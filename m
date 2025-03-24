@@ -1,76 +1,157 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9981615E96
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 02:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C402314F98;
+	Mon, 24 Mar 2025 02:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742783742; cv=none; b=V+YYXdirmooHpOQse8jYSjr5jfT3qGFXmvPetrUqIy0f0ANCWkvSPnVXPXJ3ATd6Rp2Jrh4B2mz4/TSRN4rGpN9QbZWnkhryTsRRaeG2GS3wgkxmuHivyJdD66MD/ESykmVedJGQLQ3oGwOgxUkKLcv52HknFkk1cPqzS5EAGcc=
+	t=1742783751; cv=none; b=jo4LKu1NUmc+Ev8U6oUsRCUpo+5wHYMuqtsgESE3dTzrDIcP46rcaZsbm+9tPL+CQFvrYm9hufc2d8hmPSqOD1Rbi6KIcXh88NDGS7i6JpscTjfq7WeuO39LMwCBZlPuiLTQDJXVHdDvtyUaAPQQk9IM9GuHdAM2lR779+/d/uM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742783742; c=relaxed/simple;
-	bh=WXP6pAWdo0VZuP3UbIqZt/JoWchYvGMkSjCSQIDez5I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dM8RMThVMt6qQbZmSTH1JCCOF+nlGCvNNofHJjfkFgeQqj8iHhmSeX7LnS2D2XGSets5ND9atqCN6QzmFoYGqunFE14H35oDU3qgV4u/jdMrmxF3bOJJsUlxwCNpFm/MuVCxfL83EsYs3FaGdo5w1VsZCgvVbs/yigwEQN6cuoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 175B5106F;
-	Sun, 23 Mar 2025 19:35:45 -0700 (PDT)
-Received: from entos-yitian-01.. (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9AB443F63F;
-	Sun, 23 Mar 2025 19:35:34 -0700 (PDT)
-From: Jia He <justin.he@arm.com>
-To: Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev
-Cc: Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Jia He <justin.he@arm.com>
-Subject: [PATCH v2] KVM: arm64: Skip the KVM pmu initialization when hyp is unavailable
-Date: Mon, 24 Mar 2025 02:34:50 +0000
-Message-Id: <20250324023450.109312-1-justin.he@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1742783751; c=relaxed/simple;
+	bh=xAFn0lYBGzrmag+aR3lSQ/jnbdF7nDNylnf7HpAI05U=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=IDesyb9R4mpa1MZ/DN4pQbTRn/2yL2PIeDFdhTRVvY5sjNX0mC68ZqpqvGTkKO7zhJbaUr364qDkpjYwhkLHhuWNPybnYLIk1J52kYsWLusYBfxteCsgdIvO25JDODWKGDz5LbQhSNAnk7TQe+/xlz4v/aT4+afxUf1kT5uTozk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WBAO8AHM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WBAO8AHM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 070CBC4CEE8;
+	Mon, 24 Mar 2025 02:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742783751;
+	bh=xAFn0lYBGzrmag+aR3lSQ/jnbdF7nDNylnf7HpAI05U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WBAO8AHMOxOeZjkDJmvhOuBONAVHCS2C3jtZSx/UZyEqFnCgQq0mLv49MYg5jJQD0
+	 tiHHfXHdW7X4kclgspl7Q4PbT0bX0q54fnpSMWRhpdtu0KGw5jTiql5iFFne8+EoZO
+	 +LZjhgRM3/wLA2kdJrnYcCeosHcVdQx0PNkF4ZgZ3kierqCR0keocHgRTLDp2fhEUL
+	 z3FXwGKdTIbQneZCg0GBSg319fevISnYeEmYcHj248mCsApkOGiq1IXHmaa0ki9MTK
+	 L/HLM8lqgcoSWMVu3DVZlSQogOF6WeErP45etQewAhQfeUzeHbvy6Hmpz0OUn1sAiQ
+	 S8Z+AOflrHGYQ==
+Date: Mon, 24 Mar 2025 11:35:47 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] tracing: Show last module text symbols in the
+ stacktrace
+Message-Id: <20250324113547.681fe2cd2f90a00a1e74c1a0@kernel.org>
+In-Reply-To: <20250321125203.61585a02@batman.local.home>
+References: <174230514441.2909896.16487286892751735867.stgit@mhiramat.tok.corp.google.com>
+	<174230516153.2909896.11459658533253319657.stgit@mhiramat.tok.corp.google.com>
+	<20250321125203.61585a02@batman.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-When Hyp mode is unavailable (e.g., the kernel boots from EL1), skip the
-unnecessary KVM pmu initialization.
+On Fri, 21 Mar 2025 12:52:03 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Signed-off-by: Jia He <justin.he@arm.com>
----
-v2: 
- - Utilize is_hyp_mode_available() for improved accuracy when detecting the
- guest VM case, as it accounts for scenarios where the kernel boots from EL1.
+> On Tue, 18 Mar 2025 22:39:21 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> 
+> > +/**
+> > + * trace_adjust_address() - Adjust prev boot address to current address.
+> > + * @tr: Persistent ring buffer's trace_array.
+> > + * @addr: Address in @tr which is adjusted.
+> > + */
+> > +unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr)
+> > +{
+> > +	struct trace_scratch *tscratch;
+> > +	struct trace_mod_entry *entry;
+> > +	long *module_delta;
+> > +	int idx = 0, nr_entries;
+> > +
+> > +	/* If we don't have last boot delta, return the address */
+> > +	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
+> > +		return addr;
+> > +
+> > +	tscratch = tr->scratch;
+> > +	/* if there is no tscrach, module_delta must be NULL. */
+> > +	module_delta = READ_ONCE(tr->module_delta);
+> 
+> What protects this from being freed after it is read?
+> 
+> > +	if (!module_delta || tscratch->entries[0].mod_addr > addr)
+> > +		return addr + tr->text_delta;
+> > +
+> > +	/* Note that entries must be sorted. */
+> > +	nr_entries = tscratch->nr_entries;
+> > +	if (nr_entries == 1 ||
+> > +	    tscratch->entries[nr_entries - 1].mod_addr < addr)
+> > +		idx = nr_entries - 1;
+> > +	else {
+> > +		entry = __inline_bsearch((void *)addr,
+> > +				tscratch->entries,
+> > +				nr_entries - 1,
+> > +				sizeof(tscratch->entries[0]),
+> > +				cmp_mod_entry);
+> > +		if (entry)
+> > +			idx = entry - tscratch->entries;
+> > +	}
+> > +
+> > +	return addr + module_delta[idx];
+> > +}
+> > +
+> >  #ifdef CONFIG_MODULES
+> >  static int save_mod(struct module *mod, void *data)
+> >  {
+> > @@ -6036,6 +6088,7 @@ static int save_mod(struct module *mod, void *data)
+> >  static void update_last_data(struct trace_array *tr)
+> >  {
+> >  	struct trace_scratch *tscratch;
+> > +	long *module_delta;
+> >  
+> >  	if (!(tr->flags & TRACE_ARRAY_FL_BOOT))
+> >  		return;
+> > @@ -6070,6 +6123,8 @@ static void update_last_data(struct trace_array *tr)
+> >  		return;
+> >  
+> >  	tscratch = tr->scratch;
+> > +	module_delta = READ_ONCE(tr->module_delta);
+> 
+> Say if a reader read tr->module_delta before the NULL write.
+> 
+> > +	WRITE_ONCE(tr->module_delta, NULL);
+> >  
+> >  	/* Set the persistent ring buffer meta data to this address */
+> >  #ifdef CONFIG_RANDOMIZE_BASE
+> > @@ -6078,6 +6133,8 @@ static void update_last_data(struct trace_array *tr)
+> >  	tscratch->kaslr_addr = 0;
+> >  #endif
+> >  	tr->flags &= ~TRACE_ARRAY_FL_LAST_BOOT;
+> > +
+> > +	kfree(module_delta);
+> 
+> Why is this safe?
+> 
+> I don't see any synchronization between setting NULL and freeing this,
+> like RCU would do.
 
- arch/arm64/kvm/pmu-emul.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Ah, I thought it is OK that module_delta = NULL for kfree(), but
+there could be UAF case?  update_last_data() is protected by trace_types_lock,
+so update_last_data() itself is serialized. But trace_adjust_address() is
+not. Hmm, yeah, it is not enough checking by TRACE_ARRAY_FL_LAST_BOOT flag.
 
-diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
-index 6c5950b9ceac..81b1a84ee1b3 100644
---- a/arch/arm64/kvm/pmu-emul.c
-+++ b/arch/arm64/kvm/pmu-emul.c
-@@ -779,6 +779,13 @@ void kvm_host_pmu_init(struct arm_pmu *pmu)
- {
- 	struct arm_pmu_entry *entry;
- 
-+	/*
-+	 * When Hyp mode is unavailable (e.g., the kernel boots from EL1),
-+	 * skip the unnecessary KVM PMU initialization.
-+	 */
-+	if (!is_hyp_mode_available())
-+		return;
-+
- 	/*
- 	 * Check the sanitised PMU version for the system, as KVM does not
- 	 * support implementations where PMUv3 exists on a subset of CPUs.
+OK, then what about this?
+
+- free module_delta with rcu_free()
+- protect trace_adjust_address() by rcu_read_lock()
+
+Thank you,
+
+> 
+> -- Steve
+> 
+> 
+> >  }
+> > 
+
+
 -- 
-2.34.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
