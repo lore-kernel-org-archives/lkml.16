@@ -1,100 +1,138 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BA12E3392;
-	Mon, 24 Mar 2025 05:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4A02E3392
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 05:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742794881; cv=none; b=pPS45e9cP6jXDCHsEqeFCOSq1BEfQH/qO27j0MPXuqdNWlVon9qCGi2Bm+0sCLqayNkJ1pQFsqP2AE24cnfOVIi0fOCf56zGRuEh0pxAJ+R4lEH65eP6ztw6k2PT2SR/uZXR5xEvIhdMNriqWNEO7bnaYOqyXvUdQMvBANYtbb8=
+	t=1742795023; cv=none; b=rrGcRNNXgqRp3in3/mv983bUUdmDMNeLLvuijI+tCR7GeDTronTDMNDOT99LnEZawFYZj83jZStBNrMBEC/QNMR75IFA7wVL7ec5KJaRwjRER0ScpzmVqOYHd6k8RP3o0zB3h5QKTACyGwnB3kXk2/6f5bWavaeLnDzI5CF0WTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742794881; c=relaxed/simple;
-	bh=b984k2OgR/8IM2gmxVu07aUMQ8qc79G6SBXx14h0Sqo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RWa+cKevNPtjgOigiaTTgbOcwcPPjSwjbF2oNB2sPGKiNU17uHAi1TcOYTBgEqkbosDttlMexEJpQDGmWpFSBpXIyHdwoPsSLVjx/iJWLZzOpUqJuEqAvZz7Ij1xf4EMaVxcnO34qnhznTPhG5HJifXtVZSt3I1LPLCMwKUjsuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=K0UcNrx7; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1742795023; c=relaxed/simple;
+	bh=fDHDnmQOUKbYWvor4HRHMJSkRLSzGU857d5h+34i5GQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u9pzqlSUw50exmVrR5TFaQJ+qig7pRwWq1fsXpquy5lBIIRqDlhLTKdQyr8UuuFuiqoPUuY4hQYlirqMuIxOLcEMVzvIo+0kYgTXRNtTqTumUPFwsKHaTPBQAr9QdntKtr9210pRhEwqAGTBoyNt+CXEb9UZ9gI04pYCWjQDGCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rPBjfKRn; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="K0UcNrx7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1742794872;
-	bh=rfUALjdQJ1/td1s2AxGvECCWq2bHv8pIquJ3lUwqmUs=;
-	h=Date:From:To:Cc:Subject:From;
-	b=K0UcNrx7bLB14MTOZcJtFdtcD+ZNCABUpsmxwf15ErbOdih46/r8BzgW7c/4d0X8i
-	 CuI6iajJqINp84NE9iCxKaoSFOKcNsdvOTEZDKXlIYwjwleLYOsx2lZdmt5f8jwAb/
-	 BdClFnrqXnKrg1PBDODWmQcSb+iTtK6osz5yDuUPeWvOaeQfbCI3CA4aH/FGH6yTCw
-	 sy1dF6/QQ77i6KpKKUqF1yROWfqmpl0wyuQKXv8sSseq9EcYzer47BWUi5+wZOSzvW
-	 vJdLBEi9clhRakQV5WLyyuc69Qd9pxvc9h7lrN4zyKLthis44BsDKu8kXZPjC2sZkq
-	 OOxgro2KZxNNA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZLhk05Gcgz4x8X;
-	Mon, 24 Mar 2025 16:41:12 +1100 (AEDT)
-Date: Mon, 24 Mar 2025 16:41:11 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, Uday Shankar
- <ushankar@purestorage.com>
-Subject: linux-next: manual merge of the ftrace tree with the kbuild tree
-Message-ID: <20250324164111.20c92791@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rPBjfKRn"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2260c91576aso65122245ad.3
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 22:43:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742795021; x=1743399821; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XZYqBd8vEY+viBvNer60WQXhZvWLjiw6xgE86uO2OEU=;
+        b=rPBjfKRnVm8KDbb3TrXDHR6FEwfDcJfO4jkn341rsh2yCxAUZuy0PQXb6QzNmHw4GP
+         j25mg4yzLN72SVD5R91Borrpqeix6i0wd3Mq1HS6FWmbSUrzrm5QkFjCoxUfv1w9UIdA
+         DdKT3OMAZKLh9y9H65GrS0Cwi3AcJG4Ru7Nm18SjHWlxX5K+r4MKsY12B9j7VIyMoJs7
+         hRag1O/FKbmHM7hoQWZbDgtSCC/5+NkxcuLj6UVw9+wzolaxZ3x1a23Piu2soXoReV5j
+         5lIYUWA9gf3CgqguW8Lz38MosQlGg+EtrlDOTVD9u6qIUFDw+WzvOs8TdcRDycbRsKPz
+         TJNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742795021; x=1743399821;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XZYqBd8vEY+viBvNer60WQXhZvWLjiw6xgE86uO2OEU=;
+        b=ChDTTh5781U9LQFCSNJZAXopF8sjxFIVbFFXvPivAwJA8ssqiDOuVm8XsYQ+FdAvZ4
+         buS/EQLzv0J+KHeaYqpAgIZtHT+kMv2Eg/rU+ZYF4oZJqUH/ps6xQxmPBDdwb5HYEiiB
+         swduehXfFLOoUCg19jnOQhZGIKXc420pJsVQwXcLxVfJhmjg/yOexiDueSHYVAG8o0KA
+         hiFaodn6bDD38qIOUBcK8INHlNVbDG4U48eBkFZjw2Fi5a+gy/opdV54q2dbX02D8ynn
+         hmm1XJ6dGY9uu2UvuL9OAuZyABU14bYIEuplkCy3vYzxxrtTSqLkby/E9t5yOGckaGw1
+         peEw==
+X-Forwarded-Encrypted: i=1; AJvYcCWAYyCNzqIueisntVCS/aLKxrtqbGfFbJVHk+xleU1vyQ+NkemP68EjqRibhSdiElNFhwwwWL3cmpGQLUA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4mTzgqum6LJLm/ZqbqOPmdNhb8dIFmoB/k3bfOYhPanGak9uW
+	awrpPEBBffxKejHsZhstV4gnyG3Y4yw3aLPVK3xcNacVeSWn5bqC0Bb0b8qqKrY=
+X-Gm-Gg: ASbGnctnYlrKqXfrkaH2dj9hNAmW2rgxFV5Uf1kHUMiXE+XIXNX0QfkK2nl0NZLwrej
+	uzU4K+lghw4GUqJys13gWdO42MQf+UIPb/al+xDJQQ/zjz25s+WyvX3NAgLKjUGUDsd2LyZ/Z01
+	FOwL7wMRWNvkw0g2SfL4xvrQTrwHYPLZ1XO5xf9AzyzRkQtW78T2qFYDNj98yZ/0vDNaqyxRt/m
+	YGICmjfokaJE1Qm++vQAGH4GxDejgPsfUiaQqkzgG6Z3O0xY625YxCDiZFpckY+TGrnf3Yt5SZM
+	HzEiOkQn94Tln+KTGVR3W24p/Cf4GwWr6b087DdHygIa1g==
+X-Google-Smtp-Source: AGHT+IG7ucfZiFRoh0M2V5ggHMX64UITYEnNDz5nQP04P/WihSFxf9WsMLMFop+iaLC/4c9SxWUzIQ==
+X-Received: by 2002:a17:902:ec82:b0:21f:6fb9:9299 with SMTP id d9443c01a7336-22780d8bfe0mr197243365ad.27.1742795020544;
+        Sun, 23 Mar 2025 22:43:40 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22780f3a846sm61958045ad.51.2025.03.23.22.43.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Mar 2025 22:43:39 -0700 (PDT)
+Date: Mon, 24 Mar 2025 11:13:33 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Chun-Jen Tseng =?utf-8?B?KOabvuS/iuS7gSk=?= <Chun-Jen.Tseng@mediatek.com>
+Cc: "cw00.choi@samsung.com" <cw00.choi@samsung.com>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	Project_Global_Chrome_Upstream_Group <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	"myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kyungmin.park@samsung.com" <kyungmin.park@samsung.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH v3 1/3] cpufreq: mediatek: using global lock avoid race
+ condition
+Message-ID: <20250324054333.sgwwksawnybx3lp4@vireshk-i7>
+References: <20250214074353.1169864-1-chun-jen.tseng@mediatek.com>
+ <20250214074353.1169864-2-chun-jen.tseng@mediatek.com>
+ <20250219054209.erwfp7sgzchaiuds@vireshk-i7>
+ <e8337c5eee0cadb797bacf26b00f1ca303c5147f.camel@mediatek.com>
+ <20250321045624.mwm2mnkqeow5uids@vireshk-i7>
+ <2a73b5ca35692c8ffa68c9ff0df73e24a592967d.camel@mediatek.com>
+ <20250321060148.adhxjexpnm4dkpnt@vireshk-i7>
+ <e1c2c12bace22d1803d16ecbfb32129518d87157.camel@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/U8jX5QCO.0mG9Hap++FRQdH";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e1c2c12bace22d1803d16ecbfb32129518d87157.camel@mediatek.com>
 
---Sig_/U8jX5QCO.0mG9Hap++FRQdH
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
+Thanks for sharing the details this time, it makes it much clearer
+now.
 
-Today's linux-next merge of the ftrace tree got a conflict in:
+On 24-03-25, 03:21, Chun-Jen Tseng (曾俊仁) wrote:
+> I think the best configuration sequence is as follows:
+>   cpufreq policy -> set frequency -> CCI governor get
+> CPUFREQ_POSTCHANGE NB -> choose CCI frequency -> set CCI frequency
+> 
+> However, in drivers/devfreq/governor_passive.c#L77,
+> get_target_freq_with_cpufreq() retrieves the current frequency of each
+> policy,
+> and it determines the CCI frequency based on the frequency of each
+> policy.
+> 
+> But if policy-0 and policy-6 enter simultaneously, the CCI governor
+> might get an incorrect frequency.
 
-  scripts/tracing/draw_functrace.py
+Yes it may fetch the current frequency (or last known one), but that
+shouldn't be a problem as the postchange notification for policy-6
+should get called right after and should fix the issue. Right ?
 
-between commit:
+I don't think this is a race and if this requires fixing. clk_get()
+for any device, will always return the last configured value, while
+the clock might be changing at the same time.
 
-  9d702bb1d3c0 ("scripts: make python shebangs specific about desired versi=
-on")
+What's important is that you don't get an incorrect frequency (as in
+based on intermediate values of registers, etc). Note that the last
+configured frequency isn't an incorrect frequency.
 
-from the kbuild tree and commit:
+> cpufreq policy-0 -> set frequency -> CCI governor get
+> CPUFREQ_POSTCHANGE NB -> choose CCI frequency -> set CCI frequency
+> => during this time, the CCI governor gets policy-0 and policy-6, BUT
+> policy-6 may change frequency by cpufreq driver at the same time.
 
-  a926d15a799a ("scripts/tracing: Remove scripts/tracing/draw_functrace.py")
+Sure, and I don't see a problem with that. The issue is there only if
+we can reach a state where CCI is left configured in the wrong state.
+Which I don't think would happen here as the postchange notifier will
+get called again, forcing a switch of frequency again.
 
-from the ftrace tree.
-
-I fixed it up (I just removed the file) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/U8jX5QCO.0mG9Hap++FRQdH
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfg8HcACgkQAVBC80lX
-0GzfCQgAmqUERGDJXbX9jfbOtIeY21yRb+glHLdbVedfZGMHaE5NchDD+fYbPpCo
-oAqtvXHOgxBEVXRbPUxrpztovGkywBqp9BvTpqZdRch1FahSNP2B/RQDjzfJanEt
-yfa5V6PSUWbmvAFwjcInzugisAfJCtBCgN9rwwKdJx36dNBQT8jrt0PcZPzu3lG7
-qoVskSXowC6s1OEMDH5lCt6MD3QLZreDmFn8zQ8zBvzrsYCUL2uugmvcqoX2J8Jf
-X/MeOPw6zNeaTF7xDIw57t8qaoeiJXypAkZuwyj5/9EUcu9dJVr/UiJEu/Ouxc8a
-NZnWQi4HFyP2mIQe4IKsJGdYqNHLZQ==
-=Tv+Z
------END PGP SIGNATURE-----
-
---Sig_/U8jX5QCO.0mG9Hap++FRQdH--
+-- 
+viresh
