@@ -1,123 +1,83 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0ED26B2B3
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 17:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5CD264F93;
+	Mon, 24 Mar 2025 17:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742837627; cv=none; b=igENXaePHrqc2Q9iEX38T/9J+zmJb62S/N7d+I8JyqFv1euaiDwMT0A3ZlT5Gfb+uX3h6SKAQZl5Z9P+YQp5YRDyKA/PM1y+kYLwHG+bh3X6XwZvIuyrnQa9F3dYYjp9t5VyQOi8DByUxfpPkB6TAaqd+GG29QVEIrEzYCx8FaQ=
+	t=1742837630; cv=none; b=fVxlmbWhe++jGYnZqLOZ7oFSN1EmSW7Mb+YTwk9PtjpLfgbWKTrpKITSSakiqdC1qdRo3dwOAiuDktB/7cEd0vOjsaCynUchwcXhfvOEO/oPBYzvXQok4jpx3se0y3gFDSG8nbnZPR3VYoTmX2DsyK++0ZNlyAYZ3j7qVSSGjKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742837627; c=relaxed/simple;
-	bh=SPV6f+vG/kNYrdnOrV7Ud4dp6yqxNxakKCs85+jvmag=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jHWkycCw6p+pkUDziiAf2I/U7hn3soaNTDdUzLIScKXNvqBX2MrGyPQIgEqQ7p4POS1Dvukd2Pg+ZKaCDljbxMAyvANiPIV0mjGyZo79RqU6w0NSgDzFEkiT/ccphApDmj2rarO9tsA3b5mjqBxtAzchKg49517m9ESBNcCYKSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k297gcpG; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
+	s=arc-20240116; t=1742837630; c=relaxed/simple;
+	bh=fktGd1FU7Wylsgcp/W/FoFHGov9UsZagCPsbOuIH+NA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Z6cDsvmzXhSUIiv3Zu+it+Pt7niSixnhGU2ezvSdeTSk5r5robOqMPVa4JunOpP6Ayoh3W7D4/L/tuLzCp4E/1blZdk/UMqzWLeTBdBQ03/h948ex5saoy4ZiI5LgKuq5KbOm7bfMUFagh2Wfiuo7P0CuGaOLZV/Kj1SwpxZSPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BZF5LSGU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k297gcpG"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22651aca434so76033995ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 10:33:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742837626; x=1743442426; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=3FAxBAfvnTeE02w75JVrD4RSLbO6pRSDBEOxfTgOTwA=;
-        b=k297gcpG3+AiZfVEIa1bic5XpHjHyo6FxbO2YOIXeEEjx3v3hugoGxcb2zBZR8uvsg
-         EmT1t5jLyF2iIV7gD1/Yf1AWFAR11fZIXmm+/aeltchjq3tUVBeAC77JOFJcgneqqHUo
-         bcdKnqy1fIYPIXTQJpQhvnpPSXIAVOAHubTjb/X+vGlX3rBqRpxcgtZYfU2dp3vOjx8B
-         vtL+PbgbhSjREx75TThEXGnE5eMleuj9TPBJxe5l1qCQBsLOVKZ0dpYqADM/3/i3io2R
-         Dt9GgaLgWEETfkwCbQ+3ngHbH4NrtQR/SSDQjxXSff/QwK1IGhw+cttoLXpVxDCypwxd
-         7h5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742837626; x=1743442426;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3FAxBAfvnTeE02w75JVrD4RSLbO6pRSDBEOxfTgOTwA=;
-        b=VTiFRBy7OtgHnTqWGKgbLwLbK9qnf41qS3fjBT/M3EvVjL6uqN4U6E0mYCJqma+Fyg
-         Y7VXncOL1wx7nl73q3RZS0G+xlpAyD0GHy4jdrR8tnX9Gjlsf+XvbFPoewFkCWsU0mXF
-         fm0RDHsf5T8OCdGiWw2oJBwkDXUwqJRh15ryMLbX97+I1UFvbX6i/HuvckmePCd0sLeC
-         pl2dIJjyotWpUl2oMrq1c7ksop7LMm1N+bDlRePqmjDPEXBhpYGim6hJ7C7pwLbqW+NK
-         KuRyKwHq/RkFmsLweQyDtpnQBjI0B+r/CtTUfY0g7SnPgNx0IDM52brTAzYIYqrNr3Iq
-         uNLw==
-X-Forwarded-Encrypted: i=1; AJvYcCWusyHfcegX090JGU/drvx/SIf2twGGkhnyvquoXo7SUsTHMfOPN1g+6FqkPCqjVFdMAs4n5eery+hEVvA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyugW8dQPEtqBA4/USZU9NMrQRmWQZSOgU7TUnVQdChkaF86GVq
-	md9mkUgBDMXKCLO5QIKTar4j6H6Hs0rV7IxXNckUu/lGLC7Fwu3I72BPozsWj0JpD4fxwIloF3G
-	J42HfUw==
-X-Google-Smtp-Source: AGHT+IFNR4hLiVkO6uhlXqD3citXpGRm9BfvjKuSb2pxzfsnHIVx+SR4I6E3SRncE31NfMsm/svDGQp+t39P
-X-Received: from pgbeh14.prod.google.com ([2002:a05:6a02:256e:b0:af2:3b16:9767])
- (user=mizhang job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:12d5:b0:1fb:e271:82e2
- with SMTP id adf61e73a8af0-1fe42f35752mr23440489637.11.1742837625714; Mon, 24
- Mar 2025 10:33:45 -0700 (PDT)
-Reply-To: Mingwei Zhang <mizhang@google.com>
-Date: Mon, 24 Mar 2025 17:31:13 +0000
-In-Reply-To: <20250324173121.1275209-1-mizhang@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BZF5LSGU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13E78C4CEEA;
+	Mon, 24 Mar 2025 17:33:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742837629;
+	bh=fktGd1FU7Wylsgcp/W/FoFHGov9UsZagCPsbOuIH+NA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=BZF5LSGUVGVxQMF/re+JxpvzEqbFoLgIs+eTvogiXxmlgzQ/DC5o+F7WJg6ka7vJ6
+	 F+3Zjb23JzKFM2H3Dn/CDMP6SUi01+IlqcoHhu5Unn0H4zRGHBxXp/0zlx076qTM/l
+	 qK9xAai7bFUJKHU7P+ojY47J5PiZXWfwK2JO9iZw5TkTsP5qFNnuktzZyKit5A2t16
+	 8wo5RGHDh/bd0bhvxAPFkTfxQhiqzF3Cr8IUNTn0e2iL1eQKiXL/tIw+jZUJyCkaV2
+	 eG+0XIUfmmzJ4e4yf1DLhw/dmhYfIsq8I6t0FUcZ9YY2oksF7T4gK8X0SbzfTqdCb5
+	 kMFDcmu8IZQ8A==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Kees Cook <kees@kernel.org>,
+	Alessandro Carminati <acarmina@redhat.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+	linux-next@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>,
+	Rae Moar <rmoar@google.com>,
+	linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 08/10] kunit: add module description for backtrace suppression test
+Date: Mon, 24 Mar 2025 18:32:33 +0100
+Message-Id: <20250324173242.1501003-8-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250324173242.1501003-1-arnd@kernel.org>
+References: <20250324173242.1501003-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250324173121.1275209-34-mizhang@google.com>
-Subject: [PATCH v4 33/38] perf/x86/intel: Support PERF_PMU_CAP_MEDIATED_VPMU
-From: Mingwei Zhang <mizhang@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Mingwei Zhang <mizhang@google.com>, Yongwei Ma <yongwei.ma@intel.com>, 
-	Xiong Zhang <xiong.y.zhang@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
-	Das Sandipan <Sandipan.Das@amd.com>, Shukla Manali <Manali.Shukla@amd.com>, 
-	Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-Apply the PERF_PMU_CAP_MEDIATED_VPMU for Intel core PMU. It only
-indicates that the perf side of core PMU is ready to support the
-passthrough vPMU.  Besides the capability, the hypervisor should still need
-to check the PMU version and other capabilities to decide whether to enable
-the mediated vPMU.
+The module was added but has no description:
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Mingwei Zhang <mizhang@google.com>
+WARNING: modpost: missing MODULE_DESCRIPTION() in lib/kunit/backtrace-suppression-test.o
+
+Fixes: ebf1c420422a ("kunit: add test cases for backtrace warning suppression")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/x86/events/intel/core.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ lib/kunit/backtrace-suppression-test.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index e86333eee266..ab74fdfa6a66 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4943,6 +4943,8 @@ static void intel_pmu_check_hybrid_pmus(struct x86_hybrid_pmu *pmu)
- 	else
- 		pmu->intel_ctrl &= ~(1ULL << GLOBAL_CTRL_EN_PERF_METRICS);
+diff --git a/lib/kunit/backtrace-suppression-test.c b/lib/kunit/backtrace-suppression-test.c
+index 8b4125af2481..1ceb30c736d7 100644
+--- a/lib/kunit/backtrace-suppression-test.c
++++ b/lib/kunit/backtrace-suppression-test.c
+@@ -102,3 +102,4 @@ static struct kunit_suite backtrace_suppression_test_suite = {
+ kunit_test_suites(&backtrace_suppression_test_suite);
  
-+	pmu->pmu.capabilities |= PERF_PMU_CAP_MEDIATED_VPMU;
-+
- 	intel_pmu_check_event_constraints(pmu->event_constraints,
- 					  pmu->cntr_mask64,
- 					  pmu->fixed_cntr_mask64,
-@@ -6535,6 +6537,9 @@ __init int intel_pmu_init(void)
- 			pr_cont(" AnyThread deprecated, ");
- 	}
- 
-+	/* The perf side of core PMU is ready to support the mediated vPMU. */
-+	x86_get_pmu(smp_processor_id())->capabilities |= PERF_PMU_CAP_MEDIATED_VPMU;
-+
- 	/*
- 	 * Install the hw-cache-events table:
- 	 */
+ MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("KUnit test for suppressing warning tracebacks");
 -- 
-2.49.0.395.g12beb8f557-goog
+2.39.5
 
