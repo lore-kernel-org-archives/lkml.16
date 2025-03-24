@@ -1,131 +1,216 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28E526462D;
-	Mon, 24 Mar 2025 17:48:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F0A264A7C;
+	Mon, 24 Mar 2025 17:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742838535; cv=none; b=g2ffq6FLHqQ/nHv04bNQv23C7oa2ZB/qMZybvDTw8qM2hS5Qg55Zks1bxQK6+sZ6EtgaW7sx12axdeu6JpKYZRv+8/hFsV1bkMhNoP38WoXVRrFQUlsUCcd/GlkOaR0E2Bjk9F4yCWEIe7RROSXZYiKU1PEWzWeVg8C4D0xuP+k=
+	t=1742838554; cv=none; b=FrsLiaFnQ7/6UAlyEE10ssk614KPGXYE3slrBtEL+yyz0vfPtwRzj6l+ID9cHqVQ/iCLay2PbRPejYpFyr9UYT5IZbVtX6zFs1GW3VTXBkiWnno1Bs3taL3JuD/VQIcOXg89/sOzcKZ1JvvikDZF4FWIPwYvd9/3bKuSsl2v4QM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742838535; c=relaxed/simple;
-	bh=RZQuZtXy5wnvBruRoNcdKcd8icEsXemLdvH5AT5pFrk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aZv6A/d4scdeopYgqn6PTl+FW3kQSANgjNsLEK05mYS7DvltcSVbeK4tOaNZQn+5rzdOHYjEuOLxGSkev+ekMjkaofutQTWImw2IPEPg8EpFvN1fWU15ax401gY4XoVAEmIbnSefhAU9qMvoO3xK0cAay9L6CR+G5Ntx91v0Rk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jr0poIr3; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742838554; c=relaxed/simple;
+	bh=zehG0hVjOYg1/tDV+yvNPZobIUe5t9ArdAqwSYUqvIE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
+	 References:In-Reply-To; b=h+gBB2xMitY8I7/dwAfPSQV1In4yvIddHxpN5CLtPZofurrz1ET7ZcAqj10efseLrrMQ1SOkSC+aVoSjRtNXUY18KPfMzzTZnDQWElwHUOWWVA6jU4VD9ndwqFk2zSjlgXVmyLTLO6QGcClfQoAqBXqYy93OfcCVgxzeT0JHdJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ILdBPfBw; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jr0poIr3"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfecdd8b2so38074985e9.2;
-        Mon, 24 Mar 2025 10:48:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742838532; x=1743443332; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=azBOCOMxXyiXiEpeV9ZgsajMxLsGMhPfMHOInLxtg9k=;
-        b=Jr0poIr35ntYsFH2uIoIqcxCG0BlKcAy4MvzJEWOjskbVI3DoJiqEnkI+fpvCCBxa3
-         zqq0fFaG7uV/UL0+dekpeuhRjqO8Je1YmRpmiCZg8O3pzdFe7jlOfKxJH7WHFHdiG11s
-         ovvU7UoX00O0UGYjonqnpcfHR17O/WAYH/v4FRFrY1ldQ9BXlz7n0hkC6qMyr4jlS/e/
-         PC0Ht8OKCl9li2LlJXD4Pwo1T3nMNX2a0ZWGprpDcPu9flS+jDb1W7JdM7TqGx9Xf9lE
-         6tbg8QewlSd6bHaq2dW88ON9nkqAIjr5qO0a8DNZ+J/vxl1RmAh+uyWXKRKzvpMfaCu5
-         CA5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742838532; x=1743443332;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=azBOCOMxXyiXiEpeV9ZgsajMxLsGMhPfMHOInLxtg9k=;
-        b=SmjrObkmfncJqOhei/wfR/oNmtgojw/zjfGFjnspVo7n8HT0rsx7wU7RGw/wvS8T2v
-         NRWNBGConZGfApFeyVnvrzS69ZZ8GDQu2R5AB7JXrNe+RflrKDieWtvugB2A6EjSKPhI
-         8HEFrK6nE4ZzNntU+fhmQsIheTAZjhAAX1psFdB9nw/Ll7C2QnOV7q029RMabtW3r2u3
-         eX0DwG81JJlUZqkvITf33Ox7/+nRtov45QQURiT4hTBIKNkPIFz6BPDZJYHIkos6s54E
-         jGbRrupfkxeQ3GqftplahIjTcQRW5w5YDOyowrrp5+YxDq5fg/H8XY6j57bBI4baVCVr
-         ypZA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDFgK7G17bSd6P2k+Gh/711puctXBjxg/JvqoV9ElVmw7AIJOT8Pu6BxTnCRt5JvT1tWl2qzZ1FxxkN846@vger.kernel.org, AJvYcCXLWFVnVRiuHApxBQ62pZfbstsKnTz7N2ri0ws03cdvYJ7EoQ6v4Pa6JCdxKKomSO0512QXvZQs1kD1i+ap@vger.kernel.org
-X-Gm-Message-State: AOJu0Yybt77SHgOVNs+rcVaQKnu5Viimc2U+SrD4t2RKD14/TITxgHcZ
-	pWTGIjpk3hdE0ZsRTaRnYOEcV1LnGM3vHkXdTfrgiWrxOcX655Qn
-X-Gm-Gg: ASbGncvfymFYl3Ev+1mEaU+YUSi0L78pFQ762XX+g3+etLKGLhkzznYQXm11zA85FZs
-	c0R59mY/vDbsrm/HXBwwROuu17Fov1dS1Z5nOnlW9NzMxMeRfD++HAPZ0Xn+reK2INO7fEC1ckr
-	9fKIXIsIW6WtwvxoKBdyfg6jNMk8hrBSLQmGS2snRh4q+L/ELFvYLtHJs6kZy0pisyaRty/Xiwo
-	8QvU4HsB49146DYkJg3flX6dqJrIeYek7SKPFcMX7ZmaqQiOuFiogGTCZhn7zmg/RzKpo0B7WY/
-	arIf8jGcT0xM9hLv68dbUALivkTVclVhvLDx8c/aOi+/mzmEc4KKpbwn8CqP
-X-Google-Smtp-Source: AGHT+IHaFr+YpetoOYJ7K0s7wosWi4wwpC9N5K/MZhGWvBurJT1aEYdrzxI323k/7WkiGDFh0tQ5zg==
-X-Received: by 2002:a05:600c:3489:b0:43c:efae:a73 with SMTP id 5b1f17b1804b1-43d509ea0f8mr150880905e9.10.1742838531829;
-        Mon, 24 Mar 2025 10:48:51 -0700 (PDT)
-Received: from f (cst-prg-80-192.cust.vodafone.cz. [46.135.80.192])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d43fdaca8sm180961875e9.28.2025.03.24.10.48.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Mar 2025 10:48:51 -0700 (PDT)
-Date: Mon, 24 Mar 2025 18:48:35 +0100
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: Penglei Jiang <superman.xpt@gmail.com>
-Cc: brauner@kernel.org, akpm@linux-foundation.org, 
-	lorenzo.stoakes@oracle.com, tglx@linutronix.de, jlayton@kernel.org, viro@zeniv.linux.org.uk, 
-	felix.moessbauer@siemens.com, adrian.ratiu@collabora.com, xu.xin16@zte.com.cn, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	syzbot+f9238a0a31f9b5603fef@syzkaller.appspotmail.com, syzbot+02e64be5307d72e9c309@syzkaller.appspotmail.com
-Subject: Re: [PATCH] proc: Fix the issue of proc_mem_open returning NULL
-Message-ID: <ajipijba74lvxh2qqyxbxtbmlqil2smsuxayym5ipbmjdysxq2@stvu4kt62yzu>
-References: <20250324162353.72271-1-superman.xpt@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ILdBPfBw"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 763A944346;
+	Mon, 24 Mar 2025 17:49:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1742838549;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N1co+hewvkHIAplFR3edQapFDqNXgn6Qh8Bh0s6Wls8=;
+	b=ILdBPfBwjDB6/i9FTF9i30HeNSmixqDNKdGblbcS4i9t2sLXeOp5FG+QgyOU32qSB1+F5F
+	7G9rkeO90zADgQ+rnU1dOgtm8+YfOPYu9jpY0t+YCXHScFmZ0BH/4JrjrLQ3LmKwidjHId
+	HR4OZKF6V00ajD3rHljdQxoMe5mlenxUy2lZfuefwBTKvp0fcmf1kg3ufCziKCgCnpSYGj
+	8U1BbgfQ9S3DEQNsyS42/gkGUXtf8M2dsl5l8DEesVi2FDdIuJbnqVm30On3W4Yn12maU9
+	L3BKaUnAld55T2YJog8v6Ui8vpsf+mfvkvXMu29AdhG8qNA4Jbz3o3Gh5QDDNw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250324162353.72271-1-superman.xpt@gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 24 Mar 2025 18:49:05 +0100
+Message-Id: <D8OOPAXK16CI.3TE75O760JRSL@bootlin.com>
+Cc: "Andrew Lunn" <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Rob
+ Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Nicolas Ferre"
+ <nicolas.ferre@microchip.com>, "Claudiu Beznea" <claudiu.beznea@tuxon.dev>,
+ "Paul Walmsley" <paul.walmsley@sifive.com>, "Palmer Dabbelt"
+ <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre
+ Ghiti" <alex@ghiti.fr>, "Samuel Holland" <samuel.holland@sifive.com>,
+ "Richard Cochran" <richardcochran@gmail.com>, "Russell King"
+ <linux@armlinux.org.uk>, "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
+ <gregory.clement@bootlin.com>, <netdev@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-riscv@lists.infradead.org>, <linux-mips@vger.kernel.org>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>
+To: "Andrew Lunn" <andrew@lunn.ch>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH net-next 07/13] net: macb: move HW IP alignment value to
+ macb_config
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250321-macb-v1-0-537b7e37971d@bootlin.com>
+ <20250321-macb-v1-7-537b7e37971d@bootlin.com>
+ <45b3e613-90c6-4499-b50b-383106172184@lunn.ch>
+In-Reply-To: <45b3e613-90c6-4499-b50b-383106172184@lunn.ch>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduiedtgeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefvhffuofhfjgesthhqredtredtjeenucfhrhhomhepvfhhrohoucfnvggsrhhunhcuoehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeigfelffeuffetteetuddufffghefhudeuteeigeekteevgeeileejgfdvffelheenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepjeejrddufeehrdekuddrieehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepjeejrddufeehrdekuddrieehpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvkedprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehpr
+ ggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Mon, Mar 24, 2025 at 09:23:53AM -0700, Penglei Jiang wrote:
-> The following functions call proc_mem_open but do not handle the case
-> where it returns NULL:
-> 
->   __mem_open in fs/proc/base.c
->   proc_maps_open in fs/proc/task_mmu.c
->   smaps_rollup_open in fs/proc/task_mmu.c
->   pagemap_open in fs/proc/task_mmu.c
->   maps_open in fs/proc/task_nommu.c
-> 
-> The following reported bugs may be related to this issue:
-> 
->   https://lore.kernel.org/all/000000000000f52642060d4e3750@google.com
->   https://lore.kernel.org/all/0000000000001bc4a00612d9a7f4@google.com
-> 
-> Fix:
-> 
-> Modify proc_mem_open to return an error code in case of errors, instead
-> of returning NULL.
-> 
+Hello Andrew,
 
-The rw routines associated with these consumers explictly NULL check
-mm, which becomes redundant with the patch.
+On Fri Mar 21, 2025 at 10:06 PM CET, Andrew Lunn wrote:
+> On Fri, Mar 21, 2025 at 08:09:38PM +0100, Th=C3=A9o Lebrun wrote:
+>> The controller does IP alignment (two bytes).
+>
+> I'm a bit confused here. Is this hard coded, baked into the silicon?
+> It will always do IP alignment? It cannot be turned off?
 
-While I find it fishy that returning NULL was ever a thing to begin
-with, it is unclear to me if it can be easily changed now from
-userspace-visible behavior standpoint.
+Yes, the alignment is baked inside the silicon.
+I looked but haven't seen any register to configure the alignment.
 
-I think the best way forward for the time being is to add the missing
-NULL checks instead.
+Sorry the commit message isn't clear, it needs improvements.
 
-> Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
-> ---
->  fs/proc/base.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/proc/base.c b/fs/proc/base.c
-> index cd89e956c322..b5e7317cf0dc 100644
-> --- a/fs/proc/base.c
-> +++ b/fs/proc/base.c
-> @@ -840,7 +840,7 @@ struct mm_struct *proc_mem_open(struct inode *inode, unsigned int mode)
->  	put_task_struct(task);
->  
->  	if (IS_ERR(mm))
-> -		return mm == ERR_PTR(-ESRCH) ? NULL : mm;
-> +		return mm;
->  
->  	/* ensure this mm_struct can't be freed */
->  	mmgrab(mm);
-> -- 
-> 2.17.1
-> 
+>> 	skb_reserve(skb, NET_IP_ALIGN);
+>
+> Why not just replace this with
+>
+>         skb_reserve(skb, 2);
+
+On arm64, NET_IP_ALIGN=3D0. I don't have HW to test, but the current code
+is telling us that the silicon doesn't do alignment on those:
+
+   skb =3D netdev_alloc_skb(...);
+   paddr =3D dma_map_single(..., skb->data, ...);
+   macb_set_addr(..., paddr);
+
+   // arm   =3D> NET_IP_ALIGN=3D2 =3D> silicon does alignment
+   // arm64 =3D> NET_IP_ALIGN=3D0 =3D> silicon doesn't do alignment
+   skb_reserve(skb, NET_IP_ALIGN);
+
+The platform we introduce is the first one where the silicon alignment
+(0 bytes) is different from the NET_IP_ALIGN value (MIPS, 2 bytes).
+
+Does that clarify things?
+
+>> The NET_IP_ALIGN value is arch-dependent and picked based on unaligned
+>> CPU access performance. The hardware alignment value should be
+>> compatible-specific rather than arch-specific. Offer a path forward by
+>> adding a hw_ip_align field inside macb_config.
+>>=20
+>> Values for macb_config->hw_ip_align are picked based on upstream
+>> devicetrees:
+>>=20
+>>     Compatible             |  DTS folders              |  hw_ip_align
+>>    ------------------------|---------------------------|----------------
+>>    cdns,at91sam9260-macb   | arch/arm/                 | 2
+>>    cdns,macb               | arch/{arm,riscv}/         | NET_IP_ALIGN
+>>    cdns,np4-macb           | NULL                      | NET_IP_ALIGN
+>>    cdns,pc302-gem          | NULL                      | NET_IP_ALIGN
+>>    cdns,gem                | arch/{arm,arm64}/         | NET_IP_ALIGN
+>>    cdns,sam9x60-macb       | arch/arm/                 | 2
+>>    atmel,sama5d2-gem       | arch/arm/                 | 2
+>>    atmel,sama5d29-gem      | arch/arm/                 | 2
+>>    atmel,sama5d3-gem       | arch/arm/                 | 2
+>>    atmel,sama5d3-macb      | arch/arm/                 | 2
+>>    atmel,sama5d4-gem       | arch/arm/                 | 2
+>>    cdns,at91rm9200-emac    | arch/arm/                 | 2
+>>    cdns,emac               | arch/arm/                 | 2
+>>    cdns,zynqmp-gem         | *same as xlnx,zynqmp-gem* | 0
+>>    cdns,zynq-gem           | *same as xlnx,zynq-gem*   | 2
+>>    sifive,fu540-c000-gem   | arch/riscv/               | 2
+>>    microchip,mpfs-macb     | arch/riscv/               | 2
+>>    microchip,sama7g5-gem   | arch/arm/                 | 2
+>>    microchip,sama7g5-emac  | arch/arm/                 | 2
+>>    xlnx,zynqmp-gem         | arch/arm64/               | 0
+>>    xlnx,zynq-gem           | arch/arm/                 | 2
+>>    xlnx,versal-gem         | NULL                      | NET_IP_ALIGN
+>
+> I don't remember seeing any other driver doing anything like
+> this. That often means it is wrong....
+
+Good question, let's look at skb_reserve() that follow dma_map_single():
+
+   =E2=9F=A9 git grep -A20 dma_map_single drivers/net/ethernet/ | \
+      rg skb_reserve | grep -v macb_main
+   drivers/net/ethernet/sun/sunbmac.c:          skb_reserve(copy_skb, 2);
+   drivers/net/ethernet/sun/sunhme.c:           skb_reserve(skb, RX_OFFSET)=
+;
+   drivers/net/ethernet/sun/sunhme.c:           skb_reserve(new_skb, RX_OFF=
+SET);
+   drivers/net/ethernet/sgi/ioc3-eth.c:         skb_reserve(new_skb, RX_OFF=
+SET);
+   drivers/net/ethernet/chelsio/cxgb/sge.c:     skb_reserve(skb, sge->rx_pk=
+t_pad);
+   drivers/net/ethernet/marvell/mv643xx_eth.c:  skb_reserve(skb, 2);
+   drivers/net/ethernet/dec/tulip/de2104x.c:    skb_reserve(copy_skb, RX_OF=
+FSET);
+   drivers/net/ethernet/marvell/pxa168_eth.c:   skb_reserve(skb, ETH_HW_IP_=
+ALIGN);
+   drivers/net/ethernet/alacritech/slicoss.c:   skb_reserve(skb, offset);
+   drivers/net/ethernet/toshiba/tc35815.c:      skb_reserve(skb, 2); /* mak=
+e IP header 4byte aligned */
+   drivers/net/ethernet/lantiq_etop.c:          skb_reserve(ch->skb[ch->dma=
+.desc], NET_IP_ALIGN);
+
+Out of those, two are using dynamic values:
+
+   // In drivers/net/ethernet/chelsio/cxgb/sge.c
+   // The value comes from [0]:
+   sge->rx_pkt_pad =3D t1_is_T1B(adapter) ? 0 : 2;
+   // The macro resolves to something like [1]:
+   adap->params.chip_version =3D=3D CHBT_TERM_T1 && adap->params.chip_revis=
+ion =3D=3D TERM_T1B
+
+   // In drivers/net/ethernet/alacritech/slicoss.c
+   // In slic_refill_rx_queue() [2]
+   /* ensure head buffer descriptors are 256 byte aligned */
+   offset =3D 0;
+   misalign =3D paddr & ALIGN_MASK;
+   if (misalign) {
+      offset =3D SLIC_RX_BUFF_ALIGN - misalign;
+      skb_reserve(skb, offset);
+   }
+
+Conclusion:
+ - one is HW revision dependent,
+ - the other knows that HW always aligns its buffer to 256.
+
+We aren't alone, but pretty lonely.
+
+Maybe I missed a common denominator that could be used to identify
+compatibles that do or do not have hardcoded alignemnt. Without such
+info, the approach taken (have alignment stored inside match data)
+sounds reasonable to me.
+
+Do you agree?
+
+Thanks,
+
+[0]: https://elixir.bootlin.com/linux/v6.13.7/source/drivers/net/ethernet/c=
+helsio/cxgb/sge.c#L2106
+[1]: https://elixir.bootlin.com/linux/v6.13.7/source/drivers/net/ethernet/c=
+helsio/cxgb/common.h#L292-L299
+[2]: https://elixir.bootlin.com/linux/v6.13.7/source/drivers/net/ethernet/a=
+lacritech/slicoss.c#L418-L424
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
