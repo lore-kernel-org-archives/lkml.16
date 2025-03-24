@@ -1,105 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993AD267B11;
-	Mon, 24 Mar 2025 17:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E86A267B15
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 17:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742837600; cv=none; b=REVXqQS5o9LZ4EoyQ4/8bDCbpd266GYNz/QCLI4JM1ugnb0c9zYDc4zRKLisMhZQ54ytifugVzhOFZ7KWjX6DN+zUojkkakiM/93s7hxheFGwxm3rrFDeF+0tvPh8jlBeT+WvAHrW5E3cerrSPU9gWUBFQpr0vRkyhAwS4+enQQ=
+	t=1742837602; cv=none; b=QmGYVXPwQBNcjMcoQhbPkgcY7Jj3kG/RW1rWQnTQVJgn57MY9ajIW7cLGuP2T+eyqxLR00FUqHMU8pjdYesM+h+IVwrrFvhRgQwLg/Ec0U3rj6K2vrcqCOkLdk3H0ObXvJ3SG07CzKiIJz3f9EsaxaVVsxesoH5RwJBl0xLgbw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742837600; c=relaxed/simple;
-	bh=5PgJCWrmA1a2uCozek4IhhKjd8jMGQnwBUzXUFNdLdc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=F+Cg+tTQOG8g+wT8QV9vbgXmCd6tw/gsdFB5uGGiLnTySIT2KBe4elZQpNhWlmDYliwomn29yoM8W+kYEJx42Npm1iFGFahFPD8WH2e2SyWXV5ygIL8aeY0Bk1aKzcNqwQrNHP0vEiNgiVKfZ0XkdxU33QlPkUvKpnLRsH+23HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmig1M0o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742837602; c=relaxed/simple;
+	bh=5qOPwwrxnQsx7uNK7PsLpk4FpylCW4KwiTr6opmkLZA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=LU+/SjYz2MOi8dS3oHOkM7mm2PiwVvq6BUXSqFi3KhpokegEWfKAQIkOCxFNFbHAo6taBoDBoz0F0LGbyJM2YtkEPkp0Vzu6LCD8lDDrpKkeZBKiBuBdHX/r8yzMIkZDD+y4BfL2x6qdNoLZl3TrRrd/gFMZU5A4FHTwW3krUDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tof9gi2O; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmig1M0o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B0D7C4CEE4;
-	Mon, 24 Mar 2025 17:33:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742837600;
-	bh=5PgJCWrmA1a2uCozek4IhhKjd8jMGQnwBUzXUFNdLdc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lmig1M0ocMObm4YsaaDsh0k/5azy/Ys46N/oK536aHhWpeuNf/tHfUFRiMEcztSqU
-	 yk3A9AExIdhs6jZw1Jfbzx3u7clE17drz+0vtou+c4GHOgJqPSUV7y+KO6szBRIy26
-	 khN9wuKwlvHv9ZZkG4pOyhHwdQgELSvX4Z1BRJzRe7As5xWgRac7trN6s6INMRe9Gx
-	 aFebhacfWG++vBWqYxX9DScuWmlCJcTxwswfXuh7teBmZbmI22Azrho7h4gvAfca1X
-	 q4/EGf9cmUQaWPuf2vN1FcdBZIIYxV2IHLxTo60ByRvF4H+5Nj8WruvCFml9+Plhd4
-	 A8AnAJQ3VfY8w==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Moritz Fischer <mdf@kernel.org>,
-	Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	linux-next@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>,
-	Tom Rix <trix@redhat.com>,
-	Marco Pagani <marpagan@redhat.com>,
-	Russ Weight <russ.weight@linux.dev>,
-	linux-fpga@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 04/10] fpga: tests: add module descriptions
-Date: Mon, 24 Mar 2025 18:32:29 +0100
-Message-Id: <20250324173242.1501003-4-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250324173242.1501003-1-arnd@kernel.org>
-References: <20250324173242.1501003-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tof9gi2O"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-224191d9228so98043995ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 10:33:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742837600; x=1743442400; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=rcOpnJuyQafXKIM3t3NDl4D1Wy5EWhwivUY6bQgJ2Ig=;
+        b=tof9gi2O6OfpkkQ4puiCPlL7wXk6OiiPSypGup2WLbU+MQUMSoDWfvLu7Y/k2CN98A
+         dsuL+tJYvGP+yreT79YQ6HlPtbzav2CfQkLkst6x7mBkF50LH/RGffacg1h+BUM3IgTc
+         JbNWabJOmL04gQglarcV6dok2K3Lh/TKonwpbMc6W9JDQ6olnnFy6dGLnrcw93zAUpDp
+         O/qSu1QhbJ1MI/tmYVfYVPERPj5EP24+jAO+YXki5yFxWnCnLnbe/Ajn0hcprBRWkB07
+         hrdBKN8NvXPoUys2Qt/BvFMh+CQeZm2U5EHZ5e7sVQk8FEIOw6bJ3jtdWZ6QNqnGsX7m
+         GOpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742837600; x=1743442400;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rcOpnJuyQafXKIM3t3NDl4D1Wy5EWhwivUY6bQgJ2Ig=;
+        b=CB2b2Ezur73xnbc6hyiknzpKFVQAQYxywlEz+K2lamOYmzS5yCD6BmlVxtEZFnSXkK
+         CrCO7wO1GNefiitvUdB7jIrLCznjDYWftESuU1ygSX87GrepNJ+BHNvTlU+YyBhIj5Hi
+         pxIRuAOyvZN47x2/VEV4/cLJBP1BxPP75NniHRR7ORMS8/9dOOwVEe3ArhN97of+YDLQ
+         2PVHDSdv5kIBZvHcJAA/vvZEPGCt/2SqYBw+Ygn2rtcVLDN7Y8m3/E5fbhGik9xdS4Dt
+         fbKRNIiEElsPRO/GCPH2Am1DKE9cHvs97K6+SqdAJi4sHUoMr4DgKA0IXncYoTaGs2Fv
+         SCAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXppvw/82YXblV2OCL1GzJ6+lwUlQHAMOi9IjPOFzDfZW2nB/npZIgEoWvhy+aNXqyus12y2+rXBL9X0cw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHYBteS4qE38oBICqpEjKyCVbm9Pmh7+AgHlWULU+uMH6OqCfE
+	y0kKuXicgzpq05QkHxT7DUmz2tkHea1uG3WKUX9U44GR6t0nFDjFK9RlozPMnUKHKkOXplY7Cg/
+	LmoqJzA==
+X-Google-Smtp-Source: AGHT+IHUO+nVYTje/CxANJJGo3on5RcFF6XTIavPoEExwPpO1NjAc4cYfof26CrUOcsMjaHQJm3pjkVgG3XW
+X-Received: from plho1.prod.google.com ([2002:a17:903:23c1:b0:223:49cb:8f99])
+ (user=mizhang job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:4403:b0:223:4bd6:3869
+ with SMTP id d9443c01a7336-22780c7ba5bmr212349475ad.15.1742837600009; Mon, 24
+ Mar 2025 10:33:20 -0700 (PDT)
+Reply-To: Mingwei Zhang <mizhang@google.com>
+Date: Mon, 24 Mar 2025 17:30:57 +0000
+In-Reply-To: <20250324173121.1275209-1-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com>
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
+Message-ID: <20250324173121.1275209-18-mizhang@google.com>
+Subject: [PATCH v4 17/38] KVM: x86/pmu: Add perf_capabilities field in struct kvm_host_values{}
+From: Mingwei Zhang <mizhang@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Mingwei Zhang <mizhang@google.com>, Yongwei Ma <yongwei.ma@intel.com>, 
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
+	Das Sandipan <Sandipan.Das@amd.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Modules without a description now cause a warning:
+Add perf_capabilities in kvm_host_values{} structure to record host perf
+capabilities. KVM needs to know if host supports some PMU capabilities
+and then decide if passthrough or intercept some PMU MSRs or instruction
+like rdpmc, e.g. If host supports PERF_METRICES, but guest is configured
+not to support it, then rdpmc instruction needs to be intercepted.
 
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-bridge-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-mgr-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-region-test.o
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Co-developed-by: Mingwei Zhang <mizhang@google.com>
+Signed-off-by: Mingwei Zhang <mizhang@google.com>
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- drivers/fpga/tests/fpga-bridge-test.c | 1 +
- drivers/fpga/tests/fpga-mgr-test.c    | 1 +
- drivers/fpga/tests/fpga-region-test.c | 1 +
- 3 files changed, 3 insertions(+)
+ arch/x86/kvm/vmx/vmx.c | 8 ++------
+ arch/x86/kvm/x86.c     | 3 +++
+ arch/x86/kvm/x86.h     | 1 +
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/fpga/tests/fpga-bridge-test.c b/drivers/fpga/tests/fpga-bridge-test.c
-index b9ab29809e96..124ba40e32b1 100644
---- a/drivers/fpga/tests/fpga-bridge-test.c
-+++ b/drivers/fpga/tests/fpga-bridge-test.c
-@@ -170,4 +170,5 @@ static struct kunit_suite fpga_bridge_suite = {
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index acd3582874b9..ca1c53f855e0 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7908,14 +7908,10 @@ void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+ static __init u64 vmx_get_perf_capabilities(void)
+ {
+ 	u64 perf_cap = PMU_CAP_FW_WRITES;
+-	u64 host_perf_cap = 0;
  
- kunit_test_suite(fpga_bridge_suite);
+ 	if (!enable_pmu)
+ 		return 0;
  
-+MODULE_DESCRIPTION("KUnit test for the FPGA Bridge");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/fpga/tests/fpga-mgr-test.c b/drivers/fpga/tests/fpga-mgr-test.c
-index 9cb37aefbac4..8748babb0504 100644
---- a/drivers/fpga/tests/fpga-mgr-test.c
-+++ b/drivers/fpga/tests/fpga-mgr-test.c
-@@ -330,4 +330,5 @@ static struct kunit_suite fpga_mgr_suite = {
+-	if (boot_cpu_has(X86_FEATURE_PDCM))
+-		rdmsrl(MSR_IA32_PERF_CAPABILITIES, host_perf_cap);
+-
+ 	if (!cpu_feature_enabled(X86_FEATURE_ARCH_LBR) &&
+ 	    !enable_mediated_pmu) {
+ 		x86_perf_get_lbr(&vmx_lbr_caps);
+@@ -7928,11 +7924,11 @@ static __init u64 vmx_get_perf_capabilities(void)
+ 		if (!vmx_lbr_caps.has_callstack)
+ 			memset(&vmx_lbr_caps, 0, sizeof(vmx_lbr_caps));
+ 		else if (vmx_lbr_caps.nr)
+-			perf_cap |= host_perf_cap & PMU_CAP_LBR_FMT;
++			perf_cap |= kvm_host.perf_capabilities & PMU_CAP_LBR_FMT;
+ 	}
  
- kunit_test_suite(fpga_mgr_suite);
+ 	if (vmx_pebs_supported()) {
+-		perf_cap |= host_perf_cap & PERF_CAP_PEBS_MASK;
++		perf_cap |= kvm_host.perf_capabilities & PERF_CAP_PEBS_MASK;
  
-+MODULE_DESCRIPTION("KUnit test for the FPGA Manager");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/fpga/tests/fpga-region-test.c b/drivers/fpga/tests/fpga-region-test.c
-index 6a108cafded8..020ceac48509 100644
---- a/drivers/fpga/tests/fpga-region-test.c
-+++ b/drivers/fpga/tests/fpga-region-test.c
-@@ -214,4 +214,5 @@ static struct kunit_suite fpga_region_suite = {
+ 		/*
+ 		 * Disallow adaptive PEBS as it is functionally broken, can be
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 1ebe169b88b6..578e5f110b6c 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -9786,6 +9786,9 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
+ 	if (boot_cpu_has(X86_FEATURE_ARCH_CAPABILITIES))
+ 		rdmsrl(MSR_IA32_ARCH_CAPABILITIES, kvm_host.arch_capabilities);
  
- kunit_test_suite(fpga_region_suite);
++	if (boot_cpu_has(X86_FEATURE_PDCM))
++		rdmsrl(MSR_IA32_PERF_CAPABILITIES, kvm_host.perf_capabilities);
++
+ 	r = ops->hardware_setup();
+ 	if (r != 0)
+ 		goto out_mmu_exit;
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index dbf9973b3d09..b1df4ad2341b 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -46,6 +46,7 @@ struct kvm_host_values {
+ 	u64 xcr0;
+ 	u64 xss;
+ 	u64 arch_capabilities;
++	u64 perf_capabilities;
+ };
  
-+MODULE_DESCRIPTION("KUnit test for the FPGA Region");
- MODULE_LICENSE("GPL");
+ void kvm_spurious_fault(void);
 -- 
-2.39.5
+2.49.0.395.g12beb8f557-goog
 
