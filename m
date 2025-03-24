@@ -1,100 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA5B2E3374;
-	Mon, 24 Mar 2025 20:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D104918FDD8;
+	Mon, 24 Mar 2025 20:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742848319; cv=none; b=vDOthIMSE4Mi/nvtw0xumAU/NivjFowaKSZrjipsT5Kqi88NtpZm07GhDDHp5/yBkvYRVmpQPDwAxJ8LY9CMdY/9GKoYE23qt4sKVnU7SV4PRpUHLeHz/cR4PqqcJqkbhSrX90pQzzpZb7bQ1yE1Z4SJPPNWAbRO4jWBA39fi5c=
+	t=1742848335; cv=none; b=jOrQjoD5zb81rkB0hNikcXQmbE0Md84DRbKt+UkXAoiwsd13OLbohAnwwdfL7Uuv2Jsn0VccIlVwSXWA77x0n5nnY0FgSe2/S05ZhHfpwhC+HWwTJSZh8eQhvVlamkeDnU9/hqjRTKlG/FHeH02uz4QQkLd571FAL6NPxdkTu8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742848319; c=relaxed/simple;
-	bh=LDTKp3W7h188ixr/vX4U7f5V6ZusmxQCsTGFE63qb20=;
+	s=arc-20240116; t=1742848335; c=relaxed/simple;
+	bh=XVX8FQkr9SlsH8uzchlcuOqHLWzlLBEAPLfd9ELg3Qc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s2Qr9vwEKj8MCs/WUk5gFlYgG50i0avt5XQ16+YG6pQb199LqrbxyKmsmIQb3q/0isPrpT8Em+bMyCh4ejKpNL4qzOcgFhZQkBu5GOVRIYaz3W3AkNvclxHEjavzalsu5Us4z7VZUypd3KWG5Of1iUChzFfT0PiZa9t6KdJINpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LT4IM+bM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=sYV38IZiqHzqVGgjH+GVki4YwL6wkKtMjd5MCi9/h6B/mfE2p+r+ULRcJnx91b3wLtHlBlHbDEfaRosBD0EpsixNtGKtPwA/fn+VvKi7TWF2vvNW/LphDdS9ajZatzvlcrGztcxwZi22WNT2cgdv7+MkITyW+9rmudHtXCE57O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fJthRY5f; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LT4IM+bM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AD08C4CEDD;
-	Mon, 24 Mar 2025 20:31:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742848318;
-	bh=LDTKp3W7h188ixr/vX4U7f5V6ZusmxQCsTGFE63qb20=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LT4IM+bMgEYMcruZeVIseTw5+f/xunSV2APT5kPRxD76MAc1Wg24Tz9VlF5iGCEJ8
-	 YGA3pU5hhz60cKgndPvFxfYPqSfkx+uKYR8Ng1dEAgUkAuntkDeqdCo3O6sv9oZCQT
-	 BHq12rVUyZKUjeLPjwOBkXH67myUVkzMBvIMF1tI162dpJ164PUMYyCtgJEvOJ6+XD
-	 Ieh4KXL553HZi1EfaxUqE9ucsNEN6JV/54/KoUh5zaDIwxvyEDeXgIfttMQh0fCKGu
-	 2QSf4KQPT+3uNDxjNU8LfOuup5OaEntF3WyDC49zxcpk7BtqntxOwdwWjdFc4D43NO
-	 527MT5yxxsFBg==
-Date: Mon, 24 Mar 2025 15:31:57 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Bert Vermeulen <bert@biot.com>,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-gpio@vger.kernel.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-	Maxime Ripard <mripard@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Michal Simek <michal.simek@amd.com>,
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	linux-riscv@lists.infradead.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Srinivas Neeli <srinivas.neeli@amd.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	linux-kernel@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	Manikandan Muralidharan <manikandan.m@microchip.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Sander Vanheule <sander@svanheule.net>
-Subject: Re: [PATCH] dt-bindings: gpio: Correct indentation and style in DTS
- example
-Message-ID: <174284830296.819870.8907081146872259608.robh@kernel.org>
-References: <20250324125326.82270-1-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJthRY5f"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3014ae35534so7493533a91.0;
+        Mon, 24 Mar 2025 13:32:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742848333; x=1743453133; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XVX8FQkr9SlsH8uzchlcuOqHLWzlLBEAPLfd9ELg3Qc=;
+        b=fJthRY5fo9QFxJr0KWL0rh0UtHB0APpVut5T9S4rUFzo953jgsOVR0LcTKQrSkMgk1
+         MX6n9vXHt5L9tI13FBrD6pntfpgEBF2TsGHAUbYwdUT4URjqJzQOA36hTdpP5AnT8Qfe
+         VYYsQtasZIsV+/UPMwsEfoUcVX4GSlHmDog5YdgH40cSe9Au7URvoObkUqyUoh+EFDhT
+         uwHUMCoJnX/VVQikpXEtj4YGGDjdVf3cEfT1Lxblg0/FgKtPS5uKuA9bZ/euBaKjz6yw
+         YT5cen+pMDK0FzGyi6OsveMmnQBghK1q6gHaLNYYTjrDa7w/ZpqGSzwTPhxJC4O4ryDN
+         AF8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742848333; x=1743453133;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XVX8FQkr9SlsH8uzchlcuOqHLWzlLBEAPLfd9ELg3Qc=;
+        b=bFgGACjUvR3HT4r0YojSOheZ2GpXh9GstKQ+ZCk8dMRAE5r6J4q91ZQVLhl3FujpdP
+         pmS99rtdztdyDGCGgWpFUBj8+0N77mu01Sz/Tih1W28LulBiBxlHAXJC/E2g9sl+hbUY
+         CaQdtjeeYvgc3yfBqzSs9w8ami2nZIt2YoP/L3uEt8KBY49UNcavsTGVu60fwnPhyTM1
+         xLrSjJKZJFYVXAc1e4znz6kXwwNcRlNKyiJMzsvJsmNpc/rpBlKxbwJK9KOz/aW9JGCn
+         VGVrP0LN1jpH5LjmTXCoKw1N5//LJ7GUU2KaCZ9XxceuobRy4bTX1QPUBzo3vENPkcW8
+         sheg==
+X-Forwarded-Encrypted: i=1; AJvYcCVDQzDDhUYeq0pxGryEVOKX1xLMtEnbjjNz7naJITS6EDiJ5p+5ZVn9pwQ4z6QcraPSklnbVz3pPr9vwLr5ZX2I@vger.kernel.org, AJvYcCXhRGS+cgSrDWkXyi4Po/iwdOD6ZCRP351L92rkUtuNxdng/91nxbihPhEbhkLkmYY6IyMkyef2IsmmVQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkFKrogLSHBQvfDWVU/Uf6qjiAwkg89ruHumHAxyVStFicCYtO
+	CLvfyktU45z8Q3J3n0oodNSzbpp9iHjEHanFY3v58suB/6O+SFzj
+X-Gm-Gg: ASbGnctFRYE56AYmD/LTT88+3uhhkyWNdRG4+x5VVuiUVxNNuHHnBh7q8CPZiBHZTmr
+	6+5DXEPa2CGW9/j/9BOTSEHOvw7AG3JaVwVErktc3TD+gYqOHZ59podr8l/1duv1LiAIty1IswA
+	UItyNriiNNBn6Riuiw1NzNOOcuKEV2dl1XKK/mUuZNDbyyjfsbcqN/vxT8rFpLBXHZBocRrrLug
+	ELeIxfXEI3ElcAMZiLlg0R7viy8vPlcu6DkpIKsOef7zd8TtORaHhn3NbrOVD/BZeCTuA07e649
+	GwuVdy4clizVGpdby4CHE958hrGmwIQSvhmRIQ2KTAQLdtTcRGoeLJ64C+q524OrH9A9YPtOjKY
+	rUF0=
+X-Google-Smtp-Source: AGHT+IEl94P5ryl0oiQlFs0i4xhbZ49ukxG7UTpiDPwU1kFz3OhT5yzplFI/ngX8B0sL1UAEezKEUQ==
+X-Received: by 2002:a17:90b:5105:b0:2ea:37b4:5373 with SMTP id 98e67ed59e1d1-3030fea47e8mr24740371a91.10.1742848332879;
+        Mon, 24 Mar 2025 13:32:12 -0700 (PDT)
+Received: from gmail.com (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf61a49bsm12690751a91.34.2025.03.24.13.32.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Mar 2025 13:32:12 -0700 (PDT)
+Date: Mon, 24 Mar 2025 13:32:09 -0700
+From: Howard Chu <howardchu95@gmail.com>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, acme@kernel.org,
+	namhyung@kernel.org, irogers@google.com, james.clark@linaro.org,
+	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+	hca@linux.ibm.com
+Subject: Re: [PATCH] perf trace: Fix wrong size to bpf_map__update_elem call
+Message-ID: <Z-HBSReviPphH2LJ@gmail.com>
+References: <20250324152756.3879571-1-tmricht@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250324125326.82270-1-krzysztof.kozlowski@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250324152756.3879571-1-tmricht@linux.ibm.com>
 
+On Mon, Mar 24, 2025 at 04:27:56PM +0100, Thomas Richter wrote:
+> In linux-next
+> commit c760174401f6 ("perf cpumap: Reduce cpu size from int to int16_t")
+> causes the perf tests 100 126 to fail on s390:
+>
+> Output before:
+>  # ./perf test 100
+>  100: perf trace BTF general tests         : FAILED!
 
-On Mon, 24 Mar 2025 13:53:26 +0100, Krzysztof Kozlowski wrote:
-> DTS example in the bindings should be indented with 2- or 4-spaces and
-> aligned with opening '- |', so correct any differences like 3-spaces or
-> mixtures 2- and 4-spaces in one binding.  While re-indenting, drop
-> unused labels.
-> 
-> No functional changes here, but saves some comments during reviews of
-> new patches built on existing code.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Arnaldo encountered similar failure, but I couldn't reproduce it, so the
+fix was stalled.
+
+>  #
+>
+> The root cause is the change from int to int16_t for the
+> cpu maps. The size of the CPU key value pair changes from
+> four bytes to two bytes. However a two byte key size is
+> not supported for bpf_map__update_elem().
+> Note: validate_map_op() in libbpf.c emits warning
+>  libbpf: map '__augmented_syscalls__': \
+>        unexpected key size 2 provided, expected 4
+> when key size is set to int16_t.
+>
+> Therefore change to variable size back to 4 bytes for
+> invocation of bpf_map__update_elem().
+
+Makes sense, thank you so much for digging into this and fixing it.
+
+>
+> Output after:
+>  # ./perf test 100
+>  100: perf trace BTF general tests         : Ok
+>  #
+>
+> Fixes: c760174401f6 ("perf cpumap: Reduce cpu size from int to int16_t")
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: James Clark <james.clark@linaro.org>
 > ---
->  .../bindings/gpio/atmel,at91rm9200-gpio.yaml  | 16 ++---
->  .../bindings/gpio/fairchild,74hc595.yaml      | 20 +++---
->  .../devicetree/bindings/gpio/gpio-mxs.yaml    | 70 +++++++++----------
->  .../devicetree/bindings/gpio/nxp,pcf8575.yaml | 24 +++----
->  .../bindings/gpio/realtek,otto-gpio.yaml      |  8 +--
->  .../bindings/gpio/renesas,em-gio.yaml         | 20 +++---
->  .../bindings/gpio/renesas,rcar-gpio.yaml      | 24 +++----
->  .../devicetree/bindings/gpio/sifive,gpio.yaml |  6 +-
->  .../bindings/gpio/toshiba,gpio-visconti.yaml  | 24 +++----
->  .../bindings/gpio/xlnx,gpio-xilinx.yaml       | 48 ++++++-------
->  10 files changed, 130 insertions(+), 130 deletions(-)
-> 
+>  tools/perf/builtin-trace.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 092c5f6404ba..464c97a11852 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -4375,10 +4375,12 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+>                * CPU the bpf-output event's file descriptor.
+>                */
+>               perf_cpu_map__for_each_cpu(cpu, i, trace->syscalls.events.bpf_output->core.cpus) {
+> +                     int mycpu = cpu.cpu;
+> +
+>                       bpf_map__update_elem(trace->skel->maps.__augmented_syscalls__,
+> -                                     &cpu.cpu, sizeof(int),
+> +                                     &mycpu, sizeof(int),
+>                                       xyarray__entry(trace->syscalls.events.bpf_output->core.fd,
+> -                                                    cpu.cpu, 0),
+> +                                                    mycpu, 0),
+>                                       sizeof(__u32), BPF_ANY);
+>               }
+>       }
+> --
+> 2.48.1
+>
+>
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Acked-by: Howard Chu <howardchu95@gmail.com>
 
+Thanks,
+Howard
