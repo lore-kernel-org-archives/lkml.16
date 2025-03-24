@@ -1,305 +1,259 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2082.outbound.protection.outlook.com [40.107.223.82])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242D613AA27
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 15:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742829469; cv=fail; b=mkVmjsYRQSoI2HOMYMEErHf7kD8LuZ8fY/qiPpjCi7G1s3f5OPEqaoGLhFaCoqujd3eMmjVnNySUh+ebf3V/zDkYgKcNvgJQe75r0PqfpWqnk9/r78B0vDB/aRBc4miVbvh/WqJ3rvNeQcb2HVb+kXX/4ebalpXvB2nxjMwawaI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742829469; c=relaxed/simple;
-	bh=p+GzbO2zprbX/JDQ7/8dJ0O5CngSokixlm8K8qoiluw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=SgBBjTRHSMfKR8a/M499tq1eRy36U6tbrrZzjbkJqJew4NypWzCb6SE5tr51FPXl2z9VOC/VM8h0uB1a/MH3HCtlRxq5VOGs1DpvDtZcJn2nlBZBrNjdY99UZSLjYsDTDT/lan2OR0zI/R4krKVH7YxWbMb5eGzbCNwmarkkY9g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ne2ldmEr; arc=fail smtp.client-ip=40.107.223.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901A24964E
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 15:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742829501; cv=none; b=Nn/3s/hdtNMzN3iSCrvkxSJwqN7ySDV2budLIgbFkEqpcxj2NZFhaOoXN+8qByRiIciKm82d6+GyLv+RIcT2CKO33CXH3JLw9+1kEawHpKs3BeTbr9iF3Oze2Vt2Fj9wxto5q61TJmJnMHK/XnZHvXwcKGiPOl7mPwaaQxyks2k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742829501; c=relaxed/simple;
+	bh=XHQMUjEjbZLDgavTvCJiZqSwRVqVRVlMSHmpp7AADuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qUh1hFy5xdsvTjbteR8i+Imy699kgBNAQ2sa+vzSmDt4j9jgi1sNfIr7gd/glLiwUobqV99NHtrtWkRqJKOHUrSYLckZ/wtHPpbl3LZOJruZS5AIwyOoA92vlaZVvaAUykkPm1VOREyAXyhJr2KUyezbkZjOcn9qJsE7/RkRdmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Doa9pHwZ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ne2ldmEr"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=joReJbpbGU9BKWXczqas/a4U1L8njRkSv+Sp8klBOH0qfT6bipscGWt6py8Uu3JJHqKIVQaG9drWR+B03UNiZxbBTSLhSdrjgUF17wwMANLQ0GlAA/5uTU/OsV/73w1IMQGSjuoX7RPssXCVj2fh/4tUWshmyaPdmXEu/mMnmBFrjJZ/bNNM1u3HoMfJYMeBgWdE1uw3ieQUNGJwiHV5Im/T8Fn/90mo6eHlSojXo8YSU+nm9VqR/4sw3Cx9rdVkpFEESOGdWUDPe1/xrT9fEbPGX/LN8GKDdT78LEWY8457pGPGjdfKky/IWXEgCLUlIh53jQzqzGurGWedGGMJPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RMLrr68klJgZuex00p6XZ8YhgVEqz+yF7LMDeqfgJds=;
- b=Bz/qTPxaqE7y1EIn9Q1QOFVT2nqgco8H/Oz0A01ot6B8IrKiPQYnHCY6i8D7ODdv4G9PD9eD1wHBWukhUGiIjxCoWfniFXYdTTG4ondUoxjcwzV8Z90GYzifpz9FWVnl0Xga4dZTnYZzzbQZ/bGZ8ZD7R9VORouRX5ZljjMt0lqhh+srWpZkMlAxlraTt8I85E7qzWegU/6U4Sp1MIytSWi/efdw8IFXISar5rfyqv0JWDrrd8GLkSILRJ/G0zi2AeFKjcmaf92fzu9O693bT1e1d6NOIT7kmkZ9sqzJbzfy7ZacXt/xiBiEShsKkNNTZqWm/9GWyv2iiKwDIO7JUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RMLrr68klJgZuex00p6XZ8YhgVEqz+yF7LMDeqfgJds=;
- b=ne2ldmErq0zZ3Zh06/kKhetsbINxYi6bvzt+rMGUnNr8iOP8cAReT9iqAJWsvOJX98LviebYq0/7IQqKq00le3BWB10AuNAJYL+gYQV379SXnpm5h8sWKx/nvb6yzXU8gUPK7bsyBCa1GqMAaZspb+HEn28jFAhYg85yRpJF8r0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5805.namprd12.prod.outlook.com (2603:10b6:510:1d1::13)
- by PH0PR12MB5605.namprd12.prod.outlook.com (2603:10b6:510:129::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Mon, 24 Mar
- 2025 15:17:42 +0000
-Received: from PH7PR12MB5805.namprd12.prod.outlook.com
- ([fe80::11c7:4914:62f4:f4a3]) by PH7PR12MB5805.namprd12.prod.outlook.com
- ([fe80::11c7:4914:62f4:f4a3%3]) with mapi id 15.20.8534.040; Mon, 24 Mar 2025
- 15:17:42 +0000
-Message-ID: <acec8834-0933-4483-86de-19f39fa789fb@amd.com>
-Date: Mon, 24 Mar 2025 20:47:26 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH V1 04/13] mm: Create a separate kernel thread for
- migration
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: AneeshKumar.KizhakeVeetil@arm.com, Hasan.Maruf@amd.com,
- Michael.Day@amd.com, akpm@linux-foundation.org, bharata@amd.com,
- dave.hansen@intel.com, david@redhat.com, dongjoo.linux.dev@gmail.com,
- feng.tang@intel.com, gourry@gourry.net, hannes@cmpxchg.org,
- honggyu.kim@sk.com, hughd@google.com, jhubbard@nvidia.com,
- jon.grimm@amd.com, k.shutemov@gmail.com, kbusch@meta.com,
- kmanaouil.dev@gmail.com, leesuyeon0506@gmail.com, leillc@google.com,
- liam.howlett@oracle.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- mgorman@techsingularity.net, mingo@redhat.com, nadav.amit@gmail.com,
- nphamcs@gmail.com, peterz@infradead.org, riel@surriel.com,
- rientjes@google.com, rppt@kernel.org, santosh.shukla@amd.com,
- shivankg@amd.com, shy828301@gmail.com, sj@kernel.org, vbabka@suse.cz,
- weixugc@google.com, willy@infradead.org, ying.huang@linux.alibaba.com,
- ziy@nvidia.com, dave@stgolabs.net
-References: <20250319193028.29514-1-raghavendra.kt@amd.com>
- <20250319193028.29514-5-raghavendra.kt@amd.com>
- <20250321172940.00007646@huawei.com>
-Content-Language: en-US
-From: Raghavendra K T <raghavendra.kt@amd.com>
-In-Reply-To: <20250321172940.00007646@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0055.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:22::30) To PH7PR12MB5805.namprd12.prod.outlook.com
- (2603:10b6:510:1d1::13)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Doa9pHwZ"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52O9PP13017954
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 15:18:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=RBj5wpEg+SrAwIscXXtQbPvh
+	Mb2gJI4cBrfY/nN2XHA=; b=Doa9pHwZCAMi1z2j69wrbna8FnDI9v5C8z4d9+p9
+	cm/JQ4HPT8OT6XSMPvtuKCXFWTdoOtg2pOVbdGa8QxBTX59O6bJswOrmvt3SReV7
+	pFWPjjxDeeecKGJDqR0F376hVI8gEDin5CiJ6x0hoT0p/6Y474NTQlz/BfbsalI/
+	n1Q/XoX1uJHDW2LwBAYefLBeyGq3FBx1Q/gXKAnWEOpvMlDycYZRKT2rv0W46X9Q
+	cxkamiZeX+IqBcnJ/RlJgSYwdKny3mAa79lIBOIankNCc703wqNCF+Kskd9lj+zI
+	N6c/dgd1Gp/Le5gnyAFN22G2iMtwUdWvaFWt17EtoLg2RQ==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45hne5vsg9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 15:18:17 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5ac559cbaso834251785a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 08:18:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742829496; x=1743434296;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RBj5wpEg+SrAwIscXXtQbPvhMb2gJI4cBrfY/nN2XHA=;
+        b=sFd5tKECu+1rb8dS10ntjbF2V1+XkKh9ef0EDfE3EBW3RXNN1I2vLI0fcajGHR+KrK
+         AwmROYfMlMAb5SZ6h5PIZmu3HSQfLhUwAKb6z7a5a8XWkWavlVTZzvx8WWy5JAkfiBEz
+         XGlRDbr6A7DfWVSTqhC4h1IpLd9fvZspO3jAUHRqJ0kb/mvjb+yziTXeURJqWoITN4ss
+         3M3cuqVNPpOnNa0bjfpr4Umzsxiot1Cp9XVraHuK9E68uGSMPGlVf4XPORZVx/OUYKef
+         s5MPDIOoJyvzCWXO6rEzn5a4PkrhLxjXpiUCcejkwo9qq5WbBAct5bKAN51hHFcRADOw
+         BnWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCURqImh1HvV/z/KMJPgIXncKHS8FFQWk+7MqgkwUmgbM3i9CVdd3L/q6LIqfhfPVZZXUKCo4atD2wU9BWo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4q4IQoZm7dAyRbk3Rk2PWTbKKk8HO616JeLNW5oesdR65OCZS
+	d2SPXmfz/EZN8U2/pK7nWPGXWLlsd2Va3rfpPU2hk4Vp2pPxs9Xmo8tLDpFn1B0Oe/UC6hvMFVW
+	D/JPMfkMRG3HO3YnGkSvpLVvvCKvKyPRRlkeatqFQAticWmyiXUXd4AMXROEfLrY=
+X-Gm-Gg: ASbGncu9pXry+72Bd5qKU9uzTazTpzbfqRvFFVkKMbQsBjChFXJO8xJ87Fo9uiN7Rdb
+	PDq5s30acmuJc+1lf9G4LefD4o6yGoxVKT4pnq6bYkwmGtv7XKFarCqCjfLpamsMreTws0iy2bn
+	m44jw2Jq9Ic3P/UfAlss6CF+spidf6I4yiHLUMv4qLeUZ200yAfgbjiNgWfPTCG4inq6tKCNWZe
+	uDffxqEHuMFCaYiQ4wXNOFqrsKvNbR059bAzAyMKE61B4paB5nKoJkJ9IaMVNqfWBY5opbIF6sY
+	vVLKCNyOc3q+AWCnp4aDvO5gAEMjacKEQMQBKArBK5xbfjMhh9lNlGKuTkxPEO36xeJ9KmA5VnB
+	oawc=
+X-Received: by 2002:a05:620a:258e:b0:7c5:a2be:6e4c with SMTP id af79cd13be357-7c5ba247882mr2372635485a.55.1742829496064;
+        Mon, 24 Mar 2025 08:18:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFARjdRe711E7Dx0Shw9oLzlq33M5bIuw7jDsDdDa4jCC7zZ67lPaBlBULAAs8KAUp7bJnqSg==
+X-Received: by 2002:a05:620a:258e:b0:7c5:a2be:6e4c with SMTP id af79cd13be357-7c5ba247882mr2372627385a.55.1742829495443;
+        Mon, 24 Mar 2025 08:18:15 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30d7d7df853sm14218491fa.29.2025.03.24.08.18.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Mar 2025 08:18:14 -0700 (PDT)
+Date: Mon, 24 Mar 2025 17:18:12 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: peda@axentia.se, broonie@kernel.org, andersson@kernel.org,
+        krzk+dt@kernel.org, ivprusov@salutedevices.com,
+        luca.ceresoli@bootlin.com, zhoubinbin@loongson.cn,
+        paulha@opensource.cirrus.com, lgirdwood@gmail.com, robh@kernel.org,
+        conor+dt@kernel.org, konradybcio@kernel.org, perex@perex.cz,
+        tiwai@suse.com, linux-sound@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, johan+linaro@kernel.org,
+        Christopher Obbard <christopher.obbard@linaro.org>
+Subject: Re: [PATCH v4 5/6] ASoC: codecs: wcd938x: add mux control support
+ for hp audio mux
+Message-ID: <ctcqkdbv6zh2rabkkr7tlhxlcfsn5nazjfbsnbbu4l4blyakft@pejdsvnazfh6>
+References: <20250324130057.4855-1-srinivas.kandagatla@linaro.org>
+ <20250324130057.4855-6-srinivas.kandagatla@linaro.org>
+ <CAO9ioeX9RTBAeL3+9STn+=oEYR0wtaF6yoa=esNddEvqLQyO9Q@mail.gmail.com>
+ <e4e94fbf-172f-4cfd-becc-cb2836ac1fb1@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5805:EE_|PH0PR12MB5605:EE_
-X-MS-Office365-Filtering-Correlation-Id: bb0a00b6-ba76-4fa1-7143-08dd6ae705aa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UjJTM0NBNlJYTjkram5DL2JEend5S042ZnI2R2dXZHFwaUt5UWJET1lwVEhj?=
- =?utf-8?B?TmRZSjJ2WE8rRG1pMDV6M0EzMHB5Zmk0ZXNURnNUV2o0UXpzM1Z4WDcrT0lu?=
- =?utf-8?B?dEJpb2xlRUI1Nng1WklRTlQwZ3pDQUxHa0hKUmJXd2VaTHhmVi9lcDZsd2J1?=
- =?utf-8?B?STZoaGJvMDRqYk1zOHVXNlhXeWR2M0J6ZDl6YUpIMU04a05ZZ3ovVzZWZ0l1?=
- =?utf-8?B?VFhlK1dHa2YyVnFlRHg5K0xZY3VZMzFKOXZURjJNbDNBMHo5UVFvT05JeDcz?=
- =?utf-8?B?ZjZVMklYZG1KalBkcWp1Zzc5ajkyd2Ztbm9HMiswRTBFOUEzelZROUN6WWh4?=
- =?utf-8?B?dFdacTgyVHRBbjB2ekhBZjNnU0RPa01SWDRIMWNVZUoyZEFBVUgrcHpZU2Ry?=
- =?utf-8?B?Sk9SOFVsSjFZbDc3MUk2TzgzRzZvQ3VnU1R5THdjMExUOUppYjJJNTZaUzdu?=
- =?utf-8?B?UlI5dHRqSzV5ZzJvMjRhcnFJQXVuTlI1MG9Ceno2Wm9WTVQvZHZ6MzlYaUtH?=
- =?utf-8?B?clMzVGovbjNER2VYSEdmdldUR2orWXhKd254cFdUaHgvMXNIRkZJckdTbHNx?=
- =?utf-8?B?dm4xSEorc0V0ZlhzZ0l6dGVUbTdPdGVYVWQ0MW9vK2xHRkt5YmNmMHBpOEVK?=
- =?utf-8?B?WmJ3U3BPTHhEOFpOV2dxelhSVVhibXdUcjljdUZ5WjFaVDZ5cWVkUmk2TXlq?=
- =?utf-8?B?U1A0emk5LzFxb3JFL29mTkNoeS84dEROMHY5cjkrTFFKbkJ6UXlBZDZsdEV0?=
- =?utf-8?B?ekZSd1JhazVLQ0ppUmpldzVMYjBNRVVHclpGUXJXaDBXL2N6YXAwejJ2MEJF?=
- =?utf-8?B?K3RscUVnL0dsaU5tZzUyQVl2Z1ptT2wxSG5NZXllQWRoaHZXU2pvQWFXSisx?=
- =?utf-8?B?Z3MvNEN3UUY5VnNQYU1vQ2FpUk9WcVhiZEVzVzM1dnlNYXJzbDIyTXgwVDZn?=
- =?utf-8?B?N2hHcEpzQnJ6OEtMWnBxVng2NG5YNXNJajFFS0libkxSMHNSMysxamh0Vi9P?=
- =?utf-8?B?c1ZCSklpbW02aW9jRklYb1FNT1YvVWxXTFc3TmgyRzd5aEpGcEpXeXkvVnhR?=
- =?utf-8?B?MnVzb09GcWxpZmQzK0dITWhrVFdLT1U3cHdBVTc5R3J2bU5ORlYva1dsU2M3?=
- =?utf-8?B?eDVsUktGMmk2K2RlTUFwbDVwNHJaZzd2bmE0SVc3M08vdzl3dzJPMjFIK21r?=
- =?utf-8?B?ZXNvdlpMSkt2US8zZkNJbWtNQS9BZ2VzMURlcXQwd2k0cG5CdDU2QnVTWk5z?=
- =?utf-8?B?Y1hBTVVKL3BLQ1E3NzF5THU3V1hvUDhiOGFMUEZvTGhEK2tQZWMwOStEbHVV?=
- =?utf-8?B?YndGZ09XaDUwazRaVkxOdlU3aVRyT0p6K3NrQTA3UFYxZlRyNlNZMFF2NkN1?=
- =?utf-8?B?ZTA4V0xzcTdjRmxuT1RESWo0SGRDeVNscFhpZWZLMWNpOUdKVFdIRFRTTGpr?=
- =?utf-8?B?a3FEN3pycjlkRHdvY3RwOE5OQ0E5MWZzRFpxK3EzUlF3ZXNKSnJOMWhnbmww?=
- =?utf-8?B?VThUczlSeGtuaHI2VmtkT3hUYjlxK3BsdlpLU1FUdEpWUDhMUmc1aUpmRzdk?=
- =?utf-8?B?L1p3YUpKZmh6VU1HQjg5TmtyZTdRZkp1MUlMaDVGWEcremo4dVVoSzEyYVVm?=
- =?utf-8?B?cDJob2grT1F5N3J4ckttU1pKZVgyQU04RjZqL1hNSjU5b0hXcDNyMW0xV2lI?=
- =?utf-8?B?K3VKeEV3TVB4ODc3VTNlT3d2ZU9LQzcrKzVLRk5MSVlGWGZiSElTcnBpR2h0?=
- =?utf-8?B?NFg1dDlpQUtrYjd0ZzAxSjFuVUlqbWpPT1NvZEtLOHEvdWxXMXBFcDkyaXFP?=
- =?utf-8?B?TFJoM2ZnQmJSbXkzNDhmcUtCdjRWUW14bTJrZGUwYUtCckF4VHVCMzdTb2NF?=
- =?utf-8?Q?Zktowu5FcZBl7?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5805.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?R3luOWZjNUo2eTlLa1BGR1NMdUlGMkJhWk92RUxSM0lKYWpjQ0REQXhGVTJ2?=
- =?utf-8?B?cEpSYlZCb0wyaUp2ODVUcTlkUmQ5MVl4Z0IzZWVSMWkrenRMSEFjUmRQSndv?=
- =?utf-8?B?clc5ZkhzMEk4bkd5cUQybS9CTjFhZ2tyN2NLNmFvR0p1d2JEdmNtMmFnOFpQ?=
- =?utf-8?B?ZmZPeWlTSEI0VUlkQkw3WkJlb09jTVFSaWJBcjg3TTFxVzFOZHorc3pXR0dy?=
- =?utf-8?B?TXNvQUxpUmtIR3UzRTluUzlNWFNyWnA3ZUhNZU5telhxdDB2NlZzREErRmJr?=
- =?utf-8?B?Q2dCTVNaSmxLMmF6dDROZVplTGxqVjRmNGlnOXdxbnB4QXlaZG1KT09OdnRh?=
- =?utf-8?B?dzNhRERLczdmQWlla2tMSUtGdzJ1OEJ0MlYvbThMdlV2bzJzZUhiZk5MUEtr?=
- =?utf-8?B?M3N2NDQ3b2cxU0d0K0lRb29Ha1ZzUFIwQUhjYXhOVmFwb1VucUNqUWVFSkVQ?=
- =?utf-8?B?OTZhSGp1SFh0K3U4USsxTlVsRS9iaXNSazNrakpzUTNhZDVrL2JQTTBDOEZm?=
- =?utf-8?B?TG14S0ZGOFVCMEw1UzBKR2x1RmdCUFpTcisrYXRJd2VUU1h3RzBqa3QvcG0w?=
- =?utf-8?B?dWErRTlQT1duekI2b21sMTNuSHRjaTVwRGx1eFNkRE9aWHEzS0JUV1lob3ls?=
- =?utf-8?B?TGZDNlQ3MTkxV3YxekI1MVVtQlhlNFNDelZGL3FJR2M0ckczQWc1UDJGWXVh?=
- =?utf-8?B?NDgzdFk2Mzl2Tk5nYUFlY0xjc0RYZE4yMzBaOTBsWVhTb1lucG5IVTlaVW15?=
- =?utf-8?B?SUQ5TG82Ui9jVnN1NHU4alFYM0RBNE9UeENtQ1FPME5TaklDM2YrV0U3Qzh1?=
- =?utf-8?B?dVRtTkFoVlJhQm8wV0w0cUptNTB3dzFqaHJ2OGsrWWhDVm1XVFRqSDkzdkx4?=
- =?utf-8?B?MzlBVGlSdFUvSE05UXBPYTEyVzJyN25FeWFCc2hlaUpPdE9wMWJ0YUFIamxD?=
- =?utf-8?B?MnQra0cxcC9kMjVwbmh6NVlrTjJ1VVhQYTloUmt6akRtR2VzYmZTZXlnci9h?=
- =?utf-8?B?MHZtckw4RDVNMy92bmNCbzZ1VHZNQjFJek5YbDJ0UGNETFA2dmhzTmpwaFg4?=
- =?utf-8?B?WUZRcVhteFlmYUNtcUU3VmV6d0JINVZwQ0NRVmdOQjgxRThZTHFGNk5GeXRM?=
- =?utf-8?B?VlFUUy8yUlp4M0p6RjZObjZIZmZDcGZ4cjBYQ1NkUllYempHdGZkbnFSRlBP?=
- =?utf-8?B?bm12dExDZnZKc2RpN1ZCcFRqMkl6VEVSM290SlkwU1FhOUF6bk92TWhHVFNz?=
- =?utf-8?B?aGhBV2RpNFZZSlJ4OFR0NVF1ZDY0MlFiUmtXdVhFM2R4TE5yZGtGWTdxSnVW?=
- =?utf-8?B?UjgzRTg0SWNSS0UrVGpPUXk5dDdIbDNEZVdIb1ZsYnlrSHZaWmV3Z2VQejAv?=
- =?utf-8?B?WCs2TXBncG1PN1E5KzByck9iNEk1MmFyNEQzb1NIVzBXRk42azRXU3ljczRL?=
- =?utf-8?B?TGJTMWNrdFNmVVdCMzVmQ2JuTkM3Zjc1bEJ5bnhQeEMwWlM0YmJNUHliWjd6?=
- =?utf-8?B?NnhQN3Bnd0N6bHBtNVBvTEhObGJaK0NLVmRuMEx5RjlmMGtneU9Edm9CUklJ?=
- =?utf-8?B?SzU0a3RWaW5yeUlTVWR6UDJ3SVlmd2pHbHJyVEFRTEJ2MkJEdGc3WHZsRUpk?=
- =?utf-8?B?REhXY0RVTUFlckphV1F6SUIwd1VVdkQyK0tRNEZVWWNXMG83dmtsMENham10?=
- =?utf-8?B?bEl2YVJkZmhmMkluYlNWU0ZadlAvRTQwV0NXTTg3SUEySTgrNUJMbEgzTDJ0?=
- =?utf-8?B?dEdkN2cxODFmTjNnYitzcG5kZ1pMSlNpTEF1b2R0Ris0bFhBZ0NnL005T1lQ?=
- =?utf-8?B?amcvS2JHd213bE9ITkJhL3VpNnB5M3hVM3VlZERRTDdhK0pHdGo1ajEyZS9G?=
- =?utf-8?B?OEVIS1dhdGZRS1lIQnhnYkdDRTZmNnVienBoN0VjS3RTOHc1emZ5OE00cE84?=
- =?utf-8?B?MlVqWVZOZWUzOFFSUTVlUFRiNlFVZWtsQXlJVW5LVEM2Ymp5aWlJUnNxYVdp?=
- =?utf-8?B?bHVpUGV6VVFWNXlsZ2Q2a2hKQUFMYzczLzlWWm1pTDYzTmpoRkU0VFdGSlFv?=
- =?utf-8?B?R01HeWJyMVhheG9KUk80QTdZb0VBaE8zTWdPd1BpZDB6TUs0aFM3WFkySEcw?=
- =?utf-8?Q?HXu91+vUUCXJozMcs+W3jCMLg?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb0a00b6-ba76-4fa1-7143-08dd6ae705aa
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5805.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2025 15:17:42.5612
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NlX05OtMcOIIWsGErwwWO5NHz53kUH2OMhjBmpULkVMtDQK5oZyrR8H3gZ/5F33DKlnXrqUeVr3NAWnGxGmqkw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB5605
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e4e94fbf-172f-4cfd-becc-cb2836ac1fb1@linaro.org>
+X-Proofpoint-GUID: gx4r-TJfy6zkuMmqcnYTmiVoAQ00Z1lc
+X-Proofpoint-ORIG-GUID: gx4r-TJfy6zkuMmqcnYTmiVoAQ00Z1lc
+X-Authority-Analysis: v=2.4 cv=JvPxrN4C c=1 sm=1 tr=0 ts=67e177b9 cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=KKAkSRfTAAAA:8 a=lNgCk4es9Rhgkq0fFtoA:9 a=CjuIK1q_8ugA:10 a=IoWCM6iH3mJn3m4BftBB:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-24_04,2025-03-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ malwarescore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ suspectscore=0 phishscore=0 impostorscore=0 adultscore=0 clxscore=1015
+ mlxscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503240110
 
-
-
-On 3/21/2025 10:59 PM, Jonathan Cameron wrote:
-> On Wed, 19 Mar 2025 19:30:19 +0000
-> Raghavendra K T <raghavendra.kt@amd.com> wrote:
-> 
->> Having independent thread helps in:
->>   - Alleviating the need for multiple scanning threads
->>   - Aids to control batch migration (TBD)
->>   - Migration throttling (TBD)
->>
-> A few comments on things noticed whilst reading through.
-> 
-> Jonathan
-> 
->> Signed-off-by: Raghavendra K T <raghavendra.kt@amd.com>
->> ---
->>   mm/kmmscand.c | 157 +++++++++++++++++++++++++++++++++++++++++++++++++-
->>   1 file changed, 154 insertions(+), 3 deletions(-)
->>
->> diff --git a/mm/kmmscand.c b/mm/kmmscand.c
->> index a76a58bf37b2..6e96cfab5b85 100644
->> --- a/mm/kmmscand.c
->> +++ b/mm/kmmscand.c
-> 
->>   /* Per folio information used for migration */
->>   struct kmmscand_migrate_info {
->>   	struct list_head migrate_node;
->> @@ -101,6 +126,13 @@ static int kmmscand_has_work(void)
->>   	return !list_empty(&kmmscand_scan.mm_head);
->>   }
->>   
->> +static int kmmmigrated_has_work(void)
->> +{
->> +	if (!list_empty(&kmmscand_migrate_list.migrate_head))
->> +		return true;
->> +	return false;
-> If it isn't getting more complex later, can just
-> 	return !list_empty().
-> or indeed, just put that condition directly at caller.
-> 
-
-Sure.
-
->> +}
+On Mon, Mar 24, 2025 at 01:58:06PM +0000, Srinivas Kandagatla wrote:
 > 
 > 
->>   static inline bool is_valid_folio(struct folio *folio)
->>   {
->> @@ -238,7 +293,6 @@ static int hot_vma_idle_pte_entry(pte_t *pte,
->>   			folio_put(folio);
->>   			return 0;
->>   		}
->> -		/* XXX: Leaking memory. TBD: consume info */
->>   		info = kzalloc(sizeof(struct kmmscand_migrate_info), GFP_NOWAIT);
->>   		if (info && scanctrl) {
->>   
->> @@ -282,6 +336,28 @@ static inline int kmmscand_test_exit(struct mm_struct *mm)
->>   	return atomic_read(&mm->mm_users) == 0;
->>   }
->>   
->> +static void kmmscand_cleanup_migration_list(struct mm_struct *mm)
->> +{
->> +	struct kmmscand_migrate_info *info, *tmp;
->> +
->> +	spin_lock(&kmmscand_migrate_lock);
+> On 24/03/2025 13:50, Dmitry Baryshkov wrote:
+> > On Mon, 24 Mar 2025 at 15:01, <srinivas.kandagatla@linaro.org> wrote:
+> > > 
+> > > From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > > 
+> > > On some platforms to minimise pop and click during switching between
+> > > CTIA and OMTP headset an additional HiFi mux is used. Most common
+> > > case is that this switch is switched on by default, but on some
+> > > platforms this needs a regulator enable.
+> > > 
+> > > move to using mux control to enable both regulator and handle gpios,
+> > > deprecate the usage of gpio.
+> > > 
+> > > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > > Tested-by: Christopher Obbard <christopher.obbard@linaro.org>
+> > > ---
+> > >   sound/soc/codecs/Kconfig   |  1 +
+> > >   sound/soc/codecs/wcd938x.c | 50 +++++++++++++++++++++++++++++---------
+> > >   2 files changed, 40 insertions(+), 11 deletions(-)
+> > > 
+> > > diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+> > > index ee35f3aa5521..a2829d76e108 100644
+> > > --- a/sound/soc/codecs/Kconfig
+> > > +++ b/sound/soc/codecs/Kconfig
+> > > @@ -2226,6 +2226,7 @@ config SND_SOC_WCD938X
+> > >          tristate
+> > >          depends on SOUNDWIRE || !SOUNDWIRE
+> > >          select SND_SOC_WCD_CLASSH
+> > > +       select MULTIPLEXER
+> > > 
+> > >   config SND_SOC_WCD938X_SDW
+> > >          tristate "WCD9380/WCD9385 Codec - SDW"
+> > > diff --git a/sound/soc/codecs/wcd938x.c b/sound/soc/codecs/wcd938x.c
+> > > index dfaa3de31164..88c758efe40d 100644
+> > > --- a/sound/soc/codecs/wcd938x.c
+> > > +++ b/sound/soc/codecs/wcd938x.c
+> > > @@ -19,6 +19,7 @@
+> > >   #include <linux/regmap.h>
+> > >   #include <sound/soc.h>
+> > >   #include <sound/soc-dapm.h>
+> > > +#include <linux/mux/consumer.h>
+> > >   #include <linux/regulator/consumer.h>
+> > > 
+> > >   #include "wcd-clsh-v2.h"
+> > > @@ -178,6 +179,8 @@ struct wcd938x_priv {
+> > >          int variant;
+> > >          int reset_gpio;
+> > >          struct gpio_desc *us_euro_gpio;
+> > > +       struct mux_control *us_euro_mux;
+> > > +       u32 mux_state;
+> > >          u32 micb1_mv;
+> > >          u32 micb2_mv;
+> > >          u32 micb3_mv;
+> > > @@ -3235,17 +3238,31 @@ static void wcd938x_dt_parse_micbias_info(struct device *dev, struct wcd938x_pri
+> > >                  dev_info(dev, "%s: Micbias4 DT property not found\n", __func__);
+> > >   }
+> > > 
+> > > -static bool wcd938x_swap_gnd_mic(struct snd_soc_component *component)
+> > > +static int wcd938x_select_mux_state(struct device *dev, struct wcd938x_priv *wcd938x, int state)
+> > >   {
+> > > -       int value;
+> > > +       int ret = mux_control_try_select(wcd938x->us_euro_mux, state);
+> > 
+> > Hmm. Does this really work? You have selected the mux in probe
+> > function, now you are trying to select it again. If I'm reading the
+> > code correctly, you will get -EBUSY here.
 > 
-> Could scatter some guard() magic in here.
+> On successful selection of mux state, the mux will be kept available
+> (mux_control_deselect) for any new callers.
 > 
+> So we will not get EBUSY for the second caller.
 
-Agree.
-
->> +	if (!list_empty(&kmmscand_migrate_list.migrate_head)) {
-> 
-> Maybe flip logic of this unless it is going to get more complex in future
-> patches.  That way, with guard() handling the spin lock, you can just
-> return when nothing to do.
-> 
-
-Agree. This section of code needs rewrite when implemented with mmslot
-for migration part also. will keep this in mind.
-
-
->> +		if (mm == READ_ONCE(kmmscand_cur_migrate_mm)) {
->> +			/* A folio in this mm is being migrated. wait */
->> +			WRITE_ONCE(kmmscand_migration_list_dirty, true);
->> +		}
->> +
->> +		list_for_each_entry_safe(info, tmp, &kmmscand_migrate_list.migrate_head,
->> +			migrate_node) {
->> +			if (info && (info->mm == mm)) {
->> +				info->mm = NULL;
->> +				WRITE_ONCE(kmmscand_migration_list_dirty, true);
->> +			}
->> +		}
->> +	}
->> +	spin_unlock(&kmmscand_migrate_lock);
->> +}
-> 
->>   static unsigned long kmmscand_scan_mm_slot(void)
->>   {
->>   	bool next_mm = false;
->> @@ -347,9 +429,17 @@ static unsigned long kmmscand_scan_mm_slot(void)
->>   
->>   		if (vma_scanned_size >= kmmscand_scan_size) {
->>   			next_mm = true;
->> -			/* TBD: Add scanned folios to migration list */
->> +			/* Add scanned folios to migration list */
->> +			spin_lock(&kmmscand_migrate_lock);
->> +			list_splice_tail_init(&kmmscand_scanctrl.scan_list,
->> +						&kmmscand_migrate_list.migrate_head);
->> +			spin_unlock(&kmmscand_migrate_lock);
->>   			break;
->>   		}
->> +		spin_lock(&kmmscand_migrate_lock);
->> +		list_splice_tail_init(&kmmscand_scanctrl.scan_list,
->> +					&kmmscand_migrate_list.migrate_head);
->> +		spin_unlock(&kmmscand_migrate_lock);
-> 
-> I've stared at this a while, but if we have entered the conditional block
-> above, do we splice the now empty list?
-
-We break if we hit the conditional block. Also there is a check for
-empty list in splice too IIRC.
-
-But But .. there is surely an opportunity to check if the list is empty
-without using lock (using slowtier accessed count),
-so thanks for bringing this up :)
+No. wcd938x_populate_dt_data() selects the state by calling
+wcd938x_select_mux_state(). Then you call mux_control_try_select() here.
+As far as I understand, it will return -EBUSY as the sempahore is
+already taken. Moreover, this is not how the MUX API is supposed to be
+used. The driver is supposed to hold a state while it is still in use.
 
 > 
->>   	}
->>   
->>   	if (!vma)
+> --srini
+> > 
+> > > 
+> > > -       struct wcd938x_priv *wcd938x;
+> > > +       if (ret) {
+> > > +               dev_err(dev, "Error (%d) Unable to select us/euro mux state\n", ret);
+> > > +               return ret;
+> > > +       }
+> > > 
+> > > -       wcd938x = snd_soc_component_get_drvdata(component);
+> > > +       wcd938x->mux_state = state;
+> > > +       mux_control_deselect(wcd938x->us_euro_mux);
+> > > +
+> > > +       return 0;
+> > > +}
+> > > 
+> > > -       value = gpiod_get_value(wcd938x->us_euro_gpio);
+> > > +static bool wcd938x_swap_gnd_mic(struct snd_soc_component *component)
+> > > +{
+> > > +       struct wcd938x_priv *wcd938x = snd_soc_component_get_drvdata(component);
+> > > 
+> > > -       gpiod_set_value(wcd938x->us_euro_gpio, !value);
+> > > +       if (wcd938x->us_euro_mux) {
+> > > +               if (wcd938x_select_mux_state(component->dev, wcd938x, !wcd938x->mux_state))
+> > > +                       return false;
+> > > +       } else {
+> > > +               gpiod_set_value(wcd938x->us_euro_gpio, !wcd938x->mux_state);
+> > > +       }
+> > > 
+> > >          return true;
+> > >   }
+> > > @@ -3261,11 +3278,22 @@ static int wcd938x_populate_dt_data(struct wcd938x_priv *wcd938x, struct device
+> > >                  return dev_err_probe(dev, wcd938x->reset_gpio,
+> > >                                       "Failed to get reset gpio\n");
+> > > 
+> > > -       wcd938x->us_euro_gpio = devm_gpiod_get_optional(dev, "us-euro",
+> > > -                                               GPIOD_OUT_LOW);
+> > > -       if (IS_ERR(wcd938x->us_euro_gpio))
+> > > -               return dev_err_probe(dev, PTR_ERR(wcd938x->us_euro_gpio),
+> > > -                                    "us-euro swap Control GPIO not found\n");
+> > > +       wcd938x->us_euro_mux = devm_mux_control_get(dev, NULL);
+> > > +       if (IS_ERR(wcd938x->us_euro_mux)) {
+> > > +               if (PTR_ERR(wcd938x->us_euro_mux) == -EPROBE_DEFER)
+> > > +                       return -EPROBE_DEFER;
+> > > +
+> > > +               /* mux is optional and now fallback to using gpio */
+> > > +               wcd938x->us_euro_mux = NULL;
+> > > +               wcd938x->us_euro_gpio = devm_gpiod_get_optional(dev, "us-euro", GPIOD_OUT_LOW);
+> > > +               if (IS_ERR(wcd938x->us_euro_gpio))
+> > > +                       return dev_err_probe(dev, PTR_ERR(wcd938x->us_euro_gpio),
+> > > +                                            "us-euro swap Control GPIO not found\n");
+> > > +       } else {
+> > > +               ret = wcd938x_select_mux_state(dev, wcd938x, wcd938x->mux_state);
+> > > +               if (ret)
+> > > +                       return ret;
+> > > +       }
+> > > 
+> > >          cfg->swap_gnd_mic = wcd938x_swap_gnd_mic;
+> > > 
+> > > --
+> > > 2.39.5
+> > > 
+> > 
+> > 
 
+-- 
+With best wishes
+Dmitry
