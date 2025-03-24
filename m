@@ -1,63 +1,66 @@
 Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69C117BED0
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 22:03:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12721EF09A
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 22:03:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742853791; cv=none; b=dyQJ2od86ON7Mv52ljdAAfy/+VueXygIQcblSGfImO3YKt/K3Q9nLZTitQezwqPG8NXJTtBv8qUuFq2lWgYNR8h8J94c4XZdUjJSd8s8lv2NDUq5VKGHFL6QO8GgZE0CwzAJAmco9hPYRIhBqKF3JnXn7Rtw5CEyiu1vwr08puQ=
+	t=1742853795; cv=none; b=S0/8pe/bnwWnwFGIRAcBfraY9PGGzRUKI82XKQxhwtEJnm30m7PjzR32T6etuakGemHOhlsk9297f+TXrQcNaYc4ytdddjXCSlD7LzBpdGHfoHucBtBh3LmUmexltLhl5y/pd56beQRLzlnF5r6KlQk3Hwi2KU8MeunzhQzr6E8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742853791; c=relaxed/simple;
-	bh=0ZTznosOtnIFd3piZ+2dM5WQ3/TYsB7SFS1/yhuUZEg=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=XylrsACMZMLNhdB47nq568XzckvqWpwd6WERnjhzgqcks87rA/od3qiwoXRYhDI6OYRiRxp3VH27bMNB/6ibkfJ0obmfYeTmqixqG5jumMsjAyYamNWB25wmESmvc1GrxrUmUmsWav09D4vz4bx0H0cJ3PU8+2RbwkLVxWh763M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kinseyho.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cbIJoFtj; arc=none smtp.client-ip=209.85.214.201
+	s=arc-20240116; t=1742853795; c=relaxed/simple;
+	bh=mjAVo0laEj0YedW2kUkFe7ptRqxSDqkwDdnRJi4OMT0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=MwlcqqgtkN20kx8C703UKTVuzfUTfkWtROGU80zrfkj8LsYRzhKrU4eiOSDZZ/M2M5GRwKjVRu8VrnUw6UcGMb9Hv/e7cufTg96qfZiNtzXVQxkbxOWK8jJMOwCE6NzpKBiPaTYTOs+25vZspuyZGcpoN+4wj8f2fr/igLnM4QA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kinseyho.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GtwRpZB1; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kinseyho.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cbIJoFtj"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2240a960f9cso78185415ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 15:03:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GtwRpZB1"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2254e500a73so58633745ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 15:03:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742853789; x=1743458589; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+jlhSt+zRcHOT32K00fMqybrca9+pySYTa39BSZD5ZM=;
-        b=cbIJoFtjWF9ZBEobTVHd/x3j6a0Gp9Lc5+AEXkNbip6pyJDH0rSPKPLn38aTSYtWEp
-         g1mr3JjltevQuzZbgAX4neeAz0jBn+TA8LHuttm2LQYejtRxiSwdtlzVIG8HhFCeBCRq
-         i6pjzHjP6W5Lt93E989TMVpdoe9RbgOFBNxPcO6bH6YBOk0S0m8xyHn4R4tH4lJ5sCB8
-         4+viiAo7hCz4/3XK2eDdHnqjDb5KxQ48fj91pdZfVRbKss42N41z3WEp34qsAvA6dY01
-         0cr9d1DLKCh+5+mPO7nTQ8uDbRz45LvDqj2lnH2TE44AW1GVew73+F5RVCjxsfyizOOA
-         dTnw==
+        d=google.com; s=20230601; t=1742853793; x=1743458593; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HrFPQxQVCxFCJ5eIn/lb4rFAO8+JMUT5L57UjQpjJz0=;
+        b=GtwRpZB1bdcjUojqHXC0i1YgFaZ3EGunn2cD5Q82AHYa6CrgECXiEtyYkMBpeROGuA
+         RmbvYuoUxdjAALKNdfByZhpis+hKkTU6JUMe+quN1cHyjwHgAN8deNZkgIv3z5yZWiKL
+         T4iM6MxW3qoW2CQoSFjBvdZac9lcLJa+mElJC5FlT+9iSE1mOMhwLapOQbhNFaCFW2kH
+         WMnBZhBCDHz9o5x35ApX3//wG0kTYw0TgRdaccTEwp4lCFZ/CkQNZjJSUgYPYiwMWceo
+         NUvVKVRkMqx+3eu5bjWU2Xn1G+UzOteOFZJ+B8++7Xy2gOCVsV7yPmDSmL511/GVjQqf
+         xnyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742853789; x=1743458589;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+jlhSt+zRcHOT32K00fMqybrca9+pySYTa39BSZD5ZM=;
-        b=I61m+tEc+tUUWtmOmGS1xHMNwzp8jDp07IDpFi8T7kx20GNRPOW2lHzOuqFJDMgPko
-         rrcuhI9nTH3NZKoD/yxFR3gzD8iPuHksoPpUtTSNvk0dmzxoBkWaB49XFJpDOub540qM
-         FSG5+Eu8b5BJ8ZZDEOdVmlJ8fGZtJ0gr1qFq5wPQtNrJa1oAnATSbSGmBrNuAZtW6+OA
-         NhocnrKedZjMGStyqhY4CxYmRTf0x6RQD7mB00qGU8oXz+iB93EXvuPhBOx4WWhfjY72
-         jXfNgXNCqwcdECryoNdsYxJMyYmihfLLWjAjc7YZ4oq0ZRFmfIkM7vJi8wCrMmeF78A5
-         Hd7A==
-X-Forwarded-Encrypted: i=1; AJvYcCUTdwLt7xyV2xXovTWh8eoo7GwXmwsI9Tmv1dszqEOQVTeP8UhNfQc/bsQUR5SrE1D+rGoDYImIeW9DWto=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpbFvUlSqc/uK5HvL+JcNltsvmLKPBykK8U2s8g0zBspk31m+C
-	/fhxMlDC3edhZSHgcbuonRRwDd/S2jryvBK54+0j8XAdbFFSZIEULlB3T8v4hUfBpS2Fn1BuJgm
-	WeyErxMdY3w==
-X-Google-Smtp-Source: AGHT+IGeOWd4IKU9kpcYW968CJzfD+7iaIXBkGZ1bvW2+ksZHg609U5g7s06PktVFz/qvmogxyC5p6gWhF2UFA==
-X-Received: from plxm1.prod.google.com ([2002:a17:902:db01:b0:21f:40e5:a651])
+        d=1e100.net; s=20230601; t=1742853793; x=1743458593;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HrFPQxQVCxFCJ5eIn/lb4rFAO8+JMUT5L57UjQpjJz0=;
+        b=WAA0KG7EioTdPx4XPjtbWbs60la4SEEgxNKy3DY0G7pCxYbtyEtebce1VtFeKYx3oA
+         h5v6rUdB8TCenkylawj/2cs+mb+HZtRwQXJgSjk6RBBvey3padtQNDNreI2uDRNSrVwg
+         NGps8ubwsN0KeCWEp16949UAq7mIddMtqd4YHxJNXSFU6b59VrYxbxitZ/KGjk78+dek
+         wQzx4gS4Ola3CNyorm3Zk3TLoJTtjCrIq1yervOv8Li3+oxzLkkONzh3kVBE+FhZa2YA
+         KQzBxmd7SRWY+9wzafcOPJBrNzJ3SfCEtzkTfbbzGSBSmbNjj6I4m7TzxR9vQKLbqwKn
+         OAuA==
+X-Forwarded-Encrypted: i=1; AJvYcCVztMDLDwAmGslxm8NHfZOeoYnawwyT4CxUikc9qoLZ4wOLblo6o0FNi1g5xGRm+FJoWiIMzrmRK9nxZ2c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHS9KmYXLt4rPGpmZM8w4nmdwvZMlPIuuJuyvz6v//cmSqlBKu
+	dzG7HLTBtxNpXBUrwnOUc3gMcS2LjG3b4QLAs8qYqnGLquNr8mAmGwE3JXBZIlnaMifsma6xbO1
+	vsmkcVp/mCw==
+X-Google-Smtp-Source: AGHT+IFZ5gFWS0tV3e6VWZdQngRJrAWzxvv1iFdLvWy/bvzelevqq81SzyHG2/91MA2Kj/yFZ5fNgitHPoeVag==
+X-Received: from pglu36.prod.google.com ([2002:a63:1424:0:b0:af2:22fe:cfb3])
  (user=kinseyho job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:e549:b0:224:194c:694c with SMTP id d9443c01a7336-22780d9bd43mr266827275ad.28.1742853788991;
- Mon, 24 Mar 2025 15:03:08 -0700 (PDT)
-Date: Mon, 24 Mar 2025 15:02:59 -0700
+ 2002:a05:6a20:2585:b0:1f5:7eb5:72c7 with SMTP id adf61e73a8af0-1fe4300f7d1mr23507348637.29.1742853793076;
+ Mon, 24 Mar 2025 15:03:13 -0700 (PDT)
+Date: Mon, 24 Mar 2025 15:03:01 -0700
+In-Reply-To: <20250324220301.1273038-1-kinseyho@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250324220301.1273038-1-kinseyho@google.com>
 X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250324220301.1273038-1-kinseyho@google.com>
-Subject: [RFC PATCH v1 0/2] mm: multi-gen LRU scanning for page promotion
+Message-ID: <20250324220301.1273038-3-kinseyho@google.com>
+Subject: [RFC PATCH v1 2/2] mm: klruscand: use mglru scanning for page promotion
 From: Kinsey Ho <kinseyho@google.com>
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: yuanchu@google.com, AneeshKumar.KizhakeVeetil@arm.com, Hasan.Maruf@amd.com, 
@@ -75,40 +78,179 @@ Cc: yuanchu@google.com, AneeshKumar.KizhakeVeetil@arm.com, Hasan.Maruf@amd.com,
 	hyeonggon.yoo@sk.com, bharata@amd.com, Kinsey Ho <kinseyho@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-This patch series introduces a software-based approach to identify
-hot pages for promotion in tiered memory systems, particularly those
-leveraging CXL-attached memory, by utilizing the Multi-Generational
-LRU (MGLRU) framework. This method is designed to complement
-hardware-based hotness detection mechanisms like Intel PMU sampling, AMD
-IBS, or dedicated CXL memory monitoring units, providing a more
-comprehensive view of page access patterns, similar to kmmscand [1].
+Introduce a new kernel daemon, klruscand, that periodically invokes the
+MGLRU page table walk. It leverages the new callbacks to gather access
+information and forwards it to the kpromoted daemon for promotion
+decisions.
 
-We propose to utilize MGLRU's existing infrastructure to provide hot
-page information. A key benefit here is the reuse of the MGLRU page
-table walk code, thus avoiding the overhead and duplication of effort
-involved in implementing a separate page table scanning mechanism. The
-working set reporting proposal [2] also reuses MGLRU's infrastructure,
-but focuses on cold page detection. It provides its own aging daemon,
-which could additionally provide hot page information by integrating
-this proof-of-concept.
+This benefits from reusing the existing MGLRU page table walk
+infrastructure, which is optimized with features such as hierarchical
+scanning and bloom filters to reduce CPU overhead.
 
-This series relies on kpromoted [3] as the migration engine to implement
-the promotion policies. This is just an early proof-of-concept RFC
-posted now in the context of LSFMM.
+As an additional optimization to be added in the future, we can tune
+the scan intervals for each memcg.
 
-Kinsey Ho (2):
-  mm: mglru: generalize page table walk
-  mm: klruscand: use mglru scanning for page promotion
-
- include/linux/mmzone.h |   5 ++
- mm/Kconfig             |   8 ++
- mm/Makefile            |   1 +
- mm/internal.h          |   4 +
- mm/klruscand.c         | 118 +++++++++++++++++++++++++++
- mm/vmscan.c            | 177 ++++++++++++++++++++++++++++++-----------
- 6 files changed, 267 insertions(+), 46 deletions(-)
+Signed-off-by: Kinsey Ho <kinseyho@google.com>
+Signed-off-by: Yuanchu Xie <yuanchu@google.com>
+---
+ mm/Kconfig     |   8 ++++
+ mm/Makefile    |   1 +
+ mm/klruscand.c | 118 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 127 insertions(+)
  create mode 100644 mm/klruscand.c
 
+diff --git a/mm/Kconfig b/mm/Kconfig
+index ceaa462a0ce6..ed0fa8f2551e 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -1366,6 +1366,14 @@ config KPROMOTED
+ 	  Promote hot pages from lower tier to top tier by using the
+ 	  memory access information provided by various sources.
+ 
++config KLRUSCAND
++	bool "Kernel lower tier access scan daemon"
++	default y
++	depends on KPROMOTED && LRU_GEN_WALKS_MMU
++	help
++	  Scan for accesses from lower tiers by invoking MGLRU to perform
++	  page table walks.
++
+ source "mm/damon/Kconfig"
+ 
+ endmenu
+diff --git a/mm/Makefile b/mm/Makefile
+index bf4f5f18f1f9..eb7b76db3b33 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -148,3 +148,4 @@ obj-$(CONFIG_EXECMEM) += execmem.o
+ obj-$(CONFIG_TMPFS_QUOTA) += shmem_quota.o
+ obj-$(CONFIG_PT_RECLAIM) += pt_reclaim.o
+ obj-$(CONFIG_KPROMOTED) += kpromoted.o
++obj-$(CONFIG_KLRUSCAND) += klruscand.o
+diff --git a/mm/klruscand.c b/mm/klruscand.c
+new file mode 100644
+index 000000000000..a53d43c60155
+--- /dev/null
++++ b/mm/klruscand.c
+@@ -0,0 +1,118 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <linux/memcontrol.h>
++#include <linux/kthread.h>
++#include <linux/module.h>
++#include <linux/vmalloc.h>
++#include <linux/random.h>
++#include <linux/migrate.h>
++#include <linux/mm_inline.h>
++#include <linux/slab.h>
++#include <linux/sched/clock.h>
++#include <linux/memory-tiers.h>
++#include <linux/sched/mm.h>
++#include <linux/sched.h>
++#include <linux/kpromoted.h>
++
++#include "internal.h"
++
++#define KLRUSCAND_INTERVAL_MS 4000
++#define BATCH_SIZE (2 << 16)
++
++static struct task_struct *scan_thread;
++static pfn_t pfn_batch[BATCH_SIZE];
++static int batch_index;
++
++static void flush_cb(void)
++{
++	int i = 0;
++
++	for (; i < batch_index; i++) {
++		u64 pfn = pfn_batch[i].val;
++
++		kpromoted_record_access((unsigned long)pfn, NUMA_NO_NODE,
++					KPROMOTED_PGTABLE_SCAN, jiffies);
++
++		if (i % 16 == 0)
++			cond_resched();
++	}
++	batch_index = 0;
++}
++
++static int accessed_cb(pfn_t pfn)
++{
++	if (batch_index >= BATCH_SIZE)
++		return -EAGAIN;
++
++	pfn_batch[batch_index++] = pfn;
++	return 0;
++}
++
++static int klruscand_run(void *unused)
++{
++	struct lru_gen_mm_walk *walk;
++
++	walk = kzalloc(sizeof(*walk),
++		       __GFP_HIGH | __GFP_NOMEMALLOC | __GFP_NOWARN);
++	if (!walk)
++		return -ENOMEM;
++
++	while (!kthread_should_stop()) {
++		unsigned long next_wake_time;
++		long sleep_time;
++		struct mem_cgroup *memcg;
++		int flags;
++		int nid;
++
++		next_wake_time = jiffies + msecs_to_jiffies(KLRUSCAND_INTERVAL_MS);
++
++		for_each_node_state(nid, N_MEMORY) {
++			pg_data_t *pgdat = NODE_DATA(nid);
++			struct reclaim_state rs = { 0 };
++
++			if (node_is_toptier(nid))
++				continue;
++
++			rs.mm_walk = walk;
++			set_task_reclaim_state(current, &rs);
++			flags = memalloc_noreclaim_save();
++
++			memcg = mem_cgroup_iter(NULL, NULL, NULL);
++			do {
++				struct lruvec *lruvec =
++					mem_cgroup_lruvec(memcg, pgdat);
++				unsigned long max_seq =
++					READ_ONCE((lruvec)->lrugen.max_seq);
++
++				lru_gen_scan_lruvec(lruvec, max_seq,
++						    accessed_cb, flush_cb);
++				cond_resched();
++			} while ((memcg = mem_cgroup_iter(NULL, memcg, NULL)));
++
++			memalloc_noreclaim_restore(flags);
++			set_task_reclaim_state(current, NULL);
++			memset(walk, 0, sizeof(*walk));
++		}
++
++		sleep_time = next_wake_time - jiffies;
++		if (sleep_time > 0 && sleep_time != MAX_SCHEDULE_TIMEOUT)
++			schedule_timeout_idle(sleep_time);
++	}
++	kfree(walk);
++	return 0;
++}
++
++static int __init klruscand_init(void)
++{
++	struct task_struct *task;
++
++	task = kthread_run(klruscand_run, NULL, "klruscand");
++
++	if (IS_ERR(task)) {
++		pr_err("Failed to create klruscand kthread\n");
++		return PTR_ERR(task);
++	}
++
++	scan_thread = task;
++	return 0;
++}
++module_init(klruscand_init);
 -- 
 2.49.0.395.g12beb8f557-goog
 
