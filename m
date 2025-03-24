@@ -1,47 +1,56 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E718C25D1E8;
-	Mon, 24 Mar 2025 08:03:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75ACD18B470;
+	Mon, 24 Mar 2025 08:04:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742803438; cv=none; b=tvpuCj84ltkr3ECa/IC4gt9WmD2sIsN1PSzN7BbY2Y3nn23anrURlFvj/mRs0XmRkkCW/LQLa42WNo8+EtvQQX+vzmMteLlMTV33X82owg/fSzaSbxZZHuBnsoPpJWJOodV+z8r8KyplMoMEir0w+fHk2t/EpPI6X6EVWJPFT+I=
+	t=1742803498; cv=none; b=UwsiaRbUHEu/0fwmQDSunjEPu7/C5npCWB7PtwRo9tC+0CApuKy9mhfgPjZ+qM3TxgjlOGJ6zrLpns4pq9V9mruJ5m0FAMwAGYVFyw8XwyHxfg8kuyzC/GyWXKDNwE0+l1RoRaOjpMX4TsZTOygyCqiR11ya89wxTteW6qOEv6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742803438; c=relaxed/simple;
-	bh=bVc8ppawXuFZXap+bB2SZMErDGCzppriuGtA2w5+FAc=;
+	s=arc-20240116; t=1742803498; c=relaxed/simple;
+	bh=2gSLluaFzVDaLqnWsNk8sVoYQ+2ifhmEkiUog9vfzOk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OokueUvgb59LmMQMywgEqoYwY/n85SuC/oJ5ddh7Vgz14cIJTIsFcAOF1p0sjpRgXkB/BZvKTv4lTLhqgitpCxbrwTVB/zNkyaX03unqUpQWChfBv6nUs2auCUIv+Tozt0EZ6x7AU0qgd2pWlAiubizlCJB+ECV03kaBmQnCu6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mOgNvj+4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cG3S9crPCTFVKvZ2Mm7IwuL2fTylTkaB5/iYpZHfzRkJjweMmHEa8Dx+f4/PRL/7nHNvR9+S0+dshnthnnporcsN6KxbBhnaz9mbdrZ0monf1mEhRl4kvoAO52ywuP1WGY+5A45PR4yGBDA1vzFB4KRFYU9Fydun34tE5gZgrQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RGynYWlj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mOgNvj+4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3279BC4CEED;
-	Mon, 24 Mar 2025 08:03:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RGynYWlj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1451BC4CEDD;
+	Mon, 24 Mar 2025 08:04:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742803437;
-	bh=bVc8ppawXuFZXap+bB2SZMErDGCzppriuGtA2w5+FAc=;
+	s=k20201202; t=1742803497;
+	bh=2gSLluaFzVDaLqnWsNk8sVoYQ+2ifhmEkiUog9vfzOk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mOgNvj+4vU03obYi+4rPDzBTYcup6VXKdy48bVjZY6PqjIisLRYuY3vw6mZlt/36Y
-	 Qp8RlSvpnNGvrkfVDldpl463p3uAyBim2nJUr97B1zXu0vL4sDVBUDHTz3B91gM9pG
-	 pF0t2ToYS+gmDEc2gVDUHqSiBc4XpuDBmZKaNEtX83WtvcxKtbL6/a4IwVj4EEzGHA
-	 RQs5HW+XG6Rv+xUIvvLWndqebzugrx9yh5iVcDQKb7zd3otnRekULB1b7urTymwzpH
-	 QtxZBeqNN5N40hvz+WNY6e+BCNfQDGVbMZnnl2B5p3anES6LaWIHIBjefo9fyjUE1j
-	 QhLzPg5V7a4Vw==
-Date: Mon, 24 Mar 2025 09:03:53 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Cathy Xu <ot_cathy.xu@mediatek.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Sean Wang <sean.wang@kernel.org>, Lei Xue <lei.xue@mediatek.com>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, yong.mao@mediatek.com, 
-	Axe.Yang@mediatek.com, Jimin.Wang@mediatek.com, Wenbin.Mei@mediatek.com, 
-	Guodong Liu <guodong.liu@mediatek.com>
-Subject: Re: [PATCH v5 2/3] arm64: dts: mediatek: mt8196: Add pinmux macro
- header file
-Message-ID: <20250324-cunning-ruby-lorikeet-aac6bf@krzk-bin>
-References: <20250321084142.18563-1-ot_cathy.xu@mediatek.com>
- <20250321084142.18563-3-ot_cathy.xu@mediatek.com>
+	b=RGynYWljYVwsjBkFfRfR2JqFmEpoDbpRvYy/VqSO977TnZaXU4Bqk5Oi73yGNsmzT
+	 7pO8mPc/CiqmEsMhvsQzsbZXEOombY5TdnaCSfSfgApcR2oCoiIdWRKlh9mJtg5ndZ
+	 ZhzacUowUFkM878v9z5W7PQoaum7xVkkGN5wDtaipvu3OiXv/NaFWGjJs3UKPxQG/a
+	 6FNJvUVt3Q+wKg15fZGoNsDTxCz9fewYvF3ESQyZ9R/w7TwDx4eZXjY5a53p4eeG71
+	 gbuR5LjomfD8yWv/AN9/7d+wEf5Zwa6jOnexDlxYy9GM0qKEVF602UKdYGgL5RTJ5X
+	 Zpooy1FVRPvcg==
+Date: Mon, 24 Mar 2025 09:04:50 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Eric Dumazet <edumazet@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org,
+	bpf@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
+	Greg Thelen <gthelen@google.com>,
+	Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] x86/alternatives: remove false sharing in
+ poke_int3_handler()
+Message-ID: <Z-ESIogCNDiHz4NG@gmail.com>
+References: <20250323072511.2353342-1-edumazet@google.com>
+ <Z-B_R737uM31m6_K@gmail.com>
+ <CANn89i+fmyJ8p=vBpwBy38yhVMCJv8XjrTkrXSUnSGedboCM_Q@mail.gmail.com>
+ <Z-EGvjhkg6llyX24@gmail.com>
+ <CANn89iL8o0UZTpomaT1oaMxRTBv1YdaXZGwXQn3H0dDO81UyGA@mail.gmail.com>
+ <CANn89iKwPpV7v=EnK2ac5KjHSef64eyVwUST=q=+oFaqTB95sQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,21 +59,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250321084142.18563-3-ot_cathy.xu@mediatek.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANn89iKwPpV7v=EnK2ac5KjHSef64eyVwUST=q=+oFaqTB95sQ@mail.gmail.com>
 
-On Fri, Mar 21, 2025 at 04:39:13PM +0800, Cathy Xu wrote:
-> Add the pinctrl header file on MediaTek mt8196.
+
+* Eric Dumazet <edumazet@google.com> wrote:
+
+> On Mon, Mar 24, 2025 at 8:47 AM Eric Dumazet <edumazet@google.com> wrote:
+> >
+> > On Mon, Mar 24, 2025 at 8:16 AM Ingo Molnar <mingo@kernel.org> wrote:
+> > >
+> > >
+> > > * Eric Dumazet <edumazet@google.com> wrote:
+> > >
+> > > > > What's the adversarial workload here? Spamming bpf_stats_enabled on all
+> > > > > CPUs in parallel? Or mixing it with some other text_poke_bp_batch()
+> > > > > user if bpf_stats_enabled serializes access?
+> > >             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > >
+> > > > > Does anything undesirable happen in that case?
+> > > >
+> > > > The case of multiple threads trying to flip bpf_stats_enabled is
+> > > > handled by bpf_stats_enabled_mutex.
+> > >
+> > > So my suggested workload wasn't adversarial enough due to
+> > > bpf_stats_enabled_mutex: how about some other workload that doesn't
+> > > serialize access to text_poke_bp_batch()?
+> >
+> > Do you have a specific case in mind that I can test on these big platforms ?
+> >
+> > text_poke_bp_batch() calls themselves are serialized by text_mutex, it
+> > is not clear what you are looking for.
 > 
-> Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
-> Signed-off-by: Cathy Xu <ot_cathy.xu@mediatek.com>
-> ---
->  arch/arm64/boot/dts/mediatek/mt8196-pinfunc.h | 1574 +++++++++++++++++
->  1 file changed, 1574 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt8196-pinfunc.h
 > 
+> BTW the atomic_cond_read_acquire() part is never called even during my
+> stress test.
 
-Where is the change adding the pinctrl nodes to the DTS?
+Yeah, that code threw me off - can it really happen with text_mutex 
+serializing all of it?
 
-Best regards,
-Krzysztof
+> @@ -2418,7 +2418,7 @@ static void text_poke_bp_batch(struct
+> text_poke_loc *tp, unsigned int nr_entries
+>         for_each_possible_cpu(i) {
+>                 atomic_t *refs = per_cpu_ptr(&bp_refs, i);
+> 
+> -               if (!atomic_dec_and_test(refs))
+> +               if (unlikely(!atomic_dec_and_test(refs)))
+>                         atomic_cond_read_acquire(refs, !VAL);
 
+If it could never happen then this should that condition be a 
+WARN_ON_ONCE() perhaps?
+
+Thanks,
+
+	Ingo
