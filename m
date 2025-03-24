@@ -1,158 +1,161 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8601CD0C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1B11DFED;
 	Mon, 24 Mar 2025 12:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742819443; cv=none; b=CSUy15f4hZ+sz1FR21WDuKgwaaxlh6SnE6TW3byTUsEZa64wUjoU1l6SxJICBmg0SqSVp9Ouppq2Hb/fIxexJoa7PCSV5k0I9Fppsp59RpARNyiAn7+0FzlDvQy6Cj4ATDG03UytVLr/L4RVxf40X5+tHS/1rspOgkm+satP5fE=
+	t=1742819444; cv=none; b=J9cPETlUKjWXox2CEcZplJTuC8kziPprrzdqpmm6/WE2wa7s1qqxWgW1jGCEHRZrGFh50SfIDQHqtGs5d5lW5BqyYOeqQXRRLEj3+u26rhfpn5pOue8i8N4qM0Ij4vNnwLS3KixGqWzxXLCZ8jCoHHCJUIRkOJz1gN7W+6uuKMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742819443; c=relaxed/simple;
-	bh=9BqmxImDh5n+vN8ctC/P+gHMkS152bltAwJkPHjM1Q0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NLkTCC+Wbk+viS/vvPcKPLFF4RtTxXWEeeVmu2q4bStWUbb+yfRJQoqylLyi5g3VLtybenJqH3oKulRkCS0kWg5NmRKD1ZeJYcfMly/stooep/ZQaMrMFIHY8G4F4+GkGR7a6ytfOlNrtMBlwVybBGSIlBqqOSFq4fASB4xz1vY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac34257295dso902398466b.2;
-        Mon, 24 Mar 2025 05:30:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742819440; x=1743424240;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DWmjtMIH4C4Wn6tnUZWCXgU2s4Otmlhl2EC7/ukWLRk=;
-        b=CPYoz3rJDsIogH3CiTCXV0BYZ86M9jmfVgYgPuESisEsQFazqd+PI1uO4Fe3BwMA3i
-         0oRMGwuAIbnK5VN00fJhyJ1RElFSPlCvQfEGCon87+5hKTPTwN5pC5dNpz2tItpKZcH0
-         y9BA4waGYqgNhcb9mpXiH4d9SGhEXJZuplKr+siTiKqsMNmxCD4m/KyI3h36WmjxtKh9
-         JRdV4fm7EuQf5hbtHm5NInihcH74RoU+yLkE0NJERB/qhFNFDYISU6RhSbr85xgVJjZP
-         CUJMrS6FoysSZQa+jOU8g/3mLOj9kcKO1O9zf4KS2gpb9R7wo9lY6Z4wfpActSQr0wvS
-         Yarg==
-X-Forwarded-Encrypted: i=1; AJvYcCUFZ60W2LK3Ws7le2QKV0FNvAzZgv5yPv6Do7uPZjOFl3hakx+94mTU0q5Z/JmnBbPI3IFq1Wh/Nd+b/DU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxReCFpDeW1sOOACu9QHfUMeVoz0cmzLquMkktsxX+/keTNtF4F
-	WHRUn9rBkORgBeS4i7zEUeJ3hhyOHxMZgNh2+8Rz5NpmuRfe7jUGNuyA0g==
-X-Gm-Gg: ASbGnctNEEC7NeRBcRqrxv/4U+zhVZT0mPVyblLUkP6ZrweKPWj/NoAksEVZM1vIZQ3
-	GgPEP0YUljOODFhI1RWcdtxua6S8kRk7Oo660iT3YOfGEjQT9i+jTharFDaGShi+UJnKAriT5ik
-	oHJI7fZRbGoWC9jB2PAS8qOMeu6OBWETBV3D0mdy3/0WvOIl8SBrn2QqiugumkcbH19e7k3JEdK
-	17zgA2oHuR87l8tWJ1qa+Zae48nxuHfd8gkQBAkZ07z3HSwMzCGhpGUKzqsBw2Oe+XYcDxolW6m
-	7xsAodldX8te6DquLRPGt7FrtPb8h76C6Jbo
-X-Google-Smtp-Source: AGHT+IF9Nz7U/bPn9x/81GvhUUJaG7LAHEC3eHeujyYrW8fN+VbRv87Q7UKcL43tzky2FNgKdKGopA==
-X-Received: by 2002:a17:906:7952:b0:ac2:c424:c316 with SMTP id a640c23a62f3a-ac3f25836b0mr1375544766b.57.1742819439427;
-        Mon, 24 Mar 2025 05:30:39 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:73::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef8e51c8sm680707866b.66.2025.03.24.05.30.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Mar 2025 05:30:38 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Mon, 24 Mar 2025 05:29:13 -0700
-Subject: [PATCH net-next] netpoll: optimize struct layout for cache
- efficiency
+	s=arc-20240116; t=1742819444; c=relaxed/simple;
+	bh=fwimp8HseB9UwFHpwn7n1zBpMN61kwe5isolz4he/D8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U+Ogc2P7wrKIwIeyTAoukQxpBu0xfsUAhBgZfsS4tfQw6kIVxEmV0Ya+sMfPZMC7Gsy3jAI6lHeTKsc1MnOj615sxOpjUBjoU02JDCnxjbI8L4d6WFS+zvDaurGda3MF51NYDXT/+8yYJkikw+Q4WaY4ahKIw5MExJgXma/0Ez0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=dOZUti1m; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="dOZUti1m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1742819426; x=1743424226; i=markus.elfring@web.de;
+	bh=rEc55otJf7ICHqncJghVecmxsSzuMVTiFLZWCZNGMhU=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=dOZUti1mOauygq02eBbZVYKvluyQZkNV411tWE/zylGK3jVjNS3xBo2CgSMcaekE
+	 lacXA0kOSvpPNJ9lBt/WqD40/Fair9hngzFZ111XUuFNdosvC+DJ8nhDtkDlOiRFX
+	 FUl/kraIQ2VrojgN/euMb7emLq/Cvu80VKYiEEZWRKpTwju9bW/8WswvprT30r/CU
+	 GJ5dIYqzOJRXz+WHP74K2a8Q4s3NNSoFIyH+HKcUjc4UcLOMck/8+I4RVyIHqszkU
+	 ecfuk0QQqIoKzl7bpr+0DIJALw9w9iao0RvlaKwWEdpzP0Dwapxz9M0VwW8d1On8K
+	 7OLObY2Cb8sdnm4UiA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.33]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MzCEB-1tAcny3Y1b-00wEH6; Mon, 24
+ Mar 2025 13:30:25 +0100
+Message-ID: <40a0ddb2-a2dc-4637-a899-65b84065032b@web.de>
+Date: Mon, 24 Mar 2025 13:30:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250324-netpoll_structstruct-v1-1-ff78f8a88dbb@debian.org>
-X-B4-Tracking: v=1; b=H4sIABhQ4WcC/yXMQQqDMBAF0KsMf21AU5WSq5RSSjKxAzJKMhZBv
- Huhbt7yHahchCsCHSj8lSqLIlDXEOLnrRM7SQgE3/qhvfneKdu6zPOrWtmiXbox52FMXYx9uqM
- hrIWz7P/2AWVzyrvheZ4/7JB+dXAAAAA=
-X-Change-ID: 20250324-netpoll_structstruct-6ff56d1cc4d8
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel-team@meta.com, Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2423; i=leitao@debian.org;
- h=from:subject:message-id; bh=9BqmxImDh5n+vN8ctC/P+gHMkS152bltAwJkPHjM1Q0=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBn4VBtB38D5DMw2ug8nlCBJgsaaUXxCAIY4e3Ts
- DKWxZYEHU+JAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ+FQbQAKCRA1o5Of/Hh3
- bYTyD/95gVoU9RFy62tdJKpxHUCRKD965dc+RCmhQs2op0cz/Bly9lECH3BLRpSrwgny9yOmO/Q
- F57DOfrIoKQeqpFon7Hsl89I7T5yR0J0wZt6scd1Kz1apdVK8A5hxQNFFh2808W+hP+FNVYpGz+
- SuwEpXywXOzYQH9Wfy6vB92PlQDaNvZqpk+ztZV13jt14qQCypz4B2LbcKj/+i08/GePt2AW9xZ
- bfCjM/94fMqq4Dq0PQARqvc4vAKMDdvsYYCld5Qqa09AsweTBrAqx6jLWm7cwvJ57UTri1gdx+q
- CT9HR7ysf+ZWTD7aQgm4AXNXF3flTsg/dBsV/SG5/yQqp5QYTqWZuQlShqF4YHqDPqFtN3zzNi+
- iIwV/+oNXkpF6AjmI83dGknYpjCD5MmvVFht4dp/kAHHQCis6f2Qdt9S3/UiMbFPELz1T5m5Ipx
- l77x7TGRGxQMWxYpUrle7AThODl0HrkDNbjNIFpPSNs+htCC4C7BLwy5l9R8tUrCJ+45f4PpxBc
- Fnk9/cOCyRsAUMdxpQTW4AB0/1p1SldmgvMfMKYH2ojYPmG47jKmqYm3MOteeAexPwqjd5FV/lU
- 1LQsp1q3UDM1d0wmhh4zp9lMHhHtgzbW+66i9TZW7JnaPpgBn8RHe0DN7FlW3NHmc5ne8xjUTOZ
- RyXJ0kibFxOuCOA==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH v3] mei: Improve exception handling in mei_cl_irq_read_msg()
+To: kernel-janitors@vger.kernel.org,
+ Alexander Usyskin <alexander.usyskin@intel.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Tomas Winkler <tomas.winkler@intel.com>
+Cc: cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>
+References: <f9303bdc-b1a7-be5e-56c6-dfa8232b8b55@web.de>
+ <00589154-00ac-4ed5-2a37-60b3c6f6c523@web.de>
+ <b7b6db19-055e-ace8-da37-24b4335e93b2@web.de>
+ <MN2PR11MB40930A824DF68F96A93E1B7FE5859@MN2PR11MB4093.namprd11.prod.outlook.com>
+ <df3ce733-955b-45f3-98bd-04ddb2200eca@web.de>
+ <CY5PR11MB6366D07A7F302780A87160E6EDCB2@CY5PR11MB6366.namprd11.prod.outlook.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <CY5PR11MB6366D07A7F302780A87160E6EDCB2@CY5PR11MB6366.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:oYYaUm0Hjzq9rr1Prs6gbeOzoVeO8auNDeOvHd8eS/g88fO3NLT
+ qlzYAcUnP+Hgyiql+tSUJwVAYj55QpbsYJ+YkMMV8nmAK3KGoUxaZe8hzWnLs4lcuONzfY3
+ HVCzxlWFFU/YPOUXDhuv1YDkSEklurYIoX588pFhm6WoPFJtnLh9FEh4q32VpqNE2bS8nLY
+ nbjKxNI5DbPhS1LVyP8Hg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ybipT1OztxQ=;1HSNSUDbDwk97whTFPLjzBeRR05
+ TMm3V9CSwlbB/NQ04y1Ot/sTP1/bDKdeSDHfNh2lyw16Njdbl2b6WnZG/a9QPkfp0/nIkQf8S
+ yQvMoiQG6GvO8W2pQ6f0/xqVdNV0mn+YErYFPtWfoyJwkF8MtcGur0AaAu9P4Xem4U7AgRt4/
+ Ofv+rGMPKdSGuxRX4NzjmNVoakhJsgUX+Bn/HZ4CD7FyJN+HixJLOy/XKjis6QrTp5pp9mf3p
+ 7DOBaW4/7qPh/786ep94tpR6ooQuNe1KwYLBD+rJbeKtWU1XIoLwRDegTUV/ePEB5ScDlvGB2
+ gm0gTYTVooJwsNQOZittHTPZViVqaups9123++7dzMAMkfzBO2UCkviJMj/6P+E51J+zVPCWl
+ Xrim8o2feea/hiAvIOrmGthNT36bfe/PgAF5eCB+InXzOJrTUmOGUij3pAY4YUfPZANaytZY1
+ N2m4grtdjcI368MzOW90PIGWRaT/q5Os7zXAdSS5PSN3HROApWaHyezaQCsX2yLWH1Qs16X7A
+ 5eg+UFvXAXSeUFKdSyR7tWw7fAtAfkDWRanyqF1dujbzD5zuDTwX78xUCpJApKMrHF+qEfoFQ
+ +NpUBh6GbNDfLzF21O5+MoReycfzVeWNGNZD+P7s5LaZQ0P8UNS7np4Elq4e9otjdLpfdMRLJ
+ 3ViJev7ArNB1PyGUnHUD0K6W3GB8TjQKT+yIWuW9/s2xfSzlDQ9BFyYgN3JsQQLVK4PWfOGw6
+ QvfblnKBEbzMykveAoBvS92PGDGRJTQQ8qn9mpQhAYGmjQ6Zv/jsPSQCaK/rvnFmKUBmfBy82
+ PZ1IYVYjAU+7Q5rE4RKpOC/3h6zRBhps7D/i2Eh9GDQhHbkHdQmwDUE9seGnxKye3oeC6Kw1i
+ NoOcNW1YNtxNyM6AAuEolGELyNQI3zNLKUbxi0oyuxs+LiBmGCV0yxc3DX9UBvUUQgBBf/H1I
+ Hbt+SdPCLBMHIfJxenzfmICwwkWZ34Cj50QRvBqOgiUGc4/MeAm9i6waYc3M/6pxSxerPT/qz
+ 6htkPat1UD2im+ODB3zisBGUKW5TxKHwtdva9y1nJH1hDNXgwKSyPCrlRIEqsD6tt/w1SBBM7
+ XCplEXHOzoT3EhmwPi1sETM8j4Vbl0cj/SmcoqOwujkY6hDbkkwUHAHjmjBzls1KVmtq1UHBG
+ y+uppdySMXjTVubmqI1KX4FzVjYjxmZUnsOjMPY6m46anHvLm+U4Mu5qJzrsEJy2WzmmD60Mc
+ /NCbE10b/a3ch4i7kKVnoVUr4uv+ZaKJRitObEapghTD7m7UKIir0h6zRJUGh4M9ykgUojEXB
+ zg1/m4GJGo3AKmX0cc++OvoK5C7EBq3pxSkM7LSmLj3SFOmfxyM7Ob44IySaTRskLHKubwC3m
+ Qe+MysPSJvMb4qNQdgb2qn3va1zskPIv2BErt4HvHjIM8cqXT+1NCXL6QkFEc4DVfIDKv9ME3
+ 7j03QZ0e0ovjHPFMWGlHkAIMI4WeZLkYsEnFaBeAu8ttmuBeiFoXPqVCDhu7l4lwFNKXfYg==
 
-The struct netpoll serves two distinct purposes: it contains
-configuration data needed only during setup (in netpoll_setup()), and
-runtime data that's accessed on every packet transmission (in
-netpoll_send_udp()).
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Mon, 24 Mar 2025 13:05:12 +0100
 
-Currently, this structure spans three cache lines with suboptimal
-organization, where frequently accessed fields are mixed with rarely
-accessed ones.
+The label =E2=80=9Cdiscard=E2=80=9D was used to jump to another pointer ch=
+eck despite of
+the detail in the implementation of the function =E2=80=9Cmei_cl_irq_read_=
+msg=E2=80=9D
+that it was determined already that a corresponding variable contained
+a null pointer.
 
-This commit reorganizes the structure to place all runtime fields used
-during packet transmission together in the first cache line, while
-moving the setup-only configuration fields to subsequent cache lines.
-This approach follows the principle of placing hot fields together for
-better cache locality during the performance-critical path.
+* Thus use an additional label instead.
 
-The restructuring also eliminates structural inefficiencies, reducing
-the number of holes. This provides a more compact memory layout while
-maintaining the same functionality, resulting in better cache
-utilization and potentially improves performance during packet
-transmission operations.
+* Delete a redundant check.
 
-  -   /* sum members: 137, holes: 3, sum holes: 7 */
-  +   /* sum members: 137, holes: 1, sum holes: 3 */
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- include/linux/netpoll.h | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+This issue was detected by using the Coccinelle software.
 
-diff --git a/include/linux/netpoll.h b/include/linux/netpoll.h
-index 0477208ed9ffa..a8de41d84be52 100644
---- a/include/linux/netpoll.h
-+++ b/include/linux/netpoll.h
-@@ -24,7 +24,16 @@ union inet_addr {
- 
- struct netpoll {
- 	struct net_device *dev;
-+	u16 local_port, remote_port;
- 	netdevice_tracker dev_tracker;
-+	union inet_addr local_ip, remote_ip;
-+	bool ipv6;
-+
-+	/* Hot fields above */
-+
-+	const char *name;
-+	struct sk_buff_head skb_pool;
-+	struct work_struct refill_wq;
- 	/*
- 	 * Either dev_name or dev_mac can be used to specify the local
- 	 * interface - dev_name is used if it is a nonempty string, else
-@@ -32,14 +41,7 @@ struct netpoll {
- 	 */
- 	char dev_name[IFNAMSIZ];
- 	u8 dev_mac[ETH_ALEN];
--	const char *name;
--
--	union inet_addr local_ip, remote_ip;
--	bool ipv6;
--	u16 local_port, remote_port;
- 	u8 remote_mac[ETH_ALEN];
--	struct sk_buff_head skb_pool;
--	struct work_struct refill_wq;
- };
- 
- struct netpoll_info {
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
 
----
-base-commit: bfc17c1658353f22843c7c13e27c2d31950f1887
-change-id: 20250324-netpoll_structstruct-6ff56d1cc4d8
+V3:
+The label selection was adjusted according to the naming preferences
+of Alexander Usyskin.
+https://lore.kernel.org/cocci/CY5PR11MB6366D07A7F302780A87160E6EDCB2@CY5PR=
+11MB6366.namprd11.prod.outlook.com/
 
-Best regards,
--- 
-Breno Leitao <leitao@debian.org>
+V2:
+* The summary phrase was adjusted a bit.
+
+* The Fixes tags were omitted.
+
+* The change suggestion was rebased on source files of
+  the software =E2=80=9CLinux next-20250228=E2=80=9D.
+
+
+ drivers/misc/mei/interrupt.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/misc/mei/interrupt.c b/drivers/misc/mei/interrupt.c
+index b09b79fedaba..78a01b402ea4 100644
+=2D-- a/drivers/misc/mei/interrupt.c
++++ b/drivers/misc/mei/interrupt.c
+@@ -116,11 +116,11 @@ static int mei_cl_irq_read_msg(struct mei_cl *cl,
+ 	if (!cb) {
+ 		if (!mei_cl_is_fixed_address(cl)) {
+ 			cl_err(dev, cl, "pending read cb not found\n");
+-			goto discard;
++			goto discard_nocb;
+ 		}
+ 		cb =3D mei_cl_alloc_cb(cl, mei_cl_mtu(cl), MEI_FOP_READ, cl->fp);
+ 		if (!cb)
+-			goto discard;
++			goto discard_nocb;
+ 		list_add_tail(&cb->list, &cl->rd_pending);
+ 	}
+
+@@ -236,8 +236,8 @@ static int mei_cl_irq_read_msg(struct mei_cl *cl,
+ 	return 0;
+
+ discard:
+-	if (cb)
+-		list_move_tail(&cb->list, cmpl_list);
++	list_move_tail(&cb->list, cmpl_list);
++discard_nocb:
+ 	mei_irq_discard_msg(dev, mei_hdr, length);
+ 	return 0;
+ }
+=2D-
+2.49.0
 
