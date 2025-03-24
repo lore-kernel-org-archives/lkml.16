@@ -1,49 +1,44 @@
-Received: from gentwo.org (gentwo.org [62.72.0.81])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AA625D1E1;
-	Mon, 24 Mar 2025 16:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C0225D1E1;
+	Mon, 24 Mar 2025 16:49:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742834932; cv=none; b=KZ1MA7gz9u8B5a+XUzSKZTEBFPS3Go7ld7jff7uyq82I+0+d1C8S+juLWw7KA5kJ+KHiCatyJKiNorKQBPnYqcgeWrt5i+1lBWUc6BHTki+lsS43Iy0f9GIFtr0H7oQCssMocZ1Cf6ayVBCBbGcf0w9dktXDIsVUsci+27QARHs=
+	t=1742834944; cv=none; b=NdecUSTp8QQnkZbxvX0wagIBLclK+U31cP9Qx/xofhm+2E+iH/aDwssmdNJKaN4PnvkWyZlYn9jv6/yDxfcz/qHnx/oHV5AXA2q4rh7V1Z8gfTlkgQHZE/apn7BrzWrJSJ5fLF/wKz8UTik/n7lZ/eEYnzeps8+6zlHfizEA54g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742834932; c=relaxed/simple;
-	bh=sayeoWKFFq1gCersPRDqm3tR8WeC5c4VRp8l8D2eJ7Y=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=nuoFwJhiG6SbZKLP+Zu60dsfUfuS2CB9U9MDLszYVsYXt2UyX7c5wX5h7nqAq4u5YcVQvOkTCKg7ZGmKQ31HDmYzCfI0g58PDGX4+yFW3VmA9ytRU/cR+Am19pJ6LnzB2j4HQJQHfzFlj1B9qtAN2UMymo9VYVdTDz1YCZVQ+VA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=PuNW8IJM; arc=none smtp.client-ip=62.72.0.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
+	s=arc-20240116; t=1742834944; c=relaxed/simple;
+	bh=cU38QVxcBQ/AJwJD1vO4zW2xFxWmZt4D1zEAX/SsNZg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EHkD1dTQPpmJIa6LKa96x3IMOyoiyZqj9WST4ZmwaZBD6t1hwkgr4UyMd8fH/gtv0p+tCKjndivXVP82Ozit6Ee0l4WT+bXbQberPisTcR0kkpz97x3e70fWclBrwgJ9cfQtzu+a4IZW/y1BVwoWMKgVsf4q8yOHLCiXOaBnpxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n6w1RSJ0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="PuNW8IJM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
-	s=default; t=1742833007;
-	bh=sayeoWKFFq1gCersPRDqm3tR8WeC5c4VRp8l8D2eJ7Y=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=PuNW8IJMRMPqmJoHY28KOKknba33zkvjaGV+/sa/zYLs7an3WLSXSqyZYOc+PbYaq
-	 bMg+fwipm3EQ7e7HD453pzc4EAU1x96demCTo+8BnZewB/GkMqnxGfxFwIr96MI+8M
-	 PPQq2Ypi0ufeYnFdWPm+TG7hE+HMqv2KVTvIDvNE=
-Received: by gentwo.org (Postfix, from userid 1003)
-	id 61C6A4027F; Mon, 24 Mar 2025 09:16:47 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-	by gentwo.org (Postfix) with ESMTP id 5F45E401C4;
-	Mon, 24 Mar 2025 09:16:47 -0700 (PDT)
-Date: Mon, 24 Mar 2025 09:16:47 -0700 (PDT)
-From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-To: Kees Cook <kees@kernel.org>
-cc: Vlastimil Babka <vbabka@suse.cz>, Pekka Enberg <penberg@kernel.org>, 
-    David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
-    Andrew Morton <akpm@linux-foundation.org>, 
-    Roman Gushchin <roman.gushchin@linux.dev>, 
-    Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org, 
-    Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-    Marco Elver <elver@google.com>, Nick Desaulniers <ndesaulniers@google.com>, 
-    Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
-    linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 5/5] [DEBUG] slab: Report number of NULLings
-In-Reply-To: <20250321204105.1898507-5-kees@kernel.org>
-Message-ID: <e3437446-798d-f4f3-11d7-675f8886575b@gentwo.org>
-References: <20250321202620.work.175-kees@kernel.org> <20250321204105.1898507-5-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n6w1RSJ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4170BC4CEEA;
+	Mon, 24 Mar 2025 16:48:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742834943;
+	bh=cU38QVxcBQ/AJwJD1vO4zW2xFxWmZt4D1zEAX/SsNZg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=n6w1RSJ0b/Z4gqEfv2SS6EKKPq6mRtP5BQu8aDDSFKnK+tZfT8O8SDgSyOudOOP8Z
+	 Q3wQgNVvIkFaDyI8cg+XzDy9N3+q40xgEa1wHElExFIwqapvmg/qAXj0XdRtPijxNz
+	 YILDBBd61q817T6ype0o6h8gzh2S4Zsiiu63D8mT7fT2/lf7ByWkkTEEFs2O+k9NaO
+	 +zsRAalkKzoIdH3d2rVQgEVoq8E8D1aCCnswGDpupDvs1js2BoxsVcvi/KCbMlU7eI
+	 FNcdmEo3qAX7b82V31EuJTQVKWUuUAvBHkDoIte/f48qTmETmveIH37dhFKxLtJjkP
+	 AwpgPmYWhm7mg==
+Date: Mon, 24 Mar 2025 09:48:55 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jim Liu <jim.t90615@gmail.com>
+Cc: JJLIU0@nuvoton.com, florian.fainelli@broadcom.com, andrew@lunn.ch,
+ hkallweit1@gmail.com, linux@armlinux.org.uk, edumazet@google.com,
+ pabeni@redhat.com, netdev@vger.kernel.org,
+ giulio.benetti+tekvox@benettiengineering.com,
+ bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org
+Subject: Re: [v2,net] net: phy: broadcom: Correct BCM5221 PHY model
+ detection failure
+Message-ID: <20250324094855.1ac39b2f@kernel.org>
+In-Reply-To: <20250317063452.3072784-1-JJLIU0@nuvoton.com>
+References: <20250317063452.3072784-1-JJLIU0@nuvoton.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,18 +46,16 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 21 Mar 2025, Kees Cook wrote:
+On Mon, 17 Mar 2025 14:34:52 +0800 Jim Liu wrote:
+> Use "BRCM_PHY_MODEL" can be applied to the entire 5221 family of PHYs.
+> 
+> Fixes: 3abbd0699b67 ("net: phy: broadcom: add support for BCM5221 phy")
+> Signed-off-by: Jim Liu <jim.t90615@gmail.com>
 
-> diff --git a/include/linux/slab.h b/include/linux/slab.h
-> index 2717ad238fa2..a4740c8b6ccb 100644
-> --- a/include/linux/slab.h
-> +++ b/include/linux/slab.h
-> @@ -469,6 +469,8 @@ void __kfree(const void *objp);
->  void __kfree_sensitive(const void *objp);
->  size_t __ksize(const void *objp);
->
-> +extern atomic_t count_nulled;
-
-That is a scalability issue. Use a vmstat counter instead?
-
+Please post a series of patches, you can keep this fix as the first
+patch and then the subsequent patches should address the issues pointed
+out by Russell.
+-- 
+pw-bot: cr
