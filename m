@@ -1,215 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BC025F96B;
-	Mon, 24 Mar 2025 13:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE99025E444
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 13:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742824569; cv=none; b=Q1Ksw9CYeY9AEirpW2Uh5jj6aPM+oS5cIe/bYUbVxSiSMNiqQs+PPXdhHH9iuVxiPGPJIoNBxm/HefTEsYGjKYhCwpTwP24/Izw4w5R56nmoV5CKRzMM/C0hs8U7mPmKLCsiMEkeWF2GltCVbV9NswvvoTIua+8s9SHF+mit+Oo=
+	t=1742824632; cv=none; b=oqcpZx7ddqiwtYIx8YeaM+FM6x0ePzvSJ7kn/KPdKG2EL/Tj5vfyGNadh+kDUoJzQMHEAB7ZU4MCE+aPqMID86RYGe4TkPiY4bvVTmE5OdLRpSTPnJzNvRZQJy3MM4Np5uGoLWTFVmp/sRgqZ+TdhaXJV58Qvkl3zIKrMz764hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742824569; c=relaxed/simple;
-	bh=R0sbiRhZ3b/K+7TBxgPDlLC9UTOWrZ7/h/2nQO4FbF4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rphFPOBb7Uz9A5NcLF6UpFPIC8c3FGTt5FeWCGn4eal90wBaDpNBJKt45Voiyx3YQYqqwSmJg11VKPoD/qV8AjDZPoIjaTgxpMX1sCnCAeD45hrdnNz6m9oiS39JW8q9cIchycozWka6Rz+IWcghSZrCyRAdsIhCOsxlWbrlar0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=sMMK8ZG4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742824632; c=relaxed/simple;
+	bh=MPO6jCCozjhYMoPt4y+gKPOuX7ez+gZqkKwymGwFc0M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oiriJOozHSuNXNgalCH+DWQwV4BOYNqRqllc7TZhFtgIrLZswvePAE2NDYDt8Nm+5JBAft00fk/mNEVyyrPGXp3TfgiYOHp0xtVOC36mDRkPlchpIVbmpQna44zUCzXdQqUmF5pHSEBUgmYAIdIJAjnsqP5mdgPxCfq3Rs7nni8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=LdnvjBV+; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="sMMK8ZG4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E08F2C4CEE9;
-	Mon, 24 Mar 2025 13:56:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742824569;
-	bh=R0sbiRhZ3b/K+7TBxgPDlLC9UTOWrZ7/h/2nQO4FbF4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sMMK8ZG4bN4gGhv5DiIpiPriUMfytAanKWxG1fn+81adkaFvP8ZLilJx/Bc388AVD
-	 Qrx2lXE8Mr+f+Vu4lt2NIjEbvF7+1qaiEWwyloAE2iWAAC8DmQfVBGhPI66/PjZmRo
-	 /Y1rlgX47tYLAR9pebeMevsMFWaSnh1cLxUFCNoQ=
-Date: Mon, 24 Mar 2025 06:54:47 -0700
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: bhelgaas@google.com, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] rust: pci: impl TryFrom<&Device> for &pci::Device
-Message-ID: <2025032455-elk-whoops-3439@gregkh>
-References: <20250321214826.140946-1-dakr@kernel.org>
- <20250321214826.140946-3-dakr@kernel.org>
- <2025032158-embezzle-life-8810@gregkh>
- <Z96MrGQvpVrFqWYJ@pollux>
- <Z-CG01QzSJjp46ad@pollux>
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="LdnvjBV+"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so34427185e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 06:57:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1742824629; x=1743429429; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=geHsdT1vrdpFfM6YFLK2c0Yi2DY1fN5x5Y+Dw80cp/o=;
+        b=LdnvjBV+8Eaye8ho5RjmMoedW57GovKqz7vx45WSQPkXG0yau3B7sA8P3xg6+X7bUC
+         UaR8J6UYHxcgTN3Y2e6mad1yF5zV/upEiMnA1slqtErekQzAL458hzSXEiZmsWEk9oc0
+         aXQnpjXcQlLLqSITTRhjEcggyjxxvjK6nfVs/qRt82JxcsSm0HCqo+ugkA1aSALB2d0N
+         kHf5YDBXhaAB/DMT8K/haBwA+h3ZSiIsqxSztQzcEUqh9h3NdZaHoukIi+Q/E36pXCXU
+         +Gqxg5u/nS/H7IoGddCW8NKiYtrnQ3iTjsm9ruWzP1slCJFUAZdIJBorqECIDK9j8asJ
+         +igA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742824629; x=1743429429;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=geHsdT1vrdpFfM6YFLK2c0Yi2DY1fN5x5Y+Dw80cp/o=;
+        b=Lqlqr1w7j1RIBJ3wIGsYAGTXoOmJe8UXedgXBEQXCX3FsV4oMU3iNaqYtCd19eK12U
+         YeY7+ibeJJ6lYupvu7aKlpAB3oRJT+jvCPk6jLZdcqB+2YmU+VWe/Ni44aW9rIaVHsTV
+         +rV39YJAFuVZrwS7vdwaSp2wVH8h8+NA+SkNJKkSDvpQnL7R5791ODGs6ULQn59z1IuK
+         ZS2VjPP6CWP6Ea89V1cbnVHSCnVum4FhxGrz4mWEb6zNo8Io+INhk/UwNDP615E+suI0
+         LU/afifLJy3OkYkEkRk+1cEbMavlcX5RS2qCVLp78h6P6P65W1wH5kpjyoYX1Ia3Bhwh
+         uKeg==
+X-Forwarded-Encrypted: i=1; AJvYcCU95TYs2lO0RuGKhJ7GdRSFho+iuYPQlmAOFeTpEfAKi9gkvD47zfjTHPjA8i8o5MnDtmvL69l79Ha5a4E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtTJ10itTATCetEM3yz3+Rm9qkVfIzb7n0fLsT2wtObwIMC2kQ
+	KMGRUKGinuDgIk4mHyLMt1xJaCvwXI2MJR0x2rowJlfe67i9QhllDSJkFXAklfg=
+X-Gm-Gg: ASbGncu5c1lyxrmcItA8gGzS3Jv7laWVGWeum/lJ1zkZdIbuR3LRXKvUQ8IK/glX/jK
+	uRhhQsJ/O9dVayJtAEc8WCl6lT5/T+zBwkNSeXkEofgw6gPOm793kJI4bzjvVtrKxaNV7Cccq80
+	XQOcNxNf8V0KhlEd/pLFYG8nXFZlfVI0xfM7GHhDspu0Y4eBnw20WK/ySoeV2H7E1TPNAwtO0Hh
+	7n2fZAsTfrPJJ/a5pKJnoE5CP26lhEWncQcDoFi5MnfWcMsi8OEYFgiOS9Ua+7yEeBsIri4TfBZ
+	BcLr4B9508fnNGz+PhQhgvPgAZzEsPdYB4RWcwMqkl446gP+dr9MhMY6v84r8MUnv+165chbMg=
+	=
+X-Google-Smtp-Source: AGHT+IGkbsgJvhaLoKe9hCL01Phvk9cQWomrPl7igNBxsiltgQYpsqqfKtqy6vBzpm7mTH5vwHyozg==
+X-Received: by 2002:a5d:64a8:0:b0:390:ff84:532b with SMTP id ffacd0b85a97d-3997955cc22mr13735349f8f.7.1742824629087;
+        Mon, 24 Mar 2025 06:57:09 -0700 (PDT)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.46])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fdbcfaasm120146525e9.35.2025.03.24.06.57.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Mar 2025 06:57:08 -0700 (PDT)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: rafael@kernel.org,
+	daniel.lezcano@linaro.org,
+	rui.zhang@intel.com,
+	lukasz.luba@arm.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	geert+renesas@glider.be,
+	magnus.damm@gmail.com,
+	p.zabel@pengutronix.de
+Cc: claudiu.beznea@tuxon.dev,
+	linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v3 0/4] thermal: renesas: Add support for RZ/G3S
+Date: Mon, 24 Mar 2025 15:56:57 +0200
+Message-ID: <20250324135701.179827-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-CG01QzSJjp46ad@pollux>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Mar 23, 2025 at 11:10:27PM +0100, Danilo Krummrich wrote:
-> On Sat, Mar 22, 2025 at 11:10:57AM +0100, Danilo Krummrich wrote:
-> > On Fri, Mar 21, 2025 at 08:25:07PM -0700, Greg KH wrote:
-> > > On Fri, Mar 21, 2025 at 10:47:54PM +0100, Danilo Krummrich wrote:
-> > >
-> > > Yes, over time, many subsystems were forced to come up with ways of
-> > > determining the device type, look at dev_is_pci() and where it's used
-> > > all over the place (wait, why can't you just use that here too?)
-> > 
-> > It's a macro and bindgen doesn't pick it up for us to use.
-> > 
-> > > But
-> > > those usages are the rare exception.  And I still think that was the
-> > > wrong choice.
-> > > 
-> > > What I don't want to see is this type of function to be the only way you
-> > > can get a pci device from a struct device in rust.
-> > 
-> > I see where you're coming from and I totally agree with that.
-> > 
-> > The goal is to cover as much as possible by the corresponding abstractions, such
-> > that the abstraction already provide the driver with the correct (device) type,
-> > just like the bus callbacks do.
-> > 
-> > We can do the same thing with IOCTLs, sysfs ops, etc. The miscdevice
-> > abstractions are a good example for this. The DRM abstractions will also provide
-> > the DRM device (typed to its corresponding driver) for all DRM IOCTLs a driver
-> > registers.
-> > 
-> > > That's going to be
-> > > messy as that is going to be a very common occurance (maybe, I haven't
-> > > seen how you use this), and would force everyone to always test the
-> > > return value, adding complexity and additional work for everyone, just
-> > > because the few wants it.
-> > 
-> > Given the above, I think in most cases we are (and plan to be) a step ahead and
-> > (almost) never have the driver in the situation that it ever needs any
-> > container_of() like thing, because the abstraction already provides the correct
-> > type.
-> > 
-> > However, there may be some rare exceptions, where we need the driver to
-> > "upcast", more below.
-> > 
-> > > So where/how are you going to use this?  Why can't you just store the
-> > > "real" reference to the pci device?  If you want to save off a generic
-> > > device reference, where did it come from?  Why can't you just explicitly
-> > > save off the correct type at the time you stored it?  Is this just
-> > > attempting to save a few pointers?  Is this going to be required to be
-> > > called as the only way to get from a device to a pci device in a rust
-> > > driver?
-> > 
-> > As mentioned above, wherever the abstraction can already provide the correct
-> > (device) type to the driver, that's what we should do instead.
-> > 
-> > One specific use-case I see with this is for the auxiliary bus and likely MFD,
-> > where we want to access the parent of a certain device.
-> > 
-> > For instance, in nova-drm we'll probe against an auxiliary device registered by
-> > nova-core. nova-drm will use its auxiliary device to call into nova-core.
-> > nova-core can then validate that it is the originator of the auxiliary device
-> > (e.g. by name and ID, or simply pointer comparison).
-> > 
-> > Subsequently, nova-core can find its (in this case) pci::Device instance through
-> > the parent device (Note that I changed this, such that you can only get the
-> > parent device from an auxiliary::Device, as discussed).
-> > 
-> > 	pub fn some_operation(adev: &auxiliary::Device, ...) -> ... {
-> > 	   // validate that `adev` was created by us
-> > 
-> > 	   if let Some(parent) = adev.parent() {
-> >               let pdev: &pci::Device = parent.try_into()?;
-> > 	      ...
-> > 	   }
-> > 	}
-> > 
-> > Now, I understand that your concern isn't necessarily about the fact that we
-> > "upcast", but that it is fallible.
-> > 
-> > And you're not wrong about this, nova-core knows for sure that the parent device
-> > must be its PCI device, since it can indeed validate that the auxiliary device
-> > was created and registered by itself.
-> > 
-> > However, any other API that does not validate that `parent` is actually a
-> > pci::Device in the example above would be fundamentally unsafe. And I think we
-> > don't want to give out unsafe APIs to drivers.
-> > 
-> > Given that this is only needed in very rare cases (since most of the time the
-> > driver should be provided with the correct type directly) I'm not concerned
-> > about the small overhead of the underlying pointer comparison. It's also not
-> > creating messy code as it would be in C.
-> > 
-> > In C it would be
-> > 
-> > 		struct pci_dev *pdev;
-> > 
-> > 		if (!dev_is_pci(parent))
-> > 			return -EINVAL;
-> > 
-> > 		pdev = to_pci_dev(parent);
-> > 
-> > Whereas in Rust it's only
-> > 
-> > 		let pdev: &pci::Device = parent.try_into()?;
-> > 
-> > and without any validation in Rust
-> > 
-> > 		// SAFETY: explain why this is safe to do
-> > 		let pdev = unsafe { pci::Device::from_device(parent) };
-> > 
-> > > Along these lines, if you can convince me that this is something that we
-> > > really should be doing, in that we should always be checking every time
-> > > someone would want to call to_pci_dev(), that the return value is
-> > > checked, then why don't we also do this in C if it's going to be
-> > > something to assure people it is going to be correct?  I don't want to
-> > > see the rust and C sides get "out of sync" here for things that can be
-> > > kept in sync, as that reduces the mental load of all of us as we travers
-> > > across the boundry for the next 20+ years.
-> > 
-> > I think in this case it is good when the C and Rust side get a bit
-> > "out of sync":
-> 
-> A bit more clarification on this:
-> 
-> What I want to say with this is, since we can cover a lot of the common cases
-> through abstractions and the type system, we're left with the not so common
-> ones, where the "upcasts" are not made in the context of common and well
-> established patterns, but, for instance, depend on the semantics of the driver;
-> those should not be unsafe IMHO.
-> 
-> I think for C the situation is a bit different, because there we don't have a
-> type system that can take care of the majority of cases (at compile time). Every
-> such operation is fundamentally unsafe. So, it's a bit hard to draw a boundary.
-> 
-> (In Rust, it's pretty simple to draw the boundary; if it can't be covered by the
-> type system or by the abstraction, we need to check to uphold the safety
-> guarantees.)
-> 
-> So, for the majority of cases, since it's *always* an additional runtime check
-> in C, I think we shouldn't have it. But probably there are rare cases where it
-> also wouldn't be the worst idea to check. :)
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Thanks for the long writeup, that makes more sense.
+Hi,
 
-Ok, I'll not object to this change at all, so if you need them to go
-through a different tree, feel free to take them.  But as I think it's
-the merge window now, it will have to wait till -rc1 is out.
+This series adds thermal support for the Renesas RZ/G3S SoC.
 
-And yes, maybe we do need a version of this for C code. :)
+Series is organized as follows:
+- patches 1-2/4:	add thermal support for RZ/G3S
+- patches 3-4/5:	add device tree support
 
-> In Rust we should be able to cover the majority of cases through abstractions
-> and the type system, but in the cases where we can't do so, I don't think we
-> should fall back to unsafe code for drivers.
-> 
-> > For most of the cases where we can cover things through the type system and
-> > already provide the driver with the correct object instance from the get-go,
-> > that's a great improvement over C.
-> > 
-> > For the very rare cases where we have to "upcast", I really think it's better to
-> > uphold providing safe APIs to drivers, rather than unsafe ones.
+Merge strategy, if any:
+- patches 1-2/4 can go through the thermal tree
+- patches 3-4/4 can go through the Renesas tree
 
-Fair enough, hopefully this makes things simpler for driver authors in
-the end as it is not a common case.
+Thank you,
+Claudiu Beznea
 
-greg k-h
+Changes in v3:
+- drop runtime resume/suspend from the temperature reading function;
+  this is not needed as the temperature is read with ADC; this is
+  confirmed by the HW team
+- use dedicated function to open the devres group in probe; in this
+  way the thermal probe code is simpler
+
+Changes in v2:
+- dropped the already applied patches
+- dropped patch 2/6 from v1 as the devres_open_group()/devres_release_group()
+  approach was implemented in this version (similar to what was proposed in
+  [1])
+- collected tags
+- added a passive trip point not bound to any cooling device, as proposed
+  in the review process
+- decreased the trip points temperature
+- convert the temperature to mili degree Celsius before applying the
+  computation formula to avoid losing precision
+- use int variables (instead of unsigned) for temperature computation
+
+[1] https://lore.kernel.org/all/20250215130849.227812-1-claudiu.beznea.uj@bp.renesas.com/
+
+Claudiu Beznea (4):
+  dt-bindings: thermal: r9a08g045-tsu: Document the TSU unit
+  thermal: renesas: rzg3s: Add thermal driver for the Renesas RZ/G3S SoC
+  arm64: dts: renesas: r9a08g045: Add TSU node
+  arm64: defconfig: Enable RZ/G3S thermal
+
+ .../thermal/renesas,r9a08g045-tsu.yaml        |  93 ++++++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/boot/dts/renesas/r9a08g045.dtsi    |  49 ++-
+ .../boot/dts/renesas/rzg3s-smarc-som.dtsi     |   4 -
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/thermal/renesas/Kconfig               |   8 +
+ drivers/thermal/renesas/Makefile              |   1 +
+ drivers/thermal/renesas/rzg3s_thermal.c       | 313 ++++++++++++++++++
+ 8 files changed, 471 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/renesas,r9a08g045-tsu.yaml
+ create mode 100644 drivers/thermal/renesas/rzg3s_thermal.c
+
+-- 
+2.43.0
+
