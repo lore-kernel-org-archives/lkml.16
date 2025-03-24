@@ -1,270 +1,220 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696EC2505A5;
-	Mon, 24 Mar 2025 07:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD8C18D65E
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 07:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742800938; cv=none; b=oW5Q8m0sSKXRrS1HFH61XQlUl3YXfWL1WptsL+UdfEG9Miv17krL2HbVeeuBCVSbjKtqdydpg3ea1rZNpC2MNfhHauzAbRsZJ3GFGFFj5c5VNHLTkQVfbhL/Ts4D9tFs4bbm1mcTa8nAIee5k4mfX1I6JT++c9ONLFOzxm7gKBI=
+	t=1742800996; cv=none; b=ZIZToKLjNYXlvj66vDqreCtG0OkQjs/8n4o2EzLRJbIJhkhhKgnrKrVRt4LYu5DOWvU3yA+fAiHQDxs+iGV2d/q83RsqIR+MtT5zLmMA6ZwNwSWFHCcKJW1lELI7OeV5wSI91XrHTOVmsisvFWRINuKbcJTcLWijTPKgpaTOsrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742800938; c=relaxed/simple;
-	bh=GD8mUBTlaCk9XHl24Tc35Y+NinCF+coEPAtI6DhQv2c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=c4mzP8pngLU+ULwPL3KloXo1QX+wDMoCSZ358I3ZOtD6unfktoQVQI8ulE/VW3rGKYK32I48skuSz1RQuMUmaFBJ30ZFS7z3lKa02Seh7h0jqkrG8EEaSbUEcoVOOd3MUQcbEtQKZEdDH/8StiWGzrSUmy3ecE1gd+o1yIWX/NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Tukkuj9h; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1742800996; c=relaxed/simple;
+	bh=Rq5Qsj+vtD9TgfS3gUgFhd0FdKFXn64WXTOxKmO6hBs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kYNrq8NeHMrMy00oN9n49l/jwvJ7zaZ3jBMMx+wbBit6rxH3cmec13RIYt1pYqneIYTI04Jt4Sp+XOJZggSmqoA9wpYfFtYwTlv1pWBw6WEVwCsGSSPm9qesA4RB6AUE6NwppeSvEJWZDXXgjhJ/s/lQEwqsASjSBzPxYHGfCNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AcfwUvPn; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Tukkuj9h"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52O6c27D000529;
-	Mon, 24 Mar 2025 07:22:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	fiBK3k2MO0T9Nq+cnZNmVgQOcY1jGw6wYPK3Cg4ZuNU=; b=Tukkuj9hlbJzOe5l
-	XGDDLgOVmvFXhJlQRtSS+gQJg6173ABOzqSsmZBs8D2XtlNG7YRlLmkC50No3qqC
-	m7Esi4ZcrKTaoomxaxat2I89Swzdh+RmZ7VUH5Zr0b/f3+yWXbGxnL32hnMl6hds
-	f7b1lGFuo4QWIjAREmQctRx929IUozLvHbV/Kxxfe8HC2qiL/U1Awuz/fb9FlDv5
-	jOrOExFdyNaE4wKRLDBW+iTEDLem4EbjEfYuffRv+nj8F2htD77lDelCGas1YjFM
-	bFyJIVPhKdLtVFpxjSDxIA3iIyMrny7Cl5uWlSLPUTLckgzB9XsmdmBULpa8x3st
-	zgfXgg==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45hn9wbdjx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Mar 2025 07:22:00 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52O7LxIK027659
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Mar 2025 07:21:59 GMT
-Received: from [10.233.19.224] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 24 Mar
- 2025 00:21:56 -0700
-Message-ID: <70db6155-a230-4f9c-a2e1-2c872c87cd39@quicinc.com>
-Date: Mon, 24 Mar 2025 15:21:53 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AcfwUvPn"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-227d6b530d8so575415ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 00:23:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742800993; x=1743405793; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qe/MCCvdJLYJ3g+QnwJQUU6NC2SI4IaMPwysTrJxuV0=;
+        b=AcfwUvPnzD8feBoFMYcGQDZr8gNGhElE2P9+5TlfXfzozRkql5+6bPoYp6tG7dBJH/
+         tARAKzEXxuxrn49DEGkksvFJtgk0cXjWq4O9/ZIOKEoHlENv1NzM6+PL2eWATFdh6x+i
+         NpwqxgWRndt5AITQs6ml/xpxPGQYpLnBGdgnUaNOs5MJmqoA2+QJn0C+PyyoqBRsw/FY
+         yH5PqmuT5QIsaDh7kjEvsNlBrhUIyN/sBzk0X6b/B8M/mhL00QIkxQzZ3UZRWTw+NblC
+         Rmo2+2cu9/VOOSVVjCqjAStp81GNNP9fYEE8NmZQ9FJ/fId/YYj5kNJGBBi9tlH280h7
+         qvCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742800993; x=1743405793;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qe/MCCvdJLYJ3g+QnwJQUU6NC2SI4IaMPwysTrJxuV0=;
+        b=cMjS9VjocGekvv44RuTHeqGq79tz7kCMvM4gf3eoAAUa7xJiBr/4CKEjxBVDqZFlMi
+         3oeUYLFuid/jmNzeLvjnF06fZimPF8Q+/AH4ZdJ9e55DoZ+r2hVIpd6ff8Pg1DVrhMC8
+         tjbceZGxyExU5NsVc9kHnxry12Tn6OtLhtjK7i55Ndgp8+51UCOGTa0+jN2qkCkIdrKl
+         vRc0AfIx2pHzjF5Pq2VuxAmUiGOFsHhSEk4HP17w3sVNdADna9lHGyoSDwZhyVroixRX
+         uncuGNTa78NpkKSYc5tgHx6GxTed3/ako+U+unyXvClzGZ+ycEwdyK9ftTej5UkGvpgP
+         5MTA==
+X-Forwarded-Encrypted: i=1; AJvYcCWlXeMAFXirGjEGdxp0/BycefueQwni7iFNAIkw0M0sLJ/DDuhx3raVElf8bNkai+WbIJgKCBakKDqTm+c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIthU1wO46KHSZ+gs/ivlfdOZR6V/7PGcVdcoAXJoXXE1Diqpf
+	tPtcZRshSW5wS2HdDWQDWXwhwWwpayVVjcUvL8GC3el12jtmlB/l5ZkgY5bJ+A==
+X-Gm-Gg: ASbGncsy2/zs5X+rdfMRqpvesplnj6RDwmqgqqUdp+YT0JYrh/hPgqAfOAKMaAWwlQJ
+	ZjErmNm3KUMxpywlm3Du1Erv6whmO2fTdttuTtY1R1a4JW727LnAWFSJiHIT8N4+I8BfF99DqjU
+	dyYjq3ZBljarD8uqZ8hGKeWMijHVtnqsjUO8py3U0zk2xcNquOunXN3QgFOvc69lpNCRTHWlcyV
+	LEaSR1dXTCeg5DJZt0VzE+K9l1bmUBSo794zX0aqQBwP3UWHc56hDVKXt1HXGMht/fHanghD7os
+	3NRPYpzEFp7FSbogh5MxofRIDVwtFWoonute42xeLShaORalCVNLOmhud3l9ySCnoN0=
+X-Google-Smtp-Source: AGHT+IEVDoBTCHOODzvBGMAnc/Iok1j6AhaExydrGDQgnCUirKAYBNkCKwG2t70sQoq1tMM3o02m1Q==
+X-Received: by 2002:a17:903:230d:b0:220:e9ac:e746 with SMTP id d9443c01a7336-22780e46648mr200826765ad.53.1742800992590;
+        Mon, 24 Mar 2025 00:23:12 -0700 (PDT)
+Received: from thinkpad ([220.158.156.91])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22781208966sm63304325ad.254.2025.03.24.00.23.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Mar 2025 00:23:12 -0700 (PDT)
+Date: Mon, 24 Mar 2025 12:53:05 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: Frank Li <Frank.Li@nxp.com>, Tony Lindgren <tony@atomide.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH PATCH RFC NOT TESTED 1/2] ARM: dts: ti: dra7: Correct
+ ranges for PCIe and parent bus nodes
+Message-ID: <hhvst2uvlymcyir5sb5vwd4ezko7yawwp5cnosluaz2hkabcna@ywr4thtjpdps>
+References: <20250305-dra-v1-0-8dc6d9a0e1c0@nxp.com>
+ <20250305-dra-v1-1-8dc6d9a0e1c0@nxp.com>
+ <20250313165311.2fj7aus3pcsg4m2c@thinkpad>
+ <20250314064642.fyf3jqylmc6meft7@uda0492258>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/3] arm64: dts: qcom: x1e80100-qcp: Add power control
- and sideband signals for PCIe3
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <quic_qianyu@quicinc.com>, <sfr@canb.auug.org.au>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250320055502.274849-1-quic_wenbyao@quicinc.com>
- <w7mbnqG7DHPCH6hVoSu4E2p8pV7Rw6uvurlK-CUxF7TYQ53fFyagxmLUCmCTfG0DOUgIQn7GdppXgBlq8Gyv9Q==@protonmail.internalid>
- <20250320055502.274849-4-quic_wenbyao@quicinc.com>
- <54c588be-d630-4901-8885-a042b477f168@linaro.org>
-Content-Language: en-US
-From: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>
-In-Reply-To: <54c588be-d630-4901-8885-a042b477f168@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: rSKfBKjZoSF1N6qxinMMgdaZVnSNQaYe
-X-Proofpoint-ORIG-GUID: rSKfBKjZoSF1N6qxinMMgdaZVnSNQaYe
-X-Authority-Analysis: v=2.4 cv=CPoqXQrD c=1 sm=1 tr=0 ts=67e10818 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=d_BdsECxPa-TM83sDTsA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-24_03,2025-03-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
- spamscore=0 priorityscore=1501 suspectscore=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 malwarescore=0 adultscore=0 phishscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503240052
+In-Reply-To: <20250314064642.fyf3jqylmc6meft7@uda0492258>
 
-On 3/21/2025 6:08 AM, Bryan O'Donoghue wrote:
-> On 20/03/2025 05:55, Wenbin Yao wrote:
->> From: Qiang Yu <quic_qianyu@quicinc.com>
->>
->> Add perst, wake and clkreq sideband signals and required regulators in
->> PCIe3 controller and PHY device tree node. Describe the voltage rails of
->> the x8 PCI slots for PCIe3 port.
->>
->> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
->> Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/x1e80100-qcp.dts | 119 ++++++++++++++++++++++
->>   1 file changed, 119 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts 
->> b/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
->> index 28086a2bc..9cd313802 100644
->> --- a/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
->> +++ b/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
->> @@ -318,6 +318,48 @@ vreg_wcn_3p3: regulator-wcn-3p3 {
->>           regulator-boot-on;
->>       };
->>
->> +    vreg_pcie_12v: regulator-pcie_12v {
->> +        compatible = "regulator-fixed";
->> +
->> +        regulator-name = "VREG_PCIE_12V";
->> +        regulator-min-microvolt = <12000000>;
->> +        regulator-max-microvolt = <12000000>;
->> +
->> +        gpio = <&pm8550ve_8_gpios 8 GPIO_ACTIVE_HIGH>;
->> +        enable-active-high;
->> +
->> +        pinctrl-names = "default";
->> +        pinctrl-0 = <&pcie_x8_12v>;
->> +    };
->> +
->> +    vreg_pcie_3v3_aux: regulator-pcie_3v3_aux {
->> +        compatible = "regulator-fixed";
->> +
->> +        regulator-name = "VREG_PCIE_3P3_AUX";
->> +        regulator-min-microvolt = <3300000>;
->> +        regulator-max-microvolt = <3300000>;
->> +
->> +        gpio = <&pmc8380_3_gpios 8 GPIO_ACTIVE_HIGH>;
->> +        enable-active-high;
->> +
->> +        pinctrl-names = "default";
->> +        pinctrl-0 = <&pm_sde7_aux_3p3_en>;
->> +    };
->> +
->> +    vreg_pcie_3v3: regulator-pcie_3v3 {
->> +        compatible = "regulator-fixed";
->> +
->> +        regulator-name = "VREG_PCIE_3P3";
->> +        regulator-min-microvolt = <3300000>;
->> +        regulator-max-microvolt = <3300000>;
->> +
->> +        gpio = <&pmc8380_3_gpios 6 GPIO_ACTIVE_HIGH>;
->> +        enable-active-high;
->> +
->> +        pinctrl-names = "default";
->> +        pinctrl-0 = <&pm_sde7_main_3p3_en>;
->> +};
->> +
->>       usb-1-ss0-sbu-mux {
->>           compatible = "onnn,fsusb42", "gpio-sbu-mux";
->>
->> @@ -907,6 +949,60 @@ &mdss_dp3_phy {
->>       status = "okay";
->>   };
->>
->> +&pm8550ve_8_gpios {
->> +    pcie_x8_12v: pcie-12v-default-state {
->> +        pins = "gpio8";
->> +        function = "normal";
->> +        output-enable;
->> +        output-high;
->> +        bias-pull-down;
->> +        power-source = <0>;
->> +    };
->> +};
->> +
->> +&pmc8380_3_gpios {
->> +    pm_sde7_aux_3p3_en: pcie-aux-3p3-default-state {
->> +        pins = "gpio8";
->> +        function = "normal";
->> +        output-enable;
->> +        output-high;
->> +        bias-pull-down;
->> +        power-source = <0>;
->> +    };
->> +
->> +    pm_sde7_main_3p3_en: pcie-main-3p3-default-state {
->> +        pins = "gpio6";
->> +        function = "normal";
->> +        output-enable;
->> +        output-high;
->> +        bias-pull-down;
->> +        power-source = <0>;
->> +    };
->> +};
->> +
->> +&pcie3 {
->> +
->> +    pinctrl-names = "default";
->> +    pinctrl-0 = <&pcie3_default>;
->> +    perst-gpios = <&tlmm 143 GPIO_ACTIVE_LOW>;
->> +    wake-gpios = <&tlmm 145 GPIO_ACTIVE_LOW>;
->> +    status = "okay";
->> +};
->> +
->> +&pcie3_phy {
->> +    vdda-phy-supply = <&vreg_l3j_0p8>;
->> +    vdda-pll-supply = <&vreg_l3e_1p2>;
->> +    vdda-qref-supply = <&vreg_l3c_0p8>;
->> +
->> +    status = "okay";
->> +};
->> +
->> +&pcie3port {
->> +    vpcie12v-supply = <&vreg_pcie_12v>;
->> +    vpcie3v3-supply = <&vreg_pcie_3v3>;
->> +    vpcie3v3aux-supply = <&vreg_pcie_3v3_aux>;
->> +};
->> +
->>   &pcie4 {
->>       perst-gpios = <&tlmm 146 GPIO_ACTIVE_LOW>;
->>       wake-gpios = <&tlmm 148 GPIO_ACTIVE_LOW>;
->> @@ -1118,6 +1214,29 @@ nvme_reg_en: nvme-reg-en-state {
->>           bias-disable;
->>       };
->>
->> +    pcie3_default: pcie3-default-state {
->> +        clkreq-n-pins {
->> +            pins = "gpio144";
->> +            function = "pcie3_clk";
->> +            drive-strength = <2>;
->> +            bias-pull-up;
->> +        };
->> +
->> +        perst-n-pins {
->> +            pins = "gpio143";
->> +            function = "gpio";
->> +            drive-strength = <2>;
->> +            bias-pull-down;
->> +        };
->> +
->> +        wake-n-pins {
->> +               pins = "gpio145";
->> +               function = "gpio";
->> +               drive-strength = <2>;
->> +               bias-pull-up;
->> +        };
->> +    };
->> +
->>       pcie4_default: pcie4-default-state {
->>           clkreq-n-pins {
->>               pins = "gpio147";
->> -- 
->> 2.34.1
->>
->>
->
-> Recommend breaking this patch into at least two patches @ the and
->
-> -> Add power control
-> -> Add sideband signals
->
-> if your patch title requires an and its usually a good indicator of a 
-> place to break that patch into different parts.
+On Fri, Mar 14, 2025 at 12:16:42PM +0530, Siddharth Vadapalli wrote:
+> On Thu, Mar 13, 2025 at 10:23:11PM +0530, Manivannan Sadhasivam wrote:
+> 
+> Hello Mani,
+> 
+> > On Wed, Mar 05, 2025 at 11:20:22AM -0500, Frank Li wrote:
+> > 
+> > If you want a specific patch to be tested, you can add [PATCH RFT] tag.C
+> > 
+> > > According to code in drivers/pci/controller/dwc/pci-dra7xx.c
+> > > 
+> > > dra7xx_pcie_cpu_addr_fixup()
+> > > {
+> > > 	return cpu_addr & DRA7XX_CPU_TO_BUS_ADDR;  //0x0FFFFFFF
+> > > }
+> > > 
+> > > PCI parent bus trim high 4 bits address to 0. Correct ranges in
+> > > target-module@51000000 to algin hardware behavior, which translate PCIe
+> > > outbound address 0..0x0fff_ffff to 0x2000_0000..0x2fff_ffff.
+> > > 
+> > > Set 'config' and 'addr_space' reg values to 0.
+> > > Change parent bus address of downstream I/O and non-prefetchable memory to
+> > > 0.
+> > > 
+> > > Ensure no functional impact on the final address translation result.
+> > > 
+> > > Prepare for the removal of the driver’s cpu_addr_fixup().
+> > > 
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > >  arch/arm/boot/dts/ti/omap/dra7.dtsi | 18 +++++++++---------
+> > >  1 file changed, 9 insertions(+), 9 deletions(-)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/ti/omap/dra7.dtsi b/arch/arm/boot/dts/ti/omap/dra7.dtsi
+> > > index b709703f6c0d4..9213fdd25330b 100644
+> > > --- a/arch/arm/boot/dts/ti/omap/dra7.dtsi
+> > > +++ b/arch/arm/boot/dts/ti/omap/dra7.dtsi
+> > > @@ -196,7 +196,7 @@ axi0: target-module@51000000 {
+> > >  			#size-cells = <1>;
+> > >  			#address-cells = <1>;
+> > >  			ranges = <0x51000000 0x51000000 0x3000>,
+> > > -				 <0x20000000 0x20000000 0x10000000>;
+> > > +				 <0x00000000 0x20000000 0x10000000>;
+> > 
+> > I'm not able to interpret this properly. So this essentially means that the
+> > parent address 0x20000000 is mapped to child address 0x00000000. And the child
+> > address is same for other controller as well.
+> > 
+> > Also, the cpu_addr_fixup() is doing the same by masking out the upper 4 bits. I
+> > tried looking into the DRA7 TRM, but it says (ECAM_Param_Base_Addr +
+> > 0x20000000) where ECAM_Param_Base_Addr = 0x0000_0000 to 0x0FFF_F000.
+> > 
+> > I couldn't relate TRM with the cpu_addr_fixup() callback. Can someone from TI
+> > shed light on this?
+> 
+> A "git blame" on the line being modified in dra7.dtsi gives the
+> following commit:
+> https://github.com/torvalds/linux/commit/c761028ef5e2
+> prior to which the ranges is exactly the same as the one being added by
+> this patch.
+> 
+> The cpu_addr_fixup() function was introduced by the following commit:
+> https://github.com/torvalds/linux/commit/2ed6cc71e6f7
+> with the reason described in
+> Section 24.9.4.3.2 PCIe Controller Slave Port
+> of the T.R.M. at:
+> https://www.ti.com/lit/ug/spruic2d/spruic2d.pdf
+> ---------------------------------------------------------------------------
+> NOTE:
+> The PCIe controller remains fully functional, and able to send transactions
+> to, for example, anywhere within the 64-bit PCIe memory space, with the
+> appropriate remapping of the 28-bit address by the outbound address
+> translation unit (iATU). The limitation is that the total size of addressed
+> PCIe regions (in config, memory, IO spaces) must be less than 2^28 bytes.
+> ---------------------------------------------------------------------------
+> 
+> The entire sequence is:
+> 0) dra7.dtsi had ranges which match the ranges in the current patch.
+> 1) cpu_addr_fixup() was added by
+> https://github.com/torvalds/linux/commit/2ed6cc71e6f7
+> 2) ranges was updated to <0x20000000 0x20000000 0x10000000> by:
+> https://github.com/torvalds/linux/commit/c761028ef5e2
+> 3) ranges is being changed back to its original state of "0)" above.
+> 
 
-Will fix in the next version.
+Thanks a lot for the reference.
 
->
-> ---
-> bod
+> cpu_addr_fixup() was introduced to remove the following:
+> 	pp->io_base &= DRA7XX_CPU_TO_BUS_ADDR;
+> 	pp->mem_base &= DRA7XX_CPU_TO_BUS_ADDR;
+> 	pp->cfg0_base &= DRA7XX_CPU_TO_BUS_ADDR;
+> 	pp->cfg1_base &= DRA7XX_CPU_TO_BUS_ADDR;
+> in dra7xx_pcie_host_init(). The reason for the above is mentioned in the
+> "NOTE" as:
+> ---------------------------------------------------------------------------
+> The limitation is that the total size of addressed PCIe regions
+> (in config, memory, IO spaces) must be less than 2^28 bytes.
+> ---------------------------------------------------------------------------
+> 
+
+I don't think so. This note is for the *size* of the addressed regions. The
+fixup corresponds to the sentence in your above note from TRM:
+
+"able to send transactions to, for example, anywhere within the 64-bit PCIe
+memory space, with the appropriate remapping of the 28-bit address by the
+outbound address translation unit (iATU)"
+
+I think the limitation is due to the 29-bit address bus width of the PCIe
+controller slave port as mentionend in section, 24.9.4.3.2. And that correlates
+to the truncation of the upper 4 bits of the IO/CFG/MEM addresses. So even if
+the CPU passes address range relative to offset 0, PCIe controller converts it
+to 0x20000000/0x30000000 based on the instance.
+
+If my understanding is correct, then commit, c761028ef5e2 should be reverted and
+this patch can be applied.
+
+> I am not sure if Frank is accounting for all of this in the current patch
+> as well as the dependent patch series associated with removing
+> cpu_addr_fixup().
+> 
+> Regarding testing the series, I unfortunately don't have the hardware so
+> I cannot test it.
+> 
+
+That's a pity. If TI employee doesn't have access to an upstream supported
+platform, then I'm not sure whom we should ask for testing.
+
+Could you please ask around and see if you can get access to one? I'm sure that
+the hardware will be available somewhere :)
+
+- Mani
 
 -- 
-With best wishes
-Wenbin
-
+மணிவண்ணன் சதாசிவம்
