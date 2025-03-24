@@ -1,123 +1,239 @@
-Received: from mx0b-00300601.pphosted.com (mx0b-00300601.pphosted.com [148.163.142.35])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2420818B03;
-	Mon, 24 Mar 2025 19:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.142.35
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742844154; cv=none; b=NlcHrPj/8NrfbGK8B1DUmVGkYprw3tnzhOxge4E9mgMoPnVzHxvIE6rNMcFmjEvCWaP++68IVyqGFvj/F7aSoV8HoVAxZQFb+LRJDLjRclasY9gEbI/wxaWPnSCVgC4Rj6WXd4x8MpxUGefhYGU06rn27exRKQimu69m0Vtp/Kc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742844154; c=relaxed/simple;
-	bh=yJDMXLZzTHk3EZq76Q74N4Zwvzvre3uZR9K9t14AwoU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GZb06jcpsQiixzvGMNmb+db/0mrqYAgld0J7AAVnHHHhWzeYxSguJku+eRVnqCC8qQUGEmuQ3mJuyJOK26m8R+lABGwk2E+ubLv2B+UjqIMkvB6a2KIrXQn0w7dXOKwnRzdroY7OW+9db9+613vqzWjbECpedWzdqU2BN+/52JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ni.com; spf=pass smtp.mailfrom=ni.com; dkim=pass (2048-bit key) header.d=ni.com header.i=@ni.com header.b=mw3UaA9m; arc=none smtp.client-ip=148.163.142.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ni.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ni.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42992E3381;
+	Mon, 24 Mar 2025 19:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742844354; cv=pass; b=d5h/jI6YxZMV0nlV14udVnfPcMZoRjAetungbKbiqv4m8pJ4S5F3mjdPdqnkCXLZfZubwpq1S7LzZCRF7QbS/9Y9onBN7R1vSlejyA1U4lNeRyfRa3hOp9blVnn8zsYXGJh9HnDIbeHmgVA2v77Sxp5KrrA6sLIvoANstq/TRu4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742844354; c=relaxed/simple;
+	bh=+kFk9rhdiDAm/oCDyLKl9B/OAxtodeYjS1Mr/hB+Q/4=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=TmOETr2oq+mwPY8XGrHTspZHxRMZ6CFBh4gPxKtWjQh4e2YGKl7oL6kiVPIEIu8qE11HrKPUnH6wDNZxf9xrqifJhrrN5Dlb+zjxKjYf0RN6+BLHnHYolKVtcdVzcrIoMUaVGb5vkQlt5c1I/yD3fO33aTEWr5Sbf7Xn8gPyd5A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=TPl1nyZU; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ni.com header.i=@ni.com header.b="mw3UaA9m"
-Received: from pps.filterd (m0144091.ppops.net [127.0.0.1])
-	by mx0b-00300601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52OD2W3k001531;
-	Mon, 24 Mar 2025 19:22:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ni.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=PPS11142024;
-	 bh=czoJ/paFLCwaFLFspLyWITZgqMgVHu04NTA7upDGRSA=; b=mw3UaA9mQlkg
-	feFrrKbQUnnLUvi3tboPLvOxNHUWq9adcNw0nYEx5wppKjXpTw17V3AaLA8JtUaN
-	dHTNg870Ks9t7lmPzOcBxmZz+IECm73T09QIwzv7EGd/T9vsc0NbAwKPiXAE1R8i
-	eadHiolb9sB1Za1+UAg8O9OVPDY2Om6HUf8lo9yhTvrz84Hq0FHdqTvMYCCMrBdg
-	i7yqCalwNgQQP6vjTHEDonluLcUjBEypP8tXpLm5FJuMyM7+liOh12tZ+rLYymrs
-	muB7yuIduWxmsJsTl/w6DQZT/Y0NnJTbBI/RNSST3A1WHRzldK1EiyjyB7rhIBWJ
-	jhOQitHP1w==
-Received: from us-aus-excas-p1.ni.corp.natinst.com ([130.164.94.73])
-	by mx0b-00300601.pphosted.com (PPS) with ESMTPS id 45k7x1w8gq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Mar 2025 19:22:02 +0000 (GMT)
-Received: from us-aus-excas-p2.ni.corp.natinst.com (130.164.68.18) by
- us-aus-excas-p1.ni.corp.natinst.com (130.164.68.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Mon, 24 Mar 2025 14:21:16 -0500
-Received: from ershephe-ubuntu.amer.corp.natinst.com (172.18.68.33) by
- us-aus-excas-p2.ni.corp.natinst.com (130.164.68.18) with Microsoft SMTP
- Server id 15.2.1258.28 via Frontend Transport; Mon, 24 Mar 2025 14:21:16
- -0500
-From: Erick Shepherd <erick.shepherd@ni.com>
-To: <ulf.hansson@linaro.org>
-CC: <adrian.hunter@intel.com>, <andy-ld.lu@mediatek.com>,
-        <avri.altman@wdc.com>, <dsimic@manjaro.org>, <erick.shepherd@ni.com>,
-        <jason.lai@genesyslogic.com.tw>, <jeff.johnson@oss.qualcomm.com>,
-        <jonathan@raspberrypi.com>, <keita.aihara@sony.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <victor.shih@genesyslogic.com.tw>, <wsa+renesas@sang-engineering.com>
-Subject: Re: [PATCH] mmc: Add quirk to disable DDR50 tuning
-Date: Mon, 24 Mar 2025 14:21:16 -0500
-Message-ID: <20250324192116.1756281-1-erick.shepherd@ni.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <CAPDyKFqrT0zXVRya=sgEOdjmn7D6xb-e+nD9Q4JpVnh1ddu_Fw@mail.gmail.com>
-References: <CAPDyKFqrT0zXVRya=sgEOdjmn7D6xb-e+nD9Q4JpVnh1ddu_Fw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="TPl1nyZU"
+ARC-Seal: i=1; a=rsa-sha256; t=1742844327; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Swya0szKRZ74K4uMDR5Q2HYkhrNTsV98nQASLIUdYSTu0pX1TV0ufTqnyUXOt0MDBjoAxvZnQhMHjH295lK7G1/YMt9AJp3kpK6uBOb+pzUB7ww2xNCGkIDpRmmlvK9RlmXZyzbI9CUL9x13mAdQWKfj8nBu/okltIxW2hj9bTI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1742844327; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=k8Y7CFUOAycS3oTxDxslZk149LNwr8JZUVw30eo4R5Y=; 
+	b=lsL0Xg7e8xAwEY5wdiYLM3H9Refz4PUSVk/9M7q+udDrxI/XIpXxDaT1843eVvGuJUCas9U6EaB0N+iP1Llavs8lpTZwMt7ziSTEa9GQhINekKXO7EJdJsZijKpeRXTos79kOENjSbJLVroQEpJEJG0ga6pbXWpbUDvN+Fckz1c=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742844327;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=k8Y7CFUOAycS3oTxDxslZk149LNwr8JZUVw30eo4R5Y=;
+	b=TPl1nyZUbi2yI//ivducmbo9Tst2FtnT0BPYqZbm2M8BZZO/mOxK4JdGZIWxbyUh
+	fTPnkm0YRH+q9aoRBvSiEbNoqXoSWdH2xoYe4ol+/GxlFGlsQKTvgju/qSKw/Nq2A7p
+	4FQcdhsx8x88ulnveQ7pAbX4FUBamkeVksTLeca4=
+Received: by mx.zohomail.com with SMTPS id 1742844324407222.7563228461404;
+	Mon, 24 Mar 2025 12:25:24 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH 2/2] rust: drm: Add GPUVM abstraction
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <CANiq72mQ3zuYmsq1PD-49kKLNji8OJwuvxK5QWkNaBMuC-PHQg@mail.gmail.com>
+Date: Mon, 24 Mar 2025 16:25:07 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org,
+ dri-devel@lists.freedesktop.org,
+ Asahi Lina <lina@asahilina.net>
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: ambo5f-lN4Bq9HsUUGgFt5ONALa__j-F
-X-Proofpoint-GUID: ambo5f-lN4Bq9HsUUGgFt5ONALa__j-F
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-24_06,2025-03-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=728
- lowpriorityscore=0 mlxscore=0 bulkscore=0 clxscore=1015 suspectscore=0
- spamscore=0 malwarescore=0 priorityscore=1501 adultscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503240138
+Message-Id: <509EADD7-607B-4DED-ADAC-152D7338EB50@collabora.com>
+References: <20250324-gpuvm-v1-0-7f8213eebb56@collabora.com>
+ <20250324-gpuvm-v1-2-7f8213eebb56@collabora.com>
+ <CANiq72mQ3zuYmsq1PD-49kKLNji8OJwuvxK5QWkNaBMuC-PHQg@mail.gmail.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
+X-ZohoMailClient: External
 
-> Please move this to mmc_sd_init_uhs_card() instead. Moreover, please=0D
-> add a helper in drivers/mmc/core/card.h for=0D
-> MMC_QUIRK_NO_UHS_DDR50_TUNING, similar to other quirks.=0D
-=0D
-Sorry for the late response, how does this look? I can change the=0D
-MMC_QUIRK_NO_UHS_DDR50_TUNING check to be before the tuning=0D
-if-statement instead of within it if that seems more appropriate.=0D
-=0D
---- a/drivers/mmc/core/card.h=0D
-+++ b/drivers/mmc/core/card.h=0D
-@@ -89,6 +89,7 @@ struct mmc_fixup {=0D
- #define CID_MANFID_MICRON       0x13=0D
- #define CID_MANFID_SAMSUNG      0x15=0D
- #define CID_MANFID_APACER       0x27=0D
-+#define CID_MANFID_SWISSBIT     0x5D=0D
- #define CID_MANFID_KINGSTON     0x70=0D
- #define CID_MANFID_HYNIX	0x90=0D
- #define CID_MANFID_KINGSTON_SD	0x9F=0D
-@@ -294,4 +295,9 @@ static inline int mmc_card_broken_sd_poweroff_notify(co=
-nst struct mmc_card *c)=0D
- 	return c->quirks & MMC_QUIRK_BROKEN_SD_POWEROFF_NOTIFY;=0D
- }=0D
- =0D
-+static inline int mmc_card_no_uhs_ddr50_tuning(const struct mmc_card *c)=0D
-+{=0D
-+	return c->quirks & MMC_QUIRK_NO_UHS_DDR50_TUNING;=0D
-+}=0D
-+=0D
-=0D
---- a/drivers/mmc/core/sd.c=0D
-+++ b/drivers/mmc/core/sd.c=0D
-@@ -664,6 +664,10 @@ static int mmc_sd_init_uhs_card(struct mmc_card *card)=
-=0D
-	if (!mmc_host_is_spi(card->host) &&=0D
- 		(card->host->ios.timing =3D=3D MMC_TIMING_UHS_SDR50 ||=0D
- 		 card->host->ios.timing =3D=3D MMC_TIMING_UHS_DDR50 ||=0D
- 		 card->host->ios.timing =3D=3D MMC_TIMING_UHS_SDR104)) {=0D
-+		if ((card->quirks & MMC_QUIRK_NO_UHS_DDR50_TUNING) &&=0D
-+		    card->host->ios.timing =3D=3D MMC_TIMING_UHS_DDR50)=0D
-+			goto out;=0D
-+=0D
- 		err =3D mmc_execute_tuning(card);=0D
- =0D
- 		/*=0D
-=0D
-Regards,=0D
-Erick=0D
+Hi Miguel, thanks for having a look at this:
+
+> On 24 Mar 2025, at 14:36, Miguel Ojeda =
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>=20
+> Hi Daniel,
+>=20
+> A few quick notes for future versions on style/docs to try to keep
+> things consistent upstream -- not an actual review.
+>=20
+> On Mon, Mar 24, 2025 at 4:14=E2=80=AFPM Daniel Almeida
+> <daniel.almeida@collabora.com> wrote:
+>>=20
+>> +#[allow(type_alias_bounds)]
+>=20
+> The documentation says this is highly discouraged -- it may be good to
+> mention why it is OK in this instance in a comment or similar.
+
+Someone correct me here, but I see no issue with this warning. That=E2=80=99=
+s
+because we need the bound to make `<T::Driver as drv::Driver>` work in =
+the
+first place. Otherwise, we=E2=80=99d get a compiler error saying that =
+there=E2=80=99s
+no `Driver` associated type (assuming the case where a random T gets
+passed in)
+
+So, for this to be a problem, we would need to mix this up with =
+something that
+also has a `Driver` associated type, and this associated type would also =
+need a
+drv::Driver bound.
+
+In other words, we would need a lot of things to align for this to =
+actually
+have a chance of being misused. When you consider that this is then only =
+used
+in a few places, the balance tips heavily in favor of the convenience of =
+having
+the type alias IMHO.
+
+In fact, the docs point to the exact thing I am trying to do, i.e.:
+
+>  these bounds may have secondary effects such as enabling the use of =
+=E2=80=9Cshorthand=E2=80=9D associated type paths
+
+>  I.e., paths of the form T::Assoc where T is a type parameter bounded =
+by trait Trait which defines an associated type called Assoc as opposed =
+to a fully qualified path of the form <T as Trait>::Assoc.=20
+
+>=20
+> Also, could this be `expect`? (e.g. if it triggers in all compiler
+> versions we support)
+>=20
+>> +// A convenience type for the driver's GEM object.
+>=20
+> Should this be a `///` comment, i.e. docs?
+>=20
+>> +/// Trait that must be implemented by DRM drivers to represent a DRM =
+GpuVm (a GPU address space).
+>=20
+> (Throughout the file) Markdown in documentation, e.g. `GpuVm`.
+
+By the way, maybe we should have a lint for CamelCase in docs? I tried =
+my best to
+cover all of these, but some slip through :/
+
+i.e.: if you write something in CamelCase somewhere in the docs, there's =
+a high
+chance that you should actually use Markdown and link as appropriate.
+
+I have no idea whether this would actually work in practice, to be =
+honest. It=E2=80=99s just
+a random suggestion (that I'd be willing to help with).
+
+
+>=20
+> (Throughout the file) Intra-doc links where they work, e.g. [`GpuVm`]
+> (assuming it works this one).
+>=20
+>> +        // - Ok(()) is always returned.
+>=20
+> (Throughout the file) Markdown in normal comments too.
+>=20
+>> +/// A transparent wrapper over `drm_gpuva_op_map`.
+>=20
+> (Throughout the file) A link to C definitions is always nice if there
+> is a good one, e.g.
+>=20
+>    [`drm_gpuva_op_map`]:
+> https://docs.kernel.org/gpu/drm-mm.html#c.drm_gpuva_op_map
+>=20
+> Ideally we will eventually have a better way to link these
+> automatically, but for the time being, this helps (and later we can do
+> a replace easier).
+>=20
+>> +/// `None`.
+>> +
+>> +/// Note: the reason for a dedicated remap operation, rather than =
+arbitrary
+>=20
+> Missing `///` (?).
+>=20
+>> +#[repr(C)]
+>> +#[pin_data]
+>> +/// A GPU VA range.
+>> +///
+>> +/// Drivers can use `inner` to store additional data.
+>=20
+> (Throughout the file) We typically place attributes go below the
+> documentation -- or is there a reason to do it like this?
+
+I will be honest with you here: I never remember the right order for =
+docs and attributes.
+
+I=E2=80=99ll fix this.
+
+>=20
+> We had cases with e.g. Clippy bugs regarding safety comments that
+> could be workarounded with "attribute movement", but it does not seem
+> to be the case here.
+>=20
+>> +        if p.is_null() {
+>> +            Err(ENOMEM)
+>=20
+> For error cases, we typically try to do early returns instead.
+>=20
+>> +    /// Iterates the given range of the GPU VA space. It utilizes
+>> +    /// [`DriverGpuVm`] to call back into the driver providing the =
+split and
+>> +    /// merge steps.
+>=20
+> This title (and the next one) may be a bit too long (or not -- please
+> check in the rendered docs), i.e. the first paragraph is the "title",
+> which is used differently in the rendered docs. If there is a way to
+> have a shorter title that still differentiates between the two
+> methods, that would be nice.
+>=20
+>> +    /// # Arguments
+>> +    ///
+>> +    /// - `ctx`: A driver-specific context.
+>> +    /// - `req_obj`: The GEM object to map.
+>> +    /// - `req_addr`: The start address of the new mapping.
+>> +    /// - `req_range`: The range of the mapping.
+>> +    /// - `req_offset`: The offset into the GEM object.
+>=20
+> Normally we try to avoid this kind of sections and instead reference
+> the arguments from the text (e.g. "...the range of the mapping
+> (`req_range`)...") -- but if there is no good way to do it, then it is
+> OK.
+
+Ack.
+
+>=20
+>> +// SAFETY: All our trait methods take locks
+>=20
+> (Throughout the file) Period at the end.
+>=20
+> Thanks!
+>=20
+> Cheers,
+> Miguel
+
+=E2=80=94 Daniel=
