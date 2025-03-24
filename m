@@ -1,130 +1,139 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF425266B60
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 17:33:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE82266F01;
+	Mon, 24 Mar 2025 17:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742837590; cv=none; b=oZc7korYPoeHziyNuYRvO3kbfDlBv/ztuxJU02SquaBMyW37kqFR1FXKbarfusXwOfbgf8t7TSNJrZO248OHIeNoLxJl954HzhQxFCAOFP2cjq+u9zdG/UuMSVsYKj7E7Eu57Ykk8iudm2LzW05KWUPr6ydmGkDURl5I0Ko7NCE=
+	t=1742837590; cv=none; b=c1vRnO051NTBUxyru4cco7QfQ0vXjerm0ojkPxCg4URZW9nSg1iSyl7vcBTlsmqNaWpNwPfYoGezRkLoqH0C2XA2/SdhRMQu6Jt9zgv5ImAWRltFs3hz9zslVDFo7w3dQ4Qaj7uJaLO+dM87cEd0BfeSalk6KS09eq+veL/ESO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742837590; c=relaxed/simple;
-	bh=uZHApNHtC1srnE6XLFaAhncIb2YrpW9H049JpCQwpNA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=GktBeTLQMlrLmWFjdNo+t/jxLPcpe1yvi1lX0rdVtuUU3e8O75IgJQ7qUtHHbMhDEE/vwRk28PRB8BT9W54C7UGJQJmM1HqZ3cMSzDodwyZFPf63z0iDq7TMeOa/HuySoRAeN+8j4JAdv+LXVu7i7jlLbXSK8rMLCvps7XRTYUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LQTiH46V; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
+	bh=6z1jVV/yKXBtpI1jJEON4mBcVHyI6frM0d76FlbA/Cc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iPvkWdYZmedSlKljKtscit7VkqrGVns9WDhP/pbTx0R7hZwq4ovl+dannSa95Eat88VI27koedLoClZuf/SUOExkoy3SLPiIjngziPYucGgFQRyJO1lTOXDfrp9kjrYCxJ0/ed1pqyEJf1AnRvCtJrPkFZGHHZubxCsO5Nbh0Jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TTLmt0U0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LQTiH46V"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2264e5b2b7cso69864085ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 10:33:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742837588; x=1743442388; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=EQNh2u0xTlEo8Nzfc2nQDu4yd1/+qtwS3CX+UnSCF+k=;
-        b=LQTiH46VZZ8v1TDQNAq/Ex4NBdXkNWMJTHryJN/9588OjpKKOS8JNsxJqfnhyjXye3
-         +rxIM9CEyRNlt21i1RGwhgn8VbY1qwzcpaYZOxfX8Ac60s7F2k+Tzdy52XDREcWPvb+Y
-         6r/4b+L6ZQRs4qHV5em2+3fQ52xzu5AJmm3BS2PfOT605ZYLK5sMPeOOkXViWi9R3Scc
-         75CefBDWdpu3zYp/yLAuG/BYC8kILRxLm1L5vg4tGwnTnjN7IhFBpuKo7IJ3tkgrTU1t
-         Clxm862XMEDXgE6PJRN6E81n8okOPKLh/xwccx9tSrRVktZraXZYPHB9w74vvPyvfIdP
-         8hjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742837588; x=1743442388;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EQNh2u0xTlEo8Nzfc2nQDu4yd1/+qtwS3CX+UnSCF+k=;
-        b=f74L0pvhwV9rufIFekkd00igmpfo981qYpY87mXyTZYZknV5sFS2eTv0y2gbqV2WRR
-         PNwSmgMW8QUo/UeJakQgJy6jH9D89D4dA2EnWm7xq9YPdkudsGjv2kRO1fz5uIPmPhsX
-         GftIgR9sc4bk5N3GLvr8K7fviGA1x4Lfgxl6nFTwO6Yng+zHnFohtdwtkN2R0qVrLWuG
-         Q+zF5UOWt+BVavdhmMzCokHaFxDQti3Hf+f0p0XkK7IhcjQbov0NqCNrHvcemjYfldGd
-         NPBLUgR7OlZpxUwqi3fKLYQelLTfZG5eZw+pJYtW87YgFQqjCgfKoTw9kKoDcz5DUMz5
-         UJTw==
-X-Forwarded-Encrypted: i=1; AJvYcCWcGRjEjHkNUdEOS6JcOwlgLQLlnbA3wnxKi8zw9ua1FG+rMqQ2EUxv3qYjJ4EZGpidvrCkBKIYwgCOzl8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyl6hn4XaAD6X05LL8prqsbvsqnPeY+4viQA6DOeJpFJ6UD9Xi1
-	58P2394ERh2TjAe5LO2zYixE+yif+BTSoiBBB1k+r0++Zlwy95BkA3AoqhwqDo/ZcvdvTXDFeST
-	nUI2Cqg==
-X-Google-Smtp-Source: AGHT+IHHgQ/VTpQK+Ek9oKOxqSwHtDlsEEsDEATZSstz5FpSTkUYvsnRaM4XcmWiSvU9k8/G75kMTSuBQ3o/
-X-Received: from pjbsr7.prod.google.com ([2002:a17:90b:4e87:b0:2ff:5752:a78f])
- (user=mizhang job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:db0f:b0:224:2a6d:55ae
- with SMTP id d9443c01a7336-22780e2aff0mr223959085ad.48.1742837588117; Mon, 24
- Mar 2025 10:33:08 -0700 (PDT)
-Reply-To: Mingwei Zhang <mizhang@google.com>
-Date: Mon, 24 Mar 2025 17:30:50 +0000
-In-Reply-To: <20250324173121.1275209-1-mizhang@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TTLmt0U0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3094EC4CEED;
+	Mon, 24 Mar 2025 17:33:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742837590;
+	bh=6z1jVV/yKXBtpI1jJEON4mBcVHyI6frM0d76FlbA/Cc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TTLmt0U0lb/WjNY3npIyMTIsK0uZkYSq5v4j3ttcma+yWik+b8gfSyRnC0SudDq1c
+	 lleOlzWq4F814O3jZPPFKDz9Guw8uzqcYKThypwFesTCb9NX9TJ+gxECoA9JDx6mBn
+	 m57z8frYgyQv0rLXGwagCrbZo4JcPGK5EA9L5hbrpYJ45TX+THcOmoXIIiChrcFF62
+	 /Pr9wXdZbYfZcGliCKARwh4ycVJtUOTz1BPu8E8wI8dMTQm+AVlsLnLasBiC8Diq39
+	 fF4MV1ew7is8TOnR+Yod+WNklpqmS9YWh7lvrch5zKMavSn5YavlOEENonT8End3vs
+	 FdLiawokJYNvg==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Miroslav Benes <mbenes@suse.cz>,
+	Petr Mladek <pmladek@suse.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+	linux-next@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Easwar Hariharan <eahariha@linux.microsoft.com>,
+	live-patching@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 03/10] samples/livepatch: add module descriptions
+Date: Mon, 24 Mar 2025 18:32:28 +0100
+Message-Id: <20250324173242.1501003-3-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250324173242.1501003-1-arnd@kernel.org>
+References: <20250324173242.1501003-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250324173121.1275209-11-mizhang@google.com>
-Subject: [PATCH v4 10/38] perf/x86: Support switch_guest_ctx interface
-From: Mingwei Zhang <mizhang@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Mingwei Zhang <mizhang@google.com>, Yongwei Ma <yongwei.ma@intel.com>, 
-	Xiong Zhang <xiong.y.zhang@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
-	Das Sandipan <Sandipan.Das@amd.com>, Shukla Manali <Manali.Shukla@amd.com>, 
-	Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-Implement switch_guest_ctx interface for x86 PMU, switch PMI to dedicated
-KVM_GUEST_PMI_VECTOR at perf guest enter, and switch PMI back to
-NMI at perf guest exit.
+Every module should have a description, so add one for each of these modules.
 
-Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Tested-by: Yongwei Ma <yongwei.ma@intel.com>
-Signed-off-by: Mingwei Zhang <mizhang@google.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/x86/events/core.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ samples/livepatch/livepatch-callbacks-busymod.c | 1 +
+ samples/livepatch/livepatch-callbacks-demo.c    | 1 +
+ samples/livepatch/livepatch-callbacks-mod.c     | 1 +
+ samples/livepatch/livepatch-sample.c            | 1 +
+ samples/livepatch/livepatch-shadow-fix1.c       | 1 +
+ samples/livepatch/livepatch-shadow-fix2.c       | 1 +
+ 6 files changed, 6 insertions(+)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 8f218ac0d445..28161d6ff26d 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2677,6 +2677,16 @@ static bool x86_pmu_filter(struct pmu *pmu, int cpu)
- 	return ret;
- }
+diff --git a/samples/livepatch/livepatch-callbacks-busymod.c b/samples/livepatch/livepatch-callbacks-busymod.c
+index 69105596e72e..4d6030739fcb 100644
+--- a/samples/livepatch/livepatch-callbacks-busymod.c
++++ b/samples/livepatch/livepatch-callbacks-busymod.c
+@@ -56,4 +56,5 @@ static void livepatch_callbacks_mod_exit(void)
  
-+static void x86_pmu_switch_guest_ctx(bool enter, void *data)
-+{
-+	u32 guest_lvtpc = *(u32 *)data;
-+
-+	if (enter)
-+		apic_write(APIC_LVTPC, guest_lvtpc);
-+	else
-+		apic_write(APIC_LVTPC, APIC_DM_NMI);
-+}
-+
- static struct pmu pmu = {
- 	.pmu_enable		= x86_pmu_enable,
- 	.pmu_disable		= x86_pmu_disable,
-@@ -2706,6 +2716,8 @@ static struct pmu pmu = {
- 	.aux_output_match	= x86_pmu_aux_output_match,
+ module_init(livepatch_callbacks_mod_init);
+ module_exit(livepatch_callbacks_mod_exit);
++MODULE_DESCRIPTION("Live patching demo for (un)patching callbacks");
+ MODULE_LICENSE("GPL");
+diff --git a/samples/livepatch/livepatch-callbacks-demo.c b/samples/livepatch/livepatch-callbacks-demo.c
+index 11c3f4357812..9e69d9caed25 100644
+--- a/samples/livepatch/livepatch-callbacks-demo.c
++++ b/samples/livepatch/livepatch-callbacks-demo.c
+@@ -192,5 +192,6 @@ static void livepatch_callbacks_demo_exit(void)
  
- 	.filter			= x86_pmu_filter,
-+
-+	.switch_guest_ctx	= x86_pmu_switch_guest_ctx,
- };
+ module_init(livepatch_callbacks_demo_init);
+ module_exit(livepatch_callbacks_demo_exit);
++MODULE_DESCRIPTION("Live patching demo for (un)patching callbacks");
+ MODULE_LICENSE("GPL");
+ MODULE_INFO(livepatch, "Y");
+diff --git a/samples/livepatch/livepatch-callbacks-mod.c b/samples/livepatch/livepatch-callbacks-mod.c
+index 2a074f422a51..d1851b471ad9 100644
+--- a/samples/livepatch/livepatch-callbacks-mod.c
++++ b/samples/livepatch/livepatch-callbacks-mod.c
+@@ -38,4 +38,5 @@ static void livepatch_callbacks_mod_exit(void)
  
- void arch_perf_update_userpage(struct perf_event *event,
+ module_init(livepatch_callbacks_mod_init);
+ module_exit(livepatch_callbacks_mod_exit);
++MODULE_DESCRIPTION("Live patching demo for (un)patching callbacks, support module");
+ MODULE_LICENSE("GPL");
+diff --git a/samples/livepatch/livepatch-sample.c b/samples/livepatch/livepatch-sample.c
+index cd76d7ebe598..5263a2f31c48 100644
+--- a/samples/livepatch/livepatch-sample.c
++++ b/samples/livepatch/livepatch-sample.c
+@@ -66,5 +66,6 @@ static void livepatch_exit(void)
+ 
+ module_init(livepatch_init);
+ module_exit(livepatch_exit);
++MODULE_DESCRIPTION("Kernel Live Patching Sample Module");
+ MODULE_LICENSE("GPL");
+ MODULE_INFO(livepatch, "Y");
+diff --git a/samples/livepatch/livepatch-shadow-fix1.c b/samples/livepatch/livepatch-shadow-fix1.c
+index f3f153895d6c..cbf68ca40097 100644
+--- a/samples/livepatch/livepatch-shadow-fix1.c
++++ b/samples/livepatch/livepatch-shadow-fix1.c
+@@ -168,5 +168,6 @@ static void livepatch_shadow_fix1_exit(void)
+ 
+ module_init(livepatch_shadow_fix1_init);
+ module_exit(livepatch_shadow_fix1_exit);
++MODULE_DESCRIPTION("Live patching demo for shadow variables");
+ MODULE_LICENSE("GPL");
+ MODULE_INFO(livepatch, "Y");
+diff --git a/samples/livepatch/livepatch-shadow-fix2.c b/samples/livepatch/livepatch-shadow-fix2.c
+index 361046a4f10c..b99122cb221f 100644
+--- a/samples/livepatch/livepatch-shadow-fix2.c
++++ b/samples/livepatch/livepatch-shadow-fix2.c
+@@ -128,5 +128,6 @@ static void livepatch_shadow_fix2_exit(void)
+ 
+ module_init(livepatch_shadow_fix2_init);
+ module_exit(livepatch_shadow_fix2_exit);
++MODULE_DESCRIPTION("Live patching demo for shadow variables");
+ MODULE_LICENSE("GPL");
+ MODULE_INFO(livepatch, "Y");
 -- 
-2.49.0.395.g12beb8f557-goog
+2.39.5
 
