@@ -1,43 +1,43 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4DD263F44;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3DF263F49;
 	Mon, 24 Mar 2025 17:04:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742835866; cv=none; b=ferCkpy/BnEk/PkGiX7g6e/k7SzcriipQpCc0OuP5qXvFg+A8IW9X1tQ7dm5Sxi9YGCI11OUqbZkSrSQWkkz0+bREFRmVRGl223dva7EvEzTTK2zmOqzBuP6Pfa4qrI80uNNEz4QG2yqZlA3BHd+50h57fHr4OCwCGKFm4brI/o=
+	t=1742835867; cv=none; b=i8dsvouxC59YM9Ux5QuVxGTpSI4odTnrbOfKpO8uGnwfjMwrPF+iqqBRcwFeLtNhhkhHylCGvqHXLHRXxt68NCKbTLwGbW03x9ZHxeIBxlgDRpa5Qy1NnO6b/OCsWUaAlB+Z7kXZ02po0LyePsZm/JUpx7KzhlHUj2/VjI7RYyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742835866; c=relaxed/simple;
-	bh=KRP0aB0pusR6DQBo1puDDmnz/hEZTuxKlnUQvRPL9e4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hWXEOL3QrHuV5lIquOZsM2lvVvapcIUhUuzLkMGvp7lOOlLnYOd9HtV3UsrL6Xupwm7wHiuHQsGk8mDVZA4nErkqzzpOw+/3V3q3+XGb8EO6DkiLljFNe0pBQEFk1aTwGQkobvyyLDuo1S81Ald2sS5N4qQGMUZIi3Gct3i2lOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=qhcWTwB7; arc=none smtp.client-ip=148.251.105.195
+	s=arc-20240116; t=1742835867; c=relaxed/simple;
+	bh=5kYi8rB59tsd+qkVDJfncnPdyMyZuWc5phF2+nfbC5U=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Hb9FU9+IijHazbsMboJLZjXAgbnhkKIYpGfMr7XjFnq0MEu4hKn+Z45HhQn90FU/8LFKCUX4ldM/lFo4UDX14iXW0ps6lCmHy+wucqz5S9WBtbQ4G2V5zvCZ/YCKULJD9BbH9TZ3Rgy4hTYK0tKCqzovS7kQLRQskICcUAm1xPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=FUnEuuvf; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qhcWTwB7"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="FUnEuuvf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
 	s=mail; t=1742835863;
-	bh=KRP0aB0pusR6DQBo1puDDmnz/hEZTuxKlnUQvRPL9e4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=qhcWTwB7Lw72A+2me8o8c+bw2ezh2TtX0zW8WGnP9szUu5+aLPcX9tYZxld1GLQFs
-	 BjzN/BHtK61M1mmOQOxR5TO0UmjaZFLR1Nww5xDHv2tWuG1/a6MXqsSfn7MXBznc1v
-	 GrCI2AIptqKFlw5ZZGtzN3JVEBfyuheZ+kRZwQq+1Hihm3EUq/4klWGwPKxgLOfhGy
-	 qpTAG5oaTRNXEJsIdcGLRW/9aY76TShdiLJAIOH52q5iKoFyIgD209XDOGAPcplAqb
-	 RoAeTqq2p+KLV5UfK2moqcLLu41THZrQnyoGKF5z59wvVjFtdgKZf2tB0ysSdiKWWG
-	 ioYwN8i+VCdyg==
+	bh=5kYi8rB59tsd+qkVDJfncnPdyMyZuWc5phF2+nfbC5U=;
+	h=From:Subject:Date:To:Cc:From;
+	b=FUnEuuvf9PXpYxGtocUa5dPFGqWiX6wXhfsjHqqlHELLRlbkX0Bk/CaO9sP8uuTs+
+	 2rgdcprIcB0wT/SbMlAtyEnkOSo2vhlL19gwliqoKoSVSAIz7/KJkujLNPslfHV9CK
+	 PWg/Nf+eUgA07r234Q5lq6PJMyJiPWKHmfrNIkS9MOZZuHNAVyrwtpV1tiOHKYVvCW
+	 YdaoHW6HayYfsjgzXkZQ6INiuP6lzkyONlIJEL7MtGjyXISMLuvZo7TbKdZLGA2Qq7
+	 uKHJILJ2JiV6XMvBQ31FCPq2RSi9j8/JhPWJ7B6Brhh8Cx/3yYDwVKBqoar8PEmpiV
+	 dYnuv0xcvlkSA==
 Received: from jupiter.universe (dyndsl-091-248-188-184.ewe-ip-backbone.de [91.248.188.184])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
 	(Authenticated sender: sre)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1DA8F17E0C37;
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 33C3217E0C4F;
 	Mon, 24 Mar 2025 18:04:23 +0100 (CET)
 Received: by jupiter.universe (Postfix, from userid 1000)
-	id D89FE480038; Mon, 24 Mar 2025 18:04:22 +0100 (CET)
+	id D5B3D480034; Mon, 24 Mar 2025 18:04:22 +0100 (CET)
 From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Date: Mon, 24 Mar 2025 18:04:24 +0100
-Subject: [PATCH 3/5] dt-bindings: arm: rockchip: Add Radxa ROCK 5B+
+Subject: [PATCH 0/5] arm64: dts: rockchip: add ROCK 5B+ support
+Date: Mon, 24 Mar 2025 18:04:21 +0100
+Message-Id: <20250324-rock5bp-for-upstream-v1-0-6217edf15b19@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,9 +46,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250324-rock5bp-for-upstream-v1-3-6217edf15b19@kernel.org>
-References: <20250324-rock5bp-for-upstream-v1-0-6217edf15b19@kernel.org>
-In-Reply-To: <20250324-rock5bp-for-upstream-v1-0-6217edf15b19@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAJWQ4WcC/x3MQQ5AMBBA0avIrE1SpQmuIhbKlInQZopIxN01l
+ m/x/wORhClCmz0gdHFkvycUeQbjMuwzIU/JoJU2qtQVih9XYwM6L3iGeAgNG7qpNlYpa5rSQkq
+ DkOP733b9+35EzsIKZgAAAA==
+X-Change-ID: 20250324-rock5bp-for-upstream-fd85b00b593b
 To: Heiko Stuebner <heiko@sntech.de>
 Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
@@ -56,47 +57,47 @@ Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  linux-kernel@vger.kernel.org, 
  Sebastian Reichel <sebastian.reichel@collabora.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=917; i=sre@kernel.org;
- h=from:subject:message-id; bh=KRP0aB0pusR6DQBo1puDDmnz/hEZTuxKlnUQvRPL9e4=;
- b=owJ4nAFtApL9kA0DAAoB2O7X88g7+poByyZiAGfhkJa5ha6/bzlUoT/H5amcvXsgWlJstfOTA
- B+/e6TTdOYmjokCMwQAAQoAHRYhBO9mDQdGP4tyanlUE9ju1/PIO/qaBQJn4ZCWAAoJENju1/PI
- O/qar/wQAKYdC1NWfYRLSF+z7pSP/dBf3sqEwevqmFHlNLJkmXJeFa5NTxxfvuwcX4vGn+sozlj
- VvYxkIk1VRb7evsbngaO8LYLdGqt3EGfgcHZFAGvA3X+pldhP5zWragTrkYA1Br2DGC0s/8I+xd
- 8dc++0XPVS6XvCucWxGdslvFehTSx/rjPP64DcZ/5lSJHzlIg3s2Jx8CXE7q+EOUBPkAAikUAKz
- jX+QWwrgF9IkP0VEcsy8pEyjMMs2aXi9tbnJW0Ci41tz9usgDuL9DbzHgMvrtToPQ4d0kyOKz7A
- iAL/GEZfkoilnzWAsAJ0spIiA9hP3lPoPerxu9nacOOgX75iD/wAZ8Iz17gtpJM1oKaR53m2MYN
- OQaN7U44NjwImIENC92Ncq4NELtMCvd5UwKv/G8FATswloGw4t1ynWxM87ZWh4QOPmcIDjK8JWh
- synW/ILzuBKif1a0PljfrgMuWqmrZJa6brU/bJmBxnD9sPYp6jslK4FbAgYJiygxkGaerb8tWdd
- BQjQYXUdU4qwU0TW4zjXFt8Jwhq9fIFsvIB5Ei6GGPWPDDubDO7hseeiGGyK6ivqhXBIyOVyeau
- cLwWqkMLQqZTbKoZh+AfMvRyzefmxpoUPG1tv2hzywI2ScSNpa8xbOkVsIEpXSPsoU/VlTpAEDo
- YRbUI/YM0GswTPeSGsfsv+w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1139; i=sre@kernel.org;
+ h=from:subject:message-id; bh=5kYi8rB59tsd+qkVDJfncnPdyMyZuWc5phF2+nfbC5U=;
+ b=owJ4nAFtApL9kA0DAAoB2O7X88g7+poByyZiAGfhkJawCQI4XLraZ32+UGUEQ8dIBGyHdv77y
+ hKcblymMCyUIIkCMwQAAQoAHRYhBO9mDQdGP4tyanlUE9ju1/PIO/qaBQJn4ZCWAAoJENju1/PI
+ O/qaSogQAIWUmw/Vgp0mj/l/Py2GuQ8gsfM8Y+aJdjYhhJG6c3vwZTJmsowhngtQKuKmDc84OGM
+ v1AApCEiJh+omnn2uPRiG20091Bxj4b5udgG8qxyXAxxLNxOgLaiSXfiCAxKGNoUWdWueEbOwJK
+ y5jrJ44cJNDYNNFeZVOiayrpVQ1AhV34iZmE3/ZyR5za8EZNSZrZXxiazJdzijFxKIQlZkFWQ1C
+ RMfBEdADPpB/oFjPWA/Wv5730P6BPvbHYa5WCEuWT5NaZgcCrfXIdKM0LtePRAofjfNmZerFcqA
+ waup3lgOX8tTLsvypbCiG9eAHLLRksELk98rsawaO32TohdL9TMO/4j5qohUdhW5N8j2+I+hNbq
+ INEFfHqTgAu4inG9/BV1r6ef+d5OHz3B1TnBn8uVmoagPmcKNqxvZPPc7k71YhBdzvPHn0ksBNI
+ pMGJe23nQQ5nYl2weM+Z4/2M5mbvdbBlbpBFB2fqbeespmo+PrM6e70OifK7IqEZDeGp6VoGs+z
+ 72k82Cx8Mn1UOVs3uRPcPCqVIFyJbN5rgJGAkn1eUMdoo4IpsLZcZNTQT4OCAUDR5fgGpOQmyO5
+ r+jMdgmqYMFXRrFoHQEnh9gCi3U9LPz1J4d3WiQspFKf9xoDoBMiRgMddBmaRN3hbf5vZS+P2ZR
+ OxOBhQGarglwyjs7jYmoi6w==
 X-Developer-Key: i=sre@kernel.org; a=openpgp;
  fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
-The Radxa ROCK 5B+ is an improved version of the ROCK 5B.
+This series adds support for the ROCK 5B+, which (as the name suggests)
+is an improved version of the ROCK 5B. It also adds initial USB-C
+support for both the ROCK 5B and the 5B+.
 
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+Sebastian Reichel (5):
+      arm64: dts: rockchip: move rock 5b to include file
+      arm64: dts: rockchip: move rock 5b to include file
+      dt-bindings: arm: rockchip: Add Radxa ROCK 5B+
+      arm64: dts: rockchip: add Rock 5B+
+      arm64: dts: rockchip: add USB-C support for ROCK 5B and 5B+
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index 650fb833d96ef67ea1bba33c0767777378a38fa7..fe1fe8fe52fa3594a0da8e0263cb46949436a021 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -946,6 +946,11 @@ properties:
-           - const: radxa,rock-5b
-           - const: rockchip,rk3588
- 
-+      - description: Radxa ROCK 5B+
-+        items:
-+          - const: radxa,rock-5b-plus
-+          - const: rockchip,rk3588
-+
-       - description: Radxa ROCK 5C
-         items:
-           - const: radxa,rock-5c
+ .../devicetree/bindings/arm/rockchip.yaml          |    5 +
+ arch/arm64/boot/dts/rockchip/Makefile              |    1 +
+ .../boot/dts/rockchip/rk3588-rock-5b-plus.dts      |  117 +++
+ arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts    |  952 +----------------
+ arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi   | 1087 ++++++++++++++++++++
+ 5 files changed, 1220 insertions(+), 942 deletions(-)
+---
+base-commit: 76728fe54f547950f73c9dc446beb2e31604abd7
+change-id: 20250324-rock5bp-for-upstream-fd85b00b593b
 
+Best regards,
 -- 
-2.47.2
+Sebastian Reichel <sre@kernel.org>
 
