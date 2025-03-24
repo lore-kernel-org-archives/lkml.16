@@ -1,96 +1,134 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077B91DF975;
-	Mon, 24 Mar 2025 06:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B541EA7C7;
+	Mon, 24 Mar 2025 06:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742799321; cv=none; b=HbQPBppFW5wDjj2/pNeQqTU9h+yK4Tua1mmR+K4uLXhbkej0w0AZ5KW+K5VRQP3FYkz0AjOg6FFFSyzrIe9x8/YV5guoFfBvW8ijuAVPfTbM2rL9wlB/BIF2lerT9kT5iykEqZsjf+M9h9teC7gAtnUpJmLsorQVNFZfhy2Oowo=
+	t=1742799384; cv=none; b=PcD4DvRYuzZZjH4fnySlYlcC3WtdjX0kmzfJ+HvbMaJXHq8iHG49KdMv5sjGDp8SAOrNWhHjYMag/KekgR7A25TojspSM8r/PXdpnuvgmf2Q4eiFxxCRgap/NAiquosFY4cnLLPNvrEy7P/UJj7RFZdK5MrPUNlSrP0AV27C//E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742799321; c=relaxed/simple;
-	bh=g9XGUuTEQFnJGpulXykQgmwGsLbFGLfWBifqYbVibuQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SfeLV2okrFuF7xl/E9jy1I8TLF5hDdSoEZod56UxBEf5FHC5wZaM7E02cMFfJ+QCZDU91h+50ndvBE7R88sv9uIDaO5YZKoW5gqITtvySTUynKZDa0gm5a4Ugx7dSYSxqfvCRptfu+zxGURhSca77V1msO6k9vUkvoPas7B1H+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=pass smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=54.254.200.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chenxiaosong.com
-X-QQ-mid: bizesmtpsz1t1742799160t5xj3ii
-X-QQ-Originating-IP: yHc2gHKafPJZLdKpG5LwwzyIMgkn1nGVmLlOMufgh1M=
-Received: from localhost.localdomain ( [116.128.244.171])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 24 Mar 2025 14:52:38 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 2187205931425290801
-From: chenxiaosong@chenxiaosong.com
-To: linkinjeon@kernel.org,
-	sfrench@samba.org,
-	senozhatsky@chromium.org,
-	tom@talpey.com
-Cc: linux-cifs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ChenXiaoSong <chenxiaosong@kylinos.cn>
-Subject: [PATCH] smb/server: use sock_create_kern() in create_socket()
-Date: Mon, 24 Mar 2025 06:51:55 +0000
-Message-Id: <20250324065155.665290-1-chenxiaosong@chenxiaosong.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1742799384; c=relaxed/simple;
+	bh=wUjEegEqvZW00LVkk78JoSqVQ7KAlpBEsnWnnVZ9iu0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=psCZ3Z9Rlw0s9hdY1tI0IEwSsBEzjLJdddOyyVrtes8BW3OvIHgvrzkJChtkiSKtbf9K4CixZ1a8SI+s/m/FNcMoqWkp5k6rsKqzNySJF2jgLQxedypqt9VgO/LQgRn7mZFYLIDgTqYlzmHO44Efi3RS2E97wMbDsMA0P9TRsxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SHTai/tw; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SHTai/tw"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52O6c2cw021847;
+	Mon, 24 Mar 2025 06:56:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	rwnCXb5J3d5nedzVUrVNYMUsqBCkn8NNvKJiPcVbUdk=; b=SHTai/twgyM7gb8g
+	5cKZjNrePvVziUcqz4uQzprwcB0IzDQ9ekiVsvndF643cQmk5lhmfMGgFrgGPwh0
+	4LpH4Z3ODbkBjRZXLHD2MGtqODQyUDoE7pCH/9HwZZXXWKKdLiWOAdXJPuYNIT4f
+	kVeyvXoVBZ3arqm4qyQ+35/XNos+SwEoWch0w/RLMoDFFkiEryGLivMQ6FniwvY6
+	lwove6JiyB3pW4B+dv7mBWL6uhbr67uXftnTgSptzKyxXQymevyIh+5dpSlTwLef
+	eB8tqZDHaOi5kHv+rV7wpNciH7qPwnALdUfikwwZCTMz2TqI77r7s4KQ3xcxY8nJ
+	jvIcZA==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45hmhk3cpb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 06:56:05 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52O6u4pL006717
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 06:56:04 GMT
+Received: from [10.233.19.224] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 23 Mar
+ 2025 23:56:00 -0700
+Message-ID: <6964f197-07c8-469c-b4e5-710a099752b4@quicinc.com>
+Date: Mon, 24 Mar 2025 14:55:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] arm64: defconfig: enable PCI Power Control for
+ PCIe3
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <quic_qianyu@quicinc.com>, <sfr@canb.auug.org.au>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20250320055502.274849-1-quic_wenbyao@quicinc.com>
+ <zqBb_94gbwLzHgbAiLqgbuGg9wmeV1jUxHOsMXDdZToeTtRrtUimm8ra7GB48DXWU-ZOvC5mO8EY0uvxz46ISg==@protonmail.internalid>
+ <20250320055502.274849-2-quic_wenbyao@quicinc.com>
+ <fff943a6-4322-43d0-9821-08375bc5376c@linaro.org>
+Content-Language: en-US
+From: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>
+In-Reply-To: <fff943a6-4322-43d0-9821-08375bc5376c@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: Mx19VWqBs5mwul16bCqV705JsmB8YINSbxTSRXfHTAvXuyrEAQUJeHNp
-	N4z21FFbrAnJQYeJ9xQaJ6l6eGLKVqHs3P39uR3bP8eUpUxPebEQz6Hz+rC+kS/cNsw0POH
-	uR7obC99nIwAr64YbvNEUP9Wf54GHNLKGpDYg0HrBwonZa3KVHw/z+09j6EMm2n4kSfSi1h
-	k1ttfDAq7nDWG940afXY9OPFzidnc1123+QfuquHXdtA73jIt4nrlYgVGw6C8LpInv5Ele5
-	NMTF08AqKzJDKlMQj7xgyVnarmbHpE3zqIcjpb5+ohc408Dwdc7PnqzZskzx7sjMas7TYzb
-	P7x33cg6w+ujVDpIaaydbc4U0BVQt0K8d2AL55JWLLrTxdkavo5vjVtCGPRns2aUj7ykw5k
-	fSo4UXOppwyKV3aVpdS/zZJnDD5dtLZf6Vzx5w+8+h32PpHkWTN2osPCz4Jw6sQSb+VRxeZ
-	gFhrfDNi9i6b8RXoQzGyihQxJmgQgYB8vL81HaYPUhPxpTTNASsKE4SWOdmZd34kDOqFKE8
-	LuV2IjNZp9RHoz2s/nHDZLXQOOV2BkGaQ1SLfYRvTiWYfYZcbG/u2utpr4htIvJlzdL15Tk
-	IyLgopNF67OSgdLIMnJQ3JnYTD7PSML9xnXUOzVkehp/4ZXscgVjjlekbVOJ61o4gCpfxR/
-	RQOqKuC+mTOlHYrYjmsgjl7//JKgdm3FvGJtFxBiYQNvXUaP1RbRzWirP9o5vYtdCXzdFoE
-	o7RRJa75Eyn4rGKj430cdsuRtP9zL2hLa/ZlzAKsz3jj4dOzFrSsFan3pxSBYgdpt526u08
-	KKlPa6Ptxo2WwNdVe/cMFPkSuShAgLXwhnfxK5lCyHhpQup/jGyN3tZJ5t5aDuXqOJ7tqt1
-	ypLWbfv8JYfEVU6g+ZTvIYlWzZR4gvquuEtOZlg4OtATAMnIyzINTc/XCnlb7/YXr0TSKnb
-	MFU10BKEqTB4e2UYjaKsX2+PgCchVgoStyqx7ImUFioB6ycPtMU4QovY2
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-X-QQ-RECHKSPAM: 0
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=C4PpyRP+ c=1 sm=1 tr=0 ts=67e10205 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=lMbmitncurX1WqZc_pgA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: V7AIMNvHzfeIzE9tqeottGNncaAJM3tb
+X-Proofpoint-ORIG-GUID: V7AIMNvHzfeIzE9tqeottGNncaAJM3tb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-24_03,2025-03-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ phishscore=0 mlxlogscore=962 priorityscore=1501 impostorscore=0
+ bulkscore=0 clxscore=1015 spamscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503240049
 
-From: ChenXiaoSong <chenxiaosong@kylinos.cn>
+On 3/21/2025 6:01 AM, Bryan O'Donoghue wrote:
+> On 20/03/2025 05:55, Wenbin Yao wrote:
+>> From: Qiang Yu <quic_qianyu@quicinc.com>
+>>
+>> Enable the pwrctrl driver, which is utilized to manage the power 
+>> supplies
+>> of the devices connected to the PCI slots. This ensures that the voltage
+>> rails of the x8 PCI slots on the X1E80100 - QCP can be correctly turned
+>> on/off if they are described under PCIe port device tree node.
+>>
+>> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+>> Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
+>> ---
+>>   arch/arm64/configs/defconfig | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+>> index 85ec2fba1..de86d1121 100644
+>> --- a/arch/arm64/configs/defconfig
+>> +++ b/arch/arm64/configs/defconfig
+>> @@ -245,6 +245,7 @@ CONFIG_PCIE_LAYERSCAPE_GEN4=y
+>>   CONFIG_PCI_ENDPOINT=y
+>>   CONFIG_PCI_ENDPOINT_CONFIGFS=y
+>>   CONFIG_PCI_EPF_TEST=m
+>> +CONFIG_PCI_PWRCTL_SLOT=y
+>>   CONFIG_DEVTMPFS=y
+>>   CONFIG_DEVTMPFS_MOUNT=y
+>>   CONFIG_FW_LOADER_USER_HELPER=y
+>> -- 
+>> 2.34.1
+>>
+>>
+>
+> PCI_PWRCTL_SLOT is a tristate symbol why be a "y" instead of an "m" 
+> i.e. compile this into the kernel instead of having it be a module ?
 
-The socket resides in kernel space, so use sock_create_kern()
-instead of sock_create().
+It can be compiled as module if this is preferred.
 
-Signed-off-by: ChenXiaoSong <chenxiaosong@kylinos.cn>
----
- fs/smb/server/transport_tcp.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> ---
+> bod
 
-diff --git a/fs/smb/server/transport_tcp.c b/fs/smb/server/transport_tcp.c
-index 7f38a3c3f5bd..e5f46a91c3fc 100644
---- a/fs/smb/server/transport_tcp.c
-+++ b/fs/smb/server/transport_tcp.c
-@@ -429,12 +429,13 @@ static int create_socket(struct interface *iface)
- 	struct socket *ksmbd_socket;
- 	bool ipv4 = false;
- 
--	ret = sock_create(PF_INET6, SOCK_STREAM, IPPROTO_TCP, &ksmbd_socket);
-+	ret = sock_create_kern(current->nsproxy->net_ns, PF_INET6, SOCK_STREAM,
-+			       IPPROTO_TCP, &ksmbd_socket);
- 	if (ret) {
- 		if (ret != -EAFNOSUPPORT)
- 			pr_err("Can't create socket for ipv6, fallback to ipv4: %d\n", ret);
--		ret = sock_create(PF_INET, SOCK_STREAM, IPPROTO_TCP,
--				  &ksmbd_socket);
-+		ret = sock_create_kern(current->nsproxy->net_ns, PF_INET,
-+				       SOCK_STREAM, IPPROTO_TCP, &ksmbd_socket);
- 		if (ret) {
- 			pr_err("Can't create socket for ipv4: %d\n", ret);
- 			goto out_clear;
 -- 
-2.34.1
+With best wishes
+Wenbin
 
