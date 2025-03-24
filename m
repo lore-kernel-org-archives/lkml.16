@@ -1,102 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069BD257448
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 18:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC70A86334
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 18:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742841382; cv=none; b=T83xu2rmezUX4zUXgLbKC2/CMTcMcF0rhW2sKkP3FReSzkbyrNiYjg6Q6MwAXQoluUFXbxBBuqLpa3slipzo/UC37DBsjnaCkpzg18IaEseQwisQ4rTOBI0DAfqCn/LGyy1Htha3aae0N997xui5+hvxcUhzXWTcjy7a8bXNICE=
+	t=1742841389; cv=none; b=sBm1qn28MrJPa2ZFfKv0lgrwp64YUUs1Qp/EcMHakY/wdaDEx6SrBaZpbBNJDOLld0qZ7j819woJurDMbmY6y/h7n2z/W4EkX9xTNPoFT7fV39fpiJdzNhiBHOBSg7aQpZLCBgi8yOY1DKXk+F2jE9bOFy/zfGsxKXnEWCAL80I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742841382; c=relaxed/simple;
-	bh=ZOWLfl7LRUSe/2ZMujR1d7bxu0RxzXf5mmn9Rc/VfoY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R89rXD1dpEW/BKqi1rFlpmn3L10KSvvIHxQctJ83c8pGAQ8o9FB3YotDXdkdqJsGntMMHYZ85fS0tXrqS8/JOBUmvoKEul0A32TyiEy2MBvNWoD10Qgm4QKAlSWAvoe9tsxPQqtrZP6d0+QDiLMzTIcd2mlO0cStdC3KF2jLKQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ix0kqUe+; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1742841389; c=relaxed/simple;
+	bh=hXOiHIS3DvlLQB4GyNTDafew3mKtY+pMoL7kwsNiNTo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Qpauc9vV2PCh8n7CbjWpAdygRwe6cPD+t3WwaQXSscDz5SERd+7WfSWYG34rQamNIL2ymr7I+AC620EhLTH34KHer+fV55LstL5Sg2KXCaY0UBJ5HNycBUwvv8EKSLgsTmJX28rbzt6PemdMi8oBYZF1P1ZLGmYagafnFhvJRjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Oj1/eodQ; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ix0kqUe+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Oj1/eodQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742841380;
+	s=mimecast20190719; t=1742841386;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8R1fhpCFsssJ/t2dthzX4ainTU9Kl3aOGNFVRr+jFug=;
-	b=Ix0kqUe+sCWht1+FUvtxDH+8rgWo0xMvVFgVgEQRctITfY4tQRCWnRIsJwgRFZZZFIM56M
-	GPqAr9Yx365q4C81cg91zfozkd7xpJfxtps5zcc0MWxn9w4OJDnbmQSgRGujRD+R/PFhr6
-	j+8ETxIqcoKt+v+iQjYEA3AeUZUu8s0=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-303-lOe9r2n1OWa8sAE0mD5GXA-1; Mon,
- 24 Mar 2025 14:36:16 -0400
-X-MC-Unique: lOe9r2n1OWa8sAE0mD5GXA-1
-X-Mimecast-MFC-AGG-ID: lOe9r2n1OWa8sAE0mD5GXA_1742841374
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C7084196D2CC;
-	Mon, 24 Mar 2025 18:36:14 +0000 (UTC)
-Received: from redhat.com (unknown [10.22.81.75])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 59476180A802;
-	Mon, 24 Mar 2025 18:36:12 +0000 (UTC)
-Date: Mon, 24 Mar 2025 14:36:09 -0400
-From: Joe Lawrence <joe.lawrence@redhat.com>
-To: Filipe Xavier <felipeaggger@gmail.com>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-	Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Marcos Paulo de Souza <mpdesouza@suse.com>,
-	live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org, felipe_life@live.com
-Subject: Re: [PATCH v2 1/2] selftests: livepatch: add new ftrace helpers
- functions
-Message-ID: <Z+GmGfcdEceUzTQc@redhat.com>
-References: <20250318-ftrace-sftest-livepatch-v2-0-60cb0aa95cca@gmail.com>
- <20250318-ftrace-sftest-livepatch-v2-1-60cb0aa95cca@gmail.com>
+	bh=hXOiHIS3DvlLQB4GyNTDafew3mKtY+pMoL7kwsNiNTo=;
+	b=Oj1/eodQrQpLF+8MzhyVHuGViZ3LpLiMef3/I77RTXyWI2MOec6hQwRu6Y2lOE9ez74tST
+	su7A28Iu11Va0iFGVs6PkC/JfmN9X5ZUef4JOrXD5sBPzDGxkkKk3+n8QzTiqnIUl8zgwv
+	Li40h8jhG4idMgV5u8E5f7gj1fAUH9o=
+Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
+ [209.85.219.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-544-sxzq2K_FOl-e0Iu72Gr-Bg-1; Mon, 24 Mar 2025 14:35:17 -0400
+X-MC-Unique: sxzq2K_FOl-e0Iu72Gr-Bg-1
+X-Mimecast-MFC-AGG-ID: sxzq2K_FOl-e0Iu72Gr-Bg_1742841317
+Received: by mail-yb1-f197.google.com with SMTP id 3f1490d57ef6-e691efc9bb0so109343276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 11:35:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742841317; x=1743446117;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hXOiHIS3DvlLQB4GyNTDafew3mKtY+pMoL7kwsNiNTo=;
+        b=u+bvn8T9KpYRWglLwPuSagN72y31+oN+6PIH9exthaBUrVfQBakIzARt0DlD/bG2yE
+         HpKsiooDdSNQsc6Q4bKLsMubewP1s9r8KCpGq69yGcBZlN99jotTCaukF/fG+emWLWLF
+         yR9xKtwbPLZriFJgYO3RpcOMjs4QoH7TlZLGlIcW5LTYcYPHVAasOx+Ntoh5IjfqFzgR
+         oFTJDMqyqLg31Vs+N0dlugIhsnxwaBLhtuJDleA/5BQpfJWLN1qU96FQCebQx0MosqI4
+         nhbji1c/tSUjyDP2luLBvfpql05bcJj4l+W9orPtK3IqvQSBy5evpiaCnjdKWhoEW9VL
+         RPWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVev5+u0enhqWoM0l22CxFxsCXMbVbuen6H6GPginCKNPjASJ7nI4RAw9jfg4iOlbbeKHQgyETlEFipe8k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7WjJBj/tOgCenOcvKe0BL511g/qMIpZyWp0xq0ZLqvv2DxqWD
+	54JPWdpUXEGyvqlzpLpIIOvhCP8wB4ySr0xvhZZl/q9f+jQcWaLAEP12XoJWs3XKbGAwbLxHWWm
+	9AObh+xWsEhYLhuVEz0cnY1LAcmEbqAN6bPRzDJl2KSJu4j19ETRo03YKu/aynzQOs4Mccumys8
+	Puv2y46St++WDmhVNv3RMRN1n/MierVoMAW3vP
+X-Gm-Gg: ASbGncsgyJHhxp5bdbraj91OYSEkdyPYdqIMSudoR2PtisZximdn9EJ2/nCn/5f616h
+	EbiHh4eVyeVHgPNitUwwJn1T1fZFz47t3dshe1tWeJ/3vb4+TkYO+TvGWFwITp5yv+6YE2OEF01
+	oEhDCMoMFVtfw=
+X-Received: by 2002:a05:6902:2781:b0:e61:1b41:176e with SMTP id 3f1490d57ef6-e66a4fe37b9mr17409678276.47.1742841316738;
+        Mon, 24 Mar 2025 11:35:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF8lgkjkEycjgwwOag2CdHP7QKbLWSxA2ndMrht/bd5qNPOnsWKfFP2CDU3/jWiXt5YNAqbPiSXT2f4qcYi8mI=
+X-Received: by 2002:a05:6902:2781:b0:e61:1b41:176e with SMTP id
+ 3f1490d57ef6-e66a4fe37b9mr17409613276.47.1742841316149; Mon, 24 Mar 2025
+ 11:35:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318-ftrace-sftest-livepatch-v2-1-60cb0aa95cca@gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+References: <20250319230539.140869-1-npache@redhat.com> <CAA1CXcD2g=sRRwgLSudiOAqWXq3sCj+NPuE1ju7B2gFXXefjXA@mail.gmail.com>
+ <d8fc1f66-f220-42fb-b58f-f5f9c7d30100@opensource.cirrus.com>
+ <CAA1CXcA460xfy48JMNeX5rNTfUqsahER8SDF6tWu82V35ripLg@mail.gmail.com>
+ <CAA1CXcD2RF6aXNH0ix=GN1+LTR9+dV7yRz-HGKZfUbSu+8ZM_w@mail.gmail.com> <4cc16ecf-d498-44a6-99b2-eee840cff63d@opensource.cirrus.com>
+In-Reply-To: <4cc16ecf-d498-44a6-99b2-eee840cff63d@opensource.cirrus.com>
+From: Nico Pache <npache@redhat.com>
+Date: Mon, 24 Mar 2025 12:34:48 -0600
+X-Gm-Features: AQ5f1Jr2LBKyY-vtXjhrKkI2mHegPoVMNKIPqwHoXVC90cmTjlCV0yTXpyR5wnE
+Message-ID: <CAA1CXcCLXnsUjivG2HXWZfP=XLZRCV=Ws1y5_h+bdq3GbAYzRQ@mail.gmail.com>
+Subject: Re: [PATCH] kunit: cs_dsp: Depend on FW_CS_DSP rather then enabling it
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: broonie@kernel.org, patches@opensource.cirrus.com, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, simont@opensource.cirrus.com, 
+	ckeepax@opensource.cirrus.com, brendan.higgins@linux.dev, davidgow@google.com, 
+	rmoar@google.com, johannes.berg@intel.com, sj@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 18, 2025 at 06:20:35PM -0300, Filipe Xavier wrote:
-> [ ... snip ... ]
-> 
-> +	if [[ -n "$FTRACE_FILTER" ]]; then
-> +		echo "$FTRACE_FILTER" \
-> +			| sed -e "/#### all functions enabled ####/d"
-> +			> "$SYSFS_TRACING_DIR/set_ftrace_filter"
-> +	fi
-  
-Also, this may be more stylistic than a functional nit (I don't know for
-sure), but shellcheck [1] seemed confused about these lines:
+On Sat, Mar 22, 2025 at 4:11=E2=80=AFAM Richard Fitzgerald
+<rf@opensource.cirrus.com> wrote:
+>
+> On 20/3/25 17:35, Nico Pache wrote:
+> > Sorry links got mangled
+> >
+> Thanks. I'm on vacation right now but I'll take a look through
+> all those when I have time.
+Ok thanks! no rush, enjoy your vacation!
 
-   In tools/testing/selftests/livepatch/functions.sh line 90:
-                          > "$SYSFS_TRACING_DIR/set_ftrace_filter"
-                          ^-- SC2188 (warning): This redirection doesn't have a command. Move to its command (or use 'true' as no-op).
+If the links go stale (i'm not sure how long they are valid) just lmk,
+I can get you new ones.
 
-I wasn't going to comment on these until I saw shellcheck note them, but
-I thought shell script convention was typically to end the line with the
-redirection/pipe then escape the end of line like:
+There is also this link if you want to track your upstream kunit test
+on multiple arches.
+https://datawarehouse.cki-project.org/kcidb/tests?tree_filter=3Dfedora-eln&=
+test_filter=3DKUNIT&testresult_filter=3Dcs-dsp
 
-  commands | commands > \
-      tee output.txt
-
-There are a few existing examples of this pattern if you grep the
-functions.sh file for '\\$'.
-
-That said, I'm far from certain whether which order is better than the
-other.  The only reason for bringing it up is that shellcheck warns on
-this patch's usage.
-
-[1] https://www.shellcheck.net/
-
--- Joe
+>
+> The unterminated string bugfix is this:
+> https://lore.kernel.org/all/20250211-cs_dsp-kunit-strings-v1-1-d9bc2035d1=
+54@linutronix.de/
+>
+> I got lucky on all the UM, X86 and ARM builds I tested.
+>
 
