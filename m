@@ -1,102 +1,172 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B77025E808;
-	Mon, 24 Mar 2025 11:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A8E25D54B
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 11:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742816966; cv=none; b=diiLJ59lx6BUY86YbPjguh6sk+R2ajw8Tnj6CteJudYHk5sq1aaOy9a3t3xxPhqYvn8unSP5Jn8pMFqtSu5Xj00kp6bwiUGauDKSedEQG19rRSbLdzJhcGiNsRq0c1gV+elHtMjl01je1DkkHP2tzx7QtvBCu7+PqVDCCh4xDK8=
+	t=1742816983; cv=none; b=XHIKhQOmMtWXCRer9UqVGIFZiQ7xu0KkfRAqksTtWHYx15ZePpKlzuLsIDWNBelqASm+tKb4eII7cK1s6JZ651honrrLHPVP7exfjsNX+diPJpvXnfipwSNCLG4ivCgBbAbZMxD0MMJib5AKMoucwPCEYFlbdijFB/uh/xuQEco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742816966; c=relaxed/simple;
-	bh=RrSA67qwssqhfifxPYWRTyJwoPe3eh1BW4LfV0QWXHs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jvQuqOcvKpDrJZ1irZcw1JgY2QObeDWrhkWMtzCyanfBAKT0dD/5OL40IbUv5corSQReM6EyJg/oq3XJsemUxtu+lyf2uGW8qxU/xJS6b7EmAUiFsl9t1ljLsmwGh+jv+cB97rr45Fg74SRXx55DcyuPhRwVmvpnn8dXkdqRWN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=T3WApZ0/; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1742816983; c=relaxed/simple;
+	bh=gCNyozYEmcRl2t4cfqrGA2O/KEDU2B95MNyZDaGu6sk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qfESYGXve5tvO8g7gUkt1iY3VuKjf272RreASDJdrcvKu8e/+ye0CrFHfPumGDZ8iRW9+MdD3ue+seP2tguq8tlcbakqq+MweHpmalrzZgLtK8m11ifjVVDfwl20H63GjxwjJmM5S+IWYtlly6JoHC7fmajqe+nsBcSXEqEuUwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eEGwTrFg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="T3WApZ0/"
-Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0E4BD1059;
-	Mon, 24 Mar 2025 12:47:34 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1742816854;
-	bh=RrSA67qwssqhfifxPYWRTyJwoPe3eh1BW4LfV0QWXHs=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=T3WApZ0/gfyv7JM7+MHwGK6AJFPmFV522j+T7hwapW+fxVKlrd+qB/hDGKJeu5MPy
-	 YD71f6R6GsnvPjSqvpIr5MLWJaifQW0Wqyf06v43z+tCIa8cD7hqObxCNKSCzkcXm6
-	 77whqCfjh/GEsxnKslbaIc5iQ8CAN4Kz4OY8ziyQ=
-From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Date: Mon, 24 Mar 2025 13:48:53 +0200
-Subject: [PATCH 2/3] media: rcar-vin: Fix RAW8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eEGwTrFg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F3E0C4CEDD;
+	Mon, 24 Mar 2025 11:49:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742816983;
+	bh=gCNyozYEmcRl2t4cfqrGA2O/KEDU2B95MNyZDaGu6sk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=eEGwTrFglsvgu048gbfD2qvxYtSfbc7mGzX85Z77ForBb3+nVQZB3JlnYO4W6TXzY
+	 ET3b8hfOyCbc+MP/wd4M40J6iCxMumTgt17QQsB5JeBLS1ZClFekt2gt6mwXR4sm6F
+	 ACJLKT4dj9Aggm43IcbTj1GCQKTsxP0Ix8tWq5/KxQM1bJhMuiLSAOBgDuJiZknSCs
+	 Z8Uqq8DrhZ/qB6iw8YylEnND9pPTKpb+Hb5pY5j6XFM3PRrnZ59zdvSb5fd9AIWorQ
+	 XHoTA71xSeQP674KwTcO4xWHTx+7nyQ1NeZXMhTMdP8UKSWTL93tXYK17nh7ITrbcT
+	 hBdB+IFbLo6mg==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>,
+	Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH 1/2] f2fs: zone: fix to calculate first_zoned_segno correctly
+Date: Mon, 24 Mar 2025 19:49:34 +0800
+Message-ID: <20250324114935.3087821-1-chao@kernel.org>
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250324-rcar-fix-raw-v1-2-ae56c1c7a2f6@ideasonboard.com>
-References: <20250324-rcar-fix-raw-v1-0-ae56c1c7a2f6@ideasonboard.com>
-In-Reply-To: <20250324-rcar-fix-raw-v1-0-ae56c1c7a2f6@ideasonboard.com>
-To: =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, 
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, 
- Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1189;
- i=tomi.valkeinen+renesas@ideasonboard.com; h=from:subject:message-id;
- bh=RrSA67qwssqhfifxPYWRTyJwoPe3eh1BW4LfV0QWXHs=;
- b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBn4Ua+po76ao1/MbJy17NIE3XWkhEqpiKs2kEZ/
- i89Bsh5sgiJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ+FGvgAKCRD6PaqMvJYe
- 9SvFEACmyI/fjlnjn0PO9T/JrKtx7gYe5fQnxOirywlNza1WoGjedoQkh3dj/30oOjgRilFXa+u
- jQVzuGYFvaAc2nTje3HdFeaHeTeXze8cxxqzYfLBis6/oc1Z8xi6Ovk74vg3C9aVoPQ2+UkLWmP
- ZzIKLW0p22U/RWmMKs+rywzvdf/yPxLSCDXPjVJrZxHqLMZK3jewj5/fYOZQfm0GJVE+zJpkYNA
- yZddB+3i6oAybbH466IiUCgnDPW9dEOl64wqfy4s1LrCxdYiYd9RmdhUdpUUm25V6ig3S8a1EPu
- sT25xGBuPfLE7HSBgll6FONqtRNEiw8Rfo+m8qOYjbs5fH1q1lzo1LlgZYFmGL0+dAA/euAEC5X
- VKXkOhPMXLl1hjbgEZ6jcleoAL+jnv3dirp/q41ZWk7TZGxLKeCaSMp+clr+5NLxFPct1qAGDfy
- /HjuaZcGUTQvY40irbT+lDwrBaJCV50fW7RXgFTIHuWPJrobhL6hDv/xB0wJy1L/DY7vlESXSbM
- eMMXnKzGNPTNRDGCkobqGLw53lwSa9LziZSHZ8eDNr1LLqBSknlIvDjxbjDyd801I7C73WrSsjZ
- DJZniZLYkqF1e/sBmTnLa0jlmOUK09cUIbij/ockEOr1M+GNG64qs8+JFtr4QUh8TTNRBG3i/gX
- RKIbgsA0xQXXHcw==
-X-Developer-Key: i=tomi.valkeinen+renesas@ideasonboard.com; a=openpgp;
- fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
+Content-Transfer-Encoding: 8bit
 
-On Gen4 we need to set VNMC's EXINF to a different value (1) than in
-Gen3 (0). Add a define for this, and set the bit for Gen4.
+A zoned device can has both conventional zones and sequential zones,
+so we should not treat first segment of zoned device as first_zoned_segno,
+instead, we need to check zone type for each zone during traversing zoned
+device to find first_zoned_segno.
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Otherwise, for below case, first_zoned_segno will be 0, which could be
+wrong.
+
+create_null_blk 512 2 1024 1024
+mkfs.f2fs -m /dev/nullb0
+
+Fixes: 9703d69d9d15 ("f2fs: support file pinning for zoned devices")
+Cc: Daeho Jeong <daehojeong@google.com>
+Signed-off-by: Chao Yu <chao@kernel.org>
 ---
- drivers/media/platform/renesas/rcar-vin/rcar-dma.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/f2fs/f2fs.h    | 18 +++++++++++++-----
+ fs/f2fs/segment.c |  2 +-
+ fs/f2fs/super.c   | 32 +++++++++++++++++++++++++++-----
+ 3 files changed, 41 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-index 972ae2cb3314..53046614f7a1 100644
---- a/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-+++ b/drivers/media/platform/renesas/rcar-vin/rcar-dma.c
-@@ -94,6 +94,7 @@
- #define VNMC_INF_YUV16		(5 << 16)
- #define VNMC_INF_RGB888		(6 << 16)
- #define VNMC_INF_RGB666		(7 << 16)
-+#define VNMC_EXINF_RAW8		(1 << 12) /* Gen4 specific */
- #define VNMC_VUP		(1 << 10)
- #define VNMC_IM_ODD		(0 << 3)
- #define VNMC_IM_ODD_EVEN	(1 << 3)
-@@ -791,6 +792,8 @@ static int rvin_setup(struct rvin_dev *vin)
- 	case MEDIA_BUS_FMT_SRGGB8_1X8:
- 	case MEDIA_BUS_FMT_Y8_1X8:
- 		vnmc |= VNMC_INF_RAW8;
-+		if (vin->info->model == RCAR_GEN4)
-+			vnmc |= VNMC_EXINF_RAW8;
- 		break;
- 	case MEDIA_BUS_FMT_SBGGR10_1X10:
- 	case MEDIA_BUS_FMT_SGBRG10_1X10:
-
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index ca884e39a5ff..3dea037faa55 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -4630,12 +4630,16 @@ F2FS_FEATURE_FUNCS(readonly, RO);
+ F2FS_FEATURE_FUNCS(device_alias, DEVICE_ALIAS);
+ 
+ #ifdef CONFIG_BLK_DEV_ZONED
+-static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
+-				    block_t blkaddr)
++static inline bool f2fs_zone_is_seq(struct f2fs_sb_info *sbi, int devi,
++							unsigned int zone)
+ {
+-	unsigned int zno = blkaddr / sbi->blocks_per_blkz;
++	return test_bit(zone, FDEV(devi).blkz_seq);
++}
+ 
+-	return test_bit(zno, FDEV(devi).blkz_seq);
++static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
++								block_t blkaddr)
++{
++	return f2fs_zone_is_seq(sbi, devi, blkaddr / sbi->blocks_per_blkz);
+ }
+ #endif
+ 
+@@ -4711,9 +4715,13 @@ static inline bool f2fs_valid_pinned_area(struct f2fs_sb_info *sbi,
+ 					  block_t blkaddr)
+ {
+ 	if (f2fs_sb_has_blkzoned(sbi)) {
++#ifdef CONFIG_BLK_DEV_ZONED
+ 		int devi = f2fs_target_device_index(sbi, blkaddr);
+ 
+-		return !bdev_is_zoned(FDEV(devi).bdev);
++		return !f2fs_blkz_is_seq(sbi, devi, blkaddr);
++#else
++		return true;
++#endif
+ 	}
+ 	return true;
+ }
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 396ef71f41e3..dc360b4b0569 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -3311,7 +3311,7 @@ int f2fs_allocate_pinning_section(struct f2fs_sb_info *sbi)
+ 
+ 	if (f2fs_sb_has_blkzoned(sbi) && err == -EAGAIN && gc_required) {
+ 		f2fs_down_write(&sbi->gc_lock);
+-		err = f2fs_gc_range(sbi, 0, GET_SEGNO(sbi, FDEV(0).end_blk),
++		err = f2fs_gc_range(sbi, 0, sbi->first_zoned_segno - 1,
+ 				true, ZONED_PIN_SEC_REQUIRED_COUNT);
+ 		f2fs_up_write(&sbi->gc_lock);
+ 
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 011925ee54f8..b2342366020a 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -4307,12 +4307,26 @@ static void f2fs_record_error_work(struct work_struct *work)
+ 
+ static inline unsigned int get_first_zoned_segno(struct f2fs_sb_info *sbi)
+ {
+-	int devi;
++#ifdef CONFIG_BLK_DEV_ZONED
++	unsigned int segno;
++	int devi, i;
+ 
+-	for (devi = 0; devi < sbi->s_ndevs; devi++)
+-		if (bdev_is_zoned(FDEV(devi).bdev))
+-			return GET_SEGNO(sbi, FDEV(devi).start_blk);
+-	return 0;
++	if (!f2fs_sb_has_blkzoned(sbi))
++		return NULL_SEGNO;
++
++	for (devi = 0; devi < sbi->s_ndevs; devi++) {
++		if (!bdev_is_zoned(FDEV(devi).bdev))
++			continue;
++
++		segno = GET_SEGNO(sbi, FDEV(devi).start_blk);
++		for (i = 0; i < FDEV(devi).total_segments; i++) {
++			if (f2fs_zone_is_seq(sbi, devi,
++				GET_ZONE_FROM_SEG(sbi, segno + i)))
++				return segno + i;
++		}
++	}
++#endif
++	return NULL_SEGNO;
+ }
+ 
+ static int f2fs_scan_devices(struct f2fs_sb_info *sbi)
+@@ -4349,6 +4363,14 @@ static int f2fs_scan_devices(struct f2fs_sb_info *sbi)
+ #endif
+ 
+ 	for (i = 0; i < max_devices; i++) {
++		if (max_devices == 1) {
++			FDEV(i).total_segments =
++				le32_to_cpu(raw_super->segment_count_main);
++			FDEV(i).start_blk = 0;
++			FDEV(i).end_blk = FDEV(i).total_segments *
++						BLKS_PER_SEG(sbi);
++		}
++
+ 		if (i == 0)
+ 			FDEV(0).bdev_file = sbi->sb->s_bdev_file;
+ 		else if (!RDEV(i).path[0])
 -- 
-2.43.0
+2.48.1
 
