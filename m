@@ -1,156 +1,137 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B699F25D532;
-	Mon, 24 Mar 2025 08:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7C82512D8
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 08:05:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742803509; cv=none; b=Jhdt1oIRu8sBFaBAQ1RtuR8WCIKKoH8WqLfOekl07dVlmHWj5q70DCjgZoSkmrEuLWI8MEK4CIBPwv1WXs3bvaVx8N7/Mb4TNX1rWdECVdPyvgzRyp8iAAzp/y0+LZyHisaUjH5wsmEWH4s2ABlgEVnYnnh0V+ib8VjiePd5e6Y=
+	t=1742803546; cv=none; b=Z3mZY08urI7Qqo+PUkITmdH/pr8pGYWFif4fqQ+iRY8C7fCtPpLl0AV+iOSmY0LI8ATnNogImLQ44GsIQF7swJ3Z3KaOSY1lm9sj/QudEsw3OTqldzSWpwjGvIyGOh333RiAHC0A9W4X6ag6ykybsEtahPIKXRa/kC6yVd+b3PA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742803509; c=relaxed/simple;
-	bh=CW2HMs0XwwdWNF0z9jeJT15ET7DbR6dbxCPOb57gTgY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JZDCdgMIx+JsVLWQkTDCIhOuhzPyb1A/S+iLyLdkkrl4W4fCa23cog+zvvnEG71I9pW3AB35AbxotX8fSt/pDvlxeN1QBkwknbths6rO7UEsz440cmN9EMlXVGd/eVZKq+Q8/e20XKFzvFrGgko9mkjMUz7tg8c8jvSoaauEd+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=qubhuNz1; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1742803546; c=relaxed/simple;
+	bh=S/Q/cmvjORyllVqkKmvXSGVShiTGxtyrAPfuuXoaXP8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WPM87FM1lvNhTIBywPDCaQK9y+6FXpTZnkFLR37SpG3GYuzu+vQnxJH42s9FT2sk2VNlX+qe75a8ogPW1c/z0rjeh7oWZ6WIWt96yb8uBjssraV+FVVwF6wBLuLHXswqHGi2E1ZlgdT00daVCfglHwPAAE+JjpwG0sjhWDPFkPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kQm5eO3I; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qubhuNz1"
-Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id CD9F410DD;
-	Mon, 24 Mar 2025 09:03:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1742803397;
-	bh=CW2HMs0XwwdWNF0z9jeJT15ET7DbR6dbxCPOb57gTgY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=qubhuNz1O7vm9OLTwB/ck3S/HfuYsRk9dGn6UMXYdKMOkGmUUfhJJEZenY9ja00Yg
-	 8H1Hde5YgCxBJot+9+vTzDk0b0/REca/RUU1X78iwjV7kOHk3lr4rsaPsLVCgmM/Ap
-	 M+JLqgeV2XTJSpkOaTYOjuxDwvR9mOtOWoZiwYrs=
-From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Date: Mon, 24 Mar 2025 10:04:46 +0200
-Subject: [PATCH v4 3/3] media: i2c: ds90ub913: Use
- v4l2_subdev_get_frame_desc_passthrough
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kQm5eO3I"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52O6c3a0001787;
+	Mon, 24 Mar 2025 08:05:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	GiZikm6IvzzQWX6CT9gL5kOPLfz2b9r0DDzgSO0bZyo=; b=kQm5eO3I3oNcWYSL
+	sK/nlPLVwfrjXEaFj54BQUKK7mTTmHc8iA+nUK7Ic1mzbdY69qPKEp5VQC4OkaG5
+	tT7G0Jn82IhzY3vSHyNsRfbrY9T91hxkdZejL2MYNoCbMTYw3AjYj84UDr1HAPMC
+	+divdF43wt5zVQ21eKMx17oLg1IQ6tLV0BntAqA01Tzjp/A1wAppgbawvarnY4hR
+	zihgv+yPwSnwfPoUUzUtwBo9XaA0hmpeYmICcjEEv4TuerEej1AwPebQXYQwujm+
+	NGXdau6OEo82huNZp3DKxqFMMm/wF8XI2K8rkR/4e6nt7LH9kUrkiFmqJK677yAZ
+	W/muIA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45hm5uumu0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 08:05:39 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52O85dbU011050
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 08:05:39 GMT
+Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 24 Mar
+ 2025 01:05:37 -0700
+Message-ID: <a1aa02e8-7f58-46ae-b3df-ae43288cf683@quicinc.com>
+Date: Mon, 24 Mar 2025 16:05:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: ath12k: extend dma mask to 36 bits
+To: Johan Hovold <johan@kernel.org>
+CC: Johan Hovold <johan+linaro@kernel.org>,
+        Jeff Johnson
+	<jjohnson@kernel.org>,
+        Stephan Gerhold <stephan.gerhold@linaro.org>,
+        <ath12k@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250321162331.19507-1-johan+linaro@kernel.org>
+ <bc3601ae-5639-4ee4-bbcb-4e39b542bfbe@quicinc.com>
+ <Z-EMgPg5Gp-JtTZp@hovoldconsulting.com>
+Content-Language: en-US
+From: Baochen Qiang <quic_bqiang@quicinc.com>
+In-Reply-To: <Z-EMgPg5Gp-JtTZp@hovoldconsulting.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250324-frame-desc-passthrough-v4-3-dbe2412297cc@ideasonboard.com>
-References: <20250324-frame-desc-passthrough-v4-0-dbe2412297cc@ideasonboard.com>
-In-Reply-To: <20250324-frame-desc-passthrough-v4-0-dbe2412297cc@ideasonboard.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2627;
- i=tomi.valkeinen+renesas@ideasonboard.com; h=from:subject:message-id;
- bh=CW2HMs0XwwdWNF0z9jeJT15ET7DbR6dbxCPOb57gTgY=;
- b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBn4RIs2d3FK4AfzpkhoaSd1vrqISNwE4XJC0Z35
- lObQtayJZ2JAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ+ESLAAKCRD6PaqMvJYe
- 9QsjEACRgtJezDL/Lywj7jagb4Rfy1jhwRAR3R88JSCKWSv3MVyc3QRGXOezUd/RQkm0btQE7ed
- hxwBvywetxt9LvBhaCJIBgtcauLOee+qPp+zIgp77eMmPGbvSTd3FIbt+TI2fV/Ax3kT8Vt/EKW
- 8vdbDevP8JyUj5CgT4m/AhRhf93eK8+Gf2sFm4eu+5QfLtCNrxgqVpXoFRQgf4ySGu8twUPs0xo
- r9zNzPbcaSc++opGCJ8ooYalK7HnlYvW7tK0kWJXhqymYqA6iXrxAsJY90VOCzuRoBqsymbt23d
- QaopHw19GF/PZWi45FKP4heBFU2Q4csC8a2Gz5HtYwBRPe5cEjEFvo0lWk1btmMWcpFSqaHhoay
- bo0n9GuWgRSgjSst25W7MnDdeSRl26B4MRyAVuc3v9Lt/Hg5ko3pGA7+dBoiYoqEbHuvspAm3sj
- W5dQv0u3k8+M/TjufNdkws5HlgFxzwZcasKkxMjChUWbFhrc8HAuI8WIKS+clTWJwq5HIJ6AUN9
- woJP+hQHz/mf2AYLNXcEqAxMmDsvvnbqXMpWmW1uZhqqTicNvlXzyl+5gU1knRhWrJVxdkslRHZ
- dadO0qF3uKbvhn6BN/lWI12KC8txzisCokwAWeA3FY4e1AgVf1wGsCff8zxHu6Es3CqY680cUym
- pQYPPyI8772aPfA==
-X-Developer-Key: i=tomi.valkeinen+renesas@ideasonboard.com; a=openpgp;
- fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: jyA0r0eLjHC-X6nZZ87De9CCb1vuhA17
+X-Proofpoint-GUID: jyA0r0eLjHC-X6nZZ87De9CCb1vuhA17
+X-Authority-Analysis: v=2.4 cv=AJKH5mlP c=1 sm=1 tr=0 ts=67e11254 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=2XIbIgQLYS011rX2vRkA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-24_04,2025-03-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ clxscore=1011 impostorscore=0 suspectscore=0 lowpriorityscore=0 mlxscore=0
+ mlxlogscore=888 adultscore=0 phishscore=0 bulkscore=0 priorityscore=1501
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503240058
 
-Use the new v4l2_subdev_get_frame_desc_passthrough helper for
-.get_frame_desc.
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
----
- drivers/media/i2c/ds90ub913.c | 59 +------------------------------------------
- 1 file changed, 1 insertion(+), 58 deletions(-)
 
-diff --git a/drivers/media/i2c/ds90ub913.c b/drivers/media/i2c/ds90ub913.c
-index fd2d2d5272bf..f3b9d2a84bad 100644
---- a/drivers/media/i2c/ds90ub913.c
-+++ b/drivers/media/i2c/ds90ub913.c
-@@ -358,63 +358,6 @@ static int ub913_set_routing(struct v4l2_subdev *sd,
- 	return _ub913_set_routing(sd, state, routing);
- }
- 
--static int ub913_get_frame_desc(struct v4l2_subdev *sd, unsigned int pad,
--				struct v4l2_mbus_frame_desc *fd)
--{
--	struct ub913_data *priv = sd_to_ub913(sd);
--	const struct v4l2_subdev_krouting *routing;
--	struct v4l2_mbus_frame_desc source_fd;
--	struct v4l2_subdev_route *route;
--	struct v4l2_subdev_state *state;
--	int ret;
--
--	if (pad != UB913_PAD_SOURCE)
--		return -EINVAL;
--
--	ret = v4l2_subdev_call(priv->source_sd, pad, get_frame_desc,
--			       priv->source_sd_pad, &source_fd);
--	if (ret)
--		return ret;
--
--	fd->type = V4L2_MBUS_FRAME_DESC_TYPE_PARALLEL;
--
--	state = v4l2_subdev_lock_and_get_active_state(sd);
--
--	routing = &state->routing;
--
--	for_each_active_route(routing, route) {
--		unsigned int i;
--
--		if (route->source_pad != pad)
--			continue;
--
--		for (i = 0; i < source_fd.num_entries; i++) {
--			if (source_fd.entry[i].stream == route->sink_stream)
--				break;
--		}
--
--		if (i == source_fd.num_entries) {
--			dev_err(&priv->client->dev,
--				"Failed to find stream from source frame desc\n");
--			ret = -EPIPE;
--			goto out_unlock;
--		}
--
--		fd->entry[fd->num_entries].stream = route->source_stream;
--		fd->entry[fd->num_entries].flags = source_fd.entry[i].flags;
--		fd->entry[fd->num_entries].length = source_fd.entry[i].length;
--		fd->entry[fd->num_entries].pixelcode =
--			source_fd.entry[i].pixelcode;
--
--		fd->num_entries++;
--	}
--
--out_unlock:
--	v4l2_subdev_unlock_state(state);
--
--	return ret;
--}
--
- static int ub913_set_fmt(struct v4l2_subdev *sd,
- 			 struct v4l2_subdev_state *state,
- 			 struct v4l2_subdev_format *format)
-@@ -514,7 +457,7 @@ static const struct v4l2_subdev_pad_ops ub913_pad_ops = {
- 	.enable_streams = ub913_enable_streams,
- 	.disable_streams = ub913_disable_streams,
- 	.set_routing = ub913_set_routing,
--	.get_frame_desc = ub913_get_frame_desc,
-+	.get_frame_desc = v4l2_subdev_get_frame_desc_passthrough,
- 	.get_fmt = v4l2_subdev_get_fmt,
- 	.set_fmt = ub913_set_fmt,
- };
+On 3/24/2025 3:40 PM, Johan Hovold wrote:
+> On Mon, Mar 24, 2025 at 11:06:16AM +0800, Baochen Qiang wrote:
+>> On 3/22/2025 12:23 AM, Johan Hovold wrote:
+>>> Extend the DMA mask to 36 bits to avoid using bounce buffers on machines
+>>> without an iommu (under OS control) similar to what was done for ath11k
+>>> in commit dbd73acb22d8 ("wifi: ath11k: enable 36 bit mask for stream
+>>> DMA").
+>>>
+>>> This specifically avoids using bounce buffers on Qualcomm Snapdragon X
+>>> Elite machines like the Lenovo ThinkPad T14s when running at EL1.
+>>
+>> why bounce buffer is used at EL1? is it because IOMMU is not working at EL1?
+>> or even because IOMMU is not present on Elite machines?
+> 
+> As I mentioned above, the IOMMU is not under OS control. The boot
+> firmware / hypervisor has configured the IOMMU in by-pass mode and it's
+> effectively missing from the OS POV.
+> 
+> Note that this is also the case on Qualcomm platforms like sc8280xp
+> (e.g. the Lenovo ThinkPad X13s which already benefits from the extended
+> DMA mask for ath11k).
+> 
+>>> Note that the mask could possibly be extended further but unresolved DMA
+>>> issues with 64 GiB X Elite machines currently prevents that from being
+>>> tested.
+>>
+>> could you help elaborate how it could be extended?
+> 
+> The mask should reflect the capability of the device. That may be
+> 64 (or 40) bits, but I've only been able to test using 36 bits.
 
--- 
-2.43.0
+are you talking about QCN9274? As far as I know, WCN7850 does not support 40 bits or more.
+
+> 
+>>> Also note that the driver is limited to 32 bits for coherent
+>>> allocations and that there is no need to check for errors when setting
+>>> masks larger than 32 bits.
+>>
+>> why is it not necessary to check error?
+> 
+> The DMA-API documentation was recently updated to clarify that there is
+> no need to check for errors when settings DMA mask with 32 bits or more
+> as the call will never fail in that case. See commit
+> 
+> 	f7ae20f2fc4e ("docs: dma: correct dma_set_mask() sample code")
+
+thanks for the info.
+
+> 
+> Johan
 
