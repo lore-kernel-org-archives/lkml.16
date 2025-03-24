@@ -1,124 +1,77 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15D52E3374;
-	Mon, 24 Mar 2025 20:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FEB1A08A3;
+	Mon, 24 Mar 2025 20:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742848362; cv=none; b=P3Ns2pPNAd8jDeEOb0kHAq4Az1hRn1OPTRnSLzAsMqdfjRB5SzmILeBv/U+sCt15XvA/OiwWgiOdugQ+gvmagCCwG0pXhS+ny42aYcnYFElRlKG7v0gllkUst8zL5zMz8VmI126rT/i4fY749P5lakAIFex1KKTc2aieQSHsa9M=
+	t=1742848458; cv=none; b=PpWf/RD6kRt+J+67RT8gnvlx9T9rcIWLwDjm8Nq0gT0m868i+73X/hYIUs5jVRDKyvvgoOji1k11XsiYBezW6c1fgxAHCxX2OYBPv69NX54pdgzrzy/QIpfjHuDQq4aquIUQkCe4LyCGz8Kj+knEyHObpf1mI0OshKzewu4x8ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742848362; c=relaxed/simple;
-	bh=H55dapffsuhjnE0Ly7V+beIwVQmmUr/D2N7ZOtll3cM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OmlymxOVjWjnd9os6HhpDsaQyNdHC2vCiw7kd2bbyf0BhG2mDxXYEdLy2PThDTZHG52nPA4tzXJm3w/98eg04I1qUPyqFpPN2RPZdfLZ4k0jxE3FCQYQTPsXShGZCxG5+kVLlN2kwbqRJnrErpxNIQnaCQfSlqVmuEx+8EK+OBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c+Uan55P; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742848458; c=relaxed/simple;
+	bh=WQsgdrLzGf/rKF9Rxu+Myb56pbGqDyG8vHyfgjdOXGI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vBPOxm36Nwf6DUFfPZSdATyqPyaAwK08Oh8ajC5aPuDSOSY6ExVI24SrcbpxC6UVyq9xyvRQoPuNB9xboe7C9b/qJQe6RVSlVprVA9OzDsFDvVQ9+GEydPCypohizr8UIGw6ZU++ru/exLaQGmqYI5byG0Kpri//h/NSCsz1ato=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DWY+snBo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c+Uan55P"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-223f4c06e9fso79970025ad.1;
-        Mon, 24 Mar 2025 13:32:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742848360; x=1743453160; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jj5y725C6U/JdWVBPtUFbjlsM0gGbVGWPvReveqEWoM=;
-        b=c+Uan55P0d1ep78xTiOqKUqcgZHl5jW2OP2oXQrIHIu2XTkJsHsgPizRDRfbb1jZN4
-         ghNYGddnzFh63AkG2rNJHyyV3QnFgXEXEIIsyU9bW1eV7ITXOculEm0sZ+LXfV+QpQVc
-         U3Q07NWQoF/+0XFXC9CzUjWRPQPHyZLwswQxncag5JbYg8L9ebAZ8W8FbdPn7IiglemB
-         gNlVk7EKRS8XfJ6JUEn65X3hwDFsZ5HrpL/sxmF+YLUGGQJEMKYmkPKwqfhsNHIrvZa8
-         1kgChNXq/pCeSpCi/6Nl3pdAvBYeIvcotAnGvxzglbo1Rs2qccfU6T02PhsD/n+iDw2x
-         JH6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742848360; x=1743453160;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jj5y725C6U/JdWVBPtUFbjlsM0gGbVGWPvReveqEWoM=;
-        b=JO3YsE4k8uhQAyCUFODVxecuM4751STvNu9FdzHNRmjGQRdGqtLirxvUtywko9yhm0
-         58pN/UUwBaSXpg/V8hQ6X6FHSTNqhD+9SSyUIWALmwbIggHgO7h9Ab7nFDSLszPokwXC
-         LNzi8XPa36qvTrlKMebToeXV6QPBcLImLJNXUYmfY2xwkmaDusbTt5Zb6HH0dFTdcT/e
-         ax2AzaES2RvJ4ToHNe0TKQ9mt/uLu0/X135lZOr2v7UGrWVT0G57Kn2MjfnHAf2pPNrD
-         1pJHCPuUxMoiUaBT/3Of3D0KBMQS40PebUyLvQxgE9FPsj1pkzmLvpyFMrXsK08UFMtS
-         Qewg==
-X-Forwarded-Encrypted: i=1; AJvYcCUzGMGB1Au8TKudLb1pMZDfEGj69OiGtpbhJeJthpXZ3d+DDC6ScKTPz9t3+e747O7D9z61ZDU9AFg/Gat0@vger.kernel.org, AJvYcCWo7ouOu/u43xavED0X2wSMKc0ZH/ofd6/TOXouIX5+7UaylKrRNJsNshSvWa3NpMM5vseO+8NtBkg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxlbszofh1nOxWMnMmdMFQjeTA2iPWZ9xym8L1Yzv5qG48uvL5/
-	RxkL03jV0Mmsndb90QOGqh4StdBSS9rG5t4sAixq/HewcogzNdpw
-X-Gm-Gg: ASbGncuLxG433o63tNo12kTh8cDHAHqTMGu8njG7fOCAJKAmFrPho2S+UYPNoU3ny6e
-	vy0injDU22kgOHU+/zEoOdlfO0ZfDjK6fzNO9EH6gpedYE7HarjO3uNMxl6sEQTZ4vPwYKXgZRl
-	ExxQrQM+6w4RWFs19/vHoh02jboI5i0Sb0q6oVyJS5oXDN5J+G+pw4zsFV+2h8JIteuN8AR4Wb0
-	BZnRwPGEUb4Z+ysFa8dvatNtqTCJ4/7EyOy5gF45maQrFQlrr/tlMtkAkBNwUCHgwrSAhGtK/vc
-	GtcZz/g7zZ9BG97eizD/EYerNpkXX0IhURrIrcGjD4TtZLC1KzrRoF98u39cUbNafP7NYWvy5QZ
-	BJvk9xXIoge1h3HCuv/W/LK2uBNCb7NklGaXdF3LxrA==
-X-Google-Smtp-Source: AGHT+IEkkZwglT7x6V0AyhOCINFRmYgH5G77Wb4O3lcI2Jw9QeTNeTSW9Kfa9CP4TsKw2I2S1Lo4Xg==
-X-Received: by 2002:a17:902:da8c:b0:21f:6dcf:fd2b with SMTP id d9443c01a7336-2265e67f76dmr240914285ad.1.1742848359660;
-        Mon, 24 Mar 2025 13:32:39 -0700 (PDT)
-Received: from elbadrym.c.googlers.com.com (34.125.168.34.bc.googleusercontent.com. [34.168.125.34])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af8a2a23c31sm7593981a12.54.2025.03.24.13.32.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Mar 2025 13:32:39 -0700 (PDT)
-From: mohammed.0.elbadry@gmail.com
-To: 
-Cc: Tali Perry <tali.perry1@gmail.com>,
-	Mohammed Elbadry <mohammed.0.elbadry@gmail.com>,
-	Avi Fishman <avifishman70@gmail.com>,
-	Tomer Maimon <tmaimon77@gmail.com>,
-	Patrick Venture <venture@google.com>,
-	Nancy Yuen <yuenn@google.com>,
-	Benjamin Fair <benjaminfair@google.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	openbmc@lists.ozlabs.org,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/1] i2c: npcm: Add clock toggle in case of stuck bus during init in npcm_i2c_init_module
-Date: Mon, 24 Mar 2025 20:32:03 +0000
-Message-ID: <20250324203233.1266772-2-mohammed.0.elbadry@gmail.com>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-In-Reply-To: <20250324203233.1266772-1-mohammed.0.elbadry@gmail.com>
-References: <mohammed.0.elbadry@gmail.com>
- <20250324203233.1266772-1-mohammed.0.elbadry@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DWY+snBo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D591BC4CEDD;
+	Mon, 24 Mar 2025 20:34:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742848458;
+	bh=WQsgdrLzGf/rKF9Rxu+Myb56pbGqDyG8vHyfgjdOXGI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DWY+snBo1wR3tfpaXeEhwe+NKbipOVKkpTmiUiZR2C/w3Fa8r5TSIJD+NV8xyjIFT
+	 N+fPC0DanXPQgM4ll3UklXBdUxOaaHdp6tvramUR3CIjFrksuRlriGIOHucexniQjc
+	 AoObG2d3679GL69DDFxFFWWe8xfxGWWtmVhlw6sX+atDBdyvtOSN23D9fwqreWywKi
+	 zJqx/D08WhocPB3Wv4W8eSY8oPQnHcaMClZO//4V9dq562tI2+OwvO7aBGAvtOsPeI
+	 AZH3qv9kWTsouu7N0tkAZC045cfM2e3RRVREStfWQST7uvV7eJ32wkaCZaDinWuuwW
+	 pGD19TWfAG4qA==
+Date: Mon, 24 Mar 2025 15:34:17 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: srinivas.kandagatla@linaro.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	krzk+dt@kernel.org, johan+linaro@kernel.org, broonie@kernel.org,
+	conor+dt@kernel.org, konradybcio@kernel.org,
+	paulha@opensource.cirrus.com, luca.ceresoli@bootlin.com,
+	linux-arm-msm@vger.kernel.org, perex@perex.cz,
+	dmitry.baryshkov@oss.qualcomm.com, zhoubinbin@loongson.cn,
+	ivprusov@salutedevices.com, peda@axentia.se, andersson@kernel.org,
+	tiwai@suse.com, linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+	lgirdwood@gmail.com
+Subject: Re: [PATCH v4 1/6] dt-bindings: mux: add optional regulator binding
+ to gpio mux
+Message-ID: <174284845664.822870.8151972984188794106.robh@kernel.org>
+References: <20250324130057.4855-1-srinivas.kandagatla@linaro.org>
+ <20250324130057.4855-2-srinivas.kandagatla@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250324130057.4855-2-srinivas.kandagatla@linaro.org>
 
-From: Tali Perry <tali.perry1@gmail.com>
 
-Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-Signed-off-by: Mohammed Elbadry <mohammed.0.elbadry@gmail.com>
----
- drivers/i2c/busses/i2c-npcm7xx.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+On Mon, 24 Mar 2025 13:00:52 +0000, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> 
+> On some platforms to minimise pop and click during switching between
+> CTIA and OMTP headset an additional HiFi Mux Switch is used. Most common
+> case is that this switch is switched on by default, but on some
+> platforms this needs a regulator enable. One such platform is Lenovo
+> T14s.
+> 
+> This patch adds required bindings in gpio-mux to add such optional regulator.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/mux/gpio-mux.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
 
-diff --git a/drivers/i2c/busses/i2c-npcm7xx.c b/drivers/i2c/busses/i2c-npcm7xx.c
-index 3ad6124be80f..78c85015d955 100644
---- a/drivers/i2c/busses/i2c-npcm7xx.c
-+++ b/drivers/i2c/busses/i2c-npcm7xx.c
-@@ -2043,10 +2043,14 @@ static int npcm_i2c_init_module(struct npcm_i2c *bus, enum i2c_mode mode,
- 
- 	/* Check HW is OK: SDA and SCL should be high at this point. */
- 	if ((npcm_i2c_get_SDA(&bus->adap) == 0) || (npcm_i2c_get_SCL(&bus->adap) == 0)) {
--		dev_err(bus->dev, "I2C%d init fail: lines are low\n", bus->num);
--		dev_err(bus->dev, "SDA=%d SCL=%d\n", npcm_i2c_get_SDA(&bus->adap),
--			npcm_i2c_get_SCL(&bus->adap));
--		return -ENXIO;
-+		dev_warn(bus->dev, " I2C%d SDA=%d SCL=%d, attempt recover\n", bus->num,
-+				 npcm_i2c_get_SDA(&bus->adap), npcm_i2c_get_SCL(&bus->adap));
-+		if (npcm_i2c_recovery_tgclk(&bus->adap)) {
-+			dev_err(bus->dev, "I2C%d init fail: lines are low\n", bus->num);
-+			dev_err(bus->dev, "SDA=%d SCL=%d\n", npcm_i2c_get_SDA(&bus->adap),
-+				npcm_i2c_get_SCL(&bus->adap));
-+			return -ENXIO;
-+		}
- 	}
- 
- 	npcm_i2c_int_enable(bus, true);
--- 
-2.34.1
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-**Reported-by: Mohammed Elbadry <mohammed.0.elbadry@gmail.com>**
-**Tested-by: Mohammed Elbadry <mohammed.0.elbadry@gmail.com>**
