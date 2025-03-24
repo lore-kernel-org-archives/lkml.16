@@ -1,97 +1,81 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7969198A29
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 19:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F8B9444;
+	Mon, 24 Mar 2025 19:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742843977; cv=none; b=c6gu3H9p1txQBNOyYm48n7zxAWwUH0+Js78OGp9om884g7LOxDaxcQxznEh6/roShPsWd1XayTapmTCrmRgVkeyCbxmNFDutUnPGNbWcaRTIRJ6crXHljVCjLBN9zgNr80FgKIApHjqE20VgOLgUGZNUCCa6CoH8AY7fDpPIpo4=
+	t=1742843996; cv=none; b=t+hhzl9b6rjE0ahcxE1wdert1CKg0NNH+VFIN7Tj29GLvURh5lXX+ANeU3vYioej76UfML8gU8FCV6h7bXyMrkiow8cpCTVjaP6ajEvVLx/pj17FMgmsj+0NrMvztlQiLnGccbmUs3dslIW3+7Hdmk/BZxIr565+spPHsTT0b/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742843977; c=relaxed/simple;
-	bh=P/hwBBn+ky1Zya+g5OHKD1ly/i5ipwUmNOgXdV7PMjg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kr2rb2umVSPikvpWSv9XuwD1SU/Mxjq9O9Nx1KVduXWNo6KPaFidj3l/pHGMAXFnmeFTPdfJqqVBTr5TCUPClZxYkQSnmnJTwynGfyn4sHlHbkolqILcOoBU+tD8/gPBJKDFZUFwkvbu7YYL81Fv7KAQUDfuQeFwaU3NJXl+JnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=eaRDCsZY; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1742843996; c=relaxed/simple;
+	bh=tCQwg+ILmxSv/vZ1mMK34olzXUWqG3EfmuPCjXaXCR0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=svVjAdHqmdipcRysIdD+Qqnt21Zw0vwlRy3Ks2Yx9Ke8RLhFQ271MHKXeUdK0FeXff6dud0XEaPQ++st1A3b18ZX5va+VBknW/BkJf7kHDqQ223ybPsZsJIsMbTmek23F5WhHdMTw4G5BOfBxXMWNx6fufRZiSqEhlbZULZzb2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZY4UkiXX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="eaRDCsZY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=R9G+
-	9YMCrVAXcN/A7C/bnMd2N4uDf2n66715z7MwFmw=; b=eaRDCsZYKRjAOXENBFxD
-	NUusBd6dFIL3ifBFA03P08hKISn6A9QsJRRvbuQNOU0oJl+/YXquxnokwvGh2CJE
-	sOu3xT/5XDTIBL0Y367UgEDsSiBKjAP1yoiQzIoFcXgEP228pEQEhvQXQJ0mHJw9
-	T93En2Cxp/qcceaHSzTk916pvva4ydL1Y9FybICqPe5JTCzPIxi9tYNwCibAd7j0
-	lbtrdNyts/7aDGip5RWvWRL9KFXjQe/BKVD0y5N4WQeQ6pHrwAHECnrg+8zHqATE
-	aBPvLQSirazxWy7oe1ro2eQGIkZv9Ezm5reeDQfITAiJrfKT2/cUwY2e6r8ubkEh
-	iA==
-Received: (qmail 2701050 invoked from network); 24 Mar 2025 20:19:32 +0100
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 24 Mar 2025 20:19:32 +0100
-X-UD-Smtp-Session: l3s3148p1@u5LfexsxQF1tKPAv
-Date: Mon, 24 Mar 2025 20:19:32 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: syzbot <syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com>,
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-	linux-i2c@vger.kernel.org
-Subject: Re: [syzbot] [usb?] WARNING in dib0700_i2c_xfer/usb_submit_urb
-Message-ID: <Z-GwRNe8NIigXYtS@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	syzbot <syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com>,
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-	linux-i2c@vger.kernel.org
-References: <67e1a1f5.050a0220.a7ebc.0029.GAE@google.com>
- <acfa19a7-9d24-4cd6-9d1d-580a9ac7473c@rowland.harvard.edu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZY4UkiXX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6BD0C4CEDD;
+	Mon, 24 Mar 2025 19:19:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742843995;
+	bh=tCQwg+ILmxSv/vZ1mMK34olzXUWqG3EfmuPCjXaXCR0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=ZY4UkiXX9S/UfOKf6NcPX7pE8IfyjnVqTZArcCPhkywuts4g6UnK4rx0khYOLdAyn
+	 jqNhA9bfpGgKKsWKZaL6jF6AVaiWsjo+XZbaX0S9KRWvbYPUWv0s7QJCd+TdSssMrZ
+	 G6f4AfICcTvNanogU34dS2Vku51xa2jaJs1Wo3FoasppBKtyhQLYf3UI34DNAbDbpT
+	 IRotqtcruDfASUZKbzid3zpLBw5OWEeEt2qeiN6f3FfQGVgyexfkoVyQcboXo0kV8O
+	 mvGbWUCjS05wv/YDjin8TOCuIXBb8D0ZiKSSoKj5J/5lKTInU+gJbbOcU5jURUfd2a
+	 dN5c98lxFSzKA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D08380664D;
+	Mon, 24 Mar 2025 19:20:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="D3w7yJPKb+YSZTp1"
-Content-Disposition: inline
-In-Reply-To: <acfa19a7-9d24-4cd6-9d1d-580a9ac7473c@rowland.harvard.edu>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] gve: unlink old napi only if page pool exists
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174284403204.4140851.713015694194753583.git-patchwork-notify@kernel.org>
+Date: Mon, 24 Mar 2025 19:20:32 +0000
+References: <20250317214141.286854-1-hramamurthy@google.com>
+In-Reply-To: <20250317214141.286854-1-hramamurthy@google.com>
+To: Harshitha Ramamurthy <hramamurthy@google.com>
+Cc: netdev@vger.kernel.org, jeroendb@google.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ pkaligineedi@google.com, shailend@google.com, willemb@google.com,
+ jacob.e.keller@intel.com, joshwash@google.com, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Mon, 17 Mar 2025 21:41:41 +0000 you wrote:
+> Commit de70981f295e ("gve: unlink old napi when stopping a queue using
+> queue API") unlinks the old napi when stopping a queue. But this breaks
+> QPL mode of the driver which does not use page pool. Fix this by checking
+> that there's a page pool associated with the ring.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: de70981f295e ("gve: unlink old napi when stopping a queue using queue API")
+> Reviewed-by: Joshua Washington <joshwash@google.com>
+> Signed-off-by: Harshitha Ramamurthy <hramamurthy@google.com>
+> 
+> [...]
+
+Here is the summary with links:
+  - [net] gve: unlink old napi only if page pool exists
+    https://git.kernel.org/netdev/net/c/81273eb87af8
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
---D3w7yJPKb+YSZTp1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> As far as I can tell from the source code, the dib0700 simply isn't able=
-=20
-> to handle 0-length reads.  Should the dib0700_ctrl_rd() routine be=20
-> changed simply to return 0 in such cases?
-
-The adapter (I assume the one in dvb-usb-i2c.c) should populate an
-i2c_adapter_quirks struct with I2C_AQ_NO_ZERO_LEN and then the core will
-bail out for you.
-
-
---D3w7yJPKb+YSZTp1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfhsEAACgkQFA3kzBSg
-KbZviRAAgwc9tdRFJkCUrclcfUuNms0E4rHrMGo76Al74WtC9ycZe4+exceZP1F2
-mtb2SM6PGPKsYkx0vsOej7tUW6uNBeVNFH/3xIhjJTXq4n5JFRaw9kB3DU93qaMt
-Zi57qC2fsJtKW7Zbu3AWtN9cyWf4qw7ihjOH+bGYl9244oUSpbqaum/GlErPkPdq
-S6k4mKtAsNvN+KvSB8m7HqdGknO8Ma6UJBIr2T+/X8ywKa+Dp7RgHcPYAT41eYWP
-aDxwJvIlKKK7JsIz+/f8knqRbTND15tcPfgTEeL6EFUp86u9ppa0UM9eYS4VC7AC
-kvwq9qwmHCOVfye+nc4iO6mQRjIW/V1MWqiQvLXH3V/aig8DC12mSLA/JnWcJ+n8
-6KVPfVEymOKXn0W+GiKRnlFuxdd6SkKN6K3G5nssV9Jmbn891T6LX3QPeIfUqGyf
-avDqHKpBfv59HacrKdsxzd6IYx773UqUELkTanFfcIfn9BSQa1DwUxdvDaI5YPze
-+IB0JiW7vFERAv/qje38LKI5iFAzidSHbam4k5GH8Q+nkXG6wv+fDLJSQvm7TFiY
-1YLwn0KmiAJKLeEJTgUOnc61E2I5Dc0yUZVRpeMLrR85v8zNLvy8IMU8E85utgyu
-YogWdIhRXHdKZR4Ql7STBE7gwHcPoCQf2v5jL88vzKRMRWB2u3w=
-=Ixnu
------END PGP SIGNATURE-----
-
---D3w7yJPKb+YSZTp1--
