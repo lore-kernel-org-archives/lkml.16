@@ -1,43 +1,43 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+Received: from mail-24418.protonmail.ch (mail-24418.protonmail.ch [109.224.244.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846FD1EDA1E;
-	Mon, 24 Mar 2025 21:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514D21EDA1E;
+	Mon, 24 Mar 2025 21:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742851112; cv=none; b=FjxprbkvST9tGFQm0go0VQvG1/b1fYxv0DFjpL8foR010lTstRxXHPoaCQbLs77efhaqqWlxZGEZ1KQlK/gpazuMq0VaxMQLF5a/18oxoT6/P1qM8NuKXfTxj/05N3qpT1dx5wVckbJoVYBEDKcfq3o9ullNSR9JOj2jC4UPcT8=
+	t=1742851119; cv=none; b=WaIDaW4qZX1TqSsSYFttoYYDw199/Ep+KHWf4RKj9iWkZ/eJGix7vSYF42xhyv+7PgIKYxEE0VoYuDATf0koxDTljEuOJRrNhUdDRpFd19HqTNW4JnijgEKzV5lYU6sDB5zeY4DDEf+IQhpG5DntXPFTHAEfIgJQfbEllE/dQg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742851112; c=relaxed/simple;
-	bh=c4E++3f2MDMsNPMEJdXDfgwYQoGSbwjYzUZTLh3w6c8=;
+	s=arc-20240116; t=1742851119; c=relaxed/simple;
+	bh=GNu+kahqRURr3jBKGFOwVS7xGN4jr0+9cKSPvRimRUQ=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=usiATzEEvqcGz+WsnHrAE8J6vJniXmnOv8CQ7I/SQEwd3oVJ1yl1a2iIYmuWwNeErD0Wp30/JPPg6kizcSDy6uQ5/NNylkDYymLfezwAH47YAX6ufibTZLqxIKGMjIuTewSwqTtt+avxDaPkEpRS9BUiShoUm6mzbJ1hXolWM04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=VHbt574b; arc=none smtp.client-ip=185.70.43.16
+	 MIME-Version:Content-Type; b=QzLRWobammrOpzXv2X3Z+ElPtSq0fv/Rrv3Tpc6Ilvr37L5HHQfEncWEPRhkCGKG7m26ZheiaynOGh6tIA8zaHTQ9ecRZV11m7V5UIwz05g+S4jM4Ha6VzAZy2xMftxavwrO37gsZ+lg/5FTC39Kx8ADWdGRulcTsnPuJaDTmQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=dUzln99c; arc=none smtp.client-ip=109.224.244.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="VHbt574b"
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="dUzln99c"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1742851108; x=1743110308;
-	bh=6DixGtBaeZaFqPX3S+avGICBN1tFkPrHCpETt4l8pPk=;
+	s=protonmail3; t=1742851115; x=1743110315;
+	bh=u5mBsTab4mA8udrpnBydbaZhEo5uyqSSg9IwaotnLuw=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
 	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
 	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=VHbt574by1tm+h6WWTttP9EZ0CDO0qnamTy58fhMkSXXhL58G4XT/HWkeVfmHTyAp
-	 JDLhRYtRJeBPoSGj4+3ZMZttB842ZXOIATbw58O5j4kRra/u/YpnTIsw9gky12bj7t
-	 LmDAr2CbIzHQJBybqGFJNAC4RZn2+5W+reYTT9v2Uv6yflv7Z4Vi8Y7OK68ymaTtDN
-	 TPpIO5mSOcOVgnQr0GjxYYKrnytoqbCNsmtcoi0e2oRnlzRf0X9d26xtzt/l1OYzmF
-	 TCQlyO/I1AG+2WrwQyy5MRdwfFziCDfpZ2P2ZMjF6oczeNVXX0jRezRep85IBlNvqx
-	 F8w1dAoWSIACA==
-Date: Mon, 24 Mar 2025 21:18:23 +0000
+	b=dUzln99cYsduJc1JPJFs2t9R6DdFA0hQLoznShP70y3KJlwftbbP7EIzpByVkJwn6
+	 Q5XY3uTwo3UI/FORzd95Ox/MOM7R2TPGlYl0Szr+9ntJzQEgIplO3t1/9mRsGSKnrn
+	 o1a+eiVtR2UCk7RNsUguNK9W16/NOlDFR1hcce4wVRqAWNN4Qre/GCqYDwqQswqsa7
+	 1U9TN5z/XY38U7yDUoVj+z6orukqQ/kDgxzCcIrDZBOtDXyw0Y6jIUgKQtMwBfXvfg
+	 +wBQgnWcpQ5b/JzDnb2GN4iuqkUhQ9tuGAKa1LKWu+3vgnZ1tNdGrArlC4NxL4PC2H
+	 IwoNaedSUlnbg==
+Date: Mon, 24 Mar 2025 21:18:28 +0000
 To: Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 From: =?utf-8?Q?Dominik_Karol_Pi=C4=85tkowski?= <dominik.karol.piatkowski@protonmail.com>
 Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, =?utf-8?Q?Dominik_Karol_Pi=C4=85tkowski?= <dominik.karol.piatkowski@protonmail.com>
-Subject: [PATCH v2 5/6] USB: serial: ftdi_sio: Fix misaligned block comment
-Message-ID: <20250324211619.166988-6-dominik.karol.piatkowski@protonmail.com>
+Subject: [PATCH v2 6/6] USB: serial: ftdi_sio: Remove space before tabs
+Message-ID: <20250324211619.166988-7-dominik.karol.piatkowski@protonmail.com>
 In-Reply-To: <20250324211619.166988-1-dominik.karol.piatkowski@protonmail.com>
 References: <20250324211619.166988-1-dominik.karol.piatkowski@protonmail.com>
 Feedback-ID: 117888567:user:proton
-X-Pm-Message-ID: f611cdb4109628a58b1b61b518af79d1bb384640
+X-Pm-Message-ID: 267b8bb410963ff7234fc5380080453abd6773c9
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,7 +47,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-One of the block comments was misaligned. Fix it to align with code
+Remove superfluous space before tabs in defines to align with code
 style.
 
 Signed-off-by: Dominik Karol Pi=C4=85tkowski <dominik.karol.piatkowski@prot=
@@ -56,22 +56,32 @@ onmail.com>
 
 v2: Split the patch into smaller patches
 
- drivers/usb/serial/ftdi_sio.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/serial/ftdi_sio_ids.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/serial/ftdi_sio.h b/drivers/usb/serial/ftdi_sio.h
-index 55ea61264f91..d671d2194c64 100644
---- a/drivers/usb/serial/ftdi_sio.h
-+++ b/drivers/usb/serial/ftdi_sio.h
-@@ -95,7 +95,7 @@
-  *
-  * The Purge RX and TX buffer commands affect nothing except the buffers
-  *
--   */
-+ */
+diff --git a/drivers/usb/serial/ftdi_sio_ids.h b/drivers/usb/serial/ftdi_si=
+o_ids.h
+index 52be47d684ea..3d9f6ed97783 100644
+--- a/drivers/usb/serial/ftdi_sio_ids.h
++++ b/drivers/usb/serial/ftdi_sio_ids.h
+@@ -1022,7 +1022,7 @@
+  * Kondo Kagaku Co.Ltd.
+  * http://www.kondo-robot.com/EN
+  */
+-#define KONDO_VID =09=090x165c
++#define KONDO_VID=09=090x165c
+ #define KONDO_USB_SERIAL_PID=090x0002
 =20
- /* FTDI_SIO_SET_BAUDRATE */
- #define FTDI_SIO_SET_BAUDRATE_REQUEST_TYPE 0x40
+ /*
+@@ -1446,7 +1446,7 @@
+ /*
+  * Accesio USB Data Acquisition products (http://www.accesio.com/)
+  */
+-#define ACCESIO_COM4SM_PID =090xD578
++#define ACCESIO_COM4SM_PID=090xD578
+=20
+ /* www.sciencescope.co.uk educational dataloggers */
+ #define FTDI_SCIENCESCOPE_LOGBOOKML_PID=09=090xFF18
 --=20
 2.34.1
 
