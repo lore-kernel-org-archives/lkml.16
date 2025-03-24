@@ -1,116 +1,125 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp-8fac.mail.infomaniak.ch (smtp-8fac.mail.infomaniak.ch [83.166.143.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1121195FEF
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 19:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06C81946BC
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 19:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742844077; cv=none; b=QtH70RwqIDY8O3VUw407/P/nZnOTZApsKDfMPnOVk8u35Np2RmvWMJb1DRcB2+HIM0zcqYanpze9UEXgS2vK6r3LOo62mMRIZfbo5LxO9jUD70tHG01bUyMeXdYBFGwKZSYxRuIFWTRWPfDvG4we4QL9ICnLlorS9XlWP8zMDwQ=
+	t=1742844116; cv=none; b=U2Qs1t8mkis81h755VPV4r05VEk8SBxp7nAEMCubB5rDACOtP8DqikmUpzxv4yHGGltUJrK926c8PuyGXTnp21Wdjb2bNQRKDYriIOiNolB1hS0VwGw99/raAMulPm0cHYaONMOTPXS/+zmlijp5L4hEipotJ3Dnrptyv1bGa8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742844077; c=relaxed/simple;
-	bh=0T4JFLhJnl4iWm2bszU4lW8Y2/BqIgDH5IiF44yaoYk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KvdLGzSu/nWLFgn/ks6OHxSyCGG2mORMA5I+nKUoL94VD0x9f0cYkF8sWKoUPP5t/IxNovGVnvgdfiowRShGD+iAqA1MDrFGW/4eHrlv2zMkzFcc3lvs4V3Usqj7zDoHYWV7N6DWE8Qh4T0LVfoqFTIrA8swlydKBBTOCGGvWtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=R7p3iaXO; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1742844116; c=relaxed/simple;
+	bh=TvB1EnMBcuPAfn2Ia82TJUwmEuxauLYHO6I+MZ04fBM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b2yIludbyGfDFswmjjIvWrTTHRWe/lxXDlEuWXUAeMXOPwWArNZNs+D3Zgwx8O1Gt0HTaBn17z4J4gEsXFCP8tX7lVVUXL1sySH9cGIW/iYUXTJtzYhsucbjzNSrwpXTZiY+DM1lYRvAYBqth1q3MZVGMhpQVXlXVBKERFdmYzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=fw0UGAxS; arc=none smtp.client-ip=83.166.143.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="R7p3iaXO"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52OIDLxK025896
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 19:21:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	0T4JFLhJnl4iWm2bszU4lW8Y2/BqIgDH5IiF44yaoYk=; b=R7p3iaXOREmp9MPS
-	FOl2KcaK5pekD50Z5RzIB8VdqKAwrjZ/RkxHya2rPcyCZJaMmZsYdrfQICNwNir1
-	sWZ++Rrmv/8HwSkJg1YxYHhTyl4jA2bPyD02DU4ZNsaPblXLYGc175YXiodn4CaB
-	LsyOot7ge1bw74GTLg/qd1nCYRdxav0LdCHv9LPHJjZraYjX9sB4dlmzblBGBEuL
-	+tzkl89SkC06rSBlycRi1mKRiR/GynGbKF+ghMs2do2yRjFi7pJxKRd2qwIEyQQ+
-	PxafOndg79idZjuzGpQpUb3S4mgTjhgI4/rsx22hGu1PqicY6kVXCc8epmFDupLw
-	buGcFA==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45hjjnnmvw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 19:21:14 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c55ac3a1d9so73950785a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 12:21:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742844073; x=1743448873;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0T4JFLhJnl4iWm2bszU4lW8Y2/BqIgDH5IiF44yaoYk=;
-        b=LnyNXTT3hoZEw57WnfRs4wT8Fj5SBfVzBJL89dpATRCESEuhgkE5t8Wxh9T0K5Xp0F
-         /tZecl3I66IjXAm+L7e5++dWDP5M95CluFpI2BnAT+/1c6BtQllllNpcT1iXaOjDm3xf
-         E2AfvoODk61nZhiZFiLFOSfp9evmaH7YsRTUWEnm2evSOLI0GCsvYkNtMaHQX7091oUm
-         9VA4oyEPTOhupbewyOX3yZ2KWcyoQAVfXA/HmHacD/V4hWeCOzVD09WZ8lQiElcGoT1/
-         gpLvqIXJtrs+JiE82iAsWBPQiVd1sHTz/n2IDtcKmVLjtJ7TvsZJ2MwuWcURIMpdXPCj
-         j1HA==
-X-Forwarded-Encrypted: i=1; AJvYcCW877jJxc3EkqOx+j9pmWAPjl9L94HSLLYMkyv3oG3zAmH8uPTu/8roK3/qX6d+bT6ynKGj3R5M6AX1TGE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzb3usMKbChkK05LWrFuLO1RwttRQMTA6ZDKfB3F+QhiAFr6E9T
-	ufbbOdK0ogpYZthvOYtAr76oCrIpOXIqERBhr+R1zoVG0JgTs1bDDEt2//gXaPgPjH0kIg1YwbC
-	ac2ETBTF3KODJaKzzhbS6n/VSSft7nPbFQcJ15s0a0a1Tp9H3j3y5+CC+aivmvEaNiqOy+vY=
-X-Gm-Gg: ASbGncu1JxIyIOHKdm1v5mX+lsu7z5NX+y71SR1dBj+G6vGfIff7lKkttPDKW2GBzTH
-	IhuwnyUeOrG8Am/fXox/mu+0c/UceYdYjMe79N5AzFx2mOFaipzeVJiQq+k5ONVb0PGF1nSLx8s
-	YKRJSYm8caFjH3pTBLzvNOyp36zLXwKzTOKbDWRk61B2gFlpCOHvNLe7ZUEgwM3UZ/glRjWLDDu
-	9zMYjirCyQ4xs+ODhjTlFaIJQ9uDaJwmS9jeiUHOU/6R0NAChL6h37EuT4LAMjnllyNU3UiY3sG
-	JBN4/kAyiNW0VWeuLimiixTb3mV4LxTQ5GxVcJ1t0wAjCcqtHTT3yrEIsIgmJ3t3Vn1Hww==
-X-Received: by 2002:ad4:5ca1:0:b0:6e8:f88f:b96a with SMTP id 6a1803df08f44-6eb3f27b6c2mr81881916d6.1.1742844073283;
-        Mon, 24 Mar 2025 12:21:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEfn8mbJAqQ2iSvP5BVpjwukE/fw5NAfTybeF+konRlU7Y8X9xq0mefSPXdNyWq3w+LFMKy7Q==
-X-Received: by 2002:ad4:5ca1:0:b0:6e8:f88f:b96a with SMTP id 6a1803df08f44-6eb3f27b6c2mr81881646d6.1.1742844072705;
-        Mon, 24 Mar 2025 12:21:12 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef8e509dsm730749766b.68.2025.03.24.12.21.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Mar 2025 12:21:12 -0700 (PDT)
-Message-ID: <7f161a25-f134-44cd-a619-8f7b806a869d@oss.qualcomm.com>
-Date: Mon, 24 Mar 2025 20:21:10 +0100
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="fw0UGAxS"
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZM2wm1cTKz9kh;
+	Mon, 24 Mar 2025 20:21:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1742844104;
+	bh=KP5tQfq9jTZoEX5oO13eq6Eoqzftit1HmO0SOuoKa2E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fw0UGAxSsxyEHu4mAuVmj2W5BTDwTRKTUgpOIwFPcKgqCbgVLPf5mFIsd6M+a9TJ/
+	 CWMoIuNRwGsOREtC4ItQgIbaVZmF3Mrh7oq2hoog4Nkq2g5T7oVn/0MP94m6kx+zNO
+	 Zm92qRXtcEkLcCPRtv8St5nzyW7SucJ7LLndfX6w=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZM2wg62TjzhW0;
+	Mon, 24 Mar 2025 20:21:39 +0100 (CET)
+Date: Mon, 24 Mar 2025 20:21:38 +0100
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Andrey Albershteyn <aalbersh@redhat.com>
+Cc: Richard Henderson <richard.henderson@linaro.org>, 
+	Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, linux-arch@vger.kernel.org, 
+	selinux@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
+Subject: Re: [PATCH v4 1/3] lsm: introduce new hooks for setting/getting
+ inode fsxattr
+Message-ID: <20250324.Sai1Chahyauw@digikod.net>
+References: <20250321-xattrat-syscall-v4-0-3e82e6fb3264@kernel.org>
+ <20250321-xattrat-syscall-v4-1-3e82e6fb3264@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] soc: qcom: pmic_glink_altmode: fix spurious DP hotplug
- events
-To: Johan Hovold <johan+linaro@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Clayton Craft <clayton@craftyguy.net>
-References: <20250324132448.6134-1-johan+linaro@kernel.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250324132448.6134-1-johan+linaro@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=fNc53Yae c=1 sm=1 tr=0 ts=67e1b0aa cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=6uNWq3ElG-ILUvwBAFAA:9 a=QEXdDO2ut3YA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-ORIG-GUID: 5lRFrlLHurCzZIeBr0jul0x0hJQ8Bf-V
-X-Proofpoint-GUID: 5lRFrlLHurCzZIeBr0jul0x0hJQ8Bf-V
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-24_06,2025-03-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0
- adultscore=0 spamscore=0 bulkscore=0 suspectscore=0 phishscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503240138
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250321-xattrat-syscall-v4-1-3e82e6fb3264@kernel.org>
+X-Infomaniak-Routing: alpha
 
-On 3/24/25 2:24 PM, Johan Hovold wrote:
-> The PMIC GLINK driver is currently generating DisplayPort hotplug
-> notifications whenever something is connected to (or disconnected from)
-> a port regardless of the type of notification sent by the firmware.
+On Fri, Mar 21, 2025 at 08:48:40PM +0100, Andrey Albershteyn wrote:
+> Introduce new hooks for setting and getting filesystem extended
+> attributes on inode (FS_IOC_FSGETXATTR).
+> 
+> Cc: selinux@vger.kernel.org
+> Cc: Paul Moore <paul@paul-moore.com>
+> 
+> Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+> ---
+>  fs/ioctl.c                    |  7 ++++++-
+>  include/linux/lsm_hook_defs.h |  4 ++++
+>  include/linux/security.h      | 16 ++++++++++++++++
+>  security/security.c           | 32 ++++++++++++++++++++++++++++++++
+>  4 files changed, 58 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/ioctl.c b/fs/ioctl.c
+> index 638a36be31c14afc66a7fd6eb237d9545e8ad997..4434c97bc5dff5a3e8635e28745cd99404ff353e 100644
+> --- a/fs/ioctl.c
+> +++ b/fs/ioctl.c
+> @@ -525,10 +525,15 @@ EXPORT_SYMBOL(fileattr_fill_flags);
+>  int vfs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
+>  {
+>  	struct inode *inode = d_inode(dentry);
+> +	int error;
+>  
+>  	if (!inode->i_op->fileattr_get)
+>  		return -ENOIOCTLCMD;
+>  
+> +	error = security_inode_getfsxattr(inode, fa);
 
-Yikes!
+It would help for both of these hooks to pass the dentry instead of the
+inode.
 
-Acked-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> +	if (error)
+> +		return error;
+> +
+>  	return inode->i_op->fileattr_get(dentry, fa);
+>  }
+>  EXPORT_SYMBOL(vfs_fileattr_get);
+> @@ -692,7 +697,7 @@ int vfs_fileattr_set(struct mnt_idmap *idmap, struct dentry *dentry,
+>  			fa->flags |= old_ma.flags & ~FS_COMMON_FL;
+>  		}
+>  		err = fileattr_set_prepare(inode, &old_ma, fa);
+> -		if (!err)
+> +		if (!err && !security_inode_setfsxattr(inode, fa))
+>  			err = inode->i_op->fileattr_set(idmap, dentry, fa);
+>  	}
+>  	inode_unlock(inode);
 
-That said, I'm hoping there isn't any sort of "port is full of water,
-emergency" messages that we should treat as "unplug" though..
-
-Konrad
