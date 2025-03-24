@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39CA25EFAE
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 13:24:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738EF25F794
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 13:24:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742822674; cv=none; b=JzYFdDJ4zn7hlFMMjBsz8Ap3TxWLuNtTumXgUK09Z+02G5rStsIWzcWzTIKOMGzWh0pxWfY5kdGbvKjqbDEYY0CE6oR0xJ8/r+ej/lBLAfMT+x618n3vv6HLRY/rkEWby/evhiJS/BfkSYkSEUlvLIMCUKJTtas5oOqsagRe5Zw=
+	t=1742822681; cv=none; b=Fe3OX68uxLGmQMGOA8j9kGi3Cc7erm51d7g/IMt5+9ljxLkyORP+XjNb1To2CNMhmJiNehYITJ/1Qq12dIA9RDwoc97C188Lrq2jTVP7qqyu0YgIZHpBA31v6dCRxWOk4uXbEHkzWghf/8s8E2zLfzwu76t/arVwLuV2XP5/lh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742822674; c=relaxed/simple;
-	bh=eg3bB5gz8qL8FoBXgXekv/JgMr3nmKfrCxNNYVnldAE=;
+	s=arc-20240116; t=1742822681; c=relaxed/simple;
+	bh=P+PKGnzTfrP23Udni7Vzlx28z9oAafx/tlenUU/je5s=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mXQeQczf18UMM9RCfk9xXJfyxCyD7d0Sh9p92Gv4Gpjc2ifVVwniPatgkMkmV45Q7+n2WUgGXsuFEDwanGkvPg3FM06G6WBu0EW9oaarDPXdcWgRqWbtmynZebxfXNSMHBsJExel5HPijkowi5dT5btMhD/IQFWNpSkDqdfTOvM=
+	 In-Reply-To:To:Cc; b=HO6eo1wouT9OuYWCBQOyaeAyJsXs2pyIHA/EtKbDR+kl8YOx8m5zLOyEv1VRqPUcC1wWHc5nB0OEZc74COWEj3oI0MQ5sY/565iRlfONqi7uHcKa58wWqdNeG1jsMTvWv1/rPZTbWxK35kXZE2mXFkyz6pcPWpeQcptQcHYBKzs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,22 +18,22 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <s.hauer@pengutronix.de>)
-	id 1twhmm-0003sK-71; Mon, 24 Mar 2025 14:24:12 +0100
+	id 1twhmm-0003sI-72; Mon, 24 Mar 2025 14:24:12 +0100
 Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <s.hauer@pengutronix.de>)
-	id 1twhml-001PyL-09;
+	id 1twhml-001PyP-08;
 	Mon, 24 Mar 2025 14:24:11 +0100
 Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
 	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
 	(envelope-from <s.hauer@pengutronix.de>)
-	id 1twhml-004Vqr-15;
+	id 1twhml-004Vqr-1D;
 	Mon, 24 Mar 2025 14:24:11 +0100
 From: Sascha Hauer <s.hauer@pengutronix.de>
-Date: Mon, 24 Mar 2025 14:24:03 +0100
-Subject: [PATCH wireless-next v5 02/10] wifi: mwifiex: use adapter as
- context pointer for mwifiex_hs_activated_event()
+Date: Mon, 24 Mar 2025 14:24:07 +0100
+Subject: [PATCH wireless-next v5 06/10] wifi: mwifiex: simplify
+ mwifiex_setup_ht_caps()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,21 +42,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250324-mwifiex-cleanup-1-v5-2-1128a2be02af@pengutronix.de>
+Message-Id: <20250324-mwifiex-cleanup-1-v5-6-1128a2be02af@pengutronix.de>
 References: <20250324-mwifiex-cleanup-1-v5-0-1128a2be02af@pengutronix.de>
 In-Reply-To: <20250324-mwifiex-cleanup-1-v5-0-1128a2be02af@pengutronix.de>
 To: Brian Norris <briannorris@chromium.org>, 
  Francesco Dolcini <francesco@dolcini.it>
 Cc: Johannes Berg <johannes.berg@intel.com>, linux-wireless@vger.kernel.org, 
  linux-kernel@vger.kernel.org, David Lin <yu-hao.lin@nxp.com>, 
- kernel@pengutronix.de, Sascha Hauer <s.hauer@pengutronix.de>, 
- Francesco Dolcini <francesco.dolcini@toradex.com>
+ kernel@pengutronix.de, Sascha Hauer <s.hauer@pengutronix.de>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742822651; l=7336;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742822651; l=2368;
  i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
- bh=eg3bB5gz8qL8FoBXgXekv/JgMr3nmKfrCxNNYVnldAE=;
- b=Uj8oZCMPWa5Hi9GUYB4b0tHHqlilJDsG4/yDQdrbTTBQeclBrvK55dV1BlB525Mr+Y54VSpf8
- kgjP9Ep0GYsBekcxSQRHLeIhNiIIb8WmXPBqaxRHQ9TTtUbP/N8ikL5
+ bh=P+PKGnzTfrP23Udni7Vzlx28z9oAafx/tlenUU/je5s=;
+ b=nts+uaaKh1CMICcIuDwQK56+e+v+LVCFNX93rEfnbRExQ8O4JX+/d7+RGDSr0DxPr5kteM2VT
+ hxrV5/cJ2xwCOGsBMzAAPJSCKIPB1wsBpen009nmkC7aAGcYy/A8Ic+
 X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
  pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -64,190 +63,63 @@ X-SA-Exim-Mail-From: s.hauer@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-mwifiex_hs_activated_event() takes a struct mwifiex_private * as
-context pointer which this function doesn't need directly and the callers
-don't have. Use struct mwifiex_adapter * instead to simplify both the
-function and the callers.
+In mwifiex_setup_ht_caps() first a local struct ieee80211_mcs_info
+is initialized and afterwards copied over &ht_info->mcs. Simplify
+this by initializing &ht_info->mcs directly.
 
-Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+While at it call memset on the u8 rx_mask[] array instead of the struct
+which makes the intention clearer and we no longer have to assume the
+rx_mask array is the first member of struct ieee80211_mcs_info.
+
 Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 ---
- drivers/net/wireless/marvell/mwifiex/cmdevt.c | 44 ++++++++++++---------------
- drivers/net/wireless/marvell/mwifiex/main.c   | 15 ++-------
- drivers/net/wireless/marvell/mwifiex/main.h   |  2 +-
- 3 files changed, 23 insertions(+), 38 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/cfg80211.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/cmdevt.c b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-index b30ed321c6251..b318210366f7c 100644
---- a/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-@@ -367,8 +367,7 @@ static int mwifiex_dnld_sleep_confirm_cmd(struct mwifiex_adapter *adapter)
- 	    (test_bit(MWIFIEX_IS_HS_CONFIGURED, &adapter->work_flags) &&
- 	     !adapter->sleep_period.period)) {
- 		adapter->pm_wakeup_card_req = true;
--		mwifiex_hs_activated_event(mwifiex_get_priv
--				(adapter, MWIFIEX_BSS_ROLE_ANY), true);
-+		mwifiex_hs_activated_event(adapter, true);
- 	}
- 
- 	return ret;
-@@ -784,17 +783,16 @@ int mwifiex_exec_next_cmd(struct mwifiex_adapter *adapter)
- 
- 	spin_unlock_bh(&adapter->mwifiex_cmd_lock);
- 	ret = mwifiex_dnld_cmd_to_fw(priv, cmd_node);
--	priv = mwifiex_get_priv(adapter, MWIFIEX_BSS_ROLE_ANY);
-+
- 	/* Any command sent to the firmware when host is in sleep
- 	 * mode should de-configure host sleep. We should skip the
- 	 * host sleep configuration command itself though
- 	 */
--	if (priv && (host_cmd->command !=
--	     cpu_to_le16(HostCmd_CMD_802_11_HS_CFG_ENH))) {
-+	if (host_cmd->command != cpu_to_le16(HostCmd_CMD_802_11_HS_CFG_ENH)) {
- 		if (adapter->hs_activated) {
- 			clear_bit(MWIFIEX_IS_HS_CONFIGURED,
- 				  &adapter->work_flags);
--			mwifiex_hs_activated_event(priv, false);
-+			mwifiex_hs_activated_event(adapter, false);
- 		}
- 	}
- 
-@@ -1160,27 +1158,27 @@ mwifiex_check_ps_cond(struct mwifiex_adapter *adapter)
-  * This event is generated by the driver, with a blank event body.
-  */
- void
--mwifiex_hs_activated_event(struct mwifiex_private *priv, u8 activated)
-+mwifiex_hs_activated_event(struct mwifiex_adapter *adapter, u8 activated)
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+index 33bc5cd3ce960..1d9bc8f980c8d 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+@@ -2906,16 +2906,12 @@ mwifiex_setup_ht_caps(struct ieee80211_sta_ht_cap *ht_info,
+ 		      struct mwifiex_private *priv)
  {
- 	if (activated) {
- 		if (test_bit(MWIFIEX_IS_HS_CONFIGURED,
--			     &priv->adapter->work_flags)) {
--			priv->adapter->hs_activated = true;
--			mwifiex_update_rxreor_flags(priv->adapter,
-+			     &adapter->work_flags)) {
-+			adapter->hs_activated = true;
-+			mwifiex_update_rxreor_flags(adapter,
- 						    RXREOR_FORCE_NO_DROP);
--			mwifiex_dbg(priv->adapter, EVENT,
-+			mwifiex_dbg(adapter, EVENT,
- 				    "event: hs_activated\n");
--			priv->adapter->hs_activate_wait_q_woken = true;
-+			adapter->hs_activate_wait_q_woken = true;
- 			wake_up_interruptible(
--				&priv->adapter->hs_activate_wait_q);
-+				&adapter->hs_activate_wait_q);
- 		} else {
--			mwifiex_dbg(priv->adapter, EVENT,
-+			mwifiex_dbg(adapter, EVENT,
- 				    "event: HS not configured\n");
- 		}
- 	} else {
--		mwifiex_dbg(priv->adapter, EVENT,
-+		mwifiex_dbg(adapter, EVENT,
- 			    "event: hs_deactivated\n");
--		priv->adapter->hs_activated = false;
-+		adapter->hs_activated = false;
- 	}
+ 	int rx_mcs_supp;
+-	struct ieee80211_mcs_info mcs_set;
+-	u8 *mcs = (u8 *)&mcs_set;
+ 	struct mwifiex_adapter *adapter = priv->adapter;
+ 
+ 	ht_info->ht_supported = true;
+ 	ht_info->ampdu_factor = IEEE80211_HT_MAX_AMPDU_64K;
+ 	ht_info->ampdu_density = IEEE80211_HT_MPDU_DENSITY_NONE;
+ 
+-	memset(&ht_info->mcs, 0, sizeof(ht_info->mcs));
+-
+ 	/* Fill HT capability information */
+ 	if (ISSUPP_CHANWIDTH40(adapter->hw_dot_11n_dev_cap))
+ 		ht_info->cap |= IEEE80211_HT_CAP_SUP_WIDTH_20_40;
+@@ -2961,17 +2957,15 @@ mwifiex_setup_ht_caps(struct ieee80211_sta_ht_cap *ht_info,
+ 	ht_info->cap |= IEEE80211_HT_CAP_SM_PS;
+ 
+ 	rx_mcs_supp = GET_RXMCSSUPP(adapter->user_dev_mcs_support);
++
++	memset(&ht_info->mcs, 0, sizeof(ht_info->mcs));
+ 	/* Set MCS for 1x1/2x2 */
+-	memset(mcs, 0xff, rx_mcs_supp);
+-	/* Clear all the other values */
+-	memset(&mcs[rx_mcs_supp], 0,
+-	       sizeof(struct ieee80211_mcs_info) - rx_mcs_supp);
++	memset(ht_info->mcs.rx_mask, 0xff, rx_mcs_supp);
++
+ 	if (priv->bss_mode == NL80211_IFTYPE_STATION ||
+ 	    ISSUPP_CHANWIDTH40(adapter->hw_dot_11n_dev_cap))
+ 		/* Set MCS32 for infra mode or ad-hoc mode with 40MHz support */
+-		SETHT_MCS32(mcs_set.rx_mask);
+-
+-	memcpy((u8 *) &ht_info->mcs, mcs, sizeof(struct ieee80211_mcs_info));
++		SETHT_MCS32(ht_info->mcs.rx_mask);
+ 
+ 	ht_info->mcs.tx_params = IEEE80211_HT_MCS_TX_DEFINED;
  }
- 
-@@ -1204,7 +1202,7 @@ int mwifiex_ret_802_11_hs_cfg(struct mwifiex_private *priv,
- 
- 	if (phs_cfg->action == cpu_to_le16(HS_ACTIVATE) &&
- 	    adapter->iface_type != MWIFIEX_USB) {
--		mwifiex_hs_activated_event(priv, true);
-+		mwifiex_hs_activated_event(adapter, true);
- 		return 0;
- 	} else {
- 		mwifiex_dbg(adapter, CMD,
-@@ -1217,11 +1215,11 @@ int mwifiex_ret_802_11_hs_cfg(struct mwifiex_private *priv,
- 	if (conditions != HS_CFG_CANCEL) {
- 		set_bit(MWIFIEX_IS_HS_CONFIGURED, &adapter->work_flags);
- 		if (adapter->iface_type == MWIFIEX_USB)
--			mwifiex_hs_activated_event(priv, true);
-+			mwifiex_hs_activated_event(adapter, true);
- 	} else {
- 		clear_bit(MWIFIEX_IS_HS_CONFIGURED, &adapter->work_flags);
- 		if (adapter->hs_activated)
--			mwifiex_hs_activated_event(priv, false);
-+			mwifiex_hs_activated_event(adapter, false);
- 	}
- 
- 	return 0;
-@@ -1250,9 +1248,7 @@ mwifiex_process_hs_config(struct mwifiex_adapter *adapter)
- 	adapter->hs_activated = false;
- 	clear_bit(MWIFIEX_IS_HS_CONFIGURED, &adapter->work_flags);
- 	clear_bit(MWIFIEX_IS_SUSPENDED, &adapter->work_flags);
--	mwifiex_hs_activated_event(mwifiex_get_priv(adapter,
--						    MWIFIEX_BSS_ROLE_ANY),
--				   false);
-+	mwifiex_hs_activated_event(adapter, false);
- }
- EXPORT_SYMBOL_GPL(mwifiex_process_hs_config);
- 
-@@ -1302,9 +1298,7 @@ mwifiex_process_sleep_confirm_resp(struct mwifiex_adapter *adapter,
- 	}
- 	adapter->pm_wakeup_card_req = true;
- 	if (test_bit(MWIFIEX_IS_HS_CONFIGURED, &adapter->work_flags))
--		mwifiex_hs_activated_event(mwifiex_get_priv
--						(adapter, MWIFIEX_BSS_ROLE_ANY),
--					   true);
-+		mwifiex_hs_activated_event(adapter, true);
- 	adapter->ps_state = PS_STATE_SLEEP;
- 	cmd->command = cpu_to_le16(command);
- 	cmd->seq_num = cpu_to_le16(seq_num);
-diff --git a/drivers/net/wireless/marvell/mwifiex/main.c b/drivers/net/wireless/marvell/mwifiex/main.c
-index b07cb302a00c6..3cb3db7a089b8 100644
---- a/drivers/net/wireless/marvell/mwifiex/main.c
-+++ b/drivers/net/wireless/marvell/mwifiex/main.c
-@@ -415,10 +415,7 @@ int mwifiex_main_process(struct mwifiex_adapter *adapter)
- 			if (adapter->hs_activated) {
- 				clear_bit(MWIFIEX_IS_HS_CONFIGURED,
- 					  &adapter->work_flags);
--				mwifiex_hs_activated_event
--					(mwifiex_get_priv
--					(adapter, MWIFIEX_BSS_ROLE_ANY),
--					false);
-+				mwifiex_hs_activated_event(adapter, false);
- 			}
- 		}
- 
-@@ -438,10 +435,7 @@ int mwifiex_main_process(struct mwifiex_adapter *adapter)
- 			if (adapter->hs_activated) {
- 				clear_bit(MWIFIEX_IS_HS_CONFIGURED,
- 					  &adapter->work_flags);
--				mwifiex_hs_activated_event
--					(mwifiex_get_priv
--					 (adapter, MWIFIEX_BSS_ROLE_ANY),
--					 false);
-+				mwifiex_hs_activated_event(adapter, false);
- 			}
- 		}
- 
-@@ -460,10 +454,7 @@ int mwifiex_main_process(struct mwifiex_adapter *adapter)
- 			if (adapter->hs_activated) {
- 				clear_bit(MWIFIEX_IS_HS_CONFIGURED,
- 					  &adapter->work_flags);
--				mwifiex_hs_activated_event
--					(mwifiex_get_priv
--					 (adapter, MWIFIEX_BSS_ROLE_ANY),
--					 false);
-+				mwifiex_hs_activated_event(adapter, false);
- 			}
- 		}
- 
-diff --git a/drivers/net/wireless/marvell/mwifiex/main.h b/drivers/net/wireless/marvell/mwifiex/main.h
-index 63f1c900e0967..88bd21fd3c07f 100644
---- a/drivers/net/wireless/marvell/mwifiex/main.h
-+++ b/drivers/net/wireless/marvell/mwifiex/main.h
-@@ -1125,7 +1125,7 @@ int mwifiex_ret_enh_power_mode(struct mwifiex_private *priv,
- 			       struct host_cmd_ds_command *resp,
- 			       struct mwifiex_ds_pm_cfg *pm_cfg);
- void mwifiex_process_hs_config(struct mwifiex_adapter *adapter);
--void mwifiex_hs_activated_event(struct mwifiex_private *priv,
-+void mwifiex_hs_activated_event(struct mwifiex_adapter *adapter,
- 					u8 activated);
- int mwifiex_set_hs_params(struct mwifiex_private *priv, u16 action,
- 			  int cmd_type, struct mwifiex_ds_hs_cfg *hs_cfg);
 
 -- 
 2.39.5
