@@ -1,119 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2555126463F;
-	Mon, 24 Mar 2025 18:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669772641D7
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 18:20:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742840320; cv=none; b=unLpOrPkrrnzxJiHK9heLDYvIsjFGWmb7xCnsDnjQdmhOXjifyJl0GdFd/ziDaz8ABPePAYVrM4N+cTN6MLQLiT+IppfWt07qprgt4iHGgwmPNeTO9bCQTzpfUWJAtV5SPfVCC6Pccjo8N/mPm7Wux1M6Dh4nV8LPzTxH4QoALI=
+	t=1742840433; cv=none; b=IVr7TbRRPYaYCM8GlBQESpdAaVKlZ7xwhrZrrAaYDh+Zn7nXgeB8BFlHKYVGxBjKHrWAKOJMsRN6VzxTv98g8w90s+Xy2QuDjJix7SZIQWitNY7PvaYryUT+xDLf5GgRDRG9RWIeccxtXhrzR2haepUjIoczi5tmnjOHGDv1klY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742840320; c=relaxed/simple;
-	bh=CvPtVrvhXjNToxQtztbHoatPZJDWgp/53NY9ElBqIcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fxSr0z+aA8y6KsnpploqbYQtWuAGH7dxdgGRLOOs2x+gNKtN19B9EAOzki5ubzpiFu0BCrTtYdmPh9CDAY6CNeTZkDUwBpuvKLNfMa4aAFnGE0ZK03g5Cv+CQfKZ9XiAEb8PPiF3y2odjU8eLpTVRgmL5fPDJ8MLxuk0yjI1Qvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9Ur08k8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9Ur08k8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1986DC4CEDD;
-	Mon, 24 Mar 2025 18:18:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742840319;
-	bh=CvPtVrvhXjNToxQtztbHoatPZJDWgp/53NY9ElBqIcg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m9Ur08k8fMZRkAAhCI2CxUvgZeupcT7GIrwX+p9fSpvfV3Ajb3FbMQVykY2lKtAQe
-	 rcSRUeEGnf3/NMWyPQ0qugpcciD3AvqI+F+GniZhsF5a2Ryvk/XXb2nshNIIN+x5cR
-	 JYlU5fpj2U7s/S3WdPrOsq+Y0apgFmjxkWh8sXtE1wxekMHk5W9Gzb05gDZS+Vgjfn
-	 oho/ytmj/aLCNS2l7wFW8/VHiNHcb8DPqS3CMWOxTVqp1CjPVVhuNpZCOYebRtk4tZ
-	 ZLlxV+n2Jb/jAlskHje+GtPWM7FPyNyourFaqabkHce71qm183YbuQjYPsdqdZX51N
-	 JlOQHRHBYPBPw==
-Date: Mon, 24 Mar 2025 14:18:34 -0400
-From: Mike Rapoport <rppt@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
-	graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
-	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
-	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
-	dave.hansen@linux.intel.com, dwmw2@infradead.org,
-	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com,
-	corbet@lwn.net, krzk@kernel.org, mark.rutland@arm.com,
-	pbonzini@redhat.com, pasha.tatashin@soleen.com, hpa@zytor.com,
-	peterz@infradead.org, ptyadav@amazon.de, robh+dt@kernel.org,
-	robh@kernel.org, saravanak@google.com,
-	skinsburskii@linux.microsoft.com, rostedt@goodmis.org,
-	tglx@linutronix.de, thomas.lendacky@amd.com,
-	usama.arif@bytedance.com, will@kernel.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory
- preservation
-Message-ID: <Z-Gh-t9xB21UNGU2@kernel.org>
-References: <20250320015551.2157511-1-changyuanl@google.com>
- <20250320015551.2157511-10-changyuanl@google.com>
- <20250321134629.GA252045@nvidia.com>
- <Z98Lmo50h5RboFXq@kernel.org>
- <Z+BZOKSpyPA1Pyu+@nvidia.com>
+	s=arc-20240116; t=1742840433; c=relaxed/simple;
+	bh=KtlEUCfyuUrw5cIGb23zFW0D0wbr27GwH1908BiJLuc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=f9C3re9dBY9zE1AFwSEG8xtrAkQ4AyrTQ2nW5xkuij2tRb8M4w6OVeHaAu/Oco9oqBqeB+2MLXsBIrIE6RzL8/Cnp2C0WxJ6fLNpREiELiQXIpVF5CgKuKY86zFWBRs5Ph5/iIBaKUQ36hH+rAyUH1svSIDwjXP9dHs8ss39Aro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85b3b781313so1028094339f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 11:20:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742840431; x=1743445231;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rfGgeD061v2X9cdK9GBmRLKxw6itSHQzCAu//F++bhs=;
+        b=T+kdmSwSlLUbTNK1YhjLcnODp1Yf6GhflA365uF2PQPLjK7eLOyRE3Qk84GaBWRQtA
+         pxpHTsHzykzpncFfpOYvy0SmOSmGH6C9fwlV3xbrEpcCdMFiLQdbk9z+MDSbYilmCfx8
+         ScEjqIMp6zydPVF2+/DCTIAzrkuiocSLl5X7byU8JgAOz9kXd1yi4/oksWsAS9Gbfror
+         vSKt8408NVy6eDOVNkqeq0Nj4bgoQMabr1RjWTCnnmp90JuWgaPhoA7bn3K7lHysrtFu
+         vhXKbJA0JwETe8shrxOhF9eyLAcbglGEJmpJFlI9nwZx+SynRwYYvDOx8N+duo2uTPAp
+         0ZEw==
+X-Forwarded-Encrypted: i=1; AJvYcCXM+lAgnCqqlsgnssD5dveku6CACFPMkdvCdTlt1MjIfI7t+SQNAo3DAjOug6h/3faeaqi9A5OMReMotw8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHx1OgTiKjSgXH1z5Dh+u2rDXphJqF0sEtmUoosbqxJ4WBG/UD
+	CQ7DbVWciqmKJUMxYRWNWRshgXJd6KsK4XEV7FDRff2A1pnyTnqHHHYOZ6m130IIzJ233mNV/6W
+	FsbpG2cwERJQsVOPSk+jpwqobPsZeS/DThAK93r9nG2/HISikh0vrifM=
+X-Google-Smtp-Source: AGHT+IEix882w6oYG/fF3m+qql5LodKizG2K5f9lH5OYOluq5tD0B5kooSE28HZi4G0BaoKEtAS099GE4nByrxoCughyEXqpQoxM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z+BZOKSpyPA1Pyu+@nvidia.com>
+X-Received: by 2002:a05:6e02:12ce:b0:3d4:36da:19a1 with SMTP id
+ e9e14a558f8ab-3d5961bc1e6mr160971615ab.21.1742840431391; Mon, 24 Mar 2025
+ 11:20:31 -0700 (PDT)
+Date: Mon, 24 Mar 2025 11:20:31 -0700
+In-Reply-To: <679b398d.050a0220.48cbc.0004.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67e1a26f.050a0220.a7ebc.002b.GAE@google.com>
+Subject: Re: [syzbot] [wireless?] WARNING in ieee80211_prep_channel
+From: syzbot <syzbot+c90039fcfb40175abe28@syzkaller.appspotmail.com>
+To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Mar 23, 2025 at 03:55:52PM -0300, Jason Gunthorpe wrote:
-> On Sat, Mar 22, 2025 at 03:12:26PM -0400, Mike Rapoport wrote:
->  
-> > > > +		page->private = order;
-> > > 
-> > > Can't just set the page order directly? Why use private?
-> > 
-> > Setting the order means recreating the folio the way prep_compound_page()
-> > does. I think it's better to postpone it until the folio is requested. This
-> > way it might run after SMP is enabled. 
-> 
-> I see, that makes sense, but also it could stil use page->order..
+syzbot has found a reproducer for the following issue on:
 
-But there's no page->order :)
- 
-> > Besides, when we start allocating
-> > folios separately from struct page, initializing it here would be a real
-> > issue.
-> 
-> Yes, but also we wouldn't have page->private to make it work.. Somehow
-> anything we want to carry over would have to become encoded in the
-> memdesc directly.
+HEAD commit:    38fec10eb60d Linux 6.14
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=114c8198580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d0b5b6b74098b0ef
+dashboard link: https://syzkaller.appspot.com/bug?extid=c90039fcfb40175abe28
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10d8a43f980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12afbc4c580000
 
-This is a problem to solve in 2026 :)
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-38fec10e.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/d34e40d2aad1/vmlinux-38fec10e.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/e290e3747399/bzImage-38fec10e.xz
 
-The January update for State of Page [1] talks about 
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+c90039fcfb40175abe28@syzkaller.appspotmail.com
 
-	reasonable goal to shrink struct page to (approximately): 
+mac80211_hwsim: wmediumd released netlink socket, switching to perfect channel medium
+wlan1: No basic rates, using min rate instead
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 5313 at net/mac80211/mlme.c:1012 ieee80211_determine_chan_mode net/mac80211/mlme.c:1012 [inline]
+WARNING: CPU: 0 PID: 5313 at net/mac80211/mlme.c:1012 ieee80211_prep_channel+0x389b/0x5120 net/mac80211/mlme.c:5667
+Modules linked in:
+CPU: 0 UID: 0 PID: 5313 Comm: syz-executor339 Not tainted 6.14.0-syzkaller #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:ieee80211_determine_chan_mode net/mac80211/mlme.c:1012 [inline]
+RIP: 0010:ieee80211_prep_channel+0x389b/0x5120 net/mac80211/mlme.c:5667
+Code: c6 05 4f cd 94 04 01 48 c7 c7 37 3b 4b 8d be 78 03 00 00 48 c7 c2 a0 3c 4b 8d e8 70 00 0b f6 e9 7e ca ff ff e8 16 a6 2f f6 90 <0f> 0b 90 48 8b 7c 24 30 e8 e8 5c 8b f6 48 c7 44 24 30 ea ff ff ff
+RSP: 0018:ffffc9000d086500 EFLAGS: 00010293
+RAX: ffffffff8b9239ba RBX: 0000000000000000 RCX: ffff888000280000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffc9000d086850 R08: ffffffff8b920ed9 R09: ffffffff8b60cbf9
+R10: 000000000000000e R11: ffff888000280000 R12: dffffc0000000000
+R13: ffff888044136758 R14: ffffc9000d086710 R15: ffffc9000d086750
+FS:  00007fab44b026c0(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fab44b01198 CR3: 0000000043c60000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ ieee80211_prep_connection+0xda1/0x1310 net/mac80211/mlme.c:8539
+ ieee80211_mgd_auth+0xedb/0x1750 net/mac80211/mlme.c:8829
+ rdev_auth net/wireless/rdev-ops.h:486 [inline]
+ cfg80211_mlme_auth+0x59f/0x970 net/wireless/mlme.c:291
+ cfg80211_conn_do_work+0x601/0xeb0 net/wireless/sme.c:183
+ cfg80211_sme_connect net/wireless/sme.c:626 [inline]
+ cfg80211_connect+0x190a/0x22f0 net/wireless/sme.c:1525
+ nl80211_connect+0x19ec/0x2140 net/wireless/nl80211.c:12242
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0xb1f/0xec0 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x206/0x480 net/netlink/af_netlink.c:2533
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1312 [inline]
+ netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1338
+ netlink_sendmsg+0x8de/0xcb0 net/netlink/af_netlink.c:1882
+ sock_sendmsg_nosec net/socket.c:718 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:733
+ ____sys_sendmsg+0x53a/0x860 net/socket.c:2573
+ ___sys_sendmsg net/socket.c:2627 [inline]
+ __sys_sendmsg+0x269/0x350 net/socket.c:2659
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fab44b48de9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 91 1a 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fab44b02218 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007fab44bd2368 RCX: 00007fab44b48de9
+RDX: 0000000000000000 RSI: 00002000000001c0 RDI: 0000000000000003
+RBP: 00007fab44bd2360 R08: 0000000000000034 R09: 0000000000000000
+R10: 000000000000000a R11: 0000000000000246 R12: 00007fab44b9f294
+R13: 0000200000000200 R14: 00002000000001d0 R15: 00002000000001c0
+ </TASK>
 
-	struct page {
-	    unsigned long flags;
-	    union {
-	        struct list_head buddy_list;
-	        struct list_head pcp_list;
-	        struct {
-	            unsigned long memdesc;
-	            int _refcount;
-	        };
-	    };
-	    union {
-	        unsigned long private;
-	        struct {
-	            int _folio_mapcount;
-	        };
-	    };
-	};
- 
-[1] https://lore.kernel.org/linux-mm/Z37pxbkHPbLYnDKn@casper.infradead.org/
- 
-> Jason
 
--- 
-Sincerely yours,
-Mike.
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
