@@ -1,175 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27BF9263C8A;
-	Mon, 24 Mar 2025 16:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9382F263F4E;
+	Mon, 24 Mar 2025 16:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742833809; cv=none; b=gCCEhddh9l7CLrxf6DIY6P/q52mqSlOSE46kTnfqNtUKVyUR+dJKxd2wefORY14lxJkQQ9LTAR3i93CytlZ8nI93iPsHWxhROkdnXunR9cad+tHdcnB/jM+DHQL1GxFOMccXFQimpwMVkfcMgdsYytNtzIYU6I8hYP43xJnTcIA=
+	t=1742833811; cv=none; b=qJKlMJgnjGoKyayOSjcKA2PSZYGs8qx9MYrl6Ry9vq0RTbMJrUR+dRPFI4DGRHtJ3dUjMrPweyDqJIRCnjjuJKSGKhKWa9Idzauny/QATD6zUKKS4133SXyzRFHc1O/osQEboYDDkICgPmCQxTTc07i6xAZnNlagfqVO37RxJCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742833809; c=relaxed/simple;
-	bh=oPUiieo2nIw9a52fhZehjoN/HpeYykF+bQ1aIY1TK/o=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=hPfM9362xj+2NUFy8TgcJeyFGd0m1HjSzz9bTHJsfnRMI33njJx8USa4TC74h3ByOTlMg3CllIvdD/rRnAcoUvtrG6U+Ul1isXIb7qZ4SgIkN5g24Zgn2ST/oh7ODfU5PZicBF0CU8V16XUz5jZFfb567zLr6t16eQqfeaKFFyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ehoGlY5t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742833811; c=relaxed/simple;
+	bh=C3XAo9qh2gj1Wbuwolnf2JOAUQZCs6fKOeKZA1fqa6Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YKcoRHQtLkOQ0CPtjRXSnhisGZVnPwHqKR1rHwN0Ocddq+R6IzsPxcDl46o+eXD14ZXQD/9y6DvfD+Cw0l+bRO18ierBVVaKasejmFxu+rlU+cukTVBFpp4uXJG/IW0lxAu3bTr5WEWqV7gXcAYnrnrI07Ut/lffYxekvHv+Fgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G9AOue6h; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ehoGlY5t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A272C4CEE9;
-	Mon, 24 Mar 2025 16:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742833808;
-	bh=oPUiieo2nIw9a52fhZehjoN/HpeYykF+bQ1aIY1TK/o=;
-	h=From:Date:Subject:To:Cc:From;
-	b=ehoGlY5tnTUEFFCaFeYb/3FM5lM90a1lf/LHGv02p2Vf7kXthc54XPrYi60Ln6G3Y
-	 xmvt3BZkAYVNDKC7O14XSzGQu6WTNcylXhog5iSDWwbSpMSTXpqJ4jk8jBJ6wWSw3L
-	 ITWfxfyAg4lVeU6t9CcTT4KkTifSGHEM0HeqytyBXRKdlcEjabf7mOQzSIJdUURCCM
-	 7c74kAnuZ6vY0rP8vdedT3r3Ru2Saw1X0H1wU43pdtAzBnfCXJrcxbXUNF7ilW4xqs
-	 QHzGtjNwHoVi1WpPwBW5d05wB7VQOCFzPSb4i5AOmMOpPyLsa7Oq7ZbYFuIus4aVDA
-	 udWzvqT7oh4dQ==
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7272f9b4132so3234902a34.0;
-        Mon, 24 Mar 2025 09:30:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU8YKQWGw2zVyXKuBYupISWu7HKhDFbofg1FZB4YltDikt+yJjV6VImhxSCDdSh+jc93XJEG3vJqBOBldA=@vger.kernel.org, AJvYcCVHGNxB66KjbJZGBA3BdiNwI9WsOukSsgJTnsLMcx68HsDEbl9ZrJtMew12DknLvvEaJhXqNeAxjj0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzn3ON9z6RIjcnGGLidLXolEsh8WMQdcLyfJAX5nVh1wOVzf7UX
-	Sg3j7U7YKEZDT0CZDtw8BNj3pJdPvqYrwxsIsw1LGjcEJSBzaWbLC12ksTLyqLwI5xpQFDiBjSG
-	6Y5Sx0yV2herA4yOVrQajNmcwwyE=
-X-Google-Smtp-Source: AGHT+IHwK/5o9CFHgTZKff5prpDfXTmk+iSezr4xHi+4liiVMFB2kYvfW6BCI4zQSsECXlEl6EtCiXngvKS6msIfaJo=
-X-Received: by 2002:a05:6830:7183:b0:72b:84ab:b1bc with SMTP id
- 46e09a7af769-72c0ae4f90emr8773059a34.2.1742833807789; Mon, 24 Mar 2025
- 09:30:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G9AOue6h"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43d0618746bso31243945e9.2;
+        Mon, 24 Mar 2025 09:30:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742833808; x=1743438608; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RR/33HkyWRVzBTpKjMr4gmsX71tawz+FueWvMxXm7FQ=;
+        b=G9AOue6h2ucnD4sDy22oaILanjSuf5geGycz1fH+YYWlQvbBwdVizYGXKoXMefMXsE
+         zL3l7dFa0rxvCvtUdRSjlcdFrLML8qa7mGDFBjUitcLkaN0sd9+38C1P29dudtoR/1Zx
+         tMdLDNR6ltVdVw8uhmj5910x93hMuitUu0OcyUyRfGUMbo4tLqEc7KbF4LOXl3MQxeFf
+         1kSSY4bAnGVClNRDsoAkCwkPbJuqZZdm28AK1jY2E/9/y2INWAfFu5vEBQshnM4GlQgG
+         AOxv8mz/pHdh1+epJzuoxajfLME7x1JV4FfU3uXhYFmPssua50gE7vteriPh66NAt2pv
+         3W2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742833808; x=1743438608;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RR/33HkyWRVzBTpKjMr4gmsX71tawz+FueWvMxXm7FQ=;
+        b=fOGTSi9wfWyGjh6rbnhctkf0NosY9xha3C3qX6p1w5o1WII0V5qvmaDcMPirH1xqpV
+         zkMRQ5/tZeIW1A9CLLr0m2S2N+prlOBN2sdk9Xf5g6Km233dA6zObLYXUFpWwPWoYrwc
+         QV20qmkGAmElNf81oOXhBrKmLBp76eSN6BHwyPZbcqC1qaazJykfkUj2gTHbt0Wfi7W+
+         1yz1xJ/9b68Yns5hRbC3qKxjrG9LdiDssVPKn5LbeLC0NGvrWN3fsjSa1pn16ifQbbBZ
+         /kNcEfIADdK9efrjcfB0ztCr8rKmbs5A0QNe9lGx4fliY/qjw0rsF4IORWU6T0g9hqns
+         ibQg==
+X-Forwarded-Encrypted: i=1; AJvYcCVfriTij7v9Mwr1r2q3W3lSvJqd9AS6CJ53eKgkxrK64G1NSm5mor7Gk/ckYjKnHcxTb4TFXooGi//MZ+oG@vger.kernel.org, AJvYcCXw0SsmUvv+oHSrFieJWnd61wZLiRwl2thwjK0tOTu7yiq9styPoSpfpzVt4aanYmSRLV1v0JiZ8XqH@vger.kernel.org
+X-Gm-Message-State: AOJu0YzW2ifM9nAYZjtbSjITk71D7vFjzN+FApEzSDyLQ1UwGPQKNJsF
+	6Wd16JOc96WkkQBqDgvFIEnMU6fhxIhafvtECay8EMywoqMs28K0
+X-Gm-Gg: ASbGnctzhdsHcdl0OMeh3aifqIaMSnxVNyX+ZFiwUq6gO4P2vQ1agrOaVuYaAXZCbWh
+	i0GacwDyzn28d30PRDDP8Q18eKsVrsDFsp3bgeIhYRsjyXOkJztDpLjrgUhfIjNm+0zYwMC6fpi
+	vuGcwVc92n29G4gBK02VMdVVjEbuNsqgQq9zFig2eBvkmsXhkbHgEwF119SzdfiPWIm6RFUfige
+	RkpNJtBantPSWpOiU7+5aou973Qx20PJNxy0bYr5o1/A21Gbu0Ic65QV2XQsZi8orEu0SZe7p85
+	FrG5l0uLZCnbDWrhDTnf7/EtwGtiVnZ+kjGbBE+b0Rc8v1A7El/JFMRA2D9S5BFte71MEV2MBQS
+	Ywv4W31g=
+X-Google-Smtp-Source: AGHT+IEo9FRh6+xI/yyeaQ866fq+Tvmef9RLHhF10hpOmSRuuMOdP7oXv8eQi8BJzr1/UzfTyIuU2w==
+X-Received: by 2002:a5d:6da5:0:b0:391:2f71:bbb3 with SMTP id ffacd0b85a97d-3997f958f34mr10877702f8f.46.1742833807619;
+        Mon, 24 Mar 2025 09:30:07 -0700 (PDT)
+Received: from playground.localdomain ([82.79.237.110])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fdb0669sm124106765e9.34.2025.03.24.09.30.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Mar 2025 09:30:07 -0700 (PDT)
+From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Shengjiu Wang <shengjiu.wang@nxp.com>,
+	Frank Li <Frank.li@nxp.com>,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/5] imx8mp: add support for the IMX AIPSTZ bridge
+Date: Mon, 24 Mar 2025 12:25:51 -0400
+Message-Id: <20250324162556.30972-1-laurentiumihalcea111@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 24 Mar 2025 17:29:56 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0h2BgjPbZXe7yeXo-Y9MnvX+bXT5QLEq6KKLJc5N6QR2Q@mail.gmail.com>
-X-Gm-Features: AQ5f1Jol_BYZXYkw-7voVIXhr0568LObMa_xUM9RgkcYPNx5sgQkajJxLViKI20
-Message-ID: <CAJZ5v0h2BgjPbZXe7yeXo-Y9MnvX+bXT5QLEq6KKLJc5N6QR2Q@mail.gmail.com>
-Subject: [GIT PULL] ACPI updates for v6.15-rc1
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
 
-Please pull from the tag
+The AIPSTZ bridge offers some security-related configurations which can
+be used to restrict master access to certain peripherals on the bridge.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- acpi-6.15-rc1
+Normally, this could be done from a secure environment such as ATF before
+Linux boots but the configuration of AIPSTZ5 is lost each time the power
+domain is powered off and then powered on. Because of this, it has to be
+configured each time the power domain is turned on and before any master
+tries to access the peripherals (e.g: AP, CM7, DSP, on i.MX8MP).
 
-with top-most commit 8b30d2a3962ae07e67aee90d6698a6a68e771c6c
+The child-parent relationship between the bridge and its peripherals
+should guarantee that the bridge is configured before the AP attempts
+to access the IPs.
 
- Merge branches 'acpi-x86', 'acpi-platform-profile', 'acpi-apei' and 'acpi-misc'
+Other masters should use the 'access-controllers' property to enforce
+a dependency between their device and the bridge device (see the DSP,
+for example).
 
-on top of commit 80e54e84911a923c40d7bee33a34c1b4be148d7a
+At the moment, we only want to apply a default, more relaxed
+configuration, which is why the number of access controller cells
+is 0.
 
- Linux 6.14-rc6
+The initial version of the series can be found at [1]. The new version
+should provide better management of the device dependencies.
 
-to receive ACPI updates for 6.15-rc1.
+[1]: https://lore.kernel.org/linux-arm-kernel/20241119130726.2761726-1-daniel.baluta@nxp.com/
 
-From the functional perspective, the most significant changes here are
-the ACPI fan driver update allowing it to handle fans with fine-grained
-state checking supported, but without fine-grained control, and the
-ACPI button driver update making it subscribe to system event
-notifications (in addition to device notifications) which on some
-systems is requisite for waking up the system from sleep.
+---
+Changes in v3:
+* make '#address-cells' and '#size-cells' constants and equal to 1 in the
+binding. The bus is 32-bit.
+* add child node in the example DT snippet.
+* the 'aips5' DT node now contains 2 memory regions: that of the
+peripherals accessible via this bridge and that of the access controller.
+* link to v2: https://lore.kernel.org/lkml/20250226165314.34205-1-laurentiumihalcea111@gmail.com/
 
-The rest is fixes and cleanups including removal of some dead code.
+Changes in v2:
+* adress Frank Li's comments
+* pick up some A-b/R-b's
+* don't use "simple-bus" as the second compatible. As per Krzysztof's
+comment, AIPSTZ is not a "simple-bus".
+* link to v1: https://lore.kernel.org/lkml/20250221191909.31874-1-laurentiumihalcea111@gmail.com/
+---
 
-Specifics:
+Laurentiu Mihalcea (5):
+  dt-bindings: bus: add documentation for the IMX AIPSTZ bridge
+  dt-bindings: dsp: fsl,dsp: document 'access-controllers' property
+  bus: add driver for IMX AIPSTZ bridge
+  arm64: dts: imx8mp: convert 'aips5' to 'aipstz5'
+  arm64: dts: imx8mp: make 'dsp' node depend on 'aips5'
 
- - Use the str_on_off() helper function instead of hard-coded strings in
-   the ACPI power resources handling code (Thorsten Blum).
+ .../bindings/bus/fsl,imx8mp-aipstz.yaml       | 107 ++++++++++++++++++
+ .../devicetree/bindings/dsp/fsl,dsp.yaml      |   3 +
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi     |   8 +-
+ drivers/bus/Kconfig                           |   6 +
+ drivers/bus/Makefile                          |   1 +
+ drivers/bus/imx-aipstz.c                      |  92 +++++++++++++++
+ 6 files changed, 215 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/fsl,imx8mp-aipstz.yaml
+ create mode 100644 drivers/bus/imx-aipstz.c
 
- - Add fan speed reporting for ACPI fans that have _FST, but otherwise
-   do not support the entire ACPI 4 fan interface (Joshua Grisham).
+-- 
+2.34.1
 
- - Fix a stale comment regarding trip points in acpi_thermal_add() that
-   diverged from the commented code after removing _CRT evaluation from
-   acpi_thermal_get_trip_points() (xueqin Luo).
-
- - Make ACPI button driver also subscribe to system events (Mario
-   Limonciello).
-
- - Use the str_yes_no() helper function instead of hard-coded strings in
-   the ACPI backlight (video) driver (Thorsten Blum).
-
- - Add a missing header file include to the x86 arch CPPC code (Mario
-   Limonciello).
-
- - Rework the sysfs attributes implementation in the ACPI platform-profile
-   driver and improve the unregistration code in it (Nathan Chancellor,
-   Kurt Borja).
-
- - Prevent the ACPI HED driver from being built as a module and change
-   its initcall level to subsys_initcall to avoid initialization ordering
-   issues related to it (Xiaofei Tan).
-
- - Update a maintainer email address in the ACPI PMIC entry in
-   MAINTAINERS (Mika Westerberg).
-
- - Address a GCC 15's -Wunterminated-string-initialization warning in
-   the core PNP subsystem code and remove some dead code from it (Kees
-   Cook, David Alan Gilbert).
-
-Thanks!
-
-
----------------
-
-Dr. David Alan Gilbert (1):
-      PNP: Remove prehistoric deadcode
-
-Joshua Grisham (1):
-      ACPI: fan: Add fan speed reporting for fans with only _FST
-
-Kees Cook (1):
-      PNP: Expand length of fixup id string
-
-Kurt Borja (1):
-      ACPI: platform_profile: Improve platform_profile_unregister()
-
-Mario Limonciello (2):
-      x86/ACPI: CPPC: Add missing include
-      ACPI: button: Install notifier for system events as well
-
-Mika Westerberg (1):
-      MAINTAINERS: Use my kernel.org address for ACPI PMIC work
-
-Nathan Chancellor (1):
-      ACPI: platform-profile: Fix CFI violation when accessing sysfs files
-
-Thorsten Blum (2):
-      ACPI: power: Use str_on_off() helper function
-      ACPI: video: Use str_yes_no() helper in acpi_video_bus_add()
-
-Xiaofei Tan (1):
-      ACPI: HED: Always initialize before evged
-
-xueqin Luo (1):
-      ACPI: thermal: Fix stale comment regarding trip points
-
----------------
-
- Documentation/admin-guide/pnp.rst |  3 ---
- MAINTAINERS                       |  2 +-
- arch/x86/kernel/acpi/cppc.c       |  2 ++
- drivers/acpi/Kconfig              |  2 +-
- drivers/acpi/acpi_video.c         |  7 +++---
- drivers/acpi/button.c             | 10 +++++++--
- drivers/acpi/fan.h                |  1 +
- drivers/acpi/fan_attr.c           | 37 +++++++++++++++++++-------------
- drivers/acpi/fan_core.c           | 25 ++++++++++++++++------
- drivers/acpi/fan_hwmon.c          |  8 +++++++
- drivers/acpi/hed.c                |  7 +++++-
- drivers/acpi/platform_profile.c   | 45 +++++++++++++++++++--------------------
- drivers/acpi/power.c              |  5 +++--
- drivers/acpi/thermal.c            |  2 +-
- drivers/pnp/base.h                |  4 ----
- drivers/pnp/card.c                | 32 ----------------------------
- drivers/pnp/core.c                | 16 --------------
- include/linux/platform_profile.h  |  2 +-
- include/linux/pnp.h               |  2 +-
- 19 files changed, 99 insertions(+), 113 deletions(-)
