@@ -1,53 +1,187 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED8013A41F;
-	Mon, 24 Mar 2025 15:59:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F15825F983;
+	Mon, 24 Mar 2025 15:59:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742831949; cv=none; b=kQvn4kx0DkUT+QBKzUnshSNnUNJ9ZsdP4OU8DvyuJoseiivwc1r1583wFPDKNU3U7cqoglM7fuTMJPHquqKIn/SvndjKGHcn290aAlCTHMvRyT2oh0aa/h66kuPUWpM04jbgE3WDW/THy0682FQfc5g7owjNBsX5ALkkEOyO0t4=
+	t=1742831968; cv=none; b=SjpKxu2ceSVQkGcP9Y4hFT+O4vVMcKa5lQDRoKcm6tsAEV9vEdymKot9IadEMXT92VKuXpEV1y5iZW4iNrsQPhmrlK3tKQgZdZQro+NTMHUOL+9916d2Ly1xV2is5DGhbvhkc1CIZP+TML5PqGuR8elksPMPE4Gxlhk2AipA7Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742831949; c=relaxed/simple;
-	bh=G56A8jOTTK1WscGk7rHGhLpb5HQM2DV8gKU8mM1+wJ8=;
-	h=From:Subject:Date:Message-ID:To; b=MPvl5rP3O6VG2DnSdhFYS3MO0ZFjfGMRhkJMUsTNAGBtnLt6XaDEgLFhvs09xjhwOoKpVgHnT2Hh+nMjRbzTWN97ffYuWSL4KJSNNsngzCawWedJXtolY5DZrawvGedFt74Ft48SLAhA78uHpb1zpUR8eQfeZnGBXpNXQBwIY3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97209C4CEDD;
-	Mon, 24 Mar 2025 15:59:08 +0000 (UTC)
-From: Clark Williams <williams@redhat.com>
-Subject: [ANNOUNCE] 6.6.84-rt52
-Date: Mon, 24 Mar 2025 15:56:49 -0000
-Message-ID: <174283180972.621163.577540576622356859@demetrius>
-To: LKML <linux-kernel@vger.kernel.org>,linux-rt-users <linux-rt-users@vger.kernel.org>,Steven Rostedt <rostedt@goodmis.org>,Thomas Gleixner <tglx@linutronix.de>,Carsten Emde <C.Emde@osadl.org>,John Kacur <jkacur@redhat.com>,Sebastian Andrzej Siewior <bigeasy@linutronix.de>,Daniel Wagner <daniel.wagner@suse.com>,Tom Zanussi <tom.zanussi@linux.intel.com>,Clark Williams <williams@redhat.com>,Pavel Machek <pavel@denx.de>,Joseph Salisbury <joseph.salisbury@oracle.com>,Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+	s=arc-20240116; t=1742831968; c=relaxed/simple;
+	bh=tlgS3Tr291j1384T3PsF6bF4b76t3xHeHTIlkL6k15s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s1a5X1M6vg9OYSkuMPq2gLIrx24dml4K5kwBbGzi2EzgyZvya95KxqkLJLge3PPTp1PGZUesA+/FFPcoh7eejFQTFNZvWf+1ndzdYWsmN/WfWzPTN7/iVyPsZ85517QhUiexpbUHM3864mRDf2XljTdvWiOQ0vTk1w+U4caAQMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FyvntDDI; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FyvntDDI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD1DAC4CEDD;
+	Mon, 24 Mar 2025 15:59:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742831968;
+	bh=tlgS3Tr291j1384T3PsF6bF4b76t3xHeHTIlkL6k15s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FyvntDDIRSzieJY2zWJyH2bq+gWXQShVyU6pjErO1KC5EK9b/Ee15fQyKSV9M2kRf
+	 fOQqNrQQEYvYTP6UeG4v0ESSDc0BVZ3gbLsllL69s/jUzX9HAWTJo3AVoPxVMl4Eyj
+	 r+sqgPDj7Q8rkVfWE2qcTgyHeh/RogJ3CPmHVtS5KTuKse6tqKDM/XOybLH2+22Q8+
+	 LpJejncNo7kLRzehO648XVbLI4Emc33kQbTPz+HpEa6+dNpDgpPdNf5EjYaDiNkaX0
+	 8uN6JG8lcjvulvrMCkGtEMUeq4PySVdzMwJhk0M7xZxJuP+A92TsL1V1wHuWf6CM78
+	 SYZpXamN9H5cQ==
+Message-ID: <60af2ed4-91a9-434b-b1f6-a87218aba381@kernel.org>
+Date: Mon, 24 Mar 2025 16:59:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] dt-bindings: pci: cadence: Add property "hpa" for
+ PCIe controllers
+To: Manikandan Karunakaran Pillai <mpillai@cadence.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>, "kw@linux.com" <kw@linux.com>,
+ "robh@kernel.org" <robh@kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <20250324082335.2566055-1-mpillai@cadence.com>
+ <CH2PPF4D26F8E1CE4E18E9CC5B8DAF724DCA2A42@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <CH2PPF4D26F8E1CE4E18E9CC5B8DAF724DCA2A42@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello RT-list!
+On 24/03/2025 10:08, Manikandan Karunakaran Pillai wrote:
+> Document the newly added property "hpa" for Cadence PCIe controllers in Documentation/devicetree/bindings/pci/ for Root Port and Endpoint configurations
 
-I'm pleased to announce the 6.6.84-rt52 stable release.
+Drop the path, pointless.
 
-In addition to merging the v6.6.84 changes this port contains one
-backport from Sebastian:
+> 
 
-d423d4a3e63 netfilter: nft_counter: Use u64_stats_t for statistic.
+Please run scripts/checkpatch.pl on the patches and fix reported
+warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
+patches and (probably) fix more warnings. Some warnings can be ignored,
+especially from --strict run, but the code here looks like it needs a
+fix. Feel free to get in touch if the warning is not clear.
 
-You can get this release via the git tree at:
+<form letter>
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC (and consider --no-git-fallback argument, so you will
+not CC people just because they made one commit years ago). It might
+happen, that command when run on an older kernel, gives you outdated
+entries. Therefore please be sure you base your patches on recent Linux
+kernel.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, instead use mainline) or work on fork of kernel
+(don't, instead use mainline). Just use b4 and everything should be
+fine, although remember about `b4 prep --auto-to-cc` if you added new
+patches to the patchset.
+</form letter>
 
-  branch: v6.6-rt
-  Head SHA1: 025ecd0d058156e3ea73b0862c23258bb9cc9149
+> Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
+> ---
+>  .../devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml         | 4 ++++
+>  .../devicetree/bindings/pci/cdns,cdns-pcie-host.yaml       | 7 +++++++
+>  2 files changed, 11 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+> index 98651ab22103..4e839fa90b23 100644
+> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+> @@ -24,6 +24,10 @@ properties:
+>        - const: reg
+>        - const: mem
+>  
+> +  hpa:
+> +    description: If present PCI controller is high performance architecture
 
-Or to build 6.6.84-rt52 directly, the following patches should be applied:
+compatible defines this.
 
-  https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.6.tar.xz
+> +    type: boolean
+> +
+>  required:
+>    - reg
+>    - reg-names
+> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+> index a8190d9b100f..c219fe15c879 100644
+> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+> @@ -9,8 +9,11 @@ title: Cadence PCIe host controller
+>  maintainers:
+>    - Tom Joseph <tjoseph@cadence.com>
+>  
+> +select: false
 
-  https://www.kernel.org/pub/linux/kernel/v6.x/patch-6.6.84.xz
+No clue what you wanted to achieve here, no explanation in commit msg
+and this makes not much sense.
 
-  https://www.kernel.org/pub/linux/kernel/projects/rt/6.6/patch-6.6.84-rt52.patch.xz
+> +
+>  allOf:
+>    - $ref: cdns-pcie-host.yaml#
+> +  - $ref: cdns-pcie.yaml#
 
+Why?
 
-Enjoy!
-Clark
+>  
+>  properties:
+>    compatible:
+> @@ -24,6 +27,10 @@ properties:
+>        - const: reg
+>        - const: cfg
+>  
+> +  hpa:
+
+Again, compatible defines this.
+
+Anyway, follow standard DT binding rules (see writing bindings, numerous
+talks or guides).
+
+Best regards,
+Krzysztof
