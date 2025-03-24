@@ -1,112 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08A925DCF1
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 10:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9EC25C705
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 10:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742813564; cv=none; b=EtlrvRbc8Cd3gjhrNT1ZQU1MaPJiJtSCYWAgp7GJV2O/GHf50cMIObZmimIfm9w4eUfmfhjyRGVopjtFNQgiDMgdv+vZLH2BsGeMsc8QUI3fVVHUvv+wychWQMkaqF0t0riE2tz8kcAgo2ZV1EiT/rHnFt1MItafexSJzcqWcEQ=
+	t=1742813626; cv=none; b=uKZXbaeSKYwpLbbFpyZ3+K/Kd6NWomXH/cJTat2+G0REJG0QG3nFfAdaAgB1mioMro4xiO4mt6wUsDBGWbQRh6yEmkcfotOrSsVk//X+/QTAVx79vsO7ucj/Ycz4I0cdJEdVf3pQNfubYd71dWGffcJQV7uKwyYHX0XGnScSVM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742813564; c=relaxed/simple;
-	bh=sZGc4JwXs7iJ8D/IHSbBoRpDBKmUfLLakBeMsg3vn3s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GlG1RoETwonK0oSD5Bjdj6y6v4qRq4jSRKPkSLI4gow9n86NejHh56q9zxT7Arhy1wTkty+r8FADfAs+U7UlwzfRmlE/121z5nlyQ6U+2LF+S8xki+vV0cj7bofcsz7i5PmJg054yJ+MjK2NePcb+J/f8Hlk5NXtlFBaBEiTsPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hWdhEUe0; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742813626; c=relaxed/simple;
+	bh=KjVsYB/6NbKNMWPMw7dJEN7gZajXIZf6BXVWnnRlI4I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=GpikAH40jzCoTzotnyw8x/g8sa6jeWF/0pTNjyYo5IOMQD2Y+6orerWUzRwYtUo69iGSeS6qcysCtGvwPlW4Pwa1uIkYRMielo30G6O7ZSbM0+G8AzX8BG2eAB8IQYsDi9G0XFy1wqsLvJmXSYNj0WLifPFyBaEONxWyYxnY59U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u2gRqq4x; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hWdhEUe0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742813563; x=1774349563;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=sZGc4JwXs7iJ8D/IHSbBoRpDBKmUfLLakBeMsg3vn3s=;
-  b=hWdhEUe0hP5EnnnCOaQKVI0EZwlx2FcpMFXRO6as79rKoskOX9zMtzIw
-   tVIYRyZUzZNNVDdvR6Bah505a4rtG9UdfoSuUTPKYkFuGkDo0b0LltO6l
-   Wou8U3VlvkbEAPPvJaO4clqtNYe1Iu7h0lNfmLTiwAbIHECjmsVOu3R+t
-   uWQEeFmAeoqg7WeklCbr0uTHgKTUbYH6gr60Q9ZOOk3YY2p5aInzVPlhZ
-   zn34OmRTcbaF8dHto2sbghCqBO3gYvSsCrT/OPms+VhWX9zOGQplbG8b6
-   IJj1u8PnZtoHXN5HhsdPz9jIlr6ds7JKxbDLy188WhDz1MPeIwXp8+LaQ
-   w==;
-X-CSE-ConnectionGUID: O8EX/k++R66qEpHxriS92Q==
-X-CSE-MsgGUID: an5Cd26/Q7S9bCMLB6ZeYw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11382"; a="46756889"
-X-IronPort-AV: E=Sophos;i="6.14,271,1736841600"; 
-   d="scan'208";a="46756889"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 03:52:40 -0700
-X-CSE-ConnectionGUID: W2ZE+m8aRG+4D0GYhxJ6tw==
-X-CSE-MsgGUID: 5aNeg8vqSb2B3TarIyTGUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,271,1736841600"; 
-   d="scan'208";a="154916399"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP; 24 Mar 2025 03:52:39 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 52014CC; Mon, 24 Mar 2025 12:52:37 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Alexandru Ardelean <aardelean@baylibre.com>,
-	linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH v1 1/2] kernel.h: Move READ/WRITE definitions to <linux/types.h>
-Date: Mon, 24 Mar 2025 12:50:24 +0200
-Message-ID: <20250324105228.775784-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250324105228.775784-1-andriy.shevchenko@linux.intel.com>
-References: <20250324105228.775784-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u2gRqq4x"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-399676b7c41so2158324f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 03:53:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742813623; x=1743418423; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zRBBC5Y50DbrnY2KR5VRMIecYWoom7fg1aMey6lzMKw=;
+        b=u2gRqq4xM612zQdS3dWg6nQFyzVa10fpHoXTlO+kz3hITmqKAZlltof+qevYCZ1yxc
+         DV7eFO3UBTRQPVJoJX5GctNElfwrB/8r1X1KTQZLK0gOkm7bckrrVzotx6dINS/XVwnZ
+         SL38Bav8DEUU+4sfETBxHyFD6RnFeQU2NgogmtM45SvtDHtpVPlCUZ3BO21xaKS5v/ge
+         AFimaf+puDTnpaAH7gamOUoRo8sU2bZoPZ979FRnhrJyxskeaPQTBEka7QWQmPkPXwrX
+         socKWRgglXcGkyrVx74vBkV8gYLs1JDuyAyOXWrr1s6sl7m8TkdLdqOw7YQYQNGDIgfr
+         n48A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742813623; x=1743418423;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zRBBC5Y50DbrnY2KR5VRMIecYWoom7fg1aMey6lzMKw=;
+        b=LCqNMdnwjYe3EOP6mx6IKiS623PcPfX/x34ITmWGevZGoVTx6vCtoY7rUFzgB+gktO
+         GPErEX5mgF+GU/fjWvlsyGt+5POf3M/a0SBuOawtLFxlCLztMqAzeEv+WIYwGm7D+Omk
+         GOTwGhZ9MiVd5uF5Cup3+KgtHWdOPYXMX/3XiUUJHuOTVYRWKrcQJDkQ0DX2mbzGPojo
+         vokemmwuF2TgusAxGbt8JfP9C7QbJwd0w2glJ6hA/6VKwtW/dr53Zl95T9lXqYweqA60
+         7fVFkyIA3zKx9/ORgr0jH41xzbpkDxF91dt93ol/ueOnF6NZR1v8/k/UYNvOh7oMMy5T
+         F7Dg==
+X-Forwarded-Encrypted: i=1; AJvYcCVFuWW2elg047uRPIJul7iKCkdx1+AZNsWP4TS6V+hu5YnfPcCg5qkPis4yLsxhEZqaMY+tA8FXfdMVvPk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdwjK9vz3smSdmUnkf5nbB0pXVRpmVSqcPR3XnBWnxnXshJwDB
+	abhqGDptN18Le5S7DQO11EIZeQ3nBFika5S4eUNYUgXWCA6XhtcGAq+zu27jxBY=
+X-Gm-Gg: ASbGncuhgPQHw3xWoZCa4lxSiz6MCYY799B0oCW87PqMrlecdVFhNImEXPbhifNu8zJ
+	rLr1YyLO9RMdOOHgu9RIVPns+1JiCYaPzMABiU2A4dVcgv4NeN1h0Syx3bRS4Vs8m3u4vbkolk6
+	tok6Svfa0iEYdi/GXQEimCS43MtqACUZ6D9tiye2nxHb3PwKwSjZUwJwlpx4JxRDIovxcfTOzLn
+	CbK5vtpP32DEyjpgqWJjwgwZigZzbYjAsV0cJDXcdL8fLZATfxGfux0NFik75zvANHnJ5tsM9Rc
+	Ge7wADtij+GzgRYgqleDr/a3L+YeOmtgDMn060epGD2Z4UZqbA==
+X-Google-Smtp-Source: AGHT+IG6+X0RvQWAACJrJUGE18q5oXGZ8dddeugBl2ClpDLyua8TAmKdOcrERT6mZXU5Gy8dfa/gpw==
+X-Received: by 2002:a5d:588b:0:b0:38d:de45:bf98 with SMTP id ffacd0b85a97d-3997f8ef175mr10199407f8f.8.1742813622782;
+        Mon, 24 Mar 2025 03:53:42 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3997f9b260fsm10435247f8f.43.2025.03.24.03.53.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Mar 2025 03:53:42 -0700 (PDT)
+Date: Mon, 24 Mar 2025 13:53:39 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] KVM: x86: clean up a return
+Message-ID: <7604cbbf-15e6-45a8-afec-cf5be46c2924@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-From: Ingo Molnar <mingo@kernel.org>
+Returning a literal X86EMUL_CONTINUE is slightly clearer than returning
+rc.
 
-Headers shouldn't be forced to include <linux/kernel.h> just to
-gain these simple constants.
-
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- include/linux/kernel.h | 4 ----
- include/linux/types.h  | 4 ++++
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kvm/x86.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index be2e8c0a187e..01bb0fac3667 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -41,10 +41,6 @@
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index c734ec0d809b..3e963aeb839e 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -7998,7 +7998,7 @@ static int emulator_read_write(struct x86_emulate_ctxt *ctxt,
+ 		return rc;
  
- #define STACK_MAGIC	0xdeadbeef
+ 	if (!vcpu->mmio_nr_fragments)
+-		return rc;
++		return X86EMUL_CONTINUE;
  
--/* generic data direction definitions */
--#define READ			0
--#define WRITE			1
--
- #define PTR_IF(cond, ptr)	((cond) ? (ptr) : NULL)
+ 	gpa = vcpu->mmio_fragments[0].gpa;
  
- #define u64_to_user_ptr(x) (		\
-diff --git a/include/linux/types.h b/include/linux/types.h
-index 49b79c8bb1a9..6dfdb8e8e4c3 100644
---- a/include/linux/types.h
-+++ b/include/linux/types.h
-@@ -136,6 +136,10 @@ typedef s64	ktime_t;
- typedef u64 sector_t;
- typedef u64 blkcnt_t;
- 
-+/* generic data direction definitions */
-+#define READ			0
-+#define WRITE			1
-+
- /*
-  * The type of an index into the pagecache.
-  */
 -- 
 2.47.2
 
