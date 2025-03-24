@@ -1,90 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2785D18B484
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 05:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D26C23A9;
+	Mon, 24 Mar 2025 05:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742795093; cv=none; b=GRhQDBbuiqhB7hUJbSLeYKG69q+xHfLNGTg3tkhxVtUPPmKlrOCNjhpk9Cp04zHpzWmP5eFreTEiIzAWNEK7QRKXqwfnTyZmNJ0gSaMakfCfyOnwV8l7LbgJbwlxtLGBlsSn8hWQ7LVpLDEINmi/T+Ry++b+X15Mu09+muoO0F4=
+	t=1742795156; cv=none; b=AjmaIxK3AoRrQvsy1boC49ibilsMCEX0bC+AxGbDtBU8NDHPm6jkkrvaNgN0GM67wUO/IQfBHk1Boq43wCJHMgyF/SpSdTrDgU7Q9e5Ck0fotWn1QlaBxaZ5ARGfl4IrNYlHhoCQ+tWhfRTGvnj7Ts9bDjgx1YWQxOCAZP0W8kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742795093; c=relaxed/simple;
-	bh=U8FQ3WCzUpzAdt4fdoQCq31niiSqwzR0pgRI9MZWhyc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-type; b=HzhCprrM96x31M/OIl0Cy60bNbNOUQmARV+8TQZobFMjLpFS4FpcnZsweosN2hZmNr3BcqoGM2nErTlc3NlbUN8qh9ru18kBYZjDWJW74Nt9mKj+i3uq443VJUPZ7l03GSwf79TkU++5SVW9YKaTQW+7gACx994Ie7LG1eV34vM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MWDjJoPr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742795156; c=relaxed/simple;
+	bh=0jvW7nz7pOOA0IOuCXljauxGCOytip26AbipW7bgnGk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=HRh6vKLp3CEY11ydeVcMIDiJHgZYvvXXFVKL1/BhJDJrPpsSGXNzAR82dPDer4Q1fKM70h8jPXKFyMKhooK0SYubf5F8UGtcDVooYGKL/BaCt2VinkRX+zd5BnOREFml0xa1EQWbsHc62UA5ygxvqDqKpyHtwXKw5zGwvsanoIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=REIdq1Q2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MWDjJoPr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742795091;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hdtJBojWysf83uWkpYenJh6PvgKphWk5R5ZDMHe4SEs=;
-	b=MWDjJoPrfYrLSBCdMzLjK9y2+EaRm8REiD4OBlF2OppWLvl95DVMWPYOsPz1lv9lXdlc2u
-	rSB/6ypQLSI45GbzjC+hZjQrQ6opuubtb/pUtlnja1vov2D3DRFDbH8PC67LOYR+Z0l3Kb
-	9UVM7IpsmqN+WS5xqt2S2ubHEBP78UA=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-241-Q8S0RL1oNsGm5pCCs4wyAw-1; Mon,
- 24 Mar 2025 01:44:47 -0400
-X-MC-Unique: Q8S0RL1oNsGm5pCCs4wyAw-1
-X-Mimecast-MFC-AGG-ID: Q8S0RL1oNsGm5pCCs4wyAw_1742795086
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4AD75180AF49;
-	Mon, 24 Mar 2025 05:44:45 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.72.112.200])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 839231828B5B;
-	Mon, 24 Mar 2025 05:44:33 +0000 (UTC)
-From: Jason Wang <jasowang@redhat.com>
-To: mst@redhat.com,
-	jasowang@redhat.com
-Cc: xuanzhuo@linux.alibaba.com,
-	eperezma@redhat.com,
-	virtualization@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 12/19] virtio_ring: use u16 for last_used_idx in virtqueue_poll_split()
-Date: Mon, 24 Mar 2025 13:43:26 +0800
-Message-ID: <20250324054333.1954-13-jasowang@redhat.com>
-In-Reply-To: <20250324054333.1954-1-jasowang@redhat.com>
-References: <20250324054333.1954-1-jasowang@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="REIdq1Q2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEC86C4CEDD;
+	Mon, 24 Mar 2025 05:45:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742795155;
+	bh=0jvW7nz7pOOA0IOuCXljauxGCOytip26AbipW7bgnGk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=REIdq1Q2LUUxZwRNgCX6Fpay85QeDfW1H/ysEYqCTdGazj6TLpiLBOcY5fHtaSHIo
+	 XBFkPes7cAFISuEzaeb/l3ZDuULTIoEUho+lTqNz4hV2I7rBRhXcGSH7a9EUUKYmJJ
+	 n2p7Vo6MWg+ZjuZyjX3qObKnQes7JxW9CWur42/XfWeSnh4GfGr620TgAkaFS3yHxr
+	 hvN721nqxvOiUI0LtmLgVSThVKoc0SSVTpY6xpEt1KmBaHdL0iu+T59gG+BF/N2nZP
+	 IC0VJpUumWIcCtmexmO9gBAWPZTjx/jpae0r3wYlIHAEK1M8LqsrIekRrNMM9Ss3vB
+	 lx7dpFMosiaPw==
+Date: Mon, 24 Mar 2025 14:45:51 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Douglas Raillard <douglas.raillard@arm.com>, Steven Rostedt
+ <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Fix synth event printk format for str fields
+Message-Id: <20250324144551.fc290f9cf9f57b3d2f205354@kernel.org>
+In-Reply-To: <9d234136-05b9-46b6-849f-901df83bf54c@arm.com>
+References: <20250318180939.227696-1-douglas.raillard@arm.com>
+	<20250319211858.6d8166e3fb202e6e5a658557@kernel.org>
+	<9d234136-05b9-46b6-849f-901df83bf54c@arm.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Use u16 for last_used_idx in virtqueue_poll_split() to align with the
-spec.
+On Wed, 19 Mar 2025 14:34:19 +0000
+Douglas Raillard <douglas.raillard@arm.com> wrote:
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/virtio/virtio_ring.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Hi,
+> 
+> On 19-03-2025 12:18, Masami Hiramatsu (Google) wrote:
+> > Hi,
+> > 
+> > On Tue, 18 Mar 2025 18:09:38 +0000
+> > Douglas RAILLARD <douglas.raillard@arm.com> wrote:
+> > 
+> >> From: Douglas Raillard <douglas.raillard@arm.com>
+> >>
+> >> The printk format for synth event uses "%.*s" to print string fields,
+> >> but then only passes the pointer part as var arg.
+> >>
+> >> Add the missing precision var arg.
+> > 
+> > I'm not sure what you want to. Would you mean showing the string length too?
+> > But I think actual output(*) shows only string, right?
+> > 
+> > (*) the output data which can be read from `trace` file.
+> 
+> The "%.*s" printf/printk format specifier has 2 components:
+> 1. the "*" part that in printf documentation called the "precision"
+> 2. the "s" part that is called the "specifier"
+> 
+> For a "s" specifier, the precision is interpreted as the number of chars to display from that string.
+> In any case, using "*" as precision means the value is passed dynamically, as a parameter to printf/printk,
+> before the actual char *. Both those args are consumed by printk to display "%.*s", the precision is never
+> displayed on its own.
+> 
+> In the current state, synthetic event use "%.*s" for string fields, but then only a single `__get_str(field)`
+> is passed to printk, so it's missing the precision arg. Both trace-cmd and our parser report an error because of that.
+> 
+> The alternative would be to just use "%s" instead of "%.*s", but I assume whoever wrote the code initially had a reason
+> to use the precision (maybe to print non-null-terminated strings ?), so I simply fixed the arguments.
 
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index 19aa24d62d20..a2884eae14d9 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -801,7 +801,7 @@ static void detach_buf_split(struct vring_virtqueue *vq, unsigned int head,
- }
- 
- static bool virtqueue_poll_split(const struct vring_virtqueue *vq,
--				 unsigned int last_used_idx)
-+				 u16 last_used_idx)
- {
- 	return (u16)last_used_idx != virtio16_to_cpu(vq->vq.vdev,
- 			vq->split.vring.used->idx);
+Ah, got it. It seems that the first precision parameter is for limiting
+the length of the string according to the commit;
+
+https://lore.kernel.org/all/b6bdb34e70d970e8026daa3503db6b8e5cdad524.1601848695.git.zanussi@kernel.org/T/#u
+
+So, I think it should always print the STR_VAR_LEN_MAX value.
+Steve, can you check it?
+
+Thank you,
+
+> 
+> > 
+> > Thank you,
+> > 
+> >>
+> >> Signed-off-by: Douglas Raillard <douglas.raillard@arm.com>
+> >> ---
+> >>   kernel/trace/trace_events_synth.c | 3 ++-
+> >>   1 file changed, 2 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+> >> index e3f7d09e5512..274b9b1d9f7d 100644
+> >> --- a/kernel/trace/trace_events_synth.c
+> >> +++ b/kernel/trace/trace_events_synth.c
+> >> @@ -620,7 +620,8 @@ static int __set_synth_event_print_fmt(struct synth_event *event,
+> >>   		if (event->fields[i]->is_string &&
+> >>   		    event->fields[i]->is_dynamic)
+> >>   			pos += snprintf(buf + pos, LEN_OR_ZERO,
+> >> -				", __get_str(%s)", event->fields[i]->name);
+> >> +				", (int)__get_dynamic_array_len(%s), __get_str(%s)",
+> >> +				event->fields[i]->name, event->fields[i]->name);
+> >>   		else if (event->fields[i]->is_stack)
+> >>   			pos += snprintf(buf + pos, LEN_OR_ZERO,
+> >>   				", __get_stacktrace(%s)", event->fields[i]->name);
+> >> -- 
+> >> 2.43.0
+> >>
+> 
+
+
 -- 
-2.42.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
