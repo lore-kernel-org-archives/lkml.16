@@ -1,155 +1,140 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05263199E84
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 19:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D991946C3
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 19:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742844443; cv=none; b=VRhKdUZABWq9Izb2FIpxwP8r7uf73qB1uQdo0/ArVjBehNwYiwJVZw+8D1jsiKBOnCctXOjL1vECB+pITVk1IVuDw1KqVXJK9M8YXnREvXXPpIEYCJuYvc3L5rCCO/AkbfRpCgq9wHFWOrN2diTzm4LK0VmPg3IVtpF1y2kzMWk=
+	t=1742844594; cv=none; b=NI74BfuAGclVRXBX7o+VKY2q4sYa7bJd5dYG45Se8bVBrz0zQiPkTqS8Ow7ZrBXjT8JyVa6GMc6K6JLYgg5eGayptGbp2/wibe1FWWCtd3r1eK8Wl3c8YsarmYYFzX8o8xntgnsSCvTipPk/YBW3r66X3JVZfnqfisdIYzaCAYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742844443; c=relaxed/simple;
-	bh=tow1bbsuiMKdxwcgM5wqdG0LBLdJEDfAWZYo0p/RsCA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lJZ8JvvP/GZ1ynKBadkZNsB+0VZAS1B/+Ipr0KT/RmPDMzRgDaerhnPQkv5NXuzGTo2zJgTaIcANDjNo7zU6El19kw1CTcAvaC5L4TdNwg+0ILHKSAABtcdO15EmQi1dZYFRSn1UhxzRDPX3SytfZ76RuMoYcujrsFR9X3FCABQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=hzrlVIqF; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1742844594; c=relaxed/simple;
+	bh=8TJe0kVhGoR6sCm5pzURu/URzFkew2belXE+Ac3fzKg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jxa3a4O4pFRJzhdUsB1SMcXrP8VZSQi8Ae3wwn/FDzmadN8FrUY+Uhcs5tvBUtRkOv8ik2xDUwzXQ/fZhkIE2VLdVLc4GEMRwFaBUb/HsjGfbH5NyE97/5DUyFTtCYn7rWSRyXYj90wwiahz1tYga6hnUS9kVqcftK68DehKmC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=zL9kf6O+; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="hzrlVIqF"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-476a304a8edso42310481cf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 12:27:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1742844441; x=1743449241; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=risWjFwCypYzMEcsgslZMqIUPKF0hXh9xXq6g1dCnwU=;
-        b=hzrlVIqF5lXKCI9UnOheIx2QUoJEvTxg22bRKZZBa+LUBMgnKw+pD4bt4qLCuyssJk
-         XV6T0WIwlkOQFa6HFlqpDlXHqYyu1vfwxV5vegnUU+nD2dZh9AJR1xwcoCwU1AIti75W
-         VTpsCkZ+fdKar18/9YWbd+I2rZbCCBSR8hqqACZ07U/4ScUoeHEAZ+MP/2um+89n7+yC
-         0yTM5MNH4uHWkOi1uvdUmTVb8xpyXD3DPT1vl8eVrr2pTw8b6UOggWB1HWhHCwY7zhqh
-         TFB56YDd3f4rdl1xQXCvCCrMzR7h3VZ24+zNHQ1K8mnvig7AHXpQCVb0VhD/wG4ghasA
-         /vIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742844441; x=1743449241;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=risWjFwCypYzMEcsgslZMqIUPKF0hXh9xXq6g1dCnwU=;
-        b=DEbp+X5NZ70+KNkM2M7e47sL0g1V/IGU7pDbY+t5H1ljGde6pQEvqqEl6S5MTdlOVr
-         FVu8M32xDLz4NKvPSGmkTKcaUS/8T5pG2NhzzYBx5HaB5dy00WbEigEnMFaFOO+zfITu
-         iRDNHCX77c0xFmlC6P2dGkpbwru+eRE+6Fa0eHf5CJlsvvRCZhYIBspW70hIwC4Jv3sH
-         cqvlo+BO/5eCRzRkg+Dhq1s7JBZSojBVkhgF3ocPZy7bOdfoNLZiXNQSAcPGvO0+n7eU
-         LD0e1ISD2ipm3JpjuLaFI5Yp9q/CryHYqPSGo8zR4USAXGy7XC/+sdu3+VNoFJ7gEV5m
-         oSrg==
-X-Forwarded-Encrypted: i=1; AJvYcCXoVDw5nTSjcYxevmMPPaCQKHhjW2G/dBkzRM7BqCS1zBCpnYsZ1DYzv+D7Ay4MPPGsr070GKA+/b+3SEo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzInhv7xDBPtD7cKgbk81yngydB+ZZkX78MoSkbpBk8LEjr+5FN
-	7c8Ecqi8UortcvMT30qorr7+n6AZsYcVrI8N60cwQCk4zn7wM6Y9fO/bmeKhnEWkUSwOYb2UMX/
-	SL+gfAw8ZZHSUd4HcHGcbkG2nzxsZXNoeflURPg==
-X-Gm-Gg: ASbGncskRxyk+TG12LIliDVuLSp8rbjNH1U6jlh5kKmOvJwf6S/4KKpYUlyd1Zk8o8Z
-	GKSPgCKr7eFkUpjnawgS0qOucN8yML8bWMddHichg+DvdYvXzKdH3tZdx5FN1+d9GyoPm47mtt/
-	FWcwBFoCvx6lGOCp9pFH3HKNCtRpVoRJPsx/M=
-X-Google-Smtp-Source: AGHT+IGstsIg4qTmJ5YmWZYDNChDQ3+AV2nMWCj2a+cFs02lJM90kE8eqj7HIwLM8JIykyDhXLdef0fVOQCXvqByXHY=
-X-Received: by 2002:a05:622a:550f:b0:472:bbb:1bab with SMTP id
- d75a77b69052e-4771dd88e91mr196322501cf.24.1742844440714; Mon, 24 Mar 2025
- 12:27:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="zL9kf6O+"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id BFE362C00B6;
+	Tue, 25 Mar 2025 08:29:48 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1742844588;
+	bh=uyQXzTickG6v0i7iU89rdKkTMj8eQV7bcp2q8Y8F0wY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=zL9kf6O+JCN1SBsWmrHz16SEmY2KCT8YUfxCYTdCe9OjuBhh+/M5lsGkn8ujvnuBr
+	 0DMwUDfL4Y3l8nabOJijOfRGWm2a3KVh0RLD0+kOFeJbWHO8rG/i5oIWXp+tXIjW+z
+	 6J7Oop0O+qTfTCc9G6qLSA+mg2U9KmvRhKAjlPwnIGGzUzgJ89NqczlbactNt3aWQD
+	 ZPXQfnCtFWoIPmnz2O96t1hg5IErounJ/JPEGT/RZGEIYpTuyi5QwSRM7zEX/plu73
+	 z6lpHphmMsAmuCpjjktgneMZd/Dm3RtzsIso+oFpnJ3jA2DOhXT7kCZpvi7wD4NIaG
+	 bjIxpxKY4x+5A==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B67e1b2ac0000>; Tue, 25 Mar 2025 08:29:48 +1300
+Received: from aryans-dl.ws.atlnz.lc (aryans-dl.ws.atlnz.lc [10.33.22.38])
+	by pat.atlnz.lc (Postfix) with ESMTP id 4164113ED56;
+	Tue, 25 Mar 2025 08:29:48 +1300 (NZDT)
+Received: by aryans-dl.ws.atlnz.lc (Postfix, from userid 1844)
+	id 3A94F2A362E; Tue, 25 Mar 2025 08:29:48 +1300 (NZDT)
+From: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Markus Elfring <Markus.Elfring@web.de>,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
+Subject: [PATCH v14 0/1] i2c: octeon: add block-mode r/w
+Date: Tue, 25 Mar 2025 08:29:45 +1300
+Message-ID: <20250324192946.3078712-1-aryan.srivastava@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320015551.2157511-1-changyuanl@google.com>
- <20250320015551.2157511-12-changyuanl@google.com> <CALu+AoS01QJ-H5Vpr378rbx==iRQLG0HajtMCUzDXRO75biCag@mail.gmail.com>
-In-Reply-To: <CALu+AoS01QJ-H5Vpr378rbx==iRQLG0HajtMCUzDXRO75biCag@mail.gmail.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Mon, 24 Mar 2025 15:26:43 -0400
-X-Gm-Features: AQ5f1JrjPincvTv7ELB8J7T2hdmnlfkqUUS0uCgm9_GvQ7ohVp8PZ0NaxW7sdEs
-Message-ID: <CA+CK2bC4PM0JnHOUm7qfpQ=wUhwsYQ-hJ12tTK_7pSWgYk+bhg@mail.gmail.com>
-Subject: Re: [PATCH v5 11/16] kexec: add config option for KHO
-To: Dave Young <dyoung@redhat.com>
-Cc: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org, graf@amazon.com, 
-	akpm@linux-foundation.org, luto@kernel.org, anthony.yznaga@oracle.com, 
-	arnd@arndb.de, ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de, 
-	catalin.marinas@arm.com, dave.hansen@linux.intel.com, dwmw2@infradead.org, 
-	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com, corbet@lwn.net, 
-	krzk@kernel.org, rppt@kernel.org, mark.rutland@arm.com, pbonzini@redhat.com, 
-	hpa@zytor.com, peterz@infradead.org, ptyadav@amazon.de, robh+dt@kernel.org, 
-	robh@kernel.org, saravanak@google.com, skinsburskii@linux.microsoft.com, 
-	rostedt@goodmis.org, tglx@linutronix.de, thomas.lendacky@amd.com, 
-	usama.arif@bytedance.com, will@kernel.org, devicetree@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=Ko7u2nWN c=1 sm=1 tr=0 ts=67e1b2ac a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=6rJGSieKV_OOAbgiSREA:9 a=3ZKOabzyN94A:10
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
 
-On Mon, Mar 24, 2025 at 12:18=E2=80=AFAM Dave Young <dyoung@redhat.com> wro=
-te:
->
-> On Thu, 20 Mar 2025 at 23:05, Changyuan Lyu <changyuanl@google.com> wrote=
-:
-> >
-> > From: Alexander Graf <graf@amazon.com>
-> >
-> > We have all generic code in place now to support Kexec with KHO. This
-> > patch adds a config option that depends on architecture support to
-> > enable KHO support.
-> >
-> > Signed-off-by: Alexander Graf <graf@amazon.com>
-> > Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > Co-developed-by: Changyuan Lyu <changyuanl@google.com>
-> > Signed-off-by: Changyuan Lyu <changyuanl@google.com>
-> > ---
-> >  kernel/Kconfig.kexec | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >
-> > diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-> > index 4d111f871951..57db99e758a8 100644
-> > --- a/kernel/Kconfig.kexec
-> > +++ b/kernel/Kconfig.kexec
-> > @@ -95,6 +95,21 @@ config KEXEC_JUMP
-> >           Jump between original kernel and kexeced kernel and invoke
-> >           code in physical address mode via KEXEC
-> >
-> > +config KEXEC_HANDOVER
-> > +       bool "kexec handover"
-> > +       depends on ARCH_SUPPORTS_KEXEC_HANDOVER && ARCH_SUPPORTS_KEXEC_=
-FILE
-> > +       select MEMBLOCK_KHO_SCRATCH
-> > +       select KEXEC_FILE
-> > +       select DEBUG_FS
-> > +       select LIBFDT
-> > +       select CMA
-> > +       select XXHASH
-> > +       help
-> > +         Allow kexec to hand over state across kernels by generating a=
-nd
-> > +         passing additional metadata to the target kernel. This is use=
-ful
-> > +         to keep data or state alive across the kexec. For this to wor=
-k,
-> > +         both source and target kernels need to have this option enabl=
-ed.
-> > +
->
-> Have you tested kdump?  In my mind there are two issues,  one is with
-> CMA enabled, it could cause kdump crashkernel memory reservation
-> failures more often due to the fragmented low memory.  Secondly,  in
+Add support for block mode read/write operations on
+Thunderx chips.
 
-As I understand cma low memory scratch reservation is needed only to
-support some legacy pci devices that cannot use the full 64-bit space.
-If so, I am not sure if KHO needs to be supported on machines with
-such devices. However, even if we keep it, it should really be small,
-so I would not expect that to be a problem for crash kernel memory
-reservation.
+-Refactor common code for i2c transactions (merged in v11).
+-Correct function docs (merged in v13).
+-Remove 10-bit addressing considerations (merged in v13).
+-Add block mode transaction functionality.
 
-> kdump kernel dump the crazy scratch memory in vmcore is not very
-> meaningful.  Otherwise I suspect this is not tested under kdump.  If
-> so please disable this option for kdump.
+Signed-off-by: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
+---
+Changes in v2:
+- comment style and formatting.
 
-The scratch memory will appear as regular CMA in the vmcore. The crash
-kernel can be kexec loaded only from userland, long after the scratch
-memory is converted to CMA.
+Changes in v3:
+- comment style and formatting.
 
-Pasha
+Changes in v4:
+- Refactoring common code.
+- Additional comments.
+
+Changes in v5:
+- Further refactoring.
+- Split refactoring into separate patch in series.
+- Add more comments + details to comments.
+
+Changes in v6:
+- Reword/reformat commit messages
+
+Changes in v7:
+- Fix typo in commit message.
+- Remove usage of r/w and hlc abbreviations from commits.
+
+Changes in v8:
+- Updated refactor commit msg with more information.
+- Rebased patch
+
+Changes in v9:
+- Rebased patch against i2c-host
+
+Changes in v10:
+- Fixed unitialised variable
+
+Changes in v11:
+- Rebased patch against i2c-host
+
+Changes in v12:
+- Added fixes for function docs
+- Removed considerations for 10-bit addressing
+- Transition to using appropriate byte-swap operations, instead of custom=
+ code
+- Refactor commit removed from this set, merged in:
+  https://lore.kernel.org/linux-i2c/seom4yspcjnmdxxwn6wuyiqdy2ywpna6nw4rn=
+36tsqinlncbca@jdehzfnznlsg/
+
+Changes in v13:
+- Removed unnessary assignments
+- Removed explicit casting
+- Correct typing for be64 ops
+- Use min() instead of MIN_T
+
+Changes in v14:
+- Minor fixes to return handling and declarations
+- Kernel doc and 10-bit patch removed from this set, merged in:
+  https://lore.kernel.org/r/20250318021632.2710792-3-aryan.srivastava@all=
+iedtelesis.co.nz
+
+Aryan Srivastava (1):
+  i2c: octeon: add block-mode i2c operations
+
+ drivers/i2c/busses/i2c-octeon-core.c     | 166 ++++++++++++++++++++++-
+ drivers/i2c/busses/i2c-octeon-core.h     |  13 +-
+ drivers/i2c/busses/i2c-thunderx-pcidrv.c |   3 +
+ 3 files changed, 175 insertions(+), 7 deletions(-)
+
+--=20
+2.47.1
+
