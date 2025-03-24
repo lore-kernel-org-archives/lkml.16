@@ -1,148 +1,180 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10olkn2011.outbound.protection.outlook.com [40.92.42.11])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB022E3374
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 17:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.42.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742837314; cv=fail; b=PmDueJ8TH7reE5a1fesZZ4irWmea8JvDVX/VzR697kOsyFO7JdcXDFxYSVb3TrdIRZQd5lfMBPHx2MjlY/0VH0AgxizaGgMl0LYrU45zJo6VdyhItvP7oTH2vD8eBNBCm/204GHZau89VXnUnGKn0ZLbgEXRHr3jUugtgiigMZs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742837314; c=relaxed/simple;
-	bh=UZO7uZs/V9Qm1uIjvhRTsLrH14D+CECd5RxS4HkY0jA=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=DqHfwrgIu4ly9fb3hHjqevDS9DkffLZ4anCExUK4yKUzGcZjHqucuQH57JeBZjW7Y/d14dfYYZ0y4obvIUl/4HBNdgH6SfOwlOaWPwQT6v34HfNZD5++8TmbuQCl5ZyfSamc2Nba/VVOncRhsghzyRtXiM7/8oAnGeZqCueNkVw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=WkmyYvk+; arc=fail smtp.client-ip=40.92.42.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFD22641D1;
+	Mon, 24 Mar 2025 17:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742837426; cv=none; b=uEsvmst0Nn62BPHqpzpRKKxF3FDttdWFd6dA2QYnNW8LRgzp2C8bhYW+agPfImRcfsCd3LXB2cjshKlgLBvZK60oNTllnW000p6DO8DSuXP3vmBCiT5tBj0EA5YzM90yjih/f10qq1xyxVrX1BuKSZQs4afXbeBVVEPNC+efLQs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742837426; c=relaxed/simple;
+	bh=a18JP2W8KQVW4PEFPdnixiYC42ZqHhBz7RYwa8V3mfM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kj2cF5TgkzbwEANBnzl7yR6UtnyjOnmWkILjqIXLpxFBzBmwlDUNsMTJGCmontEZBjjYDTKDiL05x2/w3M02ZytXjMjdAgAKWGAMiHl5+FK2JbSOizwezSeyIlM5zQBzu/uHhMGvyHgYF5/f3X2OfEp5F0AlfROIkURCG8ftbl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=N/We4BvY; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="WkmyYvk+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QQIKQlRL23gf4eNTq+kBDedsmUt3FsDnQEgmE2+whJh22XF1D0nLayHQgBeDDaK6Led5X6PeD/uAjYHhnVspd8VuEhw21fp3QTG2pZ5uNrHxH+QduVL1nlxJja7tU4LUrbR+f1mIXOuK6RAAGIQdoDZizwhVCJn/RJoPk30Jb+jx2hfvth41P/tnEeSGq4YKda7qvG3/VYXiMizv0vd7LPy8U1mMaEDAbukJDOuL7MnH79+j7fmZWKGe+HriwExifO44HoGgwkSSuXGMLmwA+8RuLlxOZ10mYyn5Qcj7tBhzFokFgwA8g+6AVSdNt6C8ATBY0WHzGumUGfmuko0Dzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UZO7uZs/V9Qm1uIjvhRTsLrH14D+CECd5RxS4HkY0jA=;
- b=cf3MK/KCFszVlAfx8WXlYMZ4/r1ysGvGA2VIfX8/dyXBFXyCYkCEAeXow5vMceQ7Mq4PCPX+NCWSuhdVPmAsQn6vkXJLYlKMl023dqT33fXzTY3ePFLlLlT7oBtZsfoIdR8bE+yPCFZTPUHiyWaRWBNuxemQd36CInbtk0GghMKI4/T9u/S+1WLQNcV+fwYtzVkwwdzUeKLd1HjkLSXfso8sgMvXu/V8A2zxvebJ8pxyTHgIQGoCcq6gGVCo9pL6DAPMzmV55qSCNieAeGQm4676cNdFaCcb9Sx2JrlQYxlRnhRIi9+U6XzPRtEUhB4tJId8mIgub2vFIoGNfpFmbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UZO7uZs/V9Qm1uIjvhRTsLrH14D+CECd5RxS4HkY0jA=;
- b=WkmyYvk+eUUhia54t1Nc7wL+06PUZAnEzsURDPeoirBzBWUQc2P1ZmLsi0Z5IpQLXSkjZXd+V9ElJSDMFAh/RGYY7sJWUscHLh9XQB+63qUo60ZiKBIh2VECFdM/Ub4VaT2QbfeWNcqHKktYyhHrW3imSNKnzH9mY79mnqkxe0DDh+zYMhsvuctTrcduKQH8NVhhjfI2OdRVzTOp9nqI5c80WiSr1W+xIvJtV6EvvQvCsFSzudkUAO8Ve+6+/VthqPw/WM5KWwsZR7GU57wd9MMWcq7ckSUq0CMm0W0YHb3MqoGrxZL6gckYzbr2i1bbTmQGr24JrU0+uDRn25Tmhg==
-Received: from BYAPR20MB2247.namprd20.prod.outlook.com (2603:10b6:a03:159::24)
- by DS0PR20MB4983.namprd20.prod.outlook.com (2603:10b6:8:c9::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.42; Mon, 24 Mar 2025 17:28:29 +0000
-Received: from BYAPR20MB2247.namprd20.prod.outlook.com
- ([fe80::e60:961c:9981:2755]) by BYAPR20MB2247.namprd20.prod.outlook.com
- ([fe80::e60:961c:9981:2755%4]) with mapi id 15.20.8534.040; Mon, 24 Mar 2025
- 17:28:29 +0000
-From: Ben Graham <ben.usmarketingdata@outlook.com>
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject:
- =?Windows-1252?Q?ProMat_2025_Attendees_List_=96_Ideal_for_Lead_Generation?=
- =?Windows-1252?Q?_Success?=
-Thread-Topic:
- =?Windows-1252?Q?ProMat_2025_Attendees_List_=96_Ideal_for_Lead_Generation?=
- =?Windows-1252?Q?_Success?=
-Thread-Index: AduczI7Vkmz2jPq7SVWBdgRjOufDTA==
-Date: Mon, 24 Mar 2025 17:28:29 +0000
-Message-ID:
- <BYAPR20MB2247D0B34C76E90843D2A7D5E9A42@BYAPR20MB2247.namprd20.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR20MB2247:EE_|DS0PR20MB4983:EE_
-x-ms-office365-filtering-correlation-id: e02c9c81-5041-40be-5ffc-08dd6af94b2a
-x-microsoft-antispam:
- BCL:0;ARA:14566002|15080799006|461199028|8060799006|8062599003|19110799003|102099032|440099028|3412199025|41001999003;
-x-microsoft-antispam-message-info:
- =?Windows-1252?Q?9Yhn3bPzjEdsG2m+FdvyxxuZX5me8kFD8O/hYANOh738/2QrtBIBBkkI?=
- =?Windows-1252?Q?7hInY93hK2737c5S0t5ZaPBo1OcgdoenVXRuylcq6dfSYStQQeAzzTW+?=
- =?Windows-1252?Q?x4Z9RObD0sFrQr3Oj96+wOpcN2Bjd1xpSCufORHkY4Pf72IugSXi1C/c?=
- =?Windows-1252?Q?aFFkHS8Hx7qmjKya2ItaTpMLEWwiKDjEzLapN9gYIgunuCEw8EhQAHFl?=
- =?Windows-1252?Q?QFH1Cy0kggq786alhMEYaV9/2IkEhkrpp+6i1nqPl2Jd+OZxteJGIeoR?=
- =?Windows-1252?Q?jBsh+D2WhL8kauugplJpc1J0rEuZflP4OUCbOGG4mvuMsW9oGyNZLTJS?=
- =?Windows-1252?Q?/BR7ztLJuzbMhqREPXJhTynWkbfcYCIUuDiW5fg7NU7c+x8Zq9tJn/I0?=
- =?Windows-1252?Q?8GFzv7P0Zl9CTXEX9FRiehADSASFJqENg9TPLo6nyIZfxYahg6g5u4On?=
- =?Windows-1252?Q?kaU473puzSTk1kAMnovCUo2EiK1vtngDeiuGTcG6zqN4UtNjWmFVTY8c?=
- =?Windows-1252?Q?8tTagYstrHKC82s/juAfJQfVu0c4SgUL25IAizUvZOTo9FbO13mAoIMk?=
- =?Windows-1252?Q?1F4QH292HRkbrjLIXVmDA0KZ6Qi1GRam+6gx9mVx2651/FRjSEKFihd7?=
- =?Windows-1252?Q?w9UQ+uvdYqWPfTXCxMyG+m+izJ7aUzqcHFsiJldPGVF6Kry+b5ZHQPBQ?=
- =?Windows-1252?Q?zlRgydfeCZ3cjnfSEI++cIMQcuekraNiFCLfSQ95hmrkiUkjN0xrBCQ3?=
- =?Windows-1252?Q?qwf0C0PohDtYq6UQLVSCRU81Zp9pg1vU/oykPyCrQS1tQr73vdmcydEy?=
- =?Windows-1252?Q?+0zBguWLPmJy4MifbPC58QOS1KIRDtMLexhCkW6nc5GlV0a0MGDiNmXL?=
- =?Windows-1252?Q?Jgm0mZt5Ikh5w1VqN6WffOaSUdZqepMEqJ6OCndHWeI1o77wroWTY4g0?=
- =?Windows-1252?Q?g15zafS1EigC4DXBsVGRUI1H8wmFjJLJnDYVyeKsubvJwvA8KPVJfP5f?=
- =?Windows-1252?Q?+gUJklyDqy9hN4HW4hrrHmEpWM3XcwWutXjEbvJSmmEnzmn+GOxMsnBU?=
- =?Windows-1252?Q?mKWyDfIwOFl6x0YAQXpBz4sccQZQlGM++F98i5g1qwaIk7sgHllx0Bnx?=
- =?Windows-1252?Q?uCZwAA7xqq0lWEbON6WAAZyvBh521GMlh2cDWvPhCOgitimP6LUpjMXk?=
- =?Windows-1252?Q?kHluPuOpnJE=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?Windows-1252?Q?pyIc0ukre0PzLC0xxq/b8H9vEsaH4mSHl8d8gb933n1dbnvDr+D1/46W?=
- =?Windows-1252?Q?L8Q8rYsu0WSvXCPf+tXod7wnxncT7onaqWUC5nC7mwXzHapuvuvhw0fz?=
- =?Windows-1252?Q?Wf+dtdjBUBMZlDb9c4Y09CYeJ6HdU5+Z5yCKnVRpty6DAG2dYfvBGKKK?=
- =?Windows-1252?Q?CqWbmCi3lR8DmFYGa0XmD5/LmLM5eq2WNjb5Qn6UtwMpGCvC1scOWtIg?=
- =?Windows-1252?Q?yHBzJFEveLpXAMTn2Xw+ZIo/3OexAqiv9dReGsQ9u/CFIA+x2QW2PT/q?=
- =?Windows-1252?Q?L9Tg3vqPgCqtrRXytyQiKqOT/IpX30qrRp3PeAIucNmlqf/jNnFFSgpL?=
- =?Windows-1252?Q?lmYWXy/m8PNcCT2muEXoU9Gi/zF7KcR496DVpNQyf6enXYZ61EnsyDyE?=
- =?Windows-1252?Q?n/txCFPeQbwrdRrHNHiwmxmBwknWk+4CWgQeAnn0vvuT30WouPFNTODS?=
- =?Windows-1252?Q?mncSJdbDA0aWTY+PXU8qFB4gVsmWTHfERYkMsY+/t8HR70l+2NgnKXj3?=
- =?Windows-1252?Q?xwOvWm4zuOOy7oSjxlsCZcd56hkaAud8ZdRihDgVdgSb9HmBWZzBCUtH?=
- =?Windows-1252?Q?8zUnLhHCJebbxVa0lAzYM8gGs8h9t1yhzk8/IYMvBWzuucBolTjygJvm?=
- =?Windows-1252?Q?5EiZcLHKcTcDRE8qXPihOu6I4N+7hguHqP89P4ChEeqQyEd3/pZv5+LN?=
- =?Windows-1252?Q?HiYvqhoquY35pIgH7/vjVUjtzBu6o+TaUhbRMX64UBJ4WszlFXOaZi7l?=
- =?Windows-1252?Q?UZ2oGoH5OneRDu4wlOUfiKbrBkTOwQcOxQYW20tjU1vxR+w0TuuOAVHU?=
- =?Windows-1252?Q?MeMgOH+bw5yR3cIBCVFmOT3aUpUDuHpzGHI5xVfRvDdYf+mXs6QJeZIC?=
- =?Windows-1252?Q?Fr7BjeUSsW/jHC9AIuSbrcjvymEAJFsNY6+LKTCDkRmyRw4gxN3dtMJ4?=
- =?Windows-1252?Q?0/CxaUWc6u/Pfl01DwU36IbQzdb5NEa2qRPv0uEze1KFMZgmafUONrQc?=
- =?Windows-1252?Q?FH7gXzt63WpA91TJFiWaMWlRvKagEIaqamwhMrLfSVp6JcB3uLSjFXgr?=
- =?Windows-1252?Q?dhpNF4S056LdKaqYZTpD/NEnrQVKGHTKQKYH7Bt0yr2EYo8C3ekHf8XW?=
- =?Windows-1252?Q?5rFdg5NTpCASclx19H61s+3lY2RD+AolY8UwjZPZU9KQazvrV4CT2uIX?=
- =?Windows-1252?Q?xB25qm+wrLm/57CH5Xk2Aa8UdTarsR+nVR9A+szixITA8E3M97QyRCTD?=
- =?Windows-1252?Q?T/2bmvg0Hxun3AqsA7HVid0YDY0Nwz5SQbmBvrrkSSRF5B8M5XwsM1dn?=
- =?Windows-1252?Q?PmSfQN7rYa3sOXv4+uxIA80Wu4T8DWaTWoDk4t9nxJ7Uy355lipa+bh8?=
- =?Windows-1252?Q?/IvDj/5vqFszwt8OVCWP+mmZlf4Y6CGrenrveFC0Mj197w5isnvaCVyy?=
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="N/We4BvY"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 4BB15A0611;
+	Mon, 24 Mar 2025 18:21:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=mail; bh=sn+9WvrfHWY+2IqdbQcpXc2meRV7F6T0M7XWCp5U8+M=; b=
+	N/We4BvY8xp9qmON0WwaSaZZNPVnV/yejxsPz9uP3dS7fmbOucHgc5Lwhkvurdtb
+	hLt0ZsdhHzkY0N0kIJdUFqVqw022p4fNFukJe/qQ23crkUnfuwNqYR2IV94v5cXI
+	1fu7/U8K4gNfEMMnPvMCS9Brc7JWkiD1vetg/jqfzrKWreKWM96mIWnbCQf2QuK4
+	EhmWOHGz36PBv4NM107zb5+sdulhuKcucJTFK1sAZHW6W3yhexHWxxdcbtXU+Fc6
+	ndC1ZBaExHo9xpPmvEyuryBisoKQE494Oou76iSRmyH6j//tBl3tGnXCzqnuTBTu
+	0doMda47UZOfavOpy8ssII3vGdLqOZ/Ey+dCnu/kBvqeN31ZJH5aeeuBH/elocFh
+	/v9hE8DH9Ohrc8FEqCtyxG06DBTHopfSX1LIELaREiEoGt2XNWh1FOg+qLwlnfMv
+	A4oremgjR9wuiQyiyFBEp7w8xR8pW9ybQ7ytVyqIGysYU4EFLeiacQdM84//5E4N
+	gbVtmHJBWAYLjI/nyeN8ZAnRPKMtzFnUmR3DGtOMI7DiClapOL+7drfkeg6LH37m
+	bxXNZDlnmqtrnJP2pfFcu0dYepGU/isu4s2DyOQlSPkzvVZxt0HYQ//1zoZAiS9z
+	5qBtvyusORs8TtLrW7jR1LmMmNWmDMvS76TRenHsctg=
+From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+To: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-sunxi@lists.linux.dev>, <linux-kernel@vger.kernel.org>
+CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, "Markus
+ Elfring" <Markus.Elfring@web.de>, Christophe JAILLET
+	<christophe.jaillet@wanadoo.fr>, Chen-Yu Tsai <wens@kernel.org>, "Jernej
+ Skrabec" <jernej.skrabec@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Vinod Koul
+	<vkoul@kernel.org>, Samuel Holland <samuel@sholland.org>
+Subject: [PATCH v6] dma-engine: sun4i: Simplify error handling in probe()
+Date: Mon, 24 Mar 2025 18:20:25 +0100
+Message-ID: <20250324172026.370253-2-csokas.bence@prolan.hu>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR20MB2247.namprd20.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: e02c9c81-5041-40be-5ffc-08dd6af94b2a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2025 17:28:29.6618
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR20MB4983
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1742836890;VERSION=7987;MC=2160210615;ID=85768;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D948526D7C62
 
-Hi ,
-=A0
-Are you considering securing the attendee list for ProMat 2025?
-=A0
-Expo Name: =A0ProMat Expo 2025
-Total Number of records: 35,000 records=20
-List includes: Company Name, Contact Name, Job Title, Mailing Address, Phon=
-e, Emails, etc.
-=A0
-Would you like to buy these leads? I=92ll be happy to share the pricing wit=
-h you.
-=A0
-Eager to receive your feedback
-=A0
-Regards
-Ben Graham
-Demand Generation Manager
-US Marketing Data Inc.,
-=A0
-Please reply with REMOVE if you don=92t wish to receive further emails
+Clean up error handling by using devm functions and dev_err_probe(). This
+should make it easier to add new code, as we can eliminate the "goto
+ladder" in sun4i_dma_probe().
+
+Suggested-by: Chen-Yu Tsai <wens@kernel.org>
+Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+---
+
+Notes:
+    Changes in v2:
+    * rebase on current next
+    Changes in v3:
+    * rebase on current next
+    * collect Jernej's tag
+    Changes in v4:
+    * rebase on current next
+    * collect Chen-Yu's tag
+    Changes in v5:
+    * reformat msg to 75 cols
+    * keep `\n`s in error messages
+    Changes in v6:
+    * remove redundant braces
+    * break lines to stay under 85 cols
+    * reword subject and message
+
+ drivers/dma/sun4i-dma.c | 46 ++++++++++++-----------------------------
+ 1 file changed, 13 insertions(+), 33 deletions(-)
+
+diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
+index 24796aaaddfa..00d2fd38d17f 100644
+--- a/drivers/dma/sun4i-dma.c
++++ b/drivers/dma/sun4i-dma.c
+@@ -1249,11 +1249,10 @@ static int sun4i_dma_probe(struct platform_device *pdev)
+ 	if (priv->irq < 0)
+ 		return priv->irq;
+ 
+-	priv->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(priv->clk)) {
+-		dev_err(&pdev->dev, "No clock specified\n");
+-		return PTR_ERR(priv->clk);
+-	}
++	priv->clk = devm_clk_get_enabled(&pdev->dev, NULL);
++	if (IS_ERR(priv->clk))
++		return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk),
++				     "Couldn't start the clock\n");
+ 
+ 	if (priv->cfg->has_reset) {
+ 		priv->rst = devm_reset_control_get_exclusive_deasserted(&pdev->dev, NULL);
+@@ -1328,12 +1327,6 @@ static int sun4i_dma_probe(struct platform_device *pdev)
+ 		vchan_init(&vchan->vc, &priv->slave);
+ 	}
+ 
+-	ret = clk_prepare_enable(priv->clk);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Couldn't enable the clock\n");
+-		return ret;
+-	}
+-
+ 	/*
+ 	 * Make sure the IRQs are all disabled and accounted for. The bootloader
+ 	 * likes to leave these dirty
+@@ -1343,33 +1336,23 @@ static int sun4i_dma_probe(struct platform_device *pdev)
+ 
+ 	ret = devm_request_irq(&pdev->dev, priv->irq, sun4i_dma_interrupt,
+ 			       0, dev_name(&pdev->dev), priv);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Cannot request IRQ\n");
+-		goto err_clk_disable;
+-	}
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret, "Cannot request IRQ\n");
+ 
+-	ret = dma_async_device_register(&priv->slave);
+-	if (ret) {
+-		dev_warn(&pdev->dev, "Failed to register DMA engine device\n");
+-		goto err_clk_disable;
+-	}
++	ret = dmaenginem_async_device_register(&priv->slave);
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret,
++				     "Failed to register DMA engine device\n");
+ 
+ 	ret = of_dma_controller_register(pdev->dev.of_node, sun4i_dma_of_xlate,
+ 					 priv);
+-	if (ret) {
+-		dev_err(&pdev->dev, "of_dma_controller_register failed\n");
+-		goto err_dma_unregister;
+-	}
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret,
++				     "Failed to register translation function\n");
+ 
+ 	dev_dbg(&pdev->dev, "Successfully probed SUN4I_DMA\n");
+ 
+ 	return 0;
+-
+-err_dma_unregister:
+-	dma_async_device_unregister(&priv->slave);
+-err_clk_disable:
+-	clk_disable_unprepare(priv->clk);
+-	return ret;
+ }
+ 
+ static void sun4i_dma_remove(struct platform_device *pdev)
+@@ -1380,9 +1363,6 @@ static void sun4i_dma_remove(struct platform_device *pdev)
+ 	disable_irq(priv->irq);
+ 
+ 	of_dma_controller_free(pdev->dev.of_node);
+-	dma_async_device_unregister(&priv->slave);
+-
+-	clk_disable_unprepare(priv->clk);
+ }
+ 
+ static struct sun4i_dma_config sun4i_a10_dma_cfg = {
+-- 
+2.49.0
+
+
