@@ -1,85 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743C341C85
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 16:05:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA716F06B;
+	Mon, 24 Mar 2025 16:05:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742832313; cv=none; b=QqgH003MrGKvlvJOycsKBy5SjEeC/4c+pbVL4Am+QXj5EPTIIjxoOGOFq0GDK/0mbIY/S2j/00VbCx+eZVd2Mt9AqADOvFKYW/UFdBSkO20zo1O2j9fqiVZ11xqVEmwx2ELdmQoN0qA8ut9weU/L2zgbuh9RePHSMOh1UaOridQ=
+	t=1742832358; cv=none; b=DasXn/34LAZEqNqZoenD5KZfOFM5tit/+wS2OirgDqn0FOCGWlva/zg9sI/SYlCrl8wDihSVxCxCvXgekfxwDt3qcqw5oOVSEK7nPz/dR26CY3IUymLyF3w81TnIWQSzU66S9ik6AWdOIf4fDk1tH0u1w142nlp8yzn7k+7ajwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742832313; c=relaxed/simple;
-	bh=IT2XmJJcEYDTRA3U2J8Ikve5HF+HyGqJh2t6BVa75TI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rKrpFeBOLKtNzh3+jV5uWZ0ddfIR7x22ukwf6nu5oQH5TV4tr+BPCuXMThQQztCpZNil7e/1NabaHQzSusmNFk3oOnrwYJ/f6C8QCgKx0jgjSP5gyk+kiK0ko9gcuSjS3232lOehxz3wvRf7QHedDQQzEqUYSSTaDuw00MfFClk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C/EPK/dD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C/EPK/dD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EF52C4CEDD;
-	Mon, 24 Mar 2025 16:05:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742832313;
-	bh=IT2XmJJcEYDTRA3U2J8Ikve5HF+HyGqJh2t6BVa75TI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C/EPK/dDqft5JDasPEkhG35tpiJoUGPbCKA3vo9r/52WLoG7mq9FhzksvbEs4i56D
-	 R2jjobr6qbo9X91yRROKNWlLOfgD49hJPfjSacV6IIb+aNhIo6lbENuMIB4oBYuTUB
-	 uM7OiZjL67cBumneiUa/oVjtAqDGWueaE2iJvprDFT/Hc8ppmQa6q3r/zBgikD/V0Y
-	 L5eNg/YjR5UY6W5RQvsGpS2dm4l5fqZMhF8fbSTSB8oC3iVqG3bec39uzvXDbdDErD
-	 +/3lFjMuHx1dhrmh0K1tQ/U/OUnZKkh7SY2Y5F9QJOTTcKZlylU+oE/vtoQVxaglLC
-	 DG81j2h6y1GOw==
-Date: Mon, 24 Mar 2025 11:05:12 -0500
-From: Rob Herring <robh@kernel.org>
-To: Goran =?utf-8?B?UmHEkWVub3ZpxIc=?= <goran.radni@gmail.com>
-Cc: Goran =?utf-8?B?UmHEkWVub3ZpxIc=?= <gradenovic@ultratronik.de>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] MAINTAINERS: Add maintainers for Ultratronik SoC
- Boards
-Message-ID: <20250324160512.GA129330-robh@kernel.org>
-References: <20250321111821.361419-1-goran.radni@gmail.com>
- <20250321111821.361419-3-goran.radni@gmail.com>
+	s=arc-20240116; t=1742832358; c=relaxed/simple;
+	bh=vL1/tCyN9FMgwjecz6QvgI4hFByZC2lX3OvWrZRKY3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iH0dpWtP9bWj/cKJ09LHw/QSFGCnm74x+3Psc0Wk1TNTV0+csNga8FWpwX2LSgm4zf74rsinVAEMcz/ZdTSNxo+mJGU6ikjMgByKgj4u0IJCmGfNc6+xVuF49RUtEYea99Mi8sKsYk2nVCrggRtMSpdO1+lKW8ieivJRz1G2f7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1F28C4CEDD;
+	Mon, 24 Mar 2025 16:05:56 +0000 (UTC)
+Date: Mon, 24 Mar 2025 12:06:38 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: John Kacur <jkacur@redhat.com>
+Cc: Tomas Glozar <tglozar@redhat.com>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Luis Goncalves <lgoncalv@redhat.com>
+Subject: Re: [PATCH 1/6] rtla/osnoise: Unify params struct
+Message-ID: <20250324120638.0629d4ee@gandalf.local.home>
+In-Reply-To: <e6a2d061-42bf-72c0-0e40-75bbe5b1e831@redhat.com>
+References: <20250320092500.101385-1-tglozar@redhat.com>
+	<20250320092500.101385-2-tglozar@redhat.com>
+	<e6a2d061-42bf-72c0-0e40-75bbe5b1e831@redhat.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250321111821.361419-3-goran.radni@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 21, 2025 at 12:18:17PM +0100, Goran Rađenović wrote:
-> From: Goran Rađenović <gradenovic@ultratronik.de>
-> 
-> Add maintainers for Ultratronik SBC STM32MP1 board.
-> 
-> Signed-off-by: Goran Rađenović <gradenovic@ultratronik.de>
-> ---
->  MAINTAINERS | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 00e94bec401e..26896dd2ceb3 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -24336,6 +24336,12 @@ S:	Maintained
->  F:	drivers/usb/common/ulpi.c
->  F:	include/linux/ulpi/
->  
-> +ULTRATRONIK BOARD SUPPORT
-> +M:	Goran Rađenović <goran.radni@gmail.com>
-> +M:	Börge Strümpfel <boerge.struempfel@gmail.com>
-> +S:	Maintained
-> +F:	arch/arm/boot/dts/st/stm32mp157c-ultra-fly-sbc.dts
+On Thu, 20 Mar 2025 15:00:08 -0400 (EDT)
+John Kacur <jkacur@redhat.com> wrote:
 
-This file doesn't exist yet. Just squash this with patch #4.
-
-Is this the only board? Perhaps make it a wildcard so the next board 
-doesn't need a MAINTAINERS update.
-
-> +
->  UNICODE SUBSYSTEM
->  M:	Gabriel Krisman Bertazi <krisman@kernel.org>
->  L:	linux-fsdevel@vger.kernel.org
-> -- 
-> 2.43.0
+> > -#include "utils.h"
+> >  #include "osnoise.h"
+> >  
+> >  struct timerlat_params {
+> > --   
 > 
+> Reviewed-by: John Kacur <jkacur@redhat.com>
+
+Please trim your replies. I tend to stop scrolling if there's no comment
+after three page downs. But it is very annoying to have to scroll down an
+entire long patch to see a single reviewed-by tag :-/
+
+-- Steve
