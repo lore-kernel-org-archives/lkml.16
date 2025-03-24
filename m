@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D9B2E3374
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 21:56:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C620B1EB5FE
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 21:56:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742853382; cv=none; b=rdQ4xUhtYlIhXWdKiR/aabp2Q3xortqdwCL6JnQbxQbqhmXkejWlGbwGDAvkJImClo/ZjBLSDWMiqRCPmHS73Z2Qz2v2MQE69eek6T9DSk54vwK/VQsQKiOJTpO2hnfnMWkAgi4fYLiMBF7A+kbUx9kfvTrsjx4Nwm8V1hCYsJw=
+	t=1742853382; cv=none; b=Xo2KSn4B+XG/ol6kDTaS47DYvKiscOMNzEYtrCO8H/WQL4eazK0if4thgGO4jIR4j5GPr5CP7o9xfaTnhcjx0uMPn0tfX/QNIH/s5MZkTCKOMiCFGUWwqNobmMKXmz8ZObG+/Xi/Z3+ztnNwpuAaeTYiHeutJzDQKHfD3vs2cCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742853382; c=relaxed/simple;
-	bh=3FKHjzF/gbESgMd+FKLxuKmtdTGVSH0vXl4Qsmrd38Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VjTtRRQzrwBEA3GIxVyhltYJcICZm3EG7Gf+n6czInMle504NSe0AP+5gGp/PP60kqYrYuEKk0MMHtR5jTSRBlTMHKLjlWhuL2uTWAYIjOnbuopnXBhueNCpGwZUuWfUF5E6KHOaVODZutMGL93SfoTY5tjH1AQoZayk+eKZuzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZP+HBebW; arc=none smtp.client-ip=10.30.226.201
+	bh=6oqZEdmgrvjphSWtepV7HXKe9va29XW99ADSgNxBjfM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dtu6s0vdEWY3kokA9+FlX6suysLIYdVvlEm+D3ihlYzaVvVd1ftV1tctRXC1S0INk5HVbar4uOtlE8Un/hOGyvUasAib2pImENk+e/n87MH5qrM4E+de65Yb5AKJTkFbBgkseX6RuP2plw7iJftEqkdwN5X50o8v2gHZfkq2hQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uPdg1VWH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZP+HBebW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAA03C4CEDD;
-	Mon, 24 Mar 2025 21:56:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uPdg1VWH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01E84C4CEEE;
+	Mon, 24 Mar 2025 21:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742853381;
-	bh=3FKHjzF/gbESgMd+FKLxuKmtdTGVSH0vXl4Qsmrd38Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ZP+HBebWkTpPWMSerecjHtM37mLB/JnRJPKANb+puZTsnbNPeGIlfO9Gp0ScEri8E
-	 WOd8afjZqeW+6OukeCPQwf/ipMlnOCpqKvOnZsLbYxRLAPmjtvR9lm/78Qe81dUwH8
-	 F41gDce7Hfdi/XuCBKbL69Gj2GY0jAnc5Rr6DAXg/BZQShJtUGI8H0xXKYXcb3Hexn
-	 8XNZdXyq7+MILVSga/tiqeTrMTOYpGWlHUEyuVLxlgax3IhFD4AvpUF3aX/P5ekRJC
-	 8b/sOl1a+Sqp7n5w1KzWtogWRGfATXxlE4p4gqhc0eWc52Ri84vHaXZQAr6hmf4XaE
-	 xQjSWqJlT1aRQ==
+	s=k20201202; t=1742853382;
+	bh=6oqZEdmgrvjphSWtepV7HXKe9va29XW99ADSgNxBjfM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=uPdg1VWHpjXTbmbO70/1v9pEQAICdMjen9L+qY3Uy6wpRlS99AqXrfmjBhacOnPkw
+	 1JmHoL37QEAgJGEl204jmNLVPgY5fl451IOy6rFilQVIHX//hcirYouChdQBRzNroJ
+	 G1NPkJ+VwPnXbHhX04MCRNEJzESxBDAJm/1zqvamhB8hDcrz9GCcGG7R3bPmld9t0H
+	 8xpUZ7kdy/zuNxFxKcQ8f2NlEwegDG74DYFMpz3G52XCjXTi4xqrSziKSn1sO60a72
+	 aY0Z2LVZKdDOPLIDPKIZb02IJxKnoa0KMbOOBsvMV+/OCO7Hu3jZ5uv8um1HGC17FO
+	 KmfBHALhUByXg==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -32,101 +33,55 @@ Cc: linux-kernel@vger.kernel.org,
 	Ingo Molnar <mingo@kernel.org>,
 	Miroslav Benes <mbenes@suse.cz>,
 	Brendan Jackman <jackmanb@google.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Raju Rangoju <Raju.Rangoju@amd.com>,
-	Mark Brown <broonie@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Kees Cook <kees@kernel.org>
-Subject: [PATCH 00/22] objtool: CONFIG_OBJTOOL_WERROR fixes and cleanups
-Date: Mon, 24 Mar 2025 14:55:50 -0700
-Message-ID: <cover.1742852846.git.jpoimboe@kernel.org>
+	Nathan Chancellor <nathan@kernel.org>
+Subject: [PATCH 02/22] objtool: Warn when disabling unreachable warnings
+Date: Mon, 24 Mar 2025 14:55:52 -0700
+Message-ID: <df243063787596e6031367e6659e7e43409d6c6d.1742852846.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <cover.1742852846.git.jpoimboe@kernel.org>
+References: <cover.1742852846.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Since CONFIG_OBJTOOL_WERROR got merged into -tip, a lot of warnings have
-been reported.  Fix those along with several other improvements.
+Print a warning when disabling the unreachable warnings (due to a GCC
+bug).  This will help determine if recent GCCs still have the issue and
+alert us if any other issues might be silently lurking behind the
+unreachable disablement.
 
-Cc: Raju Rangoju <Raju.Rangoju@amd.com>
-CC: Mark Brown <broonie@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Cc: Chaitanya Kulkarni <kch@nvidia.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Kees Cook <kees@kernel.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+---
+ tools/objtool/arch/x86/special.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Josh Poimboeuf (22):
-  objtool: Fix detection of consecutive jump tables
-  objtool: Warn when disabling unreachable warnings
-  objtool: Ignore entire functions rather than instructions
-  objtool: Fix X86_FEATURE_SMAP alternative handling
-  objtool: Fix CONFIG_OBJTOOL_WERROR for vmlinux.o
-  objtool: Fix init_module() handling
-  objtool: Silence more KCOV warnings
-  objtool: Properly disable uaccess validation
-  objtool: Improve error handling
-  objtool: Reduce CONFIG_OBJTOOL_WERROR verbosity
-  objtool: Fix up some outdated references to ENTRY/ENDPROC
-  objtool: Remove --no-unreachable for noinstr-only vmlinux.o runs
-  objtool: Remove redundant opts.noinstr dependency
-  spi: amd: Fix out-of-bounds stack access in amd_set_spi_freq()
-  nvmet: Fix out-of-bounds stack access in nvmet_ctrl_state_show()
-  media: dib8000: Prevent divide-by-zero in dib8000_set_dds()
-  panic: Disable SMAP in __stack_chk_fail()
-  Input: cyapa - remove undefined behavior in cyapa_update_fw_store()
-  ASoC: codecs: wcd934x: Remove undefined behavior in
-    wcd934x_slim_irq_handler()
-  regulator: rk808: Remove undefined behavior in rk806_set_mode_dcdc()
-  pwm: mediatek: Prevent divide-by-zero in pwm_mediatek_config()
-  lkdtm: Obfuscate do_nothing() pointer
-
- arch/x86/include/asm/arch_hweight.h     |   8 +-
- arch/x86/include/asm/smap.h             |  23 +-
- arch/x86/include/asm/xen/hypercall.h    |   6 +-
- drivers/input/mouse/cyapa.c             |   4 +-
- drivers/media/dvb-frontends/dib8000.c   |   5 +-
- drivers/misc/lkdtm/perms.c              |  14 +-
- drivers/nvme/target/debugfs.c           |   2 +-
- drivers/pwm/pwm-mediatek.c              |   8 +-
- drivers/regulator/rk808-regulator.c     |   4 +-
- drivers/spi/spi-amd.c                   |   2 +-
- include/linux/linkage.h                 |   4 -
- include/linux/objtool.h                 |   2 +-
- kernel/panic.c                          |   6 +
- scripts/Makefile.lib                    |   2 +-
- scripts/Makefile.vmlinux_o              |  15 +-
- sound/soc/codecs/wcd934x.c              |   2 +-
- tools/objtool/Documentation/objtool.txt |  10 +-
- tools/objtool/arch/x86/special.c        |  38 +-
- tools/objtool/builtin-check.c           | 146 ++++---
- tools/objtool/check.c                   | 525 ++++++++++++------------
- tools/objtool/elf.c                     |  28 +-
- tools/objtool/include/objtool/builtin.h |   6 +-
- tools/objtool/include/objtool/check.h   |   3 +-
- tools/objtool/include/objtool/elf.h     |  28 +-
- tools/objtool/include/objtool/objtool.h |   2 +-
- tools/objtool/include/objtool/special.h |   4 +-
- tools/objtool/include/objtool/warn.h    |  13 +-
- tools/objtool/objtool.c                 |  11 +-
- tools/objtool/special.c                 |  12 +-
- 29 files changed, 477 insertions(+), 456 deletions(-)
-
+diff --git a/tools/objtool/arch/x86/special.c b/tools/objtool/arch/x86/special.c
+index 9c1c9df09aaa..5f46d4e7f7f8 100644
+--- a/tools/objtool/arch/x86/special.c
++++ b/tools/objtool/arch/x86/special.c
+@@ -3,6 +3,7 @@
+ 
+ #include <objtool/special.h>
+ #include <objtool/builtin.h>
++#include <objtool/warn.h>
+ 
+ #define X86_FEATURE_POPCNT (4 * 32 + 23)
+ #define X86_FEATURE_SMAP   (9 * 32 + 20)
+@@ -156,8 +157,10 @@ struct reloc *arch_find_switch_table(struct objtool_file *file,
+ 	 * indicates a rare GCC quirk/bug which can leave dead
+ 	 * code behind.
+ 	 */
+-	if (reloc_type(text_reloc) == R_X86_64_PC32)
++	if (reloc_type(text_reloc) == R_X86_64_PC32) {
++		WARN_INSN(insn, "ignoring unreachables due to jump table quirk");
+ 		file->ignore_unreachables = true;
++	}
+ 
+ 	*table_size = 0;
+ 	return rodata_reloc;
 -- 
 2.48.1
 
