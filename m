@@ -1,128 +1,87 @@
-Received: from p00-icloudmta-asmtp-us-central-1k-100-percent-8.p00-icloudmta-asmtp-vip.icloud-mail-production.svc.kube.us-central-1k.k8s.cloud.apple.com (p-east1-cluster6-host2-snip4-10.eps.apple.com [57.103.90.151])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1237019C569
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 14:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.90.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A992A1BA;
+	Mon, 24 Mar 2025 14:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742824996; cv=none; b=XUF/Z6MfOzGK0p9CoPCYCgXsaHZMsCM4Weas7TniSjLZszJbCBF8T9Q6bscpwafs6Qdycv72wGaengyNmDadC1HyUgukRzRzTYFueJgirWaAkYO7+xD1HhcVVb5S/zRQjyiCAJ9f2w7NsOo2Tk+QbBVEoIOr5dCWb4hQJ9PQtEc=
+	t=1742825006; cv=none; b=kvLBhjQkTtqqpSbHavn4+GHIR55bsF9v/8aJUuFyeMnAuY9fPnfvjk15LKjpHWczK8r4xZvFJn7nSplE9+CVIqDpsBRfydoeQKXESqhJgAh+LHCSiSIpJ/Bos15thVCCNhzPc/qbagiX/d2mnR4NFRqrSYkyWNqXcCWCQB+92Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742824996; c=relaxed/simple;
-	bh=2hHc93Sco5xP3xZWtNHCJvQEA7HZmGG0cztk7rwE8pA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DbrbSOhen/WkMrNe3vcSVdqHBsewvpjUWP0ATzBfUTfSp0TTrl4nRioUlUE5BCChkSq0inWApqOvky2hMea3kik+m9Ao/SLC45n6J9Y2lUU/uRxEqXW2J/ysvvLKZLC87qmLJ7gR5FaCoLlKzSdJ8tfT5PAImjhsygJY3qRysOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pereznus.es; spf=pass smtp.mailfrom=pereznus.es; dkim=pass (2048-bit key) header.d=pereznus.es header.i=@pereznus.es header.b=cXr7Y/mo; arc=none smtp.client-ip=57.103.90.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pereznus.es
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pereznus.es
+	s=arc-20240116; t=1742825006; c=relaxed/simple;
+	bh=c9hPsufhb8A1ilMqUEF23h+pAz+YFjjN0Yxp0Z1ABB0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=oawWgs3Vn77UPlXfuUKDKu9pnMmbSP3x3AQKOejm0fY98XxLZ6ZX7TffKqQGDqWJ/Rf6ajAgEJsZ+cYZhnosWIRq4Bs1lvaKNPCxLYw13TSEM4CXrrfbnwLIRREfA09cygs2yBwbMOvr6+sjRrRaXCeX/aDjtAac/MsIzyaB50o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G6lXpAJx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dM2yThrl; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pereznus.es header.i=@pereznus.es header.b="cXr7Y/mo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pereznus.es; s=sig1;
-	bh=WasnMIg1e5gehV8W5yYsLBf07jVgGTrC4bfranCi3dk=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme;
-	b=cXr7Y/moaYWQBxPDWwCuOwrzrUeaZqru75odTB6U0MjXjEBvP+e5K/+yrZigVVNv4
-	 Yz3/zxwnlKa1IVXec4kkS+h8fH2KpEibbpSze+Idgm7hlNX/azMg2domhcucLLkH7y
-	 3RjjMrVvNx6xGPMKwLuC704diLjez3y5ZVYy1x5Qa3CeWEnJ9rwudmNHd7UspBnljI
-	 gxY709oxPaT5ZP4ZLtV2VO/zR0dg7SLctIizPmKgeWS9HTjViVKoBapSoMhexOrYTI
-	 5y9PTIk/2M3733fgQO4ysqa4PpwiDCfm1AFtjJwlZhruL6DoEq1SC79imU1nRt1J/X
-	 bE/4BGuzfehxQ==
-Received: from localhost.localdomain (ci-asmtp-me-k8s.p00.prod.me.com [17.57.156.36])
-	by p00-icloudmta-asmtp-us-central-1k-100-percent-8.p00-icloudmta-asmtp-vip.icloud-mail-production.svc.kube.us-central-1k.k8s.cloud.apple.com (Postfix) with ESMTPSA id A5850180122D;
-	Mon, 24 Mar 2025 14:03:10 +0000 (UTC)
-From: Sergio Perez <sergio@pereznus.es>
-To: Tomasz Duszynski <tduszyns@gmail.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Sergio Perez <sergio@pereznus.es>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v6 1/2] dt-bindings: iio: light: bh1750: Add reset-gpios property
-Date: Mon, 24 Mar 2025 14:59:19 +0100
-Message-ID: <20250324135920.6802-1-sergio@pereznus.es>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G6lXpAJx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dM2yThrl"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742825003;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ANzA6VKNaCYui/4ieC9n+ReV1YCAKogpYDH06EPOCGI=;
+	b=G6lXpAJxgYLE2wWsvm8LpsdIa9QK0DpmQ9G2GJnktdxb/iyKWFUA5+bLgkjGcr7VaIVKUU
+	CFLpV0KWxyCbkKSeTGblBIBCMT1hsFgTzpjueVSGqFK26aU2W3M2isRwamLKGi/K5XN0J2
+	RDpYMnK6p/lGwSSXs5yKTQeB+fd41/o+uVjpmL+cdroIOXXWUeyHf+Gns4EsEr84kIqtWO
+	AMRmhM21tlf9s0htFYD2ZkWt2Dx0F5EwxNX1V/0ZdA+UPwz47V91VCf7r1sPigPvKQQuC9
+	P/EKWf9K1AjQjcA2KgxOnimSIxFzFh888n//En65aoUBLBxidX7AoCdGlt1hZA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742825003;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ANzA6VKNaCYui/4ieC9n+ReV1YCAKogpYDH06EPOCGI=;
+	b=dM2yThrl3CtUI8FxfxorDgQQOH4HYvCqP6X/g6h5DrMX1pz2OtMGcIxvJui0kna4JO1q0a
+	fX9Gd0xtYKiuHXAw==
+Subject: [PATCH 0/3] selftests: vDSO: chacha: Bugfixes
+Date: Mon, 24 Mar 2025 15:03:14 +0100
+Message-Id: <20250324-s390-vdso-hwcap-v1-0-cb9ad001ceba@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: Y8ImYB_bvq9y8NVnp88OL0bl3FfobXMM
-X-Proofpoint-GUID: Y8ImYB_bvq9y8NVnp88OL0bl3FfobXMM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-24_04,2025-03-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- bulkscore=0 malwarescore=0 clxscore=1030 mlxscore=0 suspectscore=0
- spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2503240102
+X-B4-Tracking: v=1; b=H4sIACJm4WcC/x3MMQqAMAxA0atIZgNpVYpeRRykTTWLSgMqlN7d4
+ viG/zMoJ2GFqcmQ+BaV86gwbQN+X4+NUUI1WLIDdbZH7UbCO+iJ++PXC2k0vafovIsGanUljvL
+ +x3kp5QOip3iPYQAAAA==
+X-Change-ID: 20250324-s390-vdso-hwcap-0914c0f7c7f1
+To: Shuah Khan <shuah@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+ Heiko Carstens <hca@linux.ibm.com>, Andy Lutomirski <luto@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Shuah Khan <skhan@linuxfoundation.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742825002; l=641;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=c9hPsufhb8A1ilMqUEF23h+pAz+YFjjN0Yxp0Z1ABB0=;
+ b=72ulxBlQyEToCIz5Xe0YlihTWRn4sUSsF4CObV5xcgMl2XgTw6HQ/Ekr9LM9ZEG2Dtk+JLulB
+ 5amz01ZUSvDA1BCd2LNMSaWzn3WA8X9J4UTdDiTQ/x4GJw8anpL7dw8
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Some BH1750 sensors require a hardware reset via GPIO before they can
-be properly detected on the I2C bus. Add a new reset-gpios property
-to the binding to support this functionality.
+Bugfixes for a few issues I ran into.
 
-The reset-gpios property allows specifying a GPIO that will be toggled
-during driver initialization to reset the sensor.
-
-Signed-off-by: Sergio Perez <sergio@pereznus.es>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
-Revision history:
-v5 => v6:
- - Fixed include placement as commented by Krzysztof Kozlowski
-v4 => v5:
- - Update description to reflect "active low" on reset signal as indicated by Krzysztof Kozlowski
- - Update description to clarify what pin of sensor is used to do reset (DVI) as mentioned by Krzysztof Kozlowski
- - Edit example to be coherent with "active low" as informed by Krzysztof Kozlowski
- - Added necessary include on example
-v3 => v4:
- - No changes
-v2 => v3:
- - Split in two patches: dtbinding and code
- - Ensure list off mantainers following instructions by Krzysztof Kozlowski
- - Delete redundant details on description as suggested by Jonathan Cameron
- - Added related example to existing one as suggested by Jonathan Cameron
-v1 => v2:
- - Ensure check tests as commented by Rob Herring
- - Fixes some whitespaces and end lines
----
- Documentation/devicetree/bindings/iio/light/bh1750.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+Thomas Weißschuh (3):
+      selftests: vDSO: chacha: Correctly skip test if necessary
+      selftests: vDSO: chacha: Include asm/hwcap.h for arm64
+      selftests: vDSO: chacha: Provide default definition of HWCAP_S390_VXRS
 
-diff --git a/Documentation/devicetree/bindings/iio/light/bh1750.yaml b/Documentation/devicetree/bindings/iio/light/bh1750.yaml
-index 1a88b3c253d5..9df81c271411 100644
---- a/Documentation/devicetree/bindings/iio/light/bh1750.yaml
-+++ b/Documentation/devicetree/bindings/iio/light/bh1750.yaml
-@@ -24,6 +24,10 @@ properties:
-   reg:
-     maxItems: 1
- 
-+  reset-gpios:
-+    description: GPIO connected to the DVI reset pin (active low)
-+    maxItems: 1
-+
- required:
-   - compatible
-   - reg
-@@ -32,6 +36,7 @@ additionalProperties: false
- 
- examples:
-   - |
-+    #include <dt-bindings/gpio/gpio.h>
-     i2c {
-       #address-cells = <1>;
-       #size-cells = <0>;
-@@ -39,6 +44,7 @@ examples:
-       light-sensor@23 {
-         compatible = "rohm,bh1750";
-         reg = <0x23>;
-+        reset-gpios = <&gpio2 17 GPIO_ACTIVE_LOW>;
-       };
-     };
- 
+ tools/testing/selftests/vDSO/vdso_test_chacha.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+---
+base-commit: 586de92313fcab8ed84ac5f78f4d2aae2db92c59
+change-id: 20250324-s390-vdso-hwcap-0914c0f7c7f1
+
+Best regards,
 -- 
-2.43.0
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
