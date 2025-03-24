@@ -1,243 +1,201 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67ACC25EFBA
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 17:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F371DC985;
+	Mon, 24 Mar 2025 17:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742838723; cv=none; b=EZH0BvCdPl0C90mAaUz9hLXERYXbGDWd+Wvl85y9i6mHGepbTFDNKeHFRC1GeB3LnWZJBqWTfPEcEdCr0x+7XWb/e71eyjr25mabro1M8LzMfsrQHye0e2FYYmB2Dt+UnrRInr5/SS7zuDmxcMtJsSfd2VUSlNP841q7k1FUizk=
+	t=1742838977; cv=none; b=Wcv3jV7XrHF65iP/vTtmygOt6PbSpI6Hrrs4W3KQtn48ya+9qVvf0ocp778Rp0PNUvHl/TuTGMeljWvRi/2vIpKZ7fiesoaei350XXRaUPE0JqOVAScxRpgRCgXvsHp2Ie5f+aecaytCqjA0JYv0SOdDuLxq8kTAu3cZCiVoR3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742838723; c=relaxed/simple;
-	bh=SKIi9GQfzmduS4+Ymp6A6OWDijEX6xFabSnFdUY4nH0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xscc8tAiBQk16jrz8L66bRtlnqQVnZJ4elKudij+VNjXP+WXJZtNzvIVokxCRd1eIi931i2M/BpBYMYru6gNXnP55EpuGHptWT14N1JyvwM4UYgYGOkCH7YpERfNRuOQUyvWvf52w4ToRcFXuMkjb3V4QfKOUUDGYuiuVJ68n74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=OTdVFt5X; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1742838977; c=relaxed/simple;
+	bh=55aSHf+XbnaEkNNtZWAap9c2eiaxcY92LDR82+5KUkE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=I1U/7IGDhHXntW0kDWRxDQ88i/NCnPBRjyIShpL68NTUsUWr4uhqecc4C0RA+v1Bj7nPe9ab88FjANvcTB0p+t8nLIMIfvdE6oA8Oz042JOuZxdnQeDkjQNRBw0hH80YzsuaVKlcEBen572yjSZXLfYdMAjqjLqLmHPIvVisDtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ey8acH8B; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="OTdVFt5X"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ff6e91cff5so8093238a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 10:52:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1742838721; x=1743443521; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=CNWzWAcgP5osgtlC/YKpdqjJe9Mr06cqx1fXZbFGTuc=;
-        b=OTdVFt5XAfjqnR5tmiuRVvRborVj0tITk4wpCAzUrV60yf9St65RprNqIFbJOxCB9v
-         8HJtDbGDQxP3S76NnbadSsgxymSgyJdJKvpYxDZZMGEYKQ+khoyJN+2/YYRS5WRMDUbo
-         1y8fkwDOws+5N3JPD6c/MhkBTSbUKTiXWVF54=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742838721; x=1743443521;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CNWzWAcgP5osgtlC/YKpdqjJe9Mr06cqx1fXZbFGTuc=;
-        b=OKh8CnMmSY+ZVWZhz1Lxjj/P3p1HciaqwkZbH1jX9S8tho797/aju0jURKOxBS6vug
-         73lWjdsdQMmVW2OR26iEDfvGW6rV4xdxu/Hi5fVfmYXfJ8kNoBG0U4A4XXT2T0WndJNH
-         OZI0qrAigpsgCHWlxjwY6HmYIsppC0t4XUvnCLKk1SuXsgH1nd1nbZkMT6ZXXQdRCDJE
-         oLHn0gEysT6RH1gg+GaAjL7+jPQiEOO6iewva6bQJbQ4acqtY/GVZ+PrrifWlq1KAxRw
-         Y5d3UfkTd1t1vek5mNwZyySdVGlwWGRpOR+KfgU53ELB+iRTK/Qb+dzuaGDoJ17dKuhM
-         nXnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVxf+q7USU0IQhVP5inePJk8vdyxIt6UEMXCNEdBxrS43s7eNNdEkUi0uHtf9Y9u/oaJgZvJOk3AvwXoIE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2OA3muMA+JpWJY8zw5D1Gp2KoNbxCh3aIVIbvV+pPvUf69/Of
-	TNhYeOth03LFGELfOV0sTWWtaW3uiOj7D6vumR9DS6n+fg5Nk0xCp9ZHIWJaXwA=
-X-Gm-Gg: ASbGncsvi0EnFgFZzH0dL0RI3J1yf8+5UQ7j4iB+aDGAunu/tPFDpV61WixHMppCmSe
-	CWwVGu4hAZMTwsUczHMR5blYLSY16JszgJeS5Kerpq0eGAqur98X5XW8Y6+aEE8X+QAkBsvwP4R
-	mCrWbiyIERuG8EFQzDa4L9ZuxoUgui5aiiG+Uts73KkA/vCa/iQV57El0R/c6j54vYdlAhoNiXb
-	6PCZefsbdexO6XIQmWSw/O7lZco4lCUGJL6J8y2/jMBbDGKSfsQznHVfpYzzHIaGLG6JmFqWWmx
-	FLNl9Zbr8sER5Nx0quM7r8U1lahlHw/J1QIJTg1gKuIlCvBP6S4nloh5spD/
-X-Google-Smtp-Source: AGHT+IFyWUJjrXu1IsyCVjHhL289CPz98eVvVSsMjLEg+OjduUCs1rADwPTvWVrkRcJWj9d2Uk4q2g==
-X-Received: by 2002:a17:90b:2647:b0:2ee:d7d3:3019 with SMTP id 98e67ed59e1d1-3030fe95343mr26877301a91.12.1742838720394;
-        Mon, 24 Mar 2025 10:52:00 -0700 (PDT)
-Received: from localhost ([84.78.159.3])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3030f806fb9sm8458911a91.45.2025.03.24.10.51.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Mar 2025 10:51:59 -0700 (PDT)
-Date: Mon, 24 Mar 2025 18:51:54 +0100
-From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To: Daniel Gomez <da.gomez@kernel.org>
-Cc: =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-	Bjorn Helgaas <helgaas@kernel.org>, linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v3 3/3] PCI/MSI: Convert pci_msi_ignore_mask to per MSI
- domain flag
-Message-ID: <Z-GbuiIYEdqVRsHj@macbook.local>
-References: <20250320210741.GA1099701@bhelgaas>
- <846c80f8-b80f-49fd-8a50-3fe8a473b8ec@suse.com>
- <qn7fzggcj6qe6r6gdbwcz23pzdz2jx64aldccmsuheabhmjgrt@tawf5nfwuvw7>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ey8acH8B"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52OHBZPn027062;
+	Mon, 24 Mar 2025 17:56:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=prxcL7
+	Ol0gDHWADygOhfxw4rXA3/txwyq4L2EIdtr0o=; b=ey8acH8BhQQpV7Rkkcv3qk
+	iYB1qdSCJmXBJGd5tKEllxA4e4tHn0M8AaS5H/npjL1f62a34tG0sEoSVSmmvkGo
+	/g+qF9pA6KqTiYYMh/8IqXXEByZvU8t6HNij+2AwOXo4fVEpKZGZyfVgYs3K5QNw
+	858npq/6lkGam1ZJ8E/osa1RPW4zcKFLJ5aDph5BZzVe1oizfHkY3wS3aJUFHeik
+	r8irsF+5AfGF8s0f5my4vKdFcu1HykPo+9L183UaOSMJO1fKRbhBtT7RXDng1LJD
+	+SPOA7N6PkSBOGzaElIOq6FlJA5LY+06l3eHd9I/4gzGsLBdeSPRPuVV2kvU93yA
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45kbjwr6v4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 17:56:06 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52OFKECV030330;
+	Mon, 24 Mar 2025 17:56:06 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 45j7ht7nw4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 17:56:06 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52OHu4RE33292630
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 24 Mar 2025 17:56:04 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5DF7220043;
+	Mon, 24 Mar 2025 17:56:04 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3654120040;
+	Mon, 24 Mar 2025 17:56:04 +0000 (GMT)
+Received: from li-9b52914c-2c8b-11b2-a85c-a36f6d484b4a.boeblingen.de.ibm.com (unknown [9.155.199.15])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 24 Mar 2025 17:56:04 +0000 (GMT)
+Message-ID: <3920c0f0da1b6e324d6367cbff22d313d6981742.camel@linux.ibm.com>
+Subject: Re: [PATCH 1/1] virtio_console: fix missing byte order handling for
+ cols and rows
+From: Maximilian Immanuel Brandtner <maxbr@linux.ibm.com>
+To: Halil Pasic <pasic@linux.ibm.com>, Amit Shah <amit@kernel.org>,
+        Arnd
+ Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>
+Cc: stable@vger.kernel.org
+Date: Mon, 24 Mar 2025 18:56:03 +0100
+In-Reply-To: <20250322002954.3129282-1-pasic@linux.ibm.com>
+References: <20250322002954.3129282-1-pasic@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <qn7fzggcj6qe6r6gdbwcz23pzdz2jx64aldccmsuheabhmjgrt@tawf5nfwuvw7>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: INZKdWk_pasSNB8PIaiuDorK7o5Zx59a
+X-Proofpoint-ORIG-GUID: INZKdWk_pasSNB8PIaiuDorK7o5Zx59a
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-24_06,2025-03-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 lowpriorityscore=0 phishscore=0 spamscore=0
+ clxscore=1011 bulkscore=0 adultscore=0 suspectscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503240125
 
-On Mon, Mar 24, 2025 at 03:29:46PM +0100, Daniel Gomez wrote:
-> 
-> Hi,
-> 
-> On Fri, Mar 21, 2025 at 09:00:09AM +0100, Jürgen Groß wrote:
-> > On 20.03.25 22:07, Bjorn Helgaas wrote:
-> > > On Wed, Feb 19, 2025 at 10:20:57AM +0100, Roger Pau Monne wrote:
-> > > > Setting pci_msi_ignore_mask inhibits the toggling of the mask bit for both
-> > > > MSI and MSI-X entries globally, regardless of the IRQ chip they are using.
-> > > > Only Xen sets the pci_msi_ignore_mask when routing physical interrupts over
-> > > > event channels, to prevent PCI code from attempting to toggle the maskbit,
-> > > > as it's Xen that controls the bit.
-> > > > 
-> > > > However, the pci_msi_ignore_mask being global will affect devices that use
-> > > > MSI interrupts but are not routing those interrupts over event channels
-> > > > (not using the Xen pIRQ chip).  One example is devices behind a VMD PCI
-> > > > bridge.  In that scenario the VMD bridge configures MSI(-X) using the
-> > > > normal IRQ chip (the pIRQ one in the Xen case), and devices behind the
-> > > > bridge configure the MSI entries using indexes into the VMD bridge MSI
-> > > > table.  The VMD bridge then demultiplexes such interrupts and delivers to
-> > > > the destination device(s).  Having pci_msi_ignore_mask set in that scenario
-> > > > prevents (un)masking of MSI entries for devices behind the VMD bridge.
-> > > > 
-> > > > Move the signaling of no entry masking into the MSI domain flags, as that
-> > > > allows setting it on a per-domain basis.  Set it for the Xen MSI domain
-> > > > that uses the pIRQ chip, while leaving it unset for the rest of the
-> > > > cases.
-> > > > 
-> > > > Remove pci_msi_ignore_mask at once, since it was only used by Xen code, and
-> > > > with Xen dropping usage the variable is unneeded.
-> > > > 
-> > > > This fixes using devices behind a VMD bridge on Xen PV hardware domains.
-> > > > 
-> > > > Albeit Devices behind a VMD bridge are not known to Xen, that doesn't mean
-> > > > Linux cannot use them.  By inhibiting the usage of
-> > > > VMD_FEAT_CAN_BYPASS_MSI_REMAP and the removal of the pci_msi_ignore_mask
-> > > > bodge devices behind a VMD bridge do work fine when use from a Linux Xen
-> > > > hardware domain.  That's the whole point of the series.
-> > > > 
-> > > > Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-> > > > Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> > > > Acked-by: Juergen Gross <jgross@suse.com>
-> > > 
-> > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > 
-> > > I assume you'll merge this series via the Xen tree.  Let me know if
-> > > otherwise.
-> > 
-> > I've pushed the series to the linux-next branch of the Xen tree.
-> > 
-> > 
-> > Juergen
-> 
-> This patch landed in latest next-20250324 tag causing this crash:
-> 
-> [    0.753426] BUG: kernel NULL pointer dereference, address: 0000000000000002
-> [    0.753921] #PF: supervisor read access in kernel mode
-> [    0.754286] #PF: error_code(0x0000) - not-present page
-> [    0.754656] PGD 0 P4D 0
-> [    0.754842] Oops: Oops: 0000 [#1]
-> [    0.755080] CPU: 0 UID: 0 PID: 1 Comm: swapper Not tainted 6.14.0-rc7-next-20250324 #1 NONE
-> [    0.755691] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> [    0.756349] RIP: 0010:msix_prepare_msi_desc+0x39/0x80
-> [    0.756390] Code: 20 c7 46 04 01 00 00 00 8b 56 4c 89 d0 0d 01 01 00 00 66 89 46 4c 8b 8f 64 02 00 00 89 4e 50 48 8b 8f 70 06 00 00 48 89 4e 58 <41> f6 40 02 40 75 2a c1 ea 02 bf 80 00 00 00 21 fa 25 7f ff ff ff
-> [    0.756390] RSP: 0000:ffff8881002a76e0 EFLAGS: 00010202
-> [    0.756390] RAX: 0000000000000101 RBX: ffff88810074d000 RCX: ffffc9000002e000
-> [    0.756390] RDX: 0000000000000000 RSI: ffff8881002a7710 RDI: ffff88810074d000
-> [    0.756390] RBP: ffff8881002a7710 R08: 0000000000000000 R09: ffff8881002a76b4
-> [    0.756390] R10: 000000701000c001 R11: ffffffff82a3dc01 R12: 0000000000000000
-> [    0.756390] R13: 0000000000000005 R14: 0000000000000000 R15: 0000000000000002
-> [    0.756390] FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
-> [    0.756390] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    0.756390] CR2: 0000000000000002 CR3: 0000000002a3d001 CR4: 00000000003706b0
-> [    0.756390] Call Trace:
-> [    0.756390]  <TASK>
-> [    0.756390]  ? __die_body+0x1b/0x60
-> [    0.756390]  ? page_fault_oops+0x2d0/0x310
-> [    0.756390]  ? exc_page_fault+0x59/0xc0
-> [    0.756390]  ? asm_exc_page_fault+0x22/0x30
-> [    0.756390]  ? msix_prepare_msi_desc+0x39/0x80
-> [    0.756390]  ? msix_capability_init+0x172/0x2c0
-> [    0.756390]  ? __pci_enable_msix_range+0x1a8/0x1d0
-> [    0.756390]  ? pci_alloc_irq_vectors_affinity+0x7c/0xf0
-> [    0.756390]  ? vp_find_vqs_msix+0x187/0x400
-> [    0.756390]  ? vp_find_vqs+0x2f/0x250
-> [    0.756390]  ? snprintf+0x3e/0x50
-> [    0.756390]  ? vp_modern_find_vqs+0x13/0x60
-> [    0.756390]  ? init_vq+0x184/0x1e0
-> [    0.756390]  ? vp_get_status+0x20/0x20
-> [    0.756390]  ? virtblk_probe+0xeb/0x8d0
-> [    0.756390]  ? __kernfs_new_node+0x122/0x160
-> [    0.756390]  ? vp_get_status+0x20/0x20
-> [    0.756390]  ? virtio_dev_probe+0x171/0x1c0
-> [    0.756390]  ? really_probe+0xc2/0x240
-> [    0.756390]  ? driver_probe_device+0x1d/0x70
-> [    0.756390]  ? __driver_attach+0x96/0xe0
-> [    0.756390]  ? driver_attach+0x20/0x20
-> [    0.756390]  ? bus_for_each_dev+0x7b/0xb0
-> [    0.756390]  ? bus_add_driver+0xe6/0x200
-> [    0.756390]  ? driver_register+0x5e/0xf0
-> [    0.756390]  ? virtio_blk_init+0x4d/0x90
-> [    0.756390]  ? add_boot_memory_block+0x90/0x90
-> [    0.756390]  ? do_one_initcall+0xe2/0x250
-> [    0.756390]  ? xas_store+0x4b/0x4b0
-> [    0.756390]  ? number+0x13b/0x260
-> [    0.756390]  ? ida_alloc_range+0x36a/0x3b0
-> [    0.756390]  ? parameq+0x13/0x90
-> [    0.756390]  ? parse_args+0x10f/0x2a0
-> [    0.756390]  ? do_initcall_level+0x83/0xb0
-> [    0.756390]  ? do_initcalls+0x43/0x70
-> [    0.756390]  ? rest_init+0x80/0x80
-> [    0.756390]  ? kernel_init_freeable+0x70/0xb0
-> [    0.756390]  ? kernel_init+0x16/0x110
-> [    0.756390]  ? ret_from_fork+0x30/0x40
-> [    0.756390]  ? rest_init+0x80/0x80
-> [    0.756390]  ? ret_from_fork_asm+0x11/0x20
-> [    0.756390]  </TASK>
-> [    0.756390] Modules linked in:
-> [    0.756390] CR2: 0000000000000002
-> [    0.756390] ---[ end trace 0000000000000000 ]---
-> [    0.756390] RIP: 0010:msix_prepare_msi_desc+0x39/0x80
-> [    0.756390] Code: 20 c7 46 04 01 00 00 00 8b 56 4c 89 d0 0d 01 01 00 00 66 89 46 4c 8b 8f 64 02 00 00 89 4e 50 48 8b 8f 70 06 00 00 48 89 4e 58 <41> f6 40 02 40 75 2a c1 ea 02 bf 80 00 00 00 21 fa 25 7f ff ff ff
-> [    0.756390] RSP: 0000:ffff8881002a76e0 EFLAGS: 00010202
-> [    0.756390] RAX: 0000000000000101 RBX: ffff88810074d000 RCX: ffffc9000002e000
-> [    0.756390] RDX: 0000000000000000 RSI: ffff8881002a7710 RDI: ffff88810074d000
-> [    0.756390] RBP: ffff8881002a7710 R08: 0000000000000000 R09: ffff8881002a76b4
-> [    0.756390] R10: 000000701000c001 R11: ffffffff82a3dc01 R12: 0000000000000000
-> [    0.756390] R13: 0000000000000005 R14: 0000000000000000 R15: 0000000000000002
-> [    0.756390] FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
-> [    0.756390] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    0.756390] CR2: 0000000000000002 CR3: 0000000002a3d001 CR4: 00000000003706b0
-> [    0.756390] note: swapper[1] exited with irqs disabled
-> [    0.782774] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
-> [    0.783560] Kernel Offset: disabled
-> [    0.783909] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009 ]---
-> 
-> 
-> msix_prepare_msi_desc+0x39/0x80:
-> msix_prepare_msi_desc at drivers/pci/msi/msi.c:616
->  611            desc->nvec_used                         = 1;
->  612            desc->pci.msi_attrib.is_msix            = 1;
->  613            desc->pci.msi_attrib.is_64              = 1;
->  614            desc->pci.msi_attrib.default_irq        = dev->irq;
->  615            desc->pci.mask_base                     = dev->msix_base;
-> >616<           desc->pci.msi_attrib.can_mask           = !(info->flags & MSI_FLAG_NO_MASK) &&
->  617                                                      !desc->pci.msi_attrib.is_virtual;
->  618
->  619            if (desc->pci.msi_attrib.can_mask) {
->  620                    void __iomem *addr = pci_msix_desc_addr(desc);
->  621
-> 
-> Reverting patch 3 fixes the issue.
+On Sat, 2025-03-22 at 01:29 +0100, Halil Pasic wrote:
+> As per virtio spec the fields cols and rows are specified as little
+> endian. Although there is no legacy interface requirement that would
+> state that cols and rows need to be handled as native endian when
+> legacy
+> interface is used, unlike for the fields of the adjacent struct
+> virtio_console_control, I decided to err on the side of caution based
+> on some non-conclusive virtio spec repo archaeology and opt for using
+> virtio16_to_cpu() much like for virtio_console_control.event.
+> Strictly
+> by the letter of the spec virtio_le_to_cpu() would have been
+> sufficient.
+> But when the legacy interface is not used, it boils down to the same.
+>=20
+> And when using the legacy interface, the device formatting these as
+> little endian when the guest is big endian would surprise me more
+> than
+> it using guest native byte order (which would make it compatible with
+> the current implementation). Nevertheless somebody trying to
+> implement
+> the spec following it to the letter could end up forcing little
+> endian
+> byte order when the legacy interface is in use. So IMHO this
+> ultimately
+> needs a judgement call by the maintainers.
+>=20
+> Fixes: 8345adbf96fc1 ("virtio: console: Accept console size along
+> with resize control message")
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> Cc: stable@vger.kernel.org=C2=A0# v2.6.35+
+> ---
+>=20
+> @Michael: I think it would be nice to add a clarification on the byte
+> order to be used for cols and rows when the legacy interface is used
+> to
+> the spec, regardless of what we decide the right byte order is. If
+> it is native endian that shall be stated much like it is stated for
+> virtio_console_control. If it is little endian, I would like to add
+> a sentence that states that unlike for the fields of
+> virtio_console_control
+> the byte order of the fields of struct virtio_console_resize is
+> little
+> endian also when the legacy interface is used.
+>=20
+> @Maximilian: Would you mind giving this a spin with your
+> implementation
+> on the device side of things in QEMU?
+> ---
+> =C2=A0drivers/char/virtio_console.c | 7 ++++---
+> =C2=A01 file changed, 4 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/char/virtio_console.c
+> b/drivers/char/virtio_console.c
+> index 18f92dd44d45..fc698e2b1da1 100644
+> --- a/drivers/char/virtio_console.c
+> +++ b/drivers/char/virtio_console.c
+> @@ -1579,8 +1579,8 @@ static void handle_control_message(struct
+> virtio_device *vdev,
+> =C2=A0		break;
+> =C2=A0	case VIRTIO_CONSOLE_RESIZE: {
+> =C2=A0		struct {
+> -			__u16 rows;
+> -			__u16 cols;
+> +			__virtio16 rows;
+> +			__virtio16 cols;
+> =C2=A0		} size;
+> =C2=A0
+> =C2=A0		if (!is_console_port(port))
+> @@ -1588,7 +1588,8 @@ static void handle_control_message(struct
+> virtio_device *vdev,
+> =C2=A0
+> =C2=A0		memcpy(&size, buf->buf + buf->offset +
+> sizeof(*cpkt),
+> =C2=A0		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sizeof(size));
+> -		set_console_size(port, size.rows, size.cols);
+> +		set_console_size(port, virtio16_to_cpu(vdev,
+> size.rows),
+> +				 virtio16_to_cpu(vdev, size.cols));
+> =C2=A0
+> =C2=A0		port->cons.hvc->irq_requested =3D 1;
+> =C2=A0		resize_console(port);
+>=20
+> base-commit: b3ee1e4609512dfff642a96b34d7e5dfcdc92d05
 
-Thanks for the report and sorry for the breakage.  Do you have a QEMU
-command line I can use to try to reproduce this locally?
+It took me a while to recompile the kernel, but now that it has
+compiled it works! Unfortunately, images don't lend themselves well to
+mailing lists, but here is tmux running at 18x55(you'll just have to
+trust me that it's over a virtio serial console)
 
-Will work on a patch ASAP.
+                           =E2=94=82top - 12:54:04 up 4 min,  1
+~                          =E2=94=82Tasks: 222 total,   1 runni
+~                          =E2=94=82%Cpu(s):  0.0 us,  0.0 sy,=20
+~                          =E2=94=82MiB Mem :  15987.2 total, =20
+~                          =E2=94=82MiB Swap:   8192.0 total, =20
+~                          =E2=94=82
+~                          =E2=94=82    PID USER      PR  NI=20
+~                          =E2=94=82      1 root      20   0=20
+~                          =E2=94=82      2 root      20   0=20
+~                          =E2=94=82      3 root      20   0=20
+~                          =E2=94=82      4 root       0 -20=20
+~                          =E2=94=82      5 root       0 -20=20
+~                          =E2=94=82      6 root       0 -20=20
+~                          =E2=94=82      7 root       0 -20=20
+~                          =E2=94=82      8 root       0 -20=20
+[No Name]     0,0-1     All=E2=94=82      9 root      20   0=20
+                           =E2=94=82     10 root       0 -20=20
+[0] 0:zsh*                     "fedora" 12:53 24-Mar-25
 
-Regards, Roger.
+Cheers,
+Max
+
