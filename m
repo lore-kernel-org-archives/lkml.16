@@ -1,141 +1,192 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EE41A5B8B
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 08:56:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B081C1A5B8B
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 08:58:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742893021; cv=none; b=GpMYUxw3yGfa4st7i31dNxyfePSQaqNMyoLxYv3X5qrq+gGQnlpufsyYUpMFVs8o1rvuezVEwPX3xDr3KHElLAV9y3P6WpIz/f7zOe9dPkYQhY0RmkKekXieIwxMTkuRiyag+7DGr2yYA3u7uvkgW6yfXu1nXgBMXI34hjKqGCw=
+	t=1742893124; cv=none; b=IPKceIFtlrv/bxxzRAKauLIZ3t9E5zfQGfnd5AbAwxZ6bI+TobUPJX9ZG5WDfJn3QEWXCKQbnstC5VZF7xwzo63mKx6DxtOikUUuI/d32UNgql+7Ro4iwtwyh81ByxIl0lhI7TqucfrMP0kgYhcLoecaBpcveNJG3c5YOpePfYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742893021; c=relaxed/simple;
-	bh=vshuMyCYFLJDvNpL15NUMHq/rID0RlGfkcQcA8Uhlf4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y5QtAj8ngq/JKpSdPn+rMGQYK+k6Tyvo01k6J+5M9FDlXm3dmQDd2be0RiR4ypvafmOt76liNiwEOzZaARA9potb2S0hYhrVCIXogaA+y9wywDJHK6NyFozTIqiAphifQEi0ywQR9jSJ5ouZxCdE/cG8Zy6x0GAnBpAVwTB/VFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=CzQYtn4C; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CzQYtn4C"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54954fa61c9so6127201e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 01:56:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1742893017; x=1743497817; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pekDRC5ZiCfjtVPCurs814x3fMwzvDjR3anDXf5w15E=;
-        b=CzQYtn4CUAFPz+Vlgl7EyeMkCq0HY4n25vcD5VrspQUwOctGoYOwllnr5Qc3d4apg/
-         Ec08bTvQbc2E/06MJLI7iWrHQq/rhg/R5EgcQqWQy8FKwYs2MCooKBz4RQ3t1SQvqWhk
-         TUQ3DZJtqNu9OLpGrxa6IJxtedi3WyjRgqpBI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742893017; x=1743497817;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pekDRC5ZiCfjtVPCurs814x3fMwzvDjR3anDXf5w15E=;
-        b=EFEnUYCovTnnN4a54LNK8C3hf5IC+A/Px+KbU7Zu7Fh6t9gy40hFj/+akOlEbbSKtt
-         tIaNDKSL/FV7Nmiaz4AwQC3tyf+BnLvMvSy58f6ln+jCq+vuF0ieUhkqNjp8zrr5JXcn
-         IaUjIorMGtgB2ddlFDNmSqwg3M0Ybkn2MYSKRFM/P/5QkR/Q03eVuSfMPMrsNvgSskIp
-         K6Awru3isWBZhgXbKrUrn/XQBrXqYe+INUcingmWIQZv8rM4m4VhHt7PMrTT6IJ+mlJd
-         SlKapUCahOSs0+fBjbR13gGe3uI+F2qkVihilQYgeP82KOnv/SGZNiH/TA70mS3MM/ZK
-         2kLA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ+wTnQ+Hbrh+cdVtYjh26QdPrDlNzgZn7iv6Xq4CAJ5GXp1Nue4VNEItRhVcyDdqwBJOr6PiUe0HCX4M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeZIARY1z5pODyNh9pNktwdHyBF5J34rrbb08zsDKZzXplkVy+
-	h1OtTDuN2BWyGUMp3vfqVAoX2hGQ+OQ2GNx3Aacw5o7o5cXxjkKez6t33rAxpQcySADkRi2VQQA
-	=
-X-Gm-Gg: ASbGncvLhKHeuYVf1lc8sdOKGMlVgmS4klMRSUeLLssVuW330A1Pk77E70hvS2dV+/7
-	kJ86pdSQMzNsN5/azBQXpIWPwdlpkW2ktaDRLApqft6Uydv3lt7YZyiWK7T8T8BbsCVw0bM+FdK
-	MR1tcHORZqgPp/aSZXgKdrPwThsC0v8CJxUG0qfqk9LK5hPsDGwQvvQ0G4Rk+WzZbaLNn/wdy0i
-	/fHBo5eg6ryMfQUxRgYVFH4EuHEMcmzGWaJY2CtxX2iwLXV8MDXHRnijmNrIXDH8jIAVYUDT9gM
-	+jDaGvvq1OYM+F1I0muIrsJ0608VnScLwMsMgJdx48abMLwcKFwXhaDydyvPhPkEiEirbf2XThY
-	UDXT6W8k=
-X-Google-Smtp-Source: AGHT+IETh620lzHTOurRzXKupeZlv8rnH1AU4tDktRYBc+mtlIVN7s1ABzLHtd/BIHqetcQaqdZqGw==
-X-Received: by 2002:a05:6512:31c9:b0:545:5a5:b69f with SMTP id 2adb3069b0e04-54ad64799edmr5028347e87.9.1742893017180;
-        Tue, 25 Mar 2025 01:56:57 -0700 (PDT)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54adfb11328sm1165635e87.214.2025.03.25.01.56.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Mar 2025 01:56:56 -0700 (PDT)
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-549b159c84cso5979200e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 01:56:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUUlhz1R4joXIzRLwX/j2URMsezzFZTcID5EDbz4A5FKE+88uViNIb484utftpCHIkTwHvOi+7qSAyaAcw=@vger.kernel.org
-X-Received: by 2002:a05:6512:3401:b0:545:56c:36c7 with SMTP id
- 2adb3069b0e04-54ad64f58a6mr6508739e87.41.1742893015961; Tue, 25 Mar 2025
- 01:56:55 -0700 (PDT)
+	s=arc-20240116; t=1742893124; c=relaxed/simple;
+	bh=55PQBj5fv1Uc+oM6j1RQiORx3O0YAV8Gh9Wdp/7Eefk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YdfK54WJKDqy6UbHBYZ7hUyuQCJoKINp9EKI91KZrfAK5Qtj8pufgqhlgmisP/lS1HqMJbdlbi5CR6RGsrptI+1lo7tOH+Q8RZIy1mLJ3MlWqMKZ2OEebCqeriVCSu8lPyrEUdOvzBSX8LXZVFt7pnYJ1W4+j2xBdP+6hOSEGLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1C0F3443CC;
+	Tue, 25 Mar 2025 08:58:32 +0000 (UTC)
+Message-ID: <29c9eeff-6146-4f3b-b1e1-e7ed20fa98a3@ghiti.fr>
+Date: Tue, 25 Mar 2025 09:58:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67e26157.0c0a0220.36adcd.506e@mx.google.com>
-In-Reply-To: <67e26157.0c0a0220.36adcd.506e@mx.google.com>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Tue, 25 Mar 2025 09:56:43 +0100
-X-Gmail-Original-Message-ID: <CANiDSCsvEke31SAgXhs_sXEN7d6fXrwuhJFsi2mzESq1Jc8pxA@mail.gmail.com>
-X-Gm-Features: AQ5f1Jp8blAGxVvtPz5mzFh1PiUzr5gC4lO_rNwm9J5fxVQkAwlMwA1GEUsRJ4M
-Message-ID: <CANiDSCsvEke31SAgXhs_sXEN7d6fXrwuhJFsi2mzESq1Jc8pxA@mail.gmail.com>
-Subject: Re: [PATCH] media: Fix invalid link creation when source entity has 0 pads
-To: gshahrouzi@gmail.com
-Cc: laurent.pinchart@ideasonboard.com, hdegoede@redhat.com, mchehab@kernel.org, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzbot+701fc9cc0cb44e2b0fe9@syzkaller.appspotmail.com, 
-	skhan@linuxfoundation.org, kernelmentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] riscv: Use Zalrsc extension to implement atomic
+ functions
+Content-Language: en-US
+To: Djordje Todorovic <Djordje.Todorovic@htecgroup.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, "jrtc27@jrtc27.com" <jrtc27@jrtc27.com>
+Cc: Charlie Jenkins <charlie@rivosinc.com>,
+ "samuel.holland@sifive.com" <samuel.holland@sifive.com>,
+ Conor Dooley <conor@kernel.org>, "arikalo@gmail.com" <arikalo@gmail.com>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+ Will Deacon <will@kernel.org>, "peterz@infradead.org"
+ <peterz@infradead.org>, "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ "yury.norov@gmail.com" <yury.norov@gmail.com>,
+ "linux@rasmusvillemoes.dk" <linux@rasmusvillemoes.dk>,
+ "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
+ "leobras@redhat.com" <leobras@redhat.com>,
+ "guoren@kernel.org" <guoren@kernel.org>,
+ "ericchancf@google.com" <ericchancf@google.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <17E9A830-AE5C-41F5-AC07-2BD9C70739BB@jrtc27.com>
+ <mhng-50508e34-b5cc-4dad-b4d4-7d2bac5a74d8@palmer-ri-x1c9>
+ <AM6PR09MB26808ACAD8DF14A7F63808D0F7FC2@AM6PR09MB2680.eurprd09.prod.outlook.com>
+ <AS4PR09MB6518D0A168465DF5F0890B8EF7D92@AS4PR09MB6518.eurprd09.prod.outlook.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <AS4PR09MB6518D0A168465DF5F0890B8EF7D92@AS4PR09MB6518.eurprd09.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduiedvvdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeefueeujeevfeduheduuefhveejvdevgfegieeuhffghfeuhfelffegkedtjeevffenucffohhmrghinhepmhhiphhsrdgtohhmpdgrkhgrrdhmshdpkhgvrhhnvghlrdhorhhgpdhinhhfrhgruggvrggurdhorhhgnecukfhppeefuddrfedvrdekuddrudekjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeefuddrfedvrdekuddrudekjedphhgvlhhopegludelvddrudeikedrvddurddvhegnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepvddupdhrtghpthhtohepffhjohhrughjvgdrvfhoughorhhovhhitgeshhhtvggtghhrohhuphdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopehjrhhttgdvjeesjhhrthgtvdejrdgtohhmpdhrtghpthhtoheptghhrghrlhhivgesrhhivhhoshhinhgtrdgtohhmp
+ dhrtghpthhtohepshgrmhhuvghlrdhhohhllhgrnhgusehsihhfihhvvgdrtghomhdprhgtphhtthhopegtohhnohhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrrhhikhgrlhhosehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
+X-GND-Sasl: alex@ghiti.fr
 
-Hi Gabriel
+Hi Djordje,
 
-On Tue, 25 Mar 2025 at 08:55, <gshahrouzi@gmail.com> wrote:
+On 19/03/2025 13:28, Djordje Todorovic wrote:
+> HTEC Public
 >
-> >From 307209d175be0145e36b9cf95944e2e62afeab11 Mon Sep 17 00:00:00 2001
-> From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> Date: Mon, 24 Mar 2025 19:45:55 -0400
-> Subject: [PATCH] media: Fix invalid link creation when source entity has 0
->  pads
+> Hi everyone,
 >
-> This patch addresses the warning triggered in the media_create_pad_link()
-> function, specifically related to the check WARN_ON(source_pad >=
-> source->num_pads). The fix proposed adds an additional check to ensure that
-> source->num_pads is non-zero before proceeding with the
-> media_create_pad_link() function.
+> Thank you a lot for your comments.
+> I am wondering how we should proceed from here.
+
+
+I read the previous comments and everyone seems to agree that an 
+implementation using an alternative is the way to go, so can you come 
+with a new version doing that?
+
+Thanks,
+
+Alex
+
+
 >
-> Reported-by: syzbot+701fc9cc0cb44e2b0fe9@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=701fc9cc0cb44e2b0fe9
-I cannot reach that URL
-> Tested-by: syzbot+701fc9cc0cb44e2b0fe9@syzkaller.appspotmail.com
-> Fixes: a3fbc2e6bb05 ("media: mc-entity.c: use WARN_ON, validate link pads")
-Shouldn't it be? :
-Fixes: 4ffc2d89f38a ("[media] uvcvideo: Register subdevices for each entity")
-
-> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> ---
->  drivers/media/usb/uvc/uvc_entity.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Best,
+> Djordje
 >
-> diff --git a/drivers/media/usb/uvc/uvc_entity.c b/drivers/media/usb/uvc/uvc_entity.c
-> index cc68dd24eb42..5397ce76c218 100644
-> --- a/drivers/media/usb/uvc/uvc_entity.c
-> +++ b/drivers/media/usb/uvc/uvc_entity.c
-> @@ -43,7 +43,7 @@ static int uvc_mc_create_links(struct uvc_video_chain *chain,
->                 source = (UVC_ENTITY_TYPE(remote) == UVC_TT_STREAMING)
->                        ? (remote->vdev ? &remote->vdev->entity : NULL)
->                        : &remote->subdev.entity;
-> -               if (source == NULL)
-> +               if (source == NULL || source->num_pads == 0)
-Shouldn't source->num_pads be the same as remote->num_pads?
-
-Are you sure that your kernel does not contain?
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/media/usb/uvc/uvc_entity.c?id=41ddb251c68ac75c101d3a50a68c4629c9055e4c
-
-Regards!
-
->                         continue;
+> ________________________________________
+> From: Djordje Todorovic <Djordje.Todorovic@htecgroup.com>
+> Sent: Wednesday, February 12, 2025 11:22 AM
+> To: Palmer Dabbelt <palmer@dabbelt.com>; jrtc27@jrtc27.com <jrtc27@jrtc27.com>
+> Cc: Charlie Jenkins <charlie@rivosinc.com>; samuel.holland@sifive.com <samuel.holland@sifive.com>; Conor Dooley <conor@kernel.org>; arikalo@gmail.com <arikalo@gmail.com>; linux-riscv@lists.infradead.org <linux-riscv@lists.infradead.org>; Paul Walmsley <paul.walmsley@sifive.com>; aou@eecs.berkeley.edu <aou@eecs.berkeley.edu>; Will Deacon <will@kernel.org>; peterz@infradead.org <peterz@infradead.org>; boqun.feng@gmail.com <boqun.feng@gmail.com>; Mark Rutland <mark.rutland@arm.com>; yury.norov@gmail.com <yury.norov@gmail.com>; linux@rasmusvillemoes.dk <linux@rasmusvillemoes.dk>; parri.andrea@gmail.com <parri.andrea@gmail.com>; leobras@redhat.com <leobras@redhat.com>; guoren@kernel.org <guoren@kernel.org>; ericchancf@google.com <ericchancf@google.com>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
+> Subject: Re: [PATCH v2] riscv: Use Zalrsc extension to implement atomic functions
 >
->                 remote_pad = remote->num_pads - 1;
-> --
-> 2.43.0
+> Hi,
 >
-
-
--- 
-Ricardo Ribalda
+> The official product page is located here:
+> https://mips.com/products/hardware/p8700
+>
+> The mechanism we use to handle AMO is described in:
+> "7.3.10 MIPS Configuration 6 Register (mipsconfig6)"
+>
+> Best,
+> Djordje
+>
+> ________________________________________
+> From: Palmer Dabbelt <palmer@dabbelt.com>
+> Sent: Wednesday, February 5, 2025 4:49 PM
+> To: jrtc27@jrtc27.com <jrtc27@jrtc27.com>
+> Cc: Charlie Jenkins <charlie@rivosinc.com>; samuel.holland@sifive.com <samuel.holland@sifive.com>; Conor Dooley <conor@kernel.org>; arikalo@gmail.com <arikalo@gmail.com>; linux-riscv@lists.infradead.org <linux-riscv@lists.infradead.org>; Paul Walmsley <paul.walmsley@sifive.com>; aou@eecs.berkeley.edu <aou@eecs.berkeley.edu>; Will Deacon <will@kernel.org>; peterz@infradead.org <peterz@infradead.org>; boqun.feng@gmail.com <boqun.feng@gmail.com>; Mark Rutland <mark.rutland@arm.com>; yury.norov@gmail.com <yury.norov@gmail.com>; linux@rasmusvillemoes.dk <linux@rasmusvillemoes.dk>; parri.andrea@gmail.com <parri.andrea@gmail.com>; leobras@redhat.com <leobras@redhat.com>; guoren@kernel.org <guoren@kernel.org>; ericchancf@google.com <ericchancf@google.com>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>; Djordje Todorovic <djordje.todorovic@htecgroup.com>
+> Subject: Re: [PATCH v2] riscv: Use Zalrsc extension to implement atomic functions
+>
+> [You don't often get email from palmer@dabbelt.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+>
+> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you recognize the sender and know the content is safe.
+>
+>
+> On Mon, 03 Feb 2025 13:34:48 PST (-0800), jrtc27@jrtc27.com wrote:
+>> On 3 Feb 2025, at 19:50, Charlie Jenkins <charlie@rivosinc.com> wrote:
+>>> On Mon, Feb 03, 2025 at 01:30:48PM -0600, Samuel Holland wrote:
+>>>> Hi Charlie,
+>>>>
+>>>> On 2025-02-03 1:12 PM, Charlie Jenkins wrote:
+>>>>> On Sun, Feb 02, 2025 at 08:08:50PM +0000, Conor Dooley wrote:
+>>>>>> On Sat, Feb 01, 2025 at 01:04:25PM +0100, Aleksandar Rikalo wrote:
+>>>>>>> On Fri, Jan 10, 2025 at 4:23 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
+>>>>>>>
+>>>>>>>>> From: Chao-ying Fu <cfu@mips.com>
+>>>>>>>>>
+>>>>>>>>> Use only LR/SC instructions to implement atomic functions.
+>>>>>>>> In the previous patch you mention that this is to support MIPS P8700. Can
+>>>>>>>> you expand on why this change is required? The datasheet at [1] says:
+>>>>>>>>
+>>>>>>>> "The P8700 core is configured to support the RV64GCZba_Zbb (G = IMAFD)
+>>>>>>>> Standard ISA. It includes the RV64I base ISA, Multiply (M), Atomic (A),
+>>>>>>>> Single-Precision Floating Point (F), Double (D), Compressed (C) RISC-V
+>>>>>>>> extensions, as well as the as well as the bit-manipulation extensions
+>>>>>>>> (Zba) and (Zbb)"
+>>>>>>>>
+>>>>>>>> The "A" extension is a part of "G" which is mostly assumed to exist in
+>>>>>>>> the kernel. Additionally, having this be a compilation flag will cause
+>>>>>>>> traps on generic kernels. We generally try to push everything we can
+>>>>>>>> into runtime feature detection since there are so many possible variants
+>>>>>>>> of riscv.
+>>>>>>>>
+>>>>>>>> Expressing not being able to perform a feature like this is normally
+>>>>>>>> better expressed as an errata. Then generic kernels will be able to
+>>>>>>>> include this, and anybody who doesn't want to have the extra nops
+>>>>>>>> introduced can disable the errata. A similar approach to what I pointed
+>>>>>>>> out last time should work here too (but with more places to replace)
+>>>>>>>> [2].
+>>>>>>>>
+>>>>>>>> [1] https://mips.com/wp-content/uploads/2024/11/P8700_Data_Sheet.pdf
+>>>>>>>> [2] https://lore.kernel.org/lkml/Z2-UNfwcAQYZqVBU@ghost/T/
+>>>>>>> So far we haven't found a way to do this using errata.
+>>>>>> You mean using alternatives? Not implementing A, but instead
+>>>>>> implementing Zalrsc, is not an erratum. It's a design decision.
+>>>>> We could do the same thing we do with misaligned access detection and
+>>>>> run some instructions to determine if these instructions are being
+>>>>> emulated.  If they are being emulated, patch all of the places to use
+>>>>> zalrsc.
+>>>> Is the implication here that the riscv,isa-extensions list passed to the kernel
+>>>> will contain "a", even though the hardware does not support it, because AMOs are
+>>>> emulated in M-mode?
+>>>>
+>>>> If that is not the case, there is no need for runtime detection. The alternative
+>>>> entry can check RISCV_ISA_EXT_ZAAMO (which would be implied by RISCV_ISA_EXT_a)
+>>>> in the ISA bitmap like normal.
+>>> That would be much better! I was under the assumption that the usecase
+>>> for this patch was that they were passing in "a" and wanting to only get
+>>> zalrsc. We should be able to check
+>>> RISCV_ISA_EXT_ZAAMO/RISCV_ISA_EXT_ZALRSC to get the information without
+>>> runtime detection.
+>> In LLVM at least -mcpu=mips-p8700 enables the full A extension...
+> So then I think we need some help from the HW vendor here.
+> Specifically: do these systems implement A via M-mode traps (ie, with a
+> performance penalty) or is there something functional erratum in the A
+> implementation.
+>
+> If it's just a performance thing then we need some benchmark justifying
+> the extra work, which means some hardware we can point at to run the
+> benchmark.  Probably also best to shim this in via alternatives, so we
+> can keep multi-vendor kernels working.
+>
+> If it's a funtional issue then we need to know what's actually broken.
+>
+> Either way this should be exposed to userspace.
+>
+>> Jess
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
