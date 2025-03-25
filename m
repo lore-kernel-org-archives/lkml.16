@@ -1,261 +1,121 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A96259CA8
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED75E25522B;
+	Tue, 25 Mar 2025 14:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742912042; cv=none; b=G5IMc5dz/yGjcclVFCcxmZ4kBjNV7vUZO2+CQx5BUQmcFF7yLNrpquRTgUvaJ0oShbaVJYeuXUk6jHIBkwZyFbYc379QpsbdEXWtlX6Z9aFZOD7lxiv3ar/ekgkb/d3L9Rb1WbTeIs2hq3R9nZoHkqk/BNNZgiEUYr3PtBtR7yE=
+	t=1742912123; cv=none; b=mlowtc5xo+C5jPLr/nMfD9l8IEeBf3vvLw2VKFew4EjSNlNhcUQNvqOjUcRrqkQHq1RclPZhzbmr/R3eqZF2XlPi4ICvVElWeB6lOD8YFQm3yH3pl+EWbC6ZNVyLMhRVb5LqARqSSQjD28nBCgCsNf4ZJtb4RVNgjCHL2/UvHHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742912042; c=relaxed/simple;
-	bh=HPXVzD0cjy+L3MP8uKMZjV8z7glq9UZzhAChFvp2l2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fQSS1ePYoKot6NGWglk72//tLGYOqMvBAzTbcG3AZYv0n3D0rkHu/dU9RWJDG/+ztLWHDtI7PmMDjDAoCXNxgDxj5ODd3sHmrbtViMwQFDfNvd5uUbNhpzDavAZW0SW+8Hs4lr61kW/dpppgCaoGPkUPkB7o7xtAjrbadc0ZGS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RyEaHTQV; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1742912123; c=relaxed/simple;
+	bh=ZMaNHZC6xbmIZfH1KZ7uFhl2JDUoKP3oGCElsgWSgIw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KyJ9hBNxSWheQVYT+1XfZp8wTId9FmcIGsmKv7Sa0UUQiint/UEUqZCRrX+trk+QitGI8sOAnX8WIEkIU9qnCcoTgqERBup4OHu5Ntrnmww22dVGriVQglatewAKf4FuD8ppb6eio+aY/EYLQhyWhqF40LSjdVJC9FsP1bWfQb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xob5GJY/; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RyEaHTQV"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52PDDH45018752
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:13:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	6UHGI7B+UO+3MoBOJ7wm4LdCEVBYEGKGFK7sdnFLKk8=; b=RyEaHTQVESZM35BL
-	JD9eBXGQBd4rtOQQs+QkZKDbvlLLjXkBbHl62R/WK1Zd0vzRwckyHOGHoUIRerEt
-	9IE/GKjW++bFs0HTcyepcbi9u+3VjU1NGWP2uqYiOeEoI/E+0F7vYQ7XyfGZseck
-	9zoAfonL61x/MkXAoUOgvuYa5tuU0NH+SPRylxSCUXCNEuoqb8IYDDD+ICpsWUq4
-	2qv/+e2HMwHE764D9fUnDfqpyTFhOFifagTOcWhOVH7+j/fbyiuIW4/GPMS8byVQ
-	mdPGoVDx/Rc82vBXGNPvom/06iNdoteP4hnhjpSpldqax+p6QsPWrfUzHyGF8khX
-	tjbQ2g==
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45hjjnrcdu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:13:59 +0000 (GMT)
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-225505d1ca5so91753405ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 07:13:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xob5GJY/"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e614da8615so10230916a12.1;
+        Tue, 25 Mar 2025 07:15:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742912120; x=1743516920; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZMaNHZC6xbmIZfH1KZ7uFhl2JDUoKP3oGCElsgWSgIw=;
+        b=Xob5GJY/JSC+XBU5GOgWFti7wzv5A7ApXFX6667Ph18jTYxXWzoxr7UrabL+A44sCk
+         cimdWsTDipyas+vgjg4qE27wCsP/tT+pEOvpwd6Jn6C3Wl0TILAmOoDQgyL+JDV4WrgI
+         JU9sWWKDOeC+KFIAK9/6pIex0YWIiVpBIfA+DezRWUV/PjCYOcTXtraISDk1DNBMP1H2
+         Ibg9C4IVte4hGOMRe6pVRcE6Gg732KRL2lRiGMM6Kyuwjcol8ntbR/8qpROiqpyS2PfQ
+         yxUkFGVZTk6oGs+KsSqIbF3Otd5RNHIiyEt6TvDboqbs8YNFRxer1PGAE5TTnZhDguWV
+         RxGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742912038; x=1743516838;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6UHGI7B+UO+3MoBOJ7wm4LdCEVBYEGKGFK7sdnFLKk8=;
-        b=oN192fKXrRYEjDYSqmoy125XK5ghhcP/y139OLD0SWqFTb3+gAWVFaDJJIQzKxnHqo
-         NgbQYvjORJpq7KCw2AfVL1f+uorFIrxgKipkK9fOUMIWfo9rrqsyeBZINblhThqAlufg
-         ewo5aQx9+CmF2DeouAt3vnIkfg+VZ59r0R7q3JU02t603i1erz4UZibbOVS56XT7L6vW
-         UMkpUykdCqZz2Z2VkO4yUdFQFuL7lY6mn6lxMIoJlVQivy5Fl0YH0SfmiyEP9XLy73QN
-         uYPtOoUIXCQQxIWvfnzc1QjrS5CCLoNpX4JdDygEDwQl5DuEoULl7UAp4uFqZB4ZbJjB
-         lpUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmopi2o4aYUaOl7tE0mV/EcJzhCFlmlt672iyUgOs1h74p4/S3estKgBahEiGIxVDFDl/prf420/OUVZE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzF76FWRDA4ukyf/kxhGLD5mYVrwLYI3bnSi5A8bPmwWe1x4HHC
-	ICIBus8FEjYuICLeVwVzKGvV2d596W/L62h9/4qSoH+YyIA4WWTkjpDxUuy7XRYjnVa+zQmuvX3
-	nAo4ZjstHmn5KJxjlNtzTp9Q4WioKYnMrHOYcDIfr+IOleNaToR333d8wrQFfLBw=
-X-Gm-Gg: ASbGncseE7E2Xi32UqPpHV4ZBTRjUQIMQtpmJfy7lFlrlP0r0xYQBL1YMbvPcIMjMjm
-	iF4DXta1pwSNF7jvqo590nn0jzPLxLhVeilbXfv68olZ68Gib9xlvFSYUUWEQnjDkLTY+yDvW98
-	2u3PNvclmkK7m33qdGbEG1+WWMeOIr+nsGw2WaRJuIGbW0TnljvCA6n1ZMbJfSYOfL2A/TFiyz7
-	SOwMbQkVc6HCjYouehERVb9wMyrO7dmjWCxPvuyNyt8gHCHTK3DdwjzXYzpPNjAPmXOwlBBoRB6
-	jyueKQCF+srCq6zFEdj7JHTlnn3pqOKCQ3QCTXCB0g4=
-X-Received: by 2002:a17:903:40cb:b0:221:331:1d46 with SMTP id d9443c01a7336-22780c510fcmr226678795ad.2.1742912037409;
-        Tue, 25 Mar 2025 07:13:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGctjIt238/axUkoUbQ4QdIvSBgMTmLNz+mz+uulQIJe7SiObWOBp/yOWNe+YRV0y5+EYClbQ==
-X-Received: by 2002:a17:903:40cb:b0:221:331:1d46 with SMTP id d9443c01a7336-22780c510fcmr226678135ad.2.1742912036730;
-        Tue, 25 Mar 2025 07:13:56 -0700 (PDT)
-Received: from hu-mojha-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22780f45954sm90450565ad.62.2025.03.25.07.13.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 07:13:56 -0700 (PDT)
-Date: Tue, 25 Mar 2025 19:43:47 +0530
-From: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Elliot Berman <quic_eberman@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, cros-qcom-dts-watchers@chromium.org,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
-        Melody Olvera <quic_molvera@quicinc.com>,
-        Shivendra Pratap <quic_spratap@quicinc.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Stephen Boyd <swboyd@chromium.org>, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Elliot Berman <elliotb317@gmail.com>,
-        Elliot Berman <elliot.berman@oss.qualcomm.com>
-Subject: Re: [PATCH v9 2/5] firmware: psci: Read and use vendor reset types
-Message-ID: <Z+K6G5EuRxnkKYoz@hu-mojha-hyd.qualcomm.com>
-References: <20250303-arm-psci-system_reset2-vendor-reboots-v9-0-b2cf4a20feda@oss.qualcomm.com>
- <20250303-arm-psci-system_reset2-vendor-reboots-v9-2-b2cf4a20feda@oss.qualcomm.com>
- <Z9QQw6BcE7IXzu+r@lpieralisi>
- <a9d8d9aa-f63c-481e-b051-a3da0adb3c66@app.fastmail.com>
+        d=1e100.net; s=20230601; t=1742912120; x=1743516920;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZMaNHZC6xbmIZfH1KZ7uFhl2JDUoKP3oGCElsgWSgIw=;
+        b=Becc7DLGpkHiExhAY0PunoTA30iMt+B/0NMZ1zChBrJ3OjYR1UXLMQpL8ccYCckDF0
+         A/ZvEEUeQfFFm1dtLOpWrJmKEowqrvavzaeP0IqGev/CiKYh1XWdENyZBI+zjZYV2W43
+         JC9u884zvwfQXaleTH5FuVgoxf/2Cx7RcRe9mWZLULVRisXsoP4WFp/SgzEln14rXoZh
+         slZRq+PY7xLOpiLvoZiXYHh6L6RE6jxFu+r6v+TN7dTbVocz/d9BPA3qhuubkpUQqgf6
+         ItOxOknVDQAWtPk5aeOSpHTPDn6BPO7pxHBAjtANjdUtEINoMpgIKwjLWFqi5pasJR4q
+         R3fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+B5MgnpypyGa+aHXfuBeaWtN39pE+jsRm5axyPXgqwHJv/zuuT9CD8ADBvLRQy8/bYQAWuh7po675KcpI@vger.kernel.org, AJvYcCVfoTmh4b2918IAgMkylVGtaHatXE3bZeHf0QDNWPD1XEKk3KCaQsivkHbBQe+RHaQgBJmIH/YvVxv1D9cz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8czkqEnWQ5xhAgkistgjx2Q9FoWij2RpV4g5tHeLFitewt4U8
+	hp6oOs9LInykV7dEUQFEO4kSINNJ5xKy2QAXaNnVPaVEMfl25bbsmE8MEP6TwlY2TsdrsDjOrxp
+	8IR8y+4JWqoy57JhRFWlWDR42XTA=
+X-Gm-Gg: ASbGncsgpWRpZVAzRspIuIQcfLFFcGMT9d4EzKhuhXRUq5iC/5VztJXgfbASwjxX+Qf
+	d3z6G4TIEeQHNi82uRK4PBVmXbCTsAoTMX7nquBa2qYj+WytphQ4YUgnhg/nG2PGmttIeLrbQVn
+	H5OW2n/EJUgS+8Rbqp+Kv/rBfLRQEHobYJ3OC2
+X-Google-Smtp-Source: AGHT+IGCXq0i5sPbB6D+egYNTkN8t7fqQ46d/BSo5o0rsWhypxWST0TCfi0Il6K80MobV/2JX8on8SPeqOHSZWZg/k4=
+X-Received: by 2002:a05:6402:2712:b0:5e5:9c04:777 with SMTP id
+ 4fb4d7f45d1cf-5eb9972ae95mr19756146a12.6.1742912119870; Tue, 25 Mar 2025
+ 07:15:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a9d8d9aa-f63c-481e-b051-a3da0adb3c66@app.fastmail.com>
-X-Authority-Analysis: v=2.4 cv=fNc53Yae c=1 sm=1 tr=0 ts=67e2ba27 cx=c_pps a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=GcyzOjIWAAAA:8 a=7CQSdrXTAAAA:8 a=EUspDBNiAAAA:8 a=um3p_O4XRIyD_4qeEzYA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=dtxw0mqMjrQA:10 a=GvdueXVYPmCkWapjIL-Q:22 a=hQL3dl6oAZ8NdCsdz28n:22 a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-ORIG-GUID: cQAkY08bO76WF-oqKGtH7thtEJuBCdH-
-X-Proofpoint-GUID: cQAkY08bO76WF-oqKGtH7thtEJuBCdH-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-25_06,2025-03-25_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0
- adultscore=0 spamscore=0 bulkscore=0 suspectscore=0 phishscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503250100
+References: <67dc67f0.050a0220.25ae54.001f.GAE@google.com> <20250324160003.GA8878@redhat.com>
+ <CAGudoHHuZEc4AbxXUyBQ3n28+fzF9VPjMv8W=gmmbu+Yx5ixkg@mail.gmail.com>
+ <20250324182722.GA29185@redhat.com> <CAGudoHE8AKKxvtw+e4KpOV5DuVcVdtTwO0XjaYSaFir+09gWhQ@mail.gmail.com>
+ <20250325100936.GC29185@redhat.com> <CAGudoHFSzw7KJ-E9qZzfgHs3uoye08po0KJ_cGN_Kumu7ajaBw@mail.gmail.com>
+ <20250325132136.GB7904@redhat.com> <20250325-bretter-anfahren-39ee9eedf048@brauner>
+In-Reply-To: <20250325-bretter-anfahren-39ee9eedf048@brauner>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Tue, 25 Mar 2025 15:15:06 +0100
+X-Gm-Features: AQ5f1Jr8oXwwdmvGSBUITgwEGjTjEUXxS32Qqv2Kn_lvnq3BY7I5kPchOqLOEt8
+Message-ID: <CAGudoHFGcTergsO2Pg_v9J4aj94dWnCn_KrE1wpGd+x=g8_f1Q@mail.gmail.com>
+Subject: Re: [PATCH] exec: fix the racy usage of fs_struct->in_exec
+To: Christian Brauner <brauner@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, 
+	syzbot <syzbot+1c486d0b62032c82a968@syzkaller.appspotmail.com>, kees@kernel.org, 
+	viro@zeniv.linux.org.uk, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 14, 2025 at 05:31:44PM +0100, Arnd Bergmann wrote:
-> On Fri, Mar 14, 2025, at 12:19, Lorenzo Pieralisi wrote:
-> > On Mon, Mar 03, 2025 at 01:08:31PM -0800, Elliot Berman wrote:
-> >> From: Elliot Berman <elliot.berman@oss.qualcomm.com>
-> >> 
-> >> SoC vendors have different types of resets and are controlled through
-> >> various registers. For instance, Qualcomm chipsets can reboot to a
-> >> "download mode" that allows a RAM dump to be collected. Another example
-> >> is they also support writing a cookie that can be read by bootloader
-> >> during next boot. PSCI offers a mechanism, SYSTEM_RESET2, for these
-> >> vendor reset types to be implemented without requiring drivers for every
-> >> register/cookie.
-> >> 
-> >> Add support in PSCI to statically map reboot mode commands from
-> >> userspace to a vendor reset and cookie value using the device tree.
+On Tue, Mar 25, 2025 at 2:30=E2=80=AFPM Christian Brauner <brauner@kernel.o=
+rg> wrote:
+>
+> On Tue, Mar 25, 2025 at 02:21:36PM +0100, Oleg Nesterov wrote:
+> > On 03/25, Mateusz Guzik wrote:
+> > >
+> > > On Tue, Mar 25, 2025 at 11:10=E2=80=AFAM Oleg Nesterov <oleg@redhat.c=
+om> wrote:
+> > > >
+> > > > On 03/24, Mateusz Guzik wrote:
+> > > > >
+> > > > > On Mon, Mar 24, 2025 at 7:28=E2=80=AFPM Oleg Nesterov <oleg@redha=
+t.com> wrote:
+> > > > > >
+> > > > > > So to me it would be better to have the trivial fix for stable,
+> > > > > > exactly because it is trivially backportable. Then cleanup/simp=
+lify
+> > > > > > this logic on top of it.
+> > > > >
+> > > > > So I got myself a crap testcase with a CLONE_FS'ed task which can
+> > > > > execve and sanity-checked that suid is indeed not honored as expe=
+cted.
+> > > >
+> > > > So you mean my patch can't fix the problem?
+> > >
+> > > No, I think the patch works.
+> > >
+> > > I am saying the current scheme is avoidably hard to reason about.
 > >
-> > I have managed to discuss a little bit this patchset over the last
-> > few days and I think we have defined a plan going forward.
-> >
-> > A point that was raised is:
-> >
-> > https://man7.org/linux/man-pages/man2/reboot.2.html
-> >
-> > LINUX_REBOOT_CMD_RESTART2 *arg command, what is it supposed to
-> > represent ?
-> >
-> > Is it the mode the system should reboot into OR it is the
-> > actual command to be issued (which is what this patchset
-> > implements) ?
-> >
-> > LINUX_REBOOT_CMD_RESTART "..a default restart..."
-> >
-> > It is unclear what "default" means. We wonder whether the
-> > reboot_mode variable was introduced to _define_ that "default".
-> 
-> I think the reboot_mode predates the 'cmd' argument: linux-2.1.30
-> introduced LINUX_REBOOT_CMD_RESTART2 and it already had
-> the warm/cold/bios/hard options for i386 reboot. I think the
-> argument went unused for a while after it got introduced though.
-> 
-> > So, in short, my aim is trying to decouple reboot_mode from the
-> > LINUX_REBOOT_CMD_RESTART2 *arg command.
-> >
-> > I believe that adding a sysfs interface to reboot-mode driver
-> > infrastructure would be useful, so that the commands would
-> > be exposed to userspace and userspace can set the *arg command
-> > specifically to issue a given reset/mode.
-> >
-> > I wonder why this is not already in place for eg syscon-reboot-mode
-> > resets, how does user space issue a command in those systems if the
-> > available commands aren't exposed to userspace ?
-> >
-> > Is there a kernel entity exposing those "modes" to userspace, somehow ?
-> 
-> Don't know one either.
-> 
-> >> A separate initcall is needed to parse the devicetree, instead of using
-> >> psci_dt_init because mm isn't sufficiently set up to allocate memory.
-> >> 
-> >> Reboot mode framework is close but doesn't quite fit with the
-> >> design and requirements for PSCI SYSTEM_RESET2. Some of these issues can
-> >> be solved but doesn't seem reasonable in sum:
-> >>  1. reboot mode registers against the reboot_notifier_list, which is too
-> >>     early to call SYSTEM_RESET2. PSCI would need to remember the reset
-> >>     type from the reboot-mode framework callback and use it
-> >>     psci_sys_reset.
-> >>  2. reboot mode assumes only one cookie/parameter is described in the
-> >>     device tree. SYSTEM_RESET2 uses 2: one for the type and one for
-> >>     cookie.
-> >
-> > This can be changed and I think it should, so that the reboot modes
-> > are exposed to user space and PSCI can use that.
-> 
-> Can we try to call them 'arguments' rather than 'modes' while discussing?
-> I think it's way too easy to confuse them otherwise.
-> 
-> >> +	psci_np = of_find_matching_node(NULL, psci_of_match);
-> >> +	if (!psci_np)
-> >> +		return 0;
-> >> +
-> >> +	np = of_find_node_by_name(psci_np, "reset-types");
-> >> +	if (!np)
-> >> +		return 0;
-> >
-> > Related to my initial question above. If LINUX_REBOOT_CMD_RESTART2 *arg command,
-> > is the actual reset to be issued, should we add a default mode "cold"
-> > and, if SYSTEM_RESET2 is supported, a "warm" reset mode too ?
-> >
-> > It all boils down to what *arg represents - adding "cold" and "warm"
-> > modes would remove the dependency on reboot_mode for resets issued
-> > through LINUX_REBOOT_CMD_RESTART2, the question is whether this
-> > is the correct thing to do.
-> >
-> > Comments very welcome.
-> 
-> It would make some sense to me to treat all psci reboot as "warm" and
-> not do anything here if reboot="cold" is set: those would have to
-> be backed by a hardware specific driver.
+> > Ah, OK, thanks. Then I still think it makes more sense to do the
+> > cleanups you propose on top of this fix.
+>
+> I agree. We should go with Oleg's fix that in the old scheme and use
+> that. And then @Mateusz your cleanup should please go on top!
 
-The patch implements PSCI SYSTEM_RESET2 vendor reset types which seems
-independent of reboot_mode (warm/cold/etc) as per specs.  As per ARM
-PSCI SPEC:
-https://documentation-service.arm.com/static/60feb9bf3d73a34b640e1b67%3Ftoken%3D&ved=2ahUKEwiX7ramjZCGAxUXrlYBHaPaBX4QFnoECBUQAQ&usg=AOvVaw1L35eQniULNRstfGKX5KXp
+Ok, in that case I'm gonna ship when I'm gonna ship(tm), maybe later this w=
+eek.
 
-quoted from spec: -- 
-
-""
-5.1.11 
-
-SYSTEM_RESET2 This function extends SYSTEM_RESET.
-
-It provides:
-	• Architectural reset definitions.
-	• Support for vendor-specific resets.
-
-Bit[31] Reserved must be zero. 
-	o Set to 1 for vendor-specific resets.
-	o Set to 0 for architectural resets.
-
-Bits[30:0]
-	o For vendor-specific resets, the format of these bits is IMPLEMENTATION DEFINED. 
-	o For architectural resets, the following values are defined:
-		- 0x0 SYSTEM_WARM_RESET.
-		- All other values are reserved.
-
-""
-
-So, for vendor specific reset types it does not specify warm or cold.
-
--Mukesh
-
-> 
-> A related problem is how to determine when to use UEFI reboot: at the
-> moment arm64 tries the UEFI runtime interface before it even attempts
-> any of the notifiers, so PSCI reboot won't ever be used if UEFI is
-> present.
-> 
->      Arnd
+--=20
+Mateusz Guzik <mjguzik gmail.com>
