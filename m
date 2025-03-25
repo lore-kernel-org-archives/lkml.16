@@ -1,113 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9123513D8A0;
-	Tue, 25 Mar 2025 15:27:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D73253B68
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 15:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742916473; cv=none; b=HqwBaeTq3s7NJaw+aSgJCVDqRuN5TO84uTvUCGhHb7EpFFT6X8vQyigqo4PrEvZbCp4J9Q3IiyOi19zA7lrnWbGqDeNSJGsvQhWF0EI9co9F07GizTx9Nx6yVpeZikJrGPkipypMInC/V/FLxhLcoRa4THLXEqX3rXuCV9ZMCh8=
+	t=1742916487; cv=none; b=R/5w2/aIZ6ywE+B8Tc8e3OPb/HO7OcoADNnYPjH25jnyHuvaP9zuELw42KBHUF97gSj213kaOxOgeBK1gerhUy3rD5GDCgla9tJf+l0xfP4LNYcfKuf3AbRHJPo4stJAcXLmQpO4P6/PxGNdjHyVKMSoBE8gyYpTckXwV5yE1iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742916473; c=relaxed/simple;
-	bh=3vBzB0bC4Yz0py1GjLKu6FQytam9E2Tto+wWFuf5NgY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f7VxjoO5fl8yZJjvWj0XQxj6QEPCWrjjQm+L0EpqdS+bsPoJINEYPU7ynDQ6rCDeFSgiLm46/Oz3EjoTBxtSTxMNzfr58TbUYQCRhWF4AA6sUMAesaMGRnvxYKIBYUEXXl0sHEjK1weBTVNckNGhUuPGwXDHLXQqJ2o4vgi3y/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ss/sdlnT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742916487; c=relaxed/simple;
+	bh=gzOhUwuk6PRtqJT004lFT8JmHmf233ItpyrfAz7UByY=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=po6s3uWhm8qI+EMgtclf8MOClz06LZ6OisIRmIkF9G0egoxpNb3yZ/lgoGwNfoi1GNhjHoqYO2iiG+5NhgtJmmqVbHvxqz2c3YOe6M23XK5eRv19v6tWsg6JP0UAM1wksDB5rbDUrVZUa19DeX3ldpQWCQWzXDtpUMTY6XOHYLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q991Rvwb; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ss/sdlnT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4413DC4CEE4;
-	Tue, 25 Mar 2025 15:27:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742916473;
-	bh=3vBzB0bC4Yz0py1GjLKu6FQytam9E2Tto+wWFuf5NgY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ss/sdlnTE6NzWizQPrks2yd7B7N8OaAN41OuF4vjLlBPs3PJA/grti5Yhnlj85vf0
-	 Atjmv/Rlz18L5wgzEmVg1itZ4Ekqajb6hwM+A1G03AI13FimkbqwtMde9PCVm5ZxM4
-	 ZTHvrEAw/jGus5/yXkmdEHOjlwsnYgF5Sso3VtpXQWfcPpWfY8owCfX7hnW0w7GK1F
-	 2KGwGpAvH4Q2p4GeG8Z0vcHd2QufIsqprjOUSsL74NqXTYN+QQl7pSyPbC4GABsjVd
-	 hUx6Mpzg+AYaXSTeP7XaJRfsBduhMcnAQyEk8OW2RZ0SfvpvxFGQO7tUZJPT5tH7fd
-	 ZGUl/+2beVV9w==
-Date: Tue, 25 Mar 2025 15:27:47 +0000
-From: Simon Horman <horms@kernel.org>
-To: tang.dongxing@zte.com.cn
-Cc: krzk@kernel.org, davem@davemloft.net, feng.wei8@zte.com.cn,
-	shao.mingyin@zte.com.cn, xie.ludan@zte.com.cn, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, yang.guang5@zte.com.cn,
-	yang.yang29@zte.com.cn, ye.xingchen@zte.com.cn, xu.xin16@zte.com.cn
-Subject: Re: [PATCH] net: atm: use sysfs_emit_at() instead of scnprintf()
-Message-ID: <20250325152747.GU892515@horms.kernel.org>
-References: <20250320114253.GJ280585@kernel.org>
- <20250321104557426O89NLhm9SSuAOJwRDq75V@zte.com.cn>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q991Rvwb"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e63533f0a65so6873899276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 08:28:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742916485; x=1743521285; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6RXv0a2X2Eq8/LheD1NmgszijzevuXG/6uAHQeKi4nU=;
+        b=Q991Rvwbh25QFVgJjw5d6el5tFvf17PgGBBePQ7w/ggPUWQ3//5tGUADxKh6M5OWfc
+         KV7MzgzZtLY2ajrvmjJQF2jD9O/2mybWNg1qWpUWYB3wFL/T3yc1MnnBaPStcigin0y7
+         7mErtx4xgYzfFuUcNK//kxe23rCpcb/oGB9ZfO5lbCuHUnD2AmhC+HJSbeMvB/AsUe3U
+         l0VK4bLemrqARpd4ASpFmQuX8WzHV/bVpR1VFGJ0asPoHyVrTdvxNqJjA7yybqICZpXf
+         rWPGEL+TRurQnbYe2TvCqDvBxk/zFRL/e/jaBldv4bguqoZYtyHxIQpRA960t0YiXIG2
+         4mEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742916485; x=1743521285;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6RXv0a2X2Eq8/LheD1NmgszijzevuXG/6uAHQeKi4nU=;
+        b=CkQpwwDRMkf1vVWwGIf3PozGBVMAlIIOCsJ4qlnyTZGjoyEhPbHBrU9Jd5UetSzYXY
+         PQv1vQ5XBrTvQCej9GaCdqrmULDH10afMt+W/SebvLdzp0eQ6XrxkVs4lHT9NG4nDMDT
+         nsoyvOEK9X4GvzuJxGxIdoehN0XoRVm3U1tZySRzq7+0ddAgGXQMMsAGfs0Jp0P7Ml47
+         jDjXc7HwT0H9GEsX0fQZPwqYNLifL2WJaCGjiqxeoWh3TbEipPtlpm0ZvPdcQEN0dzAY
+         t6fQll1Rhc7ZUdZlnv9NVAdDKfYdBLMZi0txzhQhi/dF1vqu7l6CvfEuMIVz8RVV/Dh0
+         naeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWntT2Z15t+LvCXAx5U7qCoJPi04tMGQV/IfJzCTd04wBXq7+sv2y4AnqzJNpkgEUOk8gsLINSkHomc4jE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwW1nx3tSRy7rfQUop6QRinmttkkcLE1lqkWi7s8TIlAvaT5OiB
+	OuT5eCDImRqwoqJJ+FADb1lTYXsM2MdoPTFaApjzGCNjyjfjq4yXu+mpiQmCRh/4i3my0aQ+HaQ
+	56t/r8Q==
+X-Google-Smtp-Source: AGHT+IFNKlPlr6QJNBf6YwQVspG1dIg92Bw2dzwvSp/kTGzaBXAZO3vYnmXcfexGP2GQWw+OsyByv+E60KnY
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:40b3:9c02:57a5:693c])
+ (user=irogers job=sendgmr) by 2002:a05:6902:4e6:b0:e60:90de:3f4e with SMTP id
+ 3f1490d57ef6-e692ef28b8dmr51276.5.1742916484884; Tue, 25 Mar 2025 08:28:04
+ -0700 (PDT)
+Date: Tue, 25 Mar 2025 08:14:40 -0700
+In-Reply-To: <20250325151511.13628-1-irogers@google.com>
+Message-Id: <20250325151511.13628-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321104557426O89NLhm9SSuAOJwRDq75V@zte.com.cn>
+Mime-Version: 1.0
+References: <20250325151511.13628-1-irogers@google.com>
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
+Subject: [PATCH v2 04/35] perf vendor events: Update bonnell events
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Mar 21, 2025 at 10:45:57AM +0800, tang.dongxing@zte.com.cn wrote:
-> >On Mon, Mar 17, 2025 at 05:09:02PM +0800, tang.dongxing@zte.com.cn wrote:
-> >> >On 17/03/2025 08:51, tang.dongxing@zte.com.cn wrote:> From: TangDongxing <tang.dongxing@zte.com.cn>
-> >> >> 
-> >> >> Follow the advice in Documentation/filesystems/sysfs.rst:
-> >> >> show() should only use sysfs_emit() or sysfs_emit_at() when formatting
-> >> >> the value to be returned to user space.
-> >> >> 
-> >> >> Signed-off-by: Tang Dongxing <tang.dongxing@zte.com.cn>Dear ZTE,
-> >> >
-> >> >Can you slow down? You sent a bunch of emails with similar issues which
-> >> >means that dozen of maintainers will deal with the same issues
-> >> >independently. This looks like another vivo or huawei style submission,
-> >> >leading to bugs sneaked via flood of patches.
-> >> >
-> >> >First, fix the name used in the SoB (see submitting patches) to match
-> >> >Latin transcription.
-> >> >
-> >> >Second, use proper SoB chain, see submitting patches.
-> >> >
-> >> >Third, really, really be sure that what you send is correct. You already
-> >> >got quite responses, but you still keep sending patches.
-> >> >
-> >> >Fourth, respond to received feedback instead of flooding us with more of
-> >> >this!
-> >> 
-> >> Dear Krzysztof,
-> >> Thank you for your feedback. I apologize for my previous submissions.
-> >> Regarding the issues you've pointed out:
-> >> I will correct the name used in the SoB to ensure it matches the Latin transcription as required.
-> >> I will double-check my work before sending any further updates.
-> >> I appreciate your guidance and will follow the submission guidelines more carefully going forward. If you have any further advice or resources to help me improve my submissions, I would be grateful for your input.
-> >> Best regards, 
-> >> Tang Dongxing
-> >
-> >Thanks Tang Dongxing,
-> >
-> >Further to Krzystof's comments: please coordinate with your colleague
-> >Xie Ludan who has also posted a patch in this area.
-> >
-> >  https://lore.kernel.org/all/20250317152933756kWrF1Y_e-2EKtrR_GGegq@zte.com.cn/
-> >
-> >It will be much easier for review if there is a single patch
-> >that addresses these issues for ATM.
-> >
-> >Also, please consider reading the following guidance on processes
-> >for the networking subsystem of the Linux kernel. These are similar
-> >but different to other subsystems.
-> >
-> >  https://docs.kernel.org/process/maintainer-netdev.html
-> 
-> Dear SimonHroman,
-> 
-> Thank you for your guidance. I have contacted Xie Ludan,
-> we recommend that the community review be based on the https://lore.kernel.org/all/20250317152933756kWrF1Y_e-2EKtrR_GGegq@zte.com.cn/
+Move DISPATCH_BLOCKED.ANY to the pipeline topic.
 
-Thanks, understood.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/arch/x86/bonnell/other.json    | 8 --------
+ tools/perf/pmu-events/arch/x86/bonnell/pipeline.json | 8 ++++++++
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-> I will carefully read the the networking subsystem guidance before sending any further updates.
-
-Likewise, thanks.
-
+diff --git a/tools/perf/pmu-events/arch/x86/bonnell/other.json b/tools/perf/pmu-events/arch/x86/bonnell/other.json
+index 3a55c101fbf7..6e6f64b96834 100644
+--- a/tools/perf/pmu-events/arch/x86/bonnell/other.json
++++ b/tools/perf/pmu-events/arch/x86/bonnell/other.json
+@@ -323,14 +323,6 @@
+         "SampleAfterValue": "2000000",
+         "UMask": "0x2"
+     },
+-    {
+-        "BriefDescription": "Memory cluster signals to block micro-op dispatch for any reason",
+-        "Counter": "0,1",
+-        "EventCode": "0x9",
+-        "EventName": "DISPATCH_BLOCKED.ANY",
+-        "SampleAfterValue": "200000",
+-        "UMask": "0x20"
+-    },
+     {
+         "BriefDescription": "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
+         "Counter": "0,1",
+diff --git a/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json b/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
+index 9ff032ab11e2..48d3d053a369 100644
+--- a/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
+@@ -211,6 +211,14 @@
+         "SampleAfterValue": "2000000",
+         "UMask": "0x1"
+     },
++    {
++        "BriefDescription": "Memory cluster signals to block micro-op dispatch for any reason",
++        "Counter": "0,1",
++        "EventCode": "0x9",
++        "EventName": "DISPATCH_BLOCKED.ANY",
++        "SampleAfterValue": "200000",
++        "UMask": "0x20"
++    },
+     {
+         "BriefDescription": "Divide operations retired",
+         "Counter": "0,1",
+-- 
+2.49.0.395.g12beb8f557-goog
 
