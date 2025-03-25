@@ -1,63 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5399F1891A9;
-	Tue, 25 Mar 2025 01:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D95D178372
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 01:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742867878; cv=none; b=DAO4pTSUChhjKmeCqdeFq8oAlf0EDstzslpVXytTNjL2PwWoXGMR9dbmzZVXhamDGs4En9Fx0pLWKgc2qFEGWPObH1pqBIgusrBKZbwny0VipqaJqjWz4H4T9ikLLbr47G3hDPrh1OWkePUN9c3ukTaI3g7qJt7rom8E3C56OK8=
+	t=1742867878; cv=none; b=IfR59CYZTQr+FLFZhjhrhv114C4LTSzknxAcYl7x5CytdLRlR19FDJEtzUi/H6npMaorxj288IMPR7lWVeJZh031Nzue+nHOExq+KFmRzRGhuCDVVOe3cukouFL+WuhB4wSUdylM7uWUBKmcV2agkcjE6ebzxrW7OvBS/K76XY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742867878; c=relaxed/simple;
-	bh=DmUNbLkBSA7ZvMjcnypyyYYW/0NgleKxl+kCIDqrTLU=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=cLzF9wB0gaqH9A/jSok3I4SUnvTk+WMBOZ0L9QCVH7tb7saX3ybTZ9H2FyFOYJ9rnl7VsJaWJlrky2IRwyIeHAdpobi5w2wsYX5HZZbmzd47mGMFzF87p1181n0/U3wnXJZDBaLaPTKDVIdBKzeATdAJHmqtD2SMHdP6PI+8ohY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ldKR/SPw; arc=none smtp.client-ip=10.30.226.201
+	bh=ugsMpxNkJUSFp+7lz8ioeDr01ht/xTBvE8gTxUNDI9A=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TTkJ+qGdp4v8YJ+V2i70BDBEXf/XG3kosH/Nkf9zAkAJ2ibVZfmAKGkQF17TewQVTLDWCdNFTZZwAOTj3OXlYFT7lwlYsm63TbGLzN1ZgV9huAOBad/MS44YeINu54M0ZKDAqCS5fIjT9z0ORDzTAvGDub2JmyOgp9Gnct0WnW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S6r7GxtJ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ldKR/SPw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35391C4CEE9;
-	Tue, 25 Mar 2025 01:57:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742867878;
-	bh=DmUNbLkBSA7ZvMjcnypyyYYW/0NgleKxl+kCIDqrTLU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=ldKR/SPwApMw1nTd/eFqH5xn1tc1CiskXZf4rO8WvcZYn0QRTaJnwPK51DmxygQwo
-	 uP7rEmxxLXxYpLH+z/Hi7Ci7MyQ5Vg/wA7izXznN7gvCFHnb716vFmjqlCuaK5ZyNs
-	 wUdGaBlH4idJpambtsLbXhSkq8xGFATPeJlBz96KMAJw3FUuDuZMqsvEq62Fk5VWSv
-	 pGgvUvZNu2GWtqUPdRXJrgNzzTe/2ixZa92wKlumpTcxzXVAc2kg+pBEfl+0F7+wiN
-	 FyIN+MeXtzaWI1QOZi/tS+T5F5KhITm1xIx2B4iRlv1w6nBvzEK7j6sTnYMvDU4tUJ
-	 PSX0+VupKRUQg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE031380DBCD;
-	Tue, 25 Mar 2025 01:58:35 +0000 (UTC)
-Subject: Re: [GIT PULL] Documentation for 6.15
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <87tt7mjhqj.fsf@trenco.lwn.net>
-References: <87tt7mjhqj.fsf@trenco.lwn.net>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <87tt7mjhqj.fsf@trenco.lwn.net>
-X-PR-Tracked-Remote: git://git.lwn.net/linux.git tags/docs-6.15
-X-PR-Tracked-Commit-Id: 323cc36ef68bc2c8ca0bd5f528736432afc1a36a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f81c2b81508c4f479f2cf1ac0dbb138927dc6188
-Message-Id: <174286791413.53720.9062851156408080962.pr-tracker-bot@kernel.org>
-Date: Tue, 25 Mar 2025 01:58:34 +0000
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Linus Torvalds <torvalds@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S6r7GxtJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742867875;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QJ8V4OG2SIBR15qRmgINunGJlllawBsHryHVXkf+1VU=;
+	b=S6r7GxtJCD6/GXxcDswQl+yWPVHx+PBBbJTJtVijLyFpi9g+qprbRqsmoitwy/z2715NBJ
+	B+p6SJy5/oNL6ONqZhITKDfdahCef4sTywPxoGGYabCurt09SBl8guy6D32ZFRWeznTQyA
+	0QIfw1gW6Ke5g49+StdCuw0wpOETdgU=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-16-QrdUzY6RNTiwNCnTTmx6UQ-1; Mon,
+ 24 Mar 2025 21:57:52 -0400
+X-MC-Unique: QrdUzY6RNTiwNCnTTmx6UQ-1
+X-Mimecast-MFC-AGG-ID: QrdUzY6RNTiwNCnTTmx6UQ_1742867870
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3680619560BB;
+	Tue, 25 Mar 2025 01:57:50 +0000 (UTC)
+Received: from starship.lan (unknown [10.22.65.191])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BE190180176A;
+	Tue, 25 Mar 2025 01:57:47 +0000 (UTC)
+From: Maxim Levitsky <mlevitsk@redhat.com>
+To: kvm@vger.kernel.org
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	linux-kernel@vger.kernel.org,
+	Sean Christopherson <seanjc@google.com>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	James Houghton <jthoughton@google.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	linux-kselftest@vger.kernel.org,
+	Anup Patel <anup@brainfault.org>
+Subject: [PATCH v2 2/2] KVM: selftests: access_tracking_perf_test: add option to skip the sanity check
+Date: Mon, 24 Mar 2025 21:57:41 -0400
+Message-Id: <20250325015741.2478906-3-mlevitsk@redhat.com>
+In-Reply-To: <20250325015741.2478906-1-mlevitsk@redhat.com>
+References: <20250325015741.2478906-1-mlevitsk@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-The pull request you sent on Fri, 21 Mar 2025 13:39:32 -0600:
+Add an option to skip sanity check of number of still idle pages,
+and set it by default to skip, in case hypervisor or NUMA balancing
+is detected.
 
-> git://git.lwn.net/linux.git tags/docs-6.15
+Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+---
+ .../selftests/kvm/access_tracking_perf_test.c | 33 ++++++++++++++++---
+ .../testing/selftests/kvm/include/test_util.h |  1 +
+ tools/testing/selftests/kvm/lib/test_util.c   |  7 ++++
+ 3 files changed, 37 insertions(+), 4 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f81c2b81508c4f479f2cf1ac0dbb138927dc6188
-
-Thank you!
-
+diff --git a/tools/testing/selftests/kvm/access_tracking_perf_test.c b/tools/testing/selftests/kvm/access_tracking_perf_test.c
+index 3c7defd34f56..6d50c829f00c 100644
+--- a/tools/testing/selftests/kvm/access_tracking_perf_test.c
++++ b/tools/testing/selftests/kvm/access_tracking_perf_test.c
+@@ -65,6 +65,8 @@ static int vcpu_last_completed_iteration[KVM_MAX_VCPUS];
+ /* Whether to overlap the regions of memory vCPUs access. */
+ static bool overlap_memory_access;
+ 
++static int warn_on_too_many_idle_pages = -1;
++
+ struct test_params {
+ 	/* The backing source for the region of memory. */
+ 	enum vm_mem_backing_src_type backing_src;
+@@ -184,11 +186,10 @@ static void mark_vcpu_memory_idle(struct kvm_vm *vm,
+ 	 * are cached and the guest won't see the "idle" bit cleared.
+ 	 */
+ 	if (still_idle >= pages / 10) {
+-#ifdef __x86_64__
+-		TEST_ASSERT(this_cpu_has(X86_FEATURE_HYPERVISOR),
++		TEST_ASSERT(warn_on_too_many_idle_pages,
+ 			    "vCPU%d: Too many pages still idle (%lu out of %lu)",
+ 			    vcpu_idx, still_idle, pages);
+-#endif
++
+ 		printf("WARNING: vCPU%d: Too many pages still idle (%lu out of %lu), "
+ 		       "this will affect performance results.\n",
+ 		       vcpu_idx, still_idle, pages);
+@@ -342,6 +343,8 @@ static void help(char *name)
+ 	printf(" -v: specify the number of vCPUs to run.\n");
+ 	printf(" -o: Overlap guest memory accesses instead of partitioning\n"
+ 	       "     them into a separate region of memory for each vCPU.\n");
++	printf(" -w: Skip or force enable the check that after dirtying the guest memory, most (90%%) of \n"
++	       "it is reported as dirty again (0/1)");
+ 	backing_src_help("-s");
+ 	puts("");
+ 	exit(0);
+@@ -359,7 +362,7 @@ int main(int argc, char *argv[])
+ 
+ 	guest_modes_append_default();
+ 
+-	while ((opt = getopt(argc, argv, "hm:b:v:os:")) != -1) {
++	while ((opt = getopt(argc, argv, "hm:b:v:os:w:")) != -1) {
+ 		switch (opt) {
+ 		case 'm':
+ 			guest_modes_cmdline(optarg);
+@@ -376,6 +379,11 @@ int main(int argc, char *argv[])
+ 		case 's':
+ 			params.backing_src = parse_backing_src_type(optarg);
+ 			break;
++		case 'w':
++			warn_on_too_many_idle_pages =
++				atoi_non_negative("1 - enable warning, 0 - disable",
++						  optarg);
++			break;
+ 		case 'h':
+ 		default:
+ 			help(argv[0]);
+@@ -386,6 +394,23 @@ int main(int argc, char *argv[])
+ 	page_idle_fd = open("/sys/kernel/mm/page_idle/bitmap", O_RDWR);
+ 	__TEST_REQUIRE(page_idle_fd >= 0,
+ 		       "CONFIG_IDLE_PAGE_TRACKING is not enabled");
++	if (warn_on_too_many_idle_pages == -1) {
++#ifdef __x86_64__
++		if (this_cpu_has(X86_FEATURE_HYPERVISOR)) {
++			printf("Skipping idle page count sanity check, because the test is run nested\n");
++			warn_on_too_many_idle_pages = 0;
++		} else
++#endif
++		if (is_numa_balancing_enabled()) {
++			printf("Skipping idle page count sanity check, because NUMA balance is enabled\n");
++			warn_on_too_many_idle_pages = 0;
++		} else {
++			warn_on_too_many_idle_pages = 1;
++		}
++	} else if (!warn_on_too_many_idle_pages) {
++		printf("Skipping idle page count sanity check, because this was requested by the user\n");
++	}
++
+ 	close(page_idle_fd);
+ 
+ 	for_each_guest_mode(run_test, &params);
+diff --git a/tools/testing/selftests/kvm/include/test_util.h b/tools/testing/selftests/kvm/include/test_util.h
+index 3e473058849f..1bc9b0a92427 100644
+--- a/tools/testing/selftests/kvm/include/test_util.h
++++ b/tools/testing/selftests/kvm/include/test_util.h
+@@ -153,6 +153,7 @@ bool is_backing_src_hugetlb(uint32_t i);
+ void backing_src_help(const char *flag);
+ enum vm_mem_backing_src_type parse_backing_src_type(const char *type_name);
+ long get_run_delay(void);
++bool is_numa_balancing_enabled(void);
+ 
+ /*
+  * Whether or not the given source type is shared memory (as opposed to
+diff --git a/tools/testing/selftests/kvm/lib/test_util.c b/tools/testing/selftests/kvm/lib/test_util.c
+index 3dc8538f5d69..03eb99af9b8d 100644
+--- a/tools/testing/selftests/kvm/lib/test_util.c
++++ b/tools/testing/selftests/kvm/lib/test_util.c
+@@ -176,6 +176,13 @@ size_t get_trans_hugepagesz(void)
+ 	return get_sysfs_val("/sys/kernel/mm/transparent_hugepage/hpage_pmd_size");
+ }
+ 
++bool is_numa_balancing_enabled(void)
++{
++	if (!test_sysfs_path("/proc/sys/kernel/numa_balancing"))
++		return false;
++	return get_sysfs_val("/proc/sys/kernel/numa_balancing") == 1;
++}
++
+ size_t get_def_hugetlb_pagesz(void)
+ {
+ 	char buf[64];
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.26.3
+
