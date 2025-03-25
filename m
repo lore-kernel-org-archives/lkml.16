@@ -1,94 +1,139 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEFD019B586
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 23:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA57118EB0
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 23:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742944269; cv=none; b=MG220iyfWhOSimkHnXD0O6QbYtBBwo+qWXidQhIvbzDdAAlKijHctjJAJm/yfELEczbi6XTngxwHdGUnzoRaPbLxN2KvkHbv2aSqT2iXT1MeMLfmHzsG2KUacnUSj1Mkr8Gn76DBxcMwim1U7IEOdjhJ3HHsiSt7efu0Vat7Ndg=
+	t=1742944395; cv=none; b=dwHcOxxzco9n45qNNxBuTSi4LJKJltqEmBB1OkhdIPm6oiGhmQj11HNPxqIIFqeEreQwfpyKYaqRiLCKZlpvq7+uLo6dxkhyXJpVFMD582h6C0Hr/i0eOMd4pmlAwX/nC7YW2CnItklF3BbeDfzaSh3zWsUbkXuPPQu0ud13KsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742944269; c=relaxed/simple;
-	bh=mBxwdIKcLzCbuwKXu2oo5JvPVZfbX1AHe0z3d5CiU5c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FvduuNU6+ShsSU7tF2N6NdoDZTXXdt+U3yis0rZJllMecYsaaay/dYD8fnt9xER3I1SXYjfb1hjJS8jSJJ1ZIrACpFVqGOhBJrptJgxlKNdBqdouLgoYknw03uqGzQT230c71mcg3beOGl2LcnCTrG4GoEw5uOueT5XUIKfza2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D5fLFno4; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D5fLFno4"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-477296dce8dso40405611cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 16:11:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742944267; x=1743549067; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Yv0k/Fr18Nia/oix5F2g4TGuH0nYdcUdhj7DYGGgxH0=;
-        b=D5fLFno4slEoHKTRTWgW5v5JJBSpWKssRvyOwZGGPfm7/hGyQrv5S6GbP620ivP8+G
-         znO3uDxNj+tkI256ZSE6042w093Bw+ZGUbp/aAbaB2NtVF8oIMcKhOwMHsWcs9cpcDC+
-         B9vi2avPRIVsZHs8hPatNs1hXlAJ1O/B6/2FwTtiTtP64AKsnzCKxNvIkAQ8LI05SJrV
-         t1XfgaRKYa8+e9MResoD03NTeHdIqyLISIQMfuiMLcDuBYlhwO90M5Y91jrQBg1RbvHc
-         5ymQvJKLqN/byBlt/vCuzehpfiyXZhfaWFU3C85rBkPQyf87aZ/Vv/1Ff4Qj15hib9f4
-         jy+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742944267; x=1743549067;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yv0k/Fr18Nia/oix5F2g4TGuH0nYdcUdhj7DYGGgxH0=;
-        b=rXNqESU3J5rEX/aQUw98WRcMDyiy3pAZtHuDWN9dKQnDkPy7GYtUbpNPzLuFWhwxTK
-         Qilssokx5bnN7qB8cJbHIYYPq5avouoOVdFJbHHoFm9Dqb1DofFr4v6ZyH+CZM9Qqh+F
-         R6mtRAyaJaOqW7ZCII1YonKiIx6C0YDWpz9K/lZkMXR7WeRac09xrPjdskzGm17NeZtv
-         HkKuZyLg666dKiiebbf099hu+l4UfwN4S8Gvh6+vytCvnk6skDK0pyyBYZq1Qj1aUWFp
-         VbtsVBe3dNUSH5kjy04Ms/n/XiFGXcJm4sYCnDDx+qcb3r57lrEjTVqn/Bob5nVJ5Ggp
-         GUMA==
-X-Forwarded-Encrypted: i=1; AJvYcCWveREBJT3da4lPDPStWt5nxqoL5/qGGWphbIZLLehKZNfUBYsgb7ssv9M27KVi+m0DYlt/LiczGcfrLn4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyp4+Ag2yDDr+wJ+aAhrLaiUcluvXlpUUSQBl0MDUyTo6J+3KZB
-	9hUv1tSXGPVQ9TFCF3HkTSzy9k7xLWT1Y1JTaZKEbrklEbL7hHHS
-X-Gm-Gg: ASbGncue0egLqr1zKY0Zk3L/YVG0uRopYMGULQk+bR1zIpbmVagn7F6Xdr7s9Uds22l
-	XKjB7Ec3cKopZ9zXi8eZsQzK0hwe2opPX7BVpXlENQS89ksJpP6X8SKKg6G3N/WtZrzfKhoxvYs
-	rIUzRhD2451hVcHsveECpOXc0Vw7F6F6rU+qNNNeuN6ew/7AMsRlVz5fIiVVZ8xpcpdX98goyd8
-	zAUS2xT2mpW3CGWZo47qHVWNN/v0Bhxj95t3oV2oZ/lRgKaDY7Lcx4NO7zyB/k5iuoGHrUJ5ilz
-	EYwQVjbyH4y4kQElzR7JqufnBLmqzgzc4wpHk+j8v02QdLQp2+i0dmEeswYP0AkywGd4X9ZJv3M
-	7DED9FlE=
-X-Google-Smtp-Source: AGHT+IGA1CQFyXf66Rv0kFbgimISyo1ehln5yP3lhLZfPtIRMhjU5sUpgBnPf47YACkVrM56gugfwg==
-X-Received: by 2002:a05:622a:4d0f:b0:476:add4:d2b8 with SMTP id d75a77b69052e-4771de4953fmr270018191cf.32.1742944266602;
-        Tue, 25 Mar 2025 16:11:06 -0700 (PDT)
-Received: from [10.69.1.11] (c-68-55-107-1.hsd1.mi.comcast.net. [68.55.107.1])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4771d15a2d9sm64447471cf.2.2025.03.25.16.11.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Mar 2025 16:11:06 -0700 (PDT)
-Message-ID: <9ab05b38-6f77-4b0b-8a1b-8314e2873047@gmail.com>
-Date: Tue, 25 Mar 2025 19:11:05 -0400
+	s=arc-20240116; t=1742944395; c=relaxed/simple;
+	bh=6sWe4aERWUOwF2kMuXLU8LvEYbl0kzYPUBnM6PECUCQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TlQnsXrQiiDH9CnSAeza/BK4LXeNYQJDJtEBlf2aKhLELDkWYOK3qGezia5xmrfQMDa0v6/aiGlAM0PdNBNuKwNp2Wd7hXQ/99BlcMvZBylaG9do1M0BZf3RwjQJG9ul7CyQfMo2nJquVW2ei/Kv2pq5StJTfJaivG27yV00I+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1txDSI-00064Z-Iw; Wed, 26 Mar 2025 00:13:10 +0100
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1txDSH-001eeV-2h;
+	Wed, 26 Mar 2025 00:13:10 +0100
+Received: from localhost ([::1] helo=dude04.red.stw.pengutronix.de)
+	by dude04.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1txDSI-00EnBh-0e;
+	Wed, 26 Mar 2025 00:13:10 +0100
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Date: Wed, 26 Mar 2025 00:13:02 +0100
+Subject: [PATCH] pmdomain: core: only disable unused domains after
+ genpd_power_off_unused has passed
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/amdgpu: use static ids for ACP platform devs
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, alexander.deucher@amd.com,
- christian.koenig@amd.com, airlied@gmail.com, simona@ffwll.ch,
- sunil.khatri@amd.com, boyuan.zhang@amd.com
-References: <20250325210517.2097188-1-bradynorander@gmail.com>
- <CADnq5_MNBUY=jWbnq-gZQ_4_M_sBJGAgMD0bj2cMdnkoU9G=HA@mail.gmail.com>
-Content-Language: en-US
-From: Brady Norander <bradynorander@gmail.com>
-In-Reply-To: <CADnq5_MNBUY=jWbnq-gZQ_4_M_sBJGAgMD0bj2cMdnkoU9G=HA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250326-pmdomain_core-v1-1-c35d342f934f@pengutronix.de>
+X-B4-Tracking: v=1; b=H4sIAH0442cC/x3MQQqAIBBA0avIrBNsIhddJSImHWsWqShEEN09a
+ fkW/z9QuQhXmNQDhS+pkmJD3ylwB8WdtfhmQIOjGdDqfPp0ksTVpcLab0gYcHOGLLQmFw5y/79
+ 5ed8P7uLmbl8AAAA=
+X-Change-ID: 20250326-pmdomain_core-db2a2f2bc0a6
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel@pengutronix.de, Michael Grzeschik <m.grzeschik@pengutronix.de>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2082;
+ i=m.grzeschik@pengutronix.de; h=from:subject:message-id;
+ bh=6sWe4aERWUOwF2kMuXLU8LvEYbl0kzYPUBnM6PECUCQ=;
+ b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBn4ziFtimtaQcE1/vOM8ozsEGLCHzBIR84o84rl
+ ZNmG+HicNmJAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCZ+M4hQAKCRC/aVhE+XH0
+ qxqoD/0fYbHVaTyk1VaoE1STd9h0jVBzj06s8McsPu+0U529mgqj8JSgI5tF2bJL5goyZY5iENy
+ WPauj95AWjTflGx/kqplVf3wLpd+Czf6u69EzTfD06eF4YfQw++L9CDBkCgQyX1fspBCkLsmP9e
+ MXKH2HxSyYZpsFbl5Btuuhx9a9fJ9egojS9sFIhD3uRm6S4HXbgZek8zea+kSPMoa2xWrkadbzc
+ 6WyJX8MHvgIH9uQGmqURS53M6Z6NMzjedDnTbI+YxnRERfw3YQlYhhUNIvoBj1RpY6oAGnmdrAF
+ GPCeLNNRZ52ryAWucE7SWYabFbsb0eos7Ftz9JS6EZh+OzhD3XCYUlVipoCQi+OQEoiBL2t6/OW
+ Nu25aOxyYF8nUK/MGPD6rn9k3SIOHgpVP+I+MKR103kD424kpG7R7aYB8+lIurm3IAdEbJYuDL8
+ 6rGkWKCj+hOXmGku3icNcVPyHulgCMYaIUkvZqJXeCJbnP8Q/4nXWU0sZ9QAapsnAjvYspB729n
+ uoUikdt4Qibd2O2DUIDpNUf2MeCoNKD6s0sGGsbJn4DCDNe+60qLHyzJsw77c6suLYj2NhgrmUa
+ 6isLiBgUjg8ZxZaldDBEj9r2p3CEydkrsz/uzCCRuf6o0vU0VfrIfam7jZyakk8Lj8PuxZCMkwv
+ 8rFb0OXnJZ8PFFA==
+X-Developer-Key: i=m.grzeschik@pengutronix.de; a=openpgp;
+ fpr=957BC452CE953D7EA60CF4FC0BE9E3157A1E2C64
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: m.grzeschik@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 3/25/25 6:12 PM, Alex Deucher wrote:
-> 
-> While you are at it, can you take a look at
-> drivers/gpu/drm/amd/amdgpu/isp_v4_1_0.c and
-> drivers/gpu/drm/amd/amdgpu/isp_v4_1_1.c as well?
-> 
-> Alex
+If the genpd_power_off_unsused late_initcall did not pass yet, skip any
+genpd_power_off call. During the boot phase possible domain consumers
+could show up, so it is not helpful to disable and enable the power
+domains during that time.
 
-I think it makes more sense to handle that in a separate patch as it is 
-an unrelated ip block.
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+---
+ drivers/pmdomain/core.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
+index 6c94137865c9b568666fb296e20e8669574a9576..493eee39e726abd62df8b8def047434871d15125 100644
+--- a/drivers/pmdomain/core.c
++++ b/drivers/pmdomain/core.c
+@@ -44,6 +44,8 @@ static DEFINE_IDA(genpd_ida);
+ static LIST_HEAD(gpd_list);
+ static DEFINE_MUTEX(gpd_list_lock);
+ 
++static bool genpd_power_off_unused_passed;
++
+ struct genpd_lock_ops {
+ 	void (*lock)(struct generic_pm_domain *genpd);
+ 	void (*lock_nested)(struct generic_pm_domain *genpd, int depth);
+@@ -1023,6 +1025,14 @@ static void genpd_power_off_work_fn(struct work_struct *work)
+ 
+ 	genpd = container_of(work, struct generic_pm_domain, power_off_work);
+ 
++	/*
++	 * If the genpd_power_off_unsused late_initcall did not pass yet
++	 * skip any genpd_power_off call since we are still in boot phase
++	 * where possible pw domain consumers could show up.
++	 */
++	if (!genpd_power_off_unused_passed)
++		return;
++
+ 	genpd_lock(genpd);
+ 	genpd_power_off(genpd, false, 0);
+ 	genpd_unlock(genpd);
+@@ -1249,6 +1259,8 @@ static int __init genpd_power_off_unused(void)
+ 		return 0;
+ 	}
+ 
++	genpd_power_off_unused_passed = true;
++
+ 	pr_info("genpd: Disabling unused power domains\n");
+ 	mutex_lock(&gpd_list_lock);
+ 
+@@ -3272,6 +3284,8 @@ EXPORT_SYMBOL_GPL(of_genpd_parse_idle_states);
+ 
+ static int __init genpd_bus_init(void)
+ {
++	genpd_power_off_unused_passed = false;
++
+ 	return bus_register(&genpd_bus_type);
+ }
+ core_initcall(genpd_bus_init);
+
+---
+base-commit: b3c623b9a94f7f798715c87e7a75ceeecf15292f
+change-id: 20250326-pmdomain_core-db2a2f2bc0a6
+
+Best regards,
+-- 
+Michael Grzeschik <m.grzeschik@pengutronix.de>
 
