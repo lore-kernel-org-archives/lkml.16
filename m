@@ -1,39 +1,39 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from mx2.aip.ooo (mx2.aip.ooo [185.232.107.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD01C15666B;
-	Tue, 25 Mar 2025 09:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475481DB125;
+	Tue, 25 Mar 2025 09:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.232.107.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742895866; cv=none; b=BwzbTP3G9j++kxCB3H2aO7ff2mTBwy+0CagVMnRzlbnx4AUFCAtiI4trN+Zk6FITn4qQ8MfJJTIq2zLNm3UWG3bUTcb6xbEM1acdgWVSdAyEcryIWAmY7j2bGKnvBbk6E7pSVReUUJhkdxtDgjYi2XchBr0OZYg87yAGmc9djgw=
+	t=1742895946; cv=none; b=FRr7j7c69XmJoiFRrJycSRhzi98HI1qG3m1bVnyTMlmadEPRm5bWlMMFLmfumSsZauTr2Uz7YLzolMEay8oEOPUa9RShoi0peKB40/el+AOZkvWp0rL+s9uhrkXVQ3LdSqVd8pBR6lshRXVLg97iaUuHfjkrSM15dQnK2+SpIhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742895866; c=relaxed/simple;
-	bh=YExHr+2mn/5PLGawiihdqqA9Qe1EXHQUBAkBpbg9IW4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RWhvcV+vI/QIx67RbrDHM0rbK/JVkWCZQ9zEcGiv2BMMmhfso9dD1XRcex47yeAED+3GNraRQ5LprT9dZyaMpxrqd2gRvr3yk7bF/dYBR+3e8H2oy3PeYKZX9Auqv6/UE2cqhXZzYoS+hQy2Px9x0jMMb/hKU57zemyppHdTUgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZMPyj382Mz1jBPp;
-	Tue, 25 Mar 2025 17:39:41 +0800 (CST)
-Received: from kwepemg200005.china.huawei.com (unknown [7.202.181.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 54F7B1A0188;
-	Tue, 25 Mar 2025 17:44:19 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by kwepemg200005.china.huawei.com
- (7.202.181.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 25 Mar
- 2025 17:44:18 +0800
-From: Wang Liang <wangliang74@huawei.com>
-To: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>,
-	<cong.wang@bytedance.com>, <kuniyu@amazon.com>
-CC: <yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
-	<wangliang74@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH net] ipv6: sit: fix skb_under_panic with overflowed needed_headroom
-Date: Tue, 25 Mar 2025 17:54:49 +0800
-Message-ID: <20250325095449.2594874-1-wangliang74@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1742895946; c=relaxed/simple;
+	bh=hHMCEXxzUqIp7Lmp8dSlKc13OfFAgtId5ffLRKJJG+8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dDVCw28jn+huseZdVgRBDK9sE2/2W44zUcWNQjW0+fYdQEC8hzGFmURbnK9bo+HqItd2Geb2aLGdUc6OZtFpjChR5rmnj10oNyaaFTrjcUzFM2I1i42xqfHyTynTg/rak1FFDC05HSRxmRYB3K9rWiWmBxSRRNqu/ZCjf87eIn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cyberprotect.ru; spf=pass smtp.mailfrom=cyberprotect.ru; arc=none smtp.client-ip=185.232.107.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cyberprotect.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyberprotect.ru
+Received: from aip-exch-2.aip.ooo ([10.77.28.102] helo=aip-exch.aip.ooo)
+	by mx2.aip.ooo with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <Pavel.Paklov@cyberprotect.ru>)
+	id 1tx0VW-004s05-AC; Tue, 25 Mar 2025 12:23:38 +0300
+Received: from 10.77.154.78 (10.77.154.78) by AIP-EXCH-2.aip.ooo
+ (10.77.28.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 25 Mar
+ 2025 12:23:37 +0300
+From: Pavel Paklov <Pavel.Paklov@cyberprotect.ru>
+To: Joerg Roedel <joro@8bytes.org>
+CC: <pavel.paklov@cyberprotect.ru>, Pavel Paklov
+	<Pavel.Paklov@cyberprotect.ru>, Suravee Suthikulpanit
+	<suravee.suthikulpanit@amd.com>, Will Deacon <will@kernel.org>, Robin Murphy
+	<robin.murphy@arm.com>, Wan Zongshun <Vincent.Wan@amd.com>,
+	<iommu@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>, <stable@vger.kernel.org>
+Subject: [PATCH] iommu/amd: Fix potential buffer overflow in parse_ivrs_acpihid
+Date: Tue, 25 Mar 2025 09:22:44 +0000
+Message-ID: <20250325092259.392844-1-Pavel.Paklov@cyberprotect.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,111 +42,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemg200005.china.huawei.com (7.202.181.32)
+X-SA-Exim-Connect-IP: 10.77.28.102
+X-SA-Exim-Mail-From: Pavel.Paklov@cyberprotect.ru
+X-SA-Exim-Scanned: No (on mx2.aip.ooo); SAEximRunCond expanded to false
 
-When create ipip6 tunnel, if tunnel->parms.link is assigned to the previous
-created tunnel device, the dev->needed_headroom will increase based on the
-previous one.
+There is a string parsing logic error which can lead to an overflow of hid
+or uid buffers. Comparing ACPIID_LEN against a total string length doesn't
+take into account the lengths of individual hid and uid buffers so the
+check is insufficient in some cases. For example if the length of hid 
+string is 4 and the length of the uid string is 260, the length of str 
+will be equal to ACPIID_LEN + 1 but uid string will overflow uid buffer 
+which size is 256.
 
-If the number of tunnel device is sufficient, the needed_headroom can be
-overflowed. The overflow happens like this:
+The same applies to the hid string with length 13 and uid string with 
+length 250.
 
-  ipip6_newlink
-    ipip6_tunnel_create
-      register_netdevice
-        ipip6_tunnel_init
-          ipip6_tunnel_bind_dev
-            t_hlen = tunnel->hlen + sizeof(struct iphdr); // 40
-            hlen = tdev->hard_header_len + tdev->needed_headroom; // 65496
-            dev->needed_headroom = t_hlen + hlen; // 65536 -> 0
+Check the length of hid and uid strings separately to prevent 
+buffer overflow.
 
-The value of LL_RESERVED_SPACE(rt->dst.dev) may be HH_DATA_MOD, that leads
-to a small skb allocated in __ip_append_data(), which triggers a
-skb_under_panic:
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-  ------------[ cut here ]------------
-  kernel BUG at net/core/skbuff.c:209!
-  Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
-  CPU: 0 UID: 0 PID: 24133 Comm: test Tainted: G W 6.14.0-rc7-00067-g76b6905c11fd-dirty #1
-  Tainted: [W]=WARN
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.15.0-0-g2dd4b9b3f840-prebuilt.qemu.org 04/01/2014
-  RIP: 0010:skb_panic+0x156/0x1d0
-  Call Trace:
-   <TASK>
-   skb_push+0xc8/0xe0
-   fou_build_udp+0x31/0x3a0
-   gue_build_header+0xf7/0x150
-   ip_tunnel_xmit+0x684/0x3660
-   sit_tunnel_xmit__.isra.0+0xeb/0x150
-   sit_tunnel_xmit+0x2e3/0x2930
-   dev_hard_start_xmit+0x1a6/0x7b0
-   __dev_queue_xmit+0x2fa9/0x4120
-   neigh_connected_output+0x39e/0x590
-   ip_finish_output2+0x7bb/0x1f00
-   __ip_finish_output+0x442/0x940
-   ip_finish_output+0x31/0x380
-   ip_mc_output+0x1c4/0x6a0
-   ip_send_skb+0x339/0x570
-   udp_send_skb+0x905/0x1540
-   udp_sendmsg+0x17c8/0x28f0
-   udpv6_sendmsg+0x17f1/0x2c30
-   inet6_sendmsg+0x105/0x140
-   ____sys_sendmsg+0x801/0xc70
-   ___sys_sendmsg+0x110/0x1b0
-   __sys_sendmmsg+0x1f2/0x410
-   __x64_sys_sendmmsg+0x99/0x100
-   do_syscall_64+0x6e/0x1c0
-   entry_SYSCALL_64_after_hwframe+0x76/0x7e
-  ---[ end trace 0000000000000000 ]---
-
-Fix this by add check for needed_headroom in ipip6_tunnel_bind_dev().
-
-Reported-by: syzbot+4c63f36709a642f801c5@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=4c63f36709a642f801c5
-Fixes: c88f8d5cd95f ("sit: update dev->needed_headroom in ipip6_tunnel_bind_dev()")
-Signed-off-by: Wang Liang <wangliang74@huawei.com>
+Fixes: ca3bf5d47cec ("iommu/amd: Introduces ivrs_acpihid kernel parameter")
+Cc: stable@vger.kernel.org
+Signed-off-by: Pavel Paklov <Pavel.Paklov@cyberprotect.ru>
 ---
- net/ipv6/sit.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/iommu/amd/init.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/net/ipv6/sit.c b/net/ipv6/sit.c
-index 39bd8951bfca..1662b735c5e3 100644
---- a/net/ipv6/sit.c
-+++ b/net/ipv6/sit.c
-@@ -1095,7 +1095,7 @@ static netdev_tx_t sit_tunnel_xmit(struct sk_buff *skb,
+diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+index cb536d372b12..fb82f8035c0f 100644
+--- a/drivers/iommu/amd/init.c
++++ b/drivers/iommu/amd/init.c
+@@ -3677,6 +3677,14 @@ static int __init parse_ivrs_acpihid(char *str)
+ 	while (*uid == '0' && *(uid + 1))
+ 		uid++;
  
- }
- 
--static void ipip6_tunnel_bind_dev(struct net_device *dev)
-+static int ipip6_tunnel_bind_dev(struct net_device *dev)
- {
- 	struct ip_tunnel *tunnel = netdev_priv(dev);
- 	int t_hlen = tunnel->hlen + sizeof(struct iphdr);
-@@ -1134,7 +1134,12 @@ static void ipip6_tunnel_bind_dev(struct net_device *dev)
- 		WRITE_ONCE(dev->mtu, mtu);
- 		hlen = tdev->hard_header_len + tdev->needed_headroom;
- 	}
++	if (strlen(hid) >= ACPIHID_HID_LEN) {
++		pr_err("Invalid command line: hid is too long\n");
++		return 1;
++	} else if (strlen(uid) >= ACPIHID_UID_LEN) {
++		pr_err("Invalid command line: uid is too long\n");
++		return 1;
++	}
 +
-+	if (t_hlen + hlen > U16_MAX)
-+		return -EOVERFLOW;
-+
- 	dev->needed_headroom = t_hlen + hlen;
-+	return 0;
- }
- 
- static void ipip6_tunnel_update(struct ip_tunnel *t,
-@@ -1452,7 +1457,9 @@ static int ipip6_tunnel_init(struct net_device *dev)
- 	tunnel->net = dev_net(dev);
- 	strcpy(tunnel->parms.name, dev->name);
- 
--	ipip6_tunnel_bind_dev(dev);
-+	err = ipip6_tunnel_bind_dev(dev);
-+	if (err)
-+		return err;
- 
- 	err = dst_cache_init(&tunnel->dst_cache, GFP_KERNEL);
- 	if (err)
+ 	i = early_acpihid_map_size++;
+ 	memcpy(early_acpihid_map[i].hid, hid, strlen(hid));
+ 	memcpy(early_acpihid_map[i].uid, uid, strlen(uid));
 -- 
-2.34.1
+2.43.0
 
