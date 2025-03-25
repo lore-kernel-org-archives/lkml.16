@@ -1,69 +1,119 @@
-Received: from mail.toke.dk (mail.toke.dk [45.145.95.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3CD1A08CA;
-	Tue, 25 Mar 2025 12:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.95.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4B01A08CA;
+	Tue, 25 Mar 2025 12:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742904291; cv=none; b=XcLc0FflT4Qln5tAeezFQV8nRMukhEk/UOIonuIgiFvgxAO7xxuT7gAlbgdh/4/DFxJkpaRA0pO62CENttwbk31/8Cv3mycfNgX+TzzBn/MYqE4S05BLf5oN+YRSeDpZFpEFrweRiB0iZZl3TSmWPaOGSyZb/5SaoG8OKZj+JFI=
+	t=1742904308; cv=none; b=cV+aHkmi7/7IgLzQjG5xcpnWMyhdj8BCd5GzxkyR0rfblixyEO2i0FgP6n9kx0UP1S0qQC3kVL/iW0u/76ri8AX/cl7MEhireid7ghLX5/AWGKxgyT2dtZBmY2hUh7XLJySh9HxsO5hYowh6yx5WO0NjAXF0iIKdG3FvCDKBExQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742904291; c=relaxed/simple;
-	bh=zNg6WqSwfHoDXTJo4CN1g0u2BNkW0N8Jh71pNbdLExU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YN3fAhMFEZeU0OQ8Xnq/pCF3egnUDtTAcYsKX+17PMD44PlDCJYKMaP5betkkBi2YHv2Lb8HR3ohX/aPU2KkJJv/MzP0FbnrujZ4Re2CLInxA0f6/7rIxXfKZAB8UWsS3k7Umt2JlBTM+2uVok07JobJIMjx0sZL65YiFx5XCuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk; spf=pass smtp.mailfrom=toke.dk; dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b=weTchOid; arc=none smtp.client-ip=45.145.95.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toke.dk
+	s=arc-20240116; t=1742904308; c=relaxed/simple;
+	bh=VtttEXZ2GQhd/EjSumSB8FVKCizb2lPQSL5nCkB1qzA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=heGdVrYFCzWC7uhyIeAV342DsJMXpAJmDuU5S5CakNQkyWXov9pAvAJ9Hc9nMI0B9nlA7NbNlnQKlrM8X/UrRo61CqbTqrnM6EdXBTNplHKcaPFYo4+1Ur6iFpgHNwABSfl95UA8WC1q3j6Ku84TI+k3rcOQIo8CuxetyvL5Nrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EgWo8HPb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b="weTchOid"
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
-	t=1742903880; bh=zNg6WqSwfHoDXTJo4CN1g0u2BNkW0N8Jh71pNbdLExU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=weTchOidfyb8Ak6zjeYUr/Bz2a7Pq36yXNE6NKAOeUsO9pU1BXLrRQVYH+4dX2ux5
-	 mfZHU/ix/ugXWw2VSl1JA/K5XsvHZXJ1Nn3IZxuQ+kuDjxO18maKjYROmehlVbS19d
-	 N6LOa2CLcSynqcgYFxeX1z1RjLsQOqwNcZqEV6o2K06FUzIOCYAih847bf6YTjpT+p
-	 65UvtYIXOUFz4b0W5hKWE54s4pw1jAcaQNzdbaLWMoxP5MveZdCGRXrpzs9R40JlxF
-	 ArkUOvvL+Q9TXBwfz5fsvrsbDLv735qSozQ0ZfwOoge3dCNOzfHQ2LGpCS5vqZ/uuT
-	 KvPfDO4dZzivA==
-To: Johannes Berg <johannes@sipsolutions.net>, Remi Pommarel
- <repk@triplefau.lt>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] wifi: mac80211: Update skb's NULL key in
- ieee80211_tx_h_select_key()
-In-Reply-To: <cca02b859f5732d6290eaef62b0d7389c740aa59.camel@sipsolutions.net>
-References: <cover.1741950009.git.repk@triplefau.lt>
- <95269f93724a94ee0b22f8107fe5b5e8f2fbea76.1741950009.git.repk@triplefau.lt>
- <754c24f1b1f7d37cb616478c57a85af18d119c21.camel@sipsolutions.net>
- <Z-Fl9OUQ1EAEWW7h@pilgrim>
- <cca02b859f5732d6290eaef62b0d7389c740aa59.camel@sipsolutions.net>
-Date: Tue, 25 Mar 2025 12:57:59 +0100
-X-Clacks-Overhead: GNU Terry Pratchett
-Message-ID: <87sen1qq48.fsf@toke.dk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EgWo8HPb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39808C4CEE4;
+	Tue, 25 Mar 2025 12:04:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742904307;
+	bh=VtttEXZ2GQhd/EjSumSB8FVKCizb2lPQSL5nCkB1qzA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EgWo8HPbb181I+UHyz7z812jRD6IIlaeRXQfoTyQI8b+QmM8RP2KFljTw4gZ7F0Be
+	 7RcjN0BFX2xLv3FamkhW03fD2F2zJjOfoaCqtY/3Xlyxz+hnXm+PiSSFEh2MJ99Yr5
+	 LokbWEP4cVt35Qd4ENAuI6+k/qtHYQmD6JfaZOI5mvSZMSnvs+lvgV9iF19Uqwisuw
+	 2fkTEi+vouMcJdQkRDG8i5KQNkp/JqPjgjmF/IsPKc0/oPkys8+TRVhPN0qRxC39TP
+	 owKqc0vwyQtZHneA9waLg3UM24kUOcxQad2E9V5xZPSMTkdKc4M6XxYJdegOlqykkV
+	 FWagIT7nlARdA==
+Message-ID: <93c9bc3d-7ad8-438e-966e-cd28a91540af@kernel.org>
+Date: Tue, 25 Mar 2025 13:04:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] arm: dts: Adjust the 'reg' range for imx287 L2 switch
+ description
+To: Lukasz Majewski <lukma@denx.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Paolo Abeni <pabeni@redhat.com>,
+ Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
+ davem@davemloft.net, Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>,
+ netdev@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>
+References: <20250325115736.1732721-1-lukma@denx.de>
+ <20250325115736.1732721-4-lukma@denx.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250325115736.1732721-4-lukma@denx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Johannes Berg <johannes@sipsolutions.net> writes:
+On 25/03/2025 12:57, Lukasz Majewski wrote:
+> The current range of 'reg' property is too small to allow full control
+> of the L2 switch on imx287.
+> 
+> As this IP block also uses ENET-MAC blocks for its operation, the address
+> range for it must be included as well.
+> 
 
-> On Mon, 2025-03-24 at 15:02 +0100, Remi Pommarel wrote:
->> 
->> Finding a fix tag is not easy for this case because I am not sure which
->> commit exactly introduced the issue. Is it the introduction of
->> ieee80211_handle_wake_tx_queue() (i.e. c850e31f79f0) that allows packets
->> queued on another dev to be processed or the one that introduced
->> ieee80211_tx_dequeue() (i.e.  bb42f2d13ffc) ?
->> 
->> I would have said the latter, what do you think ?
->
-> I would agree, despite saying "Move ..." that called
-> ieee80211_tx_h_select_key() twice, once in invoke_tx_handlers_early()
-> before queueing the frame, and again in ieee80211_tx_dequeue().
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching. For bindings, the preferred subjects are
+explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
 
-Yeah, agreed :)
+Missing nxp or mxs.
 
--Toke
+Best regards,
+Krzysztof
