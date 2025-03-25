@@ -1,120 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1081FF5FC;
-	Tue, 25 Mar 2025 22:03:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68905190664
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 22:04:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742940221; cv=none; b=TGaS0FzsWAvcxNRNPOsut9BIAuEw4xih6FKkmfTa49lzUqvENJ+OJECwDlydvr7TSzWEV+wrSz4Thp36nQ30U0X5qATPMognVg5+6tsUhlotsTq0sjXs2xUEYS1E83zeiL0iyygvUTN6nb9KOj1tVnfcxwluCPjSS5iDzCYL89Y=
+	t=1742940285; cv=none; b=rRu1RNpxBVGP1zqGC5sZxKnHeLCP5aESfbdWN0jinI2OEiqGhx3p0wpgGbbOcUKKzeV97MwbR7ptutKh0yzpdlinWe6a70HxyhtZIzJGKj/VwcvK0G+q54AzNaw4FeY4lJTV/TlM9EzxEbSrbwtapIiBb6StT8ingL7qfJDq1S4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742940221; c=relaxed/simple;
-	bh=r4FrZ3kQRtogOz5YRrI0Y7RwoXdZXIEq6GXFizuIs5g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YK2yaj4cXdL15QKe11bs0PYzpsz8Vd96F2pPAhqfqIiks0lVYhoEIjIeqE0C4qO0YYN7qLVu4c4ApJV1lSX+hti6/uK5cYfFKcyaz/8A+LzHro0l7bCV452msmLswjQ6jDZIWmfPe4dWT6F5iec8WucRnMrvkhaGI4C2vP3rI5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LtwEBROz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LtwEBROz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8334C4CEE9;
-	Tue, 25 Mar 2025 22:03:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742940221;
-	bh=r4FrZ3kQRtogOz5YRrI0Y7RwoXdZXIEq6GXFizuIs5g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LtwEBROz1sVZ4zPjLlon/FtAMGwhCVzqKiknXc6JE3JQCPwPnnJDcM94RhFu2Fw1V
-	 Ie+pikQW5ibhnh/d6rkDkJZhxSxwj7QTizo+8ZZBGR/PRaK/rQqi+eZFcVqjTW5WZw
-	 wrXiZUqBwjsW3G0FQc9Q6GfVK5esB7hNfrSQnTZJFbPq0y/Ax8Ry5a4aR8AvxCLISA
-	 y+0ex+Hw1IcoPCwEfnvy4MbzmeVcyR5E4F2j+VpORHmpNLrQDwErhFTxurLBU17Jrp
-	 nozmUFyF6A1DbFXxwqsoQY5j2l7/CESYqVruKX7/kEJNJxyWZAJhB3WO6cZeNzJk5u
-	 M6x96mkwVM02g==
-Date: Tue, 25 Mar 2025 23:03:34 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>, Ryo Takakura <ryotkkr98@gmail.com>,
-	NeilBrown <neilb@suse.de>,
-	Caleb Sander Mateos <csander@purestorage.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Borislav Petkov <bp@alien8.de>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH v4] lockdep: Fix wait context check on softirq for
- PREEMPT_RT
-Message-ID: <Z-MoNvnFOQmST8f3@gmail.com>
-References: <20250321143322.79651-1-boqun.feng@gmail.com>
- <Z-J6jE0lHJpWA20l@gmail.com>
- <Z-L2Km8nHE7Eevis@boqun-archlinux>
+	s=arc-20240116; t=1742940285; c=relaxed/simple;
+	bh=MLfg3tCA0imUiAHq1ZnK2Iheihjk6nU8lsCCEgkW230=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=eE9C/RBU2czgj7/Q90yp66aSA2X+iCDELM0i51sSbsl+0SJJE/uWdsVWeJWTdCszs2IZ7MrJuOXjIvUcyQg5zFfm+aKx/IxdUy3lCCWdalfdKsV8G5DJ0pDfJWpdpIiCkAaGLvYX9YausJt3FHdElPZPsAxzivHYykQE8BVGMC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 868D8C4CEE4;
+	Tue, 25 Mar 2025 22:04:43 +0000 (UTC)
+Date: Tue, 25 Mar 2025 18:05:27 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada
+ <masahiroy@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Catalin
+ Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Mark
+ Brown <broonie@kernel.org>, "Arnd Bergmann" <arnd@arndb.de>, Nathan
+ Chancellor <nathan@kernel.org>
+Subject: [GIT PULL] tracing: scripts/sorttable: Updates for v6.15
+Message-ID: <20250325180527.5fc0a1fa@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-L2Km8nHE7Eevis@boqun-archlinux>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
 
-* Boqun Feng <boqun.feng@gmail.com> wrote:
 
-> On Tue, Mar 25, 2025 at 10:42:36AM +0100, Ingo Molnar wrote:
-> > 
-> > * Boqun Feng <boqun.feng@gmail.com> wrote:
-> > 
-> > > Since commit 0c1d7a2c2d32 ("lockdep: Remove softirq accounting on
-> > > PREEMPT_RT."), the wait context test for mutex usage within
-> > > "in softirq context" fails as it references @softirq_context.
-> > > 
-> > > [    0.184549]   | wait context tests |
-> > > [    0.184549]   --------------------------------------------------------------------------
-> > > [    0.184549]                                  | rcu  | raw  | spin |mutex |
-> > > [    0.184549]   --------------------------------------------------------------------------
-> > > [    0.184550]                in hardirq context:  ok  |  ok  |  ok  |  ok  |
-> > > [    0.185083] in hardirq context (not threaded):  ok  |  ok  |  ok  |  ok  |
-> > > [    0.185606]                in softirq context:  ok  |  ok  |  ok  |FAILED|
-> > > 
-> > > As a fix, add lockdep map for BH disabled section. This fixes the
-> > > issue by letting us catch cases when local_bh_disable() gets called
-> > > with preemption disabled where local_lock doesn't get acquired.
-> > > In the case of "in softirq context" selftest, local_bh_disable() was
-> > > being called with preemption disable as it's early in the boot.
-> > > 
-> > > [boqun: Move the lockdep annotations into __local_bh_*() to avoid false
-> > > positives because of unpaired local_bh_disable() reported by Borislav
-> > > Petkov [1] and Peter Zijlstra [2], and make bh_lock_map only exist for
-> > > PREEMPT_RT]
-> > > 
-> > > Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
-> > > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> > > Link: https://lore.kernel.org/all/20250306122413.GBZ8mT7Z61Tmgnh5Y9@fat_crate.local/ [1]
-> > > Link: https://lore.kernel.org/lkml/20250307113955.GK16878@noisy.programming.kicks-ass.net/ [2]
-> > > Link: https://lore.kernel.org/r/20250118054900.18639-1-ryotkkr98@gmail.com
-> > 
-> > That's a weird SOB chain. Following back the history of the submission 
-> > I believe this line went missing:
-> > 
-> >   From: Ryo Takakura <ryotkkr98@gmail.com>
-> > 
-> > I added it back in to the commit.
-> > 
-> 
-> Thanks! Looks like I lost the "From:" field when I post the draft of v4
-> at:
-> 
-> 	https://lore.kernel.org/lkml/Z8t8imzJVhWyDvhC@boqun-archlinux/
-> 
-> I must re-apply that email as a patch to my branch, hence the "From:"
-> field got changed. Sorry for the mistakes.
+Linus,
 
-No worries - sometimes when rebasing with a conflict or applying with a 
-conflict, Git can drop authorship without much of a warning - I've ran 
-into that myself - so it happens.
+tracing and sorttable updates for 6.15:
 
-Thanks,
+- Implement arm64 build time sorting of the mcount location table
 
-	Ingo
+  When gcc is used to build arm64, the mcount_loc section is all zeros in
+  the vmlinux elf file. The addresses are stored in the Elf_Rela location.
+  To sort at build time, an array is allocated and the addresses are added
+  to it via the content of the mcount_loc section as well as he Elf_Rela
+  data. After sorting, the information is put back into the Elf_Rela which
+  now has the section sorted.
+
+- Make sorting of mcount location table for arm64 work with clang as well
+
+  When clang is used, the mcount_loc section contains the addresses, unlike
+  the gcc build. An array is still created and the sorting works for both
+  methods.
+
+- Remove weak functions from the mcount_loc section
+
+  Have the sorttable code pass in the data of functions defined via nm -S
+  which shows the functions as well as their sizes. Using this information
+  the sorttable code can determine if a function in the mcount_loc section
+  was weak and overridden. If the function is not found, it is set to be
+  zero. On boot, when the mcount_loc section is read and the ftrace table is
+  created, if the address in the mcount_loc is not in the kernel core text
+  then it is removed and not added to the ftrace_filter_functions (the
+  functions that can be attached by ftrace callbacks).
+
+- Update and fix the reporting of how much data is used for ftrace functions
+
+  On boot, a report of how many pages were used by the ftrace table as well
+  as how they were grouped (the table holds a list of sections that are
+  groups of pages that were able to be allocated). The removing of the weak
+  functions required the accounting to be updated.
+
+
+Please pull the latest trace-sorttable-v6.15 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace-sorttable-v6.15
+
+Tag SHA1: 77e26125a028422c57c40da1c29b4bea889a21f2
+Head SHA1: dc208c69c033d3caba0509da1ae065d2b5ff165f
+
+
+Steven Rostedt (10):
+      arm64: scripts/sorttable: Implement sorting mcount_loc at boot for arm64
+      scripts/sorttable: Have mcount rela sort use direct values
+      scripts/sorttable: Always use an array for the mcount_loc sorting
+      scripts/sorttable: Zero out weak functions in mcount_loc table
+      ftrace: Update the mcount_loc check of skipped entries
+      ftrace: Have ftrace pages output reflect freed pages
+      ftrace: Test mcount_loc addr before calling ftrace_call_addr()
+      ftrace: Check against is_kernel_text() instead of kaslr_offset()
+      scripts/sorttable: Use normal sort if theres no relocs in the mcount section
+      scripts/sorttable: Allow matches to functions before function entry
+
+----
+ arch/arm64/Kconfig      |   1 +
+ kernel/trace/ftrace.c   |  55 ++++++-
+ scripts/link-vmlinux.sh |   4 +-
+ scripts/sorttable.c     | 411 +++++++++++++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 457 insertions(+), 14 deletions(-)
+---------------------------
