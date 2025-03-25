@@ -1,224 +1,165 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from HK2PR02CU002.outbound.protection.outlook.com (mail-eastasiaazon11020141.outbound.protection.outlook.com [52.101.128.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F10319F42F;
-	Tue, 25 Mar 2025 10:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742897896; cv=none; b=CdobMf7Ueg7b9YjOp9gT+xhLdUF96yyvFsF6yIdESk90s3NPSH10cXebTZC/EYDQL6+9aJe4eP1raCf0KU+KVO7yd5Zv/QNXKDtbFbnFLl4QGZ917ltbiYbCE9TS4Zg/9Eaqm2UaoXmS3xThVQC1XMgPRz67Qvvc47lGdAJUPdc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742897896; c=relaxed/simple;
-	bh=or9BUOS7mnNkbG2LoZHovOeZUT7/4ekMAEZeaiMi6Jg=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=nyIVtmWN3aFGZrei/ArzwXJ9pmzEfRCbDNNsy8aE6AM4DiegSHMvVyaNNTDvQYrd84nYnI12Tva5U4TISYdIUQTszcwUo+7WPQemcIWM53an0wVspYhZxwApPKD+qPf3Q/7SUUw4cDKwMTLir+uzb9lNSUZE5gYeVfGaPsylPkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Jot3g1mK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ujAN5lP9; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jot3g1mK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ujAN5lP9"
-Date: Tue, 25 Mar 2025 10:18:11 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742897892;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RbzKwXKLQ58YvFPEEIT/8vWVeG7WHmTBeOnx9PLjDUI=;
-	b=Jot3g1mKp0ekxZL0K5zjWINa/UCtoDo3tcAmPKb7KeKQf73S12cgSUgEY9OSL9ETApQf6H
-	Gtqz1E+C3AzLiuK2s11NlFgdcGIAOHM9X3P+/dz9OzWiXxjCYElS1KytoHYXEylM0mE4i9
-	36B5rDv11ywz3B6PmcxVGM/PWHRmVLPw8plyUe3kubLn2ThXpOOJKbxS7M4RgBMnDA/vVD
-	0eOyQDxZLLK2+irh/p52v5YjQmfuVbRBQiRBJ7aTsFHpTrA3tcQkxk0D7ybgDaCfyzi2Ar
-	ao0ks7uejKksr9hGZZcDiQhd7da5MOq3hjqFbsvWC7nA5tfhzlA+OmAj4LP0/A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742897892;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RbzKwXKLQ58YvFPEEIT/8vWVeG7WHmTBeOnx9PLjDUI=;
-	b=ujAN5lP9cCddRUVpeGjBtJozWo3hnj6t/IA8l8FVBNBagRzoS592xAANq0P/2oR3F6xnZp
-	hDU8I/phBDulb0BA==
-From: "tip-bot2 for Chang S. Bae" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/fpu] x86/fpu/xstate: Introduce xfeature order table and
- accessor macro
-Cc: Dave Hansen <dave.hansen@linux.intel.com>,
- "Chang S. Bae" <chang.seok.bae@intel.com>, Ingo Molnar <mingo@kernel.org>,
- Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Oleg Nesterov <oleg@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250320234301.8342-3-chang.seok.bae@intel.com>
-References: <20250320234301.8342-3-chang.seok.bae@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356F8255E34;
+	Tue, 25 Mar 2025 10:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.128.141
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742897902; cv=fail; b=ZTalqldz27cJFtioFRYeghWeIM29i5fj9oYJulRkEy5K1ZbGdsLyM5lxaDW0MP0qLMrP0sf17qK7Lv1IasLOOjnO74R3PEcK583DoMsvWAZ/0N1X/l+Hh6T38dnAvEJ9F/LGKg3f8nvQn3YnHNlzwSS6wvLKrUUJcm8Whkk/yHc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742897902; c=relaxed/simple;
+	bh=BQOH410D1CucFZNYkwi9JFwxsaurzgYktUTCdYko/2U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=iiPlPEcEFYoTzqeb/nhm8aHCgHWrzS6FkKMtazJnCP3ALgzJvffXdx1gdw5K8bNz3rbWEMqT6W9Tey3nlxygnEtdUDRQM+eFtEQQq8uZCeb2nT4f+wNwTJfVTwHtuKyM4qFzkuMgXDm85cSvAjZYPpvU8bRo4a8RNxnMG2e8INI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.128.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sMr0xiT8Lp4GBq6fubs6daSR+NR7seeJjd5xGWmE6tghR/iQeeToc5Pn1lvX4JVbGvljvC+VQMM7M1tPCBxIPyzMAtJclBQ3p7MY1eeCDhvQcqUj1yuXXyHVn2x6V0t+zTZzixNHO7ccj/yovuo1V1ldD3ncNIT4Z8MPFoVoieP75ObFJK/i8Ti8+jXo1mdxPHImwMvkTo61f5EqalLSx34DWX30fxccsU9hzFMfLKnFiCjwScAhnBQCMtOdrHdrZz62vVa2rl1Pza0713ZB02I5SNKpMyB/cVJWP8gzUdRvwIyg4mO1Y3kR/tv6OzJ6za1EqqDxk5E3jlC9cmHNjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=K5yF0B8OmdFG/b90WKI/YJJUQx5/OG3MyDkmHqDb6kk=;
+ b=ZoTtYfTDdUmKMtD91vA5n8xGZeoCR638nSh+XE1tPyMGhRHkn897xXoA+PB66wwePjPZRq24URJn8ZgYuB+s1pdaUeD4dAlxBvocgfUvNgzdREZa8Cc8jJpF6F4VFR0xvEiKsDR/FDpckcPZpIgDLY4HWNuWwYUJ3fVO9P7fWuOcAD9RzqCR8Pv9EYxyd1az07rSUDwJKvTZef/ahV6fXAzXgO31LPv+EacHsRXsoGDY/sdWGrMPjJveQ91CW+kNMv8r2663t4Ql++ZTeFjnSknNV3O6IW1m9Lq4wvl5o3h8Obg5i3MF5pRbW7AglwprTDB2qXByEGVL9dPCs0bRvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cixtech.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from SG2PR04CA0204.apcprd04.prod.outlook.com (2603:1096:4:187::16)
+ by JH0PR06MB6438.apcprd06.prod.outlook.com (2603:1096:990:2c::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Tue, 25 Mar
+ 2025 10:18:09 +0000
+Received: from SG1PEPF000082E6.apcprd02.prod.outlook.com
+ (2603:1096:4:187:cafe::66) by SG2PR04CA0204.outlook.office365.com
+ (2603:1096:4:187::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.42 via Frontend Transport; Tue,
+ 25 Mar 2025 10:18:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ SG1PEPF000082E6.mail.protection.outlook.com (10.167.240.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.20 via Frontend Transport; Tue, 25 Mar 2025 10:18:08 +0000
+Received: from gchen.. (unknown [172.20.64.84])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 8E3ED4160CA0;
+	Tue, 25 Mar 2025 18:18:07 +0800 (CST)
+From: Guomin Chen <guomin.chen@cixtech.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	cix-kernel-upstream@cixtech.com,
+	Guomin Chen <Guomin.Chen@cixtech.com>
+Subject: [PATCH v2 0/2] mailbox: add Cixtech mailbox driver
+Date: Tue, 25 Mar 2025 10:18:05 +0000
+Message-Id: <20250325101807.2202758-1-guomin.chen@cixtech.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174289789148.14745.3608491442696059289.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG1PEPF000082E6:EE_|JH0PR06MB6438:EE_
+X-MS-Office365-Filtering-Correlation-Id: 57cc4eb7-5049-4a24-8b46-08dd6b865734
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RXFYWFVEMGNLd3p5N1lqL0RLNUZVTmpteDZTbDJ4Mzg0ZFdRQm5ENHdpV1B2?=
+ =?utf-8?B?NUVYUWFEblNsc2RGaHRsTUhrS0RQME52NkdZS3AzMlN0ak4vVmk2eS93Rm5o?=
+ =?utf-8?B?QjZ4NkxYaWdMcXVEeVdOV0o3Z3RISVVVcU1aNWJzcUlDRkl1UmxaM3NJbkxn?=
+ =?utf-8?B?UDJnY1B4TGdrRzh4VzROZElXNENYSjZZOHJsRFN0RnB3c3g5NjUrVGJPVDZG?=
+ =?utf-8?B?ZUZ0eFlLb0RaT3BXNjQ2ak5DYXdmQm13MW1LNzhVZjRPS3lxVFZzc0UyeGdU?=
+ =?utf-8?B?Rlo0WWFIWUc0TmgxUlFwelNGWURSekIxZmZjdk9CWEhXbmlYZ25uY2ZEL2ZH?=
+ =?utf-8?B?L08rbEFpVFB0aXc5VnUyY1dKYVFPZnl1Q09GVFlvMHpzN1RSNlkvRFlIamh3?=
+ =?utf-8?B?MGdTekFrNzRUeUtWcHNWZFhod002eEpWcWpqaDRudHk0S25SemFnSHJTcmJz?=
+ =?utf-8?B?OU1aMS9jbUZ3aWxOYldlanJhTjF1YnROWHBiU3YzUDcyZytJQWhqNStWRjZy?=
+ =?utf-8?B?NldDbTRuekUxQTR0aktiT1k0SVlTSHRWWVNyK3FyNkhmRWdrL3dQYVI4aGhl?=
+ =?utf-8?B?MHFlZXJoSStIVmV5bXhYd1RsdCtIK2p5VStDSUh2R1Evam14WXR4VVNvZW4w?=
+ =?utf-8?B?ZFBkSXJ1cTdGWVl5N2w3dmdzdGRHdDFJaXZBRHN4VUZuNmFFNDhLYmZTRmt6?=
+ =?utf-8?B?TWY3WlltNHV5S3dMaXRya2dGQ2VtQ0RKL0NOamcvMkt5T0xSTUZDa0E5R1lQ?=
+ =?utf-8?B?SGdZODlXYzlyT3JZWi9ZalpIRld4SUZiUmtMTWhxejlCV1pMcWdpNFM5bFB4?=
+ =?utf-8?B?ODJjRlNMZkxvWXhHZjRKbTJXNDRSbWVqZVpPZ2xnZU5nVnZMV3JGSE9wMWl4?=
+ =?utf-8?B?dnJ2VHR2NEJiZ0lPTFJ5b21QM3piYXhldkdodC9wVEMvbVA1T3g0NjA2aW9E?=
+ =?utf-8?B?MHdoQXNrUWs5NnlpWVdkZk9vNUQ2bVY3eW9NNE9PR0dMZVRJdXhlNFNXUS9O?=
+ =?utf-8?B?OEZqNkhlK3owSnd1ZWpKOFlUckFSbFFDYk5ta2VRTkFmbEhiZXEwbTY1dE5T?=
+ =?utf-8?B?R2dXTnpKWmtMUDdUTTI2UEdIUjAwelUvMERQK2NwK0p1M0Npd25pcEFCekJm?=
+ =?utf-8?B?cWNlT2t5NHF5N3l6WE1kZmZyMGlkUWtYL3E5WndteFJoRHl0ZG5XZ0xnMVRW?=
+ =?utf-8?B?OUVKZVZnSjFHcWRRbFJFTExLZm5FNUt0VE1Da1BkdHNhWHFPZHlSL2dLYU44?=
+ =?utf-8?B?bkpoSGlhMFBOSmpWZzdMbW55MFREZksrZ1hPRG55ZEdCazhXY0xHdW1MT0Rh?=
+ =?utf-8?B?R2JsS0tQdllSRHQ1MGFiblY1cDdQV1VKS0tYcU9ZbjBHM1JGYnpKeWR3cmFl?=
+ =?utf-8?B?N0hMZjJYemRXbEhsQTA0SGNBTWd5S1FERnBuRGFJMUlkcjNMbVUwSEt0dDRt?=
+ =?utf-8?B?d1JkSzMrSThjWjlGM3hoM1MzQlV3eW5wa0RUOU0vL2NpbkpsNng5bThVaVlV?=
+ =?utf-8?B?eTA0REkwUmhDWktmU2VFTE5GZXplU0FOV1IxZVd6cUNIZXdTcWZKQW1sa09U?=
+ =?utf-8?B?MzF6VHI0dEFNL0gvVjFra1grVm1tYngvLzhtcXF6aUk0WjJvSExVUHIvSWdL?=
+ =?utf-8?B?aGgrM1QvZjRmcHVEWkFqbDBtSzlBSUY1Qzl3NFdxTC9HRTl2dW1mWVRyNFFU?=
+ =?utf-8?B?ZERNaFkxa2NtOWFPb0FpNVBBMk4waUdRVmJTdTBiUkIxTFd5Y0NheStsZFVU?=
+ =?utf-8?B?ajAvcHd0Q3ZFNTBuWitlbEkwL2gyRVQwc2ZYa2tsWjR6ZVNUUGM2NG1tandp?=
+ =?utf-8?B?M3BGY0lPUmJCRnJPTXZUSVNxQ3JCN1Q4ekxJNmNnN3N4MUh1K09tRk4rWWZh?=
+ =?utf-8?B?OGhSQUNxZnJqRmVPNUEzUGtpM3puZTR5U2UwK00wYk5qWnhyTmMzbERacVll?=
+ =?utf-8?B?VCs4Q3UwWWNFNWs4azhxUllhZXVGOC9MaVhObURjQkIwWmxUYUVIcjZWZmdG?=
+ =?utf-8?Q?z/SX1jekQXFlckZrswBmnfZFG4T1Mo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2025 10:18:08.7454
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57cc4eb7-5049-4a24-8b46-08dd6b865734
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: SG1PEPF000082E6.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB6438
 
-The following commit has been merged into the x86/fpu branch of tip:
+From: Guomin Chen <Guomin.Chen@cixtech.com>
 
-Commit-ID:     b03c328e9711b4af8e4a433a1c4dad38f2e160a2
-Gitweb:        https://git.kernel.org/tip/b03c328e9711b4af8e4a433a1c4dad38f2e=
-160a2
-Author:        Chang S. Bae <chang.seok.bae@intel.com>
-AuthorDate:    Thu, 20 Mar 2025 16:42:53 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 25 Mar 2025 11:02:20 +01:00
+The Cixtech mailbox controller, used in the Cixtech Sky1 SoC,
+is used for message transmission between multiple processors
+within the SoC, such as the AP, PM, audio DSP, SensorHub MCU,
+and others.
 
-x86/fpu/xstate: Introduce xfeature order table and accessor macro
+The Cixtech mailbox is unidirectional, so it typically operates in
+pairs—one for reading and one for writing.
 
-The kernel has largely assumed that higher xstate component numbers
-correspond to later offsets in the buffer. However, this assumption no
-longer holds for the non-compacted format, where a newer state component
-may have a lower offset.
+Each Cixtech mailbox supports 11 channels with different transmission
+modes:
+ channel 0-7 - Fast channel with 32bit transmit register and IRQ support
+ channel 8   - Doorbell mode,using the mailbox as an interrupt-generating
+                mechanism.
+ channel 9   - Fifo based channel with 32*32bit depth fifo and IRQ support
+ channel 10  - Reg based channel with 32*32bit transmit register and
+                Doorbell+transmit acknowledgment IRQ support
 
-When iterating over xstate components in offset order, using the feature
-number as an index may be misleading. At the same time, the CPU exposes
-each component=E2=80=99s size and offset based on its feature number, making =
-it a
-key for state information.
+Changes for v2:
+- Update the Subject title.
+- Rename the bindings file to be based on compatible: cix,sky1-mbox
 
-To provide flexibility in handling xstate ordering, introduce a mapping
-table: feature order -> feature number.  The table is dynamically
-populated based on the CPU-exposed features and is sorted in offset order
-at boot time.
-
-Additionally, add an accessor macro to facilitate sequential traversal of
-xstate components based on their actual buffer positions, given a feature
-bitmask. This accessor macro will be particularly useful for computing
-custom non-compacted format sizes and iterating over xstate offsets in
-non-compacted buffers.
-
-Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
-Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Link: https://lore.kernel.org/r/20250320234301.8342-3-chang.seok.bae@intel.com
 ---
- arch/x86/kernel/fpu/xstate.c | 58 ++++++++++++++++++++++++++++++-----
- 1 file changed, 50 insertions(+), 8 deletions(-)
+Guomin Chen (2):
+  dt-bindings: mailbox: add cix,sky1-mbox
+  mailbox: add Cixtech mailbox driver
 
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 542c698..1e22103 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -14,6 +14,7 @@
- #include <linux/proc_fs.h>
- #include <linux/vmalloc.h>
- #include <linux/coredump.h>
-+#include <linux/sort.h>
-=20
- #include <asm/fpu/api.h>
- #include <asm/fpu/regset.h>
-@@ -88,6 +89,31 @@ static unsigned int xstate_sizes[XFEATURE_MAX] __ro_after_=
-init =3D
- 	{ [ 0 ... XFEATURE_MAX - 1] =3D -1};
- static unsigned int xstate_flags[XFEATURE_MAX] __ro_after_init;
-=20
-+/*
-+ * Ordering of xstate components in uncompacted format:  The xfeature
-+ * number does not necessarily indicate its position in the XSAVE buffer.
-+ * This array defines the traversal order of xstate features.
-+ */
-+static unsigned int xfeature_uncompact_order[XFEATURE_MAX] __ro_after_init =
-=3D
-+	{ [ 0 ... XFEATURE_MAX - 1] =3D -1};
-+
-+static inline unsigned int next_xfeature_order(unsigned int i, u64 mask)
-+{
-+	for (; xfeature_uncompact_order[i] !=3D -1; i++) {
-+		if (mask & BIT_ULL(xfeature_uncompact_order[i]))
-+			break;
-+	}
-+
-+	return i;
-+}
-+
-+/* Iterate xstate features in uncompacted order: */
-+#define for_each_extended_xfeature_in_order(i, mask)	\
-+	for (i =3D 0;					\
-+	     i =3D next_xfeature_order(i, mask),		\
-+	     xfeature_uncompact_order[i] !=3D -1;		\
-+	     i++)
-+
- #define XSTATE_FLAG_SUPERVISOR	BIT(0)
- #define XSTATE_FLAG_ALIGNED64	BIT(1)
-=20
-@@ -209,13 +235,20 @@ static bool xfeature_enabled(enum xfeature xfeature)
- 	return fpu_kernel_cfg.max_features & BIT_ULL(xfeature);
- }
-=20
-+static int compare_xstate_offsets(const void *xfeature1, const void *xfeatur=
-e2)
-+{
-+	return  xstate_offsets[*(unsigned int *)xfeature1] -
-+		xstate_offsets[*(unsigned int *)xfeature2];
-+}
-+
- /*
-  * Record the offsets and sizes of various xstates contained
-- * in the XSAVE state memory layout.
-+ * in the XSAVE state memory layout. Also, create an ordered
-+ * list of xfeatures for handling out-of-order offsets.
-  */
- static void __init setup_xstate_cache(void)
- {
--	u32 eax, ebx, ecx, edx, i;
-+	u32 eax, ebx, ecx, edx, xfeature, i =3D 0;
- 	/*
- 	 * The FP xstates and SSE xstates are legacy states. They are always
- 	 * in the fixed offsets in the xsave area in either compacted form
-@@ -229,21 +262,30 @@ static void __init setup_xstate_cache(void)
- 	xstate_sizes[XFEATURE_SSE]	=3D sizeof_field(struct fxregs_state,
- 						       xmm_space);
-=20
--	for_each_extended_xfeature(i, fpu_kernel_cfg.max_features) {
--		cpuid_count(CPUID_LEAF_XSTATE, i, &eax, &ebx, &ecx, &edx);
-+	for_each_extended_xfeature(xfeature, fpu_kernel_cfg.max_features) {
-+		cpuid_count(CPUID_LEAF_XSTATE, xfeature, &eax, &ebx, &ecx, &edx);
-=20
--		xstate_sizes[i] =3D eax;
--		xstate_flags[i] =3D ecx;
-+		xstate_sizes[xfeature] =3D eax;
-+		xstate_flags[xfeature] =3D ecx;
-=20
- 		/*
- 		 * If an xfeature is supervisor state, the offset in EBX is
- 		 * invalid, leave it to -1.
- 		 */
--		if (xfeature_is_supervisor(i))
-+		if (xfeature_is_supervisor(xfeature))
- 			continue;
-=20
--		xstate_offsets[i] =3D ebx;
-+		xstate_offsets[xfeature] =3D ebx;
-+
-+		/* Populate the list of xfeatures before sorting */
-+		xfeature_uncompact_order[i++] =3D xfeature;
- 	}
-+
-+	/*
-+	 * Sort xfeatures by their offsets to support out-of-order
-+	 * offsets in the uncompacted format.
-+	 */
-+	sort(xfeature_uncompact_order, i, sizeof(unsigned int), compare_xstate_offs=
-ets, NULL);
- }
-=20
- /*
+ .../bindings/mailbox/cix,sky1-mbox.yaml       |  80 +++
+ drivers/mailbox/Kconfig                       |  10 +
+ drivers/mailbox/Makefile                      |   2 +
+ drivers/mailbox/cixtech-mailbox.c             | 633 ++++++++++++++++++
+ 4 files changed, 725 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/cix,sky1-mbox.yaml
+ create mode 100644 drivers/mailbox/cixtech-mailbox.c
+
+-- 
+2.34.1
+
