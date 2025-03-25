@@ -1,111 +1,98 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA30253F0E;
-	Tue, 25 Mar 2025 07:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE311714A1;
+	Tue, 25 Mar 2025 07:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742886252; cv=none; b=PAh8i7lCCHmq+wLyQkyL/dpHockAifgGk7EFx2YLqr5SmbkzqwMGLZw9PkUVwmeTl9be2BDvUoBdy/SaUSkSQvEeIDtEM3fgt7F1B6j99yngQVSMr8DzuPJBKTpRhFO9N1S1QOnxHV4lE0NbXdGH17oVpNiSb5riQ0LvJaR/y0s=
+	t=1742886284; cv=none; b=LoZvOAZBe5B0aW8PzPodQPearpe5pS3y1oRvIsLsfogqZ6/5+j16kJRkdw45kYttCkBilBwRYYvWHvrqSi4pCjdnJx74H+/ksXiZpu3DR/x/5bGgV1N+PU7+fTTOQ4bv/e3IAMYSA2fye310NgqUTemItwOn91AO6ofEJ+Jaykc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742886252; c=relaxed/simple;
-	bh=0BimZBJc1XVRW5ZmeAzMVSeyol5gKZu79sdS6JVdjEc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h2wmEC1qoofCTTbntfc9fGsI7JkKLDnTdu/I2PWAFFQxGCklAv8/l3HB6hC1Ep6myDceCRRi9RzItUoqiGJZHaFZ/3WweHd0KPHv/k49ql1+5hlvXiuULta8fSndSUrDzUWeiGb1ZXXcCf9Mxyq+0Yf+UCCtfIJgoo65MJ6W8cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=BDJDBk/u; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1742886284; c=relaxed/simple;
+	bh=31zbionqiWdB+efJdLuZ5Isy/glxu/5NOnadKIM/c5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PeSGXce10HrdpsGlExHQwUe3nT0rmLMoZbMzj/FKchJrZPJa64O1H0rYm+xqBq2B71lsGENkIpl4XElsC9azeaLsOc+sYPvVLT+vlhNU0rJAGcFe9tf4sannCvSO0esxebVmcw6GFuPfpkFcNXaVR3czKGylakbUT/VgNvsgbmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/0T9i1Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="BDJDBk/u"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52P0A5ga001404;
-	Tue, 25 Mar 2025 08:03:49 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	umpdSL1RKDrcoeiEHF4TRnfTgu3+K+Z+OfPFiuVf284=; b=BDJDBk/uC2fTS7+B
-	6msmrNmD72HJbQ3vzimICXB/O17aExo2nM8zjrrC0n10Z89v2UtzFP+ecrzBxQhs
-	e2/ybX9fkfVSBj+WcCJktUEHkTvz0njnHH5B3MVhdDY3zWT9vsFZ0Dg4QOoFQxUh
-	tSGvnm7nsrGEVYmMEBxUjZEt0wseqWu7SLGJof6EWFh5A7YZiT/RWg2Ip/S1hHD+
-	TwiAy86L2MLjPkeEHMi/gvNwyDFaAFHmP+hFoO4J0DDzurdlcfYraU8hnJQ9L1BT
-	JJp0LekoycfF11+0B1nqONIXnwPb0Va8Yt43Siym96HwrKHwWXHtXjoRINU8thWF
-	htGzXA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45j7n88n3m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Mar 2025 08:03:49 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 469A540069;
-	Tue, 25 Mar 2025 08:02:29 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B57D482D10A;
-	Tue, 25 Mar 2025 08:01:16 +0100 (CET)
-Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 25 Mar
- 2025 08:01:16 +0100
-From: Christian Bruel <christian.bruel@foss.st.com>
-To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <p.zabel@pengutronix.de>, <johan+linaro@kernel.org>,
-        <cassel@kernel.org>, <quic_schintav@quicinc.com>
-CC: <fabrice.gasnier@foss.st.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 8/9 RESEND] arm64: dts: st: Add PCIe Endpoint mode on stm32mp251
-Date: Tue, 25 Mar 2025 07:59:34 +0100
-Message-ID: <20250325065935.908886-9-christian.bruel@foss.st.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250325065935.908886-1-christian.bruel@foss.st.com>
-References: <20250325065935.908886-1-christian.bruel@foss.st.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/0T9i1Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C57C1C4CEE8;
+	Tue, 25 Mar 2025 07:04:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742886282;
+	bh=31zbionqiWdB+efJdLuZ5Isy/glxu/5NOnadKIM/c5s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M/0T9i1Q0v6KVDxN7Vdw3Ye1YADlJGjQBJ/vwmmMixzgv41whxjjHzuLK5DGyPFAA
+	 R/RoSBKYz6LG8AYHCy8orhf2KCY3gfXYjekiK+udtyh5KMHPyrs/t8LgMR4CnZPgno
+	 hmjuDR3KmPTKYUx+tfJKH9cmMB+RRIbwX34xvEjS7a1hyd3ucwGowrBXD4H50NakMn
+	 zCEVsKa/jnQWxvRfNeLKF/ZTw7zebaL7rwb2sD7TpKZ5ukCX93SlaMEb3aqSatK7lT
+	 6ZuzVfJfV+LyioggEmDqyC/X9wjhM+3UMDsoCFOrSpOUeIXjBKZXcC266Yje+6KApz
+	 Y2jUbEGzsFsRA==
+Date: Tue, 25 Mar 2025 15:04:36 +0800
+From: Coly Li <colyli@kernel.org>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: song@kernel.org, yukuai3@huawei.com, jgq516@gmail.com, 
+	linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org, yi.zhang@huawei.com, 
+	yangerkun@huawei.com
+Subject: Re: [PATCH] md/raid10: fix missing discard IO accounting
+Message-ID: <brtjiiejckcekwq4racmjgpzq7dod5bg2t4csj7caevnl4pkqm@zaanpogvtvus>
+References: <20250325015746.3195035-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-25_03,2025-03-21_01,2024-11-22_01
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250325015746.3195035-1-yukuai1@huaweicloud.com>
 
-Add pcie_ep node to support STM32 MP25 PCIe driver based on the
-DesignWare PCIe core configured as Endpoint mode
+On Tue, Mar 25, 2025 at 09:57:46AM +0800, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> md_account_bio() is not called from raid10_handle_discard(), now that we
+> handle bitmap inside md_account_bio(), also fix missing
+> bitmap_startwrite for discard.
+> 
+> Test whole disk discard for 20G raid10:
+> 
+> Before:
+> Device   d/s     dMB/s   drqm/s  %drqm d_await dareq-sz
+> md0    48.00     16.00     0.00   0.00    5.42   341.33
+> 
+> After:
+> Device   d/s     dMB/s   drqm/s  %drqm d_await dareq-sz
+> md0    68.00  20462.00     0.00   0.00    2.65 308133.65
+> 
+> Fixes: 528bc2cf2fcc ("md/raid10: enable io accounting")
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 
-Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
----
- arch/arm64/boot/dts/st/stm32mp251.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Should we treat discard request as real I/O?
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-index a8abb13ab663..fe73161ed0d4 100644
---- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-+++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-@@ -909,6 +909,19 @@ stmmac_axi_config_1: stmmac-axi-config {
- 				};
- 			};
- 
-+			pcie_ep: pcie-ep@48400000 {
-+				compatible = "st,stm32mp25-pcie-ep";
-+				reg = <0x48400000 0x400000>,
-+				      <0x10000000 0x8000000>;
-+				reg-names = "dbi", "addr_space";
-+				clocks = <&rcc CK_BUS_PCIE>;
-+				resets = <&rcc PCIE_R>;
-+				phys = <&combophy PHY_TYPE_PCIE>;
-+				access-controllers = <&rifsc 68>;
-+				power-domains = <&CLUSTER_PD>;
-+				status = "disabled";
-+			};
-+
- 			pcie_rc: pcie@48400000 {
- 				compatible = "st,stm32mp25-pcie-rc";
- 				device_type = "pci";
+Normally IMHO discard request should not be counted as real data transfer,
+correct me if I am wrong.
+
+Thanks.
+
+
+> ---
+>  drivers/md/raid10.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+> index 9d8516acf2fd..6ef65b4d1093 100644
+> --- a/drivers/md/raid10.c
+> +++ b/drivers/md/raid10.c
+> @@ -1735,6 +1735,7 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
+>  	 * The discard bio returns only first r10bio finishes
+>  	 */
+>  	if (first_copy) {
+> +		md_account_bio(mddev, &bio);
+>  		r10_bio->master_bio = bio;
+>  		set_bit(R10BIO_Discard, &r10_bio->state);
+>  		first_copy = false;
+> -- 
+> 2.39.2
+> 
+> 
+
 -- 
-2.34.1
-
+Coly Li
