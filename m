@@ -1,185 +1,130 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56592256C67;
-	Tue, 25 Mar 2025 10:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBAAC1F09B4;
+	Tue, 25 Mar 2025 10:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742898525; cv=none; b=H/1ZzpWBTMmr/DRzKuiygAJwgCbMtiQ1N9yMVzHsMtUfOwPiLz9AnZt1j+Xty8vJr72l/TQqHNSDDnukHYMl6RsWOKgxcbNtRnVUaoWBQwhVqsKhwWTkIe5syE8e1Rd3rxzx7JEU46W4fQRSHinMnLdJOHLdpJa+2rIlt7Zx+0Y=
+	t=1742898671; cv=none; b=C+AsEL6L9cgHgwOgGghUeU9hJeQLuryt7ptvmqWapRa2zyrQqjDsa+FGST7cuhML7VnDNsx95xrT5Ls5cyj806tvJaynl+eoeaemN9zVEYRsNbQDiXuy70D4+WFoCB8amkFIhHKAtWyhGukjDQdjOguejJkS35HbBShVljOjvPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742898525; c=relaxed/simple;
-	bh=1oAZnWbMSlWwxqLWkfTXuFO9OrpnuuYTGvnFMiHwGhs=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=JaPacO//QIfrh25bS7oVzLrdGOgo7h2HOlRlTiJGS/kebI+4cD+b2GYIvph/aMt/WQhSH/3dtICxfpLJwkMXrs24LLcMBjw9L9nOfV0FUDMmkAMACmrVWiYNWxFAuSsoz1tBnfzs9agB+/dJYkgJuNgqHfm0q872H3ZrjveyT68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xPz0hPnG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=H+db9PsC; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1742898671; c=relaxed/simple;
+	bh=iUVRNoX1Knz7Y6rUE7hxKfH2OvC8R/1+8cUIgp2bKnc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nZbTcFsGmtYGweVBFzbvOID243R7GSiGAw1v57UjbTbzTd0ngFV41dBgsysrwN7LdZpSWcllBN2hpDbi+92E1T6x3oUfSU9DeUiqPUH8TzTkiYmmaqn9uLNaBNCdisXR+UtN8GZixk18LJovLOoKSnz/j5jnb/XGh03/vUj+jhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gfFaiqWZ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xPz0hPnG";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H+db9PsC"
-Date: Tue, 25 Mar 2025 10:28:39 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742898521;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+70YDwchcNFsovZhzamRsBZiwxVQ/urJZVAc80a9z+Q=;
-	b=xPz0hPnGfcrH4EUkemAH+o/4wyhBbqhpZlDAC2EBNo+0fEhCztsBIVvkZZLE9vWGyw/6qc
-	bFGDlWFLkomFPbOyWNTpaXwh4jwgb2MWriJrAY4qbc1AHuosuIRzd+isYsla2NyKk/ojX2
-	nqzL+XXjpxoDCehdTlrIfJ6TPzuQmWy5qPXwotkWeg5QKlohdiKMX98AGUH5DuY8lDCuU9
-	Yc2Xi56YbXvEc7fKMcsdCZsZPEXbxSzC1pYPSEKZPYXrSHFm51b53CH6MztskYjJzvTfMK
-	+RTgdesirYPiI9EWkMkqgptybhnd5LrLYMGyTgfJDrKAcq4o3zQMZtm5wGkjcA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742898521;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+70YDwchcNFsovZhzamRsBZiwxVQ/urJZVAc80a9z+Q=;
-	b=H+db9PsCTLn0NpJ9ZXgmePO9ARzVfgDMkTktt/MNDdigAUuCbJb34Z4zLnBu3LzLOA96oV
-	YvBvXMVp37DT4KCQ==
-From: "tip-bot2 for Chang S. Bae" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/fpu] x86/fpu/xstate: Adjust xstate copying logic for user ABI
-Cc: "Chang S. Bae" <chang.seok.bae@intel.com>, Ingo Molnar <mingo@kernel.org>,
- Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Oleg Nesterov <oleg@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250320234301.8342-5-chang.seok.bae@intel.com>
-References: <20250320234301.8342-5-chang.seok.bae@intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gfFaiqWZ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=/kcNSHKt+p7xj8Bd8AiTv8+l1qAYvdxpi++1IEtteso=; b=gfFaiqWZoPHPtFfYrf3Z/e/vJj
+	gUrLZg/FV2zYzWXh7k0otAW57zDJ3F81RJMrj3f9jdnEWW9wz7dRze0kKx6p4uXNtcreAchaJeOEA
+	QcnE/ccvmOZxXFQpytN9KZ9eZX4QPrZccuh4HtgjKHt3Pd7dUg8DdsVCptXfQmVjHGlwj8rBV1OdG
+	XNAfhVHXAs6necQ4vvePPSmVf01mN4lGqmuTKAoMHOsxrMI5EBrE6Oove3ulQjDPbxqVUzWbx4Olc
+	Q1dfGMSi5+wSeYDhdh67b1lVfYkgwSjyy+WvhU3RIXRXxVRnjeN9ZQ+bYfJTqTFC9XjVog2vi6OO8
+	X4kJVCKA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tx1YV-00000003nQ3-3Mco;
+	Tue, 25 Mar 2025 10:30:47 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 28D7E3004AF; Tue, 25 Mar 2025 11:30:47 +0100 (CET)
+Date: Tue, 25 Mar 2025 11:30:47 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org,
+	bpf@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
+	Greg Thelen <gthelen@google.com>,
+	Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] x86/alternatives: remove false sharing in
+ poke_int3_handler()
+Message-ID: <20250325103047.GH36322@noisy.programming.kicks-ass.net>
+References: <20250323072511.2353342-1-edumazet@google.com>
+ <Z-B_R737uM31m6_K@gmail.com>
+ <CANn89i+fmyJ8p=vBpwBy38yhVMCJv8XjrTkrXSUnSGedboCM_Q@mail.gmail.com>
+ <Z-EGvjhkg6llyX24@gmail.com>
+ <CANn89iL8o0UZTpomaT1oaMxRTBv1YdaXZGwXQn3H0dDO81UyGA@mail.gmail.com>
+ <CANn89iKwPpV7v=EnK2ac5KjHSef64eyVwUST=q=+oFaqTB95sQ@mail.gmail.com>
+ <20250324113304.GB14944@noisy.programming.kicks-ass.net>
+ <Z-JsJruueRgLQ8st@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174289851964.14745.4055652915728849217.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-JsJruueRgLQ8st@gmail.com>
 
-The following commit has been merged into the x86/fpu branch of tip:
+On Tue, Mar 25, 2025 at 09:41:10AM +0100, Ingo Molnar wrote:
+> 
+> * Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > On Mon, Mar 24, 2025 at 08:53:31AM +0100, Eric Dumazet wrote:
+> > 
+> > > BTW the atomic_cond_read_acquire() part is never called even during my
+> > > stress test.
+> > 
+> > Yes, IIRC this is due to text_poke_sync() serializing the state, as that
+> > does a synchronous IPI broadcast, which by necessity requires all
+> > previous INT3 handlers to complete.
+> > 
+> > You can only hit that case if the INT3 remains after step-3 (IOW you're
+> > actively writing INT3 into the text). This is exceedingly rare.
+> 
+> Might make sense to add a comment for that.
 
-Commit-ID:     ed91ad084ef9fa49f6c6dfef2cb10c12ce3786a6
-Gitweb:        https://git.kernel.org/tip/ed91ad084ef9fa49f6c6dfef2cb10c12ce3=
-786a6
-Author:        Chang S. Bae <chang.seok.bae@intel.com>
-AuthorDate:    Thu, 20 Mar 2025 16:42:55 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 25 Mar 2025 11:21:20 +01:00
+Sure, find below.
 
-x86/fpu/xstate: Adjust xstate copying logic for user ABI
+> Also, any strong objections against doing this in the namespace:
+> 
+>   s/bp_/int3_
+> 
+> ?
+> 
+> Half of the code already calls it a variant of 'int3', half of it 'bp', 
+> which I had to think for a couple of seconds goes for breakpoint, not 
+> base pointer ... ;-)
 
-=3D=3D Background =3D=3D
+It actually is breakpoint, as in INT3 raises #BP. For complete confusion
+the things that are commonly known as debug breakpoints, those things in
+DR7, they raise #DB or debug exceptions.
 
-As feature positions in the userspace XSAVE buffer do not always align
-with their feature numbers, the XSAVE format conversion needs to be
-reconsidered to align with the revised xstate size calculation logic.
+> Might as well standardize on int3_ and call it a day?
 
-* For signal handling, XSAVE and XRSTOR are used directly to save and
-  restore extended registers.
+Yeah, perhaps. At some point you've got to know that INT3->#BP and
+DR7->#DB and it all sorta makes sense, but *shrug* :-)
 
-* For ptrace, KVM, and signal returns (for 32-bit frame), the kernel
-  copies data between its internal buffer and the userspace XSAVE buffer.
-  If memcpy() were used for these cases, existing offset helpers =E2=80=94 su=
-ch
-  as __raw_xsave_addr() or xstate_offsets[] =E2=80=94 would be sufficient to
-  handle the format conversion.
 
-=3D=3D Problem =3D=3D
-
-When copying data from the compacted in-kernel buffer to the
-non-compacted userspace buffer, the function follows the
-user_regset_get2_fn() prototype. This means it utilizes struct membuf
-helpers for the destination buffer. As defined in regset.h, these helpers
-update the memory pointer during the copy process, enforcing sequential
-writes within the loop.
-
-Since xstate components are processed sequentially, any component whose
-buffer position does not align with its feature number has an issue.
-
-=3D=3D Solution =3D=3D
-
-Replace for_each_extended_xfeature() with the newly introduced
-for_each_extended_xfeature_in_order(). This macro ensures xstate
-components are handled in the correct order based on their actual
-positions in the destination buffer, rather than their feature numbers.
-
-Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Link: https://lore.kernel.org/r/20250320234301.8342-5-chang.seok.bae@intel.com
 ---
- arch/x86/kernel/fpu/xstate.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 93f9401..46c45e2 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -1107,10 +1107,9 @@ void __copy_xstate_to_uabi_buf(struct membuf to, struc=
-t fpstate *fpstate,
- 	const unsigned int off_mxcsr =3D offsetof(struct fxregs_state, mxcsr);
- 	struct xregs_state *xinit =3D &init_fpstate.regs.xsave;
- 	struct xregs_state *xsave =3D &fpstate->regs.xsave;
-+	unsigned int zerofrom, i, xfeature;
- 	struct xstate_header header;
--	unsigned int zerofrom;
- 	u64 mask;
--	int i;
-=20
- 	memset(&header, 0, sizeof(header));
- 	header.xfeatures =3D xsave->header.xfeatures;
-@@ -1179,15 +1178,16 @@ void __copy_xstate_to_uabi_buf(struct membuf to, stru=
-ct fpstate *fpstate,
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index bf82c6f7d690..01e94603e767 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -2749,6 +2749,13 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
+ 
+ 	/*
+ 	 * Remove and wait for refs to be zero.
++	 *
++	 * Notably, if after step-3 above the INT3 got removed, then the
++	 * text_poke_sync() will have serialized against any running INT3
++	 * handlers and the below spin-wait will not happen.
++	 *
++	 * IOW. unless the replacement instruction is INT3, this case goes
++	 * unused.
  	 */
- 	mask =3D header.xfeatures;
-=20
--	for_each_extended_xfeature(i, mask) {
-+	for_each_extended_xfeature_in_order(i, mask) {
-+		xfeature =3D xfeature_uncompact_order[i];
- 		/*
- 		 * If there was a feature or alignment gap, zero the space
- 		 * in the destination buffer.
- 		 */
--		if (zerofrom < xstate_offsets[i])
--			membuf_zero(&to, xstate_offsets[i] - zerofrom);
-+		if (zerofrom < xstate_offsets[xfeature])
-+			membuf_zero(&to, xstate_offsets[xfeature] - zerofrom);
-=20
--		if (i =3D=3D XFEATURE_PKRU) {
-+		if (xfeature =3D=3D XFEATURE_PKRU) {
- 			struct pkru_state pkru =3D {0};
- 			/*
- 			 * PKRU is not necessarily up to date in the
-@@ -1197,14 +1197,14 @@ void __copy_xstate_to_uabi_buf(struct membuf to, stru=
-ct fpstate *fpstate,
- 			membuf_write(&to, &pkru, sizeof(pkru));
- 		} else {
- 			membuf_write(&to,
--				     __raw_xsave_addr(xsave, i),
--				     xstate_sizes[i]);
-+				     __raw_xsave_addr(xsave, xfeature),
-+				     xstate_sizes[xfeature]);
- 		}
- 		/*
- 		 * Keep track of the last copied state in the non-compacted
- 		 * target buffer for gap zeroing.
- 		 */
--		zerofrom =3D xstate_offsets[i] + xstate_sizes[i];
-+		zerofrom =3D xstate_offsets[xfeature] + xstate_sizes[xfeature];
- 	}
-=20
- out:
+ 	if (!atomic_dec_and_test(&bp_desc.refs))
+ 		atomic_cond_read_acquire(&bp_desc.refs, !VAL);
