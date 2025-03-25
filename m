@@ -1,181 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD509257AC7;
-	Tue, 25 Mar 2025 12:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5507C25A323;
+	Tue, 25 Mar 2025 12:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742905192; cv=none; b=SBeIQ8qO8DtMFTHEWv1Aa+rq2DXpjPdHL9+4wXJ2J/AmA3amJfZotKf48MUg4VCi1JOCOA/e0Sir90panLl72pI7ezaz1d5OiHsfztqBkhq427JVYxXp9xXKubF3wgASevClHxgSoN26CYMwA40sRnx1uUbK+Kr8KSF3pHRG3rE=
+	t=1742905205; cv=none; b=aG804TQdkK+FsRCdCa3uhJAknIs6SFoeqZS+PSNYuB7gScp3+edBz83SQfUiaIC63RCP1NA/7iKUzzZTtD1pgirBZ2jgtGteGsJDRYTdgaxjt0mWniKCS3YZEgI/7ajRnXsdGmbQvfQUoF1RpPaSBczmiFetNGVaskMTgiK+Vog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742905192; c=relaxed/simple;
-	bh=XQU8VnkDJ6h/4evak6H0aqpy4CserfZS0N3cJolheZI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rcWrVq4j2fCTHcVg3U/Ti2+lDcu0NaS96tVyxi10TEd1elOOzOfy5p/NUG9sHAd5PxYAj1XxHx8SkNd/5NxZ/GGCkD+dG9+d1mS8MfdV1MZsyJQXnqT+wk0T7BAXLPw/+tA4NIUscOYAj/BP5ugUFXzoDJxXrsUFsZsArTVNUfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1E1R9FL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742905205; c=relaxed/simple;
+	bh=W+zbuGuOsjMsAwj1TeKVa2TREDPoShSYxlcNLgWYVEk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Kz6tPoVXGaGMpeLn9TskJhK/x7YpmeJ1L0oty1beP5HEjn25MtFpBdUx7rfGO+Olss6tHLgIA2UlaYLBY2jwr6F3YPJlmu2XbKzTz0fVP4jix9cA/HJznS11C5Oq3kzBN/ts7P+Xk5J/c8ApDXribHxi+lWR60A4KokOGEQxbOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=iI10GOZx; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1E1R9FL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF255C4CEE9;
-	Tue, 25 Mar 2025 12:19:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742905191;
-	bh=XQU8VnkDJ6h/4evak6H0aqpy4CserfZS0N3cJolheZI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=G1E1R9FLbeWgS5k22Da9vESE7SNBjisQcD8Ll173fXAGcQN37cnhXheRGmLfW6pRb
-	 MFLsfzd7HgjVH005lgBFvW06/crTgH4L0EHiQbOEksUxh9Cm3UBKD6ejBcUubgKPF+
-	 97RlOQAlVtBCil9XLs+Xbgk3C6KGGayJilFKJsAV/UpFtnCXuhZCTJjbZlQdfZKyTb
-	 MyfxR93XsxrBACHiTxnYv2eAGsUWe7gPsnFAzSbzhHyU5bDPVis0et56YxbhL/ob5m
-	 Q4rucj1fLSrorLrs8uSIG48yz367/37H2evJ3YrCjJS9FYyhi9lHCNduNMhM7w+iCA
-	 jH7ZkARaHIwqg==
-From: guoren@kernel.org
-To: arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	torvalds@linux-foundation.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	anup@brainfault.org,
-	atishp@atishpatra.org,
-	oleg@redhat.com,
-	kees@kernel.org,
-	tglx@linutronix.de,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	brauner@kernel.org,
-	akpm@linux-foundation.org,
-	rostedt@goodmis.org,
-	edumazet@google.com,
-	unicorn_wang@outlook.com,
-	inochiama@outlook.com,
-	gaohan@iscas.ac.cn,
-	shihua@iscas.ac.cn,
-	jiawei@iscas.ac.cn,
-	wuwei2016@iscas.ac.cn,
-	drew@pdp7.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com,
-	ctsai390@andestech.com,
-	wefu@redhat.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	josef@toxicpanda.com,
-	dsterba@suse.com,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	boqun.feng@gmail.com,
-	guoren@kernel.org,
-	xiao.w.wang@intel.com,
-	qingfang.deng@siflower.com.cn,
-	leobras@redhat.com,
-	jszhang@kernel.org,
-	conor.dooley@microchip.com,
-	samuel.holland@sifive.com,
-	yongxuan.wang@sifive.com,
-	luxu.kernel@bytedance.com,
-	david@redhat.com,
-	ruanjinjie@huawei.com,
-	cuiyunhui@bytedance.com,
-	wangkefeng.wang@huawei.com,
-	qiaozhe@iscas.ac.cn
-Cc: ardb@kernel.org,
-	ast@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-crypto@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	maple-tree@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-atm-general@lists.sourceforge.net,
-	linux-btrfs@vger.kernel.org,
-	netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org,
-	linux-nfs@vger.kernel.org,
-	linux-sctp@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-media@vger.kernel.org
-Subject: [RFC PATCH V3 13/43] rv64ilp32_abi: riscv: Correct stackframe layout
-Date: Tue, 25 Mar 2025 08:15:54 -0400
-Message-Id: <20250325121624.523258-14-guoren@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20250325121624.523258-1-guoren@kernel.org>
-References: <20250325121624.523258-1-guoren@kernel.org>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="iI10GOZx"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id BAD1F102F66FF;
+	Tue, 25 Mar 2025 13:19:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1742905201; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=NWmWtlj/ywJV6x0SVa10Ru5jBz9yI3s7yAlnn7HAP+A=;
+	b=iI10GOZxX1mHgyM2u8+7/hdsGhCCl9XeQNlR9159nd7Yrmp1M9EzyoQznOCNezfJNl+mJ9
+	SugwMDIGDHQIt+JVt4gZ5jtXRMz5XkD7mYkyoH+3BBQsC6Wep4HQmwCEBLJguay3eUz7UO
+	a++388I8tOOmPQB3cMRAuhPNSnW6ZWmqKY49V2c5IiK5nn5VJccHfnIESBHN9fzadsHgW9
+	Xl3+WTEZKlPTP/gQXxOBNmcm+5pZf5nfRnW+HkKaqVdVO0M7unZEoNF4KEl9D0/hrc9Gqb
+	jTvv2XpW46Zt70RZ+tso/GL43Wd/7AiEZ0vMVJoY64YbV5uAx1kHujfKwWVfZw==
+Date: Tue, 25 Mar 2025 13:19:58 +0100
+From: Lukasz Majewski <lukma@denx.de>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Paolo Abeni <pabeni@redhat.com>, Jakub
+ Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
+ davem@davemloft.net, Andrew Lunn <andrew+netdev@lunn.ch>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Richard
+ Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org, Maxime
+ Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH 3/5] arm: dts: Adjust the 'reg' range for imx287 L2
+ switch description
+Message-ID: <20250325131958.552fbd0b@wsk>
+In-Reply-To: <93c9bc3d-7ad8-438e-966e-cd28a91540af@kernel.org>
+References: <20250325115736.1732721-1-lukma@denx.de>
+	<20250325115736.1732721-4-lukma@denx.de>
+	<93c9bc3d-7ad8-438e-966e-cd28a91540af@kernel.org>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/iHkkBmAY=t74XA_T2X_ZYbS";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Last-TLS-Session-Version: TLSv1.3
 
-From: "Guo Ren (Alibaba DAMO Academy)" <guoren@kernel.org>
+--Sig_/iHkkBmAY=t74XA_T2X_ZYbS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-In RV64ILP32 ABI, the callee saved fp & ra are 64-bit width,
-not long size. This patch corrects the layout for the struct
-stackframe.
+Hi Krzysztof,
 
-echo c > /proc/sysrq-trigger
+> On 25/03/2025 12:57, Lukasz Majewski wrote:
+> > The current range of 'reg' property is too small to allow full
+> > control of the L2 switch on imx287.
+> >=20
+> > As this IP block also uses ENET-MAC blocks for its operation, the
+> > address range for it must be included as well.
+> >  =20
+>=20
+> Please use subject prefixes matching the subsystem. You can get them
+> for example with `git log --oneline -- DIRECTORY_OR_FILE` on the
+> directory your patch is touching. For bindings, the preferred
+> subjects are explained here:
+> https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-pat=
+ches.html#i-for-patch-submitters
+>=20
+> Missing nxp or mxs.
 
-Before the patch:
+Ok. I will add it.
 
-sysrq: Trigger a crash
-Kernel panic - not syncing: sysrq triggered crash
-CPU: 0 PID: 102 Comm: sh Not tainted ...
-Hardware name: riscv-virtio,qemu (DT)
-Call Trace:
----[ end Kernel panic - not syncing: sysrq triggered crash ]---
+>=20
+> Best regards,
+> Krzysztof
 
-After the patch:
 
-sysrq: Trigger a crash
-Kernel panic - not syncing: sysrq triggered crash
-CPU: 0 PID: 102 Comm: sh Not tainted ...
-Hardware name: riscv-virtio,qemu (DT)
-Call Trace:
-[<c00050c8>] dump_backtrace+0x1e/0x26
-[<c086dcae>] show_stack+0x2e/0x3c
-[<c0878e00>] dump_stack_lvl+0x40/0x5a
-[<c0878e30>] dump_stack+0x16/0x1e
-[<c086df7c>] panic+0x10c/0x2a8
-[<c04f4c1e>] sysrq_reset_seq_param_set+0x0/0x76
-[<c04f52cc>] __handle_sysrq+0x9c/0x19c
-[<c04f5946>] write_sysrq_trigger+0x64/0x78
-[<c020c7f6>] proc_reg_write+0x4a/0xa2
-[<c01acf0a>] vfs_write+0xac/0x308
-[<c01ad2b8>] ksys_write+0x62/0xda
-[<c01ad33e>] sys_write+0xe/0x16
-[<c0879860>] do_trap_ecall_u+0xd8/0xda
-[<c00037de>] ret_from_exception+0x0/0x66
----[ end Kernel panic - not syncing: sysrq triggered crash ]---
 
-Signed-off-by: Guo Ren (Alibaba DAMO Academy) <guoren@kernel.org>
----
- arch/riscv/include/asm/stacktrace.h | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/arch/riscv/include/asm/stacktrace.h b/arch/riscv/include/asm/stacktrace.h
-index b1495a7e06ce..556655cab09d 100644
---- a/arch/riscv/include/asm/stacktrace.h
-+++ b/arch/riscv/include/asm/stacktrace.h
-@@ -8,7 +8,13 @@
- 
- struct stackframe {
- 	unsigned long fp;
-+#if IS_ENABLED(CONFIG_64BIT) && (BITS_PER_LONG == 32)
-+	unsigned long __fp;
-+#endif
- 	unsigned long ra;
-+#if IS_ENABLED(CONFIG_64BIT) && (BITS_PER_LONG == 32)
-+	unsigned long __ra;
-+#endif
- };
- 
- extern void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
--- 
-2.40.1
+Best regards,
 
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/iHkkBmAY=t74XA_T2X_ZYbS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmfin24ACgkQAR8vZIA0
+zr3N/gf8DYEFypnfPCvqTv0w1mjjvKAqlgERVYVIbxHIpd/6t5B0hhaY3vRUWPyJ
+VUqi8YCx8uavVTRzDM59fSfmYcFzOe7rUv9fVvS4+W3AtxqTmtndRXZUrFAtXrPf
+LwfMfvqJuoKPiLLcfPZQpNNY6iuzehkmrmcO+0MmOmsPNVHWsXUG/mmoefrSIy/Q
+yUysj6v1UeS8nm2XOXYf7Pij0CFaCgMDE7zdzziTkkLtBYywTPxMfUbNv8DjFUSX
+Xa6M/GMe39ehOU92VOjF0TRxyiDNXgRZ4kibznKZFpohskhQ1IugoT2tyXDspA6b
+JauuHhBMQ/y+Om9HVWaZV3LjzVe05Q==
+=TLOn
+-----END PGP SIGNATURE-----
+
+--Sig_/iHkkBmAY=t74XA_T2X_ZYbS--
