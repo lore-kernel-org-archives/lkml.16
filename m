@@ -1,411 +1,238 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2081.outbound.protection.outlook.com [40.107.243.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0962025BAC9;
-	Tue, 25 Mar 2025 12:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742906148; cv=none; b=tLZBtlKs9vWNb6qEmNeLha3509PqJZML6+3QAUy/bbR1gH76syoN6YpLy1B0Yd+s6vLZNiQ8FsRWhIKjEq9zmCHkAXWtc4I6FokqRROUlpQN03FkBgvZVAyY6fzeK9bF/B+BLs11ExH0ZVNlkLEef6EJN0lvUG7dQ99nebgiKo0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742906148; c=relaxed/simple;
-	bh=SPk0Cn9rYn/l2lonVBu5GunsM4adJfE3e+90yLWyOzw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=K7l9N7UIPpeQVtcbyfg+RF1IGkaI/3YA8U53Tck8SbncySE6+Mt74/hlVPkELOEM/A9hcFwp7otlsFjqiLZjz7Ysgbkly9Se3dtPkTQsEMniVzyU72i6xTeVSSNBfk0HfGaHv0BLDm+juGo+S/iA0TGMmWhcpMHeOTE6jVLiotw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=epdqZAsr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="epdqZAsr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90284C4CEE4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0681325BABC;
 	Tue, 25 Mar 2025 12:35:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742906147;
-	bh=SPk0Cn9rYn/l2lonVBu5GunsM4adJfE3e+90yLWyOzw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=epdqZAsrIOvEggT1iYn9Q8G1xeY8EgWR7GKKfSpcRaSRZcWcKwYGlue+dQ3NsfuSx
-	 4pIYOdTOjtQ+bJBrpBa6mQpCDySzmuC2OyC1i/LLr8iKW+a9cbdTgeAuD3Dpve/dZg
-	 1tWiE6T0ex4NxOOhhOoNNpOCbV+sWULQwZfD3e04=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	hargar@microsoft.com,
-	broonie@kernel.org
-Subject: [PATCH 6.6 00/77] 6.6.85-rc1 review
-Date: Tue, 25 Mar 2025 08:21:55 -0400
-Message-ID: <20250325122144.259256924@linuxfoundation.org>
-X-Mailer: git-send-email 2.49.0
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742906149; cv=fail; b=TkrXds00/a76ns0rSYcfltUeUA+jtFekEjYIdLwaYW5jOuV7Lq+94Q0e9nFo14t1VIYPHdAkuMxmomsvNicoQGt63cZc4U/INn57oUPnxawhiiQp9hcqBcUI31843q9tuDpx9RvvtW2am/lhc3PHOjcaQF4qOcPNN/zDjMTW/BA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742906149; c=relaxed/simple;
+	bh=ud6UVnutVD4qIUT22JrPrWBBax/PtgtRtvHToxFtAho=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=QiTp8PqEjEVzUv2WNm5Yd7UFkV/BPjNT0w0lIriRb3EzO3W6S+/OsEQdG4auVxFTr3znUGB9BnUhO6mVGOd0/CUB47ycam0V8dAwd2vxfW6ZGXSrRzjseBfs8sbOnTUbOhFYdFNZAzae8CXG/m1nL7ouu5oa1JTxMlXh5St8oWg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mld9Q/IE; arc=fail smtp.client-ip=40.107.243.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mld9Q/IE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uwQQRbvaI13+j910ycsTRLGErB5136uAf10TN+dwxAqrRO0uYZeHRBfethSKHr7em77XiVs5MJA0hFlz1r0xmQ4/op0R+Nz+ENkORazD8qpTlnJhAu3vYxnjmDu28Ly1qllg1kaj+5j2Z1ftXzaB4feLZOmVnNCDtTjC5WjdvP/hKpPE86kcI+UJAXyDeYQd2FP+BwyZ0I2TiZp5r4RhC8T7vybIes91X0tUspdUPN1iRSk9x4wDcRSYJjDEGUrsrWW9wluT0AHgGMM9UvjAmy2lGBkDtJbdgbrX+LfXE8MUTomrKjHTLDjoLBFEa32lH4rxavFNsCuHhNz+VMkwHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FhcIp7nOfLnYSxM0DjFov1bOpCZ7HRgFZfLZX8n22/E=;
+ b=gNXn2Oz2fP4lbmEwmnIKezPw41WkAyt08ufRbHgZ9SFJRVQbUWHC2iiLJ9bQZCw9DOhZ3J15QDXPC2n8gsbH6iHlz+7W4rWGTQGz1QiaT+hvPQGifxq5MMRuR68BkzD9MCsRNa0v8lNfcRtQI7JbO86wFF3kZsp+gIuu9QLBQBCkCYlCtu7ekcH0XqmQlT7facOuBF44yMuL1os3XFzAQqtt+LA+er0rmTG/fcqyWcoQBN1aU4BA4HFOTlKqr7BFdWEMTKCnJo8N6reh9T3sRGI9Ra5xFt6N6vgO+U7xySBCvVTkiB4kooet/kcHI1+bVdz6AXZ0qKGybgv79lxvSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FhcIp7nOfLnYSxM0DjFov1bOpCZ7HRgFZfLZX8n22/E=;
+ b=mld9Q/IEZdj1VSS8zgC3EiGhwU2c1hyA2ZBP60z6xhuRhckv8IfI4k9Ra6lUXjf+ZOLSc2et7E+J8SaNc1Yy73k9LkqAfiZfHEVg6siQ9HAs9V+7ABZ4hmId52k+J04EOGIyj3ppLHfju3BfOVXEem2e5SLqgru0qy5ZmWHNHis=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB8909.namprd12.prod.outlook.com (2603:10b6:610:179::10)
+ by BY1PR12MB8446.namprd12.prod.outlook.com (2603:10b6:a03:52d::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.43; Tue, 25 Mar
+ 2025 12:35:45 +0000
+Received: from CH3PR12MB8909.namprd12.prod.outlook.com
+ ([fe80::b55b:2420:83e9:9753]) by CH3PR12MB8909.namprd12.prod.outlook.com
+ ([fe80::b55b:2420:83e9:9753%5]) with mapi id 15.20.8534.040; Tue, 25 Mar 2025
+ 12:35:45 +0000
+Message-ID: <b26e9abc-10bb-46a0-be05-d0cd2ce835bd@amd.com>
+Date: Tue, 25 Mar 2025 18:05:38 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 06/11] misc: amd-sbi: Add support for AMD_SBI IOCTL
+To: Arnd Bergmann <arnd@arndb.de>, linux-hwmon@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Guenter Roeck <linux@roeck-us.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, shyam-sundar.s-k@amd.com,
+ gautham.shenoy@amd.com, Mario Limonciello <mario.limonciello@amd.com>,
+ naveenkrishna.chatradhi@amd.com, anand.umarji@amd.com
+References: <20250324145815.1026314-1-akshay.gupta@amd.com>
+ <20250324145815.1026314-7-akshay.gupta@amd.com>
+ <c9138dd3-6a09-47a2-a8fe-716c8894042e@app.fastmail.com>
+Content-Language: en-US
+From: "Gupta, Akshay" <Akshay.Gupta@amd.com>
+In-Reply-To: <c9138dd3-6a09-47a2-a8fe-716c8894042e@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0125.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:96::11) To CH3PR12MB8909.namprd12.prod.outlook.com
+ (2603:10b6:610:179::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.85-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-6.6.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 6.6.85-rc1
-X-KernelTest-Deadline: 2025-03-27T12:21+00:00
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-This is the start of the stable review cycle for the 6.6.85 release.
-There are 77 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Thu, 27 Mar 2025 12:21:27 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.85-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 6.6.85-rc1
-
-Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-    netfilter: nft_counter: Use u64_stats_t for statistic.
-
-Benjamin Berg <benjamin.berg@intel.com>
-    wifi: iwlwifi: mvm: ensure offloading TID queue exists
-
-Miri Korenblit <miriam.rachel.korenblit@intel.com>
-    wifi: iwlwifi: support BIOS override for 5G9 in CA also in LARI version 8
-
-Shravya KN <shravya.k-n@broadcom.com>
-    bnxt_en: Fix receive ring space parameters when XDP is active
-
-Josef Bacik <josef@toxicpanda.com>
-    btrfs: make sure that WRITTEN is set on all metadata blocks
-
-Dietmar Eggemann <dietmar.eggemann@arm.com>
-    Revert "sched/core: Reduce cost of sched_move_task when config autogroup"
-
-Justin Klaassen <justin@tidylabs.net>
-    arm64: dts: rockchip: fix u2phy1_host status for NanoPi R4S
-
-Mark Rutland <mark.rutland@arm.com>
-    KVM: arm64: Eagerly switch ZCR_EL{1,2}
-
-Mark Rutland <mark.rutland@arm.com>
-    KVM: arm64: Mark some header functions as inline
-
-Mark Rutland <mark.rutland@arm.com>
-    KVM: arm64: Refactor exit handlers
-
-Mark Rutland <mark.rutland@arm.com>
-    KVM: arm64: Remove VHE host restore of CPACR_EL1.SMEN
-
-Mark Rutland <mark.rutland@arm.com>
-    KVM: arm64: Remove VHE host restore of CPACR_EL1.ZEN
-
-Mark Rutland <mark.rutland@arm.com>
-    KVM: arm64: Remove host FPSIMD saving for non-protected KVM
-
-Mark Rutland <mark.rutland@arm.com>
-    KVM: arm64: Unconditionally save+flush host FPSIMD/SVE/SME state
-
-Fuad Tabba <tabba@google.com>
-    KVM: arm64: Calculate cptr_el2 traps on activating traps
-
-Arthur Mongodin <amongodin@randorisec.fr>
-    mptcp: Fix data stream corruption in the address announcement
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix incorrect validation for num_aces field of smb_acl
-
-Mario Limonciello <mario.limonciello@amd.com>
-    drm/amd/display: Use HW lock mgr for PSR1 when only one eDP
-
-Martin Tsai <martin.tsai@amd.com>
-    drm/amd/display: should support dmub hw lock on Replay
-
-David Rosca <david.rosca@amd.com>
-    drm/amdgpu: Fix JPEG video caps max size for navi1x and raven
-
-David Rosca <david.rosca@amd.com>
-    drm/amdgpu: Fix MPEG2, MPEG4 and VC1 video caps max size
-
-qianyi liu <liuqianyi125@gmail.com>
-    drm/sched: Fix fence reference count leak
-
-Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-    drm/radeon: fix uninitialized size issue in radeon_vce_cs_parse()
-
-Saranya R <quic_sarar@quicinc.com>
-    soc: qcom: pdr: Fix the potential deadlock
-
-Sven Eckelmann <sven@narfation.org>
-    batman-adv: Ignore own maximum aggregation size during RX
-
-Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-    xsk: fix an integer overflow in xp_create_and_assign_umem()
-
-Ard Biesheuvel <ardb@kernel.org>
-    efi/libstub: Avoid physical address 0x0 when doing random allocation
-
-Geert Uytterhoeven <geert+renesas@glider.be>
-    ARM: shmobile: smp: Enforce shmobile_smp_* alignment
-
-Stefan Eichenberger <stefan.eichenberger@toradex.com>
-    ARM: dts: imx6qdl-apalis: Fix poweroff on Apalis iMX6
-
-Shakeel Butt <shakeel.butt@linux.dev>
-    memcg: drain obj stock on cpu hotplug teardown
-
-Ye Bin <yebin10@huawei.com>
-    proc: fix UAF in proc_get_inode()
-
-Zi Yan <ziy@nvidia.com>
-    mm/migrate: fix shmem xarray update during migration
-
-Raphael S. Carvalho <raphaelsc@scylladb.com>
-    mm: fix error handling in __filemap_get_folio() with FGP_NOWAIT
-
-Gu Bowen <gubowen5@huawei.com>
-    mmc: atmel-mci: Add missing clk_disable_unprepare()
-
-Kamal Dasu <kamal.dasu@broadcom.com>
-    mmc: sdhci-brcmstb: add cqhci suspend/resume to PM ops
-
-Dragan Simic <dsimic@manjaro.org>
-    arm64: dts: rockchip: Add missing PCIe supplies to RockPro64 board dtsi
-
-Quentin Schulz <quentin.schulz@cherry.de>
-    arm64: dts: rockchip: fix pinmux of UART0 for PX30 Ringneck on Haikou
-
-Stefan Eichenberger <stefan.eichenberger@toradex.com>
-    arm64: dts: freescale: imx8mm-verdin-dahlia: add Microphone Jack to sound card
-
-Stefan Eichenberger <stefan.eichenberger@toradex.com>
-    arm64: dts: freescale: imx8mp-verdin-dahlia: add Microphone Jack to sound card
-
-Dan Carpenter <dan.carpenter@linaro.org>
-    accel/qaic: Fix integer overflow in qaic_validate_req()
-
-Christian Eggers <ceggers@arri.de>
-    regulator: check that dummy regulator has been probed before using it
-
-Christian Eggers <ceggers@arri.de>
-    regulator: dummy: force synchronous probing
-
-E Shattow <e@freeshell.de>
-    riscv: dts: starfive: Fix a typo in StarFive JH7110 pin function definitions
-
-Maíra Canal <mcanal@igalia.com>
-    drm/v3d: Don't run jobs that have errors flagged in its fence
-
-Haibo Chen <haibo.chen@nxp.com>
-    can: flexcan: disable transceiver during system PM
-
-Haibo Chen <haibo.chen@nxp.com>
-    can: flexcan: only change CAN state when link up in system PM
-
-Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-    can: ucan: fix out of bound read in strscpy() source
-
-Biju Das <biju.das.jz@bp.renesas.com>
-    can: rcar_canfd: Fix page entries in the AFL list
-
-Andreas Kemnade <andreas@kemnade.info>
-    i2c: omap: fix IRQ storms
-
-Guillaume Nault <gnault@redhat.com>
-    Revert "gre: Fix IPv6 link-local address generation."
-
-Lin Ma <linma@zju.edu.cn>
-    net/neighbor: add missing policy for NDTPA_QUEUE_LENBYTES
-
-Justin Iurman <justin.iurman@uliege.be>
-    net: lwtunnel: fix recursion loops
-
-Dan Carpenter <dan.carpenter@linaro.org>
-    net: atm: fix use after free in lec_send()
-
-Kuniyuki Iwashima <kuniyu@amazon.com>
-    ipv6: Set errno after ip_fib_metrics_init() in ip6_route_info_create().
-
-Kuniyuki Iwashima <kuniyu@amazon.com>
-    ipv6: Fix memleak of nhc_pcpu_rth_output in fib_check_nh_v6_gw().
-
-David Lechner <dlechner@baylibre.com>
-    ARM: davinci: da850: fix selecting ARCH_DAVINCI_DA8XX
-
-Jeffrey Hugo <quic_jhugo@quicinc.com>
-    accel/qaic: Fix possible data corruption in BOs > 2G
-
-Arkadiusz Bokowy <arkadiusz.bokowy@gmail.com>
-    Bluetooth: hci_event: Fix connection regression between LE and non-LE adapters
-
-Dan Carpenter <dan.carpenter@linaro.org>
-    Bluetooth: Fix error code in chan_alloc_skb_cb()
-
-Junxian Huang <huangjunxian6@hisilicon.com>
-    RDMA/hns: Fix wrong value of max_sge_rd
-
-Junxian Huang <huangjunxian6@hisilicon.com>
-    RDMA/hns: Fix a missing rollback in error path of hns_roce_create_qp_common()
-
-Junxian Huang <huangjunxian6@hisilicon.com>
-    RDMA/hns: Fix unmatched condition in error path of alloc_user_qp_db()
-
-Junxian Huang <huangjunxian6@hisilicon.com>
-    RDMA/hns: Fix soft lockup during bt pages loop
-
-Saravanan Vajravel <saravanan.vajravel@broadcom.com>
-    RDMA/bnxt_re: Avoid clearing VLAN_ID mask in modify qp path
-
-Phil Elwell <phil@raspberrypi.com>
-    ARM: dts: bcm2711: Don't mark timer regs unconfigured
-
-Arnd Bergmann <arnd@arndb.de>
-    ARM: OMAP1: select CONFIG_GENERIC_IRQ_CHIP
-
-Qasim Ijaz <qasdev00@gmail.com>
-    RDMA/mlx5: Handle errors returned from mlx5r_ib_rate()
-
-Kashyap Desai <kashyap.desai@broadcom.com>
-    RDMA/bnxt_re: Add missing paranthesis in map_qp_id_to_tbl_indx
-
-Yao Zi <ziyao@disroot.org>
-    arm64: dts: rockchip: Remove undocumented sdmmc property from lubancat-1
-
-Phil Elwell <phil@raspberrypi.com>
-    ARM: dts: bcm2711: PL011 UARTs are actually r1p5
-
-Peng Fan <peng.fan@nxp.com>
-    soc: imx8m: Unregister cpufreq and soc dev in cleanup path
-
-Marek Vasut <marex@denx.de>
-    soc: imx8m: Use devm_* to simplify probe failure handling
-
-Marek Vasut <marex@denx.de>
-    soc: imx8m: Remove global soc_uid
-
-Cosmin Ratiu <cratiu@nvidia.com>
-    xfrm_output: Force software GSO only in tunnel mode
-
-Alexandre Cassen <acassen@corp.free.fr>
-    xfrm: fix tunnel mode TX datapath in packet offload mode
-
-Alexander Stein <alexander.stein@ew.tq-group.com>
-    arm64: dts: freescale: tqma8mpql: Fix vqmmc-supply
-
-Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
-    firmware: imx-scu: fix OF node leak in .probe()
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- arch/arm/boot/dts/broadcom/bcm2711.dtsi            |  11 +-
- arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi      |  10 +-
- arch/arm/mach-davinci/Kconfig                      |   1 +
- arch/arm/mach-omap1/Kconfig                        |   1 +
- arch/arm/mach-shmobile/headsmp.S                   |   1 +
- .../boot/dts/freescale/imx8mm-verdin-dahlia.dtsi   |   6 +-
- .../arm64/boot/dts/freescale/imx8mp-tqma8mpql.dtsi |  16 +--
- .../boot/dts/freescale/imx8mp-verdin-dahlia.dtsi   |   6 +-
- .../boot/dts/rockchip/px30-ringneck-haikou.dts     |   2 +
- arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dts |   2 +-
- arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi |   2 +
- arch/arm64/boot/dts/rockchip/rk3566-lubancat-1.dts |   1 -
- arch/arm64/include/asm/kvm_host.h                  |   7 +-
- arch/arm64/include/asm/kvm_hyp.h                   |   1 +
- arch/arm64/kernel/fpsimd.c                         |  25 ----
- arch/arm64/kvm/arm.c                               |   1 -
- arch/arm64/kvm/fpsimd.c                            |  89 +++---------
- arch/arm64/kvm/hyp/entry.S                         |   5 +
- arch/arm64/kvm/hyp/include/hyp/switch.h            | 106 ++++++++++-----
- arch/arm64/kvm/hyp/nvhe/hyp-main.c                 |  15 +-
- arch/arm64/kvm/hyp/nvhe/pkvm.c                     |  29 +---
- arch/arm64/kvm/hyp/nvhe/switch.c                   | 112 ++++++++++-----
- arch/arm64/kvm/hyp/vhe/switch.c                    |  13 +-
- arch/arm64/kvm/reset.c                             |   3 +
- arch/riscv/boot/dts/starfive/jh7110-pinfunc.h      |   2 +-
- drivers/accel/qaic/qaic_data.c                     |   9 +-
- drivers/firmware/efi/libstub/randomalloc.c         |   4 +
- drivers/firmware/imx/imx-scu.c                     |   1 +
- drivers/gpu/drm/amd/amdgpu/nv.c                    |  20 +--
- drivers/gpu/drm/amd/amdgpu/soc15.c                 |  20 +--
- drivers/gpu/drm/amd/amdgpu/vi.c                    |  36 ++---
- .../gpu/drm/amd/display/dc/dce/dmub_hw_lock_mgr.c  |  15 ++
- drivers/gpu/drm/radeon/radeon_vce.c                |   2 +-
- drivers/gpu/drm/scheduler/sched_entity.c           |  11 +-
- drivers/gpu/drm/v3d/v3d_sched.c                    |   9 +-
- drivers/i2c/busses/i2c-omap.c                      |  26 +---
- drivers/infiniband/hw/bnxt_re/qplib_fp.c           |   2 -
- drivers/infiniband/hw/bnxt_re/qplib_rcfw.h         |   3 +-
- drivers/infiniband/hw/hns/hns_roce_hem.c           |  16 ++-
- drivers/infiniband/hw/hns/hns_roce_main.c          |   2 +-
- drivers/infiniband/hw/hns/hns_roce_qp.c            |  10 +-
- drivers/infiniband/hw/mlx5/ah.c                    |  14 +-
- drivers/mmc/host/atmel-mci.c                       |   4 +-
- drivers/mmc/host/sdhci-brcmstb.c                   |  10 ++
- drivers/net/can/flexcan/flexcan-core.c             |  18 ++-
- drivers/net/can/rcar/rcar_canfd.c                  |  28 ++--
- drivers/net/can/usb/ucan.c                         |  43 +++---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c          |  10 +-
- drivers/net/wireless/intel/iwlwifi/fw/file.h       |   4 +-
- drivers/net/wireless/intel/iwlwifi/mvm/d3.c        |   9 +-
- drivers/net/wireless/intel/iwlwifi/mvm/fw.c        |  37 ++++-
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c       |  28 ++++
- drivers/net/wireless/intel/iwlwifi/mvm/sta.h       |   3 +-
- drivers/regulator/core.c                           |  12 +-
- drivers/regulator/dummy.c                          |   2 +-
- drivers/soc/imx/soc-imx8m.c                        | 151 ++++++++++-----------
- drivers/soc/qcom/pdr_interface.c                   |   8 +-
- fs/btrfs/tree-checker.c                            |  30 ++--
- fs/btrfs/tree-checker.h                            |   1 +
- fs/proc/generic.c                                  |  10 +-
- fs/proc/inode.c                                    |   6 +-
- fs/proc/internal.h                                 |  14 ++
- fs/smb/server/smbacl.c                             |   5 +-
- include/linux/proc_fs.h                            |   7 +-
- include/net/bluetooth/hci.h                        |   2 +-
- kernel/sched/core.c                                |  22 +--
- mm/filemap.c                                       |  13 +-
- mm/memcontrol.c                                    |   9 ++
- mm/migrate.c                                       |  10 +-
- net/atm/lec.c                                      |   3 +-
- net/batman-adv/bat_iv_ogm.c                        |   3 +-
- net/batman-adv/bat_v_ogm.c                         |   3 +-
- net/bluetooth/6lowpan.c                            |   7 +-
- net/core/lwtunnel.c                                |  65 +++++++--
- net/core/neighbour.c                               |   1 +
- net/ipv6/addrconf.c                                |  15 +-
- net/ipv6/route.c                                   |   5 +-
- net/mptcp/options.c                                |   6 +-
- net/netfilter/nft_counter.c                        |  90 ++++++------
- net/xdp/xsk_buff_pool.c                            |   2 +-
- net/xfrm/xfrm_output.c                             |  43 +++++-
- 82 files changed, 810 insertions(+), 600 deletions(-)
-
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8909:EE_|BY1PR12MB8446:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2faed266-70db-4e26-432e-08dd6b999033
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cS9XWkRUWkdoNGNUQnB1VytLU0liN3k3dzQ0L0k4b3VFNUxhSVBpdkJOdUpG?=
+ =?utf-8?B?VlFvVjlJZzJ0NWxvelVTbzViS0srUFFXZUkvRmMzZmRCQ25hMmw2SkZYVXZJ?=
+ =?utf-8?B?dTdtYzFXdlQyMVBQUXQ3UmFiQzI2dEtvOTJGQjFPWGJSOEtYVkIxK0szVmNN?=
+ =?utf-8?B?Z1hQZGVRSFFWZU9GQWg1elBjUlpjVm9GTzNSQjdlK0dFQ1FERGhvQkVoQlFw?=
+ =?utf-8?B?N1VvS3MvVDNDS2xyeTVXbmxpc3FtRHhmQmkvT3JTNjRQUk9zcXRjWmZwcGxo?=
+ =?utf-8?B?ZTRRNEVvMmZKVVZBUDZwampnN29Nc3QvR3ErUzZOcVBLNWZEVmtqTEpOT3Nw?=
+ =?utf-8?B?cEd5WHh1aklocGc3Mmt1Y2VDOUVwQVJ5eWNlV3N3bFFDYS91R1p5bjNubE9P?=
+ =?utf-8?B?OVhXZE1LbFI2UnVBc0hKc3llS3JPcWE5QWVYOVlMVmMzdjZ2aDBEY3I4L0pX?=
+ =?utf-8?B?TzdDUjg1UTIwcXhKT3lZYXNQYTJldmNsU1NZR2pKQWs4bE1BWUxaYzVtUzc0?=
+ =?utf-8?B?VUJ6VTdFclFzR25QSGo0UVp4VmJ0WC9CZ2E2SXFCVjczZW5yL1F4MmRFeHFY?=
+ =?utf-8?B?YUpPSmRxNzhiZUZUZ0wvbXZieWZCV1VJbk9haHVSQk1aZWFpOWErZnAzWGZG?=
+ =?utf-8?B?cEwxWkZYcnQydFE5NW9oeTJ2b0c3cTdUaks3QWxvYmFXVjB2dGxHaHpQUTFs?=
+ =?utf-8?B?aHc4c0x6WXZYUGVmTEtvMnYxVFIrVjd2VUgrWnJPOEF1eTE1NGZUSDZMa3Vp?=
+ =?utf-8?B?ZmtXdDczaThtQXpwbWhRWHc3WlJCQ1lDa0V5bWtGVTJNaVdCRWkyaHByMi9r?=
+ =?utf-8?B?VERFWTRIYWRldm9EbjBNT0NxRXhtVHo3Nko3WmZJeUNxLzVDZ0szL3ZTY3dN?=
+ =?utf-8?B?bVdjTm1KbnlDQzgvNlhoU3lrNUZPcFVHRm9lSjlPbS9xbk5rSlNibmhQRHZ6?=
+ =?utf-8?B?RUpjdkN2VWRiQmxBRUFPWDNpbU9QUkN3RDR6MEd3R2tkU3gxeTRGRVZ6c1Ux?=
+ =?utf-8?B?UnpMbHdJcmZ6R3lpVUhYY2Qya2Jtd3BGRWZxYXpmYzV0WVhOWVkwcElvbHBj?=
+ =?utf-8?B?S2RpWnJOcTZHVEhaeHd5czh4MHNFVk9WYXg3VVprWUpvRE5XelovL0FkbHA1?=
+ =?utf-8?B?TDlWbkdJd0l0WExxNmJGZFpBaEdIVEl2bURKWUQxSy9Zdy9Rbk9NZzNnbVhR?=
+ =?utf-8?B?cjRwMnI4b096dHM1dlk3Rm5RaERaM2JuZkNmbHo5Y05xbHhOME5MVWIvTGxO?=
+ =?utf-8?B?dUdrRXdNQnJRV1FlVHVxZ2drblF5V3hSRlprM2NKQjVuRndORUlqNDE5WkI2?=
+ =?utf-8?B?YjVVZ0lDNnBxN1NwcGx1bm0yaWR2RHNmcW5pbjEveHRHbEJwZDlqS3llQzdJ?=
+ =?utf-8?B?YjBCbWZTRlNEYjE5eFNra2xDNmhydm9lVWJpeHh2aTFuUysvUWFmMkZnSWl5?=
+ =?utf-8?B?eXZScDErd1p3WXExNUxGYTlYdnBzVldQMlNyZUpDazFFamtSSjVPQVV1OXVH?=
+ =?utf-8?B?bm1nakVDNHdoamZBbU5kQ09iMlpSVnQ1SGNieUpmajFnKy9UOVBkQnhwNHRa?=
+ =?utf-8?B?NTRnUE9mc2l6eUJkeU4yQjU1enlJZDVMalVFdVUvQklCTlFkQ1pjZ1lROEQ0?=
+ =?utf-8?B?ek1JWjJzbWpGQVlLVFh3TWIvRGVmTkFOZjZjNmxBOUlvM21LT0ZHLzBCVjR3?=
+ =?utf-8?B?bHdpLy96L1Avd0xPZTVJOWZaMlJGZDl5Mk8zVDhza0IrRkxVV3p6a1BRZVVm?=
+ =?utf-8?B?anJLRXdmNVNXTW1MMmZnMlZWL21JcDNNYlUwVzlHNDdmWGtUOG80ODB1WjU2?=
+ =?utf-8?B?YVU3SEd5M0FhVHZSZmdVV0ZkTDN6NzNxeFBrVC9BcUZUczQ3Y1BScDJMU0x1?=
+ =?utf-8?Q?zW8gJBbq1fn5/?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8909.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?b21nN3FJS2N0aU56QVg4TkhNTzNTMElaRUVwNWo2UWhOQmM3SnZwbStLR1Br?=
+ =?utf-8?B?K1N1V2ZyWlROUGx2U3FWVSs4MThKQjFRNTc1akFIdjF5aThXdWpUa3pCV1Fx?=
+ =?utf-8?B?TU1pRzJkcVlkZDlWc3EzR3VIcHR3TnJmeDR2NmZyNmpGVW1SQ1J2b1lxdFp6?=
+ =?utf-8?B?S1VZWXJRRXplWjBVcC95UmxPZGRYT2R5NjNqSEVUMTBJRDlKcFVoSWxvRUF1?=
+ =?utf-8?B?Z0NuTmI1RUhJRjJEUXRCYVIyOEtMeG9rS2dOMHlzQzNLUDFpcHY1akRFa09j?=
+ =?utf-8?B?WWxUVmpHNEhsNHN2K0RoNTFOWnhlNWc0NHpmNnF1Y0pxS2xuSFh6TGhFZFAv?=
+ =?utf-8?B?QjVaWVVHSDBxT0tkTW9kb2haNHl3aExVZlJDMUtERVRLdTgreTl0b21RZnBw?=
+ =?utf-8?B?QXRQb1JabnBDL1VQZlNXU2hzM205VHg5Yi8raVNUbC85SHNlYWRlZGFQdzZO?=
+ =?utf-8?B?dmxuV0JjWU53LzZieEtLQWVVUzJaSWkxZndNbHZqaCtIeDlKeExVcEkySkZt?=
+ =?utf-8?B?M0p0TTVta1kzcngwaWExc2hrZkhQbWJuekpyUjlWQmpYSStCU2RzRXF2ZnFw?=
+ =?utf-8?B?cXNxOHF1MnBIZzVaZFV3WVU5dWZubWlmN1N6UUp6SGpTMWRWaXJGNWErdmhK?=
+ =?utf-8?B?UWIvcEgzU0gxWFA5RTVwMFhEcGtmMW90WlVNN1FmLzJjaVdkYkFObU01Wmo5?=
+ =?utf-8?B?ZzY0Mk5LbTJzcWRUSGJuanFlR2g4dTF2RzZNSkcyM2kyVTBrWU8rampZZHV1?=
+ =?utf-8?B?d01UV1VPZFAvWEUvVmphUVFBWkxWSEVOREU1MytCcER2NGc3clg2blNrSXVp?=
+ =?utf-8?B?VHFLbnZuRW1BaDd6QlhFM2pyQzF6eGE1LzRlL0lpNlAwaFJNek1EcmIxRWJW?=
+ =?utf-8?B?cmJUVGhrTlNteCs2WjFBck1qTGFQeE04d0ZTcG5kYnBDd3BOWjRXeWFpWG53?=
+ =?utf-8?B?RVJ0Y0t1NEdaenB6RTQ0cmF5aXJvT00wcUhKM2E3R3BDQ3pZZDdyYmNrZTNt?=
+ =?utf-8?B?cGNRZHZIWll3Slc2QWZJbmZ6bHg3dlRpNTk3d1dwTktHK1VDQ0xEQ2Noc0NI?=
+ =?utf-8?B?REt6V1JQNHdXRTZ2Y1dCOVJEbjJvYXZMb2ZKUDB0YkF4ZFo1RkhFeHpNMFpK?=
+ =?utf-8?B?cTBSakxxblMrdG9xYVFiNjI0TnR6Uy92VEZQdTl1VzNuczB0eDk5cUlVcXIx?=
+ =?utf-8?B?RzI4WkFtelVvaUtad1owaGZNNG1RN0NOa0Zlb3VZVDlZODFIMGtPYlhkazBG?=
+ =?utf-8?B?dUV3NStCT0tDcGNqU1dQbXBLcFNKaFkzcHhQYlc1TVB5YjR5N2MwN09hUDlY?=
+ =?utf-8?B?Ynd3NklLcDZYQktoZWVaaVVmRHFKYllvS1hYY3o2MU12amM0cTl6ZU9SNHUy?=
+ =?utf-8?B?bE8zRVZKMUpIclNTSVVYeE5xbDlORnZjT3RYSE1TbXFyUDVnQ2NRTXFpSVFS?=
+ =?utf-8?B?K2NnbTQwaHBMSmtqdzA1TFJFL0pTNk9ZMWh6V1cwdm1XMStOVkpEY3NScisv?=
+ =?utf-8?B?YUZOaG9tQjZzU1g2bThRS2NvT0pWNlFKQmtOYlg1MzR6ckVsQWxPakdrSmlS?=
+ =?utf-8?B?bWFORkx1aWRpWXdVMk9mNDA5VU9JNXVPYVdGUzl1dFFmQjc1MnE4TkVZc0Jh?=
+ =?utf-8?B?eXRNT2hvTThaREtHak5aVVVCOTlPVitWaUJzWm51YzRHelVaQlYzVldPd2NO?=
+ =?utf-8?B?WjBGa1ZxdG9CSktlQXdmLytrbVNrQ0dXMkcxRHhCcUM0dHhvS0Q5NUcvRmUr?=
+ =?utf-8?B?QWU2K2xaRUFSV2wzelo4SXcycGt2SllSK0owZlVNS25RSU50TDgvcXp3QTRa?=
+ =?utf-8?B?cG5yNGdzdi9ESXJSQ0pVWGwzZnhvMENkMW5ZUDF3UklVSXM0TEtSSzZTUVVk?=
+ =?utf-8?B?dktQUVY5T3hBdzFJSjFHeWFNcFcyY2JzV01HNXZRdGM0NFdQOXp1L0NLSldm?=
+ =?utf-8?B?SWZ1N0xYMWdlM3dOdFhNZmphcXh0M0dZMTZlbjdrRWUrL0NyRXhWVFRBOVhl?=
+ =?utf-8?B?a0ZZZ3Q1UUZ5V0xleVpxWXpnSDloendDb21aYVZkWGlRSDhNYWlHNkN5aGFC?=
+ =?utf-8?B?bWVIT0VkNDIyWk9JQ1UvL3EyWWVDZ1pBQXFzUXIxWFpiNVlYdXQxK0Nlc3FS?=
+ =?utf-8?Q?CfBoRPqej7rnrkMfYb7xeEqlR?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2faed266-70db-4e26-432e-08dd6b999033
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8909.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2025 12:35:45.3366
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: o3bywudPgqAfeG021x8pKi/HZBLTUB1sW4DmyGBmubGLagoDGWhaCr0pvOd0Wn/38cMpuALOUPVDruu28ioDPA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR12MB8446
+
+
+On 3/24/2025 9:10 PM, Arnd Bergmann wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+>
+>
+> On Mon, Mar 24, 2025, at 15:58, Akshay Gupta wrote:
+>> ---
+>> Changes since v5:
+>> - Address review comment
+>>   - Address Arnd comments
+>>   - Add check for cmd in ioctl
+> I think you missed one of my comments.
+>
+>> +static long sbrmi_ioctl(struct file *fp, unsigned int cmd, unsigned
+>> long arg)
+>> +{
+>> +     struct apml_message msg = { 0 };
+>> +     struct sbrmi_data *data;
+>> +     bool read = false;
+>> +     int ret;
+>> +
+>> +     if (cmd != SBRMI_IOCTL_CMD)
+>> +             return -ENOTTY;
+>> +
+>> +     if (_IOC_SIZE(cmd) != sizeof(msg))
+>> +             return -EINVAL;
+> You are checking the 'cmd' argument to the function now, which
+> is good. There is no need to also check _IOC_SIZE, since
+> that is implied by the definition.
+> rue;
+Ack.
+>
+>> +
+>> +     switch (msg.cmd) {
+>> +     case 0 ... 0x999:
+>> +             /* Mailbox protocol */
+>> +             ret = rmi_mailbox_xfer(data, &msg);
+>> +             break;
+> What is however missing here is a specific check for the
+> individual commands: I don't think it's a good idea to
+> treat all 2458 mailbox commands the same way and just
+> pass them through unfiltered here, and I would also not
+> pass the specific 'cmd' as part of a multiplexer structure.
+>
+> Instead, I think there should be a separate ioctl command
+> for each thing you can do with the mailbox. From the existing
+> driver it appears that these are the commands currently
+> supported:
+>
+> enum sbrmi_msg_id {
+>          SBRMI_READ_PKG_PWR_CONSUMPTION = 0x1,
+>          SBRMI_WRITE_PKG_PWR_LIMIT,
+>          SBRMI_READ_PKG_PWR_LIMIT,
+>          SBRMI_READ_PKG_MAX_PWR_LIMIT,
+> };
+>
+> which is just the first four out of the 2458, and clearly small
+> enough to justify one ioctl command each. I don't know what
+> the command specific arguments would look like, so it's
+> possible you may also want to define a separate structure
+> for each one.
+>
+>         Arnd
+
+Link for the documentation: 
+https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/programmer-references/57883.zip 
+<https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/programmer-references/57883.zip>
+You may refer to section: 5.4.2.2 SB-RMI Mailbox Service
+At present, more than 70 mailbox commands ids are supported.
+The number is increasing with each platforms.
+however, the input and output for all mailbox commands are maintained as 
+32 bit,
+hence, we can use the same structure and differentiate the functionality.
+As per current AMD's implementation the maximum can go up to 0xFF, I 
+will update the
+case to 0 ... 0XFF
 
