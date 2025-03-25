@@ -1,141 +1,111 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C68183CA6;
-	Tue, 25 Mar 2025 22:16:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617771C6FE4
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 22:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742941000; cv=none; b=fSV3/l8asxVGV7iwCFPZKWPD54jEzFR1HuH2KAlJftJc70RfhSpcZpyzth89Rv9d8Ud2wJDsm6K2b4Eh0eW+hXtJwAJ61updjYh0pSVpJWe4qcY+0PigZ5PEc5kYRXsxJHrO5flQkOsAJOqk4L6h+7uVDFhQMdhY/gKZLC6KjDA=
+	t=1742941060; cv=none; b=TwT2zfD10DnXVsqQ1Y73K7QczJj2aWMXdOQXojRd9wssNo5oR6XZAyd3aTsTQ61e2JHjxbUz9IA4Wr7BPNEhcI3wIgP0/AQXpww/8tdQ71TY6vDGcRa/vrtkUqfsPyL7gbDoBVnC/Ms0Uma2S2QA1uZCROKQZUzFfP4yXJc917s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742941000; c=relaxed/simple;
-	bh=ukbMYLaHnFNbzuxM/IwrERqYhxEtV6X2WUEaBtLFe88=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=BMfylrTOtA2Pu+o8Zob4YP33noRnM98kUMtBAwjAqFyC2YaZ9OnDn5hzzVI8Kjb7L1sotT6FW0/+00emkPksOvb0evVp3Pmy7RCnHVoHgWP15ptF/pJZsS0oT9aE61rURpudYH3pcJEBXuF68Okz1qbyiju0Oo2W3nnVYL77/uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HfynHWSX; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1742941060; c=relaxed/simple;
+	bh=1UV2rZVmB0/CIyPMfCR+mlReHLl03xvenKKyv7M3/pQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pf3UFR6X1JJ//cwJ4GhqRsrdexL2gYQB9Lk4yrE9uSIT4Lw9o3mct1e5vL7E7VPAm+q8H/MY9fKfpvY8IM5vkHK0JXnSqpZg4dmfGED2P8nnCh97Sb9JOz4HnyQxyZATIIKoNAGOHrxGqu4qkoQIAxvuDis4u2wDKhUR/1kdo5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=WBGMIDEi; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HfynHWSX"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52PGaVxL029366;
-	Tue, 25 Mar 2025 22:15:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	IqkDku0FBWy439knwpj1QAw3htxh/zATuam0xlC2a9Y=; b=HfynHWSXtuodTWVN
-	xIma+SE8dmmmF3ql6VflRpSr4IqtIamNWpkUPQ+tOnhzjIsibRkDYj2UfOf5dbdO
-	G27HDtHzz9F7TJs5Gpz6dWpv8iDfRGLlis5Kws5sYkmy5BK2zbq5s1A4YPv2EeA8
-	mppt7B8TXMzmx1hJk69k2FJrvI6YYhXNZIF7n+5NInINs87H6Qp9o+ZlqYt33MIs
-	k3hCJWN4To+hRY80vHsu5OiVNgJRuWAoV56HWG70AnZb7qc8BJQWWRWk0VBsvozq
-	oFsGFaKh9RMFkxCg8AlngWO2KUR/OJG1bQTq3AuVlNr4kart+zedDk4sy72f3qtL
-	p6Wgag==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45kjjf387p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Mar 2025 22:15:56 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52PMFuYK025311
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Mar 2025 22:15:56 GMT
-Received: from [10.46.162.103] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 25 Mar
- 2025 15:15:55 -0700
-Message-ID: <c5ab13ec-f650-ea10-5cb8-d6a2ddf1e825@quicinc.com>
-Date: Tue, 25 Mar 2025 15:15:47 -0700
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="WBGMIDEi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=Tr7g
+	aQg6UzJbHbDAcDCQLiy0DQOB9MXlClKRMUC2x+M=; b=WBGMIDEiYQpapAhshyPG
+	esG+zvrH2sxU27mbQ7+vn0tlDs1D/hWlUgeS6oMIA4+NHLsJC/pydqq2JqfBR/nh
+	z3sBWmwxvop46UqyJxEy7jkPJWXmXCvyqW7AFRI2xzMBvl516cf5/sBJ1C39m22a
+	x6oRP5WIiE96SgkQ38me+QzXEU9Mw8JW4BATqqrEfBLIrmjtt5tXlyJ/TRiJI9Ag
+	3yGANsaYXlC6esP9/nT5b6kZvuQcC/JJ9bJDcQSg4czxgOGyjyltESZSk5TBTGIW
+	7nxcgziG5ygPWXREY6LGpMfsj3VEF6bwxMgh2DvBJjw6qTsvqH3xZlHn+FYz+YGF
+	6g==
+Received: (qmail 3289556 invoked from network); 25 Mar 2025 23:17:33 +0100
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 25 Mar 2025 23:17:33 +0100
+X-UD-Smtp-Session: l3s3148p1@nANaFjIxYuUujnsv
+Date: Tue, 25 Mar 2025 23:17:32 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: syzbot <syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com>,
+	gregkh@linuxfoundation.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] media: dvb: usb: Fix WARNING in
+ dib0700_i2c_xfer/usb_submit_urb
+Message-ID: <Z-MrfICsY06DZV-2@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	syzbot <syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com>,
+	gregkh@linuxfoundation.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+References: <6bb3b80b-a808-4992-8666-535ed9a5c980@rowland.harvard.edu>
+ <67e2fed5.050a0220.a7ebc.0053.GAE@google.com>
+ <29db5fdc-13c9-45f0-9183-c80d637725c6@rowland.harvard.edu>
+ <Z-MKiV0Ei5lmWik6@shikoro>
+ <d0fd60d7-5660-42ed-b1c7-4dfd6b8e74b0@rowland.harvard.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v4 1/1] scsi: ufs: core: add device level exception
- support
-To: Arthur Simchaev <Arthur.Simchaev@sandisk.com>,
-        "quic_cang@quicinc.com"
-	<quic_cang@quicinc.com>,
-        "quic_nitirawa@quicinc.com"
-	<quic_nitirawa@quicinc.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "peter.wang@mediatek.com"
-	<peter.wang@mediatek.com>,
-        "manivannan.sadhasivam@linaro.org"
-	<manivannan.sadhasivam@linaro.org>,
-        "minwoo.im@samsung.com"
-	<minwoo.im@samsung.com>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
-CC: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        Alim Akhtar
-	<alim.akhtar@samsung.com>,
-        "James E.J. Bottomley"
-	<James.Bottomley@HansenPartnership.com>,
-        Matthias Brugger
-	<matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Keoseong Park <keosung.park@samsung.com>,
-        Ziqi Chen
-	<quic_ziqichen@quicinc.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Gwendal
- Grignou" <gwendal@chromium.org>,
-        Eric Biggers <ebiggers@google.com>,
-        open
- list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC
- support:Keyword:mediatek" <linux-arm-kernel@lists.infradead.org>,
-        "moderated
- list:ARM/Mediatek SoC support:Keyword:mediatek"
-	<linux-mediatek@lists.infradead.org>
-References: <4370b3a3b5a5675bb3e75aaa48a273674c159339.1742526978.git.quic_nguyenb@quicinc.com>
- <SA2PR16MB4251229744D717821D3D8353F4A72@SA2PR16MB4251.namprd16.prod.outlook.com>
-Content-Language: en-US
-From: "Bao D. Nguyen" <quic_nguyenb@quicinc.com>
-In-Reply-To: <SA2PR16MB4251229744D717821D3D8353F4A72@SA2PR16MB4251.namprd16.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: mv-66VCUBBs-n4qkdNHUeFgF5sj03LhE
-X-Authority-Analysis: v=2.4 cv=Hol2G1TS c=1 sm=1 tr=0 ts=67e32b1c cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=88o2ww302YIQ5eeAPVQA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: mv-66VCUBBs-n4qkdNHUeFgF5sj03LhE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-25_10,2025-03-25_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 lowpriorityscore=0 adultscore=0 clxscore=1011 bulkscore=0
- priorityscore=1501 malwarescore=0 impostorscore=0 phishscore=0 spamscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503250148
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6ptUPvfCjRk92+jO"
+Content-Disposition: inline
+In-Reply-To: <d0fd60d7-5660-42ed-b1c7-4dfd6b8e74b0@rowland.harvard.edu>
 
-On 3/25/2025 9:33 AM, Arthur Simchaev wrote:
-> Hi Bao
-> 
-> I think adding "struct utp_upiu_query_response_v4_0" is redundant and not correct for flags upiu response .
-> You can use "struct utp_upiu_query_v4_0"
-> 
-Hi Arthur,
-This is not a flags attribute. This is for a Query Read 64-bit Attribute 
-data. In the existing code, we do not have a read 64-bit attribute, so 
-adding this new code would also allow future re-use.
 
-The new "struct utp_upiu_query_response_v4_0" would improve readability 
-because it is formatted exactly as how the jedec standard defines for 
-Attribute Read. We won't need to use type cast to get the 64-bit value.
-There would be no issue with efficiency because the same machine code 
-would be generated.
+--6ptUPvfCjRk92+jO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The existing "struct utp_upiu_query_v4_0" probably has a bug in it. It 
-does not use the  __attribute__((__packed__)) attribute. The compiler is 
-free to add padding in this structure, resulting in the read attribute 
-value being incorrect. I plan to provide a separate patch to fix this issue.
+On Tue, Mar 25, 2025 at 05:47:53PM -0400, Alan Stern wrote:
+> On Tue, Mar 25, 2025 at 08:56:57PM +0100, Wolfram Sang wrote:
+> >=20
+> > > +	static const struct i2c_adapter_quirks i2c_usb_quirks =3D {
+> > > +		.flags =3D I2C_AQ_NO_ZERO_LEN_READ,
+> > > +	};
+> >=20
+> > Why didn't you create the static struct outside of probe?
+>=20
+> Because it's used only in that one function.  But if you prefer, I will=
+=20
+> move the definition outside of the function.  It doesn't make any real=20
+> difference.
 
-Thanks, Bao
+Then, for consistency reasons, I'd really prefer it outside probe. I
+also think it doesn't really make a difference, it just looks unusual to
+me.
+
+Thanks and happy hacking!
+
+
+--6ptUPvfCjRk92+jO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfjK3kACgkQFA3kzBSg
+KbZHVA/7Bp5i1ouvo7Hmf6ovhTvrc8OHu91n9fvTIhYsYxXZ/hwThoCkIWE9KRRd
+dPYxa/0JNQSQN3dMwdROceygUYQCkvpB2as1rJUp3PoTMHP2PG+0617QdWNBNaui
+TOSXf+UAou62g2NVeVdHpKAevFH7fZ3d6rSf0sjxEzk3xSJaxfrfo+6Zo+JctcHE
+rRuMZVKLE4u0pJbemqLaU9A1p8AVqe8S2ew9/ikgAJvC0X4lHlGjeY2YD2pR6zOv
+001vP+DwbC8twVZrCABZf9jKBR1MZJb7d5rZ4iQTIoUpFEYwnr7oZDhfzxZzKk4k
+1iZo699e2W9S664nFnXJbF5Ud8yRwf6JAcWAGOAVk3sV+SpFW0QTUeo7BohOOr2H
+pOZKTURY07bZA0J+65XnDb01Qeam/ru4Xrt5ZOeYKrE+imnbER3ov4zlbF3opjQK
+FSSb2vJBI17T9RLaEcWYog4YAomEjyXfbZIgjzWug5S3u4WbK9c9KZswNxt9XzjA
+S6LBbPzH9OZKSXUcxJo5pzSOGbXycmpspF4PkNc1VCUvpPfLPdSvTMC2Q+07c1Ke
+WABGIvBGNNo6+yfJ6tDrY1SP1gAr5+JLrWogh8T4NpX261DiLBJMH27DuCaVNFfz
+7pPUo21QKe2jK6vQ73i7ZgjprRZ0eMMmnQHip+XNAUTAhsFKjiI=
+=zLCi
+-----END PGP SIGNATURE-----
+
+--6ptUPvfCjRk92+jO--
