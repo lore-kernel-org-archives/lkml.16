@@ -1,176 +1,170 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141EF1E833A;
-	Tue, 25 Mar 2025 11:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC2E433A8
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 11:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742903125; cv=none; b=l/w4kG4ZhiHQEnX0o/yt5lDiMQCff9pwA5qEEXq1KgchpYc7pcBPvfouzNv3clq6t1OcXhz4aw6YRV79/Qatfk42qLJH5UH6BkX3P7p9BUXANExkIBXrAOcVx266UPR91c7K+ODkfRx+Uv6rHF/VlkhahDIMKfQELMM7KpCR2LY=
+	t=1742903169; cv=none; b=AR5Wl7rR8mtw9Vm74HTArI7w4I4X4RNN0V7OkFMLDxelWE3fKOhU7R6ZymIKZQp5j6BtRkBgqevjEs2bu4ui/N8KD1N4nUe7os8DDsQ5pj0T1oSEVwqrHQx7ujA1om0mMSlS2L9GD3RhAVEe1e6Tn9+06sIdgEvRliMrrsMOwNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742903125; c=relaxed/simple;
-	bh=ln3YIN/p3pvOOr6HTpKHmEmdZ4o2gfuuldLKRJWcKsY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dGDCUWlhuYyttwS43uB4+u5Xcws3/88TZ+O4R8vbjMv3QxrZ69itk7u88O9Y2SYUAMpUKcAOdJN8R7t82J0w68obNGpa1U869MNRDdpGzUddRozctnwsDGZ9WEGPDtZXpMEYJ53MLlzQzl2Eobd2aaNW3QzN2KFHuIuH+L2cj1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EVjLbNU/; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1742903169; c=relaxed/simple;
+	bh=3I6YOEEevm7Iddu9Wu3uhmlaf4D1s7KW/SvZf1lAK98=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qc1ndHhH0zkloCl83r2piWt9Gh9THz5NTSxUt48LnNIB3seSPMsYClVHdrYfWsfqbvp+vr9U0Akufqgn7YQRnff17+IWIvHk6KNvlzy6fnjHgw4rbZVTeQEr1M1pNE+6hJKdwq1x7FjhsHCGfYd74zayVkve6KO+xs6pmPuVdj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VZuvQZo0; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EVjLbNU/"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52P56dKK027910;
-	Tue, 25 Mar 2025 11:45:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=ZeSvWIeDWkZDUBR4rtlXsoPy9rqPVD
-	RaaZ2ycwV8IUc=; b=EVjLbNU/k5+hqrBMGzGH/Fx07OdHl42M4QPRgyplfcTT6J
-	MwoJFMiFn5ij4vtQYKZws4avcfDpsg8HTGu+yk4smIpknNF1/LkS9KUAqwNixD79
-	ad7FOtrMtYWSfMK+0y/k+iBDcS6qO2SkUM7X6JDEdc0QPeNWVoTr+oIu2kRcRv28
-	DH0NIcG89cBtHwrkcT21EncIaY9Q921n7hd3XwjNstgoRdi+kOoqJidlt36eXkrq
-	6W2i1ELzPn0x3ZKkp92ZwW92S6D4xMHM8O766zh98f74mqdkawWrPoNExbZDg3KS
-	b4KT6ZUcufkzDEdKg+dAFe6vpOlRQKkw/S04GkGA==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45kbjwvae5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Mar 2025 11:45:06 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52PA0TZm009692;
-	Tue, 25 Mar 2025 11:45:05 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45j9rkjy33-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Mar 2025 11:45:05 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52PBj2hk35258764
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Mar 2025 11:45:02 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 41C5120043;
-	Tue, 25 Mar 2025 11:45:02 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2D19320040;
-	Tue, 25 Mar 2025 11:44:59 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.43.39.189])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 25 Mar 2025 11:44:58 +0000 (GMT)
-Date: Tue, 25 Mar 2025 17:14:55 +0530
-From: Saket Kumar Bhaskar <skb99@linux.ibm.com>
-To: Quentin Monnet <qmo@qmon.net>
-Cc: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>, bpf <bpf@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        jkacur@redhat.com, lgoncalv@redhat.com, gmonaco@redhat.com,
-        williams@redhat.com, tglozar@redhat.com, rostedt@goodmis.org
-Subject: Re: [linux-next-20250324]/tool/bpf/bpftool fails to complie on
- linux-next-20250324
-Message-ID: <Z+KXN0KjyHlQPLUj@linux.ibm.com>
-References: <5df6968a-2e5f-468e-b457-fc201535dd4c@linux.ibm.com>
- <8b0b2a41-203d-41f8-888d-2273afb877d0@qmon.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZuvQZo0"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso58912835e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 04:46:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742903165; x=1743507965; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QM6yckbMzLuQtYcD19Hf+kaqNYJs8oHRxuA6VUZJjFY=;
+        b=VZuvQZo0regIewOmEmcqDhJ8v807sBkxtWTAZ/VPK3VBGnZSQBPLi5HbJY5cf0ragZ
+         9DTdLaUFqCiYKLyzV9+8Elzb8LnUIaHSg4nTCla/szo1PNRkE7IO2QMIx0/QhYcPwMSZ
+         xLPlu8HI+Ob337ZlDZ6ce7S1nYisWQZYROpIoAb3dnBrhF57LvOIOAS/4GiGM3iU/Kcq
+         vYpuYG0iDcrOq/FpagazYq9046bpZ0IgCGP4O+hsBQaeQpP5JFmjImoJxGeKoJkpP3aQ
+         C7qXxvhu0zcGi/LMiDSQGMi9+W4WfVlkSsmE1rOFZKafwRPChp4/Iuqjd7vrW5Ip+jeA
+         kUgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742903165; x=1743507965;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QM6yckbMzLuQtYcD19Hf+kaqNYJs8oHRxuA6VUZJjFY=;
+        b=jFNu1JYa/bEQQIsZa2YkSaORLbpbH/J7xxhXXzxOSPc7jVxFpuS9QDOLV+Or8wFd4m
+         oS8PzLJ7IJNwixOzZZAvOATBxn49LQ+tbPA/jM7PZ96Te1p7+vxDnlf1PZh1RP9JZ5Zx
+         Gxm0E8z0p3iWru+1HkgClLO2FYCM0N6F0ibquNfF/ekml0n6X6pxVdGbHlnIM5Nm5yxG
+         L1YYgFqr67PzC0bRvGCEmUiKARhHGyMRZhHUZBqZqTYScOCscaxltgzwIQ4A7l10VQds
+         tRhbKP92l0vjcsWoYijbNGlzexA9KqiDVhgsIXSFl7EfahSrOpHJ4NHsdM6y6KmLXNw8
+         TmIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUibnkqEqWHqDqgWmnZwoi7SM/hJ4oLl0AYl0/kyb/+aOw+U8Fit9q6SfBP3Xfj08w++uKrMTWZKkj00wI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvZJOhQCEXj3ca3oIUIWssfgs+RjRzNyKQgqqiymlip/WKpZAT
+	YR+LcgSWOEx6R2cPrxPKHrfAd1NCR5mEVZ91tHOyW8AARtCl9CUx
+X-Gm-Gg: ASbGncvkmUrtXQ1TO+JlatAMMs9SQMlJ85JxdUegMcYghRURHYB0IRw2B0Z9viXSg2S
+	WR/ozi7BvhtcP+QFOHJFX98QALKi4hEkZOkFra+g5BQBVr+9/5SGo8TwWNh7sB4n9SZkLQuwKB+
+	8gCBoiOKR5sNWoWOnhLqn8aqjsizJE3sZKl7ZDNvrjIwfTy+VFgYwHFK/oKqrP76R1Z9xxcpnfQ
+	lTJrojOQ/LvTkxOFqyXzXTXwZJC8UgpJwCAvdBs7G55DfKQLzhkYPS/byke3uZfIv+rWFY99mZE
+	qqdinMy+lrBMaz9lTwFRyh4UMDpDo2IjpjIyyLng+w==
+X-Google-Smtp-Source: AGHT+IG1gg+2VMW6S40TL5SGmizmMHwcdq3j/bUWa544XwDYu50O4TXneCJnlGDTs3FUGeIlvjDRfQ==
+X-Received: by 2002:a05:600c:4e41:b0:43d:1824:aadc with SMTP id 5b1f17b1804b1-43d50a3632emr167118635e9.29.1742903164542;
+        Tue, 25 Mar 2025 04:46:04 -0700 (PDT)
+Received: from pc.. ([197.155.71.138])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d6ddf2974sm12782885e9.0.2025.03.25.04.46.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 04:46:04 -0700 (PDT)
+From: Erick Karanja <karanja99erick@gmail.com>
+To: gregkh@linuxfoundation.org,
+	outreachy@lists.linux.dev
+Cc: philipp.g.hortmann@gmail.com,
+	davidzalman.101@gmail.com,
+	vivek6429.ts@gmail.com,
+	viro@zeniv.linux.org.uk,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Erick Karanja <karanja99erick@gmail.com>
+Subject: [PATCH v2] staging: rtl8723bs: Rename variables v2
+Date: Tue, 25 Mar 2025 14:45:52 +0300
+Message-ID: <20250325114552.45393-1-karanja99erick@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8b0b2a41-203d-41f8-888d-2273afb877d0@qmon.net>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 6J8TeICOWrWWtMDx4atpNlqvb8kZ_Apf
-X-Proofpoint-ORIG-GUID: 6J8TeICOWrWWtMDx4atpNlqvb8kZ_Apf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-25_04,2025-03-25_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 lowpriorityscore=0 phishscore=0 spamscore=0
- clxscore=1011 bulkscore=0 adultscore=0 suspectscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503250080
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 25, 2025 at 11:09:24AM +0000, Quentin Monnet wrote:
-> 2025-03-25 16:02 UTC+0530 ~ Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> > Greetings!!!
-> > 
-> > 
-> > bpftool fails to complie on linux-next-20250324 repo.
-> > 
-> > 
-> > Error:
-> > 
-> > make: *** No rule to make target 'bpftool', needed by '/home/linux/
-> > tools/testing/selftests/bpf/tools/include/vmlinux.h'. Stop.
-> > make: *** Waiting for unfinished jobs.....
-> 
-> 
-> Thanks! Would be great to have a bit more context on the error (and on
-> how to reproduce) for next time. Bpftool itself seems to compile fine,
-> the error shows that it's building it from the context of the selftests
-> that seems broken.
-> 
-> 
-Yes, selftest build for BPF fails.
-## pwd
-/linux/tools/testing/selftests/bpf
+Rename the variable `supportRateNum` to `support_rate_num` and variable
+`supportRate` to `support_rate` to adhere to Linux kernel coding
+standards by using snake_case instead of CamelCase.
 
-# make -j 33
+Fixes checkpatch.pl warning:
+    CHECK: Avoid CamelCase: <supportRateNum>
 
-make: *** No rule to make target 'bpftool', needed by '/home/upstreamci/linux/tools/testing/selftests/bpf/tools/include/vmlinux.h'.  Stop.
-make: *** Waiting for unfinished jobs....
+v2:
+Fixes checkpatch.pl warning:
+    CHECK: Avoid CamelCase: <supportRate>
 
-> > Git bisect points to commit: 8a635c3856ddb74ed3fe7c856b271cdfeb65f293 as
-> > first bad commit.
-> 
-> Thank you Venkat for the bisect!
-> 
-> On a quick look, that commit introduced a definition for BPFTOOL in
-> tools/scripts/Makefile.include:
-> 
-> 	diff --git a/tools/scripts/Makefile.include .../Makefile.include
-> 	index 0aa4005017c7..71bbe52721b3 100644
-> 	--- a/tools/scripts/Makefile.include
-> 	+++ b/tools/scripts/Makefile.include
-> 	@@ -91,6 +91,9 @@ LLVM_CONFIG	?= llvm-config
-> 	 LLVM_OBJCOPY	?= llvm-objcopy
-> 	 LLVM_STRIP	?= llvm-strip
-> 	
-> 	+# Some tools require bpftool
-> 	+BPFTOOL		?= bpftool
-> 	+
-> 	 ifeq ($(CC_NO_CLANG), 1)
-> 	 EXTRA_WARNINGS += -Wstrict-aliasing=3
-> 
-> But several utilities or selftests under tools/ include
-> tools/scripts/Makefile.include _and_ use their own version of the
-> $(BPFTOOL) variable, often assigning only if unset, for example in
-> tools/testing/selftests/bpf/Makefile:
-> 
-> 	BPFTOOL ?= $(DEFAULT_BPFTOOL)
-> 
-> My guess is that the new definition from Makefile.include overrides this
-> with simply "bpftool" as a value, and the Makefile fails to build it as
-> a result.
-> 
-> If I guessed correctly, one workaround would be to rename the variable
-> in Makefile.include (and in whatever Makefile now relies on it) into
-> something that is not used in the other Makefiles, for example
-> BPFTOOL_BINARY.
-> 
-> Please copy the BPF mailing list on changes impacting BPF tooling (or
-> for BPF-related patchsets in general).
-> 
-> Thanks,
-> Quentin
-Yes you are right that the new definition from Makefile.include overrides this
-with simply "bpftool" as a value, and the Makefile in bpf selftest fails to 
-build it as a result.
+Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
+---
+ drivers/staging/rtl8723bs/core/rtw_ap.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-But the main cause is that it is not able to locate the bpftool binary.
-So, is it good idea to both rename this variable in Makefile.include and 
-use:
+diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
+index 50022bb5911e..d46a04b9a05e 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_ap.c
++++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
+@@ -370,7 +370,7 @@ void add_RATid(struct adapter *padapter, struct sta_info *psta, u8 rssi_level)
+ void update_bmc_sta(struct adapter *padapter)
+ {
+ 	unsigned char network_type;
+-	int supportRateNum = 0;
++	int support_rate_num = 0;
+ 	unsigned int tx_ra_bitmap = 0;
+ 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
+ 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
+@@ -396,9 +396,9 @@ void update_bmc_sta(struct adapter *padapter)
+ 		/* psta->dot118021XPrivacy = _NO_PRIVACY_;//!!! remove it, because it has been set before this. */
+ 
+ 		/* prepare for add_RATid */
+-		supportRateNum = rtw_get_rateset_len((u8 *)&pcur_network->supported_rates);
++		support_rate_num = rtw_get_rateset_len((u8 *)&pcur_network->supported_rates);
+ 		network_type = rtw_check_network_type((u8 *)&pcur_network->supported_rates,
+-						      supportRateNum,
++						      support_rate_num,
+ 						      pcur_network->configuration.ds_config
+ 		);
+ 		if (is_supported_tx_cck(network_type)) {
+@@ -817,8 +817,8 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
+ 	u16 cap, ht_cap = false;
+ 	uint ie_len = 0;
+ 	int group_cipher, pairwise_cipher;
+-	u8 channel, network_type, supportRate[NDIS_802_11_LENGTH_RATES_EX];
+-	int supportRateNum = 0;
++	u8 channel, network_type, support_rate[NDIS_802_11_LENGTH_RATES_EX];
++	int support_rate_num = 0;
+ 	u8 OUI1[] = {0x00, 0x50, 0xf2, 0x01};
+ 	u8 WMM_PARA_IE[] = {0x00, 0x50, 0xf2, 0x02, 0x01, 0x01};
+ 	struct registry_priv *pregistrypriv = &padapter->registrypriv;
+@@ -883,7 +883,7 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
+ 
+ 	pbss_network->configuration.ds_config = channel;
+ 
+-	memset(supportRate, 0, NDIS_802_11_LENGTH_RATES_EX);
++	memset(support_rate, 0, NDIS_802_11_LENGTH_RATES_EX);
+ 	/*  get supported rates */
+ 	p = rtw_get_ie(
+ 		ie + _BEACON_IE_OFFSET_,
+@@ -892,8 +892,8 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
+ 		(pbss_network->ie_length - _BEACON_IE_OFFSET_)
+ 	);
+ 	if (p) {
+-		memcpy(supportRate, p + 2, ie_len);
+-		supportRateNum = ie_len;
++		memcpy(support_rate, p + 2, ie_len);
++		support_rate_num = ie_len;
+ 	}
+ 
+ 	/* get ext_supported rates */
+@@ -904,11 +904,12 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
+ 		pbss_network->ie_length - _BEACON_IE_OFFSET_
+ 	);
+ 	if (p) {
+-		memcpy(supportRate + supportRateNum, p + 2, ie_len);
+-		supportRateNum += ie_len;
++		memcpy(support_rate + support_rate_num, p + 2, ie_len);
++		support_rate_num += ie_len;
+ 	}
+ 
+-	network_type = rtw_check_network_type(supportRate, supportRateNum, channel);
++	network_type = rtw_check_network_type(support_rate, support_rate_num,
++					      channel);
+ 
+ 	rtw_set_supported_rate(pbss_network->supported_rates, network_type);
+ 
+-- 
+2.43.0
 
-BPFTOOL ?= /usr/sbin/bpftool
-
-This is the link to patch that is impacting: 
-https://lore.kernel.org/all/20250218145859.27762-3-tglozar@redhat.com/
-
-Thanks,
-Saket
