@@ -1,28 +1,28 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5CE82566EA;
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBE9B1DFF8;
 	Tue, 25 Mar 2025 13:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742909433; cv=none; b=N4z99fntGXg3eJKRrE+gTzZ/gZVpXvjqcOThopWgEM+SYGNZdJhxo6Rp2dtxX+lfh9JA9IDBBPK9T/AlDhnyhWjweEoHiSlXh/BNYhqqBc0XCmCBLTbvOS/G2dsCM9BPODrVJQ9oQvt8Vn9UiQomMW79nD1f4MqncBP7LGlOHn8=
+	t=1742909434; cv=none; b=AkgPL+/bjqZQkRt+RXA5A561e3bukwaL1Yv0/ufZt8VFcC7537+v7Lrw+eQjpYLzwTNGHug4xKHREYEdAz0jeA/zFukNT6q+Mm1eDPOgB2Cp+11ywzE46zO+iaaWLDR2M4lxDWVzTxuttLTCf2kGfVjx9AslfqVt43VQNfpYCvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742909433; c=relaxed/simple;
-	bh=J/FkQ+SkHYYoPQcELkb+tIcpNOe26kLfqD3rb2wWEoo=;
+	s=arc-20240116; t=1742909434; c=relaxed/simple;
+	bh=lHPcC6roTWI6j5MuLnP9MGdLrR/C3X98BMj/TCy80J0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UNDx+RZTIQQc9y8ygp2eLjiTAu0kqKl4TnJKDUAWiyqp0GAhDOdZYZRTJZL0n+L8v/D8VdJf9MGA1BFvH2zUFsqeTvPyNdUujAagCpP+OTxDwpV74VPpzqVTlRnpiv0+ngNqnsyfjXWr59ZzEmfeJOSos+YV6ieVpCkl2FYvrkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=lSMIlPKB; arc=none smtp.client-ip=220.197.31.2
+	 MIME-Version; b=CCZxGSHKks0gIHoYONrHYlN0pdWoxf+BLV+rO8mr1DFuBDH21kSPgDhsiwg3+DwmAAxmtyd3lQs9G9JQQtpbdMh2+bisBtnxvEdt1wxS5q48qHWlQVRUzPAit0uq18bn3+1ajpdf7YVakG6WBZ4Z1D5RiMN1vGuFkcC5rd3V0Zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=GVqfaRHJ; arc=none smtp.client-ip=117.135.210.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="lSMIlPKB"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="GVqfaRHJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=XjB5C
-	GDy56iSBUj/onMIQC1Fw0WRXap96Du59NyDvPE=; b=lSMIlPKBaavnVZ2+ML+uR
-	sMEo+rGV5CvITGeiAufzj/GX2TxZ0m94rvlK8Bu6zxgsIx1vLIbpeNJanvOFLON5
-	CRJFXKa50V+dEkyR2P3t34H985oSIW/pOeznLZguap7Q/WcDmkOpu/m2Z6xwg4/f
-	wySlR1QbqSEbJB0LDkzvSA=
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=SNu0F
+	4yGXjEea7fLM5tg1tfl9TwC9mxjxgn2oB/nJL4=; b=GVqfaRHJ8f4Dbd49Yoefd
+	PGivXKGqhOuFpE7Laf6x4CVnBDBDYl9cFSGTj8Z37rNN+gWIkgnm2dMIHSZbktMU
+	cNnhDgLWKj1zkB6o/9nI0e/afnYt+U6RHeKkKv2qFwX88v1cLD/kMiG5cEEvx90M
+	p2tui/QSvq5CzAkzC6+LMM=
 Received: from ProDesk.. (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgAnc2bLr+JnWNnrAA--.35530S7;
-	Tue, 25 Mar 2025 21:29:55 +0800 (CST)
+	by gzsmtp4 (Coremail) with SMTP id PygvCgAnc2bLr+JnWNnrAA--.35530S3;
+	Tue, 25 Mar 2025 21:29:51 +0800 (CST)
 From: Andy Yan <andyshrk@163.com>
 To: heiko@sntech.de
 Cc: conor+dt@kernel.org,
@@ -35,9 +35,9 @@ Cc: conor+dt@kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-rockchip@lists.infradead.org,
 	Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v2 5/6] ARM: dts: rockchip: Add ref clk for hdmi
-Date: Tue, 25 Mar 2025 21:29:39 +0800
-Message-ID: <20250325132944.171111-6-andyshrk@163.com>
+Subject: [PATCH v2 1/6] dt-bindings: display: rockchip,inno-hdmi: Fix Document of RK3036 compatible
+Date: Tue, 25 Mar 2025 21:29:35 +0800
+Message-ID: <20250325132944.171111-2-andyshrk@163.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250325132944.171111-1-andyshrk@163.com>
 References: <20250325132944.171111-1-andyshrk@163.com>
@@ -48,41 +48,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PygvCgAnc2bLr+JnWNnrAA--.35530S7
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKF1xJw4kAFWfZry3tw4xWFg_yoWDWFX_t3
-	WIgw15GF4fGrZIq34Dtr4UW39F9w4fC397XrnYqr4UJF9aqr4UXF4kGayIyry5Jay2g3sx
-	CFZ5Xw4aya1agjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU0Jrc3UUUUU==
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbBkB4bXmfirygTGgABsB
+X-CM-TRANSID:PygvCgAnc2bLr+JnWNnrAA--.35530S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tw45GrW5ur4xJFyrWF45Wrg_yoW8Ar4Dpa
+	93C3WkXr1xur1UX34Dtr18CrWkta4kAa1YkFy2q3W8Gr1j9a1DKa1agr4DZay3ArsrAa9F
+	vFsFgry8A34SvrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j773kUUUUU=
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0g0bXmfirF9iZQABsq
 
 From: Andy Yan <andy.yan@rock-chips.com>
 
-The RK3036 HDMI DDC bus requires it's PHY's reference clock to be
-enabled first before normal DDC communication can be carried out.
+The RK3036 HDMI DDC bus requires it's PHY's reference clock to be enabled
+first before normal DDC communication can be carried out.
+
+Therefore, both RK3036 and RK3128 HDMI require two identical clocks.
 
 Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+
 ---
 
 (no changes since v1)
 
- arch/arm/boot/dts/rockchip/rk3036.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../bindings/display/rockchip/rockchip,inno-hdmi.yaml | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rockchip/rk3036.dtsi b/arch/arm/boot/dts/rockchip/rk3036.dtsi
-index 6039a0908af1c..22685cd23a708 100644
---- a/arch/arm/boot/dts/rockchip/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rockchip/rk3036.dtsi
-@@ -403,8 +403,8 @@ hdmi: hdmi@20034000 {
- 		compatible = "rockchip,rk3036-inno-hdmi";
- 		reg = <0x20034000 0x4000>;
- 		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&cru  PCLK_HDMI>;
--		clock-names = "pclk";
-+		clocks = <&cru PCLK_HDMI>, <&cru SCLK_LCDC>;
-+		clock-names = "pclk", "ref";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&hdmi_ctl>;
- 		#sound-dai-cells = <0>;
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,inno-hdmi.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,inno-hdmi.yaml
+index 5b87b0f1963e1..9d1e7f894ea54 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/rockchip,inno-hdmi.yaml
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,inno-hdmi.yaml
+@@ -23,13 +23,11 @@ properties:
+     maxItems: 1
+ 
+   clocks:
+-    minItems: 1
+     items:
+       - description: The HDMI controller main clock
+       - description: The HDMI PHY reference clock
+ 
+   clock-names:
+-    minItems: 1
+     items:
+       - const: pclk
+       - const: ref
+@@ -87,11 +85,6 @@ allOf:
+             const: rockchip,rk3128-inno-hdmi
+ 
+     then:
+-      properties:
+-        clocks:
+-          minItems: 2
+-        clock-names:
+-          minItems: 2
+       required:
+         - power-domains
+ 
+@@ -106,8 +99,8 @@ examples:
+       compatible = "rockchip,rk3036-inno-hdmi";
+       reg = <0x20034000 0x4000>;
+       interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+-      clocks = <&cru  PCLK_HDMI>;
+-      clock-names = "pclk";
++      clocks = <&cru PCLK_HDMI>, <&cru SCLK_LCDC>;
++      clock-names = "pclk", "ref";
+       pinctrl-names = "default";
+       pinctrl-0 = <&hdmi_ctl>;
+       #sound-dai-cells = <0>;
 -- 
 2.43.0
 
