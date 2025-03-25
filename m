@@ -1,43 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAED1CBA02;
-	Tue, 25 Mar 2025 18:42:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6191F427D;
+	Tue, 25 Mar 2025 18:42:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742928163; cv=none; b=Q6Dp4TmJqjtE+/e6novRsqoXdNZEZJuBcmmc0KOoxc5RIZzOkMgCTn76RqKwoM6+ZjGJSs6g/7iGD9xqt07pzDnwLnyj+mTGZiHOtjTt6yLuUBFmymFIKsOr2pI3DvjGjbKgKwTq6hsBS8LJ/6fQC1x3AlsHxioPdzy7PbZX7Wc=
+	t=1742928165; cv=none; b=eg3tV7gmSU/QaQDshw34dSAPPPCGDaYNoUZk6yCHeJMJSVXT3QNmsDs7ysDrA+AlI9EzMEJw/OfheiJHtf+iQpI8xilxO1W8CVQE2y++TrOgSt1ooraFT3Lis/3VRJfmfbTdqqAMNgR2bZVq66AYgaTvOfx2ALjzMOy8amfcQiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742928163; c=relaxed/simple;
-	bh=fW5tuiDIaABRDPN2atUvbHCcLI/ZT07db+kDwcop6O0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Q9OstZZKytsI4+xXwgzv1LgNpDs0YNXaIb+PDfpyZ/IIoY12/CKdD3SIbQV+EVYGv6bwdT6NA8Z0L5LM3R1Rb8n98uyqxQ851CdvUDbAZJ0/smchQQ31j+juw2ESadcZorlnPhhw4FsL0QSgrDqdWOmL5yHz6eLcz5yFDMmkPkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dXS3nnUU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742928165; c=relaxed/simple;
+	bh=TBgMuS1DCUARS49jx/ImUj47QzARzkwymwcWUlk+3hU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CuW3+b8fYIF5r6p7myjjjsW3JhYREZN+aqLNsUKTswJODjDDOgZOCqa9O+DDECRci+HPNPMAgf83EiUXYXgFs+A5wW2UrysfYc9vTEijLwxY6ZS4nxli6ZqcuxCjSXt8HtsWD2DH1BiujwFh+BaY0l+l8WBQ6nXUifSI1E163LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PPZT5m9r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dXS3nnUU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00998C4CEE4;
-	Tue, 25 Mar 2025 18:42:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PPZT5m9r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01627C4CEE8;
+	Tue, 25 Mar 2025 18:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742928161;
-	bh=fW5tuiDIaABRDPN2atUvbHCcLI/ZT07db+kDwcop6O0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dXS3nnUU/n0tTd1xQo1zTqr30LxX6Grd0d7itmgGbs4LiWC6gVcggPvjkd4sKGVgO
-	 FuoYU3vKJihl/dED7IN7mFWuO6SVY7HFqvqTLZq4FWPW5JT/O/5tQViDSqnXCiVXRl
-	 YN2Q13y4y3JHA41tawBb0FrMQRg0g0OanVcG0V9ePtngYSU8Pxy/l5wnpltdDElWEu
-	 MDwqqHEoFkW61cdaRs4QY1BqpCifLhIBlDcqoMWHhniStRAgfUJyf+w9iLCPA8otHV
-	 xXgGP79hpgAoWCQqitW9tw3Ddz8G8/PM/3fEmtECknbyz8sE9jubnx/aOrR9fxZGp/
-	 p8Y5734EgIVyQ==
+	s=k20201202; t=1742928165;
+	bh=TBgMuS1DCUARS49jx/ImUj47QzARzkwymwcWUlk+3hU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PPZT5m9r9NA7K+kz8LUrnkCDJVts+5nz9E7Iq6tNkndYBPVePc8ADAclWIrcGwYty
+	 SYWaicODPca64KsJUvuutEMiZkAUdNbnh0ntkA/2N1H0tQv8tDFWs1Myc9q+cjHFUU
+	 6jLY8s4DOLBFlgCwQ9BA1OzbZ2ziyllZP24Yb1k8Ozf0Oz30V4e6NjzVh+LrfIP5Ji
+	 DyZ76fVBcksLXSDVsLcGdBdLPLVEQY7anKYNqfoU10lxvBr+a54q94qYZ9qpEolXMu
+	 oLUEjuiaL4MjPLCOUZznJGfCxwPdvxg+Fw4DUcLMI5WWsIWiFYBt1vgNJhmlUlF+PG
+	 gEJn0C5+mv+EA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>,
-	syzbot+78ce4489b812515d5e4d@syzkaller.appspotmail.com,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Hazem Mohamed Abuelfotoh <abuehaze@amazon.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Hagar Hemdan <hagarhem@amazon.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-can@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 1/5] can: statistics: use atomic access in hot path
-Date: Tue, 25 Mar 2025 14:42:31 -0400
-Message-Id: <20250325184236.2152255-1-sashal@kernel.org>
+	mingo@redhat.com,
+	juri.lelli@redhat.com
+Subject: [PATCH AUTOSEL 6.12 3/5] Revert "sched/core: Reduce cost of sched_move_task when config autogroup"
+Date: Tue, 25 Mar 2025 14:42:33 -0400
+Message-Id: <20250325184236.2152255-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250325184236.2152255-1-sashal@kernel.org>
+References: <20250325184236.2152255-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,191 +56,187 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.20
 Content-Transfer-Encoding: 8bit
 
-From: Oliver Hartkopp <socketcan@hartkopp.net>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
 
-[ Upstream commit 80b5f90158d1364cbd80ad82852a757fc0692bf2 ]
+[ Upstream commit 76f970ce51c80f625eb6ddbb24e9cb51b977b598 ]
 
-In can_send() and can_receive() CAN messages and CAN filter matches are
-counted to be visible in the CAN procfs files.
+This reverts commit eff6c8ce8d4d7faef75f66614dd20bb50595d261.
 
-KCSAN detected a data race within can_send() when two CAN frames have
-been generated by a timer event writing to the same CAN netdevice at the
-same time. Use atomic operations to access the statistics in the hot path
-to fix the KCSAN complaint.
+Hazem reported a 30% drop in UnixBench spawn test with commit
+eff6c8ce8d4d ("sched/core: Reduce cost of sched_move_task when config
+autogroup") on a m6g.xlarge AWS EC2 instance with 4 vCPUs and 16 GiB RAM
+(aarch64) (single level MC sched domain):
 
-Reported-by: syzbot+78ce4489b812515d5e4d@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/67cd717d.050a0220.e1a89.0006.GAE@google.com
-Signed-off-by: Oliver Hartkopp <socketcan@hartkopp.net>
-Reviewed-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Link: https://patch.msgid.link/20250310143353.3242-1-socketcan@hartkopp.net
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+  https://lkml.kernel.org/r/20250205151026.13061-1-hagarhem@amazon.com
+
+There is an early bail from sched_move_task() if p->sched_task_group is
+equal to p's 'cpu cgroup' (sched_get_task_group()). E.g. both are
+pointing to taskgroup '/user.slice/user-1000.slice/session-1.scope'
+(Ubuntu '22.04.5 LTS').
+
+So in:
+
+  do_exit()
+
+    sched_autogroup_exit_task()
+
+      sched_move_task()
+
+        if sched_get_task_group(p) == p->sched_task_group
+          return
+
+        /* p is enqueued */
+        dequeue_task()              \
+        sched_change_group()        |
+          task_change_group_fair()  |
+            detach_task_cfs_rq()    |                              (1)
+            set_task_rq()           |
+            attach_task_cfs_rq()    |
+        enqueue_task()              /
+
+(1) isn't called for p anymore.
+
+Turns out that the regression is related to sgs->group_util in
+group_is_overloaded() and group_has_capacity(). If (1) isn't called for
+all the 'spawn' tasks then sgs->group_util is ~900 and
+sgs->group_capacity = 1024 (single CPU sched domain) and this leads to
+group_is_overloaded() returning true (2) and group_has_capacity() false
+(3) much more often compared to the case when (1) is called.
+
+I.e. there are much more cases of 'group_is_overloaded' and
+'group_fully_busy' in WF_FORK wakeup sched_balance_find_dst_cpu() which
+then returns much more often a CPU != smp_processor_id() (5).
+
+This isn't good for these extremely short running tasks (FORK + EXIT)
+and also involves calling sched_balance_find_dst_group_cpu() unnecessary
+(single CPU sched domain).
+
+Instead if (1) is called for 'p->flags & PF_EXITING' then the path
+(4),(6) is taken much more often.
+
+  select_task_rq_fair(..., wake_flags = WF_FORK)
+
+    cpu = smp_processor_id()
+
+    new_cpu = sched_balance_find_dst_cpu(..., cpu, ...)
+
+      group = sched_balance_find_dst_group(..., cpu)
+
+        do {
+
+          update_sg_wakeup_stats()
+
+            sgs->group_type = group_classify()
+
+              if group_is_overloaded()                             (2)
+                return group_overloaded
+
+              if !group_has_capacity()                             (3)
+                return group_fully_busy
+
+              return group_has_spare                               (4)
+
+        } while group
+
+        if local_sgs.group_type > idlest_sgs.group_type
+          return idlest                                            (5)
+
+        case group_has_spare:
+
+          if local_sgs.idle_cpus >= idlest_sgs.idle_cpus
+            return NULL                                            (6)
+
+Unixbench Tests './Run -c 4 spawn' on:
+
+(a) VM AWS instance (m7gd.16xlarge) with v6.13 ('maxcpus=4 nr_cpus=4')
+    and Ubuntu 22.04.5 LTS (aarch64).
+
+    Shell & test run in '/user.slice/user-1000.slice/session-1.scope'.
+
+    w/o patch	w/ patch
+    21005	27120
+
+(b) i7-13700K with tip/sched/core ('nosmt maxcpus=8 nr_cpus=8') and
+    Ubuntu 22.04.5 LTS (x86_64).
+
+    Shell & test run in '/A'.
+
+    w/o patch	w/ patch
+    67675	88806
+
+CONFIG_SCHED_AUTOGROUP=y & /sys/proc/kernel/sched_autogroup_enabled equal
+0 or 1.
+
+Reported-by: Hazem Mohamed Abuelfotoh <abuehaze@amazon.com>
+Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Tested-by: Hagar Hemdan <hagarhem@amazon.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20250314151345.275739-1-dietmar.eggemann@arm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/can/af_can.c | 12 ++++++------
- net/can/af_can.h | 12 ++++++------
- net/can/proc.c   | 46 +++++++++++++++++++++++++++-------------------
- 3 files changed, 39 insertions(+), 31 deletions(-)
+ kernel/sched/core.c | 21 +++------------------
+ 1 file changed, 3 insertions(+), 18 deletions(-)
 
-diff --git a/net/can/af_can.c b/net/can/af_can.c
-index 01f3fbb3b67dc..65230e81fa08c 100644
---- a/net/can/af_can.c
-+++ b/net/can/af_can.c
-@@ -287,8 +287,8 @@ int can_send(struct sk_buff *skb, int loop)
- 		netif_rx(newskb);
- 
- 	/* update statistics */
--	pkg_stats->tx_frames++;
--	pkg_stats->tx_frames_delta++;
-+	atomic_long_inc(&pkg_stats->tx_frames);
-+	atomic_long_inc(&pkg_stats->tx_frames_delta);
- 
- 	return 0;
- 
-@@ -647,8 +647,8 @@ static void can_receive(struct sk_buff *skb, struct net_device *dev)
- 	int matches;
- 
- 	/* update statistics */
--	pkg_stats->rx_frames++;
--	pkg_stats->rx_frames_delta++;
-+	atomic_long_inc(&pkg_stats->rx_frames);
-+	atomic_long_inc(&pkg_stats->rx_frames_delta);
- 
- 	/* create non-zero unique skb identifier together with *skb */
- 	while (!(can_skb_prv(skb)->skbcnt))
-@@ -669,8 +669,8 @@ static void can_receive(struct sk_buff *skb, struct net_device *dev)
- 	consume_skb(skb);
- 
- 	if (matches > 0) {
--		pkg_stats->matches++;
--		pkg_stats->matches_delta++;
-+		atomic_long_inc(&pkg_stats->matches);
-+		atomic_long_inc(&pkg_stats->matches_delta);
- 	}
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 1f817d0c5d2d0..e9bb1b4c58421 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -8919,7 +8919,7 @@ void sched_release_group(struct task_group *tg)
+ 	spin_unlock_irqrestore(&task_group_lock, flags);
  }
  
-diff --git a/net/can/af_can.h b/net/can/af_can.h
-index 7c2d9161e2245..22f3352c77fec 100644
---- a/net/can/af_can.h
-+++ b/net/can/af_can.h
-@@ -66,9 +66,9 @@ struct receiver {
- struct can_pkg_stats {
- 	unsigned long jiffies_init;
+-static struct task_group *sched_get_task_group(struct task_struct *tsk)
++static void sched_change_group(struct task_struct *tsk)
+ {
+ 	struct task_group *tg;
  
--	unsigned long rx_frames;
--	unsigned long tx_frames;
--	unsigned long matches;
-+	atomic_long_t rx_frames;
-+	atomic_long_t tx_frames;
-+	atomic_long_t matches;
+@@ -8931,13 +8931,7 @@ static struct task_group *sched_get_task_group(struct task_struct *tsk)
+ 	tg = container_of(task_css_check(tsk, cpu_cgrp_id, true),
+ 			  struct task_group, css);
+ 	tg = autogroup_task_group(tsk, tg);
+-
+-	return tg;
+-}
+-
+-static void sched_change_group(struct task_struct *tsk, struct task_group *group)
+-{
+-	tsk->sched_task_group = group;
++	tsk->sched_task_group = tg;
  
- 	unsigned long total_rx_rate;
- 	unsigned long total_tx_rate;
-@@ -82,9 +82,9 @@ struct can_pkg_stats {
- 	unsigned long max_tx_rate;
- 	unsigned long max_rx_match_ratio;
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+ 	if (tsk->sched_class->task_change_group)
+@@ -8958,20 +8952,11 @@ void sched_move_task(struct task_struct *tsk, bool for_autogroup)
+ {
+ 	int queued, running, queue_flags =
+ 		DEQUEUE_SAVE | DEQUEUE_MOVE | DEQUEUE_NOCLOCK;
+-	struct task_group *group;
+ 	struct rq *rq;
  
--	unsigned long rx_frames_delta;
--	unsigned long tx_frames_delta;
--	unsigned long matches_delta;
-+	atomic_long_t rx_frames_delta;
-+	atomic_long_t tx_frames_delta;
-+	atomic_long_t matches_delta;
- };
+ 	CLASS(task_rq_lock, rq_guard)(tsk);
+ 	rq = rq_guard.rq;
  
- /* persistent statistics */
-diff --git a/net/can/proc.c b/net/can/proc.c
-index bbce97825f13f..25fdf060e30d0 100644
---- a/net/can/proc.c
-+++ b/net/can/proc.c
-@@ -118,6 +118,13 @@ void can_stat_update(struct timer_list *t)
- 	struct can_pkg_stats *pkg_stats = net->can.pkg_stats;
- 	unsigned long j = jiffies; /* snapshot */
+-	/*
+-	 * Esp. with SCHED_AUTOGROUP enabled it is possible to get superfluous
+-	 * group changes.
+-	 */
+-	group = sched_get_task_group(tsk);
+-	if (group == tsk->sched_task_group)
+-		return;
+-
+ 	update_rq_clock(rq);
  
-+	long rx_frames = atomic_long_read(&pkg_stats->rx_frames);
-+	long tx_frames = atomic_long_read(&pkg_stats->tx_frames);
-+	long matches = atomic_long_read(&pkg_stats->matches);
-+	long rx_frames_delta = atomic_long_read(&pkg_stats->rx_frames_delta);
-+	long tx_frames_delta = atomic_long_read(&pkg_stats->tx_frames_delta);
-+	long matches_delta = atomic_long_read(&pkg_stats->matches_delta);
-+
- 	/* restart counting in timer context on user request */
- 	if (user_reset)
- 		can_init_stats(net);
-@@ -127,35 +134,33 @@ void can_stat_update(struct timer_list *t)
- 		can_init_stats(net);
+ 	running = task_current(rq, tsk);
+@@ -8982,7 +8967,7 @@ void sched_move_task(struct task_struct *tsk, bool for_autogroup)
+ 	if (running)
+ 		put_prev_task(rq, tsk);
  
- 	/* prevent overflow in calc_rate() */
--	if (pkg_stats->rx_frames > (ULONG_MAX / HZ))
-+	if (rx_frames > (LONG_MAX / HZ))
- 		can_init_stats(net);
- 
- 	/* prevent overflow in calc_rate() */
--	if (pkg_stats->tx_frames > (ULONG_MAX / HZ))
-+	if (tx_frames > (LONG_MAX / HZ))
- 		can_init_stats(net);
- 
- 	/* matches overflow - very improbable */
--	if (pkg_stats->matches > (ULONG_MAX / 100))
-+	if (matches > (LONG_MAX / 100))
- 		can_init_stats(net);
- 
- 	/* calc total values */
--	if (pkg_stats->rx_frames)
--		pkg_stats->total_rx_match_ratio = (pkg_stats->matches * 100) /
--			pkg_stats->rx_frames;
-+	if (rx_frames)
-+		pkg_stats->total_rx_match_ratio = (matches * 100) / rx_frames;
- 
- 	pkg_stats->total_tx_rate = calc_rate(pkg_stats->jiffies_init, j,
--					    pkg_stats->tx_frames);
-+					    tx_frames);
- 	pkg_stats->total_rx_rate = calc_rate(pkg_stats->jiffies_init, j,
--					    pkg_stats->rx_frames);
-+					    rx_frames);
- 
- 	/* calc current values */
--	if (pkg_stats->rx_frames_delta)
-+	if (rx_frames_delta)
- 		pkg_stats->current_rx_match_ratio =
--			(pkg_stats->matches_delta * 100) /
--			pkg_stats->rx_frames_delta;
-+			(matches_delta * 100) /	rx_frames_delta;
- 
--	pkg_stats->current_tx_rate = calc_rate(0, HZ, pkg_stats->tx_frames_delta);
--	pkg_stats->current_rx_rate = calc_rate(0, HZ, pkg_stats->rx_frames_delta);
-+	pkg_stats->current_tx_rate = calc_rate(0, HZ, tx_frames_delta);
-+	pkg_stats->current_rx_rate = calc_rate(0, HZ, rx_frames_delta);
- 
- 	/* check / update maximum values */
- 	if (pkg_stats->max_tx_rate < pkg_stats->current_tx_rate)
-@@ -168,9 +173,9 @@ void can_stat_update(struct timer_list *t)
- 		pkg_stats->max_rx_match_ratio = pkg_stats->current_rx_match_ratio;
- 
- 	/* clear values for 'current rate' calculation */
--	pkg_stats->tx_frames_delta = 0;
--	pkg_stats->rx_frames_delta = 0;
--	pkg_stats->matches_delta   = 0;
-+	atomic_long_set(&pkg_stats->tx_frames_delta, 0);
-+	atomic_long_set(&pkg_stats->rx_frames_delta, 0);
-+	atomic_long_set(&pkg_stats->matches_delta, 0);
- 
- 	/* restart timer (one second) */
- 	mod_timer(&net->can.stattimer, round_jiffies(jiffies + HZ));
-@@ -214,9 +219,12 @@ static int can_stats_proc_show(struct seq_file *m, void *v)
- 	struct can_rcv_lists_stats *rcv_lists_stats = net->can.rcv_lists_stats;
- 
- 	seq_putc(m, '\n');
--	seq_printf(m, " %8ld transmitted frames (TXF)\n", pkg_stats->tx_frames);
--	seq_printf(m, " %8ld received frames (RXF)\n", pkg_stats->rx_frames);
--	seq_printf(m, " %8ld matched frames (RXMF)\n", pkg_stats->matches);
-+	seq_printf(m, " %8ld transmitted frames (TXF)\n",
-+		   atomic_long_read(&pkg_stats->tx_frames));
-+	seq_printf(m, " %8ld received frames (RXF)\n",
-+		   atomic_long_read(&pkg_stats->rx_frames));
-+	seq_printf(m, " %8ld matched frames (RXMF)\n",
-+		   atomic_long_read(&pkg_stats->matches));
- 
- 	seq_putc(m, '\n');
+-	sched_change_group(tsk, group);
++	sched_change_group(tsk);
+ 	if (!for_autogroup)
+ 		scx_cgroup_move_task(tsk);
  
 -- 
 2.39.5
