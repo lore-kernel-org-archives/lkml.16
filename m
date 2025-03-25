@@ -1,113 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E8F267AFA
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 21:56:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C03D1A725A;
+	Tue, 25 Mar 2025 21:57:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742939776; cv=none; b=qiHiBUc1PyKUSxDslczVSQ23ykPRWxQtaEmcSGjvTt4Tnh03ZPhIF0aTL8O761M5+Cud0iDc+V6C/FEGukK2BaLI0WsQ0C7PIf7qEFJgtcYryUhFjyR5DZygfQPJf0L6SioFpCAy3Xqx3ehQoxWBeKZDKiGywuavw7EhrYPsJ0o=
+	t=1742939824; cv=none; b=ckjpLRxvYZQXo2LC2Uq/VsoSafJHWnjo7J9KSM4mlVdX25S9zMCzQy1nA7drVfMQVFp3Oqy7uoyY5EO4OqcmUf4i/KL6tvNskH0twm5qd8DC8jOTVELpWgEO22w7AC7E+stqKl69I+PNY10i61iSEmBzuK2OgIjz7mZqQkH9Kp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742939776; c=relaxed/simple;
-	bh=7br8AaG8QRt+Y7p9nY+NCHBZBDh/3nwaBmqYeH6jESg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lfvyz+aS6DeSmm1yNvR7riT3lWZoOLggF3TPNyxKNZ4UoRnPuiT/QSLWWjTW8EJ5DONs4/RZFgjpvVNLARGzAIeJ0CGoXK+79P+klbESexjKx4ZIticXyde7/dAlqESvlgqL+trcmKfUX9+7rBx/dyhvW9BFfK/AFb4YVci5BFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oWQ+/g03; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742939824; c=relaxed/simple;
+	bh=dVbKSNw9IpYPnjB4Ud3V8KshkTL7MxnrLDQsyEYyjgs=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=s90kHz72AXhnfl+Vg/qcjEnndEWFxXM/ZjD4j4OA6uiBpnGPDvy1OZ7jjeaY4D5+GQh7DlzOOHTyf2IfrEmhprj05fDqskGy+Qx59OKD9jg7r7QTEftNlqiloQOetcf7YXfXeH8wnNDUw1o99Ui2DrNuKoYx+fGLA7zP0WcU3yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1XyMEmN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oWQ+/g03"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7122CC4CEE9;
-	Tue, 25 Mar 2025 21:56:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U1XyMEmN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09B47C4CEE4;
+	Tue, 25 Mar 2025 21:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742939776;
-	bh=7br8AaG8QRt+Y7p9nY+NCHBZBDh/3nwaBmqYeH6jESg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oWQ+/g03fQn+hRaIRoCKXD6+Y8eThKxyhvkCl04fLOcAOacLNTjWG6ijtdClMdz6B
-	 1GhL1SGMUbJWMjCEZzl0STLWPhNMPSv4TSaCzQ7a/lx6bpifNQBmHV5/Er6fHJSdMV
-	 IKao2UZiJxq/t38PW7bNq54SSHz8GXme4Qs0lvH1mxY5hFCsU5sJIu5C25QT7We6jA
-	 ubMwu47ACZalGYIgDrWj4XAdrowbtLBxSEUuyj5d+3oug9hKm1jOJzV5cBLZ2nmmlI
-	 JRlTld60yDzpua++leJ6Nsrl+Vvddp1bBP9NpmtB2eBNXU59lQRxh9BYHTAhtt8/0K
-	 USMN/5hyH6Ljg==
-Date: Tue, 25 Mar 2025 22:56:11 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH -tip 2/2] x86/hweight: Use POPCNT when available with
- X86_NATIVE_CPU option
-Message-ID: <Z-Mme_OxuhYfxgzO@gmail.com>
-References: <20250325164854.199420-1-ubizjak@gmail.com>
- <20250325164854.199420-2-ubizjak@gmail.com>
+	s=k20201202; t=1742939824;
+	bh=dVbKSNw9IpYPnjB4Ud3V8KshkTL7MxnrLDQsyEYyjgs=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=U1XyMEmNYZIlwYioOLPxclfPhiC+yUspDrhkZq+hTqghQwVjwS0zv2BVZbh2GVg89
+	 9otj4z/5i+7itFygyS8sD2cfaHriu6bLgJ+l2P2O8hQcSU07nLPDrKt6M4tqEiyvTN
+	 ZztdVM9vFRbExjb0NzQBvOzxk1yXRP+VN0G1BYdUBCQSyPbstgBzS2TUHuWaR50a3y
+	 K+QkC1xQ9k0hM3kXBkBIHNSQwO3eKsLYojZ/rXqJ47GtUh8Vp5DMdu+XGaOkqmjQ5Z
+	 M+w1s7PRQfeXZQDUQ/oAR4FiAcUtlN+24cCvCuOOSvJv6Tf8GZYWBI4h/atfb8K5aF
+	 KzDUpJTwDMq2g==
+Message-ID: <4db0bf5937c6c2a480b89b11e841782c@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250325164854.199420-2-ubizjak@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1jv7s21d8y.fsf@starbuckisacylon.baylibre.com>
+References: <20250120-amlogic-clk-drop-clk-regmap-tables-v3-0-126244146947@baylibre.com> <20250120-amlogic-clk-drop-clk-regmap-tables-v3-1-126244146947@baylibre.com> <508a5ee6c6b365e8d9cdefd5a9eec769.sboyd@kernel.org> <1jv7s21d8y.fsf@starbuckisacylon.baylibre.com>
+Subject: Re: [PATCH v3 1/4] clk: add a clk_hw helpers to get the clock device or device_node
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Neil Armstrong <neil.armstrong@linaro.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Date: Tue, 25 Mar 2025 14:57:01 -0700
+User-Agent: alot/0.12.dev8+g17a99a841c4b
 
+Quoting Jerome Brunet (2025-03-21 10:53:49)
+> On Wed 26 Feb 2025 at 17:01, Stephen Boyd <sboyd@kernel.org> wrote:
+>=20
+>=20
+> >> +static void clk_hw_get_of_node_test(struct kunit *test)
+> >> +{
+> >> +       struct device_node *np;
+> >> +       struct clk_hw *hw;
+> >> +
+> >> +       hw =3D kunit_kzalloc(test, sizeof(*hw), GFP_KERNEL);
+> >> +       KUNIT_ASSERT_NOT_ERR_OR_NULL(test, hw);
+> >> +
+> >> +       np =3D of_find_compatible_node(NULL, NULL, "test,clk-dummy-dev=
+ice");
+> >> +       hw->init =3D CLK_HW_INIT_NO_PARENT("test_get_of_node",
+> >> +                                        &clk_dummy_rate_ops, 0);
+> >> +       of_node_put_kunit(test, np);
+> >> +
+> >> +       KUNIT_ASSERT_EQ(test, 0, of_clk_hw_register_kunit(test, np, hw=
+));
+> >
+> > The stuff before the expectation should likely go to the init function.
+> > Or it can use the genparams stuff so we can set some struct members to
+> > indicate if the pointer should be NULL or not and then twist through the
+> > code a couple times.
+> >
+>=20
+> I'm trying to address all your comments but I'm starting to wonder if
+> this isn't going a bit too far ? The functions tested are one line
+> returns. Is it really worth all this ?
+>=20
+> I do understand the idea for things that actually do something, such as
+> reparenting, setting rates or what not ... But this ? It feels like a
+> lot of test code for very little added value, don't you think ?
+>=20
 
-* Uros Bizjak <ubizjak@gmail.com> wrote:
+Just so I understand, you're saying that this is always going to be a
+simple "getter" API that doesn't do much else? We're not _only_ testing
+the getter API, we're also testing the registration path that actually
+sets the device or of_node pointers for a clk. I'm not really thinking
+about the one line return functions here.
 
-> Emit naked POPCNT instruction when available with X86_NATIVE_CPU
-> option. The compiler is not bound by ABI when emitting the instruction
-> without the fallback call to __sw_hweight{32,64}() library function
-> and has much more freedom to allocate input and output operands,
-> including memory input operand.
-> 
-> The code size of x86_64 defconfig (with X86_NATIVE_CPU option)
-> shrinks by 599 bytes:
-> 
->   add/remove: 0/0 grow/shrink: 45/197 up/down: 843/-1442 (-599)
->   Total: Before=22710531, After=22709932, chg -0.00%
-> 
-> The asm changes from e.g.:
-> 
-> 	   3bf9c:	48 8b 3d 00 00 00 00 	mov    0x0(%rip),%rdi
-> 	   3bfa3:	e8 00 00 00 00       	call   3bfa8 <...>
-> 	   3bfa8:	90                   	nop
-> 	   3bfa9:	90                   	nop
-> 
-> with:
-> 
-> 	     34b:	31 c0                	xor    %eax,%eax
-> 	     34d:	f3 48 0f b8 c7       	popcnt %rdi,%rax
-> 
-> in the .altinstr_replacement section
-> 
-> to:
-> 
-> 	   3bfdc:	31 c0                	xor    %eax,%eax
-> 	   3bfde:	f3 48 0f b8 05 00 00 	popcnt 0x0(%rip),%rax
-> 	   3bfe5:	00 00
-> 
-> where there is no need for an entry in the .altinstr_replacement
-> section, shrinking all text sections by 9476 bytes:
-> 
-> 	    text           data     bss      dec            hex filename
-> 	27267068        4643047  814852 32724967        1f357e7 vmlinux-old.o
-> 	27257592        4643047  814852 32715491        1f332e3 vmlinux-new.o
+Writing tests is definitely a balancing act. I'd say we want to test the
+behavior of the API in relation to how a clk is registered and writing
+tests to show the intended usage is helpful to understand if we've
+thought of corner cases like the clk was registered with a device
+pointer that also has an of_node associated with it. (Did we remember to
+stash that of_node pointer too?) We have a bunch of clk registration
+APIs, and we want to make sure this getter API works with all of them.
+Note that we don't care about the clk flags or parent relation chains
+here, just that the device or of_node passed in to registration comes
+out the other side with the getter API.
 
-> +#ifdef __POPCNT__
-> +	asm_inline (ASM_FORCE_CLR "popcntl %[val], %[cnt]"
-> +		    : [cnt] "=&r" (res)
-> +		    : [val] ASM_INPUT_RM (w));
-> +#else
->  	asm_inline (ALTERNATIVE(ANNOTATE_IGNORE_ALTERNATIVE
->  				"call __sw_hweight32",
->  				ASM_CLR "popcntl %[val], %[cnt]",
->  				X86_FEATURE_POPCNT)
->  			 : [cnt] "=a" (res), ASM_CALL_CONSTRAINT
->  			 : [val] REG_IN (w));
+A little code duplication is OK, as long as the test is easy to
+understand. Maybe genparams stuff is going too far, I don't know, but at
+the least we want to make sure the clk registration APIs behave as
+expected when the getter API is used to get the device or of_node later.
 
-So a better optimization I think would be to declare and implement 
-__sw_hweight32 with a different, less intrusive function call ABI that 
-mirrors that of the instruction in essence, so that we optimize for the 
-overwhelmingly common case of having the POPCNT instruction.
+I've found this google chapter[1] useful for unit testing best
+practices. I recommend reading it if you haven't already.
 
-Thanks,
-
-	Ingo
+[1] https://abseil.io/resources/swe-book/html/ch12.html
