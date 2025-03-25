@@ -1,198 +1,123 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C83A255227;
-	Tue, 25 Mar 2025 07:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD5C253B68;
+	Tue, 25 Mar 2025 07:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742888178; cv=none; b=MjzVXkbNblmB6ZG2QZ78yFjIa75PuvPxI18D6/oNZ7l5XaQGc9G1gN1W1xbbdsUO9+0kyHkXnIQErbACYf7sfxapSIGruLccrDJLWMIHUD9fOs/Z4tEAng/alAmj1+suO+176nWyHZ9AGaezZ8BMxw+YK8euACsozYEawhbFjcg=
+	t=1742888191; cv=none; b=lN/PC+UMGDmJDGT6FVhxiJ8PqIH7UMfQ+vCpwOPjcNnQqVjbL27paTq9Vz9vaSQFuwsjeWZH+xuMzDz3xZyO5Gt46lTU8VM0bEQfd630hY3jzw6j08+5UMVJl1wTRBqjy5GyjAYkKbZ92BJ0YXau4NLtadBlsiTS2e5grc9XAkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742888178; c=relaxed/simple;
-	bh=MmcnAFzHXevh32n9BW1uWquF4NS+vnEYXT1DXhrx5J0=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=dEkyZo0HCK/svCP9nllA7JHFKfPEiCQ3DKC6dg5v2X3cbxSfapCz0NhRvotbYbXPmVvH9/qVjBYBcVtAzK4MjoavY2IQomp5sqqDsHj+tAgYazP/KDfSDIxwjI3BrNVgiVS6GMlKdNfZc2eeEsJhnPPPSKmnVS/XJtnvxF66n34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TXVpJFnp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2WDZhS3h; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1742888191; c=relaxed/simple;
+	bh=448kB14eOCTQmz4QTqHOt7UiZQ0V5/amZmylJyoge28=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bltRQysc0EBcaD6EeXV3/sCoCHpADre+l5LX6c1g34EkuoYzuuYdiotAZdduYCGxBaKe75vHD4d0BCSCzz06S+mp5nHBcVTACSFoPt6ex0ARRBm2JGsFv3bghek3Idz7ZhQS82999XCsgXy9yfE3B+kVPJeUAisHnLuviNJg1bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SBGhZyhs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TXVpJFnp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2WDZhS3h"
-Date: Tue, 25 Mar 2025 07:36:12 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742888173;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=q1SvW+qatn7IBquxz7U8IF4287/5fX8L/kRjSvkhJ/I=;
-	b=TXVpJFnpcKqBsj/iKDxNuQjY9Byq8qnBNy6qr4I2xdAoYWs3/4JeC6jwkBLYixNCTG6nHD
-	2KNDJREBx8Yj9F91xEP5gW+iF1OhwvpOEdOvqMRPUYxq5181Up7w2r/82kXPm6gfPjKh4i
-	4zsS0oTOQUWlMfx1TtfnmST7DNkF5T9oJ3iGmCs8BNWtammMQ18mO7iI3x3Pnr/FTT2wDD
-	sSQKXNbF/WVLDzRjHCDvc+BQXKKz3RrMvzEla9noxEGbu8ALwwro5uvqZmi48bF2YqSwyt
-	99p39BUxN7J6gPfLTNq3WLiod0AQU5OfgZTisd1mgC4/WLCctMKBsPsYJyZ5YQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742888173;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=q1SvW+qatn7IBquxz7U8IF4287/5fX8L/kRjSvkhJ/I=;
-	b=2WDZhS3hDQ0xOzJ1EUFbNiRXUSHMbhJDjS0v/0nvSzTKnAZQyLwWNEASYkkSBK3J4l3h8J
-	wgh8eE2mCN6v6QDQ==
-From:
- tip-bot2 for Mateusz =?utf-8?q?Jo=C5=84czyk?= <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/Kconfig: Enable X86_X2APIC by default and
- improve help text
-Cc: mat.jonczyk@o2.pl, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250321-x86_x2apic-v3-1-b0cbaa6fa338@ixit.cz>
-References: <20250321-x86_x2apic-v3-1-b0cbaa6fa338@ixit.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SBGhZyhs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAEB0C4CEE8;
+	Tue, 25 Mar 2025 07:36:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742888190;
+	bh=448kB14eOCTQmz4QTqHOt7UiZQ0V5/amZmylJyoge28=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SBGhZyhsbN1ZIDLL8h8H6PuG7KZpa6aHo+Bx1VaFY7nzLFbU1uEO/KRexMGuuyL3A
+	 v51O9sqfOn7HBll/gOI2F2p5PhzsdZe38QwlknfTu1bLWS55vbBMbz+nrWFOCvRCbu
+	 GsjooB/oKXQvnGAsXBlWMXcwG3mOsAjmOsF+qjytbcX7ZXuNgrGttvUHFnkiNKry3X
+	 N2p3QLCVJ4Dmy1k7SzolAWNul4ZOxJgR1Wgye/9f0nnrNoAmFN0bafk87TjLk6uVp3
+	 eLlpuFateThpHKcEFePZd3t0rzrZL/Jk4NsYwnasqMcj/lszyfdojYDgaGqnoJFpVH
+	 sao/YoAALQg4w==
+Message-ID: <b3a5ec89-0125-4b01-8cca-69b9985b6089@kernel.org>
+Date: Tue, 25 Mar 2025 08:36:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174288817298.14745.6112984038376589742.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/7] dt-bindings: input: syna,rmi4: document
+ syna,pdt-fallback-desc
+To: David Heidelberg <david@ixit.cz>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+ Vincent Huang <vincent.huang@tw.synaptics.com>, linux-input@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+ Caleb Connolly <caleb.connolly@linaro.org>
+References: <20250308-synaptics-rmi4-v3-0-215d3e7289a2@ixit.cz>
+ <20250308-synaptics-rmi4-v3-1-215d3e7289a2@ixit.cz>
+ <20250310-hissing-vagabond-pegasus-cc8aed@krzk-bin>
+ <3c5e12fc-eb91-46e8-a558-9896f0bdcab4@ixit.cz>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <3c5e12fc-eb91-46e8-a558-9896f0bdcab4@ixit.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/urgent branch of tip:
+On 24/03/2025 19:00, David Heidelberg wrote:
+> On 10/03/2025 10:45, Krzysztof Kozlowski wrote:
+>> On Sat, Mar 08, 2025 at 03:08:37PM +0100, David Heidelberg wrote:
+>>> From: Caleb Connolly <caleb.connolly@linaro.org>
+>>>
+>>> This new property allows devices to specify some register values which
+>>> are missing on units with third party replacement displays. These
+>>> displays use unofficial touch ICs which only implement a subset of the
+>>> RMI4 specification.
+>>
+>> These are different ICs, so they have their own compatibles. Why this
+>> cannot be deduced from the compatible?
+> 
+> Yes, but these identify as the originals.
 
-Commit-ID:     9232c49ff31c40fa5cf72acf74c4aa251ed4811c
-Gitweb:        https://git.kernel.org/tip/9232c49ff31c40fa5cf72acf74c4aa251ed=
-4811c
-Author:        Mateusz Jo=C5=84czyk <mat.jonczyk@o2.pl>
-AuthorDate:    Fri, 21 Mar 2025 21:48:43 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 22 Mar 2025 08:02:16 +01:00
 
-x86/Kconfig: Enable X86_X2APIC by default and improve help text
+It does not matter how they identify. You have the compatible for them.
+If you cannot add compatible for them, how can you add dedicated
+property for them?
 
-As many current platforms (most modern Intel CPUs and QEMU) have x2APIC
-present, enable CONFIG_X86_X2APIC by default as it gives performance
-and functionality benefits. Additionally, if the BIOS has already
-switched APIC to x2APIC mode, but CONFIG_X86_X2APIC is disabled, the
-kernel will panic in arch/x86/kernel/apic/apic.c .
-
-Also improve the help text, which was confusing and really did not
-describe what the feature is about.
-
-Help text references and discussion:
-
-Both Intel [1] and AMD [3] spell the name as "x2APIC", not "x2apic".
-
-"It allows faster access to the local APIC"
-        [2], chapter 2.1, page 15:
-        "More efficient MSR interface to access APIC registers."
-
-"x2APIC was introduced in Intel CPUs around 2008":
-        I was unable to find specific information which Intel CPUs
-        support x2APIC. Wikipedia claims it was "introduced with the
-        Nehalem microarchitecture in November 2008", but I was not able
-        to confirm this independently. At least some Nehalem CPUs do not
-        support x2APIC [1].
-
-        The documentation [2] is dated June 2008. Linux kernel also
-        introduced x2APIC support in 2008, so the year seems to be
-        right.
-
-"and in AMD EPYC CPUs in 2019":
-        [3], page 15:
-        "AMD introduced an x2APIC in our EPYC 7002 Series processors for
-        the first time."
-
-"It is also frequently emulated in virtual machines, even when the host
-CPU does not support it."
-        [1]
-
-"If this configuration option is disabled, the kernel will not boot on
-some platforms that have x2APIC enabled."
-        According to some BIOS documentation [4], the x2APIC may be
-        "disabled", "enabled", or "force enabled" on this system.
-        I think that "enabled" means "made available to the operating
-        system, but not already turned on" and "force enabled" means
-        "already switched to x2APIC mode when the OS boots". Only in the
-        latter mode a kernel without CONFIG_X86_X2APIC will panic in
-        validate_x2apic() in arch/x86/kernel/apic/apic.c .
-
-	QEMU 4.2.1 and my Intel HP laptop (bought in 2019) use the
-	"enabled" mode and the kernel does not panic.
-
-[1] "Re: [Qemu-devel] [Question] why x2apic's set by default without host sup"
-        https://lists.gnu.org/archive/html/qemu-devel/2013-07/msg03527.html
-
-[2] Intel=C2=AE 64 Architecture x2APIC Specification,
-        ( https://www.naic.edu/~phil/software/intel/318148.pdf )
-
-[3] Workload Tuning Guide for AMD EPYC =E2=84=A2 7002 Series Processor Based
-        Servers Application Note,
-        https://developer.amd.com/wp-content/resources/56745_0.80.pdf
-
-[4] UEFI System Utilities and Shell Command Mobile Help for HPE ProLiant
-        Gen10, ProLiant Gen10 Plus Servers and HPE Synergy:
-        Enabling or disabling Processor x2APIC Support
-        https://techlibrary.hpe.com/docs/iss/proliant-gen10-uefi/s_enable_dis=
-able_x2APIC_support.html
-
-Signed-off-by: Mateusz Jo=C5=84czyk <mat.jonczyk@o2.pl>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250321-x86_x2apic-v3-1-b0cbaa6fa338@ixit.cz
----
- arch/x86/Kconfig | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 98bd493..08bc939 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -458,20 +458,27 @@ config SMP
- 	  If you don't know what to do here, say N.
-=20
- config X86_X2APIC
--	bool "Support x2apic"
-+	bool "x2APIC interrupt controller architecture support"
- 	depends on X86_LOCAL_APIC && X86_64 && (IRQ_REMAP || HYPERVISOR_GUEST)
-+	default y
- 	help
--	  This enables x2apic support on CPUs that have this feature.
-+	  x2APIC is an interrupt controller architecture, a component of which
-+	  (the local APIC) is present in the CPU. It allows faster access to
-+	  the local APIC and supports a larger number of CPUs in the system
-+	  than the predecessors.
-=20
--	  This allows 32-bit apic IDs (so it can support very large systems),
--	  and accesses the local apic via MSRs not via mmio.
-+	  x2APIC was introduced in Intel CPUs around 2008 and in AMD EPYC CPUs
-+	  in 2019, but it can be disabled by the BIOS. It is also frequently
-+	  emulated in virtual machines, even when the host CPU does not support
-+	  it. Support in the CPU can be checked by executing
-+		cat /proc/cpuinfo | grep x2apic
-=20
--	  Some Intel systems circa 2022 and later are locked into x2APIC mode
--	  and can not fall back to the legacy APIC modes if SGX or TDX are
--	  enabled in the BIOS. They will boot with very reduced functionality
--	  without enabling this option.
-+	  If this configuration option is disabled, the kernel will not boot on
-+	  some platforms that have x2APIC enabled.
-=20
--	  If you don't know what to do here, say N.
-+	  Say N if you know that your platform does not have x2APIC.
-+
-+	  Otherwise, say Y.
-=20
- config X86_POSTED_MSI
- 	bool "Enable MSI and MSI-x delivery by posted interrupts"
+Best regards,
+Krzysztof
