@@ -1,133 +1,120 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from sonic311-30.consmr.mail.ne1.yahoo.com (sonic311-30.consmr.mail.ne1.yahoo.com [66.163.188.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B43184FAD;
-	Tue, 25 Mar 2025 16:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE74D84FAD
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 16:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.188.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742921428; cv=none; b=ibzaOQODBAzj+8DhftOY0iaU4gm88JpTmBPRfmvGtMX+M/DPKINvIm9zPt7cr7YArjH/kJ/AXBpJ0lB8luhN1+yltowtU2bYER2jjvNnLRThSz+3V4rlru7s56FG3VOWsf17UXa3mYcOHGFcYcpRq1mt1YrxeixAmmCDep1kE0M=
+	t=1742921500; cv=none; b=Fs+/3ANLF3zFHecAydKnxb+OU/VJ01hpVB3n9N886kY+EzyipmhXfB/HpI47hd5e96yS2IEO4h1WIUkVNaomCdn2uFUkIQS/xXCL6++8eN5GJDsrAgC9rslXiFtqFdBY3CPa0cyILfIXHXPspoZLmSGBMdATGv1IThS2mOAtfFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742921428; c=relaxed/simple;
-	bh=Du7Gw+6+rVXQKsTd2sGK2ovTpxCazXX01HGzbwT39UI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IB9DWIww9w19VJ1aL3Zqw1ZRsfn9I55ThsHuRX+hJ7RnjE7UbcSQvE8T8sQh8d4jrzZT/+vH700I9te5v7Z+MD099RXZsIc/EeqTRgDgjV9wVlLrnBQmOU6zJzJ84KgLp6UoccRArV/8YhnYur+xv/KF92HlcVlPMQpWG9r+n/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-abbd96bef64so58232166b.3;
-        Tue, 25 Mar 2025 09:50:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742921424; x=1743526224;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C/ZytM1hc+zRsKNx9HKVSbc8n2BtaBHbt7AbiHmZb6E=;
-        b=gTM5wWvgrHq47kc9dkQY22gFkaxXO1vtwVdO9otsg5sTjgBnBHcPJq0iiIlL92tAtw
-         k+eLGFGWIW9yxV93iYxSOdMWRkXScYhMiGeQKZnoJJ+HMHiKDSnqX34uESIDW2mVgzKc
-         Y8Ay4ZlyKKb9vcCuvWV2eaGD67j1jMW6HhfdTjBzfWcnDraY4oJE5OG6JAW00qsPrxBj
-         EufrElXanZ6+pAvFfvNCQP41hgredufZ6xm0XXR99JYlBhwxTi91qRmKY6xdp/4d1NpT
-         vfFxpVIaCvwR9kB7OEpPOgLKXHWTZCOIY5wiYIlIkxht9lQm9C37ObfVsjV5Db6YdpXK
-         vgkA==
-X-Forwarded-Encrypted: i=1; AJvYcCUqTBGCszJ1saYio5NU/DqtapJlSv+s/8xBEkJjtilB9VzLvlduVeqxpd3Cfhrie+aZy5PzRjF5KK4q4mg=@vger.kernel.org, AJvYcCWj6zYZmLSzF+7uEhMiNNSJ7yn17qWy0/JovSGANUtOruCHyL5fywbz+KkqjPArBBez9vuW6Ptt@vger.kernel.org
-X-Gm-Message-State: AOJu0YyN40mliQmd0srPixwB0CIuqbVUTtarSiF3gaVYiwOgB00t8hY7
-	RyLf+ESM14TCUT+uSgfBElZz2cVAz6GNA41ze5TQz/TTgLuETMzR
-X-Gm-Gg: ASbGncvezP3fp/COancj1vrVIonpq+dNmuVS7XBQq7R/9sET4udjBTzFGQnKngmtP+W
-	ftXnUumwnjzIZOiBjCw6AhLqx4YJ1JPy+vXJZ+a7HPvFTgYyKXmvgLD8et30AsEcht3tkxpZwar
-	CBrEu1/itEbJ8YaojomceSJXjV299IACiVpuyBRzVbJIgjkboVRdrKyel5Tvw1Pd+NnKCblIBbT
-	w9ZumVC1XdOLjXtUPOjxI0Fpg/aQHs4FFt6sKYo1IYId0fYW2Tkc4zx3YbMDLXZL//2UUlRO1qQ
-	Fl/h+divNDEz2XvgcyKQjvdackLDJY+yJ/A=
-X-Google-Smtp-Source: AGHT+IEdKEMAJgYD7a82jaxkDjPukvtfh/ZBxyz6IAzNhdDPO6JAvF/NkFvoclgaWsCm5bDXiG/DIw==
-X-Received: by 2002:a17:907:60ca:b0:ac6:d9fe:a254 with SMTP id a640c23a62f3a-ac6d9fec4aamr92166866b.29.1742921424078;
-        Tue, 25 Mar 2025 09:50:24 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:3::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efd3aa21sm896009066b.158.2025.03.25.09.50.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 09:50:23 -0700 (PDT)
-Date: Tue, 25 Mar 2025 09:50:21 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH net-next] netpoll: optimize struct layout for cache
- efficiency
-Message-ID: <20250325-just-sloth-of-examination-7cd2df@leitao>
-References: <20250324-netpoll_structstruct-v1-1-ff78f8a88dbb@debian.org>
- <20250325084838.5b2fdd1c@kernel.org>
+	s=arc-20240116; t=1742921500; c=relaxed/simple;
+	bh=jS67oAesz1Y8NauC3CC0XT71C2aVOdBEhvuvi52kWMg=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type:
+	 References; b=CTeslpH2q8PXoovbO7H1kYY87TmnNyF0UaXKDl7KpjIHmNBsEAMZg8B2+3vbLMXtD0GgJxgcVyf+gKsImE+hDYFsAITZmGQEkUTTJKrDey4ACBdOZyrbkuNSFTqdH678IvfRYGYLgNHrRrQTv7mKZTs6/EMvSriz1xLRgYIAEaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=Do5wJDFR; arc=none smtp.client-ip=66.163.188.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="Do5wJDFR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1742921491; bh=IdykXTVI7p69c2IyaMS+lYXEfvBTHgFMPP9Erx27P4c=; h=Date:To:Cc:From:Subject:References:From:Subject:Reply-To; b=Do5wJDFR01AaJfLREnOtFUnp82EGZpYfLuMxXWhafPe/0oiyBj+0VTz24pp7VOy43OL8GUKd1bFUbEFWh+ILGmUj9E7JpU6MR7dDqwzT+Y0c9qFtq3v1W40GkqnM9iqZ4SpQaWO98iAKdmx2ocWgWdocQWb2zqF1Ocf2vkf4/iaMjO4zgKDH2rPfkp+dXxzuealN6BUEwvbKLj3ZxCQ40fmu+y8cnhRr8tX3Fj9+WgavszzB0aMmUfan+rFvF69R2QdMd1rgtGblfR0w2ODAq6c4OLaC9wgS/MhzfNsP1gomodShOjpn97UM/jAtdqZ5Qr4RcOFYvN8OderVjLeKtQ==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1742921491; bh=+v6/nsJd6JeZ3hJavmMCP+2MCqUW/slCYXNkro7O3iP=; h=X-Sonic-MF:Date:To:From:Subject:From:Subject; b=dvnx/CYoVgyVl8kN8645zYyCyLMoRoiJCgUKsu4xq+0FB1mthWtj2FkRUomJwkuYQKHjHgKT2hYskZ+YIYWEFHj6vILtHkpmeiLROtMS0e+kMdfu9hZMLvOH0YNAhck/lsTS/fBn7KXFByOKY+EP+zmBlMA/RwAXwRYgm2j5FkJ0zXd1EBGCHmxV4eF/TWf2JLzIS+SnCQW5ZrYno7MR3phL02U/V74z3NGyghAVIJ5q+2RvIP6rpF4qm/zYhmvypfSw1136K2J9lWyO4z6DPeu+drpXxSgtkuVgTpTlHyELnfhHQJCB84Bno7t5BpDEU8453lbydT1bRPcftXmCww==
+X-YMail-OSG: hh8J610VM1nn8Q7n2Y0stMAoO0augQKmaIrHkmErDYZt7wtQyW3SQ472oFrbEdL
+ 172vHTm6gsX6GkSiBt5xzb.4WC2nlSkUTPuT8NCt_Wd2RJXWPT7jUN64X6a7JIMzqOflZODcLu0m
+ frtHIYnjtHNlnfU1_YKz48.44WUApWeXErcbYj2H3M.OpXqFQKuK6Wn2VuhORh8nRXl9rWO9FTGb
+ MPT3lVjR5B5hmIn2xB1LlZVg7puXQndIrSsklIAm82aEDYcFQeh3a456DxDfTAkymRHRM1RInI2Y
+ gdoB55ixNUGexCYPsqfpHrQNZG7jJNwWAq_2xU4Ax4UNCR22Zqu.rrfCAQow7PzuR6SJ1UVppGB0
+ _lHYMqiHP4A3zYnmut2urA0tx5dXV08irSB2RV_0.N1R8S3Yiw4I5NfkBBfoS.qC4DsEoOCA_r_Y
+ Edz_epOVydesNXsQF.l8xRP_eSy7c0X9g3KxNJeBCKLgXDg9XpHEy2cAN8N3a18TqPZlAWtv.agk
+ qKA_N4P26nxGwnHRqYwDtx8GifL7YvSSfXth8KWE90k7bgdzaUYO2Ull8J0ECiBuhfPQMDFKHIrb
+ ETIUWr1jKaMND._PFX4j6E6KFDr1Vj.4b0nf.XmRkUbcu50xPZUfVczPtBjWGlpsWEIYRKg7VcIs
+ ewI6J8zsttK54RzO5HSbjV3x7kzPYsDkYQ1Pulgt0WB8rxnZ1XDMIJLzMBHob6l0SsES1zzvtLjX
+ G2_EfAXB6VhuYmmSfZJh.F1YrlnXotjUUv9lQwGCQt_veKn89NOJ4j_rzN_08UOBl5cUAyBrdLO3
+ AWYsM2LCnAXdWU2blQ1Jx.ELIIIJg8NA1.Ixi_lp7iDibtc1ABci46MrfEEi7HnyO8Ecdb2AlnAH
+ G1Vl.0Rb.kpP_xn05o893LewqRyv9DsHy8M1tjlN9BLH_TWeVfDSakxT8UUiefCIUpdqG91BQMNj
+ AJb7WcWnHQ5S3NPViV1F6rfPg23qVHiOg2PVlK2d6D5dL51HQXunFDLsvmO47A6WThZhNG2lnpUG
+ 12zCeCXNTcr.z5Sbg5O404sYPHGRCT30gixj6QYo4IhjcpybVh0ZRmIsCKxe01njBxQDQZfn6hQ8
+ rbB_mvHpVsEyyNbpUSnV4YfO4DnIvsVXrcWrVvD51tVSbPrc6awbDXI7knaNEBqK39Lq_.I_9_od
+ AguP702uuI7PwPQCIeKaq7C7XyQTZ3OTGXoquT00I002RDVqzgiB.TxWJ_VhE5pT7iBl1lxKKqVc
+ ECWUAi8KuUMmDPqXUl.JzNGl3LYdhyZc8c3b.gk3cfEYv.iy.HejHFpTU_qzZruqjU_cTvjzRH3N
+ OZtmkO7z7csyxOM_jvjhIX8AtAJP2evmC_NP4O1bngIX2YG9ktfxGf.LnhlbRWFntzQ2Ck4KOlIN
+ 26AAUqaf8IgXKO2mcp7nizf2UsRQf2Gu6pr7IarlyMatzsaLXjh7VBWd4hl9B80.DtOo.7ROaSLf
+ phyt6T99ZzdrbcoJ4xu.Jty07IPPEpreDrUPviB0ckLJ9mezlmv_hqQqxLBWDsDWza04gRCpH_if
+ 1zR_4Cl9ReXCrSkfoPlhISMbPGhfywGq_QC2qODNrlHjncuwK4ZSCK48VsFUB3WfMRdNhCucyE0d
+ 0P.fnON.S299u1WlCCP6o1F5BxAnHxvP9yMt4A4VrRZ40EGTLW9qhy7kIWkX0Boc4_q7o56lRH7i
+ WlLCJ8j4AZ7K6SGv0p3hQQsYRRtl8XFnJ1qsGc8wcs4I.eqPq6J2VjZOCThL41RqqJtiD1M3wpGa
+ kJaDQLAF_1Vr6R8omJZfojQ9uIDa2NU9V_l4kbuuN7V0r93pRP3swyPBPMXytxBPtYMp7QdLKM1D
+ L8TcVrsqj97YI1X70oK82IteSsjWIuz6qhEeO6Fr1gfR_Ub9pGHDZHB.LfUJoNN2pmyIWjF_esuu
+ f.X9.2vmoVNYSSWb3AUM3XaYIKuq1vXHkpJ3rLLmaEP7Z3wIhWXOE0G1kVGtKoTWT21XPry8oEFP
+ dL.Pda8LeZCpzyPAnMJRH_5zrayqwVvDZnCsEgK7.loH.uNMe93kj5hVwUcM1RL92AD0_7FdQAlR
+ W0K.Rk1yUDrRlfMcPR8K2yPms6AespA0nw4sj5pO.CJ2FtqSjvKRx6V6EJThkAntGkfEuwbb1DV4
+ OHNEryIONgrRg63e048KkFWjOZ13fAn3KIypmm2Hug1fsdsid4HaBRjh4kvosCxgyCS9I5z5iJJm
+ Z5_0KsdFt8ZdRJ6toeOL7DQQ.OebtnUKCzr0MN.d3sC1W0QKVndEzeKNOfTi7e1cQRJdXHewS1ym
+ 0axDhl84NF3B5DUKDL9lFCw--
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: 18af2867-df7f-47b9-ba43-8f57eb44f25f
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ne1.yahoo.com with HTTP; Tue, 25 Mar 2025 16:51:31 +0000
+Received: by hermes--production-gq1-5c477bf655-s8xr7 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 4653def2fdc5d2c09a7af09c5b8d8672;
+          Tue, 25 Mar 2025 16:41:21 +0000 (UTC)
+Message-ID: <8040a0e7-2121-4389-88e5-c6f209bfca0a@schaufler-ca.com>
+Date: Tue, 25 Mar 2025 09:41:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250325084838.5b2fdd1c@kernel.org>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LSM List <linux-security-module@vger.kernel.org>,
+ Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+ Casey Schaufler <casey@schaufler-ca.com>,
+ konstantin Andreev <andreev@swemel.ru>
+From: Casey Schaufler <casey@schaufler-ca.com>
+Subject: [GIT PULL] Smack patches for 6.15
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <8040a0e7-2121-4389-88e5-c6f209bfca0a.ref@schaufler-ca.com>
+X-Mailer: WebService/1.1.23533 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On Tue, Mar 25, 2025 at 08:48:38AM -0700, Jakub Kicinski wrote:
-> On Mon, 24 Mar 2025 05:29:13 -0700 Breno Leitao wrote:
-> > The struct netpoll serves two distinct purposes: it contains
-> > configuration data needed only during setup (in netpoll_setup()), and
-> > runtime data that's accessed on every packet transmission (in
-> > netpoll_send_udp()).
-> > 
-> > Currently, this structure spans three cache lines with suboptimal
-> > organization, where frequently accessed fields are mixed with rarely
-> > accessed ones.
-> > 
-> > This commit reorganizes the structure to place all runtime fields used
-> > during packet transmission together in the first cache line, while
-> > moving the setup-only configuration fields to subsequent cache lines.
-> > This approach follows the principle of placing hot fields together for
-> > better cache locality during the performance-critical path.
-> > 
-> > The restructuring also eliminates structural inefficiencies, reducing
-> > the number of holes. This provides a more compact memory layout while
-> > maintaining the same functionality, resulting in better cache
-> > utilization and potentially improves performance during packet
-> > transmission operations.
-> 
-> Netpoll shouldn't send too many packets, "not too many" for networking
-> means >100kpps. So I don't think the hot / close split matters?
+Hello Linus,
 
-I see your point. The gain is going to be marginal given the frequency
-this netpoll is supposed to be called, for sure.
+Here is the Smack pull request for v6.15.
 
-On the other side, I think this is still better than the current state,
-given: 
+This is a larger set of patches than usual. It consists of
+a set of build clean-ups, a rework of error handling in setting
+up CIPSO label specification and a bug fix in network labeling.
+All have been tested and in next for some time.
 
- * it has no adverse effect
- * potential marginal performance win
- * structure packing, potentially saving 2 bytes.
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
 
-> >   -   /* sum members: 137, holes: 3, sum holes: 7 */
-> >   +   /* sum members: 137, holes: 1, sum holes: 3 */
-> > 
-> > Signed-off-by: Breno Leitao <leitao@debian.org>
-> > ---
-> >  include/linux/netpoll.h | 16 +++++++++-------
-> >  1 file changed, 9 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/include/linux/netpoll.h b/include/linux/netpoll.h
-> > index 0477208ed9ffa..a8de41d84be52 100644
-> > --- a/include/linux/netpoll.h
-> > +++ b/include/linux/netpoll.h
-> > @@ -24,7 +24,16 @@ union inet_addr {
-> >  
-> >  struct netpoll {
-> >  	struct net_device *dev;
-> > +	u16 local_port, remote_port;
-> >  	netdevice_tracker dev_tracker;
-> 
-> It's a little odd to leave the tracker in hot data, if you do it
-> should at least be adjacent to the pointer it tracks?
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
 
-Double-checking this better, netdevice_tracker is NOT on the hot path.
-It is only used on the setup functions.
+are available in the Git repository at:
 
-If you think this is not a total waste of time, I will send a v2 moving
-it to the bottom.
+  https://github.com/cschaufler/smack-next tags/Smack-for-6.15
 
-Thanks for your review,
---breno
+for you to fetch changes up to a158a937d864d0034fea14913c1f09c6d5f574b8:
+
+  smack: recognize ipv4 CIPSO w/o categories (2025-02-16 14:17:55 -0800)
+
+----------------------------------------------------------------
+Smack patches for v6.15
+
+----------------------------------------------------------------
+Casey Schaufler (1):
+      Smack: fix typos and spelling errors
+
+Konstantin Andreev (5):
+      smack: dont compile ipv6 code unless ipv6 is configured
+      smack: ipv4/ipv6: tcp/dccp/sctp: fix incorrect child socket label
+      smack: remove /smack/logging if audit is not configured
+      smack: Revert "smackfs: Added check catlen"
+      smack: recognize ipv4 CIPSO w/o categories
+
+ security/smack/smack.h        | 20 +++++++++++++-------
+ security/smack/smack_access.c |  6 ++++--
+ security/smack/smack_lsm.c    | 40 ++++++++++++----------------------------
+ security/smack/smackfs.c      | 29 ++++++++++++++---------------
+ 4 files changed, 43 insertions(+), 52 deletions(-)
+
