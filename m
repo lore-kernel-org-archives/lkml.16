@@ -1,155 +1,63 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE49A16C854
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 01:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D65518E02A;
+	Tue, 25 Mar 2025 01:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742867879; cv=none; b=hi7NihjvopPsCVStxQQX7xS/T1QrAIhD8a9MV5rCnJYoi9ZSJs4PYu+VQtJ5zl2yWUKFFiHn/oaZMBnqEKpPxYsqD8bK7T2jt7zfB4R1yOLuryFg3T5u+Km7kvGqiQzzDmzUH15h05e7qh7FItXoXCcbv6+/kb6ZfV9k99eVehc=
+	t=1742867880; cv=none; b=a9bRnYYY962tRVA3vAxDuG/chWz3/BUZukFzp0bGyFZcNr0npXmWePDwTSpA7rux4NMmTBTLemmO+SSR/FgdDdj6i+BlVO0ODZTXNc23GFLIkL/bnlIaQ2GqCtXzxXIKyOWj6SQiZZ9kcutCZx44HAWSO083iep0+xWfILbH1N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742867879; c=relaxed/simple;
-	bh=lif6d8bWyTb3kY1w8tbIfNSxz0oEm+nK9IO5vgIDGZw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=izplYEcvw3hGLHwMmv3NuOpmhvrCKAOnBY2JIrYMKpSNOcWSDzmOiroEyu8L01l9O3IU/9ZtNR/6Ov2uNc+KY++hv1drUvajYWMs/yhzPmdP41mlZSXUIWVrl/T5C2WW19Wdno8YtbK9W0/DUkdHkBKfnkeXVrQNX/wAAvoWg2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ue4Vn61P; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742867880; c=relaxed/simple;
+	bh=EQhuRSnLDPoPFmB4iFlaftDgrH6HhFnbk1f2sHI1RT8=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=iViVlRjHIEMfQxrkiGjRB+24GnQw1qVNQobU684nFH30OTtXwn5UG2WILX29vB4Ri4NvUoLIw/0i2voSKO2g1HRaN+BfchkmttrkP0sqOl7VxxrTyoVI/O5QZeOvOQEpPMbCNxx1JpWdOasBOWwrUY4VLR9KFcEpl1J+I+dTrrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AM9QfN8b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ue4Vn61P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742867875;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kTv/L90XVpBM4ekA2qEPhG7vXF0lbFqegJyvg+paXag=;
-	b=Ue4Vn61PNsh05ItFby1whrVHhhOVRmuDg8tzRpj3pMAj8kO5PuoOOFbOEPp4NkAPsDe5bk
-	riLVMw5XzNgwxuNRBsj659sDyL5PAa1uwMZTfQleUT4p8wHjhMKkLzqKi0LMAlHcpdsJjS
-	KPTv93ZodQbvPDOygDUIoIRJk31GDyM=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-136--KUwRpU6NHupmsJ2c19hFA-1; Mon,
- 24 Mar 2025 21:57:49 -0400
-X-MC-Unique: -KUwRpU6NHupmsJ2c19hFA-1
-X-Mimecast-MFC-AGG-ID: -KUwRpU6NHupmsJ2c19hFA_1742867867
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7BB3E18004A9;
-	Tue, 25 Mar 2025 01:57:47 +0000 (UTC)
-Received: from starship.lan (unknown [10.22.65.191])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 630FF180175F;
-	Tue, 25 Mar 2025 01:57:45 +0000 (UTC)
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: kvm@vger.kernel.org
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	linux-kernel@vger.kernel.org,
-	Sean Christopherson <seanjc@google.com>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	James Houghton <jthoughton@google.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	linux-kselftest@vger.kernel.org,
-	Anup Patel <anup@brainfault.org>
-Subject: [PATCH v2 1/2] KVM: selftests: Extract guts of THP accessor to standalone sysfs helpers
-Date: Mon, 24 Mar 2025 21:57:40 -0400
-Message-Id: <20250325015741.2478906-2-mlevitsk@redhat.com>
-In-Reply-To: <20250325015741.2478906-1-mlevitsk@redhat.com>
-References: <20250325015741.2478906-1-mlevitsk@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AM9QfN8b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0059C4CEF1;
+	Tue, 25 Mar 2025 01:57:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742867880;
+	bh=EQhuRSnLDPoPFmB4iFlaftDgrH6HhFnbk1f2sHI1RT8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=AM9QfN8bwyxwdQ8RxLiwcPfIjKqZaL21zpBxSXzQlySCWA0gTHh4uoSFswhMcjBoo
+	 61N8ZQ1R3FbYS5EZri1LiwjrZMo8rMhAU2UNqRLiiAM+gmNCSgFOZOgYnv8+Zycyat
+	 7INIxuRQdIBJn7iAXyfWFNd+74Ayz+2u1Mm0On4e5PxL+CjCOzSD/jXgmwyDZwk7YV
+	 nJpX8bD4VTgLcGmpSgfqj4EHN5bf1w/tU/mJxoJr0QOmF1VkvmCsIgrs8fTri9ir+l
+	 8i43LXwh8pzIClqujoWtOZuBxW8bFIh18tQoUkkE/FPlxlIW81EOz2s6E5lIwLfdG2
+	 u9EaYbkSKxdVw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70BAF380DBCD;
+	Tue, 25 Mar 2025 01:58:37 +0000 (UTC)
+Subject: Re: [GIT PULL] LKMM changes for v6.15
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <dbfe09b5-e5a4-4bf8-96eb-9fb6b98e2fb6@paulmck-laptop>
+References: <dbfe09b5-e5a4-4bf8-96eb-9fb6b98e2fb6@paulmck-laptop>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <dbfe09b5-e5a4-4bf8-96eb-9fb6b98e2fb6@paulmck-laptop>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu tags/lkmm.2025.03.21a
+X-PR-Tracked-Commit-Id: a2bfbf847c96196d62c9a59bd32e1fdafd1c205c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 72b40807d21cc5d7d8e48bfa860d5d78769dc07a
+Message-Id: <174286791594.53720.15242041260699194736.pr-tracker-bot@kernel.org>
+Date: Tue, 25 Mar 2025 01:58:35 +0000
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org, lkmm@lists.linux.dev, puranjay@kernel.org, jonas.oberhauser@huaweicloud.com, akiyks@gmail.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-From: Sean Christopherson <seanjc@google.com>
+The pull request you sent on Fri, 21 Mar 2025 16:15:39 -0700:
 
-Extract the guts of thp_configured() and get_trans_hugepagesz() to
-standalone helpers so that the core logic can be reused for other sysfs
-files, e.g. to query numa_balancing.
+> git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu tags/lkmm.2025.03.21a
 
-Opportunistically assert that the initial fscanf() read at least one byte,
-and add a comment explaining the second call to fscanf().
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/72b40807d21cc5d7d8e48bfa860d5d78769dc07a
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
----
- tools/testing/selftests/kvm/lib/test_util.c | 35 ++++++++++++++-------
- 1 file changed, 24 insertions(+), 11 deletions(-)
+Thank you!
 
-diff --git a/tools/testing/selftests/kvm/lib/test_util.c b/tools/testing/selftests/kvm/lib/test_util.c
-index 8ed0b74ae837..3dc8538f5d69 100644
---- a/tools/testing/selftests/kvm/lib/test_util.c
-+++ b/tools/testing/selftests/kvm/lib/test_util.c
-@@ -132,37 +132,50 @@ void print_skip(const char *fmt, ...)
- 	puts(", skipping test");
- }
- 
--bool thp_configured(void)
-+static bool test_sysfs_path(const char *path)
- {
--	int ret;
- 	struct stat statbuf;
-+	int ret;
- 
--	ret = stat("/sys/kernel/mm/transparent_hugepage", &statbuf);
-+	ret = stat(path, &statbuf);
- 	TEST_ASSERT(ret == 0 || (ret == -1 && errno == ENOENT),
--		    "Error in stating /sys/kernel/mm/transparent_hugepage");
-+		    "Error in stat()ing '%s'", path);
- 
- 	return ret == 0;
- }
- 
--size_t get_trans_hugepagesz(void)
-+bool thp_configured(void)
-+{
-+	return test_sysfs_path("/sys/kernel/mm/transparent_hugepage");
-+}
-+
-+static size_t get_sysfs_val(const char *path)
- {
- 	size_t size;
- 	FILE *f;
- 	int ret;
- 
--	TEST_ASSERT(thp_configured(), "THP is not configured in host kernel");
--
--	f = fopen("/sys/kernel/mm/transparent_hugepage/hpage_pmd_size", "r");
--	TEST_ASSERT(f != NULL, "Error in opening transparent_hugepage/hpage_pmd_size");
-+	f = fopen(path, "r");
-+	TEST_ASSERT(f, "Error opening '%s'", path);
- 
- 	ret = fscanf(f, "%ld", &size);
-+	TEST_ASSERT(ret > 0, "Error reading '%s'", path);
-+
-+	/* Re-scan the input stream to verify the entire file was read. */
- 	ret = fscanf(f, "%ld", &size);
--	TEST_ASSERT(ret < 1, "Error reading transparent_hugepage/hpage_pmd_size");
--	fclose(f);
-+	TEST_ASSERT(ret < 1, "Error reading '%s'", path);
- 
-+	fclose(f);
- 	return size;
- }
- 
-+size_t get_trans_hugepagesz(void)
-+{
-+	TEST_ASSERT(thp_configured(), "THP is not configured in host kernel");
-+
-+	return get_sysfs_val("/sys/kernel/mm/transparent_hugepage/hpage_pmd_size");
-+}
-+
- size_t get_def_hugetlb_pagesz(void)
- {
- 	char buf[64];
 -- 
-2.26.3
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
