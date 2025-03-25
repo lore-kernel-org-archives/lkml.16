@@ -1,72 +1,59 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851A178F24;
-	Tue, 25 Mar 2025 10:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034C21EF099;
+	Tue, 25 Mar 2025 10:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742898356; cv=none; b=UUb1jYm8oQpxjNjjFp4zSu6KkY4oky6xaj0Pkm0Ye4nlM1JGEZQ8elofYgegi1ASghI3O6P0lrdB2K7nHB8U3xdamZ/5NCzUu7gEnUuzqKumgK3WDZRElLbTvW7443mlmszOovnqxrmtb4Jrc5uLWUyniHRFIY3bNmgBgGqiWdc=
+	t=1742898395; cv=none; b=F90/sqy0jCpSMrhgeLxQhTUgM+M9BQoNna5EK0IS760ECkUZZFGtVW+FVzvfVDGt3YoFRzecJoBBtGmdEFTBYQXyZF24EyWmuVUAD+nXqYPS/YtBzPRVIg5XGvjZOrjmUB2E9Ry6tnDBdtI+dQKnXju1XzzWxKtYfx4xBs0b6JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742898356; c=relaxed/simple;
-	bh=pPYr2AHRKW9t53TYJf/9ZrFy4ScNeMvk2ssp+Q9q49A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pVfCTwifUaj6zGD2oNOzmxYPQxr86JLZ7NAGGKBaeeiPJNdjV0RY+gvf88Rfpqiw6rXPvHh1cT1jJueKyMwJKyer51qMvEjpEzEfhsHjfVGknCAw8ikR8TOnO+kCMATYpt29aoQcyvR0YXBmHM2p2hGgNxFX8rCPWkaAl5YHyJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=db4/JWG0; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742898395; c=relaxed/simple;
+	bh=/pBN+ohvIjqo2ih8p/b4lanOQSzFYkL2+lcRC1yvrVo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=c4bOha5N08G/L73Gi05UMxzpSM+6562Pp9m4Ar1R76mf4ziTK8uwT4uN/K7XyNF7fcIS/1aE8plQ4aEzF+anQBuiLRudGs5X6ni8vmkI4FAOlOCeWyL+oloAojRn3mXwvxzT7WbDt0O7pazYBGjYIrskEAdHgMr2wZ5iXowcUtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+oj1AWH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="db4/JWG0"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2255003f4c6so102439645ad.0;
-        Tue, 25 Mar 2025 03:25:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742898354; x=1743503154; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5TQZ1mJnI/mAePfWZskq+M/BEdwOR8KjNOwJYBWNuFU=;
-        b=db4/JWG0fFhcN36DUdT5AIaQgHQ2PKB0gVC8B+ZLzg686y2z6rhmZvhOlLjt6J8ZHI
-         6kX7l2IKWzKSxhkytUViNTqdI/gSXhBDSAX6H8UmLI+oJbM3xlDHSQnvG7wM9rQbr31R
-         yiJ4h80NV/fGAyG4xNcvxURJ/JU9BEX7Bw0IaJIeBbbGXIZmS5RgKY/QYKKcUYWGxjHX
-         okVtpr+dGE6aE9ADwVY+bJSf+B/jbGWmzO9YNKVHPzpqahgW/6SLUbsr4jVNUPYQKKVf
-         D9YfB70oayDiAMpC1hQ1/iqPV3dLzPtuofb6H/A/NZZYmojY1KkAeELjzjHIsWFGRlld
-         dFeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742898354; x=1743503154;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5TQZ1mJnI/mAePfWZskq+M/BEdwOR8KjNOwJYBWNuFU=;
-        b=eBNxQvvsLVjDZlpCdFsgkDlfEhHTNAjjY233CqXX7AONT1uFUOviZLELhG7VqDRpFp
-         dSYZjuM76Nr8/NdpUz0zMMvncgVYR0GrfzzkvLpzQWtEFw7dE+5wivXlgbUoyMb7DRJj
-         ssOV+IVX6oiUainbH29wYwoZuVDnJThZf58XU1UjzfgHoiUI4M6ZyLwY6b3ZIYVfMcyH
-         6mfaGcKzhn0dXRqMkdxUiSegC7lXGAMwJh5qC3O1KjZqNo0TA0sW/mUnr9pGIbx6K1ff
-         0YTj0yTllvMv1XbXm6MlV6vn9aN2pZfY3REMkWEYCVoM1yT9TXZUNq0fV840XZpgQWU+
-         gJqw==
-X-Forwarded-Encrypted: i=1; AJvYcCVUcC2rnxhNsKglVTe8HEMFtFXl6IBrApfHoYpwX/MHZbFKH6M4lcD79MD5IEKKP+8OCARJpFXPGQKaXEo=@vger.kernel.org, AJvYcCVgGZnvgAUzaIXq32mYV2JG6PC5gQevRRhDblr1x9VhD+t74glGUopU9bd4fM/85Hv35ly0beSmt9fri64=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRaNUbNMbEu8VB6cuIEqniTftl9INvKB8xArzqsG/dCYOJwwpa
-	LcznND36/JA7ZH/ysRmuSEN+NqjYmsVIdGy5YXUcdcgLmmTF3Mn/
-X-Gm-Gg: ASbGncvYUJtL1NEpQe9Zn4zWu7OxWiZLfscFycm2N4anrBWUGoOS6+RCOcc/R3UcahC
-	KS/9DcHA5npzeKCtaAhstkey3g8bn1KFCl71YRtu2D3iv1V8dnRlIYlH/97DfOxBjX1qy/nFVOw
-	RSidbIz5eZm6vxUFxJe7zBiTfyhXsfpq1wKPISoDklJecHUSVCxcKPrcn0knkPJmODlxldHdfQ0
-	GRFZImJs007KHEqMjpiurKQYNKMDv0D4E1nmIsFR/qhunt3Nd06ErbK1+FEyK3xlvox6LDRxAvi
-	9d2hqZD61iirih+emK78q345BZB4byzoxWd3yTVersTDk433zQkumoM/zlFbaei/0/xMAKx6DlQ
-	B
-X-Google-Smtp-Source: AGHT+IFp4W9MioP21Q0bUey2FAzrWuQgB0D3Elg/a81AxrqjWatuuSruZPC8YfCpE4FUaELr+gttBA==
-X-Received: by 2002:a05:6a20:43a7:b0:1f3:36f7:c0d2 with SMTP id adf61e73a8af0-1fe43319764mr28856857637.41.1742898353564;
-        Tue, 25 Mar 2025 03:25:53 -0700 (PDT)
-Received: from r.www.tendawifi.com ([203.95.197.25])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7390611d1dasm10063253b3a.106.2025.03.25.03.25.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 03:25:53 -0700 (PDT)
-From: Andres Traumann <andres.traumann.01@gmail.com>
-To: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Cc: Kailang Yang <kailang@realtek.com>,
-	linux-sound@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+oj1AWH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 830BEC4CEED;
+	Tue, 25 Mar 2025 10:26:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742898394;
+	bh=/pBN+ohvIjqo2ih8p/b4lanOQSzFYkL2+lcRC1yvrVo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=G+oj1AWHl0o4XLiCt8VoROLvs/Q0L0pBhKLu06Ywe1Fg+BzXr9+5ip2+PApClIoHs
+	 fs7zcKnQ5DJFV48eHfrQ9RUt7TtDPTaFkkhH7fIkBH0uPke3YjsU8elUwpv6Jc3WeE
+	 8SOb+i0AeyL2ickHR8IG85j6Z7uX3iIY0Qs2qnvUVNsJ34ESqHmuJw8L2G2O8iZtNM
+	 trJfNMRQmQXIPx7rSfMfHn1huIQps7TUqsh+nhbx0jbsaNCmbxerWXTh3sMjImBRRu
+	 QIm5u42VFey8fYmjs9AbUng/ukqVW/96DNyFRqOrAVirWFSneaFxYuH0HcAPx/oEcB
+	 F9ha/hulenm7Q==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tx1UO-00GsRS-Ci;
+	Tue, 25 Mar 2025 10:26:32 +0000
+From: Marc Zyngier <maz@kernel.org>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Andres Traumann <andres.traumann.01@gmail.com>
-Subject: [PATCH] ALSA: hda/realtek: Bass speaker fixup for ASUS UM5606KA
-Date: Tue, 25 Mar 2025 17:25:35 +0700
-Message-ID: <20250325102535.8172-1-andres.traumann.01@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	asahi@lists.linux.dev
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Janne Grunau <j@jannau.net>,
+	Hector Martin <marcan@marcan.st>,
+	Sven Peter <sven@svenpeter.dev>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
+Subject: [PATCH v2 01/13] dt-bindings: pci: apple,pcie: Add t6020 compatible string
+Date: Tue, 25 Mar 2025 10:25:58 +0000
+Message-Id: <20250325102610.2073863-2-maz@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250325102610.2073863-1-maz@kernel.org>
+References: <20250325102610.2073863-1-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,34 +61,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, asahi@lists.linux.dev, alyssa@rosenzweig.io, j@jannau.net, marcan@marcan.st, sven@svenpeter.dev, bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-This patch applies the ALC294 bass speaker fixup (ALC294_FIXUP_BASS_SPEAKER_15),
-previously introduced in commit a7df7f909cec ("ALSA: hda: improve bass
-speaker support for ASUS Zenbook UM5606WA"), to the ASUS Zenbook UM5606KA.
-This hardware configuration matches ASUS Zenbook UM5606WA, where DAC NID
-0x06 was removed from the bass speaker (NID 0x15), routing both speaker
-pins to DAC NID 0x03.
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 
-This resolves the bass speaker routing issue, ensuring correct audio
-output on ASUS UM5606KA.
+t6020 adds some register ranges compared to t8103, so requires
+a new compatible as well as the new PHY registers themselves.
 
-Signed-off-by: Andres Traumann <andres.traumann.01@gmail.com>
+Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+[maz: added PHY registers]
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/pci/apple,pcie.yaml | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index a84857a3c2bf..286ff8c57079 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10783,6 +10783,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1043, 0x1d4e, "ASUS TM420", ALC256_FIXUP_ASUS_HPE),
- 	SND_PCI_QUIRK(0x1043, 0x1da2, "ASUS UP6502ZA/ZD", ALC245_FIXUP_CS35L41_SPI_2),
- 	SND_PCI_QUIRK(0x1043, 0x1df3, "ASUS UM5606WA", ALC294_FIXUP_BASS_SPEAKER_15),
-+	SND_PCI_QUIRK(0x1043, 0x1264, "ASUS UM5606KA", ALC294_FIXUP_BASS_SPEAKER_15),
- 	SND_PCI_QUIRK(0x1043, 0x1e02, "ASUS UX3402ZA", ALC245_FIXUP_CS35L41_SPI_2),
- 	SND_PCI_QUIRK(0x1043, 0x1e11, "ASUS Zephyrus G15", ALC289_FIXUP_ASUS_GA502),
- 	SND_PCI_QUIRK(0x1043, 0x1e12, "ASUS UM3402", ALC287_FIXUP_CS35L41_I2C_2),
+diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+index c8775f9cb0713..77554899b9420 100644
+--- a/Documentation/devicetree/bindings/pci/apple,pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+@@ -17,6 +17,10 @@ description: |
+   implements its root ports.  But the ATU found on most DesignWare
+   PCIe host bridges is absent.
+ 
++  On systems derived from T602x, the PHY registers are in a region
++  separate from the port registers. In that case, there is one PHY
++  register range per port register range.
++
+   All root ports share a single ECAM space, but separate GPIOs are
+   used to take the PCI devices on those ports out of reset.  Therefore
+   the standard "reset-gpios" and "max-link-speed" properties appear on
+@@ -35,11 +39,12 @@ properties:
+           - apple,t8103-pcie
+           - apple,t8112-pcie
+           - apple,t6000-pcie
++          - apple,t6020-pcie
+       - const: apple,pcie
+ 
+   reg:
+     minItems: 3
+-    maxItems: 6
++    maxItems: 10
+ 
+   reg-names:
+     minItems: 3
+@@ -50,6 +55,10 @@ properties:
+       - const: port1
+       - const: port2
+       - const: port3
++      - const: phy0
++      - const: phy1
++      - const: phy2
++      - const: phy3
+ 
+   ranges:
+     minItems: 2
 -- 
-2.49.0
+2.39.2
 
