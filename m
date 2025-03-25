@@ -1,123 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B81259CA2;
-	Tue, 25 Mar 2025 13:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28084A95E;
+	Tue, 25 Mar 2025 13:34:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742909601; cv=none; b=FRpNEfMvYOX5987wJv0GdB/joG1GGmBQvozvNzQKlRGuXXpdlW/onhxHAnekGJCMR5VnjTiBuB9hnIyemRV/tyRkX2q6J7iR5ykYqX7F6wctmTIDPVzhWLZe6PLUKxEBg35AnkICGzBHpeiFFPEWHc1KGFDGbHioyHMU0vX5oT8=
+	t=1742909659; cv=none; b=NWFnytgJroRvi7rjuce+N6Hz16rCs/DjIV1dyugUulDXsPjnNRK8/jcJyKhWmRsBA8WQASUWRw+2+I9LIXQzylP0s/TkD+9m9nGi6DwUJQZfzvW+xtrcFjkZmMRg+P+mXKLMpk/5EuOeo3lhTLoABzpMJVDWV8joLS7s9IUWEZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742909601; c=relaxed/simple;
-	bh=BKF23zGSOyZlQEQGc6GyJrf5li3gckRHl1ef5SAMu58=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jmspOQmmDVRUtAnHDk8st6PHtrVhPq4gTZ8saMpk3pEvfxn6DTyU+PcBY5YUQG+Hmcm2RvCQgiVeMNmT4ug0oNaIdneC4HC0wucoETz+kiR2aVL9JT9Mq6L2DCNoggljfugAbf+Gfhnq6237oSDFaSnWVn1jD/31GX99lo1Yjh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ndT6DZJu; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742909659; c=relaxed/simple;
+	bh=jt/sPjWjug3egJdVdkpI3A7zPt9YVkGXm+6HGHagLDc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lr8ABW3daFuO1qqK3peQ8aRwSNnMsuDI/4Rm5PyuZHsm3eh0n5hcC6XoytIQvG+NwAG3fkzD/2uyJnkvRsNVikjH0mrKuMtJ9QiLdZCapiB9obUp/uL8vOPIeJ8SJfmUcC80j/l9ueEPqkKdqdqvUYqndFIXs1rAGtYRroDfv7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MT2bSinC; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ndT6DZJu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742909600; x=1774445600;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=BKF23zGSOyZlQEQGc6GyJrf5li3gckRHl1ef5SAMu58=;
-  b=ndT6DZJu9CXhUVysvXTCd3Q0/suIBz/+wYZPMUt3lX+x+oAAr/Xtoz++
-   Q9keG1g9FzMIu2hKv5wUbykoMK/unZNIQMRlbF8iOXJc1kRzJd9yJHOT7
-   tF95W39tRILxcmm4c2HXgVzGxmS0koo4jDkVhGcjjEe3NxZClMDwaA01p
-   IZ2jjGnmCatFzoN7h2BK7bXB2ydrPU8mfFds/8sK+dbKcN1sbtVZXTDZ2
-   gpiPo/vRcMUMxNdpOnclE3WeAWtvK/dMGYlEpr8uFMNqwryRDZzp8BDG5
-   G8FjDAoZa8dj6Pk50rqSA6juERgNLBwyHns5Watqivg37K26ytebGyWt1
-   A==;
-X-CSE-ConnectionGUID: kFwRKtEMQVe38NoRWWr+Ug==
-X-CSE-MsgGUID: rzEhD69rQ0SZ1ggFrb280Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11384"; a="31759281"
-X-IronPort-AV: E=Sophos;i="6.14,275,1736841600"; 
-   d="scan'208";a="31759281"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 06:33:18 -0700
-X-CSE-ConnectionGUID: ByO82vrGR8mAPXI+Zm8Xow==
-X-CSE-MsgGUID: Z44/HhGBRQKJKMmZjXOKsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,275,1736841600"; 
-   d="scan'208";a="129489361"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa004.fm.intel.com with ESMTP; 25 Mar 2025 06:33:17 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id DB770367; Tue, 25 Mar 2025 15:33:15 +0200 (EET)
-Date: Tue, 25 Mar 2025 15:33:15 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: "Aithal, Srikanth" <sraithal@amd.com>
-Cc: Linux-Next Mailing List <linux-next@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, "Lendacky, Thomas" <Thomas.Lendacky@amd.com>, 
-	"Roth, Michael" <Michael.Roth@amd.com>
-Subject: Re: linux-next regression: SNP Guest boot hangs with certain cpu/mem
- config combination
-Message-ID: <rar5bkfy7iplfhitsbna3b2dmxbk7nunlaiclwars6kffdetl4@lzm7iualliua>
-References: <363f8293-23e3-44d3-8005-b31eb5b7f975@amd.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MT2bSinC"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7921F4326B;
+	Tue, 25 Mar 2025 13:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1742909654;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6cp05A3ncq1r6TSS05Wy5wCIMMlphKX62znrx7IOhkM=;
+	b=MT2bSinCIIJxoo+uZCXE8NobKCTATTnWXSLD+MEYn1Cbf0q4yFnCAHXwi7ksKtomi1kgg4
+	O53gziaEH8muXl8V/mn5SPTQGdDkfmaMSRo3TtqiLLSN8293XcL/Pxxs4bUTrjTf2tQYd2
+	MQ51TNmeNIjidkLjLWUbWNJG/219tsbchKjtxidLuHMOZV2FItfl8OvXmBsn/k7Yd2ol+Q
+	Z3u58uwdkRWt64sXtcPrXNOTFr0oVKegRhq2yRQnnRxTszSKn1CON//EGSI4xq0vgtXund
+	ZyndzuyJ25ixCMaNHcdqMAPW+1Ht4zbieVJUeCeNfX7RUgTTu3vFr95AEDZw5A==
+Date: Tue, 25 Mar 2025 14:34:11 +0100
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Heiner Kallweit <hkallweit1@gmail.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Herve Codina
+ <herve.codina@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, Vladimir Oltean
+ <vladimir.oltean@nxp.com>, Oleksij Rempel <o.rempel@pengutronix.de>, Simon
+ Horman <horms@kernel.org>, Romain Gantois <romain.gantois@bootlin.com>,
+ Piergiorgio Beruto <piergiorgio.beruto@gmail.com>
+Subject: Re: [PATCH net-next v4 5/8] net: ethtool: netlink: Introduce
+ per-phy DUMP helpers
+Message-ID: <20250325143411.241053ec@kmaincent-XPS-13-7390>
+In-Reply-To: <20250324104012.367366-6-maxime.chevallier@bootlin.com>
+References: <20250324104012.367366-1-maxime.chevallier@bootlin.com>
+	<20250324104012.367366-6-maxime.chevallier@bootlin.com>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <363f8293-23e3-44d3-8005-b31eb5b7f975@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduiedvjeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddupdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhop
+ egvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Tue, Mar 25, 2025 at 02:40:00PM +0530, Aithal, Srikanth wrote:
-> Hello,
-> 
-> 
-> Starting linux-next build next-20250312, including recent build 20250324, we
-> are seeing an issue where the SNP guest boot hangs at the "boot smp config"
-> step:
-> 
-> 
->  [ 2.294722] smp: Bringing up secondary CPUs ...
-> [    2.295211] smpboot: Parallel CPU startup disabled by the platform
-> [    2.309687] smpboot: x86: Booting SMP configuration:
-> [    2.310214] .... node  #0, CPUs:          #1   #2   #3   #4 #5   #6  
-> #7   #8   #9  #10  #11  #12  #13  #14  #15  #16  #17 #18  #19  #20  #21 
-> #22  #23  #24  #25  #26  #27  #28  #29  #30 #31  #32  #33  #34  #35  #36 
-> #37  #38  #39  #40  #41  #42  #43 #44  #45  #46  #47  #48  #49  #50  #51 
-> #52  #53  #54  #55  #56 #57  #58  #59  #60  #61  #62  #63  #64  #65  #66 
-> #67  #68  #69 #70  #71  #72  #73  #74  #75  #76  #77  #78  #79  #80  #81 
-> #82 #83  #84  #85  #86  #87  #88  #89  #90  #91  #92  #93  #94  #95 #96 
-> #97  #98  #99 #100 #101 #102 #103 #104 #105 #106 #107 #108 #109 #110 #111
-> #112 #113 #114 #115 #116 #117 #118 #119 #120 #121 #122 #123 #124 #125 #126
-> #127 #128 #129 #130 #131 #132 #133 #134 #135 #136 #137 #138 #139 #140 #141
-> #142 #143 #144 #145 #146 #147 #148 #149 #150 #151 #152 #153 #154 #155 #156
-> #157 #158 #159 #160 #161 #162 #163 #164 #165 #166 #167 #168 #169 #170 #171
-> #172 #173 #174 #175 #176 #177 #178 #179 #180 #181 #182 #183 #184 #185 #186
-> #187 #188 #189 #190 #191 #192 #193 #194 #195 #196 #197 #198
-> --> The guest hangs forever at this point.
-> 
-> 
-> I have observed that certain vCPU and memory combinations work, while others
-> do not. The VM configuration I am using does not have any NUMA nodes.
-> 
-> vcpus             Mem        SNP guest boot
-> <=240            19456M    Boots fine
-> >=241,<255   19456M    Hangs
-> 1-255              2048M    Boots fine
-> 1-255              4096M    Boots fine
-> >71                 8192M    Hangs
-> >41                 6144M    Hangs
-> 
-> When I bisected this issue, it pointed to the following commit :
-> 
-> 
-> *commit 800f1059c99e2b39899bdc67a7593a7bea6375d8*
-> Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Date:   Mon Mar 10 10:28:55 2025 +0200
-> 
->     mm/page_alloc: fix memory accept before watermarks gets initialized
+On Mon, 24 Mar 2025 11:40:07 +0100
+Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
 
-Hm. It is puzzling for me. I don't see how this commit can cause the hang.
+> As there are multiple ethnl commands that report messages based on
+> phy_device information, let's introduce a set of ethnl generic dump
+> helpers to allow DUMP support for each PHY on a given netdev.
+>=20
+> This logic iterates over the phy_link_topology of each netdev (or a
+> single netdev for filtered DUMP), and call ethnl_default_dump_one() with
+> the req_info populated with ifindex + phyindex.
+>=20
+> This allows re-using all the existing infra for phy-targetting commands
+> that already use ethnl generic helpers.
+>=20
+> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> ---
+> V4 : No changes
+>=20
+>  net/ethtool/netlink.c | 78 +++++++++++++++++++++++++++++++++++++++++++
+>  net/ethtool/netlink.h |  6 ++++
+>  2 files changed, 84 insertions(+)
+>=20
+> diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+> index 0345bffa0678..171290eaf406 100644
+> --- a/net/ethtool/netlink.c
+> +++ b/net/ethtool/netlink.c
+> @@ -560,6 +560,84 @@ static int ethnl_default_dump_one(struct sk_buff *sk=
+b,
+>  	return ret;
+>  }
+> =20
+> +/* Specific context for phy-targeting command DUMP operatins. We keep in
+> context
+> + * the latest phy_index we dumped, in case of an interrupted DUMP.
+> + */
+> +struct ethnl_dump_ctx_perphy {
+> +	unsigned long phy_index;
+> +};
+> +
+> +/**
+> + * ethnl_dump_start_perphy() - Initialise a dump for PHY cmds
+> + * @ctx: Generic ethnl dump context whose cmd_ctx will be initialized
+> + *
+> + * Initializes a dump context for ethnl commands that may return
+> + * one message per PHY on a single netdev.
+> + *
+> + * Returns: 0 for success, a negative value for errors.
 
-Could you track down where hang happens?
+Minimal nitpick. In the kernel doc Return does not take a s.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+> +/**
+> + * ethnl_dump_one_dev_perphy() - Dump all PHY-related messages for one n=
+etdev
+> + * @skb: skb containing the DUMP result
+> + * @ctx: Dump context. Will be kept across the DUMP operation.
+> + * @info: Genl receive info
+> + *
+> + * Some commands are related to PHY devices attached to netdevs. As there
+> may be
+> + * multiple PHYs, this DUMP handler will populate the reply with one mes=
+sage
+> per
+> + * PHY on a single netdev.
+> + *
+> + * Returns: 0 for success or when nothing to do, a negative value otherw=
+ise.
+
+Same.
+
+Reviewed-by: Kory Maincent <kory.maincent@bootlin.com>
+
+Thank you!
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
