@@ -1,67 +1,39 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B5CD530
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 08:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B1F1A5B9B
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 08:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742889880; cv=none; b=N9Tp+XSphBF9mjJjNucYTAUG4rpo7UTFt513kXnG2e6qorsPAIBN/vI+BOTUjZSpwNeQLhMcV3HL4EhMqAisnWMlUOiM6yXP03Lr33RFv3r5gsyX+oimV8UQKiTWc2PCIPruN+S/UMBe2ALNy0S+Kj40RZOauXTsrOwuxbtkoB0=
+	t=1742890016; cv=none; b=S5AKgGPr2fgxF7Pxr1fbIWLDqF1axWc2wgvU3h3fcfOhChsPTYF1e+93TGjZvNce355YQAEJ3PmSw3N/mwSZgwcyq5FzzdPlDsL+kt1aN1wzrjx1a0FsjaWfzHY+b1dz4pK1SS5nkVh+H6nwJbd9T8GpK9TK/mAMDpEpSqluT9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742889880; c=relaxed/simple;
-	bh=yqmQrP8iFtg6eBho0ncA9LV+PFNUu6PVgOioXYl82t4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JMVuFctehfqoW6nuJSheO6GDClM7VX8QJkA5dbwaL1BpZxI1fmRVU0MjAVTMNcVh0HvdW7FDPSoVcG9MF+3E6TUFmtZvZys7QeEBQ8uQ1TTcqfJTavyK6OhvnEQjiewrrotX/bl33Y9mozKmRBWmv/O6MnaZDYlHuuMBpBDe/88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kMdkIpJ/; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1742890016; c=relaxed/simple;
+	bh=d1/jH92hinFbeqB+glZ2Uw1fPSGgDPmQEFNpJCOf8JY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hxS6N7HLd0r361Exq+/ADCDLPulWV61889Agsv20ggqtUbLb//ncl89IFoYhQSbKpBUU/uyB8Uhpw+u1XToV6KwViTng5cHeJPNAS07/7YBn/gtBDkQE5ahT6gCzVGTyzHBNotCgO0ayss8L/tdut0SITIqR4NYmYYFq+XCiI/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O0OlD6aa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kMdkIpJ/"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2240b4de12bso32744475ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 01:04:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1742889878; x=1743494678; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AUtkKoa3g3hBxsspuzhFy0YyIsrFmT1mIyA+rh1WJbg=;
-        b=kMdkIpJ/wKPZkNWmjDICN4xePY0TXmvRCoj17Wz1fPjCTZ6EdRZCrKmThef4HqGwvp
-         GmjXDPCfFkW52dCrbADqy0Y1S76765RSxbloTeYZSM0cjEuLpab5qGXTJxkdwxcvDfG0
-         /VuHX/bx7zVUMRFoT70lXiyjgAfXjuKylq7Bw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742889878; x=1743494678;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AUtkKoa3g3hBxsspuzhFy0YyIsrFmT1mIyA+rh1WJbg=;
-        b=pVDc+phBskan6wFjoYr0PGPeeIUvSnQp01baDZOgyLKXSRP5wO7cUYfR47HEx5sv/u
-         UUrA0NCpfFad2xezRz8np9V22onB+zulOtil21dc33FCBcAnJPRHqgADdFYGeoBrQhpS
-         OgaSdZshh9f10LQe5bLYJr0HtzMeAEId2O6spSS1KHANEIgPJHtzvwxxOBpOHuKywSPZ
-         zhvURIH9FunJ0AKm5PQShyszhf+LGkxYLQDJjiUZxOwm0LfNurm3JC+hH8FsLtBTK9Ek
-         xguVgeBZ3VzBKEPIEaW4P8thAcLJMKI2cr0jyBaHvit78SHjKEH2cPDjJaviR4wZ/FQG
-         a5hQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXit0bhyTjMRaDYfSz9i68mNI5FGcYMmTEToqQILfcKWtSZ1kU7X6LjQITS4gGwgNZ2VKKLH0i7Xp3N51c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHE8cvwlCMnxT5xuzWzz4Ru/xVuQEhXfmI+a1arsXAxdQcdWdl
-	WuSuoBvRGl+lzD3zpDG+/azp4lPkUQKPWaJRNPdPniS/lEncEmvmO9NeFRFZTmG7ctfXt4cDTuJ
-	r/g==
-X-Gm-Gg: ASbGncuI4fh6gG3wxtsxfuOyeOdPuVVabVODtNPeVsaxjATo/revE74aOo0KT4ftQRh
-	VVad2TeUiRi9b15itHjqKiLLU0zyh+ixloj4bxB18GDmFdxL6HA3t1r97JvnUjLU7HEc3mlT4ta
-	HkK7lKSintGk/QbRv6mre2TBJA2Lv+aw4LzOs2m4rSy5u3c2svDdXSLf6vmfa/QjnjXs4EgHmNk
-	4QDRZqXPzTCgUOMNDq4gyEpZgPpeBvPNBLJG/RIjdkIL66knear0PcCKuHGPVHwui5NuZ1EHVYN
-	yUgIAtTc8Ofu4TxJTTPOlDMhvh6kiafXxu/SXE4FkkiX/wPIEz9ONt0RnsMPeRnH/Vn/rRI=
-X-Google-Smtp-Source: AGHT+IHAczMfLGWCXdItIfmDjlXsPg9Gkemi2vQzJKAzlGMp9AUyeZeYvL1KX3k2HFar1A+vaZb7UA==
-X-Received: by 2002:a17:902:ef02:b0:220:be86:a421 with SMTP id d9443c01a7336-22780e14e9cmr278300215ad.38.1742889877565;
-        Tue, 25 Mar 2025 01:04:37 -0700 (PDT)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:f107:eb57:41d8:a285])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22780f45862sm83817215ad.70.2025.03.25.01.04.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 01:04:36 -0700 (PDT)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Minchan Kim <minchan@kernel.org>,
-	linux-mm@kvack.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O0OlD6aa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62576C4CEE4;
+	Tue, 25 Mar 2025 08:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742890015;
+	bh=d1/jH92hinFbeqB+glZ2Uw1fPSGgDPmQEFNpJCOf8JY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=O0OlD6aaJhUCv1SQ835KWyeuPRRXoytUKVSY79g1wore4dFkCnCV8AvFZp0zyFAlp
+	 VpjZUJL1hoXUXq6nYebTgbGST+z3zYtGNj6Y2L6fkRItn3M74lxxI2x+RqT9XGIjlQ
+	 26yKYDgkUokrqPFRkXyxrGbDQDhKNEzTH29B+WN8o5uLbNKpRxBbizDSZCKdJN9M9F
+	 1pgTMd67peHn8gekSMgbYXi9pjR/kjhejYsuzsyiw6KEl3DLYBfP02iw6BKpLXi4/w
+	 r8yZOHgmY/GqrOuJC6qa81n+QTt1HFBn2mJSZoe/FAcgg/H5EItVJ6gBNlNdh8zBKR
+	 hv+TIyUei7I9w==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
 	linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH] zsmalloc: cleanup headers includes
-Date: Tue, 25 Mar 2025 17:04:16 +0900
-Message-ID: <20250325080427.3449359-1-senozhatsky@chromium.org>
+	Chao Yu <chao@kernel.org>,
+	Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH v2 1/2] f2fs: zone: fix to calculate first_zoned_segno correctly
+Date: Tue, 25 Mar 2025 16:06:45 +0800
+Message-ID: <20250325080646.3291947-1-chao@kernel.org>
 X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -71,64 +43,138 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove unused headers includes from zsmalloc and move
-pagemap.h and migrate.h includes into zpdesc header.
+A zoned device can has both conventional zones and sequential zones,
+so we should not treat first segment of zoned device as first_zoned_segno,
+instead, we need to check zone type for each zone during traversing zoned
+device to find first_zoned_segno.
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+Otherwise, for below case, first_zoned_segno will be 0, which could be
+wrong.
+
+create_null_blk 512 2 1024 1024
+mkfs.f2fs -m /dev/nullb0
+
+Fixes: 9703d69d9d15 ("f2fs: support file pinning for zoned devices")
+Cc: Daeho Jeong <daehojeong@google.com>
+Signed-off-by: Chao Yu <chao@kernel.org>
 ---
- mm/zpdesc.h   |  3 +++
- mm/zsmalloc.c | 12 +-----------
- 2 files changed, 4 insertions(+), 11 deletions(-)
+v2:
+- traverse w/ zone unit in get_first_zoned_segno()
+ fs/f2fs/f2fs.h    | 18 +++++++++++++-----
+ fs/f2fs/segment.c |  2 +-
+ fs/f2fs/super.c   | 37 +++++++++++++++++++++++++++++++++----
+ 3 files changed, 47 insertions(+), 10 deletions(-)
 
-diff --git a/mm/zpdesc.h b/mm/zpdesc.h
-index fa47fece2237..57e7a4d6c6ca 100644
---- a/mm/zpdesc.h
-+++ b/mm/zpdesc.h
-@@ -7,6 +7,9 @@
- #ifndef __MM_ZPDESC_H__
- #define __MM_ZPDESC_H__
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index ca884e39a5ff..3dea037faa55 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -4630,12 +4630,16 @@ F2FS_FEATURE_FUNCS(readonly, RO);
+ F2FS_FEATURE_FUNCS(device_alias, DEVICE_ALIAS);
  
-+#include <linux/migrate.h>
-+#include <linux/pagemap.h>
+ #ifdef CONFIG_BLK_DEV_ZONED
+-static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
+-				    block_t blkaddr)
++static inline bool f2fs_zone_is_seq(struct f2fs_sb_info *sbi, int devi,
++							unsigned int zone)
+ {
+-	unsigned int zno = blkaddr / sbi->blocks_per_blkz;
++	return test_bit(zone, FDEV(devi).blkz_seq);
++}
+ 
+-	return test_bit(zno, FDEV(devi).blkz_seq);
++static inline bool f2fs_blkz_is_seq(struct f2fs_sb_info *sbi, int devi,
++								block_t blkaddr)
++{
++	return f2fs_zone_is_seq(sbi, devi, blkaddr / sbi->blocks_per_blkz);
+ }
+ #endif
+ 
+@@ -4711,9 +4715,13 @@ static inline bool f2fs_valid_pinned_area(struct f2fs_sb_info *sbi,
+ 					  block_t blkaddr)
+ {
+ 	if (f2fs_sb_has_blkzoned(sbi)) {
++#ifdef CONFIG_BLK_DEV_ZONED
+ 		int devi = f2fs_target_device_index(sbi, blkaddr);
+ 
+-		return !bdev_is_zoned(FDEV(devi).bdev);
++		return !f2fs_blkz_is_seq(sbi, devi, blkaddr);
++#else
++		return true;
++#endif
+ 	}
+ 	return true;
+ }
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 396ef71f41e3..dc360b4b0569 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -3311,7 +3311,7 @@ int f2fs_allocate_pinning_section(struct f2fs_sb_info *sbi)
+ 
+ 	if (f2fs_sb_has_blkzoned(sbi) && err == -EAGAIN && gc_required) {
+ 		f2fs_down_write(&sbi->gc_lock);
+-		err = f2fs_gc_range(sbi, 0, GET_SEGNO(sbi, FDEV(0).end_blk),
++		err = f2fs_gc_range(sbi, 0, sbi->first_zoned_segno - 1,
+ 				true, ZONED_PIN_SEC_REQUIRED_COUNT);
+ 		f2fs_up_write(&sbi->gc_lock);
+ 
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 011925ee54f8..9a42a1323f42 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -4307,12 +4307,33 @@ static void f2fs_record_error_work(struct work_struct *work)
+ 
+ static inline unsigned int get_first_zoned_segno(struct f2fs_sb_info *sbi)
+ {
++#ifdef CONFIG_BLK_DEV_ZONED
++	unsigned int zoneno, total_zones;
+ 	int devi;
+ 
+-	for (devi = 0; devi < sbi->s_ndevs; devi++)
+-		if (bdev_is_zoned(FDEV(devi).bdev))
+-			return GET_SEGNO(sbi, FDEV(devi).start_blk);
+-	return 0;
++	if (!f2fs_sb_has_blkzoned(sbi))
++		return NULL_SEGNO;
 +
- /*
-  * struct zpdesc -	Memory descriptor for zpool memory.
-  * @flags:		Page flags, mostly unused by zsmalloc.
-diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
-index 961b270f023c..2119af63d0d4 100644
---- a/mm/zsmalloc.c
-+++ b/mm/zsmalloc.c
-@@ -26,17 +26,10 @@
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/sched.h>
--#include <linux/bitops.h>
- #include <linux/errno.h>
- #include <linux/highmem.h>
- #include <linux/string.h>
- #include <linux/slab.h>
--#include <linux/pgtable.h>
--#include <asm/tlbflush.h>
--#include <linux/cpumask.h>
--#include <linux/cpu.h>
--#include <linux/vmalloc.h>
--#include <linux/preempt.h>
- #include <linux/spinlock.h>
- #include <linux/sprintf.h>
- #include <linux/shrinker.h>
-@@ -44,11 +37,8 @@
- #include <linux/debugfs.h>
- #include <linux/zsmalloc.h>
- #include <linux/zpool.h>
--#include <linux/migrate.h>
--#include <linux/wait.h>
--#include <linux/pagemap.h>
- #include <linux/fs.h>
--#include <linux/local_lock.h>
-+#include <linux/workqueue.h>
- #include "zpdesc.h"
++	for (devi = 0; devi < sbi->s_ndevs; devi++) {
++		if (!bdev_is_zoned(FDEV(devi).bdev))
++			continue;
++
++		total_zones = GET_ZONE_FROM_SEG(sbi, FDEV(devi).total_segments);
++
++		for (zoneno = 0; zoneno < total_zones; zoneno++) {
++			unsigned int segs, blks;
++
++			if (!f2fs_zone_is_seq(sbi, devi, zoneno))
++				continue;
++
++			segs = GET_SEG_FROM_SEC(sbi,
++					zoneno * sbi->secs_per_zone);
++			blks = SEGS_TO_BLKS(sbi, segs);
++			return GET_SEGNO(sbi, FDEV(devi).start_blk + blks);
++		}
++	}
++#endif
++	return NULL_SEGNO;
+ }
  
- #define ZSPAGE_MAGIC	0x58
+ static int f2fs_scan_devices(struct f2fs_sb_info *sbi)
+@@ -4349,6 +4370,14 @@ static int f2fs_scan_devices(struct f2fs_sb_info *sbi)
+ #endif
+ 
+ 	for (i = 0; i < max_devices; i++) {
++		if (max_devices == 1) {
++			FDEV(i).total_segments =
++				le32_to_cpu(raw_super->segment_count_main);
++			FDEV(i).start_blk = 0;
++			FDEV(i).end_blk = FDEV(i).total_segments *
++						BLKS_PER_SEG(sbi);
++		}
++
+ 		if (i == 0)
+ 			FDEV(0).bdev_file = sbi->sb->s_bdev_file;
+ 		else if (!RDEV(i).path[0])
 -- 
-2.49.0.395.g12beb8f557-goog
+2.48.1
 
