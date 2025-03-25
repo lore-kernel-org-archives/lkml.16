@@ -1,101 +1,87 @@
-Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6467A537E9;
-	Tue, 25 Mar 2025 11:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39388254AE7;
+	Tue, 25 Mar 2025 11:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742900750; cv=none; b=MbtqrHTVAT3Y/DxjYtVXMqho0NL6KLBX8PHbJeracjqYo+224QXstkOBoIfDSkVNnsRgpXHy8seIX4dTob0Y9xY9PnGnothze8ovQX4F6nodRcTydax182xP1l3kkKDQDjY88stXe0Rd0jPg5LHP3/vcAJoYhb16uJr7kvIivTo=
+	t=1742900799; cv=none; b=qFkVJmnZQP2Zq97/Ms8SArS7dTt3u1BVElXcE1a8i65dnAkCJyGg0rVH69F+MV/EHYNuqlioCjcNrehiLQ6m0MQFavHOVtDSLqjIKj+cBYglc+VS2ECW+3L2d2sZXmC1L+xGRNOcO9r5pQ4+vnZkG7hjX95nHpiTrdIOoe4vqSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742900750; c=relaxed/simple;
-	bh=RE1crkjfDMTRfO9l+NkEoKH5Q2VQv5QCMnn24nrgW2Y=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R9k3Xf5ek9YMrZJzSJQjkNdSv4pGCe468rPxmqpFqVAkP37gThoraOyxCTIvYKnLHYlwU7R4wVZl3BCzOpKDMnKOF2iTpa/4DSmv3Y4Nt1Ifd4Tl2L+89azCREGEN7Bqofb4JX0iq+YjyeNgub1EdsJRdhFekVtmmCJJWyKQaqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=GvzDdMjA; arc=none smtp.client-ip=79.135.106.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1742900799; c=relaxed/simple;
+	bh=D0N/mgLzCXi4oZJoUT9/lMZngBeCJnMRqCEe8RPVzCw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gQ05cZxF/aJ2jTEX85ApRfHrCX/P0AlCeLcoouX6swHoEIVMYFHgc2BNepvlWNBNFwmyt2gxqSloVscQAfb5D/s/VAQ1aoIJixbfFOQXqFcuEwe9o4D3UMKhXgfo6z6XcuFEIUyWwKb9jskxt7i5BpC7BXdFXdAg75txaRGUWms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BDM6SVMI; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="GvzDdMjA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=hkgfeukzircddjyssmulfeqlhi.protonmail; t=1742900744; x=1743159944;
-	bh=ZTrBETovGBbpxaZItuToVrfYc/UT5EF5gB+KAeul71U=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=GvzDdMjAUG7NS1sIsIN2ySv/tEePVztcY+FA/xzy7VQx0a3x+TFR30bbwt2Eu10wU
-	 CGFA0AkdW+g9/NNAC4Wc9SA7LUHKsA30BQuzj9bqyZSmTnFEf7nV7RHigfUJakwEnd
-	 3h2OVFvIvBXZ0VDaaU1b+5wR041AqHZlk8B2jz6SRvOQKzImecs5GrSEVFRvuokfsj
-	 9oiWa9J/5keCoKrgomvku1hsfe9iQyjKB/LaxECf5adMnVsnnQ5aGDqlmeEfwPke9Y
-	 7gPPw50JJ9ssVhSVR3QE7wXr9ivWCGrPqOU+qieHTem5y/S6pG3Lb1hnTBLklO7Aao
-	 D3SMfk/3USJPw==
-Date: Tue, 25 Mar 2025 11:05:40 +0000
-To: Tamir Duberstein <tamird@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 0/6] rust: reduce pointer casts, enable related lints
-Message-ID: <D8PAQXHJDVQE.36QKQGBVVL4QU@proton.me>
-In-Reply-To: <CAJ-ks9nc0ptzfh+tHj47aTCMqoaKB0SnGpZOLQ06upt7x8EBMQ@mail.gmail.com>
-References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com> <D8ORTXSUTKGL.1KOJAGBM8F8TN@proton.me> <CAJ-ks9n-z0SETz+zBfJmda6Q_vJDeM2jmDXx48xX9qpMmR-mdQ@mail.gmail.com> <D8OTXLDQCOKI.34R1U5R0JSB8H@proton.me> <CAJ-ks9nc0ptzfh+tHj47aTCMqoaKB0SnGpZOLQ06upt7x8EBMQ@mail.gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 43fd8f7124349bec9ba6525a35e3b09516fe44d7
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BDM6SVMI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1742900795;
+	bh=D0N/mgLzCXi4oZJoUT9/lMZngBeCJnMRqCEe8RPVzCw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BDM6SVMILwPq70pCVbl5bItk8GC0tcw9Yf/34rYFw6mCnsN+0yUhfJ/hjiEeDmn72
+	 U/rtTB5SmTcJGgmK3BZgMDjTc0hOnJaukjn/UNzwgBnVk7brn9q0PkuiUIBfUuZDFV
+	 /zv/Zxa8KTIPQG2taIBBWZ5p/GXotmZq93q8rvpyMR3QhlH9TaqL4UWMJLUDFeiJav
+	 oaWEJjL7EdSh00MXLBQG9R/fO5qaK1ES5NL0feETn5ewOfDXhGrOCpSZC+OTwfLJOL
+	 KAzWvgqVBrQpvPHyVOUJI/5otjdYifxjbuAroFyqWGttAulvH7kZxZ+7Cd/mLVZAPr
+	 QrTihiq9olnjw==
+Received: from [192.168.50.250] (unknown [171.76.87.92])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8ED1117E09D6;
+	Tue, 25 Mar 2025 12:06:30 +0100 (CET)
+Message-ID: <c71855d0-2638-4f06-9b75-cdbd137837bb@collabora.com>
+Date: Tue, 25 Mar 2025 16:36:00 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] drm/ci: uprev mesa
+To: Daniel Stone <daniel@fooishbar.org>
+Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com,
+ helen.fornazier@gmail.com, airlied@gmail.com, simona.vetter@ffwll.ch,
+ robdclark@gmail.com, guilherme.gallo@collabora.com,
+ sergi.blanch.torne@collabora.com, valentine.burley@collabora.com,
+ lumag@kernel.org, quic_abhinavk@quicinc.com, mripard@kernel.org,
+ jani.nikula@linux.intel.com, linux-mediatek@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ amd-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250314085858.39328-1-vignesh.raman@collabora.com>
+ <20250314085858.39328-2-vignesh.raman@collabora.com>
+ <CAPj87rMjF84yyPqBshuGu=8qx6Xhq9Z-HgEnQe=tRtbu3E8OtQ@mail.gmail.com>
+Content-Language: en-US
+From: Vignesh Raman <vignesh.raman@collabora.com>
+In-Reply-To: <CAPj87rMjF84yyPqBshuGu=8qx6Xhq9Z-HgEnQe=tRtbu3E8OtQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon Mar 24, 2025 at 10:59 PM CET, Tamir Duberstein wrote:
-> On Mon, Mar 24, 2025 at 5:55=E2=80=AFPM Benno Lossin <benno.lossin@proton=
-.me> wrote:
->> On Mon Mar 24, 2025 at 9:55 PM CET, Tamir Duberstein wrote:
->> > On Mon, Mar 24, 2025 at 4:16=E2=80=AFPM Benno Lossin <benno.lossin@pro=
-ton.me> wrote:
->> >> * `cast_lossless` (maybe this catches some of the `num as int_type`
->> >>   conversions I mentioned above)
->> >
->> > Yeah, suggested the same above. I had hoped this would deal with the
->> > char as u32 pattern but it did not.
->>
->> Aw that's a shame. Maybe we should create a clippy issue for that,
->> thoughts?
->
-> Yeah, it's not clear to me why it isn't covered by `cast_lossless`.
-> Might just be a bug. Want to file it?
 
-Done: https://github.com/rust-lang/rust-clippy/issues/14469
+On 21/03/25 15:56, Daniel Stone wrote:
+> Hi Vignesh,
+> 
+> On Fri, 14 Mar 2025 at 08:59, Vignesh Raman <vignesh.raman@collabora.com> wrote:
+>> LAVA was recently patched [1] with a fix on how parameters are parsed in
+>> `lava-test-case`, so we don't need to repeat quotes to send the
+>> arguments properly to it. Uprev mesa to fix this issue.
+> 
+> Thanks a lot; the series is:
+> Acked-by: Daniel Stone <daniels@collabora.com>
 
->> >> I'll leave it up to you what you want to do with this: add it to this
->> >> series, make a new one, or let someone else handle it. If you don't w=
-ant
->> >> to handle it, let me know, then I'll create a good-first-issue :)
->> >
->> > I'll add a patch for `cast_lossless` -- the rest should probably go
->> > into an issue.
->>
->> Do you mind filing the issue? Then you can decide yourself what you want
->> to do yourself vs what you want to leave for others. Feel free to copy
->> from my mail summary.
->
-> Well, I don't really know what's left to do. We're pretty close at
-> this point to having enabled everything but the nukes. Then there's
-> the strict provenance thing, which I suppose we can write down.
+Applied to drm-misc-next.
 
-Yes, but there are also these from my original mail:
-* `shared_ref as *const _` (for example in rust/kernel/uaccess.rs:247,
-  rust/kernel/str.rs:32 and rust/kernel/fs/file.rs:367), these we can
-  replace with `let ptr: *const ... =3D shared_ref;`. Don't know if there
-  is a clippy lint for this.
+Regards,
+Vignesh
 
-And the other points (haven't taken a look at the other series you
-submitted, so I don't know to what extend you fixed the other `as` casts
-I mentioned). So I figured you might know which ones we still have after
-applying all your patches :)
-
----
-Cheers,
-Benno
+> 
+> Cheers,
+> Daniel
+> 
 
