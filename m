@@ -1,98 +1,82 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C609D481B6;
-	Tue, 25 Mar 2025 08:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709BC19539F;
+	Tue, 25 Mar 2025 08:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742892558; cv=none; b=DG8GqvzVgBGvEXnjfuBuNe7Jq52zY9RbBq8vT2KgRzFgc6W9WS/ux3iu7PnbOuCY2UdzO3z5D4s1T5ho9zs8QPpnnzb3cp27EIPoFv7N+wbjaaLD2LjeLKTOiAYC5594ZWquOXQgpTWXD7EG1JIy83vpAlpGspVDMbQiL2vNksI=
+	t=1742892603; cv=none; b=lWZS125hIpGzqICtAfiWE6cwxRRuHJJLXHwBtSSy1HCTFjptkG857of8IxmhFjelFx0BKirLGzBS14rswqW5CenNCA6OHP1WikwuElvIagBQrKeM59+sN+d75MUpTN/tgVW5eEAL9xW5/3w/sggsX+n1b97lZmT65L6mq9AliZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742892558; c=relaxed/simple;
-	bh=UTMqa3/iThHUj62i5Lna3n7hgfqWAVpg9kIVXMcn2OA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T8nEc5oxxP3gfarTeoq14507Njul2d9iEZoWApuaTJ6+y9xQtRhKMB82gnfZYWT7NEKuXUn1COCH2PJo4nsyS0FGyWLKTngsYz8sy/NMAALyURHpMBGt1Kp0UJix1EHyox0FEYA036Q9W+0dilBKblUQDN7i7wwKnAbPxCW+IBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YVOnmoX9; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YVOnmoX9"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2ff6cf448b8so12336459a91.3;
-        Tue, 25 Mar 2025 01:49:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742892556; x=1743497356; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UTMqa3/iThHUj62i5Lna3n7hgfqWAVpg9kIVXMcn2OA=;
-        b=YVOnmoX9jive5YIjppaYTAfgrUjifJ8LR77P+mfFb0w+hb9RVSiq+JUFDzUtcMYoBd
-         6dIME2sMyKcZtDOyVN0WHKhviOBVDYul5ecN/opT+E6Y4mDiAJBQdOnSbxHcYmwANbPf
-         Uoi3TLbU5irxj999kZE3g4pvZ8o3wzHCbjFBlDrGfYD8aqGRFpd//GJZnOuw0LhBlsar
-         kUJKzeyUTYAfLzVkkKm0VDEtuHvYqT0LudMWB1DPd47LcQmGPjiWGL44YiNg9kzZnyWF
-         IwcNIkU6jdST8AX8XU7471+oS5v9Sead1KgSLV0EssdognzjWDD9xFjvgORpwanOm+EP
-         3kog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742892556; x=1743497356;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UTMqa3/iThHUj62i5Lna3n7hgfqWAVpg9kIVXMcn2OA=;
-        b=nwGHQza2oC9xzd1rhK9RtZfPTCudin4YpoOGD4KSk57rMZFcUAOEW7wFasvRAACqeO
-         LeIhiKIkg4/YEIfosqQ5YGXcpnaNJR6bYfyR7YEbtTbk9Jwgbr3LtKh2EdnVZGdCoDAo
-         QPjThUItCtSV+DhAPmlbsCLZ3OCsUA3kv2otl+LbZbGFTlzxzJKwXEIAwxrkS3yUxnWi
-         sU7TN83UcIZg7SkcjDUDFctqaEnBmq220KLe56d34hOk/ni56/1vhA+L0Y0vVXbsqpho
-         vRZOyTVtXnCMXu2phYBzf9AE1vhLMuNSssZDGFDHpcWCnyD7DuRNh8l90axbIqb0dxyb
-         JKMw==
-X-Forwarded-Encrypted: i=1; AJvYcCWA24goVu1NDM9B5NfW2Sw8Pipv7drM+um6aDfOK0uygRi8LOxWkJtHPOHRhbrKLdHQmc7eC1OW+ooVpSc7@vger.kernel.org, AJvYcCWycoHalPfYmKAS+v/v7MoA65TTxkOwiE1PhwfgE9KrwYZHvGeGvCKuyvnvrmfroT4B2rl9pSjOby9t@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwVklbgF7g8+X/Zz7y79bwHMqJoPyp5NNk5/eoK0bjCSap1+QR
-	o/d+STc7EsW8Eyeh5My0Hj8/xPhOofFtPBDHxSLpwqhiQc9I1b9Zax9iWpn4I7s1febZte7Ef2n
-	0+DNHUBewTyp3WBKfxmQoSpI84aQ=
-X-Gm-Gg: ASbGncveLiipdQj7rSg75ar5HlfZhSqH6dwKPQExN+uPVNZkNYWJwxJmDTjLLQdTycg
-	w8GNVklZe1ACxDgVD+A4/9sjfYdAgPZ+whY0zUdhrRlWAWefhWFTg5VHrZ9+1hJj27XkzuP/y6S
-	jUC7og2zHo5cNGUi15D9x8hgk=
-X-Google-Smtp-Source: AGHT+IGdUevWbt9B6OCFjrfKlwOyeQ+1e0MLr3UjHCkhv56/tA48akFvVsynr6iH2spJ/xGrmJk6TrqDw1VcLtJz89Y=
-X-Received: by 2002:a17:90b:3d8b:b0:2ee:ee77:2263 with SMTP id
- 98e67ed59e1d1-3030fe855d1mr26348075a91.7.1742892555925; Tue, 25 Mar 2025
- 01:49:15 -0700 (PDT)
+	s=arc-20240116; t=1742892603; c=relaxed/simple;
+	bh=FfUABFV3Rho9t3XDs2Bwqr8KWC+RMXbPAWjmd5zovqY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SNE83Qfk1PGZ15H83ExEpP/Ov61pSbTAgy7N1hXyGer1J86/FI44vvrI8Is6mJpLN7ae0WOURFQw6LqIUkbjoCLV8IjxOPP2yP3cnDKpos1mAXvuZQNsQIPOjn0p2Ey706lYrtCZ18A7q9qTz4LRLd+qYd29IeuNwttvvf3Ub/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-05 (Coremail) with SMTP id zQCowABHhg4wbuJnzkdJAQ--.5332S2;
+	Tue, 25 Mar 2025 16:49:53 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: shenghao-ding@ti.com,
+	kevin-lu@ti.com,
+	baojun.xu@ti.com,
+	perex@perex.cz,
+	tiwai@suse.com
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] ALSA: hda: tas2781-i2c: Remove unnecessary NULL check before release_firmware()
+Date: Tue, 25 Mar 2025 16:49:39 +0800
+Message-Id: <20250325084939.801117-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324234013.140440-1-marex@denx.de>
-In-Reply-To: <20250324234013.140440-1-marex@denx.de>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Tue, 25 Mar 2025 10:50:42 +0200
-X-Gm-Features: AQ5f1Jp83_swMO_7jm3Y2fbbueh5o_M1drf9oc9W2FWr-Vtdud0qx3Z5t9ySw6k
-Message-ID: <CAEnQRZB068dzjLmeoFdPtcX_Wc_Or0idd_J0OKi-UqgD=Lmcaw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: imx: document i.MX 95 Verdin
- Evaluation Kit (EVK)
-To: Marek Vasut <marex@denx.de>
-Cc: linux-arm-kernel@lists.infradead.org, 
-	Alexander Stein <alexander.stein@ew.tq-group.com>, Conor Dooley <conor+dt@kernel.org>, 
-	Fabio Estevam <festevam@gmail.com>, Francesco Dolcini <francesco.dolcini@toradex.com>, 
-	Frieder Schrempf <frieder.schrempf@kontron.de>, Hiago De Franco <hiago.franco@toradex.com>, 
-	Joao Goncalves <joao.goncalves@toradex.com>, 
-	Joao Goncalves <jpaulo.silvagoncalves@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Max Merchel <Max.Merchel@ew.tq-group.com>, Michael Walle <mwalle@kernel.org>, 
-	Peng Fan <peng.fan@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Rob Herring <robh@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
-	Tim Harvey <tharvey@gateworks.com>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowABHhg4wbuJnzkdJAQ--.5332S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtw18ZF4ktr4xXry8Cry7Awb_yoW3CFc_CF
+	s5Gr1kWF18X39rZa13AF1Y9ryfXasrZ34xXr1fKFWUJa97ta1Fg34UCF1DuFW5urW8ArnI
+	9r1DAFyDAryqgjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbV8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v2
+	6r1q6r43MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
+	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+	1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
+	x4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
+	DU0xZFpf9x0JUgAwsUUUUU=
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-On Tue, Mar 25, 2025 at 1:40=E2=80=AFAM Marek Vasut <marex@denx.de> wrote:
->
-> Document support for i.MX 95 Verdin Evaluation Kit (EVK), which
-> used to be the Titan EVK.
->
-> Note that the SoM used in this EVK is a derivative SoM from Verdin
-> line of SoMs, an actual i.MX95 Verdin SoM is under development.
->
-> [1] https://www.toradex.com/computer-on-modules/verdin-arm-family/nxp-imx=
-95-evaluation-kit
->
-> Signed-off-by: Marek Vasut <marex@denx.de>
+release_firmware() checks for NULL pointers internally.
+Remove unneeded NULL check for fmw here.
 
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ sound/pci/hda/tas2781_hda_i2c.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
+index 50c5e5f26589..9ed49b0dbe6b 100644
+--- a/sound/pci/hda/tas2781_hda_i2c.c
++++ b/sound/pci/hda/tas2781_hda_i2c.c
+@@ -753,8 +753,7 @@ static void tasdev_fw_ready(const struct firmware *fmw, void *context)
+ 
+ out:
+ 	mutex_unlock(&tas_hda->priv->codec_lock);
+-	if (fmw)
+-		release_firmware(fmw);
++	release_firmware(fmw);
+ 	pm_runtime_mark_last_busy(tas_hda->dev);
+ 	pm_runtime_put_autosuspend(tas_hda->dev);
+ }
+-- 
+2.25.1
+
