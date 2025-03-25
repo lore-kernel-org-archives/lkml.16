@@ -1,66 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6583254875;
-	Tue, 25 Mar 2025 07:36:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E1E254B11;
+	Tue, 25 Mar 2025 07:36:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742888175; cv=none; b=QdWNovj5CcPILGxLa1PfK7yfvpeWhkaoYuCulS9o7hozHF+P564W8pJFQKgD7kKN9vC62FEpzDX8yffS//0J/ocTlw65keKqu0lrvcnXEa34xkPKFt8wwAUBat4nIVqf5Req7HfJHObdu+5w/Si0P4yliBUKj1bNwIipjYbmY8Q=
+	t=1742888176; cv=none; b=erPvh5jSbbuqL2VZ7iZiDJIUtJ1/MxlbDm5JJg3IQx0IlctZKggk/I3LPa/1r9ctXwDk90GYZ0hvTrP4NpqPFF9wL9nG6AV4PhLsBcItMNsK5m9/N2N6vkX2M1jTmMkBsHrvh5REPPc9McwylyP55MolMFLvZ7bWJC3n1NckaF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742888175; c=relaxed/simple;
-	bh=Lx1PJbvslMbNmiHVFuw2FXiK1aKxMD1a0iON26OuN7A=;
+	s=arc-20240116; t=1742888176; c=relaxed/simple;
+	bh=R/Bgk2ZQhhQ82+k9KnMxR3d8RUARWiiYu0D0pp/nBdc=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=BDqK2YyKnOkVekLZwCGQ6Th+yJiuwDq9CnL7/RAaKXrpB2DkE9ztQ2aZR+E7WYFxP0LItjPskw0FElM67K8MSM79VV85c5J11MkTsVHK5O2MSVAOg3P6+DyxwV7yKHN6QsYJ8qq9QuZkFNBcc/0c8jXYThFIHnhAcE0HlMssZP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TYbIMiWj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TZtC9PVW; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=pY0owEsN2CCbwfcP5ygwrb9wKuqrVn/EYSnScj2ZwtvMhcP+3jPftctVor0RS1WUHJVV3LXsxmBmzIVTisyj52DrAwTyrtR7ewpiMNYkH0gHdEaU3rlDaDeLXRQoyNETyL7G0AmQw5GiEz4CjHEiLHxCWG5IL3Uq3Ey8EolVgeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=spcXUgax; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=m9kiiZiW; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TYbIMiWj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TZtC9PVW"
-Date: Tue, 25 Mar 2025 07:36:11 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="spcXUgax";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="m9kiiZiW"
+Date: Tue, 25 Mar 2025 07:36:12 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742888172;
+	s=2020; t=1742888173;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1fppa6bYAw4iiAvZ22nEdAa+0WZHQgSFclB/nruij0k=;
-	b=TYbIMiWjlhLZ6X/P4h0RggQNyCUKXXaZZ5Oz2leJOiIFdAIsqbUG3AhyS5VAfA7py+Ahyh
-	4u2vNOfdd+O7CQrZZ4UPZV9Y2x7BhpFzdgMldU4V8f4wkJKNOK64zCep6GrMfGTx4G9C3t
-	Vi/ppERyPQtKNQiw/XvrG7r/6EudFbrGNDRq/tNlghbDFp0i97hqj5FQOfXjkIvjKaESZM
-	TQJbdGBnSQEpb4sOnUFWPHq8xiDa9vIl4HCK4PXmsElaStBbFR7025lciXpJkOYrFs9X48
-	2cCfdsL9FFqyiBwDU5Efi7o2tm9AHtw7nkCLm0JBwHpaGLb9PfA5+f0P7rXeSg==
+	bh=dtqWtCDlIlO358Ff/Ea1lcxBaWSM/8os8O/8ZhUe+iI=;
+	b=spcXUgax9pNbQ6ISm/JTxn2kA2mbD9bg5FAHcAGTtozgyV8/eWm8rxGxn9+ul/4Mg5Pu2m
+	vtfvYtJ4S8NGnRqs0vdukUAxaiF4DheULxhGtQH3BnJSLd/RagFCjzHH8305ZB1EQ0F/Fl
+	CgdgqxMHk9Nx2WipzacjjjkLLpL6IGWp+2CrM9CzJO33fIV5LKX7zIHt2MUS3UTGZRQfx9
+	FU5liE7shu8VFH+q4qqcZ/hLNeeQ+oHKlqH3BIAF+BUSF34k2SrcxbyYgN3IrqDzqJPc5m
+	eGOYO4+jz0pAt9oKRQ1cjqwur/3qsufjX2tnKQ1axcvmD35TLMBhrIrye4HcOA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742888172;
+	s=2020e; t=1742888173;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1fppa6bYAw4iiAvZ22nEdAa+0WZHQgSFclB/nruij0k=;
-	b=TZtC9PVWgDVgReAO1MT+VX325auxJEMAddeiH9wikDNdz3IhjOTjAHZv1LwfMrB245oLcy
-	4COD8XOBqRWLrTAA==
+	bh=dtqWtCDlIlO358Ff/Ea1lcxBaWSM/8os8O/8ZhUe+iI=;
+	b=m9kiiZiWUoYTtdHnZN0VVpM0k7g2DnQrb7NHL8NLXkiJF5qSN++iBQc/9n47oEw8AI/RRc
+	GfdTH34bDBb+XHAQ==
 From:
  tip-bot2 for Mateusz =?utf-8?q?Jo=C5=84czyk?= <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/Kconfig: Move all X86_EXTENDED_PLATFORM options
- together
-Cc: mat.jonczyk@o2.pl, David Heidelberg <david@ixit.cz>,
+Subject: [tip: x86/urgent] x86/Kconfig: Always enable ARCH_SPARSEMEM_ENABLE
+Cc: mat.jonczyk@o2.pl, David Heideberg <david@ixit.cz>,
  Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
  Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250321-x86_x2apic-v3-3-b0cbaa6fa338@ixit.cz>
-References: <20250321-x86_x2apic-v3-3-b0cbaa6fa338@ixit.cz>
+In-Reply-To: <20250321-x86_x2apic-v3-2-b0cbaa6fa338@ixit.cz>
+References: <20250321-x86_x2apic-v3-2-b0cbaa6fa338@ixit.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174288817165.14745.16947126967594704519.tip-bot2@tip-bot2>
+Message-ID: <174288817228.14745.8439055529176907969.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,65 +69,48 @@ Content-Transfer-Encoding: quoted-printable
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     e35e328d37ee20df9a4dc9c4b0478f9e6b2c8c3e
-Gitweb:        https://git.kernel.org/tip/e35e328d37ee20df9a4dc9c4b0478f9e6b2=
-c8c3e
+Commit-ID:     31be5041dca37a67c11042678c55804e964e5145
+Gitweb:        https://git.kernel.org/tip/31be5041dca37a67c11042678c55804e964=
+e5145
 Author:        Mateusz Jo=C5=84czyk <mat.jonczyk@o2.pl>
-AuthorDate:    Fri, 21 Mar 2025 21:48:45 +01:00
+AuthorDate:    Fri, 21 Mar 2025 21:48:44 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Sat, 22 Mar 2025 08:02:16 +01:00
 
-x86/Kconfig: Move all X86_EXTENDED_PLATFORM options together
+x86/Kconfig: Always enable ARCH_SPARSEMEM_ENABLE
 
-So that these options will be displayed together in menuconfig etc.
+It appears that (X86_64 || X86_32) is always true on x86.
 
+This logical OR directive was introduced in:
+
+  6ea3038648da ("arch/x86: remove depends on CONFIG_EXPERIMENTAL")
+
+By (EXPERIMENTAL && X86_32) turning into (X86_32). Since
+this change was an identity transformation, nobody noticed
+that the condition turned into 'true'.
+
+[ mingo: Updated changelog ]
+
+Fixes: 6ea3038648da ("arch/x86: remove depends on CONFIG_EXPERIMENTAL")
 Signed-off-by: Mateusz Jo=C5=84czyk <mat.jonczyk@o2.pl>
-Signed-off-by: David Heidelberg <david@ixit.cz>
+Signed-off-by: David Heideberg <david@ixit.cz>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250321-x86_x2apic-v3-3-b0cbaa6fa338@ixit.cz
+Link: https://lore.kernel.org/r/20250321-x86_x2apic-v3-2-b0cbaa6fa338@ixit.cz
 ---
- arch/x86/Kconfig | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ arch/x86/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 442936d..d6155b9 100644
+index 08bc939..442936d 100644
 --- a/arch/x86/Kconfig
 +++ b/arch/x86/Kconfig
-@@ -665,6 +665,17 @@ config X86_INTEL_QUARK
- 	  Say Y here if you have a Quark based system such as the Arduino
- 	  compatible Intel Galileo.
+@@ -1563,7 +1563,6 @@ config ARCH_FLATMEM_ENABLE
 =20
-+config X86_RDC321X
-+	bool "RDC R-321x SoC"
-+	depends on X86_32
-+	depends on X86_EXTENDED_PLATFORM
-+	select M486
-+	select X86_REBOOTFIXUPS
-+	help
-+	  This option is needed for RDC R-321x system-on-chip, also known
-+	  as R-8610-(G).
-+	  If you don't have one of these chips, you should say N here.
-+
- config X86_INTEL_LPSS
- 	bool "Intel Low Power Subsystem Support"
- 	depends on X86 && ACPI && PCI
-@@ -718,17 +729,6 @@ config IOSF_MBI_DEBUG
-=20
- 	  If you don't require the option or are in doubt, say N.
-=20
--config X86_RDC321X
--	bool "RDC R-321x SoC"
--	depends on X86_32
--	depends on X86_EXTENDED_PLATFORM
--	select M486
--	select X86_REBOOTFIXUPS
--	help
--	  This option is needed for RDC R-321x system-on-chip, also known
--	  as R-8610-(G).
--	  If you don't have one of these chips, you should say N here.
--
- config X86_SUPPORTS_MEMORY_FAILURE
+ config ARCH_SPARSEMEM_ENABLE
  	def_bool y
- 	# MCE code calls memory_failure():
+-	depends on X86_64 || NUMA || X86_32
+ 	select SPARSEMEM_STATIC if X86_32
+ 	select SPARSEMEM_VMEMMAP_ENABLE if X86_64
+=20
