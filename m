@@ -1,140 +1,252 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC29208AD;
-	Tue, 25 Mar 2025 14:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742911685; cv=pass; b=lVhA5TkYi85LeELMI7WZrMd188Ah1etb2dMc3En+mXIDbOd5vexLJp88Z2s52TPfCzofFT0BglNbDBYtPQ2lUFNkdwc4zEIbOFBko117se1ffMgIB5Umm5mvEgZEzkpEeexuk/jR2fVKtKR9/nX8hybzL/1rG79myHzRtuH/pC8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742911685; c=relaxed/simple;
-	bh=+yPgbq8PJ4VlPYRGbamSTIRXpblzNbpZIay/fJTTm5I=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=QMynOLkr6zx2koOdqnx38wNomllTtDuW6oDAWJkevvObn0YtQlPjVPMWusQFlyAC/NXu7HZznhC9ry+6d0YfD3qOyr3aTbPHA0dDSZGanYVU6naQJul4n0Vv2WoP3QC8sca966Bze21NeVOcKG8dA+ANNTmkRxTEwvShRRFllyI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=ENGJ+IzY; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F995208AD
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742911744; cv=none; b=pRF628cnA3NGR1qAK1PlAMwBTFMwIIa4/hCi014/+9tG6kiD75ufcUrgS5mEUPX82iwlygbNElKl809Cx0IyG9B3T7OZWkFbTtbH9olCojYsYtmTJg+UTkiamv0ca1BZ6qzLzAtYKmEw+iC8wFN2YDfYqogd7YM2EUI0YDK+LXQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742911744; c=relaxed/simple;
+	bh=yEFyQ+YEa66hv43lkoEthZojt8e1UeJhq1ZZTPWRgUM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RLz0PSN8yJHzlNLQ+Eq8cQzJdDWCMBxWL2afY+N/V3WqwowV2kvWX3HwEC3Wd5DXQP7TTahhDB8q2zPYmihmv80M4gqgt/1e0TQ6bl+i88LR9EN2WnobatVAffkS9hbf5cWxWSaJbZGjJBP0ESKNneJb8MRLhIcTCiYDMMpbGgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PJDsJptU; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="ENGJ+IzY"
-ARC-Seal: i=1; a=rsa-sha256; t=1742911534; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=mfy/NLz6wtDNIHxjcWrFHpoI1hSiSb1LE5wq3SdYWpfXGkwBDGL1Vr2mVbk5Q8A+EDKkIMudKetTmBMZ1IpgzATQcw1SJ3C+YJndFZJ6qg+rKr4CgGORsJE8qxsXFUI/FQQgX9BIbZiYr5XLCm/FM/h3CmYl+A1WhtNsw7pJZe0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1742911534; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=66ru/BCUrl3ikGnmgfKgGg2NIvsWKX5AYiBRkpu1Vgw=; 
-	b=i745S3b8dT4Ou3bU41RP5gki0BvxJoI9JLIgMojvXw2xjkMWcg1RsXci69awKJ7AowRPJLD669uD/XKZk+bdE0lYM1DWCT6k1UwLDN2MWamA8sLpUHABvRYUYQvcMGkLnGoy5a9LJ/n9EpbE9Yy0CUw+4oYfwzkSXSxstUBiFWk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742911533;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=66ru/BCUrl3ikGnmgfKgGg2NIvsWKX5AYiBRkpu1Vgw=;
-	b=ENGJ+IzYu9vz5R33cX7LJfq4nCAaI7TGqVzQQhSq4tzTQ4TiTp5+kJXiqel7cILW
-	yH8Rj0cgpNy6HUGSs0n51FYC8/KXLg3RJSyvkc3KFCSP52VmgPfiBJR6qM+1QtGjjqG
-	qJLueDxb6l70iysd3ZHD66KyS8OsLRfs7nvhEelQ=
-Received: by mx.zohomail.com with SMTPS id 1742911532141346.48228251988894;
-	Tue, 25 Mar 2025 07:05:32 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="PJDsJptU"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-549963b5551so5832691e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 07:09:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1742911740; x=1743516540; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VjEJTGwVhUIjztw3KP/oH70yQTBLfj6JtyAZjLxBC88=;
+        b=PJDsJptUg3vJROMrz3qhSzyB+/tPWiGP8pWfUJ4xeCKVg1zvOeWecy13R9beBffkc3
+         4kvENdyWtMrGxKM/CD0/15EpdYa8McrDxwm+QzgE2ADYamGEU1XgWu8XaJ6zBRmu//bg
+         XZWVostlmiMnSHoKY2jyV2x7aA3pJkO6ysSuFLBYTtI9pQv76ulrIsedFEkPAzcPB72L
+         ErpdLICnpVez1bnFY4jmf7A578NrvknZNJaC9o/u5CUmIkTh9NDDu/pEd+s7xlmmlySt
+         Lx4mbEl1gti1eUuy2rFondwglBvv/FVUQ8eVDUXrjVq4cebSmaLYSXQN5PHqc1jevZ3R
+         q5Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742911740; x=1743516540;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VjEJTGwVhUIjztw3KP/oH70yQTBLfj6JtyAZjLxBC88=;
+        b=UJdd2klFg3C/8gUX+1CaHCbQUQbkJRbeJBc8j++YlcIuqjjxkP+4laNI3L/+t3lEY5
+         ImY8pR79he8BOoT8FePnXaFlko267vZUDxUuTyUkjl60OnW9ciZLtcsNNCDRsiMzEOJM
+         bTWhvYamX851JDbhMBxPMeQzYwGvOzlywK2+JLa7cnJNbHVXCZsFIe4ygu84CmXAWnB8
+         nXDyNMMpVC1i7hRudtd3l416Oo96hLV2q79aTr511XEmFp6cC1qbNi6hgOlan93Qhqhj
+         kWY3pq0N9i/uNxDqArAxe8DbhWqZ/rygaSKT9oB/AJnPOu+AhGicknYXtJ7KQghiOBjI
+         53OA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZA27zxzFZ1zS7F573Dx2P4rXjQpES6MCdu/E4LBBQWrcBgqbirzGU7qXI8LXt7XI3+Q3OYhZv+S7NXJI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKlT22r8XQx8XbBl4wV3wbZJmJFKQ3RdRrh73hjuIw0IPvkvJe
+	ym/LTUCcesf5/NirLXus+w5BIPxOB3pA4QXfWJilH8AXFOtSxnLTLS1BsCaLGP83Wb10HAJFP/t
+	x5cIxIQcXq3IjTUYazFxYwI4PZgcVc08lAWPcuds/qRGUUI3eN5g=
+X-Gm-Gg: ASbGncvrwQOndT1GpZaECf1/BMwsQgPJlLtctGjidmJNYPu//aSBTx3BjV2l/Dy4Ill
+	lGagJhSbjxhgQQuLbFbKx87GUBU6aP88rd3P5gNL9POH0PfmRpzthLN07YKm31BCLhXQdUz0xhM
+	ZO4kOD8VDdrHoWn6F4V+0HSmOKefPLKuWcPj/O+YiBhmXYOm2CjWU4pD+RfsQ=
+X-Google-Smtp-Source: AGHT+IGw6S5yD+IBHotmaDJyxDTPyEw6PJSg+VCpcrXJj7AIg+Xb8SZNfNEnKDculW6j0WN9hgtnb2ub6yP2QbppJec=
+X-Received: by 2002:a05:6512:130e:b0:549:8f47:e67d with SMTP id
+ 2adb3069b0e04-54ad64f514amr6471396e87.34.1742911738644; Tue, 25 Mar 2025
+ 07:08:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH v4 08/11] scripts: generate_rust_analyzer.py: define host
- crates
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250322-rust-analyzer-host-v4-8-1f51f9c907eb@gmail.com>
-Date: Tue, 25 Mar 2025 11:05:13 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Boris-Chengbiao Zhou <bobo1239@web.de>,
- Kees Cook <kees@kernel.org>,
- Fiona Behrens <me@kloenk.dev>,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Lukas Wirth <lukas.wirth@ferrous-systems.com>
+MIME-Version: 1.0
+References: <20250315194002.13778-1-marco.crivellari@suse.com>
+ <20250315194002.13778-2-marco.crivellari@suse.com> <alpine.DEB.2.21.2503211146001.35806@angie.orcam.me.uk>
+ <CAAofZF4gy6WJKLK4TzF5aV7+ca3gob5jVz3XQZyGrTpfnCsn_Q@mail.gmail.com> <alpine.DEB.2.21.2503211747150.35806@angie.orcam.me.uk>
+In-Reply-To: <alpine.DEB.2.21.2503211747150.35806@angie.orcam.me.uk>
+From: Marco Crivellari <marco.crivellari@suse.com>
+Date: Tue, 25 Mar 2025 15:08:47 +0100
+X-Gm-Features: AQ5f1JoGtUqdWJbsEESSlI1H3F9eC50SxCsvdhJPefcOrqBa1h6p4DAHjABqL_M
+Message-ID: <CAAofZF5yaGMG0Kyax+ksfGngQ0T6AxvN5-60SnasQh7=OabaOg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/1] MIPS: Fix idle VS timer enqueue
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Frederic Weisbecker <frederic@kernel.org>, 
+	Anna-Maria Behnsen <anna-maria@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <B6E056CC-610F-451E-969B-ADA141BA2EC5@collabora.com>
-References: <20250322-rust-analyzer-host-v4-0-1f51f9c907eb@gmail.com>
- <20250322-rust-analyzer-host-v4-8-1f51f9c907eb@gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
-X-ZohoMailClient: External
+
+Hi Maciej,
+
+Thanks a lot for all the information.
+
+>  Unlike `__r4k_wait' that code is not in a `.set noreorder' region and
+> the assembler will therefore resolve the hazard by inserting a NOP where
+> required by the architecture level requested (with `-march=3D...', etc.).
+> Try compiling that function for a MIPS III configuration such as
+> decstation_r4k_defconfig or just by hand with `-march=3Dmips3' and see
+> what machine code is produced.
+
+I tried with the configuration you suggested, and indeed I can see a NOP.
+
+>  Whatever manual you quote it refers to MIPS Release 2, which is only
+> dated 2003
+
+About the MIPS manual, anyhow, it is "MIPS32 M4 Processor Core" (year 2008)=
+.
+Maybe I've also picked the wrong manual.
+
+I've also found the manual you mentioned online, thanks.
+
+>  Best is to avoid using a `.set noreorder' region in the first place.
+> But is it really needed here?  Does the rollback area have to be of a
+> hardcoded size rather than one calculated by the assembler based on
+> actual machine code produced?  It seems to me having it calculated would
+> reduce complexity here and let us use the EI instruction where available
+> as well.
+
+Well, considering the complexity and how the code looks fragile even with
+a small change, yes, that's likely better to avoid noreorder.
+
+I think I'm going to need some guidance here.
+Please, correct me where something is wrong.
+
+1)
+When you say "let us use the EI instruction where available" are you
+referring to do
+something like below?
+
+#if defined(CONFIG_CPU_HAS_DIEI)
+ei
+#else
+MFC0    t0, CP0_STATUS
+ori     t0, 0x1f
+xori    t0, 0x1e
+MTC0    t0, CP0_STATUS
+#endif
+
+2)
+Removing "noreorder" would let the compiler add "nops" where they are neede=
+d.
+But that still means the 3 ssnop and ehb are still needed, right?
+
+My subsequent dumb question is: there is the guarantee that the
+compiler will not
+reorder / change something we did?
+This question also came after reading the manual you quoted (paragraph
+"Coprocessor Hazards"):
+
+"For example, after an mtc0 to the Status register which changes an
+interrupt mask bit,
+there will be two further instructions before the interrupt is
+actually enabled or disabled.
+[...]
+To cope with these situations usually requires the programmer to take expli=
+cit
+action to prevent the assembler from scheduling inappropriate
+instructions after a
+dangerous mtc0. This is done by using the .set noreorder directive,
+discussed below"
+
+3)
+Considering the size is determined by the compiler, the check about
+the idle interrupt
+size region should not be needed, correct?
+
+4)
+ori and PTR_ADDIU should be removed of course from the rollback handler mac=
+ro.
+Can I have some hints about the needed change?
+Using QEMU is always working, so I'm not sure if what I will change is
+also correct.
+
+
+Many thanks in advance, also for your time!
 
 
 
-> On 22 Mar 2025, at 10:23, Tamir Duberstein <tamird@gmail.com> wrote:
->=20
-> Define host crates used by the `macros` crate separately from target
-> crates, now that we can uniquely identify crates with the same name.
->=20
-> This avoids rust-analyzer thinking the host `core` crate has our =
-target
-> configs applied to it.
->=20
-> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
-> Link: =
-https://lore.kernel.org/all/CANiq72mw83RmLYeFFoJW6mUUygoyiA_f1ievSC2pmBESs=
-Qew+w@mail.gmail.com/
-> Reviewed-by: Fiona Behrens <me@kloenk.dev>
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
-> scripts/generate_rust_analyzer.py | 10 ++++++----
-> 1 file changed, 6 insertions(+), 4 deletions(-)
->=20
-> diff --git a/scripts/generate_rust_analyzer.py =
-b/scripts/generate_rust_analyzer.py
-> index de1193117161..bd6e321a6aa5 100755
-> --- a/scripts/generate_rust_analyzer.py
-> +++ b/scripts/generate_rust_analyzer.py
-> @@ -143,10 +143,12 @@ def generate_crates(
->     # NB: sysroot crates reexport items from one another so setting up =
-our transitive dependencies
->     # here is important for ensuring that rust-analyzer can resolve =
-symbols. The sources of truth
->     # for this dependency graph are `(sysroot_src / crate / =
-"Cargo.toml" for crate in crates)`.
-> +    host_core =3D append_sysroot_crate("core", [])
-> +    host_alloc =3D append_sysroot_crate("alloc", [host_core])
-> +    host_std =3D append_sysroot_crate("std", [host_alloc, host_core])
-> +    host_proc_macro =3D append_sysroot_crate("proc_macro", =
-[host_core, host_std])
-> +
->     core =3D append_sysroot_crate("core", [], =
-cfg=3Dcrates_cfgs.get("core", []))
-> -    alloc =3D append_sysroot_crate("alloc", [core])
-> -    std =3D append_sysroot_crate("std", [alloc, core])
-> -    proc_macro =3D append_sysroot_crate("proc_macro", [core, std])
->=20
->     compiler_builtins =3D append_crate(
->         "compiler_builtins",
-> @@ -157,7 +159,7 @@ def generate_crates(
->     macros =3D append_proc_macro_crate(
->         "macros",
->         srctree / "rust" / "macros" / "lib.rs",
-> -        [std, proc_macro],
-> +        [host_std, host_proc_macro],
->     )
->=20
->     build_error =3D append_crate(
->=20
-> --=20
-> 2.48.1
->=20
->=20
 
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
+On Fri, Mar 21, 2025 at 9:11=E2=80=AFPM Maciej W. Rozycki <macro@orcam.me.u=
+k> wrote:
+>
+> On Fri, 21 Mar 2025, Marco Crivellari wrote:
+>
+> > >  This instruction sequence still suffers from the coprocessor move de=
+lay
+> > > hazard.  How many times do I need to request to get it fixed (countin=
+g
+> > > three so far)?
+> >
+> > Can I have more details about this?
+> >
+> > I can see it is the same code present also in local_irq_enable()
+> > (arch_local_irq_enable()),
+>
+>  Unlike `__r4k_wait' that code is not in a `.set noreorder' region and
+> the assembler will therefore resolve the hazard by inserting a NOP where
+> required by the architecture level requested (with `-march=3D...', etc.).
+> Try compiling that function for a MIPS III configuration such as
+> decstation_r4k_defconfig or just by hand with `-march=3Dmips3' and see
+> what machine code is produced.
+>
+> > and from the manual I've seen:
+> >
+> > "The Spacing column shown in Table 2.6 and Table 2.7 indicates the
+> > number of unrelated instructions (such as NOPs or SSNOPs) that,
+> > prior to the capabilities of Release 2, would need to be placed
+> > between the producer and consumer of the hazard in order to ensure
+> > that the effects of the first instruction are seen by the second instru=
+ction."
+> >
+> > The "Spacing column" value is 3, indeed.
+> >
+> > "With the hazard elimination instructions available in Release 2, the
+> > preferred method to eliminate hazards is to place one of the
+> > instructions listed in Table 2.8 between the producer and consumer of t=
+he
+> > hazard. Execution hazards can be removed by using the EHB [...]"
+>
+>  Whatever manual you quote it refers to MIPS Release 2, which is only
+> dated 2003 (following Release 1 from 2001), but `__r4k_wait' has to
+> continue handling older architecture revisions going back to MIPS III
+> ISA from 1991.  We also support MIPS I ISA from 1985 which has further
+> instruction scheduling requirements, but `__r4k_wait' is for newer
+> processors only, because older ones had no WAIT instruction, so we can
+> ignore them (but note that the MIPS I load delay slot is regardless
+> observed in current code in the form of a NOP inserted after LONG_L).
+>
+> > What am I missing?
+>
+>  This is common MIPS knowledge really, encoded in the GNU toolchain and
+> especially GAS since forever.  While I can't cite a canonical reference,
+> the hazard is listed e.g. in Table 13.1 "Instructions with scheduling
+> implications" and Table 13.3 "R4xxx/R5000 Coprocessor 0 Hazards" from
+> "IDT MIPS Microprocessor Family Software Reference Manual," Version 2.0,
+> from October 1996.  I do believe the document is available online.
+>
+>  I'm fairly sure the hazard is also listed there in Dominic Sweetman's
+> "See MIPS Run Linux," but I don't have my copy handy right now.
+>
+>  Best is to avoid using a `.set noreorder' region in the first place.
+> But is it really needed here?  Does the rollback area have to be of a
+> hardcoded size rather than one calculated by the assembler based on
+> actual machine code produced?  It seems to me having it calculated would
+> reduce complexity here and let us use the EI instruction where available
+> as well.
+>
+>  HTH,
+>
+>   Maciej
 
 
+
+--
+
+Marco Crivellari
+
+L3 Support Engineer, Technology & Product
+
+
+
+
+marco.crivellari@suse.com
