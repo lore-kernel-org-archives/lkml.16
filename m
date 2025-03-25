@@ -1,119 +1,155 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5507C25A323;
-	Tue, 25 Mar 2025 12:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD51E25A33E;
+	Tue, 25 Mar 2025 12:20:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742905205; cv=none; b=aG804TQdkK+FsRCdCa3uhJAknIs6SFoeqZS+PSNYuB7gScp3+edBz83SQfUiaIC63RCP1NA/7iKUzzZTtD1pgirBZ2jgtGteGsJDRYTdgaxjt0mWniKCS3YZEgI/7ajRnXsdGmbQvfQUoF1RpPaSBczmiFetNGVaskMTgiK+Vog=
+	t=1742905206; cv=none; b=FO0PeYUj9mjI3XtLL6EhdgFMKI4Bl2lYHYrOVB7XgWKXg2ISuc0flfpA4uNxiPsSzm3lnmhREEyUyKisfXnTvFobCbs6V56DX8Vt4QUzenfLlHiGa/4sRUVVrgXLQyEl4VnAs92V4Ngxn7kg9TLooPA0I4/utOuZQhPm8l+x1ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742905205; c=relaxed/simple;
-	bh=W+zbuGuOsjMsAwj1TeKVa2TREDPoShSYxlcNLgWYVEk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Kz6tPoVXGaGMpeLn9TskJhK/x7YpmeJ1L0oty1beP5HEjn25MtFpBdUx7rfGO+Olss6tHLgIA2UlaYLBY2jwr6F3YPJlmu2XbKzTz0fVP4jix9cA/HJznS11C5Oq3kzBN/ts7P+Xk5J/c8ApDXribHxi+lWR60A4KokOGEQxbOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=iI10GOZx; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1742905206; c=relaxed/simple;
+	bh=S5onwW8Rhyiou8sUliJC71k2++Mi5WmKeWwnQHNXJR4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nXNg+hccrfbi5znxnNMx3O7P6GmaBFUO4T1wLGqNL8gGhXq9MLH8L9op6nJ7RGrFeiSuBcLNcYxFDfc9wrz8qoG/DYZWkCJIuwPdxFCVlti8z8qu3qCq2ksjzcjHc+NCXyEnDMhZYUvcTYDwfas0ISkLLqsmhWokv4v027dcDMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLdkNpDM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="iI10GOZx"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id BAD1F102F66FF;
-	Tue, 25 Mar 2025 13:19:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1742905201; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=NWmWtlj/ywJV6x0SVa10Ru5jBz9yI3s7yAlnn7HAP+A=;
-	b=iI10GOZxX1mHgyM2u8+7/hdsGhCCl9XeQNlR9159nd7Yrmp1M9EzyoQznOCNezfJNl+mJ9
-	SugwMDIGDHQIt+JVt4gZ5jtXRMz5XkD7mYkyoH+3BBQsC6Wep4HQmwCEBLJguay3eUz7UO
-	a++388I8tOOmPQB3cMRAuhPNSnW6ZWmqKY49V2c5IiK5nn5VJccHfnIESBHN9fzadsHgW9
-	Xl3+WTEZKlPTP/gQXxOBNmcm+5pZf5nfRnW+HkKaqVdVO0M7unZEoNF4KEl9D0/hrc9Gqb
-	jTvv2XpW46Zt70RZ+tso/GL43Wd/7AiEZ0vMVJoY64YbV5uAx1kHujfKwWVfZw==
-Date: Tue, 25 Mar 2025 13:19:58 +0100
-From: Lukasz Majewski <lukma@denx.de>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Paolo Abeni <pabeni@redhat.com>, Jakub
- Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
- davem@davemloft.net, Andrew Lunn <andrew+netdev@lunn.ch>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- devicetree@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Richard
- Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org, Maxime
- Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH 3/5] arm: dts: Adjust the 'reg' range for imx287 L2
- switch description
-Message-ID: <20250325131958.552fbd0b@wsk>
-In-Reply-To: <93c9bc3d-7ad8-438e-966e-cd28a91540af@kernel.org>
-References: <20250325115736.1732721-1-lukma@denx.de>
-	<20250325115736.1732721-4-lukma@denx.de>
-	<93c9bc3d-7ad8-438e-966e-cd28a91540af@kernel.org>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLdkNpDM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4631C4CEED;
+	Tue, 25 Mar 2025 12:19:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742905206;
+	bh=S5onwW8Rhyiou8sUliJC71k2++Mi5WmKeWwnQHNXJR4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SLdkNpDMElfs6JtH93HL2qjB8ooc8njsv/pKcwCApdLyBmrRvX5jPuX625CrCL3KO
+	 LLg2i7GO2jiDdmvOrZJHbXmmZ//hxLsMMV2R487NeFcTSsmqjUedkLmuzv7hLlERU6
+	 kiuccu5qk3IkbjYpbkj/s/pT/RPFgjJK5adv7y6A6BEEgO8BBTscDUHE/YjxJcfAd0
+	 ppo9vCiFRV5Tz05przlyIDyBiWv9hSmTIygPLI/aoXi+ZELjeBp9iCTv0eEu9tP+Tz
+	 vHMjNE6CxPdHgma3URda2HPkGEEkWTjPcCLQMXFENwL53LrB+OGroHLD8Txjexf9jd
+	 7/iF+KyP6XFLQ==
+From: guoren@kernel.org
+To: arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	torvalds@linux-foundation.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	anup@brainfault.org,
+	atishp@atishpatra.org,
+	oleg@redhat.com,
+	kees@kernel.org,
+	tglx@linutronix.de,
+	will@kernel.org,
+	mark.rutland@arm.com,
+	brauner@kernel.org,
+	akpm@linux-foundation.org,
+	rostedt@goodmis.org,
+	edumazet@google.com,
+	unicorn_wang@outlook.com,
+	inochiama@outlook.com,
+	gaohan@iscas.ac.cn,
+	shihua@iscas.ac.cn,
+	jiawei@iscas.ac.cn,
+	wuwei2016@iscas.ac.cn,
+	drew@pdp7.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	ctsai390@andestech.com,
+	wefu@redhat.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	josef@toxicpanda.com,
+	dsterba@suse.com,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	boqun.feng@gmail.com,
+	guoren@kernel.org,
+	xiao.w.wang@intel.com,
+	qingfang.deng@siflower.com.cn,
+	leobras@redhat.com,
+	jszhang@kernel.org,
+	conor.dooley@microchip.com,
+	samuel.holland@sifive.com,
+	yongxuan.wang@sifive.com,
+	luxu.kernel@bytedance.com,
+	david@redhat.com,
+	ruanjinjie@huawei.com,
+	cuiyunhui@bytedance.com,
+	wangkefeng.wang@huawei.com,
+	qiaozhe@iscas.ac.cn
+Cc: ardb@kernel.org,
+	ast@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-crypto@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	maple-tree@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-atm-general@lists.sourceforge.net,
+	linux-btrfs@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	linux-nfs@vger.kernel.org,
+	linux-sctp@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-media@vger.kernel.org
+Subject: [RFC PATCH V3 14/43] rv64ilp32_abi: riscv: Adapt kernel module code
+Date: Tue, 25 Mar 2025 08:15:55 -0400
+Message-Id: <20250325121624.523258-15-guoren@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20250325121624.523258-1-guoren@kernel.org>
+References: <20250325121624.523258-1-guoren@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/iHkkBmAY=t74XA_T2X_ZYbS";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
 
---Sig_/iHkkBmAY=t74XA_T2X_ZYbS
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: "Guo Ren (Alibaba DAMO Academy)" <guoren@kernel.org>
 
-Hi Krzysztof,
+Because riscv_insn_valid_32bit_offset is always true for ILP32,
+use BITS_PER_LONG instead of CONFIG_64BIT.
 
-> On 25/03/2025 12:57, Lukasz Majewski wrote:
-> > The current range of 'reg' property is too small to allow full
-> > control of the L2 switch on imx287.
-> >=20
-> > As this IP block also uses ENET-MAC blocks for its operation, the
-> > address range for it must be included as well.
-> >  =20
->=20
-> Please use subject prefixes matching the subsystem. You can get them
-> for example with `git log --oneline -- DIRECTORY_OR_FILE` on the
-> directory your patch is touching. For bindings, the preferred
-> subjects are explained here:
-> https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-pat=
-ches.html#i-for-patch-submitters
->=20
-> Missing nxp or mxs.
+Signed-off-by: Guo Ren (Alibaba DAMO Academy) <guoren@kernel.org>
+---
+ arch/riscv/kernel/module.c   | 2 +-
+ include/asm-generic/module.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Ok. I will add it.
+diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
+index 47d0ebeec93c..d7360878e618 100644
+--- a/arch/riscv/kernel/module.c
++++ b/arch/riscv/kernel/module.c
+@@ -45,7 +45,7 @@ struct relocation_handlers {
+  */
+ static bool riscv_insn_valid_32bit_offset(ptrdiff_t val)
+ {
+-#ifdef CONFIG_32BIT
++#if BITS_PER_LONG == 32
+ 	return true;
+ #else
+ 	return (-(1L << 31) - (1L << 11)) <= val && val < ((1L << 31) - (1L << 11));
+diff --git a/include/asm-generic/module.h b/include/asm-generic/module.h
+index 98e1541b72b7..f870171b14a8 100644
+--- a/include/asm-generic/module.h
++++ b/include/asm-generic/module.h
+@@ -12,7 +12,7 @@ struct mod_arch_specific
+ };
+ #endif
+ 
+-#ifdef CONFIG_64BIT
++#if BITS_PER_LONG == 64
+ #define Elf_Shdr	Elf64_Shdr
+ #define Elf_Phdr	Elf64_Phdr
+ #define Elf_Sym		Elf64_Sym
+-- 
+2.40.1
 
->=20
-> Best regards,
-> Krzysztof
-
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/iHkkBmAY=t74XA_T2X_ZYbS
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmfin24ACgkQAR8vZIA0
-zr3N/gf8DYEFypnfPCvqTv0w1mjjvKAqlgERVYVIbxHIpd/6t5B0hhaY3vRUWPyJ
-VUqi8YCx8uavVTRzDM59fSfmYcFzOe7rUv9fVvS4+W3AtxqTmtndRXZUrFAtXrPf
-LwfMfvqJuoKPiLLcfPZQpNNY6iuzehkmrmcO+0MmOmsPNVHWsXUG/mmoefrSIy/Q
-yUysj6v1UeS8nm2XOXYf7Pij0CFaCgMDE7zdzziTkkLtBYywTPxMfUbNv8DjFUSX
-Xa6M/GMe39ehOU92VOjF0TRxyiDNXgRZ4kibznKZFpohskhQ1IugoT2tyXDspA6b
-JauuHhBMQ/y+Om9HVWaZV3LjzVe05Q==
-=TLOn
------END PGP SIGNATURE-----
-
---Sig_/iHkkBmAY=t74XA_T2X_ZYbS--
