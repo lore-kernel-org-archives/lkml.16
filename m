@@ -1,178 +1,106 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F772030A
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 15:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75AF256C7A;
+	Tue, 25 Mar 2025 15:14:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742915593; cv=none; b=WkRFA3C3+vL69HN4IIpWohYe5kalYKSZIegrUTPk/tiPEo4jI/D2qHCN49lJDZkS/knVI6JUoyfaz7B70/dw1ZFVmQVeumNw67NNnLxenZElshLoLD+nWeSEP5a3Ry+ReV+mpMCxrlX22v9Vrkz7Z1NzTExQ4aNyCIoAzLuQfdg=
+	t=1742915659; cv=none; b=kYCS61yt6+K4kiTu8rwkk8LGyDW+dE6AYQoknR3O+ye6+lx/ngKuovXLvRzkexare+fvs48AclozEgGKxPSeD9qyjzj7CVkdBf1f+2tos4nonPvecC4GRV8fDojEj1yDVcfpXLgD5BHNLEcFA8smLwOxAyfwoDM1/bhjG4vI40A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742915593; c=relaxed/simple;
-	bh=Ymu8QmlYmsqTZ8/JVwzi+YS7QigP6MRwnkGHOEYR8+Q=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iCNHhSus1mn0rYAzbljwD9wZQ6MPMPSaj9eqDrvY247UHDyC8xu8xo7+vZ+zT3N5r0iUe3WzNrmuiR/vBfg3xF85c5pmuOBzCQn4bJFm7HduYrK0zbY3RhgrlXQm3FeNqH0wRzNIhE4ogY3P8vDoIN807w6q2eHtBKRHI3+B8fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tx5xd-0000BM-Rt; Tue, 25 Mar 2025 16:13:01 +0100
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tx5xc-001bMt-1Q;
-	Tue, 25 Mar 2025 16:13:00 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tx5xc-000AEJ-2W;
-	Tue, 25 Mar 2025 16:13:00 +0100
-Message-ID: <ce3426b50a2593c23052b83848e95db8e49fdb8a.camel@pengutronix.de>
-Subject: Re: [PATCH v2 2/2] reset: Add USB2PHY control driver for Renesas
- RZ/V2H(P)
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Prabhakar
- <prabhakar.csengg@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>,
-  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,  Magnus Damm <magnus.damm@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
- Biju Das <biju.das.jz@bp.renesas.com>,  Prabhakar Mahadev Lad
- <prabhakar.mahadev-lad.rj@bp.renesas.com>, Chris Paterson
- <Chris.Paterson2@renesas.com>
-Date: Tue, 25 Mar 2025 16:13:00 +0100
-In-Reply-To: <TYCPR01MB12093DB963348A8FD58409E5AC2DE2@TYCPR01MB12093.jpnprd01.prod.outlook.com>
-References: 
-	<20250305123915.341589-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-	 <20250305123915.341589-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-	 <30b6841b3ce199488698ab272f103a0364adb000.camel@pengutronix.de>
-	 <TY3PR01MB12089B78E1DE163B740A51134C2D32@TY3PR01MB12089.jpnprd01.prod.outlook.com>
-	 <c27ab4ca4563d20a73ffc8a577f960fe59ffa88f.camel@pengutronix.de>
-	 <TYCPR01MB12093DB963348A8FD58409E5AC2DE2@TYCPR01MB12093.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1742915659; c=relaxed/simple;
+	bh=jSkEJPEqkW5LWIo0VxKkBQc2W3VLZCRiU011fP09tMc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kma107r0wDuIkZB8rqRczURZOR0nSCLU0JGrnGbNDCuDuo0MgHIfpAW6DygrLJ4hov09rtOz5OWYeF/zfB1VpaFs1DKTUJP2k+2vP0PoKBAUN83xidelpRcQ8ViL2oUFlsQrKs4xHK5sOirODxOvazUGr8gYjhqs+IkJ0XJFczM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=SPc4yNT3; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="SPc4yNT3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=e9BYomaOrXBuNI0X4uTrl/CKPbTYsn1WfQ0/aRiNpfU=; b=SPc4yNT3r+UVTqPntSELDQ9DY/
+	nQDCXjZg9NxIiwhxY2lERc9folGnr2s3OC9xAAXT/f9HsqrFiRRlb1H2oJ1H4ssHYmNbXTqezL/g8
+	22uMPcvjz2XFkGeTmHu37gbEpdLz4KfnC6IoOW6S3mh4KD7K98AT6QigejSyv/vJcpbs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tx5yj-0074Qk-9i; Tue, 25 Mar 2025 16:14:09 +0100
+Date: Tue, 25 Mar 2025 16:14:09 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, davem@davemloft.net,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH 4/5] arm: dts: imx287: Provide description for MTIP L2
+ switch
+Message-ID: <40c6c272-d4a3-4bf2-87a1-17086d96afea@lunn.ch>
+References: <20250325115736.1732721-1-lukma@denx.de>
+ <20250325115736.1732721-5-lukma@denx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250325115736.1732721-5-lukma@denx.de>
 
-Hi Fabrizio, Prabhakar,
+On Tue, Mar 25, 2025 at 12:57:35PM +0100, Lukasz Majewski wrote:
+> This description is similar to one supprted with the cpsw_new.c
+> driver.
+> 
+> It has separated ports and PHYs (connected to mdio bus).
+> 
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> ---
+>  arch/arm/boot/dts/nxp/mxs/imx28-xea.dts | 56 +++++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/nxp/mxs/imx28-xea.dts b/arch/arm/boot/dts/nxp/mxs/imx28-xea.dts
+> index 6c5e6856648a..e645b086574d 100644
+> --- a/arch/arm/boot/dts/nxp/mxs/imx28-xea.dts
+> +++ b/arch/arm/boot/dts/nxp/mxs/imx28-xea.dts
+> @@ -5,6 +5,7 @@
+>   */
+>  
+>  /dts-v1/;
+> +#include<dt-bindings/interrupt-controller/irq.h>
+>  #include "imx28-lwe.dtsi"
+>  
+>  / {
+> @@ -18,6 +19,61 @@ &can0 {
+>  	status = "okay";
+>  };
+>  
+> +&eth_switch {
+> +	compatible = "fsl,imx287-mtip-switch";
 
-On Di, 2025-03-18 at 12:31 +0000, Fabrizio Castro wrote:
-> Hi Philipp,
->=20
-> Thanks for your feedback!
->=20
-> > From: Philipp Zabel <p.zabel@pengutronix.de>
-> > Sent: 13 March 2025 13:06
-> > Subject: Re: [PATCH v2 2/2] reset: Add USB2PHY control driver for Renes=
-as RZ/V2H(P)
-> >=20
-> > Hi Fabrizio,
-> >=20
-> > On Do, 2025-03-13 at 10:14 +0000, Fabrizio Castro wrote:
-> > > Hi Philipp,
-> > >=20
-> > > Thanks for your feedback!
-> > >=20
-> > > > From: Philipp Zabel <p.zabel@pengutronix.de>
-> > > > Sent: 13 March 2025 08:37
-> > > > Subject: Re: [PATCH v2 2/2] reset: Add USB2PHY control driver for R=
-enesas RZ/V2H(P)
-> > > >=20
-> > > > On Mi, 2025-03-05 at 12:39 +0000, Prabhakar wrote:
-> > > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > >=20
-> > > > > Add support for the USB2PHY control driver on the Renesas RZ/V2H(=
-P) SoC.
-> > > > > Make the driver handle reset and power-down operations for the US=
-B2PHY.
-> > > > >=20
-> > > > > Pass OF data to support future SoCs with similar USB2PHY hardware=
- but
-> > > > > different register configurations. Define device-specific initial=
-ization
-> > > > > values and control register settings in OF data to ensure flexibi=
-lity
-> > > > > for upcoming SoCs.
-> > > > >=20
-> > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas=
-.com>
-> > > > > ---
-> > > > >  drivers/reset/Kconfig                    |   7 +
-> > > > >  drivers/reset/Makefile                   |   1 +
-> > > > >  drivers/reset/reset-rzv2h-usb2phy-ctrl.c | 223 +++++++++++++++++=
-++++++
-> > > > >  3 files changed, 231 insertions(+)
-> > > > >  create mode 100644 drivers/reset/reset-rzv2h-usb2phy-ctrl.c
-> > > > >=20
-> > [...]
-> > > > > diff --git a/drivers/reset/reset-rzv2h-usb2phy-ctrl.c b/drivers/r=
-eset/reset-rzv2h-usb2phy-ctrl.c
-> > > > > new file mode 100644
-> > > > > index 000000000000..a6daeaf37e1c
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/reset/reset-rzv2h-usb2phy-ctrl.c
-> > > > > @@ -0,0 +1,223 @@
-> > [...]
-> > > > > +static const struct rzv2h_usb2phy_regval rzv2h_init_vals[] =3D {
-> > > > > +	{ .reg =3D 0xc10, .val =3D 0x67c },
-> > > > > +	{ .reg =3D 0xc14, .val =3D 0x1f },
-> > > > > +	{ .reg =3D 0x600, .val =3D 0x909 },
-> > > >=20
-> > > > What are these registers and what are those values doing?
-> > >=20
-> > > Unfortunately, there are some licensing restrictions on this IP, this=
- is
-> > > the best that we can do, as per the license agreement.
-> >=20
-> > How am I expected to review this?
-> >=20
-> > For now, I'll assume that these registers are not related to reset
-> > functionality at all, and that this driver should be a phy controller
-> > driver instead of a reset controller driver.
-> >=20
-> > Can you convince me otherwise without breaking license agreements?
->=20
-> Sorry about the delay, as you may have figured out, we had to double chec=
-k with
-> the LSI team before making any statement.
->=20
-> We can confirm that `rzv2h_init_vals` contains the registers and correspo=
-nding
-> initialization values required to prepare the PHY to receive assert and d=
-eassert
-> requests. This is a one time only thing, done at probe.
+The switch is part of the SoC. So i would expect the compatible to be
+in the .dtsi file for the SoC.
 
-Thank you. Please document this in a comment next to the
-rzv2h_init_vals[] table.
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mac0_pins_a>, <&mac1_pins_a>;
+> +	phy-supply = <&reg_fec_3v3>;
+> +	phy-reset-duration = <25>;
+> +	phy-reset-post-delay = <10>;
+> +	interrupts = <100>, <101>, <102>;
+> +	clocks = <&clks 57>, <&clks 57>, <&clks 64>, <&clks 35>;
+> +	clock-names = "ipg", "ahb", "enet_out", "ptp";
 
-> After looking into things again, I have noticed that the probe function i=
-s missing
-> calling into the assert sequence, and the status of the reset is undefine=
-d, so
-> that's something to fix for v3 to make it initialize in asserted state.
->=20
-> The assert, deassert, and status operations are only touching reset relat=
-ed registers.
-> Nothing else.
->
-> Therefore we believe this should be a port reset driver.
->
-> Thanks for your patience so far, and sorry for being cryptic.
+Which of these properties are SoC properties? I _guess_ interrupts,
+clocks and clock-names. So they should be in the SoC .dtsi file. You
+should only add board properties here.
 
-Let's go ahead with this driver. I'd be happy about a MAINTAINERS entry
-for it.
-
-regards
-Philipp
+       Andrew
