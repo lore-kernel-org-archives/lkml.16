@@ -1,66 +1,66 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C14E257425;
-	Tue, 25 Mar 2025 08:35:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24022257AD8;
+	Tue, 25 Mar 2025 08:35:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742891713; cv=none; b=otchPzWbGLnWYP3iVTkYYHgV2ISJvraVXTYKARcCB8SglAHYndOUu5vIBhPRpPn/w1jYvDeg4xxg9JeYbg6nex45FwVyDnJrXHjCLC1ZLwSd7IHzE0ZzOHBnOIeR57uS7SosrZCgV72SJUrAlhUXnE56zpaLvxm7HxwO5cn1SzI=
+	t=1742891714; cv=none; b=MzevzhvtXYYXl4skDeNMxuYr2ryIKN3jrvXWxKMtfVt0V4/7Yi43rAa0ZdHyC2M28+XvToQwkd3GOT9UW87Eb/DKTC+g/Cf4e1R0hyjbznr+5A33COWUsIZ8CWLw5/0RdnCNNELnIqPZTByQgZ3R66kbaYZa5jOapWd+aH5VZ/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742891713; c=relaxed/simple;
-	bh=sGWgKFS19lApaaQVjKhRLjj5L+UPSlrSbkfq9RyQZAU=;
+	s=arc-20240116; t=1742891714; c=relaxed/simple;
+	bh=wmxNcxZZn3P5rcn7I5ppsfqfQQ3ULpDvKB/0x6U1+mw=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Z20poUoPwfCEVkKbnq+5NRV4HmPVjcx7OfxBjZmVdGOnQkC2/xiJ3lI0EUHHtTrDdwNAYDbz3UYXAcu+YhTMNNc2ECzkC5s0TAcjqbhATEctsxrdoEJC0+MIVwJg4EnII/z6fGmXaQNLwRVcV/AbeMyTzYAcWRs7vtFlWaz0OHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jWQFAQCN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cpK4gYNe; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=mvcDd2LLhMflMgwt9eQ4YVqyCcmVKzcxJeSJY1Ze/tpndubcCBGjw0KgIDastj2lCWFCerK0iI3EEhxTECnQSGkc36WOrK4jWzWrX8/PyolmdpALXwmULFGeiwS3d/6UzKMPrZWd7FXPNasc/NTxMHM5Kv4hj5eki/WmqWWXwjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qSYdqHoI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F1P8BSd/; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jWQFAQCN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cpK4gYNe"
-Date: Tue, 25 Mar 2025 08:35:08 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qSYdqHoI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F1P8BSd/"
+Date: Tue, 25 Mar 2025 08:35:10 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742891709;
+	s=2020; t=1742891711;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lXWdLNiFqjcJy8RDdZyi+igNyxV9zlyuc3/D+OV9ryo=;
-	b=jWQFAQCNIp135UhzIlNwR3la5vPOuPg3c0rG4ckdegIP1fr/uY2f1/e3ApcEWELi3nxtgp
-	P6VX33qF2jdnRTH7sa4szPy3JoTbrFfd6d9etqWENAn5p2X6vP0RoPVx0rXIQ5n7v3Tkj8
-	UDUToSyyW6o67NzORkk4S8Zio1varYJ7pmxRBQyGdXnCUmrf3LuYjgbEyvCrM5P53dLRP6
-	kNQXHEZRU6Wy3+Y0W1fVWKh1Yb8CgMrH6qkcaLsiIpHQc3E4fm9C72ZLhBcBf58XMYGegy
-	f95hGkRokOD0y9Ia751KZ99Hwktt2+bX4+JGOXvKmouPMDfCeXw8KU3R/jvwvA==
+	bh=BUZAxF8sTs7D5heGOjhPy/vu06ohrAXCLw94w+Wxz+4=;
+	b=qSYdqHoIyrz52yKYqYFP0S5+O7xVF4EibWJJmdROL2BYLblrYRgJKn+EG9WAXvKxiMr2op
+	b6MVa40Zk5wqCmXl7msCbHbNW56uMV2Dr/E5TjEYoMqcD+4RARmDq6OjleZy8l88DY5i2u
+	OkvhMffOHJ0ACX7z3wnanQPmns82N/xJunJvc/V0p5yHu1LuvOxBqeqhHqHWjO9MNgzHv4
+	gyjagVsOapJcyoeWP2f0/+cqVN3SqP7bcpLXWxD96Bb7i9eexzjBMe+MMYAGdq7tc+cJt4
+	3JDnlJr3iJca8niNbyiPHsleNkXbne9ecYHcldqveRugcnSDmT27KjxV/GC0ag==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742891709;
+	s=2020e; t=1742891711;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lXWdLNiFqjcJy8RDdZyi+igNyxV9zlyuc3/D+OV9ryo=;
-	b=cpK4gYNeL1gRmBK2aGTuWNQdoSC6U+MrXBt+Xopn2tF7ecB7MWMI8tOhjp0N2mPzO2eCoz
-	PVVBdjJuN1CloeAQ==
+	bh=BUZAxF8sTs7D5heGOjhPy/vu06ohrAXCLw94w+Wxz+4=;
+	b=F1P8BSd/kECHREAr4hqpu1YuPcKpdoR8lfKgUfRPrWsmoCIqhcQtVrOMKvF0gIUVsPG14N
+	yd8xLFvK2JGIurAw==
 From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
 Subject:
- [tip: objtool/urgent] objtool: Fix CONFIG_OBJTOOL_WERROR for vmlinux.o
+ [tip: objtool/urgent] objtool: Warn when disabling unreachable warnings
 Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>,
  Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
 In-Reply-To:
- <4f71ab9b947ffc47b6a87dd3b9aff4bb32b36d0a.1742852846.git.jpoimboe@kernel.org>
+ <df243063787596e6031367e6659e7e43409d6c6d.1742852846.git.jpoimboe@kernel.org>
 References:
- <4f71ab9b947ffc47b6a87dd3b9aff4bb32b36d0a.1742852846.git.jpoimboe@kernel.org>
+ <df243063787596e6031367e6659e7e43409d6c6d.1742852846.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174289170883.14745.15615696058250224080.tip-bot2@tip-bot2>
+Message-ID: <174289171080.14745.17027999769688870053.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,52 +70,49 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the objtool/urgent branch of tip:
 
-Commit-ID:     4759670bc3e670069c055c2b33174813099fea4f
-Gitweb:        https://git.kernel.org/tip/4759670bc3e670069c055c2b33174813099fea4f
+Commit-ID:     eeff7ac61526a4a9c3916cf46885622078ad886b
+Gitweb:        https://git.kernel.org/tip/eeff7ac61526a4a9c3916cf46885622078ad886b
 Author:        Josh Poimboeuf <jpoimboe@kernel.org>
-AuthorDate:    Mon, 24 Mar 2025 14:55:55 -07:00
+AuthorDate:    Mon, 24 Mar 2025 14:55:52 -07:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 25 Mar 2025 09:20:26 +01:00
+CommitterDate: Tue, 25 Mar 2025 09:20:25 +01:00
 
-objtool: Fix CONFIG_OBJTOOL_WERROR for vmlinux.o
+objtool: Warn when disabling unreachable warnings
 
-With (!X86_KERNEL_IBT && !LTO_CLANG && NOINSTR_VALIDATION), objtool runs
-on both translation units and vmlinux.o.  With CONFIG_OBJTOOL_WERROR,
-the TUs get --Werror but vmlinux.o doesn't.  Fix that.
+Print a warning when disabling the unreachable warnings (due to a GCC
+bug).  This will help determine if recent GCCs still have the issue and
+alert us if any other issues might be silently lurking behind the
+unreachable disablement.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/4f71ab9b947ffc47b6a87dd3b9aff4bb32b36d0a.1742852846.git.jpoimboe@kernel.org
+Link: https://lore.kernel.org/r/df243063787596e6031367e6659e7e43409d6c6d.1742852846.git.jpoimboe@kernel.org
 ---
- scripts/Makefile.vmlinux_o | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ tools/objtool/arch/x86/special.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/scripts/Makefile.vmlinux_o b/scripts/Makefile.vmlinux_o
-index 0b6e2eb..f476f56 100644
---- a/scripts/Makefile.vmlinux_o
-+++ b/scripts/Makefile.vmlinux_o
-@@ -30,12 +30,20 @@ endif
- # objtool for vmlinux.o
- # ---------------------------------------------------------------------------
- #
--# For LTO and IBT, objtool doesn't run on individual translation units.
--# Run everything on vmlinux instead.
-+# For delay-objtool (IBT or LTO), objtool doesn't run on individual translation
-+# units.  Instead it runs on vmlinux.o.
-+#
-+# For !delay-objtool + CONFIG_NOINSTR_VALIDATION, it runs on both translation
-+# units and vmlinux.o, with the latter only used for noinstr/unret validation.
+diff --git a/tools/objtool/arch/x86/special.c b/tools/objtool/arch/x86/special.c
+index 9c1c9df..5f46d4e 100644
+--- a/tools/objtool/arch/x86/special.c
++++ b/tools/objtool/arch/x86/special.c
+@@ -3,6 +3,7 @@
  
- objtool-enabled := $(or $(delay-objtool),$(CONFIG_NOINSTR_VALIDATION))
+ #include <objtool/special.h>
+ #include <objtool/builtin.h>
++#include <objtool/warn.h>
  
--vmlinux-objtool-args-$(delay-objtool)			+= $(objtool-args-y)
-+ifeq ($(delay-objtool),y)
-+vmlinux-objtool-args-y					+= $(objtool-args-y)
-+else
-+vmlinux-objtool-args-$(CONFIG_OBJTOOL_WERROR)		+= --Werror
-+endif
-+
- vmlinux-objtool-args-$(CONFIG_GCOV_KERNEL)		+= --no-unreachable
- vmlinux-objtool-args-$(CONFIG_NOINSTR_VALIDATION)	+= --noinstr \
- 							   $(if $(or $(CONFIG_MITIGATION_UNRET_ENTRY),$(CONFIG_MITIGATION_SRSO)), --unret)
+ #define X86_FEATURE_POPCNT (4 * 32 + 23)
+ #define X86_FEATURE_SMAP   (9 * 32 + 20)
+@@ -156,8 +157,10 @@ struct reloc *arch_find_switch_table(struct objtool_file *file,
+ 	 * indicates a rare GCC quirk/bug which can leave dead
+ 	 * code behind.
+ 	 */
+-	if (reloc_type(text_reloc) == R_X86_64_PC32)
++	if (reloc_type(text_reloc) == R_X86_64_PC32) {
++		WARN_INSN(insn, "ignoring unreachables due to jump table quirk");
+ 		file->ignore_unreachables = true;
++	}
+ 
+ 	*table_size = 0;
+ 	return rodata_reloc;
