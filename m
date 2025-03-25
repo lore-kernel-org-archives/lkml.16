@@ -1,50 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5151F152A;
-	Tue, 25 Mar 2025 19:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561EC1CAA9C
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 19:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742932178; cv=none; b=BG00BD2MlCIiZv2uYMyNA+ukShxrrPdgB6GRTbxAvfZD8CuSyeXCwAdw5DuBkeHj/AY6IOjHU3i6Ag/lWCvZrmJVQmGNVPv7kHP319WBAzmsY7ZWXDgpFXWCIs0tPNHtwWxiUCAlxMxoeWuxvgwBPvWCsugqKgJG46SQ3FfcAls=
+	t=1742932249; cv=none; b=Vjc5KGKisImTjU+Amtl8jAOEBbeauF8ze8/OtsXQjiMlTMAu1SaGTSbWnFOZTNHQV6a+Wk2ULNjGGe07Rf9vb8ulIRDn2p5DOC4xcnW7M+HdhZzERMqDVZgUaKzjDe4OC34f5MTYDM2+D1Rs59cmsu8Wvt/jpPzaVtkeDnKcgtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742932178; c=relaxed/simple;
-	bh=11PceBHmr2h6Io1LcGM3hWr2ukF/qSGUBM0IF/niTKw=;
-	h=From:Subject:Date:Message-ID:To; b=BWXK54yrbTbtFDwazcR4vZtC2gSQdT/sIjrmDDNf+rpUYfE0Km3K9vuP8FRkztb2Zwdb2qbaN7lI1o5DI0J6/vFWcm7QHU2feKRwaeBvAMT2sVSBYB53eMggyQ5novAIeBSJyk/2thratHkRl3bJLHej+apKmogeXoVZGbA6mYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A858C4CEE4;
-	Tue, 25 Mar 2025 19:49:38 +0000 (UTC)
-From: Joseph Salisbury <joseph.salisbury@oracle.com>
-Subject: [ANNOUNCE] 5.15.179-rt84
-Date: Tue, 25 Mar 2025 19:49:17 -0000
-Message-ID: <174293215757.812224.5467551567780761272@jupiter>
-To: LKML <linux-kernel@vger.kernel.org>,linux-rt-users <linux-rt-users@vger.kernel.org>,Steven Rostedt <rostedt@goodmis.org>,Thomas Gleixner <tglx@linutronix.de>,Carsten Emde <C.Emde@osadl.org>,John Kacur <jkacur@redhat.com>,Sebastian Andrzej Siewior <bigeasy@linutronix.de>,Daniel Wagner <daniel.wagner@suse.com>,Tom Zanussi <tom.zanussi@linux.intel.com>,Clark Williams <williams@redhat.com>,Pavel Machek <pavel@denx.de>,Joseph Salisbury <josephtsalisbury@gmail.com>,Joseph Salisbury <joseph.salisbury@oracle.com>
+	s=arc-20240116; t=1742932249; c=relaxed/simple;
+	bh=APVdAU4tGhcU1S/UpfZmpYMsOYvPyiM6B+PqHMA5fJM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ol8t+dr9+1rnQ7aunFiDfLWKMGaLmxKKrmEYjXD3gYDP6kF7m7p5FjWCyTLLDHF6sY/HWJ4ZYo36RvtBlF7g6vhRmx8nNxqwws40PlQcBQEve3rO5Yx+c5DU44ILAgPnEWW5rDXtbwpApnDj1s8V3xkqAu/UChkouLMwwZdnG0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <m.felsch@pengutronix.de>)
+	id 1txAIF-0004Iw-U8; Tue, 25 Mar 2025 20:50:35 +0100
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: jens.wiklander@linaro.org,
+	sumit.garg@kernel.org,
+	akpm@linux-foundation.org,
+	vbabka@suse.cz,
+	willy@infradead.org
+Cc: kernel@pengutronix.de,
+	op-tee@lists.trustedfirmware.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] tee: shm: fix slab page refcounting
+Date: Tue, 25 Mar 2025 20:50:20 +0100
+Message-Id: <20250325195021.3589797-1-m.felsch@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::28
+X-SA-Exim-Mail-From: m.felsch@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hello RT-list!
+Skip manipulating the refcount in case of slab pages according commit
+b9c0e49abfca ("mm: decline to manipulate the refcount on a slab page").
 
-I'm pleased to announce the 5.15.179-rt84 stable release.
+Fixes: b9c0e49abfca ("mm: decline to manipulate the refcount on a slab page")
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ drivers/tee/tee_shm.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-You can get this release via the git tree at:
+diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
+index daf6e5cfd59a..3d6a3077b6f2 100644
+--- a/drivers/tee/tee_shm.c
++++ b/drivers/tee/tee_shm.c
+@@ -19,16 +19,24 @@ static void shm_put_kernel_pages(struct page **pages, size_t page_count)
+ {
+ 	size_t n;
+ 
+-	for (n = 0; n < page_count; n++)
+-		put_page(pages[n]);
++	for (n = 0; n < page_count; n++) {
++		struct page *page = pages[n];
++
++		if (!PageSlab(page))
++			put_page(pages[n]);
++	}
+ }
+ 
+ static void shm_get_kernel_pages(struct page **pages, size_t page_count)
+ {
+ 	size_t n;
+ 
+-	for (n = 0; n < page_count; n++)
+-		get_page(pages[n]);
++	for (n = 0; n < page_count; n++) {
++		struct page *page = pages[n];
++
++		if (!PageSlab(page))
++			get_page(pages[n]);
++	}
+ }
+ 
+ static void release_registered_pages(struct tee_shm *shm)
+-- 
+2.39.5
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-  branch: v5.15-rt
-  Head SHA1: 7ac5ee098afa36869af41948246db1dbe2000db7
-
-Or to build 5.15.179-rt84 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/5.15
-
-  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.15.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.15.179.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/5.15/patch-5.15.179-rt84.patch.xz
-
-
-Enjoy!
-Joseph Salisbury
