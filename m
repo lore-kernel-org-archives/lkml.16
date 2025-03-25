@@ -1,180 +1,203 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A50F25DCFA;
-	Tue, 25 Mar 2025 16:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C5C25DD12
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 16:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742921066; cv=none; b=noiGzeL1mIBwFwD0FP5QWR/ZYU31TlQi0XBvYIVUhdQI/GeeTVVP/hSCMjMRLy8yP9dNGhB/LE3rK2qb1ge/syZkd2zSwofb8p7arN9vEkxdUfRAhW9mPMcehJf9gJjq/BUewHuWzvAiA5uRiTNfc3oMBe2+VKux/O9+zGpZg78=
+	t=1742921086; cv=none; b=POyDi7IE3HlmXcU3Rj/uQLxzmaIkrMWIWi6fXiRDU67HTFpcygxxJ8ZI0unNC61NX4QY2eVF2m3v9+WeznGPVVonqUwWs+ozPtMZAphiGsF856T+ERicVBOGgJwJawczZ6T02Z1IHPvtIqFItnT0n8y7y5AAM7gyfEkFizYHhrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742921066; c=relaxed/simple;
-	bh=PIcZt32qJ9OHs9IeWqZg09HYSD4aJ2QgsyhopDAw0+g=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=GprG2l1yrjikzI7N1ldcy8r66aUubFyeWV6S5j0hK8YYdHqfZChYLyNoZfbMHkBL7b2YdqvqFr2N0Z2NqAoVQtOnqdb6EeTm6lVwOf80ktAYOEUTzANtbvHW4Y7nIL0knMdYabSrbiot3DLiLj25PwZjrKe5lclgCFJR+DT/1GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cNCGOVAw; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742921086; c=relaxed/simple;
+	bh=ldgIIS6qJKA4PqUti5NYcAmN4SsICYce46h1OQ5emEo=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=Drq5DsTa+q4vDeeqEq4Y6LI5Z0n0T2RWloj7d4JFo5kExooOAEvQsFWORsBIwj+g0dIf8SAg0LZENWDZd4YuUejdfVntebwQ7hDCUaxe6ZaTGOPhnSAoqKVFVSn8rXmJyxwfHKXxXKNw/76LQYIrMrphVZxiPpUFdVuDhcfgZ30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lWtccts0; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cNCGOVAw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742921064; x=1774457064;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=PIcZt32qJ9OHs9IeWqZg09HYSD4aJ2QgsyhopDAw0+g=;
-  b=cNCGOVAwUfqU+kG3FTpvjPGNclO2rTt54jjwxUoGvPiGR4cJHRPsCT7e
-   hwZlZ1DGiktlFyrGBRX+KWxzbJ3dZ3w2nYtD00EWUd4ScVpuciJ0VShxO
-   D150f8KlU00fxZ9DqMj14F7xWuff6aggq2uv0QyvOFUlnICpdFlAiyjGm
-   dcTbmhx3pqbD/+F+41Ql7HSBE6WIurK6lBmOackOA9hWwZvvi1bXECpbH
-   7NrvHC0c6VV5uMLBZtW1pQqdwpO0xc9assIGjRXF8O46hZeojH7FNlI4s
-   1yidbGzTlV/nhX5d8wZBrKRT8NXVqB7qEc27C5PIkk/gxUke89GSKz592
-   g==;
-X-CSE-ConnectionGUID: qMCppyDLQ1Kx6VB433ovWg==
-X-CSE-MsgGUID: ob2oK6NcR1muYmxLvspm7g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11384"; a="54828915"
-X-IronPort-AV: E=Sophos;i="6.14,275,1736841600"; 
-   d="scan'208";a="54828915"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 09:44:23 -0700
-X-CSE-ConnectionGUID: pH+x6zujRg6v3kGot+mukw==
-X-CSE-MsgGUID: cOvPsRdqTOWCPfUY740Vpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,275,1736841600"; 
-   d="scan'208";a="124902805"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.158])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 09:44:20 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 25 Mar 2025 18:44:16 +0200 (EET)
-To: Antheas Kapenekakis <lkml@antheas.dev>
-cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Jiri Kosina <jikos@kernel.org>, 
-    Benjamin Tissoires <bentiss@kernel.org>, 
-    Corentin Chary <corentin.chary@gmail.com>, 
-    "Luke D . Jones" <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v4 07/11] platform/x86: asus-wmi: add keyboard brightness
- event handler
-In-Reply-To: <20250324210151.6042-8-lkml@antheas.dev>
-Message-ID: <cc762cec-c5a3-2bf4-c877-469d1a9e6c8f@linux.intel.com>
-References: <20250324210151.6042-1-lkml@antheas.dev> <20250324210151.6042-8-lkml@antheas.dev>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lWtccts0"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6f4348c854eso67839607b3.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 09:44:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742921082; x=1743525882; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XET9HH8V4TfXAFNsd7WcnaOZ0oJ/0MNCJs/F3W4WSf4=;
+        b=lWtccts0dL+YJnuM/8VT/h/fygadsZeenHdBwFq7HpZXEV7xV5GwYQbDO9CFDu1RP1
+         bDxsVm0jXFFXsRwyFUnGpUhGfUgnqkb4ND77PveOn0S6mFVEh313LaMW+gAIMH+85FsW
+         fRLoV4+JtW/TZRf7rQEAwkY/JOtf9FOhYAXEVziRnOEbB092SxAj0EavGDIfKwesHBDA
+         9Q/Ho1/41AoN28Ew9LTLW2zFMXDyITCxkbpf3DYfGIo/RdjwvWXjc7jD1kPRjnLoSqA9
+         bn8N6Y85hbTfbcCFuJ2O4MRfSlARdUHcImC9t8IwFe+MSqK4ip+ZNshLsRyfgEGe5BN0
+         WSZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742921082; x=1743525882;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XET9HH8V4TfXAFNsd7WcnaOZ0oJ/0MNCJs/F3W4WSf4=;
+        b=CEPafraUjG9+3gZFf7VlrbMiJ8W9JVpKyS0GzO7T7R7guHWQ8VTmaLedRGZ5/gp6Hy
+         ZUDoxB7YRmBhQRmQtwbIiIS6RJp2YaLXB6ok7M/5BOkKz1BDkvCCnkSIoDrdUdd6MMPh
+         jwKT3cB1hFZoFdGY6cSqzKePnr7GCBQzdUqMZ+sV9T1wA9bP5OjCPBjtoDV3X4Q40Bsn
+         j7FVX+5KtTKBMOqqnMww+YGQJ6wFsGHnok/B20D9ymFVe7tBSecH4VZdF/Cy3L4qriUS
+         qplLXXRcNGnGxYOwkmDXX34jI8tXLOKMiu2+gimMKfI8+oLrzCiheosNXyGzBhm2klQn
+         Shrw==
+X-Forwarded-Encrypted: i=1; AJvYcCWomBwAnBpCU60MMBcnD7rbMWwwVQu9OivzuX7PZ0sPcPUuVFQ1khi99DypJUI88+cMU2v+CM99uk3yZA0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+k6i5w+UD72NB/Frv4gTjVRFkBO22Peoau9eqFpa5vXLjaFfx
+	Q0jamHWoCHkYvwQV/7MqloKnlQvJ/o3K9F5rya3H/lmbkns+lUez2Hp7jQwqkgEBjbkDxHqyYeY
+	v7U5v6A==
+X-Google-Smtp-Source: AGHT+IFloyMlyCTYkwI5WNoUbnxC0ZXTQTcaUnQn1S1VFEt9qidMOh9dB+WPksPMbdNJDXCSbcL7SI63H4uU
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:40b3:9c02:57a5:693c])
+ (user=irogers job=sendgmr) by 2002:a05:690c:3383:b0:6fb:8461:e7f4 with SMTP
+ id 00721157ae682-700bacc218dmr488617b3.3.1742921082187; Tue, 25 Mar 2025
+ 09:44:42 -0700 (PDT)
+Date: Tue, 25 Mar 2025 08:15:11 -0700
+In-Reply-To: <20250325151511.13628-1-irogers@google.com>
+Message-Id: <20250325151511.13628-36-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+References: <20250325151511.13628-1-irogers@google.com>
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
+Subject: [PATCH v2 35/35] perf vendor events: Update westmereep-dp events
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 24 Mar 2025, Antheas Kapenekakis wrote:
+Update event topic moving other topic events to cache and virtual
+memory.
 
-> Currenlty, the keyboard brightness control of Asus WMI keyboards is
-> handled in the kernel, which leads to the shortcut going from
-> brightness 0, to 1, to 2, and 3.
-> 
-> However, for HID keyboards it is exposed as a key and handled by the
-> user's desktop environment. For the toggle button, this means that
-> brightness control becomes on/off. In addition, in the absence of a
-> DE, the keyboard brightness does not work.
-> 
-> Therefore, expose an event handler for the keyboard brightness control
-> which can then be used by hid-asus.
-> 
-> Reviewed-by: Luke D. Jones <luke@ljones.dev>
-> Tested-by: Luke D. Jones <luke@ljones.dev>
-> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> ---
->  drivers/platform/x86/asus-wmi.c            | 39 ++++++++++++++++++++++
->  include/linux/platform_data/x86/asus-wmi.h | 11 ++++++
->  2 files changed, 50 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index ff1d7ccb3982f..27468d67dba09 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -1536,6 +1536,45 @@ void asus_hid_unregister_listener(struct asus_hid_listener *bdev)
->  }
->  EXPORT_SYMBOL_GPL(asus_hid_unregister_listener);
->  
-> +static void do_kbd_led_set(struct led_classdev *led_cdev, int value);
-> +
-> +int asus_hid_event(enum asus_hid_event event)
-> +{
-> +	unsigned long flags;
-> +	int brightness;
-> +
-> +	spin_lock_irqsave(&asus_ref.lock, flags);
-> +	if (!asus_ref.asus || !asus_ref.asus->kbd_led_registered) {
-> +		spin_unlock_irqrestore(&asus_ref.lock, flags);
-> +		return -EBUSY;
-> +	}
-> +	brightness = asus_ref.asus->kbd_led_wk;
-> +
-> +	switch (event) {
-> +	case ASUS_EV_BRTUP:
-> +		brightness += 1;
-> +		break;
-> +	case ASUS_EV_BRTDOWN:
-> +		brightness -= 1;
-> +		break;
-> +	case ASUS_EV_BRTTOGGLE:
-> +		if (brightness >= 3)
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ .../pmu-events/arch/x86/westmereex/cache.json | 32 +++++++++++++++
+ .../pmu-events/arch/x86/westmereex/other.json | 40 -------------------
+ .../arch/x86/westmereex/virtual-memory.json   |  8 ++++
+ 3 files changed, 40 insertions(+), 40 deletions(-)
 
-Add ASUS_EV_MAX_BRIGHTNESS instead of a literal?
-
-> +			brightness = 0;
-> +		else
-> +			brightness += 1;
-> +		break;
-> +	}
-> +
-> +	do_kbd_led_set(&asus_ref.asus->kbd_led, brightness);
-> +	led_classdev_notify_brightness_hw_changed(&asus_ref.asus->kbd_led,
-> +						  asus_ref.asus->kbd_led_wk);
-> +
-> +	spin_unlock_irqrestore(&asus_ref.lock, flags);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(asus_hid_event);
-> +
->  /*
->   * These functions actually update the LED's, and are called from a
->   * workqueue. By doing this as separate work rather than when the LED
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index c513b5a732323..9adbe8abef090 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -162,11 +162,18 @@ struct asus_hid_listener {
->  	void (*brightness_set)(struct asus_hid_listener *listener, int brightness);
->  };
->  
-> +enum asus_hid_event {
-> +	ASUS_EV_BRTUP,
-> +	ASUS_EV_BRTDOWN,
-> +	ASUS_EV_BRTTOGGLE,
-> +};
-> +
->  #if IS_REACHABLE(CONFIG_ASUS_WMI)
->  int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval);
->  
->  int asus_hid_register_listener(struct asus_hid_listener *cdev);
->  void asus_hid_unregister_listener(struct asus_hid_listener *cdev);
-> +int asus_hid_event(enum asus_hid_event event);
->  #else
->  static inline int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1,
->  					   u32 *retval)
-> @@ -181,6 +188,10 @@ static inline int asus_hid_register_listener(struct asus_hid_listener *bdev)
->  static inline void asus_hid_unregister_listener(struct asus_hid_listener *bdev)
->  {
->  }
-> +static inline int asus_hid_event(enum asus_hid_event event)
-> +{
-> +	return -ENODEV;
-> +}
->  #endif
->  
->  #endif	/* __PLATFORM_DATA_X86_ASUS_WMI_H */
-> 
-
+diff --git a/tools/perf/pmu-events/arch/x86/westmereex/cache.json b/tools/perf/pmu-events/arch/x86/westmereex/cache.json
+index 9f922370ee8b..2a677d10f688 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereex/cache.json
++++ b/tools/perf/pmu-events/arch/x86/westmereex/cache.json
+@@ -119,6 +119,38 @@
+         "SampleAfterValue": "100000",
+         "UMask": "0x2"
+     },
++    {
++        "BriefDescription": "L1I instruction fetch stall cycles",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.CYCLES_STALLED",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x4"
++    },
++    {
++        "BriefDescription": "L1I instruction fetch hits",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.HITS",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "L1I instruction fetch misses",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.MISSES",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x2"
++    },
++    {
++        "BriefDescription": "L1I Instruction fetches",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.READS",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x3"
++    },
+     {
+         "BriefDescription": "All L2 data requests",
+         "Counter": "0,1,2,3",
+diff --git a/tools/perf/pmu-events/arch/x86/westmereex/other.json b/tools/perf/pmu-events/arch/x86/westmereex/other.json
+index bcf5bcf637c0..c0cf8bae8074 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereex/other.json
++++ b/tools/perf/pmu-events/arch/x86/westmereex/other.json
+@@ -15,46 +15,6 @@
+         "SampleAfterValue": "2000000",
+         "UMask": "0x1"
+     },
+-    {
+-        "BriefDescription": "L1I instruction fetch stall cycles",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.CYCLES_STALLED",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x4"
+-    },
+-    {
+-        "BriefDescription": "L1I instruction fetch hits",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.HITS",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "L1I instruction fetch misses",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.MISSES",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x2"
+-    },
+-    {
+-        "BriefDescription": "L1I Instruction fetches",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.READS",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x3"
+-    },
+-    {
+-        "BriefDescription": "Large ITLB hit",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x82",
+-        "EventName": "LARGE_ITLB.HIT",
+-        "SampleAfterValue": "200000",
+-        "UMask": "0x1"
+-    },
+     {
+         "BriefDescription": "Loads that partially overlap an earlier store",
+         "Counter": "0,1,2,3",
+diff --git a/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json b/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json
+index 0c3501e6e5a3..1800c6ecbf80 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json
+@@ -152,6 +152,14 @@
+         "SampleAfterValue": "200000",
+         "UMask": "0x20"
+     },
++    {
++        "BriefDescription": "Large ITLB hit",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x82",
++        "EventName": "LARGE_ITLB.HIT",
++        "SampleAfterValue": "200000",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Retired loads that miss the DTLB (Precise Event)",
+         "Counter": "0,1,2,3",
 -- 
- i.
+2.49.0.395.g12beb8f557-goog
 
