@@ -1,87 +1,88 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE011EBA1C
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 12:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D2C264F89
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 12:52:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742907116; cv=none; b=PFQazeYQ9zHJa6Nm2ZjZQtCleOvuZXjL7kfQ34z++RutFCJD6Ly46FBbgy0lYd7VtofELVYtG44NUK9chHRKPr8PoFwfkeEi14DrHpR42OUm4p1Cj0IJedET9mUWwY2jb6Jluq97hSuGonlk1GDqn+bpHMrL5LYMsSjS/pXxtbQ=
+	t=1742907129; cv=none; b=qqchWK2BsHV5qzYF45XIlYOBBjb349BNpihIir6PMOkB2x5t07FXgJ3u8ElQLCcxjJc70pMdSAxUXGhycfwRq+Cclk967aMXraKnHSB425bLUkM9GexbZfNRNkALIcrctrw8oYCPKYVIOCthD2gXWit3uY2ZZUZUTIsXJh9MUuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742907116; c=relaxed/simple;
-	bh=04WyPtnaqXX/qjdJRYC16LNgsnbV5owsAL6ATqenmEQ=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=gQJHiL9YgUxAkkKWAfBlP0+ERY/rAoobvh77ELXoi74LfBVMkPYVAXzYj9MYn3KzVEXOcvOGvOQCucqhhg/gkw8EgpGFYyU5YOywBwWXieH+opjOIqBbgV1XU+GKwEW8QgLAG7G/Je8i23JjlN1NmQrkbnUoCUumP1SdkEz6dto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DDalLAdL; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1742907129; c=relaxed/simple;
+	bh=tj03Iy2cOddp5Dpo6rnyDthdPVJfZRvM2w2yOeQBtyc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i4GUIgbL8af9vF7xLCWscNZqEGlr6z/2yWOYbb7GYWONXjHTrWs9slFgvamf98cZWjBQrpx0e2wdMifP8UaapLDMFN8qB+ePQ7TBohKj7HuM5SlZVxEPjT1OFJ8KGIj5V9r3TW4xUQIesKqN0b1LHutabHXTmla/r1NbdkYVGFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=CX5aDAh+; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DDalLAdL"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742907102;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IOe5X9hTl3U+JuiEs3iaGAEn3PxEP3IbrqzHiKu85PU=;
-	b=DDalLAdLc1qsrGojQfDv+X25eSAk9RrKF+RV8ZtD97V3nbAiMOhFWvAKek/ziJqHzxMzFo
-	KJioyNTcyN+0FbwfqSSrxT75ynzhZo4+MPlOXhd5HPXdxqB4Wikq7M2pfZZDVSuWvz1Y/I
-	zUOfOR9vV5WiNaEJvdDw1tUNIAN6BT4=
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="CX5aDAh+"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-47686580529so53191101cf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 05:52:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1742907127; x=1743511927; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oPJxOALUzRJxRqwO/dJ1oQ2Yu8yWnLQ9Qghb9Fdffx4=;
+        b=CX5aDAh+B2RplNkVJaER0zHAmQ++nERhrzKiz8fSi4iwM4tbDKnj5Gj5wym3VClJKe
+         WGNk9eC8v8wl56SR/ICHu/H+Vqn929dHqH6bHeBuYWocWOoW4qEX0dtVtGU86wtfJgVi
+         xLpEzUF0x+Yh3CeO5dQ/U2HtPgP2/8wRVLZOZQT7o+1yS/X3E4saigIdwBZ8eMqN+/2Y
+         Z9v9+A3c5y4X9BclrDEMya1DNFrbNNREWJfgiO8o4DOWqQtveztTgxa7/FbHkq/RmPgX
+         FxlVTCCBByZptzq96ilWR2RVhryQJnvYbnz4n3e+0popfOVLxFZOOB5oG6bGQICU8fYO
+         Sy8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742907127; x=1743511927;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oPJxOALUzRJxRqwO/dJ1oQ2Yu8yWnLQ9Qghb9Fdffx4=;
+        b=FhYoZYR3f+jSUqPXzZdBeKRA+AOiGfPmKE0Dfwwub+V8OOLwyH6UQqMEPcNY+uPIbt
+         nnZOGSy5tFK9u7CXG1igkWQycANNvlJSIpEh/5WyuWaWp18UueE/xKtM5KrjSBzBXpgU
+         K+3qsM/Pm/1BRVhwxJ1POAM7aStud2pUCyatbRkS10vYWnEvmBgniVfDOlr4DYITsqre
+         KTQdE3n+QxDYjt8CJj3t29wHagTFJWQDwMqIh7h20B1opqFpZWY2zAhkwS1nVy2N1FdM
+         K9Iixbz+PtDCPXyYM9MBo3tj3sPYFpV5WBvzYWXEkZo9XLaC7ihyMPAS/mmQYklft69f
+         UkMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVVobxUvG7YX+zg4ljIJQWyp9W3v3WUL4BXBSrwFMQfGdjRiBmCT1S9pUDZAqM//Ei6H3QeW9Uw5rtsncA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2llLYOlBLr0JjwSPoamwbQbVta3cs/Z9nwIQa2USc591gUUyo
+	SxfXAN73SPvENflRjWj0fEyni8GfwDOKig/XBfHoOaJCE9t2WSPgasWuDZyzor1Pobl5NnOapvE
+	6X9M=
+X-Gm-Gg: ASbGnctPcTN23s0tXALwFBkOOnzt0sRAT64yZTHs8LPKxgYIvM3KS9evg6SS7czQxBk
+	KT98GWhR+cQnXJf6gT7u4qkISjpon9r8qnJoWAuiYWfMHwRzol4yjQeM5jxuB9Oas9IhNWTn4ot
+	Zv6Hz5GB+sqeYuNAT/LocXUE8WekON59Calda+Se3iLVoEnsvtHXMeIkoF/nFYBAOf6ABTTZqQI
+	pMTqqPZJBuU+n5JH+V5fQBSXECwlfQWBhk6Hke3c6OBabm1MJ9ZG9VFkyiTHRn1uUYEgY3ylQAq
+	FbcZV2HJFpXRuLROO413H6KOKmy1mJ7hbvm7KtW33A==
+X-Google-Smtp-Source: AGHT+IGqEToBEJbz0GNzaBV9LfDIy0nCojMJeT0B2Xje5qrSOLPVomFIE6YsCWtEQNR3KpSKRJwAJw==
+X-Received: by 2002:a05:622a:2513:b0:471:b8dd:6411 with SMTP id d75a77b69052e-4771de62864mr302505941cf.47.1742907127141;
+        Tue, 25 Mar 2025 05:52:07 -0700 (PDT)
+Received: from [172.22.32.183] ([99.209.85.25])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4771d18f6a3sm59449381cf.38.2025.03.25.05.52.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Mar 2025 05:52:06 -0700 (PDT)
+Message-ID: <bb7eb5db-6675-4e24-b08d-b48378ebbc88@kernel.dk>
+Date: Tue, 25 Mar 2025 06:52:05 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.1\))
-Subject: Re: [PATCH net-next] mptcp: pm: Fix undefined behavior in
- mptcp_remove_anno_list_by_saddr()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <20250325053058.412af7c5@kernel.org>
-Date: Tue, 25 Mar 2025 13:51:28 +0100
-Cc: Matthieu Baerts <matttbe@kernel.org>,
- Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org,
- mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] nvme/ioctl: move blk_mq_free_request() out of
+ nvme_map_user_request()
+To: Caleb Sander Mateos <csander@purestorage.com>,
+ Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Pavel Begunkov <asml.silence@gmail.com>
+Cc: Xinyu Zhang <xizhang@purestorage.com>, linux-nvme@lists.infradead.org,
+ io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250324200540.910962-1-csander@purestorage.com>
+ <20250324200540.910962-3-csander@purestorage.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20250324200540.910962-3-csander@purestorage.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <7EEE7001-CCD4-4A5A-8723-3AAC3A88F6FF@linux.dev>
-References: <20250325110639.49399-2-thorsten.blum@linux.dev>
- <7F685866-E146-4E99-A750-47154BDE44C6@linux.dev>
- <20250325053058.412af7c5@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-X-Migadu-Flow: FLOW_OUT
 
-On 25. Mar 2025, at 13:30, Jakub Kicinski wrote:
-> On Tue, 25 Mar 2025 12:33:11 +0100 Thorsten Blum wrote:
->> On 25. Mar 2025, at 12:06, Thorsten Blum wrote:
->>> 
->>> Commit e4c28e3d5c090 ("mptcp: pm: move generic PM helpers to pm.c")
->>> removed a necessary if-check, leading to undefined behavior because
->>> the freed pointer is subsequently returned from the function.
->>> 
->>> Reintroduce the if-check to fix this and add a local return variable to
->>> prevent further checkpatch warnings, which originally led to the removal
->>> of the if-check.
->>> 
->>> Fixes: e4c28e3d5c090 ("mptcp: pm: move generic PM helpers to pm.c")
->>> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
->>> ---  
->> 
->> Never mind, technically it's not actually undefined behavior because of
->> the implicit bool conversion, but returning a freed pointer still seems
->> confusing.
-> 
-> CCing the list back in.
+Reviewed-by: Jens Axboe <axboe@kernel.dK>
 
-Thanks!
-
-The change imo still makes sense, but the commit message should be
-updated. I'll submit a new patch for after the merge window.
-
+-- 
+Jens Axboe
