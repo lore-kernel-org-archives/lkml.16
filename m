@@ -1,152 +1,124 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C10269816;
-	Tue, 25 Mar 2025 21:48:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F1E1A8F60;
+	Tue, 25 Mar 2025 21:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742939286; cv=none; b=Q/hHX6Y8X7UzmoPBcCqNSfpod+He0hu+xYto/yaW0djmfj3nahjASkDYI71vflMRr2LyIAarD3L+YZVmQhfkWJZhnTWbXwwhV9/9Z5Bsg6n4bm265B6X+YUOkEajmOSdAjztHlfxZ7gJ5S0NmzcQVb90vz9BeM6GLqhMzQVDqFw=
+	t=1742939334; cv=none; b=HUeclsyFmKrHMZjOzuwN5SjINM8j86NclY0nYWQboMZ0jnOurfOn0w2xbGjtULWuem7WaCYRZp0DBTYsFNjA7nnq8+Rbfz7bg+BTtOlqm3XRDYjBhGibQ9V2YVOW0zOzTsEgfiJexcIDxHHkvrjpGriQ50ZcSKXgLaEq9GjPsBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742939286; c=relaxed/simple;
-	bh=04IRWgg/HpQRshpMYk9gujXG5ORwtlf+6cMMWI85m4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iodD2iI9Lk5HZ6uS1uwP/8HFy2nSLBxa2zdbXCPxZukc30u50Js6kwJg4EEKP6magAAnPZxutndzaiyBjRkvPIlo8uJnZdVvuoG/KI7AYuiM13itllUp79ZORs22PVOLiwSRwELZ68Fs0sPB1trcqHTjoxmdNNwtzWnlRjspSBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=EgFswtrb; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1742939334; c=relaxed/simple;
+	bh=FAJPQswga/rCguHs40Ezy1lKZ2ggl4FcpKvteTPRhOU=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=CEa5iUnSEmCEsk4s/oWhpPqENI0ZAEQ6dhANpEhicbih2S0cfFRJ93vHPXFkw9ldnqtLheGjgbyCFSDk6GAMyt27oKcvO4XOyxqrcf78nlzjwwovCtHWw3/lxqahW3jbrPCtGDK81/7QZjvM8ph1fo6vGehwqS8rx6iZtZRQeCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vNWKcaF9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w3n2/ARM; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EgFswtrb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1742939279;
-	bh=S/Lk7HTCz1mH7CxSdiTT8+k2unHQol0PXqqHmsW9bCs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=EgFswtrbMJibtXncdinzuy8fhAR0s72uqBclF27D1ZKmu7HM6UoGvjA6jM4FUGt2e
-	 0RQ1FvPwmGDANzlAAVzq9gcmZxXoXVwQqRzjrZo5zWaQbMMP6u+2i4fRuBkEdfBcn3
-	 5LRXgpIXi5FdllJg7esXORgiwZUlQ7lbKPQvGFJjvLMwBnIk6ZA2gIT5x/dEjH24ks
-	 WmzjcYaxQcwjtdkWuSRNiRCa5+x6dgUZoBvFO+MOHpnQHVVdUR+V5Ytln2/QpvAQ7g
-	 HK9KlIrNngRMpTnWTJ33NGSoiZ0HbrLfLdBOHXogSIVSAD0OF5zFSWQQ8Wv0WmSCkG
-	 bQEbaFQar3oWg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZMk721z93z4x21;
-	Wed, 26 Mar 2025 08:47:57 +1100 (AEDT)
-Date: Wed, 26 Mar 2025 08:47:56 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: duplicate patches in the tip tree
-Message-ID: <20250326084756.6554a6a0@canb.auug.org.au>
-In-Reply-To: <20250311150847.5a63db36@canb.auug.org.au>
-References: <20250311150847.5a63db36@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vNWKcaF9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w3n2/ARM"
+Date: Tue, 25 Mar 2025 21:48:49 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742939329;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Trc3lr1MI/DR/dpo7OS/gpOP28oHutpl0Zr17wM3BH4=;
+	b=vNWKcaF96ufQgPKL3cE6fH3fPNEYHT8WVutuUgvRn7X9s+FTnRUgKUJUCFzkbYkd9ILhTy
+	SJCK+l2SD8/GoCqG8qmJeRPWMU6uvmjQK5DeMixL5qeX4SL3u25OhVIT4ivHwnIeGBbywt
+	5MmL5wmPlV8+SLnxgrKUqE90zKq+97bZC5e8Bm0Q/Rc3P+BKiXjkbqls1V5IYt3f2LJQlc
+	XiWDzBwLCz/mXB2cGcYQT7lIivcq6jUCfO1fUYaqh/9qx8y1erqFYjN6D6ykFXVD3FyHRt
+	soLz/2ODZvgZ5H6IUdD4WaaAyRegR/C+I/IeBecx79s31B/ipk4dqBy+hy67sA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742939329;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Trc3lr1MI/DR/dpo7OS/gpOP28oHutpl0Zr17wM3BH4=;
+	b=w3n2/ARMO87LeEC/Ipv4PrezalVmcarHk/a5qqj4cmEzJSn9W3SXofxpaDFO1xl67z8WTI
+	YUfxGgY2ChTLN5AA==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/asm] x86/bitops: Use TZCNT mnemonic in <asm/bitops.h>
+Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+ Juergen Gross <jgross@suse.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250325175215.330659-1-ubizjak@gmail.com>
+References: <20250325175215.330659-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/t3Oy3LpV2mq0cUEnQ7sfoNo";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Message-ID: <174293932910.14745.11013941982683227927.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
---Sig_/t3Oy3LpV2mq0cUEnQ7sfoNo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The following commit has been merged into the x86/asm branch of tip:
 
-Hi all,
+Commit-ID:     0717b1392dc7e3f350e5a5d25ea794aa92210684
+Gitweb:        https://git.kernel.org/tip/0717b1392dc7e3f350e5a5d25ea794aa92210684
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Tue, 25 Mar 2025 18:52:01 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 25 Mar 2025 22:38:29 +01:00
 
-On Tue, 11 Mar 2025 15:08:47 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> The following commits are also in the mm tree as different commits
-> (but the same patches):
->=20
->   0b3bc3354eb9 ("arm64: vdso: Switch to generic storage implementation")
->   127b0e05c166 ("vdso: Rename included Makefile")
->   30533a55ec8e ("parisc: Remove unused symbol vdso_data")
->   31e9fa2ba9ad ("arm: vdso: Switch to generic storage implementation")
->   365841e1557a ("vdso: Add generic architecture-specific data storage")
->   3ef32d90cdaa ("x86/vdso: Fix latent bug in vclock_pages calculation")
->   46fe55b204bf ("riscv: vdso: Switch to generic storage implementation")
->   51d6ca373f45 ("vdso: Add generic random data storage")
->   5b47aba85810 ("vdso: Introduce vdso/align.h")
->   69896119dc9d ("MIPS: vdso: Switch to generic storage implementation")
->   9729dceab17b ("x86/vdso/vdso2c: Remove page handling")
->   998a8a260819 ("vdso: Remove remnants of architecture-specific random st=
-ate storage")
->   ac1a42f4e4e2 ("vdso: Remove remnants of architecture-specific time stor=
-age")
->   d2862bb9d9ca ("LoongArch: vDSO: Switch to generic storage implementatio=
-n")
->   dafde29605eb ("x86/vdso: Switch to generic storage implementation")
->   df7fcbefa710 ("vdso: Add generic time data storage")
+x86/bitops: Use TZCNT mnemonic in <asm/bitops.h>
 
-Those patches are now in Linus' tree.
+Current minimum required version of binutils is 2.25,
+which supports TZCNT instruction mnemonic.
 
-> These are causing the following conflicts:
->=20
-> CONFLICT (content): Merge conflict in arch/arm64/include/asm/vdso/compat_=
-gettim
-> ofday.h
-> CONFLICT (content): Merge conflict in arch/arm64/include/asm/vdso/vsyscal=
-l.h
-> CONFLICT (content): Merge conflict in arch/powerpc/include/asm/vdso/getti=
-meofday.h
-> CONFLICT (content): Merge conflict in arch/s390/kernel/time.c
-> CONFLICT (content): Merge conflict in arch/x86/include/asm/vdso/gettimeof=
-day.h
-> CONFLICT (content): Merge conflict in include/asm-generic/vdso/vsyscall.h
-> CONFLICT (content): Merge conflict in include/vdso/datapage.h
-> CONFLICT (content): Merge conflict in include/vdso/helpers.h
-> CONFLICT (content): Merge conflict in kernel/time/namespace.c
-> CONFLICT (content): Merge conflict in kernel/time/vsyscall.c
-> CONFLICT (add/add): Merge conflict in lib/vdso/datastore.c
-> CONFLICT (content): Merge conflict in lib/vdso/gettimeofday.c
+Replace "REP; BSF" in variable__{ffs,ffz}() function
+with this proper mnemonic.
 
-The duplicates in the mm-unstable branch of the mm tree are
+No functional change intended.
 
-  93b9079e691e ("vdso: remove remnants of architecture-specific time storag=
-e")
-  82d8b6446a79 ("vdso: remove remnants of architecture-specific random stat=
-e storage")
-  f37aec9ec784 ("x86/vdso/vdso2c: remove page handling")
-  dd2e8659933d ("x86/vdso: switch to generic storage implementation")
-  9ac741560b0b ("powerpc/vdso: switch to generic storage implementation")
-  4ca30cfeffb7 ("MIPS: vdso: switch to generic storage implementation")
-  b9e3ec578ed5 ("s390/vdso: switch to generic storage implementation")
-  64ed071644a8 ("arm: vdso: switch to generic storage implementation")
-  af0452ad92f5 ("LoongArch: vDSO: switch to generic storage implementation")
-  f3f0b0bb602e ("riscv: vdso: switch to generic storage implementation")
-  74100951337a ("arm64: vdso: switch to generic storage implementation")
-  08652b7a1b59 ("vdso: add generic architecture-specific data storage")
-  0ab86f7ece6f ("vdso: add generic random data storage")
-  f3b11eb27436 ("vdso: add generic time data storage")
-  4559a06ae7c1 ("vdso: rename included Makefile")
-  0f187d7ac318 ("vdso: introduce vdso/align.h")
-  2d1b4965384c ("parisc: remove unused symbol vdso_data")
-  837f2f1a07ad ("x86/vdso: fix latent bug in vclock_pages calculation")
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://lore.kernel.org/r/20250325175215.330659-1-ubizjak@gmail.com
+---
+ arch/x86/include/asm/bitops.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/t3Oy3LpV2mq0cUEnQ7sfoNo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfjJIwACgkQAVBC80lX
-0Gzzhwf/d42uHL9S7Wgd6/niqTAoAfIupwk7fGPhcY5CpLjDYx/r+xjvdtSbykJl
-aTXMU4xQgju4qEo6R8jjPxY/2v9P44vwH3bMOZfQ+Rja5vGSywnBl3LlSAUOoAx0
-uvVoJ+sgs1szSJ2QWRs027UlL4dRbojO8Aanmb+zLxoBZIhdKMYufhfyASvS1rXm
-h727+CHBk0IYUYXPAi0dglPb0BrBPQMaPSOn3XhbXaMgfdw22ROKMTCBfANnuqJH
-CPEtvyT3/dHcY7pHW+1hs98WF8BwhcP0YWvGbrLwO28UYSv2LDK0zMMCjqr4SOuf
-Uz7I84ppUpuYea0bbXHVnPCbfG19cQ==
-=s6ZR
------END PGP SIGNATURE-----
-
---Sig_/t3Oy3LpV2mq0cUEnQ7sfoNo--
+diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+index 100413a..bbaf75e 100644
+--- a/arch/x86/include/asm/bitops.h
++++ b/arch/x86/include/asm/bitops.h
+@@ -248,7 +248,7 @@ arch_test_bit_acquire(unsigned long nr, const volatile unsigned long *addr)
+ 
+ static __always_inline unsigned long variable__ffs(unsigned long word)
+ {
+-	asm("rep; bsf %1,%0"
++	asm("tzcnt %1,%0"
+ 		: "=r" (word)
+ 		: ASM_INPUT_RM (word));
+ 	return word;
+@@ -267,7 +267,7 @@ static __always_inline unsigned long variable__ffs(unsigned long word)
+ 
+ static __always_inline unsigned long variable_ffz(unsigned long word)
+ {
+-	asm("rep; bsf %1,%0"
++	asm("tzcnt %1,%0"
+ 		: "=r" (word)
+ 		: "r" (~word));
+ 	return word;
