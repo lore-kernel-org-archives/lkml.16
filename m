@@ -1,169 +1,212 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from mail.cjdns.fr (mail.cjdns.fr [5.135.140.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6655125A2CB;
-	Tue, 25 Mar 2025 13:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED6325A2A2;
+	Tue, 25 Mar 2025 13:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.135.140.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742910273; cv=none; b=rKgZgQgIbcm+OIR/bkGMkl8iIkNDxkRid6LnIG9KcH2h92unnxva1P2Dt0JxHFMs3sVv7CGEYGJQu7Rm6uIOnu4hG+vsmkWvpQbQzdy2kGKFmDwez/M9dOl8QYcykDrlgOXAQQ4A9UlL5QeiRm63Y2s/cPvM2SJ7UL0jOqITZn4=
+	t=1742910273; cv=none; b=NdJf4t07wmA4lMFujBxUAqTnP8E8xhBJmJFtlNjZI0eiuP9YPXt/CxNY0LSWGei3GncbWFb6KfeKyckRV5byyZ3QHkuDgcKsGQEeuurB30SqMOczLw0WqC/CqPDEEMYET8FQedfThP2467QSANK0mLpetR4khf9xkJkrKmcfMFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742910273; c=relaxed/simple;
-	bh=6lx1eOJhv9ppzEicGls86YH1VCpVV0968XvMnr65aWQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n4kqJV+ximu7OjS+JQ6sVhSaEFEh+B63oM7WbcUGMNk2rlFSctM3ROoe2o1L5KtQITCR4DNntztCEFS8bJICfQabXCO/BU/4U+Z4wAmUVf2d4Ux3lnA2U0cc8MHTpraz9by3FWPQdT0e9cw/YY4BsIDMym8JnAzFmwHNnbHN2Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0FD6C43152;
-	Tue, 25 Mar 2025 13:44:25 +0000 (UTC)
-Message-ID: <bff3d8a4-2873-4613-b7fd-de0e8320f191@ghiti.fr>
-Date: Tue, 25 Mar 2025 14:44:25 +0100
+	bh=GKnfwm89mmfTNkDSHGK+DluwZV3D+ys0rrJwPtcw7dc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XwvEVCpbJk4TmSqcMdawa4DWzGDuaNxQuqI19MqWxmhGgkpEJksgeUJw4NXRc8Hc1KYBEotLHcAY8MmUbzXjT40DEve2Eak+nguf8pCEffSmL6el0fL/ZkAaPIosUje4nRVtb9zCEoOhteoktdIWfN2dTtMussz8Zmdo1xerv/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=TsLRFQae; arc=none smtp.client-ip=5.135.140.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cjdns.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="TsLRFQae"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3DDBC2CF600;
+	Tue, 25 Mar 2025 14:44:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjdns.fr; s=dkim;
+	t=1742910269; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=NQ0h1ZQqbwKMzwOfS03yAjtcEQ2rUK3ow/HIMnwx/+4=;
+	b=TsLRFQaeonfMoobHfxTOaLE4Ne640flWZasb1MHRd8eY6OnDJBuzFKwVAirbjz3mSSJrtq
+	zWKVMZSRWAycQu7X/8iHfYO98g6Hw35qEZgSOFppcS6ZtNUXMQO1sA1fhA46gLqBgWktc2
+	4rl4r6lARjbk9TFhHofpZMHjZXe8lauaoqq93dNFL2HUe6VqOBw5be82YapnrsXqDmWu8W
+	vQO2BYBtfXrHPchdmyrudE94oIXsxN9zLSEYt5N4A41XHtZGNPWZCXsec5hmN7K9Spc0ow
+	mcPo8KfoJ2Hywr0yihe9LhzjVVHGbNnoTpAh4QuyShDqi6LWF+OTAbnlEJAJqw==
+From: Caleb James DeLisle <cjd@cjdns.fr>
+To: linux-mips@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	benjamin.larsson@genexis.eu,
+	Caleb James DeLisle <cjd@cjdns.fr>
+Subject: [PATCH v2 09/10] mips: dts: Add EcoNet DTS with EN751221 and SmartFiber XP8421-B board
+Date: Tue, 25 Mar 2025 13:43:48 +0000
+Message-Id: <20250325134349.2476458-10-cjd@cjdns.fr>
+In-Reply-To: <20250325134349.2476458-1-cjd@cjdns.fr>
+References: <20250325134349.2476458-1-cjd@cjdns.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/6] RISC-V: add vector crypto extension validation
- checks
-Content-Language: en-US
-To: Conor Dooley <conor@kernel.org>, linux-riscv@lists.infradead.org
-Cc: Conor Dooley <conor.dooley@microchip.com>,
- Eric Biggers <ebiggers@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?=
- <cleger@rivosinc.com>, Andy Chiu <andybnac@gmail.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250312-abide-pancreas-3576b8c44d2c@spud>
- <20250312-entertain-shaking-b664142c2f99@spud>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250312-entertain-shaking-b664142c2f99@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduiedvkedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeehiefhuddtuddukeetkeehhedtffduhfevfeeftdefveffgfeuffejjeejfeekueenucffohhmrghinhepghhithhhuhgsrdgtohhmnecukfhppeefuddrfedvrdekuddrudekjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeefuddrfedvrdekuddrudekjedphhgvlhhopegludelvddrudeikedrvddurddvhegnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheptghonhhorheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopegtohhnohhrrdguohholhgvhiesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopegvsghighhgvghrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdpr
- hgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomh
-X-GND-Sasl: alex@ghiti.fr
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-Hi Conor,
+Add DTS files in support of EcoNet platform, including SmartFiber XP8421-B,
+a low cost commercially available board based on EN751221.
 
-On 12/03/2025 14:11, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
->
-> Using Clement's new validation callbacks, support checking that
-> dependencies have been satisfied for the vector crpyto extensions.
-> Currently riscv_isa_extension_available(<vector crypto>) will return
-> true on systems that support the extensions but vector itself has been
-> disabled by the kernel, adding validation callbacks will prevent such a
-> scenario from occuring and make the behaviour of the extension detection
-> functions more consistent with user expectations - it's not expected to
-> have to check for vector AND the specific crypto extension.
->
-> The Unpriv spec states:
-> | The Zvknhb and Zvbc Vector Crypto Extensions --and accordingly the
-> | composite extensions Zvkn, Zvknc, Zvkng, and Zvksc-- require a Zve64x
-> | base, or application ("V") base Vector Extension. All of the other
-> | Vector Crypto Extensions can be built on any embedded (Zve*) or
-> | application ("V") base Vector Extension.
->
-> While this could be used as the basis for checking that the correct base
-> for individual crypto extensions, but that's not really the kernel's job
-> in my opinion and it is sufficient to leave that sort of precision to
-> the dt-bindings. The kernel only needs to make sure that vector, in some
-> form, is available.
->
-> Link: https://github.com/riscv/riscv-isa-manual/blob/main/src/vector-crypto.adoc#extensions-overview
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->   arch/riscv/kernel/cpufeature.c | 49 +++++++++++++++++++++++-----------
->   1 file changed, 33 insertions(+), 16 deletions(-)
->
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-> index dbea6ed3f4da..4fa951e9f1cf 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -141,6 +141,23 @@ static int riscv_ext_vector_float_validate(const struct riscv_isa_ext_data *data
->   	return 0;
->   }
->   
-> +static int riscv_ext_vector_crypto_validate(const struct riscv_isa_ext_data *data,
-> +					    const unsigned long *isa_bitmap)
-> +{
-> +	if (!IS_ENABLED(CONFIG_RISCV_ISA_V))
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * It isn't the kernel's job to check that the binding is correct, so
-> +	 * it should be enough to check that any of the vector extensions are
-> +	 * enabled, which in-turn means that vector is usable in this kernel
-> +	 */
+Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
+---
+To my knowledge, evaluation boards from EcoNet are not currently available.
+SmartFiber XP8421-B is currently manufactured, low cost, and can be
+purchased as single units by the general public.
+---
+ arch/mips/boot/dts/Makefile                   |  1 +
+ arch/mips/boot/dts/econet/Makefile            |  2 +
+ arch/mips/boot/dts/econet/en751221.dtsi       | 62 +++++++++++++++++++
+ .../econet/en751221_smartfiber_xp8421-b.dts   | 19 ++++++
+ arch/mips/econet/Kconfig                      | 11 ++++
+ 5 files changed, 95 insertions(+)
+ create mode 100644 arch/mips/boot/dts/econet/Makefile
+ create mode 100644 arch/mips/boot/dts/econet/en751221.dtsi
+ create mode 100644 arch/mips/boot/dts/econet/en751221_smartfiber_xp8421-b.dts
 
+diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+index ff468439a8c4..7375c6ced82b 100644
+--- a/arch/mips/boot/dts/Makefile
++++ b/arch/mips/boot/dts/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ subdir-$(CONFIG_BMIPS_GENERIC)		+= brcm
+ subdir-$(CONFIG_CAVIUM_OCTEON_SOC)	+= cavium-octeon
++subdir-$(CONFIG_ECONET)			+= econet
+ subdir-$(CONFIG_EYEQ)			+= mobileye
+ subdir-$(CONFIG_FIT_IMAGE_FDT_MARDUK)   += img
+ subdir-$(CONFIG_FIT_IMAGE_FDT_BOSTON)	+= img
+diff --git a/arch/mips/boot/dts/econet/Makefile b/arch/mips/boot/dts/econet/Makefile
+new file mode 100644
+index 000000000000..b467d5624e39
+--- /dev/null
++++ b/arch/mips/boot/dts/econet/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0
++dtb-$(CONFIG_DTB_ECONET_SMARTFIBER_XP8421_B)	+= en751221_smartfiber_xp8421-b.dtb
+diff --git a/arch/mips/boot/dts/econet/en751221.dtsi b/arch/mips/boot/dts/econet/en751221.dtsi
+new file mode 100644
+index 000000000000..c26b3a1eea92
+--- /dev/null
++++ b/arch/mips/boot/dts/econet/en751221.dtsi
+@@ -0,0 +1,62 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++/dts-v1/;
++
++/ {
++	compatible = "econet,en751221";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	hpt_clock: clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <200000000>;  /* 200 MHz */
++	};
++
++	cpus: cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "mips,mips24KEc";
++			reg = <0>;
++		};
++	};
++
++	cpuintc: interrupt-controller {
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++		interrupt-controller;
++		compatible = "mti,cpu-interrupt-controller";
++	};
++
++	intc: interrupt-controller@1fb40000 {
++		compatible = "econet,en751221-intc";
++		reg = <0x1fb40000 0x100>;
++		interrupt-parent = <&cpuintc>;
++		interrupts = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		econet,shadow-interrupts = <7 2>, <8 3>, <13 12>, <30 29>;
++	};
++
++	uart: serial@1fbf0000 {
++		compatible = "ns16550";
++		reg = <0x1fbf0000 0x30>;
++		reg-io-width = <4>;
++		reg-shift = <2>;
++		interrupt-parent = <&intc>;
++		interrupts = <0>;
++		clock-frequency = <1843200>;
++	};
++
++	timer_hpt: timer@1fbf0400 {
++		compatible = "econet,en751221-timer";
++		reg = <0x1fbf0400 0x100>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <30>;
++		clocks = <&hpt_clock>;
++	};
++};
+diff --git a/arch/mips/boot/dts/econet/en751221_smartfiber_xp8421-b.dts b/arch/mips/boot/dts/econet/en751221_smartfiber_xp8421-b.dts
+new file mode 100644
+index 000000000000..9289dcb2a632
+--- /dev/null
++++ b/arch/mips/boot/dts/econet/en751221_smartfiber_xp8421-b.dts
+@@ -0,0 +1,19 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++/dts-v1/;
++
++#include "en751221.dtsi"
++
++/ {
++	model = "SmartFiber XP8421-B";
++	compatible = "smartfiber,xp8421-b", "econet,en751221";
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x00000000 0x1c000000>;
++	};
++
++	chosen {
++		stdout-path = "/serial@1fbf0000:115200";
++		linux,usable-memory-range = <0x00020000 0x1bfe0000>;
++	};
++};
+diff --git a/arch/mips/econet/Kconfig b/arch/mips/econet/Kconfig
+index d03f90f3daa4..fd69884cc9a8 100644
+--- a/arch/mips/econet/Kconfig
++++ b/arch/mips/econet/Kconfig
+@@ -32,6 +32,17 @@ choice
+ 
+ 	config DTB_ECONET_NONE
+ 		bool "None"
++
++	config DTB_ECONET_SMARTFIBER_XP8421_B
++		bool "EN751221 SmartFiber XP8421-B"
++		depends on SOC_ECONET_EN751221
++		select BUILTIN_DTB
++		help
++		  The SmartFiber XP8421-B is a device based on the EN751221 SoC.
++		  It has 512MB of memory and 256MB of NAND flash. This kernel
++		  needs only an appended initramfs to boot. It can be loaded
++		  through XMODEM and booted from memory in the bootloader, or
++		  it can be packed in tclinux.trx format and written to flash.
+ endchoice
+ 
+ endif
+-- 
+2.39.5
 
-I'm not sure to understand this comment. For example, Zvknhb depends on 
-Zve64x so only checking for Zve32x would make Zvknhb usable in the 
-kernel even though it's actually not supported right? Or am I missing 
-something?
-
-Thanks,
-
-Alex
-
-
-> +	if (!__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZVE32X))
-> +		return -EPROBE_DEFER;
-> +
-> +	return 0;
-> +}
-> +
->   static int riscv_ext_zca_depends(const struct riscv_isa_ext_data *data,
->   				 const unsigned long *isa_bitmap)
->   {
-> @@ -400,8 +417,8 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
->   	__RISCV_ISA_EXT_DATA(zksed, RISCV_ISA_EXT_ZKSED),
->   	__RISCV_ISA_EXT_DATA(zksh, RISCV_ISA_EXT_ZKSH),
->   	__RISCV_ISA_EXT_DATA(ztso, RISCV_ISA_EXT_ZTSO),
-> -	__RISCV_ISA_EXT_SUPERSET(zvbb, RISCV_ISA_EXT_ZVBB, riscv_zvbb_exts),
-> -	__RISCV_ISA_EXT_DATA(zvbc, RISCV_ISA_EXT_ZVBC),
-> +	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zvbb, RISCV_ISA_EXT_ZVBB, riscv_zvbb_exts, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvbc, RISCV_ISA_EXT_ZVBC, riscv_ext_vector_crypto_validate),
->   	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zve32f, RISCV_ISA_EXT_ZVE32F, riscv_zve32f_exts, riscv_ext_vector_float_validate),
->   	__RISCV_ISA_EXT_DATA_VALIDATE(zve32x, RISCV_ISA_EXT_ZVE32X, riscv_ext_vector_x_validate),
->   	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zve64d, RISCV_ISA_EXT_ZVE64D, riscv_zve64d_exts, riscv_ext_vector_float_validate),
-> @@ -409,20 +426,20 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
->   	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zve64x, RISCV_ISA_EXT_ZVE64X, riscv_zve64x_exts, riscv_ext_vector_x_validate),
->   	__RISCV_ISA_EXT_DATA(zvfh, RISCV_ISA_EXT_ZVFH),
->   	__RISCV_ISA_EXT_DATA(zvfhmin, RISCV_ISA_EXT_ZVFHMIN),
-> -	__RISCV_ISA_EXT_DATA(zvkb, RISCV_ISA_EXT_ZVKB),
-> -	__RISCV_ISA_EXT_DATA(zvkg, RISCV_ISA_EXT_ZVKG),
-> -	__RISCV_ISA_EXT_BUNDLE(zvkn, riscv_zvkn_bundled_exts),
-> -	__RISCV_ISA_EXT_BUNDLE(zvknc, riscv_zvknc_bundled_exts),
-> -	__RISCV_ISA_EXT_DATA(zvkned, RISCV_ISA_EXT_ZVKNED),
-> -	__RISCV_ISA_EXT_BUNDLE(zvkng, riscv_zvkng_bundled_exts),
-> -	__RISCV_ISA_EXT_DATA(zvknha, RISCV_ISA_EXT_ZVKNHA),
-> -	__RISCV_ISA_EXT_DATA(zvknhb, RISCV_ISA_EXT_ZVKNHB),
-> -	__RISCV_ISA_EXT_BUNDLE(zvks, riscv_zvks_bundled_exts),
-> -	__RISCV_ISA_EXT_BUNDLE(zvksc, riscv_zvksc_bundled_exts),
-> -	__RISCV_ISA_EXT_DATA(zvksed, RISCV_ISA_EXT_ZVKSED),
-> -	__RISCV_ISA_EXT_DATA(zvksh, RISCV_ISA_EXT_ZVKSH),
-> -	__RISCV_ISA_EXT_BUNDLE(zvksg, riscv_zvksg_bundled_exts),
-> -	__RISCV_ISA_EXT_DATA(zvkt, RISCV_ISA_EXT_ZVKT),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvkb, RISCV_ISA_EXT_ZVKB, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvkg, RISCV_ISA_EXT_ZVKG, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvkn, riscv_zvkn_bundled_exts, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvknc, riscv_zvknc_bundled_exts, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvkned, RISCV_ISA_EXT_ZVKNED, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvkng, riscv_zvkng_bundled_exts, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvknha, RISCV_ISA_EXT_ZVKNHA, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvknhb, RISCV_ISA_EXT_ZVKNHB, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvks, riscv_zvks_bundled_exts, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvksc, riscv_zvksc_bundled_exts, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvksed, RISCV_ISA_EXT_ZVKSED, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvksh, RISCV_ISA_EXT_ZVKSH, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvksg, riscv_zvksg_bundled_exts, riscv_ext_vector_crypto_validate),
-> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvkt, RISCV_ISA_EXT_ZVKT, riscv_ext_vector_crypto_validate),
->   	__RISCV_ISA_EXT_DATA(smaia, RISCV_ISA_EXT_SMAIA),
->   	__RISCV_ISA_EXT_DATA(smmpm, RISCV_ISA_EXT_SMMPM),
->   	__RISCV_ISA_EXT_SUPERSET(smnpm, RISCV_ISA_EXT_SMNPM, riscv_xlinuxenvcfg_exts),
