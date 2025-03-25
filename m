@@ -1,252 +1,286 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74981F4E4B
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 15:17:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD6021F4E4B
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 15:18:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742915852; cv=none; b=PwMu1Vu8r5pOmyfoC0ClrqQUemJNeYBHMYI8FnpihRzDVGXrbVmpYCF/VV12l883icNU5WIdjpOhRI+hGGpSmU/tQwHK2dGlHPlgeB3fE06tDcVpC9e3N+7wscTUIE1inSEDkNF00enk4HwX4JPxtKBM+kUkY+YyaqPxc0KP2LI=
+	t=1742915891; cv=none; b=XBSM/cMQoXYO92GF92QmhZ/sxKH/llEtItg9QeJi+rQeA7FU4i9WA8WRJ/uZR+RH5KxtyeiddRScR4v/4TwkpU2ToCfjCMMkGvx6iYD9o7pkpdTFOZnXKfuNC4wzZtulVEv9et7XaAu7nqiN+5vX3miLFlJf9EHAEsAXmmYq5Cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742915852; c=relaxed/simple;
-	bh=Ayp5UJ5po3xqzSmNKz9lmgoFoJ0PtHgNI6fQbZIbiZU=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=qPFLL2l6W/W5pilVfCCmNjnnlZ/7M7k0JjyInjd0eFPEsSLwknHgYW7jZswZs3kFoOzE232LaTekpGvyngAt9eLl5lGuJoyh/Z3FMm0kjroe++ZT0SYaAvz5dZOD9O9E3XlaRMts0u7DdBAQ/cvoykIcPpVVLpwKoaPklQZVEHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vS3AREuu; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vS3AREuu"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e572df6db3eso8042011276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 08:17:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742915850; x=1743520650; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=SxYgSR+rs6fV7hfbOGIpD5imBossFIK7oKYgVysxITY=;
-        b=vS3AREuurja596x9YS9uvMArbGuRT5OI9Osr6R77WDuamts8PrFh7G7AuDLAmTEThW
-         IX5lVbrNqoerGu+BSAWkPw0p2LJg+x5Z0J7gsF608P3R3F5upLNhYJ0cf+Zu06p+/MtH
-         i+8GdejFc6+0ixc+y2bpRycS5k6ougENdN592+1e4fp6lSLvjX3VngEt6oHnDrG+b3Wk
-         +xPayKnlMANZSzGcBVMr8n/8KUej5FGJCLX0xygk9UKL6jmDSBOznDvWwZESNoA80D6t
-         S5wFGk3CdQR5ZRomBWoyUzCZi2gN+ocoLAC3pCua6Q+jUS8+Kyn2WjfRyjvIAje12q93
-         ZR2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742915850; x=1743520650;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SxYgSR+rs6fV7hfbOGIpD5imBossFIK7oKYgVysxITY=;
-        b=YmgqUADtEjVsEbK5jQBmzvxEr7GOqaYcE0xmEwdGwyH+iOj6GiDHQnxiBF5YTSSlG+
-         eQkNsKqpzmxypDlBo+FZgF0k1it9kF1pg3f7YoomB162nOfN90C7aYdNKhSX8DxY7pr2
-         hs2UpoDKqdPGuG9gViWih9pY9oJEnwLtQm6UEYBYXypXMpyVEQmnMDaAn4O6NmFWm9OW
-         UsYXqsB+mKpH1l93maFdc5yBxLCO2RbCR/5w4CtjQBWICxOjEXclUFJxubkNlw5I6yA1
-         4KS5R1QGS6C7O2dd/vg3H0gOVX4rBAfh7w7EXbBm3gMIXbUrt+uQM8/YwnXMk+M1AV6W
-         5pGg==
-X-Forwarded-Encrypted: i=1; AJvYcCV6ofBsbqP2n1RRW9iiS80PG7Ty/mCoOy8FAbtJWMdp8v9JJ2p0+ewRETe6+lisAnvljFaMJG6qE9kVUvs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5byQm8ZuFVGdv9jAIz5l6UHxkague1DWnwsJUPxs9l/QzNJUl
-	ndPTQbjDOFHUTLWS5SX919mTYY1oFtojzbYpNxG4Vl0Hsy6C5Ne6/1ySq5S++XYw40CSdtmBbVM
-	Svsq8OA==
-X-Google-Smtp-Source: AGHT+IEINV7YrXfOshiJ6K/FkvXqOBKQasAul8sgwc1ZhV3OP0uJELo3lpq86sVa2V0IbPf/KkRUGEy0sz4k
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:40b3:9c02:57a5:693c])
- (user=irogers job=sendgmr) by 2002:a25:b20f:0:b0:e60:9f05:a014 with SMTP id
- 3f1490d57ef6-e66a4d277c7mr7696276.3.1742915849717; Tue, 25 Mar 2025 08:17:29
- -0700 (PDT)
-Date: Tue, 25 Mar 2025 08:14:36 -0700
-Message-Id: <20250325151511.13628-1-irogers@google.com>
+	s=arc-20240116; t=1742915891; c=relaxed/simple;
+	bh=zkoP0hulZMAR7wBmbrzGy8q5F/HEyYjX8+IcYsgCaxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SMNFo7v60rw42GMwerL3F8LWrGRzx3snpobraA1vtmIeyxpCG/pJtFzEHDdmqqD4tTA2x2KjiU9X+NORZyhbJrbn1PpXeA2AVjyD1CQmUv2mZpFlaxqZKUJpDpNDTf0SvbBw2lOhB0SM0HrPBEv1LzuR4IjMaPtEYtckkaYL0Hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 221C81756;
+	Tue, 25 Mar 2025 08:18:14 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C720B3F58B;
+	Tue, 25 Mar 2025 08:18:07 -0700 (PDT)
+Date: Tue, 25 Mar 2025 15:18:03 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: suzuki.poulose@arm.com, mike.leach@linaro.org, james.clark@linaro.org,
+	alexander.shishkin@linux.intel.com, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] coresight: prevent deactivate active config while
+ enabling the config
+Message-ID: <20250325151803.GD604566@e132581.arm.com>
+References: <20250324191740.64964-1-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Subject: [PATCH v2 00/35] GNR retirement latencies, topic and metric updates
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250324191740.64964-1-yeoreum.yun@arm.com>
 
-Add default mean, min and max retirement latency values to GNR
-events. Update the topics on a number of events previously
-"other". Switch TMA metrics to the generated version. Add TMA 5.02
-metrics for sandybridge, ivytown, ivybridge and jaketown.
+Hi Levi,
 
-Events and metrics generated from the data and scripts in:
-https://github.com/intel/perfmon
-and:
-https://github.com/intel/perfmon/pull/298
+On Mon, Mar 24, 2025 at 07:17:40PM +0000, Yeoreum Yun wrote:
+> While enable active config via cscfg_csdev_enable_active_config(),
+> active config could be deactivated via configfs' sysfs interface.
+> This could make UAF issue in below scenario:
+> 
+> CPU0                                          CPU1
+> (sysfs enable)                                load module
+>                                               cscfg_load_config_sets()
+>                                               activate config. // sysfs
+>                                               (sys_active_cnt == 1)
+> ...
+> cscfg_csdev_enable_active_config()
+>   lock(csdev->cscfg_csdev_lock)
+>   // here load config activate by CPU1
+>   unlock(csdev->cscfg_csdev_lock)
+> 
+>                                               deactivate config // sysfs
+>                                               (sys_activec_cnt == 0)
+>                                               cscfg_unload_config_sets()
+>                                               unload module
+> 
+>   // access to config_desc which freed
+>   // while unloading module.
+>   cfs_csdev_enable_config
 
-v2: Fix arrowlake PMU/cpu prefixes.
+I am not sure if this flow can happen.  CoreSight configfs feature is
+integrated into the CoreSight core layer, and the other CoreSight
+modules are dependent on it.
 
-Ian Rogers (35):
-  perf vendor events: Update alderlake events/metrics
-  perf vendor events: Update AlderlakeN events/metrics
-  perf vendor events: Update arrowlake events/metrics
-  perf vendor events: Update bonnell events
-  perf vendor events: Update broadwell metrics
-  perf vendor events: Update broadwellde metrics
-  perf vendor events: Update broadwellx metrics
-  perf vendor events: Update cascadelakex events/metrics
-  perf vendor events: Update clearwaterforest events
-  perf vendor events: Update elkhartlake events
-  perf vendor events: Update emeraldrapids events/metrics
-  perf vendor events: Update grandridge events/metrics
-  perf vendor events: Add graniterapids retirement latencies
-  perf vendor events: Update haswell metrics
-  perf vendor events: Update haswellx metrics
-  perf vendor events: Update icelake events/metrics
-  perf vendor events: Update icelakex events/metrics
-  perf vendor events: Update ivybridge metrics
-  perf vendor events: Update ivytown metrics
-  perf vendor events: Update jaketown metrics
-  perf vendor events: Update lunarlake events/metrics
-  perf vendor events: Update meteorlake events/metrics
-  perf vendor events: Update nehalemep events
-  perf vendor events: Update nehalemex events
-  perf vendor events: Update rocketlake events/metrics
-  perf vendor events: Update sandybridge metrics
-  perf vendor events: Update sapphirerapids events/metrics
-  perf vendor events: Update sierraforest events
-  perf vendor events: Update skylake metrics
-  perf vendor events: Update skylakex events/metrics
-  perf vendor events: Update snowridgex events
-  perf vendor events: Update tigerlake metrics
-  perf vendor events: Update westmereep-dp events
-  perf vendor events: Update westmereep-dp events
-  perf vendor events: Update westmereep-dp events
+For example, if the ETM4x module is not removed, the kernel module
+management will natually prevent the CoreSight core module from being
+removed.
 
- .../arch/x86/alderlake/adl-metrics.json       | 485 ++++++++-------
- .../pmu-events/arch/x86/alderlake/cache.json  |  77 +++
- .../pmu-events/arch/x86/alderlake/memory.json |  55 ++
- .../pmu-events/arch/x86/alderlake/other.json  | 196 ------
- .../arch/x86/alderlake/pipeline.json          |  67 ++-
- .../arch/x86/alderlaken/adln-metrics.json     |  54 +-
- .../pmu-events/arch/x86/alderlaken/cache.json |  50 ++
- .../arch/x86/alderlaken/memory.json           |  40 ++
- .../pmu-events/arch/x86/alderlaken/other.json |  98 ---
- .../arch/x86/alderlaken/pipeline.json         |  11 +-
- .../arch/x86/arrowlake/arl-metrics.json       | 562 +++++++++---------
- .../pmu-events/arch/x86/arrowlake/cache.json  | 148 +++++
- .../pmu-events/arch/x86/arrowlake/memory.json |  11 +
- .../pmu-events/arch/x86/arrowlake/other.json  | 193 ------
- .../arch/x86/arrowlake/pipeline.json          | 163 ++++-
- .../pmu-events/arch/x86/bonnell/other.json    |   8 -
- .../pmu-events/arch/x86/bonnell/pipeline.json |   8 +
- .../arch/x86/broadwell/bdw-metrics.json       | 256 ++++----
- .../arch/x86/broadwellde/bdwde-metrics.json   | 180 +++---
- .../arch/x86/broadwellx/bdx-metrics.json      | 268 +++++----
- .../arch/x86/cascadelakex/cache.json          | 404 +++++++++++++
- .../arch/x86/cascadelakex/clx-metrics.json    | 389 ++++++------
- .../arch/x86/cascadelakex/other.json          | 404 -------------
- .../arch/x86/clearwaterforest/cache.json      |  20 +
- .../arch/x86/clearwaterforest/other.json      |  22 -
- .../arch/x86/elkhartlake/cache.json           | 192 ++++++
- .../arch/x86/elkhartlake/memory.json          | 202 +++++++
- .../arch/x86/elkhartlake/other.json           | 394 ------------
- .../arch/x86/emeraldrapids/cache.json         | 100 ++++
- .../arch/x86/emeraldrapids/emr-metrics.json   | 471 ++++++++-------
- .../arch/x86/emeraldrapids/memory.json        | 170 ++++++
- .../arch/x86/emeraldrapids/other.json         | 328 ----------
- .../arch/x86/emeraldrapids/pipeline.json      |  58 ++
- .../pmu-events/arch/x86/grandridge/cache.json | 150 ++++-
- .../arch/x86/grandridge/counter.json          |   2 +-
- .../arch/x86/grandridge/frontend.json         |   8 +
- .../arch/x86/grandridge/grr-metrics.json      | 521 +---------------
- .../pmu-events/arch/x86/grandridge/other.json |  28 -
- .../arch/x86/grandridge/pipeline.json         |  51 +-
- .../arch/x86/grandridge/uncore-cache.json     |  45 +-
- .../arch/x86/grandridge/uncore-memory.json    | 338 +++++++++++
- .../arch/x86/graniterapids/cache.json         | 122 ++++
- .../arch/x86/graniterapids/counter.json       |   5 +
- .../arch/x86/graniterapids/frontend.json      |  21 +
- .../arch/x86/graniterapids/gnr-metrics.json   | 483 ++++++++-------
- .../arch/x86/graniterapids/memory.json        | 130 ++++
- .../arch/x86/graniterapids/other.json         | 237 --------
- .../arch/x86/graniterapids/pipeline.json      |  52 ++
- .../arch/x86/graniterapids/uncore-cache.json  |  42 ++
- .../graniterapids/uncore-interconnect.json    |  90 ++-
- .../arch/x86/graniterapids/uncore-memory.json | 240 ++++++++
- .../arch/x86/haswell/hsw-metrics.json         | 206 ++++---
- .../arch/x86/haswellx/hsx-metrics.json        | 222 ++++---
- .../pmu-events/arch/x86/icelake/cache.json    |  60 ++
- .../arch/x86/icelake/icl-metrics.json         | 385 ++++++------
- .../pmu-events/arch/x86/icelake/memory.json   | 160 +++++
- .../pmu-events/arch/x86/icelake/other.json    | 220 -------
- .../pmu-events/arch/x86/icelakex/cache.json   | 273 +++++++++
- .../arch/x86/icelakex/icx-metrics.json        | 399 +++++++------
- .../pmu-events/arch/x86/icelakex/memory.json  | 190 ++++++
- .../pmu-events/arch/x86/icelakex/other.json   | 463 ---------------
- .../arch/x86/ivybridge/ivb-metrics.json       |  76 ++-
- .../arch/x86/ivybridge/metricgroups.json      |   5 +
- .../arch/x86/ivytown/ivt-metrics.json         |  80 ++-
- .../arch/x86/ivytown/metricgroups.json        |   5 +
- .../arch/x86/jaketown/frontend.json           |   8 +
- .../arch/x86/jaketown/jkt-metrics.json        |  40 +-
- .../arch/x86/jaketown/metricgroups.json       |   5 +
- .../pmu-events/arch/x86/jaketown/other.json   |   8 -
- .../pmu-events/arch/x86/lunarlake/cache.json  | 122 ++++
- .../arch/x86/lunarlake/lnl-metrics.json       | 556 +++++++++--------
- .../pmu-events/arch/x86/lunarlake/memory.json |  44 ++
- .../pmu-events/arch/x86/lunarlake/other.json  | 353 -----------
- .../arch/x86/lunarlake/pipeline.json          | 187 ++++++
- tools/perf/pmu-events/arch/x86/mapfile.csv    |  14 +-
- .../pmu-events/arch/x86/meteorlake/cache.json | 179 ++++++
- .../arch/x86/meteorlake/memory.json           |  44 ++
- .../arch/x86/meteorlake/mtl-metrics.json      | 549 +++++++++--------
- .../pmu-events/arch/x86/meteorlake/other.json | 140 -----
- .../arch/x86/meteorlake/pipeline.json         |  44 +-
- .../arch/x86/meteorlake/uncore-memory.json    |  18 +
- .../pmu-events/arch/x86/nehalemep/cache.json  |  32 +
- .../pmu-events/arch/x86/nehalemep/other.json  |  40 --
- .../arch/x86/nehalemep/virtual-memory.json    |   8 +
- .../pmu-events/arch/x86/nehalemex/cache.json  |  32 +
- .../pmu-events/arch/x86/nehalemex/other.json  |  40 --
- .../arch/x86/nehalemex/virtual-memory.json    |   8 +
- .../pmu-events/arch/x86/rocketlake/cache.json |  60 ++
- .../arch/x86/rocketlake/memory.json           | 160 +++++
- .../pmu-events/arch/x86/rocketlake/other.json | 220 -------
- .../arch/x86/rocketlake/rkl-metrics.json      | 385 ++++++------
- .../arch/x86/sandybridge/frontend.json        |   8 +
- .../arch/x86/sandybridge/metricgroups.json    |   5 +
- .../arch/x86/sandybridge/other.json           |   8 -
- .../arch/x86/sandybridge/snb-metrics.json     |  36 +-
- .../arch/x86/sapphirerapids/cache.json        | 150 +++++
- .../arch/x86/sapphirerapids/memory.json       | 170 ++++++
- .../arch/x86/sapphirerapids/other.json        | 378 ------------
- .../arch/x86/sapphirerapids/pipeline.json     |  58 ++
- .../arch/x86/sapphirerapids/spr-metrics.json  | 465 ++++++++-------
- .../arch/x86/sierraforest/cache.json          |  20 +
- .../arch/x86/sierraforest/memory.json         |  20 +
- .../arch/x86/sierraforest/other.json          |  48 --
- .../arch/x86/sierraforest/pipeline.json       |   8 +
- .../arch/x86/sierraforest/uncore-cache.json   |  32 +
- .../arch/x86/sierraforest/uncore-memory.json  | 240 ++++++++
- .../arch/x86/skylake/skl-metrics.json         | 367 ++++++------
- .../pmu-events/arch/x86/skylakex/cache.json   |  74 +++
- .../pmu-events/arch/x86/skylakex/other.json   |  74 ---
- .../arch/x86/skylakex/skx-metrics.json        | 385 ++++++------
- .../pmu-events/arch/x86/snowridgex/cache.json | 192 ++++++
- .../arch/x86/snowridgex/memory.json           | 202 +++++++
- .../pmu-events/arch/x86/snowridgex/other.json | 394 ------------
- .../arch/x86/tigerlake/tgl-metrics.json       | 383 ++++++------
- .../arch/x86/westmereep-dp/cache.json         |  32 +
- .../arch/x86/westmereep-dp/other.json         |  40 --
- .../x86/westmereep-dp/virtual-memory.json     |   8 +
- .../arch/x86/westmereep-sp/cache.json         |  32 +
- .../arch/x86/westmereep-sp/other.json         |  40 --
- .../x86/westmereep-sp/virtual-memory.json     |   8 +
- .../pmu-events/arch/x86/westmereex/cache.json |  32 +
- .../pmu-events/arch/x86/westmereex/other.json |  40 --
- .../arch/x86/westmereex/virtual-memory.json   |   8 +
- 123 files changed, 9866 insertions(+), 8780 deletions(-)
- delete mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/other.json
+> To address this, use cscfg_config_desc's active_cnt as a reference count
+> which will be holded when
+>     - activate the config.
+>     - enable the activated config.
+> and put the module reference when config_active_cnt == 0.
+> 
+> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> ---
+> Since v3:
+>   - Remove enable arguments in cscfg_config_desc_get() (from Mike).
+>   - https://lore.kernel.org/all/20250109171956.3535294-1-yeoreum.yun@arm.com/
+> ---
+>  .../hwtracing/coresight/coresight-config.h    |  2 +-
+>  .../coresight/coresight-etm4x-core.c          |  3 ++
+>  .../hwtracing/coresight/coresight-syscfg.c    | 52 +++++++++++++------
+>  3 files changed, 41 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-config.h b/drivers/hwtracing/coresight/coresight-config.h
+> index b9ebc9fcfb7f..90fd937d3bd8 100644
+> --- a/drivers/hwtracing/coresight/coresight-config.h
+> +++ b/drivers/hwtracing/coresight/coresight-config.h
+> @@ -228,7 +228,7 @@ struct cscfg_feature_csdev {
+>   * @feats_csdev:references to the device features to enable.
+>   */
+>  struct cscfg_config_csdev {
+> -	const struct cscfg_config_desc *config_desc;
+> +	struct cscfg_config_desc *config_desc;
+>  	struct coresight_device *csdev;
+>  	bool enabled;
+>  	struct list_head node;
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> index e5972f16abff..ef96028fa56b 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> @@ -1020,6 +1020,9 @@ static void etm4_disable_sysfs(struct coresight_device *csdev)
+>  	smp_call_function_single(drvdata->cpu, etm4_disable_hw, drvdata, 1);
+> 
+>  	raw_spin_unlock(&drvdata->spinlock);
+> +
+> +	cscfg_csdev_disable_active_config(csdev);
+> +
 
--- 
-2.49.0.395.g12beb8f557-goog
+In general, we need to split changes into several patches if each
+addresses a different issue.  From my understanding, the change above is
+to fix missing to disable config when disable Sysfs mode.
 
+If so, could we use a seperate patch for this change?
+
+>  	cpus_read_unlock();
+> 
+>  	/*
+> diff --git a/drivers/hwtracing/coresight/coresight-syscfg.c b/drivers/hwtracing/coresight/coresight-syscfg.c
+> index a70c1454b410..6d8c212ad434 100644
+> --- a/drivers/hwtracing/coresight/coresight-syscfg.c
+> +++ b/drivers/hwtracing/coresight/coresight-syscfg.c
+> @@ -391,14 +391,17 @@ static void cscfg_owner_put(struct cscfg_load_owner_info *owner_info)
+>  static void cscfg_remove_owned_csdev_configs(struct coresight_device *csdev, void *load_owner)
+>  {
+>  	struct cscfg_config_csdev *config_csdev, *tmp;
+> +	unsigned long flags;
+> 
+>  	if (list_empty(&csdev->config_csdev_list))
+>  		return;
+> 
+> +	raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
+
+I think we should use spinlock to guard the condition checking
+list_empty().
+
+Here the race condition is the 'config_csdev_list' list and
+configurations on the list.  For atomicity, we should use lock to
+protect any operations on the list (read, add, delete, etc).
+
+A side topic, as here it adds locks for protecting 'config_csdev_list',
+I am wandering why we do not do the same thing for
+'feature_csdev_list' (See cscfg_remove_owned_csdev_features() and
+cscfg_get_feat_csdev()).
+
+>  	list_for_each_entry_safe(config_csdev, tmp, &csdev->config_csdev_list, node) {
+>  		if (config_csdev->config_desc->load_owner == load_owner)
+>  			list_del(&config_csdev->node);
+>  	}
+> +	raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
+>  }
+> 
+>  static void cscfg_remove_owned_csdev_features(struct coresight_device *csdev, void *load_owner)
+> @@ -867,6 +870,25 @@ void cscfg_csdev_reset_feats(struct coresight_device *csdev)
+>  }
+>  EXPORT_SYMBOL_GPL(cscfg_csdev_reset_feats);
+> 
+> +static bool cscfg_config_desc_get(struct cscfg_config_desc *config_desc)
+> +{
+> +	if (!atomic_fetch_inc(&config_desc->active_cnt)) {
+> +		/* must ensure that config cannot be unloaded in use */
+> +		if (unlikely(cscfg_owner_get(config_desc->load_owner))) {
+> +			atomic_dec(&config_desc->active_cnt);
+> +			return false;
+> +		}
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +static void cscfg_config_desc_put(struct cscfg_config_desc *config_desc)
+> +{
+> +	if (!atomic_dec_return(&config_desc->active_cnt))
+> +		cscfg_owner_put(config_desc->load_owner);
+> +}
+> +
+>  /*
+>   * This activate configuration for either perf or sysfs. Perf can have multiple
+>   * active configs, selected per event, sysfs is limited to one.
+> @@ -890,22 +912,17 @@ static int _cscfg_activate_config(unsigned long cfg_hash)
+>  			if (config_desc->available == false)
+>  				return -EBUSY;
+> 
+> -			/* must ensure that config cannot be unloaded in use */
+> -			err = cscfg_owner_get(config_desc->load_owner);
+> -			if (err)
+> +			if (!cscfg_config_desc_get(config_desc)) {
+> +				err = -EINVAL;
+>  				break;
+> +			}
+> +
+>  			/*
+>  			 * increment the global active count - control changes to
+>  			 * active configurations
+>  			 */
+>  			atomic_inc(&cscfg_mgr->sys_active_cnt);
+
+Seems to me, it is more reasonable to use 'sys_active_cnt' to acquire
+the module reference instead of 'config_desc->active_cnt'.  The reason
+is 'sys_active_cnt' is a global counter.
+
+> -			/*
+> -			 * mark the descriptor as active so enable config on a
+> -			 * device instance will use it
+> -			 */
+> -			atomic_inc(&config_desc->active_cnt);
+> -
+>  			err = 0;
+>  			dev_dbg(cscfg_device(), "Activate config %s.\n", config_desc->name);
+>  			break;
+> @@ -920,9 +937,8 @@ static void _cscfg_deactivate_config(unsigned long cfg_hash)
+> 
+>  	list_for_each_entry(config_desc, &cscfg_mgr->config_desc_list, item) {
+>  		if ((unsigned long)config_desc->event_ea->var == cfg_hash) {
+> -			atomic_dec(&config_desc->active_cnt);
+>  			atomic_dec(&cscfg_mgr->sys_active_cnt);
+> -			cscfg_owner_put(config_desc->load_owner);
+> +			cscfg_config_desc_put(config_desc);
+>  			dev_dbg(cscfg_device(), "Deactivate config %s.\n", config_desc->name);
+>  			break;
+>  		}
+> @@ -1047,7 +1063,7 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
+>  				     unsigned long cfg_hash, int preset)
+>  {
+>  	struct cscfg_config_csdev *config_csdev_active = NULL, *config_csdev_item;
+> -	const struct cscfg_config_desc *config_desc;
+> +	struct cscfg_config_desc *config_desc;
+>  	unsigned long flags;
+>  	int err = 0;
+> 
+> @@ -1062,8 +1078,8 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
+>  	raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
+>  	list_for_each_entry(config_csdev_item, &csdev->config_csdev_list, node) {
+>  		config_desc = config_csdev_item->config_desc;
+> -		if ((atomic_read(&config_desc->active_cnt)) &&
+> -		    ((unsigned long)config_desc->event_ea->var == cfg_hash)) {
+> +		if (((unsigned long)config_desc->event_ea->var == cfg_hash) &&
+> +				cscfg_config_desc_get(config_desc)) {
+
+This seems to me not right.  Why a config descriptor is get in multiple
+places?  One time getting a config descriptor is in
+_cscfg_activate_config(), another is at here.
+
+To be honest, I am not clear what is the difference between 'activate'
+config and 'enable active' config.  Literally, I think we only need to
+acquire the config at its creating phase (maybe match to activate
+config?).
+
+>  			config_csdev_active = config_csdev_item;
+>  			csdev->active_cscfg_ctxt = (void *)config_csdev_active;
+>  			break;
+> @@ -1097,7 +1113,11 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
+>  				err = -EBUSY;
+>  			raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
+>  		}
+> +
+> +		if (err)
+> +			cscfg_config_desc_put(config_desc);
+>  	}
+> +
+>  	return err;
+>  }
+>  EXPORT_SYMBOL_GPL(cscfg_csdev_enable_active_config);
+> @@ -1136,8 +1156,10 @@ void cscfg_csdev_disable_active_config(struct coresight_device *csdev)
+>  	raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
+> 
+>  	/* true if there was an enabled active config */
+> -	if (config_csdev)
+> +	if (config_csdev) {
+>  		cscfg_csdev_disable_config(config_csdev);
+> +		cscfg_config_desc_put(config_csdev->config_desc);
+> +	}
+>  }
+>  EXPORT_SYMBOL_GPL(cscfg_csdev_disable_active_config);
+> 
+> --
+> LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+> 
