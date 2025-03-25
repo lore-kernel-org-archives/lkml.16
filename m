@@ -1,110 +1,109 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5281925A350;
-	Tue, 25 Mar 2025 14:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86838258CF5;
+	Tue, 25 Mar 2025 14:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742913979; cv=none; b=AeRHW/pOha+oP7t5l8+MJtzCFYgLCkXG7lciQUrF2nkiaUuohubJ1vwZsWs2HwvKPivvMOd5Uo77MSSD9GmGNHuWsaWoOGhiF2mSrooOguTGYzDM5E7NG/tHP2MynORo/YZH0gKLvjCGRqv9ZHuArbxo2W0RKa07llUXro1FEJg=
+	t=1742913990; cv=none; b=DPAwStwOniu6N+v9c9dvsII2oEkucBnPJcLBbBSRxUMlyn5j1uy61TUEBHB3CZdybQmQKtpB7l+ysS+own1SR6t8HJFLLddwGdOdzb4QJ2YSDW+wqnyE3+sfQhpHe2X77VC4D5zdnFv5UqYKo0Jnc+Zn5q3zD+gbnjXOvfHspQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742913979; c=relaxed/simple;
-	bh=7HO4LfHgdUMbfSOwKtIo/xttp3NoZ8ybprysTSQ9FO0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aZizjxfd71XoaZ1ei84929yG7AHClOTzAKO4iNOIoCpFb9IFWHj59bTkKxTHH5lcEvyVM5mjuplkLQXRSd1OApc3V0e7zufTMQzdFrcMt7LzJlId8jj4tB/fQQvGuwcgvQOCkYuBFQ42NPiLXpo3Zh5CHYXYvpXXOIQW66BNG/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lzHL+9nt; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742913990; c=relaxed/simple;
+	bh=Wmu1jzHMguKR/j6+GdBi+IvxyFpZLNBWJYNpcPE9oZ4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
+	 References:In-Reply-To; b=CBVctDP7M59IkNhEXZk/nPwSHBd117XodGb/e0a5LHhi9qTIPu6YrN0HlwErSp7AMI03xqzWi+p5z80qHDdos4+jvsDCHvAGLIPuj7odHHBOlpHvrZQ5IE6/oZAgTZIMGI///3HtdTPH1qaE/xWxqUBUqkAcl86a2/r8iiZCfvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JaaoyTvB; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lzHL+9nt"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-224100e9a5cso112536645ad.2;
-        Tue, 25 Mar 2025 07:46:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742913976; x=1743518776; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7HO4LfHgdUMbfSOwKtIo/xttp3NoZ8ybprysTSQ9FO0=;
-        b=lzHL+9ntxXGwoWbzAR/R/WPEk/zdTKNxx3IQeN/s5dKVclD4RZ918VqbC0/B6WGxGJ
-         9p381WSSqXWUZPhLR0+t04Dbi/LI8UtY/xsuCvPO6HcXLtu0VZusYxE2lxQMNIATTzrz
-         hDNKkPekopNvE464RslKGcbCVSlGNGsB6Uk8UnqYHCpc/CAEVzMUuaV8s2Dnkk2zNwah
-         fjzJCac/xxsczQrTfUubb3FDcMf3wMwDafRHx28/dPNltvilqBlBQkAQqMN05MuMWNk2
-         246n8IdjY4b7r8RR4kGNWiBrQp9X58dRHIkVfVwY2nEQB72sNM4H4ENFrD9LPU2lsqag
-         fj4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742913976; x=1743518776;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7HO4LfHgdUMbfSOwKtIo/xttp3NoZ8ybprysTSQ9FO0=;
-        b=wJCHB3mKqPFoRMbImYPp7v5FmrSavyOf7VZW16Fi7JEVdj7yqHTGl2jCQVVyCoKyMS
-         ZOh0MlXnygoA7GC3DobchqYyTbZuRMX9h5R5XFedEoSqsDZuzLYvGyhkSmnF+v/q9V6b
-         veP/+VL4VnaXXBAAiW2HJCv/XtKiyZfZnJvqdzUNoH1+NqeA/O3Rv+SSzs6cjvZhZphW
-         TYAj4oiZcNacUIDhWr5bvRKmF+9ARu8HwjSRvLSKeRaDFJE5kQC42wTtDVcAS3icgYnu
-         4+Dk3c9279NaFRu4fu9mn7JV+M0L/+gabNe3IG4KaWbhErhiReh9GgWl+izY4+CU49GL
-         v2Mw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWHub7LtDun/qEdse1O3fwjJmy9EkLhpd+jktP4JXvVVNit5FYRw6FO4wHbAnbcafXjQcSCwYw37pUElIPDZim@vger.kernel.org, AJvYcCUmqyvDVBB8JRX+4/HJvmXdxoyMupJRhsDUkQEKCvSpcFFW2B/pQY15AVV+8GmnBzvWHQLFomwUhGHcy5o/cA==@vger.kernel.org, AJvYcCWwXkr/Sbgn+ouO3QadCWr9W5CxyJ69F6FFEObL6cyLsPzIvAKsLmXjh4U9ISiktb2uCrqeyoRViDevYLg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1Yx9VOsP1OileHbAui0tb/3eeMzPFFdkEUl52HlgZfUH3n1kK
-	nykvEiJurkUlkdArmFRBdg1VRfdKlquNdesPAexsO4CL62e4+CHk
-X-Gm-Gg: ASbGncvawLca11SO0W94Y6mAuRBfHUD5cgrUPKWouFRDq9hqnZMe6k8e2IWGLtLnMzE
-	ejFDXTWuPhhz1NGBVZVR3KyrBuy7G4fgM6Zwlk/oIJOEQ94lfYEfevwU1fVCoy7xrsd+f13l2Vg
-	S6agYuE5Fq5c/Fh75r1LNjG97B01E5mfHthFxclyKYNw2fmTLYo76XMRykg6UW5OYbmf4vd+t+6
-	7+zYCdRHLOMg7HRTYH6U/PS4aF4/q+hZbBNFvnIeVX+/AxPWPjMunzqM+pvXYb8T+siN3cq/cIi
-	LpZ29/SZO2mAxpK+YGLoZu2RJdkqrbrWZCt6uhBwpJ2UuliMLFndBQUnMIPZLDkkVqiiqPjzTxs
-	oQVOr/3Vjp+41Tsnhsz/i
-X-Google-Smtp-Source: AGHT+IFa2XSNVkCxARtKu+IwYbdQXmTFoM2Q3riEQ3/rLLdNaaJXokPqFNf3Ss3lT7dT44CZtb5WLA==
-X-Received: by 2002:a17:902:ecd0:b0:223:3b76:4e22 with SMTP id d9443c01a7336-22780c535demr211768695ad.6.1742913976347;
-        Tue, 25 Mar 2025 07:46:16 -0700 (PDT)
-Received: from ?IPV6:2804:d57:4e50:a700:f33d:65d1:e22e:109b? ([2804:d57:4e50:a700:f33d:65d1:e22e:109b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811b2b1fsm90851765ad.144.2025.03.25.07.46.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Mar 2025 07:46:15 -0700 (PDT)
-Message-ID: <4602769a-6b5b-47f3-9505-d528ef2ae8de@gmail.com>
-Date: Tue, 25 Mar 2025 11:46:11 -0300
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JaaoyTvB"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9666742D46;
+	Tue, 25 Mar 2025 14:46:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1742913981;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hWoSyhuzGUD2BKO/up57XBRng0PtovCBvjlBXl3Nn3g=;
+	b=JaaoyTvB3kRgI6AtDrGYSPzTm1Ztlp0v8sV+BSQNNPpZQAJ37uEMl+aq46HAVLPaZJp/GP
+	amHzGxsfLaUbP2NQUuWFgxeFrk2FMZhWqUfCz1XuvtrbeZBXER7IjgNSvkbAVzuVGjYXta
+	odLAZPKSmYmctJMbSfcCEQGuo+Brfe9VT0AYrhpcVCVoztOSIRgdPWrn4tUwwSQOYAHr8C
+	9IgIeCjtz2NsvJoGjt5nEF8oBfIUBJvm8kigOSthauCf1fgB9fUErtwZZBKd/35RXYIl2K
+	0gHnGak3WlVjQ70ed27JuL+IT4RnChAt5an7f2AbzYUoYXFCdG2k7GUHH5kB9w==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] selftests: livepatch: test if ftrace can trace a
- livepatched function
-To: Petr Mladek <pmladek@suse.com>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
- Miroslav Benes <mbenes@suse.cz>, Joe Lawrence <joe.lawrence@redhat.com>,
- Shuah Khan <shuah@kernel.org>, Marcos Paulo de Souza <mpdesouza@suse.com>,
- live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, felipe_life@live.com
-References: <20250324-ftrace-sftest-livepatch-v3-0-d9d7cc386c75@gmail.com>
- <Z-K3S4G5BtdP1Q-H@pathway.suse.cz>
-Content-Language: en-US
-From: Filipe Xavier <felipeaggger@gmail.com>
-In-Reply-To: <Z-K3S4G5BtdP1Q-H@pathway.suse.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 25 Mar 2025 15:46:20 +0100
+Message-Id: <D8PFFWYR3ASD.YEZIXPNVZS4I@bootlin.com>
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH v5 08/11] gpio: max7360: Add MAX7360 gpio support
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
+ <20250318-mdb-max7360-support-v5-8-fb20baf97da0@bootlin.com>
+ <Z9qviF1VeSYNvcPJ@smile.fi.intel.com>
+In-Reply-To: <Z9qviF1VeSYNvcPJ@smile.fi.intel.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduiedvleefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefhvffuofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeftedvgfegteehjeejtdefgffhteevvddtvdejleeghfefuefgledtteduvdetkeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
+ dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On 3/25/25 11:01 AM, Petr Mladek wrote:
-
-> On Mon 2025-03-24 19:50:17, Filipe Xavier wrote:
->> This patchset add ftrace helpers functions and
->> add a new test makes sure that ftrace can trace
->> a function that was introduced by a livepatch.
->>
->> Signed-off-by: Filipe Xavier <felipeaggger@gmail.com>
->> Acked-by: Miroslav Benes <mbenes@suse.cz>
-> JFYI, the patchset has been committed into livepatching.git,
-> branch for-6.15/ftrace-test.
+On Wed Mar 19, 2025 at 12:50 PM CET, Andy Shevchenko wrote:
+> On Tue, Mar 18, 2025 at 05:26:24PM +0100, Mathieu Dubois-Briand wrote:
+> > Add driver for Maxim Integrated MAX7360 GPIO/GPO controller.
+> >=20
+> > Two sets of GPIOs are provided by the device:
+> > - Up to 8 GPIOs, shared with the PWM and rotary encoder functionalities=
+.
+> >   These GPIOs also provide interrupts on input changes.
+> > - Up to 6 GPOs, on unused keypad columns pins.
 >
-> I had a dilemma whether to push it for 6.15 or postpone it.
-> But it is a selftest and quite trivial. And it has been
-> reviewed by several people. And it seems to work well
-> so I think that we could push it for 6.15.
+> ...
+>
+> > +		/*
+> > +		 * Port GPIOs with interrupt-controller property: add IRQ
+> > +		 * controller.
+> > +		 */
+> > +		gpio_config.regmap_irq_flags =3D IRQF_TRIGGER_LOW | IRQF_ONESHOT | I=
+RQF_SHARED;
+>
+> But why is this being overridden? The DT or another firmware description =
+has to
+> provide the correct settings, no?
+>
 
-It sounds good to me, thank you all very much for the support.
+Ok, thinking about it, yes, IRQF_TRIGGER_LOW shoud come from firmware
+description. But IRQF_ONESHOT and IRQF_SHARED should still come from
+here, no?
 
-Cheers,
 
-Filipe
+I'm OK with all other points.
 
-> Best Regards,
-> Petr
+Thanks for your review!
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
