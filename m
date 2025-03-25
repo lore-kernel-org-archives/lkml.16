@@ -1,173 +1,113 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C382326980F
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 21:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E8F267AFA
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 21:56:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742939772; cv=none; b=iU2Xw85cFyIYkThaUBVNvoFuGTr9w13/MJvP2jIc6GnE6xOPTolNd8goraNBBtVVPvjjZEDRcazCZElPY5AfngtgPMOrldZhcwATnqI4RtZlnD32B4h7+dVkaDoZgCZV/JAwGHS9pjG0dqorG8Ql5shviVknLJlLL33On1JcTwI=
+	t=1742939776; cv=none; b=qiHiBUc1PyKUSxDslczVSQ23ykPRWxQtaEmcSGjvTt4Tnh03ZPhIF0aTL8O761M5+Cud0iDc+V6C/FEGukK2BaLI0WsQ0C7PIf7qEFJgtcYryUhFjyR5DZygfQPJf0L6SioFpCAy3Xqx3ehQoxWBeKZDKiGywuavw7EhrYPsJ0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742939772; c=relaxed/simple;
-	bh=ZG4/CH4zje5enYEsmtKpWou0CNGqTmtcqj84ZYFPhSw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=olmxrH0D9xigpB4sESQqihbnL89uD9q6rzTioUzIOjkIipgyLYzufVGAZYsnoNqpBXGmBC3Wvsv/5VDwBO9ozBBXyEgAnjH4F3iHhTwWDiiair0daU4urPPN8Xx9zZZvNVICkgWPsCmBBzpkwwk839VLKxIDnPDGCqhbFpjQhMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KMVhwoAR; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1742939776; c=relaxed/simple;
+	bh=7br8AaG8QRt+Y7p9nY+NCHBZBDh/3nwaBmqYeH6jESg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lfvyz+aS6DeSmm1yNvR7riT3lWZoOLggF3TPNyxKNZ4UoRnPuiT/QSLWWjTW8EJ5DONs4/RZFgjpvVNLARGzAIeJ0CGoXK+79P+klbESexjKx4ZIticXyde7/dAlqESvlgqL+trcmKfUX9+7rBx/dyhvW9BFfK/AFb4YVci5BFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oWQ+/g03; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KMVhwoAR"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2242ac37caeso28655ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:56:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742939770; x=1743544570; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GawijQeSK3EpSZkeGcHDhjBfafNJ3MVAaKRkLHgLy3g=;
-        b=KMVhwoARxrKS+7xabgM7M7jy4iseY0ZE/Z4cW8QM/53IWnzb18fBRO0HqiM2tT7hCd
-         aJWFBt8Wk7YO8ThMCiYcVtrPuQ/MDLcKcBAeOH//f6NRzpmeQvnTLD52mOakC/QUpGvi
-         9D6sz8+kOkP8vr1D3tUtAAbFq87jE1VPTXzn74Vz0PzqbEpv7MtJBgaUXys9H6v0e1N8
-         VFS8OR/eC9lbrRj0+NYe/hnxvyIULW5nAtMuXtUXZqJbfHSLxHSNeEtWdVXvo3EWWpP1
-         pX3fpsiUbaOVOKxjTwjDFTmSArDQAnRrFLcGNh35HkijTU3pvZ7YPc28r/DdOl6lvse3
-         SGsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742939770; x=1743544570;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GawijQeSK3EpSZkeGcHDhjBfafNJ3MVAaKRkLHgLy3g=;
-        b=Wd6rUBUXqlTknAouPHMzoW1NPVKvRWjSNk0NZABhrBd3eqoZxZFMBsIBEHK0vDEqYb
-         kUf9HEzjLmM3kf+T19G93ZHCFNtfRQSufvuHZeSwjo1V5Z8JSA7hEuZWLnsBDaAbSfuw
-         ok2aS8SWgAA4J1/aiPx2hYe/3n0HdS6ZgPLI5m068x6CJDGWcwsSghQ2X85uufDGoEF5
-         cNK6uduqhxuffVk/2B4Vvg3SjO7z1GlAm30cbOchJ7SaH5nO8THq/yMezrZCiYgED4VO
-         anfiKSss81lJQSZ4u5OvqPph4V2VHwJCH3S3AoE82WDOmw2k3hp96SdS3JTkqD+Ba6Iw
-         auhg==
-X-Forwarded-Encrypted: i=1; AJvYcCWfgZuawkAXPspwsSjkbQZOZZLFpYChaEFu7JpxRvb6J38FsF7m+SZ+c5ybKiO1/F2BGYhkQ3cbR5GH42M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwauokEC2egloLDeMylV9HDenLh/36YqQ8IqpUZPWBOxa4nGZys
-	y2YgLjiJEM3rmGxQdxmZnpAQ0dGF8mjssWM8dAVTYICx+0LmT6QJdAkKeHmKea5D21DtlQ+9JQV
-	byf4v4Nqx2ZE31Je1SXipoQsOHk/PeRnsPkAS
-X-Gm-Gg: ASbGncsTMY+YBftO93/YJxfI+Rmm8sagPox3YKVMfxP4/a+lD0ZUw5zWop/Ooio8FVZ
-	Tnod9cYudN2pOPYph+zF7SPkEFI9dlye6U0jksKsKKEx843w48hBIDeVNyJEAnOJ5gge2w9be+i
-	LnhSa90UqDD/O4EOseftOQzR7slmw6znG2DZFh8CAKbZXGAcI0cKY68C7qm/xkdTcl
-X-Google-Smtp-Source: AGHT+IGp8JXeHefat2sYKtXMfrAIHQLr7hYftj+JashDB/csUXNinqTUEneXZfdmYVqR0BdM1+g7I+KawBYu30LRXEo=
-X-Received: by 2002:a17:902:f64c:b0:215:7ced:9d67 with SMTP id
- d9443c01a7336-227f36a5585mr171955ad.24.1742939769655; Tue, 25 Mar 2025
- 14:56:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oWQ+/g03"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7122CC4CEE9;
+	Tue, 25 Mar 2025 21:56:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742939776;
+	bh=7br8AaG8QRt+Y7p9nY+NCHBZBDh/3nwaBmqYeH6jESg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oWQ+/g03fQn+hRaIRoCKXD6+Y8eThKxyhvkCl04fLOcAOacLNTjWG6ijtdClMdz6B
+	 1GhL1SGMUbJWMjCEZzl0STLWPhNMPSv4TSaCzQ7a/lx6bpifNQBmHV5/Er6fHJSdMV
+	 IKao2UZiJxq/t38PW7bNq54SSHz8GXme4Qs0lvH1mxY5hFCsU5sJIu5C25QT7We6jA
+	 ubMwu47ACZalGYIgDrWj4XAdrowbtLBxSEUuyj5d+3oug9hKm1jOJzV5cBLZ2nmmlI
+	 JRlTld60yDzpua++leJ6Nsrl+Vvddp1bBP9NpmtB2eBNXU59lQRxh9BYHTAhtt8/0K
+	 USMN/5hyH6Ljg==
+Date: Tue, 25 Mar 2025 22:56:11 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH -tip 2/2] x86/hweight: Use POPCNT when available with
+ X86_NATIVE_CPU option
+Message-ID: <Z-Mme_OxuhYfxgzO@gmail.com>
+References: <20250325164854.199420-1-ubizjak@gmail.com>
+ <20250325164854.199420-2-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324220301.1273038-1-kinseyho@google.com> <fc15a9e2-b771-4357-b724-2c3ce95d86a1@amd.com>
-In-Reply-To: <fc15a9e2-b771-4357-b724-2c3ce95d86a1@amd.com>
-From: Yuanchu Xie <yuanchu@google.com>
-Date: Tue, 25 Mar 2025 14:55:52 -0700
-X-Gm-Features: AQ5f1JqSK_zS-V30gVeRAqs4kb5kgLUolENQOggIiCEscFmsmuMw79jGcxPABzA
-Message-ID: <CAJj2-QFCGZ7==azp+Vh7x7jJDtTUMMWTC5XyYTqVHWeVxETjTg@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 0/2] mm: multi-gen LRU scanning for page promotion
-To: Bharata B Rao <bharata@amd.com>
-Cc: Kinsey Ho <kinseyho@google.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	AneeshKumar.KizhakeVeetil@arm.com, Hasan.Maruf@amd.com, 
-	Jonathan.Cameron@huawei.com, Michael.Day@amd.com, akpm@linux-foundation.org, 
-	dave.hansen@intel.com, david@redhat.com, feng.tang@intel.com, 
-	gourry@gourry.net, hannes@cmpxchg.org, honggyu.kim@sk.com, hughd@google.com, 
-	jhubbard@nvidia.com, k.shutemov@gmail.com, kbusch@meta.com, 
-	kmanaouil.dev@gmail.com, leesuyeon0506@gmail.com, leillc@google.com, 
-	liam.howlett@oracle.com, mgorman@techsingularity.net, mingo@redhat.com, 
-	nadav.amit@gmail.com, nphamcs@gmail.com, peterz@infradead.org, 
-	raghavendra.kt@amd.com, riel@surriel.com, rientjes@google.com, 
-	rppt@kernel.org, shivankg@amd.com, shy828301@gmail.com, sj@kernel.org, 
-	vbabka@suse.cz, weixugc@google.com, willy@infradead.org, 
-	ying.huang@linux.alibaba.com, ziy@nvidia.com, dave@stgolabs.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Mar 25, 2025 at 4:56=E2=80=AFAM Bharata B Rao <bharata@amd.com> wro=
-te:
->
-> Thanks for your patchset. I haven't looked at the patches in detail yet,
-> but gave it a quick try with the micro-benchmark that I have been using.
-Thanks for running the numbers. Unfortunately neither of us can attend
-LSF/MM in person, but we're excited about this opportunity for
-collaboration.
-
->
-> The below numbers can be compared with the base numbers that I have
-> posted here
-> (https://lore.kernel.org/linux-mm/20250325081832.209140-1-bharata@amd.com=
-/).
-> Test 2 in the above link is the one I tried with this patchset.
->
-> kernel.numa_balancing =3D 0
-> demotion=3Dtrue
-> cpufreq governor=3Dperformance
->
-> Benchmark run configuration:
-> Compute-node            =3D 1
-> Memory-node             =3D 2
-> Memory-size             =3D 206158430208
-> Hot-region-size         =3D 1073741824
-> Nr-hot-regions          =3D 192
-> Access pattern          =3D random
-> Access granularity      =3D 4096
-> Delay b/n accesses      =3D 0
-> Load/store ratio        =3D 50l50s
-> THP used                =3D no
-> Nr accesses             =3D 25769803776
-> Nr repetitions          =3D 512
->
-> Benchmark completed in 605983205.0 us
-The benchmark does seem to complete in less time, but I'm not sure why
-especially given the small number of pages promoted. I think it would
-also be useful to see the usage breakdown of DRAM/CXL over time.
-
->
-> numa_hit 63621437
-> numa_miss 2721737
-> numa_foreign 2721737
-> numa_interleave 0
-> numa_local 48243292
-> numa_other 18099882
-> pgpromote_success 0
-> pgpromote_candidate 0
-> pgdemote_kswapd 15409682
-> pgdemote_direct 0
-> pgdemote_khugepaged 0
-> numa_pte_updates 0
-> numa_huge_pte_updates 0
-> numa_hint_faults 0
-> numa_hint_faults_local 0
-> numa_pages_migrated 19596
-> pgmigrate_success 15429278
-> pgmigrate_fail 256
->
-> kpromoted_recorded_accesses 27647687
-> kpromoted_recorded_hwhints 0
-> kpromoted_recorded_pgtscans 27647687
-> kpromoted_record_toptier 0
-Makes sense, we skip toptier scanning
-
-> kpromoted_record_added 17184209
-> kpromoted_record_exists 10463478
-> kpromoted_mig_right_node 0
-> kpromoted_mig_non_lru 404308
-> kpromoted_mig_cold_old 6417567
-> kpromoted_mig_cold_not_accessed 10342825
-> kpromoted_mig_promoted 19509
-Compared to 611077 (IBS number) this is a lot lower.
-
-> kpromoted_mig_dropped 17164700
->
-> When I try to get the same benchmark numbers for kpromoted driven by
-> kmmscand, kpromoted gets overwhelmed with the amount of data that
-> kmmdscand provides while no such issues with the amount of accesses
-> reported by this patchset.
-The scan interval in this series is 4 seconds, while the kmmscand's
-pause between scanning is 16ms. So there're definitely some gaps here.
-The MGLRU page table walk also has a bunch of optimizations, and some
-of them are more focused on reclaim, so we might need to tweak some
-things there too.
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250325164854.199420-2-ubizjak@gmail.com>
 
 
-Yuanchu
+* Uros Bizjak <ubizjak@gmail.com> wrote:
+
+> Emit naked POPCNT instruction when available with X86_NATIVE_CPU
+> option. The compiler is not bound by ABI when emitting the instruction
+> without the fallback call to __sw_hweight{32,64}() library function
+> and has much more freedom to allocate input and output operands,
+> including memory input operand.
+> 
+> The code size of x86_64 defconfig (with X86_NATIVE_CPU option)
+> shrinks by 599 bytes:
+> 
+>   add/remove: 0/0 grow/shrink: 45/197 up/down: 843/-1442 (-599)
+>   Total: Before=22710531, After=22709932, chg -0.00%
+> 
+> The asm changes from e.g.:
+> 
+> 	   3bf9c:	48 8b 3d 00 00 00 00 	mov    0x0(%rip),%rdi
+> 	   3bfa3:	e8 00 00 00 00       	call   3bfa8 <...>
+> 	   3bfa8:	90                   	nop
+> 	   3bfa9:	90                   	nop
+> 
+> with:
+> 
+> 	     34b:	31 c0                	xor    %eax,%eax
+> 	     34d:	f3 48 0f b8 c7       	popcnt %rdi,%rax
+> 
+> in the .altinstr_replacement section
+> 
+> to:
+> 
+> 	   3bfdc:	31 c0                	xor    %eax,%eax
+> 	   3bfde:	f3 48 0f b8 05 00 00 	popcnt 0x0(%rip),%rax
+> 	   3bfe5:	00 00
+> 
+> where there is no need for an entry in the .altinstr_replacement
+> section, shrinking all text sections by 9476 bytes:
+> 
+> 	    text           data     bss      dec            hex filename
+> 	27267068        4643047  814852 32724967        1f357e7 vmlinux-old.o
+> 	27257592        4643047  814852 32715491        1f332e3 vmlinux-new.o
+
+> +#ifdef __POPCNT__
+> +	asm_inline (ASM_FORCE_CLR "popcntl %[val], %[cnt]"
+> +		    : [cnt] "=&r" (res)
+> +		    : [val] ASM_INPUT_RM (w));
+> +#else
+>  	asm_inline (ALTERNATIVE(ANNOTATE_IGNORE_ALTERNATIVE
+>  				"call __sw_hweight32",
+>  				ASM_CLR "popcntl %[val], %[cnt]",
+>  				X86_FEATURE_POPCNT)
+>  			 : [cnt] "=a" (res), ASM_CALL_CONSTRAINT
+>  			 : [val] REG_IN (w));
+
+So a better optimization I think would be to declare and implement 
+__sw_hweight32 with a different, less intrusive function call ABI that 
+mirrors that of the instruction in essence, so that we optimize for the 
+overwhelmingly common case of having the POPCNT instruction.
+
+Thanks,
+
+	Ingo
