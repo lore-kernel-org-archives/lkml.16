@@ -1,180 +1,256 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6692580CC
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 12:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393C425A634;
+	Tue, 25 Mar 2025 12:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742905234; cv=none; b=Iq7YPcORrWT3EakRg4lXTUnwLfrXin9sC/x+zX5eCd1VZifV3Wa47cn0p7xUbO+CEHIqfAT/q8fKaBnyl/2/8wrHnVJJXPG4dPgFOcbH4FcOXdQHWQGJ0AJPtW1KuCJmLlj3kWgRwIP5hwwvuXwdgDzUxitQiPBDa5D1IBnDmRE=
+	t=1742905235; cv=none; b=qRVQxWTE0q4WHX8CtpT3RT9pkVURq9wwNO4FDZK6VEoNLSPR8STliCoY72Y5e8tq/5+t5sHCLXhZPvqhr61zCs/hpFBcyUdMUOClw5KymIPZqx1kipC6DknwxgeFFnMaHKMZ4Ho76pUzpGJtA7D5YW0EDJEJuhClIdWBavuOFSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742905234; c=relaxed/simple;
-	bh=fRI2Owqgw85GmBsf1kqLISTrjN6ADCz0KAC+v9Cbe1M=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=bVoo6Kyay2NRGb+5LvvQT/sMmDie8Tlv7q82NyDeio0CuUTaSN/07TMtDHksnHeNU8rPOUbL59xeGP7eX1MQqr7JM67nakQ3UkXkbhAdkdzGSh9JL88sUww66P95WKY2zdxCnbPS1kosUjJaXHSYdaRUlkHMGfdYwAYihj/jtbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Jf7vlGGR; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1742905235; c=relaxed/simple;
+	bh=IFZFjonaMzbpRZ4swpgyItEna4nE83LkZzb9BRzGITE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=I758uCRIsZ/pTmdIvgYzt7IIftxvY9iSVz++22aEQ4JkCcOa91ax7MBgIpP6nx1PCJYo5LSsB5AhGg7MHMqWdh/eK3uVdWFAP+X0vHRoWSF1+70f5Vg4I2vBuh2q60M7Xz4CxVKkljpU9FsDaGM3YSgem7xQ0jaZnyXQoO7AbfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YGv7Ju8F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Jf7vlGGR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YGv7Ju8F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E3FBC4CEEE;
+	Tue, 25 Mar 2025 12:20:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742905234;
+	bh=IFZFjonaMzbpRZ4swpgyItEna4nE83LkZzb9BRzGITE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YGv7Ju8FJqwJKAhoK+0bpefpHJmqwSqitCJQ3KA8SHoFBO3xjgZJGCnN1+EpM9Ri8
+	 G0F8vKvx8n6+OSgZoVo+DMyBKKoIIhJSCP3taMQ5FZeWGN/R31z9hqNogcz/s/Onyr
+	 z7gFsqQn85faeI7gGJQLGHu93WAcoXryyyRSyQsANFNuhZaVIo6Dx8943m3kKw9yDg
+	 27bjtFahCMk02wsXueW0/FZUhPIbW+fn3gQxchZIXU1nl5TX8/4hg5q3hXCN/9iqSh
+	 /WA528nukATyoTdAqfWLTZshpwfuMiYbtl8zLXtJpFV+4Wd+cfr5szXSWpIHHAHUjx
+	 4Ts1fcwAE9wQQ==
+From: guoren@kernel.org
+To: arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	torvalds@linux-foundation.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	anup@brainfault.org,
+	atishp@atishpatra.org,
+	oleg@redhat.com,
+	kees@kernel.org,
+	tglx@linutronix.de,
+	will@kernel.org,
+	mark.rutland@arm.com,
+	brauner@kernel.org,
+	akpm@linux-foundation.org,
+	rostedt@goodmis.org,
+	edumazet@google.com,
+	unicorn_wang@outlook.com,
+	inochiama@outlook.com,
+	gaohan@iscas.ac.cn,
+	shihua@iscas.ac.cn,
+	jiawei@iscas.ac.cn,
+	wuwei2016@iscas.ac.cn,
+	drew@pdp7.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	ctsai390@andestech.com,
+	wefu@redhat.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	josef@toxicpanda.com,
+	dsterba@suse.com,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	boqun.feng@gmail.com,
+	guoren@kernel.org,
+	xiao.w.wang@intel.com,
+	qingfang.deng@siflower.com.cn,
+	leobras@redhat.com,
+	jszhang@kernel.org,
+	conor.dooley@microchip.com,
+	samuel.holland@sifive.com,
+	yongxuan.wang@sifive.com,
+	luxu.kernel@bytedance.com,
+	david@redhat.com,
+	ruanjinjie@huawei.com,
+	cuiyunhui@bytedance.com,
+	wangkefeng.wang@huawei.com,
+	qiaozhe@iscas.ac.cn
+Cc: ardb@kernel.org,
+	ast@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-crypto@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	maple-tree@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-atm-general@lists.sourceforge.net,
+	linux-btrfs@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	linux-nfs@vger.kernel.org,
+	linux-sctp@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-media@vger.kernel.org
+Subject: [RFC PATCH V3 16/43] rv64ilp32_abi: riscv: Support physical addresses >= 0x80000000
+Date: Tue, 25 Mar 2025 08:15:57 -0400
+Message-Id: <20250325121624.523258-17-guoren@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20250325121624.523258-1-guoren@kernel.org>
+References: <20250325121624.523258-1-guoren@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742905220;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3g0qORwvvABSJ2Rv9GuvfAIXABDwBe5tSMPOLykHwsg=;
-	b=Jf7vlGGRkuuwY6Df1TuEaUfzikmOC1Dz/EVPuFgoj2acjNTNaj0kKju1JCDNsYz39FsBUC
-	H3k/t9v87SUbjw2Xo8r/A6WS9Ujo//l227v7OcoGCLDzUYDYZByIA5LlPu52DYlWjKQovi
-	I3Z4T17Gxs2HEc7/W42mPGZQDGXCPis=
-Date: Tue, 25 Mar 2025 12:20:18 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <5cdc1bdd9caee92a6ae932638a862fd5c67630e8@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH net-next v2] tcp: Support skb PAWS drop reason when
- TIME-WAIT
-To: "Eric Dumazet" <edumazet@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kuniyu@amazon.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, dsahern@kernel.org, ncardwell@google.com, mrpre@163.com
-In-Reply-To: <CANn89iKxTHZ1JoQ9g9ekWq9=29LjRmhbxsnwkQ2RgPT-yCYMig@mail.gmail.com>
-References: <20250325110325.51958-1-jiayuan.chen@linux.dev>
- <CANn89iKxTHZ1JoQ9g9ekWq9=29LjRmhbxsnwkQ2RgPT-yCYMig@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-March 25, 2025 at 19:29, "Eric Dumazet" <edumazet@google.com> wrote:
+From: "Guo Ren (Alibaba DAMO Academy)" <guoren@kernel.org>
 
-> >  ---
-> >=20
->=20>  include/net/tcp.h | 3 ++-
-> >=20
->=20>  net/ipv4/tcp_ipv4.c | 2 +-
-> >=20
->=20>  net/ipv4/tcp_minisocks.c | 7 +++++--
-> >=20
->=20>  net/ipv6/tcp_ipv6.c | 2 +-
-> >=20
->=20>  4 files changed, 9 insertions(+), 5 deletions(-)
-> >=20
->=20>  diff --git a/include/net/tcp.h b/include/net/tcp.h
-> >=20
->=20>  index f8efe56bbccb..e1574e804530 100644
-> >=20
->=20>  --- a/include/net/tcp.h
-> >=20
->=20>  +++ b/include/net/tcp.h
-> >=20
->=20>  @@ -427,7 +427,8 @@ enum tcp_tw_status {
-> >=20
->=20>  enum tcp_tw_status tcp_timewait_state_process(struct inet_timewait=
-_sock *tw,
-> >=20
->=20>  struct sk_buff *skb,
-> >=20
->=20>  const struct tcphdr *th,
-> >=20
->=20>  - u32 *tw_isn);
-> >=20
->=20>  + u32 *tw_isn,
-> >=20
->=20>  + enum skb_drop_reason *drop_reason);
-> >=20
->=20>  struct sock *tcp_check_req(struct sock *sk, struct sk_buff *skb,
-> >=20
->=20>  struct request_sock *req, bool fastopen,
-> >=20
->=20>  bool *lost_race, enum skb_drop_reason *drop_reason);
-> >=20
->=20>  diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-> >=20
->=20>  index 1cd0938d47e0..a9dde473a23f 100644
-> >=20
->=20>  --- a/net/ipv4/tcp_ipv4.c
-> >=20
->=20>  +++ b/net/ipv4/tcp_ipv4.c
-> >=20
->=20>  @@ -2417,7 +2417,7 @@ int tcp_v4_rcv(struct sk_buff *skb)
-> >=20
->=20>  goto csum_error;
-> >=20
->=20>  }
-> >=20
->=20>  - tw_status =3D tcp_timewait_state_process(inet_twsk(sk), skb, th,=
- &isn);
-> >=20
->=20>  + tw_status =3D tcp_timewait_state_process(inet_twsk(sk), skb, th,=
- &isn, &drop_reason);
-> >=20
->=20>  switch (tw_status) {
-> >=20
->=20>  case TCP_TW_SYN: {
-> >=20
->=20>  struct sock *sk2 =3D inet_lookup_listener(net,
-> >=20
->=20>  diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
-> >=20
->=20>  index fb9349be36b8..d16dfd41397e 100644
-> >=20
->=20>  --- a/net/ipv4/tcp_minisocks.c
-> >=20
->=20>  +++ b/net/ipv4/tcp_minisocks.c
-> >=20
->=20>  @@ -97,7 +97,8 @@ static void twsk_rcv_nxt_update(struct tcp_timew=
-ait_sock *tcptw, u32 seq,
-> >=20
->=20>  */
-> >=20
->=20>  enum tcp_tw_status
-> >=20
->=20>  tcp_timewait_state_process(struct inet_timewait_sock *tw, struct s=
-k_buff *skb,
-> >=20
->=20>  - const struct tcphdr *th, u32 *tw_isn)
-> >=20
->=20>  + const struct tcphdr *th, u32 *tw_isn,
-> >=20
->=20>  + enum skb_drop_reason *drop_reason)
-> >=20
->=20>  {
-> >=20
->=20>  struct tcp_timewait_sock *tcptw =3D tcp_twsk((struct sock *)tw);
-> >=20
->=20>  u32 rcv_nxt =3D READ_ONCE(tcptw->tw_rcv_nxt);
-> >=20
->=20>  @@ -245,8 +246,10 @@ tcp_timewait_state_process(struct inet_timewa=
-it_sock *tw, struct sk_buff *skb,
-> >=20
->=20>  return TCP_TW_SYN;
-> >=20
->=20>  }
-> >=20
->=20>  - if (paws_reject)
-> >=20
->=20>  + if (paws_reject) {
-> >=20
->=20>  + *drop_reason =3D SKB_DROP_REASON_TCP_RFC7323_PAWS;
-> >=20
->=20>  __NET_INC_STATS(twsk_net(tw), LINUX_MIB_PAWSESTABREJECTED);
-> >=20
->=20
-> I think we should add a new SNMP value and drop reason for TW sockets.
->=20
->=20SNMP_MIB_ITEM("PAWSTimewait", LINUX_MIB_PAWSTIMEWAIT),
->=20
->=20and SKB_DROP_REASON_TCP_RFC7323_TW_PAWS ?
->
+The RV64ILP32 ABI has two independent 2GiB address space:
+ - 0 ~ 0x7fffffff
+ - 0xffffffff80000000 ~ 0xffffffffffffffff
 
-That makes sense, we've done similar things before, such as adding
-PAWS_OLD_ACK previously.
+In the rv64ilp32 ABI, 0x80000000 is illegal; hence, use a
+temporary trap handler to zero-extend the address for jalr,
+load and store operations.
 
-Thanks for the suggestion!
---=20
-pw-bot:=20cr
+Signed-off-by: Guo Ren (Alibaba DAMO Academy) <guoren@kernel.org>
+---
+ arch/riscv/kernel/head.S | 112 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
+
+diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+index e55a92be12b1..bd2f30aa6d01 100644
+--- a/arch/riscv/kernel/head.S
++++ b/arch/riscv/kernel/head.S
+@@ -170,6 +170,118 @@ secondary_start_sbi:
+ 
+ .align 2
+ .Lsecondary_park:
++#ifdef CONFIG_ABI_RV64ILP32
++.option push
++.option norelax
++.option norvc
++	addiw sp, sp, -32
++
++	/* zext.w sp */
++	slli  sp, sp, 32
++	srli  sp, sp, 32
++
++	/* zext.w ra */
++	slli ra, ra, 32
++	srli ra, ra, 32
++
++	/* zext.w fp */
++	slli fp, fp, 32
++	srli fp, fp, 32
++
++	/* zext.w tp */
++	slli tp, tp, 32
++	srli tp, tp, 32
++
++	/* save tmp reg */
++	REG_S ra, 24(sp)
++	REG_S fp, 16(sp)
++	REG_S tp,  8(sp)
++	REG_S gp,  0(sp)
++
++	/* zext.w epc */
++	csrr ra, CSR_EPC
++	slli ra, ra, 32
++	srli ra, ra, 32
++	csrw CSR_SEPC, ra
++
++	csrr gp, CSR_CAUSE
++
++	/* EXC_INST_ACCESS */
++	addiw fp, gp, -1
++	beqz fp, 6f
++
++	/* EXC_LOAD_ACCESS */
++	addiw fp, gp, -5
++	beqz fp, 1f
++
++	/* EXC_STORE_ACCESS */
++	addiw fp, gp, -7
++	beqz fp, 1f
++
++	j 7f
++1:
++	/* get inst */
++	lw ra, 0(ra)
++	andi gp, ra, 0x3
++
++	/* c.(lw/sw/ld/sd)sp */
++	addiw fp, gp, -2
++	beqz fp, 6f
++
++	/* lw/sw/ld/sd */
++	addiw fp, gp, -3
++	beqz fp, 2f
++
++	/* c.(lw/sw/ld/sd) */
++	li fp, 0x7
++	slli fp, fp, 7
++	and ra, fp, ra
++	slli ra, ra, 8
++	j 3f
++
++2:
++	/* get rs1 */
++	li fp, 0x1f
++	slli fp, fp, 15
++	and ra, fp, ra
++
++3:
++	/* copy rs1 to rd */
++	mv fp, ra
++	srli fp, fp, 8
++	or ra, fp, ra
++
++	/* modify slli */
++	la fp, 4f
++	lw tp, 0(fp)
++	mv gp, tp
++	or tp, ra, tp
++	sw tp, 0(fp)
++	fence.i
++4:	slli x0, x0, 32
++	sw gp, 0(fp)
++
++	/* modify srli */
++	la fp, 5f
++	lw tp, 0(fp)
++	mv gp, tp
++	or tp, ra, tp
++	sw tp, 0(fp)
++	fence.i
++5:	srli x0, x0, 32
++	sw gp, 0(fp)
++
++6:
++	/* restore tmp reg */
++	REG_L ra, 24(sp)
++	REG_L fp, 16(sp)
++	REG_L tp,  8(sp)
++	REG_L gp,  0(sp)
++	addi sp, sp, 32
++	sret
++.option pop
++7:
++#endif
+ 	/*
+ 	 * Park this hart if we:
+ 	 *  - have too many harts on CONFIG_RISCV_BOOT_SPINWAIT
+-- 
+2.40.1
+
