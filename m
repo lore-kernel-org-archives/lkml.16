@@ -1,191 +1,111 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C45A610B;
-	Tue, 25 Mar 2025 03:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC1D1494D8
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 03:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742871626; cv=none; b=lYH+9RbT+4T6uA4QUV5lydjbminUGzKHs0lUvLksQSgwRj+EC+P5hDiwqlzXpqD/GVMweQRCqNzVnloENA02X4dIs5K95zIwj9DqpAIWIZHI/8DLZcla/RcmZ4sxat9ZSGOVFrvlijYIumqIBI7SwT6VTrm4lw2vam+cGVTL5qE=
+	t=1742871765; cv=none; b=VF8FWH37pkRzoyavijCTsDryQsxuFpDmpS8J2918xgB/aWxs774rodUx0AfLdRcdiZGhtMaAMwovqsA18OCeG46V+qql+fLObKDB0XmJDUd/U3qEQBok//ZTP2rqU+/W4JckD2BTREhJSu8pn3fOeeGXqR2/zYqUkF1aqm6JuWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742871626; c=relaxed/simple;
-	bh=uUulRKjZ00n5Mt31D5KLgP81ALiFmubB5Y5oq+az+ww=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IlF9KfqWFQyznQdI3mu6Mqg++k39i1KS3KErSrk/C3pFoUfYIV2TaFlzQeRuH7Bg51MTljj7PqS+UbcV7XAYJM6dG8DxLtIuAMlCoOR5CohTZ1smEi0+pcr2KjN9GqGSGNycNGSqZNH1WnAC7VlxlkWqInUzDuK6HFLXD1AynCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=BrjDdUFQ; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1742871765; c=relaxed/simple;
+	bh=p+6PwRCtOXKT7ZJv96aTDIh/LRMyr3o7sI/Y1/kJn5I=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=t8Mn2k9KuUTsSqxbXzxwptCEOIbAQ2tZnwZA5Y1BC4sHUywrL45jBoOp21+yGlRzKzXHqMTViiA+wdCB6UZGOx7Duiz66p2bxqTDxA/uJ5T61iqGyX9OLUS+73tqwTdUsUfXjs2iZrMnFhW6uQH7SL7jH7TJEtWfocXyJNabJz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PUu+TYpj; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="BrjDdUFQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=0eer3EgLHRT+qs+bXoeJVJZ6rL+V0jGlXoHAUa4zRQI=;
-	b=BrjDdUFQ9dI6XU/JQ+YSri9SwXf+r3gw2/TeqZfJFZlcTAzqpsHTDSuz2koAAH
-	MvUF8vLjk8c3SPV4vXFWBTjXGuIi3+HRbSldOJNgcSr4TbwTwqCZR1iNezDKCp9K
-	B5jjS1r4rWZp0TnmSa0TFgU++obmj0mOIBqaRsYA63Wsc=
-Received: from [192.168.60.52] (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wD33w4cHOJnKK3sBg--.25762S2;
-	Tue, 25 Mar 2025 10:59:41 +0800 (CST)
-Message-ID: <3d9b2fa9-98bf-4f47-aa76-640a4f82cb2f@163.com>
-Date: Tue, 25 Mar 2025 10:59:40 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PUu+TYpj"
+Message-ID: <52e7d34e-cf86-40d6-a294-b318df98d72a@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1742871760;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IGGsd72H09Ek4y5Nasx3ldah0+WIfjmF4R9A3El2Gqs=;
+	b=PUu+TYpjV89j/VYrhe12ry4OhxeGSCw5aIZ3H1/JBah4h8SPGbDBX7xlgwnNaSRF5bdnYw
+	Ex9q8FoYlmI6FH0MWym2+K6fCdyFdznFmZChjy6qVGWvCS80saUwOh3nqhlOa2H05nGVua
+	/ha1F1sMacAizT5OrurYNI8iWw7xMGc=
+Date: Tue, 25 Mar 2025 11:01:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v6 3/5] PCI: cadence: Use common PCI host bridge APIs for
- finding the capabilities
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
- thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20250323164852.430546-1-18255117159@163.com>
- <20250323164852.430546-4-18255117159@163.com>
- <f467056d-8d4a-9dab-2f0a-ca589adfde53@linux.intel.com>
- <d370b69a-3b70-4e3b-94a3-43e0bc1305cd@163.com>
- <a3462c68-ec1b-0b1a-fee7-612bd1109819@linux.intel.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kunwu Chan <kunwu.chan@linux.dev>
+Subject: Re: [PATCH v2] rust: sync: optimize rust symbol generation for
+ CondVar
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+ gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+ a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+ dakr@kernel.org, nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
+ morbo@google.com, justinstitt@google.com, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+ Kunwu Chan <kunwu.chan@hotmail.com>, Grace Deng <Grace.Deng006@gmail.com>
+References: <20250324061835.1693125-1-kunwu.chan@linux.dev>
+ <CANiq72=KjT8HRJA0NStHeqm-9286gay496CU8edNALPQ9_N+ww@mail.gmail.com>
 Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <a3462c68-ec1b-0b1a-fee7-612bd1109819@linux.intel.com>
+In-Reply-To: <CANiq72=KjT8HRJA0NStHeqm-9286gay496CU8edNALPQ9_N+ww@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD33w4cHOJnKK3sBg--.25762S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCF4UKF1xAF15Xw1Dtw4Utwb_yoWrXFW7pF
-	W5KF1ayr18Jr47Wrn2va1YqF1Syr9IyFy5Aas5Ga47Zrn0g3ZIgFWqkFW3CFyfCFs7J3WU
-	X3yDtrZ3Crn8AFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Uq0PhUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDw4bo2fiFsHsUwAAsU
+X-Migadu-Flow: FLOW_OUT
 
+On 2025/3/24 17:37, Miguel Ojeda wrote:
+> On Mon, Mar 24, 2025 at 7:19 AM Kunwu Chan<kunwu.chan@linux.dev> wrote:
+>> Link:https://github.com/Rust-for-Linux/linux/issues/1145
+>> Suggested-by: Alice Ryhl<aliceryhl@google.com>
+> Nit: I typically use Link after Suggested-by, to mimic what the docs
+> require about Reported-by with Link. (No need to resend a new version
+> just for this :)
+Thanks for the kind reminder, I'll follow this next time
+>> - Remove '#[inline]' for notify()
+> It is good that the commit matches the log now, though I wonder if in
+> the future we may want the `#[inline]` for `notify` anyway, even if
+> LLVM does that one on its own today.
+Now, the default '-Copt-level' is 2 when define 
+'CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE',
+and in  KBUILD_RUSTFLAGS the  '-Ccodegen-units' is 1.
 
+So if the config not change, the result should be the same.
 
-On 2025/3/24 23:02, Ilpo Järvinen wrote:
->>>>    +static u32 cdns_pcie_read_cfg(void *priv, int where, int size)
->>>> +{
->>>> +	struct cdns_pcie *pcie = priv;
->>>> +	u32 val;
->>>> +
->>>> +	if (size == 4)
->>>> +		val = readl(pcie->reg_base + where);
->>>
->>> Should this use cdns_pcie_readl() ?
->>
->> pci_host_bridge_find_*capability required to read two or four bytes.
->>
->> reg = read_cfg(priv, cap_ptr, 2);
->> or
->> header = read_cfg(priv, pos, 4);
->>
->> Here I mainly want to write it the same way as size == 2 and size == 1.
->> Or size == 4 should I write it as cdns_pcie_readl() ?
-> 
-> As is, it seems two functions are added for the same thing for the case
-> with size == 4 with different names which feels duplication. One could add
-> cdns_pcie_readw() and cdns_pcie_readb() too but perhaps cdns_pcie_readl()
-> should just call this new function instead?
+And the actualy compile steps for rust/kernel.o is as following:
 
-Hi Ilpo,
+make -f ./scripts/Makefile.build obj=rust
+# RUSTC L rust/kernel.o
+OBJTREE=/media/kunwuchan/68d922f3-5dde-45b0-af93-c45ba81d85ef/linux-next 
+rustc --edition=2021 -Zbinary_dep_depinfo=y -Astable_features 
+-Dnon_ascii_idents -Dunsafe_op_in_unsafe_fn -Wmissing_docs 
+-Wrust_2018_idioms -Wunreachable_pub -Wclippy::all 
+-Wclippy::ignored_unit_patterns -Wclippy::mut_mut 
+-Wclippy::needless_bitwise_bool -Wclippy::needless_continue 
+-Aclippy::needless_lifetimes -Wclippy::no_mangle_with_rust_abi 
+-Wclippy::undocumented_unsafe_blocks 
+-Wclippy::unnecessary_safety_comment -Wclippy::unnecessary_safety_doc 
+-Wrustdoc::missing_crate_level_docs -Wrustdoc::unescaped_backticks 
+-Cpanic=abort -Cembed-bitcode=n -Clto=n -Cforce-unwind-tables=n 
+-Ccodegen-units=1 -Csymbol-mangling-version=v0 -Crelocation-model=static 
+-Zfunction-sections=n -Wclippy::float_arithmetic 
+--target=aarch64-unknown-none-softfloat -Cforce-unwind-tables=n 
+-Zbranch-protection=bti,pac-ret -Copt-level=2 -Cdebug-assertions=y 
+-Coverflow-checks=y -Cforce-frame-pointers=y -Cdebuginfo=1 
+@./include/generated/rustc_cfg --extern ffi --extern pin_init --extern 
+build_error --extern macros --extern bindings --extern uapi 
+--emit=dep-info=rust/.kernel.o.d --emit=obj=rust/kernel.o 
+--emit=metadata=rust/libkernel.rmeta --crate-type rlib -L./rust 
+--crate-name kernel rust/kernel/lib.rs --sysroot=/dev/null
+# EXPORTS rust/exports_kernel_generated.h
+   llvm-nm -p --defined-only rust/kernel.o | awk '$2~/(T|R|D|B)/ && 
+$3!~/__cfi/ && $3!~/__odr_asan/ { printf "EXPORT_SYMBOL_RUST_GPL(%s);
+",$3 }' > rust/exports_kernel_generated.h
 
-Redefine a function with reference to DWC?
+> Cheers,
+> Miguel
 
-u32 dw_pcie_read_dbi(struct dw_pcie *pci, u32 reg, size_t size)
-   dw_pcie_read(pci->dbi_base + reg, size, &val);
-     dw_pcie_read
-
-int dw_pcie_read(void __iomem *addr, int size, u32 *val)
-{
-	if (!IS_ALIGNED((uintptr_t)addr, size)) {
-		*val = 0;
-		return PCIBIOS_BAD_REGISTER_NUMBER;
-	}
-
-	if (size == 4) {
-		*val = readl(addr);
-	} else if (size == 2) {
-		*val = readw(addr);
-	} else if (size == 1) {
-		*val = readb(addr);
-	} else {
-		*val = 0;
-		return PCIBIOS_BAD_REGISTER_NUMBER;
-	}
-
-	return PCIBIOS_SUCCESSFUL;
-}
-EXPORT_SYMBOL_GPL(dw_pcie_read);
-
-> 
->>>> +	else if (size == 2)
->>>> +		val = readw(pcie->reg_base + where);
->>>> +	else if (size == 1)
->>>> +		val = readb(pcie->reg_base + where);
->>>> +
->>>> +	return val;
->>>> +}
->>>> +
->>>> +u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap)
->>>> +{
->>>> +	return pci_host_bridge_find_capability(pcie, cdns_pcie_read_cfg, cap);
->>>> +}
->>>> +
->>>> +u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap)
->>>> +{
->>>> +	return pci_host_bridge_find_ext_capability(pcie, cdns_pcie_read_cfg,
->>>> cap);
->>>> +}
->>>
->>> I'm really wondering why the read config function is provided directly as
->>> an argument. Shouldn't struct pci_host_bridge have some ops that can read
->>> config so wouldn't it make much more sense to pass it and use the func
->>> from there? There seems to ops in pci_host_bridge that has read(), does
->>> that work? If not, why?
->>>
->>
->> No effect.
-> 
-> I'm not sure what you meant?
-> 
->> Because we need to get the offset of the capability before PCIe
->> enumerates the device.
-> 
-> Is this to say it is needed before the struct pci_host_bridge is created?
-> 
->> I originally added a separate find capability related
->> function for CDNS in the following patch. It's also copied directly from DWC.
->> Mani felt there was too much duplicate code and also suggested passing a
->> callback function that could manipulate the registers of the root port of DWC
->> or CDNS.
-> 
-> I very much like the direction this patchset is moving (moving shared
-> part of controllers code to core), I just feel this doesn't go far enough
-> when it's passing function pointer to the read function.
-> 
-> I admit I've never written a controller driver so perhaps there's
-> something detail I lack knowledge of but I'd want to understand why
-> struct pci_ops (which exists both in pci_host_bridge and pci_bus) cannot
-> be used?
-> 
-
-
-I don't know if the following code can make it clear to you.
-
-static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
-	.host_init	= qcom_pcie_host_init,
-                   pcie->cfg->ops->post_init(pcie);
-                     qcom_pcie_post_init_2_3_3
-                       dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-};
-
-int dw_pcie_host_init(struct dw_pcie_rp *pp)
-   bridge = devm_pci_alloc_host_bridge(dev, 0);
-   if (pp->ops->host_init)
-     pp->ops = &qcom_pcie_dw_ops;  // qcom here needs to find capability
-
-   pci_host_probe(bridge); // pcie enumerate flow
-     pci_scan_root_bus_bridge(bridge);
-       pci_register_host_bridge(bridge);
-         bus->ops = bridge->ops;   // Only pci bus ops can be used
-
-
-Best regards,
-Hans
+-- 
+Thanks,
+   Kunwu.Chan(Tao.Chan)
 
