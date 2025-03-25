@@ -1,333 +1,147 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E88B19007F;
-	Tue, 25 Mar 2025 06:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AEC38385
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 06:26:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742883850; cv=none; b=WzFqScvIhZGw3GiqnGQOWGQ17ucXYHXqkfcUaO2kZ6LCnlpLX0ctdwj8I8a4xmGFhXva6ixB+7wdP5zKIeNiUQYGxoGqbGxX1fgqfrGimFxWgfvQ5VrabPSx7Tx6t4xJsyw2IvFk57ZRVyJU7lR0S/oV1efKqgD/urgc4HiVSvA=
+	t=1742883992; cv=none; b=Bu86I3s1LGO6Cic25GO5kfQtnZT9SivuIjgH13UFC1IaJ8UsRiFivJCMCEzMZNcZoBvIJ7L/LMh+7WvhhL2B7cBgmcW8U7p3LR6wTztTgZODHw5oXZsTZ9ZJbDRu4PqVaf/vl/BtlsgQGYMo3BrR61u8XS5qtKND4ByO0K6dM8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742883850; c=relaxed/simple;
-	bh=78IUP/E8zp3SBFSGZjfZ0JdsJkR0nMvdIdnx1pzY/Dg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bwvkEYW+/gjgzVM2xMJiRp3oj6ZYeGKrtnmn0cyaCWOA3z3VflIgAveSdqocRVcBf4I9IkXPlyi6gk0buaC0eBRRlS1EQDsd+5rCRzHE8AV3K4lNohd+fJtE0vjNXCvSkSTERDx/chda4J9Gn5g4zaP/CsuuNP0eUKIFs5zM77k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=dnFzMe5D; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dnFzMe5D"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 291522036591; Mon, 24 Mar 2025 23:24:08 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 291522036591
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1742883848;
-	bh=eIeO+X3sdXDN4SQgv3RFLsF0adLBIrp+lm/jD4fM/7Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dnFzMe5D5KIs/cRmORSwjqcqaYvolp8oURRxGLQfI5K1Oh4yWreNqcrrl4WzEdwk5
-	 ldf56wKphdxEd5gRueLOXqG/ot6SQRv/RUn8bebsh3zpgiV/dfWrolZ6/vUk1QhEGt
-	 IcQPe7lCS+RCZRb0t7UsIUhGYxyuS08RjfR5OtJ0=
-Date: Mon, 24 Mar 2025 23:24:08 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Wei Liu <wei.liu@kernel.org>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH] hv/hv_kvp_daemon: Enable debug logs for hv_kvp_daemon
-Message-ID: <20250325062408.GA22632@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1742800492-25911-1-git-send-email-shradhagupta@linux.microsoft.com>
- <Z-GO-VGHMFDIAZ7r@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+	s=arc-20240116; t=1742883992; c=relaxed/simple;
+	bh=Ox1fhONWN8x2PVBse44ep4LUGaP+pA4mpHXFB6FyPvM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IAKOx6k32B+/UPP9lMmjnxNNxEPzTq6J7/SFzjn/0Kf0PL3wdM9PTiwZ5olCd9Db5KZOqzBzyNjntkxJKzw2U6viMYP3d6nCaAQyPtUXtZgmTOHMKSR4nTSUTsKV5x1ZQajJBmluUAp+TePGA0xzJrS+frigSva+3Vy9BKmdwPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZMKf10n59ztRM2;
+	Tue, 25 Mar 2025 14:24:57 +0800 (CST)
+Received: from kwepemg100017.china.huawei.com (unknown [7.202.181.58])
+	by mail.maildlp.com (Postfix) with ESMTPS id D35C81800E2;
+	Tue, 25 Mar 2025 14:26:23 +0800 (CST)
+Received: from huawei.com (10.175.124.71) by kwepemg100017.china.huawei.com
+ (7.202.181.58) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 25 Mar
+ 2025 14:26:23 +0800
+From: Wupeng Ma <mawupeng1@huawei.com>
+To: <akpm@linux-foundation.org>, <mike.kravetz@oracle.com>, <david@redhat.com>
+CC: <muchun.song@linux.dev>, <mawupeng1@huawei.com>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH] mm: hugetlb: Fix incorrect fallback for subpool
+Date: Tue, 25 Mar 2025 14:16:34 +0800
+Message-ID: <20250325061634.2118202-1-mawupeng1@huawei.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-GO-VGHMFDIAZ7r@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemg100017.china.huawei.com (7.202.181.58)
 
-On Mon, Mar 24, 2025 at 04:57:29PM +0000, Wei Liu wrote:
-> On Mon, Mar 24, 2025 at 12:14:52AM -0700, Shradha Gupta wrote:
-> > Allow the KVP daemon to log the KVP updates triggered in the VM
-> > with a new debug flag(-d).
-> > When the daemon is started with this flag, it logs updates and debug
-> > information in /var/log/kvp_debug_file.log. This information comes
-> > in handy for debugging issues where the key-value pairs for certain
-> > pools show mismatch/incorrect values.
-> > 
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> 
-> If debug is enabled, you can just open the file once during
-> initialization and close it when the daemon exits.
-> 
-> If you worry whether the log lines are written, you can use fflush(3) to
-> flush the buffer to the file every time you write to it, or use
-> setvbuf(3) to disable buffering.
->
-sure, that makes sense. I'll make that change 
-> > ---
-> >  tools/hv/hv_kvp_daemon.c | 120 ++++++++++++++++++++++++++++++++++++---
-> >  1 file changed, 112 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-> > index 04ba035d67e9..1f8b02b17356 100644
-> > --- a/tools/hv/hv_kvp_daemon.c
-> > +++ b/tools/hv/hv_kvp_daemon.c
-> > @@ -41,6 +41,7 @@
-> >  #include <net/if.h>
-> >  #include <limits.h>
-> >  #include <getopt.h>
-> > +#include <time.h>
-> >  
-> >  /*
-> >   * KVP protocol: The user mode component first registers with the
-> > @@ -83,6 +84,7 @@ enum {
-> >  };
-> >  
-> >  static int in_hand_shake;
-> > +static int debug_enabled;
-> >  
-> >  static char *os_name = "";
-> >  static char *os_major = "";
-> > @@ -91,6 +93,7 @@ static char *processor_arch;
-> >  static char *os_build;
-> >  static char *os_version;
-> >  static char *lic_version = "Unknown version";
-> > +static char debug_file[PATH_MAX];
-> >  static char full_domain_name[HV_KVP_EXCHANGE_MAX_VALUE_SIZE];
-> >  static struct utsname uts_buf;
-> >  
-> > @@ -99,6 +102,7 @@ static struct utsname uts_buf;
-> >   */
-> >  
-> >  #define KVP_CONFIG_LOC	"/var/lib/hyperv"
-> > +#define KVP_DEBUG_LOC	"/var/log/"
-> >  
-> >  #ifndef KVP_SCRIPTS_PATH
-> >  #define KVP_SCRIPTS_PATH "/usr/libexec/hypervkvpd/"
-> > @@ -153,6 +157,16 @@ static void kvp_release_lock(int pool)
-> >  	}
-> >  }
-> >  
-> > +static void convert_tm_to_string(char *tm_str, size_t tm_str_size)
-> > +{
-> > +	struct tm tm;
-> > +	time_t t;
-> > +
-> > +	time(&t);
-> > +	gmtime_r(&t, &tm);
-> > +	strftime(tm_str, tm_str_size, "%Y-%m-%dT%H:%M:%S", &tm);
-> > +}
-> > +
-> >  static void kvp_update_file(int pool)
-> >  {
-> >  	FILE *filep;
-> > @@ -183,6 +197,45 @@ static void kvp_update_file(int pool)
-> >  	kvp_release_lock(pool);
-> >  }
-> >  
-> > +static void kvp_dump_initial_pools(int pool)
-> > +{
-> > +	FILE *debug_filep;
-> > +	char tm_str[50];
-> > +	int i, ret;
-> > +
-> > +	convert_tm_to_string(tm_str, sizeof(tm_str));
-> > +
-> > +	debug_filep = fopen(debug_file, "a");
-> > +	if (!debug_filep) {
-> > +		syslog(LOG_ERR, "Failed to open file: %s, pool: %d; error: %d%s",
-> > +		       debug_file, pool, errno, strerror(errno));
-> > +		return;
-> > +	}
-> > +
-> > +	ret = fprintf(debug_filep, "===Start dumping the contents on pool %d ===\n",
-> > +		      pool);
-> > +	if (ret <= 0) {
-> > +		syslog(LOG_ERR, "Failed to write to kvp debug file: %d", pool);
-> > +		fclose(debug_filep);
-> > +		return;
-> > +	}
-> > +
-> > +	for (i = 0; i < kvp_file_info[pool].num_records; i++) {
-> > +		ret = fprintf(debug_filep, "[%s]: pool: %d, %d/%d key=%s val=%s\n",
-> > +			      tm_str, pool, i, kvp_file_info[pool].num_records,
-> > +			      kvp_file_info[pool].records[i].key,
-> > +			      kvp_file_info[pool].records[i].value);
-> > +
-> > +		if (ret <= 0) {
-> > +			syslog(LOG_ERR, "Failed to write to kvp debug file: pool=%d, i=%u/%u",
-> > +			       pool, i, kvp_file_info[pool].num_records);
-> > +			break;
-> > +		}
-> > +	}
-> > +
-> > +	fclose(debug_filep);
-> > +}
-> > +
-> >  static void kvp_update_mem_state(int pool)
-> >  {
-> >  	FILE *filep;
-> > @@ -270,6 +323,8 @@ static int kvp_file_init(void)
-> >  			return 1;
-> >  		kvp_file_info[i].num_records = 0;
-> >  		kvp_update_mem_state(i);
-> > +		if (debug_enabled)
-> > +			kvp_dump_initial_pools(i);
-> >  	}
-> >  
-> >  	return 0;
-> > @@ -321,14 +376,37 @@ static int kvp_key_delete(int pool, const __u8 *key, int key_size)
-> >  static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
-> >  				 const __u8 *value, int value_size)
-> >  {
-> > -	int i;
-> > -	int num_records;
-> >  	struct kvp_record *record;
-> > +	FILE *filep = NULL;
-> > +	int num_records;
-> > +	char tm_str[50];
-> >  	int num_blocks;
-> > +	int i;
-> > +
-> > +	if (debug_enabled) {
-> > +		filep = fopen(debug_file, "a");
-> > +		if (!filep) {
-> > +			syslog(LOG_ERR, "Failed to open file %s; error: %d",
-> > +			       debug_file, errno);
-> > +		} else {
-> > +			convert_tm_to_string(tm_str, sizeof(tm_str));
-> > +			fprintf(filep, "[%s]:%s: got a KVP: pool=%d key=%s val=%s\n",
-> > +				__func__, tm_str, pool, key, value);
-> > +		}
-> > +	}
-> >  
-> >  	if ((key_size > HV_KVP_EXCHANGE_MAX_KEY_SIZE) ||
-> > -		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE))
-> > +		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)) {
-> > +		syslog(LOG_ERR, "Got a too long key or value: key=%s, val=%s",
-> > +		       key, value);
-> > +
-> > +		if (filep) {
-> > +			fprintf(filep, "[%s]: Got a too long key or value: pool=%d, key=%s, val=%s\n",
-> > +				tm_str, pool, key, value);
-> > +			fclose(filep);
-> > +		}
-> >  		return 1;
-> > +	}
-> >  
-> >  	/*
-> >  	 * First update the in-memory state.
-> > @@ -348,6 +426,11 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
-> >  		 */
-> >  		memcpy(record[i].value, value, value_size);
-> >  		kvp_update_file(pool);
-> > +		if (filep) {
-> > +			fprintf(filep, "[%s]:%s: updated: pool=%d key=%s val=%s\n",
-> > +				__func__, tm_str, pool, key, value);
-> > +			fclose(filep);
-> > +		}
-> >  		return 0;
-> >  	}
-> >  
-> > @@ -359,8 +442,12 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
-> >  		record = realloc(record, sizeof(struct kvp_record) *
-> >  			 ENTRIES_PER_BLOCK * (num_blocks + 1));
-> >  
-> > -		if (record == NULL)
-> > +		if (!record) {
-> > +			if (filep)
-> > +				fclose(filep);
-> > +			syslog(LOG_ERR, "%s: Memory alloc failure", __func__);
-> >  			return 1;
-> > +		}
-> >  		kvp_file_info[pool].num_blocks++;
-> >  
-> >  	}
-> > @@ -368,6 +455,12 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
-> >  	memcpy(record[i].key, key, key_size);
-> >  	kvp_file_info[pool].records = record;
-> >  	kvp_file_info[pool].num_records++;
-> > +
-> > +	if (filep) {
-> > +		fprintf(filep, "[%s]:%s: added: pool=%d key=%s val=%s\n",
-> > +			__func__, tm_str, pool, key, value);
-> > +		fclose(filep);
-> > +	}
-> >  	kvp_update_file(pool);
-> >  	return 0;
-> >  }
-> > @@ -1662,6 +1755,7 @@ void print_usage(char *argv[])
-> >  	fprintf(stderr, "Usage: %s [options]\n"
-> >  		"Options are:\n"
-> >  		"  -n, --no-daemon        stay in foreground, don't daemonize\n"
-> > +		"  -d, --debug-enabled    Enable debug logs\n"
-> 
-> You should specify where the log is written to. The only place that
-> tells where it is written to is in syslog.
->
-I can add the log location here as well, thanks.
+During our testing with hugetlb subpool enabled, we observe that
+hstate->resv_huge_pages may underflow into negative values. Root cause
+analysis reveals a race condition in subpool reservation fallback handling
+as follow:
+
+hugetlb_reserve_pages()
+    /* Attempt subpool reservation */
+    gbl_reserve = hugepage_subpool_get_pages(spool, chg);
+
+    /* Global reservation may fail after subpool allocation */
+    if (hugetlb_acct_memory(h, gbl_reserve) < 0)
+        goto out_put_pages;
+
+out_put_pages:
+    /* This incorrectly restores reservation to subpool */
+    hugepage_subpool_put_pages(spool, chg);
+
+When hugetlb_acct_memory() fails after subpool allocation, the current
+implementation over-commits subpool reservations by returning the full
+'chg' value instead of the actual allocated 'gbl_reserve' amount. This
+discrepancy propagates to global reservations during subsequent releases,
+eventually causing resv_huge_pages underflow.
+
+This problem can be trigger easily with the following steps:
+1. reverse hugepage for hugeltb allocation
+2. mount hugetlbfs with min_size to enable hugetlb subpool
+3. alloc hugepages with two task(make sure the second will fail due to
+   insufficient amount of hugepages)
+4. with for a few seconds and repeat step 3 which will make
+   hstate->resv_huge_pages to go below zero.
+
+To fix this problem, return corrent amount of pages to subpool during the
+fallback after hugepage_subpool_get_pages is called.
+
+Fixes: 1c5ecae3a93f ("hugetlbfs: add minimum size accounting to subpools")
+Signed-off-by: Wupeng Ma <mawupeng1@huawei.com>
+---
+ mm/hugetlb.c | 28 ++++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
+
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 318624c96584..dc4449592d00 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -2987,7 +2987,7 @@ struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
+ 	struct hugepage_subpool *spool = subpool_vma(vma);
+ 	struct hstate *h = hstate_vma(vma);
+ 	struct folio *folio;
+-	long retval, gbl_chg;
++	long retval, gbl_chg, gbl_reserve;
+ 	map_chg_state map_chg;
+ 	int ret, idx;
+ 	struct hugetlb_cgroup *h_cg = NULL;
+@@ -3140,8 +3140,16 @@ struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
+ 		hugetlb_cgroup_uncharge_cgroup_rsvd(idx, pages_per_huge_page(h),
+ 						    h_cg);
+ out_subpool_put:
+-	if (map_chg)
+-		hugepage_subpool_put_pages(spool, 1);
++	/*
++	 * put page to subpool iff the quota of subpool's rsv_hpages is used
++	 * during hugepage_subpool_get_pages.
++	 */
++	if (map_chg && !gbl_chg) {
++		gbl_reserve = hugepage_subpool_put_pages(spool, 1);
++		hugetlb_acct_memory(h, -gbl_reserve);
++	}
++
++
+ out_end_reservation:
+ 	if (map_chg != MAP_CHG_ENFORCED)
+ 		vma_end_reservation(h, vma, addr);
+@@ -6949,7 +6957,7 @@ bool hugetlb_reserve_pages(struct inode *inode,
+ 					struct vm_area_struct *vma,
+ 					vm_flags_t vm_flags)
+ {
+-	long chg = -1, add = -1;
++	long chg = -1, add = -1, spool_resv, gbl_resv;
+ 	struct hstate *h = hstate_inode(inode);
+ 	struct hugepage_subpool *spool = subpool_inode(inode);
+ 	struct resv_map *resv_map;
+@@ -7084,8 +7092,16 @@ bool hugetlb_reserve_pages(struct inode *inode,
+ 	return true;
  
-> Does systemd has a way to collect logs from a specific daemon? If so,
-> we can consider using that facility
+ out_put_pages:
+-	/* put back original number of pages, chg */
+-	(void)hugepage_subpool_put_pages(spool, chg);
++	spool_resv = chg - gbl_reserve;
++	if (spool_resv) {
++		/* put sub pool's reservation back, chg - gbl_reserve */
++		gbl_resv = hugepage_subpool_put_pages(spool, spool_resv);
++		/*
++		 * subpool's reserved pages can not be put back due to race,
++		 * return to hstate.
++		 */
++		hugetlb_acct_memory(h, -gbl_resv);
++	}
+ out_uncharge_cgroup:
+ 	hugetlb_cgroup_uncharge_cgroup_rsvd(hstate_index(h),
+ 					    chg * pages_per_huge_page(h), h_cg);
+-- 
+2.43.0
 
-yeah, using services that can be done. For hv_kvp_daemon, the services
-are defined and configured by distro vendors(ex:
-rhel:-hypervkvpd.service, ubuntu:-hv-kvp-daemon.service). Using
-StandardOutput, StandardError directives(for these services), these logs
-can be configured to be visible in journalctl logs as well.
-
-Thanks,
-Shradha
-> 
-> Thanks,
-> Wei.
-> 
-> >  		"  -h, --help             print this help\n", argv[0]);
-> >  }
-> >  
-> > @@ -1681,12 +1775,13 @@ int main(int argc, char *argv[])
-> >  	int daemonize = 1, long_index = 0, opt;
-> >  
-> >  	static struct option long_options[] = {
-> > -		{"help",	no_argument,	   0,  'h' },
-> > -		{"no-daemon",	no_argument,	   0,  'n' },
-> > -		{0,		0,		   0,  0   }
-> > +		{"help",		no_argument,	   0,  'h' },
-> > +		{"no-daemon",		no_argument,	   0,  'n' },
-> > +		{"debug-enabled",	no_argument,	   0,  'd' },
-> > +		{0,			0,		   0,  0   }
-> >  	};
-> >  
-> > -	while ((opt = getopt_long(argc, argv, "hn", long_options,
-> > +	while ((opt = getopt_long(argc, argv, "hnd", long_options,
-> >  				  &long_index)) != -1) {
-> >  		switch (opt) {
-> >  		case 'n':
-> > @@ -1695,6 +1790,9 @@ int main(int argc, char *argv[])
-> >  		case 'h':
-> >  			print_usage(argv);
-> >  			exit(0);
-> > +		case 'd':
-> > +			debug_enabled = 1;
-> > +			break;
-> >  		default:
-> >  			print_usage(argv);
-> >  			exit(EXIT_FAILURE);
-> > @@ -1717,6 +1815,12 @@ int main(int argc, char *argv[])
-> >  	 */
-> >  	kvp_get_domain_name(full_domain_name, sizeof(full_domain_name));
-> >  
-> > +	if (debug_enabled) {
-> > +		sprintf(debug_file, "%s%s", KVP_DEBUG_LOC, "kvp_debug_file.log");
-> > +		syslog(LOG_INFO, "Logging debug info in kvp_debug_file=%s",
-> > +		       debug_file);
-> > +	}
-> > +
-> >  	if (kvp_file_init()) {
-> >  		syslog(LOG_ERR, "Failed to initialize the pools");
-> >  		exit(EXIT_FAILURE);
-> > -- 
-> > 2.34.1
-> > 
