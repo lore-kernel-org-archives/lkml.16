@@ -1,106 +1,146 @@
-Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1155442A96;
-	Tue, 25 Mar 2025 15:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.190.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5D619D06A;
+	Tue, 25 Mar 2025 15:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742916726; cv=none; b=LWvTEx5McdhTeTdJP6M9wbNfFv5pq7zZF/FKzlRAXEbwblLIfVuN1D55f5kzUqmeUM1HwkEbOt5IgKL+BR99afQHE134PByH1tL6zTKWOvbTB8bMs4pKjpvct8ETDC2yOYMWm5w/bcJPCHxuoTAvT/TL7ECrbAJc1ASKm1iKmx4=
+	t=1742916785; cv=none; b=gzJyXjXPraucvIdIsjdyKlXE05d6P3AZGOWpeqfRh+xzKgSG6vj8/klAGK4zxlgl6WkXokDmxgTK0AG695nNFbNdL4mrlhLzRy2OGjPMgloq5pd3JZdU7h0L2tDaLNoTP7dGUY/67lZM01MqUZJviKmJGZ7Kt2fwWx5P5VwMkZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742916726; c=relaxed/simple;
-	bh=x2NmSt9yLbVIJPlyS82xD2DGNKCq8MlMoH8SFczXq3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OKPMlFiSMGQ8Z8ms4c/VR1lkYGdzKVS+/FXTxVEn9wwnbUCzB7KpNvf6MKRCedwB+k8GInWAqbRb3DiGcDF7ApfAKFEIewl+WzZb9Di2SvLNs/WfIrK4mOquZhlW+29Nx5IKRi0HauKhUHBWkM1fhpbv4BIbecAz1/RjXnhxX+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=netfilter.org; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=dqBa0NGx; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=q3qFTrXS; arc=none smtp.client-ip=217.70.190.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="dqBa0NGx";
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="q3qFTrXS"
-Received: by mail.netfilter.org (Postfix, from userid 109)
-	id DE3016032E; Tue, 25 Mar 2025 16:32:00 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1742916720;
-	bh=uqCXvfdB2apsnaT9FS0TOcbMaur2YtZsVJVBqKqOVhg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dqBa0NGxkoj44VfwN1i2rHQFWsvTKCPmfpuj7lnYou27otd2hiwa9RynLJfM39Jbf
-	 R2YAK1ZvEDr4aHAALJl4ZbDY5INvoqR50+cw93t4LeI3QnBL+C3ssbVFosNXGyvDxX
-	 ohy1mxW5luDd4JdEiWQdx7fujQu1cgq5OaY57Oo9tqGwphJ30RYE2CRThcJezbFsrl
-	 glnWX3Bh5x5/YIq8EQA2sV10KmgvMDJnNPLr40BmT/M8L82+zf9XFqY7afYp8R1+LO
-	 8CxkDu6ydQpfAK4Oe2W/jdUj0xH7kXTpDsFKqiJd8EjXkrBIycNyvyi085c5NXM+yR
-	 olJOiL0aquPFg==
-X-Spam-Level: 
-Received: from netfilter.org (mail-agni [217.70.190.124])
-	by mail.netfilter.org (Postfix) with ESMTPSA id 2F53960292;
-	Tue, 25 Mar 2025 16:31:58 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1742916718;
-	bh=uqCXvfdB2apsnaT9FS0TOcbMaur2YtZsVJVBqKqOVhg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q3qFTrXSS2hEHC9r/3hWthMYvvglJvKbVle3F0+2hmRKzCoQ+jsZD2yNt83Wc1bJQ
-	 a39DMxUYuu2tblvm4pUi642xqNzPMqpHomiXBNaTnCsAEaQjfZpbV5DQ8PqlFDICV3
-	 dYAIcTW1Qzw2uvAh/dZKFRTErBbfwxeIjYqhJwNbUOyykemfDYv+Z03l4WO6zyQm/P
-	 S1kzLKcPme6R4/8EJBdwKkZuU1DgvvjZYpv9taiOrWKk7npBWiVr1mAh5Mt3oC+ZFc
-	 Qg+wdlx7OqKoTjPcxZzFcqKXtbys0gzH30zFctsq3hkH081K5M+GKaUyl5L8ckOlo1
-	 yIls4dFI5VUPA==
-Date: Tue, 25 Mar 2025 16:31:55 +0100
-From: Pablo Neira Ayuso <pablo@netfilter.org>
-To: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, cgroups@vger.kernel.org,
-	Jan Engelhardt <ej@inai.de>, Florian Westphal <fw@strlen.de>
-Subject: Re: [PATCH v2] netfilter: Make xt_cgroup independent from net_cls
-Message-ID: <Z-LMa9k9q_tJolr3@calendula>
-References: <20250305170935.80558-1-mkoutny@suse.com>
- <Z9_SSuPu2TXeN2TD@calendula>
- <rpu5hl3jyvwhbvamjykjpxdxdvfmqllj4zyh7vygwdxhkpblbz@5i2abljyp2ts>
- <Z-GNBeCX0dg-rxgQ@calendula>
- <iy3wkjdtudq4m763oji7bhj6w7bj2pdst7sbtahtwgcjrhpx6i@a4cy47mlcnqf>
+	s=arc-20240116; t=1742916785; c=relaxed/simple;
+	bh=uOMaXxqQr1touZc2JkhdpC0WTA9CS+H9FhkB/6PIUEs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uCiO3yfxZODS3EQJSWbnQBwyDb/bURJBoJL/Am8rzhZC3dOGBy5OVoWKJArr4qEl7JgjqSQoptsZUbFcvZ/W9CURWlRRfkCuFXVIsalmTsmzPQajgTfIU1qk2ukFXUDes4cVCArbgb7/R8L8Y1ihTL2udMUh4IHpzfE8yBcPWCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5ed1ac116e3so1502429a12.3;
+        Tue, 25 Mar 2025 08:33:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742916778; x=1743521578;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PiWm+JkA0WFLQavBGxgJxiDDHRCBaxXFyxmdg7dNgng=;
+        b=rgQSKt0kQoznYDixLWP3j1FjS30TXhk3J/HAxfelcAOx6TeSIqQKrJ9O20mimwi5N8
+         N27HpvI3+K00N9Ga4Vn3AQKy5UtDvbdc9eXt5xP9VrUrW6n+1woduxYZ04j3+OcupmMj
+         UZxg29L8gvzk4dLEUIlUYYzY/s8d7BpMGjR6oacE85099fmrhperpsaqOive9i3lBxd8
+         olFxDAY/RQMSUNlbbu4swOs1Rgf5N57OtsOzcCz3h9YRGSNqqy4dz88+IcJdbPKVPkZF
+         GJl7dJSfUPl/XKUcO4xYsl9SFUv1ngc4EmHYL+qRmDLygUyIpSq40xKGsmYrMcU0ciWj
+         T53w==
+X-Forwarded-Encrypted: i=1; AJvYcCW+Yky6KWS92LkFC92mz96LusuTmsj8LzU+mxJ/4CAsCDgO21DNMFmsYukebnyJUiL8WzRGAIaJQ65n@vger.kernel.org, AJvYcCWAGgoqier46grGozJwvqK57pgBH0uHZmKHG9JJr9KAiPNgfjdgXRcjwhiLBE2DTcffTfwUx+eHQes9@vger.kernel.org, AJvYcCWxUW951hIr6TFwtfnATJ2YmzXGwjupGPyx/MetwXpYEqg5IID/ow7igUqwjbsjjlDxeLU3ldx8KrWIIQ==@vger.kernel.org, AJvYcCXlaa8yI1FMExYICpHjEeUIUMjVe7654sv/vQ0DAvc1NdGqviu5vryxyg/7Eo2f7dvCqT/HfxAJG0hXVsp5Q7smspU=@vger.kernel.org, AJvYcCXn2g1ERRejXjyM9AVe5Q7M0GjpjeGUX1Fos314L5C+tH1AI6i0SsD5SAA5eH1SeCl//EcP1zY1JHjoCMf2@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywa60gCgzxFGRaRUKkklZhYRmFWKzYxuoy7xZlVRSRcVOBLqTcs
+	YZlZP2QmWBKWoZmPV49JCrEGt3lDc6+oZ2PRX5UCN6vxR9VI9kxdHoUP/NwCSOk=
+X-Gm-Gg: ASbGnctTIIAGBZczhHFau4fq1tUwDm+SfxVf4EKNy0Hj5FwHRgmkSo4xBuIzNybH877
+	8UF18L2iRz+xEcECY+ShuEFSX/tijUbzkC3wZHIc3Ccmf0Kj1FEJVzkOKWk3yb/Y0SEt7DXbQrv
+	Mr+xbAMdjn1GXcqt/q8ksVSlGOlXLFQzaVo9Ijj4DFNXJKScefe15TkvPd1FddSDqp5GrwlzPEH
+	4n7ul0YUK3+gJzGB15q6TCg6bslrtFfelAFc0W6CfVeP+ezkGSTk1XEi+URYbtE4+7TYHDM+KU3
+	WwGFiC39bHkb8gxboJBFQ+3sbH9y8klbiYq5M8uvaLEgIgwNuGFgyqxOqmsphPY/XIeOJXu/4O3
+	wrvsCOpI=
+X-Google-Smtp-Source: AGHT+IEnYXidILRma17RiBJIRjyp0jlM9WGy4gjmIPyezv9wOSIz1ZxsSIppyqCysCuPcRsqiWaUQQ==
+X-Received: by 2002:a05:6402:40cc:b0:5df:6a:54ea with SMTP id 4fb4d7f45d1cf-5ebcd431b67mr15218946a12.11.1742916778052;
+        Tue, 25 Mar 2025 08:32:58 -0700 (PDT)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ebcce36d66sm7930433a12.0.2025.03.25.08.32.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Mar 2025 08:32:56 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-abf3d64849dso937660766b.3;
+        Tue, 25 Mar 2025 08:32:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU4Bwm+ckYUD5L7KIf48A8oS+TYMaEbd686t3MJNooJbOtCThvlnswUYIgHhVH1WIaWhxFUa9dqZvOZGd+d@vger.kernel.org, AJvYcCUHLUF1PThcnC8MzrD+2f1PiCpRjUwCtMi4Fr89iH6tGBuLdsGAliVnM4xYfFDoxYIlW5aWsPXXIaLbrFbxq6fxPso=@vger.kernel.org, AJvYcCV0hniPaqsqBuiwxMqcQ21ZIF7H6EoWKCRnSrCAhEW3zKO6CsKG0rzuEVSK3GAIK7F3NkPrvkzIeCHZ@vger.kernel.org, AJvYcCVtayZ4Pbcil+8TveHYdOVWkvDvyFUlGRnoIbGCwX8EC9SFUokR63YzVKqRlUZg3kqGkvUyfKOLUtaD@vger.kernel.org, AJvYcCWYkJyqc3diajLwPiDoSHzYz5y5vrvppx3VGBAkiW5qzLvofzGYAMVmgRWBF27qPUW4RV6+b1QTflZwMQ==@vger.kernel.org
+X-Received: by 2002:a17:907:9494:b0:ac1:de84:dec0 with SMTP id
+ a640c23a62f3a-ac3f24ed6c4mr1547143566b.26.1742916775525; Tue, 25 Mar 2025
+ 08:32:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <iy3wkjdtudq4m763oji7bhj6w7bj2pdst7sbtahtwgcjrhpx6i@a4cy47mlcnqf>
+References: <cover.1740753261.git.robin.murphy@arm.com> <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+ <CAMuHMdWPFnHTFeeWL2-BU8tKOL-E5K2ROOz=LLBLTJJLCK9NgA@mail.gmail.com> <25bd5477-a388-405f-a976-6b1a59860ef8@arm.com>
+In-Reply-To: <25bd5477-a388-405f-a976-6b1a59860ef8@arm.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 25 Mar 2025 16:32:42 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXt9gQxBSVrWw1VSji+faxga4Vo_NRie27K=EtdUMMa_Q@mail.gmail.com>
+X-Gm-Features: AQ5f1JoGJs3g1Wq6ZLZNBkuvqix5EpionY5Jl_k8v4NSQBsoSN9WndnQ0FJE0b0
+Message-ID: <CAMuHMdXt9gQxBSVrWw1VSji+faxga4Vo_NRie27K=EtdUMMa_Q@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe path
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, Hanjun Guo <guohanjun@huawei.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Russell King <linux@armlinux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Stuart Yoder <stuyoder@gmail.com>, 
+	Laurentiu Tudor <laurentiu.tudor@nxp.com>, Nipun Gupta <nipun.gupta@amd.com>, 
+	Nikhil Agarwal <nikhil.agarwal@amd.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	iommu@lists.linux.dev, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
+	Charan Teja Kalla <quic_charante@quicinc.com>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 24, 2025 at 07:01:14PM +0100, Michal Koutný wrote:
-> On Mon, Mar 24, 2025 at 05:49:09PM +0100, Pablo Neira Ayuso <pablo@netfilter.org> wrote:
-> > If !CONFIG_CGROUP_NET_CLASSID, then no classid matching is possible.
-> > 
-> > So why allow a rule to match on cgroup with classid == 0?
-> 
-> It is conservative approach to supposed users who may have filtering
-> rules with classid=0 but never mkdir any net_cls group. Only those who
-> eventually need to mkdir would realize there's nowhere to mkdir on (with
-> !CONFIG_CGROUP_NET_CLASSID). Admittedly, I have no idea if this helps to
-> 5% of net_cls users or 0.05% or 0%. Do you have any insights into that?
+Hi Robin,
 
-I suspect this partial support will not help anyway, because user will
-be most likely matching to classid != 0 in their rulesets, and the
-ruleset loads via iptables-restore in an atomic fashion, ie. take it
-all or nothing.
+On Tue, 18 Mar 2025 at 18:24, Robin Murphy <robin.murphy@arm.com> wrote:
+> On 18/03/2025 4:37 pm, Geert Uytterhoeven wrote:
+> [...]
+> > Thanks for your patch, which is now commit bcb81ac6ae3c2ef9 ("iommu:
+> > Get DT/ACPI parsing into the proper probe path") in iommu/next.
+> >
+> > This patch triggers two issues on R-Car Gen3 platforms:
+> >
+> > 1. I am seeing a warning on Renesas Salvator-XS with R-Car M3N
+> > (but not on the similar board with R-Car H3), and only for SATA[1].
+> > Unfortunately commit 73d2f10957f517e5 ("iommu: Don't warn prematurely
+> > about dodgy probes") does not help:
+> [...]
+> >      Call trace:
+> >       __iommu_probe_device+0x208/0x38c (P)
+> >       iommu_probe_device+0x34/0x74
+> >       of_iommu_configure+0x128/0x200
+> >       of_dma_configure_id+0xdc/0x1d4
+> >       platform_dma_configure+0x48/0x6c
+> >       really_probe+0xf0/0x260
+> >       __driver_probe_device+0xec/0x104
+> >       driver_probe_device+0x3c/0xc0
+>
+> Hurrah, this is the warning doing the correct job - something *is* off
+> if we're now getting here without the IOMMU configuration being done
+> already (for a normal device with no other funny business going on).
+>
+> > 2. The IOMMU driver's iommu_ops.of_xlate() callback is called about
+> > three times as much as before:
+>
+> That would suggest that the fwspec gets set up OK, then something later
+> in the __iommu_probe_device() path fails and tears it down again, so the
+> next attempt starts from scratch. Do you see the "Cannot attach to
+> IPMMU" message firing?
 
-> > Maybe simply do this instead?
-> > 
-> > static bool possible_classid(u32 classid)
-> > {
-> >        return IS_ENABLED(CONFIG_CGROUP_NET_CLASSID);
-> > }
-> 
-> Yes, if the above carefulness is unnecessary, I'd like to accompany this
-> with complete removal of sock_cgroup_classid() function then (to have it
-> compile-checked that it's really impossible to compare any classids w/o
-> CONFIG_CGROUP_NET_CLASSID).
+I do not see such messages.
 
-Go ahead remove this shim function and post v3.
+> And similarly to the Rockchip case, does the
+> below help?
 
-Thanks.
+The below is basically the same as your "[PATCH] iommu/ipmmu-vmsa:
+Register in a sensible order"[1].  While that fixes my first issue,
+it does not fix the second (harmless?) issue.
+
+Note that I only noticed the second issue because I have local debug
+code in soc_device_match().  Perhaps it happens, unnoticed, on other
+systems too?
+
+Thanks!
+
+[1] https://lore.kernel.org/53be6667544de65a15415b699e38a9a965692e45.1742481687.git.robin.murphy@arm.com/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
