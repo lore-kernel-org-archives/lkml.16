@@ -1,128 +1,143 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F37C18A6A8
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 21:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B9518A6A8
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 21:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742937495; cv=none; b=bTqxigzyR4OeV+/l9SncSUcexHb4T34H6w9WoGIK+N3YWToYjvXJVs7BEaALfhPFVpPG11pkYw583UwaZEskDoDPPBLhTF0n+C0Ky67rAxb10Zf5VmhBiRT/SNce2rEBmOP3rQfahCcFuaoDQIE3FVuReZR+eHwOjiJgbRrYrnA=
+	t=1742937585; cv=none; b=fYC+1fpOqGRZueEaOwr1TwMhBzW+L0Gtif/PUAcSNPcZrNAGl+hJNpgQLXUMksBJQTChS4+LMBdRH18jOKxd0nvxqvvMfifgDYuj6SleissXArycn0TPzOBaC0pkFL3dx1VQv0rCAB06q2lkYCoHM6gYvNm1DhCyLVBjuVGucRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742937495; c=relaxed/simple;
-	bh=kYCJ1vNNmu4cnX3Zv4N65BeeWCJFNxqzoBhji8GJHME=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZjDIa8CWfs/SYzbGZKlG73IWeWaQmPKREyc37+yQtNYxDnfua97HsNunmp9R08xKzw4elsdbNBT1n5NhCTl/nPpjI6RfeF3Jl2mSbpotmMza7IEOTFgbMlgfXGT5SMXkrrw/8PTtZ9aRG74IX6nvJXVUhyJqQFd2l/FeK2awtdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ry6DkxXk; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742937585; c=relaxed/simple;
+	bh=NQnbD776Zb8ERF4HsMHcXnwkS/TO5s/52zWgVm5NNQs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WGn4eBOB4PD9zuxtvcrZWP0t2mG7HJbjiCfyKHOanarS/h6KcWSbOSH4FXbhO7xH8UfDUujUwlupYJgiVV+n5oRV/X4811Q0PVkWukOE49ZVyrEQPQ0MkaiF+jRWheV+XnIZTyHWBdzu7zY01peuXM7UwTlUpRjWoTGkKkMky7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=ghwJKhCT; arc=none smtp.client-ip=209.85.166.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ry6DkxXk"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c559b3eb0bso302424185a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:18:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ghwJKhCT"
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-85e73562577so53183839f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:19:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742937493; x=1743542293; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YORNRy4OTXMv3Yhi6ofZ1+35f+Xdz3ifIja4azR4a6Q=;
-        b=Ry6DkxXkUJ1p6XgqzHK3cxYYTqWXYdZ+sWD913E2/TKukPreJ0S9HEe6QWfw2R31pE
-         qvyvLdP4/yiHmgo2Qi8c3ROZrSe/j4JuXAxqz+ZoImsKfHTBl3St3N0J7et6PbRmu7AZ
-         hO1Q/Cd6nwZMbMKWE3bW0UjHXxNAFqIlSo1l6p6qutXXcV26JX0KrmQU0BU5fIn8fjzy
-         kVsK4oWmHPUjr5Q+8jqnlcAW+y5CA7bdCNK+xjoyGa2vX7MvyDwaPSc5lTWSFyOTt5x8
-         MBSF8jYQ0yiJyilM6yadjump1dt2XklgZXVP1ZikTCB2nvioSLwYYUQD4TNMR61z3di1
-         9fgA==
+        d=sifive.com; s=google; t=1742937583; x=1743542383; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mKG8KtS1PtfoFoAQY05FHNouuuEBpDMQ8ANK42hHsEk=;
+        b=ghwJKhCTXyRH2muFJhSV27I5BgoFf4RiIMZmSRLr7Q1Xk3yBt8SJTfVibbuC32YsRU
+         Z38S6RKL2eyxecuGDU372y3mEXSNog5lZwWpM2rS3gmtdyZYUgMZa3/CSPNbRRR0+Ove
+         75mRkDkaGLUO4KPgNZVNUvBGRL+dGmFPxz2pQWf5K4HalCB7cdq766NfbOw+NnK/BE97
+         AcDJ1KnuH13PxiWU/4zY24bCOdvKE6tr/hZaz4tE+QKfDZuaJHNXNxcH2Y+qXZJo2vSh
+         mVBdJdW3Bg6FV2zoAsxTcNtC7Qh3vY1D8TadKDERNVuq+14LYaVdTFnnptuR/odiFST6
+         /F5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742937493; x=1743542293;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YORNRy4OTXMv3Yhi6ofZ1+35f+Xdz3ifIja4azR4a6Q=;
-        b=UKcKz080ZA5sssP4v4/nZFHpijGsG6/mxmYqW0lXre35PJftkfC6C4k8kZVmGXOWc3
-         SF93AJFzhxLZn2tJHpBgMiaGLUJVt46LoFfRoH5qAwiNgZFrMn8kj7DbTeOXgUW6oQcy
-         whQyEwFzVClotzfvkQATGbcBVOAp4XjhohcBARbxNUAjYrXTeHO15bV1KKZiQBLAfArU
-         3QIn3Q6f4aQXbx9iOkQV42TIBR3Mk3bel2z2wmeUDc6b93m9TT2DXin41NBF8LKW1jdP
-         KH1aMjTGuo699YKxCGzahIKP2E0Wu5KfhIq+kHrDYf8S4gZd7X06TLihdh07O8vQrrrz
-         nOQg==
-X-Forwarded-Encrypted: i=1; AJvYcCWtPTJ1iV5S41fvdQkJ8DzLDhxuRN+qd70ehjFOOa6V6pGTL9mVwSOqLffURrwb16wpc1pbBSanK9Vg8uQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzY5MAccCc9im7GLpswxIJA971OeWcIzzCNIwRuU3w7FOcEms1k
-	ANa3noOh3/i2pgqrt4mZp/zgyGHQwo+vWfMyNQhGAdOoWNGjHXUG
-X-Gm-Gg: ASbGncsPmqbqBvTSzmONgQPkU4KlYy58O/ByRo4QjQHGHwP63iOI0To7Sikz7gHRANY
-	Z0Dh/aIe8PSNG8tkwzR9BsVWuUKNIrxtifBswVQnuVvK2CMMdRn53qcjJsdLXjM0Eqb4bwuQ46s
-	MLVGsMhhU+mSIB6sHEDZVpLT2TZryRJ9diPQCvd8KqWo5Zw0I2OAcMi9dRkFqewwkrHpGd01O68
-	XnkJWo1bzmUy13S3JRYOWAgCcWJaWbhDMG1jd5NyXrFDSWJQIMh+XhMUtzkty629VxuJBLgPh1P
-	M3Pdrp3KoB7D4XVDd8uPKxCXYi9V4MTR3oq/H9fFrJc6vC73l9TTXIwhlExBnwKcqv8wXhQtlaf
-	D7Cs88OiahoCUPgQossw=
-X-Google-Smtp-Source: AGHT+IHr7MEJqWj2AbT6Erl+Fujw+8uJX4cGimN+hCDY0WysNw8kbTVhRB2c+75HV6llOMRnBSRRgg==
-X-Received: by 2002:a05:620a:19a3:b0:7c5:4278:d151 with SMTP id af79cd13be357-7c5ba211387mr2958874585a.43.1742937492920;
-        Tue, 25 Mar 2025 14:18:12 -0700 (PDT)
-Received: from localhost.localdomain (c-68-55-107-1.hsd1.mi.comcast.net. [68.55.107.1])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b9348308sm680685485a.89.2025.03.25.14.18.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 14:18:12 -0700 (PDT)
-From: Brady Norander <bradynorander@gmail.com>
-To: Mark Brown <broonie@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	u.kleine-koenig@baylibre.com,
-	Wu Bo <bo.wu@vivo.com>,
-	Brady Norander <bradynorander@gmail.com>
-Subject: [PATCH 3/3] ASoC: dwc: always enable/disable i2s irqs
-Date: Tue, 25 Mar 2025 17:18:05 -0400
-Message-ID: <20250325211805.2099278-1-bradynorander@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1742937583; x=1743542383;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mKG8KtS1PtfoFoAQY05FHNouuuEBpDMQ8ANK42hHsEk=;
+        b=vkqNmxqFpI8EnPDThqu+XcdiTjdFvofyHEoEB0x/97QY++Tu4sFBIs0Hy9b33OQaGt
+         Mc+40sB4YoWwdEUWSTDVNMQvEFC66NcACfzqIwD7hkl8i0rgwgf+ktE7gwqC3REhZbR3
+         RYOZdPksSJpNgynha90s5uX+RhkhWGBB9sBeCtcR4i3gMp3/KYiotNs61sCSlW7sIgTe
+         PiLcSTeqXCFFC1Rxd8nXIMXuu3pKsHGlpN0Z539GPwhW519M+Yyju7UWHkriaFVgaxIr
+         0C/N2/kUzioIdOAQVCmwdC9kIjn8EOdh8PbrWGV725TNAVJ1r7JbbKCyOf7gtSnWdLA4
+         wR6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVmvs0WQsRqNLNurTMF4LqeWUCAawpWAw9exvK8R6DkwtoHh4YRxiMXIT9PcAoDvRwP++il1WdpRFcmKFs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHS+0pFZ8gCYBLktNDaOyVfHz0a9TFXpkYDiYhYL4l3eItl2NN
+	W6tb+g87auDhlyR7ISmX8mC/KJQUDksx7i2qAPZxt4apsDDPyprupG7h8D8CqJQ=
+X-Gm-Gg: ASbGnct3OPjBO6euTqmRbQf7mCIppnF0nS2HwDc9kOCRY28bXKZlCxGTiTFzQp058+2
+	j8isjffFh3iieWaq/neC1tjlSDQ27hbeZz7rDZTvbVjkOwGf3DR3Sk0nPWuv2A0394h26/DLmaC
+	LMn3KFnb+rJmwPPY3USYKSlqK+3K596ay7pcuVf3rW9TMewuJ5nUOYI2UArIq/Tw4SmteY0A4wo
+	1eecZUWEgDa1QkRkQvTtKYFYf4IPZ+zGrrwlzlP/zf5wp78YtYCQcy0QXymjefYzdDrnf7iODsb
+	sj4HwK5CUqD5nAScfZ/ha8MCjgUzvaQiv0X0uumNsD9KNFnAypyVBCKe2A3wlw==
+X-Google-Smtp-Source: AGHT+IFJ9ei+dbxpqumX89NY7ke1+osmRH5g+C2Bjhwac4EqYyI6bFrpBXPDDYMUEUIaTXB7SW5t8w==
+X-Received: by 2002:a6b:6806:0:b0:85e:2e53:ed27 with SMTP id ca18e2360f4ac-85e2e53f5e9mr1462507639f.3.1742937582760;
+        Tue, 25 Mar 2025 14:19:42 -0700 (PDT)
+Received: from [100.64.0.1] ([170.85.6.166])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f2cbed215asm2531270173.136.2025.03.25.14.19.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Mar 2025 14:19:42 -0700 (PDT)
+Message-ID: <4a45df45-b2b1-4da9-b829-c5310cf32b5f@sifive.com>
+Date: Tue, 25 Mar 2025 16:19:40 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/4] ESWIN EIC7700 pinctrl driver
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+ Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>,
+ Pritesh Patel <pritesh.patel@einfochips.com>,
+ Min Lin <linmin@eswincomputing.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, =?UTF-8?B?6bKB546J5p6X?=
+ <luyulin@eswincomputing.com>, =?UTF-8?B?5a6B5a6H?=
+ <ningyu@eswincomputing.com>, Lin Feng <fenglin@eswincomputing.com>
+References: <20250325141311.758787-1-emil.renner.berthing@canonical.com>
+From: Samuel Holland <samuel.holland@sifive.com>
+Content-Language: en-US
+In-Reply-To: <20250325141311.758787-1-emil.renner.berthing@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Commit a42e988 ("ASoC: dwc: add DMA handshake control") changed the
-behavior of the driver to not enable or disable i2s irqs if using DMA. This
-breaks platforms such as AMD ACP. Revert to the old behavior by always
-enabling and disabling i2s irqs while keeping DMA handshake control.
+Hi Emil,
 
-Fixes: a42e988 ("ASoC: dwc: add DMA handshake control")
-Signed-off-by: Brady Norander <bradynorander@gmail.com>
----
- sound/soc/dwc/dwc-i2s.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+On 2025-03-25 9:13 AM, Emil Renner Berthing wrote:
+> Hi Pinkesh et. al
+> 
+> It's great to see you've begun upstreaming support for the EIC7700. I
+> read some of the data sheet for the SoC and noticed the pinctrl is quite
+> simple and could benefit from using the same model as the TH1520 pinctrl
+> driver. This version should do the same as the vendor driver, but in
+> less than 2/3 the code.
+> 
+> I hope you'll consider switching to this version once the basic
+> support[1] lands. This patchset also depends on that series.
 
-diff --git a/sound/soc/dwc/dwc-i2s.c b/sound/soc/dwc/dwc-i2s.c
-index 57b789d7fbed..5b4f20dbf7bb 100644
---- a/sound/soc/dwc/dwc-i2s.c
-+++ b/sound/soc/dwc/dwc-i2s.c
-@@ -199,12 +199,10 @@ static void i2s_start(struct dw_i2s_dev *dev,
- 	else
- 		i2s_write_reg(dev->i2s_base, IRER, 1);
- 
--	/* I2S needs to enable IRQ to make a handshake with DMAC on the JH7110 SoC */
--	if (dev->use_pio || dev->is_jh7110)
--		i2s_enable_irqs(dev, substream->stream, config->chan_nr);
--	else
-+	if (!(dev->use_pio || dev->is_jh7110))
- 		i2s_enable_dma(dev, substream->stream);
- 
-+	i2s_enable_irqs(dev, substream->stream, config->chan_nr);
- 	i2s_write_reg(dev->i2s_base, CER, 1);
- }
- 
-@@ -218,11 +216,12 @@ static void i2s_stop(struct dw_i2s_dev *dev,
- 	else
- 		i2s_write_reg(dev->i2s_base, IRER, 0);
- 
--	if (dev->use_pio || dev->is_jh7110)
--		i2s_disable_irqs(dev, substream->stream, 8);
--	else
-+	if (!(dev->use_pio || dev->is_jh7110))
- 		i2s_disable_dma(dev, substream->stream);
- 
-+	i2s_disable_irqs(dev, substream->stream, 8);
-+
-+
- 	if (!dev->active) {
- 		i2s_write_reg(dev->i2s_base, CER, 0);
- 		i2s_write_reg(dev->i2s_base, IER, 0);
--- 
-2.49.0
+Thanks for your efforts here. We are working with ESWIN (CCed) to simplify and
+prepare their driver for upstreaming, and we have ended up with something
+similar to what you include here. We were hoping to send out a first version of
+the driver soon. There are still some differences between the two drivers, so
+ideally we can coordinate on which series to move forward with.
+
+Regards,
+Samuel
+
+> [1]: https://lore.kernel.org/all/20250320105449.2094192-1-pinkesh.vaghela@einfochips.com/
+> 
+> Emil Renner Berthing (4):
+>   dt-bindings: pinctrl: Add eswin,eic7700-pinctrl binding
+>   pinctrl: Add driver for the ESWIN EIC7700 RISC-V SoC
+>   riscv: dts: Add EIC7700 pin controller node
+>   riscv: dts: eswin: Add HiFive Premier UART pin control
+> 
+>  .../pinctrl/eswin,eic7700-pinctrl.yaml        | 141 +++
+>  .../dts/eswin/eic7700-hifive-premier-p550.dts |  46 +
+>  arch/riscv/boot/dts/eswin/eic7700.dtsi        |  17 +
+>  drivers/pinctrl/Kconfig                       |  14 +
+>  drivers/pinctrl/Makefile                      |   1 +
+>  drivers/pinctrl/pinctrl-eic7700.c             | 802 ++++++++++++++++++
+>  6 files changed, 1021 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
+>  create mode 100644 drivers/pinctrl/pinctrl-eic7700.c
+> 
+> 
+> base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+> prerequisite-patch-id: 2e5cc67f66a8cfe463ec73b98cd17130d4094a86
+> prerequisite-patch-id: e39d6867f89c605fd1e3621937c8c91a6cfbe7c8
+> prerequisite-patch-id: 5d2232bb3ce3d7d4e23477c2ad3db30424fee33c
+> prerequisite-patch-id: 946719f43a0cc23ffe82e996e076de2221dcd8db
+> prerequisite-patch-id: c2c2bc1b676b1e15165e107515b380318e9ca941
+> prerequisite-patch-id: aa4a955dd99d0796973fedb78bea269ebab73b6b
+> prerequisite-patch-id: 1cd27ddae721cc1e6c52723f8b360b09b5e712c7
+> prerequisite-patch-id: 237813218e54e0c7cbed8d72e30eb649ffd9ecd4
+> prerequisite-patch-id: 8e687755e898e71c80b0294b90deac71fe05c421
+> prerequisite-patch-id: 05622d10a27ba9cba36b3d194e51a2d8d7b7b783
 
