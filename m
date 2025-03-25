@@ -1,122 +1,172 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3484C1DE8A5
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 09:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB34E1FF1A1;
+	Tue, 25 Mar 2025 09:47:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742896007; cv=none; b=TOidNS9zezF/BSsdbl0esiX+wh+1dryliEGfYaowy85HbxCv1w2oEdUQR94qyxsI3TUMFUe4tJdgWiSr0gGyhHUXbKtCGGKbvSTJlL5P/raU6ZAkZDcVcdYMGeFbVty8RtECARV0b9fRJ+WNdLeC9vysnqLrtamu45sQkUh2v3g=
+	t=1742896037; cv=none; b=BWEtbo/gvBeh7YnOKtqOv37jZOpBkQ2fQmTOZUQ66ruxuP6ogjAi3VkFv8RkY6FmZhOAtDQVRoIG8ac3htNcpPFfPEcsFgjkvXVoN2a4cv8WuZlPjspBiScnQr+gc3zm2l/avTwW5urt+4Qjy21Kcm2/tDVgKQAvn3eHpyWTiFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742896007; c=relaxed/simple;
-	bh=GjiEbFoY/UGEFhuXgO4Md7Z3mYQ2MwEfWlLsdmw7Djs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cvDqYGRO3zySKsDoQHN7V6WwcqR3RqQZnJY2SCImtuDPzLc0nScmDeYzcqZnKmmxsU95+6gfySBXWFMB4Eg1SFqz0TlQ3opkpdKZNuPTD5uTCWtVqHNgMHZyHicHUn+nb+rxXyiRo78QZIs6Y8lwl8DrJRXa3Yj/zjpw4uQ0B5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IzuE9DBj; arc=none smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742896037; c=relaxed/simple;
+	bh=e/cDwoDYdQaopoXoOusl1jpVk2a3pu7zoD7m7IynecY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tcgX8EI4UptWVB2L+0laFCJyn1i3h74b7K9fpqFEPnj1UkAkKC/87kBFbK+cQfHfDoV+2QbMXKlDytW8jEWtLJu3TamfmxjVgD/weAM0lQ3yYgWZaRpwOD3mykscKcs9/hQcbzx3xQ4g+8Gx9Cb0mcvV+p4ld20OZGU9AjHrPV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nSQ8maGz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IzuE9DBj"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-525b44ec88aso1598844e0c.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 02:46:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742896005; x=1743500805; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=b2lX5tfn7tIpxTTiRAKwTMrvBSHE/QiBFZ33eS8Haa8=;
-        b=IzuE9DBjsaK7i0FVTeTco33PyMaRUhGg6jiRpeJnywHlXM0QEHN7gdCOQS99uFb6yH
-         V1Bzig90qRFLv3Xn6aJrOaM7nK/e9sXIhnSXYRpyRyCp9WBq2J9kyIATYAwS/bODK0Q1
-         fJJaLdLwYtmWsloYIF5ccKZYt5Ee328qlEKpfH4rFgjhqgUY461VgQuzf+9cCpCvMnZC
-         FeMofV9GRQ/Gvr5lzfPjGdMym9olp+hdxGM8EywFNeevRUKmQDGq0oJH7GsbpR8zorxB
-         DS39/Iyxa/vtDKvCZf7sTxr1xBUX6dTqIccjd5ehRryD0i+xviBH1dAu5dL02m2dv7zp
-         tRsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742896005; x=1743500805;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=b2lX5tfn7tIpxTTiRAKwTMrvBSHE/QiBFZ33eS8Haa8=;
-        b=Oym9q6oldhq4ct3d03lVaS0FetygXm5EcpGk/CcCS7+wwKDMWcYWQ52BixnTLdHjbZ
-         AOmoFONpcfTCspUgqD+DX88RfJnoxyxccIslpS5crNXNdKU+HYYw0bmF5SFOF/xbEbyc
-         WN5cw/8qyI01we+VyYjwu96aF9aLPV1Wl5Vd/5+SKCtHRFUrfsWP4pmf2PP/8bvMhTXL
-         mGoM7rIPVUY1kl+szKX55JS2/YY2ZbPghTvvGaPfAnXUsC3W8z02fjzJMbwjg3xGJSvS
-         KFuI0G7qhR59Cdx5EajNhnLVukdxYkuEBD1M0+EOCVXrYt9v0wLkFp7ANAZKjPxFMHXN
-         2D9A==
-X-Gm-Message-State: AOJu0YyN4SwyqrLFZhCS2XRmVZuvaoc4N1DSahNNoxNwa5vSN+CaCQUS
-	BzcbXHmZOZ5PIfsHspip87zZox+i05UUVv3TjePCnucmqIfYLo1c/H+2B7VvfOA+a3S30bfPmnE
-	8JHEV7UywOLX/BJ3gTC0665gi28micWa/7kwMRg==
-X-Gm-Gg: ASbGncuvDfY09rLBV1GLWUKnAZ08cRTC/iWJKcr+rP4GP71lD5y0oR8Zu03c8UaCpRi
-	dx36Fzp28H8+7aO0D81fSztCDokzvmw4fZtmRQbARV0Uv9L5A6p0IBNSZp+qeupmM5YvFMj+THM
-	ltmuEmuGUAHuWohAZzj4glBYTRrhhdwUBGaly9Adybxu/Jg8eUTUIf0gA+KI0=
-X-Google-Smtp-Source: AGHT+IH//1u3lm0gEX6665f+nDZ4nWHXHyc8at04VLjpmQ8T0A2klnwJ74tyli52akhfB8SGxJAMgSoflf1CfRHTSfc=
-X-Received: by 2002:a05:6102:3e8b:b0:4c1:9159:859c with SMTP id
- ada2fe7eead31-4c50d51d56amr10977038137.15.1742896004860; Tue, 25 Mar 2025
- 02:46:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nSQ8maGz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B36E4C4CEF0;
+	Tue, 25 Mar 2025 09:47:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742896037;
+	bh=e/cDwoDYdQaopoXoOusl1jpVk2a3pu7zoD7m7IynecY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nSQ8maGzxFhBcSBD98bBUetgXwUzTMQK5kVJCEOKHf7ep4LnNnGQYuruubV+f7i1Q
+	 l6JrBXyixWQhqMiq39yAPsXSumlFxCm1dbcue9vG9VNWSSAOnczfDULgIvtxxbuduy
+	 ewCCmcSgfYSowrlvcY3cRZFLD2zC4N5heFz4QKFV+XdfkUhyPT6k83KUDQ3WLoskGm
+	 KX5BUo7I3FISHLPBazsfflFZ0Q9Bv3YzOY8og3hu+0n/cDvLgNzqEKB2tOLAxR5qLu
+	 7eHygN1UplrEtFdLGk7rpmdAZF6WTbWe8WmDBKOPa3hzHVbCfqbQNtqJSHmRWI2+MB
+	 +jU5N7rdahzSw==
+Date: Tue, 25 Mar 2025 10:47:14 +0100
+From: Daniel Gomez <da.gomez@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>, 
+	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>, Bjorn Helgaas <helgaas@kernel.org>, linux-kernel@vger.kernel.org, 
+	xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v3 3/3] PCI/MSI: Convert pci_msi_ignore_mask to per MSI
+ domain flag
+Message-ID: <gu73hcbm5opv7wpdsbyyrends3dcxkzvran2asoepujlhfeqas@76rncc27opy2>
+References: <20250320210741.GA1099701@bhelgaas>
+ <846c80f8-b80f-49fd-8a50-3fe8a473b8ec@suse.com>
+ <qn7fzggcj6qe6r6gdbwcz23pzdz2jx64aldccmsuheabhmjgrt@tawf5nfwuvw7>
+ <Z-GbuiIYEdqVRsHj@macbook.local>
+ <kp372led6jcryd4ubpyglc4h7b3erramgzsjl2slahxdk7w575@jganskuwkfvb>
+ <Z-Gv6TG9dwKI-fvz@macbook.local>
+ <87y0wtzg0z.ffs@tglx>
+ <87v7rxzct0.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYs62qxt1PajEp2A8uUmQFeAsC2JBV2wuspbAxz_hFF7CA@mail.gmail.com>
- <CA+G9fYu54p6zQpX3Kw4dy+Yy3BM66r_iawvLchPvsB_Sq_wCNQ@mail.gmail.com> <20250324103313.2bc42730@gandalf.local.home>
-In-Reply-To: <20250324103313.2bc42730@gandalf.local.home>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 25 Mar 2025 15:16:32 +0530
-X-Gm-Features: AQ5f1Jr22uNyEeSzPJIeFAGaU0oB0Z0_gFBkxqProEQ282Ldn9GhG4OhHPUzA3k
-Message-ID: <CA+G9fYuFNCoSvZMYYpqMT1SC-p2W9Ra1EuwV6p2kiOH61Uxecg@mail.gmail.com>
-Subject: Re: next-20250319: arm shmobile_defconfig trace.c undefined type
- 'struct module'
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: open list <linux-kernel@vger.kernel.org>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87v7rxzct0.ffs@tglx>
 
-On Mon, 24 Mar 2025 at 20:02, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Wed, 19 Mar 2025 19:42:42 +0530
-> Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> > On Wed, 19 Mar 2025 at 17:01, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > >
-> > > Regressions on arm the shmobile_defconfig builds failed with clang-20 and gcc-13
-> > >
-> > > First seen on the next-20250312
-> > >  Good: next-20250311
-> > >  Bad:  next-20250312 .. next-20250319
-> > >
-> > > Regressions found on arm:
-> > >  - gcc-13-shmobile_defconfig
-> > >  - gcc-8-shmobile_defconfig
-> > >  - clang-20-shmobile_defconfig
-> > >
-> > > Regression Analysis:
-> > >  - New regression? Yes
-> > >  - Reproducible? Yes
-> > >
-> > > Build regression: arm shmobile_defconfig trace.c undefined type 'struct module'
-> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+On Tue, Mar 25, 2025 at 10:20:43AM +0100, Thomas Gleixner wrote:
+> On Tue, Mar 25 2025 at 09:11, Thomas Gleixner wrote:
+> 
+> > On Mon, Mar 24 2025 at 20:18, Roger Pau Monné wrote:
+> >> On Mon, Mar 24, 2025 at 07:58:14PM +0100, Daniel Gomez wrote:
+> >>> The issue is that info appears to be uninitialized. So, this worked for me:
+> >>
+> >> Indeed, irq_domain->host_data is NULL, there's no msi_domain_info.  As
+> >> this is x86, I was expecting x86 ot always use
+> >> x86_init_dev_msi_info(), but that doesn't seem to be the case.  I
+> >> would like to better understand this.
 > >
-> > Anders bisected this build regression to the following commit,
+> > Indeed. On x86 this should not happen at all. On architectures, which do
+> > not use (hierarchical) interrupt domains, it will return NULL.
 > >
-> > # first bad commit:
-> >    [dca91c1c54686914dec4dabea8bae4f365c02007]
-> >    tracing: Have persistent trace instances save module addresses
-> >
-> > Lore link,
-> >  - https://lore.kernel.org/all/CA+G9fYs62qxt1PajEp2A8uUmQFeAsC2JBV2wuspbAxz_hFF7CA@mail.gmail.com/
->
-> The fix should have been pushed to linux-next already.
->
-> Could you test the latest linux-next?
+> > So I really want to understand why this happens on x86 before such a
+> > "fix" is deployed.
+> 
+> So after staring at it some more it's clear. Without XEN, the domain
+> returned is the MSI parent domain, which is the vector domain in that
+> setup. That does not have a domain info set. But on legacy architectures
+> there is not even a domain.
+> 
+> It's really wonderful that we have a gazillion ways to manage the
+> backends of PCI/MSI....
+> 
+> So none of the suggested pointer checks will cover it correctly. Though
+> there is already a function which allows to query MSI domain flags
+> independent of the underlying insanity. Sorry for not catching it in
+> review.
+> 
+> Untested patch below.
+> 
+> Thanks,
+> 
+>         tglx
+> ---
+>  drivers/pci/msi/msi.c |   18 ++++++------------
+>  1 file changed, 6 insertions(+), 12 deletions(-)
+> 
+> --- a/drivers/pci/msi/msi.c
+> +++ b/drivers/pci/msi/msi.c
+> @@ -285,8 +285,6 @@ static void pci_msi_set_enable(struct pc
+>  static int msi_setup_msi_desc(struct pci_dev *dev, int nvec,
+>  			      struct irq_affinity_desc *masks)
+>  {
+> -	const struct irq_domain *d = dev_get_msi_domain(&dev->dev);
+> -	const struct msi_domain_info *info = d->host_data;
+>  	struct msi_desc desc;
+>  	u16 control;
+>  
+> @@ -297,7 +295,7 @@ static int msi_setup_msi_desc(struct pci
+>  	/* Lies, damned lies, and MSIs */
+>  	if (dev->dev_flags & PCI_DEV_FLAGS_HAS_MSI_MASKING)
+>  		control |= PCI_MSI_FLAGS_MASKBIT;
+> -	if (info->flags & MSI_FLAG_NO_MASK)
+> +	if (pci_msi_domain_supports(dev, MSI_FLAG_NO_MASK, DENY_LEGACY))
+>  		control &= ~PCI_MSI_FLAGS_MASKBIT;
+>  
+>  	desc.nvec_used			= nvec;
+> @@ -605,20 +603,18 @@ static void __iomem *msix_map_region(str
+>   */
+>  void msix_prepare_msi_desc(struct pci_dev *dev, struct msi_desc *desc)
+>  {
+> -	const struct irq_domain *d = dev_get_msi_domain(&dev->dev);
+> -	const struct msi_domain_info *info = d->host_data;
+> -
+>  	desc->nvec_used				= 1;
+>  	desc->pci.msi_attrib.is_msix		= 1;
+>  	desc->pci.msi_attrib.is_64		= 1;
+>  	desc->pci.msi_attrib.default_irq	= dev->irq;
+>  	desc->pci.mask_base			= dev->msix_base;
+> -	desc->pci.msi_attrib.can_mask		= !(info->flags & MSI_FLAG_NO_MASK) &&
+> -						  !desc->pci.msi_attrib.is_virtual;
+>  
+> -	if (desc->pci.msi_attrib.can_mask) {
+> +
+> +	if (!pci_msi_domain_supports(dev, MSI_FLAG_NO_MASK, DENY_LEGACY) &&
+> +	    !desc->pci.msi_attrib.is_virtual) {
+>  		void __iomem *addr = pci_msix_desc_addr(desc);
+>  
+> +		desc->pci.msi_attrib.can_mask = true;
 
-The reported issue is fixed on tag: next-20250324.
-Please refer below link for more details,
+can_mask is u8.
 
-Link:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250324/testrun/27735288/suite/build/test/gcc-13-shmobile_defconfig/history/
+>  		desc->pci.msix_ctrl = readl(addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
+>  	}
+>  }
+> @@ -715,8 +711,6 @@ static int msix_setup_interrupts(struct
+>  static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
+>  				int nvec, struct irq_affinity *affd)
+>  {
+> -	const struct irq_domain *d = dev_get_msi_domain(&dev->dev);
+> -	const struct msi_domain_info *info = d->host_data;
+>  	int ret, tsize;
+>  	u16 control;
+>  
+> @@ -747,7 +741,7 @@ static int msix_capability_init(struct p
+>  	/* Disable INTX */
+>  	pci_intx_for_msi(dev, 0);
+>  
+> -	if (!(info->flags & MSI_FLAG_NO_MASK)) {
+> +	if (!pci_msi_domain_supports(dev, MSI_FLAG_NO_MASK, DENY_LEGACY)) {
+>  		/*
+>  		 * Ensure that all table entries are masked to prevent
+>  		 * stale entries from firing in a crash kernel.
 
-- Naresh
+It works, thanks!
+
+For the final patch:
+
+Tested-by: Daniel Gomez <da.gomez@samsung.com>
+
+Daniel
