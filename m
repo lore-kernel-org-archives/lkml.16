@@ -1,217 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8208A194A60;
-	Tue, 25 Mar 2025 07:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F498460;
+	Tue, 25 Mar 2025 07:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742888746; cv=none; b=igLIN8tuh0KiWRWKKrrmAFTmMxMIxbI2T7eGcEkkRVqYDAdajRukug94M4lRJvpEGsaDWwvTzOiJE7c8L7fdC2uYkRbH6FBDd06+NZnDbliDf2DALWj9GS6enS5SfzOK2dwN8bO6qXNAqzhYhC1y+K6d8WfWSHymYSM+PHBMi04=
+	t=1742888779; cv=none; b=eSRsMV3XtfOfjzfBwx1FiEZyhnxpLfdi5JvxIvs7ax7bOU/AkdW8X7M23dEybV1jaK3GKi4Cz1LxmobnaMwb6gGS1wE07X8HDE6hFgGjx1yXBqHtGkeJSJmrZT6eM8FKDec0FcuCLVGmZQgJQPbIoVfG5okN2cSCVPSFo27NyMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742888746; c=relaxed/simple;
-	bh=COv3ALd0K+Klf9VX67K/rQCTmju5YgCqlTdzWPNwzUE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cbmiyc8AUPffK+1wsJSwl0czLXFVvfdd8vpHrFVHoK2WaDaljda5IzJ6QakWGH3IQ/DI19LQeYlZyN8hF6Ac5VGeymi37q0KJZJVumO/a8rGk5V5W5Oawe4W2RUEcICy0LPUfWnyRjEqcRbriNNoaYbOlU4hsvElvCryr6h9Zv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CmV8JNGH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742888779; c=relaxed/simple;
+	bh=L6kB/Ks+1IwTo8ncneuLLs+OEKs9Y+Eas0DcSJtqa9I=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=bx9SgmDHv/06kMrzJ89AnxwSWCRfr68tZflHBdcUn74ST976Niovvelqn/UHkIuoddVwAD5rJGD9XZkXLRoSn/4BVuBqRPoPPUnTnwsN4a0462DLviPRu4qfmaCvWrlGr2lAGFYurzXlwKdP7ptPoVL2r53+slNARxpNnHLxAjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4FO4qeL/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Pi7tqKcu; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CmV8JNGH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C60B7C4CEE8;
-	Tue, 25 Mar 2025 07:45:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742888746;
-	bh=COv3ALd0K+Klf9VX67K/rQCTmju5YgCqlTdzWPNwzUE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CmV8JNGH7Vcd7sDcWXD3QdzPpQ44/Z4BDNs9o6G3stDLHsydKUsfaTkn5pVxB4LPA
-	 8bRlP+4KjK7bp+4NSt/vU8sD7VicmTvEh1mRkaPB4cHTWKjQ0erj5Whm43Hn4IR/lG
-	 n4FQx6G25IIjt6rmj2JZELJ4TH8vJ+Gc/no9tWf/ut0j83e6BRUaXIj+SrtahRx5Jc
-	 Xc14v+l0DLaqJDsqJrx3zrrK6WoAVXunGAC88ehMCShTerowJG2KDCV82MqmyX4lSJ
-	 eXJdt5BhH/qM4beSZDGs9q+xElFI6D7w7eRvIn1A57pPIG/DiyhT0zEF0hhLfU1bSv
-	 th6orop3f5Pjg==
-Date: Tue, 25 Mar 2025 13:15:35 +0530
-From: Sumit Garg <sumit.garg@kernel.org>
-To: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	op-tee@lists.trustedfirmware.org,
-	linux-arm-kernel@lists.infradead.org,
-	Olivier Masse <olivier.masse@nxp.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Yong Wu <yong.wu@mediatek.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T . J . Mercier" <tjmercier@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
-	Daniel Stone <daniel@fooishbar.org>
-Subject: Re: [PATCH v6 10/10] optee: smc abi: dynamic restricted memory
- allocation
-Message-ID: <Z-JfH7VAm0DTTbVg@sumit-X1>
-References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
- <20250305130634.1850178-11-jens.wiklander@linaro.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4FO4qeL/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Pi7tqKcu"
+Date: Tue, 25 Mar 2025 07:46:15 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742888776;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SWNXSt6uUvxFro85omf+Aa1Y1ZAz/1rAZ5VKNH6qjyk=;
+	b=4FO4qeL/OnbqBIY5TRd4loIFJaeQq3LxILz4TYRfqJfwg0t5VhL8cfznYwB7HNghQvCUpc
+	iBzs87WB2/l2Zj18PmTywJfqU5RChcmiat7gPmS470zVCqBcSLPQDgemTo5dmvjJ+GokTU
+	6zNBPN2hxhzBfn8pPfkNsrXS+yozg85/IKEACWI3IXdx7C1Ct3i9gCyuTHnIn43Vt9FyAC
+	tO0ujI7uDI3qCtSZxH2Js1qFewBmYy8dG+1/jzkaiN7OvlFrY7X4xfKbAbWxd7+k2jYcOc
+	80Cp8AHfd9QGOD8GWyd3Gqx8ucQp1ocGHCquuzbI+WGSKfXiORoIoYPuwJRLBw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742888776;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SWNXSt6uUvxFro85omf+Aa1Y1ZAz/1rAZ5VKNH6qjyk=;
+	b=Pi7tqKcuCFko640hEw6+sYnqZFlzukYknLpjW9yeilzAPWBHR6+8GJB2+FKhC23e8lzu7e
+	9qYCEQV/4+NVgFCQ==
+From: "tip-bot2 for Jann Horn" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/dumpstack: Fix inaccurate unwinding from
+ exception stacks due to misplaced assignment
+Cc: Jann Horn <jannh@google.com>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250325-2025-03-unwind-fixes-v1-2-acd774364768@google.com>
+References: <20250325-2025-03-unwind-fixes-v1-2-acd774364768@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250305130634.1850178-11-jens.wiklander@linaro.org>
+Message-ID: <174288877589.14745.11891370184181289037.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 05, 2025 at 02:04:16PM +0100, Jens Wiklander wrote:
-> Add support in the OP-TEE backend driver for dynamic restricted memory
-> allocation using the SMC ABI.
-> 
-> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> ---
->  drivers/tee/optee/smc_abi.c | 96 +++++++++++++++++++++++++++++++------
->  1 file changed, 81 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/tee/optee/smc_abi.c b/drivers/tee/optee/smc_abi.c
-> index a14ff0b7d3b3..aa574ee6e277 100644
-> --- a/drivers/tee/optee/smc_abi.c
-> +++ b/drivers/tee/optee/smc_abi.c
-> @@ -1001,6 +1001,69 @@ static int optee_smc_do_call_with_arg(struct tee_context *ctx,
->  	return rc;
->  }
->  
-> +static int optee_smc_lend_rstmem(struct optee *optee, struct tee_shm *rstmem,
-> +				 u16 *end_points, unsigned int ep_count,
-> +				 u32 use_case)
-> +{
-> +	struct optee_shm_arg_entry *entry;
-> +	struct optee_msg_arg *msg_arg;
-> +	struct tee_shm *shm;
-> +	u_int offs;
-> +	int rc;
-> +
-> +	msg_arg = optee_get_msg_arg(optee->ctx, 2, &entry, &shm, &offs);
-> +	if (IS_ERR(msg_arg))
-> +		return PTR_ERR(msg_arg);
-> +
-> +	msg_arg->cmd = OPTEE_MSG_CMD_LEND_RSTMEM;
-> +	msg_arg->params[0].attr = OPTEE_MSG_ATTR_TYPE_VALUE_INPUT;
-> +	msg_arg->params[0].u.value.a = use_case;
-> +	msg_arg->params[1].attr = OPTEE_MSG_ATTR_TYPE_TMEM_INPUT;
-> +	msg_arg->params[1].u.tmem.buf_ptr = rstmem->paddr;
-> +	msg_arg->params[1].u.tmem.size = rstmem->size;
-> +	msg_arg->params[1].u.tmem.shm_ref = (u_long)rstmem;
-> +
-> +	rc = optee->ops->do_call_with_arg(optee->ctx, shm, offs, false);
-> +	if (rc)
-> +		goto out;
-> +	if (msg_arg->ret != TEEC_SUCCESS) {
-> +		rc = -EINVAL;
-> +		goto out;
-> +	}
-> +	rstmem->sec_world_id = (u_long)rstmem;
-> +
-> +out:
-> +	optee_free_msg_arg(optee->ctx, entry, offs);
-> +	return rc;
-> +}
-> +
-> +static int optee_smc_reclaim_rstmem(struct optee *optee, struct tee_shm *rstmem)
-> +{
-> +	struct optee_shm_arg_entry *entry;
-> +	struct optee_msg_arg *msg_arg;
-> +	struct tee_shm *shm;
-> +	u_int offs;
-> +	int rc;
-> +
-> +	msg_arg = optee_get_msg_arg(optee->ctx, 1, &entry, &shm, &offs);
-> +	if (IS_ERR(msg_arg))
-> +		return PTR_ERR(msg_arg);
-> +
-> +	msg_arg->cmd = OPTEE_MSG_CMD_RECLAIM_RSTMEM;
-> +	msg_arg->params[0].attr = OPTEE_MSG_ATTR_TYPE_RMEM_INPUT;
-> +	msg_arg->params[0].u.rmem.shm_ref = (u_long)rstmem;
-> +
-> +	rc = optee->ops->do_call_with_arg(optee->ctx, shm, offs, false);
-> +	if (rc)
-> +		goto out;
-> +	if (msg_arg->ret != TEEC_SUCCESS)
-> +		rc = -EINVAL;
-> +
-> +out:
-> +	optee_free_msg_arg(optee->ctx, entry, offs);
-> +	return rc;
-> +}
-> +
->  /*
->   * 5. Asynchronous notification
->   */
-> @@ -1252,6 +1315,8 @@ static const struct optee_ops optee_ops = {
->  	.do_call_with_arg = optee_smc_do_call_with_arg,
->  	.to_msg_param = optee_to_msg_param,
->  	.from_msg_param = optee_from_msg_param,
-> +	.lend_rstmem = optee_smc_lend_rstmem,
-> +	.reclaim_rstmem = optee_smc_reclaim_rstmem,
->  };
->  
->  static int enable_async_notif(optee_invoke_fn *invoke_fn)
-> @@ -1622,11 +1687,13 @@ static inline int optee_load_fw(struct platform_device *pdev,
->  
->  static int optee_sdp_pool_init(struct optee *optee)
->  {
-> +	bool sdp = optee->smc.sec_caps & OPTEE_SMC_SEC_CAP_SDP;
-> +	bool dyn_sdp = optee->smc.sec_caps & OPTEE_SMC_SEC_CAP_DYNAMIC_RSTMEM;
->  	enum tee_dma_heap_id heap_id = TEE_DMA_HEAP_SECURE_VIDEO_PLAY;
-> -	struct tee_rstmem_pool *pool;
-> -	int rc;
-> +	struct tee_rstmem_pool *pool = ERR_PTR(-EINVAL);
-> +	int rc = -EINVAL;
->  
-> -	if (optee->smc.sec_caps & OPTEE_SMC_SEC_CAP_SDP) {
-> +	if (sdp) {
->  		union {
->  			struct arm_smccc_res smccc;
->  			struct optee_smc_get_sdp_config_result result;
-> @@ -1634,25 +1701,24 @@ static int optee_sdp_pool_init(struct optee *optee)
->  
->  		optee->smc.invoke_fn(OPTEE_SMC_GET_SDP_CONFIG, 0, 0, 0, 0, 0, 0,
->  				     0, &res.smccc);
-> -		if (res.result.status != OPTEE_SMC_RETURN_OK) {
-> -			pr_err("Secure Data Path service not available\n");
-> -			return 0;
-> -		}
-> +		if (res.result.status == OPTEE_SMC_RETURN_OK)
-> +			pool = tee_rstmem_static_pool_alloc(res.result.start,
-> +							    res.result.size);
-> +	}
->  
-> -		pool = tee_rstmem_static_pool_alloc(res.result.start,
-> -						    res.result.size);
-> -		if (IS_ERR(pool))
-> -			return PTR_ERR(pool);
-> +	if (dyn_sdp && IS_ERR(pool))
-> +		pool = optee_rstmem_alloc_cma_pool(optee, heap_id);
->  
-> +	if (!IS_ERR(pool)) {
->  		rc = tee_device_register_dma_heap(optee->teedev, heap_id, pool);
->  		if (rc)
-> -			goto err;
-> +			pool->ops->destroy_pool(pool);
->  	}
->  
-> +	if (rc && (sdp || dyn_sdp))
-> +		pr_err("Secure Data Path service not available\n");
+The following commit has been merged into the x86/urgent branch of tip:
 
-Rather than an error message we should just use pr_info().
+Commit-ID:     2c118f50d7fd4d9aefc4533a26f83338b2906b7a
+Gitweb:        https://git.kernel.org/tip/2c118f50d7fd4d9aefc4533a26f83338b2906b7a
+Author:        Jann Horn <jannh@google.com>
+AuthorDate:    Tue, 25 Mar 2025 03:01:23 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 25 Mar 2025 08:30:43 +01:00
 
--Sumit
+x86/dumpstack: Fix inaccurate unwinding from exception stacks due to misplaced assignment
 
-> +
->  	return 0;
-> -err:
-> -	pool->ops->destroy_pool(pool);
-> -	return rc;
->  }
->  
->  static int optee_probe(struct platform_device *pdev)
-> -- 
-> 2.43.0
-> 
+Commit:
+
+  2e4be0d011f2 ("x86/show_trace_log_lvl: Ensure stack pointer is aligned, again")
+
+was intended to ensure alignment of the stack pointer; but it also moved
+the initialization of the "stack" variable down into the loop header.
+
+This was likely intended as a no-op cleanup, since the commit
+message does not mention it; however, this caused a behavioral change
+because the value of "regs" is different between the two places.
+
+Originally, get_stack_pointer() used the regs provided by the caller; after
+that commit, get_stack_pointer() instead uses the regs at the top of the
+stack frame the unwinder is looking at. Often, there are no such regs at
+all, and "regs" is NULL, causing get_stack_pointer() to fall back to the
+task's current stack pointer, which is not what we want here, but probably
+happens to mostly work. Other times, the original regs will point to
+another regs frame - in that case, the linear guess unwind logic in
+show_trace_log_lvl() will start unwinding too far up the stack, causing the
+first frame found by the proper unwinder to never be visited, resulting in
+a stack trace consisting purely of guess lines.
+
+Fix it by moving the "stack = " assignment back where it belongs.
+
+Fixes: 2e4be0d011f2 ("x86/show_trace_log_lvl: Ensure stack pointer is aligned, again")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20250325-2025-03-unwind-fixes-v1-2-acd774364768@google.com
+---
+ arch/x86/kernel/dumpstack.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
+index 91639d1..c6fefd4 100644
+--- a/arch/x86/kernel/dumpstack.c
++++ b/arch/x86/kernel/dumpstack.c
+@@ -195,6 +195,7 @@ static void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
+ 	printk("%sCall Trace:\n", log_lvl);
+ 
+ 	unwind_start(&state, task, regs, stack);
++	stack = stack ?: get_stack_pointer(task, regs);
+ 	regs = unwind_get_entry_regs(&state, &partial);
+ 
+ 	/*
+@@ -213,9 +214,7 @@ static void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
+ 	 * - hardirq stack
+ 	 * - entry stack
+ 	 */
+-	for (stack = stack ?: get_stack_pointer(task, regs);
+-	     stack;
+-	     stack = stack_info.next_sp) {
++	for (; stack; stack = stack_info.next_sp) {
+ 		const char *stack_name;
+ 
+ 		stack = PTR_ALIGN(stack, sizeof(long));
