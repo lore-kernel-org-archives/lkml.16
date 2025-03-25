@@ -1,222 +1,171 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2041.outbound.protection.outlook.com [40.107.220.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C298226FA70;
-	Tue, 25 Mar 2025 12:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742906400; cv=none; b=IGAOU9wUJzf02MtuWdqOGojlP/GDjLLHYFGf7oKvncZJCZ/4mwAUCbnr1mS8eWKpOXsc2fIqwlN3+lA81bi+KbaoujfXVPk6YU962sxSNC+Gw2eD9hoaHDGDLtN7Vl0kuHp7YdQBnQq/htlK1yebzEq1H0ZUWJyAK8UQyXfOjcA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742906400; c=relaxed/simple;
-	bh=hMfpvuD8OHyHlBPGVhbZTTgGFI+xWrk3NeZsR5xWQWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CByc54kgVIvPtzCb6ZxkoD9W8k4NrYzWGPSY40N+C5gHyxs0HukgJIx8Rh+HCwBJmGXVRuWjngfi4ng55fBhvF3zl9soOp8WZAyd2nLzjywQbBuN16qDwPcRUmN26emuDnSPhNka0+RQn0robvGhfjQ0ugDF0bi4mms5JZOKFF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=Ph2VMeNV; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB5B18BC3B
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 12:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742906462; cv=fail; b=etwaxEkNHj/SnDaMGdCZLJuNBP7sjKraIixDQJLEkh5AOldqXhmunWRdEJwEJ9/dBiU5U+B4A/zujXNktLPu5aZwA0LBS8N87wNrCHjtsEri/nAPZ49mCnUz+PB4M/hWinNdvzXr4ICcKHMvi9BtilqwwGWxBIq3XOuzTc3FJvw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742906462; c=relaxed/simple;
+	bh=n5Yw79hGXjKuReVr+nIa+AIddl6fLQBtn/4dzwBfvVc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=L3Nxa2TVs+9hZXkabwAqD7bkdurdWtLTJghwF6Rmdh6JJfFbmXfRTPS3HnmT1SG7mS8SY0M3PdF3m+vEPzAwjQsEzY5TiR9TqQfZ9nwQ1YpMNBDz5Zh4hbHO3XctLToCSPIgynqzYRaqN5YfJehM/FRRfbJs83SzGcTwONhKuC0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Bw8T2BpN; arc=fail smtp.client-ip=40.107.220.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="Ph2VMeNV"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5F7EB10382F1B;
-	Tue, 25 Mar 2025 13:39:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1742906395; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=BlO6BNtBl1gk8zG3pRpzJ3qRY4omgmymjs/5E1n8HjU=;
-	b=Ph2VMeNVjojq7TyvN7jh1Xvncyxwlz6NpBlppHNo9w5Iu/1wa4qn5QR39AYjxqjTAPqwxR
-	TXeReWMOVxrLOSSlLiltJ2Wjjk18iMnCgzrRsVo1dHiPnSUCuiQMi9ACYt+WPA3/Fiyxtw
-	n9Tj4We6m0IQSaocMpO8/8CbewGDOxAHdmHmQ01rfWsS3KFbnTDUJWFJz2JlxQ19Ualrew
-	WRWDujnxrIt04pmWVl4zQWTf5IcXPwXu2uitdwbv7i7Bz2FqdYYnyuJSqHikLpGQTp5zub
-	mFnyW726zYKT9VIcjgCpTN8yRITpCo620DY8AGB8iiOhG6lu66/pX0AXMfDzfQ==
-Date: Tue, 25 Mar 2025 13:39:49 +0100
-From: Lukasz Majewski <lukma@denx.de>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Paolo Abeni <pabeni@redhat.com>, Jakub
- Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
- davem@davemloft.net, Andrew Lunn <andrew+netdev@lunn.ch>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- devicetree@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Richard
- Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org, Maxime
- Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH 2/5] dt-bindings: net: Add MTIP L2 switch description
- (fec,mtip-switch.yaml)
-Message-ID: <20250325133949.7782a8a5@wsk>
-In-Reply-To: <bf6d066c-f0dd-471a-bb61-9132476b515a@kernel.org>
-References: <20250325115736.1732721-1-lukma@denx.de>
-	<20250325115736.1732721-3-lukma@denx.de>
-	<2bf73cc2-c79a-4a06-9c5f-174e3b846f1d@kernel.org>
-	<20250325131507.692804cd@wsk>
-	<bf6d066c-f0dd-471a-bb61-9132476b515a@kernel.org>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Bw8T2BpN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Tdn1ZRWyO+eqepOCuaHC0P97ozFWXzWpZSM9S1v6Ka35o3P3EC61RBuSsbzFjURWYb6yKKL9rIHSWggDNsaWFoh8w9Loc4jwkWsMGIAffGRiSUIskSWQck+PUtTshjfprbsAG1HtN6KaluUxcjwi+rWLDPDrKLelYKNBcy8GksM2lzFFMkzKJMzQeu6+nIyFybUqTP/vgWL+/ijdsTSkSIYKQMCUET53xm0XRe/XKzH3kTLFRV5s+5JkNyoxWhO/bGVDA9SZkE/P18M4oVkm+UYlOZutUGhBD8fOSdIHNJlzNaobgT5MF09GW0v3lliyfdbaFyHM57NYRVGjKesvFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=u5cWZ7VHSzObqLxN0pXY8NmhurIekCV+1r2zf/3Rq5Y=;
+ b=R2/YO6uMUk3zzJDL0jTfHjwbFqO1gyokxZalczmRzVoOwp03T6SypRx6t/o+nOGQHV+1nh5gRvDe8BmIYxs+DertHEMP7C+TY4MMVYmPz1xZNfJVuxIcSqoP6/mr/3aIL7H3Ay7cMbEojHgKjwaa33GIax9Q4xiGGp07ASCMGqUBoS8iTJRFfGG9ExQFv7vn1r10NRwXXRz3G5xxgegzPkIXrGV3s5i7jzXE8kKrmDAdBhUsGX/16XaWk+McdXFrRkzBm3g6eCbtl4VmoNxac+N8Zskpo1aYHKokgJ3+dgUTgYAWMMRqUrGODASJcfzgxxWaOG6WSIiqpU+JtYqcUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u5cWZ7VHSzObqLxN0pXY8NmhurIekCV+1r2zf/3Rq5Y=;
+ b=Bw8T2BpNQNV4vnB+/0wnmAlqesZJjixqYfWbGFHI9klo0TgtT24wx9XmraZx4WFf/+BL7RAYgb7Lj8j84fn384kFzH7maZRwPKgfaEhpsrz711dpjzBX3YpidgPZd/RNa4EZpL69puPhsHksb6Cf9gWYOct/JYmU++IG9r7pAtvgbsYKm2Wvo0ukPHbmWeGGqXPSZe+HYw6ZraPlDhXi1536w2sdSHHp8g1zlvwYuYXmp2Z7PcwC5Yo5qTSQ3g6rYLpsNevb54boBjLgUyl4yavqXUItqaUKCo9a03cNMeaPfmmwd1/14hVZc/+rC3P/u87o0Q3GG/o6lMEw9Vv+jg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MW6PR12MB8663.namprd12.prod.outlook.com (2603:10b6:303:240::9)
+ by PH8PR12MB6842.namprd12.prod.outlook.com (2603:10b6:510:1c9::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Tue, 25 Mar
+ 2025 12:40:58 +0000
+Received: from MW6PR12MB8663.namprd12.prod.outlook.com
+ ([fe80::594:5be3:34d:77f]) by MW6PR12MB8663.namprd12.prod.outlook.com
+ ([fe80::594:5be3:34d:77f%2]) with mapi id 15.20.8534.040; Tue, 25 Mar 2025
+ 12:40:57 +0000
+Date: Tue, 25 Mar 2025 09:40:56 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: robin.murphy@arm.com, joro@8bytes.org, will@kernel.org,
+	kevin.tian@intel.com, baolu.lu@linux.intel.com,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	nathan@kernel.org, arnd@arndb.de
+Subject: Re: [PATCH v5 0/3] iommu: Clean up cookie and sw_msi in struct
+ iommu_domain
+Message-ID: <Z+KkWGwwUHMKxWxm@nvidia.com>
+References: <cover.1742871535.git.nicolinc@nvidia.com>
+ <Z+Itnw4ys6dmDsc+@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z+Itnw4ys6dmDsc+@nvidia.com>
+X-ClientProxiedBy: BLAPR03CA0046.namprd03.prod.outlook.com
+ (2603:10b6:208:32d::21) To MW6PR12MB8663.namprd12.prod.outlook.com
+ (2603:10b6:303:240::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/dA91ybGkb__gwOvzVaQYG_K";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW6PR12MB8663:EE_|PH8PR12MB6842:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0c14e247-5091-4cb2-3155-08dd6b9a4a8c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ihva4OHKFgnORc3JP7+7DA3mqSlrA2Vme9GMM5jt6avmpH+0mjiUwc2ow1bQ?=
+ =?us-ascii?Q?IfofsiLruoDddKYT3lxBoXu76clSzgBccvxd9YfRBGOHS93OBJDFu5orshrJ?=
+ =?us-ascii?Q?I5g3HMavQl8JzpC1SGLst/j7igwrHddh7D0kYypabfcKyCvhiWsgI83cH//c?=
+ =?us-ascii?Q?z+lvLU2vv1OlWE9nJDOBDtE3htypb2aaymR4k8f6zd9JyeehdXG2CHLbeeUZ?=
+ =?us-ascii?Q?h5Xt10UmlYpHFuJitZycJhENcok/ucYrFE3Q80LrNO89pjuxzDGFWQfeiA8A?=
+ =?us-ascii?Q?l8JjDE/QUkU+wlN5tPVPYnyuDNWRJHnF9ACNmz+6UkfS1A+LgdWDMgyMUDIx?=
+ =?us-ascii?Q?xSYEdLtH0GMljLjMlXuwApO9tyaRKe8Ljj8IKkD2Qzc4b+/AvmN6rCF0R+no?=
+ =?us-ascii?Q?kuw4H4MwyD7O8X7lQSJp6EKUNIzfa3msGQtdC0QcVqiUusohtuBsMscuqC1W?=
+ =?us-ascii?Q?HtWV2VqnZriuQmPomZDdwr0sH7z4VhXviktwhOPMLzXG0FGGYNorndfwaO28?=
+ =?us-ascii?Q?RPB9HK7i43r2X4lwFibJuUsRfXdKKV+8c2ZHJDXXjANdi6uOyp193gp2ygTB?=
+ =?us-ascii?Q?UYSFNZ6NMQE4kcZSPiTYZqE67i2nnG/qWd2UeajGC/AVKv/IzxBWyFRHrM7+?=
+ =?us-ascii?Q?2GgEoFCXV6j3M0yhAmFmZwdLIaiNoRVB1/Z7X+gkTtwb2FwoFX9tiOYvbj8Q?=
+ =?us-ascii?Q?SkBnBUqFKA3/EYpFNfco7k5aNHIlKAumAtp9rFE2V6jImT8PMmGWfTIMMV58?=
+ =?us-ascii?Q?pnNv+54V5pnepyRohhYDgSoeWwXzjFoEJqfmTqunWQsOo4+OhGV5+J+f2jmq?=
+ =?us-ascii?Q?fcPCKDI2GbhQxMmmF8HEYTTGkhcQlyMOxezhpRxn2XRU0Fl8i7oD7HSuWEKy?=
+ =?us-ascii?Q?rvTzORjQneJnu8qFDHzXLUFyupRKuR1f0yH3Cq7sRrQJLv/SueCx+L6ecXEj?=
+ =?us-ascii?Q?E3GO0uUOCuOA5Gnh63wp0hLqixf8ZDJqKao4Xbv26SsZ5zzLU7fvfX+F0cTm?=
+ =?us-ascii?Q?ULpbSixscvuS4iD79epkjjc2Ee9dPVYvh6hZE/C6gDyod82s798JsoI3gfHT?=
+ =?us-ascii?Q?B3tdhZgU8Y7tTaOkAaJ+vVcFm9/dJ0/CMHEaAQM7K1SBQaexZSKULNHkzoab?=
+ =?us-ascii?Q?VeqovJC8k24lHZojWd+Q6PzbyTp9aJX04G8PeC+PAUS2EhfTD268acC83FJ9?=
+ =?us-ascii?Q?wJVfnq1GcWoW6/HNUjM5WES+N2sUUZDIqZpp/MDK5QBZlApY/UNBGczlWKgM?=
+ =?us-ascii?Q?pL2jAZqzJT9oGmjjq1xqyOQJJ4YB4PiN9Q5pE8BGvTQdAoWERfCA6B/p7QUi?=
+ =?us-ascii?Q?Acor2VWt5xMAEG9ky5Rwf0P0mJDhRljDSfXDMs1u5Skw124S9ToywnZg01fq?=
+ =?us-ascii?Q?G8E3p3XOviGGdS9Wj6fJ0Hv+hOe6?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW6PR12MB8663.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?2AWD/Zti4vTKHFUEkPZrdib2G/KDdlXggFt9fy+KPVPuWD+shUnUTXZZ7pwu?=
+ =?us-ascii?Q?RSc3WoG1ga4JL8S3z71NNy6xg9tZAc7/BbK8l6oxsbkivk7K6Mim2y47bBEw?=
+ =?us-ascii?Q?LEcB/P77bbWl0/ZAu+cf3IPJ7nrYSt/rufJU9h5AO2avD+aE/IJuXkWJE+pp?=
+ =?us-ascii?Q?xvuYGBbksstcUChFn2I+sEAWYJK/I7LBuk5Q0TxGU8P4FPjx/kfNew4hZXVW?=
+ =?us-ascii?Q?2oO3yiOKaUccLJyrJtOuuqg9etXgtveCkztZr1CosJ1E4eflpn3Y+jF6QNzH?=
+ =?us-ascii?Q?3Lze/ukLP3I5cd7kBU3HYFnT3S+BmE+CUhrgqDqAVICwwpBEUiRcII4SZMqC?=
+ =?us-ascii?Q?Bqz0rItkyEBQZi8LX15b4J9MIPGWHq0tYOhA0dCAzBamH8jqnVa50U0vjzXs?=
+ =?us-ascii?Q?GXA9n392zGsOJffjzysJk4aVMBrre8nQPkn+WwCwY08gbqw+AayBdlMbOaY0?=
+ =?us-ascii?Q?2n8Ry4vE1Akxi4RwFXXyP1J38XIRJ8Vf24zFh+0HK9K1zn1BX+Q+59SMeVDT?=
+ =?us-ascii?Q?PWb102Ere7R9jNS6LukvmKm5KNAOqtoOp93InpoRRxMMB2x3rNTvkMY31AMG?=
+ =?us-ascii?Q?CUfjvGRqCZk+x9oEFCyN5h1H44f9H5HBRJWLPvZ/tyusKs3K/zZCjQxUNVcX?=
+ =?us-ascii?Q?INGi4991Oy1rCngpfZ4ADZby9mLKIXZN5EEBo30N4V+FMYZZOyLddtbjFq8i?=
+ =?us-ascii?Q?1JmJaUuCtcKvzqud6rI/tDB4D2AeA8oRapi41389sHsYnaLS3hP99FRJrG5+?=
+ =?us-ascii?Q?6Rk1FAzK1EWHtysxL9AqFcKo4piCdmuN7ZkEbTjiCT4t3sYvbYOGwSgxk81J?=
+ =?us-ascii?Q?yh8r39r4Zda807IiSN7xRvZZMLTcDl2CaxetU0v9/OMINbD2JfXms1TM0wMC?=
+ =?us-ascii?Q?lFB9FnPp5tZVYfa3aAd0UmCxQJVETNCZLHyi//IKAL2qX3H+tYkYS23DWzAN?=
+ =?us-ascii?Q?JwK0I5eWOS9DIuSSFcgO8UF0gX9ZPIsKVd1/wvvQmZxsANtXKTqIzdzbaZuZ?=
+ =?us-ascii?Q?uScuqTHL4lqwh/1ESpBqZpvGJbvojjKKypnfgKNLFBCcGBo6Hm52HpRRNq+D?=
+ =?us-ascii?Q?4FG3DJr/1pOQNfyFSHlqfTa08OhYPS7ye97KOqdmuD5pimKm1dIqo7IKxtXC?=
+ =?us-ascii?Q?VO+p2YMcc3NEefKNAUoa9nv597i9DDkFHOKnJ1f+eTqA9FWMXNycatFphK0D?=
+ =?us-ascii?Q?K6x7a7fL6lvpHePAOLhico9SMLXlkn+2vaawPpZP7JX7ptqd2DSgpxC8wVKa?=
+ =?us-ascii?Q?zNoFhYpgRM9ol3I5nii/64rOLFWviQllHai2cw4WqD8UVAg4hkS9/8yI8etR?=
+ =?us-ascii?Q?aEuKV5j9fuYlYr6OIMTzYDs1pq1NzHhT5VIWfOtRbottON7pv5OcrlbJNWA1?=
+ =?us-ascii?Q?8R38MIpiFYJvl6MCbDv/MW8qGlv6QOjiwuJNFJXA+x0KWCaGrpeffcXvrFq4?=
+ =?us-ascii?Q?1PG3ZKx1EPZsHYidCRxGtLwXMcb0vto51ExHG6aO5UluYsFnbgHt39/NMMpe?=
+ =?us-ascii?Q?SLZvHJ1pWIkOY4MTCFqkF08wQwWZlLMM6xgRVcTdzQCg0gg4DO/KfvVbOSaY?=
+ =?us-ascii?Q?81hyyaPZzhF2Adfr/30=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c14e247-5091-4cb2-3155-08dd6b9a4a8c
+X-MS-Exchange-CrossTenant-AuthSource: MW6PR12MB8663.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2025 12:40:57.7746
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1+jOGh8I6yX+K0eG0R3gBZN1GPy3/W7UYwh0mLSPI1vxaP6CtylxUrZVYnoheoxX
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6842
 
---Sig_/dA91ybGkb__gwOvzVaQYG_K
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Mar 24, 2025 at 09:14:23PM -0700, Nicolin Chen wrote:
+> On Mon, Mar 24, 2025 at 09:05:14PM -0700, Nicolin Chen wrote:
+> > This is a clean-up series for the previous sw_msi Part-1 core series. It's
+> > on github:
+> > https://github.com/nicolinc/iommufd/commits/iommufd_msi_cleanup-v5
+> > 
+> > Changelog
+> > v5
+> >  * Add IMPORT line for IOMMUFD_INTERNAL and change IOMMUFD_DRIVER_CORE
+> >    to a "bool" module, fixing build module errors reported by Arnd:
+> >    https://lore.kernel.org/all/20250324210329.2809869-1-arnd@kernel.org/
+> >  * In iommu_dma_prepare_msi(), let all IDENTITY DOMAINs pass through,
+> >    fixing the regression with IDENTITY domains reported by Nathan:
+> >    https://lore.kernel.org/linux-iommu/20250324162558.GA198799@ax162/
+> 
+> > base-commit: da0c56520e880441d0503d0cf0d6853dcfb5f1a4
+> 
+> Hi Jason,
+> 
+> Assuming that you want to replace the commits in your for-next
+> tree with these patches, I rebased them on this commit:
+> da0c56520e88 iommu/arm-smmu-v3: Set MEV bit in nested STE for DoS mitigations
+> 
+> Again, sorry for the trouble.
 
-Hi Krzysztof,
+Can you post a v6 please? That is a bit easier
 
-> On 25/03/2025 13:15, Lukasz Majewski wrote:
-> > Hi Krzysztof,
-> >  =20
-> >> On 25/03/2025 12:57, Lukasz Majewski wrote: =20
-> >>> This patch provides description of the MTIP L2 switch available in
-> >>> some NXP's SOCs - imx287, vf610.
-> >>>
-> >>> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> >>> ---
-> >>>  .../bindings/net/fec,mtip-switch.yaml         | 160
-> >>> ++++++++++++++++++   =20
-> >>
-> >> Use compatible as filename. =20
-> >=20
-> > I've followed the fsl,fec.yaml as an example. This file has
-> > description for all the device tree sources from fec_main.c =20
->=20
->=20
-> That's a 14 year old binding, so clear antipattern.
-
-For some reason it is still there...
-
->=20
-> >=20
-> > I've considered adding the full name - e.g.
-> > fec,imx287-mtip-switch.yaml but this driver could (and probably
-> > will) be extended to vf610. =20
->=20
-> Unless you add vf610 now, this should follow the compatible name.
-
-Ok.
-
->=20
-> >=20
-> > So what is the advised way to go?
-> >  =20
-> >> =20
-> >>>  1 file changed, 160 insertions(+)
-> >>>  create mode 100644
-> >>> Documentation/devicetree/bindings/net/fec,mtip-switch.yaml
-> >>>
-> >>> diff --git
-> >>> a/Documentation/devicetree/bindings/net/fec,mtip-switch.yaml
-> >>> b/Documentation/devicetree/bindings/net/fec,mtip-switch.yaml new
-> >>> file mode 100644 index 000000000000..cd85385e0f79 --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/net/fec,mtip-switch.yaml
-> >>> @@ -0,0 +1,160 @@
-> >>> +# SPDX-License-Identifier: GPL-2.0-only
-> >>> +%YAML 1.2
-> >>> +---
-> >>> +$id: http://devicetree.org/schemas/net/fsl,mtip-switch.yaml#
-> >>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >>> +
-> >>> +title: Freescale MTIP Level 2 (L2) switch
-> >>> +
-> >>> +maintainers:
-> >>> +  - Lukasz Majewski <lukma@denx.de>
-> >>> +   =20
-> >>
-> >> description? =20
-> >=20
-> > Ok.
-> >  =20
-> >> =20
-> >>> +allOf:
-> >>> +  - $ref: ethernet-controller.yaml#
-> >>> +
-> >>> +properties:
-> >>> +  compatible:
-> >>> +    oneOf:   =20
-> >>
-> >> Drop, you have only one variant. =20
-> >=20
-> > Ok, for imx287 this can be dropped, and then extended with vf610.
-> >  =20
-> >> =20
-> >>> +      - enum:
-> >>> +	  - imx287-mtip-switch   =20
-> >>
-> >> This wasn't tested. Except whitespace errors, above compatible does
-> >> not have format of compatible. Please look at other NXP bindings.
-> >>
-> >> Missing blank line.
-> >> =20
-> >>> +  reg:
-> >>> +    maxItems: 1
-> >>> +
-> >>> +  interrupts:
-> >>> +    maxItems: 3   =20
-> >>
-> >> Need to list items instead.
-> >> =20
-> >>> +
-> >>> +  clocks:
-> >>> +    maxItems: 4
-> >>> +    description:
-> >>> +      The "ipg", for MAC ipg_clk_s, ipg_clk_mac_s that are for
-> >>> register accessing.
-> >>> +      The "ahb", for MAC ipg_clk, ipg_clk_mac that are bus clock.
-> >>> +      The "ptp"(option), for IEEE1588 timer clock that requires
-> >>> the clock.
-> >>> +      The "enet_out"(option), output clock for external device,
-> >>> like supply clock
-> >>> +      for PHY. The clock is required if PHY clock source from
-> >>> SOC.=20
-> >>
-> >> Same problems. This binding does not look at all as any other
-> >> binding. I finish review here, but the code has similar trivial
-> >> issues all the way, including incorrect indentation. Start from
-> >> well reviewed existing binding or example-schema. =20
-> >=20
-> > As I've stated above - this code is reduced copy of fsl,fec.yaml...
-> > =20
->=20
-> Don't take the worst, old code with all the anti-patterns we point out
-> on each review, as an example.
->=20
-> Take the most recent, well reviewed binding as an example. Or
-> example-schema.
-
-Ok.
-
->=20
-> Best regards,
-> Krzysztof
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/dA91ybGkb__gwOvzVaQYG_K
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmfipBUACgkQAR8vZIA0
-zr3d0wf/bxDkHq2CXcGN5WbTK8hga817FnMv0+WxVnrO7+RB2b0lrOdZaTXXcwb6
-KM0DjW6hv1ZV/tY9uU1hNCnw3dYxia9dKKts3Xy7doPol9M31NkM9HUYpZ2gZPtR
-Db9R7nCqrNZmh2h3jqbVB1lZBpR4B9mFilCVs6+3hMn3y5bQWu6hRNvq5K+oSc9D
-d//uIGq7euZXpaAXxujJyYGQDEuJdmVf9lzktP6g9PCt/Tk799ulW7qe0RWcjfYl
-E48J4AzVxR1rCs2gJqAsxN/cKsCsuLmerC057YamM8NKVuqa30xmt7UTPFjJ89wb
-KjeIiOpkE56KfTAlW8new9bOhBT09A==
-=AANv
------END PGP SIGNATURE-----
-
---Sig_/dA91ybGkb__gwOvzVaQYG_K--
+Thanks,
+Jason
