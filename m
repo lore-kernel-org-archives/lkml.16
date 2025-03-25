@@ -1,271 +1,103 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BAA91A83ED
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 19:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B551C8619;
+	Tue, 25 Mar 2025 19:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742929503; cv=none; b=ZZkF9aZJEAff6iTnMiW/fHQdMWpjhyqhWF4GY1wk0Y+PfUH2VFxOU42DYhomi+WAWJICAUkIdzEHLSTZAMHPReSmriUQXK5J202hgWX+4SUBgRljtI3ISdnyNjvQdkmrwexmCYkj0DOTlnkF4J3LUt7CyEZQ0f0ogcdQajx594Y=
+	t=1742929506; cv=none; b=BFCwae1DjJ3IrR9G9Y0Pw7K85XirxbnCxFB2QsUDkUgPtemiIG2IKxnqE8p7nL5y25TKKAzxng4CWrM0jy5ZPlRoK9rH8U2siS8XQPWoDbTjlzyZ6poPvT33qBoiLXQxT2XqFjRI/acvPn0f70eIviCWxIMZNOuihXhZLcIXRXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742929503; c=relaxed/simple;
-	bh=wD4/URckOJ5133UcerSShorTazQTo5w/EDTu96JI6k8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pdF53gyaheT/NT5LjqJjT6W04zXpUrhUPZzkvJ8UTZUE0zDhStd/knwuZZgOFCLav3N0+/VC1PcwEXEAwTUgmqTIqSmbDyhSXa6gHaFxYBUCIL9AaMV3RzdPJ38Rpib9nRFnhxgnnGwGxGE+f3ix2QPx1g6JVAmt3CsyQU/3UDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IzoZA7ry; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1742929506; c=relaxed/simple;
+	bh=6TMgaEW+9sayzHvoDGxPrtSjxiQA+4hzRkywj2TAG0U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ouCnnS/quqHd0gn/JFjQjFsyp5vsoiDUt/PxmM/1SPC0IfVOqAI/mEKw/A8/KxYOd/6F6a8nWsJBc47Mq3ICIqe54BqtfGn6SWd9NewBXy8ZIiVbmT8nDyPiJPrjS9AFd7Gczn6/J+JMncMAMKG3GSHK88lWtIEHBQUMKkJ0Hs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YkQHMeqm; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IzoZA7ry"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52PEAq1m025977;
-	Tue, 25 Mar 2025 19:04:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=/K6e/+
-	Y0w76cVJRh2IhrsTq38O1z7wgH43Nhxih0k38=; b=IzoZA7rytZuP7TruQ11nZ9
-	rjkTZe3WXth2yWBfPnIppPjdZ6n//jpSv+tPhCFPRIjRWg/9+LPGr8XtfIStS4Jm
-	50PGmBcVVAlgTYzBgXAyRmWLdDR72clLFxPYf7HWqRRejK+SvZXI6P1GRyHfaQh0
-	HyF+1pAQ0EWMCB4OdAHeilqvqmC1og5evutN49DJkitxT6IkSNGnxyizItdrcnNT
-	byEzc/tPvZArw9zMAUvM4e/BHXkTfW+uWpv5NndGSdOqTEJRyrpF3sCMfWeoov5y
-	7M1FxjzbaRshMdVvw2YmEsBiGwqWNB0REqKBaULuhmaJLpFP0LKh/G1WgK2pw3/Q
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45kmva4h6d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Mar 2025 19:04:31 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52PFuFRX030325;
-	Tue, 25 Mar 2025 19:04:30 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 45j7htd3yy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Mar 2025 19:04:30 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52PJ4Skj51511716
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Mar 2025 19:04:28 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B8B212004B;
-	Tue, 25 Mar 2025 19:04:28 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 87AAC20040;
-	Tue, 25 Mar 2025 19:04:24 +0000 (GMT)
-Received: from [9.67.11.207] (unknown [9.67.11.207])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 25 Mar 2025 19:04:24 +0000 (GMT)
-Message-ID: <587d45c3-2098-4914-9dfc-275b5d0b9bb7@linux.ibm.com>
-Date: Wed, 26 Mar 2025 00:34:23 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YkQHMeqm"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2ff6ce72844so1561023a91.2;
+        Tue, 25 Mar 2025 12:05:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742929504; x=1743534304; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6TMgaEW+9sayzHvoDGxPrtSjxiQA+4hzRkywj2TAG0U=;
+        b=YkQHMeqmVLLS97tItqY9zjSq9CsYwgffXnuCDnyo3WqBpQfkiCfDQBj1+dOcomWP5i
+         vpF2KU9XGpkIpoTNYmDSbyV6v9N3nhfKoxBVHci71B1ClbpD4o8TSLl70W4BaFDDMRSJ
+         n80/RMLEX1u9aF5Z7ZdL0WVaC8cHxMs0jtaqauuTrTqPrVkK3FTV7B/BrbniAPIzCcP6
+         3p63XsyJq90yP7LZROOQlrG+3Hh3njpOWBJZ5Nv8faF07TPDlY3bM6ib6f6JeGby6Z8U
+         juKTT8WXejs7qfeexTBoFJfSn6GBfXTGWjN/8vfbwRBtUIVOh1Ux8CnrQLaQRROd8GEN
+         TQgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742929504; x=1743534304;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6TMgaEW+9sayzHvoDGxPrtSjxiQA+4hzRkywj2TAG0U=;
+        b=gBSsY2RXnVNW+qYiPagRRu9ttS4kNe2Zx3QdL5dkoIUMBVW08n2snClOWdciORvpCa
+         cpALkshOuE1mWVZUfL5de5v+E3KhRQGAqXA6zI7UjG4SEqb6Qb9iDGW5QnNPOJjysbP3
+         f8J3ItGvaSNc6L0Ol/AksPZwpGKEN4mNclMqDbGl1h/Xa0dwELP4PX5ZXX+biVb+KFA6
+         ENV+BhvgDHzHEIkOS04IUWOzWxI2faUMXJs1oC8EJdj4QKagM0dA0vJXhZNoNP9Nqad4
+         MwobjIDt1T0CgPosrnYMNXcESykKcQZ9t2awfpKZqMky8txcgknR8yntFEPTzCD7l/De
+         i7SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUW72Jc+jTr5PNRD116bEhtnk0Hv8O0Gno2CKOSAiNouhneR9THdPiHo+5zkK2Ctcv04J5+ubrac/AFSp0=@vger.kernel.org, AJvYcCVBiPbyp0Ly2DPYzT5jWxNVmxGYlN3Kn0Im06cNw2rvXlAafwDeYEFQMeF4fkDEMIJhB4F0NJQyOJKo1sDAHco=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcKankGWPiJM6wfOsIz97Uyrb0SNqGHhFTVWtsEHPiO1INKlx1
+	F5B82/+dq/s/bSzHxB17xZPtt/o5LjaCY7m5SJmyBZeCUe1+xgUaKwAoU8O6+CYBadKU7bFNmNM
+	z83wXGgCQyoqISICgU+5L1627WLs=
+X-Gm-Gg: ASbGncu2e0N5TEGVp1QQpbIk48owlrnUKGzW10mG23H42sq/aTRMU8rCLIYsAEqLNme
+	RNTlP3tnPWF/u+JfHsulLEwmbG9JCPaNKMD5N0TJqf+eIw0f5o+cmDvOsM3+O+XWpXtu3AKd6Sv
+	TeqPFHOrj2OCS9ZB+UP/zgmyAYyA==
+X-Google-Smtp-Source: AGHT+IEaXErss0xXwV0lJBIcOaPCzt+p7KmJRqpZTTvZUvZnCO8fOgnNeypm8mZP1MAMagB1I17kUy/UdhjTcObxQRA=
+X-Received: by 2002:a17:90b:3a8d:b0:2ff:7970:d2b6 with SMTP id
+ 98e67ed59e1d1-3036b4abf73mr2506809a91.5.1742929504147; Tue, 25 Mar 2025
+ 12:05:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 00/21] futex: Add support task local hash maps,
- FUTEX2_NUMA and FUTEX2_MPOL
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org,
-        "Nysal Jan K.A." <nysal@linux.ibm.com>
-References: <20250312151634.2183278-1-bigeasy@linutronix.de>
- <0713a015-b8dc-49db-a329-30891a10378c@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <0713a015-b8dc-49db-a329-30891a10378c@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: tJrgVF6mfYVMk_ggXMk9dHcvQPVRcxEx
-X-Proofpoint-GUID: tJrgVF6mfYVMk_ggXMk9dHcvQPVRcxEx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-25_08,2025-03-25_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- priorityscore=1501 lowpriorityscore=0 impostorscore=0 spamscore=0
- phishscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503250129
+References: <20250324210359.1199574-1-ojeda@kernel.org> <20250324210359.1199574-3-ojeda@kernel.org>
+ <dd1616d5-4808-46be-9167-6fbfe76e0c73@redhat.com>
+In-Reply-To: <dd1616d5-4808-46be-9167-6fbfe76e0c73@redhat.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 25 Mar 2025 20:04:52 +0100
+X-Gm-Features: AQ5f1JpmlWonQlCTJ2hC2bel5qL6r28Y6ygrNFDOCt0MmPyi13zbtF_Iod_7f3o
+Message-ID: <CANiq72kz9SW8Rexj7feZRvTAhgF+cBwarpFnqu0TSk6C2r9SRQ@mail.gmail.com>
+Subject: Re: [PATCH 02/10] drm/panic: add missing Markdown code span
+To: Jocelyn Falempe <jfalempe@redhat.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Sebastian.
+On Tue, Mar 25, 2025 at 10:05=E2=80=AFAM Jocelyn Falempe <jfalempe@redhat.c=
+om> wrote:
+>
+> Thanks, it looks good to me.
+>
+> Reviewed-by: Jocelyn Falempe <jfalempe@redhat.com>
+>
+> You want to take the whole series in the rust tree?
+>
+> Otherwise I can push the patch 1-2 to drm-misc-next if needed.
 
-On 3/18/25 18:54, Shrikanth Hegde wrote:
-> 
->> The complete tree is at
->>     https://git.kernel.org/pub/scm/linux/kernel/git/bigeasy/ 
->> staging.git/log/?h=futex_local_v10
->>     https://git.kernel.org/pub/scm/linux/kernel/git/bigeasy/ 
->> staging.git futex_local_v10
->>
-> 
-> Hi Sebastian. Thanks for working on this (along with bringing back 
-> FUTEX2 NUMA) which
-> might help large systems with many futexes.
-> 
-> I tried this in one of our systems(Single NUMA, 80 CPUs), I see 
-> significant reduction in futex/hash.
-> Maybe i am missing some config or doing something stupid w.r.t to 
-> benchmarking.
-> I am trying to understand this stuff.
-> 
-> I ran "perf bench futex all" as is. No change has been made to perf.
-> =========================================
-> Without patch: at 6575d1b4a6ef3336608127c704b612bc5e7b0fdc
-> # Running futex/hash benchmark...
-> Run summary [PID 45758]: 80 threads, each operating on 1024 [private] 
-> futexes for 10 secs.
-> Averaged 1556023 operations/sec (+- 0.08%), total secs = 10   <<--- 1.5M
-> 
-> =========================================
-> With the Series: I had to make PR_FUTEX_HASH=78 since 77 is used for 
-> TIMERs.
-> 
-> # Running futex/hash benchmark...
-> Run summary [PID 8644]: 80 threads, each operating on 1024 [private] 
-> futexes for 10 secs.
-> Averaged 150382 operations/sec (+- 0.42%), total secs = 10   <<-- 0.15M, 
-> close to 10x down.
-> 
-> =========================================
-> 
-> Did try a git bisect based on the futex/hash numbers. It narrowed it to 
-> this one.
-> first bad commit: [5dc017a816766be47ffabe97b7e5f75919756e5c] futex: 
-> Allow automatic allocation of process wide futex hash.
-> 
-> Is this expected given the complexity of hash function change?
+Please take them if possible, since others may want to take them
+through their tree anyway, plus it should have less conflicts if you
+change other bits, plus these are independent fixes anyway that can go
+in on their own whether or not the lint gets eventually enabled.
 
-So, did some more bench-marking using the same perf futex hash.
-I see that perf creates N threads and binds each thread to a CPU and then
-calls futex_wait such that it never blocks. It always returns EWOULDBLOCK.
-only futex_hash is exercised.
+Thanks!
 
-Numbers with different threads. (private futexes)
-threads		baseline		with series    (ratio)
-1		3386265			3266560		0.96	
-10		1972069			 821565		0.41
-40		1580497			 277900		0.17
-80		1555482			 150450		0.096
-
-
-With Shared Futex: (-s option)
-Threads		baseline		with series    (ratio)
-80		590144			 585067		0.99
-
-After looking into code, and after some hacking, could get the
-performance back with below change. this is likely functionally not correct.
-the reason for below change is,
-
-1. perf report showed significant time in futex_private_hash_put.
-    so removed rcu usage for users. that brought some improvements.
-    from 150k to 300k. Is there a better way to do this users protection?
-
-2. Since number of buckets would be less by default, this would cause hb
-    collision. This was seen by queued_spin_lock_slowpath. Increased the hash
-    bucket size what was before the series. That brought the numbers back to
-    1.5M. This could be achieved with prctl in perf/bench/futex-hash.c i guess.
-
-Note: Just increasing the hash bucket size without point 1, didn't matter much.
-
--------
-diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index 363a7692909d..7d01bf8caa13 100644
---- a/kernel/futex/core.c
-+++ b/kernel/futex/core.c
-@@ -65,7 +65,7 @@ static struct {
-  #define futex_queues	(__futex_data.queues)
-  
-  struct futex_private_hash {
--	rcuref_t	users;
-+	int	users;
-  	unsigned int	hash_mask;
-  	struct rcu_head	rcu;
-  	void		*mm;
-@@ -200,7 +200,7 @@ static bool __futex_pivot_hash(struct mm_struct *mm,
-  	fph = rcu_dereference_protected(mm->futex_phash,
-  					lockdep_is_held(&mm->futex_hash_lock));
-  	if (fph) {
--		if (!rcuref_is_dead(&fph->users)) {
-+		if (!(fph->users)) {
-  			mm->futex_phash_new = new;
-  			return false;
-  		}
-@@ -247,7 +247,7 @@ struct futex_private_hash *futex_private_hash(void)
-  		if (!fph)
-  			return NULL;
-  
--		if (rcuref_get(&fph->users))
-+		if ((fph->users))
-  			return fph;
-  	}
-  	futex_pivot_hash(mm);
-@@ -256,7 +256,7 @@ struct futex_private_hash *futex_private_hash(void)
-  
-  bool futex_private_hash_get(struct futex_private_hash *fph)
-  {
--	return rcuref_get(&fph->users);
-+	return !!(fph->users);
-  }
-  
-  void futex_private_hash_put(struct futex_private_hash *fph)
-@@ -265,7 +265,7 @@ void futex_private_hash_put(struct futex_private_hash *fph)
-  	 * Ignore the result; the DEAD state is picked up
-  	 * when rcuref_get() starts failing via rcuref_is_dead().
-  	 */
--	if (rcuref_put(&fph->users))
-+	if ((fph->users))
-  		wake_up_var(fph->mm);
-  }
-  
-@@ -1509,7 +1509,7 @@ void futex_hash_free(struct mm_struct *mm)
-  	kvfree(mm->futex_phash_new);
-  	fph = rcu_dereference_raw(mm->futex_phash);
-  	if (fph) {
--		WARN_ON_ONCE(rcuref_read(&fph->users) > 1);
-+		WARN_ON_ONCE((fph->users) > 1);
-  		kvfree(fph);
-  	}
-  }
-@@ -1524,7 +1524,7 @@ static bool futex_pivot_pending(struct mm_struct *mm)
-  		return false;
-  
-  	fph = rcu_dereference(mm->futex_phash);
--	return !rcuref_read(&fph->users);
-+	return !!(fph->users);
-  }
-  
-  static bool futex_hash_less(struct futex_private_hash *a,
-@@ -1576,7 +1576,7 @@ static int futex_hash_allocate(unsigned int hash_slots, bool custom)
-  	if (!fph)
-  		return -ENOMEM;
-  
--	rcuref_init(&fph->users, 1);
-+	fph->users = 1;
-  	fph->hash_mask = hash_slots ? hash_slots - 1 : 0;
-  	fph->custom = custom;
-  	fph->mm = mm;
-@@ -1671,6 +1671,8 @@ int futex_hash_allocate_default(void)
-  	if (current_buckets >= buckets)
-  		return 0;
-  
-+	buckets = 32768;
-+
-  	return futex_hash_allocate(buckets, false);
-  }
-  
-@@ -1732,6 +1734,8 @@ static int __init futex_init(void)
-  	hashsize = max(4, hashsize);
-  	hashsize = roundup_pow_of_two(hashsize);
-  #endif
-+	hashsize = 32768;
-+
-  	futex_hashshift = ilog2(hashsize);
-  	size = sizeof(struct futex_hash_bucket) * hashsize;
-  	order = get_order(size);
-
+Cheers,
+Miguel
