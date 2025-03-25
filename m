@@ -1,123 +1,100 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F631FAC34;
-	Tue, 25 Mar 2025 15:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AAF209F40;
+	Tue, 25 Mar 2025 15:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742918186; cv=none; b=fQA2gNP0dqgeFzxhF9YWv9Mu2vjTxpIz0IicTesz4y3TKMAFLdnBBPPcZzYwoBv96Icgyyf14pLK+pG6j390qcsFcFazxhISlNTjUIvgu12W3Xxh0Ba0wiAcokGoiIwqc3/Ck2OqrPH/LEL1bg4rRhNjVzMRJcYKtAS3aI/bpMU=
+	t=1742918194; cv=none; b=X8MBGGgw47a+VdxzzMFlZmU1IBy6hL8c8M2Q309xtkJTasVvkLbNZ1l85Q3AP8wPLTtKwSyB8vMRXlnXv1AW0ug5zHBlx4y/Is9m+1ZKs3tLWUEPY2s+T/08BW08KQ3qCIbA38EoTgmk1wlWaQBJb+pNpWFJFSwynsHKadnpOSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742918186; c=relaxed/simple;
-	bh=Qe52kL0ACIPcE875tWxkuiGfJ1bHn3ADQTfa6h9DYQY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=Qv2keMk9zMegVMLUkZxBJtmYVoVvtjUyAqDjVpPFnNte/MAf4YWNlMUc9vOc5AUD6W573SWCmh9cfvzME2ah609eL4Oj/DLQJYvPflUjKwstnV3wC7IoN9wt6HIt43uWaUWHrKWQZwZUyea+SfYzxSMpgwvJCFojH801MTOENpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bYa2sGYw; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1742918194; c=relaxed/simple;
+	bh=RjnIcXoOqxE+zxLIlZuGZ3NgudIunxk4QATpRpSyCrI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lTJvD4McnJ17uXU76t9K5uQzlVaFdhWbZqeUyDXhZwqtbhJRFCLWVNdpb4Y6IagSTsKKEn5zILfz51srU+ekFpfr1SQaIQoKvulXla5J6N8RSKFNhU409dZYxKP3YCH7I4THQmvqpFo99+rauK9Nv6hXShrcQ2TkChschQsG+DM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=vgd4XF02; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bYa2sGYw"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 241594434C;
-	Tue, 25 Mar 2025 15:56:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742918181;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xE/EuykUXaV9X7CEIc4chwri4tAOokRK/Wzf/U3t4z4=;
-	b=bYa2sGYw1SA1l2YEq9xd7GQiJjYwj+39GGRJuOVmXbUEjwMrKqHX9PAuFXvUh34dUjjNJh
-	+z5XXQlK7Oi6vF2WLuEsWF2+yB9r5PvxRuNaAggHSz9QeiKFaI/lmgFNJ+g68anduJmpxv
-	nL+JoVaCyJMRaye5+R0rBJvmG5v8SgHc8OiTXgtav4RWyKOAAisozT28Jl6O6o+lxUg503
-	iJkcMCrZLsTAmfpqWOdk2u8gkp5hHYfvBDhgFxw2RJGe9h/RIOMntuFP0i3QMr1r74VSWv
-	qx8D832aLwsQvQQAYJRi7vT2S8+j/C6zwIT94fwclERGCFqdzsR0lPZ+kefo4g==
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="vgd4XF02"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1742918193; x=1774454193;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=RjnIcXoOqxE+zxLIlZuGZ3NgudIunxk4QATpRpSyCrI=;
+  b=vgd4XF026wWpYpbt+hKlcSBS86uqo1ISRAQvvKhlpIenh6T+BOHKsi5j
+   YP65BBXKZnzGQ8waDziZAgrRy9qj5dAVCHLEasznpSV88zXNxcwRyYae4
+   fZj130iIE/5syaIOwwocV+ExwPwVZsIqkw/AKHT90HaGOFFpZ1Yeqp7N3
+   PkWC/bhlrYR3N3QaFfx9jtqe9JYRsx18+0pFAqpeERR14fyF/3RnNx5Cc
+   UzRxUMmUcBKd8Xh3/muMoC+MO99B6nPg5dRqXWXOEkTDCFk/aDAzJ3w8y
+   H87OPB2g8KSo1lAYMcifOCDeiCdgq/jhzVPFzZfsq5q1/pBiElQOUE0p3
+   A==;
+X-CSE-ConnectionGUID: 5ZRRXf5LQVCIU2dRAgtdWw==
+X-CSE-MsgGUID: 6hQuaWmuSxy8lOAwfp4MQQ==
+X-IronPort-AV: E=Sophos;i="6.14,275,1736838000"; 
+   d="scan'208";a="40152225"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Mar 2025 08:55:23 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 25 Mar 2025 08:54:53 -0700
+Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Tue, 25 Mar 2025 08:54:53 -0700
+From: <Ryan.Wanner@microchip.com>
+To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>, <mturquette@baylibre.com>
+CC: <sboyd@kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-clk@vger.kernel.org>, Ryan Wanner <Ryan.Wanner@microchip.com>
+Subject: [PATCH v2 0/4] AT91 SAMA7 SoC Clock Adjustments
+Date: Tue, 25 Mar 2025 08:55:06 -0700
+Message-ID: <cover.1742916867.git.Ryan.Wanner@microchip.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 25 Mar 2025 16:56:20 +0100
-Message-Id: <D8PGXIKGXXK9.244NSFST6C0YD@bootlin.com>
-Subject: Re: [PATCH v5 10/11] input: misc: Add support for MAX7360 rotary
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
- <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
- <20250318-mdb-max7360-support-v5-10-fb20baf97da0@bootlin.com>
- <Z9q0eaxhecN0kGKI@smile.fi.intel.com>
-In-Reply-To: <Z9q0eaxhecN0kGKI@smile.fi.intel.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieeftdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
- dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Wed Mar 19, 2025 at 1:11 PM CET, Andy Shevchenko wrote:
-> On Tue, Mar 18, 2025 at 05:26:26PM +0100, Mathieu Dubois-Briand wrote:
-> > Add driver for Maxim Integrated MAX7360 rotary encoder controller,
-> > supporting a single rotary switch.
->
-> ...
->
-> > +static irqreturn_t max7360_rotary_irq(int irq, void *data)
-> > +{
-> > +	struct max7360_rotary *max7360_rotary =3D data;
-> > +	int val;
-> > +	int ret;
-> > +
-> > +	ret =3D regmap_read(max7360_rotary->regmap, MAX7360_REG_RTR_CNT, &val=
-);
-> > +	if (ret < 0) {
-> > +		dev_err(&max7360_rotary->input->dev,
-> > +			"Failed to read rotary counter\n");
-> > +		return IRQ_NONE;
-> > +	}
-> > +
-> > +	if (val =3D=3D 0) {
-> > +		dev_dbg(&max7360_rotary->input->dev,
-> > +			"Got a spurious interrupt\n");
-> > +
-> > +		return IRQ_NONE;
-> > +	}
-> > +
-> > +	input_report_rel(max7360_rotary->input, max7360_rotary->axis,
-> > +			 (int8_t)val);
->
-> This is strange:
-> 1) why casting to begin with?
-> 2) why to C type and not kernel (s8) type?
->
+From: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-I believe the cast is needed, as, while the value read with
-regmap_read() is stored in an int, the underlying value is indeed a
-signed 8 bits integer.
+This set has clock system adjustments for the AT91 clock system for
+sama7 SoC family.
 
-Without cast negative values will not be correct: -1 (0xFF) -> will be
-interpreted as 255 (0x000000FF).
+The first is to adjust the slow clock driver to account for the updated
+DT node-naming for clocks and xtals and ensuring the driver is still
+backwards compatible.
 
-Ok for s8.
+The second and third are adding a missing clk_hw struct that are not added into
+parent_data struct causing a incorrect parent for main_osc for both
+sama7d65 and sama7g54 SoCs.
 
-Thanks for your review
-Mathieu
+The last patch updates the device tree phandle formatting for the
+sama7g54 SoC.
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Changes v1 -> v2:
+- Add clk_hw struct to parent_data adjustment for the sama7g5.c driver.
+- Add correction to sama7g54 dtsi main xtal phandles.
+
+Ryan Wanner (4):
+  clk: at91: sckc: Fix parent_data struct for slow osc
+  clk: at91: sama7d65: Add missing clk_hw to parent_data
+  clk: at91: sama7g5: Add missing clk_hw to parent_data
+  ARM: dts: microchip: sama7g5: Adjust clock xtal phandle
+
+ arch/arm/boot/dts/microchip/at91-sama7g5ek.dts | 18 ++++++++----------
+ arch/arm/boot/dts/microchip/sama7g5.dtsi       |  4 ++--
+ drivers/clk/at91/sama7d65.c                    |  1 +
+ drivers/clk/at91/sama7g5.c                     |  1 +
+ drivers/clk/at91/sckc.c                        | 12 ++++++------
+ 5 files changed, 18 insertions(+), 18 deletions(-)
+
+-- 
+2.43.0
 
