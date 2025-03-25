@@ -1,88 +1,102 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD2B257427;
-	Tue, 25 Mar 2025 11:08:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7EF33EC
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 11:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742900908; cv=none; b=A8TTa/F4QwApaOtryimF8SgyGrRhynb4RwplDtzcuck1Y3BuDFGH0jdmoWvhDvtD0PfOH0WgNTKpJ2yw9+6iVXNYoqxNMyk8cwWELx8DR6fQHlNaLDqxfUyoTLNMi0Bxplt4AKHWlAo08L857pxnD9wV6TLJieYsLTgLA8ySCTw=
+	t=1742900962; cv=none; b=kfvOw20osMKK148A1lHRCuV8qGkjFZ6aY1GmQOekYmanKTncfaUU3P46mcUSCcp+zUsxHWui6efy7HRy0bcpb6pt5LCP9wsyJCtQLRIY70t6lX6EWYJjuKB0raECpR0T7PWZGMee42g0R9SvIZs30eqpGMAFez8IGtMDW3KQDuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742900908; c=relaxed/simple;
-	bh=Fp3OuqKIGI87B+2qLAxVYAj1U/8NXpcexesT2kFFqoc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Byhghtxa2MPfgg7XhvVBrpQfO1zc0t89zAc0MI2PShY7CjBtJVKEowMvatRzYED7r27cxTdzmoLKXAR6j+zLEIHjXfisAuGzVP4WZeTF72yGwgef/03fIsR0i/FSNmADZgpj6x0EA6sw8dVxiTD32tpkhDLGt5kEkyC2k/5mudY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Tg7vjrNQ; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1742900962; c=relaxed/simple;
+	bh=CobmH/0tT3JWCF0SNaF4cBzmKPSqoD1qNh/T1HNEiOM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V2CGb9w9eKCWFMA2HbxnI3I6N+rn3IOohe7lZ68awajoXgDqnMZLdqLRp6nVHR1JH4CoTQM+G1ru0kt2irofwYEYnKbT6Zs9FH15SBtx6vL2ZRC9l8sJAOxbTAZK/VXuG0v/hwvdaZViQ3uuuFqg1ZctY2ry9zl8NkamnHcWeCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+2sfBMf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Tg7vjrNQ"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742900904;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=cQwFKVuOUJVkhVIojgcrzkha3ElxfIW69cI+JU/dNp4=;
-	b=Tg7vjrNQRJ6lXbi19BR8wkML3vpzTtgbaltdrGjQi7/ovYGEf+urVTbTtwe+L13zmxmk+n
-	Zatr/MZ7LHa8epIRed9+nfLrFVAcbmhwF6rblxhnPmTVTN9WD1xzZmuuaPa5w2RrLLqHOf
-	nKWFZ9HCZX4YiGWycUodp95zp0abBmo=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+2sfBMf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1DF8C4CEE4;
+	Tue, 25 Mar 2025 11:09:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742900962;
+	bh=CobmH/0tT3JWCF0SNaF4cBzmKPSqoD1qNh/T1HNEiOM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S+2sfBMfnmR8JC0dpPXvhhWNDDavpjxM4l26E2TvzZEqPvR3E9bNTc3jJhflVQGrt
+	 yxjctszY4G7Mt1u+nhj5FhbV/Ru4GUDCUBVp4XjByEoJq8DfDUaZMlBWBWFxfkzTUJ
+	 UoPcW8MJU2+Es2tAxSkOXkeAVgaN5iAJXQvQKli3rTYJllPZT6dVasV6TXmE+Pt6o6
+	 PMpHfCNY/cD4TwoP0KhEOERvp1Y5rIMVy2tK5Ubhm31WmbMs08BxjCTyE8jWr9GrxL
+	 HZb69P3XabAA/LKlPDNTH37VP8dKzo56fWtJ2nFrDLOk5Jft7qUzWtGxvj2nRs80ST
+	 99S73U2Hx+LMg==
+Date: Tue, 25 Mar 2025 12:09:19 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: devbrones <jonas.cronholm@protonmail.com>, 
+	maarten.lankhorst@linux.intel.com, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] mptcp: pm: Fix undefined behavior in mptcp_remove_anno_list_by_saddr()
-Date: Tue, 25 Mar 2025 12:06:39 +0100
-Message-ID: <20250325110639.49399-2-thorsten.blum@linux.dev>
+Subject: Re: [PATCH] drm/edid: Add non-desktop quirk for Playstation VR
+ Headsets with Product ID 0xB403
+Message-ID: <20250325-annoying-precise-uakari-6b6438@houat>
+References: <20250322122048.28677-1-jonas.cronholm@protonmail.com>
+ <875xjxa2rk.fsf@intel.com>
+ <20250325-inquisitive-ebony-mouse-bdf185@houat>
+ <87pli58jze.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="pz5nibo4epaozvmu"
+Content-Disposition: inline
+In-Reply-To: <87pli58jze.fsf@intel.com>
 
-Commit e4c28e3d5c090 ("mptcp: pm: move generic PM helpers to pm.c")
-removed a necessary if-check, leading to undefined behavior because
-the freed pointer is subsequently returned from the function.
 
-Reintroduce the if-check to fix this and add a local return variable to
-prevent further checkpatch warnings, which originally led to the removal
-of the if-check.
+--pz5nibo4epaozvmu
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] drm/edid: Add non-desktop quirk for Playstation VR
+ Headsets with Product ID 0xB403
+MIME-Version: 1.0
 
-Fixes: e4c28e3d5c090 ("mptcp: pm: move generic PM helpers to pm.c")
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- net/mptcp/pm.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+On Tue, Mar 25, 2025 at 12:47:49PM +0200, Jani Nikula wrote:
+> On Tue, 25 Mar 2025, Maxime Ripard <mripard@kernel.org> wrote:
+> > On Tue, Mar 25, 2025 at 11:16:47AM +0200, Jani Nikula wrote:
+> >> On Sat, 22 Mar 2025, devbrones <jonas.cronholm@protonmail.com> wrote:
+> >> > This fixes a bug where some Playstation VR Headsets would not be ass=
+igned
+> >> > the EDID_QUIRK_NON_DESKTOP quirk, causing them to be inaccessible by
+> >> > certain software under Wayland.
+> >>=20
+> >> Please file a bug over at [1], and attach the EDID on that bug, so we
+> >> have some clue what's going on.
+> >>
+> >> [1] https://gitlab.freedesktop.org/drm/misc/kernel/-/issues/new
+> >
+> > I'd rather have them in the commit log. Nobody uses gitlab issues for
+> > drm-misc, and those kind of issues are just lingering around and
+> > becoming stale.
+>=20
+> For this one, it's fine as long as we preserve the raw EDID for
+> posterity. Unless the EDID does indicate VR and we need to dig deeper,
+> that is.
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 18b19dbccbba..5a6d5e4897dd 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -151,10 +151,15 @@ bool mptcp_remove_anno_list_by_saddr(struct mptcp_sock *msk,
- 				     const struct mptcp_addr_info *addr)
- {
- 	struct mptcp_pm_add_entry *entry;
-+	bool ret = false;
- 
- 	entry = mptcp_pm_del_add_timer(msk, addr, false);
--	kfree(entry);
--	return entry;
-+	if (entry) {
-+		ret = true;
-+		kfree(entry);
-+	}
-+
-+	return ret;
- }
- 
- bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk)
+What I was trying to say is if "posterity" means "a forever open issue
+in drm-misc", then no, sorry, that doesn't work for me.
+
+Maxime
+
+--pz5nibo4epaozvmu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ+KO2gAKCRAnX84Zoj2+
+dsU5AYCGaizukwDkQEQG1RR3QR9GHy/MuKJeY6AUltgq5hCHsaHXBRbBlbIqybM+
+WZxBwqIBf3ZcvcQq+0aax2qhHJWpLBh64CC4/I06GVvaPqRNhkFT8Dk2BiUInaee
+okpbQcELeQ==
+=SVyr
+-----END PGP SIGNATURE-----
+
+--pz5nibo4epaozvmu--
