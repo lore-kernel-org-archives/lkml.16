@@ -1,134 +1,255 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7672AA95E
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 12:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 685A425A62E
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 12:30:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742905830; cv=none; b=NTyWjyMct4bxf4ieMreF8SNUatGSJii8ipriwfkUr3AQ2HCfTVjJX2qhZ+/1by64z4hTFidKHo2R2k34+omgOEdtdm0y2ww/fphSd4w5Kv0Un9ytsRqMmQ6N5rLNW8ngCvM2QDYjX1WN7GQff/P0Rd0hZ4ordnOcXO42clkqoco=
+	t=1742905834; cv=none; b=HNTwG/4DCaJ0XK3wGngmrSKvac169QiwNC3oG9HXJBCMV3s95JNtL3bpZV5G+tjEbPnYfU9pogCfqobSm6Tjy9pUY6jAv156m1FwM+ZXhEyy3gYh4u8wp96FEMwl5z2EVQSJDm5jR5ZlwexsGYlabO7KW7y1mz2LQTaLa3uEt18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742905830; c=relaxed/simple;
-	bh=/HrP3iXRFnTbX0yCFuBkoG+qDDgKxJzYpbb3ZXru4sk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=A9NonPI+6wyV+aRalbketBG7vunj0HCSTYRbe8rH3llqbJ2uiPNOnHBqwjcCdUAcCzBjb/Zwgn1kv5K+0dLm21ygR0lWnLnzSYvyWAW2r94ZXYMaW7OE9Kjjev7Q83pT33WdSjqh40YpFZWTwGdfH8xpI+rEwq7U4w8UDfBnVX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=P64RQMdU; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1742905834; c=relaxed/simple;
+	bh=2FQkQy8F48v0kwvvmmEiDNrD3XQsRtCKKA0DgUqJCPk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FET1KrI1pU8/r0UVFOLMOoRQk+6UqLW3dk+28L+1yLK98qA77F9iY4dgrXtk5UVmPsgbdt3y2RCqCcJQefBKrnXhAtx039T8SUXnziQosjin+5Mxz3s+0bIICdiP/ZOKCT4e5jdxCrprZYruaM8i5Qz2wMi8uqKiGBox3cNvctM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IAkcAUxi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="P64RQMdU"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52P5vXlH002343
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 12:30:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=3aowXoeM2vXkzmO5GPnuAiNRRKtfTBOA+fe
-	icqOTZfc=; b=P64RQMdUV1OdtXRckW8K7Ci7BVM4zx/+C/i3f73dxRdvVSaSlPk
-	IV9cACgUCqjZw9LwclonQoyFHSnc7iABcKWP+A6djG4Q9zgqb5CKc3A1v+Hu1Zvg
-	f1CWA5rt3hT4sspuG9VSj0ZQvP/Oh/HirCPrp7rCAJp4cWqIXAVK6QaBwGWcg3rl
-	Ipi93tWLwyDx2Vr/0yn0s0FuBY7r9/QpYhvYcJIQdS66tfLHxeGrQcNt0SgC2fn3
-	DA0jROHjLtgXasN4k1KT2lLmkTRSdraWN0GFeJraIlDIpI4W5QT5WfYmABJwLVkj
-	BM6mE8ybaJWmjOUewI5SVxe3pG65YKjzlGw==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45kmd4hfjc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 12:30:27 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2242ade807fso157563565ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 05:30:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742905826; x=1743510626;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3aowXoeM2vXkzmO5GPnuAiNRRKtfTBOA+feicqOTZfc=;
-        b=mA9xosRXqhWm1i1TlGcrUjKo6l9plokh5ppl7nGhzQrfAWfGBi6fEKLy9FyrKiQ3TC
-         GShwqKiF1pTyBXqBs2tOIL393jASRdKcLYUOlJyqUv4Z99Oc7tkguM6Uq7qfLzgV3vQp
-         F+qlbFXf/46yo0jKQ4qtStA5lF67CoB1uTnxNecnSMqbmHHz4cVwYc1tW/nHo8oeuQwC
-         EQDRg5gPoMUa9CDO3qiXMU50UWXbRCzznhl6/MJnpl3/EWTJboxnsYHMw+SEx1/RKSth
-         30HH03g8+5VFucGuPx0nyLV7HZpf3YgWmY7lyv8fpx1qHQNUMhk3PvBJaJWOr0ZwUiMM
-         iMFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXV3rEASotrrPlKmkRlSWF8ls9kXjiH7QwgU+JrsteGS25xtMvZ0s9z67/47oo0N/Vz/+hsWMNhI9LYNuQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVzgI54A9p0H6SMVZB46iMLzcEGw+tAyKeE7swiPqo9vgjbjsm
-	SlVkLlscVcprG/rCJ0+Uu4F+mCrn528t2SU9LIeo+G8+gbpe/jcLvBmESHQdeRH3354bywy9qTn
-	49HU736XBTfLKgeaZwiF4mfJLVQLDGd7pYxjV+Yy3fHMFnGepHr3OWNu1aCJSKAc=
-X-Gm-Gg: ASbGncvx4ciVI39iWsYG2jE+q5NxEoiC94TVlVNGg8sE2ZWFjSI1YznyWXcBzc63PEm
-	vX32fZ3gQg0f/KX0z992aRYatHyb4+3zZsMTltMjMujo1cORNkqOFOdNkqMfptvQCOJZXEgf8SY
-	UkJtdmO4ncU+26t9N+6DKw38slqVIdBsnoPgtolb4karLhem3npzN1HKJU84Ku3wETQSKBW5joB
-	q1oBw9FObN96z5iVXfYZewvTW5UQbnhNX7OActP1gmLPCNtdBlrVJzAn3cvBDBVI6ZF7S6UfO06
-	zaUT4K6k4T7/Cbk7Tv0oJ6q2Okj35qKtwZYwY0tGiz7O
-X-Received: by 2002:a05:6a00:b84:b0:736:5b85:a911 with SMTP id d2e1a72fcca58-7390598e30cmr32350951b3a.8.1742905826290;
-        Tue, 25 Mar 2025 05:30:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFUaP/3gTLNur6saCYHGHl+3SX9tZjQxxQncUBNKoOTE3PO3CfIu3oe05QxFaw8RHX2kA0xGA==
-X-Received: by 2002:a05:6a00:b84:b0:736:5b85:a911 with SMTP id d2e1a72fcca58-7390598e30cmr32350900b3a.8.1742905825712;
-        Tue, 25 Mar 2025 05:30:25 -0700 (PDT)
-Received: from hu-prashk-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7390618e4b6sm9987391b3a.180.2025.03.25.05.30.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 05:30:25 -0700 (PDT)
-From: Prashanth K <prashanth.k@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Prashanth K <prashanth.k@oss.qualcomm.com>
-Subject: [PATCH v1 0/5] Add snps,dis_u3_susphy_quirk for some QC targets
-Date: Tue, 25 Mar 2025 18:00:14 +0530
-Message-Id: <20250325123019.597976-1-prashanth.k@oss.qualcomm.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IAkcAUxi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32367C4CEE4;
+	Tue, 25 Mar 2025 12:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742905834;
+	bh=2FQkQy8F48v0kwvvmmEiDNrD3XQsRtCKKA0DgUqJCPk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IAkcAUxiwAVkDX91WD4WAbpZ/pjLxaCI73yzBO98n/JPN/C7f4Vm99zoNAvi0Q+TM
+	 hDa5bTbHNw22kGjCcY2lKzNL7U340KHn39gesTGo2IwDbpkjdjrHaslEGkVL/SF8u0
+	 KKEjiboCgRwkRPLcOHEdXrZ+VlRPztgx9aNrOCYMiTLeoK151wj5+RwBd9ENZMnNnh
+	 qdhNXLzl2hHK0pJccisCyirUdVJuWTNMQ1dgjhbTD8wh0N32jNAKJ7m4S5Cw7alkhn
+	 UX37HrRDY03nsWwvrPpMt3sz4Kp9NvY0UH1DClVfkNp0wUF5Ay98GVr2CaZbiE1qjG
+	 T8TI5FxdlQ5NA==
+Message-ID: <9ca80442-15c8-4f2d-ac11-8096b2cd83ad@kernel.org>
+Date: Tue, 25 Mar 2025 13:30:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: knI1kDhewlBni84z-2ecTocWR9ruYSPK
-X-Proofpoint-GUID: knI1kDhewlBni84z-2ecTocWR9ruYSPK
-X-Authority-Analysis: v=2.4 cv=QLZoRhLL c=1 sm=1 tr=0 ts=67e2a1e3 cx=c_pps a=JL+w9abYAAE89/QcEU+0QA==:117 a=fChuTYTh2wq5r3m49p7fHw==:17 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=1HEuz3GWIXJSLhVaKDMA:9 a=324X-CrmTo6CU4MGRt3R:22
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-25_05,2025-03-25_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 adultscore=0 malwarescore=0 phishscore=0
- mlxlogscore=675 mlxscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0
- bulkscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503250087
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] clocksource/drivers/nxp-timer: Add the System Timer
+ Module for the s32g platform
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org, Thomas Fossati <thomas.fossati@linaro.org>,
+ Larisa Grigore <Larisa.Grigore@nxp.com>,
+ Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ "moderated list:ARM/STM32 ARCHITECTURE"
+ <linux-stm32@st-md-mailman.stormreply.com>,
+ "moderated list:ARM/STM32 ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>, dl-S32 <S32@nxp.com>
+References: <20250324100008.346009-1-daniel.lezcano@linaro.org>
+ <20250324100008.346009-2-daniel.lezcano@linaro.org>
+ <bb7e4740-9608-4534-9c19-3ac066e2aa8f@kernel.org>
+ <1bf2d9ad-325e-4b1d-8440-ddbc90eabc67@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <1bf2d9ad-325e-4b1d-8440-ddbc90eabc67@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-During device mode initialization on certain QC targets, before the
-runstop bit is set, sometimes it's observed that the GEVNTADR{LO/HI}
-register write fails. As a result, GEVTADDR registers are still 0x0.
-Upon setting runstop bit, DWC3 controller attempts to write the new
-events to address 0x0, causing an SMMU fault and system crash. More
-info about the crash at [1].
+On 25/03/2025 13:23, Daniel Lezcano wrote:
+> 
+> [Added s32@ list which I miss from the initial series]
+> 
+> On 25/03/2025 08:30, Krzysztof Kozlowski wrote:
+>> On 24/03/2025 11:00, Daniel Lezcano wrote:
+>>> +
+>>> +static int __init nxp_stm_clocksource_init(struct device *dev, const char *name,
+>>> +					   void __iomem *base, struct clk *clk)
+>>> +{
+>>> +	struct stm_timer *stm_timer;
+>>> +	int ret;
+>>> +
+>>> +	stm_timer = devm_kzalloc(dev, sizeof(*stm_timer), GFP_KERNEL);
+>>> +	if (!stm_timer)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	stm_timer->base = base;
+>>> +	stm_timer->rate = clk_get_rate(clk);
+>>> +
+>>> +	stm_timer->scs.cs.name = name;
+>>
+>> You are aware that all node names will have exactly the same name? All
+>> of them will be called "timer"?
+> 
+>  From the caller const char *name = of_node_full_name(np);
 
-This was initially observed on SM8450 and later reported on few
-other targets as well. As suggested by Qualcomm HW team, clearing
-the GUSB3PIPECTL.SUSPHY bit resolves the issue by preventing register
-write failures. Address this by setting the snps,dis_u3_susphy_quirk
-to keep the GUSB3PIPECTL.SUSPHY bit cleared. This change was tested
-on multiple targets (SM8350, SM8450 QCS615 etc.) for over an year
-and hasn't exhibited any side effects.
+Ah, right, it's the full name.
 
-[1]: https://lore.kernel.org/all/fa94cbc9-e637-ba9b-8ec8-67c6955eca98@quicinc.com/
+> 
+> The names are:
+> 
+> "clocksource: Switched to clocksource stm@4011c000"
+> 
+> Or:
+> 
+>   17:      24150          0          0          0    GICv3  57 Level 
+> stm@40120000
 
-Prashanth K (3):
-  arm64: dts: qcom: sm8150: Add snps,dis_u3_susphy_quirk
-  arm64: dts: qcom: sm8350: Add snps,dis_u3_susphy_quirk
-  arm64: dts: qcom: sm8450: Add snps,dis_u3_susphy_quirk
+This all will be timer@, but anyway I get your point.
 
-Pratham Pratap (2):
-  arm64: dts: qcom: qcs615: Add snps,dis_u3_susphy_quirk
-  arm64: dts: qcom: qdu1000: Add snps,dis_u3_susphy_quirk
+>   18:          0      22680          0          0    GICv3  58 Level 
+> stm@40124000
+>   19:          0          0      24110          0    GICv3  59 Level 
+> stm@40128000
+>   20:          0          0          0      21164    GICv3  60 Level 
+> stm@4021c000
+> 
+> And:
+> 
+> cat /sys/devices/system/clocksource/clocksource0/current_clocksource
+> stm@4011c000
+> 
+> cat /sys/devices/system/clockevents/clockevent*/current_device
+> stm@40120000
+> stm@40124000
+> stm@40128000
+> stm@4021c000
 
- arch/arm64/boot/dts/qcom/qcs615.dtsi  | 2 ++
- arch/arm64/boot/dts/qcom/qdu1000.dtsi | 1 +
- arch/arm64/boot/dts/qcom/sm8150.dtsi  | 2 ++
- arch/arm64/boot/dts/qcom/sm8350.dtsi  | 2 ++
- arch/arm64/boot/dts/qcom/sm8450.dtsi  | 1 +
- 5 files changed, 8 insertions(+)
+Ack
 
--- 
-2.25.1
+> 
+> [ ... ]
+> 
+>>> +
+>>> +static int __init nxp_stm_timer_probe(struct platform_device *pdev)
+>>> +{
+>>> +	struct device *dev = &pdev->dev;
+>>> +	struct device_node *np = dev->of_node;
+>>> +	struct stm_instances *stm_instances;
+>>> +	const char *name = of_node_full_name(np);
+>>> +	void __iomem *base;
+>>> +	int irq, ret;
+>>> +	struct clk *clk;
+>>> +
+>>> +	stm_instances = (typeof(stm_instances))of_device_get_match_data(dev);
+>>
+>> No, you *cannot* drop the const. It's there on purpose. Match data
+>> should be const because it defines per variant differences. That's why
+>> the prototype of of_device_get_match_data() has such return type.
+>> You just want some global singleton, not match data.
+>>
+>>> +	if (!stm_instances) {
+>>> +		dev_err(dev, "No STM instances associated with a cpu");
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	base = devm_of_iomap(dev, np, 0, NULL);
+>>> +	if (IS_ERR(base)) {
+>>> +		dev_err(dev, "Failed to iomap %pOFn\n", np);
+>>
+>> You need to clean up the downstream code to match upstream. All of these
+>> should be return dev_err_probe().
+> 
+> Oh right, thanks for the reminder
+> 
+>>> +		return PTR_ERR(base);
+>>> +	}
+>>> +
+>>> +	irq = irq_of_parse_and_map(np, 0);
+>>> +	if (irq <= 0) {
+>>> +		dev_err(dev, "Failed to parse and map IRQ: %d\n", irq);
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	clk = devm_clk_get(dev, NULL);
+>>> +	if (IS_ERR(clk)) {
+>>> +		dev_err(dev, "Clock not found\n");
+>>
+>> And this is clearly incorrect - spamming logs. Syntax is:
+>> return dev_err_probe
+>>
+>>> +		return PTR_ERR(clk);
+>>> +	}
+>>> +
+>>> +	ret = clk_prepare_enable(clk);
+>>
+>> Drop, devm_clk_get_enabled.
+>>
+>>> +	if (ret) {
+>>> +		dev_err(dev, "Failed to enable STM timer clock: %d\n", ret);
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	if (!stm_instances->clocksource && (stm_instances->features & STM_CLKSRC)) {
+>>> +
+>>> +		/*
+>>> +		 * First probed STM will be a clocksource
+>>> +		 */
+>>> +		ret = nxp_stm_clocksource_init(dev, name, base, clk);
+>>> +		if (ret)
+>>> +			return ret;
+>>> +		stm_instances->clocksource++;
+>>
+>> That's racy. Devices can be brought async, ideally. This should be
+>> rather idr or probably entire structure protected with a mutex.
+> 
+> Mmh, interesting. I never had to think about this problem before
+> 
+> Do you know at what moment the probing is parallelized ?
 
+You don't have PROBE_PREFER_ASYNCHRONOUS, so currently this will be
+still sync, but I don't think we want it to be that way forever. I think
+new drivers should not rely on implicit sync, because converting it
+later to async will be difficult. It's easier to design it now or even
+choose async explicitly (after testing).
+
+BTW, PREEMPT_RT and all fast-boot-use-cases would be only happier with
+probe being async.
+
+
+Best regards,
+Krzysztof
