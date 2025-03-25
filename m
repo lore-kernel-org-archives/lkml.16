@@ -1,146 +1,258 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DF825FA12;
-	Tue, 25 Mar 2025 12:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5034825F98B
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 12:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742905408; cv=none; b=uQsMZo0Bm8ndLdF2ik0NN25hoIqPdVMrr1p9qlVt0BX0cEHeSlIJ4LDJj5tGDdoL4HyPY7gz/Ul87E8dZAgYgcQlSdnrLmNLp5GpUeB0jJEIrQWoctC31BERqXfqU+OMGlD63TmgdUs7zgl4Cqz+2e1KBgN73lmJXt0xxXbX2AY=
+	t=1742905408; cv=none; b=YQ7Q8hFDJYwSCW9vbQa7jA9sU67gwX2LpY7TseWEnHrgw4ZWSJLj+AReg9UooUFsWEqXQC/h3eMKz23KfgFzhf8HNn085Ul1k1qJ/GeJ4WLVa3mAd+ujBsL0CmaeXHTYCJadEbftpYya7wsA+C//s5ZRJu77t4pYjwtGq4F7sTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742905408; c=relaxed/simple;
-	bh=pIv4vnuS3dsIZ+vCl3ehqADgm2CZ2tBy3QR8swaXSZQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BUASAtCzVyNhBZULnImSGkXqPIxyxj1lDMAMqhhC71sKeAIxtKqgdlCAuW+J5JyhEEM1WMzQcPpFt8KZPer+UkaUp67uT+dfAhFy7fxKHS4iEDyKq4c1h7rx8qKXcmuQow4Bug8JW1HhMmy3XoepWUgIdcRoFDBsyjLpxIu3FOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ecDCGr6O; arc=none smtp.client-ip=10.30.226.201
+	bh=8q3d5xPwjiMNlEhK1ZkFhNcMkgP7L+QcL0KZwaCRenY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u9iicuGWslbiKTFOW0jhNtBjLwpmPiI8KtwRQIgLmS0gt7J4/8zf13MyKRR+lEWibK8XJ6adjxSwfzHURPEZE4/yQxjUwHHOuwJuZDIyODa1KgsKeJjW3Ae6FcFsYh/Zh2RL6mGTODxVWxuTA5vWYhUbfUdgt2UTLAQTEgSultA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u/HHRMv/; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ecDCGr6O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2976FC4CEE4;
-	Tue, 25 Mar 2025 12:23:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742905408;
-	bh=pIv4vnuS3dsIZ+vCl3ehqADgm2CZ2tBy3QR8swaXSZQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ecDCGr6OLJrXP13nyG/CgfeqC9ouA1qT3tlj+OsrVH1NtYD+Twp5WMbEHjMMkk81f
-	 stvP5ulWY1CYT8IOPOz08uY1HZBIlRPl1RvD/lfIzSGNe84mV4QvJl7p4JgmuvzAGK
-	 4RQVcdL24R3V34bLEfSycUxh++RgrXULYrYbovXoNTKWlQFJodYvno3cZge1QELjR8
-	 9C6TOI1VyQMTYJ6+SrsJ+n3smhuFVy+uvJ4yY+gtiJBw2C4LdtFBWY4B9hpCJDn6Wt
-	 XZ5TT6fYnWqqxrxfJ2ivZTzD3naWTrT9gp922T0ATA8xVyN89LV9zmP9RucwuPViGB
-	 6t4JQnchHEBxw==
-From: guoren@kernel.org
-To: arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	torvalds@linux-foundation.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	anup@brainfault.org,
-	atishp@atishpatra.org,
-	oleg@redhat.com,
-	kees@kernel.org,
-	tglx@linutronix.de,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	brauner@kernel.org,
-	akpm@linux-foundation.org,
-	rostedt@goodmis.org,
-	edumazet@google.com,
-	unicorn_wang@outlook.com,
-	inochiama@outlook.com,
-	gaohan@iscas.ac.cn,
-	shihua@iscas.ac.cn,
-	jiawei@iscas.ac.cn,
-	wuwei2016@iscas.ac.cn,
-	drew@pdp7.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com,
-	ctsai390@andestech.com,
-	wefu@redhat.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	josef@toxicpanda.com,
-	dsterba@suse.com,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	boqun.feng@gmail.com,
-	guoren@kernel.org,
-	xiao.w.wang@intel.com,
-	qingfang.deng@siflower.com.cn,
-	leobras@redhat.com,
-	jszhang@kernel.org,
-	conor.dooley@microchip.com,
-	samuel.holland@sifive.com,
-	yongxuan.wang@sifive.com,
-	luxu.kernel@bytedance.com,
-	david@redhat.com,
-	ruanjinjie@huawei.com,
-	cuiyunhui@bytedance.com,
-	wangkefeng.wang@huawei.com,
-	qiaozhe@iscas.ac.cn
-Cc: ardb@kernel.org,
-	ast@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-crypto@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	maple-tree@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-atm-general@lists.sourceforge.net,
-	linux-btrfs@vger.kernel.org,
-	netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org,
-	linux-nfs@vger.kernel.org,
-	linux-sctp@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-media@vger.kernel.org
-Subject: [RFC PATCH V3 28/43] rv64ilp32_abi: iov_iter: Resize kvec to match iov_iter's size
-Date: Tue, 25 Mar 2025 08:16:09 -0400
-Message-Id: <20250325121624.523258-29-guoren@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20250325121624.523258-1-guoren@kernel.org>
-References: <20250325121624.523258-1-guoren@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u/HHRMv/"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso34622815e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 05:23:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742905404; x=1743510204; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gnl5RH7POTVxhZTqrexGViAgN1F/XxGfRRowwJehUVo=;
+        b=u/HHRMv/9hJ8Nasf6OIXnr5r07wea0jqB7S4dXrxnfSxOqKk7c/GZC/NE4YCRdbg7s
+         c5XRDXoPx4iI+S3e8rc2EM8QmFnx7J0w0eL7cTKPsmAuhvhH/ZdK/8rCGNk0bL5HdPSB
+         Mb0QDAc5V8kJsTO4ekiRwOJjKmDRLO5QHFfYSE80RSRX65ot/tMNX9nTbEtSL49LMgEt
+         Q+RqcZcKUsoGKd/+sSJbN2aqWrPOXbK2Uf7fSocuzsdVnvgMQW+n593hfbGjWGIb4kre
+         Zvlossu1tPggnozWm14GSOA+qaGtgipBjxAIB/FiiCAKdWpvr/vBX2ZN9EsAfhIBRD7Z
+         8PHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742905404; x=1743510204;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gnl5RH7POTVxhZTqrexGViAgN1F/XxGfRRowwJehUVo=;
+        b=DZtsJlhGjaZSWPMYBmGjGnXzo7B/G78WMQFMGQgBu5qNFgSW+Z3p0woPgutzuixpO7
+         VzTm5/HKpv9hqYUaPQyAeaJkaTlbAbWXcLy8xXMAXfapG9nvSSX1Co6lKdtaiofQIe/b
+         6TUSMlzSRmcNX25lHEYXFPJQQ9ZffM6IJyylWqUAUMc6TxfCQChQhvNnGV/rBiDqNyYV
+         hw4y/ZUMk1uwxhTQz1mMnGmve+VTWKRsamdAva8AVIIo0imh0Fwx4RlhVdN6ZQEWt1sJ
+         uzV4/zhxW3Nc+fNp1NBk5+SxGFykG84IqA6+EM1Z+Vb78lzkeKpXrtoY84V9ozEISx2/
+         ZhBQ==
+X-Gm-Message-State: AOJu0YxTcEy7aXQ0EnIaV0DqQw2Wnlj5Tv4J7dVdF6twtFp1QWlPwdx4
+	slXiS999JaJgW0Hmoi1YVFrlXMhjZQZzEgh6i0ZweCAMBKFwfcZk0Jpqg3GswR0=
+X-Gm-Gg: ASbGncv6QFG6UTEuCTtZG4DUFmIm7VJmLRZQSR/dwLd3fxE+8K0RhhnlfmaBvDmLMLl
+	e+J57R85Q2Bi0Z4zJkHeUvxOaiywrh7hXNx3cya2tFET5LodI+4K+ppmY+ZRx01bwoN8bZKQ44R
+	ppuG+mTDwWJz5jsW9NqCsiAuoxsOlisjDrwix41w/5MLvgcc6yvqeRFemYKlWcjb5OxI9gDTpeY
+	iomuqK4pQ3H9d8qLeJglI6ZU7Ikp+A+N3cVFipYx4vSFZcdJnQYUNmdiPUyJxugwYrvWfrhEr70
+	uxJLqk2FDUJO4ltyfhb7UieyaiIsckVK1hQQg+mXHz1BXfbnXtK9yxroo9cblWaa1vJnUoFirNM
+	tbMdmG74r
+X-Google-Smtp-Source: AGHT+IE6bRcBJovGsSP7syxDYUzmQ6H73XOh9NrMfUBBqcvJmW/fILYdlvhCAYwBYc/zAFfQY02Mbg==
+X-Received: by 2002:a05:600c:a00b:b0:439:9434:4f3b with SMTP id 5b1f17b1804b1-43d503056cemr148450025e9.8.1742905404410;
+        Tue, 25 Mar 2025 05:23:24 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43d43f43e2asm204517715e9.11.2025.03.25.05.23.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Mar 2025 05:23:24 -0700 (PDT)
+Message-ID: <1bf2d9ad-325e-4b1d-8440-ddbc90eabc67@linaro.org>
+Date: Tue, 25 Mar 2025 13:23:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] clocksource/drivers/nxp-timer: Add the System Timer
+ Module for the s32g platform
+To: Krzysztof Kozlowski <krzk@kernel.org>, tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org, Thomas Fossati <thomas.fossati@linaro.org>,
+ Larisa Grigore <Larisa.Grigore@nxp.com>,
+ Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ "moderated list:ARM/STM32 ARCHITECTURE"
+ <linux-stm32@st-md-mailman.stormreply.com>,
+ "moderated list:ARM/STM32 ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>, dl-S32 <S32@nxp.com>
+References: <20250324100008.346009-1-daniel.lezcano@linaro.org>
+ <20250324100008.346009-2-daniel.lezcano@linaro.org>
+ <bb7e4740-9608-4534-9c19-3ac066e2aa8f@kernel.org>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <bb7e4740-9608-4534-9c19-3ac066e2aa8f@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: "Guo Ren (Alibaba DAMO Academy)" <guoren@kernel.org>
 
-As drivers/vhost/vringh.c uses BUILD_BUG_ON(sizeof(struct iovec)
-!= sizeof(struct kvec)), make them the same.
+[Added s32@ list which I miss from the initial series]
 
-Signed-off-by: Guo Ren (Alibaba DAMO Academy) <guoren@kernel.org>
----
- include/linux/uio.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+On 25/03/2025 08:30, Krzysztof Kozlowski wrote:
+> On 24/03/2025 11:00, Daniel Lezcano wrote:
+>> +
+>> +static int __init nxp_stm_clocksource_init(struct device *dev, const char *name,
+>> +					   void __iomem *base, struct clk *clk)
+>> +{
+>> +	struct stm_timer *stm_timer;
+>> +	int ret;
+>> +
+>> +	stm_timer = devm_kzalloc(dev, sizeof(*stm_timer), GFP_KERNEL);
+>> +	if (!stm_timer)
+>> +		return -ENOMEM;
+>> +
+>> +	stm_timer->base = base;
+>> +	stm_timer->rate = clk_get_rate(clk);
+>> +
+>> +	stm_timer->scs.cs.name = name;
+> 
+> You are aware that all node names will have exactly the same name? All
+> of them will be called "timer"?
 
-diff --git a/include/linux/uio.h b/include/linux/uio.h
-index 8ada84e85447..0e1ca023374c 100644
---- a/include/linux/uio.h
-+++ b/include/linux/uio.h
-@@ -17,7 +17,13 @@ typedef unsigned int __bitwise iov_iter_extraction_t;
- 
- struct kvec {
- 	void *iov_base; /* and that should *never* hold a userland pointer */
-+#if defined(CONFIG_64BIT) && (BITS_PER_LONG == 32)
-+	u32  __pad1;
-+#endif
- 	size_t iov_len;
-+#if defined(CONFIG_64BIT) && (BITS_PER_LONG == 32)
-+	u32  __pad2;
-+#endif
- };
- 
- enum iter_type {
+ From the caller const char *name = of_node_full_name(np);
+
+The names are:
+
+"clocksource: Switched to clocksource stm@4011c000"
+
+Or:
+
+  17:      24150          0          0          0    GICv3  57 Level 
+stm@40120000
+  18:          0      22680          0          0    GICv3  58 Level 
+stm@40124000
+  19:          0          0      24110          0    GICv3  59 Level 
+stm@40128000
+  20:          0          0          0      21164    GICv3  60 Level 
+stm@4021c000
+
+And:
+
+cat /sys/devices/system/clocksource/clocksource0/current_clocksource
+stm@4011c000
+
+cat /sys/devices/system/clockevents/clockevent*/current_device
+stm@40120000
+stm@40124000
+stm@40128000
+stm@4021c000
+
+[ ... ]
+
+>> +
+>> +static int __init nxp_stm_timer_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct device_node *np = dev->of_node;
+>> +	struct stm_instances *stm_instances;
+>> +	const char *name = of_node_full_name(np);
+>> +	void __iomem *base;
+>> +	int irq, ret;
+>> +	struct clk *clk;
+>> +
+>> +	stm_instances = (typeof(stm_instances))of_device_get_match_data(dev);
+> 
+> No, you *cannot* drop the const. It's there on purpose. Match data
+> should be const because it defines per variant differences. That's why
+> the prototype of of_device_get_match_data() has such return type.
+> You just want some global singleton, not match data.
+> 
+>> +	if (!stm_instances) {
+>> +		dev_err(dev, "No STM instances associated with a cpu");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	base = devm_of_iomap(dev, np, 0, NULL);
+>> +	if (IS_ERR(base)) {
+>> +		dev_err(dev, "Failed to iomap %pOFn\n", np);
+> 
+> You need to clean up the downstream code to match upstream. All of these
+> should be return dev_err_probe().
+
+Oh right, thanks for the reminder
+
+>> +		return PTR_ERR(base);
+>> +	}
+>> +
+>> +	irq = irq_of_parse_and_map(np, 0);
+>> +	if (irq <= 0) {
+>> +		dev_err(dev, "Failed to parse and map IRQ: %d\n", irq);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	clk = devm_clk_get(dev, NULL);
+>> +	if (IS_ERR(clk)) {
+>> +		dev_err(dev, "Clock not found\n");
+> 
+> And this is clearly incorrect - spamming logs. Syntax is:
+> return dev_err_probe
+> 
+>> +		return PTR_ERR(clk);
+>> +	}
+>> +
+>> +	ret = clk_prepare_enable(clk);
+> 
+> Drop, devm_clk_get_enabled.
+> 
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to enable STM timer clock: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	if (!stm_instances->clocksource && (stm_instances->features & STM_CLKSRC)) {
+>> +
+>> +		/*
+>> +		 * First probed STM will be a clocksource
+>> +		 */
+>> +		ret = nxp_stm_clocksource_init(dev, name, base, clk);
+>> +		if (ret)
+>> +			return ret;
+>> +		stm_instances->clocksource++;
+> 
+> That's racy. Devices can be brought async, ideally. This should be
+> rather idr or probably entire structure protected with a mutex.
+
+Mmh, interesting. I never had to think about this problem before
+
+Do you know at what moment the probing is parallelized ?
+
+>> +static struct stm_instances s32g_stm_instances = { .features = STM_CLKSRC | STM_CLKEVT_PER_CPU };
+> 
+> Missing const. Or misplaced - all file-scope static variables are
+> declared at the top.
+> 
+>> +
+>> +static const struct of_device_id nxp_stm_of_match[] = {
+>> +	{ .compatible = "nxp,s32g2-stm", &s32g_stm_instances },
+>> +	{ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, nxp_stm_of_match);
+>> +
+>> +static struct platform_driver nxp_stm_probe = {
+>> +	.probe	= nxp_stm_timer_probe,
+>> +	.driver	= {
+>> +		.name = "nxp-stm",
+>> +		.of_match_table = of_match_ptr(nxp_stm_of_match),
+> 
+> Drop of_match_ptr, you have here warnings.
+> 
+>> +	},
+>> +};
+>> +module_platform_driver(nxp_stm_probe);
+>> +
+>> +MODULE_DESCRIPTION("NXP System Timer Module driver");
+>> +MODULE_LICENSE("GPL");
+
+Thanks for the review
+
+   -- Daniel
+
+
 -- 
-2.40.1
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
