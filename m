@@ -1,98 +1,63 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6AD4A0C
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 01:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5399F1891A9;
+	Tue, 25 Mar 2025 01:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742867871; cv=none; b=J6G3luCSrVEc3fBjDdhZjQawkiZavV3SkUT/eNRUVFcJzWDcplD+rQnYGpxVnrMUBZfQVYJw4u6OgZTo2p83ohjtrYenY3exHWrzAgjEH6koBIG0ck7A/LSmvUwFoSw/m4mmxT9K/68a4eMZAjOvDxXJdCiMwzl0yu+ZyihkRj8=
+	t=1742867878; cv=none; b=DAO4pTSUChhjKmeCqdeFq8oAlf0EDstzslpVXytTNjL2PwWoXGMR9dbmzZVXhamDGs4En9Fx0pLWKgc2qFEGWPObH1pqBIgusrBKZbwny0VipqaJqjWz4H4T9ikLLbr47G3hDPrh1OWkePUN9c3ukTaI3g7qJt7rom8E3C56OK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742867871; c=relaxed/simple;
-	bh=Ij/UC/V3EoUszJukWy9se9p2Z5SkuuZcxQy6mcDyK18=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ljM/G1ZreQWAFtL3cw+RHOdYTZ4/7ZtCBl5r1fRYM7drIx9/1+3F/LjTPJAcQXd3tX14uVR24KG3a5u46kZXXjhiQKKTvSzrzSLKq+yv6cgMHMFHjV6Aza8uaQSLoyP8K1SVPqsngywaWe8AR/M6jaYWhzFum2A/76keb9taawo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hrIAAEJd; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742867878; c=relaxed/simple;
+	bh=DmUNbLkBSA7ZvMjcnypyyYYW/0NgleKxl+kCIDqrTLU=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=cLzF9wB0gaqH9A/jSok3I4SUnvTk+WMBOZ0L9QCVH7tb7saX3ybTZ9H2FyFOYJ9rnl7VsJaWJlrky2IRwyIeHAdpobi5w2wsYX5HZZbmzd47mGMFzF87p1181n0/U3wnXJZDBaLaPTKDVIdBKzeATdAJHmqtD2SMHdP6PI+8ohY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ldKR/SPw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hrIAAEJd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742867868;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=HnkkWB/IJYXgybfVM3A/a6LLwZkE9IPLdJKeFGOk9uQ=;
-	b=hrIAAEJdyBZCFsae4VgJiha589cLD1slif899qihFVJwC/LPAby/AdHvBrg7fymghDJfcG
-	h90BQthCB+rzljSX6cR8+0Ty08nOV3SviqnM+tE1/sLTOXp/q+qLDMUX1IoAXmLzTmwpF+
-	dOhO1oI0+eQMwWg1BGAOuN4ZE0iwtgI=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-54-3i8avJ-0NuqAhShzKFiqwg-1; Mon,
- 24 Mar 2025 21:57:47 -0400
-X-MC-Unique: 3i8avJ-0NuqAhShzKFiqwg-1
-X-Mimecast-MFC-AGG-ID: 3i8avJ-0NuqAhShzKFiqwg_1742867865
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 20F03196D2CD;
-	Tue, 25 Mar 2025 01:57:45 +0000 (UTC)
-Received: from starship.lan (unknown [10.22.65.191])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 89B551800268;
-	Tue, 25 Mar 2025 01:57:42 +0000 (UTC)
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: kvm@vger.kernel.org
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	linux-kernel@vger.kernel.org,
-	Sean Christopherson <seanjc@google.com>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	James Houghton <jthoughton@google.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	linux-kselftest@vger.kernel.org,
-	Anup Patel <anup@brainfault.org>
-Subject: [PATCH v2 0/2] KVM: selftests: access_tracking_perf_test: skip the test when NUMA balancing is active
-Date: Mon, 24 Mar 2025 21:57:39 -0400
-Message-Id: <20250325015741.2478906-1-mlevitsk@redhat.com>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ldKR/SPw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35391C4CEE9;
+	Tue, 25 Mar 2025 01:57:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742867878;
+	bh=DmUNbLkBSA7ZvMjcnypyyYYW/0NgleKxl+kCIDqrTLU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=ldKR/SPwApMw1nTd/eFqH5xn1tc1CiskXZf4rO8WvcZYn0QRTaJnwPK51DmxygQwo
+	 uP7rEmxxLXxYpLH+z/Hi7Ci7MyQ5Vg/wA7izXznN7gvCFHnb716vFmjqlCuaK5ZyNs
+	 wUdGaBlH4idJpambtsLbXhSkq8xGFATPeJlBz96KMAJw3FUuDuZMqsvEq62Fk5VWSv
+	 pGgvUvZNu2GWtqUPdRXJrgNzzTe/2ixZa92wKlumpTcxzXVAc2kg+pBEfl+0F7+wiN
+	 FyIN+MeXtzaWI1QOZi/tS+T5F5KhITm1xIx2B4iRlv1w6nBvzEK7j6sTnYMvDU4tUJ
+	 PSX0+VupKRUQg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE031380DBCD;
+	Tue, 25 Mar 2025 01:58:35 +0000 (UTC)
+Subject: Re: [GIT PULL] Documentation for 6.15
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <87tt7mjhqj.fsf@trenco.lwn.net>
+References: <87tt7mjhqj.fsf@trenco.lwn.net>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <87tt7mjhqj.fsf@trenco.lwn.net>
+X-PR-Tracked-Remote: git://git.lwn.net/linux.git tags/docs-6.15
+X-PR-Tracked-Commit-Id: 323cc36ef68bc2c8ca0bd5f528736432afc1a36a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f81c2b81508c4f479f2cf1ac0dbb138927dc6188
+Message-Id: <174286791413.53720.9062851156408080962.pr-tracker-bot@kernel.org>
+Date: Tue, 25 Mar 2025 01:58:34 +0000
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Linus Torvalds <torvalds@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Due to several issues which are unlikely to be fixed in the near future,=0D
-the access_tracking_perf_test sanity check for how many pages are still cle=
-an=0D
-after an iteration is not reliable when NUMA balancing is active.=0D
-=0D
-This patch series refactors this test to skip this check by default automat=
-ically.=0D
-=0D
-V2: adopted Sean's suggestions.=0D
-=0D
-Best regards,=0D
-	Maxim Levitsky=0D
-=0D
-Maxim Levitsky (1):=0D
-  KVM: selftests: access_tracking_perf_test: add option to skip the=0D
-    sanity check=0D
-=0D
-Sean Christopherson (1):=0D
-  KVM: selftests: Extract guts of THP accessor to standalone sysfs=0D
-    helpers=0D
-=0D
- .../selftests/kvm/access_tracking_perf_test.c | 33 +++++++++++++--=0D
- .../testing/selftests/kvm/include/test_util.h |  1 +=0D
- tools/testing/selftests/kvm/lib/test_util.c   | 42 ++++++++++++++-----=0D
- 3 files changed, 61 insertions(+), 15 deletions(-)=0D
-=0D
--- =0D
-2.26.3=0D
-=0D
+The pull request you sent on Fri, 21 Mar 2025 13:39:32 -0600:
 
+> git://git.lwn.net/linux.git tags/docs-6.15
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f81c2b81508c4f479f2cf1ac0dbb138927dc6188
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
