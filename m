@@ -1,368 +1,159 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50DB196C7B;
-	Tue, 25 Mar 2025 21:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D80B1DD0F6
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 21:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742939332; cv=none; b=pXtuiYgYp71zlRuyL7DHoNLhX4u7vBAVST/otSxwqrEVsUmGmWxwsJnsnBfilDO6TKXv1dNGTZsR+Yp77RvtHQGes6Ms/AwNcbiAkO3qKyyyOyQGHG04cMGwThYkD0ZkjtSD+6R/knmwTK0PK/MM4tZp1cDf+Ca75E0N7FQZrpg=
+	t=1742939358; cv=none; b=K9KskgfuSVdQ9mYrETQSUiq0PanHCdNJZ0GYQJN15s0RtoBTHPwfDUrIR8fj/RG8WEVigFCxnlhOs/53fSHuYStLEK1R8U52aS9k9VlqR+vPpSw1DXJll2GiFtdUTCPs1w4N1zWGII0eHHr1jfcbeFCvxnIV3m+tZTZ9xs6zt/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742939332; c=relaxed/simple;
-	bh=/0VFslasB3YnSp2tdURYYfGjOhDDS8Rlaxh+WD4gERg=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Txjq6+t1igSEKdCZYxdC8Rvxm2JYjcS7GEXQdkmW6XH5YOYfIBA6DAR7zjE7o/qguCTeXH/uTntD4/cHq2cunaxRG0/pDKMIt7BfY/jjChSr7uI3z7tUKJtOJGpEMYLI1d08rjHkE8uHlsa+s29J517o30Ih9ULtbhmi/N1ptKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=S/qVrLN+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8FzytFPU; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1742939358; c=relaxed/simple;
+	bh=nwPA9SIOejPkzpLh4ULI5UAZazEYdl1cPdB+6K4iWgA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dvxiJQtN/DyKH2Q87jOlNg+Dr0gpoh/iQcm9rllTw+XQfNmA3q/sDxf5FBxsVX7aLeyE8rI01049z+aCFIXnd30omuQ1bPxzn792UIuaBT6juDncsJlp13QmBDV9CO77LVqE3CNSpp8EjSv512dS27d9U/zpOQq8okuve4WSEmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=JIZDf1IB; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S/qVrLN+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8FzytFPU"
-Date: Tue, 25 Mar 2025 21:48:42 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742939327;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PozTjzZIHXCoE2XsH1fqAnijL42WT5+rQ4TjUP/om0I=;
-	b=S/qVrLN+cYqKGTefHY4cJ3MPHWGeab1Ste74O2SYEbcWrD88q6hJt1JlKg+v2kybfZMA7k
-	rcpQn/ojiFa/eDIrWjFR1ALMt5aXgokX3V08SYUUgewNZazrXzhuDD3OC6l/FkfZJlsukE
-	AVg8mhTFv/OTLsTg7PNiFo73Ae9TeDjVUFkkLomZd9c+iuoq7mXDRA+x0ZAJkBe8fhnonM
-	bMo4c0aQDlBkC1MeyQ0b2akC/1DGTKl5sXIDB2RmwCky0bOAdGDg9Y9TBwvW7DjuQOvbiB
-	Y9ETttg6Z6QoYInHa3CqPLbNLKWC6Bd/O+qGkOOL5dn5DVhy4ZMN6QE80IB2nw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742939327;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PozTjzZIHXCoE2XsH1fqAnijL42WT5+rQ4TjUP/om0I=;
-	b=8FzytFPUoWyIqTAN5XT17kffWUEUfM9gdf50W57fSP3FIWcF785CCoicX4BZcFVcYaRe/u
-	R7R4tXD5rBGk/7Dg==
-From: "tip-bot2 for David Hildenbrand" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/mm/pat: Fix VM_PAT handling when fork() fails
- in copy_page_range()
-Cc: xingwei lee <xrivendell7@gmail.com>, yuxin wang <wang1315768607@163.com>,
- Marius Fleischer <fleischermarius@gmail.com>,
- David Hildenbrand <david@redhat.com>, Ingo Molnar <mingo@kernel.org>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Rik van Riel <riel@surriel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250321112323.153741-1-david@redhat.com>
-References: <20250321112323.153741-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="JIZDf1IB"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3d59c8f0979so927795ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:49:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1742939356; x=1743544156; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3q3oNbCpD8Yr3ggdluYQ7Oxw70IpYfziH8ybf4Z46oM=;
+        b=JIZDf1IBK6HRknqS/sEe4rhtGMl/yx8f7Pzs+nD/xM0r/y+7YzzjqmRa58iaGCQiOR
+         yz7yDUaUw8qGsbNnJTtyrrmM+cRcKpq2GjdfDJTTTQFaGslA19DpP5iPjGLAkXtaVPxJ
+         ujJDo8nSE62ff4soKYBtrB6bnvQmjMhjAvmbzl6TUJYRo4awdJ7XPxVnqEPV6099zjIn
+         bCbZMx/hQpJObCxsFgdb4Js5mvGNG47DSi6v9553csCBN5NthIqktyDZsstHua04jnL6
+         4uJL61p3HfdGWlUTWVhs+onO9SOcMO8iSBgVj5gyEpuvflXUYvnuT8omussBVMaL28k7
+         12Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742939356; x=1743544156;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3q3oNbCpD8Yr3ggdluYQ7Oxw70IpYfziH8ybf4Z46oM=;
+        b=rg2NWjKsy5+OMO0UtWK+ZHae7AegTLHwM1aZpEy0Rqbk72anb9I3zb8B8gEB4PmrAq
+         +b0FuNqtTrJ/1tjKHXUKvMEaocPcEknuJ1mD4nQ4DbalxqSMabEHdow+m+nzrqOwcLbj
+         sOdVwVMdOxw8I8L3Z6u1gC01k1oahO8UWukclLyCEtBGoNQzsQXSE8we72CC/LLiMcQo
+         cFO5iKAzdaeHARtDycUDHKzTGqpHLaQ2I1+jMO+0IT2ILs3aBxaxqos1qmRATO690/Ts
+         4Im9IgRTj9nWrU6VZ6c6Xh+sl8wdFuBeE1cXWI/eb/mW2HxnktqaM8O0sGYNBFTGNxyi
+         NHxA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYUATVhKG9JXmceE31TxxbAsOYZPIDWtYhMZOQN1wyvUe+FKUBmLjweukkx4Nx6MvgTKcHCXb/Ydvu+fI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy79V8RSyVu9GIr4e+9XWpL/AMKqfoYWiY5G1gf7Qxke9KsOkiB
+	vx6IBCdyc3cZeOWj9L8Ge5GCnHrt0pg9EoopE9Ahw/bSaZebDHdRy3p+na65zEM=
+X-Gm-Gg: ASbGnctNhaMDdKp8yj38egvB1GYN99dmgJrWhFxiCo5RuN1lhGcYnfdQMF0LxvIhdEs
+	05P/UU6o6n+OELtgoapRVky2QMbQNOK75kiyR2N3QBP3k/dZuDisn0LphH1lIX2JzysA10a/g1o
+	JTcq7JY/+IaVOf3QPR/mpfQP1yQNBNuohitj+Vus2eNUO5ZyW/eNuaLj3FvxLRMaVMb3GxWkKnW
+	YXFlx/VjEqMm/2fBEC6CbNUqRXwh42Adz8FtDbwoFtEgMypGRlO+tFwM5XpYrGK0M+ZhANUg2vR
+	rx1sjUYF+I7bRTQZEZfT7H2oUVOA0ovYB6OZCTkF0g9TWxjLRGzhRugP6428MQ==
+X-Google-Smtp-Source: AGHT+IFj7uKpDfJR5Iim77+HbZSnDjrxpbs+tP0WU77QjYNPslcMwQz6BHnLAD6zLR0ygkvZ39o04g==
+X-Received: by 2002:a05:6e02:4401:20b0:3d1:4a69:e58f with SMTP id e9e14a558f8ab-3d5c20b2c25mr15007025ab.2.1742939356043;
+        Tue, 25 Mar 2025 14:49:16 -0700 (PDT)
+Received: from [100.64.0.1] ([170.85.6.166])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f2cbdcfeffsm2556607173.30.2025.03.25.14.49.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Mar 2025 14:49:15 -0700 (PDT)
+Message-ID: <a20d5849-770e-420d-b707-83a50c37810b@sifive.com>
+Date: Tue, 25 Mar 2025 16:49:14 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174293932297.14745.17814988946096623463.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 3/4] riscv: dts: Add EIC7700 pin controller node
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+ Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>,
+ Pritesh Patel <pritesh.patel@einfochips.com>,
+ Min Lin <linmin@eswincomputing.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, =?UTF-8?B?6bKB546J5p6X?=
+ <luyulin@eswincomputing.com>, =?UTF-8?B?5a6B5a6H?=
+ <ningyu@eswincomputing.com>, Lin Feng <fenglin@eswincomputing.com>
+References: <20250325141311.758787-1-emil.renner.berthing@canonical.com>
+ <20250325141311.758787-4-emil.renner.berthing@canonical.com>
+From: Samuel Holland <samuel.holland@sifive.com>
+Content-Language: en-US
+In-Reply-To: <20250325141311.758787-4-emil.renner.berthing@canonical.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/urgent branch of tip:
+On 2025-03-25 9:13 AM, Emil Renner Berthing wrote:
+> Add node for the pin controller on the ESWIN EIC7700 SoC and gpio-ranges
+> properties mapping GPIOs to pins.
+> 
+> Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+> ---
+>  arch/riscv/boot/dts/eswin/eic7700.dtsi | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/arch/riscv/boot/dts/eswin/eic7700.dtsi b/arch/riscv/boot/dts/eswin/eic7700.dtsi
+> index 9cef940f07e4..7226647919b7 100644
+> --- a/arch/riscv/boot/dts/eswin/eic7700.dtsi
+> +++ b/arch/riscv/boot/dts/eswin/eic7700.dtsi
+> @@ -312,6 +312,13 @@ porta: gpio-port@0 {
+>  					<324>, <325>, <326>, <327>, <328>, <329>, <330>,
+>  					<331>, <332>, <333>, <334>;
+>  				gpio-controller;
+> +				gpio-ranges = <&pinctrl  0 12  1>,
+> +					      <&pinctrl  1 14 12>,
+> +					      <&pinctrl 13  1  4>,
+> +					      <&pinctrl 17 32  1>,
+> +					      <&pinctrl 18 40  5>,
+> +					      <&pinctrl 23 51  7>,
+> +					      <&pinctrl 30 68  2>;
+>  				ngpios = <32>;
+>  				#gpio-cells = <2>;
+>  			};
+> @@ -320,6 +327,9 @@ portb: gpio-port@1 {
+>  				compatible = "snps,dw-apb-gpio-port";
+>  				reg = <1>;
+>  				gpio-controller;
+> +				gpio-ranges = <&pinctrl  0 70  3>,
+> +					      <&pinctrl  3 79  7>,
+> +					      <&pinctrl 10 89 22>;
+>  				ngpios = <32>;
+>  				#gpio-cells = <2>;
+>  			};
+> @@ -328,6 +338,7 @@ portc: gpio-port@2 {
+>  				compatible = "snps,dw-apb-gpio-port";
+>  				reg = <2>;
+>  				gpio-controller;
+> +				gpio-ranges = <&pinctrl 0 111 32>;
+>  				ngpios = <32>;
+>  				#gpio-cells = <2>;
+>  			};
+> @@ -336,9 +347,15 @@ portd: gpio-port@3 {
+>  				compatible = "snps,dw-apb-gpio-port";
+>  				reg = <3>;
+>  				gpio-controller;
+> +				gpio-ranges = <&pinctrl 0 143 16>;
+>  				ngpios = <16>;
+>  				#gpio-cells = <2>;
+>  			};
+>  		};
+> +
+> +		pinctrl: pinctrl@51600080 {
+> +			compatible = "eswin,eic7700-pinctrl";
+> +			reg = <0x0 0x51600080 0x0 0xff80>;
 
-Commit-ID:     dc84bc2aba85a1508f04a936f9f9a15f64ebfb31
-Gitweb:        https://git.kernel.org/tip/dc84bc2aba85a1508f04a936f9f9a15f64ebfb31
-Author:        David Hildenbrand <david@redhat.com>
-AuthorDate:    Fri, 21 Mar 2025 12:23:23 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 25 Mar 2025 22:35:14 +01:00
+Per the TRM, the MMIO range is 2M-128B large, so the size should be 0x1fff80.
+Other than that, the rest looks good (especially, the GPIO ranges match what I
+have), so:
 
-x86/mm/pat: Fix VM_PAT handling when fork() fails in copy_page_range()
+Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
 
-If track_pfn_copy() fails, we already added the dst VMA to the maple
-tree. As fork() fails, we'll cleanup the maple tree, and stumble over
-the dst VMA for which we neither performed any reservation nor copied
-any page tables.
+> +		};
+>  	};
+>  };
 
-Consequently untrack_pfn() will see VM_PAT and try obtaining the
-PAT information from the page table -- which fails because the page
-table was not copied.
-
-The easiest fix would be to simply clear the VM_PAT flag of the dst VMA
-if track_pfn_copy() fails. However, the whole thing is about "simply"
-clearing the VM_PAT flag is shaky as well: if we passed track_pfn_copy()
-and performed a reservation, but copying the page tables fails, we'll
-simply clear the VM_PAT flag, not properly undoing the reservation ...
-which is also wrong.
-
-So let's fix it properly: set the VM_PAT flag only if the reservation
-succeeded (leaving it clear initially), and undo the reservation if
-anything goes wrong while copying the page tables: clearing the VM_PAT
-flag after undoing the reservation.
-
-Note that any copied page table entries will get zapped when the VMA will
-get removed later, after copy_page_range() succeeded; as VM_PAT is not set
-then, we won't try cleaning VM_PAT up once more and untrack_pfn() will be
-happy. Note that leaving these page tables in place without a reservation
-is not a problem, as we are aborting fork(); this process will never run.
-
-A reproducer can trigger this usually at the first try:
-
-  https://gitlab.com/davidhildenbrand/scratchspace/-/raw/main/reproducers/pat_fork.c
-
-  WARNING: CPU: 26 PID: 11650 at arch/x86/mm/pat/memtype.c:983 get_pat_info+0xf6/0x110
-  Modules linked in: ...
-  CPU: 26 UID: 0 PID: 11650 Comm: repro3 Not tainted 6.12.0-rc5+ #92
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-2.fc40 04/01/2014
-  RIP: 0010:get_pat_info+0xf6/0x110
-  ...
-  Call Trace:
-   <TASK>
-   ...
-   untrack_pfn+0x52/0x110
-   unmap_single_vma+0xa6/0xe0
-   unmap_vmas+0x105/0x1f0
-   exit_mmap+0xf6/0x460
-   __mmput+0x4b/0x120
-   copy_process+0x1bf6/0x2aa0
-   kernel_clone+0xab/0x440
-   __do_sys_clone+0x66/0x90
-   do_syscall_64+0x95/0x180
-
-Likely this case was missed in:
-
-  d155df53f310 ("x86/mm/pat: clear VM_PAT if copy_p4d_range failed")
-
-... and instead of undoing the reservation we simply cleared the VM_PAT flag.
-
-Keep the documentation of these functions in include/linux/pgtable.h,
-one place is more than sufficient -- we should clean that up for the other
-functions like track_pfn_remap/untrack_pfn separately.
-
-Fixes: d155df53f310 ("x86/mm/pat: clear VM_PAT if copy_p4d_range failed")
-Fixes: 2ab640379a0a ("x86: PAT: hooks in generic vm code to help archs to track pfnmap regions - v3")
-Reported-by: xingwei lee <xrivendell7@gmail.com>
-Reported-by: yuxin wang <wang1315768607@163.com>
-Reported-by: Marius Fleischer <fleischermarius@gmail.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
-Link: https://lore.kernel.org/r/20250321112323.153741-1-david@redhat.com
-Closes: https://lore.kernel.org/lkml/CABOYnLx_dnqzpCW99G81DmOr+2UzdmZMk=T3uxwNxwz+R1RAwg@mail.gmail.com/
-Closes: https://lore.kernel.org/lkml/CAJg=8jwijTP5fre8woS4JVJQ8iUA6v+iNcsOgtj9Zfpc3obDOQ@mail.gmail.com/
----
- arch/x86/mm/pat/memtype.c | 52 ++++++++++++++++++++------------------
- include/linux/pgtable.h   | 28 +++++++++++++++-----
- kernel/fork.c             |  4 +++-
- mm/memory.c               | 11 ++------
- 4 files changed, 58 insertions(+), 37 deletions(-)
-
-diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
-index e40861c..72d8cbc 100644
---- a/arch/x86/mm/pat/memtype.c
-+++ b/arch/x86/mm/pat/memtype.c
-@@ -984,29 +984,42 @@ static int get_pat_info(struct vm_area_struct *vma, resource_size_t *paddr,
- 	return -EINVAL;
- }
- 
--/*
-- * track_pfn_copy is called when vma that is covering the pfnmap gets
-- * copied through copy_page_range().
-- *
-- * If the vma has a linear pfn mapping for the entire range, we get the prot
-- * from pte and reserve the entire vma range with single reserve_pfn_range call.
-- */
--int track_pfn_copy(struct vm_area_struct *vma)
-+int track_pfn_copy(struct vm_area_struct *dst_vma,
-+		struct vm_area_struct *src_vma, unsigned long *pfn)
- {
-+	const unsigned long vma_size = src_vma->vm_end - src_vma->vm_start;
- 	resource_size_t paddr;
--	unsigned long vma_size = vma->vm_end - vma->vm_start;
- 	pgprot_t pgprot;
-+	int rc;
- 
--	if (vma->vm_flags & VM_PAT) {
--		if (get_pat_info(vma, &paddr, &pgprot))
--			return -EINVAL;
--		/* reserve the whole chunk covered by vma. */
--		return reserve_pfn_range(paddr, vma_size, &pgprot, 1);
--	}
-+	if (!(src_vma->vm_flags & VM_PAT))
-+		return 0;
-+
-+	/*
-+	 * Duplicate the PAT information for the dst VMA based on the src
-+	 * VMA.
-+	 */
-+	if (get_pat_info(src_vma, &paddr, &pgprot))
-+		return -EINVAL;
-+	rc = reserve_pfn_range(paddr, vma_size, &pgprot, 1);
-+	if (rc)
-+		return rc;
- 
-+	/* Reservation for the destination VMA succeeded. */
-+	vm_flags_set(dst_vma, VM_PAT);
-+	*pfn = PHYS_PFN(paddr);
- 	return 0;
- }
- 
-+void untrack_pfn_copy(struct vm_area_struct *dst_vma, unsigned long pfn)
-+{
-+	untrack_pfn(dst_vma, pfn, dst_vma->vm_end - dst_vma->vm_start, true);
-+	/*
-+	 * Reservation was freed, any copied page tables will get cleaned
-+	 * up later, but without getting PAT involved again.
-+	 */
-+}
-+
- /*
-  * prot is passed in as a parameter for the new mapping. If the vma has
-  * a linear pfn mapping for the entire range, or no vma is provided,
-@@ -1095,15 +1108,6 @@ void untrack_pfn(struct vm_area_struct *vma, unsigned long pfn,
- 	}
- }
- 
--/*
-- * untrack_pfn_clear is called if the following situation fits:
-- *
-- * 1) while mremapping a pfnmap for a new region,  with the old vma after
-- * its pfnmap page table has been removed.  The new vma has a new pfnmap
-- * to the same pfn & cache type with VM_PAT set.
-- * 2) while duplicating vm area, the new vma fails to copy the pgtable from
-- * old vma.
-- */
- void untrack_pfn_clear(struct vm_area_struct *vma)
- {
- 	vm_flags_clear(vma, VM_PAT);
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index 94d267d..4c107e1 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -1508,15 +1508,26 @@ static inline void track_pfn_insert(struct vm_area_struct *vma, pgprot_t *prot,
- }
- 
- /*
-- * track_pfn_copy is called when vma that is covering the pfnmap gets
-- * copied through copy_page_range().
-+ * track_pfn_copy is called when a VM_PFNMAP VMA is about to get the page
-+ * tables copied during copy_page_range(). On success, stores the pfn to be
-+ * passed to untrack_pfn_copy().
-  */
--static inline int track_pfn_copy(struct vm_area_struct *vma)
-+static inline int track_pfn_copy(struct vm_area_struct *dst_vma,
-+		struct vm_area_struct *src_vma, unsigned long *pfn)
- {
- 	return 0;
- }
- 
- /*
-+ * untrack_pfn_copy is called when a VM_PFNMAP VMA failed to copy during
-+ * copy_page_range(), but after track_pfn_copy() was already called.
-+ */
-+static inline void untrack_pfn_copy(struct vm_area_struct *dst_vma,
-+		unsigned long pfn)
-+{
-+}
-+
-+/*
-  * untrack_pfn is called while unmapping a pfnmap for a region.
-  * untrack can be called for a specific region indicated by pfn and size or
-  * can be for the entire vma (in which case pfn, size are zero).
-@@ -1528,8 +1539,10 @@ static inline void untrack_pfn(struct vm_area_struct *vma,
- }
- 
- /*
-- * untrack_pfn_clear is called while mremapping a pfnmap for a new region
-- * or fails to copy pgtable during duplicate vm area.
-+ * untrack_pfn_clear is called in the following cases on a VM_PFNMAP VMA:
-+ *
-+ * 1) During mremap() on the src VMA after the page tables were moved.
-+ * 2) During fork() on the dst VMA, immediately after duplicating the src VMA.
-  */
- static inline void untrack_pfn_clear(struct vm_area_struct *vma)
- {
-@@ -1540,7 +1553,10 @@ extern int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
- 			   unsigned long size);
- extern void track_pfn_insert(struct vm_area_struct *vma, pgprot_t *prot,
- 			     pfn_t pfn);
--extern int track_pfn_copy(struct vm_area_struct *vma);
-+extern int track_pfn_copy(struct vm_area_struct *dst_vma,
-+		struct vm_area_struct *src_vma, unsigned long *pfn);
-+extern void untrack_pfn_copy(struct vm_area_struct *dst_vma,
-+		unsigned long pfn);
- extern void untrack_pfn(struct vm_area_struct *vma, unsigned long pfn,
- 			unsigned long size, bool mm_wr_locked);
- extern void untrack_pfn_clear(struct vm_area_struct *vma);
-diff --git a/kernel/fork.c b/kernel/fork.c
-index f11ac96..91171e5 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -504,6 +504,10 @@ struct vm_area_struct *vm_area_dup(struct vm_area_struct *orig)
- 	vma_numab_state_init(new);
- 	dup_anon_vma_name(orig, new);
- 
-+	/* track_pfn_copy() will later take care of copying internal state. */
-+	if (unlikely(new->vm_flags & VM_PFNMAP))
-+		untrack_pfn_clear(new);
-+
- 	return new;
- }
- 
-diff --git a/mm/memory.c b/mm/memory.c
-index 4f6d976..53f7b0a 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -1362,12 +1362,12 @@ int
- copy_page_range(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma)
- {
- 	pgd_t *src_pgd, *dst_pgd;
--	unsigned long next;
- 	unsigned long addr = src_vma->vm_start;
- 	unsigned long end = src_vma->vm_end;
- 	struct mm_struct *dst_mm = dst_vma->vm_mm;
- 	struct mm_struct *src_mm = src_vma->vm_mm;
- 	struct mmu_notifier_range range;
-+	unsigned long next, pfn;
- 	bool is_cow;
- 	int ret;
- 
-@@ -1378,11 +1378,7 @@ copy_page_range(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma)
- 		return copy_hugetlb_page_range(dst_mm, src_mm, dst_vma, src_vma);
- 
- 	if (unlikely(src_vma->vm_flags & VM_PFNMAP)) {
--		/*
--		 * We do not free on error cases below as remove_vma
--		 * gets called on error from higher level routine
--		 */
--		ret = track_pfn_copy(src_vma);
-+		ret = track_pfn_copy(dst_vma, src_vma, &pfn);
- 		if (ret)
- 			return ret;
- 	}
-@@ -1419,7 +1415,6 @@ copy_page_range(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma)
- 			continue;
- 		if (unlikely(copy_p4d_range(dst_vma, src_vma, dst_pgd, src_pgd,
- 					    addr, next))) {
--			untrack_pfn_clear(dst_vma);
- 			ret = -ENOMEM;
- 			break;
- 		}
-@@ -1429,6 +1424,8 @@ copy_page_range(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma)
- 		raw_write_seqcount_end(&src_mm->write_protect_seq);
- 		mmu_notifier_invalidate_range_end(&range);
- 	}
-+	if (ret && unlikely(src_vma->vm_flags & VM_PFNMAP))
-+		untrack_pfn_copy(dst_vma, pfn);
- 	return ret;
- }
- 
