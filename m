@@ -1,215 +1,256 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903CB2641E2;
-	Tue, 25 Mar 2025 17:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3D625DD05
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 17:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742925272; cv=none; b=clUNFrsACjPT44+2Vr0x4UcjLKr7KOgB2Lmk2NAX6wL2sjIOMpkjMC90rzN+0PAiLOX4CglG2HLEdF8axS/KtPzqIFcpMMCYqVZNMY1sLvL3RA5mviEbBmEsobn1VW1a/4h2ijEmcwjugPRPRNK/L0htmmr6qCfPZicJSFC8QmQ=
+	t=1742925319; cv=none; b=YVBsujsVrhJ7+k6dDdovUKomaoDQI6jD58mHYmeiYvSZV37a11bwJi+8d9sT8edqpuHr6yRgaiWM1Kjh4ZaFCdRNEm036JtW2BStOepUYkhMrRdGusQEB/8+gdg1QLjkpIbVY5hafm0nYtO2gJ+N1PNll04BZ9g01pnjPbcfVcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742925272; c=relaxed/simple;
-	bh=+u1HyZPPd+R2u3/AXT9yxNUrkUbLjE2OSYzRgR7BXOw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sSXAZiXe4TLIHscfPQaWaRTrNOks3GqMH9PaFPL8ql65MY+lsxbx0Jl3UU1N79a3XAHL1Fpa+NvolWzb+JVaWNW1UCc5zTxjhZRKU/4f59Nq5QBCfMVzsDRdC/Me1MuqM0DJkTsZFQcYK8yhQlthQtLpim9+CCPCPaBiqwA1APw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ff799d99dcso10019630a91.1;
-        Tue, 25 Mar 2025 10:54:30 -0700 (PDT)
+	s=arc-20240116; t=1742925319; c=relaxed/simple;
+	bh=KGzHV4AGIWKrWBs1lNyAyJSkG6Kr/7d+ZtUTrUzoltM=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=GqhSM5NwgT7SxhmwRJ3rZbm3nYUKBovPARxsUbA3vCam2Kxsc3ND5RnagxCJ0lfSfnw3YKyJ81AuJFvYN7zeoRua9ruhuybWxMgvhVHEVrzo4GXJlSJ3ZRyOg4bLvrR5OOB/ngL5T/5qEDzC/P9nBLL2h5DYBoRmS0jQWMW4+z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bSA0XLOn; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bSA0XLOn"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6f3ff1ff117so69759867b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 10:55:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742925316; x=1743530116; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=uBgRAC9f4JnjWelcmYNHs7Pp0auWj+zKsfRjzsiOuOE=;
+        b=bSA0XLOn3DRuEtCiA20G4nZ+mGO4lkpimrMA0pVt3V3C1aGL+ZV/7puAf7iFg8Cztf
+         OLbBqyZzZcoeBo1uE8Q1mqkfvghCgMlz0oG3RATXF6d3C0WWFzFC64KFC1L3n9Q5aTqR
+         VANiQl2O+YP3Ol/Y3PO3UbZFxyOQ1moe9ASUJ6JrsTjpkdrJ8OZdey3MBbsNR4qMXvzd
+         w5UguAuj8Kog1+s4X9XSr2G3kL6UlYBbkz9xSC1QE8gjFkz5N7mjBwlyCBV1R016mpem
+         nWsYjycoupROyz3ja4MjXcGWkt6ZAJidadpfhLb8n47b15FFAPlCyEWAiMsAMNShsa1y
+         BmOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742925269; x=1743530069;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KL3xXNyveKKELLggKhdktNiKOym+xaaWn+kS6J3KeJI=;
-        b=VbA/7iLv3wqL9Btw+HQb8WoQVBHWwME+MA3GIQP64gCk2f93rEUVlzgMnSo5TTCIv4
-         CqKn1V/J5bGcQuFUnC2wceLs2oAUMgIfchCfsRQ4YHGpSBG1VfApSWmhx1LZvSybyvyC
-         /Upwtnra45iXbAyH8oTzrv6B4SAdNj6liqt317mAQvcp0lsHzP8Tn7LW8V5l8Xh4k/n1
-         u8N3XTlBKumiAnR+mbskOzQlqkZMvAW7Z8biP3IMLOpJm7SnO2qhxsRAv3e6wqaaBVp8
-         4gTCz+doJUdRsIR3Hr1WaaNDML5fgqLJ7pFM+H6qBeV0y874RW3sSMA+LNxw/bgNK7fo
-         fO9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUHeE+m+TJf/UIkSYiEyc1oliDXWylctQvOUQb9Dzl80j25GAv15CBHEL0Y45V3ZMUx3P96bu4C7HldTZo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEj8Ti/U40MSDjCzGSkcQfOQiUDtO77SXOJsjqAUrDdbgx4I0y
-	K48nqFAE4FWE3LTKg8C7UC9/6cjTE0sdnuEEechVPHKFcZd7jgDNinTFb+Q=
-X-Gm-Gg: ASbGncvwpxzs2MOGtC71TUrFffZXldDOvGMXGdcE+dnnBCpgJF7oSmg6gqfGDnWW2G+
-	7vlYkXtWedKqStIjzinBmdx92UHxxntVZXxVIRpXXDI7WmnTNskOO0Rx4bCxNwli3qXX6XAHuvM
-	Pb5YINYcYj171jbreolSfmRimV7XfOmq6HBTR3kMQCA6/WoSoM2rOmVVN5H+FuacM0qGoMbWwI7
-	uqZfAb6tCENzn+dOx8iqONMqRnaH070stOpS+9Pjnsp6XBC0fPmpiRmPQHTLh6TGWB2LGaiqt3R
-	6V0bAYJu8JmvSbHNW1Igv0gW13kHQLaRQ3TSK+zpEVvuAYmP2yeYUXw=
-X-Google-Smtp-Source: AGHT+IHRpLw1w9FOMNF/WEqbsCKznVqXm++T2qibIkMyWcdjpgvrf8acBwLi05NTUhlivjhGkd0qxQ==
-X-Received: by 2002:a17:90b:394c:b0:2ff:52b8:2767 with SMTP id 98e67ed59e1d1-3030fe9d786mr28288794a91.19.1742925268817;
-        Tue, 25 Mar 2025 10:54:28 -0700 (PDT)
-Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3030f5f892dsm10671794a91.22.2025.03.25.10.54.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 10:54:28 -0700 (PDT)
-From: Stanislav Fomichev <sdf@fomichev.me>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-kernel@vger.kernel.org,
-	jhs@mojatatu.com,
-	xiyou.wangcong@gmail.com,
-	jiri@resnulli.us,
-	horms@kernel.org,
-	sdf@fomichev.me
-Subject: [PATCH net-next] net: move replay logic to tc_modify_qdisc
-Date: Tue, 25 Mar 2025 10:54:27 -0700
-Message-ID: <20250325175427.3818808-1-sdf@fomichev.me>
-X-Mailer: git-send-email 2.48.1
+        d=1e100.net; s=20230601; t=1742925316; x=1743530116;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uBgRAC9f4JnjWelcmYNHs7Pp0auWj+zKsfRjzsiOuOE=;
+        b=NMU14GaAk8Yjy7EWW3TIkhQcansb2R5KHGRuKMWD/jw/rGfxd8yu0cb29HIg2deTwi
+         qrusZSIaj7Mzb2Dgb+3sLW/SqiN/H4RuRv2tMwp7ok9SJCgTyz3ILK9cw8AGPCyBCzFr
+         yiRjWse9lOEm94mdPGWihhpnga3zUKYswwEmWeKO59ghzxYXp7TMOFfeFEF4H3zS4Yir
+         XYa1mg1XkgUghajPSIZO7DtKyfi9Mvwku3MfJTHmPJV2Yxibrc8QBEwsoa2fM67jY45k
+         JjGW5T6nOijRqBJry4/KotuChAzqdX/rmHr+Iq8oRfflMjYj5zLiXYKBhdDsuOSPlGUp
+         ZkHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV0b0f/cnIVYvZpOCeoFiOOrglcAnXvIxdPfBNJafwE+ro/N0duNAMGZ4GfiaXfWCBAF8bJdaFVrnd+10E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJR6H0aJdcaE662dr/DIKL++hBDBrCkuk2Lp54alZLp+1uaLw8
+	S84vZTgT/RfzDZIWk9xg9PTyQR51idx/3xi4jy8CSgH1SWXYW70zu3DkJbgd/+YlWMgPxUw+VOe
+	Y6/VbAg==
+X-Google-Smtp-Source: AGHT+IEQjv86YSRpdGGZjCOeQ9VtsOyJ19HXz7nY8/VPacYn7WQZlrVV6rVPEofn0tCVoa6ypQpU7PBLRMcw
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:40b3:9c02:57a5:693c])
+ (user=irogers job=sendgmr) by 2002:a81:f00b:0:b0:6ff:6fa4:ea5a with SMTP id
+ 00721157ae682-700ba9bd6aemr112607b3.0.1742925315784; Tue, 25 Mar 2025
+ 10:55:15 -0700 (PDT)
+Date: Tue, 25 Mar 2025 10:52:02 -0700
+Message-Id: <20250325175238.50097-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
+Subject: [PATCH v3 00/35] GNR retirement latencies, topic and metric updates
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Eric reports that by the time we call netdev_lock_ops after
-rtnl_unlock/rtnl_lock, the dev might point to an invalid device.
-As suggested by Jakub in [0], move rtnl lock/unlock and request_module
-outside of qdisc_create. This removes extra complexity with relocking
-the netdev.
+Add default mean, min and max retirement latency values to GNR
+events. Update the topics on a number of events previously
+"other". Switch TMA metrics to the generated version. Add TMA 5.02
+metrics for sandybridge, ivytown, ivybridge and jaketown.
 
-0: https://lore.kernel.org/netdev/20250325032803.1542c15e@kernel.org/
+Events and metrics generated from the data and scripts in:
+https://github.com/intel/perfmon
+and:
+https://github.com/intel/perfmon/pull/298
 
-Fixes: a0527ee2df3f ("net: hold netdev instance lock during qdisc ndo_setup_tc")
-Reported-by: Eric Dumazet <edumazet@google.com>
-Link: https://lore.kernel.org/netdev/20250305163732.2766420-1-sdf@fomichev.me/T/#me8dfd778ea4c4463acab55644e3f9836bc608771
-Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
----
- net/sched/sch_api.c | 73 +++++++++++++++++----------------------------
- 1 file changed, 27 insertions(+), 46 deletions(-)
+v3: Generate sierraforest metrics from the spreadsheet using
+    conversion with the core type of crestmont.
 
-diff --git a/net/sched/sch_api.c b/net/sched/sch_api.c
-index aef39f6dc6a8..fcb07c03117e 100644
---- a/net/sched/sch_api.c
-+++ b/net/sched/sch_api.c
-@@ -1268,38 +1268,8 @@ static struct Qdisc *qdisc_create(struct net_device *dev,
- 	struct qdisc_size_table *stab;
- 
- 	ops = qdisc_lookup_ops(kind);
--#ifdef CONFIG_MODULES
--	if (ops == NULL && kind != NULL) {
--		char name[IFNAMSIZ];
--		if (nla_strscpy(name, kind, IFNAMSIZ) >= 0) {
--			/* We dropped the RTNL semaphore in order to
--			 * perform the module load.  So, even if we
--			 * succeeded in loading the module we have to
--			 * tell the caller to replay the request.  We
--			 * indicate this using -EAGAIN.
--			 * We replay the request because the device may
--			 * go away in the mean time.
--			 */
--			netdev_unlock_ops(dev);
--			rtnl_unlock();
--			request_module(NET_SCH_ALIAS_PREFIX "%s", name);
--			rtnl_lock();
--			netdev_lock_ops(dev);
--			ops = qdisc_lookup_ops(kind);
--			if (ops != NULL) {
--				/* We will try again qdisc_lookup_ops,
--				 * so don't keep a reference.
--				 */
--				module_put(ops->owner);
--				err = -EAGAIN;
--				goto err_out;
--			}
--		}
--	}
--#endif
--
--	err = -ENOENT;
- 	if (!ops) {
-+		err = -ENOENT;
- 		NL_SET_ERR_MSG(extack, "Specified qdisc kind is unknown");
- 		goto err_out;
- 	}
-@@ -1624,8 +1594,7 @@ static int __tc_modify_qdisc(struct sk_buff *skb, struct nlmsghdr *n,
- 			     struct netlink_ext_ack *extack,
- 			     struct net_device *dev,
- 			     struct nlattr *tca[TCA_MAX + 1],
--			     struct tcmsg *tcm,
--			     bool *replay)
-+			     struct tcmsg *tcm)
- {
- 	struct Qdisc *q = NULL;
- 	struct Qdisc *p = NULL;
-@@ -1790,13 +1759,8 @@ static int __tc_modify_qdisc(struct sk_buff *skb, struct nlmsghdr *n,
- 				 tcm->tcm_parent, tcm->tcm_handle,
- 				 tca, &err, extack);
- 	}
--	if (q == NULL) {
--		if (err == -EAGAIN) {
--			*replay = true;
--			return 0;
--		}
-+	if (!q)
- 		return err;
--	}
- 
- graft:
- 	err = qdisc_graft(dev, p, skb, n, clid, q, NULL, extack);
-@@ -1809,6 +1773,27 @@ static int __tc_modify_qdisc(struct sk_buff *skb, struct nlmsghdr *n,
- 	return 0;
- }
- 
-+static void request_qdisc_module(struct nlattr *kind)
-+{
-+	struct Qdisc_ops *ops;
-+	char name[IFNAMSIZ];
-+
-+	if (!kind)
-+		return;
-+
-+	ops = qdisc_lookup_ops(kind);
-+	if (ops) {
-+		module_put(ops->owner);
-+		return;
-+	}
-+
-+	if (nla_strscpy(name, kind, IFNAMSIZ) >= 0) {
-+		rtnl_unlock();
-+		request_module(NET_SCH_ALIAS_PREFIX "%s", name);
-+		rtnl_lock();
-+	}
-+}
-+
- /*
-  * Create/change qdisc.
-  */
-@@ -1819,27 +1804,23 @@ static int tc_modify_qdisc(struct sk_buff *skb, struct nlmsghdr *n,
- 	struct nlattr *tca[TCA_MAX + 1];
- 	struct net_device *dev;
- 	struct tcmsg *tcm;
--	bool replay;
- 	int err;
- 
--replay:
--	/* Reinit, just in case something touches this. */
- 	err = nlmsg_parse_deprecated(n, sizeof(*tcm), tca, TCA_MAX,
- 				     rtm_tca_policy, extack);
- 	if (err < 0)
- 		return err;
- 
-+	request_qdisc_module(tca[TCA_KIND]);
-+
- 	tcm = nlmsg_data(n);
- 	dev = __dev_get_by_index(net, tcm->tcm_ifindex);
- 	if (!dev)
- 		return -ENODEV;
- 
--	replay = false;
- 	netdev_lock_ops(dev);
--	err = __tc_modify_qdisc(skb, n, extack, dev, tca, tcm, &replay);
-+	err = __tc_modify_qdisc(skb, n, extack, dev, tca, tcm);
- 	netdev_unlock_ops(dev);
--	if (replay)
--		goto replay;
- 
- 	return err;
- }
+v2: Fix arrowlake PMU/cpu prefixes.
+
+Ian Rogers (35):
+  perf vendor events: Update alderlake events/metrics
+  perf vendor events: Update AlderlakeN events/metrics
+  perf vendor events: Update arrowlake events/metrics
+  perf vendor events: Update bonnell events
+  perf vendor events: Update broadwell metrics
+  perf vendor events: Update broadwellde metrics
+  perf vendor events: Update broadwellx metrics
+  perf vendor events: Update cascadelakex events/metrics
+  perf vendor events: Update clearwaterforest events
+  perf vendor events: Update elkhartlake events
+  perf vendor events: Update emeraldrapids events/metrics
+  perf vendor events: Update grandridge events/metrics
+  perf vendor events: Add graniterapids retirement latencies
+  perf vendor events: Update haswell metrics
+  perf vendor events: Update haswellx metrics
+  perf vendor events: Update icelake events/metrics
+  perf vendor events: Update icelakex events/metrics
+  perf vendor events: Update ivybridge metrics
+  perf vendor events: Update ivytown metrics
+  perf vendor events: Update jaketown metrics
+  perf vendor events: Update lunarlake events/metrics
+  perf vendor events: Update meteorlake events/metrics
+  perf vendor events: Update nehalemep events
+  perf vendor events: Update nehalemex events
+  perf vendor events: Update rocketlake events/metrics
+  perf vendor events: Update sandybridge metrics
+  perf vendor events: Update sapphirerapids events/metrics
+  perf vendor events: Update sierraforest events/metrics
+  perf vendor events: Update skylake metrics
+  perf vendor events: Update skylakex events/metrics
+  perf vendor events: Update snowridgex events
+  perf vendor events: Update tigerlake metrics
+  perf vendor events: Update westmereep-dp events
+  perf vendor events: Update westmereep-dp events
+  perf vendor events: Update westmereep-dp events
+
+ .../arch/x86/alderlake/adl-metrics.json       | 485 ++++++++-------
+ .../pmu-events/arch/x86/alderlake/cache.json  |  77 +++
+ .../pmu-events/arch/x86/alderlake/memory.json |  55 ++
+ .../pmu-events/arch/x86/alderlake/other.json  | 196 ------
+ .../arch/x86/alderlake/pipeline.json          |  67 ++-
+ .../arch/x86/alderlaken/adln-metrics.json     |  54 +-
+ .../pmu-events/arch/x86/alderlaken/cache.json |  50 ++
+ .../arch/x86/alderlaken/memory.json           |  40 ++
+ .../pmu-events/arch/x86/alderlaken/other.json |  98 ---
+ .../arch/x86/alderlaken/pipeline.json         |  11 +-
+ .../arch/x86/arrowlake/arl-metrics.json       | 562 +++++++++---------
+ .../pmu-events/arch/x86/arrowlake/cache.json  | 148 +++++
+ .../pmu-events/arch/x86/arrowlake/memory.json |  11 +
+ .../pmu-events/arch/x86/arrowlake/other.json  | 193 ------
+ .../arch/x86/arrowlake/pipeline.json          | 163 ++++-
+ .../pmu-events/arch/x86/bonnell/other.json    |   8 -
+ .../pmu-events/arch/x86/bonnell/pipeline.json |   8 +
+ .../arch/x86/broadwell/bdw-metrics.json       | 256 ++++----
+ .../arch/x86/broadwellde/bdwde-metrics.json   | 180 +++---
+ .../arch/x86/broadwellx/bdx-metrics.json      | 268 +++++----
+ .../arch/x86/cascadelakex/cache.json          | 404 +++++++++++++
+ .../arch/x86/cascadelakex/clx-metrics.json    | 389 ++++++------
+ .../arch/x86/cascadelakex/other.json          | 404 -------------
+ .../arch/x86/clearwaterforest/cache.json      |  20 +
+ .../arch/x86/clearwaterforest/other.json      |  22 -
+ .../arch/x86/elkhartlake/cache.json           | 192 ++++++
+ .../arch/x86/elkhartlake/memory.json          | 202 +++++++
+ .../arch/x86/elkhartlake/other.json           | 394 ------------
+ .../arch/x86/emeraldrapids/cache.json         | 100 ++++
+ .../arch/x86/emeraldrapids/emr-metrics.json   | 471 ++++++++-------
+ .../arch/x86/emeraldrapids/memory.json        | 170 ++++++
+ .../arch/x86/emeraldrapids/other.json         | 328 ----------
+ .../arch/x86/emeraldrapids/pipeline.json      |  58 ++
+ .../pmu-events/arch/x86/grandridge/cache.json | 150 ++++-
+ .../arch/x86/grandridge/counter.json          |   2 +-
+ .../arch/x86/grandridge/frontend.json         |   8 +
+ .../arch/x86/grandridge/grr-metrics.json      | 521 +---------------
+ .../pmu-events/arch/x86/grandridge/other.json |  28 -
+ .../arch/x86/grandridge/pipeline.json         |  51 +-
+ .../arch/x86/grandridge/uncore-cache.json     |  45 +-
+ .../arch/x86/grandridge/uncore-memory.json    | 338 +++++++++++
+ .../arch/x86/graniterapids/cache.json         | 122 ++++
+ .../arch/x86/graniterapids/counter.json       |   5 +
+ .../arch/x86/graniterapids/frontend.json      |  21 +
+ .../arch/x86/graniterapids/gnr-metrics.json   | 483 ++++++++-------
+ .../arch/x86/graniterapids/memory.json        | 130 ++++
+ .../arch/x86/graniterapids/other.json         | 237 --------
+ .../arch/x86/graniterapids/pipeline.json      |  52 ++
+ .../arch/x86/graniterapids/uncore-cache.json  |  42 ++
+ .../graniterapids/uncore-interconnect.json    |  90 ++-
+ .../arch/x86/graniterapids/uncore-memory.json | 240 ++++++++
+ .../arch/x86/haswell/hsw-metrics.json         | 206 ++++---
+ .../arch/x86/haswellx/hsx-metrics.json        | 222 ++++---
+ .../pmu-events/arch/x86/icelake/cache.json    |  60 ++
+ .../arch/x86/icelake/icl-metrics.json         | 385 ++++++------
+ .../pmu-events/arch/x86/icelake/memory.json   | 160 +++++
+ .../pmu-events/arch/x86/icelake/other.json    | 220 -------
+ .../pmu-events/arch/x86/icelakex/cache.json   | 273 +++++++++
+ .../arch/x86/icelakex/icx-metrics.json        | 399 +++++++------
+ .../pmu-events/arch/x86/icelakex/memory.json  | 190 ++++++
+ .../pmu-events/arch/x86/icelakex/other.json   | 463 ---------------
+ .../arch/x86/ivybridge/ivb-metrics.json       |  76 ++-
+ .../arch/x86/ivybridge/metricgroups.json      |   5 +
+ .../arch/x86/ivytown/ivt-metrics.json         |  80 ++-
+ .../arch/x86/ivytown/metricgroups.json        |   5 +
+ .../arch/x86/jaketown/frontend.json           |   8 +
+ .../arch/x86/jaketown/jkt-metrics.json        |  40 +-
+ .../arch/x86/jaketown/metricgroups.json       |   5 +
+ .../pmu-events/arch/x86/jaketown/other.json   |   8 -
+ .../pmu-events/arch/x86/lunarlake/cache.json  | 122 ++++
+ .../arch/x86/lunarlake/lnl-metrics.json       | 556 +++++++++--------
+ .../pmu-events/arch/x86/lunarlake/memory.json |  44 ++
+ .../pmu-events/arch/x86/lunarlake/other.json  | 353 -----------
+ .../arch/x86/lunarlake/pipeline.json          | 187 ++++++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |  14 +-
+ .../pmu-events/arch/x86/meteorlake/cache.json | 179 ++++++
+ .../arch/x86/meteorlake/memory.json           |  44 ++
+ .../arch/x86/meteorlake/mtl-metrics.json      | 549 +++++++++--------
+ .../pmu-events/arch/x86/meteorlake/other.json | 140 -----
+ .../arch/x86/meteorlake/pipeline.json         |  44 +-
+ .../arch/x86/meteorlake/uncore-memory.json    |  18 +
+ .../pmu-events/arch/x86/nehalemep/cache.json  |  32 +
+ .../pmu-events/arch/x86/nehalemep/other.json  |  40 --
+ .../arch/x86/nehalemep/virtual-memory.json    |   8 +
+ .../pmu-events/arch/x86/nehalemex/cache.json  |  32 +
+ .../pmu-events/arch/x86/nehalemex/other.json  |  40 --
+ .../arch/x86/nehalemex/virtual-memory.json    |   8 +
+ .../pmu-events/arch/x86/rocketlake/cache.json |  60 ++
+ .../arch/x86/rocketlake/memory.json           | 160 +++++
+ .../pmu-events/arch/x86/rocketlake/other.json | 220 -------
+ .../arch/x86/rocketlake/rkl-metrics.json      | 385 ++++++------
+ .../arch/x86/sandybridge/frontend.json        |   8 +
+ .../arch/x86/sandybridge/metricgroups.json    |   5 +
+ .../arch/x86/sandybridge/other.json           |   8 -
+ .../arch/x86/sandybridge/snb-metrics.json     |  36 +-
+ .../arch/x86/sapphirerapids/cache.json        | 150 +++++
+ .../arch/x86/sapphirerapids/memory.json       | 170 ++++++
+ .../arch/x86/sapphirerapids/other.json        | 378 ------------
+ .../arch/x86/sapphirerapids/pipeline.json     |  58 ++
+ .../arch/x86/sapphirerapids/spr-metrics.json  | 465 ++++++++-------
+ .../arch/x86/sierraforest/cache.json          |  20 +
+ .../arch/x86/sierraforest/memory.json         |  20 +
+ .../arch/x86/sierraforest/other.json          |  48 --
+ .../arch/x86/sierraforest/pipeline.json       |   8 +
+ .../arch/x86/sierraforest/srf-metrics.json    | 204 ++++---
+ .../arch/x86/sierraforest/uncore-cache.json   |  32 +
+ .../arch/x86/sierraforest/uncore-memory.json  | 240 ++++++++
+ .../arch/x86/skylake/skl-metrics.json         | 367 ++++++------
+ .../pmu-events/arch/x86/skylakex/cache.json   |  74 +++
+ .../pmu-events/arch/x86/skylakex/other.json   |  74 ---
+ .../arch/x86/skylakex/skx-metrics.json        | 385 ++++++------
+ .../pmu-events/arch/x86/snowridgex/cache.json | 192 ++++++
+ .../arch/x86/snowridgex/memory.json           | 202 +++++++
+ .../pmu-events/arch/x86/snowridgex/other.json | 394 ------------
+ .../arch/x86/tigerlake/tgl-metrics.json       | 383 ++++++------
+ .../arch/x86/westmereep-dp/cache.json         |  32 +
+ .../arch/x86/westmereep-dp/other.json         |  40 --
+ .../x86/westmereep-dp/virtual-memory.json     |   8 +
+ .../arch/x86/westmereep-sp/cache.json         |  32 +
+ .../arch/x86/westmereep-sp/other.json         |  40 --
+ .../x86/westmereep-sp/virtual-memory.json     |   8 +
+ .../pmu-events/arch/x86/westmereex/cache.json |  32 +
+ .../pmu-events/arch/x86/westmereex/other.json |  40 --
+ .../arch/x86/westmereex/virtual-memory.json   |   8 +
+ 124 files changed, 9983 insertions(+), 8867 deletions(-)
+ delete mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/other.json
+
 -- 
-2.48.1
+2.49.0.395.g12beb8f557-goog
 
