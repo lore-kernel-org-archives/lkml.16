@@ -1,176 +1,175 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EA84258CE8;
-	Tue, 25 Mar 2025 09:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F226257427;
+	Tue, 25 Mar 2025 09:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742895400; cv=none; b=dZedhvmNo3k7QkqrfcJwWtQdKDU3B0Fpl586YrYCKPN2KBUuNUEPDSkb9N/RngjkkjiOoWTa21yEvk7t2kcI55T+j1lU7x5HeYMCIb5SN7GlTLsuNs51EzpWN68ym96+5vVBW/XQ6moytnJxN9mvnLswjc7Jv6NmMoY/QDB/ibk=
+	t=1742895399; cv=none; b=bYuo2vDKjc8OvqQdAcdadAWE7lmQiKrbh25ljOPjzHWipYEHf1QoOemJY8Gdy63e6p1A3ww7wdGkjV6g4+7qMHwynxV+Cwa8N7PnKcc88VKXMRCEHAGcdvo/dD26y/Y6RaPWadjQpUl93Gb9nGaOdizGJ6p8fyoX0ry3EF1EGJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742895400; c=relaxed/simple;
-	bh=6YUFodGvRO7ancqe4YJYSmSbtp2WWchxxkOPo59Mctw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fLT0cR7BKfvgsmNzgfbq65u9EEHq+7XQdmSEW4N5nRldI0Nvbn3udSxZe4tXo7Doa2CynUTH9Ci+l5889TH+Ptbj85qrp0Gi7N0ezaiGWXMrM9e5foQmH5rTmRK88XDPJFGlzq2Q4XqzM+5U7kKl3xSeHhJOopwN3JpSkuJe/nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78F42106F;
-	Tue, 25 Mar 2025 02:36:43 -0700 (PDT)
-Received: from mazurka.cambridge.arm.com (mazurka.cambridge.arm.com [10.2.80.18])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D1813F63F;
-	Tue, 25 Mar 2025 02:36:33 -0700 (PDT)
-From: =?UTF-8?q?Miko=C5=82aj=20Lenczewski?= <miko.lenczewski@arm.com>
-To: ryan.roberts@arm.com,
-	suzuki.poulose@arm.com,
-	yang@os.amperecomputing.com,
-	corbet@lwn.net,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	jean-philippe@linaro.org,
-	robin.murphy@arm.com,
-	joro@8bytes.org,
-	akpm@linux-foundation.org,
-	ardb@kernel.org,
-	mark.rutland@arm.com,
-	joey.gouly@arm.com,
-	maz@kernel.org,
-	james.morse@arm.com,
-	broonie@kernel.org,
-	oliver.upton@linux.dev,
-	baohua@kernel.org,
-	david@redhat.com,
-	ioworker0@gmail.com,
-	jgg@ziepe.ca,
-	nicolinc@nvidia.com,
-	mshavit@google.com,
-	jsnitsel@redhat.com,
-	smostafa@google.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	iommu@lists.linux.dev
-Cc: =?UTF-8?q?Miko=C5=82aj=20Lenczewski?= <miko.lenczewski@arm.com>
-Subject: [PATCH v5 0/3] Initial BBML2 support for contpte_convert()
-Date: Tue, 25 Mar 2025 09:36:22 +0000
-Message-ID: <20250325093625.55184-1-miko.lenczewski@arm.com>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1742895399; c=relaxed/simple;
+	bh=S+bF166yQpvaBw+NWHMHfYJw8yvCLG5kdtnQ/3TMesY=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=GLZVsnmAkxz4cli0at+YyTTsjQVjmFypJnnBetm6F8pgZfMQFs9S2aPwbiZGkbeRlF5XtjR+VBgl7Equr5u1NTuocaGGEVq/TLr2HUq2z44frr9brdE3klI+a7pARBo0O3i/lkd+gEVJvJy+giCuCOhbIeMeOIT+wghj1O3Xzto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UJwjaWJ5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uvl40Epa; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UJwjaWJ5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uvl40Epa"
+Date: Tue, 25 Mar 2025 09:36:34 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742895395;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ROaemMnzPT4CwQgSeP7OlVLfa3hbYaItNe2tpeyeT/s=;
+	b=UJwjaWJ58vmbZtw2kp9Z2ip50Jb49vQYehkGOhzV5DzbV0HTXUelt06Rcy6V+EcsEh85Uh
+	T0Lb6qhU6tybEX0pL8suqNDi0lLvlWFKPvnYLbvnw9eLAAoLbldVlA6EW7OY/uikZX7Y8f
+	PeBbwBSBjmbaIt1tdmgxuCbj+va4c72A0Ml/INsN6aZxmE0DN7UbYHaBgGhwTAIaZBfuQQ
+	/fUedB11m1ncGvJt+TRIwF1DcakabBc3j65EzzroQr5K9YhqZhXrR37VCx+xkY/h7xWW4M
+	alkAPoRy1Po/1nVkgdiItEKS3jrAq39NxEVZoOXbDHrDpYD8w1mxgq/WqWviTA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742895395;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ROaemMnzPT4CwQgSeP7OlVLfa3hbYaItNe2tpeyeT/s=;
+	b=uvl40EpanaKHVxwiY3Bwb62k4HEtjC88z5OAcxSf77O5jLIzZJ0hJmoA1GIkbXZuz4Atwn
+	CNHvCnCQKaJBhQCQ==
+From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/cpu] x86/cacheinfo: Refactor CPUID leaf 0x2 cache descriptor lookup
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ "Ahmed S. Darwish" <darwi@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250324133324.23458-6-darwi@linutronix.de>
+References: <20250324133324.23458-6-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <174289539477.14745.16854264159972359321.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi All,
+The following commit has been merged into the x86/cpu branch of tip:
 
-This patch series adds initial support for eliding Break-Before-Make
-requirements on systems that support BBML2 and additionally guarantee
-to never raise a conflict abort.
+Commit-ID:     ee159792a4db06e359a5e2e231c6f1242ec76c31
+Gitweb:        https://git.kernel.org/tip/ee159792a4db06e359a5e2e231c6f1242ec76c31
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Mon, 24 Mar 2025 14:33:00 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 25 Mar 2025 10:22:13 +01:00
 
-This support elides a TLB invalidation in contpte_convert(). This
-leads to a 12% improvement when executing a microbenchmark designed
-to force the pathological path where contpte_convert() gets called.
-This represents an 80% reduction in the cost of calling
-contpte_convert().
+x86/cacheinfo: Refactor CPUID leaf 0x2 cache descriptor lookup
 
-This series is based on v6.14-rc5 (7eb172143d55).
+Extract the cache descriptor lookup logic out of the leaf 0x2 parsing
+code and into a dedicated function.  This disentangles such lookup from
+the deeply nested leaf 0x2 parsing loop.
 
-Notes
-======
+Remove the cache table termination entry, as it is no longer needed
+after the ARRAY_SIZE()-based lookup.
 
-Patch 1 implements an allow-list of cpus that support BBML2, but with
-the additional constraint of never causing TLB conflict aborts. We
-settled on this constraint because we will use the feature for kernel
-mappings in the future, for which we cannot handle conflict aborts
-safely.
+[ darwi: Move refactoring logic into this separate commit + commit log.
+	 Remove the cache table termination entry. ]
 
-Yang Shi has a series at [1] that aims to use BBML2 to enable splitting
-the linear map at runtime. This series partially overlaps with it to add
-the cpu feature. We believe this series is fully compatible with Yang's
-requirements and could go first.
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20250324133324.23458-6-darwi@linutronix.de
+---
+ arch/x86/kernel/cpu/cacheinfo.c | 44 ++++++++++++++------------------
+ 1 file changed, 20 insertions(+), 24 deletions(-)
 
-Due to constraints with the current design of the cpufeature framework
-and the fact that our has_bbml2_noabort() check relies on both a MIDR
-allowlist and the exposed MMFR2 register value, if an implementation
-supports our desired BBML2+NOABORT semantics but fails to declare
-support for BBML2 via the id_aa64mmfr2.bbm field, the check will fail.
-
-Not declaring base support for BBML2 when supporting BBML2+NOABORT
-should be considered an erratum [2], and a workaround can be applied in
-__cpuinfo_store_cpu() to patch in support for BBML2 for the sanitised
-register view used by SCOPE_SYSTEM. However, SCOPE_LOCAL_CPU bypasses
-this sanitised view and reads the MSRs directly by design, and so an
-additional workaround can be applied in __read_sysreg_by_encoding()
-for the MMFR2 case.
-
-For situations where support for BBML2+NOABORT is claimed by an
-implementor and subsequently built into the kernel, but problems later
-arise that require user damage control [3], we introduce a kernel
-commandline parameter override for disabling all BBML2 support.
-
-[1]:
-  https://lore.kernel.org/linux-arm-kernel/20250304222018.615808-1-yang@os.amperecomputing.com/
-
-[2]:
-  https://lore.kernel.org/linux-arm-kernel/3bba7adb-392b-4024-984f-b6f0f0f88629@arm.com/
-
-[3]:
-  https://lore.kernel.org/all/0ac0f1f5-e4a0-46ae-8ea0-2eba7e21a7e1@arm.com/
-
-Changelog
-=========
-
-v5:
-  - fixup coding style nits
-  - document motivation for kernel commandline parameter
-
-v4:
-  - https://lore.kernel.org/all/20250319150533.37440-2-miko.lenczewski@arm.com/
-  - rebase onto v6.14-rc5
-  - switch from arm64 sw feature override to hw feature override
-  - reintroduce has_cpuid_feature() check in addition to MIDR check
-
-v3:
-  - https://lore.kernel.org/all/20250313104111.24196-2-miko.lenczewski@arm.com/
-  - rebase onto v6.14-rc4
-  - add arm64.nobbml2 commandline override
-  - squash "delay tlbi" and "elide tlbi" patches
-
-v2:
-  - https://lore.kernel.org/all/20250228182403.6269-2-miko.lenczewski@arm.com/
-  - fix buggy MIDR check to properly account for all boot+late cpus
-  - add smmu bbml2 feature check
-
-v1:
-  - https://lore.kernel.org/all/20250219143837.44277-3-miko.lenczewski@arm.com/
-  - rebase onto v6.14-rc3
-  - remove kvm bugfix patches from series
-  - strip out conflict abort handler code
-  - switch from blocklist to allowlist of bmml2+noabort implementations
-  - remove has_cpuid_feature() in favour of MIDR check
-
-rfc-v1:
-  - https://lore.kernel.org/all/20241211154611.40395-1-miko.lenczewski@arm.com/
-  - https://lore.kernel.org/all/20241211160218.41404-1-miko.lenczewski@arm.com/
-
-Mikołaj Lenczewski (3):
-  arm64: Add BBM Level 2 cpu feature
-  iommu/arm: Add BBM Level 2 smmu feature
-  arm64/mm: Elide tlbi in contpte_convert() under BBML2
-
- .../admin-guide/kernel-parameters.txt         |  3 +
- arch/arm64/Kconfig                            | 19 +++++
- arch/arm64/include/asm/cpucaps.h              |  2 +
- arch/arm64/include/asm/cpufeature.h           |  5 ++
- arch/arm64/kernel/cpufeature.c                | 71 +++++++++++++++++++
- arch/arm64/kernel/pi/idreg-override.c         |  2 +
- arch/arm64/mm/contpte.c                       |  3 +-
- arch/arm64/tools/cpucaps                      |  1 +
- .../iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c   |  3 +
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |  3 +
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h   |  4 ++
- 11 files changed, 115 insertions(+), 1 deletion(-)
-
--- 
-2.48.1
-
+diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
+index 6c61080..d0bfdb8 100644
+--- a/arch/x86/kernel/cpu/cacheinfo.c
++++ b/arch/x86/kernel/cpu/cacheinfo.c
+@@ -123,7 +123,6 @@ static const struct _cache_table cache_table[] =
+ 	{ 0xea, LVL_3,      MB(12) },	/* 24-way set assoc, 64 byte line size */
+ 	{ 0xeb, LVL_3,      MB(18) },	/* 24-way set assoc, 64 byte line size */
+ 	{ 0xec, LVL_3,      MB(24) },	/* 24-way set assoc, 64 byte line size */
+-	{ 0x00, 0, 0}
+ };
+ 
+ 
+@@ -728,6 +727,16 @@ void init_hygon_cacheinfo(struct cpuinfo_x86 *c)
+ 	ci->num_leaves = find_num_cache_leaves(c);
+ }
+ 
++static const struct _cache_table *cache_table_get(u8 desc)
++{
++	for (int i = 0; i < ARRAY_SIZE(cache_table); i++) {
++		if (cache_table[i].descriptor == desc)
++			return &cache_table[i];
++	}
++
++	return NULL;
++}
++
+ void init_intel_cacheinfo(struct cpuinfo_x86 *c)
+ {
+ 	/* Cache sizes */
+@@ -784,34 +793,21 @@ void init_intel_cacheinfo(struct cpuinfo_x86 *c)
+ 
+ 	/* Don't use CPUID(2) if CPUID(4) is supported. */
+ 	if (!ci->num_leaves && c->cpuid_level > 1) {
++		const struct _cache_table *entry;
+ 		union leaf_0x2_regs regs;
+ 		u8 *desc;
+ 
+ 		cpuid_get_leaf_0x2_regs(&regs);
+ 		for_each_leaf_0x2_desc(regs, desc) {
+-			u8 k = 0;
+-
+-			/* look up this descriptor in the table */
+-			while (cache_table[k].descriptor != 0) {
+-				if (cache_table[k].descriptor == *desc) {
+-					switch (cache_table[k].cache_type) {
+-					case LVL_1_INST:
+-						l1i += cache_table[k].size;
+-						break;
+-					case LVL_1_DATA:
+-						l1d += cache_table[k].size;
+-						break;
+-					case LVL_2:
+-						l2 += cache_table[k].size;
+-						break;
+-					case LVL_3:
+-						l3 += cache_table[k].size;
+-						break;
+-					}
+-
+-					break;
+-				}
+-				k++;
++			entry = cache_table_get(*desc);
++			if (!entry)
++				continue;
++
++			switch (entry->cache_type) {
++			case LVL_1_INST: l1i += entry->size; break;
++			case LVL_1_DATA: l1d += entry->size; break;
++			case LVL_2:	 l2  += entry->size; break;
++			case LVL_3:	 l3  += entry->size; break;
+ 			}
+ 		}
+ 	}
