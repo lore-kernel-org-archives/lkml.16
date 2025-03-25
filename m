@@ -1,156 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F8A1DE8B4;
-	Tue, 25 Mar 2025 13:31:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F611DE8B4;
+	Tue, 25 Mar 2025 13:31:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742909484; cv=none; b=UpIytnRlgbefpSg+hBo5LX7nZGQqUr5WA8fXD8ZqQRU/E0ZEOgGZQIZQOD8VFlIyELuYNVeaOdjMX5nnHnwsHSniA/F0CH/qxy2cmLd95w+ESs9FDIHb8ZZi4G4AsQ7nbLPP6wa/Qw157f6VAgFrr264j7DaDYC2vdbKFV8NBc4=
+	t=1742909497; cv=none; b=THF0C8qoaIrvRu7fjFYWISrP9UdHOUf/zlt9OEy56tezezigtQsjan7anpZy/FhmxVuABlmsSWpfAb0BGWpxiwqlj4qJ3qPqC9Cd1xaD8mEFPbNI0oB5KSgyae+NJX3laQ8hqEDfQwoGCqTUT8U3pTHfpg7kIyKAHdlHV3qjpi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742909484; c=relaxed/simple;
-	bh=q4pxLc2dsJbpfFd+rTznh5LCvEgCmB34/vWrz6De0hM=;
+	s=arc-20240116; t=1742909497; c=relaxed/simple;
+	bh=GQ0OSrkpXzh86AWjzuws2IWSbtpMjCSYAmwHhrKpEKs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D9TK2kPk0vj0bGv1hq1iB1q3Y03g2+quPtR8VH98VZRV0uzzQ0Pwqy4R0d+oN/CCqy8a8WikhkkTxgUm8X+nX6WRd2AbWjXKQqzZylEGH+s2U6UU0+8WHtIlHed59pTUtnFjDVfKyZeESYFGWdNqhiAr/kihYj88tQ1bawBGA9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uQ4xG7Yp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=U68vYp5o/k6MpHQ8A3caAwZ7mRadfEa1s3BmX/FVjPBKx1fedVvXmXcK9exLHTY3Q8p2VEzl9wvLwPZ445jU+iMi9WBASAZP8d0XSRX2Wyjh3ZDhSbQaBEW0l/Qo04MwKvuWKsF/51eFW6ZIcYZGsVJxcjmEtHObkjP5QywJJ10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C/hJF1Wq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uQ4xG7Yp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47520C4CEE4;
-	Tue, 25 Mar 2025 13:31:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C/hJF1Wq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C04CAC4CEE4;
+	Tue, 25 Mar 2025 13:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742909483;
-	bh=q4pxLc2dsJbpfFd+rTznh5LCvEgCmB34/vWrz6De0hM=;
+	s=k20201202; t=1742909496;
+	bh=GQ0OSrkpXzh86AWjzuws2IWSbtpMjCSYAmwHhrKpEKs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uQ4xG7YpFCzolFz84asQ+QJ82OXo1g1LtIlsQlOWhhRwD+nk18Wd8Jf0edbDo3O9U
-	 NW7lerGkosc0mN4dYIHBovNJkXACPYbipALjVO2ZHIwln7oZH/Fn4QsB6ikndNydrQ
-	 8tJOOrGbO2B0JqCZO7Hiu73r+TsSCSR/SlKwVd3uj65HDnWj15IAgPrZOdq3OHh8Uq
-	 Rlfa9zMdWSdlHsvZWyIy0iRF/W6OsruZyjF2sIADhDZ9WpP5ufT0B/s9aOZkSr9lHB
-	 LQhpsKOsKzFlk8Em3jsjGHeiPBQdq02DDHw2lxomba7WgCi9tuBMnmiSWmrekqVOac
-	 I6tI1K4JAQB9A==
-Date: Tue, 25 Mar 2025 14:31:20 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Marco Crivellari <marco.crivellari@suse.com>,
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Huacai Chen <chenhuacai@kernel.org>
-Subject: Re: [PATCH v6 1/1] MIPS: Fix idle VS timer enqueue
-Message-ID: <Z-KwKACJQhH98EoW@localhost.localdomain>
-References: <20250315194002.13778-1-marco.crivellari@suse.com>
- <20250315194002.13778-2-marco.crivellari@suse.com>
- <alpine.DEB.2.21.2503211146001.35806@angie.orcam.me.uk>
- <Z93Vj7BLTEvgWwda@pavilion.home>
- <alpine.DEB.2.21.2503221516450.35806@angie.orcam.me.uk>
+	b=C/hJF1Wq2qMQCh1xCP+ds2qNFt0FUdt8os2fzl9sKpawHLMgTMbrNJLqjnwsNiBBJ
+	 iT7ruZgeCbxf3H8k9+vXz/s8aF+zEufqtLseKxsgRHzBrpuVB70HA+Mhp9mZRGYB43
+	 ZOmVybQ4HbNrkexYjkkKWO4xqBkThLJ8sCVasLVRLkzW5Cmqt9jCza0wV2iOwccxjR
+	 nCN0p39F157IBcc69OySumhd+ysZuh9w4xIcQhr5M8n54Evbbt+Zlpy7SgUunFYnbF
+	 jnecHXidiRMZMKkWuBF+QKO9XKNYTo/9qo3CTk+XvPBOHyxLygtT26aduvdQCe9FjK
+	 NqVApGeTkJvww==
+Date: Tue, 25 Mar 2025 08:31:35 -0500
+From: Rob Herring <robh@kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	asahi@lists.linux.dev, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Janne Grunau <j@jannau.net>, Hector Martin <marcan@marcan.st>,
+	Sven Peter <sven@svenpeter.dev>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
+Subject: Re: [PATCH v2 00/13] PCI: apple: Add support for t6020
+Message-ID: <20250325133135.GB1717731-robh@kernel.org>
+References: <20250325102610.2073863-1-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <alpine.DEB.2.21.2503221516450.35806@angie.orcam.me.uk>
+In-Reply-To: <20250325102610.2073863-1-maz@kernel.org>
 
-Le Sat, Mar 22, 2025 at 04:08:31PM +0000, Maciej W. Rozycki a écrit :
-> On Fri, 21 Mar 2025, Frederic Weisbecker wrote:
+On Tue, Mar 25, 2025 at 10:25:57AM +0000, Marc Zyngier wrote:
+> As Alyssa didn't have the bandwidth to deal with this series, I have
+> taken it over. All bugs are therefore mine.
 > 
-> > > > diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
-> > > > index a572ce36a24f..4e012421d00f 100644
-> > > > --- a/arch/mips/kernel/genex.S
-> > > > +++ b/arch/mips/kernel/genex.S
-> > > > @@ -104,27 +104,30 @@ handle_vcei:
-> > > >  
-> > > >  	__FINIT
-> > > >  
-> > > > -	.align	5	/* 32 byte rollback region */
-> > > > +	.align	5
-> > > >  LEAF(__r4k_wait)
-> > > >  	.set	push
-> > > >  	.set	noreorder
-> > > > -	/* start of rollback region */
-> > > > -	LONG_L	t0, TI_FLAGS($28)
-> > > > -	nop
-> > > > -	andi	t0, _TIF_NEED_RESCHED
-> > > > -	bnez	t0, 1f
-> > > > -	 nop
-> > > > -	nop
-> > > > -	nop
-> > > > -#ifdef CONFIG_CPU_MICROMIPS
-> > > > -	nop
-> > > > -	nop
-> > > > -	nop
-> > > > -	nop
-> > > > -#endif
-> > > > +	/* Start of idle interrupt region. */
-> > > > +	MFC0	t0, CP0_STATUS
-> > > > +	/* Enable interrupt. */
-> > > > +	ori 	t0, 0x1f
-> > > 
-> > >  This instruction sequence still suffers from the coprocessor move delay 
-> > > hazard.  How many times do I need to request to get it fixed (counting 
-> > > three so far)?
-> > 
-> > This is because your request had follow-ups from Huacai and Marco that
-> > were left unanswered:
-> > 
-> >      https://lore.kernel.org/all/CAAhV-H5ptAzHTPAr1bxrgByZrnFmMK8zJ68Z++RwC=NHWjqZmw@mail.gmail.com/
+> The initial series [1] stated:
 > 
->  The conclusion made there is however wrong: `local_irq_enable' code 
-> plays no tricks with instruction scheduling and lets the toolchain 
-> resolve any pipeline hazards automatically, while `__r4k_wait' arranges 
-> for instructions to be scheduled by hand and any hazards resolved by the 
-> human writer of the code.  There's even explicit `.set reorder' in 
-> `local_irq_enable', which is redundant, because it's the default mode 
-> for inline assembly.
+> "This series adds T6020 support to the Apple PCIe controller. Mostly
+>  Apple shuffled registers around (presumably to accommodate the larger
+>  configurations on those machines). So there's a bit of churn here but
+>  not too much in the way of functional changes."
 > 
->  And I can't emphasise it enough: manual instruction scheduling is tough
-> and ought to be restricted to cases where there is no other way really, 
-> such as for placing an instruction in a branch delay slot where there is 
-> a data antidependency between the branch and the delay-slot instruction.  
-> Yet this approach has often been used by code authors for other reasons 
-> (or I daresay no reason at all), leaving it up to the maintainers to 
-> keep the code working in the changing conditions while the submitter has 
-> long gone.  I converted some of such code in the past, but it also takes 
-> time and effort that does not come for free.
+> The biggest change is affecting the ECAM layer, allowing an ECAM
+> driver to provide its own probe function instead of relying on the
+> .init() callback to do the work. The ECAM layer can therefore be used
+> as a library instead of a convoluted driver.
 > 
-> >      https://lore.kernel.org/all/CAAofZF4HAczyRmuRe-JmQ2wcZatevLwGTOMLf1V1okGbj7q5Wg@mail.gmail.com/
+> The rest is a mix of bug fixes, cleanups, and required abstraction.
 > 
->  I missed that one, sorry.  A ping would have helped, and I never have 
-> an issue with being pinged.  I do hope I have now addressed that concern 
-> with my other reply.
+> This has been tested on T6020 (M2-Pro mini) and T8102 (M1 mini).
+> 
+> * From v1[1]:
+> 
+>   - Described the PHY registers in the DT binding
+> 
+>   - Extracted a ecam bridge creation helper from the host-common layer
+> 
+>   - Moved probing into its own function instead of pci_host_common_probe()
+>     
+>   - Moved host-specific data to the of_device_id[] table
+> 
+>   - Added dynamic allocation of the RID/SID bitmap
+> 
+>   - Fixed latent bug in RC-generated interrupts
+> 
+>   - Renamed reg_info to hw_info
+> 
+>   - Dropped useless max_msimap
+> 
+>   - Dropped code being moved around without justification
+> 
+>   - Re-split some of the patches to follow a more logical progression
+> 
+>   - General cleanup to fit my own taste
+> 
+> [1] https://lore.kernel.org/r/20250211-pcie-t6-v1-0-b60e6d2501bb@rosenzweig.io
+> 
+> Alyssa Rosenzweig (1):
+>   dt-bindings: pci: apple,pcie: Add t6020 compatible string
+> 
+> Hector Martin (6):
+>   PCI: apple: Fix missing OF node reference in apple_pcie_setup_port
+>   PCI: apple: Move port PHY registers to their own reg items
+>   PCI: apple: Drop poll for CORE_RC_PHYIF_STAT_REFCLK
+>   PCI: apple: Use gpiod_set_value_cansleep in probe flow
+>   PCI: apple: Abstract register offsets via a SoC-specific structure
+>   PCI: apple: Add T602x PCIe support
+> 
+> Janne Grunau (1):
+>   PCI: apple: Set only available ports up
+> 
+> Marc Zyngier (5):
+>   PCI: host-generic: Extract an ecam bridge creation helper from
+>     pci_host_common_probe()
+>   PCI: ecam: Allow cfg->priv to be pre-populated from the root port
+>     device
+>   PCI: apple: Move over to standalone probing
+>   PCI: apple: Dynamically allocate RID-to_SID bitmap
+>   PCI: apple: Move away from INTMSK{SET,CLR} for INTx and private
+>     interrupts
+> 
+>  .../devicetree/bindings/pci/apple,pcie.yaml   |  11 +-
+>  drivers/pci/controller/pci-host-common.c      |  24 +-
+>  drivers/pci/controller/pcie-apple.c           | 241 +++++++++++++-----
+>  drivers/pci/ecam.c                            |   2 +
+>  include/linux/pci-ecam.h                      |   2 +
+>  5 files changed, 204 insertions(+), 76 deletions(-)
 
-Hopefully, I'll let Marco follow-up on that as I must confess I'm lost
-with these details. But your help has been very valuable!
+For the series,
 
-> 
-> > We have detected this longstanding architecture specific timer handling bug on
-> > loongson and MIPS and we could have just dropped a report and let you guys deal with
-> > it. Instead we decided to spend time ourselves (especially Marco) working on
-> > fixes for these architectures we don't run and which we are not familiar with,
-> > alongway taking reviews seriously and patiently re-iterating accordingly.
-> 
->  Thank you for your effort, really appreciated.  Any fixes need to be 
-> technically correct however, it makes no sense to get one bug replaced 
-> with another one.  We've got enough technical debt accumulated already 
-> with a platform that no longer has any commercial support and relies 
-> solely on voluteers keeping it alive in their limited spare time.  I do 
-> have a long list of outstanding issues to address and ever so little 
-> time to take care of them, with hardware problems additionally kicking 
-> in and distracting every so often too.
-
-Yeah I totally understand that!
-
-> 
-> > So please be gentle with us.
-> 
->  As always, but also emphatic on this occasion.  We're in the same boat 
-> really, striving against the lack of resources and issues piling, and 
-> now we've made some progress.  Thank you for your understanding.
-
-Heh I know... Thanks a lot!
-
-> 
->   Maciej
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
