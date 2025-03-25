@@ -1,158 +1,133 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A9025A62E
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:57:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC96125A633
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742914628; cv=none; b=rjY+/hts4kA31X0SxLmn6CuIREcaAGdOJ+gc67ScJio0Bb4Fser0XtXdMYKsdThrS5W/fLZB3iG+XkNOGZyoy66cJRXzL+owcztDAHRcrT72A2tgF2BibnSybAQ98V8cS90kt9+kQddV5Ta7Q0C0Uc7U64p/ZBuRKag1vejXrCU=
+	t=1742914642; cv=none; b=pbhxQDQKWHaQ3n9eDkX8JZiSoVVHle+Ulz117lLGm/+BOK6TORr+bEtvJJO58k5E8MoHIVXnxKhZe6Nwd3IgHNOig3hWrX8d382oemBa5ol8o+GVd+YyrWBr2c/TYnouEvcNEex1X636zpp+xkyYjVrl7fCqIagHhZBCmT3YnbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742914628; c=relaxed/simple;
-	bh=EqMHws/gJIm5pVARMKymR3sSEres33GBEqhPYnNv//c=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=J3Uasf/uWohinZAQeX3iOS0/r5YsGPfgVeDdMAcyuH37+LiGSDNk3nOF+Vlnj0sEjVWhIzU9c+9NXDkh0Ree+R1q1bWBsRqLk0vS72+ctsWPLPo7t0Ee7dH7Vvhx9aF3BALQv4gKS+dnDR5TNxbun4sCbaHcSIsT5Z291EgphM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ReNQKVdu; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1742914642; c=relaxed/simple;
+	bh=1DDCb/rE5y0uCUgnbi2crL4gY7ukwSS2UrHJ0uyjq0k=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=mSfh52PrV54OAHcUwZmUSTZwXjy37grgXHeQdObhMYvYN3Ofa21a4Tt3UauEMnLfUX0gAG/Fy53xLZ75KLUc0GTAMI2gDCwCeuI/c7m3vmy4x4yjcmudQbO5H9YY55piuHTm2YFEs/iXaKbwXT+K7n+3VvsGrGprJy/V1pLRkWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J56m4qYg; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ReNQKVdu"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52PDIMBK021887
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:57:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	sccn61YffIOVf72k4v7cFNWsntpRWvOgplQHMkBT7eM=; b=ReNQKVduuIUpZqLx
-	tIM1mdfFCPIkc+uPYpJylxYNUpfvedxkEyeVXODjtpRqqYT9DpIoQmg6zUgfIvDq
-	2YJvsoqhnFwtwh8q20wbWKvzdRx02VxSgWBI7z3NPzlXQKwQdXUGkmfAzxz0VdmB
-	T/GhVNmu/jeecuDNgskQk3AV4dhdxaH5+zAF6D+h3D/G3NStdljouh+7H4zUEwVr
-	5wGOB31/m068MseWzpv8qP/FSEgVHsiTBuzSdClfscomGv6d/l/bR7rncTWIZ8n5
-	185LmyxTH8q2bpU2YkxF6cpCr/9fL3R3S3YyyEy7KnJrZ92fJvnHivKLr8Zf3o69
-	h+uyWg==
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45hmhk89e8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:57:05 +0000 (GMT)
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2ff5296726fso16164232a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 07:57:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J56m4qYg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742914639;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fGpw7+lzDBqKQi13meiBn0xCYbAhrMYmTI+bEs2bkbo=;
+	b=J56m4qYg4tyKbhv2CRAmwpxdGTtGCrmCFdbswCbncZApatj0XEWiZQhSZAzw8MvDb8uXrS
+	X6wY4+O57cI1GaTpPSmI/lPYbke1RpXEw4167c68TjZgV+NEqiXDzXuPRBkkuodaZ7wQZu
+	gfX4XtfjK56uuY6NwZGFNCzTQZpVTqc=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-286-A5ejn08zOveas5Y-gAvnng-1; Tue, 25 Mar 2025 10:57:18 -0400
+X-MC-Unique: A5ejn08zOveas5Y-gAvnng-1
+X-Mimecast-MFC-AGG-ID: A5ejn08zOveas5Y-gAvnng_1742914638
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c544d2c34fso871683985a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 07:57:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742914623; x=1743519423;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sccn61YffIOVf72k4v7cFNWsntpRWvOgplQHMkBT7eM=;
-        b=AzaCDBylLCg5DlvGBWwvnCzn/8lbBucUHOLi+U1cmugptSsp5X0svD71uIEINWiLuj
-         NwNsRVNy10RrPXKWOkOpdIFmvUsm5NucN3S2lA5YkzDxEOO8Q20DRciThjvHL/OKmmTm
-         CxDKayFoP9qcDFSUpovQh77itnbvCEooY6QSNw2E9yiZA/Uvr0GSiu/k47xaZIQ6jfB+
-         rxP2E6MziwqrBzAVub+vvLUOj6ZZ8jcsZtHiK6I26airFajVmbixvoZxiDsvCxgNtNbq
-         m4/C51xZIsgxrdW4RMbhgh86XFjU+AUdc1o1Z/vURlmsIlXXlMFFPDbyqylOeJCwzMjz
-         1BYA==
-X-Forwarded-Encrypted: i=1; AJvYcCWrsCxv9NOZDHlW2xtyBJTnF6Yc0NbWB6iw/hxD6CPZOqe1QczY18SqyRBx7W29VsN/DTQUlqCjq2YyK/A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9vVlhCmUfovd1xgwqM3oYyGUp+5jE8j8cXZxGEduFc8Cub0rG
-	7aQGLlZu/igXZEjIbfo6d8yPWYjtIZLBiMPGIU/ytAkwT9ENCMIBVavZY4DZvuIvA/Rwp9uWarj
-	XaK0F249vPHA3U+bBqhalcc4mRWECSlF2YvC8i07x/kaGQm0YZShRLXXrqYoIbBI=
-X-Gm-Gg: ASbGnctYlMJuDB5DIOTy8cHsoweSxjtcH9B+4kEZp+hHpu/7CtZJ9gpdoyHPF1caNNS
-	aIKKbL64dFFFASUNSqAxWcXcxKSes/woe1vMruwNgDnQ1S2x64Z8RCCnvuBPnnJvFFnCW2JwLzT
-	tEozPTQGvtM53C2d/sDtotfrhUnaDD+i/sbcUooyTeloIy77rRAnv71dIJGjXQz8fkMwH+t5JRz
-	ReoUZwcuFN6rUDrI6DpKWsLvvMWxuD63Qh5AcH/ZHH+capeVfMdXE3r/GPJtTzEa4ziZNdxidSM
-	HwCxjZpEUEjZJ3ZE9/MF5MhEHOWXp2e5VRyMbVai2FuctTJpVaf5
-X-Received: by 2002:a17:90b:4f8b:b0:2fe:b8b9:5aa6 with SMTP id 98e67ed59e1d1-30310021a17mr25929462a91.31.1742914623299;
-        Tue, 25 Mar 2025 07:57:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGuMFcW5Mc6PLB2e9P1WD+ArFqapEY7WYWu/v0VV2vjM3az7z7rxhMWP+snHjYJQ+Oca0tXQA==
-X-Received: by 2002:a17:90b:4f8b:b0:2fe:b8b9:5aa6 with SMTP id 98e67ed59e1d1-30310021a17mr25929413a91.31.1742914622771;
-        Tue, 25 Mar 2025 07:57:02 -0700 (PDT)
-Received: from [169.254.0.1] (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf61a73fsm14496467a91.36.2025.03.25.07.57.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 07:57:02 -0700 (PDT)
-From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-To: Johannes Berg <johannes@sipsolutions.net>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
-        Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-Cc: linux-wireless@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ath12k@lists.infradead.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Balamurugan S <quic_bselvara@quicinc.com>,
-        Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>,
-        P Praneesh <quic_ppranees@quicinc.com>,
-        Sowmiya Sree Elavalagan <quic_ssreeela@quicinc.com>
-In-Reply-To: <20250321-ath12k-ahb-v12-0-bb389ed76ae5@quicinc.com>
-References: <20250321-ath12k-ahb-v12-0-bb389ed76ae5@quicinc.com>
-Subject: Re: [PATCH ath-next v12 00/13] wifi: ath12k: add Ath12k AHB driver
- support for IPQ5332
-Message-Id: <174291462168.1228728.13742084811292852249.b4-ty@oss.qualcomm.com>
-Date: Tue, 25 Mar 2025 07:57:01 -0700
+        d=1e100.net; s=20230601; t=1742914638; x=1743519438;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fGpw7+lzDBqKQi13meiBn0xCYbAhrMYmTI+bEs2bkbo=;
+        b=Hj35hrT6nOMA136JM5t9akjM+KG1DqgZwTRzoEeOfhWqAoUacKSrguHQb6nESKHsLT
+         wqYumuQ8gCdQQFh5+baoJ4e7TlGAeL7yRK/tgbo7LLG+dRzfeN6AZdN9caUTT/KnG30X
+         1jwdG0t/Sn0r0AWtir74CSCnSogNs/cWkfZpGa9pfL03T1ypdy/Kqj35QWl8R/VECQ51
+         +JuHkH3+E5hXXeJBGZoEd7Bn56ttf58pDE1f615joGwlmhgImtEbnce5AmBhWTB89JY0
+         mdspHuTUp1IBMxBQ/5ZVyC7SKshTTrDxYITa4DfpHEl4lfqEdaSiO247Pr+CQG4W9IJR
+         Qy8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWoBYWwsE1QVeK/js/DscvGS5yjtrwRLgZMJNxlpcQPpqVrqGlqj8vt3Ie1ngBCatv8Zh07LFsTrNxuuXI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGb02oYiJzPAO1bwkRZzg/6u7ZyiKTRpNAzG37RE0bjVb5Kx8U
+	dBaNhe7p7voLDb7LxZOR5DgRk/ieXAeziA6c+yxu/XVlyzeO79Yjg7UgU7e5o5ys67OgT9ibEaX
+	jdck8FcMdb+AhnORXgd5FCAtehMDJRMbtNl1LEJ72anaK0t3ewangtmYFtKcl1g==
+X-Gm-Gg: ASbGncuamnuq92ebwZtucNqLbDTbbvr8PYHKrlqQ1gz5ZTkuBU78rgOzg1LcnqeO4da
+	UJZKM17BwgxX4r6b2lc5i05Q08z9upD+UdNFAN67FNzgsdY6V5mputaALSdqbG3qlO48yKxQZgB
+	9fYPCXhQxJq8d32hEy89iyTpY7r+TiX4Nvvkpbo4hzcwWgDHIKW/qp4IRg7sDVtgexRoLks4G10
+	YGPxPrCYSIR8fqpihwy7ZkQjQH7dUJu+DrF51JbrSfshiTyEzlVyL1S9PtFd87sGEGC0R7q8C7S
+	0/M0/8vWTpKAsgJKJ6BYmfKc5Yg0+F+DVzqUNFx5X3ssqaWmHQRfynIv7yOOSg==
+X-Received: by 2002:a05:620a:198e:b0:7c5:5791:122b with SMTP id af79cd13be357-7c5ba1ea609mr2241139185a.37.1742914637805;
+        Tue, 25 Mar 2025 07:57:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEdw4wa5MlvyVnws/DGXFKT5gLLg1vPYIG4jsjd3K++5hHCV3YaqI48me4hpLE7Ev6rVqlKmA==
+X-Received: by 2002:a05:620a:198e:b0:7c5:5791:122b with SMTP id af79cd13be357-7c5ba1ea609mr2241135985a.37.1742914637381;
+        Tue, 25 Mar 2025 07:57:17 -0700 (PDT)
+Received: from ?IPV6:2601:188:c100:5710:315f:57b3:b997:5fca? ([2601:188:c100:5710:315f:57b3:b997:5fca])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b92ed0a9sm647869685a.65.2025.03.25.07.57.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Mar 2025 07:57:16 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <e4974c9e-057f-4f3f-ae2e-67a5da51df01@redhat.com>
+Date: Tue, 25 Mar 2025 10:57:15 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.0
-X-Authority-Analysis: v=2.4 cv=C4PpyRP+ c=1 sm=1 tr=0 ts=67e2c441 cx=c_pps a=0uOsjrqzRL749jD1oC5vDA==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=3RKYKuViV1jtgHVlbD4A:9 a=QEXdDO2ut3YA:10
- a=mQ_c8vxmzFEMiUWkPHU9:22
-X-Proofpoint-GUID: 5gRpMnY4fYdF5POOQFS4RYwDaJkGM2CY
-X-Proofpoint-ORIG-GUID: 5gRpMnY4fYdF5POOQFS4RYwDaJkGM2CY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-25_06,2025-03-25_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- phishscore=0 mlxlogscore=943 priorityscore=1501 impostorscore=0
- bulkscore=0 clxscore=1015 spamscore=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503250105
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] lockdep: Speed up lockdep_unregister_key() with expedited
+ RCU synchronization
+To: Waiman Long <llong@redhat.com>, Boqun Feng <boqun.feng@gmail.com>
+Cc: Eric Dumazet <edumazet@google.com>, Peter Zijlstra
+ <peterz@infradead.org>, Breno Leitao <leitao@debian.org>,
+ Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, aeh@meta.com,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, jhs@mojatatu.com,
+ kernel-team@meta.com, Erik Lundgren <elundgren@meta.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>
+References: <20250321-lockdep-v1-1-78b732d195fb@debian.org>
+ <20250324121202.GG14944@noisy.programming.kicks-ass.net>
+ <CANn89iKykrnUVUsqML7dqMuHx6OuGnKWg-xRUV4ch4vGJtUTeg@mail.gmail.com>
+ <67e1b0a6.050a0220.91d85.6caf@mx.google.com>
+ <67e1b2c4.050a0220.353291.663c@mx.google.com>
+ <67e1fd15.050a0220.bc49a.766e@mx.google.com>
+ <c0a9a0d5-400b-4238-9242-bf21f875d419@redhat.com> <Z-Il69LWz6sIand0@Mac.home>
+ <934d794b-7ebc-422c-b4fe-3e658a2e5e7a@redhat.com>
+Content-Language: en-US
+In-Reply-To: <934d794b-7ebc-422c-b4fe-3e658a2e5e7a@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 3/25/25 10:52 AM, Waiman Long wrote:
+> I agree that the commit that I mentioned is not relevant to the 
+> current case. You are right that is_dynamic_key() is the only function 
+> that is problematic, the other two are protected by the lockdep_lock. 
+> So they are safe. Anyway, I believe that the actual race happens in 
+> the iteration of the hashed list in is_dynamic_key(). The key that you 
+> save in the lockdep_key_hazptr in your proposed patch should never be 
+> the key (dead_key) that is passed to lockdep_unregister_key(). In 
+> is_dynamic_key():
+>
+>     hlist_for_each_entry_rcu(k, hash_head, hash_entry) {
+>                 if (k == key) {
+>                         found = true;
+>                         break;
+>                 }
+>         }
+>
+> key != k (dead_key), but before accessing its content to get to 
+> hash_entry, an interrupt/NMI can happen. In the mean time, the 
+> structure holding the key is freed and its content can be overwritten 
+> with some garbage. When interrupt/NMI returns, hash_entry can point to 
+> anything leading to crash or an infinite loop.  Perhaps we can use 
+> some kind of synchronization mechanism between is_dynamic_key() and 
+> lockdep_unregister_key() to prevent this kind of racing. For example, 
+> we can have an atomic counter associated with each head of the hashed 
+> table. is_dynamic_key() can increment the counter if it is not zero to 
+> proceed and lockdep_unregister_key() have to make sure it can safely 
+> decrement the counter to 0 before going ahead. Just a thought!
+>
+Well, that is essentially an arch_rwlock_t for each list head.
 
-On Fri, 21 Mar 2025 16:22:37 +0530, Raj Kumar Bhagat wrote:
-> Currently, Ath12k driver only supports WiFi devices that are based on
-> PCI bus. New Ath12k device IPQ5332 is based on AHB bus. Hence, add
-> Ath12k AHB support for IPQ5332.
-> 
-> IPQ5332 is IEEE802.11be 2 GHz 2x2 Wifi device. To bring-up IPQ5332
-> device:
-> - Add hardware parameters for IPQ5332.
-> - CE register address space in IPQ5332 is separate from WCSS register
->   space. Hence, add logic to remap CE register address.
-> - Add support for fixed QMI firmware memory for IPQ5332.
-> - Support userPD handling for WCSS secure PIL driver to enable ath12k
->   AHB support.
-> 
-> [...]
-
-Applied, thanks!
-
-[01/13] dt-bindings: net: wireless: describe the ath12k AHB module for IPQ5332
-        commit: 94fcd39ca255758335ace05f70365f2126190ee0
-[02/13] wifi: ath12k: fix incorrect CE addresses
-        commit: 60031d9c3589c7983fd1deb4a4c0bebf0929890e
-[03/13] wifi: ath12k: refactor ath12k_hw_regs structure
-        commit: 5257324583e32fd5bd6bbb6c82b4f5880b842f99
-[04/13] wifi: ath12k: add ath12k_hw_params for IPQ5332
-        commit: 5fa2fab69f59da8eaf9cbb53fd89727c750b14cf
-[05/13] wifi: ath12k: avoid m3 firmware download in AHB device IPQ5332
-        commit: 11794f8540043c230ec4bf57ee1227e765ab52ab
-[06/13] wifi: ath12k: Add hw_params to remap CE register space for IPQ5332
-        commit: 12070392be0b39d5305a235401d3ff9f03fdba13
-[07/13] wifi: ath12k: add support for fixed QMI firmware memory
-        commit: 6757079c5890f7168a9bc111b2345209f05ae278
-[08/13] wifi: ath12k: add AHB driver support for IPQ5332
-        commit: 6cee30f0da751284662affaa0d7fc567cdd65f48
-[09/13] wifi: ath12k: Power up root PD
-        commit: 10a355ba6238e13d196be2f226a59f7886d7b5bd
-[10/13] wifi: ath12k: Register various userPD interrupts and save SMEM entries
-        commit: f73e089745a000b6eb99457f71b47dc862ab221a
-[11/13] wifi: ath12k: Power up userPD
-        commit: c01d5cc9b9fe2673885db738ec8d2e01de169b92
-[12/13] wifi: ath12k: Power down userPD
-        commit: 881edc164071c2da3504b72fdc08ca8f1b915fdb
-[13/13] wifi: ath12k: enable ath12k AHB support
-        commit: c0dd3f4f70918cbcdd8da611811036a91b7dce33
-
-Best regards,
--- 
-Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Cheers,
+Longman
 
