@@ -1,466 +1,203 @@
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55B419EEBF
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 08:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECEA419EEBF;
+	Tue, 25 Mar 2025 08:52:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742892650; cv=none; b=eYOUJ72Yc1qc5kGBNffd68Z7mEmO1LZJnQnWeKREcVZATPlD2WwdRwlVC2ko6euEdKfWUYXVqxNZ/GY0Q12gljRMhj5w/KofaR2N0flfvACWt1dK2jyReFF3zkA6+ANE8fUADvdzHFs1CXVrGXPSaqVpNNCIQqbNh2XT2cT4nRY=
+	t=1742892779; cv=none; b=myNuI1MuUijmpj0P2boomtDn1bjL3GOzF8bJ9dBNi1nIAI//0GpQeopsoZZxztV0+ftsQRcAKy8vFdhgVNHLtv3oy0jON8N0V0uzDZg/4WZpCPx6GHSf7ji1zwX7a/nVBsnb2dbhqviI8zBk9oibvcaDsNVp13W9GuJKtvTT9VM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742892650; c=relaxed/simple;
-	bh=suynEf135kmKoe6SMoab+SuhQWn2VGyHbdm7fjDtc4E=;
+	s=arc-20240116; t=1742892779; c=relaxed/simple;
+	bh=k2keouQN8/qCGOrcjK3pzj7qXnScNycXHz527cVZTm0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gMnt1hLo5pFbPBAKMkehC6GXhEn6d611l2jO1N0YHZBibeU9m5goh7xbZGX5Ek58wYhwhXzsyvSJqNNARYLMZ26/L6/n08UUU8F9LlhLPpvoXwivMpu5P2kUGasa1d9LaGd5TtB8v+SkTDqyme/s05YCdvzGQha503NjSCVHWmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LxZ1ivLZ; arc=none smtp.client-ip=209.85.160.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=ppomZTsvh6zcgiAg6jXbSbSXtGVF4RltONoIE9jYjS893nJe7JixJiq6SqZ/2Is6zR9UqHfsBNhnBxOReK6BywZm6YW3Wyu1efmqbGkZsyFvHiynMxXzjNcx/4AhY2zi2Ln2E37g9WL5WNdVpNptlzxJeWsoz+KeOpdHxPQM1R0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=IrKPm8r3; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LxZ1ivLZ"
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2c7f876b320so677385fac.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 01:50:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742892647; x=1743497447; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5eOMTRp7OLNI3VGicdgRH0lRnyRYz67Gt/EAnTu6nbQ=;
-        b=LxZ1ivLZjzNUb2kBVCGTPconFc9SyrqteY8oaneQxiy/RkGRRvtkDkoKrqLoIKwCM6
-         4UdAVpZZtVNDo5Xq5lBJflQX2s1A8zniFv8VodP8QNJmFO8kRdh1Eb9jwygqbHFK5rrT
-         /wM0ahtCglA2jLzZB5eii5VP4XRhqJNVs/Lg+MofsaELhRRBbHQEd/B5VmR14IzTHGV4
-         JGHkaLBsfB1nqMFTeGY+O6xhdUly91/9WGI1qZQvWDeDr05KdPhWYCorD6IpirlyTfF+
-         yjb3rO3dFYJzAldrseKoDJfrvpthVSODm3exCA/Vkbrphuk2tlJPQjnCqVFtOVWTYniU
-         ylog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742892647; x=1743497447;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5eOMTRp7OLNI3VGicdgRH0lRnyRYz67Gt/EAnTu6nbQ=;
-        b=ASMRxkZUxe3NtixPlzvITd0oODJ8YvFMz/qspJGwwAm1W3VAtEhM2cFdUmMCpgnCV5
-         JIfmOUVLJJ5OttoQZPp9WGDku3wyQ0w8U724YtVfPDEjuhR8wJpSHud83WkaNnSdhHWd
-         sQwbHzAL8+tgUFDgx5YcNouPPL8o0VodqNQ5IG5Zq7hol7C25Pr4RnEFSHiFXJzUBFXI
-         a5Mre4oRu1bImSFhAcxYhGQUTz35sPx4TKY4faYFBwvoHpNmPfAxu1x5GQLz/pE1sRbs
-         XX/WwQCC+6UfVoSGn/qrgHaV0SwyVTJFXVINax4a4luTcxwpG7R3daob668nOsC2cbk3
-         xIOw==
-X-Gm-Message-State: AOJu0Ywk0WWJIBjhBx6T7wzLAGP6xQPxMYfD9sR7kaWNiORfDQ3PqX15
-	M6mMCyZlw+QwYZYT5qZDqYQCUIAz5TXupAIdrhdUgr5v3CMQx30H3ByWiwgcELMUxERcmpQ4gqw
-	pr4B22mp/uOYcqSJ2gn5exIR/bb3XEKqxJKzb2A==
-X-Gm-Gg: ASbGnctfwBHM4SaRmK2eauhNS+DT/vq7doesgT5xYU8ZQU0tNYOMSXtFw7WaPLeof/X
-	UQg2G0WH4zHDL2dYNwE70WV3de4944ByqGoW3CM14r4DM0Q4V0N0NY/ArEupB9rKQpwhj8Ukczv
-	v7aYlH4/KfRrf6gW5YC9EX1rmy7KE=
-X-Google-Smtp-Source: AGHT+IE1lc0Le+Xn4IPuxfRnWH1Z92SoqlO8A5APVOUx7ahbqOTcRxJtSaNA/0G1hYCe0KPtkwaeflutY9Bv2ysJ0iU=
-X-Received: by 2002:a05:6871:c714:b0:2b8:84d7:ddd5 with SMTP id
- 586e51a60fabf-2c78054a998mr9647125fac.39.1742892647207; Tue, 25 Mar 2025
- 01:50:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="IrKPm8r3"
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 9DA5C2E0873A;
+	Tue, 25 Mar 2025 10:52:46 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1742892768;
+	bh=0bCygpRrm3Yx2CpXOpIVeKdCxu9w0sgpWFU8/m26N64=;
+	h=Received:From:Subject:To;
+	b=IrKPm8r3iYxs6eTKcun0UWit2MwK68V3VxRtnsba82RyT8n1ILQjFvE9LvGyD3EJK
+	 upZtb33yD6wUnRmfdOPmDi/42J3zwa9hX0SYG04Prmj5Chiry3CUKePqwco2sowQAh
+	 O9uUX2b7TGAiHsb+3buMJ3EyvOsWT7qpkb7EIF+U=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.208.175) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f175.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f175.google.com with SMTP id
+ 38308e7fff4ca-30c0517142bso55791311fa.1;
+        Tue, 25 Mar 2025 01:52:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCXNI051P5M5XnGNWImW8WDOCbHSDow/Vfu87kzqNaXYgoK88xDr2CdJE4p3Fkh5HiEzIvHwpj8Z2QGIGnYK@vger.kernel.org,
+ AJvYcCXeU2vo8HQProEgDO1m9wBLrql/jgx5MMaW5yyTyPPnVoNJk07IHgZZyUHtqoKIOW6wYqVi5MJ2ghRyew==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvBNqnLRnA9629JjWE2p+aXBsSuzWOW1X1wuLUFsG/AAbss3CH
+	vkq08/akLF+Sc6kufc0Gb9wTqx9TUC7tqQSvNzvTBc8L2CExhmKOjF6xY/MkrdsZK44eAFefdpf
+	li37rhteGM7Mtdpb7s/1KNYtNgAk=
+X-Google-Smtp-Source: 
+ AGHT+IHRbr3Zgt3JTjcuCrzPWSyhQ7NbTyJY8uA2enw0MS8S7/YmeFAcMflWPRoZmdcCtqxkS3KQISgV+Jkx3u5FBKQ=
+X-Received: by 2002:a05:651c:2209:b0:30b:f775:baf5 with SMTP id
+ 38308e7fff4ca-30d7e0dd9bbmr59083871fa.0.1742892765627; Tue, 25 Mar 2025
+ 01:52:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
- <20250305130634.1850178-4-jens.wiklander@linaro.org> <Z9K2RQYuXSJc8Y1E@sumit-X1>
- <CAHUa44H5Zc_POJ_RWaVd4iFVagRkFaN+8Ajs=19FKboZapbQHw@mail.gmail.com>
- <Z9vfD4UWSrqSTPnP@sumit-X1> <CAHUa44HY-jZCoDXKnx-f4gBoABRVdh1+6PA1AYHSva9aL=rDAA@mail.gmail.com>
- <Z-JFagmbZBQd0hoM@sumit-X1>
-In-Reply-To: <Z-JFagmbZBQd0hoM@sumit-X1>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Tue, 25 Mar 2025 09:50:35 +0100
-X-Gm-Features: AQ5f1JqCL9i7_V-pA06IP3-j62y0ZfeHI3kPwPORgKYNirOFYekFlp01JSrl9PM
-Message-ID: <CAHUa44HXHwR1_LbjG6T5OqnafXiS4-kHeKjV9TurGORx3SsprQ@mail.gmail.com>
-Subject: Re: [PATCH v6 03/10] optee: account for direction while converting parameters
-To: Sumit Garg <sumit.garg@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	op-tee@lists.trustedfirmware.org, linux-arm-kernel@lists.infradead.org, 
-	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
-	Simona Vetter <simona.vetter@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>
+References: <20250324210151.6042-10-lkml@antheas.dev>
+ <202503251316.lPXAIXIV-lkp@intel.com>
+In-Reply-To: <202503251316.lPXAIXIV-lkp@intel.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Tue, 25 Mar 2025 09:52:32 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwFnu+eQv+qe3XyfcNEjwjFoH23K0ixssEp7m=5Xnh4nhQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JqBK-YkWbgSprjvPh-VyZ0pO6dOIRXsCrbsZaOFk6X7TVe8A4ojrJp9DLE
+Message-ID: 
+ <CAGwozwFnu+eQv+qe3XyfcNEjwjFoH23K0ixssEp7m=5Xnh4nhQ@mail.gmail.com>
+Subject: Re: [PATCH v4 09/11] HID: asus: add basic RGB support
+To: kernel test robot <lkp@intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+ "Luke D . Jones" <luke@ljones.dev>,
+	Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-PPP-Message-ID: 
+ <174289276713.8467.18012719937652387542@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-On Tue, Mar 25, 2025 at 6:56=E2=80=AFAM Sumit Garg <sumit.garg@kernel.org> =
-wrote:
+My email is not doing too well it seems. It is not just yours Luke.
+Hopefully my shared host does not bite me for abusing the IP
+
+On Tue, 25 Mar 2025 at 07:34, kernel test robot <lkp@intel.com> wrote:
 >
-> On Thu, Mar 20, 2025 at 02:00:57PM +0100, Jens Wiklander wrote:
-> > Hi Sumit,
-> >
-> > On Thu, Mar 20, 2025 at 10:25=E2=80=AFAM Sumit Garg <sumit.garg@kernel.=
-org> wrote:
-> > >
-> > > Hi Jens,
-> > >
-> > > On Mon, Mar 17, 2025 at 08:42:01AM +0100, Jens Wiklander wrote:
-> > > > Hi Sumit,
-> > > >
-> > > > On Thu, Mar 13, 2025 at 11:41=E2=80=AFAM Sumit Garg <sumit.garg@ker=
-nel.org> wrote:
-> > > > >
-> > > > > Hi Jens,
-> > > > >
-> > > > > On Wed, Mar 05, 2025 at 02:04:09PM +0100, Jens Wiklander wrote:
-> > > > > > The OP-TEE backend driver has two internal function pointers to=
- convert
-> > > > > > between the subsystem type struct tee_param and the OP-TEE type=
- struct
-> > > > > > optee_msg_param.
-> > > > > >
-> > > > > > The conversion is done from one of the types to the other, whic=
-h is then
-> > > > > > involved in some operation and finally converted back to the or=
-iginal
-> > > > > > type. When converting to prepare the parameters for the operati=
-on, all
-> > > > > > fields must be taken into account, but then converting back, it=
-'s enough
-> > > > > > to update only out-values and out-sizes. So, an update_out para=
-meter is
-> > > > > > added to the conversion functions to tell if all or only some f=
-ields
-> > > > > > must be copied.
-> > > > > >
-> > > > > > This is needed in a later patch where it might get confusing wh=
-en
-> > > > > > converting back in from_msg_param() callback since an allocated
-> > > > > > restricted SHM can be using the sec_world_id of the used restri=
-cted
-> > > > > > memory pool and that doesn't translate back well.
-> > > > > >
-> > > > > > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> > > > > > ---
-> > > > > >  drivers/tee/optee/call.c          | 10 ++--
-> > > > > >  drivers/tee/optee/ffa_abi.c       | 43 +++++++++++++----
-> > > > > >  drivers/tee/optee/optee_private.h | 42 +++++++++++------
-> > > > > >  drivers/tee/optee/rpc.c           | 31 +++++++++----
-> > > > > >  drivers/tee/optee/smc_abi.c       | 76 +++++++++++++++++++++++=
---------
-> > > > > >  5 files changed, 144 insertions(+), 58 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/tee/optee/call.c b/drivers/tee/optee/call.=
-c
-> > > > > > index 16eb953e14bb..f1533b894726 100644
-> > > > > > --- a/drivers/tee/optee/call.c
-> > > > > > +++ b/drivers/tee/optee/call.c
-> > > > > > @@ -400,7 +400,8 @@ int optee_open_session(struct tee_context *=
-ctx,
-> > > > > >       export_uuid(msg_arg->params[1].u.octets, &client_uuid);
-> > > > > >
-> > > > > >       rc =3D optee->ops->to_msg_param(optee, msg_arg->params + =
-2,
-> > > > > > -                                   arg->num_params, param);
-> > > > > > +                                   arg->num_params, param,
-> > > > > > +                                   false /*!update_out*/);
-> > > > > >       if (rc)
-> > > > > >               goto out;
-> > > > > >
-> > > > > > @@ -427,7 +428,8 @@ int optee_open_session(struct tee_context *=
-ctx,
-> > > > > >       }
-> > > > > >
-> > > > > >       if (optee->ops->from_msg_param(optee, param, arg->num_par=
-ams,
-> > > > > > -                                    msg_arg->params + 2)) {
-> > > > > > +                                    msg_arg->params + 2,
-> > > > > > +                                    true /*update_out*/)) {
-> > > > > >               arg->ret =3D TEEC_ERROR_COMMUNICATION;
-> > > > > >               arg->ret_origin =3D TEEC_ORIGIN_COMMS;
-> > > > > >               /* Close session again to avoid leakage */
-> > > > > > @@ -541,7 +543,7 @@ int optee_invoke_func(struct tee_context *c=
-tx, struct tee_ioctl_invoke_arg *arg,
-> > > > > >       msg_arg->cancel_id =3D arg->cancel_id;
-> > > > > >
-> > > > > >       rc =3D optee->ops->to_msg_param(optee, msg_arg->params, a=
-rg->num_params,
-> > > > > > -                                   param);
-> > > > > > +                                   param, false /*!update_out*=
-/);
-> > > > > >       if (rc)
-> > > > > >               goto out;
-> > > > > >
-> > > > > > @@ -551,7 +553,7 @@ int optee_invoke_func(struct tee_context *c=
-tx, struct tee_ioctl_invoke_arg *arg,
-> > > > > >       }
-> > > > > >
-> > > > > >       if (optee->ops->from_msg_param(optee, param, arg->num_par=
-ams,
-> > > > > > -                                    msg_arg->params)) {
-> > > > > > +                                    msg_arg->params, true /*up=
-date_out*/)) {
-> > > > > >               msg_arg->ret =3D TEEC_ERROR_COMMUNICATION;
-> > > > > >               msg_arg->ret_origin =3D TEEC_ORIGIN_COMMS;
-> > > > > >       }
-> > > > > > diff --git a/drivers/tee/optee/ffa_abi.c b/drivers/tee/optee/ff=
-a_abi.c
-> > > > > > index 4ca1d5161b82..e4b08cd195f3 100644
-> > > > > > --- a/drivers/tee/optee/ffa_abi.c
-> > > > > > +++ b/drivers/tee/optee/ffa_abi.c
-> > > > > > @@ -122,15 +122,21 @@ static int optee_shm_rem_ffa_handle(struc=
-t optee *optee, u64 global_id)
-> > > > > >   */
-> > > > > >
-> > > > > >  static void from_msg_param_ffa_mem(struct optee *optee, struct=
- tee_param *p,
-> > > > > > -                                u32 attr, const struct optee_m=
-sg_param *mp)
-> > > > > > +                                u32 attr, const struct optee_m=
-sg_param *mp,
-> > > > > > +                                bool update_out)
-> > > > > >  {
-> > > > > >       struct tee_shm *shm =3D NULL;
-> > > > > >       u64 offs_high =3D 0;
-> > > > > >       u64 offs_low =3D 0;
-> > > > > >
-> > > > > > +     if (update_out) {
-> > > > > > +             if (attr =3D=3D OPTEE_MSG_ATTR_TYPE_FMEM_INPUT)
-> > > > > > +                     return;
-> > > > > > +             goto out;
-> > > > > > +     }
-> > > > > > +
-> > > > > >       p->attr =3D TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT +
-> > > > > >                 attr - OPTEE_MSG_ATTR_TYPE_FMEM_INPUT;
-> > > > > > -     p->u.memref.size =3D mp->u.fmem.size;
-> > > > > >
-> > > > > >       if (mp->u.fmem.global_id !=3D OPTEE_MSG_FMEM_INVALID_GLOB=
-AL_ID)
-> > > > > >               shm =3D optee_shm_from_ffa_handle(optee, mp->u.fm=
-em.global_id);
-> > > > > > @@ -141,6 +147,8 @@ static void from_msg_param_ffa_mem(struct o=
-ptee *optee, struct tee_param *p,
-> > > > > >               offs_high =3D mp->u.fmem.offs_high;
-> > > > > >       }
-> > > > > >       p->u.memref.shm_offs =3D offs_low | offs_high << 32;
-> > > > > > +out:
-> > > > > > +     p->u.memref.size =3D mp->u.fmem.size;
-> > > > > >  }
-> > > > > >
-> > > > > >  /**
-> > > > > > @@ -150,12 +158,14 @@ static void from_msg_param_ffa_mem(struct=
- optee *optee, struct tee_param *p,
-> > > > > >   * @params:  subsystem internal parameter representation
-> > > > > >   * @num_params:      number of elements in the parameter array=
-s
-> > > > > >   * @msg_params:      OPTEE_MSG parameters
-> > > > > > + * @update_out: update parameter for output only
-> > > > > >   *
-> > > > > >   * Returns 0 on success or <0 on failure
-> > > > > >   */
-> > > > > >  static int optee_ffa_from_msg_param(struct optee *optee,
-> > > > > >                                   struct tee_param *params, siz=
-e_t num_params,
-> > > > > > -                                 const struct optee_msg_param =
-*msg_params)
-> > > > > > +                                 const struct optee_msg_param =
-*msg_params,
-> > > > > > +                                 bool update_out)
-> > > > > >  {
-> > > > > >       size_t n;
-> > > > > >
-> > > > > > @@ -166,18 +176,20 @@ static int optee_ffa_from_msg_param(struc=
-t optee *optee,
-> > > > > >
-> > > > > >               switch (attr) {
-> > > > > >               case OPTEE_MSG_ATTR_TYPE_NONE:
-> > > > > > +                     if (update_out)
-> > > > > > +                             break;
-> > > > > >                       p->attr =3D TEE_IOCTL_PARAM_ATTR_TYPE_NON=
-E;
-> > > > > >                       memset(&p->u, 0, sizeof(p->u));
-> > > > > >                       break;
-> > > > > >               case OPTEE_MSG_ATTR_TYPE_VALUE_INPUT:
-> > > > > >               case OPTEE_MSG_ATTR_TYPE_VALUE_OUTPUT:
-> > > > > >               case OPTEE_MSG_ATTR_TYPE_VALUE_INOUT:
-> > > > > > -                     optee_from_msg_param_value(p, attr, mp);
-> > > > > > +                     optee_from_msg_param_value(p, attr, mp, u=
-pdate_out);
-> > > > > >                       break;
-> > > > > >               case OPTEE_MSG_ATTR_TYPE_FMEM_INPUT:
-> > > > > >               case OPTEE_MSG_ATTR_TYPE_FMEM_OUTPUT:
-> > > > > >               case OPTEE_MSG_ATTR_TYPE_FMEM_INOUT:
-> > > > > > -                     from_msg_param_ffa_mem(optee, p, attr, mp=
-);
-> > > > > > +                     from_msg_param_ffa_mem(optee, p, attr, mp=
-, update_out);
-> > > > > >                       break;
-> > > > > >               default:
-> > > > > >                       return -EINVAL;
-> > > > > > @@ -188,10 +200,16 @@ static int optee_ffa_from_msg_param(struc=
-t optee *optee,
-> > > > > >  }
-> > > > > >
-> > > > > >  static int to_msg_param_ffa_mem(struct optee_msg_param *mp,
-> > > > > > -                             const struct tee_param *p)
-> > > > > > +                             const struct tee_param *p, bool u=
-pdate_out)
-> > > > > >  {
-> > > > > >       struct tee_shm *shm =3D p->u.memref.shm;
-> > > > > >
-> > > > > > +     if (update_out) {
-> > > > > > +             if (p->attr =3D=3D TEE_IOCTL_PARAM_ATTR_TYPE_MEMR=
-EF_INPUT)
-> > > > > > +                     return 0;
-> > > > > > +             goto out;
-> > > > > > +     }
-> > > > > > +
-> > > > > >       mp->attr =3D OPTEE_MSG_ATTR_TYPE_FMEM_INPUT + p->attr -
-> > > > > >                  TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT;
-> > > > > >
-> > > > > > @@ -211,6 +229,7 @@ static int to_msg_param_ffa_mem(struct opte=
-e_msg_param *mp,
-> > > > > >               memset(&mp->u, 0, sizeof(mp->u));
-> > > > > >               mp->u.fmem.global_id =3D OPTEE_MSG_FMEM_INVALID_G=
-LOBAL_ID;
-> > > > > >       }
-> > > > > > +out:
-> > > > > >       mp->u.fmem.size =3D p->u.memref.size;
-> > > > > >
-> > > > > >       return 0;
-> > > > > > @@ -222,13 +241,15 @@ static int to_msg_param_ffa_mem(struct op=
-tee_msg_param *mp,
-> > > > > >   * @optee:   main service struct
-> > > > > >   * @msg_params:      OPTEE_MSG parameters
-> > > > > >   * @num_params:      number of elements in the parameter array=
-s
-> > > > > > - * @params:  subsystem itnernal parameter representation
-> > > > > > + * @params:  subsystem internal parameter representation
-> > > > > > + * @update_out: update parameter for output only
-> > > > > >   * Returns 0 on success or <0 on failure
-> > > > > >   */
-> > > > > >  static int optee_ffa_to_msg_param(struct optee *optee,
-> > > > > >                                 struct optee_msg_param *msg_par=
-ams,
-> > > > > >                                 size_t num_params,
-> > > > > > -                               const struct tee_param *params)
-> > > > > > +                               const struct tee_param *params,
-> > > > > > +                               bool update_out)
-> > > > > >  {
-> > > > > >       size_t n;
-> > > > > >
-> > > > > > @@ -238,18 +259,20 @@ static int optee_ffa_to_msg_param(struct =
-optee *optee,
-> > > > > >
-> > > > > >               switch (p->attr) {
-> > > > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_NONE:
-> > > > > > +                     if (update_out)
-> > > > > > +                             break;
-> > > > > >                       mp->attr =3D TEE_IOCTL_PARAM_ATTR_TYPE_NO=
-NE;
-> > > > > >                       memset(&mp->u, 0, sizeof(mp->u));
-> > > > > >                       break;
-> > > > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT:
-> > > > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT:
-> > > > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INOUT:
-> > > > > > -                     optee_to_msg_param_value(mp, p);
-> > > > > > +                     optee_to_msg_param_value(mp, p, update_ou=
-t);
-> > > > > >                       break;
-> > > > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
-> > > > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
-> > > > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
-> > > > > > -                     if (to_msg_param_ffa_mem(mp, p))
-> > > > > > +                     if (to_msg_param_ffa_mem(mp, p, update_ou=
-t))
-> > > > > >                               return -EINVAL;
-> > > > > >                       break;
-> > > > > >               default:
-> > > > >
-> > > > > Can we rather handle it as follows to improve code readability an=
-d
-> > > > > maintainence long term? Ditto for all other places.
-> > > > >
-> > > > > static int optee_ffa_to_msg_param(struct optee *optee,
-> > > > >                                   struct optee_msg_param *msg_par=
-ams,
-> > > > >                                   size_t num_params,
-> > > > >                                   const struct tee_param *params,
-> > > > >                                   bool update_out)
-> > > > > {
-> > > > >         size_t n;
-> > > > >
-> > > > >         for (n =3D 0; n < num_params; n++) {
-> > > > >                 const struct tee_param *p =3D params + n;
-> > > > >                 struct optee_msg_param *mp =3D msg_params + n;
-> > > > >
-> > > > >                 if (update_out && (p->attr =3D=3D TEE_IOCTL_PARAM=
-_ATTR_TYPE_NONE ||
-> > > > >                      p->attr =3D=3D TEE_IOCTL_PARAM_ATTR_TYPE_VAL=
-UE_INPUT ||
-> > > > >                      p->attr =3D=3D TEE_IOCTL_PARAM_ATTR_TYPE_MEM=
-REF_INPUT))
-> > > > >                     continue;
-> > > >
-> > > > You're missing updating the length field for memrefs.
-> > > >
-> > >
-> > > Do we need to update length field for input memrefs when update_out i=
-s
-> > > set? I don't see that happening in your existing patch too.
-> >
-> > I'm sorry, I was unclear. The update_out parameter means only the
-> > output fields should be updated, not the attribute, offsets, ids, etc.
-> > That is, the length field for memrefs, and the value fields a, b, c
-> > for value params. Some of the memrefs aren't translated one-to-one
-> > with SDP, but the length field can and must be updated.
+> Hi Antheas,
 >
-> Isn't it rather better to add another attribute type to handled SDP
-> special handling?
+> kernel test robot noticed the following build errors:
+>
+> [auto build test ERROR on 38fec10eb60d687e30c8c6b5420d86e8149f7557]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/Antheas-Kapenekakis/HID-asus-refactor-init-sequence-per-spec/20250325-051852
+> base:   38fec10eb60d687e30c8c6b5420d86e8149f7557
+> patch link:    https://lore.kernel.org/r/20250324210151.6042-10-lkml%40antheas.dev
+> patch subject: [PATCH v4 09/11] HID: asus: add basic RGB support
+> config: riscv-randconfig-002-20250325 (https://download.01.org/0day-ci/archive/20250325/202503251316.lPXAIXIV-lkp@intel.com/config)
+> compiler: riscv64-linux-gcc (GCC) 14.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250325/202503251316.lPXAIXIV-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202503251316.lPXAIXIV-lkp@intel.com/
+>
+> All errors (new ones prefixed by >>):
+>
+>    riscv64-linux-ld: drivers/hid/hid-asus.o: in function `asus_kbd_register_leds':
+> >> drivers/hid/hid-asus.c:676:(.text+0x23f8): undefined reference to `devm_led_classdev_multicolor_register_ext'
+>
 
-This isn't special handling, all parameters get the same treatment.
-When updating a parameter after it has been used, this is all that
-needs to be done, regardless of whether it's an SDP buffer. The
-updates we did before this patch were redundant.
+Since I have been getting this error by test robot often, what is the
+canonical way to check that KConfig is correct before sending patches?
 
-This patch was introduced in the v3 of this patch set, but I don't
-think it's strictly needed any longer since SDP buffers are allocated
-differently now. I think it's nice to only update what's needed when
-translating back a parameter (just as in params_to_user() in
-drivers/tee/tee_core.c), but if you don't like it, we can drop this
-patch.
+I will try to fix the KConfig and send it later today
 
-Cheers,
-Jens
+
+Antheas
 
 >
-> -Sumit
+> vim +676 drivers/hid/hid-asus.c
 >
-> >
-> > Cheers,
-> > Jens
-> >
-> > >
-> > > -Sumit
-> > >
-> > > > Cheers,
-> > > > Jens
-> > > >
-> > > > >
-> > > > >                 switch (p->attr) {
-> > > > >                 case TEE_IOCTL_PARAM_ATTR_TYPE_NONE:
-> > > > >                         mp->attr =3D TEE_IOCTL_PARAM_ATTR_TYPE_NO=
-NE;
-> > > > >                         memset(&mp->u, 0, sizeof(mp->u));
-> > > > >                         break;
-> > > > >                 case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT:
-> > > > >                 case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT:
-> > > > >                 case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INOUT:
-> > > > >                         optee_to_msg_param_value(mp, p);
-> > > > >                         break;
-> > > > >                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
-> > > > >                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
-> > > > >                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
-> > > > >                         if (to_msg_param_ffa_mem(mp, p))
-> > > > >                                 return -EINVAL;
-> > > > >                         break;
-> > > > >                 default:
-> > > > >                         return -EINVAL;
-> > > > >                 }
-> > > > >         }
-> > > > >
-> > > > >         return 0;
-> > > > > }
-> > > > >
-> > > > > -Sumit
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  645
+> af22a610bc3850 Carlo Caione        2017-04-06  646  static int asus_kbd_register_leds(struct hid_device *hdev)
+> af22a610bc3850 Carlo Caione        2017-04-06  647  {
+> af22a610bc3850 Carlo Caione        2017-04-06  648      struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
+> af22a610bc3850 Carlo Caione        2017-04-06  649      unsigned char kbd_func;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  650      struct asus_kbd_leds *leds;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  651      bool no_led;
+> af22a610bc3850 Carlo Caione        2017-04-06  652      int ret;
+> af22a610bc3850 Carlo Caione        2017-04-06  653
+> 2c82a7b20f7b7a Luke D. Jones       2024-04-16  654      ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
+> 2c82a7b20f7b7a Luke D. Jones       2024-04-16  655      if (ret < 0)
+> 2c82a7b20f7b7a Luke D. Jones       2024-04-16  656              return ret;
+> 2c82a7b20f7b7a Luke D. Jones       2024-04-16  657
+> 3ebfeb18b44e01 Antheas Kapenekakis 2025-03-24  658      /* Get keyboard functions */
+> 3ebfeb18b44e01 Antheas Kapenekakis 2025-03-24  659      ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
+> b92b80246e0626 Luke D Jones        2020-10-27  660      if (ret < 0)
+> b92b80246e0626 Luke D Jones        2020-10-27  661              return ret;
+> 53078a736fbc60 Luke D. Jones       2025-01-11  662
+> 53078a736fbc60 Luke D. Jones       2025-01-11  663      if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
+> 53078a736fbc60 Luke D. Jones       2025-01-11  664              ret = asus_kbd_disable_oobe(hdev);
+> 53078a736fbc60 Luke D. Jones       2025-01-11  665              if (ret < 0)
+> 53078a736fbc60 Luke D. Jones       2025-01-11  666                      return ret;
+> 53078a736fbc60 Luke D. Jones       2025-01-11  667      }
+> af22a610bc3850 Carlo Caione        2017-04-06  668
+> af22a610bc3850 Carlo Caione        2017-04-06  669      /* Check for backlight support */
+> af22a610bc3850 Carlo Caione        2017-04-06  670      if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
+> af22a610bc3850 Carlo Caione        2017-04-06  671              return -ENODEV;
+> af22a610bc3850 Carlo Caione        2017-04-06  672
+> af22a610bc3850 Carlo Caione        2017-04-06  673      drvdata->kbd_backlight = devm_kzalloc(&hdev->dev,
+> af22a610bc3850 Carlo Caione        2017-04-06  674                                            sizeof(struct asus_kbd_leds),
+> af22a610bc3850 Carlo Caione        2017-04-06  675                                            GFP_KERNEL);
+> af22a610bc3850 Carlo Caione        2017-04-06 @676      if (!drvdata->kbd_backlight)
+> af22a610bc3850 Carlo Caione        2017-04-06  677              return -ENOMEM;
+> af22a610bc3850 Carlo Caione        2017-04-06  678
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  679      leds = drvdata->kbd_backlight;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  680      leds->removed = false;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  681      leds->brightness = 3;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  682      leds->hdev = hdev;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  683      leds->listener.brightness_set = asus_kbd_listener_set;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  684
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  685      leds->rgb_colors[0] = 0;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  686      leds->rgb_colors[1] = 0;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  687      leds->rgb_colors[2] = 0;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  688      leds->rgb_init = true;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  689      leds->rgb_set = false;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  690      leds->mc_led.led_cdev.name = devm_kasprintf(&hdev->dev, GFP_KERNEL,
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  691                                      "asus-%s:rgb:peripheral",
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  692                                      strlen(hdev->uniq) ?
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  693                                      hdev->uniq : dev_name(&hdev->dev));
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  694      leds->mc_led.led_cdev.flags = LED_BRIGHT_HW_CHANGED;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  695      leds->mc_led.led_cdev.max_brightness = 3,
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  696      leds->mc_led.led_cdev.brightness_set = asus_kbd_brightness_set,
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  697      leds->mc_led.led_cdev.brightness_get = asus_kbd_brightness_get,
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  698      leds->mc_led.subled_info = leds->subled_info,
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  699      leds->mc_led.num_colors = ARRAY_SIZE(leds->subled_info),
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  700      leds->subled_info[0].color_index = LED_COLOR_ID_RED;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  701      leds->subled_info[1].color_index = LED_COLOR_ID_GREEN;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  702      leds->subled_info[2].color_index = LED_COLOR_ID_BLUE;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  703
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  704      INIT_WORK(&drvdata->kbd_backlight->work, asus_kbd_work);
+> 315c537068a13f Pietro Borrello     2023-02-12  705      spin_lock_init(&drvdata->kbd_backlight->lock);
+> af22a610bc3850 Carlo Caione        2017-04-06  706
+> d37db2009c913c Antheas Kapenekakis 2025-03-24  707      ret = asus_hid_register_listener(&drvdata->kbd_backlight->listener);
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  708      no_led = !!ret;
+> d37db2009c913c Antheas Kapenekakis 2025-03-24  709
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  710      if (drvdata->quirks & QUIRK_ROG_NKEY_RGB) {
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  711              ret = devm_led_classdev_multicolor_register(
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  712                      &hdev->dev, &leds->mc_led);
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  713              if (!ret)
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  714                      leds->rgb_registered = true;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  715              no_led &= !!ret;
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  716      }
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  717
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  718      if (no_led) {
+> af22a610bc3850 Carlo Caione        2017-04-06  719              /* No need to have this still around */
+> af22a610bc3850 Carlo Caione        2017-04-06  720              devm_kfree(&hdev->dev, drvdata->kbd_backlight);
+> af22a610bc3850 Carlo Caione        2017-04-06  721      }
+> af22a610bc3850 Carlo Caione        2017-04-06  722
+> 312a522531f6e5 Antheas Kapenekakis 2025-03-24  723      return no_led ? -ENODEV : 0;
+> af22a610bc3850 Carlo Caione        2017-04-06  724  }
+> af22a610bc3850 Carlo Caione        2017-04-06  725
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
