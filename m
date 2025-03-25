@@ -1,217 +1,197 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0012571D1;
-	Tue, 25 Mar 2025 12:24:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0F72571D1;
+	Tue, 25 Mar 2025 12:24:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742905469; cv=none; b=ZtabhQvZpK7rLxUHnhOZL/JmtmdWgkxItI7QJfJJFl9Q4iLuMqyTSEp7tWAV7hQ2PVnq1hyPOrVRRUB7ZSOBlYVHurxuE98vSzlqc2Uxq+pI4ljXZD5JSOaLf9kM9wZt3Yfo44xoPtANn99l+hbAP+GeR0J+hmgFXhKLIyIq21c=
+	t=1742905480; cv=none; b=dwjwB+P9TxzatwpxIBvFq4OCDzWmebzS7P3Yj0b55SsW4aPs0agXPmmNH/G/iVTaUcdlvR+K8Myz7Kxv2sRNgOt1gQ7ypNvCcYO3xzxZO38YkFCSP1Jv2yuWonK/wtjla0K3f502sjAtB+RRGnEZmwBrvbWu8XHjfg+qghoypso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742905469; c=relaxed/simple;
-	bh=Mf0PY1BZwER+HJ9Mbh8TvIu8FULZZyssZyyQhg3Lxog=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G0canlWlTc9P+7pQCEAUjUwByCWEFW9FKshssW3cZmj61qMtYL2g1zp6/rX8KT0YKSZIDbayC1fN8cpJUw1Yughk6iK1s6oxlv7R12NReei1vEUAOy5n73C4txiFAwW1Xsi2sD/GGGgrUCj+lo51A/kvJNCT8jONa3Pj1C3Yxgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+/0HeFV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742905480; c=relaxed/simple;
+	bh=+rpm/N8/UHXP5n3hRK8c2vpAMzIx7Ul4qNvFlNw8mss=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HagG87bgnClocGxdlKM7dnFgKl7Qpnr1tQhnoUvR3jGCvirCyt742Glw2jC04Ne8sHJr45OmGN5tjDcaYndfDcJ3cAut/RYHgM0LTG8V9DSjN93A5bbACva01tIgw1a9b6Q5bWClFcbKxIEVD71EfbT1S2LGLg+0B5fLWZ+LlAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fJ61zsFN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+/0HeFV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EB37C4CEE9;
-	Tue, 25 Mar 2025 12:24:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fJ61zsFN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2D02C4CEED;
+	Tue, 25 Mar 2025 12:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742905468;
-	bh=Mf0PY1BZwER+HJ9Mbh8TvIu8FULZZyssZyyQhg3Lxog=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=s+/0HeFVYw6E9ENxuZrurwBQZjTKxbCYZUpzZpQQkhJ/91XayRTQsrh0ZrPcxL6VT
-	 kWPsswaWOu92ibYtKPVQ8cCX8tI/AovpWLUHxbRfI0/LYO+BNEKvw0jz9tSM+iNekY
-	 vYO8pjYDmfb/z5KEqYkNLmTBUw5TNSgx7s3Tm+/YAcmPn6gD38V4dkw/SWkZ+YlcxW
-	 su7X/NDNRXtlVjRTXmyVRJXFZaFDSzVdX/xcyiKo4eSPgyWNkviNI88lTVQL8Pypxt
-	 ZQYp+1CfBBYtXUeraYsyNCniBCJqLg9oYiWYeeJrfpwq4Grdag9K+D7WLkJGrdzDGX
-	 yL7UoRVqqlcPQ==
-Message-ID: <bf6d066c-f0dd-471a-bb61-9132476b515a@kernel.org>
-Date: Tue, 25 Mar 2025 13:24:16 +0100
+	s=k20201202; t=1742905479;
+	bh=+rpm/N8/UHXP5n3hRK8c2vpAMzIx7Ul4qNvFlNw8mss=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fJ61zsFNPv0tVZchhiONptI9S+phpKdkaxrIZlJXfqP8ZFhX5npdPIZKutJs7jnqd
+	 cCfXzR1Lhw26JF6STGdUIKZRIQjVQ3FNgrDHdOvq/LtsFHWE3zxFE/GTBVb31ANpi6
+	 beEwlo8W1sTeTn0cFAZJSTH8Xx2n6hy1MZKcm5ZKAENN6VnIKjbEvFrXx/UwseWpbr
+	 aofW9gTlCfs1lWzyuR3LRO5UKXtkNqYmP8M+/YlMc+6Le8QBFSTCqH374JFrd1SAX6
+	 1sinYuNojS4RMnq31N3OYBaEEMx5tdvpoFDLmiGmnn4c78h2enMsQS6DDCJxF83lgY
+	 sgAsBfhlY0xYg==
+From: guoren@kernel.org
+To: arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	torvalds@linux-foundation.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	anup@brainfault.org,
+	atishp@atishpatra.org,
+	oleg@redhat.com,
+	kees@kernel.org,
+	tglx@linutronix.de,
+	will@kernel.org,
+	mark.rutland@arm.com,
+	brauner@kernel.org,
+	akpm@linux-foundation.org,
+	rostedt@goodmis.org,
+	edumazet@google.com,
+	unicorn_wang@outlook.com,
+	inochiama@outlook.com,
+	gaohan@iscas.ac.cn,
+	shihua@iscas.ac.cn,
+	jiawei@iscas.ac.cn,
+	wuwei2016@iscas.ac.cn,
+	drew@pdp7.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	ctsai390@andestech.com,
+	wefu@redhat.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	josef@toxicpanda.com,
+	dsterba@suse.com,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	boqun.feng@gmail.com,
+	guoren@kernel.org,
+	xiao.w.wang@intel.com,
+	qingfang.deng@siflower.com.cn,
+	leobras@redhat.com,
+	jszhang@kernel.org,
+	conor.dooley@microchip.com,
+	samuel.holland@sifive.com,
+	yongxuan.wang@sifive.com,
+	luxu.kernel@bytedance.com,
+	david@redhat.com,
+	ruanjinjie@huawei.com,
+	cuiyunhui@bytedance.com,
+	wangkefeng.wang@huawei.com,
+	qiaozhe@iscas.ac.cn
+Cc: ardb@kernel.org,
+	ast@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-crypto@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	maple-tree@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-atm-general@lists.sourceforge.net,
+	linux-btrfs@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	linux-nfs@vger.kernel.org,
+	linux-sctp@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-media@vger.kernel.org
+Subject: [RFC PATCH V3 33/43] rv64ilp32_abi: mm/auxvec: Adapt mm->saved_auxv[] to Elf64
+Date: Tue, 25 Mar 2025 08:16:14 -0400
+Message-Id: <20250325121624.523258-34-guoren@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20250325121624.523258-1-guoren@kernel.org>
+References: <20250325121624.523258-1-guoren@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] dt-bindings: net: Add MTIP L2 switch description
- (fec,mtip-switch.yaml)
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>, Paolo Abeni <pabeni@redhat.com>,
- Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
- davem@davemloft.net, Andrew Lunn <andrew+netdev@lunn.ch>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>,
- netdev@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>
-References: <20250325115736.1732721-1-lukma@denx.de>
- <20250325115736.1732721-3-lukma@denx.de>
- <2bf73cc2-c79a-4a06-9c5f-174e3b846f1d@kernel.org>
- <20250325131507.692804cd@wsk>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250325131507.692804cd@wsk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 25/03/2025 13:15, Lukasz Majewski wrote:
-> Hi Krzysztof,
-> 
->> On 25/03/2025 12:57, Lukasz Majewski wrote:
->>> This patch provides description of the MTIP L2 switch available in
->>> some NXP's SOCs - imx287, vf610.
->>>
->>> Signed-off-by: Lukasz Majewski <lukma@denx.de>
->>> ---
->>>  .../bindings/net/fec,mtip-switch.yaml         | 160
->>> ++++++++++++++++++  
->>
->> Use compatible as filename.
-> 
-> I've followed the fsl,fec.yaml as an example. This file has description
-> for all the device tree sources from fec_main.c
+From: "Guo Ren (Alibaba DAMO Academy)" <guoren@kernel.org>
 
+Unable to handle kernel paging request at virtual address 60723de0
+Oops [#1]
+Modules linked in:
+CPU: 0 UID: 0 PID: 1 Comm: init Not tainted 6.13.0-rc4-00031-g01dc3ca797b3-dirty #161
+Hardware name: riscv-virtio,qemu (DT)
+epc : percpu_counter_add_batch+0x38/0xc4
+ ra : filemap_map_pages+0x3ec/0x54c
+epc : ffffffffbc4ea02e ra : ffffffffbc1722e4 sp : ffffffffc1c4fc60
+ gp : ffffffffbd6d3918 tp : ffffffffc1c50000 t0 : 0000000000000000
+ t1 : 000000003fffefff t2 : 0000000000000000 s0 : ffffffffc1c4fca0
+ s1 : 0000000000000022 a0 : ffffffffc25c8250 a1 : 0000000000000003
+ a2 : 0000000000000020 a3 : 000000003fffefff a4 : 000000000b1c2000
+ a5 : 0000000060723de0 a6 : ffffffffbffff000 a7 : 000000003fffffff
+ s2 : ffffffffc25c8250 s3 : ffffffffc246e240 s4 : ffffffffc2138240
+ s5 : ffffffffbd70c4d0 s6 : 0000000000000003 s7 : 0000000000000000
+ s8 : ffffffff9a02d780 s9 : 0000000000000100 s10: ffffffffc1c4fda8
+ s11: 0000000000000003 t3 : 0000000000000000 t4 : 00000000000004f7
+ t5 : 0000000000000000 t6 : 0000000000000001
+status: 0000000200000100 badaddr: 0000000060723de0 cause: 000000000000000d
+[<bc4ea02e>] percpu_counter_add_batch+0x38/0xc4
+[<bc1722e4>] filemap_map_pages+0x3ec/0x54c
+[<bc1adc86>] handle_mm_fault+0xb6c/0xe9c
+[<bc01bb3e>] handle_page_fault+0xd0/0x418
+[<bca3e264>] do_page_fault+0x20/0x3a
+[<bca4882c>] _new_vmalloc_restore_context_a0+0xb0/0xbc
+Code: 8a93 4baa 511c 171b 0027 873b 00ea 4318 2481 9fb9 (aa03) 0007
 
-That's a 14 year old binding, so clear antipattern.
+Signed-off-by: Guo Ren (Alibaba DAMO Academy) <guoren@kernel.org>
+---
+ include/linux/mm_types.h | 4 ++++
+ kernel/sys.c             | 8 ++++++++
+ 2 files changed, 12 insertions(+)
 
-> 
-> I've considered adding the full name - e.g. fec,imx287-mtip-switch.yaml
-> but this driver could (and probably will) be extended to vf610.
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index da3ba1a79ad5..0d436b0217fd 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -962,7 +962,11 @@ struct mm_struct {
+ 		unsigned long start_brk, brk, start_stack;
+ 		unsigned long arg_start, arg_end, env_start, env_end;
+ 
++#ifdef CONFIG_64BIT
++		unsigned long long saved_auxv[AT_VECTOR_SIZE]; /* for /proc/PID/auxv */
++#else
+ 		unsigned long saved_auxv[AT_VECTOR_SIZE]; /* for /proc/PID/auxv */
++#endif
+ 
+ 		struct percpu_counter rss_stat[NR_MM_COUNTERS];
+ 
+diff --git a/kernel/sys.c b/kernel/sys.c
+index cb366ff8703a..81c0d94ff50d 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -2008,7 +2008,11 @@ static int validate_prctl_map_addr(struct prctl_mm_map *prctl_map)
+ static int prctl_set_mm_map(int opt, const void __user *addr, unsigned long data_size)
+ {
+ 	struct prctl_mm_map prctl_map = { .exe_fd = (u32)-1, };
++#ifdef CONFIG_64BIT
++	unsigned long long user_auxv[AT_VECTOR_SIZE];
++#else
+ 	unsigned long user_auxv[AT_VECTOR_SIZE];
++#endif
+ 	struct mm_struct *mm = current->mm;
+ 	int error;
+ 
+@@ -2122,7 +2126,11 @@ static int prctl_set_auxv(struct mm_struct *mm, unsigned long addr,
+ 	 * up to the caller to provide sane values here, otherwise userspace
+ 	 * tools which use this vector might be unhappy.
+ 	 */
++#ifdef CONFIG_64BIT
++	unsigned long long user_auxv[AT_VECTOR_SIZE] = {};
++#else
+ 	unsigned long user_auxv[AT_VECTOR_SIZE] = {};
++#endif
+ 
+ 	if (len > sizeof(user_auxv))
+ 		return -EINVAL;
+-- 
+2.40.1
 
-Unless you add vf610 now, this should follow the compatible name.
-
-> 
-> So what is the advised way to go?
-> 
->>
->>>  1 file changed, 160 insertions(+)
->>>  create mode 100644
->>> Documentation/devicetree/bindings/net/fec,mtip-switch.yaml
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/net/fec,mtip-switch.yaml
->>> b/Documentation/devicetree/bindings/net/fec,mtip-switch.yaml new
->>> file mode 100644 index 000000000000..cd85385e0f79 --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/net/fec,mtip-switch.yaml
->>> @@ -0,0 +1,160 @@
->>> +# SPDX-License-Identifier: GPL-2.0-only
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/net/fsl,mtip-switch.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Freescale MTIP Level 2 (L2) switch
->>> +
->>> +maintainers:
->>> +  - Lukasz Majewski <lukma@denx.de>
->>> +  
->>
->> description?
-> 
-> Ok.
-> 
->>
->>> +allOf:
->>> +  - $ref: ethernet-controller.yaml#
->>> +
->>> +properties:
->>> +  compatible:
->>> +    oneOf:  
->>
->> Drop, you have only one variant.
-> 
-> Ok, for imx287 this can be dropped, and then extended with vf610.
-> 
->>
->>> +      - enum:
->>> +	  - imx287-mtip-switch  
->>
->> This wasn't tested. Except whitespace errors, above compatible does
->> not have format of compatible. Please look at other NXP bindings.
->>
->> Missing blank line.
->>
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +  interrupts:
->>> +    maxItems: 3  
->>
->> Need to list items instead.
->>
->>> +
->>> +  clocks:
->>> +    maxItems: 4
->>> +    description:
->>> +      The "ipg", for MAC ipg_clk_s, ipg_clk_mac_s that are for
->>> register accessing.
->>> +      The "ahb", for MAC ipg_clk, ipg_clk_mac that are bus clock.
->>> +      The "ptp"(option), for IEEE1588 timer clock that requires
->>> the clock.
->>> +      The "enet_out"(option), output clock for external device,
->>> like supply clock
->>> +      for PHY. The clock is required if PHY clock source from SOC.
->>>  
->>
->> Same problems. This binding does not look at all as any other
->> binding. I finish review here, but the code has similar trivial
->> issues all the way, including incorrect indentation. Start from well
->> reviewed existing binding or example-schema.
-> 
-> As I've stated above - this code is reduced copy of fsl,fec.yaml...
-
-Don't take the worst, old code with all the anti-patterns we point out
-on each review, as an example.
-
-Take the most recent, well reviewed binding as an example. Or
-example-schema.
-
-Best regards,
-Krzysztof
