@@ -1,146 +1,303 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81107254B12
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 07:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CA4253B79
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 07:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742887809; cv=none; b=CZxyAy2z08YKmO3cMOCbDPPr0k9l3umBF7DoYPmhX+m57BqWKvA7Rud7xO0dXsAo+Y3YA4H6ARE86/I+2gTgrlyO57xPQvzA2070okL6iLdVrYejhYmQu0GXKZDbF7x6Ya7qxDEPrQr0p9+jW7W3MSEanLieU8eBudeCUDUreAU=
+	t=1742887815; cv=none; b=fRX10uzmxVwD9hHyJCS2VmUk7CxabgW7nCSOXdPB+xSH2fjjn7LFhZG7nhyRkcOoQQ013vIfQpr6pICH0Z1HyPNA2zDd9uO24DO5qQLuizBy3/XnL49FUmd1UXY7cDwtcrKHyp35ntXd3YnJjN4cctJDpIiikLh+dJ0CjJmeUIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742887809; c=relaxed/simple;
-	bh=kg2008o8v9Ytw+Eu2Cj8ewqnuTpD/zcWnBku8HIJQCw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=g05yIsRZxtCOy5IuzONMixKgQzDnZyCWjccHJttvwaGewJXoAOCAT4P75GjWLqyPeD1O1y+WmUZCyUwai6lkWqNWXisMK4e40hGDn7IaeKQXf+g6iynEWbpCGCV6TknKHFhCTR5N63LsKJAMQeDeVpjvO4MlMsn81DVUrJnwgXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZMM4Y66fhz4f3m6Z
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 15:29:33 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 3C6A21A1395
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 15:29:58 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP2 (Coremail) with SMTP id Syh0CgB3M2ZxW+JnZofaHQ--.14216S10;
-	Tue, 25 Mar 2025 15:29:58 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: akpm@linux-foundation.org
-Cc: kasong@tencent.com,
-	tim.c.chen@linux.intel.com,
-	bhe@redhat.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 8/8] mm: swap: replace cluster_swap_free_nr() with swap_entries_put_[map/cache]()
-Date: Wed, 26 Mar 2025 00:25:28 +0800
-Message-Id: <20250325162528.68385-9-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20250325162528.68385-1-shikemeng@huaweicloud.com>
-References: <20250325162528.68385-1-shikemeng@huaweicloud.com>
+	s=arc-20240116; t=1742887815; c=relaxed/simple;
+	bh=NUU1tKtyrxbh9CycUXEnU1sTP9HW1U1NnObVJRtZG2w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m0NFkVmCUJDpv/QurdMZk5wxRMQO+btJy8wDlwlsSiWwj6rS0qwfS/hRtaw6M4VPXLiY7c6haNxgn56S9JvVY1ktVKMSX+/b5CyQWrDPBwKW5LaJWtAsuN/LQPSE39hadkv/TDYaN1h9WaTwGc+Sif+AoGFv3yWJZcm4EUgkJOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BwkKoGHE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BwkKoGHE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E30FCC4CEED;
+	Tue, 25 Mar 2025 07:30:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742887814;
+	bh=NUU1tKtyrxbh9CycUXEnU1sTP9HW1U1NnObVJRtZG2w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BwkKoGHEW9V+JQcsH/bEvyCDpG+0TBXS0TPr1qtq706PzmG+P3Z5QMVAWgBmf1dtU
+	 NZsuJN9NkeYlWLDaYHniaX2fRGRUE+wnZ178h/YfmMoMcDgK6TnwEsjJDbRVvfSkQ3
+	 XlwHJQUP/2OXQ+v+UsjfTLkriIoPUyaES8DMCvmztDX5JvxIVtxA/1s3TfzRfhyigD
+	 N5t6Zi9NVw/V6yR4aDpe7KlTtaz1JMGfv+qKmJa9+2JYo/sv1XMNSE1sGyIDafa+Xc
+	 u/InFkKuFool34dv31mYqVHpBUq+2fhozZPk7fHU2RprMRgwDWPHi3g80VFizesotc
+	 76zwboL0N2/0w==
+Message-ID: <bb7e4740-9608-4534-9c19-3ac066e2aa8f@kernel.org>
+Date: Tue, 25 Mar 2025 08:30:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgB3M2ZxW+JnZofaHQ--.14216S10
-X-Coremail-Antispam: 1UD129KBjvJXoWxCF1DJr1rCFWUGryxXF4rGrg_yoW5Xw43pF
-	93Wwn8Kr4xJr1xGr4fXw4DZFya93yxW3WUXFy7Ww1rZasFkryIqF1vyrZ7Cry5G34kuFZI
-	k3W7tr9xuF4Yyr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPSb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-	8IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAv
-	FVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJw
-	A2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE
-	3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr2
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2
-	AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
-	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r
-	1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF
-	7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
-	0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7I
-	U09YFtUUUUU==
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] clocksource/drivers/nxp-timer: Add the System Timer
+ Module for the s32g platform
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org, Thomas Fossati <thomas.fossati@linaro.org>,
+ Larisa Grigore <Larisa.Grigore@nxp.com>,
+ Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ "moderated list:ARM/STM32 ARCHITECTURE"
+ <linux-stm32@st-md-mailman.stormreply.com>,
+ "moderated list:ARM/STM32 ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>
+References: <20250324100008.346009-1-daniel.lezcano@linaro.org>
+ <20250324100008.346009-2-daniel.lezcano@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250324100008.346009-2-daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Replace cluster_swap_free_nr() with swap_entries_put_[map/cache]() to
-remove repeat code and leverage batch-remove for entries with last flag.
-After removing cluster_swap_free_nr, only functions with "_nr" suffix
-could free entries spanning cross clusters. Add corresponding description
-in comment of swap_entries_put_map_nr() as is first function with "_nr"
-suffix and have a non-suffix variant function swap_entries_put_map().
+On 24/03/2025 11:00, Daniel Lezcano wrote:
+> +
+> +static int __init nxp_stm_clocksource_init(struct device *dev, const char *name,
+> +					   void __iomem *base, struct clk *clk)
+> +{
+> +	struct stm_timer *stm_timer;
+> +	int ret;
+> +
+> +	stm_timer = devm_kzalloc(dev, sizeof(*stm_timer), GFP_KERNEL);
+> +	if (!stm_timer)
+> +		return -ENOMEM;
+> +
+> +	stm_timer->base = base;
+> +	stm_timer->rate = clk_get_rate(clk);
+> +
+> +	stm_timer->scs.cs.name = name;
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
-Reviewed-by: Baoquan He <bhe@redhat.com>
----
- mm/swapfile.c | 30 +++++++++++-------------------
- 1 file changed, 11 insertions(+), 19 deletions(-)
+You are aware that all node names will have exactly the same name? All
+of them will be called "timer"?
 
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 40a7d75c01e8..c46b56d636af 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -1512,6 +1512,11 @@ static bool swap_entries_put_map(struct swap_info_struct *si,
- 
- }
- 
-+/*
-+ * Only functions with "_nr" suffix are able to free entries spanning
-+ * cross multi clusters, so ensure the range is within a single cluster
-+ * when freeing entries with functions without "_nr" suffix.
-+ */
- static bool swap_entries_put_map_nr(struct swap_info_struct *si,
- 				    swp_entry_t entry, int nr)
- {
-@@ -1569,21 +1574,6 @@ static void swap_entries_free(struct swap_info_struct *si,
- 		partial_free_cluster(si, ci);
- }
- 
--static void cluster_swap_free_nr(struct swap_info_struct *si,
--		unsigned long offset, int nr_pages,
--		unsigned char usage)
--{
--	struct swap_cluster_info *ci;
--	unsigned long end = offset + nr_pages;
--
--	ci = lock_cluster(si, offset);
--	do {
--		swap_entry_put_locked(si, ci, swp_entry(si->type, offset),
--				      usage);
--	} while (++offset < end);
--	unlock_cluster(ci);
--}
--
- /*
-  * Caller has made sure that the swap device corresponding to entry
-  * is still around or has not been recycled.
-@@ -1600,7 +1590,7 @@ void swap_free_nr(swp_entry_t entry, int nr_pages)
- 
- 	while (nr_pages) {
- 		nr = min_t(int, nr_pages, SWAPFILE_CLUSTER - offset % SWAPFILE_CLUSTER);
--		cluster_swap_free_nr(sis, offset, nr, 1);
-+		swap_entries_put_map(sis, swp_entry(sis->type, offset), nr);
- 		offset += nr;
- 		nr_pages -= nr;
- 	}
-@@ -3623,11 +3613,13 @@ int swapcache_prepare(swp_entry_t entry, int nr)
- 	return __swap_duplicate(entry, SWAP_HAS_CACHE, nr);
- }
- 
-+/*
-+ * Caller should ensure entries belong to the same folio so
-+ * the entries won't span cross cluster boundary.
-+ */
- void swapcache_clear(struct swap_info_struct *si, swp_entry_t entry, int nr)
- {
--	unsigned long offset = swp_offset(entry);
--
--	cluster_swap_free_nr(si, offset, nr, SWAP_HAS_CACHE);
-+	swap_entries_put_cache(si, entry, nr);
- }
- 
- struct swap_info_struct *swp_swap_info(swp_entry_t entry)
--- 
-2.30.0
 
+> +	stm_timer->scs.cs.rating = 460;
+> +	stm_timer->scs.cs.read = nxp_stm_clocksource_read;
+> +	stm_timer->scs.cs.enable = nxp_stm_clocksource_enable;
+> +	stm_timer->scs.cs.disable = nxp_stm_clocksource_disable;
+> +	stm_timer->scs.cs.suspend = nxp_stm_clocksource_suspend;
+> +	stm_timer->scs.cs.resume = nxp_stm_clocksource_resume;
+> +	stm_timer->scs.cs.mask = CLOCKSOURCE_MASK(32);
+> +	stm_timer->scs.cs.flags = CLOCK_SOURCE_IS_CONTINUOUS;
+> +
+> +	ret = clocksource_register_hz(&stm_timer->scs.cs, stm_timer->rate);
+> +	if (ret)
+> +		return ret;
+> +
+> +	stm_sched_clock = stm_timer;
+> +
+> +	sched_clock_register(nxp_stm_read_sched_clock, 32, stm_timer->rate);
+> +
+> +	dev_set_drvdata(dev, stm_timer);
+> +
+> +	dev_dbg(dev, "Registered clocksource %s\n", name);
+
+Since all names will be the same, this makes little sense in debugging.
+I guess you wanted one of the OF printk-formats for full node name.
+
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int nxp_stm_clockevent_read_counter(struct stm_timer *stm_timer)
+> +{
+> +	return readl(stm_timer->base + STM_CNT);
+> +}
+> +
+
+...
+
+> +
+> +static int __init nxp_stm_timer_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct stm_instances *stm_instances;
+> +	const char *name = of_node_full_name(np);
+> +	void __iomem *base;
+> +	int irq, ret;
+> +	struct clk *clk;
+> +
+> +	stm_instances = (typeof(stm_instances))of_device_get_match_data(dev);
+
+No, you *cannot* drop the const. It's there on purpose. Match data
+should be const because it defines per variant differences. That's why
+the prototype of of_device_get_match_data() has such return type.
+You just want some global singleton, not match data.
+
+> +	if (!stm_instances) {
+> +		dev_err(dev, "No STM instances associated with a cpu");
+> +		return -EINVAL;
+> +	}
+> +
+> +	base = devm_of_iomap(dev, np, 0, NULL);
+> +	if (IS_ERR(base)) {
+> +		dev_err(dev, "Failed to iomap %pOFn\n", np);
+
+You need to clean up the downstream code to match upstream. All of these
+should be return dev_err_probe().
+
+> +		return PTR_ERR(base);
+> +	}
+> +
+> +	irq = irq_of_parse_and_map(np, 0);
+> +	if (irq <= 0) {
+> +		dev_err(dev, "Failed to parse and map IRQ: %d\n", irq);
+> +		return -EINVAL;
+> +	}
+> +
+> +	clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(clk)) {
+> +		dev_err(dev, "Clock not found\n");
+
+And this is clearly incorrect - spamming logs. Syntax is:
+return dev_err_probe
+
+> +		return PTR_ERR(clk);
+> +	}
+> +
+> +	ret = clk_prepare_enable(clk);
+
+Drop, devm_clk_get_enabled.
+
+> +	if (ret) {
+> +		dev_err(dev, "Failed to enable STM timer clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	if (!stm_instances->clocksource && (stm_instances->features & STM_CLKSRC)) {
+> +
+> +		/*
+> +		 * First probed STM will be a clocksource
+> +		 */
+> +		ret = nxp_stm_clocksource_init(dev, name, base, clk);
+> +		if (ret)
+> +			return ret;
+> +		stm_instances->clocksource++;
+
+That's racy. Devices can be brought async, ideally. This should be
+rather idr or probably entire structure protected with a mutex.
+
+> +
+> +	} else if (!stm_instances->clockevent_broadcast &&
+> +		   (stm_instances->features & STM_CLKEVT_BROADCAST)) {
+> +
+> +		/*
+> +		 * Second probed STM will be a broadcast clockevent
+> +		 */
+> +		ret = nxp_stm_clockevent_broadcast_init(dev, name, base, irq, clk);
+> +		if (ret)
+> +			return ret;
+> +		stm_instances->clockevent_broadcast++;
+> +
+> +	} else if (stm_instances->clockevent_per_cpu < num_possible_cpus() &&
+> +		   (stm_instances->features & STM_CLKEVT_PER_CPU)) {
+> +
+> +		/*
+> +		 * Next probed STM will be a per CPU clockevent, until
+> +		 * we probe as much as we have CPUs available on the
+> +		 * system, we do a partial initialization
+> +		 */
+> +		ret = nxp_stm_clockevent_per_cpu_init(dev, name, base, irq, clk,
+> +						      stm_instances->clockevent_per_cpu);
+> +		if (ret)
+> +			return ret;
+> +
+> +		stm_instances->clockevent_per_cpu++;
+> +
+> +		/*
+> +		 * The number of probed STM for per CPU clockevent is
+> +		 * equal to the number of available CPUs on the
+> +		 * system. We install the cpu hotplug to finish the
+> +		 * initialization by registering the clockevents
+> +		 */
+> +		if (stm_instances->clockevent_per_cpu == num_possible_cpus()) {
+> +			ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "STM timer:starting",
+> +						nxp_stm_clockevent_starting_cpu, NULL);
+> +			if (ret < 0)
+> +				return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct stm_instances s32g_stm_instances = { .features = STM_CLKSRC | STM_CLKEVT_PER_CPU };
+
+Missing const. Or misplaced - all file-scope static variables are
+declared at the top.
+
+> +
+> +static const struct of_device_id nxp_stm_of_match[] = {
+> +	{ .compatible = "nxp,s32g2-stm", &s32g_stm_instances },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, nxp_stm_of_match);
+> +
+> +static struct platform_driver nxp_stm_probe = {
+> +	.probe	= nxp_stm_timer_probe,
+> +	.driver	= {
+> +		.name = "nxp-stm",
+> +		.of_match_table = of_match_ptr(nxp_stm_of_match),
+
+Drop of_match_ptr, you have here warnings.
+
+> +	},
+> +};
+> +module_platform_driver(nxp_stm_probe);
+> +
+> +MODULE_DESCRIPTION("NXP System Timer Module driver");
+> +MODULE_LICENSE("GPL");
+
+
+Best regards,
+Krzysztof
