@@ -1,85 +1,149 @@
-Received: from mail-24417.protonmail.ch (mail-24417.protonmail.ch [109.224.244.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443EA2566FB;
-	Tue, 25 Mar 2025 13:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C446D2580FF;
+	Tue, 25 Mar 2025 13:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742909669; cv=none; b=jJgM3Gyjk+8cOR+VAf8TSVJqkuW58trC4o8/YS+3d4/jvi/GPW5CtcUFjWH1rMUMG6z9/prwf6ze5RUty+00IV1QaL5vppTFKDWEGsqCqvHoQAYwrTfVriue/ORVtoL5d/ut6EJIOnUXOcrC8rt/Uda/yxGnHFqxjUYb0Z037iM=
+	t=1742909679; cv=none; b=Ux/zrdYmmJvWXq7+W7rLETjp2F9sXE4goNOrdNmBWZoLUkzadninZxCmZ8iCluuHd0sU/wyfuAY3qPfzjsv6Csxc6suSFdYq5q5/L9/0HQf3mA9T72n7KPxczJTViZalx0sySo2kX8snobIiQQiRAmkOhcb47uTJG8y03bymXNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742909669; c=relaxed/simple;
-	bh=Y6ohaXZofpcbNJmvladlvZbrb57HSiO9YoS6iQ6shPs=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GT05Dr6BWT+WDHbwQjr5fN33l1aoAqxHGPXWR5kVUAPrcXl8bdjQrVb8gPOneiv3ANgpYQj8wxVtPFN4sCYjASSucd5UUXpWDuL7AE3lCpB/plVt9CvpIMJayhJr9G92eR7tQwl1VxBb9hTTDT2hnDNJAsCwDqUx4igvLwsfDew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=Y2mCk6Bs; arc=none smtp.client-ip=109.224.244.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1742909679; c=relaxed/simple;
+	bh=8NhHztqbui136koCHcM1Tn+Btm+vHRGgxH9/0cKV5mo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qCKsx/6yM9xTV5xsq4QIGGOcEka+h39zbdfYdWykTnj8FMtTXEU5NOWbEMPTDO66xQFeej6QiIKVtnDDxJgWTPrFo+Llp3VIWBJlh+E1rwJfOh0Sddd8BOBrCphaF+ZWgGMookx0zETXMKE62WhUSG9R37gIODnwk60c901WzsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fe0EfCN8; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="Y2mCk6Bs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1742909665; x=1743168865;
-	bh=fBZCEDHAcSL+1EbOgZxoUlg+Dt3iseMvxCTdjaU5e2k=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=Y2mCk6Bsht9m4LjOmW4sD+suqGIEUvFB756jiYzHmc5Bl8t+AGhghMMNSW+S63j+1
-	 3LYAheh7+xAhJCaq8VDAEPoMmAGGT60aiIlX5JE+vl8+2d83bicwl0KJEqFjQUPZ0a
-	 KYrl1NdezKacZcngfg/2ojIB7S3hkzo8dnuVOdZpEShTlHrBBlbClcReXQLzAWKxED
-	 48L/uQxWukjWmIyvW0h0cdlJR6YB+apubucGAyNik6vIM/WPvlRwq5QgdLQqUAOY6j
-	 DCHbZ4V+Zm+gWvZEbDT/+LGR8OXwksoSVSuzwm8ibZvKU9/FoWMo61VmxEgISLg5G6
-	 wrwOkurY1tfeA==
-Date: Tue, 25 Mar 2025 13:34:20 +0000
-To: Filipe Xavier <felipeaggger@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: daniel.almeida@collabora.com, rust-for-linux@vger.kernel.org, felipe_life@live.com, linux-kernel@vger.kernel.org, Lyude Paul <lyude@redhat.com>
-Subject: Re: [PATCH v2] rust: add new macro for common bitmap operations
-Message-ID: <D8PDWRH06U1X.3JGHP1311BPPY@proton.me>
-In-Reply-To: <20250325-feat-add-bitmask-macro-v2-1-d3beabdad90f@gmail.com>
-References: <20250325-feat-add-bitmask-macro-v2-1-d3beabdad90f@gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 1a89859a739abc0b62f06d31b08d5c5e735c24cf
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fe0EfCN8"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-223fd89d036so112354385ad.1;
+        Tue, 25 Mar 2025 06:34:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742909677; x=1743514477; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+lDb71nuOirwehOfrtxsxapTn2DVXFjs+EProLsrn5I=;
+        b=fe0EfCN8k8nyQ2zW+XzGe9YwP9RWTIMYVWVVjGePFfjhIdUKwL+F9XwdmHaJzoO97/
+         Kk+lAA7MHVfP9gTKG6epj4aQy+iYCXzofQOsL2e9PjyPPg1WBoCGOUp+ZhO8dXeRG0tn
+         ma+m7Tc3TotQESBh8h8yDsID8InYSesJz4TvNSjcXh5NAe9szKomcK2xh83pZuNY4k/M
+         0t9AhhHVJzrK2fimf2+uFealhITtmue2De52Jy5RC9K2D3XGSFDD+hgDO5yOvX0UM7xt
+         QyE9f2fbPyPy3nyz/mgu+yhGFKVGvS9lvxHQ7Zp+knrTWPPXBMu7GJOUCdcuXOXRDKhS
+         yaMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742909677; x=1743514477;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+lDb71nuOirwehOfrtxsxapTn2DVXFjs+EProLsrn5I=;
+        b=tAmPFp8AbAaXAT1odI6hNy7ULCLSjQK20M+h6OYDuyhPJx/7jIMrI2rCYZCZeExN51
+         WxWcKCuOvUIC2VXCTx/dw/RSzfuK+emPlYWd2EBy6ZlVBnKEPLJhkaorerSyLVzIufF9
+         7O0Vg2QXUqXZYvWNlZ37ygeHzzmY2aQ/94bcZSmGWM0RKORqCUKdh0zp0THghDeMD/6b
+         a6prfcQN5ho1Jm+5UbHw+qkF3ndNZ0+WsiQHlKxUQL/wJNzszqa+K2rMmqNFrMZZa7wp
+         Q/xBZQI6/izTLR0tJowIJwmLBLwzyeE2OCInyl4EA1VZ5StAzxFoU8DDQcq8C/nR4FJq
+         iQwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVMqi/AjbV0GQ1EJLoFwG34+lusL3esb2zU5wBcNWznLFtZYrVDfJ72irCm44AOcbWdvGfT11g6hQ7H1BQ=@vger.kernel.org, AJvYcCWsOTDYdZB+leq/UhpctYA0J+waUdGExvxDPiylRnCbKGlrhW/9ViOEqH236hyl9WBa27TNjc2RAi9i8WNHNlIf@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXkzaUvSnG0m+uYbTl+/oTZy/jh8jjVRbXR+2jwelSw4/WYd0W
+	PtEAZvlYtSAQ6C0aj1sL8aYBQqzJDoJg5jPVFv4QG89UknRBEIAR
+X-Gm-Gg: ASbGncuVis1oEqgDf6vF7r8eTIgUpsQ+KwMFzzBAA0M+3OGWy/HRjL60sWGwzIj9Gfi
+	d1CY23o/WTwfaLlTftCZvGjmtOi9RSKGDun1mriCN5BYfdHd36Y5odoh7qpv5ZETS8KU8eIrps9
+	pD0x4TyCiofBHnKlPqcBMHI/I66ykv08H5Y03cflBvMRUNraHoN/XZr6Ahd6ILOh/pSofqDyo1y
+	gi15MPPPz1WvhTQB/1JxaFoD7mhwtKw//N1a/pRm6QDhxp6oPREB99BHfXID1ptZGZEXBo4aj+j
+	Q6LtSBliWzrZp/M+jIr2JA80GKbAiwvvfYS2i02sAT0ocj2bHAlH8YLsPxOPqjujK9D8i2RZU62
+	Pre9iu/QGTrhqVw6z
+X-Google-Smtp-Source: AGHT+IE1S9OMVu5RWHUF4Bez/J9y9+A/s+hTIvZTOtcr0b80Ew/3RYmNUmC0vHgJmEX+H+3RL9bLDQ==
+X-Received: by 2002:a17:902:f705:b0:224:1c95:451e with SMTP id d9443c01a7336-22780e41efamr246061775ad.33.1742909676735;
+        Tue, 25 Mar 2025 06:34:36 -0700 (PDT)
+Received: from malayaVM.mrout-thinkpadp16vgen1.punetw6.csb ([103.133.229.222])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22780f3b3f2sm89766215ad.29.2025.03.25.06.34.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 06:34:36 -0700 (PDT)
+From: Malaya Kumar Rout <malayarout91@gmail.com>
+To: malayarout91@gmail.com
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH] selftests/x86/lam: fix resource leak in do_uring() and allocate_dsa_pasid()
+Date: Tue, 25 Mar 2025 19:04:09 +0530
+Message-ID: <20250325133423.13665-1-malayarout91@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <malayarout91@gmail.com>
+References: <malayarout91@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue Mar 25, 2025 at 2:10 PM CET, Filipe Xavier wrote:
-> +#[macro_export]
-> +macro_rules! impl_flags {
-> +    (
-> +        $(#[$outer_flags:meta])* $vis_flags:vis $flags:ident,
-> +        $(#[$outer_flag:meta])* $vis_flag:vis $flag:ident,
-> +        $ty:ty
-> +    ) =3D> {
-> +        $(#[$outer_flags])*
-> +        #[repr(transparent)]
-> +        #[derive(Copy, Clone, Default, PartialEq, Eq)]
-> +        $vis_flags struct $flags($ty);
-> +
-> +        $(#[$outer_flag])*
-> +        #[derive(Copy, Clone, PartialEq, Eq)]
-> +        $vis_flag struct $flag($ty);
-> +
-> +        impl From<$flag> for $flags {
+Exception branch returns without closing
+the file descriptors 'file_fd' and 'fd'
 
-Please use absolute paths to refer to items, in this case
-`::core::convert::From` (note the leading `::`). More cases below.
-
-I filed an issue to add a new clippy lint to catch this:
-
-    https://github.com/rust-lang/rust-clippy/issues/14472
-
+Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
 ---
-Cheers,
-Benno
+ tools/testing/selftests/x86/lam.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-> +            #[inline]
-> +            fn from(value: $flag) -> Self {
-> +                Self(value.0)
-> +            }
-> +        }
+diff --git a/tools/testing/selftests/x86/lam.c b/tools/testing/selftests/x86/lam.c
+index 18d736640ece..eaba0a921322 100644
+--- a/tools/testing/selftests/x86/lam.c
++++ b/tools/testing/selftests/x86/lam.c
+@@ -682,7 +682,7 @@ int do_uring(unsigned long lam)
+ 		return 1;
+ 
+ 	if (fstat(file_fd, &st) < 0)
+-		return 1;
++		goto cleanup;
+ 
+ 	off_t file_sz = st.st_size;
+ 
+@@ -690,7 +690,7 @@ int do_uring(unsigned long lam)
+ 
+ 	fi = malloc(sizeof(*fi) + sizeof(struct iovec) * blocks);
+ 	if (!fi)
+-		return 1;
++		goto cleanup;
+ 
+ 	fi->file_sz = file_sz;
+ 	fi->file_fd = file_fd;
+@@ -698,7 +698,7 @@ int do_uring(unsigned long lam)
+ 	ring = malloc(sizeof(*ring));
+ 	if (!ring) {
+ 		free(fi);
+-		return 1;
++		goto cleanup;
+ 	}
+ 
+ 	memset(ring, 0, sizeof(struct io_ring));
+@@ -730,6 +730,9 @@ int do_uring(unsigned long lam)
+ 
+ 	free(fi);
+ 
++cleanup:
++	close(file_fd);
++
+ 	return ret;
+ }
+ 
+@@ -1189,8 +1192,10 @@ void *allocate_dsa_pasid(void)
+ 
+ 	wq = mmap(NULL, 0x1000, PROT_WRITE,
+ 			   MAP_SHARED | MAP_POPULATE, fd, 0);
+-	if (wq == MAP_FAILED)
++	if (wq == MAP_FAILED) {
++		close(fd);
+ 		perror("mmap");
++	}
+ 
+ 	return wq;
+ }
+-- 
+2.43.0
 
