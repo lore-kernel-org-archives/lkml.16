@@ -1,35 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034591EEA4E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035181F03CD;
 	Tue, 25 Mar 2025 10:26:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742898395; cv=none; b=Vu00x35TD8aiqp2WDTTXZL2zrBJ2ijwautdxNHbrOwNY8ohkbqpUAyfVWAHM1OnwEAUAzVsCYkvO8sq/l7QHhZvQ/OncFte0VWK6ln5+bD5dwqJLdAo90qPs53gqxyVOH2I4xjheDWnukpXoPLKdi40TxKlBaER5mtvJTnQj4b8=
+	t=1742898395; cv=none; b=RIzaRGk4yI3yCS8B20/HKk+56+BSqDfLqM3yXtPE10EshyoeiSSgKlZ8qcPM4w0rbjkU+37aIlwCzSG0tBBVGjE75dhDc4ztcYPbvgZbh3FWL3Ktx6A6OUvIXvYlWIni+Y9YRbVPhNeZrx7Th21bi1bFSjFoimYAJIcgIn4ubuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742898395; c=relaxed/simple;
-	bh=6gx8a7ztb8u3B/u8fPofO/Tuvql7eBwSe4k9mBhaLjc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gAIZ7K4iqqaMFbvteeIH9vpCGcA9xPvN4ESJHf84c8Jzq+iCdhTun2W9qlBPXRjTdxPHaPfvQDvG+xjAx+4oxHNH4I91Q07sBeXnx/+iBeijYdqTEDiKuK0LjLrKnTeqZtsWtVUFyT6Hf7uVb/p0J24NDiFPqU5uyCYrnK1/EJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rr0YtK1P; arc=none smtp.client-ip=10.30.226.201
+	bh=TwzXn1kE0ZZbpOOI5lgQzmVfbZhL31GqLAvtVhL+thU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=q+dI3vJwAJZbQj3HUybVGdd02lfzUsSfRJ+gtD8tSzH0AKhlWWYvpLelsRUm2Inq3BEh8cpACWpzDgr85wpzS0Et+neYkW4PxsRlSYMCo7wquRw/VF2SE34N2A7X544P6dlvjjzoNRHJ7hdkg0Kg9bjH5MspHWYWBZxAvunMlQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s9toO01I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rr0YtK1P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8030CC4CEE4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s9toO01I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85205C4CEEE;
 	Tue, 25 Mar 2025 10:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1742898394;
-	bh=6gx8a7ztb8u3B/u8fPofO/Tuvql7eBwSe4k9mBhaLjc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rr0YtK1PQzC4NSDXu0DSxFUvhd4oVsWJv62czkyG0iVVQ8VuGA5YnDFCqLi1twziZ
-	 tPfNakYxPcjcAv2pzkmvMKPJ3+uKM0rs6mUcTdjghbkIV5PvB+jZqh3dqt4R8U86D1
-	 lgnBd6zTLTnEjkj8Z3MXUI8Q1+lchlFLUaCzyhI1DZX25DGP7MBxEvChQPvaJXTrro
-	 +hfoE95+lbABCqwmPeY5GCylveZ1xfjSNhSvBbbkCnvRQ/HewS5e+079aANhN7Rc+Z
-	 2URIbNlp7x0rqzE4TIronOOBp9oB/osdXg08TPDB8BxZ4mxuS5/R/nLC+4N6vSZk5c
-	 8+IBZkrVVwpuw==
+	bh=TwzXn1kE0ZZbpOOI5lgQzmVfbZhL31GqLAvtVhL+thU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=s9toO01Ipxpj+HABtOLsSc8rJ9MvHXp68OXI3f+1nFsb54ZdRe4uxiWLt76UWSj1I
+	 jjjKMrQkIBMqrCIHPexkCsls1Sy6+jMWOxBZS1dO8/qDAkrKM1G4R+dAJlrShWg5rG
+	 wZvvVmCDwtxKeHeJqfk4Nx/C3ENFet0mzej38JeF9Jb2bp3b3EfcainIo4uDiCTsY0
+	 FYwXKr4he9kLvlFUIcqJ/9AbP2kxpVxXC/NsSXTSNTwFh1gqF6BTBIeyoRjq3mnw+c
+	 XKWN08PpYZ77GCbL+YDuQDuVIpUyWwi/o46Q/gTbEFKOu7GTxGRmBv2xBYdBXZqbF9
+	 kU6AM59v6b3Ug==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1tx1UO-00GsRS-28;
+	id 1tx1UO-00GsRS-Kb;
 	Tue, 25 Mar 2025 10:26:32 +0000
 From: Marc Zyngier <maz@kernel.org>
 To: linux-arm-kernel@lists.infradead.org,
@@ -47,10 +48,12 @@ Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Subject: [PATCH v2 00/13] PCI: apple: Add support for t6020
-Date: Tue, 25 Mar 2025 10:25:57 +0000
-Message-Id: <20250325102610.2073863-1-maz@kernel.org>
+Subject: [PATCH v2 02/13] PCI: host-generic: Extract an ecam bridge creation helper from pci_host_common_probe()
+Date: Tue, 25 Mar 2025 10:25:59 +0000
+Message-Id: <20250325102610.2073863-3-maz@kernel.org>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250325102610.2073863-1-maz@kernel.org>
+References: <20250325102610.2073863-1-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,82 +66,103 @@ X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.o
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-As Alyssa didn't have the bandwidth to deal with this series, I have
-taken it over. All bugs are therefore mine.
+pci_host_common_probe() is an extremely userful helper, as it
+abstracts away most of the gunk that a "mostly-ECAM-compliant"
+device driver needs.
 
-The initial series [1] stated:
+However, it is structured as a probe function, meaning that a lot
+of the driver-specific setup has to happen in a .init() callback,
+after the bridge and config space have been instantiated.
 
-"This series adds T6020 support to the Apple PCIe controller. Mostly
- Apple shuffled registers around (presumably to accommodate the larger
- configurations on those machines). So there's a bit of churn here but
- not too much in the way of functional changes."
+This is a bit awkward, and results in a number of convolutions
+that could be avoided if the host-common code was more like
+a library.
 
-The biggest change is affecting the ECAM layer, allowing an ECAM
-driver to provide its own probe function instead of relying on the
-.init() callback to do the work. The ECAM layer can therefore be used
-as a library instead of a convoluted driver.
+Introduce a pci_host_common_init() helper that does exactly that,
+taking the platform device and a struct pci_ecam_op as parameters.
 
-The rest is a mix of bug fixes, cleanups, and required abstraction.
+This can then be called from the probe routine, and a lot of the
+code that isn't relevant to PCI setup moved away from the .init()
+callback. This also removes the dependency on the device match
+data, which is an oddity.
 
-This has been tested on T6020 (M2-Pro mini) and T8102 (M1 mini).
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ drivers/pci/controller/pci-host-common.c | 24 ++++++++++++++++--------
+ include/linux/pci-ecam.h                 |  2 ++
+ 2 files changed, 18 insertions(+), 8 deletions(-)
 
-* From v1[1]:
-
-  - Described the PHY registers in the DT binding
-
-  - Extracted a ecam bridge creation helper from the host-common layer
-
-  - Moved probing into its own function instead of pci_host_common_probe()
-    
-  - Moved host-specific data to the of_device_id[] table
-
-  - Added dynamic allocation of the RID/SID bitmap
-
-  - Fixed latent bug in RC-generated interrupts
-
-  - Renamed reg_info to hw_info
-
-  - Dropped useless max_msimap
-
-  - Dropped code being moved around without justification
-
-  - Re-split some of the patches to follow a more logical progression
-
-  - General cleanup to fit my own taste
-
-[1] https://lore.kernel.org/r/20250211-pcie-t6-v1-0-b60e6d2501bb@rosenzweig.io
-
-Alyssa Rosenzweig (1):
-  dt-bindings: pci: apple,pcie: Add t6020 compatible string
-
-Hector Martin (6):
-  PCI: apple: Fix missing OF node reference in apple_pcie_setup_port
-  PCI: apple: Move port PHY registers to their own reg items
-  PCI: apple: Drop poll for CORE_RC_PHYIF_STAT_REFCLK
-  PCI: apple: Use gpiod_set_value_cansleep in probe flow
-  PCI: apple: Abstract register offsets via a SoC-specific structure
-  PCI: apple: Add T602x PCIe support
-
-Janne Grunau (1):
-  PCI: apple: Set only available ports up
-
-Marc Zyngier (5):
-  PCI: host-generic: Extract an ecam bridge creation helper from
-    pci_host_common_probe()
-  PCI: ecam: Allow cfg->priv to be pre-populated from the root port
-    device
-  PCI: apple: Move over to standalone probing
-  PCI: apple: Dynamically allocate RID-to_SID bitmap
-  PCI: apple: Move away from INTMSK{SET,CLR} for INTx and private
-    interrupts
-
- .../devicetree/bindings/pci/apple,pcie.yaml   |  11 +-
- drivers/pci/controller/pci-host-common.c      |  24 +-
- drivers/pci/controller/pcie-apple.c           | 241 +++++++++++++-----
- drivers/pci/ecam.c                            |   2 +
- include/linux/pci-ecam.h                      |   2 +
- 5 files changed, 204 insertions(+), 76 deletions(-)
-
+diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+index f441bfd6f96a8..466a1e6a7ffcd 100644
+--- a/drivers/pci/controller/pci-host-common.c
++++ b/drivers/pci/controller/pci-host-common.c
+@@ -49,23 +49,17 @@ static struct pci_config_window *gen_pci_init(struct device *dev,
+ 	return cfg;
+ }
+ 
+-int pci_host_common_probe(struct platform_device *pdev)
++int pci_host_common_init(struct platform_device *pdev,
++			 const struct pci_ecam_ops *ops)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct pci_host_bridge *bridge;
+ 	struct pci_config_window *cfg;
+-	const struct pci_ecam_ops *ops;
+-
+-	ops = of_device_get_match_data(&pdev->dev);
+-	if (!ops)
+-		return -ENODEV;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, 0);
+ 	if (!bridge)
+ 		return -ENOMEM;
+ 
+-	platform_set_drvdata(pdev, bridge);
+-
+ 	of_pci_check_probe_only();
+ 
+ 	/* Parse and map our Configuration Space windows */
+@@ -73,6 +67,8 @@ int pci_host_common_probe(struct platform_device *pdev)
+ 	if (IS_ERR(cfg))
+ 		return PTR_ERR(cfg);
+ 
++	platform_set_drvdata(pdev, bridge);
++
+ 	bridge->sysdata = cfg;
+ 	bridge->ops = (struct pci_ops *)&ops->pci_ops;
+ 	bridge->enable_device = ops->enable_device;
+@@ -81,6 +77,18 @@ int pci_host_common_probe(struct platform_device *pdev)
+ 
+ 	return pci_host_probe(bridge);
+ }
++EXPORT_SYMBOL_GPL(pci_host_common_init);
++
++int pci_host_common_probe(struct platform_device *pdev)
++{
++	const struct pci_ecam_ops *ops;
++
++	ops = of_device_get_match_data(&pdev->dev);
++	if (!ops)
++		return -ENODEV;
++
++	return pci_host_common_init(pdev, ops);
++}
+ EXPORT_SYMBOL_GPL(pci_host_common_probe);
+ 
+ void pci_host_common_remove(struct platform_device *pdev)
+diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+index 3a10f8cfc3ad5..bc2ca2c72ee23 100644
+--- a/include/linux/pci-ecam.h
++++ b/include/linux/pci-ecam.h
+@@ -97,6 +97,8 @@ extern const struct pci_ecam_ops loongson_pci_ecam_ops; /* Loongson PCIe */
+ #if IS_ENABLED(CONFIG_PCI_HOST_COMMON)
+ /* for DT-based PCI controllers that support ECAM */
+ int pci_host_common_probe(struct platform_device *pdev);
++int pci_host_common_init(struct platform_device *pdev,
++			 const struct pci_ecam_ops *ops);
+ void pci_host_common_remove(struct platform_device *pdev);
+ #endif
+ #endif
 -- 
 2.39.2
 
