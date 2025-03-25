@@ -1,72 +1,72 @@
-Received: from mail-il1-f227.google.com (mail-il1-f227.google.com [209.85.166.227])
+Received: from mail-yw1-f225.google.com (mail-yw1-f225.google.com [209.85.128.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD1B269D16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED84269D1A
 	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 22:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.227
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742941211; cv=none; b=sPiQUZE869MTXQQSLr2CrrFoQuj9t5XORSnb8f+cyDtvug7WsYyBx1ntVyyrlcq5eHI/VTPpDptrWrreKu4lRfxS0fblYni6isqfdztbHG283SlXXfJxEzLFcwxrfMZVnu8qMi5i1CEev0JkNXRiQkcnaplSOUqS1zeV1gdpFFY=
+	t=1742941211; cv=none; b=fVas9G10Tu1EMdWecn4++JP44Ym6kzislYH43m4wd+ykMpOuIRhSXEtLhP6NCSNN8K/zb6PKy0o69yk+Cg3LEnpJo3p2QYih4WdABa0XwHXExwTGbtcjBQ+IzOk+bhIG62GlcqpDI/NKFY+cJH3FgmUMLn/d8xX+2j/MBx0cBpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742941211; c=relaxed/simple;
-	bh=nAQdS0kYPrlB0PxMAzJ/qiXcso8pLJA0WH4ER3qHVdM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cfaX1mFJO4zvmtnKvqjlma/gZoivkBIcW3WfisDLegmfata5PgZBvRor+EFzAhAi1ZH+ko86P3/YCWuZWovoubWez6XnoHNvT/MuJhouynLKpOnWl8AwY3b+NPvKsDWDXN3QXBlUq9azIw8FY9YBRMDkyC8h+sQ7fUkNmWq2/6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=GO+KRb7o; arc=none smtp.client-ip=209.85.166.227
+	bh=NeRkZlcvaCBRIUNhcAknsxh2pPI89exFKSolPCOwHZM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mXvK+fluE2bNLrZMkl0CnY4uzqEpvnau9GQqEMCUdGV4WAk5+FFT4lLe1iI9iivIQhUCN7phb5XQkEnS9QHjG4px0jREP+xwwN23kiglFQwD9fB2m+t1Zk3sE1KeAUhdwNgV/igvFmBZwjs27TG3JWS+ryaBO0nsoKrIu+9BrdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=dpLTqJz7; arc=none smtp.client-ip=209.85.128.225
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="GO+KRb7o"
-Received: by mail-il1-f227.google.com with SMTP id e9e14a558f8ab-3d434c84b7eso45209895ab.1
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="dpLTqJz7"
+Received: by mail-yw1-f225.google.com with SMTP id 00721157ae682-6f6ca9a3425so62382397b3.2
         for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 15:20:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=purestorage.com; s=google2022; t=1742941208; x=1743546008; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EiF0TiGkTFNi7Db5MBCoZMxJpvKlB7Oq6RSbWRlclPc=;
-        b=GO+KRb7o9uvfGlkG0dJl8zfE7T5grSS261BWMyG9+29f96VK9Gp7VmjB9oPXGyg/mj
-         98Xm2OIO/Sy22aEM7s5Cpo6ZcOv4JSuLO6lLzwnKQGaq4Q+wnlHAuTnLAigbcCTFogRp
-         7bHeEBu7qQg49IniTxR43ipzXRrj7Gnfgb++wgREWO6DJHLbdCp019hlxzsengwGCRSx
-         JmU5dZTuKoyTqidUxnYX4RZ/j4f+xJ8ATV+Sw0yEYYOs11Nv+DvO9Nfn8Rd4unDhtWiW
-         E7AjcYyWKBXNeiodWcNJ0iGczggaIZ1cC+AWrztKf9l77uSszVjjqMvLtR1irvH/GEOE
-         v0Xw==
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P8dONTFM6RC8uRNfo7doEMwcZfV7041orR9CUS1WNic=;
+        b=dpLTqJz77dNB2PodaHyDQmKAThY6hSgYyHc1wGnQhVzNj4cRGZ1fSiocj/tpNOb4VE
+         ohxLDKa0NYyYGiXyqRxd8ltvM7nNq3FsXXfpdWrU2qnpuwv2x93r90B222FN5s7UGYj4
+         jiwItdje7ozCLsXKGb+NqfqnWyuBNYO2xCDAu0oH1mOGc2NE8v8TcXvGJsLABJq6wzZO
+         Fq3cZxJFatqh+FBdw5xlTabbCXpFWACN/YpeErCq0nJpbEPbu/1yCjC3ks6XkYqTbPO4
+         QsHeb3R9DamnkkR9X6AlMoVOtlqsVJeXNlp+KFuPLpy1hCF2dB5tFGYJA6ISgNNL4qW4
+         ArPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1742941208; x=1743546008;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EiF0TiGkTFNi7Db5MBCoZMxJpvKlB7Oq6RSbWRlclPc=;
-        b=YCDRUGwL2qAB5Tt6I86eKrXzHVOGhIyLfrWba4EJfPnbDRZTSQ1qMkL/3eGCd0ol0Q
-         khI1cCR2vVvak4L4K2iYGcmKWO5Locy5jz4Mbuf/3jXYWRyr6woz4ezEL4eZRxd9fkaC
-         lq+i9GcWooj+fhCeAC6CXt6U1LNYpF7uyHwIXsyLRAWp52Gmg9iT1ioKw02jw0eiwrVd
-         KvDmfGjCe7x5P+6YUbHHmJZqpl+hrMSNxZ+cpoy3zkCcN99PfqOP2PcgJU4dqLeazvTO
-         U9ic9JR+HrzCm7cnrUFsiFiFwNVC8qofI/T1Z/avzM+1dj/yXvbJYyXXIksw09I52VkT
-         kgWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsfHUiIa6sg4yCw3wgTWmeCSPLHt8B5WxmzhuRyH9rrW3nNAqJibMwvejoKdHq7RitV0QY/wh9zBrl+Qs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCHxuGLZITQhDPxIA+NQQNr0oA1rgljICvuFj42cFYiCpGV394
-	jKZ7jWALau1mQs6HV7iIO92lOGhZvCCqul33cB1erecyzos3fHJEEotyc6yEgD3LrZKZ8XbkwdO
-	o2A2sVsArlqPH+1qv/p26jk1QBpxR5xaw
-X-Gm-Gg: ASbGncv571y9CFCwq3UXlW/OJE1jzsxN63P3fNfTQdEyaeUSDbyEyuZQtIrGKRrmz3k
-	C77kffSX2tYPmHZcgSD1rB4LtXVEUgmg+zhTOJ3Y2Fz65/7dx1b81Jo9pZQOoNGxWamNDxX3sxl
-	v+B+9swRBVTepNWVKvF5uG0DTRhihEA+vOH3kTWdWBM9l6x01YLrM1jFHnbnOB8W7W6eB2U5pw7
-	uy7Yfabn/787+TMiTId4q3osds7A5b0x/DdMqO1tfhPF6+jr0MB10Z94v77pD+EYpriMWj3sFgS
-	gUiL2EhYYPfCoatVogDMYbfh8CmpdWKvAZb63MzG3ixrLSSy+A==
-X-Google-Smtp-Source: AGHT+IECGuSjUNmFI1yEx79hdLBJWrV2d4PdV+RHCZjyZnEqNWuhCc1Y70X4uB74VGhHc6q3AvLuDGD9FuBX
-X-Received: by 2002:a05:6e02:3303:b0:3d2:b72d:a507 with SMTP id e9e14a558f8ab-3d596192691mr215382215ab.19.1742941208306;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P8dONTFM6RC8uRNfo7doEMwcZfV7041orR9CUS1WNic=;
+        b=biLgVraWklV2PuwBjB8wjE5z+I1INjMCnDQ5+jfSGpdeK3wj729DdOwIfZd1ziA3wK
+         FLJ9EqCDYNY+DF1nmfu1c0NWJLLHgf95nbdd1viMwPOXejw058EWvwXcaJvBzTnUXqCI
+         UrxrJWAywgK+bHR+xxgm4mr2RNOPPz0XeTdbL87k1GICaiNUNo+s7OMjtykiN+/e4hn3
+         FMXt5Zm/L0BQcm5L8OsOHnN7+UIrDqtIne+2E7IDly4C3i6roFtzuEr+7wRAM9GakV1F
+         KlKvOWF1iXVFI5vqoersG5E2FmLM6xOqesk922bXXy0pyCVmcEK4joCJ/JPir3sJzDkq
+         Y0wg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJZcTdo1bVx0uC97mPBLcUWRQBXWph8ubMLRn++JmkbmOth0SdEsFCr96jlkRCTWpXI88Bj1Wpowg4XcI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXLp/apuC00r/DJViIrJW85Faz+4DrHUsPd0FK3WT+bWmg7Oue
+	eAE5pxDdkwGggFrRVoapW3aYHQ7Nnr1y3wjTGM2lHt4kNpo1GaeDr6YDre8auwpm+bnH8kP5RnM
+	UHcsRJdBJJztFqHjGVwXilTuz3yEi5Oa0gYuE1K+RkdECZU1/
+X-Gm-Gg: ASbGncvK9kEJ6270I89SY0irf+cCO9E4RU4jSIuf2jqX31ejgOkXGRq1QyQ6pK8bs8I
+	zbk6TuEn1w5JpuPUxwdgQY2SElg1MgLYxRMRHD9EyFY/YJFNEM6xstAejPCXHTP4aj/Yv8tIkLs
+	N2Meb9xcJ4L8bvv1NNPHg0CUzKh9Hl8cjK+7DEi2DgL+BcNcLYhXDaB9iAvWVITtwhpEPLhe/tR
+	AQ/Hdj4iOrGZFrxwAWuYnU+241ZHovHrsK+E0j2loFMxxS+Hxy5+bUByNhH8bF3i5yfrQ2UvPfd
+	ykDJ7vaCiUphp90QAAHNzeOFJrdOX1AS3KI=
+X-Google-Smtp-Source: AGHT+IGkV8dFuwx5r2yLmkio5J6J8fr4hQ3tR+zgbUM8xz8jKTp4WzA8Bx5pOB3XzpAT281kk+7kSZkfNhRd
+X-Received: by 2002:a05:690c:a8b:b0:6fe:e76a:4d38 with SMTP id 00721157ae682-700bac5e14emr258757897b3.21.1742941208289;
         Tue, 25 Mar 2025 15:20:08 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
-        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3d59606ff78sm5505215ab.9.2025.03.25.15.20.06
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-700ba82d5a9sm3786797b3.46.2025.03.25.15.20.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 25 Mar 2025 15:20:08 -0700 (PDT)
 X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 51D5634041F;
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 5B1ED3404E1;
 	Tue, 25 Mar 2025 16:20:06 -0600 (MDT)
 Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id 3CCBCE415C8; Tue, 25 Mar 2025 16:20:06 -0600 (MDT)
+	id 4E772E415C9; Tue, 25 Mar 2025 16:20:06 -0600 (MDT)
 From: Uday Shankar <ushankar@purestorage.com>
-Subject: [PATCH 0/4] ublk: improve handling of saturated queues when ublk
- server exits
-Date: Tue, 25 Mar 2025 16:19:30 -0600
-Message-Id: <20250325-ublk_timeout-v1-0-262f0121a7bd@purestorage.com>
+Date: Tue, 25 Mar 2025 16:19:33 -0600
+Subject: [PATCH 3/4] selftests: ublk: kublk: ignore SIGCHLD
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,42 +75,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPIr42cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDYyNT3dKknOz4kszc1PzSEt0kA7MkyyRTw2RTS0MloJaCotS0zAqwcdG
- xtbUAk2Sfs14AAAA=
-X-Change-ID: 20250325-ublk_timeout-b06b9b51c591
+Message-Id: <20250325-ublk_timeout-v1-3-262f0121a7bd@purestorage.com>
+References: <20250325-ublk_timeout-v1-0-262f0121a7bd@purestorage.com>
+In-Reply-To: <20250325-ublk_timeout-v1-0-262f0121a7bd@purestorage.com>
 To: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>, 
  Jens Axboe <axboe@kernel.dk>
 Cc: linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Uday Shankar <ushankar@purestorage.com>
 X-Mailer: b4 0.14.2
 
-This set aims to reduce the long delay in applications reacting to ublk
-server exit in the case of a "fully saturated" queue, i.e. one for which
-all I/Os are outstanding to the ublk server. The first few patches fix
-some minor issues in the ublk selftests, and the last patch contains the
-main work and a test to validate it.
+SIGCHLD from exiting children can arrive during io_uring_wait_cqe and
+cause it to return early with -EINTR. Since we don't have a handler for
+SIGCHLD, avoid this issue by ignoring SIGCHLD.
 
 Signed-off-by: Uday Shankar <ushankar@purestorage.com>
 ---
-Uday Shankar (4):
-      selftests: ublk: kublk: use ioctl-encoded opcodes
-      selftests: ublk: kublk: fix an error log line
-      selftests: ublk: kublk: ignore SIGCHLD
-      ublk: improve handling of saturated queues when ublk server exits
+ tools/testing/selftests/ublk/kublk.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- drivers/block/ublk_drv.c                        | 40 +++++++++++------------
- tools/testing/selftests/ublk/Makefile           |  1 +
- tools/testing/selftests/ublk/kublk.c            | 10 ++++--
- tools/testing/selftests/ublk/kublk.h            |  3 ++
- tools/testing/selftests/ublk/null.c             |  4 +++
- tools/testing/selftests/ublk/test_generic_02.sh | 43 +++++++++++++++++++++++++
- 6 files changed, 76 insertions(+), 25 deletions(-)
----
-base-commit: 648154b1c78c9e00b6934082cae48bb38714de20
-change-id: 20250325-ublk_timeout-b06b9b51c591
+diff --git a/tools/testing/selftests/ublk/kublk.c b/tools/testing/selftests/ublk/kublk.c
+index ded1b93e7913011499ae5dae7b40f0e425982ee4..064a5bb6f12f35892065b8dfacb6f57f6fc16aee 100644
+--- a/tools/testing/selftests/ublk/kublk.c
++++ b/tools/testing/selftests/ublk/kublk.c
+@@ -890,6 +890,7 @@ static int cmd_dev_add(struct dev_ctx *ctx)
+ 		exit(-1);
+ 	}
+ 
++	signal(SIGCHLD, SIG_IGN);
+ 	setsid();
+ 	res = fork();
+ 	if (res == 0) {
 
-Best regards,
 -- 
-Uday Shankar <ushankar@purestorage.com>
+2.34.1
 
