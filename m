@@ -1,133 +1,99 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A4719049A;
-	Tue, 25 Mar 2025 19:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE51C1EB191;
+	Tue, 25 Mar 2025 19:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742931043; cv=none; b=GWa3Q3ycOUcWSXNutsgeNQVoJT18rUPWY43pCTyhUV9Ydvsq54A2CC6bcMpHd5m1b3wYshsCo6DBMcqIe8syap1QBD8fcaQ9Kz95HgoeQFhDM0GiLFhr2Y6px3azp0QiHS7vNJ7BATZEwPU+BL+qAHJJBbXK/ldw26qUkl6Z4UM=
+	t=1742931049; cv=none; b=eMjieXa21PeI4GGhObLyThP66JR21BY8u05P+EbGZeqg1mVKtmxdlF35rnKtqIHUy4iO0ojjgIGH3neVRE2QZkFImJyhPjlaaoqvj9TI63z99tAmW9xjm3ONXSZJm1CNv9ojRxBxumCWggJnJX/2byGCtK/MR5RFRvOCcFPCrkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742931043; c=relaxed/simple;
-	bh=V8M1FIqocDVgTg/Qhn+pCa3avFJiRNIIhW1vxEi3fyk=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=U0M0+qlAbTPGyeK9SqvXgD9TQXRIZt6G7UPD9ZIKJxGv2PlaZFOjTLONtClVhREdOIgZcWyBF2C+hjQMacxW2qTwa1KpFJEghfbllufk76DAXeekqEXcM3J94XCbJnJJtUGuUmfAtpxGh7ILSRlNIJIpwtb9MpyGeXUwe6sifbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VfS0eGJe; arc=none smtp.client-ip=209.85.160.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742931049; c=relaxed/simple;
+	bh=5tGZSH7qmIlEZiTl3tTZmYCsJqF7oZCvY5s6A5p92No=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X8uZVxUHwDnGoP1SKpU90Tf2syFpt369UJ7jpoQMq/7+m4HZkt1znElP1ViP2qq9nEvvap9vwrzJeFv6FchPnc2oDmM4krz5QjmypYlPtbgdz17o0xAjOlF7bdfmB4/b7OFDR4RbibGKrJuDP2uLYrCAAYsa7ZKYkWgY2Fbkw5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=K9Dve6XZ; arc=none smtp.client-ip=192.19.166.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VfS0eGJe"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2c6ed7ec0a5so1679056fac.1;
-        Tue, 25 Mar 2025 12:30:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742931041; x=1743535841; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4W8NwGIv3g9q9bD90ERb4CwpLXg29q/gl0kZGMFw8mM=;
-        b=VfS0eGJeFTdeJrV9qZN3LifrY1/PuswrTGeRCXGF3+a+ua9Ls1A3y1vU5Mm8seF9Mn
-         kow7/dBf84SMK9L5iM1f8FT9QpOAwSz4i2KBb0x5Yyo2Xygs/zsmvkJeD2S9stIbOzH2
-         p7gOygpuW4WpAlk4V9VRS4rX0q5x+f3Aj3gt/RuNFgsG0VIC+KqCCsqJiRS1tidMMKWA
-         RC4hCA1NTUwYRt3fPmJRcFYBXEEUybYMyXMTCIx4zRDh/dxcCuTjpVzHkrPt/tGGYvwc
-         7AiuR7WAH8LOgKEQCFQ5FdtozuFK5l5nwEgZEdE9Fba7vRTZYJqB4tyMwghC5zrTcH3v
-         1hVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742931041; x=1743535841;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4W8NwGIv3g9q9bD90ERb4CwpLXg29q/gl0kZGMFw8mM=;
-        b=d90AEH/1+fXPNnG1dnrLydxWF3RIH3vWNIT84pYeA4GwDt1FiKazPZGJGe+Vxe5giQ
-         UfBQdvzYzjwPJCD6MqGSrnMCewzyay+dgJ06sqQkaIbqZ5YeK/q0Aq/t8iz0fk6YhWMB
-         UUv8xm4iv4hZGM1pkDJGfbJIu9xkDVrAtaUT0GssjxM9TM4fxwlN/3YNorpnvFuzxsQY
-         ob4pYC2t6ENeFA8w1CeN+AHv8TseWZhq3CGjNF4tzp0uUvxygiaVWy7MKvmLrja5f4/1
-         pqsrXYacfLoH/aoYDJUSc5ci3mPyp/+reBjDps38xroLMdJRjuLhV0PRwXxA5DDXLz0D
-         S52g==
-X-Forwarded-Encrypted: i=1; AJvYcCUD9Pqbj9j0tZzeD+UjAjpWsPArUPnQ2VMSacsp6I9ReiOwii/oC6gYZqWyg1DSBj6dBaJbEAHJ8O4=@vger.kernel.org, AJvYcCUe3IcUAbir6HpU2YHKZTn6DR7HqNv7dZqvEFuspVDVJgv8w4+YYmjZJbgCTf5E++EsuXtRj2wQVwMcvBg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5GF/9+9MpPSGzdJju1vhBUYrI/oXUpCQwHvpC4Ve7ZjVGWHss
-	iqkSdb3dKW4gUOWtEA7OslbmglsHYYKUiAp7VeEyW+4fy60MLOl7RZcCGgbb
-X-Gm-Gg: ASbGncvzbgp/DxzHxiUZUg35nkTwI5wWnhieri7w0g1+ECLeenc68YgyBytJuI4QEZu
-	XBwgQeVj4LDf97XYikPv99iPviJB2Vw0z5QYSmB2tGL8enpBobafyZd5dw7BSF42vHC+MI4EYKO
-	ATHo4C7DbuKpMdKmpiUsTlYWeVeQFvuTgWZq4wB0TKq++iPJJkc4VZnT7p2yJz3aP3N6DsYDylA
-	/JMrudJI4rCSnlC1UmJgWruTIPbGqu0zHZTARVbOFQJkf2IwHT5188SKs1M0uEyYApKQUzepadt
-	50lnnmNSbZtyDE+lwlzhXoiRh/S6fmXd6sAkooRJf+Bm0g==
-X-Google-Smtp-Source: AGHT+IEwsieHitnF5P9+HL5fGRcvkWJOdtlW3j2FjuRo8vp7AE4y1CEzqZ9QMeBYn1I8NAM+YMV68Q==
-X-Received: by 2002:a05:6871:8301:b0:29e:74a0:e03f with SMTP id 586e51a60fabf-2c7804c7e14mr11154768fac.24.1742931040920;
-        Tue, 25 Mar 2025 12:30:40 -0700 (PDT)
-Received: from debian ([200.92.175.161])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c77f0f6825sm2644934fac.43.2025.03.25.12.30.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 12:30:40 -0700 (PDT)
-Date: Tue, 25 Mar 2025 13:30:44 -0600
-From: Enrique Isidoro Vazquez Ramos <kike.correo99.f@gmail.com>
-To: glaroque@baylibre.com, rafael@kernel.org, daniel.lezcano@linaro.org,
-	rui.zhang@intel.com, lukasz.luba@arm.com, linux-pm@vger.kernel.org,
-	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] thermal: amlogic: Rename Uptat to uptat to follow kernel
- coding style
-Message-ID: <Z-MEZNMLUmj75uxN@debian.debian>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="K9Dve6XZ"
+Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id CA3ABC000340;
+	Tue, 25 Mar 2025 12:22:24 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com CA3ABC000340
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1742930544;
+	bh=5tGZSH7qmIlEZiTl3tTZmYCsJqF7oZCvY5s6A5p92No=;
+	h=From:To:Cc:Subject:Date:From;
+	b=K9Dve6XZjFAyOl6QzGCqW0PzGE8jxIFFGEoCt6KzYRuNDSzKonSeiKz9j/08BowdY
+	 x0xPnR7nb8WaR+AeSPq01SQ7D2iYuIW2TEp5bP0DAnFS9qZJbN94VG7yyVNYbOnl0y
+	 EtQXoHeLfPddPkTksEjYVoFmLnMVvyWfMDC9lJv8=
+Received: from stbirv-lnx-1.igp.broadcom.net (stbirv-lnx-1.igp.broadcom.net [10.67.48.32])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 71C2718000520;
+	Tue, 25 Mar 2025 12:22:24 -0700 (PDT)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: stable@vger.kernel.org
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Pravin B Shelar <pshelar@ovn.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <kafai@fb.com>,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Breno Leitao <leitao@debian.org>,
+	=?UTF-8?q?Beno=C3=AEt=20Monin?= <benoit.monin@gmx.fr>,
+	Yan Zhai <yan@cloudflare.com>,
+	Felix Huettner <felix.huettner@mail.schwarz>,
+	Joe Stringer <joestringer@nicira.com>,
+	Andy Zhou <azhou@nicira.com>,
+	Justin Pettit <jpettit@nicira.com>,
+	Thomas Graf <tgraf@suug.ch>,
+	Luca Czesla <luca.czesla@mail.schwarz>,
+	Simon Horman <simon.horman@corigine.com>,
+	netdev@vger.kernel.org (open list:NETWORKING [GENERAL]),
+	linux-kernel@vger.kernel.org (open list),
+	dev@openvswitch.org (open list:OPENVSWITCH),
+	bpf@vger.kernel.org (open list:BPF (Safe dynamic programs and tools))
+Subject: [PATCH stable 5.4 v2 0/2] openvswitch port output fixes
+Date: Tue, 25 Mar 2025 12:22:18 -0700
+Message-Id: <20250325192220.1849902-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-The variable Uptat uses CamelCase, which violates the kernel's coding
-style that mandates snake_case for variable names. This is a purely
-cosmetic change with no functional impact.
+This patch series contains some missing openvswitch port output fixes
+for the stable 5.4 kernel.
 
-Compilation tested with:
-- checkpatch.pl --strict passed (no new warnings/errors).
+Changes in v2:
 
-Signed-off-by: Enrique Isidoro Vazquez Ramos <kike.correo99.f@gmail.com>
----
- drivers/thermal/amlogic_thermal.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+- use BUILD_BUG_ON_INVALID rather than DEBUG_NET_WARN_ON_ONCE which does
+  not exist in Linux 5.4
 
-diff --git a/drivers/thermal/amlogic_thermal.c b/drivers/thermal/amlogic_thermal.c
-index 3c5f7dbddf2c..5448d772db12 100644
---- a/drivers/thermal/amlogic_thermal.c
-+++ b/drivers/thermal/amlogic_thermal.c
-@@ -7,10 +7,10 @@
-  *
-  * Register value to celsius temperature formulas:
-  *	Read_Val	    m * U
-- * U = ---------, Uptat = ---------
-+ * U = ---------, uptat = ---------
-  *	2^16		  1 + n * U
-  *
-- * Temperature = A * ( Uptat + u_efuse / 2^16 )- B
-+ * Temperature = A * ( uptat + u_efuse / 2^16 )- B
-  *
-  *  A B m n : calibration parameters
-  *  u_efuse : fused calibration value, it's a signed 16 bits value
-@@ -112,7 +112,7 @@ static int amlogic_thermal_code_to_millicelsius(struct amlogic_thermal *pdata,
- 	const struct amlogic_thermal_soc_calib_data *param =
- 					pdata->data->calibration_parameters;
- 	int temp;
--	s64 factor, Uptat, uefuse;
-+	s64 factor, uptat, uefuse;
- 
- 	uefuse = pdata->trim_info & TSENSOR_TRIM_SIGN_MASK ?
- 			     ~(pdata->trim_info & TSENSOR_TRIM_TEMP_MASK) + 1 :
-@@ -121,12 +121,12 @@ static int amlogic_thermal_code_to_millicelsius(struct amlogic_thermal *pdata,
- 	factor = param->n * temp_code;
- 	factor = div_s64(factor, 100);
- 
--	Uptat = temp_code * param->m;
--	Uptat = div_s64(Uptat, 100);
--	Uptat = Uptat * BIT(16);
--	Uptat = div_s64(Uptat, BIT(16) + factor);
-+	uptat = temp_code * param->m;
-+	uptat = div_s64(uptat, 100);
-+	uptat = uptat * BIT(16);
-+	uptat = div_s64(uptat, BIT(16) + factor);
- 
--	temp = (Uptat + uefuse) * param->A;
-+	temp = (uptat + uefuse) * param->A;
- 	temp = div_s64(temp, BIT(16));
- 	temp = (temp - param->B) * 100;
- 
+Felix Huettner (1):
+  net: openvswitch: fix race on port output
+
+Ilya Maximets (1):
+  openvswitch: fix lockup on tx to unregistering netdev with carrier
+
+ net/core/dev.c            | 1 +
+ net/openvswitch/actions.c | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
 -- 
-2.39.5
+2.34.1
 
