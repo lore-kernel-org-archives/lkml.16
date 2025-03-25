@@ -1,147 +1,99 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AEC38385
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 06:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A98F38385
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 06:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742883992; cv=none; b=Bu86I3s1LGO6Cic25GO5kfQtnZT9SivuIjgH13UFC1IaJ8UsRiFivJCMCEzMZNcZoBvIJ7L/LMh+7WvhhL2B7cBgmcW8U7p3LR6wTztTgZODHw5oXZsTZ9ZJbDRu4PqVaf/vl/BtlsgQGYMo3BrR61u8XS5qtKND4ByO0K6dM8g=
+	t=1742884052; cv=none; b=Ogc6/m+JiIH3ZLzH7WYInpxOn2Y/Jf5+BWjd5mD8voE7A2n2cgEK6ewiZldvmaaU0vGyV3lvUfT19ByZKdha9++TjIDeKa7QILtNqoR3EgxdbLLa17HuepjzyIo/yAEB4qa42mMzmMVqvLp6nKBZvPrpW4VFSUlj79wP6M2rMSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742883992; c=relaxed/simple;
-	bh=Ox1fhONWN8x2PVBse44ep4LUGaP+pA4mpHXFB6FyPvM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IAKOx6k32B+/UPP9lMmjnxNNxEPzTq6J7/SFzjn/0Kf0PL3wdM9PTiwZ5olCd9Db5KZOqzBzyNjntkxJKzw2U6viMYP3d6nCaAQyPtUXtZgmTOHMKSR4nTSUTsKV5x1ZQajJBmluUAp+TePGA0xzJrS+frigSva+3Vy9BKmdwPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZMKf10n59ztRM2;
-	Tue, 25 Mar 2025 14:24:57 +0800 (CST)
-Received: from kwepemg100017.china.huawei.com (unknown [7.202.181.58])
-	by mail.maildlp.com (Postfix) with ESMTPS id D35C81800E2;
-	Tue, 25 Mar 2025 14:26:23 +0800 (CST)
-Received: from huawei.com (10.175.124.71) by kwepemg100017.china.huawei.com
- (7.202.181.58) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 25 Mar
- 2025 14:26:23 +0800
-From: Wupeng Ma <mawupeng1@huawei.com>
-To: <akpm@linux-foundation.org>, <mike.kravetz@oracle.com>, <david@redhat.com>
-CC: <muchun.song@linux.dev>, <mawupeng1@huawei.com>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH] mm: hugetlb: Fix incorrect fallback for subpool
-Date: Tue, 25 Mar 2025 14:16:34 +0800
-Message-ID: <20250325061634.2118202-1-mawupeng1@huawei.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1742884052; c=relaxed/simple;
+	bh=lAsxP65TBItfq9A/ejJGYnmNAqPTg1H5uubV19ShelM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VX9SS4GUZBn5WLFPbbXgh2nsSB4ewUvQ38iWRXhgVfDm23nxVsmBvcq37IMNur9pqekszzXDloK+NWLX4+uhlg21zfiGOTszPLA/TyY+gd33XH58kBUcyVy4INNl4PIgYJyAPmTIrEbLn3946wmR7OwDWto/VX2KRL7PrAmD6ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=gFk9531s; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="gFk9531s"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e61da95244so8739919a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 23:27:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1742884048; x=1743488848; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=KFtkJYIcFO8DPBzUn9JDdz2WSh7YjbuBmns9V95xwQ4=;
+        b=gFk9531st5O8Cg+NSXodlSV/+6biIx+IGKHPFqqlFQvs+O+KKc6+k385p53WwOPLMD
+         wQlaZYsUfWT2dEr/BLaHVbUKoMX5AXn3Mdh+c5pMAIQns42JBbBvKgUsIfa1axwQLMwn
+         xLz6ZDEWUUeV0eOGInKYlxtJ8Tehs6W7AUNKM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742884048; x=1743488848;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KFtkJYIcFO8DPBzUn9JDdz2WSh7YjbuBmns9V95xwQ4=;
+        b=uNHWCDphDZ3Euor2GsazCDEcV2jJpGdtNWg0ZxY3+PYEcY9D/7vR9uLrSopzYWjaM/
+         JSIE/df81wHVd27xurgpd4MbnyX2WiQ52IunFMyxMR1KeN2V0IF9wR7D/T/K5oDInbYM
+         0vmMrU/yrh65uFDF3EvVR3ngfPKf7qNAEkho5wJROQFecCf0vjU+Pg/XvHF53mBx/0bp
+         TItVZzc3aMUfbrr+KA66hqCbUnvRNCiOaeWizViabDxPMXxtWqMlTssjMLTrEjkSnSjR
+         uzDxsNqFwgkirfULBaVt5SB+31zhz8c8QIJbv90bmLFNExgbE4aSIWT1nsrP5uSdDN+z
+         ZvHg==
+X-Gm-Message-State: AOJu0YwQDlxpwW7GUp05HcIa1eaA60zpQljO6PG9f4BakIc+HPs/+/sj
+	n85CxvqCdv1BN+Hz8pM5/kZasxMxLGke37TNHiz9TVI89ATSkF8BFuDGQUmE9K+JHvZGZZDxnTM
+	rwFg=
+X-Gm-Gg: ASbGncvGj7w54su+eh3kc/SWJYapjHQv2gtWLGG6uts+Nig6ntWORhjIGyPlwlWQrf1
+	TBp60lnQHD+49A+uOAZQ8Erqhte2bjXtE7fThOvxnK7N2P+LXYd647+koZkYDM0fQMv0/aGk63I
+	3ReaKgLeJYXtjr9bthoiCAPSa31hHYdiEomwQTKIfU5kQF6qJvXBY8szXWtw/Q5YJcF3ywUe7/F
+	h0nxFHb9qmPye+bfOzUDc1kT/2m9F4P8mDzliZBIwjAgu+JfgN/VZck4+M2SKP3u8VdCoLp6J7k
+	olwFl8PSKI66XUHLX00n5fDChX2X+f4vmX29uyKO3qKWgumJxKzCjN1fPd0U+MFAGrd8kh9SMpQ
+	yziF7GuVMT9IVB8tkHyc=
+X-Google-Smtp-Source: AGHT+IHhg1H4x42Ex0lIF+mW6SCRaNTGX45E+LIgHQFLyvhDr8bvy958DsKxE9B+0jt/RHSQJnXG/g==
+X-Received: by 2002:a05:6402:e93:b0:5ed:13ba:6538 with SMTP id 4fb4d7f45d1cf-5ed13ba6593mr1460292a12.6.1742884048081;
+        Mon, 24 Mar 2025 23:27:28 -0700 (PDT)
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ebcd0c6f47sm7127395a12.52.2025.03.24.23.27.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Mar 2025 23:27:27 -0700 (PDT)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e535e6739bso8373569a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 23:27:26 -0700 (PDT)
+X-Received: by 2002:a17:906:c148:b0:ac3:eb29:2aec with SMTP id
+ a640c23a62f3a-ac3f24d5c79mr1678726566b.38.1742884046562; Mon, 24 Mar 2025
+ 23:27:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemg100017.china.huawei.com (7.202.181.58)
+References: <Z96jAWGvYzZOM6O4@gmail.com>
+In-Reply-To: <Z96jAWGvYzZOM6O4@gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 24 Mar 2025 23:27:09 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whu2fb22rEy6+oKx1-+NCHuWucZepvD0H2MD38DrJVKtg@mail.gmail.com>
+X-Gm-Features: AQ5f1Jor1dJDT-v6IamJPj8N6Y9O_XrLt-B08RQEjClG6tg0-8AT5BjsN4EuytY
+Message-ID: <CAHk-=whu2fb22rEy6+oKx1-+NCHuWucZepvD0H2MD38DrJVKtg@mail.gmail.com>
+Subject: Re: [GIT PULL] x86/build updates for v6.15
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, "the arch/x86 maintainers" <x86@kernel.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Peter Zijlstra <peterz@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
 
-During our testing with hugetlb subpool enabled, we observe that
-hstate->resv_huge_pages may underflow into negative values. Root cause
-analysis reveals a race condition in subpool reservation fallback handling
-as follow:
+On Sat, 22 Mar 2025 at 04:46, Ingo Molnar <mingo@kernel.org> wrote:
+>
+>  - Drop CRC-32 checksum and the build tool that generates it
+>    (Ard Biesheuvel)
 
-hugetlb_reserve_pages()
-    /* Attempt subpool reservation */
-    gbl_reserve = hugepage_subpool_get_pages(spool, chg);
+Hmm. I didn't notice this during the merge process, but not too long
+afterwards it became obvious that this caused problems.
 
-    /* Global reservation may fail after subpool allocation */
-    if (hugetlb_acct_memory(h, gbl_reserve) < 0)
-        goto out_put_pages;
+I've committed the fix separately: commit 2df0c02dab82 ("x86 boot
+build: make git ignore stale 'tools' directory").
 
-out_put_pages:
-    /* This incorrectly restores reservation to subpool */
-    hugepage_subpool_put_pages(spool, chg);
+Please don't just mindlessly remove .gitignore entries for generated files.
 
-When hugetlb_acct_memory() fails after subpool allocation, the current
-implementation over-commits subpool reservations by returning the full
-'chg' value instead of the actual allocated 'gbl_reserve' amount. This
-discrepancy propagates to global reservations during subsequent releases,
-eventually causing resv_huge_pages underflow.
+Because even if *you* may have removed the file, the generated files
+don't magically disappear from everybody else, and when the gitignore
+entry is gone, you are now setting other developers up for mistakes.
 
-This problem can be trigger easily with the following steps:
-1. reverse hugepage for hugeltb allocation
-2. mount hugetlbfs with min_size to enable hugetlb subpool
-3. alloc hugepages with two task(make sure the second will fail due to
-   insufficient amount of hugepages)
-4. with for a few seconds and repeat step 3 which will make
-   hstate->resv_huge_pages to go below zero.
-
-To fix this problem, return corrent amount of pages to subpool during the
-fallback after hugepage_subpool_get_pages is called.
-
-Fixes: 1c5ecae3a93f ("hugetlbfs: add minimum size accounting to subpools")
-Signed-off-by: Wupeng Ma <mawupeng1@huawei.com>
----
- mm/hugetlb.c | 28 ++++++++++++++++++++++------
- 1 file changed, 22 insertions(+), 6 deletions(-)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 318624c96584..dc4449592d00 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -2987,7 +2987,7 @@ struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
- 	struct hugepage_subpool *spool = subpool_vma(vma);
- 	struct hstate *h = hstate_vma(vma);
- 	struct folio *folio;
--	long retval, gbl_chg;
-+	long retval, gbl_chg, gbl_reserve;
- 	map_chg_state map_chg;
- 	int ret, idx;
- 	struct hugetlb_cgroup *h_cg = NULL;
-@@ -3140,8 +3140,16 @@ struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
- 		hugetlb_cgroup_uncharge_cgroup_rsvd(idx, pages_per_huge_page(h),
- 						    h_cg);
- out_subpool_put:
--	if (map_chg)
--		hugepage_subpool_put_pages(spool, 1);
-+	/*
-+	 * put page to subpool iff the quota of subpool's rsv_hpages is used
-+	 * during hugepage_subpool_get_pages.
-+	 */
-+	if (map_chg && !gbl_chg) {
-+		gbl_reserve = hugepage_subpool_put_pages(spool, 1);
-+		hugetlb_acct_memory(h, -gbl_reserve);
-+	}
-+
-+
- out_end_reservation:
- 	if (map_chg != MAP_CHG_ENFORCED)
- 		vma_end_reservation(h, vma, addr);
-@@ -6949,7 +6957,7 @@ bool hugetlb_reserve_pages(struct inode *inode,
- 					struct vm_area_struct *vma,
- 					vm_flags_t vm_flags)
- {
--	long chg = -1, add = -1;
-+	long chg = -1, add = -1, spool_resv, gbl_resv;
- 	struct hstate *h = hstate_inode(inode);
- 	struct hugepage_subpool *spool = subpool_inode(inode);
- 	struct resv_map *resv_map;
-@@ -7084,8 +7092,16 @@ bool hugetlb_reserve_pages(struct inode *inode,
- 	return true;
- 
- out_put_pages:
--	/* put back original number of pages, chg */
--	(void)hugepage_subpool_put_pages(spool, chg);
-+	spool_resv = chg - gbl_reserve;
-+	if (spool_resv) {
-+		/* put sub pool's reservation back, chg - gbl_reserve */
-+		gbl_resv = hugepage_subpool_put_pages(spool, spool_resv);
-+		/*
-+		 * subpool's reserved pages can not be put back due to race,
-+		 * return to hstate.
-+		 */
-+		hugetlb_acct_memory(h, -gbl_resv);
-+	}
- out_uncharge_cgroup:
- 	hugetlb_cgroup_uncharge_cgroup_rsvd(hstate_index(h),
- 					    chg * pages_per_huge_page(h), h_cg);
--- 
-2.43.0
-
+                 Linus
