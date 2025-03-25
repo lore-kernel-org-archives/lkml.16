@@ -1,178 +1,81 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD2525A2DF;
-	Tue, 25 Mar 2025 14:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0337225A355;
+	Tue, 25 Mar 2025 14:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742912965; cv=none; b=biiQV+GaDxPzpuETiZD8JN2PHp7vJzn9lncZtkjy1rZkxE55QaInE4nC3FmI/e6PmvWI8pL8uUBJECESET6XCu65IQh9guZOhaOpsldZRxf2RcnqGp7KQJM9K8WEFXNm/0NA8ax9BAntabU8wAjTmlbEHj4DjuG8bl2ju69I0po=
+	t=1742913006; cv=none; b=UU+jsiN8WBNQnlvRPfWuuAQyZjtD+sli6AaDlMwgPBDlljs5jiYz6erY/KCbowXrCCcC8acfyHJLnqhUOljoUHv9rLdZS+WGMKtmlWdlJmDSRclKyIS9E1gvj8zVfu+guL6clcveahc4KHl4e7Mneg7SdW1yNkoV5s2uCDuUFeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742912965; c=relaxed/simple;
-	bh=Vl3vvuU3EXqhhL0Aq4L5M6JCpv6r2cjM4xNvae15GQk=;
-	h=Content-Type:Date:Message-Id:Cc:From:To:Subject:Mime-Version:
-	 References:In-Reply-To; b=Ir+ZXJvD8UuOYVS3P4QCNltVYzobPR2UJgm+/7nBSR6sKsHwjs8CM2ThWulY1DORIykukc1lc0aYnvpkvswJhNopYPQTWmtvD2aFzQReWK9tuye2JQtzH/XkoIKlRVxwWFR592FA36yp/xLhVhkYBbiG98HsBwtSnoXj4hft5ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=oAHnWyak; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1742913006; c=relaxed/simple;
+	bh=nr9g1Wfd45MUL8j7kWkgO7JoktpaX26KTQBj59zmnkg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=cyM2b/PsulEKnq+bPP6lM/Tj3Jy5g+pL1NVb2WngJtSpqmwsrfLlm8GCdAVUewkCxBPz90z1OOUNmWpoZJWwr+JAh+s8izIr5fmaeskGKTvMMzGHoEXKWg9n717PbEore1JsqUPQfD1E3SftwR1mcXFn/lyikUrbUT45qwtIhkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+12mC25; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="oAHnWyak"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2305244297;
-	Tue, 25 Mar 2025 14:29:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742912960;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9/w2I/hCM+TADHxxC0YZFOVsXPy5gKaRLqo80ZlcyTM=;
-	b=oAHnWyaktVUyy0V9/uFdjA0D7NqFeMOTOABLtlGA/LYMCAHfnqVveZBXIbm9Yl/izlprG/
-	GbOtt0+uvmzukhKHZgJ7tN+MiXIqmN1R6zQtQi/uXq8bZuzxBHfPZtGRxfK1Xw4qHYY1wS
-	IFuePgNdYj4Y/Dq8aHLygwhQM5i3ckF9nUUgF6O+yRT9xQB0mCrox6VzPY5sM5p0/6GGLk
-	kAaGk6GFgCulOKC19E7nNRhixE6YoY3M1CVsX0RMXdUsCk7PwrhE1p/vFYn0jfZeSkQ3WR
-	YOWUaA/Kq3eABtnf208DEndGf24IUcouW3StcgqEQdMmNm2BtLTi0gbduRLR/w==
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 25 Mar 2025 15:29:18 +0100
-Message-Id: <D8PF2VNMJ0TC.396PL4OJTTBOU@bootlin.com>
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
- <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+12mC25"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C419C4CEE4;
+	Tue, 25 Mar 2025 14:30:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742913005;
+	bh=nr9g1Wfd45MUL8j7kWkgO7JoktpaX26KTQBj59zmnkg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=S+12mC25+shaBe7nPNIJF0/WA/VDMkfvFYwhKvW42PST1iEM6K2VYdFV/WQfEqAaE
+	 oKfvrLwr312wlDq9rH4d60n6BLZFya7Fh32mPrb6nrYOo6noh+MzcHuDT+z4H4qID3
+	 bnnleFyQGO20u+e5VRVZlvvHmdinClnPtlwmdWjAu3EcEISIm6VCpto6RurX/T67Mp
+	 4B/m1y9kdqzl/XkDV8gapIhnWKosMbR+YHq90zGYDo2kPQCIc/VH12STNgDK26itFh
+	 5rv5VN3eQmm+MsKK08qQs9mt1+cewb5bW1dTnLZuWiza3jmQe7G2n3a/lcDkIE5/p4
+	 WLd/R6nmICZdQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAD63380CFE7;
+	Tue, 25 Mar 2025 14:30:42 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
- <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
- <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
-In-Reply-To: <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduiedvkeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegtfffkvefhvffuggfgofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelfeetjeetffegkeeukeehvdegleeklefggfdtieduvdfgkeeggefhfeekffefhfenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
- dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] net/mlx5e: TX,
+ Utilize WQ fragments edge for multi-packet WQEs
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174291304175.595107.13297084085489474396.git-patchwork-notify@kernel.org>
+Date: Tue, 25 Mar 2025 14:30:41 +0000
+References: <1742391746-118647-1-git-send-email-tariqt@nvidia.com>
+In-Reply-To: <1742391746-118647-1-git-send-email-tariqt@nvidia.com>
+To: Tariq Toukan <tariqt@nvidia.com>
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, andrew+netdev@lunn.ch, gal@nvidia.com,
+ leonro@nvidia.com, dtatulea@nvidia.com, saeedm@nvidia.com, leon@kernel.org,
+ netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, moshe@nvidia.com, mbloch@nvidia.com
 
-On Wed Mar 19, 2025 at 12:18 PM CET, Andy Shevchenko wrote:
-> On Tue, Mar 18, 2025 at 05:26:20PM +0100, mathieu.dubois-briand@bootlin.c=
-om wrote:
-> > From: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> >=20
-> > Add driver for Maxim Integrated MAX7360 PWM controller, supporting up t=
-o
-> > 8 independent PWM outputs.
->
-> ...
->
->
-> > +static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
-> > +					   struct pwm_device *pwm,
-> > +					   const struct pwm_waveform *wf,
-> > +					   void *_wfhw)
->
-> I would expect other way around, i.e. naming with leading underscore(s) t=
-o be
-> private / local. Ditto for all similar cases.
+Hello:
 
-I get the point, but the 2 existing drivers based on pwm_ops structure
-name it that way: drivers/pwm/pwm-axi-pwmgen.c and
-drivers/pwm/pwm-stm32.c.
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Also, the parameter is mostly unusable as-is, as it is a void*, so I
-believe it also makes sense to have no underscore for the correctly
-casted one, that we will be using in the function body (wfhw).
+On Wed, 19 Mar 2025 15:42:26 +0200 you wrote:
+> For simplicity reasons, the driver avoids crossing work queue fragment
+> boundaries within the same TX WQE (Work-Queue Element). Until today, as
+> the number of packets in a TX MPWQE (Multi-Packet WQE) descriptor is not
+> known in advance, the driver pre-prepared contiguous memory for the
+> largest possible WQE. For this, when getting too close to the fragment
+> edge, having no room for the largest WQE possible, the driver was
+> filling the fragment remainder with NOP descriptors, aligning the next
+> descriptor to the beginning of the next fragment.
+> 
+> [...]
 
->
-> ...
->
-> > +static int max7360_pwm_read_waveform(struct pwm_chip *chip,
-> > +				     struct pwm_device *pwm,
-> > +				     void *_wfhw)
-> > +{
-> > +	struct max7360_pwm_waveform *wfhw =3D _wfhw;
-> > +	struct regmap *regmap;
-> > +	unsigned int val;
-> > +	int ret;
-> > +
-> > +	regmap =3D pwmchip_get_drvdata(chip);
-> > +
-> > +	ret =3D regmap_read(regmap, MAX7360_REG_GPIOCTRL, &val);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (val & BIT(pwm->hwpwm)) {
-> > +		wfhw->enabled =3D true;
->
-> Also can be (but up to you)
->
-> 	wfhw->enabled =3D val & BIT(pwm->hwpwm);
-> 	if (wfhw->enabled) {
->
-> And also see below. Perhaps it is not a good suggestion after all.
->
-> > +		ret =3D regmap_read(regmap, MAX7360_REG_PWM(pwm->hwpwm), &val);
-> > +		wfhw->duty_steps =3D val;
->
-> Set to a garbage in case of error, why?
->
+Here is the summary with links:
+  - [net-next] net/mlx5e: TX, Utilize WQ fragments edge for multi-packet WQEs
+    https://git.kernel.org/netdev/net-next/c/9da10c2d69c3
 
-Ok, I'm fixing the whole block of code.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-> > +	} else {
-> > +		wfhw->enabled =3D false;
-> > +		wfhw->duty_steps =3D 0;
-> > +	}
-> > +
-> > +	return ret;
-> > +}
->
-> ...
->
-> > +static int max7360_pwm_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev =3D &pdev->dev;
-> > +	struct pwm_chip *chip;
-> > +	struct regmap *regmap;
-> > +	int ret;
-> > +
-> > +	if (!dev->parent)
-> > +		return dev_err_probe(dev, -ENODEV, "no parent device\n");
->
-> Why? Code most likely will fail on the regmap retrieval. Just do that fir=
-st.
->
-> > +	chip =3D devm_pwmchip_alloc(dev->parent, MAX7360_NUM_PWMS, 0);
->
-> This is quite worrying. The devm_ to parent makes a lot of assumptions th=
-at may
-> not be realised. If you really need this, it has to have a very good comm=
-ent
-> explaining why and object lifetimes.
->
-
-Thanks, I'm fixing this in this driver and similar code in keypad,
-rotary and pinctrl. More details in the child mail.
-
-Thanks for your review!
-Mathieu
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
 
