@@ -1,66 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2D6253F02;
-	Tue, 25 Mar 2025 07:36:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996662F3B;
+	Tue, 25 Mar 2025 07:36:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742888174; cv=none; b=LtdWrbPDcGBISx/O3oKCJ3oDRlHyQpKWuCnT0zc8Mo/y+YizawlCXXA2IqY6XySBmNk/SIIdcvs4ws8Yk4RzY/SLkC1cXXtQQp6b3LUVexnKznSQlSq6WBIjj9B+M6zVuRHt1soZe+KAovEAJ3xU6GDTvjGZlowhjRRAy3bMZbY=
+	t=1742888175; cv=none; b=lsyESqm80hIMXHI2IqiS+Bt/PCjmT5SUdE0oPa/2cprMwUX/oSriflHUzQdh1Izbrri6o+1NEHrblcccnUEaCne+Sq90gRyhUMZvVXKicpoOR1J6dknHQ9cKpMuimTuaA5eAVuDG40ucfi7SqzY8vWpEtuN/4pJKmIjErwKxgS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742888174; c=relaxed/simple;
-	bh=c1M2WwfFg4BcwHdH4MkElkNTFx/Zj2M9lwdTa0I+JZM=;
+	s=arc-20240116; t=1742888175; c=relaxed/simple;
+	bh=DnuYk0x+SFvyp22G1fTfcg7WJqmettww7pG88pBXaEg=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=oOvmgVIK2ssIS8gow/YUmw63zswEH3Ai8CcxCxJdd3rmO1/A2Q42f+gAMSclczMzvXQKiXJ6gm0Yhsgk4xtp0UAN7jA4spMsshh2ZRKIrf9YiWWB/RvRFaCbCOm/TM+w6JRe39KJe2lYyoMhfQptwDwUmzdK9nr6RZ+mDItutfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3GRimYak; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+T2ma84K; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=DyObrzr++x3L6+F0tvDVNMy6PSVmyPUQ4eYUitc8S6i6228FwcLPFxiV1Bu+sKp/6XGjCvSERRxK5QQTBRAynlEddBfF099zWWLGWe7RJwHGN+/LvUQS11QSv5nkU/ad/H5XJY7ohyeaiZvo1sQYlSuragtmdtBxP2ia1foYdBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iihnV50G; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MpuUEiQy; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3GRimYak";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+T2ma84K"
-Date: Tue, 25 Mar 2025 07:36:09 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iihnV50G";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MpuUEiQy"
+Date: Tue, 25 Mar 2025 07:36:11 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742888170;
+	s=2020; t=1742888171;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Wa5962az/e/BhtTEeDfQpkCWvh1sFwc35PSUiwSW9J0=;
-	b=3GRimYakiJrpRkxKQc7jXTwE1lqvU2UStvSMoGDsxJMOqkJ9ofQwKsbRDLySFpCgvPClI8
-	Y5FFc0wNHkiELZD9IOGKW5oowcAD+6n+mUNoSfU2ZSLXMyFR3lwkDseUEbpMxeyxu1ulR5
-	k0s4bx/il6k/sAJxIZBF2xFNGaDAYYfmwdFPDo/2iqt1TrOWGl3+jLZ4zZSI49I5nkkJax
-	/npVNqKyd6oVH24ZzhYyLodlM6Y6HOvaWG08Nd/pgRca5/GX8ZzANl9KVej7jvvUX8N9t3
-	csltfyQTlo2M+dDBHvpRTEQnjoYzzgNK54+Yr7NQwbnlgRRPUrp3JC0Ih+pYWQ==
+	bh=vFdC9KBiiTclmsO/8q/IgoobOgIKfUMYwcYMtL2Af2c=;
+	b=iihnV50GClZYgz2PxreCB8UH3rTCyb118LIyrpDwTSzx/oVJSfCIh+6K+ZuRfAsaEPOF0B
+	fzTk+7ED0FbMw9nNbKO6C54h2wZHeufG30UAP50gyHGSpPf1kRjes99+vZmLxFiSkbIr+9
+	UmXLm/287n1VkUcRtwJiekenOvMsoWiY1hl7g1iGB/llzsxjCAxK1RhbfRsFFQAERe6rsq
+	CM94kDYZSE31gjKk773DOm8Vvb/0i3WVlIn6tiksWAKkyG/b6uiZgwKDc45qKcw2yryXKc
+	U2zTffLMIUxEMnvpr0aRqz/0fqdRvu7vHLQCDyCgz3fQ8EPUp+nqaTIHG7fs4Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742888170;
+	s=2020e; t=1742888171;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Wa5962az/e/BhtTEeDfQpkCWvh1sFwc35PSUiwSW9J0=;
-	b=+T2ma84KwXHBCOnnT0rIJngqEo0tTLkxezXyGgJ0fl1MM/KpwrWa4OqKSNctYYHMb2ekyY
-	nozMwkUVOpFKUSAw==
+	bh=vFdC9KBiiTclmsO/8q/IgoobOgIKfUMYwcYMtL2Af2c=;
+	b=MpuUEiQyrk6vrXVNj8nZeWiMxepuyg2/Q4wU6+U6Yq7zlEvDUo90GJ/j0vj9M+xSGSu+Hl
+	DKTZz/w/Rbt62NAg==
 From:
  tip-bot2 for Mateusz =?utf-8?q?Jo=C5=84czyk?= <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/urgent] x86/Kconfig: Make CONFIG_PCI_CNB20LE_QUIRK depend on X86_32
+Subject: [tip: x86/urgent] x86/Kconfig: Update lists in X86_EXTENDED_PLATFORM
 Cc: mat.jonczyk@o2.pl, David Heideberg <david@ixit.cz>,
  Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
  Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250321-x86_x2apic-v3-6-b0cbaa6fa338@ixit.cz>
-References: <20250321-x86_x2apic-v3-6-b0cbaa6fa338@ixit.cz>
+In-Reply-To: <20250321-x86_x2apic-v3-4-b0cbaa6fa338@ixit.cz>
+References: <20250321-x86_x2apic-v3-4-b0cbaa6fa338@ixit.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174288816909.14745.1771292848425363053.tip-bot2@tip-bot2>
+Message-ID: <174288817105.14745.14614627013694495488.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,94 +69,66 @@ Content-Transfer-Encoding: quoted-printable
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     d9f87802676bb23b9425aea8ad95c76ad9b50c6e
-Gitweb:        https://git.kernel.org/tip/d9f87802676bb23b9425aea8ad95c76ad9b=
-50c6e
+Commit-ID:     4047e8773fb627df3779291d9138e425537573af
+Gitweb:        https://git.kernel.org/tip/4047e8773fb627df3779291d9138e425537=
+573af
 Author:        Mateusz Jo=C5=84czyk <mat.jonczyk@o2.pl>
-AuthorDate:    Fri, 21 Mar 2025 21:48:48 +01:00
+AuthorDate:    Fri, 21 Mar 2025 21:48:46 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 22 Mar 2025 08:08:57 +01:00
+CommitterDate: Sat, 22 Mar 2025 08:02:16 +01:00
 
-x86/Kconfig: Make CONFIG_PCI_CNB20LE_QUIRK depend on X86_32
+x86/Kconfig: Update lists in X86_EXTENDED_PLATFORM
 
-I was unable to find a good description of the ServerWorks CNB20LE
-chipset. However, it was probably exclusively used with the Pentium III
-processor (this CPU model was used in all references to it that I
-found where the CPU model was provided: dmesgs in [1] and [2];
-[3] page 2; [4]-[7]).
+The order of the entries matches the order they appear in Kconfig.
 
-As is widely known, the Pentium III processor did not support the 64-bit
-mode, support for which was introduced by Intel a couple of years later.
-So it is safe to assume that no systems with the CNB20LE chipset have
-amd64 and the CONFIG_PCI_CNB20LE_QUIRK may now depend on X86_32.
+In 2011, AMD Elan was moved to Kconfig.cpu and the dependency on
+X86_EXTENDED_PLATFORM was dropped in:
 
-Additionally, I have determined that most computers with the CNB20LE
-chipset did have ACPI support and this driver was inactive on them.
-I have submitted a patch to remove this driver, but it was met with
-resistance [8].
+  ce9c99af8d4b ("x86, cpu: Move AMD Elan Kconfig under "Processor family"")
 
-[1] Jim Studt, Re: Problem with ServerWorks CNB20LE and lost interrupts
-    Linux Kernel Mailing List, https://lkml.org/lkml/2002/1/11/111
+Support for Moorestown MID devices was removed in 2012 in:
 
-[2] RedHat Bug 665109 - e100 problems on old Compaq Proliant DL320
-    https://bugzilla.redhat.com/show_bug.cgi?id=3D665109
+  1a8359e411eb ("x86/mid: Remove Intel Moorestown")
 
-[3] R. Hughes-Jones, S. Dallison, G. Fairey, Performance Measurements on
-    Gigabit Ethernet NICs and Server Quality Motherboards,
-    http://datatag.web.cern.ch/papers/pfldnet2003-rhj.doc
+SGI 320/540 (Visual Workstation) was removed in 2014 in:
 
-[4] "Hardware for Linux",
-    Probe #d6b5151873 of Intel STL2-bd A28808-302 Desktop Computer (STL2)
-    https://linux-hardware.org/?probe=3Dd6b5151873
-
-[5] "Hardware for Linux", Probe #0b5d843f10 of Compaq ProLiant DL380
-    https://linux-hardware.org/?probe=3D0b5d843f10
-
-[6] Ubuntu Forums, Dell Poweredge 2400 - Adaptec SCSI Bus AIC-7880
-    https://ubuntuforums.org/showthread.php?t=3D1689552
-
-[7] Ira W. Snyder, "BISECTED: 2.6.35 (and -git) fail to boot: APIC problems"
-    https://lkml.org/lkml/2010/8/13/220
-
-[8] Bjorn Helgaas, "Re: [PATCH] x86/pci: drop ServerWorks / Broadcom
-    CNB20LE PCI host bridge driver"
-    https://lore.kernel.org/lkml/20220318165535.GA840063@bhelgaas/T/
+  c5f9ee3d665a ("x86, platforms: Remove SGI Visual Workstation")
 
 Signed-off-by: Mateusz Jo=C5=84czyk <mat.jonczyk@o2.pl>
 Signed-off-by: David Heideberg <david@ixit.cz>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250321-x86_x2apic-v3-6-b0cbaa6fa338@ixit.cz
+Link: https://lore.kernel.org/r/20250321-x86_x2apic-v3-4-b0cbaa6fa338@ixit.cz
 ---
- arch/x86/Kconfig | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ arch/x86/Kconfig | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index a079ecf..1090eda 100644
+index d6155b9..917cd2f 100644
 --- a/arch/x86/Kconfig
 +++ b/arch/x86/Kconfig
-@@ -2929,13 +2929,21 @@ config MMCONF_FAM10H
- 	depends on X86_64 && PCI_MMCONFIG && ACPI
+@@ -542,16 +542,20 @@ config X86_EXTENDED_PLATFORM
+ 	  CONFIG_64BIT.
 =20
- config PCI_CNB20LE_QUIRK
--	bool "Read CNB20LE Host Bridge Windows" if EXPERT
--	depends on PCI
-+	bool "Read PCI host bridge windows from the CNB20LE chipset" if EXPERT
-+	depends on X86_32 && PCI
- 	help
- 	  Read the PCI windows out of the CNB20LE host bridge. This allows
- 	  PCI hotplug to work on systems with the CNB20LE chipset which do
- 	  not have ACPI.
+ 	  32-bit platforms (CONFIG_64BIT=3Dn):
+-		Goldfish (Android emulator)
+-		AMD Elan
++		Goldfish (mostly Android emulator)
++		Intel CE media processor (CE4100) SoC
++		Intel MID (Mobile Internet Device)
++		Intel Quark
+ 		RDC R-321x SoC
+-		SGI 320/540 (Visual Workstation)
++		STA2X11-based (e.g. Northville)
 =20
-+	  The ServerWorks (later Broadcom) CNB20LE was a chipset designed
-+	  most probably only for Pentium III.
-+
-+	  To find out if you have such a chipset, search for a PCI device with
-+	  1166:0009 PCI IDs, for example by executing
-+		lspci -nn | grep '1166:0009'
-+	  The code is inactive if there is none.
-+
- 	  There's no public spec for this chipset, and this functionality
- 	  is known to be incomplete.
+ 	  64-bit platforms (CONFIG_64BIT=3Dy):
+ 		Numascale NumaChip
+ 		ScaleMP vSMP
+ 		SGI Ultraviolet
+ 		Merrifield/Moorefield MID devices
++		Goldfish (mostly Android emulator)
++		Intel MID (Mobile Internet Device)
 =20
+ 	  If you have one of these systems, or if you want to build a
+ 	  generic distribution kernel, say Y here - otherwise say N.
