@@ -1,32 +1,32 @@
 Received: from mail.cjdns.fr (mail.cjdns.fr [5.135.140.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0DDE1A317A;
-	Tue, 25 Mar 2025 13:44:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF721DC9A2;
+	Tue, 25 Mar 2025 13:44:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.135.140.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742910265; cv=none; b=oRyEaPNNK7bgacrTW0BFC3l98CiNxKott+DHCSYrm6IY+1ajTfbtkYE2Gwg8bz3wMGdiep98ivXtca2n8l41F25AxIj9zztydtxPemqkK2GqBHoNYn2UBsTtoTa28GDJYnYLlgZfM60vJWZOH7OeEjrW+FluIaWVKQ6Ah01srw8=
+	t=1742910266; cv=none; b=rAlmJjVskPQgFuXb/Ejf3fix5jghwyu+oqp6zLY06brXLx6J7DSTs6IE9GhEH3rYEMgM3Wd28bb0FbVVttCxvb5PC1df/WIQfz/E9xIc6DbTgvVqLtvFalNqDYnF1sVYX7BJrsJGtzWE6KCYYhyYGoVRfRMpgB5x8iygw6VO3X4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742910265; c=relaxed/simple;
-	bh=FXo7iTuG0L9p39dIJH7lCTeYuYq3qLQ4zvqgweNQ/5U=;
+	s=arc-20240116; t=1742910266; c=relaxed/simple;
+	bh=JsY8GJn6bZZf+icEIVNJ51OUbwzM8tzgSoE/BNxzNuI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FnuZtvOjYQqZLTEEE0pYWnIgb0hqfRMqseECokp6dkNPYoVBsUvrvQIPhPvoR/W5lRkYgAZx/rv7anqWhHqWVyANbcg+bSRBj+c0A+3AAzKOgzGJZXQByWq6jwfBS1k6I8cWtmxQ2mMrBOx1v4lEqGrSP4BYt+XLWzkkXyBGxtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=gjn1jOba; arc=none smtp.client-ip=5.135.140.105
+	 MIME-Version; b=NHgZuIGLiFlpvrrOD5H0tn7LmNMTQlUHF74F8jjEiY9wBGge4Hu4IKJYnS6xSHESYtp4rsIBo7yfStHR8DciHxy1vClkdWB+0a2T4inaSLWhjvWwKSx1MEkYzwBHL8OgXpk/COAGzkWAw0zrdJHBqK7NoRyqvZ2NXhs5CfvhhiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=pg2vhKAq; arc=none smtp.client-ip=5.135.140.105
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cjdns.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="gjn1jOba"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 572E62CEA4B;
-	Tue, 25 Mar 2025 14:44:20 +0100 (CET)
+	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="pg2vhKAq"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 108372CF506;
+	Tue, 25 Mar 2025 14:44:14 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjdns.fr; s=dkim;
-	t=1742910261; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1742910256; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=GC4R2IHyPDOMtrK2VYUSVQdQziavZvcz3UAB+00rqeQ=;
-	b=gjn1jObaURXhfOTgerD6xqn3nVjb05sjd6qEKgoCvw89OvAUgZkMDXgpUMn1S2P9FFv0Gq
-	1QPD4h7/ceY8sHypJ5rIiChDpTjLdBo3F5MARZL6MwudO43Jb/utTDUIYL9OvtMg3VujSr
-	pudFb8JEsvB/XpdMgFlv4FiXHi5q0lbhXlkiz2Gxpm6X5HKsd1yjuek5nJKTTqyRNm6uTI
-	B1X1DdBe/S7DrYTTiJuLVLR2qq2KHsMSPVrCvv4FgziCr33VL1fGYaeOUVrrN1ZBljRdRK
-	M5INBYkKQU2KGD7pTHOxHz9FsQaAdMg3uUZXJGMwnosi3ykuRUtTBtMX4h5+wQ==
+	bh=3xlqYrdwVIoxKJxq2zl6oaHe09zk9ky4+vOcfNIHNf4=;
+	b=pg2vhKAqWzvLeE/mvyNlhaXiEBUnfQMzfk3gKUL5ICPUPvSsABPrQnX8+5mnXroO44X6BP
+	3dhFvBHtEno608UHM/npYLhsX1GX25xdUSktWXTPT0Uc1x5GRoxwAVinWHhbfNIE8uBIpt
+	rpVahc+HfGX16pWS8UUTjzQMkxyj6uJkSu/iZM3vMfvnqJPhhlITzkldep9QKrrHtp2S+4
+	I8EgpA6xDMNLeqncWmHYADf0uvsxaGXUsKwdcPhDuL4ONStg8hklVnsVY29oyievzqrcTU
+	WDbVApVZq63pf1W5ROsnzodehTEcFAU0s8VYzCA5BW7PGK0iXVhiPWxWkRfnoQ==
 From: Caleb James DeLisle <cjd@cjdns.fr>
 To: linux-mips@vger.kernel.org
 Cc: Thomas Gleixner <tglx@linutronix.de>,
@@ -39,9 +39,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org,
 	benjamin.larsson@genexis.eu,
 	Caleb James DeLisle <cjd@cjdns.fr>
-Subject: [PATCH v2 04/10] dt-bindings: timer: Add EcoNet EN751221 "HPT" CPU Timer
-Date: Tue, 25 Mar 2025 13:43:43 +0000
-Message-Id: <20250325134349.2476458-5-cjd@cjdns.fr>
+Subject: [PATCH v2 01/10] dt-bindings: vendor-prefixes: Add EcoNet
+Date: Tue, 25 Mar 2025 13:43:40 +0000
+Message-Id: <20250325134349.2476458-2-cjd@cjdns.fr>
 In-Reply-To: <20250325134349.2476458-1-cjd@cjdns.fr>
 References: <20250325134349.2476458-1-cjd@cjdns.fr>
 Precedence: bulk
@@ -53,101 +53,26 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-Add device tree bindings for the so-called high-precision timer (HPT)
-in the EcoNet EN751221 SoC.
+Add the "econet" vendor prefix for SoC maker
 
 Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
 ---
-HPT is a name commonly used in vendor and 3rd party out-of-tree sources.
----
- .../bindings/timer/econet,en751221-timer.yaml | 78 +++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/econet,en751221-timer.yaml
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/timer/econet,en751221-timer.yaml b/Documentation/devicetree/bindings/timer/econet,en751221-timer.yaml
-new file mode 100644
-index 000000000000..a897af322135
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/econet,en751221-timer.yaml
-@@ -0,0 +1,78 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/econet,en751221-timer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: EcoNet EN751221 High Precision Timer (HPT)
-+
-+maintainers:
-+  - Caleb James DeLisle <cjd@cjdns.fr>
-+
-+description:
-+  The EcoNet High Precision Timer (HPT) is a timer peripheral found in various
-+  EcoNet SoCs, including the EN751221 and EN751627 families. It provides per-VPE
-+  count/compare registers and a per-CPU control register, with a single interrupt
-+  line using a percpu-devid interrupt mechanism.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - const: econet,en751221-timer
-+      - items:
-+          - const: econet,en751627-timer
-+          - const: econet,en751221-timer
-+
-+  reg: true
-+
-+  interrupts:
-+    maxItems: 1
-+    description: A percpu-devid timer interrupt shared across CPUs.
-+
-+  clocks:
-+    maxItems: 1
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: econet,en751627-timer
-+then:
-+  properties:
-+    reg:
-+      items:
-+        - description: Base address for VPE timers 0 and 1
-+        - description: Base address for VPE timers 2 and 3
-+else:
-+  properties:
-+    reg:
-+      items:
-+        - description: Base address for VPE timers 0 and 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    timer@1fbf0400 {
-+        compatible = "econet,en751627-timer", "econet,en751221-timer";
-+        reg = <0x1fbf0400 0x100>, <0x1fbe0000 0x100>;
-+        interrupt-parent = <&intc>;
-+        interrupts = <30>;
-+        clocks = <&hpt_clock>;
-+    };
-+  - |
-+    timer@1fbf0400 {
-+        compatible = "econet,en751221-timer";
-+        reg = <0x1fbe0400 0x100>;
-+        interrupt-parent = <&intc>;
-+        interrupts = <30>;
-+        clocks = <&hpt_clock>;
-+    };
-+...
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 5079ca6ce1d1..4cd050e50743 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -416,6 +416,8 @@ patternProperties:
+     description: dServe Technology B.V.
+   "^dynaimage,.*":
+     description: Dyna-Image
++  "^econet,.*":
++    description: EcoNet (HK) Limited
+   "^ea,.*":
+     description: Embedded Artists AB
+   "^ebang,.*":
 -- 
 2.39.5
 
