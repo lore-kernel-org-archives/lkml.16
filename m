@@ -1,55 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD87179F5;
-	Tue, 25 Mar 2025 07:07:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B5718C92F;
+	Tue, 25 Mar 2025 07:14:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742886445; cv=none; b=hV1kyDT2DAgJwmkUXqE4OZtrLp8NTQPooKjb2CHFYGVua6OF15y8iCoZeLPVUYjXGKAoUN7EyW9sKfMupg8qYSLCC9I9LOaoUmpRLS8YZy+yrMFz4bqyYoIWjYfgU/SMLVm2oqqoS/WlzrxvpdVAvB+vqrDyavOSaPhLOQYWjpY=
+	t=1742886891; cv=none; b=OJyU1HVEvS3Z8rtoqA/nY34cDoaF17/o6NYniZiRoAhiOfo3xbOysQLro4fMTo685ltT9W2DQ2Q1CSAzUPaD4y6Kg3//QcZTk4GHDmt8+1SBIuSk66wqxYTelA0Z5L06HW/Vb7FafpJOBjKhQQtfc4p+9ooiUOHOgeh3OT1Tlpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742886445; c=relaxed/simple;
-	bh=tg+CzT94V2KHL7cvcsv3BOAj9cqZ8YzAUgJ5W4z5H4c=;
+	s=arc-20240116; t=1742886891; c=relaxed/simple;
+	bh=1TWK6NEmpcH3Tnhy1DMaTugnC9yzYdJK+FhaUnOaf+Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OlVmdBS1WukjH2nxifhRIWr7lFJyfvvhTjyu4G8qNXkaItzXD3z13eiKk6rPfglSOVtHIpsfEjUonP5dQRokPKtUPicWihAgH7u5wA/9yEStF/8aCVc9I2yA4f0kadSLP1ZVvak6rMQXQb23k19psR8Z+elG5oxWcaZQOZySa68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uGuI/gEN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UoeXML92347KCvXfYAOjeV26APYT5Dz4UE7mqROHKg0HKdwAQw6en0N7yJUFQtVY3gQwYtjRI8jeJCLR5iE3Z4P/OvD52IPCjJ585WiZ/TWBN5e5X7vjs+sqrsqkXILwPDYlkpB/3dhqVscrQ3R45AnnIMBlOQobt5w271TpE8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+vvW9E1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uGuI/gEN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7D46C4CEE8;
-	Tue, 25 Mar 2025 07:07:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+vvW9E1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8873C4CEE8;
+	Tue, 25 Mar 2025 07:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742886445;
-	bh=tg+CzT94V2KHL7cvcsv3BOAj9cqZ8YzAUgJ5W4z5H4c=;
+	s=k20201202; t=1742886890;
+	bh=1TWK6NEmpcH3Tnhy1DMaTugnC9yzYdJK+FhaUnOaf+Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uGuI/gENsIOfo9g5ssUpgXDjOcPi/XDvQ0rYWtHHZe1uUQrrQ8ebTZWvoWVg+18B+
-	 CFGPkLQOw+VRAO30/5q9eIme3Vkr4yH8NLyfqw1F6AFisurhS0oNLivQo9O3w5Uotr
-	 6GSqx3JjQ9kNBfeeJpGcV9Lw+w/WKlkf5+zKDRf5zOKgy2ST8honmAVIHVsoECIyrC
-	 SyjaBIh8m9eQQHuu1KsbRnzeG8y7nv4gh8X4RsMufU1N0p9Gd34AFsR8ZJpckY4+nb
-	 RRsOPpkVUIbVu1UswcBf11rCBapP0682sP1oFXtCXmeZFKj4CnGAlPxZblMVTRTLp6
-	 kwoVO1kXmRLyg==
-Date: Tue, 25 Mar 2025 12:37:15 +0530
-From: Sumit Garg <sumit.garg@kernel.org>
-To: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	op-tee@lists.trustedfirmware.org,
-	linux-arm-kernel@lists.infradead.org,
-	Olivier Masse <olivier.masse@nxp.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Yong Wu <yong.wu@mediatek.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T . J . Mercier" <tjmercier@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
-	Daniel Stone <daniel@fooishbar.org>
-Subject: Re: [PATCH v6 08/10] optee: support restricted memory allocation
-Message-ID: <Z-JWIyd8cKyXQR0H@sumit-X1>
-References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
- <20250305130634.1850178-9-jens.wiklander@linaro.org>
+	b=W+vvW9E1INkCFnuFICYOL75WUKw5cWaz7HZXJHR0tQ3VZspFw8SLwGpALyQRj8xw2
+	 X3WK8q8q9hGyDIqJUBGH4HZ/dFqoUBbtDxHGIml2Yfi+cCdBCcnneiN7NqA7ARK3LZ
+	 jpGUih43Ag4baQS3CNOEBoLkpkpA8sqwy76vSpH82Iu4K9bS9Cy9qbafKPDPlhMmAx
+	 T2mzcyVjBMoFhMKAksOW/O43OO5Z0Fgf5C/42ylQ1IBrFSXrp9xkw/+wmw8TNZ6Hjx
+	 Q38BNMqJaLglsWwH0eWi0l69R7kzCKdwpysmIeOC3GXd3q4P+tH8FRzpi86g81RmYc
+	 P955aOIhJGtEA==
+Date: Tue, 25 Mar 2025 08:14:44 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Eric Dumazet <edumazet@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org,
+	bpf@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
+	Greg Thelen <gthelen@google.com>,
+	Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v3] x86/alternatives: remove false sharing in
+ poke_int3_handler()
+Message-ID: <Z-JX5ImltdTFoFgr@gmail.com>
+References: <20250325043316.874518-1-edumazet@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,128 +54,138 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250305130634.1850178-9-jens.wiklander@linaro.org>
+In-Reply-To: <20250325043316.874518-1-edumazet@google.com>
 
-On Wed, Mar 05, 2025 at 02:04:14PM +0100, Jens Wiklander wrote:
-> Add support in the OP-TEE backend driver for restricted memory
-> allocation. The support is limited to only the SMC ABI and for secure
-> video buffers.
+
+* Eric Dumazet <edumazet@google.com> wrote:
+
+> eBPF programs can be run 50,000,000 times per second on busy servers.
 > 
-> OP-TEE is probed for the range of restricted physical memory and a
-> memory pool allocator is initialized if OP-TEE have support for such
-> memory.
+> Whenever /proc/sys/kernel/bpf_stats_enabled is turned off,
+> hundreds of calls sites are patched from text_poke_bp_batch()
+> and we see a huge loss of performance due to false sharing
+> on bp_desc.refs lasting up to three seconds.
 > 
-> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+>    51.30%  server_bin       [kernel.kallsyms]           [k] poke_int3_handler
+>             |
+>             |--46.45%--poke_int3_handler
+>             |          exc_int3
+>             |          asm_exc_int3
+>             |          |
+>             |          |--24.26%--cls_bpf_classify
+>             |          |          tcf_classify
+>             |          |          __dev_queue_xmit
+>             |          |          ip6_finish_output2
+>             |          |          ip6_output
+>             |          |          ip6_xmit
+>             |          |          inet6_csk_xmit
+>             |          |          __tcp_transmit_skb
+> 
+> Fix this by replacing bp_desc.refs with a per-cpu bp_refs.
+> 
+> Before the patch, on a host with 240 cores (480 threads):
+> 
+> sysctl -wq kernel.bpf_stats_enabled=0
+> 
+> text_poke_bp_batch(nr_entries=164) : Took 2655300 usec
+> 
+> bpftool prog | grep run_time_ns
+> ...
+> 105: sched_cls  name hn_egress  tag 699fc5eea64144e3  gpl run_time_ns
+> 3009063719 run_cnt 82757845 : average cost is 36 nsec per call
+> 
+> After this patch:
+> 
+> sysctl -wq kernel.bpf_stats_enabled=0
+> 
+> text_poke_bp_batch(nr_entries=164) : Took 702 usec
+> 
+> $ bpftool prog | grep run_time_ns
+> ...
+> 105: sched_cls  name hn_egress  tag 699fc5eea64144e3  gpl run_time_ns
+> 1928223019 run_cnt 67682728 : average cost is 28 nsec per call
+> 
+> Signed-off-by: Eric Dumazet <edumazet@google.com>
 > ---
->  drivers/tee/optee/core.c    |  1 +
->  drivers/tee/optee/smc_abi.c | 44 +++++++++++++++++++++++++++++++++++--
->  2 files changed, 43 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
-> index c75fddc83576..c7fd8040480e 100644
-> --- a/drivers/tee/optee/core.c
-> +++ b/drivers/tee/optee/core.c
-> @@ -181,6 +181,7 @@ void optee_remove_common(struct optee *optee)
->  	tee_device_unregister(optee->supp_teedev);
->  	tee_device_unregister(optee->teedev);
->  
-> +	tee_device_unregister_all_dma_heaps(optee->teedev);
->  	tee_shm_pool_free(optee->pool);
->  	optee_supp_uninit(&optee->supp);
->  	mutex_destroy(&optee->call_queue.mutex);
-> diff --git a/drivers/tee/optee/smc_abi.c b/drivers/tee/optee/smc_abi.c
-> index cfdae266548b..a14ff0b7d3b3 100644
-> --- a/drivers/tee/optee/smc_abi.c
-> +++ b/drivers/tee/optee/smc_abi.c
-> @@ -1620,6 +1620,41 @@ static inline int optee_load_fw(struct platform_device *pdev,
->  }
->  #endif
->  
-> +static int optee_sdp_pool_init(struct optee *optee)
-> +{
-> +	enum tee_dma_heap_id heap_id = TEE_DMA_HEAP_SECURE_VIDEO_PLAY;
-> +	struct tee_rstmem_pool *pool;
-> +	int rc;
-> +
-> +	if (optee->smc.sec_caps & OPTEE_SMC_SEC_CAP_SDP) {
+>  arch/x86/kernel/alternative.c | 30 ++++++++++++++++++------------
+>  1 file changed, 18 insertions(+), 12 deletions(-)
 
-Is this SDP capability an ABI yet since we haven't supported it in
-upstream kernel? If no then can we rename it as
-OPTEE_SMC_SEC_CAP_RSTMEM?
+Thanks for the updates. I've further improved the changelog (see 
+attached below), and have tentatively applied it to 
+tip:x86/alternatives.
 
-> +		union {
-> +			struct arm_smccc_res smccc;
-> +			struct optee_smc_get_sdp_config_result result;
-> +		} res;
-> +
-> +		optee->smc.invoke_fn(OPTEE_SMC_GET_SDP_CONFIG, 0, 0, 0, 0, 0, 0,
-> +				     0, &res.smccc);
-> +		if (res.result.status != OPTEE_SMC_RETURN_OK) {
-> +			pr_err("Secure Data Path service not available\n");
-> +			return 0;
-> +		}
-> +
-> +		pool = tee_rstmem_static_pool_alloc(res.result.start,
-> +						    res.result.size);
-> +		if (IS_ERR(pool))
-> +			return PTR_ERR(pool);
-> +
-> +		rc = tee_device_register_dma_heap(optee->teedev, heap_id, pool);
-> +		if (rc)
-> +			goto err;
-> +	}
-> +
-> +	return 0;
-> +err:
-> +	pool->ops->destroy_pool(pool);
-> +	return rc;
-> +}
-> +
->  static int optee_probe(struct platform_device *pdev)
->  {
->  	optee_invoke_fn *invoke_fn;
-> @@ -1715,7 +1750,7 @@ static int optee_probe(struct platform_device *pdev)
->  	optee = kzalloc(sizeof(*optee), GFP_KERNEL);
->  	if (!optee) {
->  		rc = -ENOMEM;
-> -		goto err_free_pool;
-> +		goto err_free_shm_pool;
->  	}
->  
->  	optee->ops = &optee_ops;
-> @@ -1788,6 +1823,10 @@ static int optee_probe(struct platform_device *pdev)
->  		pr_info("Asynchronous notifications enabled\n");
->  	}
->  
-> +	rc = optee_sdp_pool_init(optee);
+Thanks,
 
-s/optee_sdp_pool_init/optee_rstmem_pool_init/
+	Ingo
 
--Sumit
+==============================>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 25 Mar 2025 04:33:16 +0000
+Subject: [PATCH] x86/alternatives: Improve code-patching scalability by removing false sharing in poke_int3_handler()
 
-> +	if (rc)
-> +		goto err_notif_uninit;
-> +
->  	/*
->  	 * Ensure that there are no pre-existing shm objects before enabling
->  	 * the shm cache so that there's no chance of receiving an invalid
-> @@ -1823,6 +1862,7 @@ static int optee_probe(struct platform_device *pdev)
->  		optee_disable_shm_cache(optee);
->  	optee_smc_notif_uninit_irq(optee);
->  	optee_unregister_devices();
-> +	tee_device_unregister_all_dma_heaps(optee->teedev);
->  err_notif_uninit:
->  	optee_notif_uninit(optee);
->  err_close_ctx:
-> @@ -1839,7 +1879,7 @@ static int optee_probe(struct platform_device *pdev)
->  	tee_device_unregister(optee->teedev);
->  err_free_optee:
->  	kfree(optee);
-> -err_free_pool:
-> +err_free_shm_pool:
->  	tee_shm_pool_free(pool);
->  	if (memremaped_shm)
->  		memunmap(memremaped_shm);
-> -- 
-> 2.43.0
-> 
+eBPF programs can be run 50,000,000 times per second on busy servers.
+
+Whenever /proc/sys/kernel/bpf_stats_enabled is turned off,
+hundreds of calls sites are patched from text_poke_bp_batch()
+and we see a huge loss of performance due to false sharing
+on bp_desc.refs lasting up to three seconds.
+
+   51.30%  server_bin       [kernel.kallsyms]           [k] poke_int3_handler
+            |
+            |--46.45%--poke_int3_handler
+            |          exc_int3
+            |          asm_exc_int3
+            |          |
+            |          |--24.26%--cls_bpf_classify
+            |          |          tcf_classify
+            |          |          __dev_queue_xmit
+            |          |          ip6_finish_output2
+            |          |          ip6_output
+            |          |          ip6_xmit
+            |          |          inet6_csk_xmit
+            |          |          __tcp_transmit_skb
+
+Fix this by replacing bp_desc.refs with a per-cpu bp_refs.
+
+Before the patch, on a host with 240 cores (480 threads):
+
+  $ sysctl -wq kernel.bpf_stats_enabled=0
+
+  text_poke_bp_batch(nr_entries=164) : Took 2655300 usec
+
+  $ bpftool prog | grep run_time_ns
+  ...
+  105: sched_cls  name hn_egress  tag 699fc5eea64144e3  gpl run_time_ns
+  3009063719 run_cnt 82757845 : average cost is 36 nsec per call
+
+After this patch:
+
+  $ sysctl -wq kernel.bpf_stats_enabled=0
+
+  text_poke_bp_batch(nr_entries=164) : Took 702 usec
+
+  $ bpftool prog | grep run_time_ns
+  ...
+  105: sched_cls  name hn_egress  tag 699fc5eea64144e3  gpl run_time_ns
+  1928223019 run_cnt 67682728 : average cost is 28 nsec per call
+
+Ie. text-patching performance improved 3700x: from 2.65 seconds
+to 0.0007 seconds.
+
+Since the atomic_cond_read_acquire(refs, !VAL) spin-loop was not triggered
+even once in my tests, add an unlikely() annotation, because this appears
+to be the common case.
+
+[ mingo: Improved the changelog some more. ]
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://lore.kernel.org/r/20250325043316.874518-1-edumazet@google.com
+
