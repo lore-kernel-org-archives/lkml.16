@@ -1,142 +1,263 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6046925F7B7;
-	Tue, 25 Mar 2025 17:38:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BBD2561AD
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 17:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742924298; cv=none; b=ZzVpkCU+5H0pGyLlFNO/sift3z0+62pDYlw/ALWEWgekRXx+a/QgzGxAmOH1wir6JfImCpHJlzNbJpbzam2bXd4ZI1ONIqdLPovXtTavZ4IVDCLLdlZZh9YB+1cFpuAkQEBFe+R0djT27kqzzuOL3QJlTFZggLIVFaWyM/h9cKk=
+	t=1742924690; cv=none; b=DHLt/cOUE/7Kp/ym1PwZ8pd8AypxiMbkF78YPeYJ3vbhixEB9Sec4f7JuPsz4zieqwhUbWW/mXoFi6J3by/yebnkqlLZ72QFqlQ+pZ9Ngi4p8XKIzwh+SaKFSXzqlwyGwwRO+ROUHrEu52z38vhaW2iepO2xQaxuzwumNMerzu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742924298; c=relaxed/simple;
-	bh=ZnwOuPQszgGFnJ7ASTrb72w0n4+MF6tVe4dX5uRrVUM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=awrHXzhF36asbhKx/gJ6NQqPK7TuLRPAwdBwS93ZL+NXr9MEIWwxRsmCVncMw0EW9pD6nnyW+L36npy3AlKP8cAPDBkU9lVD4KRDXZoEeV3PY3dA9Dgvsrcj2TX5R82c1HQO4LuSRa1PDdah+GSL8EylCX001JWOD2DE+qnq7SA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CN3Wh71v; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742924690; c=relaxed/simple;
+	bh=o6g5HoC32I+6BiDO8vCfhv3kf+WezCmeDCwVZM3gAjo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=XvWNR2x0eMZ4TkswFLmOELyuslZeSaG7X6R2xCDRSiWR2b8aheImsNhpWGJqyD64Z8NdBDkXfUvOtgkrRDzbmwzlWxCBjuAHUQwbytHTXiAndyI3G+i2D1oaxcQP564q4kTACJYN3AFpjjPz3/KBJ2qFYmU+ReqQwLMzrG3LSlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rQkSHL1J; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CN3Wh71v"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2b8e2606a58so2983542fac.0;
-        Tue, 25 Mar 2025 10:38:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rQkSHL1J"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2240aad70f2so18605ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 10:44:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742924296; x=1743529096; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=pwqYH740eHfa7nr66Oz8rz112QvEfxlqWsjIWzeytTA=;
-        b=CN3Wh71vQxKhCrCPRCGB2SdVya+WkUTZZvrQWOj2u8XB3OFICkQWh9Q5QybbDm8l9d
-         j0mRsZwe54yZJLZdWaiTWKfFYTAJawY/WKyZ93cad6gqa3lcLZZY33NdrueTNzQESUSd
-         SvnStWp1Yc9cF62v1A9Wtmjr3IMyjajpcWUcS3flIyNfkphCZOklTvrKfLhTGCsnRkDa
-         pepYwYQVawioX63In6UKXKbcDxRr6dGbWO9P09fPjUdhLUpbMIT8wdKyQH50tLtMmmOs
-         PpFCx9n+UTPrvKyvCKmGYZKcxXCFZo/Z8Hu4/0LTfSkkNhy5L2JlIO1c/n9b8vnOFFMC
-         CAwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742924296; x=1743529096;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1742924687; x=1743529487; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pwqYH740eHfa7nr66Oz8rz112QvEfxlqWsjIWzeytTA=;
-        b=U6pQkltc23b9SRT2TGnH79DdGdtNyXfdOEOymYpAYrynXf5GQJW9E/hUQfkDOzpa6g
-         NVVEuTpraQDU3tViZJdD3thWllT0qfuZwzMT8ATEjqEteziItDUWb7plsAMA++HLL84m
-         g/cPVwiMnnUkudCtGo+ofX/WZcFdZC0n+bUW5xXG7r7u3LXetW3z2/aQy86MC/dCwfRi
-         wQ6Ht+bTmTYHxk2mktkOo0Aje0uoJsRLpJDntYLuX2nzlohaOoxAi6j0ByGp4CFN50nZ
-         pEbXcCsCjkHoGRMr2veaA2Ks8SMZI0I/l7qiUzpvV0tgqeqzwA3Qas9Eou9ePAQNYrCk
-         mh1g==
-X-Forwarded-Encrypted: i=1; AJvYcCXNqEb1YNv/2v0XzE67DfXYHDrsoR8M/Oq3K3ekL8Kbvhq/XyMwrF66Oylrg81SxIuOBHxHKk0O@vger.kernel.org, AJvYcCXTDTX6cHocKFHO57xjKAgM2fouTHd0/DZx/R1aMUIXPpKqruo39fRzxMhhGwd//AZp+RNDDIc/2Nz5vNE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6gztTqLbfN2rapqbtC2bLk019eHWztDCmZh7LmRJrrbYkMUR5
-	0BqEpCtpvyofsbjylmjgLpeif6MAi0952u87dOhCsu8wi37tkVLA
-X-Gm-Gg: ASbGncvnubHMwc2tK+Q1OanBxRsvK+QKF29GnJA/9/dfc1oq5eaNWviYTrH4QlGjtHy
-	YZywq/BmjVOcSydsg6TOlCci9m16bylUghLmWkltU+cwew3DsgLgJuBKNoKK5+igoCljRByVWmt
-	2m/9b/HpW0lLTMgx5/8YiMbSr5wDjMqGN42CrmsLiwbOkAm/XYLyp9ikJTy3zBuEMREVAUnA2/z
-	AHV9MNDcqb9G6ePKRMUGV/n0tOrzhZ1u6tU6G4zbTRaYr4db0OIxeJmFzG22YxyuKbsoRe0eSfn
-	dsoujW/IVHXOQyaGBNCUF/prTwb5nKyVxcruezXGxHLFRVLxNU64R3LAf9wxbYwSq+ytJyHM
-X-Google-Smtp-Source: AGHT+IF91Adb740CaBkkzjchwnIb0t1PYPF6DMBIepjROWrzdPfXlPqlaH3T+uBSaaRR/gfP31TwDg==
-X-Received: by 2002:a05:6870:ff94:b0:2c2:3eb4:e53 with SMTP id 586e51a60fabf-2c78054aae4mr10641137fac.37.1742924296229;
-        Tue, 25 Mar 2025 10:38:16 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2c77ec50cfcsm2572389fac.15.2025.03.25.10.38.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Mar 2025 10:38:15 -0700 (PDT)
-Message-ID: <55f9a6c4-9248-4a34-9488-d09a543a4a23@gmail.com>
-Date: Tue, 25 Mar 2025 10:38:13 -0700
+        bh=C557zFYMQNx6YZaNFk9a2tG90MlGVtliFmUOKVTtxbE=;
+        b=rQkSHL1JHmNlhh0a1ZWsWrS999xui5awFO7BqNybosaOIJkRSHoufCZWqAwL5S6AS5
+         waRJ/Abd9VjTSU2xFn5DNNCxCteivYlWCvsF+QbpfCjLB+31YxihfXUmJFRpIqKiJw7R
+         hVtTQUDvrJbnbSkACK4QT9Wspv5WeolxnfXYwVD9zT0zGD9e+jOYRt+angMGN3vEuG0m
+         QJeqI1pcc8uUnQ6RV7cDgyrzNA9H6xH1zdeA9PbS5Ushbk6/pamcxu7PfSSJxA/z0rig
+         30aVkBQKVQRjZZHcGUN41wcme+ClwhGrczWAEtatTyzSqEBKup4x31schAjjWRPUzPHG
+         QxsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742924687; x=1743529487;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C557zFYMQNx6YZaNFk9a2tG90MlGVtliFmUOKVTtxbE=;
+        b=dxES5d4symDOyie2812SlHicNRDlRlR0LdFtAuekmFtPxjt/EzrSba22whDwwRjQgc
+         SHrxKxf86N3adQ4sqG8b98iY9P/8kxlMObV065aL3OFwbRVyF0G+sLpm7rcFjA18e7Q4
+         jriK1ysxkm1f/P41S2ikkwNeix8dWFneiwdN+bmOtP50fz1GYPZKH6b1E35V16t8UKfg
+         zSD93c9ktaiJYOAwnJRnBUrtau6bPJTsFH1mZxTpv4r/C45otusy4WP7kkirpbHS6DDt
+         OC/nQ2YN6bdlIcVoKTVfWOoUUYldFo+oi7TAbbDzAwk7YGFdlnVqgU25tzNPqfq/2vcP
+         dRJw==
+X-Forwarded-Encrypted: i=1; AJvYcCXDm3suuvx3JDWlN0cBeTj9W7nVySiWKGQ5yNQkjLnaVdE+LmLeBL1ejSAEfh8d+3Idns4mAdHrUgLlFHE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTbfMaIz+AfaYwtebw9uWKi6flRtMUffBABKhMgzd83992HNX4
+	btd0Rk9Nph7I7OGytQw4h8gWL7/rDh8PmLNGCAlwrjJB1ZHaGH8pfT/rtZBsVrmdXr94fWWHE1j
+	XG2az4fmo0uPrZji+9yV6TSnbzGsPnn74cyWJ50ArUkGEeThJNZUC
+X-Gm-Gg: ASbGncuO8FSZBwzkGK10CRXxfSt3vnYNmKLjVSLP8hrDQHrIV4MB2LUP2FKf9LmUx3X
+	lOduIKqkqaLYWp4aAPtCk21KHx0vxD2hQZ+1SQMlcJcjXsts7XZsc0ru3N23dFuKlJ+ODokt3Ud
+	PmOYAcAtKza1MEW+mItJstUuuIsC9hqj8pq9wmGQAkS4iWVlUKKHzACA==
+X-Google-Smtp-Source: AGHT+IHPelgDScufsa6zAdrdNBGBs5B6xqAFz7eUGQGOmOqHwOhJ5MfpsvqJ85TCgQC7BKeJ/DkvYhul0b9i7GXTf4c=
+X-Received: by 2002:a17:903:2c6:b0:21f:2ded:bfa0 with SMTP id
+ d9443c01a7336-22799f80a6bmr9127625ad.25.1742924687095; Tue, 25 Mar 2025
+ 10:44:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/116] 6.12.21-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250325122149.207086105@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250325122149.207086105@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250122174308.350350-1-irogers@google.com> <20250122174308.350350-11-irogers@google.com>
+In-Reply-To: <20250122174308.350350-11-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 25 Mar 2025 10:44:34 -0700
+X-Gm-Features: AQ5f1JpIGP8wbMVFe85DxBTilH4hLmUR3dv-unPSph-h7lFMwMVjU6DwDza6nuM
+Message-ID: <CAP-5=fUt4rvEWRY=O6-EM0GGgOxz3VL933OgSYET2HxCi8fsCA@mail.gmail.com>
+Subject: Re: [PATCH v3 10/18] perf dso: Support BPF programs in dso__read_symbol
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Aditya Gupta <adityag@linux.ibm.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Changbin Du <changbin.du@huawei.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Kajol Jain <kjain@linux.ibm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
+	Chaitanya S Prakash <chaitanyas.prakash@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev, 
+	Song Liu <song@kernel.org>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/25/25 05:21, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.21 release.
-> There are 116 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 27 Mar 2025 12:21:27 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.21-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+On Wed, Jan 22, 2025 at 9:43=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Set the buffer to the code in the BPF linear info. This enables BPF
+> JIT code disassembly by LLVM and capstone. Move the disassmble_bpf
+> calls to disassemble_objdump so that they are only called after
+> falling back to the objdump option.
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+It would be nice to land this series in part because of supporting BPF
+disassembly with LLVM and capstone, possible because of the cleanups
+and refactorings.
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+Thanks,
+Ian
+
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/disasm.c | 12 +++---
+>  tools/perf/util/dso.c    | 85 +++++++++++++++++++++++++---------------
+>  2 files changed, 60 insertions(+), 37 deletions(-)
+>
+> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> index a9cc588a3006..99b9c21e02b0 100644
+> --- a/tools/perf/util/disasm.c
+> +++ b/tools/perf/util/disasm.c
+> @@ -1500,6 +1500,12 @@ static int symbol__disassemble_objdump(const char =
+*filename, struct symbol *sym,
+>         struct child_process objdump_process;
+>         int err;
+>
+> +       if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_PROG_INFO)
+> +               return symbol__disassemble_bpf(sym, args);
+> +
+> +       if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_IMAGE)
+> +               return symbol__disassemble_bpf_image(sym, args);
+> +
+>         err =3D asprintf(&command,
+>                  "%s %s%s --start-address=3D0x%016" PRIx64
+>                  " --stop-address=3D0x%016" PRIx64
+> @@ -1681,11 +1687,7 @@ int symbol__disassemble(struct symbol *sym, struct=
+ annotate_args *args)
+>
+>         pr_debug("annotating [%p] %30s : [%p] %30s\n", dso, dso__long_nam=
+e(dso), sym, sym->name);
+>
+> -       if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_PROG_INFO) =
+{
+> -               return symbol__disassemble_bpf(sym, args);
+> -       } else if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_IMAG=
+E) {
+> -               return symbol__disassemble_bpf_image(sym, args);
+> -       } else if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__NOT_FOUN=
+D) {
+> +       if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__NOT_FOUND) {
+>                 return SYMBOL_ANNOTATE_ERRNO__COULDNT_DETERMINE_FILE_TYPE=
+;
+>         } else if (dso__is_kcore(dso)) {
+>                 kce.addr =3D map__rip_2objdump(map, sym->start);
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 0285904ed26d..a90799bed230 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -1686,48 +1686,69 @@ const u8 *dso__read_symbol(struct dso *dso, const=
+ char *symfs_filename,
+>                            const struct map *map, const struct symbol *sy=
+m,
+>                            u8 **out_buf, u64 *out_buf_len, bool *is_64bit=
+)
+>  {
+> -       struct nscookie nsc;
+>         u64 start =3D map__rip_2objdump(map, sym->start);
+>         u64 end =3D map__rip_2objdump(map, sym->end);
+> -       int fd, count;
+> -       u8 *buf =3D NULL;
+> -       size_t len;
+> -       struct find_file_offset_data data =3D {
+> -               .ip =3D start,
+> -       };
+> +       const u8 *buf;
+> +       size_t len =3D end - start;
+>
+>         *out_buf =3D NULL;
+>         *out_buf_len =3D 0;
+>         *is_64bit =3D false;
+>
+> -       nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+> -       fd =3D open(symfs_filename, O_RDONLY);
+> -       nsinfo__mountns_exit(&nsc);
+> -       if (fd < 0)
+> +       if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_IMAGE) {
+> +               pr_debug("No BPF image disassembly support\n");
+>                 return NULL;
+> +       } else if (dso__binary_type(dso) =3D=3D DSO_BINARY_TYPE__BPF_PROG=
+_INFO) {
+> +#ifdef HAVE_LIBBPF_SUPPORT
+> +               struct bpf_prog_info_node *info_node;
+> +               struct perf_bpil *info_linear;
+> +
+> +               *is_64bit =3D sizeof(void *) =3D=3D sizeof(u64);
+> +               info_node =3D perf_env__find_bpf_prog_info(dso__bpf_prog(=
+dso)->env,
+> +                                                        dso__bpf_prog(ds=
+o)->id);
+> +               if (!info_node) {
+> +                       errno =3D SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF;
+> +                       return NULL;
+> +               }
+> +               info_linear =3D info_node->info_linear;
+> +               buf =3D (const u8 *)(uintptr_t)(info_linear->info.jited_p=
+rog_insns);
+> +               assert(len <=3D info_linear->info.jited_prog_len);
+> +#else
+> +               pr_debug("No BPF program disassembly support\n");
+> +               return NULL;
+> +#endif
+> +       } else {
+> +               struct nscookie nsc;
+> +               int fd;
+> +               ssize_t count;
+> +               struct find_file_offset_data data =3D {
+> +                       .ip =3D start,
+> +               };
+> +               u8 *code_buf =3D NULL;
+>
+> -       if (file__read_maps(fd, /*exe=3D*/true, find_file_offset, &data, =
+is_64bit) =3D=3D 0)
+> -               goto err;
+> -
+> -       len =3D end - start;
+> -       buf =3D malloc(len);
+> -       if (buf =3D=3D NULL)
+> -               goto err;
+> -
+> -       count =3D pread(fd, buf, len, data.offset);
+> -       close(fd);
+> -       fd =3D -1;
+> -
+> -       if ((u64)count !=3D len)
+> -               goto err;
+> +               nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+> +               fd =3D open(symfs_filename, O_RDONLY);
+> +               nsinfo__mountns_exit(&nsc);
+> +               if (fd < 0)
+> +                       return NULL;
+>
+> -       *out_buf =3D buf;
+> +               if (file__read_maps(fd, /*exe=3D*/true, find_file_offset,=
+ &data, is_64bit) =3D=3D 0) {
+> +                       close(fd);
+> +                       return NULL;
+> +               }
+> +               buf =3D code_buf =3D malloc(len);
+> +               if (buf =3D=3D NULL) {
+> +                       close(fd);
+> +                       return NULL;
+> +               }
+> +               count =3D pread(fd, code_buf, len, data.offset);
+> +               close(fd);
+> +               if ((u64)count !=3D len) {
+> +                       free(code_buf);
+> +                       return NULL;
+> +               }
+> +               *out_buf =3D code_buf;
+> +       }
+>         *out_buf_len =3D len;
+>         return buf;
+> -
+> -err:
+> -       if (fd >=3D 0)
+> -               close(fd);
+> -       free(buf);
+> -       return NULL;
+>  }
+> --
+> 2.48.1.262.g85cc9f2d1e-goog
+>
