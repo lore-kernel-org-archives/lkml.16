@@ -1,147 +1,198 @@
-Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0134252914
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 06:50:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.0.225.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F6986324;
+	Tue, 25 Mar 2025 06:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742885455; cv=none; b=mrJjyY7lZBHuBEhQpblzrlIBl3yc7yU8sUZuclxhUDGVxNsT1thSDfcS+u5QF97xla2wvXaYJuu2bBn8upwcbA5PYeBc2f8gY8hA8z0Ens3gCDT3op1hXyHGS7rPNpm8chgzWV1lUqCsbWfg22sAnxazkDre8xWY76siYN5acFw=
+	t=1742885635; cv=none; b=u+DK3fmmAo6Dxp4o7MOzMa8ejR8rRtzCA3DVOV+iytaxzgZfPHdOjI9q6789UUluDNdeS50LEvPXDraMMe0tU/Flqik+MgO7mia8k2Le6E8ukj37SCl+v38w+r2WTemsa2IzAXbYkAe/CMXmWchdZPpmPpDx4+3CyXyXYlkwRmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742885455; c=relaxed/simple;
-	bh=SNK/rfv9Sm/aoQ+fP6y1jffu6QK0mE8GsVuulckg7HY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Z7lmjVTloBC2H96BHPI6kAygbql7WBgBFAGSUJIl6m68nm2MjxeKbyZzHml6+Hcde6vUpZYN+bcgV3zBP9hGUIYHd9mNLZFvt1t9dMK6QJFPzHAgqPL1NPKgLZfSW/A3d+Vn3soXWLJZTP1Klu2snruwuTOZeHiRhJ/zQhRH9Fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=210.0.225.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
-X-ASG-Debug-ID: 1742884580-086e2360172e37a0001-xx1T2L
-Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx1.zhaoxin.com with ESMTP id uKcjGgU61vPQQnT3 (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Tue, 25 Mar 2025 14:36:20 +0800 (CST)
-X-Barracuda-Envelope-From: LiamNi-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Received: from ZXSHMBX2.zhaoxin.com (10.28.252.164) by ZXSHMBX3.zhaoxin.com
- (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Tue, 25 Mar
- 2025 14:36:19 +0800
-Received: from ZXSHMBX2.zhaoxin.com ([fe80::4dfc:4f6a:c0cf:4298]) by
- ZXSHMBX2.zhaoxin.com ([fe80::4dfc:4f6a:c0cf:4298%4]) with mapi id
- 15.01.2507.044; Tue, 25 Mar 2025 14:36:19 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Received: from [10.28.66.46] (10.28.66.46) by ZXBJMBX02.zhaoxin.com
- (10.29.252.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Tue, 25 Mar
- 2025 14:10:58 +0800
-Message-ID: <676ed22f-9c3f-4013-99d8-37c4c73bb9ac@zhaoxin.com>
-Date: Tue, 25 Mar 2025 14:10:58 +0800
+	s=arc-20240116; t=1742885635; c=relaxed/simple;
+	bh=kjvYmCQ8Y/WN+yHilTtN81fEcJrveiY+q5nnPqA3msc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V6ieR7vxFkDOs8p2e4HNcHh7pR7woYOU5HGXkQJUSEXMqRboEO86faYQNee4dXvSZv0E9yaP/dW7DOYJBa8rhyVcv7edUHqIms2OyDYYxp09SR8P26WeAm4Vwp2trUAmLeekzpaSv5XX8lm1OiGj8ENyK5wFS+1qWAtk8/1CkmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TSf3uNv5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TSf3uNv5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9D66C4CEE8;
+	Tue, 25 Mar 2025 06:53:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742885634;
+	bh=kjvYmCQ8Y/WN+yHilTtN81fEcJrveiY+q5nnPqA3msc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TSf3uNv5Rw+J8RXCaL/dj8yWijjd1ot7Zs1EcpoC0IFPkR0SszCUJUn/LyPwsG/NY
+	 Q7N0ASaAzMMo61I4JF94CkeEkO7tKjp+pIIaXrbSAg8fdozuKrnv0FXlsAIaJCUagF
+	 vuR2DSvIk3a2B4+fu9j51sU+JLb092Sh5rJOmNFMO2679kZQuaYVHt/BdCbbJRcrp/
+	 mY30UVqS/EvUNmK4VB5FLb1a7mzRopHztnsbyYItn8vrGPPtc4cpbflHFXaJH1Crb5
+	 9Jbgs2og3TemIMLi4V77jyNixRxRd4xOQhHCWhPfO0kEsynuJVS87gWnHChOBi7U/F
+	 bsa/GP8WvQd3A==
+Date: Tue, 25 Mar 2025 12:23:45 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org,
+	Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
+	Daniel Stone <daniel@fooishbar.org>
+Subject: Re: [PATCH v6 07/10] tee: add tee_shm_alloc_cma_phys_mem()
+Message-ID: <Z-JS-Tq_lxGAZfiP@sumit-X1>
+References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
+ <20250305130634.1850178-8-jens.wiklander@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] KVM: x86:Cancel hrtimer in the process of saving PIT
- state to reduce the performance overhead caused by hrtimer during guest stop.
-To: Sean Christopherson <seanjc@google.com>
-X-ASG-Orig-Subj: Re: [PATCH] KVM: x86:Cancel hrtimer in the process of saving PIT
- state to reduce the performance overhead caused by hrtimer during guest stop.
-CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
-	<pbonzini@redhat.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <hpa@zytor.com>,
-	<LiamNi@zhaoxin.com>, <CobeChen@zhaoxin.com>, <LouisQi@zhaoxin.com>,
-	<EwanHai@zhaoxin.com>, <FrankZhu@zhaoxin.com>
-References: <20250317091917.72477-1-liamni-oc@zhaoxin.com>
- <Z9gl5dbTfZsUCJy-@google.com>
-From: LiamNioc <LiamNi-oc@zhaoxin.com>
-In-Reply-To: <Z9gl5dbTfZsUCJy-@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
- ZXBJMBX02.zhaoxin.com (10.29.252.6)
-X-Moderation-Data: 3/25/2025 2:36:18 PM
-X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
-X-Barracuda-Start-Time: 1742884580
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 2769
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: -2.02
-X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.138991
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------------------------
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250305130634.1850178-8-jens.wiklander@linaro.org>
 
+Hi Jens,
 
+On Wed, Mar 05, 2025 at 02:04:13PM +0100, Jens Wiklander wrote:
+> Add tee_shm_alloc_cma_phys_mem() to allocate a physical memory using
+> from the default CMA pool. The memory is represented by a tee_shm object
+> using the new flag TEE_SHM_CMA_BUF to identify it as physical memory
+> from CMA.
+> 
+> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> ---
+>  drivers/tee/tee_shm.c    | 55 ++++++++++++++++++++++++++++++++++++++--
+>  include/linux/tee_core.h |  4 +++
+>  2 files changed, 57 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
+> index 8b79918468b5..8d8341f8ebd7 100644
+> --- a/drivers/tee/tee_shm.c
+> +++ b/drivers/tee/tee_shm.c
+> @@ -3,8 +3,11 @@
+>   * Copyright (c) 2015-2017, 2019-2021 Linaro Limited
+>   */
+>  #include <linux/anon_inodes.h>
+> +#include <linux/cma.h>
+>  #include <linux/device.h>
+>  #include <linux/dma-buf.h>
+> +#include <linux/dma-map-ops.h>
+> +#include <linux/highmem.h>
+>  #include <linux/idr.h>
+>  #include <linux/io.h>
+>  #include <linux/mm.h>
+> @@ -13,7 +16,6 @@
+>  #include <linux/tee_core.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/uio.h>
+> -#include <linux/highmem.h>
+>  #include "tee_private.h"
+>  
+>  /* extra references appended to shm object for registered shared memory */
+> @@ -59,7 +61,14 @@ static void tee_shm_release(struct tee_device *teedev, struct tee_shm *shm)
+>  	struct tee_shm *parent_shm = NULL;
+>  	void *p = shm;
+>  
+> -	if (shm->flags & TEE_SHM_DMA_BUF) {
+> +	if (shm->flags & TEE_SHM_CMA_BUF) {
+> +#if !IS_MODULE(CONFIG_TEE) && IS_ENABLED(CONFIG_CMA)
 
-On 2025/3/17 21:38, Sean Christopherson wrote:
->=20
->=20
->=20
-> On Mon, Mar 17, 2025, Liam Ni wrote:
->> When using the dump-guest-memory command in QEMU to dump
->> the virtual machine's memory,the virtual machine will be
->> paused for a period of time.If the guest (i.e., UEFI) uses
->> the PIT as the system clock,it will be observed that the
->> HRTIMER used by the PIT continues to run during the guest
->> stop process, imposing an additional burden on the system.
->> Moreover, during the guest restart process,the previously
->> established HRTIMER will be canceled,and the accumulated
->> timer events will be flushed.However, before the old
->> HRTIMER is canceled,the accumulated timer events
->> will "surreptitiously" inject interrupts into the guest.
->>
->> SO during the process of saving the KVM PIT state,
->> the HRTIMER need to be canceled to reduce the performance overhead
->> caused by HRTIMER during the guest stop process.
->>
->> i.e. if guest
->>
->> Signed-off-by: Liam Ni <liamni-oc@zhaoxin.com>
->> ---
->>   arch/x86/kvm/x86.c | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index 045c61cc7e54..75355b315aca 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -6405,6 +6405,8 @@ static int kvm_vm_ioctl_get_pit(struct kvm *kvm, s=
-truct kvm_pit_state *ps)
->>
->>        mutex_lock(&kps->lock);
->>        memcpy(ps, &kps->channels, sizeof(*ps));
->> +     hrtimer_cancel(&kvm->arch.vpit->pit_state.timer);
->> +     kthread_flush_work(&kvm->arch.vpit->expired);
->=20
-> KVM cannot assume userspace wants to stop the PIT when grabbing a snapsho=
-t.  It's
-> a significant ABI change, and not desirable in all cases.
+Can we rather manage this dependency via Kconfig?
 
-When VM Pause, all devices of the virtual machine are frozen, so the PIT=20
-freeze only saves the PIT device status, but does not cancel HRTIMER,=20
-but chooses to cancel HRTIMER when VM resumes and refresh the pending=20
-task. According to my observation, before refreshing the pending task,=20
-these pending tasks will secretly inject interrupts into the guest.
+> +		struct page *page = phys_to_page(shm->paddr);
+> +		struct cma *cma = dev_get_cma_area(&shm->ctx->teedev->dev);
+> +
+> +		cma_release(cma, page, shm->size / PAGE_SIZE);
+> +#endif
+> +	} else if (shm->flags & TEE_SHM_DMA_BUF) {
+>  		struct tee_shm_dmabuf_ref *ref;
+>  
+>  		ref = container_of(shm, struct tee_shm_dmabuf_ref, shm);
+> @@ -341,6 +350,48 @@ struct tee_shm *tee_shm_alloc_priv_buf(struct tee_context *ctx, size_t size)
+>  }
+>  EXPORT_SYMBOL_GPL(tee_shm_alloc_priv_buf);
+>  
+> +struct tee_shm *tee_shm_alloc_cma_phys_mem(struct tee_context *ctx,
+> +					   size_t page_count, size_t align)
+> +{
+> +#if !IS_MODULE(CONFIG_TEE) && IS_ENABLED(CONFIG_CMA)
 
-So do we need to cancel the HRTIMER when VM pause=EF=BC=9F
+Ditto here.
 
->=20
->>        mutex_unlock(&kps->lock);
->>        return 0;
->>   }
->> @@ -6428,6 +6430,8 @@ static int kvm_vm_ioctl_get_pit2(struct kvm *kvm, =
-struct kvm_pit_state2 *ps)
->>        memcpy(ps->channels, &kvm->arch.vpit->pit_state.channels,
->>                sizeof(ps->channels));
->>        ps->flags =3D kvm->arch.vpit->pit_state.flags;
->> +     hrtimer_cancel(&kvm->arch.vpit->pit_state.timer);
->> +     kthread_flush_work(&kvm->arch.vpit->expired);
->>        mutex_unlock(&kvm->arch.vpit->pit_state.lock);
->>        memset(&ps->reserved, 0, sizeof(ps->reserved));
->>        return 0;
->> --
->> 2.25.1
->>
+-Sumit
 
+> +	struct tee_device *teedev = ctx->teedev;
+> +	struct cma *cma = dev_get_cma_area(&teedev->dev);
+> +	struct tee_shm *shm;
+> +	struct page *page;
+> +
+> +	if (!tee_device_get(teedev))
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	page = cma_alloc(cma, page_count, align, true/*no_warn*/);
+> +	if (!page)
+> +		goto err_put_teedev;
+> +
+> +	shm = kzalloc(sizeof(*shm), GFP_KERNEL);
+> +	if (!shm)
+> +		goto err_cma_crelease;
+> +
+> +	refcount_set(&shm->refcount, 1);
+> +	shm->ctx = ctx;
+> +	shm->paddr = page_to_phys(page);
+> +	shm->size = page_count * PAGE_SIZE;
+> +	shm->flags = TEE_SHM_CMA_BUF;
+> +
+> +	teedev_ctx_get(ctx);
+> +
+> +	return shm;
+> +
+> +err_cma_crelease:
+> +	cma_release(cma, page, page_count);
+> +err_put_teedev:
+> +	tee_device_put(teedev);
+> +
+> +	return ERR_PTR(-ENOMEM);
+> +#else
+> +	return ERR_PTR(-EINVAL);
+> +#endif
+> +}
+> +EXPORT_SYMBOL_GPL(tee_shm_alloc_cma_phys_mem);
+> +
+>  int tee_dyn_shm_alloc_helper(struct tee_shm *shm, size_t size, size_t align,
+>  			     int (*shm_register)(struct tee_context *ctx,
+>  						 struct tee_shm *shm,
+> diff --git a/include/linux/tee_core.h b/include/linux/tee_core.h
+> index 6bd833b6d0e1..b6727d9a3556 100644
+> --- a/include/linux/tee_core.h
+> +++ b/include/linux/tee_core.h
+> @@ -29,6 +29,7 @@
+>  #define TEE_SHM_POOL		BIT(2)  /* Memory allocated from pool */
+>  #define TEE_SHM_PRIV		BIT(3)  /* Memory private to TEE driver */
+>  #define TEE_SHM_DMA_BUF		BIT(4)	/* Memory with dma-buf handle */
+> +#define TEE_SHM_CMA_BUF		BIT(5)	/* CMA allocated memory */
+>  
+>  #define TEE_DEVICE_FLAG_REGISTERED	0x1
+>  #define TEE_MAX_DEV_NAME_LEN		32
+> @@ -307,6 +308,9 @@ void *tee_get_drvdata(struct tee_device *teedev);
+>   */
+>  struct tee_shm *tee_shm_alloc_priv_buf(struct tee_context *ctx, size_t size);
+>  
+> +struct tee_shm *tee_shm_alloc_cma_phys_mem(struct tee_context *ctx,
+> +					   size_t page_count, size_t align);
+> +
+>  int tee_dyn_shm_alloc_helper(struct tee_shm *shm, size_t size, size_t align,
+>  			     int (*shm_register)(struct tee_context *ctx,
+>  						 struct tee_shm *shm,
+> -- 
+> 2.43.0
+> 
