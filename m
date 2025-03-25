@@ -1,155 +1,240 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF8A19B5B1
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 18:42:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332E51A840E;
+	Tue, 25 Mar 2025 18:42:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742928128; cv=none; b=dB9TlDlIQLIJosE4dbXysy3H4i5b1KxztLGYcs251Z6pGirYAHNM5zk6fhgBqNhQCclRLM1fJdkFCRWc5La8lFIQ1p15mT9wU4l2P1MjY4hfj3ayFdlSJvuA5aMYLATAUvosWopJEQmjnwmMcUEP+tQq3pewEiKWMKFiLZvFTcU=
+	t=1742928142; cv=none; b=XrX86d4Sc0A+8lg+BvVMJ5faKhRRzPDkU3T9GJYl9aa8Bce4GRL1essGyonSplU7dYWN4TrTF2V1F+iXFT4fnTm6Anta8Sh/pzHvw59DfF4k3idJIbo/4IF7mT0fvuErct1juezVHUdGxSrdX3nWe6k8UdGj8wOdUtN5gY2AkhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742928128; c=relaxed/simple;
-	bh=czQfqjHXT8AC/TqCowPb/ICdTvn8xVWPY8Fynodl96M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hwAU44cu2oYxHRtGxCdu1wHOhXxCPlLAv5H0XcEuMonaJgB/rmY0S0kI8WL24XbTZrFFvtfojD6xzEPvtxCHra5xtAXDrJ+j5yrqucX/xv+pA01rAS8BuutgonUaA6pic3T+CVXA0VsDkaZ1Dcl9hawP9YbQ2gjuFoqina32R4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aT9YSFk6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742928142; c=relaxed/simple;
+	bh=fW5tuiDIaABRDPN2atUvbHCcLI/ZT07db+kDwcop6O0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dybaWqXWxlExgcMhlCnMu/Alm8BTvlBh3hPv+hLCz+uhPutaJ4Da/xBqNPCxa3wZ42zE7G1vRnpwgsMiL+iaPFc1ClMDb5nhMx16pQski/Ds9+0poTu+5HC5FDU4cdfX87T/URJksjFMS8/e49RJn5HhuPsP+sNemBr9KvicYag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TiT/7Yz7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aT9YSFk6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52DDCC4CEE4;
-	Tue, 25 Mar 2025 18:42:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TiT/7Yz7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD0E2C4CEE4;
+	Tue, 25 Mar 2025 18:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742928128;
-	bh=czQfqjHXT8AC/TqCowPb/ICdTvn8xVWPY8Fynodl96M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aT9YSFk6b9jkufAk8kVmC33X31kyb1aWzVts36xbMEwix/lf/heysclGqCnFWMPaQ
-	 M5fMzZCi7tLYMYeqIBepcMRgQ2BNS5aprNXd7kk/JaSgkzmF8w0s++eF3RHz85xPW3
-	 Za3LXHmNDwDoGTBQPSuJAAZZXRCZ+SUeN5BTpLJO/ru3v6BdDprTljPvvWL1L41c1U
-	 khocGo3TsCC4vXVEbKHQ3NMznx6LrPG4Y2tJV7hCM7M+ACTtq7pQq+e8qaf+GoWNEC
-	 Z+oTMtpEwl/akWMEoj3TovduRdJQ5FgkGzQZT7YhR9xOd8IlUMyn3TxNeleTcsQLO9
-	 aUidFygrY1VaA==
-Message-ID: <e9216aaf-f53e-4256-bb73-489c2261d4c5@kernel.org>
-Date: Tue, 25 Mar 2025 19:42:03 +0100
+	s=k20201202; t=1742928141;
+	bh=fW5tuiDIaABRDPN2atUvbHCcLI/ZT07db+kDwcop6O0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TiT/7Yz7H8M8ssdr1z2jit2j8D+bSICModdFzwDf4oxq1VFr9HmLKUIcQLavutBsf
+	 O/rGGd+Ug4apj2uxFA/PSnf11PY1DhJvBuTAyUSASHE4zhkHRZYv1JKFXwMiHSGFXM
+	 LsDsqBMItRWi0ZUox7wfPGLMslXIlvZb1HZsXFcRSY0puV5/3qctKFR/pYsMcT/CXZ
+	 WLSLsNA3ZE59ooXe6x0dTqprqAjws5OUY7r17Xk/AIxMFpxo88A6aQQXaOijms6ILc
+	 furO5qbUoDf6giSvq+cZhCWi2J73QmoxKX8DEt74SwYh31gp79Mv9lkIC1CbwPkefQ
+	 0wim8DPeF3N4A==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Oliver Hartkopp <socketcan@hartkopp.net>,
+	syzbot+78ce4489b812515d5e4d@syzkaller.appspotmail.com,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-can@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 1/7] can: statistics: use atomic access in hot path
+Date: Tue, 25 Mar 2025 14:42:09 -0400
+Message-Id: <20250325184215.2152123-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] clocksource/drivers/nxp-timer: Add the System Timer
- Module for the s32g platform
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org, Thomas Fossati <thomas.fossati@linaro.org>,
- Larisa Grigore <Larisa.Grigore@nxp.com>,
- Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-stm32@st-md-mailman.stormreply.com>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>, dl-S32 <S32@nxp.com>
-References: <20250324100008.346009-1-daniel.lezcano@linaro.org>
- <20250324100008.346009-2-daniel.lezcano@linaro.org>
- <bb7e4740-9608-4534-9c19-3ac066e2aa8f@kernel.org>
- <1bf2d9ad-325e-4b1d-8440-ddbc90eabc67@linaro.org>
- <9ca80442-15c8-4f2d-ac11-8096b2cd83ad@kernel.org>
- <ff213c29-2a17-4776-a575-35e398e560ec@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <ff213c29-2a17-4776-a575-35e398e560ec@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13.8
+Content-Transfer-Encoding: 8bit
 
-On 25/03/2025 19:38, Daniel Lezcano wrote:
-> On 25/03/2025 13:30, Krzysztof Kozlowski wrote:
->> On 25/03/2025 13:23, Daniel Lezcano wrote:
-> 
-> [ ... ]
-> 
->>>>> +	if (!stm_instances->clocksource && (stm_instances->features & STM_CLKSRC)) {
->>>>> +
->>>>> +		/*
->>>>> +		 * First probed STM will be a clocksource
->>>>> +		 */
->>>>> +		ret = nxp_stm_clocksource_init(dev, name, base, clk);
->>>>> +		if (ret)
->>>>> +			return ret;
->>>>> +		stm_instances->clocksource++;
->>>>
->>>> That's racy. Devices can be brought async, ideally. This should be
->>>> rather idr or probably entire structure protected with a mutex.
->>>
->>> Mmh, interesting. I never had to think about this problem before
->>>
->>> Do you know at what moment the probing is parallelized ?
->>
->> You don't have PROBE_PREFER_ASYNCHRONOUS, so currently this will be
->> still sync, but I don't think we want it to be that way forever. I think
->> new drivers should not rely on implicit sync, because converting it
->> later to async will be difficult. It's easier to design it now or even
->> choose async explicitly (after testing).
-> 
-> I gave a try and sometimes I reach the warnings below. I suspect the 
-> underlying code in the time framework is not yet ready for that.
-> 
-> Even if it could be a good candidate for parallelizing the boot, this 
-> driver should stay sync ATM. Except if someone has the willing to dig 
-> into the core framework to find out the race when switching the 
-> clockevent. I think a thread is setting a timer while we are switching 
-> the driver.
-> 
-> IMO, this core framework is too sensitive for this kind of change now.
-> 
-> Alternatively, I can put anyway the lock which is harmless for the sync 
-> code but making the driver race free. The async flag can be put later.
+From: Oliver Hartkopp <socketcan@hartkopp.net>
 
+[ Upstream commit 80b5f90158d1364cbd80ad82852a757fc0692bf2 ]
 
-Yes, that's what I meant, although indeed good point that clocksource is
-way too early to be async. In that case this part is up to you, maybe my
-suggestion was not correct.
+In can_send() and can_receive() CAN messages and CAN filter matches are
+counted to be visible in the CAN procfs files.
 
+KCSAN detected a data race within can_send() when two CAN frames have
+been generated by a timer event writing to the same CAN netdevice at the
+same time. Use atomic operations to access the statistics in the hot path
+to fix the KCSAN complaint.
 
-Best regards,
-Krzysztof
+Reported-by: syzbot+78ce4489b812515d5e4d@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/67cd717d.050a0220.e1a89.0006.GAE@google.com
+Signed-off-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Reviewed-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Link: https://patch.msgid.link/20250310143353.3242-1-socketcan@hartkopp.net
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/can/af_can.c | 12 ++++++------
+ net/can/af_can.h | 12 ++++++------
+ net/can/proc.c   | 46 +++++++++++++++++++++++++++-------------------
+ 3 files changed, 39 insertions(+), 31 deletions(-)
+
+diff --git a/net/can/af_can.c b/net/can/af_can.c
+index 01f3fbb3b67dc..65230e81fa08c 100644
+--- a/net/can/af_can.c
++++ b/net/can/af_can.c
+@@ -287,8 +287,8 @@ int can_send(struct sk_buff *skb, int loop)
+ 		netif_rx(newskb);
+ 
+ 	/* update statistics */
+-	pkg_stats->tx_frames++;
+-	pkg_stats->tx_frames_delta++;
++	atomic_long_inc(&pkg_stats->tx_frames);
++	atomic_long_inc(&pkg_stats->tx_frames_delta);
+ 
+ 	return 0;
+ 
+@@ -647,8 +647,8 @@ static void can_receive(struct sk_buff *skb, struct net_device *dev)
+ 	int matches;
+ 
+ 	/* update statistics */
+-	pkg_stats->rx_frames++;
+-	pkg_stats->rx_frames_delta++;
++	atomic_long_inc(&pkg_stats->rx_frames);
++	atomic_long_inc(&pkg_stats->rx_frames_delta);
+ 
+ 	/* create non-zero unique skb identifier together with *skb */
+ 	while (!(can_skb_prv(skb)->skbcnt))
+@@ -669,8 +669,8 @@ static void can_receive(struct sk_buff *skb, struct net_device *dev)
+ 	consume_skb(skb);
+ 
+ 	if (matches > 0) {
+-		pkg_stats->matches++;
+-		pkg_stats->matches_delta++;
++		atomic_long_inc(&pkg_stats->matches);
++		atomic_long_inc(&pkg_stats->matches_delta);
+ 	}
+ }
+ 
+diff --git a/net/can/af_can.h b/net/can/af_can.h
+index 7c2d9161e2245..22f3352c77fec 100644
+--- a/net/can/af_can.h
++++ b/net/can/af_can.h
+@@ -66,9 +66,9 @@ struct receiver {
+ struct can_pkg_stats {
+ 	unsigned long jiffies_init;
+ 
+-	unsigned long rx_frames;
+-	unsigned long tx_frames;
+-	unsigned long matches;
++	atomic_long_t rx_frames;
++	atomic_long_t tx_frames;
++	atomic_long_t matches;
+ 
+ 	unsigned long total_rx_rate;
+ 	unsigned long total_tx_rate;
+@@ -82,9 +82,9 @@ struct can_pkg_stats {
+ 	unsigned long max_tx_rate;
+ 	unsigned long max_rx_match_ratio;
+ 
+-	unsigned long rx_frames_delta;
+-	unsigned long tx_frames_delta;
+-	unsigned long matches_delta;
++	atomic_long_t rx_frames_delta;
++	atomic_long_t tx_frames_delta;
++	atomic_long_t matches_delta;
+ };
+ 
+ /* persistent statistics */
+diff --git a/net/can/proc.c b/net/can/proc.c
+index bbce97825f13f..25fdf060e30d0 100644
+--- a/net/can/proc.c
++++ b/net/can/proc.c
+@@ -118,6 +118,13 @@ void can_stat_update(struct timer_list *t)
+ 	struct can_pkg_stats *pkg_stats = net->can.pkg_stats;
+ 	unsigned long j = jiffies; /* snapshot */
+ 
++	long rx_frames = atomic_long_read(&pkg_stats->rx_frames);
++	long tx_frames = atomic_long_read(&pkg_stats->tx_frames);
++	long matches = atomic_long_read(&pkg_stats->matches);
++	long rx_frames_delta = atomic_long_read(&pkg_stats->rx_frames_delta);
++	long tx_frames_delta = atomic_long_read(&pkg_stats->tx_frames_delta);
++	long matches_delta = atomic_long_read(&pkg_stats->matches_delta);
++
+ 	/* restart counting in timer context on user request */
+ 	if (user_reset)
+ 		can_init_stats(net);
+@@ -127,35 +134,33 @@ void can_stat_update(struct timer_list *t)
+ 		can_init_stats(net);
+ 
+ 	/* prevent overflow in calc_rate() */
+-	if (pkg_stats->rx_frames > (ULONG_MAX / HZ))
++	if (rx_frames > (LONG_MAX / HZ))
+ 		can_init_stats(net);
+ 
+ 	/* prevent overflow in calc_rate() */
+-	if (pkg_stats->tx_frames > (ULONG_MAX / HZ))
++	if (tx_frames > (LONG_MAX / HZ))
+ 		can_init_stats(net);
+ 
+ 	/* matches overflow - very improbable */
+-	if (pkg_stats->matches > (ULONG_MAX / 100))
++	if (matches > (LONG_MAX / 100))
+ 		can_init_stats(net);
+ 
+ 	/* calc total values */
+-	if (pkg_stats->rx_frames)
+-		pkg_stats->total_rx_match_ratio = (pkg_stats->matches * 100) /
+-			pkg_stats->rx_frames;
++	if (rx_frames)
++		pkg_stats->total_rx_match_ratio = (matches * 100) / rx_frames;
+ 
+ 	pkg_stats->total_tx_rate = calc_rate(pkg_stats->jiffies_init, j,
+-					    pkg_stats->tx_frames);
++					    tx_frames);
+ 	pkg_stats->total_rx_rate = calc_rate(pkg_stats->jiffies_init, j,
+-					    pkg_stats->rx_frames);
++					    rx_frames);
+ 
+ 	/* calc current values */
+-	if (pkg_stats->rx_frames_delta)
++	if (rx_frames_delta)
+ 		pkg_stats->current_rx_match_ratio =
+-			(pkg_stats->matches_delta * 100) /
+-			pkg_stats->rx_frames_delta;
++			(matches_delta * 100) /	rx_frames_delta;
+ 
+-	pkg_stats->current_tx_rate = calc_rate(0, HZ, pkg_stats->tx_frames_delta);
+-	pkg_stats->current_rx_rate = calc_rate(0, HZ, pkg_stats->rx_frames_delta);
++	pkg_stats->current_tx_rate = calc_rate(0, HZ, tx_frames_delta);
++	pkg_stats->current_rx_rate = calc_rate(0, HZ, rx_frames_delta);
+ 
+ 	/* check / update maximum values */
+ 	if (pkg_stats->max_tx_rate < pkg_stats->current_tx_rate)
+@@ -168,9 +173,9 @@ void can_stat_update(struct timer_list *t)
+ 		pkg_stats->max_rx_match_ratio = pkg_stats->current_rx_match_ratio;
+ 
+ 	/* clear values for 'current rate' calculation */
+-	pkg_stats->tx_frames_delta = 0;
+-	pkg_stats->rx_frames_delta = 0;
+-	pkg_stats->matches_delta   = 0;
++	atomic_long_set(&pkg_stats->tx_frames_delta, 0);
++	atomic_long_set(&pkg_stats->rx_frames_delta, 0);
++	atomic_long_set(&pkg_stats->matches_delta, 0);
+ 
+ 	/* restart timer (one second) */
+ 	mod_timer(&net->can.stattimer, round_jiffies(jiffies + HZ));
+@@ -214,9 +219,12 @@ static int can_stats_proc_show(struct seq_file *m, void *v)
+ 	struct can_rcv_lists_stats *rcv_lists_stats = net->can.rcv_lists_stats;
+ 
+ 	seq_putc(m, '\n');
+-	seq_printf(m, " %8ld transmitted frames (TXF)\n", pkg_stats->tx_frames);
+-	seq_printf(m, " %8ld received frames (RXF)\n", pkg_stats->rx_frames);
+-	seq_printf(m, " %8ld matched frames (RXMF)\n", pkg_stats->matches);
++	seq_printf(m, " %8ld transmitted frames (TXF)\n",
++		   atomic_long_read(&pkg_stats->tx_frames));
++	seq_printf(m, " %8ld received frames (RXF)\n",
++		   atomic_long_read(&pkg_stats->rx_frames));
++	seq_printf(m, " %8ld matched frames (RXMF)\n",
++		   atomic_long_read(&pkg_stats->matches));
+ 
+ 	seq_putc(m, '\n');
+ 
+-- 
+2.39.5
+
