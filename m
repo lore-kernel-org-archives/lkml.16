@@ -1,393 +1,241 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072D42566E7
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 11:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70982566DE;
+	Tue, 25 Mar 2025 11:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742903862; cv=none; b=if+2ZAddc8QMjS5ELczPpVVHI2eok1rcqBfs7OtTpZAEt0F3vGdlS40cZRo6lnxfgv2BCz5LApjT9PXAwc5TpSLBb5kagQdkUKrqA7Psm+J9ckM5cOM6k8w5RhmiMkG8jGuXaeM+6sOB7479ifCAvdhkXlW3gtvi5JnVexqCC9I=
+	t=1742903878; cv=none; b=TeA+nLdU8vuawWWHICWWk7GuzieC2Ifo7MI8PRLalQ9Egg4/pTJL5N0L7yqxL0T3hfkENrWpXRd7kDu18hBXc0NZeHJAHatWyGDtWHIBHXLqkz4LYt0r8ZFEqZgChjUeC1yeNYycGb1DAS3oezzTum39zfzHrTuoYPCPX4beDRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742903862; c=relaxed/simple;
-	bh=FCbgwHJZe4cWFJob/cAvjCUXF1bIozzOffqO5dJ9ico=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hudfphfI7caMiRDetBNHew//ARGlEWPhKWFZ5rB1qfN9FFoSCIEKUr+z1h5fftwRd+tRmdpxwj7phaVBFeSqQuGFNv96Tm0rjhLlNJ8Voh3Jv6iFOcLnTwEnhfTjq/QbMtqc7Hww0dd8pAikkR24rjtxYxXPqFQtS+kdhhLlsGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=B4BfehnR; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1742903878; c=relaxed/simple;
+	bh=gow2/ksm0v1uVcmLyDcsdHXfmC7ituNJBBiQFhQuiPI=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=DpBbO2CtNSCOZOt16zubmEdsuA4NxIJhwkiKD1XZ+lDbogJ4MyG4IbJOggCAsih0dgjLCXtoKq/oHz2lOo7drBTa57TGtjVSojafDpQu0SatpCCAOIV5jeaIGSsqiaLh9R2I0XkLwCqurDaYNjynulub05vByBfbzIJs9AL0YqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Dt5yk0R7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9Id7/MOA; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="B4BfehnR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1742903857; x=1743163057;
-	bh=WXmiEWKhOTusWAn23N7UpMfR2VOHEW2xDiAsXVNYT/A=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=B4BfehnRq0CHgWOwzaPQ5wmfwnaqwUiaXcMffqzsIaGo7kk0/HYfMU0eRQWj1VWiv
-	 MUmBJEG3g7tW4zuqHhN6eFSp+/HB1QZ2zQFD/OtZ+IjE95w5hdnukaitKxmqTqeNXy
-	 HpNGR+fmDRuB0WZANR70XWa1g5w9OhIhOuis+ZfWg855kS2HFHmenKUNp0Z0SDNMt6
-	 KGNntGIwSNGHMCUwfZ6nbaMLfb2kMtZjJtS8YLxIGdFjg4AUbb+3KHYJhSSlpnDmOg
-	 ezv+WmlFRXZnC+bpI5xpmTrNAEEAsPc4DDaC28hxbIsPHBw3/+oW77L2Ty1se8dntu
-	 kyGyqV2oQsknQ==
-Date: Tue, 25 Mar 2025 11:57:29 +0000
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Asahi Lina <lina@asahilina.net>
-From: Oliver Mangold <oliver.mangold@pm.me>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Oliver Mangold <oliver.mangold@pm.me>
-Subject: [PATCH v9 5/5] rust: Add OwnableRefCounted and SimpleOwnableRefCounted
-Message-ID: <20250325-unique-ref-v9-5-e91618c1de26@pm.me>
-In-Reply-To: <20250325-unique-ref-v9-0-e91618c1de26@pm.me>
-References: <20250325-unique-ref-v9-0-e91618c1de26@pm.me>
-Feedback-ID: 31808448:user:proton
-X-Pm-Message-ID: b9f696edfcc726e05327cc0867db057a223f8010
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Dt5yk0R7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9Id7/MOA"
+Date: Tue, 25 Mar 2025 11:57:50 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742903874;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KuoNKzDLjG3dTjyakixSvwtTm4IEEJRKl0cWeBrwvXU=;
+	b=Dt5yk0R7mhtlqxUTVakN/NE/61IWryMP/nNr9BAQMsZ472cPBDlj0FLkdb5x1k9eZXa8zj
+	0ECb7TOZWO6nIx9VOnrIYrkSRG24kCW4nMfxcloJk2+dTFujB636ysv+mzXNFRIMshw02a
+	P2fuGbCe6jHKQXbvBw/yR8WfUgP+emfpvNEvf4KLP5HQrrJk742iHF+4nyo2Fjp8fQ2/eX
+	5ez8e3LBGYfKIR/05obpHpTspNknHdH7cTESpZoTpKAYIVL5uAjGh4WGEAaRdU0BOkKbAE
+	+w2rKsq0rJSslpXvqnRg9ByMgdcbkSVI29x5foArS3pezfSfbgexofj1I2VN7w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742903874;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KuoNKzDLjG3dTjyakixSvwtTm4IEEJRKl0cWeBrwvXU=;
+	b=9Id7/MOARPsR5eaUlPq7LfHX+N7vpfyYeuqpEKfFlTfp4rtoglVpwlUUYuTXwhDRi5fMS0
+	BBLwPPLyZn1w9aBw==
+From: "tip-bot2 for David Woodhouse" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/asm] x86/kexec: Debugging support: Dump registers on exception
+Cc: David Woodhouse <dwmw@amazon.co.uk>, Ingo Molnar <mingo@kernel.org>,
+ Brian Gerst <brgerst@gmail.com>, Juergen Gross <jgross@suse.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@chromium.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250314173226.3062535-3-dwmw2@infradead.org>
+References: <20250314173226.3062535-3-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174290387080.14745.5028811145419628375.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Types implementing one of these traits can safely convert between an
-ARef<T> and an Owned<T>.
+The following commit has been merged into the x86/asm branch of tip:
 
-This is useful for types which generally are access through an ARef
-but have methods which can only safely called when the reference is unique,
-like e.g. `block::mq::Request::end_ok()`.
+Commit-ID:     3d66af75b08609281cbd7b71d40bbb9829c88764
+Gitweb:        https://git.kernel.org/tip/3d66af75b08609281cbd7b71d40bbb9829c88764
+Author:        David Woodhouse <dwmw@amazon.co.uk>
+AuthorDate:    Fri, 14 Mar 2025 17:27:34 
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 25 Mar 2025 12:49:05 +01:00
 
-Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
+x86/kexec: Debugging support: Dump registers on exception
+
+The actual serial output function is a no-op for now.
+
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20250314173226.3062535-3-dwmw2@infradead.org
 ---
- rust/kernel/ownable.rs | 244 +++++++++++++++++++++++++++++++++++++++++++++=
-++++
- rust/kernel/types.rs   |   8 +-
- 2 files changed, 251 insertions(+), 1 deletion(-)
+ arch/x86/kernel/relocate_kernel_64.S | 121 ++++++++++++++++++++++++--
+ 1 file changed, 115 insertions(+), 6 deletions(-)
 
-diff --git a/rust/kernel/ownable.rs b/rust/kernel/ownable.rs
-index f4bebea23ce1d62f5597e35199ca38ea07b293db..59f84a838bbc4e80fc86dd8dc91=
-f1672fc649403 100644
---- a/rust/kernel/ownable.rs
-+++ b/rust/kernel/ownable.rs
-@@ -2,6 +2,7 @@
-=20
- //! Owned reference types.
-=20
-+use crate::types::{ARef, RefCounted};
- use core::{
-     marker::PhantomData,
-     mem::ManuallyDrop,
-@@ -115,3 +116,246 @@ fn drop(&mut self) {
-         unsafe { T::release(self.ptr) };
-     }
- }
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index 8f26ffd..29cb399 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -379,6 +379,69 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
+ 	int3
+ SYM_CODE_END(swap_pages)
+ 
++/*
++ * Generic 'print character' routine (as yet unimplemented)
++ *  - %al: Character to be printed (may clobber %rax)
++ *  - %rdx: MMIO address or port.
++ */
++SYM_CODE_START_LOCAL_NOALIGN(pr_char)
++	UNWIND_HINT_FUNC
++	ANNOTATE_NOENDBR
++	ANNOTATE_UNRET_SAFE
++	ret
++SYM_CODE_END(pr_char)
 +
-+/// A trait for objects that can be wrapped in either one of the reference=
- types [`Owned`] and
-+/// [`ARef`].
-+///
-+/// # Safety
-+///
-+/// Implementers must ensure that:
-+///
-+/// - Both the safety requirements for [`Ownable`] and [`RefCounted`] are =
-fulfilled.
-+/// - [`try_from_shared()`](OwnableRefCounted::into_shared) only returns a=
-n [`Owned`] if exactly
-+///   one [`ARef`] exists.
-+/// - [`into_shared()`](OwnableRefCounted::into_shared) set the reference =
-count to the value which
-+///   the returned [`ARef`] expects for an object with a single reference
-+///   in existence. This implies that if [`into_shared()`](OwnableRefCount=
-ed::into_shared) is left
-+///   on the default implementation, which just rewraps the underlying obj=
-ect, the reference count
-+///   needs not to be modified when converting a [`Owned`] to an [`ARef`].
-+///
-+/// # Examples
-+///
-+/// A minimal example implementation of [`OwnableRefCounted`], [`Ownable`]=
- and its usage with
-+/// [`ARef`] and [`Owned`] looks like this:
-+///
-+/// ```
-+/// # #![expect(clippy::disallowed_names)]
-+/// use core::cell::Cell;
-+/// use core::ptr::NonNull;
-+/// use kernel::alloc::{flags, kbox::KBox, AllocError};
-+/// use kernel::types::{
-+///     ARef, RefCounted, Owned, Ownable, OwnableRefCounted,
-+/// };
-+///
-+/// struct Foo {
-+///     refcount: Cell<usize>,
-+/// }
-+///
-+/// impl Foo {
-+///     fn new() -> Result<Owned<Self>, AllocError> {
-+///         // Use a `KBox` to handle the actual allocation.
-+///         let result =3D KBox::new(
-+///             Foo {
-+///                 refcount: Cell::new(1),
-+///             },
-+///             flags::GFP_KERNEL,
-+///         )?;
-+///         let result =3D NonNull::new(KBox::into_raw(result))
-+///             .expect("Raw pointer to newly allocation KBox is null, thi=
-s should never happen.");
-+///         // SAFETY: We just allocated the `Foo`, thus it is valid.
-+///         Ok(unsafe { Owned::from_raw(result) })
-+///     }
-+/// }
-+///
-+/// // SAFETY: We increment and decrement each time the respective functio=
-n is called and only free
-+/// // the `Foo` when the refcount reaches zero.
-+/// unsafe impl RefCounted for Foo {
-+///     fn inc_ref(&self) {
-+///         self.refcount.replace(self.refcount.get() + 1);
-+///     }
-+///
-+///     unsafe fn dec_ref(this: NonNull<Self>) {
-+///         // SAFETY: The underlying object is always valid when the func=
-tion is called.
-+///         let refcount =3D unsafe { &this.as_ref().refcount };
-+///         let new_refcount =3D refcount.get() - 1;
-+///         if new_refcount =3D=3D 0 {
-+///             // The `Foo` will be dropped when `KBox` goes out of scope=
-.
-+///             // SAFETY: The `Box<Foo>` is still alive as the old refcou=
-nt is 1.
-+///             unsafe { KBox::from_raw(this.as_ptr()) };
-+///         } else {
-+///             refcount.replace(new_refcount);
-+///         }
-+///     }
-+/// }
-+///
-+/// // SAFETY: We only convert into an `Owned` when the refcount is 1.
-+/// unsafe impl OwnableRefCounted for Foo {
-+///     fn try_from_shared(this: ARef<Self>) -> Result<Owned<Self>, ARef<S=
-elf>> {
-+///         if this.refcount.get() =3D=3D 1 {
-+///             // SAFETY: The `Foo` is still alive as the refcount is 1.
-+///             Ok(unsafe { Owned::from_raw(ARef::into_raw(this)) })
-+///         } else {
-+///             Err(this)
-+///         }
-+///     }
-+/// }
-+///
-+/// // SAFETY: We are not `AlwaysRefCounted`.
-+/// unsafe impl Ownable for Foo {
-+///     unsafe fn release(this: NonNull<Self>) {
-+///         // SAFETY: Using `dec_ref()` from `RefCounted` to release is o=
-kay, as the refcount is
-+///         // always 1 for an `Owned<Foo>`.
-+///         unsafe{ Foo::dec_ref(this) };
-+///     }
-+/// }
-+///
-+/// let foo =3D Foo::new().unwrap();
-+/// let mut foo =3D ARef::from(foo);
-+/// {
-+///     let bar =3D foo.clone();
-+///     assert!(Owned::try_from(bar).is_err());
-+/// }
-+/// assert!(Owned::try_from(foo).is_ok());
-+/// ```
-+pub unsafe trait OwnableRefCounted: RefCounted + Ownable + Sized {
-+    /// Checks if the [`ARef`] is unique and convert it to an [`Owned`] it=
- that is that case.
-+    /// Otherwise it returns again an [`ARef`] to the same underlying obje=
-ct.
-+    fn try_from_shared(this: ARef<Self>) -> Result<Owned<Self>, ARef<Self>=
->;
++/*
++ * Load pr_char function pointer into %rsi and load %rdx with whatever
++ * that function wants to see there (typically port/MMIO address).
++ */
++.macro	pr_setup
++	/* No output; pr_char just returns */
++	leaq	pr_char(%rip), %rsi
++.endm
 +
-+    /// Converts the [`Owned`] into an [`ARef`].
-+    fn into_shared(this: Owned<Self>) -> ARef<Self> {
-+        // SAFETY: Safe by the requirements on implementing the trait.
-+        unsafe { ARef::from_raw(Owned::into_raw(this)) }
-+    }
-+}
++/* Print the nybble in %bl, clobber %rax */
++SYM_CODE_START_LOCAL_NOALIGN(pr_nybble)
++	UNWIND_HINT_FUNC
++	movb	%bl, %al
++	nop
++	andb	$0x0f, %al
++	addb	$0x30, %al
++	cmpb	$0x3a, %al
++	jb	1f
++	addb	$('a' - '0' - 10), %al
++	ANNOTATE_RETPOLINE_SAFE
++1:	jmp	*%rsi
++SYM_CODE_END(pr_nybble)
 +
-+/// This trait allows to implement [`Ownable`] and [`OwnableRefCounted`] t=
-ogether in a simplified
-+/// way, only requiring to implement [`RefCounted`] and providing the meth=
-od
-+/// [`is_unique()`](SimpleOwnableRefCounted::is_unique).
-+///
-+/// For non-standard cases where conversion between [`Ownable`] and [`RefC=
-ounted`] does not allow
-+/// [`Ownable::release()`] and [`RefCounted::dec_ref()`] to be the same me=
-thod, [`Ownable`]
-+/// and [`OwnableRefCounted`] should be implemented separately.
-+///
-+/// # Safety
-+///
-+/// Implementers must ensure that:
-+///
-+/// - The safety requirements for [`Ownable`] are fulfilled and [`RefCount=
-ed::dec_ref()`] can
-+///   be used for [`Ownable::release()`].
-+/// - [`is_unique`](SimpleOwnableRefCounted::is_unique) must only return `=
-true` in case only one
-+///   [`ARef`] exists and it is impossible for one to be obtained other th=
-an by cloning an existing
-+///   [`ARef`] or converting an [`Owned`] to an [`ARef`].
-+/// - It is safe to convert an unique [`ARef`] into an [`Owned`] simply by=
- re-wrapping the
-+///   underlying object without modifying the refcount.
-+///
-+/// # Examples
-+///
-+/// A minimal example implementation of [`RefCounted`] and [`SimpleOwnable=
-RefCounted`]
-+/// and its usage with [`ARef`] and [`Owned`] looks like this:
-+///
-+/// ```
-+/// # #![expect(clippy::disallowed_names)]
-+/// use core::cell::Cell;
-+/// use core::ptr::NonNull;
-+/// use kernel::alloc::{flags, kbox::KBox, AllocError};
-+/// use kernel::types::{
-+///     ARef, Owned, RefCounted, SimpleOwnableRefCounted,
-+/// };
-+///
-+/// struct Foo {
-+///     refcount: Cell<usize>,
-+/// }
-+///
-+/// impl Foo {
-+///     fn new() -> Result<Owned<Self>, AllocError> {
-+///         // Use a KBox to handle the actual allocation.
-+///         let result =3D KBox::new(
-+///             Foo {
-+///                 refcount: Cell::new(1),
-+///             },
-+///             flags::GFP_KERNEL,
-+///         )?;
-+///         let result =3D NonNull::new(KBox::into_raw(result))
-+///             .expect("Raw pointer to newly allocation KBox is null, thi=
-s should never happen.");
-+///         // SAFETY: We just allocated the `Foo`, thus it is valid.
-+///         Ok(unsafe { Owned::from_raw(result) })
-+///     }
-+/// }
-+///
-+/// // SAFETY: we ensure that:
-+/// // - The `Foo` is only dropped when the refcount is zero.
-+/// // - `is_unique()` only returns `true` when the refcount is 1.
-+/// unsafe impl RefCounted for Foo {
-+///     fn inc_ref(&self) {
-+///         self.refcount.replace(self.refcount.get() + 1);
-+///     }
-+///
-+///     unsafe fn dec_ref(this: NonNull<Self>) {
-+///         // SAFETY: The underlying object is always valid when the func=
-tion is called.
-+///         let refcount =3D unsafe { &this.as_ref().refcount };
-+///         let new_refcount =3D refcount.get() - 1;
-+///         if new_refcount =3D=3D 0 {
-+///             // The `Foo` will be dropped when KBox goes out of scope.
-+///             // SAFETY: The `Box<Foo>` is still alive as the old refcou=
-nt is 1.
-+///             unsafe { KBox::from_raw(this.as_ptr()) };
-+///         } else {
-+///             refcount.replace(new_refcount);
-+///         }
-+///     }
-+/// }
-+///
-+/// // SAFETY: we ensure that:
-+/// // - `is_unique()` only returns `true` when the refcount is 1.
-+/// unsafe impl SimpleOwnableRefCounted for Foo {
-+///     fn is_unique(&self) -> bool {
-+///         self.refcount.get() =3D=3D 1
-+///     }
-+/// }
-+///
-+/// let foo =3D Foo::new().unwrap();
-+/// let mut foo =3D ARef::from(foo);
-+/// {
-+///     let bar =3D foo.clone();
-+///     assert!(Owned::try_from(bar).is_err());
-+/// }
-+/// assert!(Owned::try_from(foo).is_ok());
-+/// ```
-+pub unsafe trait SimpleOwnableRefCounted: RefCounted {
-+    /// Checks if exactly one [`ARef`] to the object exists. In case the o=
-bject is [`Sync`], the
-+    /// check needs to be race-free.
-+    fn is_unique(&self) -> bool;
-+}
++SYM_CODE_START_LOCAL_NOALIGN(pr_qword)
++	UNWIND_HINT_FUNC
++	movq	$16, %rcx
++1:	rolq	$4, %rbx
++	call	pr_nybble
++	loop	1b
++	movb	$'\n', %al
++	ANNOTATE_RETPOLINE_SAFE
++	jmp	*%rsi
++SYM_CODE_END(pr_qword)
 +
-+#[cfg_attr(RUSTC_HAS_DO_NOT_RECOMMEND, diagnostic::do_not_recommend)]
-+// SAFETY: Safe by the requirements on implementation of [`SimpleOwnableRe=
-fCounted`].
-+unsafe impl<T: SimpleOwnableRefCounted> OwnableRefCounted for T {
-+    fn try_from_shared(this: ARef<Self>) -> Result<Owned<Self>, ARef<Self>=
-> {
-+        if T::is_unique(&*this) {
-+            // SAFETY: Safe by the requirements on implementation of [`Sim=
-pleOwnable`].
-+            Ok(unsafe { Owned::from_raw(ARef::into_raw(this)) })
-+        } else {
-+            Err(this)
-+        }
-+    }
-+}
++.macro print_reg a, b, c, d, r
++	movb	$\a, %al
++	ANNOTATE_RETPOLINE_SAFE
++	call	*%rsi
++	movb	$\b, %al
++	ANNOTATE_RETPOLINE_SAFE
++	call	*%rsi
++	movb	$\c, %al
++	ANNOTATE_RETPOLINE_SAFE
++	call	*%rsi
++	movb	$\d, %al
++	ANNOTATE_RETPOLINE_SAFE
++	call	*%rsi
++	movq	\r, %rbx
++	call	pr_qword
++.endm
 +
-+#[cfg_attr(RUSTC_HAS_DO_NOT_RECOMMEND, diagnostic::do_not_recommend)]
-+// SAFETY: Safe by the requirements on implementation of [`SimpleOwnableRe=
-fCounted`].
-+unsafe impl<T: SimpleOwnableRefCounted> Ownable for T {
-+    unsafe fn release(this: NonNull<Self>) {
-+        // SAFETY: Safe by the requirements on implementation of
-+        // [`SimpleOwnableRefCounted::dec_ref()`].
-+        unsafe { RefCounted::dec_ref(this) };
-+    }
-+}
+ SYM_CODE_START_NOALIGN(kexec_debug_exc_vectors)
+ 	/* Each of these is 6 bytes. */
+ .macro vec_err exc
+@@ -422,17 +485,63 @@ SYM_CODE_START_LOCAL_NOALIGN(exc_handler)
+ 	VALIDATE_UNRET_END
+ 
+ 	pushq	%rax
++	pushq	%rbx
++	pushq	%rcx
+ 	pushq	%rdx
+-	movw	$0x3f8, %dx
+-	movb	$'A', %al
+-	outb	%al, %dx
+-	popq	%rdx
+-	popq	%rax
++	pushq	%rsi
 +
-+impl<T: OwnableRefCounted> TryFrom<ARef<T>> for Owned<T> {
-+    type Error =3D ARef<T>;
-+    /// Tries to convert the [`ARef`] to an [`Owned`] by calling
-+    /// [`try_from_shared()`](OwnableRefCounted::try_from_shared). In case=
- the [`ARef`] is not
-+    /// unique, it returns again an [`ARef`] to the same underlying object=
-.
-+    fn try_from(b: ARef<T>) -> Result<Owned<T>, Self::Error> {
-+        T::try_from_shared(b)
-+    }
-+}
-diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-index db29f7c725e631c11099fa9122901ec2b3f4a039..a72ac86befc4923ee0bbbc1eea7=
-33a245189706a 100644
---- a/rust/kernel/types.rs
-+++ b/rust/kernel/types.rs
-@@ -11,7 +11,7 @@
-     ptr::NonNull,
- };
-=20
--pub use crate::ownable::{Ownable, OwnableMut, Owned};
-+pub use crate::ownable::{Ownable, OwnableMut, OwnableRefCounted, Owned, Si=
-mpleOwnableRefCounted};
-=20
- /// Used to transfer ownership to and from foreign (non-Rust) languages.
- ///
-@@ -536,6 +536,12 @@ fn from(b: &T) -> Self {
-     }
- }
-=20
-+impl<T: OwnableRefCounted> From<Owned<T>> for ARef<T> {
-+    fn from(b: Owned<T>) -> Self {
-+        T::into_shared(b)
-+    }
-+}
++	/* Stack frame */
++#define EXC_SS		0x58 /* Architectural... */
++#define EXC_RSP		0x50
++#define EXC_EFLAGS	0x48
++#define EXC_CS		0x40
++#define EXC_RIP		0x38
++#define EXC_ERRORCODE	0x30 /* Either architectural or zero pushed by handler */
++#define EXC_EXCEPTION	0x28 /* Pushed by handler entry point */
++#define EXC_RAX		0x20 /* Pushed just above in exc_handler */
++#define EXC_RBX		0x18
++#define EXC_RCX		0x10
++#define EXC_RDX		0x08
++#define EXC_RSI		0x00
 +
- impl<T: RefCounted> Drop for ARef<T> {
-     fn drop(&mut self) {
-         // SAFETY: The type invariants guarantee that the `ARef` owns the =
-reference we're about to
-
---=20
-2.49.0
-
-
++	/* Set up %rdx/%rsi for debug output */
++	pr_setup
++
++	/* rip and exception info */
++	print_reg 'E', 'x', 'c', ':', EXC_EXCEPTION(%rsp)
++	print_reg 'E', 'r', 'r', ':', EXC_ERRORCODE(%rsp)
++	print_reg 'r', 'i', 'p', ':', EXC_RIP(%rsp)
++	print_reg 'r', 's', 'p', ':', EXC_RSP(%rsp)
++
++	/* We spilled these to the stack */
++	print_reg 'r', 'a', 'x', ':', EXC_RAX(%rsp)
++	print_reg 'r', 'b', 'x', ':', EXC_RBX(%rsp)
++	print_reg 'r', 'c', 'x', ':', EXC_RCX(%rsp)
++	print_reg 'r', 'd', 'x', ':', EXC_RDX(%rsp)
++	print_reg 'r', 's', 'i', ':', EXC_RSI(%rsp)
++
++	/* Other registers untouched */
++	print_reg 'r', 'd', 'i', ':', %rdi
++	print_reg 'r', '8', ' ', ':', %r8
++	print_reg 'r', '9', ' ', ':', %r9
++	print_reg 'r', '1', '0', ':', %r10
++	print_reg 'r', '1', '1', ':', %r11
++	print_reg 'r', '1', '2', ':', %r12
++	print_reg 'r', '1', '3', ':', %r13
++	print_reg 'r', '1', '4', ':', %r14
++	print_reg 'r', '1', '5', ':', %r15
++	print_reg 'c', 'r', '2', ':', %cr2
+ 
+ 	/* Only return from INT3 */
+-	cmpq	$3, (%rsp)
++	cmpq	$3, EXC_EXCEPTION(%rsp)
+ 	jne	.Ldie
+ 
++	popq	%rsi
++	popq	%rdx
++	popq	%rcx
++	popq	%rbx
++	popq	%rax
++
+ 	addq	$16, %rsp
+ 	iretq
+ 
