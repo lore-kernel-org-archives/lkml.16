@@ -1,257 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from outbound.soverin.net (outbound.soverin.net [185.233.34.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA062E337C;
-	Tue, 25 Mar 2025 11:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9586816A395;
+	Tue, 25 Mar 2025 11:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742901357; cv=none; b=NV+EIfQvQpe1mGoW1tGFslWzLZ9RHNHe/oQme1DPDK99OrOeWbJwVcv2Oau9AZxvwAEkCmFsdxH5KfGc7VoQJpjPzgZpLMEsNq8Ec1gIkBA5JV/Ly04jdXKXDafPr355SkDvmw+zlXltY3vffzG8lvMh6tfDKxFmclaBZTgd1tU=
+	t=1742901359; cv=none; b=RiRGfnGNgJ+dV3umT6GgdPTb9KGp3nRAvztzAxmx8BqVFMo8nnH7MPFeca1g9NXKlLJ/WaUX+F6VYcrTyZ4SbIUOfzM4aw42YUPlurUlpAoUBArub6GRVw8lqMr2sGzj/eCA53Fc42w2nTnMWnaUB8gKiRzHBTj8YcGLkpvb1do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742901357; c=relaxed/simple;
-	bh=ejo2mJfaZPVCPpYuCkYgIZdpbhitxkRb24uvxJioFd0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=FQyffSbCBZ9APqebvo6mMiXz3QNz/L70UJl20o+oa8dKyeOt8br1cGkT3jRgqQOAHV2DtkRns4zCkyVzduroX7Sk7d2KAmeewLTapdm0s5s0MRB0tixjisPcy/28gA9fwPqmZwwRkPrBmgY5cFj6qiWbICbpAjC2D6/SibyWkp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qlun8Bqw; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742901359; c=relaxed/simple;
+	bh=bTLjwuVyybm/I/wCHz+nDM/wvGZp90Vk4U3oPodejdg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qxdwwBRvOAaAlpyTlAmT62giVv0zXbiImXpgO1bZZPav7k/8aUYGeKydv2DOfncDtINGGAQLSUzkTlBluCxTqBDxLWmTE2vGhxlDH9PLfdABGU+/gz9+GYd1cQtSBrdyl/yZy8j2g90fSVZ4JciNQuwD9H/Nv342vOQHy+onCAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qmon.net; spf=pass smtp.mailfrom=qmon.net; dkim=pass (2048-bit key) header.d=qmon.net header.i=@qmon.net header.b=r3FoCtrO; arc=none smtp.client-ip=185.233.34.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qmon.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qmon.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qlun8Bqw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742901356; x=1774437356;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=ejo2mJfaZPVCPpYuCkYgIZdpbhitxkRb24uvxJioFd0=;
-  b=Qlun8BqwW/Uv+e2Xtm89Rjr3UR/kXcG8rhwppZZb0pTmM2u+9dPcNb5L
-   1EMcI65UWhq3x2oWp/iFSpDdKMP6wO+Bq53sx+Xa8Otr0OocGOcpUYWo/
-   PEZyt49i6GzhdxufKVcRD9TbVbDPaNJwy/OCtQjSq0bw+ah4XmyqWE6o/
-   vzzl72AKiZ3WRsE9d4I/yymkMEzXnxjkCwJphQhsO0XnRaaxpudd98zt/
-   llr83f49SrqK4VR5gDGUwqZwftICavLduo3UgkP2K7Kd64scEROaXL9be
-   NDF49u2qjKTnOvrHWXpYZXYSl8ZiXzCcOnPxh61cBESZuRy4FucpegtBb
-   Q==;
-X-CSE-ConnectionGUID: O0j/QV13SQaljd87p0Wg1w==
-X-CSE-MsgGUID: UsM1+8oiReafEuLt36F5xg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="43299869"
-X-IronPort-AV: E=Sophos;i="6.14,274,1736841600"; 
-   d="scan'208";a="43299869"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 04:15:55 -0700
-X-CSE-ConnectionGUID: pezZcfE1QgmaLFl2HoRdKg==
-X-CSE-MsgGUID: Euqu4xK9QMqpCVBvr6tsdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,274,1736841600"; 
-   d="scan'208";a="155253915"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.158])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 04:15:52 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 25 Mar 2025 13:15:49 +0200 (EET)
-To: Hans Zhang <18255117159@163.com>
-cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
-    robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com, 
-    thomas.richard@bootlin.com, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [v6 3/5] PCI: cadence: Use common PCI host bridge APIs for
- finding the capabilities
-In-Reply-To: <3d9b2fa9-98bf-4f47-aa76-640a4f82cb2f@163.com>
-Message-ID: <26dcba54-93c1-dda4-c5e2-e324e9d50b09@linux.intel.com>
-References: <20250323164852.430546-1-18255117159@163.com> <20250323164852.430546-4-18255117159@163.com> <f467056d-8d4a-9dab-2f0a-ca589adfde53@linux.intel.com> <d370b69a-3b70-4e3b-94a3-43e0bc1305cd@163.com> <a3462c68-ec1b-0b1a-fee7-612bd1109819@linux.intel.com>
- <3d9b2fa9-98bf-4f47-aa76-640a4f82cb2f@163.com>
+	dkim=pass (2048-bit key) header.d=qmon.net header.i=@qmon.net header.b="r3FoCtrO"
+Received: from smtp.soverin.net (c04cst-smtp-sov02.int.sover.in [10.10.4.100])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	by outbound.soverin.net (Postfix) with ESMTPS id 4ZMRyF59pSz5Y;
+	Tue, 25 Mar 2025 11:09:25 +0000 (UTC)
+Received: from smtp.soverin.net (smtp.soverin.net [10.10.4.100]) by soverin.net (Postfix) with ESMTPSA id 4ZMRyD4TSVzML;
+	Tue, 25 Mar 2025 11:09:24 +0000 (UTC)
+Authentication-Results: smtp.soverin.net;
+	dkim=pass (2048-bit key; unprotected) header.d=qmon.net header.i=@qmon.net header.a=rsa-sha256 header.s=soverin1 header.b=r3FoCtrO;
+	dkim-atps=neutral
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qmon.net; s=soverin1;
+	t=1742900965;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cGOfD2XTG3f2KGCnBBCpnWBs5ydWIF56orN3h4fexfI=;
+	b=r3FoCtrOdZY5uz3a4IWefaYR/yF9GCJwVwz6OPF/s3+iZQezt1m0luRyELbSFNh1oXjS3Y
+	TenjkE7Pwl+to1A2eAgE1ZuFPvbXdKH0zUapeJsie8/v1M4fCtmCNVz/ljAbFwSluvla5V
+	cUwZbqQJCvpCUyAvwKvjAWZa2PkZsbanYqQDP/o3hR+3A+niH8kRgZMqA07gp/OdgzzQeN
+	SCpJAliHzTXy3L/ydV3sEdoh+2Ee9BD7WPcV7ulIgJFMM8L7crZUjWD6r02rbzO3UXbVDU
+	x+Onj0gIaJ+s5ljhcJZwVRyZq1QimJrCZKV/nycNsBmjrrLMXmRWX0pBLcceZA==
+X-CM-Envelope: MS4xfE9qJlPwytaJvqH5tq1m5QU56wWQBwUboh0Qh6Yd9gPG3SfGIEto9BX9dKfT5mpckLp6hdBINDG1q65gThfj8VIClkPgn3mJ+gwirrZuazommNFE7IVj f8pr3U4gUKXfDXH9/HS4vCY4QB+ycLV97kwbthBKcJKphbKv4/clwyNx5phT0PVdlrFynOx3BW/v61eZV/Xwy7uLbQMxLLUtDLTSjfKhjgcwBPENDF1iunsZ 1pa3vf8wIMJR9J6b86EksOEXARDZDDa7g5G4zoNAKMbUiwjQ/QQwruJlEGIGadx8Qjy/Zc0DUaxCp4hvLjZEC86gwgq6Qyd7qOwt8fM9r5Pui8OilCkRpakL lX70dETd699Ogy4m4MnbmpHYwqV7LS2PDeBBtr0av5iRrl0ov5xtVaXURGB1YSG39F2lLT4ddjq8wlBThQ79j39LTLOWoiBPH1FtOKaFBX+ZDVW+3IaxLxUU Ja4Pnl+rUa0s9ti265wJnrKHJ2lB7mLFXNtzyD9ihJLPqfDP1TQ6/6LxPcB6CYqgmljjQ3n37XnGLCwLZXwdrF03sYzpFs4G7j19BiP9cxfzPzmQ95pnNBg1 M28Bu9gKEAYQ23bly3Hd9ZqyEImn0l2S9+LJHcgo5DrdhvJKmLdHLv7lSZYEz6SL+1M=
+X-CM-Analysis: v=2.4 cv=I7afRMgg c=1 sm=1 tr=0 ts=67e28ee5 a=vzOQIoBu8N4nb49veeH0EQ==:617 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=VnNF1IyMAAAA:8 a=K2RAGah4TdK_Dg0oFeQA:9 a=QEXdDO2ut3YA:10
+Message-ID: <8b0b2a41-203d-41f8-888d-2273afb877d0@qmon.net>
+Date: Tue, 25 Mar 2025 11:09:24 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1369016099-1742899832=:930"
-Content-ID: <dcc4341b-40b0-3a66-8cf5-ba1fb697c37b@linux.intel.com>
+Subject: Re: [linux-next-20250324]/tool/bpf/bpftool fails to complie on
+ linux-next-20250324
+To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+ Saket Kumar Bhaskar <skb99@linux.ibm.com>,
+ Hari Bathini <hbathini@linux.ibm.com>, bpf <bpf@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
+ jkacur@redhat.com, lgoncalv@redhat.com, gmonaco@redhat.com,
+ williams@redhat.com, tglozar@redhat.com, rostedt@goodmis.org
+References: <5df6968a-2e5f-468e-b457-fc201535dd4c@linux.ibm.com>
+From: Quentin Monnet <qmo@qmon.net>
+Content-Language: en-GB
+In-Reply-To: <5df6968a-2e5f-468e-b457-fc201535dd4c@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spampanel-Class: ham
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+2025-03-25 16:02 UTC+0530 ~ Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> Greetings!!!
+> 
+> 
+> bpftool fails to complie on linux-next-20250324 repo.
+> 
+> 
+> Error:
+> 
+> make: *** No rule to make target 'bpftool', needed by '/home/linux/
+> tools/testing/selftests/bpf/tools/include/vmlinux.h'. Stop.
+> make: *** Waiting for unfinished jobs.....
 
---8323328-1369016099-1742899832=:930
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <79a7a062-7cab-6b21-e28f-218eedc1a9ca@linux.intel.com>
 
-On Tue, 25 Mar 2025, Hans Zhang wrote:
-> On 2025/3/24 23:02, Ilpo J=E4rvinen wrote:
-> > > > >    +static u32 cdns_pcie_read_cfg(void *priv, int where, int size=
-)
-> > > > > +{
-> > > > > +=09struct cdns_pcie *pcie =3D priv;
-> > > > > +=09u32 val;
-> > > > > +
-> > > > > +=09if (size =3D=3D 4)
-> > > > > +=09=09val =3D readl(pcie->reg_base + where);
-> > > >=20
-> > > > Should this use cdns_pcie_readl() ?
-> > >=20
-> > > pci_host_bridge_find_*capability required to read two or four bytes.
-> > >=20
-> > > reg =3D read_cfg(priv, cap_ptr, 2);
-> > > or
-> > > header =3D read_cfg(priv, pos, 4);
-> > >=20
-> > > Here I mainly want to write it the same way as size =3D=3D 2 and size=
- =3D=3D 1.
-> > > Or size =3D=3D 4 should I write it as cdns_pcie_readl() ?
-> >=20
-> > As is, it seems two functions are added for the same thing for the case
-> > with size =3D=3D 4 with different names which feels duplication. One co=
-uld add
-> > cdns_pcie_readw() and cdns_pcie_readb() too but perhaps cdns_pcie_readl=
-()
-> > should just call this new function instead?
->=20
-> Hi Ilpo,
->=20
-> Redefine a function with reference to DWC?
+Thanks! Would be great to have a bit more context on the error (and on
+how to reproduce) for next time. Bpftool itself seems to compile fine,
+the error shows that it's building it from the context of the selftests
+that seems broken.
 
-This patch was about cadence so my comment above what related to that.
 
-> u32 dw_pcie_read_dbi(struct dw_pcie *pci, u32 reg, size_t size)
->   dw_pcie_read(pci->dbi_base + reg, size, &val);
->     dw_pcie_read
->=20
-> int dw_pcie_read(void __iomem *addr, int size, u32 *val)
-> {
-> =09if (!IS_ALIGNED((uintptr_t)addr, size)) {
-> =09=09*val =3D 0;
-> =09=09return PCIBIOS_BAD_REGISTER_NUMBER;
-> =09}
->=20
-> =09if (size =3D=3D 4) {
-> =09=09*val =3D readl(addr);
-> =09} else if (size =3D=3D 2) {
-> =09=09*val =3D readw(addr);
-> =09} else if (size =3D=3D 1) {
-> =09=09*val =3D readb(addr);
-> =09} else {
-> =09=09*val =3D 0;
-> =09=09return PCIBIOS_BAD_REGISTER_NUMBER;
-> =09}
->=20
-> =09return PCIBIOS_SUCCESSFUL;
-> }
-> EXPORT_SYMBOL_GPL(dw_pcie_read);
->=20
-> >=20
-> > > > > +=09else if (size =3D=3D 2)
-> > > > > +=09=09val =3D readw(pcie->reg_base + where);
-> > > > > +=09else if (size =3D=3D 1)
-> > > > > +=09=09val =3D readb(pcie->reg_base + where);
-> > > > > +
-> > > > > +=09return val;
-> > > > > +}
-> > > > > +
-> > > > > +u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap)
-> > > > > +{
-> > > > > +=09return pci_host_bridge_find_capability(pcie,
-> > > > > cdns_pcie_read_cfg, cap);
-> > > > > +}
-> > > > > +
-> > > > > +u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap=
-)
-> > > > > +{
-> > > > > +=09return pci_host_bridge_find_ext_capability(pcie,
-> > > > > cdns_pcie_read_cfg,
-> > > > > cap);
-> > > > > +}
-> > > >=20
-> > > > I'm really wondering why the read config function is provided direc=
-tly
-> > > > as
-> > > > an argument. Shouldn't struct pci_host_bridge have some ops that ca=
-n
-> > > > read
-> > > > config so wouldn't it make much more sense to pass it and use the f=
-unc
-> > > > from there? There seems to ops in pci_host_bridge that has read(), =
-does
-> > > > that work? If not, why?
-> > > >=20
-> > >=20
-> > > No effect.
-> >=20
-> > I'm not sure what you meant?
-> >=20
-> > > Because we need to get the offset of the capability before PCIe
-> > > enumerates the device.
-> >=20
-> > Is this to say it is needed before the struct pci_host_bridge is create=
-d?
-> >=20
-> > > I originally added a separate find capability related
-> > > function for CDNS in the following patch. It's also copied directly f=
-rom
-> > > DWC.
-> > > Mani felt there was too much duplicate code and also suggested passin=
-g a
-> > > callback function that could manipulate the registers of the root por=
-t of
-> > > DWC
-> > > or CDNS.
-> >=20
-> > I very much like the direction this patchset is moving (moving shared
-> > part of controllers code to core), I just feel this doesn't go far enou=
-gh
-> > when it's passing function pointer to the read function.
-> >=20
-> > I admit I've never written a controller driver so perhaps there's
-> > something detail I lack knowledge of but I'd want to understand why
-> > struct pci_ops (which exists both in pci_host_bridge and pci_bus) canno=
-t
-> > be used?
-> >=20
->=20
->=20
-> I don't know if the following code can make it clear to you.
->=20
-> static const struct dw_pcie_host_ops qcom_pcie_dw_ops =3D {
-> =09.host_init=09=3D qcom_pcie_host_init,
->                   pcie->cfg->ops->post_init(pcie);
->                     qcom_pcie_post_init_2_3_3
->                       dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> };
->=20
-> int dw_pcie_host_init(struct dw_pcie_rp *pp)
->   bridge =3D devm_pci_alloc_host_bridge(dev, 0);
+> Git bisect points to commit: 8a635c3856ddb74ed3fe7c856b271cdfeb65f293 as
+> first bad commit.
 
-It does this almost immediately:
+Thank you Venkat for the bisect!
 
-    bridge->ops =3D &dw_pcie_ops;
+On a quick look, that commit introduced a definition for BPFTOOL in
+tools/scripts/Makefile.include:
 
-Can we like add some function into those ops such that the necessary read=
-=20
-can be performed? Like .early_root_config_read or something like that?
+	diff --git a/tools/scripts/Makefile.include .../Makefile.include
+	index 0aa4005017c7..71bbe52721b3 100644
+	--- a/tools/scripts/Makefile.include
+	+++ b/tools/scripts/Makefile.include
+	@@ -91,6 +91,9 @@ LLVM_CONFIG	?= llvm-config
+	 LLVM_OBJCOPY	?= llvm-objcopy
+	 LLVM_STRIP	?= llvm-strip
+	
+	+# Some tools require bpftool
+	+BPFTOOL		?= bpftool
+	+
+	 ifeq ($(CC_NO_CLANG), 1)
+	 EXTRA_WARNINGS += -Wstrict-aliasing=3
 
-Then the host bridge capability finder can input struct pci_host_bridge=20
-*host_bridge and can do host_bridge->ops->early_root_cfg_read(host_bridge,=
-=20
-=2E..). That would already be a big win over passing the read function=20
-itself as a pointer.
+But several utilities or selftests under tools/ include
+tools/scripts/Makefile.include _and_ use their own version of the
+$(BPFTOOL) variable, often assigning only if unset, for example in
+tools/testing/selftests/bpf/Makefile:
 
-Hopefully having such a function in the ops would allow moving other=20
-common controller driver functionality into PCI core as well as it would=20
-abstract the per controller read function (for the time before everything=
-=20
-is fully instanciated).
+	BPFTOOL ?= $(DEFAULT_BPFTOOL)
 
-Is that a workable approach?
+My guess is that the new definition from Makefile.include overrides this
+with simply "bpftool" as a value, and the Makefile fails to build it as
+a result.
 
->   if (pp->ops->host_init)
->     pp->ops =3D &qcom_pcie_dw_ops;  // qcom here needs to find capability
->
->   pci_host_probe(bridge); // pcie enumerate flow
->     pci_scan_root_bus_bridge(bridge);
->       pci_register_host_bridge(bridge);
->         bus->ops =3D bridge->ops;   // Only pci bus ops can be used
->=20
->=20
-> Best regards,
-> Hans
->=20
+If I guessed correctly, one workaround would be to rename the variable
+in Makefile.include (and in whatever Makefile now relies on it) into
+something that is not used in the other Makefiles, for example
+BPFTOOL_BINARY.
 
---=20
- i.
---8323328-1369016099-1742899832=:930--
+Please copy the BPF mailing list on changes impacting BPF tooling (or
+for BPF-related patchsets in general).
+
+Thanks,
+Quentin
