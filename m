@@ -1,185 +1,222 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11021137.outbound.protection.outlook.com [52.101.129.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75D41991DD;
-	Tue, 25 Mar 2025 10:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742897895; cv=none; b=YtZuIqp852pRxefbzWUhEcroxTuTq/gswbU1YYSQP/+ntswQ3Oy1+uIIWAJUafEpfp6/bEBscxcrke1ZJyb5Y8mq0HDyla8GZ+0C1rb3dzr54DhQ3cqXH3WipuGK+JM14Jq+s7Z1QeAZkppgdhDWBCaumKSEVALaQaLPMb2zik0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742897895; c=relaxed/simple;
-	bh=frWBJ03L5nyvaR3e6bGOWFK/48tUuzZX2ed65EWssU0=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=VV7GHbrEwc/FroMr7G5qvDMFOuIjA+1iARAxUQc1OoySyz9IFmJ9W8VSsFloqVDStio76qdzp7ANC8bfZ8mDULTzKy/Vhz5d2jOHPPFlkAacpbjNt23CPbqfBf56ggooaqrA5Sk7DvBquybT2smRyxDrxXzXz3bRUGRid0PeQz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hgKkNmif; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=23CUrKGd; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hgKkNmif";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="23CUrKGd"
-Date: Tue, 25 Mar 2025 10:18:09 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742897892;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZSCN2rFg7XDZADyc8vjumX2JQGtBtWN/0JlG5k9h9rQ=;
-	b=hgKkNmifl7XmxmxiU0SEAG2zB6NaDGs0UW/uSr79MmBJTYxEb6QPc0wy4iB/c4K09J0J+x
-	fPK44s8MnBTCJYe4eFuQ4uKixzzsmeV9s+cU/YQfQ4n4nOsSnKlnp1i/6BBORp1VQhEtvK
-	0nXqCGbpddmBmJf60yzIjg/X258O/9TRvZ+xSF03kRKjfiLIvxM0xeOaRnNCizTasrHf87
-	VItU3cL0kLJuf7g2qPQWKaUX7R0ZGgKE0WoK61Nz3Tk1nKwzMwH9W/selc8kcYVfm0AMXG
-	FtUDSFI59fh1O3h1tw2c/uzwLBT4EtLIg/EJnVPQPpvKbV6Rqe+M2JZaYhazAw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742897892;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZSCN2rFg7XDZADyc8vjumX2JQGtBtWN/0JlG5k9h9rQ=;
-	b=23CUrKGdxWQO3e7PmxN9PZim3JQ4K4fUTG6IwSem3x7kEgcldqGaLr+5gzGOFwHZ2gGmh+
-	1GAotGjIh9/2/VCw==
-From: "tip-bot2 for Chang S. Bae" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/fpu] x86/fpu/xstate: Adjust xstate copying logic for user ABI
-Cc: "Chang S. Bae" <chang.seok.bae@intel.com>, Ingo Molnar <mingo@kernel.org>,
- Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Oleg Nesterov <oleg@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250320234301.8342-5-chang.seok.bae@intel.com>
-References: <20250320234301.8342-5-chang.seok.bae@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3AB19004B;
+	Tue, 25 Mar 2025 10:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.137
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742897896; cv=fail; b=aoGKIPf12kQXkTTIoqWDcjrs40NIDrlrC90zNfGL/4SR7Az4C/5j52vFMIJrrgQC0IpeY134AYe15mlcdXe2wCfaz+pld72jKaYmRHq4VBPsLGTX4NrkQ0Qz9Tz1RXNgqgYz/WXq3pam7k+B49tlhPxRpWilro1BjQl0Bj1K9aI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742897896; c=relaxed/simple;
+	bh=d0wmspuvbxQHnyJAoLriCOQR7/2pdy7vGIE8ks4KSU4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JSrDIHs4/oluKIvm9z5J+0GH2aJ1kkm8Jf75fBAEoul73//eetVCa5zY2aAYILXJVa+3cxyaXrI592esgf2UXKZ46NfhdWJgEvMFeYU+bCX3T7Xx0KGGKBGFE3wL/cB0OHOo58ZvuqmTs6BiiT/15rGhKVUNAQeH2ncPFuT14Hs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.129.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gyY956Vt/ty4pgxZLUf8kPS8/bZwpkX9DQAWU9Fa8oIaHkftPQGjjMd3VhCJluZfUPa/uP9XTnmROnv7Krxnt/ekKQjdiHFihfAHxRgpl5rYp4F+9gc9uPZe5JlKQN2S/FxhLz2OZ+ShQ0p7tzBmy1BU76PQla9jK9Kz4ivZtPV6+FML0kIg9VduNQLBFY4Qt3JtEdY2w4esZT4Eap3ZcyTWkywf08c66QDF3kD7kOBHBad7v62zE8NV6+j0rRsHFOvYjgGZg7G1io24V9OpVAQKjicN96Oa6qNhnRwAOAhGASp8FoPPwnlc3ZncR6VJimed6uOtCCmUuztFF5pcaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JqiyPfKcDFxNKiRq0655nkIWJKR7drFzc+Jv3R6Miig=;
+ b=fygomZEq7AY616iOpjtGuBLnwL7I9pRBFdoy+fkLcaGEpBCCRQz5JE7tsawcMQpciICrIs2UiLYSsmIofmfWWEcEaaSFIeZkMm7jc9+5jYLV4zqUjKs5m7JoDXbndFohH61W3B90/kaeSrHCBpI/MZ48us7ZBnQQ1KLKDh85XWiS9awhI9LptSpfYuI4Lgosi1sfIRAa00ImbhE+q0NgV8dOJ44B5Vz56TL+7bi+/mf6aZh28Lcdi/TbGBS1Eexa5b5At9jztAOszFMdtGRD7IbLWG+y21ZLPitxb4Qvco4ciQ7VMFf0hq71ic3aoKJwUR/89ORkbEUdh6M92EeXIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cixtech.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from OS7PR01CA0186.jpnprd01.prod.outlook.com (2603:1096:604:250::9)
+ by PUZPR06MB5956.apcprd06.prod.outlook.com (2603:1096:301:113::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Tue, 25 Mar
+ 2025 10:18:10 +0000
+Received: from OSA0EPF000000CD.apcprd02.prod.outlook.com
+ (2603:1096:604:250:cafe::69) by OS7PR01CA0186.outlook.office365.com
+ (2603:1096:604:250::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.42 via Frontend Transport; Tue,
+ 25 Mar 2025 10:18:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ OSA0EPF000000CD.mail.protection.outlook.com (10.167.240.59) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.20 via Frontend Transport; Tue, 25 Mar 2025 10:18:09 +0000
+Received: from gchen.. (unknown [172.20.64.84])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id D731B4160CA1;
+	Tue, 25 Mar 2025 18:18:07 +0800 (CST)
+From: Guomin Chen <guomin.chen@cixtech.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	cix-kernel-upstream@cixtech.com,
+	Guomin Chen <Guomin.Chen@cixtech.com>,
+	Peter Chen <peter.chen@cixtech.com>,
+	Lihua Liu <Lihua.Liu@cixtech.com>
+Subject: [PATCH v2 1/2] dt-bindings: mailbox: add cix,sky1-mbox
+Date: Tue, 25 Mar 2025 10:18:06 +0000
+Message-Id: <20250325101807.2202758-2-guomin.chen@cixtech.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250325101807.2202758-1-guomin.chen@cixtech.com>
+References: <20250325101807.2202758-1-guomin.chen@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174289788973.14745.15318583152985052097.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: OSA0EPF000000CD:EE_|PUZPR06MB5956:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 835b8ab9-620c-473e-a14d-08dd6b86579d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?rM6T36NK666cwrDCK9jWqlb4/vlRTO79t9c1bY7rZA+1AF9in61WMFFkJKsR?=
+ =?us-ascii?Q?lMDLb4UHXNFMUmudQVpG4s+YHEoijLB15rk7ylub4MQlKYadKtk5SFke1ZSN?=
+ =?us-ascii?Q?ulrbUUWKW5K0lMx2hOQANOtGvBtvJwW8gj+MbDrD9d1Y06bFQAdJJESYkSJS?=
+ =?us-ascii?Q?fi76GMNwwNMnLnIVMFQfxEnLIKINrlJLSfFIPQtC6vkqC8Us6tCDxkucLpJb?=
+ =?us-ascii?Q?MnmHdb/WUOgGFGN+OqtuaLim5DNPdFv0DX0fYsWkFDncKPAcxdOLhRwPI5yj?=
+ =?us-ascii?Q?GDL1Q41ZZtaHu3QQYqOkQK41vWLAFBj9MSMuCPWaitmfd/4cvCgV7ekNB3hF?=
+ =?us-ascii?Q?K/MD/xubGIE0D40CWIiFR6406ueep7ZCmi4D3xPXJ1qVi95WFTULJTEiFkhc?=
+ =?us-ascii?Q?Hld7dkwNvI5kHlDPDwL9P4E/k/eQ71Kk4dYvoviOaAr/DkXtpniuDy8aPzdS?=
+ =?us-ascii?Q?ycKeRS/xqFgY/HuIDOENhl7kWFQ0tjNe7Mv5GzzPDjYzMWAFghOrCvcSrB8Z?=
+ =?us-ascii?Q?tuB0SdAI0pTsc6SOomMLbqtKVmzC3L5Dm8Y9tohzA2sPCz2BNEl28pQRnK9g?=
+ =?us-ascii?Q?mtF26H80zDY89Lj/CJIA9WAcVLo89aNhtjTcKH3cErgMQqdve+sax6/aY34H?=
+ =?us-ascii?Q?BHYkYRQU0DbMTtMz5zjquEkndNoggCHyCYI6/ERdeAhUuuXk1AZYaidNJacn?=
+ =?us-ascii?Q?qxS+RTRiTMEEWbgPp2L8txHr8edRnHZR+2c+jrxwMtG3JIgxpcF5xYzMC2sT?=
+ =?us-ascii?Q?C6MidGxZs5ZTjDJ6QJO+iGhHi/fer8Hektjavc6Lhzwp0mbt7SWwQGrwkGS0?=
+ =?us-ascii?Q?eQ+qr50Z3LwdCMkGFlYUfv8wjF3LuBRbKk9nLDJiOIiFIvAjGlZ4/ATNjyg2?=
+ =?us-ascii?Q?HiNSOh7atstWPpl6yDNEIidKic/O8pb+JZirF7SF9lf48t2C4zsRzEx3TotQ?=
+ =?us-ascii?Q?0Nt0t4JUyjPManiEjZ5idOymdnJBS0rayW66jnHW+aDi9LTI1CuzYjgGUaCF?=
+ =?us-ascii?Q?Btpmkwli1fEE4ITqNBT7bbjSdxV9zBosiE/dy7+RwqtKclGpiAanUF3pP0uU?=
+ =?us-ascii?Q?AaKxI70RgrOmbIpu8gjToKhiUirD5qJTwLUh5n9Jevda5EqBHVreY0Z9HHqc?=
+ =?us-ascii?Q?nqPKuk6FybCevIk3jiv8yIrwbYYmZFV6qjUhkHYuS0RNpriEvnQ6j+G9WgUS?=
+ =?us-ascii?Q?1b8Hhz4Yn24ZfrmgPCIcb27wURo/CLJ9tFEeKopR+8nTPAMmXM79KlxyoVNI?=
+ =?us-ascii?Q?q/PYinWa2Ev7vYiblGKnmuLQt5OAqkI5qs+1ozStS+Jqz3PfpAlMoQPfkqMx?=
+ =?us-ascii?Q?+SidlU7xBkhqasEqZFS4IUjTlUH9ChK9VRqsQdff036m1vD3myKBT3KtIJ1x?=
+ =?us-ascii?Q?R+WOV02wlQe0T2PoIjJH33kBvB+mx1jk63RZSNS1zwGSf19m5fzxMxHl+dBH?=
+ =?us-ascii?Q?fhRhX2vfsQplC5/oChEupJjdsjywwmqO?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2025 10:18:09.0432
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 835b8ab9-620c-473e-a14d-08dd6b86579d
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: OSA0EPF000000CD.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB5956
 
-The following commit has been merged into the x86/fpu branch of tip:
+From: Guomin Chen <Guomin.Chen@cixtech.com>
 
-Commit-ID:     8693f035b9d6814082aed41234f3459560ce81b2
-Gitweb:        https://git.kernel.org/tip/8693f035b9d6814082aed41234f3459560c=
-e81b2
-Author:        Chang S. Bae <chang.seok.bae@intel.com>
-AuthorDate:    Thu, 20 Mar 2025 16:42:55 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 25 Mar 2025 11:02:21 +01:00
+Add a dt-binding for the Cixtech Mailbox Controller.
 
-x86/fpu/xstate: Adjust xstate copying logic for user ABI
-
-=3D=3D Background =3D=3D
-
-As feature positions in the userspace XSAVE buffer do not always align
-with their feature numbers, the XSAVE format conversion needs to be
-reconsidered to align with the revised xstate size calculation logic.
-
-* For signal handling, XSAVE and XRSTOR are used directly to save and
-  restore extended registers.
-
-* For ptrace, KVM, and signal returns (for 32-bit frame), the kernel
-  copies data between its internal buffer and the userspace XSAVE buffer.
-  If memcpy() were used for these cases, existing offset helpers =E2=80=94 su=
-ch
-  as __raw_xsave_addr() or xstate_offsets[] =E2=80=94 would be sufficient to
-  handle the format conversion.
-
-=3D=3D Problem =3D=3D
-
-When copying data from the compacted in-kernel buffer to the
-non-compacted userspace buffer, the function follows the
-user_regset_get2_fn() prototype. This means it utilizes struct membuf
-helpers for the destination buffer. As defined in regset.h, these helpers
-update the memory pointer during the copy process, enforcing sequential
-writes within the loop.
-
-Since xstate components are processed sequentially, any component whose
-buffer position does not align with its feature number has an issue.
-
-=3D=3D Solution =3D=3D
-
-Replace for_each_extended_xfeature() with the newly introduced
-for_each_extended_xfeature_in_order(). This macro ensures xstate
-components are handled in the correct order based on their actual
-positions in the destination buffer, rather than their feature numbers.
-
-Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Link: https://lore.kernel.org/r/20250320234301.8342-5-chang.seok.bae@intel.com
+Reviewed-by: Peter Chen <peter.chen@cixtech.com>
+Signed-off-by: Lihua Liu <Lihua.Liu@cixtech.com>
+Signed-off-by: Guomin Chen <Guomin.Chen@cixtech.com>
 ---
- arch/x86/kernel/fpu/xstate.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ .../bindings/mailbox/cix,sky1-mbox.yaml       | 80 +++++++++++++++++++
+ 1 file changed, 80 insertions(+)
 
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 1e22103..61b3a49 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -1100,10 +1100,9 @@ void __copy_xstate_to_uabi_buf(struct membuf to, struc=
-t fpstate *fpstate,
- 	const unsigned int off_mxcsr =3D offsetof(struct fxregs_state, mxcsr);
- 	struct xregs_state *xinit =3D &init_fpstate.regs.xsave;
- 	struct xregs_state *xsave =3D &fpstate->regs.xsave;
-+	unsigned int zerofrom, i, xfeature;
- 	struct xstate_header header;
--	unsigned int zerofrom;
- 	u64 mask;
--	int i;
-=20
- 	memset(&header, 0, sizeof(header));
- 	header.xfeatures =3D xsave->header.xfeatures;
-@@ -1172,15 +1171,16 @@ void __copy_xstate_to_uabi_buf(struct membuf to, stru=
-ct fpstate *fpstate,
- 	 */
- 	mask =3D header.xfeatures;
-=20
--	for_each_extended_xfeature(i, mask) {
-+	for_each_extended_xfeature_in_order(i, mask) {
-+		xfeature =3D xfeature_uncompact_order[i];
- 		/*
- 		 * If there was a feature or alignment gap, zero the space
- 		 * in the destination buffer.
- 		 */
--		if (zerofrom < xstate_offsets[i])
--			membuf_zero(&to, xstate_offsets[i] - zerofrom);
-+		if (zerofrom < xstate_offsets[xfeature])
-+			membuf_zero(&to, xstate_offsets[xfeature] - zerofrom);
-=20
--		if (i =3D=3D XFEATURE_PKRU) {
-+		if (xfeature =3D=3D XFEATURE_PKRU) {
- 			struct pkru_state pkru =3D {0};
- 			/*
- 			 * PKRU is not necessarily up to date in the
-@@ -1190,14 +1190,14 @@ void __copy_xstate_to_uabi_buf(struct membuf to, stru=
-ct fpstate *fpstate,
- 			membuf_write(&to, &pkru, sizeof(pkru));
- 		} else {
- 			membuf_write(&to,
--				     __raw_xsave_addr(xsave, i),
--				     xstate_sizes[i]);
-+				     __raw_xsave_addr(xsave, xfeature),
-+				     xstate_sizes[xfeature]);
- 		}
- 		/*
- 		 * Keep track of the last copied state in the non-compacted
- 		 * target buffer for gap zeroing.
- 		 */
--		zerofrom =3D xstate_offsets[i] + xstate_sizes[i];
-+		zerofrom =3D xstate_offsets[xfeature] + xstate_sizes[xfeature];
- 	}
-=20
- out:
+diff --git a/Documentation/devicetree/bindings/mailbox/cix,sky1-mbox.yaml b/Documentation/devicetree/bindings/mailbox/cix,sky1-mbox.yaml
+new file mode 100644
+index 000000000000..98cee3bc0638
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/cix,sky1-mbox.yaml
+@@ -0,0 +1,80 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mailbox/cix,sky1-mbox.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Cixtech mailbox controller
++
++maintainers:
++  - Guomin Chen <Guomin.Chen@cixtech.com>
++
++description:
++  The Cixtech mailbox controller, used in the Cixtech Sky1 SoC,
++  is used for message transmission between multiple processors
++  within the SoC, such as the AP, PM, audio DSP, SensorHub MCU,
++  and others
++
++  Each Cixtech mailbox controller is unidirectional, so they are
++  typically used in pairs-one for receiving and one for transmitting.
++
++  Each Cixtech mailbox supports 11 channels with different transmission modes
++    channel 0-7 - Fast channel with 32bit transmit register and IRQ support
++    channel 8   - Doorbell mode,using the mailbox as an interrupt-generating
++                   mechanism.
++    channel 9   - Fifo based channel with 32*32bit depth fifo and IRQ support
++    channel 10  - Reg based channel with 32*32bit transmit register and
++                   Doorbell+transmit acknowledgment IRQ support
++
++properties:
++  compatible:
++    const: cix,sky1-mbox
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  "#mbox-cells":
++    description: Common mailbox binding property to identify the number
++        of cells required for the mailbox specifier. Should be 1
++
++  cix,mbox-dir:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Direction of the mailbox (0:TX or 1:RX)
++    enum: [0, 1]
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#mbox-cells"
++  - cix,mbox-dir
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        mbox_ap2pm: mailbox@30000000 {
++            compatible = "cix,sky1-mbox";
++            reg = <0 0x30000000 0 0x10000>;
++            interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH 0>;
++            #mbox-cells = <1>;
++            cix,mbox-dir = <0>; /* 0:tx; 1:rx */
++        };
++
++        mbox_pm2ap: mailbox@30010000 {
++            compatible = "cix,sky1-mbox";
++            reg = <0 0x30010000 0 0x10000>;
++            interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH 0>;
++            #mbox-cells = <1>;
++            cix,mbox-dir = <1>; /* 0:tx; 1:rx */
++        };
++    };
+-- 
+2.34.1
+
