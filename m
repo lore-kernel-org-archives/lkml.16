@@ -1,106 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9052566C5;
-	Tue, 25 Mar 2025 11:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F83255E3D
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 11:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742903094; cv=none; b=EMGYcIkn8P2xba0p2ls9C9mSqLJD94tV3iTebCz0KIuTsKIjqILswUY+Bbbm3+1smOftyetvIukppIJH6nhb59ABCyBTO7Z5ly1i6RYyDVjzUMWpvttaiGXWIYMY3hYlVs+gc7Hh4jkgjZIorBSJe6O2lM4pN/XREWl43UR4GV8=
+	t=1742903105; cv=none; b=aA0rpL0s3PgYjCUSJ6v2fAco0Yu7EeU4os4TkmmloaezCEGhL8MRji9bTI/sxIxpYOtUPIDH5pgt7E8EFM94i/uAWmg574nG1kgDWdWUW4+zD+jTsG1utpTV6vvIob+s1I4Xmx4HtMPvvr4ciKsTBiQexJd4BGJXI8RERjTALrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742903094; c=relaxed/simple;
-	bh=L7+6+B+SMEuXjEw9gMWwD/OBdX5Bd8fZcJ0/saOl8VU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=T74Yjju+ve8vFOKjagpmunZ2p16BKh7qVSsk27bJe85McMMgfSDuTLTVNFVrKZiaM9DG9q7HOfoDppNKS0Y4m1ePSUayr8Kh5t51dE18hpiMLhbIhco6FSvCVk0smJ5g029oARKzvDPvLITfYFuOijcy6cNqwOkHJGnxnLAXxdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z6M0Qg6Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742903105; c=relaxed/simple;
+	bh=kGviRIRkVJVYJRwzPINRkJ4/aNLR/55d1zS6iwo79iU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=WShsTzRrcRJ/1VDqCjZJyqEqXgs50b3c8C7uPhra6lnSR9RIO1Qv/hWfcxII4Btl/UylEs4W+QVxetJvWcHnlae8l2Cda5AybhFNss7DMc7/iFTuEElv2v6hyKbO8qBqm1Q40n5xRJE6QxRUFyoa+ucPqJe8fv2BjmjAsqoD6F0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=J7x/y2LU; arc=none smtp.client-ip=192.134.164.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z6M0Qg6Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21C1FC4CEED;
-	Tue, 25 Mar 2025 11:44:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742903093;
-	bh=L7+6+B+SMEuXjEw9gMWwD/OBdX5Bd8fZcJ0/saOl8VU=;
-	h=From:Date:Subject:To:Cc:From;
-	b=Z6M0Qg6YkFg26pVKoeh/fFR8+15VG3Yu2xnInepKF/9H+Yp6NAsSHuxSIN97MhyRP
-	 yox+qCwY7Seza/9vx08+pjCGdD4cpnzKPVXM7GBQKWZIgifnhee57TUPOY6WPSCc0q
-	 /XJ2+Kp2lfLPGfMPYw1XPksVTy6gzZnOleOXh4PN9wnNk74mVyvnZYa3sfL5FmeDyp
-	 ISxQ044vaTjDBZwWjBhwFb2ibZPSZd4FDOfi/aB8fRVecyGTrQMwRtkh1BvqblNRo/
-	 W+rU9kTUcRXvzB83MNI6G3wQo40yXXQtkbxEjCx94FHmOd6HkmJIaqRXk7mpPIxzT6
-	 dy1VuqvPMsfMA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 25 Mar 2025 07:44:45 -0400
-Subject: [PATCH] nfs: add a refcount tracker for struct net as held by the
- nfs_client
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="J7x/y2LU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=/zxSpOMiJDOZ4qtsEq4rxPWz7PgHqNikQtoZmF/uPIo=;
+  b=J7x/y2LUIJijZ9hZPSjvNQ4mKkGxzDhQzbIEqoLQI2rNazr6/vWzTtdX
+   IBoN1YvpV8M3Ww19dUkab5jR78ca81Gjb2enQm9HPjJj2LVjkV3m1XXcM
+   xZ7m0F91m2O0i/FNQnc4PALCDdITlGUIl4BbN0YUnjsBIs6tMZ+WUDcNw
+   M=;
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.14,274,1736809200"; 
+   d="scan'208";a="112539116"
+Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 12:44:58 +0100
+Date: Tue, 25 Mar 2025 12:44:58 +0100 (CET)
+From: Julia Lawall <julia.lawall@inria.fr>
+To: nancyenos <nicymimz@gmail.com>
+cc: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev, 
+    linux-kernel@vger.kernel.org, outreachy@lists.linux.dev
+Subject: Re: [PATCH] staging: octeon: Fix unused macro Argument 'x'
+In-Reply-To: <20250325100952.2956-1-nicymimz@gmail.com>
+Message-ID: <1fe6ca57-c879-2459-1a1f-24b21bd19b@inria.fr>
+References: <20250325100952.2956-1-nicymimz@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250325-nfs-net-nef-v1-1-0142cbd7e9ea@kernel.org>
-X-B4-Tracking: v=1; b=H4sIACyX4mcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDYyNT3by0Yt281BIgTtNNSzYyN7BMMklNS0lUAuooKEpNy6wAmxYdW1s
- LADNyz9FdAAAA
-X-Change-ID: 20250325-nfs-net-nef-fc2709b4efda
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Eric Dumazet <edumazet@google.com>, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1460; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=L7+6+B+SMEuXjEw9gMWwD/OBdX5Bd8fZcJ0/saOl8VU=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBn4pcuNgA73sXv72Vnhxk4THndyOleXRWV0L2Nq
- FXASJQpPMqJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ+KXLgAKCRAADmhBGVaC
- FdbwD/45ROiYbaWKfw1pmbofRJ3m1ZRZAWc2FxNZ8PFXrsmxT7cWcESUFuhEyPPlIFkpiTd+VAy
- 5KV7lWn9qP3bMedkNe2M6Wk7w2oKlkA06d1f+rR2bnNTr8m8xSQklNUoO/qbPfnqqt8bHxFtSU0
- /xFyJNkqUoGXg46uAU3H02VwVQwWiPO6bNf3FlJrUbg6oVoyTPsjPtF9nRAd4Oy9fVrOyVZkHiD
- C3yUTsFLgeuEzwmHNCUAjN6cOf0MXhxJYZKebTMQDItwrfugkSPndaYl/RKHB68FUzslA+dqG2d
- MptlThtnc38OlAFafspIcqvTCIwYnUZGIf/gZKO6j4EBLdOqAWSNEtNKSv0fRSE3dFoI8JTk1K5
- KIbHTS9TV8mK1hI3bJwso7RaLCsTLP0RRUcILwp2xlRXOnYQdubAS9QfpG2HQVZa+KSUxcCF/V0
- e6OvDiMxD/FLFDlhN9faw5YjTTjaob5scf4dKM2s7kgk1ClrK8dQP1dlq2VraKhLz8D/D04iyhe
- IjnlYlKZHRDehg2LgHdhp0NrKZ/LV59cIYNCoAUnoCUyAJzOEHMIPQtmNOmYtXOD9G12ybfq0Mq
- ofFKN1thLNiGv3Sss2f4Y0sTWzQzU8Dd365/KOxcNh7kYf1IqL7tXex6hpTrGxDee62t/rJ/7O4
- roCpCNqXg4H5gcw==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Type: text/plain; charset=US-ASCII
 
-Eric added refcount trackers to several long-held netns references in
-the sunrpc layer in 2022. Add a tracker to the netns reference held by
-the nfs_client as well.
+On Tue, 25 Mar 2025, nancyenos wrote:
 
-Cc: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfs/client.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> warning found by checkpath.pl
+>
+> Signed-off-by: nancyenos <nicymimz@gmail.com>
+> ---
+>  drivers/staging/octeon/octeon-stubs.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
+> index 44cced319c11..0155f3c41657 100644
+> --- a/drivers/staging/octeon/octeon-stubs.h
+> +++ b/drivers/staging/octeon/octeon-stubs.h
+> @@ -8,8 +8,8 @@
+>  #define OCTEON_IRQ_WORKQ0 0
+>  #define OCTEON_IRQ_RML 0
+>  #define OCTEON_IRQ_TIMER1 0
+> -#define OCTEON_IS_MODEL(x) 0
+> -#define octeon_has_feature(x)	0
+> +#define OCTEON_IS_MODEL(x) ((void)(x), 0)
+> +#define octeon_has_feature(x) ((void)(x), 0)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 3b0918ade53cd331d76baaa86fd2adec5d945b78..2ce58f2d6bf50924c38962ddedb7f0ca68752a8a 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -180,7 +180,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
- 	clp->cl_proto = cl_init->proto;
- 	clp->cl_nconnect = cl_init->nconnect;
- 	clp->cl_max_connect = cl_init->max_connect ? cl_init->max_connect : 1;
--	clp->cl_net = get_net(cl_init->net);
-+	clp->cl_net = get_net_track(cl_init->net, &clp->cl_ns_tracker, GFP_KERNEL);
- 
- #if IS_ENABLED(CONFIG_NFS_LOCALIO)
- 	seqlock_init(&clp->cl_boot_lock);
-@@ -250,7 +250,7 @@ void nfs_free_client(struct nfs_client *clp)
- 	if (!IS_ERR(clp->cl_rpcclient))
- 		rpc_shutdown_client(clp->cl_rpcclient);
- 
--	put_net(clp->cl_net);
-+	put_net_track(clp->cl_net, &clp->cl_ns_track);
- 	put_nfs_version(clp->cl_nfs_mod);
- 	kfree(clp->cl_hostname);
- 	kfree(clp->cl_acceptor);
+I'm not sure that this is useful.  It seems that there may be multiple
+definitions; one that has an argument and a default one that doesn't need
+anything.  It's true that this change will ensure that x is checked by the
+compiler, which may help find some bugs.  Have you seen other code that
+makes this kind of change?
 
----
-base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
-change-id: 20250325-nfs-net-nef-fc2709b4efda
+thanks,
+julia
 
-Best regards,
--- 
-Jeff Layton <jlayton@kernel.org>
-
+>  #define octeon_get_clock_rate()	0
+>
+>  #define CVMX_SYNCIOBDMA		do { } while (0)
+> --
+> 2.25.1
+>
+>
+>
