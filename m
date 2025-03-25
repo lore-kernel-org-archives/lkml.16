@@ -1,148 +1,55 @@
-Received: from mail-ua1-f78.google.com (mail-ua1-f78.google.com [209.85.222.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E47C1B412A
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 18:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADDA2E337C;
+	Tue, 25 Mar 2025 18:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742928826; cv=none; b=TTzmn3YwLbhESCU66Pm67LhspsqO7EhkPnO8HX9agB/l4MeQ5tZMRpQkC7uf1e04O2Pl/ID8UzUgh3ega1kZcEY8gskmIFQAJ1Xpp1BvlPDxuPmyHjOXdVvB+hM0DVP6H5orWEwBnOkS5Sv6cOxw0ZmWLlIofeJCIa4U3WfebXA=
+	t=1742929019; cv=none; b=d98HQ71xBdCT3MfZxFpo0U26MuJ63BXiazfswVZSRaqpzx+xOZLjqiUAH75Dk2XrUM9NaWJGh7rQ1xmfVXjBucwuitrlSFTA/33WpqwoctNEzbNP56WVZd9AJRRKhnPUr0uYRwdPcTUAR2Id5cDWzuIbng+zD43X/C7rGcbjJfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742928826; c=relaxed/simple;
-	bh=zGupvF8yrRozOv6tT9j+/eKRp+/zVe79XmqL3dHGU8o=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=g2CftSmPlkGk9w6UvrP6LZk5XVoW7LqB1hSq58MzQotQXCrvmQKsRTl2mNE8a0Bzf+tYs5ZqTVHgs0c3ZhxrAwtJJJsaSSd87v8ZyVtss6d35k5OdFEaRFSZR/fx8afwYCDAugqH1orzsvFQchjp7L4ZDPIHNartVYWkTOvd6ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.222.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-ua1-f78.google.com with SMTP id a1e0cc1a2514c-85c8a0d07f2so7962869241.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 11:53:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742928824; x=1743533624;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GG0iCKwDH9KZTZsDp4Avb3wqwoFz6sePEbX2q3Ppj48=;
-        b=UYMzmi1/Bj8gYdEeVw5a3zjktHF7PkulXxSG0EeKGBOaZ4X6RfS0v7SdoRyQfTgHnm
-         6bueXC/4s2+Gh0fnZuIEWGg3JfTVLOKP0W4ARu4tNZjd9nqxEnmgHqTKkxuvvXF/dZ6E
-         AgjpFhPjSyCKOeCJYFJR98mmEHYYd1QlJShCrPVzwpuo/R1QuSk7WnHvGTNg5BfP6ftk
-         hld6LEIdiM+hoi+LyqmsgWvO1qSDyxcnIGO2qN+XN2yw88wlKNzkJRW/yD+KX3h2H0xJ
-         c+M2jM6CsMP/uLJwCP5OAFNkiLNYQBlDMPYC+OAwr7Ab4p7PjzXnwAMrsrIxlTe2yw/C
-         xh2A==
-X-Forwarded-Encrypted: i=1; AJvYcCW87Pbsf68HR8L7eZuUzbqyvKjhFpxDnMWOgbZpSL8sr7jWa4AyIU/0PLmMZ4p1buK2T2I+edcEMy3RzCw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyo7DLCUf5LMObn1RmLBfl9vCyEpnSmN8FtPhErUxiNcc963Exm
-	ZMQ1XliExDmfTT82jcfciBHhrup9Qz7tHNR5CfyUBUNkRcR3ntdQQ4yu8iWV5UIKozo12q/65Tp
-	SqVrWQnzCpIf4qAJCw8bepTqA9xufNUkyFWPYP/aYqa+Q5P2Nn7qe7mE=
-X-Google-Smtp-Source: AGHT+IH9aZIr86YFiB/nZHoAPIpiFpPmKisM4Mc/3V3NF81TDmbJHgoghCJ/dvYt9MZpKzy+bEC3111aWBBUM1mj0KhgoMl73MoN
+	s=arc-20240116; t=1742929019; c=relaxed/simple;
+	bh=2QzP5JqawscAyGA62aDcgEiUGMdCdATZjb/lp/MKWwM=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=S+E0xKgTnfMMV5przu6JgcxdJWLUD00pV4f5qqU6EvOam8Y3xazM91LafzXVwKQdXPPWfR2kHNGfSVitovQ2jsfYbs3aJITxpcd7CSIVetEpEH/sFOp6oOxfvhiKJoZT0FarGyz16zde4mlW6J9N2YTc5xgdH3KHmJJu3qLZmt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tTijed4x; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tTijed4x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7DB5C4CEE8;
+	Tue, 25 Mar 2025 18:56:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742929017;
+	bh=2QzP5JqawscAyGA62aDcgEiUGMdCdATZjb/lp/MKWwM=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=tTijed4xSGTvP94O9sYfWb8vS13K4/x6ZwlXQ0cyUauZqv9Eu8XGA/H44jOXe+1AG
+	 R1MQFnN8ld/qRTGRJj393NVRACIqOPqEL/hfpUa55sVcKN5FU2boZKh/bklwYcSkW/
+	 CljvbIWWC9mr1WZ7uIqFWfa0fjJnpbtbHidUUeMJp9T85dUopLqLQXJof2bzeya72H
+	 h6H6BL2LXKie6epVgaScDtxbawQQPLREj4ORNjhFqcx3bTuqgfo4WRW6LmrOs4j0a9
+	 8UIbiCCIgVUGOuyVa0I7Or8lce88+caSv32WZXbZ1naeBLUxAjcqutTmM14xrWRwKU
+	 cN5QLH1Zc24WQ==
+Message-ID: <69024f13d296cf2127e7f4229d1e6ece@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:ca46:0:b0:3d3:d823:5402 with SMTP id
- e9e14a558f8ab-3d59613ea0bmr199543535ab.7.1742928813390; Tue, 25 Mar 2025
- 11:53:33 -0700 (PDT)
-Date: Tue, 25 Mar 2025 11:53:33 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67e2fbad.050a0220.a7ebc.0052.GAE@google.com>
-Subject: [syzbot] [io-uring?] WARNING: refcount bug in io_tx_ubuf_complete
-From: syzbot <syzbot+640cb22897e59078196e@syzkaller.appspotmail.com>
-To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250321095556.91425-3-clamor95@gmail.com>
+References: <20250321095556.91425-1-clamor95@gmail.com> <20250321095556.91425-3-clamor95@gmail.com>
+Subject: Re: [PATCH v1 2/3] drivers: clk: tegra: add DFLL support for Tegra 4
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org
+To: Jonathan Hunter <jonathanh@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Philipp Zabel <p.zabel@pengutronix.de>, Prashant Gaikwad <pgaikwad@nvidia.com>, Rafael J. Wysocki <rafael@kernel.org>, Svyatoslav Ryhel <clamor95@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>
+Date: Tue, 25 Mar 2025 11:56:54 -0700
+User-Agent: alot/0.12.dev8+g17a99a841c4b
 
-Hello,
+Quoting Svyatoslav Ryhel (2025-03-21 02:55:55)
+> Extend the Tegra124 driver to include DFLL configuration settings required
+> for Tegra114 compatibility.
+>=20
+> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> ---
 
-syzbot found the following issue on:
-
-HEAD commit:    d07de43e3f05 Merge tag 'io_uring-6.14-20250321' of git://g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10e4de98580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2e330e9768b5b8ff
-dashboard link: https://syzkaller.appspot.com/bug?extid=640cb22897e59078196e
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/89a42818241f/disk-d07de43e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/379e7ddd9b3b/vmlinux-d07de43e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/1ad55828885f/bzImage-d07de43e.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+640cb22897e59078196e@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 1 PID: 11036 at lib/refcount.c:28 refcount_warn_saturate+0x14a/0x210 lib/refcount.c:28
-Modules linked in:
-CPU: 1 UID: 0 PID: 11036 Comm: syz.5.1209 Not tainted 6.14.0-rc7-syzkaller-00186-gd07de43e3f05 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:refcount_warn_saturate+0x14a/0x210 lib/refcount.c:28
-Code: ff 89 de e8 e8 1b f5 fc 84 db 0f 85 66 ff ff ff e8 3b 21 f5 fc c6 05 77 2b 86 0b 01 90 48 c7 c7 20 17 d3 8b e8 87 51 b5 fc 90 <0f> 0b 90 90 e9 43 ff ff ff e8 18 21 f5 fc 0f b6 1d 52 2b 86 0b 31
-RSP: 0018:ffffc9000bd979c8 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffc9001d01c000
-RDX: 0000000000080000 RSI: ffffffff817a2276 RDI: 0000000000000001
-RBP: ffff888049207010 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000000001
-R13: 0000000000000000 R14: ffff888049207010 R15: ffff88802a564000
-FS:  00007fa9b395d6c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f53a8057d58 CR3: 000000002b110000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000097 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __refcount_sub_and_test include/linux/refcount.h:275 [inline]
- __refcount_dec_and_test include/linux/refcount.h:307 [inline]
- refcount_dec_and_test include/linux/refcount.h:325 [inline]
- io_tx_ubuf_complete+0x236/0x280 io_uring/notif.c:50
- io_notif_flush io_uring/notif.h:40 [inline]
- io_send_zc_cleanup+0x8a/0x1c0 io_uring/net.c:1222
- io_clean_op io_uring/io_uring.c:406 [inline]
- io_free_batch_list io_uring/io_uring.c:1429 [inline]
- __io_submit_flush_completions+0xcb3/0x1df0 io_uring/io_uring.c:1470
- io_submit_flush_completions io_uring/io_uring.h:159 [inline]
- ctx_flush_and_put.constprop.0+0x9a/0x410 io_uring/io_uring.c:1031
- io_handle_tw_list+0x3df/0x540 io_uring/io_uring.c:1071
- tctx_task_work_run+0xac/0x390 io_uring/io_uring.c:1123
- tctx_task_work+0x7b/0xd0 io_uring/io_uring.c:1141
- task_work_run+0x14e/0x250 kernel/task_work.c:227
- get_signal+0x1d3/0x26c0 kernel/signal.c:2809
- arch_do_signal_or_restart+0x90/0x7e0 arch/x86/kernel/signal.c:337
- exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x150/0x2a0 kernel/entry/common.c:218
- do_syscall_64+0xda/0x250 arch/x86/entry/common.c:89
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fa9b2b8d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fa9b395d038 EFLAGS: 00000246 ORIG_RAX: 00000000000001aa
-RAX: 0000000000000800 RBX: 00007fa9b2da5fa0 RCX: 00007fa9b2b8d169
-RDX: 0000000000000000 RSI: 00000000000047bc RDI: 0000000000000005
-RBP: 00007fa9b2c0e2a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fa9b2da5fa0 R15: 00007ffee776f038
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Drive by nitpick. The subject should drop "drivers: " because it's
+implicit from "clk:".
