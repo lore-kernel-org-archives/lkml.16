@@ -1,99 +1,203 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AD925E800
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 16:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E2625DB11
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 16:42:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742920885; cv=none; b=cDneZyGD9V7+N30QiYfKND/8KsmFH6VBrw1YbeDoZNEXrE5n1lU5g+V5+YjqiYxVxOWj/Qw12HgXwKydyYDi/DjNSY2qAaM1EHStEJDz0pR/O8UCOB5CYmXLt5rAE4h3GzwINtRbJlR3yJTPbl+lwzhWoWtxGm88WggzAaFWhsA=
+	t=1742920927; cv=none; b=sNaFjLLcm6m6kx6LxCiAAud+Q64J1deMB59OdaMZHjgbaQDxzlUr/nQxmbjEsraBEQ6PchxuMhH2g9rFNntqMT+MoRbhcgjHHgrvBTzapxHWUcPI6gVmpnYrQaeoRckfiMWb1bYM18PTboiI6U5cHbe+sZ6KuPANMhauWeETjw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742920885; c=relaxed/simple;
-	bh=HE0WwEEjXe2OvIj8FLiwdnpX+f7YNiat07ISj1wGnCQ=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FRG63SPsqzE5FdKk9+O1L/Zgk+/Loz+f4UzqIXNtFOSCn8XVm2Mslpv2wEAWpjPVKJpWqdh+SObxRNcz89qRNqW57lFoQ/xYBw8zvF5CJP5kn50gSQgaFv3lfW91ibIC6pjh8UVGGpAlM40QkmsiBA9q+4M3RWia4ePSY+hOEvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=EX82g2J4; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	s=arc-20240116; t=1742920927; c=relaxed/simple;
+	bh=9yS94I0V+aj5EaLixu70v/BvSVLiAUj4x7/o+VoVa7U=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=NoV++dm+RFQJDCnSvTLiN+sN1Ys4OX1GOVdxUcREiNNnJWQwvz0PiLA2oTf5dRRXOy+u+LUQfJBQJOsqfxsQ1U2tm+0WoPjGsrqZDcQ8J5spLkdavPiJuSqHpC0y3VA7Kw88uRIWYAACHPs6eLCEU0qYIuAhorOf0KZG7WdtQpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ijUYWTp6; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="EX82g2J4"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6ecf0e07947so177776d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 09:41:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ijUYWTp6"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e6372ccd355so8323318276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 09:42:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1742920882; x=1743525682; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=miqKoY+UYVscqlsw94wZLt2jeTP0mGsCrBdRIv58gSg=;
-        b=EX82g2J4RfMYTVP0xtt//t6++4uw1IXPfjARXV/8V+HRSFf8vLvA0/0dXDpoPaDnDZ
-         yj3Be3YD1behcXq17dp0qbJzcH8JiYY4lAc9GSzl2DAr2CcT/kIhGSkUEghmxsJp1ElP
-         QkSyW7K71jWYFdJSz3tMHdoJe+wHqSi7QQ2ChgTU3xrn2DvYr0vKgCQSW2aKevQWEY+u
-         PjyTTyZz9JSwBPV97nBq0IaKUKmQIYQjCFue+3Pt98jj/WlsY22p/ZzkS8HOp5FK9SkG
-         lWc6jeTh1lgtQwESsxSo5D5DDm3Wwg6JzGvwcOgs8ox2FTjOjeRZZaeTWLhvl3lLmyFz
-         OdrQ==
+        d=google.com; s=20230601; t=1742920924; x=1743525724; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RPugHL8eCvwfstte7zHSdBSJ9ey/olpTRBhxpg/Uv8M=;
+        b=ijUYWTp6vB7X9x6njfGoLOiSmrh2nPO+vjYu3Hg07bCt7wNAjA9Po9623VXzic4ago
+         1hdU6WuDwRiCSBbQSOErxjV2B1TJNMprMeyzhBvQSQ4Qp2PQfj/zqsBUyKdYDwEzUuXO
+         rAFhOk9eQITaKiSpqVjW//mO00GvlRBgoWTSTiYf7hQ+2IiSOHUI+17Np5oJTC/MGKn5
+         4GAeDchOwPCqLX7j0DLo2BlE5+7BAcx9JQUxoFE552pXyACwt1cmu6KX52I5+/GA26Ox
+         Y4pYRRumGEKewHvnD7/4C4G+b9NTYQ+VmwOJtd403hI9D8cDPFNHU6T77cPo/05qDb4e
+         4jAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742920882; x=1743525682;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=miqKoY+UYVscqlsw94wZLt2jeTP0mGsCrBdRIv58gSg=;
-        b=TgIGQoklua4z7c5UnHPPObJ0B7Q37UzZ075DqY5dQ7cGS3HyFm4wntOSvx4EXanvEn
-         ScQQnKmbr6mkGoCfM5zxAA3CNWczXuOTOhJSa2kglevUAsDRsk7bT5LubfFrpOWK3Hke
-         KVBXM5tOvk4utLiMg82oz5KHHJ6oGq3iT8M5MsKR+aMiB3MIpCrH+aqGE+6RoHvUXJAm
-         j/aNLVkGtqKbmzQf0g9P3FZO3nzKpujGEtsvJdiYO3oxMl3XyCeHyHffj6WjfZhQEzeA
-         /IayDRlucLL5EvUXN3KyMaJDcW0Cu7jzAzK8gVSai0FZ5IjLpQobQ9jU8D4ALrpgjx0m
-         vMvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWGVkHp2/BWWup0CP1wH/9IvDbPADlXE7pVIAfrKvFtLyr+furaBmfCOKc+WoyKmVYGuPXCkaoY66kH7js=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykWmbEW1W4kvTh3YPsRZo1ZyjyaU+EDAwQCH8Cne9wK5wXtuJi
-	6UyLBguoIFnyHendvsZenU2fUN2LUqTGSOsisvZ/FeEuvxRGVtIukmZSOjmoGA==
-X-Gm-Gg: ASbGnctZNdn6/o9iBD/YthUYSMDz0DF5nYH6jY3IXUpcrcBhSV+Kb6MEvOFZXra7Y5d
-	Z2WSkp4xiA/x1UERM4h+jpD/076AvN+aZJTOq9uS4Mueep6gO90rdsbH22ElAPGiXaVLdMpxJ/+
-	CwqbQZMkujJjh4ps0iyly1RMZZ/nldrivt6MlfjeNwP/AkOwlZqG8Ia0JH+s3w0NiZ8ewIUweJH
-	BUB2YkUV30jpsi4B+No9KOH6jxvF7ZntdsuoWUJaX6fY1olXQ8nHgloB7GS6tv5maJ4Lv5VWPJj
-	vxO8Q3HI9sl3ocnAvW5tP62bg3Pl2AgNaCKGHt0Zump13ynr1XWPoV39hECH5u+E48nXI38eee6
-	1BXnznph7FSfHFMPadkBs0i+jyOiH+zW8Lx2e5w==
-X-Google-Smtp-Source: AGHT+IFeP8N81JAGt1FKSNUu0N8sqMwAbRybniXeyxbpbDyGTB3nk4kytpnyLPPjCGdlVLhPquev0w==
-X-Received: by 2002:a05:6214:3d9f:b0:6e6:5b8e:7604 with SMTP id 6a1803df08f44-6ed16cbbed1mr7940456d6.12.1742920882545;
-        Tue, 25 Mar 2025 09:41:22 -0700 (PDT)
-Received: from rowland.harvard.edu (nat-65-112-8-24.harvard-secure.wrls.harvard.edu. [65.112.8.24])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eb3ef0ed7dsm58440546d6.25.2025.03.25.09.41.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 09:41:22 -0700 (PDT)
-Date: Tue, 25 Mar 2025 12:41:19 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	syzbot <syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com>,
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-	linux-i2c@vger.kernel.org
-Subject: Re: [syzbot] [usb?] WARNING in dib0700_i2c_xfer/usb_submit_urb
-Message-ID: <ecdc37c4-b178-4e43-bfbf-45bd3ed29ff2@rowland.harvard.edu>
-References: <67e1a1f5.050a0220.a7ebc.0029.GAE@google.com>
- <acfa19a7-9d24-4cd6-9d1d-580a9ac7473c@rowland.harvard.edu>
- <Z-GwRNe8NIigXYtS@shikoro>
+        d=1e100.net; s=20230601; t=1742920924; x=1743525724;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RPugHL8eCvwfstte7zHSdBSJ9ey/olpTRBhxpg/Uv8M=;
+        b=sFpQQd6G+tfbmD8REmBKKQzO1SeSQIDCQr8wdDcWEE6RzO12P/rZI7XP2rfkRSoqzI
+         MGG5uFu6s6Fez8CULMQ++FUoyzVQ6OpHaO77VPjVKF1JzkSuIfaPglPvAASeMSLtWF7V
+         jQOKhz3OSE+DmkyWhY/lzxeTvHwOgKcCxt1J08frrtEedOiRXaDXcSJ8eMrpEPxQEVLI
+         3QbetoFkCIYb3iTXBfDLWJhpM9kEpOdwWUvY5CHwirwJxzUH+R+U43Yi1KqkudWGO6Iw
+         R4SbaV0Lb5tDq/jZxj1FmDHXLa1vP9HDidJLBUloZbYTZEHsGYlPG6b6s5kl8fQfUM/j
+         v1Hg==
+X-Forwarded-Encrypted: i=1; AJvYcCUcy0+epCYGErO42BzJ8PIQlGgaglxrpzDaLSXXFkU+YFSsemw0ezzzLQWLuJ62W587DU4h1KrLknmZdUo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxyet/s67eHd/wU1UwJHWekGtJxpgNCASJl6LCRLhcdWeOD1Pd3
+	qRxNyh30NKPxKXfgU1rh+5S5d+yb1bO9VsAqqYFC+vh/lKP/4cC5TBjr/MgZU6LZUwv77dUaI6l
+	ZwdTymg==
+X-Google-Smtp-Source: AGHT+IHds7r9R9NDbM+n0zARfRDgEes0cddmvgi2De604ANvOJBFbjpQrm1pSRvVfIXcafcK3ZIDt3q18V1p
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:40b3:9c02:57a5:693c])
+ (user=irogers job=sendgmr) by 2002:a05:6902:101:b0:e57:3500:2294 with SMTP id
+ 3f1490d57ef6-e66a4d42cc0mr7267276.3.1742920924630; Tue, 25 Mar 2025 09:42:04
+ -0700 (PDT)
+Date: Tue, 25 Mar 2025 08:15:10 -0700
+In-Reply-To: <20250325151511.13628-1-irogers@google.com>
+Message-Id: <20250325151511.13628-35-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-GwRNe8NIigXYtS@shikoro>
+Mime-Version: 1.0
+References: <20250325151511.13628-1-irogers@google.com>
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
+Subject: [PATCH v2 34/35] perf vendor events: Update westmereep-dp events
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 24, 2025 at 08:19:32PM +0100, Wolfram Sang wrote:
-> 
-> > As far as I can tell from the source code, the dib0700 simply isn't able 
-> > to handle 0-length reads.  Should the dib0700_ctrl_rd() routine be 
-> > changed simply to return 0 in such cases?
-> 
-> The adapter (I assume the one in dvb-usb-i2c.c) should populate an
-> i2c_adapter_quirks struct with I2C_AQ_NO_ZERO_LEN and then the core will
-> bail out for you.
+Update event topic moving other topic events to cache and virtual
+memory.
 
-Or the I2C_AQ_NO_ZERO_LEN_READ flag bit.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ .../arch/x86/westmereep-sp/cache.json         | 32 +++++++++++++++
+ .../arch/x86/westmereep-sp/other.json         | 40 -------------------
+ .../x86/westmereep-sp/virtual-memory.json     |  8 ++++
+ 3 files changed, 40 insertions(+), 40 deletions(-)
 
-What about all the other fields in the i2c_adapter_quirks structure?  
-How should they be set?  (Note: I don't know anything about this driver 
-or these devices; I'm just chasing down the syzbot bug report.)
-
-Alan Stern
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json
+index 90cb367f5798..0cd571472dca 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json
+@@ -119,6 +119,38 @@
+         "SampleAfterValue": "100000",
+         "UMask": "0x2"
+     },
++    {
++        "BriefDescription": "L1I instruction fetch stall cycles",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.CYCLES_STALLED",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x4"
++    },
++    {
++        "BriefDescription": "L1I instruction fetch hits",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.HITS",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "L1I instruction fetch misses",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.MISSES",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x2"
++    },
++    {
++        "BriefDescription": "L1I Instruction fetches",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.READS",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x3"
++    },
+     {
+         "BriefDescription": "All L2 data requests",
+         "Counter": "0,1,2,3",
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/other.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/other.json
+index bcf5bcf637c0..c0cf8bae8074 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereep-sp/other.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/other.json
+@@ -15,46 +15,6 @@
+         "SampleAfterValue": "2000000",
+         "UMask": "0x1"
+     },
+-    {
+-        "BriefDescription": "L1I instruction fetch stall cycles",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.CYCLES_STALLED",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x4"
+-    },
+-    {
+-        "BriefDescription": "L1I instruction fetch hits",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.HITS",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "L1I instruction fetch misses",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.MISSES",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x2"
+-    },
+-    {
+-        "BriefDescription": "L1I Instruction fetches",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.READS",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x3"
+-    },
+-    {
+-        "BriefDescription": "Large ITLB hit",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x82",
+-        "EventName": "LARGE_ITLB.HIT",
+-        "SampleAfterValue": "200000",
+-        "UMask": "0x1"
+-    },
+     {
+         "BriefDescription": "Loads that partially overlap an earlier store",
+         "Counter": "0,1,2,3",
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/virtual-memory.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/virtual-memory.json
+index e7affdf7f41b..a1b22c82a9bf 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereep-sp/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/virtual-memory.json
+@@ -128,6 +128,14 @@
+         "SampleAfterValue": "200000",
+         "UMask": "0x20"
+     },
++    {
++        "BriefDescription": "Large ITLB hit",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x82",
++        "EventName": "LARGE_ITLB.HIT",
++        "SampleAfterValue": "200000",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Retired loads that miss the DTLB (Precise Event)",
+         "Counter": "0,1,2,3",
+-- 
+2.49.0.395.g12beb8f557-goog
 
