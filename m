@@ -1,141 +1,99 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A4A63CB
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 02:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B6CB666;
+	Tue, 25 Mar 2025 02:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742868098; cv=none; b=BreD6iJoU9ghItjrtnZLpKZvna92YGQNMoEgapjrpYjRSpwcoXGxXK6320xwspaAUVHKsjOez4A/VoR2F/5ckrKOC3Npt9df/tiNeazHEI4xfitfiLXAgxbw7hPF7Jo+8nFZOxBlLIeaQDgckerdl067jMjhBXpUgVsfzg64Oh8=
+	t=1742868220; cv=none; b=M6D2lU1h9j4p4aWBaWORMg1c0BDA6modHzBhcSX2NdtkGQOFQ5kfXURICN1z6Bgt7hEQ5SuhMD5VdUN5+X/uPA3zb5OyKLMi8L8eVu1als/+ctsHNSSO7arE9JNAawawdHBXiIgKqqBc/gTfhegt2yTgb1D3riTiimUH2qgaAJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742868098; c=relaxed/simple;
-	bh=0XiKQpEx/LJRMqxAe2fPCzSIjY7oJZHtPeKkCipBQhM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AB4KP47Fvd+J/sw4MsIWPjmJeNMUQkbLiloZ8EiuyJ1sKwT1m57MbcCYQUzmfdd1KuDNTcS9Gvpo3LfxmdNVMPKtxNgLSu9GjX3EB8Vq4XSX2rN7aXawWTJ5Qwrx81J6Q1zz9H+R08Bsq5xMAJqmN2VaVAVMDie32NXBPY9KLFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QLSRx2/2; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QLSRx2/2"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4393ee912e1so17075e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 19:01:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742868095; x=1743472895; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ugyR/LCYHKfgKcf3dWgRzREDXmHjGBwxKIlqYssVg5c=;
-        b=QLSRx2/2LrJwBw4x0YAsWHy5pwCdnGunZrwXwda2g5y6JwpEv9h6ncgTCWygz6V7iS
-         qZ1z1FYcgnsVYZi1FhrjgPUcEEeKczAbbAWQdU6WpuE/ZHFh2BHQiw0e8/loh2qR/fNn
-         UafIT+mSOQaHSqr6ds3gVZ5w6t+eqQPhrAktOJVTlTKh4NuQstOb8E13v+9AmjPoyu45
-         A/XkbB+ORVICmMtrY03RRbtT6DeslvoLX+m3YwZg7xURK88sEiql1/Qnut3uc0UrvD0b
-         9xrcnoNddMPmddbpOueii9cAR6SNJtFxItndLLrkj1wJ5J9V1nuS8/kpOlz3toYjviwQ
-         WZew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742868095; x=1743472895;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ugyR/LCYHKfgKcf3dWgRzREDXmHjGBwxKIlqYssVg5c=;
-        b=ISMljcckoCJaeZiFhkUIMXaPBgY/bggxlnpVI2TjJOWHN8HjnKeHkwMeouI0FxvoNs
-         x9PURUJ7ssbLeKm2dqYfHKwz9XD9NInNEznX0w/tCYqr6DH1wJ1f4sjnUQ6KLwrDJj1x
-         ATqn2Rqo5/SMPqfdNr53g4aabwvI02EMw3oFTfugcOEMMxe6V4hDSaMwZGB5ibobkOES
-         E04xFWpPZN70g/sOUmTgYRo9ZFfyih8KLxnExYD9j77rJJJQn0vFwbJheHhUfxQnSyyA
-         TdOjXgJAN6Jy8iKeF2yUIS0WiYukedhXPCZZ1dZbRTtJVNPja9BJyWF9PHoEULjBqSHb
-         BigA==
-X-Gm-Message-State: AOJu0YxMuKYpeRhqkwM1wKyPpIZTDddffmOp8Ee2NKsO6Pcpik4bDwTw
-	GIIun2YsvkyH7nRev8lqO+UTbXN0c8eXAbLUA5Ksn28bgIN4H3KYILury1aULw==
-X-Gm-Gg: ASbGncssYMyMULHWYTe3QK+ZVWybUcGdNbCLw1yjIhWN7dUO9/NrVEXrBSk86urrbzV
-	uo1u1V/7wUuoWPCnRj8+x/VmWoDolnqO4m7Wa4nuP9cqnaZQd4/J5L1MPAUoTnNELjR26BS9bIt
-	OYl66c0rbWHRUUgx78mpbQZ9V7Wv5XUvJqvZs7bwsr9bwNcs4KCUtSHbXDrM6U3lS+ksUWWvq8P
-	pYRgRa8yDK6mKYzSMiJjBIxKGZDh5fav3F5E2qiYPd0f9aI61ENGDq4fbdsuol7nY72L3Ncldq6
-	mq/HYDx71HzM35I7u/NC1pU0PjWpphIp7w==
-X-Google-Smtp-Source: AGHT+IEwxGzlEsa/yozvMpG5rLjzDpAwrA4wJBU/u0n8ghpuiKmN+mvX2t2n1Qc8jeK5DBv88CYXIA==
-X-Received: by 2002:a05:600c:5107:b0:43d:169e:4d75 with SMTP id 5b1f17b1804b1-43d5a3ac61bmr4371355e9.1.1742868094984;
-        Mon, 24 Mar 2025 19:01:34 -0700 (PDT)
-Received: from localhost ([2a00:79e0:9d:4:fbb4:5f96:b3e7:71b1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a50c1sm12579021f8f.38.2025.03.24.19.01.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Mar 2025 19:01:34 -0700 (PDT)
-From: Jann Horn <jannh@google.com>
-Date: Tue, 25 Mar 2025 03:01:23 +0100
-Subject: [PATCH 2/2] x86/dumpstack: Fix broken unwinding from exception
- stacks
+	s=arc-20240116; t=1742868220; c=relaxed/simple;
+	bh=WFE7MOFRJd0H1oOzfPjhras3v2n3Oy+pB4YlnYimc/A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VAVc/GzntiefezSWPR6oTKE7EpvPeFrXnwVJbmxe144n9pZBVkeW5zkPLpZyGj1GsTsBL+gL2qWdlSSCgVs/5FOQFBTHufQB4QehyH8EYzTo0kTOdiBJnnFpIfxSgjURwMHq3esD2S/SWNcgEs6CmItaPdCwhwvf69D+ld+Jovs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZMCqp3wF4z4f3kj8;
+	Tue, 25 Mar 2025 10:03:02 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 67A851A0D4E;
+	Tue, 25 Mar 2025 10:03:25 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgDnSl_rDuJnainyHQ--.34151S4;
+	Tue, 25 Mar 2025 10:03:25 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: song@kernel.org,
+	yukuai3@huawei.com,
+	jgq516@gmail.com
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH] md/raid10: fix missing discard IO accounting
+Date: Tue, 25 Mar 2025 09:57:46 +0800
+Message-Id: <20250325015746.3195035-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250325-2025-03-unwind-fixes-v1-2-acd774364768@google.com>
-References: <20250325-2025-03-unwind-fixes-v1-0-acd774364768@google.com>
-In-Reply-To: <20250325-2025-03-unwind-fixes-v1-0-acd774364768@google.com>
-To: x86@kernel.org, Andy Lutomirski <luto@kernel.org>, 
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, 
- Dominik Brodowski <linux@dominikbrodowski.net>, 
- Ingo Molnar <mingo@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
- Vernon Lovejoy <vlovejoy@redhat.com>, Jann Horn <jannh@google.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742868088; l=2348;
- i=jannh@google.com; s=20240730; h=from:subject:message-id;
- bh=0XiKQpEx/LJRMqxAe2fPCzSIjY7oJZHtPeKkCipBQhM=;
- b=Tax2z5kRDsKeRF1KcIuAqhoJvHIkChW3L+IfLc0L9ACU+OJ8RoC4iLWFojZlE1rUBHYEaDlCW
- dzULsxhB8t+CwIcRcRZOBrKHMmVAC2Kvp6ejVgaHQV/9vrYVI+I2QEf
-X-Developer-Key: i=jannh@google.com; a=ed25519;
- pk=AljNtGOzXeF6khBXDJVVvwSEkVDGnnZZYqfWhP1V+C8=
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDnSl_rDuJnainyHQ--.34151S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrWxAFWUXryDXrW7GFyrXrb_yoWkJrg_K3
+	Z3WryxKr4fKrn3Kw1Fvr1Ivryj9w109FZ7WrWUWFWUZF98Wryjyry0gFWDtr15CF95Zr15
+	A3WkWF1jvF1q9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbcAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r12
+	6r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfUYCJmUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Commit 2e4be0d011f2 ("x86/show_trace_log_lvl: Ensure stack pointer is
-aligned, again") was intended to ensure alignment of the stack pointer; but
-it also moved the initialization of the "stack" variable down into the loop
-header. This was likely intended as a no-op cleanup, since the commit
-message does not mention it; however, this caused a behavioral change
-because the value of "regs" is different between the two places.
+From: Yu Kuai <yukuai3@huawei.com>
 
-Originally, get_stack_pointer() used the regs provided by the caller; after
-that commit, get_stack_pointer() instead uses the regs at the top of the
-stack frame the unwinder is looking at. Often, there are no such regs at
-all, and "regs" is NULL, causing get_stack_pointer() to fall back to the
-task's current stack pointer, which is not what we want here, but probably
-happens to mostly work. Other times, the original regs will point to
-another regs frame - in that case, the linear guess unwind logic in
-show_trace_log_lvl() will start unwinding too far up the stack, causing the
-first frame found by the proper unwinder to never be visited, resulting in
-a stack trace consisting purely of guess lines.
+md_account_bio() is not called from raid10_handle_discard(), now that we
+handle bitmap inside md_account_bio(), also fix missing
+bitmap_startwrite for discard.
 
-Fix it by moving the "stack = " assignment back where it belongs.
+Test whole disk discard for 20G raid10:
 
-Fixes: 2e4be0d011f2 ("x86/show_trace_log_lvl: Ensure stack pointer is aligned, again")
-Signed-off-by: Jann Horn <jannh@google.com>
+Before:
+Device   d/s     dMB/s   drqm/s  %drqm d_await dareq-sz
+md0    48.00     16.00     0.00   0.00    5.42   341.33
+
+After:
+Device   d/s     dMB/s   drqm/s  %drqm d_await dareq-sz
+md0    68.00  20462.00     0.00   0.00    2.65 308133.65
+
+Fixes: 528bc2cf2fcc ("md/raid10: enable io accounting")
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- arch/x86/kernel/dumpstack.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/md/raid10.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
-index a7d562697e50..b2b118a8c09b 100644
---- a/arch/x86/kernel/dumpstack.c
-+++ b/arch/x86/kernel/dumpstack.c
-@@ -195,6 +195,7 @@ static void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
- 	printk("%sCall Trace:\n", log_lvl);
- 
- 	unwind_start(&state, task, regs, stack);
-+	stack = stack ?: get_stack_pointer(task, regs);
- 	regs = unwind_get_entry_regs(&state, &partial);
- 
- 	/*
-@@ -213,9 +214,7 @@ static void show_trace_log_lvl(struct task_struct *task, struct pt_regs *regs,
- 	 * - hardirq stack
- 	 * - entry stack
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index 9d8516acf2fd..6ef65b4d1093 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -1735,6 +1735,7 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
+ 	 * The discard bio returns only first r10bio finishes
  	 */
--	for (stack = stack ?: get_stack_pointer(task, regs);
--	     stack;
--	     stack = stack_info.next_sp) {
-+	for (; stack; stack = stack_info.next_sp) {
- 		const char *stack_name;
- 
- 		stack = PTR_ALIGN(stack, sizeof(long));
-
+ 	if (first_copy) {
++		md_account_bio(mddev, &bio);
+ 		r10_bio->master_bio = bio;
+ 		set_bit(R10BIO_Discard, &r10_bio->state);
+ 		first_copy = false;
 -- 
-2.49.0.395.g12beb8f557-goog
+2.39.2
 
