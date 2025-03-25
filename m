@@ -1,112 +1,69 @@
-Received: from mail76.out.titan.email (mail76.out.titan.email [3.216.99.56])
+Received: from mail.toke.dk (mail.toke.dk [45.145.95.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E2D2566FA
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 12:04:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.216.99.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3CD1A08CA;
+	Tue, 25 Mar 2025 12:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.95.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742904288; cv=none; b=nndfbY9Ob7WyXD766C+9kV/egGqfQmD94cctN1cYlTOijHpXlUg2Jj6ydN2zTCiAXWkLbLY5wmIEAmItu2VS382D5IiqJDsU+2+NFMWNe4mZZQNuzWXrmQWZYjCoBekyr4E3fbVPkw2J6Fy/0mHqv+IGvGmgqlCYHkcQ9OYn+aE=
+	t=1742904291; cv=none; b=XcLc0FflT4Qln5tAeezFQV8nRMukhEk/UOIonuIgiFvgxAO7xxuT7gAlbgdh/4/DFxJkpaRA0pO62CENttwbk31/8Cv3mycfNgX+TzzBn/MYqE4S05BLf5oN+YRSeDpZFpEFrweRiB0iZZl3TSmWPaOGSyZb/5SaoG8OKZj+JFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742904288; c=relaxed/simple;
-	bh=JT3aIXZbV2GEP8lc7Sl8Xb/3pdQ9Rs9u+JTKvTe4+x0=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=qvtAVzD57fS7GFDr19r2q7mhlMmil/qR9uzuZemYI7ZD9pZ+N3Gg2d1Wu9iRvgwpmFICoc/qXMdj03N8CLPd8KVpyYdw/JciuPqAqEbGeiBd2dJMUTXGT3/+TfUKmVMiNm/J7fMMHdtKr/oV0l1O19eV3DVZf9XryZtOTOO3fqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=fkIYwozL; arc=none smtp.client-ip=3.216.99.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
+	s=arc-20240116; t=1742904291; c=relaxed/simple;
+	bh=zNg6WqSwfHoDXTJo4CN1g0u2BNkW0N8Jh71pNbdLExU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YN3fAhMFEZeU0OQ8Xnq/pCF3egnUDtTAcYsKX+17PMD44PlDCJYKMaP5betkkBi2YHv2Lb8HR3ohX/aPU2KkJJv/MzP0FbnrujZ4Re2CLInxA0f6/7rIxXfKZAB8UWsS3k7Umt2JlBTM+2uVok07JobJIMjx0sZL65YiFx5XCuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk; spf=pass smtp.mailfrom=toke.dk; dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b=weTchOid; arc=none smtp.client-ip=45.145.95.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toke.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="fkIYwozL"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp-out.flockmail.com (Postfix) with ESMTP id 6824C1004B5;
-	Tue, 25 Mar 2025 11:48:40 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=bDDNFMTDDoJPuB4LnRqlAWuTzWTx5ucgEN3AgGVM4Ak=;
-	c=relaxed/relaxed; d=t12smtp-sign004.email;
-	h=cc:mime-version:subject:date:from:message-id:to:references:in-reply-to:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1742903320; v=1;
-	b=fkIYwozLuqPF6WeiCIrubvaw3XsS4LeUc+2k15xZI9eqVv3pxItV88O9gSzcte6/7/JZWsKe
-	Ol6WDsJIWzP2IolEcPGRMp57wP1bdeVHT8mU4wu8e7ngpvA2Or3kd1UtdudRmx/wLHO1qcuOnZF
-	MyZjKgK9i2V5fzLPRA5OZw8o=
-Received: from smtpclient.apple (ns3036696.ip-164-132-201.eu [164.132.201.48])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id 9CDF31004CB;
-	Tue, 25 Mar 2025 11:48:37 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b="weTchOid"
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
+	t=1742903880; bh=zNg6WqSwfHoDXTJo4CN1g0u2BNkW0N8Jh71pNbdLExU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=weTchOidfyb8Ak6zjeYUr/Bz2a7Pq36yXNE6NKAOeUsO9pU1BXLrRQVYH+4dX2ux5
+	 mfZHU/ix/ugXWw2VSl1JA/K5XsvHZXJ1Nn3IZxuQ+kuDjxO18maKjYROmehlVbS19d
+	 N6LOa2CLcSynqcgYFxeX1z1RjLsQOqwNcZqEV6o2K06FUzIOCYAih847bf6YTjpT+p
+	 65UvtYIXOUFz4b0W5hKWE54s4pw1jAcaQNzdbaLWMoxP5MveZdCGRXrpzs9R40JlxF
+	 ArkUOvvL+Q9TXBwfz5fsvrsbDLv735qSozQ0ZfwOoge3dCNOzfHQ2LGpCS5vqZ/uuT
+	 KvPfDO4dZzivA==
+To: Johannes Berg <johannes@sipsolutions.net>, Remi Pommarel
+ <repk@triplefau.lt>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] wifi: mac80211: Update skb's NULL key in
+ ieee80211_tx_h_select_key()
+In-Reply-To: <cca02b859f5732d6290eaef62b0d7389c740aa59.camel@sipsolutions.net>
+References: <cover.1741950009.git.repk@triplefau.lt>
+ <95269f93724a94ee0b22f8107fe5b5e8f2fbea76.1741950009.git.repk@triplefau.lt>
+ <754c24f1b1f7d37cb616478c57a85af18d119c21.camel@sipsolutions.net>
+ <Z-Fl9OUQ1EAEWW7h@pilgrim>
+ <cca02b859f5732d6290eaef62b0d7389c740aa59.camel@sipsolutions.net>
+Date: Tue, 25 Mar 2025 12:57:59 +0100
+X-Clacks-Overhead: GNU Terry Pratchett
+Message-ID: <87sen1qq48.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH] md/raid10: fix missing discard IO accounting
-Feedback-ID: :i@coly.li:coly.li:flockmailId
-From: Coly Li <i@coly.li>
-In-Reply-To: <36f1f74b-4376-89f3-0690-09f36e05d6e1@huaweicloud.com>
-Date: Tue, 25 Mar 2025 19:48:24 +0800
-Cc: Coly Li <colyli@kernel.org>,
- song@kernel.org,
- jgq516@gmail.com,
- linux-raid@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- yi.zhang@huawei.com,
- yangerkun@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <761DA302-0E21-4CDD-ACCE-85958DBD48D5@coly.li>
-References: <20250325015746.3195035-1-yukuai1@huaweicloud.com>
- <brtjiiejckcekwq4racmjgpzq7dod5bg2t4csj7caevnl4pkqm@zaanpogvtvus>
- <36f1f74b-4376-89f3-0690-09f36e05d6e1@huaweicloud.com>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1742903320252286929.20113.3586250469236701842@prod-use1-smtp-out1002.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=I9+fRMgg c=1 sm=1 tr=0 ts=67e29818
-	a=cqlkUh1Psg5J4QAqX6BmHg==:117 a=cqlkUh1Psg5J4QAqX6BmHg==:17
-	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=AiHppB-aAAAA:8 a=i0EeH86SAAAA:8
-	a=RN-FF68yhb4yU0s_A_oA:9 a=QEXdDO2ut3YA:10
+MIME-Version: 1.0
+Content-Type: text/plain
 
+Johannes Berg <johannes@sipsolutions.net> writes:
 
+> On Mon, 2025-03-24 at 15:02 +0100, Remi Pommarel wrote:
+>> 
+>> Finding a fix tag is not easy for this case because I am not sure which
+>> commit exactly introduced the issue. Is it the introduction of
+>> ieee80211_handle_wake_tx_queue() (i.e. c850e31f79f0) that allows packets
+>> queued on another dev to be processed or the one that introduced
+>> ieee80211_tx_dequeue() (i.e.  bb42f2d13ffc) ?
+>> 
+>> I would have said the latter, what do you think ?
+>
+> I would agree, despite saying "Move ..." that called
+> ieee80211_tx_h_select_key() twice, once in invoke_tx_handlers_early()
+> before queueing the frame, and again in ieee80211_tx_dequeue().
 
-> 2025=E5=B9=B43=E6=9C=8825=E6=97=A5 15:27=EF=BC=8CYu Kuai =
-<yukuai1@huaweicloud.com> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> Hi,
->=20
-> =E5=9C=A8 2025/03/25 15:04, Coly Li =E5=86=99=E9=81=93:
->> On Tue, Mar 25, 2025 at 09:57:46AM +0800, Yu Kuai wrote:
->>> From: Yu Kuai <yukuai3@huawei.com>
->>>=20
->>> md_account_bio() is not called from raid10_handle_discard(), now =
-that we
->>> handle bitmap inside md_account_bio(), also fix missing
->>> bitmap_startwrite for discard.
->>>=20
->>> Test whole disk discard for 20G raid10:
->>>=20
->>> Before:
->>> Device   d/s     dMB/s   drqm/s  %drqm d_await dareq-sz
->>> md0    48.00     16.00     0.00   0.00    5.42   341.33
->>>=20
->>> After:
->>> Device   d/s     dMB/s   drqm/s  %drqm d_await dareq-sz
->>> md0    68.00  20462.00     0.00   0.00    2.65 308133.65
->>>=20
->>> Fixes: 528bc2cf2fcc ("md/raid10: enable io accounting")
->>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
->> Should we treat discard request as real I/O?
->> Normally IMHO discard request should not be counted as real data =
-transfer,
->> correct me if I am wrong.
->=20
-> Normally it's not, that's why discard IOs are accounted separately in
-> the block layer.
->=20
-> Also notice that discard should be treated as write, because after
-> discard, reading will get zero data.
+Yeah, agreed :)
 
-I see, it is for the separated discard counting.  Sure, I reply my =
-Acked-by on the original patch.
-
-Thank you for the explanation.
-
-Coly Li=
+-Toke
