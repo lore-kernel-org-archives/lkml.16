@@ -1,102 +1,125 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6BFD257421;
-	Tue, 25 Mar 2025 13:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742910008; cv=pass; b=OmJQad5wbDthmOlMq2SFtwJocsej6E5lBbxnv8wUtQPMkv3SgI4vLBo9gDZd9D5tAscUW8nPpJ/3hzQtG2yOXKmuCdNM0IrMeTcFwYmmZYAC5/91c+VU0ThPLU9I+Fj3XlQfKobhC5EE24FQWm7ZmLeC/m2j0c5hreOyA3RIpQU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742910008; c=relaxed/simple;
-	bh=E1aLYMGnS7zKaLY/UfigWOGLX5sjhXJl+77d7eid4vU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=EskKMUeXkOMWZpNtQBOEG7DPIsof6JjwYmNBBkhSKZIbY8LA3ywqVuib/u5UGb+0U1iR5vGav3wCaqO4bpz5kt3h00QBch1RVA5WjhmDHkI+wfoXw57aY/dnYqqK6V0G6wq0Osyav03f8jMMhZkhvtb8sIZOwdtiTVepHb/0WpQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=B/mRhEa4; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7DC258CFE
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 13:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742910012; cv=none; b=AtEDgvJeMQsQwtPYwVt6wEum47ZP667TD7voVavjnqYsLKzbbZOF+4mOnNFTbHpn2mxnkfsFm2nx4j9WjqdaGRXp7+OlAOXq3li3LzDUXIe4eefj0tE8YIWYP3K3/MSyJlUPFk/m/ht/9rLdqlcitPk5dXkx/xqBenY4PHGnTXU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742910012; c=relaxed/simple;
+	bh=gfN7cMZt0m00PoH2OI1tjaBb8cDZ7CVfoz0QzMwPGX0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pJMVQu3cDL0uvgVJyVlJ0hCFolE8FigpWdpugIeLTbDhuBakuvdcTkhCPYsBT+AOc2z9wYrhsloNMxM8PfsTuQQ0j2tnwbFNaqpwcqIhZDtcoDKPb8PVbfy8RmRnm0jCIlNGWRAEg2uiQmlgtllhqpczMtXd6m9KoJxCgPb/93Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Ui1HN22k; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="B/mRhEa4"
-ARC-Seal: i=1; a=rsa-sha256; t=1742909981; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=JK8Afb3KUgbrCxmWZlnLN9jcBM10Klc6bIpIEl6jHNexPloQsRLdqFYV1SqCZnMDFDY88X8tPmRhE0+b9/TiB4EHEcd5q77NV5a7rYORIITi6AHxtkp6RKNb3JHJq33T7+SCO1rkNg/SU59MQHrBj3qZp3KLgQrEZKkNGI9+VOQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1742909981; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=E1aLYMGnS7zKaLY/UfigWOGLX5sjhXJl+77d7eid4vU=; 
-	b=VCa+IKIzfxwOjBv7+51ra9ot4DvryeQdFUV5quXUv4wqhjIzUQuq8n9gfzxYv9punyorHHvIIlGOUTKH9y6iJIjWMKFuDix3goaK9Nsze5kt6dXnqPU4bLj/7h4+/BPdqE430eD7d7MDdS/7uYQU1oBejWsRzUbpWBCd4sIBrbo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742909981;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=E1aLYMGnS7zKaLY/UfigWOGLX5sjhXJl+77d7eid4vU=;
-	b=B/mRhEa4JAqwExkPR9JLiW4JHiboptNPN0hF5f1x3P0s3JVNRf9dIgioG4QV8BBF
-	TQ0DUWpB7cGV+YHbHDSq73NMrf8QzXCT62U8jy8f/5OXEKtaEWRscfemvn719NlVtgw
-	ktVzQajUYFhaQBcXpxLyBFeHL6hKYtoZFMrFnXnA=
-Received: by mx.zohomail.com with SMTPS id 1742909980149878.2853274737729;
-	Tue, 25 Mar 2025 06:39:40 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Ui1HN22k"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3913290f754so709655f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 06:40:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1742910007; x=1743514807; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k7feDy+sWNSv66+UsfBQ6A5DM/YLrYmP4DUJwBvM+h4=;
+        b=Ui1HN22kJpuZD90teILb9gy2OYpbPArAIOw3efszye3l5MJtDJxoKLkJYeC0B2zsve
+         9py+xSB26tzwrU47gjgU0JPa+rh0ULmgN4oTTNRiQKpnsxW93WF+C2igIAGghnLbMeKN
+         5bCEAaIuEpqFHCQR0aCzZOzljD/jKtEuWzyV8iZFg/U779yVkF2CoIiorZS4NGzbPPNW
+         1lNy7BdrVp2xbZVAwUBmttQ0bJ/F/RIZRcDL4TRaD6LC14svkPTK3Ldl+VClSKEuO+/c
+         TfMAaGeGJ/DrSdBayOmRkkBt2l8h//ytmq5XOOjlVMdRm7I+StIBN6fuyPDNEKe9vosB
+         5LRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742910007; x=1743514807;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k7feDy+sWNSv66+UsfBQ6A5DM/YLrYmP4DUJwBvM+h4=;
+        b=QQvGMkSF7anzm7zSttW10UZV9DWFz6PRJZLrDrcDOmyXhG8yh07KxfBPwm5l5dZ0UH
+         J7l2U3Bkrws8XdoEuPoCXh6h4TiZXJIa35QsdMvJp/duSXeNDK7fUJ7cRTiZTHboux7z
+         3yDHPK4uc0mhBmwzGj/tF1X3So03s+xrO2zm/BPjyhaLtN0hgW1Di+q1nIFmQBrTDGhX
+         HXsE1debrW+Vj/Nn6YFNLDGYLC8WSBtqMQDS5/xU60kP8+Sd0khz1VcEUZ0XOphYq6SM
+         G9o/RpXmwmG130b0hmP1gKRqewuaHxX3LAD1HHRbIIVHuUyiRX898ryR7m6y803//r8J
+         WITw==
+X-Gm-Message-State: AOJu0YwKotHodpyPwC0UN81+dyOndUUX69FwrYaqc88ZEY9/dWnn3oSx
+	Ri25SGM9sdFit69HrLB+V12GPgjt60xV9De3S2/9//FL52p44UIWzAvI8Rq9beMrjdBXYyfU+Ge
+	4
+X-Gm-Gg: ASbGncvrLFpFWxc+V8CzS1HztQOWcISXidpO9dmT1ECUb+n8aPA7b/oMuj+H5SNlVTd
+	uXo4js+vcbphTvcwBiLSdIJO4eP2SgkAPs/WaRQ7yZhXstHrEo9+ST+cHwTk3q1rfo2ufPyogB3
+	30W1NDh1ac+qvH0aMXd5TuTV4xuMFJDvKmXWmqHZ/pa19m0xkj2ZMdDdTEgUtJkf3tMNuw2WL8d
+	6eEtyCl7nKUElbYnfW2AIEwaK5CFLCBxqRy7A1g+PybFssmOdmGK8XugqaHLNjb3jqDUhQqi0N3
+	7wS/HIePqk27nQJzIOKRf5gjiy/PmlZy5hxn
+X-Google-Smtp-Source: AGHT+IED2TuBVJz/QsKt7tFUBFUnL7V28VtfeqSnvq7Lx3KDoQ/LLrNVxkuZwXYlKSIof6+LVtQOcQ==
+X-Received: by 2002:a5d:5f8c:0:b0:38d:d69e:1316 with SMTP id ffacd0b85a97d-3997f8f4a93mr5708785f8f.1.1742910007335;
+        Tue, 25 Mar 2025 06:40:07 -0700 (PDT)
+Received: from localhost ([99.209.85.25])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eb3ef1f15fsm56604616d6.34.2025.03.25.06.40.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 06:40:06 -0700 (PDT)
+From: Petr Tesarik <ptesarik@suse.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Petr Tesarik <ptesarik@suse.com>
+Subject: [PATCH v2] usb: core: warn if a GFP zone flag is passed to hcd_buffer_alloc()
+Date: Tue, 25 Mar 2025 14:40:00 +0100
+Message-ID: <20250325134000.575794-1-ptesarik@suse.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250320154733.392410-1-ptesarik@suse.com>
+References: <20250320154733.392410-1-ptesarik@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH v4 05/11] scripts: generate_rust_analyzer.py: add type
- hints
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <FB3D0F03-B162-4AD5-B288-4E307421276B@collabora.com>
-Date: Tue, 25 Mar 2025 10:39:24 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Boris-Chengbiao Zhou <bobo1239@web.de>,
- Kees Cook <kees@kernel.org>,
- Fiona Behrens <me@kloenk.dev>,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Lukas Wirth <lukas.wirth@ferrous-systems.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3DC4063A-3E9E-412B-AAF4-AA0C33DEEBFC@collabora.com>
-References: <20250322-rust-analyzer-host-v4-0-1f51f9c907eb@gmail.com>
- <20250322-rust-analyzer-host-v4-5-1f51f9c907eb@gmail.com>
- <FB3D0F03-B162-4AD5-B288-4E307421276B@collabora.com>
-To: Tamir Duberstein <tamird@gmail.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Ah, by the way:
+Remove a misleading comment and issue a warning if a zone modifier is
+specified when allocating a hcd buffer.
 
+There is no valid use case for a GFP zone modifier in hcd_buffer_alloc():
+- PIO mode can use any kernel-addressable memory
+- dma_alloc_coherent() ignores memory zone bits
 
-> On 25 Mar 2025, at 10:37, Daniel Almeida =
-<daniel.almeida@collabora.com> wrote:
->=20
-> Hi Tamir,
->=20
->> On 22 Mar 2025, at 10:23, Tamir Duberstein <tamird@gmail.com> wrote:
->>=20
->> Python type hints allow static analysis tools like mypy to detect =
-type
->> errors during development, improving the developer experience.
->>=20
->> Python type hints have been present in the kernel since 2019 at the
->> latest; see commit 6ebf5866f2e8 ("kunit: tool: add Python wrappers =
-for
->> running KUnit tests").
->>=20
->> Run `mypy --strict scripts/generate_rust_analyzer.py --python-version
->> 3.8` to verify. Note that `mypy` no longer supports python < 3.8.
+This function is called by usb_alloc_coherent() and indirectly by
+usb_submit_urb(). Despite the comment, no in-tree users currently pass
+GFP_DMA.
 
-$ mypy --strict scripts/generate_rust_analyzer.py --python-version 3.8
-Success: no issues found in 1 source file
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+---
+ drivers/usb/core/buffer.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-=E2=80=94 Daniel=
+diff --git a/drivers/usb/core/buffer.c b/drivers/usb/core/buffer.c
+index 87230869e1fa..10844cd42e66 100644
+--- a/drivers/usb/core/buffer.c
++++ b/drivers/usb/core/buffer.c
+@@ -108,10 +108,6 @@ void hcd_buffer_destroy(struct usb_hcd *hcd)
+ }
+ 
+ 
+-/* sometimes alloc/free could use kmalloc with GFP_DMA, for
+- * better sharing and to leverage mm/slab.c intelligence.
+- */
+-
+ void *hcd_buffer_alloc(
+ 	struct usb_bus		*bus,
+ 	size_t			size,
+@@ -128,6 +124,12 @@ void *hcd_buffer_alloc(
+ 	if (hcd->localmem_pool)
+ 		return gen_pool_dma_alloc(hcd->localmem_pool, size, dma);
+ 
++	/*
++	 * Zone modifiers are ignored by DMA API, and PIO should always use
++	 * GFP_KERNEL.
++	 */
++	WARN_ON_ONCE(mem_flags & GFP_ZONEMASK);
++
+ 	/* some USB hosts just use PIO */
+ 	if (!hcd_uses_dma(hcd)) {
+ 		*dma = ~(dma_addr_t) 0;
+-- 
+2.48.1
+
