@@ -1,72 +1,110 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF7E725522B;
-	Tue, 25 Mar 2025 11:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D346255252
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 11:06:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742900811; cv=none; b=eyX/XmQ18YEso8BFOIocySL2TeCURhoxcA1nLvY0a2TnKEA4LVv71smZX0ZvEglIAVOkDTeR0VZhiYG3nvtiTLPZ7HtsIjWN7V2GQdIz4se+YREwzxSr8XfRTvVS8G0Op+tciogrwcwpr/bP6CIbJFK/SQIyUT7phUDekjzf0N8=
+	t=1742900813; cv=none; b=FH87DVolyd/KtsTs0gaatSxP5eh/M60zMU2ywSBmG8gbWOJ2nKBjkid2CYequF7rYKUqqv2jnxlwmQuhln+z9+m6Pqan1/CHp6UpZWyNweQuCSTnSTREguwrWwkz41M3L0aRN6+Eexqbzm5PEI52PhcUzj7GOm0PJiM+gR49s2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742900811; c=relaxed/simple;
-	bh=1oUtFGtYzogbL0vB7U/WIQ8hwYhjr5hl5aNe3i3p1t8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=nArYDGCp7u9DRk7Mmo/soWcrNfqm+6QpP06qsP7H5N0vprGKzBhi/TaknNrM5N4xrRT8B2je8IYMCr8782s8ezoFuFKmxgbrVAlh58ibET+KJjBqcjEIlO+XqFQBJo0+NUZUpbHGdxTdaNqJ+Is/LlXVA869m2H3OND6l8QN+io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D407106F;
-	Tue, 25 Mar 2025 04:06:48 -0700 (PDT)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 182383F58B;
-	Tue, 25 Mar 2025 04:06:38 -0700 (PDT)
-Message-ID: <5e49377e-6a3e-4a48-94c9-db06f13cffe8@arm.com>
-Date: Tue, 25 Mar 2025 11:06:37 +0000
+	s=arc-20240116; t=1742900813; c=relaxed/simple;
+	bh=vmdMzRsge6rNZ1LRkzX7z+rHOWaV9SylfaktcIGnP54=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q+lDosGtmgaZwOPLivTHYayU8o21IfDqQwa5UYfI01LrBtCHarpclBjYj+ze34erHjNStYuD2cRj2kzh61zahOJBKPpB/17hamKe+siOxPuNBIxhFpUv5Hwvk4vDXrfciVtrAPixu60+Azjzk9RVwH9UoRLLyq8ovWzc03WNRws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=ZAar6WoU; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="ZAar6WoU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=vmdM
+	zRsge6rNZ1LRkzX7z+rHOWaV9SylfaktcIGnP54=; b=ZAar6WoUSglQkwhOiy/3
+	vOXLvs7Fc0qrbgMFtN9dLx4akox7ffQsmmqwuUEV8BJzjrpvc/aN0ELGg3rMh13t
+	jAFxAivN6zDynI4X7mv2agNW7V/5LvXb7++fZG+kGmJtpnoO/wq83INRAofjhD9s
+	6VHck9kdN0RRIgH0otyUfZloGezMx0jp1z3OUqRCcOiC76CgSjS5xu5X9g1pXTFF
+	8kQ+LWAL/05W4mDlqWUcogRWMXmAQ6h3SWYqIkCB6Bm+qv3MZNDMrOAMheEqTvRv
+	7pO/u7JQX+urkO9AJkMmF+DjcExaU4EDe4rVeAYZJcg5QZCZFJsWc6AinzAJ3kH+
+	jg==
+Received: (qmail 3018856 invoked from network); 25 Mar 2025 12:06:41 +0100
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 25 Mar 2025 12:06:41 +0100
+X-UD-Smtp-Session: l3s3148p1@/+catygxorQgAwDPXyTHAJp038nK7dx+
+Date: Tue, 25 Mar 2025 12:06:40 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>,
+	"thierry.bultel@linatsea.fr" <thierry.bultel@linatsea.fr>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	"geert@linux-m68k.org" <geert@linux-m68k.org>,
+	Paul Barker <paul.barker.ct@bp.renesas.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Subject: Re: [PATCH v4 10/13] serial: sh-sci: Add support for RZ/T2H SCI
+Message-ID: <Z-KOQMx9IHQXwrt1@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	"thierry.bultel@linatsea.fr" <thierry.bultel@linatsea.fr>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	"geert@linux-m68k.org" <geert@linux-m68k.org>,
+	Paul Barker <paul.barker.ct@bp.renesas.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+References: <20250306152451.2356762-1-thierry.bultel.yh@bp.renesas.com>
+ <20250306152451.2356762-11-thierry.bultel.yh@bp.renesas.com>
+ <Z-EpPL3tn54E8KG5@shikoro>
+ <TYCPR01MB114922CBDC2911E2F644BDADC8AA42@TYCPR01MB11492.jpnprd01.prod.outlook.com>
+ <Z-HVD6w6ivYR6pt5@shikoro>
+ <TY3PR01MB1134602E988AD8428422E820086A72@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <Z-Jgdi5_SizHzcO0@shikoro>
+ <TYCPR01MB11492F2D6D73B2EC18E46D6B98AA72@TYCPR01MB11492.jpnprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/3] arm64: Add BBM Level 2 cpu feature
-To: =?UTF-8?Q?Miko=C5=82aj_Lenczewski?= <miko.lenczewski@arm.com>,
- ryan.roberts@arm.com, yang@os.amperecomputing.com, corbet@lwn.net,
- catalin.marinas@arm.com, will@kernel.org, jean-philippe@linaro.org,
- robin.murphy@arm.com, joro@8bytes.org, akpm@linux-foundation.org,
- ardb@kernel.org, mark.rutland@arm.com, joey.gouly@arm.com, maz@kernel.org,
- james.morse@arm.com, broonie@kernel.org, oliver.upton@linux.dev,
- baohua@kernel.org, david@redhat.com, ioworker0@gmail.com, jgg@ziepe.ca,
- nicolinc@nvidia.com, mshavit@google.com, jsnitsel@redhat.com,
- smostafa@google.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- iommu@lists.linux.dev
-References: <20250325093625.55184-1-miko.lenczewski@arm.com>
- <20250325093625.55184-2-miko.lenczewski@arm.com>
-Content-Language: en-US
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20250325093625.55184-2-miko.lenczewski@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-On 25/03/2025 09:36, Mikołaj Lenczewski wrote:
-> The Break-Before-Make cpu feature supports multiple levels (levels 0-2),
-> and this commit adds a dedicated BBML2 cpufeature to test against
-> support for, as well as a kernel commandline parameter to optionally
-> disable BBML2 altogether.
-> 
-> This is a system feature as we might have a big.LITTLE architecture
-> where some cores support BBML2 and some don't, but we want all cores to
-> be available and BBM to default to level 0 (as opposed to having cores
-> without BBML2 not coming online).
-> 
-> To support BBML2 in as wide a range of contexts as we can, we want not
-> only the architectural guarantees that BBML2 makes, but additionally
-> want BBML2 to not create TLB conflict aborts. Not causing aborts avoids
-> us having to prove that no recursive faults can be induced in any path
-> that uses BBML2, allowing its use for arbitrary kernel mappings.
-> Support detection of such CPUs.
-> 
-> Signed-off-by: Mikołaj Lenczewski <miko.lenczewski@arm.com>
-
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Lh4eZ0BfjukHNZUE"
+Content-Disposition: inline
+In-Reply-To: <TYCPR01MB11492F2D6D73B2EC18E46D6B98AA72@TYCPR01MB11492.jpnprd01.prod.outlook.com>
 
 
+--Lh4eZ0BfjukHNZUE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+
+> Would SERIAL_RZ_SCI_T2 (and rz-sci-t2 for the driver) be specific enough ?
+
+For me, yes. That means at least "as first supported in RZ/T2". Only
+RZ_SCI seems more arbitrary to me. It might show up in non-RZ platforms
+later, and then RZ_SCI basically has no information gain.
+
+That being said, I see that there doesn't seem to be an easily available
+better name, and we are entering bike-shedding area. I do prefer
+SERIAL_RZ_SCI_T2 but if you really want to keep this version, so be it.
+
+
+
+--Lh4eZ0BfjukHNZUE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfijjwACgkQFA3kzBSg
+KbZlzQ/+Lsk+IZzFWOt3O0lk6Ng2geoq/7aFMUBTwOMXC5oyq09CoEkOcGS5mzw9
+psN/a8WqMOu+4KZ6fwFMNvJtNN05RhDnfP0fiWrPkwPJZTfEr6+uoiBpHvaLX/5O
+8caJOH9V/63DFnswv8E0pefy+3MNu2fktwMDsu6GCAf0L4A8YOwYevl8J3ApuEsz
+/TgMX9rm27bs7h6om/iD0TP/3iph/UzCeG7Zf8/IxkjqGWHsVQKbh1YcP5F11ZF0
+bQHJ0zUb4m1ZAkuN+/1DmKXHNFDgbBoRtnAZ47ytXscWLC4NN5wNu2cs+dW9l6Z4
+ANDl6/+vOQdhEQ6qo0v3WGAr0hTVb1ppcA4pkKI4EQEcHTqq9ofwB/ohb7xYjCQN
+BoW3fDv/d/VODrUjJRHqAggIVpXUKlAnDfW2A98Qi77uFYP3OCCNsa09JZ91ot8J
+DkWJunQc42f2CpHqyD8oFCSrnTyvB1F9n5ozQJgnoxByKItrb6h09SWZrha0kDhV
+e9xCsBe+xfdFOKrreKLeUAu2tzKaZ2X6Zs2xf0LK3es+oRgwdYY80Erm9TFsYuxp
+3G48w42FCcSAJBMDpaFKSGzlLKn3VGv1KKUg1NLEs68cUnljs/8+D+MWwTdD3F9F
+jQOPD5t6ywnhmY38v9U/rdGl4nfcpN5YchF541hqsT+cRldX9Bc=
+=fMXS
+-----END PGP SIGNATURE-----
+
+--Lh4eZ0BfjukHNZUE--
