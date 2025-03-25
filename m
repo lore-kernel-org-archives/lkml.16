@@ -1,148 +1,142 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41981A2387
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 15:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A9A6191493;
+	Tue, 25 Mar 2025 15:41:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742917231; cv=none; b=B8Yxc6sqsOEXLkLosDO4vAU1CxiqJTyYnkY8c8YSCNgQUN1NUXXYy3MkJ/kfl5G8/X/+AhB9K8v7bBw5HnMBRTdKPPXCyn4PlJsFSoGvPkZVwkoOhgX+qDrUZc0quQ68dNLmohamKZV9Uz7CHw+O8L/Iy2nTXC6HWtK3FWog6mQ=
+	t=1742917293; cv=none; b=pNA9MPeeT5YdyFYbe+wE45sXW6MiYSdP2/NQ1aq94TrgcJsmo+WUpDIM/dC/VWrwyjCWoObJfwJCwTJsWYWzz+bGZVgHDR7bTiMDINsK7U7L5R48nvNUMTmCZ/zxIQQMw31aeCutT9WYF4x4BfQ62ZVRQHAYjTePMxoFG2y41SA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742917231; c=relaxed/simple;
-	bh=jj7cgVY1dHCdbl7CToIOpx+DtAOgzXi+ZwBseYtASCc=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=CrSJTTdKAiytxRNO/xEkct8Np/R3QcBAOihlLkMfe9rKKUC6689OPqTl0+XhnMk1YPAcnWZdTmiU3cYCNOerMDEC5nLa56vZNbBWcG+T11ehbyIkfHhNjLdghMjpl9+RjJSKqpXjWRSui9s2ibU7Tn6SiWxTqMRgU3QZ9GCJ4Qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DpQ7wBMM; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1742917293; c=relaxed/simple;
+	bh=0mbEID5ahHrKwR9jwh1G01FTCatcISBK/d1QAIR8hNI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BPxyDxa7OgjHgCDNF99GkSCEc2rckiasTbqvOtlCL9Llw1iGaK2wRgj6xwuolYyf/ixTo7y4tvBr/DmLAIihVDVckg2F/l6Y7ysz3jOd1vvKyHdSLeUH77/wQrOGB0DdcPXUPjFaf0IU3esTPmmtiTdPWbaZYCCPRdKl+DfJUqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eiC0dqTQ; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DpQ7wBMM"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e643f233fbeso8007417276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 08:40:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742917228; x=1743522028; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6tXKzMdne0PcZ1yEwuy/OWzqt9sFMlDxjtYmEokV0uc=;
-        b=DpQ7wBMM/xjZv2pAOc16Cnkt2IO8LMQEjL0Md/kXqHhCHRPQvefY3LvkC1P3jbbFlG
-         NhmAnDrzw4wBS4J2yCAVr0ktn1Hj5U99Dgr0YgFGWcgsi2qBMt5Cdu5kUjOZ3lzTAW87
-         WTZG7T1ABnvQ4NoGrM1mCT8XO1S1TrswZlWWOal2mqgmzEJ/IHwxDtsO/ylCWt1HMvDl
-         Kev+vWUZNxmUfmSFr1EmDpI2P/q+46prOyvsCZTOa++FEZKvf2HCaiRu5uClmfMbu7yo
-         hETJeQbHPfatAvKscJB6bzKjLunE2JNiICXIVwFqTsoZEfEbgmFpHPztQqyLYTUk+/Nt
-         4N3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742917228; x=1743522028;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6tXKzMdne0PcZ1yEwuy/OWzqt9sFMlDxjtYmEokV0uc=;
-        b=jjiMbPx9GF14ITPXiKSa71BlrFS6iwZfhWMLNAjFVodVzq8DyjZSffXyCt9af3jff1
-         uO0+aeFvGFitXcib1n4BGfQVmBmLrLVQqEPsgRGP5nw17X5ddxH/8dewm9Xjv3/oELtt
-         UDrgr75ifLcQLaE01Rhbr1Xpl9SyoufFY1xk679A/kYH46cI4vfIAvIBH4psh7Qu3k8y
-         9n53JDHPiVUx5kHOMMScbbNRnvhxwdp00AFlKXZUlUlDOiKIO3+37/S8pkMZHucwEBe5
-         CumhGRZbpgbcIJ8YoyXZRv9fhJfgbniBkugBXCXXMHFfEbJCxROnBF0bUABmAxDyq3GC
-         I8Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCVIoJ24B6HMc9ur262bEzHHAiTVos71+2jVX23InD2d6vQh9jSncFJzLXGQhWzh5uY9fFgTKY5Vtyq7wfo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCizZuEPWE1UjUwPRILNhGPa0fuiVMj+I+sPJ2OEcZIhXU+bNK
-	LSv0jmxwjp0fakWv6BVJ37epfkZcpJ4M7gP52MjDble5YkEARhyfL9LMDUtsH/zyhN7RqrCQcUH
-	dwQkiWw==
-X-Google-Smtp-Source: AGHT+IG17UaE2XcNrnu+hPwcqCVZ+jD94deum5JjXJ3TZYsixDPJKOzrUExsSkGWbiNP+AoVE5xx2LFFnzZW
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:40b3:9c02:57a5:693c])
- (user=irogers job=sendgmr) by 2002:a25:2d18:0:b0:e63:5e65:658f with SMTP id
- 3f1490d57ef6-e692eb8fe70mr100276.2.1742917228428; Tue, 25 Mar 2025 08:40:28
- -0700 (PDT)
-Date: Tue, 25 Mar 2025 08:14:45 -0700
-In-Reply-To: <20250325151511.13628-1-irogers@google.com>
-Message-Id: <20250325151511.13628-10-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eiC0dqTQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742917292; x=1774453292;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0mbEID5ahHrKwR9jwh1G01FTCatcISBK/d1QAIR8hNI=;
+  b=eiC0dqTQBAupSC8YqTR8+Kl6zYKKn0QbPRnKh/O4BTAqQQfhtqpL5CWj
+   Jy+wUXq+j8yw47IDjeIeUUKsJF6wN8pL5xfwxRPPMDtxCvrNE9Xz1V8ss
+   6Wav9u2rHN1QHIZlkZciBgG7BTu0F4TJdFUY/0FH/JESHQzfByUNL5SU1
+   OGeAr1CRz0m37+CsU4OSmaJkOIVDKYv6w844W5BWaiY/QJc1aGerH5b6Q
+   LysTjVBh5UENbSVfI70LAQTHziGFe092RmwkAUfm3bFKZsTLRzMC6CbNW
+   DmyjGlW1efuo11FEdsIiFVn9RLI97nxExYXwK/889vYeGPmGfJDFtTUXL
+   g==;
+X-CSE-ConnectionGUID: yIRvxbfPT72FCGFBGrxhbQ==
+X-CSE-MsgGUID: LMPQEY+8QI6SWXA/pTXNfQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11384"; a="61563434"
+X-IronPort-AV: E=Sophos;i="6.14,275,1736841600"; 
+   d="scan'208";a="61563434"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 08:41:31 -0700
+X-CSE-ConnectionGUID: eXX55xHSRGG72Mo/kqSWLQ==
+X-CSE-MsgGUID: TiWJfMkNSAisIA4JV4fERw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,275,1736841600"; 
+   d="scan'208";a="124885124"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 08:41:26 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1tx6P4-00000005n4L-3k44;
+	Tue, 25 Mar 2025 17:41:22 +0200
+Date: Tue, 25 Mar 2025 17:41:22 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
+Message-ID: <Z-LOokj8h13IRSSo@smile.fi.intel.com>
+References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
+ <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
+ <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
+ <D8PF2VNMJ0TC.396PL4OJTTBOU@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250325151511.13628-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Subject: [PATCH v2 09/35] perf vendor events: Update clearwaterforest events
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D8PF2VNMJ0TC.396PL4OJTTBOU@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Update event topic of OCR.DEMAND_DATA_RD.ANY_RESPONSE and
-OCR.DEMAND_RFO.ANY_RESPONSE to be cache.
+On Tue, Mar 25, 2025 at 03:29:18PM +0100, Mathieu Dubois-Briand wrote:
+> On Wed Mar 19, 2025 at 12:18 PM CET, Andy Shevchenko wrote:
+> > On Tue, Mar 18, 2025 at 05:26:20PM +0100, mathieu.dubois-briand@bootlin.com wrote:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../arch/x86/clearwaterforest/cache.json      | 20 +++++++++++++++++
- .../arch/x86/clearwaterforest/other.json      | 22 -------------------
- 2 files changed, 20 insertions(+), 22 deletions(-)
- delete mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/other.json
+...
 
-diff --git a/tools/perf/pmu-events/arch/x86/clearwaterforest/cache.json b/tools/perf/pmu-events/arch/x86/clearwaterforest/cache.json
-index 875361b30f1d..17f8bfba56bc 100644
---- a/tools/perf/pmu-events/arch/x86/clearwaterforest/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/clearwaterforest/cache.json
-@@ -140,5 +140,25 @@
-         "EventName": "MEM_UOPS_RETIRED.STORE_LATENCY",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x6"
-+    },
-+    {
-+        "BriefDescription": "Counts demand data reads that have any type of response.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand read for ownership (RFO) requests and software prefetches for exclusive ownership (PREFETCHW) that have any type of response.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10002",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-     }
- ]
-diff --git a/tools/perf/pmu-events/arch/x86/clearwaterforest/other.json b/tools/perf/pmu-events/arch/x86/clearwaterforest/other.json
-deleted file mode 100644
-index 80454e497f83..000000000000
---- a/tools/perf/pmu-events/arch/x86/clearwaterforest/other.json
-+++ /dev/null
-@@ -1,22 +0,0 @@
--[
--    {
--        "BriefDescription": "Counts demand data reads that have any type of response.",
--        "Counter": "0,1,2,3,4,5,6,7",
--        "EventCode": "0xB7",
--        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand read for ownership (RFO) requests and software prefetches for exclusive ownership (PREFETCHW) that have any type of response.",
--        "Counter": "0,1,2,3,4,5,6,7",
--        "EventCode": "0xB7",
--        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10002",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    }
--]
+> > > +static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
+> > > +					   struct pwm_device *pwm,
+> > > +					   const struct pwm_waveform *wf,
+> > > +					   void *_wfhw)
+> >
+> > I would expect other way around, i.e. naming with leading underscore(s) to be
+> > private / local. Ditto for all similar cases.
+> 
+> I get the point, but the 2 existing drivers based on pwm_ops structure
+> name it that way: drivers/pwm/pwm-axi-pwmgen.c and
+> drivers/pwm/pwm-stm32.c.
+> 
+> Also, the parameter is mostly unusable as-is, as it is a void*, so I
+> believe it also makes sense to have no underscore for the correctly
+> casted one, that we will be using in the function body (wfhw).
+
+It's all up to PWM maintainers, but I find this style a bit weird, sorry.
+I only saw this in the macros, where it's kinda okay. In functions it's
+something that needs an additional thinking and understanding the semantics
+of the underscore.
+
+...
+
+> > > +static int max7360_pwm_probe(struct platform_device *pdev)
+> > > +{
+> > > +	struct device *dev = &pdev->dev;
+> > > +	struct pwm_chip *chip;
+> > > +	struct regmap *regmap;
+> > > +	int ret;
+> > > +
+> > > +	if (!dev->parent)
+> > > +		return dev_err_probe(dev, -ENODEV, "no parent device\n");
+> >
+> > Why? Code most likely will fail on the regmap retrieval. Just do that first.
+> >
+> > > +	chip = devm_pwmchip_alloc(dev->parent, MAX7360_NUM_PWMS, 0);
+> >
+> > This is quite worrying. The devm_ to parent makes a lot of assumptions that may
+> > not be realised. If you really need this, it has to have a very good comment
+> > explaining why and object lifetimes.
+> 
+> Thanks, I'm fixing this in this driver and similar code in keypad,
+> rotary and pinctrl. More details in the child mail.
+
+Sure, thanks!
+
 -- 
-2.49.0.395.g12beb8f557-goog
+With Best Regards,
+Andy Shevchenko
+
 
