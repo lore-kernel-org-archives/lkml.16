@@ -1,65 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFAA2580CB;
-	Tue, 25 Mar 2025 09:36:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F3F258CD2;
+	Tue, 25 Mar 2025 09:36:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742895398; cv=none; b=LKGRhsfENYaT3PHKJm9VOpPinVHbztBqUeJsnL1LxYKnP5obdveKmukFmF2hpL2MrHe6XcuNVrVm5DsItY/ruN4/5dzo4nhb2aCgk/erx5ck5AUd/sQHQDhoYGGHxLmzSBVi0XubYnjhhWn9fHs1Wm0BgzMOY1ibSAOettFkqME=
+	t=1742895400; cv=none; b=ffKrBamvvEu0/90/A4WVNfp1yppsugjoUpC2qf3dIdZMaVfFeVHaOxjy72ltvG/kgjN1o336XgKnRNR6YDmuuPLdcOeZJ3dlQmaTIV3HdhXAC/rEBWXGM0+EeZubMI7innoJEm0uhfCOc3fLyykYvFJXZBFg/e/7mfByO6xhJZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742895398; c=relaxed/simple;
-	bh=kIe+dQeBNbMQ4SKdJson20OczwY0tAsGwiNsbe7WF4Q=;
+	s=arc-20240116; t=1742895400; c=relaxed/simple;
+	bh=8E5uvYj6591b+e1itvfJv6K5bw/JI9M05B7hoeyJpzw=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=juQBAmrTiNNUCfGLzl1evA4+8Rx6xSTQl9id8fME7q5yYmf5C2f8heqZA/IWYH5CwmvnRIK6XwSTRzEV8olsU2icuxWMFvOeVJo/KbT+Y/t1qrJzBYuuwtKlVgTNPonT1bSreIU0B3XbOTSYNKuz3EhLHilyly64SAdrRP1xr1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aR7Fibe8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gE8tgG+t; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=L5Jtu890juzc9a+xN5qSfoWvYRE5vvTpPb5rHCraD/5FB0iNWDb3Kj40HsZfYIIRsZX9MG7bZih5B19Q0KDef5ceHV6Tfz7WD9WvbNRK6ryDLQ3Res+U9k0Iz09PYhhCvCLmbZjn38oU0Qz5x11wrMCwxNxka/B59H6nYdrtMog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RWomz/Zm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k1ahghLh; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aR7Fibe8";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gE8tgG+t"
-Date: Tue, 25 Mar 2025 09:36:33 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RWomz/Zm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k1ahghLh"
+Date: Tue, 25 Mar 2025 09:36:35 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742895394;
+	s=2020; t=1742895396;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xkQ6hSvdVe15I07d2ymsi3vdQv/uQm6JIWI+kTq7KmM=;
-	b=aR7Fibe8Zs4MSTpih9FCc9F4PycYW/TyYdZD5VodW1/K6ISLTrkg69SViCgTsR2881OZlj
-	DzsVkCoIXJSKeoWAjmcSGiTolsPtd5rCUBNcGTHsxP2ytMI5C+wRIwAp08UK4DWEzegkXz
-	ks2UbSCxXh4Lutz4Eqy7vRMN+jheyqWNq9Etri1Two1K7UfRtsQLczi4LoL7YbSr6tzOjC
-	6r3TIu8PjE6+jBitku0ezTlep5n2sHQ2lffAh3DQHATOFKUeFZ32WQNdLq8epKsPmc/8Qd
-	EAVlHr72q3ZQyOoQkwN6C5LamMRkX6FPb77gpgTthw5RVm9/Nuwk4XNXjW6l2w==
+	bh=I+/ShWuf6XaTl06BNSe4FcsmSnRBtKqOGAV3aTee27o=;
+	b=RWomz/ZmEURqyDloaHeXx3cHr0SNN8PryLoLCaS9MlO1BepdbIwdDez+DTAaEPpdM7BxKU
+	qpjxpa9vvUaobovjAgf4305Vfkztygjq7rQQwlLixNcOtOQwnGV1wzaLMXWDpzhYXcf8Jk
+	fpkeTlw80w7aHYkVagNRxJUPk/9E+uIeThsx1r+/EEcsnoSqCHtTZ9WjJn8nvKTRJjoSGF
+	ww1OmpUL5Wp653saNJMvTwXNc7ey7nNuWpk+g9FYPnTWnBG55gLSPzKJaeougqkBR/RqVG
+	f7WnP8nZ7MS5rro8DkWwLgQXXDaVrjp4oPo4RoILJcbbuOxJmzBV1mkVC6+DxA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742895394;
+	s=2020e; t=1742895396;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xkQ6hSvdVe15I07d2ymsi3vdQv/uQm6JIWI+kTq7KmM=;
-	b=gE8tgG+twRS0D3cuiIbSKzFOeJSK4nN//bR7UXGVJQgD3bjFpWMACmn8RatQD6pKncN7iV
-	kdNegJBhzFfQSuCg==
-From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+	bh=I+/ShWuf6XaTl06BNSe4FcsmSnRBtKqOGAV3aTee27o=;
+	b=k1ahghLhCJUj/N6eM1UcyEfUorrB3En2OPEAvsnJr7XYgD+Q5YcVI6lf2E+x9BI4t0grrO
+	5WlQhPc7u4jq3hAw==
+From: "tip-bot2 for Ahmed S. Darwish" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cacheinfo: Use proper name for cacheinfo instances
-Cc: Thomas Gleixner <tglx@linutronix.de>,
- "Ahmed S. Darwish" <darwi@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+Subject:
+ [tip: x86/cpu] x86/cpu: Introduce and use CPUID leaf 0x2 parsing helpers
+Cc: "Ahmed S. Darwish" <darwi@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
  "H. Peter Anvin" <hpa@zytor.com>,
  Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250324133324.23458-8-darwi@linutronix.de>
-References: <20250324133324.23458-8-darwi@linutronix.de>
+In-Reply-To: <20250324133324.23458-4-darwi@linutronix.de>
+References: <20250324133324.23458-4-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174289539364.14745.11407246423474648500.tip-bot2@tip-bot2>
+Message-ID: <174289539591.14745.1940490304633626580.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,270 +69,183 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cpu branch of tip:
 
-Commit-ID:     cf8758205264707b4521163c0a37bf587c4425c4
-Gitweb:        https://git.kernel.org/tip/cf8758205264707b4521163c0a37bf587c4425c4
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Mon, 24 Mar 2025 14:33:02 +01:00
+Commit-ID:     fe78079ec07fd48a19abcfeac74bc97e07171fb6
+Gitweb:        https://git.kernel.org/tip/fe78079ec07fd48a19abcfeac74bc97e07171fb6
+Author:        Ahmed S. Darwish <darwi@linutronix.de>
+AuthorDate:    Mon, 24 Mar 2025 14:32:58 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 25 Mar 2025 10:22:19 +01:00
+CommitterDate: Tue, 25 Mar 2025 10:22:06 +01:00
 
-x86/cacheinfo: Use proper name for cacheinfo instances
+x86/cpu: Introduce and use CPUID leaf 0x2 parsing helpers
 
-The cacheinfo structure defined at <include/linux/cacheinfo.h> is a
-generic cache info object representation.
+Introduce CPUID leaf 0x2 parsing helpers at <asm/cpuid/leaf_0x2_api.h>.
+This allows sharing the leaf 0x2's output validation and iteration logic
+across both x86/cpu intel.c and cacheinfo.c.
 
-Calling its instances at x86 cacheinfo.c "leaf" confuses it with a CPUID
-leaf -- especially that multiple CPUID calls are already sprinkled across
-that file.  Most of such instances also have a redundant "this_" prefix.
+Start by converting intel.c to the new API.
 
-Rename all of the cacheinfo "this_leaf" instances to just "ci".
-
-[ darwi: Move into separate commit and write commit log ]
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250324133324.23458-8-darwi@linutronix.de
+Link: https://lore.kernel.org/r/20250324133324.23458-4-darwi@linutronix.de
 ---
- arch/x86/kernel/cpu/cacheinfo.c | 89 +++++++++++++++-----------------
- 1 file changed, 43 insertions(+), 46 deletions(-)
+ arch/x86/include/asm/cpuid.h              |  1 +-
+ arch/x86/include/asm/cpuid/leaf_0x2_api.h | 65 ++++++++++++++++++++++-
+ arch/x86/include/asm/cpuid/types.h        | 16 +++++-
+ arch/x86/kernel/cpu/intel.c               | 23 ++------
+ 4 files changed, 88 insertions(+), 17 deletions(-)
+ create mode 100644 arch/x86/include/asm/cpuid/leaf_0x2_api.h
 
-diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
-index 0fd4e96..be9be5e 100644
---- a/arch/x86/kernel/cpu/cacheinfo.c
-+++ b/arch/x86/kernel/cpu/cacheinfo.c
-@@ -349,11 +349,10 @@ static int amd_get_l3_disable_slot(struct amd_northbridge *nb, unsigned slot)
- 	return -1;
- }
+diff --git a/arch/x86/include/asm/cpuid.h b/arch/x86/include/asm/cpuid.h
+index d5749b2..5858193 100644
+--- a/arch/x86/include/asm/cpuid.h
++++ b/arch/x86/include/asm/cpuid.h
+@@ -4,5 +4,6 @@
+ #define _ASM_X86_CPUID_H
  
--static ssize_t show_cache_disable(struct cacheinfo *this_leaf, char *buf,
--				  unsigned int slot)
-+static ssize_t show_cache_disable(struct cacheinfo *ci, char *buf, unsigned int slot)
+ #include <asm/cpuid/api.h>
++#include <asm/cpuid/leaf_0x2_api.h>
+ 
+ #endif /* _ASM_X86_CPUID_H */
+diff --git a/arch/x86/include/asm/cpuid/leaf_0x2_api.h b/arch/x86/include/asm/cpuid/leaf_0x2_api.h
+new file mode 100644
+index 0000000..4c845fc
+--- /dev/null
++++ b/arch/x86/include/asm/cpuid/leaf_0x2_api.h
+@@ -0,0 +1,65 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_CPUID_LEAF_0x2_API_H
++#define _ASM_X86_CPUID_LEAF_0x2_API_H
++
++#include <asm/cpuid/api.h>
++#include <asm/cpuid/types.h>
++
++/**
++ * cpuid_get_leaf_0x2_regs() - Return sanitized leaf 0x2 register output
++ * @regs:	Output parameter
++ *
++ * Query CPUID leaf 0x2 and store its output in @regs.	Force set any
++ * invalid 1-byte descriptor returned by the hardware to zero (the NULL
++ * cache/TLB descriptor) before returning it to the caller.
++ *
++ * Use for_each_leaf_0x2_desc() to iterate over the returned output.
++ */
++static inline void cpuid_get_leaf_0x2_regs(union leaf_0x2_regs *regs)
++{
++	cpuid_leaf(0x2, regs);
++
++	/*
++	 * All Intel CPUs must report an iteration count of 1.	In case
++	 * of bogus hardware, treat all returned descriptors as NULL.
++	 */
++	if (regs->desc[0] != 0x01) {
++		for (int i = 0; i < 4; i++)
++			regs->regv[i] = 0;
++		return;
++	}
++
++	/*
++	 * The most significant bit (MSB) of each register must be clear.
++	 * If a register is invalid, replace its descriptors with NULL.
++	 */
++	for (int i = 0; i < 4; i++) {
++		if (regs->reg[i].invalid)
++			regs->regv[i] = 0;
++	}
++}
++
++/**
++ * for_each_leaf_0x2_desc() - Iterator for CPUID leaf 0x2 descriptors
++ * @regs:	Leaf 0x2 output, as returned by cpuid_get_leaf_0x2_regs()
++ * @desc:	Pointer to the returned descriptor for each iteration
++ *
++ * Loop over the 1-byte descriptors in the passed leaf 0x2 output registers
++ * @regs.  Provide each descriptor through @desc.
++ *
++ * Note that the first byte is skipped as it is not a descriptor.
++ *
++ * Sample usage::
++ *
++ *	union leaf_0x2_regs regs;
++ *	u8 *desc;
++ *
++ *	cpuid_get_leaf_0x2_regs(&regs);
++ *	for_each_leaf_0x2_desc(regs, desc) {
++ *		// Handle *desc value
++ *	}
++ */
++#define for_each_leaf_0x2_desc(regs, desc)				\
++	for (desc = &(regs).desc[1]; desc < &(regs).desc[16]; desc++)
++
++#endif /* _ASM_X86_CPUID_LEAF_0x2_API_H */
+diff --git a/arch/x86/include/asm/cpuid/types.h b/arch/x86/include/asm/cpuid/types.h
+index 8582e27..753f6c4 100644
+--- a/arch/x86/include/asm/cpuid/types.h
++++ b/arch/x86/include/asm/cpuid/types.h
+@@ -29,4 +29,20 @@ enum cpuid_regs_idx {
+ #define CPUID_LEAF_FREQ		0x16
+ #define CPUID_LEAF_TILE		0x1d
+ 
++/*
++ * Types for CPUID(0x2) parsing
++ * Check <asm/cpuid/leaf_0x2_api.h>
++ */
++
++struct leaf_0x2_reg {
++		u32		: 31,
++			invalid	: 1;
++};
++
++union leaf_0x2_regs {
++	struct leaf_0x2_reg	reg[4];
++	u32			regv[4];
++	u8			desc[16];
++};
++
+ #endif /* _ASM_X86_CPUID_TYPES_H */
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 0570d4d..aeb7d6d 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -16,6 +16,7 @@
+ #include <asm/cpu_device_id.h>
+ #include <asm/cpufeature.h>
+ #include <asm/cpu.h>
++#include <asm/cpuid.h>
+ #include <asm/hwcap2.h>
+ #include <asm/intel-family.h>
+ #include <asm/microcode.h>
+@@ -778,27 +779,15 @@ static void intel_tlb_lookup(const unsigned char desc)
+ 
+ static void intel_detect_tlb(struct cpuinfo_x86 *c)
  {
- 	int index;
--	struct amd_northbridge *nb = this_leaf->priv;
-+	struct amd_northbridge *nb = ci->priv;
+-	u32 regs[4];
+-	u8 *desc = (u8 *)regs;
++	union leaf_0x2_regs regs;
++	u8 *desc;
  
- 	index = amd_get_l3_disable_slot(nb, slot);
- 	if (index >= 0)
-@@ -367,8 +366,8 @@ static ssize_t								\
- cache_disable_##slot##_show(struct device *dev,				\
- 			    struct device_attribute *attr, char *buf)	\
- {									\
--	struct cacheinfo *this_leaf = dev_get_drvdata(dev);		\
--	return show_cache_disable(this_leaf, buf, slot);		\
-+	struct cacheinfo *ci = dev_get_drvdata(dev);			\
-+	return show_cache_disable(ci, buf, slot);			\
- }
- SHOW_CACHE_DISABLE(0)
- SHOW_CACHE_DISABLE(1)
-@@ -435,18 +434,17 @@ static int amd_set_l3_disable_slot(struct amd_northbridge *nb, int cpu,
- 	return 0;
- }
- 
--static ssize_t store_cache_disable(struct cacheinfo *this_leaf,
--				   const char *buf, size_t count,
--				   unsigned int slot)
-+static ssize_t store_cache_disable(struct cacheinfo *ci, const char *buf,
-+				   size_t count, unsigned int slot)
- {
- 	unsigned long val = 0;
- 	int cpu, err = 0;
--	struct amd_northbridge *nb = this_leaf->priv;
-+	struct amd_northbridge *nb = ci->priv;
- 
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
- 
--	cpu = cpumask_first(&this_leaf->shared_cpu_map);
-+	cpu = cpumask_first(&ci->shared_cpu_map);
- 
- 	if (kstrtoul(buf, 10, &val) < 0)
- 		return -EINVAL;
-@@ -467,8 +465,8 @@ cache_disable_##slot##_store(struct device *dev,			\
- 			     struct device_attribute *attr,		\
- 			     const char *buf, size_t count)		\
- {									\
--	struct cacheinfo *this_leaf = dev_get_drvdata(dev);		\
--	return store_cache_disable(this_leaf, buf, count, slot);	\
-+	struct cacheinfo *ci = dev_get_drvdata(dev);			\
-+	return store_cache_disable(ci, buf, count, slot);		\
- }
- STORE_CACHE_DISABLE(0)
- STORE_CACHE_DISABLE(1)
-@@ -476,8 +474,8 @@ STORE_CACHE_DISABLE(1)
- static ssize_t subcaches_show(struct device *dev,
- 			      struct device_attribute *attr, char *buf)
- {
--	struct cacheinfo *this_leaf = dev_get_drvdata(dev);
--	int cpu = cpumask_first(&this_leaf->shared_cpu_map);
-+	struct cacheinfo *ci = dev_get_drvdata(dev);
-+	int cpu = cpumask_first(&ci->shared_cpu_map);
- 
- 	return sprintf(buf, "%x\n", amd_get_subcaches(cpu));
- }
-@@ -486,8 +484,8 @@ static ssize_t subcaches_store(struct device *dev,
- 			       struct device_attribute *attr,
- 			       const char *buf, size_t count)
- {
--	struct cacheinfo *this_leaf = dev_get_drvdata(dev);
--	int cpu = cpumask_first(&this_leaf->shared_cpu_map);
-+	struct cacheinfo *ci = dev_get_drvdata(dev);
-+	int cpu = cpumask_first(&ci->shared_cpu_map);
- 	unsigned long val;
- 
- 	if (!capable(CAP_SYS_ADMIN))
-@@ -511,10 +509,10 @@ cache_private_attrs_is_visible(struct kobject *kobj,
- 			       struct attribute *attr, int unused)
- {
- 	struct device *dev = kobj_to_dev(kobj);
--	struct cacheinfo *this_leaf = dev_get_drvdata(dev);
-+	struct cacheinfo *ci = dev_get_drvdata(dev);
- 	umode_t mode = attr->mode;
- 
--	if (!this_leaf->priv)
-+	if (!ci->priv)
- 		return 0;
- 
- 	if ((attr == &dev_attr_subcaches.attr) &&
-@@ -562,11 +560,11 @@ static void init_amd_l3_attrs(void)
- }
- 
- const struct attribute_group *
--cache_get_priv_group(struct cacheinfo *this_leaf)
-+cache_get_priv_group(struct cacheinfo *ci)
- {
--	struct amd_northbridge *nb = this_leaf->priv;
-+	struct amd_northbridge *nb = ci->priv;
- 
--	if (this_leaf->level < 3 || !nb)
-+	if (ci->level < 3 || !nb)
- 		return NULL;
- 
- 	if (nb && nb->l3_cache.indices)
-@@ -846,7 +844,7 @@ static int __cache_amd_cpumap_setup(unsigned int cpu, int index,
- 				    struct _cpuid4_info_regs *base)
- {
- 	struct cpu_cacheinfo *this_cpu_ci;
--	struct cacheinfo *this_leaf;
-+	struct cacheinfo *ci;
- 	int i, sibling;
- 
- 	/*
-@@ -858,12 +856,12 @@ static int __cache_amd_cpumap_setup(unsigned int cpu, int index,
- 			this_cpu_ci = get_cpu_cacheinfo(i);
- 			if (!this_cpu_ci->info_list)
- 				continue;
--			this_leaf = this_cpu_ci->info_list + index;
-+			ci = this_cpu_ci->info_list + index;
- 			for_each_cpu(sibling, cpu_llc_shared_mask(cpu)) {
- 				if (!cpu_online(sibling))
- 					continue;
- 				cpumask_set_cpu(sibling,
--						&this_leaf->shared_cpu_map);
-+						&ci->shared_cpu_map);
- 			}
- 		}
- 	} else if (boot_cpu_has(X86_FEATURE_TOPOEXT)) {
-@@ -883,14 +881,14 @@ static int __cache_amd_cpumap_setup(unsigned int cpu, int index,
- 			if ((apicid < first) || (apicid > last))
- 				continue;
- 
--			this_leaf = this_cpu_ci->info_list + index;
-+			ci = this_cpu_ci->info_list + index;
- 
- 			for_each_online_cpu(sibling) {
- 				apicid = cpu_data(sibling).topo.apicid;
- 				if ((apicid < first) || (apicid > last))
- 					continue;
- 				cpumask_set_cpu(sibling,
--						&this_leaf->shared_cpu_map);
-+						&ci->shared_cpu_map);
- 			}
- 		}
- 	} else
-@@ -903,7 +901,7 @@ static void __cache_cpumap_setup(unsigned int cpu, int index,
- 				 struct _cpuid4_info_regs *base)
- {
- 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
--	struct cacheinfo *this_leaf, *sibling_leaf;
-+	struct cacheinfo *ci, *sibling_ci;
- 	unsigned long num_threads_sharing;
- 	int index_msb, i;
- 	struct cpuinfo_x86 *c = &cpu_data(cpu);
-@@ -914,10 +912,10 @@ static void __cache_cpumap_setup(unsigned int cpu, int index,
- 			return;
- 	}
- 
--	this_leaf = this_cpu_ci->info_list + index;
-+	ci = this_cpu_ci->info_list + index;
- 	num_threads_sharing = 1 + base->eax.split.num_threads_sharing;
- 
--	cpumask_set_cpu(cpu, &this_leaf->shared_cpu_map);
-+	cpumask_set_cpu(cpu, &ci->shared_cpu_map);
- 	if (num_threads_sharing == 1)
+ 	if (c->cpuid_level < 2)
  		return;
  
-@@ -929,28 +927,27 @@ static void __cache_cpumap_setup(unsigned int cpu, int index,
- 
- 			if (i == cpu || !sib_cpu_ci->info_list)
- 				continue;/* skip if itself or no cacheinfo */
--			sibling_leaf = sib_cpu_ci->info_list + index;
--			cpumask_set_cpu(i, &this_leaf->shared_cpu_map);
--			cpumask_set_cpu(cpu, &sibling_leaf->shared_cpu_map);
-+			sibling_ci = sib_cpu_ci->info_list + index;
-+			cpumask_set_cpu(i, &ci->shared_cpu_map);
-+			cpumask_set_cpu(cpu, &sibling_ci->shared_cpu_map);
- 		}
+-	cpuid(2, &regs[0], &regs[1], &regs[2], &regs[3]);
+-
+-	/* Intel CPUs must report an iteration count of 1 */
+-	if (desc[0] != 0x01)
+-		return;
+-
+-	/* If a register's bit 31 is set, it is an unknown format */
+-	for (int i = 0; i < 4; i++) {
+-		if (regs[i] & (1 << 31))
+-			regs[i] = 0;
+-	}
+-
+-	/* Skip the first byte as it is not a descriptor */
+-	for (int i = 1; i < 16; i++)
+-		intel_tlb_lookup(desc[i]);
++	cpuid_get_leaf_0x2_regs(&regs);
++	for_each_leaf_0x2_desc(regs, desc)
++		intel_tlb_lookup(*desc);
  }
  
--static void ci_leaf_init(struct cacheinfo *this_leaf,
--			 struct _cpuid4_info_regs *base)
-+static void ci_info_init(struct cacheinfo *ci, struct _cpuid4_info_regs *base)
- {
--	this_leaf->id = base->id;
--	this_leaf->attributes = CACHE_ID;
--	this_leaf->level = base->eax.split.level;
--	this_leaf->type = cache_type_map[base->eax.split.type];
--	this_leaf->coherency_line_size =
-+	ci->id = base->id;
-+	ci->attributes = CACHE_ID;
-+	ci->level = base->eax.split.level;
-+	ci->type = cache_type_map[base->eax.split.type];
-+	ci->coherency_line_size =
- 				base->ebx.split.coherency_line_size + 1;
--	this_leaf->ways_of_associativity =
-+	ci->ways_of_associativity =
- 				base->ebx.split.ways_of_associativity + 1;
--	this_leaf->size = base->size;
--	this_leaf->number_of_sets = base->ecx.split.number_of_sets + 1;
--	this_leaf->physical_line_partition =
-+	ci->size = base->size;
-+	ci->number_of_sets = base->ecx.split.number_of_sets + 1;
-+	ci->physical_line_partition =
- 				base->ebx.split.physical_line_partition + 1;
--	this_leaf->priv = base->nb;
-+	ci->priv = base->nb;
- }
- 
- int init_cache_level(unsigned int cpu)
-@@ -984,7 +981,7 @@ int populate_cache_leaves(unsigned int cpu)
- {
- 	unsigned int idx, ret;
- 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
--	struct cacheinfo *this_leaf = this_cpu_ci->info_list;
-+	struct cacheinfo *ci = this_cpu_ci->info_list;
- 	struct _cpuid4_info_regs id4_regs = {};
- 
- 	for (idx = 0; idx < this_cpu_ci->num_leaves; idx++) {
-@@ -992,7 +989,7 @@ int populate_cache_leaves(unsigned int cpu)
- 		if (ret)
- 			return ret;
- 		get_cache_id(cpu, &id4_regs);
--		ci_leaf_init(this_leaf++, &id4_regs);
-+		ci_info_init(ci++, &id4_regs);
- 		__cache_cpumap_setup(cpu, idx, &id4_regs);
- 	}
- 	this_cpu_ci->cpu_map_populated = true;
+ static const struct cpu_dev intel_cpu_dev = {
