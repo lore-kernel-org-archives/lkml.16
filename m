@@ -1,155 +1,252 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C041F4E4B;
-	Tue, 25 Mar 2025 15:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A7D25D209
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 15:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742915772; cv=none; b=ULMjGfPz7lz8FORODyv9/2xOwHZHHuUmK2tTtEw1InRTGrDQAea4BywdOY2Z65lKYiEIl6QqR+i+LXK5UnwFMtgCFWhpxY4UnYkcxKlACUM5o+r10GkS5AHoL5iL40hciVx3kKelVBGA5SuKbfqX3YnGw9fMU/LZlyzzaEIaw6Y=
+	t=1742915775; cv=none; b=keIP1awhWqxEHmt/9W4YK8yRkxrd9pOXMnBd76WwjgzArcIEsu56N6ObMMFNLFyEGTGk3PdMu47vP1Kp0toXmgEu2W0X1iSMS8yjZkXoK7mADdWxdX+ji4kcWEmPjHycGr5CV8HxUKGxLrEx1vG42EBCtSneBwMJ8sOh2PgVPJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742915772; c=relaxed/simple;
-	bh=5ByUJpks9hkZhuJoceNmjpMgpU8NiVFGUeBDfoAE150=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ymu18HODcd+aF7swLSCkKwEk2L1eJh4vRTe+lqDZV7yR2UHKhAaXqOimzUc8Ik5rHz3n5o+goCWMn8j8aAAHzwOUYScCqXEtvnVekdSK3nYr86CbFMHd3BWnX5N60BnqtySFBYo3UboF2aDOaqefwSJECEdmUuTHjEZ6a8RPJes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vLPVmvDc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742915775; c=relaxed/simple;
+	bh=Ayp5UJ5po3xqzSmNKz9lmgoFoJ0PtHgNI6fQbZIbiZU=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=GTstoCd5XdXOzioAXnfFEAJLdxivAhuBusAQD8k6uolhyowKYnPW/nSj9e9vjU+xkyeh7RNzpiRQ6TuRkhepeMG//uVQD546kGKPwbeLVDs7R6l7m6PWjRdANZv89a+VJqIZ/7l9KIk5/Ev0bF6PG6j3FzMy+uUU9nj2otLDEEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kY55vHt+; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vLPVmvDc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E88A6C4CEE4;
-	Tue, 25 Mar 2025 15:16:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742915772;
-	bh=5ByUJpks9hkZhuJoceNmjpMgpU8NiVFGUeBDfoAE150=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vLPVmvDcdWcHF5VNb//6QuBceDBAFsUxvouEhOfevFwX7zzpHqTD7Z2q4DJvRmlFB
-	 GQv1gvCsygYRFHv/ja5UWu4+WwEr1my4iRzZQPi9S1P3dCtAutlpaKrsV8AW3L5Uto
-	 GqaKna3ic6X4bfMn91rlM047BCW+Dz/DM00Ld9yAJISCgFtC73NjcItqk3jIbkk51P
-	 fMr+TeBbaJy0F2tl7TqWhL7UwehxwVTrq3m5i9vgrRqtKk8I5jBlwlT7QIfHztKbxR
-	 vqQr78kIqdwVTfurkMxTojgv1Wz7bZxQuiWMoNU5vCFuOJI+kdOpM8DYxnnec0XaQ3
-	 G9cZsUGQP+61w==
-Date: Tue, 25 Mar 2025 10:16:11 -0500
-From: Rob Herring <robh@kernel.org>
-To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>,
-	Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org,
-	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v3 02/10] dt-bindings: phy: samsung,usb3-drd-phy: add
- exynos2200 support
-Message-ID: <20250325151611.GA2057949-robh@kernel.org>
-References: <20250321135854.1431375-1-ivo.ivanov.ivanov1@gmail.com>
- <20250321135854.1431375-3-ivo.ivanov.ivanov1@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kY55vHt+"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e5740c858beso6946275276.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 08:16:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742915772; x=1743520572; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SxYgSR+rs6fV7hfbOGIpD5imBossFIK7oKYgVysxITY=;
+        b=kY55vHt+XDjGsxmAWJ6rK08QyHyI4TBa4YyhphtLjYqNZfHesleEQlNS/tEtqSfTgG
+         nyTj5XvJTFr0RU0zMWrjEvY8/l0R7yn/SQ4UmC+vW9JaZ/BqMAnpPy0pw1hzf+JRLcxD
+         xXRxTrhXR2NVAd20ylsExMGNirBvwT3YHKXvFlrJFKUEVc9gAjKwpgDT9s/a13h/f4D3
+         FIKf/3vtDCFXwqmTPkToMUnN7Yg2p5ewkcLtA3N/fIutryklzRZZ0lL1+YQfuMDTg7UU
+         pM7YxVo5DzH8JotfPndxgJkqkBX4lGB/Iu+05CBAt0m1cvYcM1Pv9Pcoy2JL95vxskv2
+         7HEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742915772; x=1743520572;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SxYgSR+rs6fV7hfbOGIpD5imBossFIK7oKYgVysxITY=;
+        b=c7DMJN9+IeRL8nMzTiZV36DsYoV3H5I/YzHlU6Y25WwLtCNBxyO7eiuAnxj5Xuhtmh
+         3NePDGe1oVxw9NsVtG0S71oiFSLIrk4rQuYll3TmpL6xtOnPYPGvNO8p5I8By6Gtr+HE
+         GBwJceTJIk/zaAfuxq0OZsj1A6BTPnf6btqbtlTzxf4yqPIfTj9KnY0mCUkLYK5cASvy
+         mpJGsFooOddS/qXJUIapOWFxTvMr/KQ3CogcDZSO5url6aIzk5/HoQDljbOxDzUc2k/m
+         OtozP/YeqUjrI1x0h+DqI0BPZbs6gvIM49uMFMAn36Tmh73eKtNKxzMQoEbkdnBpD7pQ
+         a1DQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXLhdzZPGej9MKlBsG7HBIwDgTxzT4GxYcMCtu/jtF5D6RbpoQEsOn/f37JR+y57N/g0z9OEFbZUT8fmI8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyddCygdHPxXBHnniJuX6eoo2PdYI5+D2y8tyApF8jWf2mvp8Cc
+	NDnXOg7q/u/Cvg3f5bGaoCg5UFwimqexuW7zMn0wV/1D6lAXqgs065G/mPCNKyVcZ4Z/rM1gIaK
+	j6sHm6Q==
+X-Google-Smtp-Source: AGHT+IFWsvZ3MZTa1iXnnfjNdh2akMiPZ8iIMTPv9BKJDVoFdJ9VU7RjWDTGLmvkNqLH3bUcjLhu1d7Vc85i
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:40b3:9c02:57a5:693c])
+ (user=irogers job=sendgmr) by 2002:a25:ef44:0:b0:e64:e234:ef50 with SMTP id
+ 3f1490d57ef6-e66a4a89f91mr8741276.0.1742915772069; Tue, 25 Mar 2025 08:16:12
+ -0700 (PDT)
+Date: Tue, 25 Mar 2025 08:13:02 -0700
+Message-Id: <20250325151337.13143-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321135854.1431375-3-ivo.ivanov.ivanov1@gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
+Subject: [PATCH v2 00/35] GNR retirement latencies, topic and metric updates
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Mar 21, 2025 at 03:58:46PM +0200, Ivaylo Ivanov wrote:
-> Document support for Exynos2200. As the USBDRD 3.2 4nm controller
-> consists of Synopsys eUSB2.0 phy and USBDP/SS combophy, which will
-> be handled by external drivers, define only the bus clocked used
-> by the link controller.
-> 
-> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-> ---
->  .../bindings/phy/samsung,usb3-drd-phy.yaml    | 38 +++++++++++++++++--
->  1 file changed, 34 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/samsung,usb3-drd-phy.yaml b/Documentation/devicetree/bindings/phy/samsung,usb3-drd-phy.yaml
-> index 16321cdd4..819e4afe6 100644
-> --- a/Documentation/devicetree/bindings/phy/samsung,usb3-drd-phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/samsung,usb3-drd-phy.yaml
-> @@ -26,6 +26,7 @@ properties:
->    compatible:
->      enum:
->        - google,gs101-usb31drd-phy
-> +      - samsung,exynos2200-usb32drd-phy
->        - samsung,exynos5250-usbdrd-phy
->        - samsung,exynos5420-usbdrd-phy
->        - samsung,exynos5433-usbdrd-phy
-> @@ -33,24 +34,32 @@ properties:
->        - samsung,exynos850-usbdrd-phy
->  
->    clocks:
-> -    minItems: 2
-> +    minItems: 1
->      maxItems: 5
->  
->    clock-names:
-> -    minItems: 2
-> +    minItems: 1
->      maxItems: 5
->      description: |
-> -      At least two clocks::
-> +      Typically two clocks::
+Add default mean, min and max retirement latency values to GNR
+events. Update the topics on a number of events previously
+"other". Switch TMA metrics to the generated version. Add TMA 5.02
+metrics for sandybridge, ivytown, ivybridge and jaketown.
 
-Don't need double colon.
+Events and metrics generated from the data and scripts in:
+https://github.com/intel/perfmon
+and:
+https://github.com/intel/perfmon/pull/298
 
->          - Main PHY clock (same as USB DRD controller i.e. DWC3 IP clock), used
->            for register access.
->          - PHY reference clock (usually crystal clock), used for PHY operations,
->            associated by phy name. It is used to determine bit values for clock
->            settings register.  For Exynos5420 this is given as 'sclk_usbphy30'
-> -          in the CMU.
-> +          in the CMU. It's not needed for Exynos2200.
->  
->    "#phy-cells":
->      const: 1
->  
-> +  phys:
-> +    maxItems: 1
-> +    description:
-> +      Phandle to USBDRD-underlying high-speed PHY
+v2: Fix arrowlake PMU/cpu prefixes.
 
-Drop 'phandle to'.
+Ian Rogers (35):
+  perf vendor events: Update alderlake events/metrics
+  perf vendor events: Update AlderlakeN events/metrics
+  perf vendor events: Update arrowlake events/metrics
+  perf vendor events: Update bonnell events
+  perf vendor events: Update broadwell metrics
+  perf vendor events: Update broadwellde metrics
+  perf vendor events: Update broadwellx metrics
+  perf vendor events: Update cascadelakex events/metrics
+  perf vendor events: Update clearwaterforest events
+  perf vendor events: Update elkhartlake events
+  perf vendor events: Update emeraldrapids events/metrics
+  perf vendor events: Update grandridge events/metrics
+  perf vendor events: Add graniterapids retirement latencies
+  perf vendor events: Update haswell metrics
+  perf vendor events: Update haswellx metrics
+  perf vendor events: Update icelake events/metrics
+  perf vendor events: Update icelakex events/metrics
+  perf vendor events: Update ivybridge metrics
+  perf vendor events: Update ivytown metrics
+  perf vendor events: Update jaketown metrics
+  perf vendor events: Update lunarlake events/metrics
+  perf vendor events: Update meteorlake events/metrics
+  perf vendor events: Update nehalemep events
+  perf vendor events: Update nehalemex events
+  perf vendor events: Update rocketlake events/metrics
+  perf vendor events: Update sandybridge metrics
+  perf vendor events: Update sapphirerapids events/metrics
+  perf vendor events: Update sierraforest events
+  perf vendor events: Update skylake metrics
+  perf vendor events: Update skylakex events/metrics
+  perf vendor events: Update snowridgex events
+  perf vendor events: Update tigerlake metrics
+  perf vendor events: Update westmereep-dp events
+  perf vendor events: Update westmereep-dp events
+  perf vendor events: Update westmereep-dp events
 
-> +
-> +  phy-names:
-> +    const: hs
-> +
->    port:
->      $ref: /schemas/graph.yaml#/properties/port
->      description:
-> @@ -137,6 +146,27 @@ allOf:
->          - vdda-usbdp-supply
->          - vddh-usbdp-supply
->  
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - samsung,exynos2200-usb32drd-phy
-> +    then:
-> +      properties:
-> +        clocks:
-> +          maxItems: 1
-> +        clock-names:
-> +          items:
-> +            - const: phy
-> +        reg:
-> +          maxItems: 1
-> +        reg-names:
-> +          maxItems: 1
-> +      required:
-> +        - phys
-> +        - phy-names
-> +
->    - if:
->        properties:
->          compatible:
-> -- 
-> 2.43.0
-> 
+ .../arch/x86/alderlake/adl-metrics.json       | 485 ++++++++-------
+ .../pmu-events/arch/x86/alderlake/cache.json  |  77 +++
+ .../pmu-events/arch/x86/alderlake/memory.json |  55 ++
+ .../pmu-events/arch/x86/alderlake/other.json  | 196 ------
+ .../arch/x86/alderlake/pipeline.json          |  67 ++-
+ .../arch/x86/alderlaken/adln-metrics.json     |  54 +-
+ .../pmu-events/arch/x86/alderlaken/cache.json |  50 ++
+ .../arch/x86/alderlaken/memory.json           |  40 ++
+ .../pmu-events/arch/x86/alderlaken/other.json |  98 ---
+ .../arch/x86/alderlaken/pipeline.json         |  11 +-
+ .../arch/x86/arrowlake/arl-metrics.json       | 562 +++++++++---------
+ .../pmu-events/arch/x86/arrowlake/cache.json  | 148 +++++
+ .../pmu-events/arch/x86/arrowlake/memory.json |  11 +
+ .../pmu-events/arch/x86/arrowlake/other.json  | 193 ------
+ .../arch/x86/arrowlake/pipeline.json          | 163 ++++-
+ .../pmu-events/arch/x86/bonnell/other.json    |   8 -
+ .../pmu-events/arch/x86/bonnell/pipeline.json |   8 +
+ .../arch/x86/broadwell/bdw-metrics.json       | 256 ++++----
+ .../arch/x86/broadwellde/bdwde-metrics.json   | 180 +++---
+ .../arch/x86/broadwellx/bdx-metrics.json      | 268 +++++----
+ .../arch/x86/cascadelakex/cache.json          | 404 +++++++++++++
+ .../arch/x86/cascadelakex/clx-metrics.json    | 389 ++++++------
+ .../arch/x86/cascadelakex/other.json          | 404 -------------
+ .../arch/x86/clearwaterforest/cache.json      |  20 +
+ .../arch/x86/clearwaterforest/other.json      |  22 -
+ .../arch/x86/elkhartlake/cache.json           | 192 ++++++
+ .../arch/x86/elkhartlake/memory.json          | 202 +++++++
+ .../arch/x86/elkhartlake/other.json           | 394 ------------
+ .../arch/x86/emeraldrapids/cache.json         | 100 ++++
+ .../arch/x86/emeraldrapids/emr-metrics.json   | 471 ++++++++-------
+ .../arch/x86/emeraldrapids/memory.json        | 170 ++++++
+ .../arch/x86/emeraldrapids/other.json         | 328 ----------
+ .../arch/x86/emeraldrapids/pipeline.json      |  58 ++
+ .../pmu-events/arch/x86/grandridge/cache.json | 150 ++++-
+ .../arch/x86/grandridge/counter.json          |   2 +-
+ .../arch/x86/grandridge/frontend.json         |   8 +
+ .../arch/x86/grandridge/grr-metrics.json      | 521 +---------------
+ .../pmu-events/arch/x86/grandridge/other.json |  28 -
+ .../arch/x86/grandridge/pipeline.json         |  51 +-
+ .../arch/x86/grandridge/uncore-cache.json     |  45 +-
+ .../arch/x86/grandridge/uncore-memory.json    | 338 +++++++++++
+ .../arch/x86/graniterapids/cache.json         | 122 ++++
+ .../arch/x86/graniterapids/counter.json       |   5 +
+ .../arch/x86/graniterapids/frontend.json      |  21 +
+ .../arch/x86/graniterapids/gnr-metrics.json   | 483 ++++++++-------
+ .../arch/x86/graniterapids/memory.json        | 130 ++++
+ .../arch/x86/graniterapids/other.json         | 237 --------
+ .../arch/x86/graniterapids/pipeline.json      |  52 ++
+ .../arch/x86/graniterapids/uncore-cache.json  |  42 ++
+ .../graniterapids/uncore-interconnect.json    |  90 ++-
+ .../arch/x86/graniterapids/uncore-memory.json | 240 ++++++++
+ .../arch/x86/haswell/hsw-metrics.json         | 206 ++++---
+ .../arch/x86/haswellx/hsx-metrics.json        | 222 ++++---
+ .../pmu-events/arch/x86/icelake/cache.json    |  60 ++
+ .../arch/x86/icelake/icl-metrics.json         | 385 ++++++------
+ .../pmu-events/arch/x86/icelake/memory.json   | 160 +++++
+ .../pmu-events/arch/x86/icelake/other.json    | 220 -------
+ .../pmu-events/arch/x86/icelakex/cache.json   | 273 +++++++++
+ .../arch/x86/icelakex/icx-metrics.json        | 399 +++++++------
+ .../pmu-events/arch/x86/icelakex/memory.json  | 190 ++++++
+ .../pmu-events/arch/x86/icelakex/other.json   | 463 ---------------
+ .../arch/x86/ivybridge/ivb-metrics.json       |  76 ++-
+ .../arch/x86/ivybridge/metricgroups.json      |   5 +
+ .../arch/x86/ivytown/ivt-metrics.json         |  80 ++-
+ .../arch/x86/ivytown/metricgroups.json        |   5 +
+ .../arch/x86/jaketown/frontend.json           |   8 +
+ .../arch/x86/jaketown/jkt-metrics.json        |  40 +-
+ .../arch/x86/jaketown/metricgroups.json       |   5 +
+ .../pmu-events/arch/x86/jaketown/other.json   |   8 -
+ .../pmu-events/arch/x86/lunarlake/cache.json  | 122 ++++
+ .../arch/x86/lunarlake/lnl-metrics.json       | 556 +++++++++--------
+ .../pmu-events/arch/x86/lunarlake/memory.json |  44 ++
+ .../pmu-events/arch/x86/lunarlake/other.json  | 353 -----------
+ .../arch/x86/lunarlake/pipeline.json          | 187 ++++++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |  14 +-
+ .../pmu-events/arch/x86/meteorlake/cache.json | 179 ++++++
+ .../arch/x86/meteorlake/memory.json           |  44 ++
+ .../arch/x86/meteorlake/mtl-metrics.json      | 549 +++++++++--------
+ .../pmu-events/arch/x86/meteorlake/other.json | 140 -----
+ .../arch/x86/meteorlake/pipeline.json         |  44 +-
+ .../arch/x86/meteorlake/uncore-memory.json    |  18 +
+ .../pmu-events/arch/x86/nehalemep/cache.json  |  32 +
+ .../pmu-events/arch/x86/nehalemep/other.json  |  40 --
+ .../arch/x86/nehalemep/virtual-memory.json    |   8 +
+ .../pmu-events/arch/x86/nehalemex/cache.json  |  32 +
+ .../pmu-events/arch/x86/nehalemex/other.json  |  40 --
+ .../arch/x86/nehalemex/virtual-memory.json    |   8 +
+ .../pmu-events/arch/x86/rocketlake/cache.json |  60 ++
+ .../arch/x86/rocketlake/memory.json           | 160 +++++
+ .../pmu-events/arch/x86/rocketlake/other.json | 220 -------
+ .../arch/x86/rocketlake/rkl-metrics.json      | 385 ++++++------
+ .../arch/x86/sandybridge/frontend.json        |   8 +
+ .../arch/x86/sandybridge/metricgroups.json    |   5 +
+ .../arch/x86/sandybridge/other.json           |   8 -
+ .../arch/x86/sandybridge/snb-metrics.json     |  36 +-
+ .../arch/x86/sapphirerapids/cache.json        | 150 +++++
+ .../arch/x86/sapphirerapids/memory.json       | 170 ++++++
+ .../arch/x86/sapphirerapids/other.json        | 378 ------------
+ .../arch/x86/sapphirerapids/pipeline.json     |  58 ++
+ .../arch/x86/sapphirerapids/spr-metrics.json  | 465 ++++++++-------
+ .../arch/x86/sierraforest/cache.json          |  20 +
+ .../arch/x86/sierraforest/memory.json         |  20 +
+ .../arch/x86/sierraforest/other.json          |  48 --
+ .../arch/x86/sierraforest/pipeline.json       |   8 +
+ .../arch/x86/sierraforest/uncore-cache.json   |  32 +
+ .../arch/x86/sierraforest/uncore-memory.json  | 240 ++++++++
+ .../arch/x86/skylake/skl-metrics.json         | 367 ++++++------
+ .../pmu-events/arch/x86/skylakex/cache.json   |  74 +++
+ .../pmu-events/arch/x86/skylakex/other.json   |  74 ---
+ .../arch/x86/skylakex/skx-metrics.json        | 385 ++++++------
+ .../pmu-events/arch/x86/snowridgex/cache.json | 192 ++++++
+ .../arch/x86/snowridgex/memory.json           | 202 +++++++
+ .../pmu-events/arch/x86/snowridgex/other.json | 394 ------------
+ .../arch/x86/tigerlake/tgl-metrics.json       | 383 ++++++------
+ .../arch/x86/westmereep-dp/cache.json         |  32 +
+ .../arch/x86/westmereep-dp/other.json         |  40 --
+ .../x86/westmereep-dp/virtual-memory.json     |   8 +
+ .../arch/x86/westmereep-sp/cache.json         |  32 +
+ .../arch/x86/westmereep-sp/other.json         |  40 --
+ .../x86/westmereep-sp/virtual-memory.json     |   8 +
+ .../pmu-events/arch/x86/westmereex/cache.json |  32 +
+ .../pmu-events/arch/x86/westmereex/other.json |  40 --
+ .../arch/x86/westmereex/virtual-memory.json   |   8 +
+ 123 files changed, 9866 insertions(+), 8780 deletions(-)
+ delete mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/other.json
+
+-- 
+2.49.0.395.g12beb8f557-goog
+
