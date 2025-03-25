@@ -1,253 +1,721 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B246918FDB2
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 06:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742884343; cv=fail; b=QWSAVaOuDiwRS+rfzOOF7A0GEiBRzPeSfJqVPzZHWncELS00i+wWAv4HizOnspjyunJEW2+NJfLyutqJ0jU/UfdL/0qOOxOoeZy6rlF2xcUASNBp1ybw7fnxo85X+2wVGYAHTA1wTn/7gSEZfjqMjpzL9I6VkKalnaRf2PCwhFo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742884343; c=relaxed/simple;
-	bh=9vVpFKDD8OKR0nKyCKi+UHKeOz+PAe3/qzLbAHm7EHI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=bXHwH7oM9uniwNgEErE/u18/CYK0hIpP/+m9vpKxhbh30s+5cPA/JkzOzfLTRMT9QVYD6c6zA8KCvPO8FKzjxed4pNSzhq3AeIFRrxBiQjEEZtGY82MxD0Ha+Ej+7DIk3eFbf+1ylcaOgUT44viwbgBpO8x9JrD/K3I4O/WqIos=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ncg2En6Q; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D16A93D;
+	Tue, 25 Mar 2025 06:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742884425; cv=none; b=iQK8kAWIMCK/gqY/9R44ozYUBCp4Ihto103o+6MKy1J0D+OiLwaPm1h9xivBMU23YJ994UMHiDxmXKbW+fmxftDjWni+KprdTekZQ0nrdTReW9I2ETW/oIih59Q4lvxrx/34eaQjUFzz3Cz4yOZaXRWOUL777QtPpk/6IEMDubg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742884425; c=relaxed/simple;
+	bh=r7w+aGoUwFXDf+BRwierI19tADInAdQw9/spp+aVQTY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g++ia7WN7WuaOSuSCjD2M/hsAljZPA4RZFsLFybTpDAa79/wgNki4KWuabeeHBthqza6I/juWKzXQMnkdiJdK+3VaCMBmF4FBGHvt5VGsyE4JHFbENf+LKmuKKkyhEN9Gv5p6sN8IewHs6aR/Z41g5x1M+Nr6T999GvFjNY65DU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i3IHFUwt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ncg2En6Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742884342; x=1774420342;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=9vVpFKDD8OKR0nKyCKi+UHKeOz+PAe3/qzLbAHm7EHI=;
-  b=Ncg2En6Q4JBughdydY06ELIiAYCmO+TI4D6CiNKsK2d1VopReCLNy2gn
-   /9NHLmEFFRJyO9eBrtt8vQzfS99sBfqcKkRRNxDvr8voOsT0UAI3H4V52
-   OaGQR5n7qWvGVVBggoYyNM3h+GOvXL7ucRMocH3YsVNTeXFikSjHPcNXa
-   9PTgSWdqLyQAEwGvSdNumR4O62ACQp00QGpEjfB5+5Odb+7HJrSgF4AEV
-   y5tDgEhCJBljaGZ0qie8QOONmqMHzNJjJro9ilub7wcIJrpfxK6VDEn8N
-   IVlcDStKG5Xi7J5HW1NkOY2Hbnbj9ZqvxnUke4xjLAq0pWANL+w4XRaRF
-   w==;
-X-CSE-ConnectionGUID: PeSMMOevR2ynT0DWVjEH5w==
-X-CSE-MsgGUID: SK8e5tuoRwCEklaHS3RkAQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="66573334"
-X-IronPort-AV: E=Sophos;i="6.14,274,1736841600"; 
-   d="scan'208";a="66573334"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 23:32:21 -0700
-X-CSE-ConnectionGUID: V5VNPdMJR2i+1PXUk1vWug==
-X-CSE-MsgGUID: MlevDWTmTQeqvukbN9vYEQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,274,1736841600"; 
-   d="scan'208";a="124805366"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 23:32:21 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Mon, 24 Mar 2025 23:32:20 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Mon, 24 Mar 2025 23:32:20 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.45) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 24 Mar 2025 23:32:20 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Uv/ZFPwFrOC6taPZ3yeSjwR7TUv1dbjNhwxjSUS5i/cwnfiWWWZBiJbsU9VG4ooUn8IggY1XQSR977bAkXzwz2YNVgzi7FVkcvUwFPe8/iuijogPL5p+utVr89SFFqxTiPjiFgfdeII+oZVybXC7/asq1ilhPsfPAuy2mG+4ERQGsrYKmR9Ek/9kX2jzWB8zI/ax2G3PbrhJA/1vmtWJU7MArNTMJl7RjiEML3odOZAO0qhLjp52eoBl5u3fmSoLpuMzouoDRxBHRBI5+HTzm8ZjiP/P6Su3be+bd14wJv4qGvy8Ydv2Bxc6qVZ+rfhwt/tzigc0vkIYhU2Wp8gKAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9vVpFKDD8OKR0nKyCKi+UHKeOz+PAe3/qzLbAHm7EHI=;
- b=LEbmT3ZmpsxGyF+q2we4yyQ0J3inW74l1bhYwsWgwsQEhhprqZCW4EuQ5+c/3Tk/n6XNbJ8o9i8uWGnSx3M+pv8QEGL7g5OwBr9sp2hIfT18nBsD8f/KYEdSCdS+8q95Dh8FbnY4XXdG05YmtrOgwkz107PK8QKTXNBX1OcYGZpDT2kXizKBmluDFoeGoj0lkFJcWhIYVh7jEJGqzq2nVxU3bxj/0GwqI2hu+Vvhx3tBMoM9x08oUkuvlItj0XHRU582clJNJ34AohkNQZdTc4wpgNR3H+6krAE4s0zARr2OLGKf6/9sFcH+O2V1d4o4yHTGrMWO3A8tjQZkAUpyRg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from IA0PR11MB7185.namprd11.prod.outlook.com (2603:10b6:208:432::20)
- by PH8PR11MB6777.namprd11.prod.outlook.com (2603:10b6:510:1c8::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Tue, 25 Mar
- 2025 06:32:18 +0000
-Received: from IA0PR11MB7185.namprd11.prod.outlook.com
- ([fe80::dd3b:ce77:841a:722b]) by IA0PR11MB7185.namprd11.prod.outlook.com
- ([fe80::dd3b:ce77:841a:722b%3]) with mapi id 15.20.8534.040; Tue, 25 Mar 2025
- 06:32:18 +0000
-From: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>
-To: Huan Yang <link@vivo.com>, Hillf Danton <hdanton@sina.com>, "Christoph
- Hellwig" <hch@lst.de>
-CC: "bingbu.cao@linux.intel.com" <bingbu.cao@linux.intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "opensource.kernel@vivo.com"
-	<opensource.kernel@vivo.com>, "urezki@gmail.com" <urezki@gmail.com>
-Subject: RE: [PATCH] mm/vmalloc: fix mischeck pfn valid in vmap_pfns
-Thread-Topic: [PATCH] mm/vmalloc: fix mischeck pfn valid in vmap_pfns
-Thread-Index: AQHbkxY+HILoU9IAJUSnMFDe4wG37LNvBwAAgAeW2gCAADb4gIAABrQAgAAegYCAAYMzgIAAGcKAgAADsgCAAAG5AIAAAXWAgAABrgCAAVLqgIAAM6uAgAA3UICAB0DwgIAB06rw
-Date: Tue, 25 Mar 2025 06:32:18 +0000
-Message-ID: <IA0PR11MB71851C5EF8BC5BADFD5A5D79F8A72@IA0PR11MB7185.namprd11.prod.outlook.com>
-References: <20250317055304.GB26662@lst.de>
- <5a12454c-16a1-4400-a764-f49293d8dece@vivo.com>
- <20250318064805.GA16121@lst.de>
- <5229b24f-1984-4225-ae03-8b952de56e3b@vivo.com>
- <20250318083330.GB18902@lst.de>
- <bcbbc2e9-858f-46ed-909e-1d911dd614f0@vivo.com>
- <20250318084453.GB19274@lst.de> <20250319050359.3484-1-hdanton@sina.com>
- <20250319112651.3502-1-hdanton@sina.com>
- <752e606b-640d-46d1-a8e0-fa714b29a7b6@vivo.com>
-In-Reply-To: <752e606b-640d-46d1-a8e0-fa714b29a7b6@vivo.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: IA0PR11MB7185:EE_|PH8PR11MB6777:EE_
-x-ms-office365-filtering-correlation-id: 75b1ca87-a6de-4697-609d-08dd6b66ca7b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?iso-2022-jp?B?cDVrUjRmNXlSVVgwbU43REhoTlJPM0VFZ0xoU0JNc1JqVER1L2xyMW5J?=
- =?iso-2022-jp?B?VXVmY1JJUlhBRmVGMmQ5dkJ3UXk5NkV2NTVTNjAxVTBvUER3MTNYaFZl?=
- =?iso-2022-jp?B?T0NYYldZNU5XVEJSVGYwTVlVZ1Q1dVg3YklOb0QrQjZOQXk0eVJwdTI2?=
- =?iso-2022-jp?B?Q0tCdG85MUw3dEdvWGI0TzN6TlhDZVNITG5LOHY3OVZ0YVF6c3BOWVlP?=
- =?iso-2022-jp?B?WDBtMXRPVE16MnVTNk9paDFZVmV6S0R3T1BUOW05a3dLdWYrNDhaS2lr?=
- =?iso-2022-jp?B?VnZwbUE2K05SNi9EeU1EdWp1NEplOExpbkJQM2xqd0dpQ1pSODlnU24w?=
- =?iso-2022-jp?B?Z09KTmRvRGQrb3pWaGNyNlkwTmZUakYweEdFRktCMnNKSjA4VnZMb3Iw?=
- =?iso-2022-jp?B?cnJ6Uk8xMUl2OEtObUZEWlU2dFF2a3dWMHkvTkxkRUJ6Q2FQRytDelFw?=
- =?iso-2022-jp?B?WFliK21STzFyL1pxN2xkNVZkMW1RYjdMZUVYcUxvVllLNG5FMTZTZXdr?=
- =?iso-2022-jp?B?ekExblgxQWNrbDB3Z0hDZzNCNDlNSU1SYWxkTHNFN0VmdGFFMndxSlJ1?=
- =?iso-2022-jp?B?WWRvd2pVRjFRd3JoZUo2Q1NOTk9KT0RKM0lvSktEcXF2eDhVSkdIazdw?=
- =?iso-2022-jp?B?bVdTUjZIdmFTbmwyei83ak1SamVoUXVweU1OcSs4cGJqcWg5T3MzakFB?=
- =?iso-2022-jp?B?RTg0L3RUK1pROHEzbnBWMEphV01QNFg0cW4yblBBMlJOd2xBczV1ZjdW?=
- =?iso-2022-jp?B?cGMrZ0xFYnljTkQvOTd6SlBqeTkwMk9rWGZoZUV5bTBDVFpSNEIyeDQr?=
- =?iso-2022-jp?B?Ri9neW9zeVpiTDdOa0lLaTFIUXUyRXpnMmo3Tm1POUQ3K2dIVjN6VTJ0?=
- =?iso-2022-jp?B?MnB1YW5Xd3ZRa0FtdXFZRmZIeURDeGN0S2dueCtkcWlqY1o4b1J2Tm9r?=
- =?iso-2022-jp?B?S0t4NUswYi82RHpYbEJrL0oyaFQwUUI1MitRK1Rkd0VUUHVoWjFaTEl5?=
- =?iso-2022-jp?B?VVROejVHRmlTMzBYUXZXRU93UTJuYkRYSUJOVWJFclRodExsRExMeng5?=
- =?iso-2022-jp?B?aHhmYVAvbDVOWlJRYStFQi9BRm9yZ0VBc0UvVUVETWYreFBRZXR2SnZN?=
- =?iso-2022-jp?B?dzJLM3hNN09KZWpWMGZrTFQwaDczeEpIdzluZVRwTStrUmZMT05LOFVD?=
- =?iso-2022-jp?B?dkE5aXNEZ2UvZ0VWSEozZTdmMW5uZ0Q5R0U0WEJHcFNTWm5UUzlaZEU5?=
- =?iso-2022-jp?B?dTVsZGtLcFlqc3hRdXZNdDdrNGxzdUFaZFBpREtIMG5lMzJvSlJKYzVK?=
- =?iso-2022-jp?B?eExiRVZ4MmhvU1BmL203K1NjeGJHRjlYWUlvZzE1MUJualNBUUtUMGsy?=
- =?iso-2022-jp?B?Mi9aZE0rWFhPSyt5V3dVUTV2Rnl5ODEvQWhtNzh0eWtEcHRON05BcE1K?=
- =?iso-2022-jp?B?VFpVazB4VFE2OFdHemJRZmUvL1Z6SWM2eWl1a2pNMFh6bWYxa1NWa3V0?=
- =?iso-2022-jp?B?SlJjWFFiMzNndHd3MTlVQ0hUQm4zb21GT2JpK0wzZ08rdERpNmRXTVRq?=
- =?iso-2022-jp?B?MHFjVHZIYmxOb1NHcHIyb054WGtocGtDbHIxaDBaVy92Yy9QelZKR2Z1?=
- =?iso-2022-jp?B?NG13YXJ3alAwQ0gyR1ZaZkptMDcrdG00L0tRN1dqaEcyeUVmUEhxSmYy?=
- =?iso-2022-jp?B?NU5BdWNWVlR3Tnd2Z1lid3hDQVc4WmQ0dFltVDdUMFFMMFF5M0xmRGRC?=
- =?iso-2022-jp?B?N2N1OEZHakM4aE9qR3d6VCszM3ZDbXM0K3dPeVZtb21rMGg1cklmWmhw?=
- =?iso-2022-jp?B?N1EvL0RZQ0JRSGszRjZEWUVSOStWemFUaGMrUXlLNDZzaGVmNS94MFZO?=
- =?iso-2022-jp?B?M3JHQ2ZxTDdOU2d5SzdneFZJaExEMWRlVHRXT1p6YnlRa3BDbzcxMHdo?=
- =?iso-2022-jp?B?bTdBNnhUSkpnZVltTFZSVXd2NElIUi9ZcTNuYUJ0TGRCNXlHd0h0OUZR?=
- =?iso-2022-jp?B?OW5IWGhrTnJKZGhuZXFJK1N0UHMybWkybERiblJObG5lZmI4aUF5M2p5?=
- =?iso-2022-jp?B?YW14S2ZYU1l2ZVlQQTVBUWFhYjE0aUJmeFIybE9hV01wL2gyRmo1cGZ5?=
- =?iso-2022-jp?B?VEk=?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR11MB7185.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-2022-jp?B?YjJUbVlHeCtYcUtLdkRtWlNYeTRuUW5jYTRYU05YMHFvdk1CTGdTQzR4?=
- =?iso-2022-jp?B?RFU1U0thMmVyK0d0cWdjZkZieEZ3SVhJRktINHZVR0t1R0tGWTRETGRZ?=
- =?iso-2022-jp?B?WExma0JLRjBEdW1VYVY1YVZZbHZxSm5TZnFPalJzWU5pdlFlRzZaQ2Zr?=
- =?iso-2022-jp?B?ZzEwb3VJeGhMeHVvbXZoTzlNQk1JT2xJQm9vL1JQZDVtNkhkSTRjZ3pM?=
- =?iso-2022-jp?B?NWkyZkI4VUduRmRuTi85NzBZZE1IVlc5Y0ZUTnN4bU1INEMzZXQ2UTY1?=
- =?iso-2022-jp?B?aHJXRTJ6TVR4MWFvNWNjNEFnN2d4T3ZWeG5NeTdFWkJFRWQrODh4TThn?=
- =?iso-2022-jp?B?RjEyOFpwUEgxNkdCOEZpdEEvbVlVSldpcmtXMzdvb1p4eHB4RGUwaldT?=
- =?iso-2022-jp?B?QlhaZ1ZsSnhDeDRpOVgxbjgySW4zUzAySGk0aFp2UUQyRm1IdEpSRlNn?=
- =?iso-2022-jp?B?WXowOXcxd1VDVkdMblhZZDJTZ2gvaHJiWFByZzdMT1h4ZTlETHM0N3lz?=
- =?iso-2022-jp?B?aysvdzVGWityVFlZSCtNdzkrTkVSN3hndGhXbXRNMndBR2JvY2t6T0cw?=
- =?iso-2022-jp?B?aHJkS0prU29HU0FjT1BHWVZvZ3NKdlRFNzNlL0VNc00rVktob2V6Smw2?=
- =?iso-2022-jp?B?NzJvTnhGbDVXWkJIQTg4UkczN25xMTlTcjZPLzJpMVFHZ3hsSDhDS0VH?=
- =?iso-2022-jp?B?bm9QU2JWdzFMUWJzWkZOR2htZmxPMGtzZ1VUQ3QvR0x4N3VIU2ttZTlz?=
- =?iso-2022-jp?B?ckh4Z1lLYkhrTVdZN1lUYVg2alRBUGNqRmRYdUl0WmUyR0JFWWxNVS9U?=
- =?iso-2022-jp?B?YlFra3J6SlBKUUt6WjV2ZGZpNE1uNTYvV2U5L3NXUEhBU203QnIwbDBl?=
- =?iso-2022-jp?B?cmk0VHNnSGl5QVpLNkpjSmxmaVJWUGhlN0pHVHdGZ2dTVFdZcW1BT29M?=
- =?iso-2022-jp?B?RWJCTXpiZ0VLdDlHaUI0SVlNbjd2SThYV3VmMi9aTVB3TythZ0ZNZnpZ?=
- =?iso-2022-jp?B?cENHbHR0R0JYaVVmbXROWmxZNVFrM21UZUNHZEtJdEpZc2NtT0tnSDU0?=
- =?iso-2022-jp?B?SGpYUjdSbUdoMVkwaU1Db3BOUkE5dzgzVHVxa25PVjRoRUYzZUlEZTAr?=
- =?iso-2022-jp?B?YzhETmhVZU04MDEzRHhTVW5oRUkyWlZqRjF5QVFJQmFod3RPK2xmNG8r?=
- =?iso-2022-jp?B?Q0ltRUttb0QxQm0wNHk4ZFlsSDNxS1dlUGRKa2pEbTExNmxpMElYRVg4?=
- =?iso-2022-jp?B?STFlZUVFOFZtWGhMUjJEVTlZdkRmOE5zbFRZV2VJZXlqcjZyLzBoSFhu?=
- =?iso-2022-jp?B?VXljWkppdEkxRXFGdU9KeUtoaHAzWFZqQ1p3eFpQN0dCQmpReVFRWERH?=
- =?iso-2022-jp?B?UE1veDU1MWxIeFBKbk5EWXdRUVp5WDNnOWx4aDYwZTE0N05oaG1DK3dO?=
- =?iso-2022-jp?B?QldQM0pTN0dDSk1QOUFvUEZWYzNMU2lNS2hiaHVTbXlrUHZ6Vno1QkV2?=
- =?iso-2022-jp?B?eGdINmZEL1RyVFNwMDMxRGRpOGY1V09SZjMyZWNpU203dzRSOFROb2Y0?=
- =?iso-2022-jp?B?b3ZpLytVdlV5d1o3c2ZwN0FLOTlkSUQwZGdZbCtxbU5BMkQ4T1ZVUkt2?=
- =?iso-2022-jp?B?UW1TMEthVWp3VUI3bllJeVVyU3FnUHNLWFpEdzg4aG1QU2pOdUdMQXVt?=
- =?iso-2022-jp?B?RW5IbzF0NURKTFcvODc1bTFhMk51VEw0S0F5RVJvMUhZc2pSNk5QUU1I?=
- =?iso-2022-jp?B?UkxrN09xT0dZVHhPOHp3YU92R2VrSUVBS0VFOVU4SmgwMGpZQ2pjVi9W?=
- =?iso-2022-jp?B?cGtkbVhjeTJzOUk4T1QvcmEvY2IxYU5iazdpZGZVVHV6NTlza1cvL2h6?=
- =?iso-2022-jp?B?WlhsM1prSzJVZDlnTm1Zc2RSeGllYTNaV2ZhU2JvV200LzM4QUlsU3dJ?=
- =?iso-2022-jp?B?S0duVWxFU2MrL3pFQTh3d2ZFeWxtOUdaaEN2aGJQdE5aZXUyVTRYUEJP?=
- =?iso-2022-jp?B?WDV6TEYyWFk2RzMxbXBJdTZ0bU44WUpiSkwra3RLT1BTZGhETGZJWWxK?=
- =?iso-2022-jp?B?cWtzOTJpdklvSFl2NzBUcnFER3NoeFBHUjJCUmxDU01IUllmakxoZlhs?=
- =?iso-2022-jp?B?dWhJMldpUk50VTlCUXdqSThsOUQwdGhxUzFxTE9ZODZMbE9LZkp2Zjlk?=
- =?iso-2022-jp?B?UklJV3ZqVk1lNnJBbkVUcUo2WjZqU3RrMERrcTcyVDl1b2NmUERyVklT?=
- =?iso-2022-jp?B?bnRHNkp1R2UvUXlEVUhubDgzR1BOMUF5N01MaUF6NzVTY0xYcTRDOGQx?=
- =?iso-2022-jp?B?WnJMVA==?=
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i3IHFUwt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 343E1C4CEE8;
+	Tue, 25 Mar 2025 06:33:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742884424;
+	bh=r7w+aGoUwFXDf+BRwierI19tADInAdQw9/spp+aVQTY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i3IHFUwtIVBilg4swfttW/qf7qS8KKad83f+q4g9uFgLZzEpJzks4/PSIjrLKzWAu
+	 j+ccMadp3I6ugZLZfireS3axIGvkWGap9QUwUSueETzufTCItqDjCoaTtiBCt2lv0m
+	 sa4zDr10G7MlBWcYUEfAM2RffzWqAEnP3Q3+seB/bLtC+xTprncm7KwD00t8IcYFiQ
+	 p5HA3PYMHPpkrY6acnptDSRJrZwxMUxBzcePU59GBqrUWzMNk39yOgOqg4lvjjF5rS
+	 32MHOVfldTadnU2X66CWLb97fAi7uJZA4JdWI2O6qJjs40hXA/Kutad51vpn6ijVut
+	 NLeEXUPZjjUNQ==
+Date: Tue, 25 Mar 2025 12:03:34 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org,
+	Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
+	Daniel Stone <daniel@fooishbar.org>
+Subject: Re: [PATCH v6 05/10] tee: implement restricted DMA-heap
+Message-ID: <Z-JOPgcWlpTlskgd@sumit-X1>
+References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
+ <20250305130634.1850178-6-jens.wiklander@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR11MB7185.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75b1ca87-a6de-4697-609d-08dd6b66ca7b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2025 06:32:18.4260
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iY+HKtC6+9LIMSn6htSsR6MPRfx/MGIPkd+N8adUomvTttTAFAmZ2wipUTr1g24/DttoGSsHQdU3Uva8Mzyr/a3pim1qUjWKUbr3pBVqH7I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6777
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250305130634.1850178-6-jens.wiklander@linaro.org>
 
-Hi Huan,
+Hi Jens,
 
-> Subject: Re: [PATCH] mm/vmalloc: fix mischeck pfn valid in vmap_pfns
->=20
-> HI Hillf,
->=20
-> Thanks fo your suggestion.
->=20
-> =1B$B:_=1B(B 2025/3/19 19:26, Hillf Danton =1B$B<LF;=1B(B:
-> > On Wed, 19 Mar 2025 09:08:51 +0100 Christoph Hellwig wrote:
-> >> On Wed, Mar 19, 2025 at 01:03:55PM +0800, Hillf Danton wrote:
-> >>> A quick fix is to add a vmap_pfn variant to walk around the pfn
-> >>> check in question, like the following diff (just for idea show).
-> >> No.
-> >>
-> > Patient to see your fix, given no low hanging peach left for Mr Folio
-> > in case of HVO, (feel free to ignore, who is likely about 2.6-mile
-> > less tough than you could be).
->=20
-> I now believe there are two way to resolve the HVO folio can't vmap in
-> udmabuf.
->=20
-> 1. simple copy vmap_pfn code, don't bother common vmap_pfn, use by itself
-> and remove pfn_valid check.
->=20
-> 2. implement folio array based vmap(vmap_folios), which can given a range=
- of
-> each folio(offset, nr_pages), so can suit HVO folio's vmap.
->=20
-> 1 is simple and can fast fix this issue, but may not too good. I need dis=
-cuss with
-> bot Christoph and udmabuf's maintainer.
->=20
-> 2 is hard, but may worth to research, which I also will try to do. :)
-Another option is to just limit udmabuf's vmap() to only shmem folios but I=
- guess
-it may not work as expected if THP is also enabled.=20
-Bingbu, what exactly is your use-case? Could you please describe the scenar=
-io that
-requires you to use udmabuf's vmap()?
+On Wed, Mar 05, 2025 at 02:04:11PM +0100, Jens Wiklander wrote:
+> Implement DMA heap for restricted DMA-buf allocation in the TEE
+> subsystem.
+> 
+> Restricted memory refers to memory buffers behind a hardware enforced
+> firewall. It is not accessible to the kernel during normal circumstances
+> but rather only accessible to certain hardware IPs or CPUs executing in
+> higher or differently privileged mode than the kernel itself. This
+> interface allows to allocate and manage such restricted memory buffers
+> via interaction with a TEE implementation.
+> 
+> The restricted memory is allocated for a specific use-case, like Secure
+> Video Playback, Trusted UI, or Secure Video Recording where certain
+> hardware devices can access the memory.
+> 
+> The DMA-heaps are enabled explicitly by the TEE backend driver. The TEE
+> backend drivers needs to implement restricted memory pool to manage the
+> restricted memory.
+> 
+> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> ---
+>  drivers/tee/Makefile      |   1 +
+>  drivers/tee/tee_heap.c    | 470 ++++++++++++++++++++++++++++++++++++++
+>  drivers/tee/tee_private.h |   6 +
+>  include/linux/tee_core.h  |  62 +++++
+>  4 files changed, 539 insertions(+)
+>  create mode 100644 drivers/tee/tee_heap.c
+> 
+> diff --git a/drivers/tee/Makefile b/drivers/tee/Makefile
+> index 5488cba30bd2..949a6a79fb06 100644
+> --- a/drivers/tee/Makefile
+> +++ b/drivers/tee/Makefile
+> @@ -1,6 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-$(CONFIG_TEE) += tee.o
+>  tee-objs += tee_core.o
+> +tee-objs += tee_heap.o
+>  tee-objs += tee_shm.o
+>  tee-objs += tee_shm_pool.o
+>  obj-$(CONFIG_OPTEE) += optee/
+> diff --git a/drivers/tee/tee_heap.c b/drivers/tee/tee_heap.c
+> new file mode 100644
+> index 000000000000..476ab2e27260
+> --- /dev/null
+> +++ b/drivers/tee/tee_heap.c
+> @@ -0,0 +1,470 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2025, Linaro Limited
+> + */
+> +
+> +#include <linux/scatterlist.h>
+> +#include <linux/dma-buf.h>
+> +#include <linux/dma-heap.h>
+> +#include <linux/genalloc.h>
+> +#include <linux/module.h>
+> +#include <linux/scatterlist.h>
+> +#include <linux/slab.h>
+> +#include <linux/tee_core.h>
+> +#include <linux/xarray.h>
 
-Thanks,
-Vivek
+Lets try to follow alphabetical order here.
 
->=20
+> +
+> +#include "tee_private.h"
+> +
+> +struct tee_dma_heap {
+> +	struct dma_heap *heap;
+> +	enum tee_dma_heap_id id;
+> +	struct tee_rstmem_pool *pool;
+> +	struct tee_device *teedev;
+> +	/* Protects pool and teedev above */
+> +	struct mutex mu;
+> +};
+> +
+> +struct tee_heap_buffer {
+> +	struct tee_rstmem_pool *pool;
+> +	struct tee_device *teedev;
+> +	size_t size;
+> +	size_t offs;
+> +	struct sg_table table;
+> +};
+> +
+> +struct tee_heap_attachment {
+> +	struct sg_table table;
+> +	struct device *dev;
+> +};
+> +
+> +struct tee_rstmem_static_pool {
+> +	struct tee_rstmem_pool pool;
+> +	struct gen_pool *gen_pool;
+> +	phys_addr_t pa_base;
+> +};
+> +
+> +#if !IS_MODULE(CONFIG_TEE) && IS_ENABLED(CONFIG_DMABUF_HEAPS)
 
+Can this dependency rather be better managed via Kconfig?
+
+> +static DEFINE_XARRAY_ALLOC(tee_dma_heap);
+> +
+> +static int copy_sg_table(struct sg_table *dst, struct sg_table *src)
+> +{
+> +	struct scatterlist *dst_sg;
+> +	struct scatterlist *src_sg;
+> +	int ret;
+> +	int i;
+> +
+> +	ret = sg_alloc_table(dst, src->orig_nents, GFP_KERNEL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dst_sg = dst->sgl;
+> +	for_each_sgtable_sg(src, src_sg, i) {
+> +		sg_set_page(dst_sg, sg_page(src_sg), src_sg->length,
+> +			    src_sg->offset);
+> +		dst_sg = sg_next(dst_sg);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int tee_heap_attach(struct dma_buf *dmabuf,
+> +			   struct dma_buf_attachment *attachment)
+> +{
+> +	struct tee_heap_buffer *buf = dmabuf->priv;
+> +	struct tee_heap_attachment *a;
+> +	int ret;
+> +
+> +	a = kzalloc(sizeof(*a), GFP_KERNEL);
+> +	if (!a)
+> +		return -ENOMEM;
+> +
+> +	ret = copy_sg_table(&a->table, &buf->table);
+> +	if (ret) {
+> +		kfree(a);
+> +		return ret;
+> +	}
+> +
+> +	a->dev = attachment->dev;
+> +	attachment->priv = a;
+> +
+> +	return 0;
+> +}
+> +
+> +static void tee_heap_detach(struct dma_buf *dmabuf,
+> +			    struct dma_buf_attachment *attachment)
+> +{
+> +	struct tee_heap_attachment *a = attachment->priv;
+> +
+> +	sg_free_table(&a->table);
+> +	kfree(a);
+> +}
+> +
+> +static struct sg_table *
+> +tee_heap_map_dma_buf(struct dma_buf_attachment *attachment,
+> +		     enum dma_data_direction direction)
+> +{
+> +	struct tee_heap_attachment *a = attachment->priv;
+> +	int ret;
+> +
+> +	ret = dma_map_sgtable(attachment->dev, &a->table, direction,
+> +			      DMA_ATTR_SKIP_CPU_SYNC);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	return &a->table;
+> +}
+> +
+> +static void tee_heap_unmap_dma_buf(struct dma_buf_attachment *attachment,
+> +				   struct sg_table *table,
+> +				   enum dma_data_direction direction)
+> +{
+> +	struct tee_heap_attachment *a = attachment->priv;
+> +
+> +	WARN_ON(&a->table != table);
+> +
+> +	dma_unmap_sgtable(attachment->dev, table, direction,
+> +			  DMA_ATTR_SKIP_CPU_SYNC);
+> +}
+> +
+> +static void tee_heap_buf_free(struct dma_buf *dmabuf)
+> +{
+> +	struct tee_heap_buffer *buf = dmabuf->priv;
+> +	struct tee_device *teedev = buf->teedev;
+> +
+> +	buf->pool->ops->free(buf->pool, &buf->table);
+> +	tee_device_put(teedev);
+> +}
+> +
+> +static const struct dma_buf_ops tee_heap_buf_ops = {
+> +	.attach = tee_heap_attach,
+> +	.detach = tee_heap_detach,
+> +	.map_dma_buf = tee_heap_map_dma_buf,
+> +	.unmap_dma_buf = tee_heap_unmap_dma_buf,
+> +	.release = tee_heap_buf_free,
+> +};
+> +
+> +static struct dma_buf *tee_dma_heap_alloc(struct dma_heap *heap,
+> +					  unsigned long len, u32 fd_flags,
+> +					  u64 heap_flags)
+> +{
+> +	struct tee_dma_heap *h = dma_heap_get_drvdata(heap);
+> +	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
+> +	struct tee_device *teedev = NULL;
+> +	struct tee_heap_buffer *buf;
+> +	struct tee_rstmem_pool *pool;
+> +	struct dma_buf *dmabuf;
+> +	int rc;
+> +
+> +	mutex_lock(&h->mu);
+> +	if (tee_device_get(h->teedev)) {
+> +		teedev = h->teedev;
+> +		pool = h->pool;
+> +	}
+> +	mutex_unlock(&h->mu);
+> +
+> +	if (!teedev)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	buf = kzalloc(sizeof(*buf), GFP_KERNEL);
+> +	if (!buf) {
+> +		dmabuf = ERR_PTR(-ENOMEM);
+> +		goto err;
+> +	}
+> +	buf->size = len;
+> +	buf->pool = pool;
+> +	buf->teedev = teedev;
+> +
+> +	rc = pool->ops->alloc(pool, &buf->table, len, &buf->offs);
+> +	if (rc) {
+> +		dmabuf = ERR_PTR(rc);
+> +		goto err_kfree;
+> +	}
+> +
+> +	exp_info.ops = &tee_heap_buf_ops;
+> +	exp_info.size = len;
+> +	exp_info.priv = buf;
+> +	exp_info.flags = fd_flags;
+> +	dmabuf = dma_buf_export(&exp_info);
+> +	if (IS_ERR(dmabuf))
+> +		goto err_rstmem_free;
+> +
+> +	return dmabuf;
+> +
+> +err_rstmem_free:
+> +	pool->ops->free(pool, &buf->table);
+> +err_kfree:
+> +	kfree(buf);
+> +err:
+> +	tee_device_put(h->teedev);
+> +	return dmabuf;
+> +}
+> +
+> +static const struct dma_heap_ops tee_dma_heap_ops = {
+> +	.allocate = tee_dma_heap_alloc,
+> +};
+> +
+> +static const char *heap_id_2_name(enum tee_dma_heap_id id)
+> +{
+> +	switch (id) {
+> +	case TEE_DMA_HEAP_SECURE_VIDEO_PLAY:
+> +		return "restricted,secure-video";
+> +	case TEE_DMA_HEAP_TRUSTED_UI:
+> +		return "restricted,trusted-ui";
+> +	case TEE_DMA_HEAP_SECURE_VIDEO_RECORD:
+> +		return "restricted,secure-video-record";
+> +	default:
+> +		return NULL;
+> +	}
+> +}
+> +
+> +static int alloc_dma_heap(struct tee_device *teedev, enum tee_dma_heap_id id,
+> +			  struct tee_rstmem_pool *pool)
+> +{
+> +	struct dma_heap_export_info exp_info = {
+> +		.ops = &tee_dma_heap_ops,
+> +		.name = heap_id_2_name(id),
+> +	};
+> +	struct tee_dma_heap *h;
+> +	int rc;
+> +
+> +	if (!exp_info.name)
+> +		return -EINVAL;
+> +
+> +	if (xa_reserve(&tee_dma_heap, id, GFP_KERNEL)) {
+> +		if (!xa_load(&tee_dma_heap, id))
+> +			return -EEXIST;
+> +		return -ENOMEM;
+> +	}
+> +
+> +	h = kzalloc(sizeof(*h), GFP_KERNEL);
+> +	if (!h)
+> +		return -ENOMEM;
+> +	h->id = id;
+> +	h->teedev = teedev;
+> +	h->pool = pool;
+> +	mutex_init(&h->mu);
+> +
+> +	exp_info.priv = h;
+> +	h->heap = dma_heap_add(&exp_info);
+> +	if (IS_ERR(h->heap)) {
+> +		rc = PTR_ERR(h->heap);
+> +		kfree(h);
+> +
+> +		return rc;
+> +	}
+> +
+> +	/* "can't fail" due to the call to xa_reserve() above */
+> +	return WARN(xa_store(&tee_dma_heap, id, h, GFP_KERNEL),
+> +		    "xa_store() failed");
+> +}
+> +
+> +int tee_device_register_dma_heap(struct tee_device *teedev,
+> +				 enum tee_dma_heap_id id,
+> +				 struct tee_rstmem_pool *pool)
+> +{
+> +	struct tee_dma_heap *h;
+> +	int rc;
+> +
+> +	h = xa_load(&tee_dma_heap, id);
+> +	if (h) {
+> +		mutex_lock(&h->mu);
+> +		if (h->teedev) {
+> +			rc = -EBUSY;
+> +		} else {
+> +			h->teedev = teedev;
+> +			h->pool = pool;
+> +			rc = 0;
+> +		}
+> +		mutex_unlock(&h->mu);
+> +	} else {
+> +		rc = alloc_dma_heap(teedev, id, pool);
+> +	}
+> +
+> +	if (rc)
+> +		dev_err(&teedev->dev, "can't register DMA heap id %d (%s)\n",
+> +			id, heap_id_2_name(id));
+> +
+> +	return rc;
+> +}
+> +
+> +void tee_device_unregister_all_dma_heaps(struct tee_device *teedev)
+> +{
+> +	struct tee_rstmem_pool *pool;
+> +	struct tee_dma_heap *h;
+> +	u_long i;
+> +
+> +	xa_for_each(&tee_dma_heap, i, h) {
+> +		if (h) {
+> +			pool = NULL;
+> +			mutex_lock(&h->mu);
+> +			if (h->teedev == teedev) {
+> +				pool = h->pool;
+> +				h->teedev = NULL;
+> +				h->pool = NULL;
+> +			}
+> +			mutex_unlock(&h->mu);
+> +			if (pool)
+> +				pool->ops->destroy_pool(pool);
+> +		}
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(tee_device_unregister_all_dma_heaps);
+> +
+> +int tee_heap_update_from_dma_buf(struct tee_device *teedev,
+> +				 struct dma_buf *dmabuf, size_t *offset,
+> +				 struct tee_shm *shm,
+> +				 struct tee_shm **parent_shm)
+> +{
+> +	struct tee_heap_buffer *buf;
+> +	int rc;
+> +
+> +	/* The DMA-buf must be from our heap */
+> +	if (dmabuf->ops != &tee_heap_buf_ops)
+> +		return -EINVAL;
+> +
+> +	buf = dmabuf->priv;
+> +	/* The buffer must be from the same teedev */
+> +	if (buf->teedev != teedev)
+> +		return -EINVAL;
+> +
+> +	shm->size = buf->size;
+> +
+> +	rc = buf->pool->ops->update_shm(buf->pool, &buf->table, buf->offs, shm,
+> +					parent_shm);
+> +	if (!rc && *parent_shm)
+> +		*offset = buf->offs;
+> +
+> +	return rc;
+> +}
+> +#else
+> +int tee_device_register_dma_heap(struct tee_device *teedev __always_unused,
+> +				 enum tee_dma_heap_id id __always_unused,
+> +				 struct tee_rstmem_pool *pool __always_unused)
+> +{
+> +	return -EINVAL;
+> +}
+> +EXPORT_SYMBOL_GPL(tee_device_register_dma_heap);
+> +
+> +void
+> +tee_device_unregister_all_dma_heaps(struct tee_device *teedev __always_unused)
+> +{
+> +}
+> +EXPORT_SYMBOL_GPL(tee_device_unregister_all_dma_heaps);
+> +
+> +int tee_heap_update_from_dma_buf(struct tee_device *teedev __always_unused,
+> +				 struct dma_buf *dmabuf __always_unused,
+> +				 size_t *offset __always_unused,
+> +				 struct tee_shm *shm __always_unused,
+> +				 struct tee_shm **parent_shm __always_unused)
+> +{
+> +	return -EINVAL;
+> +}
+> +#endif
+> +
+> +static struct tee_rstmem_static_pool *
+> +to_rstmem_static_pool(struct tee_rstmem_pool *pool)
+> +{
+> +	return container_of(pool, struct tee_rstmem_static_pool, pool);
+> +}
+> +
+> +static int rstmem_pool_op_static_alloc(struct tee_rstmem_pool *pool,
+> +				       struct sg_table *sgt, size_t size,
+> +				       size_t *offs)
+> +{
+> +	struct tee_rstmem_static_pool *stp = to_rstmem_static_pool(pool);
+> +	phys_addr_t pa;
+> +	int ret;
+> +
+> +	pa = gen_pool_alloc(stp->gen_pool, size);
+> +	if (!pa)
+> +		return -ENOMEM;
+> +
+> +	ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
+> +	if (ret) {
+> +		gen_pool_free(stp->gen_pool, pa, size);
+> +		return ret;
+> +	}
+> +
+> +	sg_set_page(sgt->sgl, phys_to_page(pa), size, 0);
+> +	*offs = pa - stp->pa_base;
+> +
+> +	return 0;
+> +}
+> +
+> +static void rstmem_pool_op_static_free(struct tee_rstmem_pool *pool,
+> +				       struct sg_table *sgt)
+> +{
+> +	struct tee_rstmem_static_pool *stp = to_rstmem_static_pool(pool);
+> +	struct scatterlist *sg;
+> +	int i;
+> +
+> +	for_each_sgtable_sg(sgt, sg, i)
+> +		gen_pool_free(stp->gen_pool, sg_phys(sg), sg->length);
+> +	sg_free_table(sgt);
+> +}
+> +
+> +static int rstmem_pool_op_static_update_shm(struct tee_rstmem_pool *pool,
+> +					    struct sg_table *sgt, size_t offs,
+> +					    struct tee_shm *shm,
+> +					    struct tee_shm **parent_shm)
+> +{
+> +	struct tee_rstmem_static_pool *stp = to_rstmem_static_pool(pool);
+> +
+> +	shm->paddr = stp->pa_base + offs;
+> +	*parent_shm = NULL;
+> +
+> +	return 0;
+> +}
+> +
+> +static void rstmem_pool_op_static_destroy_pool(struct tee_rstmem_pool *pool)
+> +{
+> +	struct tee_rstmem_static_pool *stp = to_rstmem_static_pool(pool);
+> +
+> +	gen_pool_destroy(stp->gen_pool);
+> +	kfree(stp);
+> +}
+> +
+> +static struct tee_rstmem_pool_ops rstmem_pool_ops_static = {
+> +	.alloc = rstmem_pool_op_static_alloc,
+> +	.free = rstmem_pool_op_static_free,
+> +	.update_shm = rstmem_pool_op_static_update_shm,
+> +	.destroy_pool = rstmem_pool_op_static_destroy_pool,
+> +};
+> +
+> +struct tee_rstmem_pool *tee_rstmem_static_pool_alloc(phys_addr_t paddr,
+> +						     size_t size)
+> +{
+> +	const size_t page_mask = PAGE_SIZE - 1;
+> +	struct tee_rstmem_static_pool *stp;
+> +	int rc;
+> +
+> +	/* Check it's page aligned */
+> +	if ((paddr | size) & page_mask)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	stp = kzalloc(sizeof(*stp), GFP_KERNEL);
+> +	if (!stp)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	stp->gen_pool = gen_pool_create(PAGE_SHIFT, -1);
+> +	if (!stp->gen_pool) {
+> +		rc = -ENOMEM;
+> +		goto err_free;
+> +	}
+> +
+> +	rc = gen_pool_add(stp->gen_pool, paddr, size, -1);
+> +	if (rc)
+> +		goto err_free_pool;
+> +
+> +	stp->pool.ops = &rstmem_pool_ops_static;
+> +	stp->pa_base = paddr;
+> +	return &stp->pool;
+> +
+> +err_free_pool:
+> +	gen_pool_destroy(stp->gen_pool);
+> +err_free:
+> +	kfree(stp);
+> +
+> +	return ERR_PTR(rc);
+> +}
+> +EXPORT_SYMBOL_GPL(tee_rstmem_static_pool_alloc);
+> diff --git a/drivers/tee/tee_private.h b/drivers/tee/tee_private.h
+> index 9bc50605227c..6c6ff5d5eed2 100644
+> --- a/drivers/tee/tee_private.h
+> +++ b/drivers/tee/tee_private.h
+> @@ -8,6 +8,7 @@
+>  #include <linux/cdev.h>
+>  #include <linux/completion.h>
+>  #include <linux/device.h>
+> +#include <linux/dma-buf.h>
+>  #include <linux/kref.h>
+>  #include <linux/mutex.h>
+>  #include <linux/types.h>
+> @@ -24,4 +25,9 @@ struct tee_shm *tee_shm_alloc_user_buf(struct tee_context *ctx, size_t size);
+>  struct tee_shm *tee_shm_register_user_buf(struct tee_context *ctx,
+>  					  unsigned long addr, size_t length);
+>  
+> +int tee_heap_update_from_dma_buf(struct tee_device *teedev,
+> +				 struct dma_buf *dmabuf, size_t *offset,
+> +				 struct tee_shm *shm,
+> +				 struct tee_shm **parent_shm);
+> +
+>  #endif /*TEE_PRIVATE_H*/
+> diff --git a/include/linux/tee_core.h b/include/linux/tee_core.h
+> index a38494d6b5f4..16ef078247ae 100644
+> --- a/include/linux/tee_core.h
+> +++ b/include/linux/tee_core.h
+> @@ -8,9 +8,11 @@
+>  
+>  #include <linux/cdev.h>
+>  #include <linux/device.h>
+> +#include <linux/dma-buf.h>
+>  #include <linux/idr.h>
+>  #include <linux/kref.h>
+>  #include <linux/list.h>
+> +#include <linux/scatterlist.h>
+>  #include <linux/tee.h>
+>  #include <linux/tee_drv.h>
+>  #include <linux/types.h>
+> @@ -30,6 +32,12 @@
+>  #define TEE_DEVICE_FLAG_REGISTERED	0x1
+>  #define TEE_MAX_DEV_NAME_LEN		32
+>  
+> +enum tee_dma_heap_id {
+> +	TEE_DMA_HEAP_SECURE_VIDEO_PLAY = 1,
+> +	TEE_DMA_HEAP_TRUSTED_UI,
+> +	TEE_DMA_HEAP_SECURE_VIDEO_RECORD,
+> +};
+> +
+>  /**
+>   * struct tee_device - TEE Device representation
+>   * @name:	name of device
+> @@ -116,6 +124,33 @@ struct tee_desc {
+>  	u32 flags;
+>  };
+>  
+> +/**
+> + * struct tee_rstmem_pool - restricted memory pool
+> + * @ops:		operations
+> + *
+> + * This is an abstract interface where this struct is expected to be
+> + * embedded in another struct specific to the implementation.
+> + */
+> +struct tee_rstmem_pool {
+> +	const struct tee_rstmem_pool_ops *ops;
+> +};
+> +
+> +/**
+> + * struct tee_rstmem_pool_ops - restricted memory pool operations
+> + * @alloc:		called when allocating restricted memory
+> + * @free:		called when freeing restricted memory
+> + * @destroy_pool:	called when destroying the pool
+> + */
+> +struct tee_rstmem_pool_ops {
+> +	int (*alloc)(struct tee_rstmem_pool *pool, struct sg_table *sgt,
+> +		     size_t size, size_t *offs);
+> +	void (*free)(struct tee_rstmem_pool *pool, struct sg_table *sgt);
+> +	int (*update_shm)(struct tee_rstmem_pool *pool, struct sg_table *sgt,
+> +			  size_t offs, struct tee_shm *shm,
+> +			  struct tee_shm **parent_shm);
+
+This API isn't descibed in kdoc comment above. Can you descibe the role
+of this API and when it's needed?
+
+-Sumit
+
+> +	void (*destroy_pool)(struct tee_rstmem_pool *pool);
+> +};
+> +
+>  /**
+>   * tee_device_alloc() - Allocate a new struct tee_device instance
+>   * @teedesc:	Descriptor for this driver
+> @@ -154,6 +189,11 @@ int tee_device_register(struct tee_device *teedev);
+>   */
+>  void tee_device_unregister(struct tee_device *teedev);
+>  
+> +int tee_device_register_dma_heap(struct tee_device *teedev,
+> +				 enum tee_dma_heap_id id,
+> +				 struct tee_rstmem_pool *pool);
+> +void tee_device_unregister_all_dma_heaps(struct tee_device *teedev);
+> +
+>  /**
+>   * tee_device_set_dev_groups() - Set device attribute groups
+>   * @teedev:	Device to register
+> @@ -229,6 +269,28 @@ static inline void tee_shm_pool_free(struct tee_shm_pool *pool)
+>  	pool->ops->destroy_pool(pool);
+>  }
+>  
+> +/**
+> + * tee_rstmem_static_pool_alloc() - Create a restricted memory manager
+> + * @paddr:	Physical address of start of pool
+> + * @size:	Size in bytes of the pool
+> + *
+> + * @returns pointer to a 'struct tee_shm_pool' or an ERR_PTR on failure.
+> + */
+> +struct tee_rstmem_pool *tee_rstmem_static_pool_alloc(phys_addr_t paddr,
+> +						     size_t size);
+> +
+> +/**
+> + * tee_rstmem_pool_free() - Free a restricted memory pool
+> + * @pool:	The restricted memory pool to free
+> + *
+> + * There must be no remaining restricted memory allocated from this pool
+> + * when this function is called.
+> + */
+> +static inline void tee_rstmem_pool_free(struct tee_rstmem_pool *pool)
+> +{
+> +	pool->ops->destroy_pool(pool);
+> +}
+> +
+>  /**
+>   * tee_get_drvdata() - Return driver_data pointer
+>   * @returns the driver_data pointer supplied to tee_register().
+> -- 
+> 2.43.0
+> 
