@@ -1,106 +1,207 @@
-Received: from mail-24418.protonmail.ch (mail-24418.protonmail.ch [109.224.244.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 557EE25485D;
-	Tue, 25 Mar 2025 10:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9655F254863
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 10:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742899209; cv=none; b=j2RuGnfBNQZz8KXsjgXtar9w8Zr/c+jdAmXSgEspGwYcCwl+m+t5+UdruOkvWGxuI0KAIMuV1uTICxmNT+lhQWVC9/yyBaM0+qDGJ4o8BOyegekST/udxUkR64TEPu1Ahr1Pzjfp/BFgVArEuWi7J3L77EALmuyuOIotuS5Kd5I=
+	t=1742899340; cv=none; b=V7X49oTTJq9+N4+hSXJrLCuDTx8a9aaVfaXe0anwWfQHF3/pNTz8v2zdzYzjDEYElp6RauoFaNGU2wfe2fs8EYUz9iqnCU2gkrj5ziqrbXugAoVXPHkysHBHlOP5OJl6/1BElJu3UpPzRYEfXLcnk4gW4Bv8jKhMsY3E9VJNpIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742899209; c=relaxed/simple;
-	bh=L/9OZbHih+ThSpCoQVn5U45aw0Qkhz8V3Pr4tkwf4/U=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xt6EI46jCBiYvOLh44HAjDTleqkahodvUERzgawVkc/9mmoL2KqkcjPhPEeKm3mW8+ddbqCdER12psxbMPRH1ocGfuzgGIHYwy+qCaNfUdKOCw+ocr5VjoKyZARjlLGpteHVL7GnSscUUk9LqVfvKMl7I5rKyZ9ImPRCAfWJTSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=aIHo0FKZ; arc=none smtp.client-ip=109.224.244.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1742899340; c=relaxed/simple;
+	bh=4M685YFYylBe1+NiGa82PVUKBg9Vt+l/BT1my7zTJ4k=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EFlq+TMMVAFIgLAwLOs06XAMYgMOHX4NufXkDdzyp5q54euxsgOIt7lHbtCwfRCUjf5aUdD5cMHlNNogqvGgFaj5Envy6HfxpBpkxR3mXU2W8H+C39dkL9oVtpf75NR3WwasnKJOBl4Q14+lLlcpMHtnxRDdA3TLs+AShCzhlf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jMd1jw7N; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6kc4EbTB; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jMd1jw7N; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6kc4EbTB; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="aIHo0FKZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=cazukxct4je5rfknpomo5ndhoy.protonmail; t=1742899198; x=1743158398;
-	bh=7Qxu14y7hXsByiWaRphWUIUPNCDRSXJiL8l6Iwsjd+o=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=aIHo0FKZH0kRllaPjkCGXFAr6LoxqTKm7hgdunLsTv4w5oVNQtrGYaBtwwFM+3+Xf
-	 qb4LhaahWEaV+TcejHjZHz9kb3ta7oFcwRu+LTwldD/khMWlbvdAjibUuTslYBolxf
-	 XXuNAfr8AkRPJ4BxpAOPyFK8CpuDZ0j7OmDpiAGN3D8IirMPcqDu3Jf3SliaHYKu3D
-	 P9xlyRyG9v1oxDDOrFqCEk2wLMAgSZf59WKZHklHsEj4PaYmqTT2wDB7bkKONR/Dod
-	 9ko2k1DPmIVnQTn6h28XdhksWdmirA7W0Xto5S73RspeL499sOmWaw9h52GP5aS/qy
-	 IFDNr70n0Yxig==
-Date: Tue, 25 Mar 2025 10:39:54 +0000
-To: Tamir Duberstein <tamird@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy
-	<robin.murphy@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, FUJITA Tomonori <fujita.tomonori@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v6 6/6] rust: enable `clippy::cast_lossless` lint
-Message-ID: <D8PA773W07SS.3T2SZUIJH4HOH@proton.me>
-In-Reply-To: <20250324-ptr-as-ptr-v6-6-49d1b7fd4290@gmail.com>
-References: <20250324-ptr-as-ptr-v6-0-49d1b7fd4290@gmail.com> <20250324-ptr-as-ptr-v6-6-49d1b7fd4290@gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: d544dfa742d24e7be7a673d1c81bdd5dcc22818d
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jMd1jw7N";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6kc4EbTB";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jMd1jw7N";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6kc4EbTB"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 8ADFA21157;
+	Tue, 25 Mar 2025 10:42:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1742899336; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=arYeXTM3mdXUvVX2yoxaWjgO4joW01BAfqMKfnfpp+U=;
+	b=jMd1jw7NfPHFe1EzKfGP17P/xabwDhLGlGU18Ej+orltFNN0do0og67rh7h6vLOp0CY94K
+	7OA/OklYcnMCyX84bhSPOmc50byi6vhO0M8X7r60cDLh2r/BEmRjy5unxzKSCcrUuZjIN4
+	Q5vUNH1SMOQvVDnxGF6ZzG1H58tbwGM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1742899336;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=arYeXTM3mdXUvVX2yoxaWjgO4joW01BAfqMKfnfpp+U=;
+	b=6kc4EbTBC2zr0lESUskhbAezs0cS6ySbpDkPUC/4SAyg9RCDZbRm29EYtR/EKjuApbpMT4
+	kti7XBRJcdcghlDA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1742899336; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=arYeXTM3mdXUvVX2yoxaWjgO4joW01BAfqMKfnfpp+U=;
+	b=jMd1jw7NfPHFe1EzKfGP17P/xabwDhLGlGU18Ej+orltFNN0do0og67rh7h6vLOp0CY94K
+	7OA/OklYcnMCyX84bhSPOmc50byi6vhO0M8X7r60cDLh2r/BEmRjy5unxzKSCcrUuZjIN4
+	Q5vUNH1SMOQvVDnxGF6ZzG1H58tbwGM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1742899336;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=arYeXTM3mdXUvVX2yoxaWjgO4joW01BAfqMKfnfpp+U=;
+	b=6kc4EbTBC2zr0lESUskhbAezs0cS6ySbpDkPUC/4SAyg9RCDZbRm29EYtR/EKjuApbpMT4
+	kti7XBRJcdcghlDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4C54E137AC;
+	Tue, 25 Mar 2025 10:42:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Zu5SEYiI4mfGTQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 25 Mar 2025 10:42:16 +0000
+Date: Tue, 25 Mar 2025 11:42:15 +0100
+Message-ID: <87r02lcry0.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Shenghao Ding <shenghao-ding@ti.com>
+Cc: <broonie@kernel.org>,
+	<andriy.shevchenko@linux.intel.com>,
+	<13564923607@139.com>,
+	<alsa-devel@alsa-project.org>,
+	<linux-kernel@vger.kernel.org>,
+	<baojun.xu@ti.com>,
+	<Baojun.Xu@fpt.com>,
+	<robinchen@ti.com>
+Subject: Re: [PATCH v1] ALSA: hda/tas2781: Support dsp firmware Alpha and Beta seaies
+In-Reply-To: <20250325103612.2021-1-shenghao-ding@ti.com>
+References: <20250325103612.2021-1-shenghao-ding@ti.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Score: -3.30
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[139.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,139.com,alsa-project.org,vger.kernel.org,ti.com,fpt.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ti.com:email,suse.de:mid]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Mon Mar 24, 2025 at 11:01 PM CET, Tamir Duberstein wrote:
-> Before Rust 1.29.0, Clippy introduced the `cast_lossless` lint [1]:
->
->> Rust=E2=80=99s `as` keyword will perform many kinds of conversions, incl=
-uding
->> silently lossy conversions. Conversion functions such as `i32::from`
->> will only perform lossless conversions. Using the conversion functions
->> prevents conversions from becoming silently lossy if the input types
->> ever change, and makes it clear for people reading the code that the
->> conversion is lossless.
->
-> While this doesn't eliminate unchecked `as` conversions, it makes such
-> conversions easier to scrutinize.  It also has the slight benefit of
-> removing a degree of freedom on which to bikeshed. Thus apply the
-> changes and enable the lint -- no functional change intended.
->
-> Link: https://rust-lang.github.io/rust-clippy/master/index.html#cast_loss=
-less [1]
-> Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> Link: https://lore.kernel.org/all/D8ORTXSUTKGL.1KOJAGBM8F8TN@proton.me/
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+On Tue, 25 Mar 2025 11:36:12 +0100,
+Shenghao Ding wrote:
+> 
+> For calibration data, basic version firmware does not contain any
+> calibration addresses, it depends on calibration tool to convey the
+> addresses to the driver. Since Alpha and Beta firmware, all the
+> calibration addresses are saved into the firmware.
 
-One nit below, but you may add:
+The description is same with the other changes in ASoC and that's
+*very* confusing.
 
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+Please give the proper description that matches with the actual
+change.  Also consider a better subject line, too.
 
+The same problem happened already a few times from your submitted
+series in the past.  Please try to improve the process.
+
+
+thanks,
+
+Takashi
+
+> Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
+> 
 > ---
->  Makefile                        |  1 +
->  drivers/gpu/drm/drm_panic_qr.rs | 10 +++++-----
->  rust/bindings/lib.rs            |  2 +-
->  rust/kernel/net/phy.rs          |  4 ++--
->  4 files changed, 9 insertions(+), 8 deletions(-)
-
-> diff --git a/rust/bindings/lib.rs b/rust/bindings/lib.rs
-> index 0486a32ed314..591e4ca9bc54 100644
-> --- a/rust/bindings/lib.rs
-> +++ b/rust/bindings/lib.rs
-> @@ -25,7 +25,7 @@
->  )]
-> =20
->  #[allow(dead_code)]
-> -#[allow(clippy::ptr_as_ptr)]
-> +#[allow(clippy::cast_lossless, clippy::ptr_as_ptr)]
-
-Not sure if we instead want this in a separate attribute, ultimately it
-doesn't really matter, but why should `undocumented_unsafe_blocks` be
-special?
-
----
-Cheers,
-Benno
-
->  #[allow(clippy::undocumented_unsafe_blocks)]
->  mod bindings_raw {
->      // Manual definition for blocklisted types.
-
+> v1:
+>  - Add updating calibration addresses code into tas2781_apply_calib in
+>    case of Alpha and Beta firmware.
+> ---
+>  sound/pci/hda/tas2781_hda_i2c.c | 30 ++++++++++++++++++++----------
+>  1 file changed, 20 insertions(+), 10 deletions(-)
+> 
+> diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
+> index 50c5e5f26589..cb3d683013d9 100644
+> --- a/sound/pci/hda/tas2781_hda_i2c.c
+> +++ b/sound/pci/hda/tas2781_hda_i2c.c
+> @@ -558,28 +558,38 @@ static int tas2563_save_calibration(struct tasdevice_priv *tas_priv)
+>  
+>  static void tas2781_apply_calib(struct tasdevice_priv *tas_priv)
+>  {
+> -	static const unsigned char page_array[CALIB_MAX] = {
+> -		0x17, 0x18, 0x18, 0x13, 0x18,
+> +	struct calidata *cali_data = &tas_priv->cali_data;
+> +	struct cali_reg *r = &cali_data->cali_reg_array;
+> +	unsigned int cali_reg[CALIB_MAX] = {
+> +		TASDEVICE_REG(0, 0x17, 0x74),
+> +		TASDEVICE_REG(0, 0x18, 0x0c),
+> +		TASDEVICE_REG(0, 0x18, 0x14),
+> +		TASDEVICE_REG(0, 0x13, 0x70),
+> +		TASDEVICE_REG(0, 0x18, 0x7c),
+>  	};
+> -	static const unsigned char rgno_array[CALIB_MAX] = {
+> -		0x74, 0x0c, 0x14, 0x70, 0x7c,
+> -	};
+> -	int offset = 0;
+>  	int i, j, rc;
+> +	int oft = 0;
+>  	__be32 data;
+>  
+> +	if (tas_priv->dspbin_typ != TASDEV_BASIC) {
+> +		cali_reg[0] = r->r0_reg;
+> +		cali_reg[1] = r->invr0_reg;
+> +		cali_reg[2] = r->r0_low_reg;
+> +		cali_reg[3] = r->pow_reg;
+> +		cali_reg[4] = r->tlimit_reg;
+> +	}
+> +
+>  	for (i = 0; i < tas_priv->ndev; i++) {
+>  		for (j = 0; j < CALIB_MAX; j++) {
+>  			data = cpu_to_be32(
+> -				*(uint32_t *)&tas_priv->cali_data.data[offset]);
+> +				*(uint32_t *)&tas_priv->cali_data.data[oft]);
+>  			rc = tasdevice_dev_bulk_write(tas_priv, i,
+> -				TASDEVICE_REG(0, page_array[j], rgno_array[j]),
+> -				(unsigned char *)&data, 4);
+> +				cali_reg[j], (unsigned char *)&data, 4);
+>  			if (rc < 0)
+>  				dev_err(tas_priv->dev,
+>  					"chn %d calib %d bulk_wr err = %d\n",
+>  					i, j, rc);
+> -			offset += 4;
+> +			oft += 4;
+>  		}
+>  	}
+>  }
+> -- 
+> 2.34.1
+> 
