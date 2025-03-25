@@ -1,94 +1,98 @@
-Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6911EEA4E
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 13:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E642580EB
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 13:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742910975; cv=none; b=ZZD1m0qNR+CQ3PWCcTOKYHysknS4l3XeLWt5KNI2okRwhN1oRXyki1kwfpOnoTN24Xpf8GP57Zu6OS0qBeDbzgYZsW0vPAullD3yfAtEbIUp3vrG4X1H0Bwc7sZZd74Kde3q6+Rdy6RAnKY7G/MFQ4sAYSRPzsTKHqVsR6OnD9g=
+	t=1742910989; cv=none; b=EK4Ff0ZTpYK65BgGLkNSWnfKa+VaFtKAZ1ATGLcpDtrBDkDFx8DUd2TOnzi5IjrZ9BgXG79Bn1Lq5fcEP4kEE16rSwPQxJumhK7sW3SCd/0hVUg4Ld7/eaVh3wTi4ed/ocPhQ1GrFfZ2VZliBDJ1LlK7Jwb+vSOLu2oL7Z9prZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742910975; c=relaxed/simple;
-	bh=qEMNyQ5ds/VmKFLRDJf2+qMtoc35WfaEw22SNJ59GUs=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=eBMr0XeXxc1XP7JM6VO/bDI60R+Sygft5SIegbPYclZAzL1PRcJNqGYFnqqJ1M/8Xfyf+mFy65qOfb/6pi2vnJkuS6lvoXWlwt7T16E88glRaJVp6tCpprYuEX3KiwIoQTeEzvt6FsK3qSk46cO86qy7lxoJIQWLRV87W4eb4pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=J2Y4LS4z; arc=none smtp.client-ip=192.134.164.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1742910989; c=relaxed/simple;
+	bh=A1Q+B2gufMsfREQp5SIVWcC7720Z/T99tr9MbQkNLgk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FHje8+pGzZgFaktWeOqld3fw2sT3BMDMqB2CbYBwEzZzG8IvWqYOZY9y1C3qDCLTCXZqQupbyGDzzuwjCXaKtvFaybLXTd+AcDWPzwGGhknM79cI1D4vBL7ACdauL/bC6UKlKkKu4wv2T9XMyBhiUf24ePW+MoVnJJTGukMgs/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ajWv4Ohw; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="J2Y4LS4z"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ajWv4Ohw"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3913d129c1aso4057060f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 06:56:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Q+5awqeE5/5JpbIYKZrW0uZUXFfOxvrShRVsEromEjQ=;
-  b=J2Y4LS4zbjbhorrwatNvMrgKR35paPRget3yRAD9D8IA1ew4HJ4tO/sl
-   xdvZUGWOsx7sxWeKq0gWWADschgh/Khmtli8f9wXxv61DnFqRwK5pXqlp
-   L0UCVbpm3AD7bDqJZpICuLkPRI2AFxMZeMv0BsQOwWKWNDOmpVaLAlgh0
-   k=;
-Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.14,275,1736809200"; 
-   d="scan'208";a="214672165"
-Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 14:56:10 +0100
-Date: Tue, 25 Mar 2025 14:56:09 +0100 (CET)
-From: Julia Lawall <julia.lawall@inria.fr>
-To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, outreachy@lists.linux.dev, 
-    linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: simplify if-else block by removing
- unnecessary braces
-In-Reply-To: <Z+KraOo2DfmH5zMX@HP-650>
-Message-ID: <36d38aa1-39f7-ba14-633f-d3411a863a83@inria.fr>
-References: <Z+KraOo2DfmH5zMX@HP-650>
+        d=suse.com; s=google; t=1742910985; x=1743515785; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UenxoH6KmmrH5CC3OQgIopnnTp23ZO/0n/qWbM1/1zo=;
+        b=ajWv4OhwFXIiyIBoxfRqNRV/2qs/SZUnb5D19ez7n8slAjmmQf3L57Wh8xjjywnKPe
+         hJxu8GOT3IejCy5pYIqeFokINlrWCk0xex+XUUzEIl+uoLgTmy1NuKGDa554zFCsSvfH
+         QPUjhFBtN//YwbfEdRxl1gyB+o7UHTBhe0M3lo8SEmqJpueBk21iQevFgueZueTOTP4k
+         cbQDf4WK1eq9VShlE3WHwyDxecsbcI08j5dV/WmOVaCV/nuy0NeA1Sgj0mSzhkG4fH0T
+         LZ/qO+FGFT5td1mm2dHhwxlGBiSKDIhroiaEyuVxOlwGY8JqsOSFc4gyr7ZtcNDnznGA
+         cbTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742910985; x=1743515785;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UenxoH6KmmrH5CC3OQgIopnnTp23ZO/0n/qWbM1/1zo=;
+        b=EUoSgnIyPpfZlZc5Ra8F/zVRQrEDs3l0L8CsSowckCyweGyMOFcZw+GObE4s0sCOrz
+         cQLvOcrwb/p76uv59S50/0uhgEXYu7L/0N5rNJow6Y1sgzBk1RhVb1knfh04seQC99/Q
+         JU4MoyNOY7oohg8m+y0cmy72OmBNefxAeO9ITw1AZSsXDUNiwjI4RWWsznF0CDkmCtff
+         siCUJkEp5/7bx1KgwSUMINEy3tZcjIgR4yQCvphnKZ87JHzabqMnS7VCrX3Tl7jHHclq
+         VNvBi1icr/Kn6dAjagZlHJlcWPVB4zQ9vs526HN4HZ4F8Vr7+qtshDaHKgx83YUQ9Zeg
+         0OVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX3ioxciERKQWfRSSthpNQRv/mHyc9c0UOEDG3kcAzSEaVNy6za3E8wMoQBSrASUeB26UyQc3kJdFMqxwQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwomXyh9CHUFdT6/qV1APUbUFIQAkKpZuWIMPcrF371Z5riC2mZ
+	Z6GM4siTqVUOw5CbyRlaF68a1W77FT7MUeLu7lyAJ14U0DvzjQ8uyvu+GY1k5UL+0rj2SrREEab
+	M
+X-Gm-Gg: ASbGnctFenabmcgvzUTxGRlLmGp/AWiVj2jlUabvftPDiF0bCP22P2127JCCkXDnzP0
+	8X6NzRr/pLLReMa8okltnrx32LjP0GWnAu7rgL0VT89Neizjs6dawFXllFy5JoNrOPajSSRPJ3b
+	7MQym9rYeZ3BhNfXrkePvpbrAfQ0c08Sb5h/sNEHMhqCsoR/ifnV0xs/mfPqqxm1joZEouY2yNj
+	Av+ODxLN9o7Y86jR7jG4Ojnu9SXSZR8eN5nJgj0FN28LHdmr5TxKkSnWoJ4dMTnWl5WR7doPmYK
+	72YB5GA85mKRtcZGDdxDkDwu0wVDtAJlDVftr1PN+X9I
+X-Google-Smtp-Source: AGHT+IGuP7hdX4oUt/uYmCs7eqmCWfVYFgG4WOsXpx3j+wCi9SZrdUfRY084MJJ+0RZbPCxY7u8W5w==
+X-Received: by 2002:a05:6000:188e:b0:390:dec3:2780 with SMTP id ffacd0b85a97d-3997f93c60fmr13164520f8f.24.1742910985169;
+        Tue, 25 Mar 2025 06:56:25 -0700 (PDT)
+Received: from pathway.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9efcb1sm14030721f8f.94.2025.03.25.06.56.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 06:56:24 -0700 (PDT)
+Date: Tue, 25 Mar 2025 14:56:23 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Filipe Xavier <felipeaggger@gmail.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+	Miroslav Benes <mbenes@suse.cz>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Marcos Paulo de Souza <mpdesouza@suse.com>,
+	live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org, felipe_life@live.com
+Subject: Re: [PATCH v3 0/2] selftests: livepatch: test if ftrace can trace a
+ livepatched function
+Message-ID: <Z-K2B8WMVf36sLcX@pathway.suse.cz>
+References: <20250324-ftrace-sftest-livepatch-v3-0-d9d7cc386c75@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250324-ftrace-sftest-livepatch-v3-0-d9d7cc386c75@gmail.com>
 
+On Mon 2025-03-24 19:50:17, Filipe Xavier wrote:
+> This patchset add ftrace helpers functions and
+> add a new test makes sure that ftrace can trace
+> a function that was introduced by a livepatch.
+> 
+> Signed-off-by: Filipe Xavier <felipeaggger@gmail.com>
+> Acked-by: Miroslav Benes <mbenes@suse.cz>
 
+For both patches:
 
-On Tue, 25 Mar 2025, Abraham Samuel Adekunle wrote:
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Tested-by: Petr Mladek <pmladek@suse.com>
 
-> The if-else block contained braces around single statements, which are
-> unnecessary according to the Linux kernel coding style.
->
-> Remove the redundant braces to improve code readability and maintain
-> consistency with the rest of the codebase.
->
-> Reported by checkpatch:
->
-> WARNING: braces {} are not necessary for any arm of this statement
->
-> Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-
-Reviewed-by: Julia Lawall <julia.lawall@inria.fr>
-
-> ---
->  drivers/staging/rtl8723bs/core/rtw_ieee80211.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/staging/rtl8723bs/core/rtw_ieee80211.c b/drivers/staging/rtl8723bs/core/rtw_ieee80211.c
-> index 0ed420f3d096..53d4c113b19c 100644
-> --- a/drivers/staging/rtl8723bs/core/rtw_ieee80211.c
-> +++ b/drivers/staging/rtl8723bs/core/rtw_ieee80211.c
-> @@ -988,11 +988,10 @@ void rtw_macaddr_cfg(struct device *dev, u8 *mac_addr)
->  	if (is_broadcast_ether_addr(mac) || is_zero_ether_addr(mac)) {
->  		addr = of_get_property(np, "local-mac-address", &len);
->
-> -		if (addr && len == ETH_ALEN) {
-> +		if (addr && len == ETH_ALEN)
->  			ether_addr_copy(mac_addr, addr);
-> -		} else {
-> +		else
->  			eth_random_addr(mac_addr);
-> -		}
->  	}
->  }
->
-> --
-> 2.34.1
->
->
+Best Regards,
+Petr
