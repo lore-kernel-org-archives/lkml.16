@@ -1,140 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E130F9E6;
-	Tue, 25 Mar 2025 12:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6201B85FD;
+	Tue, 25 Mar 2025 12:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742906597; cv=none; b=jzdsOqW0PXt/V8nGi1B5UuFzRwXAgYDc2t4LNSr5dW7KTuS+eAnUJBmZPscv1JkibKi+4PIhkRXSCRmzYnNu2lomMn7Igytk5ff4E/9jPfWsBOLwjJ2I+tS1AnBgtYh7bhaMdu9L1OiOMBwP3UvdwsMnsCaciPqt3pggNy5Rydc=
+	t=1742906732; cv=none; b=hkqXrLgIuHpxdyNLDveiMHYg8tYrdlbv3JTwoDW0zgWx3xuKW7NxGE/lNPglH7S9Uk6udpU/Q9ObvcZ+l83TyCHjC16ZQIIYdKl/kv5m8xTpeoyBP+SjqWXrxHFsE6MWFeesTcQQbuXk+v51d13Px+p2iT+lmscY/VIuIFw3HDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742906597; c=relaxed/simple;
-	bh=ng35KBckf7JeUu4rjFsZ5XIXPqVaMyQEg+4Yl2pBr0E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TV9HIegLKcqfMx5/KTspFn4L0fTFvYkxe+cTlITkSoFMQLXMyCyndOnYAxrnCD8V1YI8+oZMwm5X/k+CCC89ufc2oE0SlEg2YvJsaOqmF2VLjlVN7RXMAXBufrEDe2d7priMuVLKRNlh8U3/0RcgDp8T767UqPViEp2E4ISThZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FqskeZGh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742906732; c=relaxed/simple;
+	bh=etoP08AoKZtuZl84RAwLoOiSki62COEcAOZ7N/k0MIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B+WitzP0WYENoUz96dDjO79Xz+z3X/vzsQy3nTbXLTjGvHsvLhBGk2XNwFo4OcW7zNiUXJD+HasZkzzdbRjkyTMUzsenoerYXm62pbcXVT8QBDzNDBrWqjODJhdu4LJZ6dIySWyaOe6L7PLR7P7VGJ5+0RuIPDBqVzrVrEHY8lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NdMZNpU1; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FqskeZGh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28C5FC4CEE4;
-	Tue, 25 Mar 2025 12:43:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742906594;
-	bh=ng35KBckf7JeUu4rjFsZ5XIXPqVaMyQEg+4Yl2pBr0E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FqskeZGhSZkJYVG9aZ3S0NXYbJpzHLGfjDW0JGVj5tfAuGSsdltKpL3n588a6KTxs
-	 i7/TsSCDSYZRVXDC2qb58+1zPOHTP+RiYIrxb9fZhLWrgKhaUzZuhKyuQnG1dP8yE2
-	 zyXS693a2C23KkKdhWQwUV2RWNdCTFC2Xp/v2wBVaXpplbKgljG8IQEUkINMxtMfaE
-	 rDQg9Q9Kr84uyitneCf2OHFGwikKw7RCeXxl6R65Xrq6vDgxwgomSWTSWzKmmK4/CX
-	 zcY6JGu+qY/z4LMk0xI1K0z5BG+EFrNZs9BPBb9AhSdD6Pi2IdnPaEnhNcg/9nEyeb
-	 tH6vMMFWSz0Gg==
-Message-ID: <7d3fbe0b-f566-4615-a5df-a8f3b4544c3b@kernel.org>
-Date: Tue, 25 Mar 2025 13:43:04 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NdMZNpU1"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so39525685e9.3;
+        Tue, 25 Mar 2025 05:45:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742906729; x=1743511529; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gSa7I/akXEAX+WMr4yb3n8ucSGDNYu+Pa5yhxPlOXx0=;
+        b=NdMZNpU1pw2VznRqMwq1+2KskrWQbIeBJkxIbF172aqHebfGtacCw5VlUhMxe4ho1R
+         6xqzm/EQUMj+WoPF/owjud6R89g/vAIgJvA8JmSBAoCFlYCobNaDYFy8nXWj+68EaArO
+         d8p276yQdE2fHzEQPgNMozu9SRc2P9+d/w2UsMREx0IpxRN7+mvjHZRuDvgglMsUx+op
+         AlUAiYuFebrIDGrkTHik8KNS/MhIxc84qpYLR+VvvI70ucmpO4nmNoF3w0dpsfIYMhTq
+         EVOBztfjizMZSmIq+wJ9o88dH4+gDDff3lT/7txaoeosoKes8zqco3Up5RvCI/Sn5OhU
+         IDCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742906729; x=1743511529;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gSa7I/akXEAX+WMr4yb3n8ucSGDNYu+Pa5yhxPlOXx0=;
+        b=wyREASU3G+bPpbwaDhuU3Q8PoZypx/CynE1pY9znBSphndTmEKqJhM9AhCSlDcACvF
+         RVNxAPam9iNCwfMjypAux7jEYUIvZVfjQNHcn4T9GuIaMYEPBuIy9AjHmHly34oJLvXp
+         5is0RiTIM4PvwKVrSIYpd/Gq0mQxRnKopW1iM79MZP+WbDrebaNWObpcLrWVyvWwCqar
+         kn3jlotPdj6J2BTgDP8CR6huBDsaLEWoG77S7n8S86ivTPx4c5SQZTA9qgFGvOLi8qF5
+         xAjuGaeWQH2Qv5Q7zi8kQ1MNzY3wGxhD/W5foAINVp/SspI30aSCv99PCVHPaNO6lfhv
+         EOmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUkB3tJJc4Hm3mE44Km2E3fLeIqlc0NV1O156Spq51sz1IHIrjdL4S5tlNowQlZ3+WC0qHMo8emNuH1hws=@vger.kernel.org, AJvYcCWQmoLnZV4A+N6JwxDFuI8EmmLv7/9OF68iXymvpiZidP3rVqBnweIGaQAlNQtqJ1II3hv5PRq2jn/v@vger.kernel.org, AJvYcCXHZs3ct38panvDVW7p8D9pf6uRGnDgoNnmcKM46iNtm4m3J5T2ckWPtWdg50qtL9LMEyrQOWncHQiJ57WP@vger.kernel.org, AJvYcCXLHijQM+7I+qGpU/QKC9rNTSHW8RaFYwlg9uwGmk4KlKmbSbpKZkl9hzUDBFgcRuIbtoib0UcFQxkU@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBnoqAD7F2vWUNZi8+Opd9HbTZmzF2+hON6KY9BaskyAuNy+jl
+	Rzk4HC5DqF7Dw2tVn9kMPshFPVGs4YClqvpZmDUC2TM0zLUI8934
+X-Gm-Gg: ASbGncs/BUOAAs9oWXm/IbhQrVGf0J3xWgLppTwVP6xPx4lBsWvs0LxSnhE8/uYwKo4
+	6leCwGo3owr1A9e7L1UTa/8jY5PiruCYtodgwga3IqmrI5T06j17UnCaxlLIdu/40E4YOmxSABV
+	taGSTKc9XoHzMKr/UFs+ci0aq2iKRd8a4/+EqgUD1I6DFCbP34gAGmA4Y2R4tvRLnep5MvbB53Y
+	x2ex0PQUV64v8eQvquh9CmH9zru1DR3M5LjiO7mTRZuzqbj92ix4UO8BgvbTVR8pL2t5xtgUoXw
+	is/xrJ4pObMNP0jh8XeNqQcUJgG01z41d787eVFCfI8y8GU8jnL4YKgTxtJuYWcULoeCOMyaqC4
+	P6m2rRV9pc9TJS0dD4qczWZqXGBPdJ1VtCJO8n6pyCQ==
+X-Google-Smtp-Source: AGHT+IFdARdk+/q7cuJYaSe5KqZD7COsq6XvV6kr3Ih+IpEeyty+QcYuulDT663rN+ubH6y7PNuClg==
+X-Received: by 2002:a05:600c:1d8f:b0:43b:ca39:6c75 with SMTP id 5b1f17b1804b1-43d509f44f2mr176018735e9.16.1742906729241;
+        Tue, 25 Mar 2025 05:45:29 -0700 (PDT)
+Received: from orome (p200300e41f4bef00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f4b:ef00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fdbd0a9sm151377025e9.38.2025.03.25.05.45.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 05:45:28 -0700 (PDT)
+Date: Tue, 25 Mar 2025 13:45:26 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Jon Hunter <jonathanh@nvidia.com>, Vishwaroop A <va@nvidia.com>, 
+	krzk+dt@kernel.org, robh@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: spi: Add DT schema for Tegra SPIDEV
+ controller
+Message-ID: <4zic633abvwj377kfqem42zmc2yruflbwfmmqrpvjjgr6jae6h@jthoycb3vzzz>
+References: <20241126134529.936451-1-va@nvidia.com>
+ <20241126134529.936451-3-va@nvidia.com>
+ <a1278046-038e-4825-b029-1b478f28cb7c@sirena.org.uk>
+ <e95f870f-1309-4ac3-a16f-ce58b02dc817@nvidia.com>
+ <59ec100f-1915-447b-98fb-3cbe2ca53a1f@sirena.org.uk>
+ <925fe847-68b4-4689-832c-08f8de3dfeb1@nvidia.com>
+ <48f9c8c0-5cac-4812-8d06-501193be731b@sirena.org.uk>
+ <909f0c92-d110-4253-903e-5c81e21e12c9@nvidia.com>
+ <48248165-c800-484f-be62-7c48b3c6829b@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] dt-bindings: net: Add MTIP L2 switch description
- (fec,mtip-switch.yaml)
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>, Paolo Abeni <pabeni@redhat.com>,
- Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
- davem@davemloft.net, Andrew Lunn <andrew+netdev@lunn.ch>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>,
- netdev@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>
-References: <20250325115736.1732721-1-lukma@denx.de>
- <20250325115736.1732721-3-lukma@denx.de>
- <2bf73cc2-c79a-4a06-9c5f-174e3b846f1d@kernel.org>
- <20250325131507.692804cd@wsk>
- <bf6d066c-f0dd-471a-bb61-9132476b515a@kernel.org>
- <20250325133949.7782a8a5@wsk>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250325133949.7782a8a5@wsk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="juqd7brllbpcvgf2"
+Content-Disposition: inline
+In-Reply-To: <48248165-c800-484f-be62-7c48b3c6829b@sirena.org.uk>
 
-On 25/03/2025 13:39, Lukasz Majewski wrote:
-> Hi Krzysztof,
-> 
->> On 25/03/2025 13:15, Lukasz Majewski wrote:
->>> Hi Krzysztof,
->>>   
->>>> On 25/03/2025 12:57, Lukasz Majewski wrote:  
->>>>> This patch provides description of the MTIP L2 switch available in
->>>>> some NXP's SOCs - imx287, vf610.
->>>>>
->>>>> Signed-off-by: Lukasz Majewski <lukma@denx.de>
->>>>> ---
->>>>>  .../bindings/net/fec,mtip-switch.yaml         | 160
->>>>> ++++++++++++++++++    
->>>>
->>>> Use compatible as filename.  
->>>
->>> I've followed the fsl,fec.yaml as an example. This file has
->>> description for all the device tree sources from fec_main.c  
->>
->>
->> That's a 14 year old binding, so clear antipattern.
-> 
-> For some reason it is still there...
 
-And it will be there for very long time. Bindings are not removed just
-because they are old, because they are an ABI. That's still not a reason
-to use something old as starting point.
+--juqd7brllbpcvgf2
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 2/3] dt-bindings: spi: Add DT schema for Tegra SPIDEV
+ controller
+MIME-Version: 1.0
 
-It's the same with drivers, although driver can be easier changed and
-old pattern can be dropped. You cannot easily drop old, anti-patterns
-from the binding.
+On Tue, Mar 25, 2025 at 12:10:19PM +0000, Mark Brown wrote:
+> On Tue, Mar 25, 2025 at 10:36:29AM +0000, Jon Hunter wrote:
+> > On 27/11/2024 17:31, Mark Brown wrote:
+>=20
+> > > You can put 'spidev' in as the compatible and get the warning, we don=
+'t
+> > > require specific compatibles if the Linux device ID is good enough.  =
+If
+> > > you genuinely just have bare wires you're probably able to cope with =
+the
+> > > warning.  If something is actually connected you should use the
+> > > compatible for whatever that is, if spidev makes sense for it then
+> > > that'd be OK to add to spidev.
+>=20
+> > We finally got back to this. Looks like just having 'spidev' as the
+> > compatible does not work. Apparently, it use to work and yes you would =
+get
+> > the warning, but that no longer seems to be the case. I see a few others
+> > have been doing similar things and hacking their device-trees in differ=
+ent
+> > ways [0].
+>=20
+> Huh, OK.  I don't recall any deliberate SPI change for that.
 
-Best regards,
-Krzysztof
+People in the discussion that Jon linked to indicated that it was this
+patch that caused the "regression":
+
+commit 6840615f85f6046039ebc4989870ddb12892b7fc
+Author: Mark Brown <broonie@kernel.org>
+Date:   Thu Sep 23 18:00:23 2021 +0100
+    spi: spidev: Add SPI ID table
+   =20
+    Currently autoloading for SPI devices does not use the DT ID table, it =
+uses
+    SPI modalises. Supporting OF modalises is going to be difficult if not
+    impractical, an attempt was made but has been reverted, so ensure that
+    module autoloading works for this driver by adding an id_table listing =
+the
+    SPI IDs for everything.
+   =20
+    Fixes: 96c8395e2166 ("spi: Revert modalias changes")
+    Signed-off-by: Mark Brown <broonie@kernel.org>
+    Link: https://lore.kernel.org/r/20210923170023.1683-1-broonie@kernel.org
+    Signed-off-by: Mark Brown <broonie@kernel.org>
+
+If you say that the regression wasn't deliberate, maybe we should look
+at fixing this so that people don't have to work around stuff?
+
+Thierry
+
+--juqd7brllbpcvgf2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmfipWIACgkQ3SOs138+
+s6EEeRAAvrnIRjGZ4twQvpRENci9TEsWE7Q8l9qO4bVt2DlFaAD9AtKmLPkay7Gb
+GKV+MbGhtg0v2x2Xjmh/p/XN8vw1xE2Zb7TvwZUEHfq8ILvkLeTXszIIgNcLGzu5
+NuQKT9Nu3IXQm/79t4FeFr8xroQwVpj9t3w9sZMi29fxC5GMzKnXzAM0Pji/8efr
+V6n7lSl6Jg8Nj3rn0vAubMlSnXT/2/YrEFQ6zcUUJnNQD6NO/oWNF/KDrg9Vi1S4
+7E6FuT05edRhODgRogOFpn0FWbPIaqEcGz/5asck04du5IhZ+54iwSNcjQ/aoi19
+99sNQCOLK99QwbfA0eigeZiBrbhfkTdQNFxWPgUP4PWeofoC2zYd5KF8RPhgS0Vq
+9mRSkHl1R6npGLBXFVxKj4H4DjaYPXtbNYvz7hT4so2iSXv9FL3bRGvKpJs+51Mh
+Kgp/17DUK9TtauU75m+09fVshB0mJXHZaKbhU2bqKbdonQYSla3soWyGZ+YwjyIH
+YHZaxTCxF/OVVmSqUDTKEOIFsOf+8lx28aOWBxlBvYjmlnqpimbTgHCa0Kd2m/eW
+o7IUC5ButbfbLNwPmowFGv8Msg9xfVZrSIotvMq5exucMi42PYPbSedGVCqnNP3N
+EfjsQGFCE1ldOE13Bm1AB3cWr/k9Ak8WFErUuXUecisivAgFAvI=
+=/BYC
+-----END PGP SIGNATURE-----
+
+--juqd7brllbpcvgf2--
