@@ -1,126 +1,87 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D73253B68
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 15:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F2C2E3382;
+	Tue, 25 Mar 2025 15:30:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742916487; cv=none; b=R/5w2/aIZ6ywE+B8Tc8e3OPb/HO7OcoADNnYPjH25jnyHuvaP9zuELw42KBHUF97gSj213kaOxOgeBK1gerhUy3rD5GDCgla9tJf+l0xfP4LNYcfKuf3AbRHJPo4stJAcXLmQpO4P6/PxGNdjHyVKMSoBE8gyYpTckXwV5yE1iw=
+	t=1742916602; cv=none; b=LGwvhlICC8J6DR8HS8rwcA8ZzW6Um54Q+bfH91abT3bmBLCCAaYjeyZA72V+8l85nNH0QFqq9+/QvjZzlJpy4BpYYAZZ1hXd8M0M3nSuzXrvoZgNrc1OqUMu8FJ1fUT8evPNhckeL0oe+MQiRqmC/2rC7CvyOfQwXM7nGVn6Q6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742916487; c=relaxed/simple;
-	bh=gzOhUwuk6PRtqJT004lFT8JmHmf233ItpyrfAz7UByY=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=po6s3uWhm8qI+EMgtclf8MOClz06LZ6OisIRmIkF9G0egoxpNb3yZ/lgoGwNfoi1GNhjHoqYO2iiG+5NhgtJmmqVbHvxqz2c3YOe6M23XK5eRv19v6tWsg6JP0UAM1wksDB5rbDUrVZUa19DeX3ldpQWCQWzXDtpUMTY6XOHYLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q991Rvwb; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1742916602; c=relaxed/simple;
+	bh=rZQHfWmksMwHawhsGIweB/zezJOd7MftOi3iZ8m1Wpg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=A41DYbk/15EbeVD5FJzL3dhANqB7XXBpeuipWV4kJbqJIybQzgs7+UAOV0OEQMu2xvEZDYM90J56oqDGCSrUWcLrYngBnd4mFQf4GidgErkK0tD4JkssCLp8iQIUbuXLZ3RPAGtJeAdvAH0y24Z6JQ2VwHN74Wfv2kvlggu+aAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eWBp3Ypx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q991Rvwb"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e63533f0a65so6873899276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 08:28:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742916485; x=1743521285; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6RXv0a2X2Eq8/LheD1NmgszijzevuXG/6uAHQeKi4nU=;
-        b=Q991Rvwbh25QFVgJjw5d6el5tFvf17PgGBBePQ7w/ggPUWQ3//5tGUADxKh6M5OWfc
-         KV7MzgzZtLY2ajrvmjJQF2jD9O/2mybWNg1qWpUWYB3wFL/T3yc1MnnBaPStcigin0y7
-         7mErtx4xgYzfFuUcNK//kxe23rCpcb/oGB9ZfO5lbCuHUnD2AmhC+HJSbeMvB/AsUe3U
-         l0VK4bLemrqARpd4ASpFmQuX8WzHV/bVpR1VFGJ0asPoHyVrTdvxNqJjA7yybqICZpXf
-         rWPGEL+TRurQnbYe2TvCqDvBxk/zFRL/e/jaBldv4bguqoZYtyHxIQpRA960t0YiXIG2
-         4mEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742916485; x=1743521285;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6RXv0a2X2Eq8/LheD1NmgszijzevuXG/6uAHQeKi4nU=;
-        b=CkQpwwDRMkf1vVWwGIf3PozGBVMAlIIOCsJ4qlnyTZGjoyEhPbHBrU9Jd5UetSzYXY
-         PQv1vQ5XBrTvQCej9GaCdqrmULDH10afMt+W/SebvLdzp0eQ6XrxkVs4lHT9NG4nDMDT
-         nsoyvOEK9X4GvzuJxGxIdoehN0XoRVm3U1tZySRzq7+0ddAgGXQMMsAGfs0Jp0P7Ml47
-         jDjXc7HwT0H9GEsX0fQZPwqYNLifL2WJaCGjiqxeoWh3TbEipPtlpm0ZvPdcQEN0dzAY
-         t6fQll1Rhc7ZUdZlnv9NVAdDKfYdBLMZi0txzhQhi/dF1vqu7l6CvfEuMIVz8RVV/Dh0
-         naeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWntT2Z15t+LvCXAx5U7qCoJPi04tMGQV/IfJzCTd04wBXq7+sv2y4AnqzJNpkgEUOk8gsLINSkHomc4jE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW1nx3tSRy7rfQUop6QRinmttkkcLE1lqkWi7s8TIlAvaT5OiB
-	OuT5eCDImRqwoqJJ+FADb1lTYXsM2MdoPTFaApjzGCNjyjfjq4yXu+mpiQmCRh/4i3my0aQ+HaQ
-	56t/r8Q==
-X-Google-Smtp-Source: AGHT+IFNKlPlr6QJNBf6YwQVspG1dIg92Bw2dzwvSp/kTGzaBXAZO3vYnmXcfexGP2GQWw+OsyByv+E60KnY
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:40b3:9c02:57a5:693c])
- (user=irogers job=sendgmr) by 2002:a05:6902:4e6:b0:e60:90de:3f4e with SMTP id
- 3f1490d57ef6-e692ef28b8dmr51276.5.1742916484884; Tue, 25 Mar 2025 08:28:04
- -0700 (PDT)
-Date: Tue, 25 Mar 2025 08:14:40 -0700
-In-Reply-To: <20250325151511.13628-1-irogers@google.com>
-Message-Id: <20250325151511.13628-5-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eWBp3Ypx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 801C5C4CEE4;
+	Tue, 25 Mar 2025 15:30:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742916601;
+	bh=rZQHfWmksMwHawhsGIweB/zezJOd7MftOi3iZ8m1Wpg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=eWBp3YpxEPLM6ryebQjoA4PJCxBI4E82P3LF8Alu0zAip65522kwa0Pka0g7Fbsev
+	 iduP3nA0NNKGyudzvLrgYdOH+SKX2wRPlrAbvNsujgLVCtAiTdLFh/3EsLWrZKiG9r
+	 ae3zfk50ybDKt1tTbA7rdD2KGvwOOVyXyW8BtKwh5TiZUqDmfLUxyZOap//DnW45Ka
+	 E8cKxQR/mgv/toGCGplM4YKDt6NtmLIOAF8vf2eFH3SIqxOXbOhRW92v/rYTt/H6qb
+	 SOlRFgslerd3nbuKhI7gIvLyp+fwWHAdOmhScDb1vFbq+mjpNhtBpz482+GyjcB9k/
+	 yx809GcG3tsSw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE7B380CFE7;
+	Tue, 25 Mar 2025 15:30:38 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250325151511.13628-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Subject: [PATCH v2 04/35] perf vendor events: Update bonnell events
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2] net: fix NULL pointer dereference in l3mdev_l3_rcv
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174291663751.618403.8982725389393074966.git-patchwork-notify@kernel.org>
+Date: Tue, 25 Mar 2025 15:30:37 +0000
+References: <20250321090353.1170545-1-wangliang74@huawei.com>
+In-Reply-To: <20250321090353.1170545-1-wangliang74@huawei.com>
+To: Wang Liang <wangliang74@huawei.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, dsahern@kernel.org, horms@kernel.org,
+ gnault@redhat.com, daniel@iogearbox.net, fw@strlen.de, yuehaibing@huawei.com,
+ zhangchangzhong@huawei.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
-Move DISPATCH_BLOCKED.ANY to the pipeline topic.
+Hello:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/arch/x86/bonnell/other.json    | 8 --------
- tools/perf/pmu-events/arch/x86/bonnell/pipeline.json | 8 ++++++++
- 2 files changed, 8 insertions(+), 8 deletions(-)
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-diff --git a/tools/perf/pmu-events/arch/x86/bonnell/other.json b/tools/perf/pmu-events/arch/x86/bonnell/other.json
-index 3a55c101fbf7..6e6f64b96834 100644
---- a/tools/perf/pmu-events/arch/x86/bonnell/other.json
-+++ b/tools/perf/pmu-events/arch/x86/bonnell/other.json
-@@ -323,14 +323,6 @@
-         "SampleAfterValue": "2000000",
-         "UMask": "0x2"
-     },
--    {
--        "BriefDescription": "Memory cluster signals to block micro-op dispatch for any reason",
--        "Counter": "0,1",
--        "EventCode": "0x9",
--        "EventName": "DISPATCH_BLOCKED.ANY",
--        "SampleAfterValue": "200000",
--        "UMask": "0x20"
--    },
-     {
-         "BriefDescription": "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
-         "Counter": "0,1",
-diff --git a/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json b/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
-index 9ff032ab11e2..48d3d053a369 100644
---- a/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
-@@ -211,6 +211,14 @@
-         "SampleAfterValue": "2000000",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Memory cluster signals to block micro-op dispatch for any reason",
-+        "Counter": "0,1",
-+        "EventCode": "0x9",
-+        "EventName": "DISPATCH_BLOCKED.ANY",
-+        "SampleAfterValue": "200000",
-+        "UMask": "0x20"
-+    },
-     {
-         "BriefDescription": "Divide operations retired",
-         "Counter": "0,1",
+On Fri, 21 Mar 2025 17:03:53 +0800 you wrote:
+> When delete l3s ipvlan:
+> 
+>     ip link del link eth0 ipvlan1 type ipvlan mode l3s
+> 
+> This may cause a null pointer dereference:
+> 
+>     Call trace:
+>      ip_rcv_finish+0x48/0xd0
+>      ip_rcv+0x5c/0x100
+>      __netif_receive_skb_one_core+0x64/0xb0
+>      __netif_receive_skb+0x20/0x80
+>      process_backlog+0xb4/0x204
+>      napi_poll+0xe8/0x294
+>      net_rx_action+0xd8/0x22c
+>      __do_softirq+0x12c/0x354
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,v2] net: fix NULL pointer dereference in l3mdev_l3_rcv
+    https://git.kernel.org/netdev/net/c/0032c99e83b9
+
+You are awesome, thank you!
 -- 
-2.49.0.395.g12beb8f557-goog
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
