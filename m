@@ -1,218 +1,152 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95CA5291E;
-	Tue, 25 Mar 2025 02:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62D929408;
+	Tue, 25 Mar 2025 03:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742871563; cv=none; b=S9llK58I4G8lw4vLCiFupfAGkEOypaKoIecw8ubEXwD+oWlDa5Z+WI6acJpIc9WBXQMiXrZuYq/YE4VqofAXTLuSsGDcnIab2n60yPPkexA/zGZ2g7BuQ/fgefs3GmNYa672oTZlCPF59yw3lGKzLylrhJ2pni1MYnBzCQbIrqo=
+	t=1742871612; cv=none; b=a34ov0Thwede/CuxNqyzH89JT3ksfsIlWPleCne2F2HtvxuYGlqfZtSfF5Pn8YIaO+idnuocl1s7ngA/e7kU2KGPfXhvPYXlz89Mp7LbZ1ej6JHGKcm/7VEattD+nCaNOGIqpfU1tK/ORjRELEF1WvvAvvCvBEKP4/liYCAaWMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742871563; c=relaxed/simple;
-	bh=Y9z7F5JLkMuPI/sEYkg3vVvcDH9FgVE1nbT2FCZgfV4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QS9nj+kRKGwf1F6LjnsekoYbvyFGuT5snozoH5MPfMKz72pltWfBuhceRC00Ch485AH3qkcMO98pISmA9aEd0q8qvl54GM6goBfcFphlIMyK9sChH6ydRgetOCAK4lKdrjMobHUSpBTKyXCsNKn822Gc9BXTofOiJ5QgdpEhPG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=C+Ui5zkj; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1742871612; c=relaxed/simple;
+	bh=kdPMBibLH/yez18tp3tlaahIu5VsHTU259fGn/4jyQo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oJVlngQVp9TtJUkFsA79Om4H203Qgd9g0jN2ieQG9Pjjzo0PHcIov0xvovBYhpRhEsC9QBY/iswT01xVl38ThSCL53v5vEGjqfkiMAY0GqPtJVrXdAYhD0Ms7iQBMxCMHwPWfjvr4zbBgUPQHL1qtDJrwJ+EyrHS4wHr5/VbPTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DkxmB9m5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="C+Ui5zkj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=2qw6dvYpZWZFfrtTa82kfSVcyByXP7JEHsfo1qEhQ8k=;
-	b=C+Ui5zkj7+XgdAGb0sd3bOQ5nmKo/c5oXdQbAYFHxwq9srE5yodvDujDSZdgsc
-	JsGDyAxs4lTsmWt16GMWVo004XFST1pL8fw+b/rxVws27fQ2hmwoSOlwaTC5wxwF
-	BcLK7AJJs3g9/9MrUZ4uD08ncPaEk1bgK+fcfVywXYSQ8=
-Received: from [192.168.60.52] (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wBXfD3TG+JngimnBg--.27167S2;
-	Tue, 25 Mar 2025 10:58:31 +0800 (CST)
-Message-ID: <bee6ba78-d65a-4a04-b83f-3be0676e8ad8@163.com>
-Date: Tue, 25 Mar 2025 10:58:27 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DkxmB9m5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32EADC4CEDD;
+	Tue, 25 Mar 2025 03:00:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742871612;
+	bh=kdPMBibLH/yez18tp3tlaahIu5VsHTU259fGn/4jyQo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DkxmB9m513BCDmqfq6M8Mm5MX+1h0K8ISn8PTtOoIPerDR7um/wMv77YtmWfmz2nZ
+	 fjdYCty2HfSs7IQhWAE2XeRbRDhIfywHUOhIqQI25Gm8k3agUI41LnWtZ+k/+LtAm3
+	 OKhs4vvF938iEX8bNDOFs0TcFc9RxDiEmSKBuX+wz9zMbvM0dCbp0Gb4j3Q/qV9X5o
+	 qfZKM/HH5IA3HwuBa3Y+r6cYuIqGiYxFYnbpdR4Gd4/Q6w7tLIBZlCW30g0EL3ZgES
+	 +vLaPw0vMR8sjRiCc8CdjtdIOVMG5CDsrySX0WMgS6/XmHU2tTll/R8gnH+0Sxgops
+	 UqTnqvH8kX6Dw==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5eb5ecf3217so9032138a12.3;
+        Mon, 24 Mar 2025 20:00:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUy9sZMEQ55VYyBZLxDQv/KqTS7Xpsit4B5cwOUJE2HxpTO/f+9u9PX8xc/KGgCekaMl/Eq/1IoC5Hs5UqL@vger.kernel.org, AJvYcCVwT6Mdp758LfbQjmJlTkg4M3JE8D1i7u16qWoXCZjm9NUU8/NhG8zhy2dbcv9/gbbY4vvvM86HWaQC@vger.kernel.org, AJvYcCXSALVGQOZvw4MiHI2vTqN9sufvDnYMmiqer7BMYV4zFuHOAKSk36GxACzoEv+DPoKLl+XcfqdYE4wcux4=@vger.kernel.org, AJvYcCXldsxGbKjjJ8FOPNg0uDm7vD06am/c5AzWDKm09PMDuEruiqkrPZLi3qFRG57fdEKvXhzYmgnHtD0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxV91zKGomy1X/ttxjO9C3Ct85fyf2oL4j2DaFDLYZdy0NY6QVw
+	tdA8lUEbVUXHW9Ubk6pomJwOGK8K9yPuagIQbHyXZT3/idAE0mu8yiPmrbJQ9uKIoVxAMwRo9uI
+	IA3lCy+AtBhz2YzH2SOAfbq+PAg==
+X-Google-Smtp-Source: AGHT+IE3QSDPASR1s+nvT5rVlKy95tLrHztKiVeza2RPpLc3nhGJkSRj8CDw6TvAGMN64kzNpUhRLGwyYJxd3/EHS/k=
+X-Received: by 2002:a17:907:2d92:b0:ac2:7cf9:71a0 with SMTP id
+ a640c23a62f3a-ac3f251fba6mr1525711466b.48.1742871610756; Mon, 24 Mar 2025
+ 20:00:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v6 1/5] PCI: Introduce generic capability search functions
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
- thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20250323164852.430546-1-18255117159@163.com>
- <20250323164852.430546-2-18255117159@163.com>
- <f89f3d00-4423-f65d-293e-8aec3be14418@linux.intel.com>
- <b846123d-a161-4380-b7c7-24d7066f8d25@163.com>
- <1846e0b6-e743-f743-b972-723ee81fd434@linux.intel.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <1846e0b6-e743-f743-b972-723ee81fd434@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBXfD3TG+JngimnBg--.27167S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3WrWDGryDurWrWw4kKFW8tFb_yoW7KryfpF
-	WrX3W2kF4kJF4aywsFva1FyF9IgFZrAry7X3ykG34DZrsI9F92qrW2y34YkF97Ar4xXF1j
-	vrWUt3Z7Cr98AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Ug4SwUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWw8bo2fiGftRHgAAsE
+References: <20250323071424.48779-1-clamor95@gmail.com> <20250323071424.48779-3-clamor95@gmail.com>
+ <20250324165257.GA458528-robh@kernel.org> <CAPVz0n3=-QL1_NGP31WX_4LQBt5-T47BbU_yn6td1zk9C2T=iA@mail.gmail.com>
+In-Reply-To: <CAPVz0n3=-QL1_NGP31WX_4LQBt5-T47BbU_yn6td1zk9C2T=iA@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 24 Mar 2025 21:59:58 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLCW+zE2LfsVybuxn_xu1JwtLSXSbMNj-YYfVgtYhZcaQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JpysCtkCUgcjLane3iayaPg4HSVsmHDOlKr6Lj27dEl2msQmnjpD8eCuPc
+Message-ID: <CAL_JsqLCW+zE2LfsVybuxn_xu1JwtLSXSbMNj-YYfVgtYhZcaQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/4] dt-bindings: mfd: Document Infineon/Cypress
+ CG7153AM MCU
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: Lee Jones <lee@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Mar 24, 2025 at 12:06=E2=80=AFPM Svyatoslav Ryhel <clamor95@gmail.c=
+om> wrote:
+>
+> =D0=BF=D0=BD, 24 =D0=B1=D0=B5=D1=80. 2025=E2=80=AF=D1=80. =D0=BE 18:52 Ro=
+b Herring <robh@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
+> >
+> > On Sun, Mar 23, 2025 at 09:14:22AM +0200, Svyatoslav Ryhel wrote:
+> > > Add binding for Cypress CG7153AM embedded controller. Pegatron implem=
+ented
+> > > a custom configuration of this MCU in their Chagall tablets, utilizin=
+g it
+> > > for battery monitoring.
+> > >
+> > > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> > > ---
+> > >  .../bindings/mfd/cypress,cg7153am.yaml        | 55 +++++++++++++++++=
+++
+> > >  1 file changed, 55 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/mfd/cypress,cg7=
+153am.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mfd/cypress,cg7153am.y=
+aml b/Documentation/devicetree/bindings/mfd/cypress,cg7153am.yaml
+> > > new file mode 100644
+> > > index 000000000000..f8469b5e3816
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mfd/cypress,cg7153am.yaml
+> > > @@ -0,0 +1,55 @@
+> > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/mfd/cypress,cg7153am.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Infineon/Cypress Semicon CG7153AM Microcontroller
+> > > +
+> > > +maintainers:
+> > > +  - Svyatoslav Ryhel <clamor95@gmail.com>
+> > > +
+> > > +description:
+> > > +  The CG7153AM, an 8-bit programmable microcontroller from Infineon/=
+Cypress
+> > > +  Semiconductor, communicates over I2C and is implemented in devices=
+ like the
+> > > +  Pegatron Chagall tablet for fuel gauge and battery control functio=
+ns.
+> > > +
+> > > +$ref: /schemas/power/supply/power-supply.yaml
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    oneOf:
+> > > +      - items:
+> > > +          - enum:
+> > > +              - pegatron,chagall-ec # Pegatron Chagall tablet device
+> > > +          - const: cypress,cg7153am
+> > > +      - items:
+> > > +          const: cypress,cg7153am
+> >
+> > Is this just some general purpose uC which could be used for anything
+> > and the interface exposed is Pegatron's invention. If so, then I'd drop
+> > the cypress,cg7153am compatible. What use would it be to software?
+> >
+>
+> Yeah, Cypress made an MPU, Pegatron used it as a base to make a fuel gaug=
+e.
+>
+> You propose smth like this?
+>
+>       - items:
+>           - enum:
+>               - pegatron,chagall-ec # Pegatron Chagall tablet device
+>           - const: cypress,cg7153am
+>
+> Without oneOf and second item or remove cypress,cg7153am entirely and
+> submit as pegatron,chagall-ec.yaml? Just to be clear.
+>
+> I am fine with removing oneOf and items: const: cypress,cg7153am, but
+> I would like to preserve cypress,cg7153am as second compatible since
+> this is an actual MCU model.
 
+I would just drop the cypress compatible entirely. It needs to be
+useful to a client (OS) in some way. If you said something like the
+firmware downloading is defined by Cypress or some other feature, then
+it would make sense. Otherwise, how this interface is implemented is
+irrelevant. I can't think of any other embedded controller where we
+have a compatible for the underlying MCU.
 
-On 2025/3/24 22:52, Ilpo Järvinen wrote:
->>>> --- a/drivers/pci/controller/Kconfig
->>>> +++ b/drivers/pci/controller/Kconfig
->>>> @@ -132,6 +132,23 @@ config PCI_HOST_GENERIC
->>>>    	  Say Y here if you want to support a simple generic PCI host
->>>>    	  controller, such as the one emulated by kvmtool.
->>>>    +config PCI_HOST_HELPERS
->>>> +	bool
->>>> +	prompt "PCI Host Controller Helper Functions" if EXPERT
->>>> + 	help
->>>> +	  This provides common infrastructure for PCI host controller drivers
->>>> to
->>>> +	  handle PCI capability scanning and other shared operations. The
->>>> helper
->>>> +	  functions eliminate code duplication across controller drivers.
->>>> +
->>>> +	  These functions are used by PCI controller drivers that need to scan
->>>> +	  PCI capabilities using controller-specific access methods (e.g. when
->>>> +	  the controller is behind a non-standard configuration space).
->>>> +
->>>> +	  If you are using any PCI host controller drivers that require these
->>>> +	  helpers (such as DesignWare, Cadence, etc), this will be
->>>> +	  automatically selected. Say N unless you are developing a custom PCI
->>>> +	  host controller driver.
->>>
->>> Hi,
->>>
->>> Does this need to be user selectable at all? What's the benefit? If
->>> somebody is developing a driver, they can just as well add the select
->>> clause in that driver to get it built.
->>>
->>
->> Dear Ilpo,
->>
->> Thanks your for reply. Only DWC and CDNS drivers are used here, what do you
->> suggest should be done?
-> 
-> Just make it only Kconfig select'able and not user selectable at all.
-> 
-
-Hi Ilpo,
-
-Thanks your for reply. Will change.
-
-Will delete it.
-prompt "PCI Host Controller Helper Functions" if EXPERT
-
->>>> + * These interfaces resemble the pci_find_*capability() interfaces, but
->>>> these
->>>> + * are for configuring host controllers, which are bridges *to* PCI
->>>> devices but
->>>> + * are not PCI devices themselves.
->>>> + */
->>>> +static u8 __pci_host_bridge_find_next_cap(void *priv,
->>>> +					  pci_host_bridge_read_cfg read_cfg,
->>>> +					  u8 cap_ptr, u8 cap)
->>>> +{
->>>> +	u8 cap_id, next_cap_ptr;
->>>> +	u16 reg;
->>>> +
->>>> +	if (!cap_ptr)
->>>> +		return 0;
->>>> +
->>>> +	reg = read_cfg(priv, cap_ptr, 2);
->>>> +	cap_id = (reg & 0x00ff);
->>>> +
->>>> +	if (cap_id > PCI_CAP_ID_MAX)
->>>> +		return 0;
->>>> +
->>>> +	if (cap_id == cap)
->>>> +		return cap_ptr;
->>>> +
->>>> +	next_cap_ptr = (reg & 0xff00) >> 8;
->>>> +	return __pci_host_bridge_find_next_cap(priv, read_cfg, next_cap_ptr,
->>>> +					       cap);
->>>
->>> This is doing (tail) recursion?? Why??
->>>
->>> What should be done, IMO, is that code in __pci_find_next_cap_ttl()
->>> refactored such that it can be reused instead of duplicating it in a
->>> slightly different form here and the functions below.
->>>
->>> The capability list parser should be the same?
->>>
->>
->> The original function is in the following file:
->> drivers/pci/controller/dwc/pcie-designware.c
->> u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
->> u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
->>
->> CDNS has the same need to find the offset of the capability.
->>
->> We don't have pci_dev before calling pci_host_probe, but we want to get the
->> offset of the capability and configure some registers to initialize the root
->> port. Therefore, the __pci_find_next_cap_ttl function cannot be used. This is
->> also the purpose of dw_pcie_find_*capability.
-> 
-> __pci_find_next_cap_ttl() does not take pci_dev so I'm unsure if the
-> problem is real or not?!?
-
-__pci_find_next_cap_ttl uses pci_bus as the first argument, and other 
-functions take pci_dev->bus as its first argument. Either way, either 
-pci_bus or pci_dev is required, and before pcie enumeration, there was 
-no pci_bus or pci_dev.
-
-I replied to you in the patch email [v6 3/5], if I wasn't clear enough, 
-please remind me and we'll discuss it again.
-
-> 
->> The CDNS driver does not have a cdns_pcie_find_*capability function.
->> Therefore, separate the find capability, and then DWC and CDNS can be used at
->> the same time to reduce duplicate code.
->>
->>
->> Communication history:
->>
->> Bjorn HelgaasMarch 14, 2025, 8:31 p.m. UTC | #8
->> On Fri, Mar 14, 2025 at 06:35:11PM +0530, Manivannan Sadhasivam wrote:
->>> ...
->>
->>> Even though this patch is mostly for an out of tree controller
->>> driver which is not going to be upstreamed, the patch itself is
->>> serving some purpose. I really like to avoid the hardcoded offsets
->>> wherever possible. So I'm in favor of this patch.
->>>
->>> However, these newly introduced functions are a duplicated version
->>> of DWC functions. So we will end up with duplicated functions in
->>> multiple places. I'd like them to be moved (both this and DWC) to
->>> drivers/pci/pci.c if possible. The generic function
->>> *_find_capability() can accept the controller specific readl/ readw
->>> APIs and the controller specific private data.
->>
->> I agree, it would be really nice to share this code.
->>
->> It looks a little messy to deal with passing around pointers to
->> controller read ops, and we'll still end up with a lot of duplicated
->> code between __pci_find_next_cap() and __cdns_pcie_find_next_cap(),
->> etc.
->>
->> Maybe someday we'll make a generic way to access non-PCI "config"
->> space like this host controller space and PCIe RCRBs.
->>
->> Or if you add interfaces that accept read/write ops, maybe the
->> existing pci_find_capability() etc could be refactored on top of them
->> by passing in pci_bus_read_config_word() as the accessor.
-> 
-> At minimum, the loop in __pci_find_next_cap_ttl() could be turned into a
-> macro similar to eg. read_poll_timeout() that takes the read function as
-> an argument (read_poll_timeout() looks messy because it doesn't align
-> backslashed to far right). That would avoid duplicating the parsing logic
-> on C code level.
-> 
-
-The config space register cannot be read before PCIe enumeration. Only 
-the read and write functions of the root port driver can be used.
-
-Best regards,
-Hans
-
+Rob
