@@ -1,153 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758C21F0E5B;
-	Tue, 25 Mar 2025 18:43:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E9D13633F
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 18:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742928212; cv=none; b=IDrfqzUn4Q/P435tj4c21vpOcG/8D9+MqxVV2aW0sflUXDWPvSno2u8YIge9VYYLZskLLQZuk/K7efxcUzvH048Aqd1vjw1MHiXE7YYkBvCgy6k28m5qz6uaywhh5JMysyFtL74CA4KHj+Sg3d8s6HacowN0T4Y9MXy9BKjwves=
+	t=1742928290; cv=none; b=grSpsrIgRsZTyhfNV/gp1u6bUCNi+GJBx/BRR7YFpS8xEHSEdMuxsbWz0dzPWvISdGO6kdKvqvj87lLsyIMiTbb1yxc9e4jLb5RYA0DKbMjs9apVW/HopnOGgyhlozRxEAyHG/A/Q7UNCHtDClHM+LPlh8Kb0nO6qPlhj0ur4K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742928212; c=relaxed/simple;
-	bh=lxUUlSThn5Avn0z7/o3Yphjmqxg3+x8EnqxeM1zvcV4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a4yoM36djs2qFOfdtgw0TTZ7oEEMp/RgnGzGw412wVOdQyHmfk6g0KtyXEe6ZLsRQe7F2z53Vq2oIQoPs3CicYSb79ufAqAPhWOViFdCJ9v9b1mSQ3hkwhyu8hHSDpKi70GMMBURo7Cb34PE02W6LUGC9GCGvJQkyAwZyvZYYrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DxTjGe1x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742928290; c=relaxed/simple;
+	bh=olIxRGmiA18On6j0TKZgV9L20BnBdZDSVxW9Xv6z5pI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gp2kHs3m1a9C78cpYU3ReuoMhFzoak0451mdBIUW133HPTuwQF29HqRPzg80DeRmk2YuC5RfIdMPsSvjwbwMBOrxjNIb2sH7vIlHH7Ya/k1mV8pyVL2le1PA3b+CkUh2YQqP0bH/v+0iq4iFR3s0cdm/Osvj0czmq9XvcKQuY4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YwLdOj3L; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DxTjGe1x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EB66C4CEED;
-	Tue, 25 Mar 2025 18:43:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742928212;
-	bh=lxUUlSThn5Avn0z7/o3Yphjmqxg3+x8EnqxeM1zvcV4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DxTjGe1xX+uQPbSWLTrtqL7QcLtDmGjdNJFR1ddxRqpKs8OUGqUQMKaC1OKlAg6+f
-	 AdvM3RmoHgKxu/uI5vpDUqJx+Yc3ibb4qndbqSW8SMuCZM70nSVlN4dNI353TAk4YO
-	 qoR+6LUny8XLYHLBDFhk6+kZcF4VLymPaieX+R5yNgC9lvr+McDX5yBx2++5btCkRV
-	 ewyNUKxaffaGJKhv2W3GfFRbqSiBv6oda59T2/QiGUuDd+BbodRzge7FeYK3Vnc6ur
-	 TL50FZXRz/XnfdNEUPFmIsuhNMbWuQS/Y9lQS0cCAqVIWV5xBwbduh1F3udYreOP6t
-	 PFETTH9Idethw==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: [PATCH] rust: workaround `bindgen` issue with forward references to `enum` types
-Date: Tue, 25 Mar 2025 19:43:09 +0100
-Message-ID: <20250325184309.97170-1-ojeda@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YwLdOj3L"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=4xxiTEwAsuvrp40FFgSetmTuIJM8iMUCWyB++M5be/g=; b=YwLdOj3Lk7WhZnJPYKnPlZ7BYR
+	OGVFSiCJK9Tc3vNQB9xOI4/Hg39gaY45Hpj28+we/6FEL5E2UJkMlU+0GNXZM0DUhf8UXFr2PxraB
+	tBFZs80yj2Qr1TwPD3SUa+hz8WJGeT/Dq7+D16yg98SYe+TcFXV2RXXSmU0/K9/MXgOCbjyfGPiWV
+	xvPZ3Ga+39RXYdXqLLlrvBE0s08lStkZOZhXcW5dGCZZLJpDfE6DqN9rAiqgUu6Kt5gG6tYrLiUhk
+	UcpqisJtr1niMSThvng8RkovjmVZg41FK7N1uMhLUxUJKkbj8nPdoQBiDNxP2JhJFa1lv2GUolRI3
+	/UO+oDyg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1tx9GI-00000008kOU-2a91;
+	Tue, 25 Mar 2025 18:44:30 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 7333A300583; Tue, 25 Mar 2025 19:44:29 +0100 (CET)
+Date: Tue, 25 Mar 2025 19:44:29 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Chen, Yu C" <yu.c.chen@intel.com>
+Cc: juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org,
+	tim.c.chen@linux.intel.com, tglx@linutronix.de, len.brown@intel.com,
+	gautham.shenoy@amd.com, mingo@kernel.org, kprateek.nayak@amd.com,
+	yu.chen.surf@foxmail.com
+Subject: Re: [RFC][PATCH] sched: Cache aware load-balancing
+Message-ID: <20250325184429.GA31413@noisy.programming.kicks-ass.net>
+References: <20250325120952.GJ36322@noisy.programming.kicks-ass.net>
+ <4cd8ba54-8b9e-4563-8fbc-1d6cd6699e81@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4cd8ba54-8b9e-4563-8fbc-1d6cd6699e81@intel.com>
 
-`bindgen` currently generates the wrong type for an `enum` when there
-is a forward reference to it. For instance:
+On Tue, Mar 25, 2025 at 11:19:52PM +0800, Chen, Yu C wrote:
+> 
+> Hi Peter,
+> 
+> Thanks for sending this out,
+> 
+> On 3/25/2025 8:09 PM, Peter Zijlstra wrote:
+> > Hi all,
+> > 
+> > One of the many things on the eternal todo list has been finishing the
+> > below hackery.
+> > 
+> > It is an attempt at modelling cache affinity -- and while the patch
+> > really only targets LLC, it could very well be extended to also apply to
+> > clusters (L2). Specifically any case of multiple cache domains inside a
+> > node.
+> > 
+> > Anyway, I wrote this about a year ago, and I mentioned this at the
+> > recent OSPM conf where Gautham and Prateek expressed interest in playing
+> > with this code.
+> > 
+> > So here goes, very rough and largely unproven code ahead :-)
+> > 
+> > It applies to current tip/master, but I know it will fail the __percpu
+> > validation that sits in -next, although that shouldn't be terribly hard
+> > to fix up.
+> > 
+> > As is, it only computes a CPU inside the LLC that has the highest recent
+> > runtime, this CPU is then used in the wake-up path to steer towards this
+> > LLC and in task_hot() to limit migrations away from it.
+> > 
+> > More elaborate things could be done, notably there is an XXX in there
+> > somewhere about finding the best LLC inside a NODE (interaction with
+> > NUMA_BALANCING).
+> > 
+> 
+> Besides the control provided by CONFIG_SCHED_CACHE, could we also introduce
+> sched_feat(SCHED_CACHE) to manage this feature, facilitating dynamic
+> adjustments? Similarly we can also introduce other sched_feats for load
+> balancing and NUMA balancing for fine-grain control.
 
-    enum E;
-    enum E { A };
+We can do all sorts, but the very first thing is determining if this is
+worth it at all. Because if we can't make this work at all, all those
+things are a waste of time.
 
-generates:
-
-    pub const E_A: E = 0;
-    pub type E = i32;
-
-instead of the expected:
-
-    pub const E_A: E = 0;
-    pub type E = ffi::c_uint;
-
-The issue was reported to upstream `bindgen` [1].
-
-Now, both GCC and Clang support silently these forward references to
-`enum` types, unless `-Wpedantic` is passed, and it turns out that some
-headers in the kernel depend on them.
-
-Thus, depending on how the headers are included, which in turn may depend
-on the kernel configuration or the architecture, we may get a different
-type on the Rust side for a given C `enum`.
-
-That can be quite confusing, to say the least, especially since
-developers may only notice issues when building for other architectures
-like in [2]. In particular, they may end up forcing a cast and adding
-an `#[allow(clippy::unnecessary_cast)]` like it was done in commit
-94e05a66ea3e ("rust: hrtimer: allow timer restart from timer handler"),
-which isn't great.
-
-Instead, let's have a section at the top of our `bindings_helper.h` that
-`#include`s the headers with the affected types -- hopefully there are
-not many cases and there is a single ordering that covers all cases.
-
-This allows us to remove the cast and the `#[allow]`, thus keeping the
-correct code in the source files. When the issue gets resolved in upstream
-`bindgen` (and we update our minimum `bindgen` version), we can easily
-remove this section at the top.
-
-Link: https://github.com/rust-lang/rust-bindgen/issues/3179 [1]
-Link: https://lore.kernel.org/rust-for-linux/87tt7md1s6.fsf@kernel.org/ [2]
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
----
- rust/bindings/bindings_helper.h | 19 +++++++++++++++++++
- rust/kernel/time/hrtimer.rs     |  6 ++----
- 2 files changed, 21 insertions(+), 4 deletions(-)
-
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index ccb988340df6..9f29855d5ab0 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -6,6 +6,25 @@
-  * Sorted alphabetically.
-  */
- 
-+/*
-+ * First, avoid forward references to `enum` types.
-+ *
-+ * This workarounds a `bindgen` issue with them:
-+ * <https://github.com/rust-lang/rust-bindgen/issues/3179>.
-+ *
-+ * Without this, the generated Rust type may be the wrong one (`i32`) or
-+ * the proper one (typically `c_uint`) depending on how the headers are
-+ * included, which in turn may depend on the particular kernel configuration
-+ * or the architecture.
-+ *
-+ * The alternative would be to use casts and likely an
-+ * `#[allow(clippy::unnecessary_cast)]` in the Rust source files. Instead,
-+ * this approach allows us to keep the correct code in the source files and
-+ * simply remove this section when the issue is fixed upstream and we bump
-+ * the minimum `bindgen` version.
-+ */
-+#include <linux/hrtimer_types.h>
-+
- #include <kunit/test.h>
- #include <linux/blk-mq.h>
- #include <linux/blk_types.h>
-diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-index ce53f8579d18..d52ce884303d 100644
---- a/rust/kernel/time/hrtimer.rs
-+++ b/rust/kernel/time/hrtimer.rs
-@@ -384,11 +384,9 @@ unsafe fn start(this: *const Self, expires: Ktime) {
- #[repr(u32)]
- pub enum HrTimerRestart {
-     /// Timer should not be restarted.
--    #[allow(clippy::unnecessary_cast)]
--    NoRestart = bindings::hrtimer_restart_HRTIMER_NORESTART as u32,
-+    NoRestart = bindings::hrtimer_restart_HRTIMER_NORESTART,
-     /// Timer should be restarted.
--    #[allow(clippy::unnecessary_cast)]
--    Restart = bindings::hrtimer_restart_HRTIMER_RESTART as u32,
-+    Restart = bindings::hrtimer_restart_HRTIMER_RESTART,
- }
- 
- impl HrTimerRestart {
--- 
-2.49.0
+This patch is not meant to be merged, it is meant for testing and
+development. We need to first make it actually improve workloads. If it
+then turns out it regresses workloads (likely, things always do), then
+we can look at how to best do that.
 
