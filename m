@@ -1,110 +1,103 @@
-Received: from rudorff.com (rudorff.com [193.31.26.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969B426562D
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 12:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.31.26.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6743325949A;
+	Tue, 25 Mar 2025 12:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742907243; cv=none; b=S5WZSogWa8VU4rBESheBQPG4xUq2BMIMsN6F4QowNDC0HH+ig37kz5iKNAJeJm1XS89YdHnBVxoqx++g9NOQXW4YFTimKVEuBH8JJskCBQ9P81hdkUNA+f6NEjbhmqvhzfT4iPBFIH8cGfDYtMz/yIrPD5KbTTMbg0smgbtCDzI=
+	t=1742907309; cv=none; b=ek8s7OEe0TdKraFpD23vbhMVsC2062pHPe32fTGojoXS3BzRGbJKEhUKjOeIaRXLpCZEqT5VTUE/aCzfTWNlOyvqJAPTgynZuqDGPD+oSV4Hw/reusjdDLvaQVEQd0uS3XEwjNx6QqNCzNuLkBhK7W6M6VHSc1ZB+eIRQU+ARHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742907243; c=relaxed/simple;
-	bh=ZpCiPmapm0mpAWY6CbQBtSI41bLQoEKJWma6xyMNXQU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KPD5I9hhipZdPXVk/hikItB0dPiNCyWPp4r2cMblu6MzuolvHZdUeTFxTkh0CDPHe5qTXMoO7Zs8ZxyTKmgpNfd25zZ1TiynV3L15DERF1h3RctNzJ1s3O37YeqzIMNxO1Sj6Ft2J9IOPtXVdXu66bPEG5zDo52EBj10Wnas4B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rudorff.com; spf=pass smtp.mailfrom=rudorff.com; arc=none smtp.client-ip=193.31.26.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rudorff.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rudorff.com
-Received: from [127.0.0.1] (dynamic-2a02-3102-8418-1620-0000-0000-0000-04cc.310.pool.telefonica.de [IPv6:2a02:3102:8418:1620::4cc])
-	by rudorff.com (Postfix) with ESMTPSA id DA59C406DA;
-	Tue, 25 Mar 2025 13:45:50 +0100 (CET)
-From: Christoph Rudorff <chris@rudorff.com>
-Date: Tue, 25 Mar 2025 13:44:36 +0100
-Subject: [PATCH v2] drm/nouveau: fix hibernate on disabled GPU
+	s=arc-20240116; t=1742907309; c=relaxed/simple;
+	bh=ckzAE8HF0ZWj4AwxiTL55C67VRklHv8GEBJ1a65+i08=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=qTbzQlu8krhvQcPWIvHH1TpmoL/jVRPY3df1rSkSzH2aFsd3IEh/HLqyXmB9SXOnkAPiw7g+Uu/QalwpIZoXgpMftN/t2/5tkZnLLzolk7SIsfjvZZw3PYgfIaDN9IsJwRi5Fiw7p+9lel1H1CzB+pphw1QSc4k11FhW+ZEN9+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YUnUnYE0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YUnUnYE0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4914C4CEE9;
+	Tue, 25 Mar 2025 12:55:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742907308;
+	bh=ckzAE8HF0ZWj4AwxiTL55C67VRklHv8GEBJ1a65+i08=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=YUnUnYE0RhBK5Mu+AjpF6eKDDaJ1g4syNkA6COLKkt2ADNEGcpvmXd7ySB5t1R1sN
+	 maP3AB2QucK+3iRnUQejjs3hnwJ24lUitJdN12DHlLFet8BO+DCdjWW6qiethDe0Dd
+	 0wVeP+XZ6XQgt4JbylIV/Kw4fPpKznSkAPSsYopk66NfjTFzwlAw0SFHtGpKMfxKMK
+	 ld7t0NnM0ggqgVZnysdgY5bsxUi326TvlLQjgHXyBbnLLtsQQ2bS0EZsrNrHQmGJvR
+	 1l29MBk3uAJzGtChOs8Hyg1zdAhFLqB+ySX11z0pG4xHMgHrwhMdipYv/bur3TEprN
+	 BaU37JYllKICg==
+Date: Tue, 25 Mar 2025 07:55:07 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250325-nouveau-fix-hibernate-v2-1-2bd5c13fb953@rudorff.com>
-X-B4-Tracking: v=1; b=H4sIADOl4mcC/4WNTQ6CMBCFr0Jm7ZhSCv6svIdhUWCws7A1U9poC
- He3cgGX38t731shkjBFuFYrCGWOHHwBfahgdNY/CHkqDFrpVjXKoA8pk0048xsdDyTeLoTaXM6
- 6m4w+DQOU7UuoFHbvvS/sOC5BPvtNrn/pP2OusUYiY5qmNV0p3iRNQeb5OIYn9Nu2fQFtPSRSv
- AAAAA==
-X-Change-ID: 20250304-nouveau-fix-hibernate-249826d427bb
-To: Lyude Paul <lyude@redhat.com>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, Christoph Rudorff <chris@rudorff.com>
-X-Mailer: b4 0.14.2
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: kernel-team@android.com, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Lee Jones <lee@kernel.org>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ linux-gpio@vger.kernel.org, Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ linux-hardening@vger.kernel.org, devicetree@vger.kernel.org, 
+ Will McVicker <willmcvicker@google.com>, 
+ Peter Griffin <peter.griffin@linaro.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+ Kees Cook <kees@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+To: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+In-Reply-To: <20250325-max77759-mfd-v6-1-c0870ca662ba@linaro.org>
+References: <20250325-max77759-mfd-v6-0-c0870ca662ba@linaro.org>
+ <20250325-max77759-mfd-v6-1-c0870ca662ba@linaro.org>
+Message-Id: <174290730586.1654929.1967433750081044561.robh@kernel.org>
+Subject: Re: [PATCH v6 1/6] dt-bindings: gpio: add max77759 binding
 
-Hibernate bricks the machine if a discrete GPU was disabled via
 
-echo IGD > /sys/kernel/debug/vgaswitcheroo/switch
+On Tue, 25 Mar 2025 08:27:02 +0000, André Draszik wrote:
+> The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+> includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> Port Controller (TCPC), NVMEM, and a GPIO expander.
+> 
+> This describes its GPIO module.
+> 
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> ---
+> v2:
+> * drop 'interrupts' property and sort properties alphabetically
+> ---
+>  .../bindings/gpio/maxim,max77759-gpio.yaml         | 44 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  6 +++
+>  2 files changed, 50 insertions(+)
+> 
 
-The freeze and thaw handler lacks checking the GPU power state,
-as suspend and resume do.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-This patch add the checks and fix this issue.
+yamllint warnings/errors:
 
-Signed-off-by: Christoph Rudorff <chris@rudorff.com>
----
-I got an old MacBook having a defective nvidia GPU
+dtschema/dtc warnings/errors:
 
-So I put this in the initrd scripts to turn it off asap:
 
-mount -t debugfs none /sys/kernel/debug
-echo IGD > /sys/kernel/debug/vgaswitcheroo/switch
+doc reference errors (make refcheckdocs):
+Warning: Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml references a file that doesn't exist: Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml: Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
 
-which powers down the nouveau.
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250325-max77759-mfd-v6-1-c0870ca662ba@linaro.org
 
-Suspend and resume works,
-but hibernate locks up the machine.
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-The handlers are not checking the GPU state.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-This is a good candidate for backport.
-This patch applies down to 6.12.y
----
-Changes in v2:
-- EDITME: use my real name, my nick raised bugs
-- Link to v1: https://lore.kernel.org/r/20250304-nouveau-fix-hibernate-v1-1-ee4433546030@rudorff.com
----
- drivers/gpu/drm/nouveau/nouveau_drm.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+pip3 install dtschema --upgrade
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index 5664c4c71faf1ced30f38d9874244db80d58194a..0958d1b940c2533bfadc29e098045db6f0170c79 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -1079,6 +1079,10 @@ nouveau_pmops_freeze(struct device *dev)
- {
- 	struct nouveau_drm *drm = dev_get_drvdata(dev);
- 
-+	if (drm->dev->switch_power_state == DRM_SWITCH_POWER_OFF ||
-+	    drm->dev->switch_power_state == DRM_SWITCH_POWER_DYNAMIC_OFF)
-+		return 0;
-+
- 	return nouveau_do_suspend(drm, false);
- }
- 
-@@ -1087,6 +1091,10 @@ nouveau_pmops_thaw(struct device *dev)
- {
- 	struct nouveau_drm *drm = dev_get_drvdata(dev);
- 
-+	if (drm->dev->switch_power_state == DRM_SWITCH_POWER_OFF ||
-+	    drm->dev->switch_power_state == DRM_SWITCH_POWER_DYNAMIC_OFF)
-+		return 0;
-+
- 	return nouveau_do_resume(drm, false);
- }
- 
-
----
-base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
-change-id: 20250304-nouveau-fix-hibernate-249826d427bb
-
-Best regards,
--- 
-Christoph Rudorff <chris@rudorff.com>
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
