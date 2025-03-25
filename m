@@ -1,154 +1,93 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1242F5B
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 02:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B088CA4E
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 02:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742869465; cv=none; b=fG3BCsjh3hj9p4CWQ15Wd8XMmm2wz/ZlEybfroyedjqIvposuXihxPwfZGrJd6Eg9M59oeE2peBL0/FhpStWAi/mmfuZF+6RTNYURuYohf4DGrk740pcK6JI22Q7g8GCskBn1jZtDa5kKEuFI7Ttgi4w3SyGVMRjM1wc8u/qMtY=
+	t=1742869496; cv=none; b=K8A0zG5Plnn0FQv74N9ULHXH3K2hnSdveVQ8rf+AFQTbxISTLZV0moHzCh+OF+Z85RHPRsOwHYSuSqItr+t34DKvYya5YVj75DWyq2omQhBmpBMDzLUPbq7kIVFuEp+JITw9cNJYOu692CBoWZG5v/3gAEhdCPKu32AI38a4YSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742869465; c=relaxed/simple;
-	bh=gIwipyV+DqlwG9NY1oE+yWi4jiO9m0GTBzS1aLIXF3w=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M0gYNMnALsbYxpFS3jzeeuMV9CC4YvIGQsm5azNA9RrYm+ZPI9LX2TiGZj7SOFoEZ1nr3J2UOVPazPWINNQZDcZTCKatWTQHLgAoLgVlaXhpVvPdGoefhLIfuXh1MUqKMzQisOivgUW647BPyrJGim5yAuZREq4sL1JmsHlDTyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from SHSQR01.spreadtrum.com (localhost [127.0.0.2] (may be forged))
-	by SHSQR01.spreadtrum.com with ESMTP id 52P1lsRQ087290
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 09:47:54 +0800 (+08)
-	(envelope-from Xuewen.Yan@unisoc.com)
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 52P1ldqT086144;
-	Tue, 25 Mar 2025 09:47:39 +0800 (+08)
-	(envelope-from Xuewen.Yan@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4ZMCTS5ymvz2KchH9;
-	Tue, 25 Mar 2025 09:47:08 +0800 (CST)
-Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.48; Tue, 25 Mar 2025 09:47:35 +0800
-From: Xuewen Yan <xuewen.yan@unisoc.com>
-To: <dietmar.eggemann@arm.com>, <mingo@redhat.com>, <peterz@infradead.org>,
-        <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>
-CC: <rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
-        <vschneid@redhat.com>, <hongyan.xia2@arm.com>, <qyousef@layalina.io>,
-        <ke.wang@unisoc.com>, <di.shen@unisoc.com>,
-        <linux-kernel@vger.kernel.org>, <xuewen.yan94@gmail.com>
-Subject: [PATCH v2] sched/uclamp: Align uclamp and util_est and call before freq update
-Date: Tue, 25 Mar 2025 09:47:33 +0800
-Message-ID: <20250325014733.18405-1-xuewen.yan@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1742869496; c=relaxed/simple;
+	bh=tPu4PoNTvOpCZmOqaRYVZs29TsR2s4dj9lt2lmCaU9Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EpFAiseOHGb4VPxCKLlx5ht7GKt+YaySckp8yn2o1RnkF2A7B0mXwWG7IrRqcNACxkpyGe6tVn9T7Epp0K016sKFy7HazvSduExgffgWiJS0TkArPNAxN7YTLxjdPofk9L1pHlBOkV924uCbrRX/eMdd3xdqM95ABuAY4A+Nsd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bl+nXr0c; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bl+nXr0c"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e50bae0f5bso5528a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 19:24:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742869493; x=1743474293; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tPu4PoNTvOpCZmOqaRYVZs29TsR2s4dj9lt2lmCaU9Q=;
+        b=bl+nXr0cDic/fy6DieanwSHylZTzAtaX31tyY8nV16E4TCOSZEE9J7pJz+yb+v6kfR
+         a9teJpjLPIl6vd4+D2Dk7Fm25K+LkgyAkxa4tfxB7sL9SMAVJbFJS7AaEwdi3DzZcY4s
+         lulZ0pbD/11XdGnZyxk0DNHxYWkSAQrw+AJCkeynE2hCZuuzBgdH51ttos8Zrx0yBvEu
+         RokSA3WiljCgsZPxKT/Tpb/LAETvBxZYrV5o+iUrslIBQkTV9Z190f+ljVHhtfIqeWhW
+         H6sLmFssvX2+EhAsVLMTJXBRhPmmc/DoFysqy4L/7d+LhOyQiLf+DiHZZD5AQkhIMkM5
+         jLYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742869493; x=1743474293;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tPu4PoNTvOpCZmOqaRYVZs29TsR2s4dj9lt2lmCaU9Q=;
+        b=cwDU3JjQWY2c9CAbRTwWhbc0qu4Yf0omq/nCi3tzJMIa578ZHCeM0IvlLP6mm588eH
+         VfcY9jbyiX6NHkJHvcTz5Dj4Uq3tXGRz7AySYLFlnYP8AvMZx/13nDRFdaoYKP5643QV
+         dPaNeNhc74i3xmMbP4HIYzrbxKjx7CqwVf8B6D5vW7G/4IEYvMI11lcwPUtKV60L7irK
+         F+Rye8gZsQ48onR1+zqg5dykWkj0cEXP3Ot3gcux2GLi7etci6IRTDhQt7yziOGnbJAO
+         2tJUXDfsubDnVTQyiBkt4mbjAjEM5JO5zPxW7zulSArMUgU5jkoDfXi4WsmwBfXCA2PG
+         Kg/w==
+X-Gm-Message-State: AOJu0Yw09sijn+VGwafSsEi+2ot0fYk83uOPNMCDnMCXTItr27DB3HEj
+	12JT2/uUHQkDcAyA8q/bGeSy6+NdsMLYQjHP/umoQ3/jelIGePjn5QkDTtaeWh8fII6T6n4DvKL
+	r+z1pqMKuO3dJkNEiwiXPsow1mT9aMWqthsFW
+X-Gm-Gg: ASbGncu9c1M29xL5GAl/YfEHhmtERH5pocRGyXkHvS4kDRpHU1oivwWAHYwDwg5MqmD
+	rf0JdJuRw9F+u3ljgTeM9QnHUJXm9PDy0rG2Ptpq4nuzmj8necDdNyLA5l7HyyCQUIYlDKuoVey
+	nTD2Rnuo7RkGarfk9k8i2W783p4qAKl1arY6ZvsSES/1geGDg9RoNpM/MJPkngthV7
+X-Google-Smtp-Source: AGHT+IH7o8kr1tk8DgEOjQsu3Lj8O1K/LxJznAnKKgVVncNcVNxeOD0uk4/nTtqBnOG5i9IhvljwaFZ0F5ibT19la9A=
+X-Received: by 2002:a50:bae6:0:b0:5e5:7c1:43bd with SMTP id
+ 4fb4d7f45d1cf-5ec20b280fdmr226970a12.1.1742869493232; Mon, 24 Mar 2025
+ 19:24:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 52P1ldqT086144
+References: <20250325-2025-03-unwind-fixes-v1-0-acd774364768@google.com> <20250325-2025-03-unwind-fixes-v1-2-acd774364768@google.com>
+In-Reply-To: <20250325-2025-03-unwind-fixes-v1-2-acd774364768@google.com>
+From: Jann Horn <jannh@google.com>
+Date: Tue, 25 Mar 2025 03:24:17 +0100
+X-Gm-Features: AQ5f1JpLG3AaHY66Jva60DeVx3Vb0fs0V2MwzwZh-_Y-IzOlu35XZB0L0VrkI5I
+Message-ID: <CAG48ez0=dtR85yhy07jqvq9YC__3ocT_N_hpJMN4v-FfMs-PsA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86/dumpstack: Fix broken unwinding from exception stacks
+To: x86@kernel.org, Andy Lutomirski <luto@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, 
+	Dominik Brodowski <linux@dominikbrodowski.net>, Ingo Molnar <mingo@kernel.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Vernon Lovejoy <vlovejoy@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When task's uclamp is set, we hope that the CPU frequency
-can increase as quickly as possible when the task is enqueued.
-Because the cpu frequency updating happens during the enqueue_task(),
-so the rq's uclamp needs to be updated before the task is enqueued,
-just like util_est.
-So, aline the uclamp and util_est and call before freq update.
+On Tue, Mar 25, 2025 at 3:01=E2=80=AFAM Jann Horn <jannh@google.com> wrote:
+> Originally, get_stack_pointer() used the regs provided by the caller; aft=
+er
+> that commit, get_stack_pointer() instead uses the regs at the top of the
+> stack frame the unwinder is looking at. Often, there are no such regs at
+> all, and "regs" is NULL, causing get_stack_pointer() to fall back to the
+> task's current stack pointer, which is not what we want here, but probabl=
+y
+> happens to mostly work. Other times, the original regs will point to
+> another regs frame - in that case, the linear guess unwind logic in
+> show_trace_log_lvl() will start unwinding too far up the stack, causing t=
+he
+> first frame found by the proper unwinder to never be visited, resulting i=
+n
+> a stack trace consisting purely of guess lines.
 
-For sched-delayed tasks, the rq uclamp/util_est should only be updated
-when they are enqueued upon being awakened.
-So simply the logic of util_est's enqueue/dequeue check.
-
-Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
----
-v2:
-- simply the util-est's en/dequeue check;
----
-Previous discussion:
-https://lore.kernel.org/all/CAB8ipk8pEvOtCm-d0o1rsekwxPWUHk9iBGtt9TLTWW-iWTQKiA@mail.gmail.com/
-https://lore.kernel.org/all/84441660bef0a5e67fd09dc3787178d0276dad31.1740664400.git.hongyan.xia2@arm.com/T/#u
-https://lore.kernel.org/all/CAB8ipk9LpbiUDnbcV6+59+Sa=Ai7tFzO===mpLD3obNdV4=J-A@mail.gmail.com/T/#u
-https://lore.kernel.org/all/aa8baf67-a8ec-4ad8-a6a8-afdcd7036771@arm.com/
----
- kernel/sched/core.c | 17 ++++++++++-------
- kernel/sched/fair.c |  4 ++--
- 2 files changed, 12 insertions(+), 9 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 042351c7afce..72fbe2031e54 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1747,7 +1747,7 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
- 	}
- }
- 
--static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
-+static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p, int flags)
- {
- 	enum uclamp_id clamp_id;
- 
-@@ -1763,7 +1763,8 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
- 	if (unlikely(!p->sched_class->uclamp_enabled))
- 		return;
- 
--	if (p->se.sched_delayed)
-+	/* Only inc the delayed task which being woken up. */
-+	if (p->se.sched_delayed && !(flags & ENQUEUE_DELAYED))
- 		return;
- 
- 	for_each_clamp_id(clamp_id)
-@@ -2031,7 +2032,7 @@ static void __init init_uclamp(void)
- }
- 
- #else /* !CONFIG_UCLAMP_TASK */
--static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { }
-+static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p, int flags) { }
- static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { }
- static inline void uclamp_fork(struct task_struct *p) { }
- static inline void uclamp_post_fork(struct task_struct *p) { }
-@@ -2067,12 +2068,14 @@ void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
- 	if (!(flags & ENQUEUE_NOCLOCK))
- 		update_rq_clock(rq);
- 
--	p->sched_class->enqueue_task(rq, p, flags);
- 	/*
--	 * Must be after ->enqueue_task() because ENQUEUE_DELAYED can clear
--	 * ->sched_delayed.
-+	 * Can be before ->enqueue_task() because uclamp considers the
-+	 * ENQUEUE_DELAYED task before its ->sched_delayed gets cleared
-+	 * in ->enqueue_task().
- 	 */
--	uclamp_rq_inc(rq, p);
-+	uclamp_rq_inc(rq, p, flags);
-+
-+	p->sched_class->enqueue_task(rq, p, flags);
- 
- 	psi_enqueue(p, flags);
- 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index c798d2795243..c92fee07fb7b 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6930,7 +6930,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	 * Let's add the task's estimated utilization to the cfs_rq's
- 	 * estimated utilization, before we update schedutil.
- 	 */
--	if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & ENQUEUE_RESTORE))))
-+	if (!p->se.sched_delayed || (flags & ENQUEUE_DELAYED))
- 		util_est_enqueue(&rq->cfs, p);
- 
- 	if (flags & ENQUEUE_DELAYED) {
-@@ -7168,7 +7168,7 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
-  */
- static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- {
--	if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & DEQUEUE_SAVE))))
-+	if (!p->se.sched_delayed)
- 		util_est_dequeue(&rq->cfs, p);
- 
- 	util_est_update(&rq->cfs, p, flags & DEQUEUE_SLEEP);
--- 
-2.25.1
-
+I guess the subject line is kind of misleading - maybe "x86/dumpstack:
+Fix misplaced assignment in unwinder" would be better?
