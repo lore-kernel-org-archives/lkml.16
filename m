@@ -1,448 +1,678 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2064.outbound.protection.outlook.com [40.107.21.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AFD2040A7;
-	Tue, 25 Mar 2025 07:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.64
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742888368; cv=fail; b=K3kJMoGnO2hKUI3Y/FUBFTFFa/EJ9F/Zfxa8yMEdZD8hV6c63K3uar8lrUfc5HU6hkSQ++O8Dd0hgHI6cXJUGEDg/Wg1Qnq2dRGvYFYp1In5beI4a72rKOu84rs61Xm9icBuDqQsjVhLimkBpprGdpnj01ZdmMEuO1ga+ZL3JfQ=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742888368; c=relaxed/simple;
-	bh=w4qxrlVtfikVUuuluANPxypZmqhtxb0KFDOt7E4Af9o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=X99k1ls5pWUFotNvRb/O+RNc1Ls7GxP2Q+5Ocw4/8uDcx/bkFGVSdQjXwS7qjKx9iez6QMCK4C4U3y8F1syHh8APLxhBxRHLiBGHBgdaqemFr3g4a5pVbq7Fvy9oMYv8yK6lspPoLf8AsnUHvIl9zdf3/ZVJ1n04YL83cs/9+54=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=PQh90Bl8; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=PQh90Bl8; arc=fail smtp.client-ip=40.107.21.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C7E25776;
+	Tue, 25 Mar 2025 07:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742888521; cv=none; b=JppYdVic7IGrVd41NNqX9FObLvmZY0Q+Dc7ib7BsMZ1Nh7+EcYZUuCwzM5ViuKr5G+iaWUhF7z3wE29Gm0lkYEgc3+TKarRcZeWU91MNSEM8yeG2l/6h9hlJ9MHgf3p10L0VnGbiZCoAz8aHWX97tjz3lZjVKaQKtHPk8/pm/Ps=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742888521; c=relaxed/simple;
+	bh=TFRJDQ2La7vli87XOc2oGlXTZu1111nEsjjLXhmtjbk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a1kb90CqVqBDkZj+JITTpVZFHHqK7JxbPRc7nHRu49Ain2rLZ19wYPJ70pdVJ//AjirDKbWAj81Gqia+FNIJGa81R4FJfB0/Ju06tPyba1a/xKpXPKW/hSexNraRsJ/2X7KwlidZF3uL1NVPdcpWLc/BZPg2i8fBNrzueqPgnLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PO25fr9+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="PQh90Bl8";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="PQh90Bl8"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=LyN9pNyHHMM/99POAMFNQS23P0PX0I1e5Op023v0/izJoal1Vce3WLQUxejeGvXPa81+b7LzyheLFDFi/FmQNY/dw5NpOXTXBzWQfspAd/f6pOs7qvlJUTYob+3vgI5MZEn3aN+Q8eD31wOhfKda8Aj1xgMU1rKvAGMF/tydC56bSUNURBPYehgw2lc6GZbcIMk9+rH3shcz9na32i30HLItj4LNBi3RJdjbhvl339b2S6pUtuN6KB91ZmVsSmgylzh3FcmYctGOamZZC5OZfIMP/3ER1YPCipN/PFo7kE7h0mmfvbKyFIsQjTSL0iF2/Xr7lcMNXR1Q68a9kRQEtQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8Y9xepnarh+S14kpLGFGZTfzmOAJWoJrLrrh2Jf5aZM=;
- b=e4XINcqKy/cmXkArj/nlIbcJkvgeGlBg+51JM02NAGPIY53yMr6pXo7PUaV9sMdJPa3LH6jNanq0+wOU+tdDkUw56P43qNIdMTQqjUlkqNfz3s8PKiHZcetR8yvgHnyVpnUthZQ21djgtvlwhlXxs/a8EMKPAtsh54dw+GkhBJprnIMdJHeeEYCkNsFk/WEorDSQCDpIHAuiGU8/rUWI/GFmKHyYMoQnYoc7unMew/SGQFY5HLy97Aa+5WS+0opuVEZtAINTXRBVL8jg8f55vzrgOg0C+eB6I3WqXlTVN8egBUaNWFmq5SXM6sp55JsITVg6vvbbDM5O0UAPMy0S9Q==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 63.35.35.123) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8Y9xepnarh+S14kpLGFGZTfzmOAJWoJrLrrh2Jf5aZM=;
- b=PQh90Bl8tVZd+EdYs+qcnDkeOzgu5iUkCBeq9DkC0qqP6iPqvlQOXxmxVj8/+A+2heKn7ZEjh41hm22XxZiSR0tdOvlZkmRA89TyjnX3rwqAjawUVAXg2dD7dq7hea3OPoEHEp3K/Ty2XQEnvCyK/K+5kJVMJ21QDGFqIMwTZ8I=
-Received: from AM0PR02CA0015.eurprd02.prod.outlook.com (2603:10a6:208:3e::28)
- by DU0PR08MB9347.eurprd08.prod.outlook.com (2603:10a6:10:41f::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Tue, 25 Mar
- 2025 07:39:20 +0000
-Received: from AM3PEPF0000A792.eurprd04.prod.outlook.com
- (2603:10a6:208:3e:cafe::eb) by AM0PR02CA0015.outlook.office365.com
- (2603:10a6:208:3e::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.42 via Frontend Transport; Tue,
- 25 Mar 2025 07:39:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
- pr=C
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM3PEPF0000A792.mail.protection.outlook.com (10.167.16.121) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.20
- via Frontend Transport; Tue, 25 Mar 2025 07:39:20 +0000
-Received: ("Tessian outbound 42ac64abf51c:v601"); Tue, 25 Mar 2025 07:39:20 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 0e352d6e83731803
-X-TessianGatewayMetadata: b26J6uHqu/UOOQuc3deKUtr1ZkgTQkfxfwjlEuy1J+oAWiRqKZIgFtsJGPPKizxnKYphX8TauBy38Oo1roqsocxZlH9xgQ4MKakiOT7dvU/OdHiNKnbLoPGhF3/r+tf8yFTPRtQ2ACbr1IHp7LGE6A==
-X-CR-MTA-TID: 64aa7808
-Received: from L23000e15d892.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 6C2C6ADF-DA43-4E92-BE92-B77ADBED77ED.1;
-	Tue, 25 Mar 2025 07:39:09 +0000
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id L23000e15d892.2
-    (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
-    Tue, 25 Mar 2025 07:39:09 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KZWY2TDcrAciVSJ1hu/s7PK6YcLTAmqbVVpgukQgCrbvqSIyLwQ5ZmLsbGBWvPf9WTD7LonwBzG8N+omyrkqucQrrhFkxQaQ0F5Q4OsKUv4AtR2a2Bp+ZmCBGu1iuo7hcf8mlNzTlgR79LMvVJUaS9NjCFyXuzCKn00Qx0wG8JsjJB475ZzbvoJw9bFdBl9TgFnZuKmUy8E83OVsWSO4cUCXqiZ/KTtC9b9thIBF2mMHkvOI1FJBWzprHy91kVHJy+QUGOqRYpJGmSnOVo7mjX6b8aTnmUrDangRJtz3vPC/rq2A1cUCBnQQz8B7ThrQQy/FEhCKNCcIRnWcTuj1gQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8Y9xepnarh+S14kpLGFGZTfzmOAJWoJrLrrh2Jf5aZM=;
- b=lfNAr6CF01AWjXbm7JCxwPaYO6RUTkJkAoAqyuPKNhirsJ1vb0nuT1BFkPHYCloT3xASclrH2GKM0gqQM63FmTga1+QCCKbq018Jsdj8P8dok3kxGdDyIW3Prh2jMwFPIFpRzYtCP4olMvOb2WaJ021u8BZQ7ERM1+nCVjC57tw/VKpBj0vfzmdaHjVL0v3pCxGWi82o1C7jOtqzzH90I95UZS/j+6YfL1ufh1wm9PNf+mamojlVKtgPDgkPmI29jzIceJi0FToeOxcK3kBCkBre61E6T1fd0PwGUI+ZEKIVcO4zvzAUtYMqWHld257k3q0ylJOTZXUUmXZyRfc+bg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8Y9xepnarh+S14kpLGFGZTfzmOAJWoJrLrrh2Jf5aZM=;
- b=PQh90Bl8tVZd+EdYs+qcnDkeOzgu5iUkCBeq9DkC0qqP6iPqvlQOXxmxVj8/+A+2heKn7ZEjh41hm22XxZiSR0tdOvlZkmRA89TyjnX3rwqAjawUVAXg2dD7dq7hea3OPoEHEp3K/Ty2XQEnvCyK/K+5kJVMJ21QDGFqIMwTZ8I=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- (2603:10a6:150:163::20) by DBBPR08MB5931.eurprd08.prod.outlook.com
- (2603:10a6:10:1f7::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Tue, 25 Mar
- 2025 07:39:06 +0000
-Received: from GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739]) by GV1PR08MB10521.eurprd08.prod.outlook.com
- ([fe80::d430:4ef9:b30b:c739%6]) with mapi id 15.20.8534.040; Tue, 25 Mar 2025
- 07:39:05 +0000
-Date: Tue, 25 Mar 2025 07:39:03 +0000
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: Leo Yan <leo.yan@arm.com>
-Cc: mingo@kernel.org, peterz@infradead.org, acme@kernel.org,
-	namhyung@kernel.org, Mark.Rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, james.clark@linaro.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] events/core: fix acoount failure for event's
- child_total_enable_time at task exit
-Message-ID: <Z+Jdl99Y2EpDHciK@e129823.arm.com>
-References: <20250306123350.1650114-1-yeoreum.yun@arm.com>
- <20250324194758.GB604566@e132581.arm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324194758.GB604566@e132581.arm.com>
-X-ClientProxiedBy: LO2P123CA0091.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:139::6) To GV1PR08MB10521.eurprd08.prod.outlook.com
- (2603:10a6:150:163::20)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PO25fr9+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90BD2C4CEE8;
+	Tue, 25 Mar 2025 07:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742888520;
+	bh=TFRJDQ2La7vli87XOc2oGlXTZu1111nEsjjLXhmtjbk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PO25fr9+eOCrDIMDJId3JqA54+MkcuWAuwX3SJKh1JUVr54UQRJcJ6JmLm6mqQmXb
+	 BHp0po3Ho0tuE4ueCFXgOETlYpIscWYbvozaxVMg5Qcjzq5DQZ68d0cfvZqe98Ymna
+	 ax0l0i2kXorys8uIm19/xI/OKlKsV+F7YBUBXolPthf6RSKx+CMWTqXRlj+41k82vW
+	 8I/edWgGVE0pSVEEe+G/7y1rptkobya9atok54hwzLjbvl/iXjo8zo9BfGHXoOE/+g
+	 tqQ6Pp361KE3HfnKcIELUTqi6GQb79DLUf9+dQtPhNXGzyHUayxyYA3xsCzpFQO5gz
+	 4n0NgYrFBlGNA==
+Date: Tue, 25 Mar 2025 13:11:50 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org,
+	Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
+	Daniel Stone <daniel@fooishbar.org>
+Subject: Re: [PATCH v6 09/10] optee: FF-A: dynamic restricted memory
+ allocation
+Message-ID: <Z-JePo6yGlUgrZkw@sumit-X1>
+References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
+ <20250305130634.1850178-10-jens.wiklander@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	GV1PR08MB10521:EE_|DBBPR08MB5931:EE_|AM3PEPF0000A792:EE_|DU0PR08MB9347:EE_
-X-MS-Office365-Filtering-Correlation-Id: 655118c6-c5c2-49a8-a6d2-08dd6b7027ce
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|376014|366016|1800799024|7416014;
-X-Microsoft-Antispam-Message-Info-Original:
- =?us-ascii?Q?MItRyNS5tq+/JVWJ/2dzQBMW4VNw+Jm2knaIyl04oKV/aI2NSnZv4MqYHwDs?=
- =?us-ascii?Q?f6ymcW1KVB78wIyUf6wSTWE4+PYa0JkcSNEUXjDyMUgI8LTxhYRJ2uEBFeBS?=
- =?us-ascii?Q?mMy7F1uA/Qv+K5n0hsjG2fcZ1+bJqOvComTcV8TN9uFmMiMOhQcQf66GOWW3?=
- =?us-ascii?Q?1JtU9Tk5m7tkrY7TfI3WXLTONIrjSQUp8mPq6PRJcXbIYn6TxIj0z/EBLSw6?=
- =?us-ascii?Q?seJc3x9HyNhhIwyQe6lf8pW6SpKS22hRimekFJmD+darFjp0R+fZa+PMKQid?=
- =?us-ascii?Q?LLAFEdlFKcr/7YzSYx7mt3Z3GiYRilmsaaau0PxzxjjAe/GVR7nHOgNU5cHF?=
- =?us-ascii?Q?vpUozHi0TSNBoPQ1PNhpx+dqnJdsDwfBoSvyFPkX8WDkIGeOQ7fEXhSOBAU0?=
- =?us-ascii?Q?XWmJCDvuhFXaaVbees4LUgG48479Dr3y/eh122o3U9/ag77Om6+PPfEYOFZX?=
- =?us-ascii?Q?zpc3C3GNnH+cpDvJLZM1F0KNSsidmNqebZ6E1uwgv5vOrQOVbK0rFZiKCl5T?=
- =?us-ascii?Q?lg+rxcQ3r4HFYmj1vxFWZuBP8xsj7gfqJp3k1Yh6Jb8hBgxPxOIaTzkQY73z?=
- =?us-ascii?Q?W8qy/rC9mUsDY+jnjCmWs1Y5QyXAQWJBYPwC6HqZtOc58d3pinarrNc+dqba?=
- =?us-ascii?Q?KVYF4+tpB5Vo0yiK6meC7vhgJ8uHcFDKLEFl6lKlfHxgA6CDcHGI+FzO+mcP?=
- =?us-ascii?Q?tuLCY5RZUgAC6Cw60X5r1MygRJvQV02J/vGlOqTaqbgaeERJGGy1iL7A/Sil?=
- =?us-ascii?Q?5hMZfGxscqkF+Sy9gh8gIL9YMgPd1+C9f58npo2khakEx/bwTfYN3D8q2d0g?=
- =?us-ascii?Q?FC/YQ2vEDyE/DUhNoGjBSioQJPD5JxgDk68cfD+hC1Xq7ZwSMko1FNCR+t5P?=
- =?us-ascii?Q?vtopgYBjTzstK47AsD4IW9Ot63burdfipwpztm5YI7knT0xC+r3ZL/6+St23?=
- =?us-ascii?Q?JGI1G/kQNH8MQP1Gaa0iLTrup09je8E1q0/5bfsTH3N5UlirU2NBeA4cE4bz?=
- =?us-ascii?Q?y4/pn+YgR0GkdCcEAIAQhV5t6N69KruYZv7jcV8a7+DRc+dzAUglyWnlyrfP?=
- =?us-ascii?Q?zDr1TDxkWBstqEoaL6Ze+XPBwK3Lgnv2SPd5xMW+Lgt39JLsdlNE3l4SQ98s?=
- =?us-ascii?Q?OTjYg1b8sJS402etcrMsrf4KT00NbO38WPjW598VabNEdMvp1Gb4imEYLtr1?=
- =?us-ascii?Q?q+eS0qpgVu/KNLviptvv7mI2kxN2Ps480Z3AaQmiib6MSTrfWzuBUx79gnDc?=
- =?us-ascii?Q?4ohB+Urf7cTPu7Kl5tN4vQn2wRHhcRRNH6bkkzhcrtv7orISFR0ZETVKLi9h?=
- =?us-ascii?Q?oJmAvlNf9DVwDNvj+kLE7Vo6t7ssn9cEZMA5UeO4rki1rq+k3rYHbQqCN0+z?=
- =?us-ascii?Q?VQ3dLk4DumKAnNZURdwbNVe6IrFR?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR08MB10521.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB5931
-Original-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-SkipListedInternetSender:
- ip=[2603:10a6:150:163::20];domain=GV1PR08MB10521.eurprd08.prod.outlook.com
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AM3PEPF0000A792.eurprd04.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	284c91bd-3553-491f-4b1f-08dd6b701efb
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|376014|35042699022|82310400026|14060799003;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?oLKx68lXaL7QJDqwuLO+F9S8z56y2KekWthQtI+dn26RuUcuatIxiITz+Ut6?=
- =?us-ascii?Q?/xTXrijYcoSKWsqrVwLoZGvtHuEx9P3O2f2tAZwWoJwrMDJw40va0VBiraXr?=
- =?us-ascii?Q?at0Kcp9P9VKKkzxo5MEaa92e7BPUL8QnVSMfU97Bd+E50zkmIFiB+veXVmNH?=
- =?us-ascii?Q?Wba/cdVHw9bks2k9Z3eN7TTNjgXZK+4LEYt2mXLfHqiK8zkxqSTwniDceCgI?=
- =?us-ascii?Q?N1OlE5p5diqcpan9a7urw5soXPICzPT7e3C320Xgji66CAm8JOKnlaEpdyo+?=
- =?us-ascii?Q?bQlxSe/uNZeINDaBUyq5L76zaB/bbC/EdJcpyM2mswcwx5NnEZTXia5DsHeP?=
- =?us-ascii?Q?TO/cDonk1R0taxQ2StUu+2DOZL029O+4uJjvoJuX91LdNF1zggtKYomJsLvs?=
- =?us-ascii?Q?kIoZmwc2h3syKj+uK6z2uoA2HouDw1e1oIyGgywo9pgoxMVGBEzyWQV+Uqtk?=
- =?us-ascii?Q?1Qcqj+T9h/U01VUhc7VlbnaBW0ayQlhRKoojzPSDAe+JIrrloHdEr01zINvM?=
- =?us-ascii?Q?YG/Y9DspUzIPrQ2n8kwEZZQK0U9W5oy5LB4tuGqApzzmBSS35RcG8l7Zif3Z?=
- =?us-ascii?Q?KRHnM0JWyI7Q/oSWs7ffuLTiSrH2kO1xNhOB/LgKzTxCba/z+Y/StFzNpHvi?=
- =?us-ascii?Q?/st6ZOExt2m6u7sI3aZy7FyZBoe0HkCmlZBmeFiHMkvkJsfVr8oH3uLtjOfC?=
- =?us-ascii?Q?6kDufhzMX5bK/t96cptckvVQDbUqi7GeFWr3x/WqtaFEkIJGGplVgCGNmwbq?=
- =?us-ascii?Q?k6tLKSngdKbdVjx8UbRRTbuVkqf3/aj5T3HcqfdpO6VRniEAozRqrBdfBqrT?=
- =?us-ascii?Q?OdvoAdRJOpE/NkXeN/fgg6rkvNOheqxhZWxSclXb2Ckgctc4Z1LFQhPHRKox?=
- =?us-ascii?Q?3VjEg5c1glFeV83TXXyFs9IZeDHj2F9D2N3H2PNmW+xn4sylnafHF7XBLpwP?=
- =?us-ascii?Q?zRB7IZP9RBxOXYKNgJ5ZV9H42S+BYFUH3bUKzYwnE1V3aGwktdvAVOnj1eW4?=
- =?us-ascii?Q?5Oh2pabG6vizTlMlrfMFwWsltGMawSIbx7vCQ3qFL7Psz+0s6tOyizWM7/ax?=
- =?us-ascii?Q?6FblwJIYw9b3blx6HW4BduKmluS+m+qkMjR45HhFpJMYIW/TMUO03DnEtTjF?=
- =?us-ascii?Q?pAn23rdghuqBf2MsFh49Wqst1ABTqhUOt4rBpHyVchlAJsWDOqibH2xMg8WD?=
- =?us-ascii?Q?GAIgZu1rripgsWCg8ymizpCtjH5MWd0xRfD9kYLOhKlamRtbB1vaIY0o9V7T?=
- =?us-ascii?Q?Sodatafc9FHnQmslL3TRzvzLBstdchxzEKI1fgDib6A5e2JNaa2KG5nvZkOr?=
- =?us-ascii?Q?ggVhzQ/PUYp//bz8JLzFypcFscjneoW8RU0K+xTE1b8sXJoN47nxj35Ca3sZ?=
- =?us-ascii?Q?GRuvY05TL83NYuBfnNvd4VjQw0DOGqEe8uknekYH+vQMZs2uo1TO4/gQ82pF?=
- =?us-ascii?Q?sq5TmG7Kf29kWexY/rQhVSjSuaZh+o34u4nHKECazxuVb5r9HgK2lCsLmsEe?=
- =?us-ascii?Q?D1rTkq8yY7cJ6fk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:64aa7808-outbound-1.mta.getcheckrecipient.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(35042699022)(82310400026)(14060799003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2025 07:39:20.3904
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 655118c6-c5c2-49a8-a6d2-08dd6b7027ce
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM3PEPF0000A792.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB9347
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250305130634.1850178-10-jens.wiklander@linaro.org>
 
-Hi Leo,
+On Wed, Mar 05, 2025 at 02:04:15PM +0100, Jens Wiklander wrote:
+> Add support in the OP-TEE backend driver dynamic restricted memory
+> allocation with FF-A.
+> 
+> The restricted memory pools for dynamically allocated restrict memory
+> are instantiated when requested by user-space. This instantiation can
+> fail if OP-TEE doesn't support the requested use-case of restricted
+> memory.
+> 
+> Restricted memory pools based on a static carveout or dynamic allocation
+> can coexist for different use-cases. We use only dynamic allocation with
+> FF-A.
+> 
+> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> ---
+>  drivers/tee/optee/Makefile        |   1 +
+>  drivers/tee/optee/ffa_abi.c       | 143 ++++++++++++-
+>  drivers/tee/optee/optee_private.h |  13 +-
+>  drivers/tee/optee/rstmem.c        | 329 ++++++++++++++++++++++++++++++
+>  4 files changed, 483 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/tee/optee/rstmem.c
+> 
+> diff --git a/drivers/tee/optee/Makefile b/drivers/tee/optee/Makefile
+> index a6eff388d300..498969fb8e40 100644
+> --- a/drivers/tee/optee/Makefile
+> +++ b/drivers/tee/optee/Makefile
+> @@ -4,6 +4,7 @@ optee-objs += core.o
+>  optee-objs += call.o
+>  optee-objs += notif.o
+>  optee-objs += rpc.o
+> +optee-objs += rstmem.o
+>  optee-objs += supp.o
+>  optee-objs += device.o
+>  optee-objs += smc_abi.o
+> diff --git a/drivers/tee/optee/ffa_abi.c b/drivers/tee/optee/ffa_abi.c
+> index e4b08cd195f3..6a55114232ef 100644
+> --- a/drivers/tee/optee/ffa_abi.c
+> +++ b/drivers/tee/optee/ffa_abi.c
+> @@ -672,6 +672,123 @@ static int optee_ffa_do_call_with_arg(struct tee_context *ctx,
+>  	return optee_ffa_yielding_call(ctx, &data, rpc_arg, system_thread);
+>  }
+>  
+> +static int do_call_lend_rstmem(struct optee *optee, u64 cookie, u32 use_case)
+> +{
+> +	struct optee_shm_arg_entry *entry;
+> +	struct optee_msg_arg *msg_arg;
+> +	struct tee_shm *shm;
+> +	u_int offs;
+> +	int rc;
+> +
+> +	msg_arg = optee_get_msg_arg(optee->ctx, 1, &entry, &shm, &offs);
+> +	if (IS_ERR(msg_arg))
+> +		return PTR_ERR(msg_arg);
+> +
+> +	msg_arg->cmd = OPTEE_MSG_CMD_ASSIGN_RSTMEM;
+> +	msg_arg->params[0].attr = OPTEE_MSG_ATTR_TYPE_VALUE_INPUT;
+> +	msg_arg->params[0].u.value.a = cookie;
+> +	msg_arg->params[0].u.value.b = use_case;
+> +
+> +	rc = optee->ops->do_call_with_arg(optee->ctx, shm, offs, false);
+> +	if (rc)
+> +		goto out;
+> +	if (msg_arg->ret != TEEC_SUCCESS) {
+> +		rc = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +out:
+> +	optee_free_msg_arg(optee->ctx, entry, offs);
+> +	return rc;
+> +}
+> +
+> +static int optee_ffa_lend_rstmem(struct optee *optee, struct tee_shm *rstmem,
+> +				 u16 *end_points, unsigned int ep_count,
+> +				 u32 use_case)
+> +{
+> +	struct ffa_device *ffa_dev = optee->ffa.ffa_dev;
+> +	const struct ffa_mem_ops *mem_ops = ffa_dev->ops->mem_ops;
+> +	const struct ffa_msg_ops *msg_ops = ffa_dev->ops->msg_ops;
+> +	struct ffa_send_direct_data data;
+> +	struct ffa_mem_region_attributes *mem_attr;
+> +	struct ffa_mem_ops_args args = {
+> +		.use_txbuf = true,
+> +		.tag = use_case,
+> +	};
+> +	struct page *page;
+> +	struct scatterlist sgl;
+> +	unsigned int n;
+> +	int rc;
+> +
+> +	mem_attr = kcalloc(ep_count, sizeof(*mem_attr), GFP_KERNEL);
+> +	for (n = 0; n < ep_count; n++) {
+> +		mem_attr[n].receiver = end_points[n];
+> +		mem_attr[n].attrs = FFA_MEM_RW;
+> +	}
+> +	args.attrs = mem_attr;
+> +	args.nattrs = ep_count;
+> +
+> +	page = phys_to_page(rstmem->paddr);
+> +	sg_init_table(&sgl, 1);
+> +	sg_set_page(&sgl, page, rstmem->size, 0);
+> +
+> +	args.sg = &sgl;
+> +	rc = mem_ops->memory_lend(&args);
+> +	kfree(mem_attr);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = do_call_lend_rstmem(optee, args.g_handle, use_case);
+> +	if (rc)
+> +		goto err_reclaim;
+> +
+> +	rc = optee_shm_add_ffa_handle(optee, rstmem, args.g_handle);
+> +	if (rc)
+> +		goto err_unreg;
+> +
+> +	rstmem->sec_world_id = args.g_handle;
+> +
+> +	return 0;
+> +
+> +err_unreg:
+> +	data = (struct ffa_send_direct_data){
+> +		.data0 = OPTEE_FFA_RELEASE_RSTMEM,
+> +		.data1 = (u32)args.g_handle,
+> +		.data2 = (u32)(args.g_handle >> 32),
+> +	};
+> +	msg_ops->sync_send_receive(ffa_dev, &data);
+> +err_reclaim:
+> +	mem_ops->memory_reclaim(args.g_handle, 0);
+> +	return rc;
+> +}
+> +
+> +static int optee_ffa_reclaim_rstmem(struct optee *optee, struct tee_shm *rstmem)
+> +{
+> +	struct ffa_device *ffa_dev = optee->ffa.ffa_dev;
+> +	const struct ffa_msg_ops *msg_ops = ffa_dev->ops->msg_ops;
+> +	const struct ffa_mem_ops *mem_ops = ffa_dev->ops->mem_ops;
+> +	u64 global_handle = rstmem->sec_world_id;
+> +	struct ffa_send_direct_data data = {
+> +		.data0 = OPTEE_FFA_RELEASE_RSTMEM,
+> +		.data1 = (u32)global_handle,
+> +		.data2 = (u32)(global_handle >> 32)
+> +	};
+> +	int rc;
+> +
+> +	optee_shm_rem_ffa_handle(optee, global_handle);
+> +	rstmem->sec_world_id = 0;
+> +
+> +	rc = msg_ops->sync_send_receive(ffa_dev, &data);
+> +	if (rc)
+> +		pr_err("Release SHM id 0x%llx rc %d\n", global_handle, rc);
+> +
+> +	rc = mem_ops->memory_reclaim(global_handle, 0);
+> +	if (rc)
+> +		pr_err("mem_reclaim: 0x%llx %d", global_handle, rc);
+> +
+> +	return rc;
+> +}
+> +
+>  /*
+>   * 6. Driver initialization
+>   *
+> @@ -833,6 +950,8 @@ static const struct optee_ops optee_ffa_ops = {
+>  	.do_call_with_arg = optee_ffa_do_call_with_arg,
+>  	.to_msg_param = optee_ffa_to_msg_param,
+>  	.from_msg_param = optee_ffa_from_msg_param,
+> +	.lend_rstmem = optee_ffa_lend_rstmem,
+> +	.reclaim_rstmem = optee_ffa_reclaim_rstmem,
+>  };
+>  
+>  static void optee_ffa_remove(struct ffa_device *ffa_dev)
+> @@ -941,7 +1060,7 @@ static int optee_ffa_probe(struct ffa_device *ffa_dev)
+>  				  optee->pool, optee);
+>  	if (IS_ERR(teedev)) {
+>  		rc = PTR_ERR(teedev);
+> -		goto err_free_pool;
+> +		goto err_free_shm_pool;
+>  	}
+>  	optee->teedev = teedev;
+>  
+> @@ -988,6 +1107,24 @@ static int optee_ffa_probe(struct ffa_device *ffa_dev)
+>  			       rc);
+>  	}
+>  
+> +	if (IS_ENABLED(CONFIG_CMA) && !IS_MODULE(CONFIG_OPTEE) &&
 
-> Hi Levi,
->
-> I tested this patch and it works for me.
+The CMA dependency should be managed via Kconfig.
 
-Thanks ;)
+> +	    (sec_caps & OPTEE_FFA_SEC_CAP_RSTMEM)) {
+> +		enum tee_dma_heap_id id = TEE_DMA_HEAP_SECURE_VIDEO_PLAY;
+> +		struct tee_rstmem_pool *pool;
+> +
+> +		pool = optee_rstmem_alloc_cma_pool(optee, id);
+> +		if (IS_ERR(pool)) {
+> +			rc = PTR_ERR(pool);
+> +			goto err_notif_uninit;
+> +		}
+> +
+> +		rc = tee_device_register_dma_heap(optee->teedev, id, pool);
+> +		if (rc) {
+> +			pool->ops->destroy_pool(pool);
+> +			goto err_notif_uninit;
+> +		}
+> +	}
+> +
+>  	rc = optee_enumerate_devices(PTA_CMD_GET_DEVICES);
+>  	if (rc)
+>  		goto err_unregister_devices;
+> @@ -1001,6 +1138,8 @@ static int optee_ffa_probe(struct ffa_device *ffa_dev)
+>  
+>  err_unregister_devices:
+>  	optee_unregister_devices();
+> +	tee_device_unregister_all_dma_heaps(optee->teedev);
+> +err_notif_uninit:
+>  	if (optee->ffa.bottom_half_value != U32_MAX)
+>  		notif_ops->notify_relinquish(ffa_dev,
+>  					     optee->ffa.bottom_half_value);
+> @@ -1018,7 +1157,7 @@ static int optee_ffa_probe(struct ffa_device *ffa_dev)
+>  	tee_device_unregister(optee->supp_teedev);
+>  err_unreg_teedev:
+>  	tee_device_unregister(optee->teedev);
+> -err_free_pool:
+> +err_free_shm_pool:
+>  	tee_shm_pool_free(pool);
+>  err_free_optee:
+>  	kfree(optee);
+> diff --git a/drivers/tee/optee/optee_private.h b/drivers/tee/optee/optee_private.h
+> index 20eda508dbac..faab31ad7c52 100644
+> --- a/drivers/tee/optee/optee_private.h
+> +++ b/drivers/tee/optee/optee_private.h
+> @@ -174,9 +174,14 @@ struct optee;
+>   * @do_call_with_arg:	enters OP-TEE in secure world
+>   * @to_msg_param:	converts from struct tee_param to OPTEE_MSG parameters
+>   * @from_msg_param:	converts from OPTEE_MSG parameters to struct tee_param
+> + * @lend_rstmem:	lends physically contiguous memory as restricted
+> + *			memory, inaccessible by the kernel
+> + * @reclaim_rstmem:	reclaims restricted memory previously lent with
+> + *			@lend_rstmem() and makes it accessible by the
+> + *			kernel again
+>   *
+>   * These OPs are only supposed to be used internally in the OP-TEE driver
+> - * as a way of abstracting the different methogs of entering OP-TEE in
+> + * as a way of abstracting the different methods of entering OP-TEE in
+>   * secure world.
+>   */
+>  struct optee_ops {
+> @@ -191,6 +196,10 @@ struct optee_ops {
+>  			      size_t num_params,
+>  			      const struct optee_msg_param *msg_params,
+>  			      bool update_out);
+> +	int (*lend_rstmem)(struct optee *optee, struct tee_shm *rstmem,
+> +			   u16 *end_points, unsigned int ep_count,
+> +			   u32 use_case);
+> +	int (*reclaim_rstmem)(struct optee *optee, struct tee_shm *rstmem);
+>  };
+>  
+>  /**
+> @@ -285,6 +294,8 @@ u32 optee_supp_thrd_req(struct tee_context *ctx, u32 func, size_t num_params,
+>  void optee_supp_init(struct optee_supp *supp);
+>  void optee_supp_uninit(struct optee_supp *supp);
+>  void optee_supp_release(struct optee_supp *supp);
+> +struct tee_rstmem_pool *optee_rstmem_alloc_cma_pool(struct optee *optee,
+> +						    enum tee_dma_heap_id id);
+>  
+>  int optee_supp_recv(struct tee_context *ctx, u32 *func, u32 *num_params,
+>  		    struct tee_param *param);
+> diff --git a/drivers/tee/optee/rstmem.c b/drivers/tee/optee/rstmem.c
+> new file mode 100644
+> index 000000000000..ea27769934d4
+> --- /dev/null
+> +++ b/drivers/tee/optee/rstmem.c
+> @@ -0,0 +1,329 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2025, Linaro Limited
+> + */
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/errno.h>
+> +#include <linux/genalloc.h>
+> +#include <linux/slab.h>
+> +#include <linux/string.h>
+> +#include <linux/tee_core.h>
+> +#include <linux/types.h>
+> +#include "optee_private.h"
+> +
+> +struct optee_rstmem_cma_pool {
+> +	struct tee_rstmem_pool pool;
+> +	struct gen_pool *gen_pool;
+> +	struct optee *optee;
+> +	size_t page_count;
+> +	u16 *end_points;
+> +	u_int end_point_count;
+> +	u_int align;
+> +	refcount_t refcount;
+> +	u32 use_case;
+> +	struct tee_shm *rstmem;
+> +	/* Protects when initializing and tearing down this struct */
+> +	struct mutex mutex;
+> +};
+> +
+> +static struct optee_rstmem_cma_pool *
+> +to_rstmem_cma_pool(struct tee_rstmem_pool *pool)
+> +{
+> +	return container_of(pool, struct optee_rstmem_cma_pool, pool);
+> +}
+> +
+> +static int init_cma_rstmem(struct optee_rstmem_cma_pool *rp)
+> +{
+> +	int rc;
+> +
+> +	rp->rstmem = tee_shm_alloc_cma_phys_mem(rp->optee->ctx, rp->page_count,
+> +						rp->align);
+> +	if (IS_ERR(rp->rstmem)) {
+> +		rc = PTR_ERR(rp->rstmem);
+> +		goto err_null_rstmem;
+> +	}
+> +
+> +	/*
+> +	 * TODO unmap the memory range since the physical memory will
+> +	 * become inaccesible after the lend_rstmem() call.
+> +	 */
 
->
-> I would suggestion to improve a bit commit log for easier understanding.
-> And a minor comment for the code, otherwise, LGTM.
->
-> On Thu, Mar 06, 2025 at 12:33:50PM +0000, Yeoreum Yun wrote:
-> > The perf core code fails to account for total_enable_time of event
-> > when its state is inactive.
-> >
-> > Here is the error case for failure to account for total_enable_time for
-> > core event:
->
-> Here is a failure case for accouting total_enable_time for CPU PMU
-> events:
->
-> > sudo ./perf stat -vvv -e armv8_pmuv3_0/event=0x08/ -e armv8_pmuv3_1/event=0x08/ -- stress-ng --pthread=2 -t 2s
-> > ...
-> >
-> > /*
-> >  * three number represetns each
-> >  *   scaled count / total_enable_time / total_total_running_time
-> >  */
-> > armv8_pmuv3_0/event=0x08/: 1138698008 2289429840 2174835740
-> >                                       ^^^^^^^^^^
-> > armv8_pmuv3_1/event=0x08/: 1826791390 1950025700 847648440
-> >                                       ^^^^^^^^^^
->
-> You could use below syntax like:
->
->   armv8_pmuv3_0/event=0x08/: 1138698008 2289429840 2174835740
->   armv8_pmuv3_1/event=0x08/: 1826791390 1950025700 847648440
->                               `          `          `> child_total_time_running
->                                `          `> child_total_time_enabled
->                                 `> child_count
-> >
-> >  Performance counter stats for 'stress-ng --pthread=2 -t 2s':
-> >
-> >      1,138,698,008      armv8_pmuv3_0/event=0x08/                                               (94.99%)
-> >      1,826,791,390      armv8_pmuv3_1/event=0x08/                                               (43.47%)
-> >
-> > Since above two events are belong to the same task context and
-> > mutually-exclusive per cpu (they couldn't be active at the same time on the same cpu),
-> > the total_enable_time should be the same (marked with ^^^^^^^^^^^)
-> > and the summation of ratio should be 100%.
->
-> The two events above are opened on two different CPU PMUs, for example,
-> each event is opened for a cluster in an Arm big.LITTLE system, they
-> will never run on the same CPU.  In theory, the total enabled time should
-> be same for both events, as two events are opened and closed together.
->
-> > This account failure of total_enable_time because of
-> > account failure of child_total_enable_time of child event when
-> > child task exit.
->
-> As the result show, the two events' child total enabled time are
-> different (2289429840 vs 1950025700).  This is because child events
-> are not accounted properly if a event is INACTIVE state when the
-> task exits.
->
-> > Below table explains how the child_total_enable_time is failed to account at
-> > exiting child task which switch cpus as time passes by (CPU0 -> CPU1 -> CPU0)
-> >
-> >  - in means sched_in.
-> >  - out means sched_out.
-> >  - exit means at the exit of child task.
-> >    NOTE: the value is before calling list_del_event(). which mean
-> >          the value at exit column will be added at parent event's
-> >           child_total_enable_time when child task exit.
-> >  - ctx is the child_task_ctx,
-> >  - e0 is the child_event which set with cpu == -1 and opened with pmu0 only
-> >    added in CPU0,
-> >  - e1 is the child_event which set with cpu == -1 and opened with pmu1 only
-> >    added in CPU1,
-> >  - e0 and e1 belongs to same child_task_ctx.
-> >
-> >           CPU0 (run t1)        CPU1 (run t2)          CPU0 (run t3)
-> >           |  in | out |       | in  | out     |       | in      | exit        |
-> > ------------------------------------------------------------------------------
-> > ctx->time |  0  | t1  |       | t1  | t1 + t2 |       | t1 + t2 | t1 + t2 + t3|
-> > ------------------------------------------------------------------------------
-> > e0->ena   |  0  | t1  |       | t1  | t1     *|       | t1 + t2 | t1 + t2 + t3|
-> > ------------------------------------------------------------------------------
-> > e0->run   |  0  | t1  |       | t1  | t1     *|       | t1      | t1 + t3     |
-> > ------------------------------------------------------------------------------
-> > e1->ena   |  0  | 0  *|       | t1  | t1 + t2 |       | t1 + t2 | t1 + t2    X|
-> > ------------------------------------------------------------------------------
-> > e1->run   |  0  | 0  *|       | 0   | t2      |       | t2      | t2         X|
-> > ------------------------------------------------------------------------------
-> >
-> > The value marked with * means it doesn't updates since event->state was
-> > INACTIVE.
-> >
-> > Please see the last CPU0's column with exit (marked with X).
-> > Since e1's state is INACTIVE its total_enable_time doesn't update
-> > and it remains with former value without accounting t3 time.
-> >
-> > In this situation, at __perf_remove_from_context() while exit child_task,
-> > sync_child_event() where adds child_event's total_enable_time to
-> > parent event's child_total_enable_time in perf_child_detach() is called
-> > before list_del_event() in which event time is updated by setting
-> > the event state as OFF.
->
-> In this case, the call sequence is:
->
->   perf_event_exit_event()
->     `> perf_remove_from_context()
->          `> __perf_remove_from_context()
->               `> perf_child_detach()   -> Accumulate child_total_time_enabled
->               `> list_del_event()      -> Update child event's time
->
-> The problem is the time accumulation happens prior to child event's time
-> updating.  Thus, it misses to account the last period's time when event
-> exits.
->
-> > That means child_total_enable_time is added with missing
-> > amount of last enable time -- t3.
-> >
-> > In case of parent event's total_enable_time is updated properly in
-> > list_del_event() when the task exit.
-> > However, the child_total_enable_time is missed when child_task exited,
-> > the perf prints error amount of enable_time (which is summation of
-> > total_enable_time + child_total_enable_time).
-> >
-> > To address this, update event state via perf_event_state() in
-> > __perf_remove_from_context() and call it before perf_child_detach()
-> > where parent's total_enable_time is updated.
-> >
->
-> The perf core layer follows the rule that timekeeping is tied to state
-> change.  To address the issue, invokes perf_event_state() for updating
-> state alongside with accouting the time.  Then, perf_child_detach()
-> populates the time into parent's time metrics.
->
-> > After this patch, this problem is gone like:
-> >
-> > sudo ./perf stat -vvv -e armv8_pmuv3_0/event=0x08/ -e armv8_pmuv3_1/event=0x08/ -- stress-ng --pthread=2 -t 10s
-> > ...
-> > armv8_pmuv3_0/event=0x08/: 15396770398 32157963940 21898169000
-> > armv8_pmuv3_1/event=0x08/: 22428964974 32157963940 10259794940
-> >
-> >  Performance counter stats for 'stress-ng --pthread=2 -t 10s':
-> >
-> >     15,396,770,398      armv8_pmuv3_0/event=0x08/                                               (68.10%)
-> >     22,428,964,974      armv8_pmuv3_1/event=0x08/                                               (31.90%)
-> >
-> > Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
-> > Suggsted-by: Peter Zijlstra <peterz@infradead.org>
->
-> /Suggsted-by/Suggested-by/
+What's your plan for this TODO? I think we need a CMA allocator here
+which can allocate un-mapped memory such that any cache speculation
+won't lead to CPU hangs once the memory restriction comes into picture.
 
-Thanks ;) I'll respin.
+> +	rc = rp->optee->ops->lend_rstmem(rp->optee, rp->rstmem, rp->end_points,
+> +					 rp->end_point_count, rp->use_case);
+> +	if (rc)
+> +		goto err_put_shm;
+> +	rp->rstmem->flags |= TEE_SHM_DYNAMIC;
+> +
+> +	rp->gen_pool = gen_pool_create(PAGE_SHIFT, -1);
+> +	if (!rp->gen_pool) {
+> +		rc = -ENOMEM;
+> +		goto err_reclaim;
+> +	}
+> +
+> +	rc = gen_pool_add(rp->gen_pool, rp->rstmem->paddr,
+> +			  rp->rstmem->size, -1);
+> +	if (rc)
+> +		goto err_free_pool;
+> +
+> +	refcount_set(&rp->refcount, 1);
+> +	return 0;
+> +
+> +err_free_pool:
+> +	gen_pool_destroy(rp->gen_pool);
+> +	rp->gen_pool = NULL;
+> +err_reclaim:
+> +	rp->optee->ops->reclaim_rstmem(rp->optee, rp->rstmem);
+> +err_put_shm:
+> +	tee_shm_put(rp->rstmem);
+> +err_null_rstmem:
+> +	rp->rstmem = NULL;
+> +	return rc;
+> +}
+> +
+> +static int get_cma_rstmem(struct optee_rstmem_cma_pool *rp)
+> +{
+> +	int rc = 0;
+> +
+> +	if (!refcount_inc_not_zero(&rp->refcount)) {
+> +		mutex_lock(&rp->mutex);
+> +		if (rp->gen_pool) {
+> +			/*
+> +			 * Another thread has already initialized the pool
+> +			 * before us, or the pool was just about to be torn
+> +			 * down. Either way we only need to increase the
+> +			 * refcount and we're done.
+> +			 */
+> +			refcount_inc(&rp->refcount);
+> +		} else {
+> +			rc = init_cma_rstmem(rp);
+> +		}
+> +		mutex_unlock(&rp->mutex);
+> +	}
+> +
+> +	return rc;
+> +}
+> +
+> +static void release_cma_rstmem(struct optee_rstmem_cma_pool *rp)
+> +{
+> +	gen_pool_destroy(rp->gen_pool);
+> +	rp->gen_pool = NULL;
+> +
+> +	rp->optee->ops->reclaim_rstmem(rp->optee, rp->rstmem);
+> +	rp->rstmem->flags &= ~TEE_SHM_DYNAMIC;
+> +
+> +	WARN(refcount_read(&rp->rstmem->refcount) != 1, "Unexpected refcount");
+> +	tee_shm_put(rp->rstmem);
+> +	rp->rstmem = NULL;
+> +}
+> +
+> +static void put_cma_rstmem(struct optee_rstmem_cma_pool *rp)
+> +{
+> +	if (refcount_dec_and_test(&rp->refcount)) {
+> +		mutex_lock(&rp->mutex);
+> +		if (rp->gen_pool)
+> +			release_cma_rstmem(rp);
+> +		mutex_unlock(&rp->mutex);
+> +	}
+> +}
+> +
+> +static int rstmem_pool_op_cma_alloc(struct tee_rstmem_pool *pool,
+> +				    struct sg_table *sgt, size_t size,
+> +				    size_t *offs)
+> +{
+> +	struct optee_rstmem_cma_pool *rp = to_rstmem_cma_pool(pool);
+> +	size_t sz = ALIGN(size, PAGE_SIZE);
+> +	phys_addr_t pa;
+> +	int rc;
+> +
+> +	rc = get_cma_rstmem(rp);
+> +	if (rc)
+> +		return rc;
+> +
+> +	pa = gen_pool_alloc(rp->gen_pool, sz);
+> +	if (!pa) {
+> +		rc = -ENOMEM;
+> +		goto err_put;
+> +	}
+> +
+> +	rc = sg_alloc_table(sgt, 1, GFP_KERNEL);
+> +	if (rc)
+> +		goto err_free;
+> +
+> +	sg_set_page(sgt->sgl, phys_to_page(pa), size, 0);
+> +	*offs = pa - rp->rstmem->paddr;
+> +
+> +	return 0;
+> +err_free:
+> +	gen_pool_free(rp->gen_pool, pa, size);
+> +err_put:
+> +	put_cma_rstmem(rp);
+> +
+> +	return rc;
+> +}
+> +
+> +static void rstmem_pool_op_cma_free(struct tee_rstmem_pool *pool,
+> +				    struct sg_table *sgt)
+> +{
+> +	struct optee_rstmem_cma_pool *rp = to_rstmem_cma_pool(pool);
+> +	struct scatterlist *sg;
+> +	int i;
+> +
+> +	for_each_sgtable_sg(sgt, sg, i)
+> +		gen_pool_free(rp->gen_pool, sg_phys(sg), sg->length);
+> +	sg_free_table(sgt);
+> +	put_cma_rstmem(rp);
+> +}
+> +
+> +static int rstmem_pool_op_cma_update_shm(struct tee_rstmem_pool *pool,
+> +					 struct sg_table *sgt, size_t offs,
+> +					 struct tee_shm *shm,
+> +					 struct tee_shm **parent_shm)
+> +{
+> +	struct optee_rstmem_cma_pool *rp = to_rstmem_cma_pool(pool);
+> +
+> +	*parent_shm = rp->rstmem;
+> +
+> +	return 0;
+> +}
+> +
+> +static void pool_op_cma_destroy_pool(struct tee_rstmem_pool *pool)
+> +{
+> +	struct optee_rstmem_cma_pool *rp = to_rstmem_cma_pool(pool);
+> +
+> +	mutex_destroy(&rp->mutex);
+> +	kfree(rp);
+> +}
+> +
+> +static struct tee_rstmem_pool_ops rstmem_pool_ops_cma = {
+> +	.alloc = rstmem_pool_op_cma_alloc,
+> +	.free = rstmem_pool_op_cma_free,
+> +	.update_shm = rstmem_pool_op_cma_update_shm,
+> +	.destroy_pool = pool_op_cma_destroy_pool,
+> +};
+> +
+> +static int get_rstmem_config(struct optee *optee, u32 use_case,
+> +			     size_t *min_size, u_int *min_align,
+> +			     u16 *end_points, u_int *ep_count)
 
-> > ---
-> >  kernel/events/core.c | 18 +++++++++---------
-> >  1 file changed, 9 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 6364319e2f88..058533a50493 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -2407,6 +2407,7 @@ ctx_time_update_event(struct perf_event_context *ctx, struct perf_event *event)
-> >  #define DETACH_GROUP	0x01UL
-> >  #define DETACH_CHILD	0x02UL
-> >  #define DETACH_DEAD	0x04UL
-> > +#define DETACH_EXIT	0x08UL
-> >
-> >  /*
-> >   * Cross CPU call to remove a performance event
-> > @@ -2421,6 +2422,7 @@ __perf_remove_from_context(struct perf_event *event,
-> >  			   void *info)
-> >  {
-> >  	struct perf_event_pmu_context *pmu_ctx = event->pmu_ctx;
-> > +	enum perf_event_state state = PERF_EVENT_STATE_OFF;
-> >  	unsigned long flags = (unsigned long)info;
-> >
-> >  	ctx_time_update(cpuctx, ctx);
-> > @@ -2429,16 +2431,19 @@ __perf_remove_from_context(struct perf_event *event,
-> >  	 * Ensure event_sched_out() switches to OFF, at the very least
-> >  	 * this avoids raising perf_pending_task() at this time.
-> >  	 */
-> > -	if (flags & DETACH_DEAD)
-> > +	if (flags & DETACH_EXIT)
-> > +		state = PERF_EVENT_STATE_EXIT;
-> > +	if (flags & DETACH_DEAD) {
-> >  		event->pending_disable = 1;
-> > +		state = PERF_EVENT_STATE_DEAD;
-> > +	}
-> >  	event_sched_out(event, ctx);
-> > +	perf_event_set_state(event, min(event->state, state));
->
-> Nitpick: can we move perf_event_set_state() before event_sched_out()?
->
-> So the function handles the state machine ahead, then proceed for
-> other operations.
+I guess this end points terminology is specific to FF-A ABI. Is there
+any relevance for this in the common APIs?
 
-No It couldn't. IIUC, event_sched_out() disable pmu with ACTIVE state
-event only.
-If state is changed first from active state, it wouldn't be sched out by
-event_sched_out.
+-Sumit
 
-
-Thanks
-
->
-> >  	if (flags & DETACH_GROUP)
-> >  		perf_group_detach(event);
-> >  	if (flags & DETACH_CHILD)
-> >  		perf_child_detach(event);
-> >  	list_del_event(event, ctx);
-> > -	if (flags & DETACH_DEAD)
-> > -		event->state = PERF_EVENT_STATE_DEAD;
-> >
-> >  	if (!pmu_ctx->nr_events) {
-> >  		pmu_ctx->rotate_necessary = 0;
-> > @@ -13424,12 +13429,7 @@ perf_event_exit_event(struct perf_event *event, struct perf_event_context *ctx)
-> >  		mutex_lock(&parent_event->child_mutex);
-> >  	}
-> >
-> > -	perf_remove_from_context(event, detach_flags);
-> > -
-> > -	raw_spin_lock_irq(&ctx->lock);
-> > -	if (event->state > PERF_EVENT_STATE_EXIT)
-> > -		perf_event_set_state(event, PERF_EVENT_STATE_EXIT);
-> > -	raw_spin_unlock_irq(&ctx->lock);
-> > +	perf_remove_from_context(event, detach_flags | DETACH_EXIT);
-> >
-> >  	/*
-> >  	 * Child events can be freed.
-> > --
-> > LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
-> >
+> +{
+> +	struct tee_param params[2] = {
+> +		[0] = {
+> +			.attr = TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INOUT,
+> +			.u.value.a = use_case,
+> +		},
+> +		[1] = {
+> +			.attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT,
+> +		},
+> +	};
+> +	struct optee_shm_arg_entry *entry;
+> +	struct tee_shm *shm_param = NULL;
+> +	struct optee_msg_arg *msg_arg;
+> +	struct tee_shm *shm;
+> +	u_int offs;
+> +	int rc;
+> +
+> +	if (end_points && *ep_count) {
+> +		params[1].u.memref.size = *ep_count * sizeof(*end_points);
+> +		shm_param = tee_shm_alloc_priv_buf(optee->ctx,
+> +						   params[1].u.memref.size);
+> +		if (IS_ERR(shm_param))
+> +			return PTR_ERR(shm_param);
+> +		params[1].u.memref.shm = shm_param;
+> +	}
+> +
+> +	msg_arg = optee_get_msg_arg(optee->ctx, ARRAY_SIZE(params), &entry,
+> +				    &shm, &offs);
+> +	if (IS_ERR(msg_arg)) {
+> +		rc = PTR_ERR(msg_arg);
+> +		goto out_free_shm;
+> +	}
+> +	msg_arg->cmd = OPTEE_MSG_CMD_GET_RSTMEM_CONFIG;
+> +
+> +	rc = optee->ops->to_msg_param(optee, msg_arg->params,
+> +				      ARRAY_SIZE(params), params,
+> +				      false /*!update_out*/);
+> +	if (rc)
+> +		goto out_free_msg;
+> +
+> +	rc = optee->ops->do_call_with_arg(optee->ctx, shm, offs, false);
+> +	if (rc)
+> +		goto out_free_msg;
+> +	if (msg_arg->ret && msg_arg->ret != TEEC_ERROR_SHORT_BUFFER) {
+> +		rc = -EINVAL;
+> +		goto out_free_msg;
+> +	}
+> +
+> +	rc = optee->ops->from_msg_param(optee, params, ARRAY_SIZE(params),
+> +					msg_arg->params, true /*update_out*/);
+> +	if (rc)
+> +		goto out_free_msg;
+> +
+> +	if (!msg_arg->ret && end_points &&
+> +	    *ep_count < params[1].u.memref.size / sizeof(u16)) {
+> +		rc = -EINVAL;
+> +		goto out_free_msg;
+> +	}
+> +
+> +	*min_size = params[0].u.value.a;
+> +	*min_align = params[0].u.value.b;
+> +	*ep_count = params[1].u.memref.size / sizeof(u16);
+> +
+> +	if (msg_arg->ret == TEEC_ERROR_SHORT_BUFFER) {
+> +		rc = -ENOSPC;
+> +		goto out_free_msg;
+> +	}
+> +
+> +	if (end_points)
+> +		memcpy(end_points, tee_shm_get_va(shm_param, 0),
+> +		       params[1].u.memref.size);
+> +
+> +out_free_msg:
+> +	optee_free_msg_arg(optee->ctx, entry, offs);
+> +out_free_shm:
+> +	if (shm_param)
+> +		tee_shm_free(shm_param);
+> +	return rc;
+> +}
+> +
+> +struct tee_rstmem_pool *optee_rstmem_alloc_cma_pool(struct optee *optee,
+> +						    enum tee_dma_heap_id id)
+> +{
+> +	struct optee_rstmem_cma_pool *rp;
+> +	u32 use_case = id;
+> +	size_t min_size;
+> +	int rc;
+> +
+> +	rp = kzalloc(sizeof(*rp), GFP_KERNEL);
+> +	if (!rp)
+> +		return ERR_PTR(-ENOMEM);
+> +	rp->use_case = use_case;
+> +
+> +	rc = get_rstmem_config(optee, use_case, &min_size, &rp->align, NULL,
+> +			       &rp->end_point_count);
+> +	if (rc) {
+> +		if (rc != -ENOSPC)
+> +			goto err;
+> +		rp->end_points = kcalloc(rp->end_point_count,
+> +					 sizeof(*rp->end_points), GFP_KERNEL);
+> +		if (!rp->end_points) {
+> +			rc = -ENOMEM;
+> +			goto err;
+> +		}
+> +		rc = get_rstmem_config(optee, use_case, &min_size, &rp->align,
+> +				       rp->end_points, &rp->end_point_count);
+> +		if (rc)
+> +			goto err_kfree_eps;
+> +	}
+> +
+> +	rp->pool.ops = &rstmem_pool_ops_cma;
+> +	rp->optee = optee;
+> +	rp->page_count = min_size / PAGE_SIZE;
+> +	mutex_init(&rp->mutex);
+> +
+> +	return &rp->pool;
+> +
+> +err_kfree_eps:
+> +	kfree(rp->end_points);
+> +err:
+> +	kfree(rp);
+> +	return ERR_PTR(rc);
+> +}
+> -- 
+> 2.43.0
+> 
