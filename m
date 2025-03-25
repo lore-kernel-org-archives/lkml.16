@@ -1,73 +1,74 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D2543169
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 00:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD23125D6
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 00:52:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742863795; cv=none; b=ETXnN/aRE2O6ry6uXwuG7FwNPoWICWIMN8B6D8ZbgKHEkfWKA1RHoqP8yslq/qVq+Vm5pim7bXI3pdrhKhpQ6E0jjkJ5jdW+Uh86M1dbAw5IJdsocrfXBgMuJR9XHrgXQVulrbSOvoVX8tHMOxeagu9iOU0VPzWMhtCqjdntuXY=
+	t=1742863961; cv=none; b=XemRDRyjfPKbID1XU1pDWhcBCzYqR6z87kKB1jIpD5SS/LhqnvMjNqozJX4+ooE45kVrZbHh70WnLrTpb+KcVpdyYVZ9yBImrXkeyNwymQa0OWDtFaBQn20itR+HDg/W0XRWdNgQsXqsOal9/8VG+DtVLi/4xnbgi1iquxQY9Ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742863795; c=relaxed/simple;
-	bh=j6Klsb4thp1cQVepxif8KY5/V7b0H6oGeIsv596vS1w=;
+	s=arc-20240116; t=1742863961; c=relaxed/simple;
+	bh=Ob78+tbnQMGlB5beES+uCyBPJqMz19XSvQosd5J0uwU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QO1ee+HjRx95MxtRfBdRRHoNwumcaz54Twt+XM395gE85Liy5NNJhG7V+pSGBMD+a/arEfpDU4pl5bXvD/YS1o36AND3YCczRMfgrJzkNJFyGnyGZ+CvVDq+JN9jz+EhOyp8QzKebCqGugjlWtW4rwlngkv8uSL2OP40k7ED5NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0ApgJceq; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=MGJCTHG8MRXd918MDW3yV6TZnv7fzU3YRu31UkED3Si+ot52IHegrAAz72UaSAkG7KpEwxp1kNdOuQxdpPGT9Ul03gqYanvvTJhdhRRVh0BP82v/0oSFnWLZE+0phzBtYErohb0cslPEtrOVBreuxWbiD3X74Mku4yYf2Cb9ecA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YRYOJ3Hj; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0ApgJceq"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2263428c8baso68505ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 17:49:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742863793; x=1743468593; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OaD7q3ZQOQjfRhBGVXHdE9Gzn34bnoG0yDb7obc0zLg=;
-        b=0ApgJceqnh2SwQhtTX8e3psi9FQ0ztx7S2zR8A5iXyIgkuDPjdUhMtap7GThzat3fi
-         C1h5JADKpg8hBdRy9u2YDMgnt4NMMPb5vhRdA/WmcGFEXSfnq3f/tERqzGVaw5vXdyme
-         ViBTfgNCpadyTETcDi8NFKso9jpKI+8hdHcHsUj7ybprZdwq/sikmNl1/mIpJun1brYy
-         oM4AAcTDAwScuaEMfUAG4/Ad8kHVttPuXWJRAMVVcEi5K0sGIogSJRzu8QBuSypQb4DH
-         YPp6tiHbgGPFQp5wXac4Z0ItuIPasZJVsKs3N5BzPGGNQ2hLqKf+P4n6eTNGniPzogC8
-         Wg5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742863793; x=1743468593;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OaD7q3ZQOQjfRhBGVXHdE9Gzn34bnoG0yDb7obc0zLg=;
-        b=M2ly2GXRpWpHUBY35EQ3yiuhfo/o+WQ5RJmcBFfB8J37gbG2Y35hc9fck1jfMu3Zvb
-         qNk5p/mzKpRqrtyoc7tY0LVgljSbHlSwcTZnzw/9ML0ugqiSS67b4Z7PnE+5BTJPZV/m
-         HjIcYuU1L1YWyzHC4EJnjcsS51JhjaLctIMWt2DR2R/oYw5Z8Ki3ETFkekoeuXR5b6rK
-         awMsJICS4RboAH7CaIo8OQNRXzKvee44vD9wOB9zFK5gAAZmRy45+gJS28MqWJSroOed
-         d//N/WUhgQ2mEB+Tj9XsZ9996yRRhjV0uDBrMFbQU7MA41bNT44/UB65lUJc/BCNS/9O
-         /6nA==
-X-Forwarded-Encrypted: i=1; AJvYcCX1eLKsjsKJdK/hGYOpPQoVrqbGA2mA1VIXIWClgyxcRjWNnmmiTxcCfyIbuNxGtjhpKKf6g3EiVGSPzac=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFryX1myTlPlUKZuozgElnyHlLEe8egAHD2f6QDag3wQj5VFCU
-	rduCa6YOLD1pusg52O3jUJ++/k2GQqUHbcCKXoaHQ8RlWO3UaWATz6fdMkuFnw==
-X-Gm-Gg: ASbGncsjOzdW/p3ooXWMw7TJvNtvZl333B/mn3FMl0grf4sNRzf/IOm1ISMiQ+jBWXF
-	RUOkBUNtQDkGmP91PkWoRxf05oHpwcc6H4eCjq9cKOWg9wj5DSjzlkp1734MthhSPOMqLTGEIIF
-	JvpHnDlSeJQ8QXoCzCsmq8FomiqSW9S27sIARFNxQI7U8MBSX4xW4CAWKS5tVSV/X7Yqo1UtO0r
-	6uK739tj/QhvTSJVFAI8nmS/An8/yLEEIV4CCm8PPhgYtwAkucA2ZEdQd0rsTsNcGIq/6WNbGr8
-	usnVF8qyD8dRlReimvrOpNmdGCLTcxFwLMQO2fBoIVx8fRHcL75aDMRBe0rQKIh7QEd50CpXUKI
-	ml8CR
-X-Google-Smtp-Source: AGHT+IGXMGB5BIztLF+KW+EFyu9AEbwESCHM5GYmH0GeZR1XvtB1o65cw/3QX7jDCkrukwg1tu9BmA==
-X-Received: by 2002:a17:902:d4cf:b0:215:f0c6:4dbf with SMTP id d9443c01a7336-227982bd0e7mr6009575ad.14.1742863792544;
-        Mon, 24 Mar 2025 17:49:52 -0700 (PDT)
-Received: from google.com (128.65.83.34.bc.googleusercontent.com. [34.83.65.128])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22780f45f45sm77436155ad.87.2025.03.24.17.49.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Mar 2025 17:49:52 -0700 (PDT)
-Date: Tue, 25 Mar 2025 00:49:47 +0000
-From: Carlos Llamas <cmllamas@google.com>
-To: syzbot <syzbot+810b8555076779a07399@syzkaller.appspotmail.com>
-Cc: arve@android.com, brauner@kernel.org, gregkh@linuxfoundation.org,
-	joel@joelfernandes.org, linux-kernel@vger.kernel.org,
-	maco@android.com, surenb@google.com,
-	syzkaller-bugs@googlegroups.com, tkjos@android.com
-Subject: Re: [syzbot] [kernel?] KASAN: slab-use-after-free Write in
- binder_add_device
-Message-ID: <Z-H9q5X8e6uYiaF0@google.com>
-References: <67d755ef.050a0220.2ca2c6.0004.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YRYOJ3Hj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742863961; x=1774399961;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ob78+tbnQMGlB5beES+uCyBPJqMz19XSvQosd5J0uwU=;
+  b=YRYOJ3Hjubja4g4yCRtnKxbmRpuMoU0Bsi9lb7XGkTFoaFnZWp7cv+xj
+   715ZUT2H4CBrZPTxFl4dKUkDLO8DQ+mVUxHZsrMtwaOFcBqhXEgnAUvGo
+   JjiLVCR18dVd+NYIi3XYNssqAzAxolgRPDx8S24OpjckmZ41Q/xnSlFOg
+   z4CKbbZNKpSnbQaD7OHLVo4st1NxSjrMTSWhzN8aEEsFKtcmfV6m/gO39
+   sb3eTD5pd7Lcx6GxuhXzvXRU43Z5v5AOB3aHu8OI0rv/VxHoKwLf6Arg8
+   8WuV8qZSIHffrlu2vMZQ7dNsyQj91nK7olLndzinWC1LDbrIffdCd9oca
+   Q==;
+X-CSE-ConnectionGUID: 92Rkb+S+SiO4o7E4aDwX/g==
+X-CSE-MsgGUID: aP+5ZLWATWuv0JYE3/ucVw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="61484981"
+X-IronPort-AV: E=Sophos;i="6.14,273,1736841600"; 
+   d="scan'208";a="61484981"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 17:52:40 -0700
+X-CSE-ConnectionGUID: TBZdFiqvQg+VREbxlYoztA==
+X-CSE-MsgGUID: V3pdKtQEQ0KTPt7/3Wpv/g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,273,1736841600"; 
+   d="scan'208";a="128384903"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.70])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 17:52:38 -0700
+Date: Mon, 24 Mar 2025 17:52:37 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com, lcherian@marvell.com,
+	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+	dfustini@baylibre.com, amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>,
+	Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>, fenghuay@nvidia.com
+Subject: Re: [PATCH v7 37/49] x86/resctrl: Expand the width of dom_id by
+ replacing mon_data_bits
+Message-ID: <Z-H-VesKknnUMmpb@agluck-desk3>
+References: <20250228195913.24895-1-james.morse@arm.com>
+ <20250228195913.24895-38-james.morse@arm.com>
+ <e1816cbf-e2a7-44cf-92f9-bbd24d9e264b@intel.com>
+ <a54fe3e7-19cb-4f84-9189-f0e3853e98fe@arm.com>
+ <9e47d037-a47c-4869-8ac1-2ab151608b08@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,100 +77,114 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67d755ef.050a0220.2ca2c6.0004.GAE@google.com>
+In-Reply-To: <9e47d037-a47c-4869-8ac1-2ab151608b08@intel.com>
 
-On Sun, Mar 16, 2025 at 03:51:27PM -0700, syzbot wrote:
-> Hello,
+On Thu, Mar 13, 2025 at 08:25:08AM -0700, Reinette Chatre wrote:
+> Hi James,
 > 
-> syzbot found the following issue on:
+> On 3/12/25 11:04 AM, James Morse wrote:
+> > On 07/03/2025 05:03, Reinette Chatre wrote:
+> >> On 2/28/25 11:59 AM, James Morse wrote:
 > 
-> HEAD commit:    b7f94fcf5546 Merge tag 'sched_ext-for-6.14-rc6-fixes' of g..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=134f303f980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=cdc24cb631dc9bc4
-> dashboard link: https://syzkaller.appspot.com/bug?extid=810b8555076779a07399
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> ...
+> 
+> >> With all of the above I do not think this will work on an SNC enabled
+> >> system ... to confirm this I tried it out and it is not possible to mount
+> >> resctrl on an SNC enabled system and the WARN_ON_ONCE() this patch adds to
+> >> mon_add_all_files() is hit.
+> > 
+> > I hadn't realised the mon_sub directories for SNC weren't all directly under mon_data.
+> > Searching from mon_data will need the parent name too. What I've come up with is:
+> > -------%<-------
+> > 	snc_mode = r->mon_scope == RESCTRL_L3_NODE;
+> > 	if (!snc_mode) {
+> > 		sprintf(name, "mon_%s_%02d", r->name, d->hdr.id);
+> > 		kn_target_dir = kernfs_find_and_get(kn_mondata, name);
+> > 	} else {
+> > 		sprintf(name, "mon_%s_%02d", r->name, d->ci->id);
+> > 		kn_target_dir = kernfs_find_and_get(kn_mondata, name);
+> > 
+> > 		if (snc_mode && !do_sum) {
+> 
+> snc_mode should always be true here?
+> 
+> > 			sprintf(name, "mon_sub_%s_%02d", r->name, d->hdr.id);
+> > 			kernfs_put(kn_target_dir);
+> 
+> I think this needs some extra guardrails. If kn_target_dir is NULL here
+> it looks like that the kernfs_put() above will be fine, but from what I can tell
+> the kernfs_find_and_get() below will not be.
+> 
+> > 			kn_target_dir = kernfs_find_and_get(kn_target_dir, name);
+> > 		}
+> > 	}
+> > 	kernfs_put(kn_target_dir);
+> > 	if (!kn_target_dir)
+> > 		return NULL;
+> > -------%<-------
+> > 
+> 
+> This looks good to me. In original patch a NULL kn within mon_get_default_kn_priv()
+> was used as prompt to create the private data. It is thus not obvious to me from this
+> snippet what is being returned "to", but I do not think that was your point of sharing
+> this snippet. 
 
-#syz test
+Is this all overly complex trying to re-use the "priv" fields from
+the default resctrl group?  Would it be easier to just keep a list
+of each combinations of region id, domain id, sum, and event id that have
+already been allocated and re-use existing ones, or add to the list
+for new ones. Scanning this list may be less overhead that all the
+sprintf() and kernfs_find_and_get() searches.
 
-diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index 76052006bd87..bf79a0e339fe 100644
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -79,6 +79,8 @@ static HLIST_HEAD(binder_deferred_list);
- static DEFINE_MUTEX(binder_deferred_lock);
- 
- static HLIST_HEAD(binder_devices);
-+static DEFINE_SPINLOCK(binder_devices_lock);
-+
- static HLIST_HEAD(binder_procs);
- static DEFINE_MUTEX(binder_procs_lock);
- 
-@@ -6929,7 +6931,16 @@ const struct binder_debugfs_entry binder_debugfs_entries[] = {
- 
- void binder_add_device(struct binder_device *device)
- {
-+	spin_lock(&binder_devices_lock);
- 	hlist_add_head(&device->hlist, &binder_devices);
-+	spin_unlock(&binder_devices_lock);
-+}
-+
-+void binder_remove_device(struct binder_device *device)
-+{
-+	spin_lock(&binder_devices_lock);
-+	hlist_del_init(&device->hlist);
-+	spin_unlock(&binder_devices_lock);
- }
- 
- static int __init init_binder_device(const char *name)
-@@ -6956,7 +6967,7 @@ static int __init init_binder_device(const char *name)
- 		return ret;
- 	}
- 
--	hlist_add_head(&binder_device->hlist, &binder_devices);
-+	binder_add_device(binder_device);
- 
- 	return ret;
- }
-@@ -7018,7 +7029,7 @@ static int __init binder_init(void)
- err_init_binder_device_failed:
- 	hlist_for_each_entry_safe(device, tmp, &binder_devices, hlist) {
- 		misc_deregister(&device->miscdev);
--		hlist_del(&device->hlist);
-+		binder_remove_device(device);
- 		kfree(device);
- 	}
- 
-diff --git a/drivers/android/binder_internal.h b/drivers/android/binder_internal.h
-index e4eb8357989c..c5d68c1d3780 100644
---- a/drivers/android/binder_internal.h
-+++ b/drivers/android/binder_internal.h
-@@ -584,9 +584,13 @@ struct binder_object {
- /**
-  * Add a binder device to binder_devices
-  * @device: the new binder device to add to the global list
-- *
-- * Not reentrant as the list is not protected by any locks
-  */
- void binder_add_device(struct binder_device *device);
- 
-+/**
-+ * Remove a binder device to binder_devices
-+ * @device: the binder device to remove from the global list
-+ */
-+void binder_remove_device(struct binder_device *device);
-+
- #endif /* _LINUX_BINDER_INTERNAL_H */
-diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-index 94c6446604fc..44d430c4ebef 100644
---- a/drivers/android/binderfs.c
-+++ b/drivers/android/binderfs.c
-@@ -274,7 +274,7 @@ static void binderfs_evict_inode(struct inode *inode)
- 	mutex_unlock(&binderfs_minors_mutex);
- 
- 	if (refcount_dec_and_test(&device->ref)) {
--		hlist_del_init(&device->hlist);
-+		binder_remove_device(device);
- 		kfree(device->context.name);
- 		kfree(device);
- 	}
+
+Something like:
+
+
+static LIST_HEAD(kn_priv_list);
+
+static struct mon_data *mon_get_kn_priv(struct rdt_resource *r,
+					struct rdt_mon_domain *d,
+					struct mon_evt *mevt,
+					struct rdtgroup *rdtgrp,
+					bool do_sum)
+{
+	struct mon_data *priv;
+
+	list_for_each_entry(priv, &kn_priv_list, list) {
+		if (priv->rid == r->rid && priv->domid == (do_sum ? d->ci->id : d->hdr.id) &&
+		    priv->sum == do_sum && priv->evtid == mevt->evtid)
+			return priv;
+		}
+	}
+
+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+	if (!priv)
+		return NULL;
+
+	priv->rid = r->rid;
+	priv->domid = do_sum ? d->ci->id : d->hdr.id;
+	priv->sum = do_sum;
+	priv->evtid = mevt->evtid;
+	list_add_tail(&priv->list, &kn_priv_list);
+
+	return priv;
+}
+
+Maybe just ignore the "domain goes offline case" there's not much memory
+tied up in these structures (and the domain may come back).
+
+Just free the whole list when resctrl is unmounted.
+
+static void mon_put_kn_priv(void)
+{
+	struct mon_data *priv, *tmp;
+
+	list_for_each_entry_safe(priv, tmp, &kn_priv_list, list)
+		kfree(priv);
+}
+
+[Lightly tested the "get" path. Haven't tried the "put" code.]
+
+
+
+-Tony
