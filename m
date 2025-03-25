@@ -1,203 +1,85 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4D720E30F
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 16:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50A619F13B;
+	Tue, 25 Mar 2025 16:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742920772; cv=none; b=CRLYMiojCjwUEL5tmRpSBzVQBVil57Di56jYYi670qYEdqkA4l9sUGQAJrFAkoyVzeFbbUY1LG+1bLEJFGMnLI35n4VjrNQd+jjGsa6nWEKMFGvUlSVSDHXB869q653tWjH/Tt1PfOD5NGUaKq9Kea/uptCgGo6+/LPFanC2lVw=
+	t=1742920798; cv=none; b=LoT5BuxBQtSKTDm7i5uyi/qm5CAJBCyuriBoydcdtIPBfBjmPrBMDVGrkBucH9+FudKktIyERu/3IZyglCuENZQLKRBril7dWDl+jEtBNl5Ya3JAQ97BsU/uya61PH0j5cyGeWd5+HE5e+0ztWa1c3JSNJgB8i3eFsBTiWSWnlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742920772; c=relaxed/simple;
-	bh=9QtWxO8l2GpcAYbRMHA4inZL25MuZzaCf9TT8yzkl7E=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=s0B+0pg4P20o/RpbTyEef4id9dcZmveRzlr41MpO4OnM6k3jH6ZIobx3nrXu3GfRWwP0Xsb43guGVD2xZKLWEdZNb0zHClp34ysj21cIaIjIPJQWMYum4Q8miywyQ5GoTiGCQ3IzzraKHL3zbu10vA4aYXTBMkogL/YvvDtGjLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=plNEyzah; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1742920798; c=relaxed/simple;
+	bh=CcCpmQ2C/F3isCH+LAunPzZPAfUEnTS/eOJ5mm5dvFM=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=YTzFAj1UU6hyJZ4QsixhsXq/LkzoqJQdZ7suXuk3vLS1F1vrHMixsQF7qOcTsuf0+RxXSeHqiEkJXOxjPhN/5b5jidG3rP0W40FL6cAor0JzxDYjXcZNH3NTIAi1pbjyDNJ9sxqyj2hRqmIm1i9MLoEXQOm73khpJfaRvWLswDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fxraOzyl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="plNEyzah"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6feb1097d64so69835337b3.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 09:39:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742920770; x=1743525570; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bjcCoWPLeFv7HToZ+VPWd4Z16z9IeZ5E4tfOnaC3rvg=;
-        b=plNEyzahtoVv02YgITTWR9gmNxNMZXu3x7xVZdD6zBJHs6IuAv5mDv3lNvL4JMrGXu
-         I0Ox+KJvIK/KzjUszbOAJtItr4pbPzD430O0w/Ny0jrV/vqXRGSFND8W4xKlYf7utrUM
-         69uEG/b2hzq1YMzZvgkfaN2LttGivQR23VsT1IDT57/wbpUOj7bk4upPAEnbOY0mdqW3
-         TubLo/fwH/X1ueYdJRpgWR/vgRCWYs1iwYS3ULf9ZP+L60rY2/MY9XNqRK1EOiaN2BK6
-         6/up63KWei/bt764x9/3DbCqX8GasmSf2XR1WajVvt1maDaLfFz+unOvQMXicdxwT+Td
-         zHeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742920770; x=1743525570;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bjcCoWPLeFv7HToZ+VPWd4Z16z9IeZ5E4tfOnaC3rvg=;
-        b=jM+8x8d8+ciIKrWZ45uSLKCyEZ0uZUPZJIiW5IFrouu4umzb3JiHuVdSb5+Im6F4Zs
-         DymGU4SeBnyAb5NUyoI+5ngWLdCtZI6ujYP/m4/0TZV4YFjNscaXgAw7qjJbYoPpseXp
-         tSAGchyv3+SKTVLVvLILzGy3JtGoJKprsXLDutRDks/9W7U4rpWOYR5YgTTrvWxICT2n
-         15g3C+R3sNZzN2+0ey6fNWkJsxdVI8ReWU+2E9w+YOHncNEPV4j3BwfJN8awdIWK3RHq
-         ehr/pxxKpxRwWYGasB+kzdeJC8DpPLp4yYvliLzSHwgPHx8ympwKfSeYSv5GnX1whbcw
-         UhGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVzhrmNKKNV58SdTYYaK4SW+BhJ3MWPRcaIc2aW3pcHOvwpH6gYDOeqNUz06ZLx3Fw//vIBDXBk/o0bsKk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHl6OQQGrrO78yELzVk7tMkR221+z1HdB6vlgZsw8EnbOhIPaj
-	x+JJSdLfVCHcVgvON5agcP1ST7Dwcb/W1P2HfEscSCLVOQB4/HdfOZw1b5eOVUXRndMBbkHOPXx
-	+bnQHTg==
-X-Google-Smtp-Source: AGHT+IGdB6wbpBTqFd2Evu7cWcXPKmn5GFxVH0GEAj2YVW+usxSd/sxMFvU4hH09sQcX6fhUOK3tmjHFtHva
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:40b3:9c02:57a5:693c])
- (user=irogers job=sendgmr) by 2002:a25:aa8a:0:b0:e60:8a7d:3e90 with SMTP id
- 3f1490d57ef6-e66a4e57117mr7298276.4.1742920770204; Tue, 25 Mar 2025 09:39:30
- -0700 (PDT)
-Date: Tue, 25 Mar 2025 08:15:09 -0700
-In-Reply-To: <20250325151511.13628-1-irogers@google.com>
-Message-Id: <20250325151511.13628-34-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fxraOzyl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37D7FC4CEE4;
+	Tue, 25 Mar 2025 16:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742920798;
+	bh=CcCpmQ2C/F3isCH+LAunPzZPAfUEnTS/eOJ5mm5dvFM=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=fxraOzylm1CY40Xy/mCXija6raz9hEyNcNGcg2QMH4tIxUBqmJmizWmylTXkoFI2l
+	 jJdjezHNKQ2sS4ThVC5NuVJDryDHGESpZUBfVmVMUW+3CBjvlaFvNZiir2DnVBGSWd
+	 1da8yCeJzBE/0/1HzUcI2IhYVuK3oYHjGqI1Be3P0AY3tvfcI8R3k95X0wKlAuCBMF
+	 00LN1eYfmhtBtbbDIMHAcd8fqhV/aSGSchiPF0CJjACl4ycErXGf2lB8Y00hUMEzWu
+	 inVUIhNgutQhDS1/+FNqzQGFaVmt/H0Yf6BHpwVNiGJ5QYCQ780HYpnHKlA/PH/j53
+	 aRe6wz1r3UVyA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADFEE380CFE7;
+	Tue, 25 Mar 2025 16:40:35 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250325151511.13628-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Subject: [PATCH v2 33/35] perf vendor events: Update westmereep-dp events
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v2 0/4] virtio_net: Fixes and improvements
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174292083452.643641.3571008462591384727.git-patchwork-notify@kernel.org>
+Date: Tue, 25 Mar 2025 16:40:34 +0000
+References: <20250321-virtio-v2-0-33afb8f4640b@daynix.com>
+In-Reply-To: <20250321-virtio-v2-0-33afb8f4640b@daynix.com>
+To: Akihiko Odaki <akihiko.odaki@daynix.com>
+Cc: mst@redhat.com, jasowang@redhat.com, xuanzhuo@linux.alibaba.com,
+ eperezma@redhat.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, andrew@daynix.com,
+ jdamato@fastly.com, lulie@linux.alibaba.com, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devel@daynix.com,
+ leiyang@redhat.com
 
-Update event topic moving other topic events to cache and virtual
-memory.
+Hello:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../arch/x86/westmereep-dp/cache.json         | 32 +++++++++++++++
- .../arch/x86/westmereep-dp/other.json         | 40 -------------------
- .../x86/westmereep-dp/virtual-memory.json     |  8 ++++
- 3 files changed, 40 insertions(+), 40 deletions(-)
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/cache.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/cache.json
-index 30845c7dbf08..f6f95f3ff301 100644
---- a/tools/perf/pmu-events/arch/x86/westmereep-dp/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/cache.json
-@@ -119,6 +119,38 @@
-         "SampleAfterValue": "100000",
-         "UMask": "0x2"
-     },
-+    {
-+        "BriefDescription": "L1I instruction fetch stall cycles",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x80",
-+        "EventName": "L1I.CYCLES_STALLED",
-+        "SampleAfterValue": "2000000",
-+        "UMask": "0x4"
-+    },
-+    {
-+        "BriefDescription": "L1I instruction fetch hits",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x80",
-+        "EventName": "L1I.HITS",
-+        "SampleAfterValue": "2000000",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "L1I instruction fetch misses",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x80",
-+        "EventName": "L1I.MISSES",
-+        "SampleAfterValue": "2000000",
-+        "UMask": "0x2"
-+    },
-+    {
-+        "BriefDescription": "L1I Instruction fetches",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x80",
-+        "EventName": "L1I.READS",
-+        "SampleAfterValue": "2000000",
-+        "UMask": "0x3"
-+    },
-     {
-         "BriefDescription": "All L2 data requests",
-         "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/other.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/other.json
-index bcf5bcf637c0..c0cf8bae8074 100644
---- a/tools/perf/pmu-events/arch/x86/westmereep-dp/other.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/other.json
-@@ -15,46 +15,6 @@
-         "SampleAfterValue": "2000000",
-         "UMask": "0x1"
-     },
--    {
--        "BriefDescription": "L1I instruction fetch stall cycles",
--        "Counter": "0,1,2,3",
--        "EventCode": "0x80",
--        "EventName": "L1I.CYCLES_STALLED",
--        "SampleAfterValue": "2000000",
--        "UMask": "0x4"
--    },
--    {
--        "BriefDescription": "L1I instruction fetch hits",
--        "Counter": "0,1,2,3",
--        "EventCode": "0x80",
--        "EventName": "L1I.HITS",
--        "SampleAfterValue": "2000000",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "L1I instruction fetch misses",
--        "Counter": "0,1,2,3",
--        "EventCode": "0x80",
--        "EventName": "L1I.MISSES",
--        "SampleAfterValue": "2000000",
--        "UMask": "0x2"
--    },
--    {
--        "BriefDescription": "L1I Instruction fetches",
--        "Counter": "0,1,2,3",
--        "EventCode": "0x80",
--        "EventName": "L1I.READS",
--        "SampleAfterValue": "2000000",
--        "UMask": "0x3"
--    },
--    {
--        "BriefDescription": "Large ITLB hit",
--        "Counter": "0,1,2,3",
--        "EventCode": "0x82",
--        "EventName": "LARGE_ITLB.HIT",
--        "SampleAfterValue": "200000",
--        "UMask": "0x1"
--    },
-     {
-         "BriefDescription": "Loads that partially overlap an earlier store",
-         "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/virtual-memory.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/virtual-memory.json
-index 53d7f76325a3..84c920637b12 100644
---- a/tools/perf/pmu-events/arch/x86/westmereep-dp/virtual-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/virtual-memory.json
-@@ -152,6 +152,14 @@
-         "SampleAfterValue": "200000",
-         "UMask": "0x20"
-     },
-+    {
-+        "BriefDescription": "Large ITLB hit",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x82",
-+        "EventName": "LARGE_ITLB.HIT",
-+        "SampleAfterValue": "200000",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Retired loads that miss the DTLB (Precise Event)",
-         "Counter": "0,1,2,3",
+On Fri, 21 Mar 2025 15:48:31 +0900 you wrote:
+> Jason Wang recently proposed an improvement to struct
+> virtio_net_rss_config:
+> https://lore.kernel.org/r/CACGkMEud0Ki8p=z299Q7b4qEDONpYDzbVqhHxCNVk_vo-KdP9A@mail.gmail.com
+> 
+> This patch series implements it and also fixes a few minor bugs I found
+> when writing patches.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,v2,1/4] virtio_net: Split struct virtio_net_rss_config
+    https://git.kernel.org/netdev/net-next/c/976c2696b71d
+  - [net-next,v2,2/4] virtio_net: Fix endian with virtio_net_ctrl_rss
+    https://git.kernel.org/netdev/net-next/c/97841341e302
+  - [net-next,v2,3/4] virtio_net: Use new RSS config structs
+    https://git.kernel.org/netdev/net-next/c/ed3100e90d0d
+  - [net-next,v2,4/4] virtio_net: Allocate rss_hdr with devres
+    https://git.kernel.org/netdev/net-next/c/4944be2f5ad8
+
+You are awesome, thank you!
 -- 
-2.49.0.395.g12beb8f557-goog
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
