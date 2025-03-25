@@ -1,134 +1,203 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8542C25A631
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 16:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B8E61FFE
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 16:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742919435; cv=none; b=l9V/KQIuv+zr9HVJbUlkg/M6Q71NFGfBCeLefqgd89J/QMRm0zH5+FeHOAzclWs+XN5GO+4MUsVsD6XLobGzG5AcCiZRnyf9LeWmlHIjcTGDHwAmu7UnJFcH+C4wWDeWe9VmP2VtVKmbKF+76JAfmrvEOP2iKjesvmglRzzHeI8=
+	t=1742919436; cv=none; b=n0D5yR2FNBI6pFi2lLMZW7O0oAppnspFvg51mkE6AOrweclUX37DkaZPXMWx/BKQmWl9LfAmjK4Y7cAHSsY36SN0Q+4LEgkObrxu208KwXPdkw2RwYOFRXVdD/IL0BQFhcopj4r5l8uIUAPjYWzkog2SueoDkJjGirCNp7dG6NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742919435; c=relaxed/simple;
-	bh=M736tMda+Xo3V451dLSmP5tUE0yt+PReWmVjVSa8LF4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=SBXzCrFA1o1Yk1AUfLgjz7Y+cEaUtF3WTXh4/HeDL55v7kNtME/DC1waWYyEnlmjpuRLxqsQYDIZmsVGL6WXXYr6f+8IQuPGOfT8uZnlPJx2ND/km1op4E2dcdo7AO/r6kWmkFe+qd2Js44gzSalhjgC8it2OzbtAaW/3NtjvxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HD1XM9m/; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1742919436; c=relaxed/simple;
+	bh=Zy0jRafJxRLJGt4ZHFy+/ySVLU1klhzlJJANwxxpiE0=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=fj4WYmgWUJ1bHQ9oYtvTKxOJ0OzA+QZusFKh/1c1USGZ6txKwLT6CDj45OqzthpDgObTdhVwlzvRrEv30zc2GHgT6qpL/NeP0twt8cSF+Xp+JTTRwhvC72/LIZxZt6asGcDNn+lHugpy2GGJn8hNI81iTDHc3s/RhNhLv59VdGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VqZu5Uob; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HD1XM9m/"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4635940E0214;
-	Tue, 25 Mar 2025 16:17:10 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ifvA_0Gysur2; Tue, 25 Mar 2025 16:17:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1742919423; bh=Z3ONUzf5mfUfq03VJB8Ha1NlpPj1E3lbbqhevOTT0AY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=HD1XM9m/x5bS9lRd25s2Spp/8Nw5dO4c3bVmSFTWOEuXnVP031y97DbwcevFANQxt
-	 D/M98JqUGv13qBBVYceKqhDxepBCsJ5mFbuEIO7trq8d7BEvu+Smq8LtoLmyb7Gwlb
-	 V2JulOloR+i1EB08788Lb4uGD/epiS4bTtPlgIoCWNu+FNcnsSpgn5haZRiGaNv/ND
-	 Mu7CyRXPr/CrY/uC+QBBE8agVuBSeL9g1UPsjL6OfzFuOPF+m47S7kVO1bZvca2vtX
-	 hJZBk72G8kb/Tg8kCtzpln8XDD++7xmyrxk1WtBnPQOo4QmyMIafPrIeDZwl9W5Ecs
-	 ZF2dMDEnAQ6aRLIS6wDAOlOWs+jKHDLH5BKKXbox6wOV3lfdBdMRgQWWJr40NcJHcD
-	 VLw5G4GsFqElg8M78HKCIdhS+w9iZfUQe4p/x9tp+oxWuvEypXMduetlEOrgRNKYqt
-	 pjGMwtDy4kaWS1g9WmxqTcngOYjk3VVTSuCp3suKDU7SFgjrzksDWFRCEMGpUDaPyM
-	 dlsuKRNbfx1ZOjrr9AAptYF6I4Utf+aWDuhhcMq2g+3qU1q8WuD7riqMIwiQUPXssv
-	 hZ3ixyIXwHhJNfz00QDpUdYbS45qfsQbEr3IctLgySwWThfhCVF/7l5hxjxs5FPQFQ
-	 L7WrY1RUBmlX533bUgwxzzng=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 271DD40E015D;
-	Tue, 25 Mar 2025 16:17:00 +0000 (UTC)
-Date: Tue, 25 Mar 2025 17:16:53 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] x86/bugs for v6.15
-Message-ID: <20250325161653.GAZ-LW9WpsQrJgWx16@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VqZu5Uob"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6fed889e353so83477867b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 09:17:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742919434; x=1743524234; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kWTSLGRSQc6JnxhtpbR0m8qTat7TUVK+43G8X5ABzRg=;
+        b=VqZu5UobEhVSfBSrl15mJIOjb9/LNXoEY7qDiUVb2O7E5oCcCA6BwGn6mH9HU7selT
+         2Fj7ByuxupwCMngL0pY56WH039RzX0DC9DA6o8Jc2IVCpemQriiX6wtilGa7reCglFjj
+         rC/FERusXsJLkDvZ1urbPGWJVlYWqiGlY+VycLRhAreMo8KPVqFKM/SJr+yCqGCmVK+D
+         Qzuzg9kR4WjzAUGi1wdJ96Q+4kylZ79M008efkok1LIBPkEje8oLmUgxgmz+NZfjo9uK
+         whBAW+dQLXO/xiL38VCPhBhgTaW/v2PC8PgeVzNY92IpfJ3Y4rW4dHnGHu8B0crRztHb
+         JgTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742919434; x=1743524234;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kWTSLGRSQc6JnxhtpbR0m8qTat7TUVK+43G8X5ABzRg=;
+        b=DTVIh8AYa3Os6aylPstxbWvtjFNzYRHI66Ekt9mbQ1zxrmubMYfOpvBXT4ah/Wh38q
+         NDvDoZV6FY/9ikpVttV8/P5NoOz4Wxp/jY1c5lnGvvrBXjOCl345avE82xUtRsaCjS9v
+         e5dFpFnkJaNJYBwQW9JFabDJAmEP2K7ui1P5vJgUZFn5S0CRrQBA7qc/4aPgh87TYt8y
+         vua+qowLJhrvAE8tv8DkCvzRNMg2NoX5eZ4kphwD6leYQh71fNUI55hgSVw4GExScwRZ
+         vCefCvAiWjrRQQWSE7f9edNuvCjcl9Z4Hp9vdxZjmTk817Wjgra8jLTI1Q8qfGNBT5sQ
+         NrZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW5oJPH/UwR+3tRg4feEqM6iNd2UtF4PbzJbu+aNE1tGmQ8e6OesFbBO1+s3pIsRwnM45uXDvQzTkuz3FM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrLbEYlqTy7uKLfmOaFIdMKNOYt26QbF7zwuZqFwbIiP9wX4kd
+	8EYrDtw33Z3pjhvvTmfqyFEPMMK1hJy/fY44MyySnTRH+xDJEj9v7bQSduCpOZMOlplT2nctGkX
+	kDBZ2mQ==
+X-Google-Smtp-Source: AGHT+IEcIafZTeM8RtrSrfxRcrnBbWhlzqvUzwtQ8SLqh5V/te2Nwg7m+oI+ftjZA4tKxki+TX94s1aDpvRP
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:40b3:9c02:57a5:693c])
+ (user=irogers job=sendgmr) by 2002:a0d:d2c1:0:b0:6fd:2fb9:f109 with SMTP id
+ 00721157ae682-700bad107f9mr94147b3.7.1742919433646; Tue, 25 Mar 2025 09:17:13
+ -0700 (PDT)
+Date: Tue, 25 Mar 2025 08:15:00 -0700
+In-Reply-To: <20250325151511.13628-1-irogers@google.com>
+Message-Id: <20250325151511.13628-25-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Mime-Version: 1.0
+References: <20250325151511.13628-1-irogers@google.com>
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
+Subject: [PATCH v2 24/35] perf vendor events: Update nehalemex events
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Linus,
+Update event topic moving other topic events to cache and virtual
+memory.
 
-please pull the x86 spec mitigations updates for v6.15.
-
-Thx.
-
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
+ .../pmu-events/arch/x86/nehalemex/cache.json  | 32 +++++++++++++++
+ .../pmu-events/arch/x86/nehalemex/other.json  | 40 -------------------
+ .../arch/x86/nehalemex/virtual-memory.json    |  8 ++++
+ 3 files changed, 40 insertions(+), 40 deletions(-)
 
-The following changes since commit d082ecbc71e9e0bf49883ee4afd435a77a5101b6:
-
-  Linux 6.14-rc4 (2025-02-23 12:32:57 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip tags/x86_bugs_for_v6.15
-
-for you to fetch changes up to 98fdaeb296f51ef08e727a7cc72e5b5c864c4f4d:
-
-  x86/bugs: Make spectre user default depend on MITIGATION_SPECTRE_V2 (2025-03-03 12:48:41 +0100)
-
-----------------------------------------------------------------
-- Some preparatory work to convert the mitigations machinery to mitigating
-  attack vectors instead of single vulnerabilities
-
-- Untangle and remove a now unneeded X86_FEATURE_USE_IBPB flag
-
-- Add support for a Zen5-specific SRSO mitigation
-
-- Cleanups and minor improvements
-
-----------------------------------------------------------------
-Borislav Petkov (1):
-      x86/bugs: KVM: Add support for SRSO_MSR_FIX
-
-Breno Leitao (2):
-      x86/bugs: Use the cpu_smt_possible() helper instead of open-coded code
-      x86/bugs: Make spectre user default depend on MITIGATION_SPECTRE_V2
-
-David Kaplan (3):
-      x86/bugs: Add X86_BUG_SPECTRE_V2_USER
-      x86/bugs: Relocate mds/taa/mmio/rfds defines
-      x86/bugs: Add AUTO mitigations for mds/taa/mmio/rfds
-
-Yosry Ahmed (6):
-      x86/bugs: Move the X86_FEATURE_USE_IBPB check into callers
-      x86/mm: Remove X86_FEATURE_USE_IBPB checks in cond_mitigation()
-      x86/bugs: Remove the X86_FEATURE_USE_IBPB check in ib_prctl_set()
-      x86/bugs: Use a static branch to guard IBPB on vCPU switch
-      KVM: nVMX: Always use IBPB to properly virtualize IBRS
-      x86/bugs: Remove X86_FEATURE_USE_IBPB
-
- Documentation/admin-guide/hw-vuln/srso.rst      |  13 +++
- Documentation/admin-guide/kernel-parameters.txt |   2 +
- arch/x86/include/asm/cpufeatures.h              |   6 +-
- arch/x86/include/asm/msr-index.h                |   1 +
- arch/x86/include/asm/nospec-branch.h            |   4 +-
- arch/x86/include/asm/processor.h                |   1 +
- arch/x86/kernel/cpu/bugs.c                      | 121 +++++++++++++++---------
- arch/x86/kernel/cpu/common.c                    |   4 +-
- arch/x86/kvm/svm/svm.c                          |   9 +-
- arch/x86/kvm/vmx/vmx.c                          |   3 +-
- arch/x86/lib/msr.c                              |   2 +
- arch/x86/mm/tlb.c                               |   3 +-
- tools/arch/x86/include/asm/cpufeatures.h        |   1 -
- 13 files changed, 118 insertions(+), 52 deletions(-)
-
-
+diff --git a/tools/perf/pmu-events/arch/x86/nehalemex/cache.json b/tools/perf/pmu-events/arch/x86/nehalemex/cache.json
+index 2c0ea6f8c4e0..b6c6b22a3188 100644
+--- a/tools/perf/pmu-events/arch/x86/nehalemex/cache.json
++++ b/tools/perf/pmu-events/arch/x86/nehalemex/cache.json
+@@ -239,6 +239,38 @@
+         "SampleAfterValue": "100000",
+         "UMask": "0x2"
+     },
++    {
++        "BriefDescription": "L1I instruction fetch stall cycles",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.CYCLES_STALLED",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x4"
++    },
++    {
++        "BriefDescription": "L1I instruction fetch hits",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.HITS",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "L1I instruction fetch misses",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.MISSES",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x2"
++    },
++    {
++        "BriefDescription": "L1I Instruction fetches",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.READS",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x3"
++    },
+     {
+         "BriefDescription": "All L2 data requests",
+         "Counter": "0,1,2,3",
+diff --git a/tools/perf/pmu-events/arch/x86/nehalemex/other.json b/tools/perf/pmu-events/arch/x86/nehalemex/other.json
+index f6887b234b0e..5fe5ca778e9f 100644
+--- a/tools/perf/pmu-events/arch/x86/nehalemex/other.json
++++ b/tools/perf/pmu-events/arch/x86/nehalemex/other.json
+@@ -15,46 +15,6 @@
+         "SampleAfterValue": "2000000",
+         "UMask": "0x1"
+     },
+-    {
+-        "BriefDescription": "L1I instruction fetch stall cycles",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.CYCLES_STALLED",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x4"
+-    },
+-    {
+-        "BriefDescription": "L1I instruction fetch hits",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.HITS",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "L1I instruction fetch misses",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.MISSES",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x2"
+-    },
+-    {
+-        "BriefDescription": "L1I Instruction fetches",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.READS",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x3"
+-    },
+-    {
+-        "BriefDescription": "Large ITLB hit",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x82",
+-        "EventName": "LARGE_ITLB.HIT",
+-        "SampleAfterValue": "200000",
+-        "UMask": "0x1"
+-    },
+     {
+         "BriefDescription": "All loads dispatched",
+         "Counter": "0,1,2,3",
+diff --git a/tools/perf/pmu-events/arch/x86/nehalemex/virtual-memory.json b/tools/perf/pmu-events/arch/x86/nehalemex/virtual-memory.json
+index e88c0802e679..accd263cfbfd 100644
+--- a/tools/perf/pmu-events/arch/x86/nehalemex/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/nehalemex/virtual-memory.json
+@@ -88,6 +88,14 @@
+         "SampleAfterValue": "200000",
+         "UMask": "0x20"
+     },
++    {
++        "BriefDescription": "Large ITLB hit",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x82",
++        "EventName": "LARGE_ITLB.HIT",
++        "SampleAfterValue": "200000",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Retired loads that miss the DTLB (Precise Event)",
+         "Counter": "0,1,2,3",
 -- 
-Regards/Gruss,
-    Boris.
+2.49.0.395.g12beb8f557-goog
 
-https://people.kernel.org/tglx/notes-about-netiquette
