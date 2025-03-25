@@ -1,100 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A455A95E;
-	Tue, 25 Mar 2025 13:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688361A5B8F;
+	Tue, 25 Mar 2025 13:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742907792; cv=none; b=CdaGbCCGvXxDlvuOUnQ0B2UpL73stVotCcqDsv2ZXBPkUg6nw8rrDCzAsMtCnW0QWk8TOSiIbpfjdbwFlJ0ErzTLyJjEteRfSkalJfrL3VjTo9w5oWgIUd+5RrTzIOJ61UYrd1BMkl3G+g8EKbynNPoxcI9A4UNP0UDV5W81jVI=
+	t=1742907865; cv=none; b=NcBurtNqoM/qxXT0whZgpPoq07GNX+KvRVwu03VPhGuwo1yVwk6aNvgM2UHchqlJ4LZFdLf2FGQkuY7tp2xyxphVDFxSqRYwkuR1+hXIWgILfVqHcbFgX1X3Ic0FvHYbhsioe2hYJLdFfEkVziVABfrqRSA606u+stZugwTWZoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742907792; c=relaxed/simple;
-	bh=NOtSZO6+mIJhpKmav78FIQ7+8EjmLGHsFa+GzKNPUZg=;
+	s=arc-20240116; t=1742907865; c=relaxed/simple;
+	bh=ytAAvQ7JGlkRy9+sQoqDV7MKxsmXX7OMGSm/op62KLs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dg2zp2IWCtjFhTd+TXZ6O45CndY0BAF9BKSOKHIdLWBTUHXqMxD4A8+Pk2tmvYHIIv3xRK/64wko6/SFQ6DagCECAAQUFA4IryJWlIATRM3kRalc7zbfb9+766VHFME21py5Go3WSE5vtwML2T7JuTTAi/kyXDjSV3RMpIcdLk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fkt2f92k; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=SDAvPioHe+yfrF3qxiPEMfbKHpZnkn5DRQpgn9YurPzTceEioiUaOBNXx2jdsAaJS+U4hHjewCm6AovzXGqFoXMHvJdVYGptj/bye46MJt+w1fb0qt0h9fnfTw78KA1PdFM1+pMhwmQUOGLapg81obmtTKhe4uuoj07FHLcy5+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wa7uX92K; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fkt2f92k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 111C7C4CEF3;
-	Tue, 25 Mar 2025 13:03:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742907792;
-	bh=NOtSZO6+mIJhpKmav78FIQ7+8EjmLGHsFa+GzKNPUZg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Fkt2f92kJiGWhH8dgk17/UoRqdJx0EFe/3P/dy4V1s5KFOcQBfhFPknqCwMCrbm6/
-	 xQjQOvggDEzDyOsIOE623THEpITveY2dRX8fO+8ia0MsnvPzH3VZCtioaeqCxzuBjy
-	 JaoZsexlhO6gfrDEN2F6R84U7RTlY1tzf+2VXUZZvzGoGB4oL1cGPJnw40aRmZVpU2
-	 N/M9WO1QdqSS6PBVtpgJQypgCL9UBhGszkA+cg0oNo1w2WVNHVRgsafoRthA/cgVJz
-	 KlRJZSKbHbQrWjY9jRq12NqOaBRm8MvivREYHKVonSwAKmbUfLZQJ9B3ALN3qcs8ae
-	 nAVXsi7XusNvg==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5b6f3025dso8674346a12.1;
-        Tue, 25 Mar 2025 06:03:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU4X3X5uabf4fdRLpBFAOBP91rSdxdhBlQ4V54FhgYfHLdB5+31LbK5+ksNOoBnQ0luNndG5qRGIGC1c4TRqJk=@vger.kernel.org, AJvYcCUPiKl7sGumk37Qo/LRDum9KYYbHfZhDIbC9xEAYDdXUGvkzcy10EC7YbxDYk1wLeXlLk/bmKif99FPf4gm4Q==@vger.kernel.org, AJvYcCVK06wdAIXemLnSaK70GvnDkFUVYa2kbfjKXRnxD4MrC0oSyobtzMI97pJxdHrqC37m+X0QfhnidtUfrw==@vger.kernel.org, AJvYcCVWyJ/1Sh8Fv9s4wLOUuAfkPFMNXSMXehx8awAI74DBHo9xV4SN96m16/ME1hd5lJj/XPy1Xw97kLv8Wc4G@vger.kernel.org, AJvYcCWwLqXvdcYzq7yZypByv3OGe3KWfoinL353dRklC0UbiWQWDEp32PV+f1MA3sVCuclikI5Vgh6BUgXvyDEVTiM=@vger.kernel.org, AJvYcCXPT1P0ZT44NE0qGLi4LpIq9TFCQHhjs31kWxIL3PLGVHjwxsIXL5QeVMnMouIkbK5+9kxKLRVI@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyiU3GODGyL4a/LBV4c+txrLdnizbVXq1kYMqpIBpTKnysNpU2
-	01IkjShI/j3/6Tt14iRTQcc/cUBcEDUpL4+2dPk62niJyT61vYuUAebqdsLjYjYwnG670csdHPy
-	OD4Ay0mesMKaJ0OYdjrAKkrecUg==
-X-Google-Smtp-Source: AGHT+IE9YIgEdFy0C8MVlG0nopmhGsYdec5XnoCD98500ifVdHHqN4dUOGNkZiKuQcgs2ZSWsIpcRThQGaL/16F7l+4=
-X-Received: by 2002:a05:6402:5189:b0:5e5:4807:5441 with SMTP id
- 4fb4d7f45d1cf-5ebcd520049mr11476593a12.30.1742907790342; Tue, 25 Mar 2025
- 06:03:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wa7uX92K"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e8f4c50a8fso46900146d6.1;
+        Tue, 25 Mar 2025 06:04:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742907862; x=1743512662; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ytAAvQ7JGlkRy9+sQoqDV7MKxsmXX7OMGSm/op62KLs=;
+        b=Wa7uX92KMW9yeIwtesJ1tHzSvA9Fpxlb0073hs2XCM8AUfasnOcY+MlL8ipzW07ueE
+         vfDHM+SXGg8DJgtMGxDxSqoKypqAwxpgRqw2vM4BMb5x/+XyckezWZuo6d/eIA2PXKAb
+         OCs1IKgeyyFEhAOBfrTqSxhPEGaPeoTM0M0vFHAKghjrTrIwbvKQAlJgKp/lto1PEZFy
+         PLphP9yiA8oIE4XAP6ZMrFJ4S1QLV7+JM1YN5yv/25Rqh0JLfO6MKkt8POAN3W1SNgHB
+         IuW+sKWtIahM3dLWx0y4xFVpOCh/eHtXYu1SkEqHTTW3ezylKuZN8/CNd+4iodrqgf1o
+         phog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742907862; x=1743512662;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ytAAvQ7JGlkRy9+sQoqDV7MKxsmXX7OMGSm/op62KLs=;
+        b=ck+Lzr75Cennnt//VrWb73S3porp6LNPrMMBrGx1YHbHiy6jsiA3tkSduw7nFY6CF0
+         Y+nwXiLVC5IIm5K0TLdLgcfAQxc0A+yjHidniZapimUn7Cd4CjTsfMv539rUNsNXxfcc
+         AcA0Cx8bhjzBzNJyWe6rfYwX+b8Ekes82fBQHG232wiSsgClH+4eia3tNsovgsYDonax
+         33nbquexz188SoDU1Gi/Pln7qZ+FFWwJN3N7RISDtzHeq4QvbCBJyAAZP9SdpejHrJUn
+         5iJYD+TmhBuOPBdH+pFiuT5We90Jt4vQksTCiIhv0UbOZPbf3tq4/e64qLQRi27mTKZE
+         0evA==
+X-Forwarded-Encrypted: i=1; AJvYcCUD9NIumMLp9u2/Fkw8qzmsPnessDrno8L2vk+E1rDpvhuqVBueIrHkvFcZJXqia+/NIWsHbUqfNik=@vger.kernel.org, AJvYcCUmuc6kQZdgesDCfUnS2ftY2xgT/4hK+P0BcmqutXSO35C5dzSWiQkrKqkCvn6LSCVTl0KNjN4BVS1Geqhk@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYgNvNO+PG42ym6Eme1DB897YBkAf2IRSmxkqGt3/MeQCeOOjG
+	rK7vV0mmHc/+6BmTZ2zNSc037cjrDNQCU7LFBFzWgZ9I9zsuv4ybghtrQ0ER4fh88gjzZxFmhjC
+	k4ZwrNQy+fk68obGo5WPUXX63vh0=
+X-Gm-Gg: ASbGnctawtGd4xbIPpBUyN2Qpckh5JXmbFu1pYaoYvhcHYef7SYk/PnYIkeEVqKlqVR
+	wFnc6qM1pdDnYSXvJNPJNh6vde7CUlRCXYn/jRH9F+7VIi7qNY2uqeOl93nZUPAgXaCLrP7xXtT
+	Pn46WqxYriQtomrGWCnS2qWtBTvNZm430XH/yy1JPN0A==
+X-Google-Smtp-Source: AGHT+IE51PXGLgkSnQJ98M/ddGNci74PQXWvqk0kA+jVT/PXCPMy/JwdbENsPVcSNY10HlA73yPF/yQqtOeqqz2rqvE=
+X-Received: by 2002:a05:6214:2607:b0:6e6:61a5:aa57 with SMTP id
+ 6a1803df08f44-6eb3f2937ccmr297309616d6.14.1742907862103; Tue, 25 Mar 2025
+ 06:04:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324-dt-bindings-network-class-v5-0-f5c3fe00e8f0@ixit.cz> <3452b67752228665fa275030a7d8100b73063392.camel@sipsolutions.net>
-In-Reply-To: <3452b67752228665fa275030a7d8100b73063392.camel@sipsolutions.net>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 25 Mar 2025 08:02:59 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLv9THitHzj8nj7ppCp-aKn010-Oz=s+AUNKOCoDmBnbQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JriMZBTiF3C2w64Aagyvo_O56C7A0zRxATovzxB1bkU0K4BsN971bbnmGo
-Message-ID: <CAL_JsqLv9THitHzj8nj7ppCp-aKn010-Oz=s+AUNKOCoDmBnbQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/5] dt-bindings: net: Add network-class.yaml schema
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: david@ixit.cz, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Mailing List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, van Spriel <arend@broadcom.com>, 
-	=?UTF-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <jerome.pouiller@silabs.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Andy Gross <agross@kernel.org>, Mailing List <devicetree-spec@vger.kernel.org>, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, Janne Grunau <j@jannau.net>
+References: <20250324172026.370253-2-csokas.bence@prolan.hu>
+ <92772f63-52c9-4979-9b60-37c8320ca009@web.de> <7064597b-caf7-42e2-b083-b3531e874200@prolan.hu>
+ <7332ccd2-ebe6-4b9d-a2ae-8f33641e7bd4@web.de> <7afcbbee-6261-4b2f-be14-a3076746d53c@prolan.hu>
+ <26e36378-d393-4fe1-938a-be8c3db94ede@web.de> <CAGRGNgU7t85oG3Bq7L3KjKUAbRyd6SHSM6F6BvmdXDVkbNegKg@mail.gmail.com>
+ <bd7b31d8-be25-4dbc-9a81-4b0cccd64798@prolan.hu>
+In-Reply-To: <bd7b31d8-be25-4dbc-9a81-4b0cccd64798@prolan.hu>
+From: Julian Calaby <julian.calaby@gmail.com>
+Date: Wed, 26 Mar 2025 00:04:10 +1100
+X-Gm-Features: AQ5f1JoI1ggKA9Gw7ELv7T2TUC8A9SzwWIQijK61-mP9ZJ-R-qeFWsNR8IL_vmU
+Message-ID: <CAGRGNgVcPRJB+sx_5g-+CLJih4vTWU-FrqiRbvVQ07219WBZPA@mail.gmail.com>
+Subject: Re: [v6] dma-engine: sun4i: Simplify error handling in probe()
+To: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+Cc: Markus Elfring <Markus.Elfring@web.de>, dmaengine@vger.kernel.org, 
+	linux-sunxi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	LKML <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@kernel.org>, 
+	Chen-Yu Tsai <wens@csie.org>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Vinod Koul <vkoul@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 25, 2025 at 5:33=E2=80=AFAM Johannes Berg <johannes@sipsolution=
-s.net> wrote:
->
-> On Mon, 2025-03-24 at 18:41 +0100, David Heidelberg via B4 Relay wrote:
-> > The Devicetree Specification, Release v0.3 specifies in section 4.3.1
-> > a "Network Class Binding". This covers MAC address and maximal frame
-> > size properties. "local-mac-address" and "mac-address" with a fixed
-> > "address-size" of 48 bits are already in the ethernet-controller.yaml
-> > schema so move those over.
-> >
-> > Keep "address-size" fixed to 48 bits as it's unclear if network protoco=
-ls
-> > using 64-bit mac addresses like ZigBee, 6LoWPAN and others are relevant=
- for
-> > this binding. This allows mac address array size validation for etherne=
-t
-> > and wireless lan devices.
-> >
-> > "max-frame-size" in the Devicetree Specification is written to cover th=
-e
-> > whole layer 2 ethernet frame but actual use for this property is the
-> > payload size. Keep the description from ethernet-controller.yaml which
-> > specifies the property as MTU.
-> >
->
-> I have no idea what tree this should go through, and you CC'ed enough
-> people that I can't figure it out either ... I'll assume not wifi but DT
-> for now?
+Hi Bence,
 
-Can you take it via wifi as the main target here is wifi bindings.
+On Tue, Mar 25, 2025 at 11:39=E2=80=AFPM Cs=C3=B3k=C3=A1s Bence <csokas.ben=
+ce@prolan.hu> wrote:
+>
+> Hi Julian,
+>
+> On 2025. 03. 25. 13:20, Julian Calaby wrote:
 
-Rob
+[snip]
+
+> > Bence Cs=C3=B3k=C3=A1s, (I hope I've got the order of your names correc=
+t)
+>
+> Either order works, Bence is the given name, and Cs=C3=B3k=C3=A1s is the =
+family
+> name (surname). Hungarian and Japanese order follows the scientific
+> "Surname, Given Name(s)" order, but commas broke many tools, including
+> Git < v2.46, and b4, so I switched to the germanic "Firstname Lastname"
+> format.
+
+Thanks for that, I'll try to keep that in mind!
+
+[snip]
+
+> Lastly, to all other adressees, sorry for the spam. So let's end this
+> meta-discussion here and keep the rest of the conversation professional,
+> reasoning about the technicals.
+
+And this is why I was so hessitant to step in here.
+
+Getting back to that, your patch looks good to me and it's awesome how
+the devm_ functions and their frends can simplify things.
+
+I'm going to point out that this does swap the clock enable and reset
+deassert, but I'm assuming that is harmless.
+
+Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
+
+Thanks,
+
+--=20
+Julian Calaby
+
+Email: julian.calaby@gmail.com
+Profile: http://www.google.com/profiles/julian.calaby/
