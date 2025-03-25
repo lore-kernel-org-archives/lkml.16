@@ -1,150 +1,179 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C9225A634;
-	Tue, 25 Mar 2025 12:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99A525A654;
+	Tue, 25 Mar 2025 12:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742905248; cv=none; b=SrE+QlEU/UaZnOPZUXQdwu0nTL6x4Edfd964WflhF8N5GcCL1HKAjFSVHwjJ0ZEfxyWGnBifflR/RgzwQBT67b3jHTsdLfGqkPgflBRu3fXhUB60GvubuidVDKhWHFMpocRRPH6hABthnXIkWTvwTipbb/VdBQwrrBTutGByPCo=
+	t=1742905249; cv=none; b=PXA5/9Qb0S+RV8JZtCUOA/lBhL14/s2dk44d2hCQerhzIw5o/KQjCgVPjBaqvwa1/CSMRnHG3o6fy7wfjsR8YEoJZQS5k1UGO+YPhOFoyjbPzzqkGszC2Bi7TBfL1ugeq4jSg5auQvPPD4LMXUzicrv8PwSmdPT0jq/ckFsrf1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742905248; c=relaxed/simple;
-	bh=+Q6Q8jost6RR+L6/1WQaoG8urBg7K9/rNabjNfsQh20=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MIeIoNzVkuOcAmUfrdmCbU3lVIHQahIokaNmuPZ9iXg6hZLxHNC/lqJWWevoltXjWJ/5kiDbqodzFeBtspYxJqm2rvKVmTV6kIvu1W9P9ee0X+PZoE10DBkGtaBadp0JpR0vSScq2rifhredoOXGEMNDOKDKwjLWRx6KmzRhEwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lvA7D/2P; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742905249; c=relaxed/simple;
+	bh=j18oLXPHFjnaGmgCwscTDaPTneiSyVqaoCKba61TqXg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ksvMfmY3i/W6NiLN+klluOkriT32EGq0noZ3BusNVu2GF1AiyMz1e9hsraXsCjKqLoktGK0HuqvGxV7Chie2WyAg0trLkEr7HRdWJXG0YdGkmxxNSw4WqETQnjLPn6jZ97gwQJPhPeJNGOogJavJ9OO67radIxFoZ1IA8nnwXfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oz8iARGb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lvA7D/2P"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6e8f05acc13so65875006d6.2;
-        Tue, 25 Mar 2025 05:20:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742905245; x=1743510045; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+Q6Q8jost6RR+L6/1WQaoG8urBg7K9/rNabjNfsQh20=;
-        b=lvA7D/2P1kyd3seOssn0go2hS35d/CRgd6nf4/nIZIzUeicZRqR0XIkciCwLkfJNqd
-         o2XQDNpO+sIF2yNHKBbLwdlkt9dU/MfVQg50SoCIQKyNpS3/KXyVw8n/FKQSFLhaKOFr
-         Qzf8zrfsPoMh5Z2yzIP44a+ujQyxTVK4LpLSWwHWK8pVlT9DoceptsHsVqVkFAc8UL3G
-         tXdp4dkadq5DEuQHNUb3WM0pupv8CN4zDHUiY1/43mA8BySwB/LxHXGVJxh8+qVHd+c3
-         9aI/YPUIjWbqAqH0P/QXpxTmtxWhdJRKaPeaBODZx8k7qWUwp7jMtmPAr7u7IUDxIe05
-         uveA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742905245; x=1743510045;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+Q6Q8jost6RR+L6/1WQaoG8urBg7K9/rNabjNfsQh20=;
-        b=J0HyZOsW9r3lQqfI53mrTBXhoT0X4FB8hGifHdFLBLiVESLLjdXbfLGEru26onG2GZ
-         0qyQO7UMS8HUHs8q5bxVrYptWkYccIsKI0v/Wsiwm8BDF1RXn1bqPXQHCgb1UcgiunYg
-         gTy2BQYpg7vXZlfchoFiQK+oYyIAZKlJi4VAUQJ7ckaaYOsbjtxxiynkkHaYX4Tx+4KI
-         hGQboY8g8iZ62tWyEJyyMlLYVIOBvhrKky8qXu4MzH7GJByZa++grH8Ox5YSLqXM5iwm
-         yKbmAEQoqPlEvmg+ONh0IQQ3CSI857AppRxAMF3ZBXKsLqcYN6+1y2d3JVGacQQMStl9
-         fRtA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDtzXQ0wwE9JVJ2FjbirBvmE0GVd/jrGikx//UyTyuFZEUGkB/G939GQql+4p3qgGc30HDkSinyQ0=@vger.kernel.org, AJvYcCW4eONknek35N+KmpGkZT7U9zlZwDqrHzM6CLOcmabt48VdC0s1G4ftbAbw1tKqbMt6BDaxAnQZ1r3IZM8c@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy//p5CFQSohO2lvB+xQvvwh2kJHMAFzvpElVWFpdVwH5hA0hCW
-	Am6dhUCpEcxC3Qvcgz/ye/WG5Hy/6Hn6HbVZKPeeyNqFOsFeqza7A9YFrauoZg/hvAvOiLHEHwM
-	7jgA93H1VSeaIjhx+87yr3lzVoxLxdZM+
-X-Gm-Gg: ASbGncta7olvi8q30lzmpSyFZGipK0QY91WZYRt8l0RXWHXkfLMrXohYM8orEJpMN4N
-	utQ5RhYrItP4rBIg6ogXyCDGLTWCUc7BYmtdRWknFm/f6+8oWtP9kMT95qJqn5Czb/HNi9VWmNg
-	7akBpzz1djV2nhYj6KMUT1aphcUsJbEqBNK/AvIbY5FA==
-X-Google-Smtp-Source: AGHT+IHzPCRF5SOBl5uX+I45ItuIcu7yYqv1UpwkBeNgwvJPwNXZIu0GAxVrZtFs9aKbKMtvCsG5QpWp0f/ADoOZEd0=
-X-Received: by 2002:a05:6214:c64:b0:6e8:f17e:e00d with SMTP id
- 6a1803df08f44-6eb3f2b884amr196473756d6.14.1742905245447; Tue, 25 Mar 2025
- 05:20:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oz8iARGb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 213B1C4CEE4;
+	Tue, 25 Mar 2025 12:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742905248;
+	bh=j18oLXPHFjnaGmgCwscTDaPTneiSyVqaoCKba61TqXg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Oz8iARGb8tr7htUnaAeUCJ6IYWmPD2sUy6Fahrj1eenZT1kKMM+eFWJiKMQdGqcqw
+	 rqWz1qpr3jo3lVxFFYwrBasJ+tHw3PWT4Rv+apRvPWQa/i4K/2vaflC0hzKnPuX+P4
+	 8bTM1EjGGpOTuQHdC8TBFwQkrFBcJI49u7thNpghWlOyMzJ3hMkq6mroidX2glUScJ
+	 uyG/XkFYIxn9NAsEUQSTt4TYvFJgoGc/h+TFjpPprvl74n7fsNLu4FNEPQT7I99tBn
+	 keJQj/Yhn5p3/N2C2J6YITPpmyRqNzvFWJV+jSwmuHsx+jq6dfD8Ek+CQ8ONbZxS8/
+	 mQmFdBGqaAdYQ==
+From: guoren@kernel.org
+To: arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	torvalds@linux-foundation.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	anup@brainfault.org,
+	atishp@atishpatra.org,
+	oleg@redhat.com,
+	kees@kernel.org,
+	tglx@linutronix.de,
+	will@kernel.org,
+	mark.rutland@arm.com,
+	brauner@kernel.org,
+	akpm@linux-foundation.org,
+	rostedt@goodmis.org,
+	edumazet@google.com,
+	unicorn_wang@outlook.com,
+	inochiama@outlook.com,
+	gaohan@iscas.ac.cn,
+	shihua@iscas.ac.cn,
+	jiawei@iscas.ac.cn,
+	wuwei2016@iscas.ac.cn,
+	drew@pdp7.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	ctsai390@andestech.com,
+	wefu@redhat.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	josef@toxicpanda.com,
+	dsterba@suse.com,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	boqun.feng@gmail.com,
+	guoren@kernel.org,
+	xiao.w.wang@intel.com,
+	qingfang.deng@siflower.com.cn,
+	leobras@redhat.com,
+	jszhang@kernel.org,
+	conor.dooley@microchip.com,
+	samuel.holland@sifive.com,
+	yongxuan.wang@sifive.com,
+	luxu.kernel@bytedance.com,
+	david@redhat.com,
+	ruanjinjie@huawei.com,
+	cuiyunhui@bytedance.com,
+	wangkefeng.wang@huawei.com,
+	qiaozhe@iscas.ac.cn
+Cc: ardb@kernel.org,
+	ast@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-crypto@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	maple-tree@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-atm-general@lists.sourceforge.net,
+	linux-btrfs@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	linux-nfs@vger.kernel.org,
+	linux-sctp@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-media@vger.kernel.org
+Subject: [RFC PATCH V3 17/43] rv64ilp32_abi: riscv: Adapt kasan memory layout
+Date: Tue, 25 Mar 2025 08:15:58 -0400
+Message-Id: <20250325121624.523258-18-guoren@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20250325121624.523258-1-guoren@kernel.org>
+References: <20250325121624.523258-1-guoren@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324172026.370253-2-csokas.bence@prolan.hu>
- <92772f63-52c9-4979-9b60-37c8320ca009@web.de> <7064597b-caf7-42e2-b083-b3531e874200@prolan.hu>
- <7332ccd2-ebe6-4b9d-a2ae-8f33641e7bd4@web.de> <7afcbbee-6261-4b2f-be14-a3076746d53c@prolan.hu>
- <26e36378-d393-4fe1-938a-be8c3db94ede@web.de>
-In-Reply-To: <26e36378-d393-4fe1-938a-be8c3db94ede@web.de>
-From: Julian Calaby <julian.calaby@gmail.com>
-Date: Tue, 25 Mar 2025 23:20:34 +1100
-X-Gm-Features: AQ5f1JqJR8vf390EC146ON7d6-teBUeT_TrrTXamjUUZoP5Hfz81vyeOiEOgepg
-Message-ID: <CAGRGNgU7t85oG3Bq7L3KjKUAbRyd6SHSM6F6BvmdXDVkbNegKg@mail.gmail.com>
-Subject: Re: [v6] dma-engine: sun4i: Simplify error handling in probe()
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>, 
-	dmaengine@vger.kernel.org, linux-sunxi@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, 
-	Chen-Yu Tsai <wens@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Christophe Jaillet <christophe.jaillet@wanadoo.fr>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Samuel Holland <samuel@sholland.org>, Vinod Koul <vkoul@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Markus,
+From: "Guo Ren (Alibaba DAMO Academy)" <guoren@kernel.org>
 
-I really wanted to keep out of this, but...
+For generic KASAN, the size of each memory granule is 8, which
+needs 1/8 address space. The kernel space is 2GiB in rv64ilp32,
+so we need 256MiB range (0x80000000 ~ 0x90000000), and the offset
+is 0x7000000 for the whole 4GiB address space.
 
-On Tue, Mar 25, 2025 at 8:14=E2=80=AFPM Markus Elfring <Markus.Elfring@web.=
-de> wrote:
->
-> >> Implementation details are probably worth for another look.
-> >
-> > What don't you like in the implementation? Let's discuss that then.
->
-> I dare to point concerns out also for the development process.
+ Virtual kernel memory layout:
+       fixmap : 0x90a00000 - 0x90ffffff   (6144 kB)
+       pci io : 0x91000000 - 0x91ffffff   (  16 MB)
+      vmemmap : 0x92000000 - 0x93ffffff   (  32 MB)
+      vmalloc : 0x94000000 - 0xb3ffffff   ( 512 MB)
+      modules : 0xb4000000 - 0xb7ffffff   (  64 MB)
+       lowmem : 0xc0000000 - 0xc7ffffff   ( 128 MB)
+        kasan : 0x80000000 - 0x8fffffff   ( 256 MB) <=
+       kernel : 0xb8000000 - 0xbfffffff   ( 128 MB)
 
-You're "concerned" about patch granularity, but this is not the sort
-of thing that some random person would raise, this is the sort of
-thing a maintainer asks for when patches are doing too many things or
-are unreviewable. This is neither. It is a very simple cleanup of a
-probe function as it says in the patch subject.
+Signed-off-by: Guo Ren (Alibaba DAMO Academy) <guoren@kernel.org>
+---
+ arch/riscv/include/asm/kasan.h | 6 +++++-
+ arch/riscv/mm/kasan_init.c     | 2 +-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-Futhermore, this already has an ack from the maintainer of this file.
-This indicates that they're happy with it and no significant changes
-are required. This is also version 6 of the patch, if the maintainer
-was concerned about this, they'd have already provided some clear
-guidance on this. If you check previous versions of this patch, no
-such requests have been made.
+diff --git a/arch/riscv/include/asm/kasan.h b/arch/riscv/include/asm/kasan.h
+index e6a0071bdb56..dd3a211bc5d0 100644
+--- a/arch/riscv/include/asm/kasan.h
++++ b/arch/riscv/include/asm/kasan.h
+@@ -21,7 +21,7 @@
+  * [KASAN_SHADOW_OFFSET, KASAN_SHADOW_END) cover all 64-bits of virtual
+  * addresses. So KASAN_SHADOW_OFFSET should satisfy the following equation:
+  *      KASAN_SHADOW_OFFSET = KASAN_SHADOW_END -
+- *                              (1ULL << (64 - KASAN_SHADOW_SCALE_SHIFT))
++ *                              (1ULL << (BITS_PER_LONG - KASAN_SHADOW_SCALE_SHIFT))
+  */
+ #define KASAN_SHADOW_SCALE_SHIFT	3
+ 
+@@ -31,7 +31,11 @@
+  * aligned on PGDIR_SIZE, so force its alignment to ease its population.
+  */
+ #define KASAN_SHADOW_START	((KASAN_SHADOW_END - KASAN_SHADOW_SIZE) & PGDIR_MASK)
++#if defined(CONFIG_64BIT) && (BITS_PER_LONG == 32)
++#define KASAN_SHADOW_END	0x90000000UL
++#else
+ #define KASAN_SHADOW_END	MODULES_LOWEST_VADDR
++#endif
+ 
+ #ifdef CONFIG_KASAN
+ #define KASAN_SHADOW_OFFSET	_AC(CONFIG_KASAN_SHADOW_OFFSET, UL)
+diff --git a/arch/riscv/mm/kasan_init.c b/arch/riscv/mm/kasan_init.c
+index 41c635d6aca4..1e864598779a 100644
+--- a/arch/riscv/mm/kasan_init.c
++++ b/arch/riscv/mm/kasan_init.c
+@@ -324,7 +324,7 @@ asmlinkage void __init kasan_early_init(void)
+ 	uintptr_t i;
+ 
+ 	BUILD_BUG_ON(KASAN_SHADOW_OFFSET !=
+-		KASAN_SHADOW_END - (1UL << (64 - KASAN_SHADOW_SCALE_SHIFT)));
++		KASAN_SHADOW_END - (1UL << (BITS_PER_LONG - KASAN_SHADOW_SCALE_SHIFT)));
+ 
+ 	for (i = 0; i < PTRS_PER_PTE; ++i)
+ 		set_pte(kasan_early_shadow_pte + i,
+-- 
+2.40.1
 
-Your only other "concern" had already been addressed as has already
-been pointed out to you.
-
-> >> Please distinguish better between information from the =E2=80=9Cchange=
-log=E2=80=9D
-> >> and items in a message subject.
-> >
-> > What do you mean? The email body will be the commit message.
-> See also:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/Documentation/process/submitting-patches.rst?h=3Dv6.14#n623
-
-The email and patch structure are following the format outlined in the
-document you link to _exactly_.
-
-
-Once again your comments are just noise, and your insistence on
-repeating them over and over and over and over and over again is
-borderline harassment.
-
-You have been told to stop this nonsense many many times, here's a
-link to the most recent one:
-
-https://lore.kernel.org/all/92d1a410788c54facedec033474046dda6a1a2cc.camel@=
-sipsolutions.net/
-
-Please stop sending these emails and go do something constructive with
-your life.
-
-* * * * *
-
-Bence Cs=C3=B3k=C3=A1s, (I hope I've got the order of your names correct)
-
-Please block or ignore Markus, at best he's a nuisance and at worst a troll=
-.
-
-Thanks,
-
---=20
-Julian Calaby
-
-Email: julian.calaby@gmail.com
-Profile: http://www.google.com/profiles/julian.calaby/
