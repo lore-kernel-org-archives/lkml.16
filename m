@@ -1,89 +1,91 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3560525F988
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 17:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29B31A0BFE;
+	Tue, 25 Mar 2025 17:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742922615; cv=none; b=K3V80mpDIxcIoN3qG/R680qz8WlzGV6/1RNhebVKoZ6KSXYoV0YSDDtEVGN/x8uvzv30wRLwzfZh0HOUXhMgYj2KzmqWdwYrZrLJsWln/IZhGXVMJ+3TT7sDuQZW6rSGLf2VivRtdaRHVYurC9nJUe3+OLjNw2zlgEX+u5fHUrY=
+	t=1742922655; cv=none; b=jyMr0pZmRf0AvtPILznZJXE3liW8HKgXC8MyiTdkqqsGxn5ACG71lEPB5IEYCXH6h9EQxkTjSLrib62gLJLSc3Gl1+pqmwd+uAyflzj4KX5muP+/ZJ/yd5tMysQZCErCAMJE3F+LStA2MUsEvDx/wnromAsBj5EZQZIL/tN2nU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742922615; c=relaxed/simple;
-	bh=VTzh6p8sdLXgtm1dcyU8A3yPyAfqZP2PURip12/aE/A=;
+	s=arc-20240116; t=1742922655; c=relaxed/simple;
+	bh=GNqENFQaTr7pvnN27Xev/R/FfH7qw+nT7Ttp27/8aIc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F+8F6jFy9W4dp+xSK8p3BHc8viDtqervFIL+4UKeUrMLnd4Ws44rgCJmR05gAf23ywdzOaPrcOW3mFm39sPhZkpvUTcCSYlFjG+hCk7KzL7iD8iAZ+Vqe1t4Sr//bmVWuf3zk3quClxcGAX0qz75U9Nz/gYPNpoz+zBGUPkkcn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=itv3wHSz; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=rW7Qdbeo5r3CGzIdTi6nhhC1Z7Djen5RAvhr5W071ebpTdYFNmwHZGZCPmYvFmOwGeIyVuJPKTyLK3zl6r5g05JhJ1Ou6XxVjjekLu3cw1tS2YFUUI6psyaNAHbj1ChV+aSy6HhsEaxXsxto40MvvyWrwxwuE7wVm8sy2784Als=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AveRPtLW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="itv3wHSz"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1176140E0219;
-	Tue, 25 Mar 2025 17:10:10 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ESc8JYNbU0sP; Tue, 25 Mar 2025 17:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1742922606; bh=xuW+1acWbyIXSc6I4FgAnoNPiRSbNAyPu57oGWJiKRo=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AveRPtLW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0B43C4CEE4;
+	Tue, 25 Mar 2025 17:10:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742922654;
+	bh=GNqENFQaTr7pvnN27Xev/R/FfH7qw+nT7Ttp27/8aIc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=itv3wHSz/vRFGCJuRGswigasZzUZ/h3avnPbR6adgie+8LPdiiiSaWgrL5vpgd6Pw
-	 cNtcmIVlCZQIR0Onj+lEGlKAAhdyAeYxhY3xYZvGzWZZP4p7wpkXgbzjVie4Le6SCw
-	 gR0b9XOIwHYqjaA2S90GqFIgtrNYseGsH6f+mZRFKtxivw18TDdjvSWKr35US2tmz7
-	 KUFCkezVLS97Fu7coHh0Yjrhy4bwnQNqqNtbE/bobK/VyFN7MY6ETNn+960vFdjImS
-	 q1VQqb5400Iz//VLTBM+HSbt2qBxFLmzqqUVzYPgQiB5OpeAKP0FiuPceA39wcYJCu
-	 Huc7WMuqKDysnfcYRQy9aSgn+laOaGM4Nhmy3YhTOrOZxt2axZT1sJ/KrgHNZeygEy
-	 A6JZfw6ddKFnin/seZ3Pa3iOu6BUsnaCXFyFUFZ9w10PNO5y1Hxov8FnGcLCCLNFIG
-	 WZNILA5TJBR162V59psWI5fGymmR2Kc7RnjHPWJtgLr3AEp9lz75h8YNHPD/PdzfsK
-	 aZdB0zBAmRihTpa8VY5lT5JLlS8++ZhogNAnKDq8wc0fSgJNbgjTFkvY1fImazy3sW
-	 qpLotoa72STtkfkWhXmtcK/mXmz1ZtKYDwW3WS6pRHrMkK3rmh+r230iJ1XcAnq0lf
-	 RBPkOG4G42uMCL2J2Pc79Ia8=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1C6F040E0214;
-	Tue, 25 Mar 2025 17:09:59 +0000 (UTC)
-Date: Tue, 25 Mar 2025 18:09:53 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH -tip 1/2] x86/hweight: Fix false output register
- dependency of POPCNT insn
-Message-ID: <20250325170953.GCZ-LjYdl4rftqY-us@fat_crate.local>
-References: <20250325164854.199420-1-ubizjak@gmail.com>
+	b=AveRPtLW8iwTMOgYDEmSrCG4Kr9UFnf9W4EpzpxIWsxlTEYpZr1GoX9Iy/x4bSGy4
+	 CgQK5G21DwIr4dGGS33VmnA4nBYAiJmxZyUjVON8wuC6vfCT95a/NY2JX2hxUmrP1Y
+	 M1N5MrmtOXAU5pmZFGwsGRK+1hUNuxqnjMUOjeKdrnmDQk/tJVlLjGUmec1eXeButL
+	 4C3pMWzW9/Ab6vswbh5qK0UgGYlclj+6YJqQOY5PcWjFMc3FTBTOk+TG9cNvUqMt7f
+	 I31n7BigTqc9bCDJbltm4d5rHpzrmR0hT/RNqLgXBAkSMSEQF99JYkJb8MmkQR/WQ+
+	 aVnQjSXgEbjbw==
+Date: Tue, 25 Mar 2025 17:10:48 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: Nico Pache <npache@redhat.com>, patches@opensource.cirrus.com,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, simont@opensource.cirrus.com,
+	ckeepax@opensource.cirrus.com, brendan.higgins@linux.dev,
+	davidgow@google.com, rmoar@google.com, johannes.berg@intel.com,
+	sj@kernel.org
+Subject: Re: [PATCH] kunit: cs_dsp: Depend on FW_CS_DSP rather then enabling
+ it
+Message-ID: <67e46328-3a8a-4fc9-8ec3-6c7bc224d6da@sirena.org.uk>
+References: <20250319230539.140869-1-npache@redhat.com>
+ <CAA1CXcD2g=sRRwgLSudiOAqWXq3sCj+NPuE1ju7B2gFXXefjXA@mail.gmail.com>
+ <d8fc1f66-f220-42fb-b58f-f5f9c7d30100@opensource.cirrus.com>
+ <CAA1CXcA460xfy48JMNeX5rNTfUqsahER8SDF6tWu82V35ripLg@mail.gmail.com>
+ <CAA1CXcD2RF6aXNH0ix=GN1+LTR9+dV7yRz-HGKZfUbSu+8ZM_w@mail.gmail.com>
+ <4cc16ecf-d498-44a6-99b2-eee840cff63d@opensource.cirrus.com>
+ <9d6831c7-053e-4414-ba9f-f5e71c690588@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="HPN+G74z3uWNF37H"
 Content-Disposition: inline
-In-Reply-To: <20250325164854.199420-1-ubizjak@gmail.com>
+In-Reply-To: <9d6831c7-053e-4414-ba9f-f5e71c690588@opensource.cirrus.com>
+X-Cookie: Visit beautiful Vergas, Minnesota.
 
-On Tue, Mar 25, 2025 at 05:48:37PM +0100, Uros Bizjak wrote:
-> +/*
-> + * On Sandy/Ivy Bridge and later Intel processors, the POPCNT instruction
-> + * appears to have a false dependency on the destination register. Even
-> + * though the instruction only writes to it, the instruction will wait
-> + * until destination is ready before executing. This false dependency
-> + * was fixed for Cannon Lake (and later) processors.
 
-Any official documentation about that?
+--HPN+G74z3uWNF37H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Any performance numbers to justify that change?
+On Sat, Mar 22, 2025 at 07:02:26PM +0000, Richard Fitzgerald wrote:
+> On 22/3/25 10:11, Richard Fitzgerald wrote:
 
-Because if it doesn't matter, why do it in the first place? Especially if
-you're doing this XORing now for *everyone* - not just the affected parties.
+> > I got lucky on all the UM, X86 and ARM builds I tested.
 
--- 
-Regards/Gruss,
-    Boris.
+> It looks like that bugfix has got lost.
+> Mark sent an email on 20 Feb to say it has been merged into his
+> sound tree. But that patch isn't in torvalds/master.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+It was queued for -next rather than as a fix.
+
+--HPN+G74z3uWNF37H
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfi45gACgkQJNaLcl1U
+h9DlAgf+NxfHOGfvo+VFOD75XLJkVKcL8K0dfEtpMMxBuzGtTAC5v6V8zk4PYCmN
+kv/Xs0jLwZCSoIKjbNFOOEZHqWwjXlGz4b8FB+1BnhFaF5T0A6c+cLSC3ieFX40r
+2d7N2Cgt7R7F1Bq9LbQbRFtt0tkEw9JW76tL9sanG60DdLwmw++nLiD3PM9Rq3Mn
+XZRFmRko/V1Wsyc3JrKCHGIaotgWtee7ESYzWQb7Y6MHcltAAHh4R8yg3VdMukUk
+wNnVfcpDF8wlUKOh175JUanvCPJi3n5RP6oV+0EWpmN2zUyVfGVzD8Cj6p9L2Qoj
+scQsC00CLr9fi3kqVuAyO+EHFl8hCQ==
+=uve9
+-----END PGP SIGNATURE-----
+
+--HPN+G74z3uWNF37H--
