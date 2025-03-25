@@ -1,62 +1,59 @@
-Received: from mail.hows.id.au (125-63-26-112.ip4.superloop.au [125.63.26.112])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E72B82E337C;
-	Tue, 25 Mar 2025 11:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=125.63.26.112
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642372E337C;
+	Tue, 25 Mar 2025 11:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742901708; cv=none; b=olKPZpF1AAp0/1tAdul8qac7IcXOxTq8VuOqFuhuGP0FgL/T/d3VYvKwHv27U2HH3ArjuQ9NOkNuspF4NEkKynocSQlBYppiBAZPkQZTb2sjFdPlNq6iI3w3OkFW5maPXkqO3ZGwfBN41pz1bY5VEmXVme8PcVMc/hBgEVB43h4=
+	t=1742901713; cv=none; b=N0W8vooBoUZPQzWpF0olo6TcaPFyGaqUkbTSqTyIXeZ5ZeNYhUPgZOH7zjIm2F6SiKQWJbdlnjRgOPS0Hm/P+afQeMsEanlRfZENbElcLHs0t1Wls5G20mXsK645aj2kzTiEmtRf/se+WgmUG6QK1/EaEwQ5yJPCNvE3D5C/mbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742901708; c=relaxed/simple;
-	bh=iLKFQ1XT7Gv64WulzIF36Fz95RYXU9EXLw7LTgu9jT4=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=BDbc7o1trA3KTaqWUDva8Mdv57+n3TihnxYqfUOj3LiXZwrlewPo5DETYXCgICFgvPxSkvGi0Ybh5XJqXUDVo0ER0y6iWDroklRrTClPJqwXN2USEx0wgE3CMUGpKkWW4W/9j2bO5++1J80qYJRDoP1nMsQcNNmu8m3Nhk4uXDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hows.id.au; spf=pass smtp.mailfrom=hows.id.au; arc=none smtp.client-ip=125.63.26.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hows.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hows.id.au
-Received: by mail.hows.id.au (Postfix, from userid 113)
-	id 2F92622F1A; Tue, 25 Mar 2025 22:14:46 +1100 (AEDT)
-X-Spam-Level: 
-Received: from archibald.hows.id.au (unknown [192.168.0.118])
-	by mail.hows.id.au (Postfix) with ESMTPSA id 7A7A4228BE;
-	Tue, 25 Mar 2025 22:14:37 +1100 (AEDT)
-Date: Tue, 25 Mar 2025 22:14:36 +1100
-From: David Hows <david@hows.id.au>
-To: Clemens Ladisch <clemens@ladisch.de>, Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] Add support for CCD temperatures in AMD 1Ah CPUs model
- 0x40..0x4f
-Message-ID: <Z-KQHKm0nBWvYNI1@archibald.hows.id.au>
+	s=arc-20240116; t=1742901713; c=relaxed/simple;
+	bh=ftwtZXIOCMaYAxzuWBdEbpL26cxxbkseuQptRaNUc+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k1KgLeVe6xcxXMk6S5gFpBZfai5jC0VkJLC+/hyYazDwonL4kiTZf6urMwVE6YeRY2mnSvdzRsR/bWu6fnKHwfrH6Xs1gl2wBHxnNCZZTlpVvNCjTCVtigDJ2vQ4/0V3oP8kxd0q7Lm1sXUgzK+XIBpTqpF09QbBkUW4sJD97Ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQRRb1h9; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQRRb1h9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F450C4CEE4;
+	Tue, 25 Mar 2025 11:21:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742901712;
+	bh=ftwtZXIOCMaYAxzuWBdEbpL26cxxbkseuQptRaNUc+Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KQRRb1h9cWQhfU/gB9TJRz1RpitBikdcWCYG2g+XXI75psCXyQ5vOXFamDiKliebd
+	 PKHXhiBrabOZmAlPa+rs9piKbgAHdK2DIlAujwG/LP1qqIE3QrIHTkatlCIQc1m5jr
+	 7F8I+ykoIFV1aw7WSU7YZYIKGldI/5QKkmKF2Cecc6Vejq1GPnh8dRDqn/gnUyIGNv
+	 qrFi0Aciy0BoB7xqfJlk+aimtW7QfHHUzNEp4jWQ/45gbfnuI9KX+bxW4op8luOueY
+	 8/GXQcOXmFQCfNnRSxem8AAGJzNc0w2DErsETaALNMmtb2AVnJOM7yb+OQkRS4pQbC
+	 1qRB5TyEPz47A==
+Date: Tue, 25 Mar 2025 04:21:44 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Murad Masimov <m.masimov@mt-integration.ru>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+ <horms@kernel.org>, Joerg Reuter <jreuter@yaina.de>, Kuniyuki Iwashima
+ <kuniyu@amazon.com>, <linux-hams@vger.kernel.org>,
+ <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <lvc-project@linuxtesting.org>,
+ <syzbot+33841dc6aa3e1d86b78a@syzkaller.appspotmail.com>
+Subject: Re: [PATCH] ax25: Remove broken autobind
+Message-ID: <20250325042144.022c9121@kernel.org>
+In-Reply-To: <20250317105352.412-1-m.masimov@mt-integration.ru>
+References: <20250317105352.412-1-m.masimov@mt-integration.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
----
- drivers/hwmon/k10temp.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+On Mon, 17 Mar 2025 13:53:52 +0300 Murad Masimov wrote:
+> Binding AX25 socket by using the autobind feature leads to memory leaks
+> in ax25_connect() and also refcount leaks in ax25_release(). Memory
+> leak was detected with kmemleak:
 
-diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
-index d0b4cc9a5011..cc2ad7a324f9 100644
---- a/drivers/hwmon/k10temp.c
-+++ b/drivers/hwmon/k10temp.c
-@@ -502,6 +502,13 @@ static int k10temp_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 			k10temp_get_ccd_support(data, 12);
- 			break;
- 		}
-+	} else if (boot_cpu_data.x86 == 0x1a) {
-+		switch (boot_cpu_data.x86_model) {
-+		case 0x40 ... 0x4f:	/* Zen5 Ryzen Desktop*/
-+			data->ccd_offset = 0x308;
-+			k10temp_get_ccd_support(data, 8);
-+			break;
-+		}
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(tctl_offset_table); i++) {
+Looks like DaveM applied this yesterday, thanks!
 -- 
-2.49.0
-
+pw-bot: accept
