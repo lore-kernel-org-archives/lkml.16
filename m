@@ -1,218 +1,185 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6924215199A
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 10:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75D41991DD;
+	Tue, 25 Mar 2025 10:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742897758; cv=none; b=Q6XgImvXrjm/FQ4aEwWHHBFrzR4xKt4BR6HI8zLsUotAGpT/jv4vGPFGl5dKe/2J7IPASiQ3WrgLb6RufC9s+kUkRiCDxm36G2drw4RcQMRJ1mbeihrUCD5ly4baxkSG5R30tNswep6iwebrtZ2XcfKmZpoLYvWeyL6OC/Q3Xp4=
+	t=1742897895; cv=none; b=YtZuIqp852pRxefbzWUhEcroxTuTq/gswbU1YYSQP/+ntswQ3Oy1+uIIWAJUafEpfp6/bEBscxcrke1ZJyb5Y8mq0HDyla8GZ+0C1rb3dzr54DhQ3cqXH3WipuGK+JM14Jq+s7Z1QeAZkppgdhDWBCaumKSEVALaQaLPMb2zik0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742897758; c=relaxed/simple;
-	bh=kq3z/F+bkdyrEEPxLj4aaSVutwseYeIy5wfytTS54JM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kFXSSbaYpfHbGjKWDmPlUODGNe2B+Un/nbNklrMvFkpVpusrg89v6IUPGVDwjagqexeFf9gJpGw8JFOaZZdeacOZtqwBPMXBEoxAsIEW49Ut8rkLst2J5alq3iVqB6a/empbNJjaRQ4fEczF5O2EAabIbQ8hhBBGjmX3lPJghPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RY4b7Rdb; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742897895; c=relaxed/simple;
+	bh=frWBJ03L5nyvaR3e6bGOWFK/48tUuzZX2ed65EWssU0=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=VV7GHbrEwc/FroMr7G5qvDMFOuIjA+1iARAxUQc1OoySyz9IFmJ9W8VSsFloqVDStio76qdzp7ANC8bfZ8mDULTzKy/Vhz5d2jOHPPFlkAacpbjNt23CPbqfBf56ggooaqrA5Sk7DvBquybT2smRyxDrxXzXz3bRUGRid0PeQz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hgKkNmif; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=23CUrKGd; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RY4b7Rdb"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30c0517142bso56583951fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 03:15:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742897753; x=1743502553; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kUX8G/ipswWdxea2g5yuXYGySDqu/Dr7lyepw+RoYJc=;
-        b=RY4b7RdbZBgZdMFPyRwUCqyXTtEeVadQnmXCPRBMq7C0+f6RYTGjvkE1nt1x/xtaNr
-         NFfLe0v2r6TBPI7WsaCofNSwZ8zc15PIz+pkQCNqPXdBM9G1TEAWhfPeAhuJAsXrz2A+
-         VThanqzu+c3WJy8N+CWJMjK/mfhP6fnbZNIeJcN+bCgSyDPR1ZXalflozN8woji/FmDR
-         Pq+6MrWgBflrGArCVQ7ZgDzHnnBI5qqZQqeYEwlQbCUQLBTSV+vV1OoZlsP/BJ+Zv/KL
-         J7qVV4B80ocBbuj0UOEUlUpU/X0T+FJrKItGGoiKT48eeeEtW9LC1lknsFF0jmHsgw17
-         ulKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742897753; x=1743502553;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kUX8G/ipswWdxea2g5yuXYGySDqu/Dr7lyepw+RoYJc=;
-        b=emZHSKS2xJpdHgkooBRoDgMflLopeyuVlb5ABlzkkbTbatGbHWfgkcUSWulKqvp/PN
-         FZc1FRe5Tsz/l9alHuUba6qKS1t6/wD/93pgvoweEqpBxFGeK8BNINBIgdVJS6YK0kYB
-         Jk9K46sgyWcMuLCXBxUUWGm28COPTKb1XvaBgYcJ/oGX2qnyyjqW3Bv4mE67WiwHl5Qi
-         XQbhCqiWBdXRMRWGk0jEnbRlMug09FU8grLiutf9Xcc0lNDW86NBIYSyRt9Lgt0K3Xe8
-         9ckgl3Z7m7qaF6ZP1h86pPjNpYvcBOVhWx5dyOyQxFbVPYFOJnKX335pYjtIGW149pcs
-         OjAw==
-X-Forwarded-Encrypted: i=1; AJvYcCXYa+zyMe4k/x+h0SpsNdWZgTHVtb7SY5hFWeBb273qZaCH1ZOPnwfsN4TMOIzapRYK2EvD6y5eEGVe48M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8lIQd5xFClYIIOuMNJ2SawjjtqoKdP5GVBvk1OlTuVCqYpwOE
-	MORy1ifBkuQUa/u8zKmEZMUKTED4tEJsupQ+uySaInhYUJk2E8LXKdbrDJEIz56mVDGU3Psdz3+
-	E
-X-Gm-Gg: ASbGncsapxXin0rr6ooZESx6fO0lFGgGRGpDhYZrIF7mvfQ+2QmY+06e8AuLB5DRRPr
-	5oSirgTD0M8VVhIiTF0l3xv0ggChNEJrZEHWyHCoMXXfsJN8FQDbnqfs7S38DYGJqHzHFbHthSj
-	gt2Xbag/mdtvO1GLNC4j0/lU3tj/zsmfgiJVdr+/DbZaSbpZDCGPCAfSOTBenvEpWHgHwjGBIoa
-	7hw8Y332JV52UM4NGMSiSXOF8QR4eRDXfljfN2QzsPjeMqoL2PvD2Nd5+McA0S8JHTAzytYVnOE
-	WLnK8wqE4V+1QuHVNkVhI6AXNROkvXNGJMUuIGos1xt2WYj1ryAzL2FZIvdn8cyHvRwXdAABMez
-	b2EYSbn5wTN95r7A/Lpg=
-X-Google-Smtp-Source: AGHT+IHnO39V4+b6f1jfx33CjnYElfBanHZKx/akSem4UqrpMiaVwGrwOnGjhZ0e5y3d7myuygRTsQ==
-X-Received: by 2002:a05:651c:1546:b0:30b:b7c3:ea71 with SMTP id 38308e7fff4ca-30d7e222a65mr64186041fa.15.1742897753356;
-        Tue, 25 Mar 2025 03:15:53 -0700 (PDT)
-Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30d7d910e86sm17475501fa.102.2025.03.25.03.15.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 03:15:52 -0700 (PDT)
-From: Ulf Hansson <ulf.hansson@linaro.org>
-To: Linus <torvalds@linux-foundation.org>,
-	linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [GIT PULL] MMC and MEMSTICK updates for v6.15
-Date: Tue, 25 Mar 2025 11:15:51 +0100
-Message-ID: <20250325101551.26387-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hgKkNmif";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="23CUrKGd"
+Date: Tue, 25 Mar 2025 10:18:09 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742897892;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZSCN2rFg7XDZADyc8vjumX2JQGtBtWN/0JlG5k9h9rQ=;
+	b=hgKkNmifl7XmxmxiU0SEAG2zB6NaDGs0UW/uSr79MmBJTYxEb6QPc0wy4iB/c4K09J0J+x
+	fPK44s8MnBTCJYe4eFuQ4uKixzzsmeV9s+cU/YQfQ4n4nOsSnKlnp1i/6BBORp1VQhEtvK
+	0nXqCGbpddmBmJf60yzIjg/X258O/9TRvZ+xSF03kRKjfiLIvxM0xeOaRnNCizTasrHf87
+	VItU3cL0kLJuf7g2qPQWKaUX7R0ZGgKE0WoK61Nz3Tk1nKwzMwH9W/selc8kcYVfm0AMXG
+	FtUDSFI59fh1O3h1tw2c/uzwLBT4EtLIg/EJnVPQPpvKbV6Rqe+M2JZaYhazAw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742897892;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZSCN2rFg7XDZADyc8vjumX2JQGtBtWN/0JlG5k9h9rQ=;
+	b=23CUrKGdxWQO3e7PmxN9PZim3JQ4K4fUTG6IwSem3x7kEgcldqGaLr+5gzGOFwHZ2gGmh+
+	1GAotGjIh9/2/VCw==
+From: "tip-bot2 for Chang S. Bae" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/fpu] x86/fpu/xstate: Adjust xstate copying logic for user ABI
+Cc: "Chang S. Bae" <chang.seok.bae@intel.com>, Ingo Molnar <mingo@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Oleg Nesterov <oleg@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250320234301.8342-5-chang.seok.bae@intel.com>
+References: <20250320234301.8342-5-chang.seok.bae@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <174289788973.14745.15318583152985052097.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+The following commit has been merged into the x86/fpu branch of tip:
 
-Here's the pull-request with updates for MMC and MEMSTICK for v6.15. Details
-about the highlights are as usual found in the signed tag.
+Commit-ID:     8693f035b9d6814082aed41234f3459560ce81b2
+Gitweb:        https://git.kernel.org/tip/8693f035b9d6814082aed41234f3459560c=
+e81b2
+Author:        Chang S. Bae <chang.seok.bae@intel.com>
+AuthorDate:    Thu, 20 Mar 2025 16:42:55 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 25 Mar 2025 11:02:21 +01:00
 
-Please pull this in!
+x86/fpu/xstate: Adjust xstate copying logic for user ABI
 
-Kind regards
-Ulf Hansson
+=3D=3D Background =3D=3D
 
+As feature positions in the userspace XSAVE buffer do not always align
+with their feature numbers, the XSAVE format conversion needs to be
+reconsidered to align with the revised xstate size calculation logic.
 
-The following changes since commit 723ef0e20dbb2aa1b5406d2bb75374fc48187daa:
+* For signal handling, XSAVE and XRSTOR are used directly to save and
+  restore extended registers.
 
-  mmc: sdhci-brcmstb: add cqhci suspend/resume to PM ops (2025-03-17 11:42:42 +0100)
+* For ptrace, KVM, and signal returns (for 32-bit frame), the kernel
+  copies data between its internal buffer and the userspace XSAVE buffer.
+  If memcpy() were used for these cases, existing offset helpers =E2=80=94 su=
+ch
+  as __raw_xsave_addr() or xstate_offsets[] =E2=80=94 would be sufficient to
+  handle the format conversion.
 
-are available in the Git repository at:
+=3D=3D Problem =3D=3D
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v6.15
+When copying data from the compacted in-kernel buffer to the
+non-compacted userspace buffer, the function follows the
+user_regset_get2_fn() prototype. This means it utilizes struct membuf
+helpers for the destination buffer. As defined in regset.h, these helpers
+update the memory pointer during the copy process, enforcing sequential
+writes within the loop.
 
-for you to fetch changes up to c48e13e83513bd7eb4efffeeb562df9e4e1452d0:
+Since xstate components are processed sequentially, any component whose
+buffer position does not align with its feature number has an issue.
 
-  mmc: core: Remove redundant null check (2025-03-21 09:48:37 +0100)
+=3D=3D Solution =3D=3D
 
-----------------------------------------------------------------
-MMC host:
- - atmel-mci: Convert DT bindings to json schema
- - dw_mmc: Add support for the Exynos7870 variant
- - dw_mmc-rockchip: Add support for the RK3562/3528 variants
- - omap: Fix potential memory leak in the probe error path
- - renesas_sdhi: Add support for RZ/G3E variants
- - sdhci: Disable SD card clock before changing parameters
- - sdhci-esdhc-imx: Add support for the i.MX94 variant
- - sdhci-of-dwcmshc: Add support for the RK3562/RK3528 variants
- - sdhci-omap: Disable aggressive PM for eMMC/SD-cards
- - sdhci-pci-core: Wait for VDD to settle on card power off
- - sdhci-pxav3: Fix busy-signalling by using MMC_CAP_NEED_RSP_BUSY
- - sunxi-mmc: Add support for the A523 variant
+Replace for_each_extended_xfeature() with the newly introduced
+for_each_extended_xfeature_in_order(). This macro ensures xstate
+components are handled in the correct order based on their actual
+positions in the destination buffer, rather than their feature numbers.
 
-MEMSTICK:
- - rtsx_usb_ms: Fix potential use-after-free during remove
+Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Link: https://lore.kernel.org/r/20250320234301.8342-5-chang.seok.bae@intel.com
+---
+ arch/x86/kernel/fpu/xstate.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-----------------------------------------------------------------
-Andre Przywara (2):
-      dt-bindings: mmc: sunxi: Simplify compatible string listing
-      dt-bindings: mmc: sunxi: add compatible strings for Allwinner A523
-
-Avri Altman (1):
-      mmc: core: Remove redundant null check
-
-Biju Das (2):
-      dt-bindings: mmc: renesas,sdhi: Document RZ/G3E support
-      mmc: renesas_sdhi: Add support for RZ/G3E SoC
-
-Dan Carpenter (1):
-      mmc: renesas_sdhi: fix error code in renesas_sdhi_probe()
-
-Dharma Balasubiramani (2):
-      dt-bindings: mmc: mmc-slot: Make compatible property optional
-      dt-bindings: mmc: atmel,hsmci: Convert to json schema
-
-Dr. David Alan Gilbert (1):
-      mmc: slot-gpio: Remove unused mmc_gpio_set_cd_isr
-
-Dragan Simic (1):
-      mmc: core: Trim trailing whitespace from card product names
-
-Erick Shepherd (2):
-      mmc: sdhci: Disable SD card clock before changing parameters
-      mmc: host: Wait for Vdd to settle on card power off
-
-Frank Li (2):
-      dt-bindings: mmc: Change to additionalProperties to fix fail detect Unevaluated property
-      dt-bindings: mmc: fsl-imx-esdhc: Add i.MX94 support
-
-Jaehoon Chung (1):
-      mmc: sdhci-of-dwcmshc: Change to dwcmshc_phy_init for reusing codes
-
-Jiri Slaby (SUSE) (1):
-      tty: mmc: sdio: use bool for cts and remove parentheses
-
-Jonas Karlman (1):
-      dt-bindings: mmc: sdhci-of-dwcmhsc: Add compatible string for RK3528
-
-Karel Balej (1):
-      mmc: sdhci-pxav3: set NEED_RSP_BUSY capability
-
-Kaustabh Chakraborty (3):
-      dt-bindings: mmc: samsung,exynos-dw-mshc: add exynos7870 support
-      mmc: dw_mmc: add a quirk for accessing 64-bit FIFOs in two halves
-      mmc: dw_mmc: add exynos7870 DW MMC support
-
-Kever Yang (2):
-      dt-bindings: mmc: Add support for rk3562 eMMC
-      dt-bindings: mmc: rockchip-dw-mshc: Add support for rk3562
-
-Luo Qiu (1):
-      memstick: rtsx_usb_ms: Fix slab-use-after-free in rtsx_usb_ms_drv_remove
-
-Miaoqian Lin (1):
-      mmc: omap: Fix memory leak in mmc_omap_new_slot
-
-Ulf Hansson (3):
-      mmc: Merge branch fixes into next
-      mmc: sdhci-omap: Disable MMC_CAP_AGGRESSIVE_PM for eMMC/SD
-      mmc: Merge branch fixes into next
-
-Yao Zi (1):
-      dt-bindings: mmc: rockchip-dw-mshc: Add compatible string for RK3528
-
- .../bindings/mmc/allwinner,sun4i-a10-mmc.yaml      |  38 +++---
- .../bindings/mmc/amlogic,meson-mx-sdio.yaml        |   3 +
- .../devicetree/bindings/mmc/atmel,hsmci.yaml       | 106 +++++++++++++++++
- .../devicetree/bindings/mmc/atmel-hsmci.txt        |  73 ------------
- .../devicetree/bindings/mmc/fsl-imx-esdhc.yaml     |   1 +
- .../devicetree/bindings/mmc/mmc-controller.yaml    |   2 +-
- .../devicetree/bindings/mmc/mmc-slot.yaml          |   1 -
- .../devicetree/bindings/mmc/renesas,sdhi.yaml      |  16 +++
- .../devicetree/bindings/mmc/rockchip-dw-mshc.yaml  |   2 +
- .../bindings/mmc/samsung,exynos-dw-mshc.yaml       |   2 +
- .../bindings/mmc/snps,dwcmshc-sdhci.yaml           |   5 +-
- drivers/memstick/host/rtsx_usb_ms.c                |   1 +
- drivers/mmc/core/core.c                            |   2 +-
- drivers/mmc/core/mmc.c                             |   6 +-
- drivers/mmc/core/sd.c                              |   4 +
- drivers/mmc/core/sdio_uart.c                       |   2 +-
- drivers/mmc/core/slot-gpio.c                       |  12 --
- drivers/mmc/host/dw_mmc-exynos.c                   |  41 ++++++-
- drivers/mmc/host/dw_mmc.c                          |  94 ++++++++++++++-
- drivers/mmc/host/dw_mmc.h                          |  27 +++++
- drivers/mmc/host/omap.c                            |  19 ++-
- drivers/mmc/host/renesas_sdhi.h                    |   1 +
- drivers/mmc/host/renesas_sdhi_core.c               | 131 +++++++++++++++++++++
- drivers/mmc/host/sdhci-of-dwcmshc.c                |  72 +++--------
- drivers/mmc/host/sdhci-omap.c                      |   4 +-
- drivers/mmc/host/sdhci-pci-core.c                  |   6 +-
- drivers/mmc/host/sdhci-pxav3.c                     |   1 +
- drivers/mmc/host/sdhci.c                           |   9 +-
- drivers/mmc/host/tmio_mmc.h                        |  10 ++
- include/linux/mmc/slot-gpio.h                      |   1 -
- 30 files changed, 508 insertions(+), 184 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mmc/atmel,hsmci.yaml
- delete mode 100644 Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 1e22103..61b3a49 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -1100,10 +1100,9 @@ void __copy_xstate_to_uabi_buf(struct membuf to, struc=
+t fpstate *fpstate,
+ 	const unsigned int off_mxcsr =3D offsetof(struct fxregs_state, mxcsr);
+ 	struct xregs_state *xinit =3D &init_fpstate.regs.xsave;
+ 	struct xregs_state *xsave =3D &fpstate->regs.xsave;
++	unsigned int zerofrom, i, xfeature;
+ 	struct xstate_header header;
+-	unsigned int zerofrom;
+ 	u64 mask;
+-	int i;
+=20
+ 	memset(&header, 0, sizeof(header));
+ 	header.xfeatures =3D xsave->header.xfeatures;
+@@ -1172,15 +1171,16 @@ void __copy_xstate_to_uabi_buf(struct membuf to, stru=
+ct fpstate *fpstate,
+ 	 */
+ 	mask =3D header.xfeatures;
+=20
+-	for_each_extended_xfeature(i, mask) {
++	for_each_extended_xfeature_in_order(i, mask) {
++		xfeature =3D xfeature_uncompact_order[i];
+ 		/*
+ 		 * If there was a feature or alignment gap, zero the space
+ 		 * in the destination buffer.
+ 		 */
+-		if (zerofrom < xstate_offsets[i])
+-			membuf_zero(&to, xstate_offsets[i] - zerofrom);
++		if (zerofrom < xstate_offsets[xfeature])
++			membuf_zero(&to, xstate_offsets[xfeature] - zerofrom);
+=20
+-		if (i =3D=3D XFEATURE_PKRU) {
++		if (xfeature =3D=3D XFEATURE_PKRU) {
+ 			struct pkru_state pkru =3D {0};
+ 			/*
+ 			 * PKRU is not necessarily up to date in the
+@@ -1190,14 +1190,14 @@ void __copy_xstate_to_uabi_buf(struct membuf to, stru=
+ct fpstate *fpstate,
+ 			membuf_write(&to, &pkru, sizeof(pkru));
+ 		} else {
+ 			membuf_write(&to,
+-				     __raw_xsave_addr(xsave, i),
+-				     xstate_sizes[i]);
++				     __raw_xsave_addr(xsave, xfeature),
++				     xstate_sizes[xfeature]);
+ 		}
+ 		/*
+ 		 * Keep track of the last copied state in the non-compacted
+ 		 * target buffer for gap zeroing.
+ 		 */
+-		zerofrom =3D xstate_offsets[i] + xstate_sizes[i];
++		zerofrom =3D xstate_offsets[xfeature] + xstate_sizes[xfeature];
+ 	}
+=20
+ out:
