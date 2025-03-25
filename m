@@ -1,78 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B091EF099;
-	Tue, 25 Mar 2025 10:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B687254AED;
+	Tue, 25 Mar 2025 10:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742898492; cv=none; b=keTGjsVXhWBPoKgWDVbxh1CVcDAFCJCegYxleJ6ldmLIeGDxyaImJ7T+ljJocyjPRmUp5MqmKgwENDdot62dCx0b7MImKJstK2/d6sbMPBvHbhp9xzxvJxu6Xc7JS6IY77L7wT7W3zUD87JhE5bfrC7MLYmlme8b2PIALzV9eRU=
+	t=1742898494; cv=none; b=AWa6ntXW/fYV/To6rtQIQ5K0jaDsTEXHQZTghmB8WXDAMsbB3GfSn3PZikK1wpGXxKhxGO0zxafsr7qyb+z/gWzIs0AP02I/XOr2hfEmBFuDUNJLiLaOfv8JiIw+wZh0oKGGvE6FUwMSn5mNWydST1iozhjwKCq2NzvXUbIJJ6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742898492; c=relaxed/simple;
-	bh=ynEc60K6YQeeOcyOvYuKO+SfYNwPtk04/dRhtnauNzE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nnupKtxV9rlDDEEEPILj8JV/ge7/r5jay5xFz/WUTczQkh+Tt31HiqogIxK0Tg1OuRTX4RpkFA3pYfk9pzo81Xe4SIjhlv59tk2Isrt2etfPxiMkfXUxZXUjcCkZMOhE39HSazrVzMyIwp6Fbb7cGQTEGNuiq2+aLHTKAq6+zTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ke/f4Onm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ke/f4Onm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E401DC4CEE4;
-	Tue, 25 Mar 2025 10:28:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742898491;
-	bh=ynEc60K6YQeeOcyOvYuKO+SfYNwPtk04/dRhtnauNzE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ke/f4OnmuUWItLRENhmJy648Pe71M1IKAzs3RZS2h/JjqKNXTmXcWr1AcwZ+yEzkA
-	 u+nKn4DKBsNe3A1zp239hJJeT5uwMwwWF/pdQKuceQok3bQN3pa7QeQXicH62/XcrO
-	 EO55eBChz7Quc9TxX1Af4ZZZRxoBuTO9tbR75J6Tpt3FZNND2lf2Q8n16FaU3kGSVH
-	 FfMnitzr48057ndp1IpkjU2oTbksKQO76XGAoJaqmovvXP+g71pKfuPPZG9FdNhA3Q
-	 ZKku/IGxizfNjYJh8K7lYpLtBGIOVwKTORpLxxAa0Z4qlNBZnZZBAAIQaC6FfvsJcF
-	 /7HqrFsm3aXEg==
-Date: Tue, 25 Mar 2025 03:28:03 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: Stanislav Fomichev <sdf@fomichev.me>, netdev@vger.kernel.org,
- davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- linux-kernel@vger.kernel.org, jhs@mojatatu.com, xiyou.wangcong@gmail.com,
- jiri@resnulli.us, horms@kernel.org
-Subject: Re: [PATCH net-next v2] net: hold netdev reference during
- qdisc_create request_module
-Message-ID: <20250325032803.1542c15e@kernel.org>
-In-Reply-To: <Z-HbGR1V9-1Fwf0H@mini-arch>
-References: <20250320165103.3926946-1-sdf@fomichev.me>
-	<20250324150425.32b3ec10@kernel.org>
-	<Z-HbGR1V9-1Fwf0H@mini-arch>
+	s=arc-20240116; t=1742898494; c=relaxed/simple;
+	bh=VoMONhNNoSLZOMZUowEmZUtizC7WgFG9m+4dKgH/5w8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aWOLrH/8W8IU4f2Z3RUxulSOUlVIR7Xu/llj3ZYFus9IITFVjXb1y0U1dNLO+MNjqgWbOpCveNYIyDqf9gv6K1IMih1AqpU07mnbtKrfbHdj3SCgXXz8Gs42O6rytcoJ3U5xM9mR4HSBhTIAuq54iqMg7Tr9om23S+tsT862U5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-1d-67e28538ffd3
+From: Rakie Kim <rakie.kim@sk.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	david@redhat.com,
+	Jonathan.Cameron@huawei.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	Rakie Kim <rakie.kim@sk.com>
+Subject: Re: [PATCH v3 3/3] mm/mempolicy: Support memory hotplug in weighted interleave
+Date: Tue, 25 Mar 2025 19:27:39 +0900
+Message-ID: <20250325102804.1020-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <Z-FfAUiGePF9mnPS@gourry-fedora-PF4VCD3F>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPLMWRmVeSWpSXmKPExsXC9ZZnoa5F66N0g/PfVSzmrF/DZjF96gVG
+	i6/rfzFb/Lx7nN1i1cJrbBbHt85jtzg/6xSLxeVdc9gs7q35z2qxek2GA5fHzll32T262y6z
+	e7QcecvqsXjPSyaPTZ8msXucmPGbxWPnQ0uP9/uusnl83iQXwBnFZZOSmpNZllqkb5fAlXGt
+	Yx17wVv2ituntBoYO9m6GDk5JARMJCZ+WsYIY29dvpGpi5GDg01ASeLY3hgQU0RAVaLtinsX
+	IxcHs8AjJonT7UtZQcqFBcIlug8+ZAGxWYBqTjz5DjaGF2jMvdVtTBAjNSUaLt0DszkFzCTe
+	TrwHtlZIgEfi1Yb9UPWCEidnPgGbwywgL9G8dTYzyDIJgftsEifurmGBGCQpcXDFDZYJjPyz
+	kPTMQtKzgJFpFaNQZl5ZbmJmjoleRmVeZoVecn7uJkZgsC+r/RO9g/HTheBDjAIcjEo8vAHh
+	D9OFWBPLiitzDzFKcDArifAeYwUK8aYkVlalFuXHF5XmpBYfYpTmYFES5zX6Vp4iJJCeWJKa
+	nZpakFoEk2Xi4JRqYFzInOrxnnmXytuIUI5Om/Mf6wMtt/PV/UhW5foZH5WoWsGx49vPFz5G
+	x+OVP1nvdHrPn/fcm/F9z4qnfiI7jm49cUz/ilO7uJOiqeLMvwv5vdXvGm1ed5VPeafBnAD/
+	9T+qtQ4eX6lzbZYUw7Wt1+ousXucjv/7/ebxlf+SlGKOa7if7/m6iVGJpTgj0VCLuag4EQDV
+	R8qBcgIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJLMWRmVeSWpSXmKPExsXCNUNNS9ei9VG6wY0ZYhZz1q9hs5g+9QKj
+	xdf1v5gtft49zm7x+dlrZotVC6+xWRzfOo/d4vDck6wW52edYrG4vGsOm8W9Nf9ZLQ5de85q
+	sXpNhsXvbSvYHPg8ds66y+7R3XaZ3aPlyFtWj8V7XjJ5bPo0id3jxIzfLB47H1p6vN93lc3j
+	220Pj8UvPjB5fN4kF8AdxWWTkpqTWZZapG+XwJVxrWMde8Fb9orbp7QaGDvZuhg5OSQETCS2
+	Lt/I1MXIwcEmoCRxbG8MiCkioCrRdsW9i5GLg1ngEZPE6falrCDlwgLhEt0HH7KA2CxANSee
+	fGcEsXmBxtxb3cYEMVJTouHSPTCbU8BM4u3Ee2CrhAR4JF5t2A9VLyhxcuYTsDnMAvISzVtn
+	M09g5JmFJDULSWoBI9MqRpHMvLLcxMwcU73i7IzKvMwKveT83E2MwABfVvtn4g7GL5fdDzEK
+	cDAq8fBGxD1MF2JNLCuuzD3EKMHBrCTCe4wVKMSbklhZlVqUH19UmpNafIhRmoNFSZzXKzw1
+	QUggPbEkNTs1tSC1CCbLxMEp1cAYtyO5Ye2lp9KRzepNEp+0jvPHnWWtNE5y+qwXnBz64MYf
+	2R+eW88c5LFc9cagr4EtT/7U0u6atnDpvSpnZp638ouf7FXFKC9iYCsnsLNH/tXFlrT919ob
+	Ltcb7Ym48Z49tiEuMG52RfJy9lsG/I7CN/00wqVeHLxpWSHTaTzlvlvZCRbuw0osxRmJhlrM
+	RcWJAMl8FbNsAgAA
+X-CFilter-Loop: Reflected
 
-On Mon, 24 Mar 2025 15:22:17 -0700 Stanislav Fomichev wrote:
-> > I'm not sure if this is a correct sequence. Do we guarantee that locks
-> > will be taken before device is freed? I mean we do:
+On Mon, 24 Mar 2025 09:32:49 -0400 Gregory Price <gourry@gourry.net> wrote:
+> On Mon, Mar 24, 2025 at 05:54:27PM +0900, Rakie Kim wrote:
 > > 
-> > 	dev = netdev_wait_allrefs_any()
-> > 	free_netdev(dev)
-> > 		mutex_destroy(dev->lock)
+> > I'm sorry, the code is missing.
+> > I may not fully understand the scenario you described, but I think your concern
+> > can be addressed by adding a simple check like the following:
 > > 
-> > without explicitly taking rtnl_lock() or netdev_lock(), so the moment
-> > that dev_put() is called the device may get freed from another thread
-> > - while its locked here.
-> > 
-> > My mental model is that taking the instance lock on a dev for which we
-> > only have a ref requires a dance implemented in __netdev_put_lock().  
+> >     case MEM_OFFLINE:
+> >         if (!node_state(nid, N_MEMORY)) --> this point
+> >             sysfs_wi_node_release(nid);
+> >
 > 
-> Good point, didn't think about it. In this case, I think I need to
-> get back to exposing locked/unlocked signal back to the callers.
-> Even with __netdev_put_lock, there is a case where the netdev is
-> dead and can't be relocked. Will add some new 'bool *locked' argument
-> and reset it here; the caller will skip unlock when 'locked == false'.
-> LMK if you have better ideas, otherwise will post something tomorrow.
+> This should work.  I have some questions about whether there might be
+> some subtle race conditions with this implementation, but I can take a
+> look after LSFMM.  (Example: Two blocks being offlined/onlined at the
+> same time, is state(nid, N_MEMORY) a raced value?)
+> 
+> ~Gregory
 
-I wonder if we can bubble up this module loading business all the way
-to tc_modify_qdisc(), before we look up the dev. At this point we
-already checked that user has permissions, so we can load the module,
-whether the request is valid or not? Instead of adding another bool
-we can probably kill the "replay" silliness.
+I will also further review the code for any race condition
+issues. I intend to update v4 to incorporate the discussions
+from this patch series. Your feedback and review of v4 after
+LSFMM would be greatly appreciated.
+
+Rakie
+
