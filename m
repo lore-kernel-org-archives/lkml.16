@@ -1,93 +1,63 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74F2269D16
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 22:26:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891D813633F;
+	Tue, 25 Mar 2025 22:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742941604; cv=none; b=QoKy/7nLE0Nv/pTlsF5oBfH2o5E72vx10g2r2rWoO7dAcroIn9vEiGvKvXJKJmg91/Eypb+mouxyKPWefks4t/uUdZ9+JunuNqI8zTppaD8nXzsJj+xdqLLV76s7bihRmV2zkQQT8AdmxHNsUX0DAwnlIjHAbMR6FIXvwqdQvpg=
+	t=1742941636; cv=none; b=nr8eijJZ/OLR0e+g+ABBTdFe/103sHdASdtp3rJAL2KmgZxHHC+PiveanD7l32g/c0Ve4SRbEf9XDWLUKQ9VQm/ZHAeVy/Mo/RLxA81YkRHcUUYB6k+TZXi7Z65/MAWzyP2Wy4lAHrZ8Jy5JHncv66sxUg7B4PlrPb9i7ktu0P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742941604; c=relaxed/simple;
-	bh=Ax/xgb3TsFCNXd+hqnMtNKg6gGOsr2N5FRf66cIOIgg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KNrXec2KsPBvGGI3o0XDdPqkDttgq4CodSZBBpHG9i/aRNg2z5nZaAPs1G1ymm+YK5tI+JVwiUH1jfG2qg5BfvtpSiVA6qj3syBgmQQgSEpkbQcmg+Dyj65exQYl9nnOfs3u6f40r87JGdqB31xBj1BsRUHiaBZJdzS1K5cKIUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Vi7sb70J; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1742941636; c=relaxed/simple;
+	bh=X6ABw96X6bt9yVBOdRc0n9HFdKPFnmTXoqlyi/sJYs4=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=feKBmVL5RfnEWQzM03vXbZKuHqD6OTWvimfLb1qQAMnfSBvS4cbFJUjw88Hm/bp6aAAZAUrzvcXZ0xjev6ubKIzcyE5AIgDS9f6QDP04DfxRSnx2XNRzSgLZ2X0gFqk4hUBuRyvygCAjwveEhRuFO4R53WWdRQunmgT+NeFrfhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kBtRqyW4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vi7sb70J"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2260c915749so83710875ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 15:26:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1742941602; x=1743546402; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ax/xgb3TsFCNXd+hqnMtNKg6gGOsr2N5FRf66cIOIgg=;
-        b=Vi7sb70JtuukLn5QGDZk04k5Cnb/LmkT+4Bcd5F5LF6Ue7BmnVPKXComjR0tj04gIw
-         iukAnQ2ki9J5FupWsM0WhPvw8VqRm+G3jEzYb3m9eoX/n7T1x2gFGdT7qLzq+ZDRafqB
-         34LDoKzaA2fwQXL5FtT8v5Tvy8wLsQO75Qw2g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742941602; x=1743546402;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ax/xgb3TsFCNXd+hqnMtNKg6gGOsr2N5FRf66cIOIgg=;
-        b=QtTj2vLatyxdADZq34uBVXf9+qG7aHGpEUQOG0JZzYxNgJntO55a9c91LcoWFbM0S6
-         pkwnsA5Lmg0JUDEGoEX9gpl2psHDIW1nQSov/p/gkiu/y6dz/vSDm1nW7GhKkxsdElEp
-         uvuIypcxXkhRoILABIBknQX0Hsy5vgChzYS0nMx36ApMuRXD0f6UN6SRYA/G/IsOgjMA
-         UtClpqrEaqUe7lfWf/fTahg1vcxLmUQrVoKWVnVWyArOOs42ipR9SqjQO4TVmwhz0A9f
-         EJoid0pbFZJ47wfJy2UkoLx8lQzpreME/Vn5YfR8mMOJ4XxQJuiTY1dNcTKnA8g89CaN
-         0ndA==
-X-Forwarded-Encrypted: i=1; AJvYcCVgpbYpoLVCG44f+kL+acqAaA39iQaJD596O1ND2el80HrDTUmS42Gd2JV/OQ/G4AuOXXIlnF4pQuu4dCI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbxGsrpv8gS6xTsfwp2eeef/auXkux09/c8NNnPpaTXns1JAux
-	snIzxFU91G/mYC45sa+uaCfSKv+gIxNzXMdVonJ+i0lz4dqvMiLdfsnbbowBsQ==
-X-Gm-Gg: ASbGncvpAPFl0KAi+62yKPFNfVfviS44XW8ECMJOLcwVrsUOppJGozJ42dVB0WAu38M
-	RXsJs9QvawqmXdrnHkjnznLCuF6UaFhtvRbzyPsJjV3GRnQtZgyju2yC0adJ18Edv4XH4mXmoSU
-	nsi/GhSLyd68dpAG02Ent0C45hDB1gJmBRyWXfZPt8JU+iUoC551jT6Q++UIGfJ0ss9384Wwi2N
-	lyKr6NBdxWWBKeOahL6k88FkbhtNAKLwbxdI2w0102Y5UbfYJgdMiDHM/FDKe7paThh1tWzOHlB
-	uFeTdHyaCzEH90fZRhY9iHNNqHkrYYwmITkEOF73h9fuyf7XhS5q5jRaSNM/XQHQbQ7CtO7z/NZ
-	YxtT38cc=
-X-Google-Smtp-Source: AGHT+IHVHlRkM1Xo1gijBPKRyHa63UrZO0+fcBb9I1JM7qtE52PfSIfTdRLQC0cXlJNB8zkMo6XFeQ==
-X-Received: by 2002:a17:903:3285:b0:223:5ca1:3b0b with SMTP id d9443c01a7336-22780e122c6mr238387615ad.40.1742941601896;
-        Tue, 25 Mar 2025 15:26:41 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:b885:47c3:6268:77fb])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22780f39d48sm96249485ad.37.2025.03.25.15.26.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Mar 2025 15:26:41 -0700 (PDT)
-Date: Tue, 25 Mar 2025 15:26:40 -0700
-From: Brian Norris <briannorris@chromium.org>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Francesco Dolcini <francesco@dolcini.it>,
-	Johannes Berg <johannes.berg@intel.com>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	David Lin <yu-hao.lin@nxp.com>, kernel@pengutronix.de,
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: Re: [PATCH wireless-next v5 00/10] mwifiex: cleanups
-Message-ID: <Z-MtoOCLX2_1GztI@google.com>
-References: <20250324-mwifiex-cleanup-1-v5-0-1128a2be02af@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kBtRqyW4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D2D4C4CEE4;
+	Tue, 25 Mar 2025 22:27:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742941636;
+	bh=X6ABw96X6bt9yVBOdRc0n9HFdKPFnmTXoqlyi/sJYs4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=kBtRqyW4JKru+IFTFSL67BY6WzA9fFkvOqr1qjWC92A0SfUWh1r0p1WBMCkPU4hPF
+	 9qBL/vmelOlyR++GWNysJjVBxDP/APsHE+AMBihshp0FqjmT4qBJzTW3mW7fHazjh9
+	 obX0oCfmVQgkHiX8SuM1nQpWfiCs63PkQxw95OxG+Z0IOYASGBwvlP46WfvKHJgtf6
+	 WTq8t4EPwszYBXFOWPxiRUwou+veD4up5y/F4S9thL41th03jS4dzcsaMxTJlqXRRu
+	 xRcnsP60yc0nktIMXmf7cqZvy7nws7yQhfT9K62I31S0M0H3MFX0I0I9NdnwPiiCpJ
+	 ej2TOWH/Vtskw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB168380DBFC;
+	Tue, 25 Mar 2025 22:27:53 +0000 (UTC)
+Subject: Re: [GIT PULL] ACPI updates for v6.15-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <CAJZ5v0h2BgjPbZXe7yeXo-Y9MnvX+bXT5QLEq6KKLJc5N6QR2Q@mail.gmail.com>
+References: <CAJZ5v0h2BgjPbZXe7yeXo-Y9MnvX+bXT5QLEq6KKLJc5N6QR2Q@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-acpi.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAJZ5v0h2BgjPbZXe7yeXo-Y9MnvX+bXT5QLEq6KKLJc5N6QR2Q@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-6.15-rc1
+X-PR-Tracked-Commit-Id: 8b30d2a3962ae07e67aee90d6698a6a68e771c6c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 21e0ff5b10ec1b61fda435d42db4ba80d0cdfded
+Message-Id: <174294167244.756596.6230189804241957724.pr-tracker-bot@kernel.org>
+Date: Tue, 25 Mar 2025 22:27:52 +0000
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324-mwifiex-cleanup-1-v5-0-1128a2be02af@pengutronix.de>
 
-On Mon, Mar 24, 2025 at 02:24:01PM +0100, Sascha Hauer wrote:
-> This contains several cleanup patches for the mwifiex driver. I dropped
-> the MAC address fixing patch this time as it needs more discussion, but
-> the remaining patches sent here are nearly unchanged from v1 and should
-> be good to go.
+The pull request you sent on Mon, 24 Mar 2025 17:29:56 +0100:
 
-Thanks! For patches 1-9:
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-6.15-rc1
 
-Acked-by: Brian Norris <briannorris@chromium.org>
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/21e0ff5b10ec1b61fda435d42db4ba80d0cdfded
 
-I had some issues with patch 10.
+Thank you!
 
-If you respin before Johannes applies any of these, feel free to carry
-my Acked-by.
-
-Brian
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
