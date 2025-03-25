@@ -1,102 +1,114 @@
-Received: from ksmg01.maxima.ru (ksmg01.maxima.ru [81.200.124.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC6125A62B;
-	Tue, 25 Mar 2025 14:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B80D2571A7
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742912371; cv=none; b=qTqIJqWzJ/X11UtUFJq3duMgTj78OgJceyIw6zD+g/xUO6S2V6W0ML3UMlUc7GbGB6PYmfA+O/Y9m3XdyymVTjlyyMk7Fq1EXyxyPCzmSjtIcRdX2LswvuCGImB/DHZj66iKcqhhVnCvCyvbiky1ffGj5t7GLC5G4yXgr8WjdiI=
+	t=1742912413; cv=none; b=KagWONeje69z5D+0vUJo1gHjjaH1iVM7d2540X0eK0O17OmylfYCd+m3eAoYWlGYTkD6wwONEKagehaQfEwGu1vm8mLolAq1gIhmED13sDmbq5CCiYffP6yG5TGKkNbQ7O79L15RV6J21LI2HTsSFcjw2hP39k5900+lm047z2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742912371; c=relaxed/simple;
-	bh=GmM9nc0h7Rpsda36dj+2kNnrsCf+HAeRmCa1HiIvXRQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I7wvCdBozfZ8H9YNgWT45GRvSRNUkXdF02yd+8og3suph4kK4eRPmsM7kvDr128BGLe8IUvlGnRsooLOQJkkbI2Y8vGiobMPuE/adSG7XIA9lPdGXQQVxk3lmvuTdBDm8Qbutx6eJu38zPDIqdQ18xELW1BkZgITvb0cfbNIDHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=CNJSVftO; arc=none smtp.client-ip=81.200.124.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
+	s=arc-20240116; t=1742912413; c=relaxed/simple;
+	bh=TOpjA7jpbG6If//PTh5k3PFBfbMxxOiOsJHPkDgO9lY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jXs9n0HxEMa+AeTOjjQjC0clF/5+nhiRSpUABdkT8PzyCvO+kmicEK+/ztSPQV+Ank6qHPR8dMvXt8VVaf4f04jjFiefLUJ7jqcY+dU9xaqbS8JAI98wwpfIn9iSORVVPvyBQg5NLp/08QqwpQIcP+qLpIcgDWLOxinFKgMx28o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y09QKFn/; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="CNJSVftO"
-Received: from ksmg01.maxima.ru (localhost [127.0.0.1])
-	by ksmg01.maxima.ru (Postfix) with ESMTP id 1BAD5C001E;
-	Tue, 25 Mar 2025 17:19:28 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg01.maxima.ru 1BAD5C001E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
-	s=sl; t=1742912368; bh=xOIKQhfLeGn+BFImddppcHEQgCWq+xEUuCyR1dMleec=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=CNJSVftOKCqRKX5+oLBucq6KGFkuJIXJmSD9gEBUroZJAi6hOnGKYfhBCivitmyZh
-	 fVCiMNTbdBJXgJPLyQKt09ow1ycjBdUG4JGBbRjgiq3EAWWj1IY8Wds74Abt6x22/Z
-	 0DKgJ8qNj/7BK7RyLAuhNkeARzW52ltWp28hXbxJwOVNLtFP4bgI3UhUVz9EEZOgpf
-	 NMox4+BP8i8B7fhqPFQJV61QSDUDh8TdoWhFemBkEexlvGcEyWNuPqqvxVCbxUXtqD
-	 o46Cff3AHRDEI9Z4hnOVHgWBzF9d8brFEzl/Eorq0iqPT5P13RWjnXx3i0N2SlsFUz
-	 i7nlZe9Bl0sCA==
-Received: from ksmg01.maxima.ru (mail.maxima.ru [81.200.124.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
-	by ksmg01.maxima.ru (Postfix) with ESMTPS;
-	Tue, 25 Mar 2025 17:19:27 +0300 (MSK)
-Received: from db126-1-abramov-14-d-mosos.mti-lab.com (172.25.20.118) by
- mmail-p-exch01.mt.ru (81.200.124.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 25 Mar 2025 17:19:26 +0300
-From: Ivan Abramov <i.abramov@mt-integration.ru>
-To: "David S. Miller" <davem@davemloft.net>
-CC: Ivan Abramov <i.abramov@mt-integration.ru>, Jakub Kicinski
-	<kuba@kernel.org>, <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH net 4/4] net: Avoid calling WARN_ON() on -ENOMEM in __dev_change_net_namespace()
-Date: Tue, 25 Mar 2025 17:19:12 +0300
-Message-ID: <20250325141912.499929-1-i.abramov@mt-integration.ru>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y09QKFn/"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ff62f9b6e4so1729801a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 07:20:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742912411; x=1743517211; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i4L7vtbekxau+N8vnTb0gwa/BBAesYIKpvGqtJoUimg=;
+        b=Y09QKFn//HzLsdYQJ6wxVZ3+XCVCF2zabvB9eRBVbO0a+RX/Pd70il96Sb+tsSfOUD
+         uDBquokHr7qYLE3HSNSrjyXk4o2zJUUzDQd6UhXZ6Y/naEm9JMeJwOjF9PE1/YWErI0k
+         b67q5RJFBWrj1Vxkl+2vrL6mak1QEMt6JlY0FUqndxHGhIKj4OClBL242zy6bAc45roP
+         Gq7watuZQ16pn3/x8JwFrC4gKjknOSOHE/eI7+amrHVZJJqLdcjrQDpVdx2kfe4XBK5F
+         rjF7H2p58B6lEeWH8X9z1pWC1yDDhAMGjbPxGHtJMVWhIqMQSxtRAE9TdXzdZgih7Q4h
+         gufA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742912411; x=1743517211;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i4L7vtbekxau+N8vnTb0gwa/BBAesYIKpvGqtJoUimg=;
+        b=nI+VWULKuyW/jGoNIDJwGoDsrCxa8RJXreizcmTC1TbQjMZSdM8apyw5E4TXTMTMxT
+         +M/Vr13+Zxv/N6E33V3511Dn6uYKDobVORO07yycmIDbg5Sqn/0xVEedwxcA1OF8y++y
+         qfGuVaZTVP3AyFBLLZICqtwltz9jQDtKLP0teSOTA+mdFNNXOtK6iEr7q7GWFuI22isI
+         kYwuhpAqw++0OtH5iuNnXQN1+PtvAkmfTqliwZFFcM4Z+7aH7N1332//dYTRMrYlOw67
+         +s7MZrI6GrzoHMDqjV3gddCgrKSH0a30J6X+I6Kx6vlxMPePCxJPAVJiBb5dZoADyoEM
+         FCDg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgosix97EKfFU+FLfIdAJ9I77AWWSpk1RalLdn/SxQJ49k4a5gnZqd+K4Q7r0odOqVrzT2hJVb1TD3rq0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpryKHtyvW6dF/39FAIwI45rgo5FqvGN6MoMbR6COjH6e5t+9O
+	WeK+dV6je0wykda+1qtB+YbxZ5OUjCmJbMKZ99GH1aXSUbqyjx///XOCcV/Eqscq0ZF3Gr9lMKn
+	2nVFw1dBHD31xeJOOmNtg8vFS++w=
+X-Gm-Gg: ASbGncsudIB0JOONhpQKHTxVvZyzEQrcG/QHwgoM8RRsZnXmxXW4b7zSrKp++NDPr5X
+	3HnNhbeXu6gaSmCUFEMdgv/gFGjn224bM/x1T9qaqjaAgGj/0aDxCIEs4GsvxiZ1HN1bw4ENrZb
+	rKWbAeDro1Rh7TP+bHPeQL7Hp7xw==
+X-Google-Smtp-Source: AGHT+IHAolY+Get/kJBAAF50KlItDOfMAbpeBYkYfFsflb7rqe6tkJSn71jeSSxBNSv3ybme1lRgYtjxQaXjP5DQFqs=
+X-Received: by 2002:a17:90b:17c5:b0:2ff:4a6d:b359 with SMTP id
+ 98e67ed59e1d1-3030ff14660mr8976662a91.7.1742912411258; Tue, 25 Mar 2025
+ 07:20:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: mmail-p-exch02.mt.ru (81.200.124.62) To
- mmail-p-exch01.mt.ru (81.200.124.61)
-X-KSMG-AntiPhishing: NotDetected
-X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
-X-KSMG-AntiSpam-Envelope-From: i.abramov@mt-integration.ru
-X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {rep_avail}, {Tracking_from_domain_doesnt_match_to}, mt-integration.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;81.200.124.61:7.1.2;ksmg01.maxima.ru:7.1.1;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 81.200.124.61
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 192091 [Mar 25 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/03/25 08:37:00 #27838357
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 7
+References: <20250325014912.23911-1-srikarananta01@gmail.com>
+In-Reply-To: <20250325014912.23911-1-srikarananta01@gmail.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Tue, 25 Mar 2025 10:19:59 -0400
+X-Gm-Features: AQ5f1Jpvm1BjO8DicOpLFH6O-0g58f9oKH-Qp-1OSpOcFPScESTJDPRJR3nUcy8
+Message-ID: <CADnq5_N9skrjQHEq5QP9c=7dad7HeSP7FaoTQFEg92dGdnJLtg@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/amdgpu: Fix typo
+To: AnantaSrikar <srikarananta01@gmail.com>
+Cc: alexander.deucher@amd.com, christian.koenig@amd.com, airlied@gmail.com, 
+	simona@ffwll.ch, Jack.Xiao@amd.com, sunil.khatri@amd.com, 
+	Hawking.Zhang@amd.com, shaoyun.liu@amd.com, Jiadong.Zhu@amd.com, 
+	chongli2@amd.com, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-It's pointless to call WARN_ON() in case of an allocation failure in
-device_rename(), since it only leads to useless splats caused by deliberate
-fault injections, so avoid it.
+Applied.  Thanks!
 
-Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+Alex
 
-Fixes: 8b41d1887db7 ("[NET]: Fix running without sysfs")
-Signed-off-by: Ivan Abramov <i.abramov@mt-integration.ru>
----
- net/core/dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 2f7f5fd9ffec..14726cc8796b 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -12102,7 +12102,7 @@ int __dev_change_net_namespace(struct net_device *dev, struct net *net,
- 	dev_set_uevent_suppress(&dev->dev, 1);
- 	err = device_rename(&dev->dev, dev->name);
- 	dev_set_uevent_suppress(&dev->dev, 0);
--	WARN_ON(err);
-+	WARN_ON(err && err != -ENOMEM);
- 
- 	/* Send a netdev-add uevent to the new namespace */
- 	kobject_uevent(&dev->dev.kobj, KOBJ_ADD);
--- 
-2.39.5
-
+On Tue, Mar 25, 2025 at 4:14=E2=80=AFAM AnantaSrikar <srikarananta01@gmail.=
+com> wrote:
+>
+> From: Ananta Srikar <srikarananta01@gmail.com>
+>
+> Fixes a typo in the word "version" in an error message.
+>
+> Signed-off-by: Ananta Srikar <srikarananta01@gmail.com>
+>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/mes_v11_0.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/mes_v11_0.c b/drivers/gpu/drm/amd=
+/amdgpu/mes_v11_0.c
+> index f9a4d08eef92..fccf6e255b82 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/mes_v11_0.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/mes_v11_0.c
+> @@ -646,7 +646,7 @@ static int mes_v11_0_misc_op(struct amdgpu_mes *mes,
+>                 break;
+>         case MES_MISC_OP_CHANGE_CONFIG:
+>                 if ((mes->adev->mes.sched_version & AMDGPU_MES_VERSION_MA=
+SK) < 0x63) {
+> -                       dev_err(mes->adev->dev, "MES FW versoin must be l=
+arger than 0x63 to support limit single process feature.\n");
+> +                       dev_err(mes->adev->dev, "MES FW version must be l=
+arger than 0x63 to support limit single process feature.\n");
+>                         return -EINVAL;
+>                 }
+>                 misc_pkt.opcode =3D MESAPI_MISC__CHANGE_CONFIG;
+> --
+> 2.49.0
+>
