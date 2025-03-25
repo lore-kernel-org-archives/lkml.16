@@ -1,57 +1,75 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0511B25A357;
-	Tue, 25 Mar 2025 14:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5F7CA52
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742913009; cv=none; b=Y3U9ZFdBsBk4cA2kOT2Qi5HwC6juvRafuoM9CglMGO0nHMuAUeRkCFUzVHq8WqeBzc4FLfXo4cJXebZpQaeEcY5++6hWmtKzCK3kg9CU2kzZ7ViPiP1C7yZoe4Kfz9TYb6s3+X8p4RudZ1brG5p+3OeIUtPusOKg0HlzfnVMex0=
+	t=1742913182; cv=none; b=RZ9Zc6YeHJGb4B/StEHkZjze28+7AMnMHkHEEt2sjsGxliRVAPXIErd6Vz2nn2D4ZMrJOrXXw+LN9wCE3hl1KMyrTpo9e+kScZ1Kxl/UcxZX9WG6XHfn2amAxxjFkY6MFlLnIDXggYcEPvvfB8HdstbjwHVAt0uv0aQEJ5om5u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742913009; c=relaxed/simple;
-	bh=DGCPw7uqthNFfxZvHSwm7GOwjXM6Etp/joQOSVf8YSo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=HjYhpYJC66JVt6hIM6DN+cidE+Eci/YE/nx/YFo5wbPCf0X4ycak7X5OtPtRDu48Pmwz6MlA68qApBOSSgxhFkfLPnYeUoFV3mkDthYCBCGFyWJA2726oT6dGhUdabAz0sMfAIWlJpjF/6od+TvFF+B5Dx1DYH1/ZBpHAFDo+B0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=imwAy0Vv; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1742913182; c=relaxed/simple;
+	bh=m0zKd5ydXx6oxCg5WUGcqC9H5SeZXiPlfiQFHbhUVtM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dS/LWIljQL32cQ+xarpUCn24k7Ne7uffQpyZ7lBEq+sbMen4DDMq7QC5iofwZ/h1J+5VFGgjfc/bDGGjNJUAPjYzej8IGzKoL2nzSCQgav7dMwzVNYAor7kk4aKQQOXqwyZ8u0KP9jhkmHPuEoYkCCccWtmHUPKBR23T2jCN6pE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BvXM8LVe; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="imwAy0Vv"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 91BE440E0219;
-	Tue, 25 Mar 2025 14:30:03 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id aXqoICNDnDVX; Tue, 25 Mar 2025 14:29:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1742912999; bh=Er5cXo6uby70n3806YQnxGFQf13dha/YemMQxz/+lOk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=imwAy0VvHttLJzyFH64ToN0OAAAyje1MVKE6+Lpw0BqK+h6vdk9lXsH2m6mjPNo2l
-	 vM+7Jg/0M6eaaC8qPebvNRmEcpOxoiQwabbwpryk7Ax9ms9VvL/9mDfGyu+BTdcCfk
-	 CdCqyq+jZysRdtudmtPbsxfRwNxEn2aoJaI5Df7Ae25HArNeudharFcmamDzWtTJr8
-	 3gnJOLt8/jX4gJTfe4S3xDy15n/bu56rRGPa6/TFomExtkZaE2Yp3rMO57iEKzWdgq
-	 tWlO9AN11Y/vMbJvZkju/jANtKEnUfLd5HubhnzYlci0CN7lrUIFJjx8OExbZ0Hb9U
-	 +VeJabunVyDWHZQb4j9WH1IeGZPw3fOvc42JQ5c6tNkHFLLok9HY8bxjHVW02VnKuP
-	 IhpgCLl/Lu0QkVUIEyJ8IzSDeVHUbbQ6HNzOCnBHLN63K1HG3uBMkaxPdRUYQdeE6g
-	 4gUyE5rwjXn2whBQnMh8ZOfwbvT/A7EgT4PAtIB3cK1m5y5aKHiCRX4LEJ+u524Gxv
-	 mb+nR+fB+W6uDsSKSAW0seCdwSvJ2GJUGxlj/r8CDDSiVKDOHcG67bGVV5Mns7EWPb
-	 5IcVuBBqNubsG/by6ZPdo/j9r2TReHOdcFhQUhdPsNPyrJtIkK3eILxkfhKlNNyv6d
-	 Xqktb0mrzEbrugJt7slUjQNA=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4CBD740E01D1;
-	Tue, 25 Mar 2025 14:29:56 +0000 (UTC)
-Date: Tue, 25 Mar 2025 15:29:48 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] EDAC updates for v6.15
-Message-ID: <20250325142948.GAZ-K93G38luDj558S@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BvXM8LVe"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-301cda78d48so10940008a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 07:33:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742913180; x=1743517980; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=OKRABh44uDFI70lZVbe1fR/gjcdCuWiPeTV+hZF44Lg=;
+        b=BvXM8LVeE/IXEpPesgsWAWCG1sw+C605d9mnCx7TYnTY8y+6+2It4Yhl8Rby4lfrq7
+         gMiyo3XV+cCgUjo6AeRyrSOgnop4TBxvaHsPL2+2F+rdT28YSmUj4M5yKJnPnELwo1Vj
+         1PPorv5aGRpCS2LqMGlzYlRrIysFqizfxAuuUgxjSBV2GTMO3D3gKFck3CwNrUyHPkVm
+         9vcrAquem+DctcD6HSuRKkA+MN8XsGGeUpp74yutH0hOUfNSHk+gP7ZSXl1Slk5VJLzO
+         z9KnfjovJY3HtBHU/eMhGMo036e+1uz0iYkb/rTux5iYUsuivknRVBpLtXbI1Ko4KCOn
+         vqng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742913180; x=1743517980;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OKRABh44uDFI70lZVbe1fR/gjcdCuWiPeTV+hZF44Lg=;
+        b=Pid1mag4YZhAEAsNko6RUrB1FmfkJXXrR1JvVL4xgOKjyeddVfxwuIbzVdGGWNRkgR
+         PMYpsM3etdhjYDH9fpHrpLsuLhsxpKHCF0ByBxD+ep4mzoEf5chfyO7ic1czZY6EfBfd
+         pLh9ZjT3Qe740vIUEm5B3H6Pb1f0X6lTkp6JhDQsxicB2ggR3/inLJmdv3JS6QE7h7oC
+         px7puVCZlP+NZ9rNEiMBp+Ww6jU7zCeXswvQw5vmXNmea6SWRzV8svr+d9ZAIMArVIef
+         92UCpXHwfICcMgGHgr0tpXIeI37e4auJF0txXYKKCG062cL3HgeGoElevyjPtJvz4For
+         9Z0w==
+X-Forwarded-Encrypted: i=1; AJvYcCXbpIHkyQEKU6Z50X1fCPL2nvLnGkkDjMhNw3XRsiC/e/pqSm9ksCMdEuRtCQ7mzzdjNboJzh1NFw1W738=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTtS+HsX4vteQs/4o7OII8045GTHFmEvaxPIV2sJdCcnsflfW2
+	5e2jFeSSzFZL/0nw2MvRG2rm2HOpVjOPTZ1Du1/bLuidF+KB5Ko2yUpn+735qA==
+X-Gm-Gg: ASbGnctk+hSX6JkVzns6vN5VIvNVcsukdS1sRlhkB22zH/qOXp+7WrI2VWCwHVha15T
+	33OAVYntgnnmUyHf6mzFAp6L81YICro2ab19zn/2Yz+mO4PgvQyKQVpCdsC8fTdNwXw+iEEOLgA
+	Z7nGrgbSws2Z6mUuASHBkHOtUx2Pc77U3Zhud0ZJRMMbhkCRSkG3rpaKbnHHdj8SmUXB3QRbVUR
+	eZy3kOCIF45PhMna72NnGWQ1b8cUsMBn76zGNtY6xriXB7h0+EyDpXjVOMPoihTWE3z7b2o3sS0
+	XmhRuLgttpuODozKsesClAMOmfw7AzUsN0OLjK3Rgq3n8PIIMvMqD1ux
+X-Google-Smtp-Source: AGHT+IEB+XaCO6duAN2wp0HmjUzHuf7tiQOHA3Esz/U9fWrPnrUspdywgNu7CbKOFz9lwCKIl8JtAA==
+X-Received: by 2002:a17:90b:5450:b0:301:6343:1626 with SMTP id 98e67ed59e1d1-3030fe58e5bmr25896303a91.1.1742913179728;
+        Tue, 25 Mar 2025 07:32:59 -0700 (PDT)
+Received: from thinkpad ([120.60.136.104])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf64aca3sm14431313a91.49.2025.03.25.07.32.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 07:32:59 -0700 (PDT)
+Date: Tue, 25 Mar 2025 20:02:54 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Md Sadre Alam <quic_mdalam@quicinc.com>
+Cc: miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com, 
+	broonie@kernel.org, bbrezillon@kernel.org, linux-mtd@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] mtd: rawnand: qcom: Pass 18 bit offset from QPIC
+ base address to BAM
+Message-ID: <bu2msy7ngxzjk54rdq3fmgvww5rrn5ogjm4uq2vt2pwp6toxfw@ytvk6x6wcgi5>
+References: <20250310120906.1577292-1-quic_mdalam@quicinc.com>
+ <20250310120906.1577292-2-quic_mdalam@quicinc.com>
+ <20250318073332.guylcyqjmfq5nyyr@thinkpad>
+ <004c7c4a-69b4-c6f6-14c2-eb62672a7125@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,123 +78,100 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <004c7c4a-69b4-c6f6-14c2-eb62672a7125@quicinc.com>
 
-Hi Linus,
+On Thu, Mar 20, 2025 at 11:23:40AM +0530, Md Sadre Alam wrote:
+> 
+> 
+> On 3/18/2025 1:03 PM, Manivannan Sadhasivam wrote:
+> > On Mon, Mar 10, 2025 at 05:39:03PM +0530, Md Sadre Alam wrote:
+> > > Currently we are configuring lower 24 bits of address in descriptor
+> > > whereas QPIC design expects 18 bit register offset from QPIC base
+> > > address to be configured in cmd descriptors. This is leading to a
+> > > different address actually being used in HW, leading to wrong value
+> > > read.
+> > > 
+> > > the actual issue is that the NANDc base address is different from the
+> > > QPIC base address. But the driver doesn't take it into account and just
+> > > used the QPIC base as the NANDc base. This used to work as the NANDc IP
+> > > only considers the lower 18 bits of the address passed by the driver to
+> > > derive the register offset. Since the base address of QPIC used to contain
+> > > all 0 for lower 18 bits (like 0x07980000), the driver ended up passing the
+> > 
+> > What is this address? Is it coming from DT?
+> > 
+> > > actual register offset in it and NANDc worked properly. But on newer SoCs
+> > > like SDX75, the QPIC base address doesn't contain all 0 for lower 18 bits
+> > > (like 0x01C98000). So NANDc sees wrong offset as per the current logic
+> > > 
+> > > The address should be passed to BAM 0x30000 + offset. In older targets
+> > 
+> > You gave no explanation on how this 0x30000 offset came into picture. I gave the
+> > reasoning in v2:
+> > 
+> > "SDX55's NANDc base is 0x01b30000 and it has bits 17 and 18 set corresponding to
+> > 0x30000. So it is correct that the IP only considers lower 18 bits and it used
+> > to work as the driver ended up passing 0x3000 + register offset."
+> > 
+> > Then you replied:
+> > 
+> > "This address 0x30000 is the address from QPIC_BASE to QPIC_EBI2NAND
+> > e.g for SDX55 and SDX65 the QPIC_BASE is 0x01B00000. So here lower 18-bits
+> > are zero only."
+> > 
+> > No one outside Qcom knows what QPIC_BASE and QPIC_EBI2NAND are. We just know the
+> > NANDc address mentioned in DT, which corresponds to 0x01b30000 for SDX55.
+> > 
+> > Please reword the commit message to present the full picture and not half baked
+> > info. This is v3, I see no improvement in the commit message, sorry.
+> > 
+> > > the lower 18-bits are zero so that correct address being paased. But
+> > > in newer targets the lower 18-bits are non-zero in QPIC base so that
+> > > 0x300000 + offset giving the wrong value.
+> > > 
+> > > SDX75 : QPIC_QPIC | 0x01C98000 (Lower 18 bits are non zero)
+> > > SDX55 : QPIC_QPIC | 0x1B00000 (Lower 18 bits are zero) Same for
+> > 
+> > There is no address as '0x1B00000' in DT.
+> 
+> Mani,
+> 
+> Please see if this commit message would be acceptable?
+> 
+> 	The BAM command descriptor provides only 18 bits to specify
+> 	the NAND register offset. Additionally, in the BAM command
+> 	descriptor, the NAND register offset is supposed to be
+> 	specified as "(NANDc offset - BAM base offset) + reg_off".
 
-please pull the EDAC lineup for v6.15.
+Isn't it, (NANDc base - BAM base)? 'offset' is not valid here.
 
-Thx.
+And also, you are just mixing the names everywhere. Here you say, NANDc base
+and BAM base, but in patch 4:
 
----
+"NAND register addresses to be computed based on the NAND register offset from
+QPIC base". So the second address is BAM or QPIC?
 
-The following changes since commit 0ad2507d5d93f39619fc42372c347d6006b64319:
+Please be consistent with naming.
 
-  Linux 6.14-rc3 (2025-02-16 14:02:44 -0800)
+> 	Since, the nand driver isn't aware of the BAM base offset,
+> 	have the value of "NANDc offset - BAM base offset" in a new
+> 	field 'nandc_offset' in the NAND properties structure and use
+> 	it while preparing the descriptor.
+> 
 
-are available in the Git repository at:
+And what about 'nandc_offset'? NANDc is already the term used for NAND
+controller which has the base address of 0x01b30000 in DT. So clearly, the name
+of the offset variable is not correct.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git edac_updates_for_v6.15
+> 	Previously, the NAND driver was incorrectly specifying the
+> 	NAND register offset directly in the BAM descriptor.
+> 
 
-for you to fetch changes up to 298ffd537585ceb45034749d51d8a82c8f3f3c0c:
+No. Previously, the driver was specifying the NANDc base address in the BAM
+descriptor. You are now trying to pass the register offset.
 
-  Merge remote-tracking branches 'ras/edac-cxl', 'ras/edac-drivers' and 'ras/edac-misc' into edac-updates (2025-03-25 14:53:27 +0100)
-
-----------------------------------------------------------------
-- Add infrastructure support to EDAC in order to be able to register memory
-  scrubbing RAS functionality with the kernel and expose sysfs nodes to
-  control such scrubbing functionality. The main use case is CXL devices which
-  provide different scrubbers for their built-in memories so that tools like
-  rasdaemon can configure and control memory scrubbing and other, more
-  advanced RAS functionality. (Shiju Jose and Jonathan Cameron)
-
-- Add support to ie31200_edac for client SoCs like Raptor Lake-S which have
-  multiple memory controllers and out-of-band ECC capability. (Qiuxu Zhuo)
-
-- The usual round of cleanups, simplifications and fixlets
-
-----------------------------------------------------------------
-Arnd Bergmann (2):
-      EDAC/ie31200: work around false positive build warning
-      EDAC/device: Fix dev_set_name() format string
-
-Borislav Petkov (AMD) (1):
-      Merge remote-tracking branches 'ras/edac-cxl', 'ras/edac-drivers' and 'ras/edac-misc' into edac-updates
-
-Christophe JAILLET (1):
-      EDAC/igen6: Constify struct res_config
-
-Colin Ian King (1):
-      EDAC/pnd2: Make read-only const array intlv static
-
-David Thompson (1):
-      MAINTAINERS: Add a secondary maintainer for bluefield_edac
-
-Qiuxu Zhuo (13):
-      EDAC/igen6: Fix the flood of invalid error reports
-      EDAC/{skx_common,i10nm}: Fix some missing error reports on Emerald Rapids
-      EDAC/ie31200: Fix the size of EDAC_MC_LAYER_CHIP_SELECT layer
-      EDAC/ie31200: Fix the DIMM size mask for several SoCs
-      EDAC/ie31200: Fix the error path order of ie31200_init()
-      EDAC/ie31200: Fix the 3rd parameter name of *populate_dimm_info()
-      EDAC/ie31200: Simplify the pci_device_id table
-      EDAC/ie31200: Make the memory controller resources configurable
-      EDAC/ie31200: Make struct dimm_data contain decoded information
-      EDAC/ie31200: Fold the two channel loops into one loop
-      EDAC/ie31200: Break up ie31200_probe1()
-      EDAC/ie31200: Add Intel Raptor Lake-S SoCs support
-      EDAC/ie31200: Switch Raptor Lake-S to interrupt mode
-
-Shiju Jose (5):
-      EDAC: Add support for EDAC device features control
-      EDAC: Add scrub control feature
-      EDAC: Add a Error Check Scrub control feature
-      EDAC: Add a memory repair control feature
-      EDAC: Update memory repair control interface for memory sparing feature
-
-Thorsten Blum (2):
-      EDAC: Use string choice helper functions
-      EDAC/amd64: Simplify return statement in dct_ecc_enabled()
-
- Documentation/ABI/testing/sysfs-edac-ecs           |  74 +++
- Documentation/ABI/testing/sysfs-edac-memory-repair | 206 +++++++
- Documentation/ABI/testing/sysfs-edac-scrub         |  69 +++
- Documentation/edac/features.rst                    | 103 ++++
- Documentation/edac/index.rst                       |  12 +
- Documentation/edac/memory_repair.rst               | 121 ++++
- Documentation/edac/scrub.rst                       | 266 +++++++++
- MAINTAINERS                                        |   1 +
- drivers/edac/Kconfig                               |  30 +-
- drivers/edac/Makefile                              |   3 +
- drivers/edac/amd64_edac.c                          |  52 +-
- drivers/edac/debugfs.c                             |   5 +-
- drivers/edac/ecs.c                                 | 205 +++++++
- drivers/edac/edac_device.c                         | 185 ++++++
- drivers/edac/i10nm_base.c                          |   2 +
- drivers/edac/i5400_edac.c                          |   3 +-
- drivers/edac/i7300_edac.c                          |   7 +-
- drivers/edac/ie31200_edac.c                        | 641 +++++++++++++--------
- drivers/edac/igen6_edac.c                          |  41 +-
- drivers/edac/mem_repair.c                          | 359 ++++++++++++
- drivers/edac/pnd2_edac.c                           |   4 +-
- drivers/edac/scrub.c                               | 209 +++++++
- drivers/edac/skx_common.c                          |  33 ++
- drivers/edac/skx_common.h                          |  11 +
- drivers/edac/xgene_edac.c                          |  17 +-
- include/linux/edac.h                               | 215 +++++++
- 26 files changed, 2560 insertions(+), 314 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-edac-ecs
- create mode 100644 Documentation/ABI/testing/sysfs-edac-memory-repair
- create mode 100644 Documentation/ABI/testing/sysfs-edac-scrub
- create mode 100644 Documentation/edac/features.rst
- create mode 100644 Documentation/edac/index.rst
- create mode 100644 Documentation/edac/memory_repair.rst
- create mode 100644 Documentation/edac/scrub.rst
- create mode 100755 drivers/edac/ecs.c
- create mode 100755 drivers/edac/mem_repair.c
- create mode 100755 drivers/edac/scrub.c
+- Mani
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+மணிவண்ணன் சதாசிவம்
