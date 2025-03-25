@@ -1,131 +1,85 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 703C019ABD8
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 23:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147A625FA1C;
+	Tue, 25 Mar 2025 23:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742944990; cv=none; b=drNFjr1rXZ0LkYTVZz4um1fEmABDawirAwpo89Y4lSYoP85bZAij6kduQDVyoGHO5mGn0s4sVyPHCYhDo2LPXwxqQCkPoqV3HAHCtjKm4gyIum2xpwzyeuMAthrv3eotd6V6rOZqwodOle1E3H7MTU+dPo5dSv1IAThnv1WND/A=
+	t=1742945079; cv=none; b=MMtJU44ZYC0DRQlBFRfTIW9+uqP5rlb+zy+Mfby+R8iBz8dOhp3sJUUpRWz6MmDeopbH8o9aso5Jep8gD3ZY/pb7/k3LQrOC+KH7yW/NPwDUiJyqKpHK48wMot17azKoBy5vzFh/Nu4I8M6Tl27G5PACzjBHgduVJN7VS0L2i10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742944990; c=relaxed/simple;
-	bh=aiAGn8HR5QAxkXOqoNEse2IFUoHOXlm68nmF/CqfwHE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uJ0ayRpmmIkCuN4w/BbEb+CQWaveEwp8C5K8BqN0rdJgQBTpSmo9n9SpzLGLNfWHlGrSztFqRtVjuoXNypmR+4tz7H8JDOabaTIBIyTjmCE9k/4I/r4rd5iPkJX3/hXCRKbU0QHRxC6C30E7gWUg17xyN59dk79CsgepeInot/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=GOhtQcQe; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1742945079; c=relaxed/simple;
+	bh=mXs6H3oUDdJrT8iiX5WZDDmaBw4vJekRy6YT2nK6t/U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JOE71L6wyc/NPoH7uew/vPPABF3lNkNp7FFy5U+jrrJ/VwcJgPxEx+hJbVLJE5stkRsLKJ0wo71HSXX5QOSfxEBxMraQySxbSRX8DZz/jYBlCGdTjgtYcXL2zUIieFOBf1+I1fNhL8JnkTDI5xgvZpBY8Pq1KJuSTzd8GxScr0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WnP5NOkZ; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="GOhtQcQe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1742944957; x=1743549757; i=spasswolf@web.de;
-	bh=gY8B9GBQL9nUHTRbQamIZos1rVDULEBsh1sN+fH5oGo=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=GOhtQcQe8sat3+iobd73xdx1RHz8WbkQHKOw+JPg+WeIy5pzxIC1FMKR+HdDzS0z
-	 PLNNBFgeNweYRmcSF1ISyUE7M/UBb4vFt+jnNXkj70KEqyBu+6wHf0zxurT9vurso
-	 Zq2gsGhweS7dJTkR205cYlHF60o8ky4HjibDv6lMauOMorRkfDrJO0mVvPWvf7GlO
-	 Ze590lN+3cEyeXagF1BHr4uKSdrVVqPm9oGGtPOPHAsMR38HV3RhtC1HKgITBxvWy
-	 AP4WOkoLSt9N8YIQcmU+Pbf1+XseUylUZV5rd+jMsQzx256BV06HRWJ0HPldZ2+jM
-	 Mrh/uv2Ql2r+7wyGwQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1Myv72-1tASSt2Ayo-012jIk; Wed, 26
- Mar 2025 00:22:37 +0100
-Message-ID: <eb041c610719c8275d321c4c420c0b006d31d9f4.camel@web.de>
-Subject: Re: commit 7ffb791423c7 breaks steam game
-From: Bert Karwatzki <spasswolf@web.de>
-To: Balbir Singh <balbirs@nvidia.com>, Christian =?ISO-8859-1?Q?K=F6nig?=
-	 <christian.koenig@amd.com>
-Cc: Ingo Molnar <mingo@kernel.org>, Kees Cook <kees@kernel.org>, Bjorn
- Helgaas	 <bhelgaas@google.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>,
- Andy Lutomirski <luto@kernel.org>, Alex Deucher	
- <alexander.deucher@amd.com>, linux-kernel@vger.kernel.org, 
-	amd-gfx@lists.freedesktop.org, spasswolf@web.de
-Date: Wed, 26 Mar 2025 00:21:53 +0100
-In-Reply-To: <261e7069-9f65-4a89-95cb-25c224ff04f1@nvidia.com>
-References: <20250322122351.3268-1-spasswolf@web.de>
-	 <688f2757-e364-45db-ad54-daa6ff1c4f3c@nvidia.com>
-	 <6e8ad3cd27b570aaefd85395810cc90bb3120734.camel@web.de>
-	 <7cdbe06c-1586-4112-8d27-defa89c368e9@amd.com>
-	 <b1d72b95-5b5f-4954-923f-8eebc7909c4d@nvidia.com>
-	 <938c2cbd-c47f-4925-ba82-94eef54d9ebc@amd.com>
-	 <261e7069-9f65-4a89-95cb-25c224ff04f1@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.0-1 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WnP5NOkZ"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3032a9c7cfeso1279552a91.1;
+        Tue, 25 Mar 2025 16:24:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742945077; x=1743549877; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=reNdsD3iYuO2qUkRkB3QZH4YVcnvK0Jr4eMsQnbWgOg=;
+        b=WnP5NOkZZq4WpgPcm4Bh/qCoSG0lX6lWuvhXaNBT6QhVcZ8fLI8XS/Qfw9EzlMcIFa
+         tdVq/5WBe6goQn6Ww3ekzEJZHzl/FBub2pYGAMjQd4ubkmhoPhM/r9G3mu7iXDhdzu+S
+         fsVqzWekiIlqSAvKy95ZbFqFmC2J5W5rf+bbAl4v2oP3U61HNmahUifTdkGh9uYYKVby
+         3f6uu9SZh2VpHhuGaHWUafly7LPFI7WNaPzzhDTb9uBcpYARu3vqfxyzCwhw82CjiSoH
+         Dq9nt//v2XSmgGxHw/rsovZSZxEn3s5J+enZBsFnQYPUgsKy/XazXoF4Z7PU0lEsLWWD
+         SYVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742945077; x=1743549877;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=reNdsD3iYuO2qUkRkB3QZH4YVcnvK0Jr4eMsQnbWgOg=;
+        b=DRN65Vl+sdfWZvsuQLH3R+yNobVKsKOCs2dUsxcKWbMtAAdMVNvRe5gZD9pMInfiCy
+         Ja8ZGhRFKDx/yDK+Z7NmqnuEh156k7J8JftrliQ+Pr9w8maVlOYxHpARTt1M/yurl6xJ
+         7iO30epmR4ADaZiwYMDyFvH3xvTsZ6Yaj8AQ3mI7juuLO16V01UlVyvNd6Po6B1FPL86
+         x9F/nXODE6J37uUYc0kr5byiYh987GE7mlkbtDnAagGpo5s3/quIWExpAx4pxbxVoqO8
+         FauHZVhMFJFNyepCxhRLBxFkcLmlIIHySnIdsKNwWMSmYZIgF1CfF7+NXspXFRh/dL9l
+         84zA==
+X-Forwarded-Encrypted: i=1; AJvYcCUKKiq3YX42F6TwAvIssabSIuMDt3Bge9orZZwF55+ajiQ96F3V0ryA2xImRb1MTehvVpOPqBASb0orghw=@vger.kernel.org, AJvYcCVOKJAvDP1oK4YziM+LyA/UivhMj+6yPvin16W7q5dR/VndLC46IfcNmd2/ebzMlejo0Zk6+wLSXTt8qiLmKnA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvfFrmTKRzioM89D9HGbCEnUXsKyh2LNBOp8ECied76yIThbf+
+	ESUAJBCM0a+AJSmaDx7dSl74ot1YrpzGv1DLuxUFf4FCq1fjyXWg9vDPDmbYdjLXs67WRP32+vt
+	mRVuoa90BUGhizaRCpQqtXi3LlzA=
+X-Gm-Gg: ASbGncuA0twvIHhPONPwQyQQp1CWxgdLRSyIzC4OMmt0gGRde9Z790YnGpi5vD1SAC9
+	Z8f1yL2BS+3HSF+cCyYSX1ToSp+U9jPicuC+H79l2x6GwvgB4bLOvgo9JElXkmNre2daGNnk24K
+	iayU8GgNB69bQTqY/wjKdrQA3dVg==
+X-Google-Smtp-Source: AGHT+IG/b4WcatCGkVzxwi7SGzWpFJnbsb49yP+SUqQGqgu0Dx7YfD5IjzHfsC/xCneQV0PI8FZ26LIsT/lKkHvMLVU=
+X-Received: by 2002:a17:90b:4acc:b0:2fe:b77a:2eba with SMTP id
+ 98e67ed59e1d1-3036b3c5905mr2953150a91.1.1742945077076; Tue, 25 Mar 2025
+ 16:24:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <87pliljcvy.fsf@kernel.org> <87tt7md1s6.fsf@kernel.org> <87r02pb9jq.fsf@kernel.org>
+In-Reply-To: <87r02pb9jq.fsf@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 26 Mar 2025 00:24:23 +0100
+X-Gm-Features: AQ5f1JqvZFzEMqVnNXLtSTWV1jxoKKe9mo-MCjsPt76Pbv7UlAFukcmXGWhZnLU
+Message-ID: <CANiq72kV=9YA+jMEJYv-Aqb1pzB528OZcN4wU3_-jJGP8HjBkg@mail.gmail.com>
+Subject: Re: [GIT PULL] Rust `hrtimer` support for v6.15
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
+	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:VOOYiLoMShOoiud3+Nvf9dJHlrBFUOfbXbOX2rAweYFMDUO3oAl
- yKiaZIcoBV8/mMfnmn5wQQ35A+U8QrbCBKyJ/dXxNwu91KbBIqxv48wuGXoI+bjspavIeX3
- UOzGW1SCHtaVCHbtc25eupk/bGDTFpD+GgUz714Cz4AhBX7INVs1MIffJVHHEwt36NILool
- uWQkN1WzGzDZwlgnbnsyg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:2gzskj2BU/o=;d0gTqL3GqAmtRzdUT0j+Q8tFfVa
- 5GFu70rSv4eYkvN57UrTXRSqslZMW9JGjuRHOFlFuY69+SVcQI2BbHw1dLyLSs39fBPgEgdvC
- IvEm13d6IOsjd/CejCXteFVFm3HdxkLa8SJovOERPNZsYNXOYT5Oy7HpjN/IYPflIEG7bcvAf
- jm/KoK9QFrDxWMRQqRHp6u1zQXnhuqH5O/0IWeKoiObP+YVDVA+cwyY4IQyWXjA/GulNBPhNY
- CrNwNwoR/UF/N756AUAF/xnRItqcm5XBQA1JFmuFVmCZka4CjiSSPRtmaEGj2l9b7OAV3MSNV
- 0YnYVDcP87tMYd6m+zFUTyiRaVhTtXdYacznSgdUIL0jmFX7PWDn5kB5sHyqb9sSOgUoZfqLw
- nAkMhMKzsZHZ7ft8kN51cwA6Sh/G2G3hb/Wy+j+a+RkKUujlC3xCQIQ3BVhypov3x53kto4Kb
- dU5m0qDWfrcrf9SpSVTNwb6VSQHxfvRd8cNw+YPpn0V7EmXkfEehGAyVnpaQxnb4EPfScmxFq
- OIcKbT+9VK99gpddxPqiU7uORHU5KxNlHG6uyU759jFFVUFkO3aDxjrIIavygKcyxmYOrv5dC
- DUI9oYEZxNvYMXnP1EtiIFSzvfBuO/nd45bcfJjGHgTC2yjAwkf26t7O98BEgeCXtlCkXQ2Hy
- Gb5BTMI5/k/saueIpWUQNug9bHgaMIkN2pgxQJcb1xKD+XVR+ZqudHcPNiOSEe0psQU2kyf6K
- vBu2gouMqadEab7y1BOEexKmeL4nJGZ3JKhTVSN6xwCC31BH69VsVwws9e50p+Rlhk112sxJB
- 02ubfgMZvAayDCpQ+tL9mkjA3v2v5QwuaogpY8q0+o9ff62Okaq+srqUOADzO0WHF0hizOZUW
- VDJu42qbf52SYTo3NT6nq8EzrXSEmXPO8XW/A0Ll6zR4ZzZdu260wBjcHRoTilX5M4w4GVNKA
- i2aMsLxuZyAsHfjvp8yUQZDNIvURH0uFafRN+h+VMvXa6PeezI0YaanYcY09ZsJEw3LZs/tuW
- tra0T/L0htAeUYIwc5/Zw6eGF6LgnLYpVnbOTi2rcPPZF1DtzbAmDuaeVSj0CFqnU0epHisvg
- YsaRp9M7esKX9xRuoXITpp3EXgftMBj5AAK9iQqzGEOl7AeV0/5xTOH/mRPD21Zmj+AjImnj5
- ogfRMam0cnOnI5qPhL1rtxEbzyRSU4x0rE7FGHlK99G+LHAI+pUpitKDPqHbd2Qz7u4o4F4al
- xTNPgyyltbrgnDNVdkmvlXitGq/EKWlX9RjC/6q8fLsO4pJNLGJte6wMLEb7WP7eQHL79QG/i
- 3IMKj2a7W+CKpeBFtjfu6DJDPWtZfibdIwzKupY+nMnW7Jgyk0w6BFBX/16aXwluTmyujVuG7
- hC3xDOmU9yZ5O8ps1GgmWexoocTwuQpy2ZGraX1J91hwILw8oIV6VNerhQz/szxbGakHoiFs6
- 1G26J0d0BzTtwKsbAmoYa236XlEQ=
 
-Am Mittwoch, dem 26.03.2025 um 09:45 +1100 schrieb Balbir Singh:
+On Sat, Mar 22, 2025 at 12:16=E2=80=AFPM Andreas Hindborg <a.hindborg@kerne=
+l.org> wrote:
 >
->
-> The second region seems to be additional, I suspect that is HMM mapping =
-from kgd2kfd_init_zone_device()
->
-> Balbir Singh
->
-Good guess! I inserted a printk into kgd2kfd_init_zone_device():
+>   https://github.com/rust-for-linux/linux.git tags/rust-hrtimer-for-v6.15=
+-v3
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
-b/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
-index d05d199b5e44..201220e2ac42 100644
-=2D-- a/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
-@@ -1049,6 +1049,8 @@ int kgd2kfd_init_zone_device(struct amdgpu_device *a=
-dev)
-                pgmap->range.end =3D res->end;
-                pgmap->type =3D MEMORY_DEVICE_PRIVATE;
-        }
-+       dev_info(adev->dev, "%s: range.start =3D 0x%llx ranges.end =3D 0x%=
-llx\n",
-+                       __func__, pgmap->range.start, pgmap->range.end);
+Merged into `rust-next` -- thank you!
 
-        pgmap->nr_range =3D 1;
-        pgmap->ops =3D &svm_migrate_pgmap_ops;
-
-
-and get this in the case without nokaslr:
-
-[    T367] amdgpu 0000:03:00.0: kfd_migrate: kgd2kfd_init_zone_device:
-range.start =3D 0xafe00000000 ranges.end =3D 0xaffffffffff
-
-and this in the case with nokaslr:
-
-[    T365] amdgpu 0000:03:00.0: kfd_migrate: kgd2kfd_init_zone_device:
-range.start =3D 0x3ffe00000000 ranges.end =3D 0x3fffffffffff
-
-Bert Karwatzki
+Cheers,
+Miguel
