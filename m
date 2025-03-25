@@ -1,94 +1,93 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA73A2561C3
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D31425A2C1;
+	Tue, 25 Mar 2025 14:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742912358; cv=none; b=qUkAr+AGjVeDwhxfmc4uaug+eS5mddYr5Gt+lHr1H9ev5kJl3jNuhgKNJkMZ/O3l4wl8JzbHY8u5SC80BKuLrgkail2/CkZUmkixNYyH87Q3F/3FVeyg/TK/FQsySP/E775sTUdN7yRahYd4gC+WpRT01WwKGyPIAuHjImzncPc=
+	t=1742912367; cv=none; b=PizUsnSs7l0iZp6WlvDhR7tgTYiMwiBHbw0FJITb5RQ12qFMJ/ZL+BctXxcothmImc6mmXnEquy652VfomCzO/Of9A3vRSXyT5ZREfpxPc4LGnsQGKty1kYtJEDsaHYozG9wda8WEyY0wJuvjYqp63K7FT8KqIcaI/HR4soUMpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742912358; c=relaxed/simple;
-	bh=8u4Y3ZSLgNRFVySzx54/EIAWbDGZ4w0oYa5xJjD9FSc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IqVAWH5SoIV5V0+l1p7z4UA2QKpi3eKY4aVMRKwYbK5TLWXEFTHGPnlhbOXt3s6wbfndgTAkaGrZA3PxfmQSOOIPgcVt4gQ2k3la1tomyKl2FbgWfocQMLdAM9s7BtOuKVyoWaRihk5Re0IDzpALRCheQicGQ2hU/vCe6vtlOpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZMX3m4lHjz1jBLl;
-	Tue, 25 Mar 2025 22:14:28 +0800 (CST)
-Received: from kwepemg100001.china.huawei.com (unknown [7.202.181.18])
-	by mail.maildlp.com (Postfix) with ESMTPS id C7E2F1800B1;
-	Tue, 25 Mar 2025 22:19:06 +0800 (CST)
-Received: from huawei.com (10.50.165.33) by kwepemg100001.china.huawei.com
- (7.202.181.18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 25 Mar
- 2025 22:19:06 +0800
-From: Jinqian Yang <yangjinqian1@huawei.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>,
-	<oliver.upton@linux.dev>, <maz@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<wangzhou1@hisilicon.com>, <shameerali.kolothum.thodi@huawei.com>,
-	<liuyonglong@huawei.com>, <jiangkunkun@huawei.com>,
-	<yangjinqian1@huawei.comm>, <xueshan2@huawei.com>, Jinqian Yang
-	<yangjinqian1@huawei.com>
-Subject: [PATCH] arm64: Add support for HIP09 Spectre-BHB mitigation
-Date: Tue, 25 Mar 2025 22:19:00 +0800
-Message-ID: <20250325141900.2057314-1-yangjinqian1@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1742912367; c=relaxed/simple;
+	bh=I2lblF/sEfHT7z3P1dCiKaaeoG5MmtAEKuRyQV44FuY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CoCW9TeXF5NNaV0d7UgQA9b5w0az5XVqb9z2uKK5yOH88lsetkcJg7OiiIyZC3v4thvdq2R7b3K5fsYF/A7FG3zcGiENkvJf9OwYdsfF/HNwroBCwh+X9Uj+lr68JozBCeS9PZClORGvF3YPdeKp/mHn+ZCDUhuT3ac/jU4QHq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LCZ1kG5S; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCZ1kG5S"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-30363975406so413916a91.0;
+        Tue, 25 Mar 2025 07:19:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742912365; x=1743517165; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I2lblF/sEfHT7z3P1dCiKaaeoG5MmtAEKuRyQV44FuY=;
+        b=LCZ1kG5SpAoty+q/7lARXDOl95Erz2Yg23kMElBITvF6eHYaQ+dUZIaid7PcUGRJoi
+         CD91071NKu2URGp8dpYAO/QZ17G/5Yunut3xSnAUcus9+oSZCKFhBBAIk6yJntewTFOf
+         gmnxzL0uFRS0C9/bZOpeDkqiiUUSTPAsthEgsbF7eZ/6ALTKt5Zmy4/8w7Tow3CyNfX1
+         Ccl4Axy0ePRiLHoSa5NIzHpBF9ardO6nLkFThwsrR84oJLmbhWg5uTl4u7vwkDVEi8fl
+         M/cwTz6eC+IqyB1reeaNvWUYEkZQE1GV8Bg8hIr8CWKzR3/iBRBiFfDrQAGda4EJJXb0
+         RuVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742912365; x=1743517165;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=I2lblF/sEfHT7z3P1dCiKaaeoG5MmtAEKuRyQV44FuY=;
+        b=VA9+AtpcrjHOpOED8IzC+s+WIFWZgWxdB9IiQEHCdBvHaBFjkQ/Dox60jq2WXqLMpM
+         isItCdJZbSlWsZxzoc0ywbUNv+gNJEhcs9pjVP1Mv8Y6wh6qY4Wwd7MB2vG6kmnnAFbL
+         Pzf15pTBMChpZ5nss44O/pyakoEWN5DGc3bAlzKKU749aRn3IaaLd0zJknC4iFmviJnA
+         A3LETR3R56hOXoytF26Imqo7P6WUJfavdAjFHKGybW/3m4qJtDZn+4/zdfzKTqZo4K9F
+         1HuY9BZZ0lqUuLNe5Y3O8NQZGqyN9MMr1gJCL0igZwxI+uKXKVt9GAv9rIZmPi/81TnS
+         bkjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU952RsofpB+uJ3MdqwBIsA03fHrzdwbxZKst9hNkzcA1dn3kPd51crlip8GF3JXCTazXXRO/9L5XdrZLoodbw=@vger.kernel.org, AJvYcCXDtRcnZCoxJ9o3D3y7o8Q02odwUj7SBEfWu11CUtvSbngI5V3/qKC2BY1DztR2IxqOCW1ysCRl2k7uudA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxV/33odFOFNQWC3qwzNPIg4K+wPkL89aetPO4+btk89Sb7nxjJ
+	WZ8CoTnLyfJS7A+/wOdkof9QGS9foXg/z3g2qM0WqPWtkJdH9fWY5XkIZKfnhWz4hJiGRFTSaAG
+	k9Aw8zD8X9//2sKJveLpxkXWVGns=
+X-Gm-Gg: ASbGncv5EFKfhZjurHkqCuZH771NMxh+tbrjcfOxBqqePgpKPmeh/t8/jVY6sPGo/HA
+	SfU8kSkc++bc2TwbzL/51skEDyfp2TaMp9f5sSofQ57EpdEvq5JljctPjhpqBrm3g5lzrOG4Bdh
+	k58yl6m1ZSc9EgqS2g7pBODHz3SGZ/VdIg5C4s
+X-Google-Smtp-Source: AGHT+IEoN/yvfpbSzdjBSvEx92ayIangXqWC+MRDBzrVrubs2HZ/X3k3nIEzR0YJ1Ux80oKRDjtZ/ndVyYiCL7hUkMA=
+X-Received: by 2002:a17:90b:4d0d:b0:2ee:f59a:94d3 with SMTP id
+ 98e67ed59e1d1-3036b2c7bedmr1985451a91.0.1742912364690; Tue, 25 Mar 2025
+ 07:19:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemg100001.china.huawei.com (7.202.181.18)
+References: <20250322-rust-analyzer-host-v4-0-1f51f9c907eb@gmail.com>
+ <20250322-rust-analyzer-host-v4-5-1f51f9c907eb@gmail.com> <FB3D0F03-B162-4AD5-B288-4E307421276B@collabora.com>
+ <3DC4063A-3E9E-412B-AAF4-AA0C33DEEBFC@collabora.com>
+In-Reply-To: <3DC4063A-3E9E-412B-AAF4-AA0C33DEEBFC@collabora.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 25 Mar 2025 15:19:12 +0100
+X-Gm-Features: AQ5f1JqAaqZQMBsZwvtO1tL-L9kNrwTNUGTZoX67HP__t3_ZqXvRMIQRHjCf-0A
+Message-ID: <CANiq72k0J1PqH6mQ3DJVMbM=yrzXsFZU5NpDX-rPU-DP_4QHeA@mail.gmail.com>
+Subject: Re: [PATCH v4 05/11] scripts: generate_rust_analyzer.py: add type hints
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Tamir Duberstein <tamird@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Boris-Chengbiao Zhou <bobo1239@web.de>, Kees Cook <kees@kernel.org>, 
+	Fiona Behrens <me@kloenk.dev>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Lukas Wirth <lukas.wirth@ferrous-systems.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The HIP09 processor is vulnerable to the Spectre-BHB (Branch History
-Buffer) attack, which can be exploited to leak information through
-branch prediction side channels. This commit adds the MIDR of HIP09
-to the list for software mitigation.
+On Tue, Mar 25, 2025 at 2:39=E2=80=AFPM Daniel Almeida
+<daniel.almeida@collabora.com> wrote:
+>
+> $ mypy --strict scripts/generate_rust_analyzer.py --python-version 3.8
+> Success: no issues found in 1 source file
 
-Signed-off-by: Jinqian Yang <yangjinqian1@huawei.com>
----
- arch/arm64/include/asm/cputype.h | 2 ++
- arch/arm64/kernel/proton-pack.c  | 1 +
- 2 files changed, 3 insertions(+)
+Should this be a Tested-by? Or am I confused and did you mean something els=
+e?
 
-diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
-index 6f3f4142e214..363a9cbe780e 100644
---- a/arch/arm64/include/asm/cputype.h
-+++ b/arch/arm64/include/asm/cputype.h
-@@ -130,6 +130,7 @@
- #define FUJITSU_CPU_PART_A64FX		0x001
- 
- #define HISI_CPU_PART_TSV110		0xD01
-+#define HISI_CPU_PART_HIP09			0xD02
- 
- #define APPLE_CPU_PART_M1_ICESTORM	0x022
- #define APPLE_CPU_PART_M1_FIRESTORM	0x023
-@@ -204,6 +205,7 @@
- #define MIDR_NVIDIA_CARMEL MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, NVIDIA_CPU_PART_CARMEL)
- #define MIDR_FUJITSU_A64FX MIDR_CPU_MODEL(ARM_CPU_IMP_FUJITSU, FUJITSU_CPU_PART_A64FX)
- #define MIDR_HISI_TSV110 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_TSV110)
-+#define MIDR_HISI_HIP09 MIDR_CPU_MODEL(ARM_CPU_IMP_HISI, HISI_CPU_PART_HIP09)
- #define MIDR_APPLE_M1_ICESTORM MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_ICESTORM)
- #define MIDR_APPLE_M1_FIRESTORM MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_FIRESTORM)
- #define MIDR_APPLE_M1_ICESTORM_PRO MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M1_ICESTORM_PRO)
-diff --git a/arch/arm64/kernel/proton-pack.c b/arch/arm64/kernel/proton-pack.c
-index da53722f95d4..98bb7251a184 100644
---- a/arch/arm64/kernel/proton-pack.c
-+++ b/arch/arm64/kernel/proton-pack.c
-@@ -866,6 +866,7 @@ u8 spectre_bhb_loop_affected(int scope)
- 			MIDR_ALL_VERSIONS(MIDR_CORTEX_A76),
- 			MIDR_ALL_VERSIONS(MIDR_CORTEX_A77),
- 			MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
-+			MIDR_ALL_VERSIONS(MIDR_HISI_HIP09),
- 			{},
- 		};
- 		static const struct midr_range spectre_bhb_k11_list[] = {
--- 
-2.33.0
-
+Cheers,
+Miguel
