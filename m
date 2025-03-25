@@ -1,118 +1,141 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCF81E7C2D
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 23:13:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD681B4247
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 23:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742944397; cv=none; b=mN+4qIZZHgGBC5THn/19T/LKryVnV8LQh3vIBTCF4v7Fi+ezRLnMoogSyzk869M6/kGb4e2bqBUglueryhAW2/jdmCw+yaG1W27aXebSVAiBKzZuh5mScwTAnP0I2ZyJHU9Yg1oaJxezqG60Q5tA+xcxfhxk0pW7jSR9laUH5Yg=
+	t=1742944527; cv=none; b=j7aMvRwvOMBd1l8P9gZDaMSeWvwMlmUIyTalR1I5sKD+hpUPE7Qbr1xv13JqwkbmKQofmYJ6uCi+UMzBfx6MSS3vV4UXAVoj8Om/nyLHaLn0S4vLVvPReQHS7MmRsHSEU4jddIjHlVl9tWOcRG4Pw6v8C+XByouo9aDVNsrj5wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742944397; c=relaxed/simple;
-	bh=jw3maACCO3f6vt9Qr0IksUHDBNePsVPYv0eL53Q5Uko=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rTqLTUxc7BYbMDmvBEFiL+ELlwWfi8i3hyfky29lvo+0Dp7iQTD5iNbCMXMD5QyjtGKkk4L8HdiWeH9D0epjqPeHv+to+1abf/hXcbVTJpUfaKwQ6FAVp5s7APb/FTs3zbJzw33NK9lxPDX+nT1vqCriUKgj+Cz+kUPADuKxUSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Vp3NWqvx; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Vp3NWqvx"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2902f7c2aso1034256366b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 16:13:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1742944394; x=1743549194; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=O3h0xRoLxiN1v7pMNtH0qapseB+kIL16c87ibP89wiw=;
-        b=Vp3NWqvxJQJH9Tqz976dYwrBJ39GbXgtXhwSyJ2zz/vWMGUeLKoY9fcNO1j+McPb+m
-         1gjpiG/+WvLV24XPvsPyddGG5j561OTEwWD17PiTakIEVMrfZET6qRimMAAHan99zLfm
-         3Hgni7fsta5LUT66hDBbL/uY+pnJAbVmtIocc=
+	s=arc-20240116; t=1742944527; c=relaxed/simple;
+	bh=ZKJSymgM1gpV9lZ02aHKvMGYhn7mgvmpPt2UI1o9r6E=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=CiGjpDKihEgNVfRKb+toMMd4pxVom0WHYhK4k+qGfXzzOAR+Cwv3IwwuZV2sqjyYzYKLdwuzOy6+xUMmLv49of3GqtEDU7rvvQMoKdD8knF+9toNqtUc/ID5wSXRkrbZIiehsauRWwYTDWJnAZ7WMv3OXNnwiOpcIpDE44D/JgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d453d367a0so126770845ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 16:15:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742944394; x=1743549194;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O3h0xRoLxiN1v7pMNtH0qapseB+kIL16c87ibP89wiw=;
-        b=NWMvBcZKGfmU8hjMziBu5SOyy7g+s82/8yyxYrAs4oCwlw2t5dOQ7g6PxvuAnKhwot
-         vrhFdv1VbrdxYMl93u4AeAAyRmDTHUTKAPgw8El30PmxrsKor92OJpeDTCH4N5WwGIBB
-         PP7NMAY5WdmdUsABo7XFGs/8KC79Fir5c4pxBWmcDS66tUT19OUWCmTOHSB9eDONXDl4
-         abYOOcA+6uQE6N8rf6gAXWHmhwE9uf4ZPsP/fmMiiQoiR7ZUDpFxvvjas8qdsV+OY4q0
-         yFVBnEhTvArnDrTHtUI+I6FbfRfwbZP/rjrceGswb2gzCeOk9GIXfWHb4aKZDIzKMu+K
-         /CXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUs1wD4g4nvmsVjT31Y8TKPGK0CadY6v5fhuD/Ldt1M6rXN9Gd95HPZ7sCRny/7OFy9/HbwfqL6K7wBCMQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzv6x4gsEJFGPdyBPZNMHaFvWjo4tD35rIGQVX8/awoj/D7I8cD
-	SKaiO1eeWI7PXJRtVo7RfWpzy/1ECV/IC90vTZPRBHQh1pxIr5MoTDwa2o1XiJRvdTrI7GUMjIj
-	xjoou/w==
-X-Gm-Gg: ASbGncsExCdkgjAQxEcrvgDTOfQG8k7HjT8fdFUZXg3EwUo7zT8oT4pYVcncU43epak
-	JNMJElcvF5vc/4smJ2zB1oOj8+Valuz2JUzVY6VWi6o2pSFBMMYydzjdS5WIglL0gh2eJfdi30W
-	xE+dPRghZd0HmeOQWmxbuHSey7NFzOemG2MRSiYVLufrajaqWRnXH3deYA1yqgZzRPwaoDSBRN1
-	HtAvQVCOqLrQuaoewMIIS/p+5jbhGLAblg2LylecpB1MX2T0LrhnznKJemuEhjQk8UAXiTN6EkE
-	Ka7Oeyov0k2eMqD9ALRt/zAHtNQhBS6jcxtOAebFLc6x4Ivtov2rue1B4tbY9jkI/sDeNptkmaY
-	Jo7BZW3qqT6+HfRyr28M=
-X-Google-Smtp-Source: AGHT+IFdjbmYOxtQRVM1fSV2CsR7vZmMoWEEL2JZaOrvrl9mlqW4mp+aCpWDA+VmvK4qTb6DKKOtBw==
-X-Received: by 2002:a17:907:7f24:b0:ac3:3cff:268 with SMTP id a640c23a62f3a-ac3f22b2c30mr1671702966b.30.1742944393836;
-        Tue, 25 Mar 2025 16:13:13 -0700 (PDT)
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efd163cesm915945766b.151.2025.03.25.16.13.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Mar 2025 16:13:12 -0700 (PDT)
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac34257295dso1274494166b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 16:13:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU+QRtSTwz7aiQyNCzWqjQGrvA53YAtd6u2QkYOaIWkdna+asc+NWjVjgl5noTWdHczt+y/zZ7lCjSJUJc=@vger.kernel.org
-X-Received: by 2002:a17:907:9728:b0:ac3:26ff:11a0 with SMTP id
- a640c23a62f3a-ac3f251ac63mr2074660766b.38.1742944391848; Tue, 25 Mar 2025
- 16:13:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742944525; x=1743549325;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LcNhfYX8DYDWCLTvbWQ366FzPUFPeaECk8xLDsoNIKU=;
+        b=EUmw1UlXXNyI19qLzo2oxpYjTmGMtNF65xWuhkVVGG5yqw8rliVGNHDznnh9pHeqrJ
+         M/zFutX3z9bixVIA2lMOEvG6Sxylr/XJnjVIeo2rctGHWy8y0pRPcaDjmC6cr/30hrT/
+         PBEmyuqp1ctU1PV0n7YZN18i3VSrCVbQTfWV6rgRCWSLa8+5afninTMdwr3tBkAG1e4R
+         geMolDxhxCTaSaFweFLi8epobaUmnvkqNZ/0DB4Sz328MZJeqIm78t6BQHgX7Uzx09lP
+         QynEGcZok+53+6iXtIi2QQJgSd3EJimcRzK4UjiE1RxQMxfikKECSk+cBYpiVzhfa7Fp
+         Ckuw==
+X-Forwarded-Encrypted: i=1; AJvYcCWcPeNTethSWOm7/Ib+FyvGfaXUDBrXGkIxqDgJMazU6wjxmYUmEjzSw1tGo1PqHufF+XuXwnRdPhgVU8o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweXoLJOC2f+txG0V6UMVbQ2LVU4uePN7MtfTwrRkuU9k32LAhf
+	9FzUsQsTVhfPr6i8uQ0ZLGRQMLNsLGoDj5xLHi1czy3uAUo5i4+4VPdgBtaqb7cZbKXwNpkuycL
+	QNWlgpIzbwxKeqp65ljZELIWvHIixYivF6ei87ZhVsiZJU2ORqlzG64o=
+X-Google-Smtp-Source: AGHT+IEVOI/b+UjVs7AqWXi2J6e1BP34OFe8JlkcPWJvlW25nHsSR44X3PkcDxU6UZf6ui41zMJ/Wrw8R8U7cfG4MzS6WCABbAt+
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317104257.3496611-2-mingo@kernel.org> <174246120542.14745.16936293992221722909.tip-bot2@tip-bot2>
- <20250324115955.GF14944@noisy.programming.kicks-ass.net> <Z-J5UEFwM3gh6VXR@gmail.com>
- <Z-KRD3ODxT9f8Yjw@gmail.com> <20250325123625.GM36322@noisy.programming.kicks-ass.net>
- <CAHk-=wg_BRnCs8o5vEjK_zDuc0KJ-z9bvq5845jKv+7UduS4hQ@mail.gmail.com> <Z-MxULQtc--KoKMW@gmail.com>
-In-Reply-To: <Z-MxULQtc--KoKMW@gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 25 Mar 2025 16:12:55 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjMu5iGZ2ifBqjzV4a993D13OnDvfbtYe6jgPP8cZnAGQ@mail.gmail.com>
-X-Gm-Features: AQ5f1Jr72i2YXbGGJdC978hKkzVdmQ4LG3orQqVMCJwAlQF0vF7KbLFr4RRoHnc
-Message-ID: <CAHk-=wjMu5iGZ2ifBqjzV4a993D13OnDvfbtYe6jgPP8cZnAGQ@mail.gmail.com>
-Subject: Re: [PATCH] bug: Add the condition string to the CONFIG_DEBUG_BUGVERBOSE=y
- output
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
-	linux-tip-commits@vger.kernel.org, Shrikanth Hegde <sshegde@linux.ibm.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, x86@kernel.org
+X-Received: by 2002:a92:c263:0:b0:3cf:c773:6992 with SMTP id
+ e9e14a558f8ab-3d59611acdbmr217588175ab.12.1742944524650; Tue, 25 Mar 2025
+ 16:15:24 -0700 (PDT)
+Date: Tue, 25 Mar 2025 16:15:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67e3390c.050a0220.1ec46.0001.GAE@google.com>
+Subject: [syzbot] [mm?] KCSAN: data-race in try_to_migrate_one /
+ vms_clear_ptes (2)
+From: syzbot <syzbot+93107467480b9f9ed726@syzkaller.appspotmail.com>
+To: Liam.Howlett@oracle.com, akpm@linux-foundation.org, jannh@google.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lorenzo.stoakes@oracle.com, 
+	syzkaller-bugs@googlegroups.com, vbabka@suse.cz
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 25 Mar 2025 at 15:42, Ingo Molnar <mingo@kernel.org> wrote:
->
-> So something like the patch below?
-> [...]
-> After:
->
->   WARNING: CPU: 0 PID: 0 at [ptr == 0 && 1] kernel/sched/core.c:8511 sched_init+0x20/0x410
->                             ^^^^^^^^^^^^^^^
+Hello,
 
-Hmm. Is that the prettiest output ever? No. But it does seem workable,
-and the patch is simple.
+syzbot found the following issue on:
 
-And I think the added condition string is useful, in that I often end
-up looking up warnings that other people report and where the line
-numbers have changed enough that it's not immediately obvious exactly
-which warning it is. Not only does it disambiguate which warning it
-is, it would probably often would obviate having to look it up
-entirely because the warning message is now more useful.
+HEAD commit:    3ba7dfb8da62 Merge tag 'rcu-next-v6.15' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14254198580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=79f1cf4142160c34
+dashboard link: https://syzkaller.appspot.com/bug?extid=93107467480b9f9ed726
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-So I think I like it. Let's see how it works in practice.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-(I actually think the "CPU: 0 PID: 0" is likely the least useful part
-of that warning string, and maybe *that* should be moved away and make
-things a bit more legible, but I think that discussion might as well
-be part of that "Let's see how it works")
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/dd40b872cca9/disk-3ba7dfb8.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/86a3a241fb7d/vmlinux-3ba7dfb8.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/1ce46917915c/bzImage-3ba7dfb8.xz
 
-            Linus
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+93107467480b9f9ed726@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KCSAN: data-race in try_to_migrate_one / vms_clear_ptes
+
+write to 0xffff88810005d8f8 of 8 bytes by task 8860 on cpu 1:
+ update_hiwater_rss include/linux/mm.h:2675 [inline]
+ vms_clear_ptes+0x1a2/0x300 mm/vma.c:1136
+ vms_complete_munmap_vmas+0x17b/0x480 mm/vma.c:1186
+ do_vmi_align_munmap+0x344/0x390 mm/vma.c:1445
+ do_vmi_munmap+0x1eb/0x230 mm/vma.c:1493
+ __vm_munmap+0x19a/0x280 mm/vma.c:2956
+ __do_sys_munmap mm/mmap.c:1084 [inline]
+ __se_sys_munmap mm/mmap.c:1081 [inline]
+ __x64_sys_munmap+0x36/0x40 mm/mmap.c:1081
+ x64_sys_call+0xe1b/0x2e10 arch/x86/include/generated/asm/syscalls_64.h:12
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+read to 0xffff88810005d8f8 of 8 bytes by task 8858 on cpu 0:
+ update_hiwater_rss include/linux/mm.h:2674 [inline]
+ try_to_migrate_one+0x775/0x12e0 mm/rmap.c:2183
+ rmap_walk_anon+0x28f/0x440 mm/rmap.c:2646
+ try_to_migrate+0x11f/0x150
+ migrate_folio_unmap mm/migrate.c:1318 [inline]
+ migrate_pages_batch+0x786/0x1930 mm/migrate.c:1864
+ migrate_pages_sync mm/migrate.c:1987 [inline]
+ migrate_pages+0xf02/0x1840 mm/migrate.c:2096
+ do_mbind mm/mempolicy.c:1425 [inline]
+ kernel_mbind mm/mempolicy.c:1568 [inline]
+ __do_sys_mbind mm/mempolicy.c:1642 [inline]
+ __se_sys_mbind+0xfd1/0x11c0 mm/mempolicy.c:1638
+ __x64_sys_mbind+0x78/0x90 mm/mempolicy.c:1638
+ x64_sys_call+0x13be/0x2e10 arch/x86/include/generated/asm/syscalls_64.h:238
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+value changed: 0x0000000000001f8f -> 0x000000000000262f
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 UID: 0 PID: 8858 Comm: syz.2.1483 Tainted: G        W          6.14.0-syzkaller-00685-g3ba7dfb8da62 #0
+Tainted: [W]=WARN
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
