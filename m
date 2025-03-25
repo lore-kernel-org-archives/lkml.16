@@ -1,95 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED29318A6AB;
-	Tue, 25 Mar 2025 15:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E24F18A6AB;
+	Tue, 25 Mar 2025 15:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742918108; cv=none; b=NKFJpVuAkKsTU1re18DuxGDH1rV6YPUQU0SBjWO6Zh2lUJjbxAo3hhAFzvwp8XNvhEhwelpz5U60HDyPWcwhoDNFH3zpryBlSEwiiZzfTLEDzkYK0HZNEOkUjsDaYvbryAde38wQlill/kde0QRZ4v3YXSiVkoW2HniM4UR92RA=
+	t=1742918133; cv=none; b=Rn96fzV65uwe/aibVTaYAtClqTD6pYA0lQa+gwG1vi17SWo2h0rfZkz0A53T+GFoTd761dLAiqGzq+gHNFt4vjFpzOaQ9zp7hpiOt2PqDFvqJthXxNaAAOaczXES8pYf3ss9P99tsHak5zFkSJS+Zdn7r+NLiN2YQmXr4Q3vIFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742918108; c=relaxed/simple;
-	bh=/sWusNH0/d1dasvfDJ3IgNRXiLJFey3D01NjmmoGY1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T6poz+5plDpqp8wJ2DdqNhNlhPewbu7KTD4Jgbss1jlz+S+XmofkbSG4oxiCZuUEw8KXjnNM7qJl6QqJHeL524G1Js1LM7FaIH+DkyFA/Q0kphICY6VCAJSiey6Q1z6oCOSS/luT1zcwrfhQXd7+yZ0XYltd+tjNO1NzdR+dREI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tij9wJA1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742918133; c=relaxed/simple;
+	bh=jfgSiqLCqwkZI4qYAO/dSdiUYlqbnqAIsGKA2fS7izw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sqHgvtj2G+43cEwRMw07bw8SNVKpqESUBcOHL4SRgPj0KKTIpHaq52o1LOxGG/sly0JDvSsJ24OBwQOz/AyxHjEikws6IUEq5BjUCBP1h6Dtufn6A/YSL7W7srCUFsNZEHexMLOV8/2A2WXKL7s4Xp319fU3UHeXUvOo0YX3NIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=PmxVGHTh; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tij9wJA1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BA5EC4CEE4;
-	Tue, 25 Mar 2025 15:55:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742918107;
-	bh=/sWusNH0/d1dasvfDJ3IgNRXiLJFey3D01NjmmoGY1w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Tij9wJA1v1Yh9o+hC/dgptP076g+fLxSWf1M+2I2y6vb8+Ynts5xup4zmTE62n7h6
-	 wcEuQ0JXZWx8Ic/NpD3/wCylr0+g4Gg40zNHgXrrVpls5GVQ/SockmwgYhmwWYF2Zx
-	 awAn4bYwVNfv2ybmaijmxr4W7oNzrH8X6HJg5RW0JStl/bq6yWZVWnkU2TjgRyl6pp
-	 BSgOVEQY+OtRNB5q2gQXWEEOcXeDRqsMTpBULVRrpYAhhc5ExBQBw9DyYSzswGF2ca
-	 qQiQYcbSNo9DQrrVOareNfbKxUvnhjfH5aiA3TUeKwMWplL2Q3xnM+eW7E6XJf4tES
-	 FCd/4oB+FlSpw==
-Date: Tue, 25 Mar 2025 15:55:02 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jon Hunter <jonathanh@nvidia.com>, Vishwaroop A <va@nvidia.com>,
-	krzk+dt@kernel.org, robh@kernel.org, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: spi: Add DT schema for Tegra SPIDEV
- controller
-Message-ID: <499703ae-dba1-49a6-869b-a60b44c2a85f@sirena.org.uk>
-References: <20241126134529.936451-3-va@nvidia.com>
- <a1278046-038e-4825-b029-1b478f28cb7c@sirena.org.uk>
- <e95f870f-1309-4ac3-a16f-ce58b02dc817@nvidia.com>
- <59ec100f-1915-447b-98fb-3cbe2ca53a1f@sirena.org.uk>
- <925fe847-68b4-4689-832c-08f8de3dfeb1@nvidia.com>
- <48f9c8c0-5cac-4812-8d06-501193be731b@sirena.org.uk>
- <909f0c92-d110-4253-903e-5c81e21e12c9@nvidia.com>
- <48248165-c800-484f-be62-7c48b3c6829b@sirena.org.uk>
- <4zic633abvwj377kfqem42zmc2yruflbwfmmqrpvjjgr6jae6h@jthoycb3vzzz>
- <ljxxml7z2k6xniamzzw4ssi7u75qqfpcvmidzy3ekr3imtoxau@eztnxovsjplg>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="PmxVGHTh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1742918131; x=1774454131;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=jfgSiqLCqwkZI4qYAO/dSdiUYlqbnqAIsGKA2fS7izw=;
+  b=PmxVGHTh+d5Am8/eFdrEtYTgLwHEr6kGm25vwmL3/drOXVXNjnuQDrOn
+   69/lX0zfabu5QfXGtxod3xOqiO6Ezg9SphDfV1/Crn8Kkl8WBO+WlXZiM
+   Gyt9PnCSBlwdw+GC56laCfp22cv/7w/ikeK/6fZEH1tJrN6E6vE5+GImv
+   KjGDhLu80MZkAJBtKU7uB7vS5VE/c/7J/gEnlknQTHVb9PYvGSnCLNIKL
+   RBTWuagrSx6fy4uZpqOk3GO1BVPEm9k5Ieai6xv2nVoGRQq62MGK5rlwZ
+   sAPMkOhELzpM0RI8Z6dt/8U1YQXGrzsTKAP71BYrNPt+BCQKZH2XwwKZ6
+   A==;
+X-CSE-ConnectionGUID: 5ZRRXf5LQVCIU2dRAgtdWw==
+X-CSE-MsgGUID: ptw/juAZTZWwDMU9R8w8+g==
+X-IronPort-AV: E=Sophos;i="6.14,275,1736838000"; 
+   d="scan'208";a="40152236"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Mar 2025 08:55:25 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 25 Mar 2025 08:54:54 -0700
+Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Tue, 25 Mar 2025 08:54:54 -0700
+From: <Ryan.Wanner@microchip.com>
+To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>, <mturquette@baylibre.com>
+CC: <sboyd@kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-clk@vger.kernel.org>, Ryan Wanner <Ryan.Wanner@microchip.com>
+Subject: [PATCH v2 4/4] ARM: dts: microchip: sama7g5: Adjust clock xtal phandle
+Date: Tue, 25 Mar 2025 08:55:10 -0700
+Message-ID: <95c33a95347b098bd32861a59bf6ec658c52f65d.1742916867.git.Ryan.Wanner@microchip.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1742916867.git.Ryan.Wanner@microchip.com>
+References: <cover.1742916867.git.Ryan.Wanner@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="F4WbcsPWDlVylFlJ"
-Content-Disposition: inline
-In-Reply-To: <ljxxml7z2k6xniamzzw4ssi7u75qqfpcvmidzy3ekr3imtoxau@eztnxovsjplg>
-X-Cookie: Visit beautiful Vergas, Minnesota.
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+From: Ryan Wanner <Ryan.Wanner@microchip.com>
 
---F4WbcsPWDlVylFlJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Adjust clock xtal phandles to match the new xtal phandle formatting.
 
-On Tue, Mar 25, 2025 at 02:05:01PM +0100, Thierry Reding wrote:
+Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
+---
+ arch/arm/boot/dts/microchip/at91-sama7g5ek.dts | 18 ++++++++----------
+ arch/arm/boot/dts/microchip/sama7g5.dtsi       |  4 ++--
+ 2 files changed, 10 insertions(+), 12 deletions(-)
 
-> Mark, would another alternative be to add something like a sysfs export
-> attribute? Something that you'd write a controller/chipselect pair to in
-> order to create a spidev device? That has the benefit of removing this
-> entirely from device tree where it doesn't belong, but still makes this
-> option available to users that would otherwise have to resort to hacks.
+diff --git a/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts b/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts
+index 2543599013b1..79bf58f8c02e 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts
++++ b/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts
+@@ -35,16 +35,6 @@ aliases {
+ 		i2c2 = &i2c9;
+ 	};
+ 
+-	clocks {
+-		slow_xtal {
+-			clock-frequency = <32768>;
+-		};
+-
+-		main_xtal {
+-			clock-frequency = <24000000>;
+-		};
+-	};
+-
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
+ 
+@@ -512,6 +502,10 @@ spi11: spi@400 {
+ 	};
+ };
+ 
++&main_xtal {
++	clock-frequency = <24000000>;
++};
++
+ &gmac0 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+@@ -917,3 +911,7 @@ &vddout25 {
+ 	vin-supply = <&vdd_3v3>;
+ 	status = "okay";
+ };
++
++&slow_xtal {
++	clock-frequency = <32768>;
++};
+diff --git a/arch/arm/boot/dts/microchip/sama7g5.dtsi b/arch/arm/boot/dts/microchip/sama7g5.dtsi
+index 17bcdcf0cf4a..250c9e98a8bb 100644
+--- a/arch/arm/boot/dts/microchip/sama7g5.dtsi
++++ b/arch/arm/boot/dts/microchip/sama7g5.dtsi
+@@ -117,12 +117,12 @@ map1 {
+ 	};
+ 
+ 	clocks {
+-		slow_xtal: slow_xtal {
++		slow_xtal: clock-slowxtal {
+ 			compatible = "fixed-clock";
+ 			#clock-cells = <0>;
+ 		};
+ 
+-		main_xtal: main_xtal {
++		main_xtal: clock-mainxtal {
+ 			compatible = "fixed-clock";
+ 			#clock-cells = <0>;
+ 		};
+-- 
+2.43.0
 
-Possibly?  I think I've lost track of what the use case is here, usually
-for the spidev stuff DT overlays seem like they're the right thing but
-perhaps this is different?  If we are doing this at runtime sysfs seems
-like a reasonable way to trigger it, though you'd still need the DT to
-describe the controller and the chipselects that are available.
-
---F4WbcsPWDlVylFlJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfi0dUACgkQJNaLcl1U
-h9ARpgf+IUdIkCNbqFahvFbW/Ee0iGxUVn8zZMvbwl5WkkiIDfyqOt10rfwVWjXR
-gkJhcwUpBLZVSoYm9+f/8y+toWLCYqdvZeuIMHt3E6l/0tVrChLqScaH9PtHI6sD
-0z+BybR/AxvcDlhn4sWXbCZBufdGIp+cUmUp47N/N36nRFGaforGi22UCIct+0g7
-hfcGVHmSd9MzbK0FNa5f7xTQth9LE+lch1NNg1ZK6LxdvClsMtZ6elQW9bUjz6d8
-RaYHUHlxuq6mvtJot8F+c7/GAwsb5U4vTfsXxul4phRgWDH40XzeQY7ocRJ5v/N1
-TPEv31ss3uWqHlZZq51wMoxJM4Qlgg==
-=hzVh
------END PGP SIGNATURE-----
-
---F4WbcsPWDlVylFlJ--
