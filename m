@@ -1,109 +1,150 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8D1C25B687
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 15:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4090825A33A
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 15:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742915183; cv=none; b=nUvQQSnZ+QU6xnTdF8+H8T8wXzJw3qDtFqVa6NVYQaMfNVVSrP/LxxeOgg78snydBF3Rr1A35EWpoTaQU1nKkb4juOMJuXifmfrueLa0SfSwyvPnrc2nr3+l1buhsP9fPPY0QEMktVKFh6IwE5O2RR+YRSv4A8QR4YW53OVsO8Q=
+	t=1742915276; cv=none; b=UPP6GOQPFt6hYgQuVAR7+sxoPbgsdKW/j8bHt3qPSpoawCHK1/y2N5HiFs1J6C0bQR6FM9nzSF4kQ62/Jz7yh+Crd0tBWBSszL5nimEfKoj3WmX8k5jxPsz6oY/5EcYlbgNgdY3Q8VxNmcYR/srAULJBvXibBsEPfBl2VvbZcfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742915183; c=relaxed/simple;
-	bh=PvyYpzUXhELSq3ybRCk73kUVLP1N1ZA9qdunL3naoMM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UqatePV8N8e9Xy64gqd0fTXZl6aT0wOQzbbtLUwwsmgvI/tQM9ef7JXtpF3t363jd3RgYUrsPaL2/DUaiFBjcmZYKhRDceqddimpScFF+MvrOq8cRXH7aD7NkPTJEeUKKlQPEto7GBuE5sOx3a3nVBt5ktv3HgHWsLf5ZMUH6bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B94421756;
-	Tue, 25 Mar 2025 08:06:23 -0700 (PDT)
-Received: from e126645.arm.com (unknown [10.57.14.116])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CF1043F58B;
-	Tue, 25 Mar 2025 08:06:14 -0700 (PDT)
-From: Pierre Gondois <pierre.gondois@arm.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chritian Loehle <christian.loehle@arm.com>,
-	Hongyan Xia <hongyan.xia2@arm.com>,
-	Pierre Gondois <pierre.gondois@arm.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>
-Subject: [PATCH] sched/fair: Allow decaying util_est when util_avg > CPU capa
-Date: Tue, 25 Mar 2025 16:05:41 +0100
-Message-Id: <20250325150542.1077344-1-pierre.gondois@arm.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1742915276; c=relaxed/simple;
+	bh=iSmodtdY7Dchcz1A/sUPS+H3SHiLLQyywM4beAv33u0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CsLDRRufoO/MHCf/Ojj9WSopsZ5KQMVhzu8VJ/PQov4Pf26joxh0YcFQSI6/H4B8Ljvx9S3oFgfqG65DZTV1CoPnmF/jGMOWToaCjtehG5DBYuWOGFx2MEBZBusuqyMqhMBgXdzPjlp5ZFTpO/+jwgiu2rBlEkkssbuGaACTLeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lJ2c7OP2; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lJ2c7OP2"
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-523f19d39d3so2756311e0c.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 08:07:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742915274; x=1743520074; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ASRZZn4DjAVCiGVwyErb4eVcqvprss3kx2mpnoqQ/Aw=;
+        b=lJ2c7OP2ctgy0sc4pykNStYO3q/NHZCwjiKUv8QE7ho11GEihMp+VE05S2NYUJmUJb
+         jM4U3gtcEogTOOSekGOjc5BlpmuF47WJqVR9d3r/9HeJgxW+yap4dEDtdMcoD766bCD9
+         kF0R5PjdemnYDPc6/fKm4++DrneK0PHlcs6BKRwu03DEDVONg9l/QK0nk/No1op2BaM9
+         Owfget9il+fzpy3iTpkw4x35Lnz12id8pVHkNnkvp34+ftBAX9kK27njAfra5KRjfaGY
+         V+EQbo72jEYebQHN2MpsRL8UuiHMKgzPFTWMPBmdN9Hykk6lhmXxdcEl3xCMUZ42cosM
+         pjrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742915274; x=1743520074;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ASRZZn4DjAVCiGVwyErb4eVcqvprss3kx2mpnoqQ/Aw=;
+        b=FFOY6JyvDz427gc+8HKBqiMayNhCJ/k5rOVX+pybptwHEOgfyhirii4oF95zi/cbLa
+         ppoG+DduhRYaRwWtruIP/6ng8HCQCW2Cuj7mMH0r2a56NAucF2NrgmA6OaRhoaSqlWCS
+         OGh1r3a7gb7TCYqZLmsE8/I1nc1OHOetOwuCA0Bzx1dquNYKqlFn3PwcHirJL4HGCG6B
+         ikmXK6+/o7UQ2ntYKn0PSvpeT0lBCOSPWVqq2MrG+Cr81uD2zimA/AmJT/+RYeGuCZQx
+         w448Wzfffsfruz7TGMicUAo/DoqC0h6LbNr4Ymm3+hreyuY/xlQgH6d1iYCvtW3XpoCF
+         3q6A==
+X-Forwarded-Encrypted: i=1; AJvYcCWPBd0KlWKtSHOsmvWU7YhotY6pVkDOHVpoA/0f79vyF3uNAmQqiS8CVqJwJ/m07BmpJvRjlIgROQBw/Us=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywx7J/OnVCwMAgPJVIHHD8Tqv+Lms4FtoE+4Iaa97pkW5XHTeCB
+	DVvweUwunxrfQsJOjV62/Wsblr7W89DUMMMEe9SqbYixWIfzWz0HHUSBcerJ/ek5BvuRFZ0Hoqu
+	At40KKbwWI2w27zNpuLG9Xlx0jUQk5bOHxychxA==
+X-Gm-Gg: ASbGncsXJZK48dyYHUxA45FvJFgWB2bSfZb/QkceYT0FQjeHTYpDzeXaqAGslc6TpDO
+	0+a2aVEidFdOeMmeduVdvmBSvbUa9w7HBQbZQI872DKtH/yGzpd9lDNrpuimVqTIts4Ik7egM2O
+	EsQmEicQv/B9iJ9QB8XR8XS/qyH5cVNfvCNwZxZar+ioibpP4klUjh+fHyz1E=
+X-Google-Smtp-Source: AGHT+IGJxNNn58Pr6BXkc8yTC7dt3Dz8oYa2jVHYnOw8DdFwyMT+9nGnrZ/TQ+Sepc3obyBo9xvaY36PFzfQAXxFVmo=
+X-Received: by 2002:a05:6122:2810:b0:520:60c2:3fb with SMTP id
+ 71dfb90a1353d-525a80d5eb4mr10912049e0c.0.1742915273945; Tue, 25 Mar 2025
+ 08:07:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250325122144.259256924@linuxfoundation.org>
+In-Reply-To: <20250325122144.259256924@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 25 Mar 2025 20:37:42 +0530
+X-Gm-Features: AQ5f1Jo5lbttZtSAb6LnZgDq3AuZotqFT2rixgG9lx0L7Z-hkj4vcw5915tDF-M
+Message-ID: <CA+G9fYvWau1nC8wmpWkxG8gWPaRMP9pbkh2eNsAZoUMeRPgzqA@mail.gmail.com>
+Subject: Re: [PATCH 6.6 00/77] 6.6.85-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org, Heiko Stuebner <heiko@sntech.de>, Dragan Simic <dsimic@manjaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-commit 10a35e6812aa ("sched/pelt: Skip updating util_est when
-utilization is higher than CPU's capacity")
-prevents util_est from being updated if util_avg is higher than the
-underlying CPU capacity to avoid overestimating the task when the CPU
-is capped (due to thermal issue for instance). In this scenario, the
-task will miss its deadlines and start overlapping its wake-up events
-for instance. The task will appear as always running when the CPU is
-just not powerful enough to allow having a good estimation of the
-task.
+On Tue, 25 Mar 2025 at 18:05, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.6.85 release.
+> There are 77 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 27 Mar 2025 12:21:27 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.85-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-commit b8c96361402a ("sched/fair/util_est: Implement faster ramp-up
-EWMA on utilization increases")
-sets ewma to util_avg when ewma > util_avg, allowing ewma to quickly
-grow instead of slowly converge to the new util_avg value when a task
-profile changes from small to big.
 
-However, the 2 conditions:
-- Check util_avg against max CPU capacity
-- Check whether util_est > util_avg
-are placed in an order such as it is possible to set util_est to a
-value higher than the CPU capacity if util_est > util_avg, but
-util_est is prevented to decay as long as:
-CPU capacity < util_avg < util_est.
+Regressions on arm64 rk3399 dtb builds failed with gcc-13 the
+stable-rc 6.6.85-rc1
 
-Just remove the check as either:
-1.
-There is idle time on the CPU. In that case the util_avg value of the
-task is actually correct. It is possible that the task missed a
-deadline and appears bigger, but this is also the case when the
-util_avg of the task is lower than the maximum CPU capacity.
-2.
-There is no idle time. In that case, the util_avg value might aswell
-be an under estimation of the size of the task.
-It is possible that undesired frequency spikes will appear when the
-task is later enqueued with an inflated util_est value, but the
-frequency spike might aswell be deserved. The absence of idle time
-prevents from drawing any conclusion.
+First seen on the v6.6.83-245-gc1fb5424adea
+ Good: v6.6.84
+ Bad: 6.6.85-rc1
 
-Signed-off-by: Pierre Gondois <pierre.gondois@arm.com>
----
- kernel/sched/fair.c | 7 -------
- 1 file changed, 7 deletions(-)
+* arm64, build
+  - gcc-13-defconfig
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index c798d2795243..de7687e579c2 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4918,13 +4918,6 @@ static inline void util_est_update(struct cfs_rq *cfs_rq,
- 	if (last_ewma_diff < UTIL_EST_MARGIN)
- 		goto done;
- 
--	/*
--	 * To avoid overestimation of actual task utilization, skip updates if
--	 * we cannot grant there is idle time in this CPU.
--	 */
--	if (dequeued > arch_scale_cpu_capacity(cpu_of(rq_of(cfs_rq))))
--		return;
--
- 	/*
- 	 * To avoid underestimate of task utilization, skip updates of EWMA if
- 	 * we cannot grant that thread got all CPU time it wanted.
--- 
-2.25.1
+Regression Analysis:
+ - New regression? yes
+ - Reproducibility? Yes
 
+
+Build regression: arm64 dtb rockchip non-existent node or label "vcca_0v9"
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Build log
+arch/arm64/boot/dts/rockchip/rk3399.dtsi:221.23-266.4: ERROR
+(phandle_references):
+/pcie@f8000000: Reference to non-existent node or label "vcca_0v9"
+
+  also defined at arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi:659.8-669.3
+
+## Source
+* Kernel version: 6.6.85-rc1
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+* Git sha: c1fb5424adea53e3a4d8b2018c5e974f7772af29
+* Git describe: v6.6.83-245-gc1fb5424adea
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.83-245-gc1fb5424adea/
+
+## Build
+* Build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.83-245-gc1fb5424adea/testrun/27760755/suite/build/test/gcc-13-defconfig/log
+* Build history:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.83-245-gc1fb5424adea/testrun/27763720/suite/build/test/gcc-13-defconfig/history/
+* Build details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.83-245-gc1fb5424adea/testrun/27760755/suite/build/test/gcc-13-defconfig/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2uoHmBcVLd60GQ0SVHWAaZRZfNd/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2uoHmBcVLd60GQ0SVHWAaZRZfNd/config
+
+## Steps to reproduce
+ - # tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
+--kconfig defconfig
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
