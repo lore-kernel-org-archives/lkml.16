@@ -1,109 +1,83 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FBFB25A2D1;
-	Tue, 25 Mar 2025 13:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D1E25A2D1;
+	Tue, 25 Mar 2025 13:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742909439; cv=none; b=Tdg5JmApMuDbTCd2NJMSJmJKYVTrA+H27WNWQDfd6KabDnCMqmj3l669CzVrBY7pXdV/igWimTF9eQLWs3itiaqVbGWeen/4zTI16gUIuvWE9C/Xg33O9bsDNsathvYc1OLBXuMpA0b79jDbdxY6O9GEXdW6r2+CxL8xOxsYX2A=
+	t=1742909451; cv=none; b=gb+m2zupO2EDOBTn4L9bVlfzT5ofJ54X3ZvYYoxTPkWLA6OVhAvlmOM2SbBc2kQqkFHDFXyd/fJ+2Yjss7c13DrklFmDlX8Ghqvi70cRzR9FXe4wR0a+WSDU573i1W4I61oTBLReMskaEvBgWPLQBxQS9pfKodHPuwFptXUCKSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742909439; c=relaxed/simple;
-	bh=Onfwe7BIoo+XN6snqbku8zp5ci0I7j6pmqOlv7+LQTc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jGS4bE70B2vqFTVHXDsuS2AeecMaBDgjgHZk0RNIlgisZzP+P53yWjohrdONtfQgdYg6iAtjG3KdConcisEznjFfDm1K5NwTsZsEn59xAMU63DmEhq/IgEvco3uqXoHyDs+XE14zcbBwXhNoaqdQ98E+IOgiUgtzTB+DQUH89q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=arhNAZxv; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1742909451; c=relaxed/simple;
+	bh=AFz+xR3cxeybdFAR0wl1Pa8igU585gpjH4/Of2Jdma8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nb/flzBNBabH7hmg/phdQWc7NQR6YBx6Rrt+j3tqfFHV441igoCGglMrROBDabSJ8BV8bZtFB39ypF32Hok+TvEPGOeFpfgnjXhaE8hyYgmlC+ZdzhrDEOTkW0KPTPbwZBaNdBmr93c3XlF+FeVFh3KfaW0ZC+ZXA2QVZ6hmfHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nz9sujFM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="arhNAZxv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=R6TTX
-	6i0XQxaEnW4x1mI+/13/Nh8Vd+xGWNS930sgHw=; b=arhNAZxvxgBjReAXbNFDD
-	Fva9rgXgRJbS+4y7+UonVJo1dXpo8/tcFOu1XQuyevmlbRRcV9YdZOyXBZiOmssk
-	tvY2S9+0BlpiqPO5M3UfmfTbqqaZjwSH5LGVJ5ljK6k93eSe88Mld+jaXoJomGeW
-	4wQeZhQrnDh2XQ/6W9CtmA=
-Received: from ProDesk.. (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgAnc2bLr+JnWNnrAA--.35530S4;
-	Tue, 25 Mar 2025 21:29:52 +0800 (CST)
-From: Andy Yan <andyshrk@163.com>
-To: heiko@sntech.de
-Cc: conor+dt@kernel.org,
-	krzk+dt@kernel.org,
-	robh@kernel.org,
-	hjc@rock-chips.com,
-	devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v2 2/6] dt-bindings: display: rockchip,inno-hdmi: Document GRF for RK3036 HDMI
-Date: Tue, 25 Mar 2025 21:29:36 +0800
-Message-ID: <20250325132944.171111-3-andyshrk@163.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250325132944.171111-1-andyshrk@163.com>
-References: <20250325132944.171111-1-andyshrk@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nz9sujFM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5527C4CEE4;
+	Tue, 25 Mar 2025 13:30:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742909450;
+	bh=AFz+xR3cxeybdFAR0wl1Pa8igU585gpjH4/Of2Jdma8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nz9sujFM3jGlX1cHt1JguczqA9ISu3qQOHeNcNTi0xtlHx3RtUm8YOKu+XOdXSJYD
+	 p6EVnBJ3EdnHncBhfmMt9LJMgvNLuku6QMo79r8+amEoMRiqXpXBS6mgSIoWwNxbFP
+	 hmbg+j0B5rDfafyIFtDp8pWDMx7U9BEODq8Ql+KV/XkNapaHROK2GS/mteMQ/+o26p
+	 BthSbV2ScCG5HtKovdxiRSkTtYQ+U3/hZ0n/zTMLqAlbXrjq1Pwj9bxrcicKOiXpYg
+	 mMSfuXBDJoUoBj9zQPHGbNEOmnbhQi4muH9u9dxgy5932q46Mm3N0W652+cJWdsVhL
+	 J27Sgbv+cdCqA==
+Date: Tue, 25 Mar 2025 14:30:48 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>, Mateusz Guzik <mjguzik@gmail.com>
+Cc: syzbot <syzbot+1c486d0b62032c82a968@syzkaller.appspotmail.com>, 
+	kees@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] exec: fix the racy usage of fs_struct->in_exec
+Message-ID: <20250325-bretter-anfahren-39ee9eedf048@brauner>
+References: <67dc67f0.050a0220.25ae54.001f.GAE@google.com>
+ <20250324160003.GA8878@redhat.com>
+ <CAGudoHHuZEc4AbxXUyBQ3n28+fzF9VPjMv8W=gmmbu+Yx5ixkg@mail.gmail.com>
+ <20250324182722.GA29185@redhat.com>
+ <CAGudoHE8AKKxvtw+e4KpOV5DuVcVdtTwO0XjaYSaFir+09gWhQ@mail.gmail.com>
+ <20250325100936.GC29185@redhat.com>
+ <CAGudoHFSzw7KJ-E9qZzfgHs3uoye08po0KJ_cGN_Kumu7ajaBw@mail.gmail.com>
+ <20250325132136.GB7904@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PygvCgAnc2bLr+JnWNnrAA--.35530S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ZryxJFW8ZF1kCrW8WFW8Crg_yoW8GF45pa
-	s3C3srWFyxGF17X34ktF1kCrWYqF97Aa15GFW2qr17tF12gan5Ka1agwn8ZF4UAFs7ZFyS
-	9F47GF98Aw1Ivr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j2ZXrUUUUU=
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqAobXmfipyL8oQAAs6
+In-Reply-To: <20250325132136.GB7904@redhat.com>
 
-From: Andy Yan <andy.yan@rock-chips.com>
+On Tue, Mar 25, 2025 at 02:21:36PM +0100, Oleg Nesterov wrote:
+> On 03/25, Mateusz Guzik wrote:
+> >
+> > On Tue, Mar 25, 2025 at 11:10 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> > >
+> > > On 03/24, Mateusz Guzik wrote:
+> > > >
+> > > > On Mon, Mar 24, 2025 at 7:28 PM Oleg Nesterov <oleg@redhat.com> wrote:
+> > > > >
+> > > > > So to me it would be better to have the trivial fix for stable,
+> > > > > exactly because it is trivially backportable. Then cleanup/simplify
+> > > > > this logic on top of it.
+> > > >
+> > > > So I got myself a crap testcase with a CLONE_FS'ed task which can
+> > > > execve and sanity-checked that suid is indeed not honored as expected.
+> > >
+> > > So you mean my patch can't fix the problem?
+> >
+> > No, I think the patch works.
+> >
+> > I am saying the current scheme is avoidably hard to reason about.
+> 
+> Ah, OK, thanks. Then I still think it makes more sense to do the
+> cleanups you propose on top of this fix.
 
-HDMI on RK3036 use GRF control the HSYNC/VSYNC polarity, but this part
-is missing when it first landing upstream.
-
-Document that it is mandatory for RK3036 HDMI.
-
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
----
-
-(no changes since v1)
-
- .../bindings/display/rockchip/rockchip,inno-hdmi.yaml    | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,inno-hdmi.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,inno-hdmi.yaml
-index 9d1e7f894ea54..290376bec079a 100644
---- a/Documentation/devicetree/bindings/display/rockchip/rockchip,inno-hdmi.yaml
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,inno-hdmi.yaml
-@@ -56,6 +56,12 @@ properties:
-       - port@0
-       - port@1
- 
-+  rockchip,grf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      Phandle to GRF used for control the polarity of hsync/vsync of rk3036
-+      HDMI.
-+
- required:
-   - compatible
-   - reg
-@@ -75,6 +81,8 @@ allOf:
-             const: rockchip,rk3036-inno-hdmi
- 
-     then:
-+      required:
-+        - rockchip,grf
-       properties:
-         power-domains: false
- 
-@@ -103,6 +111,7 @@ examples:
-       clock-names = "pclk", "ref";
-       pinctrl-names = "default";
-       pinctrl-0 = <&hdmi_ctl>;
-+      rockchip,grf = <&grf>;
-       #sound-dai-cells = <0>;
- 
-       ports {
--- 
-2.43.0
-
+I agree. We should go with Oleg's fix that in the old scheme and use
+that. And then @Mateusz your cleanup should please go on top!
