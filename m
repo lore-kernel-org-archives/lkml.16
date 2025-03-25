@@ -1,126 +1,163 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A691C6FEC
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 19:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20C319ABD8;
+	Tue, 25 Mar 2025 19:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742930301; cv=none; b=nyngmIhq41ItjfYFdOK392aRCI3iWtR3zporICmDsgnFfNJsMUf/6raCSEryUXlKu2LXD+PLaZgt2poUDhUIqyTBZh7IVR7RiRKqUy+i46DaMyKJeayWvaPXKecGM1cyce2TG67BgoUOTLQgfb6F3IiZMrHs9LzvPjz6m77Jneg=
+	t=1742930390; cv=none; b=C9EWB4+wdSmDwSrVBjJoHPaVXxLxY0yssN8sI+SL0aeJx0EgDthrdDHqm/0tbja/03UZtNgSKeP0/hJhzcjGYFVgN/7PZBj2iGlfzEU/eprM1CN21RlnD+kVwodLkuEcnq58H7eCusEuzIWgiOTF2+BC/UE2hPzSrbMUI7YQgak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742930301; c=relaxed/simple;
-	bh=gzOhUwuk6PRtqJT004lFT8JmHmf233ItpyrfAz7UByY=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=r+erZ4QL5Dlhf7t9DFrqhh7oWBvRAN1NJpInd96ZAqIZqN0kyRIiyJ38v5kjzoQ4tpqaw3xEb+Cx5I8WIbQVdyHAZKziDa1CSQOEMGvWZp1LDnXeLbsMwpHr82vki1w7FpwNd3uBPa9tFC/6vnEcAJ9Yyg5YPOEDhXOC/eHBSSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S5NNWKX1; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1742930390; c=relaxed/simple;
+	bh=wafZEi25K9c1JaTWa6sefMLZsC4dbteHbRRbzmLF/cQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WnL4opMhVONEhFFJ1gwhj/DGgcOR0Y6Lf/rnYEWWt/UVnkJ/GnNAboOVyMV4adZG6VxgekX8p2E0GeXOMR72kWs3ihOPXuHcryYSePpZsTthELRopOeYVC1toRiYPpaxOo03QYQ4cIBRg7lPbfdDZvinrF0yLQwPtz/UTYo4D7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPbGLGyB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S5NNWKX1"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6f6d40a61e7so89996017b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 12:18:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742930299; x=1743535099; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6RXv0a2X2Eq8/LheD1NmgszijzevuXG/6uAHQeKi4nU=;
-        b=S5NNWKX1oAkTzUNk2JpjwzQZjElniubd/TFcu5X2Gf6GWSISwfaS/qvrwRkWpRlyDN
-         swfCldb3Pa2Zgpgfz/lnkaVsRJ2bJBcnfyUj7Ao4ndbgbGnWjrK3u3fcrWrS7b/MmMA3
-         jB5u2U1V8IZlC7jAGj48lei6FFQGUjGPs2zN0wT/Q4zPXGT74qQK/M1iVWWwRbF0bjl1
-         511baivNq8dyuOx91C5ROQ9UVFMskMqL+BX8zl6bHrvMOXmcNLEuOjwQGUDxJJsomZlp
-         v0ahWl2+8aSEtf6FVsnBU9QIn9Bk8jdN6Z6cRL+t6vJHmxv+ENZMIQcXg1iNN/EH1qLR
-         mZ6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742930299; x=1743535099;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6RXv0a2X2Eq8/LheD1NmgszijzevuXG/6uAHQeKi4nU=;
-        b=ghX+CYR+YxpjXFs9GV2E0SaE5eUcSdkCtEw2R9ZrwOG2QZ9b+4BtQcKfXJLhcYOESk
-         TGgw8l6oxIFaiDEj8wmdFP+sxxf+9ZsDKwqiVsj+lNbmdZq6Gk38F40sySryRl8i72Hi
-         X/14DYuCPFZlZ4veo0OvGmNY4w3pz8pVL0VTk9nEmmTdgtH89LbkqxlhnCjyzG2MxXZA
-         789U8dt7oXKLbkgn71TH9Hx5V0zGMcGaVv4dzOVTEISN9/fiTZK8G7iCeoMk+aBXbwEs
-         6Miih2gOgIGOUUzE+PDRD6enhNd4bu9RFZbFi58yhXSperMBGloS7F2YDSHPtEPgN0x1
-         voZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxlgpL5Kj0oNY9kJsQuHNj+7GyfgIjmtn4ux03Fnc3xwIH8kB3tTDtkYSvWS3AuXy58+X7XZL/X9euhb0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVZ8GkcGxUIvdmcjkssKGi5iD4xi7MdIS9hZ9ZLlX22VtybyUh
-	iGE3UsekvexYeIGX8ydWchL9ubiLp1UA04vXgyI2sT/dk9lcNQp/hru59dcXnMr70x7FILzXY8C
-	gUv2sjQ==
-X-Google-Smtp-Source: AGHT+IHG6EbMLgHhgV3KGXgXmrIM18FNa02aejF2j8HY3sgrmGHd3s8xloMIuaepYOznr1nEt/KGfkpZgz6b
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:3b0c:e5d7:4752:a58])
- (user=irogers job=sendgmr) by 2002:a0d:e546:0:b0:6fd:2b82:af09 with SMTP id
- 00721157ae682-700bad0a95bmr128807b3.8.1742930299148; Tue, 25 Mar 2025
- 12:18:19 -0700 (PDT)
-Date: Tue, 25 Mar 2025 12:03:20 -0700
-In-Reply-To: <20250325190352.59241-1-irogers@google.com>
-Message-Id: <20250325190352.59241-5-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPbGLGyB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95819C4CEE4;
+	Tue, 25 Mar 2025 19:19:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742930390;
+	bh=wafZEi25K9c1JaTWa6sefMLZsC4dbteHbRRbzmLF/cQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EPbGLGyBiB1SvRfjtdKDPGZo2ETHpmtg4qXxmT/GsGNeAR+CaOgpCSQkLho6C5cyc
+	 BeFl650l1ufdKyeIojv+r6tvos6q1QYTea+agnc7gVeN//anBFAS8jHYiYDVjzt75S
+	 s4ZzhkBDnUKxoUSQebcAdRQCh05nh9CfvgA1nGA7rbw2k4oclzJMZbHrxqVlBm48wb
+	 Z621YrYZ+JHXHsHghbHMhKcOrjvBF8Y03gX03F9+y0ZGfKdZwqTAliB69pFxnQnTxA
+	 /WTgRa7IozzmoX/kArbLGdEvNkKtPUwcd3I8f3yvhQKyd+ycRUqXs6b97otN3YzUpL
+	 HwRTkHR1eqHGg==
+Date: Tue, 25 Mar 2025 15:19:44 -0400
+From: Mike Rapoport <rppt@kernel.org>
+To: Frank van der Linden <fvdl@google.com>
+Cc: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
+	graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
+	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
+	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
+	dave.hansen@linux.intel.com, dwmw2@infradead.org,
+	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com,
+	corbet@lwn.net, krzk@kernel.org, mark.rutland@arm.com,
+	pbonzini@redhat.com, pasha.tatashin@soleen.com, hpa@zytor.com,
+	peterz@infradead.org, ptyadav@amazon.de, robh+dt@kernel.org,
+	robh@kernel.org, saravanak@google.com,
+	skinsburskii@linux.microsoft.com, rostedt@goodmis.org,
+	tglx@linutronix.de, thomas.lendacky@amd.com,
+	usama.arif@bytedance.com, will@kernel.org,
+	devicetree@vger.kernel.org, kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH v5 07/16] kexec: add Kexec HandOver (KHO) generation
+ helpers
+Message-ID: <Z-MB0Cj4tM6QgOAg@kernel.org>
+References: <20250320015551.2157511-1-changyuanl@google.com>
+ <20250320015551.2157511-8-changyuanl@google.com>
+ <CAPTztWbFXajArSN8yKu32eSoR=xsk1CHM_4V7MJ0eQxydFqPUQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250325190352.59241-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Subject: [PATCH v3 04/35] perf vendor events: Update bonnell events
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPTztWbFXajArSN8yKu32eSoR=xsk1CHM_4V7MJ0eQxydFqPUQ@mail.gmail.com>
 
-Move DISPATCH_BLOCKED.ANY to the pipeline topic.
+On Mon, Mar 24, 2025 at 11:40:43AM -0700, Frank van der Linden wrote:
+> On Wed, Mar 19, 2025 at 6:56 PM Changyuan Lyu <changyuanl@google.com> wrote:
+> >
+> > From: Alexander Graf <graf@amazon.com>
+> >
+> > Add the core infrastructure to generate Kexec HandOver metadata. Kexec
+> > HandOver is a mechanism that allows Linux to preserve state - arbitrary
+> > properties as well as memory locations - across kexec.
+> >
+> > It does so using 2 concepts:
+> >
+> >   1) State Tree - Every KHO kexec carries a state tree that describes the
+> >      state of the system. The state tree is represented as hash-tables.
+> >      Device drivers can add/remove their data into/from the state tree at
+> >      system runtime. On kexec, the tree is converted to FDT (flattened
+> >      device tree).
+> >
+> >   2) Scratch Regions - CMA regions that we allocate in the first kernel.
+> >      CMA gives us the guarantee that no handover pages land in those
+> >      regions, because handover pages must be at a static physical memory
+> >      location. We use these regions as the place to load future kexec
+> >      images so that they won't collide with any handover data.
+> >
+> > Signed-off-by: Alexander Graf <graf@amazon.com>
+> > Co-developed-by: Pratyush Yadav <ptyadav@amazon.de>
+> > Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
+> > Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > Co-developed-by: Changyuan Lyu <changyuanl@google.com>
+> > Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+> > ---
+> >  MAINTAINERS                    |   2 +-
+> >  include/linux/kexec_handover.h | 109 +++++
+> >  kernel/Makefile                |   1 +
+> >  kernel/kexec_handover.c        | 865 +++++++++++++++++++++++++++++++++
+> >  mm/mm_init.c                   |   8 +
+> >  5 files changed, 984 insertions(+), 1 deletion(-)
+> >  create mode 100644 include/linux/kexec_handover.h
+> >  create mode 100644 kernel/kexec_handover.c
+> [...]
+> > diff --git a/mm/mm_init.c b/mm/mm_init.c
+> > index 04441c258b05..757659b7a26b 100644
+> > --- a/mm/mm_init.c
+> > +++ b/mm/mm_init.c
+> > @@ -30,6 +30,7 @@
+> >  #include <linux/crash_dump.h>
+> >  #include <linux/execmem.h>
+> >  #include <linux/vmstat.h>
+> > +#include <linux/kexec_handover.h>
+> >  #include "internal.h"
+> >  #include "slab.h"
+> >  #include "shuffle.h"
+> > @@ -2661,6 +2662,13 @@ void __init mm_core_init(void)
+> >         report_meminit();
+> >         kmsan_init_shadow();
+> >         stack_depot_early_init();
+> > +
+> > +       /*
+> > +        * KHO memory setup must happen while memblock is still active, but
+> > +        * as close as possible to buddy initialization
+> > +        */
+> > +       kho_memory_init();
+> > +
+> >         mem_init();
+> >         kmem_cache_init();
+> >         /*
+> 
+> 
+> Thanks for the work on this.
+> 
+> Obviously it needs to happen while memblock is still active - but why
+> as close as possible to buddy initialization?
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/arch/x86/bonnell/other.json    | 8 --------
- tools/perf/pmu-events/arch/x86/bonnell/pipeline.json | 8 ++++++++
- 2 files changed, 8 insertions(+), 8 deletions(-)
+One reason is to have all memblock allocations done to autoscale the
+scratch area. Another reason is to keep memblock structures small as long
+as possible as memblock_reserve()ing the preserved memory would quite
+inflate them.
 
-diff --git a/tools/perf/pmu-events/arch/x86/bonnell/other.json b/tools/perf/pmu-events/arch/x86/bonnell/other.json
-index 3a55c101fbf7..6e6f64b96834 100644
---- a/tools/perf/pmu-events/arch/x86/bonnell/other.json
-+++ b/tools/perf/pmu-events/arch/x86/bonnell/other.json
-@@ -323,14 +323,6 @@
-         "SampleAfterValue": "2000000",
-         "UMask": "0x2"
-     },
--    {
--        "BriefDescription": "Memory cluster signals to block micro-op dispatch for any reason",
--        "Counter": "0,1",
--        "EventCode": "0x9",
--        "EventName": "DISPATCH_BLOCKED.ANY",
--        "SampleAfterValue": "200000",
--        "UMask": "0x20"
--    },
-     {
-         "BriefDescription": "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
-         "Counter": "0,1",
-diff --git a/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json b/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
-index 9ff032ab11e2..48d3d053a369 100644
---- a/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
-@@ -211,6 +211,14 @@
-         "SampleAfterValue": "2000000",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Memory cluster signals to block micro-op dispatch for any reason",
-+        "Counter": "0,1",
-+        "EventCode": "0x9",
-+        "EventName": "DISPATCH_BLOCKED.ANY",
-+        "SampleAfterValue": "200000",
-+        "UMask": "0x20"
-+    },
-     {
-         "BriefDescription": "Divide operations retired",
-         "Counter": "0,1",
+And it's overall simpler if memblock only allocates from scratch rather
+than doing some of early allocations from scratch and some elsewhere and
+still making sure they avoid the preserved ranges.
+ 
+> Ordering is always a sticky issue when it comes to doing things during
+> boot, of course. In this case, I can see scenarios where code that
+> runs a little earlier may want to use some preserved memory. The
+
+Can you elaborate about such scenarios?
+
+> current requirement in the patch set seems to be "after sparse/page
+> init", but I'm not sure why it needs to be as close as possibly to
+> buddy init.
+
+Why would you say that sparse/page init would be a requirement here?
+ 
+> - Frank
+
 -- 
-2.49.0.395.g12beb8f557-goog
-
+Sincerely yours,
+Mike.
