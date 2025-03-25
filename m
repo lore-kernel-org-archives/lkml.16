@@ -1,209 +1,175 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f100.google.com (mail-qv1-f100.google.com [209.85.219.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9547525A342;
-	Tue, 25 Mar 2025 14:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742913566; cv=pass; b=PcTCA/UsjRU1qAa9+bbRbtjP/nlxYGVXCdZSkqRM8DeDMeuYK6LCtu9b8axsdv51V5CD2jUxQ+w8+BOUQCmqRUeXAoDHRpNnK+AAF/mf5x4a6g66SFH1WPj2HQK1AEoM7A6HU+pndB0X2C7ii84RlyvoMJ4LVPNTOc+A0Nqle1k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742913566; c=relaxed/simple;
-	bh=Gvt8K1sA1CaAsu2eb2QGQYOlpD6tSJd58vP4p0vCBcM=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=qINw90ceOFlSHDwJqviscJ1oR39SG5IolArankbLrJTF7dr7gJX+HqcoM129u76igYMpp/v575WCZcUQL+ymxWUkdRXs5nNH/uyz2taFWc2VKTHtyjhq4VR5CalVii3f9Rlxi/efaFt+rj7apKNF6oIajY5VR5BUFKyLYeCsy08=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=Q7Qn2w1J; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2705125A35E
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.100
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742913591; cv=none; b=YqCSAkoujMeiXMz0iKhsdSPAjI8i/LB/9hQVGf4+MmTsuKZX1NuMtq0VOp5VDP+hMDNl3JBPGn8qV23IOBJLqmve2mWsRHENPCrJXf+ogCOD1i9A/npA4i67CnKzdhSZeaHeSlcxBafLcZFtjL1G9NeljnXEGl5uUjU2FldpHb8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742913591; c=relaxed/simple;
+	bh=rCLSYeIfXuVSPFtngy9ZTWChJeLAUNk74DjLait3gKI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q1yE2pxxjDQ8Ljukhy8vP9aDe5ieUvvS2b87HWye8lOZUSD9JiW1D87LCv395yBNMuCgiLZ/byFt1OK/yYu+s5j39H46VgZLvmrhidVb9yf7Wrp67++EVRSBnkpnmyH72qPs1l4/DQwqolf2rUQ3v6gvqWPM8L0Y9+0MbSqBBKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=F9x6+6R1; arc=none smtp.client-ip=209.85.219.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="Q7Qn2w1J"
-ARC-Seal: i=1; a=rsa-sha256; t=1742913536; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=VUVu38pF+ELp8GK6YdhvjNb30da9YOmDDJeYolZO0WNipKoxltMmo5HeRYRobHll4LCMbsJy6+KHZ6Ut/iJwSTcHC09FcWZtKe/W121VHvsWMsk1Zuwf9Oi/Z5N6BAbxQ3S/g3bgxaspCNr7FfPeDVhdDFD/R9xG4S6jAdK8sE8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1742913536; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=jQZDBSONaTvaFu9T91EHjA31tT8fr2Z46N42ed/1SWE=; 
-	b=YArRVSUZZTzD8qeJuueVTNj+oJgISEaAn8RKep0aAYZDdIYEUA8qfHmOOxwm8LKSueDgeopsSldV12csgi1CwvXiIz73qLPyCGgnNP+OMwm6vbkpQcnJ4pK98Xl0IyvhqJ0r62dwc+kV9bjOVruuNjoge1N+MqP50ya4UMSoV6s=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742913536;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=jQZDBSONaTvaFu9T91EHjA31tT8fr2Z46N42ed/1SWE=;
-	b=Q7Qn2w1JM5e57wWolQ/0oebm+F7PwyjAchnvl2wXYY5kojAq/8ZcJUmUYJuTcxew
-	/9Bxb0bOUzla+YBFln50TijQTU4zWg8yXDC9y50oF9bjvrkm2PnIA/shcdOt7iDkK25
-	KH10JYmXBKXFe1ZyY8dkVabM2kMfa9NzU23Hbl08=
-Received: by mx.zohomail.com with SMTPS id 17429135343111014.0342799037822;
-	Tue, 25 Mar 2025 07:38:54 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="F9x6+6R1"
+Received: by mail-qv1-f100.google.com with SMTP id 6a1803df08f44-6eaf348103cso12175646d6.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 07:39:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1742913588; x=1743518388; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KvEoHJR3H5rDtrh76cias56A8NX1LxdTDYMAo9ZEIug=;
+        b=F9x6+6R1Cka3xUiCXNJM7VL/QYoEyVEgl4yoptQVdZQT9LMb4AG3P0/2b7LgpFiTG9
+         sIw6PwdH9AEbBMlXs/xWXmd3alDrbi/C+FKndS+ciKXk+lKpxG0XH17NmoUJNfKtQfI5
+         uMae7ucukA/tDcScBDG6O2Li9s31ss1JK8rvH6OpAWDpQVV3gduzFJJbhq7fKXF+lGTg
+         MgGRXeWi3qMim5M6Z0m6KHQNVYgL+G9+NwezI3xgzSYZ/T/Dtj9n9VZRzM+NFgKhA+IJ
+         fVFXII7HfHI1wOz8piiFka6fo1wRvCrj33An8OzM7DHgxyynSavYpw7Ww4YAiu4cUHPf
+         hJFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742913588; x=1743518388;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KvEoHJR3H5rDtrh76cias56A8NX1LxdTDYMAo9ZEIug=;
+        b=QzWireaLzGVY6zPprxXoJb3BLZqvPdNJIlPgaIph6y1/eSoYAlLHPyyiKSQrN11fEe
+         ZjGMywrDoPxELOyK0OWnJuirji8qO1OpoYqttnXK8w91unLFNxiI++ePMxPPpX+1RcKC
+         +N5LKcMpRs3h1Ci61WSUUU00CWJX20hRf+CykY3taZoTjKfg2Lc0uzmqNdjox9w7GIVm
+         VnVgGURR+QvJMft1mgqHGEuxLNf5PetK0wqgv9rE28g4g2waPA0sX4+osVSj62kxyMgl
+         s3oljDsnedkrabJAvChtnNmvoZ7pCxrJVHEbu5UX3EmCiOW0V97CMDtZGpVqI2lMknh5
+         EgNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUlyF5/1WPoI48rxOmeBoEabmsXC2Xflv43LTx8bRF5IrrSwKZ6FPewJEztdBuOydw/9PKHa3tYHA7LAhI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1YEX1AKj8gJ/k5seJ8aLbUTONzk+QqI9CnPjEV21XOv9+BEi3
+	Blc/ZZf+OpJVOUwZZt3YNFelxnUqEKpXv0IxKSmt04+ZJJ49LWproN5TGXNJUgdrAWmAu0bD9FJ
+	CTeAhaRtqtGRq/2Jy5UWKEcX2r3n8uNWx3CJ6t3/3xzHGUSjk
+X-Gm-Gg: ASbGncuCYFXMRbJOLNxthuy0U0DVd4tiSYWsald4pAk1rNGfI6yBPDESPJFNnP0iGgQ
+	OA48Rh+o56/pAkeE7ZdeA+QvNI6x6FBAwfUD+Mk4R2cl1NWoYxzs2rfIXFA9N2e6Rc3IESMp9Zc
+	6o4rmdjzK+MXzD8SbI94IFYYj3YnTDY1yxneWCMUR1pz42jXtNIVEvxe9mAKsiTrYUsxCMDWqpA
+	/0M3/FbGdtGl1k3JmrbeKc2WtVtJh6WParq19RNeW8fbzgijiFeS/TWr0iFrCxZ3WerYVRO23Gs
+	LgN4v1bFFkelbbveAJ7oe87Ts9P1XVTwaQ==
+X-Google-Smtp-Source: AGHT+IEhlp6iFJ/nyrhTZLyoIqP0PYN5prYdCkGBn4s3G3ahC1K2ifu4QgQbVRpdOZOSyBRCptdVsrJl6HW/
+X-Received: by 2002:a05:6214:e4e:b0:6e6:9c39:ae44 with SMTP id 6a1803df08f44-6ed0c28045emr16629676d6.10.1742913587787;
+        Tue, 25 Mar 2025 07:39:47 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id 6a1803df08f44-6eb3efa9663sm5438656d6.34.2025.03.25.07.39.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 07:39:47 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 8E6973404BA;
+	Tue, 25 Mar 2025 08:39:46 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id 96FC8E40ACF; Tue, 25 Mar 2025 08:39:46 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Jens Axboe <axboe@kernel.dk>,
+	Pavel Begunkov <asml.silence@gmail.com>
+Cc: Caleb Sander Mateos <csander@purestorage.com>,
+	io-uring@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] io_uring/net: use REQ_F_IMPORT_BUFFER for send_zc
+Date: Tue, 25 Mar 2025 08:39:42 -0600
+Message-ID: <20250325143943.1226467-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH v4 11/11] scripts: generate_rust_analyzer.py: use
- `cfg_groups`
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250322-rust-analyzer-host-v4-11-1f51f9c907eb@gmail.com>
-Date: Tue, 25 Mar 2025 11:38:37 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Boris-Chengbiao Zhou <bobo1239@web.de>,
- Kees Cook <kees@kernel.org>,
- Fiona Behrens <me@kloenk.dev>,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Lukas Wirth <lukas.wirth@ferrous-systems.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <CFD8E300-A2A3-41C6-A11A-1177F20A56A7@collabora.com>
-References: <20250322-rust-analyzer-host-v4-0-1f51f9c907eb@gmail.com>
- <20250322-rust-analyzer-host-v4-11-1f51f9c907eb@gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
+Instead of a bool field in struct io_sr_msg, use REQ_F_IMPORT_BUFFER to
+track whether io_send_zc() has already imported the buffer. This flag
+already serves a similar purpose for sendmsg_zc and {read,write}v_fixed.
 
+Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+Suggested-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ include/linux/io_uring_types.h |  5 ++++-
+ io_uring/net.c                 | 10 +++++-----
+ 2 files changed, 9 insertions(+), 6 deletions(-)
 
-> On 22 Mar 2025, at 10:23, Tamir Duberstein <tamird@gmail.com> wrote:
->=20
-> Declare common `cfg`s just once to reduce the size of =
-rust-analyzer.json
-> from 30619 to 2624 lines.
->=20
-> Link: =
-https://github.com/rust-lang/rust-analyzer/commit/2607c09fddef36da0d6f0a84=
-625db5e20a5ebde3
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
-> scripts/generate_rust_analyzer.py | 35 =
-+++++++++++++++++++++++------------
-> 1 file changed, 23 insertions(+), 12 deletions(-)
->=20
-> diff --git a/scripts/generate_rust_analyzer.py =
-b/scripts/generate_rust_analyzer.py
-> index 957b413fe0b6..3d89c0198db4 100755
-> --- a/scripts/generate_rust_analyzer.py
-> +++ b/scripts/generate_rust_analyzer.py
-> @@ -37,6 +37,7 @@ class Crate(TypedDict):
->     root_module: str
->     is_workspace_member: bool
->     deps: List[Dependency]
-> +    cfg_groups: List[str]
->     cfg: List[str]
->     edition: Literal["2021"]
->     env: Dict[str, str]
-> @@ -59,15 +60,8 @@ def generate_crates(
->     sysroot_src: pathlib.Path,
->     external_src: pathlib.Path,
->     cfgs: List[str],
-> +    cfg_groups: List[str],
-> ) -> List[Crate]:
-> -    # Generate the configuration list.
-> -    cfg =3D []
-> -    with open(objtree / "include" / "generated" / "rustc_cfg") as fd:
-> -        for line in fd:
-> -            line =3D line.replace("--cfg=3D", "")
-> -            line =3D line.replace("\n", "")
-> -            cfg.append(line)
-> -
->     # Now fill the crates list.
->     crates: List[Crate] =3D []
->     crates_cfgs =3D args_crates_cfgs(cfgs)
-> @@ -77,6 +71,7 @@ def generate_crates(
->         root_module: pathlib.Path,
->         deps: List[Dependency],
->         cfg: List[str] =3D [],
-> +        cfg_groups: List[str] =3D [],
->         is_workspace_member: bool =3D True,
->     ) -> Crate:
->         return {
-> @@ -85,6 +80,7 @@ def generate_crates(
->             "is_workspace_member": is_workspace_member,
->             "deps": deps,
->             "cfg": cfg,
-> +            "cfg_groups": cfg_groups,
->             "edition": "2021",
->             "env": {
->                 "RUST_MODFILE": "This is only for rust-analyzer"
-> @@ -101,10 +97,13 @@ def generate_crates(
->         root_module: pathlib.Path,
->         deps: List[Dependency],
->         cfg: List[str] =3D [],
-> +        cfg_groups: List[str] =3D [],
->         is_workspace_member: bool =3D True,
->     ) -> Dependency:
->         return register_crate(
-> -            build_crate(display_name, root_module, deps, cfg, =
-is_workspace_member)
-> +            build_crate(
-> +                display_name, root_module, deps, cfg, cfg_groups, =
-is_workspace_member
-> +            )
->         )
->=20
->     def append_proc_macro_crate(
-> @@ -190,7 +189,7 @@ def generate_crates(
->             display_name,
->             srctree / "rust" / display_name / "lib.rs",
->             deps,
-> -            cfg=3Dcfg,
-> +            cfg_groups=3Dcfg_groups,
->         )
->         crate["env"]["OBJTREE"] =3D str(objtree.resolve(True))
->         crate_with_generated: CrateWithGenerated =3D {
-> @@ -252,7 +251,7 @@ def generate_crates(
->                 name,
->                 path,
->                 [core, kernel],
-> -                cfg=3Dcfg,
-> +                cfg_groups=3Dcfg_groups,
->             )
->=20
->     return crates
-> @@ -277,9 +276,21 @@ def main() -> None:
->     # Making sure that the `sysroot` and `sysroot_src` belong to the =
-same toolchain.
->     assert args.sysroot in args.sysroot_src.parents
->=20
-> +    # Generate the configuration list.
-> +    with open(args.objtree / "include" / "generated" / "rustc_cfg") =
-as fd:
-> +        cfg_groups =3D {"rustc_cfg": =
-[line.lstrip("--cfg=3D").rstrip("\n") for line in fd]}
-> +
->     rust_project =3D {
-> -        "crates": generate_crates(args.srctree, args.objtree, =
-args.sysroot_src, args.exttree, args.cfgs),
-> +        "crates": generate_crates(
-> +            args.srctree,
-> +            args.objtree,
-> +            args.sysroot_src,
-> +            args.exttree,
-> +            args.cfgs,
-> +            list(cfg_groups.keys()),
-> +        ),
->         "sysroot": str(args.sysroot),
-> +        "cfg_groups": cfg_groups,
->     }
->=20
->     json.dump(rust_project, sys.stdout, sort_keys=3DTrue, indent=3D4)
->=20
-> --=20
-> 2.48.1
->=20
->=20
-
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
-Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
+diff --git a/include/linux/io_uring_types.h b/include/linux/io_uring_types.h
+index c17d2eedf478..699e2c0895ae 100644
+--- a/include/linux/io_uring_types.h
++++ b/include/linux/io_uring_types.h
+@@ -583,11 +583,14 @@ enum {
+ 	REQ_F_BUFFERS_COMMIT	= IO_REQ_FLAG(REQ_F_BUFFERS_COMMIT_BIT),
+ 	/* buf node is valid */
+ 	REQ_F_BUF_NODE		= IO_REQ_FLAG(REQ_F_BUF_NODE_BIT),
+ 	/* request has read/write metadata assigned */
+ 	REQ_F_HAS_METADATA	= IO_REQ_FLAG(REQ_F_HAS_METADATA_BIT),
+-	/* resolve padded iovec to registered buffers */
++	/*
++	 * For vectored fixed buffers, resolve iovec to registered buffers.
++	 * For SEND_ZC, whether to import buffers (i.e. the first issue).
++	 */
+ 	REQ_F_IMPORT_BUFFER	= IO_REQ_FLAG(REQ_F_IMPORT_BUFFER_BIT),
+ };
+ 
+ typedef void (*io_req_tw_func_t)(struct io_kiocb *req, io_tw_token_t tw);
+ 
+diff --git a/io_uring/net.c b/io_uring/net.c
+index c87af980b98e..a7b3e2688689 100644
+--- a/io_uring/net.c
++++ b/io_uring/net.c
+@@ -75,11 +75,10 @@ struct io_sr_msg {
+ 	unsigned			nr_multishot_loops;
+ 	u16				flags;
+ 	/* initialised and used only by !msg send variants */
+ 	u16				buf_group;
+ 	bool				retry;
+-	bool				imported; /* only for io_send_zc */
+ 	void __user			*msg_control;
+ 	/* used only for send zerocopy */
+ 	struct io_kiocb 		*notif;
+ };
+ 
+@@ -1305,11 +1304,10 @@ int io_send_zc_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	struct io_ring_ctx *ctx = req->ctx;
+ 	struct io_kiocb *notif;
+ 
+ 	zc->done_io = 0;
+ 	zc->retry = false;
+-	zc->imported = false;
+ 	req->flags |= REQ_F_POLL_NO_LAZY;
+ 
+ 	if (unlikely(READ_ONCE(sqe->__pad2[0]) || READ_ONCE(sqe->addr3)))
+ 		return -EINVAL;
+ 	/* we don't support IOSQE_CQE_SKIP_SUCCESS just yet */
+@@ -1351,12 +1349,14 @@ int io_send_zc_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	if (io_is_compat(req->ctx))
+ 		zc->msg_flags |= MSG_CMSG_COMPAT;
+ 
+ 	if (unlikely(!io_msg_alloc_async(req)))
+ 		return -ENOMEM;
+-	if (req->opcode != IORING_OP_SENDMSG_ZC)
++	if (req->opcode == IORING_OP_SEND_ZC) {
++		req->flags |= REQ_F_IMPORT_BUFFER;
+ 		return io_send_setup(req, sqe);
++	}
+ 	return io_sendmsg_zc_setup(req, sqe);
+ }
+ 
+ static int io_sg_from_iter_iovec(struct sk_buff *skb,
+ 				 struct iov_iter *from, size_t length)
+@@ -1447,12 +1447,12 @@ int io_send_zc(struct io_kiocb *req, unsigned int issue_flags)
+ 	if (unlikely(!sock))
+ 		return -ENOTSOCK;
+ 	if (!test_bit(SOCK_SUPPORT_ZC, &sock->flags))
+ 		return -EOPNOTSUPP;
+ 
+-	if (!zc->imported) {
+-		zc->imported = true;
++	if (req->flags & REQ_F_IMPORT_BUFFER) {
++		req->flags &= ~REQ_F_IMPORT_BUFFER;
+ 		ret = io_send_zc_import(req, issue_flags);
+ 		if (unlikely(ret))
+ 			return ret;
+ 	}
+ 
+-- 
+2.45.2
 
