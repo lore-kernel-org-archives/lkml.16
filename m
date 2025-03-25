@@ -1,30 +1,32 @@
 Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F4D2566C5;
-	Tue, 25 Mar 2025 11:58:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8223F256C8B;
+	Tue, 25 Mar 2025 11:58:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742903901; cv=none; b=qB9a/b15tZJAEVFwWDemflK71uMuIkmu//nACRurs27S/JRXPKC/9uIhulM8T+u+sGZy3ykbsM4aHbVh7gqmRaI9CmdvLGRl5kHho3FREVafhQbkVf9Lrq7NNEeJVtvTUzpbWD13qs+2HSkZTnZnM9Ejot8KbJcVs3vsMmauALc=
+	t=1742903903; cv=none; b=fyxx+41nSfVxdkuXPLJ4WNC1IaMwcPY9Rr5m2dxRkRf9e/VeMKAJPuGZGk5RwSg67dWnydoj41h+RtMxw1GYZlbs7HQSycThTOB2Wrsbl/zHf46Fw7a/i4oJzfAaq8sBSfNwyAFvLTPZs7wrVT+R1f+d/oDN6453G8oHmg269Gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742903901; c=relaxed/simple;
-	bh=ogJk0gjbecFlaa/OaLnvGTB/fbFW9JECh0LpYnOG8qk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=opo81TPoGsJAT4ePLLB6Zhi8dbO1IvE4e/UiYrAr9xea2Vih97q5C74PygW/t6Y6fwcN4ZH6uY003sfv+k8ILty5eubm1brU7Nv00oNWOKBUfDCmYn81hm4Wbqm851jGI7UZBHIPOItCdZV/Yy6hoLyZ94xmOW+8X8YIWDTN4/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=fdCItleR; arc=none smtp.client-ip=89.58.32.78
+	s=arc-20240116; t=1742903903; c=relaxed/simple;
+	bh=LbKDGPUsRzB21/dtuDv+AQH08uLt87W+n3tEi8+rwD8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QHB9vOqCs1HibOfoTSp5PaW/lQTzNYmIm/dSqQ6V12ykPmWFP9fSk7ZmPqvYwVOlpwIzZbs1iw3wr6R7+o67qPRtNMKdzNMZmfM8DiMCzPouxPWtOPCOP3KBBrFljpPtTuQ29iuiNBgU0sNaH+GS2btJ/yxUsEa+CaMaRqGfWdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=a75CWyZL; arc=none smtp.client-ip=89.58.32.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="fdCItleR"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id F1137102F66FF;
-	Tue, 25 Mar 2025 12:58:09 +0100 (CET)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="a75CWyZL"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 76329102EBA4A;
+	Tue, 25 Mar 2025 12:58:17 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1742903894; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=Pd9Mb9EGjiorJmqfD3xt+UhIpKbj2X3/flEfWMUs8j4=;
-	b=fdCItleRY1ScOnEWpELgucVdXlUxLkQHTIfzCcdGcfmnKj9LIP5nqvDTQUjO46Act2J8NC
-	D3TshBfu8viiqbsirGHG+tzbX4JjgHHVWY3k87i/TeAFBWlMGtiEKIs+CLp79iOhOQaorq
-	DSbttWnBdJgrBX1HYkpTo0joXGpUA4wICUColKwuVWy+/kDTClinxRHbgOecQz/gxyFuSK
-	d79YH9ol4ywqqkHip+Dhvl9DGl2qCSbQgAggPHfEr2LZD7nJQD2e6pnbck6pxWcjEP896U
-	O++eo3dIRIAVVuv9FXLyYIHwuMxHyifWZTr1LcQ14iMhj6weVQz04GziUWr+og==
+	t=1742903898; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=wkjvXpluXHZIyk2FPJLHBibzQd9cgpPYKEkveOICekU=;
+	b=a75CWyZLI/mtX4BBgVvlvy0gl8YN7T8r6CFmKMRLIe1xop8h8A3BOkSRHm62mPSuH4m5Ab
+	DqHOIUQ+/VTodkeEYQoIQeyUMjX65j4r2aN27Y1kbW20eNWIp5oSQxsZRNmjQJ+U6MGkZ3
+	PJxIrKdRCJKU7KCShMtzgjaMKsZcaxoGoGXQ/dJBzTobByZgYyueHwI5+JEPfSWRAkuHBU
+	9p6rg5kodjQw90TrkFa2QQ8r4JVbQMrW6BBdqg79j+u8gAu6mU9jA92RTlk+D8rE4PGsQk
+	l1MvmgGQkHNkiC8k8uo4emYcgQMnIxeIuyDXmp1RtpsYUDVo0+7c6DgNfbDSDA==
 From: Lukasz Majewski <lukma@denx.de>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -46,10 +48,12 @@ Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
 	netdev@vger.kernel.org,
 	Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH 0/5] net: mtip: Add support for MTIP imx287 L2 switch driver
-Date: Tue, 25 Mar 2025 12:57:31 +0100
-Message-Id: <20250325115736.1732721-1-lukma@denx.de>
+Subject: [PATCH 2/5] dt-bindings: net: Add MTIP L2 switch description (fec,mtip-switch.yaml)
+Date: Tue, 25 Mar 2025 12:57:33 +0100
+Message-Id: <20250325115736.1732721-3-lukma@denx.de>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250325115736.1732721-1-lukma@denx.de>
+References: <20250325115736.1732721-1-lukma@denx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,98 +63,181 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-This patch series adds support for More Than IP's L2 switch driver embedded
-in some NXP's SoCs. This one has been tested on imx287, but is also available
-in the vf610.
+This patch provides description of the MTIP L2 switch available in some
+NXP's SOCs - imx287, vf610.
 
-In the past there has been performed some attempts to upstream this driver:
-1. The 4.19-cip based one [1]
-2. DSA based one for 5.12 [2] - i.e. the switch itself was treat as a DSA switch
-   with NO tag appended.
-3. The extension for FEC driver for 5.12 [3] - the trick here was to fully reuse
-   FEC when the in-HW switching is disabled. When bridge offloading is enabled,
-   the driver uses already configured MAC and PHY to also configure PHY.
-
-All three approaches were not accepted as eligible for upstreaming.
-
-The driver from this series has floowing features:
-
-1. It is fully separated from fec_main - i.e. can be used interchangeable
-   with it. To be more specific - one can build them as modules and
-   if required switch between them when e.g. bridge offloading is required.
-
-   To be more specific:
-	- Use FEC_MAIN: When one needs support for two ETH ports with separate
-	  uDMAs used for both and bridging can be realized in SW.
-
-	- Use MTIPL2SW: When it is enough to support two ports with only uDMA0
-	  attached to switch and bridging shall be offloaded to HW. 
-	
-2. This driver uses MTIP's L2 switch internal VLAN feature to provide port
-   separation at boot time. Port separation is disabled when bridging is
-   required.
-
-3. Example usage:
-	Configuration:
-	ip link set lan0 up; sleep 1;
-	ip link set lan1 up; sleep 1;
-	ip link add name br0 type bridge;
-	ip link set br0 up; sleep 1;
-	ip link set lan0 master br0;
-	ip link set lan1 master br0;
-	bridge link;
-	ip addr add 192.168.2.17/24 dev br0;
-	ping -c 5 192.168.2.222
-
-	Removal:
-	ip link set br0 down;
-	ip link delete br0 type bridge;
-	ip link set dev lan1 down
-	ip link set dev lan0 down
-
-4. Limitations:
-	- Driver enables and disables switch operation with learning and ageing.
-	- Missing is the advanced configuration (e.g. adding entries to FBD). This is
-	  on purpose, as up till now we didn't had consensus about how the driver
-	  shall be added to Linux.
-	
-Links:
-[1] - https://github.com/lmajewski/linux-imx28-l2switch/commits/master
-[2] - https://github.com/lmajewski/linux-imx28-l2switch/tree/imx28-v5.12-L2-upstream-RFC_v1
-[3] - https://source.denx.de/linux/linux-imx28-l2switch/-/tree/imx28-v5.12-L2-upstream-switchdev-RFC_v1?ref_type=heads
-
-
-
-Lukasz Majewski (5):
-  MAINTAINERS: Add myself as the MTIP L2 switch maintainer (IMX SoCs:
-    imx287)
-  dt-bindings: net: Add MTIP L2 switch description
-    (fec,mtip-switch.yaml)
-  arm: dts: Adjust the 'reg' range for imx287 L2 switch description
-  arm: dts: imx287: Provide description for MTIP L2 switch
-  net: mtip: The L2 switch driver for imx287
-
- .../bindings/net/fec,mtip-switch.yaml         |  160 ++
- MAINTAINERS                                   |    7 +
- arch/arm/boot/dts/nxp/mxs/imx28-xea.dts       |   56 +
- arch/arm/boot/dts/nxp/mxs/imx28.dtsi          |    4 +-
- drivers/net/ethernet/freescale/Kconfig        |    1 +
- drivers/net/ethernet/freescale/Makefile       |    1 +
- drivers/net/ethernet/freescale/mtipsw/Kconfig |   10 +
- .../net/ethernet/freescale/mtipsw/Makefile    |    6 +
- .../net/ethernet/freescale/mtipsw/mtipl2sw.c  | 2108 +++++++++++++++++
- .../net/ethernet/freescale/mtipsw/mtipl2sw.h  |  784 ++++++
- .../ethernet/freescale/mtipsw/mtipl2sw_br.c   |  113 +
- .../ethernet/freescale/mtipsw/mtipl2sw_mgnt.c |  434 ++++
- 12 files changed, 3682 insertions(+), 2 deletions(-)
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
+---
+ .../bindings/net/fec,mtip-switch.yaml         | 160 ++++++++++++++++++
+ 1 file changed, 160 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/net/fec,mtip-switch.yaml
- create mode 100644 drivers/net/ethernet/freescale/mtipsw/Kconfig
- create mode 100644 drivers/net/ethernet/freescale/mtipsw/Makefile
- create mode 100644 drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c
- create mode 100644 drivers/net/ethernet/freescale/mtipsw/mtipl2sw.h
- create mode 100644 drivers/net/ethernet/freescale/mtipsw/mtipl2sw_br.c
- create mode 100644 drivers/net/ethernet/freescale/mtipsw/mtipl2sw_mgnt.c
 
+diff --git a/Documentation/devicetree/bindings/net/fec,mtip-switch.yaml b/Documentation/devicetree/bindings/net/fec,mtip-switch.yaml
+new file mode 100644
+index 000000000000..cd85385e0f79
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/fec,mtip-switch.yaml
+@@ -0,0 +1,160 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/fsl,mtip-switch.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale MTIP Level 2 (L2) switch
++
++maintainers:
++  - Lukasz Majewski <lukma@denx.de>
++
++allOf:
++  - $ref: ethernet-controller.yaml#
++
++properties:
++  compatible:
++    oneOf:
++      - enum:
++	  - imx287-mtip-switch
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 3
++
++  clocks:
++    maxItems: 4
++    description:
++      The "ipg", for MAC ipg_clk_s, ipg_clk_mac_s that are for register accessing.
++      The "ahb", for MAC ipg_clk, ipg_clk_mac that are bus clock.
++      The "ptp"(option), for IEEE1588 timer clock that requires the clock.
++      The "enet_out"(option), output clock for external device, like supply clock
++      for PHY. The clock is required if PHY clock source from SOC.
++
++  clock-names:
++    minItems: 4
++    maxItems: 4
++    items:
++      enum:
++	- ipg
++	- ahb
++	- ptp
++	- enet_out
++
++  phy-supply:
++    description:
++      Regulator that powers the Ethernet PHY.
++
++  phy-reset-gpios:
++    deprecated: true
++    description:
++      Should specify the gpio for phy reset.
++
++  phy-reset-duration:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    deprecated: true
++    description:
++      Reset duration in milliseconds.  Should present only if property
++      "phy-reset-gpios" is available.  Missing the property will have the
++      duration be 1 millisecond.  Numbers greater than 1000 are invalid
++      and 1 millisecond will be used instead.
++
++  phy-reset-post-delay:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    deprecated: true
++    description:
++      Post reset delay in milliseconds. If present then a delay of phy-reset-post-delay
++      milliseconds will be observed after the phy-reset-gpios has been toggled.
++      Can be omitted thus no delay is observed. Delay is in range of 1ms to 1000ms.
++      Other delays are invalid.
++
++  mdio:
++    $ref: mdio.yaml#
++    unevaluatedProperties: false
++    description:
++      Specifies the mdio bus in the FEC, used as a container for phy nodes.
++
++  ethernet-ports:
++    type: object
++    additionalProperties: false
++
++    patternProperties:
++      "^port@[0-9a-f]+$":
++	$ref: /schemas/net/ethernet-switch-controller.yaml#
++	unevaluatedProperties: false
++
++	properties:
++	  reg:
++	    description: Switch port number
++
++	required:
++	  - reg
++	  - phy-mode
++	  - phy-handle
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - mdio
++  - ethernet-ports
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    switch@800f0000 {
++	compatible = "fsl,imx287-mtip-switch";
++	pinctrl-names = "default";
++	pinctrl-0 = <&mac0_pins_a>, <&mac1_pins_a>;
++	phy-supply = <&reg_fec_3v3>;
++	phy-reset-duration = <25>;
++	phy-reset-post-delay = <10>;
++	interrupts = <100>, <101>, <102>;
++	clocks = <&clks 57>, <&clks 57>, <&clks 64>, <&clks 35>;
++	clock-names = "ipg", "ahb", "enet_out", "ptp";
++	status = "okay";
++
++	ethernet-ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		mtip_port1: port@1 {
++			reg = <1>;
++			label = "lan0";
++			local-mac-address = [ 00 00 00 00 00 00 ];
++			phy-mode = "rmii";
++			phy-handle = <&ethphy0>;
++		};
++
++		mtip_port2: port@2 {
++			reg = <2>;
++			label = "lan1";
++			local-mac-address = [ 00 00 00 00 00 00 ];
++			phy-mode = "rmii";
++			phy-handle = <&ethphy1>;
++		};
++	};
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethphy0: ethernet-phy@0 {
++			reg = <0>;
++			smsc,disable-energy-detect;
++			/* Both PHYs (i.e. 0,1) have the same, single GPIO, */
++			/* line to handle both, their interrupts (AND'ed) */
++			interrupt-parent = <&gpio4>;
++			interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
++		};
++
++		ethphy1: ethernet-phy@1 {
++			reg = <1>;
++			smsc,disable-energy-detect;
++			interrupt-parent = <&gpio4>;
++			interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
++		};
++	};
++    };
 -- 
 2.39.5
 
