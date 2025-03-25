@@ -1,69 +1,71 @@
 Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F744258CFF
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:13:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7A5259CA6
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:13:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742911999; cv=none; b=czD6/T4lEUWwN1itN1w68x25qUThFEn0dpI20C4kE3Wsd3rH0fWiaBUtr0WlW9A1r+4q5n/o4pEokPYNi8VrtWnwrMV60wrS340hIcPzxoYzoaairGklO2ORB8M+U22vgOybtK0EFsQLw9ei2Xrb5S9Ya3uAiJV4iZsqJhOdc3s=
+	t=1742912002; cv=none; b=scstMgqQFYg5F6BbP65fscEIC5P+yFC9lA/iYOCvgYyFybOzi7Qgj4/638ST/1hH3j26KEWWw5c4EvgJsfk8dEMfA8GH7Yq8XDWXAdhkzyeSPakVXIzYKXCGFKYgSuSnk3XQYXytWpeZEobgDWV1VOR69iGNSvGqsi2VZu5qVps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742911999; c=relaxed/simple;
-	bh=otuC/CFv+EroRezJqWlsIO+RTb56ZCo/gwA9TYGTy4Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aGwXCnDfeK7ODYbi2HOmX8rStyGlvCeqUy/RgaW2jNHNFGO/fnya2j/V8xbB7XUa+zGEvQb4pNxPQU7tbful7su/7UPx2Lo9axo+F4a5+wYOa5yNaP/dJbVNjVcu8CIIiNZSdfIwh++137dvwdxAjv/Czm4+WDmpqhs+2mpqD/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=EIKhy1Om; arc=none smtp.client-ip=185.125.188.122
+	s=arc-20240116; t=1742912002; c=relaxed/simple;
+	bh=nJ76qnpAiA1hIrK3TfkbYTYfWRCX/J8sNAMB6mmLa10=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XJRHf8tu68bjW7R0Wn3+q3K/PM7HlVaPHMALPVPASuhqnxDSoJl3UuLFytxWZFLtmSYeWd9sHTWU+9AllyC52PxKMFZteYjJHXVQ2P5Asr3tnzvMKjA95qm1o+07iF7553UDkJ2Z52TcwZ9I2hUuYVjt0H0F8Pp4CGZqto9z3rM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=JSvOyZAF; arc=none smtp.client-ip=185.125.188.122
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="EIKhy1Om"
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="JSvOyZAF"
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id BC5203F474
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:13:14 +0000 (UTC)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id D2FB14017F
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1742911994;
-	bh=JaLEOuspohf9X4xUwz7GRTfjgrM6e47VPxpoP7GA8+I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
-	b=EIKhy1OmEbtnp3UYG+TjyDyiYHO5sHQSvhVlJYlw3lnXLo/xYpwNttMkQ7/v2Tjfr
-	 RghPR70OMK7PVhBpedHWcsJ7dHbqpULfEQGyRjvTEHXfpmz/bx/JQmiEeC9oKJI24P
-	 cafkGSad2uuqw3WVbLK96bNE6MYB3C0BgLl+RGLk2HEmEeZoBWXKyjKQklRPfc71GX
-	 RDu87ArERxUPb2KBHdgrABC1X6fAcE+DLkdmz0tM+fRpM9B0giccl9BzYwe3uszdjL
-	 2vyml5vEo4BDkOqUxQ7y+2hoXKi/UGz1ANjE6pfkdCxqBpa3EviQbtb74k6ZrEN2JK
-	 xi/X2iZf5ODEA==
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3978ef9a284so2198195f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 07:13:14 -0700 (PDT)
+	s=20210705; t=1742911998;
+	bh=ruY4mx+ycuBPq+bKcBygbtDAkYa1zJT+mxxboy0e/q8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version;
+	b=JSvOyZAFwiK1TO17Bmqawt5J6WLj+ESA6TLodVIFNqtdZD2Sl7PkBSnQEzb5KjHBL
+	 sf3abF6lnrgTKG55dOLtDf5walwwLYfSKIKezZC5Xg414GnoC0mF7Zm3vE+4BcmJid
+	 3GEm3KDTfxiaAzI0v3XdFRnEDtRwQiqCMbsvK2yJQia61CR7CXhjmgVK1Iz1sBLPN4
+	 MVWctQuzkJ1FFLTc2HZkWm70V6uSq47qcy/zEpPx2t+NMkkyx+LV2Yo2BS1GStP3Lz
+	 p0907vfpiO0iekTbI5dB1MdDyLh8cGrIcSNMZIm2YjlFNnqnmSrPLNYb/KXnrBRYhn
+	 aCCPwiDoR/BmQ==
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3912d5f6689so2963549f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 07:13:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742911994; x=1743516794;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JaLEOuspohf9X4xUwz7GRTfjgrM6e47VPxpoP7GA8+I=;
-        b=EQiP3zY4u9Cv+nuHDf33XjvoGXObqJiR6K1CI7hICFVuV+ivSKYNXlbYt6uRGfzpam
-         vckQw72WKZiWKyJsErWelFVomeHfxsrobrHMwGDZo0G9zmu3ngfM/IRqM1Iha3ywMGnq
-         6Irtt6/gzuggPUpnBS8Uac6HF5UggrC5JyAjKA9zDjGwgbkvqrwko1U+7I7ztDD+neZa
-         +nyBHtW0tb436gdNYKQPg5RjFWvWY+Pnj/gy35kHNRbYvuzkfdGbpuN7jqZi0WGN1vfT
-         R7DCz6skXwFHAwTdHu2GFhma5f8fqohlp24SH14y7KBDFmzQo5rqePCDkMFNt25PfKTL
-         VB/g==
-X-Forwarded-Encrypted: i=1; AJvYcCVjmVDqlA9+9yxZ8LTjpKWRPL7CkJNgzjcK1LWhheTtKdrmWtnEPdS0fcvBPzKsPhi0MhdRHMoI58q4IeQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOhOlUDd0uSYyKEiNoIUmDhS6CAD875CdZGUF5X/azsmwRgsI8
-	Zbi4Jyx8cVTvYPItMlAq9G3RQUsQtUDdGn9Rkpql/1lGaPMldRimuTBpGcSWe6NmTrBTLmks3/1
-	cEZWwImLwsOkIjmEmdkWqQvGdo9PtZ/+NXnviSaeejmzfHtitAQ5+tdDQIufaHsjaUuuTLRhP/P
-	Ab2A==
-X-Gm-Gg: ASbGnctnYfNyIX/mL5gaqK4P88KGWv2BtoZhriI/AEBOJMYb5aNEW5tGCiGL6mKXXBm
-	5sOFqlUemngtkxcliQr9ZU/ZvjGTMfxoxfa3Gvz/GCuhTYXcNvqyagJ0rcmIJoa0nfher58yEuz
-	b5Col0M7tjxVWPVQ9kaS+ZwubuoaYVWmA87pHoEbUzQAaJMxQG5n6DNlkjlY33JG1E9HVq3oj6C
-	1IYg7WQAiftmP4xSMyTp7OJpdI/VXA/AIHNpbJEZoyib9vGU2qzdFaMdd2sTHvbXy8Iks02yGfn
-	nFfh5sLPxGykuY0y/itFLW0CnqSwrw==
-X-Received: by 2002:a05:6000:2808:b0:39a:ca0c:fb0c with SMTP id ffacd0b85a97d-39aca0cfb21mr1504921f8f.28.1742911994023;
-        Tue, 25 Mar 2025 07:13:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH9gu1kOTO2EMBz8bV0KvUy/lftump2d38xUsNj4Qewh4mTh1y9N8aE976C4YFTsdPfqCBOMQ==
-X-Received: by 2002:a05:6000:2808:b0:39a:ca0c:fb0c with SMTP id ffacd0b85a97d-39aca0cfb21mr1504872f8f.28.1742911993506;
-        Tue, 25 Mar 2025 07:13:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742911998; x=1743516798;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ruY4mx+ycuBPq+bKcBygbtDAkYa1zJT+mxxboy0e/q8=;
+        b=UCOzBqAoCnJCexHcOlztEjW5l2A388CF9fzEYjomy50RqqQ6nukAO+GBv2a/62JOp3
+         k1scNP3nxixLR154nm2M0kLQzURbTdytWkToBVUySyQQv0w6YdYPn88PKtVsLSm5wXuY
+         BM3X3TINp9+lv43Qaubd4O7+uZxPEOJMhrRmdIRUASz0CyjOBx86DzAubo/8l4iJg8OU
+         YjfpP+TutkWZYqDjuboVFbRKA3HmWCM/IsZVmUw9hUnCgkdnvY9D2HgsXKIMdkDQ6PjE
+         /A27FoC59Pnl5zb6IJa9pYIXERSMP64tv89dbQ4Aar7n/hk5Oq0L5SZZLt5gfC+PeCpH
+         hyYw==
+X-Forwarded-Encrypted: i=1; AJvYcCW6TjZl77wBLVtlJhFNKfQTHZzhmeC9vqim3se7aaZRBxAGKDewMwi1vVIf/9PBuSBPJfB32O4UJDWw4VQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhpbcwehZQ5r7y8gLa0/BofB00kRDJ6VGBPzbkjSkSe6Wugf8o
+	ycoDw91YTPkxc8kAT0flMsx/fOJelWFV3y2TjZFcfLpl2IBHzDqeGFA2Ku1p3gRWO6WpN0b+lSl
+	lykvyIXgEOOSrX8pSgDIvELDgltNa4l2vmftNXnWFfL92UMGsT2cgefy8glq8v5MsIxi9AsGnNW
+	EqQQ==
+X-Gm-Gg: ASbGncvWvHxDVKHW40bUJXoCU65m6l8L3+lGx+h/1UwSCXa+Ft3dGft+zLPSqIt8d0b
+	yJsn6YVcazQFlwe/IvMfFUoW1VvTG7MyKMXPpWoBW4VIP1DLnXACa6SOhmp3kMRJfjXlxPLakKr
+	7cjaONMsh4dvtlmy1/zro8k8pfdK7e8uXg82mHBpWNULtTm89SnmAJOtkqY69luVRBLbCng2knk
+	lf1LAWBw5PKyPhcjuNQ1M5+c5O+f7iO0jCtRegKiQ8v3i2iFUlgFCPGN/8MTeLr+50+0gEZ6fIR
+	cSa4ypm+StW2/oT/2/xJqky3EuWJ6Q==
+X-Received: by 2002:a05:6000:1a8d:b0:38f:2a32:abbb with SMTP id ffacd0b85a97d-3997f8f9d54mr13315769f8f.4.1742911997519;
+        Tue, 25 Mar 2025 07:13:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHIxyJ37OZghcxQ+a/pWrQYrdFkF1ltdT3GNn4+fygXg02/lhRChSV9UcnQAQLd+3Joudp+Ag==
+X-Received: by 2002:a05:6000:1a8d:b0:38f:2a32:abbb with SMTP id ffacd0b85a97d-3997f8f9d54mr13315703f8f.4.1742911997011;
+        Tue, 25 Mar 2025 07:13:17 -0700 (PDT)
 Received: from stitch.. ([80.71.142.166])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a6326sm13532091f8f.29.2025.03.25.07.13.12
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a6326sm13532091f8f.29.2025.03.25.07.13.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 07:13:13 -0700 (PDT)
+        Tue, 25 Mar 2025 07:13:16 -0700 (PDT)
 From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 To: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>,
 	Pritesh Patel <pritesh.patel@einfochips.com>,
@@ -81,10 +83,12 @@ Cc: Samuel Holland <samuel.holland@sifive.com>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [RFC PATCH 0/4] ESWIN EIC7700 pinctrl driver
-Date: Tue, 25 Mar 2025 15:13:02 +0100
-Message-ID: <20250325141311.758787-1-emil.renner.berthing@canonical.com>
+Subject: [RFC PATCH 3/4] riscv: dts: Add EIC7700 pin controller node
+Date: Tue, 25 Mar 2025 15:13:05 +0100
+Message-ID: <20250325141311.758787-4-emil.renner.berthing@canonical.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250325141311.758787-1-emil.renner.berthing@canonical.com>
+References: <20250325141311.758787-1-emil.renner.berthing@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -93,47 +97,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Pinkesh et. al
+Add node for the pin controller on the ESWIN EIC7700 SoC and gpio-ranges
+properties mapping GPIOs to pins.
 
-It's great to see you've begun upstreaming support for the EIC7700. I
-read some of the data sheet for the SoC and noticed the pinctrl is quite
-simple and could benefit from using the same model as the TH1520 pinctrl
-driver. This version should do the same as the vendor driver, but in
-less than 2/3 the code.
+Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+---
+ arch/riscv/boot/dts/eswin/eic7700.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-I hope you'll consider switching to this version once the basic
-support[1] lands. This patchset also depends on that series.
-
-[1]: https://lore.kernel.org/all/20250320105449.2094192-1-pinkesh.vaghela@einfochips.com/
-
-Emil Renner Berthing (4):
-  dt-bindings: pinctrl: Add eswin,eic7700-pinctrl binding
-  pinctrl: Add driver for the ESWIN EIC7700 RISC-V SoC
-  riscv: dts: Add EIC7700 pin controller node
-  riscv: dts: eswin: Add HiFive Premier UART pin control
-
- .../pinctrl/eswin,eic7700-pinctrl.yaml        | 141 +++
- .../dts/eswin/eic7700-hifive-premier-p550.dts |  46 +
- arch/riscv/boot/dts/eswin/eic7700.dtsi        |  17 +
- drivers/pinctrl/Kconfig                       |  14 +
- drivers/pinctrl/Makefile                      |   1 +
- drivers/pinctrl/pinctrl-eic7700.c             | 802 ++++++++++++++++++
- 6 files changed, 1021 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
- create mode 100644 drivers/pinctrl/pinctrl-eic7700.c
-
-
-base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
-prerequisite-patch-id: 2e5cc67f66a8cfe463ec73b98cd17130d4094a86
-prerequisite-patch-id: e39d6867f89c605fd1e3621937c8c91a6cfbe7c8
-prerequisite-patch-id: 5d2232bb3ce3d7d4e23477c2ad3db30424fee33c
-prerequisite-patch-id: 946719f43a0cc23ffe82e996e076de2221dcd8db
-prerequisite-patch-id: c2c2bc1b676b1e15165e107515b380318e9ca941
-prerequisite-patch-id: aa4a955dd99d0796973fedb78bea269ebab73b6b
-prerequisite-patch-id: 1cd27ddae721cc1e6c52723f8b360b09b5e712c7
-prerequisite-patch-id: 237813218e54e0c7cbed8d72e30eb649ffd9ecd4
-prerequisite-patch-id: 8e687755e898e71c80b0294b90deac71fe05c421
-prerequisite-patch-id: 05622d10a27ba9cba36b3d194e51a2d8d7b7b783
+diff --git a/arch/riscv/boot/dts/eswin/eic7700.dtsi b/arch/riscv/boot/dts/eswin/eic7700.dtsi
+index 9cef940f07e4..7226647919b7 100644
+--- a/arch/riscv/boot/dts/eswin/eic7700.dtsi
++++ b/arch/riscv/boot/dts/eswin/eic7700.dtsi
+@@ -312,6 +312,13 @@ porta: gpio-port@0 {
+ 					<324>, <325>, <326>, <327>, <328>, <329>, <330>,
+ 					<331>, <332>, <333>, <334>;
+ 				gpio-controller;
++				gpio-ranges = <&pinctrl  0 12  1>,
++					      <&pinctrl  1 14 12>,
++					      <&pinctrl 13  1  4>,
++					      <&pinctrl 17 32  1>,
++					      <&pinctrl 18 40  5>,
++					      <&pinctrl 23 51  7>,
++					      <&pinctrl 30 68  2>;
+ 				ngpios = <32>;
+ 				#gpio-cells = <2>;
+ 			};
+@@ -320,6 +327,9 @@ portb: gpio-port@1 {
+ 				compatible = "snps,dw-apb-gpio-port";
+ 				reg = <1>;
+ 				gpio-controller;
++				gpio-ranges = <&pinctrl  0 70  3>,
++					      <&pinctrl  3 79  7>,
++					      <&pinctrl 10 89 22>;
+ 				ngpios = <32>;
+ 				#gpio-cells = <2>;
+ 			};
+@@ -328,6 +338,7 @@ portc: gpio-port@2 {
+ 				compatible = "snps,dw-apb-gpio-port";
+ 				reg = <2>;
+ 				gpio-controller;
++				gpio-ranges = <&pinctrl 0 111 32>;
+ 				ngpios = <32>;
+ 				#gpio-cells = <2>;
+ 			};
+@@ -336,9 +347,15 @@ portd: gpio-port@3 {
+ 				compatible = "snps,dw-apb-gpio-port";
+ 				reg = <3>;
+ 				gpio-controller;
++				gpio-ranges = <&pinctrl 0 143 16>;
+ 				ngpios = <16>;
+ 				#gpio-cells = <2>;
+ 			};
+ 		};
++
++		pinctrl: pinctrl@51600080 {
++			compatible = "eswin,eic7700-pinctrl";
++			reg = <0x0 0x51600080 0x0 0xff80>;
++		};
+ 	};
+ };
 -- 
 2.43.0
 
