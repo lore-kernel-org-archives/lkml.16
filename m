@@ -1,126 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691881547C3;
-	Tue, 25 Mar 2025 16:59:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32B925C716
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 17:00:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742921992; cv=none; b=GHkESm8EBuFD7QZe9ErBKuafS3XOsjayCRlItog4KmwE44ITkhEjvPD0r5wVvDkuITuv+udb1Vw7Uy+Gkk/uDjxOL2JikLfAs32th4PJeOLiSVEgyl8DfFUXIDbTJmuh0g7X4lJyyIMteADJZ4qkqvnWbkUyyE/1ZUEuY3PfETc=
+	t=1742922024; cv=none; b=QeGwTohfJwBAoB7Jl8oLbNVKudt1dBqkmcidH85J1jDxudMrsQw7LlGyftZOc4mEJ2orLa28weOyST43Vrtk6vLqjeVr8lb9uoDNrJc5MVv/dykhtKjHxpPqgda0dwV+on5R15csSRVY3zVicCVWBazSljdGZ+8lw8CdmDJqwQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742921992; c=relaxed/simple;
-	bh=TvuNV6wKnM0OfxGqgTXqnI3weghrkbXm3vheYinYnSo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g9h5FjpcXtrkoyLJICC5l2NhDXz4x2RnFAswk6bVca0rTChMbDtFm8J2+8Z4pG1NIv+EZfD4wlP56vGoHif+yA1xanvXucznUuC6NUQ9XqX+L8bezKtyzp5qhi35QBWoy8w9Z4+J9OMfsQSEamdm6nOSUg2Grw9CbXDgbsLKcXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFVVbQyw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742922024; c=relaxed/simple;
+	bh=fMDCIrknMga52tByCYAzlgDLTGxj2rqO7TMXOqtzQTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kl3jPzPXZzMEkQURFNdWhdB1haSFEo/JzhOnYPjdGtSW5hAXclJfAmSyZeGLQM7uEGyzwRC7EGdt9PqUGLwQLJWGyp5DvsnVF6k/c5kMnnCdFLizTFBOQEZahlgsd8008m00F5boDbXP8CmRq1RsyXg2BV6lWMT9rtr3pe/P2AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jgosEb7T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFVVbQyw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF3D7C4CEEE;
-	Tue, 25 Mar 2025 16:59:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jgosEb7T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C353EC4CEEA;
+	Tue, 25 Mar 2025 17:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742921991;
-	bh=TvuNV6wKnM0OfxGqgTXqnI3weghrkbXm3vheYinYnSo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YFVVbQywsW5HNlyalHgO9qClrVkGoea6T0cK2kb5qUUVpe4UtcD9OyNQn6GwOgc5w
-	 KZ8BMeg0b7/tvTrwSDzjfI1Ed032SMtEnzc9fOLAPFdop7qmCP8sSyNwaKMGOc4vLo
-	 oSkxiOYuOWTWfokEJSKFO8iwmMySncVMfoAelcg0P2dwbDfGY4KiXxl5iHBFc6s4s2
-	 Y7EDJ2VQCiOLAqsTOB/o8OZDXetwGLr81fylaTLzkmS00VnhDSUVmDYEfAQO5MmCBG
-	 5EPXANUu1uwCWXhtjtqO0kvPsAz79cXMlwIl5/DkF90xU+fPzau807rfYYw9AUqj8m
-	 tdMTQsVpdgHgQ==
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30beedb99c9so56167421fa.3;
-        Tue, 25 Mar 2025 09:59:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVK41/zb3BtwsltTb13N6+RBpi2+3vv6ru4Em3O3/o04+6E9H3IjlQiNP+OE8EtC6Q3fYLvON41BVAEkGdf@vger.kernel.org, AJvYcCWgNsrgeKWiFyyWZE1Z8YFBtP+X7vKOHuMVTJP6cId1Ybhjv2ZGrJoN/TaZulqsBlcu2b3cGQZN82N0Vv0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcWUTjdnPY2HVQ1jz2uvtkZ7YH8gffaQUF6Q98tMV0HPs0OoG6
-	qk16bblvmQ2Umd3p2JSSHS4mDVtvPpm2biwmjeMHJSzpNH4Gzqn0EPweqc81p7pVrDu/pSPCG7Q
-	/Zf2yPchrL8uMm4GkiJ7tuqGL5LA=
-X-Google-Smtp-Source: AGHT+IF0mLfYg906NjEtDJUBzhsSCFQvlfBVJeusa824a/YnxCdYXhYU64I5Kq9m2fk2SN5sjC3u2ZaN/0XMxdCr5QM=
-X-Received: by 2002:a05:651c:19a7:b0:30b:b00f:9507 with SMTP id
- 38308e7fff4ca-30d7e2aaca1mr70115571fa.24.1742921990190; Tue, 25 Mar 2025
- 09:59:50 -0700 (PDT)
+	s=k20201202; t=1742922024;
+	bh=fMDCIrknMga52tByCYAzlgDLTGxj2rqO7TMXOqtzQTI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jgosEb7TUdFofoFDLjNEd3EDRk6cnWxqTccGPnhqNG6KThpdqe22/0ZCNvKHAqrZ6
+	 +jMfoUUeKiqp1qdg2lE0wDlndMPhil5VDNBPCOw4823uTyGhCi2uGoh4y6KdRmasL+
+	 +/+mZcenkT1sTWLI+inIZOcxaBKZCGEdgDHruP2WCqXeXIGlWu8f9bG/S8wWq2ugk6
+	 Tr/NBzXEIBAZv6xg1GMAv0ajnO7xpQ80yR/r3lmaUG4MBMBc57rzm6RzucVWDD7LrV
+	 I4DQ0wXi0oJx0eFM29sDvY4U7HAwFxo0sqmqHwxxY+R0+AwHG2LuWNLNtMJWrBtAOx
+	 wQka+Hbk83u8Q==
+Date: Tue, 25 Mar 2025 18:00:21 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: devbrones <jonas.cronholm@protonmail.com>, 
+	maarten.lankhorst@linux.intel.com, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/edid: Add non-desktop quirk for Playstation VR
+ Headsets with Product ID 0xB403
+Message-ID: <20250325-crouching-benevolent-serval-fd54b8@houat>
+References: <20250322122048.28677-1-jonas.cronholm@protonmail.com>
+ <875xjxa2rk.fsf@intel.com>
+ <20250325-inquisitive-ebony-mouse-bdf185@houat>
+ <87pli58jze.fsf@intel.com>
+ <20250325-annoying-precise-uakari-6b6438@houat>
+ <87h63h884t.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZOxnTFhchkTvKpZV@gondor.apana.org.au> <ZUNIBcBJ0VeZRmT9@gondor.apana.org.au>
- <ZZ3F/Pp1pxkdqfiD@gondor.apana.org.au> <ZfO6zKtvp2jSO4vF@gondor.apana.org.au>
- <ZkGN64ulwzPVvn6-@gondor.apana.org.au> <ZpkdZopjF9/9/Njx@gondor.apana.org.au>
- <ZuetBbpfq5X8BAwn@gondor.apana.org.au> <ZzqyAW2HKeIjGnKa@gondor.apana.org.au>
- <Z5Ijqi4uSDU9noZm@gondor.apana.org.au> <Z-JE2HNY-Tj8qwQw@gondor.apana.org.au> <20250325152541.GA1661@sol.localdomain>
-In-Reply-To: <20250325152541.GA1661@sol.localdomain>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 25 Mar 2025 17:59:39 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXFM29ZM5ncyZLrAbX35V7y8=C-n8KT0y1SZhafK_+5aHg@mail.gmail.com>
-X-Gm-Features: AQ5f1JqtBqIc34Ji6-nObeR0Ug-BwTZ3CpgACCZqe_azCWAm-c_PGc92djp7YpQ
-Message-ID: <CAMj1kXFM29ZM5ncyZLrAbX35V7y8=C-n8KT0y1SZhafK_+5aHg@mail.gmail.com>
-Subject: Re: [GIT PULL] Crypto Update for 6.15
-To: Eric Biggers <ebiggers@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vutrervm6fjxn5pl"
+Content-Disposition: inline
+In-Reply-To: <87h63h884t.fsf@intel.com>
 
-On Tue, 25 Mar 2025 at 16:25, Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Tue, Mar 25, 2025 at 01:53:28PM +0800, Herbert Xu wrote:
+
+--vutrervm6fjxn5pl
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] drm/edid: Add non-desktop quirk for Playstation VR
+ Headsets with Product ID 0xB403
+MIME-Version: 1.0
+
+On Tue, Mar 25, 2025 at 05:03:46PM +0200, Jani Nikula wrote:
+> On Tue, 25 Mar 2025, Maxime Ripard <mripard@kernel.org> wrote:
+> > On Tue, Mar 25, 2025 at 12:47:49PM +0200, Jani Nikula wrote:
+> >> On Tue, 25 Mar 2025, Maxime Ripard <mripard@kernel.org> wrote:
+> >> > On Tue, Mar 25, 2025 at 11:16:47AM +0200, Jani Nikula wrote:
+> >> >> On Sat, 22 Mar 2025, devbrones <jonas.cronholm@protonmail.com> wrot=
+e:
+> >> >> > This fixes a bug where some Playstation VR Headsets would not be =
+assigned
+> >> >> > the EDID_QUIRK_NON_DESKTOP quirk, causing them to be inaccessible=
+ by
+> >> >> > certain software under Wayland.
+> >> >>=20
+> >> >> Please file a bug over at [1], and attach the EDID on that bug, so =
+we
+> >> >> have some clue what's going on.
+> >> >>
+> >> >> [1] https://gitlab.freedesktop.org/drm/misc/kernel/-/issues/new
+> >> >
+> >> > I'd rather have them in the commit log. Nobody uses gitlab issues for
+> >> > drm-misc, and those kind of issues are just lingering around and
+> >> > becoming stale.
+> >>=20
+> >> For this one, it's fine as long as we preserve the raw EDID for
+> >> posterity. Unless the EDID does indicate VR and we need to dig deeper,
+> >> that is.
 > >
-> >       crypto: hash - Add request chaining API
->
-> Herbert didn't mention that I have nacked this patch, which he is insisting on
-> pushing for some reason instead of my original version that is much better.
->
-> Let me reiterate why "request chaining" is a bad idea and is going to cause
-> problems.
->
-> It makes it so that now a single hash request can now actually be a list of hash
-> requests.  It makes some of the crypto code operate on the whole list.  However,
-> most code still operates only on the first request in the list.  It's
-> undocumented and inconsistent which code is doing which, which is going to cause
-> bugs.  The first request in the list is also being treated specially in
-> undocumented ways, so submitting a list of requests is not necessarily
-> equivalent to submitting them all individually.  Another recipe for bugs.
->
-> Each hash request can also contain an entire scatterlist.  It's overkill for
-> what is actually needed for multibuffer hashing, which is a simple API that
-> hashes two buffers specified by virtual address.  Herbert's API creates lots of
-> unnecessary edge cases, most of which lack any testing.  It continues many of
-> the worst practices of the crypto API that we *know* are not working, like
-> requiring per-request memory allocations and optimizing for legacy hardware
-> offload rather than the CPU-based crypto that almost everyone actually uses.
->
-> In contrast, my patchset
-> https://lore.kernel.org/r/20250212154718.44255-1-ebiggers@kernel.org/ supports
-> multibuffer hashing in a much better way and has been ready for a year already.
-> It actually works; it has a smaller diffstat; it is faster; it has a much
-> simpler API; and it actually includes all needed pieces including x86 and arm64
-> support, dm-verity and fs-verity support, and full documentation and tests.
->
-> I've been spending a lot of time fixing the kernel's crypto code over the years.
-> I'm not looking forward to having another set of major issues to fix.
->
-> And this latest set of issues will be totally unnecessary.
->
-> We can do better than this, especially for cryptography code.
->
-> Nacked-by: Eric Biggers <ebiggers@kernel.org>
->
+> > What I was trying to say is if "posterity" means "a forever open issue
+> > in drm-misc", then no, sorry, that doesn't work for me.
+>=20
+> I want to check the EDID before we merge the quirk.
+>=20
+> If the EDID does not indicate VR, we can merge. I want the EDID
+> preserved so we can track them down later if we need to drop or modify
+> the quirks.
+>=20
+> If the EDID does indicate VR, either the quirk is unnecessary or there's
+> a bug somewhere. This requires further debugging, and we must not merge
+> the quirk.
 
-It's sad that it is coming to this, but I have to second Eric here:
-for CPU based crypto, the flexibility of Herbert's approach has no
-added value. SHA CPU instructions can be interleaved at the
-instruction level to get almost 2x speedup in some cases, and this
-works very well when operating on equal sized inputs. However,
-generalizing this to arbitrary request chains to accommodate async h/w
-offload introduces a lot of complexity for use cases that are only
-imaginary.
+I understand that, but I don't see why putting it in the commit log, or
+as a mail reply to the patch is not a good solution for that.
 
-Given Eric's track record as a contributor to the crypto subsystem and
-as a maintainer of subsystems that are closely tied to it, I would
-expect Herbert to take his opinion more seriously, but it is just
-being ignored. Instead, a lightly tested alternative with no
-integration into existing users has been merged in its place, with
-very little input from the community.
+Or why using drm-misc issues for this is a good one.
 
-So Herbert, please withdraw this pull request, and work with Eric and
-the rest of us to converge on something that we can all get behind.
+Maxime
+
+--vutrervm6fjxn5pl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ+LhJQAKCRDj7w1vZxhR
+xf12AQCkpCIuaInNcgBVfxP39ielwCgnCH71pclDTaqRhvXwQgEAwjtHnvtxboWH
+rnnPN9tQza5+KuVRKykQsWBpDDHivQk=
+=Gr6x
+-----END PGP SIGNATURE-----
+
+--vutrervm6fjxn5pl--
