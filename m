@@ -1,292 +1,169 @@
-Received: from mail.cjdns.fr (mail.cjdns.fr [5.135.140.105])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7577E258CE2;
-	Tue, 25 Mar 2025 13:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.135.140.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6655125A2CB;
+	Tue, 25 Mar 2025 13:44:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742910270; cv=none; b=bYFu3dyYv8NoP/Nwt0UufK+yf02iTZ1O81GlhX0epkaqkrdMh9QFdcDbFY1y2dLZ28rnaJC4SzqaiElBXbPiYJgV53r/54dTVFL/xDcUuLa6aMqnLjWDtmGgtKKEymgw9c7htkwQ6cXjgZCmOpQm2iugtUoj95Z/fvu0YfLwv/E=
+	t=1742910273; cv=none; b=rKgZgQgIbcm+OIR/bkGMkl8iIkNDxkRid6LnIG9KcH2h92unnxva1P2Dt0JxHFMs3sVv7CGEYGJQu7Rm6uIOnu4hG+vsmkWvpQbQzdy2kGKFmDwez/M9dOl8QYcykDrlgOXAQQ4A9UlL5QeiRm63Y2s/cPvM2SJ7UL0jOqITZn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742910270; c=relaxed/simple;
-	bh=Rr8Gr3jTsX1Cadu7vL8JGNOd3pP7bX3roIMD6KV1cGw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lbUB5kTlz7ng4FJPZma/ZhCDovUYSyJSIUGwpWDLtMQ6038ROf/Ns8A6S6yppFXig6/xK5ocMvv2+hgZ6gv9i6IB5fcrNHuEaf9ttMGy8IKWbHgFhpWLF+un2czvEvdbJqpPHW9kGQwn+SD8O054k+Xxnp+cULg21nw9FmxyEWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=EZEvGa+x; arc=none smtp.client-ip=5.135.140.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cjdns.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="EZEvGa+x"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E196C2CF58B;
-	Tue, 25 Mar 2025 14:44:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjdns.fr; s=dkim;
-	t=1742910266; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=EJsR2+W6v3RnojP+wgIYk/sT/Hhyw76l4uAVukATtaQ=;
-	b=EZEvGa+xykrwNlKTLuPuiy6Sa2HjPm3nhSaUN0tyDfWMcs5GRCZaWaH5vwBOyIbaBqatq/
-	9ADkEW9Pv1nezQOkdIkSGcoLx5FF1SwTdPbsY6gdmbZKOGS0CkjwcjcBZcO9F/jeUah8QF
-	B+rCFAfYWD0dw8tzMtKNLLuDVsWd6d7bzQBt+7dP5ioUbsGMhzygvj58qCrrcBEhkYDdS3
-	yuESClABAJNVNorPvIQIBeAQMYP8rwqxuIzveGwcMWeIIvOWiw1LH9pJo95cg3X9TNyILv
-	W3EsMRbLjosCQK5cBKBt2FyUTNFj+5in2ssNyLKCe+USISLvnqUgGwyKZ7LD2g==
-From: Caleb James DeLisle <cjd@cjdns.fr>
-To: linux-mips@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	benjamin.larsson@genexis.eu,
-	Caleb James DeLisle <cjd@cjdns.fr>
-Subject: [PATCH v2 07/10] mips: Add EcoNet MIPS platform support
-Date: Tue, 25 Mar 2025 13:43:46 +0000
-Message-Id: <20250325134349.2476458-8-cjd@cjdns.fr>
-In-Reply-To: <20250325134349.2476458-1-cjd@cjdns.fr>
-References: <20250325134349.2476458-1-cjd@cjdns.fr>
+	s=arc-20240116; t=1742910273; c=relaxed/simple;
+	bh=6lx1eOJhv9ppzEicGls86YH1VCpVV0968XvMnr65aWQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n4kqJV+ximu7OjS+JQ6sVhSaEFEh+B63oM7WbcUGMNk2rlFSctM3ROoe2o1L5KtQITCR4DNntztCEFS8bJICfQabXCO/BU/4U+Z4wAmUVf2d4Ux3lnA2U0cc8MHTpraz9by3FWPQdT0e9cw/YY4BsIDMym8JnAzFmwHNnbHN2Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0FD6C43152;
+	Tue, 25 Mar 2025 13:44:25 +0000 (UTC)
+Message-ID: <bff3d8a4-2873-4613-b7fd-de0e8320f191@ghiti.fr>
+Date: Tue, 25 Mar 2025 14:44:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/6] RISC-V: add vector crypto extension validation
+ checks
+Content-Language: en-US
+To: Conor Dooley <conor@kernel.org>, linux-riscv@lists.infradead.org
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+ Eric Biggers <ebiggers@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?=
+ <cleger@rivosinc.com>, Andy Chiu <andybnac@gmail.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250312-abide-pancreas-3576b8c44d2c@spud>
+ <20250312-entertain-shaking-b664142c2f99@spud>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250312-entertain-shaking-b664142c2f99@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduiedvkedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeehiefhuddtuddukeetkeehhedtffduhfevfeeftdefveffgfeuffejjeejfeekueenucffohhmrghinhepghhithhhuhgsrdgtohhmnecukfhppeefuddrfedvrdekuddrudekjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeefuddrfedvrdekuddrudekjedphhgvlhhopegludelvddrudeikedrvddurddvhegnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheptghonhhorheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopegtohhnohhrrdguohholhgvhiesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopegvsghighhgvghrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdpr
+ hgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomh
+X-GND-Sasl: alex@ghiti.fr
 
-Add platform support for EcoNet MIPS SoCs.
+Hi Conor,
 
-Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
----
- arch/mips/Kbuild.platforms             |  1 +
- arch/mips/Kconfig                      | 25 +++++++++
- arch/mips/boot/compressed/uart-16550.c |  5 ++
- arch/mips/econet/Kconfig               | 37 ++++++++++++
- arch/mips/econet/Makefile              |  2 +
- arch/mips/econet/Platform              |  5 ++
- arch/mips/econet/init.c                | 78 ++++++++++++++++++++++++++
- 7 files changed, 153 insertions(+)
- create mode 100644 arch/mips/econet/Kconfig
- create mode 100644 arch/mips/econet/Makefile
- create mode 100644 arch/mips/econet/Platform
- create mode 100644 arch/mips/econet/init.c
+On 12/03/2025 14:11, Conor Dooley wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+>
+> Using Clement's new validation callbacks, support checking that
+> dependencies have been satisfied for the vector crpyto extensions.
+> Currently riscv_isa_extension_available(<vector crypto>) will return
+> true on systems that support the extensions but vector itself has been
+> disabled by the kernel, adding validation callbacks will prevent such a
+> scenario from occuring and make the behaviour of the extension detection
+> functions more consistent with user expectations - it's not expected to
+> have to check for vector AND the specific crypto extension.
+>
+> The Unpriv spec states:
+> | The Zvknhb and Zvbc Vector Crypto Extensions --and accordingly the
+> | composite extensions Zvkn, Zvknc, Zvkng, and Zvksc-- require a Zve64x
+> | base, or application ("V") base Vector Extension. All of the other
+> | Vector Crypto Extensions can be built on any embedded (Zve*) or
+> | application ("V") base Vector Extension.
+>
+> While this could be used as the basis for checking that the correct base
+> for individual crypto extensions, but that's not really the kernel's job
+> in my opinion and it is sufficient to leave that sort of precision to
+> the dt-bindings. The kernel only needs to make sure that vector, in some
+> form, is available.
+>
+> Link: https://github.com/riscv/riscv-isa-manual/blob/main/src/vector-crypto.adoc#extensions-overview
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>   arch/riscv/kernel/cpufeature.c | 49 +++++++++++++++++++++++-----------
+>   1 file changed, 33 insertions(+), 16 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> index dbea6ed3f4da..4fa951e9f1cf 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -141,6 +141,23 @@ static int riscv_ext_vector_float_validate(const struct riscv_isa_ext_data *data
+>   	return 0;
+>   }
+>   
+> +static int riscv_ext_vector_crypto_validate(const struct riscv_isa_ext_data *data,
+> +					    const unsigned long *isa_bitmap)
+> +{
+> +	if (!IS_ENABLED(CONFIG_RISCV_ISA_V))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * It isn't the kernel's job to check that the binding is correct, so
+> +	 * it should be enough to check that any of the vector extensions are
+> +	 * enabled, which in-turn means that vector is usable in this kernel
+> +	 */
 
-diff --git a/arch/mips/Kbuild.platforms b/arch/mips/Kbuild.platforms
-index bca37ddf974b..41a00fa860c1 100644
---- a/arch/mips/Kbuild.platforms
-+++ b/arch/mips/Kbuild.platforms
-@@ -11,6 +11,7 @@ platform-$(CONFIG_CAVIUM_OCTEON_SOC)	+= cavium-octeon/
- platform-$(CONFIG_EYEQ)			+= mobileye/
- platform-$(CONFIG_MIPS_COBALT)		+= cobalt/
- platform-$(CONFIG_MACH_DECSTATION)	+= dec/
-+platform-$(CONFIG_ECONET)		+= econet/
- platform-$(CONFIG_MIPS_GENERIC)		+= generic/
- platform-$(CONFIG_MACH_JAZZ)		+= jazz/
- platform-$(CONFIG_LANTIQ)		+= lantiq/
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 1924f2d83932..909bf0847af0 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -390,6 +390,30 @@ config MACH_DECSTATION
- 
- 	  otherwise choose R3000.
- 
-+config ECONET
-+	bool "EcoNet MIPS family"
-+	select BOOT_RAW
-+	select CPU_BIG_ENDIAN
-+	select DEBUG_ZBOOT
-+	select EARLY_PRINTK_8250
-+	select ECONET_EN751221_TIMER
-+	select SERIAL_OF_PLATFORM
-+	select SYS_SUPPORTS_BIG_ENDIAN
-+	select SYS_HAS_CPU_MIPS32_R1
-+	select SYS_HAS_CPU_MIPS32_R2
-+	select SYS_HAS_EARLY_PRINTK
-+	select SYS_SUPPORTS_32BIT_KERNEL
-+	select SYS_SUPPORTS_MIPS16
-+	select SYS_SUPPORTS_ZBOOT_UART16550
-+	select USE_GENERIC_EARLY_PRINTK_8250
-+	select USE_OF
-+	help
-+	  EcoNet EN75xx MIPS devices are big endian MIPS machines used
-+	  in XPON (fiber) and DSL applications. They have SPI, PCI, USB,
-+	  GPIO, and Ethernet, with optional XPON, DSL, and VoIP DSP cores.
-+	  Don't confuse these with the Airoha ARM devices sometimes referred
-+	  to as "EcoNet", this family is for MIPS based devices only.
-+
- config MACH_JAZZ
- 	bool "Jazz family of machines"
- 	select ARC_MEMORY
-@@ -1019,6 +1043,7 @@ source "arch/mips/ath79/Kconfig"
- source "arch/mips/bcm47xx/Kconfig"
- source "arch/mips/bcm63xx/Kconfig"
- source "arch/mips/bmips/Kconfig"
-+source "arch/mips/econet/Kconfig"
- source "arch/mips/generic/Kconfig"
- source "arch/mips/ingenic/Kconfig"
- source "arch/mips/jazz/Kconfig"
-diff --git a/arch/mips/boot/compressed/uart-16550.c b/arch/mips/boot/compressed/uart-16550.c
-index db618e72a0c4..529e77a6487c 100644
---- a/arch/mips/boot/compressed/uart-16550.c
-+++ b/arch/mips/boot/compressed/uart-16550.c
-@@ -20,6 +20,11 @@
- #define PORT(offset) (CKSEG1ADDR(INGENIC_UART_BASE_ADDR) + (4 * offset))
- #endif
- 
-+#ifdef CONFIG_ECONET
-+#define EN75_UART_BASE	0x1fbf0003
-+#define PORT(offset)	(CKSEG1ADDR(EN75_UART_BASE) + (4 * (offset)))
-+#endif
-+
- #ifndef IOTYPE
- #define IOTYPE char
- #endif
-diff --git a/arch/mips/econet/Kconfig b/arch/mips/econet/Kconfig
-new file mode 100644
-index 000000000000..d03f90f3daa4
---- /dev/null
-+++ b/arch/mips/econet/Kconfig
-@@ -0,0 +1,37 @@
-+# SPDX-License-Identifier: GPL-2.0
-+if ECONET
-+
-+choice
-+	prompt "EcoNet SoC selection"
-+	default SOC_ECONET_EN751221
-+	help
-+	  Select EcoNet MIPS SoC type. Individual SoCs within a family are
-+	  very similar, so is it enough to select the right family, and
-+	  then customize to the specific SoC using the device tree only.
-+
-+	config SOC_ECONET_EN751221
-+		bool "EN751221 family"
-+		select COMMON_CLK
-+		select ECONET_EN751221_INTC
-+		select IRQ_MIPS_CPU
-+		select SMP
-+		select SMP_UP
-+		select SYS_SUPPORTS_SMP
-+		help
-+		  The EN751221 family includes EN7512, RN7513, EN7521, EN7526.
-+		  They are based on single core MIPS 34Kc processors. To boot
-+		  this kernel, you will need a device tree such as
-+		  MIPS_RAW_APPENDED_DTB=y, and a root filesystem.
-+endchoice
-+
-+choice
-+	prompt "Devicetree selection"
-+	default DTB_ECONET_NONE
-+	help
-+	  Select the devicetree.
-+
-+	config DTB_ECONET_NONE
-+		bool "None"
-+endchoice
-+
-+endif
-diff --git a/arch/mips/econet/Makefile b/arch/mips/econet/Makefile
-new file mode 100644
-index 000000000000..7e4529e7d3d7
---- /dev/null
-+++ b/arch/mips/econet/Makefile
-@@ -0,0 +1,2 @@
-+
-+obj-y := init.o
-diff --git a/arch/mips/econet/Platform b/arch/mips/econet/Platform
-new file mode 100644
-index 000000000000..ea5616447bcd
---- /dev/null
-+++ b/arch/mips/econet/Platform
-@@ -0,0 +1,5 @@
-+# To address a 7.2MB kernel size limit in the EcoNet SDK bootloader,
-+# we put the load address well above where the bootloader loads and then use
-+# zboot. So please set CONFIG_ZBOOT_LOAD_ADDRESS to the address where your
-+# bootloader actually places the kernel.
-+load-$(CONFIG_ECONET)	+= 0xffffffff81000000
-diff --git a/arch/mips/econet/init.c b/arch/mips/econet/init.c
-new file mode 100644
-index 000000000000..6f43ffb209cb
---- /dev/null
-+++ b/arch/mips/econet/init.c
-@@ -0,0 +1,78 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * EcoNet setup code
-+ *
-+ * Copyright (C) 2025 Caleb James DeLisle <cjd@cjdns.fr>
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/of_clk.h>
-+#include <linux/irqchip.h>
-+
-+#include <asm/addrspace.h>
-+#include <asm/io.h>
-+#include <asm/bootinfo.h>
-+#include <asm/time.h>
-+#include <asm/prom.h>
-+#include <asm/smp-ops.h>
-+#include <asm/reboot.h>
-+
-+#define CR_AHB_RSTCR		((void __iomem *)CKSEG1ADDR(0x1fb00040))
-+#define RESET			BIT(31)
-+
-+#define UART_BASE		CKSEG1ADDR(0x1fbf0003)
-+#define UART_REG_SHIFT		2
-+
-+static void hw_reset(char *command)
-+{
-+	iowrite32(RESET, CR_AHB_RSTCR);
-+}
-+
-+/* 1. Bring up early printk. */
-+void __init prom_init(void)
-+{
-+	setup_8250_early_printk_port(UART_BASE, UART_REG_SHIFT, 0);
-+	_machine_restart = hw_reset;
-+}
-+
-+/* 2. Parse the DT and find memory */
-+void __init plat_mem_setup(void)
-+{
-+	void *dtb;
-+
-+	set_io_port_base(KSEG1);
-+
-+	dtb = get_fdt();
-+	if (!dtb)
-+		panic("no dtb found");
-+
-+	__dt_setup_arch(dtb);
-+
-+	early_init_dt_scan_memory();
-+}
-+
-+/* 3. Overload __weak device_tree_init(), add SMP_UP ops */
-+void __init device_tree_init(void)
-+{
-+	unflatten_and_copy_device_tree();
-+
-+	register_up_smp_ops();
-+}
-+
-+const char *get_system_type(void)
-+{
-+	return "EcoNet-EN75xx";
-+}
-+
-+/* 4. Initialize the IRQ subsystem */
-+void __init arch_init_irq(void)
-+{
-+	irqchip_init();
-+}
-+
-+/* 5. Timers */
-+void __init plat_time_init(void)
-+{
-+	of_clk_init(NULL);
-+	timer_probe();
-+}
--- 
-2.39.5
 
+I'm not sure to understand this comment. For example, Zvknhb depends on 
+Zve64x so only checking for Zve32x would make Zvknhb usable in the 
+kernel even though it's actually not supported right? Or am I missing 
+something?
+
+Thanks,
+
+Alex
+
+
+> +	if (!__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZVE32X))
+> +		return -EPROBE_DEFER;
+> +
+> +	return 0;
+> +}
+> +
+>   static int riscv_ext_zca_depends(const struct riscv_isa_ext_data *data,
+>   				 const unsigned long *isa_bitmap)
+>   {
+> @@ -400,8 +417,8 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+>   	__RISCV_ISA_EXT_DATA(zksed, RISCV_ISA_EXT_ZKSED),
+>   	__RISCV_ISA_EXT_DATA(zksh, RISCV_ISA_EXT_ZKSH),
+>   	__RISCV_ISA_EXT_DATA(ztso, RISCV_ISA_EXT_ZTSO),
+> -	__RISCV_ISA_EXT_SUPERSET(zvbb, RISCV_ISA_EXT_ZVBB, riscv_zvbb_exts),
+> -	__RISCV_ISA_EXT_DATA(zvbc, RISCV_ISA_EXT_ZVBC),
+> +	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zvbb, RISCV_ISA_EXT_ZVBB, riscv_zvbb_exts, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvbc, RISCV_ISA_EXT_ZVBC, riscv_ext_vector_crypto_validate),
+>   	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zve32f, RISCV_ISA_EXT_ZVE32F, riscv_zve32f_exts, riscv_ext_vector_float_validate),
+>   	__RISCV_ISA_EXT_DATA_VALIDATE(zve32x, RISCV_ISA_EXT_ZVE32X, riscv_ext_vector_x_validate),
+>   	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zve64d, RISCV_ISA_EXT_ZVE64D, riscv_zve64d_exts, riscv_ext_vector_float_validate),
+> @@ -409,20 +426,20 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+>   	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zve64x, RISCV_ISA_EXT_ZVE64X, riscv_zve64x_exts, riscv_ext_vector_x_validate),
+>   	__RISCV_ISA_EXT_DATA(zvfh, RISCV_ISA_EXT_ZVFH),
+>   	__RISCV_ISA_EXT_DATA(zvfhmin, RISCV_ISA_EXT_ZVFHMIN),
+> -	__RISCV_ISA_EXT_DATA(zvkb, RISCV_ISA_EXT_ZVKB),
+> -	__RISCV_ISA_EXT_DATA(zvkg, RISCV_ISA_EXT_ZVKG),
+> -	__RISCV_ISA_EXT_BUNDLE(zvkn, riscv_zvkn_bundled_exts),
+> -	__RISCV_ISA_EXT_BUNDLE(zvknc, riscv_zvknc_bundled_exts),
+> -	__RISCV_ISA_EXT_DATA(zvkned, RISCV_ISA_EXT_ZVKNED),
+> -	__RISCV_ISA_EXT_BUNDLE(zvkng, riscv_zvkng_bundled_exts),
+> -	__RISCV_ISA_EXT_DATA(zvknha, RISCV_ISA_EXT_ZVKNHA),
+> -	__RISCV_ISA_EXT_DATA(zvknhb, RISCV_ISA_EXT_ZVKNHB),
+> -	__RISCV_ISA_EXT_BUNDLE(zvks, riscv_zvks_bundled_exts),
+> -	__RISCV_ISA_EXT_BUNDLE(zvksc, riscv_zvksc_bundled_exts),
+> -	__RISCV_ISA_EXT_DATA(zvksed, RISCV_ISA_EXT_ZVKSED),
+> -	__RISCV_ISA_EXT_DATA(zvksh, RISCV_ISA_EXT_ZVKSH),
+> -	__RISCV_ISA_EXT_BUNDLE(zvksg, riscv_zvksg_bundled_exts),
+> -	__RISCV_ISA_EXT_DATA(zvkt, RISCV_ISA_EXT_ZVKT),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvkb, RISCV_ISA_EXT_ZVKB, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvkg, RISCV_ISA_EXT_ZVKG, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvkn, riscv_zvkn_bundled_exts, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvknc, riscv_zvknc_bundled_exts, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvkned, RISCV_ISA_EXT_ZVKNED, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvkng, riscv_zvkng_bundled_exts, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvknha, RISCV_ISA_EXT_ZVKNHA, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvknhb, RISCV_ISA_EXT_ZVKNHB, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvks, riscv_zvks_bundled_exts, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvksc, riscv_zvksc_bundled_exts, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvksed, RISCV_ISA_EXT_ZVKSED, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvksh, RISCV_ISA_EXT_ZVKSH, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvksg, riscv_zvksg_bundled_exts, riscv_ext_vector_crypto_validate),
+> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvkt, RISCV_ISA_EXT_ZVKT, riscv_ext_vector_crypto_validate),
+>   	__RISCV_ISA_EXT_DATA(smaia, RISCV_ISA_EXT_SMAIA),
+>   	__RISCV_ISA_EXT_DATA(smmpm, RISCV_ISA_EXT_SMMPM),
+>   	__RISCV_ISA_EXT_SUPERSET(smnpm, RISCV_ISA_EXT_SMNPM, riscv_xlinuxenvcfg_exts),
