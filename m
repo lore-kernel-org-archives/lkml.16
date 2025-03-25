@@ -1,150 +1,183 @@
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4090825A33A
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 15:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924DE25A33A;
+	Tue, 25 Mar 2025 15:08:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742915276; cv=none; b=UPP6GOQPFt6hYgQuVAR7+sxoPbgsdKW/j8bHt3qPSpoawCHK1/y2N5HiFs1J6C0bQR6FM9nzSF4kQ62/Jz7yh+Crd0tBWBSszL5nimEfKoj3WmX8k5jxPsz6oY/5EcYlbgNgdY3Q8VxNmcYR/srAULJBvXibBsEPfBl2VvbZcfM=
+	t=1742915280; cv=none; b=eZok98O4FBoI35DcP0X2fRod4UMB1FhPKzdN82ucxURQ7MsJ7NmYqOfL0nNBs2yD1oRrgA+nuSGi54zsFP4wcdwIWrcfvzDONm2YzUhFLWxbrf8I2hnzt37wP2EAMgMGU30g3QBgZ2Hln8SAMyY91FzKJjceWIljJ7eDKFCHKdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742915276; c=relaxed/simple;
-	bh=iSmodtdY7Dchcz1A/sUPS+H3SHiLLQyywM4beAv33u0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CsLDRRufoO/MHCf/Ojj9WSopsZ5KQMVhzu8VJ/PQov4Pf26joxh0YcFQSI6/H4B8Ljvx9S3oFgfqG65DZTV1CoPnmF/jGMOWToaCjtehG5DBYuWOGFx2MEBZBusuqyMqhMBgXdzPjlp5ZFTpO/+jwgiu2rBlEkkssbuGaACTLeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lJ2c7OP2; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742915280; c=relaxed/simple;
+	bh=FVtW+znZpqIiN9CqfSZ9CbuEpNile4mPRx1yMLXOKBA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WA3JT730T8iE0xEXlcUzCxiugGQM4MNzLfEv+nxkDwhWoGsdKZ/4JruZ+gBaKUbLLJS+5rpdATEkgyIWKoIbp4BZn5IHlzbPDq2b3n2cIxgxu451E3Kr+P+8thOWYf00n9XrasFjUnldd8561XD/iwf0trBj1O6h5t4A7f1QcX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQXjsABG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lJ2c7OP2"
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-523f19d39d3so2756311e0c.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 08:07:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742915274; x=1743520074; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ASRZZn4DjAVCiGVwyErb4eVcqvprss3kx2mpnoqQ/Aw=;
-        b=lJ2c7OP2ctgy0sc4pykNStYO3q/NHZCwjiKUv8QE7ho11GEihMp+VE05S2NYUJmUJb
-         jM4U3gtcEogTOOSekGOjc5BlpmuF47WJqVR9d3r/9HeJgxW+yap4dEDtdMcoD766bCD9
-         kF0R5PjdemnYDPc6/fKm4++DrneK0PHlcs6BKRwu03DEDVONg9l/QK0nk/No1op2BaM9
-         Owfget9il+fzpy3iTpkw4x35Lnz12id8pVHkNnkvp34+ftBAX9kK27njAfra5KRjfaGY
-         V+EQbo72jEYebQHN2MpsRL8UuiHMKgzPFTWMPBmdN9Hykk6lhmXxdcEl3xCMUZ42cosM
-         pjrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742915274; x=1743520074;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ASRZZn4DjAVCiGVwyErb4eVcqvprss3kx2mpnoqQ/Aw=;
-        b=FFOY6JyvDz427gc+8HKBqiMayNhCJ/k5rOVX+pybptwHEOgfyhirii4oF95zi/cbLa
-         ppoG+DduhRYaRwWtruIP/6ng8HCQCW2Cuj7mMH0r2a56NAucF2NrgmA6OaRhoaSqlWCS
-         OGh1r3a7gb7TCYqZLmsE8/I1nc1OHOetOwuCA0Bzx1dquNYKqlFn3PwcHirJL4HGCG6B
-         ikmXK6+/o7UQ2ntYKn0PSvpeT0lBCOSPWVqq2MrG+Cr81uD2zimA/AmJT/+RYeGuCZQx
-         w448Wzfffsfruz7TGMicUAo/DoqC0h6LbNr4Ymm3+hreyuY/xlQgH6d1iYCvtW3XpoCF
-         3q6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWPBd0KlWKtSHOsmvWU7YhotY6pVkDOHVpoA/0f79vyF3uNAmQqiS8CVqJwJ/m07BmpJvRjlIgROQBw/Us=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywx7J/OnVCwMAgPJVIHHD8Tqv+Lms4FtoE+4Iaa97pkW5XHTeCB
-	DVvweUwunxrfQsJOjV62/Wsblr7W89DUMMMEe9SqbYixWIfzWz0HHUSBcerJ/ek5BvuRFZ0Hoqu
-	At40KKbwWI2w27zNpuLG9Xlx0jUQk5bOHxychxA==
-X-Gm-Gg: ASbGncsXJZK48dyYHUxA45FvJFgWB2bSfZb/QkceYT0FQjeHTYpDzeXaqAGslc6TpDO
-	0+a2aVEidFdOeMmeduVdvmBSvbUa9w7HBQbZQI872DKtH/yGzpd9lDNrpuimVqTIts4Ik7egM2O
-	EsQmEicQv/B9iJ9QB8XR8XS/qyH5cVNfvCNwZxZar+ioibpP4klUjh+fHyz1E=
-X-Google-Smtp-Source: AGHT+IGJxNNn58Pr6BXkc8yTC7dt3Dz8oYa2jVHYnOw8DdFwyMT+9nGnrZ/TQ+Sepc3obyBo9xvaY36PFzfQAXxFVmo=
-X-Received: by 2002:a05:6122:2810:b0:520:60c2:3fb with SMTP id
- 71dfb90a1353d-525a80d5eb4mr10912049e0c.0.1742915273945; Tue, 25 Mar 2025
- 08:07:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQXjsABG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6207BC4CEE4;
+	Tue, 25 Mar 2025 15:08:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742915280;
+	bh=FVtW+znZpqIiN9CqfSZ9CbuEpNile4mPRx1yMLXOKBA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=kQXjsABGJFG7H/SydkIhmI9ti6PbsbLSitopLcSKhCyb1xZYJ6DV2oNA5jYmwCjDq
+	 ptq13iaxKhRsr61P2b28vGBE6y2eZRw4fjPkxRQrQ2Ah0+B+oXNgnV0gARBcI1S895
+	 Lz2/P3cqM5Zq/PM3V0PMmfehqubuW/CqtULK0AUUgMFW//grEiSliEshbBgXOfqZlY
+	 V9MsXfmbI+6OQly3Iuss1wPBKwEhGGVcA0xTD2VCtSMKNnPKecQZ+tWOceb637oNRp
+	 UeMJdM6uid8QWyAJehuJT6XUKFfNjpfF8S25s2iTgYxkFg/uc9tVIbt7lKZ6j9GCio
+	 Wd7nmM+860+8w==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id F1C1CCE0843; Tue, 25 Mar 2025 08:07:59 -0700 (PDT)
+Date: Tue, 25 Mar 2025 08:07:59 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, rcu@vger.kernel.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Huth <thuth@redhat.com>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>,
+	Valentin Schneider <vschneid@redhat.com>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH rcu 10/11] srcu: Add FORCE_NEED_SRCU_NMI_SAFE Kconfig for
+ testing
+Message-ID: <b4ac95ce-7cfd-4d31-aa7d-54ef04f4ae24@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250219153938.24966-1-boqun.feng@gmail.com>
+ <20250219153938.24966-11-boqun.feng@gmail.com>
+ <CAMuHMdX6dy9_tmpLkpcnGzxyRbe6qSWYukcPp=H1GzZdyd3qBQ@mail.gmail.com>
+ <5bf94fdb-7556-4b34-ba21-389dfa1df4f7@paulmck-laptop>
+ <CAMuHMdVVQWZCUFT2uF+QSQz-GzOz2PvugkeatA6bDQeNHU9PSA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325122144.259256924@linuxfoundation.org>
-In-Reply-To: <20250325122144.259256924@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 25 Mar 2025 20:37:42 +0530
-X-Gm-Features: AQ5f1Jo5lbttZtSAb6LnZgDq3AuZotqFT2rixgG9lx0L7Z-hkj4vcw5915tDF-M
-Message-ID: <CA+G9fYvWau1nC8wmpWkxG8gWPaRMP9pbkh2eNsAZoUMeRPgzqA@mail.gmail.com>
-Subject: Re: [PATCH 6.6 00/77] 6.6.85-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org, Heiko Stuebner <heiko@sntech.de>, Dragan Simic <dsimic@manjaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVVQWZCUFT2uF+QSQz-GzOz2PvugkeatA6bDQeNHU9PSA@mail.gmail.com>
 
-On Tue, 25 Mar 2025 at 18:05, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.6.85 release.
-> There are 77 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 27 Mar 2025 12:21:27 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.85-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Tue, Mar 25, 2025 at 03:57:43PM +0100, Geert Uytterhoeven wrote:
+> Hi Paul,
+> 
+> On Tue, 25 Mar 2025 at 15:36, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > On Tue, Mar 25, 2025 at 09:04:31AM +0100, Geert Uytterhoeven wrote:
+> > > On Wed, 19 Feb 2025 at 16:44, Boqun Feng <boqun.feng@gmail.com> wrote:
+> > > > From: "Paul E. McKenney" <paulmck@kernel.org>
+> > > >
+> > > > The srcu_read_lock_nmisafe() and srcu_read_unlock_nmisafe() functions
+> > > > map to __srcu_read_lock() and __srcu_read_unlock() on systems like x86
+> > > > that have NMI-safe this_cpu_inc() operations.  This makes the underlying
+> > > > __srcu_read_lock_nmisafe() and __srcu_read_unlock_nmisafe() functions
+> > > > difficult to test on (for example) x86 systems, allowing bugs to creep in.
+> > > >
+> > > > This commit therefore creates a FORCE_NEED_SRCU_NMI_SAFE Kconfig that
+> > > > forces those underlying functions to be used even on systems where they
+> > > > are not needed, thus providing better testing coverage.
+> > > >
+> > > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > > > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> > >
+> > > Thanks for your patch, which is now commit 536e8b9b80bc7a0a ("srcu:
+> > > Add FORCE_NEED_SRCU_NMI_SAFE Kconfig for testing") in linus/master
+> > >
+> > > > --- a/kernel/rcu/Kconfig
+> > > > +++ b/kernel/rcu/Kconfig
+> > > > @@ -65,6 +65,17 @@ config TREE_SRCU
+> > > >         help
+> > > >           This option selects the full-fledged version of SRCU.
+> > > >
+> > > > +config FORCE_NEED_SRCU_NMI_SAFE
+> > > > +       bool "Force selection of NEED_SRCU_NMI_SAFE"
+> > >
+> > > What am I supposed to answer here? "n" I guess.
+> > > What about distro and allmodconfig kernels?
+> >
+> > Yes, you should select "n" unless ...
+> >
+> > > > +       depends on !TINY_SRCU
+> > > > +       select NEED_SRCU_NMI_SAFE
+> > > > +       default n
+> > > > +       help
+> > > > +         This option forces selection of the NEED_SRCU_NMI_SAFE
+> > > > +         Kconfig option, allowing testing of srcu_read_lock_nmisafe()
+> > > > +         and srcu_read_unlock_nmisafe() on architectures (like x86)
+> > > > +         that select the ARCH_HAS_NMI_SAFE_THIS_CPU_OPS Kconfig option.
+> > >
+> > > Perhaps this should depend on ARCH_HAS_NMI_SAFE_THIS_CPU_OPS?
+> >
+> > ... you are on a system selecting ARCH_HAS_NMI_SAFE_THIS_CPU_OPS and
+> 
+> So a dependency on ARCH_HAS_NMI_SAFE_THIS_CPU_OPS does make sense,
+> doesn't it?
 
+The FORCE_NEED_SRCU_NMI_SAFE has no effect otherwise, so it cannot
+hurt.  Again, please see below.
 
-Regressions on arm64 rk3399 dtb builds failed with gcc-13 the
-stable-rc 6.6.85-rc1
+							Thanx, Paul
 
-First seen on the v6.6.83-245-gc1fb5424adea
- Good: v6.6.84
- Bad: 6.6.85-rc1
+> > you would like to test the SRCU setup that needed only by systems that
+> > do not select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS.
+> >
+> > Ah.  I forgot to add "depends on RCU_EXPERT".
+> 
+> Yes, that makes sense.
+> 
+> > Apologies, I will fix this.  Does the patch show below do the trick?
+> >
+> >                                                         Thanx, Paul
 
-* arm64, build
-  - gcc-13-defconfig
+-----------------------------------------------------------------------
 
-Regression Analysis:
- - New regression? yes
- - Reproducibility? Yes
+commit 2245ef8605a80726548253d885b4cadd97f69f3b
+Author: Paul E. McKenney <paulmck@kernel.org>
+Date:   Tue Mar 25 07:31:45 2025 -0700
 
+    srcu: Make FORCE_NEED_SRCU_NMI_SAFE depend on RCU_EXPERT
+    
+    The FORCE_NEED_SRCU_NMI_SAFE is useful only for those wishing to test
+    the SRCU code paths that accommodate architectures that do not have
+    NMI-safe per-CPU operations, that is, those architectures that do not
+    select the ARCH_HAS_NMI_SAFE_THIS_CPU_OPS Kconfig option.  As such, this
+    is a specialized Kconfig option that is not intended for casual users.
+    
+    This commit therefore hides it behind the RCU_EXPERT Kconfig option.
+    Given that this new FORCE_NEED_SRCU_NMI_SAFE Kconfig option has no effect
+    unless the ARCH_HAS_NMI_SAFE_THIS_CPU_OPS Kconfig option is also selected,
+    it also depends on this Kconfig option.
+    
+    [ paulmck: Apply Geert Uytterhoeven feedback. ]
+    
+    Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+    Closes: https://lore.kernel.org/all/CAMuHMdX6dy9_tmpLkpcnGzxyRbe6qSWYukcPp=H1GzZdyd3qBQ@mail.gmail.com/
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 
-Build regression: arm64 dtb rockchip non-existent node or label "vcca_0v9"
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build log
-arch/arm64/boot/dts/rockchip/rk3399.dtsi:221.23-266.4: ERROR
-(phandle_references):
-/pcie@f8000000: Reference to non-existent node or label "vcca_0v9"
-
-  also defined at arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi:659.8-669.3
-
-## Source
-* Kernel version: 6.6.85-rc1
-* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-* Git sha: c1fb5424adea53e3a4d8b2018c5e974f7772af29
-* Git describe: v6.6.83-245-gc1fb5424adea
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.83-245-gc1fb5424adea/
-
-## Build
-* Build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.83-245-gc1fb5424adea/testrun/27760755/suite/build/test/gcc-13-defconfig/log
-* Build history:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.83-245-gc1fb5424adea/testrun/27763720/suite/build/test/gcc-13-defconfig/history/
-* Build details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.83-245-gc1fb5424adea/testrun/27760755/suite/build/test/gcc-13-defconfig/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2uoHmBcVLd60GQ0SVHWAaZRZfNd/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2uoHmBcVLd60GQ0SVHWAaZRZfNd/config
-
-## Steps to reproduce
- - # tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
---kconfig defconfig
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
+index b3f985d41717a..ceaf6594f634c 100644
+--- a/kernel/rcu/Kconfig
++++ b/kernel/rcu/Kconfig
+@@ -68,6 +68,8 @@ config TREE_SRCU
+ config FORCE_NEED_SRCU_NMI_SAFE
+ 	bool "Force selection of NEED_SRCU_NMI_SAFE"
+ 	depends on !TINY_SRCU
++	depends on RCU_EXPERT
++	depends on ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+ 	select NEED_SRCU_NMI_SAFE
+ 	default n
+ 	help
