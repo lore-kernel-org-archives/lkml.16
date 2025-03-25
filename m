@@ -1,105 +1,142 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995CF2676F3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943202676EE;
 	Tue, 25 Mar 2025 20:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742933218; cv=none; b=q2wcumHjuzd4RcrRjcXGEaDQBsSDVcr7bctPCQr2OAIVMq5pQ8rx57ka315++fjwrSyIkLsHC+z6uQpdS4Dkikia0qQfBoTCkYwMRYazScT550UhdB3C8JHmYjOR/Exj5dbBU1gGj9Ao0LvUKXxQcKqkf/U9bIJgSKdhpm8K/bI=
+	t=1742933218; cv=none; b=MIW5kCG8r/FneKKSamgys/98Z2+A3WnwbLnearSSFgWw4/IuzOeU0pTOy74c8nW6vPTNnv32sOJ5DsDyEk8SgsHFZidVglHpnC8wXgaA+U/cW4T0fC1uf+a2K1Wot/6h5fR2QY3ZRICRtNpjMQAkM1P3DtHoSs+3aGZ/CrXMfKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742933218; c=relaxed/simple;
-	bh=l7C8LIRo3jzIHuUJ93UZmTfHkJn7Pu3Uak0d0iCS0yo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jA5/bt3lhdatHxORNDXuByt3OuBD9EpqfVM3enYh3H/nmJt/lw5Zdb320+WNQy+3B1fyIYUIf0ERDFf5IXfZfdYwO3/dKNCxPTFA6AAQvns7I1j64+gSkXydsbA1KnBnAgXAY2vAtM4jNJwbJRXva1e9kats48Ywk8ssYIlNb2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=PV9bb6bG; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	bh=RBzWSstENQi6Bfk1urvAf45w1RzXiLBP/nSsn0BYsHg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=OIS7pdhAMmb3yoj2yVOrnfhSaBJ7iMApn8/dzuYes6qqq+ZKrJaMRYnQL2voNY1ZvHAh+KARyqpTG59PPKpbB/oWCqxf5QjmmorsAJsNtlt6d+1PjOObRtJUpixnAgOt7guu+zWQXkkrO1YMYwcC7/ehvIw+rsi9mJ3tBrtfKSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EkaE6OuW; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="PV9bb6bG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=RAsui1tHpSbJgGexr5H0HED26l04puvhVJUKlrM78oU=; b=PV9bb6bGXb/fjjN4gsc629oAIo
-	4eV1l1Pd79eugrcACzEeJZQ5Wnd8ktYgMTeBCBzBRs+5v5s7YSG/IIYlEMsyncYN0w7Y9RBQ3yQD7
-	h3CH0ah22FLGTzbWfw69Dy4ZmcX7/WXetew5b9ILVo+FgvpBI/QONoJ4tMz828Mz+TOI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1txAXv-00765D-Ba; Tue, 25 Mar 2025 21:06:47 +0100
-Date: Tue, 25 Mar 2025 21:06:47 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Rengarajan.S@microchip.com
-Cc: andrew+netdev@lunn.ch, rmk+kernel@armlinux.org.uk, davem@davemloft.net,
-	Thangaraj.S@microchip.com, Woojung.Huh@microchip.com,
-	pabeni@redhat.com, o.rempel@pengutronix.de, edumazet@google.com,
-	kuba@kernel.org, phil@raspberrypi.org, kernel@pengutronix.de,
-	horms@kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, UNGLinuxDriver@microchip.com,
-	maxime.chevallier@bootlin.com
-Subject: Re: [PATCH net-next v5 1/6] net: usb: lan78xx: Improve error
- handling in PHY initialization
-Message-ID: <d1ce9f0d-9158-47ee-a60f-640822e35610@lunn.ch>
-References: <20250319084952.419051-1-o.rempel@pengutronix.de>
- <20250319084952.419051-2-o.rempel@pengutronix.de>
- <5f9b4b549d45c1c1a422c6e683a566b7a125f2a5.camel@microchip.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EkaE6OuW"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c54a9d3fcaso617181185a.2;
+        Tue, 25 Mar 2025 13:06:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742933215; x=1743538015; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gYAZ1xJdNGcy0sQryY8wDgfJTKU5qHeO7HWy+ZSRTko=;
+        b=EkaE6OuWC/mh4Yh4JdUxX0C0QdcddHHYsjqG8rq6Vv4bXL5UVJ969pDT55IrGLZ2EZ
+         UKFjfHM/R/HmfnADKso5+8YFkoA5c9/T06UFAkRbdM4UorJ2lBJuzrqoOkfnXwBGrw7R
+         bSWk34X57h7I2xNXiTs1Zv07ojSiA417dT+9f8ArCNgix1tNh4Ho1grbmd1du2PSZzOw
+         1XEoxvzZXIaRGQA4gWUytn24d2Z268CkhFVBM7x9rVOpVT5KRndTozYvDwrHokbznQCA
+         nRx25ng9dwVJdiqUb+iNA/6AZkHrPhCmFiHLyMGT7ZGAHI3+hiLoEgXRU9qGyVhEvWK/
+         dKOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742933215; x=1743538015;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gYAZ1xJdNGcy0sQryY8wDgfJTKU5qHeO7HWy+ZSRTko=;
+        b=uW3eMYlfPZkAaS7HezdmxY8SNH4NDWyG0oW7aiesk3gKKjfSOUpbFb/HbGCexXM9eI
+         aR298+7XCMdQaFfvmZUIXuHz63Fm0DQo71NflQLbl9jufgy7o4I6DwuKngx1W8Iv8Omb
+         ffQ3Mi3vROnDA6tss7e1pqiro31sQa8IpK1kooOL5h5nYhS9Ox0NBtTCRm+PYRVkXaKG
+         o/hIJqkoi6VLByxuuu4oWf9p1xCnIvEzUoUGEhyIf6ZTmeV3j6tED0DoGHBbCvwnTsNr
+         iR0/DGpT8JYsahSzrj/bs0QZn9qfNLXNR5yCzmMQP3VRj1VPAd8wOCOhM7tfjVnkruwA
+         v1KA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNqbr4IDB1OQMfiwju5g6xMFQ65mtfD1VXdn8q9OGKy2E4UVozyBv4PJdXVBVVKyfYwCuhJowbnR2Y+SA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEA3zGntJfI2d6QWZ4l8VOwuriVQoCPCQPGJcf9D1xoMj/SQiB
+	UXM+BcETVLeeHQ23oYJqFvZk2GWmONcNVXWCEAhlMCRvdUwoHRjl
+X-Gm-Gg: ASbGncs70KYRv1M+d46LSOWyA3szsuBEuO9TjCFyiAZA6gw31xGVU1CEq7uS985zfkg
+	1d1/lXJFYNY2eGvcQwXitT/UEbqVZ4xz3APGzjPZ/XEhQD3r36IlJeAuuAp2vva9bkhp+M1bRmi
+	F8PfuQs9V3aKlnzqLjhwYA2sqBfYckOnBtZE0qrQDVPHrzo3xRS1jX+waEkppcMeNg/DZijWx59
+	5ylII/wkwSQJAqqCxtEyUKqULT9LKAUmxlJdjL+ltLxwvZqPgTSoLWG1W5JJXKwCdDm9UCa6jrp
+	j/bWprSyZsGp6bV6FrL/lL1e6at2yRPzIghjVmlcj2FiB3amihmpg0SSGUbN1vBWMRFp21x0SyC
+	3/EpBr9di59xKveYExOu5VjskB1bMp39RwuFzsWVaVFytanvR6JPmk1vrhOKPUSft
+X-Google-Smtp-Source: AGHT+IH443+8WqT8ReUchRKCpxkuSmYpQyPofizIBWr5Iy5qze0m/jT0WeB79UCEV+bDDs+dij5qlA==
+X-Received: by 2002:a05:620a:170d:b0:7c5:6410:3a6 with SMTP id af79cd13be357-7c5ba17d196mr2740909585a.27.1742933215236;
+        Tue, 25 Mar 2025 13:06:55 -0700 (PDT)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:38f6])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b92ed179sm673528485a.57.2025.03.25.13.06.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 13:06:54 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 25 Mar 2025 16:06:33 -0400
+Subject: [PATCH v5 10/13] scripts: generate_rust_analyzer.py: define host
+ crates
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5f9b4b549d45c1c1a422c6e683a566b7a125f2a5.camel@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250325-rust-analyzer-host-v5-10-385e7f1e1e23@gmail.com>
+References: <20250325-rust-analyzer-host-v5-0-385e7f1e1e23@gmail.com>
+In-Reply-To: <20250325-rust-analyzer-host-v5-0-385e7f1e1e23@gmail.com>
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ Boris-Chengbiao Zhou <bobo1239@web.de>, Kees Cook <kees@kernel.org>, 
+ Fiona Behrens <me@kloenk.dev>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Lukas Wirth <lukas.wirth@ferrous-systems.com>, 
+ Tamir Duberstein <tamird@gmail.com>, 
+ Daniel Almeida <daniel.almeida@collabora.com>
+X-Mailer: b4 0.15-dev
 
-> >  static struct phy_device *lan7801_phy_init(struct lan78xx_net *dev)
-> >  {
-> > -       u32 buf;
-> > -       int ret;
-> >         struct fixed_phy_status fphy_status = {
-> >                 .link = 1,
-> >                 .speed = SPEED_1000,
-> >                 .duplex = DUPLEX_FULL,
-> >         };
-> >         struct phy_device *phydev;
-> > +       int ret;
-> > 
-> >         phydev = phy_find_first(dev->mdiobus);
-> >         if (!phydev) {
-> > @@ -2525,30 +2524,40 @@ static struct phy_device
-> > *lan7801_phy_init(struct lan78xx_net *dev)
-> >                 phydev = fixed_phy_register(PHY_POLL, &fphy_status,
-> > NULL);
-> >                 if (IS_ERR(phydev)) {
-> >                         netdev_err(dev->net, "No PHY/fixed_PHY
-> > found\n");
-> > -                       return NULL;
-> > +                       return ERR_PTR(-ENODEV);
-> >                 }
-> >                 netdev_dbg(dev->net, "Registered FIXED PHY\n");
-> >                 dev->interface = PHY_INTERFACE_MODE_RGMII;
-> >                 ret = lan78xx_write_reg(dev, MAC_RGMII_ID,
-> >                                         MAC_RGMII_ID_TXC_DELAY_EN_);
-> > +               if (ret < 0)
-> > +                       return ERR_PTR(ret);
-> > +
-> 
-> I noticed that fixed_phy_register is removed in later patches. However,
-> in the above implementation, if a failure occurs we exit without
-> unregistering it. To avoid this issue, can we include the patch that
-> removes fixed_phy_register first to avoid the cleanup scenario?
+Define host crates used by the `macros` crate separately from target
+crates, now that we can uniquely identify crates with the same name.
 
-phylink itself implements fixed phy. So it is being removed later
-because it is not needed once the conversation to phylink is
-performed. If you remove it here, before the conversion to phylink,
-you break the driver when it is using fixed phy.
+This avoids rust-analyzer thinking the host `core` crate has our target
+configs applied to it.
 
-With this sort of refactoring, you should not break the normal
-case. But there is some wiggle room for error cases, which should not
-happen, so long as by the end of the patch series, it is all clean.
+Suggested-by: Miguel Ojeda <ojeda@kernel.org>
+Link: https://lore.kernel.org/all/CANiq72mw83RmLYeFFoJW6mUUygoyiA_f1ievSC2pmBESsQew+w@mail.gmail.com/
+Reviewed-by: Fiona Behrens <me@kloenk.dev>
+Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
+Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+ scripts/generate_rust_analyzer.py | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-So i personally don't care about this leak of a fixed link, at this
-stage.
+diff --git a/scripts/generate_rust_analyzer.py b/scripts/generate_rust_analyzer.py
+index 09f5f40d689a..ea4dd68d0dd9 100755
+--- a/scripts/generate_rust_analyzer.py
++++ b/scripts/generate_rust_analyzer.py
+@@ -162,10 +162,16 @@ def generate_crates(
+     # NB: sysroot crates reexport items from one another so setting up our transitive dependencies
+     # here is important for ensuring that rust-analyzer can resolve symbols. The sources of truth
+     # for this dependency graph are `(sysroot_src / crate / "Cargo.toml" for crate in crates)`.
++    host_core = append_sysroot_crate("core", deps=[], cfg=[])
++    host_alloc = append_sysroot_crate("alloc", deps=[host_core], cfg=[])
++    host_std = append_sysroot_crate("std", deps=[host_alloc, host_core], cfg=[])
++    host_proc_macro = append_sysroot_crate(
++        "proc_macro",
++        deps=[host_core, host_std],
++        cfg=[],
++    )
++
+     core = append_sysroot_crate("core", deps=[], cfg=crates_cfgs["core"])
+-    alloc = append_sysroot_crate("alloc", deps=[core], cfg=[])
+-    std = append_sysroot_crate("std", deps=[alloc, core], cfg=[])
+-    proc_macro = append_sysroot_crate("proc_macro", deps=[core, std], cfg=[])
+ 
+     compiler_builtins = append_crate(
+         "compiler_builtins",
+@@ -177,7 +183,7 @@ def generate_crates(
+     macros = append_proc_macro_crate(
+         "macros",
+         srctree / "rust" / "macros" / "lib.rs",
+-        deps=[std, proc_macro],
++        deps=[host_std, host_proc_macro],
+         cfg=[],
+     )
+ 
 
-	Andrew
+-- 
+2.49.0
+
