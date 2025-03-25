@@ -1,255 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 685A425A62E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0634E26772C
 	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 12:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742905834; cv=none; b=HNTwG/4DCaJ0XK3wGngmrSKvac169QiwNC3oG9HXJBCMV3s95JNtL3bpZV5G+tjEbPnYfU9pogCfqobSm6Tjy9pUY6jAv156m1FwM+ZXhEyy3gYh4u8wp96FEMwl5z2EVQSJDm5jR5ZlwexsGYlabO7KW7y1mz2LQTaLa3uEt18=
+	t=1742905836; cv=none; b=RhWDE1peettDZKmWSAROgEzQiaTCq2fVTH3qWfFcTNX0JKpFqXHIT3j3bpE5rVnkBo0HzHDQ8wspRaioXPEf6SMIe6Is/kIcFE8tOgizozwTnszhrF+Imn9nLfDradQ8l8KyHoGD2CeamGL+lLgZg23Q4+Zr486k2FmpCqC9Foo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742905834; c=relaxed/simple;
-	bh=2FQkQy8F48v0kwvvmmEiDNrD3XQsRtCKKA0DgUqJCPk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FET1KrI1pU8/r0UVFOLMOoRQk+6UqLW3dk+28L+1yLK98qA77F9iY4dgrXtk5UVmPsgbdt3y2RCqCcJQefBKrnXhAtx039T8SUXnziQosjin+5Mxz3s+0bIICdiP/ZOKCT4e5jdxCrprZYruaM8i5Qz2wMi8uqKiGBox3cNvctM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IAkcAUxi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742905836; c=relaxed/simple;
+	bh=EWJKXkB8LgOYgPO2GqjsxkANuQt2ed1jlqMbsU/LlwI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=eD9GRsVLMNXC9pcGKScBjxJ3IW4LkU5eoMhx1Fq1jpJKlpsVUrItgCzL/J+rOV3VFhmDPICLH1JTq+V6Ra04yrpdm+e+qpPnfmr4CrtG2uCCyJlCgnQQQ8pDpzwj5vkJzLDh5nL9RENlsEN1r9ubY/XDD1qvhIOg9RZsIDYfYTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=B7z/Rtql; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IAkcAUxi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32367C4CEE4;
-	Tue, 25 Mar 2025 12:30:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742905834;
-	bh=2FQkQy8F48v0kwvvmmEiDNrD3XQsRtCKKA0DgUqJCPk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IAkcAUxiwAVkDX91WD4WAbpZ/pjLxaCI73yzBO98n/JPN/C7f4Vm99zoNAvi0Q+TM
-	 hDa5bTbHNw22kGjCcY2lKzNL7U340KHn39gesTGo2IwDbpkjdjrHaslEGkVL/SF8u0
-	 KKEjiboCgRwkRPLcOHEdXrZ+VlRPztgx9aNrOCYMiTLeoK151wj5+RwBd9ENZMnNnh
-	 qdhNXLzl2hHK0pJccisCyirUdVJuWTNMQ1dgjhbTD8wh0N32jNAKJ7m4S5Cw7alkhn
-	 UX37HrRDY03nsWwvrPpMt3sz4Kp9NvY0UH1DClVfkNp0wUF5Ay98GVr2CaZbiE1qjG
-	 T8TI5FxdlQ5NA==
-Message-ID: <9ca80442-15c8-4f2d-ac11-8096b2cd83ad@kernel.org>
-Date: Tue, 25 Mar 2025 13:30:27 +0100
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="B7z/Rtql"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52P5vXlI002343
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 12:30:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=/EQM6DEoDUu
+	6zxmdeqRLQ9xyT8MDYjKcZBBXwIJ855Y=; b=B7z/RtqluDa1rImIos/tyMn+Tt/
+	YhNGPX6sxI4vRWKSlSTbR/BNhIKdpOsdgqjrNozsWKFozs8fKQczvvmjgFfJ23KQ
+	GX5N74aCFVJ5+9Mn+UTULOhThkXvMC+BtSfbpKSr6I3vXJaa02wzH7M4IAn96yFF
+	HtvQ46Lygqt7/it1K3qOK+KUo6UIW+0A3CrFU7sW2wlM4kTtNgn8YDCy30hszN11
+	rtHzW4ts8HN9erkSmOEwbPTQJq9hb25988OUh4CIPuHQBhS0VdcKtn0IfhQzPqkM
+	pkBCFpHvBloXhHIhvZll/XXR7f1KELvsUdO/zynaphcX/NZBBR5GuHJ1PxQ==
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45kmd4hfjt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 12:30:33 +0000 (GMT)
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2ff6aaa18e8so8443679a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 05:30:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742905833; x=1743510633;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/EQM6DEoDUu6zxmdeqRLQ9xyT8MDYjKcZBBXwIJ855Y=;
+        b=hhyni2o96SWnOdr+gSFHC36TGlZQDiYaLoHsevZUmtwi7nsVU/l/XYN94oYeh1Kxai
+         b2/lyDUeOYsOyTRJaq+lITC/rQoH9gh0YQB1vn0azskw0hP0O327hZ8fU+TTOrxVl2tl
+         SEYDy0aSgIInIz/gDPNQHGwWY1ECtdXGXqVJNnX5RwIbR9xNd2IE4XYtbYeETFa/UgE2
+         gyWj37AI2Us7IBQWXUFLQNACv3glzrpeN7+H3xBhLgdZcD+0sbLwD7fJv3qkA3VlZAuD
+         w+p7XVAEALQlcSIi50ldREiz6xRjskIRbmH/TjbUY4y2OM8ddllaQXAok8zWiBp14YjP
+         9y4g==
+X-Forwarded-Encrypted: i=1; AJvYcCXq/tfp+FW4NvUK1TLTSexTPST/JlAGxoamEvPHU+9QW8ZJsUoT9TCdopKfm/0SDDsFQePCedIHvKtmdBc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7O7ft+0rI0mG4N2w0OkQFhReB74C6NvQp4HOrT3/wmf5jiDyL
+	bWc0OCCL7PhjW1PXn5EjCKhKxCXY3ljx2tl0Q0O1nnNoqgO3+QgDxsxh0WczsdsV2lK50XqUugK
+	tnhmBApYWDy5VLo8zmNED64hf7ZmXqxGo6FqzzDGzRXOqXSXXvi+Gfs5Nj891Wh0=
+X-Gm-Gg: ASbGncsYdq1tLHTQ6D2Sz+pfYtW7pn2JhbwuK/49IsEp/qalV6kvX5uvn5ienyxQDPX
+	l5tYHwCshHQzfqz2CQrP/RBfAec9X+ScRUC44dCl8G7evgd74sVObu7MpmK1B3EJdsyKFaXT3Wq
+	9vNvo9OcD8/ffxAaiYlJD1F1nGZIw0RQ1bqY/K8dChTC4sCk9Z4K5HdEIrY5vSB7XWAmFi4YrqV
+	pIslevAkJLrxXxtVKXICukQQIVBLXQm8jNLcU6KmBO/ijsyagGWg7ojHwR5ZQK1CMJEbiN+ERBW
+	RGMVW0uV0S1i7O8dCV9bDAV5bV6iI2jY5h4TJPehA3m2
+X-Received: by 2002:a05:6a00:1301:b0:736:5e28:cfba with SMTP id d2e1a72fcca58-739059ffb1amr28507106b3a.18.1742905832860;
+        Tue, 25 Mar 2025 05:30:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHouuf4m/7aas0Ea6VvKqkVXtocGxmnrkYVDOh+y2Z/ngsR4dy9YmGQThpYoaWuqqdjbhek2w==
+X-Received: by 2002:a05:6a00:1301:b0:736:5e28:cfba with SMTP id d2e1a72fcca58-739059ffb1amr28507042b3a.18.1742905832325;
+        Tue, 25 Mar 2025 05:30:32 -0700 (PDT)
+Received: from hu-prashk-hyd.qualcomm.com ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7390618e4b6sm9987391b3a.180.2025.03.25.05.30.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 05:30:31 -0700 (PDT)
+From: Prashanth K <prashanth.k@oss.qualcomm.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Prashanth K <prashanth.k@oss.qualcomm.com>
+Subject: [PATCH v1 2/5] arm64: dts: qcom: sm8350: Add snps,dis_u3_susphy_quirk
+Date: Tue, 25 Mar 2025 18:00:16 +0530
+Message-Id: <20250325123019.597976-3-prashanth.k@oss.qualcomm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250325123019.597976-1-prashanth.k@oss.qualcomm.com>
+References: <20250325123019.597976-1-prashanth.k@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] clocksource/drivers/nxp-timer: Add the System Timer
- Module for the s32g platform
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org, Thomas Fossati <thomas.fossati@linaro.org>,
- Larisa Grigore <Larisa.Grigore@nxp.com>,
- Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-stm32@st-md-mailman.stormreply.com>,
- "moderated list:ARM/STM32 ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>, dl-S32 <S32@nxp.com>
-References: <20250324100008.346009-1-daniel.lezcano@linaro.org>
- <20250324100008.346009-2-daniel.lezcano@linaro.org>
- <bb7e4740-9608-4534-9c19-3ac066e2aa8f@kernel.org>
- <1bf2d9ad-325e-4b1d-8440-ddbc90eabc67@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <1bf2d9ad-325e-4b1d-8440-ddbc90eabc67@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: 6OgnRFbn6JoOL0L32BTdwBCcvj4IzGUa
+X-Proofpoint-GUID: 6OgnRFbn6JoOL0L32BTdwBCcvj4IzGUa
+X-Authority-Analysis: v=2.4 cv=QLZoRhLL c=1 sm=1 tr=0 ts=67e2a1ea cx=c_pps a=RP+M6JBNLl+fLTcSJhASfg==:117 a=fChuTYTh2wq5r3m49p7fHw==:17 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=tc1TWAvYerzeY2VvnAsA:9 a=iS9zxrgQBfv6-_F4QbHw:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-25_05,2025-03-25_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 adultscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=819 mlxscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0
+ bulkscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503250087
 
-On 25/03/2025 13:23, Daniel Lezcano wrote:
-> 
-> [Added s32@ list which I miss from the initial series]
-> 
-> On 25/03/2025 08:30, Krzysztof Kozlowski wrote:
->> On 24/03/2025 11:00, Daniel Lezcano wrote:
->>> +
->>> +static int __init nxp_stm_clocksource_init(struct device *dev, const char *name,
->>> +					   void __iomem *base, struct clk *clk)
->>> +{
->>> +	struct stm_timer *stm_timer;
->>> +	int ret;
->>> +
->>> +	stm_timer = devm_kzalloc(dev, sizeof(*stm_timer), GFP_KERNEL);
->>> +	if (!stm_timer)
->>> +		return -ENOMEM;
->>> +
->>> +	stm_timer->base = base;
->>> +	stm_timer->rate = clk_get_rate(clk);
->>> +
->>> +	stm_timer->scs.cs.name = name;
->>
->> You are aware that all node names will have exactly the same name? All
->> of them will be called "timer"?
-> 
->  From the caller const char *name = of_node_full_name(np);
+During device mode initialization on certain QC targets, before the
+runstop bit is set, sometimes it's observed that the GEVNTADR{LO/HI}
+register write fails. As a result, GEVTADDR registers are still 0x0.
+Upon setting runstop bit, DWC3 controller attempts to write the new
+events to address 0x0, causing an SMMU fault and system crash.
 
-Ah, right, it's the full name.
+This was initially observed on SM8450 and later reported on few
+other targets as well. As suggested by Qualcomm HW team, clearing
+the GUSB3PIPECTL.SUSPHY bit resolves the issue by preventing register
+write failures. Address this by setting the snps,dis_u3_susphy_quirk
+to keep the GUSB3PIPECTL.SUSPHY bit cleared. This change was tested
+on multiple targets (SM8350, SM8450 QCS615 etc.) for over an year
+and hasn't exhibited any side effects.
 
-> 
-> The names are:
-> 
-> "clocksource: Switched to clocksource stm@4011c000"
-> 
-> Or:
-> 
->   17:      24150          0          0          0    GICv3  57 Level 
-> stm@40120000
+Signed-off-by: Prashanth K <prashanth.k@oss.qualcomm.com>
+---
+ arch/arm64/boot/dts/qcom/sm8350.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-This all will be timer@, but anyway I get your point.
+diff --git a/arch/arm64/boot/dts/qcom/sm8350.dtsi b/arch/arm64/boot/dts/qcom/sm8350.dtsi
+index 5f93cae01b06..a4fc3657ff87 100644
+--- a/arch/arm64/boot/dts/qcom/sm8350.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8350.dtsi
+@@ -2651,6 +2651,7 @@ usb_1_dwc3: usb@a600000 {
+ 				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+ 				iommus = <&apps_smmu 0x0 0x0>;
+ 				snps,dis_u2_susphy_quirk;
++				snps,dis_u3_susphy_quirk;
+ 				snps,dis_enblslpm_quirk;
+ 				snps,dis-u1-entry-quirk;
+ 				snps,dis-u2-entry-quirk;
+@@ -2729,6 +2730,7 @@ usb_2_dwc3: usb@a800000 {
+ 				interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
+ 				iommus = <&apps_smmu 0x20 0x0>;
+ 				snps,dis_u2_susphy_quirk;
++				snps,dis_u3_susphy_quirk;
+ 				snps,dis_enblslpm_quirk;
+ 				snps,dis-u1-entry-quirk;
+ 				snps,dis-u2-entry-quirk;
+-- 
+2.25.1
 
->   18:          0      22680          0          0    GICv3  58 Level 
-> stm@40124000
->   19:          0          0      24110          0    GICv3  59 Level 
-> stm@40128000
->   20:          0          0          0      21164    GICv3  60 Level 
-> stm@4021c000
-> 
-> And:
-> 
-> cat /sys/devices/system/clocksource/clocksource0/current_clocksource
-> stm@4011c000
-> 
-> cat /sys/devices/system/clockevents/clockevent*/current_device
-> stm@40120000
-> stm@40124000
-> stm@40128000
-> stm@4021c000
-
-Ack
-
-> 
-> [ ... ]
-> 
->>> +
->>> +static int __init nxp_stm_timer_probe(struct platform_device *pdev)
->>> +{
->>> +	struct device *dev = &pdev->dev;
->>> +	struct device_node *np = dev->of_node;
->>> +	struct stm_instances *stm_instances;
->>> +	const char *name = of_node_full_name(np);
->>> +	void __iomem *base;
->>> +	int irq, ret;
->>> +	struct clk *clk;
->>> +
->>> +	stm_instances = (typeof(stm_instances))of_device_get_match_data(dev);
->>
->> No, you *cannot* drop the const. It's there on purpose. Match data
->> should be const because it defines per variant differences. That's why
->> the prototype of of_device_get_match_data() has such return type.
->> You just want some global singleton, not match data.
->>
->>> +	if (!stm_instances) {
->>> +		dev_err(dev, "No STM instances associated with a cpu");
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	base = devm_of_iomap(dev, np, 0, NULL);
->>> +	if (IS_ERR(base)) {
->>> +		dev_err(dev, "Failed to iomap %pOFn\n", np);
->>
->> You need to clean up the downstream code to match upstream. All of these
->> should be return dev_err_probe().
-> 
-> Oh right, thanks for the reminder
-> 
->>> +		return PTR_ERR(base);
->>> +	}
->>> +
->>> +	irq = irq_of_parse_and_map(np, 0);
->>> +	if (irq <= 0) {
->>> +		dev_err(dev, "Failed to parse and map IRQ: %d\n", irq);
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	clk = devm_clk_get(dev, NULL);
->>> +	if (IS_ERR(clk)) {
->>> +		dev_err(dev, "Clock not found\n");
->>
->> And this is clearly incorrect - spamming logs. Syntax is:
->> return dev_err_probe
->>
->>> +		return PTR_ERR(clk);
->>> +	}
->>> +
->>> +	ret = clk_prepare_enable(clk);
->>
->> Drop, devm_clk_get_enabled.
->>
->>> +	if (ret) {
->>> +		dev_err(dev, "Failed to enable STM timer clock: %d\n", ret);
->>> +		return ret;
->>> +	}
->>> +
->>> +	if (!stm_instances->clocksource && (stm_instances->features & STM_CLKSRC)) {
->>> +
->>> +		/*
->>> +		 * First probed STM will be a clocksource
->>> +		 */
->>> +		ret = nxp_stm_clocksource_init(dev, name, base, clk);
->>> +		if (ret)
->>> +			return ret;
->>> +		stm_instances->clocksource++;
->>
->> That's racy. Devices can be brought async, ideally. This should be
->> rather idr or probably entire structure protected with a mutex.
-> 
-> Mmh, interesting. I never had to think about this problem before
-> 
-> Do you know at what moment the probing is parallelized ?
-
-You don't have PROBE_PREFER_ASYNCHRONOUS, so currently this will be
-still sync, but I don't think we want it to be that way forever. I think
-new drivers should not rely on implicit sync, because converting it
-later to async will be difficult. It's easier to design it now or even
-choose async explicitly (after testing).
-
-BTW, PREEMPT_RT and all fast-boot-use-cases would be only happier with
-probe being async.
-
-
-Best regards,
-Krzysztof
