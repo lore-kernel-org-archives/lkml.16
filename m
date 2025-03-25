@@ -1,78 +1,113 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8193019CC2E;
-	Tue, 25 Mar 2025 13:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742908298; cv=none; b=ZVefcnZE78PqcfAqhYOg8HPvQ+mLCatt+tmYce6j3jiDYndU2fm5O2RLpGLvmm7WSLifvzrbf1o9xUTjALSHPTqW0Ax8RHWji0Dg/MgW+jH5xaPlELEBPVZULzk85WAMTzVJuVryw92gVrfYygkeqZjlPuE01CviG6JCQP5dj0M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742908298; c=relaxed/simple;
-	bh=zQE7l7QJJRU50A1ezQBABnNaU4SfTHa6rs31LDY+qOg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=amBqwxPrnWI4tU/ge/oeQGBfiPjKXhad0U/cSTkI3NLz10DSvaw20uagLDgGomAMcKIyLI8AFoayecs9K7KGxntavih5q0BVxi8bBZRGfZb0z/SZPE4qgG6qrrbLovm4JyGpDSZ4DXVYoZchRwJeUnXK0wGJ5r+Pm32GVGL594E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=nZirLOuP; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6790219CC2E;
+	Tue, 25 Mar 2025 13:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742908307; cv=pass; b=RUzgHqRPU9lSq7S5gCrBkQkjFG1nMzrQkIFATjakEyEGu3VoaO9TMmexi8IVKTH5b3XkJXluuUB3o6MVWIrcL6c4gu+n00Cy/dPnMJDv75k/mWy9slL9+rc2KwYKkKGO4Fl93nNJJXS7Rep/oNqeX1pid+JCS3qOm8JYSR0ku3I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742908307; c=relaxed/simple;
+	bh=F3M4xRxxZEd+MRvQ08oFk7oomJXKkj01N6u8v1bq4jo=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=arx7FWE++O1jwWgFX4ghBVbmcH2LgfLR66KIjrWNC/0spFcwML4B9keworN73A/cpcEIejAwwgHDVz5mHKp4hRo0LwYGf5GxwdjWhN2lXisVrlLq/mPkJVdt6mhYYMZZFX79LetzO9U1umVTAt/hbFy5EU+EAgzWXJy74LeAXT4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=MQhif9Jl; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="nZirLOuP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=zQE7l7QJJRU50A1ezQBABnNaU4SfTHa6rs31LDY+qOg=;
-	t=1742908296; x=1744117896; b=nZirLOuPOmDB0Vn1mFA+HGegbqYCW0UQu4PMyBfmhJDu5Ye
-	vrGW7UASEFvXaXGVoU4eqcoXNd/2H3dn9k8gCKmHFAbQw1GHNpJ3h2acpGuHiYPbZLoNSyhX7aJYI
-	84er/hAXiAriQwuv2WH4wxtpADuf5swPcNrtoHIPpHwYobvD8bwbfvg4hD/xlq2yR3Xvva/D1YhFY
-	lKKVod8jtrdmpPVOqnfvMVcrDhrDxuTbccLARhYnTaZFa92OYlyxvbtLceFl2Z6+tu6v79i11iNTx
-	Z8AO+4Vh8xDe85kz6uz5KJfEhwtXWNExKmU1ccOhcKbWOYVJt5QzCHIWzOJcAs1w==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1tx440-000000057Rx-3jhN;
-	Tue, 25 Mar 2025 14:11:29 +0100
-Message-ID: <bfb7433131cb9aeebc75666f86a67a6c71521229.camel@sipsolutions.net>
-Subject: Re: [PATCH v5 0/5] dt-bindings: net: Add network-class.yaml schema
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Rob Herring <robh@kernel.org>
-Cc: david@ixit.cz, Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"	
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski	
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Krzysztof Kozlowski	
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Mailing List	
- <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Bianconi
-	 <lorenzo@kernel.org>, van Spriel <arend@broadcom.com>, 
- =?ISO-8859-1?Q?J=E9r=F4me?= Pouiller	 <jerome.pouiller@silabs.com>, Bjorn
- Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- Andy Gross <agross@kernel.org>, Mailing List	
- <devicetree-spec@vger.kernel.org>, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, linux-arm-msm@vger.kernel.org, Janne Grunau
-	 <j@jannau.net>
-Date: Tue, 25 Mar 2025 14:11:27 +0100
-In-Reply-To: <CAL_JsqLv9THitHzj8nj7ppCp-aKn010-Oz=s+AUNKOCoDmBnbQ@mail.gmail.com>
-References: <20250324-dt-bindings-network-class-v5-0-f5c3fe00e8f0@ixit.cz>
-	 <3452b67752228665fa275030a7d8100b73063392.camel@sipsolutions.net>
-	 <CAL_JsqLv9THitHzj8nj7ppCp-aKn010-Oz=s+AUNKOCoDmBnbQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="MQhif9Jl"
+ARC-Seal: i=1; a=rsa-sha256; t=1742908281; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=JZ09NcLU3ofT2BNR5EJp3KYd5fjx/j8yfk7iWngBkKEUqzDXKsvESJJTuc9bjDvxMpIk80rgg0EXWgyi+bEh7YTCRO1KnquUSNGd6PrNllE08DXq8l4ZJZkC3bNyGnXzUGSwmYGw9sb3YKUifl7O5ZlfWLDK0G4aCQU1qWHUHYg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1742908281; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=twnitO21dTvErIVWBhavTOZMN8TCo8oZ5guh8coyjqM=; 
+	b=hSPifjSLRiYN9JrK6Uyiz5Ms7XtAgtJGBOK6FeG6S4HWgb30OMBv5V5WbePeRcu/eNU1qoS6oQ1y0+zqRIUC/TRIaN96MkJ28TovnBhD4rI+z3C4kWJfO4DdhgMVDgH2tzhAEMaodVGeqzptxlPkirqzkT4EhsjSaZjEj7lnrT0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742908281;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=twnitO21dTvErIVWBhavTOZMN8TCo8oZ5guh8coyjqM=;
+	b=MQhif9JlmnTF2D4+T/ob/K8fwiG3WxpGO+2GoV3fWcjR4pNV6Aw1Ice7BfElxHZ2
+	31chhA5CAl5nHz7F6uuJ4fqxEeK+/cFtgki1OJmrr+vRjY/IaXUh0Zi6Ygc5SZs/oMy
+	JduJ8dQkVkt9A6M19WO7RIKsTVxp6K9skbfzrKxk=
+Received: by mx.zohomail.com with SMTPS id 1742908279441540.0955049314723;
+	Tue, 25 Mar 2025 06:11:19 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH v4 02/11] scripts: generate_rust_analyzer.py: use double
+ quotes
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <20250322-rust-analyzer-host-v4-2-1f51f9c907eb@gmail.com>
+Date: Tue, 25 Mar 2025 10:11:03 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Boris-Chengbiao Zhou <bobo1239@web.de>,
+ Kees Cook <kees@kernel.org>,
+ Fiona Behrens <me@kloenk.dev>,
+ rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Lukas Wirth <lukas.wirth@ferrous-systems.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0C1AEBA2-A84F-4C15-9A74-F50A0CC74C22@collabora.com>
+References: <20250322-rust-analyzer-host-v4-0-1f51f9c907eb@gmail.com>
+ <20250322-rust-analyzer-host-v4-2-1f51f9c907eb@gmail.com>
+To: Tamir Duberstein <tamird@gmail.com>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
+X-ZohoMailClient: External
 
-On Tue, 2025-03-25 at 08:02 -0500, Rob Herring wrote:
-> >=20
-> > I have no idea what tree this should go through, and you CC'ed enough
-> > people that I can't figure it out either ... I'll assume not wifi but D=
-T
-> > for now?
+
+
+> On 22 Mar 2025, at 10:23, Tamir Duberstein <tamird@gmail.com> wrote:
 >=20
-> Can you take it via wifi as the main target here is wifi bindings.
+> Replace inconsistent use of single quotes with double quotes.
+>=20
+> This change was made by a code formatting tool.
+>=20
+> Reviewed-by: Fiona Behrens <me@kloenk.dev>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+> scripts/generate_rust_analyzer.py | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/scripts/generate_rust_analyzer.py =
+b/scripts/generate_rust_analyzer.py
+> index fc1788764b31..e2bc4a717f87 100755
+> --- a/scripts/generate_rust_analyzer.py
+> +++ b/scripts/generate_rust_analyzer.py
+> @@ -169,8 +169,8 @@ def generate_crates(srctree, objtree, sysroot_src, =
+external_src, cfgs):
+>=20
+> def main():
+>     parser =3D argparse.ArgumentParser()
+> -    parser.add_argument('--verbose', '-v', action=3D'store_true')
+> -    parser.add_argument('--cfgs', action=3D'append', default=3D[])
+> +    parser.add_argument("--verbose", "-v", action=3D"store_true")
+> +    parser.add_argument("--cfgs", action=3D"append", default=3D[])
+>     parser.add_argument("srctree", type=3Dpathlib.Path)
+>     parser.add_argument("objtree", type=3Dpathlib.Path)
+>     parser.add_argument("sysroot", type=3Dpathlib.Path)
+>=20
+> --=20
+> 2.48.1
+>=20
+>=20
 
-I can do that, but I suppose it's 6.16 material at this point.
-
-johannes
+Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>=
