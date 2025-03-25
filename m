@@ -1,173 +1,209 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B459E25A355
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742913561; cv=none; b=RLetN8g56hQm7jfx1+IzLIMn45umyREZbniutnKJI/TK5H0Y51j/WuKx2TCJIn3uuf/0WXkeezPakxZUM8LM2v+eSGSlPYVU2wmT7jFdqw8C2JuoG+QZ/g/6bDJ6AdrIk2nk9akguBD/bd06L3EqNmFZNwyIa+Ltqmmb+wwGvR8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742913561; c=relaxed/simple;
-	bh=BF/9SLoL0/eahxTrlHrP7+kk6jiwP3IV1YiE0RpH0aU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XBSDqgwqJKsc+dXIOFhHyWqRR2rw5EhU1OmoJoOMB+p5wrsX2xZcX4h6cBHd9uXGSm8xHJRiUY1XcwXA08+CTRVp6XKy2zx9IVtxqPujMZM1g+GC8U7kCeELSEwQsdzZb0oNlTsn84BsoE/ulWp5sD+J7aUKdYGStpnMtA6O3Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=oXVWegIH; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9547525A342;
+	Tue, 25 Mar 2025 14:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742913566; cv=pass; b=PcTCA/UsjRU1qAa9+bbRbtjP/nlxYGVXCdZSkqRM8DeDMeuYK6LCtu9b8axsdv51V5CD2jUxQ+w8+BOUQCmqRUeXAoDHRpNnK+AAF/mf5x4a6g66SFH1WPj2HQK1AEoM7A6HU+pndB0X2C7ii84RlyvoMJ4LVPNTOc+A0Nqle1k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742913566; c=relaxed/simple;
+	bh=Gvt8K1sA1CaAsu2eb2QGQYOlpD6tSJd58vP4p0vCBcM=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=qINw90ceOFlSHDwJqviscJ1oR39SG5IolArankbLrJTF7dr7gJX+HqcoM129u76igYMpp/v575WCZcUQL+ymxWUkdRXs5nNH/uyz2taFWc2VKTHtyjhq4VR5CalVii3f9Rlxi/efaFt+rj7apKNF6oIajY5VR5BUFKyLYeCsy08=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=Q7Qn2w1J; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="oXVWegIH"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52PE028G000588
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:39:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	2AR9DLJxuAX5J+vUj9fnqNV1djjf7QFzxQNMwmMHS4A=; b=oXVWegIHey1D7hgo
-	mRkBBDvrEh3YomsjH1AECYJXa3PCMVCFzndXKb1l2dzhimMHtvRcxtM8lIFdL4Mt
-	g1cUvzhOZj4137q2hxw7GCPS0TgV7uzVS0UgOTT46SKIcJTYuZEsLoeUyi5GvM/h
-	j8cEit6MisUlo3SNqKHqLYp5ZQIqMgxvENZhEMN0BUJ7VeM2VCsTmWN8QTzNL6f3
-	payQVb0iXgpdb4FL8UyODIMlWBHBWHj2T9z2inD1BR+6IfL8aYQLfdev5ArrKEd6
-	RFMN63VayVKplC8gdDqA8ckGC3pH1fFbW3iCZXtBc7RoO9UwBWPMOb/gABePN+bh
-	G/Cjrg==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45hm79r7tr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:39:17 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4766654b0c3so14313661cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 07:39:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742913556; x=1743518356;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2AR9DLJxuAX5J+vUj9fnqNV1djjf7QFzxQNMwmMHS4A=;
-        b=FEkHeWn5TVFkz+pyYcz6rRNqKMiwUkoXhAUd+ri5d7B6Wsy8TVvDYM/fv40n9fc9cT
-         CIM0MZlHw+a+9ajxiNyfPr1qSmcQfTLyvW4l9tx7Re6UXelq0NSh9Pe011rmHBQ8Yvge
-         SLO2xhMxKpQugM6Bw8xFy1+AeTEdYXxj3WTh9V6OtjLf5WVN53NOI9jiXtHYoXWm0X+E
-         uPxQhJS+VnYArW0awoXh1P73+MJZy0d9HgGIlId5GaMsp4Y18qx6mpnf5FMLkAZohzi6
-         1eDSym7EOQ/MWL37IGprFqS81F8Rngn5513I/i791v4aUOfI12wpBe5pTrE9YQBZ8IGj
-         yozQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVMBX+SSHRaXLrJIlI6b2sbwasf/8G4604C3AIBzTsNkFqg8sMS0TtZVPsEs6Z8SRD2QPjYERa4aqv9oRY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywq3bjv5HvlrqXbMXz6usZknUW8ANCQOfSWPPYaEGYBVCxx6/zc
-	BvcqmZ5nY2HZlZmTpflgnC4XZ7UiJCUY93S483wOMHfi2eJNYZL8EnFlmpYsKZV4bl/T7BDX3Ns
-	wUB2lOl9sT+tnoNQKEXNSHKumUV/zDmZzCNKzVgg0vFk4S5hVifq4y2SLomCIQZvOeVhU5SY=
-X-Gm-Gg: ASbGncsjdXmDFG3c21GGrWJp8HReOHWosveg83chTb8gv/2msHiwE6+xpXk9P4h91Sr
-	5YSlXQQiN+6uugFCqVuQaKvFiGObtHapbUmQfDVQXIK9G9B6iIfXdRoUliBaLt1YIPiuM1HmYT1
-	cZh7BaGckcXHmXjBBIzxb1If5phZ+2su3Ws4Iyw0xy8vCfYeNFYiTfcMVzNOOL/z4B5rKZQ+Fp1
-	ah4HOKK/rCZk8+pFMgrrawRWFoqGSwo916OOkVzrNI8XwpkH0zz59yle1umjPZMDoijrYg6+CMv
-	RJzYoULnajQ/NKwfJoowjVp3ixS2CIcS5cljjgzsm4HaTmwhL34afB6yGB6SFPoMAnsY/A==
-X-Received: by 2002:a05:622a:1a97:b0:476:af54:503f with SMTP id d75a77b69052e-4771dd6226bmr92953531cf.2.1742913556343;
-        Tue, 25 Mar 2025 07:39:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGR7ZJxcn2AD4UVzPlapOFAWeZjSCT60qNnDD/c5K+/WhuOlamYQaCR57BDtBgMf8xGuiCSWQ==
-X-Received: by 2002:a05:622a:1a97:b0:476:af54:503f with SMTP id d75a77b69052e-4771dd6226bmr92953231cf.2.1742913555748;
-        Tue, 25 Mar 2025 07:39:15 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ebcd0c7759sm7850418a12.51.2025.03.25.07.39.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Mar 2025 07:39:15 -0700 (PDT)
-Message-ID: <0f700f59-3cbd-424a-84a0-0d23db0ca581@oss.qualcomm.com>
-Date: Tue, 25 Mar 2025 15:39:12 +0100
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="Q7Qn2w1J"
+ARC-Seal: i=1; a=rsa-sha256; t=1742913536; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=VUVu38pF+ELp8GK6YdhvjNb30da9YOmDDJeYolZO0WNipKoxltMmo5HeRYRobHll4LCMbsJy6+KHZ6Ut/iJwSTcHC09FcWZtKe/W121VHvsWMsk1Zuwf9Oi/Z5N6BAbxQ3S/g3bgxaspCNr7FfPeDVhdDFD/R9xG4S6jAdK8sE8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1742913536; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=jQZDBSONaTvaFu9T91EHjA31tT8fr2Z46N42ed/1SWE=; 
+	b=YArRVSUZZTzD8qeJuueVTNj+oJgISEaAn8RKep0aAYZDdIYEUA8qfHmOOxwm8LKSueDgeopsSldV12csgi1CwvXiIz73qLPyCGgnNP+OMwm6vbkpQcnJ4pK98Xl0IyvhqJ0r62dwc+kV9bjOVruuNjoge1N+MqP50ya4UMSoV6s=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742913536;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=jQZDBSONaTvaFu9T91EHjA31tT8fr2Z46N42ed/1SWE=;
+	b=Q7Qn2w1JM5e57wWolQ/0oebm+F7PwyjAchnvl2wXYY5kojAq/8ZcJUmUYJuTcxew
+	/9Bxb0bOUzla+YBFln50TijQTU4zWg8yXDC9y50oF9bjvrkm2PnIA/shcdOt7iDkK25
+	KH10JYmXBKXFe1ZyY8dkVabM2kMfa9NzU23Hbl08=
+Received: by mx.zohomail.com with SMTPS id 17429135343111014.0342799037822;
+	Tue, 25 Mar 2025 07:38:54 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: x1e001de-devkit: Add Wi-Fi and
- Bluetooth pwrseq
-To: Stephan Gerhold <stephan.gerhold@linaro.org>,
-        Abel Vesa <abel.vesa@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Johan Hovold <johan@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250324-x1e001de-devkit-dts-pwrseq-v1-1-530f69b39a16@linaro.org>
- <Z-KuG0aOwEnxuhp9@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <Z-KuG0aOwEnxuhp9@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: KEXrF77AnCq-tFWvnNFZMiI41HdG3Fik
-X-Proofpoint-ORIG-GUID: KEXrF77AnCq-tFWvnNFZMiI41HdG3Fik
-X-Authority-Analysis: v=2.4 cv=IKYCChvG c=1 sm=1 tr=0 ts=67e2c015 cx=c_pps a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=KKAkSRfTAAAA:8 a=RC_zNtMqMYb_0QXlmi0A:9 a=QEXdDO2ut3YA:10
- a=dawVfQjAaf238kedN5IG:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-25_06,2025-03-25_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- phishscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0 spamscore=0
- priorityscore=1501 adultscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503250103
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH v4 11/11] scripts: generate_rust_analyzer.py: use
+ `cfg_groups`
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <20250322-rust-analyzer-host-v4-11-1f51f9c907eb@gmail.com>
+Date: Tue, 25 Mar 2025 11:38:37 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Boris-Chengbiao Zhou <bobo1239@web.de>,
+ Kees Cook <kees@kernel.org>,
+ Fiona Behrens <me@kloenk.dev>,
+ rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Lukas Wirth <lukas.wirth@ferrous-systems.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CFD8E300-A2A3-41C6-A11A-1177F20A56A7@collabora.com>
+References: <20250322-rust-analyzer-host-v4-0-1f51f9c907eb@gmail.com>
+ <20250322-rust-analyzer-host-v4-11-1f51f9c907eb@gmail.com>
+To: Tamir Duberstein <tamird@gmail.com>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
+X-ZohoMailClient: External
 
-On 3/25/25 2:22 PM, Stephan Gerhold wrote:
-> On Mon, Mar 24, 2025 at 04:24:01PM +0200, Abel Vesa wrote:
->> The Qualcomm X Elite Devkit comes with a WCN7850 combo chip which provides
->> Wi-fi and Bluetooth, similar to the CRD and QCP.
->>
->> Describe the nodes for the Wi-Fi, Bluetooth, the related regulators and
->> the PMU.
->>
->> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
->> ---
->>  arch/arm64/boot/dts/qcom/x1e001de-devkit.dts | 144 +++++++++++++++++++++++++++
->>  1 file changed, 144 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts b/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
->> index 74911861a3bf2606add8cf4aaa3816542e837513..8f288a138c4cb6e21725fdf726eb2a2489bfbc38 100644
->> --- a/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
->> +++ b/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
->> @@ -17,6 +17,7 @@ / {
->>  
->>  	aliases {
->>  		serial0 = &uart21;
->> +		serial1 = &uart14;
->>  	};
->>  
->>  	wcd938x: audio-codec {
->> @@ -392,6 +393,42 @@ vph_pwr: regulator-vph-pwr {
->>  		regulator-boot-on;
->>  	};
->>  
->> +	vreg_wcn_0p95: regulator-wcn-0p95 {
->> +		compatible = "regulator-fixed";
->> +
->> +		regulator-name = "VREG_WCN_0P95";
->> +		regulator-min-microvolt = <950000>;
->> +		regulator-max-microvolt = <950000>;
->> +
->> +		vin-supply = <&vreg_wcn_3p3>;
->> +	};
->> +
->> +	vreg_wcn_1p9: regulator-wcn-1p9 {
->> +		compatible = "regulator-fixed";
->> +
->> +		regulator-name = "VREG_WCN_1P9";
->> +		regulator-min-microvolt = <1900000>;
->> +		regulator-max-microvolt = <1900000>;
->> +
->> +		vin-supply = <&vreg_wcn_3p3>;
->> +	};
-> 
-> Hm, on CRD and T14s there is a TODO comment above these two, which is
-> also why I haven't posted these upstream yet:
-> 
-> We still haven't come to a conclusion unfortunately how to model the M.2
-> WiFi/BT cards. QCP doesn't have M.2, which is why it is upstream
-> already. These two regulators don't actually exist on the devkit itself,
-> they are (probably) part of the M.2 card.
-> 
-> The devkit only provides the 3.3V and 1.8V supply to the M.2 card.
-> 
-> We should really find some way forward for this, but just omitting any
-> mention of this is not the best way. :-)
 
-Now that we have a PCI port pwrseq driver, perhaps that could work..
 
-Konrad
+> On 22 Mar 2025, at 10:23, Tamir Duberstein <tamird@gmail.com> wrote:
+>=20
+> Declare common `cfg`s just once to reduce the size of =
+rust-analyzer.json
+> from 30619 to 2624 lines.
+>=20
+> Link: =
+https://github.com/rust-lang/rust-analyzer/commit/2607c09fddef36da0d6f0a84=
+625db5e20a5ebde3
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+> scripts/generate_rust_analyzer.py | 35 =
++++++++++++++++++++++++------------
+> 1 file changed, 23 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/scripts/generate_rust_analyzer.py =
+b/scripts/generate_rust_analyzer.py
+> index 957b413fe0b6..3d89c0198db4 100755
+> --- a/scripts/generate_rust_analyzer.py
+> +++ b/scripts/generate_rust_analyzer.py
+> @@ -37,6 +37,7 @@ class Crate(TypedDict):
+>     root_module: str
+>     is_workspace_member: bool
+>     deps: List[Dependency]
+> +    cfg_groups: List[str]
+>     cfg: List[str]
+>     edition: Literal["2021"]
+>     env: Dict[str, str]
+> @@ -59,15 +60,8 @@ def generate_crates(
+>     sysroot_src: pathlib.Path,
+>     external_src: pathlib.Path,
+>     cfgs: List[str],
+> +    cfg_groups: List[str],
+> ) -> List[Crate]:
+> -    # Generate the configuration list.
+> -    cfg =3D []
+> -    with open(objtree / "include" / "generated" / "rustc_cfg") as fd:
+> -        for line in fd:
+> -            line =3D line.replace("--cfg=3D", "")
+> -            line =3D line.replace("\n", "")
+> -            cfg.append(line)
+> -
+>     # Now fill the crates list.
+>     crates: List[Crate] =3D []
+>     crates_cfgs =3D args_crates_cfgs(cfgs)
+> @@ -77,6 +71,7 @@ def generate_crates(
+>         root_module: pathlib.Path,
+>         deps: List[Dependency],
+>         cfg: List[str] =3D [],
+> +        cfg_groups: List[str] =3D [],
+>         is_workspace_member: bool =3D True,
+>     ) -> Crate:
+>         return {
+> @@ -85,6 +80,7 @@ def generate_crates(
+>             "is_workspace_member": is_workspace_member,
+>             "deps": deps,
+>             "cfg": cfg,
+> +            "cfg_groups": cfg_groups,
+>             "edition": "2021",
+>             "env": {
+>                 "RUST_MODFILE": "This is only for rust-analyzer"
+> @@ -101,10 +97,13 @@ def generate_crates(
+>         root_module: pathlib.Path,
+>         deps: List[Dependency],
+>         cfg: List[str] =3D [],
+> +        cfg_groups: List[str] =3D [],
+>         is_workspace_member: bool =3D True,
+>     ) -> Dependency:
+>         return register_crate(
+> -            build_crate(display_name, root_module, deps, cfg, =
+is_workspace_member)
+> +            build_crate(
+> +                display_name, root_module, deps, cfg, cfg_groups, =
+is_workspace_member
+> +            )
+>         )
+>=20
+>     def append_proc_macro_crate(
+> @@ -190,7 +189,7 @@ def generate_crates(
+>             display_name,
+>             srctree / "rust" / display_name / "lib.rs",
+>             deps,
+> -            cfg=3Dcfg,
+> +            cfg_groups=3Dcfg_groups,
+>         )
+>         crate["env"]["OBJTREE"] =3D str(objtree.resolve(True))
+>         crate_with_generated: CrateWithGenerated =3D {
+> @@ -252,7 +251,7 @@ def generate_crates(
+>                 name,
+>                 path,
+>                 [core, kernel],
+> -                cfg=3Dcfg,
+> +                cfg_groups=3Dcfg_groups,
+>             )
+>=20
+>     return crates
+> @@ -277,9 +276,21 @@ def main() -> None:
+>     # Making sure that the `sysroot` and `sysroot_src` belong to the =
+same toolchain.
+>     assert args.sysroot in args.sysroot_src.parents
+>=20
+> +    # Generate the configuration list.
+> +    with open(args.objtree / "include" / "generated" / "rustc_cfg") =
+as fd:
+> +        cfg_groups =3D {"rustc_cfg": =
+[line.lstrip("--cfg=3D").rstrip("\n") for line in fd]}
+> +
+>     rust_project =3D {
+> -        "crates": generate_crates(args.srctree, args.objtree, =
+args.sysroot_src, args.exttree, args.cfgs),
+> +        "crates": generate_crates(
+> +            args.srctree,
+> +            args.objtree,
+> +            args.sysroot_src,
+> +            args.exttree,
+> +            args.cfgs,
+> +            list(cfg_groups.keys()),
+> +        ),
+>         "sysroot": str(args.sysroot),
+> +        "cfg_groups": cfg_groups,
+>     }
+>=20
+>     json.dump(rust_project, sys.stdout, sort_keys=3DTrue, indent=3D4)
+>=20
+> --=20
+> 2.48.1
+>=20
+>=20
+
+Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
+Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
+
