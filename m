@@ -1,32 +1,32 @@
 Received: from mail.cjdns.fr (mail.cjdns.fr [5.135.140.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DC32571A7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E672571CD;
 	Tue, 25 Mar 2025 13:44:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.135.140.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742910268; cv=none; b=ls1af3T2ReAvnVAO2mqFCiwSnq6SQr94HQgB/32cPLsefs/RtfFybu9cD4Gj0s93/XwLAQpgUTNty0WiWa5N+PNev36gtp1k/kzgDET2o5bGhuDJV76Dn+Y3/F4YLdrZUYDC5QjRGwJcNLzL6C+jt8uj9kmjv+VYOsqGsGZNx0E=
+	t=1742910268; cv=none; b=fHgEnnpr4Q7Sg37/inMDngenD+RltCGtPzrsMWCA0z93Sd9mR7R3+jVpqA1cTiq54TKGurtTtcMzKkTV/ijYcLRwTSP3luCk2s2c5dTx6EQD3tBwiNZxp/qmi7iRcK08u/v8PIRa9hg3q5Can7ZKzjosUb7EgYPUg5OQX2k41VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742910268; c=relaxed/simple;
-	bh=uSGNFfrY8jE3xI1OgQ83dSjuEaq2r2kZyy8PLCCNpFA=;
+	bh=eo26+lNjm30JchJHMhtCgmQD8PuV/0cJ0NZTeci9Wh0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BVsH/z0KfFQFvI+hEEGXb4+GjR6IRJfl5qsJCGIXN7PHTlOEcI1Vza9LxfB8aeXw1Aturl+nRdzZLMxcgZbJgSDqSZv2y9NeifJg4SqpJNiKMSCXhFVC29aIxpYzQP2K5+r3v75jd7m4uaPS7SR+gtfAq/bDfr8jTUw8/GSd2z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=U0mGMImL; arc=none smtp.client-ip=5.135.140.105
+	 MIME-Version; b=rUaKEHn7R7uc8M15UY4VROCRTV1vTZ17dHADVltWl588bK4z3wBWQ9ffYhehsGnHKkxsMaUcw8kE3GHx0jRDD72p3x4tBp5P6PCKrFa9Qvsv93G3a7SiMaM4uvrTuIiaFxuCvtZub86Pg+UKbG9iyvmQj7Ykvb0QBGsqxTAN5ZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=mWgLd5hl; arc=none smtp.client-ip=5.135.140.105
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cjdns.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="U0mGMImL"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id F15002CF216;
-	Tue, 25 Mar 2025 14:44:16 +0100 (CET)
+	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="mWgLd5hl"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 68ED72CD9AA;
+	Tue, 25 Mar 2025 14:44:23 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjdns.fr; s=dkim;
-	t=1742910258; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1742910264; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=CfwmhzuwDu9s111Mr4QP7njA8+Zmh9UN8wUq+4xS+p8=;
-	b=U0mGMImLWlSzGk2XQcZn3HUr3X2Xd/XO4WJlH6BCr4D8qX8phhECy/9j1N4lZuNRw37WqX
-	9/Can7GGZSkWggpGcqRYJjf7WbDgGhcb1PMHGRUnw2mkbg7xIfsU9HHO/s1f08gk+xz6th
-	ChhsOjH0dfV1jEik8HvOnz/gPMgX5XDtZ7rMOZ5noZnekDj2KyFdq34wWspWVJQvNWBnHo
-	0dYg0kcFMHXUuWmdtIjHCR8MXBBkgtfN9CltJE90M0ZU1A5bFpyahSqrznGUypicSNa1YV
-	DhK3RSoqq1tBzfRB6pdlCl7/s1BD484fcJKMmy85fG47d/pyYbuZyNQTgD3v3g==
+	bh=f0b41uiUdPdQPYyBOZFXDF2cGL1WfkMqfk3isWB7T8w=;
+	b=mWgLd5hlcaFDsNI7NoQSdMtMegj9j3GKkGZYqxaFKBRg5n59IO6tVzb9xuZhJP9olXqNYz
+	iLGIZIVQZPjaVHXIiGNaH8QCVkyRtTGp+To+nfk0RLyGHKHlIYVq3yxpxFC1UNHXxBEdGc
+	mhFSO7Apkh+OZJ1SanO9wDObnqmPjApWJ6No6qeu2m2eAnzH2gkqhFl6KovnOyBsyFxIba
+	9/7Poh7roU+Sxxsc8zJbKQ9V+a2eD/5ircBhcjDjKtqT9GhT/uxV4wXp/Vpa/1nZmDZiYP
+	LabPp7CSs6J5dxYqz+nVUU6cHxSmnDxDPGAPxrMoQOLBaB5cPwBkzkgW2XhT3Q==
 From: Caleb James DeLisle <cjd@cjdns.fr>
 To: linux-mips@vger.kernel.org
 Cc: Thomas Gleixner <tglx@linutronix.de>,
@@ -39,9 +39,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org,
 	benjamin.larsson@genexis.eu,
 	Caleb James DeLisle <cjd@cjdns.fr>
-Subject: [PATCH v2 02/10] dt-bindings: interrupt-controller: Add EcoNet EN751221 INTC
-Date: Tue, 25 Mar 2025 13:43:41 +0000
-Message-Id: <20250325134349.2476458-3-cjd@cjdns.fr>
+Subject: [PATCH v2 06/10] dt-bindings: mips: Add EcoNet platform binding
+Date: Tue, 25 Mar 2025 13:43:45 +0000
+Message-Id: <20250325134349.2476458-7-cjd@cjdns.fr>
 In-Reply-To: <20250325134349.2476458-1-cjd@cjdns.fr>
 References: <20250325134349.2476458-1-cjd@cjdns.fr>
 Precedence: bulk
@@ -53,101 +53,45 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-Document the device tree binding for the interrupt controller in the
-EcoNet EN751221 MIPS SoC.
+Document the top-level device tree binding for EcoNet MIPS-based SoCs.
 
 Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
 ---
-If anyone is aware of a standard name for this "shadow interrupt" pattern,
-please let me know and I will re-send with updated naming.
----
- .../econet,en751221-intc.yaml                 | 78 +++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/econet,en751221-intc.yaml
+ .../devicetree/bindings/mips/econet.yaml      | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mips/econet.yaml
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/econet,en751221-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/econet,en751221-intc.yaml
+diff --git a/Documentation/devicetree/bindings/mips/econet.yaml b/Documentation/devicetree/bindings/mips/econet.yaml
 new file mode 100644
-index 000000000000..5536319c49c3
+index 000000000000..d8181b58c781
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/econet,en751221-intc.yaml
-@@ -0,0 +1,78 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++++ b/Documentation/devicetree/bindings/mips/econet.yaml
+@@ -0,0 +1,26 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/interrupt-controller/econet,en751221-intc.yaml#
++$id: http://devicetree.org/schemas/mips/econet.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: EcoNet EN751221 Interrupt Controller
++title: EcoNet MIPS SoCs
 +
 +maintainers:
 +  - Caleb James DeLisle <cjd@cjdns.fr>
 +
-+description:
-+  The EcoNet EN751221 Interrupt Controller is a simple interrupt controller
-+  designed for the MIPS 34Kc MT SMP processor with 2 VPEs. Each interrupt can
-+  be routed to either VPE but not both, so to support per-CPU interrupts, a
-+  secondary IRQ number is allocated to control masking/unmasking on VPE#1. For
-+  lack of a better term we call these "shadow interrupts". The assignment of
-+  shadow interrupts is defined by the SoC integrator when wiring the interrupt
-+  lines, so they are configurable in the device tree.
-+
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
-+
 +properties:
++  $nodename:
++    const: '/'
++
 +  compatible:
-+    const: econet,en751221-intc
++    oneOf:
++      - description: Boards with EcoNet EN751221 family SoC
++        items:
++          - enum:
++              - smartfiber,xp8421-b
++          - const: econet,en751221
 +
-+  reg:
-+    maxItems: 1
++additionalProperties: true
 +
-+  "#interrupt-cells":
-+    const: 1
-+
-+  interrupt-controller: true
-+
-+  interrupts:
-+    maxItems: 1
-+    description: Interrupt line connecting this controller to its parent.
-+
-+  econet,shadow-interrupts:
-+    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-+    description:
-+      An array of interrupt number pairs where each pair represents a shadow
-+      interrupt relationship. The first number in each pair is the primary IRQ,
-+      and the second is its shadow IRQ used for VPE#1 control. For example,
-+      <8 3> means IRQ 8 is shadowed by IRQ 3, so IRQ 3 cannot be mapped, but
-+      when VPE#1 requests IRQ 8, it will manipulate the IRQ 3 mask bit.
-+    minItems: 1
-+    maxItems: 20
-+    items:
-+      items:
-+        - description: primary per-CPU IRQ
-+        - description: shadow IRQ number
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    interrupt-controller@1fb40000 {
-+        compatible = "econet,en751221-intc";
-+        reg = <0x1fb40000 0x100>;
-+
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+
-+        interrupt-parent = <&cpuintc>;
-+        interrupts = <2>;
-+
-+        econet,shadow-interrupts = <7 2>, <8 3>, <13 12>, <30 29>;
-+    };
 +...
 -- 
 2.39.5
