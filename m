@@ -1,37 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132AF25A638
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:34:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83F425A352
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:34:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742913259; cv=none; b=UjrOuKAmREix4f8yDVXFk/aYcJNU/yko2ePl4soFaGw9HExK6KFkGp7Hey63PVQTl2UOCfE8uapPwagM8SvkP+vTXPfgqkh9IfR+COG7cqaMm7NnOmK8Ym5jKLtHZE9BPW0C/R5i8kg5AB+5BjeT34w4tFQY7kOpvp978K1OBSQ=
+	t=1742913258; cv=none; b=M/Zv1+NZSKOJjJZkhfVPK1VJzGnfKyCPHcn0oAaDOd1tDz2RBNdgJn/l7UdhiTKbmGKHAJ3Myuf74fxWa6xiefaZtoM4NiTnhlxWuQu9NlUpv6NCBx/ln+/TAyhc3JQWdZDfFCzf6pUD9zoI9IXaawLjYwlfTsTuXaM+WdMW49I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742913259; c=relaxed/simple;
-	bh=PrCjgwJXdAKGTLy2RDPqMHQOsl2AIO8OBNqwsAnQgms=;
+	s=arc-20240116; t=1742913258; c=relaxed/simple;
+	bh=op4bZHNgFkTMeMbsYcAkob/xeuuEeaMPRJ0DS4GK3Ac=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=VjuZNzNRKbjUay0nxyd82ehkGKfYOCcfGG0OnP00o31WJp8WzeiOUyt6V7/JtDIJrt5fdCxgTH/BGb+c0g3MhNC3CfWru8vjZOTuovHyehcWd/50MdydzRWSQeUk5qFrjd2pyTab/wojxXygk81zvcpgE2zOn3UAZyUwHXOwdTI=
+	 Content-Type; b=kObcY9ITxywpYBc5J5QNhytAWKlxO2JAz9DpoNwg34KWqxWDpLVVkxVqaZ+pKgfzJjfSOHpVzG/YH6YWLS0uJkGHOPl6aW6x39oVErSor9G9a1TRne2I/1pWuZvgW06I3kLprGwCXm0KwrLmnly4krbvcyt3otaemBwba+fsQq4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E23B7C4AF0C;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 837CAC4AF09;
 	Tue, 25 Mar 2025 14:34:18 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tx5Mt-00000002P2L-1FVl;
-	Tue, 25 Mar 2025 10:35:03 -0400
-Message-ID: <20250325143503.142711804@goodmis.org>
+	id 1tx5Ms-00000002P1L-4066;
+	Tue, 25 Mar 2025 10:35:02 -0400
+Message-ID: <20250325143502.803979565@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 25 Mar 2025 10:34:44 -0400
+Date: Tue, 25 Mar 2025 10:34:42 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>
+To: linux-kernel@vger.kernel.org
 Cc: Tomas Glozar <tglozar@redhat.com>,
  John Kacur <jkacur@redhat.com>,
+ Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>,
  Juri Lelli <juri.lelli@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Clark Williams <williams@redhat.com>,
  Gabriele Monaco <gmonaco@redhat.com>
-Subject: [for-next][PATCH 8/9] Documentation/rv: Add docs for the sched monitors
+Subject: [for-next][PATCH 6/9] tools/rv: Add support for nested monitors
 References: <20250325143436.168114339@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -43,281 +41,456 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Gabriele Monaco <gmonaco@redhat.com>
 
-Add man page and kernel documentation for the sched monitors, as sched
-is a container of other monitors, document all in the same page.
-sched is the first nested monitor, also explain what is a nested monitor
-and how enabling containers or children monitors work.
+RV now supports nested monitors, this functionality requires a container
+monitor, which has virtually no functionality besides holding other
+monitors, and nested monitors, that have a container as parent.
 
-To: Ingo Molnar <mingo@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
+Nested monitors' sysfs folders are physically nested in the container's
+folder, and they are listed in the available_monitors file with the
+notation container:monitor.
+These changes go against the assumption that each line in the
+available_monitors file correspond to a folder in the rv directory,
+breaking the functionality of the rv tool.
+
+Add support for nested containers in the rv userspace tool, indenting
+nested monitors while listed and allowing both the notation with and
+without container name, which are equivalent:
+
+  # rv list
+  mon1
+  mon2
+  container:
+   - nested1
+   - nested2
+
+  ## notation with container name
+  # rv mon container:nested1
+
+  ## notation without container name
+  # rv mon nested1
+
+Either way, enabling a nested monitor is the same as enabling any other
+non-nested monitor.
+Selecting the container with rv mon enables all the nested monitors, if
+-t is passed, the trace also includes the monitor name next to the
+event:
+
+  # rv mon nested1 -t
+  <idle>-0        [004] event   state1 x event    -> state2
+  <idle>-0        [004] error   event not expected in state2
+
+  # rv mon sched -t
+  <idle>-0        [004] event_nested1   state1 x event    -> state2
+  <idle>-0        [004] error_nested1   event not expected in state2
+
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: John Kacur <jkacur@redhat.com>
-Cc: Clark Williams <williams@redhat.com>
-Link: https://lore.kernel.org/20250305140406.350227-9-gmonaco@redhat.com
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Link: https://lore.kernel.org/20250305140406.350227-7-gmonaco@redhat.com
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- Documentation/tools/rv/rv-mon-sched.rst  |  69 +++++++++
- Documentation/trace/rv/monitor_sched.rst | 171 +++++++++++++++++++++++
- 2 files changed, 240 insertions(+)
- create mode 100644 Documentation/tools/rv/rv-mon-sched.rst
- create mode 100644 Documentation/trace/rv/monitor_sched.rst
+ tools/verification/rv/include/rv.h    |   1 +
+ tools/verification/rv/src/in_kernel.c | 226 ++++++++++++++++++++------
+ 2 files changed, 179 insertions(+), 48 deletions(-)
 
-diff --git a/Documentation/tools/rv/rv-mon-sched.rst b/Documentation/tools/rv/rv-mon-sched.rst
-new file mode 100644
-index 000000000000..da0fe4c79ae5
---- /dev/null
-+++ b/Documentation/tools/rv/rv-mon-sched.rst
-@@ -0,0 +1,69 @@
-+.. SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/verification/rv/include/rv.h b/tools/verification/rv/include/rv.h
+index 0cab1037a98f..6f668eb266cb 100644
+--- a/tools/verification/rv/include/rv.h
++++ b/tools/verification/rv/include/rv.h
+@@ -7,6 +7,7 @@ struct monitor {
+ 	char name[MAX_DA_NAME_LEN];
+ 	char desc[MAX_DESCRIPTION];
+ 	int enabled;
++	int nested;
+ };
+ 
+ int should_stop(void);
+diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
+index f2bbc75a76f4..032b85101929 100644
+--- a/tools/verification/rv/src/in_kernel.c
++++ b/tools/verification/rv/src/in_kernel.c
+@@ -6,15 +6,18 @@
+  */
+ #include <getopt.h>
+ #include <stdlib.h>
++#include <stdio.h>
+ #include <string.h>
+ #include <errno.h>
+ #include <unistd.h>
++#include <dirent.h>
+ 
+ #include <trace.h>
+ #include <utils.h>
+ #include <rv.h>
+ 
+ static int config_has_id;
++static int config_is_container;
+ static int config_my_pid;
+ static int config_trace;
+ 
+@@ -44,6 +47,51 @@ static int __ikm_read_enable(char *monitor_name)
+ 	return enabled;
+ }
+ 
++/*
++ * __ikm_find_monitor - find the full name of a possibly nested module
++ *
++ * __does not log errors.
++ *
++ * Returns 1 if we found the monitor, -1 on error and 0 if it does not exist.
++ * The string out_name is populated with the full name, which can be
++ * equal to monitor_name or container/monitor_name if nested
++ */
++static int __ikm_find_monitor_name(char *monitor_name, char *out_name)
++{
++	char *available_monitors, container[MAX_DA_NAME_LEN+1], *cursor, *end;
++	int retval = 1;
 +
-+============
-+rv-mon-sched
-+============
-+-----------------------------
-+Scheduler monitors collection
-+-----------------------------
++	available_monitors = tracefs_instance_file_read(NULL, "rv/available_monitors", NULL);
++	if (!available_monitors)
++		return -1;
 +
-+:Manual section: 1
++	cursor = strstr(available_monitors, monitor_name);
++	if (!cursor) {
++		retval = 0;
++		goto out_free;
++	}
 +
-+SYNOPSIS
-+========
++	for (; cursor > available_monitors; cursor--)
++		if (*(cursor-1) == '\n')
++			break;
++	end = strstr(cursor, "\n");
++	memcpy(out_name, cursor, end-cursor);
++	out_name[end-cursor] = '\0';
 +
-+**rv mon sched** [*OPTIONS*]
++	cursor = strstr(out_name, ":");
++	if (cursor)
++		*cursor = '/';
++	else {
++		sprintf(container, "%s:", monitor_name);
++		if (strstr(available_monitors, container))
++			config_is_container = 1;
++	}
 +
-+**rv mon <NESTED_MONITOR>** [*OPTIONS*]
++out_free:
++	free(available_monitors);
++	return retval;
++}
 +
-+**rv mon sched:<NESTED_MONITOR>** [*OPTIONS*]
+ /*
+  * ikm_read_enable - reads monitor's enable status
+  *
+@@ -137,7 +185,17 @@ static char *ikm_read_desc(char *monitor_name)
+ static int ikm_fill_monitor_definition(char *name, struct monitor *ikm)
+ {
+ 	int enabled;
+-	char *desc;
++	char *desc, *nested_name;
 +
-+DESCRIPTION
-+===========
++	nested_name = strstr(name, ":");
++	if (nested_name) {
++		*nested_name = '/';
++		++nested_name;
++		ikm->nested = 1;
++	} else {
++		nested_name = name;
++		ikm->nested = 0;
++	}
+ 
+ 	enabled = ikm_read_enable(name);
+ 	if (enabled < 0) {
+@@ -151,7 +209,7 @@ static int ikm_fill_monitor_definition(char *name, struct monitor *ikm)
+ 		return -1;
+ 	}
+ 
+-	strncpy(ikm->name, name, MAX_DA_NAME_LEN);
++	strncpy(ikm->name, nested_name, MAX_DA_NAME_LEN);
+ 	ikm->enabled = enabled;
+ 	strncpy(ikm->desc, desc, MAX_DESCRIPTION);
+ 
+@@ -273,7 +331,7 @@ static int ikm_has_id(char *monitor_name)
+ int ikm_list_monitors(void)
+ {
+ 	char *available_monitors;
+-	struct monitor ikm;
++	struct monitor ikm = {0};
+ 	char *curr, *next;
+ 	int retval;
+ 
+@@ -293,7 +351,9 @@ int ikm_list_monitors(void)
+ 		if (retval)
+ 			err_msg("ikm: error reading %d in kernel monitor, skipping\n", curr);
+ 
+-		printf("%-24s %s %s\n", ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
++		printf("%s%-*s %s %s\n", ikm.nested ? " - " : "",
++		       ikm.nested ? MAX_DA_NAME_LEN - 3 : MAX_DA_NAME_LEN,
++		       ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
+ 		curr = ++next;
+ 
+ 	} while (strlen(curr));
+@@ -343,11 +403,11 @@ ikm_event_handler(struct trace_seq *s, struct tep_record *record,
+ 	unsigned long long final_state;
+ 	unsigned long long pid;
+ 	unsigned long long id;
+-	int cpu = record->cpu;
+ 	int val;
++	bool missing_id;
+ 
+ 	if (config_has_id)
+-		tep_get_field_val(s, trace_event, "id", record, &id, 1);
++		missing_id = tep_get_field_val(s, trace_event, "id", record, &id, 1);
+ 
+ 	tep_get_common_field_val(s, trace_event, "common_pid", record, &pid, 1);
+ 
+@@ -356,12 +416,21 @@ ikm_event_handler(struct trace_seq *s, struct tep_record *record,
+ 	else if (config_my_pid && (config_my_pid == pid))
+ 		return 0;
+ 
+-	tep_print_event(trace_event->tep, s, record, "%16s-%-8d ", TEP_PRINT_COMM, TEP_PRINT_PID);
++	tep_print_event(trace_event->tep, s, record, "%16s-%-8d [%.3d] ",
++			TEP_PRINT_COMM, TEP_PRINT_PID, TEP_PRINT_CPU);
+ 
+-	trace_seq_printf(s, "[%.3d] event ", cpu);
++	if (config_is_container)
++		tep_print_event(trace_event->tep, s, record, "%s ", TEP_PRINT_NAME);
++	else
++		trace_seq_printf(s, "event ");
+ 
+-	if (config_has_id)
+-		trace_seq_printf(s, "%8llu ", id);
++	if (config_has_id) {
++		if (missing_id)
++			/* placeholder if we are dealing with a mixed-type container*/
++			trace_seq_printf(s, "        ");
++		else
++			trace_seq_printf(s, "%8llu ", id);
++	}
+ 
+ 	state = tep_get_field_raw(s, trace_event, "state", record, &val, 0);
+ 	event = tep_get_field_raw(s, trace_event, "event", record, &val, 0);
+@@ -394,9 +463,10 @@ ikm_error_handler(struct trace_seq *s, struct tep_record *record,
+ 	int cpu = record->cpu;
+ 	char *state, *event;
+ 	int val;
++	bool missing_id;
+ 
+ 	if (config_has_id)
+-		tep_get_field_val(s, trace_event, "id", record, &id, 1);
++		missing_id = tep_get_field_val(s, trace_event, "id", record, &id, 1);
+ 
+ 	tep_get_common_field_val(s, trace_event, "common_pid", record, &pid, 1);
+ 
+@@ -405,10 +475,20 @@ ikm_error_handler(struct trace_seq *s, struct tep_record *record,
+ 	else if (config_my_pid == pid)
+ 		return 0;
+ 
+-	trace_seq_printf(s, "%8lld [%03d] error ", pid, cpu);
++	trace_seq_printf(s, "%8lld [%03d] ", pid, cpu);
+ 
+-	if (config_has_id)
+-		trace_seq_printf(s, "%8llu ", id);
++	if (config_is_container)
++		tep_print_event(trace_event->tep, s, record, "%s ", TEP_PRINT_NAME);
++	else
++		trace_seq_printf(s, "error ");
 +
-+The scheduler monitor collection is a container for several monitors to model
-+the behaviour of the scheduler. Each monitor describes a specification that
-+the scheduler should follow.
++	if (config_has_id) {
++		if (missing_id)
++			/* placeholder if we are dealing with a mixed-type container*/
++			trace_seq_printf(s, "        ");
++		else
++			trace_seq_printf(s, "%8llu ", id);
++	}
+ 
+ 	state = tep_get_field_raw(s, trace_event, "state", record, &val, 0);
+ 	event = tep_get_field_raw(s, trace_event, "event", record, &val, 0);
+@@ -421,6 +501,64 @@ ikm_error_handler(struct trace_seq *s, struct tep_record *record,
+ 	return 0;
+ }
+ 
++static int ikm_enable_trace_events(char *monitor_name, struct trace_instance *inst)
++{
++	char event[MAX_DA_NAME_LEN + 7]; /* max(error_,event_) + '0' = 7 */
++	int retval;
 +
-+As a monitor container, it will enable all nested monitors and set them
-+according to OPTIONS.
-+Nevertheless nested monitors can also be activated independently both by name
-+and by specifying sched: , e.g. to enable only monitor tss you can do any of:
++	snprintf(event, sizeof(event), "event_%s", monitor_name);
++	retval = tracefs_event_enable(inst->inst, "rv",  event);
++	if (retval)
++		return -1;
 +
-+    # rv mon sched:tss
++	tep_register_event_handler(inst->tep, -1, "rv", event,
++				   ikm_event_handler, NULL);
 +
-+    # rv mon tss
++	snprintf(event, sizeof(event), "error_%s", monitor_name);
++	retval = tracefs_event_enable(inst->inst, "rv", event);
++	if (retval)
++		return -1;
 +
-+See kernel documentation for further information about this monitor:
-+<https://docs.kernel.org/trace/rv/monitor_sched.html>
++	tep_register_event_handler(inst->tep, -1, "rv", event,
++				   ikm_error_handler, NULL);
 +
-+OPTIONS
-+=======
-+
-+.. include:: common_ikm.rst
-+
-+NESTED MONITOR
-+==============
-+
-+The available nested monitors are:
-+  * scpd: schedule called with preemption disabled
-+  * snep: schedule does not enable preempt
-+  * sncid: schedule not called with interrupt disabled
-+  * snroc: set non runnable on its own context
-+  * sco: scheduling context operations
-+  * tss: task switch while scheduling
-+
-+SEE ALSO
-+========
-+
-+**rv**\(1), **rv-mon**\(1)
-+
-+Linux kernel *RV* documentation:
-+<https://www.kernel.org/doc/html/latest/trace/rv/index.html>
-+
-+AUTHOR
-+======
-+
-+Written by Gabriele Monaco <gmonaco@redhat.com>
-+
-+.. include:: common_appendix.rst
-diff --git a/Documentation/trace/rv/monitor_sched.rst b/Documentation/trace/rv/monitor_sched.rst
-new file mode 100644
-index 000000000000..24b2c62a3bc2
---- /dev/null
-+++ b/Documentation/trace/rv/monitor_sched.rst
-@@ -0,0 +1,171 @@
-+Scheduler monitors
-+==================
-+
-+- Name: sched
-+- Type: container for multiple monitors
-+- Author: Gabriele Monaco <gmonaco@redhat.com>, Daniel Bristot de Oliveira <bristot@kernel.org>
-+
-+Description
-+-----------
-+
-+Monitors describing complex systems, such as the scheduler, can easily grow to
-+the point where they are just hard to understand because of the many possible
-+state transitions.
-+Often it is possible to break such descriptions into smaller monitors,
-+sharing some or all events. Enabling those smaller monitors concurrently is,
-+in fact, testing the system as if we had one single larger monitor.
-+Splitting models into multiple specification is not only easier to
-+understand, but gives some more clues when we see errors.
-+
-+The sched monitor is a set of specifications to describe the scheduler behaviour.
-+It includes several per-cpu and per-task monitors that work independently to verify
-+different specifications the scheduler should follow.
-+
-+To make this system as straightforward as possible, sched specifications are *nested*
-+monitors, whereas sched itself is a *container*.
-+From the interface perspective, sched includes other monitors as sub-directories,
-+enabling/disabling or setting reactors to sched, propagates the change to all monitors,
-+however single monitors can be used independently as well.
-+
-+It is important that future modules are built after their container (sched, in
-+this case), otherwise the linker would not respect the order and the nesting
-+wouldn't work as expected.
-+To do so, simply add them after sched in the Makefile.
-+
-+Specifications
-+--------------
-+
-+The specifications included in sched are currently a work in progress, adapting the ones
-+defined in by Daniel Bristot in [1].
-+
-+Currently we included the following:
-+
-+Monitor tss
-+~~~~~~~~~~~
-+
-+The task switch while scheduling (tss) monitor ensures a task switch happens
-+only in scheduling context, that is inside a call to `__schedule`::
-+
-+                     |
-+                     |
-+                     v
-+                   +-----------------+
-+                   |     thread      | <+
-+                   +-----------------+  |
-+                     |                  |
-+                     | schedule_entry   | schedule_exit
-+                     v                  |
-+    sched_switch                        |
-+  +---------------                      |
-+  |                       sched         |
-+  +-------------->                     -+
-+
-+Monitor sco
-+~~~~~~~~~~~
-+
-+The scheduling context operations (sco) monitor ensures changes in a task state
-+happen only in thread context::
++	/* set if at least 1 monitor has id in case of a container */
++	config_has_id = ikm_has_id(monitor_name);
++	if (config_has_id < 0)
++		return -1;
 +
 +
-+                        |
-+                        |
-+                        v
-+    sched_set_state   +------------------+
-+  +------------------ |                  |
-+  |                   |  thread_context  |
-+  +-----------------> |                  | <+
-+                      +------------------+  |
-+                        |                   |
-+                        | schedule_entry    | schedule_exit
-+                        v                   |
-+                                            |
-+                       scheduling_context  -+
++	return 0;
++}
 +
-+Monitor snroc
-+~~~~~~~~~~~~~
++static int ikm_enable_trace_container(char *monitor_name,
++				      struct trace_instance *inst)
++{
++	DIR *dp;
++	char *abs_path, rv_path[MAX_PATH];
++	struct dirent *ep;
++	int retval = 0;
 +
-+The set non runnable on its own context (snroc) monitor ensures changes in a
-+task state happens only in the respective task's context. This is a per-task
-+monitor::
++	snprintf(rv_path, MAX_PATH, "rv/monitors/%s", monitor_name);
++	abs_path = tracefs_instance_get_file(NULL, rv_path);
++	if (!abs_path)
++		return -1;
++	dp = opendir(abs_path);
++	if (!dp)
++		goto out_free;
 +
-+                        |
-+                        |
-+                        v
-+                      +------------------+
-+                      |  other_context   | <+
-+                      +------------------+  |
-+                        |                   |
-+                        | sched_switch_in   | sched_switch_out
-+                        v                   |
-+    sched_set_state                         |
-+  +------------------                       |
-+  |                       own_context       |
-+  +----------------->                      -+
++	while (!retval && (ep = readdir(dp))) {
++		if (ep->d_type != DT_DIR || ep->d_name[0] == '.')
++			continue;
++		retval = ikm_enable_trace_events(ep->d_name, inst);
++	}
 +
-+Monitor scpd
-+~~~~~~~~~~~~
++	closedir(dp);
++out_free:
++	free(abs_path);
++	return retval;
++}
 +
-+The schedule called with preemption disabled (scpd) monitor ensures schedule is
-+called with preemption disabled::
+ /*
+  * ikm_setup_trace_instance - set up a tracing instance to collect data
+  *
+@@ -430,19 +568,12 @@ ikm_error_handler(struct trace_seq *s, struct tep_record *record,
+  */
+ static struct trace_instance *ikm_setup_trace_instance(char *monitor_name)
+ {
+-	char event[MAX_DA_NAME_LEN + 7]; /* max(error_,event_) + '0' = 7 */
+ 	struct trace_instance *inst;
+ 	int retval;
+ 
+ 	if (!config_trace)
+ 		return NULL;
+ 
+-	config_has_id = ikm_has_id(monitor_name);
+-	if (config_has_id < 0) {
+-		err_msg("ikm: failed to read monitor %s event format\n", monitor_name);
+-		goto out_err;
+-	}
+-
+ 	/* alloc data */
+ 	inst = calloc(1, sizeof(*inst));
+ 	if (!inst) {
+@@ -454,23 +585,13 @@ static struct trace_instance *ikm_setup_trace_instance(char *monitor_name)
+ 	if (retval)
+ 		goto out_free;
+ 
+-	/* enable events */
+-	snprintf(event, sizeof(event), "event_%s", monitor_name);
+-	retval = tracefs_event_enable(inst->inst, "rv",  event);
+-	if (retval)
+-		goto out_inst;
+-
+-	tep_register_event_handler(inst->tep, -1, "rv", event,
+-				   ikm_event_handler, NULL);
+-
+-	snprintf(event, sizeof(event), "error_%s", monitor_name);
+-	retval = tracefs_event_enable(inst->inst, "rv", event);
++	if (config_is_container)
++		retval = ikm_enable_trace_container(monitor_name, inst);
++	else
++		retval = ikm_enable_trace_events(monitor_name, inst);
+ 	if (retval)
+ 		goto out_inst;
+ 
+-	tep_register_event_handler(inst->tep, -1, "rv", event,
+-				   ikm_error_handler, NULL);
+-
+ 	/* ready to enable */
+ 	tracefs_trace_on(inst->inst);
+ 
+@@ -633,32 +754,41 @@ static int parse_arguments(char *monitor_name, int argc, char **argv)
+ int ikm_run_monitor(char *monitor_name, int argc, char **argv)
+ {
+ 	struct trace_instance *inst = NULL;
++	char *nested_name, full_name[2*MAX_DA_NAME_LEN];
+ 	int retval;
+ 
+-	/*
+-	 * Check if monitor exists by seeing it is enabled.
+-	 */
+-	retval = __ikm_read_enable(monitor_name);
+-	if (retval < 0)
++	nested_name = strstr(monitor_name, ":");
++	if (nested_name)
++		++nested_name;
++	else
++		nested_name = monitor_name;
 +
-+                       |
-+                       |
-+                       v
-+                     +------------------+
-+                     |    cant_sched    | <+
-+                     +------------------+  |
-+                       |                   |
-+                       | preempt_disable   | preempt_enable
-+                       v                   |
-+    schedule_entry                         |
-+    schedule_exit                          |
-+  +-----------------      can_sched        |
-+  |                                        |
-+  +---------------->                      -+
-+
-+Monitor snep
-+~~~~~~~~~~~~
-+
-+The schedule does not enable preempt (snep) monitor ensures a schedule call
-+does not enable preemption::
-+
-+                        |
-+                        |
-+                        v
-+    preempt_disable   +------------------------+
-+    preempt_enable    |                        |
-+  +------------------ | non_scheduling_context |
-+  |                   |                        |
-+  +-----------------> |                        | <+
-+                      +------------------------+  |
-+                        |                         |
-+                        | schedule_entry          | schedule_exit
-+                        v                         |
-+                                                  |
-+                          scheduling_contex      -+
-+
-+Monitor sncid
-+~~~~~~~~~~~~~
-+
-+The schedule not called with interrupt disabled (sncid) monitor ensures
-+schedule is not called with interrupt disabled::
-+
-+                       |
-+                       |
-+                       v
-+    schedule_entry   +--------------+
-+    schedule_exit    |              |
-+  +----------------- |  can_sched   |
-+  |                  |              |
-+  +----------------> |              | <+
-+                     +--------------+  |
-+                       |               |
-+                       | irq_disable   | irq_enable
-+                       v               |
-+                                       |
-+                        cant_sched    -+
-+
-+References
-+----------
-+
-+[1] - https://bristot.me/linux-task-model
++	retval = __ikm_find_monitor_name(monitor_name, full_name);
++	if (!retval)
+ 		return 0;
++	if (retval < 0) {
++		err_msg("ikm: error finding monitor %s\n", nested_name);
++		return -1;
++	}
+ 
++	retval = __ikm_read_enable(full_name);
+ 	if (retval) {
+-		err_msg("ikm: monitor %s (in-kernel) is already enabled\n", monitor_name);
++		err_msg("ikm: monitor %s (in-kernel) is already enabled\n", nested_name);
+ 		return -1;
+ 	}
+ 
+ 	/* we should be good to go */
+-	retval = parse_arguments(monitor_name, argc, argv);
++	retval = parse_arguments(full_name, argc, argv);
+ 	if (retval)
+-		ikm_usage(1, monitor_name, "ikm: failed parsing arguments");
++		ikm_usage(1, nested_name, "ikm: failed parsing arguments");
+ 
+ 	if (config_trace) {
+-		inst = ikm_setup_trace_instance(monitor_name);
++		inst = ikm_setup_trace_instance(nested_name);
+ 		if (!inst)
+ 			return -1;
+ 	}
+ 
+-	retval = ikm_enable(monitor_name);
++	retval = ikm_enable(full_name);
+ 	if (retval < 0)
+ 		goto out_free_instance;
+ 
+@@ -682,17 +812,17 @@ int ikm_run_monitor(char *monitor_name, int argc, char **argv)
+ 		sleep(1);
+ 	}
+ 
+-	ikm_disable(monitor_name);
++	ikm_disable(full_name);
+ 	ikm_destroy_trace_instance(inst);
+ 
+ 	if (config_reactor && config_initial_reactor)
+-		ikm_write_reactor(monitor_name, config_initial_reactor);
++		ikm_write_reactor(full_name, config_initial_reactor);
+ 
+ 	return 1;
+ 
+ out_free_instance:
+ 	ikm_destroy_trace_instance(inst);
+ 	if (config_reactor && config_initial_reactor)
+-		ikm_write_reactor(monitor_name, config_initial_reactor);
++		ikm_write_reactor(full_name, config_initial_reactor);
+ 	return -1;
+ }
 -- 
 2.47.2
 
