@@ -1,114 +1,77 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3BE1A841E
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4046F31E;
+	Tue, 25 Mar 2025 14:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742913769; cv=none; b=BFN1uVUmM5WN/rxFXHGMuVPQKiXZgSuS6O0mWvQdR0g4XiSYQ5rs4s00mm+j2gSVvEZovnqAW975xkNEmvpKrTSOLxRPr8ZbrfgfKfQ/yiIBkS1EwIOy9KDM2d9o2FxyPdOT1HKXpgoPmYC0mtn70qdmshu2/OfindR3z2p1gTQ=
+	t=1742913781; cv=none; b=ijHVOWDliP4KEK+xwHA7tcxHikQP+k10aol2oYHsLL0S8wVum6+royK3pT/D10w9FH3kC8UCE1s7TJlIoqgrk9CMEOTsp4Nu9RirWjUTMNBLblYdkdl7Z/CvHL0tNet92cUiHUzWqBqRdbhK9rxRAExGLoet1Z/L47QzoHjgSoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742913769; c=relaxed/simple;
-	bh=Vk7lu+k/LxGfSIe4a8nBRYhg0IP1gdWBVQeXlEMh/Wg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Yzi+APaBJzXN/8R5O5d+kFj5RbRjd6PGN88vPTkog8P/ceXffixlwmE9P/07WJpBoCZowtwIzZSEVK72y9LV8ednN64OP9s5KwsIt91IkMdsd3QpVgQFdXeEsbjH556jfTL8yzMnCHEPT2cpYPdHy5JJce2RTOTpeQcu9bqjNv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GcMuv1n0; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742913781; c=relaxed/simple;
+	bh=lmIrBROtKRFCCWLUgzAzJqkCXPp1Qx01fWTc2rvFYFA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sp5woRGd0dMJptvLlPXPPjzlieJEayB9g2o0vhkkwvlWIIqfrJxgtsjyP7In74fzx+VrOS3fhDqAeT2b2/IbpM1Ug5Gt8J9sE5PwJfNpTFj49eRFwKI3yYLVznenKS/+QBzBZ0iX5nnJHpYlsfb3MIwxh3xMLl+OBwjxghToesg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XclqaUB2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GcMuv1n0"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e60cfef9cfso8579894a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 07:42:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742913766; x=1743518566; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ifjnDb3LR3+EXG2gLg9Iuod7C3gy4u+/OHVZr6cmIUY=;
-        b=GcMuv1n0jBmx8/yiWriAONJZqLwjhLo7ZAqA4X5CkCn3Em23BWVKSsMrmOeQUrHqsg
-         hK98fcaM1KJImkmmL1eI6hFHQDdaRnBpJS+Z59Lu1/tC96ZW2sCKX1ArzdrhQdQd9U1W
-         fMYZUWy33gTDtmZxT3C1Z9cdD2vkEgDEJPYvooNDYEqk4KAYC+z5o2EURrQezHjQF0Fm
-         GYBdipKAmcTRgtDMSvxzbCffAQzaJP/4iyiDvPacIAhKaR50Tq0hD2suZH32FDXKpBZ4
-         m3NNieHupFYo59DDq3l9Z12vVXWw/ELbcTXObct1+st9n3JZ9KPaXHs/7bNDifdE6F9m
-         CQYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742913766; x=1743518566;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ifjnDb3LR3+EXG2gLg9Iuod7C3gy4u+/OHVZr6cmIUY=;
-        b=i2vs/6F0Oamn631k5Q4LtJF1uw5bLa4SIF7oNdvu2z3P8Oxy87wF0x/fNwh5EqurPo
-         DDSausB15s9BYzWlD1tNFNfTEPfh8OYS+QZHgobPnVg60GzsH+g/pbfKa1bp+Xf3t+V9
-         cQ2L+7Oo+gJ80Lyz9/stW1DaL5j7AykZqHgArqN/twtDLxSo4z2IslA8WJ3c4o894hUF
-         /iQmL57uGMkw4uGUsWz3cNpHgMeDFUwzVbbPvBBPZf8+5b9iqlB3Y0I8hUAEUKdcXqPc
-         KqcStyFtkpTIcluGxEOHV4XvqC0Vc5zyXTbaCrt1zUrQUCy3KTmSwY2aRkp78FLwyLS3
-         FJjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUpWXmn1JL8luVHsngQ97yML0lcUN1/WpeXpoRlTR4EnmJ76IqL8QcLTTph4bsFlOo0uz4ucUPJ8hIw5Tc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwB6JNDp+XmYxLuGs+AlQUbMtOGOq1TNW2/DRv6cdLZhLH9ahx
-	t0uiMLgNtL3UydWmjim24y52Zh9XrqQ+l/HMjK0O7HGcIV8nbxNtMcDxI04C
-X-Gm-Gg: ASbGncu2f4gIsd1jbr8u4paB1Z7zJA6wswrGpcj5jSNKQEQJlFvcZwZyGDkl4VH8f4y
-	pnfkXZW0T/kKg8aYAO6bt5AQeg/sRscGa15JbwZi3UxpS0wpM4CeKsJlXg0yh3XpjznNETvCREj
-	HzCNs2ZGjgdi1v8O2fJvr1B3UWLjdJ/axNsoRRKi/u6QPCTRPpjV8z8RS2Wi6CPIXkrOwOkGhYH
-	KRgz1ZQeQ5xqkzy6hVk0M1bwXLGp6OgOwebWpGniwO9SAQRYvb4rzxiYJ6MN8shvHu00T5GL/T4
-	0bT5o27ethDznPTtGhPRIiy/GNhFKSo+wL0iHp1Wgd5xcx30OQ==
-X-Google-Smtp-Source: AGHT+IGC8+tqW/1yJe1dg4+8ZsCRTfU/nKmyirtXygvgBHP4Qtsc3PrlbHnyd/E1spsS8y/6s0kKqQ==
-X-Received: by 2002:a17:907:94cb:b0:abf:7776:7e0c with SMTP id a640c23a62f3a-ac3f23e00e9mr1451400966b.33.1742913765279;
-        Tue, 25 Mar 2025 07:42:45 -0700 (PDT)
-Received: from HP-650 ([105.112.117.141])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac6964189f1sm421150366b.33.2025.03.25.07.42.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 07:42:44 -0700 (PDT)
-Date: Tue, 25 Mar 2025 15:42:33 +0100
-From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Julia Lawall <julia.lawall@inria.fr>, outreachy@lists.linux.dev
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: remove unnecessary else block after
- return
-Message-ID: <Z+LA2eeFRL+K0KCy@HP-650>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XclqaUB2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E6BFC4CEE4;
+	Tue, 25 Mar 2025 14:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742913780;
+	bh=lmIrBROtKRFCCWLUgzAzJqkCXPp1Qx01fWTc2rvFYFA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=XclqaUB2rG4UNBogPMGQDviRUqnMR2uosSLTTYSi27oo9YrVe5oVhp+gwqHPmp/x+
+	 JX30bRnWDmpfXxo2YKtHyYOcPwDSxGJJXNGVIPw9P0HbWuspbgTlVBVba36VLoZg61
+	 Ky7AX7MTjMpwM/EAGfF4jdT6ZSW2ymLZ47v8mVb6CCXC5OXi0xIDBGWagawr+WsIaF
+	 kYnlZyiqCkLPnI1ekSnv+bs92UJVBA720wtfUgCCk7wNXKmVf1cG0OIFhPt08CwHTD
+	 n1Euqd2KYe/lZ81Ac40t4sOFv9lO4zCyzw94PXBhpS8pNPd4P8rNkKYXoQqtFyDT1t
+	 tboArCEMXGg3A==
+From: Christian Brauner <brauner@kernel.org>
+To: David Howells <dhowells@redhat.com>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	netfs@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] netfs: add Paulo as maintainer and remove myself as Reviewer
+Date: Tue, 25 Mar 2025 15:42:56 +0100
+Message-ID: <20250325-badeort-biomedizin-2fa6a73ec24a@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250324-master-v1-1-e2dd2fdb15b4@kernel.org>
+References: <20250324-master-v1-1-e2dd2fdb15b4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1018; i=brauner@kernel.org; h=from:subject:message-id; bh=lmIrBROtKRFCCWLUgzAzJqkCXPp1Qx01fWTc2rvFYFA=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQ/OvAp4uUP1o4lPdKnuM89cUjz0jU9XcH3Vcj2GP85z 1KPRc2+HaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABN5tZSR4fGlv6+2WwVd0Jhw Jvi2+A/Rec06MR9S7Sf7zGadK/fnPw/DX7meV91rpLcebK5dYHWn5ucmr0c+7tovWeU/Cu72eKq 1nBEA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-The else block after the return statement is unnecessary since
-execution does not continue past the return statement.
+On Mon, 24 Mar 2025 16:11:03 -0400, Jeff Layton wrote:
+> My role has changed since I originally agreed to help with netfs, and
+> I'm no longer providing a lot of value here. Luckily, Paulo has agreed
+> to step in as co-maintainer.
+> 
+> 
 
-Remove the else block while preserving logic making the code cleaner
-and more readable.
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-reported by checkpatch:
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-WARNING: else is not generally useful after a break or return
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_mlme.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme.c b/drivers/staging/rtl8723bs/core/rtw_mlme.c
-index 5ded183aa08c..91c6a962f7e8 100644
---- a/drivers/staging/rtl8723bs/core/rtw_mlme.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_mlme.c
-@@ -2022,12 +2022,12 @@ signed int rtw_restruct_sec_ie(struct adapter *adapter, u8 *in_ie, u8 *out_ie, u
- 	}
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
 
- 	iEntry = SecIsInPMKIDList(adapter, pmlmepriv->assoc_bssid);
--	if (iEntry < 0) {
-+	if (iEntry < 0)
- 		return ielength;
--	} else {
--		if (authmode == WLAN_EID_RSN)
--			ielength = rtw_append_pmkid(adapter, iEntry, out_ie, ielength);
--	}
-+
-+	if (authmode == WLAN_EID_RSN)
-+		ielength = rtw_append_pmkid(adapter, iEntry, out_ie, ielength);
-+
- 	return ielength;
- }
-
---
-2.34.1
-
+[1/1] netfs: add Paulo as maintainer and remove myself as Reviewer
+      https://git.kernel.org/vfs/vfs/c/1243045c9448
