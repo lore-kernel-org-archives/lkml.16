@@ -1,802 +1,135 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C3625D525
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 18:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927C725E802;
+	Tue, 25 Mar 2025 18:01:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742925629; cv=none; b=MjYg/Ow3AZiPoZB0q42UZhi0h1Ocq+0z1m9z0ZUIOBfQBmdHiFNGRjT3va5+DjT4q0y6PLlm+emehzfMXJ773+gATZQzOpGoS1ams4Q1SvSQ3+CqjgLJEn363tNPTPRUiUcX5y1vgOPvEy/f/fRW7+yjmLO1AnMYp/dE/pqBB5k=
+	t=1742925710; cv=none; b=diNYqp4GwRZTuB9MilMg+rAp0toj5kSLeFPwMJSxRI7rwHOAkukq0KNb25ZZ16ypBHkQgMgb1hHfQr669R2ParrOwvspRCIF9MUA1nykhe75hMS7vLX/dTjprBmPX5/KJb5SC9sHTTQIaTzUVCoPrqfl5UG/a61Z9LenYHmzW3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742925629; c=relaxed/simple;
-	bh=s0JRgLoxxuvunaHY7JyhOI/QMjmxBJL1LP9dIRrQ/aA=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=i7s7j50iwYtOHO9mCc8yjCdU7M5q7O8kOp0oqLFRoKXLpZUKCSUeZLnxayibZwcIeDmhNJ6iQVV70P7CwZfQt/wnKLcySUMr3yq5Pr85bXcoXA9rKiSWmXgjtCB08nz7sQBOb16N4oYrPlRZUpNQtCrirBLPp5KHOWSjxr3D23U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B1sPFmya; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1742925710; c=relaxed/simple;
+	bh=qYMDHNy6x7LteSXyJourP/ZKJgw92Af9wGSpBcLqRb0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PEQrf1RqmNsMkGe93T75sEjW6rwJE+CnTeQ02wcYGD0elVNBaHaLgEXvj4RMFp9l8963YdlHbH/OShtNv9cFPCIYoc3VKASHMVJCeK3yw8TJXn6JDMoETHb54SL+3cf6bjiMeMzGkJFUx5wVA0EpQ1wqFU+kbdcA+SOnDgn6YCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nMnFCm4J; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B1sPFmya"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e549b6c54a0so8605183276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 11:00:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nMnFCm4J"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3011737dda0so7775932a91.1;
+        Tue, 25 Mar 2025 11:01:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742925624; x=1743530424; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aGWGBvU/x5QSdgsAS6s6D7Oyp5KpZml9VkSt87fTBIw=;
-        b=B1sPFmyaj/flXCAAgZD8n9GITs2Ojr7841s7VLBUpKlxZFDl5iaY8yWxUvdCHBjqao
-         z3pT3tgULS83bDbdD6dzXxWpvhTBxIwH5kdGFNm7tKVqMkXG86Bt7wfCHDPVBCAf+Nmd
-         dK8FKzij7d3A/R9IlVQ40kOxv3Eqgw8rlZ7gkNALsKAcgwZ1zAcCQeS5FHSgHQ4Xq3JK
-         v0zV2qTa3/3z4aiQ3f7M+N56RgvQF9zxS6SeST5mSyvX+4k3bgadEnmK85l67gdc0ohx
-         xXp2qZo20I5Rl4k0kkw5gJiX7K78oBKCIPvkgWBWOeeRJCSUELE03cU37czxIn5B2BSr
-         Jr+g==
+        d=gmail.com; s=20230601; t=1742925708; x=1743530508; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l8rvo4PVoMB8SeibvRLkn8Z5/SmePf793BhCpZf68DA=;
+        b=nMnFCm4JsAy6CEBi63gIjCNysHwj54CwFhwyBIeJ1lbgHK/xzxR9/H0Ts/9RQcZH3s
+         1dRzq8LKb1/U16zhEc8tVJD3WQVMVpLnG4u9eEq660lJd3bTSEvUumLr0Lp3DlFjYDPM
+         VcEKA30K5WZuxqMWr9IWEcQ8Sro/5bcMCYiwsWFL2uJV7BUzOC0u52uotwuWLUAIkeAL
+         p576gqltgaXW/K4NZ5lfb1JnbI60gBKaWMnIJOKQDrMD9Q3DImYD9qNe0oYUYT0ur00q
+         YFCDtgjg/ix9cBPo11XjBSkm62BLmdn0TrpqDGk1/MEVNQwi4vUPD4WvICd2QG+i1m4E
+         vTSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742925624; x=1743530424;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=aGWGBvU/x5QSdgsAS6s6D7Oyp5KpZml9VkSt87fTBIw=;
-        b=KMLJYOfM2WG5IQ3FgtFgs24nelzGptOIIIQcccip/l+Vg2ScZaeS0Elw08ZM//IM/2
-         CJTirf7Y8ftQN07yUBPZInWfMv2hGU0r4Ebq99PmCxKjBzyfSVquwa0XYirZfdm3q739
-         ewO06BB2HNI/HarXvsk2q5MnqT3fsX21ithMid+yjwz+6FCOwMPaBZ+bcQsn/wFU79ES
-         2vJLpRlYQGR0s5A0xUWbyhnghqpzWMGPZ6KYtqGM0nGYXwpAhjgL6HwnQhIlDCQEOvP8
-         4V4CZKhXnWfWrL3bndQtAJOQEx+DCo7xkRZ7Xf8YZvf4fasltbgQaLc5OUMWyXhwwXWj
-         gA0A==
-X-Forwarded-Encrypted: i=1; AJvYcCXOnEbwHFnsKXT46Xpacev+Rf+nZOJgBtxF2QKA4DuH6qBdwZ5YlllzfnBV9wf/oAlYfNX0poUuJpl7bXs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhsmaodYT+WVvR3lHjWMZMZ0aXmKs15mPTtqqva0syYlA4eN2F
-	1ZxTdLNzSGwVoEWsd8KJdxTtO3Nq2d57DgVMMYbEWLnDyfzkAZRCjhOx2fk6iAVPRbrTo9UznaA
-	iVp2SXQ==
-X-Google-Smtp-Source: AGHT+IFNixxubL7kOAcUmtz7Bi7pKfQcv/nNqjqZ4yl4p/TDjgdtAZhIEmSFR6Y0Cwo/R41L4OVjxUsGEzwF
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:40b3:9c02:57a5:693c])
- (user=irogers job=sendgmr) by 2002:a5b:788:0:b0:e5e:1554:41a4 with SMTP id
- 3f1490d57ef6-e66a4f9db77mr9320276.6.1742925624183; Tue, 25 Mar 2025 11:00:24
- -0700 (PDT)
-Date: Tue, 25 Mar 2025 10:52:04 -0700
-In-Reply-To: <20250325175238.50097-1-irogers@google.com>
-Message-Id: <20250325175238.50097-3-irogers@google.com>
+        d=1e100.net; s=20230601; t=1742925708; x=1743530508;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l8rvo4PVoMB8SeibvRLkn8Z5/SmePf793BhCpZf68DA=;
+        b=JVo4670Fb/0EsRkcycFS7B67O8xrvbW5iW6ucykINXnDVJATPkvdPp9/lQxZ5ANHe1
+         yT0FybEcLHlek4fOS1wsba5D7bwv7w46qSdSY+9Hy1pEBsw+Sb6wbznRYmsSgNw6zVT2
+         oLa9Wq22tjG25ryEH9W0XrfyGE4iNEk29m8mDTRiI0VR/0vdiABtlpr4rvr4/icZ2ebw
+         wKuxhMoSlPOsMmkgJ528kcOt6A3YCv6S1F0TQhrhfeP1YWoCgAUblB29csemgPaV3jDR
+         3tibj1vmcyl6xI7P6sQPs5L9BSFeZ7OpEs0SSifveiB1nU4jYxbd9bQQ1AjuHWusd8Bi
+         G3VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6alXtVZsFlFpR3ZML0ccw8GEGgkiCRZD1hIKJn6tuuryppyGavjfz7GNi7S0JcIRqcz2K6bmws2N6kB5S@vger.kernel.org, AJvYcCWETQEk9AzzhPOPdpJ82rd16KgjFz1hc+5Dau1WN9XXfqCd2JfaQpXBy0ACSh0ICbMmw8BY/6lPtfHX1g==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKd+uDfiKhA0xF7q3Nf91PrxYuz6PgssAr3CsLgOHp+hze1tmk
+	l2p/2h1oPAqK0HvJWWRjAuYQgA43YupMq4fq2JOeHLy8d+Obio29
+X-Gm-Gg: ASbGncsXohu8gT8g8CflKnzdijbb8ZQ6PCwDnugvN1t6KQ1I9r9CBQfbmp84N7pp7p5
+	XoOdkReLs+b/nsaeZIybHl0+dnl8hpT/mJnqGXig/Wjy0HVIxYXqsgwIrWSYp+pVUopS+jAiN+Q
+	hp6O6NIa2N7aKYc3cnwbpjX+o1J++MzIzMNqekzuUGZvicxKPqbJD4ewtuGzF3MRy5umiU+HCUS
+	opW+08o0y55rZlPOAWNUXk55CJVuuzahmrntVgdj3XFx02UJVL2uTP79r7j2nqUXiXsJHAV8sVZ
+	D4i4n52DPhSUd6uGY5vzri0X1/1CmN0RjiRpmpg4ZjILSIESxNznkWcyOaFljnvfiT0PgAVF5vD
+	ZD8d7EKVk/jcDEPToEMWsb0XMmm6y+0KM9FiwZI9covql/g==
+X-Google-Smtp-Source: AGHT+IH+8uJxRqDClMtWkj8EBCH2dLpeOyEIFLHzml5c1ywD55VVAPMOVPy9bwm0Qv2P2WBCDUitWw==
+X-Received: by 2002:a17:90b:5105:b0:2ea:37b4:5373 with SMTP id 98e67ed59e1d1-3030fea47e8mr30353796a91.10.1742925707548;
+        Tue, 25 Mar 2025 11:01:47 -0700 (PDT)
+Received: from codespaces-3dd663.dxrpqgqhlb3ehogrxrezr215ye.rx.internal.cloudapp.net ([20.192.21.52])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3030f5d8287sm10683796a91.15.2025.03.25.11.01.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 11:01:47 -0700 (PDT)
+From: adityagarg1208@gmail.com
+X-Google-Original-From: gargaditya08@live.com
+To: jikos@kernel.org,
+	jkosina@suse.com,
+	bentiss@kernel.org,
+	benjamin.tissoires@redhat.com
+Cc: gargaditya08@live.com,
+	kekrby@gmail.com,
+	orlandoch.dev@gmail.com,
+	admin@kodeit.net,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] HID: multitouch: Add support for Touch Bars on x86 MacBook Pros
+Date: Tue, 25 Mar 2025 17:57:23 +0000
+Message-ID: <20250325180138.15113-1-gargaditya08@live.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250325175238.50097-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Subject: [PATCH v3 02/35] perf vendor events: Update AlderlakeN events/metrics
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Update events from v1.28 to v1.29.
-Update event topics, metrics to be generated from the TMA spreadsheet
-and other small clean ups.
+From: Aditya Garg <gargaditya08@live.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../arch/x86/alderlaken/adln-metrics.json     | 54 +++++-----
- .../pmu-events/arch/x86/alderlaken/cache.json | 50 ++++++++++
- .../arch/x86/alderlaken/memory.json           | 40 ++++++++
- .../pmu-events/arch/x86/alderlaken/other.json | 98 -------------------
- .../arch/x86/alderlaken/pipeline.json         | 11 ++-
- tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
- 6 files changed, 128 insertions(+), 127 deletions(-)
+Hi all!
 
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/adln-metrics.json b/=
-tools/perf/pmu-events/arch/x86/alderlaken/adln-metrics.json
-index ad04b1e3881e..ce93648043ef 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/adln-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/adln-metrics.json
-@@ -75,7 +75,7 @@
-         "MetricExpr": "tma_core_bound",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_core_bound_group",
-         "MetricName": "tma_allocation_restriction",
--        "MetricThreshold": "(tma_allocation_restriction >0.10) & ((tma_cor=
-e_bound >0.10) & ((tma_backend_bound >0.10)))",
-+        "MetricThreshold": "tma_allocation_restriction > 0.1 & (tma_core_b=
-ound > 0.1 & tma_backend_bound > 0.1)",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -84,7 +84,7 @@
-         "MetricExpr": "TOPDOWN_BE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.CORE)"=
-,
-         "MetricGroup": "Default;TopdownL1;tma_L1_group",
-         "MetricName": "tma_backend_bound",
--        "MetricThreshold": "(tma_backend_bound >0.10)",
-+        "MetricThreshold": "tma_backend_bound > 0.1",
-         "MetricgroupNoGroup": "TopdownL1;Default",
-         "PublicDescription": "Counts the total number of issue slots that =
-were not consumed by the backend due to backend stalls. Note that uops must=
- be available for consumption in order for this event to count. If a uop is=
- not available (IQ is empty), this event will not count",
-         "ScaleUnit": "100%"
-@@ -95,7 +95,7 @@
-         "MetricExpr": "(5 * CPU_CLK_UNHALTED.CORE - (TOPDOWN_FE_BOUND.ALL =
-+ TOPDOWN_BE_BOUND.ALL + TOPDOWN_RETIRING.ALL)) / (5 * CPU_CLK_UNHALTED.COR=
-E)",
-         "MetricGroup": "Default;TopdownL1;tma_L1_group",
-         "MetricName": "tma_bad_speculation",
--        "MetricThreshold": "(tma_bad_speculation >0.15)",
-+        "MetricThreshold": "tma_bad_speculation > 0.15",
-         "MetricgroupNoGroup": "TopdownL1;Default",
-         "PublicDescription": "Counts the total number of issue slots that =
-were not consumed by the backend because allocation is stalled due to a mis=
-predicted jump or a machine clear. Only issue slots wasted due to fast nuke=
-s such as memory ordering nukes are counted. Other nukes are not accounted =
-for. Counts all issue slots blocked during this recovery window including r=
-elevant microcode flows and while uops are not yet available in the instruc=
-tion queue (IQ). Also includes the issue slots that were consumed by the ba=
-ckend but were thrown away because they were younger than the mispredict or=
- machine clear.",
-         "ScaleUnit": "100%"
-@@ -105,7 +105,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.BRANCH_DETECT / (5 * CPU_CLK_UNHAL=
-TED.CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_latency_group",
-         "MetricName": "tma_branch_detect",
--        "MetricThreshold": "(tma_branch_detect >0.05) & ((tma_ifetch_laten=
-cy >0.15) & ((tma_frontend_bound >0.20)))",
-+        "MetricThreshold": "tma_branch_detect > 0.05 & (tma_ifetch_latency=
- > 0.15 & tma_frontend_bound > 0.2)",
-         "PublicDescription": "Counts the number of issue slots that were n=
-ot delivered by the frontend due to BACLEARS, which occurs when the Branch =
-Target Buffer (BTB) prediction or lack thereof, was corrected by a later br=
-anch predictor in the frontend. Includes BACLEARS due to all branch types i=
-ncluding conditional and unconditional jumps, returns, and indirect branche=
-s.",
-         "ScaleUnit": "100%"
-     },
-@@ -114,7 +114,7 @@
-         "MetricExpr": "TOPDOWN_BAD_SPECULATION.MISPREDICT / (5 * CPU_CLK_U=
-NHALTED.CORE)",
-         "MetricGroup": "TopdownL2;tma_L2_group;tma_bad_speculation_group",
-         "MetricName": "tma_branch_mispredicts",
--        "MetricThreshold": "(tma_branch_mispredicts >0.05) & ((tma_bad_spe=
-culation >0.15))",
-+        "MetricThreshold": "tma_branch_mispredicts > 0.05 & tma_bad_specul=
-ation > 0.15",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-@@ -123,7 +123,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.BRANCH_RESTEER / (5 * CPU_CLK_UNHA=
-LTED.CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_latency_group",
-         "MetricName": "tma_branch_resteer",
--        "MetricThreshold": "(tma_branch_resteer >0.05) & ((tma_ifetch_late=
-ncy >0.15) & ((tma_frontend_bound >0.20)))",
-+        "MetricThreshold": "tma_branch_resteer > 0.05 & (tma_ifetch_latenc=
-y > 0.15 & tma_frontend_bound > 0.2)",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -131,7 +131,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.CISC / (5 * CPU_CLK_UNHALTED.CORE)=
-",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_bandwidth_group"=
-,
-         "MetricName": "tma_cisc",
--        "MetricThreshold": "(tma_cisc >0.05) & ((tma_ifetch_bandwidth >0.1=
-0) & ((tma_frontend_bound >0.20)))",
-+        "MetricThreshold": "tma_cisc > 0.05 & (tma_ifetch_bandwidth > 0.1 =
-& tma_frontend_bound > 0.2)",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -139,7 +139,7 @@
-         "MetricExpr": "TOPDOWN_BE_BOUND.ALLOC_RESTRICTIONS / (5 * CPU_CLK_=
-UNHALTED.CORE)",
-         "MetricGroup": "TopdownL2;tma_L2_group;tma_backend_bound_group",
-         "MetricName": "tma_core_bound",
--        "MetricThreshold": "(tma_core_bound >0.10) & ((tma_backend_bound >=
-0.10))",
-+        "MetricThreshold": "tma_core_bound > 0.1 & tma_backend_bound > 0.1=
-",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-@@ -148,7 +148,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.DECODE / (5 * CPU_CLK_UNHALTED.COR=
-E)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_bandwidth_group"=
-,
-         "MetricName": "tma_decode",
--        "MetricThreshold": "(tma_decode >0.05) & ((tma_ifetch_bandwidth >0=
-.10) & ((tma_frontend_bound >0.20)))",
-+        "MetricThreshold": "tma_decode > 0.05 & (tma_ifetch_bandwidth > 0.=
-1 & tma_frontend_bound > 0.2)",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -156,7 +156,7 @@
-         "MetricExpr": "TOPDOWN_BAD_SPECULATION.FASTNUKE / (5 * CPU_CLK_UNH=
-ALTED.CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_machine_clears_group",
-         "MetricName": "tma_fast_nuke",
--        "MetricThreshold": "(tma_fast_nuke >0.05) & ((tma_machine_clears >=
-0.05) & ((tma_bad_speculation >0.15)))",
-+        "MetricThreshold": "tma_fast_nuke > 0.05 & (tma_machine_clears > 0=
-.05 & tma_bad_speculation > 0.15)",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -165,7 +165,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.CORE)"=
-,
-         "MetricGroup": "Default;TopdownL1;tma_L1_group",
-         "MetricName": "tma_frontend_bound",
--        "MetricThreshold": "(tma_frontend_bound >0.20)",
-+        "MetricThreshold": "tma_frontend_bound > 0.2",
-         "MetricgroupNoGroup": "TopdownL1;Default",
-         "ScaleUnit": "100%"
-     },
-@@ -174,7 +174,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.ICACHE / (5 * CPU_CLK_UNHALTED.COR=
-E)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_latency_group",
-         "MetricName": "tma_icache_misses",
--        "MetricThreshold": "(tma_icache_misses >0.05) & ((tma_ifetch_laten=
-cy >0.15) & ((tma_frontend_bound >0.20)))",
-+        "MetricThreshold": "tma_icache_misses > 0.05 & (tma_ifetch_latency=
- > 0.15 & tma_frontend_bound > 0.2)",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -182,7 +182,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.FRONTEND_BANDWIDTH / (5 * CPU_CLK_=
-UNHALTED.CORE)",
-         "MetricGroup": "TopdownL2;tma_L2_group;tma_frontend_bound_group",
-         "MetricName": "tma_ifetch_bandwidth",
--        "MetricThreshold": "(tma_ifetch_bandwidth >0.10) & ((tma_frontend_=
-bound >0.20))",
-+        "MetricThreshold": "tma_ifetch_bandwidth > 0.1 & tma_frontend_boun=
-d > 0.2",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-@@ -191,7 +191,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.FRONTEND_LATENCY / (5 * CPU_CLK_UN=
-HALTED.CORE)",
-         "MetricGroup": "TopdownL2;tma_L2_group;tma_frontend_bound_group",
-         "MetricName": "tma_ifetch_latency",
--        "MetricThreshold": "(tma_ifetch_latency >0.15) & ((tma_frontend_bo=
-und >0.20))",
-+        "MetricThreshold": "tma_ifetch_latency > 0.15 & tma_frontend_bound=
- > 0.2",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-@@ -473,7 +473,7 @@
-         "BriefDescription": "PerfMon Event Multiplexing accuracy indicator=
-",
-         "MetricExpr": "CPU_CLK_UNHALTED.CORE_P / CPU_CLK_UNHALTED.CORE",
-         "MetricName": "tma_info_system_mux",
--        "MetricThreshold": "((tma_info_system_mux > 1.1)|(tma_info_system_=
-mux < 0.9))"
-+        "MetricThreshold": "tma_info_system_mux > 1.1 | tma_info_system_mu=
-x < 0.9"
-     },
-     {
-         "BriefDescription": "Average Frequency Utilization relative nomina=
-l frequency",
-@@ -506,7 +506,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.ITLB / (5 * CPU_CLK_UNHALTED.CORE)=
-",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_latency_group",
-         "MetricName": "tma_itlb_misses",
--        "MetricThreshold": "(tma_itlb_misses >0.05) & ((tma_ifetch_latency=
- >0.15) & ((tma_frontend_bound >0.20)))",
-+        "MetricThreshold": "tma_itlb_misses > 0.05 & (tma_ifetch_latency >=
- 0.15 & tma_frontend_bound > 0.2)",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -514,7 +514,7 @@
-         "MetricExpr": "TOPDOWN_BAD_SPECULATION.MACHINE_CLEARS / (5 * CPU_C=
-LK_UNHALTED.CORE)",
-         "MetricGroup": "TopdownL2;tma_L2_group;tma_bad_speculation_group",
-         "MetricName": "tma_machine_clears",
--        "MetricThreshold": "(tma_machine_clears >0.05) & ((tma_bad_specula=
-tion >0.15))",
-+        "MetricThreshold": "tma_machine_clears > 0.05 & tma_bad_speculatio=
-n > 0.15",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-@@ -523,7 +523,7 @@
-         "MetricExpr": "TOPDOWN_BE_BOUND.MEM_SCHEDULER / (5 * CPU_CLK_UNHAL=
-TED.CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
-         "MetricName": "tma_mem_scheduler",
--        "MetricThreshold": "(tma_mem_scheduler >0.10) & ((tma_resource_bou=
-nd >0.20) & ((tma_backend_bound >0.10)))",
-+        "MetricThreshold": "tma_mem_scheduler > 0.1 & (tma_resource_bound =
-> 0.2 & tma_backend_bound > 0.1)",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -531,7 +531,7 @@
-         "MetricExpr": "TOPDOWN_BE_BOUND.NON_MEM_SCHEDULER / (5 * CPU_CLK_U=
-NHALTED.CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
-         "MetricName": "tma_non_mem_scheduler",
--        "MetricThreshold": "(tma_non_mem_scheduler >0.10) & ((tma_resource=
-_bound >0.20) & ((tma_backend_bound >0.10)))",
-+        "MetricThreshold": "tma_non_mem_scheduler > 0.1 & (tma_resource_bo=
-und > 0.2 & tma_backend_bound > 0.1)",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -539,7 +539,7 @@
-         "MetricExpr": "TOPDOWN_BAD_SPECULATION.NUKE / (5 * CPU_CLK_UNHALTE=
-D.CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_machine_clears_group",
-         "MetricName": "tma_nuke",
--        "MetricThreshold": "(tma_nuke >0.05) & ((tma_machine_clears >0.05)=
- & ((tma_bad_speculation >0.15)))",
-+        "MetricThreshold": "tma_nuke > 0.05 & (tma_machine_clears > 0.05 &=
- tma_bad_speculation > 0.15)",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -547,7 +547,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.OTHER / (5 * CPU_CLK_UNHALTED.CORE=
-)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_bandwidth_group"=
-,
-         "MetricName": "tma_other_fb",
--        "MetricThreshold": "(tma_other_fb >0.05) & ((tma_ifetch_bandwidth =
->0.10) & ((tma_frontend_bound >0.20)))",
-+        "MetricThreshold": "tma_other_fb > 0.05 & (tma_ifetch_bandwidth > =
-0.1 & tma_frontend_bound > 0.2)",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -555,7 +555,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.PREDECODE / (5 * CPU_CLK_UNHALTED.=
-CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_bandwidth_group"=
-,
-         "MetricName": "tma_predecode",
--        "MetricThreshold": "(tma_predecode >0.05) & ((tma_ifetch_bandwidth=
- >0.10) & ((tma_frontend_bound >0.20)))",
-+        "MetricThreshold": "tma_predecode > 0.05 & (tma_ifetch_bandwidth >=
- 0.1 & tma_frontend_bound > 0.2)",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -563,7 +563,7 @@
-         "MetricExpr": "TOPDOWN_BE_BOUND.REGISTER / (5 * CPU_CLK_UNHALTED.C=
-ORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
-         "MetricName": "tma_register",
--        "MetricThreshold": "(tma_register >0.10) & ((tma_resource_bound >0=
-.20) & ((tma_backend_bound >0.10)))",
-+        "MetricThreshold": "tma_register > 0.1 & (tma_resource_bound > 0.2=
- & tma_backend_bound > 0.1)",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -571,7 +571,7 @@
-         "MetricExpr": "TOPDOWN_BE_BOUND.REORDER_BUFFER / (5 * CPU_CLK_UNHA=
-LTED.CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
-         "MetricName": "tma_reorder_buffer",
--        "MetricThreshold": "(tma_reorder_buffer >0.10) & ((tma_resource_bo=
-und >0.20) & ((tma_backend_bound >0.10)))",
-+        "MetricThreshold": "tma_reorder_buffer > 0.1 & (tma_resource_bound=
- > 0.2 & tma_backend_bound > 0.1)",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -579,7 +579,7 @@
-         "MetricExpr": "tma_backend_bound - tma_core_bound",
-         "MetricGroup": "TopdownL2;tma_L2_group;tma_backend_bound_group",
-         "MetricName": "tma_resource_bound",
--        "MetricThreshold": "(tma_resource_bound >0.20) & ((tma_backend_bou=
-nd >0.10))",
-+        "MetricThreshold": "tma_resource_bound > 0.2 & tma_backend_bound >=
- 0.1",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-@@ -589,7 +589,7 @@
-         "MetricExpr": "TOPDOWN_RETIRING.ALL / (5 * CPU_CLK_UNHALTED.CORE)"=
-,
-         "MetricGroup": "Default;TopdownL1;tma_L1_group",
-         "MetricName": "tma_retiring",
--        "MetricThreshold": "(tma_retiring >0.75)",
-+        "MetricThreshold": "tma_retiring > 0.75",
-         "MetricgroupNoGroup": "TopdownL1;Default",
-         "ScaleUnit": "100%"
-     },
-@@ -598,7 +598,7 @@
-         "MetricExpr": "TOPDOWN_BE_BOUND.SERIALIZATION / (5 * CPU_CLK_UNHAL=
-TED.CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
-         "MetricName": "tma_serialization",
--        "MetricThreshold": "(tma_serialization >0.10) & ((tma_resource_bou=
-nd >0.20) & ((tma_backend_bound >0.10)))",
-+        "MetricThreshold": "tma_serialization > 0.1 & (tma_resource_bound =
-> 0.2 & tma_backend_bound > 0.1)",
-         "ScaleUnit": "100%"
-     }
- ]
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/cache.json b/tools/p=
-erf/pmu-events/arch/x86/alderlaken/cache.json
-index fd9ed58c2f90..605d56311dfc 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
-@@ -396,6 +396,26 @@
-         "SampleAfterValue": "1000003",
-         "UMask": "0x6"
-     },
-+    {
-+        "BriefDescription": "Counts modified writebacks from L1 cache and =
-L2 cache that have any type of response.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.COREWB_M.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10008",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that have any type of response.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_CODE_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10004",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that were supplied by the L3 cache.",
-         "Counter": "0,1,2,3,4,5",
-@@ -436,6 +456,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand data reads that have any type o=
-f response.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand data reads that were supplied b=
-y the L3 cache.",
-         "Counter": "0,1,2,3,4,5",
-@@ -476,6 +506,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that have any type o=
-f response.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10002",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
-y the L3 cache.",
-         "Counter": "0,1,2,3,4,5",
-@@ -516,6 +556,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts L1 data cache software prefetches whic=
-h include T0/T1/T2 and NTA (except PREFETCHW) that have any type of respons=
-e.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.SWPF_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x14000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts L1 data cache software prefetches whic=
-h include T0/T1/T2 and NTA (except PREFETCHW) that were supplied by the L3 =
-cache.",
-         "Counter": "0,1,2,3,4,5",
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/memory.json b/tools/=
-perf/pmu-events/arch/x86/alderlaken/memory.json
-index 3b46b048dfb2..06eca0a45c18 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/memory.json
-@@ -56,6 +56,16 @@
-         "SampleAfterValue": "20003",
-         "UMask": "0x2"
-     },
-+    {
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that were supplied by DRAM.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_CODE_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x784000004",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that were not supplied by the L3 cache.",
-         "Counter": "0,1,2,3,4,5",
-@@ -66,6 +76,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand data reads that were supplied b=
-y DRAM.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_DATA_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x784000001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand data reads that were not suppli=
-ed by the L3 cache.",
-         "Counter": "0,1,2,3,4,5",
-@@ -86,6 +106,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
-y DRAM.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_RFO.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x784000002",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were not suppli=
-ed by the L3 cache.",
-         "Counter": "0,1,2,3,4,5",
-@@ -106,6 +136,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts L1 data cache software prefetches whic=
-h include T0/T1/T2 and NTA (except PREFETCHW) that were supplied by DRAM.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.SWPF_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x784004000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts L1 data cache software prefetches whic=
-h include T0/T1/T2 and NTA (except PREFETCHW) that were not supplied by the=
- L3 cache.",
-         "Counter": "0,1,2,3,4,5",
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/other.json b/tools/p=
-erf/pmu-events/arch/x86/alderlaken/other.json
-index f8c21b7f8f40..0ebcb3e20e1d 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/other.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/other.json
-@@ -8,76 +8,6 @@
-         "SampleAfterValue": "1000003",
-         "UMask": "0x1"
-     },
--    {
--        "BriefDescription": "Counts modified writebacks from L1 cache and =
-L2 cache that have any type of response.",
--        "Counter": "0,1,2,3,4,5",
--        "EventCode": "0xB7",
--        "EventName": "OCR.COREWB_M.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10008",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that have any type of response.",
--        "Counter": "0,1,2,3,4,5",
--        "EventCode": "0xB7",
--        "EventName": "OCR.DEMAND_CODE_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10004",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that were supplied by DRAM.",
--        "Counter": "0,1,2,3,4,5",
--        "EventCode": "0xB7",
--        "EventName": "OCR.DEMAND_CODE_RD.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x784000004",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand data reads that have any type o=
-f response.",
--        "Counter": "0,1,2,3,4,5",
--        "EventCode": "0xB7",
--        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand data reads that were supplied b=
-y DRAM.",
--        "Counter": "0,1,2,3,4,5",
--        "EventCode": "0xB7",
--        "EventName": "OCR.DEMAND_DATA_RD.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x784000001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that have any type o=
-f response.",
--        "Counter": "0,1,2,3,4,5",
--        "EventCode": "0xB7",
--        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10002",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
-y DRAM.",
--        "Counter": "0,1,2,3,4,5",
--        "EventCode": "0xB7",
--        "EventName": "OCR.DEMAND_RFO.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x784000002",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
-     {
-         "BriefDescription": "Counts streaming stores which modify a full 6=
-4 byte cacheline that have any type of response.",
-         "Counter": "0,1,2,3,4,5",
-@@ -107,33 +37,5 @@
-         "MSRValue": "0x10800",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts L1 data cache software prefetches whic=
-h include T0/T1/T2 and NTA (except PREFETCHW) that have any type of respons=
-e.",
--        "Counter": "0,1,2,3,4,5",
--        "EventCode": "0xB7",
--        "EventName": "OCR.SWPF_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x14000",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts L1 data cache software prefetches whic=
-h include T0/T1/T2 and NTA (except PREFETCHW) that were supplied by DRAM.",
--        "Counter": "0,1,2,3,4,5",
--        "EventCode": "0xB7",
--        "EventName": "OCR.SWPF_RD.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x784004000",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts the number of issue slots in a UMWAIT =
-or TPAUSE instruction where no uop issues due to the instruction putting th=
-e CPU into the C0.1 activity state. For Tremont, UMWAIT and TPAUSE will onl=
-y put the CPU into C0.1 activity state (not C0.2 activity state)",
--        "Counter": "0,1,2,3,4,5",
--        "EventCode": "0x75",
--        "EventName": "SERIALIZATION.C01_MS_SCB",
--        "SampleAfterValue": "200003",
--        "UMask": "0x4"
-     }
- ]
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json b/tool=
-s/perf/pmu-events/arch/x86/alderlaken/pipeline.json
-index 713ebc21cec0..0cc8cd203fc3 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
-@@ -399,8 +399,9 @@
-         "UMask": "0x20"
-     },
-     {
--        "BriefDescription": "Counts the number of machine clears that flus=
-h the pipeline and restart the machine with the use of microcode due to SMC=
-, MEMORY_ORDERING, FP_ASSISTS, PAGE_FAULT, DISAMBIGUATION, and FPC_VIRTUAL_=
-TRAP.",
-+        "BriefDescription": "This event is deprecated.",
-         "Counter": "0,1,2,3,4,5",
-+        "Deprecated": "1",
-         "EventCode": "0xc3",
-         "EventName": "MACHINE_CLEARS.SLOW",
-         "SampleAfterValue": "20003",
-@@ -423,6 +424,14 @@
-         "SampleAfterValue": "1000003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts the number of issue slots in a UMWAIT =
-or TPAUSE instruction where no uop issues due to the instruction putting th=
-e CPU into the C0.1 activity state. For Tremont, UMWAIT and TPAUSE will onl=
-y put the CPU into C0.1 activity state (not C0.2 activity state)",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0x75",
-+        "EventName": "SERIALIZATION.C01_MS_SCB",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0x4"
-+    },
-     {
-         "BriefDescription": "Counts the number of issue slots not consumed=
- by the backend due to a micro-sequencer (MS) scoreboard, which stalls the =
-front-end from issuing from the UROM until a specified older uop retires.",
-         "Counter": "0,1,2,3,4,5",
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
-ents/arch/x86/mapfile.csv
-index 881f418137fd..0ef31b65f8df 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -1,6 +1,6 @@
- Family-model,Version,Filename,EventType
- GenuineIntel-6-(97|9A|B7|BA|BF),v1.29,alderlake,core
--GenuineIntel-6-BE,v1.28,alderlaken,core
-+GenuineIntel-6-BE,v1.29,alderlaken,core
- GenuineIntel-6-C[56],v1.07,arrowlake,core
- GenuineIntel-6-(1C|26|27|35|36),v5,bonnell,core
- GenuineIntel-6-(3D|47),v30,broadwell,core
---=20
-2.49.0.395.g12beb8f557-goog
+This patch series aims to improve the Touch Bar support for x86 Macs.
+
+Recently, the hid-appletb-kbd and hid-appletb-bl drivers were upstreamed
+into the Linux kernel [1]. They enabled the Touch Bar to display a
+predefined set of media and function keys, exactly the same it does on
+Windows Bootcamp.
+
+Now we are about to get support added for the DRM mode of the Touch Bar
+as well [2].
+
+The DRM mode enables the Touch Bar to act as a second display,
+just like macOS. So now you can add a widget, put a clock or anything
+else on the Touch Bar as long as you can develop a daemon.
+
+Now via these patches, in the DRM mode, we can use the Touch Bar as a
+touch screen. The Touch Bar seems to be not compliant with the HID spec,
+thus via these patches several tweaks have been done under the cover of
+a single quirk, MT_QUIRK_APPLE_TOUCHBAR.
+
+For the case of T2 Macs, apple-bce [3], the driver for the T2 Security
+Chip is also needed for all the peripherals, including the Touch Bar
+to work. It is still WIP, and will be subsequently sent later to the
+appropriate tree. Till then, I'll suggest for get the driver from [3],
+or more preferably, get Linux support from https://t2linux.org/.
+
+Cheers
+Aditya
+
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git/log/?h=for-6.15/apple
+[2]: https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/0670c2f56e45b3f4541985a9ebe06d04308e43b0
+[3]: https://github.com/t2linux/apple-bce-drv
+
+Kerem Karabay (5):
+  HID: multitouch: Get the contact ID from HID_DG_TRANSDUCER_INDEX
+    fields in case of Apple Touch Bar
+  HID: multitouch: support getting the tip state from HID_DG_TOUCH
+    fields in Apple Touch Bar
+  HID: multitouch: take cls->maxcontacts into account for Apple Touch
+    Bar even without a HID_DG_CONTACTMAX field
+  HID: multitouch: specify that Apple Touch Bar is direct
+  HID: multitouch: add device ID for Apple Touch Bar
+
+ drivers/hid/Kconfig          |  1 +
+ drivers/hid/hid-multitouch.c | 62 +++++++++++++++++++++++++++++++++---
+ 2 files changed, 58 insertions(+), 5 deletions(-)
+
+-- 
+2.49.0
 
