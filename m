@@ -1,96 +1,117 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811771ADC86
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 18:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C291ADC86;
+	Tue, 25 Mar 2025 18:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742928552; cv=none; b=SrOqwKqRe/q507y8uB9pgNUU0vnDokbPQYYitEVd0zOEKqg06k6iBGOFiqPlgTM4ePRb9blcwjI/fHQ4n1uCvNGMJSFza94qysunCC5Z1a6GnrfKo6ZZsEsrcu2Aqjzwg7OPNvzkgNvexmQuH05SU/7W4L+pU9DXP+mQi/rGiOk=
+	t=1742928564; cv=none; b=KlxjQOU+RrVrJoyrIyQeYMu8VjtVxeDvqPMCukSc/nLlKAlP6kH71xLlVbdW3pstcVLpqIqZZOB6vJFpnQK5i/hgxJFE15naoSf+usiNs12FHmFC/qDXYjR2kDCBx4oNR0F0Kpd0Am10tfWvRbz9QIXJpL0RWC8DiX/PIhTFVZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742928552; c=relaxed/simple;
-	bh=6AKG+4MIU3nFkzhQI1KPFHDmJM4sAAvKCqzFZ2pchRM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=aAayKH7s36L6Jxy1oNJkjUpbUKt6IOfX/N/+u7hYVyxDtAttLYXwp3pxYvo7PoNSbwRp9UaxHiv+9BFa4XV6G+HUcS7+t3IpQ4iPDrXlF+AwJxbEaEvSJv1zUNvQDFf55DZcEtXrJfuXcPg6/CylVyPkecIDaMAPUGZsmqwyxP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4EYSlkYM; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--cmllamas.bounces.google.com
+	s=arc-20240116; t=1742928564; c=relaxed/simple;
+	bh=dMnezC4ayMJ3IPQofFQCbhpFIaP/JJW0J5RFebyBYdI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ROWn3xzAhuD4bqIvbyJ8z37JK49GH7QxJ8Eq7nSW2C2nK5mrzpUK+5CT+5xYWmjk0z46t3u+0YWuarbtZ0P6VEqvpMG9SEiEoZUDeGGG4q9mfXO1Fpn0rU91yPApMQgHXg9Mq3qmtiGWQYmDe8j1CQbNpOHfbmi7Huh3ElwoSd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r9UKjknP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4EYSlkYM"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff78bd3026so10189129a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 11:49:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742928550; x=1743533350; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+GYzbbMon8zBFYnMfBByCIqb+0VFAaEep9NdHw4CNu8=;
-        b=4EYSlkYM2zHNZ7lYAjytaJNEMkXEMarq568obbxlDzWgGhYw1ENd9KHYAdzDO4eZOH
-         0sJU+cAfUvnptluNFYkQlUv/RLSlbEUwYOs1CXxv5eti85XxvsENNv9Z7dI9nU7K+Sbr
-         AicBI6jq9u9tQbarHeBaCXzOA/7MexU7CWJ5W+T0S7YWXzK9Ik0XNXgqQFHDbmW1Mqkf
-         A7Ko3mNOfDR/VQe0cQnCFzsE0VMsu9WXHj9EYey3O+xd8OUYzDzwdFsso6QV22dBIa3U
-         FdK4I+V9K2rrREbQTXUO8npkuVH4l02Fk4jP4Td/nQg7jCLgOIq8C3Ftmc4npnmF02Xq
-         3gvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742928550; x=1743533350;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+GYzbbMon8zBFYnMfBByCIqb+0VFAaEep9NdHw4CNu8=;
-        b=u9BPCUu9va/y+o7RNUyRWINo2Wmhx2yAsggwpy1m53pH6SQ+o0zE8A85oL/PQSBQAA
-         7iSQEY6SMEMePN+TJqBrH3QbtnCUjDlVkZwIpo5qXFOeQUpPSs3m+wkY3vXipCCfZnuj
-         fVGs0Q0hga/4cL5Atvm+TzqkC+ETGhyzXIrcks8aAkkzB3nWmzdY8sHaelATFJ35V/XC
-         v4bdP1MArI2nuryyJfSf1QzeDkbGdGQH2LE3iZ7FDActev93BE9gPSyfXCoyqFHsjKxW
-         DR2TrV5+d91cuH76bAoDZW25YGLTTc+l6VpykGBesNMEvBp2y/UNpeAjN8l6LOJuZq/B
-         mgRg==
-X-Gm-Message-State: AOJu0YyPQxC/QSoC2LZbpKk8HWOo2QBDwaDdxK7GMMSqP3S+0psRQdLm
-	Ex7mgd/GYrG/qbbu5/4DQeD727GuptM8Hbbf8vJw5cf8rNCtlIJKLHKchV5W9QY8mDjObPVjVvX
-	wRoTs5pVqOg==
-X-Google-Smtp-Source: AGHT+IFLLKVhdVugqD5pcE0y+fL5jXQTQK+4ePWC9LHMiExN+AlvX4zavqO6tq0PKuWuySMriKun4+wfAAS6zQ==
-X-Received: from pjm7.prod.google.com ([2002:a17:90b:2fc7:b0:2f8:49ad:406c])
- (user=cmllamas job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:134c:b0:2ff:53ad:a0f4 with SMTP id 98e67ed59e1d1-3030fe93f0dmr35266909a91.12.1742928549694;
- Tue, 25 Mar 2025 11:49:09 -0700 (PDT)
-Date: Tue, 25 Mar 2025 18:49:00 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r9UKjknP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6957FC4CEE8;
+	Tue, 25 Mar 2025 18:49:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742928564;
+	bh=dMnezC4ayMJ3IPQofFQCbhpFIaP/JJW0J5RFebyBYdI=;
+	h=From:Subject:Date:To:Cc:From;
+	b=r9UKjknPytbiyC8ao3vIlO3IHvjjOX8QhbrJNZvHHIJ508ceweEL2zWK2U35kW0VV
+	 QhQEW0kyHmJckX3j0r/aYdt9SO1KAMZlS/j9XwzwPKimMQ+DNRZpdzxzgrGzr/997x
+	 6uoDcrz0Ms52ftX+bquYJNW8H1/1aq0Gz5Jiq3JK4CPIygImx4vv70Gu+7d633tGLE
+	 Hx9TxrWedwBpHXXO/kBzeomkjBC2bjV1wf0HwWDPoZbFeIOTKkzyyn7L592vP+wKYT
+	 BXjxsDR66+SDGvPf6l9oly0m9NkSIa49zhGK/OWxMCpVtw5/F0ocJGvwaPDCtzIySZ
+	 c6S5x7vGvIqXg==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH 6.1 00/12] KVM: arm64: Backport of SVE fixes to v6.1
+Date: Tue, 25 Mar 2025 18:48:14 +0000
+Message-Id: <20250325-stable-sve-6-1-v1-0-83259d427d84@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250325184902.587138-1-cmllamas@google.com>
-Subject: [PATCH] binder: fix offset calculation in debug log
-From: Carlos Llamas <cmllamas@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Christian Brauner <brauner@kernel.org>, 
-	Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Alice Ryhl <aliceryhl@google.com>
-Cc: linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	"Tiffany Y. Yang" <ynaffit@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAG/64mcC/x3MSwqAMAwA0atI1kbaSCt6FXHhJ2pAVBopgnh3i
+ 8u3mHlAOQgrNNkDgaOoHHuCzTMY135fGGVKBjLkDFGFevXDxqiR0aNFU7nRUu2G0peQojPwLPc
+ /bMEXFrr3/QAySG3WZQAAAA==
+X-Change-ID: 20250227-stable-sve-6-1-075c1295b363
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+ James Morse <james.morse@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Oliver Upton <oliver.upton@linux.dev>, Oleg Nesterov <oleg@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ kvmarm@lists.linux.dev, kvmarm@lists.cs.columbia.edu, 
+ Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Eric Auger <eauger@redhat.com>, Wilco Dijkstra <wilco.dijkstra@arm.com>, 
+ Eric Auger <eric.auger@redhat.com>, Florian Weimer <fweimer@redhat.com>, 
+ Fuad Tabba <tabba@google.com>, Jeremy Linton <jeremy.linton@arm.com>, 
+ Paolo Bonzini <pbonzini@redhat.com>, James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.15-dev-1b0d6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2157; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=dMnezC4ayMJ3IPQofFQCbhpFIaP/JJW0J5RFebyBYdI=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBn4vqmCPwzcGSfTLOgeQzSiZW0IL4tQ4gwy2MUcCBh
+ H1gZPsqJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZ+L6pgAKCRAk1otyXVSH0Nb/B/
+ 9HIGw2v6yKXfbS3mLuw+X2L259feQoMEIwZ85e0Cjq9BUN4+xY/sFb1ruNIZC3voVU3DiSdqEes/yV
+ FUZGE1lcMQCHwiK9XAT5Bwv8xsMZWKPjjN5n6C/o78Uutl2Wm0H4DK7B2XmifIeFX5VXmR/Ul/HWHq
+ maG/Aq34b7vfa05OkX3JpGME3uIPlenoVStzJU5EuLJG+lnhRHpS0qOACLvHSvT0Js9Nd0WkrjjDuw
+ N/bclxtZP/mJbdTEE+gVt6ETuDfgBR0Bl5BPYnBDOSq7CdpHTfzdyt4PE/R0kRhA8PXrIMKdT/Ivol
+ mwY1eD8ShrnljyxTC71ePoBLmRM2Oe
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-The vma start address should be substracted from the buffer's user data
-address and not the other way around.
+This series backports some recent fixes for SVE/KVM interactions from
+Mark Rutland to v6.1.
 
-Cc: Tiffany Y. Yang <ynaffit@google.com>
-Cc: stable@vger.kernel.org
-Fixes: 162c79731448 ("binder: avoid user addresses in debug logs")
-Signed-off-by: Carlos Llamas <cmllamas@google.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/android/binder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Fuad Tabba (1):
+      KVM: arm64: Calculate cptr_el2 traps on activating traps
 
-diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index 76052006bd87..5fc2c8ee61b1 100644
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -6373,7 +6373,7 @@ static void print_binder_transaction_ilocked(struct seq_file *m,
- 		seq_printf(m, " node %d", buffer->target_node->debug_id);
- 	seq_printf(m, " size %zd:%zd offset %lx\n",
- 		   buffer->data_size, buffer->offsets_size,
--		   proc->alloc.vm_start - buffer->user_data);
-+		   buffer->user_data - proc->alloc.vm_start);
- }
- 
- static void print_binder_work_ilocked(struct seq_file *m,
+Mark Brown (4):
+      KVM: arm64: Discard any SVE state when entering KVM guests
+      arm64/fpsimd: Track the saved FPSIMD state type separately to TIF_SVE
+      arm64/fpsimd: Have KVM explicitly say which FP registers to save
+      arm64/fpsimd: Stop using TIF_SVE to manage register saving in KVM
+
+Mark Rutland (7):
+      KVM: arm64: Unconditionally save+flush host FPSIMD/SVE/SME state
+      KVM: arm64: Remove host FPSIMD saving for non-protected KVM
+      KVM: arm64: Remove VHE host restore of CPACR_EL1.ZEN
+      KVM: arm64: Remove VHE host restore of CPACR_EL1.SMEN
+      KVM: arm64: Refactor exit handlers
+      KVM: arm64: Mark some header functions as inline
+      KVM: arm64: Eagerly switch ZCR_EL{1,2}
+
+ arch/arm64/include/asm/fpsimd.h         |   4 +-
+ arch/arm64/include/asm/kvm_host.h       |  19 +++---
+ arch/arm64/include/asm/kvm_hyp.h        |   1 +
+ arch/arm64/include/asm/processor.h      |   7 +++
+ arch/arm64/kernel/fpsimd.c              |  69 +++++++++++++++------
+ arch/arm64/kernel/process.c             |   2 +
+ arch/arm64/kernel/ptrace.c              |   3 +
+ arch/arm64/kernel/signal.c              |   7 ++-
+ arch/arm64/kvm/arm.c                    |   1 -
+ arch/arm64/kvm/fpsimd.c                 |  92 ++++++++-------------------
+ arch/arm64/kvm/hyp/entry.S              |   5 ++
+ arch/arm64/kvm/hyp/include/hyp/switch.h | 106 +++++++++++++++++++++-----------
+ arch/arm64/kvm/hyp/nvhe/hyp-main.c      |   8 +--
+ arch/arm64/kvm/hyp/nvhe/pkvm.c          |  17 +----
+ arch/arm64/kvm/hyp/nvhe/switch.c        |  91 +++++++++++++++++----------
+ arch/arm64/kvm/hyp/vhe/switch.c         |  12 ++--
+ arch/arm64/kvm/reset.c                  |   3 +
+ 17 files changed, 259 insertions(+), 188 deletions(-)
+---
+base-commit: 344a09659766c83c42cdd4943318deabde89a9c3
+change-id: 20250227-stable-sve-6-1-075c1295b363
+
+Best regards,
 -- 
-2.49.0.395.g12beb8f557-goog
+Mark Brown <broonie@kernel.org>
 
