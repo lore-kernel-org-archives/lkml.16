@@ -1,852 +1,370 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from esa4.hgst.iphmx.com (esa4.hgst.iphmx.com [216.71.154.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B79253F32;
-	Tue, 25 Mar 2025 09:05:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742893544; cv=none; b=YQ9V2KrvlK60cjtzMtu68/rudoxpOuS3aLn7/sWR0o9rFnAGL2aTJYL7YnXrLANneQw6oYg8nCKOmXCgEB15kUQx1imSQzjrq+Vs0LfE6BDTcukk+xiLZEL0aP9ZRHrr3zrK/ItD+AdwKGqGXX6qP7XIIP/BgM/CT9NGf1puf3c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742893544; c=relaxed/simple;
-	bh=xriHIAK2H+XTy7mr5rQRn247vUAj2q+XGOvETsd/upU=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=lb8xF9+PXiBqb2XSn9ybXbDmEJjw1QbgcgmPb0NDcbQuTxffPGs6Kn1tXWX6+ge8U1U+xHmPGhPvn8IVrlm/5mZ8u3RKQtn7gH/USPsUT7GJj43TyXrNWmZJKR7D7qTGFGh6TqTV1lk9VjZ4ZFEiWtSllBN+OqZPLctX+QSV1Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Qm3OF0On; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CDUCav4+; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09EF1E9B06;
+	Tue, 25 Mar 2025 09:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.154.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742893861; cv=fail; b=Ddu7VquJUX2fQ9GHsmEBqymLyZinsgNdkC9yV9WFOR530cfmtvC6pw9ZTZtg5KIeY89/bckjsURj1siwBRcVNE1JhEM5B2dTBHNTu3K0ZpDA2VIaRuX3Vb9OC8Zs+uTnONm9iMl6ysZPG+0KhxVhmLdYxSekRI0R8wG8MMtCqj0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742893861; c=relaxed/simple;
+	bh=3CiKhhY7y1fQxI69TonjZi1xGok0dDWMT5DvMXnOByU=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=hY8KSupODNqwlhrZoASFImCR/I9OvgSELMr8e9iL66keH0w37uhRdP01+v5gjPHWdRw57yYSJ1pEHkcHfh92Qpn1bnxtVcwGF7xttrE8WrksJx86KeHyQoItzct25FWMtyualCcE1R5XTDNt/gYwrYkp847db0qZ2twbPg8xz6o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=mf482or3; dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b=Whq50MxL; arc=fail smtp.client-ip=216.71.154.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Qm3OF0On";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CDUCav4+"
-Date: Tue, 25 Mar 2025 09:05:38 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742893539;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T90kYuiVI0PBCb/UxoyxLj75w5G4y1KGa0fwYjt8LfA=;
-	b=Qm3OF0Ona+qiHTeub5ZlWpRpEpxss4CUTLDwOs0LtbWE7U5F5TFZLUGclTXTmpjniKy8w+
-	l21Ztx1T3lEaeyqx2SNmlG9BcpXUk9cEJSEiJo94A3+IGrYrukIpavrZxLHWMEMbcibkxL
-	TsU9cNc+DRJV1tgVhBexg+Hyj/3RJAVSen7Uww0fKQpef2de1sHbff9TyS9nWVufMdQ5Nm
-	byIjBTKQBrORTtzMqKIPEmt0WRaUUDRdB6g7Quw1F3tR8fmruq/NxxfDDrTz1xpx1IAKop
-	J1PANyNpFapHrOAkKj6ei5e6CrqveXTmoNpqFQHru2k6/gEINuImCi4BmgyC0A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742893539;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T90kYuiVI0PBCb/UxoyxLj75w5G4y1KGa0fwYjt8LfA=;
-	b=CDUCav4++7cXF8TeClOdiTkv8oQF3rpwWEWkuYhq6mWu1I0w399f5zQcSflUVPk0H2VR/d
-	ZlL/h63bNf465GBQ==
-From: "tip-bot2 for Ahmed S. Darwish" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/cpu] tools/x86/kcpuid: Update bitfields to x86-cpuid-db v2.0
-Cc: "Ahmed S. Darwish" <darwi@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250324142042.29010-17-darwi@linutronix.de>
-References: <20250324142042.29010-17-darwi@linutronix.de>
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="mf482or3";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="Whq50MxL"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1742893859; x=1774429859;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=3CiKhhY7y1fQxI69TonjZi1xGok0dDWMT5DvMXnOByU=;
+  b=mf482or3Z1bXxDl9AGlK97p3YJ5L3U2T7Mb1S+Y5XQQIe/lVxBcNQFeL
+   /uIWAruXXC2NCVKE9AyuA/2YVkh12nrZCMjg59PywOn1Wz02h0Z7psyAn
+   eXgW5X89ZOhIOyU3+b0ZsD//gLR4iFMp63bGwo5wOtvOpfOBL135JOlmD
+   mjYCy9gu08447ci3KUhf9YDaX/B9ENeSq4mTiYT1XcvvTAlC8MpTlk0N+
+   Fewew3/DNc2V5Vhmj4uQw7+lTcF7KLfqOnpc5TcFqYMcJYBY4Y7JFd95I
+   uTtshJUNFUQffEiBxpeSIfP5UU88PGXbaQ6vW5WMDEUY6HwfDiSyDO/By
+   A==;
+X-CSE-ConnectionGUID: qGcy6+Y0TGyJwMLzSXEMjA==
+X-CSE-MsgGUID: bgumOX34S1WF5PIQgJAvTA==
+X-IronPort-AV: E=Sophos;i="6.14,274,1736784000"; 
+   d="scan'208";a="59856590"
+Received: from mail-westcentralusazlp17011030.outbound.protection.outlook.com (HELO CY4PR02CU008.outbound.protection.outlook.com) ([40.93.6.30])
+  by ob1.hgst.iphmx.com with ESMTP; 25 Mar 2025 17:10:51 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uTtjaNvhw8cMPQdhoxjX3bOufnUe3VQCi1RMel7+gULzflaf1Jee8t0Mlxd8T5VebVKHhd2R2hFdG1a9efV46mAxoSOEENje8jkBEq6k3msZL1Dz8nDhuQgWyk22lSb7dPKHkHvnMRCMl8xZSyTV1yjdaUZNouWKJXE+2RdpWd+xxEJGdL9qIucQcda2gqIepkIt/V5qMGYMTFVOsdI9FyqRWhFuPaNW1tzZle4kxgTPWg75M48dCcJJhSZY65WUagJ/Q+qsQxFbMJsGx7N734AJ8MOswTh5T/wn9rQ22sLOuiJyn6wrtV8uXo2RrJDIkooW6wDwy33K0NdA24UvdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5RkLKmZy9ToegkBxmeyKqKmZ4IjOFtqqinxCYAAMmc8=;
+ b=IXthmz3uuRfOAt1IDIoYcmF9Bh7XaywWWIsPi5coL4+oWosNPpqCdXVfXxYKNCjuJtbf3eqhCD5UYl+mlv/PVL4+1xzF6dnNUPAgn5RjOejqXIVdRc3ByWu1v+ZO4F/F0re6PtqAlZG+xJ26+TZHt08AxIWFzD6T+jTHW3DeDYf0Vq76O8f5T/K2idZ6PNJZAgJzi9QBV3gZ64Gw7LRZTq2pUZIo/rm4CNKjF+Jf381VQhbDWC47IDwFkpZzKIgtqSPSZ8dnXvfQQTpQv5bU4S1hBNMQvYWQ//zUlig3Xa62trsjDeGPMkNQeOOApNMgqgx7I2uDCtr5BRYeKkfbWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5RkLKmZy9ToegkBxmeyKqKmZ4IjOFtqqinxCYAAMmc8=;
+ b=Whq50MxLDo00EC22XmZgnR9AXZTzkJKnZccguLt4DFgGhvhH67uE5tbiBhPfo0haOR2TLTREb7DZfP5nHFTz/EWnRGiDFeTLc6SDe0PWKVD5bIaSui76HQs/K/UCMkkUg0JTToYZi7PBs5vSdUFi0KRlDwHGfC9KGou7jQNQ6w0=
+Received: from PH7PR04MB8755.namprd04.prod.outlook.com (2603:10b6:510:236::8)
+ by CO1PR04MB9580.namprd04.prod.outlook.com (2603:10b6:303:26e::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Tue, 25 Mar
+ 2025 09:10:50 +0000
+Received: from PH7PR04MB8755.namprd04.prod.outlook.com
+ ([fe80::4372:e8cb:5341:9a9b]) by PH7PR04MB8755.namprd04.prod.outlook.com
+ ([fe80::4372:e8cb:5341:9a9b%7]) with mapi id 15.20.8534.040; Tue, 25 Mar 2025
+ 09:10:50 +0000
+From: Hans Holmberg <Hans.Holmberg@wdc.com>
+To: Carlos Maiolino <cem@kernel.org>, Dave Chinner <david@fromorbit.com>,
+	"Darrick J . Wong" <djwong@kernel.org>
+CC: hch <hch@lst.de>, "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans Holmberg
+	<Hans.Holmberg@wdc.com>
+Subject: [PATCH] xfs: add tunable threshold parameter for triggering zone GC
+Thread-Topic: [PATCH] xfs: add tunable threshold parameter for triggering zone
+ GC
+Thread-Index: AQHbnWXN7wqBus3oD0yp1n74cUSC0Q==
+Date: Tue, 25 Mar 2025 09:10:49 +0000
+Message-ID: <20250325091007.24070-1-hans.holmberg@wdc.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mailer: git-send-email 2.47.0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wdc.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH7PR04MB8755:EE_|CO1PR04MB9580:EE_
+x-ms-office365-filtering-correlation-id: 6e8bcc3e-5cee-4834-be9a-08dd6b7cefcf
+x-ld-processed: b61c8803-16f3-4c35-9b17-6f65f441df86,ExtAddr
+wdcipoutbound: EOP-TRUE
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?GholzI76L5HfGMi+qEYosP2Mbf3bgqiaLPYEvJZquAzGeVWAIroFILN/my?=
+ =?iso-8859-1?Q?AlDQFZPxMy9TjXw5vv/h2eDvubz9twgAO6c9nLxK3CzjE87PVo63+ej2AM?=
+ =?iso-8859-1?Q?Vz9ojZbpCFuLq03QN9FEZIO2KBDNZYojN2XhOMsUq+mO3n0J7aVitSoBq8?=
+ =?iso-8859-1?Q?YyRwJyITYr/rpJIfp0SAIEEr7hC7rfhtVp+bU31u2oukZOhTTiRr9vZ1m5?=
+ =?iso-8859-1?Q?sRfFwORMTCwuXqTv+zDguVuwOD4WrhcIftUurYCZZiP3Phb6/8JAuqX3oS?=
+ =?iso-8859-1?Q?1dG/Kpey/DJ8ufkUYyPA4lnJN3SLXX4jGndr8OcOg/87DMcYQQfh3ZUYOd?=
+ =?iso-8859-1?Q?nrz+hg24jfR0SfU2nGZZTyTrdrKdfZTC6s4OVKuElXEKd8cgR5RwZ6rf/S?=
+ =?iso-8859-1?Q?kpmjYERgypCZ0Ssnkq60Ff2Qu0Sm2CwgUD8BKOMMCR2TJVjAwYvnxn3ysV?=
+ =?iso-8859-1?Q?3G5VAFNBbR6Ee4JpBcQKL4+aSPSrM8x2V+0nGKBhVNOEyF4pVLhA92YIAa?=
+ =?iso-8859-1?Q?VuLXOVmXlJwInvL+PJc3CQyLpsFm++2TW8xqdICZBnxQfUxj2WJAcQS8cM?=
+ =?iso-8859-1?Q?tYwrgH9+MZ3dnAJ04P/YjAjb7X3S8ggOKKPel+Z5x1dgwZl/upqDNu3hH9?=
+ =?iso-8859-1?Q?dgh8MjOV4H6mxSDPG9Q0U8AO1UcddtBfHxpw8I517iu9wmbtNSoW9/wPxz?=
+ =?iso-8859-1?Q?hheIByOC+Ycv8/a63ffUs96lTXNNyAvn3d6s/WA7Vm7vHBKTJiz9H7w2Mj?=
+ =?iso-8859-1?Q?269RtYVp+EeyauoBHUX+s7ejFk38JrdUyFvHbDlTZVConG7XbNAf2sZWur?=
+ =?iso-8859-1?Q?/jYM/ASfnD1g2VKqMj13jf1dWbhSPcCPP8dBL7eqj5nFkKJMdD5ePK05br?=
+ =?iso-8859-1?Q?AQis2lPqCdoj9fbM+iBn/M67F5RwjjMT4mTtIPIRgUitAD9u6t7ZfWHj18?=
+ =?iso-8859-1?Q?F0yHVMKJv3Prtxq1/VsNxfutN82wkCLGxmzqawM4QaIxAqHwcP5a7GtnLT?=
+ =?iso-8859-1?Q?IU2P3b5IthNOrC53emppkGZ0veSM8nJEfNtldGFExd4pBnlDAr5qPFa9H7?=
+ =?iso-8859-1?Q?Db2L8EfnJhiutrBGVMqQsRCeA1zGzRl5Funib6ZfmkDboQNe+DlvK/r+lT?=
+ =?iso-8859-1?Q?Vc0VWzIQNUqml00Annu4RH2LgLmni23Ye0adopn61ZSqnvyBGrLlnhJ9PL?=
+ =?iso-8859-1?Q?9uOVTugqgQUTtdapoUHjlYkjG6YMFE1C3pnNNWlWEWVcaW1OfWF6oMhggj?=
+ =?iso-8859-1?Q?LrVeVF+FT+xqiaReFUd8pI0vJ+rjaekhQoQpmZgB4IkEqjDJPX2VwMaXvZ?=
+ =?iso-8859-1?Q?h2oWR4Va9rayM6j/pGdLmR9KU/TbbocL1EZlEYznHel+2M+uDnLRliuWjx?=
+ =?iso-8859-1?Q?praLEhgTU0ELV5zUY5A3hBuR+l7BMinkY3Ryg1LC8NSJsqws2fUkbGEx+h?=
+ =?iso-8859-1?Q?IK9MKw0WkynzkeRMSeU6zEIbBIcoLAtymDnHSA=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR04MB8755.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?H+LP9jLdNajsv7P6cjArqQ4pGR42iSx405fSusHMGV9sGRzB4/k7t/crxM?=
+ =?iso-8859-1?Q?+ywd4yom4zbASG0o32GFY4vv+D7JNuMwMfIfNyLp8nrF/ePAcMXr1nV5G8?=
+ =?iso-8859-1?Q?ij44KRJ25IQTU9rdjluZPZSN4WWz6eLb8F251+EpY7TxGEJpfdh0HVzHJi?=
+ =?iso-8859-1?Q?Ly448kAu3I/BqpSLOxOx3Q1YJwwTraU6J6damGTKsBUgnP6YjUCO11ucaA?=
+ =?iso-8859-1?Q?lgUkr+StXyp8fn1vr/Wgx02IwC8OA9vJo7ox5qJ+qYjFOXipDl2/7FnmQq?=
+ =?iso-8859-1?Q?IXNtf+WrhdR1Fs72e3bxTqixVWC57DdvHM4mQR5elwRzfdLAIAeiRfgSGm?=
+ =?iso-8859-1?Q?oGhyzA2LEX8bMDhoab6DRvMkyUx4McpwaRS7mwQpXn37a6QHc18xBOn8e9?=
+ =?iso-8859-1?Q?5RJlm0IXsuU83k9AnP3iIjdYm4HjyD1k2F22B9uCUwa3sOmw8xPsXVARR+?=
+ =?iso-8859-1?Q?piXKGTScxMixBnHEWmqKIdoD8fE3JdjfBFUnSaJQ0ymAPbwXJhj3347JAK?=
+ =?iso-8859-1?Q?NJSF7FnzirPyDo9IPGRrLgXSV9X3cE7S5vuZrHBQxL+WW4ivr087l+bbX8?=
+ =?iso-8859-1?Q?H5NT2Q0Bh5j/hFsv2mcyfnTcHpDVGhNLEyWxinNP99O2gMPeMYgZHoKYKC?=
+ =?iso-8859-1?Q?mKjHRNqm3xmiJL80rfPQNXgGJPNUaPponbsd9Kc6fIswFnRyCTfTvQQoT5?=
+ =?iso-8859-1?Q?eLIgL5rPzbJmgUUFMx1l8vCexf1fCPMKhnS2cweo7+PNUUc9KlUqb8L0oL?=
+ =?iso-8859-1?Q?GRSimzPk9aahwWxWWsv1zK25NqpRFdJPivZu5qVgf9qibHP3BcBvekvQlp?=
+ =?iso-8859-1?Q?QIrhTUgE0hDOgHNtNTNUKJuEj68XXrd9U1F9XfHKSMr82VEj4pWERdJ/Vh?=
+ =?iso-8859-1?Q?IL49eQav/WSoUQ5qCN0NIqo4x+pVMKiAgZ2RKwC1ZfhT9nQ0nKVZeZ1Iyj?=
+ =?iso-8859-1?Q?5JyszQPEJ5IaceRItwBDEvBjn60v4j7cwKXP1FnObupX78Cy8D41gZEXPD?=
+ =?iso-8859-1?Q?0nfjS1hRDpDkd76p5opuBD66kKGOOUk6Nvr1K714wKchzI6aaMg4NEUAL5?=
+ =?iso-8859-1?Q?2/MFjHNVQzYs39I1ANnznP/daniGQSj/qQITlrAiMsTofM9lOdDGUMpmoU?=
+ =?iso-8859-1?Q?DHJLMuxbDhdd9AHEg2fVM8+D6EVLq/okA370sO/gH2PpU66TzWP+K5K6al?=
+ =?iso-8859-1?Q?dw2hdc0f91lwRQGFyvfXPyCS99+N70T3v46QSDxL9PSdldyv8ndcIfZuVm?=
+ =?iso-8859-1?Q?SG3DDWd92WuG4THaaz08yG649mCXTMyqhHGDvFBKI/TtMwvqJ17JT15ARU?=
+ =?iso-8859-1?Q?3mEe6O/hyFyF0XDptGk9VOwYwuzkgAMBcD5MGZMP1iJHy+tVpa0JbhX3PY?=
+ =?iso-8859-1?Q?327IeDzIek71d1sh+BuwjJIuIv/T0FkKiE8nplHMHdZcUUnuxazxycCL3N?=
+ =?iso-8859-1?Q?+r6xKKP+F1Lkiro8zo4NR9MMNbzkFe5tEjBhrG2Op6ClBmlKYvwbb/lRKM?=
+ =?iso-8859-1?Q?PB5qzkoPdiRTu3Yy4o/46fAslCEfqjlAixV2r1rMI/vr8i1/XOKbFhywoy?=
+ =?iso-8859-1?Q?j5XOGh+hK6gR9xmsCb2f4WFHcMzzzaJgmMqKtSi6YVT7pbgj6VGm2XQAtC?=
+ =?iso-8859-1?Q?w7hWpb8rC6nScDyVHkxSrU1JAKSa/6ZkM0bhjHavsztpEdojJuQwSoyg?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174289353853.14745.11293123470738304389.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	p3zgpCXJgeEmNSK+5C5yg69pro6QKyQOS2eYRZnWBbSbkvs0MGMj6FTTMVYgZ8wND/RUmIZI+yL9+6/sps7XR2r4lJQBfT6H7hL7Zy6o3T7/4qBocwI2M4Ysm0ND1nFahR+gsL22lYiZV2kwx2cC9Tg4W8hPUmbmj2WQy9WcmsxHshWkXtRT8/8gmktU3sr8BjdeJ0shhAeEynNkN4F1U0FspLgdx6jIax9LkwD/d/82ltmhJRZEOQhpqMNAJT/iLxxelNsHjFzpoqyoLVXpz8NHuqsvBE5cvLH/yvhcVcTZGGxxo21KtfDZenUQNLYA0UJBQqa8VpzOSs9GFInWVFCXp/rBMS77u+OxfVv7mxPma7WtptgiaIpfIhQO0FqnxV3MI9xNrVZiHDMZfky4L1H5/lflfgrQozEJoRZCA9ioRe2+FbUNd484v7YfbaZ26vCcXVBhwtvQc0WBBJ5LwBfoWfDEr4RpXUYzO4w/ILARvgCICadRFdeYerr0tHxhBX4LIxaXBI981bYlRjxgWFgtFDnmunPfQ4l42Qpl8soeL8geCcl9/13uBgQ7CkRNacGmSkzl6w+NBLpzU8DzX0wNwaBS/bhhhxWZ5Zb3E4U/R0pwOzkZ74xhdUgDDoVM
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR04MB8755.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e8bcc3e-5cee-4834-be9a-08dd6b7cefcf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2025 09:10:49.9658
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bpUw+3bFjLVkdnw44D541f8QQe9KdmZ8P5GkuzJ2SdD8lHXdLyBMRWmYgT0PYgL42rqVP58geuWw8W06Ms9gIA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR04MB9580
 
-The following commit has been merged into the x86/cpu branch of tip:
+Presently we start garbage collection late - when we start running
+out of free zones to backfill max_open_zones. This is a reasonable
+default as it minimizes write amplification. The longer we wait,
+the more blocks are invalidated and reclaim cost less in terms
+of blocks to relocate.
 
-Commit-ID:     e1dde2f5a4ef4a0e91a67adebb7037bbfbcb0c50
-Gitweb:        https://git.kernel.org/tip/e1dde2f5a4ef4a0e91a67adebb7037bbfbcb0c50
-Author:        Ahmed S. Darwish <darwi@linutronix.de>
-AuthorDate:    Mon, 24 Mar 2025 15:20:37 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 25 Mar 2025 09:53:47 +01:00
+Starting this late however introduces a risk of GC being outcompeted
+by user writes. If GC can't keep up, user writes will be forced to
+wait for free zones with high tail latencies as a result.
 
-tools/x86/kcpuid: Update bitfields to x86-cpuid-db v2.0
+This is not a problem under normal circumstances, but if fragmentation
+is bad and user write pressure is high (multiple full-throttle
+writers) we will "bottom out" of free zones.
 
-Update kcpuid's CSV file to version v2.0, as generated by x86-cpuid-db.
+To mitigate this, introduce a zonegc_low_space tunable that lets the
+user specify a percentage of how much of the unused space that GC
+should keep available for writing. A high value will reclaim more of
+the space occupied by unused blocks, creating a larger buffer against
+write bursts.
 
-Summary of the v2.0 changes:
+This comes at a cost as write amplification is increased. To
+illustrate this using a sample workload, setting zonegc_low_space to
+60% avoids high (500ms) max latencies while increasing write
+amplification by 15%.
 
-* Introduce the leaves:
-
-  - Leaf 0x00000003, Transmeta Processor serial number
-  - Leaf 0x80860000, Transmeta max leaf number + CPU vendor ID
-  - Leaf 0x80860001, Transmeta extended CPU information
-  - Leaf 0x80860002, Transmeta Code Morphing Software (CMS) enumeration
-  - Leaf 0x80860003 => 0x80860006, Transmeta CPU information string
-  - Leaf 0x80860007, Transmeta "live" CPU information
-  - Leaf 0xc0000000, Centaur/Zhaoxin's max leaf number
-  - Leaf 0xc0000001, Centaur/Zhaoxin's extended CPU features
-
-* Add a 0x prefix for leaves 0x0 to 0x9.  This maintains consistency with
-  the rest of the CSV entries.
-
-* Add the new bitfields:
-
-  - Leaf 0x7: nmi_src, NMI-source reporting
-  - Leaf 0x80000001: e_base_type and e_mmx (Transmeta)
-
-* Update the section headers for leaves 0x80000000 and 0x80000005 to
-  indicate that they are also valid for Transmeta.
-
-Notes:
-    Leaf 0x3, being not unique to Transmeta, is handled at the generated
-    CSV file v2.3 update, later in this patch queue.
-
-    Leaf 0x80000001 EDX:23 bit, e_mmx, is also available on AMD.  A bugfix
-    is already merged at x86-cpuid-db's -tip for that, and it will be part
-    of the project's upcoming v2.4 release.:
-
-        https://gitlab.com/x86-cpuid.org/x86-cpuid-db/-/commit/65fff25daa41
-
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://gitlab.com/x86-cpuid.org/x86-cpuid-db/-/blob/v2.0/CHANGELOG.rst
-Link: https://lore.kernel.org/r/20250324142042.29010-17-darwi@linutronix.de
+Signed-off-by: Hans Holmberg <hans.holmberg@wdc.com>
 ---
- tools/arch/x86/kcpuid/cpuid.csv | 648 ++++++++++++++++++-------------
- 1 file changed, 382 insertions(+), 266 deletions(-)
+Changes delta RFC:
+- Turned the mount option into a sysfs tunable (as Dave suggested)
+- Used mult_frac to avoid overflows (thanks Dave)
+- Added xfs admin-guide documentation, including max_open_zones
+- Documented the default value and set it explicitly
+- Link to RFC: https://lore.kernel.org/all/20250319081818.6406-1-hans.holmb=
+erg@wdc.com/T/
 
-diff --git a/tools/arch/x86/kcpuid/cpuid.csv b/tools/arch/x86/kcpuid/cpuid.csv
-index d751eb8..d0f7159 100644
---- a/tools/arch/x86/kcpuid/cpuid.csv
-+++ b/tools/arch/x86/kcpuid/cpuid.csv
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: CC0-1.0
--# Generator: x86-cpuid-db v1.0
-+# Generator: x86-cpuid-db v2.0
- 
- #
- # Auto-generated file.
-@@ -12,297 +12,306 @@
- # Leaf 0H
- # Maximum standard leaf number + CPU vendor string
- 
--         0,         0,  eax,    31:0,    max_std_leaf           , Highest cpuid standard leaf supported
--         0,         0,  ebx,    31:0,    cpu_vendorid_0         , CPU vendor ID string bytes 0 - 3
--         0,         0,  ecx,    31:0,    cpu_vendorid_2         , CPU vendor ID string bytes 8 - 11
--         0,         0,  edx,    31:0,    cpu_vendorid_1         , CPU vendor ID string bytes 4 - 7
-+       0x0,         0,  eax,    31:0,    max_std_leaf           , Highest cpuid standard leaf supported
-+       0x0,         0,  ebx,    31:0,    cpu_vendorid_0         , CPU vendor ID string bytes 0 - 3
-+       0x0,         0,  ecx,    31:0,    cpu_vendorid_2         , CPU vendor ID string bytes 8 - 11
-+       0x0,         0,  edx,    31:0,    cpu_vendorid_1         , CPU vendor ID string bytes 4 - 7
- 
- # Leaf 1H
- # CPU FMS (Family/Model/Stepping) + standard feature flags
- 
--         1,         0,  eax,     3:0,    stepping               , Stepping ID
--         1,         0,  eax,     7:4,    base_model             , Base CPU model ID
--         1,         0,  eax,    11:8,    base_family_id         , Base CPU family ID
--         1,         0,  eax,   13:12,    cpu_type               , CPU type
--         1,         0,  eax,   19:16,    ext_model              , Extended CPU model ID
--         1,         0,  eax,   27:20,    ext_family             , Extended CPU family ID
--         1,         0,  ebx,     7:0,    brand_id               , Brand index
--         1,         0,  ebx,    15:8,    clflush_size           , CLFLUSH instruction cache line size
--         1,         0,  ebx,   23:16,    n_logical_cpu          , Logical CPU (HW threads) count
--         1,         0,  ebx,   31:24,    local_apic_id          , Initial local APIC physical ID
--         1,         0,  ecx,       0,    pni                    , Streaming SIMD Extensions 3 (SSE3)
--         1,         0,  ecx,       1,    pclmulqdq              , PCLMULQDQ instruction support
--         1,         0,  ecx,       2,    dtes64                 , 64-bit DS save area
--         1,         0,  ecx,       3,    monitor                , MONITOR/MWAIT support
--         1,         0,  ecx,       4,    ds_cpl                 , CPL Qualified Debug Store
--         1,         0,  ecx,       5,    vmx                    , Virtual Machine Extensions
--         1,         0,  ecx,       6,    smx                    , Safer Mode Extensions
--         1,         0,  ecx,       7,    est                    , Enhanced Intel SpeedStep
--         1,         0,  ecx,       8,    tm2                    , Thermal Monitor 2
--         1,         0,  ecx,       9,    ssse3                  , Supplemental SSE3
--         1,         0,  ecx,      10,    cid                    , L1 Context ID
--         1,         0,  ecx,      11,    sdbg                   , Sillicon Debug
--         1,         0,  ecx,      12,    fma                    , FMA extensions using YMM state
--         1,         0,  ecx,      13,    cx16                   , CMPXCHG16B instruction support
--         1,         0,  ecx,      14,    xtpr                   , xTPR Update Control
--         1,         0,  ecx,      15,    pdcm                   , Perfmon and Debug Capability
--         1,         0,  ecx,      17,    pcid                   , Process-context identifiers
--         1,         0,  ecx,      18,    dca                    , Direct Cache Access
--         1,         0,  ecx,      19,    sse4_1                 , SSE4.1
--         1,         0,  ecx,      20,    sse4_2                 , SSE4.2
--         1,         0,  ecx,      21,    x2apic                 , X2APIC support
--         1,         0,  ecx,      22,    movbe                  , MOVBE instruction support
--         1,         0,  ecx,      23,    popcnt                 , POPCNT instruction support
--         1,         0,  ecx,      24,    tsc_deadline_timer     , APIC timer one-shot operation
--         1,         0,  ecx,      25,    aes                    , AES instructions
--         1,         0,  ecx,      26,    xsave                  , XSAVE (and related instructions) support
--         1,         0,  ecx,      27,    osxsave                , XSAVE (and related instructions) are enabled by OS
--         1,         0,  ecx,      28,    avx                    , AVX instructions support
--         1,         0,  ecx,      29,    f16c                   , Half-precision floating-point conversion support
--         1,         0,  ecx,      30,    rdrand                 , RDRAND instruction support
--         1,         0,  ecx,      31,    guest_status           , System is running as guest; (para-)virtualized system
--         1,         0,  edx,       0,    fpu                    , Floating-Point Unit on-chip (x87)
--         1,         0,  edx,       1,    vme                    , Virtual-8086 Mode Extensions
--         1,         0,  edx,       2,    de                     , Debugging Extensions
--         1,         0,  edx,       3,    pse                    , Page Size Extension
--         1,         0,  edx,       4,    tsc                    , Time Stamp Counter
--         1,         0,  edx,       5,    msr                    , Model-Specific Registers (RDMSR and WRMSR support)
--         1,         0,  edx,       6,    pae                    , Physical Address Extensions
--         1,         0,  edx,       7,    mce                    , Machine Check Exception
--         1,         0,  edx,       8,    cx8                    , CMPXCHG8B instruction
--         1,         0,  edx,       9,    apic                   , APIC on-chip
--         1,         0,  edx,      11,    sep                    , SYSENTER, SYSEXIT, and associated MSRs
--         1,         0,  edx,      12,    mtrr                   , Memory Type Range Registers
--         1,         0,  edx,      13,    pge                    , Page Global Extensions
--         1,         0,  edx,      14,    mca                    , Machine Check Architecture
--         1,         0,  edx,      15,    cmov                   , Conditional Move Instruction
--         1,         0,  edx,      16,    pat                    , Page Attribute Table
--         1,         0,  edx,      17,    pse36                  , Page Size Extension (36-bit)
--         1,         0,  edx,      18,    pn                     , Processor Serial Number
--         1,         0,  edx,      19,    clflush                , CLFLUSH instruction
--         1,         0,  edx,      21,    dts                    , Debug Store
--         1,         0,  edx,      22,    acpi                   , Thermal monitor and clock control
--         1,         0,  edx,      23,    mmx                    , MMX instructions
--         1,         0,  edx,      24,    fxsr                   , FXSAVE and FXRSTOR instructions
--         1,         0,  edx,      25,    sse                    , SSE instructions
--         1,         0,  edx,      26,    sse2                   , SSE2 instructions
--         1,         0,  edx,      27,    ss                     , Self Snoop
--         1,         0,  edx,      28,    ht                     , Hyper-threading
--         1,         0,  edx,      29,    tm                     , Thermal Monitor
--         1,         0,  edx,      30,    ia64                   , Legacy IA-64 (Itanium) support bit, now resreved
--         1,         0,  edx,      31,    pbe                    , Pending Break Enable
-+       0x1,         0,  eax,     3:0,    stepping               , Stepping ID
-+       0x1,         0,  eax,     7:4,    base_model             , Base CPU model ID
-+       0x1,         0,  eax,    11:8,    base_family_id         , Base CPU family ID
-+       0x1,         0,  eax,   13:12,    cpu_type               , CPU type
-+       0x1,         0,  eax,   19:16,    ext_model              , Extended CPU model ID
-+       0x1,         0,  eax,   27:20,    ext_family             , Extended CPU family ID
-+       0x1,         0,  ebx,     7:0,    brand_id               , Brand index
-+       0x1,         0,  ebx,    15:8,    clflush_size           , CLFLUSH instruction cache line size
-+       0x1,         0,  ebx,   23:16,    n_logical_cpu          , Logical CPU (HW threads) count
-+       0x1,         0,  ebx,   31:24,    local_apic_id          , Initial local APIC physical ID
-+       0x1,         0,  ecx,       0,    pni                    , Streaming SIMD Extensions 3 (SSE3)
-+       0x1,         0,  ecx,       1,    pclmulqdq              , PCLMULQDQ instruction support
-+       0x1,         0,  ecx,       2,    dtes64                 , 64-bit DS save area
-+       0x1,         0,  ecx,       3,    monitor                , MONITOR/MWAIT support
-+       0x1,         0,  ecx,       4,    ds_cpl                 , CPL Qualified Debug Store
-+       0x1,         0,  ecx,       5,    vmx                    , Virtual Machine Extensions
-+       0x1,         0,  ecx,       6,    smx                    , Safer Mode Extensions
-+       0x1,         0,  ecx,       7,    est                    , Enhanced Intel SpeedStep
-+       0x1,         0,  ecx,       8,    tm2                    , Thermal Monitor 2
-+       0x1,         0,  ecx,       9,    ssse3                  , Supplemental SSE3
-+       0x1,         0,  ecx,      10,    cid                    , L1 Context ID
-+       0x1,         0,  ecx,      11,    sdbg                   , Sillicon Debug
-+       0x1,         0,  ecx,      12,    fma                    , FMA extensions using YMM state
-+       0x1,         0,  ecx,      13,    cx16                   , CMPXCHG16B instruction support
-+       0x1,         0,  ecx,      14,    xtpr                   , xTPR Update Control
-+       0x1,         0,  ecx,      15,    pdcm                   , Perfmon and Debug Capability
-+       0x1,         0,  ecx,      17,    pcid                   , Process-context identifiers
-+       0x1,         0,  ecx,      18,    dca                    , Direct Cache Access
-+       0x1,         0,  ecx,      19,    sse4_1                 , SSE4.1
-+       0x1,         0,  ecx,      20,    sse4_2                 , SSE4.2
-+       0x1,         0,  ecx,      21,    x2apic                 , X2APIC support
-+       0x1,         0,  ecx,      22,    movbe                  , MOVBE instruction support
-+       0x1,         0,  ecx,      23,    popcnt                 , POPCNT instruction support
-+       0x1,         0,  ecx,      24,    tsc_deadline_timer     , APIC timer one-shot operation
-+       0x1,         0,  ecx,      25,    aes                    , AES instructions
-+       0x1,         0,  ecx,      26,    xsave                  , XSAVE (and related instructions) support
-+       0x1,         0,  ecx,      27,    osxsave                , XSAVE (and related instructions) are enabled by OS
-+       0x1,         0,  ecx,      28,    avx                    , AVX instructions support
-+       0x1,         0,  ecx,      29,    f16c                   , Half-precision floating-point conversion support
-+       0x1,         0,  ecx,      30,    rdrand                 , RDRAND instruction support
-+       0x1,         0,  ecx,      31,    guest_status           , System is running as guest; (para-)virtualized system
-+       0x1,         0,  edx,       0,    fpu                    , Floating-Point Unit on-chip (x87)
-+       0x1,         0,  edx,       1,    vme                    , Virtual-8086 Mode Extensions
-+       0x1,         0,  edx,       2,    de                     , Debugging Extensions
-+       0x1,         0,  edx,       3,    pse                    , Page Size Extension
-+       0x1,         0,  edx,       4,    tsc                    , Time Stamp Counter
-+       0x1,         0,  edx,       5,    msr                    , Model-Specific Registers (RDMSR and WRMSR support)
-+       0x1,         0,  edx,       6,    pae                    , Physical Address Extensions
-+       0x1,         0,  edx,       7,    mce                    , Machine Check Exception
-+       0x1,         0,  edx,       8,    cx8                    , CMPXCHG8B instruction
-+       0x1,         0,  edx,       9,    apic                   , APIC on-chip
-+       0x1,         0,  edx,      11,    sep                    , SYSENTER, SYSEXIT, and associated MSRs
-+       0x1,         0,  edx,      12,    mtrr                   , Memory Type Range Registers
-+       0x1,         0,  edx,      13,    pge                    , Page Global Extensions
-+       0x1,         0,  edx,      14,    mca                    , Machine Check Architecture
-+       0x1,         0,  edx,      15,    cmov                   , Conditional Move Instruction
-+       0x1,         0,  edx,      16,    pat                    , Page Attribute Table
-+       0x1,         0,  edx,      17,    pse36                  , Page Size Extension (36-bit)
-+       0x1,         0,  edx,      18,    pn                     , Processor Serial Number
-+       0x1,         0,  edx,      19,    clflush                , CLFLUSH instruction
-+       0x1,         0,  edx,      21,    dts                    , Debug Store
-+       0x1,         0,  edx,      22,    acpi                   , Thermal monitor and clock control
-+       0x1,         0,  edx,      23,    mmx                    , MMX instructions
-+       0x1,         0,  edx,      24,    fxsr                   , FXSAVE and FXRSTOR instructions
-+       0x1,         0,  edx,      25,    sse                    , SSE instructions
-+       0x1,         0,  edx,      26,    sse2                   , SSE2 instructions
-+       0x1,         0,  edx,      27,    ss                     , Self Snoop
-+       0x1,         0,  edx,      28,    ht                     , Hyper-threading
-+       0x1,         0,  edx,      29,    tm                     , Thermal Monitor
-+       0x1,         0,  edx,      30,    ia64                   , Legacy IA-64 (Itanium) support bit, now resreved
-+       0x1,         0,  edx,      31,    pbe                    , Pending Break Enable
- 
- # Leaf 2H
- # Intel cache and TLB information one-byte descriptors
- 
--         2,         0,  eax,     7:0,    iteration_count        , Number of times this CPUD leaf must be queried
--         2,         0,  eax,    15:8,    desc1                  , Descriptor #1
--         2,         0,  eax,   23:16,    desc2                  , Descriptor #2
--         2,         0,  eax,   30:24,    desc3                  , Descriptor #3
--         2,         0,  eax,      31,    eax_invalid            , Descriptors 1-3 are invalid if set
--         2,         0,  ebx,     7:0,    desc4                  , Descriptor #4
--         2,         0,  ebx,    15:8,    desc5                  , Descriptor #5
--         2,         0,  ebx,   23:16,    desc6                  , Descriptor #6
--         2,         0,  ebx,   30:24,    desc7                  , Descriptor #7
--         2,         0,  ebx,      31,    ebx_invalid            , Descriptors 4-7 are invalid if set
--         2,         0,  ecx,     7:0,    desc8                  , Descriptor #8
--         2,         0,  ecx,    15:8,    desc9                  , Descriptor #9
--         2,         0,  ecx,   23:16,    desc10                 , Descriptor #10
--         2,         0,  ecx,   30:24,    desc11                 , Descriptor #11
--         2,         0,  ecx,      31,    ecx_invalid            , Descriptors 8-11 are invalid if set
--         2,         0,  edx,     7:0,    desc12                 , Descriptor #12
--         2,         0,  edx,    15:8,    desc13                 , Descriptor #13
--         2,         0,  edx,   23:16,    desc14                 , Descriptor #14
--         2,         0,  edx,   30:24,    desc15                 , Descriptor #15
--         2,         0,  edx,      31,    edx_invalid            , Descriptors 12-15 are invalid if set
-+       0x2,         0,  eax,     7:0,    iteration_count        , Number of times this CPUD leaf must be queried
-+       0x2,         0,  eax,    15:8,    desc1                  , Descriptor #1
-+       0x2,         0,  eax,   23:16,    desc2                  , Descriptor #2
-+       0x2,         0,  eax,   30:24,    desc3                  , Descriptor #3
-+       0x2,         0,  eax,      31,    eax_invalid            , Descriptors 1-3 are invalid if set
-+       0x2,         0,  ebx,     7:0,    desc4                  , Descriptor #4
-+       0x2,         0,  ebx,    15:8,    desc5                  , Descriptor #5
-+       0x2,         0,  ebx,   23:16,    desc6                  , Descriptor #6
-+       0x2,         0,  ebx,   30:24,    desc7                  , Descriptor #7
-+       0x2,         0,  ebx,      31,    ebx_invalid            , Descriptors 4-7 are invalid if set
-+       0x2,         0,  ecx,     7:0,    desc8                  , Descriptor #8
-+       0x2,         0,  ecx,    15:8,    desc9                  , Descriptor #9
-+       0x2,         0,  ecx,   23:16,    desc10                 , Descriptor #10
-+       0x2,         0,  ecx,   30:24,    desc11                 , Descriptor #11
-+       0x2,         0,  ecx,      31,    ecx_invalid            , Descriptors 8-11 are invalid if set
-+       0x2,         0,  edx,     7:0,    desc12                 , Descriptor #12
-+       0x2,         0,  edx,    15:8,    desc13                 , Descriptor #13
-+       0x2,         0,  edx,   23:16,    desc14                 , Descriptor #14
-+       0x2,         0,  edx,   30:24,    desc15                 , Descriptor #15
-+       0x2,         0,  edx,      31,    edx_invalid            , Descriptors 12-15 are invalid if set
+I just realized that the max_open_zones *mount option* is not documented
+in the admin guide, but that should probably be added as a separate patch.
+
+ Documentation/admin-guide/xfs.rst | 21 ++++++++++++++++++++
+ fs/xfs/xfs_mount.h                |  1 +
+ fs/xfs/xfs_sysfs.c                | 32 +++++++++++++++++++++++++++++++
+ fs/xfs/xfs_zone_alloc.c           |  7 +++++++
+ fs/xfs/xfs_zone_gc.c              | 16 ++++++++++++++--
+ 5 files changed, 75 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/admin-guide/xfs.rst b/Documentation/admin-guide/=
+xfs.rst
+index b67772cf36d6..20746e795477 100644
+--- a/Documentation/admin-guide/xfs.rst
++++ b/Documentation/admin-guide/xfs.rst
+@@ -542,3 +542,24 @@ The interesting knobs for XFS workqueues are as follow=
+s:
+   nice           Relative priority of scheduling the threads.  These are t=
+he
+                  same nice levels that can be applied to userspace process=
+es.
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 +
-+# Leaf 3H
-+# Transmeta Processor Serial Number (PSN)
++Zoned Filesystems
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 +
-+       0x3,         0,  eax,    31:0,    cpu_psn_0              , Processor Serial Number bytes 0 - 3
-+       0x3,         0,  ebx,    31:0,    cpu_psn_1              , Processor Serial Number bytes 4 - 7
-+       0x3,         0,  ecx,    31:0,    cpu_psn_2              , Processor Serial Number bytes 8 - 11
-+       0x3,         0,  edx,    31:0,    cpu_psn_3              , Processor Serial Number bytes 12 - 15
- 
- # Leaf 4H
- # Intel deterministic cache parameters
- 
--         4,      31:0,  eax,     4:0,    cache_type             , Cache type field
--         4,      31:0,  eax,     7:5,    cache_level            , Cache level (1-based)
--         4,      31:0,  eax,       8,    cache_self_init        , Self-initialializing cache level
--         4,      31:0,  eax,       9,    fully_associative      , Fully-associative cache
--         4,      31:0,  eax,   25:14,    num_threads_sharing    , Number logical CPUs sharing this cache
--         4,      31:0,  eax,   31:26,    num_cores_on_die       , Number of cores in the physical package
--         4,      31:0,  ebx,    11:0,    cache_linesize         , System coherency line size (0-based)
--         4,      31:0,  ebx,   21:12,    cache_npartitions      , Physical line partitions (0-based)
--         4,      31:0,  ebx,   31:22,    cache_nways            , Ways of associativity (0-based)
--         4,      31:0,  ecx,    30:0,    cache_nsets            , Cache number of sets (0-based)
--         4,      31:0,  edx,       0,    wbinvd_rll_no_guarantee, WBINVD/INVD not guaranteed for Remote Lower-Level caches
--         4,      31:0,  edx,       1,    ll_inclusive           , Cache is inclusive of Lower-Level caches
--         4,      31:0,  edx,       2,    complex_indexing       , Not a direct-mapped cache (complex function)
-+       0x4,      31:0,  eax,     4:0,    cache_type             , Cache type field
-+       0x4,      31:0,  eax,     7:5,    cache_level            , Cache level (1-based)
-+       0x4,      31:0,  eax,       8,    cache_self_init        , Self-initialializing cache level
-+       0x4,      31:0,  eax,       9,    fully_associative      , Fully-associative cache
-+       0x4,      31:0,  eax,   25:14,    num_threads_sharing    , Number logical CPUs sharing this cache
-+       0x4,      31:0,  eax,   31:26,    num_cores_on_die       , Number of cores in the physical package
-+       0x4,      31:0,  ebx,    11:0,    cache_linesize         , System coherency line size (0-based)
-+       0x4,      31:0,  ebx,   21:12,    cache_npartitions      , Physical line partitions (0-based)
-+       0x4,      31:0,  ebx,   31:22,    cache_nways            , Ways of associativity (0-based)
-+       0x4,      31:0,  ecx,    30:0,    cache_nsets            , Cache number of sets (0-based)
-+       0x4,      31:0,  edx,       0,    wbinvd_rll_no_guarantee, WBINVD/INVD not guaranteed for Remote Lower-Level caches
-+       0x4,      31:0,  edx,       1,    ll_inclusive           , Cache is inclusive of Lower-Level caches
-+       0x4,      31:0,  edx,       2,    complex_indexing       , Not a direct-mapped cache (complex function)
- 
- # Leaf 5H
- # MONITOR/MWAIT instructions enumeration
- 
--         5,         0,  eax,    15:0,    min_mon_size           , Smallest monitor-line size, in bytes
--         5,         0,  ebx,    15:0,    max_mon_size           , Largest monitor-line size, in bytes
--         5,         0,  ecx,       0,    mwait_ext              , Enumeration of MONITOR/MWAIT extensions is supported
--         5,         0,  ecx,       1,    mwait_irq_break        , Interrupts as a break-event for MWAIT is supported
--         5,         0,  edx,     3:0,    n_c0_substates         , Number of C0 sub C-states supported using MWAIT
--         5,         0,  edx,     7:4,    n_c1_substates         , Number of C1 sub C-states supported using MWAIT
--         5,         0,  edx,    11:8,    n_c2_substates         , Number of C2 sub C-states supported using MWAIT
--         5,         0,  edx,   15:12,    n_c3_substates         , Number of C3 sub C-states supported using MWAIT
--         5,         0,  edx,   19:16,    n_c4_substates         , Number of C4 sub C-states supported using MWAIT
--         5,         0,  edx,   23:20,    n_c5_substates         , Number of C5 sub C-states supported using MWAIT
--         5,         0,  edx,   27:24,    n_c6_substates         , Number of C6 sub C-states supported using MWAIT
--         5,         0,  edx,   31:28,    n_c7_substates         , Number of C7 sub C-states supported using MWAIT
-+       0x5,         0,  eax,    15:0,    min_mon_size           , Smallest monitor-line size, in bytes
-+       0x5,         0,  ebx,    15:0,    max_mon_size           , Largest monitor-line size, in bytes
-+       0x5,         0,  ecx,       0,    mwait_ext              , Enumeration of MONITOR/MWAIT extensions is supported
-+       0x5,         0,  ecx,       1,    mwait_irq_break        , Interrupts as a break-event for MWAIT is supported
-+       0x5,         0,  edx,     3:0,    n_c0_substates         , Number of C0 sub C-states supported using MWAIT
-+       0x5,         0,  edx,     7:4,    n_c1_substates         , Number of C1 sub C-states supported using MWAIT
-+       0x5,         0,  edx,    11:8,    n_c2_substates         , Number of C2 sub C-states supported using MWAIT
-+       0x5,         0,  edx,   15:12,    n_c3_substates         , Number of C3 sub C-states supported using MWAIT
-+       0x5,         0,  edx,   19:16,    n_c4_substates         , Number of C4 sub C-states supported using MWAIT
-+       0x5,         0,  edx,   23:20,    n_c5_substates         , Number of C5 sub C-states supported using MWAIT
-+       0x5,         0,  edx,   27:24,    n_c6_substates         , Number of C6 sub C-states supported using MWAIT
-+       0x5,         0,  edx,   31:28,    n_c7_substates         , Number of C7 sub C-states supported using MWAIT
- 
- # Leaf 6H
- # Thermal and Power Management enumeration
- 
--         6,         0,  eax,       0,    dtherm                 , Digital temprature sensor
--         6,         0,  eax,       1,    turbo_boost            , Intel Turbo Boost
--         6,         0,  eax,       2,    arat                   , Always-Running APIC Timer (not affected by p-state)
--         6,         0,  eax,       4,    pln                    , Power Limit Notification (PLN) event
--         6,         0,  eax,       5,    ecmd                   , Clock modulation duty cycle extension
--         6,         0,  eax,       6,    pts                    , Package thermal management
--         6,         0,  eax,       7,    hwp                    , HWP (Hardware P-states) base registers are supported
--         6,         0,  eax,       8,    hwp_notify             , HWP notification (IA32_HWP_INTERRUPT MSR)
--         6,         0,  eax,       9,    hwp_act_window         , HWP activity window (IA32_HWP_REQUEST[bits 41:32]) supported
--         6,         0,  eax,      10,    hwp_epp                , HWP Energy Performance Preference
--         6,         0,  eax,      11,    hwp_pkg_req            , HWP Package Level Request
--         6,         0,  eax,      13,    hdc_base_regs          , HDC base registers are supported
--         6,         0,  eax,      14,    turbo_boost_3_0        , Intel Turbo Boost Max 3.0
--         6,         0,  eax,      15,    hwp_capabilities       , HWP Highest Performance change
--         6,         0,  eax,      16,    hwp_peci_override      , HWP PECI override
--         6,         0,  eax,      17,    hwp_flexible           , Flexible HWP
--         6,         0,  eax,      18,    hwp_fast               , IA32_HWP_REQUEST MSR fast access mode
--         6,         0,  eax,      19,    hfi                    , HW_FEEDBACK MSRs supported
--         6,         0,  eax,      20,    hwp_ignore_idle        , Ignoring idle logical CPU HWP req is supported
--         6,         0,  eax,      23,    thread_director        , Intel thread director support
--         6,         0,  eax,      24,    therm_interrupt_bit25  , IA32_THERM_INTERRUPT MSR bit 25 is supported
--         6,         0,  ebx,     3:0,    n_therm_thresholds     , Digital thermometer thresholds
--         6,         0,  ecx,       0,    aperfmperf             , MPERF/APERF MSRs (effective frequency interface)
--         6,         0,  ecx,       3,    epb                    , IA32_ENERGY_PERF_BIAS MSR support
--         6,         0,  ecx,    15:8,    thrd_director_nclasses , Number of classes, Intel thread director
--         6,         0,  edx,       0,    perfcap_reporting      , Performance capability reporting
--         6,         0,  edx,       1,    encap_reporting        , Energy efficiency capability reporting
--         6,         0,  edx,    11:8,    feedback_sz            , HW feedback interface struct size, in 4K pages
--         6,         0,  edx,   31:16,    this_lcpu_hwfdbk_idx   , This logical CPU index @ HW feedback struct, 0-based
-+       0x6,         0,  eax,       0,    dtherm                 , Digital temprature sensor
-+       0x6,         0,  eax,       1,    turbo_boost            , Intel Turbo Boost
-+       0x6,         0,  eax,       2,    arat                   , Always-Running APIC Timer (not affected by p-state)
-+       0x6,         0,  eax,       4,    pln                    , Power Limit Notification (PLN) event
-+       0x6,         0,  eax,       5,    ecmd                   , Clock modulation duty cycle extension
-+       0x6,         0,  eax,       6,    pts                    , Package thermal management
-+       0x6,         0,  eax,       7,    hwp                    , HWP (Hardware P-states) base registers are supported
-+       0x6,         0,  eax,       8,    hwp_notify             , HWP notification (IA32_HWP_INTERRUPT MSR)
-+       0x6,         0,  eax,       9,    hwp_act_window         , HWP activity window (IA32_HWP_REQUEST[bits 41:32]) supported
-+       0x6,         0,  eax,      10,    hwp_epp                , HWP Energy Performance Preference
-+       0x6,         0,  eax,      11,    hwp_pkg_req            , HWP Package Level Request
-+       0x6,         0,  eax,      13,    hdc_base_regs          , HDC base registers are supported
-+       0x6,         0,  eax,      14,    turbo_boost_3_0        , Intel Turbo Boost Max 3.0
-+       0x6,         0,  eax,      15,    hwp_capabilities       , HWP Highest Performance change
-+       0x6,         0,  eax,      16,    hwp_peci_override      , HWP PECI override
-+       0x6,         0,  eax,      17,    hwp_flexible           , Flexible HWP
-+       0x6,         0,  eax,      18,    hwp_fast               , IA32_HWP_REQUEST MSR fast access mode
-+       0x6,         0,  eax,      19,    hfi                    , HW_FEEDBACK MSRs supported
-+       0x6,         0,  eax,      20,    hwp_ignore_idle        , Ignoring idle logical CPU HWP req is supported
-+       0x6,         0,  eax,      23,    thread_director        , Intel thread director support
-+       0x6,         0,  eax,      24,    therm_interrupt_bit25  , IA32_THERM_INTERRUPT MSR bit 25 is supported
-+       0x6,         0,  ebx,     3:0,    n_therm_thresholds     , Digital thermometer thresholds
-+       0x6,         0,  ecx,       0,    aperfmperf             , MPERF/APERF MSRs (effective frequency interface)
-+       0x6,         0,  ecx,       3,    epb                    , IA32_ENERGY_PERF_BIAS MSR support
-+       0x6,         0,  ecx,    15:8,    thrd_director_nclasses , Number of classes, Intel thread director
-+       0x6,         0,  edx,       0,    perfcap_reporting      , Performance capability reporting
-+       0x6,         0,  edx,       1,    encap_reporting        , Energy efficiency capability reporting
-+       0x6,         0,  edx,    11:8,    feedback_sz            , HW feedback interface struct size, in 4K pages
-+       0x6,         0,  edx,   31:16,    this_lcpu_hwfdbk_idx   , This logical CPU index @ HW feedback struct, 0-based
- 
- # Leaf 7H
- # Extended CPU features enumeration
- 
--         7,         0,  eax,    31:0,    leaf7_n_subleaves      , Number of cpuid 0x7 subleaves
--         7,         0,  ebx,       0,    fsgsbase               , FSBASE/GSBASE read/write support
--         7,         0,  ebx,       1,    tsc_adjust             , IA32_TSC_ADJUST MSR supported
--         7,         0,  ebx,       2,    sgx                    , Intel SGX (Software Guard Extensions)
--         7,         0,  ebx,       3,    bmi1                   , Bit manipulation extensions group 1
--         7,         0,  ebx,       4,    hle                    , Hardware Lock Elision
--         7,         0,  ebx,       5,    avx2                   , AVX2 instruction set
--         7,         0,  ebx,       6,    fdp_excptn_only        , FPU Data Pointer updated only on x87 exceptions
--         7,         0,  ebx,       7,    smep                   , Supervisor Mode Execution Protection
--         7,         0,  ebx,       8,    bmi2                   , Bit manipulation extensions group 2
--         7,         0,  ebx,       9,    erms                   , Enhanced REP MOVSB/STOSB
--         7,         0,  ebx,      10,    invpcid                , INVPCID instruction (Invalidate Processor Context ID)
--         7,         0,  ebx,      11,    rtm                    , Intel restricted transactional memory
--         7,         0,  ebx,      12,    cqm                    , Intel RDT-CMT / AMD Platform-QoS cache monitoring
--         7,         0,  ebx,      13,    zero_fcs_fds           , Deprecated FPU CS/DS (stored as zero)
--         7,         0,  ebx,      14,    mpx                    , Intel memory protection extensions
--         7,         0,  ebx,      15,    rdt_a                  , Intel RDT / AMD Platform-QoS Enforcemeent
--         7,         0,  ebx,      16,    avx512f                , AVX-512 foundation instructions
--         7,         0,  ebx,      17,    avx512dq               , AVX-512 double/quadword instructions
--         7,         0,  ebx,      18,    rdseed                 , RDSEED instruction
--         7,         0,  ebx,      19,    adx                    , ADCX/ADOX instructions
--         7,         0,  ebx,      20,    smap                   , Supervisor mode access prevention
--         7,         0,  ebx,      21,    avx512ifma             , AVX-512 integer fused multiply add
--         7,         0,  ebx,      23,    clflushopt             , CLFLUSHOPT instruction
--         7,         0,  ebx,      24,    clwb                   , CLWB instruction
--         7,         0,  ebx,      25,    intel_pt               , Intel processor trace
--         7,         0,  ebx,      26,    avx512pf               , AVX-512 prefetch instructions
--         7,         0,  ebx,      27,    avx512er               , AVX-512 exponent/reciprocal instrs
--         7,         0,  ebx,      28,    avx512cd               , AVX-512 conflict detection instrs
--         7,         0,  ebx,      29,    sha_ni                 , SHA/SHA256 instructions
--         7,         0,  ebx,      30,    avx512bw               , AVX-512 BW (byte/word granular) instructions
--         7,         0,  ebx,      31,    avx512vl               , AVX-512 VL (128/256 vector length) extensions
--         7,         0,  ecx,       0,    prefetchwt1            , PREFETCHWT1 (Intel Xeon Phi only)
--         7,         0,  ecx,       1,    avx512vbmi             , AVX-512 Vector byte manipulation instrs
--         7,         0,  ecx,       2,    umip                   , User mode instruction protection
--         7,         0,  ecx,       3,    pku                    , Protection keys for user-space
--         7,         0,  ecx,       4,    ospke                  , OS protection keys enable
--         7,         0,  ecx,       5,    waitpkg                , WAITPKG instructions
--         7,         0,  ecx,       6,    avx512_vbmi2           , AVX-512 vector byte manipulation instrs group 2
--         7,         0,  ecx,       7,    cet_ss                 , CET shadow stack features
--         7,         0,  ecx,       8,    gfni                   , Galois field new instructions
--         7,         0,  ecx,       9,    vaes                   , Vector AES instrs
--         7,         0,  ecx,      10,    vpclmulqdq             , VPCLMULQDQ 256-bit instruction support
--         7,         0,  ecx,      11,    avx512_vnni            , Vector neural network instructions
--         7,         0,  ecx,      12,    avx512_bitalg          , AVX-512 bit count/shiffle
--         7,         0,  ecx,      13,    tme                    , Intel total memory encryption
--         7,         0,  ecx,      14,    avx512_vpopcntdq       , AVX-512: POPCNT for vectors of DW/QW
--         7,         0,  ecx,      16,    la57                   , 57-bit linear addreses (five-level paging)
--         7,         0,  ecx,   21:17,    mawau_val_lm           , BNDLDX/BNDSTX MAWAU value in 64-bit mode
--         7,         0,  ecx,      22,    rdpid                  , RDPID instruction
--         7,         0,  ecx,      23,    key_locker             , Intel key locker support
--         7,         0,  ecx,      24,    bus_lock_detect        , OS bus-lock detection
--         7,         0,  ecx,      25,    cldemote               , CLDEMOTE instruction
--         7,         0,  ecx,      27,    movdiri                , MOVDIRI instruction
--         7,         0,  ecx,      28,    movdir64b              , MOVDIR64B instruction
--         7,         0,  ecx,      29,    enqcmd                 , Enqueue stores supported (ENQCMD{,S})
--         7,         0,  ecx,      30,    sgx_lc                 , Intel SGX launch configuration
--         7,         0,  ecx,      31,    pks                    , Protection keys for supervisor-mode pages
--         7,         0,  edx,       1,    sgx_keys               , Intel SGX attestation services
--         7,         0,  edx,       2,    avx512_4vnniw          , AVX-512 neural network instructions
--         7,         0,  edx,       3,    avx512_4fmaps          , AVX-512 multiply accumulation single precision
--         7,         0,  edx,       4,    fsrm                   , Fast short REP MOV
--         7,         0,  edx,       5,    uintr                  , CPU supports user interrupts
--         7,         0,  edx,       8,    avx512_vp2intersect    , VP2INTERSECT{D,Q} instructions
--         7,         0,  edx,       9,    srdbs_ctrl             , SRBDS mitigation MSR available
--         7,         0,  edx,      10,    md_clear               , VERW MD_CLEAR microcode support
--         7,         0,  edx,      11,    rtm_always_abort       , XBEGIN (RTM transaction) always aborts
--         7,         0,  edx,      13,    tsx_force_abort        , MSR TSX_FORCE_ABORT, RTM_ABORT bit, supported
--         7,         0,  edx,      14,    serialize              , SERIALIZE instruction
--         7,         0,  edx,      15,    hybrid_cpu             , The CPU is identified as a 'hybrid part'
--         7,         0,  edx,      16,    tsxldtrk               , TSX suspend/resume load address tracking
--         7,         0,  edx,      18,    pconfig                , PCONFIG instruction
--         7,         0,  edx,      19,    arch_lbr               , Intel architectural LBRs
--         7,         0,  edx,      20,    ibt                    , CET indirect branch tracking
--         7,         0,  edx,      22,    amx_bf16               , AMX-BF16: tile bfloat16 support
--         7,         0,  edx,      23,    avx512_fp16            , AVX-512 FP16 instructions
--         7,         0,  edx,      24,    amx_tile               , AMX-TILE: tile architecture support
--         7,         0,  edx,      25,    amx_int8               , AMX-INT8: tile 8-bit integer support
--         7,         0,  edx,      26,    spec_ctrl              , Speculation Control (IBRS/IBPB: indirect branch restrictions)
--         7,         0,  edx,      27,    intel_stibp            , Single thread indirect branch predictors
--         7,         0,  edx,      28,    flush_l1d              , FLUSH L1D cache: IA32_FLUSH_CMD MSR
--         7,         0,  edx,      29,    arch_capabilities      , Intel IA32_ARCH_CAPABILITIES MSR
--         7,         0,  edx,      30,    core_capabilities      , IA32_CORE_CAPABILITIES MSR
--         7,         0,  edx,      31,    spec_ctrl_ssbd         , Speculative store bypass disable
--         7,         1,  eax,       4,    avx_vnni               , AVX-VNNI instructions
--         7,         1,  eax,       5,    avx512_bf16            , AVX-512 bFloat16 instructions
--         7,         1,  eax,       6,    lass                   , Linear address space separation
--         7,         1,  eax,       7,    cmpccxadd              , CMPccXADD instructions
--         7,         1,  eax,       8,    arch_perfmon_ext       , ArchPerfmonExt: CPUID leaf 0x23 is supported
--         7,         1,  eax,      10,    fzrm                   , Fast zero-length REP MOVSB
--         7,         1,  eax,      11,    fsrs                   , Fast short REP STOSB
--         7,         1,  eax,      12,    fsrc                   , Fast Short REP CMPSB/SCASB
--         7,         1,  eax,      17,    fred                   , FRED: Flexible return and event delivery transitions
--         7,         1,  eax,      18,    lkgs                   , LKGS: Load 'kernel' (userspace) GS
--         7,         1,  eax,      19,    wrmsrns                , WRMSRNS instr (WRMSR-non-serializing)
--         7,         1,  eax,      21,    amx_fp16               , AMX-FP16: FP16 tile operations
--         7,         1,  eax,      22,    hreset                 , History reset support
--         7,         1,  eax,      23,    avx_ifma               , Integer fused multiply add
--         7,         1,  eax,      26,    lam                    , Linear address masking
--         7,         1,  eax,      27,    rd_wr_msrlist          , RDMSRLIST/WRMSRLIST instructions
--         7,         1,  ebx,       0,    intel_ppin             , Protected processor inventory number (PPIN{,_CTL} MSRs)
--         7,         1,  edx,       4,    avx_vnni_int8          , AVX-VNNI-INT8 instructions
--         7,         1,  edx,       5,    avx_ne_convert         , AVX-NE-CONVERT instructions
--         7,         1,  edx,       8,    amx_complex            , AMX-COMPLEX instructions (starting from Granite Rapids)
--         7,         1,  edx,      14,    prefetchit_0_1         , PREFETCHIT0/1 instructions
--         7,         1,  edx,      18,    cet_sss                , CET supervisor shadow stacks safe to use
--         7,         2,  edx,       0,    intel_psfd             , Intel predictive store forward disable
--         7,         2,  edx,       1,    ipred_ctrl             , MSR bits IA32_SPEC_CTRL.IPRED_DIS_{U,S}
--         7,         2,  edx,       2,    rrsba_ctrl             , MSR bits IA32_SPEC_CTRL.RRSBA_DIS_{U,S}
--         7,         2,  edx,       3,    ddp_ctrl               , MSR bit  IA32_SPEC_CTRL.DDPD_U
--         7,         2,  edx,       4,    bhi_ctrl               , MSR bit  IA32_SPEC_CTRL.BHI_DIS_S
--         7,         2,  edx,       5,    mcdt_no                , MCDT mitigation not needed
--         7,         2,  edx,       6,    uclock_disable         , UC-lock disable is supported
-+       0x7,         0,  eax,    31:0,    leaf7_n_subleaves      , Number of cpuid 0x7 subleaves
-+       0x7,         0,  ebx,       0,    fsgsbase               , FSBASE/GSBASE read/write support
-+       0x7,         0,  ebx,       1,    tsc_adjust             , IA32_TSC_ADJUST MSR supported
-+       0x7,         0,  ebx,       2,    sgx                    , Intel SGX (Software Guard Extensions)
-+       0x7,         0,  ebx,       3,    bmi1                   , Bit manipulation extensions group 1
-+       0x7,         0,  ebx,       4,    hle                    , Hardware Lock Elision
-+       0x7,         0,  ebx,       5,    avx2                   , AVX2 instruction set
-+       0x7,         0,  ebx,       6,    fdp_excptn_only        , FPU Data Pointer updated only on x87 exceptions
-+       0x7,         0,  ebx,       7,    smep                   , Supervisor Mode Execution Protection
-+       0x7,         0,  ebx,       8,    bmi2                   , Bit manipulation extensions group 2
-+       0x7,         0,  ebx,       9,    erms                   , Enhanced REP MOVSB/STOSB
-+       0x7,         0,  ebx,      10,    invpcid                , INVPCID instruction (Invalidate Processor Context ID)
-+       0x7,         0,  ebx,      11,    rtm                    , Intel restricted transactional memory
-+       0x7,         0,  ebx,      12,    cqm                    , Intel RDT-CMT / AMD Platform-QoS cache monitoring
-+       0x7,         0,  ebx,      13,    zero_fcs_fds           , Deprecated FPU CS/DS (stored as zero)
-+       0x7,         0,  ebx,      14,    mpx                    , Intel memory protection extensions
-+       0x7,         0,  ebx,      15,    rdt_a                  , Intel RDT / AMD Platform-QoS Enforcemeent
-+       0x7,         0,  ebx,      16,    avx512f                , AVX-512 foundation instructions
-+       0x7,         0,  ebx,      17,    avx512dq               , AVX-512 double/quadword instructions
-+       0x7,         0,  ebx,      18,    rdseed                 , RDSEED instruction
-+       0x7,         0,  ebx,      19,    adx                    , ADCX/ADOX instructions
-+       0x7,         0,  ebx,      20,    smap                   , Supervisor mode access prevention
-+       0x7,         0,  ebx,      21,    avx512ifma             , AVX-512 integer fused multiply add
-+       0x7,         0,  ebx,      23,    clflushopt             , CLFLUSHOPT instruction
-+       0x7,         0,  ebx,      24,    clwb                   , CLWB instruction
-+       0x7,         0,  ebx,      25,    intel_pt               , Intel processor trace
-+       0x7,         0,  ebx,      26,    avx512pf               , AVX-512 prefetch instructions
-+       0x7,         0,  ebx,      27,    avx512er               , AVX-512 exponent/reciprocal instrs
-+       0x7,         0,  ebx,      28,    avx512cd               , AVX-512 conflict detection instrs
-+       0x7,         0,  ebx,      29,    sha_ni                 , SHA/SHA256 instructions
-+       0x7,         0,  ebx,      30,    avx512bw               , AVX-512 BW (byte/word granular) instructions
-+       0x7,         0,  ebx,      31,    avx512vl               , AVX-512 VL (128/256 vector length) extensions
-+       0x7,         0,  ecx,       0,    prefetchwt1            , PREFETCHWT1 (Intel Xeon Phi only)
-+       0x7,         0,  ecx,       1,    avx512vbmi             , AVX-512 Vector byte manipulation instrs
-+       0x7,         0,  ecx,       2,    umip                   , User mode instruction protection
-+       0x7,         0,  ecx,       3,    pku                    , Protection keys for user-space
-+       0x7,         0,  ecx,       4,    ospke                  , OS protection keys enable
-+       0x7,         0,  ecx,       5,    waitpkg                , WAITPKG instructions
-+       0x7,         0,  ecx,       6,    avx512_vbmi2           , AVX-512 vector byte manipulation instrs group 2
-+       0x7,         0,  ecx,       7,    cet_ss                 , CET shadow stack features
-+       0x7,         0,  ecx,       8,    gfni                   , Galois field new instructions
-+       0x7,         0,  ecx,       9,    vaes                   , Vector AES instrs
-+       0x7,         0,  ecx,      10,    vpclmulqdq             , VPCLMULQDQ 256-bit instruction support
-+       0x7,         0,  ecx,      11,    avx512_vnni            , Vector neural network instructions
-+       0x7,         0,  ecx,      12,    avx512_bitalg          , AVX-512 bit count/shiffle
-+       0x7,         0,  ecx,      13,    tme                    , Intel total memory encryption
-+       0x7,         0,  ecx,      14,    avx512_vpopcntdq       , AVX-512: POPCNT for vectors of DW/QW
-+       0x7,         0,  ecx,      16,    la57                   , 57-bit linear addreses (five-level paging)
-+       0x7,         0,  ecx,   21:17,    mawau_val_lm           , BNDLDX/BNDSTX MAWAU value in 64-bit mode
-+       0x7,         0,  ecx,      22,    rdpid                  , RDPID instruction
-+       0x7,         0,  ecx,      23,    key_locker             , Intel key locker support
-+       0x7,         0,  ecx,      24,    bus_lock_detect        , OS bus-lock detection
-+       0x7,         0,  ecx,      25,    cldemote               , CLDEMOTE instruction
-+       0x7,         0,  ecx,      27,    movdiri                , MOVDIRI instruction
-+       0x7,         0,  ecx,      28,    movdir64b              , MOVDIR64B instruction
-+       0x7,         0,  ecx,      29,    enqcmd                 , Enqueue stores supported (ENQCMD{,S})
-+       0x7,         0,  ecx,      30,    sgx_lc                 , Intel SGX launch configuration
-+       0x7,         0,  ecx,      31,    pks                    , Protection keys for supervisor-mode pages
-+       0x7,         0,  edx,       1,    sgx_keys               , Intel SGX attestation services
-+       0x7,         0,  edx,       2,    avx512_4vnniw          , AVX-512 neural network instructions
-+       0x7,         0,  edx,       3,    avx512_4fmaps          , AVX-512 multiply accumulation single precision
-+       0x7,         0,  edx,       4,    fsrm                   , Fast short REP MOV
-+       0x7,         0,  edx,       5,    uintr                  , CPU supports user interrupts
-+       0x7,         0,  edx,       8,    avx512_vp2intersect    , VP2INTERSECT{D,Q} instructions
-+       0x7,         0,  edx,       9,    srdbs_ctrl             , SRBDS mitigation MSR available
-+       0x7,         0,  edx,      10,    md_clear               , VERW MD_CLEAR microcode support
-+       0x7,         0,  edx,      11,    rtm_always_abort       , XBEGIN (RTM transaction) always aborts
-+       0x7,         0,  edx,      13,    tsx_force_abort        , MSR TSX_FORCE_ABORT, RTM_ABORT bit, supported
-+       0x7,         0,  edx,      14,    serialize              , SERIALIZE instruction
-+       0x7,         0,  edx,      15,    hybrid_cpu             , The CPU is identified as a 'hybrid part'
-+       0x7,         0,  edx,      16,    tsxldtrk               , TSX suspend/resume load address tracking
-+       0x7,         0,  edx,      18,    pconfig                , PCONFIG instruction
-+       0x7,         0,  edx,      19,    arch_lbr               , Intel architectural LBRs
-+       0x7,         0,  edx,      20,    ibt                    , CET indirect branch tracking
-+       0x7,         0,  edx,      22,    amx_bf16               , AMX-BF16: tile bfloat16 support
-+       0x7,         0,  edx,      23,    avx512_fp16            , AVX-512 FP16 instructions
-+       0x7,         0,  edx,      24,    amx_tile               , AMX-TILE: tile architecture support
-+       0x7,         0,  edx,      25,    amx_int8               , AMX-INT8: tile 8-bit integer support
-+       0x7,         0,  edx,      26,    spec_ctrl              , Speculation Control (IBRS/IBPB: indirect branch restrictions)
-+       0x7,         0,  edx,      27,    intel_stibp            , Single thread indirect branch predictors
-+       0x7,         0,  edx,      28,    flush_l1d              , FLUSH L1D cache: IA32_FLUSH_CMD MSR
-+       0x7,         0,  edx,      29,    arch_capabilities      , Intel IA32_ARCH_CAPABILITIES MSR
-+       0x7,         0,  edx,      30,    core_capabilities      , IA32_CORE_CAPABILITIES MSR
-+       0x7,         0,  edx,      31,    spec_ctrl_ssbd         , Speculative store bypass disable
-+       0x7,         1,  eax,       4,    avx_vnni               , AVX-VNNI instructions
-+       0x7,         1,  eax,       5,    avx512_bf16            , AVX-512 bFloat16 instructions
-+       0x7,         1,  eax,       6,    lass                   , Linear address space separation
-+       0x7,         1,  eax,       7,    cmpccxadd              , CMPccXADD instructions
-+       0x7,         1,  eax,       8,    arch_perfmon_ext       , ArchPerfmonExt: CPUID leaf 0x23 is supported
-+       0x7,         1,  eax,      10,    fzrm                   , Fast zero-length REP MOVSB
-+       0x7,         1,  eax,      11,    fsrs                   , Fast short REP STOSB
-+       0x7,         1,  eax,      12,    fsrc                   , Fast Short REP CMPSB/SCASB
-+       0x7,         1,  eax,      17,    fred                   , FRED: Flexible return and event delivery transitions
-+       0x7,         1,  eax,      18,    lkgs                   , LKGS: Load 'kernel' (userspace) GS
-+       0x7,         1,  eax,      19,    wrmsrns                , WRMSRNS instr (WRMSR-non-serializing)
-+       0x7,         1,  eax,      20,    nmi_src                , NMI-source reporting with FRED event data
-+       0x7,         1,  eax,      21,    amx_fp16               , AMX-FP16: FP16 tile operations
-+       0x7,         1,  eax,      22,    hreset                 , History reset support
-+       0x7,         1,  eax,      23,    avx_ifma               , Integer fused multiply add
-+       0x7,         1,  eax,      26,    lam                    , Linear address masking
-+       0x7,         1,  eax,      27,    rd_wr_msrlist          , RDMSRLIST/WRMSRLIST instructions
-+       0x7,         1,  ebx,       0,    intel_ppin             , Protected processor inventory number (PPIN{,_CTL} MSRs)
-+       0x7,         1,  edx,       4,    avx_vnni_int8          , AVX-VNNI-INT8 instructions
-+       0x7,         1,  edx,       5,    avx_ne_convert         , AVX-NE-CONVERT instructions
-+       0x7,         1,  edx,       8,    amx_complex            , AMX-COMPLEX instructions (starting from Granite Rapids)
-+       0x7,         1,  edx,      14,    prefetchit_0_1         , PREFETCHIT0/1 instructions
-+       0x7,         1,  edx,      18,    cet_sss                , CET supervisor shadow stacks safe to use
-+       0x7,         2,  edx,       0,    intel_psfd             , Intel predictive store forward disable
-+       0x7,         2,  edx,       1,    ipred_ctrl             , MSR bits IA32_SPEC_CTRL.IPRED_DIS_{U,S}
-+       0x7,         2,  edx,       2,    rrsba_ctrl             , MSR bits IA32_SPEC_CTRL.RRSBA_DIS_{U,S}
-+       0x7,         2,  edx,       3,    ddp_ctrl               , MSR bit  IA32_SPEC_CTRL.DDPD_U
-+       0x7,         2,  edx,       4,    bhi_ctrl               , MSR bit  IA32_SPEC_CTRL.BHI_DIS_S
-+       0x7,         2,  edx,       5,    mcdt_no                , MCDT mitigation not needed
-+       0x7,         2,  edx,       6,    uclock_disable         , UC-lock disable is supported
- 
- # Leaf 9H
- # Intel DCA (Direct Cache Access) enumeration
- 
--         9,         0,  eax,       0,    dca_enabled_in_bios    , DCA is enabled in BIOS
-+       0x9,         0,  eax,       0,    dca_enabled_in_bios    , DCA is enabled in BIOS
- 
- # Leaf AH
- # Intel PMU (Performance Monitoring Unit) enumeration
-@@ -623,7 +632,7 @@
- 0x40000000,         0,  edx,    31:0,    hypervisor_id_2        , Hypervisor ID string bytes 8 - 11
- 
- # Leaf 80000000H
--# Maximum extended leaf number + CPU vendor string (AMD)
-+# Maximum extended leaf number + AMD/Transmeta CPU vendor string
- 
- 0x80000000,         0,  eax,    31:0,    max_ext_leaf           , Maximum extended cpuid leaf supported
- 0x80000000,         0,  ebx,    31:0,    cpu_vendorid_0         , Vendor ID string bytes 0 - 3
-@@ -636,6 +645,7 @@
- 0x80000001,         0,  eax,     3:0,    e_stepping_id          , Stepping ID
- 0x80000001,         0,  eax,     7:4,    e_base_model           , Base processor model
- 0x80000001,         0,  eax,    11:8,    e_base_family          , Base processor family
-+0x80000001,         0,  eax,   13:12,    e_base_type            , Base processor type (Transmeta)
- 0x80000001,         0,  eax,   19:16,    e_ext_model            , Extended processor model
- 0x80000001,         0,  eax,   27:20,    e_ext_family           , Extended processor family
- 0x80000001,         0,  ebx,    15:0,    brand_id               , Brand ID
-@@ -687,6 +697,7 @@
- 0x80000001,         0,  edx,      19,    mp                     , Out-of-spec AMD Multiprocessing bit
- 0x80000001,         0,  edx,      20,    nx                     , No-execute page protection
- 0x80000001,         0,  edx,      22,    mmxext                 , AMD MMX extensions
-+0x80000001,         0,  edx,      23,    e_mmx                  , MMX instructions (Transmeta)
- 0x80000001,         0,  edx,      24,    e_fxsr                 , FXSAVE and FXRSTOR instructions
- 0x80000001,         0,  edx,      25,    fxsr_opt               , FXSAVE and FXRSTOR optimizations
- 0x80000001,         0,  edx,      26,    pdpe1gb                , 1-GB large page support
-@@ -720,7 +731,7 @@
- 0x80000004,         0,  edx,    31:0,    cpu_brandid_11         , CPU brand ID string, bytes 44 - 47
- 
- # Leaf 80000005H
--# AMD L1 cache and L1 TLB enumeration
-+# AMD/Transmeta L1 cache and L1 TLB enumeration
- 
- 0x80000005,         0,  eax,     7:0,    l1_itlb_2m_4m_nentries , L1 ITLB #entires, 2M and 4M pages
- 0x80000005,         0,  eax,    15:8,    l1_itlb_2m_4m_assoc    , L1 ITLB associativity, 2M and 4M pages
-@@ -1051,3 +1062,108 @@
- 0x80000026,       3:0,  ecx,     7:0,    domain_level           , This domain level (subleaf ID)
- 0x80000026,       3:0,  ecx,    15:8,    domain_type            , This domain type
- 0x80000026,       3:0,  edx,    31:0,    x2apic_id              , x2APIC ID of current logical CPU
++For zoned file systems, the following attributes are exposed in:
 +
-+# Leaf 80860000H
-+# Maximum Transmeta leaf number + CPU vendor ID string
++ /sys/fs/xfs/<dev>/zoned/
 +
-+0x80860000,         0,  eax,    31:0,    max_tra_leaf           , Maximum supported Transmeta leaf number
-+0x80860000,         0,  ebx,    31:0,    cpu_vendorid_0         , Transmeta Vendor ID string bytes 0 - 3
-+0x80860000,         0,  ecx,    31:0,    cpu_vendorid_2         , Transmeta Vendor ID string bytes 8 - 11
-+0x80860000,         0,  edx,    31:0,    cpu_vendorid_1         , Transmeta Vendor ID string bytes 4 - 7
++ max_open_zones                 (Min:  1  Default:  Varies  Max:  UINTMAX)
++        This read-only attribute exposes the maximum number of open zones
++        available for data placement. The value is determined at mount tim=
+e and
++        is limited by the capabilities of the backing zoned device, file s=
+ystem
++        size and the max_open_zones mount option.
 +
-+# Leaf 80860001H
-+# Transmeta extended CPU information
++ zonegc_low_space               (Min:  0  Default:  0  Max:  100)
++        Define a percentage for how much of the unused space that GC shoul=
+d keep
++        available for writing. A high value will reclaim more of the space
++        occupied by unused blocks, creating a larger buffer against write
++        bursts at the cost of increased write amplification.  Regardless
++        of this value, garbage collection will always aim to free a minimu=
+m
++        amount of blocks to keep max_open_zones open for data placement pu=
+rposes.
+diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+index 799b84220ebb..e5192c12e7ac 100644
+--- a/fs/xfs/xfs_mount.h
++++ b/fs/xfs/xfs_mount.h
+@@ -229,6 +229,7 @@ typedef struct xfs_mount {
+ 	bool			m_finobt_nores; /* no per-AG finobt resv. */
+ 	bool			m_update_sb;	/* sb needs update in mount */
+ 	unsigned int		m_max_open_zones;
++	unsigned int		m_zonegc_low_space;
+=20
+ 	/*
+ 	 * Bitsets of per-fs metadata that have been checked and/or are sick.
+diff --git a/fs/xfs/xfs_sysfs.c b/fs/xfs/xfs_sysfs.c
+index b0857e3c1270..40bfe0a7790e 100644
+--- a/fs/xfs/xfs_sysfs.c
++++ b/fs/xfs/xfs_sysfs.c
+@@ -718,8 +718,40 @@ max_open_zones_show(
+ }
+ XFS_SYSFS_ATTR_RO(max_open_zones);
+=20
++static ssize_t
++zonegc_low_space_store(
++	struct kobject		*kobj,
++	const char		*buf,
++	size_t			count)
++{
++	int			ret;
++	unsigned int		val;
 +
-+0x80860001,         0,  eax,     3:0,    stepping               , Stepping ID
-+0x80860001,         0,  eax,     7:4,    base_model             , Base CPU model ID
-+0x80860001,         0,  eax,    11:8,    base_family_id         , Base CPU family ID
-+0x80860001,         0,  eax,   13:12,    cpu_type               , CPU type
-+0x80860001,         0,  ebx,     7:0,    cpu_rev_mask_minor     , CPU revision ID, mask minor
-+0x80860001,         0,  ebx,    15:8,    cpu_rev_mask_major     , CPU revision ID, mask major
-+0x80860001,         0,  ebx,   23:16,    cpu_rev_minor          , CPU revision ID, minor
-+0x80860001,         0,  ebx,   31:24,    cpu_rev_major          , CPU revision ID, major
-+0x80860001,         0,  ecx,    31:0,    cpu_base_mhz           , CPU nominal frequency, in MHz
-+0x80860001,         0,  edx,       0,    recovery               , Recovery CMS is active (after bad flush)
-+0x80860001,         0,  edx,       1,    longrun                , LongRun power management capabilities
-+0x80860001,         0,  edx,       3,    lrti                   , LongRun Table Interface
++	ret =3D kstrtouint(buf, 0, &val);
++	if (ret)
++		return ret;
 +
-+# Leaf 80860002H
-+# Transmeta Code Morphing Software (CMS) enumeration
++	if (val > 100)
++		return -EINVAL;
 +
-+0x80860002,         0,  eax,    31:0,    cpu_rev_id             , CPU revision ID
-+0x80860002,         0,  ebx,     7:0,    cms_rev_mask_2         , CMS revision ID, mask component 2
-+0x80860002,         0,  ebx,    15:8,    cms_rev_mask_1         , CMS revision ID, mask component 1
-+0x80860002,         0,  ebx,   23:16,    cms_rev_minor          , CMS revision ID, minor
-+0x80860002,         0,  ebx,   31:24,    cms_rev_major          , CMS revision ID, major
-+0x80860002,         0,  ecx,    31:0,    cms_rev_mask_3         , CMS revision ID, mask component 3
++	zoned_to_mp(kobj)->m_zonegc_low_space =3D val;
 +
-+# Leaf 80860003H
-+# Transmeta CPU information string, bytes 0 - 15
++	return count;
++}
 +
-+0x80860003,         0,  eax,    31:0,    cpu_info_0             , CPU info string bytes 0 - 3
-+0x80860003,         0,  ebx,    31:0,    cpu_info_1             , CPU info string bytes 4 - 7
-+0x80860003,         0,  ecx,    31:0,    cpu_info_2             , CPU info string bytes 8 - 11
-+0x80860003,         0,  edx,    31:0,    cpu_info_3             , CPU info string bytes 12 - 15
++static ssize_t
++zonegc_low_space_show(
++	struct kobject		*kobj,
++	char			*buf)
++{
++	return sysfs_emit(buf, "%u\n",
++			zoned_to_mp(kobj)->m_zonegc_low_space);
++}
++XFS_SYSFS_ATTR_RW(zonegc_low_space);
 +
-+# Leaf 80860004H
-+# Transmeta CPU information string, bytes 16 - 31
+ static struct attribute *xfs_zoned_attrs[] =3D {
+ 	ATTR_LIST(max_open_zones),
++	ATTR_LIST(zonegc_low_space),
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(xfs_zoned);
+diff --git a/fs/xfs/xfs_zone_alloc.c b/fs/xfs/xfs_zone_alloc.c
+index 734b73470ef9..31c2803bc8c9 100644
+--- a/fs/xfs/xfs_zone_alloc.c
++++ b/fs/xfs/xfs_zone_alloc.c
+@@ -1195,6 +1195,13 @@ xfs_mount_zones(
+ 	xfs_set_freecounter(mp, XC_FREE_RTEXTENTS,
+ 			iz.available + iz.reclaimable);
+=20
++	/*
++	 * The user may configure GC to free up a percentage of unused blocks.
++	 * By default this is 0. GC will always trigger at the minimum level
++	 * for keeping max_open_zones available for data placement.
++	 */
++	mp->m_zonegc_low_space =3D 0;
 +
-+0x80860004,         0,  eax,    31:0,    cpu_info_4             , CPU info string bytes 16 - 19
-+0x80860004,         0,  ebx,    31:0,    cpu_info_5             , CPU info string bytes 20 - 23
-+0x80860004,         0,  ecx,    31:0,    cpu_info_6             , CPU info string bytes 24 - 27
-+0x80860004,         0,  edx,    31:0,    cpu_info_7             , CPU info string bytes 28 - 31
+ 	error =3D xfs_zone_gc_mount(mp);
+ 	if (error)
+ 		goto out_free_zone_info;
+diff --git a/fs/xfs/xfs_zone_gc.c b/fs/xfs/xfs_zone_gc.c
+index a4abaac0fbc5..dd706635e3c1 100644
+--- a/fs/xfs/xfs_zone_gc.c
++++ b/fs/xfs/xfs_zone_gc.c
+@@ -162,18 +162,30 @@ struct xfs_zone_gc_data {
+=20
+ /*
+  * We aim to keep enough zones free in stock to fully use the open zone li=
+mit
+- * for data placement purposes.
++ * for data placement purposes. Additionally, the m_zonegc_low_space tunab=
+le
++ * can be set to make sure a fraction of the unused blocks are available f=
+or
++ * writing.
+  */
+ bool
+ xfs_zoned_need_gc(
+ 	struct xfs_mount	*mp)
+ {
++	s64			available, free;
 +
-+# Leaf 80860005H
-+# Transmeta CPU information string, bytes 32 - 47
+ 	if (!xfs_group_marked(mp, XG_TYPE_RTG, XFS_RTG_RECLAIMABLE))
+ 		return false;
+-	if (xfs_estimate_freecounter(mp, XC_FREE_RTAVAILABLE) <
 +
-+0x80860005,         0,  eax,    31:0,    cpu_info_8             , CPU info string bytes 32 - 35
-+0x80860005,         0,  ebx,    31:0,    cpu_info_9             , CPU info string bytes 36 - 39
-+0x80860005,         0,  ecx,    31:0,    cpu_info_10            , CPU info string bytes 40 - 43
-+0x80860005,         0,  edx,    31:0,    cpu_info_11            , CPU info string bytes 44 - 47
++	available =3D xfs_estimate_freecounter(mp, XC_FREE_RTAVAILABLE);
 +
-+# Leaf 80860006H
-+# Transmeta CPU information string, bytes 48 - 63
++	if (available <
+ 	    mp->m_groups[XG_TYPE_RTG].blocks *
+ 	    (mp->m_max_open_zones - XFS_OPEN_GC_ZONES))
+ 		return true;
 +
-+0x80860006,         0,  eax,    31:0,    cpu_info_12            , CPU info string bytes 48 - 51
-+0x80860006,         0,  ebx,    31:0,    cpu_info_13            , CPU info string bytes 52 - 55
-+0x80860006,         0,  ecx,    31:0,    cpu_info_14            , CPU info string bytes 56 - 59
-+0x80860006,         0,  edx,    31:0,    cpu_info_15            , CPU info string bytes 60 - 63
++	free =3D xfs_estimate_freecounter(mp, XC_FREE_RTEXTENTS);
++	if (available < mult_frac(free, mp->m_zonegc_low_space, 100))
++		return true;
 +
-+# Leaf 80860007H
-+# Transmeta live CPU information
-+
-+0x80860007,         0,  eax,    31:0,    cpu_cur_mhz            , Current CPU frequency, in MHz
-+0x80860007,         0,  ebx,    31:0,    cpu_cur_voltage        , Current CPU voltage, in millivolts
-+0x80860007,         0,  ecx,    31:0,    cpu_cur_perf_pctg      , Current CPU performance percentage, 0 - 100d
-+0x80860007,         0,  edx,    31:0,    cpu_cur_gate_delay     , Current CPU gate delay, in femtoseconds
-+
-+# Leaf C0000000H
-+# Maximum Centaur/Zhaoxin leaf number
-+
-+0xc0000000,         0,  eax,    31:0,    max_cntr_leaf          , Maximum Centaur/Zhaoxin leaf number
-+
-+# Leaf C0000001H
-+# Centaur/Zhaoxin extended CPU features
-+
-+0xc0000001,         0,  edx,       0,    ccs_sm2                , CCS SM2 instructions
-+0xc0000001,         0,  edx,       1,    ccs_sm2_en             , CCS SM2 enabled
-+0xc0000001,         0,  edx,       2,    xstore                 , Random Number Generator
-+0xc0000001,         0,  edx,       3,    xstore_en              , RNG enabled
-+0xc0000001,         0,  edx,       4,    ccs_sm3_sm4            , CCS SM3 and SM4 instructions
-+0xc0000001,         0,  edx,       5,    ccs_sm3_sm4_en         , CCS SM3/SM4 enabled
-+0xc0000001,         0,  edx,       6,    ace                    , Advanced Cryptography Engine
-+0xc0000001,         0,  edx,       7,    ace_en                 , ACE enabled
-+0xc0000001,         0,  edx,       8,    ace2                   , Advanced Cryptography Engine v2
-+0xc0000001,         0,  edx,       9,    ace2_en                , ACE v2 enabled
-+0xc0000001,         0,  edx,      10,    phe                    , PadLock Hash Engine
-+0xc0000001,         0,  edx,      11,    phe_en                 , PHE enabled
-+0xc0000001,         0,  edx,      12,    pmm                    , PadLock Montgomery Multiplier
-+0xc0000001,         0,  edx,      13,    pmm_en                 , PMM enabled
-+0xc0000001,         0,  edx,      16,    parallax               , Parallax auto adjust processor voltage
-+0xc0000001,         0,  edx,      17,    parallax_en            , Parallax enabled
-+0xc0000001,         0,  edx,      20,    tm3                    , Thermal Monitor v3
-+0xc0000001,         0,  edx,      21,    tm3_en                 , TM v3 enabled
-+0xc0000001,         0,  edx,      25,    phe2                   , PadLock Hash Engine v2 (SHA384/SHA512)
-+0xc0000001,         0,  edx,      26,    phe2_en                , PHE v2 enabled
-+0xc0000001,         0,  edx,      27,    rsa                    , RSA instructions (XMODEXP/MONTMUL2)
-+0xc0000001,         0,  edx,      28,    rsa_en                 , RSA instructions enabled
+ 	return false;
+ }
+=20
+--=20
+2.34.1
