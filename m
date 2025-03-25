@@ -1,101 +1,97 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB227257458
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A93255E46;
+	Tue, 25 Mar 2025 14:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742912125; cv=none; b=NUlnFeLCTeOPduzirL8jX3FvG4m80qj/+uGXQyuaIQbC1vp8eIsaCc/5EXJPkg2gn6MQ1esJqWljPX8VztxbjwoWQBflEOWNfz4Yt/g1/LdWVflysrX54pY2QbeQj3xV8Da1qn64ESR+7Sh+HSUxOWq8ojdmzlp59jc5+vfUzxQ=
+	t=1742912267; cv=none; b=BrGNDaOKUK+Y2ePwdhu0YG22vVb4t9nZRD5KlrJHlmiP01htVKeXizFedsrNZnosavjIltkwarn6tFjmbyiDe1HTxdjZvCAIwAaEvnrNF4V5qak4vwD8bAnfaLVAH9FoBFfGX9yAmwYqwmB4yupsYOW4womHclU//qtDt6Z+fCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742912125; c=relaxed/simple;
-	bh=w5EreeKhUAgOFBnSwIf3AdHlAHNu2gpXo2JDwr7A0mw=;
+	s=arc-20240116; t=1742912267; c=relaxed/simple;
+	bh=bxnLVExzAbVNZlcwUQ+EuHdmVGqO2jOXVg8Rvy5+13Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EdqlVCBmDLNzFxGRgnWev/nR0+/GzM466Kcgfitb8IetrZszEmyx8KZoArswtllIBNVJWHxBoVUpAfA5RhP8leyi3bXtefDQ4sVWpOz6aGe7qJAl+6v+1KMFkt0kwCjSjhWyo76VaSCQos6WcM3b1JniI4Cr2wiEVF2PRleDzSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RsS+bDCT; arc=none smtp.client-ip=209.85.218.42
+	 To:Cc:Content-Type; b=LfBoH2LyVd8k7g+a7Xx0kY8a1GsxLgRHlap+WcmpTszIoqjPbh5WF7XIO5FLUppJClrvN6+sGTwdFCLZ3xP2x2hb7P24OkKqvqBpM6CVYphr+jf71QtPt7iozFimTbZpkPVWqaBMZYzg3otjrUkrxmZ1VuIynvTrf30DtnZ8ooo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j1lUNK+1; arc=none smtp.client-ip=209.85.216.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RsS+bDCT"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ab7430e27b2so1176084366b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 07:15:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j1lUNK+1"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ff53b26af2so1565147a91.0;
+        Tue, 25 Mar 2025 07:17:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742912122; x=1743516922; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742912265; x=1743517065; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=w5EreeKhUAgOFBnSwIf3AdHlAHNu2gpXo2JDwr7A0mw=;
-        b=RsS+bDCTRsw3oLhK1k++h3929OfVnwzde299fG6y/mvlEvJffJny3w/LhOYx+YDyeY
-         6PzTo+biuHbav01A1cV3Zdw/1W+yzT7+e0TQ8jY4CMNE2EHPCHXMTIp1f2DIrsa3K2bU
-         KoNNT7/KiV1h3w33lUsflyg6edKSVTncBekdjym34HcSciT6t7hfx7WOFfKyo/5AdLfK
-         5jHaNonj0GYEYrlUENBm2+ZAekTKIX5QjbcgqaQrXAUAbCL8blCufXq4+VRFtgciumGU
-         1n5DIS5DvuBur2GaWf/GmJ2WMZM3EWRxYMOfDJVnuTuZsEq8RQ1hTUyQwgcsB7w8E9gB
-         YmvQ==
+        bh=yiAxxfZBeIiK5a2HBBXitFpStb7QFVYBiaYLfAZYFgg=;
+        b=j1lUNK+1GAIv39/eRLqKk1q3x6EjQDOpyaCW/fC8UAuA3bgs1y8NiMqVmniO4fyH9z
+         +1Ks23MJOhxRv7Avi+ue6/KX6kHf/BnxJrTK79SbGkpi3LgBPbuVfB0hHtxDvun8T+xd
+         CScnachl+WqDyhN4LmPj/5V9B13chDrj1Mlhl3dTM+m2kYUaJawqS6TCjl0adY49rBBZ
+         32JCc7p1zVBzsb2W/HgV8I/WM66qoBq6ZL5L9txif4fFtuBo4ixDS0qjE/6ZbBpacx/i
+         ZL+firrcycUd5ylXTD7GqLiFpUlK+LXRlCHKX/3eBWSljaYjflAOAHfX4erOZxJuK7rc
+         IXqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742912122; x=1743516922;
+        d=1e100.net; s=20230601; t=1742912265; x=1743517065;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=w5EreeKhUAgOFBnSwIf3AdHlAHNu2gpXo2JDwr7A0mw=;
-        b=Ybr+3lYGXrOHxT2RNm3d+200a7azG3GRasxEsUDFaz0F9AjhRaRGKGeHugHmnZPK7r
-         LDhRdNj1fmjw6bExk2oe1RB28qCC9OvtkLbIlggMVLv3HldFWv9hsgRpndiokBJSH4FM
-         WFePn6ga1hpbhi/AYhDJB9zsFfAzRMxYTdg4xn/+BIYsCPymwdGbqSA7J0INLMh2lmR+
-         hlSU2AJ7tdHUFz2Ncw5Fo0LdouMSu1g3tlMn7I5RJO9wL9Fs6ho1W+F493cbyVoPcA1G
-         YyNac2i+ucuH/0w5kOleCnCGJEhqeOVEsD6Zz642ShqEPRydt5MfCP0pWc66f/xJfXfl
-         VJ2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVw7y16D0snkMuxtoMUR3zFhwzb7a/ai6QRwTtPCpcyyi9AB7tq3cc7VduidH6+5amsW9YRXFaaGHgLO58=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQFrSIXrzwRQ5NFyQKGApJ2jmGZ+YUx02ljH92BvHccDlrzvtV
-	gakiiQqZGe/4LJ0V6507wTT70KIJdBgvr8bVhMHO/QQM3eQNRbGsmZwsb/Vi+XMORinF9X7R0JN
-	Uukwc1wluGpgBX972d7EfWo3kVgPw+S7piZc=
-X-Gm-Gg: ASbGncvzuYfR7Jr9tP61xaGBDSmFsl0Wm7ePD5gssnm3BVIkfyllyAWHszDQtkHxbD8
-	3eTvIJGs8D/wI8ObcJXeSzNgwLMlmgWBzl1pgG4H1IxIccO8pWFnNC/JvpAx9d5iNhRHsfJotql
-	Mc4ms++SzQeyFdJ6OdCh4V+09T4sfr
-X-Google-Smtp-Source: AGHT+IHK0fJ2cGUy3PZ7GPK/m1tOr2sUxPAQ0Rh/AzS1MwkJsiVSy6WDJm6paNd+KuGtf2AomV4Ok/Ofy7InlJTm66o=
-X-Received: by 2002:a17:907:6ea7:b0:ac6:b816:454f with SMTP id
- a640c23a62f3a-ac6b816458bmr385675666b.54.1742912121823; Tue, 25 Mar 2025
- 07:15:21 -0700 (PDT)
+        bh=yiAxxfZBeIiK5a2HBBXitFpStb7QFVYBiaYLfAZYFgg=;
+        b=gpHZXPqgtTgaTV9Tj5bHaJSeycRmbQH/bIyOu6RGTJ2ZsKfuvco4wCHdtAfEZEdacd
+         NKYz54jTT4l2TQT/VgXsxsOgLjGA4jXp+Gza2ohd8UsKHfjVvTrqYdO3UxmxaXk99gOr
+         mfGtfv2JskuWGYAXAZWePeGfRQ+5tPhOdquqUP0ewBI3DGFDBEKWJUfKBFKfo28nGPSV
+         uaAKCwd/mTEcdByO3Bz0lFc9rF/QTQQG0Mv3ZeCvqYdtjFq5K6sOyq19A1jCbq9MM00S
+         m2BPX5//zlU/uPtMs+hMOEtGILVit29aQtxSiSBA2Xb/aZ8QdHY3rMqmeWW0H2cL4B+L
+         wZ4A==
+X-Forwarded-Encrypted: i=1; AJvYcCXRWOMN8XXbBfUIOM3RcVAr9ebBzK7g6UWRWKajTuX10idxh+h6qrRXSSIX8z3d8iGVVrdLGhNjNwXaIY0=@vger.kernel.org, AJvYcCXrHPg8Wo8zmmTJaM584FzrqwcNi4odY/FsyYr8NC6DHFqvELHHBR2aorY4915kbFmYdDw3pbi9gGWs4D+nYas=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPxRpIXjtqJYiNOd9vES7LtwI2ip/aNv8GGy7AlQI8dSUMtsNk
+	Wnu+09cjzmQ3rOpbkXR9ETl+/+IxB+lo1Fo1ZNo5QA6oAbEICXTeLBAlfzXN/jWUCCSgYQIHYTV
+	bD71jOnsAaq5ZGtZpF1yvurqU5I6fZDNzmA0=
+X-Gm-Gg: ASbGncua27sl1v+I32sGtf9AX4htKDRj+3XVYKrplOOYZROtZ30Y9gS5xO0YqqvXx7V
+	mtfHF1nF2Y1hcxfjfpv3ASF/uUQM1egbfGkteRAMS4rv/mNsK2iIRhyDwCZ3HKibAqYzSOf6ovM
+	6lwAiD5cPZY121X6uFjAyHyvAwqw==
+X-Google-Smtp-Source: AGHT+IGwUtqDN9/gKOU8D3rc7eewlWrEw5Yldn+0hCf3frdUZFYWU0VKlZ+SzQiAqLHzncX80HoFxER+12RCQiUSp0c=
+X-Received: by 2002:a17:90b:1647:b0:2ee:6563:20b5 with SMTP id
+ 98e67ed59e1d1-3030fb1fbc7mr9477978a91.0.1742912264922; Tue, 25 Mar 2025
+ 07:17:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250321-x86_x2apic-v3-4-b0cbaa6fa338@ixit.cz>
- <20250322175052.43611-1-mat.jonczyk@o2.pl> <Z998eR-9QNL1R-71@surfacebook.localdomain>
- <Z-JZnueg7EvMFJqK@gmail.com>
-In-Reply-To: <Z-JZnueg7EvMFJqK@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 25 Mar 2025 16:14:45 +0200
-X-Gm-Features: AQ5f1JouQfAX51lH_jtINaDcfKoo2ATRpdfeDsSCfxVJ29CHbGveW3iY0GsWSoo
-Message-ID: <CAHp75Ve++2rEGe7Ob=sRw7qBC-kf5v8_Ag9h99rrn5yd7Kx9cw@mail.gmail.com>
-Subject: Re: [PATCH] x86/Kconfig: fix lists in X86_EXTENDED_PLATFORM help text
-To: Ingo Molnar <mingo@kernel.org>
-Cc: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	David Heideberg <david@ixit.cz>
+References: <20250325-feat-add-bitmask-macro-v2-1-d3beabdad90f@gmail.com> <D8PDWRH06U1X.3JGHP1311BPPY@proton.me>
+In-Reply-To: <D8PDWRH06U1X.3JGHP1311BPPY@proton.me>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 25 Mar 2025 15:17:32 +0100
+X-Gm-Features: AQ5f1JrNG9IMxQMOkhvrXLzEDQWYrISIuIZhgF6lHcZlHfC1fPERYeufzxN3OEM
+Message-ID: <CANiq72nm=Sz7s3o81FFP6o5hKCH6M=BtzmvF7eVeZx0C8aWW1g@mail.gmail.com>
+Subject: Re: [PATCH v2] rust: add new macro for common bitmap operations
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Filipe Xavier <felipeaggger@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, daniel.almeida@collabora.com, 
+	rust-for-linux@vger.kernel.org, felipe_life@live.com, 
+	linux-kernel@vger.kernel.org, Lyude Paul <lyude@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 25, 2025 at 9:22=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wrot=
-e:
-> * Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > Sat, Mar 22, 2025 at 06:50:52PM +0100, Mateusz Jo=C5=84czyk kirjoitti:
-> > > Support for STA2X11-based systems was removed in February in
-> > > commit dcbb01fbb7ae ("x86/pci: Remove old STA2x11 support")
-> > >
-> > > Intel MID for 32-bit platforms was removed from this list also in
-> >
-> > Was it? It's rather hidden and not recommended as far as I understand.
+On Tue, Mar 25, 2025 at 2:34=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
 >
-> Well, with the '32-bit' qualifier the statement is true, isn't it?
+> Please use absolute paths to refer to items, in this case
+> `::core::convert::From` (note the leading `::`). More cases below.
+>
+> I filed an issue to add a new clippy lint to catch this:
+>
+>     https://github.com/rust-lang/rust-clippy/issues/14472
 
-> ca5955dd5f08 removed a MID reference from the 32-bit list and added a
-> different one to the 64-bit list:
+Linked in our list:
 
-Ah, right, we are talking only about the _list_ here and not about the
-support code. Now it's all clear, indeed.
+    https://github.com/Rust-for-Linux/linux/issues/349
 
---=20
-With Best Regards,
-Andy Shevchenko
+Thanks!
+
+Cheers,
+Miguel
