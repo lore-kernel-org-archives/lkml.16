@@ -1,141 +1,406 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF292F5B;
-	Tue, 25 Mar 2025 09:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B71C1F940A
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 09:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742893889; cv=none; b=Nc0PPLbH9qk7ow23DdXKTbvR46nXCZZ6iORhc1WUk0rLVyNy0FR9a8RyyFr0i6i9RduXB/I+37KO5Y5yjqgrUpnwm9AcjJH5fQrNsYSWBvP06bR8JWO96Vb6bDEtxPpXOTrzYqovc8j3N32t80eyOBye/qb8kfaNsRpT4JxVA7Y=
+	t=1742893950; cv=none; b=P0ukkeje/ywrfjz36yJ8AJYB3xEvgxgvKnCDqCvXwlt6NNZmVQQc7p17dSbFf3jjE56gr14nrcIi5zvim8wgFepj5ioRbPqgyLfXsgQ7ISj8anhpCxJa9XFnWWzjUk6K+ci9L1eQl9uPkwSK+3zsFlgM+3V5NLJ7zm3R9233Iz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742893889; c=relaxed/simple;
-	bh=8ZqXnrU0AKG02HNlyB5u3VfqeMfIfP0PQXI4TwJmruo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uaYIz9x3VjuGjIXoKiOp8TwB50WNFXb/B1+ixSLdQNKcbcG1yNVOtr9bKN0HqHVWkuyV/J68FL6rz5I+gBgZC2qjg4GON6F7JAW7YRYPfl6YSb2oytwvkyKQ5IeYQ9GSe0ToN+3L28O7S/2fnSqm8uItBSqPmr61M/Y+B+lnQA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kCoTDpX6; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kCoTDpX6"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ff85fec403so13022021a91.1;
-        Tue, 25 Mar 2025 02:11:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742893887; x=1743498687; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6S3q00Ly2YEgnihClS5EXWQIAkjqOLphkLp6Zwb5Cuw=;
-        b=kCoTDpX6EhA6p6FikQbr127X8JTKskmP1/t/PC8H+7QnPIfNt6ZfzQrs5bxLZeu2fY
-         VkfOSrNDwkJ6XS03ZHArCn+JIV2lQaQmiB7yFvntBYRvX+v/ozCfWFCZuHqc1AnotzaH
-         KmUjyP0DuQrlcvf5F2M5xRbrmbf/BdbQfMI26917laC/+o+zTy0R8Fa6iznAS1VW27O5
-         3RuYI/jCuQ20WK2vUbYKYCC/qe+lnbsdmZGEVJE52G7iIXIqra9JEsTMdiJLG8MFu758
-         +5mu/1fy4p2GtsxJ84zN+gdnI9ALg+3EdafSz2vJj1okg/Vdg8X0Y7fU5s5mqj7Q5j8n
-         AnwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742893887; x=1743498687;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6S3q00Ly2YEgnihClS5EXWQIAkjqOLphkLp6Zwb5Cuw=;
-        b=o/dYB8hUjuC0juUbqiE3I2ZgToBMJQ3BZJD+slZY4SChjQVffa2cn/5pDiWVrdwsuw
-         9jL6+YCLZ3tVQ6g7LfIRT5GQ9iQA+jgNgV3bHQZMGWo/1xc1EGSPZJ2z5poFe8Ur/ytI
-         ZI5Y++ELo1kDVpB1mywX3+AEBQF6gnqzeLhN2sUHa3TnNsjse9dM2EIpgCUYAGxm0yc+
-         O1BEV8U53kuyF35RILIcj7sReFdFP19YWem1LVDj3Yk81XjZvS+9Igs2UqDJ8cJ2o25i
-         Xa+QVVn/VVYgGa5zLFSgGLcRIL/grHCNiMdhrJeVkvN4ItQAZpiRZHsLoNbmnZ4ie00/
-         4jdA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYLruyRCYHYFgjzUD4jocMeFiHQVpZnRn19FDtAScT26BHOcrMg8yz67kLPseeRpfcY3KIukoV1U6g2FA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6u272XPmNZu8z2Uz/+JIVaTNX8sgjqZmLRRZPSL1Rky1f79jK
-	UG7t5PPFza26iFDvo1uMf5kxajo3RkYdcBMd5Tr380QXsLtIL3Tt
-X-Gm-Gg: ASbGncvT9kUVT6WDJGkOL8Geejm07+sEkpZvq1lOHsWN9z5DrVMP0nDhSjeHGLDSiNp
-	5nzDB7ZbBH5N39ylbCgcBx4XI1g5J9QUtw2lW2yhMH4pGWyXMkQXm6Woode2dKIH1BTW53wplxK
-	bZG3vTe61yN+0nzpD/951AdE31jMEEBJkSEyJoqPLoNscEimdCoHx1znaVAHVUxkr7kphLfeHu9
-	262FZ4mmLYHOLcjfSYbRfRoVF41kaKN1om561D3GOHrKUOZIN5+P8zDFhm2F7XqLUV958Do+2gW
-	Kok2LInE8hUcl8J0s68Wm42ZDhwII5WZkESrchPwqBZHJpWHfDoMd/PT58rSqQKMeRE=
-X-Google-Smtp-Source: AGHT+IGAgeeRx8c4qx0gwdM6u3mkeO/xzEJBfDsv8Qo3SDJ35nrMrCfdjOnwKQpjGh0bDrU0lgqtIA==
-X-Received: by 2002:a17:90b:5408:b0:2ee:5c9b:35c0 with SMTP id 98e67ed59e1d1-3030f200ebdmr20681087a91.9.1742893886955;
-        Tue, 25 Mar 2025 02:11:26 -0700 (PDT)
-Received: from cs20-buildserver.lan ([2403:c300:dc02:2d2e:2e0:4cff:fe68:863])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf576be5sm13717402a91.6.2025.03.25.02.11.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 02:11:26 -0700 (PDT)
-From: Jim Liu <jim.t90615@gmail.com>
-X-Google-Original-From: Jim Liu <JJLIU0@nuvoton.com>
-To: JJLIU0@nuvoton.com,
-	jim.t90615@gmail.com,
-	florian.fainelli@broadcom.com,
-	andrew@lunn.ch,
-	hkallweit1@gmail.com,
-	kuba@kernel.org,
-	linux@armlinux.org.uk,
-	edumazet@google.com,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	giulio.benetti+tekvox@benettiengineering.com,
-	bcm-kernel-feedback-list@broadcom.com,
-	linux-kernel@vger.kernel.org,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Subject: [v3,net] net: phy: broadcom: Correct BCM5221 PHY model detection failure
-Date: Tue, 25 Mar 2025 17:10:29 +0800
-Message-Id: <20250325091029.3511303-1-JJLIU0@nuvoton.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1742893950; c=relaxed/simple;
+	bh=b9he5cC70vuyc5wkpSLIy0f1koMsdlqyCxHaRZctk6Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MjMO5hPamYKA4yUgjLLswdlivoFV4e34Dr7uQAmSJNJU0RDbPLuExQNfRY3DIAEoLnoToVIKdfvQWaEt6yGNZF3EJkVM0kqaH302RemrLuJJwvMk71J3b/XY7autNZt9+RKaSnK/Vzyzyz0e0OBVQ5dVSiNBqHQSqeHOYgKodow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 816784341A;
+	Tue, 25 Mar 2025 09:12:22 +0000 (UTC)
+Message-ID: <c6d329e3-f712-4da9-879b-26f52086fc36@ghiti.fr>
+Date: Tue, 25 Mar 2025 10:12:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] riscv: Fix the PAUSE Opcode for MIPS P8700.
+Content-Language: en-US
+To: Djordje Todorovic <Djordje.Todorovic@htecgroup.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, "arikalo@gmail.com" <arikalo@gmail.com>
+Cc: "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+ "ajones@ventanamicro.com" <ajones@ventanamicro.com>,
+ "christoph.muellner@vrull.eu" <christoph.muellner@vrull.eu>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250129131703.733098-1-arikalo@gmail.com>
+ <mhng-c1c0b3c0-f358-40ce-ba1d-e33d2b85d9cc@palmer-ri-x1c9>
+ <AS4PR09MB651829E38B4857711DD6799CF7D92@AS4PR09MB6518.eurprd09.prod.outlook.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <AS4PR09MB651829E38B4857711DD6799CF7D92@AS4PR09MB6518.eurprd09.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduiedvvdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeeffffgheehfeeltefhveehkeethedtjeegkedvffdutddtgfeuhfdtvdelffdtffenucffohhmrghinheprghkrgdrmhhspdgvnhhtrhihrdhssgdpihhnfhhrrgguvggrugdrohhrghenucfkphepfedurdefvddrkedurddukeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepfedurdefvddrkedurddukeejpdhhvghloheplgduledvrdduieekrddvuddrvdehngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeelpdhrtghpthhtohepffhjohhrughjvgdrvfhoughorhhovhhitgeshhhtvggtghhrohhuphdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegrrhhikhgrlhhosehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdpr
+ hgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopegrohhusegvvggtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtoheprghjohhnvghssehvvghnthgrnhgrmhhitghrohdrtghomhdprhgtphhtthhopegthhhrihhsthhophhhrdhmuhgvlhhlnhgvrhesvhhruhhllhdrvghu
+X-GND-Sasl: alex@ghiti.fr
 
-Use "BRCM_PHY_MODEL" can be applied to the entire 5221 family of PHYs.
+Hi Djordje,
 
-Fixes: 3abbd0699b67 ("net: phy: broadcom: add support for BCM5221 phy")
-Signed-off-by: Jim Liu <jim.t90615@gmail.com>
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
----
-v3:
-   modify BRCM_PHY_MODEL define
----
- drivers/net/phy/broadcom.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+On 19/03/2025 13:26, Djordje Todorovic wrote:
+> HTEC Public
+>
+> Hi everyone,
+>
+> Thank you a lot for your comments.
+> I am wondering how we should proceed from here.
 
-diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
-index 22edb7e4c1a1..4327d946d524 100644
---- a/drivers/net/phy/broadcom.c
-+++ b/drivers/net/phy/broadcom.c
-@@ -23,8 +23,7 @@
- #include <linux/irq.h>
- #include <linux/gpio/consumer.h>
- 
--#define BRCM_PHY_MODEL(phydev) \
--	((phydev)->drv->phy_id & (phydev)->drv->phy_id_mask)
-+#define BRCM_PHY_MODEL(phydev) ((phydev)->drv->phy_id)
- 
- #define BRCM_PHY_REV(phydev) \
- 	((phydev)->drv->phy_id & ~((phydev)->drv->phy_id_mask))
-@@ -859,7 +858,7 @@ static int brcm_fet_config_init(struct phy_device *phydev)
- 		return reg;
- 
- 	/* Unmask events we are interested in and mask interrupts globally. */
--	if (phydev->phy_id == PHY_ID_BCM5221)
-+	if (BRCM_PHY_MODEL(phydev) == PHY_ID_BCM5221)
- 		reg = MII_BRCM_FET_IR_ENABLE |
- 		      MII_BRCM_FET_IR_MASK;
- 	else
-@@ -888,7 +887,7 @@ static int brcm_fet_config_init(struct phy_device *phydev)
- 		return err;
- 	}
- 
--	if (phydev->phy_id != PHY_ID_BCM5221) {
-+	if (BRCM_PHY_MODEL(phydev) != PHY_ID_BCM5221) {
- 		/* Set the LED mode */
- 		reg = __phy_read(phydev, MII_BRCM_FET_SHDW_AUXMODE4);
- 		if (reg < 0) {
-@@ -1009,7 +1008,7 @@ static int brcm_fet_suspend(struct phy_device *phydev)
- 		return err;
- 	}
- 
--	if (phydev->phy_id == PHY_ID_BCM5221)
-+	if (BRCM_PHY_MODEL(phydev) == PHY_ID_BCM5221)
- 		/* Force Low Power Mode with clock enabled */
- 		reg = BCM5221_SHDW_AM4_EN_CLK_LPM | BCM5221_SHDW_AM4_FORCE_LPM;
- 	else
--- 
-2.34.1
 
+I don't think there is a requirement for exposing this new encoding to 
+userspace, you just need to make sure that Zihintpause is not advertised 
+though.
+
+So either you expose a new vendor extension to userspace so that the 
+difference in the encoding can be dealt with or you make sure you don't 
+expose Zihintpause.
+
+Thanks,
+
+Alex
+
+
+>
+> Best,
+> Djordje
+>
+> ________________________________________
+> From: Palmer Dabbelt <palmer@dabbelt.com>
+> Sent: Wednesday, February 5, 2025 4:44 PM
+> To: arikalo@gmail.com <arikalo@gmail.com>
+> Cc: linux-riscv@lists.infradead.org <linux-riscv@lists.infradead.org>; Paul Walmsley <paul.walmsley@sifive.com>; aou@eecs.berkeley.edu <aou@eecs.berkeley.edu>; ajones@ventanamicro.com <ajones@ventanamicro.com>; christoph.muellner@vrull.eu <christoph.muellner@vrull.eu>; arikalo@gmail.com <arikalo@gmail.com>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>; Djordje Todorovic <djordje.todorovic@htecgroup.com>
+> Subject: Re: [PATCH v3] riscv: Fix the PAUSE Opcode for MIPS P8700.
+>
+> [You don't often get email from palmer@dabbelt.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+>
+> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you recognize the sender and know the content is safe.
+>
+>
+> On Wed, 29 Jan 2025 05:17:03 PST (-0800), arikalo@gmail.com wrote:
+>> From: Djordje Todorovic <djordje.todorovic@htecgroup.com>
+>>
+>> The riscv MIPS P8700 uses a different opcode for PAUSE.
+>> It is a ‘hint’ encoding of the SLLI instruction, with rd=0, rs1=0 and
+>> imm=5. It will behave as a NOP instruction if no additional behavior
+>> beyond that of SLLI is implemented.
+> We need to expose it to userspace, then, as it's a user-visible erratum
+> -- really it's just a totally different custom extension than
+> Zihintpause, but I don't think it really makes much of a difference what
+> we call it.
+>
+> If you have other custom stuff it's probably a good time to expose
+> those, too, as then it'll be easier for userspace to sort out.
+>
+>> Add ERRATA_MIPS and ERRATA_MIPS_P8700_PAUSE_OPCODE configs.
+>> Handle errata for MIPS CPUs.
+>>
+>> Signed-off-by: Djordje Todorovic <djordje.todorovic@htecgroup.com>
+>> Signed-off-by: Aleksandar Rikalo <arikalo@gmail.com>
+>> Signed-off-by: Raj Vishwanathan4 <rvishwanathan@mips.com>
+>> ---
+>>   arch/riscv/Kconfig.errata                     | 23 +++++++++++
+>>   arch/riscv/errata/Makefile                    |  1 +
+>>   arch/riscv/errata/mips/Makefile               |  5 +++
+>>   arch/riscv/errata/mips/errata.c               | 41 +++++++++++++++++++
+>>   arch/riscv/include/asm/alternative.h          |  3 ++
+>>   arch/riscv/include/asm/cmpxchg.h              |  3 +-
+>>   arch/riscv/include/asm/errata_list.h          | 20 ++++++++-
+>>   arch/riscv/include/asm/vdso/processor.h       |  4 +-
+>>   arch/riscv/include/asm/vendorid_list.h        |  1 +
+>>   arch/riscv/kernel/alternative.c               |  5 +++
+>>   arch/riscv/kernel/entry.S                     |  2 +
+>>   arch/riscv/mm/init.c                          |  1 +
+>>   tools/arch/riscv/include/asm/vdso/processor.h |  5 ++-
+>>   13 files changed, 110 insertions(+), 4 deletions(-)
+>>   create mode 100644 arch/riscv/errata/mips/Makefile
+>>   create mode 100644 arch/riscv/errata/mips/errata.c
+>>
+>> diff --git a/arch/riscv/Kconfig.errata b/arch/riscv/Kconfig.errata
+>> index 2acc7d876e1f..1589528fdc30 100644
+>> --- a/arch/riscv/Kconfig.errata
+>> +++ b/arch/riscv/Kconfig.errata
+>> @@ -21,6 +21,29 @@ config ERRATA_ANDES_CMO
+>>
+>>          If you don't know what to do here, say "Y".
+>>
+>> +config ERRATA_MIPS
+>> +     bool "MIPS errata"
+>> +     depends on RISCV_ALTERNATIVE
+>> +     help
+>> +       All MIPS errata Kconfig depend on this Kconfig. Disabling
+>> +       this Kconfig will disable all MIPS errata. Please say "Y"
+>> +       here if your platform uses MIPS CPU cores.
+>> +
+>> +       Otherwise, please say "N" here to avoid unnecessary overhead.
+>> +
+>> +config ERRATA_MIPS_P8700_PAUSE_OPCODE
+>> +     bool "Fix the PAUSE Opcode for MIPS P8700"
+>> +     depends on ERRATA_MIPS && 64BIT
+>> +     default n
+>> +     help
+>> +        The RISCV MIPS P8700 uses a different opcode for PAUSE.
+>> +        It is a 'hint' encoding of the SLLI instruction,
+>> +        with rd=0, rs1=0 and imm=5. It will behave as a NOP
+>> +        instruction if no additional behavior beyond that of
+>> +        SLLI is implemented.
+>> +
+>> +        If you are not using the P8700 processor, say n.
+>> +
+>>   config ERRATA_SIFIVE
+>>        bool "SiFive errata"
+>>        depends on RISCV_ALTERNATIVE
+>> diff --git a/arch/riscv/errata/Makefile b/arch/riscv/errata/Makefile
+>> index f0da9d7b39c3..156cafb338c1 100644
+>> --- a/arch/riscv/errata/Makefile
+>> +++ b/arch/riscv/errata/Makefile
+>> @@ -9,5 +9,6 @@ endif
+>>   endif
+>>
+>>   obj-$(CONFIG_ERRATA_ANDES) += andes/
+>> +obj-$(CONFIG_ERRATA_MIPS) += mips/
+>>   obj-$(CONFIG_ERRATA_SIFIVE) += sifive/
+>>   obj-$(CONFIG_ERRATA_THEAD) += thead/
+>> diff --git a/arch/riscv/errata/mips/Makefile b/arch/riscv/errata/mips/Makefile
+>> new file mode 100644
+>> index 000000000000..6278c389b801
+>> --- /dev/null
+>> +++ b/arch/riscv/errata/mips/Makefile
+>> @@ -0,0 +1,5 @@
+>> +ifdef CONFIG_RISCV_ALTERNATIVE_EARLY
+>> +CFLAGS_errata.o := -mcmodel=medany
+>> +endif
+>> +
+>> +obj-y += errata.o
+>> diff --git a/arch/riscv/errata/mips/errata.c b/arch/riscv/errata/mips/errata.c
+>> new file mode 100644
+>> index 000000000000..998bbcaa50d1
+>> --- /dev/null
+>> +++ b/arch/riscv/errata/mips/errata.c
+>> @@ -0,0 +1,41 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (C) 2025 MIPS.
+>> + */
+>> +
+>> +#include <linux/memory.h>
+>> +#include <linux/module.h>
+>> +#include <asm/text-patching.h>
+>> +#include <asm/alternative.h>
+>> +#include <asm/errata_list.h>
+>> +#include <asm/vendorid_list.h>
+>> +#include <asm/vendor_extensions.h>
+>> +
+>> +void mips_errata_patch_func(struct alt_entry *begin,
+>> +                                          struct alt_entry *end,
+>> +                                          unsigned long archid,
+>> +                                          unsigned long impid,
+>> +                                          unsigned int stage)
+>> +{
+>> +     struct alt_entry *alt;
+>> +
+>> +     BUILD_BUG_ON(ERRATA_MIPS_NUMBER >= RISCV_VENDOR_EXT_ALTERNATIVES_BASE);
+>> +
+>> +     if (stage == RISCV_ALTERNATIVES_EARLY_BOOT)
+>> +             return;
+>> +
+>> +     for (alt = begin; alt < end; alt++) {
+>> +             if (alt->vendor_id != MIPS_VENDOR_ID)
+>> +                     continue;
+>> +
+>> +             if (alt->patch_id >= ERRATA_MIPS_NUMBER) {
+>> +                     WARN(1, "MIPS errata id:%d not in kernel errata list\n",
+>> +                          alt->patch_id);
+>> +                     continue;
+>> +             }
+>> +
+>> +             mutex_lock(&text_mutex);
+>> +             patch_text_nosync(ALT_OLD_PTR(alt), ALT_ALT_PTR(alt), alt->alt_len);
+>> +             mutex_unlock(&text_mutex);
+>> +     }
+>> +}
+>> diff --git a/arch/riscv/include/asm/alternative.h b/arch/riscv/include/asm/alternative.h
+>> index 3c2b59b25017..bc3ada8190a9 100644
+>> --- a/arch/riscv/include/asm/alternative.h
+>> +++ b/arch/riscv/include/asm/alternative.h
+>> @@ -48,6 +48,9 @@ struct alt_entry {
+>>   void andes_errata_patch_func(struct alt_entry *begin, struct alt_entry *end,
+>>                             unsigned long archid, unsigned long impid,
+>>                             unsigned int stage);
+>> +void mips_errata_patch_func(struct alt_entry *begin, struct alt_entry *end,
+>> +                           unsigned long archid, unsigned long impid,
+>> +                           unsigned int stage);
+>>   void sifive_errata_patch_func(struct alt_entry *begin, struct alt_entry *end,
+>>                              unsigned long archid, unsigned long impid,
+>>                              unsigned int stage);
+>> diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
+>> index 4cadc56220fe..2f5705f49dcc 100644
+>> --- a/arch/riscv/include/asm/cmpxchg.h
+>> +++ b/arch/riscv/include/asm/cmpxchg.h
+>> @@ -13,6 +13,7 @@
+>>   #include <asm/hwcap.h>
+>>   #include <asm/insn-def.h>
+>>   #include <asm/cpufeature-macros.h>
+>> +#include <asm/errata_list.h>
+>>
+>>   #define __arch_xchg_masked(sc_sfx, swap_sfx, prepend, sc_append,             \
+>>                           swap_append, r, p, n)                                \
+>> @@ -404,7 +405,7 @@ static __always_inline void __cmpwait(volatile void *ptr,
+>>        return;
+>>
+>>   no_zawrs:
+>> -     asm volatile(RISCV_PAUSE : : : "memory");
+>> +     ALT_RISCV_PAUSE();
+>>   }
+>>
+>>   #define __cmpwait_relaxed(ptr, val) \
+>> diff --git a/arch/riscv/include/asm/errata_list.h b/arch/riscv/include/asm/errata_list.h
+>> index 7c8a71a526a3..68c46ccb9b7c 100644
+>> --- a/arch/riscv/include/asm/errata_list.h
+>> +++ b/arch/riscv/include/asm/errata_list.h
+>> @@ -5,7 +5,6 @@
+>>   #ifndef ASM_ERRATA_LIST_H
+>>   #define ASM_ERRATA_LIST_H
+>>
+>> -#include <asm/alternative.h>
+>>   #include <asm/csr.h>
+>>   #include <asm/insn-def.h>
+>>   #include <asm/hwcap.h>
+>> @@ -28,6 +27,11 @@
+>>   #define      ERRATA_THEAD_NUMBER 2
+>>   #endif
+>>
+>> +#ifdef CONFIG_ERRATA_MIPS
+>> +#define ERRATA_MIPS_P8700_PAUSE_OPCODE 0
+>> +#define ERRATA_MIPS_NUMBER 1
+>> +#endif
+>> +
+>>   #ifdef __ASSEMBLY__
+>>
+>>   #define ALT_INSN_FAULT(x)                                            \
+>> @@ -58,6 +62,20 @@ asm(ALTERNATIVE("sfence.vma %0, %1", "sfence.vma", SIFIVE_VENDOR_ID,       \
+>>                ERRATA_SIFIVE_CIP_1200, CONFIG_ERRATA_SIFIVE_CIP_1200)  \
+>>                : : "r" (addr), "r" (asid) : "memory")
+>>
+>> +#ifdef CONFIG_ERRATA_MIPS_P8700_PAUSE_OPCODE
+>> +#define ALT_RISCV_PAUSE()                                               \
+>> +asm volatile(ALTERNATIVE(                                               \
+>> +    RISCV_PAUSE,                /* Original RISC‑V pause insn */        \
+>> +    ".4byte 0x00501013",        /* Replacement for MIPS P8700 */        \
+>> +    MIPS_VENDOR_ID,             /* Vendor ID to match */                \
+>> +    ERRATA_MIPS_P8700_PAUSE_OPCODE, /* patch_id */                      \
+>> +    CONFIG_ERRATA_MIPS_P8700_PAUSE_OPCODE)                              \
+>> +    : /* no outputs */ : /* no inputs */ : "memory")
+>> +#else
+>> +#define ALT_RISCV_PAUSE() \
+>> +    asm volatile(RISCV_PAUSE : : : "memory")
+>> +#endif
+>> +
+>>   /*
+>>    * _val is marked as "will be overwritten", so need to set it to 0
+>>    * in the default case.
+>> diff --git a/arch/riscv/include/asm/vdso/processor.h b/arch/riscv/include/asm/vdso/processor.h
+>> index 8f383f05a290..8f749552ecfe 100644
+>> --- a/arch/riscv/include/asm/vdso/processor.h
+>> +++ b/arch/riscv/include/asm/vdso/processor.h
+>> @@ -5,6 +5,8 @@
+>>   #ifndef __ASSEMBLY__
+>>
+>>   #include <asm/barrier.h>
+>> +
+>> +#include <asm/errata_list.h>
+>>   #include <asm/insn-def.h>
+>>
+>>   static inline void cpu_relax(void)
+>> @@ -19,7 +21,7 @@ static inline void cpu_relax(void)
+>>         * Reduce instruction retirement.
+>>         * This assumes the PC changes.
+>>         */
+>> -     __asm__ __volatile__ (RISCV_PAUSE);
+>> +     ALT_RISCV_PAUSE();
+>>        barrier();
+>>   }
+>>
+>> diff --git a/arch/riscv/include/asm/vendorid_list.h b/arch/riscv/include/asm/vendorid_list.h
+>> index a5150cdf34d8..3b09874d7a6d 100644
+>> --- a/arch/riscv/include/asm/vendorid_list.h
+>> +++ b/arch/riscv/include/asm/vendorid_list.h
+>> @@ -9,5 +9,6 @@
+>>   #define MICROCHIP_VENDOR_ID  0x029
+>>   #define SIFIVE_VENDOR_ID     0x489
+>>   #define THEAD_VENDOR_ID              0x5b7
+>> +#define MIPS_VENDOR_ID               0x722
+>>
+>>   #endif
+>> diff --git a/arch/riscv/kernel/alternative.c b/arch/riscv/kernel/alternative.c
+>> index 7eb3cb1215c6..7642704c7f18 100644
+>> --- a/arch/riscv/kernel/alternative.c
+>> +++ b/arch/riscv/kernel/alternative.c
+>> @@ -47,6 +47,11 @@ static void riscv_fill_cpu_mfr_info(struct cpu_manufacturer_info_t *cpu_mfr_info
+>>                cpu_mfr_info->patch_func = andes_errata_patch_func;
+>>                break;
+>>   #endif
+>> +#ifdef CONFIG_ERRATA_MIPS
+>> +     case MIPS_VENDOR_ID:
+>> +             cpu_mfr_info->patch_func = mips_errata_patch_func;
+>> +             break;
+>> +#endif
+>>   #ifdef CONFIG_ERRATA_SIFIVE
+>>        case SIFIVE_VENDOR_ID:
+>>                cpu_mfr_info->patch_func = sifive_errata_patch_func;
+>> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+>> index 33a5a9f2a0d4..2007d9de7f27 100644
+>> --- a/arch/riscv/kernel/entry.S
+>> +++ b/arch/riscv/kernel/entry.S
+>> @@ -15,6 +15,8 @@
+>>   #include <asm/thread_info.h>
+>>   #include <asm/asm-offsets.h>
+>>   #include <asm/errata_list.h>
+>> +#include <asm/alternative.h>
+>> +
+>>   #include <linux/sizes.h>
+>>
+>>        .section .irqentry.text, "ax"
+>> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+>> index 722178ae3488..ee8a2c5b40f8 100644
+>> --- a/arch/riscv/mm/init.c
+>> +++ b/arch/riscv/mm/init.c
+>> @@ -35,6 +35,7 @@
+>>   #include <asm/soc.h>
+>>   #include <asm/sparsemem.h>
+>>   #include <asm/tlbflush.h>
+>> +#include <asm/alternative.h>
+>>
+>>   #include "../kernel/head.h"
+>>
+>> diff --git a/tools/arch/riscv/include/asm/vdso/processor.h b/tools/arch/riscv/include/asm/vdso/processor.h
+>> index 662aca039848..880f26a24f69 100644
+>> --- a/tools/arch/riscv/include/asm/vdso/processor.h
+>> +++ b/tools/arch/riscv/include/asm/vdso/processor.h
+>> @@ -14,7 +14,10 @@ static inline void cpu_relax(void)
+>>        __asm__ __volatile__ ("div %0, %0, zero" : "=r" (dummy));
+>>   #endif
+>>
+>> -#ifdef CONFIG_TOOLCHAIN_HAS_ZIHINTPAUSE
+>> +#ifdef CONFIG_ERRATA_MIPS_P8700_PAUSE_OPCODE
+>> +    /* MIPS P8700 pause opcode */
+>> +    __asm__ __volatile__ (".4byte 0x00501013");
+>> +#elif CONFIG_TOOLCHAIN_HAS_ZIHINTPAUSE
+>>        /*
+>>         * Reduce instruction retirement.
+>>         * This assumes the PC changes.
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
