@@ -1,93 +1,111 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88DE25D1E3;
-	Tue, 25 Mar 2025 15:56:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2A3255E32;
+	Tue, 25 Mar 2025 15:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742918198; cv=none; b=su+/C9lehEeLSgjv8UqSTHiM1Av1GkV2mRwxqOwV6p8LOZT6wjVRcK/FRXEfG6GxqxJP4Q/0eYECYgNar+3gmVJc1Q8R796SVWV7RB7N2TVpYo1q1U68cr6qZzC0yYAQJQo7GwFFHGYpc0i6G6PHfG/QPF2g+uwxzulbp0xKPDE=
+	t=1742918234; cv=none; b=B5to76oGedb/hvEcyvWqCmrq2/oztTvyrPVGZhqnyg3fc+LhFRivkJv/0R0PQFjD5x9esjzh8r21/YKqZK9Gg+y6cTGtbqiMg5JDFXjM/g/HwKZhKY8hZm3GmbMzdD2boq8atIW52e2lvTnBnPtdIWUiH4lnUVPZDdWJ43AOJ6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742918198; c=relaxed/simple;
-	bh=KTXtnWwkPZ9dd4XF9bTY1ABrcDQk0xQphr+uv8Hqj7A=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NnDrt7GKTTcOfigecKdErYoIOQy+S9cGX22man1ghZSLs6QVkqve1uT+itO7MXJAvLTAEPXV4jDBnNV8eC9905wbn4QZVi6QPzAdVpqqoKRRfnvZhl6Xjw34g0H9EuTo4PypvMNtBGe8bBfv/OHshpXiJjA/O940vqagrF9NQjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=ELYBToYa; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1742918234; c=relaxed/simple;
+	bh=Ieg0O1UliTfBkQFmqf9idM/b2XHLPdbmep+cn3VQ98A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N57ct10OC9a2e1ihCp8KR+AMaTThrvQ01TJUuQnSmfJXCPZjsn1yBQFh8L+m6MBrgszSyfIQqn7BWSk+7ohZPVmgQyD3DQ3IHp1YsZBajQV6Eb6dQQtM1MRrU4Vdgi9HIow52DjBADp6aRTguxW+X9ZZQTeV0i0vbhVAVPWAAvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WOiqOI5i; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ELYBToYa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WOiqOI5i"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1742918197; x=1774454197;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KTXtnWwkPZ9dd4XF9bTY1ABrcDQk0xQphr+uv8Hqj7A=;
-  b=ELYBToYafEe1x0mm5h8/1czsj2rSQg3RcnzkuKkdFIWBfqIcTot24l1M
-   Jpga4WGZMqrtZpEYJep3AhS3dn4J1kN2eEbjxG28CgmkrTSUomvZrGXk7
-   /vm4Ab+RSj17aKpXVLwULKp938IriAGJGsaqvkU7PsY9CkTnFXhYJNSml
-   sh5bcB8doGsrqI2xVOH88+AsEhK84BR+ANXo+gSqRzK0d1C1Se9ubT4bM
-   Ax3K4LQFOgHW+RUxDlQrsOpbMBD/OIUAAptt378R+W6Uz0buogm79BfQP
-   kDa+tds3kZpDyGVJfimHX4wOtU+knNoIlXroe7B51i/OMK7Ed7BEITTBW
-   g==;
-X-CSE-ConnectionGUID: 5ZRRXf5LQVCIU2dRAgtdWw==
-X-CSE-MsgGUID: J3K9ZU4iQeaA5GTgDrFq0Q==
-X-IronPort-AV: E=Sophos;i="6.14,275,1736838000"; 
-   d="scan'208";a="40152234"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Mar 2025 08:55:25 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 25 Mar 2025 08:54:54 -0700
-Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Tue, 25 Mar 2025 08:54:53 -0700
-From: <Ryan.Wanner@microchip.com>
-To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <mturquette@baylibre.com>
-CC: <sboyd@kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-clk@vger.kernel.org>, Ryan Wanner <Ryan.Wanner@microchip.com>
-Subject: [PATCH v2 3/4]  clk: at91: sama7g5: Add missing clk_hw to parent_data
-Date: Tue, 25 Mar 2025 08:55:09 -0700
-Message-ID: <690cf499758c10ad5f70df3f0d238b8a7834a971.1742916867.git.Ryan.Wanner@microchip.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1742916867.git.Ryan.Wanner@microchip.com>
-References: <cover.1742916867.git.Ryan.Wanner@microchip.com>
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742918233; x=1774454233;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ieg0O1UliTfBkQFmqf9idM/b2XHLPdbmep+cn3VQ98A=;
+  b=WOiqOI5izcmpBptBGAIGXL3RCf5nlO0+R0wuAz0/96ELxSvXl77NZqjD
+   sGbQ3nJh5Vsv+hcjJCAu2m6K5OMic+b191Kq0MjGylcSlR1Zz/tRj2WIl
+   8PaHQgYx5ZFT4Zg3F2K33OzGZ7bjuo03vLjqdnDqBn6OT3klGfcdZSy/t
+   fjDa8GUO1l0sH8+HFiGJgncqtbVxjE+ESkULKyYY6HvIfAQ0/+lLBK0jr
+   u62VPpXSDqsfDLy33JRemupJKP77PF76VDL8I8HaoD/76xnKNIwGAw18i
+   wXCvEjQ3emyIF3mjiKLlVm5ZRKrf9FnOU6BkQqeMKtfJRL/9cGZ0sd989
+   A==;
+X-CSE-ConnectionGUID: m0etwx+dRae7dibPLYUrsg==
+X-CSE-MsgGUID: zodyqjKzTPiNmAsHPKu0lw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11384"; a="44296262"
+X-IronPort-AV: E=Sophos;i="6.14,275,1736841600"; 
+   d="scan'208";a="44296262"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 08:57:11 -0700
+X-CSE-ConnectionGUID: io6D8B0XRuCIqbvgsaotbw==
+X-CSE-MsgGUID: d5KwaRjiSOW1Fd4Ralo1Qg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,275,1736841600"; 
+   d="scan'208";a="129534324"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 08:57:03 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1tx6eC-00000005nIJ-45YA;
+	Tue, 25 Mar 2025 17:57:00 +0200
+Date: Tue, 25 Mar 2025 17:57:00 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 08/11] gpio: max7360: Add MAX7360 gpio support
+Message-ID: <Z-LSTM48_u3FJLNZ@smile.fi.intel.com>
+References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
+ <20250318-mdb-max7360-support-v5-8-fb20baf97da0@bootlin.com>
+ <Z9qviF1VeSYNvcPJ@smile.fi.intel.com>
+ <D8PFFWYR3ASD.YEZIXPNVZS4I@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D8PFFWYR3ASD.YEZIXPNVZS4I@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Ryan Wanner <Ryan.Wanner@microchip.com>
+On Tue, Mar 25, 2025 at 03:46:20PM +0100, Mathieu Dubois-Briand wrote:
+> On Wed Mar 19, 2025 at 12:50 PM CET, Andy Shevchenko wrote:
+> > On Tue, Mar 18, 2025 at 05:26:24PM +0100, Mathieu Dubois-Briand wrote:
 
-The main_xtal clk_hw struct is not passed into parent_data.hw causing an
-issue with main_osc parent. Passing the main_xtal struct into the
-parent_data struct will ensure the correct parent structure.
+...
 
-Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
----
- drivers/clk/at91/sama7g5.c | 1 +
- 1 file changed, 1 insertion(+)
+> > > +		/*
+> > > +		 * Port GPIOs with interrupt-controller property: add IRQ
+> > > +		 * controller.
+> > > +		 */
+> > > +		gpio_config.regmap_irq_flags = IRQF_TRIGGER_LOW | IRQF_ONESHOT | IRQF_SHARED;
+> >
+> > But why is this being overridden? The DT or another firmware description has to
+> > provide the correct settings, no?
+> 
+> Ok, thinking about it, yes, IRQF_TRIGGER_LOW shoud come from firmware
+> description. But IRQF_ONESHOT and IRQF_SHARED should still come from
+> here, no?
 
-diff --git a/drivers/clk/at91/sama7g5.c b/drivers/clk/at91/sama7g5.c
-index 8385badc1c70..ac51d006ba99 100644
---- a/drivers/clk/at91/sama7g5.c
-+++ b/drivers/clk/at91/sama7g5.c
-@@ -1017,6 +1017,7 @@ static void __init sama7g5_pmc_setup(struct device_node *np)
- 
- 	parent_data.name = main_xtal_name;
- 	parent_data.fw_name = main_xtal_name;
-+	parent_data.hw = main_xtal_hw;
- 	main_osc_hw = at91_clk_register_main_osc(regmap, "main_osc", NULL,
- 						 &parent_data, bypass);
- 	if (IS_ERR(main_osc_hw))
+This is my view as well.
+
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
