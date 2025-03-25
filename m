@@ -1,127 +1,152 @@
-Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEB91946AA
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 09:43:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD01C15666B;
+	Tue, 25 Mar 2025 09:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742895843; cv=none; b=Tz1UqrGrDLPEP9Xdi+6A+qtWwl8R0XnQPkXf/t9HSWtODqv/QmvaGt9pKY8PNFLz5gcvW94f/MrdZMr73YGYAMMS/fbjN8W07t7311/oOtdj6hnZllF+HoQXsSmyT5t4PDNDk8eEpySZuUlFVkSv0EBgi9NZj4jz53NYiHxBtPQ=
+	t=1742895866; cv=none; b=BwzbTP3G9j++kxCB3H2aO7ff2mTBwy+0CagVMnRzlbnx4AUFCAtiI4trN+Zk6FITn4qQ8MfJJTIq2zLNm3UWG3bUTcb6xbEM1acdgWVSdAyEcryIWAmY7j2bGKnvBbk6E7pSVReUUJhkdxtDgjYi2XchBr0OZYg87yAGmc9djgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742895843; c=relaxed/simple;
-	bh=TYIKRFmySxjaYkrzWC6O+A1EEpgPYclffCAzpy/s7Go=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=t6em6me0nxQWyXfRJx6EOQzZmFOPk7OTi3Ist05u3EIbF+fjznUK9GN42ZBSX20vQTExNTTDjf/ew9h12cdQOoZGkiM323Lyr9t+ClAG1y70y0Cnrm7TdS01iY+GRZrk25B4qHoOpwjnqWyFUmQW8qgY6qzJzB6zFNEXFvJsjSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=g4HCkfsF; arc=none smtp.client-ip=192.134.164.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="g4HCkfsF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=v2KhdyEfE1+Z09fS//IwfD9BpZAAnrKgq8D0E/CrNbM=;
-  b=g4HCkfsFWzng8WSNB72ZEPZTfkhHndqwt1nUIFglGLCdIifX2WF4Znpy
-   zvOk6uyYMRkt0lHuxd6lKu0srq35qmKPkkWBhTzShY+ENb7UqqqJFIwe0
-   dMFTsRAU045kdK95kwoZTcrlNp/7yR0KzQdrBp3Aowjrwo4ISGdInkcTo
-   Y=;
-Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.14,274,1736809200"; 
-   d="scan'208";a="214612573"
-Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 10:43:58 +0100
-Date: Tue, 25 Mar 2025 10:43:57 +0100 (CET)
-From: Julia Lawall <julia.lawall@inria.fr>
-To: Erick Karanja <karanja99erick@gmail.com>
-cc: gregkh@linuxfoundation.org, outreachy@lists.linux.dev, 
-    philipp.g.hortmann@gmail.com, davidzalman.101@gmail.com, 
-    vivek6429.ts@gmail.com, viro@zeniv.linux.org.uk, 
-    linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: Rename variable supportRateNum
-In-Reply-To: <20250325091220.38601-1-karanja99erick@gmail.com>
-Message-ID: <58c6f23e-1fb-fef6-8177-4f24ad559889@inria.fr>
-References: <20250325091220.38601-1-karanja99erick@gmail.com>
+	s=arc-20240116; t=1742895866; c=relaxed/simple;
+	bh=YExHr+2mn/5PLGawiihdqqA9Qe1EXHQUBAkBpbg9IW4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RWhvcV+vI/QIx67RbrDHM0rbK/JVkWCZQ9zEcGiv2BMMmhfso9dD1XRcex47yeAED+3GNraRQ5LprT9dZyaMpxrqd2gRvr3yk7bF/dYBR+3e8H2oy3PeYKZX9Auqv6/UE2cqhXZzYoS+hQy2Px9x0jMMb/hKU57zemyppHdTUgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZMPyj382Mz1jBPp;
+	Tue, 25 Mar 2025 17:39:41 +0800 (CST)
+Received: from kwepemg200005.china.huawei.com (unknown [7.202.181.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 54F7B1A0188;
+	Tue, 25 Mar 2025 17:44:19 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by kwepemg200005.china.huawei.com
+ (7.202.181.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 25 Mar
+ 2025 17:44:18 +0800
+From: Wang Liang <wangliang74@huawei.com>
+To: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>,
+	<cong.wang@bytedance.com>, <kuniyu@amazon.com>
+CC: <yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
+	<wangliang74@huawei.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH net] ipv6: sit: fix skb_under_panic with overflowed needed_headroom
+Date: Tue, 25 Mar 2025 17:54:49 +0800
+Message-ID: <20250325095449.2594874-1-wangliang74@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemg200005.china.huawei.com (7.202.181.32)
 
+When create ipip6 tunnel, if tunnel->parms.link is assigned to the previous
+created tunnel device, the dev->needed_headroom will increase based on the
+previous one.
 
+If the number of tunnel device is sufficient, the needed_headroom can be
+overflowed. The overflow happens like this:
 
-On Tue, 25 Mar 2025, Erick Karanja wrote:
+  ipip6_newlink
+    ipip6_tunnel_create
+      register_netdevice
+        ipip6_tunnel_init
+          ipip6_tunnel_bind_dev
+            t_hlen = tunnel->hlen + sizeof(struct iphdr); // 40
+            hlen = tdev->hard_header_len + tdev->needed_headroom; // 65496
+            dev->needed_headroom = t_hlen + hlen; // 65536 -> 0
 
-> Rename the variable `supportRateNum` to `support_rate_num` to adhere to
-> Linux kernel coding standards by using snake_case instead of CamelCase.
+The value of LL_RESERVED_SPACE(rt->dst.dev) may be HH_DATA_MOD, that leads
+to a small skb allocated in __ip_append_data(), which triggers a
+skb_under_panic:
 
-Maybe it would make sense to do supportRate at the same time, since they
-seem to be closely related?
+  ------------[ cut here ]------------
+  kernel BUG at net/core/skbuff.c:209!
+  Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
+  CPU: 0 UID: 0 PID: 24133 Comm: test Tainted: G W 6.14.0-rc7-00067-g76b6905c11fd-dirty #1
+  Tainted: [W]=WARN
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.15.0-0-g2dd4b9b3f840-prebuilt.qemu.org 04/01/2014
+  RIP: 0010:skb_panic+0x156/0x1d0
+  Call Trace:
+   <TASK>
+   skb_push+0xc8/0xe0
+   fou_build_udp+0x31/0x3a0
+   gue_build_header+0xf7/0x150
+   ip_tunnel_xmit+0x684/0x3660
+   sit_tunnel_xmit__.isra.0+0xeb/0x150
+   sit_tunnel_xmit+0x2e3/0x2930
+   dev_hard_start_xmit+0x1a6/0x7b0
+   __dev_queue_xmit+0x2fa9/0x4120
+   neigh_connected_output+0x39e/0x590
+   ip_finish_output2+0x7bb/0x1f00
+   __ip_finish_output+0x442/0x940
+   ip_finish_output+0x31/0x380
+   ip_mc_output+0x1c4/0x6a0
+   ip_send_skb+0x339/0x570
+   udp_send_skb+0x905/0x1540
+   udp_sendmsg+0x17c8/0x28f0
+   udpv6_sendmsg+0x17f1/0x2c30
+   inet6_sendmsg+0x105/0x140
+   ____sys_sendmsg+0x801/0xc70
+   ___sys_sendmsg+0x110/0x1b0
+   __sys_sendmmsg+0x1f2/0x410
+   __x64_sys_sendmmsg+0x99/0x100
+   do_syscall_64+0x6e/0x1c0
+   entry_SYSCALL_64_after_hwframe+0x76/0x7e
+  ---[ end trace 0000000000000000 ]---
 
-julia
+Fix this by add check for needed_headroom in ipip6_tunnel_bind_dev().
 
->
-> Fixes checkpatch.pl warning:
->     CHECK: Avoid CamelCase: <supportRateNum>
->
-> Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
-> ---
->  drivers/staging/rtl8723bs/core/rtw_ap.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
-> index 50022bb5911e..5124260602c8 100644
-> --- a/drivers/staging/rtl8723bs/core/rtw_ap.c
-> +++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
-> @@ -370,7 +370,7 @@ void add_RATid(struct adapter *padapter, struct sta_info *psta, u8 rssi_level)
->  void update_bmc_sta(struct adapter *padapter)
->  {
->  	unsigned char network_type;
-> -	int supportRateNum = 0;
-> +	int support_rate_num = 0;
->  	unsigned int tx_ra_bitmap = 0;
->  	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
->  	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
-> @@ -396,9 +396,9 @@ void update_bmc_sta(struct adapter *padapter)
->  		/* psta->dot118021XPrivacy = _NO_PRIVACY_;//!!! remove it, because it has been set before this. */
->
->  		/* prepare for add_RATid */
-> -		supportRateNum = rtw_get_rateset_len((u8 *)&pcur_network->supported_rates);
-> +		support_rate_num = rtw_get_rateset_len((u8 *)&pcur_network->supported_rates);
->  		network_type = rtw_check_network_type((u8 *)&pcur_network->supported_rates,
-> -						      supportRateNum,
-> +						      support_rate_num,
->  						      pcur_network->configuration.ds_config
->  		);
->  		if (is_supported_tx_cck(network_type)) {
-> @@ -893,7 +893,7 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
->  	);
->  	if (p) {
->  		memcpy(supportRate, p + 2, ie_len);
-> -		supportRateNum = ie_len;
-> +		support_rate_num = ie_len;
->  	}
->
->  	/* get ext_supported rates */
-> @@ -904,11 +904,12 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
->  		pbss_network->ie_length - _BEACON_IE_OFFSET_
->  	);
->  	if (p) {
-> -		memcpy(supportRate + supportRateNum, p + 2, ie_len);
-> -		supportRateNum += ie_len;
-> +		memcpy(supportRate + support_rate_num, p + 2, ie_len);
-> +		support_rate_num += ie_len;
->  	}
->
-> -	network_type = rtw_check_network_type(supportRate, supportRateNum, channel);
-> +	network_type = rtw_check_network_type(supportRate, support_rate_num,
-> +					      channel);
->
->  	rtw_set_supported_rate(pbss_network->supported_rates, network_type);
->
-> --
-> 2.43.0
->
->
->
+Reported-by: syzbot+4c63f36709a642f801c5@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=4c63f36709a642f801c5
+Fixes: c88f8d5cd95f ("sit: update dev->needed_headroom in ipip6_tunnel_bind_dev()")
+Signed-off-by: Wang Liang <wangliang74@huawei.com>
+---
+ net/ipv6/sit.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/net/ipv6/sit.c b/net/ipv6/sit.c
+index 39bd8951bfca..1662b735c5e3 100644
+--- a/net/ipv6/sit.c
++++ b/net/ipv6/sit.c
+@@ -1095,7 +1095,7 @@ static netdev_tx_t sit_tunnel_xmit(struct sk_buff *skb,
+ 
+ }
+ 
+-static void ipip6_tunnel_bind_dev(struct net_device *dev)
++static int ipip6_tunnel_bind_dev(struct net_device *dev)
+ {
+ 	struct ip_tunnel *tunnel = netdev_priv(dev);
+ 	int t_hlen = tunnel->hlen + sizeof(struct iphdr);
+@@ -1134,7 +1134,12 @@ static void ipip6_tunnel_bind_dev(struct net_device *dev)
+ 		WRITE_ONCE(dev->mtu, mtu);
+ 		hlen = tdev->hard_header_len + tdev->needed_headroom;
+ 	}
++
++	if (t_hlen + hlen > U16_MAX)
++		return -EOVERFLOW;
++
+ 	dev->needed_headroom = t_hlen + hlen;
++	return 0;
+ }
+ 
+ static void ipip6_tunnel_update(struct ip_tunnel *t,
+@@ -1452,7 +1457,9 @@ static int ipip6_tunnel_init(struct net_device *dev)
+ 	tunnel->net = dev_net(dev);
+ 	strcpy(tunnel->parms.name, dev->name);
+ 
+-	ipip6_tunnel_bind_dev(dev);
++	err = ipip6_tunnel_bind_dev(dev);
++	if (err)
++		return err;
+ 
+ 	err = dst_cache_init(&tunnel->dst_cache, GFP_KERNEL);
+ 	if (err)
+-- 
+2.34.1
+
