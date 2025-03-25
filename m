@@ -1,219 +1,234 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B992571C6
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 11:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5D72561DA
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 11:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742902875; cv=none; b=Rzxc6fVnZfKFXAokAIKiWJWh4n90geAluYV2YG+vVxkM4ID2CT7vYSKtqi5Hxp8jJykEB/Y0uD7o/zN9RjiZco8Bbno1p+fmQXhbwIzGefV1+x/Y+AtF0u9/tcfgBovbTcSM2ClYew0+AO+N0t5yfiPr80DuQAJ8orupl7FW45I=
+	t=1742902895; cv=none; b=psy9PUBTwXE+hK6wDY0iQlb2AA/sIAyyMIQC+j1GteIUVcCnqxGrObje+qyWRMhe7FtokSzvtqzg8a4Am5T4ZwV9fhsUsUMeI8T71m5qBOdgCZayo7dn4D9UoQk95viurmQ1hQKVORshalerNAa68pMMmUNCcYkV9ET0zAnYW/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742902875; c=relaxed/simple;
-	bh=A0WtHTs89u0NRiqeb7jtxP3PC6SiQD+qIJMNWTfSuvQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SAZLw29g52d2RWbZHrUkKUclnjoScpytoZ80Q2kH3URNTSepId7z9iNq8JuEHJMrgm2mp6NKv3y/Z+FSMKQbjd32gO1TkyMFchUN5MbKB1nbMP3AQyhAlryK2cAy3xXFbscfM+Y0qiatEyNibVuncxZg24l73nLfdVVI1/hHIOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wiJ7JQ22; arc=none smtp.client-ip=209.85.221.48
+	s=arc-20240116; t=1742902895; c=relaxed/simple;
+	bh=/4MN9pL13QS8WSvmrDAkH9tjZnUJYGKfLLZEMOGkYI4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=qJeZotMoK0uI4DGnc24iKUTiido4M821ueCzgcEEpK7OdbSwIzfSrgGXWMGROU9TEICeFnG7qfPFzUXDBOm/DYB3ZA60prcoZNZuykyk7cMKUWs2Xxvxv+oW4+1u+CDF0++RI7dT1wOB4fNx0KYmGRErVQOdk/UD/8Di3WYkx+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MgLXv+cB; arc=none smtp.client-ip=209.85.221.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wiJ7JQ22"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3995ff6b066so3055873f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 04:41:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MgLXv+cB"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-5259327a937so2148139e0c.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 04:41:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742902870; x=1743507670; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ciCsmE+euFjZCUyipJS5apSViu1JxNfFN5bCQJg2zCQ=;
-        b=wiJ7JQ22WojqGzrhJ8Pl+cTT8qIbgdtpPw1H5fgulafVZdOcoggMP508EQlSHIugSy
-         u4FUL4udk5AUOI9r/sLg3gYySlqPBblpBL+7njJyH8DEdSzvpNtSsea3sqeOdIVQ4P9K
-         Ry45Iv8R19LXzFe/A5PJYShS4xvTibjZt/Scr/svzlzqC3NRnvoMG27Pjzw5slBNTkBH
-         tgRABLHmbq4zdLOVLuqlsim8cGrJ9kIKyLC4kl5W7hZgTRAjktbsLqMlEZcqBoS3OJDl
-         ErZhxOiLn9DNv6fzw8/cgQJDlS4IVZLqKQ53AJ7oKZIG77CE8APAD6bYJDsvbtdSzuId
-         R4HA==
+        d=linaro.org; s=google; t=1742902892; x=1743507692; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GojWv6JgO00ZhMt6mOebWUL6XxDfc/RWWGCpH5UC34U=;
+        b=MgLXv+cB28foKrGLTatBjcBBVIBvdKNDE/yoCExu1J7VUIPu0WgZsxMobKaqeekO07
+         +vINemjTkv1e6VVZPUyaoj+Bz2FTBTVaxnqTwAuTyUPqoHsifCcOMwxPxWznJ0vWScuk
+         7mvozJuvnQGNorY0y0rD7e2iAga/OJpGq/8dc/YV8AwS9IpLb+Fh4u2uYhjl5ITafmkH
+         5OJ/ZhKLVqX01/Bww+fAd0NAQMJZiM0aR9IZ41mREVruHreSbZgsnyc8RzmRvqYOZTd4
+         B0lw67JonW+lzQkU2Ix2UTj9fj4K0x95vCTvua4NgK5uzhoI02PsgKeB2TKagljd7Fv8
+         OPPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742902870; x=1743507670;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ciCsmE+euFjZCUyipJS5apSViu1JxNfFN5bCQJg2zCQ=;
-        b=Ks18lcATvfBVOJPQR0TG0caapXnVZigt+y6wHwRC1k6zSRqdK5IhyGRiWQxp67WHNK
-         /7HpUuEwgC5xyUzsnwJYECsn1ty3VMPjUddWOD3TYeGf7xgEnfLIxBjgvP5Q+Hu/aVbl
-         VwNSWZKbhThgDUewBnNevU4sEKv4MZBEpac3MwUfar6hybJ9P90qh/bexRPBUrn3avqc
-         AqrS2hxQIX8jdpgXG2dYZc/0ev+/Cj+29FXC2lbNqiyGHUag4xeMH0ON8r8+S/B+EA0f
-         MjFUyBEGuAMrMRcfziE4bLpQGxYqmZtKHjH4SErJwHzhJZ2AB6p+TuT4SRLC5MMUgjww
-         D6Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZgycC1shPGHThIQp+y9zzIhbtruLetdpcUVlf8MPn4oesdu1QUjeFCwZjNzYI3FKvM9zmPUAQL9i37rw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeBx6m7+Iw66o9vIj/z9D+eW6z2GbTsDyZVVQqu9lmgc2U7OOW
-	xEqcwDeII9YGO+sp04p2uVtcuVD5udeVGsQV0wzF4aTUo7V2Co7xANGKYjKpg7c=
-X-Gm-Gg: ASbGnctLdCv4ACZgYp3d2YZKm7bMOlou4Y0NhIWAhXDsI2kWWQPX3iYdis0J6ImPw/l
-	F5waCIY0jX5vSntIrg6rjEE/fLv7DL+665mP7hGhDmuOscmMg9nZx29ewb56iLjHnLds6oxO+zK
-	Z2U/Dx9+I39bm1K9Mbi7AcYlnro7MLmk+JMXOw2PF25MDkxjk3IXqqEVRWqre5tAUu+LU+PKDbI
-	Acvzkd9q3L4F5D0MGt9gt+LSfPkyqpCwhq3J5h0eiBEkw+qMlejmq9+EEgI370GGtDKFLpujHoz
-	rKcjUqrXrq7xXp/ItY62+vJjpHFO1qj/ooF/TT7ClFcWQPBl7U33XoFh9a/vvqAxje7PJA==
-X-Google-Smtp-Source: AGHT+IF0JTdKEiQNMaj66CfUpe4bYsSfOE4aj8Z5HReCu3uR/s99pqqLX+H/2CSyYdeTC/sC6+XkdA==
-X-Received: by 2002:a5d:5f96:0:b0:391:2fe3:24ec with SMTP id ffacd0b85a97d-3997f91072amr14239891f8f.14.1742902870048;
-        Tue, 25 Mar 2025 04:41:10 -0700 (PDT)
-Received: from localhost.localdomain ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a6326sm13213330f8f.29.2025.03.25.04.41.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 04:41:09 -0700 (PDT)
-From: srinivas.kandagatla@linaro.org
-To: peda@axentia.se,
-	broonie@kernel.org,
-	andersson@kernel.org,
-	krzk+dt@kernel.org
-Cc: ivprusov@salutedevices.com,
-	luca.ceresoli@bootlin.com,
-	zhoubinbin@loongson.cn,
-	paulha@opensource.cirrus.com,
-	lgirdwood@gmail.com,
-	robh@kernel.org,
-	conor+dt@kernel.org,
-	konradybcio@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	dmitry.baryshkov@oss.qualcomm.com,
-	linux-sound@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	johan+linaro@kernel.org,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Christopher Obbard <christopher.obbard@linaro.org>
-Subject: [PATCH v5 5/6] ASoC: codecs: wcd938x: add mux control support for hp audio mux
-Date: Tue, 25 Mar 2025 11:40:57 +0000
-Message-Id: <20250325114058.12083-6-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250325114058.12083-1-srinivas.kandagatla@linaro.org>
-References: <20250325114058.12083-1-srinivas.kandagatla@linaro.org>
+        d=1e100.net; s=20230601; t=1742902892; x=1743507692;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GojWv6JgO00ZhMt6mOebWUL6XxDfc/RWWGCpH5UC34U=;
+        b=Q9pvM55Sb0UpjmpIORYfbX2xd2kyCl58LOEBLSSFonq4BbkYi/vBSrgeSAuxlgWY4C
+         01nqcSAO7E1gpVC0bOwXkmJYjEurIgC3v/0BvfFcZLILMHjsnn/IJF30RLYtBNhp5d8q
+         /bsdvtUcu2jjMnpp1N4MRwlnBptyTet3FYvNrz4GiBfACzdAzIR5Bi3Vgf4XONdhPNih
+         he3Pk8brbABhzwNuOKNHVU2pY0dbgQkXySyWX6P4owZAkcrcSzCDfSq0he9iry488tn3
+         Mmd2igPIB6Nv2aNO74txBlNsiGqgHvB6/FpGWPwzucJcXvrH1HcPft/MTlOGM/AlNOjl
+         xodA==
+X-Forwarded-Encrypted: i=1; AJvYcCVYHx/AZTp7gk9YYCg/V1p5qVsLxHYwZv+g4DuKg9qWrtx/xDWMRbCVcS0OZDwrsvoxrfZ3EiUrV2999HI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx114fDA0Q1/o2eBB2LQ/6ayuK6DqxOYnleIkfet4bObmEKEULc
+	RMwYQrozbQzXe4U+DG6fND3Yd6GAMgBlOjnLVySwly9Boc2YWE5sNA5z3hKrkdeaKJsrqkOkWo2
+	reU3QkkqdpkXKCO1WiF7ed53B2U/T/9O0Mum2CA==
+X-Gm-Gg: ASbGncsrFikx/B8YQ0NSF1A4MzW9fl6pQ6XPziM2qA1LQk4+c9CWkZTB38Ag8MYiGCP
+	HOwSbiGP+eMapRU15b27nHkL08N5mvBpnGNwHlXrEOJkpj0t99kGxgSgISbQXTPCuLBfHoQO10o
+	d2DH62CaIzVmgZQN/j9d69Gk0qDnTbLUHQ22oNj8lZoyiil85UqJy6n/eQq00=
+X-Google-Smtp-Source: AGHT+IErnLB8k2eURQkQuvonw7hDaTgDK/6MY679H/xblBZRcECFv8MSDYwthPn/gDiugNBls/DTd74DC7XLhdBeVrs=
+X-Received: by 2002:a05:6122:2783:b0:51b:a11f:cbdb with SMTP id
+ 71dfb90a1353d-525a833b0cfmr11322920e0c.4.1742902892035; Tue, 25 Mar 2025
+ 04:41:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 25 Mar 2025 17:11:20 +0530
+X-Gm-Features: AQ5f1Jp4MnK8M9WIj6QfiQc4fPhqZDUJiPB_52yu7nH9UEpCQdOPXm-gf5TLGEQ
+Message-ID: <CA+G9fYs4-4y=edxddERXQ_fMsW_nUJU+V0bSMHFDL3St7NiLxQ@mail.gmail.com>
+Subject: next-20250324: x86_64: BUG: kernel NULL pointer dereference __pci_enable_msi_range
+To: PCI <linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, shivamurthy.shastri@linutronix.de, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Regressions on x86_64 boot failed with Linux next-20250324 tag kernel
+6.14.0-rc7-next-20250324
 
-On some platforms to minimise pop and click during switching between
-CTIA and OMTP headset an additional HiFi mux is used. Most common
-case is that this switch is switched on by default, but on some
-platforms this needs a regulator enable.
+First seen on the next-20250324
+ Good: next-20250321
+ Bad:  next-20250324 ..next-20250325
 
-move to using mux control to enable both regulator and handle gpios,
-deprecate the usage of gpio.
+Regressions found on x86_84:
+ - boot
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Tested-by: Christopher Obbard <christopher.obbard@linaro.org>
----
- sound/soc/codecs/Kconfig   |  1 +
- sound/soc/codecs/wcd938x.c | 50 +++++++++++++++++++++++++++++---------
- 2 files changed, 39 insertions(+), 12 deletions(-)
+Regression Analysis:
+ - New regression? Yes
+ - Reproducible? Yes
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index ee35f3aa5521..a2829d76e108 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -2226,6 +2226,7 @@ config SND_SOC_WCD938X
- 	tristate
- 	depends on SOUNDWIRE || !SOUNDWIRE
- 	select SND_SOC_WCD_CLASSH
-+	select MULTIPLEXER
- 
- config SND_SOC_WCD938X_SDW
- 	tristate "WCD9380/WCD9385 Codec - SDW"
-diff --git a/sound/soc/codecs/wcd938x.c b/sound/soc/codecs/wcd938x.c
-index dfaa3de31164..209d0b64c8be 100644
---- a/sound/soc/codecs/wcd938x.c
-+++ b/sound/soc/codecs/wcd938x.c
-@@ -19,6 +19,7 @@
- #include <linux/regmap.h>
- #include <sound/soc.h>
- #include <sound/soc-dapm.h>
-+#include <linux/mux/consumer.h>
- #include <linux/regulator/consumer.h>
- 
- #include "wcd-clsh-v2.h"
-@@ -178,6 +179,8 @@ struct wcd938x_priv {
- 	int variant;
- 	int reset_gpio;
- 	struct gpio_desc *us_euro_gpio;
-+	struct mux_control *us_euro_mux;
-+	unsigned int mux_state;
- 	u32 micb1_mv;
- 	u32 micb2_mv;
- 	u32 micb3_mv;
-@@ -3237,15 +3240,22 @@ static void wcd938x_dt_parse_micbias_info(struct device *dev, struct wcd938x_pri
- 
- static bool wcd938x_swap_gnd_mic(struct snd_soc_component *component)
- {
--	int value;
--
--	struct wcd938x_priv *wcd938x;
--
--	wcd938x = snd_soc_component_get_drvdata(component);
-+	struct wcd938x_priv *wcd938x = snd_soc_component_get_drvdata(component);
-+	struct device *dev = component->dev;
-+	int ret;
- 
--	value = gpiod_get_value(wcd938x->us_euro_gpio);
-+	if (wcd938x->us_euro_mux) {
-+		mux_control_deselect(wcd938x->us_euro_mux);
-+		ret = mux_control_try_select(wcd938x->us_euro_mux, !wcd938x->mux_state);
-+		if (ret) {
-+			dev_err(dev, "Error (%d) Unable to select us/euro mux state\n", ret);
-+			return false;
-+		}
-+	} else {
-+		gpiod_set_value(wcd938x->us_euro_gpio, !wcd938x->mux_state);
-+	}
- 
--	gpiod_set_value(wcd938x->us_euro_gpio, !value);
-+	wcd938x->mux_state = !wcd938x->mux_state;
- 
- 	return true;
- }
-@@ -3261,11 +3271,24 @@ static int wcd938x_populate_dt_data(struct wcd938x_priv *wcd938x, struct device
- 		return dev_err_probe(dev, wcd938x->reset_gpio,
- 				     "Failed to get reset gpio\n");
- 
--	wcd938x->us_euro_gpio = devm_gpiod_get_optional(dev, "us-euro",
--						GPIOD_OUT_LOW);
--	if (IS_ERR(wcd938x->us_euro_gpio))
--		return dev_err_probe(dev, PTR_ERR(wcd938x->us_euro_gpio),
--				     "us-euro swap Control GPIO not found\n");
-+	wcd938x->us_euro_mux = devm_mux_control_get(dev, NULL);
-+	if (IS_ERR(wcd938x->us_euro_mux)) {
-+		if (PTR_ERR(wcd938x->us_euro_mux) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+
-+		/* mux is optional and now fallback to using gpio */
-+		wcd938x->us_euro_mux = NULL;
-+		wcd938x->us_euro_gpio = devm_gpiod_get_optional(dev, "us-euro", GPIOD_OUT_LOW);
-+		if (IS_ERR(wcd938x->us_euro_gpio))
-+			return dev_err_probe(dev, PTR_ERR(wcd938x->us_euro_gpio),
-+					     "us-euro swap Control GPIO not found\n");
-+	} else {
-+		ret = mux_control_try_select(wcd938x->us_euro_mux, wcd938x->mux_state);
-+		if (ret) {
-+			dev_err(dev, "Error (%d) Unable to select us/euro mux state\n", ret);
-+			return ret;
-+		}
-+	}
- 
- 	cfg->swap_gnd_mic = wcd938x_swap_gnd_mic;
- 
-@@ -3581,6 +3604,9 @@ static void wcd938x_remove(struct platform_device *pdev)
- 	pm_runtime_set_suspended(dev);
- 	pm_runtime_dont_use_autosuspend(dev);
- 
-+	if (wcd938x->us_euro_mux)
-+		mux_control_deselect(wcd938x->us_euro_mux);
-+
- 	regulator_bulk_disable(WCD938X_MAX_SUPPLY, wcd938x->supplies);
- 	regulator_bulk_free(WCD938X_MAX_SUPPLY, wcd938x->supplies);
- }
--- 
-2.39.5
+Boot regression: x86 boot fail kernel panic __pci_enable_msi_range
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
+## Boot log
+<1>[    1.525485] BUG: kernel NULL pointer dereference, address:
+0000000000000002
+<1>[    1.525573] #PF: supervisor read access in kernel mode
+<1>[    1.525573] #PF: error_code(0x0000) - not-present page
+<6>[    1.525573] PGD 0 P4D 0
+<4>[    1.525573] Oops: Oops: 0000 [#1] SMP PTI
+<4>[    1.525573] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted
+6.14.0-rc7-next-20250324 #1 PREEMPT(voluntary)
+<4>[    1.525573] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+<4>[    1.525573] RIP: 0010:__pci_enable_msi_range+0x306/0x6b0
+<4>[    1.525573] Code: ff ff ff e8 1c 05 fe ff f6 83 21 08 00 00 10
+0f b7 85 6e ff ff ff 74 0c 0d 00 01 00 00 66 89 85 6e ff ff ff 8b 8d
+68 ff ff ff <41> f6 44 24 02 40 74 0c 25 ff fe 00 00 66 89 85 6e ff ff
+ff 89 8d
+<4>[    1.525573] RSP: 0000:ffffa83b00013740 EFLAGS: 00010246
+<4>[    1.525573] RAX: 0000000000000080 RBX: ffffa11c8023e000 RCX:
+0000000000000001
+<4>[    1.525573] RDX: 0000000000000000 RSI: ffffffff9e60c683 RDI:
+ffffffff9e6519a8
+<4>[    1.525573] RBP: ffffa83b00013810 R08: 0000000000000002 R09:
+ffffa83b0001370c
+<4>[    1.525573] R10: 0000000000000001 R11: ffffffff9e60c5b0 R12:
+0000000000000000
+<4>[    1.525573] R13: 0000000000000000 R14: 0000000000000001 R15:
+ffffa11c8023e000
+<4>[    1.525573] FS:  0000000000000000(0000)
+GS:ffffa11d5c339000(0000) knlGS:0000000000000000
+<4>[    1.525573] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[    1.525573] CR2: 0000000000000002 CR3: 000000007d844000 CR4:
+00000000000006f0
+<4>[    1.525573] Call Trace:
+<4>[    1.525573]  <TASK>
+<4>[    1.525573]  ? __die_body+0xb4/0xc0
+<4>[    1.525573]  ? __die+0x2e/0x40
+<4>[    1.525573]  ? page_fault_oops+0x3ae/0x410
+<4>[    1.525573]  ? kernelmode_fixup_or_oops+0x54/0x70
+<4>[    1.525573]  ? __bad_area_nosemaphore+0x52/0x240
+<4>[    1.525573]  ? bad_area_nosemaphore+0x16/0x20
+<4>[    1.525573]  ? do_user_addr_fault+0x738/0x7a0
+<4>[    1.525573]  ? irqentry_enter+0x2d/0x50
+<4>[    1.525573]  ? exc_page_fault+0x4d/0x120
+<4>[    1.525573]  ? exc_page_fault+0x70/0x120
+<4>[    1.525573]  ? asm_exc_page_fault+0x2b/0x30
+<4>[    1.525573]  ? __pfx_pci_conf1_read+0x10/0x10
+<4>[    1.525573]  ? pci_conf1_read+0xd3/0xf0
+<4>[    1.525573]  ? _raw_spin_unlock_irqrestore+0x28/0x50
+<4>[    1.525573]  ? __pci_enable_msi_range+0x306/0x6b0
+<4>[    1.525573]  ? _raw_spin_unlock_irqrestore+0x28/0x50
+<4>[    1.525573]  pci_alloc_irq_vectors_affinity+0xbf/0x140
+<4>[    1.525573]  pci_alloc_irq_vectors+0x15/0x20
+<4>[    1.525573]  ahci_init_irq+0x90/0xc0
+<4>[    1.525573]  ahci_init_one+0x82c/0xd10
+<4>[    1.525573]  pci_device_probe+0x198/0x230
+<4>[    1.525573]  really_probe+0x146/0x450
+<4>[    1.525573]  __driver_probe_device+0x7a/0xf0
+<4>[    1.525573]  driver_probe_device+0x24/0x190
+<4>[    1.525573]  __driver_attach+0x104/0x250
+<4>[    1.525573]  ? __pfx___driver_attach+0x10/0x10
+<4>[    1.525573]  bus_for_each_dev+0x10e/0x160
+<4>[    1.525573]  driver_attach+0x22/0x30
+<4>[    1.525573]  bus_add_driver+0x175/0x2c0
+<4>[    1.525573]  driver_register+0x65/0xf0
+<4>[    1.525573]  ? __pfx_ahci_pci_driver_init+0x10/0x10
+<4>[    1.525573]  __pci_register_driver+0x68/0x70
+<4>[    1.525573]  ahci_pci_driver_init+0x22/0x30
+<4>[    1.525573]  do_one_initcall+0x121/0x330
+<4>[    1.525573]  ? alloc_pages_mpol+0x170/0x1c0
+<4>[    1.525573]  ? alloc_pages_mpol+0x170/0x1c0
+<4>[    1.525573]  ? trace_preempt_on+0x12/0x80
+<4>[    1.525573]  ? alloc_pages_mpol+0x170/0x1c0
+<4>[    1.525573]  ? preempt_count_sub+0x63/0x80
+<4>[    1.525573]  ? alloc_pages_mpol+0x170/0x1c0
+<4>[    1.525573]  ? trace_hardirqs_on+0x29/0xa0
+<4>[    1.525573]  ? irqentry_exit+0x57/0x60
+<4>[    1.525573]  ? sysvec_apic_timer_interrupt+0x52/0x90
+<4>[    1.525573]  ? next_arg+0xcd/0x150
+<4>[    1.525573]  ? next_arg+0x138/0x150
+<4>[    1.525573]  ? parse_args+0x16e/0x440
+<4>[    1.525573]  do_initcall_level+0x80/0xf0
+<4>[    1.525573]  do_initcalls+0x48/0x80
+<4>[    1.525573]  do_basic_setup+0x1d/0x30
+<4>[    1.525573]  kernel_init_freeable+0x10c/0x180
+<4>[    1.525573]  ? __pfx_kernel_init+0x10/0x10
+<4>[    1.525573]  kernel_init+0x1e/0x130
+<4>[    1.525573]  ret_from_fork+0x45/0x50
+<4>[    1.525573]  ? __pfx_kernel_init+0x10/0x10
+<4>[    1.525573]  ret_from_fork_asm+0x1a/0x30
+<4>[    1.525573]  </TASK>
+<4>[    1.525573] Modules linked in:
+<4>[    1.525573] CR2: 0000000000000002
+<4>[    1.525573] ---[ end trace 0000000000000000 ]---
+<4>[    1.525573] RIP: 0010:__pci_enable_msi_range+0x306/0x6b0
+<4>[    1.525573] Code: ff ff ff e8 1c 05 fe ff f6 83 21 08 00 00 10
+0f b7 85 6e ff ff ff 74 0c 0d 00 01 00 00 66 89 85 6e ff ff ff 8b 8d
+68 ff ff ff <41> f6 44 24 02 40 74 0c 25 ff fe 00 00 66 89 85 6e ff ff
+ff 89 8d
+<4>[    1.525573] RSP: 0000:ffffa83b00013740 EFLAGS: 00010246
+<4>[    1.525573] RAX: 0000000000000080 RBX: ffffa11c8023e000 RCX:
+0000000000000001
+<4>[    1.525573] RDX: 0000000000000000 RSI: ffffffff9e60c683 RDI:
+ffffffff9e6519a8
+<4>[    1.525573] RBP: ffffa83b00013810 R08: 0000000000000002 R09:
+ffffa83b0001370c
+<4>[    1.525573] R10: 0000000000000001 R11: ffffffff9e60c5b0 R12:
+0000000000000000
+<4>[    1.525573] R13: 0000000000000000 R14: 0000000000000001 R15:
+ffffa11c8023e000
+<4>[    1.525573] FS:  0000000000000000(0000)
+GS:ffffa11d5c339000(0000) knlGS:0000000000000000
+<4>[    1.525573] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[    1.525573] CR2: 0000000000000002 CR3: 000000007d844000 CR4:
+00000000000006f0
+<6>[    1.525573] note: swapper/0[1] exited with irqs disabled
+<0>[    1.553459] Kernel panic - not syncing: Attempted to kill init!
+exitcode=0x00000009
+<0>[    1.553844] Kernel Offset: 0x1c000000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+<0>[    1.553844] ---[ end Kernel panic - not syncing: Attempted to
+kill init! exitcode=0x00000009 ]---
+
+
+## Source
+* Kernel version: 6.14.0-rc7-next-20250324
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: 882a18c2c14fc79adb30fe57a9758283aa20efaa
+* Git describe: next-20250324
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250324/
+
+## Test
+* Test log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250324/testrun/27735988/suite/boot/test/clang-20-lkftconfig/log
+* Test history:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250324/testrun/27735988/suite/boot/test/clang-20-lkftconfig/history/
+* Test details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250324/testrun/27735936/suite/boot/test/clang-20-lkftconfig/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2ulLSNJUAxmyv6UZdUMeoptIZNn/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2ulLSNJUAxmyv6UZdUMeoptIZNn/config
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
