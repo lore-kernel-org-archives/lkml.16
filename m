@@ -1,63 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2200269D04;
-	Tue, 25 Mar 2025 22:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2197A269D04;
+	Tue, 25 Mar 2025 22:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742941643; cv=none; b=X8yK2TLKjiYFqPuN6L5qvgNS6cpMtLBKSla/qvO9D2eY5AKqr4Xoy+k2kAe4+dQiUpZ0ziXIbuOUixot3uEE8E1CjpXZxIuT+8g9BEqzkAcLWs8DmJC7AK3Y3QMjcqGSLaE1xU64LpNKwGGa81jSCQKdZqaS9LYiqQEflyBbWtM=
+	t=1742941667; cv=none; b=qIup1Qhy2+9Rzyy2okgpboEiMNYlaC3+uIsn5SeClO2I123bX5jk/BGgz/hJEm2s7gjX2K0CN6J4FWDJIOe6U/i2q1EQ3yhqPnmIp7vduN3reMfj0a+aUBfpaxPhi9vC7IChlpSYsnl/T9JvaN1QNxqU/Kd9d+yv1olwMn9X6o0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742941643; c=relaxed/simple;
-	bh=CjhTi+TCLM66pen4h3uAMenY0PpRUjXiB10TSDhkPjo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=VmuTBu/lFewRdXnrLSmrbId7ST5QAvF1w5Pk9fgitNd7TW5WfAXxi2kv5aIEuSFnEAJpXnqWAv7NBH93T7j2LRfJke4kvY3e3X7M1MtLd0Sr+LuNW7rA0O956FQSTBb/OCpmaug+HT+OMMtIKBSulFU6PhCQfMwWpooF8nm/CBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OcWEUss3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742941667; c=relaxed/simple;
+	bh=I6Bh2Pj6j0LoG+gyB+9U4Am8CJTmsjj3+N2uNJx+TkM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k6gznCpay4J1C0P44S+BOYY2BU2EKpR54ZzSPcSZbJsZnuwQMa0AGoZmIODpJByV6xkHBculQ41HAvughlzuqYhKc9ysTq/O+GgEkBd8csnFrIHpnN6WLTJIuia8SpG6wbAoi9jbzDmphHD8gzMlEgH9UWus5gFIHaalCYGQVoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Ys7MDF98; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OcWEUss3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A59BCC4CEE4;
-	Tue, 25 Mar 2025 22:27:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742941643;
-	bh=CjhTi+TCLM66pen4h3uAMenY0PpRUjXiB10TSDhkPjo=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=OcWEUss3sAXYW6VG2hooA8s+qYcKI3fdt9EnNrVcv2N4/9qX76eU8shHMRX4uXSxM
-	 OalIbZFd5ILginOU1AVMb3yjAj7SDrCywGvEx4LfIj3ssufFNN3ZiAQHhEcHxi9zdM
-	 +VL1rsha4mQnLt2xblAOxqX7MgRMRYMHozLaaZy6HQMYHMGyLVzxVZsW9Kmpyh54rB
-	 G8b+m2RjVrvrlR71GyZHK+L6TIeg2Rk+Adwm4o+nBCvpLvzeHZtturY15t3S37K7JM
-	 z+aXCWmW0xu4f/JkyONBGm6Ql4IKJgViiisbeYYpyuA5h5nmgznT8EB55LX2RyZ3h6
-	 /r6Kp94czaGag==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D72380DBFC;
-	Tue, 25 Mar 2025 22:28:01 +0000 (UTC)
-Subject: Re: [GIT PULL] Thermal control updates for v6.15-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0gsHdE+Mt+8vMbUJMRuTUdiBTnUTonaGM_41EpPt9wS5g@mail.gmail.com>
-References: <CAJZ5v0gsHdE+Mt+8vMbUJMRuTUdiBTnUTonaGM_41EpPt9wS5g@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-pm.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0gsHdE+Mt+8vMbUJMRuTUdiBTnUTonaGM_41EpPt9wS5g@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git thermal-6.15-rc1
-X-PR-Tracked-Commit-Id: c3b659b74541f4564f9f5a39f65e625c47e77e21
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b3c623b9a94f7f798715c87e7a75ceeecf15292f
-Message-Id: <174294167970.756596.8448296515241254975.pr-tracker-bot@kernel.org>
-Date: Tue, 25 Mar 2025 22:27:59 +0000
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Ys7MDF98"
+Received: from [10.17.64.173] (unknown [131.107.8.109])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 3AD04204E596;
+	Tue, 25 Mar 2025 15:27:45 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3AD04204E596
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742941665;
+	bh=yu+zl6twDuJmGCQvb+BJhKb1ZJUDVREmR4BMuDWngzo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ys7MDF98d7F6l7lO9UCnXF/KFQKz7cXYNKkmxX7+w/ntWkDq23pjCzvFEabp0ldlI
+	 yZr6ADwe2o1JSR5oVDNsw3uMxSyxVLVT+h+iKf2UIUheJgaUP+FqcD3CVAFghPZ4WW
+	 GBj5l4/HREsMBvqHdkzChu8fcboRIvH/w57jXdeU=
+Message-ID: <6583378c-55ee-4192-a95f-ebaf3f708bbb@linux.microsoft.com>
+Date: Tue, 25 Mar 2025 15:27:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 6/8] ima: kexec: move IMA log copy from kexec load to
+ execute
+To: Baoquan He <bhe@redhat.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
+ nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
+ vgoyal@redhat.com, dyoung@redhat.com
+References: <20250318010448.954-1-chenste@linux.microsoft.com>
+ <20250318010448.954-7-chenste@linux.microsoft.com>
+ <Z9t4LVpE470DMBYU@MiWiFi-R3L-srv>
+ <3d7b5e06-5166-46bb-89dc-a0b95ca7c767@linux.microsoft.com>
+ <Z+E7X6LuQ82q1i5V@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <Z+E7X6LuQ82q1i5V@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The pull request you sent on Mon, 24 Mar 2025 17:33:56 +0100:
+On 3/24/2025 4:00 AM, Baoquan He wrote:
+> On 03/21/25 at 09:23am, steven chen wrote:
+>> On 3/19/2025 7:06 PM, Baoquan He wrote:
+>>> On 03/17/25 at 06:04pm, steven chen wrote:
+>>> ...snip...
+>>>> ---
+>>>>    kernel/kexec_file.c                | 10 ++++++
+>>>>    security/integrity/ima/ima_kexec.c | 51 ++++++++++++++++++------------
+>>>>    2 files changed, 40 insertions(+), 21 deletions(-)
+>>>>
+>>>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+>>>> index 606132253c79..ab449b43aaee 100644
+>>>> --- a/kernel/kexec_file.c
+>>>> +++ b/kernel/kexec_file.c
+>>>> @@ -201,6 +201,13 @@ kimage_validate_signature(struct kimage *image)
+>>>>    }
+>>>>    #endif
+>>>> +static void kimage_file_post_load(struct kimage *image)
+>>>> +{
+>>>> +#ifdef CONFIG_IMA_KEXEC
+>>>> +	ima_kexec_post_load(image);
+>>>> +#endif
+>>>> +}
+>>>> +
+>>>>    /*
+>>>>     * In file mode list of segments is prepared by kernel. Copy relevant
+>>>>     * data from user space, do error checking, prepare segment list
+>>>> @@ -428,6 +435,9 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+>>>>    	kimage_terminate(image);
+>>>> +	if (!(flags & KEXEC_FILE_ON_CRASH))
+>>>> +		kimage_file_post_load(image);
+>>> machine_kexec_post_load() is called by both kexec_load and kexec_file_load,
+>>> we should use it to do things post load, but not introducing another
+>>> kimage_file_post_load().
+>> Hi Baoquan,
+>>
+>> Could you give me more detail about this?
+> I mean machine_kexec_post_load() is the place where post load operations
+> are done, including kexec_load and kexec_file_load. There's no need to
+> specifically introduce a kimage_file_post_load() to do post load
+> operaton for kexec_file_load.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git thermal-6.15-rc1
+Hi Baoquan,
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b3c623b9a94f7f798715c87e7a75ceeecf15292f
+Updating the machine_kexec_post_load() API to carry flags would indeed 
+require changes to multiple files. This approach involves the condition 
+check if (!(flags & KEXEC_FILE_ON_CRASH)) and ensuring that the flags 
+are properly passed and handled across the relevant file
 
-Thank you!
+if just adding a API kimage_file_post_load() here, it is much easy and 
+clean, right?
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+How do you think?
+
+Thanks,
+
+Steven
+
