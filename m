@@ -1,38 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923121A5BA6
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 08:13:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6224C481C4
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 08:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742890406; cv=none; b=ubbS4D4fDJKm5uGSOVZhtAU90w449so2t9k3GhHNKhVXK9wfOxCTiYE9c+pqA2s+4boKaRs1yymia6t1iPHPc9/Q3TivjboP1qRUJdMcyuOAPryOPJF1vPWbliwcNhsKUP9MtqE2S8r3qRVy007Z2bBdbIhbMjpncFiUEREv7z0=
+	t=1742890463; cv=none; b=shPiAkEp9uvNsceELdYBj0l++7KdSJdPL9I5gAQMKsvFyCX+ELkGNniOmNk+5P/uXPnNfpapjNyzPh1MFpuVuikx2nIPnRmrhCJv0h10M8kO38r11ST4xtF+Pj8q4oun3LNsVktqqzx2V53/HUB+HvAZTEJOaJSFsthhjrHkvIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742890406; c=relaxed/simple;
-	bh=LtRdniLcPqa7ao3nLrAh74t9DlpseprTi8ntyDAeLik=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dcV3FbP5kc33cgn74gXTKQrrLBH9MCmgYxnkiUc7BBcQlzzboOGniB5AXgZAj9nGDLL2KqHFEsc/vwpmWQ7SqHbvjsB+/KhilE36ih2SH8MAgzUY7LnLzqKZN2Twy/Al8gnJacCygEDJ02unGiYkhkljumnPJUE2k7lBPXhiabE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MyEVArTW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742890463; c=relaxed/simple;
+	bh=otQXdpFdlu2BChfhwuQRzaNNK0IsSAk7WEEMHeNI4TU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b9G0aurKYqwAitCSrqQ9OU8FyHum0JNHrUmNHhomn4tA/0PgcGDTmkk7LWwFrfjVRTbGa+VNevp2AexZSdpoFXtS0qZwef82qEE7grr/CU+NS+ZOvpYGU1WaLe0tH9baw9mrlU5Tu8DfF+TZl54IM7J0j/V79PpD6tVtZjTtUF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HT/woCYX; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MyEVArTW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B29AC4CEE8;
-	Tue, 25 Mar 2025 08:13:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742890406;
-	bh=LtRdniLcPqa7ao3nLrAh74t9DlpseprTi8ntyDAeLik=;
-	h=From:To:Cc:Subject:Date:From;
-	b=MyEVArTWZinYlc0UyKhExD7y6Zsq8cAsvxIG1OUzHrmWdb5qzOErLKCig3Ry+zNDO
-	 yhdqtSPQxB2x7YwGCI3sOYVbrAGUsweAt4Sk8IY867ibaDUatPNFzkApDxnBv9qIJQ
-	 ky/O85t3knHqdBB+Lq4rNf+n2sFmFFwwJHG5S0uLjJi1jKAbL+6jLFgfSVnVd46KmC
-	 tVKuOrrrOpMe3n5JkJaHZw0yj7ukc5dBqmzKjCLQ7hWqTgGcwX468a+WxsHCM5Rwue
-	 KHmXaKQXfFXXU5XQh0gkzD9KF/qrIrgXGktvb9P+n4JiMlk3kxM3ZeXIpN/kDRwngX
-	 cUSw9Ua2YAweA==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH v2] f2fs: add a fast path in finish_preallocate_blocks()
-Date: Tue, 25 Mar 2025 16:13:21 +0800
-Message-ID: <20250325081321.3296714-1-chao@kernel.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HT/woCYX"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2243803b776so31730555ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 01:14:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1742890460; x=1743495260; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kNYXBQpFyPKAPrC63ak+6Lghv9itCVCrzkPP9piyvFo=;
+        b=HT/woCYX7bdqjuYF3gXmVf/YJ102qpupCux0ZXtnWEVeH9sgAxlWOFItIkMCutLLeo
+         gR5xFNmVMtBNulRP6e3OGoML8cvHU28nN1nyNgTEVLhl/g8wKibhhFl4lwDKe2Ge/ksZ
+         Agzw+3sj6or8Psad14BdYL5a87fr/MKXCebUw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742890460; x=1743495260;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kNYXBQpFyPKAPrC63ak+6Lghv9itCVCrzkPP9piyvFo=;
+        b=JiEzAgTjr+X454KxbteaHim4r/9z88n0mbiY4hDKsUwZFJuq3DnlKTR6r4T+6U3WL/
+         m9rh7qtpG/De0Pbx8bNm3HFlawsFTdHQP3s/FWYUumwMz2ilvd6YkWZ0tCbFpJBMyUA4
+         0ezzzFiz7ij9o0S2NUpX+vJNnVeEyowMdLJBwr1WZ+8oYrgoEC2kfEx9xiy9EBVPMnL4
+         QHW1D3ONAv7tAQhsB3N99o1dR0oTtA2J1BK0mfM3B3MUQMQYwk7uTvxqyN+LqCUTwADu
+         kG1eYhUu2RjuoLqOyJ85E0ZjosMwCKyh6TpRMI1A6Z/gZoBY5bbM7cymU9bJo9hvLk8W
+         IEbw==
+X-Forwarded-Encrypted: i=1; AJvYcCUfIJ+8zYTzipJpSf1Oh7KntZ//KRC2ETn0EZLrFLbGkx/7nwgKn5ehYgXN0LPR5F26XmqBb6S1YCpxHkA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy667CTLwoOY7a8odeOuSqok8PmFIuANR+30ZN+AWdQ+CS7WYlv
+	sYj8f1+m1o2aswBEoQ2a8QiVJ81l6r0Gwts5o9y1UdfQoym4M95+L8Jppm1OwA==
+X-Gm-Gg: ASbGncvASKRLdVYrlSneEm9kFJuhuzVMDBpw+/Tb3IjWxfe5QmfQBgc/gTMW/ky3ifz
+	eEhYJ7eLvTAA8cu1AYuI8XrlElpR5EMF+VZ1V5CaDhYYsKBqz/rhvcycqNOIARkTs1sxls1OeA3
+	uQZDfKfWveB06tV8bw39h/y+SCOsLURX0DHTh8y9EYUIHGE71jOQ4NvNBgAMSJA3TfKUSw3lrkR
+	LQIUikEFQ8AXBFI8HoVllb9sAOvEcxQ4thGVM7GAYeBe1GrUTADkAA/EePu0hmhXRwteUTsl42W
+	o/ek+dZjoTDV42IOSo4gpuFizdbquCcwI0q98J3KIflyhQtdgCcl+lCsAR36jwNg
+X-Google-Smtp-Source: AGHT+IGDbB2izvu+t9h4n+6kBg4rcIhVYj9jR1WRlX4F5kfsit9jrFvvckdmOs5NpmzKyk+jgcasxQ==
+X-Received: by 2002:a05:6a00:3c95:b0:736:eb7e:df39 with SMTP id d2e1a72fcca58-73905a54b96mr28430513b3a.24.1742890460358;
+        Tue, 25 Mar 2025 01:14:20 -0700 (PDT)
+Received: from fshao-p620.tpe.corp.google.com ([2401:fa00:1:10:d83e:63a8:42b9:7425])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7390618c056sm9457156b3a.163.2025.03.25.01.14.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 01:14:19 -0700 (PDT)
+From: Fei Shao <fshao@chromium.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>
+Cc: Xin Ji <xji@analogixsemi.com>,
+	Fei Shao <fshao@chromium.org>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/bridge: anx7625: Simplify INTERFACE_CHANGE_INT reg clear write
+Date: Tue, 25 Mar 2025 13:54:43 +0800
+Message-ID: <20250325081331.1965917-1-fshao@chromium.org>
 X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -42,79 +71,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch uses i_sem to protect access/update on f2fs_inode_info.flag
-in finish_preallocate_blocks(), it avoids grabbing inode_lock() in
-each open().
+Simply clear the INTERFACE_CHANGE_INT register with 0 and replace the
+indirect `x & (~x)` pattern, since they are logically the same.
+No functional change.
 
-Signed-off-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Fei Shao <fshao@chromium.org>
 ---
-v2:
-- get rid of read lock during querying FI_OPENED_FILE once we held
-inode lock.
- fs/f2fs/file.c | 37 ++++++++++++++++++++-----------------
- 1 file changed, 20 insertions(+), 17 deletions(-)
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index abbcbb5865a3..a71946976761 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -554,19 +554,21 @@ static int f2fs_file_mmap(struct file *file, struct vm_area_struct *vma)
- 
- static int finish_preallocate_blocks(struct inode *inode)
- {
--	int ret;
-+	int ret = 0;
-+	bool opened;
- 
--	inode_lock(inode);
--	if (is_inode_flag_set(inode, FI_OPENED_FILE)) {
--		inode_unlock(inode);
-+	f2fs_down_read(&F2FS_I(inode)->i_sem);
-+	opened = is_inode_flag_set(inode, FI_OPENED_FILE);
-+	f2fs_up_read(&F2FS_I(inode)->i_sem);
-+	if (opened)
- 		return 0;
--	}
- 
--	if (!file_should_truncate(inode)) {
--		set_inode_flag(inode, FI_OPENED_FILE);
--		inode_unlock(inode);
--		return 0;
--	}
-+	inode_lock(inode);
-+	if (is_inode_flag_set(inode, FI_OPENED_FILE))
-+		goto out_unlock;
-+
-+	if (!file_should_truncate(inode))
-+		goto out_update;
- 
- 	f2fs_down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
- 	filemap_invalidate_lock(inode->i_mapping);
-@@ -576,16 +578,17 @@ static int finish_preallocate_blocks(struct inode *inode)
- 
- 	filemap_invalidate_unlock(inode->i_mapping);
- 	f2fs_up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
--
--	if (!ret)
--		set_inode_flag(inode, FI_OPENED_FILE);
--
--	inode_unlock(inode);
- 	if (ret)
--		return ret;
-+		goto out_unlock;
- 
- 	file_dont_truncate(inode);
--	return 0;
-+out_update:
-+	f2fs_down_write(&F2FS_I(inode)->i_sem);
-+	set_inode_flag(inode, FI_OPENED_FILE);
-+	f2fs_up_write(&F2FS_I(inode)->i_sem);
-+out_unlock:
-+	inode_unlock(inode);
-+	return ret;
- }
- 
- static int f2fs_file_open(struct inode *inode, struct file *filp)
+ drivers/gpu/drm/bridge/analogix/anx7625.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
+index 0b97b66de577..df2d1dd95d01 100644
+--- a/drivers/gpu/drm/bridge/analogix/anx7625.c
++++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
+@@ -1586,8 +1586,7 @@ static int anx7625_hpd_change_detect(struct anx7625_data *ctx)
+ 	}
+ 	DRM_DEV_DEBUG_DRIVER(dev, "0x7e:0x44=%x\n", intr_vector);
+ 	status = anx7625_reg_write(ctx, ctx->i2c.rx_p0_client,
+-				   INTERFACE_CHANGE_INT,
+-				   intr_vector & (~intr_vector));
++				   INTERFACE_CHANGE_INT, 0);
+ 	if (status < 0) {
+ 		DRM_DEV_ERROR(dev, "cannot clear interrupt change reg.\n");
+ 		return status;
 -- 
-2.48.1
+2.49.0.395.g12beb8f557-goog
 
