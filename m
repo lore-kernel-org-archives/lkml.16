@@ -1,63 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE3C269B11
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 21:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F37C18A6A8
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 21:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742937479; cv=none; b=g+YMhZxGOjasph6suQvK47GVs32HFwoN5+YSZfs2Z8Ci6+0AMpwjXwXPeeCf5IiiBaqTAHXNLFPocnv9F2aJeSBkIaDeVQPgBhNkmWiC1SfRjAzXoP3aDgqeF9ExKTcle/KKFAiOIkbP9j4sYiI/BJITfyYGQkO4ELONF/lQm7o=
+	t=1742937495; cv=none; b=bTqxigzyR4OeV+/l9SncSUcexHb4T34H6w9WoGIK+N3YWToYjvXJVs7BEaALfhPFVpPG11pkYw583UwaZEskDoDPPBLhTF0n+C0Ky67rAxb10Zf5VmhBiRT/SNce2rEBmOP3rQfahCcFuaoDQIE3FVuReZR+eHwOjiJgbRrYrnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742937479; c=relaxed/simple;
-	bh=f/qLl44N3j0AX0JzE6mTioWl6p9L/UzMiTSUgPq8eQ4=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=VJrebmG4J6rAwcqC+AFggRl93AWgCOIe5MMIIeh2D7bem0bR8nDz0Qu69Dt6aUKZ3IeRmmomevry7dmv5e5Wt9DbbHU4OetHW5hVo5KQNmVkI92nAaOL1rkFuPIgubdi5tUE5Vhl+wnmL4oac0slP65JPGGWi2euML6hFLsGDP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkKc1d/e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742937495; c=relaxed/simple;
+	bh=kYCJ1vNNmu4cnX3Zv4N65BeeWCJFNxqzoBhji8GJHME=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZjDIa8CWfs/SYzbGZKlG73IWeWaQmPKREyc37+yQtNYxDnfua97HsNunmp9R08xKzw4elsdbNBT1n5NhCTl/nPpjI6RfeF3Jl2mSbpotmMza7IEOTFgbMlgfXGT5SMXkrrw/8PTtZ9aRG74IX6nvJXVUhyJqQFd2l/FeK2awtdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ry6DkxXk; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkKc1d/e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F12FC4CEE4;
-	Tue, 25 Mar 2025 21:17:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742937479;
-	bh=f/qLl44N3j0AX0JzE6mTioWl6p9L/UzMiTSUgPq8eQ4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=CkKc1d/ehrmwEtJc+s/ZzppZNmu9ElwXpg44UZobRaya0ClvkKA4kpcAFuUCcBd7p
-	 EvVuJE9E9dzeo2SXEXQSDfl481PQB5lhTZYGlbEiwKGZg4KG5SxPDnVum1Cs6KoTpx
-	 Erp8Qs048mMoztXldETjyl4L0I2Uv+KK2Q6AiyKwPq15L51YAMUuzrZtzf1Rr5ujar
-	 GOZIJ1J/rmL6niKXd97G+GBkqED+ntpazeLAnHuCVqaFFrYtyhdbb+2Tpu7+gdTpxH
-	 /Xie7Xc5+/d47fAaryTDnuYx9CU7FB8UqmLJoyDkaYbJU8TOGZrYMwWesYFZmytk/u
-	 dwOUvFxwyNioA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE43B380DBFC;
-	Tue, 25 Mar 2025 21:18:36 +0000 (UTC)
-Subject: Re: [GIT PULL] x86/cache for v6.15
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250325171320.GAZ-LkMAFoSM7ZhDqq@fat_crate.local>
-References: <20250325171320.GAZ-LkMAFoSM7ZhDqq@fat_crate.local>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250325171320.GAZ-LkMAFoSM7ZhDqq@fat_crate.local>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip tags/x86_cache_for_v6.15
-X-PR-Tracked-Commit-Id: 823beb31e55673bf2fd21374e095eec73a761ee7
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2899aa3973efa3b0a7005cb7fb60475ea0c3b8a0
-Message-Id: <174293751518.732113.2128225767932545522.pr-tracker-bot@kernel.org>
-Date: Tue, 25 Mar 2025 21:18:35 +0000
-To: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ry6DkxXk"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c559b3eb0bso302424185a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:18:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742937493; x=1743542293; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YORNRy4OTXMv3Yhi6ofZ1+35f+Xdz3ifIja4azR4a6Q=;
+        b=Ry6DkxXkUJ1p6XgqzHK3cxYYTqWXYdZ+sWD913E2/TKukPreJ0S9HEe6QWfw2R31pE
+         qvyvLdP4/yiHmgo2Qi8c3ROZrSe/j4JuXAxqz+ZoImsKfHTBl3St3N0J7et6PbRmu7AZ
+         hO1Q/Cd6nwZMbMKWE3bW0UjHXxNAFqIlSo1l6p6qutXXcV26JX0KrmQU0BU5fIn8fjzy
+         kVsK4oWmHPUjr5Q+8jqnlcAW+y5CA7bdCNK+xjoyGa2vX7MvyDwaPSc5lTWSFyOTt5x8
+         MBSF8jYQ0yiJyilM6yadjump1dt2XklgZXVP1ZikTCB2nvioSLwYYUQD4TNMR61z3di1
+         9fgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742937493; x=1743542293;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YORNRy4OTXMv3Yhi6ofZ1+35f+Xdz3ifIja4azR4a6Q=;
+        b=UKcKz080ZA5sssP4v4/nZFHpijGsG6/mxmYqW0lXre35PJftkfC6C4k8kZVmGXOWc3
+         SF93AJFzhxLZn2tJHpBgMiaGLUJVt46LoFfRoH5qAwiNgZFrMn8kj7DbTeOXgUW6oQcy
+         whQyEwFzVClotzfvkQATGbcBVOAp4XjhohcBARbxNUAjYrXTeHO15bV1KKZiQBLAfArU
+         3QIn3Q6f4aQXbx9iOkQV42TIBR3Mk3bel2z2wmeUDc6b93m9TT2DXin41NBF8LKW1jdP
+         KH1aMjTGuo699YKxCGzahIKP2E0Wu5KfhIq+kHrDYf8S4gZd7X06TLihdh07O8vQrrrz
+         nOQg==
+X-Forwarded-Encrypted: i=1; AJvYcCWtPTJ1iV5S41fvdQkJ8DzLDhxuRN+qd70ehjFOOa6V6pGTL9mVwSOqLffURrwb16wpc1pbBSanK9Vg8uQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY5MAccCc9im7GLpswxIJA971OeWcIzzCNIwRuU3w7FOcEms1k
+	ANa3noOh3/i2pgqrt4mZp/zgyGHQwo+vWfMyNQhGAdOoWNGjHXUG
+X-Gm-Gg: ASbGncsPmqbqBvTSzmONgQPkU4KlYy58O/ByRo4QjQHGHwP63iOI0To7Sikz7gHRANY
+	Z0Dh/aIe8PSNG8tkwzR9BsVWuUKNIrxtifBswVQnuVvK2CMMdRn53qcjJsdLXjM0Eqb4bwuQ46s
+	MLVGsMhhU+mSIB6sHEDZVpLT2TZryRJ9diPQCvd8KqWo5Zw0I2OAcMi9dRkFqewwkrHpGd01O68
+	XnkJWo1bzmUy13S3JRYOWAgCcWJaWbhDMG1jd5NyXrFDSWJQIMh+XhMUtzkty629VxuJBLgPh1P
+	M3Pdrp3KoB7D4XVDd8uPKxCXYi9V4MTR3oq/H9fFrJc6vC73l9TTXIwhlExBnwKcqv8wXhQtlaf
+	D7Cs88OiahoCUPgQossw=
+X-Google-Smtp-Source: AGHT+IHr7MEJqWj2AbT6Erl+Fujw+8uJX4cGimN+hCDY0WysNw8kbTVhRB2c+75HV6llOMRnBSRRgg==
+X-Received: by 2002:a05:620a:19a3:b0:7c5:4278:d151 with SMTP id af79cd13be357-7c5ba211387mr2958874585a.43.1742937492920;
+        Tue, 25 Mar 2025 14:18:12 -0700 (PDT)
+Received: from localhost.localdomain (c-68-55-107-1.hsd1.mi.comcast.net. [68.55.107.1])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b9348308sm680685485a.89.2025.03.25.14.18.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 14:18:12 -0700 (PDT)
+From: Brady Norander <bradynorander@gmail.com>
+To: Mark Brown <broonie@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	u.kleine-koenig@baylibre.com,
+	Wu Bo <bo.wu@vivo.com>,
+	Brady Norander <bradynorander@gmail.com>
+Subject: [PATCH 3/3] ASoC: dwc: always enable/disable i2s irqs
+Date: Tue, 25 Mar 2025 17:18:05 -0400
+Message-ID: <20250325211805.2099278-1-bradynorander@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Tue, 25 Mar 2025 18:13:20 +0100:
+Commit a42e988 ("ASoC: dwc: add DMA handshake control") changed the
+behavior of the driver to not enable or disable i2s irqs if using DMA. This
+breaks platforms such as AMD ACP. Revert to the old behavior by always
+enabling and disabling i2s irqs while keeping DMA handshake control.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip tags/x86_cache_for_v6.15
+Fixes: a42e988 ("ASoC: dwc: add DMA handshake control")
+Signed-off-by: Brady Norander <bradynorander@gmail.com>
+---
+ sound/soc/dwc/dwc-i2s.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2899aa3973efa3b0a7005cb7fb60475ea0c3b8a0
-
-Thank you!
-
+diff --git a/sound/soc/dwc/dwc-i2s.c b/sound/soc/dwc/dwc-i2s.c
+index 57b789d7fbed..5b4f20dbf7bb 100644
+--- a/sound/soc/dwc/dwc-i2s.c
++++ b/sound/soc/dwc/dwc-i2s.c
+@@ -199,12 +199,10 @@ static void i2s_start(struct dw_i2s_dev *dev,
+ 	else
+ 		i2s_write_reg(dev->i2s_base, IRER, 1);
+ 
+-	/* I2S needs to enable IRQ to make a handshake with DMAC on the JH7110 SoC */
+-	if (dev->use_pio || dev->is_jh7110)
+-		i2s_enable_irqs(dev, substream->stream, config->chan_nr);
+-	else
++	if (!(dev->use_pio || dev->is_jh7110))
+ 		i2s_enable_dma(dev, substream->stream);
+ 
++	i2s_enable_irqs(dev, substream->stream, config->chan_nr);
+ 	i2s_write_reg(dev->i2s_base, CER, 1);
+ }
+ 
+@@ -218,11 +216,12 @@ static void i2s_stop(struct dw_i2s_dev *dev,
+ 	else
+ 		i2s_write_reg(dev->i2s_base, IRER, 0);
+ 
+-	if (dev->use_pio || dev->is_jh7110)
+-		i2s_disable_irqs(dev, substream->stream, 8);
+-	else
++	if (!(dev->use_pio || dev->is_jh7110))
+ 		i2s_disable_dma(dev, substream->stream);
+ 
++	i2s_disable_irqs(dev, substream->stream, 8);
++
++
+ 	if (!dev->active) {
+ 		i2s_write_reg(dev->i2s_base, CER, 0);
+ 		i2s_write_reg(dev->i2s_base, IER, 0);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.49.0
+
