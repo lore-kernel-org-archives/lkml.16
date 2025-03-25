@@ -1,98 +1,120 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE7C25A350
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E1627456;
+	Tue, 25 Mar 2025 14:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742914427; cv=none; b=mzolR2klfaZ9pc7n7/UB8pY1OJSXC9RHlAsgdX40fjowlB01btdXqvbEuosQeRS353uABxvUqxT4RlsZ4GGfmz5hzPqtTqDREp2AL/LdrtR4jjC5Eqm9hqUJJK+JMcAqEiPXu2b+4noBcdhDqFEJVCyDcnsEpYWnzWgOTQLGuP4=
+	t=1742914627; cv=none; b=RcWvhEoFme07KPir2x+cNj/4oqUmmNfmjdgYQdZHxelMFLf8ReKobVlTKHiL4RLmdF3MuXUpgH25/AsQBkVINs7ui58Pw7QeRvzKHqLwp6MkEk40CpjhfpXU7PJ8tL6llLaXXsvTVsm9LrdYK5QQPLxlBGSBgVd951HfDeVYpK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742914427; c=relaxed/simple;
-	bh=1sM5l4Le9uZaYWmJvDCU8/tUWoePiEbJJ8FpsxGPQHA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eAUrh8FfrtiBzP8HtyY0Xw77q73ZNBhTOrW14MCK+WLBojkeu6yxqlpMJHv+AdNLbeJD4yuKAgCyF6wtN2ySuggoxaKpCdjAXiQ3WThyCBHr5z/pu3OBJrYb+fOVvyH7FmfshjXszOBAeOTW7LG/d+cKJpcJHBlKFM25e+LkUjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=c+fhiXdo; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1742914627; c=relaxed/simple;
+	bh=RYqHjWw3KTpaby0u6OwaBZc7ufnS+zuGBANKdwMFpf4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=FEQwdj67ZLe/o2WFhQGihAaTqppVD+KFf1S0js3BWNvOTyl/SZoykmAzNaqxslB6QzMXSuu0/92DNk0YQW7R7eB5d8Y1ajGBiSJKTwRoVrjH75Bjp7xG3k0LK2qJJeee6zmTTlzrgRKz83tcWuvxvEJnEjCRMrtGL505p1ekuP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CTzPC1gG; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="c+fhiXdo"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-301302a328bso10840653a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 07:53:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1742914425; x=1743519225; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/TdkDS/vMk5p1AZv8W+AgQj6RaWYMpbzjtCmMRhYEbI=;
-        b=c+fhiXdoVvykfu7MlS9X+itas6WJclx71D0tUzBqIpP4q+OXrzEjZUNQR7kFIdfFjb
-         lM7FJVOPbNU8Sp7llOUUbJ92w8e2h8+Qxs3A5NkLMyT470VhVL6Ggn2q3U2wLOtCzQs8
-         cKtZlOqOz3D+7+Rw2ES22wkODhcNmtY33GILg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742914425; x=1743519225;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/TdkDS/vMk5p1AZv8W+AgQj6RaWYMpbzjtCmMRhYEbI=;
-        b=aAkxqKyRRUTMdiQpspzAMH6dhHw1ScQUoFpZPM/M1mCytxqrNWhM7urxnF1r+eq2QL
-         09mv6j3t10d5UquiMqTLkxjr+FO94jBT8jM0QBvzbj9XbRVKqD7TlffDX1KhZD7f4q0h
-         gl/xUGD7ruB+MQSzjBot+NX24KQmlGaamGXr86PTLAA6g4a02PJWj67boOcBHTnvgvCH
-         O+OIhuPsBVr+Rwmgjc2d2FmHlSywoKp+PQ3zmYpxmh3Dc9B5XtAhxy9UzA7wxQvhmAxN
-         RTFlI2CTObjOBpg4PKjZ39c/zyobfdnmRW6JDGe15cqCEm2zTt3tDBGJg8uHEIzeD6oc
-         DwHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFH7yHmw9RjQeqO0QuBpqt4QjxKzgL+h4gZ7FTkemVf8P3ugJfDMj7AuaHba5UvXqx6iCRRmsoD7zutCQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfOri/+50aKDRG9hOyrnDM9XstTSVhNAd5v3J7rgsMnJF4qoaj
-	UfYSDUTGrn+bPgy+jcPKyf4FZKOtjAfwSxiSwJZR3pluuJZJai1zsNr1CZJC9P4=
-X-Gm-Gg: ASbGncvc5bS94KqIPi1p2qz2528TXNHP03ThYhAGJIL44sb5lsPNyTjUMHHdPAN76mO
-	wK52/rY+Y1HuCY3GuZdVbAebeyA6xr3E0dKd+1Oorr5k35wraMF7Ib/9uheyoVZsChfh+UcT4Db
-	ZMSyemRryCC47gzXRwrCp2pkfoQfDM2guEhM2kERIR8XYrh6AYAKbql3TjAAWbFDQeUql2nM99q
-	mkdAEXUNK3id6GJFGSR/HJmhFch9Q6/NgEIkGK9aVcxkU7ikRkQ60FeUAbuGfL3jVWGRq7BHaVm
-	T4eei6C65MFsR7iPZVSKsAYVcv/0Ekt+K6ncW0Tp4A21KuPyGjRO8HY/GzM5
-X-Google-Smtp-Source: AGHT+IGTbPk9dPvPoREsYcLOoknFmq0RVX2PWOyMpPbWJ8k+G1JOY7Wb19hLjnqLwlugSDnBNIwDXA==
-X-Received: by 2002:a17:90b:51cf:b0:2ee:edae:75e with SMTP id 98e67ed59e1d1-3030fe86471mr27282348a91.13.1742914425185;
-        Tue, 25 Mar 2025 07:53:45 -0700 (PDT)
-Received: from localhost ([84.78.159.3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-227811baf30sm90844895ad.130.2025.03.25.07.53.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 07:53:44 -0700 (PDT)
-Date: Tue, 25 Mar 2025 15:53:40 +0100
-From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	PCI <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	shivamurthy.shastri@linutronix.de,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: next-20250324: x86_64: BUG: kernel NULL pointer dereference
- __pci_enable_msi_range
-Message-ID: <Z-LDdPeTsnBi8gAU@macbook.local>
-References: <CA+G9fYs4-4y=edxddERXQ_fMsW_nUJU+V0bSMHFDL3St7NiLxQ@mail.gmail.com>
- <b6df035d-74b5-4113-84c3-1a0a18a61e78@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CTzPC1gG"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0172D2047D;
+	Tue, 25 Mar 2025 14:57:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1742914623;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MBZ1CEC0QSASEo3c9ilc08bpvWeK9tdZuZ0/dmDvxvo=;
+	b=CTzPC1gG1AcpU3Wp/Ap7na1XuvEWAIpIK6mF+neWSzfzTXp4iAIUOckj8vJzz/fx63Ek5n
+	QeobZgh5fGmjoCDSjULN2or9wbUH3VEX+j0cUUV/7pOUgaZMbohWVzSi9wxbSk+muJ+YFz
+	h4Xi5fYctiSsjW9QYZFVScarprkW0MkT1oFkXIe2mqvAb2cphiDLOYzMLVjnAWsBX72c+o
+	+C/x1Jy/yt9dA80LnyyMPoy8L/ka+JPz+4w/cjq4gwzPWbrmNIusORtacSh3P4LibJg1as
+	VnlKeFUuR1soGL8rBQPfY78CQXZOrwjrJHfiHTTumWuuLOeE9K0ALiuITVrz0g==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b6df035d-74b5-4113-84c3-1a0a18a61e78@stanley.mountain>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 25 Mar 2025 15:57:01 +0100
+Message-Id: <D8PFO3LSGWQD.38SX4PSHQ84W2@bootlin.com>
+Subject: Re: [PATCH v5 09/11] input: keyboard: Add support for MAX7360
+ keypad
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+X-Mailer: aerc 0.18.2-0-ge037c095a049
+References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
+ <20250318-mdb-max7360-support-v5-9-fb20baf97da0@bootlin.com>
+ <Z9qybcY7VyQBvZMv@smile.fi.intel.com>
+In-Reply-To: <Z9qybcY7VyQBvZMv@smile.fi.intel.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduiedvleegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
+ dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Tue, Mar 25, 2025 at 04:56:33PM +0300, Dan Carpenter wrote:
-> If I had to guess, I'd say that it was related to Fixes: d9f2164238d8
-> ("PCI/MSI: Convert pci_msi_ignore_mask to per MSI domain flag").  I
-> suspect d->host_data can be NULL.  I could be wrong, but let's add Roger
-> to the CC list just in case.
+On Wed Mar 19, 2025 at 1:02 PM CET, Andy Shevchenko wrote:
+> On Tue, Mar 18, 2025 at 05:26:25PM +0100, Mathieu Dubois-Briand wrote:
+> > Add driver for Maxim Integrated MAX7360 keypad controller, providing
+> > support for up to 64 keys, with a matrix of 8 columns and 8 rows.
+>
+> ...
+>
+> > +	help
+> > +	  If you say yes here you get support for the keypad controller on th=
+e
+> > +	  Maxim MAX7360 I/O Expander.
+> > +
+> > +	  To compile this driver as a module, choose M here: the
+> > +	  module will be called max7360_keypad.
+>
+> One paragraph is wrapped way too late or too early, can you make them app=
+rox.
+> the same in terms of a line width?
+>
 
-Indeed, sorry.  There's a patch from Thomas to switch to using
-pci_msi_domain_supports() for fetching the flag, as there's no
-guarantee all call contexts will have an associated msi_domain_info:
+Thanks. I had a look at all other Kconfigs, I believe they are all fixed
+now.
 
-https://lore.kernel.org/xen-devel/87v7rxzct0.ffs@tglx/
+> > +
+> > +	input_set_capability(input, EV_MSC, MSC_SCAN);
+> > +	if (autorepeat)
+> > +		__set_bit(EV_REP, input->evbit);
+> > +
+> > +	input_set_drvdata(input, max7360_keypad);
+> > +
+> > +	ret =3D devm_request_threaded_irq(&pdev->dev, irq, NULL, max7360_keyp=
+ad_irq,
+> > +					IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+>
+> What's wrong with the interrupt flags provided by firmware description?
+>
 
-Regards, Roger.
+So same question as for the GPIO driver: IRQF_TRIGGER_LOW from the
+firmware, but IRQF_ONESHOT from the driver? Or should everything come
+from the firmware?
+
+Thanks again for your review.
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
