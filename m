@@ -1,86 +1,103 @@
 Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4B94234969
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 07:20:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA7A520E6F7;
+	Tue, 25 Mar 2025 07:20:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742887214; cv=none; b=mRocRgnEzx82A7lFCQqCT89X0lrxBhq5kmR/6vuntoU9jrB/o2mCbE/pz9Rn7cNNsOEnSYmxpvGhaU4sMZAgYjVeZi0TcMYUT4huxwDOz4XDcvpIgLnZnp3bd8SJ5eG8IOsz2xBNkX6is8U6JQ7MqKlhWCB1ueuYesEPemE/xS4=
+	t=1742887223; cv=none; b=o2A4pBz9ZFFpoI7QD8GnfS9k6n/EcVRTmED1KyF3rky2gMo2Xa7DAoJQMxhtVArR28MfTOaW1Uc/siFCNkeD6Pjdko42eGVJUYTehMHFG6pQk/Me5pJ8MfLX+7mykYGLUMpmur2x7lZnqQ8BjfsFY/BmNovifTuy7uMCR3qT4i0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742887214; c=relaxed/simple;
-	bh=FBKgAl0dls+V54M/y6/NImGIXa8V8XrwxDn2mtWskRk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oC4Z3gf63Oub6vNBI70YGwyULzjEDRrJFD21we+ZEKpx0DuIQgRh4yM7sKsgVc6eUx/KhvZ4+HhvB1ZVkOpqDpaOygyeYGss20w3w21WhulGXAh6fruFwPssgHsN56JZ7Oy/35/m2epxPMVqZl988i5BzK6N9ZDY2oJh5uE4RTI=
+	s=arc-20240116; t=1742887223; c=relaxed/simple;
+	bh=kHHaPODkvtdGvxf9qarpBVrrEOuOfLu3WIWAlckAWtQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jpL0/YxwuJXcuHey0/s2zIDM5I9WkHXoDMG+Mdmju49Is9Uu8X8wUbP8+hAI/qt7XFGyRkafjNIFb1vA7hDE0AxLbubx2QSoUVg9VZFEGMtD+M8/xhkJGgR2EHeAx6RR94Ff5A+FLF7wJMQEUaKKUKs12AlWNDoJFHd5xUOUrbY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
 Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4ZMLYK5Gt4z9sSh;
-	Tue, 25 Mar 2025 08:05:57 +0100 (CET)
+	by localhost (Postfix) with ESMTP id 4ZMLk83dyNz9sSm;
+	Tue, 25 Mar 2025 08:13:36 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from pegase2.c-s.fr ([172.26.127.65])
 	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id FJ4bAikuKLHX; Tue, 25 Mar 2025 08:05:57 +0100 (CET)
+	with ESMTP id w1R402GlpRmr; Tue, 25 Mar 2025 08:13:36 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZMLYK4VFHz9sSg;
-	Tue, 25 Mar 2025 08:05:57 +0100 (CET)
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZMLk82p2tz9sSj;
+	Tue, 25 Mar 2025 08:13:36 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 851568B765;
-	Tue, 25 Mar 2025 08:05:57 +0100 (CET)
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 4A99B8B765;
+	Tue, 25 Mar 2025 08:13:36 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
 	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 1R3S4luMUOar; Tue, 25 Mar 2025 08:05:57 +0100 (CET)
-Received: from PO20335.IDSI0.si.c-s.fr (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 565FA8B763;
-	Tue, 25 Mar 2025 08:05:57 +0100 (CET)
-Received: from PO20335.IDSI0.si.c-s.fr (localhost [127.0.0.1])
-	by PO20335.IDSI0.si.c-s.fr (8.18.1/8.17.1) with ESMTPS id 52P75npS009415
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 25 Mar 2025 08:05:49 +0100
-Received: (from chleroy@localhost)
-	by PO20335.IDSI0.si.c-s.fr (8.18.1/8.18.1/Submit) id 52P75mFm009410;
-	Tue, 25 Mar 2025 08:05:48 +0100
-X-Authentication-Warning: PO20335.IDSI0.si.c-s.fr: chleroy set sender to christophe.leroy@csgroup.eu using -f
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: ioana.ciornei@nxp.com, stuyoder@gmail.com, linux@treblig.org
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bus: fsl-mc: Remove deadcode
-Date: Tue, 25 Mar 2025 08:03:29 +0100
-Message-ID: <174288553818.2234438.11007216946587143383.b4-ty@csgroup.eu>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241115152055.279732-1-linux@treblig.org>
-References: <20241115152055.279732-1-linux@treblig.org>
+	with ESMTP id Q_Gt9WeIslhN; Tue, 25 Mar 2025 08:13:36 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id BC7668B763;
+	Tue, 25 Mar 2025 08:13:35 +0100 (CET)
+Message-ID: <b192632a-7b30-4227-96b8-84a587c45fa2@csgroup.eu>
+Date: Tue, 25 Mar 2025 08:13:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742886214; l=584; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=VhmgXn8UTNWepu/WKdG9W0WStpBu+2fR6BBNfwNb5Vo=; b=OOvXAJey8QbW05uaPC1iND6tTU4jLioJLk4ni3WxNp8YZL9IeOycvAmyn8xVebICfDxO/xZ2T ZW88LyzkL67DtjvUgJNVQ4IKPHgyaY28eIKUhtLCD0xCKdaYppLQQbT
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] vfio: pci: Advertise INTx only if LINE is connected
+To: Shivaprasad G Bhat <sbhat@linux.ibm.com>, alex.williamson@redhat.com,
+ jgg@ziepe.ca, kevin.tian@intel.com
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, yi.l.liu@intel.com,
+ Yunxiang.Li@amd.com, pstanner@redhat.com, maddy@linux.ibm.com,
+ linuxppc-dev@lists.ozlabs.org
+References: <174231895238.2295.12586708771396482526.stgit@linux.ibm.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <174231895238.2295.12586708771396482526.stgit@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
-On Fri, 15 Nov 2024 15:20:55 +0000, linux@treblig.org wrote:
-> fsl_mc_allocator_driver_exit() was added explicitly by
-> commit 1e8ac83b6caf ("bus: fsl-mc: add fsl_mc_allocator cleanup function")
-> but was never used.
-> 
-> Remove it.
-> 
-> fsl_mc_portal_reset() was added in 2015 by
-> commit 197f4d6a4a00 ("staging: fsl-mc: fsl-mc object allocator driver")
-> but was never used.
-> 
-> [...]
 
-Applied, thanks!
+Le 18/03/2025 à 18:29, Shivaprasad G Bhat a écrit :
+> On POWER systems, when the device is behind the io expander,
+> not all PCI slots would have the PCI_INTERRUPT_LINE connected.
+> The firmware assigns a valid PCI_INTERRUPT_PIN though. In such
+> configuration, the irq_info ioctl currently advertizes the
+> irq count as 1 as the PCI_INTERRUPT_PIN is valid.
+> 
+> The patch adds the additional check[1] if the irq is assigned
+> for the PIN which is done iff the LINE is connected.
+> 
+> [1]: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Fqemu-devel%2F20250131150201.048aa3bf.alex.williamson%40redhat.com%2F&data=05%7C02%7Cchristophe.leroy2%40cs-soprasteria.com%7Ce0fb1d4bf2064e115ce408dd6642796b%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638779157886704638%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=egZuT5CZsC6S%2Bd7bZTuO4RcKL8IJREPbxIMGZZkZeMQ%3D&reserved=0
+> 
+> Signed-off-by: Shivaprasad G Bhat <sbhat@linux.ibm.com>
+> Suggested-By: Alex Williamson <alex.williamson@redhat.com>
+> ---
+>   drivers/vfio/pci/vfio_pci_core.c |    4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index 586e49efb81b..4ce70f05b4a8 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -734,6 +734,10 @@ static int vfio_pci_get_irq_count(struct vfio_pci_core_device *vdev, int irq_typ
+>   			return 0;
+>   
+>   		pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
+> +#if IS_ENABLED(CONFIG_PPC64)
+> +		if (!vdev->pdev->irq)
+> +			pin = 0;
+> +#endif
 
-[1/1] bus: fsl-mc: Remove deadcode
-      commit: c25951eb7518844fcb7fc9ec58e888731e8c46d0
+I see no reason for #ifdef here, please instead do:
 
-Best regards,
--- 
-Christophe Leroy <christophe.leroy@csgroup.eu>
+	if (IS_ENABLED(CONFIG_PPC64) && !vdev->pdev->irq)
+
+See 
+https://docs.kernel.org/process/coding-style.html#conditional-compilation
+
+>   
+>   		return pin ? 1 : 0;
+>   	} else if (irq_type == VFIO_PCI_MSI_IRQ_INDEX) {
+> 
+> 
+> 
+
