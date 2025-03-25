@@ -1,98 +1,185 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE311714A1;
-	Tue, 25 Mar 2025 07:04:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD87179F5;
+	Tue, 25 Mar 2025 07:07:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742886284; cv=none; b=LoZvOAZBe5B0aW8PzPodQPearpe5pS3y1oRvIsLsfogqZ6/5+j16kJRkdw45kYttCkBilBwRYYvWHvrqSi4pCjdnJx74H+/ksXiZpu3DR/x/5bGgV1N+PU7+fTTOQ4bv/e3IAMYSA2fye310NgqUTemItwOn91AO6ofEJ+Jaykc=
+	t=1742886445; cv=none; b=hV1kyDT2DAgJwmkUXqE4OZtrLp8NTQPooKjb2CHFYGVua6OF15y8iCoZeLPVUYjXGKAoUN7EyW9sKfMupg8qYSLCC9I9LOaoUmpRLS8YZy+yrMFz4bqyYoIWjYfgU/SMLVm2oqqoS/WlzrxvpdVAvB+vqrDyavOSaPhLOQYWjpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742886284; c=relaxed/simple;
-	bh=31zbionqiWdB+efJdLuZ5Isy/glxu/5NOnadKIM/c5s=;
+	s=arc-20240116; t=1742886445; c=relaxed/simple;
+	bh=tg+CzT94V2KHL7cvcsv3BOAj9cqZ8YzAUgJ5W4z5H4c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PeSGXce10HrdpsGlExHQwUe3nT0rmLMoZbMzj/FKchJrZPJa64O1H0rYm+xqBq2B71lsGENkIpl4XElsC9azeaLsOc+sYPvVLT+vlhNU0rJAGcFe9tf4sannCvSO0esxebVmcw6GFuPfpkFcNXaVR3czKGylakbUT/VgNvsgbmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/0T9i1Q; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=OlVmdBS1WukjH2nxifhRIWr7lFJyfvvhTjyu4G8qNXkaItzXD3z13eiKk6rPfglSOVtHIpsfEjUonP5dQRokPKtUPicWihAgH7u5wA/9yEStF/8aCVc9I2yA4f0kadSLP1ZVvak6rMQXQb23k19psR8Z+elG5oxWcaZQOZySa68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uGuI/gEN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/0T9i1Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C57C1C4CEE8;
-	Tue, 25 Mar 2025 07:04:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uGuI/gEN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7D46C4CEE8;
+	Tue, 25 Mar 2025 07:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742886282;
-	bh=31zbionqiWdB+efJdLuZ5Isy/glxu/5NOnadKIM/c5s=;
+	s=k20201202; t=1742886445;
+	bh=tg+CzT94V2KHL7cvcsv3BOAj9cqZ8YzAUgJ5W4z5H4c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M/0T9i1Q0v6KVDxN7Vdw3Ye1YADlJGjQBJ/vwmmMixzgv41whxjjHzuLK5DGyPFAA
-	 R/RoSBKYz6LG8AYHCy8orhf2KCY3gfXYjekiK+udtyh5KMHPyrs/t8LgMR4CnZPgno
-	 hmjuDR3KmPTKYUx+tfJKH9cmMB+RRIbwX34xvEjS7a1hyd3ucwGowrBXD4H50NakMn
-	 zCEVsKa/jnQWxvRfNeLKF/ZTw7zebaL7rwb2sD7TpKZ5ukCX93SlaMEb3aqSatK7lT
-	 6ZuzVfJfV+LyioggEmDqyC/X9wjhM+3UMDsoCFOrSpOUeIXjBKZXcC266Yje+6KApz
-	 Y2jUbEGzsFsRA==
-Date: Tue, 25 Mar 2025 15:04:36 +0800
-From: Coly Li <colyli@kernel.org>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: song@kernel.org, yukuai3@huawei.com, jgq516@gmail.com, 
-	linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org, yi.zhang@huawei.com, 
-	yangerkun@huawei.com
-Subject: Re: [PATCH] md/raid10: fix missing discard IO accounting
-Message-ID: <brtjiiejckcekwq4racmjgpzq7dod5bg2t4csj7caevnl4pkqm@zaanpogvtvus>
-References: <20250325015746.3195035-1-yukuai1@huaweicloud.com>
+	b=uGuI/gENsIOfo9g5ssUpgXDjOcPi/XDvQ0rYWtHHZe1uUQrrQ8ebTZWvoWVg+18B+
+	 CFGPkLQOw+VRAO30/5q9eIme3Vkr4yH8NLyfqw1F6AFisurhS0oNLivQo9O3w5Uotr
+	 6GSqx3JjQ9kNBfeeJpGcV9Lw+w/WKlkf5+zKDRf5zOKgy2ST8honmAVIHVsoECIyrC
+	 SyjaBIh8m9eQQHuu1KsbRnzeG8y7nv4gh8X4RsMufU1N0p9Gd34AFsR8ZJpckY4+nb
+	 RRsOPpkVUIbVu1UswcBf11rCBapP0682sP1oFXtCXmeZFKj4CnGAlPxZblMVTRTLp6
+	 kwoVO1kXmRLyg==
+Date: Tue, 25 Mar 2025 12:37:15 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org,
+	Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
+	Daniel Stone <daniel@fooishbar.org>
+Subject: Re: [PATCH v6 08/10] optee: support restricted memory allocation
+Message-ID: <Z-JWIyd8cKyXQR0H@sumit-X1>
+References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
+ <20250305130634.1850178-9-jens.wiklander@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250325015746.3195035-1-yukuai1@huaweicloud.com>
+In-Reply-To: <20250305130634.1850178-9-jens.wiklander@linaro.org>
 
-On Tue, Mar 25, 2025 at 09:57:46AM +0800, Yu Kuai wrote:
-> From: Yu Kuai <yukuai3@huawei.com>
+On Wed, Mar 05, 2025 at 02:04:14PM +0100, Jens Wiklander wrote:
+> Add support in the OP-TEE backend driver for restricted memory
+> allocation. The support is limited to only the SMC ABI and for secure
+> video buffers.
 > 
-> md_account_bio() is not called from raid10_handle_discard(), now that we
-> handle bitmap inside md_account_bio(), also fix missing
-> bitmap_startwrite for discard.
+> OP-TEE is probed for the range of restricted physical memory and a
+> memory pool allocator is initialized if OP-TEE have support for such
+> memory.
 > 
-> Test whole disk discard for 20G raid10:
-> 
-> Before:
-> Device   d/s     dMB/s   drqm/s  %drqm d_await dareq-sz
-> md0    48.00     16.00     0.00   0.00    5.42   341.33
-> 
-> After:
-> Device   d/s     dMB/s   drqm/s  %drqm d_await dareq-sz
-> md0    68.00  20462.00     0.00   0.00    2.65 308133.65
-> 
-> Fixes: 528bc2cf2fcc ("md/raid10: enable io accounting")
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-
-Should we treat discard request as real I/O?
-
-Normally IMHO discard request should not be counted as real data transfer,
-correct me if I am wrong.
-
-Thanks.
-
-
+> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
 > ---
->  drivers/md/raid10.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/tee/optee/core.c    |  1 +
+>  drivers/tee/optee/smc_abi.c | 44 +++++++++++++++++++++++++++++++++++--
+>  2 files changed, 43 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-> index 9d8516acf2fd..6ef65b4d1093 100644
-> --- a/drivers/md/raid10.c
-> +++ b/drivers/md/raid10.c
-> @@ -1735,6 +1735,7 @@ static int raid10_handle_discard(struct mddev *mddev, struct bio *bio)
->  	 * The discard bio returns only first r10bio finishes
->  	 */
->  	if (first_copy) {
-> +		md_account_bio(mddev, &bio);
->  		r10_bio->master_bio = bio;
->  		set_bit(R10BIO_Discard, &r10_bio->state);
->  		first_copy = false;
-> -- 
-> 2.39.2
-> 
-> 
+> diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
+> index c75fddc83576..c7fd8040480e 100644
+> --- a/drivers/tee/optee/core.c
+> +++ b/drivers/tee/optee/core.c
+> @@ -181,6 +181,7 @@ void optee_remove_common(struct optee *optee)
+>  	tee_device_unregister(optee->supp_teedev);
+>  	tee_device_unregister(optee->teedev);
+>  
+> +	tee_device_unregister_all_dma_heaps(optee->teedev);
+>  	tee_shm_pool_free(optee->pool);
+>  	optee_supp_uninit(&optee->supp);
+>  	mutex_destroy(&optee->call_queue.mutex);
+> diff --git a/drivers/tee/optee/smc_abi.c b/drivers/tee/optee/smc_abi.c
+> index cfdae266548b..a14ff0b7d3b3 100644
+> --- a/drivers/tee/optee/smc_abi.c
+> +++ b/drivers/tee/optee/smc_abi.c
+> @@ -1620,6 +1620,41 @@ static inline int optee_load_fw(struct platform_device *pdev,
+>  }
+>  #endif
+>  
+> +static int optee_sdp_pool_init(struct optee *optee)
+> +{
+> +	enum tee_dma_heap_id heap_id = TEE_DMA_HEAP_SECURE_VIDEO_PLAY;
+> +	struct tee_rstmem_pool *pool;
+> +	int rc;
+> +
+> +	if (optee->smc.sec_caps & OPTEE_SMC_SEC_CAP_SDP) {
 
--- 
-Coly Li
+Is this SDP capability an ABI yet since we haven't supported it in
+upstream kernel? If no then can we rename it as
+OPTEE_SMC_SEC_CAP_RSTMEM?
+
+> +		union {
+> +			struct arm_smccc_res smccc;
+> +			struct optee_smc_get_sdp_config_result result;
+> +		} res;
+> +
+> +		optee->smc.invoke_fn(OPTEE_SMC_GET_SDP_CONFIG, 0, 0, 0, 0, 0, 0,
+> +				     0, &res.smccc);
+> +		if (res.result.status != OPTEE_SMC_RETURN_OK) {
+> +			pr_err("Secure Data Path service not available\n");
+> +			return 0;
+> +		}
+> +
+> +		pool = tee_rstmem_static_pool_alloc(res.result.start,
+> +						    res.result.size);
+> +		if (IS_ERR(pool))
+> +			return PTR_ERR(pool);
+> +
+> +		rc = tee_device_register_dma_heap(optee->teedev, heap_id, pool);
+> +		if (rc)
+> +			goto err;
+> +	}
+> +
+> +	return 0;
+> +err:
+> +	pool->ops->destroy_pool(pool);
+> +	return rc;
+> +}
+> +
+>  static int optee_probe(struct platform_device *pdev)
+>  {
+>  	optee_invoke_fn *invoke_fn;
+> @@ -1715,7 +1750,7 @@ static int optee_probe(struct platform_device *pdev)
+>  	optee = kzalloc(sizeof(*optee), GFP_KERNEL);
+>  	if (!optee) {
+>  		rc = -ENOMEM;
+> -		goto err_free_pool;
+> +		goto err_free_shm_pool;
+>  	}
+>  
+>  	optee->ops = &optee_ops;
+> @@ -1788,6 +1823,10 @@ static int optee_probe(struct platform_device *pdev)
+>  		pr_info("Asynchronous notifications enabled\n");
+>  	}
+>  
+> +	rc = optee_sdp_pool_init(optee);
+
+s/optee_sdp_pool_init/optee_rstmem_pool_init/
+
+-Sumit
+
+> +	if (rc)
+> +		goto err_notif_uninit;
+> +
+>  	/*
+>  	 * Ensure that there are no pre-existing shm objects before enabling
+>  	 * the shm cache so that there's no chance of receiving an invalid
+> @@ -1823,6 +1862,7 @@ static int optee_probe(struct platform_device *pdev)
+>  		optee_disable_shm_cache(optee);
+>  	optee_smc_notif_uninit_irq(optee);
+>  	optee_unregister_devices();
+> +	tee_device_unregister_all_dma_heaps(optee->teedev);
+>  err_notif_uninit:
+>  	optee_notif_uninit(optee);
+>  err_close_ctx:
+> @@ -1839,7 +1879,7 @@ static int optee_probe(struct platform_device *pdev)
+>  	tee_device_unregister(optee->teedev);
+>  err_free_optee:
+>  	kfree(optee);
+> -err_free_pool:
+> +err_free_shm_pool:
+>  	tee_shm_pool_free(pool);
+>  	if (memremaped_shm)
+>  		memunmap(memremaped_shm);
+> -- 
+> 2.43.0
+> 
