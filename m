@@ -1,141 +1,173 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608192561AD
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 17:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 037002E339B;
+	Tue, 25 Mar 2025 17:14:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742922811; cv=none; b=At6dDPxLiyFRx9Z84+PDG2gRlWYDBEqnA9wa0cqpZF/SHb4KC9XX9A76yOqc/WEvevWK2CNkq7TsUXAA0y6jai6vVjIF2eqy1DJoyYwmNR0A0GW+LxJaQHxlPgdJ9UUQzP+XQG1/OfePSKshiAlFQYfLFWvo+OdvomtCoCOCCLk=
+	t=1742922888; cv=none; b=cxCJqahr0GYfNi3u4KO/CD2JsBp8lKlWMG7rfE6VdvJCxjHVdjBaMqNgftGHyfLcbidLUu0zIhUzSUXa1ZlJo+OrvlCoSJGagBVbKjSil8sOHqLWPj7A4BSr15qPzOQhS12tZ/uTfmbaCI4z33r70QOMyEpq0fnGsVxUCluckRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742922811; c=relaxed/simple;
-	bh=cHMGTELfsdVgVpogKAdgWd/mwqRTPxY6INt118OB4Uk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=NCmjKmj7I/jqiULSlQLx+Tc63QfNvwqR6WYV6LiOpAG+flM3zsK5LEWoSer/Y+ss8inKYDK7OD9HOzqOIyB1yzOXbR+8qkuuZY6RkqR/hVD5TN5VEk0vimeDy6DC+F7mQjkF/22CrRYTJOb+yTTiTfRnE8dsMud9lT1kdYxD10M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=BDvF6d8I; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1742922888; c=relaxed/simple;
+	bh=ijgyDEwMxfU8RhoSiM083JV3wsc9bFDWhCPR2Ky1aKM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SpDz3RsMviZIsTfme9GCNQuQWWpIroJR9TgJN1s1pFZMCiTzf29HnQihwx2EsA03VurQY+EdB6KYFyC1tOyO5WQdrF+6bxW5n4jZ7EZBRL878av6MJWUVv2qJF6JBmKVg7dl9SAn/hmnZf1qrhoJryPhx4pCZbUJJRi2kemN4u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FgjUb+Qy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="BDvF6d8I"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A0C6540E0219;
-	Tue, 25 Mar 2025 17:13:27 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id UHT_K_i8EGDY; Tue, 25 Mar 2025 17:13:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1742922804; bh=yvXTl5sy7JBuIL7c56tpjCj24YNNiRGj4Zb1aDBMvkc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=BDvF6d8I40taBLjKD9b923O2DOZl1zkacqWkovwIhakuiHEdgjsMm+m9f+3D0lJ14
-	 dyu0Hmxr2OsvKRhBsdM8BBSbuP0XJy5sf1/jGkpuUF1gJQaAVTK8xwsUSksw4r8i3w
-	 07gihT2NntKpdDDvfKgO1dF4fN/2kyewRGWZ8m+PS1vCij4yF2/oVAB+TLL5j2v89u
-	 8taEr1SRt6Q1eBqbqlYcvuZwcZ6FE9QgerFar9cr4xeK+EwtbJqniltI/zRbNhLLnT
-	 lTzIzXLj8TTM/0QprmChuDHwRe6tUoqeh8HH6HO94sYmnXJeSIv3O/LK23o/UtPler
-	 HoOSiuigvq2SEwii7q4aFdNlW+iAnHvIDVEoNG4vcQMCoL1Zht24mR7IH623MtEj/Q
-	 r3J/xiXX9fm85+xawqHoNmdlB5miBgCN655O2Hk2aBQvZBA3X6QBsMTLvd+lo854q1
-	 YEViX8lTpNp9nXKGfcPsCIkOCnzSmPlIykeq6mQcz1g3+I845asB7bRM2arjorwdx0
-	 Pqd2lNvuDW2OH3JB+Duqpax65mgkonmXL1fMDtT2KZHwL3GbZuzEso+SWPSX1zP2zK
-	 A5dsU0338h7gbOQ7K2AyjuhHjbRNz37n49eJUwsI1jVNWj7tF0JFsopZkW1P+dQist
-	 N3wg7JrCosLROXw2LlfUv0Qw=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5B6EC40E0214;
-	Tue, 25 Mar 2025 17:13:21 +0000 (UTC)
-Date: Tue, 25 Mar 2025 18:13:20 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] x86/cache for v6.15
-Message-ID: <20250325171320.GAZ-LkMAFoSM7ZhDqq@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FgjUb+Qy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81D92C4CEE4;
+	Tue, 25 Mar 2025 17:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742922887;
+	bh=ijgyDEwMxfU8RhoSiM083JV3wsc9bFDWhCPR2Ky1aKM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FgjUb+QyxN1/l8wdusIvMY6/5jGB+S0lkgcJ0fULQe+9vM85087AcH62QkeLzyItp
+	 vrOiVZ1HRhVRBylYjDxZjdnfwKmnSwgXrO1z+VMv1ZdJjeVjMbdg4Cz4tUaCk/JzFM
+	 5X0yNpoNin4AJoBf6S6W2u9rN3UWy55oxYLLEsQf6mSgbgqhXkImTNp/8iuTEEhz0/
+	 RlWT3jH5GRMBIfpCrXyKRg0ryFqo1PUZ+SgfaaxiNqX+QG/OO1DY38huqyeK6clvza
+	 i9CKuH3Fbq+JxY6hOC141LDTiPeXmZAOrzTP6+MkuQJ9QNkSmFDrQILLvoqou9D6Jm
+	 SiKs+R9VjAc1w==
+Date: Tue, 25 Mar 2025 17:14:43 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 04/14] dt-bindings: mfd: bd96802: Add ROHM BD96806
+Message-ID: <20250325-resent-presuming-39ad42e2ceef@spud>
+References: <cover.1742802856.git.mazziesaccount@gmail.com>
+ <99ffe94d642b6c73cd5199103e65419c93214533.1742802856.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="P4JHdL5AJMMqX7bn"
 Content-Disposition: inline
-
-Hi Linus,
-
-please pull the x86/cache lineup for v6.15.
-
-Thx.
-
----
-
-The following changes since commit 80e54e84911a923c40d7bee33a34c1b4be148d7a:
-
-  Linux 6.14-rc6 (2025-03-09 13:45:25 -1000)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip tags/x86_cache_for_v6.15
-
-for you to fetch changes up to 823beb31e55673bf2fd21374e095eec73a761ee7:
-
-  x86/resctrl: Move get_{mon,ctrl}_domain_from_cpu() to live with their callers (2025-03-12 12:24:58 +0100)
-
-----------------------------------------------------------------
-- First part of the MPAM work: split the architectural part of resctrl from the
-  filesystem part so that ARM's MPAM varian of resource control can be added
-  later while sharing the user interface with x86 (James Morse)
-
-----------------------------------------------------------------
-James Morse (30):
-      x86/resctrl: Fix allocation of cleanest CLOSID on platforms with no monitors
-      x86/resctrl: Add a helper to avoid reaching into the arch code resource list
-      x86/resctrl: Remove fflags from struct rdt_resource
-      x86/resctrl: Use schema type to determine how to parse schema values
-      x86/resctrl: Use schema type to determine the schema format string
-      x86/resctrl: Remove data_width and the tabular format
-      x86/resctrl: Add max_bw to struct resctrl_membw
-      x86/resctrl: Generate default_ctrl instead of sharing it
-      x86/resctrl: Add helper for setting CPU default properties
-      x86/resctrl: Remove rdtgroup from update_cpu_closid_rmid()
-      x86/resctrl: Expose resctrl fs's init function to the rest of the kernel
-      x86/resctrl: Move rdt_find_domain() to be visible to arch and fs code
-      x86/resctrl: Move resctrl types to a separate header
-      x86/resctrl: Add an arch helper to reset one resource
-      x86/resctrl: Move monitor exit work to a resctrl exit call
-      x86/resctrl: Move monitor init work to a resctrl init call
-      x86/resctrl: Rewrite and move the for_each_*_rdt_resource() walkers
-      x86/resctrl: Move the is_mbm_*_enabled() helpers to asm/resctrl.h
-      x86/resctrl: Add resctrl_arch_is_evt_configurable() to abstract BMEC
-      x86/resctrl: Change mon_event_config_{read,write}() to be arch helpers
-      x86/resctrl: Move mba_mbps_default_event init to filesystem code
-      x86/resctrl: Move mbm_cfg_mask to struct rdt_resource
-      x86/resctrl: Add resctrl_arch_ prefix to pseudo lock functions
-      x86/resctrl: Allow an architecture to disable pseudo lock
-      x86/resctrl: Make prefetch_disable_bits belong to the arch code
-      x86/resctrl: Make resctrl_arch_pseudo_lock_fn() take a plr
-      x86/resctrl: Move RFTYPE flags to be managed by resctrl
-      x86/resctrl: Handle throttle_mode for SMBA resources
-      x86/resctrl: Move get_config_index() to a header
-      x86/resctrl: Move get_{mon,ctrl}_domain_from_cpu() to live with their callers
-
- MAINTAINERS                               |   1 +
- arch/x86/Kconfig                          |   7 +
- arch/x86/include/asm/resctrl.h            |  36 +++-
- arch/x86/kernel/cpu/resctrl/Makefile      |   5 +-
- arch/x86/kernel/cpu/resctrl/core.c        | 181 +++++--------------
- arch/x86/kernel/cpu/resctrl/ctrlmondata.c |  93 ++++++----
- arch/x86/kernel/cpu/resctrl/internal.h    | 201 +++++----------------
- arch/x86/kernel/cpu/resctrl/monitor.c     | 119 +++++++++----
- arch/x86/kernel/cpu/resctrl/pseudo_lock.c |  55 +++---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 284 ++++++++++++++++++++++--------
- include/linux/resctrl.h                   | 212 ++++++++++++++++++++--
- include/linux/resctrl_types.h             |  54 ++++++
- 12 files changed, 769 insertions(+), 479 deletions(-)
- create mode 100644 include/linux/resctrl_types.h
+In-Reply-To: <99ffe94d642b6c73cd5199103e65419c93214533.1742802856.git.mazziesaccount@gmail.com>
 
 
--- 
-Regards/Gruss,
-    Boris.
+--P4JHdL5AJMMqX7bn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-https://people.kernel.org/tglx/notes-about-netiquette
+On Mon, Mar 24, 2025 at 10:55:21AM +0200, Matti Vaittinen wrote:
+> The ROHM BD96806 is very similar to the BD96802. The differences visible
+> to the drivers is different tune voltage ranges.
+>=20
+> Add compatible for the ROHM BD96805 PMIC.
+>=20
+> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+>=20
+> ---
+> Revision history:
+>  v1 =3D> :
+>   - No changes
+> ---
+>  .../bindings/mfd/rohm,bd96802-pmic.yaml       | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml=
+ b/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
+> index d5d9e69dc0c2..c6e6be4015b2 100644
+> --- a/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
+> @@ -4,23 +4,23 @@
+>  $id: http://devicetree.org/schemas/mfd/rohm,bd96802-pmic.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+> =20
+> -title: ROHM BD96802 Scalable Power Management Integrated Circuit
+> +title: ROHM BD96802 / BD96806Scalable Power Management Integrated Circuit
+                                ^ Missing space here :)
+
+> =20
+>  maintainers:
+>    - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> =20
+>  description: |
+> -  BD96802Qxx-C is an automotive grade configurable Power Management
+> -  Integrated Circuit supporting Functional Safety features for applicati=
+on
+> +  BD96802Qxx-C and BD96806 are automotive grade configurable Power Manag=
+ement
+> +  Integrated Circuits supporting Functional Safety features for applicat=
+ion
+>    processors, SoCs and FPGAs
+> =20
+>  properties:
+>    compatible:
+> -    const: rohm,bd96802
+> +    enum:
+> +      - rohm,bd96802
+> +      - rohm,bd96806
+> =20
+>    reg:
+> -    description:
+> -      I2C slave address.
+
+I'd just drop this from the original.
+
+>      maxItems: 1
+> =20
+>    interrupts:
+> @@ -29,7 +29,8 @@ properties:
+>        for fatal IRQs which will cause the PMIC to shut down power output=
+s.
+>        In many systems this will shut down the SoC contolling the PMIC and
+>        connecting/handling the errb can be omitted. However, there are ca=
+ses
+> -      where the SoC is not powered by the PMIC. In that case it may be
+> +      where the SoC is not powered by the PMIC or has a short time backup
+> +      energy to handle shutdown of critical hardware. In that case it ma=
+y be
+>        useful to connect the errb and handle errb events.
+>      minItems: 1
+>      maxItems: 2
+> @@ -69,7 +70,7 @@ examples:
+>              interrupt-names =3D "intb", "errb";
+> =20
+>              regulators {
+> -                buck1: BUCK1 {
+> +                buck1 {
+
+Here too?
+
+>                      regulator-name =3D "buck1";
+>                      regulator-ramp-delay =3D <1250>;
+>                      /* 0.5V min INITIAL - 150 mV tune */
+> @@ -84,7 +85,7 @@ examples:
+>                      regulator-temp-protection-kelvin =3D <1>;
+>                      regulator-temp-warn-kelvin =3D <0>;
+>                  };
+> -                buck2: BUCK2 {
+
+and here?
+
+> +                buck2 {
+>                      regulator-name =3D "buck2";
+>                      regulator-min-microvolt =3D <350000>;
+>                      regulator-max-microvolt =3D <3450000>;
+> --=20
+> 2.49.0
+>=20
+
+
+
+--P4JHdL5AJMMqX7bn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ+LkgwAKCRB4tDGHoIJi
+0tvOAQCCtP77GM6oCnLZ3/mADX1SzaGiK5rmCbR+sWUFVC05RgD/WytAb12sgbdX
+PDvAIfPog1DUFf4Wvnix1Pqqe171nQg=
+=8iSv
+-----END PGP SIGNATURE-----
+
+--P4JHdL5AJMMqX7bn--
