@@ -1,120 +1,130 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F36190696
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 22:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2912A190696;
+	Tue, 25 Mar 2025 22:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742943328; cv=none; b=CjvGWPY65HtHQf7K913aFXWXscRpxVAizYXfhasWTzhD+S1SjLqQZ1/CWeMJ6OQSRFqAWgaWhoFgS/pJBAi2JIsolhx88koP/VjOnmbmmq07DTqph8WzHWyGJgIkrdUx79fyPbezTGYEfhz7LuNIXsoDgwkh73Hs6lZ/vqoedfM=
+	t=1742943336; cv=none; b=MlJlofzucUnlfj1H+5TDHh0Kkt3MgPJKLky767t3RYlbHhyprR324+NnZ4g6QuBv/homcWWyXN/vLT6hPLDCMGn6Nh0eh/5ySpQSbNjPmGtUEIxPhZhcZJoe2/qoV2Clw47cfxSNWnI3fXl0Ox9JHI+0AScK2shjKqoCtiFGS4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742943328; c=relaxed/simple;
-	bh=3ATsKOEl3U55Kx0tNiQbYgKWXpTx+lq0HaAgp3b+/1I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NCg3By51f12OoE/EPi8qwgZI+dnyuneB6LmGfKhvm4X83qmjHwYjGi/fGhZrGH2YEaYqPiR8Tm3C1nZxbGFZeq8NhJw3B2Xofnr8OnEn1Av19IsDWoHSmp7odVAL1BkFBBujZhdBynl+GQK8SiKq0OvxTgJ70hsV+bhUzwVISFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZyczogLj; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZyczogLj"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ff797f8f1bso10406087a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 15:55:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1742943326; x=1743548126; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/rWYTl0BQ8sV08+fAcHai9+yEEk78TAqV1oXCWKXLvo=;
-        b=ZyczogLjhc45iJvvJluP48PgYwXfI4ElqHvn7tUwgjL2KzxYgZFDYRAAlmIMmjrf01
-         JAUiUEPqh+U9uJ8Rr1U8euA7CCF5c4G4E9/VhKCEMFh5sBV3GD88k6T+YdDkGTap5G0q
-         AMzI5VBrx+gzWie6CXsY1QYFXJ/L5IfEgLUz0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742943326; x=1743548126;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/rWYTl0BQ8sV08+fAcHai9+yEEk78TAqV1oXCWKXLvo=;
-        b=VkWjS9eE3h7Xnsh8cSZacY6JH1IXVF1my4WhulL64bNLoUgSKdHkSJk+C9iTMqnmkd
-         hGq64lToQ6H+/3pNXIDtaO6u8ylw7/T2X4Zxc2hm2voXFSEqHYNBWZrjb7HvgQa4Pymj
-         bwBdGs+bDMuKl+MkdssypbUwaClWXr4CoPt93jVTf7jG+OkH1KU1XobGasMDZMI5IOIM
-         66ESpO1xzEN1uPLcKJe92wZTT9ZtVBN/fcnOQzRQsh1WAZPWjcKFeJ5UaZACv6tUDIt1
-         omLE38C9eVwkcPfxPsG3w/8PqlENm41xAGKus6JuHo+agVCBrX/Zx8YBUGOv6TWixf05
-         qoUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCby6zFxo62hD7uhDB1YVm5okGP89j6ZHu1hsLNcYLyy50UWwi2Ds+/Uk2u8jX+0ijmYj9BZ3gOHn6CMk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0/SOX060QwLt3Btu+NXn4701TevkuQlwe3p4zn0WCcyX/03Qb
-	bEhmEbmaL0mYoyUU9efmK4V3I/Sl4Ohxd7W3/qNNqfjgMob5PiBejUHjrgzWaw==
-X-Gm-Gg: ASbGncsX+sRZb6xxoc1bXAHLyEqFcc52DAtoapn6/CrN3w943ePbYvMN72ZCg7rGxY0
-	rUZfbJXPU2SJ22CMF2Hp5PE/rOxmBS6uDsrljDpij3LNrtnwcFcRrG31frNHCt4qImc63S7jiH0
-	KMsJWSjfqX+VpFxqfrj83ZoQgCObSfdVFryU5emrUT2CPMRzQAEuAmPCkAMxC+hlB9+5pOiNTL8
-	kDm7z/1PBC1OM+OlG3QiSwdDgMTG1CSdZhoHXYQ9/vyYfQrzp0U37lFzG+gfyGDYi1RyVE3HLYn
-	ImGLLmsStUY+UPjDZRWqwGPV3hj283WeVrC/TayJkRKOCAm+DYsJqTxrSg3GxmnkggxBZVjuKb/
-	nE9hUKu8=
-X-Google-Smtp-Source: AGHT+IG9S6QnIRAL+Dp97HJUJGLI8iqjec4PoLgiksev72cNRulybhcRcYYBIlaatzFFYS67MgI4+w==
-X-Received: by 2002:a17:90b:390a:b0:2ee:bc7b:9237 with SMTP id 98e67ed59e1d1-3030fef0a26mr27364715a91.27.1742943326173;
-        Tue, 25 Mar 2025 15:55:26 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:b885:47c3:6268:77fb])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3030f60994dsm10989539a91.26.2025.03.25.15.55.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Mar 2025 15:55:25 -0700 (PDT)
-Date: Tue, 25 Mar 2025 15:55:23 -0700
-From: Brian Norris <briannorris@chromium.org>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Jeff Chen <jeff.chen_1@nxp.com>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Pete Hsieh <tsung-hsien.hsieh@nxp.com>,
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [EXT] Re: [PATCH v4 1/2] wifi: mwifiex: Fix premature release of
- RF calibration data.
-Message-ID: <Z-M0W_RzOM9X0x0Y@google.com>
-References: <20250220061143.1417420-2-jeff.chen_1@nxp.com>
- <20250318050739.2239376-2-jeff.chen_1@nxp.com>
- <20250319162842.GA46894@francesco-nb>
- <PAWPR04MB9910FE139C88507DE5904ABD9CA72@PAWPR04MB9910.eurprd04.prod.outlook.com>
- <fe70fb090164301d8b2a894dd350850c175a03dc.camel@sipsolutions.net>
+	s=arc-20240116; t=1742943336; c=relaxed/simple;
+	bh=2nQzsqOOrvKOqCo3drGiKKMEpjDeHpD3jFNBe8CNXk8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=dBpHdcGij29ZjINa1eFiTEt+XKhBUl71B6Fij/sPKWuqKfAv2ECa8pFvHOCHMNlDpGtSpbhaav8hySUxzxsZNKA2pAt4aCLePnfrriWFbhepKab4BCR1ZLJH7xgUnTpfFtpJN+6NiQIMlsRIxfiaRBpKZkqLd5w1QPSWImU1V5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3E12C4CEE9;
+	Tue, 25 Mar 2025 22:55:34 +0000 (UTC)
+Date: Tue, 25 Mar 2025 18:56:19 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v3] tracing: Adjust addresses for printing out fields
+Message-ID: <20250325185619.54b85587@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fe70fb090164301d8b2a894dd350850c175a03dc.camel@sipsolutions.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 25, 2025 at 05:45:10PM +0100, Johannes Berg wrote:
-> On Tue, 2025-03-25 at 16:43 +0000, Jeff Chen wrote:
-> > 
-> > 
-> > I have decided to withdraw the patch. I appreciate your feedback and attention to detail, 
-> > which helped identify this oversight.  
-> > 
-> 
-> This goes for _everyone_ on this thread... I applied this patch a long
-> time ago. Whatever you need to fix, you need to send new patches.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-If it needs withdrawn, I suppose Jeff should send a revert patch then.
+Add adjustments to the values of the "fields" output if the buffer is a
+persistent ring buffer to adjust the addresses to both the kernel core and
+kernel modules if they match a module in the persistent memory and that
+module is also loaded.
 
-> And I guess next time I'm not going to apply any patches for mwifiex
-> however innocent they look ... thus making the situation of that driver
-> even worse than it is now.
-> 
-> So please get together and form a plan on how to maintain it.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v2: https://lore.kernel.org/20250325213919.956212394@goodmis.org
 
-My 2 cents:
+- Fix 32 bit build when casting an unsigned long long to pointer,
+  needs to be cast to (long) first. But this code isn't even run
+  on 32 bit, but it is compiled on 32 bit.
 
- * Technically, I'm listed as maintainer still. I'm not always prompt,
-   but I try to eventually get around to stuff (or at least see that
-   Francesco reviews). I believe the previous implicit agreement would
-   be that the wireless-drivers maintainer would wait for an Ack from
-   sub-maintainer(s) before applying, unless they were truly trivial. I
-   don't require that, of course, if you'd like to take things on your
-   own Johannes, but that was my previous understanding.
- * I'm also used to seeing email replies when patches get applied. Kalle
-   used to do that (presumably from some kind of push-time automation?),
-   but I see you don't. You're of course free to do this however works
-   best for you, but I find such emails useful for all interested
-   parties (authors, reviewers, etc.). For example, if I thought the
-   patches were controversial and were on my ToDo list, I'd probably
-   speak up sooner.
+ kernel/trace/trace_output.c | 38 ++++++++++++++++++++-----------------
+ 1 file changed, 21 insertions(+), 17 deletions(-)
 
-Brian
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index ef6307a6ca5e..f88acc9257d5 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -858,6 +858,9 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
+ 			 struct list_head *head)
+ {
+ 	struct ftrace_event_field *field;
++	struct trace_array *tr = iter->tr;
++	unsigned long long laddr;
++	unsigned long addr;
+ 	int offset;
+ 	int len;
+ 	int ret;
+@@ -894,8 +897,8 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
+ 		case FILTER_PTR_STRING:
+ 			if (!iter->fmt_size)
+ 				trace_iter_expand_format(iter);
+-			pos = *(void **)pos;
+-			ret = strncpy_from_kernel_nofault(iter->fmt, pos,
++			addr = trace_adjust_address(tr, *(unsigned long *)pos);
++			ret = strncpy_from_kernel_nofault(iter->fmt, (void *)addr,
+ 							  iter->fmt_size);
+ 			if (ret < 0)
+ 				trace_seq_printf(&iter->seq, "(0x%px)", pos);
+@@ -904,8 +907,8 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
+ 						 pos, iter->fmt);
+ 			break;
+ 		case FILTER_TRACE_FN:
+-			pos = *(void **)pos;
+-			trace_seq_printf(&iter->seq, "%pS", pos);
++			addr = trace_adjust_address(tr, *(unsigned long *)pos);
++			trace_seq_printf(&iter->seq, "%pS", (void *)addr);
+ 			break;
+ 		case FILTER_CPU:
+ 		case FILTER_OTHER:
+@@ -935,24 +938,25 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
+ 					break;
+ 				}
+ 
+-				if (sizeof(long) == 4)
++				addr = *(unsigned int *)pos;
++				if (sizeof(long) == 4) {
++					addr = trace_adjust_address(tr, addr);
+ 					trace_seq_printf(&iter->seq, "%pS (%d)",
+-							 *(void **)pos,
+-							 *(unsigned int *)pos);
+-				else
++							 (void *)addr, (int)addr);
++				} else {
+ 					trace_seq_printf(&iter->seq, "0x%x (%d)",
+-							 *(unsigned int *)pos,
+-							 *(unsigned int *)pos);
++							 (unsigned int)addr, (int)addr);
++				}
+ 				break;
+ 			case 8:
+-				if (sizeof(long) == 8)
++				laddr = *(unsigned long long *)pos;
++				if (sizeof(long) == 8) {
++					laddr = trace_adjust_address(tr, (unsigned long)laddr);
+ 					trace_seq_printf(&iter->seq, "%pS (%lld)",
+-							 *(void **)pos,
+-							 *(unsigned long long *)pos);
+-				else
+-					trace_seq_printf(&iter->seq, "0x%llx (%lld)",
+-							 *(unsigned long long *)pos,
+-							 *(unsigned long long *)pos);
++							 (void *)(long)laddr, laddr);
++				} else {
++					trace_seq_printf(&iter->seq, "0x%llx (%lld)", laddr, laddr);
++				}
+ 				break;
+ 			default:
+ 				trace_seq_puts(&iter->seq, "<INVALID-SIZE>");
+-- 
+2.47.2
+
