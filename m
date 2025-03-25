@@ -1,565 +1,539 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42EF62566EA;
-	Tue, 25 Mar 2025 12:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76E326B94E
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 12:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742906290; cv=none; b=fUETc2zoPxDEOlfzCeu7oLrOq604NyvezbWOpe87SAYc5v2Wa1rQwSXW+b91CASk8KkeKAEj9bnjYY9ZFA0FpOOskGm0PC4bA6D1bA7MkhAfAfOhDn9WPZ9X9QBPZ+9ZvKefMZC9RXjKL/e0Atqeyyq7eZUkQPVa2Uh9JWKfRJw=
+	t=1742906379; cv=none; b=KZUEMLwGkzOIxxkIz8WTXne+RrZ3303aLEUvosdIKBaudtnCPBRxNLM4E95AsdW2gMbplvaysTPg4mazWX7Fjlw/T/CEY9hEjOoIkAir2QjoWpaUbEAMf09k5OHim5D0+pbitA9HbyueKvCKUBcRDSbThFn2fZAc1gYKCf/UDJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742906290; c=relaxed/simple;
-	bh=mrTKcMHuNKBPMTcRWR+EuzE4dMj9aW+kwF5iI0urW9w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SReoAwq+eCQJGuEnPb/au6Fczcto9iUNbWE0df2qkfLwSmdyfFIA28BrbmtsdzkoZNS41y7rXbbOZfmJmNhMGQCfALypu9Tniy7n6OhjbVzf6H4UntbcOdXG6A8cVnkkx0o0yRI43mf51WtO/SNHoq0r6+sB0g40Aj3CDSjJ/LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UkvuKz3f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742906379; c=relaxed/simple;
+	bh=y9AGL8klTy2uhoXyU/11/1Bz0lHhK4QUWyZ7Y8PIlYg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JVh1NNWVmLskeCY3pWwawflFXvMfzYMGCHCBRDEHOkSc0ADdGgwDhLW4AqRVD8N8+0MS74XdmiKeGtH7uh6DqY3NVYheDMU6kZqKGVFdF6JOFAIaFiGpKlfd6uNOdgW2Nss0SP8YFZG2FcNUsgSivi9A6ERVSB5jdGA4MW0PkeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TQ4IaBvl; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UkvuKz3f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1EFDC4CEE4;
-	Tue, 25 Mar 2025 12:38:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742906290;
-	bh=mrTKcMHuNKBPMTcRWR+EuzE4dMj9aW+kwF5iI0urW9w=;
-	h=From:To:Cc:Subject:Date:From;
-	b=UkvuKz3fcm6YrdnD6ARUnitVPoAXUpamSmYQyEjYzbeme57DbMWNyzki/6ii94JjM
-	 XVMd0u25bD4XSIMZYE22M7M7FlVlViG44l+y5IaKSvQ4g8grtR+AIYwmYz/1FZsA4g
-	 IZLNn83Ofzs/qJZwDuBiYkrPISBwnOvJqU37j4XU=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	hargar@microsoft.com,
-	broonie@kernel.org
-Subject: [PATCH 6.12 000/116] 6.12.21-rc1 review
-Date: Tue, 25 Mar 2025 08:21:27 -0400
-Message-ID: <20250325122149.207086105@linuxfoundation.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQ4IaBvl"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e6194e9d2cso10108573a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 05:39:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742906376; x=1743511176; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wKjgWB6TvzIdAsr3S3K/HK4ewyUzjCEe3m57z5Zfxsw=;
+        b=TQ4IaBvlWxfHyFfWhA52Cc+P8kyzmMy3+VboJ3+HdqiGFKVQLv282VkIx0HnzYRktU
+         HNbRfGk7ONnaxeqop3gGT/NFgttXI5USi9C5SHnD+Uwz0tBK1eAuvdVY+K9TeCgtIMrJ
+         GvARv0TLkwUUOB4xJg3uyXrZLSC5qEpQqVUXU7IAXa32M1kNpMOHC964XZFJFUA5cLwe
+         kLSRezK5p6APMurqBahXmoo7MV0pnXFcR49D0myUyGcVsUtErplmKbSFYyD9LWSJX3VV
+         5LK+4mVkMq6i4k2a8L1E/GC/zSdQAfdZ8l7KQr8n9emXX8u/1XDSJX0K3F8QuSkTFOuM
+         LJJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742906376; x=1743511176;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wKjgWB6TvzIdAsr3S3K/HK4ewyUzjCEe3m57z5Zfxsw=;
+        b=DlbQelRZZ5QrhpNyPazezEWwC7C8AoGSRsilrDhGR6/FyCrpqF6r+B43ioZ28xlGYH
+         +SO9dLaEjqhfHOWw1/FCiPRtxGJz8Uev5novl9RrJdxsciCXh7DfbJ0LuxES7R2BQi6f
+         Bl989oKsvJTjiuAZcKnDiifjjMye3fpOnX8T7qf1dxdFrNum/DNMDa1lt06+JNWPwzTp
+         TGRkMBC2UCKr3//3ldh+ZZ6qf4BtBE0h7V0LUNVDrycmxiyjKA9bIGRAFMxfTi5z3MsZ
+         NxfIVJRavswb8gwEnfhIafPKab2MnBqhgCn4Uykjg6eUgL2tl30kzODMtXD5XVwn63fv
+         lWzg==
+X-Forwarded-Encrypted: i=1; AJvYcCXCQ7rD92X6ZHzRo+H9UK3/HPocLq0kCHunQeOPwMoZwpefJuGcYE5wnlbr88z/GzY5rWxTeQ/JQb5F+64=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5voigpR7LLRqdqkm2iLSeTvpsKOLuD+Hs7bvhebtaiffg189T
+	Zsocnp22bjKNVZZ54VOYbxfJl6M7NJDn02t9/K8t35eMNkxzQgrHjxY3ciYMJ1mML0JZqYKoYSE
+	qlh94g3X665QlHaUBxxWWYpfZEf4=
+X-Gm-Gg: ASbGncsAphyllurIHNQB98eS7qav+wCpEWMv+OsjrhOpv8Wl0ERFu4nUvcmFcb2yYhP
+	3V2/RWWVF24Dr8KxZzZtpI3oEm0Zz+omBmhc+b3AdPi/ESU6at0B5PDNHa4GP37ZczSaanugxhP
+	QyziJybBPJw904GkRxxHiUH4VZ
+X-Google-Smtp-Source: AGHT+IGdupF01QlyFQSqXrPSXzIUWzzNYHBlBz9FvwrkTYFKD0ac363zKdJELEcVjUiNULjUAeCN3qPL8zhTgvLGEPU=
+X-Received: by 2002:a05:6402:84f:b0:5ea:b406:4617 with SMTP id
+ 4fb4d7f45d1cf-5ebcd42e5bbmr16537562a12.13.1742906375459; Tue, 25 Mar 2025
+ 05:39:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.21-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-6.12.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 6.12.21-rc1
-X-KernelTest-Deadline: 2025-03-27T12:21+00:00
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-This is the start of the stable review cycle for the 6.12.21 release.
-There are 116 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Thu, 27 Mar 2025 12:21:27 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.21-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 6.12.21-rc1
-
-Arthur Mongodin <amongodin@randorisec.fr>
-    mptcp: Fix data stream corruption in the address announcement
-
-Zi Yan <ziy@nvidia.com>
-    mm/huge_memory: drop beyond-EOF folios with the right number of refs
-
-Justin Klaassen <justin@tidylabs.net>
-    arm64: dts: rockchip: fix u2phy1_host status for NanoPi R4S
-
-Eder Zulian <ezulian@redhat.com>
-    libsubcmd: Silence compiler warning
-
-Dietmar Eggemann <dietmar.eggemann@arm.com>
-    Revert "sched/core: Reduce cost of sched_move_task when config autogroup"
-
-Mark Rutland <mark.rutland@arm.com>
-    KVM: arm64: Eagerly switch ZCR_EL{1,2}
-
-Mark Rutland <mark.rutland@arm.com>
-    KVM: arm64: Mark some header functions as inline
-
-Mark Rutland <mark.rutland@arm.com>
-    KVM: arm64: Refactor exit handlers
-
-Mark Rutland <mark.rutland@arm.com>
-    KVM: arm64: Remove VHE host restore of CPACR_EL1.SMEN
-
-Mark Rutland <mark.rutland@arm.com>
-    KVM: arm64: Remove VHE host restore of CPACR_EL1.ZEN
-
-Mark Rutland <mark.rutland@arm.com>
-    KVM: arm64: Remove host FPSIMD saving for non-protected KVM
-
-Mark Rutland <mark.rutland@arm.com>
-    KVM: arm64: Unconditionally save+flush host FPSIMD/SVE/SME state
-
-Fuad Tabba <tabba@google.com>
-    KVM: arm64: Calculate cptr_el2 traps on activating traps
-
-Pavel Begunkov <asml.silence@gmail.com>
-    io_uring/net: fix sendzc double notif flush
-
-Namjae Jeon <linkinjeon@kernel.org>
-    ksmbd: fix incorrect validation for num_aces field of smb_acl
-
-Philip Yang <Philip.Yang@amd.com>
-    drm/amdkfd: Fix user queue validation on Gfx7/8
-
-David Rosca <david.rosca@amd.com>
-    drm/amdgpu: Fix JPEG video caps max size for navi1x and raven
-
-David Rosca <david.rosca@amd.com>
-    drm/amdgpu: Fix MPEG2, MPEG4 and VC1 video caps max size
-
-David Rosca <david.rosca@amd.com>
-    drm/amdgpu: Remove JPEG from vega and carrizo video caps
-
-Alex Deucher <alexander.deucher@amd.com>
-    drm/amdgpu/pm: wire up hwmon fan speed for smu 14.0.2
-
-Tomasz Pakuła <tomasz.pakula.oficjalny@gmail.com>
-    drm/amdgpu/pm: Handle SCLK offset correctly in overdrive for smu 14.0.2
-
-David Belanger <david.belanger@amd.com>
-    drm/amdgpu: Restore uncached behaviour on GFX12
-
-Harish Kasiviswanathan <Harish.Kasiviswanathan@amd.com>
-    drm/amd/pm: add unique_id for gfx12
-
-Mario Limonciello <mario.limonciello@amd.com>
-    drm/amd/display: Use HW lock mgr for PSR1 when only one eDP
-
-Yilin Chen <Yilin.Chen@amd.com>
-    drm/amd/display: Fix message for support_edp0_on_dp1
-
-Wentao Liang <vulab@iscas.ac.cn>
-    drm/amdgpu/gfx12: correct cleanup of 'me' field with gfx_v12_0_me_fini()
-
-qianyi liu <liuqianyi125@gmail.com>
-    drm/sched: Fix fence reference count leak
-
-Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-    drm/radeon: fix uninitialized size issue in radeon_vce_cs_parse()
-
-Xianwei Zhao <xianwei.zhao@amlogic.com>
-    pmdomain: amlogic: fix T7 ISP secpower
-
-Saranya R <quic_sarar@quicinc.com>
-    soc: qcom: pdr: Fix the potential deadlock
-
-Sven Eckelmann <sven@narfation.org>
-    batman-adv: Ignore own maximum aggregation size during RX
-
-Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-    xsk: fix an integer overflow in xp_create_and_assign_umem()
-
-David Howells <dhowells@redhat.com>
-    keys: Fix UAF in key_put()
-
-Ard Biesheuvel <ardb@kernel.org>
-    efi/libstub: Avoid physical address 0x0 when doing random allocation
-
-Johan Hovold <johan+linaro@kernel.org>
-    firmware: qcom: uefisecapp: fix efivars registration race
-
-Geert Uytterhoeven <geert+renesas@glider.be>
-    ARM: shmobile: smp: Enforce shmobile_smp_* alignment
-
-Stefan Eichenberger <stefan.eichenberger@toradex.com>
-    ARM: dts: imx6qdl-apalis: Fix poweroff on Apalis iMX6
-
-Shakeel Butt <shakeel.butt@linux.dev>
-    memcg: drain obj stock on cpu hotplug teardown
-
-Ye Bin <yebin10@huawei.com>
-    proc: fix UAF in proc_get_inode()
-
-Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-    mm/page_alloc: fix memory accept before watermarks gets initialized
-
-Zi Yan <ziy@nvidia.com>
-    mm/migrate: fix shmem xarray update during migration
-
-Raphael S. Carvalho <raphaelsc@scylladb.com>
-    mm: fix error handling in __filemap_get_folio() with FGP_NOWAIT
-
-Rafael Aquini <raquini@redhat.com>
-    selftests/mm: run_vmtests.sh: fix half_ufd_size_MB calculation
-
-Gu Bowen <gubowen5@huawei.com>
-    mmc: atmel-mci: Add missing clk_disable_unprepare()
-
-Kamal Dasu <kamal.dasu@broadcom.com>
-    mmc: sdhci-brcmstb: add cqhci suspend/resume to PM ops
-
-Dragan Simic <dsimic@manjaro.org>
-    arm64: dts: rockchip: Add missing PCIe supplies to RockPro64 board dtsi
-
-Quentin Schulz <quentin.schulz@cherry.de>
-    arm64: dts: rockchip: fix pinmux of UART5 for PX30 Ringneck on Haikou
-
-Quentin Schulz <quentin.schulz@cherry.de>
-    arm64: dts: rockchip: fix pinmux of UART0 for PX30 Ringneck on Haikou
-
-Stefan Eichenberger <stefan.eichenberger@toradex.com>
-    arm64: dts: freescale: imx8mm-verdin-dahlia: add Microphone Jack to sound card
-
-Stefan Eichenberger <stefan.eichenberger@toradex.com>
-    arm64: dts: freescale: imx8mp-verdin-dahlia: add Microphone Jack to sound card
-
-Dan Carpenter <dan.carpenter@linaro.org>
-    accel/qaic: Fix integer overflow in qaic_validate_req()
-
-Christian Eggers <ceggers@arri.de>
-    regulator: check that dummy regulator has been probed before using it
-
-Christian Eggers <ceggers@arri.de>
-    regulator: dummy: force synchronous probing
-
-Max Kellermann <max.kellermann@ionos.com>
-    netfs: Call `invalidate_cache` only if implemented
-
-E Shattow <e@freeshell.de>
-    riscv: dts: starfive: Fix a typo in StarFive JH7110 pin function definitions
-
-Jens Axboe <axboe@kernel.dk>
-    io_uring/net: don't clear REQ_F_NEED_CLEANUP unconditionally
-
-Maíra Canal <mcanal@igalia.com>
-    drm/v3d: Don't run jobs that have errors flagged in its fence
-
-Tomasz Rusinowicz <tomasz.rusinowicz@intel.com>
-    drm/xe: Fix exporting xe buffers multiple times
-
-Haibo Chen <haibo.chen@nxp.com>
-    can: flexcan: disable transceiver during system PM
-
-Haibo Chen <haibo.chen@nxp.com>
-    can: flexcan: only change CAN state when link up in system PM
-
-Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-    can: ucan: fix out of bound read in strscpy() source
-
-Biju Das <biju.das.jz@bp.renesas.com>
-    can: rcar_canfd: Fix page entries in the AFL list
-
-Biju Das <biju.das.jz@bp.renesas.com>
-    dt-bindings: can: renesas,rcar-canfd: Fix typo in pattern properties for R-Car V4M
-
-Haiyang Zhang <haiyangz@microsoft.com>
-    net: mana: Support holes in device list reply msg
-
-Andreas Kemnade <andreas@kemnade.info>
-    i2c: omap: fix IRQ storms
-
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
-    tracing: tprobe-events: Fix leakage of module refcount
-
-Guillaume Nault <gnault@redhat.com>
-    Revert "gre: Fix IPv6 link-local address generation."
-
-Lin Ma <linma@zju.edu.cn>
-    net/neighbor: add missing policy for NDTPA_QUEUE_LENBYTES
-
-Yongjian Sun <sunyongjian1@huawei.com>
-    libfs: Fix duplicate directory entry in offset_dir_lookup
-
-Justin Iurman <justin.iurman@uliege.be>
-    net: ipv6: ioam6: fix lwtunnel_output() loop
-
-Justin Iurman <justin.iurman@uliege.be>
-    net: lwtunnel: fix recursion loops
-
-MD Danish Anwar <danishanwar@ti.com>
-    net: ti: icssg-prueth: Add lock to stats
-
-Dan Carpenter <dan.carpenter@linaro.org>
-    net: atm: fix use after free in lec_send()
-
-Jason Gunthorpe <jgg@ziepe.ca>
-    gpu: host1x: Do not assume that a NULL domain means no DMA IOMMU
-
-Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-    phy: fix xa_alloc_cyclic() error handling
-
-Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-    dpll: fix xa_alloc_cyclic() error handling
-
-Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-    devlink: fix xa_alloc_cyclic() error handling
-
-Kuniyuki Iwashima <kuniyu@amazon.com>
-    ipv6: Set errno after ip_fib_metrics_init() in ip6_route_info_create().
-
-Kuniyuki Iwashima <kuniyu@amazon.com>
-    ipv6: Fix memleak of nhc_pcpu_rth_output in fib_check_nh_v6_gw().
-
-Felix Fietkau <nbd@nbd.name>
-    net: ipv6: fix TCP GSO segmentation with NAT
-
-Vignesh Raghavendra <vigneshr@ti.com>
-    net: ethernet: ti: am65-cpsw: Fix NAPI registration sequence
-
-Niklas Cassel <cassel@kernel.org>
-    ata: libata-core: Add ATA_QUIRK_NO_LPM_ON_ATI for certain Samsung SSDs
-
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
-    tracing: tprobe-events: Fix to clean up tprobe correctly when module unload
-
-David Lechner <dlechner@baylibre.com>
-    ARM: davinci: da850: fix selecting ARCH_DAVINCI_DA8XX
-
-Jeffrey Hugo <quic_jhugo@quicinc.com>
-    accel/qaic: Fix possible data corruption in BOs > 2G
-
-Arkadiusz Bokowy <arkadiusz.bokowy@gmail.com>
-    Bluetooth: hci_event: Fix connection regression between LE and non-LE adapters
-
-Dan Carpenter <dan.carpenter@linaro.org>
-    Bluetooth: Fix error code in chan_alloc_skb_cb()
-
-Junxian Huang <huangjunxian6@hisilicon.com>
-    RDMA/hns: Fix wrong value of max_sge_rd
-
-Junxian Huang <huangjunxian6@hisilicon.com>
-    RDMA/hns: Fix missing xa_destroy()
-
-Junxian Huang <huangjunxian6@hisilicon.com>
-    RDMA/hns: Fix a missing rollback in error path of hns_roce_create_qp_common()
-
-Junxian Huang <huangjunxian6@hisilicon.com>
-    RDMA/hns: Fix invalid sq params not being blocked
-
-Junxian Huang <huangjunxian6@hisilicon.com>
-    RDMA/hns: Fix unmatched condition in error path of alloc_user_qp_db()
-
-Junxian Huang <huangjunxian6@hisilicon.com>
-    RDMA/hns: Fix soft lockup during bt pages loop
-
-Saravanan Vajravel <saravanan.vajravel@broadcom.com>
-    RDMA/bnxt_re: Avoid clearing VLAN_ID mask in modify qp path
-
-Baochen Qiang <quic_bqiang@quicinc.com>
-    dma-mapping: fix missing clear bdr in check_ram_in_range_map()
-
-Chester A. Unal <chester.a.unal@arinc9.com>
-    ARM: dts: BCM5301X: Fix switch port labels of ASUS RT-AC3200
-
-Chester A. Unal <chester.a.unal@arinc9.com>
-    ARM: dts: BCM5301X: Fix switch port labels of ASUS RT-AC5300
-
-Phil Elwell <phil@raspberrypi.com>
-    ARM: dts: bcm2711: Don't mark timer regs unconfigured
-
-Arnd Bergmann <arnd@arndb.de>
-    ARM: OMAP1: select CONFIG_GENERIC_IRQ_CHIP
-
-Qasim Ijaz <qasdev00@gmail.com>
-    RDMA/mlx5: Handle errors returned from mlx5r_ib_rate()
-
-Kashyap Desai <kashyap.desai@broadcom.com>
-    RDMA/bnxt_re: Add missing paranthesis in map_qp_id_to_tbl_indx
-
-Zhu Yanjun <yanjun.zhu@linux.dev>
-    RDMA/rxe: Fix the failure of ibv_query_device() and ibv_query_device_ex() tests
-
-Yao Zi <ziyao@disroot.org>
-    arm64: dts: rockchip: Remove undocumented sdmmc property from lubancat-1
-
-Phil Elwell <phil@raspberrypi.com>
-    arm64: dts: bcm2712: PL011 UARTs are actually r1p5
-
-Phil Elwell <phil@raspberrypi.com>
-    ARM: dts: bcm2711: PL011 UARTs are actually r1p5
-
-Stefan Wahren <wahrenst@gmx.net>
-    ARM: dts: bcm2711: Fix xHCI power-domain
-
-Peng Fan <peng.fan@nxp.com>
-    soc: imx8m: Unregister cpufreq and soc dev in cleanup path
-
-Marek Vasut <marex@denx.de>
-    soc: imx8m: Use devm_* to simplify probe failure handling
-
-Marek Vasut <marex@denx.de>
-    soc: imx8m: Remove global soc_uid
-
-Cosmin Ratiu <cratiu@nvidia.com>
-    xfrm_output: Force software GSO only in tunnel mode
-
-Alexandre Cassen <acassen@corp.free.fr>
-    xfrm: fix tunnel mode TX datapath in packet offload mode
-
-Heiko Stuebner <heiko.stuebner@cherry.de>
-    arm64: dts: rockchip: remove supports-cqe from rk3588 tiger
-
-Heiko Stuebner <heiko.stuebner@cherry.de>
-    arm64: dts: rockchip: remove supports-cqe from rk3588 jaguar
-
-Alexander Stein <alexander.stein@ew.tq-group.com>
-    arm64: dts: freescale: tqma8mpql: Fix vqmmc-supply
-
-Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>
-    firmware: imx-scu: fix OF node leak in .probe()
-
-Dan Carpenter <dan.carpenter@linaro.org>
-    firmware: qcom: scm: Fix error code in probe()
-
-
--------------
-
-Diffstat:
-
- .../bindings/net/can/renesas,rcar-canfd.yaml       |   2 +-
- Makefile                                           |   4 +-
- arch/arm/boot/dts/broadcom/bcm2711-rpi.dtsi        |   5 -
- arch/arm/boot/dts/broadcom/bcm2711.dtsi            |  12 +-
- .../boot/dts/broadcom/bcm4709-asus-rt-ac3200.dts   |  12 +-
- .../boot/dts/broadcom/bcm47094-asus-rt-ac5300.dts  |   8 +-
- arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi      |  10 +-
- arch/arm/mach-davinci/Kconfig                      |   1 +
- arch/arm/mach-omap1/Kconfig                        |   1 +
- arch/arm/mach-shmobile/headsmp.S                   |   1 +
- arch/arm64/boot/dts/broadcom/bcm2712.dtsi          |   2 +-
- .../boot/dts/freescale/imx8mm-verdin-dahlia.dtsi   |   6 +-
- .../arm64/boot/dts/freescale/imx8mp-tqma8mpql.dtsi |  16 +--
- .../boot/dts/freescale/imx8mp-verdin-dahlia.dtsi   |   6 +-
- .../boot/dts/rockchip/px30-ringneck-haikou.dts     |  12 ++
- arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dts |   2 +-
- arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi |   2 +
- arch/arm64/boot/dts/rockchip/rk3566-lubancat-1.dts |   1 -
- arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts     |   1 -
- arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi     |   1 -
- arch/arm64/include/asm/kvm_host.h                  |  23 +---
- arch/arm64/kernel/fpsimd.c                         |  25 ----
- arch/arm64/kvm/arm.c                               |   9 --
- arch/arm64/kvm/fpsimd.c                            | 100 ++------------
- arch/arm64/kvm/hyp/entry.S                         |   5 +
- arch/arm64/kvm/hyp/include/hyp/switch.h            | 133 +++++++++++++-----
- arch/arm64/kvm/hyp/nvhe/hyp-main.c                 |  11 +-
- arch/arm64/kvm/hyp/nvhe/pkvm.c                     |  29 ----
- arch/arm64/kvm/hyp/nvhe/switch.c                   | 140 ++++++++++---------
- arch/arm64/kvm/hyp/vhe/switch.c                    |  21 ++-
- arch/riscv/boot/dts/starfive/jh7110-pinfunc.h      |   2 +-
- drivers/accel/qaic/qaic_data.c                     |   9 +-
- drivers/ata/libata-core.c                          |  14 +-
- drivers/dpll/dpll_core.c                           |   2 +-
- drivers/firmware/efi/libstub/randomalloc.c         |   4 +
- drivers/firmware/imx/imx-scu.c                     |   1 +
- drivers/firmware/qcom/qcom_qseecom_uefisecapp.c    |  18 +--
- drivers/firmware/qcom/qcom_scm.c                   |   4 +-
- drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c             |   2 +-
- drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c             |  22 +--
- drivers/gpu/drm/amd/amdgpu/nv.c                    |  20 +--
- drivers/gpu/drm/amd/amdgpu/soc15.c                 |  21 ++-
- drivers/gpu/drm/amd/amdgpu/vi.c                    |  43 +++---
- drivers/gpu/drm/amd/amdkfd/kfd_queue.c             |  12 +-
- drivers/gpu/drm/amd/amdkfd/kfd_svm.c               |   8 +-
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  |   2 +-
- .../gpu/drm/amd/display/dc/dce/dmub_hw_lock_mgr.c  |  11 ++
- drivers/gpu/drm/amd/pm/amdgpu_pm.c                 |   2 +
- .../gpu/drm/amd/pm/swsmu/smu14/smu_v14_0_2_ppt.c   |  96 +++++++------
- drivers/gpu/drm/radeon/radeon_vce.c                |   2 +-
- drivers/gpu/drm/scheduler/sched_entity.c           |  11 +-
- drivers/gpu/drm/v3d/v3d_sched.c                    |   9 +-
- drivers/gpu/drm/xe/xe_bo.h                         |   2 -
- drivers/gpu/drm/xe/xe_dma_buf.c                    |   2 +-
- drivers/gpu/host1x/dev.c                           |   6 +
- drivers/i2c/busses/i2c-omap.c                      |  26 +---
- drivers/infiniband/hw/bnxt_re/qplib_fp.c           |   2 -
- drivers/infiniband/hw/bnxt_re/qplib_rcfw.h         |   3 +-
- drivers/infiniband/hw/hns/hns_roce_alloc.c         |   4 +-
- drivers/infiniband/hw/hns/hns_roce_cq.c            |   1 +
- drivers/infiniband/hw/hns/hns_roce_hem.c           |  16 ++-
- drivers/infiniband/hw/hns/hns_roce_main.c          |   2 +-
- drivers/infiniband/hw/hns/hns_roce_qp.c            |  20 +--
- drivers/infiniband/hw/mlx5/ah.c                    |  14 +-
- drivers/infiniband/sw/rxe/rxe.c                    |  25 +---
- drivers/mmc/host/atmel-mci.c                       |   4 +-
- drivers/mmc/host/sdhci-brcmstb.c                   |  10 ++
- drivers/net/can/flexcan/flexcan-core.c             |  18 ++-
- drivers/net/can/rcar/rcar_canfd.c                  |  28 ++--
- drivers/net/can/usb/ucan.c                         |  43 +++---
- drivers/net/ethernet/microsoft/mana/gdma_main.c    |  14 +-
- drivers/net/ethernet/ti/am65-cpsw-nuss.c           |  32 +++--
- drivers/net/ethernet/ti/icssg/icssg_prueth.c       |   1 +
- drivers/net/ethernet/ti/icssg/icssg_prueth.h       |   2 +
- drivers/net/ethernet/ti/icssg/icssg_stats.c        |   4 +
- drivers/net/phy/phy_link_topology.c                |   2 +-
- drivers/pmdomain/amlogic/meson-secure-pwrc.c       |   2 +-
- drivers/regulator/core.c                           |  12 +-
- drivers/regulator/dummy.c                          |   2 +-
- drivers/soc/imx/soc-imx8m.c                        | 151 ++++++++++-----------
- drivers/soc/qcom/pdr_interface.c                   |   8 +-
- fs/libfs.c                                         |   2 +-
- fs/netfs/write_collect.c                           |   3 +-
- fs/proc/generic.c                                  |  10 +-
- fs/proc/inode.c                                    |   6 +-
- fs/proc/internal.h                                 |  14 ++
- fs/smb/server/smbacl.c                             |   5 +-
- include/linux/key.h                                |   1 +
- include/linux/libata.h                             |   2 +
- include/linux/proc_fs.h                            |   7 +-
- include/net/bluetooth/hci.h                        |   2 +-
- include/net/mana/gdma.h                            |  11 +-
- io_uring/net.c                                     |   5 +-
- kernel/dma/direct.c                                |  28 ++--
- kernel/sched/core.c                                |  21 +--
- kernel/trace/trace_fprobe.c                        |  30 ++--
- mm/filemap.c                                       |  13 +-
- mm/huge_memory.c                                   |   2 +-
- mm/memcontrol.c                                    |   9 ++
- mm/migrate.c                                       |  10 +-
- mm/page_alloc.c                                    |  14 +-
- net/atm/lec.c                                      |   3 +-
- net/batman-adv/bat_iv_ogm.c                        |   3 +-
- net/batman-adv/bat_v_ogm.c                         |   3 +-
- net/bluetooth/6lowpan.c                            |   7 +-
- net/core/lwtunnel.c                                |  65 +++++++--
- net/core/neighbour.c                               |   1 +
- net/devlink/core.c                                 |   2 +-
- net/ipv6/addrconf.c                                |  15 +-
- net/ipv6/ioam6_iptunnel.c                          |   8 +-
- net/ipv6/route.c                                   |   5 +-
- net/ipv6/tcpv6_offload.c                           |  21 ++-
- net/mptcp/options.c                                |   6 +-
- net/xdp/xsk_buff_pool.c                            |   2 +-
- net/xfrm/xfrm_output.c                             |  43 +++++-
- security/keys/gc.c                                 |   4 +-
- security/keys/key.c                                |   2 +
- tools/lib/subcmd/parse-options.c                   |   2 +-
- tools/testing/selftests/mm/run_vmtests.sh          |   4 +-
- 119 files changed, 944 insertions(+), 819 deletions(-)
-
-
+References: <cover.1735550269.git.zhoubinbin@loongson.cn> <b0ac8b81fbb8955ed8ada27aba423cff45aad9f6.1735550269.git.zhoubinbin@loongson.cn>
+ <f365c722-c294-4834-8c84-fd6dcd4a9ee9@suse.de> <CAMpQs4JXKu4GDD79Mdkq9vASSDE_5SQsjsg4htfaZ5yGm3=k5g@mail.gmail.com>
+In-Reply-To: <CAMpQs4JXKu4GDD79Mdkq9vASSDE_5SQsjsg4htfaZ5yGm3=k5g@mail.gmail.com>
+From: Binbin Zhou <zhoubb.aaron@gmail.com>
+Date: Tue, 25 Mar 2025 20:39:22 +0800
+X-Gm-Features: AQ5f1Jrbk_EFMADnaFY725mw-u4J_gY-MBHc_ta67hZ-stRVovQuuFCq39O9Dms
+Message-ID: <CAMpQs4JJQpW7cjKDOGjBg2gQ=8r-nYMXtE2_YddmHcsbd9agVA@mail.gmail.com>
+Subject: Re: [PATCH v1 4/4] drm/ls2kbmc: Add Loongson-2K BMC reset function support
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>, 
+	Lee Jones <lee@kernel.org>, Corey Minyard <minyard@acm.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Huacai Chen <chenhuacai@kernel.org>, 
+	linux-kernel@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
+	dri-devel@lists.freedesktop.org, Xuerui Wang <kernel@xen0n.name>, 
+	loongarch@lists.linux.dev, Chong Qiao <qiaochong@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Feb 11, 2025 at 7:27=E2=80=AFPM Binbin Zhou <zhoubb.aaron@gmail.com=
+> wrote:
+>
+> Hi Thomas:
+>
+> Sorry for my late reply and thanks for your advice.
+>
+> On Wed, Jan 15, 2025 at 2:57=E2=80=AFPM Thomas Zimmermann <tzimmermann@su=
+se.de> wrote:
+> >
+> > Hi
+> >
+> >
+> > Am 30.12.24 um 10:31 schrieb Binbin Zhou:
+> > > Since the display is a sub-function of the Loongson-2K BMC, when the
+> > > BMC reset, the entire BMC PCIe is disconnected, including the display
+> > > which is interrupted.
+> >
+> > To me, that's a strong indicator to set up the entire thing from scratc=
+h.
+> >
+> > >
+> > > Not only do you need to save/restore the relevant PCIe registers
+> > > throughout the reset process, but you also need to re-push the displa=
+y
+> > > to the monitor at the end.
+> > >
+> > > Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
+> > > Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+> > > Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> > > ---
+> > >   drivers/gpu/drm/tiny/ls2kbmc.c | 284 ++++++++++++++++++++++++++++++=
+++-
+> > >   1 file changed, 283 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/tiny/ls2kbmc.c b/drivers/gpu/drm/tiny/ls=
+2kbmc.c
+> > > index 909d6c687193..4b440f20cb4d 100644
+> > > --- a/drivers/gpu/drm/tiny/ls2kbmc.c
+> > > +++ b/drivers/gpu/drm/tiny/ls2kbmc.c
+> >
+> > Move all the reset detection into the BMC core driver. When you see a
+> > reset, remove the display's platform device via
+> > platform_device_unregister(). This will release the device  and the DRM
+> > driver on top. We do this for simpledrm/efifb/etc. Hence user-space cod=
+e
+> > is able to deal with it. Then set up a new platform device when the new
+> > framebuffer is available. Your DRM driver will bind to it and user-spac=
+e
+> > code will continue with the new DRM device.
+>
+> I tried to refactor the bmc restart part according to your scheme. I'm
+> not quite sure if the experimental results are exactly right.
+>
+> Key part:
+>
+> New solution:
+> 1. platform_device_unregister(simpledrm)
+> 2. wait and detect if the BMC reboot is complete;
+> 3. platform_device_register_resndata(simpledrm)
+>
+> Original solution:
+> 1. wait and detect if the BMC reboot is complete;
+> 2. ls2kbmc_push_drm_mode() pushes display data such as crtc.
+>
+> When the BMC reboot is completed, the display in the new solution will
+> lose all the information of the previous desktop and redisplay the
+> system login interface, while the original solution will keep the
+> desktop information.
+>
+> Is this normal for our new solution, or is there something wrong with
+> my implementation?
+
+Hi Thomas:
+
+Sorry to bother you and my last email[1] may have been lost.
+Some time ago, I modified the code and tested it based on your
+previous comments, but the results were a bit different than expected.
+
+I'm not sure if the code changes are wrong, so it would be great if
+you could take the time to help me out:
+
+[1]: https://lore.kernel.org/all/CAMpQs4JXKu4GDD79Mdkq9vASSDE_5SQsjsg4htfaZ=
+5yGm3=3Dk5g@mail.gmail.com/
+>
+> >
+> > Best regards
+> > Thomas
+> >
+> > > @@ -8,10 +8,12 @@
+> > >    */
+> > >
+> > >   #include <linux/aperture.h>
+> > > +#include <linux/delay.h>
+> > >   #include <linux/minmax.h>
+> > >   #include <linux/pci.h>
+> > >   #include <linux/platform_data/simplefb.h>
+> > >   #include <linux/platform_device.h>
+> > > +#include <linux/stop_machine.h>
+> > >
+> > >   #include <drm/drm_atomic.h>
+> > >   #include <drm/drm_atomic_state_helper.h>
+> > > @@ -32,9 +34,27 @@
+> > >   #include <drm/drm_panic.h>
+> > >   #include <drm/drm_probe_helper.h>
+> > >
+> > > +#define BMC_RESET_DELAY      (60 * HZ)
+> > > +#define BMC_RESET_WAIT       10000
+> > > +
+> > > +static const u32 index[] =3D { 0x4, 0x10, 0x14, 0x18, 0x1c, 0x20, 0x=
+24,
+> > > +                          0x30, 0x3c, 0x54, 0x58, 0x78, 0x7c, 0x80 }=
+;
+> > > +static const u32 cindex[] =3D { 0x4, 0x10, 0x3c };
+> > > +
+> > > +struct ls2kbmc_pci_data {
+> > > +     u32 d80c;
+> > > +     u32 d71c;
+> > > +     u32 data[14];
+> > > +     u32 cdata[3];
+> > > +};
+> > > +
+> > >   struct ls2kbmc_pdata {
+> > >       struct pci_dev *pdev;
+> > > +     struct drm_device *ddev;
+> > > +     struct work_struct bmc_work;
+> > > +     unsigned long reset_time;
+> > >       struct simplefb_platform_data pd;
+> > > +     struct ls2kbmc_pci_data pci_data;
+> > >   };
+> > >
+> > >   /*
+> > > @@ -583,6 +603,265 @@ static struct ls2kbmc_device *ls2kbmc_device_cr=
+eate(struct drm_driver *drv,
+> > >       return sdev;
+> > >   }
+> > >
+> > > +static bool ls2kbmc_bar0_addr_is_set(struct pci_dev *ppdev)
+> > > +{
+> > > +     u32 addr;
+> > > +
+> > > +     pci_read_config_dword(ppdev, PCI_BASE_ADDRESS_0, &addr);
+> > > +     addr &=3D PCI_BASE_ADDRESS_MEM_MASK;
+> > > +
+> > > +     return addr ? true : false;
+> > > +}
+> > > +
+> > > +static void ls2kbmc_save_pci_data(struct ls2kbmc_pdata *priv)
+> > > +{
+> > > +     struct pci_dev *pdev =3D priv->pdev;
+> > > +     struct pci_dev *parent =3D pdev->bus->self;
+> > > +     int i;
+> > > +
+> > > +     for (i =3D 0; i < ARRAY_SIZE(index); i++)
+> > > +             pci_read_config_dword(parent, index[i], &priv->pci_data=
+.data[i]);
+> > > +
+> > > +     for (i =3D 0; i < ARRAY_SIZE(cindex); i++)
+> > > +             pci_read_config_dword(pdev, cindex[i], &priv->pci_data.=
+cdata[i]);
+> > > +
+> > > +     pci_read_config_dword(parent, 0x80c, &priv->pci_data.d80c);
+> > > +     priv->pci_data.d80c =3D (priv->pci_data.d80c & ~(3 << 17)) | (1=
+ << 17);
+> > > +
+> > > +     pci_read_config_dword(parent, 0x71c, &priv->pci_data.d71c);
+> > > +     priv->pci_data.d71c |=3D 1 << 26;
+> > > +}
+> > > +
+> > > +static bool ls2kbmc_check_pcie_connected(struct pci_dev *parent, str=
+uct drm_device *dev)
+> > > +{
+> > > +     void __iomem *mmio;
+> > > +     int sts, timeout =3D 10000;
+> > > +
+> > > +     mmio =3D pci_iomap(parent, 0, 0x100);
+> > > +     if (!mmio)
+> > > +             return false;
+> > > +
+> > > +     writel(readl(mmio) | 0x8, mmio);
+> > > +     while (timeout) {
+> > > +             sts =3D readl(mmio + 0xc);
+> > > +             if ((sts & 0x11) =3D=3D 0x11)
+> > > +                     break;
+> > > +             mdelay(1);
+> > > +             timeout--;
+> > > +     }
+> > > +
+> > > +     pci_iounmap(parent, mmio);
+> > > +
+> > > +     if (!timeout) {
+> > > +             drm_err(dev, "pcie train failed status=3D0x%x\n", sts);
+> > > +             return false;
+> > > +     }
+> > > +
+> > > +     return true;
+> > > +}
+> > > +
+> > > +static int ls2kbmc_recove_pci_data(void *data)
+> > > +{
+> > > +     struct ls2kbmc_pdata *priv =3D data;
+> > > +     struct pci_dev *pdev =3D priv->pdev;
+> > > +     struct drm_device *dev =3D priv->ddev;
+> > > +     struct pci_dev *parent =3D pdev->bus->self;
+> > > +     u32 i, timeout, retry =3D 0;
+> > > +     bool ready;
+> > > +
+> > > +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_2, 0);
+> > > +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_3, 0);
+> > > +     pci_write_config_dword(parent, PCI_BASE_ADDRESS_4, 0);
+> > > +
+> > > +     timeout =3D 10000;
+> > > +     while (timeout) {
+> > > +             ready =3D ls2kbmc_bar0_addr_is_set(parent);
+> > > +             if (!ready)
+> > > +                     break;
+> > > +             mdelay(1);
+> > > +             timeout--;
+> > > +     };
+> > > +
+> > > +     if (!timeout)
+> > > +             drm_warn(dev, "bar not clear 0\n");
+> > > +
+> > > +retrain:
+> > > +     for (i =3D 0; i < ARRAY_SIZE(index); i++)
+> > > +             pci_write_config_dword(parent, index[i], priv->pci_data=
+.data[i]);
+> > > +
+> > > +     pci_write_config_dword(parent, 0x80c, priv->pci_data.d80c);
+> > > +     pci_write_config_dword(parent, 0x71c, priv->pci_data.d71c);
+> > > +
+> > > +     /* Check if the pcie is connected */
+> > > +     ready =3D ls2kbmc_check_pcie_connected(parent, dev);
+> > > +     if (!ready)
+> > > +             return ready;
+> > > +
+> > > +     for (i =3D 0; i < ARRAY_SIZE(cindex); i++)
+> > > +             pci_write_config_dword(pdev, cindex[i], priv->pci_data.=
+cdata[i]);
+> > > +
+> > > +     drm_info(dev, "pcie recovered done\n");
+> > > +
+> > > +     if (!retry) {
+> > > +             /*wait u-boot ddr config */
+> > > +             mdelay(BMC_RESET_WAIT);
+> > > +             ready =3D ls2kbmc_bar0_addr_is_set(parent);
+> > > +             if (!ready) {
+> > > +                     retry =3D 1;
+> > > +                     goto retrain;
+> > > +             }
+> > > +     }
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static int ls2kbmc_push_drm_mode(struct drm_device *dev)
+> > > +{
+> > > +     struct ls2kbmc_device *sdev =3D ls2kbmc_device_of_dev(dev);
+> > > +     struct drm_crtc *crtc =3D &sdev->crtc;
+> > > +     struct drm_plane *plane =3D crtc->primary;
+> > > +     struct drm_connector *connector =3D &sdev->connector;
+> > > +     struct drm_framebuffer *fb =3D NULL;
+> > > +     struct drm_mode_set set;
+> > > +     struct drm_modeset_acquire_ctx ctx;
+> > > +     int ret;
+> > > +
+> > > +     mutex_lock(&dev->mode_config.mutex);
+> > > +     connector->funcs->fill_modes(connector, 4096, 4096);
+> > > +     mutex_unlock(&dev->mode_config.mutex);
+> > > +
+> > > +     DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx,
+> > > +                                DRM_MODESET_ACQUIRE_INTERRUPTIBLE, r=
+et);
+> > > +
+> > > +     if (plane->state)
+> > > +             fb =3D plane->state->fb;
+> > > +     else
+> > > +             fb =3D plane->fb;
+> > > +
+> > > +     if (!fb) {
+> > > +             drm_dbg(dev, "CRTC doesn't have current FB\n");
+> > > +             ret =3D -EINVAL;
+> > > +             goto out;
+> > > +     }
+> > > +
+> > > +     drm_framebuffer_get(fb);
+> > > +
+> > > +     set.crtc =3D crtc;
+> > > +     set.x =3D 0;
+> > > +     set.y =3D 0;
+> > > +     set.mode =3D &sdev->mode;
+> > > +     set.connectors =3D &connector;
+> > > +     set.num_connectors =3D 1;
+> > > +     set.fb =3D fb;
+> > > +
+> > > +     ret =3D crtc->funcs->set_config(&set, &ctx);
+> > > +
+> > > +out:
+> > > +     DRM_MODESET_LOCK_ALL_END(dev, ctx, ret);
+> > > +
+> > > +     return ret;
+> > > +}
+> > > +
+> > > +static void ls2kbmc_events_fn(struct work_struct *work)
+> > > +{
+> > > +     struct ls2kbmc_pdata *priv =3D container_of(work, struct ls2kbm=
+c_pdata, bmc_work);
+> > > +
+> > > +     /*
+> > > +      * The pcie is lost when the BMC resets,
+> > > +      * at which point access to the pcie from other CPUs
+> > > +      * is suspended to prevent a crash.
+> > > +      */
+> > > +     stop_machine(ls2kbmc_recove_pci_data, priv, NULL);
+> > > +
+> > > +     drm_info(priv->ddev, "redraw console\n");
+> > > +
+> > > +     /* We need to re-push the display due to previous pcie loss. */
+> > > +     ls2kbmc_push_drm_mode(priv->ddev);
+> > > +}
+> > > +
+> > > +static irqreturn_t ls2kbmc_interrupt(int irq, void *arg)
+> > > +{
+> > > +     struct ls2kbmc_pdata *priv =3D arg;
+> > > +
+> > > +     if (system_state !=3D SYSTEM_RUNNING)
+> > > +             return IRQ_HANDLED;
+> > > +
+> > > +     /* skip interrupt in BMC_RESET_DELAY */
+> > > +     if (time_after(jiffies, priv->reset_time + BMC_RESET_DELAY))
+> > > +             schedule_work(&priv->bmc_work);
+> > > +
+> > > +     priv->reset_time =3D jiffies;
+> > > +
+> > > +     return IRQ_HANDLED;
+> > > +}
+> > > +
+> > > +#define BMC_RESET_GPIO                       14
+> > > +#define LOONGSON_GPIO_REG_BASE               0x1fe00500
+> > > +#define LOONGSON_GPIO_REG_SIZE               0x18
+> > > +#define LOONGSON_GPIO_OEN            0x0
+> > > +#define LOONGSON_GPIO_FUNC           0x4
+> > > +#define LOONGSON_GPIO_INTPOL         0x10
+> > > +#define LOONGSON_GPIO_INTEN          0x14
+> > > +
+> > > +/* The gpio interrupt is a watchdog interrupt that is triggered when=
+ the BMC resets. */
+> > > +static int ls2kbmc_gpio_reset_handler(struct ls2kbmc_pdata *priv)
+> > > +{
+> > > +     int irq, ret =3D 0;
+> > > +     int gsi =3D 16 + (BMC_RESET_GPIO & 7);
+> > > +     void __iomem *gpio_base;
+> > > +
+> > > +     /* Since Loongson-3A hardware does not support GPIO interrupt c=
+ascade,
+> > > +      * chip->gpio_to_irq() cannot be implemented,
+> > > +      * here acpi_register_gsi() is used to get gpio irq.
+> > > +      */
+> > > +     irq =3D acpi_register_gsi(NULL, gsi, ACPI_EDGE_SENSITIVE, ACPI_=
+ACTIVE_LOW);
+> > > +     if (irq < 0)
+> > > +             return irq;
+> > > +
+> > > +     gpio_base =3D ioremap(LOONGSON_GPIO_REG_BASE, LOONGSON_GPIO_REG=
+_SIZE);
+> > > +     if (!gpio_base) {
+> > > +             acpi_unregister_gsi(gsi);
+> > > +             return PTR_ERR(gpio_base);
+> > > +     }
+> > > +
+> > > +     writel(readl(gpio_base + LOONGSON_GPIO_OEN) | BIT(BMC_RESET_GPI=
+O),
+> > > +            gpio_base + LOONGSON_GPIO_OEN);
+> > > +     writel(readl(gpio_base + LOONGSON_GPIO_FUNC) & ~BIT(BMC_RESET_G=
+PIO),
+> > > +            gpio_base + LOONGSON_GPIO_FUNC);
+> > > +     writel(readl(gpio_base + LOONGSON_GPIO_INTPOL) & ~BIT(BMC_RESET=
+_GPIO),
+> > > +            gpio_base + LOONGSON_GPIO_INTPOL);
+> > > +     writel(readl(gpio_base + LOONGSON_GPIO_INTEN) | BIT(BMC_RESET_G=
+PIO),
+> > > +            gpio_base + LOONGSON_GPIO_INTEN);
+> > > +
+> > > +     ret =3D request_irq(irq, ls2kbmc_interrupt, IRQF_SHARED | IRQF_=
+TRIGGER_FALLING,
+> > > +                       "ls2kbmc gpio", priv);
+> > > +
+> > > +     acpi_unregister_gsi(gsi);
+> > > +     iounmap(gpio_base);
+> > > +
+> > > +     return ret;
+> > > +}
+> > > +
+> > > +static int ls2kbmc_pdata_initial(struct platform_device *pdev, struc=
+t ls2kbmc_pdata *priv)
+> > > +{
+> > > +     int ret;
+> > > +
+> > > +     priv->pdev =3D *(struct pci_dev **)dev_get_platdata(&pdev->dev)=
+;
+> > > +
+> > > +     ls2kbmc_save_pci_data(priv);
+> > > +
+> > > +     INIT_WORK(&priv->bmc_work, ls2kbmc_events_fn);
+> > > +
+> > > +     ret =3D request_irq(priv->pdev->irq, ls2kbmc_interrupt,
+> > > +                       IRQF_SHARED | IRQF_TRIGGER_RISING, "ls2kbmc p=
+cie", priv);
+> > > +     if (ret) {
+> > > +             pr_err("request_irq(%d) failed\n", priv->pdev->irq);
+> > > +             return ret;
+> > > +     }
+> > > +
+> > > +     return ls2kbmc_gpio_reset_handler(priv);
+> > > +}
+> > > +
+> > >   /*
+> > >    * Platform driver
+> > >    */
+> > > @@ -598,12 +877,15 @@ static int ls2kbmc_probe(struct platform_device=
+ *pdev)
+> > >       if (IS_ERR(priv))
+> > >               return -ENOMEM;
+> > >
+> > > -     priv->pdev =3D *(struct pci_dev **)dev_get_platdata(&pdev->dev)=
+;
+> > > +     ret =3D ls2kbmc_pdata_initial(pdev, priv);
+> > > +     if (ret)
+> > > +             return ret;
+> > >
+> > >       sdev =3D ls2kbmc_device_create(&ls2kbmc_driver, pdev, priv);
+> > >       if (IS_ERR(sdev))
+> > >               return PTR_ERR(sdev);
+> > >       dev =3D &sdev->dev;
+> > > +     priv->ddev =3D &sdev->dev;
+> > >
+> > >       ret =3D drm_dev_register(dev, 0);
+> > >       if (ret)
+> >
+> > --
+> > --
+> > Thomas Zimmermann
+> > Graphics Driver Developer
+> > SUSE Software Solutions Germany GmbH
+> > Frankenstrasse 146, 90461 Nuernberg, Germany
+> > GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+> > HRB 36809 (AG Nuernberg)
+> >
+>
+>
+> --
+> Thanks.
+> Binbin
+
+
+
+--=20
+Thanks.
+Binbin
