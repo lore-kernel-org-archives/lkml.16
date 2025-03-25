@@ -1,25 +1,33 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D25BDF78;
-	Tue, 25 Mar 2025 15:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C230425B67D;
+	Tue, 25 Mar 2025 15:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742915444; cv=none; b=INS2ZAGpXofek941TvIALsAYrVr5ikbc0mSf7MHI714WxEnj+lY4eymlS3ov/bd4IK+z02F9MNf9GgRY9avkmh0XnK5tOR3JjQAA5xKAR2cg/6/kYXADrkyhuFSbauC8kM0znnlD6wUkyF92J+CrruyYrD5y6yKQgt3hUErtZcc=
+	t=1742915472; cv=none; b=aHvBkG1pXtEqGzDkL21jGA5zwPr+Bi+wbu8Ccs3AoZrFEHCEYhdasmfhPsqppcPg4j+Afv1sptNALIl0UFdZWC+28j2FjhzrZsxDNlPNWKMFCf1rTc6yVbhiupOR7zT+SWMXZhaok5sn2X2ChH/Sgilmk6+qdb7uuNYLFfRWjn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742915444; c=relaxed/simple;
-	bh=BZYJziINKBIcqjS1/8unrKx3dUgU2wz565xUE4lre5c=;
+	s=arc-20240116; t=1742915472; c=relaxed/simple;
+	bh=Vod3ROmU+JnQThido/st53zu41n3FBS+YZCyzPx0c5Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TdRR7jgqVJLCI29T08feWYL3Im+BryAVHT6Ja6YX0L0fMzNIKCPS2gJ7aG5DhCN8RhrBiP2wUAoG4T7YL+38YMqmM6YVycA8bRBGIedmxx2og7o3egDmHafrRmfbI/X6g5htwyNo4nZk7z4usqCMOWAmwsfpEFOca8BVijSAlqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F9641756;
-	Tue, 25 Mar 2025 08:10:45 -0700 (PDT)
-Received: from [10.57.14.116] (unknown [10.57.14.116])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7DF7A3F58B;
-	Tue, 25 Mar 2025 08:10:36 -0700 (PDT)
-Message-ID: <d629b646-d04b-4a26-86a2-34300dcd3e9f@arm.com>
-Date: Tue, 25 Mar 2025 16:10:30 +0100
+	 In-Reply-To:Content-Type; b=flzz6v8doyg3PB7vZ4VfME5j78wGWjWRCKhvy+iAY3cuFQXRFIfsYERbmGpmDh1AwgUcQYOv/wEEmyYBGl4kRYUMI9U7JuS0FDoJe73+HetC+hUvZTyjcnOPLzG251odweE4lY9lnKjD3xjoxy2kU+xbHrz3z3BpQQrsb58rV34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gm8eYWgI; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gm8eYWgI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 772DFC4CEE4;
+	Tue, 25 Mar 2025 15:11:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742915470;
+	bh=Vod3ROmU+JnQThido/st53zu41n3FBS+YZCyzPx0c5Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gm8eYWgIYe+NbzB2WbLx7c8b+HwcUCNrKswo2YgkTMJa2qyrlDJc0a4I/gez5BSGJ
+	 odHWwT4xBN7AMNu7JRNrExiNuMdHDOmUbbKH8ux7A2QDTCRo+acjvJJP8jCdygI5rt
+	 28NWGoUgmbclHLKH6j/+yni9yP5rGCTxWW7cj3ff8eLnyVjqKN9wqu2a/3CPliFmT6
+	 bpsIqquXA7EByh/HWI6DMTqQY7IsSaMNzruBArXrP0aIQWn6goI8Ma/TrXcwvJCv7i
+	 r0MZticb8iCkkEnTE4ENUcgwl7yjVvCaDe7tvYSaXsXFVHKs/w0rqUTf+AO/OTnRTR
+	 0sY6bKd0qOyvQ==
+Message-ID: <a60c6ea2-628b-447d-bdc2-ebc7bd7d7400@kernel.org>
+Date: Tue, 25 Mar 2025 16:11:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,57 +35,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] sched/fair: Fix integer underflow
-To: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Rik van Riel <riel@surriel.com>
-References: <20241001134603.2758480-1-pierre.gondois@arm.com>
+Subject: Re: [PATCH 2/5] dt-bindings: net: Add MTIP L2 switch description
+ (fec,mtip-switch.yaml)
+To: Andrew Lunn <andrew@lunn.ch>, Lukasz Majewski <lukma@denx.de>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Paolo Abeni <pabeni@redhat.com>,
+ Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
+ davem@davemloft.net, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>,
+ netdev@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>
+References: <20250325115736.1732721-1-lukma@denx.de>
+ <20250325115736.1732721-3-lukma@denx.de>
+ <2ccab52d-5ed1-4257-a8f1-328c76127ebe@lunn.ch>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Pierre Gondois <pierre.gondois@arm.com>
-In-Reply-To: <20241001134603.2758480-1-pierre.gondois@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <2ccab52d-5ed1-4257-a8f1-328c76127ebe@lunn.ch>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello Vincent,
-
-This patch should still be relevant, would it be possible to pick it ?
-Or maybe something is missing ?
-
-Regards,
-Pierre
-
-On 10/1/24 15:46, Pierre Gondois wrote:
-> (struct sg_lb_stats).idle_cpus is of type 'unsigned int'.
-> (local->idle_cpus - busiest->idle_cpus) can underflow to UINT_MAX
-> for instance, and max_t(long, 0, UINT_MAX) will output UINT_MAX.
+On 25/03/2025 16:05, Andrew Lunn wrote:
+>> +  phy-reset-gpios:
+>> +    deprecated: true
+>> +    description:
+>> +      Should specify the gpio for phy reset.
 > 
-> Use lsub_positive() instead of max_t().
-> 
-> Fixes: 16b0a7a1a0af ("sched/fair: Ensure tasks spreading in LLC during LB")
-> cc: stable@vger.kernel.org
-> Signed-off-by: Pierre Gondois <pierre.gondois@arm.com>
-> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-> ---
->   kernel/sched/fair.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 9057584ec06d..6d9124499f52 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -10775,8 +10775,8 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
->   			 * idle CPUs.
->   			 */
->   			env->migration_type = migrate_task;
-> -			env->imbalance = max_t(long, 0,
-> -					       (local->idle_cpus - busiest->idle_cpus));
-> +			env->imbalance = local->idle_cpus;
-> +			lsub_positive(&env->imbalance, busiest->idle_cpus);
->   		}
->   
->   #ifdef CONFIG_NUMA
+> It seem odd that a new binding has deprecated properties. Maybe add a
+> comment in the commit message as to why they are there. I assume this
+> is because you are re-using part of the FEC code as is, and it
+> implements them?
+
+Re-using existing driver code should not be a reason to use deprecated
+properties, because you can change that common driver parts to support
+both: old FEC style and new MTIP-L2-FEC switch.
+
+Best regards,
+Krzysztof
