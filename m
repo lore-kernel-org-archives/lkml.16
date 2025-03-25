@@ -1,102 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7EF33EC
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 11:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DCC633EC
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 11:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742900962; cv=none; b=kfvOw20osMKK148A1lHRCuV8qGkjFZ6aY1GmQOekYmanKTncfaUU3P46mcUSCcp+zUsxHWui6efy7HRy0bcpb6pt5LCP9wsyJCtQLRIY70t6lX6EWYJjuKB0raECpR0T7PWZGMee42g0R9SvIZs30eqpGMAFez8IGtMDW3KQDuE=
+	t=1742901005; cv=none; b=ffhVPCCDWsCk+4kYGf5HE0r4GgDf0shkyVd2TnSsZ6+OFsABRUhg8JtaD+fxXCOyuZ2Y3Y+m8Yfza6f0hKLbi7a1FnAOWnm8XtadH0FahVSefP7xC3iprNlKnESwC0mf7oDCyo8Kzb9z8qrIoYKQ5mPHQsmz2TParGSytSO+XNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742900962; c=relaxed/simple;
-	bh=CobmH/0tT3JWCF0SNaF4cBzmKPSqoD1qNh/T1HNEiOM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V2CGb9w9eKCWFMA2HbxnI3I6N+rn3IOohe7lZ68awajoXgDqnMZLdqLRp6nVHR1JH4CoTQM+G1ru0kt2irofwYEYnKbT6Zs9FH15SBtx6vL2ZRC9l8sJAOxbTAZK/VXuG0v/hwvdaZViQ3uuuFqg1ZctY2ry9zl8NkamnHcWeCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+2sfBMf; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+2sfBMf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1DF8C4CEE4;
-	Tue, 25 Mar 2025 11:09:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742900962;
-	bh=CobmH/0tT3JWCF0SNaF4cBzmKPSqoD1qNh/T1HNEiOM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S+2sfBMfnmR8JC0dpPXvhhWNDDavpjxM4l26E2TvzZEqPvR3E9bNTc3jJhflVQGrt
-	 yxjctszY4G7Mt1u+nhj5FhbV/Ru4GUDCUBVp4XjByEoJq8DfDUaZMlBWBWFxfkzTUJ
-	 UoPcW8MJU2+Es2tAxSkOXkeAVgaN5iAJXQvQKli3rTYJllPZT6dVasV6TXmE+Pt6o6
-	 PMpHfCNY/cD4TwoP0KhEOERvp1Y5rIMVy2tK5Ubhm31WmbMs08BxjCTyE8jWr9GrxL
-	 HZb69P3XabAA/LKlPDNTH37VP8dKzo56fWtJ2nFrDLOk5Jft7qUzWtGxvj2nRs80ST
-	 99S73U2Hx+LMg==
-Date: Tue, 25 Mar 2025 12:09:19 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: devbrones <jonas.cronholm@protonmail.com>, 
-	maarten.lankhorst@linux.intel.com, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/edid: Add non-desktop quirk for Playstation VR
- Headsets with Product ID 0xB403
-Message-ID: <20250325-annoying-precise-uakari-6b6438@houat>
-References: <20250322122048.28677-1-jonas.cronholm@protonmail.com>
- <875xjxa2rk.fsf@intel.com>
- <20250325-inquisitive-ebony-mouse-bdf185@houat>
- <87pli58jze.fsf@intel.com>
+	s=arc-20240116; t=1742901005; c=relaxed/simple;
+	bh=Mlo9nkuf8hVOFYgL7mLgOdK0xFR9i1nTldeCr0R6Aok=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Kt+ZhjUIAXQEkH26VXKYprOTdBo/A2CtFQxzfgmMzxmN6qlSkopQ6j+fTKloVOLOjQGeO3lqao1RUSolr2hOtdTCQqmlFHACYW7+Rl+aYuEO3cKWyZ7HBpQY3xcYi//m/ACwiS5bmVw/mpGMrMBr/gjxTUG1N5uezBSj+S0kTIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15BBE1756;
+	Tue, 25 Mar 2025 04:10:09 -0700 (PDT)
+Received: from [10.57.14.116] (unknown [10.57.14.116])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 77D013F58B;
+	Tue, 25 Mar 2025 04:10:00 -0700 (PDT)
+Message-ID: <6b217eb3-f8f5-4a25-8fe9-550cc7a15a81@arm.com>
+Date: Tue, 25 Mar 2025 12:09:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="pz5nibo4epaozvmu"
-Content-Disposition: inline
-In-Reply-To: <87pli58jze.fsf@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/7 v5] sched/fair: Rework feec() to use cost instead of
+ spare capacity
+To: Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
+ peterz@infradead.org, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
+ rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+ vschneid@redhat.com, lukasz.luba@arm.com, rafael.j.wysocki@intel.com,
+ linux-kernel@vger.kernel.org
+Cc: qyousef@layalina.io, hongyan.xia2@arm.com, christian.loehle@arm.com,
+ luis.machado@arm.com, qperret@google.com
+References: <20250302210539.1563190-1-vincent.guittot@linaro.org>
+ <20250302210539.1563190-4-vincent.guittot@linaro.org>
+Content-Language: en-US
+From: Pierre Gondois <pierre.gondois@arm.com>
+In-Reply-To: <20250302210539.1563190-4-vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+Hello Vincent,
 
---pz5nibo4epaozvmu
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] drm/edid: Add non-desktop quirk for Playstation VR
- Headsets with Product ID 0xB403
-MIME-Version: 1.0
+On 3/2/25 22:05, Vincent Guittot wrote:
+> feec() looks for the CPU with highest spare capacity in a PD assuming that
+> it will be the best CPU from a energy efficiency PoV because it will
+> require the smallest increase of OPP. Although this is true generally
+> speaking, this policy also filters some others CPUs which will be as
+> efficients because of using the same OPP.
+> In fact, we really care about the cost of the new OPP that will be
+> selected to handle the waking task. In many cases, several CPUs will end
+> up selecting the same OPP and as a result using the same energy cost. In
+> these cases, we can use other metrics to select the best CPU for the same
+> energy cost.
+> 
+> Rework feec() to look 1st for the lowest cost in a PD and then the most
+> performant CPU between CPUs. The cost of the OPP remains the only
+> comparison criteria between Performance Domains.
+> 
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+>   kernel/sched/fair.c | 466 +++++++++++++++++++++++---------------------
+>   1 file changed, 246 insertions(+), 220 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index d3d1a2ba6b1a..a9b97bbc085f 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
 
-On Tue, Mar 25, 2025 at 12:47:49PM +0200, Jani Nikula wrote:
-> On Tue, 25 Mar 2025, Maxime Ripard <mripard@kernel.org> wrote:
-> > On Tue, Mar 25, 2025 at 11:16:47AM +0200, Jani Nikula wrote:
-> >> On Sat, 22 Mar 2025, devbrones <jonas.cronholm@protonmail.com> wrote:
-> >> > This fixes a bug where some Playstation VR Headsets would not be ass=
-igned
-> >> > the EDID_QUIRK_NON_DESKTOP quirk, causing them to be inaccessible by
-> >> > certain software under Wayland.
-> >>=20
-> >> Please file a bug over at [1], and attach the EDID on that bug, so we
-> >> have some clue what's going on.
-> >>
-> >> [1] https://gitlab.freedesktop.org/drm/misc/kernel/-/issues/new
-> >
-> > I'd rather have them in the commit log. Nobody uses gitlab issues for
-> > drm-misc, and those kind of issues are just lingering around and
-> > becoming stale.
->=20
-> For this one, it's fine as long as we preserve the raw EDID for
-> posterity. Unless the EDID does indicate VR and we need to dig deeper,
-> that is.
+[...]
 
-What I was trying to say is if "posterity" means "a forever open issue
-in drm-misc", then no, sorry, that doesn't work for me.
+>   
+> -	if ((best_fits > prev_fits) ||
+> -	    ((best_fits > 0) && (best_delta < prev_delta)) ||
+> -	    ((best_fits < 0) && (best_actual_cap > prev_actual_cap)))
+> -		target = best_energy_cpu;
+> +		/* Add the energy cost of p */
+> +		delta_nrg = task_util * min_stat.cost;
 
-Maxime
+Not capping task_util to the target CPU's max capacity when computing energy
+means this is ok to have fully-utilized CPUs.
 
---pz5nibo4epaozvmu
-Content-Type: application/pgp-signature; name="signature.asc"
+Just to re-advertise what can happen with utilization values of CPUs that are
+fully utilized:
 
------BEGIN PGP SIGNATURE-----
+On a Pixel6, placing 3 tasks with:
+period=16ms, duty_cycle=100%, UCLAMP_MAX=700, cpuset=5,6
+I.e. the tasks can run on one medium/big core. UCLAMP_MAX is set such as the
+system doesn't become overutilized.
 
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ+KO2gAKCRAnX84Zoj2+
-dsU5AYCGaizukwDkQEQG1RR3QR9GHy/MuKJeY6AUltgq5hCHsaHXBRbBlbIqybM+
-WZxBwqIBf3ZcvcQq+0aax2qhHJWpLBh64CC4/I06GVvaPqRNhkFT8Dk2BiUInaee
-okpbQcELeQ==
-=SVyr
------END PGP SIGNATURE-----
+Tasks are going to bounce on the medium CPU as, if we follow one task:
+1. The task will grow to reach a maximum utilization of ~340 (=1024/3 due to
+the pressure of other tasks)
+2. As the big CPU is less energy efficient than the medium CPU, the big CPU
+will eventually reach an OPP where it will be better to run on the medium CPU
+energy-wise
+3. The task is migrated to the medium CPU. However the task can now grow
+its utilization since there is no pressure from other tasks. So the
+utilization of the task slowly grows.
+4. The medium CPU reaches on OPP where it is more energy efficient to migrate
+the task on the big CPU. We can go to step 1.
 
---pz5nibo4epaozvmu--
+As the utilization is only a reflection of how much CPU time the task received,
+util_avg depends on the #tasks/niceness of the co-scheduled tasks. Thus, it is
+really hard to make any assumption based on this value. UCLAMP_MAX puts tasks
+in the exact situation where util_avg doesn't represent the size of the task
+anymore.
+
+------
+
+In this example, niceness is not taken into account, but cf. the other thread,
+other scenarios could be created where the task placement is incorrect/un-stable.
+EAS mainly relies on util_avg, so having correct task estimations should be the
+priority.
+
+------
+
+As you and Christian I think briefly evoked as an idea, setting the SCHED_IDLE
+policy to UCLAMP_MAX could maybe help. However, this implies:
+1. not being able to set UCLAMP_MIN and UCLAMP_MAX at the same time for a task
+Indeed, as someone might want to have SCHED_NORMAL for it UCLAMP_MIN task
+
+2. not using feec() for UCLAMP_MAX tasks.
+Indeed, SCHED_IDLE tasks will likely have wrong util_avg values since they don't
+have much running time. So doing energy computation using these values would not
+work.
+Another advantage is that UCLAMP_MAX tasks will impact the util_avg of
+non-UCLAMP_MAX tasks only lightly as their running time will be really low.
+Balancing CPUs based on h_nr_idle rather than h_nr_runnable would also allow
+to have ~the same number of UCLAMP_MAX tasks on all CPUs of the same
+type/capacity.
+
+------
+
+At the risk of being a bit insistant, I don't see how UCLAMP_MAX tasks could
+be placed using EAS. Either EAS or UCLAMP_MAX needs to change...
