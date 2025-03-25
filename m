@@ -1,107 +1,96 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2AEA2E339B
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 17:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C94792E339B;
+	Tue, 25 Mar 2025 17:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742922418; cv=none; b=HK0Cg+uATz+WK2jTYltnFUZQ1zoYOq/jk5+cwXqbllYKAJYRS+Izw3RhY7JvAvUty4o6JZ8xH0Xi8UIwaZhYT4XtgpJg2c+WrGzh6XvuRbKnuhpWzxN8oPzRujuKFntOcG5Ihwu2gVSKiHSnSdrkZ+KIK1uo170oARHwc3kt/70=
+	t=1742922597; cv=none; b=beWo5YcPV/NCNzbmNXrQ+O1W44wK1B3ZTjWz6ciPuAywcbxyudy1JbsCiNN+7IQW6ckufH1AdQNgl4HDO9fQYSrJ2o50Kw0OD/sPIDCH8+ChjJd4DqWf092thX2RknjGSN2Z74z3QKzMKCKFYJoImEyGVAzUr0hJNSlznJg3tE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742922418; c=relaxed/simple;
-	bh=p4hI6rmj/B2jQcKFonO+VLVTRv3JWXwyiknfAMihw2Y=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=A71pkFeJzvD8ZDde0ADOqBtL/CWPp99w9OYBoT5OMuDyPHy/tPSSkDexISgCkc2+BtQWPx6l45eb7sjEKS7cnOu19HWlhbsVHtjE8wRF+O55sP7NEWLkNpUY1OVAofIBjiNTkaslGETKZonMR+hhvYvoYTKsxKWON3UKmCrmp1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YGdxRfbz; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1742922597; c=relaxed/simple;
+	bh=v/k0ISaq5RYlyl5YrvYc26UUUVRy7HHPNAzlq4Z3UXc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MnEs4ihOFhy8zsdSrk5g7HKOfHsbUzyLe3ZKvG5DCfnM8qjg+G9PudXFdCGGbjAWi+ORLXioUikdZL9Ma1bqEuHTL2hWbiSYAn1tYNrmJmx76cpy8CimGlw/CRzG2SOwDpU0UbWvCjJ4zgY8ybjE5HcB/9rlEgt1Pna4aeI5Qog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=K2GMMy/U; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YGdxRfbz"
-Message-ID: <6ab8b951-a2be-4434-8621-0b31d00608ad@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742922414;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3Nbign4VerDHGQ4baDVBf0Bsdr3S4g3WcFkWogC97fU=;
-	b=YGdxRfbzDkzHKl5/qMOZrrR4LII7XP0QUt4iwMW61UJEowyRrEsbO9yZpQA0ymxy+9uyFW
-	jTqenr7oGL2jmdGvM8YgwevbtNmWQ7EdCjIvoqFM/bjS9YrRYVsCdLPkYCvMnHVonpPY42
-	zWBWUW+7/xFGNwbkcmzVqhqiX94q6wo=
-Date: Tue, 25 Mar 2025 18:06:51 +0100
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="K2GMMy/U"
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 5BDD2203659C; Tue, 25 Mar 2025 10:09:55 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5BDD2203659C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742922595;
+	bh=TKSCvK+Z+E2nBTbRXLRveMgjlIDGsBl82/XulX1hncc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K2GMMy/UlrBv+TZS3YWLozHje4h1h/PWk7hVSmmEMncBMrMAVK/ksD0z8g6bFQhg8
+	 zL+AvcdBh6YlR8ONiLtalFp8+qReHMizRK/ai6qPTykrijRYgcYr5PyEMbR5SkBbRV
+	 souOcTxF4XlP2qKiyxP4g2tbu/ZcVa354i/yuEsI=
+Date: Tue, 25 Mar 2025 10:09:55 -0700
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	longli@microsoft.com, kotaranov@microsoft.com, horms@kernel.org,
+	brett.creeley@amd.com, surenb@google.com,
+	schakrabarti@linux.microsoft.com, kent.overstreet@linux.dev,
+	shradhagupta@linux.microsoft.com, erick.archer@outlook.com,
+	rosenp@gmail.com, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: Re: [PATCH 2/3] net: mana: Implement set_link_ksettings in ethtool
+ for speed
+Message-ID: <20250325170955.GB23398@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1742473341-15262-1-git-send-email-ernis@linux.microsoft.com>
+ <1742473341-15262-3-git-send-email-ernis@linux.microsoft.com>
+ <fb6b544f-f683-4307-8adf-82d37540c556@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Marco Pagani <marco.pagani@linux.dev>
-Subject: Re: [PATCH 04/10] fpga: tests: add module descriptions
-To: Arnd Bergmann <arnd@kernel.org>,
- Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Moritz Fischer <mdf@kernel.org>,
- Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org,
- Arnd Bergmann <arnd@arndb.de>, Tom Rix <trix@redhat.com>,
- Marco Pagani <marpagan@redhat.com>, Russ Weight <russ.weight@linux.dev>,
- linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250324173242.1501003-1-arnd@kernel.org>
- <20250324173242.1501003-4-arnd@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20250324173242.1501003-4-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fb6b544f-f683-4307-8adf-82d37540c556@lunn.ch>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-
-On 2025-03-24 18:32, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Thu, Mar 20, 2025 at 02:43:34PM +0100, Andrew Lunn wrote:
+> On Thu, Mar 20, 2025 at 05:22:20AM -0700, Erni Sri Satya Vennela wrote:
+> > Add support for ethtool_set_link_ksettings for mana.
+> > Set speed information of the port using ethtool. This
+> > feature is not supported by all hardware.
+> > 
+> > Before the change:
+> > $ethtool -s enP30832s1 speed 100
+> > >netlink error: Operation not supported
+> > $ethtool enP30832s1
+> > >Settings for enP30832s1:
+> >         Supported ports: [  ]
+> >         Supported link modes:   Not reported
 > 
-> Modules without a description now cause a warning:
+> Since there are no link modes, what does this speed actually mean?
 > 
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-bridge-test.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-mgr-test.o
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-region-test.o
+Initially we planned to support for speed incrementally by 1Mbps, but
+after internal discussion with the host team, we will be supporting 
+only speed which is multiples of 100. The HWC commands 
+MANA_QUERY_LINK_CONFIG and MANA_SET_BW_CLAMP help us to get and
+set the speed in the hardware respectively.
+> > After the change:
+> > $ethtool -s enP30832s1 speed 100
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-Reviewed-by: Marco Pagani <marco.pagani@linux.dev>
-
-> ---
->  drivers/fpga/tests/fpga-bridge-test.c | 1 +
->  drivers/fpga/tests/fpga-mgr-test.c    | 1 +
->  drivers/fpga/tests/fpga-region-test.c | 1 +
->  3 files changed, 3 insertions(+)
+> Is 
 > 
-> diff --git a/drivers/fpga/tests/fpga-bridge-test.c b/drivers/fpga/tests/fpga-bridge-test.c
-> index b9ab29809e96..124ba40e32b1 100644
-> --- a/drivers/fpga/tests/fpga-bridge-test.c
-> +++ b/drivers/fpga/tests/fpga-bridge-test.c
-> @@ -170,4 +170,5 @@ static struct kunit_suite fpga_bridge_suite = {
->  
->  kunit_test_suite(fpga_bridge_suite);
->  
-> +MODULE_DESCRIPTION("KUnit test for the FPGA Bridge");
->  MODULE_LICENSE("GPL");
-> diff --git a/drivers/fpga/tests/fpga-mgr-test.c b/drivers/fpga/tests/fpga-mgr-test.c
-> index 9cb37aefbac4..8748babb0504 100644
-> --- a/drivers/fpga/tests/fpga-mgr-test.c
-> +++ b/drivers/fpga/tests/fpga-mgr-test.c
-> @@ -330,4 +330,5 @@ static struct kunit_suite fpga_mgr_suite = {
->  
->  kunit_test_suite(fpga_mgr_suite);
->  
-> +MODULE_DESCRIPTION("KUnit test for the FPGA Manager");
->  MODULE_LICENSE("GPL");
-> diff --git a/drivers/fpga/tests/fpga-region-test.c b/drivers/fpga/tests/fpga-region-test.c
-> index 6a108cafded8..020ceac48509 100644
-> --- a/drivers/fpga/tests/fpga-region-test.c
-> +++ b/drivers/fpga/tests/fpga-region-test.c
-> @@ -214,4 +214,5 @@ static struct kunit_suite fpga_region_suite = {
->  
->  kunit_test_suite(fpga_region_suite);
->  
-> +MODULE_DESCRIPTION("KUnit test for the FPGA Region");
->  MODULE_LICENSE("GPL");
-
+> $ethtool -s enP30832s1 speed 42
+> 
+> permitted? 
+> 
+The user will be allowed to set the speed which are multiples 
+of 100. And the minimum allowed bandwidth is 100Mbps. I will be making
+this change in the next version of this patch.
+> or
+> 
+> $ethtool -s enP30832s1 speed -1
+> 
+This case is handled by the firmware, which throws an error:
+ethtool (-s): invalid value '-1' for parameter 'speed'
+> 	Andrew
