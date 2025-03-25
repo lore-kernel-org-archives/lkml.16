@@ -1,109 +1,121 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71DB1DD9D3;
-	Tue, 25 Mar 2025 14:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742911784; cv=none; b=Vq6m+ZKNBhx+PiMMUhGnXR2ePZ1rYk56cHNcIfPoSlWKfP2KO9Axo7xtVIpZ8SgRTVIEz+m1Wa1TVUqCB2vxLOmkXRIZWeS+od03tVPEUrqsP24s2OYWebMhaB2uLKmAyLGNLwVm0i+ch1DYJa7ypH8/8CEPHYhGFVA0/TCHbCM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742911784; c=relaxed/simple;
-	bh=2uswpZV/3MbmSaOQPXyR9jbj0XssNkhBFZkF+PiK5wY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=H2BwifcFbvnOaXMjZobzgW1GrceOnHGctAcP/BzNsLMx37Y2lyUfJeHxR8zx7bXHDP8VpYOfw57N2Xi1edu5jVgrxvWqZvf9iw1S347HL5P3oaopXud7eHAyJs8abMDtTtj19UsAvBInOb+5od49hpczGZjfa4dec7lH1GbMlEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.2.102] (213.87.148.48) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 25 Mar
- 2025 17:09:17 +0300
-Message-ID: <87933eef-e2b4-4f15-b6b6-1634a9ca17d1@omp.ru>
-Date: Tue, 25 Mar 2025 17:09:16 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555C91DD9D3;
+	Tue, 25 Mar 2025 14:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742911788; cv=pass; b=sn7dgpO4ksV2pwPNoKeqHj1AuimkuEm4LWYrskMU5Y6cnPTAbXjFhzD78Fi7HOTw3mJrKjMEhknCFxYMVVAgI/b/qSLnQOjd0ejdiDbn2gDHqnsFKAUc9x/cKuZxnr2Rq5vmdDFXxgb1oH/OBmaW0XMbeVOxfmFxW6VPPlcPm7k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742911788; c=relaxed/simple;
+	bh=Ch6+qUgGynR/70jdVo3jg+Clw0dnQHwqKoYj5m7skgY=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=fBQWBFOiabjkGHsj9+DM2QGfKPe3MDpD7O/6IUXqPQV673MymCtLSvtIJi5IdR9rxKNT1Xypj0jIQgaD+vqQ2ADABqfDD0KdJ82TexaexOJT8vsEsfn0nTzFtzPKE+06cGHviam3cimFScA22jF2PDKSNUvgbiNK54Js+CmIWNs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=cKRRuCbk; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="cKRRuCbk"
+ARC-Seal: i=1; a=rsa-sha256; t=1742911745; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=l0RIF5Z2CTTHhQ0EA1qs2Oflg5cB7509sExFx/Dt2+tRIYOCSgFc72v1gdp4KmvZcpGfD+c5gF/wPjamqJgFCFo7+PYFWAsCjH5GbYAoAZbT3NzoMHR9QQj2zthjZAPfYKF3HArhZDAyYYvyq2ov0JGmXKpqTKw2NjbEe9b27ss=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1742911745; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=IhGvb/tLAJnIoiWvG3hYv5l20MW1d5v5bmCOcmdtFrM=; 
+	b=LetY3gTN+PW3cAJKgoGJ/o/5V1wjREkVaFB2GJ2mT2twEHkiwiOrV4LMyC5u7EFxQkisPy+wNqzEWD1b9/L6i+9/M078NddiNCYwpnw10d2nbmi/czx9nuViryClfWvKrJVD1UDaZ8GFxbcnKg7Nn5nvimDE6j5XvClcuqpFuNw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742911745;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=IhGvb/tLAJnIoiWvG3hYv5l20MW1d5v5bmCOcmdtFrM=;
+	b=cKRRuCbkeGnyTCP+5lMZJv/Yv16APiNwxCZHS6tryzHzsOjM+t25XJQN9oOyRmph
+	/IST+uC/HcSWTK9xUt0Ee9csF+mLQeN+69WziQMA2NdT+ced5+7rA0YEOMD5rnOkYJG
+	ciLMfgCZ1v7ZSg884IDtFNcWBrcuYiNjscx/+X1o=
+Received: by mx.zohomail.com with SMTPS id 1742911743160345.8065019059693;
+	Tue, 25 Mar 2025 07:09:03 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/10] dt-bindings: vendor-prefixes: Add EcoNet
-To: Caleb James DeLisle <cjd@cjdns.fr>, <linux-mips@vger.kernel.org>
-CC: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Daniel Lezcano
-	<daniel.lezcano@linaro.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <benjamin.larsson@genexis.eu>
-References: <20250325134349.2476458-1-cjd@cjdns.fr>
- <20250325134349.2476458-2-cjd@cjdns.fr>
-Content-Language: en-US
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-In-Reply-To: <20250325134349.2476458-2-cjd@cjdns.fr>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 03/25/2025 13:44:17
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 19
-X-KSE-AntiSpam-Info: Lua profiles 192091 [Mar 25 2025]
-X-KSE-AntiSpam-Info: Version: 6.1.1.11
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 51 0.3.51
- 68896fb0083a027476849bf400a331a2d5d94398
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.148.48 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info:
-	213.87.148.48:7.1.2;omp.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.148.48
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 19
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 03/25/2025 13:46:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 3/25/2025 1:01:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH v4 10/11] scripts: generate_rust_analyzer.py: define
+ scripts
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <20250322-rust-analyzer-host-v4-10-1f51f9c907eb@gmail.com>
+Date: Tue, 25 Mar 2025 11:08:46 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Boris-Chengbiao Zhou <bobo1239@web.de>,
+ Kees Cook <kees@kernel.org>,
+ Fiona Behrens <me@kloenk.dev>,
+ rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Lukas Wirth <lukas.wirth@ferrous-systems.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <101DAAC6-5EA6-4CA4-B593-4B928877057D@collabora.com>
+References: <20250322-rust-analyzer-host-v4-0-1f51f9c907eb@gmail.com>
+ <20250322-rust-analyzer-host-v4-10-1f51f9c907eb@gmail.com>
+To: Tamir Duberstein <tamird@gmail.com>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
+X-ZohoMailClient: External
 
-On 3/25/25 4:43 PM, Caleb James DeLisle wrote:
 
-> Add the "econet" vendor prefix for SoC maker
-> 
-> Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
+
+> On 22 Mar 2025, at 10:23, Tamir Duberstein <tamird@gmail.com> wrote:
+>=20
+> Generate rust-project.json entries for scripts written in Rust. This =
+is
+> possible now that we have a definition for `std` built for the host.
+>=20
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 5079ca6ce1d1..4cd050e50743 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -416,6 +416,8 @@ patternProperties:
->      description: dServe Technology B.V.
->    "^dynaimage,.*":
->      description: Dyna-Image
-> +  "^econet,.*":
-> +    description: EcoNet (HK) Limited
->    "^ea,.*":
->      description: Embedded Artists AB
->    "^ebang,.*":
+> scripts/generate_rust_analyzer.py | 13 +++++++++++++
+> 1 file changed, 13 insertions(+)
+>=20
+> diff --git a/scripts/generate_rust_analyzer.py =
+b/scripts/generate_rust_analyzer.py
+> index ccb15aa66929..957b413fe0b6 100755
+> --- a/scripts/generate_rust_analyzer.py
+> +++ b/scripts/generate_rust_analyzer.py
+> @@ -209,6 +209,19 @@ def generate_crates(
+>     uapi =3D append_crate_with_generated("uapi", [core])
+>     kernel =3D append_crate_with_generated("kernel", [core, macros, =
+build_error, bindings, pin_init, uapi])
+>=20
+> +    scripts =3D srctree / "scripts"
+> +    with open(scripts / "Makefile") as f:
+> +        makefile =3D f.read()
+> +    for path in scripts.glob("*.rs"):
+> +        name =3D path.name.replace(".rs", "")
+> +        if f"{name}-rust" not in makefile:
+> +            continue
+> +        _script =3D append_crate(
+> +            name,
+> +            path,
+> +            [host_std],
+> +        )
+> +
+>     def is_root_crate(build_file: pathlib.Path, target: str) -> bool:
+>         try:
+>             with open(build_file) as f:
+>=20
+> --=20
+> 2.48.1
+>=20
+>=20
 
-   "econet" goes after "ea" and "ebang" in my book. :-)
-
-MBR, Sergey
-
+Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>=
