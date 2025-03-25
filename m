@@ -1,216 +1,105 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ksmg01.maxima.ru (ksmg01.mt-integration.ru [81.200.124.38])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF7415575C
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1659A259CBD;
+	Tue, 25 Mar 2025 14:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742912282; cv=none; b=j0aRpLawZngGepPE34B4QsZXRloh5D9dRyJQLFsk3KeVE3L//HnRDj5zzM5PiQ5M1roDkWeA5nE5lVEpF7Xz8vVJ9sDyAnKbyCDh4sEwk6bREuhvKgOIqLoY9m6OOhyUToebWKUrjwzeq38A+eeEArtzehma7eaP+RiERdod0Pk=
+	t=1742912331; cv=none; b=VRvKYkNaKFyBuR8G/LZQgpEXZZwTLiv6Er4X2IL4c14OchzAR2ct8dBRbOB1YOJbKPoTM2/G3YAhcuNJ4COkRltNZijcY+g8mINCZru7AYjr3J0w8bb0s/AhgN/+MFXDCE/metGDuIZhhphIY520ppxF1dgyNaf3OSAvlSBVbYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742912282; c=relaxed/simple;
-	bh=vfmQHc0JqL0t/9wfsFmuRRnGqMBoyo4k9ShjZmRBnII=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T26gHknuDnA0S3rU17rZYfIWO4w+9qCmiTf144mbVg5EhRuiLARqOxTdTkb9UyBeXqjK16GXPrGEWFCYtA4L1EtZQYH5UXg4kddEUU7oOemS7YPGwJLobqk5bUftwciQ6eEelzfhz6gMKDB/KTLKbzoMeFF7AwSZQE0YTYj7P8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=N0iBIPJG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9/Gw5bYZ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=N0iBIPJG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=9/Gw5bYZ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1742912331; c=relaxed/simple;
+	bh=7mFZoI3oUwSgsrtXYgoQO4zWvGggFBPc0QqMqh4qw+A=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U514vfBuylbAE+7qDvCMz1fp0TZAOJIuheatpa0Wy6y6KDM/krQHPMXfZV4EE2PSNWf0nF08f2xPYxUF+u81o9aZb85M5cHQ3ELIv5gwEzZEIo9hbLea4ZUnPphAIFwq3gtzQ6A7m00ahQNYd0kAFcQPxnpBpzghovn/2UxFOQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=RjqEDJSL; arc=none smtp.client-ip=81.200.124.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="N0iBIPJG";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9/Gw5bYZ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="N0iBIPJG";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="9/Gw5bYZ"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4FC9A1F391;
-	Tue, 25 Mar 2025 14:17:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1742912278; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Hs0YS/wfSFYXl/1DQ7zM/1hagYFnz5mjomQwY05XTYA=;
-	b=N0iBIPJGcRYDyIpf4VbYaEt5J5kVt7Eiyc2Beji0esbJsh1rhpq30WGbtpdbwOD5OZYVK4
-	Oph+pAe+JlkWtdB4iE6rQR/e0YiXNb529nbrnvq3RPugj1AYL/6k5tIpwRbLJ5A3gbJYOR
-	ASfN8hJg3HnVA0We06Ol1VL5LOeUA8s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1742912278;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Hs0YS/wfSFYXl/1DQ7zM/1hagYFnz5mjomQwY05XTYA=;
-	b=9/Gw5bYZk5KykOeuXJv/cQE8ugvOi4BkqIm0MbmcifsAcru9DrakCF/ETl9UAsuQNo48C2
-	I+dU3KvkEMl/YNBA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1742912278; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Hs0YS/wfSFYXl/1DQ7zM/1hagYFnz5mjomQwY05XTYA=;
-	b=N0iBIPJGcRYDyIpf4VbYaEt5J5kVt7Eiyc2Beji0esbJsh1rhpq30WGbtpdbwOD5OZYVK4
-	Oph+pAe+JlkWtdB4iE6rQR/e0YiXNb529nbrnvq3RPugj1AYL/6k5tIpwRbLJ5A3gbJYOR
-	ASfN8hJg3HnVA0We06Ol1VL5LOeUA8s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1742912278;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Hs0YS/wfSFYXl/1DQ7zM/1hagYFnz5mjomQwY05XTYA=;
-	b=9/Gw5bYZk5KykOeuXJv/cQE8ugvOi4BkqIm0MbmcifsAcru9DrakCF/ETl9UAsuQNo48C2
-	I+dU3KvkEMl/YNBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D2B13137AC;
-	Tue, 25 Mar 2025 14:17:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 8WSuMRW74mcwGgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Tue, 25 Mar 2025 14:17:57 +0000
-Message-ID: <0e0686da-ae96-4a7a-81b2-b9ece1fa4837@suse.de>
-Date: Tue, 25 Mar 2025 15:17:57 +0100
+	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="RjqEDJSL"
+Received: from ksmg01.maxima.ru (localhost [127.0.0.1])
+	by ksmg01.maxima.ru (Postfix) with ESMTP id 85491C001C;
+	Tue, 25 Mar 2025 17:18:45 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg01.maxima.ru 85491C001C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
+	s=sl; t=1742912325; bh=Kl/vgxvkF6dodXZC7H99NoGlSRboIwJ+apzfaBVvyhU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=RjqEDJSLlzXSQ2giJRH//e0mYZa0eFVLw8+h0gdhptBKVqS6if41pBTNHjzeFYrCn
+	 rdXI6p69dsu51Vr3ZtAOdIQAgg6RZvdXchklmGjK5QXC2CJuuQtS8v5WdaHgM3kbiD
+	 xc/fUGKxmk+yQ4c5k9E21xfot/Om2pVdeUOIKEd2gueZRgAP05mVPGTe7sZr+hjRbN
+	 msSlbb3gx0xTS1tc+p4VshVnnCebMylkeI3dqo7j/oXXaRGBQwKy2oG7DSnAASuaBI
+	 NXifTAesbETyi4L+XnQFRvw8stlBILzA1S41Q/i3JDk1jQDrlX+2VltoHRXz/VQe+V
+	 ey1co8Qk/VpLg==
+Received: from ksmg01.maxima.ru (mail.maxima.ru [81.200.124.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
+	by ksmg01.maxima.ru (Postfix) with ESMTPS;
+	Tue, 25 Mar 2025 17:18:45 +0300 (MSK)
+Received: from db126-1-abramov-14-d-mosos.mti-lab.com (172.25.20.118) by
+ mmail-p-exch01.mt.ru (81.200.124.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Tue, 25 Mar 2025 17:18:43 +0300
+From: Ivan Abramov <i.abramov@mt-integration.ru>
+To: "David S. Miller" <davem@davemloft.net>
+CC: Ivan Abramov <i.abramov@mt-integration.ru>, Jakub Kicinski
+	<kuba@kernel.org>, <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH net 3/4] cfg80211: Avoid calling WARN_ON() on -ENOMEM in cfg80211_switch_netns()
+Date: Tue, 25 Mar 2025 17:17:22 +0300
+Message-ID: <20250325141723.499850-4-i.abramov@mt-integration.ru>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250325141723.499850-1-i.abramov@mt-integration.ru>
+References: <20250325141723.499850-1-i.abramov@mt-integration.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 00/10] Add generic DRM-shmem memory shrinker (part 1)
-To: Dmitry Osipenko <dmitry.osipenko@collabora.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Gerd Hoffmann <kraxel@redhat.com>, Qiang Yu <yuq825@gmail.com>,
- Steven Price <steven.price@arm.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com
-References: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[collabora.com,gmail.com,ffwll.ch,linux.intel.com,kernel.org,amd.com,redhat.com,arm.com,imgtec.com];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: mmail-p-exch02.mt.ru (81.200.124.62) To
+ mmail-p-exch01.mt.ru (81.200.124.61)
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
+X-KSMG-AntiSpam-Envelope-From: i.abramov@mt-integration.ru
+X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {rep_avail}, {Tracking_from_domain_doesnt_match_to}, mt-integration.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;81.200.124.61:7.1.2;ksmg01.maxima.ru:7.1.1;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 81.200.124.61
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 192091 [Mar 25 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/03/25 08:37:00 #27838357
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 7
 
-I've looked through this before, so
+It's pointless to call WARN_ON() in case of an allocation failure in
+device_rename(), since it only leads to useless splats caused by deliberate
+fault injections, so avoid it.
 
-Acked-by: Thomas Zimmermann <tzimmermann@suse.d>
+Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
 
-for the series.
+Fixes: 04600794958f ("cfg80211: support sysfs namespaces")
+Signed-off-by: Ivan Abramov <i.abramov@mt-integration.ru>
+---
+ net/wireless/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Am 22.03.25 um 22:25 schrieb Dmitry Osipenko:
-> Hi,
->
-> This a continuation of a year-old series that adds generic DRM-shmem
-> shrinker [1]. The old series became too big with too many patches, more
-> reasonable to split it up into multiple smaller patchsets. Here is
-> the firtst part that makes preparatory DRM changes.
->
-> [1] https://lore.kernel.org/dri-devel/20240105184624.508603-1-dmitry.osipenko@collabora.com/
->
-> Changelog:
->
-> v20:- Rebased on recent drm-misc. Added r-bs that were given to v19.
->
-> Dmitry Osipenko (10):
->    drm/gem: Change locked/unlocked postfix of drm_gem_v/unmap() function
->      names
->    drm/gem: Add _locked postfix to functions that have unlocked
->      counterpart
->    drm/gem: Document locking rule of vmap and evict callbacks
->    drm/shmem-helper: Make all exported symbols GPL
->    drm/shmem-helper: Refactor locked/unlocked functions
->    drm/shmem-helper: Remove obsoleted is_iomem test
->    drm/shmem-helper: Add and use pages_pin_count
->    drm/shmem-helper: Use refcount_t for pages_use_count
->    drm/shmem-helper: Switch drm_gem_shmem_vmap/vunmap to use pin/unpin
->    drm/shmem-helper: Use refcount_t for vmap_use_count
->
->   drivers/gpu/drm/drm_client.c                  |  10 +-
->   drivers/gpu/drm/drm_gem.c                     |  26 ++--
->   drivers/gpu/drm/drm_gem_framebuffer_helper.c  |   6 +-
->   drivers/gpu/drm/drm_gem_shmem_helper.c        | 145 +++++++++---------
->   drivers/gpu/drm/drm_internal.h                |   4 +-
->   drivers/gpu/drm/drm_prime.c                   |   4 +-
->   drivers/gpu/drm/imagination/pvr_gem.c         |   4 +-
->   drivers/gpu/drm/lima/lima_gem.c               |   4 +-
->   drivers/gpu/drm/lima/lima_sched.c             |   4 +-
->   drivers/gpu/drm/panfrost/panfrost_drv.c       |   2 +-
->   drivers/gpu/drm/panfrost/panfrost_dump.c      |   4 +-
->   .../gpu/drm/panfrost/panfrost_gem_shrinker.c  |   2 +-
->   drivers/gpu/drm/panfrost/panfrost_mmu.c       |   2 +-
->   drivers/gpu/drm/panfrost/panfrost_perfcnt.c   |   6 +-
->   drivers/gpu/drm/panthor/panthor_gem.h         |   4 +-
->   drivers/gpu/drm/panthor/panthor_sched.c       |   4 +-
->   drivers/gpu/drm/tests/drm_gem_shmem_test.c    |  28 ++--
->   include/drm/drm_gem.h                         |  15 +-
->   include/drm/drm_gem_shmem_helper.h            |  45 ++++--
->   19 files changed, 167 insertions(+), 152 deletions(-)
->
-
+diff --git a/net/wireless/core.c b/net/wireless/core.c
+index 828e29872633..7c0ca2fd3b45 100644
+--- a/net/wireless/core.c
++++ b/net/wireless/core.c
+@@ -201,7 +201,7 @@ int cfg80211_switch_netns(struct cfg80211_registered_device *rdev,
+ 	wiphy_net_set(&rdev->wiphy, net);
+ 
+ 	err = device_rename(&rdev->wiphy.dev, dev_name(&rdev->wiphy.dev));
+-	WARN_ON(err);
++	WARN_ON(err && err != -ENOMEM);
+ 
+ 	nl80211_notify_wiphy(rdev, NL80211_CMD_NEW_WIPHY);
+ 
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+2.39.5
 
