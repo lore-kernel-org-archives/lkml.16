@@ -1,87 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E4625A350;
-	Tue, 25 Mar 2025 14:39:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16641197A7A;
+	Tue, 25 Mar 2025 14:40:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742913598; cv=none; b=Wew6N3MUugO7OSdr+vtFNLpYjY5Gk42DnOCvGd/ceQfau+wm88nCwvAG+EMuoSVhGZxh8dmawNJ5+6wirLB83j1tHB5Qe4vTMnRtFcc5Y11cKrNwQ8FUjcB9S+/gjuXGbEIXutciIrOLu4KGpeylwqH1x0s1recW3XAPv7NMU30=
+	t=1742913605; cv=none; b=DIc1rdMX/4Aas1pVKqxb+k+0nIPj2trr+T+uT/leo6qTQaoKrNaPEgndWjy4X29ei7b34wh3CQMlyGeS/DcfH35GQmccBy9Tsw9wLjIMkdo+b0qaNTx/VDDysCnRZdldzVMPEZyD4vuVtF+gfoq5WsYlTheRidjMLBz+lHhc+4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742913598; c=relaxed/simple;
-	bh=oSIxgxWHSnCuXyPzauYk9K0XrvZWwq3e9FzV+AsbbFs=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=FdnYwwsOFeFU83RjEO2+ip6YvVkGVOgt/Ts5VvgTPn31d1Ju5ReHkDlEYXG/vO6w3MdNvPgMAHKjDLN2frX5Aw1bZMqleE/x4cS44sq6EgODmUVBRJjiUw0sfnY2FkaHb82/diUqcv7xREkngZT7m5R+xYbp1sl/Vb/Hje1vyJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Whw2amIY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742913605; c=relaxed/simple;
+	bh=NOu2dEjZjNyRR7ev3N8tyYgYXm16NuUTpuYOhgNGviE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JH1AgdRJ7b3rIMb3Qb8Vdo8y69575aknHBFWVoZF7YI2uH0RORJCDTYfRNwQb992upwG5UsT7izTykJve5OKW/QhDOh7k5EvzaiEXl6X2nOgOClnXEROCepnecx4x+wodRqPuUsg0xnFkqF8q2FYlhCdF53yF8khAuCujOgOxp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AcyWc/R6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Whw2amIY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37AB3C4CEE4;
-	Tue, 25 Mar 2025 14:39:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AcyWc/R6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E87F8C4CEE4;
+	Tue, 25 Mar 2025 14:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742913598;
-	bh=oSIxgxWHSnCuXyPzauYk9K0XrvZWwq3e9FzV+AsbbFs=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Whw2amIYZ0Ps58gmL29Ut7b7aouwcRiW+mfQXIfoKrvHSuYq8O+YCybBwnnB203YY
-	 f3h5yBIc+wM+aNr6W3IUcjwfKsvQF+g50fCNV1iJq8D+FBS0dbG3OMOf0u8adYKTmI
-	 AZIRJY/73Axrm7g35u1WXBSqMn+1fs8r5/G2tMJ2Ptxa6ibRZ3h7VmUBm5bX15PU/C
-	 r00P/NxDBznpnxzhNEod29mwXv+UEdgcIyw7kAYDNKY9cVVqCSGfhuyd9v+IfRwIa/
-	 lTklndOz9s/bB5SvGJaPS/jBE+Zp1m8pi0cE4TvmbIJRHIVmYWRSAPWV/6ALVvGxyY
-	 yZyVFRknjzv7g==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADF2F380CFE7;
-	Tue, 25 Mar 2025 14:40:35 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1742913604;
+	bh=NOu2dEjZjNyRR7ev3N8tyYgYXm16NuUTpuYOhgNGviE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AcyWc/R6Aj3Gt0V/40m326ZlGgq1U+AWyRnu1EK3Oi9qll3sgjc32xj/e472oLNoe
+	 6kYLjmfPCwj58SvMirqbaycnyIRuetgxcM1jBHQ/ZvPJ50r7J67VVEbj4AltmgFr3F
+	 5KEVknu7q3GK4B2ZIVbkyoTEd7kUsPHxMcjgi2ACWbj0SFH1Bdo6v5EJR5egKS0IFa
+	 UWuArncw3ptQS3DuAMVRtE83DlLPKMLU3UiiSQdRzl5xEBnfDJ3DKDfr8rRTI22BNK
+	 kXCsAVzgs3ilAfT1BpmeLDHGZq5A3qPgDEOSvthK/5wOR7iqeGpXoO5e6AcqOLiFr5
+	 7nO7IJLsejlPg==
+Date: Tue, 25 Mar 2025 15:40:01 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Joe Damato <jdamato@fastly.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, linux-fsdevel@vger.kernel.org, 
+	netdev@vger.kernel.org, asml.silence@gmail.com, hch@infradead.org, axboe@kernel.dk, 
+	edumazet@google.com, pabeni@redhat.com, horms@kernel.org, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, "David S. Miller" <davem@davemloft.net>, 
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH vfs/for-next 2/3] splice: Move splice_to_socket to
+ net/socket.c
+Message-ID: <20250325-umkurven-abtauchen-47ab46d2d7f7@brauner>
+References: <20250322203558.206411-1-jdamato@fastly.com>
+ <20250322203558.206411-3-jdamato@fastly.com>
+ <20250324141526.5b5b0773@kernel.org>
+ <Z-HiYx5C_HMWwO14@LQ3V64L9R2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/5] mlx5 misc enhancements 2025-03-19
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174291363452.598629.7996885033125997504.git-patchwork-notify@kernel.org>
-Date: Tue, 25 Mar 2025 14:40:34 +0000
-References: <1742392983-153050-1-git-send-email-tariqt@nvidia.com>
-In-Reply-To: <1742392983-153050-1-git-send-email-tariqt@nvidia.com>
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, andrew+netdev@lunn.ch, gal@nvidia.com,
- leonro@nvidia.com, saeedm@nvidia.com, leon@kernel.org,
- netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org, moshe@nvidia.com, mbloch@nvidia.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z-HiYx5C_HMWwO14@LQ3V64L9R2>
 
-Hello:
-
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Wed, 19 Mar 2025 16:02:58 +0200 you wrote:
-> Hi,
+On Mon, Mar 24, 2025 at 03:53:23PM -0700, Joe Damato wrote:
+> On Mon, Mar 24, 2025 at 02:15:26PM -0700, Jakub Kicinski wrote:
+> > On Sat, 22 Mar 2025 20:35:45 +0000 Joe Damato wrote:
+> > > Eliminate the #ifdef CONFIG_NET from fs/splice.c and move the
+> > > splice_to_socket helper to net/socket.c, where the other splice socket
+> > > helpers live (like sock_splice_read and sock_splice_eof).
+> > > 
+> > > Signed-off-by: Joe Damato <jdamato@fastly.com>
+> > 
+> > Matter of preference, to some extent, but FWIW:
+> > 
+> > Acked-by: Jakub Kicinski <kuba@kernel.org>
 > 
-> This series introduces multiple small misc enhancements from the team to
-> the mlx5 core and Eth drivers.
+> Thanks for the ACK.
 > 
-> Regards,
-> Tariq
-> 
-> [...]
+> It looks like Jens thinks maybe the code should stay where it is and
+> given that it might be more "splice related" than networking, it may
 
-Here is the summary with links:
-  - [net-next,1/5] net/mlx5: Lag, use port selection tables when available
-    https://git.kernel.org/netdev/net-next/c/16ad8394bf31
-  - [net-next,2/5] net/mlx5: fw reset, check bridge accessibility at earlier stage
-    https://git.kernel.org/netdev/net-next/c/ade4794fe893
-  - [net-next,3/5] net/mlx5: Update pfnum retrieval for devlink port attributes
-    https://git.kernel.org/netdev/net-next/c/91e7398e0603
-  - [net-next,4/5] net/mlx5e: CT: Filter legacy rules that are unrelated to nic
-    https://git.kernel.org/netdev/net-next/c/0fe234769ea6
-  - [net-next,5/5] net/mlx5e: TC, Don't offload CT commit if it's the last action
-    https://git.kernel.org/netdev/net-next/c/56617e11bd6a
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Uhm, it should stay in fs/ especially since it's closely tied to
+pipe_lock().
