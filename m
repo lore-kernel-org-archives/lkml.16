@@ -1,112 +1,127 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA05257AF3;
-	Tue, 25 Mar 2025 13:56:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742911021; cv=pass; b=oMxZI6qCgVb9ozexfDyzduAzjH+ykHm++WiLwLdr8fBQ/zPbWnRWCdxCg9UVx4QmQE7C8DwQqh0SLlw97BiQouIG0tyK84QqrZkyJdk5lhJmdjdzj2L1EEx6cm9zgGITt7DFFwBUBEOsGFNycLuZR3Cac9GMqFUwi5nNrCNHXsA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742911021; c=relaxed/simple;
-	bh=PXmbI4Ysww4x3hZl3JOeQw3JZ5ni3tMzFhHspd5E3n4=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=nyLqyQVauhCUPIk7H6xP7ZThHMM/ifXgBrkS9SxvaZ0c4E6Q97AHBJylkperhaCx/ZdboxqgL+vwjw5WabUkfc4WopQruZTuKL7tturSY48m0IUgLTjuJhDP4H731lDX7YbWw2g8jINX0NiZZPuRgzOd7I04ZY9Xx3nVVB1Uk+M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=blMlEPYe; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCCC2566FF
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 13:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742911050; cv=none; b=lPS1OXK0aqjRMFwsiUqQf6L3ot6NswOYE4orPv1InY/U8/FHxxihEpyV6RX1GK0fqSF8cWDnO/SBA8bnUQswWTSoy4IJ2DWICXf0i/C24IutiyVWG1xsk5PJ/VA9tY2bnSjlweAHObGDSae3xE3+GErZuZfpvDCkE7WZdsUieOE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742911050; c=relaxed/simple;
+	bh=5vmsaVmY7RCeBltG3oaYsLyhH00UvyfSdKrADtgNQsQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=kW7rBpJJLJUBQQ0ztAyhB+WP9f+4xjT7IBeIFvyQz+YsSHrGdbH/J//RLg0Zl4xtaM3dGwjHMfvJDMYOz+FqSA8Ay0o+Ooo1Cu8RhDkj+6px0V58rtoLnwURkwMvrlKcPBsVJzKwO/EZlCPiMx1QLZmbdPY3tdj97yuhmntU/38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=A/HONrhz; arc=none smtp.client-ip=192.134.164.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="blMlEPYe"
-ARC-Seal: i=1; a=rsa-sha256; t=1742910993; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=c6Et2H4HiI04DFJKT0SpWRg5auDzjAgoShuhcHlcf3R6j0IBHntfVnb/tN/o904jFVd/jYUkO4YuHTIyKWiaGy8j3bSIYo1TU+4yj2MNVDEfGEfWFEo9aPsnjPg1h5+XoAX03Q2mXecnkzByQi5SfNmYPeHdnpuDusdkYMsZHMI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1742910993; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=OELQCuc5LfRr+FGbtU0FfFiS0xA0xBZSkdLY+QAiyUs=; 
-	b=ksvroG3X2bqhS029w294zaUO80rr3d7pcA9avVOyD7FQ0q9BH4BxMWr6feyvhVSBX2gXEv2tz2nWoO6D4pjx4eWwhAiWcw2rDbmXxxvBeB6CCj/qqovQ60qANpoVJUMFfT5B33d6Yno4HiZt5lfszulh9D20o7sdIXp06EO6HHA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742910993;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=OELQCuc5LfRr+FGbtU0FfFiS0xA0xBZSkdLY+QAiyUs=;
-	b=blMlEPYeO01FCBcHQmmN0HpTkMmrDgj3wZbkcrVhvMIoocx78z4P6e4SW71rNMnE
-	N3uhwQIUMTB1HaMrS0jmV1YH4f2xf3G5Q7D+SbLbS9IV0z1OQtN88XDLbQn/AdJiwb2
-	01FQqTsQlAfxT5fcWd9ZLbn4rcG5r24+qWTgsobs=
-Received: by mx.zohomail.com with SMTPS id 1742910992311454.9893269642041;
-	Tue, 25 Mar 2025 06:56:32 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="A/HONrhz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=39LmuDI9bOxMy0VVpRTL66OIPOopihwRPhpHSWSa6GI=;
+  b=A/HONrhz8qXm5ONveFdISU4jX4UvXz/Gc1mUpyPQl+RjDg0O2v1DPKo4
+   K7nFJQyFxe4L0cO8YTlvjSWcqvEBVlL0q+bWsecPqJGbgboyH+rW6vxuy
+   7WsituMwgC2QJUys0Ro95r2IDbIbbBswpVUdj0wiI/xMIdyKtRye6zjmn
+   M=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.14,275,1736809200"; 
+   d="scan'208";a="214672416"
+Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 14:57:26 +0100
+Date: Tue, 25 Mar 2025 14:57:26 +0100 (CET)
+From: Julia Lawall <julia.lawall@inria.fr>
+To: Erick Karanja <karanja99erick@gmail.com>
+cc: gregkh@linuxfoundation.org, outreachy@lists.linux.dev, 
+    philipp.g.hortmann@gmail.com, davidzalman.101@gmail.com, 
+    vivek6429.ts@gmail.com, viro@zeniv.linux.org.uk, 
+    linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: rtl8723bs: Rename variables
+In-Reply-To: <20250325124712.47577-1-karanja99erick@gmail.com>
+Message-ID: <36f86d43-9c0-56fd-372a-87d8637e9377@inria.fr>
+References: <20250325124712.47577-1-karanja99erick@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH v4 06/11] scripts: generate_rust_analyzer.py: use
- str(pathlib.Path)
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250322-rust-analyzer-host-v4-6-1f51f9c907eb@gmail.com>
-Date: Tue, 25 Mar 2025 10:56:16 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Boris-Chengbiao Zhou <bobo1239@web.de>,
- Kees Cook <kees@kernel.org>,
- Fiona Behrens <me@kloenk.dev>,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Lukas Wirth <lukas.wirth@ferrous-systems.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <32FF4399-D3BB-4F41-A103-CC41290CDA3A@collabora.com>
-References: <20250322-rust-analyzer-host-v4-0-1f51f9c907eb@gmail.com>
- <20250322-rust-analyzer-host-v4-6-1f51f9c907eb@gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
 
 
-> On 22 Mar 2025, at 10:23, Tamir Duberstein <tamird@gmail.com> wrote:
->=20
-> Use the `/` operator on `pathlib.Path` rather than directly crafting a
-> string. This is consistent with all other path manipulation in this
-> script.
->=20
-> Reviewed-by: Fiona Behrens <me@kloenk.dev>
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+On Tue, 25 Mar 2025, Erick Karanja wrote:
+
+> Rename the variable `mediaStatus` to `media_status` and variable
+> `lpsVal` to `lps_val` to adhere to Linux kernel coding
+> standards by using snake_case instead of CamelCase.
+>
+> Fixes checkpatch.pl warning:
+> 	CHECK: Avoid CamelCase: <mediaStatus>
+> 	CHECK: Avoid CamelCase: <lpsVal>
+>
+> Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
 > ---
-> scripts/generate_rust_analyzer.py | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/scripts/generate_rust_analyzer.py =
-b/scripts/generate_rust_analyzer.py
-> index 0772ea309f94..1ee079c6d916 100755
-> --- a/scripts/generate_rust_analyzer.py
-> +++ b/scripts/generate_rust_analyzer.py
-> @@ -123,7 +123,7 @@ def generate_crates(
->         proc_macro_crate: ProcMacroCrate =3D {
->             **crate,
->             "is_proc_macro": True,
-> -            "proc_macro_dylib_path": =
-f"{objtree}/rust/{proc_macro_dylib_name}",
-> +            "proc_macro_dylib_path": str(objtree / "rust" / =
-proc_macro_dylib_name),
->         }
->         register_crate(proc_macro_crate)
->=20
->=20
-> --=20
-> 2.48.1
->=20
->=20
+>  drivers/staging/rtl8723bs/core/rtw_btcoex.c | 14 ++++++--------
+>  1 file changed, 6 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_btcoex.c b/drivers/staging/rtl8723bs/core/rtw_btcoex.c
+> index d54095f50113..27dfd00b4249 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_btcoex.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_btcoex.c
+> @@ -8,14 +8,14 @@
+>  #include <rtw_btcoex.h>
+>  #include <hal_btcoex.h>
+>
+> -void rtw_btcoex_MediaStatusNotify(struct adapter *padapter, u8 mediaStatus)
+> +void rtw_btcoex_MediaStatusNotify(struct adapter *padapter, u8 media_status)
+>  {
+> -	if ((mediaStatus == RT_MEDIA_CONNECT)
+> +	if ((media_status == RT_MEDIA_CONNECT)
+>  		&& (check_fwstate(&padapter->mlmepriv, WIFI_AP_STATE) == true)) {
+>  		rtw_hal_set_hwreg(padapter, HW_VAR_DL_RSVD_PAGE, NULL);
+>  	}
+>
+> -	hal_btcoex_MediaStatusNotify(padapter, mediaStatus);
+> +	hal_btcoex_MediaStatusNotify(padapter, media_status);
+>  }
+>
+>  void rtw_btcoex_HaltNotify(struct adapter *padapter)
+> @@ -52,21 +52,19 @@ void rtw_btcoex_RejectApAggregatedPacket(struct adapter *padapter, u8 enable)
+>  void rtw_btcoex_LPS_Enter(struct adapter *padapter)
+>  {
+>  	struct pwrctrl_priv *pwrpriv;
+> -	u8 lpsVal;
+> -
+> +	u8 lps_val;
+>
+>  	pwrpriv = adapter_to_pwrctl(padapter);
+>
+>  	pwrpriv->bpower_saving = true;
+> -	lpsVal = hal_btcoex_LpsVal(padapter);
+> -	rtw_set_ps_mode(padapter, PS_MODE_MIN, 0, lpsVal, "BTCOEX");
+> +	lps_val = hal_btcoex_LpsVal(padapter);
+> +	rtw_set_ps_mode(padapter, PS_MODE_MIN, 0, lps_val, "BTCOEX");
+>  }
+>
+>  void rtw_btcoex_LPS_Leave(struct adapter *padapter)
+>  {
+>  	struct pwrctrl_priv *pwrpriv;
+>
+> -
 
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>=
+You seem to have done something else here.
+
+Were there two blank lines in the original code?
+
+julia
+
+>  	pwrpriv = adapter_to_pwrctl(padapter);
+>
+>  	if (pwrpriv->pwr_mode != PS_MODE_ACTIVE) {
+> --
+> 2.43.0
+>
+>
+>
