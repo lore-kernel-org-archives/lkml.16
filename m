@@ -1,191 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D65BA53;
-	Tue, 25 Mar 2025 01:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FD7BA53;
+	Tue, 25 Mar 2025 01:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742866315; cv=none; b=ZLyXcaN7Jy+kg41L5gRGsLm53L+rGaoFt1pTRmJoc17udL2R6SwTjTVFWzC1/DnzQBv4nSLYr45+NdW80rDdklneTzboxJwL8OynDiG3daF9mJ2pJBUQpFA9L+shbdBe10JxsxxbmvZvumMdqkft3hxJzvl/JJiCTFLedfwckPA=
+	t=1742866398; cv=none; b=g+VO2C13/2/5dOg/hKhpRMoNNugoWXw3DxJlc6pTiSVn4PN/w5DgTHrl2lIQsLkR2kwUli97ylcYyHU/kre4zV8GyGohFykdMucI+zlURQsD/COu/1fYH8OJMZPQmyF3d5BmLGdk4fva9TE7JHI5eqeJ1ifVzVNwtNIxNCc+s28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742866315; c=relaxed/simple;
-	bh=m9o5uIA7KuvW5DNvB+jxx0/ZMRcYVE9NeLZeHBADx4w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qhKhyba3xLqnqhSODyXfSqX+Mdtx1RZUKftDoETuW/E7HwZSXgDpV+ZaKz0EyVTE7ReAjs25ELrNdKM3miWkwfZQVe1vPNqgC7sGLrbfARPTPPd1IRJ7YYMCMSPYKvZ8k0Fe5Qdl69m+Xkb29khY9qz+SMvCSLUjC9k0gJtNloY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGE+m4Ng; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742866398; c=relaxed/simple;
+	bh=dBaOEme30YRUdSk2oIRZi23qL/4FGjEpNPquQLSQKIA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JBhRt0eAAPAXvBfxwe5EImJOsTSVqFJy3CKScCwtWRmUah92EBISUil2ZZRhwUMZtVzB9N02RGgFlO0ndB/w6Ht0NP2EEZG3VNr8id2npbAvaDQoEW4o93rJUCqooI9mRAmptreZPW3j+6OiUFrajojDDS1mQm/5/A+ov1Lpkjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C1txE17V; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eGE+m4Ng"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A3BCC4CEDD;
-	Tue, 25 Mar 2025 01:31:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742866314;
-	bh=m9o5uIA7KuvW5DNvB+jxx0/ZMRcYVE9NeLZeHBADx4w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eGE+m4NgZPGMDWStEwsLiyyEvTPRksiuvO8cI2s7h9i6xhGwEkbtwp1KrLu512EKm
-	 dXNtymhU24dfYDw4da8e+7mgFgvKSadupLJ+pl0Z052Zzv/QkJPKU9mBF3SrI3I7GE
-	 Wsx9Ze1fyB7KaxRKRxmnlXX3oKWtK1joWdk0Srnez+mVUVi7r6syYtfQwNTQJBh6Nm
-	 GvVtjnNBZzegczV3EQgY2Pgb2Of8Vleb3/Ny2P2c27Mm0BfaQ4GwefmtJRUr6KVa9b
-	 Bo5YGcx8ITSxVh+r6xYY2NfoAuKwsjnpAwLpenpjUK1AGit3CLIAvT6SSQL7/o/GoZ
-	 uwtW/TytbAYJA==
-Message-ID: <3dec3def-df4b-49ac-8102-01118b793798@kernel.org>
-Date: Mon, 24 Mar 2025 20:31:51 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C1txE17V"
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-524038ba657so4922714e0c.0;
+        Mon, 24 Mar 2025 18:33:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742866395; x=1743471195; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dBaOEme30YRUdSk2oIRZi23qL/4FGjEpNPquQLSQKIA=;
+        b=C1txE17Vtf59xrIhIpHLcrMxE//2bfWOjxw4p4tZ/3xqdqwMsGO6e6oJuykrvOfwVB
+         fYH0InX8ec7MMOnfi44649k/vsSXEEuQ4JxsuNQaKp4i0vMNdh71RAsY9BeEAMRbIWfc
+         MHxzfcsw5msEJVJbxauwoK739SUE6v9+7661nT1CsEbCVni1X2boTM5JDRpM0v/nKaJj
+         RYkPxO/I+kD/OYL2TDGcWmkayxU9vupGK0qczBQJIN/0buWQFQXHfj8yQWnu4asPD9G+
+         j0nBqlcx4WzwGaENSk0uGg4ZGhMz0Vo5QKBX53bJ5pUlCV26kOT6lH169RdEnyOxL/dP
+         ap4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742866395; x=1743471195;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dBaOEme30YRUdSk2oIRZi23qL/4FGjEpNPquQLSQKIA=;
+        b=HTJdS01cvbA39rfSzOYwGMLeQ4XE1YIpqS6pQTo4hV876Y2oe0qP9iOJ4fMLAHVJmp
+         3Rm2PLqEalmhLUNlo771U4PACUx2mTkok0h175Q1bPMYUPiUfkr99ICJd5mp+BBMDdwj
+         cFMihd6+Yr9+2f/5l3Rz1mQxP1gMpHqq9fmV99p4wzwuuTD8qnwt0MqXROokPLLIOyvL
+         nlydO+Oahq2FsrUyK7N0E4OcHhuFSnrJFZB8ETrkJpNNB5fHTXRAWcG1kexSJfujiGbv
+         0doRO9d1slBuZL0ghA25UPmefK/GFrl33wi02ejsU1H+DXnuK0JdiIe6weSk5WiHHzKR
+         mIoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX8yJIrrKHugpLlxQqqJAmVq8wnGvJIeonPZU0bp/Er08p+HLjrXJcDGYrmEYsHmLzEClSNqfDLVzui1dhoaA==@vger.kernel.org, AJvYcCXC6F8qwXmwHyIfBr4PzNw6WQetVd/Xu8q6+5d6ZeGYAibPhmch/vTNEJ6aK2ITalB+An4gtoYg9i1VOhop@vger.kernel.org, AJvYcCXMJbRzCBiSGgZFfRDp7jXIXovrSCxoBfDI7ddpUNzIxal8SDpMj8CQUGo7wqO0xzX4vUjjwiqXfZJyOelI@vger.kernel.org
+X-Gm-Message-State: AOJu0YwN4LTwmZfwk+YF4DqeCRzcQNvIlpGDTdsnfXwNXt4jSm3dfP0k
+	p5txb0S5RxNVXCvDQSyzdDSgnxsyhLQXfvGolY3e4mWhQEscNxqZ+AF6v8ape9Bjfu+OupMUYpc
+	r6XdqPGwv5xMuWFfz5vycHSI7M2A=
+X-Gm-Gg: ASbGnctFeCslk+M23pS+P8rZGlkX0dFokJpH48IooNtHUYzX7gi1sn/i+/0s35sNR4S
+	kaSaWW5fYfH1eyZFe7dwg60r8CvEdE+KOuwDFtUPIutQk72TYRdjbZ7kaZTY2ks1cdLlNSLHuzM
+	60GUFJH2MeHWJWvhmNvQURyhUh3Oc=
+X-Google-Smtp-Source: AGHT+IFcKyGrmwFeZOkZfUk6dgLpT20Raubjmbigh65PTf9Zgys4T3/kl6TOrYJigHLNClVGpmixmCpg85sh5NXU7bA=
+X-Received: by 2002:ac5:c9bc:0:b0:523:771e:8b81 with SMTP id
+ 71dfb90a1353d-52595ec0b28mr10952976e0c.7.1742866394818; Mon, 24 Mar 2025
+ 18:33:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/5] cpufreq/amd-pstate: Add dynamic energy performance
- preference
-To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
- "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
- Perry Yuan <perry.yuan@amd.com>
-Cc: "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
- <linux-kernel@vger.kernel.org>,
- "open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250321022858.1538173-1-superm1@kernel.org>
- <20250321022858.1538173-2-superm1@kernel.org>
- <186c3fa4-fe85-4989-9edd-fdb6345859a9@amd.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <186c3fa4-fe85-4989-9edd-fdb6345859a9@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <CAHOo4gLWAbArwg+w+AqqkxGmOFX6cm8Tvy85tb4igN6V7Z9BZQ@mail.gmail.com>
+ <20250324170046.GA19087@google.com> <rs7ocmzcqkwf3ac6spqvign6rov2ecqef3bu2dzeg6y6ryvv7x@4c47km4r5iqb>
+In-Reply-To: <rs7ocmzcqkwf3ac6spqvign6rov2ecqef3bu2dzeg6y6ryvv7x@4c47km4r5iqb>
+From: Hui Guo <guohui.study@gmail.com>
+Date: Tue, 25 Mar 2025 09:33:03 +0800
+X-Gm-Features: AQ5f1JpqKL-h73MdjIF1-5BnHK1FjqGccZpWWAyLvdauIRBJVCsC8gDEKSFQXUE
+Message-ID: <CAHOo4gKENirYHJ40sU3LBQv9MPic9umz3+g8DcTGzX+LEn7Uog@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in poly1305_update_arch
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Eric Biggers <ebiggers@kernel.org>, linux-bcachefs@vger.kernel.org, 
+	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/24/2025 03:19, Dhananjay Ugwekar wrote:
-> On 3/21/2025 7:58 AM, Mario Limonciello wrote:
->> From: Mario Limonciello <mario.limonciello@amd.com>
->>
->> Dynamic energy performance preference will change the EPP profile
->> based on whether the machine is running on AC or DC power.
->>
->> A notification chain from the power supply core is used to adjust
->> EPP values on plug in or plug out events.
->>
->> For non-server systems:
->>      * the default EPP for AC mode is `performance`.
->>      * the default EPP for DC mode is `balance_performance`.
->>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->> v3->v4:
->>   * Handle Kconfig not being set
->>   * Fix dynamic epp default on server
->> v2-v3:
->>   * Fix typo in Kconfig
->> v1->v2:
->>   * Change defaults to performance (AC) and balance_performance (DC)
->>   * Default Kconfig to disabled for now
->>   * Rebase on latest branch
->> ---
->>   Documentation/admin-guide/pm/amd-pstate.rst |  18 ++-
->>   drivers/cpufreq/Kconfig.x86                 |  12 ++
->>   drivers/cpufreq/amd-pstate.c                | 135 +++++++++++++++++++-
->>   drivers/cpufreq/amd-pstate.h                |   5 +-
->>   4 files changed, 161 insertions(+), 9 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/pm/amd-pstate.rst b/Documentation/admin-guide/pm/amd-pstate.rst
->> index 412423c54f258..2e076650dc77c 100644
->> --- a/Documentation/admin-guide/pm/amd-pstate.rst
->> +++ b/Documentation/admin-guide/pm/amd-pstate.rst
->> @@ -289,7 +289,7 @@ and user can change current preference according to energy or performance needs
->>   Please get all support profiles list from
->>   ``energy_performance_available_preferences`` attribute, all the profiles are
->>   integer values defined between 0 to 255 when EPP feature is enabled by platform
->> -firmware, if EPP feature is disabled, driver will ignore the written value
->> +firmware, but if the dynamic EPP feature is enabled, driver will block writes.
->>   This attribute is read-write.
->>   
->>   ``boost``
->> @@ -311,6 +311,22 @@ boost or `1` to enable it, for the respective CPU using the sysfs path
->>   Other performance and frequency values can be read back from
->>   ``/sys/devices/system/cpu/cpuX/acpi_cppc/``, see :ref:`cppc_sysfs`.
->>   
->> +Dynamic energy performance profile
->> +==================================
->> +The amd-pstate driver supports dynamically selecting the energy performance
->> +profile based on whether the machine is running on AC or DC power.
->> +
->> +Whether this behavior is enabled by default with the kernel config option
->> +`CONFIG_X86_AMD_PSTATE_DYNAMIC_EPP`. This behavior can also be overridden
->> +at runtime by the sysfs file ``/sys/devices/system/cpu/cpufreq/policyX/dynamic_epp``.
-> 
-> The file is actually located at "/sys/devices/system/cpu/amd_pstate/dynamic_epp"
-> 
->> +
->> +When set to enabled, the driver will select a different energy performance
->> +profile when the machine is running on battery or AC power.
->> +When set to disabled, the driver will not change the energy performance profile
->> +based on the power source and will not react to user desired power state.
->> +
->> +Attempting to manually write to the ``energy_performance_preference`` sysfs
->> +file will fail when ``dynamic_epp`` is enabled.
->>   
->>   ``amd-pstate`` vs ``acpi-cpufreq``
->>   ======================================
-> [snip]
->> @@ -1502,9 +1611,15 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
->>   			return ret;
->>   		WRITE_ONCE(cpudata->cppc_req_cached, value);
->>   	}
->> -	ret = amd_pstate_set_epp(policy, cpudata->epp_default);
->> +
->> +	if (dynamic_epp) {
->> +		policy->policy = CPUFREQ_POLICY_PERFORMANCE;
-> 
-> So, we are allowing the dynamic EPP framework to modify the EPP value in performance
-> governor as well? Shouldn't we allow dynamic_epp only with powersave governor.
+https://raw.githubusercontent.com/androidAppGuard/KernelBugs/refs/heads/mai=
+n/586de92313fcab8ed84ac5f78f4d2aae2db92c59/my.config
+you can try this config to build the kernel image. I reproduce this
+issue in 586de92313fcab8ed84ac5f78f4d2aae2db92c59 (kernel commit) by
+the above my.config.
 
-You're right; I was trying to avoid issues in 
-amd_pstate_epp_set_policy() but I'll come up with a way to correct this.
+Kent Overstreet <kent.overstreet@linux.dev> =E4=BA=8E2025=E5=B9=B43=E6=9C=
+=8825=E6=97=A5=E5=91=A8=E4=BA=8C 02:06=E5=86=99=E9=81=93=EF=BC=9A
 
-> 
->> +		ret = amd_pstate_set_dynamic_epp(policy);
->> +	}
->> +	else
->> +		ret = amd_pstate_set_epp(policy, amd_pstate_get_balanced_epp(policy));
->>   	if (ret)
->> -		return ret;
->> +		goto free_cpudata1;
->>   
->>   	current_pstate_driver->adjust_perf = NULL;
->>   
->> @@ -1521,6 +1636,8 @@ static void amd_pstate_epp_cpu_exit(struct cpufreq_policy *policy)
->>   	struct amd_cpudata *cpudata = policy->driver_data;
->>   
->>   	if (cpudata) {
->> +		if (cpudata->dynamic_epp)
->> +			amd_pstate_clear_dynamic_epp(policy);
->>   		kfree(cpudata);
->>   		policy->driver_data = NULL;
->>   	}
->> @@ -1556,6 +1673,10 @@ static int amd_pstate_epp_set_policy(struct cpufreq_policy *policy)
->>   	if (!policy->cpuinfo.max_freq)
->>   		return -ENODEV;
->>   
->> +	/* policy can't be changed to powersave policy while dynamic epp is enabled */
->> +	if (policy->policy == CPUFREQ_POLICY_POWERSAVE && cpudata->dynamic_epp)
->> +		return -EBUSY;
->> +
->>   	cpudata->policy = policy->policy;
->>   
->>   	ret = amd_pstate_epp_update_limit(policy);
->> diff --git a/drivers/cpufreq/amd-pstate.h b/drivers/cpufreq/amd-pstate.h
->> index fbe1c08d3f061..6882876f895de 100644
->> --- a/drivers/cpufreq/amd-pstate.h
->> +++ b/drivers/cpufreq/amd-pstate.h
->> @@ -104,7 +104,10 @@ struct amd_cpudata {
->>   	/* EPP feature related attributes*/
->>   	u32	policy;
->>   	bool	suspended;
->> -	u8	epp_default;
->> +	u8	epp_default_ac;
->> +	u8	epp_default_dc;
->> +	bool	dynamic_epp;
->> +	struct notifier_block power_nb;
->>   };
->>   
->>   /*
-> 
-
+>
+> On Mon, Mar 24, 2025 at 05:00:46PM +0000, Eric Biggers wrote:
+> > This is a bcachefs issue.
+> >
+> > +linux-bcachefs@vger.kernel.org
+> >
+> > In the future, when fuzzing a filesystem please direct any bugs found d=
+irectly
+> > to the mailing list for the corresponding filesystem.
+>
+> This is also one I've been unable to reproduce, so if anyone knows what
+> does it (kernel config opts?) so I can repro it in ktest - please let me
+> know
