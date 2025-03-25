@@ -1,235 +1,117 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81252F3B;
-	Tue, 25 Mar 2025 07:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00321FE471;
+	Tue, 25 Mar 2025 07:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742889244; cv=none; b=qCUmsO5yfOMhs3thGdrlVB10iJkd3XT8C+r33SujkOPszq6roiuqJydK5wGbWhaSWMGuP1KnYwH7/7sZ0/kgBecP5ipDliKyzUZD/cxxRTNnd48L939MmabYhUuESpIa5IhL/RhS4r5HHRH4+rP94bNTJaSA7zRwjrlBkrAWEP0=
+	t=1742889306; cv=none; b=gKB0AuOqX6DNbQnTsQ3dflogGCcAqSJzdiMu80pSkRRG+2FN9PtQ2+/lys/NecAcBrzTe4usDNQT5QW4ojoTxk4q7KeruliR8zzeR5hhHeoZBvt3gPf2QonoovSFRhddqov1K5fvE+7BWn9onmz4gRyE88bgK6w5jPDvcHPijlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742889244; c=relaxed/simple;
-	bh=nv8XnlMoWya6RpbUM5hM8CzPqW2uvCzmutE7V3gsdoE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SQjmL2hopsJ17aIAR1eCQN/rlO2q9j894Gmu0QXU0HBlp6Gh3f5Rkatlit1BtJp/0GUagRfxsb9om24PpG2XR9HyODoGH7rLGPnPg2r54QJKFU9Rmr+/HRLEe9ucYaQDtSp3TiDB3EvMFUJPj2RgePrFruJIhZ4FaYBbpNxYh/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ExuuBygq; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1742889306; c=relaxed/simple;
+	bh=tim0CjBCZCUNSYsfdqpjhc5M/8LJk7xy34yXEObHoD4=;
+	h=Message-ID:Date:Content-Type:MIME-Version:From:To:Cc:Subject; b=BxVLlcGqj8do2EOYKVE5UHPsBG9vL752L7c7iuLDlHFYFKRhYx5V80AtTiV86io3DVNK6Sj/D2QZuzodeWR4rP3XvUJqQ8OIbsVNHTSWJtm2AaCemb/JaUcQlV2SYevyGuEGDWVzU4mdMQfjiLywUehqvw19WGcYHohyjCqDAl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XqFJ6SZG; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ExuuBygq"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52P5vqLj031215;
-	Tue, 25 Mar 2025 07:53:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	UuhqFYXWqEuAqwd9bgdRuMVFJzVyDmZNuTQjWT4BAbU=; b=ExuuBygqabyhiBlB
-	vCawFzgsYKe8CENpHD8rdcOj6pw23xY59DROqI+/bh/dNKgTvhED13EbFboe8EzE
-	k0coDOl8jDCFNmnu+Nnny2e3OJeWibu1lubts4L8kpCJyIRi+fULwh/dIGdWawDp
-	YHEhqN/KxeGpI5NSzLq+fJT9mMihjGGAXx0f7tYI+qoG+Zpa+vrvUBrtzPxRXH+O
-	b4GgaetWDyddUYHBJcE7qyTJ3ezJQB9YhrXpTsPwAi7Lnfflr/NvZz4Lv1f4PrCh
-	1iO/jkq85ZKBb023+CbrWzw30iM/kGrN6BJ2/qYjTk1b9rNhO03XP8hCF8XHDms9
-	QvpOmg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45hm79q07x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Mar 2025 07:53:58 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52P7rvmA016738
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Mar 2025 07:53:57 GMT
-Received: from localhost.localdomain (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 25 Mar 2025 00:53:53 -0700
-From: Stone Zhang <quic_stonez@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_miaoqing@quicinc.com>,
-        <quic_zhichen@quicinc.com>, <quic_yuzha@quicinc.com>,
-        Stone Zhang
-	<quic_stonez@quicinc.com>
-Subject: [PATCH v4 2/2] arm64: dts: qcom: qcs8300-ride: enable WLAN on qcs8300-ride
-Date: Tue, 25 Mar 2025 15:53:31 +0800
-Message-ID: <20250325075331.1662306-3-quic_stonez@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250325075331.1662306-1-quic_stonez@quicinc.com>
-References: <20250325075331.1662306-1-quic_stonez@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XqFJ6SZG"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6e17d3e92d9so41379736d6.1;
+        Tue, 25 Mar 2025 00:55:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742889304; x=1743494104; darn=vger.kernel.org;
+        h=subject:cc:to:from:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PWvyL5zaWl1iiCY61g6KYx0pemuqXQhwV74VbVAQYeI=;
+        b=XqFJ6SZGajbYjAuirkkiaUQ8twxx8De3StcuyvmYdHHJrB1bLKyawD35BkLqTzkrI2
+         +LbcpCvYnKgtywisHF7QAJDeRBDWAw61SO8WhDsMjFcxxVioHX6BjL1DsZyTe4P5fm+Y
+         AOdijbRKmDb9KUI7xV7dz1+PIIQQ1fIe5NnVc1IUa2MAKaU46EucqBwHwNYn2g75tm3e
+         oRCLKcplsqFZcYKgjPZl4jrW/9Y5r5/T2I/baCSsmZCNuVCytKqQg6/9RkeRWl1obEtL
+         lI0ypvlEpzI4WckNyxIwqSDlYUITz0QxNNjQgHkitPpqz6qjmoIGFRVyaHsN90pM1oS6
+         VhBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742889304; x=1743494104;
+        h=subject:cc:to:from:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PWvyL5zaWl1iiCY61g6KYx0pemuqXQhwV74VbVAQYeI=;
+        b=UbMV8wiz0ktyKGkcLridZPy9+KGkRy88QmvK23qpJh0L7jdhsOYfrZ7IrPVnBfmfS4
+         BvfSWMqNAE7DWPFyYoZsPPH11EB2Ypao1TfNiEGeBXiA9Wg2s2EQOupwR3y2vGFqT6ic
+         Z+lQoO+D1PU5DMwswN0xMOFjotBkKnAk+jr55DvZcB/UkIUzxIVBp0WGpPSKLTLE1r8W
+         5Sn/TUKYMGOs3Zl+gnxiEgNsO5Bg+ysm4jXR+DmkfTX8qJ1tVXcPqVvFCvHqRRWsqlcP
+         w5yFbBhPfmY4JtUVMmsXSRWIhjwvLgE+juQfIlONjtd0KViRBJ+x1I5aTxBpFUEBux6o
+         ANIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUNowKZ0oUEt9hg5D3ocyo3sbQEJs6IykFB7D8Ot64eWoNxpz+l2n3L5zzjGF0Ye+s2VfILZgkJjjqz5CA=@vger.kernel.org, AJvYcCXPHRLsSu8onPV0xaQAotgooTB+qjjaJFnMKfao0D4WUmgMFmi0RbuCNVHr+RmO7LzFBprE+P5QSs46Ci0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZRrv2KpjGC95vI9HIFJz0D6QE0YiyqJ+3xro+j4T4j6/feevd
+	TTx41gf46jWrYEsEOek5mdrM3cH+LqkjYrRBx3Bkov5xUo+RRLLl
+X-Gm-Gg: ASbGncuRTSt0ccp5lxRomlOzs5c+KLPg4mrPpeTMjWy3PEsVbo9eW5ivISSb9frrJEk
+	N8e8KcMMqElzyN79bR95rhTzr+lJ025e5gKQ9y3lTyDqWoEuZFrgh13IIG9HnHl11ji+uUqgAn2
+	75oGSbmDkX69XpYyFITlMKyPg609sFPrdvlidcDwemPTq1MXyoHXvGVdMsCjGsuL02xoOCFq73x
+	iHhAeHx2kl9aktinVOMkSjlujX3ot9NNxx4gaMDwR7ax0sntsdvqfmZQEdB/Ki5xjPfQAW3bpLE
+	rxg6jBn+3Xi+qSz7xz04yYMVVl+ofKHuEcMoaYd5S3DLyQHBnPSMUcd+GRKDxgDHGaTD2/CDyJ+
+	F9flvahkuyA==
+X-Google-Smtp-Source: AGHT+IFgkpLgyaIuwi/UunIPUrsPIRmIsJVPGwvLNiNpYyWjTpkB7W61WX2Jz2rW00HVhpv5PQjWIw==
+X-Received: by 2002:a05:6214:194b:b0:6e8:9b52:7a1d with SMTP id 6a1803df08f44-6eb3f27f3a0mr229361886d6.8.1742889303599;
+        Tue, 25 Mar 2025 00:55:03 -0700 (PDT)
+Received: from [127.0.1.1] (c-73-123-232-110.hsd1.ma.comcast.net. [73.123.232.110])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eb3efe0c9csm54518066d6.95.2025.03.25.00.55.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 00:55:03 -0700 (PDT)
+Message-ID: <67e26157.0c0a0220.36adcd.506e@mx.google.com>
+Date: Tue, 25 Mar 2025 00:55:03 -0700 (PDT)
+Content-Type: multipart/mixed; boundary="===============1076553333254439057=="
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: mSVMW7xhnvremKFI2xf3WpipVv8IthsQ
-X-Proofpoint-ORIG-GUID: mSVMW7xhnvremKFI2xf3WpipVv8IthsQ
-X-Authority-Analysis: v=2.4 cv=IKYCChvG c=1 sm=1 tr=0 ts=67e26116 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=dMF3AOKxnUAneYmfqR4A:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-25_03,2025-03-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- phishscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0 spamscore=0
- priorityscore=1501 adultscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503250054
+From: gshahrouzi@gmail.com
+To: laurent.pinchart@ideasonboard.com
+Cc: 
+ hdegoede@redhat.com,mchehab@kernel.org,linux-media@vger.kernel.org,linux-kernel@vger.kernel.org,syzbot+701fc9cc0cb44e2b0fe9@syzkaller.appspotmail.com,skhan@linuxfoundation.org,kernelmentees@lists.linuxfoundation.org
+Subject: [PATCH] media: Fix invalid link creation when source entity has 0
+ pads
 
-Enable WLAN on qcs8300-ride by adding a node for the PMU module
-of the WCN6855 and assigning its LDO power outputs to the existing
-WiFi module.
+--===============1076553333254439057==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-On the qcs8300-ride platform, the corresponding firmware and BDF
-are QCA6698AQ instead of WCN6855, which have been added in the
-20250211 release.
+>From 307209d175be0145e36b9cf95944e2e62afeab11 Mon Sep 17 00:00:00 2001
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Date: Mon, 24 Mar 2025 19:45:55 -0400
+Subject: [PATCH] media: Fix invalid link creation when source entity has 0
+ pads
 
-Signed-off-by: Stone Zhang <quic_stonez@quicinc.com>
+This patch addresses the warning triggered in the media_create_pad_link()
+function, specifically related to the check WARN_ON(source_pad >=
+source->num_pads). The fix proposed adds an additional check to ensure that
+source->num_pads is non-zero before proceeding with the
+media_create_pad_link() function.
+
+Reported-by: syzbot+701fc9cc0cb44e2b0fe9@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=701fc9cc0cb44e2b0fe9
+Tested-by: syzbot+701fc9cc0cb44e2b0fe9@syzkaller.appspotmail.com
+Fixes: a3fbc2e6bb05 ("media: mc-entity.c: use WARN_ON, validate link pads")
+Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/qcs8300-ride.dts | 108 ++++++++++++++++++++++
- 1 file changed, 108 insertions(+)
+ drivers/media/usb/uvc/uvc_entity.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-index 662a6baa9f8e..14aa648fe617 100644
---- a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
-@@ -22,6 +22,88 @@ aliases {
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-+
-+	vreg_conn_1p8: vreg-conn-1p8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vreg_conn_1p8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		startup-delay-us = <4000>;
-+		enable-active-high;
-+		gpio = <&pmm8650au_1_gpios 4 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	vreg_conn_pa: vreg-conn-pa {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vreg_conn_pa";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		startup-delay-us = <4000>;
-+		enable-active-high;
-+		gpio = <&pmm8650au_1_gpios 6 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	wcn6855-pmu {
-+		compatible = "qcom,wcn6855-pmu";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wlan_en_state>;
-+
-+		vddio-supply = <&vreg_conn_pa>;
-+		vddaon-supply = <&vreg_conn_1p8>;
-+		vddpmu-supply = <&vreg_conn_pa>;
-+		vddpmumx-supply = <&vreg_conn_1p8>;
-+		vddpmucx-supply = <&vreg_conn_pa>;
-+		vddrfa0p95-supply = <&vreg_conn_1p8>;
-+		vddrfa1p3-supply = <&vreg_conn_pa>;
-+		vddrfa1p9-supply = <&vreg_conn_1p8>;
-+		vddpcie1p3-supply = <&vreg_conn_pa>;
-+		vddpcie1p9-supply = <&vreg_conn_1p8>;
-+
-+		wlan-enable-gpios = <&tlmm 54 GPIO_ACTIVE_HIGH>;
-+
-+		regulators {
-+			vreg_pmu_rfa_cmn: ldo0 {
-+				regulator-name = "vreg_pmu_rfa_cmn";
-+			};
-+
-+			vreg_pmu_aon_0p59: ldo1 {
-+				regulator-name = "vreg_pmu_aon_0p59";
-+			};
-+
-+			vreg_pmu_wlcx_0p8: ldo2 {
-+				regulator-name = "vreg_pmu_wlcx_0p8";
-+			};
-+
-+			vreg_pmu_wlmx_0p85: ldo3 {
-+				regulator-name = "vreg_pmu_wlmx_0p85";
-+			};
-+
-+			vreg_pmu_btcmx_0p85: ldo4 {
-+				regulator-name = "vreg_pmu_btcmx_0p85";
-+			};
-+
-+			vreg_pmu_rfa_0p8: ldo5 {
-+				regulator-name = "vreg_pmu_rfa_0p8";
-+			};
-+
-+			vreg_pmu_rfa_1p2: ldo6 {
-+				regulator-name = "vreg_pmu_rfa_1p2";
-+			};
-+
-+			vreg_pmu_rfa_1p7: ldo7 {
-+				regulator-name = "vreg_pmu_rfa_1p7";
-+			};
-+
-+			vreg_pmu_pcie_0p9: ldo8 {
-+				regulator-name = "vreg_pmu_pcie_0p9";
-+			};
-+
-+			vreg_pmu_pcie_1p8: ldo9 {
-+				regulator-name = "vreg_pmu_pcie_1p8";
-+			};
-+		};
-+	};
- };
+diff --git a/drivers/media/usb/uvc/uvc_entity.c b/drivers/media/usb/uvc/uvc_entity.c
+index cc68dd24eb42..5397ce76c218 100644
+--- a/drivers/media/usb/uvc/uvc_entity.c
++++ b/drivers/media/usb/uvc/uvc_entity.c
+@@ -43,7 +43,7 @@ static int uvc_mc_create_links(struct uvc_video_chain *chain,
+ 		source = (UVC_ENTITY_TYPE(remote) == UVC_TT_STREAMING)
+ 		       ? (remote->vdev ? &remote->vdev->entity : NULL)
+ 		       : &remote->subdev.entity;
+-		if (source == NULL)
++		if (source == NULL || source->num_pads == 0)
+ 			continue;
  
- &apps_rsc {
-@@ -320,6 +402,25 @@ &pcie1_phy {
- 	status = "okay";
- };
- 
-+&pcie0_port0 {
-+	wifi@0 {
-+		compatible = "pci17cb,1103";
-+		reg = <0x10000 0x0 0x0 0x0 0x0>;
-+
-+		vddrfacmn-supply = <&vreg_pmu_rfa_cmn>;
-+		vddaon-supply = <&vreg_pmu_aon_0p59>;
-+		vddwlcx-supply = <&vreg_pmu_wlcx_0p8>;
-+		vddwlmx-supply = <&vreg_pmu_wlmx_0p85>;
-+		vddrfa0p8-supply = <&vreg_pmu_rfa_0p8>;
-+		vddrfa1p2-supply = <&vreg_pmu_rfa_1p2>;
-+		vddrfa1p8-supply = <&vreg_pmu_rfa_1p7>;
-+		vddpcie0p9-supply = <&vreg_pmu_pcie_0p9>;
-+		vddpcie1p8-supply = <&vreg_pmu_pcie_1p8>;
-+
-+		qcom,calibration-variant = "QC_QCS8300_Ride";
-+	};
-+};
-+
- &qupv3_id_0 {
- 	status = "okay";
- };
-@@ -406,6 +507,13 @@ ethernet0_mdio: ethernet0-mdio-pins {
- 			bias-pull-up;
- 		};
- 	};
-+
-+	wlan_en_state: wlan-en-state {
-+		pins = "gpio54";
-+		function = "gpio";
-+		output-low;
-+		bias-pull-up;
-+	};
- };
- 
- &uart7 {
+ 		remote_pad = remote->num_pads - 1;
 -- 
-2.34.1
+2.43.0
 
+
+--===============1076553333254439057==--
