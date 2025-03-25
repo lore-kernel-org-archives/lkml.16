@@ -1,313 +1,182 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45CF31991D2
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 18:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D239019CC39
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 18:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742927386; cv=none; b=myO7emeLRAGSqvfNXUqgpMfmhrG6FwefwaGWhZVDuluJEJYgNqq3k9EmAJYGvCPxO62ffqi44bgdlpJN5EJmi8yAasL/O5I54sd572u0WKXKH4FkWjY6aZJy182OblVVxjM1oD4+A/EWoO7D4TLstFjAiKtUdGgqqM21i1P/+fQ=
+	t=1742927412; cv=none; b=PS9keEvFdxP+iOPZfftnlUkKek0eZexh4rbPLMN/Ch/+uCF03MONHDLxzcXeBLNBCZvryvgxiAZR5dq6Tl5ln/DRJw1qYv+tcgiEWWmR75ncfk3zJXZaG1CbkxDPL4R+pm6Kp8LqPv0uuHcQsFqjn6J0JNX49VBZAruetSzWuOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742927386; c=relaxed/simple;
-	bh=NuI7FIOIqRGJQoJEUHE4oqATBzjAmNttmo4568EtUFg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sZIRhMahTthoS19abKlgPSFEiBxO0aROn1trtz28r1htG3X9pvm8S0D6t3Ub0uCZEOb3RZuNU1swmIAfKiQY0z2195iVxHMcR+4XueuoHw680834lWzT4yryKhRE0ve1+h1G2ejwEAcC1zynCffAcL5crrkYxFYSUOV5X6yX6fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=awRqFqxo; arc=none smtp.client-ip=209.85.128.180
+	s=arc-20240116; t=1742927412; c=relaxed/simple;
+	bh=Z/9lJhVTBRGnad0GoyXoA1eCrn4cxADU5RuFqiIZpj0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AHXHKi/JnjIuflXNhuOlKx9gxuNZeF+kE7ZP+EW60hCCj/m2aUQdFqRVoy4zamzDTYBH0gNkgLYnuVuCArIFutjQtKkZJSoM9RPdsRCv0wUl5xT3aJxkLMIDUnt1nUuD7xFDSa9ZKwkmT5N/xA9qcV3Cd0W/OKuz+D9MORz98dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JrOdJN/n; arc=none smtp.client-ip=209.85.222.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="awRqFqxo"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6ef7c9e9592so49966457b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 11:29:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JrOdJN/n"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c592764e54so682032385a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 11:30:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742927383; x=1743532183; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1742927408; x=1743532208; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MrcQMqawSQzJcQ5iaIhabL0LanhIuq3ELqb60ctwCEk=;
-        b=awRqFqxoD2DL7XemqCJuLEYi9XLs3B0YsIirdJ53MyQR8b2YivD8EIX/+/SZvoA3xE
-         j2K4CopWhf5DxxByT9xd6Y1nY8kNYY/PA73D5Qf8iPgVXAm5XqsJwW62cz6HOBR/snK0
-         9RyQr8pQoLcW3q3mluh5JSxa6rp5lewkQWki4GqCPvqQEJ0fgcTnU7K2fYgycmyYEkWK
-         eTU+NJUpW20vVtUY4wOfSIyJuZt62G5O8+yFWBE/NET2FGgpqMIdyqdq60/n52CPZ+Gu
-         Cx8LxnC0ecm9gvLZBN+86EZPcVuqMIJP/cfWhPqeSOrMh5x2r6XJzmKynWB7jTJeCF3Y
-         f4cg==
+        bh=y8eKmhB4IFnu/wWz9bz23aTCFYM2BiZ97FbsYtffbs0=;
+        b=JrOdJN/nlBYE3+2gVX6beWB8PzKRfWRY/8t4/vXnVZBf23pOVXAG7FgYCiF3b7kODy
+         SOXdrqzFtLkKtqDtWurnP8jCqhZ+ZzfpH8Pi0PeDhVC4ftXol3hENL3krPkzZ+fdNgvs
+         tu68bVgvJ1lF00Ei8NKWlXcjwW9J4A+B6GGEIiaVbe92sU/zcJHcdjRVy6I899OdJlWd
+         jKFeEzo4WnpP5b1Xv1bo5PF0EeAB5o6hLYeFdTTpQ0dCbKfHDOTn9Irsuk9x8UKzF9Un
+         T/+6jVKQuY8ddd/XmUv61ORFoMJJjEW+1j7n3gWnUExJFAl0aFkdJtfdQmJ0wygKfJvM
+         gEYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742927383; x=1743532183;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1742927408; x=1743532208;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MrcQMqawSQzJcQ5iaIhabL0LanhIuq3ELqb60ctwCEk=;
-        b=jV1UaWdg3vP1R7uQza3HpQM0yMHxDXRw/2OwF1MtzVRDsOsdQkTF4dK1dT8YA8t1CC
-         bVUjyPHpGGffphvf1OyA6gPm6ESuN1jx6a9/okMlMSbh/ECyVmArp4nmH5tAHeDlqfQS
-         kuIgvFdiqMTXNZzSpeLGL18AU0KnZTTy64wAZzWC47kNJmcqJCUJ0uBPuYUEM5CHpR2L
-         KGdFZ9J94dQMBRmvEQmCAdbohoqNd95GqEgbbOVJR0NPlVngmLi7mw5lSpGJnPwkbGx6
-         pWNIMIavAOG3kV9dh4Wb868geXCfNEv4gSsS9E2xUF6BhnPPN+eQgsbI+1eEyiKhxY9A
-         /cMg==
-X-Gm-Message-State: AOJu0YyChXuXuaLi9wEGrAxKyAhDbE/1Dxet31EvA22Bllki5IjY5LLz
-	zPbrK/twSnBgeIU3CBEMzzsFmCrQt8HjKzt39Z2VG4KguiKc6qdw1d/hFEJzOwPg5xNpn+wvhTR
-	30WwP4IvwfhMNKXT+SVdMTSXgsP0=
-X-Gm-Gg: ASbGncvzOJMEVWIr5kHfCWX4gciH0tGFKh3/vAlgUKRcXMybzSAMlXOIxEDMgFfu10V
-	cU9sNir9a9f7brnJtSc08tYXDUG1WATH+unIH8wovaVPabwtBJqlfv7tVfuZlthP9oBd7h4+kNN
-	pdXLm1gut5rBDAQJrn/wZZwwEW
-X-Google-Smtp-Source: AGHT+IGSYmYgheX9gYmSYWZVtqE6/0HkKR1jPp2CwbNY9HGr77Lm7kMi0w0OpRvDpWIHY8B30zbphEO20QwIKfu/s4A=
-X-Received: by 2002:a05:690c:640d:b0:6fb:b4e7:1471 with SMTP id
- 00721157ae682-700babf5ec9mr217278727b3.7.1742927382961; Tue, 25 Mar 2025
- 11:29:42 -0700 (PDT)
+        bh=y8eKmhB4IFnu/wWz9bz23aTCFYM2BiZ97FbsYtffbs0=;
+        b=ISVPY4Hu6WmQQSgd1A/D4Vc6UoyhuU6e85mRVrkakmsBgelI2xVVynZOKDDqM7OFio
+         +l7HbJNvSHZFXMgPLLvTEIdsPDuQlnyuYIvuvM2UnDZCinxESn2X934E09Svunn7LI13
+         /pxyOl3WBGT2N1qaycipQPgwWLDcz5ziMIBznldNeN2+4gJDqMFYqa3MYSRzxzWpxeTb
+         5jNApqVvD1VOJRMcjr0HZAd9z+XyLQ8gycSzgkGtSWXmPB0VgaMfbmiw2uKDYehovlrQ
+         k3CC+DBlL1g7pwjZFwXlekrKRGYPNeAIHobcHR55omLrUQ9pEvqmIP4xL5IxI+KxD2+4
+         Nm7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXGlR/wNfjzFMekCj8aZIWqStEw+mj/21d+CcpsSvm+RgaRIY+LrggbsfZ8Q442cAt0agP7n4q/tjU/ndo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznjwELFF+/nOZL6Rh3yQWt+8eq1eaUrwSnFserjaFCjdTyma9+
+	sSGMdqcJLLNbRT1/TQIGr5patc6WuTSsyRlUeMs3zU0CJUn9nrCU+KPZ8A==
+X-Gm-Gg: ASbGnctxxYPViJCt4fR3Ds+2ZSE3RU1T4S6R0iRyjrprySfdhWGG0tSe8D0zX0tKowM
+	NBP1K3It3gUqIPg6YgC8Yr1MbLmb0bFjefUXnA6sXbmC4McFjB+NjkOoV/+Ft/GZWkb1q9Bxjaj
+	lH8CJIBmvWmyG6xMAq1w7vkcT2Wo7X6QppeoqozsmhLUsbXHJT4YELA8uhmM/do4wO4athBLesA
+	2FzRo4VNu2b6WOmcGbcI4YsrY62LW8nCkQoYrBgafUKAdGDixw3nyB8nkSIWLxftdL28JoS2t0r
+	MKvuOa6rN42//nvNN9yes2gpFObmSGg3gvUtATmFjoD6SVJkHu4X86wjeQA7mRbLBzibQK02zFR
+	HSJFLdwqMnK82ILL0NQGm+f6Jh2TzlZNhHrA=
+X-Google-Smtp-Source: AGHT+IEkArU/HVjoiphBvdDPCvGy8fE7knsktSkjFzUd0A68OQYpoVfXVTDmXJAOFwe/nbrLfhrUBw==
+X-Received: by 2002:a05:620a:3196:b0:7c5:592c:c25 with SMTP id af79cd13be357-7c5ba1f7562mr3290100085a.48.1742927408168;
+        Tue, 25 Mar 2025 11:30:08 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b93482d9sm667748985a.82.2025.03.25.11.30.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 11:30:07 -0700 (PDT)
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id D275A120006B;
+	Tue, 25 Mar 2025 14:30:05 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-10.internal (MEProxy); Tue, 25 Mar 2025 14:30:05 -0400
+X-ME-Sender: <xms:LfbiZ3L0s-uxxazgHFWoD3FXWeadjSNLM0zw3SaLgMy_gH743OhUlg>
+    <xme:LfbiZ7KcS4a2rLX4-DWyr244gG5AT-G39Ihj3EIxJ-r4kALdHdc6yx0TZYy1eNv8Q
+    dhGK8J64CKp_qCAgQ>
+X-ME-Received: <xmr:LfbiZ_v7ceRR6YlXnhxe1dOEbx2LU_ocX8A0Oyl5oWrlwkc8Y8eFW68BJe8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieeffeejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpefhtedvgfdtueekvdekieetieetjeeihedv
+    teehuddujedvkedtkeefgedvvdehtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhu
+    nhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqdduje
+    ejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdr
+    nhgrmhgvpdhnsggprhgtphhtthhopeduledpmhhouggvpehsmhhtphhouhhtpdhrtghpth
+    htohepmhhinhhgoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghighgvrghshies
+    lhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopegtlhhrkhiflhhlmhhssehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhr
+    tghpthhtohepthhglhigsehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepphgvth
+    gvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepphgruhhlmhgtkheskhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtoheprgigsghovgeskhgvrhhnvghlrdgukhdprhgtph
+    htthhopehrhihothhkkhhrleeksehgmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:LfbiZwY4M-dJxruBtDlVTZCbVkn8kRSmEXzJR3mpjPItwQ9rOxb--A>
+    <xmx:LfbiZ-YC8Io--R4sQyjcPuB2gUMfRSWU_6HrFv7pnuUtWFGsh_sJgg>
+    <xmx:LfbiZ0B8umsgdONgT7567Kq9-xrbPQue3feecIIV8rIGq8dqwb2fSw>
+    <xmx:LfbiZ8b4pedorhcQx9YLNFJ_N0qKFWYlJWuhlIBK_mp1euyq53iKxg>
+    <xmx:LfbiZyqdZdJdfe8PEdkbLh1ndOOv_QbyEEEg2ZCi_Xi5ClbAB4ebB2zU>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 25 Mar 2025 14:30:05 -0400 (EDT)
+Date: Tue, 25 Mar 2025 11:30:02 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>, Ryo Takakura <ryotkkr98@gmail.com>,
+	NeilBrown <neilb@suse.de>,
+	Caleb Sander Mateos <csander@purestorage.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Borislav Petkov <bp@alien8.de>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Subject: Re: [PATCH v4] lockdep: Fix wait context check on softirq for
+ PREEMPT_RT
+Message-ID: <Z-L2Km8nHE7Eevis@boqun-archlinux>
+References: <20250321143322.79651-1-boqun.feng@gmail.com>
+ <Z-J6jE0lHJpWA20l@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320185238.447458-1-jim.cromie@gmail.com> <20250320185238.447458-31-jim.cromie@gmail.com>
- <0828cfdb-abf3-42c5-8500-70f36affd0a8@bootlin.com>
-In-Reply-To: <0828cfdb-abf3-42c5-8500-70f36affd0a8@bootlin.com>
-From: jim.cromie@gmail.com
-Date: Tue, 25 Mar 2025 12:29:16 -0600
-X-Gm-Features: AQ5f1JpL4zfuR5gFvMhO5JMn9AbG8jHdc2qnKxdZBAmkJZi1rc9OZZj-4YfgnjU
-Message-ID: <CAJfuBxzHEtS1psJ+L_6=FP-mU3b8mgLQbXRWoizLkZoRUB6G1Q@mail.gmail.com>
-Subject: Re: [PATCH v2 30/59] dyndbg: drop "protection" of class'd pr_debugs
- from legacy queries
-To: Louis Chauvet <louis.chauvet@bootlin.com>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	amd-gfx@lists.freedesktop.org, intel-gvt-dev@lists.freedesktop.org, 
-	intel-gfx@lists.freedesktop.org, intel-gfx-trybot@lists.freedesktop.org, 
-	jbaron@akamai.com, gregkh@linuxfoundation.org, ukaszb@chromium.org, 
-	daniel.vetter@ffwll.ch, tvrtko.ursulin@linux.intel.com, jani.nikula@intel.com, 
-	ville.syrjala@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-J6jE0lHJpWA20l@gmail.com>
 
-On Mon, Mar 24, 2025 at 9:20=E2=80=AFAM Louis Chauvet <louis.chauvet@bootli=
-n.com> wrote:
->
->
->
-> Le 20/03/2025 =C3=A0 19:52, Jim Cromie a =C3=A9crit :
-> > Current classmap code protects class'd pr_debugs from unintended
-> > changes by "legacy" unclassed queries:
-> >
-> >    # this doesn't disable all of DRM_UT_* categories
-> >    echo "-p" > /proc/dynamic_debug/control
-> >
-> >    # name the class to change it - protective but tedious
-> >    echo "class DRM_UT_CORE +p" > /proc/dynamic_debug/control
-> >
-> >    # or do it the subsystem way
-> >    echo 1 > /sys/module/drm/parameters/debug
-> >
-> > This "name the class to change it" behavior gave a modicum of
-> > protection to classmap users (ie DRM) so their debug settings aren't
-> > trivially and unintentionally altered underneath them.
-> >
-> > But this made the class keyword special in some sense; the other
-> > keywords skip only on explicit mismatch, otherwize the code falls thru
->
-> s/otherwize/otherwise/
+On Tue, Mar 25, 2025 at 10:42:36AM +0100, Ingo Molnar wrote:
+> 
+> * Boqun Feng <boqun.feng@gmail.com> wrote:
+> 
+> > Since commit 0c1d7a2c2d32 ("lockdep: Remove softirq accounting on
+> > PREEMPT_RT."), the wait context test for mutex usage within
+> > "in softirq context" fails as it references @softirq_context.
+> > 
+> > [    0.184549]   | wait context tests |
+> > [    0.184549]   --------------------------------------------------------------------------
+> > [    0.184549]                                  | rcu  | raw  | spin |mutex |
+> > [    0.184549]   --------------------------------------------------------------------------
+> > [    0.184550]                in hardirq context:  ok  |  ok  |  ok  |  ok  |
+> > [    0.185083] in hardirq context (not threaded):  ok  |  ok  |  ok  |  ok  |
+> > [    0.185606]                in softirq context:  ok  |  ok  |  ok  |FAILED|
+> > 
+> > As a fix, add lockdep map for BH disabled section. This fixes the
+> > issue by letting us catch cases when local_bh_disable() gets called
+> > with preemption disabled where local_lock doesn't get acquired.
+> > In the case of "in softirq context" selftest, local_bh_disable() was
+> > being called with preemption disable as it's early in the boot.
+> > 
+> > [boqun: Move the lockdep annotations into __local_bh_*() to avoid false
+> > positives because of unpaired local_bh_disable() reported by Borislav
+> > Petkov [1] and Peter Zijlstra [2], and make bh_lock_map only exist for
+> > PREEMPT_RT]
+> > 
+> > Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
+> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> > Link: https://lore.kernel.org/all/20250306122413.GBZ8mT7Z61Tmgnh5Y9@fat_crate.local/ [1]
+> > Link: https://lore.kernel.org/lkml/20250307113955.GK16878@noisy.programming.kicks-ass.net/ [2]
+> > Link: https://lore.kernel.org/r/20250118054900.18639-1-ryotkkr98@gmail.com
+> 
+> That's a weird SOB chain. Following back the history of the submission 
+> I believe this line went missing:
+> 
+>   From: Ryo Takakura <ryotkkr98@gmail.com>
+> 
+> I added it back in to the commit.
+> 
 
-ack
+Thanks! Looks like I lost the "From:" field when I post the draft of v4
+at:
 
->
-> > to adjust the pr-debug site.
-> >
-> > So Jason Baron didn't like this special case when I 1st proposed it;
-> > I argued 2 points:
-> > - "protection gives stable-debug, improving utility"
-> > - __drm_debug is authoritative w/o dyndbg under it.
-> >
-> > I thought I'd convinced him back then, (and the patchset got merged),
-> > but he noted it again when he reviewed this series.  So this commit
-> > names the "special case": ddebug_client_module_protects_classes(), and
-> > reverts it to Jason's preference.
->   >
-> > If a class mismatch is seen, code distinguishes whether the class was
-> > explicitly given (and always skips/continue), or the DFLT was assumed
-> > because no class was given.  Here we test
-> > ddebug_client_module_protects_classes(), skip if so.
-> >
-> > Later, if any user/module wants to protect its classes, we could add a
-> > flag to ddebug_table, a means to set it from CLASSMAP_DEFINE, and
-> > check it when applying a classless query/cmd.
->
-> I don't really understand the goal of the protection, do you have the
-> discussion between you and Jason so I can have some context and some
-> answer to my questions?
->
+	https://lore.kernel.org/lkml/Z8t8imzJVhWyDvhC@boqun-archlinux/
 
-The on-list discussion is here.
+I must re-apply that email as a patch to my branch, hence the "From:"
+field got changed. Sorry for the mistakes.
 
-https://lore.kernel.org/lkml/2d3846cb-ff9a-3484-61a8-973799727d8f@akamai.co=
-m/
-https://lore.kernel.org/lkml/0d9f644f-3d60-02c3-7ce0-01296757e181@akamai.co=
-m/#t
+Regards,
+Boqun
 
-At the time I thought it was unfinished business, and expected some
-more discussion,
-but that didnt happen, and later GregKH committed the set.
-
-Last summer I emailed him privately, and he made a 5-6 points Ive
-addressed in this rev,
-(reduction of repetitive code, enforcing classmap constraints,
-protecting against misuse)
-but it also became clear he still didnt like the "specialness" of the keywo=
-rd,
-given by the _DFLT constraint applied to legacy callsites and queries.
-
-Since thats a bit of a philosophical debate, I looked for a technical solut=
-ion,
-to have it either way with fairly trivial additions, and to yield
-until user experience
-dictates otherwise
-
-To be clear, I still think protecting the "classed" is proper.
-Without dyndbg, /sys/module/drm/parameters/debug is authoritative, full sto=
-p.
-I'm surprised any customer would give away that certainty,
-it looks like a (small caliber) footgun to me.
-But its not worth disagreeing on.
-Hence this patch reverts that "protection"
-
-> With the example you gave above, I think this could lead to a very odd
-> behavior: if I enable dyndbg, I expect any pr_dbg to be managed by
-> dyndbg settings.
-
-if by "any" you mean ALL the ones that currently exist,
-before we add a whole new "CLASS" of user,
-(with ~5k uses, all comfortable with their exclusive control)
-I can agree.
-
-echo class FOO +p > control
-gives full control.  You just have to say so for the new classes of users.
-
->
-> If a user writes stuff on dyndbg control, he clearly knows what he is
-> doing, and he wants to control what logs he wants.
->
-> And if you allow multiple "protected" users, the normal way to disable
-> all dyndbg logs will be:
->
->         ddcmd -p
->         ddcmd class DRM_UT_CORE -p
->         ddcmd class DRM_... -p # all drm classes
->         ddcmd class SPI_... -p # all spi classes
->         ddcmd class WHATEVER_... -p # all other subsystem
->
->         # And only now you can enable only what you want
->         ddcmd module my_mod +p
->
-> This is clearly annoying to write.
-
-It is clearly annoying.
-It doesnt need to be handy.
-thats what /sys/module/drm/parameters/debug is for.
-with modest "protection" of explicit naming,
-the sysfs knob can reasonably be expected
-to reflect whats going on underneath.
-Without it, bets are misplaced.
-
->
-> If DRM (or whatever subsystem) wants to add a debug parameter and use it
-> to control their logs without being impacted by dyndbg, I believe it
-> should not use dyndbg classes to do it.
-
-hmm - dyndbg's 1st value is its NOOP cost when off.
-If thats not worth something, you wouldnt bother using it.
-
-
-In any case, its pretty clear that my viewpoint isnt prevailing here,
-and as I said, I dont care enough to disagree.
-the reversion here can stand.
-
-
->
-> > CC: jbaron@akamai.com
-> > Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
-> > ---
-> >   lib/dynamic_debug.c | 34 +++++++++++++++++++++++++---------
-> >   1 file changed, 25 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-> > index c44502787c2b..13de0dd3a4ad 100644
-> > --- a/lib/dynamic_debug.c
-> > +++ b/lib/dynamic_debug.c
-> > @@ -193,6 +193,17 @@ static int ddebug_find_valid_class(struct ddebug_t=
-able const *dt, const char *cl
-> >       return -ENOENT;
-> >   }
-> >
-> > +/*
-> > + * classmaps-v1 protected classes from changes by legacy commands
-> > + * (those selecting _DPRINTK_CLASS_DFLT by omission), v2 undoes that
-> > + * special treatment.  State so explicitly.  Later we could give
-> > + * modules the choice to protect their classes or to keep v2 behavior.
-> > + */
-> > +static inline bool ddebug_client_module_protects_classes(const struct =
-ddebug_table *dt)
-> > +{
-> > +     return false;
-> > +}
-> > +
-> >   /*
-> >    * Search the tables for _ddebug's which match the given `query' and
-> >    * apply the `flags' and `mask' to them.  Returns number of matching
-> > @@ -206,7 +217,7 @@ static int ddebug_change(const struct ddebug_query =
-*query, struct flag_settings
-> >       unsigned int newflags;
-> >       unsigned int nfound =3D 0;
-> >       struct flagsbuf fbuf, nbuf;
-> > -     int valid_class;
-> > +     int slctd_class;
->
-> Nitpick: can you use full words? slctd is difficult to read.
->
-> >
-> >       /* search for matching ddebugs */
-> >       mutex_lock(&ddebug_lock);
-> > @@ -218,21 +229,26 @@ static int ddebug_change(const struct ddebug_quer=
-y *query, struct flag_settings
-> >                       continue;
-> >
-> >               if (query->class_string) {
-> > -                     valid_class =3D ddebug_find_valid_class(dt, query=
-->class_string);
-> > -                     if (valid_class < 0)
-> > +                     slctd_class =3D ddebug_find_valid_class(dt, query=
-->class_string);
-> > +                     if (slctd_class < 0)
-> > +                             /* skip/reject classes unknown by module =
-*/
-> >                               continue;
-> >               } else {
-> > -                     /* constrain query, do not touch class'd callsite=
-s */
-> > -                     valid_class =3D _DPRINTK_CLASS_DFLT;
-> > +                     slctd_class =3D _DPRINTK_CLASS_DFLT;
-> >               }
-> >
-> >               for (i =3D 0; i < dt->info.descs.len; i++) {
-> >                       struct _ddebug *dp =3D &dt->info.descs.start[i];
-> >
-> > -                     /* match site against query-class */
-> > -                     if (dp->class_id !=3D valid_class)
-> > -                             continue;
-> > -
-> > +                     if (dp->class_id !=3D slctd_class) {
-> > +                             if (query->class_string)
-> > +                                     /* site.class !=3D given class */
-> > +                                     continue;
-> > +                             /* legacy query, class'd site */
-> > +                             else if (ddebug_client_module_protects_cl=
-asses(dt))
-> > +                                     continue;
-> > +                             /* allow change on class'd pr_debug */
-> > +                     }
-> >                       /* match against the source filename */
-> >                       if (query->filename &&
-> >                           !match_wildcard(query->filename, dp->filename=
-) &&
->
-> --
-> Louis Chauvet, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
->
->
+> Thanks,
+> 
+> 	Ingo
