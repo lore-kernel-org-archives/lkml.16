@@ -1,88 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF3C25D1EA;
-	Tue, 25 Mar 2025 15:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D25BDF78;
+	Tue, 25 Mar 2025 15:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742915405; cv=none; b=MNolyxxSzTVnd7S3w0wp2dRAIoterr0JVq0Obcg0i2XdAmR8KcBRbUHt7wuwnJHxSfd41IlqYscII+GDEsCHe6b0IeZzGfX6clrziuvoqKRcPETD3DiaxRls8aRNd95+IncUjX5nxG3nHcZa0hXM9M1wRzSIoF2wnpVkkjpWBJE=
+	t=1742915444; cv=none; b=INS2ZAGpXofek941TvIALsAYrVr5ikbc0mSf7MHI714WxEnj+lY4eymlS3ov/bd4IK+z02F9MNf9GgRY9avkmh0XnK5tOR3JjQAA5xKAR2cg/6/kYXADrkyhuFSbauC8kM0znnlD6wUkyF92J+CrruyYrD5y6yKQgt3hUErtZcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742915405; c=relaxed/simple;
-	bh=rM2cEQEVYKda9LgagA18a6qU64i4bQNXa6hgu74L26A=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=mBg6KodpQ9BFpbHKCu8Xf0LrAb28KgStA2binSAQRrW5RtPheoZ++KpsU4br30OFw9p3ijjN1dcaAqvn7i/e7t8jrsTu7k50xzuU1/u9lDEPrmNN6ob+hTsDGyDsx4PUeT+XScSQ/SvpRqgzl1TDLbq+e5I34gS1kYmv1AaQvuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qw5sPzUV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qw5sPzUV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEB9EC4CEE4;
-	Tue, 25 Mar 2025 15:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742915404;
-	bh=rM2cEQEVYKda9LgagA18a6qU64i4bQNXa6hgu74L26A=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Qw5sPzUVhPHUW9fD/il87+6z83Jw4hwaJrAGTBy9CUiqw3koPQWc9H/VQKqDTpEBV
-	 lXc88fT5IhlMVkV+F0G/kg8fb83Tpq931IlK+GqHe/rEujg345ZUB7aok1aGXWMvuu
-	 xIcn8DgX/oczkCxpSFxf7KsqehTQt6JdYIbjrHhTZpqi8xMsTkD+m1N0AX8d7CvoCp
-	 JZqSVQuFj65qOGbT/kOqgpeM0+ddZTzn1kryyBXmf3yaWWBMFNcWIBMEIDUpNn2B7I
-	 d0NwG3K9seJJEMRpMlunFvX3Kh/BWShA1U3y70fqWV+S7aBwKfecwr7/Pv5IkGho+h
-	 SMrIfjj19viBQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34F0D380CFE7;
-	Tue, 25 Mar 2025 15:10:42 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1742915444; c=relaxed/simple;
+	bh=BZYJziINKBIcqjS1/8unrKx3dUgU2wz565xUE4lre5c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TdRR7jgqVJLCI29T08feWYL3Im+BryAVHT6Ja6YX0L0fMzNIKCPS2gJ7aG5DhCN8RhrBiP2wUAoG4T7YL+38YMqmM6YVycA8bRBGIedmxx2og7o3egDmHafrRmfbI/X6g5htwyNo4nZk7z4usqCMOWAmwsfpEFOca8BVijSAlqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F9641756;
+	Tue, 25 Mar 2025 08:10:45 -0700 (PDT)
+Received: from [10.57.14.116] (unknown [10.57.14.116])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7DF7A3F58B;
+	Tue, 25 Mar 2025 08:10:36 -0700 (PDT)
+Message-ID: <d629b646-d04b-4a26-86a2-34300dcd3e9f@arm.com>
+Date: Tue, 25 Mar 2025 16:10:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v3 0/5] net: stmmac: dwmac-rk: Add GMAC support for
- RK3528
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174291544076.609648.8594782943472190694.git-patchwork-notify@kernel.org>
-Date: Tue, 25 Mar 2025 15:10:40 +0000
-References: <20250319214415.3086027-1-jonas@kwiboo.se>
-In-Reply-To: <20250319214415.3086027-1-jonas@kwiboo.se>
-To: Jonas Karlman <jonas@kwiboo.se>
-Cc: heiko@sntech.de, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, david.wu@rock-chips.com,
- ziyao@disroot.org, netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] sched/fair: Fix integer underflow
+To: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>,
+ Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Rik van Riel <riel@surriel.com>
+References: <20241001134603.2758480-1-pierre.gondois@arm.com>
+Content-Language: en-US
+From: Pierre Gondois <pierre.gondois@arm.com>
+In-Reply-To: <20241001134603.2758480-1-pierre.gondois@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello:
+Hello Vincent,
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+This patch should still be relevant, would it be possible to pick it ?
+Or maybe something is missing ?
 
-On Wed, 19 Mar 2025 21:44:04 +0000 you wrote:
-> The Rockchip RK3528 has two Ethernet controllers, one 100/10 MAC to be
-> used with the integrated PHY and a second 1000/100/10 MAC to be used
-> with an external Ethernet PHY.
+Regards,
+Pierre
+
+On 10/1/24 15:46, Pierre Gondois wrote:
+> (struct sg_lb_stats).idle_cpus is of type 'unsigned int'.
+> (local->idle_cpus - busiest->idle_cpus) can underflow to UINT_MAX
+> for instance, and max_t(long, 0, UINT_MAX) will output UINT_MAX.
 > 
-> This series add initial support for the Ethernet controllers found in
-> RK3528 and initial support to power up/down the integrated PHY.
+> Use lsub_positive() instead of max_t().
 > 
-> [...]
-
-Here is the summary with links:
-  - [net-next,v3,1/5] dt-bindings: net: rockchip-dwmac: Add compatible string for RK3528
-    https://git.kernel.org/netdev/net-next/c/1b22f686f199
-  - [net-next,v3,2/5] net: stmmac: dwmac-rk: Add GMAC support for RK3528
-    https://git.kernel.org/netdev/net-next/c/1725f0eb37d6
-  - [net-next,v3,3/5] net: stmmac: dwmac-rk: Move integrated_phy_powerup/down functions
-    https://git.kernel.org/netdev/net-next/c/0bed91f2b183
-  - [net-next,v3,4/5] net: stmmac: dwmac-rk: Add integrated_phy_powerdown operation
-    https://git.kernel.org/netdev/net-next/c/32c7bc0747bb
-  - [net-next,v3,5/5] net: stmmac: dwmac-rk: Add initial support for RK3528 integrated PHY
-    https://git.kernel.org/netdev/net-next/c/83e7b35c7879
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+> Fixes: 16b0a7a1a0af ("sched/fair: Ensure tasks spreading in LLC during LB")
+> cc: stable@vger.kernel.org
+> Signed-off-by: Pierre Gondois <pierre.gondois@arm.com>
+> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+>   kernel/sched/fair.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 9057584ec06d..6d9124499f52 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -10775,8 +10775,8 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+>   			 * idle CPUs.
+>   			 */
+>   			env->migration_type = migrate_task;
+> -			env->imbalance = max_t(long, 0,
+> -					       (local->idle_cpus - busiest->idle_cpus));
+> +			env->imbalance = local->idle_cpus;
+> +			lsub_positive(&env->imbalance, busiest->idle_cpus);
+>   		}
+>   
+>   #ifdef CONFIG_NUMA
