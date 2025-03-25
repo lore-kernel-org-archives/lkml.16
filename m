@@ -1,108 +1,116 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76CB12E1CD
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 16:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BB51547C0
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 16:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742920308; cv=none; b=XjzdObKP/SXK5zqf9BHA0IwYFaCCBIjBbHwCqOnP/HMCgRhngA3kEfaC63SVkIYnp/KXxzJHmNdKa5In6d9Ts4Az0oQfpkd7OoMJ+lttqlhM/qslmIImBFZYdm7WCI1wI+rxZ4SEWvEjyaWwGIM3cOWkZPmMPxIFaCyrYVx+Ep8=
+	t=1742920317; cv=none; b=iXeyXCScL9cjLhTjj3U7L+OeGKTTQXc2IDe1YZQ1DNMtIuKY5Sg0+wGNG0o733yDgwynVzivLHGHSnwjIvyJmtko29xmHtNKd2NSZUCLqqF0TgASt2KkTIV4logMYEOA5675lNrmLKsrsdeuddEoAQDuffH+iSi8nuVgVx+Sd20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742920308; c=relaxed/simple;
-	bh=FqCTIgh8QO/t7KPUealsnN0UqFbnMBx72fTK2JxImZA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AOAk+H+IposYafaSGrtdofcL2Kp+HGo1F5gUN6OA8/dYy7sRa78chmsF8lqE1RVcFdJifTG/ZiDzred2qfxt9rjH0D4E4lDJhbeZ9vGQa4xzMHcx5dok4B1R4b66S8YzHH4eCVHJHMBuZXps3mhrgtXOSwyjzpfo4obp6G5MD0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WORJzFnm; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1742920317; c=relaxed/simple;
+	bh=eWXxqsgrKXzBPrF8cRI2av7A685G//8p1hBb4smPizU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=shSsCB3N6/r37izEpJpRBgCtO3oLxVzE6pbAarMWyd8ssPWSwwKbGpzk/986NEErOYdQduIy8NPtsG5QEBstLtbS0wjOrQpN1BiA6yyUYOdQ6oyWskRalTKVr+V7DI0fk7wVB5sVpWiJkEs+19ytf/AtyxfGUprQqfJpn7L/FAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=URC/8W1W; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=URC/8W1W; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WORJzFnm"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22548a28d0cso126942525ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 09:31:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742920306; x=1743525106; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FqCTIgh8QO/t7KPUealsnN0UqFbnMBx72fTK2JxImZA=;
-        b=WORJzFnmqQKLQHUQGsbgutdP+8FYmzlWK+Sx67omcM7DaFtCKKPb8Z1aI6m12IrsL9
-         j/zBWJ7yRpQ4ro0biN1qEl3ilk/F+brryi1dL0yPR9aboc7H5Kx6dHuyt74IjV1sDgQP
-         Oqwg3mEYtOayzX7HHHRotOsqNJXGX2SmNT7K/TunrVibClWg3GrWYhW1HlxVFLUMmU52
-         6X8dyttDKdzKlG0vVuoWfQExGI3A9qfwEp7RFQrCmSALEQJArEty1EdYxwwJhClhVmLR
-         8mskdbfsE/bSF74xIFKZ8Y5LN2rHsFINl9cBcx+wc3nGx9Ge2rwmXxFdOlNs4LE0hW20
-         hgCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742920306; x=1743525106;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FqCTIgh8QO/t7KPUealsnN0UqFbnMBx72fTK2JxImZA=;
-        b=iXFgxKVIRQ8wJaqG95A0T85IkrSqqoiTguMZl2d9ufpvRtRYsTnFcDmPTw0Jop7MYc
-         XVnRXvhHzU4CJDW2RlJe5kXNBcPGCh84Vtzg/Hms+1yYmrquDX1RNoTbu3MB4R3Nvq5S
-         Lza2WuKQOh8tv5MoSN7VQl7TIu6zw9DXMRHm83HFt2rrerX5H9kfKgIX4YHTG3XD5DqE
-         XpCryQHoM9M9LULDkkBsgvpjmTk9ckPbMqroUHreI9NA6zxUTQNteORntA262FY7XOBO
-         kn9yGLc/1bGjP5Ao+prUr/RaU91Y9aHW6AMv4iegyysjxSO3zCe15+wvs3QN4pUoYv5s
-         Og6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUW2LZkUbFwkvDxnwY04l6AIa/qkGaHMaX5xOYIN67I3xJLXVLeBxmuCeaslaf6XjWLFgDA70STf8XMu6M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT4FlW79QgOlxuXDicP62IF6jvc8yTWZ5GCV+XIFi6c0Vh67Mu
-	U4ufyrKPdRKTTCkNvbYMPJ8lWhRob3nafMXeMDxeJum44CWrzyXd3hpT0peqKJNmI7lHjQbZUAh
-	Qoq66fIUhpY83UxRb8bBAORT0pg0vITx2fBtS
-X-Gm-Gg: ASbGnct6zJsF71M6d5SRxnQrBs9bq4uajR/OmnGYVEVUu4xPndYePuO9yz13NnELwuo
-	vizXvPz7XrRncsnR+3wBJlS8wFbSIDAyh2Sghw8Sf3yGl2nJE37g0TIJxNd3xmJ9I7Gs22mSnW7
-	AoI5YW4+bgmx8X9l6mmri/TNBkg1JYA45T4LIz59GHA4UGFikzPMn4jKR+Aj/9CAYI
-X-Google-Smtp-Source: AGHT+IE2SR9bpc54rZzeETcMjOZPU5KZizBq4WuPKmSbzaKhsMuxbQn4aRhsY1Rh/59zdT9tE5i7EBsD3SxvGx8pyiw=
-X-Received: by 2002:a17:90b:4a44:b0:2f4:4003:f3d4 with SMTP id
- 98e67ed59e1d1-3030ff08e4amr26346030a91.30.1742920305908; Tue, 25 Mar 2025
- 09:31:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="URC/8W1W";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="URC/8W1W"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6FCCA21172;
+	Tue, 25 Mar 2025 16:31:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1742920313; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=AuQwi+dDekrTDrq2NHVrIsKGsWOSbGf0aot71i79cVU=;
+	b=URC/8W1WkTHl5TKhRtah2NP68RUjELY64QIJRNsU8cFltTJT97MmY+huDHTZWUpItZgDPl
+	SflVbYIRhTXQlLpGAOWDJz0OVCTYOspZfubRo+i8btewVumMpwUwZatiRq7lBGLGYyQCLA
+	ExA8yDADY5Ys7WKUjgGN4WDb1jd0dEs=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b="URC/8W1W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1742920313; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=AuQwi+dDekrTDrq2NHVrIsKGsWOSbGf0aot71i79cVU=;
+	b=URC/8W1WkTHl5TKhRtah2NP68RUjELY64QIJRNsU8cFltTJT97MmY+huDHTZWUpItZgDPl
+	SflVbYIRhTXQlLpGAOWDJz0OVCTYOspZfubRo+i8btewVumMpwUwZatiRq7lBGLGYyQCLA
+	ExA8yDADY5Ys7WKUjgGN4WDb1jd0dEs=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4CFA7137AC;
+	Tue, 25 Mar 2025 16:31:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /jU3Enna4meDSQAAD6G6ig
+	(envelope-from <neelx@suse.com>); Tue, 25 Mar 2025 16:31:53 +0000
+From: Daniel Vacek <neelx@suse.com>
+To: Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>
+Cc: Daniel Vacek <neelx@suse.com>,
+	linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] btrfs: extent buffer flags cleanup
+Date: Tue, 25 Mar 2025 17:31:35 +0100
+Message-ID: <20250325163139.878473-1-neelx@suse.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325-kcsan-rwonce-v1-1-36b3833a66ae@google.com> <26df580c-b2cc-4bb0-b15b-4e9b74897ff0@app.fastmail.com>
-In-Reply-To: <26df580c-b2cc-4bb0-b15b-4e9b74897ff0@app.fastmail.com>
-From: Marco Elver <elver@google.com>
-Date: Tue, 25 Mar 2025 17:31:09 +0100
-X-Gm-Features: AQ5f1JpE-9eEvuTImZnrBRyMVLS4S4ftn6GcJfbHDvLlEcvUIVnaUo1LgJcC6PM
-Message-ID: <CANpmjNMGr8-r_uPRMhwBGX42hbV+pavL7n1+zyBK167ZT7=nmA@mail.gmail.com>
-Subject: Re: [PATCH] rwonce: handle KCSAN like KASAN in read_word_at_a_time()
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jann Horn <jannh@google.com>, Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com, 
-	Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 6FCCA21172
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	ARC_NA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	DKIM_TRACE(0.00)[suse.com:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-On Tue, 25 Mar 2025 at 17:06, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Tue, Mar 25, 2025, at 17:01, Jann Horn wrote:
-> > Fixes: dfd402a4c4ba ("kcsan: Add Kernel Concurrency Sanitizer infrastructure")
-> > Signed-off-by: Jann Horn <jannh@google.com>
->
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
+There are a few leftover extent buffer flags not being meaningfully used
+anymore for some time. Simply clean them up.
 
-Acked-by: Marco Elver <elver@google.com>
+Daniel Vacek (3):
+  btrfs: cleanup EXTENT_BUFFER_READ_ERR flag
+  btrfs: cleanup EXTENT_BUFFER_READAHEAD flag
+  btrfs: cleanup EXTENT_BUFFER_CORRUPT flag
 
-> > ---
-> > This is a low-priority fix. I've never actually hit this issue with
-> > upstream KCSAN.
-> > (I only noticed it because I... err... hooked up KASAN to the KCSAN
-> > hooks. Long story.)
+ fs/btrfs/disk-io.c     | 11 ++---------
+ fs/btrfs/extent-tree.c |  6 ------
+ fs/btrfs/extent_io.c   |  7 ++-----
+ fs/btrfs/extent_io.h   |  5 -----
+ 4 files changed, 4 insertions(+), 25 deletions(-)
 
-Sounds exciting... ;-)
+-- 
+2.47.2
 
-> > I'm not sure if this should go through Arnd's tree (because it's in
-> > rwonce.h) or Marco's (because it's a KCSAN thing).
-> > Going through Marco's tree (after getting an Ack from Arnd) might
-> > work a little better for me, I may or may not have more KCSAN patches
-> > in the future.
->
-> I agree it's easier if Marco takes it through his tree, as this
-> is something I rarely touch.
->
-> If Marco has nothing else pending for 6.15, I can take it though.
-
-I have nothing pending yet. Unless you're very certain there'll be
-more KCSAN patches, I'd suggest that Arnd can take it. I'm fine with
-KCSAN-related patches that aren't strongly dependent on each other
-outside kernel/kcsan to go through whichever tree is closest.
-
-Thanks,
--- Marco
