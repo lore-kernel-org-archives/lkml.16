@@ -1,130 +1,261 @@
-Received: from outbound.soverin.net (outbound.soverin.net [185.233.34.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9586816A395;
-	Tue, 25 Mar 2025 11:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFA6016A395
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 11:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742901359; cv=none; b=RiRGfnGNgJ+dV3umT6GgdPTb9KGp3nRAvztzAxmx8BqVFMo8nnH7MPFeca1g9NXKlLJ/WaUX+F6VYcrTyZ4SbIUOfzM4aw42YUPlurUlpAoUBArub6GRVw8lqMr2sGzj/eCA53Fc42w2nTnMWnaUB8gKiRzHBTj8YcGLkpvb1do=
+	t=1742901374; cv=none; b=ltfFehE77KKkMzMB/cE9zvL3J5n/sk8zx1dVjfyPZSR69pnCKCVc/wQM0EExz3XEeBmz93F1Z0VxxxbpIDXISxCVF40cCwfW/hNIy6hIK7+9DY5kTGG4Cl16w+fyAJbytaA7YsL4YTEs/pdzoMjRR/SX5EST8SHD5j2CndrQlw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742901359; c=relaxed/simple;
-	bh=bTLjwuVyybm/I/wCHz+nDM/wvGZp90Vk4U3oPodejdg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=qxdwwBRvOAaAlpyTlAmT62giVv0zXbiImXpgO1bZZPav7k/8aUYGeKydv2DOfncDtINGGAQLSUzkTlBluCxTqBDxLWmTE2vGhxlDH9PLfdABGU+/gz9+GYd1cQtSBrdyl/yZy8j2g90fSVZ4JciNQuwD9H/Nv342vOQHy+onCAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qmon.net; spf=pass smtp.mailfrom=qmon.net; dkim=pass (2048-bit key) header.d=qmon.net header.i=@qmon.net header.b=r3FoCtrO; arc=none smtp.client-ip=185.233.34.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qmon.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qmon.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qmon.net header.i=@qmon.net header.b="r3FoCtrO"
-Received: from smtp.soverin.net (c04cst-smtp-sov02.int.sover.in [10.10.4.100])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	by outbound.soverin.net (Postfix) with ESMTPS id 4ZMRyF59pSz5Y;
-	Tue, 25 Mar 2025 11:09:25 +0000 (UTC)
-Received: from smtp.soverin.net (smtp.soverin.net [10.10.4.100]) by soverin.net (Postfix) with ESMTPSA id 4ZMRyD4TSVzML;
-	Tue, 25 Mar 2025 11:09:24 +0000 (UTC)
-Authentication-Results: smtp.soverin.net;
-	dkim=pass (2048-bit key; unprotected) header.d=qmon.net header.i=@qmon.net header.a=rsa-sha256 header.s=soverin1 header.b=r3FoCtrO;
-	dkim-atps=neutral
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qmon.net; s=soverin1;
-	t=1742900965;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cGOfD2XTG3f2KGCnBBCpnWBs5ydWIF56orN3h4fexfI=;
-	b=r3FoCtrOdZY5uz3a4IWefaYR/yF9GCJwVwz6OPF/s3+iZQezt1m0luRyELbSFNh1oXjS3Y
-	TenjkE7Pwl+to1A2eAgE1ZuFPvbXdKH0zUapeJsie8/v1M4fCtmCNVz/ljAbFwSluvla5V
-	cUwZbqQJCvpCUyAvwKvjAWZa2PkZsbanYqQDP/o3hR+3A+niH8kRgZMqA07gp/OdgzzQeN
-	SCpJAliHzTXy3L/ydV3sEdoh+2Ee9BD7WPcV7ulIgJFMM8L7crZUjWD6r02rbzO3UXbVDU
-	x+Onj0gIaJ+s5ljhcJZwVRyZq1QimJrCZKV/nycNsBmjrrLMXmRWX0pBLcceZA==
-X-CM-Envelope: MS4xfE9qJlPwytaJvqH5tq1m5QU56wWQBwUboh0Qh6Yd9gPG3SfGIEto9BX9dKfT5mpckLp6hdBINDG1q65gThfj8VIClkPgn3mJ+gwirrZuazommNFE7IVj f8pr3U4gUKXfDXH9/HS4vCY4QB+ycLV97kwbthBKcJKphbKv4/clwyNx5phT0PVdlrFynOx3BW/v61eZV/Xwy7uLbQMxLLUtDLTSjfKhjgcwBPENDF1iunsZ 1pa3vf8wIMJR9J6b86EksOEXARDZDDa7g5G4zoNAKMbUiwjQ/QQwruJlEGIGadx8Qjy/Zc0DUaxCp4hvLjZEC86gwgq6Qyd7qOwt8fM9r5Pui8OilCkRpakL lX70dETd699Ogy4m4MnbmpHYwqV7LS2PDeBBtr0av5iRrl0ov5xtVaXURGB1YSG39F2lLT4ddjq8wlBThQ79j39LTLOWoiBPH1FtOKaFBX+ZDVW+3IaxLxUU Ja4Pnl+rUa0s9ti265wJnrKHJ2lB7mLFXNtzyD9ihJLPqfDP1TQ6/6LxPcB6CYqgmljjQ3n37XnGLCwLZXwdrF03sYzpFs4G7j19BiP9cxfzPzmQ95pnNBg1 M28Bu9gKEAYQ23bly3Hd9ZqyEImn0l2S9+LJHcgo5DrdhvJKmLdHLv7lSZYEz6SL+1M=
-X-CM-Analysis: v=2.4 cv=I7afRMgg c=1 sm=1 tr=0 ts=67e28ee5 a=vzOQIoBu8N4nb49veeH0EQ==:617 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=VnNF1IyMAAAA:8 a=K2RAGah4TdK_Dg0oFeQA:9 a=QEXdDO2ut3YA:10
-Message-ID: <8b0b2a41-203d-41f8-888d-2273afb877d0@qmon.net>
-Date: Tue, 25 Mar 2025 11:09:24 +0000
+	s=arc-20240116; t=1742901374; c=relaxed/simple;
+	bh=YWVQ6PM10pQEwods3bxAs0yE58TK/G7E2yvIn/gqjXY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h+7Iiy9hqVqe/jZ0vSjsVvduA3QyivOsherbbubknfHKmMAKNWa0NF+dbIyXN1BkBenCRQ6zsV+99vP+3ilBXCAjCdZrxKe3EGC2tvc0z2VN7jsTYUfcvsHy+gn2V1FEy7+P0OQgXkKBJxIUSX2KdyPokGlIMpnFB2K70uAOl+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1ACA91756;
+	Tue, 25 Mar 2025 04:16:18 -0700 (PDT)
+Received: from [10.57.41.137] (unknown [10.57.41.137])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C5163F58B;
+	Tue, 25 Mar 2025 04:16:08 -0700 (PDT)
+Message-ID: <b19a857c-4c01-471b-94be-c465de636cd9@arm.com>
+Date: Tue, 25 Mar 2025 11:16:07 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [linux-next-20250324]/tool/bpf/bpftool fails to complie on
- linux-next-20250324
-To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
- Saket Kumar Bhaskar <skb99@linux.ibm.com>,
- Hari Bathini <hbathini@linux.ibm.com>, bpf <bpf@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
- jkacur@redhat.com, lgoncalv@redhat.com, gmonaco@redhat.com,
- williams@redhat.com, tglozar@redhat.com, rostedt@goodmis.org
-References: <5df6968a-2e5f-468e-b457-fc201535dd4c@linux.ibm.com>
-From: Quentin Monnet <qmo@qmon.net>
-Content-Language: en-GB
-In-Reply-To: <5df6968a-2e5f-468e-b457-fc201535dd4c@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/7 v5] sched/fair: Add push task mechanism for EAS
+To: Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
+ peterz@infradead.org, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
+ rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+ vschneid@redhat.com, lukasz.luba@arm.com, rafael.j.wysocki@intel.com,
+ pierre.gondois@arm.com, linux-kernel@vger.kernel.org
+Cc: qyousef@layalina.io, hongyan.xia2@arm.com, luis.machado@arm.com,
+ qperret@google.com
+References: <20250302210539.1563190-1-vincent.guittot@linaro.org>
+ <20250302210539.1563190-6-vincent.guittot@linaro.org>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <20250302210539.1563190-6-vincent.guittot@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spampanel-Class: ham
 
-2025-03-25 16:02 UTC+0530 ~ Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> Greetings!!!
+On 3/2/25 21:05, Vincent Guittot wrote:
+> EAS is based on wakeup events to efficiently place tasks on the system, but
+> there are cases where a task doesn't have wakeup events anymore or at a far
+> too low pace. For such situation, we can take advantage of the task being
+> put back in the enqueued list to check if it should be pushed on another
+> CPU. When the task is alone on the CPU, it's never put back in the enqueued
+> list; In this special case, we use the tick to run the check.
 > 
+> Wake up events remain the main way to migrate tasks but we now detect
+> situation where a task is stuck on a CPU by checking that its utilization
+> is larger than the max available compute capacity (max cpu capacity or
+> uclamp max setting)
 > 
-> bpftool fails to complie on linux-next-20250324 repo.
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+>  kernel/sched/fair.c  | 220 +++++++++++++++++++++++++++++++++++++++++++
+>  kernel/sched/sched.h |   2 +
+>  2 files changed, 222 insertions(+)
 > 
-> 
-> Error:
-> 
-> make: *** No rule to make target 'bpftool', needed by '/home/linux/
-> tools/testing/selftests/bpf/tools/include/vmlinux.h'. Stop.
-> make: *** Waiting for unfinished jobs.....
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index a9b97bbc085f..c3e383b86808 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -7051,6 +7051,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+>  	hrtick_update(rq);
+>  }
+>  
+> +static void fair_remove_pushable_task(struct rq *rq, struct task_struct *p);
+>  static void set_next_buddy(struct sched_entity *se);
+>  
+>  /*
+> @@ -7081,6 +7082,8 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
+>  		h_nr_idle = task_has_idle_policy(p);
+>  		if (task_sleep || task_delayed || !se->sched_delayed)
+>  			h_nr_runnable = 1;
+> +
+> +		fair_remove_pushable_task(rq, p);
+>  	} else {
+>  		cfs_rq = group_cfs_rq(se);
+>  		slice = cfs_rq_min_slice(cfs_rq);
+> @@ -8589,6 +8592,197 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+>  	return target;
+>  }
+>  
+> +static inline bool task_stuck_on_cpu(struct task_struct *p, int cpu)
+> +{
+> +	unsigned long max_capa, util;
+> +
+> +	max_capa = min(get_actual_cpu_capacity(cpu),
+> +		       uclamp_eff_value(p, UCLAMP_MAX));
+> +	util = max(task_util_est(p), task_runnable(p));
+> +
+> +	/*
+> +	 * Return true only if the task might not sleep/wakeup because of a low
+> +	 * compute capacity. Tasks, which wake up regularly, will be handled by
+> +	 * feec().
+> +	 */
+> +	return (util > max_capa);
+> +}
+> +
+> +static inline bool sched_energy_push_task(struct task_struct *p, struct rq *rq)
+> +{
+> +	if (p->nr_cpus_allowed == 1)
+> +		return false;
+> +
+> +	if (is_rd_overutilized(rq->rd))
+> +		return false;
+> +
+> +	if (task_stuck_on_cpu(p, cpu_of(rq)))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +static int active_load_balance_cpu_stop(void *data);
+> +
+> +static inline void check_pushable_task(struct task_struct *p, struct rq *rq)
+> +{
+> +	int new_cpu, cpu = cpu_of(rq);
+> +
+> +	if (!sched_energy_enabled())
+> +		return;
+> +
+> +	if (WARN_ON(!p))
+> +		return;
+> +
+> +	if (WARN_ON(!task_current(rq, p)))
+> +		return;
+> +
+> +	if (is_migration_disabled(p))
+> +		return;
+> +
+> +	/* If there are several task, wait for being put back */
+> +	if (rq->nr_running > 1)
+> +		return;
+> +
+> +	if (!sched_energy_push_task(p, rq))
+> +		return;
+> +
+> +	new_cpu = find_energy_efficient_cpu(p, cpu);
+> +
+> +	if (new_cpu == cpu)
+> +		return;
+> +
+> +	/*
+> +	 * ->active_balance synchronizes accesses to
+> +	 * ->active_balance_work.  Once set, it's cleared
+> +	 * only after active load balance is finished.
+> +	 */
+> +	if (!rq->active_balance) {
+> +		rq->active_balance = 1;
+> +		rq->push_cpu = new_cpu;
+> +	} else
+> +		return;
+> +
+> +	raw_spin_rq_unlock(rq);
+> +	stop_one_cpu_nowait(cpu,
+> +		active_load_balance_cpu_stop, rq,
+> +		&rq->active_balance_work);
+> +	raw_spin_rq_lock(rq);
+> +}
+> +
+> +static inline int has_pushable_tasks(struct rq *rq)
+> +{
+> +	return !plist_head_empty(&rq->cfs.pushable_tasks);
+> +}
+> +
+> +static struct task_struct *pick_next_pushable_fair_task(struct rq *rq)
+> +{
+> +	struct task_struct *p;
+> +
+> +	if (!has_pushable_tasks(rq))
+> +		return NULL;
+> +
+> +	p = plist_first_entry(&rq->cfs.pushable_tasks,
+> +			      struct task_struct, pushable_tasks);
+> +
+> +	WARN_ON_ONCE(rq->cpu != task_cpu(p));
+> +	WARN_ON_ONCE(task_current(rq, p));
+> +	WARN_ON_ONCE(p->nr_cpus_allowed <= 1);
+> +	WARN_ON_ONCE(!task_on_rq_queued(p));
+> +
+> +	/*
+> +	 * Remove task from the pushable list as we try only once after that
+> +	 * the task has been put back in enqueued list.
+> +	 */
+> +	plist_del(&p->pushable_tasks, &rq->cfs.pushable_tasks);
+> +
+> +	return p;
+> +}
+> +
+> +/*
+> + * See if the non running fair tasks on this rq can be sent on other CPUs
+> + * that fits better with their profile.
+> + */
+> +static bool push_fair_task(struct rq *rq)
+> +{
+> +	struct task_struct *next_task;
+> +	int prev_cpu, new_cpu;
+> +	struct rq *new_rq;
+> +
+> +	next_task = pick_next_pushable_fair_task(rq);
+> +	if (!next_task)
+> +		return false;
+> +
+> +	if (is_migration_disabled(next_task))
+> +		return true;
+> +
+> +	/* We might release rq lock */
+> +	get_task_struct(next_task);
+> +
+> +	prev_cpu = rq->cpu;
+> +
+> +	new_cpu = find_energy_efficient_cpu(next_task, prev_cpu);
 
+We aren't gating this on a overutilized check for both call sites of this patch
+like the other feec() call and testing shows that this calls feec when OU
+relatively often.
+Why would it be OK to call feec() here when it isn't on task placement?
 
-Thanks! Would be great to have a bit more context on the error (and on
-how to reproduce) for next time. Bpftool itself seems to compile fine,
-the error shows that it's building it from the context of the selftests
-that seems broken.
+> +
+> +	if (new_cpu == prev_cpu)
+> +		goto out;
+> +
+> +	new_rq = cpu_rq(new_cpu);
+> +
+> +	if (double_lock_balance(rq, new_rq)) {
+> +		/* The task has already migrated in between */
+> +		if (task_cpu(next_task) != rq->cpu) {
+> +			double_unlock_balance(rq, new_rq);
+> +			goto out;
+> +		}
+> +
+> +		deactivate_task(rq, next_task, 0);
+> +		set_task_cpu(next_task, new_cpu);
+> +		activate_task(new_rq, next_task, 0);
+> +
+> +		resched_curr(new_rq);
+> +
+> +		double_unlock_balance(rq, new_rq);
+> +	}
+> +
+> +out:
+> +	put_task_struct(next_task);
+> +
+> +	return true;
+> +}
+> +
+> +static void push_fair_tasks(struct rq *rq)
+> +{
+> +	/* push_fair_task() will return true if it moved a fair task */
 
+This isn't technically true, a bit of a nit, push_fair_task() also
+will return true when the task found wasn't moveable.
 
-> Git bisect points to commit: 8a635c3856ddb74ed3fe7c856b271cdfeb65f293 as
-> first bad commit.
-
-Thank you Venkat for the bisect!
-
-On a quick look, that commit introduced a definition for BPFTOOL in
-tools/scripts/Makefile.include:
-
-	diff --git a/tools/scripts/Makefile.include .../Makefile.include
-	index 0aa4005017c7..71bbe52721b3 100644
-	--- a/tools/scripts/Makefile.include
-	+++ b/tools/scripts/Makefile.include
-	@@ -91,6 +91,9 @@ LLVM_CONFIG	?= llvm-config
-	 LLVM_OBJCOPY	?= llvm-objcopy
-	 LLVM_STRIP	?= llvm-strip
-	
-	+# Some tools require bpftool
-	+BPFTOOL		?= bpftool
-	+
-	 ifeq ($(CC_NO_CLANG), 1)
-	 EXTRA_WARNINGS += -Wstrict-aliasing=3
-
-But several utilities or selftests under tools/ include
-tools/scripts/Makefile.include _and_ use their own version of the
-$(BPFTOOL) variable, often assigning only if unset, for example in
-tools/testing/selftests/bpf/Makefile:
-
-	BPFTOOL ?= $(DEFAULT_BPFTOOL)
-
-My guess is that the new definition from Makefile.include overrides this
-with simply "bpftool" as a value, and the Makefile fails to build it as
-a result.
-
-If I guessed correctly, one workaround would be to rename the variable
-in Makefile.include (and in whatever Makefile now relies on it) into
-something that is not used in the other Makefiles, for example
-BPFTOOL_BINARY.
-
-Please copy the BPF mailing list on changes impacting BPF tooling (or
-for BPF-related patchsets in general).
-
-Thanks,
-Quentin
+[snip]
