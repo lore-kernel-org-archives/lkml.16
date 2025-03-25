@@ -1,286 +1,372 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72AC92571A8;
-	Tue, 25 Mar 2025 14:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742911334; cv=pass; b=kU9riNlits3syDVm60Ig88atqkXS8bqcoL7bhPT6/da+LALrjfqlV/FAqxlXB1oKaH6oqu3TaSWKQXd/BPoKO225zU+LznZPYGyED9jAu1/6CnNkLCWuDJLb0HSvXFUJVgmsbaCHN33/kkuksKM7oHYvLiRbiK4kLz8vNH3ZbVc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742911334; c=relaxed/simple;
-	bh=9O4uqy1naeX8bzCKhM3eYUxsi/i9W+iJkdCDH/bQvuU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Zm5vOUk8Oo1gTuoqqz27MAsbbDqJw4Zna5GcfDQd3VhF1VyrJaGYWIiMbkqejF/9FGeYcLIXpdJjD30Ou0PE5dRHHAmQy2T7X55I9ugsIvGtlgYz+f99yqSrHBVezx0r5GWTCmTDOX76+jluSraE/0Acvqtf3wgQJ+vAn6s4ZU8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=bkZfd5zt; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFE52E3364
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742911432; cv=none; b=Y1eY25IkTp7r852XC3P8QPhwm5GE42XkfFe1CToWYV6K2Cdh2wMwK8O9ApHkfEbWxmbNgqXqsOLgDy10tl9V8TyIINrY4jc5LhX06+ZfgTvy1fBgs3Mf4azFFzRD3hBDceGdnrSkA7I6HLWXjtZq7XZa1m2aBJo/al3EixgHvPc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742911432; c=relaxed/simple;
+	bh=751jpRvxTP7qXUFkQp7z9zoqq7FMnAhXrspgDE7t0ZY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b0tg3emfAmzW6Zib1DfvbPhN5ERqCQ0uSgHNg89i9pr/FeKzLT+svOMd6TKfuKwrgMgBn6Da60/SsZuUSL26W33trN8yczjwC9mwPBBxvTtIlUAWNtfG68jJbiMa6xUlZb1t5twzWK4zCFukNAFCAekBprlrM+W2AjA+CnLapyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DgxwWYGA; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="bkZfd5zt"
-ARC-Seal: i=1; a=rsa-sha256; t=1742911286; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=IRFGJzjYDFnAAqMFvFQXDY8O7v26YZe/QK8HqXR9ORiOiv2YgAz1mJJ4ajtrEBJCh5a/Uk8eSPqm0He/o2K7oM95yqejiC1+B/ZyspZHLCnitzp9ZWIExZSljyaiF74vAzohkEADIWeFdzg9Kr6C6NNtJJN/7pFhiM8zcQV7UKI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1742911286; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=1t9m9SPFoJmycN3sPfqfbtevGGXJbztvUbH5/PjzUdA=; 
-	b=LDDlxX34uPCjC07wd3SRlNKcVDDpfJ53NkXgC8lWaCiNQhVWUK+ZrweoH/SozivoeKczpWTY3VH0cypvoZbz8L7YZ3uen90eL8oOgSl99/3abMbH93oKMgkseFwdY6ExNG+M2aw299ICZMtRdog43vvWYt9Mjz5Qqc8vd9yzBh0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742911286;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=1t9m9SPFoJmycN3sPfqfbtevGGXJbztvUbH5/PjzUdA=;
-	b=bkZfd5ztrycIJwn3iCqyPvV3aPEtVo9hbS1XSrcTibUMeGlj8Jyt94mEWpm+Aph2
-	P2yjbBwz6r5ybASsV7ACkNOX/VxpHYtPWyc54FKS5PMJO3U8YUc0rdbh2E1i3iPCqdC
-	DL0oqKikMkuKssxCv4hA+7FLHHF1AfaaiYcvCHsc=
-Received: by mx.zohomail.com with SMTPS id 1742911284117910.7174817445112;
-	Tue, 25 Mar 2025 07:01:24 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DgxwWYGA"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52PDpWbk021964
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:03:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=8+OV30Ke0OQlvHx9FJ4l7yTT
+	crZlafSc5GoCEvCnavs=; b=DgxwWYGAzzheE7TgTyY86UHR2HHsPUKgTYCXNs3d
+	wcFbVzyySKvRN9nV2m8ybu15e0hrxlvPIm32yiYvweArhlrVswHGMhS89iydEbe6
+	74+3PBDOFbnCOz9leUnm37unebceA1CftqNTJvj5BUl9AvNMAF+Oce/GjNr30po2
+	4tyi7+9XEbDHnGxgIfnn8EUmeCCDWSbVuyZtIlMR8wIQVxdGOe55E1LQosiEIwIK
+	KF/Y8sNyEujB2u9B30HueJoX5rB+eTedunQEZdSd7fDqN54gt37yR3JyCaO7C3a9
+	kamKGMy2cOMrdcyJJjl6B9Wjm7ZpNfjmbOHZe1+DUIi6xw==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45hmhk84h3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 14:03:49 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-227e2faab6dso14127415ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 07:03:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742911428; x=1743516228;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8+OV30Ke0OQlvHx9FJ4l7yTTcrZlafSc5GoCEvCnavs=;
+        b=vhphr/DGuCjoLudmXCHK3ySPPAEM5pJ8+KnXDOmX6mGfj7wzR2zDcNsnPinJWxA0p1
+         NwEbLprSlodla1Z+dfmxvRT8n7s5Q/8+pkVbCnt0i4jOGwUFoYKSs3YuvTmqBoLaiYNq
+         PlNaQ6AYLJj3pPZUVbO14w5ihuOAPBL6t13uEsCvaUx3tnN/o4tgthQ5PlOuMh6+zJZY
+         7EkNxz6i68/apCjiZrDsfzYmGeUR+n2mesCmUOTw7lc263M7hstP5VEamntKwOITom9P
+         0yGYfB+etZWM8+Xq8kQ0cr8awihErBAA7TAnj6W5VQbilZWDLcjPPq03EvGCGXNFJo3c
+         SyZA==
+X-Forwarded-Encrypted: i=1; AJvYcCVjfRxzmJw2xlVQ44e2yasb7hs9J7NqhkwTKQhv6bkjATlF7ipz49d51v5d2FVKivVNUVaf+x5npJtvj0o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJuaO1rgpYjZBPhycXsSjJcOSCywZSSMC2VU3GpuDDKX2erRpd
+	/eNseQgSn8BsBwcuBqfwA7aucmvWITUyQc6xt1Gbh/OEhAXzBPiArqZ7CztxzLAODGNen9ccByL
+	2woxMSruV5IWu5hdlEEJfv57ltMchfuTlYcVLIzEb7OsifptgL+lo945Bvhd7Ct4=
+X-Gm-Gg: ASbGncvbUwLWBHPtwGWEE7a5OUSK6xQaQRr1bL/0Xy6Oqd2mAcWtKKDHWe/cA0VezLA
+	8Q1IHiE0achXjr08Tyo0D5gfZ/JTOPRYcmXIoGnbHf78+pUFKBc7f9EIzWtpm+zPVcgZUBLlYhN
+	c0h0at8dABru4EPnEuFfmautFwZZZ66N9wUMQhIspHHROhgSX5A9izU0yAEeU+2yl2nt7sWiXUH
+	77YnxTV90x/nHrvyxzIuRNr16PdHLVo/qOjJkDPVWANyVfKDqqKfuyRbaJZgDDeKsy/Amq50L6z
+	aG9wrnCFguiXdBBfM6q4povVGBsE6QECYjmb1rDAz18=
+X-Received: by 2002:a17:902:f084:b0:224:c7c:7146 with SMTP id d9443c01a7336-22780c54d42mr169438435ad.6.1742911426646;
+        Tue, 25 Mar 2025 07:03:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHbNSNxwqRpeGEIa+PRTFNX2l7otE9uzBL+l4MpRSESqIyfb/WaExHc5CZYJsWuUeIjXx6SPw==
+X-Received: by 2002:a17:902:f084:b0:224:c7c:7146 with SMTP id d9443c01a7336-22780c54d42mr169437745ad.6.1742911425988;
+        Tue, 25 Mar 2025 07:03:45 -0700 (PDT)
+Received: from hu-mojha-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811c1b8fsm89941585ad.154.2025.03.25.07.03.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 07:03:45 -0700 (PDT)
+Date: Tue, 25 Mar 2025 19:33:36 +0530
+From: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Elliot Berman <quic_eberman@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, cros-qcom-dts-watchers@chromium.org,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
+        Melody Olvera <quic_molvera@quicinc.com>,
+        Shivendra Pratap <quic_spratap@quicinc.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Stephen Boyd <swboyd@chromium.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Elliot Berman <elliotb317@gmail.com>,
+        Elliot Berman <elliot.berman@oss.qualcomm.com>
+Subject: Re: [PATCH v9 2/5] firmware: psci: Read and use vendor reset types
+Message-ID: <Z+K3uNjTNbq3pUis@hu-mojha-hyd.qualcomm.com>
+References: <20250303-arm-psci-system_reset2-vendor-reboots-v9-0-b2cf4a20feda@oss.qualcomm.com>
+ <20250303-arm-psci-system_reset2-vendor-reboots-v9-2-b2cf4a20feda@oss.qualcomm.com>
+ <Z9QQw6BcE7IXzu+r@lpieralisi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH v4 07/11] scripts: generate_rust_analyzer.py: identify
- crates explicitly
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250322-rust-analyzer-host-v4-7-1f51f9c907eb@gmail.com>
-Date: Tue, 25 Mar 2025 11:01:08 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Boris-Chengbiao Zhou <bobo1239@web.de>,
- Kees Cook <kees@kernel.org>,
- Fiona Behrens <me@kloenk.dev>,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Lukas Wirth <lukas.wirth@ferrous-systems.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A959347E-EC7D-4CF1-A0C4-A4EA4C7E041F@collabora.com>
-References: <20250322-rust-analyzer-host-v4-0-1f51f9c907eb@gmail.com>
- <20250322-rust-analyzer-host-v4-7-1f51f9c907eb@gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9QQw6BcE7IXzu+r@lpieralisi>
+X-Authority-Analysis: v=2.4 cv=C4PpyRP+ c=1 sm=1 tr=0 ts=67e2b7c5 cx=c_pps a=cmESyDAEBpBGqyK7t0alAg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=GcyzOjIWAAAA:8 a=EUspDBNiAAAA:8 a=W06eqCPg62U6qe7cA7cA:9 a=CjuIK1q_8ugA:10
+ a=dtxw0mqMjrQA:10 a=1OuFwYUASf3TG4hYMiVC:22 a=hQL3dl6oAZ8NdCsdz28n:22
+X-Proofpoint-GUID: 0fuUMV6eFTcFBdk2FparzkOphTxSyITd
+X-Proofpoint-ORIG-GUID: 0fuUMV6eFTcFBdk2FparzkOphTxSyITd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-25_06,2025-03-25_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ phishscore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
+ bulkscore=0 clxscore=1015 spamscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503250099
 
+On Fri, Mar 14, 2025 at 12:19:31PM +0100, Lorenzo Pieralisi wrote:
+> On Mon, Mar 03, 2025 at 01:08:31PM -0800, Elliot Berman wrote:
+> > From: Elliot Berman <elliot.berman@oss.qualcomm.com>
+> > 
+> > SoC vendors have different types of resets and are controlled through
+> > various registers. For instance, Qualcomm chipsets can reboot to a
+> > "download mode" that allows a RAM dump to be collected. Another example
+> > is they also support writing a cookie that can be read by bootloader
+> > during next boot. PSCI offers a mechanism, SYSTEM_RESET2, for these
+> > vendor reset types to be implemented without requiring drivers for every
+> > register/cookie.
+> > 
+> > Add support in PSCI to statically map reboot mode commands from
+> > userspace to a vendor reset and cookie value using the device tree.
+> 
+> I have managed to discuss a little bit this patchset over the last
+> few days and I think we have defined a plan going forward.
+> 
+> A point that was raised is:
+> 
+> https://man7.org/linux/man-pages/man2/reboot.2.html
+> 
+> LINUX_REBOOT_CMD_RESTART2 *arg command, what is it supposed to
+> represent ?
+> 
+> Is it the mode the system should reboot into OR it is the
+> actual command to be issued (which is what this patchset
+> implements) ?
+> 
+> LINUX_REBOOT_CMD_RESTART "..a default restart..."
+> 
+> It is unclear what "default" means. We wonder whether the
+> reboot_mode variable was introduced to _define_ that "default".
+> 
+> So, in short, my aim is trying to decouple reboot_mode from the
+> LINUX_REBOOT_CMD_RESTART2 *arg command.
+> 
+> I believe that adding a sysfs interface to reboot-mode driver
+> infrastructure would be useful, so that the commands would
+> be exposed to userspace and userspace can set the *arg command
+> specifically to issue a given reset/mode.
+> 
+> I wonder why this is not already in place for eg syscon-reboot-mode
+> resets, how does user space issue a command in those systems if the
+> available commands aren't exposed to userspace ?
+> 
+> Is there a kernel entity exposing those "modes" to userspace, somehow ?
+> 
+> > A separate initcall is needed to parse the devicetree, instead of using
+> > psci_dt_init because mm isn't sufficiently set up to allocate memory.
+> > 
+> > Reboot mode framework is close but doesn't quite fit with the
+> > design and requirements for PSCI SYSTEM_RESET2. Some of these issues can
+> > be solved but doesn't seem reasonable in sum:
+> >  1. reboot mode registers against the reboot_notifier_list, which is too
+> >     early to call SYSTEM_RESET2. PSCI would need to remember the reset
+> >     type from the reboot-mode framework callback and use it
+> >     psci_sys_reset.
+> >  2. reboot mode assumes only one cookie/parameter is described in the
+> >     device tree. SYSTEM_RESET2 uses 2: one for the type and one for
+> >     cookie.
+> 
+> This can be changed and I think it should, so that the reboot modes
+> are exposed to user space and PSCI can use that.
+> 
+In the case of a regular reboot or panic, the reboot/panic notifiers run
+first, followed by the restart notifiers. The PSCI reset/reset2 should
+be the last call from Linux, and ideally, this call should not fail.
 
+Reboot mode notifiers => restart notifiers or Panic notifiers => restart
+notifiers
 
-> On 22 Mar 2025, at 10:23, Tamir Duberstein <tamird@gmail.com> wrote:
->=20
-> Use the return of `append_crate` to declare dependency on that crate.
-> This allows multiple crates with the same display_name be defined, =
-which
-> we'll use to define host crates separately from target crates.
->=20
-> Reviewed-by: Fiona Behrens <me@kloenk.dev>
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
-> scripts/generate_rust_analyzer.py | 70 =
-+++++++++++++++++++--------------------
-> 1 file changed, 34 insertions(+), 36 deletions(-)
->=20
-> diff --git a/scripts/generate_rust_analyzer.py =
-b/scripts/generate_rust_analyzer.py
-> index 1ee079c6d916..de1193117161 100755
-> --- a/scripts/generate_rust_analyzer.py
-> +++ b/scripts/generate_rust_analyzer.py
-> @@ -68,17 +68,14 @@ def generate_crates(
->             line =3D line.replace("\n", "")
->             cfg.append(line)
->=20
-> -    # Now fill the crates list -- dependencies need to come first.
-> -    #
-> -    # Avoid O(n^2) iterations by keeping a map of indexes.
-> +    # Now fill the crates list.
->     crates: List[Crate] =3D []
-> -    crates_indexes: Dict[str, int] =3D {}
->     crates_cfgs =3D args_crates_cfgs(cfgs)
->=20
->     def build_crate(
->         display_name: str,
->         root_module: pathlib.Path,
-> -        deps: List[str],
-> +        deps: List[Dependency],
->         cfg: List[str] =3D [],
->         is_workspace_member: bool =3D True,
->     ) -> Crate:
-> @@ -86,7 +83,7 @@ def generate_crates(
->             "display_name": display_name,
->             "root_module": str(root_module),
->             "is_workspace_member": is_workspace_member,
-> -            "deps": [{"crate": crates_indexes[dep], "name": dep} for =
-dep in deps],
-> +            "deps": deps,
->             "cfg": cfg,
->             "edition": "2021",
->             "env": {
-> @@ -94,27 +91,28 @@ def generate_crates(
->             },
->         }
->=20
-> -    def register_crate(crate: Crate) -> None:
-> -        crates_indexes[crate["display_name"]] =3D len(crates)
-> +    def register_crate(crate: Crate) -> Dependency:
-> +        index =3D len(crates)
->         crates.append(crate)
-> +        return {"crate": index, "name": crate["display_name"]}
->=20
->     def append_crate(
->         display_name: str,
->         root_module: pathlib.Path,
-> -        deps: List[str],
-> +        deps: List[Dependency],
->         cfg: List[str] =3D [],
->         is_workspace_member: bool =3D True,
-> -    ) -> None:
-> -        register_crate(
-> +    ) -> Dependency:
-> +        return register_crate(
->             build_crate(display_name, root_module, deps, cfg, =
-is_workspace_member)
->         )
->=20
->     def append_proc_macro_crate(
->         display_name: str,
->         root_module: pathlib.Path,
-> -        deps: List[str],
-> +        deps: List[Dependency],
->         cfg: List[str] =3D [],
-> -    ) -> None:
-> +    ) -> Dependency:
->         crate =3D build_crate(display_name, root_module, deps, cfg)
->         proc_macro_dylib_name =3D subprocess.check_output(
->             [os.environ["RUSTC"], "--print", "file-names", =
-"--crate-name", display_name, "--crate-type", "proc-macro", "-"],
-> @@ -125,14 +123,14 @@ def generate_crates(
->             "is_proc_macro": True,
->             "proc_macro_dylib_path": str(objtree / "rust" / =
-proc_macro_dylib_name),
->         }
-> -        register_crate(proc_macro_crate)
-> +        return register_crate(proc_macro_crate)
->=20
->     def append_sysroot_crate(
->         display_name: str,
-> -        deps: List[str],
-> +        deps: List[Dependency],
->         cfg: List[str] =3D [],
-> -    ) -> None:
-> -        register_crate(
-> +    ) -> Dependency:
-> +        return register_crate(
->             build_crate(
->                 display_name,
->                 sysroot_src / display_name / "src" / "lib.rs",
-> @@ -145,47 +143,47 @@ def generate_crates(
->     # NB: sysroot crates reexport items from one another so setting up =
-our transitive dependencies
->     # here is important for ensuring that rust-analyzer can resolve =
-symbols. The sources of truth
->     # for this dependency graph are `(sysroot_src / crate / =
-"Cargo.toml" for crate in crates)`.
-> -    append_sysroot_crate("core", [], cfg=3Dcrates_cfgs.get("core", =
-[]))
-> -    append_sysroot_crate("alloc", ["core"])
-> -    append_sysroot_crate("std", ["alloc", "core"])
-> -    append_sysroot_crate("proc_macro", ["core", "std"])
-> +    core =3D append_sysroot_crate("core", [], =
-cfg=3Dcrates_cfgs.get("core", []))
-> +    alloc =3D append_sysroot_crate("alloc", [core])
-> +    std =3D append_sysroot_crate("std", [alloc, core])
-> +    proc_macro =3D append_sysroot_crate("proc_macro", [core, std])
->=20
-> -    append_crate(
-> +    compiler_builtins =3D append_crate(
->         "compiler_builtins",
->         srctree / "rust" / "compiler_builtins.rs",
->         [],
->     )
->=20
-> -    append_proc_macro_crate(
-> +    macros =3D append_proc_macro_crate(
->         "macros",
->         srctree / "rust" / "macros" / "lib.rs",
-> -        ["std", "proc_macro"],
-> +        [std, proc_macro],
->     )
->=20
-> -    append_crate(
-> +    build_error =3D append_crate(
->         "build_error",
->         srctree / "rust" / "build_error.rs",
-> -        ["core", "compiler_builtins"],
-> +        [core, compiler_builtins],
->     )
->=20
-> -    append_proc_macro_crate(
-> +    pin_init_internal =3D append_proc_macro_crate(
->         "pin_init_internal",
->         srctree / "rust" / "pin-init" / "internal" / "src" / "lib.rs",
->         [],
->         cfg=3D["kernel"],
->     )
->=20
-> -    append_crate(
-> +    pin_init =3D append_crate(
->         "pin_init",
->         srctree / "rust" / "pin-init" / "src" / "lib.rs",
-> -        ["core", "pin_init_internal", "macros"],
-> +        [core, pin_init_internal, macros],
->         cfg=3D["kernel"],
->     )
->=20
->     def append_crate_with_generated(
->         display_name: str,
-> -        deps: List[str],
-> -    ) -> None:
-> +        deps: List[Dependency],
-> +    ) -> Dependency:
->         crate =3D build_crate(
->             display_name,
->             srctree / "rust" / display_name / "lib.rs",
-> @@ -203,11 +201,11 @@ def generate_crates(
->                 "exclude_dirs": [],
->             }
->         }
-> -        register_crate(crate_with_generated)
-> +        return register_crate(crate_with_generated)
->=20
-> -    append_crate_with_generated("bindings", ["core"])
-> -    append_crate_with_generated("uapi", ["core"])
-> -    append_crate_with_generated("kernel", ["core", "macros", =
-"build_error", "bindings", "pin_init", "uapi"])
-> +    bindings =3D append_crate_with_generated("bindings", [core])
-> +    uapi =3D append_crate_with_generated("uapi", [core])
-> +    kernel =3D append_crate_with_generated("kernel", [core, macros, =
-build_error, bindings, pin_init, uapi])
->=20
->     def is_root_crate(build_file: pathlib.Path, target: str) -> bool:
->         try:
-> @@ -237,7 +235,7 @@ def generate_crates(
->             append_crate(
->                 name,
->                 path,
-> -                ["core", "kernel"],
-> +                [core, kernel],
->                 cfg=3Dcfg,
->             )
->=20
->=20
-> --=20
-> 2.48.1
->=20
->=20
+So, if I understand correctly, you mean that we can change the reboot
+mode framework to expose the arguments available to user space. We can
+extend it to accept magic and cookies, save them in the reboot
+framework, and retrieve them via a call from PSCI during a regular
+reboot or panic based on the current arguments. Is this leading towards
+writing an ARM-specific PSCI-reboot-mode driver, which in its reboot
+notifier callback saves the magic and cookies, and these magic and
+cookies will be used during psci_sys_reset2()? Or is there something
+wrong with my understanding?
 
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
+P.S. We appreciate Elliot for his work and follow-up on this while being
+employed at Qualcomm.
 
+> >  3. psci cpuidle driver already registers a driver against the
+> >     arm,psci-1.0 compatible. Refactoring would be needed to have both a
+> >     cpuidle and reboot-mode driver.
+> > 
+> > Signed-off-by: Elliot Berman <elliot.berman@oss.qualcomm.com>
+> > ---
+> >  drivers/firmware/psci/psci.c | 105 +++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 105 insertions(+)
+> > 
+> > diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+> > index a1ebbe9b73b136218e9d9f9b8daa7756b3ab2fbe..6f8c47deaec0225f26704e1f3bcad52603127a85 100644
+> > --- a/drivers/firmware/psci/psci.c
+> > +++ b/drivers/firmware/psci/psci.c
+> > @@ -80,6 +80,14 @@ static u32 psci_cpu_suspend_feature;
+> >  static bool psci_system_reset2_supported;
+> >  static bool psci_system_off2_hibernate_supported;
+> >  
+> > +struct psci_reset_param {
+> > +	const char *mode;
+> > +	u32 reset_type;
+> > +	u32 cookie;
+> > +};
+> > +static struct psci_reset_param *psci_reset_params __ro_after_init;
+> > +static size_t num_psci_reset_params __ro_after_init;
+> > +
+> >  static inline bool psci_has_ext_power_state(void)
+> >  {
+> >  	return psci_cpu_suspend_feature &
+> > @@ -306,9 +314,39 @@ static int get_set_conduit_method(const struct device_node *np)
+> >  	return 0;
+> >  }
+> >  
+> > +static int psci_vendor_system_reset2(const char *cmd)
+> > +{
+> > +	unsigned long ret;
+> > +	size_t i;
+> > +
+> > +	for (i = 0; i < num_psci_reset_params; i++) {
+> > +		if (!strcmp(psci_reset_params[i].mode, cmd)) {
+> > +			ret = invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2),
+> > +					     psci_reset_params[i].reset_type,
+> > +					     psci_reset_params[i].cookie, 0);
+> > +			/*
+> > +			 * if vendor reset fails, log it and fall back to
+> > +			 * architecture reset types
+> 
+> That's not what the code does.
+> 
+Ack.
+
+-Mukesh
+
+> > +			 */
+> > +			pr_err("failed to perform reset \"%s\": %ld\n", cmd,
+> > +			       (long)ret);
+> > +			return 0;
+> > +		}
+> > +	}
+> > +
+> > +	return -ENOENT;
+> > +}
+> > +
+> >  static int psci_sys_reset(struct notifier_block *nb, unsigned long action,
+> >  			  void *data)
+> >  {
+> > +	/*
+> > +	 * try to do the vendor system_reset2
+> > +	 * If there wasn't a matching command, fall back to architectural resets
+> > +	 */
+> > +	if (data && !psci_vendor_system_reset2(data))
+> > +		return NOTIFY_DONE;
+> > +
+> >  	if ((reboot_mode == REBOOT_WARM || reboot_mode == REBOOT_SOFT) &&
+> >  	    psci_system_reset2_supported) {
+> >  		/*
+> > @@ -795,6 +833,73 @@ static const struct of_device_id psci_of_match[] __initconst = {
+> >  	{},
+> >  };
+> >  
+> > +#define REBOOT_PREFIX "mode-"
+> > +
+> > +static int __init psci_init_system_reset2_modes(void)
+> > +{
+> > +	const size_t len = strlen(REBOOT_PREFIX);
+> > +	struct psci_reset_param *param;
+> > +	struct device_node *psci_np __free(device_node) = NULL;
+> > +	struct device_node *np __free(device_node) = NULL;
+> > +	struct property *prop;
+> > +	size_t count = 0;
+> > +	u32 magic[2];
+> > +	int num;
+> > +
+> > +	if (!psci_system_reset2_supported)
+> > +		return 0;
+> > +
+> > +	psci_np = of_find_matching_node(NULL, psci_of_match);
+> > +	if (!psci_np)
+> > +		return 0;
+> > +
+> > +	np = of_find_node_by_name(psci_np, "reset-types");
+> > +	if (!np)
+> > +		return 0;
+> 
+> Related to my initial question above. If LINUX_REBOOT_CMD_RESTART2 *arg command,
+> is the actual reset to be issued, should we add a default mode "cold"
+> and, if SYSTEM_RESET2 is supported, a "warm" reset mode too ?
+> 
+> It all boils down to what *arg represents - adding "cold" and "warm"
+> modes would remove the dependency on reboot_mode for resets issued
+> through LINUX_REBOOT_CMD_RESTART2, the question is whether this
+> is the correct thing to do.
+> 
+> Comments very welcome.
+> 
+> Thanks,
+> Lorenzo
+> 
+> > +
+> > +	for_each_property_of_node(np, prop) {
+> > +		if (strncmp(prop->name, REBOOT_PREFIX, len))
+> > +			continue;
+> > +		num = of_property_count_u32_elems(np, prop->name);
+> > +		if (num != 1 && num != 2)
+> > +			continue;
+> > +
+> > +		count++;
+> > +	}
+> > +
+> > +	param = psci_reset_params =
+> > +		kcalloc(count, sizeof(*psci_reset_params), GFP_KERNEL);
+> > +	if (!psci_reset_params)
+> > +		return -ENOMEM;
+> > +
+> > +	for_each_property_of_node(np, prop) {
+> > +		if (strncmp(prop->name, REBOOT_PREFIX, len))
+> > +			continue;
+> > +
+> > +		num = of_property_read_variable_u32_array(np, prop->name, magic,
+> > +							  1, ARRAY_SIZE(magic));
+> > +		if (num < 0) {
+> > +			pr_warn("Failed to parse vendor reboot mode %s\n",
+> > +				param->mode);
+> > +			kfree_const(param->mode);
+> > +			continue;
+> > +		}
+> > +
+> > +		param->mode = kstrdup_const(prop->name + len, GFP_KERNEL);
+> > +		if (!param->mode)
+> > +			continue;
+> > +
+> > +		/* Force reset type to be in vendor space */
+> > +		param->reset_type = PSCI_1_1_RESET_TYPE_VENDOR_START | magic[0];
+> > +		param->cookie = num > 1 ? magic[1] : 0;
+> > +		param++;
+> > +		num_psci_reset_params++;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +arch_initcall(psci_init_system_reset2_modes);
+> > +
+> >  int __init psci_dt_init(void)
+> >  {
+> >  	struct device_node *np;
+> > 
+> > -- 
+> > 2.34.1
+> > 
