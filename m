@@ -1,75 +1,98 @@
-Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C1B194094;
-	Tue, 25 Mar 2025 09:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057D5199FAB
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 09:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742896675; cv=none; b=l+98bcZYcPUJXOKKEkizDWo4VYR1Dxt0kNh6liqEhN5uPMcMpyinmqXwLnZo6C/7aVh+ymCYV8NZg5dsQy3vtUKTBLXDfso6pWpp1qKyqbaCxNcuoJgSsvIvD6lZff0qqt7w1NuXPXKCnIua1c6F7Cac0chATD6WWtyhqcb4OXg=
+	t=1742896794; cv=none; b=AXOndMyk6NLWu2puRhFcOK5z8rsbMxtgHh/bZtZCReONYPjhsUJaXl87THDQ0lXjeP72xzNdDuLNXf5D18PCaq19TmD5kV4tOY/fQHJgOqCkgS7HRJLlhnpg6ekYUI39Y3T9UNBIoJSCuGBjjLvSpRYA7126L3ikuicVo6G4lj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742896675; c=relaxed/simple;
-	bh=BAcGLV2gROaH61d2upyHEAfq6TIAYGSRatBT/GV/s0Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KWEP2zD392SEqzPT+XeFb2ydAtcuQd1Y9jLBDi1A/optmHKx/LHhEMPcTuq64AYfhMXriSO4DN11fybMGIEZuBUcJdskRfE4sHSjGMFN69k46KB92L+qvhYrbu2qpVm3s2oti70kBgEfT/Y2tCReeABqTXZeIYznUuN1xDuSFQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=AHFxqWLO; arc=none smtp.client-ip=95.143.211.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="AHFxqWLO"
-From: Denis Arefev <arefev@swemel.ru>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
-	t=1742896660;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=W/iG3eeUUjRo4LRsKssknGqy+N5wFg8aMaSR8xK6czo=;
-	b=AHFxqWLOIbDgzGIhxRRLbvJlC1ZHzMiYYUEftXwKVZIe+fFxvo4uiwad9AeI0kW7g1ctBK
-	FTOzOaxpPchGYO9hVnOYjnQJelzC7oQKfbayNiWjKbUYfQ18GyE6sSMp7TUqXYFa0I0VF0
-	iA0uyO9s8nwgD3fghsODc9ffNDMVs2c=
-To: Corentin Chary <corentin.chary@gmail.com>
-Cc: "Luke D. Jones" <luke@ljones.dev>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org
-Subject: [PATCH] asus-laptop: Fix an uninitialized variable
-Date: Tue, 25 Mar 2025 12:57:37 +0300
-Message-ID: <20250325095739.20310-1-arefev@swemel.ru>
+	s=arc-20240116; t=1742896794; c=relaxed/simple;
+	bh=SWsfRbLRu6z1OAvlaXUoNay9G0Cd94I/ud7jbpcroHE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=FiISDZEjrjWFSJtqsAuOH54W5BH68pFmB6JMOVJwDlSpCio8mxOyqLzio5K9JVaF7gRa00qXiVn8r+RqjZnYsjAHon5syUoyvbx0Xkj6Vj/P/caToUcQZj3HPAQG8rI56ZrNG7zyEbWW6MgKGNKeJpPzm+qzqVrRuUeKAaC9I58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A3EB3433EC;
+	Tue, 25 Mar 2025 09:59:43 +0000 (UTC)
+Message-ID: <1036c9e7-dd0c-4ae0-ad20-cb424a37736d@ghiti.fr>
+Date: Tue, 25 Mar 2025 10:59:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] riscv: print hartid on bringup
+Content-Language: en-US
+To: Yunhui Cui <cuiyunhui@bytedance.com>, apatel@ventanamicro.com,
+ atishp@rivosinc.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, samuel.holland@sifive.com, alexghiti@rivosinc.com,
+ jassisinghbrar@gmail.com, takakura@valinux.co.jp,
+ valentina.fernandezalanis@microchip.com, ruanjinjie@huawei.com,
+ charlie@rivosinc.com, conor.dooley@microchip.com, haibo1.xu@intel.com,
+ andybnac@gmail.com, ke.zhao@shingroup.cn, tglx@linutronix.de,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250303083424.14309-1-cuiyunhui@bytedance.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250303083424.14309-1-cuiyunhui@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduiedvfeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfhfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepueefgeehheegtddvgeelgeejjeefudekgeetffeijefgveejudehfffftdelhffhnecukfhppeefuddrfedvrdekuddrudekjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeefuddrfedvrdekuddrudekjedphhgvlhhopegludelvddrudeikedrvddurddvhegnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepvddtpdhrtghpthhtoheptghuihihuhhnhhhuihessgihthgvuggrnhgtvgdrtghomhdprhgtphhtthhopegrphgrthgvlhesvhgvnhhtrghnrghmihgtrhhordgtohhmpdhrtghpthhtoheprghtihhshhhpsehrihhvohhsihhntgdrtghomhdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegrohhusegvvggtshdrsggvrhhkv
+ ghlvgihrdgvughupdhrtghpthhtohepshgrmhhuvghlrdhhohhllhgrnhgusehsihhfihhvvgdrtghomhdprhgtphhtthhopegrlhgvgihghhhithhisehrihhvohhsihhntgdrtghomh
+X-GND-Sasl: alex@ghiti.fr
 
-The value returned by the acpi_evaluate_integer() function is not
-checked, but the result is not always successful, so an uninitialized
-'val' variable may be used in calculations.
+Hi Yunhui,
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+On 03/03/2025 09:34, Yunhui Cui wrote:
+> Firmware randomly releases cores, so CPU numbers don't linearly map
+> to hartids. When the system has an exception, we care more about hartids.
+> Adding "dyndbg="file smpboot.c +p" loglevel=8" to the cmdline can output
+> the hartid.
+>
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> ---
+>   arch/riscv/kernel/smp.c     | 2 ++
+>   arch/riscv/kernel/smpboot.c | 4 ++++
+>   2 files changed, 6 insertions(+)
+>
+> diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
+> index d58b5e751286..e650dec44817 100644
+> --- a/arch/riscv/kernel/smp.c
+> +++ b/arch/riscv/kernel/smp.c
+> @@ -48,6 +48,8 @@ EXPORT_SYMBOL_GPL(__cpuid_to_hartid_map);
+>   void __init smp_setup_processor_id(void)
+>   {
+>   	cpuid_to_hartid_map(0) = boot_cpu_hartid;
+> +
+> +	pr_info("Booting Linux on hartid %lu\n", boot_cpu_hartid);
+>   }
+>   
+>   static DEFINE_PER_CPU_READ_MOSTLY(int, ipi_dummy_dev);
+> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+> index e36d20205bd7..601a321e0f17 100644
+> --- a/arch/riscv/kernel/smpboot.c
+> +++ b/arch/riscv/kernel/smpboot.c
+> @@ -231,6 +231,10 @@ asmlinkage __visible void smp_callin(void)
+>   	riscv_ipi_enable();
+>   
+>   	numa_add_cpu(curr_cpuid);
+> +
+> +	pr_debug("CPU%u: Booted secondary hartid %lu\n", curr_cpuid,
+> +		cpuid_to_hartid_map(curr_cpuid));
+> +
+>   	set_cpu_online(curr_cpuid, true);
+>   
+>   	/*
 
-Fixes: b23910c2194e ("asus-laptop: Pegatron Lucid accelerometer")
-Cc: stable@vger.kernel.org 
-Signed-off-by: Denis Arefev <arefev@swemel.ru>
----
- drivers/platform/x86/asus-laptop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-index d460dd194f19..b74b7d0eb6c2 100644
---- a/drivers/platform/x86/asus-laptop.c
-+++ b/drivers/platform/x86/asus-laptop.c
-@@ -427,7 +427,7 @@ static int asus_pega_lucid_set(struct asus_laptop *asus, int unit, bool enable)
- static int pega_acc_axis(struct asus_laptop *asus, int curr, char *method)
- {
- 	int i, delta;
--	unsigned long long val;
-+	unsigned long long val = PEGA_ACC_CLAMP;
- 	for (i = 0; i < PEGA_ACC_RETRIES; i++) {
- 		acpi_evaluate_integer(asus->handle, method, NULL, &val);
- 
--- 
-2.43.0
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Thanks,
+
+Alex
 
