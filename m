@@ -1,423 +1,143 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A1D13D8A0
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 16:07:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD217253B41;
+	Tue, 25 Mar 2025 16:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742918828; cv=none; b=PVZHr0xTIAl/knlwFhOfAiLHEQ9XYrBa7aAjkqTkmFI7bWUq2/cP8ZV09ec/paJqqbM8p2EMuvKn4BY8BmRYGH/Co7I0QUJpQVIbA9+cYQyPkE9Zw3QrVbBvV7JFSG1py4xctMm8P6ULtafvDuT5NnMH+SahZpMj5soyQW8gs/E=
+	t=1742918848; cv=none; b=l0m5uRY+tUaqxI0WyCkdQgP2QOed0ni+v+zrId2SHjWQQCHTHgTqzIBNJkU/HLhbHnjPeOGYfnqu24DP03p5C3m4topAwgh1qsZOkgUG5HjYoohZyAjOSF/5YO5Qt75FsajUu9z488WLExyVGamRyrtV55AcNu2JG90e7tQVuzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742918828; c=relaxed/simple;
-	bh=bWiq+5MyDXTElYieLM6C7dh8a0sGhdsKcE3TX6IvQ64=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=RtjLg7YC5wBXh31G64vfaYa/aUY/ws31cFavoLb/KWV7uxVHWn2JJxlUIH1FU5tUDFMH2SbEJ34QptHuJ8nrWkN94MtbWDkD+7W1hPMfTZELJOljalUAUtx05kiAsfFpYAkXY26KtL6NcTeMk8wx0gEuPj5cL9shg2//bzfyuhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yO3bVqAH; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1742918848; c=relaxed/simple;
+	bh=AfeinVZchvMBv438BnpRosunMeQS/bsLf199sZ53/es=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=hBOJPpsMdL8T+SPCD9bkPE5foLXGZDocFDSfPMhY5mEyIz2rPCX+nk6sZalJUpMUxDDlDzzaXhbMNnDDRR4f8+QmM03VM8ciifwfxqpBsStoFQB/wcKwv+Hl3gKoETWBDeinvYPJ5M9NTmrtE9S6IkTTKOObSH2HpimJb3jqtoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=wUfVeTSd; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yO3bVqAH"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6fedcc61536so92318227b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 09:07:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742918825; x=1743523625; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CC4DlL0ippkQfeYw3fEnFY+uPfIQ3TXIJOTrdzzBovo=;
-        b=yO3bVqAH+2xgMzHys+J2jYurhHibfwir8p0Z1XsSQjaHA2j2t/koyW1JStKn7qCoie
-         S8vxDE7Hxn8RuOztR1Gi/iBmsDIKqv+BHkkXg6N4k6EvSPN2L9oyRrcjnY9DfkL0VOqZ
-         ltkbDSATCAC+9tdZvtlzfmrshUTOfqVrnxXpTxsPvAM3d0D3/mdLMVBW3herivj5w4wo
-         LqKeyfTf7x+7pMGQ34UiodYRhPZFSCmOtSFSoyuszKQ1QPJf7ygCLIPwRmVRDjD0iPzr
-         /OONDZByzkujemWJRCabGWvGcDs6BxSm8CCkEthleaRj156VvqWu1ax6Uofu//BLW7bV
-         D5rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742918825; x=1743523625;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=CC4DlL0ippkQfeYw3fEnFY+uPfIQ3TXIJOTrdzzBovo=;
-        b=u331I5lM8EQrzvf+EnXRa0i6hdvV42TvsfyeQSVjYaAynPRQ/uzeI/bAzLxoZh6Mqz
-         3QT+zzkEoprhCUHs0agJ5ZzOBEXvui44lAnARrD/8OfoX1NlEFY1fKmihXSIbg57myXQ
-         IhYJ68vZcUk1Ba0UV3OntvoLtO5fbM7hupGfCud/L8/ID/F/GotAQ2omVDrfZfr0t7hv
-         GPWweQtvfmboecLI30lfVHGk/v6wvh2qT0G1oYD7iSe58KzMoImkYGJg5O+WiDjN5WJV
-         j+VorVpd4qCHiqEOUft9lzKcCA9bntvqSNx0ayU1u6vM7CmEUV4En2/EZpjENqUd3kTs
-         OmNg==
-X-Forwarded-Encrypted: i=1; AJvYcCXMMX83xGGCA2+JFiSR3UQSmc/c0bqiMgINyciQ564kGeFNNcAIdl871jUY5meIDnhrdBOMYUbtIM6wvNc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9mPHInjeqZDkQlOh39ZIuKqfkMIyhvaC4NtcHTARsPK29oFBm
-	30sXU4bluCKJLrx+fW4IHOhU3+jM0o3CHd1PqozQh4t2oFRYwch+7TZ6CkvxmqLzG5J6ofaJkzG
-	B4rqTzg==
-X-Google-Smtp-Source: AGHT+IFWDQmphKjs3cu25yrT4SWmmObvRNWTOHv6fM0cRSyscosn8nU+XSk2mFH1mmNhO8+bDnm0wfjJc5iT
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:40b3:9c02:57a5:693c])
- (user=irogers job=sendgmr) by 2002:a05:6902:1365:b0:e5b:1418:5733 with SMTP
- id 3f1490d57ef6-e692ed2a23bmr112276.5.1742918825202; Tue, 25 Mar 2025
- 09:07:05 -0700 (PDT)
-Date: Tue, 25 Mar 2025 08:14:56 -0700
-In-Reply-To: <20250325151511.13628-1-irogers@google.com>
-Message-Id: <20250325151511.13628-21-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="wUfVeTSd"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250325151511.13628-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Subject: [PATCH v2 20/35] perf vendor events: Update jaketown metrics
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1742918837;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QCdOLNdtvvawO2bLA9Pq/xQEF8vw52RF0Zlq/SJ2c7c=;
+	b=wUfVeTSdLHzAFhu0xYsljK9AL/NIapgRddAqJIa07lxsXIGlgJUt3Gwqs7VSjnfvqky12j
+	tofRAlyjRtNI2LmU9bPpPFPuMlaDzj86ewGY3BvH6YutxsxM7xNtwI+mTniyo6HophI5if
+	2CD2b+wWt6fScbtF7D/6O1+vUEyIO9TQCThj9NzV14uxa6pae/cESsldjNjMy5MOZUXjGP
+	7uRZ51L7//TMWgAO8rXlmiEqlQaLIDfDzbaMpkT30JAE64LNdRGc2f2bxvH+edlBXO8Jlx
+	cxEo5Uwr+FAepTbwxvv1IpMwxp9QKmLNUGwxqcXxiTH9AwDSKI4rsQFwW8AN3w==
+Date: Tue, 25 Mar 2025 17:07:16 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
+ patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 6.6 00/77] 6.6.85-rc1 review
+In-Reply-To: <CA+G9fYvWau1nC8wmpWkxG8gWPaRMP9pbkh2eNsAZoUMeRPgzqA@mail.gmail.com>
+References: <20250325122144.259256924@linuxfoundation.org>
+ <CA+G9fYvWau1nC8wmpWkxG8gWPaRMP9pbkh2eNsAZoUMeRPgzqA@mail.gmail.com>
+Message-ID: <a823454af9915fe3acfcb66fd84dc826@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-Update TMA metrics from 4.8 to 5.02. Move INSTS_WRITTEN_TO_IQ.INSTS to
-the frontend topic.
+Hello Naresh,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../arch/x86/jaketown/frontend.json           |  8 ++++
- .../arch/x86/jaketown/jkt-metrics.json        | 40 ++++++++++++++-----
- .../arch/x86/jaketown/metricgroups.json       |  5 +++
- .../pmu-events/arch/x86/jaketown/other.json   |  8 ----
- 4 files changed, 43 insertions(+), 18 deletions(-)
+On 2025-03-25 16:07, Naresh Kamboju wrote:
+> On Tue, 25 Mar 2025 at 18:05, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+>> 
+>> This is the start of the stable review cycle for the 6.6.85 release.
+>> There are 77 patches in this series, all will be posted as a response
+>> to this one.  If anyone has any issues with these being applied, 
+>> please
+>> let me know.
+>> 
+>> Responses should be made by Thu, 27 Mar 2025 12:21:27 +0000.
+>> Anything received after that time might be too late.
+>> 
+>> The whole patch series can be found in one patch at:
+>>         
+>> https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.85-rc1.gz
+>> or in the git tree and branch at:
+>>         
+>> git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git 
+>> linux-6.6.y
+>> and the diffstat can be found below.
+>> 
+>> thanks,
+>> 
+>> greg k-h
+> 
+> 
+> Regressions on arm64 rk3399 dtb builds failed with gcc-13 the
+> stable-rc 6.6.85-rc1
+> 
+> First seen on the v6.6.83-245-gc1fb5424adea
+>  Good: v6.6.84
+>  Bad: 6.6.85-rc1
+> 
+> * arm64, build
+>   - gcc-13-defconfig
+> 
+> Regression Analysis:
+>  - New regression? yes
+>  - Reproducibility? Yes
+> 
+> 
+> Build regression: arm64 dtb rockchip non-existent node or label 
+> "vcca_0v9"
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> ## Build log
+> arch/arm64/boot/dts/rockchip/rk3399.dtsi:221.23-266.4: ERROR
+> (phandle_references):
+> /pcie@f8000000: Reference to non-existent node or label "vcca_0v9"
+> 
+>   also defined at 
+> arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi:659.8-669.3
+> 
+> ## Source
+> * Kernel version: 6.6.85-rc1
+> * Git tree:
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+> * Git sha: c1fb5424adea53e3a4d8b2018c5e974f7772af29
+> * Git describe: v6.6.83-245-gc1fb5424adea
+> * Project details:
+> https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.83-245-gc1fb5424adea/
+> 
+> ## Build
+> * Build log:
+> https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.83-245-gc1fb5424adea/testrun/27760755/suite/build/test/gcc-13-defconfig/log
+> * Build history:
+> https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.83-245-gc1fb5424adea/testrun/27763720/suite/build/test/gcc-13-defconfig/history/
+> * Build details:
+> https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.83-245-gc1fb5424adea/testrun/27760755/suite/build/test/gcc-13-defconfig/
+> * Build link:
+> https://storage.tuxsuite.com/public/linaro/lkft/builds/2uoHmBcVLd60GQ0SVHWAaZRZfNd/
+> * Kernel config:
+> https://storage.tuxsuite.com/public/linaro/lkft/builds/2uoHmBcVLd60GQ0SVHWAaZRZfNd/config
+> 
+> ## Steps to reproduce
+>  - # tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
+> --kconfig defconfig
 
-diff --git a/tools/perf/pmu-events/arch/x86/jaketown/frontend.json b/tools/=
-perf/pmu-events/arch/x86/jaketown/frontend.json
-index 3cb468da7011..97e7760aeb26 100644
---- a/tools/perf/pmu-events/arch/x86/jaketown/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/jaketown/frontend.json
-@@ -278,5 +278,13 @@
-         "EventName": "IDQ_UOPS_NOT_DELIVERED.CYCLES_LE_3_UOP_DELIV.CORE",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Valid instructions written to IQ per cycle.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x17",
-+        "EventName": "INSTS_WRITTEN_TO_IQ.INSTS",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x1"
-     }
- ]
-diff --git a/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json b/too=
-ls/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
-index f8c18741b360..6f636ea0f216 100644
---- a/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
-@@ -127,7 +127,7 @@
-         "MetricGroup": "BvCB;TopdownL3;tma_L3_group;tma_core_bound_group",
-         "MetricName": "tma_divider",
-         "MetricThreshold": "tma_divider > 0.2 & (tma_core_bound > 0.1 & tm=
-a_backend_bound > 0.2)",
--        "PublicDescription": "This metric represents fraction of cycles wh=
-ere the Divider unit was active. Divide and square root instructions are pe=
-rformed by the Divider unit and can take considerably longer latency than i=
-nteger or Floating Point addition; subtraction; or multiplication. Sample w=
-ith: ARITH.DIVIDER_UOPS",
-+        "PublicDescription": "This metric represents fraction of cycles wh=
-ere the Divider unit was active. Divide and square root instructions are pe=
-rformed by the Divider unit and can take considerably longer latency than i=
-nteger or Floating Point addition; subtraction; or multiplication. Sample w=
-ith: ARITH.DIVIDER_ACTIVE",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -211,7 +211,7 @@
-         "MetricGroup": "Compute;Flops;TopdownL5;tma_L5_group;tma_fp_vector=
-_group;tma_issue2P",
-         "MetricName": "tma_fp_vector_128b",
-         "MetricThreshold": "tma_fp_vector_128b > 0.1 & (tma_fp_vector > 0.=
-1 & (tma_fp_arith > 0.2 & tma_light_operations > 0.6))",
--        "PublicDescription": "This metric approximates arithmetic FP vecto=
-r uops fraction the CPU has retired for 128-bit wide vectors. May overcount=
- due to FMA double counting. Related metrics: tma_fp_scalar, tma_fp_vector,=
- tma_fp_vector_256b, tma_fp_vector_512b, tma_port_6, tma_ports_utilized_2",
-+        "PublicDescription": "This metric approximates arithmetic FP vecto=
-r uops fraction the CPU has retired for 128-bit wide vectors. May overcount=
- due to FMA double counting prior to LNL. Related metrics: tma_fp_scalar, t=
-ma_fp_vector, tma_fp_vector_256b, tma_fp_vector_512b, tma_port_6, tma_ports=
-_utilized_2",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -220,7 +220,7 @@
-         "MetricGroup": "Compute;Flops;TopdownL5;tma_L5_group;tma_fp_vector=
-_group;tma_issue2P",
-         "MetricName": "tma_fp_vector_256b",
-         "MetricThreshold": "tma_fp_vector_256b > 0.1 & (tma_fp_vector > 0.=
-1 & (tma_fp_arith > 0.2 & tma_light_operations > 0.6))",
--        "PublicDescription": "This metric approximates arithmetic FP vecto=
-r uops fraction the CPU has retired for 256-bit wide vectors. May overcount=
- due to FMA double counting. Related metrics: tma_fp_scalar, tma_fp_vector,=
- tma_fp_vector_128b, tma_fp_vector_512b, tma_port_6, tma_ports_utilized_2",
-+        "PublicDescription": "This metric approximates arithmetic FP vecto=
-r uops fraction the CPU has retired for 256-bit wide vectors. May overcount=
- due to FMA double counting prior to LNL. Related metrics: tma_fp_scalar, t=
-ma_fp_vector, tma_fp_vector_128b, tma_fp_vector_512b, tma_port_6, tma_ports=
-_utilized_2",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -240,7 +240,7 @@
-         "MetricName": "tma_heavy_operations",
-         "MetricThreshold": "tma_heavy_operations > 0.1",
-         "MetricgroupNoGroup": "TopdownL2",
--        "PublicDescription": "This metric represents fraction of slots whe=
-re the CPU was retiring heavy-weight operations -- instructions that requir=
-e two or more uops or micro-coded sequences. This highly-correlates with th=
-e uop length of these instructions/sequences. ([ICL+] Note this may overcou=
-nt due to approximation using indirect events; [ADL+] .)",
-+        "PublicDescription": "This metric represents fraction of slots whe=
-re the CPU was retiring heavy-weight operations -- instructions that requir=
-e two or more uops or micro-coded sequences. This highly-correlates with th=
-e uop length of these instructions/sequences.([ICL+] Note this may overcoun=
-t due to approximation using indirect events; [ADL+])",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -275,6 +275,12 @@
-         "MetricThreshold": "tma_info_frontend_dsb_coverage < 0.7 & tma_inf=
-o_thread_ipc / 4 > 0.35",
-         "PublicDescription": "Fraction of Uops delivered by the DSB (aka D=
-ecoded ICache; or Uop Cache). Related metrics: tma_dsb_switches, tma_fetch_=
-bandwidth, tma_lcp"
-     },
-+    {
-+        "BriefDescription": "Taken Branches retired Per Cycle",
-+        "MetricExpr": "BR_INST_RETIRED.NEAR_TAKEN / tma_info_thread_clks",
-+        "MetricGroup": "Branches;FetchBW",
-+        "MetricName": "tma_info_frontend_tbpc"
-+    },
-     {
-         "BriefDescription": "Total number of retired Instructions",
-         "MetricExpr": "INST_RETIRED.ANY",
-@@ -290,7 +296,7 @@
-     },
-     {
-         "BriefDescription": "Measured Average Core Frequency for unhalted =
-processors [GHz]",
--        "MetricExpr": "tma_info_system_turbo_utilization * TSC / 1e9 / dur=
-ation_time",
-+        "MetricExpr": "tma_info_system_turbo_utilization * TSC / 1e9 / tma=
-_info_system_time",
-         "MetricGroup": "Power;Summary",
-         "MetricName": "tma_info_system_core_frequency"
-     },
-@@ -308,14 +314,14 @@
-     },
-     {
-         "BriefDescription": "Average external Memory Bandwidth Use for rea=
-ds and writes [GB / sec]",
--        "MetricExpr": "64 * (UNC_M_CAS_COUNT.RD + UNC_M_CAS_COUNT.WR) / 1e=
-9 / duration_time",
-+        "MetricExpr": "64 * (UNC_M_CAS_COUNT.RD + UNC_M_CAS_COUNT.WR) / 1e=
-9 / tma_info_system_time",
-         "MetricGroup": "HPC;MemOffcore;MemoryBW;SoC;tma_issueBW",
-         "MetricName": "tma_info_system_dram_bw_use",
-         "PublicDescription": "Average external Memory Bandwidth Use for re=
-ads and writes [GB / sec]. Related metrics: tma_mem_bandwidth"
-     },
-     {
-         "BriefDescription": "Giga Floating Point Operations Per Second",
--        "MetricExpr": "(FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EX=
-E.SSE_SCALAR_DOUBLE + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * (FP_COMP_=
-OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE) + 8 * SIMD_FP_256.PA=
-CKED_SINGLE) / 1e9 / duration_time",
-+        "MetricExpr": "(FP_COMP_OPS_EXE.SSE_SCALAR_SINGLE + FP_COMP_OPS_EX=
-E.SSE_SCALAR_DOUBLE + 2 * FP_COMP_OPS_EXE.SSE_PACKED_DOUBLE + 4 * (FP_COMP_=
-OPS_EXE.SSE_PACKED_SINGLE + SIMD_FP_256.PACKED_DOUBLE) + 8 * SIMD_FP_256.PA=
-CKED_SINGLE) / 1e9 / tma_info_system_time",
-         "MetricGroup": "Cor;Flops;HPC",
-         "MetricName": "tma_info_system_gflops",
-         "PublicDescription": "Giga Floating Point Operations Per Second. A=
-ggregate across all supported options of: FP precisions, scalar and vector =
-instructions, vector-width"
-@@ -349,11 +355,18 @@
-     },
-     {
-         "BriefDescription": "Average latency of data read request to exter=
-nal memory (in nanoseconds)",
--        "MetricExpr": "1e9 * (UNC_C_TOR_OCCUPANCY.MISS_OPCODE@filter_opc\\=
-=3D0x182@ / UNC_C_TOR_INSERTS.MISS_OPCODE@filter_opc\\=3D0x182@) / (tma_inf=
-o_system_socket_clks / duration_time)",
-+        "MetricExpr": "1e9 * (UNC_C_TOR_OCCUPANCY.MISS_OPCODE@filter_opc\\=
-=3D0x182@ / UNC_C_TOR_INSERTS.MISS_OPCODE@filter_opc\\=3D0x182@) / (tma_inf=
-o_system_socket_clks / tma_info_system_time)",
-         "MetricGroup": "Mem;MemoryLat;SoC",
-         "MetricName": "tma_info_system_mem_read_latency",
-         "PublicDescription": "Average latency of data read request to exte=
-rnal memory (in nanoseconds). Accounts for demand loads and L1/L2 prefetche=
-s. ([RKL+]memory-controller only)"
-     },
-+    {
-+        "BriefDescription": "PerfMon Event Multiplexing accuracy indicator=
-",
-+        "MetricExpr": "CPU_CLK_UNHALTED.THREAD_P / CPU_CLK_UNHALTED.THREAD=
-",
-+        "MetricGroup": "Summary",
-+        "MetricName": "tma_info_system_mux",
-+        "MetricThreshold": "tma_info_system_mux > 1.1 | tma_info_system_mu=
-x < 0.9"
-+    },
-     {
-         "BriefDescription": "Fraction of cycles where both hardware Logica=
-l Processors were active",
-         "MetricExpr": "(1 - CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / (CPU_CLK_=
-UNHALTED.REF_XCLK_ANY / 2) if #SMT_on else 0)",
-@@ -366,6 +379,13 @@
-         "MetricGroup": "SoC",
-         "MetricName": "tma_info_system_socket_clks"
-     },
-+    {
-+        "BriefDescription": "Run duration time in seconds",
-+        "MetricExpr": "duration_time",
-+        "MetricGroup": "Summary",
-+        "MetricName": "tma_info_system_time",
-+        "MetricThreshold": "tma_info_system_time < 1"
-+    },
-     {
-         "BriefDescription": "Average Frequency Utilization relative nomina=
-l frequency",
-         "MetricExpr": "tma_info_thread_clks / CPU_CLK_UNHALTED.REF_TSC",
-@@ -374,7 +394,7 @@
-     },
-     {
-         "BriefDescription": "Measured Average Uncore Frequency for the SoC=
- [GHz]",
--        "MetricExpr": "tma_info_system_socket_clks / 1e9 / duration_time",
-+        "MetricExpr": "tma_info_system_socket_clks / 1e9 / tma_info_system=
-_time",
-         "MetricGroup": "SoC",
-         "MetricName": "tma_info_system_uncore_frequency"
-     },
-@@ -468,7 +488,7 @@
-     {
-         "BriefDescription": "This metric estimates fraction of cycles wher=
-e the core's performance was likely hurt due to approaching bandwidth limit=
-s of external memory - DRAM ([SPR-HBM] and/or HBM)",
-         "MetricExpr": "min(CPU_CLK_UNHALTED.THREAD, cpu@OFFCORE_REQUESTS_O=
-UTSTANDING.ALL_DATA_RD\\,cmask\\=3D6@) / tma_info_thread_clks",
--        "MetricGroup": "BvMS;MemoryBW;Offcore;TopdownL4;tma_L4_group;tma_d=
-ram_bound_group;tma_issueBW",
-+        "MetricGroup": "BvMB;MemoryBW;Offcore;TopdownL4;tma_L4_group;tma_d=
-ram_bound_group;tma_issueBW",
-         "MetricName": "tma_mem_bandwidth",
-         "MetricThreshold": "tma_mem_bandwidth > 0.2 & (tma_dram_bound > 0.=
-1 & (tma_memory_bound > 0.2 & tma_backend_bound > 0.2))",
-         "PublicDescription": "This metric estimates fraction of cycles whe=
-re the core's performance was likely hurt due to approaching bandwidth limi=
-ts of external memory - DRAM ([SPR-HBM] and/or HBM).  The underlying heuris=
-tic assumes that a similar off-core traffic is generated by all IA cores. T=
-his metric does not aggregate non-data-read requests by this logical proces=
-sor; requests from other IA Logical Processors/Physical Cores/sockets; or o=
-ther non-IA devices like GPU; hence the maximum external memory bandwidth l=
-imits may or may not be approached when this metric is flagged (see Uncore =
-counters for that). Related metrics: tma_info_system_dram_bw_use",
-diff --git a/tools/perf/pmu-events/arch/x86/jaketown/metricgroups.json b/to=
-ols/perf/pmu-events/arch/x86/jaketown/metricgroups.json
-index 7dc7eb0d3dd3..eb8fbd14138a 100644
---- a/tools/perf/pmu-events/arch/x86/jaketown/metricgroups.json
-+++ b/tools/perf/pmu-events/arch/x86/jaketown/metricgroups.json
-@@ -9,6 +9,7 @@
-     "BvCB": "Grouping from Top-down Microarchitecture Analysis Metrics spr=
-eadsheet",
-     "BvFB": "Grouping from Top-down Microarchitecture Analysis Metrics spr=
-eadsheet",
-     "BvIO": "Grouping from Top-down Microarchitecture Analysis Metrics spr=
-eadsheet",
-+    "BvMB": "Grouping from Top-down Microarchitecture Analysis Metrics spr=
-eadsheet",
-     "BvML": "Grouping from Top-down Microarchitecture Analysis Metrics spr=
-eadsheet",
-     "BvMP": "Grouping from Top-down Microarchitecture Analysis Metrics spr=
-eadsheet",
-     "BvMS": "Grouping from Top-down Microarchitecture Analysis Metrics spr=
-eadsheet",
-@@ -33,6 +34,7 @@
-     "InsType": "Grouping from Top-down Microarchitecture Analysis Metrics =
-spreadsheet",
-     "L2Evicts": "Grouping from Top-down Microarchitecture Analysis Metrics=
- spreadsheet",
-     "LSD": "Grouping from Top-down Microarchitecture Analysis Metrics spre=
-adsheet",
-+    "LockCont": "Grouping from Top-down Microarchitecture Analysis Metrics=
- spreadsheet",
-     "MachineClears": "Grouping from Top-down Microarchitecture Analysis Me=
-trics spreadsheet",
-     "Machine_Clears": "Grouping from Top-down Microarchitecture Analysis M=
-etrics spreadsheet",
-     "Mem": "Grouping from Top-down Microarchitecture Analysis Metrics spre=
-adsheet",
-@@ -48,6 +50,7 @@
-     "Pipeline": "Grouping from Top-down Microarchitecture Analysis Metrics=
- spreadsheet",
-     "PortsUtil": "Grouping from Top-down Microarchitecture Analysis Metric=
-s spreadsheet",
-     "Power": "Grouping from Top-down Microarchitecture Analysis Metrics sp=
-readsheet",
-+    "Prefetches": "Grouping from Top-down Microarchitecture Analysis Metri=
-cs spreadsheet",
-     "Ret": "Grouping from Top-down Microarchitecture Analysis Metrics spre=
-adsheet",
-     "Retire": "Grouping from Top-down Microarchitecture Analysis Metrics s=
-preadsheet",
-     "SMT": "Grouping from Top-down Microarchitecture Analysis Metrics spre=
-adsheet",
-@@ -75,6 +78,7 @@
-     "tma_bad_speculation_group": "Metrics contributing to tma_bad_speculat=
-ion category",
-     "tma_branch_resteers_group": "Metrics contributing to tma_branch_reste=
-ers category",
-     "tma_core_bound_group": "Metrics contributing to tma_core_bound catego=
-ry",
-+    "tma_divider_group": "Metrics contributing to tma_divider category",
-     "tma_dram_bound_group": "Metrics contributing to tma_dram_bound catego=
-ry",
-     "tma_dtlb_load_group": "Metrics contributing to tma_dtlb_load category=
-",
-     "tma_dtlb_store_group": "Metrics contributing to tma_dtlb_store catego=
-ry",
-@@ -99,6 +103,7 @@
-     "tma_issueSmSt": "Metrics related by the issue $issueSmSt",
-     "tma_issueSyncxn": "Metrics related by the issue $issueSyncxn",
-     "tma_issueTLB": "Metrics related by the issue $issueTLB",
-+    "tma_itlb_misses_group": "Metrics contributing to tma_itlb_misses cate=
-gory",
-     "tma_l1_bound_group": "Metrics contributing to tma_l1_bound category",
-     "tma_light_operations_group": "Metrics contributing to tma_light_opera=
-tions category",
-     "tma_machine_clears_group": "Metrics contributing to tma_machine_clear=
-s category",
-diff --git a/tools/perf/pmu-events/arch/x86/jaketown/other.json b/tools/per=
-f/pmu-events/arch/x86/jaketown/other.json
-index 42692fa24b6c..970839a9c786 100644
---- a/tools/perf/pmu-events/arch/x86/jaketown/other.json
-+++ b/tools/perf/pmu-events/arch/x86/jaketown/other.json
-@@ -33,14 +33,6 @@
-         "SampleAfterValue": "2000003",
-         "UMask": "0x2"
-     },
--    {
--        "BriefDescription": "Valid instructions written to IQ per cycle.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0x17",
--        "EventName": "INSTS_WRITTEN_TO_IQ.INSTS",
--        "SampleAfterValue": "2000003",
--        "UMask": "0x1"
--    },
-     {
-         "BriefDescription": "Cycles when L1 and L2 are locked due to UC or=
- split lock.",
-         "Counter": "0,1,2,3",
---=20
-2.49.0.395.g12beb8f557-goog
-
+This is caused by another patch from the original series failing
+to apply due to some bulk regulator renaming.  I'll send backported
+version of that patch soon, which should make everything fine.
