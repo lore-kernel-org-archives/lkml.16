@@ -1,137 +1,177 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A7E2638B6
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 17:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F92263F49
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 17:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742925151; cv=none; b=O7790VVzjK2rA/zSn9h+5AAxJgCHrZ0gmKa9E+8G/eBa81oZ0wTN+lpewsBL82f1ZzjGKXXRIPtvAaqpDpzAkvFe9pnLuFYDXPEWQzO4NawbZ773ARJG59OFt4nprSH45Dh1T78bX5RrQltp4E5mcxpRqpRLVIXRKjtWxOaiyJM=
+	t=1742925165; cv=none; b=TCzy9deHnpOfv/0FJjXne/PNY6m+N9cP08wi3QVWuRJVrkUQfs0FPJRyfQLWdOW2Nftb+6svQF1ijU8KXUdmtfPyrDnJqwEHAffzJtlNCJNBqfhW2dZXy/JYKFo0il9T+BZErWNAuzMugxga+aImZIo8Sm3zVrSu6ijhhW50T10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742925151; c=relaxed/simple;
-	bh=hnt+gROIGEYtDufShCECnYtdK/HGy9wQEpwLYnzkD2g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MOqr6h8Ts0XceUTweF89Qh2m4tu1iJYdc+AA1DuUZvEJX6zD9+PZ5S9mbw88gGNzat0Zck4sWtMo4GEEYZeqN8dYR+m277Miuly5KfAmvd4KG7kVonR4/k7EblOhH8aipIeZmYGFOurp6wwE/s1t4BTLmZ3tjpNIzH1YNbh2D2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aP4vmID2; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742925165; c=relaxed/simple;
+	bh=rqgWaiOeIHt4zG94xEwnMSEUgdwajlC/lHAStnrVhlo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=CkxLULx9g0xkYulIntAzF+wc1tZkokIrxcQYK0FDkN6wxTC76bN6ANDxTbRabBdTWWy3Y9bZMlgnFFG0mR6Q8vbuxyCN2CC7x2okDksztGFWPY7YTSkRmLY/0VNJiAJ4Dhoe+k5wf/e30QC9M4SyoxtoiAsxWHVEwSaQo3o3IkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G12cdrLZ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aP4vmID2"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5deb6482cso133314a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 10:52:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742925148; x=1743529948; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mKA5WA5HVfIrcWNVNbTnmvzq77SZqSw1yWIAelErrYA=;
-        b=aP4vmID28kRd8EvQyXIrBike8dSK4vLiwOO1Os8Q7/cdDYcHMsw61ATVNMt/bWXMHB
-         YTDvuThygz9qJ5nsaBGjTG3cRzf7bIXepusqLqUmK6R4jyfajNKTQy7UswsactU14cIB
-         ndeKSXkikqf6DlEEWSV0QpAKCAtsXcKU4N1MVf5e+fOpc5YOw3DLd972/97w+TM24Ona
-         pWTS0exJIdPF+eSeOU2m5qLm+RzRVfLUcBfZqAGe6PGqGpvLUHZLF5DUV/aUSWfryGd2
-         WTYtQTpPmiGiz4MFT85VsCAn57k/dUcsCvliu9tydOfrlK9Ubq0fjdbZXkYK006n8lJi
-         s1qQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G12cdrLZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742925161;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=58+r+FAQ5TTby/P3+2e15XArHywgR9oB31F4zzKw58o=;
+	b=G12cdrLZiH2O0I4Fg9LV2QgbNKilLkFryvzQoZqQyrdz4IU7BXV+H8AgVX+ixYY3mzjs0J
+	pr8rcxZr3R2Od8PodkTO80jh4WHY8KNzNIjFL+0u585isJEqAChbTEthKR4TJWoPYyrqkh
+	Lpm5nAIXo8zJzGyw9V+1NuhsjdY9mtU=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-182-ixxye6OSNP-7ybaDNEPqKQ-1; Tue, 25 Mar 2025 13:52:40 -0400
+X-MC-Unique: ixxye6OSNP-7ybaDNEPqKQ-1
+X-Mimecast-MFC-AGG-ID: ixxye6OSNP-7ybaDNEPqKQ_1742925159
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43935e09897so37573515e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 10:52:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742925148; x=1743529948;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mKA5WA5HVfIrcWNVNbTnmvzq77SZqSw1yWIAelErrYA=;
-        b=iBIbhmsQznCfk4yg4Xozr+2BWdYuvBhS+p703fPZ6hfBWy0An85UmCkmDzpnz9RgLl
-         UVVnEDB4RVUkQIvb4yO/z9oIiQK9lVx68C5CWIcs1iXs26Kjp+hzKF/SlVzs7KpWOBsB
-         rCcU9uqn62hNI5V+zaJDEQep8skEhEJSPxkWWaRoowc6y3+SJQx2BHAWboysBA6iQ8zY
-         qt6B8uu4bhvFTw9Prm01/2MTtVlAO1+dmcatzmvIQUCwgomCU5lj2XG+SCM/f0HcCIqT
-         miMdrZYRFvNxCJdvV47QkQ28pQvW6pKj/3SdfSA/F4yNJ62kkKnzSyE5eJSxcLUyVXFw
-         IoXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUaU864hJWGcZfqyQsh8oiGVKRvSXk3u+l1QGcBWNyTE/rhoNx7zYLuhG0AwXmkeSps3uE18r6Uj8vO+SU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkoT/LwjA67S35dpU6JvR3bnXAZoLmkUyr4N+LyHEy5WPq9Hc6
-	yfYzKjfomYt+eVLHv+CCMQE/6yNA1Q9Yf8h8D3pAAKzZUx/vJUkl
-X-Gm-Gg: ASbGnctiTH1HSdCDkltK1ZEv+NSSC6KkHGYfKJ1hm9GSAPrKBNGtNPV5f0QIoWE2Sx0
-	8su5tpmPE38eXHH4iF9Kfu98xNmjrNrH9QyGFKkwXDTFCeergPoaY31V7k7xqroV2JdoUTOtDmD
-	bTmBXQza0EUTqb2L4Kf2FP6X4ojzq6MYcBguE1q9mttAhIlOxh/csma56tGv496AN2ZGR8pgB5E
-	h7La45VoSovGeHS+YqtQR7MHn8CfoUBEq6xPkk8T9/2FgCCwvOvegmBL18HrDDX6/8mlWLnDRTT
-	dOw6qYADa6vstf73yX6TnvzP+/4U6WRZR+TaAhAU+6GnqmgJu9SMHg==
-X-Google-Smtp-Source: AGHT+IEHgnV8No9iUwCozetBpvcTdwgDWXnhBeYNArNKIWhT8OK/eFn2icOJI25l7X4Iim4Is5idmg==
-X-Received: by 2002:a05:6402:26d3:b0:5e5:334e:86d9 with SMTP id 4fb4d7f45d1cf-5ed43ba9268mr566408a12.13.1742925147757;
-        Tue, 25 Mar 2025 10:52:27 -0700 (PDT)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ebcd0cefdcsm8027789a12.58.2025.03.25.10.52.26
+        d=1e100.net; s=20230601; t=1742925159; x=1743529959;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=58+r+FAQ5TTby/P3+2e15XArHywgR9oB31F4zzKw58o=;
+        b=knWPc1tzhUKltKXSTJk2LXrOfrbMZ3DF0D4eWPnpifR9/+a745bIU7iDoNyZoVeDTB
+         XCk5VlL9ePiZb9HgTKXNLx+7Pkz412CW12ibBkkPjE3t1O9WQc+S0xgYSMWaWfXrVt0o
+         GJXC/NKtBP2yLOeZyZ5YceoqkOeytSJL2n+gbaZ8j/5p6692UIhu/75NwS1yEBFyr1ET
+         RnvXiFFMCgLnJjhhWvQDT3mNDeZ6+/C8VuI2MS6uNTIFGJMT4E097Pql9zrrXMGJZmpy
+         GFTH5H3rnycBnaZjwqI5fxk+eL/5Nslh9TYfEIy/RyVXyJOMqfhsKP68Z5HuS0U0UstI
+         E+yA==
+X-Gm-Message-State: AOJu0YzwOt8xAHHqoYhHw91eofTyiBiDsVWaP2gvVUilQL7E2hsS2Tgv
+	QoKKWoxCXeECRZChh30MgDG+NLEOJQrtOiRqLeEJTvhnJImu/xRXloNnEm9TgLV8wZlolVMbhQB
+	85jVa+T2lUF2gLgmocH7waAFkhdt6crDVbbkmXEXeu24jW2WbmRspqBEi7fxWug==
+X-Gm-Gg: ASbGncuzsAXvwxiKElWcx8A4/VO1TNhR6gkK59xgjvIcXWw211gDy9b2xSJRG68FB5T
+	sDAX3Hq/XhRY3sSWDx/4+IZagIrGxQeotIGhjkQ/QxYcs423Ype3o9oeNi3Y4jGa324FWB+q2Vr
+	xDJ6mpKrqgMMcePv5l/D5eFvNiRgALR4T8bsuWiDDGDl8idXl/2KuV8EQndYZBMlom42WPrxCkQ
+	onR7fY5kNAj6jwRhebU9VNfNjX+0qMNcV+9Lp2YYQhJw0verDFvkIThnpcZ1PD8D+jkw8ga2dZM
+	awFnM0xcB2xxqRAwV0xqmbtL6yfzxiaUk9l8P/N2HIY9HeDNDL/B9KC9DmUJsmuejb5VqWhxXOv
+	W
+X-Received: by 2002:a05:600c:4584:b0:43c:fe85:e4ba with SMTP id 5b1f17b1804b1-43d509f4b25mr191666585e9.15.1742925159179;
+        Tue, 25 Mar 2025 10:52:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFE+waNkOHjpFuU78xXxVfBVrthL7+/n2itqapsAHnKkAlkbjOyC6OGUhEtlUEcPF/6kvS3dA==
+X-Received: by 2002:a05:600c:4584:b0:43c:fe85:e4ba with SMTP id 5b1f17b1804b1-43d509f4b25mr191665765e9.15.1742925158655;
+        Tue, 25 Mar 2025 10:52:38 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9b409fsm14543767f8f.50.2025.03.25.10.52.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 10:52:27 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH 2/2] x86/bitops: Fix false output register dependency of TZCNT insn
-Date: Tue, 25 Mar 2025 18:52:02 +0100
-Message-ID: <20250325175215.330659-2-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20250325175215.330659-1-ubizjak@gmail.com>
-References: <20250325175215.330659-1-ubizjak@gmail.com>
+        Tue, 25 Mar 2025 10:52:37 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Dave Hansen <dave.hansen@intel.com>, Jann Horn <jannh@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, xen-devel@lists.xenproject.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+ bcm-kernel-feedback-list@broadcom.com, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski
+ <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Jason
+ Baron <jbaron@akamai.com>, Steven Rostedt <rostedt@goodmis.org>, Ard
+ Biesheuvel <ardb@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Clark Williams <williams@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
+ Tomas Glozar <tglozar@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Christoph
+ Hellwig <hch@infradead.org>, Shuah Khan <shuah@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl
+ <aliceryhl@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Samuel Holland <samuel.holland@sifive.com>, Rong Xu <xur@google.com>,
+ Nicolas Saenz Julienne <nsaenzju@redhat.com>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Yosry Ahmed <yosryahmed@google.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, Jinghao Jia <jinghao7@illinois.edu>, Luis
+ Chamberlain <mcgrof@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v4 29/30] x86/mm, mm/vmalloc: Defer
+ flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
+In-Reply-To: <408ebd8b-4bfb-4c4f-b118-7fe853c6e897@intel.com>
+References: <20250114175143.81438-1-vschneid@redhat.com>
+ <20250114175143.81438-30-vschneid@redhat.com>
+ <CAG48ez1Mh+DOy0ysOo7Qioxh1W7xWQyK9CLGNU9TGOsLXbg=gQ@mail.gmail.com>
+ <xhsmh34hhh37q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez3H8OVP1GxBLdmFgusvT1gQhwu2SiXbgi8T9uuCYVK52w@mail.gmail.com>
+ <xhsmh5xlhk5p2.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <CAG48ez1EAATYcX520Nnw=P8XtUDSr5pe+qGH1YVNk3xN2LE05g@mail.gmail.com>
+ <xhsmh34gkk3ls.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <352317e3-c7dc-43b4-b4cb-9644489318d0@intel.com>
+ <xhsmhjz9mj2qo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <d0450bc8-6585-49ca-9cad-49e65934bd5c@intel.com>
+ <xhsmhh64qhssj.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <eef09bdc-7546-462b-9ac0-661a44d2ceae@intel.com>
+ <xhsmhfrk84k5k.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <408ebd8b-4bfb-4c4f-b118-7fe853c6e897@intel.com>
+Date: Tue, 25 Mar 2025 18:52:34 +0100
+Message-ID: <xhsmhy0wtngkd.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Haswell and later Intel processors, the TZCNT instruction appears
-to have a false dependency on the destination register. Even though
-the instruction only writes to it, the instruction will wait until
-destination is ready before executing. This false dependency
-was fixed for Skylake (and later) processors.
+On 20/02/25 09:38, Dave Hansen wrote:
+> But, honestly, I'm still not sure this is worth all the trouble. If
+> folks want to avoid IPIs for TLB flushes, there are hardware features
+> that *DO* that. Just get new hardware instead of adding this complicated
+> pile of software that we have to maintain forever. In 10 years, we'll
+> still have this software *and* 95% of our hardware has the hardware
+> feature too.
 
-Fix false dependency by clearing the destination register first.
+Sorry, you're going to have to deal with my ignorance a little bit longer...
 
-The x86_64 defconfig object size increases by 4215 bytes:
+Were you thinking x86 hardware specifically, or something else?
+AIUI things like arm64's TLBIVMALLE1IS can do what is required without any
+IPI:
 
-	    text           data     bss      dec            hex filename
-	27342396        4642999  814852 32800247        1f47df7 vmlinux-old.o
-	27346611        4643015  814852 32804478        1f48e7e vmlinux-new.o
+C5.5.78
+"""
+The invalidation applies to all PEs in the same Inner Shareable shareability domain as the PE that
+executes this System instruction.
+"""
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
----
- arch/x86/include/asm/bitops.h | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+But for (at least) these architectures:
 
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index bbaf75ea6703..7e3d1cc97c5a 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -248,8 +248,9 @@ arch_test_bit_acquire(unsigned long nr, const volatile unsigned long *addr)
- 
- static __always_inline unsigned long variable__ffs(unsigned long word)
- {
--	asm("tzcnt %1,%0"
--		: "=r" (word)
-+	asm("xor %k0,%k0\n\t" /* avoid false dependency on dest register */
-+	    "tzcnt %1,%0"
-+		: "=&r" (word)
- 		: ASM_INPUT_RM (word));
- 	return word;
- }
-@@ -267,8 +268,9 @@ static __always_inline unsigned long variable__ffs(unsigned long word)
- 
- static __always_inline unsigned long variable_ffz(unsigned long word)
- {
--	asm("tzcnt %1,%0"
--		: "=r" (word)
-+	asm("xor %k0,%k0\n\t" /* avoid false dependency on dest register */
-+	    "tzcnt %1,%0"
-+		: "=&r" (word)
- 		: "r" (~word));
- 	return word;
- }
--- 
-2.42.0
+  alpha
+  x86
+  loongarch
+  mips
+  (non-freescale 8xx) powerpc
+  riscv
+  xtensa
+
+flush_tlb_kernel_range() has a path with a hardcoded use of on_each_cpu(),
+so AFAICT for these the IPIs will be sent no matter the hardware.
+
 
