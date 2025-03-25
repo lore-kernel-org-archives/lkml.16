@@ -1,116 +1,109 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38780267B19;
-	Tue, 25 Mar 2025 20:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A88F267B9E;
+	Tue, 25 Mar 2025 20:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742933222; cv=none; b=IaWnRlYa2m7VXvVoTCDHB9crZAlPCFJ+P1SwFfFONZpZe6qU7jrcEHwRXkprsLED+29dmZ4oAiSv3YI1gAjXkheMM2vM9NJXdq3atASdB3EXUToKCe8Lit/mubNYSfzKjxMR7NnMN3P+KzLDMPPRyLVRw1kg+eAfA5AFRss4EkY=
+	t=1742933224; cv=none; b=elFYqINr8V3aMDAlrcG4zcsGU4MLpVn4nvebXZuS/RnisTr7UnCJuh/z3zV64Z1FHiljXhUyYdKorYrHPujfsA5OTmB1QXap2yt/u8gEbK2HUh0UJiieztVFoB2+Sepnb+7lhQmgXmi2AkibfM8DYqcyas1zfJlQBat8E847TTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742933222; c=relaxed/simple;
-	bh=1yFUcOpHUOIgBreFOly1F38SGM7zd64N3dGYLNDoXic=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KTduN+UieO9yqzy9b2M45m4cEZqji8gh/8HxQjv4WCQFjRKcydoDMlGQAddfSQU4Rg6EZb1gxqgbT7SUz4PP3vbNc/GY12k1+LdPGLnmSy93Zmse+WiMXCEosWd6Mhdo2AK1/YX549Vyi+rxqAQJ08GOKPd1tMyzOnnlBsPmjXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cUPxsKsI; arc=none smtp.client-ip=209.85.222.174
+	s=arc-20240116; t=1742933224; c=relaxed/simple;
+	bh=tj0V8WO1QBHCvlLieT9zL79MvFmfnXHh40llfNUDrnw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ZQorr3h+Gu8mPlGTBCv1gvDPOtZHRdgWI7Vv8CsATDABXhNt4Tdim2qidOnuUuuFSAOj3oL0sd1dvLQm5reEEhHtAR7wtNVHjAm4Ec9ZUxTdVChTNPCC33zqp0vDVNcNgY9akA10OgTnaXxTYQv7aRlfmIvNUQFL3VoWiHUbvmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=khCB68gx; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cUPxsKsI"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c547932d2eso361404985a.0;
-        Tue, 25 Mar 2025 13:07:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="khCB68gx"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-223f4c06e9fso3953795ad.1;
+        Tue, 25 Mar 2025 13:07:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742933220; x=1743538020; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rBwQPN2xCDYLo+eBhch8X/oz6/HNwZpgTbIjMvkraHE=;
-        b=cUPxsKsISQEKK5WbijY4pBsOKM/XA7z0Oon+nlTnkQt+ODZDn9Bokuy7ZZrcmm4Cps
-         ljBIn2B69Jls3d35XllKj95vhGCqxue4z1fTrJZk7WAc81AkZ6Pli3ijvZZSN+Yhwqjd
-         W3jcXECnLpQ8AdaO8O8M4nD0XnYb+0bAY9DqqriU7IvL2uM384d6g8bg8IRx4BMD40NR
-         OwEYuMqafJeCkEsxtZzEoA1kgml1orWz9Vl5S4Ia7EpkzTC/caZ6dmhYN5ftHQLdsW//
-         cxgL7hUkm/50u/RVCtZAFYoSMmwPhjmoUzkRm1lV1zu5yGPZYbwzfywuJVe1xAuElXvS
-         wTfQ==
+        d=gmail.com; s=20230601; t=1742933222; x=1743538022; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tj0V8WO1QBHCvlLieT9zL79MvFmfnXHh40llfNUDrnw=;
+        b=khCB68gx2zeYn5+4lu4SLeF0W8MHPn6IkoNvdNc8dqyHC7Sw5Hv4GopsthfHMHkzTJ
+         //uCIgxSf7liM3jWcQTSnfPbNzZG3PfzWDpyChqX6z9fUNdI+NakSbQ7EgjRA7MiH2F7
+         A4pxL5ddHe1pmtLDLxE0mV9R/xAyxW1fztX6Jo0o1WO3k1EXcx58O7Ut564kiFUgXbc6
+         5f56+RKlkmSjtn9NOpXbaiu6dQemK6GxXB4TrywNui8G/MDt3g0TKoyMhwvtKqWQjkB5
+         Ea4eQyxgeVtdS+XwZiYzIFQVRi7tpLGH5QiUHz/xnzH/fSZMFzAP6LhOrvA8eXnvdVXf
+         PU3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742933220; x=1743538020;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rBwQPN2xCDYLo+eBhch8X/oz6/HNwZpgTbIjMvkraHE=;
-        b=LtloUl76hq2/wBFiD5LVsk9kedTC/kj0bbM7Dh0+HD5WwLjwtCBDzDAtt4SMghkpys
-         ny2uLoo8K/QDYgFG2jEoYrEj1SK0LuG8axgVSEIzQOv3PGTaEgKIr9Pg+RlEKyA8FVKJ
-         E9a+LuYG40x5CNpxcKKWIZpVjrd2CfNBaQ8Jg+k0m+Qf/C1M3KNqFKpy8WNs0EopKe1R
-         0ms8EuviMHgLLF2nY4PGNBLj+buq1PzL0BUfiH5mgz2ZERRrHk6+wUdBlbjgcy7MsU2i
-         Jxtr8vpFsywBdz9ApCJqqI53CEqMBvKL+IcHaxZTv8AnKe55bInQ3KckuueaaWLI8yep
-         I0UQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVdJm6TLWLUyaua4Obi2lVMIb1/X+zZ5aqGpleMBv4MoZe2E/IDSDoS2ikraXP6GJMn9SYEs6ORoXfLIeA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6cLcgR6VtWt69BG59PwJtpF35BHuWPzTCkxZgOWz2fWCap6LV
-	TQ9fxpJnw7XJEMxqaKtWSFzHafnuRm/dJefQE2NVowyEMXnUZutf
-X-Gm-Gg: ASbGncuiw+aEYh9Uo4YirPc2mJm8rI2C52HhsVu3jUqgdteR1oz1YdK+xjWHfevj+iC
-	ndd/gRGILulYp2/sZGigdASDzrRCvX9QnFntq9A0EuV2NywP8j/8GlVhuTJIQSwOHncwiD/gxhm
-	mnoxuAZa0xnCefXTrK1m3ShxeFwti373Av8TIpNcmAsMkFlLYtuwM7VI7Ohp3G/9zXM7G+eRGvj
-	m20oPoVi4x3Tuhbp7lsizitrMQ6G8yuR9kehmcB0AGvIJCGfacysPXyXANRNMqZNF+npQjvnYmz
-	/LZ/yYUVNGid7HcmS4jL0aFchHD4hCRvqbaUO6D3fN4qRsU73omT4NhqXRShIrdJWe6Paqbxa3j
-	hQIZ2AE4grcSKy5FySSYRgYjobj9Kl6/H8AIzwWbOIywzLDCM4SKkzg==
-X-Google-Smtp-Source: AGHT+IEKVbuE0KyXkkSD6p62PPcUjmD6BHNj9U3H61XKcvKbWqqImBFROAg6gD4n8iLDTwscXPJFDQ==
-X-Received: by 2002:a05:620a:4443:b0:7c3:ccf5:363e with SMTP id af79cd13be357-7c5ba15c1b9mr2818260185a.13.1742933216574;
-        Tue, 25 Mar 2025 13:06:56 -0700 (PDT)
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:38f6])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b92ed179sm673528485a.57.2025.03.25.13.06.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 13:06:55 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 25 Mar 2025 16:06:34 -0400
-Subject: [PATCH v5 11/13] scripts: generate_rust_analyzer.py: avoid FD leak
+        d=1e100.net; s=20230601; t=1742933222; x=1743538022;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tj0V8WO1QBHCvlLieT9zL79MvFmfnXHh40llfNUDrnw=;
+        b=doCWiTzrrC6t8e8AwDRh1wvGBisvtE9GBuscaB+Upe2Y3e5xXl8lGrB+PXVklLJi3F
+         9ogzpPmAfoId14td23017+45BUU2pecsCNZanr8rwjqfszfJPkEbdSGLIPsTGSqFblVh
+         qBjuAEoq88VkprzZVejopvnTO+uYUYXNJ8tqDCMq0TVeJxsDT9S+asUMvahWjQLJX7Yg
+         cndZIrB3QIb4Vn4Ua8hSorKVr/hJ6HL4CPSFDohHsSik6wZMhCO+VFVr0+a7K1jJrMl+
+         jy/Wh5zQqb9XN4KsJA1L6h8IM7A90mO3hpQnq4pkMeCASbu6tVWDYLLdYWaW8oERVTJp
+         9ZKg==
+X-Forwarded-Encrypted: i=1; AJvYcCUIyYct1DukGdkSb2JT2uMCUYMqQohpt5XujjB1mAj1cJ6dU4P8Ijuf2P4K81FJO/kmP+3HpBBB9hDHp9Ko@vger.kernel.org, AJvYcCV4AyCF871IeQXpBcLYskRScJr6g6D5PI66g49EYC1gftFm6QNDuXWoXKXq2RnikLk4oug0j8pSwAE4@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjbrtJLcSNxu7EeaSH5DQ8iE/DJPyQ3LAHoLaAnswpObd+rLNy
+	D+vUMfnV8tAsXVy1CqLYqr4qDtcyvZVtpDdq638FwoOc2ApeGffe
+X-Gm-Gg: ASbGncusKhmAeLbI10HjOEWCgLckH0hJEG1GBQCcLAerBIwriH/r/f3EnXkzTGwLTam
+	BqazVVWZ3IRiJ/7j3M5JZdQz7BiLMdWSPU3cFD2j7BL8UyspNy6BCvPsjogCJ5RLwh2s729KYFK
+	IAFnKo0Z4q0Z3z1/YKIT1sYzUH8tV4kqrVKrocdZqtowxRqcwJMcJl9NAcfx1cME5LZjKOdmlW4
+	FuRNvdbLa6M1qhPGAEJFf8OErEA1Jib0F+Mta0g2z1GPdlH06X17L21FJkOLhOVRwy3tFYLz/wN
+	oiLLJ3c7qFaboJ68qqLojwyt1ePQBvpdgEAbj0hDPRwex5W2
+X-Google-Smtp-Source: AGHT+IE+lzdM+Ptk09dWS8IoLI3bFfZRmtMysmn4d27tUOZ9HPEFhuMB+8v3KUg2zEBCEiB9ShFc7A==
+X-Received: by 2002:a17:902:f547:b0:225:abd2:5e5a with SMTP id d9443c01a7336-227efaa0686mr12163825ad.4.1742933222434;
+        Tue, 25 Mar 2025 13:07:02 -0700 (PDT)
+Received: from localhost ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811da32fsm94335935ad.182.2025.03.25.13.07.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Mar 2025 13:07:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250325-rust-analyzer-host-v5-11-385e7f1e1e23@gmail.com>
-References: <20250325-rust-analyzer-host-v5-0-385e7f1e1e23@gmail.com>
-In-Reply-To: <20250325-rust-analyzer-host-v5-0-385e7f1e1e23@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Boris-Chengbiao Zhou <bobo1239@web.de>, Kees Cook <kees@kernel.org>, 
- Fiona Behrens <me@kloenk.dev>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Lukas Wirth <lukas.wirth@ferrous-systems.com>, 
- Tamir Duberstein <tamird@gmail.com>, 
- Daniel Almeida <daniel.almeida@collabora.com>
-X-Mailer: b4 0.15-dev
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 25 Mar 2025 17:06:58 -0300
+Message-Id: <D8PM9ESWNN10.QARF2AMDMH6W@gmail.com>
+Cc: "Mario Limonciello" <mario.limonciello@amd.com>, "Len Brown"
+ <lenb@kernel.org>, <linux-acpi@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ACPI: platform_profile: Optimize _aggregate_choices()
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Armin Wolf" <W_Armin@gmx.de>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Mark
+ Pearson" <mpearson-lenovo@squebb.ca>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250322-pprof-opt-v1-1-105455879a82@gmail.com>
+ <a66f55aa-9ee1-404b-8f78-258b307ea361@gmx.de>
+In-Reply-To: <a66f55aa-9ee1-404b-8f78-258b307ea361@gmx.de>
 
-Use a context manager to avoid leaking file descriptors.
+On Tue Mar 25, 2025 at 4:36 PM -03, Armin Wolf wrote:
+> Am 22.03.25 um 22:03 schrieb Kurt Borja:
+>
+>> Choices aggregates passed to _aggregate_choices() are already filled
+>> with ones, therefore we can avoid copying a new bitmap on the first
+>> iteration.
+>>
+>> This makes setting the PLATFORM_PROFILE_LAST bit on aggregates
+>> unnecessary, so drop it as well.
+>>
+>> While at it, add a couple empty lines to improve style.
+>>
+> Please add a comment to signal future developers that the bitmap needs to=
+ be filled with ones
+> before being passed to _aggregate_choices().
 
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
-Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
-Reviewed-by: Fiona Behrens <me@kloenk.dev>
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- scripts/generate_rust_analyzer.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Sure, I'll mention it in the kernel-doc for v2.
 
-diff --git a/scripts/generate_rust_analyzer.py b/scripts/generate_rust_analyzer.py
-index ea4dd68d0dd9..e3f1ec856ecf 100755
---- a/scripts/generate_rust_analyzer.py
-+++ b/scripts/generate_rust_analyzer.py
-@@ -251,7 +251,8 @@ def generate_crates(
- 
-     def is_root_crate(build_file: pathlib.Path, target: str) -> bool:
-         try:
--            return f"{target}.o" in open(build_file).read()
-+            with open(build_file) as f:
-+                return f"{target}.o" in f.read()
-         except FileNotFoundError:
-             return False
- 
+>
+> With this being addressed:
+>
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
--- 
-2.49.0
+Thank you Mario and Armin for the reviews!
 
+--=20
+ ~ Kurt
