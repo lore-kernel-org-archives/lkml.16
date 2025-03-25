@@ -1,108 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BD920E30F;
-	Tue, 25 Mar 2025 15:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B784918A6AB;
+	Tue, 25 Mar 2025 15:58:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742918320; cv=none; b=Iw3uuFP/e1S0uwDsqmX8Le8WmnQ27Sy12ncPP3AXyrBTQarOVnecWpW9erorzKbACaCl0SvFTLVfvTNU+Sjb0tRejBzqr/WNVnAIt+L/ZVEKatuiEXZqyByqx2/vq1mgGEKvLB5zgRo7gjT8xu5LvEdNxoBoB+tORIM3ys5gDFg=
+	t=1742918340; cv=none; b=pkkUIAmB/xiWFT/1IC/8k9N5N+T1kfW+C0lH9ncvILHqBGImXhRrNMkfSZm/XFqGH8/U69G36xHUjoYfsrsjMzBz3+MnyqWKRfz+vHl02eFckcZdsD5EdRDdx2UcF7rFx7cANBocxFjBlFPgVMyuDxVm57/Ji2WGu0yU8EDDqyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742918320; c=relaxed/simple;
-	bh=B5U+FnoyiD8ehcQwNrX3Bjp4on7HLO0Q7pE59+Vx5is=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J5wybZRBnlwsZ2N0q+On8kkqWjfXMvOC8FjALm08OOSZHD01NFf5a0M36HH2Fpd7lBgkhFmM7GY9iJX0mxrsBZ3o+D3jHAc0kkvwoJ5gvtnza+G0PdADIcUZOmIKNBIt/ORDcofZJjtBn/5I4yKSb6qAI4q2apq0LzMR2YDkD7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WJJl+ED1; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742918340; c=relaxed/simple;
+	bh=mtwsqA8PakWZMH413YQKjvGljPxyyNqwwyQFCNzvbbk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RiZaURXFRK0UVPkDwQthTin/IAyqC3KIaFiwzBk92ygKvXT5FQK+drW/yTI3f0GsHKvUbXzGdTjSuXErVq2oEPIEIvFu+dP79P4m3kTXrM9FXXw8rYiotizkh1GRBwqnoK/Y+QLsCh59X8yYpMtEFMWraNUfh1W8JnsA4K8U/0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QrlJkonk; arc=none smtp.client-ip=209.85.167.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WJJl+ED1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742918319; x=1774454319;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=B5U+FnoyiD8ehcQwNrX3Bjp4on7HLO0Q7pE59+Vx5is=;
-  b=WJJl+ED13g661dH+4Zso1nlB/UgQwA0JjhcDSCaU+/YOYvzhwrciKd+V
-   a1Re4bWH2MfObE1qAVwSvEcTMqKFhmcRHzjaEiz24/wxqMlaNE8bW6Mx7
-   A8XzCByoQsNDYn3cWgym8hZn8amcxAis9OL+/H12+ksWSH8YPD5ZII2h8
-   mWgihlOm2k+SO+SQnPjqh/0IIph2xiO07/zRLXHlE67lKWdz1MWhP7i5I
-   R3njqVKAhuVslDBgp2Gd0WhhcvAifUa3aiRSz291zCnFskWFoR9TJpr6M
-   GRdopDY6fl7YBQcSDN28+fE1W519hpd/rUDtc1KtC4Ydp/9jjeWrj1KP3
-   w==;
-X-CSE-ConnectionGUID: VAITzi+CR2SHtF1HeBeQ3g==
-X-CSE-MsgGUID: Uq+T3maRRte9eC6IMCGOgg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11384"; a="55554972"
-X-IronPort-AV: E=Sophos;i="6.14,275,1736841600"; 
-   d="scan'208";a="55554972"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 08:58:38 -0700
-X-CSE-ConnectionGUID: zM8aJLmCQ1uFZw0B+5Ks7w==
-X-CSE-MsgGUID: P+HCHL29QAGv6ulPZo1Uag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,275,1736841600"; 
-   d="scan'208";a="124370501"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 08:58:33 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1tx6fd-00000005nK4-12Ba;
-	Tue, 25 Mar 2025 17:58:29 +0200
-Date: Tue, 25 Mar 2025 17:58:29 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v5 09/11] input: keyboard: Add support for MAX7360 keypad
-Message-ID: <Z-LSpRq3M3YYGOsW@smile.fi.intel.com>
-References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
- <20250318-mdb-max7360-support-v5-9-fb20baf97da0@bootlin.com>
- <Z9qybcY7VyQBvZMv@smile.fi.intel.com>
- <D8PFO3LSGWQD.38SX4PSHQ84W2@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QrlJkonk"
+Received: by mail-lf1-f67.google.com with SMTP id 2adb3069b0e04-549967c72bcso6710609e87.3;
+        Tue, 25 Mar 2025 08:58:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742918337; x=1743523137; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WxXlB3Q2YL2Ilad6LW0JN/V9aTo4Xt5BBRqQjvL+Sk4=;
+        b=QrlJkonkl/DwPcnC8t2hLA7IUZQTtP9zaDUYDKctoNnXl4d+idNxbPtzfoaPGeE0ta
+         T+cz+yFFi2uDiQhWDUWXXDJeHKvcI+QaRoeIVWHrddxqJuY+rLtwiHnkQ5EUm8NAzdL7
+         mf1gXXVqyblcctUpg3/KQB/kCXpOvLhXBUwqYEnJCmXSutztnEjT+Uf6Vrd8YX1/zOww
+         J/DH2eGxXfI3tf4OOBH/xtuTSo741fvxvK1ywEtcMDo13x0tmKHcigHyeMKRgjZAcTJV
+         KDGZO1euHRs7zCXdgwOeTiYwwrDDqt7fvB3KkG4uokDSa56CdBliZXOHnG1OzjfG6vAv
+         1ePg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742918337; x=1743523137;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WxXlB3Q2YL2Ilad6LW0JN/V9aTo4Xt5BBRqQjvL+Sk4=;
+        b=kswIFEPWk31bPhLbPd3bsrGEvrUu7kQYkIp76GAkREF6VHSWdnd8DtwuErbGXTOFdY
+         IQep1f7bvcyRCASJsyaFjGWb/LbxBdmAh86kwXCEzf+orwBNKdfu7f9e+rQDZQvFYyKF
+         L7LTjTk++8xrjw7dO21z2NJtEezVhVWmZb1d+9v+C9yXSNjrEk99zT12v/EAi+T8NzZh
+         on336NAlX7rG4Nvmm1xVWMwaCixamIcwNbx5JiBCHhZd9MXL9YiLukcMIPLqvxhtE2zr
+         ZXFfrxxkFZ3t+Hrl1InHetdSqRNFAxrLidKLfyHjEEqMjh/pc7TBRtFtzryGLT+g93yV
+         dLmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUcbwPjNWPmFH8/Mhr9dwi4lAF0znMZ4FTeG99bKPZIEtA2DRDmnMFcwEcpiTaMnLJJdiPJQooAn91t@vger.kernel.org, AJvYcCXSHAd3QiJtQ6wYj7kQofG2ba1wUXNcRx3AwT/mTXUAir641qD/b/JZWXXn7pZaaodvVowPUP6wBFHdYQjm@vger.kernel.org
+X-Gm-Message-State: AOJu0YytQxTqaIaoazk/5AsgddLFfEQw+hYeRwF73IP+cwx461EZQ+hK
+	+1nEXJqgdiVUR18EHmuIIAdOVxeqGjaffF+MvPTX9pyPhEb5H4u5
+X-Gm-Gg: ASbGncvxTqnwPHBQcymoAWtP85jDfRQ3C/DIoiwieyvwvmCqpWplqHAuv7jtWT3fv5e
+	A5iZKSfrquJyzWFEEo3RYFRDWoOSq/kxihXCw3J3QU126dZopsizfwDMo4AJ6RVHZvD+nX3zNl6
+	NpNjt2NocXxqU8/s0eRc/GpA7ozu+U8S0cu10XSAkU4+QTvIwLn8Zs26cgrgjM5Bxw0w0bXMfAs
+	CQuSps3dBpDMEkidiLu2Uw72QchtugSyH1eCGAePiMggUyF8qW6QTV2c/M6HlH5n6Z4ZxFChm26
+	uzoBBkag2AxWHSWI5nAZQoE/A9MqdeyXGDuh8Sn6ibo5jajK10i8UEgMLA==
+X-Google-Smtp-Source: AGHT+IHrbmRJ4XKU9ftZ0EjXOQDmgfR01iKjUAzH+4vTrN7X920Ls+acQM0brH8Yhs+E5/llV1y8wA==
+X-Received: by 2002:a05:6512:3e23:b0:545:22ec:8b6c with SMTP id 2adb3069b0e04-54ad64b311cmr6540631e87.35.1742918336460;
+        Tue, 25 Mar 2025 08:58:56 -0700 (PDT)
+Received: from pilotmaintrash.lan ([178.34.180.83])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ad646cedfsm1544573e87.2.2025.03.25.08.58.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 08:58:56 -0700 (PDT)
+From: Alexander Baransky <sanyapilot496@gmail.com>
+To: neil.armstrong@linaro.org,
+	quic_jesszhan@quicinc.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: Alexander Baransky <sanyapilot496@gmail.com>,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] Add Visionox G2647FB105 panel support
+Date: Tue, 25 Mar 2025 18:57:47 +0300
+Message-ID: <20250325155756.703907-1-sanyapilot496@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D8PFO3LSGWQD.38SX4PSHQ84W2@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 25, 2025 at 03:57:01PM +0100, Mathieu Dubois-Briand wrote:
-> On Wed Mar 19, 2025 at 1:02 PM CET, Andy Shevchenko wrote:
-> > On Tue, Mar 18, 2025 at 05:26:25PM +0100, Mathieu Dubois-Briand wrote:
+This patch series adds support for the Visionox G2647FB105 panel, used in:
+- Xiaomi Mi Note 10 / CC9 Pro (sm7150-xiaomi-tucana)
+- Xiaomi Mi Note 10 Lite (sm7150-xiaomi-toco)
 
-...
+Testing has been done by me on sm7150-xiaomi-tucana. According to the
+downstream DTS, this driver should be fully compatible with the
+sm7150-xiaomi-toco (unfortunately not tested) without requiring any
+modifications.
 
-> > > +	ret = devm_request_threaded_irq(&pdev->dev, irq, NULL, max7360_keypad_irq,
-> > > +					IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-> >
-> > What's wrong with the interrupt flags provided by firmware description?
-> 
-> So same question as for the GPIO driver: IRQF_TRIGGER_LOW from the
-> firmware, but IRQF_ONESHOT from the driver? Or should everything come
-> from the firmware?
+Signed-off-by: Alexander Baransky <sanyapilot496@gmail.com>
 
-The same answer, yes, the Linux stuff (e.g., ONESHOT) should be given
-explicitly here.
+Alexander Baransky (2):
+  dt-bindings: display: panel: Add Visionox G2647FB105
+  drm/panel: Add Visionox G2647FB105 panel driver
+
+ .../display/panel/visionox,g2647fb105.yaml    |  79 +++++
+ drivers/gpu/drm/panel/Kconfig                 |   9 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ .../gpu/drm/panel/panel-visionox-g2647fb105.c | 277 ++++++++++++++++++
+ 4 files changed, 366 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/visionox,g2647fb105.yaml
+ create mode 100644 drivers/gpu/drm/panel/panel-visionox-g2647fb105.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.49.0
 
