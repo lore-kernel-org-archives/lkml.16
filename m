@@ -1,79 +1,72 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912991F63D9;
-	Wed, 26 Mar 2025 15:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552281F7910
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743004734; cv=none; b=kYg4E9ZfV3q201EdJYcRXIsFmMvPHcH1otUOk210Wi6jiJPpM7UAU4xFqw2+UkE363n3rnWJs2x1kMdkDw0znXsKitsEMh46h8eEK5t7c3Y/CmZQ+d+iOVzpr/5gS6KIag5QcEL6C6iaeENibvpHQ2+GgojdGskFOaL44QAN5Hg=
+	t=1743004735; cv=none; b=ZE8K7xRHvI20hGmARaDafyQ3EK6WafG6bgBPH5Qdo+ix9pRfH+r2AhlYgC6axrKylKyD9EI/nOsne36XUjDydJwPQA9khDKInxiN87bPyMtQEfcvrNPuYXK1GEBkG2maq5sus3N31bW3+xRUmm3zoo2Pa4UgeGN/Q4IwszAgWjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743004734; c=relaxed/simple;
-	bh=NejtlTor2FpD1GJUomMaCO5RdVyHraorG0c0pmJ9Ouk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eWGHFS2gbqlZM6PWN9MwjHYD7Wz2mZUMVs+sHGS7OTUG8MwYEwphzulgmvL5xQH3I66oaquCRwUJMAY9/k5I5++ket+oKNzimuxeomWhzwcrz/sWhKSv+GPH6/w7sRRsCr8aGMCrH9APOcSFos3bcf70PxXh4faZ7YqxhSrW83s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=eo5uYP9N; arc=none smtp.client-ip=192.19.144.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1743004735; c=relaxed/simple;
+	bh=Ko35wHuYTUsyD9pNDD6CddW86SuHmvVF/p8rHOgc5Kc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=osrdr3iN1K8uGvLKpvPEUMZxy+uGz3VslWZeexuvv81BwG2ZBZzI9oodziWXEcEkLuYlNn9+srj6/HS+aEleShSWp0Q0iuOTxV3rAR76t4rYuHwwMwwZG/W6+YCWR96hNBj4lE3+rlNuEJZXRjy2BewvVaka4aVf8hF9vJC0RS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=furiosa.ai; spf=none smtp.mailfrom=furiosa.ai; dkim=pass (1024-bit key) header.d=furiosa.ai header.i=@furiosa.ai header.b=T8VWEhwI; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=furiosa.ai
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=furiosa.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="eo5uYP9N"
-Received: from mail-acc-it-01.broadcom.com (mail-acc-it-01.acc.broadcom.net [10.35.36.83])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id C97FAC003AC9;
-	Wed, 26 Mar 2025 08:58:51 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com C97FAC003AC9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1743004731;
-	bh=NejtlTor2FpD1GJUomMaCO5RdVyHraorG0c0pmJ9Ouk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eo5uYP9N3yBJIVl2ifd2E56kR/fM9yf0z/zCw7IZynLfg6VlQ9ycmaRBGBvLwwxuH
-	 +QoYgvR6ZTuV4acRi3mywjMsI6Ks5uS5jCV0jH/9TaVOJWyKWE/5C7+1BHdnQ7hF7t
-	 lhU+1GRALgW62MJ7P/EKBj69hMJNDt6HYhXjxvAc=
-Received: from stbirv-lnx-1.igp.broadcom.net (stbirv-lnx-1.igp.broadcom.net [10.67.48.32])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail-acc-it-01.broadcom.com (Postfix) with ESMTPSA id 233EA4002F44;
-	Wed, 26 Mar 2025 11:58:49 -0400 (EDT)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: stable@vger.kernel.org
-Cc: Ilya Maximets <i.maximets@ovn.org>,
-	Friedrich Weber <f.weber@proxmox.com>,
-	Aaron Conole <aconole@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Carlos Soto <carlos.soto@broadcom.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Pravin B Shelar <pshelar@ovn.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <kafai@fb.com>,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Willem de Bruijn <willemb@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Breno Leitao <leitao@debian.org>,
-	Felix Huettner <felix.huettner@mail.schwarz>,
-	Yan Zhai <yan@cloudflare.com>,
-	=?UTF-8?q?Beno=C3=AEt=20Monin?= <benoit.monin@gmx.fr>,
-	Thomas Graf <tgraf@suug.ch>,
-	Justin Pettit <jpettit@nicira.com>,
-	Andy Zhou <azhou@nicira.com>,
-	Simon Horman <simon.horman@corigine.com>,
-	Luca Czesla <luca.czesla@mail.schwarz>,
-	netdev@vger.kernel.org (open list:NETWORKING [GENERAL]),
-	linux-kernel@vger.kernel.org (open list),
-	dev@openvswitch.org (open list:OPENVSWITCH),
-	bpf@vger.kernel.org (open list:BPF (Safe dynamic programs and tools))
-Subject: [PATCH stable 5.10 v3 2/2] openvswitch: fix lockup on tx to unregistering netdev with carrier
-Date: Wed, 26 Mar 2025 08:58:41 -0700
-Message-Id: <20250326155841.4133945-3-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250326155841.4133945-1-florian.fainelli@broadcom.com>
-References: <20250326155841.4133945-1-florian.fainelli@broadcom.com>
+	dkim=pass (1024-bit key) header.d=furiosa.ai header.i=@furiosa.ai header.b="T8VWEhwI"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ff187f027fso2696080a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:58:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=furiosa.ai; s=google; t=1743004733; x=1743609533; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vaZQ+2MJDMVjz/9PaIWP0hky9ATIPKX3HyuJU/jmspM=;
+        b=T8VWEhwIWdprG7TzGEYgjk8BP/tosxJmDPwv1apaqgnHfMtYfvrE9EfeKFk/WJGTiP
+         T4knKjFqT11kDt1yCPC0XVRr2Kdte1to2oNh4c6QneRLhxyYh/RXmCf4oNPIAuAx2xXa
+         90KmDNoJ+JQunZJbAulL5f7e+W61mYfNEIJEM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743004733; x=1743609533;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vaZQ+2MJDMVjz/9PaIWP0hky9ATIPKX3HyuJU/jmspM=;
+        b=cxq/OQiYx8Fxxl3RGzoKtatSLS6AXGt+JTzW69gal9Y3Zgj/Z+s5vG8u164HVBttZ5
+         iGsTVjW7IpbzdHI60nmCdJw6u5vArTObcyKWru66ozu18HDifv3g/UJ0M2FLKauSdDq/
+         lF+TghrqQzEGmpIJKu8XTq6gltJzkLjQpwNspnfiBLtIyLKcKqhFQl2nJNdIHJFYPF0k
+         IXi1xuDhFkwHkcYjieb4jzbvhm1ulVyX6YP1fIWRB/6dBmqs1tFGrUqlgWZpIk+ybK6n
+         BzcomD2U2aH+XqqX42vrMRaI/BGzQhtDlqGHJkzYTCcsZHPcSoUTbY02tnl3Tdn2v321
+         f5gw==
+X-Forwarded-Encrypted: i=1; AJvYcCUAilK8vtUJKU4ifuhUTp6c7HDIKAZzvYu20R4IOv4DvF0AztTRrK7u/8qHrIFXjX0ymv/PS3gepCCDSvA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWGUqH5mIXZ23HHKywrQs5NMvVTcbixxU9vexbczM6jhPVlW0C
+	6QFFMae4W3KK1DJeUQkaVXo8eDxNpGARRq9lXgsOWaP36w75WGd8VBZjHScCntU=
+X-Gm-Gg: ASbGnctHxbG/O+gC1Ut2PeH1NLJoJyG4BoFTCQ1RNGWCJrHi3T13g7+NFUc/YHmRVA4
+	90le49c/KJT3PgOb/AK5yjx6OvU5d59cgmFGfKzvgDzoa6hdZPynR85C74ZOKg5hBqmj7suUSRL
+	mS74RNsl6srUMsm80KiNpvEJA+jq4VDxIPnBKaTJKtCTy3Y876GpxzZs1iGJ3yr/edxP3lcH6F3
+	u2P023eexS4TrLeXBakZ6NiE7FIjNJhgxLlM1UJ+bEth4FMfDv44oV+rlQN/4tYoFSapBZApZpP
+	qjXyzZaG9Q/4VShI26ZyjqisXJrT3ZsQVIDUzuTJAeUsT/LhwtptKeiSNxeIx9VQH5TOL9AGhVt
+	xN561
+X-Google-Smtp-Source: AGHT+IHFgZ5MnxSjZ1MnHHSC8h28hT1dJVRZQpLzJ1vDyTU635J4PM5CGpBG8FJ9Nnh2HGTU+QyICw==
+X-Received: by 2002:a17:90b:3e8d:b0:2fc:aaf:74d3 with SMTP id 98e67ed59e1d1-303788c3949mr5434698a91.4.1743004733212;
+        Wed, 26 Mar 2025 08:58:53 -0700 (PDT)
+Received: from sidong.sidong.yang.office.furiosa.vpn ([61.83.209.48])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73905fab1d1sm12423939b3a.32.2025.03.26.08.58.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 08:58:52 -0700 (PDT)
+From: Sidong Yang <sidong.yang@furiosa.ai>
+To: Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>,
+	Mark Harmstone <maharmstone@fb.com>
+Cc: linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	Sidong Yang <sidong.yang@furiosa.ai>
+Subject: [PATCH 6.14] btrfs: ioctl: error on fixed buffer flag for io-uring cmd
+Date: Wed, 26 Mar 2025 15:57:36 +0000
+Message-ID: <20250326155736.611445-1-sidong.yang@furiosa.ai>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,79 +75,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Ilya Maximets <i.maximets@ovn.org>
+Currently, the io-uring fixed buffer cmd flag is silently dismissed,
+even though it does not work. This patch returns an error when the flag
+is set, making it clear that operation is not supported.
 
-[ Upstream commit 47e55e4b410f7d552e43011baa5be1aab4093990 ]
-
-Commit in a fixes tag attempted to fix the issue in the following
-sequence of calls:
-
-    do_output
-    -> ovs_vport_send
-       -> dev_queue_xmit
-          -> __dev_queue_xmit
-             -> netdev_core_pick_tx
-                -> skb_tx_hash
-
-When device is unregistering, the 'dev->real_num_tx_queues' goes to
-zero and the 'while (unlikely(hash >= qcount))' loop inside the
-'skb_tx_hash' becomes infinite, locking up the core forever.
-
-But unfortunately, checking just the carrier status is not enough to
-fix the issue, because some devices may still be in unregistering
-state while reporting carrier status OK.
-
-One example of such device is a net/dummy.  It sets carrier ON
-on start, but it doesn't implement .ndo_stop to set the carrier off.
-And it makes sense, because dummy doesn't really have a carrier.
-Therefore, while this device is unregistering, it's still easy to hit
-the infinite loop in the skb_tx_hash() from the OVS datapath.  There
-might be other drivers that do the same, but dummy by itself is
-important for the OVS ecosystem, because it is frequently used as a
-packet sink for tcpdump while debugging OVS deployments.  And when the
-issue is hit, the only way to recover is to reboot.
-
-Fix that by also checking if the device is running.  The running
-state is handled by the net core during unregistering, so it covers
-unregistering case better, and we don't really need to send packets
-to devices that are not running anyway.
-
-While only checking the running state might be enough, the carrier
-check is preserved.  The running and the carrier states seem disjoined
-throughout the code and different drivers.  And other core functions
-like __dev_direct_xmit() check both before attempting to transmit
-a packet.  So, it seems safer to check both flags in OVS as well.
-
-Fixes: 066b86787fa3 ("net: openvswitch: fix race on port output")
-Reported-by: Friedrich Weber <f.weber@proxmox.com>
-Closes: https://mail.openvswitch.org/pipermail/ovs-discuss/2025-January/053423.html
-Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
-Tested-by: Friedrich Weber <f.weber@proxmox.com>
-Reviewed-by: Aaron Conole <aconole@redhat.com>
-Link: https://patch.msgid.link/20250109122225.4034688-1-i.maximets@ovn.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Carlos Soto <carlos.soto@broadcom.com>
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Fixes: 34310c442e17 ("btrfs: add io_uring command for encoded reads (ENCODED_READ ioctl)")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sidong Yang <sidong.yang@furiosa.ai>
 ---
- net/openvswitch/actions.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/btrfs/ioctl.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
-index 9b07e2172c94..1f05fa85d295 100644
---- a/net/openvswitch/actions.c
-+++ b/net/openvswitch/actions.c
-@@ -913,7 +913,9 @@ static void do_output(struct datapath *dp, struct sk_buff *skb, int out_port,
- {
- 	struct vport *vport = ovs_vport_rcu(dp, out_port);
+diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+index 6c18bad53cd3..62bb9e11e8d6 100644
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -4823,6 +4823,12 @@ static int btrfs_uring_encoded_read(struct io_uring_cmd *cmd, unsigned int issue
+ 		ret = -EPERM;
+ 		goto out_acct;
+ 	}
++
++	if (cmd->flags & IORING_URING_CMD_FIXED) {
++		ret = -EOPNOTSUPP;
++		goto out_acct;
++	}
++
+ 	file = cmd->file;
+ 	inode = BTRFS_I(file->f_inode);
+ 	fs_info = inode->root->fs_info;
+@@ -4959,6 +4965,11 @@ static int btrfs_uring_encoded_write(struct io_uring_cmd *cmd, unsigned int issu
+ 		goto out_acct;
+ 	}
  
--	if (likely(vport && netif_carrier_ok(vport->dev))) {
-+	if (likely(vport &&
-+		   netif_running(vport->dev) &&
-+		   netif_carrier_ok(vport->dev))) {
- 		u16 mru = OVS_CB(skb)->mru;
- 		u32 cutlen = OVS_CB(skb)->cutlen;
++	if (cmd->flags & IORING_URING_CMD_FIXED) {
++		ret = -EOPNOTSUPP;
++		goto out_acct;
++	}
++
+ 	file = cmd->file;
+ 	sqe_addr = u64_to_user_ptr(READ_ONCE(cmd->sqe->addr));
  
 -- 
-2.34.1
+2.43.0
 
