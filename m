@@ -1,154 +1,139 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D06F1A255C
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 23:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B71E5028C;
+	Wed, 26 Mar 2025 23:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743031245; cv=none; b=ZfttsqjUfa0gSzGmwWSCxvFQCj14ib5SPLI9D3JQnRQkh9uoievPFK/WlIPlmWW4/seyQ/PvXMrV+bhFKhwGk8SFiMlVF+pidbk7SGCCiTumdhS1WBAGo8YFg2h6y9R9kVdbSJ9IUuyR59uOyQr+hAd6EmUvbTk+UE2GDcnlTgI=
+	t=1743031296; cv=none; b=ukR0+XKef8zU1Sn9uc2hg124BDF0OtprFVv8dGeuV71O6m6QMNhILaicLjnGR5F298f0S0vMJVACkrEoT6DHArD+4f5dROmRgCpON69IOD5s/QS7CTI5y1UJk2/5erv5W7LYPD+tt2D5UEqmqRngJ2cDgCul2ybBu6fpNKvqcqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743031245; c=relaxed/simple;
-	bh=eEE2r1yYFkUZu7hEG2XGMjMoeTAApxZuXF2Q5/43/SA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XlCz4+y+8KEyovuHn3181KGLmekFxUYrT4OVGa7GBMO7BC1b+Fec5GMp76bflGJlsvF5K4uGYmJkICnX/JZmrdUc8d2sLo+mSNlETerTTvqou6aUrsBCDFhNTrQQBW72HGm7/9AXViIzmjjRQ02rB97KHvOOWHbFs3cin0Vy0Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VulDeUkB; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743031296; c=relaxed/simple;
+	bh=lgNxuxN9BEKZ/qMmg9zwTlKkDmzDFfXUpPWJ/K2w6Ag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nZjQLdZP/cdk2J0Uk4h4waemUvydJShFzCka5uFXrYOPXGKJqfPMWyXSqFqFqUt7+YGulOFhKL9a3sMwfqk19jPiMug7xD+nbC2Wr8XdzVg9wjWAOhV1J3IyqrQ3FlBVyvYhRosR2hQzu+PQCkk7jPIKSFnadCdeQCqozCj1t6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Le71A9jA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VulDeUkB"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so3471105e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 16:20:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743031241; x=1743636041; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XuFo84pE+zU/a5xWpeUooNoDSLrcVG0XywvPlUvoobY=;
-        b=VulDeUkBZJdhVfEi7UAmIteQ7+twfxrhvthHGXAEyq28sS9fPmb/uOb7gQXSB6Xav4
-         RMCHUXc4BeBrgQ3X45vo7Jg/X1rSNWWLXKpZNfQnzHEPtfLSrft73WmsvVEXCSJkZujr
-         gWlOQQZrhkIRisK1ZD6VfZXN89VHt/QFxjsIN0qbmtJ/1tbY8qHF1p3UQLUQnvv3UR4h
-         IRZiQxXKKuqv5swDsxNql7GCwDtHl6O91/eA4VwxWxVhttus5tMZMRyOs4jn+iQgjt8W
-         Fq3G3l5FKuyHR997ES4Bs1yyo0Z5bjM0RpgLwTuBhVTn924ka2MN/K4MJLUel8tSvOE/
-         pU6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743031241; x=1743636041;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XuFo84pE+zU/a5xWpeUooNoDSLrcVG0XywvPlUvoobY=;
-        b=IvGbef31gQ/jwkOHT30VYR889UiYP8UERzkcvua+CVtQcQJBT+lp6at+KHDmGKY4Wp
-         xWDq5hd36YVCiTv0L8ANkjhX8Wdi3ROZCo87QO/kw1cb9XFfy8v/Z45A6eWKG75xhIGL
-         /0Lrq1Fc6FD0cymmAyBZjbZkJu+z34QO5OfCT934vN10DLt+eeOv4s3EOOo9/lWizR1B
-         fGSg4AdhZC6UGE1HrY9iKKpxg3h8BWEpMIrZkm2YOX5uxAguXvU90DxWPpJJ4PUqFyRe
-         Wk+CJVYakCeyTdRlVAhFpd34EUxBFPsr55tWYsJSULWMx4ASksZClS7bjdP4flSa+XPc
-         YfDw==
-X-Forwarded-Encrypted: i=1; AJvYcCVlHSuKdwcIml7BowotZ4Pse7KzE/dNuw/NO1hSvIvCr3KL5hgWgCWhtKfW+gtSn0YGwinHns6yy1Acc7M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMo3ZM3FJPHFj3+b7zM9uFFJDBoXy55MyVFEUGg5OmFyWp9E3m
-	PvZBLWjFlS4WQBB//weeyN5LA9Nyx7z97NhE+lyMWhEByDDAJasIhNed6s1scSQ=
-X-Gm-Gg: ASbGncu/io25bSgEFHZShAGSIU7oYveXSdF0gF+eqgftwI/0NEGiAYMX8cnNPW6+NAE
-	wSUYh+EDrQhVgvHzKtw/Nxht6LFYhXgMs7qQ4HYZLUlqqIww4BwJLy6JpicjP19mokyE4CiIPv0
-	0/uXjtndCqaiRheKSr0Z/pHRBhoUQGBWdAgXN4V68EPATLF763A2e8SCjI4ib0xlEugUtit0zes
-	QSHMY+VWDfn0jaaNNmB6jU9QMPafD+o0r3bnuV7g2Y/JQ99uzaVRn1zngEtt7i43vWmkExnURCd
-	KcIiYrE5WmbNJudoef1n8EF98kEPhHO6pKLM9jmO3n6ly7vkKdOBJjWL7YiexEPn9wybKBCBblX
-	5t+SadKzWtA==
-X-Google-Smtp-Source: AGHT+IFFqiheC5thw/TIFb+2LZxLiMGm8Pw7LKkpF7QCjDZPBPf2FRSdFD6V9DQI8xaqabcvnC/8/w==
-X-Received: by 2002:a05:600c:3d97:b0:43a:b0ac:b10c with SMTP id 5b1f17b1804b1-43d8509745dmr9396235e9.26.1743031241531;
-        Wed, 26 Mar 2025 16:20:41 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82f1bb75sm18551995e9.25.2025.03.26.16.20.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Mar 2025 16:20:41 -0700 (PDT)
-Message-ID: <316c55f5-189c-40f6-95e3-c7c0d858a6e8@linaro.org>
-Date: Wed, 26 Mar 2025 23:20:39 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Le71A9jA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C4D7C4CEE2;
+	Wed, 26 Mar 2025 23:21:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743031295;
+	bh=lgNxuxN9BEKZ/qMmg9zwTlKkDmzDFfXUpPWJ/K2w6Ag=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=Le71A9jAr23Pbr2eaaDZNY/F2p4X9dmWnGCRbIrRHsC7FDW5apRa3BrJokxsiOFbo
+	 0fuWGs8sue07IGDvNmAsImD5KkhxfMn8f000Py6+FElunlvVMM3PXtR4UdnYFaBRUP
+	 rz7uMoJOC6ViLYCi06BhFFyPjNnV9puwNM3IDUQr4rJ68zqMmmjSobR3bN0y7x57yH
+	 tF7ZdS3AlsLabp5aXwpjkMKd2XSOjhuy5kinT2KQDslEXYyd1RDs/RzrhajqTYEQkD
+	 nII8EPEeydBf7bZugXONzgHy4aeBHYWXSEI4FGQcYMQ3tM78PHylC7VtbLlRC7pTbn
+	 oU4faA36OtbmQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 343B2CE0C2A; Wed, 26 Mar 2025 16:21:35 -0700 (PDT)
+Date: Wed, 26 Mar 2025 16:21:35 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	"rcu@vger.kernel.org" <rcu@vger.kernel.org>
+Subject: Re: [PATCH 2/3] rcu: Add warning to ensure rcu_seq_done_exact() is
+ working
+Message-ID: <6fbebe6b-89a0-4347-9363-36ccf6b13b62@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250324170156.469763-1-joelagnelf@nvidia.com>
+ <20250324170156.469763-3-joelagnelf@nvidia.com>
+ <4a40eba2-ebd3-42a8-a25f-b7a0ff94256b@paulmck-laptop>
+ <E9D67C85-37FD-4BA7-990D-2BA2ED7E5963@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] arm64: dts: qcom: x1e78100-t14s: add hpd gpio to
- LCD panel
-To: Christopher Obbard <christopher.obbard@linaro.org>,
- Douglas Anderson <dianders@chromium.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, Johan Hovold <johan@kernel.org>,
- Rui Miguel Silva <rui.silva@linaro.org>, Abel Vesa <abel.vesa@linaro.org>,
- devicetree@vger.kernel.org
-References: <20250325-wip-obbardc-qcom-t14s-oled-panel-v2-0-e9bc7c9d30cc@linaro.org>
- <OO_0LvWJ_pUpza-tYPX0qCtcJ0_aZFbYrE81PaiSXqt7-R2mUWB8XyJLww_1t9mMLrI92GH3PconB8FDnbq_NA==@protonmail.internalid>
- <20250325-wip-obbardc-qcom-t14s-oled-panel-v2-2-e9bc7c9d30cc@linaro.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250325-wip-obbardc-qcom-t14s-oled-panel-v2-2-e9bc7c9d30cc@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <E9D67C85-37FD-4BA7-990D-2BA2ED7E5963@nvidia.com>
 
-On 25/03/2025 19:21, Christopher Obbard wrote:
-> The eDP panel has an HPD GPIO. Describe it in the devicetree.
+On Wed, Mar 26, 2025 at 10:50:13PM +0000, Joel Fernandes wrote:
 > 
-> Unfortunately I cannot test this on the non-OLED model since I
-> only have access to the model with OLED (which also uses the
-> HPD GPIO).
 > 
-> I believe this could be split into two patches; one adding the
-> pinctrl node and one adding the hpd gpio to the T14s devicetree.
-> But I will wait for your comments on this ;-).
+> > On Mar 26, 2025, at 6:36 PM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > 
+> > ﻿On Mon, Mar 24, 2025 at 01:01:54PM -0400, Joel Fernandes wrote:
+> >> The previous patch improved the rcu_seq_done_exact() function by adding
+> >> a meaningful constant for the guardband.
+> >> 
+> >> Ensure that this is working for the future by a quick check during
+> >> rcu_gp_init().
+> >> 
+> >> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+> > 
+> > This is a good test for the guardband being way too short.
+> 
+> Thanks. Let me know if I could add your review tag!
+> 
+> > Are there other tests the should be run, possibly on a separate gp_seq
+> > used only for testing?  Should the test below be under CONFIG_PROVE_RCU?
+> 
+> Yes, I could move it to PROVE RCU and it should be sufficient for testing.
+> 
+> The other test I was working on is to force the counter wrapping and hence gpwrap which is related. 
 
-There's nothing wrong with defining a pin when you also use it but 
-emoji's in a commit log are surely verboten !
+Very good on both counts.
 
+> Maybe we could also some testing around false negatives not happening too often (for examples with the rcu_seq_done()).
 > 
-> Signed-off-by: Christopher Obbard <christopher.obbard@linaro.org>
-> ---
->   arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi | 11 +++++++++++
->   1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
-> index 962fb050c55c4fd33f480a21a8c47a484d0c82b8..46c73f5c039ed982b553636cf8c4237a20ba7687 100644
-> --- a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
-> @@ -980,8 +980,12 @@ &mdss_dp3 {
->   	aux-bus {
->   		panel: panel {
->   			compatible = "edp-panel";
-> +			hpd-gpios = <&tlmm 119 GPIO_ACTIVE_HIGH>;
->   			power-supply = <&vreg_edp_3p3>;
-> 
-> +			pinctrl-0 = <&edp_hpd_n_default>;
-> +			pinctrl-names = "default";
-> +
->   			port {
->   				edp_panel_in: endpoint {
->   					remote-endpoint = <&mdss_dp3_out>;
-> @@ -1286,6 +1290,13 @@ hall_int_n_default: hall-int-n-state {
->   		bias-disable;
->   	};
-> 
-> +	edp_hpd_n_default: edp-hpd-n-state {
-> +		pins = "gpio119";
-> +		function = "gpio";
-> +		drive-strength = <2>;
-> +		bias-pull-up;
-> +	};
-> +
->   	pcie4_default: pcie4-default-state {
->   		clkreq-n-pins {
->   			pins = "gpio147";
-> 
-> --
-> 2.49.0
-> 
-> 
-This definition looks consistent with the schematic to me.
+> I will add more tests if I come across usecases.
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Keep the counter from just after the start (or just before the end)
+of the previous grace period and verify that it also has not ended just
+after the start of the current grace period?
+
+							Thanx, Paul
+
+> Thanks!
+> 
+> Joel
+> 
+> > 
+> >                            Thanx, Paul
+> > 
+> >> ---
+> >> kernel/rcu/tree.c | 5 +++++
+> >> 1 file changed, 5 insertions(+)
+> >> 
+> >> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> >> index 659f83e71048..29ddbcbea25e 100644
+> >> --- a/kernel/rcu/tree.c
+> >> +++ b/kernel/rcu/tree.c
+> >> @@ -1798,6 +1798,7 @@ static noinline_for_stack bool rcu_gp_init(void)
+> >>    struct rcu_data *rdp;
+> >>    struct rcu_node *rnp = rcu_get_root();
+> >>    bool start_new_poll;
+> >> +    unsigned long old_gp_seq;
+> >> 
+> >>    WRITE_ONCE(rcu_state.gp_activity, jiffies);
+> >>    raw_spin_lock_irq_rcu_node(rnp);
+> >> @@ -1825,7 +1826,11 @@ static noinline_for_stack bool rcu_gp_init(void)
+> >>     */
+> >>    start_new_poll = rcu_sr_normal_gp_init();
+> >>    /* Record GP times before starting GP, hence rcu_seq_start(). */
+> >> +    old_gp_seq = rcu_state.gp_seq;
+> >>    rcu_seq_start(&rcu_state.gp_seq);
+> >> +    /* Ensure that rcu_seq_done_exact() guardband doesn't give false positives. */
+> >> +    WARN_ON_ONCE(rcu_seq_done_exact(&old_gp_seq, rcu_seq_snap(&rcu_state.gp_seq)));
+> >> +
+> >>    ASSERT_EXCLUSIVE_WRITER(rcu_state.gp_seq);
+> >>    trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq, TPS("start"));
+> >>    rcu_poll_gp_seq_start(&rcu_state.gp_seq_polled_snap);
+> >> --
+> >> 2.43.0
+> >> 
