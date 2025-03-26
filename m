@@ -1,57 +1,55 @@
 Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA7818A6B5
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 00:09:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABFC190068
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 00:10:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742947791; cv=none; b=h1vKL4UN3gPUYUl1SaKr+HYsICvnqBZa+DrcKSa9TIWcKxe2FQl3Wi2ukxq/c91Ug7/Yqpoi3QJ7UYSdLPbjXe5qjsWyCdObdxMtQkc2mlw14vPzUu2eLCVeqMQUmO6Nkd6Gb7PlbbUBLVhZWV5qtKMEp/oItXFaoONRQQ9b4q4=
+	t=1742947807; cv=none; b=BmjewhLIH2qmKiqDR3s4UxDkA/4xmxGDKfY9FWGEelh6kcnmR2IXRojcRVK94D2b75ALfqwAbVPXmgFODqgCH18no86Qke8ubLh5jxsHLQMh6Ldgb+UNjzibq97bZaIEAOgpVFInjoG0w6Zbrcy1WubiT4j3/hE0T7VujgeFouQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742947791; c=relaxed/simple;
-	bh=0AT9S4+tQKLFJnJKnyWkGKU0/cg5F7/LVzqrzS1ky+g=;
+	s=arc-20240116; t=1742947807; c=relaxed/simple;
+	bh=9QtWxO8l2GpcAYbRMHA4inZL25MuZzaCf9TT8yzkl7E=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=U2xEGYVDYw7T2+JpfyHdekvSC1KKZ1io3tmwLS6n4QvMAhiSTHqXVQXeTYGYBJedatSdlUN/T2eT9u3ZH2u8rN7wopnRFZPw+LSroqVcMJs2qWDaKUgDTdo4IOMbrO+5851GBfHmwBfLRNsKcMEeCJ6/vxCnS4Vo/3ctbxn4QiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ctFKppnO; arc=none smtp.client-ip=209.85.216.74
+	 To:Content-Type; b=dvRAsYnTzvLtoePUYClZjTRc744SHZ3iSGnRiYohu84Ulu9FFOt3GckKfpPj/ImRqUK546FagEtb6gr6V0g2YsxMADCqf8/hXEgaUibH9BF4XN6//drorT34FOYCH3hjFM0zgYxQ/uFQQ0Q3CH4VWu5BArftmnyaDuoOkX3wizo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VlaCkWvD; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ctFKppnO"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff58318acaso17420068a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 17:09:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VlaCkWvD"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fec3e38c2dso16425819a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 17:10:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742947787; x=1743552587; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=umn9Nu09RuoBihtyilxpcZ9ZnsjZo8cvNgml2LAfPCY=;
-        b=ctFKppnOfHrQ0fyjQMIeNpX4zESAOPG6WBGG8JoiH5cUy4SdLS3QBxrwYYQONpurGw
-         6WDFVOpiPYjqwbwLivTSSIJqRlh5tluo+XN48cZVVB2GAtBPanFaHj0b4b3ciNbXGNH8
-         nX+Gu8LHjbOrBTrFQ14623bwwKgCkRT6yFDst7pmBB4VUJae8HXuU4PzZc9bPXqnTMDJ
-         k+j2VbqBGs+47YuSbriqg2oDXfEhMNGbQxi0tQGGkuEWYLJdoil4mmN5qAh0RKbt47xf
-         rtULzDk5VIkBrXFMUkJBpIjp6gEjwLOuatanAFHEWM3iFSWjPhac63rBr1QO9Y4rdGdG
-         /p5Q==
+        d=google.com; s=20230601; t=1742947805; x=1743552605; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bjcCoWPLeFv7HToZ+VPWd4Z16z9IeZ5E4tfOnaC3rvg=;
+        b=VlaCkWvDzEj6lrTpYUy8YCGJEEVYdqCU6eaxVTyQXMAD9tQweUUcyOp6ZkfoIHMCox
+         xDS9cIyaQmd+jBJHqCbB2O32AdAPqbTRd2pXfe9dyhzQWabpu6KxiEhY27MUCMhs6z0H
+         DbNIsgN+WaEGUks5JBC4yvX+/D/xrAuOdgfrpaD5bu3TpisferpLXxRwIykXAWwgxbim
+         KUjpeTvORZdVmv3ZsA0AdSA/YmlJH/TR1v8tlm72K8MBaFpi+2JMADJNkm6Fc+f/hx6t
+         ix8oQJrbhSGBRtKT0FYufgTOhc4GNskLnb+8Qkj7uU9Xi+UbOOxyqp6Tg2Yujdk/P0AP
+         ByAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742947787; x=1743552587;
-        h=content-transfer-encoding:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=umn9Nu09RuoBihtyilxpcZ9ZnsjZo8cvNgml2LAfPCY=;
-        b=AtjncYC6fOx1ujzjLp8Z4wiHDPejSlip6+SddxTTR66ryJRSYdGUNgrlZCF3d99W/U
-         XPfSSZ4EOtK9IGPSnSRvcatvBqxQmW47KZDpsY2f775ABOXOYVepD2Q768ccFIGv2OFO
-         JB2/70GFI1FOtR88+L4WOKBzGQc3SHUiL8HG3PGz+p+/smjlGsQTQOug8V15fpgPHHSX
-         /mV+cs0lPGu0Ujrp/5ukNzE3L0RuLkWVhaI9dKLQ7+RACp8Mh7le0Mh7kgi+Lk6CTMIk
-         ARbXCDpZxxqydMe4G+/ziA+AsVhXrfmPEDT+qXCqGTemNpQjeXmfehqnFIDV6bgOalg3
-         tUDA==
-X-Forwarded-Encrypted: i=1; AJvYcCW24j4X4SBeTDRkpL706m7XRzzB+mvCVXZNmxU6TG3XTkdczMZNAbhAG4AjACKuG+3V0Ay6MC3WjVoM7aE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/Jkgfw7aUCt6iBtcD6YRXYT+2yKbs/g1M5d0f3SL6cIJfY46N
-	qbg7wkW6gGQlXlj+Q5cuEmLMJGWwRMEZCV6uD82k4dMNP5Mu7xSePF+dnqVvlY90LaablQhF8Kt
-	axyeGeA==
-X-Google-Smtp-Source: AGHT+IG7tJBdLQt+JiiRjeh94pcBEFZUxUWYxH+OLGhKxd2B4HZuBNfutj/wwUkHFqT45oiQ8ANAONPbAu+r
-X-Received: from pjbqd16.prod.google.com ([2002:a17:90b:3cd0:b0:2ef:8055:93d9])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2647:b0:2ff:592d:23bc
- with SMTP id 98e67ed59e1d1-3030fe58cc6mr30094855a91.4.1742947787303; Tue, 25
- Mar 2025 17:09:47 -0700 (PDT)
-Date: Tue, 25 Mar 2025 17:04:29 -0700
+        d=1e100.net; s=20230601; t=1742947805; x=1743552605;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bjcCoWPLeFv7HToZ+VPWd4Z16z9IeZ5E4tfOnaC3rvg=;
+        b=qKFdZh1oB9kULe8BeIHSu1UZ1AZvVxnDz0LQ5cOQfHAfZyIr5XiqxCPqF7oBDuj8A0
+         po+dYw36Hk+918uxzfNKar535skBn6hoW7i3UDJtZEWW6kkuTImynie0gs9a5JsW4RMa
+         BAfQjeXrtlz7xi/yNKXMmCa/IyftpmuLWsky0vpjM5sZ0/AFF+Aj0TFFT2as9r4OX/hW
+         G9b5cniKV2ipr503F6H1l6VhzpobcXZ6YHLS1jj7QsEkTc0yYETHMsu4++MVwISSXRVx
+         l9vPOVvmJO7lburK7W2wodBma07HKEkZw/4WVxXCM7xwh46dTZI8QhC3pO/KOkERwpzQ
+         GnzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5piI/bREQJwlUOae5gsC2BErKKmeAllXB7Qq2MW9n8nxtswaIBL1N4x6LEn0CbpRIEgJOhQLN9a+hU8E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybnPPMoO5imlY1U2y/sRDFXuM14YS+fZ/j260gHYY5WSGVu4ME
+	fg+zUzjLdtq7yXDVB+LZn5okm5nNP4InsdIllnSR/SEGolOWc1xadHfQFj4M+uI8UMBqr8GaKbi
+	x4qyLBw==
+X-Google-Smtp-Source: AGHT+IGPKt0S0YUd4fGnI98Ax+NYjlpCe5sPqtoR7BrjF4gq5QfezF8MF2KvT76zmSRO5elsl+UjMSzged09
+X-Received: from pgac3.prod.google.com ([2002:a05:6a02:2943:b0:af9:775:2e8b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:688:b0:1f5:58b9:6d9b
+ with SMTP id adf61e73a8af0-1fe42f2c91dmr31426051637.12.1742947804799; Tue, 25
+ Mar 2025 17:10:04 -0700 (PDT)
+Date: Tue, 25 Mar 2025 17:04:31 -0700
 In-Reply-To: <20250326000434.83325-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250326000434.83325-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250326000434.83325-32-irogers@google.com>
-Subject: [PATCH v3 31/35] perf vendor events: Update snowridgex events
+Message-ID: <20250326000434.83325-34-irogers@google.com>
+Subject: [PATCH v3 33/35] perf vendor events: Update westmereep-dp events
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,1220 +74,130 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
 	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Update event topic moving other topic events to cache and memory.
+Update event topic moving other topic events to cache and virtual
+memory.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/snowridgex/cache.json | 192 +++++++++
- .../arch/x86/snowridgex/memory.json           | 202 +++++++++
- .../pmu-events/arch/x86/snowridgex/other.json | 394 ------------------
- 3 files changed, 394 insertions(+), 394 deletions(-)
+ .../arch/x86/westmereep-dp/cache.json         | 32 +++++++++++++++
+ .../arch/x86/westmereep-dp/other.json         | 40 -------------------
+ .../x86/westmereep-dp/virtual-memory.json     |  8 ++++
+ 3 files changed, 40 insertions(+), 40 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/snowridgex/cache.json b/tools/p=
-erf/pmu-events/arch/x86/snowridgex/cache.json
-index 7882dca9d5e1..1bb42acf1d48 100644
---- a/tools/perf/pmu-events/arch/x86/snowridgex/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/snowridgex/cache.json
-@@ -357,6 +357,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/cache.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/cache.json
+index 30845c7dbf08..f6f95f3ff301 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereep-dp/cache.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/cache.json
+@@ -119,6 +119,38 @@
+         "SampleAfterValue": "100000",
+         "UMask": "0x2"
      },
 +    {
-+        "BriefDescription": "Counts modified writebacks from L1 cache and =
-L2 cache that have any type of response.",
++        "BriefDescription": "L1I instruction fetch stall cycles",
 +        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.COREWB_M.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x3000000010000",
-+        "SampleAfterValue": "100003",
++        "EventCode": "0x80",
++        "EventName": "L1I.CYCLES_STALLED",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x4"
++    },
++    {
++        "BriefDescription": "L1I instruction fetch hits",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.HITS",
++        "SampleAfterValue": "2000000",
 +        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "L1I instruction fetch misses",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.MISSES",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x2"
++    },
++    {
++        "BriefDescription": "L1I Instruction fetches",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.READS",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x3"
 +    },
      {
-         "BriefDescription": "Counts modified writebacks from L1 cache and =
-L2 cache that were supplied by the L3 cache.",
+         "BriefDescription": "All L2 data requests",
          "Counter": "0,1,2,3",
-@@ -367,6 +377,26 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts modified writebacks from L1 cache and =
-L2 cache that have an outstanding request. Returns the number of cycles unt=
-il the response is received (i.e. XQ to XQ latency).",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.COREWB_M.OUTSTANDING",
-+        "MSRIndex": "0x1a6",
-+        "MSRValue": "0x8003000000000000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that have any type of response.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.DEMAND_CODE_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10004",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that were supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -427,6 +457,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts cacheable demand data reads, L1 data c=
-ache hardware prefetches and software prefetches (except PREFETCHW) that ha=
-ve any type of response.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.DEMAND_DATA_AND_L1PF_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts cacheable demand data reads, L1 data c=
-ache hardware prefetches and software prefetches (except PREFETCHW) that we=
-re supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -487,6 +527,27 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts cacheable demand data reads, L1 data c=
-ache hardware prefetches and software prefetches (except PREFETCHW) that ha=
-ve an outstanding request. Returns the number of cycles until the response =
-is received (i.e. XQ to XQ latency).",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.DEMAND_DATA_AND_L1PF_RD.OUTSTANDING",
-+        "MSRIndex": "0x1a6",
-+        "MSRValue": "0x8000000000000001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.ANY_RESPONSE",
-+        "Counter": "0,1,2,3",
-+        "Deprecated": "1",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.L3_HIT",
-         "Counter": "0,1,2,3",
-@@ -553,6 +614,27 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.OUTSTANDING",
-+        "Counter": "0,1,2,3",
-+        "Deprecated": "1",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.DEMAND_DATA_RD.OUTSTANDING",
-+        "MSRIndex": "0x1a6",
-+        "MSRValue": "0x8000000000000001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that have any type o=
-f response.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10002",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
-y the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -613,6 +695,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that have an outstan=
-ding request. Returns the number of cycles until the response is received (=
-i.e. XQ to XQ latency).",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.DEMAND_RFO.OUTSTANDING",
-+        "MSRIndex": "0x1a6",
-+        "MSRValue": "0x8000000000000002",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts streaming stores which modify a full 6=
-4 byte cacheline that were supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -623,6 +715,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts L1 data cache hardware prefetches and =
-software prefetches (except PREFETCHW and PFRFO) that have any type of resp=
-onse.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.HWPF_L1D_AND_SWPF.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10400",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts L1 data cache hardware prefetches and =
-software prefetches (except PREFETCHW and PFRFO) that were supplied by the =
-L3 cache where a snoop was sent, the snoop hit, and modified data was forwa=
-rded.",
-         "Counter": "0,1,2,3",
-@@ -633,6 +735,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts L2 cache hardware prefetch code reads =
-(written to the L2 cache only) that have any type of response.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.HWPF_L2_CODE_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10040",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts L2 cache hardware prefetch code reads =
-(written to the L2 cache only) that were supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -693,6 +805,26 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts L2 cache hardware prefetch code reads =
-(written to the L2 cache only) that have an outstanding request. Returns th=
-e number of cycles until the response is received (i.e. XQ to XQ latency)."=
-,
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.HWPF_L2_CODE_RD.OUTSTANDING",
-+        "MSRIndex": "0x1a6",
-+        "MSRValue": "0x8000000000000040",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts L2 cache hardware prefetch data reads =
-(written to the L2 cache only) that have any type of response.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.HWPF_L2_DATA_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10010",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts L2 cache hardware prefetch data reads =
-(written to the L2 cache only) that were supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -753,6 +885,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts L2 cache hardware prefetch RFOs (writt=
-en to the L2 cache only) that have any type of response.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.HWPF_L2_RFO.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10020",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts L2 cache hardware prefetch RFOs (writt=
-en to the L2 cache only) that were supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -813,6 +955,26 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts L2 cache hardware prefetch RFOs (writt=
-en to the L2 cache only) that have an outstanding request. Returns the numb=
-er of cycles until the response is received (i.e. XQ to XQ latency).",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.HWPF_L2_RFO.OUTSTANDING",
-+        "MSRIndex": "0x1a6",
-+        "MSRValue": "0x8000000000000020",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts modified writebacks from L1 cache that=
- miss the L2 cache that have any type of response.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.L1WB_M.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x1000000010000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts modified writebacks from L1 cache that=
- miss the L2 cache that were supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -823,6 +985,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts modified writeBacks from L2 cache that=
- miss the L3 cache that have any type of response.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.L2WB_M.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x2000000010000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts modified writeBacks from L2 cache that=
- miss the L3 cache that were supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -843,6 +1015,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that hav=
-e any type of response.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.READS_TO_CORE.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10477",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that wer=
-e supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -903,6 +1085,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that hav=
-e an outstanding request. Returns the number of cycles until the response i=
-s received (i.e. XQ to XQ latency).",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.READS_TO_CORE.OUTSTANDING",
-+        "MSRIndex": "0x1a6",
-+        "MSRValue": "0x8000000000000477",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts streaming stores that were supplied by=
- the L3 cache.",
-         "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/snowridgex/memory.json b/tools/=
-perf/pmu-events/arch/x86/snowridgex/memory.json
-index 34306ec24e9b..260a488540bb 100644
---- a/tools/perf/pmu-events/arch/x86/snowridgex/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/snowridgex/memory.json
-@@ -25,6 +25,16 @@
-         "SampleAfterValue": "200003",
-         "UMask": "0x4"
-     },
-+    {
-+        "BriefDescription": "Counts all code reads that were supplied by D=
-RAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.ALL_CODE_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000044",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts all code reads that were not supplied =
-by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -45,6 +55,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts all code reads that were supplied by D=
-RAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.ALL_CODE_RD.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000044",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts modified writebacks from L1 cache and =
-L2 cache that were not supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -65,6 +85,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that were supplied by DRAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.DEMAND_CODE_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000004",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that were not supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -85,6 +115,26 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that were supplied by DRAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.DEMAND_CODE_RD.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000004",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts cacheable demand data reads, L1 data c=
-ache hardware prefetches and software prefetches (except PREFETCHW) that we=
-re supplied by DRAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.DEMAND_DATA_AND_L1PF_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts cacheable demand data reads, L1 data c=
-ache hardware prefetches and software prefetches (except PREFETCHW) that we=
-re not supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -105,6 +155,27 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts cacheable demand data reads, L1 data c=
-ache hardware prefetches and software prefetches (except PREFETCHW) that we=
-re supplied by DRAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.DEMAND_DATA_AND_L1PF_RD.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.DRAM",
-+        "Counter": "0,1,2,3",
-+        "Deprecated": "1",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.DEMAND_DATA_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.L3_MISS",
-         "Counter": "0,1,2,3",
-@@ -127,6 +198,27 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.LOCAL_DRAM",
-+        "Counter": "0,1,2,3",
-+        "Deprecated": "1",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.DEMAND_DATA_RD.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
-y DRAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.DEMAND_RFO.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000002",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were not suppli=
-ed by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -147,6 +239,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
-y DRAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.DEMAND_RFO.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000002",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts streaming stores which modify a full 6=
-4 byte cacheline that were not supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -167,6 +269,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts L2 cache hardware prefetch code reads =
-(written to the L2 cache only) that were supplied by DRAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.HWPF_L2_CODE_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000040",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts L2 cache hardware prefetch code reads =
-(written to the L2 cache only) that were not supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -187,6 +299,26 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts L2 cache hardware prefetch code reads =
-(written to the L2 cache only) that were supplied by DRAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.HWPF_L2_CODE_RD.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000040",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts L2 cache hardware prefetch data reads =
-(written to the L2 cache only) that were supplied by DRAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.HWPF_L2_DATA_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000010",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts L2 cache hardware prefetch data reads =
-(written to the L2 cache only) that were not supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -207,6 +339,26 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts L2 cache hardware prefetch data reads =
-(written to the L2 cache only) that were supplied by DRAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.HWPF_L2_DATA_RD.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000010",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts L2 cache hardware prefetch RFOs (writt=
-en to the L2 cache only) that were supplied by DRAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.HWPF_L2_RFO.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000020",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts L2 cache hardware prefetch RFOs (writt=
-en to the L2 cache only) that were not supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -227,6 +379,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts L2 cache hardware prefetch RFOs (writt=
-en to the L2 cache only) that were supplied by DRAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.HWPF_L2_RFO.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000020",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts modified writebacks from L1 cache that=
- miss the L2 cache that were not supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -317,6 +479,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that wer=
-e supplied by DRAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.READS_TO_CORE.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000477",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that wer=
-e not supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -337,6 +509,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that wer=
-e supplied by DRAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.READS_TO_CORE.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000477",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts streaming stores that were not supplie=
-d by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -357,6 +539,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts uncached memory reads that were suppli=
-ed by DRAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.UC_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x100184000000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts uncached memory reads that were not su=
-pplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -377,6 +569,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts uncached memory reads that were suppli=
-ed by DRAM.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0XB7",
-+        "EventName": "OCR.UC_RD.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x100184000000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts uncached memory writes that were not s=
-upplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/snowridgex/other.json b/tools/p=
-erf/pmu-events/arch/x86/snowridgex/other.json
-index 57613207f7ad..35cdbfa617e7 100644
---- a/tools/perf/pmu-events/arch/x86/snowridgex/other.json
-+++ b/tools/perf/pmu-events/arch/x86/snowridgex/other.json
-@@ -116,26 +116,6 @@
-         "SampleAfterValue": "100003",
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/other.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/other.json
+index bcf5bcf637c0..c0cf8bae8074 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereep-dp/other.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/other.json
+@@ -15,46 +15,6 @@
+         "SampleAfterValue": "2000000",
          "UMask": "0x1"
      },
 -    {
--        "BriefDescription": "Counts all code reads that were supplied by D=
-RAM.",
+-        "BriefDescription": "L1I instruction fetch stall cycles",
 -        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.ALL_CODE_RD.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000044",
--        "SampleAfterValue": "100003",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.CYCLES_STALLED",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x4"
+-    },
+-    {
+-        "BriefDescription": "L1I instruction fetch hits",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.HITS",
+-        "SampleAfterValue": "2000000",
 -        "UMask": "0x1"
 -    },
 -    {
--        "BriefDescription": "Counts all code reads that were supplied by D=
-RAM.",
+-        "BriefDescription": "L1I instruction fetch misses",
 -        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.ALL_CODE_RD.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000044",
--        "SampleAfterValue": "100003",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.MISSES",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x2"
+-    },
+-    {
+-        "BriefDescription": "L1I Instruction fetches",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.READS",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x3"
+-    },
+-    {
+-        "BriefDescription": "Large ITLB hit",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x82",
+-        "EventName": "LARGE_ITLB.HIT",
+-        "SampleAfterValue": "200000",
 -        "UMask": "0x1"
 -    },
      {
-         "BriefDescription": "Counts all code reads that have an outstandin=
-g request. Returns the number of cycles until the response is received (i.e=
-. XQ to XQ latency).",
+         "BriefDescription": "Loads that partially overlap an earlier store",
          "Counter": "0,1,2,3",
-@@ -146,180 +126,6 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/virtual-memory.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/virtual-memory.json
+index 53d7f76325a3..84c920637b12 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereep-dp/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/virtual-memory.json
+@@ -152,6 +152,14 @@
+         "SampleAfterValue": "200000",
+         "UMask": "0x20"
      },
--    {
--        "BriefDescription": "Counts modified writebacks from L1 cache and =
-L2 cache that have any type of response.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.COREWB_M.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x3000000010000",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts modified writebacks from L1 cache and =
-L2 cache that have an outstanding request. Returns the number of cycles unt=
-il the response is received (i.e. XQ to XQ latency).",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.COREWB_M.OUTSTANDING",
--        "MSRIndex": "0x1a6",
--        "MSRValue": "0x8003000000000000",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that have any type of response.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.DEMAND_CODE_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10004",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that were supplied by DRAM.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.DEMAND_CODE_RD.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000004",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that were supplied by DRAM.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.DEMAND_CODE_RD.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000004",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts cacheable demand data reads, L1 data c=
-ache hardware prefetches and software prefetches (except PREFETCHW) that ha=
-ve any type of response.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.DEMAND_DATA_AND_L1PF_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts cacheable demand data reads, L1 data c=
-ache hardware prefetches and software prefetches (except PREFETCHW) that we=
-re supplied by DRAM.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.DEMAND_DATA_AND_L1PF_RD.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts cacheable demand data reads, L1 data c=
-ache hardware prefetches and software prefetches (except PREFETCHW) that we=
-re supplied by DRAM.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.DEMAND_DATA_AND_L1PF_RD.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts cacheable demand data reads, L1 data c=
-ache hardware prefetches and software prefetches (except PREFETCHW) that ha=
-ve an outstanding request. Returns the number of cycles until the response =
-is received (i.e. XQ to XQ latency).",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.DEMAND_DATA_AND_L1PF_RD.OUTSTANDING",
--        "MSRIndex": "0x1a6",
--        "MSRValue": "0x8000000000000001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.ANY_RESPONSE",
--        "Counter": "0,1,2,3",
--        "Deprecated": "1",
--        "EventCode": "0XB7",
--        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.DRAM",
--        "Counter": "0,1,2,3",
--        "Deprecated": "1",
--        "EventCode": "0XB7",
--        "EventName": "OCR.DEMAND_DATA_RD.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.LOCAL_DRAM",
--        "Counter": "0,1,2,3",
--        "Deprecated": "1",
--        "EventCode": "0XB7",
--        "EventName": "OCR.DEMAND_DATA_RD.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.OUTSTANDING",
--        "Counter": "0,1,2,3",
--        "Deprecated": "1",
--        "EventCode": "0XB7",
--        "EventName": "OCR.DEMAND_DATA_RD.OUTSTANDING",
--        "MSRIndex": "0x1a6",
--        "MSRValue": "0x8000000000000001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that have any type o=
-f response.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10002",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
-y DRAM.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.DEMAND_RFO.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000002",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
-y DRAM.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.DEMAND_RFO.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000002",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that have an outstan=
-ding request. Returns the number of cycles until the response is received (=
-i.e. XQ to XQ latency).",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.DEMAND_RFO.OUTSTANDING",
--        "MSRIndex": "0x1a6",
--        "MSRValue": "0x8000000000000002",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
++    {
++        "BriefDescription": "Large ITLB hit",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x82",
++        "EventName": "LARGE_ITLB.HIT",
++        "SampleAfterValue": "200000",
++        "UMask": "0x1"
++    },
      {
-         "BriefDescription": "Counts streaming stores which modify a full 6=
-4 byte cacheline that have any type of response.",
+         "BriefDescription": "Retired loads that miss the DTLB (Precise Event)",
          "Counter": "0,1,2,3",
-@@ -330,146 +136,6 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
--    {
--        "BriefDescription": "Counts L1 data cache hardware prefetches and =
-software prefetches (except PREFETCHW and PFRFO) that have any type of resp=
-onse.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.HWPF_L1D_AND_SWPF.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10400",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts L2 cache hardware prefetch code reads =
-(written to the L2 cache only) that have any type of response.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.HWPF_L2_CODE_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10040",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts L2 cache hardware prefetch code reads =
-(written to the L2 cache only) that were supplied by DRAM.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.HWPF_L2_CODE_RD.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000040",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts L2 cache hardware prefetch code reads =
-(written to the L2 cache only) that were supplied by DRAM.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.HWPF_L2_CODE_RD.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000040",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts L2 cache hardware prefetch code reads =
-(written to the L2 cache only) that have an outstanding request. Returns th=
-e number of cycles until the response is received (i.e. XQ to XQ latency)."=
-,
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.HWPF_L2_CODE_RD.OUTSTANDING",
--        "MSRIndex": "0x1a6",
--        "MSRValue": "0x8000000000000040",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts L2 cache hardware prefetch data reads =
-(written to the L2 cache only) that have any type of response.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.HWPF_L2_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10010",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts L2 cache hardware prefetch data reads =
-(written to the L2 cache only) that were supplied by DRAM.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.HWPF_L2_DATA_RD.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000010",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts L2 cache hardware prefetch data reads =
-(written to the L2 cache only) that were supplied by DRAM.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.HWPF_L2_DATA_RD.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000010",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts L2 cache hardware prefetch RFOs (writt=
-en to the L2 cache only) that have any type of response.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.HWPF_L2_RFO.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10020",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts L2 cache hardware prefetch RFOs (writt=
-en to the L2 cache only) that were supplied by DRAM.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.HWPF_L2_RFO.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000020",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts L2 cache hardware prefetch RFOs (writt=
-en to the L2 cache only) that were supplied by DRAM.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.HWPF_L2_RFO.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000020",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts L2 cache hardware prefetch RFOs (writt=
-en to the L2 cache only) that have an outstanding request. Returns the numb=
-er of cycles until the response is received (i.e. XQ to XQ latency).",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.HWPF_L2_RFO.OUTSTANDING",
--        "MSRIndex": "0x1a6",
--        "MSRValue": "0x8000000000000020",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts modified writebacks from L1 cache that=
- miss the L2 cache that have any type of response.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.L1WB_M.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x1000000010000",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts modified writeBacks from L2 cache that=
- miss the L3 cache that have any type of response.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.L2WB_M.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x2000000010000",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
-     {
-         "BriefDescription": "Counts miscellaneous requests, such as I/O ac=
-cesses, that have any type of response.",
-         "Counter": "0,1,2,3",
-@@ -500,46 +166,6 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
--    {
--        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that hav=
-e any type of response.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.READS_TO_CORE.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10477",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that wer=
-e supplied by DRAM.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.READS_TO_CORE.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000477",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that wer=
-e supplied by DRAM.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.READS_TO_CORE.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000477",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts all data read, code read and RFO reque=
-sts including demands and prefetches to the core caches (L1 or L2) that hav=
-e an outstanding request. Returns the number of cycles until the response i=
-s received (i.e. XQ to XQ latency).",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.READS_TO_CORE.OUTSTANDING",
--        "MSRIndex": "0x1a6",
--        "MSRValue": "0x8000000000000477",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
-     {
-         "BriefDescription": "Counts streaming stores that have any type of=
- response.",
-         "Counter": "0,1,2,3",
-@@ -560,26 +186,6 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
--    {
--        "BriefDescription": "Counts uncached memory reads that were suppli=
-ed by DRAM.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.UC_RD.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x100184000000",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts uncached memory reads that were suppli=
-ed by DRAM.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0XB7",
--        "EventName": "OCR.UC_RD.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x100184000000",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
-     {
-         "BriefDescription": "Counts uncached memory reads that have an out=
-standing request. Returns the number of cycles until the response is receiv=
-ed (i.e. XQ to XQ latency).",
-         "Counter": "0,1,2,3",
---=20
+-- 
 2.49.0.395.g12beb8f557-goog
 
