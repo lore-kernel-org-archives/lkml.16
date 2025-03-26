@@ -1,148 +1,154 @@
-Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BD41F5433;
-	Wed, 26 Mar 2025 16:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9741F4276;
+	Wed, 26 Mar 2025 16:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743006085; cv=none; b=kyU8pegQ4fXuBpb2vKxWQ1qfSHNl9XJT4sPbMvy6H7TuY5ZutVRsIrcsmYikLf+URNuadSlAG7iBs9vEpaIblfU3Q8jdJh1xFzaoTqK0jO/VZHpUt9lz3XsZ4T7rvOgYBQQ2jMi0z2FvGrOV0ZLc7RzWwU4iXJcfBw9ml82UCGY=
+	t=1743006211; cv=none; b=t1aZxXhAX/zCQejrW67eg1EJ79TLtgKkSoZcG32Scfsvq/EV15dCrrQ6+A8mkLwYE61ggCoWqzHoXCoX3pCiwhmHiSFELspxForuM9sNZnE0WWwvfjcF8day9hmteJnsTYfo5XRZaq28pgBCsygiY7AhyHoPJk76w+iWeySlZSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743006085; c=relaxed/simple;
-	bh=nT6VRtgopQ8G6LxyrDepOfBp6qLTXcRbja01PY+hu7M=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n60JBnKj17gW5I1GaZVYeBi2ThsUtNFALdhb2mR54ZxAJuCvBem8E4myG7HfmMB2Y1ruqs/A2QSH/dvUycjXrHmfALooQdzrZJX/FFFAGX0KDszE/6bzeEYadUwQYgorESwJVqnY7aevYJ8FIBt+YLJf8vbjjVGDSLxipYMjmkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=QS8p2MJB; arc=none smtp.client-ip=52.119.213.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1743006211; c=relaxed/simple;
+	bh=nPnx3oYTirJDrOHIV1nZVRXcnxyFBQz9FCV+07VhSgY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pmk5ny0y/DwDnLqkCKIJdXIA4XNs81y4cWjQLUNXJzxMq5GxiJvdSnBbgoluArPzJObMQhGujw+IIFxTP3krr4X+wghCa8ZjYUQ/j9TxnsLkjSCi3ohrzXzjsaa2Wd3bS/WLrKUblWTYKu3w4DpMF2DAWgaq5vneKP+AuCb34/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Shbe3zOi; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="QS8p2MJB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1743006084; x=1774542084;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Shbe3zOi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743006210; x=1774542210;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=nhr7gIYRxszAnMd29YWnQ+sqjq5QqSN5i/GFVwNuhZA=;
-  b=QS8p2MJBdiua1B492roh7kCbYQWNqmt7NC0MFSIZApqKL0G4ayyLbE3n
-   SHJEtiEflx0/IEHC8d70Z+MOqeMFDIqjfGley9I8oGQUB3WQcgEIZ4Nx8
-   9uRd9UM6nTWYIEbLYfo178Oy43S5AO6rku69oWusY/xVmH/u30aDSnldh
-   4=;
-X-IronPort-AV: E=Sophos;i="6.14,278,1736812800"; 
-   d="scan'208";a="77909939"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 16:21:19 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.21.151:64354]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.9.87:2525] with esmtp (Farcaster)
- id 1abbc2fe-9a1d-48e3-9635-300968de39f9; Wed, 26 Mar 2025 16:21:18 +0000 (UTC)
-X-Farcaster-Flow-ID: 1abbc2fe-9a1d-48e3-9635-300968de39f9
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 26 Mar 2025 16:21:17 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.106.100.44) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 26 Mar 2025 16:21:14 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <john.johansen@canonical.com>, <kuniyu@amazon.com>,
-	<linux-kernel@vger.kernel.org>, <linux-next@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <pabeni@redhat.com>, <sfr@canb.auug.org.au>
-Subject: Re: linux-next: build failure after merge of the apparmor tree
-Date: Wed, 26 Mar 2025 09:19:56 -0700
-Message-ID: <20250326162104.20801-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250326042655.4e160022@kernel.org>
-References: <20250326042655.4e160022@kernel.org>
+  bh=nPnx3oYTirJDrOHIV1nZVRXcnxyFBQz9FCV+07VhSgY=;
+  b=Shbe3zOixLWIV82FLHOv31Y2jZnynFbTuFNKMO19kIgqMAZA36mJwRv7
+   eJOWxoBcynEKRsyTcwu/JMuTl70X1AS2B7axfxFLkKTTkoPuqZv1RjCUB
+   vAcd8aeQfrp7L0vi1pbC+AiuO1oARa70rA0KjM8CIlKOc51tCUKiLd8Xe
+   VXTxy6VBnSaTrmKI2iaLkYPA7Fwc7OLlE6sGiW4b7WiQawPIlT+d2VH5Y
+   HukWfHTMipeVrbTevQGCw0mOYruYJTySIxSM+4F+zrb705gZ0yOYDMJpi
+   nFq8Ypzq1i7KPUJKj2I1+7b5FyZRu6nQy9PNhe4Hd4pmWktz8eOv5rj3E
+   A==;
+X-CSE-ConnectionGUID: wuOm4dRbT9KJxuaAqiysKw==
+X-CSE-MsgGUID: DfLgHkQPQn6N0LMvaR1tKQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="55304854"
+X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
+   d="scan'208";a="55304854"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 09:23:29 -0700
+X-CSE-ConnectionGUID: aDgz8b89RN6LcvD7b/+3Vg==
+X-CSE-MsgGUID: p7pyJBusSmGGGnMVg6+/mg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
+   d="scan'208";a="124789951"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.239])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 09:23:23 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Alison Schofield <alison.schofield@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ Robert Richter <rrichter@amd.com>, ming.li@zohomail.com,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ Robert Richter <rrichter@amd.com>, ming.li@zohomail.com,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Subject:
+ Re: [PATCH 0/4 v3] cxl/core: Enable Region creation on x86 with Low Mem Hole
+Date: Wed, 26 Mar 2025 17:23:21 +0100
+Message-ID: <3304445.h6RI2rZIcs@fdefranc-mobl3>
+In-Reply-To: <Z9tzZkn1rqd2Uk_6@aschofie-mobl2.lan>
+References:
+ <20250314113708.759808-1-fabio.m.de.francesco@linux.intel.com>
+ <Z9tzZkn1rqd2Uk_6@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D044UWB004.ant.amazon.com (10.13.139.134) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-From: Jakub Kicinski <kuba@kernel.org>
-Date: Wed, 26 Mar 2025 04:26:55 -0700
-> On Wed, 26 Mar 2025 15:01:48 +1100 Stephen Rothwell wrote:
-> > After merging the apparmor tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
-> > 
-> > security/apparmor/af_unix.c: In function 'unix_state_double_lock':
-> > security/apparmor/af_unix.c:627:17: error: implicit declaration of function 'unix_state_lock'; did you mean 'unix_state_double_lock'? [-Wimplicit-function-declaration]
-> >   627 |                 unix_state_lock(sk1);
-> >       |                 ^~~~~~~~~~~~~~~
-> >       |                 unix_state_double_lock
-> > security/apparmor/af_unix.c: In function 'unix_state_double_unlock':
-> > security/apparmor/af_unix.c:642:17: error: implicit declaration of function 'unix_state_unlock'; did you mean 'unix_state_double_lock'? [-Wimplicit-function-declaration]
-> >   642 |                 unix_state_unlock(sk1);
-> >       |                 ^~~~~~~~~~~~~~~~~
-> >       |                 unix_state_double_lock
-> 
-> Thanks Stephen! I'll pop this into the tree in a few hours,
-> just giving Kuniyuki a bit more time to ack.
+On Thursday, March 20, 2025 2:46:14=E2=80=AFAM Central European Standard Ti=
+me Alison Schofield wrote:
+> On Fri, Mar 14, 2025 at 12:36:29PM +0100, Fabio M. De Francesco wrote:
+> > The CXL Fixed Memory Window Structure (CFMWS) describes zero or more Ho=
+st
+> > Physical Address (HPA) windows that are associated with each CXL Host
+> > Bridge. Each window represents a contiguous HPA that may be interleaved
+> > with one or more targets (CXL v3.1 - 9.18.1.3).
+> >=20
+> > The Low Memory Hole (LMH) of x86 is a range of addresses of physical low
+> > memory to which systems cannot send transactions. On those systems, BIOS
+> > publishes CFMWS which communicate the active System Physical Address (S=
+PA)
+> > ranges that map to a subset of the Host Physical Address (HPA) ranges. =
+The
+> > SPA range trims out the hole, and capacity in the endpoint is lost with=
+ no
+> > SPA to map to CXL HPA in that hole.
+> >=20
+> > In the early stages of CXL Regions construction and attach on platforms
+> > with Low Memory Holes, the driver fails and returns an error because it
+> > expects that the CXL Endpoint Decoder range is a subset of the Root
+> > Decoder's (SPA >=3D HPA). On x86 with LMH's, it happens that SPA < HPA.
+> >=20
+> > Therefore, detect x86 Low Memory Holes, match CXL Root and Endpoint
+> > Decoders or already made CXL Regions and Decoders to allow the
+> > construction of new CXL Regions and the attachment of Endpoint Decoders,
+> > even if SPA < HPA. If needed because of LMH's, adjust the Endpoint Deco=
+der
+> > range end to match Root Decoder's.
+>=20
+> I think the dpa_res field of the endpoint decoder needs adjusting.
+> After the region is setup, the cxled->dpa_res has the unadjusted value
+> and that leads to region warning and address translation failure because
+> the driver 'thinks' that DPA is within a region, but when it tries
+> to translate to an HPA in that region, it fails.
+>=20
+> Here's where I looked at it: using the cxl-test LMH auto-region (nice!)
+> each endpoint decoder is programmed to contribute 512MB to the 1024MB reg=
+ion.
+> The LMH adjustment shrunk the region to 768MB, so each endpoint is only
+> contributing 384MB to the region.=20
+>=20
+> DPA->HPA address translations of DPA addresses in the 384->512 gap cause
+> a problem. The driver will needlessly warn that they are in a region for
+> any poison inject or clear, and will fail address translations for any
+> poison, general media or dram event.
+>=20
+> I think this should fail in region.c: __cxl_dpa_to_region()
+>         if (dpa > cxled->dpa_res->end || dpa < cxled->dpa_res->start)
+>                 return 0;
+>=20
+> For that to fail, LMH code needs to adjust cxled->dpa_res too.=20
+>=20
+>=20
+> To test is using clear_poison you can:
+> # echo 536866816 > /sys/kernel/debug/cxl/mem1/clear_poison
+>   (536866816 =3D 512MB - 4096)
+>=20
+> [ ] cxl_core:__cxl_dpa_to_region:2860: cxl decoder18.0: dpa:0x1ffff000 ma=
+pped in region:region0
+> [ ] cxl_core:cxl_dpa_to_hpa:2963: cxl_region region0: Addr trans fail: hp=
+a 0x3ff04fffe000 not in region
+>=20
+>=20
+> snip
+> >=20
+>=20
+Alison,
 
-Thanks for catching this, Stephen !
+I'll adjust cxled->dpa_res too.
+Thank you for noticing this issue.
 
-The patch itself looks good, for the patch:
-
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-
-
-John:
-
-I had a cursory look at this commit and the exact user of
-unix_state_lock() is broken for SOCK_DGRAM.
-
-https://web.git.kernel.org/pub/scm/linux/kernel/git/jj/linux-apparmor.git/commit/?h=apparmor-next&id=c05e705812d179f4b85aeacc34a555a42bc4f9ac
-
----8<---
-+
-+	/* TODO: update sock label with new task label */
-+	unix_state_lock(sock->sk);
-+	peer_sk = unix_peer(sock->sk);
-+	if (peer_sk)
-+		sock_hold(peer_sk);
-+
-+	is_sk_fs = is_unix_fs(sock->sk);
-+	if (is_sk_fs && peer_sk)
-+		sk_req = request;
-+	if (sk_req)
-+		error = unix_label_sock_perm(subj_cred, label, op, sk_req,
-+					     sock);
-+	unix_state_unlock(sock->sk);
-+	if (!peer_sk)
-+		return error;
-+
-+	unix_state_double_lock(sock->sk, peer_sk);
-
-Here, unix_peer(sock->sk) could have been changed and must be
-double checked.  See unix_dgram_sendmsg().
-
-The patch seems to be written in 2022 and recently merged.
-I'm not sure if it's reviewed by netdev folks at that time,
-but please cc me and netdev next time for patches regarding
-AF_UNIX.
-
-Thanks!
+=46abio=20
 
 
-+	if (!is_sk_fs && is_unix_fs(peer_sk)) {
-+		last_error(error,
-+			   unix_fs_perm(op, request, subj_cred, label,
-+					unix_sk(peer_sk)));
-+	} else if (!is_sk_fs) {
-+		struct aa_sk_ctx *pctx = aa_sock(peer_sk);
-+
-+		last_error(error,
-+			xcheck(aa_unix_peer_perm(subj_cred, label, op,
-+						 MAY_READ | MAY_WRITE,
-+						 sock->sk, peer_sk, NULL),
-+			       aa_unix_peer_perm(file->f_cred, pctx->label, op,
-+						 MAY_READ | MAY_WRITE,
-+						 peer_sk, sock->sk, label)));
-+	}
-+	unix_state_double_unlock(sock->sk, peer_sk);
----8<---
+
