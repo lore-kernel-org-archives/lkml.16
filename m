@@ -1,228 +1,116 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18411F94A
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17884157A48;
+	Wed, 26 Mar 2025 08:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742976291; cv=none; b=jWq7Z8jxD1AjUIN3oQeFmL6no7T+Pm/3B/SANI1VkyEGRSsqVCTPlxw3W7egq2bGaMXE0h6ZAWaeweF624wtz2kDgkRTGwue0ewvHVWcqf2Aje1x4NQoFbq6D/UpLZryaL0YmP459v/i1s8q0S/VmPm+8ZYTFlnwkLW2vZb4ETw=
+	t=1742976298; cv=none; b=qiQ0Y3x5LUha7vrG55gsW8iUvCAYTAiwwshlHf5+ujBLznV2lmOKOTJ4yxCnVMHoXBtbtn3A/MkQy5HcSP81hSst2oN8n2OPGMpL0lPFpeesD54mWc4U3yVvam8Z6KoqKpDxaDeRpNhjpiZtiu6OQh0K8Sm6a73CdDm370UDqws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742976291; c=relaxed/simple;
-	bh=MwQfeMm2+eCxQqPWJ6oAb1gzgIa1dnQGEuwzrDI2GRg=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=tfsgU43cZ6/7ygtgkqtZufjHQozED+iW/orndxsx/2XwRD3SVaaQUL/v64WiO9OM5CpcCXfiEiXitYKRJ5piwekKXZ1+qja13pPPAtQDKmE8uVxMnb1CTwN2WRl7vyQ9TLFZGjvMFTrvO2QNYS30wfLIGDww1W8NwBE7KjH8a8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZMzmw1LQkztRLS;
-	Wed, 26 Mar 2025 16:03:12 +0800 (CST)
-Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
-	by mail.maildlp.com (Postfix) with ESMTPS id AB24D1401F4;
-	Wed, 26 Mar 2025 16:04:38 +0800 (CST)
-Received: from [10.174.178.46] (10.174.178.46) by
- kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 26 Mar 2025 16:04:37 +0800
-Subject: Re: [RFC 1/1] fs/jffs2: Avoid a possible deadlock in
- jffs2_wbuf_recover
-To: Wang Zhaolong <wangzhaolong1@huawei.com>, <dwmw2@infradead.org>,
-	<richard@nod.at>
-CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<yi.zhang@huawei.com>
-References: <20250319024700.10364-1-wangzhaolong1@huawei.com>
- <20250319024700.10364-2-wangzhaolong1@huawei.com>
-From: Zhihao Cheng <chengzhihao1@huawei.com>
-Message-ID: <6610d627-dfab-7b9b-c616-cccaf40ea948@huawei.com>
-Date: Wed, 26 Mar 2025 16:04:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+	s=arc-20240116; t=1742976298; c=relaxed/simple;
+	bh=MtqkJBxxri2Ybg08dqBppEn0TPIs5TXQGc5QKdVF1VU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W5dX/veIiNAq8+O4pLfxKk0YIePpZb/uyhO2MZQ6dfgEbb4dccc7EFeU3O/o7vnyXIm3vDzopEcSXJwhgKd0OogkiNo+Ah83XM252e6d3KEcjls2tafYfDKl75q6tOmz4Hlt1WCcd2OA8fdu/Q8MBmw/UTk7qhl34AHF1GUP6rU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KVcLxaHx; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KVcLxaHx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4052C4CEE9;
+	Wed, 26 Mar 2025 08:04:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742976297;
+	bh=MtqkJBxxri2Ybg08dqBppEn0TPIs5TXQGc5QKdVF1VU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KVcLxaHxgaFjM6OTC8rDYS5iR8qpdiv/odw5DzXTDcQ32Mikw+6myhD968S+3+x4A
+	 +W1Q4UDyjHld7Uc4SYqJk44ByvfoAfia0pxI/n4NrgyqsDz5R6j0H1OJ5sF7hIpzAN
+	 /z1XO/WaIaeGzZ4ayG3zymU7becsIJwhWdQ79Gny0b5Qi4SoHEAUOR0ZzOnzjU1Epb
+	 6sTDjTQ61JS55pQfcjku6Fg4nN/yaMYoJFY5ncyYlMil5cVsY3GSo6Sl/m56ICOmzL
+	 7AQzBZQ+s9JeiYZnMUqrwzXaVWVpyGJV7sNnqyMptbCan7M/AaR5pmeXKMberQhaSi
+	 3Y7bpyG4/BkEg==
+Date: Wed, 26 Mar 2025 09:04:53 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Caleb James DeLisle <cjd@cjdns.fr>
+Cc: linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	benjamin.larsson@genexis.eu
+Subject: Re: [PATCH v2 04/10] dt-bindings: timer: Add EcoNet EN751221 "HPT"
+ CPU Timer
+Message-ID: <20250326-gigantic-mauve-capuchin-e667ed@krzk-bin>
+References: <20250325134349.2476458-1-cjd@cjdns.fr>
+ <20250325134349.2476458-5-cjd@cjdns.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250319024700.10364-2-wangzhaolong1@huawei.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemk500005.china.huawei.com (7.202.194.90)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250325134349.2476458-5-cjd@cjdns.fr>
 
-ÔÚ 2025/3/19 10:47, Wang Zhaolong Ð´µÀ:
-> jffs2_wbuf_recover can deadlock when called from __jffs2_flush_wbuf
-> error path, because both functions try to acquire c->wbuf_sem.
-> 
->   jffs2_write_end
->     jffs2_write_inode_range
->       jffs2_write_dnode
->         jffs2_flash_writev
->           down_write(&c->wbuf_sem)            # first hold lock
->           __jffs2_flush_wbuf
->             mtd_write()                       # return error
->             jffs2_wbuf_recover
->               jffs2_reserve_space_gc
->                 jffs2_do_reserve_space
->                   jffs2_flush_wbuf_pad
->                     down_write(&c->wbuf_sem)  # AA deadlock
-> 
-> Fix this by adding a wbuf_sem_held parameter to jffs2_reserve_space_gc
-> and jffs2_do_reserve_space, which can be used to indicate that the caller
-> already holds c->wbuf_sem. If this is the case, jffs2_do_reserve_space
-> will directly call __jffs2_flush_wbuf instead of going through
-> jffs2_flush_wbuf_pad, which would try to acquire the lock again.
-> 
-> Signed-off-by: Wang Zhaolong <wangzhaolong1@huawei.com>
-> ---
->   fs/jffs2/gc.c       | 12 ++++++------
->   fs/jffs2/nodelist.h | 12 +++++++++++-
->   fs/jffs2/nodemgmt.c | 16 ++++++++++------
->   fs/jffs2/os-linux.h |  1 +
->   fs/jffs2/wbuf.c     | 13 ++-----------
->   fs/jffs2/write.c    |  4 ++--
->   fs/jffs2/xattr.c    |  4 ++--
->   7 files changed, 34 insertions(+), 28 deletions(-)
-> 
-[...]
-> @@ -416,11 +416,15 @@ static int jffs2_do_reserve_space(struct jffs2_sb_info *c, uint32_t minsize,
->   
->   			if (jffs2_wbuf_dirty(c)) {
->   				spin_unlock(&c->erase_completion_lock);
->   				jffs2_dbg(1, "%s(): Flushing write buffer\n",
->   					  __func__);
-> -				jffs2_flush_wbuf_pad(c);
-> +				if (wbuf_sem_held) {
-> +					__jffs2_flush_wbuf(c, PAD_NOACCOUNT);
-> +				} else {
-> +					jffs2_flush_wbuf_pad(c);
-> +				}
-Hi, Zhaolong
-Perhaps the __jffs2_flush_wbuf is not equalivelent to the lockless 
-version of jffs2_flush_wbuf_pad, for 2 reasons:
-1. jffs2_flush_wbuf_pad will do nothing when CONFIG_JFFS2_FS_WRITEBUFFER 
-is disabled.
-2. jffs2_flush_wbuf_pad also checks 'c->wbuf', will it be ok to remove 
-the check?
+On Tue, Mar 25, 2025 at 01:43:43PM +0000, Caleb James DeLisle wrote:
+> +title: EcoNet EN751221 High Precision Timer (HPT)
+> +
+> +maintainers:
+> +  - Caleb James DeLisle <cjd@cjdns.fr>
+> +
+> +description:
+> +  The EcoNet High Precision Timer (HPT) is a timer peripheral found in various
+> +  EcoNet SoCs, including the EN751221 and EN751627 families. It provides per-VPE
+> +  count/compare registers and a per-CPU control register, with a single interrupt
+> +  line using a percpu-devid interrupt mechanism.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
 
->   				spin_lock(&c->erase_completion_lock);
->   				jeb = c->nextblock;
->   				goto restart;
->   			}
->   
-> diff --git a/fs/jffs2/os-linux.h b/fs/jffs2/os-linux.h
-> index 86ab014a349c..c9dda7126850 100644
-> --- a/fs/jffs2/os-linux.h
-> +++ b/fs/jffs2/os-linux.h
-> @@ -76,10 +76,11 @@ static inline void jffs2_init_inode_info(struct jffs2_inode_info *f)
->   #define jffs2_cleanmarker_oob(c) (0)
->   #define jffs2_write_nand_cleanmarker(c,jeb) (-EIO)
->   
->   #define jffs2_flash_write(c, ofs, len, retlen, buf) jffs2_flash_direct_write(c, ofs, len, retlen, buf)
->   #define jffs2_flash_read(c, ofs, len, retlen, buf) (mtd_read((c)->mtd, ofs, len, retlen, buf))
-> +#define __jffs2_flush_wbuf(c, pad) ({ do{} while(0); (void)(c), 0; })
->   #define jffs2_flush_wbuf_pad(c) ({ do{} while(0); (void)(c), 0; })
->   #define jffs2_flush_wbuf_gc(c, i) ({ do{} while(0); (void)(c), (void) i, 0; })
->   #define jffs2_write_nand_badblock(c,jeb,bad_offset) (1)
->   #define jffs2_nand_flash_setup(c) (0)
->   #define jffs2_nand_flash_cleanup(c) do {} while(0)
-> diff --git a/fs/jffs2/wbuf.c b/fs/jffs2/wbuf.c
-> index 4061e0ba7010..799559760dc1 100644
-> --- a/fs/jffs2/wbuf.c
-> +++ b/fs/jffs2/wbuf.c
-> @@ -384,11 +384,11 @@ static void jffs2_wbuf_recover(struct jffs2_sb_info *c)
->   	}
->   	/* OK... we're to rewrite (end-start) bytes of data from first_raw onwards.
->   	   Either 'buf' contains the data, or we find it in the wbuf */
->   
->   	/* ... and get an allocation of space from a shiny new block instead */
-> -	ret = jffs2_reserve_space_gc(c, end-start, &len, JFFS2_SUMMARY_NOSUM_SIZE);
-> +	ret = jffs2_reserve_space_gc(c, end-start, &len, JFFS2_SUMMARY_NOSUM_SIZE, 1);
->   	if (ret) {
->   		pr_warn("Failed to allocate space for wbuf recovery. Data loss ensues.\n");
->   		kfree(buf);
->   		return;
->   	}
-> @@ -566,20 +566,11 @@ static void jffs2_wbuf_recover(struct jffs2_sb_info *c)
->   	jffs2_dbg(1, "wbuf recovery completed OK. wbuf_ofs 0x%08x, len 0x%x\n",
->   		  c->wbuf_ofs, c->wbuf_len);
->   
->   }
->   
-> -/* Meaning of pad argument:
-> -   0: Do not pad. Probably pointless - we only ever use this when we can't pad anyway.
-> -   1: Pad, do not adjust nextblock free_size
-> -   2: Pad, adjust nextblock free_size
-> -*/
-> -#define NOPAD		0
-> -#define PAD_NOACCOUNT	1
-> -#define PAD_ACCOUNTING	2
-> -
-> -static int __jffs2_flush_wbuf(struct jffs2_sb_info *c, int pad)
-> +int __jffs2_flush_wbuf(struct jffs2_sb_info *c, int pad)
->   {
->   	struct jffs2_eraseblock *wbuf_jeb;
->   	int ret;
->   	size_t retlen;
->   
-> diff --git a/fs/jffs2/write.c b/fs/jffs2/write.c
-> index cda9a361368e..1764cf0466fc 100644
-> --- a/fs/jffs2/write.c
-> +++ b/fs/jffs2/write.c
-> @@ -137,11 +137,11 @@ struct jffs2_full_dnode *jffs2_write_dnode(struct jffs2_sb_info *c, struct jffs2
->   			jffs2_dbg_acct_sanity_check(c,jeb);
->   			jffs2_dbg_acct_paranoia_check(c, jeb);
->   
->   			if (alloc_mode == ALLOC_GC) {
->   				ret = jffs2_reserve_space_gc(c, sizeof(*ri) + datalen, &dummy,
-> -							     JFFS2_SUMMARY_INODE_SIZE);
-> +							     JFFS2_SUMMARY_INODE_SIZE, 0);
->   			} else {
->   				/* Locking pain */
->   				mutex_unlock(&f->sem);
->   				jffs2_complete_reservation(c);
->   
-> @@ -289,11 +289,11 @@ struct jffs2_full_dirent *jffs2_write_dirent(struct jffs2_sb_info *c, struct jff
->   			jffs2_dbg_acct_sanity_check(c,jeb);
->   			jffs2_dbg_acct_paranoia_check(c, jeb);
->   
->   			if (alloc_mode == ALLOC_GC) {
->   				ret = jffs2_reserve_space_gc(c, sizeof(*rd) + namelen, &dummy,
-> -							     JFFS2_SUMMARY_DIRENT_SIZE(namelen));
-> +							     JFFS2_SUMMARY_DIRENT_SIZE(namelen), 0);
->   			} else {
->   				/* Locking pain */
->   				mutex_unlock(&f->sem);
->   				jffs2_complete_reservation(c);
->   
-> diff --git a/fs/jffs2/xattr.c b/fs/jffs2/xattr.c
-> index defb4162c3d5..b7b1eb8f012c 100644
-> --- a/fs/jffs2/xattr.c
-> +++ b/fs/jffs2/xattr.c
-> @@ -1241,11 +1241,11 @@ int jffs2_garbage_collect_xattr_datum(struct jffs2_sb_info *c, struct jffs2_xatt
->   		goto out;
->   	}
->   	old_ofs = ref_offset(xd->node);
->   	totlen = PAD(sizeof(struct jffs2_raw_xattr)
->   			+ xd->name_len + 1 + xd->value_len);
-> -	rc = jffs2_reserve_space_gc(c, totlen, &length, JFFS2_SUMMARY_XATTR_SIZE);
-> +	rc = jffs2_reserve_space_gc(c, totlen, &length, JFFS2_SUMMARY_XATTR_SIZE, 0);
->   	if (rc) {
->   		JFFS2_WARNING("jffs2_reserve_space_gc()=%d, request=%u\n", rc, totlen);
->   		goto out;
->   	}
->   	rc = save_xattr_datum(c, xd);
-> @@ -1274,11 +1274,11 @@ int jffs2_garbage_collect_xattr_ref(struct jffs2_sb_info *c, struct jffs2_xattr_
->   		goto out;
->   
->   	old_ofs = ref_offset(ref->node);
->   	totlen = ref_totlen(c, c->gcblock, ref->node);
->   
-> -	rc = jffs2_reserve_space_gc(c, totlen, &length, JFFS2_SUMMARY_XREF_SIZE);
-> +	rc = jffs2_reserve_space_gc(c, totlen, &length, JFFS2_SUMMARY_XREF_SIZE, 0);
->   	if (rc) {
->   		JFFS2_WARNING("%s: jffs2_reserve_space_gc() = %d, request = %u\n",
->   			      __func__, rc, totlen);
->   		goto out;
->   	}
-> 
+Drop items, that's const directly.
+
+> +          - const: econet,en751221-timer
+> +      - items:
+> +          - const: econet,en751627-timer
+> +          - const: econet,en751221-timer
+> +
+> +  reg: true
+
+Widest constraints are always here.
+
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: A percpu-devid timer interrupt shared across CPUs.
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +if:
+
+This goes under allOf:, to save re-indent later, and then after
+required: block (see example-schema).
+
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        const: econet,en751627-timer
+> +then:
+> +  properties:
+> +    reg:
+> +      items:
+> +        - description: Base address for VPE timers 0 and 1
+
+s/Base address for//
+because it is redundant. Bus/parent addressing already defines this as
+base address, cannot be anything else.
+
+> +        - description: Base address for VPE timers 2 and 3
+> +else:
+> +  properties:
+> +    reg:
+> +      items:
+> +        - description: Base address for VPE timers 0 and 1
+
+Best regards,
+Krzysztof
 
