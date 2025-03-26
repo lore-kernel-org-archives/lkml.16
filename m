@@ -1,108 +1,115 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-24418.protonmail.ch (mail-24418.protonmail.ch [109.224.244.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521BB1A2541
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 21:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCE51A2541;
+	Wed, 26 Mar 2025 21:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743023375; cv=none; b=beKbEpOcZLrshqG9leiArCEEEXryzXDdv2q4ORmfMQcu7UjI9NzgZzR2/DB0ha5aQj4WaRTow886BSRw4Z8IpYYKGKK7M1LK3QcLRdv2Oy6YkG9KYv6A39xMcXcdvc1j4lwQghIaA8678YBqMS7lQEvHHfHndVc+w+/3EX4LcVE=
+	t=1743023395; cv=none; b=uZTQwR1UaNGLT+sL4cuN0aGWTNOtMqd4YhOdHtOGN4mkjv1Lcj8po8/2S19L5N+gULshL2Zoq3HlC/CVaJZ/fgYOD/S4rBebK0s2Vx4I3o48Jcirz1oparD820WU+zuWrbEyaTzDIF7p1dOD282sK5uDHWn795vLt3VI1hEdL90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743023375; c=relaxed/simple;
-	bh=N1Iw1CJ8p9YjJ/cpcO93upEpS735Wn8gFvx0ADY4HQc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZmlhQCld96jqr7z/Bo7oDf5X0CIsUcmtZiElqdklAtJV2meFtKnGES7dnb8zvba/o9NNVyKwUzCL5qTZZcTK8dD3OEjXmIzbQeC6+RNcuaVqrqT4bU7dVHxlm/4EhwCSfMFlptQ3QIJDHLRy4FauhCjHHQ0c2IWsiDEvubxx5eQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FbLHCo98; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743023395; c=relaxed/simple;
+	bh=RpFb68sfUuLucQKFl/LvCo6BIWrsfhNT9hY9gKkIojc=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TpCw+92Gwss/Qc1FROpkbLL/E+g4lxxIIRbJzkf9S6H1PRIMFBWvkqYZMRWU4y8jDlOqfIwK9iCH6NtbO4/4bDKdEyVeMKQd2SSq/jnbpVl3JVWfIZv7H1auTCgV3WbPuPgyQqp7BWf52wyw65+zBA5umCvhJFpzSqisL/fOK1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=YIjfw2wK; arc=none smtp.client-ip=109.224.244.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FbLHCo98"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e5cbd8b19bso1153a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:09:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743023372; x=1743628172; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mn6ZXtt6CVZ3GL75/BKIeHmkynUInUG3RiCFW/2GGVA=;
-        b=FbLHCo98BNQbaIzelURIZhGhN3nxVLc2ZcD0Bt7Cc/zj1ciJjKSNQqi3lBAqGFRpSs
-         GMMv+lmjV4f8AsP/07Qs4vBSVgOivZGjN/mWlubhwLIo8UnU5H6jVCa4BURkjWw6xKW9
-         aAihdjzQh4Yo+bnfkqW2sroYSNFyRBAX01cnFrRiXWxdtfltu3j3V3f47tOBnq5k6z2t
-         nOzspXmbr73gAoTm17MqPV7sFlja1ZhD3fE1W6CqmG9X4tOh28MWm+x/n0nmHTBLLDJq
-         TotkMrb8mfH1evYKH+jFYr9kYM0DZsNy39rE4SCJqybHyDQN2pePA584HDk+nbU7IDNj
-         N9ZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743023372; x=1743628172;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mn6ZXtt6CVZ3GL75/BKIeHmkynUInUG3RiCFW/2GGVA=;
-        b=eAsiOgYsBAnPSbP+KnOMDmHLj9C/O2etuh7NVGXK7+BznYDiq/5gWBG78RpS1UJgxk
-         Ys/k1/4quRAFjRoYHZeZoRoitJxxeG382Auq7ljrnROacdz5LNeBN4AjAJcTuIdS/w6B
-         8swekGODdKbEJq3Y5Jqw0xovij+V9d/BQ1vmv3mScymYtKFxc4QLqPEACGnXRXRUPYJG
-         JWO/WUh5I1LO1in+uR3SeElLP5HQXQPs8FWPH3p+hZuQEijZIadp9aDl02gYpGsRIDNy
-         BtEK5/RyMzK6+ken70oHVz8d1zncIUfS8XNARayeUmLc8PWzc4ddQBYhrs2YIoRKsu3m
-         jytw==
-X-Forwarded-Encrypted: i=1; AJvYcCXdUO2A92aoJNoUfs/Mr4a6bKoqjijmH8qGkP7r1iEta0oJroH9gyx1MZx93YNbMBCW4RsWvSDGTJNrtGU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHJwLiqYWzv+T+SZdHKwwXBnjKg5Orr6fE4JrrlLQxVgL+ELXS
-	XJGJ56ZfptVoIHaVzF+yi7CrjCX3H2x9ThSmrTcUCxxWJFEj4qhJe6UiFc5lJzdD4D6wFUyZKz4
-	AxICRZ92iTzsal8WEcWNPDCQk0ovuDlNyJgvl
-X-Gm-Gg: ASbGnctVDaG21OJIzKc1dCpgdOAQ5tNXKa54weKOA2krW64bLDuvTYnAuvvcRlIzBtx
-	P5dCiyb8x9KHR/JcRJ9R5uF/pZ6Hj06f/mujRLTwAXUOnlXM73rqNbqPavbvH3IIn2qzKjKBJdD
-	8DoWZhpsCoB39qoTBlRF3nLhZjJYKKNye/8OsRoCa72y7EuVhz4P24eAA=
-X-Google-Smtp-Source: AGHT+IF5XYVtxnEMnp8UVx9idrWRetkioyCanAIqpXdGdCYrAu98yJ9b779Z+2gRPmY2TAzVTNKL5she3ojuvy4WlUA=
-X-Received: by 2002:aa7:c557:0:b0:5e5:c024:ec29 with SMTP id
- 4fb4d7f45d1cf-5eda8160d64mr14905a12.0.1743023372195; Wed, 26 Mar 2025
- 14:09:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="YIjfw2wK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1743023391; x=1743282591;
+	bh=RpFb68sfUuLucQKFl/LvCo6BIWrsfhNT9hY9gKkIojc=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=YIjfw2wK1j2h6azYTqWRVEH0cuiyeF3PG94+4kPpWByxyEylHxw0yQ73QMVZYJpHE
+	 enuZwCDqIfktzADNY3W4VW9qxXpnNVZ+qU/+ZkmsA1kaA9IhNHEyTAFxsbAfN7CGob
+	 yjy+Nsyi17yd4c4EO69HPaAvBFwtz+mx3Q85qArKW5RqcxXdKP4h7NjQDNwMtfVB2+
+	 1qU3SaIvILaFIGyOtnlmAmy2At8S/6bHl2gQ8TwJrAUGPmnGDFFPBY2nRrP6R1QHcn
+	 h2ILwNEWubh1bOBRCdkoe5lERIkf3BJHUs9m7fkcfvkvILO7/wnIc7ox7EkEr4A/tN
+	 7bP6FyKUEueYg==
+Date: Wed, 26 Mar 2025 21:09:47 +0000
+To: Tamir Duberstein <tamird@gmail.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, FUJITA Tomonori <fujita.tomonori@gmail.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v7 7/7] rust: enable `clippy::ref_as_ptr` lint
+Message-ID: <D8QI804Q3DAS.2BV4WSL81H52Z@proton.me>
+In-Reply-To: <CAJ-ks9ntTxBM=c5nUZWGv3MoRt-LveBchn-c1Xy-DGap7fLVRA@mail.gmail.com>
+References: <20250325-ptr-as-ptr-v7-0-87ab452147b9@gmail.com> <D8PPIYIJCNX8.13VPQULEI0ALN@proton.me> <CAJ-ks9k6220j6CQSOF4TDrgY9qq4PfV9uaMXz1Qk4m=eeSr5Ag@mail.gmail.com> <D8Q4MSXXZ7OI.1NC226MO02VSN@proton.me> <CAJ-ks9nHKpQPuSBypXTSATYhbAFkQTJzUq8jN0nu4t=Kw+0xxg@mail.gmail.com> <D8QCK3CQES3Y.3LTZ4MVO5B3KT@proton.me> <CAJ-ks9nKT2PUDm6=b4AB1QUWwwvcqPn7Vz60=c0B+uFMZrqPew@mail.gmail.com> <D8QDOBUM6NF0.CGJY7ZA5KD9S@proton.me> <CAJ-ks9ntTxBM=c5nUZWGv3MoRt-LveBchn-c1Xy-DGap7fLVRA@mail.gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: db89d0d8c8162336c902db644badce1251720b1b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <31097083-a444-4bd1-8722-d8b7c4b7a43a@app.fastmail.com>
-In-Reply-To: <31097083-a444-4bd1-8722-d8b7c4b7a43a@app.fastmail.com>
-From: Jann Horn <jannh@google.com>
-Date: Wed, 26 Mar 2025 22:08:55 +0100
-X-Gm-Features: AQ5f1Jrc_WaIP2U4wJ_EdK04Nd4TpZufnq_KcUHEOJYF7zycnekmFp_S3xzW9WU
-Message-ID: <CAG48ez0ZahF98zN+qKrizDC8MBM7CM=WMBOzk7ybr55Er37=pA@mail.gmail.com>
-Subject: Re: [GIT PULL] asm-generic changes for 6.15
-To: Arnd Bergmann <arnd@arndb.de>, Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org, 
-	Nathan Chancellor <nathan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 26, 2025 at 8:43=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrote=
-:
-> The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f0=
-5b:
+On Wed Mar 26, 2025 at 8:06 PM CET, Tamir Duberstein wrote:
+> On Wed, Mar 26, 2025 at 1:36=E2=80=AFPM Benno Lossin <benno.lossin@proton=
+.me> wrote:
+>> On Wed Mar 26, 2025 at 5:57 PM CET, Tamir Duberstein wrote:
+>> > In the current code you're looking at, yes. But in the code I have
+>> > locally I'm transmuting `[u8]` to `BStr`. See my earlier reply where I
+>> > said "Hmm, looking at this again we can just transmute ref-to-ref and
+>> > avoid pointers entirely. We're already doing that in
+>> > `CStr::from_bytes_with_nul_unchecked`".
+>>
+>> `CStr::from_bytes_with_nul_unchecked` does the transmute with
+>> references. That is a usage that the docs of `transmute` explicitly
+>> recommend to change to an `as` cast [1].
 >
->   Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
->
-> are available in the Git repository at:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git ta=
-gs/asm-generic-6.15
->
-> for you to fetch changes up to ece69af2ede103e190ffdfccd9f9ec850606ab5e:
->
->   rwonce: handle KCSAN like KASAN in read_word_at_a_time() (2025-03-25 17=
-:50:38 +0100)
-[...]
-> Jann Horn (1):
->       rwonce: handle KCSAN like KASAN in read_word_at_a_time()
+> RIght. That guidance was written in 2016
+> (https://github.com/rust-lang/rust/pull/34609) and doesn't present any
+> rationale for `as` casts being preferred to transmute. I posted a
+> comment in the most relevant issue I could find:
+> https://github.com/rust-lang/rust/issues/34249#issuecomment-2755316610.
 
-Uh, sorry about this...
+Not sure if that's the correct issue, maybe we should post one on the
+UCG (unsafe code guidelines). But before that we probably should ask on
+zulip...
 
-Nathan Chancellor just pointed out that my commit "rwonce: handle
-KCSAN like KASAN in read_word_at_a_time()" breaks the arm64 build when
-LTO is enabled (<https://lore.kernel.org/all/20250326203926.GA10484@ax162/>=
-).
-I just posted a patch that undoes the buggy part of my patch at
-<https://lore.kernel.org/r/20250326-rwaat-fix-v1-1-600f411eaf23@google.com>=
-.
+>> No idea about provenance still.
+>
+> Well that's not surprising, nobody was thinking about provenance in
+> 2016. But I really don't think we should blindly follow the advice in
+> this case. It doesn't make an iota of sense to me - does it make sense
+> to you?
 
-@Linus: Sorry for throwing a spanner in the works here... maybe you
-should only pull up to the commit before mine (luckily mine's the last
-in the stack, and it's not important), or wait for Arnd to give his
-opinion.
+For ptr-to-int transmutes, I know that they will probably remove
+provenance, hence I am a bit cautious about using them for ptr-to-ptr or
+ref-to-ref.
+
+>> [1]: https://doc.rust-lang.org/std/mem/fn.transmute.html#alternatives
+>>
+>> >> I tried to find some existing issues about the topic and found that
+>> >> there exists a clippy lint `transmute_ptr_to_ptr`. There is an issue
+>> >> asking for a better justification [1] and it seems like nobody provid=
+ed
+>> >> one there. Maybe we should ask the opsem team what happens to provena=
+nce
+>> >> when transmuting?
+>> >
+>> > Yeah, we should do this - but again: not relevant in this discussion.
+>>
+>> I think it's pretty relevant.
+>
+> It's not relevant because we're no longer talking about transmuting
+> pointer to pointer. The two options are:
+> 1. transmute reference to reference.
+> 2. coerce reference to pointer, `as` cast pointer to pointer (triggers
+> `ptr_as_ptr`), reborrow pointer to reference.
+>
+> If anyone can help me understand why (2) is better than (1), I'd
+> certainly appreciate it.
+
+I am very confident that (2) is correct. With (1) I'm not sure (see
+above), so that's why I mentioned it.
+
+---
+Cheers,
+Benno
+
