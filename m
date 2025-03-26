@@ -1,441 +1,345 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED71F253B59
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 20:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACD0254877;
+	Wed, 26 Mar 2025 20:11:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743019805; cv=none; b=UsaKjqoXE68xli65r4eMkHJ1TO8paObed1iifYh0QFgJ6Qqcag+7qVH5iDZQaPPg1AMWOgpDU5oQma1+yhW7Eb9zqa72GyJDoijR7Scz9tQoHay9QJBki9f7Q6Ii+FT0buYVl01you3FRGrfOcqwBSvA6COamLaQehHpVx4kdRU=
+	t=1743019894; cv=none; b=gxSHgnksnTBCt+k2o/yAqs/V7dYHTope9EsxjMNVBdTcYETXMC9L1IfU1uU1LV+C3LUebqbujk4w/rH+viWqzPQy3X4NaVVRAXKA9wjULc+jsV+o7h97hqBYoaZoAKbtAagcqK0sAvljefXU2/PkvhqPL7Y70kGCOSob6E9I7bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743019805; c=relaxed/simple;
-	bh=Ag8lW0Ee30nrHHnKtUiBa06NaeDuCLEFAZmzJucTwuw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eHuYj90vZO5R8+6Dxcn/J0O5jbI8tpuOD0ttJ4klKAQ3hxTTUm8dKby0VboFf1f840ZtN4AcLeux8iKg615D46r9vI6zg8R2t4dM8Cgo3zeDZwJdyn2uKNNCrUuq25p7gBcHmi+oIfhyMV1SD0qdQw4y6BijC3kSxNA64EldiXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GXLjRvmZ; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743019894; c=relaxed/simple;
+	bh=bvdQL4r4gh/BbpJ2VQIdjkW0C7cktRMBN8ush0AzB14=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=do6+i3iBBcq9fBy/fTJSta1zdLXLTuiNvAY21qICpZKVnXG09TJiH11wMYFT3eCx0WMAzijOdfOcGk/laeukQFJ6sPWB4F9GVL44Ej8vrnhTgoPKQuxgFsHU5kvZO92ZjmBbyq5ydbnzb+hGWHZiYxyQBm/QPxKaaLc+Pv+Zjw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r20HJ0A1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GXLjRvmZ"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c55500d08cso29167885a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 13:10:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743019802; x=1743624602; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QpzfHBYhWUpsUZgJspeC/SaPXcwYDG9jrut2pHl/3X0=;
-        b=GXLjRvmZhm9s9nUhh+DoncK/eqiVsfiLXRNlLOYKmMiPfZbjw6HjM6FcpKduqO5UK1
-         zOlKUZS9OcxpO/JITm7kfODIsFdRzid20vXi/shhAQPrx+5QyS2QK0mhUKQYOBTbvIjc
-         Y9O9vkcnTR71oSUsTbZ2srk2h+Hf+egY2F2dKqtpvQ+egRzKMBojuWfWdz677wW97FFP
-         rtDZ4DbeojXCMya62MkdqN3F6BEFHWaazS1gfXNwDHdiCS4E0BnHUrhlCEsRZaA9C3k3
-         6aTkunjgcD54oi/FSLMPxYhJlbk2HsdLxN9AmTefl2NRt+8ZC3OQefeI/2Zl55TNhJ4F
-         XTqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743019802; x=1743624602;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QpzfHBYhWUpsUZgJspeC/SaPXcwYDG9jrut2pHl/3X0=;
-        b=ivEVnWSUkSVcpgCApHyq+ydq2a63D1TkAUnznumw+LCHYb2g2iNShsB2clzEWTCbIb
-         YNNJTLk8L94v3l/6Mi0kIr3vcc49afpR+JQKoGtmLoO/Oma3h+B7YV8981/mV8T8ATvG
-         qBnbSZwR7Lr7uU/SYK/zHrxH7v+mEEdnQIZgb7d54mDn3xEzcigO0A9TDcKj7NvnP0zm
-         42xF4PJgS8FIodOUAI7KilN3ktUkjuCEHZNgc9jZn9aYQkxeSCo81pQW1MIoL2Wz8BiK
-         IbqF5lfyRPtHlEwitX16iNkVRIAMgcA8CkhirHdk+wpxTji3OUdp7Lz2yYBVT0i3gvmi
-         rDqg==
-X-Forwarded-Encrypted: i=1; AJvYcCXxNMOad7OlTaEqg0OAnHY4m2xRyOvraGFGh1WS6s/usQl6N7h6MWlrboYvfAsfJev3H27gJ9b1gfort9Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfB59RJq/88BGSzl6ta8NMEou/u3W09/nbtm/xO8Z9MG0z/lP9
-	kU3nA8ZbUILoLoRMbqTIPEvquBkmOJGrg4Ys3ypbH2gzndXxBMajSIPHdTrU+iqINvZeepijfKK
-	r5t8AQg8i4fVEsZv4YafHduN7mBH+81HYzZpC
-X-Gm-Gg: ASbGncvPcTcI929keYNYfEBjnTZ5JuYdzvevsUR1bMWMB6VsGqFBbVOyhjTZ9dWHT4D
-	6ELXw93/DM5kx4L40y3GC7Tw1D23/zzv6e2I6gL6cVbBLhUps8O1uXQ4SSUUHVyLpbiiJyPe55H
-	e8j+VQ+u4Uj5sI1TcwtJ8aq1hCuyXY
-X-Google-Smtp-Source: AGHT+IH1TzlOPgvnqxhZbW0+a/Qg28Os3s9xAi7HFLJb4HykC2p6pqxgZdtm60nxAGnkOBbfh0dDzYZVD0aWO5W/8gc=
-X-Received: by 2002:a05:6214:2507:b0:6e8:fa33:2969 with SMTP id
- 6a1803df08f44-6ed238a5609mr10672636d6.10.1743019801352; Wed, 26 Mar 2025
- 13:10:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r20HJ0A1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8B3BC4CEE2;
+	Wed, 26 Mar 2025 20:11:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743019894;
+	bh=bvdQL4r4gh/BbpJ2VQIdjkW0C7cktRMBN8ush0AzB14=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r20HJ0A1NTtPo12CzQbu3zAXFTSCzvy2JFUahBr76y7VCEs8osiV8029EaGkj0s/q
+	 78KOWC08u6FtkeydkgGsgC+8To4MiiVC0P9Ums8C3xnJ0CvyuDW/pEZ12w/AybtfwG
+	 sSrth7bWktpAF7WMH69EijpGcgYopfXF8kmFdzrU9KSS5PtLQd9sRPpMMtC0K1KQ8p
+	 i+SZQKk89QpOU1m+CX0T+7y6M++JDJAKvttnfQ/NWObKIgeKn/nlQg16eNnl31znj9
+	 w+kVVan0MoIj4iYCVG9QALes4tBncZZyHHGjC/dh4QsAGjeioFg0oW4V23YPNhRt/1
+	 222eOWHdE70ww==
+Date: Wed, 26 Mar 2025 22:11:30 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc: "Hansen, Dave" <dave.hansen@intel.com>,
+	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"Mallick, Asit K" <asit.k.mallick@intel.com>,
+	"Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
+	"Cai, Chong" <chongc@google.com>,
+	"Aktas, Erdem" <erdemaktas@google.com>,
+	"Annapurve, Vishal" <vannapurve@google.com>,
+	"dionnaglaze@google.com" <dionnaglaze@google.com>,
+	"bondarn@google.com" <bondarn@google.com>,
+	"Raynor, Scott" <scott.raynor@intel.com>,
+	"Zhang, Cathy" <cathy.zhang@intel.com>
+Subject: Re: [PATCH 4/4] x86/sgx: Implement ENCLS[EUPDATESVN] and
+ opportunistically call it during first EPC page alloc
+Message-ID: <Z-RfcpSBAybk-KjG@kernel.org>
+References: <20250321123938.802763-1-elena.reshetova@intel.com>
+ <20250321123938.802763-5-elena.reshetova@intel.com>
+ <Z983ZaTaWNqFUpYS@kernel.org>
+ <DM8PR11MB575000AEB9CC3A318651AAABE7A42@DM8PR11MB5750.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-22-mizhang@google.com>
- <4d55c919-92ab-4bfe-a8c2-c0a756546f7c@intel.com>
-In-Reply-To: <4d55c919-92ab-4bfe-a8c2-c0a756546f7c@intel.com>
-From: Mingwei Zhang <mizhang@google.com>
-Date: Wed, 26 Mar 2025 13:09:24 -0700
-X-Gm-Features: AQ5f1Jpcdu2iIGLEY__YZk5gVm28pOu2oG__DajpKikoWCPH2LKK5HVymiw7t9Y
-Message-ID: <CAL715WLfr5k=Rz0cQ08xS=eHEyRn83PBTiqQ5H7iX4qH=jiS8A@mail.gmail.com>
-Subject: Re: [PATCH v4 21/38] KVM: x86/pmu/vmx: Save/load guest
- IA32_PERF_GLOBAL_CTRL with vm_exit/entry_ctrl
-To: "Chen, Zide" <zide.chen@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Eranian Stephane <eranian@google.com>, 
-	Shukla Manali <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM8PR11MB575000AEB9CC3A318651AAABE7A42@DM8PR11MB5750.namprd11.prod.outlook.com>
 
-On Wed, Mar 26, 2025 at 9:51=E2=80=AFAM Chen, Zide <zide.chen@intel.com> wr=
-ote:
->
->
->
-> On 3/24/2025 10:31 AM, Mingwei Zhang wrote:
-> > From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> >
-> > Intel processor (vmx) provides capability to save/load guest
-> > IA32_PERF_GLOBAL_CTRL at vm-exit/vm-entry by setting
-> > VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL bit in VM-exit-ctrl or
-> > VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL bit in VM-entry-ctrl.
-> >
-> > Mediated vPMU leverages both capabilities to save/load guest
-> > IA32_PERF_GLOBAL_CTRL automatically at vm-exit/vm-entry. Note that the
-> > former was introduced in SapphireRapids and later Intel CPUs.
-> >
-> > If VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL is unavailable, mediated PMU will=
- be
-> > disabled. Note that mediated PMU can be enabled by falling back to atom=
-ic
-> > msr save/retore list. However, that would cause extra overhead per
-> > VM-enter/exit.
-> >
-> > Since these VMX capability bits perform automatic saving/restoring of t=
-he
-> > PMU global ctrl between VMCS and the HW MSR. No synchronization was
-> > performed betwen HW MSR and pmu->global_ctrli, the KVM cached value .
-> > Therefore, whenever KVM needs to use this variable, it will need to
-> > explicitly read the value from MSR to pmu->global_ctrl. This is especia=
-lly
-> > so when guest doesn't own all PMU counters, i.e., when
-> > IA32_PERF_GLOBAL_CTRL is interceped by mediated PMU.
-> >
-> > Suggested-by: Sean Christopherson <seanjc@google.com>
-> > Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> > Co-developed-by: Mingwei Zhang <mizhang@google.com>
-> > Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> > ---
-> >  arch/x86/include/asm/kvm_host.h |  4 ++++
-> >  arch/x86/include/asm/vmx.h      |  1 +
-> >  arch/x86/kvm/pmu.c              | 30 ++++++++++++++++++++++++-
-> >  arch/x86/kvm/vmx/capabilities.h |  5 +++++
-> >  arch/x86/kvm/vmx/nested.c       |  3 ++-
-> >  arch/x86/kvm/vmx/pmu_intel.c    | 39 ++++++++++++++++++++++++++++++++-
-> >  arch/x86/kvm/vmx/vmx.c          | 22 ++++++++++++++++++-
-> >  arch/x86/kvm/vmx/vmx.h          |  3 ++-
-> >  8 files changed, 102 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm=
-_host.h
-> > index 0b7af5902ff7..4b3bfefc2d05 100644
-> > --- a/arch/x86/include/asm/kvm_host.h
-> > +++ b/arch/x86/include/asm/kvm_host.h
-> > @@ -553,6 +553,10 @@ struct kvm_pmu {
-> >       unsigned available_event_types;
-> >       u64 fixed_ctr_ctrl;
-> >       u64 fixed_ctr_ctrl_rsvd;
-> > +     /*
-> > +      * kvm_pmu_sync_global_ctrl_from_vmcs() must be called to update
-> > +      * this SW-maintained global_ctrl for mediated vPMU before access=
-ing it.
-> > +      */
-> >       u64 global_ctrl;
-> >       u64 global_status;
-> >       u64 counter_bitmask[2];
-> > diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-> > index f7fd4369b821..48e137560f17 100644
-> > --- a/arch/x86/include/asm/vmx.h
-> > +++ b/arch/x86/include/asm/vmx.h
-> > @@ -106,6 +106,7 @@
-> >  #define VM_EXIT_CLEAR_BNDCFGS                   0x00800000
-> >  #define VM_EXIT_PT_CONCEAL_PIP                       0x01000000
-> >  #define VM_EXIT_CLEAR_IA32_RTIT_CTL          0x02000000
-> > +#define VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL   0x40000000
-> >
-> >  #define VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR    0x00036dff
-> >
-> > diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> > index 6ad71752be4b..4e8cefcce7ab 100644
-> > --- a/arch/x86/kvm/pmu.c
-> > +++ b/arch/x86/kvm/pmu.c
-> > @@ -646,6 +646,30 @@ void kvm_pmu_deliver_pmi(struct kvm_vcpu *vcpu)
-> >       }
-> >  }
-> >
-> > +static void kvm_pmu_sync_global_ctrl_from_vmcs(struct kvm_vcpu *vcpu)
-> > +{
-> > +     struct msr_data msr_info =3D { .index =3D MSR_CORE_PERF_GLOBAL_CT=
-RL };
-> > +
-> > +     if (!kvm_mediated_pmu_enabled(vcpu))
-> > +             return;
-> > +
-> > +     /* Sync pmu->global_ctrl from GUEST_IA32_PERF_GLOBAL_CTRL. */
-> > +     kvm_pmu_call(get_msr)(vcpu, &msr_info);
-> > +}
-> > +
-> > +static void kvm_pmu_sync_global_ctrl_to_vmcs(struct kvm_vcpu *vcpu, u6=
-4 global_ctrl)
-> > +{
-> > +     struct msr_data msr_info =3D {
-> > +             .index =3D MSR_CORE_PERF_GLOBAL_CTRL,
-> > +             .data =3D global_ctrl };
-> > +
-> > +     if (!kvm_mediated_pmu_enabled(vcpu))
-> > +             return;
-> > +
-> > +     /* Sync pmu->global_ctrl to GUEST_IA32_PERF_GLOBAL_CTRL. */
-> > +     kvm_pmu_call(set_msr)(vcpu, &msr_info);
-> > +}
-> > +
-> >  bool kvm_pmu_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
-> >  {
-> >       switch (msr) {
-> > @@ -680,7 +704,6 @@ int kvm_pmu_get_msr(struct kvm_vcpu *vcpu, struct m=
-sr_data *msr_info)
-> >               msr_info->data =3D pmu->global_status;
-> >               break;
-> >       case MSR_AMD64_PERF_CNTR_GLOBAL_CTL:
-> > -     case MSR_CORE_PERF_GLOBAL_CTRL:
-> >               msr_info->data =3D pmu->global_ctrl;
-> >               break;
-> >       case MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR:
-> > @@ -731,6 +754,9 @@ int kvm_pmu_set_msr(struct kvm_vcpu *vcpu, struct m=
-sr_data *msr_info)
->
->
-> pmu->global_ctrl doesn't always have the up-to-date guest value, need to
-> sync from vmcs/vmbc before comparing it against 'data'.
->
-> +               kvm_pmu_sync_global_ctrl_from_vmcs(vcpu);
->                 if (pmu->global_ctrl !=3D data) {
+On Mon, Mar 24, 2025 at 12:26:38PM +0000, Reshetova, Elena wrote:
+> 
+> > On Fri, Mar 21, 2025 at 02:34:43PM +0200, Elena Reshetova wrote:
+> > > SGX architecture introduced  a new instruction called EUPDATESVN [1]
+> > > to Ice Lake. It allows updating security SVN version, given that EPC
+> > > is completely empty. The latter is required for security reasons
+> > > in order to reason that enclave security posture is as secure as the
+> > > security SVN version of the TCB that created it.
+> > >
+> > > Additionally it is important to ensure that while ENCLS[EUPDATESVN]
+> > > runs, no concurrent page creation happens in EPC, because it might
+> > > result in #GP delivered to the creator. Legacy SW might not be prepared
+> > > to handle such unexpected #GPs and therefore this patch introduces
+> > > a locking mechanism to ensure no concurrent EPC allocations can happen.
+> > >
+> > > It is also ensured that ENCLS[EUPDATESVN] is not called when running
+> > > in a VM since it does not have a meaning in this context (microcode
+> > > updates application is limited to the host OS) and will create
+> > > unnecessary load.
+> > >
+> > > The implementation of ENCLS[EUPDATESVN] is based on previous
+> > submision in [2]
+> > >
+> > > [1] https://cdrdv2.intel.com/v1/dl/getContent/648682?explicitVersion=true
+> > 
+> > I don't think for Intel opcodes a link is needed. We know where to look
+> > them up.
+> 
+> Ok, I can drop this reference. It is just a whitepaper explaining to readers
+> the background and operation of EUPDATESVN. It is not part of standard
+> SDM, so I thought I would put a link. 
+> 
+> 
+> > 
+> > > [2] https://lore.kernel.org/all/20220520103904.1216-1-
+> > cathy.zhang@intel.com/T/#medb89e6a916337b4f9e68c736a295ba0ae99ac90
+> > 
+> > Link:
+> 
+> ?  Not sure what you mean by it. 
+> 
+> > 
+> > >
+> > > Co-developed-by: Cathy Zhang <cathy.zhang@intel.com>
+> > > Signed-off-by: Cathy Zhang <cathy.zhang@intel.com>
+> > > Co-developed-by: Elena Reshetova <elena.reshetova@intel.com>
+> > > Signed-off-by: Elena Reshetova <elena.reshetova@intel.com>
+> > > ---
+> > >  arch/x86/include/asm/sgx.h      | 33 +++++++++--------
+> > >  arch/x86/kernel/cpu/sgx/encls.h |  6 +++
+> > >  arch/x86/kernel/cpu/sgx/main.c  | 65
+> > ++++++++++++++++++++++++++++++++-
+> > >  arch/x86/kernel/cpu/sgx/sgx.h   |  2 +
+> > >  4 files changed, 90 insertions(+), 16 deletions(-)
+> > >
+> > > diff --git a/arch/x86/include/asm/sgx.h b/arch/x86/include/asm/sgx.h
+> > > index 8ba39bbf4e91..5caf5c31ebc6 100644
+> > > --- a/arch/x86/include/asm/sgx.h
+> > > +++ b/arch/x86/include/asm/sgx.h
+> > > @@ -26,23 +26,26 @@
+> > >  #define SGX_CPUID_EPC_SECTION	0x1
+> > >  /* The bitmask for the EPC section type. */
+> > >  #define SGX_CPUID_EPC_MASK	GENMASK(3, 0)
+> > > +/* EUPDATESVN presence indication */
+> > > +#define SGX_CPUID_EUPDATESVN	BIT(10)
+> > >
+> > >  enum sgx_encls_function {
+> > > -	ECREATE	= 0x00,
+> > > -	EADD	= 0x01,
+> > > -	EINIT	= 0x02,
+> > > -	EREMOVE	= 0x03,
+> > > -	EDGBRD	= 0x04,
+> > > -	EDGBWR	= 0x05,
+> > > -	EEXTEND	= 0x06,
+> > > -	ELDU	= 0x08,
+> > > -	EBLOCK	= 0x09,
+> > > -	EPA	= 0x0A,
+> > > -	EWB	= 0x0B,
+> > > -	ETRACK	= 0x0C,
+> > > -	EAUG	= 0x0D,
+> > > -	EMODPR	= 0x0E,
+> > > -	EMODT	= 0x0F,
+> > > +	ECREATE		= 0x00,
+> > > +	EADD		= 0x01,
+> > > +	EINIT		= 0x02,
+> > > +	EREMOVE		= 0x03,
+> > > +	EDGBRD		= 0x04,
+> > > +	EDGBWR		= 0x05,
+> > > +	EEXTEND		= 0x06,
+> > > +	ELDU		= 0x08,
+> > > +	EBLOCK		= 0x09,
+> > > +	EPA		= 0x0A,
+> > > +	EWB		= 0x0B,
+> > > +	ETRACK		= 0x0C,
+> > > +	EAUG		= 0x0D,
+> > > +	EMODPR		= 0x0E,
+> > > +	EMODT		= 0x0F,
+> > > +	EUPDATESVN	= 0x18,
+> > >  };
+> > >
+> > >  /**
+> > > diff --git a/arch/x86/kernel/cpu/sgx/encls.h
+> > b/arch/x86/kernel/cpu/sgx/encls.h
+> > > index 99004b02e2ed..3d83c76dc91f 100644
+> > > --- a/arch/x86/kernel/cpu/sgx/encls.h
+> > > +++ b/arch/x86/kernel/cpu/sgx/encls.h
+> > > @@ -233,4 +233,10 @@ static inline int __eaug(struct sgx_pageinfo *pginfo,
+> > void *addr)
+> > >  	return __encls_2(EAUG, pginfo, addr);
+> > >  }
+> > >
+> > > +/* Update CPUSVN at runtime. */
+> > > +static inline int __eupdatesvn(void)
+> > > +{
+> > > +	return __encls_ret_1(EUPDATESVN, "");
+> > > +}
+> > > +
+> > >  #endif /* _X86_ENCLS_H */
+> > > diff --git a/arch/x86/kernel/cpu/sgx/main.c
+> > b/arch/x86/kernel/cpu/sgx/main.c
+> > > index b61d3bad0446..698921229094 100644
+> > > --- a/arch/x86/kernel/cpu/sgx/main.c
+> > > +++ b/arch/x86/kernel/cpu/sgx/main.c
+> > > @@ -32,6 +32,11 @@ static DEFINE_XARRAY(sgx_epc_address_space);
+> > >  static LIST_HEAD(sgx_active_page_list);
+> > >  static DEFINE_SPINLOCK(sgx_reclaimer_lock);
+> > >
+> > > +/* This lock is held to prevent new EPC pages from being created
+> > > + * during the execution of ENCLS[EUPDATESVN].
+> > > + */
+> > > +static DEFINE_SPINLOCK(sgx_epc_eupdatesvn_lock);
+> > > +
+> > >  static atomic_long_t sgx_nr_used_pages = ATOMIC_LONG_INIT(0);
+> > >  static unsigned long sgx_nr_total_pages;
+> > >
+> > > @@ -457,7 +462,17 @@ static struct sgx_epc_page
+> > *__sgx_alloc_epc_page_from_node(int nid)
+> > >  	page->flags = 0;
+> > >
+> > >  	spin_unlock(&node->lock);
+> > > -	atomic_long_inc(&sgx_nr_used_pages);
+> > > +
+> > > +	if (!atomic_long_inc_not_zero(&sgx_nr_used_pages)) {
+> > > +		spin_lock(&sgx_epc_eupdatesvn_lock);
+> > > +		/* Only call sgx_updatesvn() once the first enclave's
+> > > +		 * page is allocated from EPC
+> > > +		 */
+> > > +		if (atomic_long_read(&sgx_nr_used_pages) == 0)
+> > > +			sgx_updatesvn();
+> > > +		atomic_long_inc(&sgx_nr_used_pages);
+> > > +		spin_unlock(&sgx_epc_eupdatesvn_lock);
+> > > +	}
+> > >
+> > >  	return page;
+> > >  }
+> > > @@ -970,3 +985,51 @@ static int __init sgx_init(void)
+> > >  }
+> > >
+> > >  device_initcall(sgx_init);
+> > > +
+> > > +/**
+> > > + * sgx_updatesvn() - Issue ENCLS[EUPDATESVN]
+> > > + * If EPC is ready, this instruction will update CPUSVN to the currently
+> > > + * loaded microcode update SVN and generate new cryptographic assets.
+> > > + */
+> > > +void sgx_updatesvn(void)
+> > > +{
+> > > +	int ret;
+> > > +	int retry = 10;
+> > 
+> > Reverse declaration order.
+> 
+> Sure, will fix. 
+> 
+> > 
+> > > +
+> > > +	lockdep_assert_held(&sgx_epc_eupdatesvn_lock);
+> > > +
+> > > +	/* Do not execute EUPDATESVN if instruction is unavalible or running
+> > in a VM */
+> > > +	if (!(cpuid_eax(SGX_CPUID) & SGX_CPUID_EUPDATESVN) ||
+> > > +		    boot_cpu_has(X86_FEATURE_HYPERVISOR))
+> > > +		return;
+> > 
+> > 
+> > 	if (!(cpuid_eax(SGX_CPUID) & SGX_CPUID_EUPDATESVN))
+> > 		return;
+> > 
+> > 	/* ... */
+> > 	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+> > 		return;
+> > 
+> > The first check really does not need a comment. The second would benefit
+> > from explaining why bail out inside a VM.
+> 
+> Sure, I can change. The reason why we dont want the execution in a VM is explained
+> in the commit message, I can duplicate it in the code comment also. 
+> 
+> 
+> > 
+> > 
+> > 
+> > 
+> > 
+> > > +
+> > > +	do {
+> > > +		ret = __eupdatesvn();
+> > > +		if (ret != SGX_INSUFFICIENT_ENTROPY)
+> > > +			break;
+> > > +
+> > > +	} while (--retry);
+> > > +
+> > > +	switch (ret) {
+> > > +	case 0:
+> > > +		pr_debug("EUPDATESVN was successful!\n");
+> > > +		break;
 
-Good catch. Thanks!
+This is at least definite removal. We don't log for zero codes.
 
-This is why I really prefer just unconditionally syncing the global
-ctrl from VMCS to pmu->global_ctrl and vice versa.
+> > > +	case SGX_NO_UPDATE:
+> > > +		pr_debug("EUPDATESVN was successful, but CPUSVN was not
+> > updated, "
+> > > +			"because current SVN was not newer than
+> > CPUSVN.\n");
+> > > +		break;
+> > > +	case SGX_EPC_NOT_READY:
+> > > +		pr_debug("EPC is not ready for SVN update.");
+> > > +		break;
+> > > +	case SGX_INSUFFICIENT_ENTROPY:
+> > > +		pr_debug("CPUSVN update is failed due to Insufficient
+> > entropy in RNG, "
+> > > +			"please try it later.\n");
+> > > +		break;
+> > > +	case SGX_EPC_PAGE_CONFLICT:
+> > > +		pr_debug("CPUSVN update is failed due to concurrency
+> > violation, please "
+> > > +			"stop running any other ENCLS leaf and try it
+> > later.\n");
+> > > +		break;
+> > > +	default:
+> > > +		break;
+> > 
+> > Remove pr_debug() statements.
+> 
+> This I am not sure it is good idea. I think it would be useful for system
+> admins to have a way to see that update either happened or not.
+> It is true that you can find this out by requesting a new SGX attestation
+> quote (and see if newer SVN is used), but it is not the faster way. 
 
-We might get into similar problems as well in the future.
+Maybe pr_debug() is them wrong level if they are meant for sysadmins?
 
->
-> >                       diff =3D pmu->global_ctrl ^ data;
-> >                       pmu->global_ctrl =3D data;
-> >                       reprogram_counters(pmu, diff);
-> > +
-> > +                     /* Propagate guest global_ctrl to GUEST_IA32_PERF=
-_GLOBAL_CTRL. */
-> > +                     kvm_pmu_sync_global_ctrl_to_vmcs(vcpu, data);
-> >               }
-> >               break;
-> >       case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
-> > @@ -907,6 +933,8 @@ void kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u=
-64 eventsel)
-> >
-> >       BUILD_BUG_ON(sizeof(pmu->global_ctrl) * BITS_PER_BYTE !=3D X86_PM=
-C_IDX_MAX);
-> >
-> > +     kvm_pmu_sync_global_ctrl_from_vmcs(vcpu);
-> > +
-> >       if (!kvm_pmu_has_perf_global_ctrl(pmu))
-> >               bitmap_copy(bitmap, pmu->all_valid_pmc_idx, X86_PMC_IDX_M=
-AX);
-> >       else if (!bitmap_and(bitmap, pmu->all_valid_pmc_idx,
-> > diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabil=
-ities.h
-> > index 013536fde10b..cc63bd4ab87c 100644
-> > --- a/arch/x86/kvm/vmx/capabilities.h
-> > +++ b/arch/x86/kvm/vmx/capabilities.h
-> > @@ -101,6 +101,11 @@ static inline bool cpu_has_load_perf_global_ctrl(v=
-oid)
-> >       return vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_PERF_GLOBAL_=
-CTRL;
-> >  }
-> >
-> > +static inline bool cpu_has_save_perf_global_ctrl(void)
-> > +{
-> > +     return vmcs_config.vmexit_ctrl & VM_EXIT_SAVE_IA32_PERF_GLOBAL_CT=
-RL;
-> > +}
-> > +
-> >  static inline bool cpu_has_vmx_mpx(void)
-> >  {
-> >       return vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_BNDCFGS;
-> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> > index 8a7af02d466e..ecf72394684d 100644
-> > --- a/arch/x86/kvm/vmx/nested.c
-> > +++ b/arch/x86/kvm/vmx/nested.c
-> > @@ -7004,7 +7004,8 @@ static void nested_vmx_setup_exit_ctls(struct vmc=
-s_config *vmcs_conf,
-> >               VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR |
-> >               VM_EXIT_LOAD_IA32_EFER | VM_EXIT_SAVE_IA32_EFER |
-> >               VM_EXIT_SAVE_VMX_PREEMPTION_TIMER | VM_EXIT_ACK_INTR_ON_E=
-XIT |
-> > -             VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL;
-> > +             VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
-> > +             VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL;
-> >
-> >       /* We support free control of debug control saving. */
-> >       msrs->exit_ctls_low &=3D ~VM_EXIT_SAVE_DEBUG_CONTROLS;
-> > diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.=
-c
-> > index 2a5f79206b02..04a893e56135 100644
-> > --- a/arch/x86/kvm/vmx/pmu_intel.c
-> > +++ b/arch/x86/kvm/vmx/pmu_intel.c
-> > @@ -294,6 +294,11 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu=
-, struct msr_data *msr_info)
-> >       u32 msr =3D msr_info->index;
-> >
-> >       switch (msr) {
-> > +     case MSR_CORE_PERF_GLOBAL_CTRL:
-> > +             if (kvm_mediated_pmu_enabled(vcpu))
-> > +                     pmu->global_ctrl =3D vmcs_read64(GUEST_IA32_PERF_=
-GLOBAL_CTRL);
-> > +             msr_info->data =3D pmu->global_ctrl;
-> > +             break;
-> >       case MSR_CORE_PERF_FIXED_CTR_CTRL:
-> >               msr_info->data =3D pmu->fixed_ctr_ctrl;
-> >               break;
-> > @@ -339,6 +344,11 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu=
-, struct msr_data *msr_info)
-> >       u64 reserved_bits, diff;
-> >
-> >       switch (msr) {
-> > +     case MSR_CORE_PERF_GLOBAL_CTRL:
-> > +             if (kvm_mediated_pmu_enabled(vcpu))
-> > +                     vmcs_write64(GUEST_IA32_PERF_GLOBAL_CTRL,
-> > +                                  pmu->global_ctrl);
-> > +             break;
-> >       case MSR_CORE_PERF_FIXED_CTR_CTRL:
-> >               if (data & pmu->fixed_ctr_ctrl_rsvd)
-> >                       return 1;
-> > @@ -558,10 +568,37 @@ static void __intel_pmu_refresh(struct kvm_vcpu *=
-vcpu)
-> >
-> >  static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
-> >  {
-> > +     struct kvm_pmu *pmu =3D vcpu_to_pmu(vcpu);
-> > +     struct vcpu_vmx *vmx =3D to_vmx(vcpu);
-> > +     bool mediated;
-> > +
-> >       __intel_pmu_refresh(vcpu);
-> >
-> > -     exec_controls_changebit(to_vmx(vcpu), CPU_BASED_RDPMC_EXITING,
-> > +     exec_controls_changebit(vmx, CPU_BASED_RDPMC_EXITING,
-> >                               !kvm_rdpmc_in_guest(vcpu));
-> > +
-> > +     mediated =3D kvm_mediated_pmu_enabled(vcpu);
-> > +     if (cpu_has_load_perf_global_ctrl()) {
-> > +             vm_entry_controls_changebit(vmx,
-> > +                     VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL, mediated);
-> > +             /*
-> > +              * Initialize guest PERF_GLOBAL_CTRL to reset value as SD=
-M rules.
-> > +              *
-> > +              * Note: GUEST_IA32_PERF_GLOBAL_CTRL must be initialized =
-to
-> > +              * "BIT_ULL(pmu->nr_arch_gp_counters) - 1" instead of pmu=
-->global_ctrl
-> > +              * since pmu->global_ctrl is only be initialized when gue=
-st
-> > +              * pmu->version > 1. Otherwise if pmu->version is 1, pmu-=
->global_ctrl
-> > +              * is 0 and guest counters are never really enabled.
-> > +              */
-> > +             if (mediated)
-> > +                     vmcs_write64(GUEST_IA32_PERF_GLOBAL_CTRL,
-> > +                                  BIT_ULL(pmu->nr_arch_gp_counters) - =
-1);
-> > +     }
-> > +
-> > +     if (cpu_has_save_perf_global_ctrl())
-> > +             vm_exit_controls_changebit(vmx,
-> > +                     VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
-> > +                     VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL, mediated);
-> >  }
-> >
-> >  static void intel_pmu_init(struct kvm_vcpu *vcpu)
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index ff66f17d6358..38ecf3c116bd 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -4390,6 +4390,13 @@ void vmx_set_constant_host_state(struct vcpu_vmx=
- *vmx)
-> >
-> >       if (cpu_has_load_ia32_efer())
-> >               vmcs_write64(HOST_IA32_EFER, kvm_host.efer);
-> > +
-> > +     /*
-> > +      * Initialize host PERF_GLOBAL_CTRL to 0 to disable all counters
-> > +      * immediately once VM exits. Mediated vPMU then call perf_guest_=
-exit()
-> > +      * to re-enable host perf events.
-> > +      */
-> > +     vmcs_write64(HOST_IA32_PERF_GLOBAL_CTRL, 0);
-> >  }
-> >
-> >  void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
-> > @@ -4457,7 +4464,8 @@ static u32 vmx_get_initial_vmexit_ctrl(void)
-> >                                VM_EXIT_CLEAR_IA32_RTIT_CTL);
-> >       /* Loading of EFER and PERF_GLOBAL_CTRL are toggled dynamically *=
-/
-> >       return vmexit_ctrl &
-> > -             ~(VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL | VM_EXIT_LOAD_IA32_=
-EFER);
-> > +             ~(VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL | VM_EXIT_LOAD_IA32_=
-EFER |
-> > +               VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL);
-> >  }
-> >
-> >  void vmx_refresh_apicv_exec_ctrl(struct kvm_vcpu *vcpu)
-> > @@ -7196,6 +7204,9 @@ static void atomic_switch_perf_msrs(struct vcpu_v=
-mx *vmx)
-> >       struct perf_guest_switch_msr *msrs;
-> >       struct kvm_pmu *pmu =3D vcpu_to_pmu(&vmx->vcpu);
-> >
-> > +     if (kvm_mediated_pmu_enabled(&vmx->vcpu))
-> > +             return;
-> > +
-> >       pmu->host_cross_mapped_mask =3D 0;
-> >       if (pmu->pebs_enable & pmu->global_ctrl)
-> >               intel_pmu_cross_mapped_check(pmu);
-> > @@ -8451,6 +8462,15 @@ __init int vmx_hardware_setup(void)
-> >               enable_sgx =3D false;
-> >  #endif
-> >
-> > +     /*
-> > +      * All CPUs that support a mediated PMU are expected to support l=
-oading
-> > +      * and saving PERF_GLOBAL_CTRL via dedicated VMCS fields.
-> > +      */
-> > +     if (enable_mediated_pmu &&
-> > +         (WARN_ON_ONCE(!cpu_has_load_perf_global_ctrl() ||
-> > +                       !cpu_has_save_perf_global_ctrl())))
-> > +             enable_mediated_pmu =3D false;
-> > +
-> >       /*
-> >        * set_apic_access_page_addr() is used to reload apic access
-> >        * page upon invalidation.  No need to do anything if not
-> > diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> > index 5c505af553c8..b282165f98a6 100644
-> > --- a/arch/x86/kvm/vmx/vmx.h
-> > +++ b/arch/x86/kvm/vmx/vmx.h
-> > @@ -510,7 +510,8 @@ static inline u8 vmx_get_rvi(void)
-> >              VM_EXIT_LOAD_IA32_EFER |                                 \
-> >              VM_EXIT_CLEAR_BNDCFGS |                                  \
-> >              VM_EXIT_PT_CONCEAL_PIP |                                 \
-> > -            VM_EXIT_CLEAR_IA32_RTIT_CTL)
-> > +            VM_EXIT_CLEAR_IA32_RTIT_CTL |                            \
-> > +            VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL)
-> >
-> >  #define KVM_REQUIRED_VMX_PIN_BASED_VM_EXEC_CONTROL                   \
-> >       (PIN_BASED_EXT_INTR_MASK |                                      \
->
+I mean these should not happen in normal behavior like ever? As
+pr_debug() I don't really grab this.
+
+> 
+> 
+> 
+> > 
+> > > +	}
+> > > +}
+> > > diff --git a/arch/x86/kernel/cpu/sgx/sgx.h b/arch/x86/kernel/cpu/sgx/sgx.h
+> > > index d2dad21259a8..92c9e226f1b5 100644
+> > > --- a/arch/x86/kernel/cpu/sgx/sgx.h
+> > > +++ b/arch/x86/kernel/cpu/sgx/sgx.h
+> > > @@ -104,4 +104,6 @@ static inline int __init sgx_vepc_init(void)
+> > >
+> > >  void sgx_update_lepubkeyhash(u64 *lepubkeyhash);
+> > >
+> > 
+> > I don't think we need a newline in-between.
+> 
+> Sure, will fix.
+> 
+> Thank you very much for your prompt review Jarkko!
+
+NP, despite all the complains this are really just minor details
+that we need to nail :-) I'm sure we get them right within round
+or two...
+
+> 
+> Best Regards,
+> Elena.
+
+BR, Jarkko
