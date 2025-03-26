@@ -1,131 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC7F21ABB0;
-	Wed, 26 Mar 2025 17:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12BC238D49
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 17:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743010232; cv=none; b=oApiuawjsvDFQvN3zI89/bEgyPTWj9AS1jLF5typN8b07weaLpBv6OoxlaXOuPoQWPAq4dQfkuDgZanU1dWpmqDBlfYZd2j6AGiLeqU/trg+6bWKgoNAQU7IFk0NtCYSQf0wEIp47e/5VrD3azAUrGgu37RSUII4qPVekoshK6I=
+	t=1743010315; cv=none; b=rvvScl9WsnKmqFjRbz+WJf6CY78hyB16Qcpv8lv+4Z3i2HzfbKuZiAu4DYW8dukDpMd2NPUwiKU6KskYfWGxCthmSQDGYwp/DnOqIUDuS/fcBuW3xKoBXpM9uH/A0ZgkdTHwWs39mecjcoYUrKOSYARPCZi9H28n5LGHKBnzCWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743010232; c=relaxed/simple;
-	bh=Mbm+u3QizKBZ40iFAnVyDC65anxDLftBvvbQxnugJVg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jTg1497BD5AOsscgDFjd2rlQqlx8LIWZiE28t+cUyG3/FSbw2W0bQDfj4au9kit0U0GChVu5CgQ8c391pzxdKF55IwqLfS5eggvyNO8SZCPYBa87jae0WaszK3jofiHMHivJFrtKHrVXkZwmOAHVx9t39V6OUecw7k8my+2g5pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=anrzRB+N; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743010315; c=relaxed/simple;
+	bh=ApVXiA9JPxeDJiY+bJAZzl9b29ymaQInYWf0uYBUIvw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hnpkUnFoNqDYyPG0uMzHXnGqVFjr4YdPwiBfks6R2FObfHCSMIa1t+ej0GECpDNbILNlahakMEllZpIqf6bQQYksfeoZ1VWG99hgWXS0R1RZiO3I0ljoUIR1MJ8mhoh/s4Ok0loQ3m/dRyAVL+ZO7j92EkqIUApj8j9mTeasAT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=QfS+Kf+m; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="anrzRB+N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743010230; x=1774546230;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Mbm+u3QizKBZ40iFAnVyDC65anxDLftBvvbQxnugJVg=;
-  b=anrzRB+NzplXdyf3d+urjVKOW8EYfM/C4KB/NbbmoW8CZB35Jy4v4VdJ
-   DeN/44682jN7SCIUinrxj4OBxv4ZH2XcUZCWwlsI7uIPuRf0P/Eeg248c
-   QO4OlGxdp9e/d+MTS3IgYVHPM3W6qQawj5kPIa2duGqBNFzgNWm2XNSS1
-   iGaPUIA3Dt8bA12s7/CDh4H0vad30xphrMj7qeGLnIEfcwaiaYUpLzpJ8
-   TnhmIysd2NW0lWFfLiUeG3NWqnNuovZnpoC3r18Rs2Hz8wSIw+4UVlI6H
-   HC12qlc7qvOLH79dGQLqIEudKheyRPOYCJxrnZzQTP/WsnjxL+Ra6oLC0
-   A==;
-X-CSE-ConnectionGUID: z8KFgJiyR7OkLBmGvIXIUQ==
-X-CSE-MsgGUID: dxN1p4cRRIOlYfUpVbuxvA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="54963834"
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="54963834"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 10:29:54 -0700
-X-CSE-ConnectionGUID: UIK73DulR02oLJP0y32Jng==
-X-CSE-MsgGUID: /KhZetHOQU2AmYDSKiRyeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="125304370"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 26 Mar 2025 10:29:52 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1txUZY-0005wX-1i;
-	Wed, 26 Mar 2025 17:29:48 +0000
-Date: Thu, 27 Mar 2025 01:29:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Oliver Mangold <oliver.mangold@pm.me>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Asahi Lina <lina@asahilina.net>
-Cc: oe-kbuild-all@lists.linux.dev, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Oliver Mangold <oliver.mangold@pm.me>
-Subject: Re: [PATCH v9 2/5] rust: Rename AlwaysRefCounted to RefCounted
-Message-ID: <202503270014.4G907YMY-lkp@intel.com>
-References: <20250325-unique-ref-v9-2-e91618c1de26@pm.me>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="QfS+Kf+m"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c592764e54so17927385a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 10:31:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1743010311; x=1743615111; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SkIulgoTL6tlyyzZtYI7VaNWhJbd+nkeEIRVTyUEc6I=;
+        b=QfS+Kf+mystD2rnZVReDRZVVp5u4UXnwdTMdBCa5X04vCgxMINb7/eQ2qDN8mhu+s7
+         fmVoPL7Z4C/lIe+f9zeM7IafqcWp0KKUpU1Bhf6BNDdEzalZOnuJIAEWQp9+V6O01fhj
+         Y7pimAdw3oGvmLaHRD2N3Rx6K9WgwYKVjP916IxI2jYjHiKtoGk7wM5BhXDUlT4XVk/g
+         4V6QWSDE/kCTQCF2w7mzSCfWU2AuTIO5lhXH+0Z2BOsJU+HLJmFTfBFbAGeo8GnNz2ys
+         z0pxNYdZq8rsM1DUqZ26FGGTxXCNZvLfhERv2gblrfTUq0C9iXa5D5VvVxIvTWNx0Ak/
+         oTXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743010311; x=1743615111;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SkIulgoTL6tlyyzZtYI7VaNWhJbd+nkeEIRVTyUEc6I=;
+        b=tkWsDoFT0hhGEZ8OHxal1LoT6pUu2GDvk+m8T+vLH61Y2WbPdqQTUbvsiginX1vPBN
+         DdOsbS5TmMJ3Ye0XTQZxRVs8JYwAuZJa2zgUFtisrWNygFNr407b+Mz2gulk/iUOsCL8
+         LXENhNPJZdoKmAPgz0+rK3WvuyxDmW1pj23komeZ0bqUr1AQHYpAOsfxe92BILu0k9t/
+         zYnVUHLy/sBdrqzlgf4Xu+wy1UNOt78GknwOj9uKYoURJ8i+t4h0n4yah6jC6zItpE1W
+         vfmc6JkKBlErFuBq7/ZSMmGYdlNVcH0lMc+KEtkw4M4oFiKw46LMoTJpif8FpHVIaafk
+         rGsA==
+X-Forwarded-Encrypted: i=1; AJvYcCWL2M3pu3Ivkec8faI/z2MD8IU+H3VUL6xs74SbbIQMvtlpJaJlqX9u9YCon3P3mb4LE+8zcLg14a1YaZU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxelf63F8vgDXNcWlwlUUcISfrWzlscPx4rzPMH1mmhEq/aCyF4
+	47ibgdmcL+KbJpij8qsWMr6hh72uNnbB+oemosaQ+CzvWqNbBf8LIlTz8I6R5/90z/IfZkmU647
+	ndXM=
+X-Gm-Gg: ASbGncttjmPPygdFu7oGE9x5SlyycpMrXOXZa6jrxu6RKPXOaDxZyhUNaUI3QXwID/G
+	qQIM1UMM5KFdDz9LyHWplUR7X79Hno/pt52c6YH7/krUScyYTWPRGpG1qQ2F2IeeiqBME/PmeyY
+	Uh+kr5hN2lMxO6MlfSVuBb2OlMQ40pwnKRaKJgtriQ0FPGxsoPC2q/LlX4VIJmw9IirE7KLP/5A
+	n6uycNEwvxdfudOddGnc8xPyNgOu4Pl9hJLc4AizIh4cgolWUTk1N8KEs9sHapGOdy8cQA/9xTX
+	MZmz52jkVEvidEWRS6njASNbXC8SCkYbJOy1HJE=
+X-Google-Smtp-Source: AGHT+IGcpvYp3s03Bz7oKBIO03FZbkxQfna6XvWcbUmCwGiU6FTlnxHk33r6KzJ7Cawr3NxN8yaEZA==
+X-Received: by 2002:a05:620a:2912:b0:7c5:58b0:42c1 with SMTP id af79cd13be357-7c5eda12934mr74754085a.34.1743010311319;
+        Wed, 26 Mar 2025 10:31:51 -0700 (PDT)
+Received: from [172.20.6.96] ([99.209.85.25])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b92d68dcsm786416685a.42.2025.03.26.10.31.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Mar 2025 10:31:50 -0700 (PDT)
+Message-ID: <570272b0-4d96-4e98-bf73-e313cc49918c@kernel.dk>
+Date: Wed, 26 Mar 2025 11:31:50 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250325-unique-ref-v9-2-e91618c1de26@pm.me>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] io_uring/net: use REQ_F_IMPORT_BUFFER for send_zc
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250325143943.1226467-1-csander@purestorage.com>
+ <5b6b20d7-5230-4d30-b457-4d69c1bb51d4@gmail.com>
+ <CADUfDZoo11vZ3Yq-6y4zZNNoyE+YnSSa267hOxQCvH66vM1njQ@mail.gmail.com>
+ <9770387a-9726-4905-9166-253ec02507ff@kernel.dk>
+ <CADUfDZr0FgW4O3bCtq=Yez2cHz799=Tfud6uA6SHEGT4hdwxiA@mail.gmail.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <CADUfDZr0FgW4O3bCtq=Yez2cHz799=Tfud6uA6SHEGT4hdwxiA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Oliver,
+On 3/26/25 11:23 AM, Caleb Sander Mateos wrote:
+> On Wed, Mar 26, 2025 at 10:05?AM Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>> On 3/26/25 11:01 AM, Caleb Sander Mateos wrote:
+>>> On Wed, Mar 26, 2025 at 2:59?AM Pavel Begunkov <asml.silence@gmail.com> wrote:
+>>>>
+>>>> On 3/25/25 14:39, Caleb Sander Mateos wrote:
+>>>>> Instead of a bool field in struct io_sr_msg, use REQ_F_IMPORT_BUFFER to
+>>>>> track whether io_send_zc() has already imported the buffer. This flag
+>>>>> already serves a similar purpose for sendmsg_zc and {read,write}v_fixed.
+>>>>
+>>>> It didn't apply cleanly to for-6.15/io_uring-reg-vec, but otherwise
+>>>> looks good.
+>>>
+>>> It looks like Jens dropped my earlier patch "io_uring/net: import
+>>> send_zc fixed buffer before going async":
+>>> https://lore.kernel.org/io-uring/20250321184819.3847386-3-csander@purestorage.com/T/#u
+>>> .
+>>> Not sure why it was dropped. But this change is independent, I can
+>>> rebase it onto the current for-6.15/io_uring-reg-vec if desired.
+>>
+>> Mostly just around the discussion on what we want to guarantee here. I
+>> do think that patch makes sense, fwiw!
+> 
+> I hope the approach I took for the revised NVMe passthru patch [1] is
+> an acceptable compromise: the order in which io_uring issues
+> operations isn't guaranteed, but userspace may opportunistically
+> submit operations in parallel with a fallback path in case of failure.
+> Viewed this way, I think it makes sense for the kernel to allow the
+> operation using the fixed buffer to succeed even if it goes async,
+> provided that it doesn't impose any burden on the io_uring
+> implementation. I dropped the "Fixes" tag and added a paragraph to the
+> commit message clarifying that io_uring doesn't guarantee this
+> behavior, it's just an optimization.
+> 
+> [1]: https://lore.kernel.org/io-uring/20250324200540.910962-4-csander@purestorage.com/T/#u
 
-kernel test robot noticed the following build errors:
+It is, I already signed off on that one, I think it's just waiting for
+Keith to get queued up. Always a bit tricky during the merge window,
+particularly when it ends up depending on multiple branches. But should
+go in for 6.15.
 
-[auto build test ERROR on 4701f33a10702d5fc577c32434eb62adde0a1ae1]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Oliver-Mangold/rust-types-Add-Ownable-Owned-types/20250325-200247
-base:   4701f33a10702d5fc577c32434eb62adde0a1ae1
-patch link:    https://lore.kernel.org/r/20250325-unique-ref-v9-2-e91618c1de26%40pm.me
-patch subject: [PATCH v9 2/5] rust: Rename AlwaysRefCounted to RefCounted
-config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20250327/202503270014.4G907YMY-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250327/202503270014.4G907YMY-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503270014.4G907YMY-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   PATH=/opt/cross/clang-18/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-   INFO PATH=/opt/cross/rustc-1.78.0-bindgen-0.65.1/cargo/bin:/opt/cross/clang-18/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-   /usr/bin/timeout -k 100 12h /usr/bin/make KCFLAGS= -Wno-error=return-type -Wreturn-type -funsigned-char -Wundef W=1 --keep-going LLVM=1 -j32 -C source O=/kbuild/obj/consumer/x86_64-rhel-9.4-rust ARCH=x86_64 SHELL=/bin/bash rustfmtcheck
-   make: Entering directory '/kbuild/src/consumer'
-   make[1]: Entering directory '/kbuild/obj/consumer/x86_64-rhel-9.4-rust'
->> Diff in rust/kernel/pid_namespace.rs at line 9:
-    
-    use crate::{
-        bindings,
-   -    types::{AlwaysRefCounted, RefCounted, Opaque},
-   +    types::{AlwaysRefCounted, Opaque, RefCounted},
-    };
-    use core::ptr;
-    
->> Diff in rust/kernel/pid_namespace.rs at line 9:
-    
-    use crate::{
-        bindings,
-   -    types::{AlwaysRefCounted, RefCounted, Opaque},
-   +    types::{AlwaysRefCounted, Opaque, RefCounted},
-    };
-    use core::ptr;
-    
-   make[2]: *** [Makefile:1816: rustfmt] Error 123
-   make[2]: Target 'rustfmtcheck' not remade because of errors.
-   make[1]: Leaving directory '/kbuild/obj/consumer/x86_64-rhel-9.4-rust'
-   make: *** [Makefile:251: __sub-make] Error 2
-   make: Target 'rustfmtcheck' not remade because of errors.
-   make[1]: *** [Makefile:251: __sub-make] Error 2
-   make: Leaving directory '/kbuild/src/consumer'
-   make[1]: Target 'rustfmtcheck' not remade because of errors.
+When you have time, resending the net one would be useful. I do think
+that one makes sense too.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Jens Axboe
