@@ -1,116 +1,108 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1164A261373
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 21:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D1219FA93;
+	Wed, 26 Mar 2025 21:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743023610; cv=none; b=UHLm3ITILElNM59xhb/zx0YgcPQSwpdt7MUKi2LvW5V2hJAUMXeGWhcbQ/HtftNTPlKa7VuerbuOosxzJS6p1idq6FFeLgpxPMaw81W8oj3Df72dpt7TAKFPEoKFOw6JhzMRyCWMgENje8xMQoBkjOaqa71EUrVZ71QlMeOrRYk=
+	t=1743023909; cv=none; b=f4I9u6EyZ7b3X3gaEQ+DRSTq1o0cn4hk07JN+QLnuw6ZwfV558xDglXVgPZmY6Ji6XUbCDsL8mRvp0IVc5eskAX9A78kNxhoGaV8sjTC552uYcFZrw+ORNp7y72SB0lny//IpaX0xUt/eg1E4edxbn8HKF62nEfr9y0Sd3ko+EA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743023610; c=relaxed/simple;
-	bh=/KWdbS8/joW2iD1JevCtRTM1rYNd6cf0i7F0cOqel4M=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=K8mgBLowvQyIhXSp3UHGL3cm0SrhS5G3kL8WRGGDRQoYlHucetIPFeAv0F/iGgWwsZaorQXRJ0brdmrNHNdCRWgbTaJzMPTx2wsUJNkwMPvBkt4s0SZLFjAWlVS4mbDsMTM0RgvPiR4msZIJBu1WZ9Gcb2ZUn153Wa7Gp9nt6OE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-85da19887ebso71861239f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:13:28 -0700 (PDT)
+	s=arc-20240116; t=1743023909; c=relaxed/simple;
+	bh=EtebjioKBAjwwkcdb6cdmvmGljQ7daTD04eDyBOVc+o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PZkqXBPmX53FYhFB5QAgYqKDZhUv1x1AMzn7k1BUiFFO0fBo9YzuVJI2fMnlHAcCjiHRc+ZaDTVxfj7HoDHtMbnmqE/CuJM4F21GYWXD3BuxWdw6rudfURB/6qxDUuc5YmnVUfGltM40VMcoFb9bo+gpjJ+bcsBAPYMxCnKWnjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=cVkb7Z2N; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="cVkb7Z2N"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so2731585e9.3;
+        Wed, 26 Mar 2025 14:18:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1743023906; x=1743628706; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K5aDv4/p4YZ4hvd0+24OMdNG2SUNxl+JoR75kjs+xoo=;
+        b=cVkb7Z2NjK262qDHkJyXTatzBUPLrhGuWC6o6S5jZB4B8Q81mxYJk6fj9l5ZHMEwZx
+         v/uUYr0mWfEVBGpmC3kIPWt6OqERUhz0Qaqi5YAvbVZFkyS3tGdfMyobo2JLrhQZnK8Z
+         lOY0onJLWLwsoHbozeiMRw/zwhW3QjBryovI8shBX3NwkrJ/HpyWs4XQgNL6VbvThIVQ
+         813jDIen7COWMncNAvGTONs/TAZl0j4t7/rLMyTYFL0A24vVkaH1eJYlkrpvAsom1AG2
+         44kv1pJYQmhrUMHrFsarD5TCOtuy9+x2NdELa7PwPH/Y84agamG73SOasgBQ3Hz86rh8
+         bMug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743023608; x=1743628408;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1743023906; x=1743628706;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k79YQHIzUDhwHvSN4MUDlJaB44p7E+PisDw0heO3Hx4=;
-        b=h2J8BkCeELRcIrOETxf8PHigaGBP+MwcnyL+bLZEuGx5W00iuepLIc24YJRC4bGqZy
-         kSbRVskrpdtogU1f+wtnlgKH4V/RXSZ3Jg/x7wtPFhxqG3N79YMfIkqhfX5p8ARhYZVc
-         L0WP/439jeAkTTuvoQs1vs0BqFs6JO9Aj/73jUQPZqZaI5GQnSsFdk2FlxAGsk3WRzxs
-         d/vji5f/MsJ0isqJb2AInmQTnLL1VgvlVj6e9TFvYZmC/AuZM4S8Vj6x3a5auIdKnTUJ
-         OxnwtijmBdfTirnwR+98WftYSg4aZXPa27dcJP28PPSwupAfQkJB30It6HVrTFvghK/R
-         lrCA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9bQBhCdiipna5P62reOOa/AYd72YknAZ7x57rMxOHQ0k7r/x4cTO+ILQ0SVUNY5yK34HgbuT86fHW29g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy//+x07+W6ZOmCS3i8qaYV+7OZI45SQhhizDLlSeaEkUAn4tTu
-	db8lXHreEFyDB319yQ/6pYSP3acvYMzL6Ik8UbaT4FIavUWPMqqfOVcmMd+HlC028dvvliObEwx
-	J8VVpFbG2NPMR0O1gQtFEMkXWztreLTmcPW4PR18YQ3l/o52b1X3EO4Y=
-X-Google-Smtp-Source: AGHT+IGavhDViMeLVe1t3XTwp6jK7VmudcxvWFdBCzYiAbPtPVeiQmYWKwJqLXBlizUuOkKfY+2e4SDI1Cy/841LfZp8jcKMuGt9
+        bh=K5aDv4/p4YZ4hvd0+24OMdNG2SUNxl+JoR75kjs+xoo=;
+        b=CPK7gkgc+f4hyOU2PV8WsHh/gu+GNpawVdWqtPG7DJWOoellKf6QjUNau965TFyrVe
+         laM4n2uGYWuXk/esPKm1jideNxOH+371EQWfHSTMGgyMqKCGkkd4c/Txyq4QefQrUl3p
+         GGbR6YlvInK4sMFvWW6tNPPnsNhC3wvnCxgtWyQolsuW52uUwWhwI+lZIpHc6IlIus6z
+         SKmDvR0xNFurYv6fi28AqIvgJBdyiPsEDckhX3cIHDJe3p0mx86FVEL0znt2f6zEVyIA
+         XkSL0skqsinMWpXxmSnut94Cqf3c6Lzu+IwWLRfeKCyYEy1XLp+nbDBU+NNhu4ABvz9X
+         KV+w==
+X-Forwarded-Encrypted: i=1; AJvYcCV2H85DGlDBvPu2iFDPp9FpooW5iHmoMJVzYuVycMDnYeUmgb5+lPYpxZRJnqEpHBzXlm87uN5g@vger.kernel.org, AJvYcCWW8vOlgvWzWPbmkmrC8BqF4TvSf+2K6w9Dq8/m0ALXMjN2CIQBXEcIPNLVIKj+5HsPPqQXmyg8ZfJKzOg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVHYWDLNuXF29WXLxOsAbldTScgwCbNn7l+qTkbu2f+9OJJP8Z
+	BX7qjhQ6X6wQL69WcNh++yAIJ1pZtvG+mcv2Ic0hNmHRfbqT5Z0=
+X-Gm-Gg: ASbGncsFu1lwXBmm8oDGQxvzBE132MZJRm7FcmJBsz1xlHnxojFhTplypA75jMHkRFL
+	3HYIyJgQl2hT4yZm7VG9aUOTJOIktdNUTlUp41u66uZxOaIw60IUU56GVB08FAHTBWiM4cAzSWC
+	wPMsG/Ih/32qE3HBaL0ExYEBuAWFZjkq+IHUbFI2ZsrkeIZ4q/yH6NyYhQUjhJEPNUz+yXyUv/1
+	PSZSiIHMGE2ytCZHIHhf9WKqcScdXYMeAr2Jh/kp2P7RauPs8cE1LijvqoHjwzwBvqRvz0LA3XR
+	ur1J6AbvQwoyw9QEG1P+vIBOirwXSXV8698+MmFxfW2eZ56Zj8E4fBZCTyW2btd23Ajm/1ZpBfK
+	CnC3Dlq8mx0qQ2oUQ3gSKI0OJ3tPnfpE=
+X-Google-Smtp-Source: AGHT+IE5XCCVhPuBcalvEhMCh/Qrz+4i7AieIwvdyBLJ0b5CDmGEn9c22Xv5qXdYHR7I8Um+eZ+FYA==
+X-Received: by 2002:a05:600c:4f44:b0:43d:94:cff0 with SMTP id 5b1f17b1804b1-43d85065900mr8185345e9.19.1743023906123;
+        Wed, 26 Mar 2025 14:18:26 -0700 (PDT)
+Received: from [192.168.1.3] (p5b057a21.dip0.t-ipconnect.de. [91.5.122.33])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82e834a5sm15499865e9.13.2025.03.26.14.18.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Mar 2025 14:18:25 -0700 (PDT)
+Message-ID: <5d15f324-a848-42e4-a008-ad4b466ff841@googlemail.com>
+Date: Wed, 26 Mar 2025 22:18:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3e03:b0:3d4:244b:db1d with SMTP id
- e9e14a558f8ab-3d5ccdd147amr15239435ab.6.1743023608083; Wed, 26 Mar 2025
- 14:13:28 -0700 (PDT)
-Date: Wed, 26 Mar 2025 14:13:28 -0700
-In-Reply-To: <6755b44c.050a0220.2477f.002a.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67e46df8.050a0220.2f068f.000f.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] KMSAN: uninit-value in bch2_bucket_alloc_trans
-From: syzbot <syzbot+c761143a86b1640bc485@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.12 000/115] 6.12.21-rc2 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250326154546.724728617@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250326154546.724728617@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-syzbot has found a reproducer for the following issue on:
+Am 26.03.2025 um 16:46 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.12.21 release.
+> There are 115 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-HEAD commit:    2df0c02dab82 x86 boot build: make git ignore stale 'tools'..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=135c6a4c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=afd286fb06ecc311
-dashboard link: https://syzkaller.appspot.com/bug?extid=c761143a86b1640bc485
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10355804580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16c86198580000
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/4df46ef3da39/disk-2df0c02d.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/7585a408245b/vmlinux-2df0c02d.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2f16d3f20d29/bzImage-2df0c02d.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/e2708f9fb487/mount_5.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c761143a86b1640bc485@syzkaller.appspotmail.com
-
-  fragmentation     0
-  bp_start          8
-  incorrectly set at freespace:0:31:0 (free 0, genbits 0 should be 0), fixing
-=====================================================
-BUG: KMSAN: uninit-value in try_alloc_bucket fs/bcachefs/alloc_foreground.c:297 [inline]
-BUG: KMSAN: uninit-value in bch2_bucket_alloc_freelist fs/bcachefs/alloc_foreground.c:442 [inline]
-BUG: KMSAN: uninit-value in bch2_bucket_alloc_trans+0x2191/0x3280 fs/bcachefs/alloc_foreground.c:574
- try_alloc_bucket fs/bcachefs/alloc_foreground.c:297 [inline]
- bch2_bucket_alloc_freelist fs/bcachefs/alloc_foreground.c:442 [inline]
- bch2_bucket_alloc_trans+0x2191/0x3280 fs/bcachefs/alloc_foreground.c:574
- bch2_bucket_alloc_set_trans+0x935/0x1620 fs/bcachefs/alloc_foreground.c:730
- __open_bucket_add_buckets+0x1e98/0x3130 fs/bcachefs/alloc_foreground.c:973
- open_bucket_add_buckets+0x32b/0x530 fs/bcachefs/alloc_foreground.c:1017
- bch2_alloc_sectors_start_trans+0x1839/0x32d0
- __bch2_btree_node_alloc fs/bcachefs/btree_update_interior.c:322 [inline]
- bch2_btree_reserve_get+0x9eb/0x22b0 fs/bcachefs/btree_update_interior.c:532
- bch2_btree_update_start+0x22b8/0x2ec0 fs/bcachefs/btree_update_interior.c:1232
- bch2_btree_node_rewrite+0x1da/0x1af0 fs/bcachefs/btree_update_interior.c:2144
- async_btree_node_rewrite_trans fs/bcachefs/btree_update_interior.c:2217 [inline]
- async_btree_node_rewrite_work+0x74c/0x1aa0 fs/bcachefs/btree_update_interior.c:2253
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xc1d/0x1e80 kernel/workqueue.c:3319
- worker_thread+0xea7/0x14f0 kernel/workqueue.c:3400
- kthread+0x6b9/0xef0 kernel/kthread.c:464
- ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-Local variable gen.i.i created at:
- bch2_bucket_alloc_freelist fs/bcachefs/alloc_foreground.c:442 [inline]
- bch2_bucket_alloc_trans+0x1fb2/0x3280 fs/bcachefs/alloc_foreground.c:574
- bch2_bucket_alloc_set_trans+0x935/0x1620 fs/bcachefs/alloc_foreground.c:730
-
-CPU: 1 UID: 0 PID: 4283 Comm: kworker/u8:21 Not tainted 6.14.0-syzkaller-01103-g2df0c02dab82 #0 PREEMPT(undef) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Workqueue: btree_node_rewrite async_btree_node_rewrite_work
-=====================================================
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Beste Grüße,
+Peter Schneider
+
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
+
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
