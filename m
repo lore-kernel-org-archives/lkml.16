@@ -1,112 +1,93 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EFB1F4165
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4940818B0F;
+	Wed, 26 Mar 2025 15:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743002618; cv=none; b=TrxrP2phNyrgc7xRGICOrdo0UCGbWlCIabvYEw88IIzXkfHCCUrvC2GT4nc9fy6S1Hho5lixoSPrnceiTiSqpt3WNDd3P/xCr5HSKTpysflCRVMdT9OwzHOZW3lSMP8Je1OYSUKkijc5FiyqwszqvOENQKPXK0YIr73FjMzAJyY=
+	t=1743002682; cv=none; b=nODA94GPReMffpO8Q6nJf3oEBjWisSq0s9ULuB2j6Tq61zeFbLGYnabUsBNjY92X+jxE4NKO0tvN/JlfgM+QXerzrVEQrpQCEGj4toNJ1zgUfJ6znGeQriu6PPk+9bsOx2US43e3aIDC7BPC99cp9dslrRZVsJzYxyi5BCWybWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743002618; c=relaxed/simple;
-	bh=ThbuFrBidcsv7ki8clsHCS9mlo8Lxr9wScaCYVrIqBk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z7bqLbqd5cL+IoMeBT/6s1oNAAkXiWqdZOV+e6KEAAI5ACKVO4v5aGsNbe6zAFI5bAQ9DDvdKeC0/eSNM3x0ccDlbvVD8NUJWalGjplLW+RQxVAZ1N97mlOTBUsvt4d/BbGyD9uqJyBVxKqH+sZhOHuzo6bYS80hXgVCNApcp10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KiPHA4Sk; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1743002682; c=relaxed/simple;
+	bh=QmVEMWC5i2pBLpyMpgVj9i2Xeeobc0j6hPI9i00YqGA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l6okKRUnPwEJdJamMObUB5OIEdY3JCF76LjTQbBkeYKcRoKElMHTNUr0UhCyHNxVGJQ6HfBQkbjL5uJg+ruM/pzIdiKKQ40Dsu1I0MP/Xq/bWBZe4VxqhhdXvJFlCa8XgKuExpSFCN99x7h4TlAo7HqVYgXoodx5mx9TH6xWQfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=LvhZHxxP; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KiPHA4Sk"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52QFNODR2227262
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Mar 2025 10:23:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1743002604;
-	bh=guzCcx7sZr0haX4pTDAv49k4kG8TbtZrl1jzFabfe6c=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=KiPHA4SkRkVQbH7JUsHr/y8OnVj04Ye3GVpIKGAsc0rWzVV2sGm22QXNUfun8wYdF
-	 8EI8HJxtmlJi8a2+T8mGwH0/C0RpqrNDujcskEYyX9dwwdyoeOYcEcbTQ8ohVMCIw+
-	 Ev5dx1yPUlfTTL/0wpCOtdGwyMEESm77THnyKamA=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52QFNOQ2004053
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 26 Mar 2025 10:23:24 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
- Mar 2025 10:23:24 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 26 Mar 2025 10:23:24 -0500
-Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52QFNNXW076869;
-	Wed, 26 Mar 2025 10:23:23 -0500
-From: Devarsh Thakkar <devarsht@ti.com>
-To: <vkoul@kernel.org>, <kishon@kernel.org>, <mripard@kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC: <sakari.ailus@linux.intel.com>, <u.kleine-koenig@baylibre.com>,
-        <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>, <s-jain1@ti.com>,
-        <r-donadkar@ti.com>, <tomi.valkeinen@ideasonboard.com>
-Subject: [PATCH v2 2/2] phy: cadence: cdns-dphy: Update calibration wait time for startup state machine
-Date: Wed, 26 Mar 2025 20:53:20 +0530
-Message-ID: <20250326152320.3835249-3-devarsht@ti.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20250326152320.3835249-1-devarsht@ti.com>
-References: <20250326152320.3835249-1-devarsht@ti.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="LvhZHxxP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=MXUNQ3qwLDG8TCGsRA0HZ7ccSxkq0b8zwwJm6HgvBOc=; b=LvhZHxxP4PkL3vrUPyY8fcGEbb
+	8Kx5bTCmCSWT51Rbgcs3/unQVAE0hmuEmtn9rI4u2kH+ni6xLmDttEX5Yrr1tvj6QYrh538SD9Ofw
+	tuUGDNrXIzDFlZ6MN/FvWO4UKsFh99mWPfyZ1/dicPLsOnH0uBTVJ+dJckbLDIvO5VA8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1txScK-007BQt-CA; Wed, 26 Mar 2025 16:24:32 +0100
+Date: Wed, 26 Mar 2025 16:24:32 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, davem@davemloft.net,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH 2/5] dt-bindings: net: Add MTIP L2 switch description
+ (fec,mtip-switch.yaml)
+Message-ID: <4297e9ae-bb10-4d0d-b750-96256ab573f3@lunn.ch>
+References: <20250325115736.1732721-1-lukma@denx.de>
+ <20250325115736.1732721-3-lukma@denx.de>
+ <2ccab52d-5ed1-4257-a8f1-328c76127ebe@lunn.ch>
+ <20250326144316.2ca252f7@wsk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250326144316.2ca252f7@wsk>
 
-Use system characterized reset value specified in TRM [1] to program
-calibration wait time which defines number of cycles to wait for after
-startup state machine is in bandgap enable state.
+On Wed, Mar 26, 2025 at 02:43:16PM +0100, Lukasz Majewski wrote:
+> Hi Andrew,
+> 
+> > > +  phy-reset-gpios:
+> > > +    deprecated: true
+> > > +    description:
+> > > +      Should specify the gpio for phy reset.  
+> > 
+> > It seem odd that a new binding has deprecated properties. Maybe add a
+> > comment in the commit message as to why they are there. I assume this
+> > is because you are re-using part of the FEC code as is, and it
+> > implements them?
+> > 
+> 
+> In the case of MTIP L2 switch, the reset gpio line (in my case, but
+> also on e.g. imx28-evk, and vf610) is single for both PHYs.
 
-This fixes PLL lock timeout error faced while using RPi DSI Panel on TI's
-AM62L and J721E SoC [2].
+So this is known as an MDIO bus reset, not a PHY reset.
 
-[1] AM62P TRM (Section ):
-https://www.ti.com/lit/pdf/spruj83
+Documentation/devicetree/bindings/net/mdio.yaml
 
-[2]:
-Link: https://gist.github.com/devarsht/89e4830e886774fcd50aa6e29cce3a79
+  reset-gpios:
+    maxItems: 1
+    description:
+      The phandle and specifier for the GPIO that controls the RESET
+      lines of all devices on that MDIO bus.
 
-Cc: stable@vger.kernel.org
-Fixes: 7a343c8bf4b5 ("phy: Add Cadence D-PHY support")
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
----
-V2: Introduced this as as separate patch
+We have moved the handling of such reset lines into core code, which
+is why per driver properties are deprecated, and you should use the
+properties defined in the core.
 
- drivers/phy/cadence/cdns-dphy.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/phy/cadence/cdns-dphy.c b/drivers/phy/cadence/cdns-dphy.c
-index c4de9e4d3e93..11fbffe5aafd 100644
---- a/drivers/phy/cadence/cdns-dphy.c
-+++ b/drivers/phy/cadence/cdns-dphy.c
-@@ -30,6 +30,7 @@
- 
- #define DPHY_CMN_SSM			DPHY_PMA_CMN(0x20)
- #define DPHY_CMN_SSM_EN			BIT(0)
-+#define DPHY_CMN_SSM_CAL_WAIT_TIME	GENMASK(8, 1)
- #define DPHY_CMN_TX_MODE_EN		BIT(9)
- 
- #define DPHY_CMN_PWM			DPHY_PMA_CMN(0x40)
-@@ -405,6 +406,8 @@ static int cdns_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
- 	reg = FIELD_PREP(DPHY_BAND_CFG_LEFT_BAND, band_ctrl) |
- 	      FIELD_PREP(DPHY_BAND_CFG_RIGHT_BAND, band_ctrl);
- 	writel(reg, dphy->regs + DPHY_BAND_CFG);
-+	writel(FIELD_PREP(DPHY_CMN_SSM_CAL_WAIT_TIME, 0x14) | DPHY_CMN_SSM_EN | DPHY_CMN_TX_MODE_EN,
-+	       dphy->regs + DPHY_CMN_SSM);
- 
- 	ret = cdns_dphy_wait_for_pll_lock(dphy);
- 	if (ret)
--- 
-2.39.1
-
+	Andrew
