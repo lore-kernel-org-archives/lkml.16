@@ -1,128 +1,94 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E102E3D6A;
-	Wed, 26 Mar 2025 08:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14271440C
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742979022; cv=none; b=KU58YRE+bHCjxcFMUi94fGy79FusxoFr7UYs/4yguhRhEqg8sndkMe6Dt7oxbeTWYgyR0fhE6vNxTx6mFoNqDvLX8D1z5JrHeB50nGBag4qPkdJaq+QLCG+8b8ULmdo8/W0ZH4lU9S7aKTJfDnEdkAKd8AgMV+6w9mcOaeygb20=
+	t=1742979174; cv=none; b=kS5Pt+zLNoySa9fGysAi0FIV2LN3Qs4pFUBNmJTWF3GwVqnylRUt/u7r7VbNGnffcmmgObcU+c/MhkuEALaFMWZsfg4ZJ6kxybFZ2fkmBj8gwI/Fw3Hw8ZBpdoTLxieTkyQ6hTZltv/A5pLhB82KqO5H8iCHlCe7P801J7xgPA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742979022; c=relaxed/simple;
-	bh=zckyWCR8co9b4ewG7tpvLex3uvCol9oBpbVIwzyjzag=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q5L0iLQX2AaXiCK7C0Tvs2ZmO3oD2HaaAtr/htZTl4662PcI/1u2lJUp/Fv3BpPgqff0sSj1BEjUsP9C7Pzqkm3kf3JvXNLl2xiNd0rMb2lcB+Y7vpgl7411NFgyS0tFtHcpFhjeGoW7i4QQWtzOrvdLHMPzDDNLQuJc7pfp9cQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=k38PEtqH; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=em4EobGm reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1742979174; c=relaxed/simple;
+	bh=pc6BzqgVr39k2T0UBlxABnkDyhytHZOH25/oOWeJDu4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RtKlPMlkYMsCNideYFvpGR1txTUsoolc4EDeKC66uSifrIqxpFenQsoQg3yyYwghwWsJ45fs4TVADrgFgslBFChX6Lj1W/VepM439A51KkX1djXiJioOkZwKXEFqFiiZ4MIkgHMYJm5dDgRW19tDYEqc41NIPCFFHldO1NBmves=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=O0uOAMMr; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="k38PEtqH";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="em4EobGm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1742979019; x=1774515019;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ZP0l56nxJaRM6ya5wloLaFklD8MUTQmVk56fPxgwkqI=;
-  b=k38PEtqHQa4FtgjmkFzE5l8gZ4o9xLKE0M3sXYwcTpkEuWtfwZwcJRvd
-   Fy2ghc8PMpbPUfFUxE8VjP7hE3ZcrGLnB+3DZWicWEDrl7HXIlQ+3nrZO
-   AfLmWvfoDpEq5NKoJFU3ndDL1SVrdsGYI9uFflvs0BDYHUJ0R6ytan2GO
-   11rMhAkE2w6yvOEDXB5kr5uiTs8lxcbbrBVfgeSCXfaXGT6bQLq0PUt4F
-   LQLW3B9GOuu0dflJw54GxVExN7xAlEEQHZGUvsS9Mx11DLlCvoYeWKGJI
-   W6ZVkvuUuT53MccGFfixZTVPgX9V5/2B6T02Pn0kilWvbe6l6UO4XWVXM
-   Q==;
-X-CSE-ConnectionGUID: MfDwbYMlScqJ+JJEsYNc2Q==
-X-CSE-MsgGUID: QpMB02+nQjmsFCzLs9HGZA==
-X-IronPort-AV: E=Sophos;i="6.14,277,1736809200"; 
-   d="scan'208";a="43164243"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 26 Mar 2025 09:50:15 +0100
-X-CheckPoint: {67E3BFC7-37-903EAEAC-E04C76C8}
-X-MAIL-CPID: F04AAAF7416FCDBA5B861161D3D6F77C_5
-X-Control-Analysis: str=0001.0A006368.67E3BFCE.0036,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 95F75166EFA;
-	Wed, 26 Mar 2025 09:50:02 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1742979011;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ZP0l56nxJaRM6ya5wloLaFklD8MUTQmVk56fPxgwkqI=;
-	b=em4EobGmpORctKzGb651E+9YPDv0naO9NFFUwMSq7jZ9NonsqAQMfMPyCACKdSXs8EsPNC
-	5/3FYn0z+iyPvaoayosYcCwpUhYzVgUGZoxC83kijimQdRdmWSiyYN3ZJ0hbr5gpH9UlNT
-	kMw3gIs0lIvqbswdrIMXItqebsaOmmva2IMPdUZ6u3F83JGxBK5QU3UNTe0/mP2fD1eT+2
-	+E5YGY6y3FZqWzUegymx+CzAaoRcFq6l7iysU23V+MHx6VdtTlOnmjdpOVqVYoYkzL5O3m
-	/cNTer68kHH7+HGNffpgKuNMo/FBqvLUCfD1KDiAcZOTfc59mbVlYpROxflPDw==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Oleksij Rempel <o.rempel@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux-i2c@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] i2c: imx: add some dev_err_probe calls
-Date: Wed, 26 Mar 2025 09:49:36 +0100
-Message-ID: <20250326084937.3932383-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O0uOAMMr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=KXImG46r4aiyY+vMwJl+o0biRuf3PwTtdX0fAmnKSiM=; b=O0uOAMMr3YBvGjWZ8TyB/vBveo
+	8H25f4794jc4EFNqvqIBFVwx0b37UjqmpbJj8EjDm8y9RfZ1w//Wn59MfomQCyHgWZUINEZWMCOeG
+	nmBgANWe1vvyYBXriiDDkhQm9jLAMiodaRiJxPu6/UpUSjPsAZTkAGyp2T3Tts+DD7CLwmiOimHgE
+	w0Ig2rQDrDu57tW4IxNCLZiLlmEsoUh9D/5lKJTunAfG1i9YF1zqd7vZn0qKbVlqcghqjGpXAMAT6
+	WPMoF8dzWi65Kc04CSQ1anteypyGjtBkqWv7i+T5ompeNUcSQZ2FBr4DLti0CoFxOfMaOyA8Jfwgf
+	m0Vq5Pmw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1txMVF-0000000HHzf-2DFV;
+	Wed, 26 Mar 2025 08:52:49 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C6B0A3004AF; Wed, 26 Mar 2025 09:52:48 +0100 (CET)
+Date: Wed, 26 Mar 2025 09:52:48 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 5/5] bugs/core: Do not print CPU and PID values
+ in__warn() output
+Message-ID: <20250326085248.GA25239@noisy.programming.kicks-ass.net>
+References: <20250326084751.2260634-1-mingo@kernel.org>
+ <20250326084751.2260634-6-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250326084751.2260634-6-mingo@kernel.org>
 
-Especially DMA channels might not be available. Add some deferred probe
-messages accordingly.
+On Wed, Mar 26, 2025 at 09:47:50AM +0100, Ingo Molnar wrote:
+> For most warnings it's repeated anyway a few lines later, as
+> part of the register dump:
+> 
+>   WARNING: CPU: 0 PID: 0 at kernel/sched/core.c:8511 sched_init+0x20/0x410
+>            ^^^^^^^^^^^^^
+>   Modules linked in:
+>   CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.14.0-01616-g94d7af2844aa #4 PREEMPT(undef)
+>   ^^^^^^^^^^^^^^^^^^
+> 
+> In fact the later dump is richer, as it includes the 'comm' line as well.
+> 
+> As a side effect, this makes some space for the 'file' field to be augmented
+> with extra information (the condition string in particular).
+> 
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> ---
+>  kernel/panic.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index d8635d5cecb2..3101c21ca39f 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -725,12 +725,9 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
+>  	disable_trace_on_warning();
+>  
+>  	if (file)
+> -		pr_warn("WARNING: CPU: %d PID: %d at %s:%d %pS\n",
+> -			raw_smp_processor_id(), current->pid, file, line,
+> -			caller);
+> +		pr_warn("WARNING: %s:%d at %pS\n", file, line, caller);
+>  	else
+> -		pr_warn("WARNING: CPU: %d PID: %d at %pS\n",
+> -			raw_smp_processor_id(), current->pid, caller);
+> +		pr_warn("WARNING: at %pS\n", caller);
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
- drivers/i2c/busses/i2c-imx.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-index 9e5d454d8318e..e6e09d5a2bbd4 100644
---- a/drivers/i2c/busses/i2c-imx.c
-+++ b/drivers/i2c/busses/i2c-imx.c
-@@ -1711,11 +1711,13 @@ static int i2c_imx_probe(struct platform_device *pdev)
- 
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0)
--		return irq;
-+		return dev_err_probe(&pdev->dev, irq,
-+				     "can't get IRQ\n");
- 
- 	base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
- 	if (IS_ERR(base))
--		return PTR_ERR(base);
-+		return dev_err_probe(&pdev->dev, PTR_ERR(base),
-+				     "can't get IO memory\n");
- 
- 	phy_addr = (dma_addr_t)res->start;
- 	i2c_imx = devm_kzalloc(&pdev->dev, sizeof(*i2c_imx), GFP_KERNEL);
-@@ -1810,13 +1812,15 @@ static int i2c_imx_probe(struct platform_device *pdev)
- 	 */
- 	ret = i2c_imx_dma_request(i2c_imx, phy_addr);
- 	if (ret) {
--		if (ret == -EPROBE_DEFER)
-+		if (ret == -EPROBE_DEFER) {
-+			dev_err_probe(&pdev->dev, ret, "can't get DMA channels\n");
- 			goto clk_notifier_unregister;
--		else if (ret == -ENODEV)
-+		} else if (ret == -ENODEV) {
- 			dev_dbg(&pdev->dev, "Only use PIO mode\n");
--		else
-+		} else {
- 			dev_warn(&pdev->dev, "Failed to setup DMA (%pe), only use PIO mode\n",
- 				 ERR_PTR(ret));
-+		}
- 	}
- 
- 	/* Add I2C adapter */
--- 
-2.43.0
+Over the years I've had concurrent WARNs interleaved on the console.
+This duplicate information would allow untangling some of that.
 
