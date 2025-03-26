@@ -1,176 +1,143 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC3E19E97B
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2CAB18C031;
+	Wed, 26 Mar 2025 08:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742978200; cv=none; b=F5CAiH1iZPW/ng78wesY4KLdn+vh1vhxxEK9dtCRGK5T+HGfu3QzLXFsYKeCFen4ZcSNrFYsqD8ZGp3lSRnx7rCp9HpQkQafFaruN72H+gKgTEHrgWTlCjVd/9pfabF+CDGwiC1+QQ1kUq7JqpVwgY4ac+Y7DVDgJFY+2ERQNsY=
+	t=1742978410; cv=none; b=efjhz5PPpvdSPlFxtmCXLTiybaNoP6reR3pvWYp4bIe7R6zBIvh7s6WaY9VWvEa3b8Kj7pinumfm5u/bn2ngmAmbq/6yuYbbnyD/C0uV8hrM3SKqwqhn6ikOjRHw5ifgAM8d8nG84fjuCtEF8ShSan50DcusA/NRXBLaY+Ljeqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742978200; c=relaxed/simple;
-	bh=w9wNzYU+aPbStF8kAGgTTTVPFywdX62D8q7UXWKnFnI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=clNWm4f4RJkb49l/mzHPEG+jLr+w2pIDQMwYPUXLtRY3p8pKAGteripr5oLX9PnjDDZsb0gYgZ5ZnE6S+fOJMo1kmZCVRj5EDx5BwH3RQTwByEPQUcNK5BeNnHj/tBpunHYUf0nteSrww2IcgVGS0crbNHhT8MpTahYIPcAEaf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IgBfbsJQ; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742978410; c=relaxed/simple;
+	bh=yIt+M7uOO+mgzZtFsWE5czw7q0k+Yi6Iv5h3TlA7gV8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P1jxCPTrP1hAwFjDfh7xbgJg0G7pEQer9SG0BB/9yRd+s7PvMjl1Svlncc7CsWiDs4+1bMfjE3CSJ80ZlnRqfhxJ0Sv4ZHNGKa5hsTF6qdMt2qAJpkDxXdG+826tBG3ZUWKfck4Ij0QNLWb/DnUm6NX+IL7oIG8ybs9QMWGInTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KsW/rGab; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IgBfbsJQ"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfecdd8b2so51610425e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 01:36:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742978196; x=1743582996; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=H4cKiD2wr70tJ2BhsXs3hlRFzhjZNcSJsAA0y717TPA=;
-        b=IgBfbsJQh09ULKfRGOdvRUqWcYK2FxTQXb0RqlV+WauzLnJQREPUU7kXB5i6F3Nbj8
-         rEXhjh5A9IkwtY0Z445mQyUZShTseLYgBtUgC4vEp1MFC73vcd0EvRisn3tFFNzzRM1H
-         P7g8TpXIP+ZcFjx2ypCqApaPV0+fjZ+O5n7kCm8gCDfJx6yz2Py9Sg6lynvgQFYOq0YU
-         jHEiifkxUUnBcuofc5HgDhscEoNyKktqfvJpVb1PYEY8OW8XQt6dmjx++2YVSHXbwXFi
-         KLv1Fdd2zgdaAEgMQklF7Sxdfd3rvVLiJXWQs3vHGfrB6Oh+1pJRxI5vT6RTUHB4R3vU
-         D9GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742978196; x=1743582996;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H4cKiD2wr70tJ2BhsXs3hlRFzhjZNcSJsAA0y717TPA=;
-        b=AUlSwvmU7xP99ftrRZJ55BxagR9lc/+9q55UtiPm++0WrfWmABE7awZMrX/2cwVl06
-         fA5upfvPGCygR8PoKuL6Iy+KJT8Ne6SugZhMsEEITlYoY1qN9SUkkudmY6/KwUoWb6E5
-         ylIbjx+2IjR94mDbxfdvdDgv1nFJdZLAuN/HZ2FqwCM1fJbfNZqj39aDf2BiM/0z2CjZ
-         rpLn5wpeEq1kYidiT4iz0pKZTdBcTv2LxUD7APR1Hv0V1JYc4pfwKoAkAhB74x62DM8V
-         jCJ5TsmvpTfdt120kESHNJetx6Dj15RyK4bjnVOtvU75TdgLwlgAFTKxbKUVVbBzzDGz
-         ljzA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQkLcMbF1JJcL0QyvUIGFSV7I05z3i3MSpbmXkqA8VU2gL2748fI2aZEzjwRkwvFdsOipLppPGnvsl1So=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyD+hcXnBim5uyB400+x3sIGC6pp+SXguJdoZXqfn2g7uCGpiSY
-	aH0aOVjAON6SThvI1PtC5tkb6n2RXlC7v6ChxGVbhS80i3XiMWWr7jRecGlI7yY=
-X-Gm-Gg: ASbGnctZYB3lCGxPH5RiI8qmKxhw39eL07IGusDmPIgXkIzEMvM9JUZQVBXHA0ILYqB
-	naeBmj2k8uHDEIUHk+G8VuCTLYp4MTjL6v3BEboaZlcMPGD6s30sJvvTvnukJ7FseNn0NXWtsMg
-	82iN9haSg4HcuqTnu2M8hpaal3r9k8T91vUsdrN4mcTtVoFtozW2h+2PLxgHNUEiMpj3c2mMcuS
-	CfRdw0bOoXumYcOGsqjd+JhozXd9+Hb5iM8Dj7QzuvelU/pe3CD5rull5u1noslT9N6FCV2Dz4b
-	Oi+x633H+RbhrLDU+I/krPhLTzkow6GUrKgH8efIESc1IaEWyHrSaRP9oKYTbly9v0kgze6B87p
-	r
-X-Google-Smtp-Source: AGHT+IFsj8loULGb6ONI7TIxEQoBTJELk7QeTPsICMtStG6xC0Zx9gne0MS4JiDzm1A7viVbhzKE+Q==
-X-Received: by 2002:a05:600c:46c3:b0:43b:ce3c:19d0 with SMTP id 5b1f17b1804b1-43d5e6fc3b6mr107741795e9.29.1742978195655;
-        Wed, 26 Mar 2025 01:36:35 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fcea400sm176823365e9.2.2025.03.26.01.36.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 01:36:35 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Wed, 26 Mar 2025 09:36:32 +0100
-Subject: [PATCH RFC v2 1/2] ufs: core: drop last_intr_status/ts stats
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KsW/rGab"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52Q73ADp014514;
+	Wed, 26 Mar 2025 08:40:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=xs4w0gEe6MCwCPXnB/2dBMpr1bX6UUfU7tM
+	Hiwt++EE=; b=KsW/rGabHR5bvZqguawbORshSJTGgd8VBtFBiovqdYIp3PQouwi
+	+EJEgnDhBAX9z/EY2SzM5qP3JPhAJUsFLQNPigrM4QLL/xOD10YAICNbkG4AzrTP
+	C7Gjznx3Sj1H/rsI0GzLXtAqbALG2OAGdOvjaASM+qgNTIS4wrKy84Llpv08/Syg
+	oJBJmm6YDsEJguhModnIN7AlFcLBgopSXcL3pFMkOvmRbWHwy8wXLaf0tctBHIHl
+	4efuk4ISb6wCjWwpPZqPmxa3vwCPqXdfsCUMyQmHu687WG3C6cvDWM96XUQUYTY6
+	OxzV9MM09fMp7zGFQ8TrmepbG9GUTysxAXQ==
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45mb9mrg78-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Mar 2025 08:40:03 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 52Q8dxFY003700;
+	Wed, 26 Mar 2025 08:39:59 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 45hp9mbppy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Mar 2025 08:39:59 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 52Q8dx1s003694;
+	Wed, 26 Mar 2025 08:39:59 GMT
+Received: from hu-maiyas-hyd.qualcomm.com (hu-msavaliy-hyd.qualcomm.com [10.213.110.207])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 52Q8dwVp003692
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Mar 2025 08:39:59 +0000
+Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 429934)
+	id 1CF8F22886; Wed, 26 Mar 2025 14:09:58 +0530 (+0530)
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+To: broonie@kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: andersson@kernel.org, konradybcio@kernel.org,
+        Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+Subject: [PATCH V1] spi: Add support for Double Transfer Rate (DTR) mode
+Date: Wed, 26 Mar 2025 14:09:54 +0530
+Message-Id: <20250326083954.3338597-1-quic_msavaliy@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250326-topic-ufs-use-threaded-irq-v2-1-7b3e8a5037e6@linaro.org>
-References: <20250326-topic-ufs-use-threaded-irq-v2-0-7b3e8a5037e6@linaro.org>
-In-Reply-To: <20250326-topic-ufs-use-threaded-irq-v2-0-7b3e8a5037e6@linaro.org>
-To: Alim Akhtar <alim.akhtar@samsung.com>, 
- Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3094;
- i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=w9wNzYU+aPbStF8kAGgTTTVPFywdX62D8q7UXWKnFnI=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBn47yRFXcud1GnInRxtT2r1ht0zT5Esp+Gl9CCVLFa
- rP96LlCJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ+O8kQAKCRB33NvayMhJ0XLeEA
- CkMHi8XwcoEVwEYO7/GFQ4ggtCzDr+PWYoyPKpP8U5RVtdwYQXkmGIc7XoIyYFaaWENDLkf7J5wtdP
- zsNIUiZFmkINO6U2882Zu2ogZv1oH3mjQA78zoL+Jt+dqiqFKR9RM3hob+NeiL+YNrwxg4c5rNEqxz
- uYMKYwJ/NGNHZ+yhn8I87ZJ8ap0U8dVAcZrELqZ0n7TrWHUUKURq0MoUByEktti+WIesVIVpDbNICb
- Fhsy+NSTHqXC26mfSWjO/m+rG4l3XBgri1hMhRtlDEKLwynELL9BLBe7NlZpEih9tax3jRXT0FeEdn
- ktyUtHYF2yHap+07UPGggFME/iAP06UvtysMZLMq+vwSQHhMLT3hq4ozwyvGHuORAZ7rVa0knBOTum
- kPDqbJuBVwpkdrOmfVKmUAc9+aZd/2Acq7DosrXAK5KNedzMqbrhkwwApGLtuNg46qDA6+zrJ/XHh8
- /CxiMAzjkJhfnTMC/oNxKWoZrBSz/Y6EMnjAFw9rvs35DCMr3znk0JEOm36q5N8NEReNdS77K8EwAU
- 2Ay8lAV4I1xBTaZsQUwaAtq5gE7neuOugvEGPsrSsMDY6M7LGZ/HGwtbglx/rh2HUFpusaPebNt+vz
- PMkZW7PjTb+DoeTHo9KTzmjuIq7sxhPBQadbt64CQoMELLLFlRTtpQFbZMDQ==
-X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
- fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=cs+bk04i c=1 sm=1 tr=0 ts=67e3bd63 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=AXjDKuDS1RE16Qb0dB8A:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: MShBbftaXfVz1vnplNkg03AJqp9WeoQg
+X-Proofpoint-ORIG-GUID: MShBbftaXfVz1vnplNkg03AJqp9WeoQg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-26_02,2025-03-26_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ bulkscore=0 mlxlogscore=999 malwarescore=0 lowpriorityscore=0
+ clxscore=1015 adultscore=0 priorityscore=1501 phishscore=0 suspectscore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503260051
 
-Drop last_intr_status & last_intr_ts drop the ufs_stats struct,
-and the associated debug code.
+There is no support for protocol drivers to specify whether a transfer
+should use single or dual transfer mode. As a result, the SPI controller
+has no way to determine this information from the user, leading to
+potential limitations in transfer capabilities.
 
-Suggested-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+This change introduces a new field `dtr_mode` in the `spi_transfer`
+structure. The `dtr_mode` field allows protocol drivers to indicate if
+Double Transfer Rate (DTR) mode is supported for a given transfer. When
+`dtr_mode` is set to true, the SPI controller will use DTR mode
+otherwise, it will default to single transfer mode.
+
+The QSPI controller driver uses this flag and configures single or double
+transfer rate using the controller register.
+
+The existing spi-mem driver helps configure the DTR mode but is limited
+to memory devices. There is no support available to set DTR mode for
+non-memory devices, e.g., touch or any generic SPI sensor. This change
+is backward compatible and doesn't break existing SPI or QSPI drivers.
+
+Changes include:
+- Addition of `dtr_mode` field in `spi_transfer` structure.
+- Documentation updates to reflect the new `dtr_mode` field.
+
+Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
 ---
- drivers/ufs/core/ufshcd.c | 11 +++--------
- include/ufs/ufshcd.h      |  5 -----
- 2 files changed, 3 insertions(+), 13 deletions(-)
+ include/linux/spi/spi.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index 0534390c2a35d0671156d79a4b1981a257d2fbfa..5e73ac1e00788f3d599f0b3eb6e2806df9b6f6c3 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -643,9 +643,6 @@ static void ufshcd_print_host_state(struct ufs_hba *hba)
- 		"last_hibern8_exit_tstamp at %lld us, hibern8_exit_cnt=%d\n",
- 		div_u64(hba->ufs_stats.last_hibern8_exit_tstamp, 1000),
- 		hba->ufs_stats.hibern8_exit_cnt);
--	dev_err(hba->dev, "last intr at %lld us, last intr status=0x%x\n",
--		div_u64(hba->ufs_stats.last_intr_ts, 1000),
--		hba->ufs_stats.last_intr_status);
- 	dev_err(hba->dev, "error handling flags=0x%x, req. abort count=%d\n",
- 		hba->eh_flags, hba->req_abort_count);
- 	dev_err(hba->dev, "hba->ufs_version=0x%x, Host capabilities=0x%x, caps=0x%x\n",
-@@ -6984,14 +6981,12 @@ static irqreturn_t ufshcd_sl_intr(struct ufs_hba *hba, u32 intr_status)
-  */
- static irqreturn_t ufshcd_intr(int irq, void *__hba)
- {
--	u32 intr_status, enabled_intr_status = 0;
-+	u32 last_intr_status, intr_status, enabled_intr_status = 0;
- 	irqreturn_t retval = IRQ_NONE;
- 	struct ufs_hba *hba = __hba;
- 	int retries = hba->nutrs;
- 
--	intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
--	hba->ufs_stats.last_intr_status = intr_status;
--	hba->ufs_stats.last_intr_ts = local_clock();
-+	last_intr_status = intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
- 
- 	/*
- 	 * There could be max of hba->nutrs reqs in flight and in worst case
-@@ -7015,7 +7010,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
- 		dev_err(hba->dev, "%s: Unhandled interrupt 0x%08x (0x%08x, 0x%08x)\n",
- 					__func__,
- 					intr_status,
--					hba->ufs_stats.last_intr_status,
-+					last_intr_status,
- 					enabled_intr_status);
- 		ufshcd_dump_regs(hba, 0, UFSHCI_REG_SPACE_SIZE, "host_regs: ");
- 	}
-diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
-index e3909cc691b2a854a270279901edacaa5c5120d6..fffa9cc465433604570f91b8e882b58cd985f35b 100644
---- a/include/ufs/ufshcd.h
-+++ b/include/ufs/ufshcd.h
-@@ -501,8 +501,6 @@ struct ufs_event_hist {
- 
- /**
-  * struct ufs_stats - keeps usage/err statistics
-- * @last_intr_status: record the last interrupt status.
-- * @last_intr_ts: record the last interrupt timestamp.
-  * @hibern8_exit_cnt: Counter to keep track of number of exits,
-  *		reset this after link-startup.
-  * @last_hibern8_exit_tstamp: Set time after the hibern8 exit.
-@@ -510,9 +508,6 @@ struct ufs_event_hist {
-  * @event: array with event history.
-  */
- struct ufs_stats {
--	u32 last_intr_status;
--	u64 last_intr_ts;
--
- 	u32 hibern8_exit_cnt;
- 	u64 last_hibern8_exit_tstamp;
- 	struct ufs_event_hist event[UFS_EVT_CNT];
-
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 0ba5e49bace4..4e1152de82cd 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -998,6 +998,7 @@ struct spi_res {
+  *	processed the word, i.e. the "pre" timestamp should be taken before
+  *	transmitting the "pre" word, and the "post" timestamp after receiving
+  *	transmit confirmation from the controller for the "post" word.
++ * @dtr_mode: true if supports double transfer rate.
+  * @timestamped: true if the transfer has been timestamped
+  * @error: Error status logged by SPI controller driver.
+  *
+@@ -1049,6 +1050,9 @@ struct spi_res {
+  * two should both be set. User can set transfer mode with SPI_NBITS_SINGLE(1x)
+  * SPI_NBITS_DUAL(2x) and SPI_NBITS_QUAD(4x) to support these three transfer.
+  *
++ * User may also set dtr_mode to true to use dual transfer mode if desired. if
++ * not, default considered as single transfer mode.
++ *
+  * The code that submits an spi_message (and its spi_transfers)
+  * to the lower layers is responsible for managing its memory.
+  * Zero-initialize every field you don't set up explicitly, to
+@@ -1083,6 +1087,7 @@ struct spi_transfer {
+ 	unsigned	tx_nbits:4;
+ 	unsigned	rx_nbits:4;
+ 	unsigned	timestamped:1;
++	bool		dtr_mode;
+ #define	SPI_NBITS_SINGLE	0x01 /* 1-bit transfer */
+ #define	SPI_NBITS_DUAL		0x02 /* 2-bit transfer */
+ #define	SPI_NBITS_QUAD		0x04 /* 4-bit transfer */
 -- 
-2.34.1
+2.25.1
 
