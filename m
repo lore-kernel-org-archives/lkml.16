@@ -1,143 +1,92 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9633A19F495;
-	Wed, 26 Mar 2025 10:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928F41B424A;
+	Wed, 26 Mar 2025 10:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742985539; cv=none; b=AF9O9L91Qwf3kG+SZAuWOZ3TUR441aGM075wChRGD6yVHjTzbRIaVEJi1YmlCPfPNztsOmvSsBbu6A+jOvdQwZ5xiPc/PF/MeDxDIysxdjckgQykjB275ljjVgvfC+W1D+uB04e3ASC6PE8EnEezYUS9j909NfbSDCDZChm3Sig=
+	t=1742985567; cv=none; b=QFQOYESphpRfrYokrKyqf5m7+3Ghy5Eaj+1JgG3ar0xKUH/JokyY/irJszVnqIE1N2LZLWppkidlXh1ya9jE92dQnK3JCX7/qOeFXvsO7gmaG6Y+kyEZjAKkXMaIB4vuY684gGUj6JtSE4olw6E4xGLtgeeTNS2GjhcoMEix1XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742985539; c=relaxed/simple;
-	bh=4sjlpSeiW8BPZ2gloRcNiH1clVDJW6TOW9ZqzX8nOt4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DuPkkQN0IMUiUQKdDeyo7uQODcD8azozwQr4puQZOO3e59sKAK1e202HuxWVJaQQy7N2cdq1Zb1boX6jEK9NIjc+SgtEm7ICZ6NHeuwcGH1/rrQAWGCNevUcBU4sIbfZCbt+gpjd6yPJBeSlf8ui4QJMKE9Z7X6vM1F7T+d+rtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ooW5VAdK; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1742985567; c=relaxed/simple;
+	bh=jzGCBkutBgzfiA+VlgU2fbb9z16gst/HAke89+6OrwA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=BuBj82+cE0qcOuvL+zgznFqWPYuPisJ85ljlJJ6sZyV+yZsydeJI8BCZTHJlIFRQ//OdDYKPWilE9SjBuPkTlNQQMWgGGBZTVTXDNO/Q8MUQInN4kv5LNGmGcefaXxgeVxuRWcIZGJtaSS/8aPXTSIw0cGagSalA3wxIUb9AGb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J5BQnGxL; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ooW5VAdK"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52Q73JO7004322;
-	Wed, 26 Mar 2025 10:38:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	misQHeiBbzOmvCNgf8vEmI8bJoYtUzpNmKjPdcGR5bk=; b=ooW5VAdKOLtb2zWR
-	zx1t/zcU5VKWUS6nN+re/MF0n8rqEoc06bHAeax9ZRF4u0gaOaIstVp1SO8LT3yJ
-	iX1BSP/EVQHEXigXz+c9O16hx4q6Wzm9i9rCFs5qTShMEBaWngq9PAHZfiMZFf2X
-	PeLBZp83+GZCJDSdWCbY4EySS/QKfBtuC/czA97R1riHvqHy4r1myhH1o18g08Mp
-	/gsbktxtesDP1uagx6Bo/OKP/q9v7ttQ55x0WT4JCW02khKTPobww/haLD3RRiiO
-	48pDO1oJlLjY/rXFebjMJlq9b5zAdb+puyyDibTxZfPpegT7lejCMEe3xFufGmHX
-	ttQHnQ==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45kmcycq6q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Mar 2025 10:38:35 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52QAcZHP031580
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Mar 2025 10:38:35 GMT
-Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 26 Mar
- 2025 03:38:31 -0700
-Message-ID: <823ab604-ac59-4b85-8bca-81e8b4c5c63d@quicinc.com>
-Date: Wed, 26 Mar 2025 16:08:28 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J5BQnGxL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742985566; x=1774521566;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=jzGCBkutBgzfiA+VlgU2fbb9z16gst/HAke89+6OrwA=;
+  b=J5BQnGxLvpZXYXzxcSin+RHftXe9JR8PqMa4cUduh3FGdV1Bo6XeWJQB
+   au1XkPJLrYPLtz7QKUorNKM1u4fjtEo8n6cVa0unKGGwuvvo3DcEkwnnY
+   BDLp5Gc2c3eIrwAYQzWyKvTcBde6kVO8oboyPlI19Ro55XzlZHWMZXB8a
+   KXIOgIZUTgu1R/J+dIO8U7YJ4N/5uHG5T0EOScVNc8f9gAUwW+vutQ9VO
+   pdDQn8Rnc0RP87pv7Rsl2sDLHqE7+itPUmfLt5PDex57toRdC/ZMCvt9c
+   8t8ETrPU9jLHZaJPftrQVhWIrHV9VeiVw85Eqt7aL1qQEaQ4Y5s6FgM5Y
+   A==;
+X-CSE-ConnectionGUID: g9ny3ka3SNm450JQR0ZL2A==
+X-CSE-MsgGUID: +Hn+qYKwQoyj9NszBVoYeA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11384"; a="44144992"
+X-IronPort-AV: E=Sophos;i="6.14,277,1736841600"; 
+   d="scan'208";a="44144992"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 03:39:24 -0700
+X-CSE-ConnectionGUID: 8tQtKnKxS7yJ/BafNRrroA==
+X-CSE-MsgGUID: R2XbqdYXSyS3ofmm/GBCqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,277,1736841600"; 
+   d="scan'208";a="124896092"
+Received: from carterle-desk.ger.corp.intel.com (HELO localhost) ([10.245.246.210])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 03:39:18 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Lyude Paul <lyude@redhat.com>, Maxime Ripard <mripard@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor
+ <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo
+ <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>, Benno
+ Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, "open
+ list:RUST:Keyword:b(?i:rust)b" <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH 1/2] drm/edid: Use unsigned int in drm_add_modes_noedid()
+In-Reply-To: <20250325212823.669459-2-lyude@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250325212823.669459-1-lyude@redhat.com>
+ <20250325212823.669459-2-lyude@redhat.com>
+Date: Wed, 26 Mar 2025 12:39:15 +0200
+Message-ID: <87wmcc6ppo.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] i2c: imx: add some dev_err_probe calls
-To: Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Oleksij Rempel
-	<o.rempel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Andi Shyti <andi.shyti@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha
- Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>
-CC: <linux-i2c@vger.kernel.org>, <imx@lists.linux.dev>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20250326084937.3932383-1-alexander.stein@ew.tq-group.com>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <20250326084937.3932383-1-alexander.stein@ew.tq-group.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=EZ3IQOmC c=1 sm=1 tr=0 ts=67e3d92b cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=8f9FM25-AAAA:8 a=T3eNeIW6sh54MCHzbYgA:9 a=QEXdDO2ut3YA:10
- a=uSNRK0Bqq4PXrUp6LDpb:22
-X-Proofpoint-ORIG-GUID: fBVMLbZVYV5bXMaBHbqWx3iBszV8Mp-n
-X-Proofpoint-GUID: fBVMLbZVYV5bXMaBHbqWx3iBszV8Mp-n
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-26_03,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 malwarescore=0 priorityscore=1501 mlxlogscore=999
- spamscore=0 lowpriorityscore=0 clxscore=1011 bulkscore=0 phishscore=0
- adultscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503260064
+Content-Type: text/plain
+
+On Tue, 25 Mar 2025, Lyude Paul <lyude@redhat.com> wrote:
+> A negative resolution doesn't really make any sense, no one goes into a TV
+> store and says "Hello sir, I would like a negative 4K TV please", that
+> would make everyone look at you funny.
+
+That is largely the point, though. You know something fishy is going on
+when you have a negative resolution. Nobody blinks an eye when you ask
+for 4294963K telly, but it's still just as bonkers as that negative 4K.
+
+I think the change at hand is fine, but please let's not pretend using
+unsigned somehow protects us from negative numbers.
 
 
+BR,
+Jani.
 
-On 3/26/2025 2:19 PM, Alexander Stein wrote:
-> Especially DMA channels might not be available. Add some deferred probe
-> messages accordingly.
-> 
-Anything specific instead of some deferred probe messages ?  Would be 
-good to mention problem like During probe if DMA channels not available, 
-replace regular error messages by deferred probe messages ?
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> ---
->   drivers/i2c/busses/i2c-imx.c | 14 +++++++++-----
->   1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-> index 9e5d454d8318e..e6e09d5a2bbd4 100644
-> --- a/drivers/i2c/busses/i2c-imx.c
-> +++ b/drivers/i2c/busses/i2c-imx.c
-> @@ -1711,11 +1711,13 @@ static int i2c_imx_probe(struct platform_device *pdev)
->   
->   	irq = platform_get_irq(pdev, 0);
->   	if (irq < 0)
-> -		return irq;
-> +		return dev_err_probe(&pdev->dev, irq,
-> +				     "can't get IRQ\n");
-Can fit into single line ?
->   
->   	base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
->   	if (IS_ERR(base))
-> -		return PTR_ERR(base);
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(base),
-> +				     "can't get IO memory\n");
-same here if possible.
->   
->   	phy_addr = (dma_addr_t)res->start;
->   	i2c_imx = devm_kzalloc(&pdev->dev, sizeof(*i2c_imx), GFP_KERNEL);
-> @@ -1810,13 +1812,15 @@ static int i2c_imx_probe(struct platform_device *pdev)
->   	 */
->   	ret = i2c_imx_dma_request(i2c_imx, phy_addr);
->   	if (ret) {
-> -		if (ret == -EPROBE_DEFER)
-> +		if (ret == -EPROBE_DEFER) {
-> +			dev_err_probe(&pdev->dev, ret, "can't get DMA channels\n");
->   			goto clk_notifier_unregister;
-> -		else if (ret == -ENODEV)
-> +		} else if (ret == -ENODEV) {
->   			dev_dbg(&pdev->dev, "Only use PIO mode\n");
-> -		else
-> +		} else {
->   			dev_warn(&pdev->dev, "Failed to setup DMA (%pe), only use PIO mode\n",
->   				 ERR_PTR(ret));
-> +		}
->   	}
->   
->   	/* Add I2C adapter */
 
+-- 
+Jani Nikula, Intel
