@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C1A1E8349
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:26:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C341F2B8B
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:28:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743002810; cv=none; b=YmZnn3Kws3qPeMv6PUgWcDLO5ksdvqaCpdLTsI4q/m0ua49wcjitLa4Ropn3FpdOZl7nKHiA3YskpdVoj+W0QdQz1PphHtP6rg3za2JG86OsM8Yu0aTI5+K4L6i3YwpLCDd+OLMOSHRdgItlTJoR1nNh7hjgR8OT3Bf/yj+pnso=
+	t=1743002903; cv=none; b=QOpH9EHjqYkr9nNphdvEBPZQo3w5/wATCoRKk1kBsVo8vpQy5j1qtGGojWzwratAgC6d4x8W03sBeXwH1aqwigc740nifcoBTRMqh3tQ+5wiyYg3FanFkyo2K6rDidowteOxV9fYa27OyVN92VueDjXVOKNKCtWoadm3Y5gmh/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743002810; c=relaxed/simple;
-	bh=E3LVCXLoRzbhs4MzPU/33YNPn5UAO0vP8mj3ilyU6MU=;
+	s=arc-20240116; t=1743002903; c=relaxed/simple;
+	bh=+iTDM1up9bQyibbW8Bm0+4EO+vdNAR+vKU9j9w34kYg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pLtjr7iTPuEb00R54mXm1U+QjiTPEp/rI/fm6nGTHaPfXi8mAFxeTG5c+8h6n44YeugVOnGkjKuHAigUc5k/ianyyqxWlxANmD0MbMcgUzH8e1LXxSDjK91sivnjsv+0hnTJbFgEZWZEVY5ZQYX16+ooduXOoIWDaSVUoYWDFZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibhRk9N+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=feKpHdpzzEdgwVggDKHppeD+mqUzLvuNxsz1W5lk5Ao8HjN+Xq+Lu8R1ArYmQ91cClo7xJZnBsnIfSI1USWNSYYGQA4Vupj47yzsGs2cMY9LO0B3NDsbattu/bnacav08P3cmBmc6xOdgm7i/NATV+e54B3S1qE7ww7q+NIF6fE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SxHxZUcv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibhRk9N+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD585C4CEE2;
-	Wed, 26 Mar 2025 15:26:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SxHxZUcv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94415C4CEED;
+	Wed, 26 Mar 2025 15:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743002810;
-	bh=E3LVCXLoRzbhs4MzPU/33YNPn5UAO0vP8mj3ilyU6MU=;
+	s=k20201202; t=1743002902;
+	bh=+iTDM1up9bQyibbW8Bm0+4EO+vdNAR+vKU9j9w34kYg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ibhRk9N+8JE80IkNKOMMxpqqoMdJJsAZ7apRKKEOTN17yaiQBtdMMPI8Qnu4WlT9e
-	 p02y4Op1o8uWoq2qdPHVjYsjl/O+CUFdMIcLF4CU6YT1efrGgfEUkeKmAPpcvW3Wuy
-	 hrtsVDWnjiFPemqHMG7LEGmlvHmFWwPo2LJG4+Nq88zffW6Tib0SzqhuXxHZSh87M3
-	 E5GcfkttsX/C3G3yk3zFkDM0RO3O/tPutcaa1REMUfemtCfdu1TRCae5APvbGj0S+Z
-	 MhABIa2aq+dfzWBb7PicBNq94fMySf4sTALjbFVaGnJMEnM0GCutN/9lpsQQvHk0z6
-	 VeYzPfk7jn7aQ==
-Date: Wed, 26 Mar 2025 16:26:47 +0100
+	b=SxHxZUcvd0c+VlPOSawUfFkduDYadlR37K+FMQHCAZy/++rzWlaixMcDoJGDdDANs
+	 CzS18JGEuldUJe6AsKytDKVwHQ9xt4Ep9Ey3h+dr2vqvz9pC3hXoz9Cayui9SEH5L5
+	 AFRxbWeruM0yX6xgmQnjFL/wH1VGWmzFlRqR8nVOcVRAKZqIqM/F7T6bwXhEd/QGJq
+	 y5+vQWyYB+j+f/m0OmBGTHaLnadR4kBT6F2ZANgmrruC4DxuPV6cdMjXv0iYkkvd2t
+	 jtriA0FWrU2cxJXwwCSHz1hd3ZxKSuhPmNmy4J8Nn6f5b6wK4TWFONJQp00YE4qN8S
+	 GaKuqQjiwu2pw==
+Date: Wed, 26 Mar 2025 16:28:20 +0100
 From: Maxime Ripard <mripard@kernel.org>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] drm/panel: Add new helpers for refcounted panel
- allocatons
-Message-ID: <20250326-camouflaged-satisfied-quokka-8d5afc@houat>
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: Re: [PATCH 2/5] drm/panel: Add refcount support
+Message-ID: <20250326-persimmon-parrot-of-glamour-f31fdb@houat>
 References: <20250325-b4-panel-refcounting-v1-0-4e2bf5d19c5d@redhat.com>
- <20250325-b4-panel-refcounting-v1-1-4e2bf5d19c5d@redhat.com>
- <20250326102259.3bdbc22d@booty>
+ <20250325-b4-panel-refcounting-v1-2-4e2bf5d19c5d@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,75 +45,119 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kx76iyfxdbnxqini"
+	protocol="application/pgp-signature"; boundary="35mfar5h62wtrpdj"
 Content-Disposition: inline
-In-Reply-To: <20250326102259.3bdbc22d@booty>
+In-Reply-To: <20250325-b4-panel-refcounting-v1-2-4e2bf5d19c5d@redhat.com>
 
 
---kx76iyfxdbnxqini
+--35mfar5h62wtrpdj
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/5] drm/panel: Add new helpers for refcounted panel
- allocatons
+Subject: Re: [PATCH 2/5] drm/panel: Add refcount support
 MIME-Version: 1.0
 
-On Wed, Mar 26, 2025 at 10:22:59AM +0100, Luca Ceresoli wrote:
-> Hello Anusha,
+On Tue, Mar 25, 2025 at 01:24:09PM -0400, Anusha Srivatsa wrote:
+> Allocate panel via reference counting.
+> Add _get() and _put() helper functions
+> to ensure panel allocations are refcounted.
+> Avoid use after free by ensuring panel is
+> valid and can be usable till the last reference
+> is put. This avoids use-after-free
 >=20
-> On Tue, 25 Mar 2025 13:24:08 -0400
-> Anusha Srivatsa <asrivats@redhat.com> wrote:
+> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+> ---
+>  drivers/gpu/drm/drm_panel.c | 65 +++++++++++++++++++++++++++++++++++++++=
++++++-
+>  include/drm/drm_panel.h     | 19 ++++++++++++-
+>  2 files changed, 82 insertions(+), 2 deletions(-)
 >=20
-> > Introduce reference counted allocations for panels to avoid
-> > use-after-free. The patch adds the macro devm_drm_bridge_alloc()
-> > to allocate a new refcounted panel. Followed the documentation for
-> > drmm_encoder_alloc() and devm_drm_dev_alloc and other similar
-> > implementations for this purpose.
-> >=20
-> > Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
->=20
-> [...]
->=20
-> > +void *__devm_drm_panel_alloc(struct device *dev, size_t size, size_t o=
-ffset,
-> > +			     const struct drm_panel_funcs *funcs,
-> > +			     int connector_type);
-> > +
-> > +/**
-> > + * devm_drm_panel_alloc - Allocate and initialize an refcounted panel
->                                                      ^^
-> "a refcounted panel"
->=20
-> > + * @dev: struct device of the panel device
-> > + * @type: the type of the struct which contains struct &drm_panel
-> > + * @member: the name of the &drm_panel within @type
-> > + * @funcs: callbacks for this panel
-> > + * @connector_type: connector type of the driver
->=20
-> I'd say it's the connector type in the hardware, rather than of the
-> driver (the driver follows what is in the hardware. Maybe you can just
-> copy the description present in the drm_panel_init kdoc:
->=20
->  * @connector_type: the connector type (DRM_MODE_CONNECTOR_*) correspondi=
-ng to
->  *      the panel interface (must NOT be DRM_MODE_CONNECTOR_Unknown)
->=20
-> Other than that it looks good!
+> diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
+> index bdeab5710ee324dc1742fbc77582250960556308..079c3c666a2ddc99a0051d1a3=
+c9ba65d986dd003 100644
+> --- a/drivers/gpu/drm/drm_panel.c
+> +++ b/drivers/gpu/drm/drm_panel.c
+> @@ -355,24 +355,87 @@ struct drm_panel *of_drm_find_panel(const struct de=
+vice_node *np)
+>  }
+>  EXPORT_SYMBOL(of_drm_find_panel);
+> =20
+> +static void __drm_panel_free(struct kref *kref)
+> +{
+> +	struct drm_panel *panel =3D container_of(kref, struct drm_panel, refcou=
+nt);
+> +
+> +	kfree(panel->container);
+> +}
+> +
+> +/**
+> + * drm_panel_get - Acquire a panel reference
+> + * @panel: DRM panel
+> + *
+> + * This function increments the panel's refcount.
+> + *
+> + */
+> +struct drm_panel *drm_panel_get(struct drm_panel *panel)
+> +{
+> +	if (!panel)
+> +		return panel;
+> +
+> +	kref_get(&panel->refcount);
+> +
+> +	return panel;
+> +}
 
-Heh, Unknown is fine, but you're right for the rest. I'd use the
-drm_panel_init doc for that field actually.
+This should be exported
 
+> +/**
+> + * drm_panel_put - Release a panel reference
+> + * @panel: DRM panel
+> + *
+> + * This function decrements the panel's reference count and frees the
+> + * object if the reference count drops to zero.
+> + */
+> +struct drm_panel *drm_panel_put(struct drm_panel *panel)
+> +{
+> +	if (!panel)
+> +		return panel;
+> +
+> +	kref_put(&panel->refcount, __drm_panel_free);
+> +
+> +	return panel;
+> +}
+
+Ditto,
+
+> +/**
+> + * drm_bridge_put_void - wrapper to drm_bridge_put() taking a void point=
+er
+> + *
+> + * @data: pointer to @struct drm_bridge, cast to a void pointer
+> + *
+> + * Wrapper of drm_bridge_put() to be used when a function taking a void
+> + * pointer is needed, for example as a devm action.
+> + */
+> +static void drm_panel_put_void(void *data)
+> +{
+> +	struct drm_panel *panel =3D (struct drm_panel *)data;
+> +
+> +	drm_panel_put(panel);
+> +}
+
+You can drop the documentation on that one.
+
+Looks good otherwise,
 Maxime
 
---kx76iyfxdbnxqini
+--35mfar5h62wtrpdj
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ+QctgAKCRDj7w1vZxhR
-xW8DAQD40+ulGnIJEDIE/lvd8rfwdrKdgFym/9bSB9uZ01XXHAEA5MNcCIEyKhj4
-MGIvSR/D/1GUWfEkNBH4dz32KHIupgA=
-=9uMY
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ+QdEwAKCRDj7w1vZxhR
+xYQOAP9w3MTmVHhd861+uBbT6ku5QPjuAF8QKp2uW930Xg0/ngEA8+IQLZq8MDQH
+cJZsh0JTE1RLVLeeQTyRMOo8NM6g5wk=
+=WCTM
 -----END PGP SIGNATURE-----
 
---kx76iyfxdbnxqini--
+--35mfar5h62wtrpdj--
