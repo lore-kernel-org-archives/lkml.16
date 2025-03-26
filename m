@@ -1,107 +1,122 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC8E1F417A
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743000424; cv=pass; b=jewhM6TMGLMRia1A5taxQsA1RFV6yOfrYQjn41qBjFsrzQ5Ku7nH40D8S5lIU1HFrW3+axa77a6Cx/MRgafI6Rm/UVKU4NMmnvpZKpkREFr0LbxWIQohyZjQasrJB82GQnR5Lae1CoUxc/vCr8Q7ugQ08EEkhan5lQVnzyySoj0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743000424; c=relaxed/simple;
-	bh=BBJJp7brECBnD5Lxk7Yxy9YoxzxJ98QGVJjxIODinM4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZltsyLNxE/G67SAo5YxLuWxC2LpE73/nijiz3Uxq152PGG5SVboTXGVCNpTihA14MbAZ9eJT5q3ohV8ARoL7BXjxRXy9UPnUtmHrv3wBokvoxvx+5YAmj23lvz1CrQaXR4LZLyD7IXoUOqgIxYXdM0YJMjFNT8MHmIxa1saZEgs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=FRBgU1Ca; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994111DEFD7;
+	Wed, 26 Mar 2025 14:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743000456; cv=none; b=ra7MmSRgXtYyMK06pmAsKEznEeDrqVMD32RKbQQ1rB1hVTavMxICrTdsQU1Cgwdvmj7B6RScjJcK8AV7SXeF4q9QWo5iYNpI2fp6ZhMvy1rxTat13Je84lZX/20rqAvAmgCfGYOxrFPEQN+rMsaDqQEp2V5vmRnRtIRCtSwnKOk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743000456; c=relaxed/simple;
+	bh=nQHwaxjR8CO0tgJWL7PgM7ZESLA6hMbTYzDTbj02txM=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oRj9UzPmCOBFucOxdxuVtcUAO1vnw09UijUWVst+GeDnwyWiLOPPILEtLGbRu58QFH3PQUBkA9DdCeSX0jbDPREiB9EZGV12BroYWmXQF6NID3m3C81CTTL74SKotvwtjYyv1JnpLj8BuJ7JnWPvuh7W8QlTh4Q27AsEO3hXTIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GkytLo7f; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="FRBgU1Ca"
-ARC-Seal: i=1; a=rsa-sha256; t=1743000395; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ghZpvDPIx2W4upA6AWCap5qOIs4idAM13yP3crLjPK1kCGyX2UJsyd9lFx/f6AMnnt2tkoE2DiU6/PTe8WcItH3rrwD+Is/HnEV3FIp6+OnARNFrVL2ohvYpgAmvEXSmDabJ0IEqRa02hHBPQZt4ExvLrhRxLffgoKqAZpno+9k=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743000395; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=UM0Ih6VqtqbtAFJFS/WtVT4fHB3Sai9RsrTsE09plNk=; 
-	b=j3l79jGiCQLmzYVr5krK0FMQ6XM/5RAfgg+eXUMKqxZnnYAub2idfsBCh7+9aI6Zmf/4mBDIl8yONUd6D0Acv+GMM7nBe8VhkDeQYVeRA0/mvqOkyiY8rcphOtp+3ok6M38fTnEkZyiE8lf3ylBZWIrqRsHY/ES73+dR1AOXAL8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743000395;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=UM0Ih6VqtqbtAFJFS/WtVT4fHB3Sai9RsrTsE09plNk=;
-	b=FRBgU1CaK7Zy+0AL4OpfnUwHAm0RT6VgaukKrE+DxzjT0N4Z8l31PZOqcu9xvnoi
-	lqD6OfIi1E/V9wE1Vv0YqA0Bw0f5KrYdHb3hUKghbxaVwXn95E5oVERxepoabadpyRe
-	jQRRrD+44BzBr63ne0py+i6WAr7KzC/8V99oju4o=
-Received: by mx.zohomail.com with SMTPS id 1743000392935887.9682124854454;
-	Wed, 26 Mar 2025 07:46:32 -0700 (PDT)
-Message-ID: <85470439-3c03-4787-be91-b6b680a5aca5@collabora.com>
-Date: Wed, 26 Mar 2025 17:46:27 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkytLo7f"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso68331585e9.0;
+        Wed, 26 Mar 2025 07:47:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743000453; x=1743605253; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=39ME7p5eLaR1hcfbNt4XmwgZF3ncfkWZ8Hrmuut2Ejo=;
+        b=GkytLo7fVA19PPWH1XJcGJWaNmY0ENSwqSOlQYnJk+PFdfAlU0wqmzJVwNO/u5Exdm
+         8IHWERYtnQqB6jM8gtv4EcaQz8aH7MuDeja7KlxuPCjCa2N8Ucu01vP7v8jhq9dmo92V
+         wVhgwy667DWtx4z9zQN1Non1Uf4Hc3kIuwuVFPi82gsUuQwPxrodSXynZjnoPzBao1O5
+         VZ4CImBRiUsYaIy3u2RbgtF6RbNHCQqSXbymBZQhj56+p//1qNpT/EfSGQwwok5gX3vT
+         I3kGDk1ZelWVnuEjZwiDnaI3tYNpLwxa9UMFQyyo02EK4RzpaQU0EkOsUwE5oX2E0AmV
+         P80A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743000453; x=1743605253;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=39ME7p5eLaR1hcfbNt4XmwgZF3ncfkWZ8Hrmuut2Ejo=;
+        b=TwsdB9BsJLM3H/4kbQaOr8Na1oBph2I7YWSPthU4thuLbi2FbXm6pKn3Y4A2L1wPtl
+         ITxMK3YXqnSa0JdJ53rM9z7kbwF4bTRWKsh7cP1qBantGLnMDTW9Z/Kz88ZSqh7PclCr
+         Mt2QaYfXLnrWsUH/NcozAN1+WoAHoAEzo3YVxix3bdaus3ZhvmuWgrqxaZ8rHdmKi5Oi
+         /lZNJutiXNs8bKhHp/Z+PWG0pBZrh/6tMkaOh/+1qV/T7BZkhBqVFrjmO4fAtRxhmLt1
+         cyGhqULPogFWDsZs5mlu2NyMRwC6rb9YF+G9pBnGz+k3NbgGVymgGq599OpOy1L++7cv
+         XkAg==
+X-Forwarded-Encrypted: i=1; AJvYcCU5VZD2+u1nKuBFJN5e93veSF3cT8HUE2YkGcTysWSHoPXZDBW1HnuojCfBqj1g38DdCrIytIIzp8A2@vger.kernel.org, AJvYcCUQp7I/vTuCJu6RBtkOz24j1OGuE8/9901GjaRdRE7XcBms/+MsRTcbAJ/Y6w64FVe57/21xmHBmKumFMdr@vger.kernel.org, AJvYcCUZQWWOLNHRf7SicsWNGZBFxqVQ57ggRZrsrAJVvqZbASjjui+GiYa4dN6a8pqQeU7o4cff16vS@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoXqOEPE6sf3FubgfHIsQ5DtfHejhhnpP3lIqQP93vJ4NP1UyX
+	jwxZPW7yXqstfKCPJ47ivonDxhrf5W2BDkBhBbU5YP5GJup20jbI
+X-Gm-Gg: ASbGncu0KZaQvgYExGKrNnIawTm0P8pcqpspQSyqp3O02/ZxzCVqjPA43P9spH3SFeI
+	HOgasQwJtqkbsz6t0JIy4WDNf+OyOL+F/jLtrK91c2KHXZl4VgPKMXzJumJ8zWqTetA5R5Ulwrb
+	Vo41wPe/sgFBO671I6ddDWg3HYR4YacZP3HzzAhF1BCurqyC0g11rzIaXovyINWGcD8I5s0wBIv
+	SQSrdiV9WyQRR5h5LN7h/T8mi29ffldls7snwW8zxQkUlfiedGOLnMCP4y1V3h+eApU5Kq/mzJA
+	BODMHN//+oP66l9ZMwTRxxXj7DMnBcEugoPAqw2eHq/v+JY5AIsP+wcehQSMl8RYNTCjw4Ijhf9
+	9
+X-Google-Smtp-Source: AGHT+IEkprDARHohL99BkF+vUUKFTW3i4+MC+nQyhd1smUBMoa+9+btab3iJ8OvGIU508Uhu9eNAYg==
+X-Received: by 2002:a05:600c:1d02:b0:43d:77c5:9c09 with SMTP id 5b1f17b1804b1-43d77c5a08bmr37312175e9.24.1743000452479;
+        Wed, 26 Mar 2025 07:47:32 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9b4ce9sm17218000f8f.53.2025.03.26.07.47.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 07:47:32 -0700 (PDT)
+Message-ID: <67e41384.5d0a0220.e4975.e9c3@mx.google.com>
+X-Google-Original-Message-ID: <Z-QTgbrYFES4bT6N@Ansuel-XPS.>
+Date: Wed, 26 Mar 2025 15:47:29 +0100
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [net-next RFC PATCH v2 2/3] net: phy: Add support for Aeonsemi
+ AS21xxx PHYs
+References: <20250326002404.25530-1-ansuelsmth@gmail.com>
+ <20250326002404.25530-3-ansuelsmth@gmail.com>
+ <Z-QG4w425UuYXZOX@shell.armlinux.org.uk>
+ <a3cddcf4-bdcc-49f4-9d72-309854895c7c@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/7] virtio-gpu api: add blob userptr resource
-To: "Huang, Honglei1" <Honglei1.Huang@amd.com>,
- Demi Marie Obenour <demiobenour@gmail.com>, David Airlie
- <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>,
- Huang Rui <ray.huang@amd.com>
-Cc: dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250228053650.393646-1-honglei1.huang@amd.com>
- <20250228053650.393646-2-honglei1.huang@amd.com>
- <cd9f85a5-0d99-4007-bba2-d792ac9d84da@gmail.com>
- <c2d1334f-6f5a-493f-bbf0-3e92789f128a@amd.com>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <c2d1334f-6f5a-493f-bbf0-3e92789f128a@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a3cddcf4-bdcc-49f4-9d72-309854895c7c@lunn.ch>
 
-On 3/6/25 13:51, Huang, Honglei1 wrote:
+On Wed, Mar 26, 2025 at 02:57:09PM +0100, Andrew Lunn wrote:
+> > In summary, I really don't like this approach - it feels too much of a
+> > hack, _and_ introduces the potential for drivers that makes use of this
+> > to get stuff really very wrong. In my opinion that's not a model that
+> > we should add to the kernel.
 > 
-> On 2025/3/1 5:21, Demi Marie Obenour wrote:
->> On 2/28/25 12:36 AM, Honglei Huang wrote:
->>> From: Honglei Huang <Honglei1.Huang@amd.com>
->>>
->>> Add a new resource for blob resource, called userptr, used for let
->>> host access guest user space memory, to acquire buffer based userptr
->>> feature in virtio GPU.
->>>
->>> - The capset VIRTIO_GPU_CAPSET_HSAKMT used for context init,
->>> in this series patches only HSAKMT context can use the userptr
->>> feature. HSAKMT is a GPU compute library in HSA stack, like
->>> the role libdrm in mesa stack.
->>
->> Userptr should not be limited to HSMKMT contexts.  Userptr can
->> accelerate shm buffers by avoiding a copy from guest to host, and
->> it can be implemented using grant tables on Xen.
+> I agree.
 > 
-> Yes, I totally agree userptr can accelerate shm buffers, but I currently
-> don't know if there are any other projects working on similar features,
-> or if maintainers have any opinions or better ways to implement them, so
-> I temporarily limit this feature to HSAKMT context only.
+> > 
+> > I'll say again - why can't the PHY firmware be loaded by board firmware.
+> > You've been silent on my feedback on this point. Given that you're
+> > ignoring me... for this patch series...
 > 
-> I am waiting for everyone's opinions, please provide your thoughts.
+> And i still think using the match op is something that should be
+> investigated, alongside the bootloader loading firmware.
+>
 
-USERPTR should be relevant for anything Vulkan-related, like Venus and
-native contexts. I expect that this new feature will work universally
-good for all context types.
+The main problem (as said in the other answer) is that I feel match op
+won't solve the problem and doesn't seems the good place to do complex
+operation like OF and load firmware.
 
-In order to merge USERPTR support upstream, we at least will need to
-prototype the guest USERPTR in one of native context driver to know that
-it works. You'll need to post the whole set of host/guest USERPTR
-patches including QEMU and etc, not just the kernel patches.
+But now that I think about it your idea was to define a match_phy_device
+for each PHY ID... The generic PHY ID is detected and firmware is loaded
+and the PHY ID is checked again?
+
+That way any other call of match_phy_device for other PHY of the same
+family will found the FW loaded and check the ID?
+
+That might work but sound more like a trick than a solid implementation.
 
 -- 
-Best regards,
-Dmitry
+	Ansuel
