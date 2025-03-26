@@ -1,119 +1,95 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1575C1DBB37;
-	Wed, 26 Mar 2025 11:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A0E19CC3E;
+	Wed, 26 Mar 2025 11:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742988940; cv=none; b=J0yC5Nq1OREfiydaBvYj2T+KzRB83Jd/6ObNz9lzJ0As4qiHuUmssG/oPGK3oT5p3um3DQlyLzuwEWoPIPIXihRE6DmT2dcovxEfzJSCHHqJb+YPzGtxBcPkABMJ7Ie8CjhkunsQW7tBOysTyhwqdv0Yc1FdNe/Z/5FFFeYs7rk=
+	t=1742988986; cv=none; b=e0/BDNb642THI9R7C7rt4/qIRKj9GujcYC9VChFiTRJ+OMBPAHYXPdoxfADYph4rhliZwhlrdDXjGHwUiFdQ0MI++8x/O5f4wk717VD0pRiqrg4vCrOisevhxaXLr89ZKrFoAFqQzMxEp+ey4khmd3sPzIdCAbvI74//UZc9hU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742988940; c=relaxed/simple;
-	bh=INj7E8sEIm1QV4p0LYnCXBVskAJ6OA1nNyxY/YLEwxc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NxcuKLThJN4Nm66nuPNxYiNnuiKA5BbTWb91YJWoAWIWROEnMo2pYcT1rNEzlLv37J4FCrpFz6p3NKO4dnQPpScTCzbz2WBwUaHVgOTXQBaON6ZswuLsni2xc0oNLBRa3gRgpufu0P7R6s1g/CgcJX/XVlJxRHbgMrh9j+CNS1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1txP2f-0006Ln-00; Wed, 26 Mar 2025 12:35:29 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 5B95EC0135; Wed, 26 Mar 2025 12:34:37 +0100 (CET)
-Date: Wed, 26 Mar 2025 12:34:37 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Marco Crivellari <marco.crivellari@suse.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>, linux-mips@vger.kernel.org,
+	s=arc-20240116; t=1742988986; c=relaxed/simple;
+	bh=i+1SA1AXJQX4Q9Crpe7MCE2kgK7BHEod+Flw4MdzIdE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oSl8isl2xi3qqQK5GfPeZ9zJIZMCpnwH1rNfSf3BveyjW6qvnBraivobmSLitJ7mjEHH63KDtE+j9/MSV1koz+phxuTzWLqFElVftJAmY7hPnlWryfcjbQ2o/lwSmhuLuYMcRtXAFlZYKRzd2k9Vg/nAtKn9TP+mVAPSgKQKkRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=JEusnVnx; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="JEusnVnx"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 71A1525D79;
+	Wed, 26 Mar 2025 12:36:15 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id L35YDY5GWVHS; Wed, 26 Mar 2025 12:36:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1742988974; bh=i+1SA1AXJQX4Q9Crpe7MCE2kgK7BHEod+Flw4MdzIdE=;
+	h=From:To:Cc:Subject:Date;
+	b=JEusnVnxCcLq5kc8e3+v66/68lTz7j7OUh6mkbl8CT8T6tvtQr6jw62C5VsbJJMMd
+	 I/9VWOZurlvmrOOz89NfCPM0m9w0/wjtP82BQEmIhmj2QanHt5Dsmrrrhkepagpot7
+	 /n65OZMjdQTl5zs1iigHL9VbA4kN4ArY4Dg5BcuQyKOoXaBMS6qMf57MA10GnpjY4S
+	 e5PnPIwdRNE7UMT0lAmKQ0JoQYpIvVvdJalwgHFF54CrfM4y8XERNLfkQuDCJoqyfP
+	 WYYfXvHrDFOR+K5pXM27DwyDTTKlzypWZs52SPIDMHYnaadwHO6yWlIs0Q0Ee6e6Ot
+	 qZw7plq3SOHhQ==
+From: Yao Zi <ziyao@disroot.org>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v6 1/1] MIPS: Fix idle VS timer enqueue
-Message-ID: <Z-PmTcGvmHgww6KP@alpha.franken.de>
-References: <20250315194002.13778-1-marco.crivellari@suse.com>
- <20250315194002.13778-2-marco.crivellari@suse.com>
- <alpine.DEB.2.21.2503211146001.35806@angie.orcam.me.uk>
- <CAAofZF4gy6WJKLK4TzF5aV7+ca3gob5jVz3XQZyGrTpfnCsn_Q@mail.gmail.com>
- <alpine.DEB.2.21.2503211747150.35806@angie.orcam.me.uk>
- <CAAofZF5yaGMG0Kyax+ksfGngQ0T6AxvN5-60SnasQh7=OabaOg@mail.gmail.com>
- <CAAhV-H7Tko290LSCJPuVFE2qds81N4C=8RPz4edC-xddFvZGjA@mail.gmail.com>
- <CAAofZF52_yKcpd+GBE9ygggeNTOVQDP7AKau5xZE+N4fHGCgSQ@mail.gmail.com>
+	Yao Zi <ziyao@disroot.org>
+Subject: [PATCH] clk: rockchip: Drop empty init callback for rk3588 PLL type
+Date: Wed, 26 Mar 2025 11:35:56 +0000
+Message-ID: <20250326113556.21039-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAofZF52_yKcpd+GBE9ygggeNTOVQDP7AKau5xZE+N4fHGCgSQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 26, 2025 at 10:46:08AM +0100, Marco Crivellari wrote:
-> I'm mostly thinking about future changes in this part of the code.
-> But if it is ok what we have now, and future changes are not a
-> problem, let's keep this version.
-> 
-> Would this be ok with you @Maciej?
-> 
-> If so, the region is now 40 bytes. This is what I did yesterday:
-> 
-> @@ -110,6 +110,7 @@ LEAF(__r4k_wait)
->        .set    noreorder
->        /* Start of idle interrupt region. */
->        MFC0    t0, CP0_STATUS
-> +       nop
->        /* Enable interrupt. */
->        ori     t0, 0x1f
->        xori    t0, 0x1e
-> @@ -128,7 +129,11 @@ LEAF(__r4k_wait)
->         */
->        wait
->        /* End of idle interrupt region. */
-> -1:
-> +__r4k_wait_exit:
-> +       /* Check idle interrupt region size. */
-> +       .if ((__r4k_wait_exit - __r4k_wait) != 40)
-> +       .error  "Idle interrupt region size mismatch: expected 40 bytes."
-> +       .endif
->        jr      ra
->         nop
->        .set    pop
-> @@ -139,10 +144,10 @@ LEAF(__r4k_wait)
->        .set    push
->        .set    noat
->        MFC0    k0, CP0_EPC
-> -       PTR_LA  k1, 1b
-> -       /* 36 byte idle interrupt region. */
-> +       PTR_LA  k1, __r4k_wait_exit
-> +       /* 40 byte idle interrupt region. */
+Unlike PLLs in previous geneation of SoCs, PLLs in RK3588 type don't
+require any platform-specific initialization. Drop callback
+rockchip_rk3588_pll_init() that does nothing in fact to clean the
+driver up.
 
-IMHO, we can't extend this above 36 bytes, because the interrupt could
-hit at the instruction before the wait, which is then in the
-next 32byte block.
+Signed-off-by: Yao Zi <ziyao@disroot.org>
+---
+ drivers/clk/rockchip/clk-pll.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-I was thinking about aligning __r4k_wait 16 byte earlier and place
-the wait at the end of the 
-
-Something like:
-
-	.align 5
-	.align 4
-LEAF(__r4k_wait)
-	// irq enable sequence
-	wait // align to end of the 32byte block
-_r4k_wait_exit:
-
->        ori     k0, 0x1f
-> -       PTR_ADDIU       k0, 5
-> +       PTR_ADDIU       k0, 9
-
-this needs to
-	PTR_ADDIU       k0, 1
-
-then. and __r4k_wait_exit - __r4k_wait is 48
-
-But there might better ways...
-
-Thomas.
-
+diff --git a/drivers/clk/rockchip/clk-pll.c b/drivers/clk/rockchip/clk-pll.c
+index fe76756e592e..a2a57d47bbf8 100644
+--- a/drivers/clk/rockchip/clk-pll.c
++++ b/drivers/clk/rockchip/clk-pll.c
+@@ -1025,16 +1025,6 @@ static int rockchip_rk3588_pll_is_enabled(struct clk_hw *hw)
+ 	return !(pllcon & RK3588_PLLCON1_PWRDOWN);
+ }
+ 
+-static int rockchip_rk3588_pll_init(struct clk_hw *hw)
+-{
+-	struct rockchip_clk_pll *pll = to_rockchip_clk_pll(hw);
+-
+-	if (!(pll->flags & ROCKCHIP_PLL_SYNC_RATE))
+-		return 0;
+-
+-	return 0;
+-}
+-
+ static const struct clk_ops rockchip_rk3588_pll_clk_norate_ops = {
+ 	.recalc_rate = rockchip_rk3588_pll_recalc_rate,
+ 	.enable = rockchip_rk3588_pll_enable,
+@@ -1049,7 +1039,6 @@ static const struct clk_ops rockchip_rk3588_pll_clk_ops = {
+ 	.enable = rockchip_rk3588_pll_enable,
+ 	.disable = rockchip_rk3588_pll_disable,
+ 	.is_enabled = rockchip_rk3588_pll_is_enabled,
+-	.init = rockchip_rk3588_pll_init,
+ };
+ 
+ /*
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.49.0
+
