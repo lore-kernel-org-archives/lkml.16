@@ -1,89 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE9E1DD539
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 19:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743018898; cv=none; b=P5BGwPYMDyO325a1ldpUP+dEfTuwr7Rt3kHIHCsOao4sr3qoLv4lOaNLG4+X5OsRHchQlhU2pOS+DWFdoMRzsD3Bztq0mq/KQYldyc1VOMdRcUf1SJd0kaDGuO1DEUoqVyr2d/vGcAFstctqdWuFMnt51qlQi9VUIvszko6pAJ4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9B22E337C
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 19:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743018898; cv=pass; b=QkKQZ/5uL3yXpqPYp3IcteAi9Nq6PtPc4rRX0Rc19zBt7J3WLKDAPxg6FCuPHtHPMoX9jzRIHZ8sOo6g5RqKYjOdv3uJPjBnNHCAO/X5eqvC0T8E1lzgsjwse/Z08KxxCFxAv53FIxBggeEMreTJupWKXutkT2aikHfUi28XZc8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743018898; c=relaxed/simple;
-	bh=nJdi+8s1W+HMSPaTDyc5/leo0zsB9OTHXjIF969gMCM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=hIjCgwOiOcKzb9MMDCxh3i0kZjLf/TP8M9mTOhEvnBuPorvNeBC5wwpAvh0omedyip15fWqnwNbbWwdFICw1nshqcA1WDQ+sXDsgIYTSWRvhA5ddQ8wdD7s2s90INwnFOIz/N3YrKqQ5MlSrRv6ZWcXnfnSeMpZhn4I9086Bdw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PZ7ATmg1; arc=none smtp.client-ip=10.30.226.201
+	bh=Dy0J6EBrPQWCBVq9Slx+LWeV6rTwnEG6MDzoQ5GyC0g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UnZqaEo1Yp5rmAD2spT1MO+cFMJgXtIsmbZ1bG4FiYE+hdSZubuEherNhjKUk3qgg9AGKGcBAeomeEp6uIrxArzj9UTFzCIUSHDnmV/u5YS4OAzF9zzJu1Md/aW2oQSdtyhwy0jAp41cMLSBGHxIfFGnM3uRhzzEC3NCiijZcfI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=BN0sZyrp; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PZ7ATmg1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41EBAC4CEE9;
-	Wed, 26 Mar 2025 19:54:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743018897;
-	bh=nJdi+8s1W+HMSPaTDyc5/leo0zsB9OTHXjIF969gMCM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=PZ7ATmg1MTJY8x0AB42UeFq2UfnmXvGnw1JeL3woN1O+dyTTvoQZJRpvL7Mmx6k4g
-	 9DUqaQmjFCdsok+YC1sqc+3pUWs8lxH3gY6zJqpXc7OtNKRHausY+EKyQwftkgEA+6
-	 Uxyn7VaVTjR4Fc8t1c3MRcceTXM74iEn6fb9hEzC431vtOoqrvd1Uo15iIilOEl0Xt
-	 NRM8aP99dWiogqt6gid3He65o8XFBOldC6O3fyvNVlxfF6f/T9pre2Z3p2Ojk9en5Z
-	 lwo14PbhT19hp+sz8y3Xdl6OibVlXb60BRoVlW1wISccuVivkiRr0D8sgxSwOsHPnL
-	 DMHvOiXpdnBsQ==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: Yao Zi <ziyao@disroot.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Pasha Tatashin
- <pasha.tatashin@soleen.com>, Kent Overstreet <kent.overstreet@linux.dev>,
- Petr Tesarik <petr@tesarici.cz>, Ying Sun <sunying@isrc.iscas.ac.cn>,
- Samuel Holland <samuel.holland@sifive.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Han Gao
- <rabenda.cn@gmail.com>, Yao Zi <ziyao@disroot.org>
-Subject: Re: [PATCH] riscv/kexec_file: Handle R_RISCV_64 in purgatory relocator
-In-Reply-To: <877c4bg1us.fsf@all.your.base.are.belong.to.us>
-References: <20250326051445.55131-2-ziyao@disroot.org>
- <877c4bg1us.fsf@all.your.base.are.belong.to.us>
-Date: Wed, 26 Mar 2025 20:54:54 +0100
-Message-ID: <87y0wrk1o1.fsf@all.your.base.are.belong.to.us>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="BN0sZyrp"
+ARC-Seal: i=1; a=rsa-sha256; t=1743018874; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=carkWtiol7Q6Etgnz18adBGw7YwbrRsciQm0GpsF7Ffgbfnbn85C4n6J4ZDvYkeqlLFqFXiDyeo9ZxFfYPoe+MmduF8YP81xznk+0ihqgGyULjrKN+EOZk4a9W90UUb09MhPZHx4C5IOvgyi9hN8LMsHy7n3z6aQ/uoN2698mPY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743018874; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=iWHtsRfC6sDeLCSXa8Igd46o0WY5wleHKKN8wZjwzWo=; 
+	b=k2OPFthXhz+BwvZ6G5wpRr42R8nICmVLRAfcjcLv1SBln6h7uCof+UvJMAkonf4jBuCS2t8TtAYO4J5KF44GyQ3mnWwOHCHDCosoT1rKY96/sakdM/8fknwlC0+xsifAhYAl1qtze4xW+PZEdPEwZJ4Q3zglYASnvfXRSDSeXio=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743018874;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=iWHtsRfC6sDeLCSXa8Igd46o0WY5wleHKKN8wZjwzWo=;
+	b=BN0sZyrpUhLauOFR/PvagqgfCxqvjZZcXLFFrDlC557mlg+KM83XxoOhXC1wYFCv
+	i3Jebm9yeoCdXk58yd+sKFJHAaBh75YN75nvlnGkwWjxYI/8/VJtnyV1YMQ3v0Nmo0L
+	5LKuGG+5zDu2RD3UvzHc9MPZPIo57PGdG2JC5DBw=
+Received: by mx.zohomail.com with SMTPS id 17430188720701011.2938235750142;
+	Wed, 26 Mar 2025 12:54:32 -0700 (PDT)
+Message-ID: <e4f41400-b300-43ee-843f-8bc407aa9f76@collabora.com>
+Date: Wed, 26 Mar 2025 22:54:27 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 3/6] drm/shmem: Implement sparse allocation of
+ pages for shmem objects
+To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Rob Herring <robh@kernel.org>, Steven Price <steven.price@arm.com>,
+ Liviu Dudau <liviu.dudau@arm.com>
+Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20250326021433.772196-1-adrian.larumbe@collabora.com>
+ <20250326021433.772196-4-adrian.larumbe@collabora.com>
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250326021433.772196-4-adrian.larumbe@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
+On 3/26/25 05:14, Adrián Larumbe wrote:
+> +static struct sg_table *
+> +drm_gem_shmem_sparse_get_sgt_range(struct drm_gem_shmem_object *shmem,
+> +				   unsigned int n_pages, pgoff_t page_offset,
+> +				   gfp_t gfp)
+> +{
+> +	struct drm_gem_object *obj = &shmem->base;
+> +	struct sg_table *sgt;
+> +	int ret;
+> +
+> +	if (drm_WARN_ON(obj->dev, !shmem->sparse))
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	/* If the page range wasn't allocated, then bail out immediately */
+> +	if (xa_load(&shmem->xapages, page_offset) == NULL)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	sgt = kzalloc(sizeof(*sgt), GFP_NOWAIT);
 
-> Yao Zi <ziyao@disroot.org> writes:
->
->> Commit 58ff537109ac ("riscv: Omit optimized string routines when
->> using KASAN") introduced calls to EXPORT_SYMBOL() in assembly string
->> routines, which result in R_RISCV_64 relocations against
->> .export_symbol section. As these rountines are reused by RISC-V
->> purgatory and our relocator doesn't recognize these relocations, this
->> fails kexec-file-load with dmesg like
->>
->> 	[   11.344251] kexec_image: Unknown rela relocation: 2
->> 	[   11.345972] kexec_image: Error loading purgatory ret=3D-8
->>
->> Let's support R_RISCV_64 relocation to fix kexec on 64-bit RISC-V.
->> 32-bit variant isn't covered since KEXEC_FILE and KEXEC_PURGATORY isn't
->> available.
->
-> Hi!
->
-> This patch does fix the vmlinux loading for kexec-file -- very nice!
-> However, I haven't been able to get kexec to successfully boot a kernel
-> from qemu, i.e.:
->
->   kexec -s -l /path/to/vmlinux # fixed w/ your patch
->   kexec -e # hangs after "Bye..."
->
-> Same when I try vanilla kexec (kexec -c -l /path/to/vmlinux). kexec with
-> an Image works for me in qemu.
->
-> Before I start to bisect too much; What config/qemu did you use to test
-> this?
+You likely meant to use the gfp arg here.
 
-Nevermind! Got it to work; Sorry for the noise.
-
-Tested-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
-Reviewed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+-- 
+Best regards,
+Dmitry
