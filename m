@@ -1,134 +1,108 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3EA9C2FB
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 23:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9DD19644B;
+	Wed, 26 Mar 2025 23:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743030181; cv=none; b=jFbNDqwT/iiWrD9gFE6nqbtF8ga95A35Zzq62nFiTaQNqyDLrvnwVs/C83IYmUVPMUEn6XnWDrstUkWjIJsdtWij6uft3TvbSE6iq3yFtwGACD7beBOupXBM0mW0NyuGR4eCi8JSApSo74ByfZ1Yo8ZW8V64HnBZjpS5SS/hwA0=
+	t=1743030290; cv=none; b=ocNhLyaOGyLyvCp4ZnvswN3lSzjWODBiLk2woPmKKwkfStV+oyQ3K+uTfidQt56j9J9h2LOpMiSr9zyRs6VT/o16fx0AzIzFFgoSrYnBhm4GjCdRymOstDxq8gUcn255EsDttD5nNa2eXrsKEY747V1SUQt4489/9sxztvXjgbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743030181; c=relaxed/simple;
-	bh=jPUH8cHEITF2cPzC/ZmZ0ONxB+dyH7o21Er3HkXtDvs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nPos7unQoErz8lLU8IN/ZA2nFFxhYAoTRlQ/lvuRR150eLVni0Kq7HFx5Xa5POCNsZxlKeFAAi4soM2F4EOeN7jcGhaEdBTDbImzs7hXGpY8SNuwQI9onCjQ8loCVB+E27kEC/9PTYXHO9E8fK/Ys4/qokV+2G+ZuUMjv8/Sci0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=SvkcW293; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1743030290; c=relaxed/simple;
+	bh=lu0985pnAiWIeLqiiXNJyyeE3/4K9/7b88UOr7N8zC8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NeY9c5tX6pVzgs9lLMxMuZKXKN9mlc7cJA06nErRlCx4S6tzTb9felFqiIzXzh0tCkQcHZi9z3L6jfQ3jFbgLqVYKgmjTkgOLpU4SWteezoZR2YS/QOcSukq1NzlGmTBPz2OJb32v2V8854tJNtRARvfx0FgGOn3q4WnQc89hTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=aYbkrPBV; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="SvkcW293"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e46ebe19368so414726276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 16:02:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="aYbkrPBV"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso987852f8f.1;
+        Wed, 26 Mar 2025 16:04:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1743030179; x=1743634979; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xB9UYcH5AdqIyBolCZJx21sb/shumgTj8OuXokPvO7Y=;
-        b=SvkcW293mh0HY0jomhpu7kdz3qpx0PViSONxHoknNmnzXuzevmGnYoW0IDb99wfcSg
-         LW/ntXYlQbJ8Fd2YLf4/b8vFNpKPR5sR8DEfUULAbJej2ni6bSfO01gt2Ef+jSHi8QRq
-         eZqXdB4mkNAInBCcxKXo02FqP8hGJomeU0/GlSqQ89lZ5mY+SGVZ4gMpU66EJL3V5gau
-         RqwOr7VMvK5jT3Pcof1Z7MWRg9SM8mzwIRBrlwvaTSo7GsFodvziuZwqFgU0Ou+pww5D
-         gkystDi+tJ03YeNKNe61++YFt0kwYlE+yHPtMdMsv6EeVzek1DK6hHIL17SqmGk8K6xa
-         sZgg==
+        d=googlemail.com; s=20230601; t=1743030287; x=1743635087; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G1Db4+giVOhxRRsgeVFOY4J55f6l7WCs95jCreUUDT4=;
+        b=aYbkrPBVn/XMIAFeb2dfpqq8KLWfH0dnDpQ0qgHiWTix4h0gyoPTy+Pa4LCPAd1ojJ
+         401VBsHHt7r101DuKjbboYoGmYHvtvwKxhnS2eaBntLCyPYvAmeJPECk9UAUEJLRPSZG
+         aXtwNW5kPOq1StwpoHgAiByZMOQMZA34FPlWRTBIBqC5AgP4du5BQ6YfVma96/opSX/8
+         bvwIF4SHnUIyYtVtsAeFVpWjfVMig2ouKQmOiMDKP5E54YS1vVX8YtzpzszbFbr3j0Ii
+         Ym4UbmOIdCA6N4Mz82NZd286rWKevb7HrCYco5r/YKJsczhI/QpZSCIBfP7vMgDjFkUr
+         1VJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743030179; x=1743634979;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xB9UYcH5AdqIyBolCZJx21sb/shumgTj8OuXokPvO7Y=;
-        b=bqAfWRr3iJTyowAkOz/uwLvJ1gsAqBmfbWzl3W+VZ10v3v0dDGiMxrdpb7xeBlI+/E
-         t6sPv2wZT336hJ18WgNivDWYTYa+BG3tiOUFP9MMHEyKrKuycvCnfS4o9kMN+1p/6nOS
-         VHVsl+roMdFbmjdDnM76HJxRcD10IsKSA/TZHyezjvV2n2xEwtSexeLL8tHC+d8Ccwc5
-         Bg+7FsuduCTRDKg6KbeB24jRfo3v9rzjeNkitpsAtJmOd6TNDrUgGnstJ2ovkgvtI+Sf
-         D2nYCX7jDQTTQntbQlckSf4n4CXsnLlL3tT2P2/YUOwykD8+B/Sqce0pJPm2fuWnGfrp
-         4UeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVoOkz/SbzzuJbC8DZS01M+6oApaDHS+Z8v69BWSQ/rA/jwL9s6EDGz2QaSxhdE9altfYPVQwhHknPg3tQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWFH3AaxG5FZXoJPb4ZJHjPcEafAhRE14FFZray17PcK4UT5dF
-	lDBBvtO4pu0ZyhCiEfl6cCymnR1uZEW+T3msgh4a2+pMA4RhI/BjlDDuDwRg9i3lJGdkae/4hua
-	b72eAIQAb7rtLLc63yGkspOp+WRW3nx0Ih11q
-X-Gm-Gg: ASbGncu0fRkZv6uXJ9+wCQF/VIt7DV6BOgZRAvch49t89C/TGDqnkzkiovD/Ekzdt6z
-	z5bzNcW/Xcf7pKqrXKnkUeMlQS7DlmpCdfbvIBaXRgOH5mCYzVxoooSNFXuUTGjgDvXWzWI+GJi
-	x4CFygp9vnfj22nknrP3WuvqiWcA==
-X-Google-Smtp-Source: AGHT+IE5Pt/Vffo+1JRWLwabWNqS6xEZLcnPafMLRISgkt7U3sr2Fb1QpXN7gcExs5dAKsCpr+YNc+v2PsCBNTv6dd8=
-X-Received: by 2002:a05:6902:240f:b0:e69:1f19:cc3a with SMTP id
- 3f1490d57ef6-e694377e6f5mr1997953276.30.1743030178518; Wed, 26 Mar 2025
- 16:02:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743030287; x=1743635087;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G1Db4+giVOhxRRsgeVFOY4J55f6l7WCs95jCreUUDT4=;
+        b=n/MwUfV0PAcivbASyRi98aNd5D0uu+JxpNY6NdMwS5Lc1ORYNiWNPVpL3nbd99kk92
+         TWBYDaxQDIHLTCqx7uckEWxLlJwFzlTQTUi1JRSLVJmx0LwwlvxX9N9LohjljmDYi9cy
+         jXSqbVGfCIkFDDHLcbYnLuNl7ut/5kS0en1aKb7Q06/hQMEkPUHoxAh9XX43x48HZdlT
+         VZIEupQutlDCPxloWPmwnLZjsA8XhE65vTEbHTpSw86TzF7WUZozl8gXkBKiybQ9CWzW
+         hDF1hC2bYh9xsisI5uQE6zk0VMMumKaMZeD0co3K3HgiyfwEx8CRy0udepy3zXNYO6rJ
+         Fv1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUa7lk1pz/fPwhGs5JIPWcjrri2CTrAzZK+ZGYJ8uNeRkbFV6wv3MOppTvL31V/n8McMS8gszFI@vger.kernel.org, AJvYcCWe+lBGtldHJP8cSPjQ6Sl6ujrUcTMUnfxICx3+5v1yWv/tUth7Ahsk4s7N+GLUntgIVznTLbDop/pSlsg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/wog5iEysEwilqPR91p6S/zdn5SymjjyR/e/yoAXU29RAej7q
+	lLbA7aELIwW8m/Lu0vjEou5U2oj016EPiiAksivoKcHlZ5FLqMM=
+X-Gm-Gg: ASbGncs9dIlqy2STCfzlpCkmQxYs1msdgAK4r+IbSCe1MYc/yY9dTlkoRW/38hXppfU
+	VwTSMHcPs1PPoig/BLQhWGK+4k7xZyKmDoyNtk/Aw4X7H8fx6FWOMvY3tusLAAQZTFJdOQeAcVg
+	Th6OYve/tugTEBHWX8ccycVOv15irm9LczfB7T9Sosk0caxyIQ10AkVLqSWt+ccqm94z04aPcLJ
+	PtCnd/KJWGpxOesRKXvC0umPcRSELxt9y0CBWmhb9qBgv3p7Kp35bWH/T1eBCeHpSzkAp8EoJDj
+	Q9Do3vPrQzz/QbZG6Ve6bZkGtYn80wi/Tl+LIZgJFCuliyvaoHsCCEeUQSOfwtb/W5NIYOxFQyj
+	J59iceIhClKeg7MpbbfQG
+X-Google-Smtp-Source: AGHT+IEYCg6JrwvA9ri9z4o/+GNt/2rRyXIUH7v3Awan8sMK7hJCRKxqpK5ZlWFLSeEigUNOVXrQJg==
+X-Received: by 2002:a5d:6d01:0:b0:390:f9d0:5e7 with SMTP id ffacd0b85a97d-39ad14f7f07mr1284508f8f.13.1743030287279;
+        Wed, 26 Mar 2025 16:04:47 -0700 (PDT)
+Received: from [192.168.1.3] (p5b057a21.dip0.t-ipconnect.de. [91.5.122.33])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39ad0c6bae8sm1940263f8f.68.2025.03.26.16.04.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Mar 2025 16:04:44 -0700 (PDT)
+Message-ID: <d3ca01f7-08a1-4725-9007-b6d127de0b1d@googlemail.com>
+Date: Thu, 27 Mar 2025 00:04:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <d0ade43454dee9c00689f03e8d9bd32a@paul-moore.com>
- <CAHk-=wjbahY4JjLCXNT4o3xVq2cejqBG69z+MNfHsN9FQBnbOw@mail.gmail.com>
- <CAHC9VhRExVqdhHqs0njs7NY6bFg0BfcE-gMpS30HW9O7MSDfWQ@mail.gmail.com>
- <CAHk-=wi9m8-_3cywQCohJQEQtuQ+teS4gOtBkWZrhFWzNy-5_A@mail.gmail.com>
- <CAHC9VhT3D7X=4SpO5xbYm=JUwJqTa7tn=J6QMDBV96c7VBUw4g@mail.gmail.com> <CAHk-=wiH3hoPTxX3=xTRzRuCwktf3pNzFWP45-x6AwoVAjUsUQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wiH3hoPTxX3=xTRzRuCwktf3pNzFWP45-x6AwoVAjUsUQ@mail.gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 26 Mar 2025 19:02:47 -0400
-X-Gm-Features: AQ5f1Jp1vWdVeq6koEuglRdSXOOkCRBFnBJO34u8phUSwAMef3byd67a9AAqfD4
-Message-ID: <CAHC9VhT5G6W7g9pB3VM6W7wCEJjWfYSUWNgWF+rRiQ4ZQbGMEQ@mail.gmail.com>
-Subject: Re: [GIT PULL] selinux/selinux-pr-20250323
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Cameron K. Williams" <ckwilliams.work@gmail.com>, "Kipp N. Davis" <kippndavis.work@gmx.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, selinux@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.13 000/119] 6.13.9-rc1 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250325122149.058346343@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250325122149.058346343@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 26, 2025 at 5:06=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> *WHY* is that policy needed at all?
->
-> As you correctly point out, it has NOT EXISTED for a long long time
-> already, and the code has been the old way since 4.x timeframe.
->
-> So my question literally boils down to "WHY SHOULD IT EXIST NOW"?
+Am 25.03.2025 um 13:20 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.13.9 release.
+> There are 119 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-SELinux is different things to different people, but for this
-discussion I think one of the more relevant aspects is the fact that
-SELinux is designed in such a way that you can analyze the security
-policy and reason about the security properties of the system.  For
-example, how does data from application A flow through the system?
-Can application B ever read from file C either directly or through
-some chain of applications/users?  What about writing to file D?  Who
-can manage device E, or configure various runtime knobs in the kernel.
-I could go on, but the important part is that SELinux allows an admin
-to reason about the security properties of a system in ways that
-simply aren't possible using traditional Linux access controls (mode
-bits, capabilities, etc.).  If you're curious the collection of
-analysis tools can be found below:
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-https://github.com/SELinuxProject/setools
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-An important prerequisite of this is that any "security relevant"
-operation on the system needs to have a SELinux access control point.
-If an access control is missing, the quality of the policy analysis
-suffers.
 
-> And I do not not see the point of allowing a driver module load (which
-> *is* a policy, and has been for a long time), and then disallowing
-> loading the firmware that the driver needs.
->
-> That's insane. So explain to me why you added what looks like
-> completely insane policy hooks.
+Beste Grüße,
+Peter Schneider
 
-In the security_kernel_read_file() LSM hook, the SELinux callback
-examines if the current task has the ability to perform the designated
-read operation on file A.  Loading a kernel module and loading its
-associated firmware are two events inside the kernel with the current
-task loading data from two different files, each with potentially
-different security properties, and we want to perform an access check
-on each file to ensure it is permitted under the security policy
-defined by the admin.  For example, with the kernel enforcing kernel
-module signing one administrator might be inclined to allow a given
-process to load a kernel module from a file that is more widely
-writable than a firmware image without any form of integrity
-protection.  Having two distinct permissions, system/module_load and
-system/firmware_load, allows the administrator to distinguish between
-the two different file reads in the SELinux policy.
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
 
---=20
-paul-moore.com
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
