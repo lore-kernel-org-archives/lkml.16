@@ -1,334 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EDA1F561B
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4B661F583A;
+	Wed, 26 Mar 2025 15:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743003448; cv=none; b=SAdYkB7CU8Ol6Anz3lQ+wuITKiG1Ui+lXDmxSS7xlyHD9BhQHFQZA0HBC83fowNYsW/Zs2eGzrTZzOHpxK2NU0QfPKLvOQ75e8qf1CTMqg2BulIXS2VUZlmSiuq/WMVqGpuCyvGSnpsEtQIa/x43ns7xWGee2BdltQjKZZ//JC4=
+	t=1743003451; cv=none; b=mb5wpHfIPA4SXVCIBHKF2mKgvRd2GrJrWsL74VkfCPCJHERZDsMZai/ylB5ZffV9Ngd6gRAs7ZgnWIAtAoP7EXFTmUktTAd18+sAYTSa/ZI51bCO6pBwa4X9EDni4nVKnC/wLDwf+8iww7eS1Xlo/x8M7ZjfoMDCBqi9svLvbns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743003448; c=relaxed/simple;
-	bh=ruHWqJEUQ83ZkpENeM/gfPOBC/AizL0pfZK6HBPDzWo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=axSPKYW60R+CKlnXy80bXHC0Ba6q8Ikf7ovf6CGpM0cHOs70mwcyNFRWDypEdqd9dDlR21fItXATpD+tWoi3ODbb0Xah502OhgYTd/L4DSiaTXRYETr1g5M7kN/jwD6AYSTZ94AH4ITlUQ+EJJKVG3zuZHpAtvpwtdCFsgCAC70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Arturqdt; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743003451; c=relaxed/simple;
+	bh=X7FAEgRsV2xbboJ7QKOztmy6O5MW3v9XOfceR4QGwks=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HYVB6x44gE4rKHzJcLxHvMSuDeclHUqkTGg/jvU3+nLvr8vyqHP7p99TFhf5XEokWIkzBXOQxNfKOucxfZtRiVz5VV4EC6sFsZEj8hAE/6iBPrHOaYm+ajIWrTr50hSupHUXteVvbhX7/sExJtTx1DkEUKy97HwLA4qJHFuuq4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=QCZ/1a3p; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Arturqdt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743003447; x=1774539447;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ruHWqJEUQ83ZkpENeM/gfPOBC/AizL0pfZK6HBPDzWo=;
-  b=ArturqdtKtaiRn3bPCZYD1L7m4CPYe1h5E9IFb5wSbpyeXaHhwJ2YB3U
-   K3JJ4SkdIqmwwrVoqH8dzd5GCzva3NJrZGxJ1lUK9OG8bZGiXL/uRQyZA
-   D5Omwa2/NeuEtZMRm8LYLL7gsFr2GMe64Ycr+8v5tv7zrIKNG0ePDiZ2G
-   ugsdBbVARLdMss6oWTSMMHRjfaofFGZY0xr+WPwAFZp1FXOr1TJO5smfu
-   198TvL23IGqzepH3eyrffU/tM+VvKY0gqEcA3L6EgmARkapPZdyikvi0H
-   GK1dRZBvWo3YORSEEeItv/03ASodWlSELJT2wdzhTpb3eieAfBEh2NJx8
-   A==;
-X-CSE-ConnectionGUID: A+1pTX6VRkmkIunjDmQD1w==
-X-CSE-MsgGUID: 52/XpoFGTg20QUH8E5mhxw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="55665454"
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="55665454"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 08:37:27 -0700
-X-CSE-ConnectionGUID: 2w2sLTX4QfGOaa78ueDF+g==
-X-CSE-MsgGUID: lyD+9LdPQrmteMaw3keS4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="129923421"
-Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 08:37:21 -0700
-From: Alexander Usyskin <alexander.usyskin@intel.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Karthik Poosa <karthik.poosa@intel.com>
-Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
-	Oren Weil <oren.jer.weil@intel.com>,
-	linux-mtd@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Alexander Usyskin <alexander.usyskin@intel.com>,
-	Tomas Winkler <tomasw@gmail.com>
-Subject: [PATCH v7 02/12] mtd: add driver for intel graphics non-volatile memory device
-Date: Wed, 26 Mar 2025 17:26:13 +0200
-Message-ID: <20250326152623.3897204-3-alexander.usyskin@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250326152623.3897204-1-alexander.usyskin@intel.com>
-References: <20250326152623.3897204-1-alexander.usyskin@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="QCZ/1a3p"
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 204B22036597;
+	Wed, 26 Mar 2025 08:37:29 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 204B22036597
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743003449;
+	bh=WjzFIgjV9jVjkAChBrIFVJQnAYd6k3ZAKIpA/MaT4yo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QCZ/1a3p+ZIUFWcAhkJvic5IwY8U0ufXEKXOuGNNCfYPOL2C8wZRVb0oHeZ26p7MN
+	 55ghDNm1zZbkc7h9pH8j0WaY5qfjqpwdKTYWPi2UX1+7ck4WlgOZl7f4IIiSvY3N3U
+	 3LSW1a2/cC6In4mf7262M02Vm2HMR/pY2ogrm5bY=
+Message-ID: <83b983a4-064e-4a81-9c58-239b630eb299@linux.microsoft.com>
+Date: Wed, 26 Mar 2025 08:37:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v6 11/11] PCI: hv: Get vPCI MSI IRQ domain
+ from DeviceTree
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+ catalin.marinas@arm.com, conor+dt@kernel.org, dan.carpenter@linaro.org,
+ dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com,
+ hpa@zytor.com, joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com,
+ kys@microsoft.com, lenb@kernel.org, lpieralisi@kernel.org,
+ manivannan.sadhasivam@linaro.org, mark.rutland@arm.com, maz@kernel.org,
+ mingo@redhat.com, oliver.upton@linux.dev, robh@kernel.org,
+ ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
+ tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org,
+ yuzenghui@huawei.com, devicetree@vger.kernel.org, kvmarm@lists.linux.dev,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
+ apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
+ sunilmut@microsoft.com
+References: <20250315001931.631210-1-romank@linux.microsoft.com>
+ <20250315001931.631210-12-romank@linux.microsoft.com>
+ <CAJZ5v0jNEO2VcwmMXLZaS+Kqg3iBgHcWb65f90HKUADtPuvgqA@mail.gmail.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <CAJZ5v0jNEO2VcwmMXLZaS+Kqg3iBgHcWb65f90HKUADtPuvgqA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Add auxiliary driver for intel discrete graphics
-non-volatile memory device.
 
-CC: Lucas De Marchi <lucas.demarchi@intel.com>
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Co-developed-by: Tomas Winkler <tomasw@gmail.com>
-Signed-off-by: Tomas Winkler <tomasw@gmail.com>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
----
- MAINTAINERS                        |   7 ++
- drivers/mtd/devices/Kconfig        |  11 +++
- drivers/mtd/devices/Makefile       |   1 +
- drivers/mtd/devices/mtd_intel_dg.c | 138 +++++++++++++++++++++++++++++
- include/linux/intel_dg_nvm_aux.h   |  27 ++++++
- 5 files changed, 184 insertions(+)
- create mode 100644 drivers/mtd/devices/mtd_intel_dg.c
- create mode 100644 include/linux/intel_dg_nvm_aux.h
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1554908c94cc..6b6c8cdafc16 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11594,6 +11594,13 @@ L:	linux-kernel@vger.kernel.org
- S:	Supported
- F:	arch/x86/include/asm/intel-family.h
- 
-+INTEL DISCRETE GRAPHICS NVM MTD DRIVER
-+M:	Alexander Usyskin <alexander.usyskin@intel.com>
-+L:	linux-mtd@lists.infradead.org
-+S:	Supported
-+F:	drivers/mtd/devices/mtd_intel_dg.c
-+F:	include/linux/intel_dg_nvm_aux.h
-+
- INTEL DRM DISPLAY FOR XE AND I915 DRIVERS
- M:	Jani Nikula <jani.nikula@linux.intel.com>
- M:	Rodrigo Vivi <rodrigo.vivi@intel.com>
-diff --git a/drivers/mtd/devices/Kconfig b/drivers/mtd/devices/Kconfig
-index ff2f9e55ef28..59be6d3f0d32 100644
---- a/drivers/mtd/devices/Kconfig
-+++ b/drivers/mtd/devices/Kconfig
-@@ -183,6 +183,17 @@ config MTD_POWERNV_FLASH
- 	  platforms from Linux. This device abstracts away the
- 	  firmware interface for flash access.
- 
-+config MTD_INTEL_DG
-+	tristate "Intel Discrete Graphics non-volatile memory driver"
-+	depends on AUXILIARY_BUS
-+	depends on MTD
-+	help
-+	  This provides an MTD device to access Intel Discrete Graphics
-+	  non-volatile memory.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called mtd-intel-dg.
-+
- comment "Disk-On-Chip Device Drivers"
- 
- config MTD_DOCG3
-diff --git a/drivers/mtd/devices/Makefile b/drivers/mtd/devices/Makefile
-index d11eb2b8b6f8..9fe4ce9cffde 100644
---- a/drivers/mtd/devices/Makefile
-+++ b/drivers/mtd/devices/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_MTD_SST25L)	+= sst25l.o
- obj-$(CONFIG_MTD_BCM47XXSFLASH)	+= bcm47xxsflash.o
- obj-$(CONFIG_MTD_ST_SPI_FSM)    += st_spi_fsm.o
- obj-$(CONFIG_MTD_POWERNV_FLASH)	+= powernv_flash.o
-+obj-$(CONFIG_MTD_INTEL_DG)	+= mtd_intel_dg.o
- 
- 
- CFLAGS_docg3.o			+= -I$(src)
-diff --git a/drivers/mtd/devices/mtd_intel_dg.c b/drivers/mtd/devices/mtd_intel_dg.c
-new file mode 100644
-index 000000000000..963a88cacc6c
---- /dev/null
-+++ b/drivers/mtd/devices/mtd_intel_dg.c
-@@ -0,0 +1,138 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright(c) 2019-2025, Intel Corporation. All rights reserved.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/intel_dg_nvm_aux.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/string.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+
-+struct intel_dg_nvm {
-+	struct kref refcnt;
-+	void __iomem *base;
-+	size_t size;
-+	unsigned int nregions;
-+	struct {
-+		const char *name;
-+		u8 id;
-+		u64 offset;
-+		u64 size;
-+	} regions[] __counted_by(nregions);
-+};
-+
-+static void intel_dg_nvm_release(struct kref *kref)
-+{
-+	struct intel_dg_nvm *nvm = container_of(kref, struct intel_dg_nvm, refcnt);
-+	int i;
-+
-+	pr_debug("freeing intel_dg nvm\n");
-+	for (i = 0; i < nvm->nregions; i++)
-+		kfree(nvm->regions[i].name);
-+	kfree(nvm);
-+}
-+
-+static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
-+			      const struct auxiliary_device_id *aux_dev_id)
-+{
-+	struct intel_dg_nvm_dev *invm = auxiliary_dev_to_intel_dg_nvm_dev(aux_dev);
-+	struct device *device;
-+	struct intel_dg_nvm *nvm;
-+	unsigned int nregions;
-+	unsigned int i, n;
-+	char *name;
-+	int ret;
-+
-+	device = &aux_dev->dev;
-+
-+	/* count available regions */
-+	for (nregions = 0, i = 0; i < INTEL_DG_NVM_REGIONS; i++) {
-+		if (invm->regions[i].name)
-+			nregions++;
-+	}
-+
-+	if (!nregions) {
-+		dev_err(device, "no regions defined\n");
-+		return -ENODEV;
-+	}
-+
-+	nvm = kzalloc(struct_size(nvm, regions, nregions), GFP_KERNEL);
-+	if (!nvm)
-+		return -ENOMEM;
-+
-+	kref_init(&nvm->refcnt);
-+
-+	nvm->nregions = nregions;
-+	for (n = 0, i = 0; i < INTEL_DG_NVM_REGIONS; i++) {
-+		if (!invm->regions[i].name)
-+			continue;
-+
-+		name = kasprintf(GFP_KERNEL, "%s.%s",
-+				 dev_name(&aux_dev->dev), invm->regions[i].name);
-+		if (!name)
-+			continue;
-+		nvm->regions[n].name = name;
-+		nvm->regions[n].id = i;
-+		n++;
-+	}
-+	nvm->nregions = n; /* in case where kasprintf fail */
-+
-+	nvm->base = devm_ioremap_resource(device, &invm->bar);
-+	if (IS_ERR(nvm->base)) {
-+		dev_err(device, "mmio not mapped\n");
-+		ret = PTR_ERR(nvm->base);
-+		goto err;
-+	}
-+
-+	dev_set_drvdata(&aux_dev->dev, nvm);
-+
-+	return 0;
-+
-+err:
-+	kref_put(&nvm->refcnt, intel_dg_nvm_release);
-+	return ret;
-+}
-+
-+static void intel_dg_mtd_remove(struct auxiliary_device *aux_dev)
-+{
-+	struct intel_dg_nvm *nvm = dev_get_drvdata(&aux_dev->dev);
-+
-+	if (!nvm)
-+		return;
-+
-+	dev_set_drvdata(&aux_dev->dev, NULL);
-+
-+	kref_put(&nvm->refcnt, intel_dg_nvm_release);
-+}
-+
-+static const struct auxiliary_device_id intel_dg_mtd_id_table[] = {
-+	{
-+		.name = "i915.nvm",
-+	},
-+	{
-+		.name = "xe.nvm",
-+	},
-+	{
-+		/* sentinel */
-+	}
-+};
-+MODULE_DEVICE_TABLE(auxiliary, intel_dg_mtd_id_table);
-+
-+static struct auxiliary_driver intel_dg_mtd_driver = {
-+	.probe  = intel_dg_mtd_probe,
-+	.remove = intel_dg_mtd_remove,
-+	.driver = {
-+		/* auxiliary_driver_register() sets .name to be the modname */
-+	},
-+	.id_table = intel_dg_mtd_id_table
-+};
-+
-+module_auxiliary_driver(intel_dg_mtd_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Intel Corporation");
-+MODULE_DESCRIPTION("Intel DGFX MTD driver");
-diff --git a/include/linux/intel_dg_nvm_aux.h b/include/linux/intel_dg_nvm_aux.h
-new file mode 100644
-index 000000000000..68df634c994c
---- /dev/null
-+++ b/include/linux/intel_dg_nvm_aux.h
-@@ -0,0 +1,27 @@
-+/* SPDX-License-Identifier: MIT */
-+/*
-+ * Copyright(c) 2019-2025, Intel Corporation. All rights reserved.
-+ */
-+
-+#ifndef __INTEL_DG_NVM_AUX_H__
-+#define __INTEL_DG_NVM_AUX_H__
-+
-+#include <linux/auxiliary_bus.h>
-+
-+#define INTEL_DG_NVM_REGIONS 13
-+
-+struct intel_dg_nvm_region {
-+	const char *name;
-+};
-+
-+struct intel_dg_nvm_dev {
-+	struct auxiliary_device aux_dev;
-+	bool writable_override;
-+	struct resource bar;
-+	const struct intel_dg_nvm_region *regions;
-+};
-+
-+#define auxiliary_dev_to_intel_dg_nvm_dev(auxiliary_dev) \
-+	container_of(auxiliary_dev, struct intel_dg_nvm_dev, aux_dev)
-+
-+#endif /* __INTEL_DG_NVM_AUX_H__ */
+On 3/26/2025 7:56 AM, Rafael J. Wysocki wrote:
+> On Sat, Mar 15, 2025 at 1:19 AM Roman Kisel <romank@linux.microsoft.com> wrote:
+
+[...]
+
+>> -                                                         chip_data);
+>> +#ifdef CONFIG_ACPI
+>> +       if (!acpi_disabled)
+>> +               irq_domain_parent = hv_pci_acpi_irq_domain_parent();
+>> +#endif
+>> +#if defined(CONFIG_OF)
+> 
+> Why don't you do
+> 
+> #ifdef CONFIG_OF
+> 
+> here for consistency?
+> 
+
+Agree, that'd be easier on the eyes :) Will fix in the next version,
+thanks for the suggestion!
+
+>> +       if (!irq_domain_parent)
+>> +               irq_domain_parent = hv_pci_of_irq_domain_parent();
+>> +#endif
+>> +       if (!irq_domain_parent) {
+>> +               WARN_ONCE(1, "Invalid firmware configuration for VMBus interrupts\n");
+>> +               ret = -EINVAL;
+>> +               goto free_chip;
+>> +       }
+>> +
+>> +       hv_msi_gic_irq_domain = irq_domain_create_hierarchy(
+>> +               irq_domain_parent, 0, HV_PCI_MSI_SPI_NR,
+>> +               fn, &hv_pci_domain_ops,
+>> +               chip_data);
+>>
+>>          if (!hv_msi_gic_irq_domain) {
+>>                  pr_err("Failed to create Hyper-V arm64 vPCI MSI IRQ domain\n");
+>> --
+
 -- 
-2.43.0
+Thank you,
+Roman
 
