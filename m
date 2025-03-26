@@ -1,160 +1,164 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60911F4197
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798AB1F4622
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743003428; cv=none; b=cGsJ6UwW5YkHVDJKQV/lnWciM9YhBKl/kQJ5ucTfvcRZYOzbELCkDFYfV1Qbh5oKa4FIFV9bGugL+WuxnQf9S/GfWfyAwJb801zH7QxUZkmKyuk6Ic6NnpDTzJXMi7hWjnlno2gE+Qn8Jr3Q7cd2CXlG/Ybw1qAHV4PPUjS/lcU=
+	t=1743003437; cv=none; b=KB1AvoGHjbRlNIl5O694Rv4ZUR6Y4Bc168jKYJmIgs3hPrsvFmy5cq17Mz4DwxFUghDsbMRePrahdoKFOsYVXQN+VkM5YOjo9ibOVD7nnVPU7YVmQXVZSI74jwaO9p4r+hYr7eEqQddk1KhslWGO+SABhsuCl0eHIM4hCQSlEQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743003428; c=relaxed/simple;
-	bh=ZH/Qib1KROeOJAvECS53oTCCdB2Xyz1o3yyLgdvDp9c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K84ZGpRFEhz5PSbW1X5ITqYtcAqHf0bcaiGk3MECgkmwgYgf4kaTqMw2D9JiQkKq90nZp3LX4NAONiL4FZVBHaP1NufvlaWVK7dZP76xhGoa/dKgXpYU+OVZCMwSguYLku9iC6oHQ7XP7eahAx+LKv30/NS7bf0YNhxFr+tFe60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=U4/lSeD6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=y68hG9kK; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743003437; c=relaxed/simple;
+	bh=etz60a6MvWygM3PUJqxrf9Ighj+E4OBlFZOKYs0hJ/k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cv1CbRNJVlpQH38X0yamYUc+Glc/lObDbB/xc/Og31CjnHuAQL4Tvp5koYlGYF3r2KLgf+4LzFCya9zpntMliaxUdOVtl0GeyTrF4wKeuQ0pC+EwsQ8+rjeBQAFzKw48R/VCE9VtoWZcwOB3zwmGB/RD/A/q/pJrZ+hit9Y7XU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fGOJw8BP; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U4/lSeD6";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y68hG9kK"
-Date: Wed, 26 Mar 2025 16:37:03 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743003424;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DboYwCcNZGXRf6439BqA6sDYH2xWbE0J5kLD+XvfReE=;
-	b=U4/lSeD6smV6aX6xEK55wCzPzYTc87kevaKD/XFlzbnkEohLUwT/U1S4k0OW2l7184qSNa
-	i0n8W8V4UmWE1A3stOCg9q0JeK8/mVISLE027w0dBcmXbIJa0x/IdR3M1ajzpqtOVEDFrm
-	PdhwnUFYOW5w8K663M1ZiwtGo8Q0qIfC7WtqLuZQQWK6JOebSsH+fZYufnPofR70KzkiMf
-	BAQ9cjAFn7vWDcWiWwZLHOGrYrMr/bAtH93uiFVHxSfn8E6bPkyG5L3AhXhhWQiJnC302k
-	3lVW5+sKMSBYHMglEuaLjID3Jcp0PQDp6d9D+ZH4z3V2Jncvbq2CiSVKCtouFg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743003424;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DboYwCcNZGXRf6439BqA6sDYH2xWbE0J5kLD+XvfReE=;
-	b=y68hG9kKuGAA+uhJrcOy3pj1a9ywJANa4iyka0FgkB6XQnmh5L1o7DZetk6H/vQROwqi7G
-	qAMdWkEARtxc91Bw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: linux-kernel@vger.kernel.org
-Cc: =?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v10 18/21] futex: Rework SET_SLOTS
-Message-ID: <20250326153703.n_PgVpun@linutronix.de>
-References: <20250312151634.2183278-1-bigeasy@linutronix.de>
- <20250312151634.2183278-19-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fGOJw8BP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743003436; x=1774539436;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=etz60a6MvWygM3PUJqxrf9Ighj+E4OBlFZOKYs0hJ/k=;
+  b=fGOJw8BP2iavmptqqMv6qETpPv6HVkb9r+ZfH6VLkI68543nYKkTbRL3
+   IEPDP4Zds3dwfG2A2BRgwQYTdMTuEgEZLr/C4Dtes2wWdXB6P/qPJwjOl
+   Y8bvgXLpmMKGL0DQVG0HG5BYQRlTBizLQfsUP/fk6K5dzUfbLWuWJxXKm
+   +Nv/L4XGn1sT1wjbioB17tPptvD3BnefUTEYD2cnhNu2b5kJnFWEuU28d
+   bTukLcMIT2A3L2m99f3+j6Q40gTYmVzm8xLTMFglf2BFOzF/1HqeJQMQm
+   2fdOgF5pf6xJV2vuM72II2z0IcRguZlgXb5zg1fDiT55NIduFFoNjMY5P
+   g==;
+X-CSE-ConnectionGUID: gREOqHeiQNKZYrUXZaucLQ==
+X-CSE-MsgGUID: B4MdLGLhTfCHEo2N58sCmw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="55665419"
+X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
+   d="scan'208";a="55665419"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 08:37:15 -0700
+X-CSE-ConnectionGUID: r2ZP/49wQz6sR25R0u4h7w==
+X-CSE-MsgGUID: Rvn45KkhT3iChDS164wt0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
+   d="scan'208";a="129923374"
+Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 08:37:09 -0700
+From: Alexander Usyskin <alexander.usyskin@intel.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Karthik Poosa <karthik.poosa@intel.com>
+Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
+	Oren Weil <oren.jer.weil@intel.com>,
+	linux-mtd@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Alexander Usyskin <alexander.usyskin@intel.com>
+Subject: [PATCH v7 00/12] mtd: add driver for Intel discrete graphics
+Date: Wed, 26 Mar 2025 17:26:11 +0200
+Message-ID: <20250326152623.3897204-1-alexander.usyskin@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250312151634.2183278-19-bigeasy@linutronix.de>
+Content-Transfer-Encoding: 8bit
 
-On 2025-03-12 16:16:31 [+0100], To linux-kernel@vger.kernel.org wrote:
+Add driver for access to Intel discrete graphics card
+internal NVM device.
+Expose device on auxiliary bus by i915 and Xe drivers and
+provide mtd driver to register this device with MTD framework.
 
-I am folding and testing and
-=E2=80=A6
-> +static bool futex_pivot_pending(struct mm_struct *mm)
-> +{
-> +	struct futex_private_hash *fph;
-> +
-> +	guard(rcu)();
-> +
-> +	if (!mm->futex_phash_new)
-> +		return false;
-> +
-> +	fph =3D rcu_dereference(mm->futex_phash);
-> +	return !rcuref_read(&fph->users);
-> +}
-=E2=80=A6
-> +static int futex_hash_allocate(unsigned int hash_slots, bool custom)
-=E2=80=A6
->  		/*
-> -		 * Will set mm->futex_phash_new on failure;
-> -		 * futex_get_private_hash() will try again.
-> +		 * Only let prctl() wait / retry; don't unduly delay clone().
->  		 */
-> -		__futex_pivot_hash(mm, fph);
-> +again:
-> +		wait_var_event(mm, futex_pivot_pending(mm));
+This is a rewrite of "drm/i915/spi: spi access for discrete graphics"
+and "spi: add driver for Intel discrete graphics"
+series with connection to the Xe driver and splitting
+the spi driver part to separate module in mtd subsystem.
 
-This wait condition should be !futex_pivot_pending(). Otherwise it
-blocks. We want to wait until the current futex_phash_new assignment is
-gone and the ::users counter is >0.
+This series intended to be pushed through drm-xe-next.
 
-This brings me to the wake condition of which we have two:
-> @@ -207,6 +203,7 @@ static bool __futex_pivot_hash(struct mm_struct *mm,
->  	}
->  	rcu_assign_pointer(mm->futex_phash, new);
->  	kvfree_rcu(fph, rcu);
-> +	wake_up_var(mm);
->  	return true;
->  }
-> =20
-> @@ -262,7 +259,8 @@ void futex_private_hash_put(struct futex_private_hash=
- *fph)
->  	 * Ignore the result; the DEAD state is picked up
->  	 * when rcuref_get() starts failing via rcuref_is_dead().
->  	 */
-> -	bool __maybe_unused ignore =3D rcuref_put(&fph->users);
-> +	if (rcuref_put(&fph->users))
-> +		wake_up_var(fph->mm);
->  }
+V2: Replace dev_* prints with drm_* prints in drm (xe and i915) patches.
+    Enable NVM device on Battlemage HW (xe driver patch)
+    Fix overwrite register address (xe driver patch)
+    Add Rodrigo's r-b
 
-The one in __futex_pivot_hash() makes sense because ::futex_phash_new is
-NULL and the users counter is set to one.
-The wake in futex_private_hash_put() doesn't make sense. At this point
-we have ::futex_phash_new set and rcuref_read() returns 0. So we
-schedule again after the wake.
-Therefore we could remove the wake from futex_private_hash_put().
-However, if there is no futex operation (unlikely) then we are stuck in
-wait_var_event() forever. Therefore I would suggest to:
+V3: Use devm_pm_runtime_enable to simplify flow.
+    Drop print in i915 unload that was accidentally set as error.
+    Drop HAS_GSC_NVM macro in line with latest Xe changes.
+    Add more Rodrigo's r-b and Miquel's ack.
 
-diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index 65523f3cfe32e..64c7be8df955c 100644
---- a/kernel/futex/core.c
-+++ b/kernel/futex/core.c
-@@ -210,7 +210,6 @@ static bool __futex_pivot_hash(struct mm_struct *mm,
- 	}
- 	rcu_assign_pointer(mm->futex_phash, new);
- 	kvfree_rcu(fph, rcu);
--	wake_up_var(mm);
- 	return true;
- }
-=20
-@@ -1522,10 +1521,10 @@ static bool futex_pivot_pending(struct mm_struct *m=
-m)
- 	guard(rcu)();
-=20
- 	if (!mm->futex_phash_new)
--		return false;
-+		return true;
-=20
- 	fph =3D rcu_dereference(mm->futex_phash);
--	return !rcuref_read(&fph->users);
-+	return rcuref_is_dead(&fph->users);
- }
-=20
- static bool futex_hash_less(struct futex_private_hash *a,
+V4: Add patch that always creates mtd master device
+    and adjust mtd-intel-dg power management to use this device.
 
--> Attempt to replace if there no replacement pending (futex_phash_new =3D=
-=3D NULL).
--> If there is replacement (futex_phash_new !=3D NULL) then wait until the
-   current private hash is DEAD. This happens once the last user is gone
-   and gives the wakeup.
+V5: Fix master device creation to accomodate for devices without
+    partitions (create partitoned master in this case)
+    Rebase over latest drm-xe-next
+    Add ack's
+V6: Fix master device release (use rigth idr in release)
+    Rebase over latest drm-xe-next
+    Grammar and style fixes
 
-Sebastian
+V7: Add patch with non-posted erase support (fix hang on BMG)
+    Rebase over latest drm-xe-next
+
+Abliyev, Reuven (1):
+  drm/xe/nvm: add support for non-posted erase
+
+Alexander Usyskin (11):
+  mtd: core: always create master device
+  mtd: add driver for intel graphics non-volatile memory device
+  mtd: intel-dg: implement region enumeration
+  mtd: intel-dg: implement access functions
+  mtd: intel-dg: register with mtd
+  mtd: intel-dg: align 64bit read and write
+  mtd: intel-dg: wake card on operations
+  drm/i915/nvm: add nvm device for discrete graphics
+  drm/i915/nvm: add support for access mode
+  drm/xe/nvm: add on-die non-volatile memory device
+  drm/xe/nvm: add support for access mode
+
+ MAINTAINERS                           |   7 +
+ drivers/gpu/drm/i915/Makefile         |   4 +
+ drivers/gpu/drm/i915/i915_driver.c    |   6 +
+ drivers/gpu/drm/i915/i915_drv.h       |   3 +
+ drivers/gpu/drm/i915/i915_reg.h       |   1 +
+ drivers/gpu/drm/i915/intel_nvm.c      | 115 ++++
+ drivers/gpu/drm/i915/intel_nvm.h      |  15 +
+ drivers/gpu/drm/xe/Makefile           |   1 +
+ drivers/gpu/drm/xe/regs/xe_gsc_regs.h |   4 +
+ drivers/gpu/drm/xe/xe_device.c        |   5 +
+ drivers/gpu/drm/xe/xe_device_types.h  |   6 +
+ drivers/gpu/drm/xe/xe_heci_gsc.c      |   5 +-
+ drivers/gpu/drm/xe/xe_nvm.c           | 161 +++++
+ drivers/gpu/drm/xe/xe_nvm.h           |  15 +
+ drivers/gpu/drm/xe/xe_pci.c           |   6 +
+ drivers/mtd/devices/Kconfig           |  11 +
+ drivers/mtd/devices/Makefile          |   1 +
+ drivers/mtd/devices/mtd_intel_dg.c    | 884 ++++++++++++++++++++++++++
+ drivers/mtd/mtdcore.c                 | 141 ++--
+ drivers/mtd/mtdcore.h                 |   2 +-
+ drivers/mtd/mtdpart.c                 |  17 +-
+ include/linux/intel_dg_nvm_aux.h      |  29 +
+ 22 files changed, 1385 insertions(+), 54 deletions(-)
+ create mode 100644 drivers/gpu/drm/i915/intel_nvm.c
+ create mode 100644 drivers/gpu/drm/i915/intel_nvm.h
+ create mode 100644 drivers/gpu/drm/xe/xe_nvm.c
+ create mode 100644 drivers/gpu/drm/xe/xe_nvm.h
+ create mode 100644 drivers/mtd/devices/mtd_intel_dg.c
+ create mode 100644 include/linux/intel_dg_nvm_aux.h
+
+-- 
+2.43.0
+
