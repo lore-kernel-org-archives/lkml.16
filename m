@@ -1,160 +1,63 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99D31A0BFD
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361EC1A23AD;
+	Wed, 26 Mar 2025 08:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742976884; cv=none; b=Fvwn+4fR+FhZmmpZKwnw9dRVrCkRYaIPVpO/INuXCuBcgJKgi3s5hevHyj5oC0BCsS+S5OKZwjRh1k0OCwjHF9q/shPAEQ9MRWZOXVOvm1c04LMtzzSbed2z1AN9/iqRzj6sLzzD7kBw5+B6qG+lJlR4PMQ6CsN/lH1nxsIG4Uw=
+	t=1742976902; cv=none; b=nV6h0JuofkYSFSoJnIC16OWtKIjxfCuGrQWtDha/HXPrDvR8CA2buwyK+Ic3B0TBSfUk6PBmdtmWvFqoRl9D4EjqUEjlC1mV2/vVtE0P92FmDNixdSnDCFCbQPqAF+7asMd1I/urOQ/1QrTqYmOTCEfuDrepTr05L4ek4Pxx4Vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742976884; c=relaxed/simple;
-	bh=d94Wug1j448Vfloe6YPhxvFw+vcX7h6NTaCwAPlBwtM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KGCf3GT3AGqlK7MSx9GtFUaHLqSETx1ZUpznJhe+7REguKvksMzDGdQpdJYoCRMDe1dwCo5+nNWZQ3BrYZRb+N/IwB8kmsB4oMtky0D9Z8x5qENG6fi0Qb1Bdhh7JxwBTLp5js5LuHGRxW5LXYtfrB7YRu1lhERwW2k/TnjNh4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=nE5nNb8m; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1742976902; c=relaxed/simple;
+	bh=gAniqJkuUHX0bLXDcqTZVfwYS6QnDyYuQRRlQh3xL/Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qgi6dC/yPOSM35v21fHuFxeK4ABb08Ou6jerf1UA3nuMXKJsJ9Qk3qPzRBPnB+X4rxbEV9H1RtU/WFa82HIZ5ne+qa2ZKNQE6lO8mg5LefUL2VDiWgLLmD5h5GErqf7cq47X9xIRZU3ZSEMs7djynWkh1Zi+nwy+7F0E+UgsYoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nhssw/C0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="nE5nNb8m"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4ZN0206w5Hz9vqS;
-	Wed, 26 Mar 2025 09:14:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1742976873; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yDJA3AFDro/Gd5EG3lHw9enC/cyhwBJuPgmUI1A4KUE=;
-	b=nE5nNb8m8bZemKMCNX24G3Le0cffXoaY/iJvd1FWcLTn9VvjyezQ1jXVRvi1B0agxn8aki
-	ROuIguCRba8UOmxbLRvhfHLUelFM7stYMXw1V8NzJZnR1cOxLknFzOC7aiEC5svGfDOcnO
-	EoN1ZTzBPOvhvo3vssjN/1TWOZSIK3IIwHHTm6VdY3V0ByiL6f8OuH98+Xx/98Rc4l75Sg
-	Hmshs9urgCo4E09TSqRbe40CR8wicQfnSmRuG/+wuoPO7iFpVPTQJd0vzjPKWN4hQYWc6d
-	EwQjvSY/VSXOkzvi4+kpWRIMh8je9xyqRu2DN2YxwPkK4YUZwBYHU9YDVP0WpQ==
-Message-ID: <8e636b5ec44b8b5d859a18a4a21ca95d74e45587.camel@mailbox.org>
-Subject: Re: [PATCH] drm/sched: Add return value for
- drm_sched_entity_push_job
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Qianyi Liu <liuqianyi125@gmail.com>, airlied@gmail.com, 
- ckoenig.leichtzumerken@gmail.com, dakr@kernel.org, daniel@ffwll.ch, 
- maarten.lankhorst@linux.intel.com, matthew.brost@intel.com,
- mripard@kernel.org,  phasta@kernel.org, tzimmermann@suse.de
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Date: Wed, 26 Mar 2025 09:14:28 +0100
-In-Reply-To: <20250326070441.1515428-1-liuqianyi125@gmail.com>
-References: <20250326070441.1515428-1-liuqianyi125@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nhssw/C0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5DE6C4CEE2;
+	Wed, 26 Mar 2025 08:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742976901;
+	bh=gAniqJkuUHX0bLXDcqTZVfwYS6QnDyYuQRRlQh3xL/Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Nhssw/C0U+wwnY8xBlcTunqXAO/YAjz2Y0JICwMOInOIIbhtZb32J/if7AZYDjQ/n
+	 +6fQqMVw6e2npjuMDnyK9Uorf/nXu92RWjuaJz9FNIjhIoQ2SQoDNbxgYDgUPydkPd
+	 qEUu1oujj0YCBZqNSFRLIs60GbBf8krWzODE3T9YpPGMYXX2s8NMwYWekc0GvOChw0
+	 fglOKrE3V5hKGwew8mYR6x6jAaeMsTdGvGtEQP6oCM/vybtc7idXH4yLhGE3aCH/pT
+	 NL318W3jc8zV/TamNSVmF9Tetnm/ST6rQBE2tUXFrGbfQKHFNeuyHrmGjgF15WW8+S
+	 m5PW2lQT6BXcw==
+Date: Wed, 26 Mar 2025 09:14:57 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Hu Ziji <huziji@marvell.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-mmc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] dt-bindings: mmc: marvell,xenon-sdhci: Drop
+ requiring 2 clocks
+Message-ID: <20250326-light-shellfish-of-aptitude-2e64aa@krzk-bin>
+References: <20250320-dt-marvell-mmc-v1-0-e51002ea0238@kernel.org>
+ <20250320-dt-marvell-mmc-v1-3-e51002ea0238@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-META: idg8pyi8xtpzbgx6zcuj4mk6zjejcrna
-X-MBO-RS-ID: 1dd07560aa5f956bd1a
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250320-dt-marvell-mmc-v1-3-e51002ea0238@kernel.org>
 
-Hello,
-
-thanks for your patch
-
-On Wed, 2025-03-26 at 15:04 +0800, Qianyi Liu wrote:
-> Currently drm_sched_entity_push_job() has no return value to indicate
-> operation status. This makes it difficult for callers to handle error
-> conditions properly.
->=20
-> Add a int return value to drm_sched_entity_push_job() that returns 0
-> on
-> success or a negative error code (e.g., -EINVAL) on failure. This
-> allows
-> callers to:
->=20
-> 1. Detect when job submission fails
-> 2. Perform proper cleanup (e.g., release job and fence allocations)
-> 3. Avoid potential memory leaks in error paths
->=20
-> Signed-off-by: Qianyi Liu <liuqianyi125@gmail.com>
+On Thu, Mar 20, 2025 at 04:35:48PM -0500, Rob Herring (Arm) wrote:
+> The "axi" clock is optional on at least the "marvell,armada-ap806-sdhci"
+> variant. Not sure what's correct here, so just drop the constraint.
+> 
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
-> =C2=A0drivers/gpu/drm/scheduler/sched_entity.c | 8 ++++++--
-> =C2=A0include/drm/gpu_scheduler.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 +-
-> =C2=A02 files changed, 7 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/scheduler/sched_entity.c
-> b/drivers/gpu/drm/scheduler/sched_entity.c
-> index bd39db7bb240..f31964e76062 100644
-> --- a/drivers/gpu/drm/scheduler/sched_entity.c
-> +++ b/drivers/gpu/drm/scheduler/sched_entity.c
-> @@ -579,8 +579,10 @@ void drm_sched_entity_select_rq(struct
-> drm_sched_entity *entity)
-> =C2=A0 * fence sequence number this function should be called with
-> drm_sched_job_arm()
-> =C2=A0 * under common lock for the struct drm_sched_entity that was set u=
-p
-> for
-> =C2=A0 * @sched_job in drm_sched_job_init().
-> + *
-> + * Returns 0 on success or a negative error code on failure.
-> =C2=A0 */
-> -void drm_sched_entity_push_job(struct drm_sched_job *sched_job)
-> +int drm_sched_entity_push_job(struct drm_sched_job *sched_job)
+>  .../devicetree/bindings/mmc/marvell,xenon-sdhci.yaml | 20 --------------------
+>  1 file changed, 20 deletions(-)
 
-I am not convinced this is a justified change, because:
-   1. The entity being dead is the only error that might occur
-   2. That error is extremely unlikely
-   3. It does not occur in all existing upstream drivers
-   4. Drivers typically first prevent userspace from pushing stuff to
-      an entity, then tear the entity down, then (in case of firmware
-      schedulers) tear the entire scheduler down.
-   5. Your patch doesn't add an upstream user for the error code,
-      showing how it's better / different from how existing drivers
-      handle their entity-pushing.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Thus, pushing to a killed entity is a gross misdesign of the driver,
-which should become visible during development and can't be handled
-during runtime in a reasonable manner.
-
-P.
-
-> =C2=A0{
-> =C2=A0 struct drm_sched_entity *entity =3D sched_job->entity;
-> =C2=A0 bool first;
-> @@ -609,7 +611,7 @@ void drm_sched_entity_push_job(struct
-> drm_sched_job *sched_job)
-> =C2=A0 spin_unlock(&entity->lock);
-> =C2=A0
-> =C2=A0 DRM_ERROR("Trying to push to a killed entity\n");
-> - return;
-> + return -EINVAL;
-> =C2=A0 }
-> =C2=A0
-> =C2=A0 rq =3D entity->rq;
-> @@ -626,5 +628,7 @@ void drm_sched_entity_push_job(struct
-> drm_sched_job *sched_job)
-> =C2=A0
-> =C2=A0 drm_sched_wakeup(sched);
-> =C2=A0 }
-> +
-> + return 0;
-> =C2=A0}
-> =C2=A0EXPORT_SYMBOL(drm_sched_entity_push_job);
-> diff --git a/include/drm/gpu_scheduler.h
-> b/include/drm/gpu_scheduler.h
-> index 50928a7ae98e..48a263571bab 100644
-> --- a/include/drm/gpu_scheduler.h
-> +++ b/include/drm/gpu_scheduler.h
-> @@ -589,7 +589,7 @@ int drm_sched_job_init(struct drm_sched_job *job,
-> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct drm_sched_entity *enti=
-ty,
-> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 credits, void *owner);
-> =C2=A0void drm_sched_job_arm(struct drm_sched_job *job);
-> -void drm_sched_entity_push_job(struct drm_sched_job *sched_job);
-> +int drm_sched_entity_push_job(struct drm_sched_job *sched_job);
-> =C2=A0int drm_sched_job_add_dependency(struct drm_sched_job *job,
-> =C2=A0 struct dma_fence *fence);
-> =C2=A0int drm_sched_job_add_syncobj_dependency(struct drm_sched_job *job,
+Best regards,
+Krzysztof
 
