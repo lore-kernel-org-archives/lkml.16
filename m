@@ -1,122 +1,197 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31B32F42
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 09:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8F62F42
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 09:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742981519; cv=none; b=MMsL6a6UqaxNqSmuMYpQMBL8r8aja2hI31dvO5zuvwjnIZS2ScJGmnn61viJHUD/iy2JCsRCsPfGLb/FGzY2L3R3glhE33vmDIeDpBIh1Ayul+W2jJcGJQzhXd4ilGKjaZ7lElt6Gz39ktwS2kLjktJNpSLLwJ5ayparwFjVRic=
+	t=1742981549; cv=none; b=Rb+2CyieRvO6emKUeETEoJz11qIYQa0SgHhZ4c+vVjX2cac+eZIm7fSWgk/AVETJ20wMyypMLsNr5Dro24+08p0Qv93XJhEHBWjBgiPQjCyr8kjtewZeFTnXaXTnx3nT7WW2Kym7mTEwkOfUy9a3ThrspMhvzkBzZOelCeOMC7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742981519; c=relaxed/simple;
-	bh=flg3l++JFrsj3kJkUANQTt1Ji2Y0LiAbuxFybUdhtx4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m7rJ1ouBUheVBk4zvWGYX9P3t0T4Ws0qprdmlef4XQ8Uxg0TolF3UDZmMuFzlii2iBe3EclgElZmOZbtMM99kjDb6bGVAdtzYtFhTV8K+qCO11R6V72t3A7sBIUQVzp9x6bMOvZ665fsgkw3F4cTAZNpe73Nkpc1AGfEO7CiR7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Lu1feKwL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=55Swh33O; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1742981549; c=relaxed/simple;
+	bh=WOgRLODx2mJ+ddf4QzJd2mzZ58I0OakByTGbqfp58P4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BsUL7WKhjE375PqPtIHoBF+CPH0iogBe8Yu0nxlZ4TtUPd69JGKykX+T5XNxS4KuzZU8uoZXI99rEZD2CE76VqziYnfFWnyi0JwElKABWF+lOfCW6HqTQ186vWHW19pWZS8673ceVHZ7gsiygboe0y14HPa1ca9HSE7uPdFSB8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RBlGHB9o; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vrrpfHVb; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RBlGHB9o; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vrrpfHVb; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Lu1feKwL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="55Swh33O"
-Date: Wed, 26 Mar 2025 10:31:53 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742981514;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=spFZOhmUvoAs6K2ujJCU4wgUAPTTw6QUCrfcN3N5bls=;
-	b=Lu1feKwLiZWmr1kUuYTZgfzROyDfAXlac3TK0qt6te4hDWdQ7jPeqkCVgbjl81B1ahRErE
-	CgaPTpavXKkhrRNz0r5Ktuxk1aR9y9SxZAk5TagCozyHPmVLRbOVjUrHFnjLkE/wJInpTi
-	F68wekQgtAd7SpSLPfgUNyKUMF+Enh3uAC81dwuos+uq/v40uUSQsg0sxUFCM+VXX8Qkmp
-	gtL3brgv6qdpzHJcjwrhj2eL3ZWj8Inc0leZCBEEfUAVc9MGVoMaQKK8CRYhd26JyZ3zf/
-	Gt6XKrjHEr1MzzgzoTtpzu23YddlblncVwLc9DakuRVG1wDHN40ZmDE2ndT4vg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742981514;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=spFZOhmUvoAs6K2ujJCU4wgUAPTTw6QUCrfcN3N5bls=;
-	b=55Swh33OMQx4omuV9cleDLYpERT3aQxUFR238hGLziq7ADXVj1pbCDMuRasba70en1ifbz
-	wkWpAoMZUZ0k+6CQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: =?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org,
-	"Nysal Jan K.A." <nysal@linux.ibm.com>
-Subject: Re: [PATCH v10 00/21] futex: Add support task local hash maps,
- FUTEX2_NUMA and FUTEX2_MPOL
-Message-ID: <20250326093153.Ib5b2p6M@linutronix.de>
-References: <20250312151634.2183278-1-bigeasy@linutronix.de>
- <0713a015-b8dc-49db-a329-30891a10378c@linux.ibm.com>
- <587d45c3-2098-4914-9dfc-275b5d0b9bb7@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RBlGHB9o";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vrrpfHVb";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RBlGHB9o";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vrrpfHVb"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1513D1F449;
+	Wed, 26 Mar 2025 09:32:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1742981546; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DswBERMkpxR267niKK/AGKT9RXW/1Vb0AVG9m8FuzFs=;
+	b=RBlGHB9oL3a+QP9/UY46yElWDc49kg0eMw4o9trDJt07a/qCI6qauGTc8a6+8e2j6zvK0P
+	KdirChV3m8zy4FeHNI7OJKoG4BTikT8CoUjaH6M+vrXNAkCpjVP23WFz4e2cjftDuixN8t
+	OuklcvTCMDu8d9mreaDo4wsTHX3e+Hg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1742981546;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DswBERMkpxR267niKK/AGKT9RXW/1Vb0AVG9m8FuzFs=;
+	b=vrrpfHVbQMXZ7s5mib7CPoTs04bmhASyonzsDI9tsqkIyfZPcyYoyk6XSSC+c7aKy+KaGl
+	DWn7YKjHwJ0usQBA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1742981546; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DswBERMkpxR267niKK/AGKT9RXW/1Vb0AVG9m8FuzFs=;
+	b=RBlGHB9oL3a+QP9/UY46yElWDc49kg0eMw4o9trDJt07a/qCI6qauGTc8a6+8e2j6zvK0P
+	KdirChV3m8zy4FeHNI7OJKoG4BTikT8CoUjaH6M+vrXNAkCpjVP23WFz4e2cjftDuixN8t
+	OuklcvTCMDu8d9mreaDo4wsTHX3e+Hg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1742981546;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DswBERMkpxR267niKK/AGKT9RXW/1Vb0AVG9m8FuzFs=;
+	b=vrrpfHVbQMXZ7s5mib7CPoTs04bmhASyonzsDI9tsqkIyfZPcyYoyk6XSSC+c7aKy+KaGl
+	DWn7YKjHwJ0usQBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D38BF1374A;
+	Wed, 26 Mar 2025 09:32:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id P/2gMqnJ42e+ZQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 26 Mar 2025 09:32:25 +0000
+Message-ID: <888333e6-e81c-4186-b543-78fda7e3eb68@suse.de>
+Date: Wed, 26 Mar 2025 10:32:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <587d45c3-2098-4914-9dfc-275b5d0b9bb7@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] drm/mode_config: Make
+ drm_mode_config.(max|min)_(width|height) signed
+To: Lyude Paul <lyude@redhat.com>, Maxime Ripard <mripard@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+References: <20250325212823.669459-1-lyude@redhat.com>
+ <20250325212823.669459-3-lyude@redhat.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250325212823.669459-3-lyude@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux.intel.com,gmail.com,ffwll.ch];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linuxfoundation.org:email,imap1.dmz-prg2.suse.org:helo,suse.de:mid]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-On 2025-03-26 00:34:23 [+0530], Shrikanth Hegde wrote:
-> Hi Sebastian.
-Hi Shrikanth,
+Hi
 
-> So, did some more bench-marking using the same perf futex hash.
-> I see that perf creates N threads and binds each thread to a CPU and then
-> calls futex_wait such that it never blocks. It always returns EWOULDBLOCK.
-> only futex_hash is exercised.
+Am 25.03.25 um 22:27 schrieb Lyude Paul:
+> Similarly, it doesn't really make much sense for us to allow devices to
+> specify their minimum/maximum resolution as signed. So, let's fix that as
+> well while we're at it.
 
-It also does spin_lock() + unlock on the hash bucket. Without the
-locking, you would have constant numbers.
+This commit message only makes sense in the context of the series. 
+Better remove 'Similarily' and 'as well while we're at it'.
 
-> Numbers with different threads. (private futexes)
-> threads	baseline		with series    (ratio)
-> 1		3386265			3266560		0.96	
-> 10		1972069			 821565		0.41
-> 40		1580497			 277900		0.17
-> 80		1555482			 150450		0.096
-> 
-> 
-> With Shared Futex: (-s option)
-> Threads	baseline		with series    (ratio)
-> 80		590144			 585067		0.99
+>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> ---
+>   include/drm/drm_mode_config.h | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/drm/drm_mode_config.h b/include/drm/drm_mode_config.h
+> index 271765e2e9f2d..4b8f0370b79bf 100644
+> --- a/include/drm/drm_mode_config.h
+> +++ b/include/drm/drm_mode_config.h
+> @@ -532,8 +532,8 @@ struct drm_mode_config {
+>   	 */
+>   	struct list_head privobj_list;
+>   
+> -	int min_width, min_height;
+> -	int max_width, max_height;
+> +	unsigned int min_width, min_height;
+> +	unsigned int max_width, max_height;
 
-The shared numbers are equal since the code path there is unchanged.
+No problem, I just hope this has no fallout where these fields are being 
+used.
 
-> After looking into code, and after some hacking, could get the
-> performance back with below change. this is likely functionally not correct.
-> the reason for below change is,
-> 
-> 1. perf report showed significant time in futex_private_hash_put.
->    so removed rcu usage for users. that brought some improvements.
->    from 150k to 300k. Is there a better way to do this users protection?
+Best regards
+Thomas
 
-This is likely from the atomic dec operation itself. Then there is also
-the preemption counter operation. The inc should be also visible but
-might be inlined into the hash operation.
-This is _just_ the atomic inc/ dec that doubled the "throughput" but you
-don't have anything from the regular path.
-Anyway. To avoid the atomic part we would need to have a per-CPU counter
-instead of a global one and a more expensive slow path for the resize
-since you have to sum up all the per-CPU counters and so on. Not sure it
-is worth it.
+>   	const struct drm_mode_config_funcs *funcs;
+>   
+>   	/* output poll support */
 
-> 2. Since number of buckets would be less by default, this would cause hb
->    collision. This was seen by queued_spin_lock_slowpath. Increased the hash
->    bucket size what was before the series. That brought the numbers back to
->    1.5M. This could be achieved with prctl in perf/bench/futex-hash.c i guess.
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
-Yes. The idea is to avoid a resize at runtime and setting to something
-you know best. You can also use it now to disable the private hash and
-stick with the global.
-
-> Note: Just increasing the hash bucket size without point 1, didn't matter much.
-
-Sebastian
