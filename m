@@ -1,116 +1,142 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704BA13E02A;
-	Wed, 26 Mar 2025 02:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742956104; cv=pass; b=e8PLvRPo+Lw0MLr2Q6dU0QjDG0+Tw56R7EFwqCKpK++nA2zrtNxmEhaBw6aJKLQ4pdWTV56UgEfcYOA29XOg+LLMY49dcMWzmKyXryDvyqK9iuw02RmNbXGn10sEo5w0qsE4FB7N5oBft4QuA6LrCeCWBkJYatxe9Va8tK2Cxr0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742956104; c=relaxed/simple;
-	bh=5gmQ+tJhOEQ6J3LvTEGDk1RfsDiQRB37WVqm6a/dV8c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V1j1AdiY9pcnKB8goXd1wOXhHMoSx9MBSZ/vMdRP5P3soyE3TqaeJAsJcA5tc1h9s5J2K/QHVDdVDoRGJAFxpIIVeylrxKcWu5a4E8sZHRZuoMGiyAAYI3ot2PJkyALYr1OpKThgR+wkED0uFe26GEYYWS1jfgZKcI2S4fhR4ys=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=TBbOSYjI; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A67A142E67;
+	Wed, 26 Mar 2025 02:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742956107; cv=none; b=dXdY3HUlq1sAvc/pUpAsPE1t7YUlXxpX+yVm2FTZLo0Wh+rI5rj3d3CxFjyqtSjX+CTk6vle3uiQOUuVhFgjY2mGFe6evqfETDAZsJpT3NEMAfl40yeU/5tv3MiAi8ZpHlg5xxLaE1oL6LmiJs/rHDzqGIu55Empop8CC6+BZGQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742956107; c=relaxed/simple;
+	bh=ZZtnP1XjxpMRP3yjHyGXTHYfFFGxZvkA1fzvEMigWy0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Vuo/oL9mGtFhw9RXSS1tQUDCwzQQBYNoQQ4xuMIZdEvzpiUZSr9Fr8OmuFViojkjps4GUleM4HHdhZthDnBeR8gTxfGpAoPQ9vanu5KSSxB1cbd0wvXSQf9Ujzb1u4uSU9porjLjvWAoH7vi0ycRGeBs1H4amjmXTIF3htDUgvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=gRqJBVOK; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="TBbOSYjI"
-ARC-Seal: i=1; a=rsa-sha256; t=1742956088; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=c2qWMYu/bl46WfHteQAeOd/fYIoIViStB67wJdkgm52GsXDEiGvGOzOXQJ9F5b1TMJGPNWRRkqLYBvsAFG41N74gg0bS2zV810ofbA9Hulls0xF3wuiVInCSKp38r9MH+PIe7cGerglaFhRKPI6cSylC0Ehh5Q5QviujT+/D0dQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1742956088; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=5gmQ+tJhOEQ6J3LvTEGDk1RfsDiQRB37WVqm6a/dV8c=; 
-	b=PT9UWjn+jSZrlV13Y0iYWkBhZVngAz0F235zWcMlXdZGQkw59LJ5V0aUUoVmhNDgJKOoP58JtK5otuUvMR+XkIaZJl6IAN+RDBnIJgRccg7AvvNOhi+6Ckatt01r/ZM7bTYsVWyV22QDauvOE6pSeUIeGEn/WHa28zK5Mw5N1Dk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742956088;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=5gmQ+tJhOEQ6J3LvTEGDk1RfsDiQRB37WVqm6a/dV8c=;
-	b=TBbOSYjIZrFmcaHjmvWUsbLV8+JeqzuMqMwyH7vAdyV16nsHh/xI1Rg7sjfEcJFM
-	ATskVII0vJglhMjxuuHyKe9VAd3rK4qjrCb7apKRZU4M1CMLj6MCwbR3wkhKvjzQo5Q
-	T53/JQL1pxGp9vqvYWwT6L7Uth5cfxN8thcG2Yf0=
-Received: by mx.zohomail.com with SMTPS id 1742956085688129.13714269607817;
-	Tue, 25 Mar 2025 19:28:05 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id F0ACB180811; Wed, 26 Mar 2025 03:28:00 +0100 (CET)
-Date: Wed, 26 Mar 2025 03:28:00 +0100
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Marcin Juszkiewicz <mjuszkiewicz@redhat.com>
-Cc: linux-rockchip@lists.infradead.org, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, Johan Jonker <jbx6244@gmail.com>, 
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, cristian.ciocaltea@collabora.com
-Subject: Re: [PATCH 0/2] Enable HDMI features on NanoPC-T6
-Message-ID: <jzoyhh73c5dmvvkfkvnnig3bzcgpr3fvrfrosvkeft26ovimze@i5akqrmk524i>
-References: <20250325-nanopc-t6-hdmi-v1-0-299a2ed45878@redhat.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gRqJBVOK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1742956100;
+	bh=x7S2TV1RuJBApU10U5xfEeWg9V74C+IFyrIBGEv1QS4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=gRqJBVOKZDQzSGQL7ABKOEIxHxK4vp9cyAgcXGs9J6+W7BYzNOUVwOul+zUJe3HXA
+	 4xzAeam0sjFN15bG/+4YTXaNCqrVO+lw5GzI5JmTEc4TObIUCZg4qGsqPf03XiY9Vm
+	 W2w31XIe+g4tgz0OhXFbyJy3hQOyfHg9nJG33z4KRjC55rvfRIOoa+mIBSQEPi0qn2
+	 u3AxXNrdc+LTibapONK3utCVlyUTVtkRKpIjI+Mfxh6l5lkmOtUwbyBe5iCNvHWoI2
+	 D5sQWbA5RK1Ekj+bqEA2HVTYkOU8ALvKS9/jDDZedhOmzMpB4bEwmefZl6s0q+ElgE
+	 dApGs1ENP8RZg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZMrLX30Krz4wcr;
+	Wed, 26 Mar 2025 13:28:20 +1100 (AEDT)
+Date: Wed, 26 Mar 2025 13:28:19 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Kent Overstreet <kent.overstreet@linux.dev>, Andrew Morton
+ <akpm@linux-foundation.org>
+Cc: Uros Bizjak <ubizjak@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the bcachefs tree
+Message-ID: <20250326132819.30db65e7@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yz72wtjkngnhfly3"
-Content-Disposition: inline
-In-Reply-To: <20250325-nanopc-t6-hdmi-v1-0-299a2ed45878@redhat.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.2/242.878.74
-X-ZohoMailClient: External
+Content-Type: multipart/signed; boundary="Sig_/DHZ+CmQzw6AMneIwPqr8EUV";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-
---yz72wtjkngnhfly3
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+--Sig_/DHZ+CmQzw6AMneIwPqr8EUV
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 0/2] Enable HDMI features on NanoPC-T6
-MIME-Version: 1.0
 
-Hi,
+Hi all,
 
-On Tue, Mar 25, 2025 at 08:51:45PM +0100, Marcin Juszkiewicz wrote:
-> This patchset follows other SBCs and enables second HDMI output and then
-> enables HDMI audio on both ports.
->=20
-> Tested with 1920x1080@60 and 3440x1440@60 displays. Worked nice, audio
-> played on both monitors.
->=20
-> Would be nice to have an option for more than 60Hz (larger screen can do
-> 75Hz) but I assume that this will come one day.
+After merging the bcachefs tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-3440x1440 can be used up to 90Hz with 600 MHz TMDS signalling [0].
-So it does not require FRL and as far as I know should work once
-the scrambling support patches from Cristian (added to Cc) land.
+fs/bcachefs/time_stats.c: In function 'bch2_time_stats_reset':
+fs/bcachefs/time_stats.c:165:27: error: comparison of pointers to disjoint =
+address spaces
+  165 |             stats->buffer !=3D TIME_STATS_NONPCPU) {
+      |                           ^~
+fs/bcachefs/time_stats.c: In function 'bch2_time_stats_exit':
+fs/bcachefs/time_stats.c:175:27: error: comparison of pointers to disjoint =
+address spaces
+  175 |         if (stats->buffer !=3D TIME_STATS_NONPCPU) {
+      |                           ^~
+fs/bcachefs/time_stats.c: In function 'bch2_time_stats_init_no_pcpu':
+fs/bcachefs/time_stats.c:192:23: error: assignment from pointer to non-encl=
+osed address space
+  192 |         stats->buffer =3D TIME_STATS_NONPCPU;
+      |                       ^
+fs/bcachefs/time_stats.c:192:23: note: expected '__seg_gs struct time_stat_=
+buffer *' but pointer is of type 'struct time_stat_buffer *'
 
-[0] https://en.wikipedia.org/wiki/HDMI
+Caused by commit
 
-Greetings,
+  5490554cf06f ("bcachefs: bch2_time_stats_init_no_pcpu()")
 
--- Sebastian
+interacting with commit
 
---yz72wtjkngnhfly3
-Content-Type: application/pgp-signature; name="signature.asc"
+  6a367577153a ("percpu/x86: enable strict percpu checks via named AS quali=
+fiers")
+(or an associated one)
+
+from the mm-stable tree.
+
+I have applied the following merge fix patch for today (but I think it
+could just be applied to the bcachefs tree).
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 26 Mar 2025 13:15:00 +1100
+Subject: [PATCH] fix up for "bcachefs: bch2_time_stats_init_no_pcpu()"
+
+interacting with "percpu/x86: enable strict percpu checks via named AS qual=
+ifiers"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ fs/bcachefs/time_stats.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/bcachefs/time_stats.c b/fs/bcachefs/time_stats.c
+index a8382d876835..b16540aa9ca4 100644
+--- a/fs/bcachefs/time_stats.c
++++ b/fs/bcachefs/time_stats.c
+@@ -11,7 +11,7 @@
+ #include "time_stats.h"
+=20
+ /* disable automatic switching to percpu mode */
+-#define TIME_STATS_NONPCPU	((struct time_stat_buffer *) 1)
++#define TIME_STATS_NONPCPU	((struct time_stat_buffer __percpu *) 1)
+=20
+ static const struct time_unit time_units[] =3D {
+ 	{ "ns",		1		 },
+--=20
+2.45.2
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/DHZ+CmQzw6AMneIwPqr8EUV
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmfjZiwACgkQ2O7X88g7
-+pqFsQ//cylOZLEs6DQqi+V2MbkcIvWd7W05qyBM0k1HPdzrCIcgw+STplA3Ps5x
-HIqFp4zx8f61K+000Xhr1ATCNsmWid5Sy8ghAGvd8VH+0a0vq0R850UorlAnsQMa
-Er9uZuE/cMbFfybvSWM6WghEh5XAv67W1i1P6Mh55M3ozAJTCVK3GtRRnnDKwqPz
-GeERslbWhjknLH7zBKEUjQMLGKakTrYSqbSfUdARmje5Xvmf8urmuE8wgbrhSyP2
-XLFv0VfU6C5qkPvHoluMYl9HEliprwascRYQfXok+m6ADUVLjvsU7plwlv61TM7V
-v2NN+GoeWnRLq2oigDW2dq7SCPMcgkDGVB516q29CyL2OcbOfsRVXuHCtk14zaUo
-vgdaiWMoADwc4obfLpw63947DVpO/W8Kf8qnSCWdSmS7TJmF8MdJUtxRK1g06Htq
-/tq3KY86cu/zLdw4APrhhgagI0KOPVhWdfeiKNvG0+jtfY2ua1fVBfIUA8N3hCQI
-G0tNtkfjq5Xc7bowXVSCAlAe76V2PiRE85K2I/y69yAFmh6qIeahyP0pYKe13G9o
-JYT5FwLNS3oX73D/jzLoxO0/V0XFJHACd/d1X9DEetPnRp4CLKFlKpzZ/X5fQnr6
-uWnAaP5o0qnfVTBPtBU+Wpsj7qSYUeqmc0bCxO0JTKYtie3Wbvs=
-=Xj4D
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfjZkMACgkQAVBC80lX
+0Gxg1Af/YVC+iuASqgc4f5d0zNKiZWJKzhADNrIAC2lXKbDkt/lkZYXOYLYCMm0I
+/U7MX3XShd4isgnRYhh/v9AW4xsxKUAxBdnq20XhxOsvs4kxM6TfNgZCAuy1VwI2
+JiaieDgYbNbUTsXx7cbSfq5Dre6BAS2h4nBq363lKqyJCAlduO5MQ1blpc08oinc
+Jd8I+aTy0+5Y503toSA0UmVqT2GfPADgIjpWuSiYUwrJa1dnP5QRUVp2TKAcSDj6
+ru/Ldr47pqYUyhTlh9mPawltTatdi2krVqZrCGe2ygMkgC8pYz34npfkOD41TYxl
++zXEyvGeFJtZGMA12JgGYycIs5wIzQ==
+=QlDJ
 -----END PGP SIGNATURE-----
 
---yz72wtjkngnhfly3--
+--Sig_/DHZ+CmQzw6AMneIwPqr8EUV--
