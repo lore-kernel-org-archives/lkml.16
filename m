@@ -1,86 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622F91F8901
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 20:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832C82192E2;
+	Wed, 26 Mar 2025 20:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743022171; cv=none; b=UYBlPVghADk7O5aOnu7E62NKVFGvsTThaVDSnEplLcfAEaq6EaivDZWFEq/z7wbq4HPzZ9WaNbw4xqp43vuYW+ZttUWNLA2KQ6+/LSsyI7qUqh5nEdi8DDSK5CUFix8iJ3Rr+EV+AxaqXe3U4bRQTLoSCpTC67XxztLIFFGiftg=
+	t=1743022228; cv=none; b=ql6DmvcU8m17BdwL9Pu5eHYlHvi0oJNTNVW1G88xjVsoN9dJlJDgEfdrP4HlSqMhsPDhDP6kiTvpCtTS/mpWeT0gBd13juFHycEm1G2/SvZWlUlk9WPx7sCI+NPTw+OvBA51z1fdyyDGQgSyPTnCckoHtqhuKgPZZzcY/0G/mPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743022171; c=relaxed/simple;
-	bh=PcSjWA7MXwFfyvPKFloh1oReYLk1/2AWnKMGIn5AHRk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f1BuTQA77Cj/Wm6+9Ls+AWkJDoJkvpC4kUL8Evc49voGYofe2Yi4Dh7Xs6EYp8qDCO8WjkZ3GIBrxQmU7YNwMiHkFH8U227DAVVjhw8FGEMkZN/vezsyR/ZRacV/ZNtHzS8XDaV8eZr9qsnkICG5FzHw6YHx6JpcdG40R+oGcdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFYOwGFS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743022228; c=relaxed/simple;
+	bh=h3EYkjw7L9UGlc3Wubv0gpRSL0eQmUMaB71c0nEDWhs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a+FJ4QAUk6zMXW4rl7UCpvLaO5HRmT66NP5gEAgS37NTEY3YFxuVVjyhyz+BBxrGzournkZkaQShp1tefnLrRq+rvybD9g62VN5EadurXQJ7vOGYRdMbQ1KOr1v90Q936yPBe7IdnlGIzfaVq11JtLaKOjKND/G2MSj7FrUm12A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P8J7or5B; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFYOwGFS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB6D3C4CEE2;
-	Wed, 26 Mar 2025 20:49:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743022170;
-	bh=PcSjWA7MXwFfyvPKFloh1oReYLk1/2AWnKMGIn5AHRk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fFYOwGFSEqBZJGpNRaTumru73lVvdAR6s0usdA29N3p/UfkVbAYHw04K78Yw9LlFl
-	 xZY1IaQ6JuEfhfkBseebBpW+Ey33ckmFXZ6mYNqLcvBo+hWUQ5kX+MyP++WUMbYOoh
-	 ZL2wbxXwlfdQL69LzZaNVMxbUHPQTdMDo9YCyr22ODRIkDIhBSo1BaNwoGik14JWfw
-	 qmcThEJG/ckwIdQMAb2988QFqvDwxOPRBjRQy8FcMr0l/44IRVcMBG8xYoh7ojO+nQ
-	 xqJL1/XINqbvp33K5tFNCe+4o2ts9+pHRy+5jJzKQ+BaEOqy7mMnDybPjj6IngnMPD
-	 2cOsRgeRXlCKA==
-Date: Wed, 26 Mar 2025 10:49:29 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] sched_ext: initialize built-in idle state before
- ops.init()
-Message-ID: <Z-RoWbLDwgqGYvtq@slm.duckdns.org>
-References: <20250325093212.47188-1-arighi@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8J7or5B"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2241053582dso8376855ad.1;
+        Wed, 26 Mar 2025 13:50:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743022227; x=1743627027; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bP6P38XoUK0rcAsKbIKLNxYLayd1+Nc9zo4Ms/5SEFE=;
+        b=P8J7or5Bhg4EPKWqZIkhKTh+RgCbKEDdo5yzpvbSD77N3WCe1es6kMZsTkUDGpcbWm
+         nXibilrwHyfP+OYUl3d4REDmdeI7FZyp3xEYKmE0SJYp5kJgt8dFrByd7n/iKZ4g211K
+         ycntfpaAq21IkeKDvDi5PmWz4izgQ0+4TL2o/zXMLGENPv4k3S4z2FPDuoX4j2wY7GaW
+         xqA9AjWpB2opTJImTBlsKjnhQmEnsOKjvW1w49Z5qyIKf2QruHhEuN934NXA5oLL4C+t
+         b3zq8Rf7LVWeZXJlwx8S/qvdVwcEwm08jBChYjbMqbvenNHUarv8rLDX+X4JSt4BsNgX
+         C+uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743022227; x=1743627027;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bP6P38XoUK0rcAsKbIKLNxYLayd1+Nc9zo4Ms/5SEFE=;
+        b=nF+KeczH3SPuwG9yyiNqb1a/OY1pzqELFx7vnHoBIFI+9D0JJOx2uC6oRwj1I7Kz1E
+         qwQaPCoa0kkM4sBrSRvs6xhDGNTOYT4Xx2tSXjBieIxDJpB205Xmq0qbmtFAou9KvLbX
+         SnyX913q/39zGYjLk7jycPllwU7rxbUOJ5aTcJuCYEoSVNBDrrvEghtaQHKlPiA4TPR8
+         W/4wZTxXawep3L+1QNVKeIesDuxGFttxpVTA+nYXR6PfbF1EbbdwPnzZ6FWbFFJVgS8b
+         jOX0Mj006SlEMuJTn1VjTxaXGHtVacFRtAWMFohXwN9O9Yk2Q97OruLgyn2p+PNGNFwT
+         lLYg==
+X-Gm-Message-State: AOJu0Yyu3gzEr14RVf8Gj+s5+B454eAvj/pIu8GGUZ174TDRwyXBbxI4
+	mXkOyPPT+djqWFQAzMCmrysJyz5wt/+3fTXvJ9jI0trzPfxE8cC0yB44gDHjP4hDAg==
+X-Gm-Gg: ASbGncuUvQz+1QCsiuEQUWAxKmdA45cEjcyWqHizBkdTXxEY7NgTftwmNoaLXyBDimC
+	NDepsW+ZjCV0B+JVs5301tIBSOcPeY2WDThNFa5GwPuxTyJbM1M2zgwD5yqYDvLVgJttzAs4gWn
+	AK3v8IFrYK7eR6wESaJCQqnWE4f2oOawFwJ5XBHaPyrnPDHDVnIrEtTpk9ra/jJ+U19ViDx7nYQ
+	qy1+mqM2e1/cUSzmmVy/TrecJ3bRx9YYvDy2K/8i459SeWkIpYbdkDhwggYfVf/6wzDjbNNtkqX
+	sn+CuDI99wp20kXe3vgS59SqSUpzlEYCwipKpwrBOvTqfnhj9UDWAwz5Kn1aqJEnqzA=
+X-Google-Smtp-Source: AGHT+IFlu0ktIlK5C0YIvtzx4DrdXYfKxDAoyXP1J1wg91+68H9IPtUSEvVTlnjABJd7uNAwixBmQA==
+X-Received: by 2002:a17:903:19ef:b0:21f:7a8b:d675 with SMTP id d9443c01a7336-2280481cc28mr17439445ad.4.1743022226379;
+        Wed, 26 Mar 2025 13:50:26 -0700 (PDT)
+Received: from fedora.am.students.amrita.edu ([175.184.253.10])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22780f397a2sm115291155ad.48.2025.03.26.13.50.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 13:50:26 -0700 (PDT)
+From: Siddharth Menon <simeddon@gmail.com>
+To: linux-iio@vger.kernel.org,
+	lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	jic23@kernel.org,
+	gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	marcelo.schmitt1@gmail.com,
+	Siddharth Menon <simeddon@gmail.com>
+Subject: [PATCH v2] iio: frequency: ad9832: Update bit manipulation macros to use FIELD_PREP and GENMASK
+Date: Thu, 27 Mar 2025 01:50:07 +0530
+Message-ID: <20250326204901.44337-1-simeddon@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250325093212.47188-1-arighi@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 25, 2025 at 10:32:12AM +0100, Andrea Righi wrote:
-> A BPF scheduler may want to use the built-in idle cpumasks in ops.init()
-> before the scheduler is fully initialized, either directly or through a
-> BPF timer for example.
-> 
-> However, this would result in an error, since the idle state has not
-> been properly initialized yet.
-> 
-> This can be easily verified by modifying scx_simple to call
-> scx_bpf_get_idle_cpumask() in ops.init():
-> 
-> $ sudo scx_simple
-> 
-> DEBUG DUMP
-> ===========================================================================
-> 
-> scx_simple[121] triggered exit kind 1024:
->   runtime error (built-in idle tracking is disabled)
-> ...
-> 
-> Fix this by properly initializing the idle state before ops.init() is
-> called. With this change applied:
-> 
-> $ sudo scx_simple
-> local=2 global=0
-> local=19 global=11
-> local=23 global=11
-> ...
-> 
-> Fixes: d73249f88743d ("sched_ext: idle: Make idle static keys private")
-> Signed-off-by: Andrea Righi <arighi@nvidia.com>
+Update AD9832_PHASE and RES_MASK to use FIELD_PREP and GENMASK for
+clean bitmask generation and improved maintainability.
 
-Applied to sched_ext/for-6.15-fixes.
+Suggested-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Signed-off-by: Siddharth Menon <simeddon@gmail.com>
+---
+ The previous patch would not apply cleanly as I was not working on a
+ clean branch
+ v1->v2:
+ Resolve previous patch application issues
+ 
+ drivers/staging/iio/frequency/ad9832.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks.
-
+diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
+index 140ee4f9c137..6e463488462a 100644
+--- a/drivers/staging/iio/frequency/ad9832.c
++++ b/drivers/staging/iio/frequency/ad9832.c
+@@ -59,7 +59,7 @@
+ #define AD9832_CMD_SLEEPRESCLR	0xC
+ 
+ #define AD9832_FREQ		BIT(11)
+-#define AD9832_PHASE(x)		(((x) & 3) << 9)
++#define AD9832_PHASE(x)	FIELD_PREP(GENMASK(10, 9), x)
+ #define AD9832_SYNC		BIT(13)
+ #define AD9832_SELSRC		BIT(12)
+ #define AD9832_SLEEP		BIT(13)
+@@ -69,7 +69,7 @@
+ #define ADD_SHIFT		8
+ #define AD9832_FREQ_BITS	32
+ #define AD9832_PHASE_BITS	12
+-#define RES_MASK(bits)		((1 << (bits)) - 1)
++#define RES_MASK(bits)	GENMASK((bits) - 1, 0)
+ 
+ /**
+  * struct ad9832_state - driver instance specific data
 -- 
-tejun
+2.49.0
+
