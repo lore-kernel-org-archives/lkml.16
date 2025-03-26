@@ -1,131 +1,134 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2162B9CF;
-	Wed, 26 Mar 2025 02:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBFFEEC3;
+	Wed, 26 Mar 2025 02:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742957428; cv=none; b=na1LXDICELAPv/wBBn66mh77bKEwRyTs643Zhvfbg7nzTtxfXd2gMWOMIlXvYvHINq64LbBYZldwcxh/IUhX6PgLv1yrOCIp35dP83g6S1xNYZmw1fc19BkGusuRb3OyecTdDzrP6ebLBAzHjrJNtFnOrxW8BREiiOANiX7j8ik=
+	t=1742957589; cv=none; b=cisu7RmgZ/WBNW2IhKaCXce3KCJAqd1CsZjt6Y9St3HoRFUwi6Ok762PRTWLKtk+ptKFuHSLOvD/MEG/rCUuWNXqGXnbenaGihv/PbiK7knmGe/lrRs7c/RI8ZNcG6KgKuUmXcXM0MCcAW383C/XeQcTec3fL1VtlvbsYPs0GAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742957428; c=relaxed/simple;
-	bh=P4cNx8UpvXvFeQzrapJXpJI7nVJOk6s+ylMENBO5nPg=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=f8UUqsA/72tCfEsUlHhkK8rkEDFcJzyuwvYgqaCtr3rCCto+fmGNQHnzzwUFMK1jh7C2YCJe8xwApk146QRXtxHoEScB5vRVUlYQHgYy1SodsOI43X0vofabaoIqtm7LTIVLDLOCM8AzwzQyZWhnTpg+5ntne8qCVURgYQYa54Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZMrqP3w07z13LCv;
-	Wed, 26 Mar 2025 10:49:53 +0800 (CST)
-Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
-	by mail.maildlp.com (Postfix) with ESMTPS id D90901800FD;
-	Wed, 26 Mar 2025 10:50:15 +0800 (CST)
-Received: from [10.174.178.46] (10.174.178.46) by
- kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 26 Mar 2025 10:50:15 +0800
-Subject: Re: [PATCH] jffs2: check jffs2_prealloc_raw_node_refs() result in few
- other places
-To: Fedor Pchelkin <pchelkin@ispras.ru>, Richard Weinberger <richard@nod.at>
-CC: David Woodhouse <dwmw2@infradead.org>, <linux-mtd@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>,
-	<stable@vger.kernel.org>
-References: <20250325163215.287311-1-pchelkin@ispras.ru>
-From: Zhihao Cheng <chengzhihao1@huawei.com>
-Message-ID: <742d0485-66ec-94b3-4e97-481ffc33383e@huawei.com>
-Date: Wed, 26 Mar 2025 10:50:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+	s=arc-20240116; t=1742957589; c=relaxed/simple;
+	bh=tR0hpiSjFO/WspQVHGVT8zUQ9voaGhpKDs6/znEN4Yk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uOmWWwCRrJPB1ez2EhqQGRPCGJ3hC98u7cnxduuYqQgrqT06I3AdG74bIg8BnBHt05UrVZ4qppZFwH40wx9k6YXsZpR1HHm4K9scmjtrwhUFDlv7TsAcWJnsj1pkm/sSE5+ezLHIH6XMWzYZyj3HIIn0JS1Y9By+88PmCPHsWKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OwoA4H+y; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OwoA4H+y"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6fecfae554bso54802517b3.0;
+        Tue, 25 Mar 2025 19:53:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742957586; x=1743562386; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fRVOk3+qVIByxfoFBHmyldpu57c1EQEApVPRpT4+B7I=;
+        b=OwoA4H+y9QtFLr/UPxpxX8uSphf1BuR5upEdkf3m4sitIyWWd3b+AhxsL/wPpH1f7D
+         ulTD0Fc2mfcqNGONcLpLsbSkdAg6KvepuyHOvJ+DN+wDpbsZ4XSBbKLtsLuAimSOplhK
+         78ICAfVyCwz8303RS3A3hmxn3tvzvfKTaZj2Mri1FZviCznK8S1JzFhVczSjXZrbHrMJ
+         4+Wh7Cmjy8fYl5q1pf+2e4U3HCDaS5RiLYpS5UVb0jZd841TW3bFYLpcADwgbqFQTtAP
+         IbHgfm6ZZpIJjK6cxIIAsz8GQoqfJyW5/4WixLKTcT7/YNiShlEuef3J4HpOVQ4SGGHg
+         gcBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742957586; x=1743562386;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fRVOk3+qVIByxfoFBHmyldpu57c1EQEApVPRpT4+B7I=;
+        b=qi1b1HGcGL0qblM0I2l811M6ZCbeVLDkP3WH+0aCKU/G48JBkwo3Ob8cra6Z+FxS4S
+         hP/R6+p/LzcJIA8+6x1LevrkQvin+355R83E09p6V/Q7Z/8ZK7brrO46CxSeO2kHhSkm
+         Qwbg3MPBBeON5ntYZVmIkTk33ai+p50Y0AMauTH94A9eRLp9JMb2Yj5FJuU2swlI9lTE
+         6SDWLvxUf/OPcLZlCO5JVdo0vk03RRwJQZxQO8Gj97UF1mO0fXKfzVBz+CqNcmmHP5e/
+         fEEvhtk8kWBTYzfBF/Amyci6T+aRsPYDZRRVqa6XxDYji+4Rg61zwPpBN3JZwNQrwS47
+         JHPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUU/EFzSWGimenfJn/RCFCemPUSviJCxjpspLKhqk0rLCu8Gxw5+SdoMsPYKenP7r40UIQh2LNb8ShP@vger.kernel.org, AJvYcCUblOWL728ecvO4pqguuQo5Z3CsUuC9wcHcYPt4K7AAUbfhaJKCIFCbd5c0nxqCyWUYTCFafBeHjkxTtQ==@vger.kernel.org, AJvYcCUwETAayMPQst9+/HvousaxpvRH007ySznxBCOSjK5WL8tPGV7LgCGrIemueBHKjQAzCvP0qxOto6o=@vger.kernel.org, AJvYcCVc1vbPdsps0JNVQ8OfWFgGzv0T8BhhSUQzlYBbebHddq5yeE4kEPjLS3LRx2/GW2pLNBnxdZtLgTSgVgnr@vger.kernel.org, AJvYcCVsE71xkfTpIBkaMCBmutrvz4cAbUtfpaGj/ueEdeSBuGyL1fR37y8QgHjclwhqOMfy68VU8OUI4W8kBo0=@vger.kernel.org, AJvYcCW1RWrM9JDBaxazvfawaonn681JbuMqtMlnYl1FQDIbxmWgAH6liKOIQfh16rfiAaoP/8ba/lDhec0vKqTsFBo=@vger.kernel.org, AJvYcCWA3tZ/MWfMc+brJ3YzwaUlVTy4eJWrUV6dpesHhTA9eMQlMQC6bll9kAUzb3maMwp1bmQv7noi@vger.kernel.org, AJvYcCX+nVozsYRLyHOdFxRVIBtlKt7c769s9QuAzbc1nnT4SF/F38KFYNiKawmAbicKkXRc9G+4s6GsWJSl@vger.kernel.org, AJvYcCXVUjduQ49oRrjF3+EQPwabdnlbuUfjy6YPeh37+H8OGRziDTmCwQnfVjGhZuWc1GeuDybRlDRmR6Z3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyccvm+edfmFmb12tlWXec36Ug52+c5LI8PUN/A8Urwt9jAtvlM
+	rofwd0ixbdvL2E5gl0z3qKmu8ykJRHejqnl2CcqrM/PHOivodDdg3ZlKsavIEn7rKxNcW9Aw/1K
+	9Y/5aKYvT1rs+LXnPtV+bsjWQ2Fc=
+X-Gm-Gg: ASbGncsFGJonJXSXzMnTgpE7Llfzy/pFyhT2rOZKqpM4NnnHxMegHi2JMy/lQK4HU/1
+	Zqy4Bx2zQgNOC/J51vE7tPh0WBIHvEcthq9RYnSf0O2cugSk/Ej34dJIcyDW8IaojPIqi9mQCVY
+	aHMQLbX9MZ2n60yUdaeJ0oaV3u35VbJfAAtTq+17RavsRAecgjs3t5/CLjaJIv
+X-Google-Smtp-Source: AGHT+IGFmM/43LiglnO1PLksaWD1bA8yVyyua4atAOI0toysfW72PAufjGsdZP3qrneDzJlMRZpR/DRSuqkw2K1SlX0=
+X-Received: by 2002:a05:690c:6c85:b0:6fd:33a5:59a with SMTP id
+ 00721157ae682-700bac6b12cmr265622027b3.18.1742957586397; Tue, 25 Mar 2025
+ 19:53:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250325163215.287311-1-pchelkin@ispras.ru>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemk500005.china.huawei.com (7.202.194.90)
+References: <20250225081644.3524915-1-a0282524688@gmail.com>
+ <20250225081644.3524915-2-a0282524688@gmail.com> <20250307011542.GE8350@google.com>
+ <CAOoeyxUgiTqtSksfHopEDhZHwNkUq9+d-ojo8ma3PX2dosuwyQ@mail.gmail.com> <20250320145042.GS3890718@google.com>
+In-Reply-To: <20250320145042.GS3890718@google.com>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Wed, 26 Mar 2025 10:52:54 +0800
+X-Gm-Features: AQ5f1Jr-qehcBUjCHKAC9Ig86kbnYpN20BwJHFrPhGUZx482dDzZ5qYruqNjkmE
+Message-ID: <CAOoeyxXZmrzBSNRdRx9vK84m5Z5y8T_A+wY98vVrPUZ7f4w4iw@mail.gmail.com>
+Subject: Re: [PATCH v8 1/7] mfd: Add core driver for Nuvoton NCT6694
+To: Lee Jones <lee@kernel.org>
+Cc: tmyu0@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org, 
+	linux@roeck-us.net, jdelvare@suse.com, alexandre.belloni@bootlin.com, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-ÔÚ 2025/3/26 0:32, Fedor Pchelkin Ð´µÀ:
-> Fuzzing hit another invalid pointer dereference due to the lack of
-> checking whether jffs2_prealloc_raw_node_refs() completed successfully.
-> Subsequent logic implies that the node refs have been allocated.
-> 
-> Handle that. The code is ready for propagating the error upwards.
-> 
-> KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
-> CPU: 1 PID: 5835 Comm: syz-executor145 Not tainted 5.10.234-syzkaller #0
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> RIP: 0010:jffs2_link_node_ref+0xac/0x690 fs/jffs2/nodelist.c:600
-> Call Trace:
->   jffs2_mark_erased_block fs/jffs2/erase.c:460 [inline]
->   jffs2_erase_pending_blocks+0x688/0x1860 fs/jffs2/erase.c:118
->   jffs2_garbage_collect_pass+0x638/0x1a00 fs/jffs2/gc.c:253
->   jffs2_reserve_space+0x3f4/0xad0 fs/jffs2/nodemgmt.c:167
->   jffs2_write_inode_range+0x246/0xb50 fs/jffs2/write.c:362
->   jffs2_write_end+0x712/0x1110 fs/jffs2/file.c:302
->   generic_perform_write+0x2c2/0x500 mm/filemap.c:3347
->   __generic_file_write_iter+0x252/0x610 mm/filemap.c:3465
->   generic_file_write_iter+0xdb/0x230 mm/filemap.c:3497
->   call_write_iter include/linux/fs.h:2039 [inline]
->   do_iter_readv_writev+0x46d/0x750 fs/read_write.c:740
->   do_iter_write+0x18c/0x710 fs/read_write.c:866
->   vfs_writev+0x1db/0x6a0 fs/read_write.c:939
->   do_pwritev fs/read_write.c:1036 [inline]
->   __do_sys_pwritev fs/read_write.c:1083 [inline]
->   __se_sys_pwritev fs/read_write.c:1078 [inline]
->   __x64_sys_pwritev+0x235/0x310 fs/read_write.c:1078
->   do_syscall_64+0x30/0x40 arch/x86/entry/common.c:46
->   entry_SYSCALL_64_after_hwframe+0x67/0xd1
-> 
-> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
-> 
-> Fixes: 2f785402f39b ("[JFFS2] Reduce visibility of raw_node_ref to upper layers of JFFS2 code.")
-> Fixes: f560928baa60 ("[JFFS2] Allocate node_ref for wasted space when skipping to page boundary")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
-> ---
-> 
-> Similar to https://lore.kernel.org/linux-mtd/20250307163409.13491-2-a.sadovnikov@ispras.ru/
-> but touches two remaining places.
-> 
->   fs/jffs2/erase.c | 4 +++-
->   fs/jffs2/scan.c  | 4 +++-
->   2 files changed, 6 insertions(+), 2 deletions(-)
+Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B43=E6=9C=8820=E6=97=A5 =E9=
+=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8810:50=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+...
+> > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x1),
+> > >
+> > > IDs are usually given in base-10.
+> > >
+> >
+> > Fix it in v9.
+> >
+> > > Why are you manually adding the device IDs?
+> > >
+> > > PLATFORM_DEVID_AUTO doesn't work for you?
+> > >
+> >
+> > I need to manage these IDs to ensure that child devices can be
+> > properly utilized within their respective modules.
+>
+> How?  Please explain.
+>
+> This numbering looks sequential and arbitrary.
+>
+> What does PLATFORM_DEVID_AUTO do differently such that it is not useful?
+>
 
-Reviewed-by: Zhihao Cheng <chengzhihao1@huawei.com>
-> 
-> diff --git a/fs/jffs2/erase.c b/fs/jffs2/erase.c
-> index ef3a1e1b6cb0..fda9f4d6093f 100644
-> --- a/fs/jffs2/erase.c
-> +++ b/fs/jffs2/erase.c
-> @@ -425,7 +425,9 @@ static void jffs2_mark_erased_block(struct jffs2_sb_info *c, struct jffs2_eraseb
->   			.totlen =	cpu_to_je32(c->cleanmarker_size)
->   		};
->   
-> -		jffs2_prealloc_raw_node_refs(c, jeb, 1);
-> +		ret = jffs2_prealloc_raw_node_refs(c, jeb, 1);
-> +		if (ret)
-> +			goto filebad;
->   
->   		marker.hdr_crc = cpu_to_je32(crc32(0, &marker, sizeof(struct jffs2_unknown_node)-4));
->   
-> diff --git a/fs/jffs2/scan.c b/fs/jffs2/scan.c
-> index 29671e33a171..62879c218d4b 100644
-> --- a/fs/jffs2/scan.c
-> +++ b/fs/jffs2/scan.c
-> @@ -256,7 +256,9 @@ int jffs2_scan_medium(struct jffs2_sb_info *c)
->   
->   		jffs2_dbg(1, "%s(): Skipping %d bytes in nextblock to ensure page alignment\n",
->   			  __func__, skip);
-> -		jffs2_prealloc_raw_node_refs(c, c->nextblock, 1);
-> +		ret = jffs2_prealloc_raw_node_refs(c, c->nextblock, 1);
-> +		if (ret)
-> +			goto out;
->   		jffs2_scan_dirty_space(c, c->nextblock, skip);
->   	}
->   #endif
-> 
+As far as I know, PLATFORM_DEVID_AUTO assigns dynamic IDs to devices,
+but I need fixed IDs.
+For example, the GPIO driver relies on these IDs to determine the
+group, allowing the firmware to identify which GPIO group to operate
+on through the API.
 
+> >
+> > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x2),
+> > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x3),
+> > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x4),
+> > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x5),
+> > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x6),
+> > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x7),
+> > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x8),
+> > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0x9),
+> > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xA),
+> > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xB),
+> > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xC),
+> > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xD),
+> > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xE),
+> > > > +     MFD_CELL_BASIC("gpio-nct6694", NULL, NULL, 0, 0xF),
+
+
+Thanks,
+Ming
