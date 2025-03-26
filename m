@@ -1,149 +1,122 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566B91F30C0
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 16:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2511F63DD;
+	Wed, 26 Mar 2025 16:49:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743007721; cv=none; b=tqgEQf6eGb+sotp7xxU2pt2O00nHByUL5HxvgzqnRx5sVTCsgftYvU77f9VdIpmjE2P/o4Q8+Ai495cgeJ1QCe7BvhGOqgHUDMneW6OrKlX6hadoUy9brgyZu03FabTGrg6l4fJ+u9eDGoh/6158xvJ2wlmXtg1gmr1iDWE9p9k=
+	t=1743007744; cv=none; b=Le0/E0HzC/TFtzoNmCVyh2ZIQ1M9F4dD1cgdXMtHUq9MckSu7WqrF1t10vSEA+3gPKgF3bhgXmYMx8O3RvsMRvr/SSHxfFlM9GVIXYJPFdMZSMDzp5IaqIP+/S1YJTrLukQTrFzmK04dZ72uW5bZ+cT0EEX5AYL1axqkfj+VbuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743007721; c=relaxed/simple;
-	bh=v+AmZUmpN4LDUzxm3w5ft1I/+r4feJlmYE8bhA3zNfY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ppp3jnE5DpPD2PKs3skM2fpQmguqsD8AZKCSdAYrDTrqdhZBPLdIL7hEgk0iiHeuWhRt3vXfKXxy8XwA1/jFt0HwCdTfCWxmlnFV+pU7dMRcnSO9KYU0mvwNhtiE7ZpgDY4pYV5l4NIH9MhOYmNo0Oq7r7ONT7dlMZ8ATztwj7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mUP/DVgm; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743007744; c=relaxed/simple;
+	bh=/j6PcOoWyDgRrb4mDoUwSYJNqXaS+qewMovhxAHvQ1Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pXWvz6sc4i8TlOk1FF3l72bNjgcunqboMiQCFjHG8bbzKgzPkU1eRIW8Dv4y8Voj3hPrMMjWTlwzoN54pYKuLtJyBEkUMlDMHZDcF1uO098Eik3aLR+XLEPdLhlFskKzfJ95VM/88TGzXj2wxoCPWEz0JMWk4XkuEyaPJXdES1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JyS3UwKK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mUP/DVgm"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5cd420781so5850a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 09:48:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743007717; x=1743612517; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xIONhgKygIJfrRbEsZfUKmIHxiah0KpnWCpr3sd5zNk=;
-        b=mUP/DVgm+gU6G0fk+R7hdL9Dt/I8ahmOMfat54qqRwGQ/W1EV3nxTWNH0BQ5i/US0P
-         dvTdbofnWXCHI14e/ztzohVx+8cN7/vF3LhWtMidmZCrRjfcKMlycbt1HRx+rdy2isnm
-         KhIXVxQw1nYW2QECs9U7v3vOtgOO6Zd6A6kdnaM9Ta0PhfLanY6y1eMOhkgFtvgoqUTN
-         MSKIYOoJrhPpsysj7Se2b9FpxrcgKZbyjFmVw9/1dWK/FTA7bq0sDr7+zjI+NkVGJUXy
-         2OBbVIoLVTEOuz3u9CI8Di0pAG6MnYn11DSUwZOLUfMFHSCQFbMngzEj7PE8gB1Lv1Fg
-         XrwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743007717; x=1743612517;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xIONhgKygIJfrRbEsZfUKmIHxiah0KpnWCpr3sd5zNk=;
-        b=UOPeaHTq/Aiih3kZppkA/gQLPOATGU3A/XLpmlX3cybJQRXs287FJwP8yVGUjBIf5g
-         aK213EPQCT+fQeKYTI4Ag/6suemBQ+MMYTDGUKeaJqJYiouv+P21rJdGHOIH2TL9tJYm
-         TcEAzc8cdUpzW8yVOJxvkGwb3hC0I/a0Xutp/nSHi62z4KZrbmHMVX05++0w0m3LGUed
-         o/N7M6gN1GTIVNhu4EBnWOt+2dR/WtFdZIfBF+DSMHBO0R5D4SBf/L3amXj6QYmB2k/B
-         eGmmq886UTPqIIUzX3nMPfC3u/kK0i2v+0FkxstJvy12JhU/adxcopYXOZQjoQPGY4uQ
-         cyMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUuqqZsVduc6f9udHpPofWgMXTPjNOxEbJa1w8Ae4ONDC1/yw4wtCRyTffIrGB47bUBLZP+gRfjrhui9R0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjxQFFGXTNIYp3brWe92gT/Z+lomu3ZqZvE/TQiBRrvdnsjwrG
-	Aqulwq3x/2YOKatre/4o6+WZ+wTxG5KjbGLCUH+Tha9Rx33BO0xzV9pKGmPjBQ==
-X-Gm-Gg: ASbGnctni10S9e3YoW5AsXjnJYdOd5+MfpeQ1CU8O2+esLw3Sqz4DZZeJ79pw6qJ15z
-	zBXKR3nZ11OkjV8SrRRzdvIvyxUE10avGOLHmcgRuvQ4Opm1KZazvEoYzXtnO/lLCn/HGQomn8i
-	saNhHoo6g9XrLR3KE11ccY+xaD8BgBB4QQ9FZgw0sNV97TDdAIovNSFPVWWCsdzNvpNTYnctngD
-	NJjo0ko5P51bAYH8wsnepTG9PbOF0bAFFa5J/p7qiVVZAfw4c2c9qi5G7g9QKN2bhaGx8qMIcGX
-	dLoyE/x0Dw/PsNrd78XIDpJvc6yhfRSF/G8kCFIzCPwV0F5KTRE187NwSCBrVwlw3PT2xm5iqSo
-	rV8w=
-X-Google-Smtp-Source: AGHT+IELoh1UdGLEoChuBbrPrSJlW3iazs22Tqnm/p66h/kdfAKvlGAngZOzasm3FVG0orud4x07LQ==
-X-Received: by 2002:a17:907:7f86:b0:ac1:e881:89a7 with SMTP id a640c23a62f3a-ac6fae48539mr15547466b.6.1743007717280;
-        Wed, 26 Mar 2025 09:48:37 -0700 (PDT)
-Received: from google.com (140.20.91.34.bc.googleusercontent.com. [34.91.20.140])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac404959f47sm907950666b.170.2025.03.26.09.48.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 09:48:36 -0700 (PDT)
-Date: Wed, 26 Mar 2025 16:48:33 +0000
-From: Quentin Perret <qperret@google.com>
-To: Sebastian Ene <sebastianene@google.com>
-Cc: catalin.marinas@arm.com, joey.gouly@arm.com, maz@kernel.org,
-	oliver.upton@linux.dev, snehalreddy@google.com,
-	sudeep.holla@arm.com, suzuki.poulose@arm.com, vdonnefort@google.com,
-	will@kernel.org, yuzenghui@huawei.com, kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kernel-team@android.com, Andrei Homescu <ahomescu@google.com>
-Subject: Re: [PATCH v4 3/3] KVM: arm64: Release the ownership of the hyp rx
- buffer to Trustzone
-Message-ID: <Z-Qv4b0vgVql2yOb@google.com>
-References: <20250326113901.3308804-1-sebastianene@google.com>
- <20250326113901.3308804-4-sebastianene@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JyS3UwKK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76AF7C4CEE8;
+	Wed, 26 Mar 2025 16:49:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743007744;
+	bh=/j6PcOoWyDgRrb4mDoUwSYJNqXaS+qewMovhxAHvQ1Q=;
+	h=From:Date:Subject:To:Cc:From;
+	b=JyS3UwKK3WkGtk39qAWuY7N9POEno+elq8+Yn63ObrElD0PH/fWZWWgGKIAG64Psf
+	 nwJMov2csx1azoWJ8WSDwB4w4eKxd+zoxgBe2KvFPIJpzgixDr2E9DoBBRVKJOqAWg
+	 2TFDMDu7iWVWQmdSkPQ29vYEvlSIO7lugoJP0nKlpOfIrJDkKeQSpaDwjjVNUWRio4
+	 oU8O6aOloQYP0kP1yygoP4kDARVAs60jiyLdtK3U+ftX07fJdzfBtA1npzcSUu1Ola
+	 IhLFp8DNVg5hEffOYMU9HzGkBUyQuu126xwpH0jZ98wXW/vlSnCdzqq1rNf6DtYm+P
+	 59gictiW/9nxg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+Date: Wed, 26 Mar 2025 17:45:30 +0100
+Subject: [PATCH] MAINTAINERS: configfs: add Andreas Hindborg as maintainer
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250326113901.3308804-4-sebastianene@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250326-configfs-maintainer-v1-1-b175189fa27b@kernel.org>
+X-B4-Tracking: v=1; b=H4sIACkv5GcC/x2MQQqAIBAAvyJ7TjDTor4SHcRW20MaGhGIf086z
+ GEOMwUyJsIMCyuQ8KFMMTTpOwb2MMEjp705SCG1GOTIbQyOvMv8NBTuBiY+oxJ2Etoop6GVV0J
+ H739dt1o/1dN962UAAAA=
+X-Change-ID: 20250326-configfs-maintainer-9e40c705a4f5
+To: Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Cc: Breno Leitao <leitao@debian.org>, 
+ Andreas Hindborg <a.hindborg@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1620; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=/j6PcOoWyDgRrb4mDoUwSYJNqXaS+qewMovhxAHvQ1Q=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBn5C87y6IUdxQ9EJ3NhSrjxdqXDgFE/kOR30jGs
+ xF2EKadJSaJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ+QvOwAKCRDhuBo+eShj
+ dy8GD/oCrGI/gskZiZMr9Nuvx5Ycpzijn/pIDaqkH8RyHRLyWThcn3B/w2xOVGnBxbf7ahWesVE
+ yOnnxX1FVr5yC1PHsPIXeWgnfLplYgtYNkvNkOBhB9kBxRchVvUO4l24g0iHNmCwl6khmebED8l
+ +xh5otRCFy9WZ0G9l3xbVk3sVwXtKd77lWInSZ1ITCSrFpxA5G9GvIHsUIuqXmPA+by4qRo9tF9
+ wLk6JNrDjB5RATDlHJ07QIbbFrEYLju/Il4rYwJvN7om5buz12agrBIP1GHo8hRdy3ZFInMHp+X
+ E2b130MpYH14r5Hx6LajYj9u8i51e7voA1He0QkwKzJV5UZ9XKiyzcCEincMEiAYMy4yOoTDLXA
+ UtdG4jZZweIHaJWMOdobXQH6Sx8TpvkCaB1f1Yv6o4pJ1LvfMYxAaqKCTuElyqoUYjgO7I2Z/kw
+ zd6yaH5dCpFP5cqnRifmcm858vd2MOZ6ipcseZaEtYeZfEP/41RSLKPR5wJTpHnAewTBISoLjnK
+ 8sFnMh/iyzQp8iU2LIsWTbmRr3yT4pfB0tf++Q1XH8JrelqyCce+T9JNCZ0dgWINTIbS3cZLMjQ
+ 8KRlp7PPQ/CtrHDULtlkgkLF2GjnYme4HnAMrsNgf76cbpCp4TTJTVf+3CG4SBsVutK0qb2K906
+ vHQZFE090OAxXeg==
+X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
+ fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-On Wednesday 26 Mar 2025 at 11:39:01 (+0000), Sebastian Ene wrote:
-> Introduce the release FF-A call to notify Trustzone that the hypervisor
-> has finished copying the data from the buffer shared with Trustzone to
-> the non-secure partition.
->
-> Reported-by: Andrei Homescu <ahomescu@google.com>
-> Signed-off-by: Sebastian Ene <sebastianene@google.com>
-> ---
->  arch/arm64/kvm/hyp/nvhe/ffa.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
-> index 6df6131f1107..ac898ea6274a 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/ffa.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
-> @@ -749,6 +749,7 @@ static void do_ffa_part_get(struct arm_smccc_res *res,
->  	DECLARE_REG(u32, uuid3, ctxt, 4);
->  	DECLARE_REG(u32, flags, ctxt, 5);
->  	u32 count, partition_sz, copy_sz;
-> +	struct arm_smccc_res _res;
->  
->  	hyp_spin_lock(&host_buffers.lock);
->  	if (!host_buffers.rx) {
-> @@ -765,11 +766,11 @@ static void do_ffa_part_get(struct arm_smccc_res *res,
->  
->  	count = res->a2;
->  	if (!count)
-> -		goto out_unlock;
-> +		goto release_rx;
->  
->  	if (hyp_ffa_version > FFA_VERSION_1_0) {
->  		/* Get the number of partitions deployed in the system */
-> -		if (flags & 0x1)
-> +		if (flags & PARTITION_INFO_GET_RETURN_COUNT_ONLY)
->  			goto out_unlock;
->  
->  		partition_sz  = res->a3;
-> @@ -781,10 +782,12 @@ static void do_ffa_part_get(struct arm_smccc_res *res,
->  	copy_sz = partition_sz * count;
->  	if (copy_sz > KVM_FFA_MBOX_NR_PAGES * PAGE_SIZE) {
->  		ffa_to_smccc_res(res, FFA_RET_ABORTED);
-> -		goto out_unlock;
-> +		goto release_rx;
->  	}
->  
->  	memcpy(host_buffers.rx, hyp_buffers.rx, copy_sz);
-> +release_rx:
-> +	ffa_rx_release(&_res);
+Remove Joel Becker as maintainer of configfs and add Andreas Hindborg as
+maintainer and Breno Leitao as reviewer. Also update the tree URL.
 
-I'm a bit confused about this release call here. In the pKVM FF-A proxy
-model, the hypervisor is essentially 'transparent', so do we not expect
-EL1 to issue that instead? How is EL1 supposed to know that the
-hypervisor has already sent the release call? And isn't EL1 going to be
-confused if the content of the buffer is overridden before is has issued
-the release call itself? What would otherwise prevent that from
-happening?
+Add an entry for Joel Becker to CREDITS.
 
-Thanks,
-Quentin
+Acked-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+---
+As recommended in plenary session at LSF/MM plenary session on March 25 2025.
+Joel is no longer active in the community.
+---
+ CREDITS     | 4 ++++
+ MAINTAINERS | 5 +++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
->  out_unlock:
->  	hyp_spin_unlock(&host_buffers.lock);
->  }
-> -- 
-> 2.49.0.395.g12beb8f557-goog
-> 
+diff --git a/CREDITS b/CREDITS
+index 53d11a46fd69..3ec620f7260b 100644
+--- a/CREDITS
++++ b/CREDITS
+@@ -317,6 +317,10 @@ S: Code 930.5, Goddard Space Flight Center
+ S: Greenbelt, Maryland 20771
+ S: USA
+ 
++N: Joel Becker
++E: jlbec@evilplan.org
++D: configfs
++
+ N: Adam Belay
+ E: ambx1@neo.rr.com
+ D: Linux Plug and Play Support
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 00e94bec401e..ff62b2bff99a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5860,9 +5860,10 @@ S:	Maintained
+ F:	Documentation/security/snp-tdx-threat-model.rst
+ 
+ CONFIGFS
+-M:	Joel Becker <jlbec@evilplan.org>
++M:	Andreas Hindborg <a.hindborg@kernel.org>
++R:	Breno Leitao <leitao@debian.org>
+ S:	Supported
+-T:	git git://git.infradead.org/users/hch/configfs.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/a.hindborg/linux.git configfs-next
+ F:	fs/configfs/
+ F:	include/linux/configfs.h
+ F:	samples/configfs/
+
+---
+base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+change-id: 20250326-configfs-maintainer-9e40c705a4f5
+
+Best regards,
+-- 
+Andreas Hindborg <a.hindborg@kernel.org>
+
+
