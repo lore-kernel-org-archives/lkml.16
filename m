@@ -1,168 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634A619644B;
-	Wed, 26 Mar 2025 23:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251EF24C082;
+	Wed, 26 Mar 2025 23:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743032439; cv=none; b=bRpRNkDdmHRsTknVXgQK9hRNwBUabi/J5vPFASVchFoUr/weJAgt0sX5MLcMzddUMVtpUsFXMit7STgWuI6db3LV7CRxG3q1pJ8J/BRuR6k31ZcUGTSOlhngFX0zSqE4gmBd0wFJezt5sglDqZ9Piq8JuaglfYSC0h4VRhCqXyU=
+	t=1743032679; cv=none; b=CuyaGhr9PFjIw/7guNCkl/1Sc7VHojRUbd3dpPVgjPAhmg1pouezsml/tYKUbUgIuVmSNXAs6vSXEvvmPbwp+SdIERo9XsslSBYSZMtQB+Rqw/d7uGR4S8SJlLWg2A3D0D2gicscFuwYBo10FzUOuAhjy0rjiYfHWUWNz0Y/npQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743032439; c=relaxed/simple;
-	bh=hcNqv06EziM4XfUMLDoHZkf+3cGNbhPk/8HQFmo+Mxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=tuMzcWdysR795iNQo6grX23Iiq1ETc0w5GfjR3fonyTYfxjTSbD9G+p1grnAVU8gBQx6RADnkB8S9qVMclWuzQIyPoffvG+J/jXolvCNGogA74ZtUXfM0wW6ru5qFq41BegDeosfRoY/5Ki13uT7veaCFCFIWKHibaaDOeMZO1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qaM9/i9i; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743032679; c=relaxed/simple;
+	bh=D1apogL4fCUbwrUIBOk7sBJ0HDf+NbhOpks7NTMIzdM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=MuiUvgw2c18odf1YDg5A68k+pcReLOrqTXD2jgF54FLXXRAPLCzoY7FUDJIoQYhmnzkbZw3Zy6ctLodqHYLue5VdTpgd19Nkr8phPzbUqfYLdA4IuUOj+0f/bXRS3mVb+04X8Eyh7mU5H1ly863B7GWIQKh07beZzwTW1W2/zp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MD36ZbOf; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qaM9/i9i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BB38C4CEE5;
-	Wed, 26 Mar 2025 23:40:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743032438;
-	bh=hcNqv06EziM4XfUMLDoHZkf+3cGNbhPk/8HQFmo+Mxs=;
-	h=Date:From:To:Cc:Subject:From;
-	b=qaM9/i9i3HfKRZ81MSwAHYXWrQpN32fdqqeZ0t1IYVP/8DwmSmoW7apf6hv0QnciW
-	 DDNuhDUVkJeAvjZk914x8MBMBAQMYFf6p+sm/UJKCt8mJ33g2vRwSsHupVvGXX0Pd7
-	 xgFclLo+qH1ivWEia2nZ4nkMfd8HbwkXVdE1PUMMl8SlTrnHGHJDfyP3qajqWtqzpW
-	 iP+mVrbmRUVEvqvTCc9nzGdtTY5yEZBVCmD4hrAKbJSdOgKOdHoeFvbRh5IU5igoBA
-	 YnER1of/BFj+NMi+POiYdu6uUutw30HOZEiQR6vKMx4uQWH/rVgD51kHGaSjkubYcV
-	 UKjgJYctjUJeQ==
-Date: Wed, 26 Mar 2025 17:40:36 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] wifi: mac80211: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <Z-SQdHZljwAgIlp9@kspp>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MD36ZbOf"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52QLF1Nt008791;
+	Wed, 26 Mar 2025 23:44:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Pb0iPc
+	dEeHebXeBafq6Cz5IsD8ru0VAgrLo98xb9RWo=; b=MD36ZbOfUkPrFh5VqvRb7v
+	+Kt2tEfGngQGbB4KcQ126tLOG4YYdJWL3Com+ciIHdHK+1QXL92XGb06MMAOz0kS
+	fdxKcbXQpA8ptNlQ9nhWiOutiRk5eDBLjr/moSQ6wSejDISOsYb4YKF8wmcZ1B9+
+	/upSEo/DPU1iXFrTJKRTNL81Ct7PPlvkaf7TLth0drdpuFqBPy3TAyzwA8G5r6Pc
+	Y2MHc4tXmKeASyZL8RD1W1QfSUY2f9O7Y/+NBlglnA4s4e4SvsyD9GCzKHGtA9BR
+	CD7mFmYMc4xMeoI1JJLCX7QhE8SZjq5jb/ZQGL7azqipu6q8qoNlpBzmw1/z/LrA
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45mk0qatqb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Mar 2025 23:44:10 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52QN7oei009737;
+	Wed, 26 Mar 2025 23:44:09 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45j9rktmv5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Mar 2025 23:44:09 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52QNi8JM30737142
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 26 Mar 2025 23:44:08 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 87A7658059;
+	Wed, 26 Mar 2025 23:44:08 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B48D65805D;
+	Wed, 26 Mar 2025 23:44:06 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.98.130])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 26 Mar 2025 23:44:06 +0000 (GMT)
+Message-ID: <af61537d6d4b293813f86c4b55dcfe15a3139085.camel@linux.ibm.com>
+Subject: Re: [PATCH v10 6/8] ima: kexec: move IMA log copy from kexec load
+ to execute
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: steven chen <chenste@linux.microsoft.com>, Baoquan He <bhe@redhat.com>
+Cc: stefanb@linux.ibm.com, roberto.sassu@huaweicloud.com,
+        roberto.sassu@huawei.com, eric.snowberg@oracle.com,
+        ebiederm@xmission.com, paul@paul-moore.com, code@tyhicks.com,
+        bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
+        nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
+        vgoyal@redhat.com, dyoung@redhat.com
+Date: Wed, 26 Mar 2025 19:44:06 -0400
+In-Reply-To: <2d2ea573-1ddd-44b4-8ba3-4ae86313d63f@linux.microsoft.com>
+References: <20250318010448.954-1-chenste@linux.microsoft.com>
+	 <20250318010448.954-7-chenste@linux.microsoft.com>
+	 <Z9t4LVpE470DMBYU@MiWiFi-R3L-srv>
+	 <3d7b5e06-5166-46bb-89dc-a0b95ca7c767@linux.microsoft.com>
+	 <Z+E7X6LuQ82q1i5V@MiWiFi-R3L-srv>
+	 <6583378c-55ee-4192-a95f-ebaf3f708bbb@linux.microsoft.com>
+	 <Z+NmLtn0vojVYJ3H@MiWiFi-R3L-srv>
+	 <2d2ea573-1ddd-44b4-8ba3-4ae86313d63f@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 7gAqfQEYtFE5MeYFzlmWitnjt9waQDRW
+X-Proofpoint-ORIG-GUID: 7gAqfQEYtFE5MeYFzlmWitnjt9waQDRW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 phishscore=0 mlxscore=0 mlxlogscore=665 impostorscore=0
+ malwarescore=0 adultscore=0 bulkscore=0 clxscore=1015 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503260146
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
 
-Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
-a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+> > Hmm, it's easier, while maybe not good. We should not repeatedly
+> > introduce similar things into codes. Here, it's similar as
+> > what kexec_apply_relocations() and arch_kexec_apply_relocations() are
+> > doing.
+> >=20
+> > int machine_kexec_post_load(struct kimage *image)
 
-So, with these changes, fix the following warnings:
+(As discussed) just as kexec_apply_relocation calls
+arch_kexec_apply_relocations().  Name this function kexec_post_load() and c=
+all
+machine_kexec_post_load().
 
-net/mac80211/spectmgmt.c:151:47: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-net/mac80211/spectmgmt.c:155:48: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+Mimi
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- net/mac80211/spectmgmt.c | 55 ++++++++++++++++++++--------------------
- 1 file changed, 27 insertions(+), 28 deletions(-)
-
-diff --git a/net/mac80211/spectmgmt.c b/net/mac80211/spectmgmt.c
-index c6015cd00372..7422888d3640 100644
---- a/net/mac80211/spectmgmt.c
-+++ b/net/mac80211/spectmgmt.c
-@@ -147,14 +147,14 @@ validate_chandef_by_6ghz_he_eht_oper(struct ieee80211_sub_if_data *sdata,
- 	struct ieee80211_local *local = sdata->local;
- 	u32 control_freq, center_freq1, center_freq2;
- 	enum nl80211_chan_width chan_width;
--	struct {
--		struct ieee80211_he_operation _oper;
--		struct ieee80211_he_6ghz_oper _6ghz_oper;
--	} __packed he;
--	struct {
--		struct ieee80211_eht_operation _oper;
--		struct ieee80211_eht_operation_info _oper_info;
--	} __packed eht;
-+	DEFINE_RAW_FLEX(struct ieee80211_he_operation, he, optional,
-+			sizeof(struct ieee80211_he_6ghz_oper));
-+	struct ieee80211_he_6ghz_oper *_6ghz_oper =
-+				(struct ieee80211_he_6ghz_oper *)he->optional;
-+	DEFINE_RAW_FLEX(struct ieee80211_eht_operation, eht, optional,
-+			sizeof(struct ieee80211_eht_operation_info));
-+	struct ieee80211_eht_operation_info *_oper_info =
-+			(struct ieee80211_eht_operation_info *)eht->optional;
- 	const struct ieee80211_eht_operation *eht_oper;
- 
- 	if (conn->mode < IEEE80211_CONN_MODE_HE) {
-@@ -167,38 +167,38 @@ validate_chandef_by_6ghz_he_eht_oper(struct ieee80211_sub_if_data *sdata,
- 	center_freq2 = chandef->center_freq2;
- 	chan_width = chandef->width;
- 
--	he._oper.he_oper_params =
-+	he->he_oper_params =
- 		le32_encode_bits(1, IEEE80211_HE_OPERATION_6GHZ_OP_INFO);
--	he._6ghz_oper.primary =
-+	_6ghz_oper->primary =
- 		ieee80211_frequency_to_channel(control_freq);
--	he._6ghz_oper.ccfs0 = ieee80211_frequency_to_channel(center_freq1);
--	he._6ghz_oper.ccfs1 = center_freq2 ?
-+	_6ghz_oper->ccfs0 = ieee80211_frequency_to_channel(center_freq1);
-+	_6ghz_oper->ccfs1 = center_freq2 ?
- 		ieee80211_frequency_to_channel(center_freq2) : 0;
- 
- 	switch (chan_width) {
- 	case NL80211_CHAN_WIDTH_320:
--		he._6ghz_oper.ccfs1 = he._6ghz_oper.ccfs0;
--		he._6ghz_oper.ccfs0 += control_freq < center_freq1 ? -16 : 16;
--		he._6ghz_oper.control = IEEE80211_EHT_OPER_CHAN_WIDTH_320MHZ;
-+		_6ghz_oper->ccfs1 = _6ghz_oper->ccfs0;
-+		_6ghz_oper->ccfs0 += control_freq < center_freq1 ? -16 : 16;
-+		_6ghz_oper->control = IEEE80211_EHT_OPER_CHAN_WIDTH_320MHZ;
- 		break;
- 	case NL80211_CHAN_WIDTH_160:
--		he._6ghz_oper.ccfs1 = he._6ghz_oper.ccfs0;
--		he._6ghz_oper.ccfs0 += control_freq < center_freq1 ? -8 : 8;
-+		_6ghz_oper->ccfs1 = _6ghz_oper->ccfs0;
-+		_6ghz_oper->ccfs0 += control_freq < center_freq1 ? -8 : 8;
- 		fallthrough;
- 	case NL80211_CHAN_WIDTH_80P80:
--		he._6ghz_oper.control =
-+		_6ghz_oper->control =
- 			IEEE80211_HE_6GHZ_OPER_CTRL_CHANWIDTH_160MHZ;
- 		break;
- 	case NL80211_CHAN_WIDTH_80:
--		he._6ghz_oper.control =
-+		_6ghz_oper->control =
- 			IEEE80211_HE_6GHZ_OPER_CTRL_CHANWIDTH_80MHZ;
- 		break;
- 	case NL80211_CHAN_WIDTH_40:
--		he._6ghz_oper.control =
-+		_6ghz_oper->control =
- 			IEEE80211_HE_6GHZ_OPER_CTRL_CHANWIDTH_40MHZ;
- 		break;
- 	default:
--		he._6ghz_oper.control =
-+		_6ghz_oper->control =
- 			IEEE80211_HE_6GHZ_OPER_CTRL_CHANWIDTH_20MHZ;
- 		break;
- 	}
-@@ -206,15 +206,14 @@ validate_chandef_by_6ghz_he_eht_oper(struct ieee80211_sub_if_data *sdata,
- 	if (conn->mode < IEEE80211_CONN_MODE_EHT) {
- 		eht_oper = NULL;
- 	} else {
--		eht._oper.params = IEEE80211_EHT_OPER_INFO_PRESENT;
--		eht._oper_info.control = he._6ghz_oper.control;
--		eht._oper_info.ccfs0 = he._6ghz_oper.ccfs0;
--		eht._oper_info.ccfs1 = he._6ghz_oper.ccfs1;
--		eht_oper = &eht._oper;
-+		eht->params = IEEE80211_EHT_OPER_INFO_PRESENT;
-+		_oper_info->control = _6ghz_oper->control;
-+		_oper_info->ccfs0 = _6ghz_oper->ccfs0;
-+		_oper_info->ccfs1 = _6ghz_oper->ccfs1;
-+		eht_oper = eht;
- 	}
- 
--	if (!ieee80211_chandef_he_6ghz_oper(local, &he._oper,
--					    eht_oper, chandef))
-+	if (!ieee80211_chandef_he_6ghz_oper(local, he, eht_oper, chandef))
- 		chandef->chan = NULL;
- }
- 
--- 
-2.43.0
-
+> > {
+> > #ifdef CONFIG_IMA_KEXEC
+> >          ima_kexec_post_load(image);
+> > #endif
+> > 	return arch_machine_kexec_post_load();
+> > }
+>=20
