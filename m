@@ -1,63 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.tkos.co.il (golan.tkos.co.il [84.110.109.230])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C6B19066B;
-	Wed, 26 Mar 2025 08:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707F819DF53
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.110.109.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742976833; cv=none; b=Ddq3U4BMDZS1InxF8Shzn3Q+XgwSue7TGTPIdzNpxMXXYoS6q62KJluv+Jh+hRPya2eoXswXFdCfelx94TxXf+SzN64qwJ//IxbVIBen3ln5di7SaZrEOHKdxEjgsLipbzVLH5uUw/skAuTr6D6rTMeOL7UWCxpAfeg2GuRJiZM=
+	t=1742976871; cv=none; b=XNSpvpJrrcG3iHPDaUQM7vHExylozFHnfZtTTfJM79yN6HmkqW5CteszNPco1agRgH9iZ1e3IxT5W1VzL9R77Up6zqcodKsYTw7LxJms1S/IDdtQjs8yshqzPG2LxBqr5n/tgPS/SPL13VhmE7VoGvuKQk36gGliTIrD3N4ZO6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742976833; c=relaxed/simple;
-	bh=v4CYst09Trq8VkiSo2M2aXD4T7YqMP6slaQagB+pQIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HEK5UC9Cpqkz8eyyD318yhVSZSYvRIj0XtT8gU+niF0eFtbLFP4afXfIGVfGIAVYp8t/5h3SExZMOWb20SimaMXdteGvZSIH44oU/77i/1e6obe+xCECNAFRgNXDZvFulRNpvCDdFaLCSNVBtJxVJ5eZRsvqWPdcmhcyNb9hzio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGs3PIBv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742976871; c=relaxed/simple;
+	bh=4ii4RbB5khDzrVzL7SDv7AMK9e8BPIkos2e4idCFtXU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nwg2/aebX900HUhpggxRjnLg/TdJHX7bQ2ivJqq79eDPmmtkr/MOy3qTPOFbm7UyOw77u9t3mhRTU/gZsEQ8V3awP8GCEwJ8Uw0Ubbhf0X3flwxDNSY8PQ/l/+byNXUmMhTtB6KFZIpV1hei5P9ecLAwysuOx2GhR8DMrX4Ylfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il; spf=pass smtp.mailfrom=tkos.co.il; dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b=f2G1up5X; arc=none smtp.client-ip=84.110.109.230
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tkos.co.il
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGs3PIBv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85485C4CEE2;
-	Wed, 26 Mar 2025 08:13:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742976832;
-	bh=v4CYst09Trq8VkiSo2M2aXD4T7YqMP6slaQagB+pQIU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GGs3PIBvpiMyofY/XbxhQL8hqjoDRETSRYGuWhEOoE8m0AAXocbFt6gO57xYe0lO6
-	 5tP6lZmIkmfbNSewn0p8IxN5NXEcWLjc5kZ7GBwQmH7CJ5NArt2oZrDcZJMe/AgtAl
-	 PeXFFZB5MLWAo9rd37fye5bXYhIk03iCguRqpFBzSiO/pM2Gkpe/3c8QWvdJ97dcib
-	 XZQcJOO1t5yNrxxXyN1OyoTIK1nKt84P+S1wIeBqc+CqOPV62l7ihn1jXQnDI4uBBt
-	 iowypYddiWCO7zddBsRE2sdcGeTyPjDWNzLWPiDVHnXsubNrtaHFuByh+32mELym8R
-	 GWunfKxlsbvig==
-Date: Wed, 26 Mar 2025 09:13:48 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Hu Ziji <huziji@marvell.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-mmc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: mmc: marvell,xenon-sdhci: Add reference
- to sdhci-common.yaml
-Message-ID: <20250326-chocolate-ibis-of-faith-970ccf@krzk-bin>
-References: <20250320-dt-marvell-mmc-v1-0-e51002ea0238@kernel.org>
- <20250320-dt-marvell-mmc-v1-2-e51002ea0238@kernel.org>
+	dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b="f2G1up5X"
+Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.tkos.co.il (Postfix) with ESMTPS id 5D8B64406EE;
+	Wed, 26 Mar 2025 10:05:20 +0200 (IST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
+	s=default; t=1742976320;
+	bh=4ii4RbB5khDzrVzL7SDv7AMK9e8BPIkos2e4idCFtXU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=f2G1up5X0P7nYeimxLzyTY2rJniwJhw8w6QnSfQ+HY5hBiS+RHYwIbTtIIR7OF9+q
+	 hkryvVdc+a2yt0OXnequVeOySVAfQJ5iKs+rePyuqyfbsez90tqF3no2gEkTeQ2QqS
+	 YOLqLX5yKzLF+hOx3NuOrk7DBeB3w08k36/PTVdga6340d2yiq+iOXyMag2jOX6KS7
+	 8Sieme5+jtOZ4hYZEfyxl053WGUBNgi2Bb2qt4yjtS9n3MfB/rGTWBHeerg0ShVKks
+	 guhYhdVAB8hmfZzJe6z+8wQijz4qWNAzGJ2bRE5wpXuQoWWkSHInIfuVzb8XxD/GYW
+	 tHowfNqEUPcZg==
+From: Baruch Siach <baruch@tkos.co.il>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	Baruch Siach <baruch@tkos.co.il>
+Subject: [PATCH] init/main.c: drop misleading comment
+Date: Wed, 26 Mar 2025 10:05:36 +0200
+Message-ID: <77c8d040201e17349fc825e445f472518776a434.1742976336.git.baruch@tkos.co.il>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250320-dt-marvell-mmc-v1-2-e51002ea0238@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 20, 2025 at 04:35:47PM -0500, Rob Herring (Arm) wrote:
-> The Marvell xenon-sdhci block is an SDHCI and can use properties from
-> sdhci-common.yaml, so change the reference.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+initcall_debug prints show with or without the DEBUG macro. This macro
+does affect a few pr_debug() calls, so leave it there, but remove the
+comment.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+---
 
-Best regards,
-Krzysztof
+Not sure who takes init/main.c patches. I followed THE REST entry from
+MAINTAINERS. Hope this is OK.
+---
+ init/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/init/main.c b/init/main.c
+index 7f0a2a3dbd29..3594c3e37760 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -10,7 +10,7 @@
+  *  Simplified starting of init:  Michael A. Griffith <grif@acm.org>
+  */
+ 
+-#define DEBUG		/* Enable initcall_debug */
++#define DEBUG
+ 
+ #include <linux/types.h>
+ #include <linux/extable.h>
+-- 
+2.47.2
 
