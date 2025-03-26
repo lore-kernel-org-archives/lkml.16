@@ -1,140 +1,127 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89B919E7E2
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 17:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C9F23E334;
+	Wed, 26 Mar 2025 17:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743011836; cv=none; b=opYz9DyE1n0J9n1/FvQ7babgApBUEsnrCJHLc+QEaKAWcuXFKkMMfjEE/uheh2BJuTVnH/Npvb7eVZ8vWFamn7ps9f9+1vfuWJBdDlCtSSriuij8kwpEadhbV+bVjjCGQ5czUqJ56cmrZ2sElIA0XJc13LULkmCQLHUiZ31GALs=
+	t=1743011869; cv=none; b=TLz8atY25mzOg0J6MDaoCHuz37PK6wJ/AlzivDm2fskQLZMVgcv7GU6oqgyNwlJQjREiAnOPOJKlmXzmdD/O0TK3BFUX6xy/KFaJ91rIjWCLQ9moLBL9CzUXA+tRF9ahEZ8UnPYBQte/hhkOQ3uj1xlY+HVy77LS2l3K9Lww9sI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743011836; c=relaxed/simple;
-	bh=y2Bavw+fb2yGj75P8FeHHge6IUp29GnDyZ5KZhxnMMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aO6PLdBkM7P/m+gkOrYr7B/EpbtWVxoK3pHCqBkJoNYHETnawvFZ7dqScCcV2vPGLawKMEDl5af4Lmih09hXlg/YMnzjRnmrBASts7sJNoZulmgVNCLAVX9Fj73cvtJLl2PEasGUJLv8GgQ9lFmQxYNksrlI+A4L8qcP+lxRSo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=NA8XzC+G; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=fq2PC/xB; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=A64a30eR; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Rlnu3tGI; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1743011869; c=relaxed/simple;
+	bh=GqOcnRFwlAHtp/aIMlSjsrauyIL3K6klyA2xEQOJUvk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=URrCfqwSYbMG/EfG12PoakzvY/M8W2aYLU6RLJ7GFwEf+LWukL4l7rHEYitmDVRxCB8gsDK9WwPwk2MHxAdXMzGYyg+pMrgRHDFDbKObU3jIRsXMAFQdnxPHoG5bjeCCkLY9Qii0tl3mfRHaw4HyjiOZhpJo3u/FRbuJhvPNJ38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b+0jSa7c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="NA8XzC+G";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="fq2PC/xB";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="A64a30eR";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Rlnu3tGI"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CD79D1F391;
-	Wed, 26 Mar 2025 17:57:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743011833; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LhbcJbX1E8/sAF7u3AaRHNUnCD+wtvVbag4T1LGLR+c=;
-	b=NA8XzC+GdycsBYmAjlliy8ESatOWuxEPezBNghytnk9a61smBlukKctAbo/jGlg2YpY+uZ
-	GnjwxWy3yP92QS8Grg3dBwNa/phqi7dwFRQ0tyQeZSMYD7niCeV1Ujz2CKRlUTC7xPLecS
-	L8I3QQOXsVk/ykL7z85ttA9NscGcIWo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743011833;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LhbcJbX1E8/sAF7u3AaRHNUnCD+wtvVbag4T1LGLR+c=;
-	b=fq2PC/xB0VbE7J02pWhwhw+rJ6afTye8pGkXMtRrUNRy96Kdj2Z2hzTQyPRnlkdkh8UJxI
-	6erv2gZ4kZqZ3tBA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743011832; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LhbcJbX1E8/sAF7u3AaRHNUnCD+wtvVbag4T1LGLR+c=;
-	b=A64a30eRyCtwt9FsPVJ+Budx2+5Nf6/7G4KdWkD+RdwKy7vL5+Y9i+CuXMxP30QFt6+ryr
-	loFOr8gFxorbU+vz4qavFhl2TBY7QabOYQLpMJ1QqQjXOBIf9JEKuA4jhXZXKYBGV+zz9D
-	nwNl/61Zz3x/wWLcploDIvLpiV254u4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743011832;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LhbcJbX1E8/sAF7u3AaRHNUnCD+wtvVbag4T1LGLR+c=;
-	b=Rlnu3tGIwA1JdrPyQnRbeubVAmPp7LweN6VUaHryfWNuIu14+8iYuNRdGBtBXvmNHPj8uF
-	BoC/ZXPOKlmd19BQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B972B1374A;
-	Wed, 26 Mar 2025 17:57:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id a9IBLfg/5Gc3DQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 26 Mar 2025 17:57:12 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 4C7F2A082A; Wed, 26 Mar 2025 18:57:08 +0100 (CET)
-Date: Wed, 26 Mar 2025 18:57:08 +0100
-From: Jan Kara <jack@suse.cz>
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: jack@suse.cz, hch@infradead.org, James.Bottomley@hansenpartnership.com, 
-	david@fromorbit.com, rafael@kernel.org, djwong@kernel.org, pavel@kernel.org, 
-	song@kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	gost.dev@samsung.com
-Subject: Re: [RFC 4/6] ext4: replace kthread freezing with auto fs freezing
-Message-ID: <ii74e3kgrkamwkx3md6mkalmmzffi6c6ieoebepu6e7bsrjikg@acalyy2cmi6b>
-References: <20250326112220.1988619-1-mcgrof@kernel.org>
- <20250326112220.1988619-5-mcgrof@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b+0jSa7c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D956DC4CEE9;
+	Wed, 26 Mar 2025 17:57:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743011868;
+	bh=GqOcnRFwlAHtp/aIMlSjsrauyIL3K6klyA2xEQOJUvk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=b+0jSa7cZfR/1HhlQHIH8Zu8IxU8dTyf/ZW+W6v3rGedeJZ4hDz5p2Bii+DzH2RLP
+	 bb/NCTZHuKmmkgPI7/MtOFSl1viIjaYeqEMsMp3WmUFPMnzdFAETzy4UYvBrYQVdn2
+	 XNF/irI7SEjZJw9ICpKdZY+IFqxa22VXfw5XBPtFvLv+/vygOifc9u0va0lIPZKW7V
+	 rS6GBdvW/Gy98o3zdE2VLAMFrSpDSZ5R+UZ3droT5tI1yubqF2JEZLi1EJ0iL83s8H
+	 vqW97g5q2wGuuFC0bJo9voPX3zqr3eMDA+rU2SWDh4G6T3owCF/h0dx9I0qvcCp4oy
+	 KUI73Y0qUCmDg==
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-72bbc03d436so101690a34.3;
+        Wed, 26 Mar 2025 10:57:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUAq/IDu6iiWytq0kU07PbK4Uh0hUlSEZ6eFEsNtpS/djWWo1vLzj+iLtKZJjHtKt8w4Nbm5HnNI/3ugzs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhI5YoXEQhrO/bXEfzi/Feq/VPYAr7ie83tTAD/XcmGIyhrON/
+	7tH9VDvYkokqalnOWrGsfE57xxQeO7Aa+7jn1t0KX6ZNd2uKMLSLxDzGI7B+On6y8hq/rKqTEPL
+	bbHD3I870LtgYfHjA9RXIaAjqtTw=
+X-Google-Smtp-Source: AGHT+IGt4eD2dTMMXBmq7kFDQ2GELUuv+zrkhHmxQU26TbdlWTVi8vwnmhmQbiKeeKP6QytrVdIEIhVN54F0jvDImK0=
+X-Received: by 2002:a05:6830:3151:b0:72b:93c9:41a6 with SMTP id
+ 46e09a7af769-72c4c9f2c69mr441975a34.20.1743011868181; Wed, 26 Mar 2025
+ 10:57:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250326112220.1988619-5-mcgrof@kernel.org>
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <CAJ1CgxEJn543x50SbvZQZCvSxUFB2xJ7OL3ejcgNqWr0=O52JQ@mail.gmail.com>
+In-Reply-To: <CAJ1CgxEJn543x50SbvZQZCvSxUFB2xJ7OL3ejcgNqWr0=O52JQ@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 26 Mar 2025 18:57:35 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0hzLXt5P9VWw_DfmUop37Gju7qf5p5W20RPDWtCFH-yxw@mail.gmail.com>
+X-Gm-Features: AQ5f1JoYRG2zv3xvwYfCHGdETN8jDDq7DPyIyz6dD4HUTunVXXto8_NbVHl56Dc
+Message-ID: <CAJZ5v0hzLXt5P9VWw_DfmUop37Gju7qf5p5W20RPDWtCFH-yxw@mail.gmail.com>
+Subject: Re: ACPI BIOS errors causing intermittent boot freezes on Lenovo
+ Legion Pro 5
+To: Dominik Pawlik <osemka59@gmail.com>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed 26-03-25 04:22:18, Luis Chamberlain wrote:
-> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-> index 0d523e9fb3d5..ae235ec5ff3a 100644
-> --- a/fs/ext4/mballoc.c
-> +++ b/fs/ext4/mballoc.c
-> @@ -6782,7 +6782,7 @@ static ext4_grpblk_t ext4_last_grp_cluster(struct super_block *sb,
->  
->  static bool ext4_trim_interrupted(void)
->  {
-> -	return fatal_signal_pending(current) || freezing(current);
-> +	return fatal_signal_pending(current);
->  }
+On Wed, Mar 26, 2025 at 6:36=E2=80=AFPM Dominik Pawlik <osemka59@gmail.com>=
+ wrote:
+>
+> To: linux-acpi@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Subject: ACPI BIOS errors causing intermittent boot freezes on Lenovo
+> Legion Pro 5
+>
+> SYSTEM INFORMATION
+>
+> Hardware:
+> - Laptop/Desktop Model: Lenovo Legion Pro 5 16IRX9 i9-14900HX
+> - CPU: i9-14900HX
+> - BIOS Version: N0CN29WW
+>
+> Kernel Version: 6.13.8-061308-generic #202503222044
+> Distribution: Ubuntu 24.10
+>
+> OBSERVED ISSUE
+>
+> Description: System freezes intermittently during boot due to ACPI BIOS e=
+rrors.
 
-I think this is wrong. ext4_trim_interrupted() gets called from a normal
-process that's doing fstrim (which can take a long time and we don't want
-to block system suspend with it). So IMO this should stay as is.
+There are two things here, the ACPI error messages in the kernel log
+and failing boot.  Do you actually know how these two things are
+related to each other?
 
-Otherwise the patch looks good to me.
+First, the same or similar messages are also present in your
+successful boot log.  Second, there is nothing I can see that would
+indicate a direct connection between those messages and boot failures.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> Errors indicate missing symbols (_TZ.ETMD,
+> _SB.PC00.LPCB.EC0._Q37.PNOT, _Q38.PNOT)
+> in ACPI tables.
+
+True, but is this the reason for failing to boot?
+
+> Error Logs:
+> [13:40:52] kernel: ACPI Error: Aborting method \_SB.IETM._OSC due to
+> previous error (AE_NOT_FOUND) (20240827/psparse-529)
+> [13:40:52] kernel: ACPI BIOS Error (bug): Could not resolve symbol
+> [\_TZ.ETMD], AE_NOT_FOUND (20240827/psargs-332)
+> [13:40:21] kernel: ACPI: video: Video Device [GFX0] (multi-head: yes
+> rom: no  post: no)
+> [13:40:21] kernel: ACPI: video: Video Device [PEGP] (multi-head: yes
+> rom: no  post: no)
+> [13:40:21] kernel: ACPI Error: Aborting method \_SB.IETM._OSC due to
+> previous error (AE_NOT_FOUND) (20240827/psparse-529)
+> [13:40:21] kernel: ACPI BIOS Error (bug): Could not resolve symbol
+> [\_TZ.ETMD], AE_NOT_FOUND (20240827/psargs-332)
+> [13:40:21] kernel: ACPI BIOS Error (bug): Could not resolve symbol
+> [\_SB.PC00.LPCB.EC0._Q37.PNOT], AE_NOT_FOUND (20240827/psargs-332)
+> [13:40:21] kernel: ACPI Error: Aborting method \_SB.PC00.LPCB.EC0._Q38
+> due to previous error (AE_NOT_FOUND) (20240827/psparse-529)
+>
+> Full boot logs available in:
+> - boot_failed_journal.txt (failed boot case)
+> - boot_succeeded_journal.txt (successful boot case)
+> - acpidump.txt (ACPI tables)
+>
+> STEPS TO REPRODUCE
+> 1. Reboot the system
+> 2. Observe ACPI errors during boot (freezes occur intermittently,
+> every few boots)
+>
+> TROUBLESHOOTING ATTEMPTED
+> - Updated BIOS to latest version (N0CN29WW)
+> - Tried booting without splash screen (nomodeset)
+> - Tested with multiple kernel versions (including official)
