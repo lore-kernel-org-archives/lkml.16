@@ -1,80 +1,92 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA0FE1EB5D4
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:34:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D601E8343
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742999646; cv=none; b=VXgbgtIUdeqcGIcJYhSbJ9pKtzuNXVANoYqppfu2Bf4r6yxsRssAMGeDrro9HRt+Uo7rUFupuuKUYSAy6nHoJ05eDQzVFZqLv88oEwtpXgdTgLPjyXFx46eadAqBlqEEoUdvFNrwEM6XYFeYcJhtXez+QrXkPYpfKfiP0jG9t28=
+	t=1742999669; cv=none; b=rjbgef9AIUj0Tg3ajP6yF4IGf+rfpl3GpFpiqs2al44Si4eurMeyLH0AmMQ+kuMdZKrwQbd44uxe5ZeOuUG/3zzHIoeTmvpIHCbQdNDOZgrNYNpcnH5M/jcg1hjx5BHkUFo9ipsFS6MSszi8Rf91y5kWE5v3c+N79nofuhCQqPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742999646; c=relaxed/simple;
-	bh=X9K0ZiIBbyvbHh33ELRxPX3WXyDf6Rv/bbUWC1l6rkI=;
+	s=arc-20240116; t=1742999669; c=relaxed/simple;
+	bh=bGdSlf9iC5TjW33KKOqByec7ahm5IZSgwgZbmR3p2Es=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nq7fK+Tb8emaDIxkGWzs1hhmTjKo65/dQiE16lgJzeLFQfwA8dzbF0ix4GD7U8O5i9SuAnAEfyttBjJcxSX+NJ4gCUFlRrwhP7gvVXvz78vZnETKyNapCqx9vIHtib78fFxB6uzpvvrtDqIHh5AGOHxAIIKoUOK53PusgVJrixE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=OsyVIHS1; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	 Content-Type:Content-Disposition:In-Reply-To; b=gFeyUcDlm2H4Z8EbOAmXL7sQg3Ala5qiPXrMAUtbjzKiYThXa6N5dkLhWmAEvDhdQiQ5PfZydixhSjXZvtOCJ3/O6SDjCP7sKC+LE41F4mbzb/0MchU8sJ+SD73oSLQswVOduYlykGRLxN/lQej/0cBNVjOrlP6Ux9hHlz+TEVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NoGaHWXD; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="OsyVIHS1"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c5c815f8efso367645485a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 07:34:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1742999643; x=1743604443; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=X9K0ZiIBbyvbHh33ELRxPX3WXyDf6Rv/bbUWC1l6rkI=;
-        b=OsyVIHS1DCbkohaT8GNSyvOIwoQ7zn3xRt6+wTj3Y+r9XYdSdLiD0qgXXGl/89DTtG
-         e8pJLVNtLWtI+dWmUpwX1e+jGg9HrKAStwSJt3jQTBSsJsA0LCGyiZkuQz66WvG2n8P1
-         UF+0MU8y100y7T3SS/OEE9ueHxOh1TAWznFfI7xd7tAwsXwbd0BgUf4bnx8/Wv1lhzcj
-         hEu/D3CZTPHqVasmWzOsZqb7kIJ4a2VW9+WIDQnCdOiGGat9uqCZPyegJZ3touewr+B1
-         PQIqlP05CMceZZpGkEkEg66AmYZSuyJSIJYrpVsq4zjzmlfbz4+lr2k66W+gOdFeJXq8
-         1OZg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NoGaHWXD"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52Q736M9004062
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:34:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=RY0WQaB9X6ZreP0NVetrV9wA
+	t2tqT58NwwimdxdQF20=; b=NoGaHWXDU+LVn7AtakWhD0dYjqhRxg19LcJnyWot
+	M/3wJQ88MXpKvUmtVT0OZ7pDfosQbmfvVDvA2VlMiKKAUgk8p03yDTe633zFmNyw
+	gnKRUaH4ngrb+70yFCr5ihb5jJKMuE/c7jZ6Z7J2CSFA+vtWRhNynmx3Ah5F3yld
+	HbIar1xIAdoM1xcaqNhtdKV4b8IBmlTqByep1i3f5uQogALygQmMpu6eNteXZQKr
+	s5LwbUUEbgCDtTNbmOgGqEn17IuH2ORrZ5cksGaiOLfkTfLfHKnOXGGKR9Wb4skG
+	spaqFv87QtX/1bB49QeRtKJNOTDOdov98QopXiTB75gBnA==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45kmcydan9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:34:27 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5c77aff55so954649785a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 07:34:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742999643; x=1743604443;
+        d=1e100.net; s=20230601; t=1742999666; x=1743604466;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=X9K0ZiIBbyvbHh33ELRxPX3WXyDf6Rv/bbUWC1l6rkI=;
-        b=CSukg9TfdK47v2xIlJDe53jrqKSgi56mg9mKWgbMP4vi1BOvgn+eGLJsfESdpjRfXP
-         E2xM8Cg6v873Xq+itgOs0Z72gZVncAQkcG9FQOwysPP6fYrpy9kkcIlFv9C8vXKaGzOk
-         ytJFkWEtlbPh6F9BU/cWWr+fsCKpyruHW0iCFodCviEULVfETl8H9Ec+Il/7eSM3uGLy
-         s5Dk7KONkW9Jl5EO213SpL/Rf1s1DJ5+Gu7+A/lvNTdYl+32A5zSl+9fC1LeL9L3Ival
-         HlmfodcS1doyLc1lx9b+K3JvuUkc7/qz09k36kSyqjQwcPd3PYSWV9v2G6iRXzWdYqar
-         SA+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUzVtqILAh+/9tmZiYk1+vG6EXkT5WeiNJeBJpkq5MPZpYqBvmjgrAlgzYBRpiVIAiakrw/bnkj/YnD3FM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw87Qov3nezMgQwI2OTQUtaDue1AfhLhbs241HdErkypoyG1eU2
-	k0TrVUQHlhaSVmHkIcsZf5gk+FYvs+r1Vv7W28UZoQ8mkoQ8To2wbvwwzQ3hIYY=
-X-Gm-Gg: ASbGncssEG6FSbq77hdV4Mbg7AFaLUQBxXl2FDKL6tatcVBF4KwGJRS36X96rEtSm7W
-	0U852ni2PKenDQqElBfCd8H3HyfImuCUsAGz96oyIv1qweTycORxFWG3K2V+LZUp2CTlWhAwHEe
-	l1iUh9upUhy4JD3qivZHnP2KPlsdo8YYVaYueMw9GvmbE5PLk/aWwv4iyFIYFiDF1GQNI+sopmZ
-	UN7WdD6kZJeFqz87xwgumK0w42yWs5EoNMifA3wir8FaRcTFFdqkOZePgRhc3iyLAOWRZR/QQ0W
-	1ArrU4JUtGwyzEmusw==
-X-Google-Smtp-Source: AGHT+IEvJNHFEY70ZCHkTf9bLLQ/xpRNZLwrrnPOmT9ZRkaQAnsvEu15xp7iNKz4p/RtU1qliO8qlA==
-X-Received: by 2002:a05:620a:2a08:b0:7c5:5670:bd75 with SMTP id af79cd13be357-7c5ba1e961amr3571891985a.46.1742999643403;
-        Wed, 26 Mar 2025 07:34:03 -0700 (PDT)
-Received: from ziepe.ca ([99.209.85.25])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b934831esm772669385a.80.2025.03.26.07.34.02
+        bh=RY0WQaB9X6ZreP0NVetrV9wAt2tqT58NwwimdxdQF20=;
+        b=d3J0UZrIkkPCfrfhH9c+q3hSezFQsCl4wh+qM/tWCKVvzOrJBiuSZUwVnmgeV15GrD
+         E/F8pwZ2R1UO6JWn1P01D2ly8FKhR4M+HxfBL14y9W8uvBtMmzDXbVJAx+Ci67thQoB3
+         uTtaHLtgGpRrvdtJLn8ogOLIbTt6/9AGMkBRh575x2Rgzp0r+q0X2ciSgziMS4GZmge7
+         e61oQr7In1SWHBH1RGlovAD43iVvOxMjv0WYiXtXstgByK3AAyibS9A2uTgooU2WkJ1x
+         y4pjXCXQ3zUlHYBO5AI6OYC+7VSoNVJBFdETuxFGoVP4X5IweqxPvTImK+Yx8QFk14Gs
+         21OA==
+X-Forwarded-Encrypted: i=1; AJvYcCVdouDp5Gaz35PJDQ7Bhh9DIhnV4m92DiGOvuBYErVQwKJ2NixakNo8mgOJShDXgNebt7g+ewt7gtb9uhU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyu6JuD9hUHwkqAbdp7t28NOzVqATKwPvb2nay4/Mig/hUZSt6I
+	w1b2DmJJf3ohrY7dqcEKgCSfNfenFIUIH+zWB+OeybT71jbZhNOq8syxSn8IZkOFKU2EOlTIV5+
+	clnxJI6BTki4v/tBGgqibmu5LrQ7+3NieZOnyd8jhbWMZh2h10tpB59IKG6ucqz4=
+X-Gm-Gg: ASbGncv0kGqOLlUNpFKBrEg6f+ESZgzGLJBW9djclREm6132KT4a3gCBbpme8LxaRe5
+	Di4A9Wv1hJFOLZQTT45IgriZQb7ActkGDjQn6FbgbSlGdg1EkYkK1/HD1Mq/Y2efMk+r4bTNl+z
+	sYbtd7NMpP/ru0UjGO8o4Fb8+Y1CYihvxa+/bpwkzvbwVxaKoXkAFOqpPJnQI0An9PQh5X2ZzaL
+	m68QnZHJvZWzKmf2exYZYClRLqV5LJej5KZCvCix+8BUSGa4MwIcBGCQQwv/x4Dr/osR/e2I4wI
+	Q/KE9BEn1CrqjQToxcDBXaYP6kP5yUsUxEtz8oC7d36b6wVV0lmGvE8xdEWVt4Tdgdl+y/ZF3xe
+	Givw=
+X-Received: by 2002:a05:620a:4588:b0:7c5:4d22:2149 with SMTP id af79cd13be357-7c5ba18febamr3269040085a.30.1742999665696;
+        Wed, 26 Mar 2025 07:34:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IECnr4KG/OEqDIRPkCO6WNP3n/KkReiXPV8GoopXIeN6jC6CBHU7czD9VyoO4qTAXKU2p3ZKg==
+X-Received: by 2002:a05:620a:4588:b0:7c5:4d22:2149 with SMTP id af79cd13be357-7c5ba18febamr3269034685a.30.1742999665204;
+        Wed, 26 Mar 2025 07:34:25 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ad6508252sm1818881e87.179.2025.03.26.07.34.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 07:34:02 -0700 (PDT)
-Received: from jgg by jggl with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1txRpR-000ATd-1m;
-	Wed, 26 Mar 2025 11:34:01 -0300
-Date: Wed, 26 Mar 2025 11:34:01 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Sumit Garg <sumit.garg@kernel.org>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	linux-kernel@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
-	linux-integrity@vger.kernel.org,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Jens Wiklander <jens.wiklander@linaro.org>
-Subject: Re: [PATCH 2/2] tpm/tpm_ftpm_tee: use send_recv() op
-Message-ID: <Z+QQWe/upJuVpU8r@ziepe.ca>
-References: <20250320152433.144083-1-sgarzare@redhat.com>
- <20250320152433.144083-3-sgarzare@redhat.com>
- <Z-I86tWMcD6b_YeM@sumit-X1>
- <Z-Pu4FhcntnKii61@kernel.org>
+        Wed, 26 Mar 2025 07:34:24 -0700 (PDT)
+Date: Wed, 26 Mar 2025 16:34:22 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Melody Olvera <quic_molvera@quicinc.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Wesley Cheng <quic_wcheng@quicinc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 10/10] arm64: defconfig: Add M31 eUSB2 PHY config for
+ SM8750
+Message-ID: <bsbv6isa4dprmirm66keduxdshm4h5spl4q5xptcuduo6jyux7@35axuo7mze5b>
+References: <20250324-sm8750_usb_master-v3-0-13e096dc88fd@quicinc.com>
+ <20250324-sm8750_usb_master-v3-10-13e096dc88fd@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,25 +95,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z-Pu4FhcntnKii61@kernel.org>
+In-Reply-To: <20250324-sm8750_usb_master-v3-10-13e096dc88fd@quicinc.com>
+X-Authority-Analysis: v=2.4 cv=EZ3IQOmC c=1 sm=1 tr=0 ts=67e41073 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=xq4t1jtuFps5bkffva0A:9 a=CjuIK1q_8ugA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: B1ntUX_gbIlBTh32Vxv2yw-QN_DF6mAq
+X-Proofpoint-GUID: B1ntUX_gbIlBTh32Vxv2yw-QN_DF6mAq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-26_07,2025-03-26_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 malwarescore=0 priorityscore=1501 mlxlogscore=489
+ spamscore=0 lowpriorityscore=0 clxscore=1015 bulkscore=0 phishscore=0
+ adultscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503260088
 
-On Wed, Mar 26, 2025 at 02:11:12PM +0200, Jarkko Sakkinen wrote:
+On Mon, Mar 24, 2025 at 01:18:38PM -0700, Melody Olvera wrote:
+> The SM8750 SoCs use an eUSB2 PHY driver different from the
+> already existing M31 USB driver because it requires a connection
+> to an eUSB2 repeater. Thus, for USB to probe and work properly on
+> SM8750, enable the additional driver.
+> 
+> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+> ---
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-> Generally speaking I don't see enough value in complicating
-> callback interface. It's better to handle complications in
-> the leaves (i.e. dictatorship of majority ;-) ).
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-That is very much not the way most driver subsystems view the
-world. We want to pull logical things into the core code and remove
-them from drivers to make the drivers simpler and more robust.
-
-The amount of really dumb driver boiler plate that this series
-obviously removes is exactly the sort of stuff we should be fixing by
-improving the core code.
-
-The callback interface was never really sanely designed, it was just
-built around the idea of pulling the timout processing into the core
-code for TIS hardware. It should be revised to properly match these
-new HW types that don't have this kind of timeout mechanism.
-
-Jason
+-- 
+With best wishes
+Dmitry
