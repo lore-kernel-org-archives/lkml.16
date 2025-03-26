@@ -1,86 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A24019D88B;
-	Wed, 26 Mar 2025 22:17:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E216F1A315D;
+	Wed, 26 Mar 2025 22:18:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743027464; cv=none; b=WZ1Dj76SWraGtnlruLMOljB1qfHjfFPb5nhsh3c3o8sbQH0h1mHnos/eTVJe0ckLeaQ/a57PrVBv1iZLrcXMftl7Viajo33++vxDC2MnHAOOlDg2tRKoD2b+nGA1ePS1ubFkWh/2zNzkYsxyqWcOxiM4TP+k5HZLdxJobViQov4=
+	t=1743027533; cv=none; b=q1rNdJ/S2RBtO0Ork2tfoMrEE0xJIGPmnh3gywfaFk7LL/1Oo8pBUu8fnaZx/xhuskCRhqiy0kNyg0wNH3MA7o0WatdMXNyBndBouWWXg1PmukeriOvV0yvDCMeRgaMwuT+fIYQcZz0fXAzUXAQgd2duWfAvrBxVmaARNyT4SNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743027464; c=relaxed/simple;
-	bh=ztcSyDM8688dY/x4+PbD/IkRXQaivYoZnohIQ5z1uOk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Qg2y2bGmu1s4ioSDIlWGbMHj5Ele88soFGAIoMj+yEvYZsTbWGY53bbMecrEoERJngmzagRuO2Moq1mpIUVpJVqWQzjqP3U7I4Yu95cZQyvy0VOXYV0V0qMFU8Fr7pUDO+MRI8ITN92ZOGV/RUM2YrM0uh/H8q8AmS0duuDAY6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZjKyefw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743027533; c=relaxed/simple;
+	bh=K3WzyobfO96VNIeCwweVniqoBNNYchgUhG7DiNyc5EM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mWPjLwJWOFY88Eyx/5yEycKuR2NEqyVi4x4knc5i4S1qozKZUetGHBjWdEpDqAAHDDJP3W5hjh0iyp5SjklxzNzKKS0M6kR7ip66D5vVLUN21vBa9/5lU9Z9c3mGyKJ1iKPWMippNGcpU8dvgLp+muIxl8kZBOISf6t5jriI6EA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ifjLmfaS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZjKyefw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C32DC4CEE2;
-	Wed, 26 Mar 2025 22:17:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ifjLmfaS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A95CC4CEE2;
+	Wed, 26 Mar 2025 22:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743027463;
-	bh=ztcSyDM8688dY/x4+PbD/IkRXQaivYoZnohIQ5z1uOk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=aZjKyefwZKYW7LeGPlItgSyUrpIMQulGkTH7hGBOcy36+7XQoK4Una1scZ6ZVHlax
-	 WaKJRvg4WEcH7nrTkKZCrZv5Lagw9FRHfG6zutH3FgYnIdrjgn/bc76FOlfgd38VgU
-	 Yp9g5LKLFsH6vrWDjxJywPxkBeXiavmEH4zl0wcNKSHr5tlb4BIBOXRRQPdfODkIla
-	 SJvWdMdjhjy6repYF27U25o5E6JpVyMr0HBpNOmsccm/fhEHc4FREkWs23WNG8dZp4
-	 t4Q2rN4/UZVh1/palTutmswlnOOFiuQi7AlXTIM0aLpWkGdCQgkUCzRzUQzmL28ba9
-	 BtMEoboYuKvsA==
-Date: Wed, 26 Mar 2025 16:17:41 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Alan Stern <stern@rowland.harvard.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] usb: ehci-fsl: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <Z-R9BcnSzrRv5FX_@kspp>
+	s=k20201202; t=1743027532;
+	bh=K3WzyobfO96VNIeCwweVniqoBNNYchgUhG7DiNyc5EM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ifjLmfaS2b4f7yPXPBYDL8GniFgR4/5QORIB0KiKrKbw8TMYvZLpEjxS4r8+AHL51
+	 1nJDIfjqXE20glqDByMeKjfCoQbeCeRuk4K+LlELS93+UjLtTmohwTre8tPNUWjy+n
+	 BA+MP5idArlIuTujU6w9pvSbAz3jf5iEd9drp8Mzb6CidDHp+ezUXiGhL4Y5uvTSWD
+	 +cwyVC9985wCJq9kk6C40hZsW7JISRfixOfmQ+F+jaJ/rekskoTRPI8NN8KdE79CnN
+	 YrXtkuLzLbNOcR9o0s6Dwx6/wzeQ2vGaVjcvCIch771RIAFXe03DzNm9f3uaQ2ClnZ
+	 WpiIDKpe1q0ig==
+Date: Wed, 26 Mar 2025 15:18:48 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jann Horn <jannh@google.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux-Arch <linux-arch@vger.kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] asm-generic changes for 6.15
+Message-ID: <20250326221848.GA14731@ax162>
+References: <31097083-a444-4bd1-8722-d8b7c4b7a43a@app.fastmail.com>
+ <CAG48ez0ZahF98zN+qKrizDC8MBM7CM=WMBOzk7ybr55Er37=pA@mail.gmail.com>
+ <8ec475fb-9972-45d9-8fd2-9406ed3862ec@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8ec475fb-9972-45d9-8fd2-9406ed3862ec@app.fastmail.com>
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Wed, Mar 26, 2025 at 10:32:39PM +0100, Arnd Bergmann wrote:
+> On Wed, Mar 26, 2025, at 22:08, Jann Horn wrote:
+> > On Wed, Mar 26, 2025 at 8:43 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >> The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+> >>
+> >>   Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+> >>
+> >> are available in the Git repository at:
+> >>
+> >>   https://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git tags/asm-generic-6.15
+> >>
+> >> for you to fetch changes up to ece69af2ede103e190ffdfccd9f9ec850606ab5e:
+> >>
+> >>   rwonce: handle KCSAN like KASAN in read_word_at_a_time() (2025-03-25 17:50:38 +0100)
+> > [...]
+> >> Jann Horn (1):
+> >>       rwonce: handle KCSAN like KASAN in read_word_at_a_time()
+> >
+> > Uh, sorry about this...
+> >
+> > Nathan Chancellor just pointed out that my commit "rwonce: handle
+> > KCSAN like KASAN in read_word_at_a_time()" breaks the arm64 build when
+> > LTO is enabled (<https://lore.kernel.org/all/20250326203926.GA10484@ax162/>).
+> > I just posted a patch that undoes the buggy part of my patch at
+> > <https://lore.kernel.org/r/20250326-rwaat-fix-v1-1-600f411eaf23@google.com>.
+> >
+> > @Linus: Sorry for throwing a spanner in the works here... maybe you
+> > should only pull up to the commit before mine (luckily mine's the last
+> > in the stack, and it's not important), or wait for Arnd to give his
+> > opinion.
+> 
+> I've already tagged a tags/asm-generic-6.15-2 with your fix included
+> and the same tag description.
+> 
+> I don't think it's worth doing a partial pull here.
+> 
+> Linus, if you have already pulled the tags/asm-generic-6.15 tag,
+> I suggest you just apply the fix directly yourself, otherwise
+> you can use the tags/asm-generic-6.15-2 tag instead, or hold off
+> for today and wait for me to send a new pull request after
+> I get an ok from Nathan.
 
-Move the conflicting declaration to the end of the structure. Notice
-that `struct ehci_hcd` is a flexible structure --a structure that
-contains a flexible-array member.
+Jann's patch resolves the issue for me. My two arm64 boxes happily
+boot with it applied to next-20250326 and the virtual test case passes
+as well.
 
-Fix the following warning:
-
-drivers/usb/host/ehci-fsl.c:414:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/usb/host/ehci-fsl.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/host/ehci-fsl.c b/drivers/usb/host/ehci-fsl.c
-index 26f13278d4d6..c720d55f4982 100644
---- a/drivers/usb/host/ehci-fsl.c
-+++ b/drivers/usb/host/ehci-fsl.c
-@@ -411,12 +411,13 @@ static int ehci_fsl_setup(struct usb_hcd *hcd)
- }
- 
- struct ehci_fsl {
--	struct ehci_hcd	ehci;
--
- #ifdef CONFIG_PM
- 	/* Saved USB PHY settings, need to restore after deep sleep. */
- 	u32 usb_ctrl;
- #endif
-+
-+	/* Must be last --ends in a flexible-array member. */
-+	struct ehci_hcd	ehci;
- };
- 
- #ifdef CONFIG_PM
--- 
-2.43.0
-
+Cheers,
+Nathan
