@@ -1,136 +1,146 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7B65149C41;
-	Wed, 26 Mar 2025 22:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87530149C41
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 22:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743029220; cv=none; b=F7jWyz9067Qisg3/GLDyq1B8Hf7AqCEL7N4qokuMJCiPx7w5V2IRDTJ9g0Nnrri5UMm3SlD61PcaBXZqC01j4fx03u7wsSD+BU1DtAvIRLS1Sxt6mhk24A2lbzWO2HInC+ef3qzcWnFO4bHLBlMK4dM6DSE6FPQHAhD+XQFYN9Q=
+	t=1743029269; cv=none; b=dBhYg8+L+G9gJLMNsWD/QWNMdVfe4AlO9aNMDK8egmkl2/LnOPzPlfGGAEsGswhYr0NCUigCLvBnhjNDAVL5JaS0WRgZWxmWYs0XelQTrSOyHut2Volqz/P4P0L4K/x2YrLLwD2aOhQ0BIy6KckLEQyAvr375CoEJMfDQx87jHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743029220; c=relaxed/simple;
-	bh=7P3UYO+P9hGo9sz9SOt5vSKtq1wCmqOzSFvHPDcbymk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sKo0xzU1k1nfUKMRllQkj8MWudvMgCH7imq7qeZW1KNioB2ySc0hKkPsJXqOvqYTGRHkKYJYC+AeHWehp5xslKmYUaASkkx5b24PWxd30bSnXkp3C2/N2ANJ0PxT6r/2jEFDnpBivFIgw6DohYPZbh9c4KYNFaHrUtRN5HJGzxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sKgV6M9w; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1743029269; c=relaxed/simple;
+	bh=dX0TnjfTRmrEh6KUb9pip/Kj3eupXHMYl1L+/L+n+O8=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=PthbyD+Xim4sHA+KUxo8ug774m+x0xb/49QuMOICYVHlcuBZb0QN8DFNS2h/Aq9rMc0uQD82in81yNyiBo6AXtIJonUHIjyG7vxGOsAuHVe9ltFpN8gatS8cUfcuitZJD6ryCDCuhhIccZu82foqq/vYuh7nXbzsxE52PF4OGdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=IZ69+VIe; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sKgV6M9w"
-Received: from [10.17.64.132] (unknown [131.107.147.132])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 0EFD4210235E;
-	Wed, 26 Mar 2025 15:46:57 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0EFD4210235E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1743029217;
-	bh=WpQRiPMWre5w+oBe5t52C7npv5APr1INrJO/mypsiTE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sKgV6M9wLQw9WiOTCQUm1nhq24BoZZcDn4uhQq9k6apxualjEFDdcPOgCFCoz572i
-	 ciFXzhFzDl/Cyy2JIVFr2Z9s8ffkrWtdsNDF/CSiODCu6HqGrq3dMBIDm8fz/T4P+j
-	 snRRve0tkABnzrVk+X1KBYQKlJSd7CM9tW3yEt/w=
-Message-ID: <2d2ea573-1ddd-44b4-8ba3-4ae86313d63f@linux.microsoft.com>
-Date: Wed, 26 Mar 2025 15:46:55 -0700
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="IZ69+VIe"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2239c066347so9174585ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:47:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1743029266; x=1743634066; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ENYvbfpYW1FRwv+5fNWWoBDVfb51NMkn/35jJNBxxwA=;
+        b=IZ69+VIeozB0TWY8k2GfcvetglzTlauehDWFELOboG5CauHiF9b221CFkPCZp/MenY
+         il3MQEA/Eu+cZ1NiZFG0lRFWVb3p0Jk7Uq9IjFEtVNKkCITI8FOReWJ+v5UVBGRPF9S4
+         2+iAJkpScaO9OMjTnl0cfKz0kC73rwqc8wYHL96N8ha7aPWmK7coRZA2ua0avEh3YI3j
+         EYM0f868W8oldEFp/hPzF/F2opNDjsrUuiBhFzyuOhT8YourGThp+E3RLT0oz4bBhMfp
+         44dlQHSvQNwoTvJC9Gvbd6ja6rKDnPq4/J2a1ae8fL7w/E1X0RYuAGxdZC1kfYzxIgwN
+         7pIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743029266; x=1743634066;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ENYvbfpYW1FRwv+5fNWWoBDVfb51NMkn/35jJNBxxwA=;
+        b=sR5AmS7yuJyCeoF2OehSApCJPVb9Bx3Z4KY7YTw2tQDdGnJqOt2g3XWE5HamzpJ78j
+         OL9W4Hk3JUXUUk1duAznmJ/M+KM7woxOs2jUy57woTxM3z1B1Zci6mwSAg0A+dzXPqct
+         em5FLq3LZJpxmXhEpA2GgiQL63D1GomfTicLp1/rIsIFYgAJJuVqZyp9CZQCRfG4mvKX
+         jTNdhJ2jv1vuAPJRcM7MAttv77NLqduVXt0A3BcfeDuUShb2VC86ZM4iZ+7kc/h/z6Ov
+         tJfJ3wdY7DrsxmfbXYOTZkYC79Vwd+IkMA/l1WbR473HGm+uPAytRqSmigQdSkViOYLj
+         SUtg==
+X-Gm-Message-State: AOJu0Yy41VFeTFBfCNDDRT9mHC9t5YKcGh3ANpMHIv7iL50/IHFqCjbT
+	vi3zOx3MraJAwVHhezgE5usXSnU1j5YH5vnb5pA32W1dGB1lrEOIoHvbhZnMzlKKdPw3vz0pwov
+	HgoQ=
+X-Gm-Gg: ASbGncsh7nEMz76EWZqlVLngheUH6H7knh8z+Z+iCG1bQ8uiKOCs6v5Wjry8QhtvCuh
+	AJnZl8ZzwzCJNYiDP6gh/n6/zaNoabx+vW9875d+Pf+uCRvz9SquGyekVYSDjZANSlB0K6BtXro
+	Undk5XARpAyAiU5wQgAhPYeEv9QeCi/upS1dBUGx8lh9IsQ6mi6JDBswRUjq1ZeNqvjzEIdAvF4
+	owClohcly1IWza2aU4EuAbG4NSPDhCcwTUVrtjFqtmLCC2rXtk/SJYyQuGQBXpdxFXG+KhxxisS
+	mf+8WpLnq9eg+swfYImR20jgDVOScaG+H1vLRciHbHNLLxOULEpe
+X-Google-Smtp-Source: AGHT+IEvXt3oSJ/F1fAesg3sth848fXdJQyiT5KFcCnd7670HL/7uTbeEUUKEITdtFQDQ4zqX3fqHg==
+X-Received: by 2002:a05:6a00:3a1e:b0:736:54c9:df2c with SMTP id d2e1a72fcca58-739610bdb9dmr1453432b3a.15.1743029266324;
+        Wed, 26 Mar 2025 15:47:46 -0700 (PDT)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7390615618fsm13249198b3a.146.2025.03.26.15.47.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 15:47:45 -0700 (PDT)
+Date: Wed, 26 Mar 2025 15:47:45 -0700 (PDT)
+X-Google-Original-Date: Wed, 26 Mar 2025 15:45:24 PDT (-0700)
+Subject:     Re: [PATCH 0/6] riscv: Relocatable NOMMU kernels
+In-Reply-To: <60900b42-298c-4b9f-86cf-af31aa5a02d3@sifive.com>
+CC: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+  akpm@linux-foundation.org, Arnd Bergmann <arnd@arndb.de>, alexghiti@rivosinc.com
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: samuel.holland@sifive.com
+Message-ID: <mhng-517c0318-c8fb-4c4a-aa0e-0d08f8d34d78@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 6/8] ima: kexec: move IMA log copy from kexec load to
- execute
-To: Baoquan He <bhe@redhat.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
- roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
- eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
- code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
- kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
- nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
- vgoyal@redhat.com, dyoung@redhat.com
-References: <20250318010448.954-1-chenste@linux.microsoft.com>
- <20250318010448.954-7-chenste@linux.microsoft.com>
- <Z9t4LVpE470DMBYU@MiWiFi-R3L-srv>
- <3d7b5e06-5166-46bb-89dc-a0b95ca7c767@linux.microsoft.com>
- <Z+E7X6LuQ82q1i5V@MiWiFi-R3L-srv>
- <6583378c-55ee-4192-a95f-ebaf3f708bbb@linux.microsoft.com>
- <Z+NmLtn0vojVYJ3H@MiWiFi-R3L-srv>
-Content-Language: en-US
-From: steven chen <chenste@linux.microsoft.com>
-In-Reply-To: <Z+NmLtn0vojVYJ3H@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 3/25/2025 7:27 PM, Baoquan He wrote:
-> On 03/25/25 at 03:27pm, steven chen wrote:
->> On 3/24/2025 4:00 AM, Baoquan He wrote:
->>> On 03/21/25 at 09:23am, steven chen wrote:
->>>> On 3/19/2025 7:06 PM, Baoquan He wrote:
->>>>> On 03/17/25 at 06:04pm, steven chen wrote:
->>>>> ...snip...
->>>>>> ---
->>>>>>     kernel/kexec_file.c                | 10 ++++++
->>>>>>     security/integrity/ima/ima_kexec.c | 51 ++++++++++++++++++------------
->>>>>>     2 files changed, 40 insertions(+), 21 deletions(-)
->>>>>>
->>>>>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
->>>>>> index 606132253c79..ab449b43aaee 100644
->>>>>> --- a/kernel/kexec_file.c
->>>>>> +++ b/kernel/kexec_file.c
->>>>>> @@ -201,6 +201,13 @@ kimage_validate_signature(struct kimage *image)
->>>>>>     }
->>>>>>     #endif
->>>>>> +static void kimage_file_post_load(struct kimage *image)
->>>>>> +{
->>>>>> +#ifdef CONFIG_IMA_KEXEC
->>>>>> +	ima_kexec_post_load(image);
->>>>>> +#endif
->>>>>> +}
->>>>>> +
->>>>>>     /*
->>>>>>      * In file mode list of segments is prepared by kernel. Copy relevant
->>>>>>      * data from user space, do error checking, prepare segment list
->>>>>> @@ -428,6 +435,9 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
->>>>>>     	kimage_terminate(image);
->>>>>> +	if (!(flags & KEXEC_FILE_ON_CRASH))
->>>>>> +		kimage_file_post_load(image);
->>>>> machine_kexec_post_load() is called by both kexec_load and kexec_file_load,
->>>>> we should use it to do things post load, but not introducing another
->>>>> kimage_file_post_load().
->>>> Hi Baoquan,
->>>>
->>>> Could you give me more detail about this?
->>> I mean machine_kexec_post_load() is the place where post load operations
->>> are done, including kexec_load and kexec_file_load. There's no need to
->>> specifically introduce a kimage_file_post_load() to do post load
->>> operaton for kexec_file_load.
->> Hi Baoquan,
+On Wed, 26 Feb 2025 07:22:51 PST (-0800), samuel.holland@sifive.com wrote:
+> Hi Palmer,
+>
+> On 2025-02-13 8:17 AM, Palmer Dabbelt wrote:
+>> On Sat, 26 Oct 2024 10:13:52 PDT (-0700), samuel.holland@sifive.com wrote:
+>>> Currently, RISC-V NOMMU kernels are linked at CONFIG_PAGE_OFFSET, and
+>>> since they are not relocatable, must be loaded at this address as well.
+>>> CONFIG_PAGE_OFFSET is not a user-visible Kconfig option, so its value is
+>>> not obvious, and users must patch the kernel source if they want to load
+>>> it at a different address.
+>>>
+>>> Make NOMMU kernels more portable by making them relocatable by default.
+>>> This allows a single kernel binary to work when loaded at any address.
+>>>
+>>>
+>>> Samuel Holland (6):
+>>>   riscv: Remove duplicate CONFIG_PAGE_OFFSET definition
+>>>   riscv: Allow NOMMU kernels to access all of RAM
+>>>   riscv: Support CONFIG_RELOCATABLE on NOMMU
+>>>   asm-generic: Always define Elf_Rel and Elf_Rela
+>>>   riscv: Support CONFIG_RELOCATABLE on riscv32
+>>>   riscv: Remove CONFIG_PAGE_OFFSET
+>>>
+>>>  arch/riscv/Kconfig               | 10 +---
+>>>  arch/riscv/Makefile              |  1 -
+>>>  arch/riscv/include/asm/page.h    | 27 ++++-----
+>>>  arch/riscv/include/asm/pgtable.h |  6 +-
+>>>  arch/riscv/mm/init.c             | 97 ++++++++++++++++----------------
+>>>  include/asm-generic/module.h     |  8 ---
+>>>  6 files changed, 68 insertions(+), 81 deletions(-)
 >>
->> Updating the machine_kexec_post_load() API to carry flags would indeed
->> require changes to multiple files. This approach involves the condition
->> check if (!(flags & KEXEC_FILE_ON_CRASH)) and ensuring that the flags are
->> properly passed and handled across the relevant file
+>> I'm getting some build failures
 >>
->> if just adding a API kimage_file_post_load() here, it is much easy and
->> clean, right?
-> Hmm, it's easier, while maybe not good. We should not repeatedly
-> introduce similar things into codes. Here, it's similar as
-> what kexec_apply_relocations() and arch_kexec_apply_relocations() are
-> doing.
+>> riscv64-unknown-linux-gnu-ld: arch/riscv/errata/sifive/errata.o: relocation
+>> R_RISCV_HI20 against `tlb_flush_all_threshold' can not be used when making a
+>> shared object; recompile with -fPIC
+>> riscv64-unknown-linux-gnu-ld: arch/riscv/errata/thead/errata.o: relocation
+>> R_RISCV_HI20 against `riscv_cbom_block_size' can not be used when making a
+>> shared object; recompile with -fPIC
 >
-> int machine_kexec_post_load(struct kimage *image)
-> {
-> #ifdef CONFIG_IMA_KEXEC
->          ima_kexec_post_load(image);
-> #endif
-> 	return arch_machine_kexec_post_load();
-> }
+> What toolchain and config do you see failures with? I have tried building this
+> series on top of v6.14-rc4 with GCC 14.2.1 and
+>  * defconfig
+>  * defconfig + NOMMU + S-mode
+>  * defconfig + NOMMU + M-mode
+>  * defconfig + 32-bit
+>  * defconfig + 32-bit + NOMMU + S-mode
+>  * defconfig + 32-bit + NOMMU + M-Mode
+>  * nommu_k210_defconfig
+>  * nommu_k210_sdcard_defconfig
+>  * nommu_virt_defconfig
+> and all succeed.
+
+rv32 allmodconfig does it.
+
+I don't actually know what's going on, but it seems that something in 
+Kconfig land has flipped over and ended up building medlow with these.  
+The erata handling can't be proper PIC (see 8dc2a7e8027f ("riscv: Fix 
+relocatable kernels with early alternatives using -fno-pie")), but that 
+one was just wrong -- they need to be medany, otherwise they're 
+very-non-relocatable.
+
+I feel like it's possible to construct Kconfigs that break this without 
+your patch set, but not 100% sure there.  Either way I sent a patch
+<https://lore.kernel.org/all/20250326224506.27165-2-palmer@rivosinc.com/>
+
 >
-> Then a generic arch_machine_kexec_post_load(struct kimage *image)
-> {return 0;} version, and a arm64 specific version.
->
-> Is it OK to you?
-
-Hi Baoquan,
-
-Thanks for your suggestion. I will update in the next version.
-
-Steven
-
+> Regards,
+> Samuel
