@@ -1,279 +1,142 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7321FECC2;
-	Wed, 26 Mar 2025 17:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F691F9A90
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 17:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743009325; cv=none; b=p0IRSoqBVz4QacW+WXVLuh6HJK/f2n/ymwR995PvB0iZQsleSdHVdsVfC6vg+Sx0fxwfkvopKcHS2tk+iQ2E0zZTx5SOjeUBW+01jJE79EIFYdZRmjlWpQAus9nKrPCmARbp6S+JJd9aXhqw42l4obGV2ihQl3yLmr38VH4+suw=
+	t=1743009430; cv=none; b=YEFX/pWkNcH1ZXd82vlf+7cLWZ2q5t5brJAVJnAoYy+RXla2X5U7XdZhkSbsYnkGxb+ttJzMIKSvugtdVunsIvSJfPyVI/exdYD8H4QWoJx9v2xMd0eeQ4Sh//gTDkv7wapLYeVkj4/h5VvRdHL7aUV9H4je89fkj2ZhrYY4TxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743009325; c=relaxed/simple;
-	bh=s56M1HA3ha2K/OQmzA+ilqI8odqNZ9uJMiyFYK8oGPw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gpnIlmwthZgwYdTYUGQ+rXNOIzQJJiUcTjaSKt7zGAiI5HRnF4DMmCvyTRSXgGfNOkcEE/30pggeik1O2u5eNxFQhJGu7FfSuYMcoQJYrbY1q0YqAmTa7mBqlPhVkdXsBR9p/ggV3jLUWp9cJmenxOiAueKjf8sKDhWbzwvr7FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4ZND1s6nVHz9tFH;
-	Wed, 26 Mar 2025 18:15:13 +0100 (CET)
-From: Remo Senekowitsch <remo@buenzli.dev>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Rob Herring <robh@kernel.org>
-Cc: Dirk Behme <dirk.behme@de.bosch.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Remo Senekowitsch <remo@buenzli.dev>,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: [PATCH 09/10] rust: property: Add PropertyGuard
-Date: Wed, 26 Mar 2025 18:13:48 +0100
-Message-ID: <20250326171411.590681-10-remo@buenzli.dev>
-In-Reply-To: <20250326171411.590681-1-remo@buenzli.dev>
-References: <20250326171411.590681-1-remo@buenzli.dev>
+	s=arc-20240116; t=1743009430; c=relaxed/simple;
+	bh=ULQll42SpXp13/9+pqAM5sMEpJ0dbiOa04Hrg2p6sXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W4t0td6kRHWwG3atDOYQjVSDorktlzKmEUDq6nGJvmM44ta4R63Zd0CX4ygWQDckWLNh6+FFvlvvAdsMu24BpTRLpt6k3fsr/nurWRFTZln2xIBs84hnWfdURyi30D9p4SP8uEbjYQh65/VmFTK+2hNd9cRhLcQx3Y4p1KWxJdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WkaRsmdO; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WkaRsmdO"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52QF1Tie006152
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 17:17:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=57VyLFaymf8F9QU36mtSjFzj
+	QMz+UO59TFULkEduc7g=; b=WkaRsmdOaVzXTCXblrwhQ7etqbA9GJ8a7O3AI+A9
+	N0aYAr1dPUV3QNo7t/pkbcW+NO+iEvGg/FhM9wvxzlzKbVGoaLdaOWu7Lus9tdWK
+	eeWnWdgTGREkjZkoH5mPlJs1uDrUOyPamsEQE1mLHUM0OzXHwjCbcktrPOpLn0KI
+	FSSHkY/5RPHbY9o1KMFMG19zZmEHRmsbOXHQbdQ0KJoxLe9vNpN/+/7n7qRP9ra+
+	CfXNNIR7+oMYjE8KbVScA1tOl8++kb1GHuf//T2T3RnP/3cSkNmNum80TBXHlhqa
+	FjGMwnYhOGsU9+vVp1znwKEYZ0IKzEzlto7Kl3IB4VCVRw==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45manj24r8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 17:17:07 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c3c8f8ab79so15608885a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 10:17:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743009427; x=1743614227;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=57VyLFaymf8F9QU36mtSjFzjQMz+UO59TFULkEduc7g=;
+        b=ZOEU21D/Rc3bKlQRQhVJnFRU19Pa+TXDsvtp47C86BVQH+LWrto5ZCOfS+nDQvky6G
+         u96MzXz2H5RV2GY388tpHcQVry0uTY2/cBgtBs1AYByblJwipaPVPUnBQtUxl9Lv3p8O
+         hHpj+fbTTiG+ZHMCYQAnRDxOoeCwxAIxhPEZhQBDBwdMjjfX6rcwS/5dxxrP4i7H/blj
+         UCGnBRuXOf2XVU9VCQsfrFM4dRVFML2rORrq2bGQosHHiBK+YAkUTWbLcAj5YzCh454p
+         6h8lUXObYeNm2p08y1j9lYVh79g7+v+ozfSia+751IBftcbjriVkG/HrrQwGjKtj+Tl8
+         VCpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVEkGDmDGPxqmy42TSkqt82+WesYGpcL4KmAJUq6KNHdLIeUUZ1Br3+nLxZdGAAdtBBB1ZY4kgn1Q3e/fg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFgIE3i/q1K/MyxN3ZZJjq7DG7WHNITfPuT2gSLiGT6/nchufm
+	EuvuQ0kP2L+YHXfXz7ToVdcL1zcfxbJohU2Z1pe7rBJhC+AsRzco1is5rSyR6zFH9U+9I9mVn3U
+	oSCfZ8XcThrMHq0fkr4lPwMGn+W3CGine9NWHMbAWgC9rN858j2c9jmtf1YPRIik=
+X-Gm-Gg: ASbGnctbBvGMHk/R9HbbQFxdHB20fvcNabsP1hcpC5w6f6c0V7v+jiCSx42t6Weh6+x
+	BXXTD5rcUBtUujLOJURawbP/cYQs+WNanF95TLX9JY8aG41mAA6Dhvunvsc65Ej+mpOBL2nRpMg
+	MvOgiGy6qIU+gjqIl2htIcb2t86t7xc4bTX4xa9POHVYAl2+StJ5/78RgGwkaiJYrO108pmXv35
+	2lwerporKclvEI9EyTrULkaBr9wuau5hW2PFL4ae4P0ivXGVMp32X8A70QzKgTdeUVNVJsQzQgW
+	JV7hIFCYZaIEbXknLhy3BcHJ/gHczy+KeL9rdcDMKoxAhTYyEZKKxM7AnxOaiIzHjAdNAh9LvQD
+	cnAU=
+X-Received: by 2002:a05:620a:2483:b0:7c5:df79:f2f with SMTP id af79cd13be357-7c5ed9f2cd8mr77469085a.18.1743009426613;
+        Wed, 26 Mar 2025 10:17:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHZVayB4qjwN0UyX1tnhJiLkSyjaqLbzhmrB0L0YbneGkZGXSc7GvgkWAaXLuLzkuqSASIp2Q==
+X-Received: by 2002:a05:620a:2483:b0:7c5:df79:f2f with SMTP id af79cd13be357-7c5ed9f2cd8mr77462885a.18.1743009426112;
+        Wed, 26 Mar 2025 10:17:06 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30d7d8f4280sm21672611fa.73.2025.03.26.10.17.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 10:17:05 -0700 (PDT)
+Date: Wed, 26 Mar 2025 19:17:03 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Christopher Obbard <christopher.obbard@linaro.org>
+Cc: Douglas Anderson <dianders@chromium.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Jessica Zhang <quic_jesszhan@quicinc.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Rui Miguel Silva <rui.silva@linaro.org>,
+        Abel Vesa <abel.vesa@linaro.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] drm/dp: fallback to maximum when PWM bit count is
+ zero
+Message-ID: <jbowz36pz7es7koc3abi3maw6ytz4auuobhkmkqelvwavilqkr@gxgsdhao3skr>
+References: <20250325-wip-obbardc-qcom-t14s-oled-panel-v2-0-e9bc7c9d30cc@linaro.org>
+ <20250325-wip-obbardc-qcom-t14s-oled-panel-v2-4-e9bc7c9d30cc@linaro.org>
+ <2cfdf7f3-56a6-495e-83cf-1921a2e0ef8d@oss.qualcomm.com>
+ <CACr-zFBFpqgHVRiH37ooeVJ4Jk1UA4AhP5J5L5yV8_CHBTG07g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4ZND1s6nVHz9tFH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACr-zFBFpqgHVRiH37ooeVJ4Jk1UA4AhP5J5L5yV8_CHBTG07g@mail.gmail.com>
+X-Proofpoint-GUID: lxo9QQbm-cIiKkSPLkz6XknN-HaX4Fvd
+X-Proofpoint-ORIG-GUID: lxo9QQbm-cIiKkSPLkz6XknN-HaX4Fvd
+X-Authority-Analysis: v=2.4 cv=KvJN2XWN c=1 sm=1 tr=0 ts=67e43693 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=cpwuP4bK5o1WZ1zuufgA:9 a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-26_08,2025-03-26_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ malwarescore=0 priorityscore=1501 clxscore=1015 mlxscore=0 spamscore=0
+ impostorscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503260106
 
-Forcing users to specify whether a property is supposed to be required
-or not allows us to move error logging of missing required properties
-into core, preventing a lot of boilerplate in drivers.
+On Wed, Mar 26, 2025 at 03:08:30PM +0000, Christopher Obbard wrote:
+> Hi Dmitry,
+> 
+> On Tue, 25 Mar 2025 at 22:53, Dmitry Baryshkov
+> <dmitry.baryshkov@oss.qualcomm.com> wrote:
+> >
+> > On 25/03/2025 21:21, Christopher Obbard wrote:
+> > > Some eDP devices report DP_EDP_PWMGEN_BIT_COUNT as 0, but still provide
+> > > valid non-zero MIN and MAX values. This patch reworks the logic to
+> > > fallback to the max value in such cases, ensuring correct backlight PWM
+> > > configuration even when the bit count value is not explicitly set.
+> >
+> > I don't think this matches the eDP standard. It tells to use MIN if
+> > BIT_COUNT is less than MIN, if I understand it correctly.
+> 
+> Thanks for your comment; that's a good point.
+> 
+> I need to re-read this section of the spec; but at least on this
+> hardware I printed the values of the registers and it seems like
+> MIN and MAX are the same, so I could switch the patch around to use
+> MIN in the next version.
 
-Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
----
- rust/kernel/property.rs | 146 ++++++++++++++++++++++++++++++++++------
- 1 file changed, 127 insertions(+), 19 deletions(-)
+SGTM.
 
-diff --git a/rust/kernel/property.rs b/rust/kernel/property.rs
-index f1d0a33ba..e4f0e5f97 100644
---- a/rust/kernel/property.rs
-+++ b/rust/kernel/property.rs
-@@ -42,7 +42,11 @@ pub fn property_match_string(&self, name: &CStr, match_str: &CStr) -> Result<usi
-     }
- 
-     /// Returns firmware property `name` integer array values in a KVec
--    pub fn property_read_array_vec<T: Integer>(&self, name: &CStr, len: usize) -> Result<KVec<T>> {
-+    pub fn property_read_array_vec<'fwnode, 'name, T: Integer>(
-+        &'fwnode self,
-+        name: &'name CStr,
-+        len: usize,
-+    ) -> Result<PropertyGuard<'fwnode, 'name, KVec<T>>> {
-         self.fwnode().property_read_array_vec(name, len)
-     }
- 
-@@ -52,12 +56,18 @@ pub fn property_count_elem<T: Integer>(&self, name: &CStr) -> Result<usize> {
-     }
- 
-     /// Returns firmware property `name` integer scalar value
--    pub fn property_read<T: Property>(&self, name: &CStr) -> Result<T> {
-+    pub fn property_read<'fwnode, 'name, T: Property>(
-+        &'fwnode self,
-+        name: &'name CStr,
-+    ) -> PropertyGuard<'fwnode, 'name, T> {
-         self.fwnode().property_read(name)
-     }
- 
-     /// Returns first matching named child node handle.
--    pub fn get_child_by_name(&self, name: &CStr) -> Option<ARef<FwNode>> {
-+    pub fn get_child_by_name<'fwnode, 'name>(
-+        &'fwnode self,
-+        name: &'name CStr,
-+    ) -> PropertyGuard<'fwnode, 'name, ARef<FwNode>> {
-         self.fwnode().get_child_by_name(name)
-     }
- 
-@@ -132,12 +142,16 @@ pub fn property_match_string(&self, name: &CStr, match_str: &CStr) -> Result<usi
-     }
- 
-     /// Returns firmware property `name` integer array values in a KVec
--    pub fn property_read_array_vec<T: Integer>(&self, name: &CStr, len: usize) -> Result<KVec<T>> {
-+    pub fn property_read_array_vec<'fwnode, 'name, T: Integer>(
-+        &'fwnode self,
-+        name: &'name CStr,
-+        len: usize,
-+    ) -> Result<PropertyGuard<'fwnode, 'name, KVec<T>>> {
-         let mut val: KVec<T> = KVec::with_capacity(len, GFP_KERNEL)?;
- 
-         // SAFETY: `name` is non-null and null-terminated. `self.as_raw` is valid
-         // because `self` is valid. `val.as_ptr` is valid because `val` is valid.
--        to_result(unsafe {
-+        let err = unsafe {
-             bindings::fwnode_property_read_int_array(
-                 self.as_raw(),
-                 name.as_char_ptr(),
-@@ -145,11 +159,19 @@ pub fn property_read_array_vec<T: Integer>(&self, name: &CStr, len: usize) -> Re
-                 val.as_ptr() as *mut c_void,
-                 len,
-             )
--        })?;
--
--        // SAFETY: fwnode_property_read_int_array() writes exactly `len` entries on success
--        unsafe { val.set_len(len) }
--        Ok(val)
-+        };
-+        let res = if err < 0 {
-+            Err(Error::from_errno(err))
-+        } else {
-+            // SAFETY: fwnode_property_read_int_array() writes exactly `len` entries on success
-+            unsafe { val.set_len(len) }
-+            Ok(val)
-+        };
-+        Ok(PropertyGuard {
-+            inner: res,
-+            fwnode: self,
-+            name,
-+        })
-     }
- 
-     /// Returns integer array length for firmware property `name`
-@@ -194,24 +216,42 @@ pub fn property_count_elem<T: Integer>(&self, name: &CStr) -> Result<usize> {
-     /// # use crate::{device::Device, types::CString};
-     /// fn examples(dev: &Device) -> Result {
-     ///     let fwnode = dev.fwnode();
--    ///     let b: bool = fwnode.property_read("some-bool")?;
--    ///     let s: CString = fwnode.property_read("some-str")?;
-+    ///     let b: bool = fwnode.property_read("some-bool").required()?;
-+    ///     if let Some(s) = fwnode.property_read::<CString>("some-str").optional() {
-+    ///         // ...
-+    ///     }
-     /// }
-     /// ```
--    pub fn property_read<T: Property>(&self, name: &CStr) -> Result<T> {
--        T::read(&self, name)
-+    pub fn property_read<'fwnode, 'name, T: Property>(
-+        &'fwnode self,
-+        name: &'name CStr,
-+    ) -> PropertyGuard<'fwnode, 'name, T> {
-+        PropertyGuard {
-+            inner: T::read(&self, name),
-+            fwnode: self,
-+            name,
-+        }
-     }
- 
-     /// Returns first matching named child node handle.
--    pub fn get_child_by_name(&self, name: &CStr) -> Option<ARef<Self>> {
-+    pub fn get_child_by_name<'fwnode, 'name>(
-+        &'fwnode self,
-+        name: &'name CStr,
-+    ) -> PropertyGuard<'fwnode, 'name, ARef<Self>> {
-         // SAFETY: `self` and `name` are valid.
-         let child =
-             unsafe { bindings::fwnode_get_named_child_node(self.as_raw(), name.as_char_ptr()) };
--        if child.is_null() {
--            return None;
-+        let res = if child.is_null() {
-+            Err(ENOENT)
-+        } else {
-+            // SAFETY: `fwnode_get_named_child_node` returns a pointer with refcount incremented.
-+            Ok(unsafe { Self::from_raw(child) })
-+        };
-+        PropertyGuard {
-+            inner: res,
-+            fwnode: self,
-+            name,
-         }
--        // SAFETY: `fwnode_get_named_child_node` returns a pointer with refcount incremented.
--        Some(unsafe { Self::from_raw(child) })
-     }
- 
-     /// Returns an iterator over a node's children.
-@@ -365,3 +405,71 @@ pub enum NArgs<'a> {
-     /// The known number of arguments.
-     N(u32),
- }
-+
-+/// A helper for reading device properties.
-+///
-+/// Use [Self::required] if a missing property is considered a bug and
-+/// [Self::optional] otherwise.
-+///
-+/// For convenience, [Self::or] and [Self::or_default] are provided.
-+pub struct PropertyGuard<'fwnode, 'name, T> {
-+    /// The result of reading the property.
-+    inner: Result<T>,
-+    /// The fwnode of the property, used for logging in the "required" case.
-+    fwnode: &'fwnode FwNode,
-+    /// The name of the property, used for logging in the "required" case.
-+    name: &'name CStr,
-+}
-+
-+impl<T> PropertyGuard<'_, '_, T> {
-+    /// Access the property, indicating it is required.
-+    ///
-+    /// If the property is not present, the error is automatically logged. If a
-+    /// missing property is not an error, use [Self::optional] instead.
-+    pub fn required(self) -> Result<T> {
-+        if self.inner.is_err() {
-+            // Get the device associated with the fwnode for device-associated
-+            // logging.
-+            // TODO: Are we allowed to do this? The field `fwnode_handle.dev`
-+            // has a somewhat vague comment, which could mean we're not
-+            // supposed to access it:
-+            // https://elixir.bootlin.com/linux/v6.13.6/source/include/linux/fwnode.h#L51
-+            // SAFETY: According to the invariant of FwNode, it is valid.
-+            let dev = unsafe { (*self.fwnode.as_raw()).dev };
-+
-+            if dev.is_null() {
-+                pr_err!("property '{}' is missing\n", self.name);
-+            } else {
-+                // SAFETY: If dev is not null, it points to a valid device.
-+                let dev: &Device = unsafe { &*dev.cast() };
-+                dev_err!(dev, "property '{}' is missing\n", self.name);
-+            };
-+        }
-+        self.inner
-+    }
-+
-+    /// Access the property, indicating it is optional.
-+    ///
-+    /// In contrast to [Self::required], no error message is logged if the
-+    /// property is not present.
-+    pub fn optional(self) -> Option<T> {
-+        self.inner.ok()
-+    }
-+
-+    /// Access the property or the specified default value.
-+    ///
-+    /// Do not pass a sentinel value as default to detect a missing property.
-+    /// Use [Self::required] or [Self::optional] instead.
-+    pub fn or(self, default: T) -> T {
-+        self.inner.unwrap_or(default)
-+    }
-+}
-+
-+impl<T: Default> PropertyGuard<'_, '_, T> {
-+    /// Access the property or a default value.
-+    ///
-+    /// Use [Self::or] to specify a custom default value.
-+    pub fn or_default(self) -> T {
-+        self.inner.unwrap_or_default()
-+    }
-+}
 -- 
-2.49.0
-
+With best wishes
+Dmitry
