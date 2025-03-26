@@ -1,41 +1,41 @@
-Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46F313AA31
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 02:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AC514A4C7
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 02:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742955340; cv=pass; b=Qr4jXVtkwboVUuDQS76hxhu5hDEUdYYSYORIHZs4SRhj2wiC8qcslVDn0zwXE4XEYSvV/5EQMN3gRIfn45z/QvFLfnAWULInq1gcisP8jIOBc8aJJH5ddWMNsWNBG6geaZPmFMLFm7dCQIQSG7zSkjlhgEkz3G0JJEsT5wAJQv0=
+	t=1742955344; cv=pass; b=ut0Tv41eMGSwaA4/NuQ2QpQqsS0rX9oedTKAuS2ySjdPdDsUjYiM9n1MdxTM20rN9BtFD7bpJH9gFoNV0J1whWwj4tFfOvf1ZmhE3RvAFDRPbyshzyKQPB3qadtVcwYCQ8qiLQ0P+TaAt3bhGYg8fABvy6yyBxlTTA7V3ibTSuo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742955340; c=relaxed/simple;
-	bh=m9GD4loYkS9eoifl1EJQIY3WbQjjRF/a0URtsymk1mU=;
+	s=arc-20240116; t=1742955344; c=relaxed/simple;
+	bh=9vfke5HnAF2Wqc54OPluwfj7o+e/FQzQG/LWyjFoxmY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l+6PiX52sDxdQWu/3lEpDScVIgcbhiYsUZ8ulTrM2uHnZjvyf65XD6KudO/lh6qIOL+lBRawLGr8P5LhG/GRI/6mbrSYn6wUEbEr+JNbU8WaUvbYBy/nmBxUt0NH4FSB5amkjAlw8tX63yckUtjobil1yTcIW8uVHpjWTGUkZs0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=VnTfUOjy; arc=pass smtp.client-ip=136.143.184.112
+	 MIME-Version:Content-Type; b=CqRR3iQDaXPdnx72HKwZfSsufi7BXpOVCltmS001/gxNPcn/NWA6lxNp0ZFWA4DLOQF5GkSknxB0jLTpMBLl1wyaF91aQ5Vc10453BgPYOz1updQBgYYlkq6Xlm77cBtF/dfN0AKfw54FuHaUP8YxgJKOhEHlsEpUC7hoj2z1q4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=LOnbgMTa; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="VnTfUOjy"
-ARC-Seal: i=1; a=rsa-sha256; t=1742955319; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="LOnbgMTa"
+ARC-Seal: i=1; a=rsa-sha256; t=1742955325; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=buHt9+8wJ2ksc9/06QreSVQ1jLvLR69XLdNhzNlGH1n+VdbQzbuUWwwOvf0kZwVPmMEkhBkDBOJYSANDple11op8JHPd9zvpQw1hU1/6VLUQSSII7Y6yjwaGw//3PbGmafz0cU2iGFPBILRDFzSrV2pp5D35LIWt9hmkBeLAjnI=
+	b=D993yEkMW8ZLVF3kchalGOTPS5dUiIKfLjM3KhemKUmwj/CNtlz42s3ggZvlupj5/r49ECAP5iprNCOvLhI9Fn/A1RD4fma8D8Lgz5WJyfTqeKAQSJlP2uYOzpxSMM6+xG5f/S0kui0xCtbV5y838e1R6zPID3A9C+3ecPaLxUY=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1742955319; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=eDDJBa43wl24zfW0m/nKztfofIyTDy2Iq6m6CG3HtAk=; 
-	b=QSMSm9uIWhwqtw6WdRYV6gjbqeUEtU8pc+ID24SdLiYl/uYPRyXbrjnAHxS1cWssNF+gXlf7JtOEkLdJkNmUnN5OvQL7o2ksPoqHPM5JoAWmvax/QesyvxeeCgxp9OTrvUu2NwMstgUGo/BkBj/z9qZo62uYYkovgz4Ps6S1Uzk=
+	t=1742955325; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=CkVWMn1qdF1+NRmxxMqwW4Ffn+XH6JIvJ+h06D/D6o8=; 
+	b=l2wAIPJsYRgu/7uVoB32ST1TMxqGN9oG/vTeXsSfANvs2ZbgS1dna4qXfC0IyjHxXbqE+FNiyyVo27BVjWQmdO61Ygt3P/nZyZAGTT0m0YV4i8GoGnOdMMQdhPosvxigh9b6OCRmDEcX43lpexHAGDDDQ9AspK2na94jXerzRak=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
 	dmarc=pass header.from=<adrian.larumbe@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742955319;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742955325;
 	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=eDDJBa43wl24zfW0m/nKztfofIyTDy2Iq6m6CG3HtAk=;
-	b=VnTfUOjyyEJaAd4e+E2GUEG9Q8ZbsX/4wbg87KRRuZ7DnBZeq14dWpyF+w0oOv6d
-	e0abxBxVT5cw7dyBjtIrJQHkJfv5QHxnnf8+rAZDN0kxOXGToZmgS3Q5OwirmEYqtc+
-	8tSKQzxRTEJdHxEzzByVlpSav5+PJKS+15KaZbLE=
-Received: by mx.zohomail.com with SMTPS id 1742955317701794.8257212544316;
-	Tue, 25 Mar 2025 19:15:17 -0700 (PDT)
+	bh=CkVWMn1qdF1+NRmxxMqwW4Ffn+XH6JIvJ+h06D/D6o8=;
+	b=LOnbgMTaZDNlBkCjgAAhDsJjCJktEiuZCkZKBQOmXuE2oiu7wrsex+TOHjlqZ2ZT
+	0RmarQvyR13jqfLzoBoOVxwnuR4taNtV621GS+/Ke/zXvBA8lGMiIQ3PQho3IeqBHML
+	sNp24WHx0vaf+WOdOHV5z55yget2oPxCsyQ5j1GY=
+Received: by mx.zohomail.com with SMTPS id 1742955324455246.24181735240438;
+	Tue, 25 Mar 2025 19:15:24 -0700 (PDT)
 From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -51,9 +51,9 @@ Cc: kernel@collabora.com,
 	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>,
 	linux-kernel@vger.kernel.org,
 	dri-devel@lists.freedesktop.org
-Subject: [RFC PATCH v2 2/6] drm/shmem: Introduce the notion of sparse objects
-Date: Wed, 26 Mar 2025 02:14:22 +0000
-Message-ID: <20250326021433.772196-3-adrian.larumbe@collabora.com>
+Subject: [RFC PATCH v2 4/6] drm/panfrost: Use shmem sparse allocation for heap BOs
+Date: Wed, 26 Mar 2025 02:14:24 +0000
+Message-ID: <20250326021433.772196-5-adrian.larumbe@collabora.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250326021433.772196-1-adrian.larumbe@collabora.com>
 References: <20250326021433.772196-1-adrian.larumbe@collabora.com>
@@ -66,234 +66,195 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Sparse DRM objects will store their backing pages in an xarray, to avoid
-the overhead of preallocating a huge struct page pointer array when only
-a very small range of indices might be assigned.
+Panfrost heap BOs grow on demand when the GPU triggers a page fault
+after accessing an address within the BO's virtual range.
 
-For now, only the definition of a sparse object as a union alternative
-to a 'dense' object is provided, with functions that exploit it being
-part of later commits.
+We still store the sgts we get back from the shmem sparse allocation
+function, since it was decided management of sparse memory SGTs should
+be done by client drivers rather than the shmem subsystem.
 
 Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
 ---
- drivers/gpu/drm/drm_gem_shmem_helper.c | 68 +++++++++++++++++++++++++-
- include/drm/drm_gem_shmem_helper.h     | 23 ++++++++-
- 2 files changed, 88 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/panfrost/panfrost_gem.c | 12 ++--
+ drivers/gpu/drm/panfrost/panfrost_gem.h |  2 +-
+ drivers/gpu/drm/panfrost/panfrost_mmu.c | 86 +++++--------------------
+ 3 files changed, 26 insertions(+), 74 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-index d99dee67353a..5f75eb1230f6 100644
---- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-+++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-@@ -128,6 +128,31 @@ struct drm_gem_shmem_object *drm_gem_shmem_create(struct drm_device *dev, size_t
- }
- EXPORT_SYMBOL_GPL(drm_gem_shmem_create);
+diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.c b/drivers/gpu/drm/panfrost/panfrost_gem.c
+index 8e0ff3efede7..0cda2c4e524f 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_gem.c
++++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
+@@ -40,10 +40,10 @@ static void panfrost_gem_free_object(struct drm_gem_object *obj)
+ 		int n_sgt = bo->base.base.size / SZ_2M;
  
-+/**
-+ * drm_gem_shmem_create_sparse - Allocate a sparse object with the given size
-+ * @dev: DRM device
-+ * @size: Size of the sparse object to allocate
-+ *
-+ * This function creates a sparse shmem GEM object.
-+ *
-+ * Returns:
-+ * A struct drm_gem_shmem_object * on success or an ERR_PTR()-encoded negative
-+ * error code on failure.
-+ */
-+struct drm_gem_shmem_object *drm_gem_shmem_create_sparse(struct drm_device *dev, size_t size)
-+{
-+	struct drm_gem_shmem_object *shmem =
-+		__drm_gem_shmem_create(dev, size, false, NULL);
-+
-+	if (!IS_ERR(shmem)) {
-+		shmem->sparse = true;
-+		xa_init_flags(&shmem->xapages, XA_FLAGS_ALLOC);
-+	}
-+
-+	return shmem;
-+}
-+EXPORT_SYMBOL_GPL(drm_gem_shmem_create_sparse);
-+
- /**
-  * drm_gem_shmem_create_with_mnt - Allocate an object with the given size in a
-  * given mountpoint
-@@ -173,8 +198,8 @@ void drm_gem_shmem_free(struct drm_gem_shmem_object *shmem)
- 			sg_free_table(shmem->sgt);
- 			kfree(shmem->sgt);
+ 		for (i = 0; i < n_sgt; i++) {
+-			if (bo->sgts[i].sgl) {
+-				dma_unmap_sgtable(pfdev->dev, &bo->sgts[i],
++			if (bo->sgts[i]) {
++				dma_unmap_sgtable(pfdev->dev, bo->sgts[i],
+ 						  DMA_BIDIRECTIONAL, 0);
+-				sg_free_table(&bo->sgts[i]);
++				sg_free_table(bo->sgts[i]);
+ 			}
  		}
--		if (shmem->pages)
--			drm_gem_shmem_put_pages(shmem);
+ 		kvfree(bo->sgts);
+@@ -274,7 +274,11 @@ panfrost_gem_create(struct drm_device *dev, size_t size, u32 flags)
+ 	if (flags & PANFROST_BO_HEAP)
+ 		size = roundup(size, SZ_2M);
+ 
+-	shmem = drm_gem_shmem_create(dev, size);
++	if (flags & PANFROST_BO_HEAP)
++		shmem = drm_gem_shmem_create_sparse(dev, size);
++	else
++		shmem = drm_gem_shmem_create(dev, size);
 +
-+		drm_gem_shmem_put_pages(shmem);
+ 	if (IS_ERR(shmem))
+ 		return ERR_CAST(shmem);
  
- 		drm_WARN_ON(obj->dev, shmem->pages_use_count);
+diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.h b/drivers/gpu/drm/panfrost/panfrost_gem.h
+index 7516b7ecf7fe..2a8d0752011e 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_gem.h
++++ b/drivers/gpu/drm/panfrost/panfrost_gem.h
+@@ -11,7 +11,7 @@ struct panfrost_mmu;
  
-@@ -196,6 +221,12 @@ static int drm_gem_shmem_get_pages(struct drm_gem_shmem_object *shmem)
- 	if (shmem->pages_use_count++ > 0)
- 		return 0;
- 
-+	/* We only allow increasing the user count in the case of
-+	 * sparse shmem objects with some backed pages for now
-+	 */
-+	if (shmem->sparse && xa_empty(&shmem->xapages))
-+		return -EINVAL;
-+
- 	pages = drm_gem_get_pages(obj);
- 	if (IS_ERR(pages)) {
- 		drm_dbg_kms(obj->dev, "Failed to get pages (%ld)\n",
-@@ -231,6 +262,14 @@ void drm_gem_shmem_put_pages(struct drm_gem_shmem_object *shmem)
- 
- 	dma_resv_assert_held(shmem->base.resv);
- 
-+	if (!shmem->sparse) {
-+		if (!shmem->pages)
-+			return;
-+	} else {
-+		/* Not implemented yet */
-+		return;
-+	}
-+
- 	if (drm_WARN_ON_ONCE(obj->dev, !shmem->pages_use_count))
- 		return;
- 
-@@ -404,8 +443,15 @@ void drm_gem_shmem_vunmap(struct drm_gem_shmem_object *shmem,
- {
- 	struct drm_gem_object *obj = &shmem->base;
- 
-+	if (shmem->sparse) {
-+		drm_err(obj->dev, "UM unmapping of sparse shmem objects not implemented\n");
-+		return;
-+	}
-+
- 	if (drm_gem_is_imported(obj)) {
- 		dma_buf_vunmap(obj->dma_buf, map);
-+	} else if (obj->import_attach) {
-+		dma_buf_vunmap(obj->import_attach->dmabuf, map);
- 	} else {
- 		dma_resv_assert_held(shmem->base.resv);
- 
-@@ -541,6 +587,12 @@ static vm_fault_t drm_gem_shmem_fault(struct vm_fault *vmf)
- 	struct page *page;
- 	pgoff_t page_offset;
- 
-+	/* TODO: Implement UM mapping of sparse shmem objects */
-+	if (drm_WARN_ON(obj->dev, shmem->sparse)) {
-+		drm_err(obj->dev, "UM mapping of sparse shmem objects not implemented\n");
-+		return VM_FAULT_SIGBUS;
-+	}
-+
- 	/* We don't use vmf->pgoff since that has the fake offset */
- 	page_offset = (vmf->address - vma->vm_start) >> PAGE_SHIFT;
- 
-@@ -566,8 +618,14 @@ static void drm_gem_shmem_vm_open(struct vm_area_struct *vma)
- 	struct drm_gem_object *obj = vma->vm_private_data;
- 	struct drm_gem_shmem_object *shmem = to_drm_gem_shmem_obj(obj);
- 
-+	/* TODO: Implement UM mapping of sparse shmem objects */
-+	if (drm_WARN_ON(obj->dev, shmem->sparse))
-+		return;
-+
- 	drm_WARN_ON(obj->dev, drm_gem_is_imported(obj));
- 
-+	drm_WARN_ON(obj->dev, obj->import_attach);
-+
- 	dma_resv_lock(shmem->base.resv, NULL);
+ struct panfrost_gem_object {
+ 	struct drm_gem_shmem_object base;
+-	struct sg_table *sgts;
++	struct sg_table **sgts;
  
  	/*
-@@ -690,6 +748,9 @@ struct sg_table *drm_gem_shmem_get_sg_table(struct drm_gem_shmem_object *shmem)
+ 	 * Use a list for now. If searching a mapping ever becomes the
+diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+index b91019cd5acb..de343c4e399a 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
++++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+@@ -441,14 +441,11 @@ addr_to_mapping(struct panfrost_device *pfdev, int as, u64 addr)
+ static int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as,
+ 				       u64 addr)
  {
- 	struct drm_gem_object *obj = &shmem->base;
- 
-+	if (drm_WARN_ON(obj->dev, shmem->sparse))
-+		return ERR_PTR(-EINVAL);
-+
- 	drm_WARN_ON(obj->dev, drm_gem_is_imported(obj));
- 
- 	return drm_prime_pages_to_sg(obj->dev, shmem->pages, obj->size >> PAGE_SHIFT);
-@@ -702,6 +763,9 @@ static struct sg_table *drm_gem_shmem_get_pages_sgt_locked(struct drm_gem_shmem_
- 	int ret;
+-	int ret, i;
+ 	struct panfrost_gem_mapping *bomapping;
+ 	struct panfrost_gem_object *bo;
+-	struct address_space *mapping;
+-	struct drm_gem_object *obj;
+ 	pgoff_t page_offset;
  	struct sg_table *sgt;
- 
-+	if (drm_WARN_ON(obj->dev, shmem->sparse))
-+		return ERR_PTR(-EINVAL);
-+
- 	if (shmem->sgt)
- 		return shmem->sgt;
- 
-diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
-index cef5a6b5a4d6..00e47512b30f 100644
---- a/include/drm/drm_gem_shmem_helper.h
-+++ b/include/drm/drm_gem_shmem_helper.h
-@@ -6,6 +6,7 @@
- #include <linux/fs.h>
- #include <linux/mm.h>
- #include <linux/mutex.h>
-+#include <linux/xarray.h>
- 
- #include <drm/drm_file.h>
- #include <drm/drm_gem.h>
-@@ -29,7 +30,10 @@ struct drm_gem_shmem_object {
- 	/**
- 	 * @pages: Page table
- 	 */
 -	struct page **pages;
-+	union {
-+		struct page **pages;
-+		struct xarray xapages;
-+	};
++	int ret = 0;
  
- 	/**
- 	 * @pages_use_count:
-@@ -91,12 +95,18 @@ struct drm_gem_shmem_object {
- 	 * @map_wc: map object write-combined (instead of using shmem defaults).
- 	 */
- 	bool map_wc : 1;
+ 	bomapping = addr_to_mapping(pfdev, as, addr);
+ 	if (!bomapping)
+@@ -459,94 +456,45 @@ static int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as,
+ 		dev_WARN(pfdev->dev, "matching BO is not heap type (GPU VA = %llx)",
+ 			 bomapping->mmnode.start << PAGE_SHIFT);
+ 		ret = -EINVAL;
+-		goto err_bo;
++		goto fault_out;
+ 	}
+ 	WARN_ON(bomapping->mmu->as != as);
+ 
+ 	/* Assume 2MB alignment and size multiple */
+ 	addr &= ~((u64)SZ_2M - 1);
+-	page_offset = addr >> PAGE_SHIFT;
+-	page_offset -= bomapping->mmnode.start;
++	page_offset = (addr >> PAGE_SHIFT) - bomapping->mmnode.start;
+ 
+-	obj = &bo->base.base;
+-
+-	dma_resv_lock(obj->resv, NULL);
+-
+-	if (!bo->base.pages) {
++	if (!bo->sgts) {
+ 		bo->sgts = kvmalloc_array(bo->base.base.size / SZ_2M,
+-				     sizeof(struct sg_table), GFP_KERNEL | __GFP_ZERO);
++					  sizeof(struct sg_table *), GFP_KERNEL | __GFP_ZERO);
+ 		if (!bo->sgts) {
+ 			ret = -ENOMEM;
+-			goto err_unlock;
+-		}
+-
+-		pages = kvmalloc_array(bo->base.base.size >> PAGE_SHIFT,
+-				       sizeof(struct page *), GFP_KERNEL | __GFP_ZERO);
+-		if (!pages) {
+-			kvfree(bo->sgts);
+-			bo->sgts = NULL;
+-			ret = -ENOMEM;
+-			goto err_unlock;
+-		}
+-		bo->base.pages = pages;
+-		bo->base.pages_use_count = 1;
+-	} else {
+-		pages = bo->base.pages;
+-		if (pages[page_offset]) {
+-			/* Pages are already mapped, bail out. */
+-			goto out;
++			goto fault_out;
+ 		}
+ 	}
+ 
+-	mapping = bo->base.base.filp->f_mapping;
+-	mapping_set_unevictable(mapping);
++	sgt = drm_gem_shmem_get_sparse_pages_sgt(&bo->base, NUM_FAULT_PAGES,
++						 page_offset, GFP_NOWAIT);
++	if (IS_ERR(sgt)) {
++		if (WARN_ON(PTR_ERR(sgt) != -EEXIST))
++			ret = PTR_ERR(sgt);
++		else
++			ret = 0;
+ 
+-	for (i = page_offset; i < page_offset + NUM_FAULT_PAGES; i++) {
+-		/* Can happen if the last fault only partially filled this
+-		 * section of the pages array before failing. In that case
+-		 * we skip already filled pages.
+-		 */
+-		if (pages[i])
+-			continue;
+-
+-		pages[i] = shmem_read_mapping_page(mapping, i);
+-		if (IS_ERR(pages[i])) {
+-			ret = PTR_ERR(pages[i]);
+-			pages[i] = NULL;
+-			goto err_unlock;
+-		}
++		goto fault_out;
+ 	}
+ 
+-	sgt = &bo->sgts[page_offset / (SZ_2M / PAGE_SIZE)];
+-	ret = sg_alloc_table_from_pages(sgt, pages + page_offset,
+-					NUM_FAULT_PAGES, 0, SZ_2M, GFP_KERNEL);
+-	if (ret)
+-		goto err_unlock;
+-
+-	ret = dma_map_sgtable(pfdev->dev, sgt, DMA_BIDIRECTIONAL, 0);
+-	if (ret)
+-		goto err_map;
+-
+ 	mmu_map_sg(pfdev, bomapping->mmu, addr,
+ 		   IOMMU_WRITE | IOMMU_READ | IOMMU_NOEXEC, sgt);
+ 
++	bo->sgts[page_offset / (SZ_2M / PAGE_SIZE)] = sgt;
 +
-+	/**
-+	 * @sparse: the object is only partially backed by pages
-+	 */
-+	bool sparse : 1;
- };
+ 	bomapping->active = true;
+ 	bo->heap_rss_size += SZ_2M;
  
- #define to_drm_gem_shmem_obj(obj) \
- 	container_of(obj, struct drm_gem_shmem_object, base)
+ 	dev_dbg(pfdev->dev, "mapped page fault @ AS%d %llx", as, addr);
  
- struct drm_gem_shmem_object *drm_gem_shmem_create(struct drm_device *dev, size_t size);
-+struct drm_gem_shmem_object *drm_gem_shmem_create_sparse(struct drm_device *dev, size_t size);
- struct drm_gem_shmem_object *drm_gem_shmem_create_with_mnt(struct drm_device *dev,
- 							   size_t size,
- 							   struct vfsmount *gemfs);
-@@ -210,6 +220,10 @@ static inline struct sg_table *drm_gem_shmem_object_get_sg_table(struct drm_gem_
- {
- 	struct drm_gem_shmem_object *shmem = to_drm_gem_shmem_obj(obj);
- 
-+	/* Use the specific sparse shmem get_sg_table function instead */
-+	if (WARN_ON(shmem->sparse))
-+		return ERR_PTR(-EINVAL);
-+
- 	return drm_gem_shmem_get_sg_table(shmem);
+-out:
+-	dma_resv_unlock(obj->resv);
+-
+-	panfrost_gem_mapping_put(bomapping);
+-
+-	return 0;
+-
+-err_map:
+-	sg_free_table(sgt);
+-err_unlock:
+-	dma_resv_unlock(obj->resv);
+-err_bo:
++fault_out:
+ 	panfrost_gem_mapping_put(bomapping);
+ 	return ret;
  }
- 
-@@ -229,6 +243,10 @@ static inline int drm_gem_shmem_object_vmap(struct drm_gem_object *obj,
- {
- 	struct drm_gem_shmem_object *shmem = to_drm_gem_shmem_obj(obj);
- 
-+	/* TODO: Implement kernel mapping of sparse shmem objects */
-+	if (WARN_ON(shmem->sparse))
-+		return -EACCES;
-+
- 	return drm_gem_shmem_vmap(shmem, map);
- }
- 
-@@ -263,6 +281,9 @@ static inline int drm_gem_shmem_object_mmap(struct drm_gem_object *obj, struct v
- {
- 	struct drm_gem_shmem_object *shmem = to_drm_gem_shmem_obj(obj);
- 
-+	if (shmem->sparse)
-+		return -EACCES;
-+
- 	return drm_gem_shmem_mmap(shmem, vma);
- }
- 
 -- 
 2.48.1
 
