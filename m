@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCF01F4194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948931F4196
 	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:55:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743000918; cv=none; b=FqRp4MUfRxpcbjuQ597MeuX3+/JTpGX7lbYQdpx7l4tKxcOVLq/C87bKZC4/g/1Dv+sVcBLQjGF9/FJs5eAOaZv+7T7LTb2LB9CasI3cHcIh0DoiYZR1BGYezun4O/CKktiBrAqXq6VOYzsGG6roJdS5VXrp7Qu6NfPe5iRN5N4=
+	t=1743000918; cv=none; b=VFagxnTTqw7oxdP1mmiXUShV72LZeLiGp+2pqu2oa1vRJSDKbJ/S+DDkIzVg+Vspe+eb37OWGrgOs0RuMMAA6MZlzCrDmEjrRfSo8Nqs3F9pGsP+Jo6mRGiO2iET1d9wDZtEfz90CV5FfdSqi9469gSGtHgRkl18CHPBB+OGfOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743000918; c=relaxed/simple;
-	bh=f8Go/Lf6eKTKK3ZOLvtfyqYnJK+Xb1Uz/4HbbTR++Tw=;
+	bh=o6iNGj42Opmg2oegJQ1Tw7Jv8z8jcOYi8n6UQAgaqHs=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=iOnYKPdjRP/mJEQeFdzLDoBs0OzD50DWqjQx19bkqY7jbAAKn5BHQ4KQj3DeUY6G/x3kXQGDPetl7z3JGEmvAI6Wq9j4CAyVjZjRvbUo8ph61EZeOqXyIRMsmuaZyXSw08fdWgnjJq/nzfB9bqh/l+teJHkKtUmaBjXg37e9cHY=
+	 Content-Type; b=btO36xdQKdmvBk5qBRiUhj10TBBI6JXBElM6D+nxcVIdVrtBaqY10y86d9Ucrc4G99qNDQOiJx/A1PwOgv+HfG1ht/XgjRKpG8HW9sSbOxjTqPE/l9XJ1hZa+nvk3SBtkfBngJxcW+7CgWQtRqYu/m+vGhgekH7WSNLFVgB2gTI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2034CC4CEF6;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FA6CC4CEEB;
 	Wed, 26 Mar 2025 14:55:18 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1txSAm-00000002kFY-45d0;
-	Wed, 26 Mar 2025 10:56:04 -0400
-Message-ID: <20250326145604.825747992@goodmis.org>
+	id 1txSAn-00000002kGa-1LK4;
+	Wed, 26 Mar 2025 10:56:05 -0400
+Message-ID: <20250326145605.168984535@goodmis.org>
 User-Agent: quilt/0.68
-Date: Wed, 26 Mar 2025 10:55:56 -0400
+Date: Wed, 26 Mar 2025 10:55:58 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Tomas Glozar <tglozar@redhat.com>,
  John Kacur <jkacur@redhat.com>,
- Luis Goncalves <lgoncalv@redhat.com>
-Subject: [for-next][PATCH 7/9] rtla/tests: Reset osnoise options before check
+ "Luis Claudio R . Goncalves" <lgoncalv@redhat.com>
+Subject: [for-next][PATCH 9/9] rtla: Add the ability to create ctags and etags
 References: <20250326145549.978154551@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -36,89 +36,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Tomas Glozar <tglozar@redhat.com>
+From: John Kacur <jkacur@redhat.com>
 
-Remove any dangling tracing instances from previous improperly exited
-runs of rtla, and reset osnoise options to default before running a test
-case.
+- Add the ability to create and remove ctags and etags, using the following
+make tags
+make TAGS
+make tags_clean
 
-This ensures that the test results are deterministic. Specific test
-cases checked that rtla behaves correctly even when the tracer state is
-not clean will be added later.
+- fix a comment in Makefile.rtla with the correct spelling and don't
+  imply that the ability to create an rtla tarball will be removed
 
-Cc: John Kacur <jkacur@redhat.com>
-Cc: Luis Goncalves <lgoncalv@redhat.com>
-Link: https://lore.kernel.org/20250320092500.101385-6-tglozar@redhat.com
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+Cc: Tomas Glozar <tglozar@redhat.com>
+Cc: "Luis Claudio R . Goncalves" <lgoncalv@redhat.com>
+Link: https://lore.kernel.org/20250321175053.29048-1-jkacur@redhat.com
+Signed-off-by: John Kacur <jkacur@redhat.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- tools/tracing/rtla/tests/engine.sh | 40 ++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ tools/tracing/rtla/Makefile.rtla | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/tools/tracing/rtla/tests/engine.sh b/tools/tracing/rtla/tests/engine.sh
-index 64d0446dc28e..5db8aa4bc031 100644
---- a/tools/tracing/rtla/tests/engine.sh
-+++ b/tools/tracing/rtla/tests/engine.sh
-@@ -8,12 +8,44 @@ test_begin() {
- 	[ -n "$TEST_COUNT" ] && echo "1..$TEST_COUNT"
- }
+diff --git a/tools/tracing/rtla/Makefile.rtla b/tools/tracing/rtla/Makefile.rtla
+index cc1d6b615475..08c1b40883d3 100644
+--- a/tools/tracing/rtla/Makefile.rtla
++++ b/tools/tracing/rtla/Makefile.rtla
+@@ -34,6 +34,8 @@ INSTALL		:= install
+ MKDIR		:= mkdir
+ STRIP		:= strip
+ BINDIR		:= /usr/bin
++CTAGS		:= ctags
++ETAGS		:= ctags -e
  
-+reset_osnoise() {
-+	# Reset osnoise options to default and remove any dangling instances created
-+	# by improperly exited rtla runs.
-+	pushd /sys/kernel/tracing || return 1
-+
-+	# Remove dangling instances created by previous rtla run
-+	echo 0 > tracing_thresh
-+	cd instances
-+	for i in osnoise_top osnoise_hist timerlat_top timerlat_hist
-+	do
-+		[ ! -d "$i" ] && continue
-+		rmdir "$i"
-+	done
-+
-+	# Reset options to default
-+	# Note: those are copied from the default values of osnoise_data
-+	# in kernel/trace/trace_osnoise.c
-+	cd ../osnoise
-+	echo all > cpus
-+	echo DEFAULTS > options
-+	echo 1000000 > period_us
-+	echo 0 > print_stack
-+	echo 1000000 > runtime_us
-+	echo 0 > stop_tracing_total_us
-+	echo 0 > stop_tracing_us
-+	echo 1000 > timerlat_period_us
-+
-+	popd
-+}
-+
- check() {
- 	# Simple check: run rtla with given arguments and test exit code.
- 	# If TEST_COUNT is set, run the test. Otherwise, just count.
- 	ctr=$(($ctr + 1))
- 	if [ -n "$TEST_COUNT" ]
- 	then
-+		# Reset osnoise options before running test.
-+		[ "$NO_RESET_OSNOISE" == 1 ] || reset_osnoise
- 		# Run rtla; in case of failure, include its output as comment
- 		# in the test results.
- 		result=$(stdbuf -oL $TIMEOUT "$RTLA" $2 2>&1); exitcode=$?
-@@ -37,6 +69,14 @@ unset_timeout() {
- 	unset TIMEOUT
- }
+ .PHONY: install
+ install: doc_install
+@@ -47,6 +49,18 @@ install: doc_install
+ 	@test ! -f $(DESTDIR)$(BINDIR)/timerlat || $(RM) $(DESTDIR)$(BINDIR)/timerlat
+ 	@$(LN) -s rtla $(DESTDIR)$(BINDIR)/timerlat
  
-+set_no_reset_osnoise() {
-+	NO_RESET_OSNOISE=1
-+}
++.PHONY: tags
++tags:
++	$(CTAGS) -R --extras=+f --c-kinds=+p src
 +
-+unset_no_reset_osnoise() {
-+	unset NO_RESET_OSNOISE
-+}
++.PHONY: TAGS
++TAGS:
++	$(ETAGS) -R --extras=+f --c-kinds=+p src
 +
- test_end() {
- 	# If running without TEST_COUNT, tests are not actually run, just
- 	# counted. In that case, re-run the test with the correct count.
++.PHONY: tags_clean
++tags_clean:
++	$(RM) tags TAGS
++
+ .PHONY: doc doc_clean doc_install
+ doc:
+ 	$(MAKE) -C $(DOCSRC)
+@@ -57,8 +71,7 @@ doc_clean:
+ doc_install:
+ 	$(MAKE) -C $(DOCSRC) install
+ 
+-# This section is neesary for the tarball, when the tarball
+-# support is removed, we can delete these entries.
++# This section is necessary to make the rtla tarball
+ NAME		:= rtla
+ DIRS		:= src
+ FILES		:= Makefile README.txt
 -- 
 2.47.2
 
