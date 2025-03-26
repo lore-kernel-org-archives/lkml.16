@@ -1,123 +1,142 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02972202F93;
-	Wed, 26 Mar 2025 17:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E30215065
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 17:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743009807; cv=none; b=olvEwnyS0GIfdoHej4j+/8/hygLy++V/voCKZdABy2jkgZHDFI1BkQ813TsoaIAsij/BJ4NW8/m3c6d/zfJSCrzfOs0Uzr0Rlmg/SccTMA4GR+BWIybIh1LWbIC/7UgPQqhVWglkt1n/sjJ1rXPwZfY3nLbTaDBaVdDAeHnjY4g=
+	t=1743009806; cv=none; b=q5K+QYWttb9U2Cm6rGori1fmlIMXhSASQPv/ohW6BhWy03mldAinEZP3FmVI8HY4XwCaFr//5warqhzIrGsqcUPGKEOM4+LcWdTtKjrb4s0Wk3TJULSrG+RTxG2+yTXFMGwDrt8H1GpaVw82HUxr3MUs9iGx99T2s2oJq0VHH0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743009807; c=relaxed/simple;
-	bh=rs9bOE/ilaGLGVSwM1Ef1ijs+11j18W4WaeUmdZRUUo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SLZ9WzrwboipooHn3uO5C4vLkKyo+6ypxwPg5T+e2SdopmJq1WGhmCIMmnnRiqfCUu/gUfM6BbmEN721ExRatk3N244PuB6wZj0+Rv7IVPVKvu87rI0uEY6JcAuEJ9dUKOSywSX+uFAoKomHddXzrRN+cTO5mQojW9uH0prakaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4ZND1N0Jbqz9smk;
-	Wed, 26 Mar 2025 18:14:48 +0100 (CET)
-From: Remo Senekowitsch <remo@buenzli.dev>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Rob Herring <robh@kernel.org>
-Cc: Dirk Behme <dirk.behme@de.bosch.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Remo Senekowitsch <remo@buenzli.dev>,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: [PATCH 02/10] rust: Add an Integer trait
-Date: Wed, 26 Mar 2025 18:13:41 +0100
-Message-ID: <20250326171411.590681-3-remo@buenzli.dev>
-In-Reply-To: <20250326171411.590681-1-remo@buenzli.dev>
-References: <20250326171411.590681-1-remo@buenzli.dev>
+	s=arc-20240116; t=1743009806; c=relaxed/simple;
+	bh=a2NyMrUiQOV80ARg/+DvduuMj0SZhgXE4j7q8A388ds=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u/ZdPGUFh5Bh5Yi0u6bR8e0HhP6SeaYXr5/uTxOut0gNEinMkCSDzVLn3h54AtfxCE/WvJB6Mb5t8E7VpfmqPjFM6KRdRnMSaZcr/Pq9TXP/OS+cPetJUkvrPAfTe8ubGVLUCeWQwRMlM2BYTRyWPJrMiFK+OnfMt9TXR4dFzGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=DLnT6LM9; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="DLnT6LM9"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ff6b9a7f91so4162a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 10:23:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1743009804; x=1743614604; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a2NyMrUiQOV80ARg/+DvduuMj0SZhgXE4j7q8A388ds=;
+        b=DLnT6LM9SlB6RMADbirhr6CNJF2sQaAioJA4LSFomc9vVEe2phAN4OMEUouTeZAfvo
+         ltQ3hH1WCR9uC7Q+HvTNku8cAEpb0f7gDHGspIi25u1DboQ2PX0VpLR7g6vWTtBS29jK
+         lEPji/A0X5QVcGlec1f3XoHLBubcx/6wwNZpdjxeEhaMlc3VelQ4ayMkzjinVzSkmlcQ
+         uMHugj5FgBdIHggxKkVVaPjrEA5hpIwNAuXXmIPksy9fP1AIy5caVYO4rcrtHo6hzS08
+         3g+vXrGPieLruDPg5QUVJFzVDGcxkJm8mxM/vS6PqqWvHM9CInNnLzOKC5J3e986sP/2
+         4Ulg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743009804; x=1743614604;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a2NyMrUiQOV80ARg/+DvduuMj0SZhgXE4j7q8A388ds=;
+        b=mhaMM0oQgaYpA9uMq/vsBmauazFBH22K2TjZHxkVvlB900ydHradkVnTIbCuRsDxBn
+         fuN0jtV9m3eAXHI0OtQjmdzTFxm/GMQYYUrVPTsVGAj26ftlrfpy1o4aBcrE4cWgTo4B
+         /80sCxEyyNBgIRGoJ4uCl+0xnrxBoPbaQw0R/7uIx4jK+BnTcq9ordYX484/1bZrW0LC
+         D74cwgDrhN1SjA7kSswmF/k+6tsJkqceCSyYoLYOri9zEHGTcW9z//CwDbZJBR/xSmBT
+         DMRkF0C1EvbwLyPEozXABnr/doFESNheQRGwvzBOeXOwsPNDrN2aQrlFtPOahMbtCfDu
+         nFVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUBuzlV+ZnH/hX/NdZdZpetedIehaW1MCS/Y1oy89PhtUtHCfVz4X2MIVd2Hx8fDj0ftWiJce41dTazUM4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrgJeNdE0I5pv0+d/ZAKrlrKD51FjL5zCq0ablcnOLeo6IM15y
+	5YCqE2j+TzJeWhSp9HYDDQS5uK9Xdg1YOow6fsjPDmbtH5IGY4N76ZDEJuR9Hl9TdpgnOxtvx2c
+	vrgbE7I55oPByI+uLSFoJu9Px+fQaWmqnSpS6dw==
+X-Gm-Gg: ASbGncs6MmzueGXIBqoXVsqDr1ZeD70ho3PgC3h6C7bwjPCGUzynHM/epg65/4pzxrA
+	KfIjjtsGP/OL0frpFIsLVcKALmM9YGRwvPDdJXJtK2H/2cy+IRYUcAjkdrZcwVk4YI5C2UPbznb
+	rXCHHh6A00rp+nhKWuV3D5Alwv
+X-Google-Smtp-Source: AGHT+IH7rIFlWyEYfIZ3WN0p7Zb9qCbUlZyp5L8giHJ9QZiKfqAiDrKPrmG0kZcCYX063nmTDXOGpO6drIVHOa7BaQQ=
+X-Received: by 2002:a17:90b:1c04:b0:2ff:7970:d2b6 with SMTP id
+ 98e67ed59e1d1-303a9185a25mr255538a91.5.1743009804102; Wed, 26 Mar 2025
+ 10:23:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4ZND1N0Jbqz9smk
+References: <20250325143943.1226467-1-csander@purestorage.com>
+ <5b6b20d7-5230-4d30-b457-4d69c1bb51d4@gmail.com> <CADUfDZoo11vZ3Yq-6y4zZNNoyE+YnSSa267hOxQCvH66vM1njQ@mail.gmail.com>
+ <9770387a-9726-4905-9166-253ec02507ff@kernel.dk>
+In-Reply-To: <9770387a-9726-4905-9166-253ec02507ff@kernel.dk>
+From: Caleb Sander Mateos <csander@purestorage.com>
+Date: Wed, 26 Mar 2025 10:23:12 -0700
+X-Gm-Features: AQ5f1Jq090bRbktCGQj6AKofeV73gODEjcWkjhMdf9jWJZQbbcbRL1wJhVOvgeM
+Message-ID: <CADUfDZr0FgW4O3bCtq=Yez2cHz799=Tfud6uA6SHEGT4hdwxiA@mail.gmail.com>
+Subject: Re: [PATCH v2] io_uring/net: use REQ_F_IMPORT_BUFFER for send_zc
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "Rob Herring (Arm)" <robh@kernel.org>
+On Wed, Mar 26, 2025 at 10:05=E2=80=AFAM Jens Axboe <axboe@kernel.dk> wrote=
+:
+>
+> On 3/26/25 11:01 AM, Caleb Sander Mateos wrote:
+> > On Wed, Mar 26, 2025 at 2:59?AM Pavel Begunkov <asml.silence@gmail.com>=
+ wrote:
+> >>
+> >> On 3/25/25 14:39, Caleb Sander Mateos wrote:
+> >>> Instead of a bool field in struct io_sr_msg, use REQ_F_IMPORT_BUFFER =
+to
+> >>> track whether io_send_zc() has already imported the buffer. This flag
+> >>> already serves a similar purpose for sendmsg_zc and {read,write}v_fix=
+ed.
+> >>
+> >> It didn't apply cleanly to for-6.15/io_uring-reg-vec, but otherwise
+> >> looks good.
+> >
+> > It looks like Jens dropped my earlier patch "io_uring/net: import
+> > send_zc fixed buffer before going async":
+> > https://lore.kernel.org/io-uring/20250321184819.3847386-3-csander@pures=
+torage.com/T/#u
+> > .
+> > Not sure why it was dropped. But this change is independent, I can
+> > rebase it onto the current for-6.15/io_uring-reg-vec if desired.
+>
+> Mostly just around the discussion on what we want to guarantee here. I
+> do think that patch makes sense, fwiw!
 
-Add an "Integer" trait similar to crate::num::Integer. This is useful
-for implementing generic methods which operate on different sizes of
-integers. One example is reading DT/ACPI firmware properties.
+I hope the approach I took for the revised NVMe passthru patch [1] is
+an acceptable compromise: the order in which io_uring issues
+operations isn't guaranteed, but userspace may opportunistically
+submit operations in parallel with a fallback path in case of failure.
+Viewed this way, I think it makes sense for the kernel to allow the
+operation using the fixed buffer to succeed even if it goes async,
+provided that it doesn't impose any burden on the io_uring
+implementation. I dropped the "Fixes" tag and added a paragraph to the
+commit message clarifying that io_uring doesn't guarantee this
+behavior, it's just an optimization.
 
-This was originally proposed by Alice Ryhl[1].
+[1]: https://lore.kernel.org/io-uring/20250324200540.910962-4-csander@pures=
+torage.com/T/#u
 
-[1] https://lore.kernel.org/rust-for-linux/CAH5fLgiXPZqKpWSSNdx-Ww-E9h2tOLcF3_8Y4C_JQ0eU8EMwFw@mail.gmail.com/
+>
+> >> Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+> >
+> > Thanks!
+> >
+> >>
+> >>> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+> >>> Suggested-by: Pavel Begunkov <asml.silence@gmail.com>
+> >>
+> >> Note for the future, it's a good practice to put your sob last.
+> >
+> > Okay. Is the preferred order of tags documented anywhere? I ran
+> > scripts/checkpatch.pl, but it didn't have any complaints.
+>
+> I think that one is minor, as it's not reordering with another SOB. Eg
+> mine would go below it anyway. But you definitely should always include
+> a list of what changed since v1 when posting v2, and so forth. Otherwise
+> you need to find the old patch and compare them to see what changed.
+> Just put it below the --- line in the email.
 
-Suggested-by: Alice Ryhl <aliceryhl@google.com>
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- rust/kernel/types.rs | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+Sorry about that, it slipped my mind. Will try to remember next time!
 
-diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-index 2bbaab83b..21647b7ba 100644
---- a/rust/kernel/types.rs
-+++ b/rust/kernel/types.rs
-@@ -3,10 +3,11 @@
- //! Kernel types.
- 
- use crate::init::{self, PinInit};
-+use crate::transmute::{AsBytes, FromBytes};
- use core::{
-     cell::UnsafeCell,
-     marker::{PhantomData, PhantomPinned},
--    mem::{ManuallyDrop, MaybeUninit},
-+    mem::{size_of, ManuallyDrop, MaybeUninit},
-     ops::{Deref, DerefMut},
-     ptr::NonNull,
- };
-@@ -553,6 +554,25 @@ pub enum Either<L, R> {
-     Right(R),
- }
- 
-+/// Trait defined for all integer types similar to `crate::num::Integer`
-+pub trait Integer: FromBytes + AsBytes + Copy {
-+    /// Size of the integer in bytes
-+    const SIZE: usize;
-+}
-+
-+macro_rules! impl_int {
-+    ($($typ:ty),* $(,)?) => {$(
-+        impl Integer for $typ {
-+            const SIZE: usize = size_of::<Self>();
-+        }
-+    )*};
-+}
-+
-+impl_int! {
-+    u8, u16, u32, u64, usize,
-+    i8, i16, i32, i64, isize,
-+}
-+
- /// Zero-sized type to mark types not [`Send`].
- ///
- /// Add this type as a field to your struct if your type should not be sent to a different task.
--- 
-2.49.0
-
+Thanks,
+Caleb
