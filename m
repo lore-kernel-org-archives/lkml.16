@@ -1,73 +1,89 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED661F95C
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 16:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BD11F95C;
+	Wed, 26 Mar 2025 16:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743008194; cv=none; b=UZg9xUQEBStwqTtNoZbr8ut57TMPfCIt6qMxDGgL/A9kyZm/LLETz/aqBKFaCaZlCSksPjXeSEi/JqSIA1sjAA/MB8sbw/iBH5CEp8+uvrj30S1XAyNuIwmEokgVdR1tRXUj//RP4dZlh1UrCUF1LX8q7k/7ExujrYcu5qkoETQ=
+	t=1743008250; cv=none; b=eZi+gCL8AwtV5h7z1B+2SGznPNv42dYPEW7+Wv0r+tqCBubSx+tTE5NQ+FcLabefaGZ9VYqSERapdMe54o/Ao+dhDsEq/O/hpEUb+qNxFMwu5CphvcCzrVQB6x5swZVy3GJrNjGBZqpvpvnBrWRuWugvn/I5ekmrYe3tHw26YrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743008194; c=relaxed/simple;
-	bh=bXJ0oLNBJborP8h9cyHjqDVZTHl+kJAv4+LmY4HiteE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=EyZ2tSqz0bcqBs2I46/gUeqBVQv+RMls3NvKWk7d1JSBfXOlsg7NdebecqQEzZkcDli5c/OWKilNzSkhHYhBnx0meH+jin8onV8ks0mCLFhRB7HGqRwf7eTm5gWhb8N+ZLGqCo63HJtCYkCI2PJyjciJqwakF6kVddhczPZPw/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QbM8kxMP; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1743008250; c=relaxed/simple;
+	bh=doUGU7qVE0nBslUip4rBHGXcaNRqYNLVIEXEA4QLHQA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=tedSUquQGt/fWLzJ5dHxesXQPNjseXa3O6h1Hniu5qafCepZUvj0zttb/VCtrp4wMQGDRXFwy/GB8It+PpgHlKMy4Mqp2MTQGuSXYdwf0y8yF6h/YulNoCVNxWJDffuw9RIPcaFjy1+y7FCERPj0LkWuQLZco76wT41ogi2rzwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJmHmHqV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QbM8kxMP"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F09EC44430;
-	Wed, 26 Mar 2025 16:56:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743008191;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bXJ0oLNBJborP8h9cyHjqDVZTHl+kJAv4+LmY4HiteE=;
-	b=QbM8kxMPImrGfqF9p3+No83/t+WyUVxfVNs/L0d0z2vUk/leyEF4Zx/TwywPHZ1Qro2CNz
-	lxWvBQ9ErT6upGfp1dDLgndh/jtlfruny4TIlbRRQqQQ1AZJYPrvv97VHpA034E9oK3LY6
-	gArvg8O9LO10Zttnt0OEEr2q8syIEDoFDHEK9BuUa6SKuOQIKQGhtXh6EApipoJc9djCX/
-	K6VKnqDryZR0TW6NUjGFc4fo2pS9y1R7cxPj/D6wuzgZDLZW4wGqC5FI3A6mk68J6dkHqc
-	B6EZe8ptg1vt4pXN/y106q8QqmkVp5SHfjjqV5+ZK2DnShFMhBkazvoAuXR/9g==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: Richard Weinberger <richard@nod.at>,  Pratyush Yadav
- <pratyush@kernel.org>,  Michael Walle <mwalle@kernel.org>,  "open list:SPI
- NOR SUBSYSTEM" <linux-mtd@lists.infradead.org>,  open list
- <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] mtd: spi-nor: changes for v6.15
-In-Reply-To: <b4a5c030-e8af-4724-a0aa-b53f7e08f365@linaro.org> (Tudor
-	Ambarus's message of "Tue, 18 Mar 2025 08:21:01 +0200")
-References: <b4a5c030-e8af-4724-a0aa-b53f7e08f365@linaro.org>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Wed, 26 Mar 2025 17:56:30 +0100
-Message-ID: <87a597ohmp.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJmHmHqV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBE67C4CEE2;
+	Wed, 26 Mar 2025 16:57:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743008249;
+	bh=doUGU7qVE0nBslUip4rBHGXcaNRqYNLVIEXEA4QLHQA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=UJmHmHqVI3uYPPPWwZz7PXpzmD9dQ/ucfsM7V7xxc5q13C8Rwio5uuH4TjbFn8O2M
+	 G4Z2l0eXdzlB5lfeG+bNdnWMgXiMC7Odzgy2vYwgjRtJ6W7hH0NWJQ18YFdPsq46yj
+	 WbWr4eusBPxPD6uHupuMQDorBHriEtOuHZV0AOPPeAXGdoi20pHFI8qmdsv+MXy8MA
+	 MfbRdz+dCsni9WuPBZtxDHgsmPfVueqlUKrPKficvchGgIhZ2OqTug4P/h4Xn9jxwz
+	 hu520cCH7UoblQQeZ1dmNORLokqOLHmBjl+5gVTs5apTbK7vt8a0O6x24SL4Y7cwkZ
+	 nsqwOY0X9SrUQ==
+Date: Wed, 26 Mar 2025 11:57:28 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Yibo Dong <dong100@mucse.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add MUCSE vendor ID to pci_ids.h
+Message-ID: <20250326165728.GA1339144@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieeitdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeipdhrtghpthhtohepthhuughorhdrrghmsggrrhhusheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepphhrrghthihushhhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhop
- ehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250325065718.333301-1-dong100@mucse.com>
 
-On 18/03/2025 at 08:21:01 +02, Tudor Ambarus <tudor.ambarus@linaro.org> wro=
-te:
+On Tue, Mar 25, 2025 at 02:57:18PM +0800, Yibo Dong wrote:
+> Add MUCSE as a vendor ID (0x8848) for PCI devices so we can use
+> the macro for future drivers.
+> 
+> Signed-off-by: Yibo Dong <dong100@mucse.com>
 
-> Hi, Miquel,
->
-> Here is the SPI NOR PR for v6.15. We'll try to have it a week earlier
-> next time.
+Please post this in the series where you add the future drivers.
 
-No worries, I do not need earlier than that.
+We don't add new things to pci_ids.h unless they are actually used by
+more than one driver because it complicates life for people who
+backport things (there's a note at the top of the file about this).
 
-Pulled into mtd/next.
+> ---
+>  include/linux/pci_ids.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index de5deb1a0118..f1b4c61c6d3c 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -3143,6 +3143,8 @@
+>  #define PCI_VENDOR_ID_SCALEMP		0x8686
+>  #define PCI_DEVICE_ID_SCALEMP_VSMP_CTL	0x1010
+>  
+> +#define PCI_VENDOR_ID_MUCSE		0x8848
 
-Thanks,
-Miqu=C3=A8l
+https://pcisig.com/membership/member-companies?combine=8848 says this
+Vendor ID belongs to:
+
+  Wuxi Micro Innovation Integrated Circuit Design Co.,Ltd
+
+I suppose "MUCSE" connects with that somehow.
+
+It's nice if people can connect PCI_VENDOR_ID_MUCSE with a name used
+in marketing the product.  Maybe "MUCSE" is the name under which
+Wuxi Micro Innovation Integrated Circuit Design Co.,Ltd markets
+products?
+
+>  #define PCI_VENDOR_ID_COMPUTONE		0x8e0e
+>  #define PCI_DEVICE_ID_COMPUTONE_PG	0x0302
+>  #define PCI_SUBVENDOR_ID_COMPUTONE	0x8e0e
+> -- 
+> 2.25.1
+> 
