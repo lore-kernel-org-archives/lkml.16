@@ -1,942 +1,174 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0479A1F3FD0
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:55:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1471EEA36;
+	Wed, 26 Mar 2025 14:55:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743000918; cv=none; b=XjWLRHjqacVX6h9i2oqQXPkMmrHdeEm5KgQuJP+0WLlkv6z0F6QwHdBPFVqzkH2v476QMFQQPO81QgYGYSfuuM+e1IKITI0HSzUc2F2n+jDJ8r2EMH4Ww4aBsHHOArVjHVUz2QmC7mp6YBbvkCn9fpZiagwEmHqYk+DW5f9GuV4=
+	t=1743000928; cv=none; b=ZBnDrQqNqtPVR5d3WT+NObr7pfoX9FG4ABKkemqRLWNGDXlfJ13aFo43zCQWP0TQbiTd1PbL5RWRKp8TBZ/j0U++RZuFBVcm5tnNMwmvtGQAudwMPYjLoKx+t8LgefYBXPBI6dSXkHkKs8ZA+/zI8EW6ttQo/76o8g4lpbOYGys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743000918; c=relaxed/simple;
-	bh=H6sL1mzwy2TdYofBteYn+cMuI0IEfK9GZ5u1SeqVN/8=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=ZphcpUFsQbL8ymU2lkacQbNWYVW2S9H1PjN+nbnoGfoE5VjpaUUQJVsxRhkcu2s8t/OnIRx1viWDJNy12nd3ewYcXx8Dr4gKBBp6re4YPgERuYkBWp6MX2B/q2IJIPhY9qjAv6j6NVHqt5RKawFNCzg43ZFkYg7Kqs81+VRGCBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8063C4CEE8;
-	Wed, 26 Mar 2025 14:55:17 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1txSAm-00000002kE5-1wRV;
-	Wed, 26 Mar 2025 10:56:04 -0400
-Message-ID: <20250326145604.311802792@goodmis.org>
-User-Agent: quilt/0.68
-Date: Wed, 26 Mar 2025 10:55:53 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org
-Cc: Tomas Glozar <tglozar@redhat.com>,
- John Kacur <jkacur@redhat.com>,
- Luis Goncalves <lgoncalv@redhat.com>
-Subject: [for-next][PATCH 4/9] rtla: Unify apply_config between top and hist
-References: <20250326145549.978154551@goodmis.org>
+	s=arc-20240116; t=1743000928; c=relaxed/simple;
+	bh=2FjJkXZ1Sr7UVOgZLzCfOaayYT0ey4QBq9TK9OK+P/E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iny8sHywRy1KDbeDQ8bEOeoLWeS1yRNjap40ktcb3yMCdjkyEfceIfsqdJeUTQgKG49caAwF1cPGvHqOINZLTHf0aqZyZKw7Au8JqWQ4MeTWJiYHGfE10lUYCv63ivspVyEhYd3nhB7vgqgW3XT8D5Mmd9MFksXJBH9qBvaA6Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HX6aTZbf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HX6aTZbf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6CA9C4CEE2;
+	Wed, 26 Mar 2025 14:55:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743000927;
+	bh=2FjJkXZ1Sr7UVOgZLzCfOaayYT0ey4QBq9TK9OK+P/E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=HX6aTZbfmKW3A2e/vn8L0G+6m4LL7IV/4qxaFFkyjSE9WQc2yJgVcmxtQn0yvGNkB
+	 j6/G1HeyjUGGQ+beZvHvcO588uANwt91E4OKcxRzxTXZI5mCXQTIZ2GG9s8mhOZjSp
+	 TS0R+5Y4qCBs+JMfbnbCvadMlrkMaksBOO3waBiF05sW9mCoLUbEcMF8Yx3tUsMpXq
+	 fHw/Kn1InTPrQzu2NX8fmA9qXnwoc+6z/41+WHWS62uemtTQ1oQHUCZj9FZzfLavBp
+	 5C39yp2vgvXV6jaJWKLHkNQxTEJwn3NhnThF88ek5cHtzIAmEj4Zxl7WPMuPhOcEm9
+	 Z//hTubBOrTcw==
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2c2c754af3cso3523539fac.3;
+        Wed, 26 Mar 2025 07:55:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU/nLXbfqNxVE6AKjH4vRNioLbDxaMz94xZdKU7DF6o8QZZx7QJ5OT5LNAnsj5HJfj0DT1mcfO2OZD/7Asw@vger.kernel.org, AJvYcCVBwVumVtKSzzDL3fRQgHJsNyZitgY5rtR7MooIXKcotd/J2MM2zwlANPKYDWd7tDG2pJkuSWqEkkdB@vger.kernel.org, AJvYcCVLM2AEqUVI6S5NEaf4QGYR/jksq1lONKFoboKm6tM38msGE4e/glC1DIjKdEIdOChN8wJvRpT7mAT//Q==@vger.kernel.org, AJvYcCWZE/EOvRFCRUzrabNmjb5ZEUm3KJpMXQzK5uZvlOD4tSgHY0k57YM3XWVseGIHDahL04QAKAcnKdz1@vger.kernel.org, AJvYcCXO77w8RQlvdpbARz9KV2CX/7pEmkYSZyoImlBt6ppwx3eEiFFXyjkYX8rcLxD6uGsMsIuyMtduYoZXNOal@vger.kernel.org, AJvYcCXjeHZ97FWu/c0b7Nyew0lu4N3lIEt7maak/pm5VLy+r/BYjrnTgrn1DvLZoYfygOFokG3uqQaTTFOL4w==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHW6hqHItVobhEdS17eTiFOAWMBtIy0LkA/0afBker09U/MIYI
+	NMA45GSvzl7+/vKcjiFF5w0uZho8JHLUCfjKgxby8qW7W73zLfWWZQ88gg7aTTN2f7r3SxcC8er
+	Vsol+BoEQRLRMxkKn4NVTVi3D4pU=
+X-Google-Smtp-Source: AGHT+IEYYA/6LylePhPYpVsBFlVh+o1a/2X6ugf3+5Zk77UyBnBXpaSo0UzJzWGtji5Mqp0Q8hwWmxY8a4Ns27KKFng=
+X-Received: by 2002:a05:6871:5223:b0:2bd:455e:c22e with SMTP id
+ 586e51a60fabf-2c7803002damr12663712fac.19.1743000926945; Wed, 26 Mar 2025
+ 07:55:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20250315001931.631210-1-romank@linux.microsoft.com> <20250315001931.631210-11-romank@linux.microsoft.com>
+In-Reply-To: <20250315001931.631210-11-romank@linux.microsoft.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 26 Mar 2025 15:55:15 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0g1bX_3zRUUf-=euuvhm1dPB6bjEXPH9O-kMGcZjRspcw@mail.gmail.com>
+X-Gm-Features: AQ5f1Jr4yQ264W4Fr4uvYbe-kFtKKfam4-v0_OqzzA1JU-y-jScH9oT2tKvFv-0
+Message-ID: <CAJZ5v0g1bX_3zRUUf-=euuvhm1dPB6bjEXPH9O-kMGcZjRspcw@mail.gmail.com>
+Subject: Re: [PATCH hyperv-next v6 10/11] ACPI: irq: Introduce acpi_get_gsi_dispatcher()
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de, catalin.marinas@arm.com, 
+	conor+dt@kernel.org, dan.carpenter@linaro.org, dave.hansen@linux.intel.com, 
+	decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com, 
+	joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com, 
+	lenb@kernel.org, lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org, 
+	mark.rutland@arm.com, maz@kernel.org, mingo@redhat.com, 
+	oliver.upton@linux.dev, rafael@kernel.org, robh@kernel.org, 
+	ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com, 
+	tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org, yuzenghui@huawei.com, 
+	devicetree@vger.kernel.org, kvmarm@lists.linux.dev, 
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org, 
+	apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com, 
+	sunilmut@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Tomas Glozar <tglozar@redhat.com>
+On Sat, Mar 15, 2025 at 1:19=E2=80=AFAM Roman Kisel <romank@linux.microsoft=
+.com> wrote:
+>
+> Using acpi_irq_create_hierarchy() in the cases where the code
+> also handles OF leads to code duplication as the ACPI subsystem
+> doesn't provide means to compute the IRQ domain parent whereas
+> the OF does.
+>
+> Introduce acpi_get_gsi_dispatcher() so that the drivers relying
+> on both ACPI and OF may use irq_domain_create_hierarchy() in the
+> common code paths.
+>
+> No functional changes.
+>
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
-The functions osnoise_top_apply_config and osnoise_hist_apply_config, as
-well as timerlat_top_apply_config and timerlat_hist_apply_config, are
-mostly the same.
+This basically looks OK to me except for a couple of coding style
+related nits below.
 
-Move common part from them into separate functions osnoise_apply_config
-and timerlat_apply_config.
+> ---
+>  drivers/acpi/irq.c   | 15 +++++++++++++--
+>  include/linux/acpi.h |  5 ++++-
+>  2 files changed, 17 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/acpi/irq.c b/drivers/acpi/irq.c
+> index 1687483ff319..8eb09e45e5c5 100644
+> --- a/drivers/acpi/irq.c
+> +++ b/drivers/acpi/irq.c
+> @@ -12,7 +12,7 @@
+>
+>  enum acpi_irq_model_id acpi_irq_model;
+>
+> -static struct fwnode_handle *(*acpi_get_gsi_domain_id)(u32 gsi);
+> +static acpi_gsi_domain_disp_fn acpi_get_gsi_domain_id;
+>  static u32 (*acpi_gsi_to_irq_fallback)(u32 gsi);
+>
+>  /**
+> @@ -307,12 +307,23 @@ EXPORT_SYMBOL_GPL(acpi_irq_get);
+>   *     for a given GSI
+>   */
+>  void __init acpi_set_irq_model(enum acpi_irq_model_id model,
+> -                              struct fwnode_handle *(*fn)(u32))
 
-For rtla-timerlat, also unify params->user_hist and params->user_top
-into one field called params->user_data, and move several fields used
-only by timerlat-top into the top-only section of struct
-timerlat_params.
+Please retain the indentation here and analogously below.
 
-Cc: Luis Goncalves <lgoncalv@redhat.com>
-Link: https://lore.kernel.org/20250320092500.101385-3-tglozar@redhat.com
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
-Reviewed-by: John Kacur <jkacur@redhat.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- tools/tracing/rtla/src/osnoise.c       |  79 ++++++++++++++++
- tools/tracing/rtla/src/osnoise.h       |   1 +
- tools/tracing/rtla/src/osnoise_hist.c  |  66 +-------------
- tools/tracing/rtla/src/osnoise_top.c   |  66 +-------------
- tools/tracing/rtla/src/timerlat.c      | 109 ++++++++++++++++++++++
- tools/tracing/rtla/src/timerlat.h      |  11 +--
- tools/tracing/rtla/src/timerlat_hist.c | 119 ++++---------------------
- tools/tracing/rtla/src/timerlat_top.c  | 110 +++--------------------
- 8 files changed, 227 insertions(+), 334 deletions(-)
+> +       acpi_gsi_domain_disp_fn fn)
+>  {
+>         acpi_irq_model =3D model;
+>         acpi_get_gsi_domain_id =3D fn;
+>  }
+>
+> +/**
+> + * acpi_get_gsi_dispatcher - Returns dispatcher function that
+> + *                           computes the domain fwnode for a
+> + *                           given GSI.
+> + */
 
-diff --git a/tools/tracing/rtla/src/osnoise.c b/tools/tracing/rtla/src/osnoise.c
-index 93d485c0e949..1735a36466c4 100644
---- a/tools/tracing/rtla/src/osnoise.c
-+++ b/tools/tracing/rtla/src/osnoise.c
-@@ -3,6 +3,7 @@
-  * Copyright (C) 2021 Red Hat Inc, Daniel Bristot de Oliveira <bristot@kernel.org>
-  */
- 
-+#define _GNU_SOURCE
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <pthread.h>
-@@ -12,6 +13,7 @@
- #include <errno.h>
- #include <fcntl.h>
- #include <stdio.h>
-+#include <sched.h>
- 
- #include "osnoise.h"
- 
-@@ -1114,6 +1116,83 @@ osnoise_report_missed_events(struct osnoise_tool *tool)
- 	}
- }
- 
-+/*
-+ * osnoise_apply_config - apply common configs to the initialized tool
-+ */
-+int
-+osnoise_apply_config(struct osnoise_tool *tool, struct osnoise_params *params)
-+{
-+	int retval;
-+
-+	if (!params->sleep_time)
-+		params->sleep_time = 1;
-+
-+	if (params->cpus) {
-+		retval = osnoise_set_cpus(tool->context, params->cpus);
-+		if (retval) {
-+			err_msg("Failed to apply CPUs config\n");
-+			goto out_err;
-+		}
-+	}
-+
-+	if (params->runtime || params->period) {
-+		retval = osnoise_set_runtime_period(tool->context,
-+						    params->runtime,
-+						    params->period);
-+		if (retval) {
-+			err_msg("Failed to set runtime and/or period\n");
-+			goto out_err;
-+		}
-+	}
-+
-+	if (params->stop_us) {
-+		retval = osnoise_set_stop_us(tool->context, params->stop_us);
-+		if (retval) {
-+			err_msg("Failed to set stop us\n");
-+			goto out_err;
-+		}
-+	}
-+
-+	if (params->stop_total_us) {
-+		retval = osnoise_set_stop_total_us(tool->context, params->stop_total_us);
-+		if (retval) {
-+			err_msg("Failed to set stop total us\n");
-+			goto out_err;
-+		}
-+	}
-+
-+	if (params->threshold) {
-+		retval = osnoise_set_tracing_thresh(tool->context, params->threshold);
-+		if (retval) {
-+			err_msg("Failed to set tracing_thresh\n");
-+			goto out_err;
-+		}
-+	}
-+
-+	if (params->hk_cpus) {
-+		retval = sched_setaffinity(getpid(), sizeof(params->hk_cpu_set),
-+					   &params->hk_cpu_set);
-+		if (retval == -1) {
-+			err_msg("Failed to set rtla to the house keeping CPUs\n");
-+			goto out_err;
-+		}
-+	} else if (params->cpus) {
-+		/*
-+		 * Even if the user do not set a house-keeping CPU, try to
-+		 * move rtla to a CPU set different to the one where the user
-+		 * set the workload to run.
-+		 *
-+		 * No need to check results as this is an automatic attempt.
-+		 */
-+		auto_house_keeping(&params->monitored_cpus);
-+	}
-+
-+	return 0;
-+
-+out_err:
-+	return -1;
-+}
-+
- static void osnoise_usage(int err)
- {
- 	int i;
-diff --git a/tools/tracing/rtla/src/osnoise.h b/tools/tracing/rtla/src/osnoise.h
-index f78ffbdc8c8d..ac1c99910744 100644
---- a/tools/tracing/rtla/src/osnoise.h
-+++ b/tools/tracing/rtla/src/osnoise.h
-@@ -155,6 +155,7 @@ struct osnoise_tool *osnoise_init_tool(char *tool_name);
- struct osnoise_tool *osnoise_init_trace_tool(char *tracer);
- void osnoise_report_missed_events(struct osnoise_tool *tool);
- bool osnoise_trace_is_off(struct osnoise_tool *tool, struct osnoise_tool *record);
-+int osnoise_apply_config(struct osnoise_tool *tool, struct osnoise_params *params);
- 
- int osnoise_hist_main(int argc, char *argv[]);
- int osnoise_top_main(int argc, char **argv);
-diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-index 4721f15f77cd..d9d15c8f27c7 100644
---- a/tools/tracing/rtla/src/osnoise_hist.c
-+++ b/tools/tracing/rtla/src/osnoise_hist.c
-@@ -12,7 +12,6 @@
- #include <errno.h>
- #include <stdio.h>
- #include <time.h>
--#include <sched.h>
- 
- #include "osnoise.h"
- 
-@@ -705,68 +704,9 @@ osnoise_hist_apply_config(struct osnoise_tool *tool, struct osnoise_params *para
- {
- 	int retval;
- 
--	if (!params->sleep_time)
--		params->sleep_time = 1;
--
--	if (params->cpus) {
--		retval = osnoise_set_cpus(tool->context, params->cpus);
--		if (retval) {
--			err_msg("Failed to apply CPUs config\n");
--			goto out_err;
--		}
--	}
--
--	if (params->runtime || params->period) {
--		retval = osnoise_set_runtime_period(tool->context,
--						    params->runtime,
--						    params->period);
--		if (retval) {
--			err_msg("Failed to set runtime and/or period\n");
--			goto out_err;
--		}
--	}
--
--	if (params->stop_us) {
--		retval = osnoise_set_stop_us(tool->context, params->stop_us);
--		if (retval) {
--			err_msg("Failed to set stop us\n");
--			goto out_err;
--		}
--	}
--
--	if (params->stop_total_us) {
--		retval = osnoise_set_stop_total_us(tool->context, params->stop_total_us);
--		if (retval) {
--			err_msg("Failed to set stop total us\n");
--			goto out_err;
--		}
--	}
--
--	if (params->threshold) {
--		retval = osnoise_set_tracing_thresh(tool->context, params->threshold);
--		if (retval) {
--			err_msg("Failed to set tracing_thresh\n");
--			goto out_err;
--		}
--	}
--
--	if (params->hk_cpus) {
--		retval = sched_setaffinity(getpid(), sizeof(params->hk_cpu_set),
--					   &params->hk_cpu_set);
--		if (retval == -1) {
--			err_msg("Failed to set rtla to the house keeping CPUs\n");
--			goto out_err;
--		}
--	} else if (params->cpus) {
--		/*
--		 * Even if the user do not set a house-keeping CPU, try to
--		 * move rtla to a CPU set different to the one where the user
--		 * set the workload to run.
--		 *
--		 * No need to check results as this is an automatic attempt.
--		 */
--		auto_house_keeping(&params->monitored_cpus);
--	}
-+	retval = osnoise_apply_config(tool, params);
-+	if (retval)
-+		goto out_err;
- 
- 	return 0;
- 
-diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index 7f393019bbf5..3455ee73e2e6 100644
---- a/tools/tracing/rtla/src/osnoise_top.c
-+++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -11,7 +11,6 @@
- #include <unistd.h>
- #include <stdio.h>
- #include <time.h>
--#include <sched.h>
- 
- #include "osnoise.h"
- 
-@@ -523,50 +522,9 @@ osnoise_top_apply_config(struct osnoise_tool *tool, struct osnoise_params *param
- {
- 	int retval;
- 
--	if (!params->sleep_time)
--		params->sleep_time = 1;
--
--	if (params->cpus) {
--		retval = osnoise_set_cpus(tool->context, params->cpus);
--		if (retval) {
--			err_msg("Failed to apply CPUs config\n");
--			goto out_err;
--		}
--	}
--
--	if (params->runtime || params->period) {
--		retval = osnoise_set_runtime_period(tool->context,
--						    params->runtime,
--						    params->period);
--		if (retval) {
--			err_msg("Failed to set runtime and/or period\n");
--			goto out_err;
--		}
--	}
--
--	if (params->stop_us) {
--		retval = osnoise_set_stop_us(tool->context, params->stop_us);
--		if (retval) {
--			err_msg("Failed to set stop us\n");
--			goto out_err;
--		}
--	}
--
--	if (params->stop_total_us) {
--		retval = osnoise_set_stop_total_us(tool->context, params->stop_total_us);
--		if (retval) {
--			err_msg("Failed to set stop total us\n");
--			goto out_err;
--		}
--	}
--
--	if (params->threshold) {
--		retval = osnoise_set_tracing_thresh(tool->context, params->threshold);
--		if (retval) {
--			err_msg("Failed to set tracing_thresh\n");
--			goto out_err;
--		}
--	}
-+	retval = osnoise_apply_config(tool, params);
-+	if (retval)
-+		goto out_err;
- 
- 	if (params->mode == MODE_HWNOISE) {
- 		retval = osnoise_set_irq_disable(tool->context, 1);
-@@ -576,24 +534,6 @@ osnoise_top_apply_config(struct osnoise_tool *tool, struct osnoise_params *param
- 		}
- 	}
- 
--	if (params->hk_cpus) {
--		retval = sched_setaffinity(getpid(), sizeof(params->hk_cpu_set),
--					   &params->hk_cpu_set);
--		if (retval == -1) {
--			err_msg("Failed to set rtla to the house keeping CPUs\n");
--			goto out_err;
--		}
--	} else if (params->cpus) {
--		/*
--		 * Even if the user do not set a house-keeping CPU, try to
--		 * move rtla to a CPU set different to the one where the user
--		 * set the workload to run.
--		 *
--		 * No need to check results as this is an automatic attempt.
--		 */
--		auto_house_keeping(&params->monitored_cpus);
--	}
--
- 	if (isatty(STDOUT_FILENO) && !params->quiet)
- 		params->pretty_output = 1;
- 
-diff --git a/tools/tracing/rtla/src/timerlat.c b/tools/tracing/rtla/src/timerlat.c
-index 21cdcc5c4a29..448fb1f7d3a6 100644
---- a/tools/tracing/rtla/src/timerlat.c
-+++ b/tools/tracing/rtla/src/timerlat.c
-@@ -2,6 +2,7 @@
- /*
-  * Copyright (C) 2021 Red Hat Inc, Daniel Bristot de Oliveira <bristot@kernel.org>
-  */
-+#define _GNU_SOURCE
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <pthread.h>
-@@ -11,9 +12,117 @@
- #include <errno.h>
- #include <fcntl.h>
- #include <stdio.h>
-+#include <sched.h>
- 
- #include "timerlat.h"
- 
-+/*
-+ * timerlat_apply_config - apply common configs to the initialized tool
-+ */
-+int
-+timerlat_apply_config(struct osnoise_tool *tool, struct timerlat_params *params)
-+{
-+	int retval, i;
-+
-+	if (!params->sleep_time)
-+		params->sleep_time = 1;
-+
-+	if (params->cpus) {
-+		retval = osnoise_set_cpus(tool->context, params->cpus);
-+		if (retval) {
-+			err_msg("Failed to apply CPUs config\n");
-+			goto out_err;
-+		}
-+	} else {
-+		for (i = 0; i < sysconf(_SC_NPROCESSORS_CONF); i++)
-+			CPU_SET(i, &params->monitored_cpus);
-+	}
-+
-+	if (params->stop_us) {
-+		retval = osnoise_set_stop_us(tool->context, params->stop_us);
-+		if (retval) {
-+			err_msg("Failed to set stop us\n");
-+			goto out_err;
-+		}
-+	}
-+
-+	if (params->stop_total_us) {
-+		retval = osnoise_set_stop_total_us(tool->context, params->stop_total_us);
-+		if (retval) {
-+			err_msg("Failed to set stop total us\n");
-+			goto out_err;
-+		}
-+	}
-+
-+
-+	if (params->timerlat_period_us) {
-+		retval = osnoise_set_timerlat_period_us(tool->context, params->timerlat_period_us);
-+		if (retval) {
-+			err_msg("Failed to set timerlat period\n");
-+			goto out_err;
-+		}
-+	}
-+
-+
-+	if (params->print_stack) {
-+		retval = osnoise_set_print_stack(tool->context, params->print_stack);
-+		if (retval) {
-+			err_msg("Failed to set print stack\n");
-+			goto out_err;
-+		}
-+	}
-+
-+	if (params->hk_cpus) {
-+		retval = sched_setaffinity(getpid(), sizeof(params->hk_cpu_set),
-+					   &params->hk_cpu_set);
-+		if (retval == -1) {
-+			err_msg("Failed to set rtla to the house keeping CPUs\n");
-+			goto out_err;
-+		}
-+	} else if (params->cpus) {
-+		/*
-+		 * Even if the user do not set a house-keeping CPU, try to
-+		 * move rtla to a CPU set different to the one where the user
-+		 * set the workload to run.
-+		 *
-+		 * No need to check results as this is an automatic attempt.
-+		 */
-+		auto_house_keeping(&params->monitored_cpus);
-+	}
-+
-+	/*
-+	 * If the user did not specify a type of thread, try user-threads first.
-+	 * Fall back to kernel threads otherwise.
-+	 */
-+	if (!params->kernel_workload && !params->user_data) {
-+		retval = tracefs_file_exists(NULL, "osnoise/per_cpu/cpu0/timerlat_fd");
-+		if (retval) {
-+			debug_msg("User-space interface detected, setting user-threads\n");
-+			params->user_workload = 1;
-+			params->user_data = 1;
-+		} else {
-+			debug_msg("User-space interface not detected, setting kernel-threads\n");
-+			params->kernel_workload = 1;
-+		}
-+	}
-+
-+	/*
-+	 * Set workload according to type of thread if the kernel supports it.
-+	 * On kernels without support, user threads will have already failed
-+	 * on missing timerlat_fd, and kernel threads do not need it.
-+	 */
-+	retval = osnoise_set_workload(tool->context, params->kernel_workload);
-+	if (retval < -1) {
-+		err_msg("Failed to set OSNOISE_WORKLOAD option\n");
-+		goto out_err;
-+	}
-+
-+	return 0;
-+
-+out_err:
-+	return -1;
-+}
-+
- static void timerlat_usage(int err)
- {
- 	int i;
-diff --git a/tools/tracing/rtla/src/timerlat.h b/tools/tracing/rtla/src/timerlat.h
-index cadc613dc82e..73045aef23fa 100644
---- a/tools/tracing/rtla/src/timerlat.h
-+++ b/tools/tracing/rtla/src/timerlat.h
-@@ -15,17 +15,15 @@ struct timerlat_params {
- 	int			sleep_time;
- 	int			output_divisor;
- 	int			duration;
--	int			quiet;
- 	int			set_sched;
- 	int			dma_latency;
- 	int			no_aa;
--	int			aa_only;
- 	int			dump_tasks;
- 	int			cgroup;
- 	int			hk_cpus;
- 	int			user_workload;
- 	int			kernel_workload;
--	int			pretty_output;
-+	int			user_data;
- 	int			warmup;
- 	int			buffer_size;
- 	int			deepest_idle_state;
-@@ -35,11 +33,12 @@ struct timerlat_params {
- 	union {
- 		struct {
- 			/* top only */
--			int			user_top;
-+			int			quiet;
-+			int			aa_only;
-+			int			pretty_output;
- 		};
- 		struct {
- 			/* hist only */
--			int			user_hist;
- 			char			no_irq;
- 			char			no_thread;
- 			char			no_header;
-@@ -52,6 +51,8 @@ struct timerlat_params {
- 	};
- };
- 
-+int timerlat_apply_config(struct osnoise_tool *tool, struct timerlat_params *params);
-+
- int timerlat_hist_main(int argc, char *argv[]);
- int timerlat_top_main(int argc, char *argv[]);
- int timerlat_main(int argc, char *argv[]);
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 822c068b4776..9d9efeedc4c2 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -315,7 +315,7 @@ static void timerlat_hist_header(struct osnoise_tool *tool)
- 		if (!params->no_thread)
- 			trace_seq_printf(s, "   Thr-%03d", cpu);
- 
--		if (params->user_hist)
-+		if (params->user_data)
- 			trace_seq_printf(s, "   Usr-%03d", cpu);
- 	}
- 	trace_seq_printf(s, "\n");
-@@ -371,7 +371,7 @@ timerlat_print_summary(struct timerlat_params *params,
- 			trace_seq_printf(trace->seq, "%9llu ",
- 					data->hist[cpu].thread_count);
- 
--		if (params->user_hist)
-+		if (params->user_data)
- 			trace_seq_printf(trace->seq, "%9llu ",
- 					 data->hist[cpu].user_count);
- 	}
-@@ -399,7 +399,7 @@ timerlat_print_summary(struct timerlat_params *params,
- 					     data->hist[cpu].min_thread,
- 					     false);
- 
--		if (params->user_hist)
-+		if (params->user_data)
- 			format_summary_value(trace->seq,
- 					     data->hist[cpu].user_count,
- 					     data->hist[cpu].min_user,
-@@ -429,7 +429,7 @@ timerlat_print_summary(struct timerlat_params *params,
- 					     data->hist[cpu].sum_thread,
- 					     true);
- 
--		if (params->user_hist)
-+		if (params->user_data)
- 			format_summary_value(trace->seq,
- 					     data->hist[cpu].user_count,
- 					     data->hist[cpu].sum_user,
-@@ -459,7 +459,7 @@ timerlat_print_summary(struct timerlat_params *params,
- 					     data->hist[cpu].max_thread,
- 					     false);
- 
--		if (params->user_hist)
-+		if (params->user_data)
- 			format_summary_value(trace->seq,
- 					     data->hist[cpu].user_count,
- 					     data->hist[cpu].max_user,
-@@ -521,7 +521,7 @@ timerlat_print_stats_all(struct timerlat_params *params,
- 	if (!params->no_thread)
- 		trace_seq_printf(trace->seq, "       Thr");
- 
--	if (params->user_hist)
-+	if (params->user_data)
- 		trace_seq_printf(trace->seq, "       Usr");
- 
- 	trace_seq_printf(trace->seq, "\n");
-@@ -537,7 +537,7 @@ timerlat_print_stats_all(struct timerlat_params *params,
- 		trace_seq_printf(trace->seq, "%9llu ",
- 				 sum.thread_count);
- 
--	if (params->user_hist)
-+	if (params->user_data)
- 		trace_seq_printf(trace->seq, "%9llu ",
- 				 sum.user_count);
- 
-@@ -558,7 +558,7 @@ timerlat_print_stats_all(struct timerlat_params *params,
- 				     sum.min_thread,
- 				     false);
- 
--	if (params->user_hist)
-+	if (params->user_data)
- 		format_summary_value(trace->seq,
- 				     sum.user_count,
- 				     sum.min_user,
-@@ -581,7 +581,7 @@ timerlat_print_stats_all(struct timerlat_params *params,
- 				     sum.sum_thread,
- 				     true);
- 
--	if (params->user_hist)
-+	if (params->user_data)
- 		format_summary_value(trace->seq,
- 				     sum.user_count,
- 				     sum.sum_user,
-@@ -604,7 +604,7 @@ timerlat_print_stats_all(struct timerlat_params *params,
- 				     sum.max_thread,
- 				     false);
- 
--	if (params->user_hist)
-+	if (params->user_data)
- 		format_summary_value(trace->seq,
- 				     sum.user_count,
- 				     sum.max_user,
-@@ -654,7 +654,7 @@ timerlat_print_stats(struct timerlat_params *params, struct osnoise_tool *tool)
- 						data->hist[cpu].thread[bucket]);
- 			}
- 
--			if (params->user_hist) {
-+			if (params->user_data) {
- 				total += data->hist[cpu].user[bucket];
- 				trace_seq_printf(trace->seq, "%9d ",
- 						data->hist[cpu].user[bucket]);
-@@ -690,7 +690,7 @@ timerlat_print_stats(struct timerlat_params *params, struct osnoise_tool *tool)
- 			trace_seq_printf(trace->seq, "%9d ",
- 					 data->hist[cpu].thread[data->entries]);
- 
--		if (params->user_hist)
-+		if (params->user_data)
- 			trace_seq_printf(trace->seq, "%9d ",
- 					 data->hist[cpu].user[data->entries]);
- 	}
-@@ -965,7 +965,7 @@ static struct timerlat_params
- 			params->user_workload = 1;
- 			/* fallback: -u implies in -U */
- 		case 'U':
--			params->user_hist = 1;
-+			params->user_data = 1;
- 			break;
- 		case '0': /* no irq */
- 			params->no_irq = 1;
-@@ -1063,98 +1063,11 @@ static struct timerlat_params
- static int
- timerlat_hist_apply_config(struct osnoise_tool *tool, struct timerlat_params *params)
- {
--	int retval, i;
--
--	if (!params->sleep_time)
--		params->sleep_time = 1;
--
--	if (params->cpus) {
--		retval = osnoise_set_cpus(tool->context, params->cpus);
--		if (retval) {
--			err_msg("Failed to apply CPUs config\n");
--			goto out_err;
--		}
--	} else {
--		for (i = 0; i < sysconf(_SC_NPROCESSORS_CONF); i++)
--			CPU_SET(i, &params->monitored_cpus);
--	}
--
--	if (params->stop_us) {
--		retval = osnoise_set_stop_us(tool->context, params->stop_us);
--		if (retval) {
--			err_msg("Failed to set stop us\n");
--			goto out_err;
--		}
--	}
--
--	if (params->stop_total_us) {
--		retval = osnoise_set_stop_total_us(tool->context, params->stop_total_us);
--		if (retval) {
--			err_msg("Failed to set stop total us\n");
--			goto out_err;
--		}
--	}
--
--	if (params->timerlat_period_us) {
--		retval = osnoise_set_timerlat_period_us(tool->context, params->timerlat_period_us);
--		if (retval) {
--			err_msg("Failed to set timerlat period\n");
--			goto out_err;
--		}
--	}
--
--	if (params->print_stack) {
--		retval = osnoise_set_print_stack(tool->context, params->print_stack);
--		if (retval) {
--			err_msg("Failed to set print stack\n");
--			goto out_err;
--		}
--	}
--
--	if (params->hk_cpus) {
--		retval = sched_setaffinity(getpid(), sizeof(params->hk_cpu_set),
--					   &params->hk_cpu_set);
--		if (retval == -1) {
--			err_msg("Failed to set rtla to the house keeping CPUs\n");
--			goto out_err;
--		}
--	} else if (params->cpus) {
--		/*
--		 * Even if the user do not set a house-keeping CPU, try to
--		 * move rtla to a CPU set different to the one where the user
--		 * set the workload to run.
--		 *
--		 * No need to check results as this is an automatic attempt.
--		 */
--		auto_house_keeping(&params->monitored_cpus);
--	}
--
--	/*
--	 * If the user did not specify a type of thread, try user-threads first.
--	 * Fall back to kernel threads otherwise.
--	 */
--	if (!params->kernel_workload && !params->user_hist) {
--		retval = tracefs_file_exists(NULL, "osnoise/per_cpu/cpu0/timerlat_fd");
--		if (retval) {
--			debug_msg("User-space interface detected, setting user-threads\n");
--			params->user_workload = 1;
--			params->user_hist = 1;
--		} else {
--			debug_msg("User-space interface not detected, setting kernel-threads\n");
--			params->kernel_workload = 1;
--		}
--	}
-+	int retval;
- 
--	/*
--	* Set workload according to type of thread if the kernel supports it.
--	* On kernels without support, user threads will have already failed
--	* on missing timerlat_fd, and kernel threads do not need it.
--	*/
--	retval = osnoise_set_workload(tool->context, params->kernel_workload);
--	if (retval < -1) {
--		err_msg("Failed to set OSNOISE_WORKLOAD option\n");
-+	retval = timerlat_apply_config(tool, params);
-+	if (retval)
- 		goto out_err;
--	}
- 
- 	return 0;
- 
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index c3196a0bb585..79cb6f28967f 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -266,7 +266,7 @@ static void timerlat_top_header(struct timerlat_params *params, struct osnoise_t
- 		trace_seq_printf(s, "\033[2;37;40m");
- 
- 	trace_seq_printf(s, "                                     Timer Latency                                              ");
--	if (params->user_top)
-+	if (params->user_data)
- 		trace_seq_printf(s, "                                         ");
- 
- 	if (params->pretty_output)
-@@ -277,7 +277,7 @@ static void timerlat_top_header(struct timerlat_params *params, struct osnoise_t
- 			params->output_divisor == 1 ? "ns" : "us",
- 			params->output_divisor == 1 ? "ns" : "us");
- 
--	if (params->user_top) {
-+	if (params->user_data) {
- 		trace_seq_printf(s, "      |    Ret user Timer Latency (%s)",
- 				params->output_divisor == 1 ? "ns" : "us");
- 	}
-@@ -287,7 +287,7 @@ static void timerlat_top_header(struct timerlat_params *params, struct osnoise_t
- 		trace_seq_printf(s, "\033[2;30;47m");
- 
- 	trace_seq_printf(s, "CPU COUNT      |      cur       min       avg       max |      cur       min       avg       max");
--	if (params->user_top)
-+	if (params->user_data)
- 		trace_seq_printf(s, " |      cur       min       avg       max");
- 
- 	if (params->pretty_output)
-@@ -338,7 +338,7 @@ static void timerlat_top_print(struct osnoise_tool *top, int cpu)
- 		trace_seq_printf(s, "%9llu", cpu_data->max_thread);
- 	}
- 
--	if (!params->user_top) {
-+	if (!params->user_data) {
- 		trace_seq_printf(s, "\n");
- 		return;
- 	}
-@@ -380,7 +380,7 @@ timerlat_top_print_sum(struct osnoise_tool *top, struct timerlat_top_cpu *summar
- 	}
- 
- 	trace_seq_printf(s, "%.*s|%.*s|%.*s", 15, split, 40, split, 39, split);
--	if (params->user_top)
-+	if (params->user_data)
- 		trace_seq_printf(s, "-|%.*s", 39, split);
- 	trace_seq_printf(s, "\n");
- 
-@@ -405,7 +405,7 @@ timerlat_top_print_sum(struct osnoise_tool *top, struct timerlat_top_cpu *summar
- 		trace_seq_printf(s, "%9llu", summary->max_thread);
- 	}
- 
--	if (!params->user_top) {
-+	if (!params->user_data) {
- 		trace_seq_printf(s, "\n");
- 		return;
- 	}
-@@ -722,7 +722,7 @@ static struct timerlat_params
- 			params->user_workload = true;
- 			/* fallback: -u implies -U */
- 		case 'U':
--			params->user_top = true;
-+			params->user_data = true;
- 			break;
- 		case '0': /* trigger */
- 			if (params->events) {
-@@ -800,100 +800,10 @@ static int
- timerlat_top_apply_config(struct osnoise_tool *top, struct timerlat_params *params)
- {
- 	int retval;
--	int i;
--
--	if (!params->sleep_time)
--		params->sleep_time = 1;
--
--	if (params->cpus) {
--		retval = osnoise_set_cpus(top->context, params->cpus);
--		if (retval) {
--			err_msg("Failed to apply CPUs config\n");
--			goto out_err;
--		}
--	} else {
--		for (i = 0; i < sysconf(_SC_NPROCESSORS_CONF); i++)
--			CPU_SET(i, &params->monitored_cpus);
--	}
--
--	if (params->stop_us) {
--		retval = osnoise_set_stop_us(top->context, params->stop_us);
--		if (retval) {
--			err_msg("Failed to set stop us\n");
--			goto out_err;
--		}
--	}
--
--	if (params->stop_total_us) {
--		retval = osnoise_set_stop_total_us(top->context, params->stop_total_us);
--		if (retval) {
--			err_msg("Failed to set stop total us\n");
--			goto out_err;
--		}
--	}
--
--
--	if (params->timerlat_period_us) {
--		retval = osnoise_set_timerlat_period_us(top->context, params->timerlat_period_us);
--		if (retval) {
--			err_msg("Failed to set timerlat period\n");
--			goto out_err;
--		}
--	}
- 
--
--	if (params->print_stack) {
--		retval = osnoise_set_print_stack(top->context, params->print_stack);
--		if (retval) {
--			err_msg("Failed to set print stack\n");
--			goto out_err;
--		}
--	}
--
--	if (params->hk_cpus) {
--		retval = sched_setaffinity(getpid(), sizeof(params->hk_cpu_set),
--					   &params->hk_cpu_set);
--		if (retval == -1) {
--			err_msg("Failed to set rtla to the house keeping CPUs\n");
--			goto out_err;
--		}
--	} else if (params->cpus) {
--		/*
--		 * Even if the user do not set a house-keeping CPU, try to
--		 * move rtla to a CPU set different to the one where the user
--		 * set the workload to run.
--		 *
--		 * No need to check results as this is an automatic attempt.
--		 */
--		auto_house_keeping(&params->monitored_cpus);
--	}
--
--	/*
--	 * If the user did not specify a type of thread, try user-threads first.
--	 * Fall back to kernel threads otherwise.
--	 */
--	if (!params->kernel_workload && !params->user_top) {
--		retval = tracefs_file_exists(NULL, "osnoise/per_cpu/cpu0/timerlat_fd");
--		if (retval) {
--			debug_msg("User-space interface detected, setting user-threads\n");
--			params->user_workload = 1;
--			params->user_top = 1;
--		} else {
--			debug_msg("User-space interface not detected, setting kernel-threads\n");
--			params->kernel_workload = 1;
--		}
--	}
--
--	/*
--	* Set workload according to type of thread if the kernel supports it.
--	* On kernels without support, user threads will have already failed
--	* on missing timerlat_fd, and kernel threads do not need it.
--	*/
--	retval = osnoise_set_workload(top->context, params->kernel_workload);
--	if (retval < -1) {
--		err_msg("Failed to set OSNOISE_WORKLOAD option\n");
-+	retval = timerlat_apply_config(top, params);
-+	if (retval)
- 		goto out_err;
--	}
- 
- 	if (isatty(STDOUT_FILENO) && !params->quiet)
- 		params->pretty_output = 1;
-@@ -1142,7 +1052,7 @@ int timerlat_top_main(int argc, char *argv[])
- 		}
- 	}
- 
--	if (params->cgroup && !params->user_top) {
-+	if (params->cgroup && !params->user_data) {
- 		retval = set_comm_cgroup("timerlat/", params->cgroup_name);
- 		if (!retval) {
- 			err_msg("Failed to move threads to cgroup\n");
--- 
-2.47.2
+I would format this kerneldoc comment a bit differently:
 
+/*
+ * acpi_get_gsi_dispatcher() - Get the GSI dispatcher function
+ *
+ * Return the dispatcher function that computes the domain fwnode for
+a given GSI.
+ */
 
+> +acpi_gsi_domain_disp_fn acpi_get_gsi_dispatcher(void)
+> +{
+> +       return acpi_get_gsi_domain_id;
+> +}
+> +EXPORT_SYMBOL_GPL(acpi_get_gsi_dispatcher);
+> +
+>  /**
+>   * acpi_set_gsi_to_irq_fallback - Register a GSI transfer
+>   * callback to fallback to arch specified implementation.
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 4e495b29c640..abc51288e867 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -336,8 +336,11 @@ int acpi_register_gsi (struct device *dev, u32 gsi, =
+int triggering, int polarity
+>  int acpi_gsi_to_irq (u32 gsi, unsigned int *irq);
+>  int acpi_isa_irq_to_gsi (unsigned isa_irq, u32 *gsi);
+>
+> +typedef struct fwnode_handle *(*acpi_gsi_domain_disp_fn)(u32);
+> +
+>  void acpi_set_irq_model(enum acpi_irq_model_id model,
+> -                       struct fwnode_handle *(*)(u32));
+> +       acpi_gsi_domain_disp_fn fn);
+> +acpi_gsi_domain_disp_fn acpi_get_gsi_dispatcher(void);
+>  void acpi_set_gsi_to_irq_fallback(u32 (*)(u32));
+>
+>  struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
+> --
+
+With the above addressed, please feel free to add
+
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+to the patch and route it along with the rest of the series.
+
+Thanks!
