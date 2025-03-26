@@ -1,189 +1,193 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6F417A2E6;
-	Wed, 26 Mar 2025 21:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26B619FA93;
+	Wed, 26 Mar 2025 21:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743024437; cv=none; b=NFdinG28UTVq+crYnq9D0WaMq9uf39FQRw+s8ZA53/YQEBpB8NJxZKkvu43JZW1wVnTprXgo78i/uOYPz2A9/9resm6xvrcx12GxW7+KwxQYbQ7YFzMKt3Iki+cKMxXV4XZoIf4XRW9fLZRo1Ersq3wVvrcVcSlAA7Zke1DnwQY=
+	t=1743024475; cv=none; b=K36D74DxGE/bDzWec+g2KhGZeTsaaGMWon68qafngMNP2s00pNAEFUKX+ACuWZ0zOlmPm+tTWDOK+DcrsYTz8yHGXdHkbi1iqtxjcBNtRoHFNzxQOUZsWAmJqXOZNwQvLwKpAxQ8BP536JTTqTtM01Aia10K23sF/qi1m0sw5rY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743024437; c=relaxed/simple;
-	bh=FGZ7ys+40W7ESYcVCxVQVeb6iDW6mrS2/OJOCHus2Wc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DdttIaIZYdBWsFWZMOYK1aSbFRK2kZ7T0mFSzeRXxBzPSLx/Of+4GuJQBK+RhOIB580vLn/5JqgWuogTyTjbpeglQCDEg4iqr5zLgPxM57OPFxzsTV1cmfE+y2vUry/2AYkq8wvQoYgIm0WP/YTWPYDhhzLvY+3XNHspkPz1Zok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=h/F2QKX2; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1743024475; c=relaxed/simple;
+	bh=rel0LO6wnZX0yamOBZ2Hr0Q9Kjf4GnVHzzI1nENcclc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eBgHdCC4ixKk7RLNq9eHMcVWOSsN/+XbEfnrzn8NaUEKcBBxSnistrCxGW6jZOra3tcR4GfvqZ2WVuFCtCvaOc9KnThgGRheI1bxPrFHt34TPZERVi3x7C5EjaLLRBDGWbF1h3VyVuEUQeXi2CsoKoPYJzkhcSymRgABY+6j7xQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJdT/eTR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="h/F2QKX2"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A0356102EB802;
-	Wed, 26 Mar 2025 22:27:04 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1743024426; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=b6RKGXQH70hN/26lMgtvVKQRQMPme4MC9VIAU6oygE0=;
-	b=h/F2QKX2TF17qdZE5CpxqRAAdG9oeiGJ+djfVnvV1KnMrvTSlPIWRA0vdQNWi3As0X+b9q
-	JTbAXiGKWu2T5BMKUJstkJk1Ymy02h1SVWmnK7pJnhQ+7iP2UBkS9NLB5b7DmY+cT5TJZj
-	emVS4W3zQCOTojswaALJYF1iORdksh/UuAHioGD39mxBd/R3JwcXW8NG0/zogdGqQR6JzC
-	p0RNGIS6dFqZJaas0jehjsYONv5xn3KFjKb8szL6YSo/ZoIIhw3AWvhCZdo847UKOItivt
-	k1cyf2XoQoDGXtByHroKqkw3oNWKmeIIIXezpkwCuTnzmLxYaMXEAovAm5A7Qw==
-Date: Wed, 26 Mar 2025 22:27:02 +0100
-From: Lukasz Majewski <lukma@denx.de>
-To: Conor Dooley <conor@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
- Noah Wang <noahwang.wang@outlook.com>, Michal Simek <michal.simek@amd.com>,
- Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] dt-bindings: trivial-devices: Document SPI
- measurement on LWE boards
-Message-ID: <20250326222702.436f115b@wsk>
-In-Reply-To: <20250326-bulge-outdated-9787da68e2d3@spud>
-References: <20250326140930.2587775-1-lukma@denx.de>
-	<20250326-unluckily-consuming-948176031b08@spud>
-	<20250326184240.77e2bdc9@wsk>
-	<20250326-bulge-outdated-9787da68e2d3@spud>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJdT/eTR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02E69C4CEE2;
+	Wed, 26 Mar 2025 21:27:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743024474;
+	bh=rel0LO6wnZX0yamOBZ2Hr0Q9Kjf4GnVHzzI1nENcclc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mJdT/eTRAHvGAOCaMQrlGca1CdQRPyRIC4GWPhsZdS5Cveg6IVcs06MFgLWOoiFc6
+	 7eDhVMI1FPp513/EB/liAG5epgFpDSbrWW6qcuxu5fT/I84tAi1mLO4DGPuZFoy/hl
+	 yhJFsxFWW4duYwMY5UEWQTBiIxWrJTaGEFWSMZUkAUVlgIi54fcTBXl+z/i26zNJ7h
+	 Tes2xS47a7G4y4ITvCWvx7Up40J35SfQGMmTomRhTwLVWDi/pulQuINith0lKr/Sza
+	 CzoXM+2/etQGpvOB6ot50QsmGuCCK/YYUGczOHpHn4ZpMid4el9wWyK9UDQUHXmGjd
+	 20iq6iCgQ46Mw==
+Date: Wed, 26 Mar 2025 16:27:53 -0500
+From: Rob Herring <robh@kernel.org>
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Dirk Behme <dirk.behme@de.bosch.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 04/10] rust: Add bindings for reading device properties
+Message-ID: <20250326212753.GA2844851-robh@kernel.org>
+References: <20250326171411.590681-1-remo@buenzli.dev>
+ <20250326171411.590681-5-remo@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/JVzrlJU+vTy2I3H3ZW7lB1L";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250326171411.590681-5-remo@buenzli.dev>
 
---Sig_/JVzrlJU+vTy2I3H3ZW7lB1L
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Mar 26, 2025 at 06:13:43PM +0100, Remo Senekowitsch wrote:
+> The device property API is a firmware agnostic API for reading
+> properties from firmware (DT/ACPI) devices nodes and swnodes.
+> 
+> While the C API takes a pointer to a caller allocated variable/buffer,
+> the rust API is designed to return a value and can be used in struct
+> initialization. Rust generics are also utilized to support different
+> sizes of properties (e.g. u8, u16, u32).
+> 
+> Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+> ---
+>  rust/kernel/property.rs | 153 +++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 151 insertions(+), 2 deletions(-)
+> 
+> diff --git a/rust/kernel/property.rs b/rust/kernel/property.rs
+> index b0a4bb63a..4756ea766 100644
+> --- a/rust/kernel/property.rs
+> +++ b/rust/kernel/property.rs
+> @@ -4,9 +4,17 @@
+>  //!
+>  //! C header: [`include/linux/property.h`](srctree/include/linux/property.h)
+>  
+> -use core::ptr;
+> +use core::{ffi::c_void, mem::MaybeUninit, ptr};
+>  
+> -use crate::{bindings, device::Device, str::CStr, types::Opaque};
+> +use crate::{
+> +    alloc::KVec,
+> +    bindings,
+> +    device::Device,
+> +    error::{to_result, Result},
+> +    prelude::*,
+> +    str::{CStr, CString},
+> +    types::{Integer, Opaque},
+> +};
+>  
+>  impl Device {
+>      /// Obtain the fwnode corresponding to the device.
+> @@ -26,6 +34,41 @@ fn fwnode(&self) -> &FwNode {
+>      pub fn property_present(&self, name: &CStr) -> bool {
+>          self.fwnode().property_present(name)
+>      }
+> +
+> +    /// Returns if a firmware property `name` is true or false
+> +    pub fn property_read_bool(&self, name: &CStr) -> bool {
+> +        self.fwnode().property_read_bool(name)
+> +    }
+> +
+> +    /// Returns the index of matching string `match_str` for firmware string property `name`
 
-Hi Conor,
+Comment doesn't match the function.
 
-> On Wed, Mar 26, 2025 at 06:42:40PM +0100, Lukasz Majewski wrote:
-> > Hi Conor,
-> >  =20
-> > > On Wed, Mar 26, 2025 at 03:09:30PM +0100, Lukasz Majewski wrote: =20
-> > > > The measurement device on Liebherr's (LWE) boards is used to
-> > > > monitor the overall state of the device. It does have SPI
-> > > > interface to communicate with Linux host via spidev driver.
-> > > > Document the SPI DT binding as trivial SPI device.
-> > > >=20
-> > > > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > > > ---   =20
-> > >=20
-> > > You should not do a resend with no explanation as to why.
-> > > Additionally, I would like to know why my review on the original
-> > > patch was ignored:
-> > > https://lore.kernel.org/all/20250225-despair-rural-dc10216005f4@spud/=
-#t
-> > >  =20
-> >=20
-> > I've made a mistake, as I've used the lwe prefix, which is the
-> > different branch office for Liebherr.
-> >=20
-> > As we discussed last time - it would be better to use the already
-> > present 'lwn' vendor prefix as several other boards from this
-> > company use it (display5, bk4, xea, btt3).
-> >=20
-> > And this was apparent, after I've resent the patches. My mistake.
-> >=20
-> > Regarding the comment - on xea, btt the binding would be used, as
-> > those two boards (based on imx287) are using it.
-> >=20
-> > Hence, single "trivial device" would be OK.
-> >=20
-> > The v2 of this patch has the proper 'lwn,btt' binding. =20
->=20
-> I'm sorry, I don't understand how this excuses using the same binding
-> for different devices.
+> +    pub fn property_read_string(&self, name: &CStr) -> Result<CString> {
+> +        self.fwnode().property_read_string(name)
+> +    }
+> +
+> +    /// Returns the index of matching string `match_str` for firmware string property `name`
+> +    pub fn property_match_string(&self, name: &CStr, match_str: &CStr) -> Result<usize> {
+> +        self.fwnode().property_match_string(name, match_str)
+> +    }
+> +
+> +    /// Returns firmware property `name` integer scalar value
+> +    pub fn property_read<T: Integer>(&self, name: &CStr) -> Result<T> {
+> +        self.fwnode().property_read(name)
+> +    }
+> +
+> +    /// Returns firmware property `name` integer array values
+> +    pub fn property_read_array<T: Integer, const N: usize>(&self, name: &CStr) -> Result<[T; N]> {
+> +        self.fwnode().property_read_array(name)
+> +    }
+> +
+> +    /// Returns firmware property `name` integer array values in a KVec
+> +    pub fn property_read_array_vec<T: Integer>(&self, name: &CStr, len: usize) -> Result<KVec<T>> {
+> +        self.fwnode().property_read_array_vec(name, len)
+> +    }
+> +
+> +    /// Returns integer array length for firmware property `name`
+> +    pub fn property_count_elem<T: Integer>(&self, name: &CStr) -> Result<usize> {
+> +        self.fwnode().property_count_elem::<T>(name)
+> +    }
+>  }
+>  
+>  /// A reference-counted fwnode_handle.
+> @@ -57,6 +100,112 @@ pub fn property_present(&self, name: &CStr) -> bool {
+>          // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
+>          unsafe { bindings::fwnode_property_present(self.as_raw().cast_const(), name.as_char_ptr()) }
+>      }
+> +
+> +    /// Returns if a firmware property `name` is true or false
+> +    pub fn property_read_bool(&self, name: &CStr) -> bool {
+> +        // SAFETY: `name` is non-null and null-terminated. `self.as_raw` is valid
+> +        // because `self` is valid.
+> +        unsafe { bindings::fwnode_property_read_bool(self.as_raw(), name.as_char_ptr()) }
+> +    }
+> +
+> +    /// Returns the index of matching string `match_str` for firmware string property `name`
 
-Ok, so maybe I will just explain how things are on those devices and we
-can find some solution.
+Same comment copy-n-paste mismatch.
 
-So we do have two devices - based on imx287: XEA (rev 1,2) and BTT (rev
-0,1,2).
+> +    pub fn property_read_string(&self, name: &CStr) -> Result<CString> {
+> +        let mut str = core::ptr::null_mut();
+> +        let pstr: *mut _ = &mut str;
+> +
+> +        // SAFETY: `name` is non-null and null-terminated. `self.as_raw` is
+> +        // valid because `self` is valid.
+> +        let ret = unsafe {
+> +            bindings::fwnode_property_read_string(self.as_raw(), name.as_char_ptr(), pstr as _)
+> +        };
+> +        to_result(ret)?;
+> +
+> +        // SAFETY: `pstr` contains a non-null ptr on success
+> +        let str = unsafe { CStr::from_char_ptr(*pstr) };
+> +        Ok(str.try_into()?)
+> +    }
 
-We do have a measurement device connected to SPI (on both above
-devices). This device has a protocol, which is fully served in user
-space (just the /dev/spidevX.Y is required for it).
+There's a problem with the C version of this function that I'd like to 
+not repeat in Rust especially since ownership is clear. 
 
-Hence the 'lwn,btt' can be used for all those measurement devices.
+The issue is that we never know when the returned string is no longer 
+needed. For DT overlays, we need to be able free the string when/if an 
+overlay is removed. Though overlays are somewhat orthogonal to this. 
+It's really just when the property's node refcount goes to 0 that the 
+property value could be freed.
 
-As pointed out by Fabio, there is also 'lwn,bk4-spi' which is totally
-different device, with different protocol used.
+So this function should probably return a copy of the string that the 
+caller owns.
 
-
->=20
-> >  =20
-> > > Cheers,
-> > > Conor.
-> > >  =20
-> > > >  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > >=20
-> > > > diff --git
-> > > > a/Documentation/devicetree/bindings/trivial-devices.yaml
-> > > > b/Documentation/devicetree/bindings/trivial-devices.yaml index
-> > > > fadbd3c041c8..5d736a9792c2 100644 ---
-> > > > a/Documentation/devicetree/bindings/trivial-devices.yaml +++
-> > > > b/Documentation/devicetree/bindings/trivial-devices.yaml @@
-> > > > -161,6 +161,8 @@ properties:
-> > > >            - jedec,spd5118
-> > > >              # Linear Technology LTC2488
-> > > >            - lineartechnology,ltc2488
-> > > > +            # Liebherr on-board measurement SPI device
-> > > > +          - lwe,btt
-> > > >              # 5 Bit Programmable, Pulse-Width Modulator
-> > > >            - maxim,ds1050
-> > > >              # 10 kOhm digital potentiometer with I2C interface
-> > > > --=20
-> > > > 2.39.5
-> > > >    =20
-> >=20
-> >=20
-> >=20
-> >=20
-> > Best regards,
-> >=20
-> > Lukasz Majewski
-> >=20
-> > --
-> >=20
-> > DENX Software Engineering GmbH,      Managing Director: Erika Unter
-> > HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell,
-> > Germany Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email:
-> > lukma@denx.de =20
->=20
->=20
-
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/JVzrlJU+vTy2I3H3ZW7lB1L
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmfkcSYACgkQAR8vZIA0
-zr0zUQf/QEYcbk8e/7WYLDh466wg0pzuEp8El+44ZV75SZeMnmSJ4HmwGT+dvMsk
-pdgySz4drBFb/X1a0w2i0vxEUKiXa/XlQGHjP57WCYWTjjuM3iSlXS4/gCird5vh
-nOClclALhJuRo5rcTCRHEMS685yXRSQWAnyD7lenUqgg7eWMKa/jkLTvgw9h8h9S
-TnrZ1BM3D3I9Y9lcXZHAUEk9hQ4/jYYTk7OeQP6cLJDivEumw0y6t+sHt3WFgiy/
-Q2PXN9+kDY1KrsWk2s5cMcFF/LQ2ad4dcOQpicuOtRJaK58lkVI8F5ePd1P9lD7O
-vtxYEwvoRdVqPsrdWOlocyNTw3vqnA==
-=CiAq
------END PGP SIGNATURE-----
-
---Sig_/JVzrlJU+vTy2I3H3ZW7lB1L--
+Rob
