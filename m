@@ -1,104 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF9318027;
-	Wed, 26 Mar 2025 23:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145AF18027;
+	Wed, 26 Mar 2025 23:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743032754; cv=none; b=Vp8RGosC/FOQYPiFeGtk4sc5k+ea6AiD38O767ORQZsPoE47o27KS57qdoHjjSIYv37exO7dKxHOGttFpLGghETa0eB9ogCtW07nRuBoWiwj2afhENCI5ahnP15ICtSn/J3loco9X/33mMi50PMwyVbHE3mrEEyI6nezGJQvVFY=
+	t=1743032866; cv=none; b=HNvYtRUthb0wcNUh2CoKVqcbuFOUqHYeuNAKNfM3G0yivcCgq6r4W7pfXf52FeMPz5IKh11EUyp2CMNi3bPHi9V1j+tbl/lpcRnW/NRZfS9GFaxuyxz0ZNDGYVc4FFe1JZfwMdDTxykt5nyET1cpV9+q/6OmifkuJg3C76IFrpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743032754; c=relaxed/simple;
-	bh=xenkETHNq21MnE2o5q2f8tGsWGGsqyf3/hSbvPMf/SM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hX70JN0X98v23nV2wQrhZdW9uO5zSiDpTIYkUNL7aoZfdPBMUFEpilDIE/BMZBlmCNEb1bsTxbXPs4qG7mlnrIFakveilk8sYWgTwBAVS9qulqQEWCM+/V6PFk4BkZHj/8B1thdyhp2MQKUE9hj3QJ5//Uotw7dFkXSpFCILFpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=opg24X0/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743032866; c=relaxed/simple;
+	bh=0qlX98iK/sIt7t8b6PWnQZSig8+2JDNOJqB2kytJBQQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ZuTjE1ArcV/+ySpb+D9cyYA56pLDVp9nLwkmdQti8vJWGaaQFhMMYsKYKaHdCXTRGf8yqVyjJQxBERlWfTWBWq4dM+PkUWkq9P084iFRDcNVcfo8J/djhy5/bRXrqZnqwuczfgW4WJ3x34twOEOMvUzLEjVOWRbXMOv61Ul+WFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=i6MOTzST; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="opg24X0/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0F64C4CEE2;
-	Wed, 26 Mar 2025 23:45:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743032752;
-	bh=xenkETHNq21MnE2o5q2f8tGsWGGsqyf3/hSbvPMf/SM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=opg24X0/bGiv56vNxDDcZdo1UJoz5PWVnh4h5LFfFnudRKEaU2AX7XRMK1XIALnZQ
-	 nFUuQYEz/RvxwSmJzPJ2+GhXrO/oSuF2eskQAVSqU4EnLpF+9IW5sRlPvz/jZnRRMY
-	 12X0Wjrq9aKm1Tf55DnDMQ6+d60RU5SHNtTtxInLlFpzvg0wQMMBu9sGrUqk8qDE1M
-	 ZsrtAz7zQH2Lwy6VPdLKmrOrI2UIcqydjFvZPKWjjk+OArTqE8MgzSAid9YFSO3ZNW
-	 HSTpH1DrCiv4EtGw2ORbx6A5k5RenXvM9M6BCQWcaglci7tzAE6VwQMo8rlGJNDNzQ
-	 mlj1TRxuGzpsQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 5BBFACE0C2A; Wed, 26 Mar 2025 16:45:52 -0700 (PDT)
-Date: Wed, 26 Mar 2025 16:45:52 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-	iommu@lists.linux.dev
-Subject: Re: [BUG] vmlinux.o: warning: objtool: iommu_dma_sw_msi() falls
- through to next function alloc_io_pgtable_ops()
-Message-ID: <88ef4efd-9736-4c37-9b05-212e65602322@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <5dd1f35e-8ece-43b7-ad6d-86d02d2718f6@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="i6MOTzST"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52QEZeif009175;
+	Wed, 26 Mar 2025 23:47:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ps0LOA1rZ7tVmufDCYSMrXairdaApv+By0nwQ7sMedY=; b=i6MOTzSTNCE6kcq0
+	z3QjdhhefkggMJ+PAHxy99c8+2a0G3wM8j57GTjBOQcdR/Qj0Jn+5GF4zrMljEpd
+	Ppz+oATOeUIvdGozA6Glvc2zaSOHb1KpfFYmAONa4G9QdX0fIKDaX6wVBNA24iXc
+	jBa1hf/jNmeCiJ2/U1IuWLFz8I/LQoQl6j+6MwVK93ZNBYVirQpuAJFYTYhBb30L
+	vduzbLgmjjs0GwfBQY860Yq2Xfhfzhx3AbXg8aAk1RdQd3XAiUXxHmrip3nczYsE
+	Qf35K1azRml8QrvE2B1PSRwgEAQKcMwnU1I9K79tDq4Ylq3pJrBZuFSiC2bZlDZC
+	gxFuig==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45kmd4pqje-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Mar 2025 23:47:16 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52QNlF9w002413
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Mar 2025 23:47:15 GMT
+Received: from [10.46.162.103] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 26 Mar
+ 2025 16:47:15 -0700
+Message-ID: <ad246ef4-7429-63bb-0279-90738736f6e3@quicinc.com>
+Date: Wed, 26 Mar 2025 16:47:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5dd1f35e-8ece-43b7-ad6d-86d02d2718f6@paulmck-laptop>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v4 1/1] scsi: ufs: core: add device level exception
+ support
+Content-Language: en-US
+To: Bart Van Assche <bvanassche@acm.org>,
+        Arthur Simchaev
+	<Arthur.Simchaev@sandisk.com>,
+        "quic_cang@quicinc.com"
+	<quic_cang@quicinc.com>,
+        "quic_nitirawa@quicinc.com"
+	<quic_nitirawa@quicinc.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+        "minwoo.im@samsung.com" <minwoo.im@samsung.com>,
+        "adrian.hunter@intel.com"
+	<adrian.hunter@intel.com>,
+        "martin.petersen@oracle.com"
+	<martin.petersen@oracle.com>
+CC: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        Alim Akhtar
+	<alim.akhtar@samsung.com>,
+        "James E.J. Bottomley"
+	<James.Bottomley@HansenPartnership.com>,
+        Matthias Brugger
+	<matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Keoseong Park <keosung.park@samsung.com>,
+        Ziqi Chen
+	<quic_ziqichen@quicinc.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Gwendal
+ Grignou" <gwendal@chromium.org>,
+        Eric Biggers <ebiggers@google.com>,
+        open
+ list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC
+ support:Keyword:mediatek" <linux-arm-kernel@lists.infradead.org>,
+        "moderated
+ list:ARM/Mediatek SoC support:Keyword:mediatek"
+	<linux-mediatek@lists.infradead.org>
+References: <4370b3a3b5a5675bb3e75aaa48a273674c159339.1742526978.git.quic_nguyenb@quicinc.com>
+ <SA2PR16MB4251229744D717821D3D8353F4A72@SA2PR16MB4251.namprd16.prod.outlook.com>
+ <c5ab13ec-f650-ea10-5cb8-d6a2ddf1e825@quicinc.com>
+ <0a68d437-5d6a-42aa-ae4e-6f5d89cfcaf3@acm.org>
+From: "Bao D. Nguyen" <quic_nguyenb@quicinc.com>
+In-Reply-To: <0a68d437-5d6a-42aa-ae4e-6f5d89cfcaf3@acm.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: jOzoVN6oCqhmK4G6Uxv_ULe-2YdiwsRn
+X-Proofpoint-GUID: jOzoVN6oCqhmK4G6Uxv_ULe-2YdiwsRn
+X-Authority-Analysis: v=2.4 cv=QLZoRhLL c=1 sm=1 tr=0 ts=67e49204 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=PtWNw9R7xlkL8hu1AuQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 adultscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 mlxscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0
+ bulkscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503260148
 
-On Wed, Mar 26, 2025 at 04:18:51PM -0700, Paul E. McKenney wrote:
-> Hello!
+On 3/26/2025 3:49 AM, Bart Van Assche wrote:
+> On 3/25/25 6:15 PM, Bao D. Nguyen wrote:
+>> The existing "struct utp_upiu_query_v4_0" probably has a bug in it. It 
+>> does not use the  __attribute__((__packed__)) attribute. The compiler 
+>> is free to add padding in this structure, resulting in the read 
+>> attribute value being incorrect. I plan to provide a separate patch to 
+>> fix this issue.
 > 
-> Building next-20250326 using clang version 19.1.7 (CentOS 19.1.7-1.el9)
-> gets me the following warning:
+> Adding __attribute__((__packed__)) or __packed to data structures that
+> don't need it is not an improvement but is a change that makes
+> processing slower on architectures that do not support unaligned
+> accesses. Instead of adding __packed to data structures in their
+> entirety, only add it to those members that need it and check the
+> structure size as follows:
+> 
+> static_assert(sizeof(...) == ...);
+> 
+Thank you for the info on this, Bart.
+IMO, this response upiu data should be __packed because the data coming 
+from the hardware follows a strict format as defined by the spec. If we 
+support __pack each individual field which data may be read by the 
+driver (the attribute read commands) and check the validity of their 
+sizes, it may add some complexity?
 
-Apologies, but make that gcc version 11.5.0 20240719 (Red Hat 11.5.0-5) (GCC).
-(Hey, it has almost always been clang in the past...)
-
-Also, the runs that have this problem are the ones whose kernels are
-built with CONFIG_DEBUG_LOCK_ALLOC=y, but that do *not* enable KASAN.
-For rcutorture, these are scenarios SRCU-P, TREE02, TREE05, TASKS01,
-TRACE02, RUDE01, SRCU-T, and TINY02.
-
-							Thanx, Paul
-
-> vmlinux.o: warning: objtool: iommu_dma_sw_msi() falls through to next function alloc_io_pgtable_ops()
-> 
-> This surprised me for a couple of reasons.  First, from what I
-> can see, iommu_dma_sw_msi() does not fall through.  Second, it
-> is in drivers/iommu/dma-iommu.c while alloc_io_pgtable_ops() is in
-> drivers/iommu/io-pgtable.c, though maybe the compiler and/or linker saw
-> fit to rearrange these functions' object code.
-> 
-> Please let me know of any debug patches or fixes that I could apply,
-> or any additional information that you might need.
-> 
-> 						Thanx, Paul
-> 
-> Note to self: Run 2025.03.26-14.37.10-remote on first test system.  ;-)
-> 
-> ------------------------------------------------------------------------
-> 
-> int iommu_dma_sw_msi(struct iommu_domain *domain, struct msi_desc *desc,
-> 		     phys_addr_t msi_addr)
-> {
-> 	struct device *dev = msi_desc_to_dev(desc);
-> 	const struct iommu_dma_msi_page *msi_page;
-> 
-> 	if (!has_msi_cookie(domain)) {
-> 		msi_desc_set_iommu_msi_iova(desc, 0, 0);
-> 		return 0;
-> 	}
-> 
-> 	iommu_group_mutex_assert(dev);
-> 	msi_page = iommu_dma_get_msi_page(dev, msi_addr, domain);
-> 	if (!msi_page)
-> 		return -ENOMEM;
-> 
-> 	msi_desc_set_iommu_msi_iova(desc, msi_page->iova,
-> 				    ilog2(cookie_msi_granule(domain)));
-> 	return 0;
-> }
+Thanks, Bao
