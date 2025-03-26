@@ -1,32 +1,32 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFBA2571D8
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 19:45:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919D325522B
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 19:45:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743018309; cv=none; b=qzM03RTphfW+Dq1xXhO7oms6zHyhf/q6ZmNS10o1uIHQV5NhXlTaqkuv6w/tNcAf0LPbT40SRpi+O/JPP77v05mhNP16wf/gBYzgSEjScDip8Fj9UI3c9hP47vpYVuDI/si+2xGt3mb0vGDYt0OT4VCgL2l06+ZLxLIzXN8l69c=
+	t=1743018310; cv=none; b=YI0EaFO9tfoprDSxHnkTWovkcSanNMiVDx6fbomKqAacMuw3Al9ggpy+Gk4c8JVgt0wbzHR+a4KhksNWMNwd+6oWhk8a8hDVmeV5vA/PRpI2tRxxLvIWLk1LaapxOhzAkTv9bsQXgEPW5zIf8Sk/SZb1EPLvEVphTxLV6zhtOhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743018309; c=relaxed/simple;
-	bh=p3QwBU+jBVDcTlSsMqq7CihkMh5Nzv5/+k/utju49uE=;
+	s=arc-20240116; t=1743018310; c=relaxed/simple;
+	bh=Q+u4MZuDKUNqegWFP2vQgLiAAQq8Sl2SpCPgZZN3GX4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fKI+simoLSUfsJUJSVSk6D1YAzZhaNaMgHm5FZptebT83goeHGg4B8p1YOZos46T4VzdkUbG8aaYmiGXyGTghxV1x+ktDVOjL6f31DzK/9Iss3o29vlKcrMXBaGfu7dqhL9SUY8pkLPqPGYOMdnlqh2vmPUpFNrIaXVgR4Dq18M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qQxf6/LZ; arc=none smtp.client-ip=95.215.58.173
+	 MIME-Version; b=rUh+6vX7XeH/tTSdfD0IATdOBNOaSz5EjaXIgWnXVqcm1X5xe+jlLeEcU3bsfcFMaKf+YwIAGr0QHlv51RBDscIUFBixC2m4ycms8aEPWaS8hmszBAwO4ilmKlmi0lXFxXth0ppeKyP7J7FZak0+HIhg9onl+9d4ABAqVAmSfnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UD+UUtIW; arc=none smtp.client-ip=95.215.58.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qQxf6/LZ"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UD+UUtIW"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743018295;
+	t=1743018300;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=eUdDAUOASl+dv9HtsY1A+uMvUg3QBNYQ0WgEzzzA9VU=;
-	b=qQxf6/LZIhhOHf7RdxU5oF3iUu63ZVB4yWc04hzLaQtQup9nLw5sJmZTyAeeZiPaUgElFY
-	R1Zxu5jyECSHC8uQuubeWtK5a8bT83agBGqrSQeT+B1E2C5mha8jIhpw+qaKopHI1Jm+HB
-	wxdGWRG4a+TusQqr1hFYQGJ4BUA8MNg=
+	bh=w0ttQrYyxTXxPea/MErL3ctFGOlp5LmJRLSVUgf6cSc=;
+	b=UD+UUtIWQ6E6kzaZGNUJP5OuSS2zSK1ztioh/MCvV8yo/KJ7ijB1QmtDoCCvW6CmihclMc
+	Mq9MQaIcgvFC4iq1Mx1+XvCsAyHLVJ95wojzKbf2bn+2uAB3DtipJznSfqTSkIu1k2Q0gT
+	JUFe5O6En8Dw22T9nUDDJ7UQQHBeKYw=
 From: Yosry Ahmed <yosry.ahmed@linux.dev>
 To: Sean Christopherson <seanjc@google.com>
 Cc: Paolo Bonzini <pbonzini@redhat.com>,
@@ -39,11 +39,12 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yosry Ahmed <yosry.ahmed@linux.dev>
-Subject: [RFC PATCH 20/24] KVM: nSVM: Do not reset TLB_CONTROL in VMCB02 on nested entry
-Date: Wed, 26 Mar 2025 19:44:19 +0000
-Message-ID: <20250326194423.3717668-1-yosry.ahmed@linux.dev>
-In-Reply-To: <20250326193619.3714986-1-yosry.ahmed@linux.dev>
+Subject: [RFC PATCH 22/24] KVM: nSVM: Handle INVLPGA interception correctly
+Date: Wed, 26 Mar 2025 19:44:21 +0000
+Message-ID: <20250326194423.3717668-3-yosry.ahmed@linux.dev>
+In-Reply-To: <20250326194423.3717668-1-yosry.ahmed@linux.dev>
 References: <20250326193619.3714986-1-yosry.ahmed@linux.dev>
+ <20250326194423.3717668-1-yosry.ahmed@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,55 +54,116 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-TLB_CONTROL is reset to TLB_CONTROL_DO_NOTHING on nested transitions to
-L2 in nested_vmcb02_prepare_control(). This is unnecessary because:
-- TLB_CONTROL is set in vcpu_enter_guest() if needed when servicing a
-  TLB flush request (by svm_flush_tlb_asid()).
-- TLB_CONTROL is reset to TLB_CONTROL_DO_NOTHING after the guest is run
-  in svm_cpu_run().
+Currently, INVPLGA interception handles it like INVLPG, which flushes
+L1's TLB translations for the address. It was implemented in this way
+because L1 and L2 shared an ASID. Now, L1 and L2 have separate ASIDs. It
+is still harmless to flush L1's translations, but it's only correct
+because all translations are flushed on nested transitions anyway.
 
-Hence, at the point where nested_vmcb02_prepare_control() is called,
-TLB_CONTROL should have already be set to TLB_CONTROL_DO_NOTHING by
-svm_cpu_run() after L1 runs.
+In preparation for stopping unconditional flushes on nested transitions,
+handle INVPLGA interception properly. If L1 specified zero as the ASID,
+this is equivalent to INVLPG, so handle it as such. Otherwise, use
+INVPLGA to flush the translations of the appropriate ASID tracked by
+KVM, if any. Sync the shadow MMU as well, as L1 invalidated L2's
+mappings.
 
-There is a TODO in nested_svm_transition_tlb_flush() about this reset
-crushing pending TLB flushes. Remove it, as the reset is not really
-crushing anything as explained above.
-
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
 ---
- arch/x86/kvm/svm/nested.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  2 ++
+ arch/x86/kvm/mmu/mmu.c          |  5 +++--
+ arch/x86/kvm/svm/svm.c          | 36 +++++++++++++++++++++++++++++++--
+ 3 files changed, 39 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index ca8db246ac050..544913461693c 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -511,12 +511,7 @@ static void nested_svm_entry_tlb_flush(struct kvm_vcpu *vcpu)
- 		svm->nested.last_asid = svm->nested.ctl.asid;
- 		kvm_make_request(KVM_REQ_TLB_FLUSH_GUEST, vcpu);
- 	}
--	/*
--	 * TODO: optimize unconditional TLB flush/MMU sync.  A partial list of
--	 * things to fix before this can be conditional:
--	 *
--	 *  - Don't crush a pending TLB flush in vmcb02 on nested VMRUN
--	 */
-+	/* TODO: optimize unconditional TLB flush/MMU sync */
- 	kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
- 	kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index d881e7d276b12..a158d324168a0 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -2237,6 +2237,8 @@ int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
+ 		       void *insn, int insn_len);
+ void kvm_mmu_print_sptes(struct kvm_vcpu *vcpu, gpa_t gpa, const char *msg);
+ void kvm_mmu_invlpg(struct kvm_vcpu *vcpu, gva_t gva);
++void __kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
++			       u64 addr, unsigned long roots, bool gva_flush);
+ void kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
+ 			     u64 addr, unsigned long roots);
+ void kvm_mmu_invpcid_gva(struct kvm_vcpu *vcpu, gva_t gva, unsigned long pcid);
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index e2b1994f12753..d3baa12df84e7 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -6355,8 +6355,8 @@ static void kvm_mmu_invalidate_addr_in_root(struct kvm_vcpu *vcpu,
+ 	write_unlock(&vcpu->kvm->mmu_lock);
  }
-@@ -710,9 +705,6 @@ static void nested_vmcb02_prepare_control(struct vcpu_svm *svm,
- 	vmcb02->control.msrpm_base_pa = vmcb01->control.msrpm_base_pa;
- 	vmcb02->control.asid = svm_nested_asid(vcpu->kvm);
  
--	/* Also overwritten later if necessary.  */
--	vmcb_clr_flush_asid(vmcb02);
--
- 	/* nested_cr3.  */
- 	if (nested_npt_enabled(svm))
- 		nested_svm_init_mmu_context(vcpu);
+-static void __kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
+-				      u64 addr, unsigned long roots, bool gva_flush)
++void __kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
++			       u64 addr, unsigned long roots, bool gva_flush)
+ {
+ 	int i;
+ 
+@@ -6382,6 +6382,7 @@ static void __kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu
+ 			kvm_mmu_invalidate_addr_in_root(vcpu, mmu, addr, mmu->prev_roots[i].hpa);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(__kvm_mmu_invalidate_addr);
+ 
+ void kvm_mmu_invalidate_addr(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
+ 			     u64 addr, unsigned long roots)
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 3649707c61d3e..4b95fd6b501e6 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -2505,6 +2505,7 @@ static int clgi_interception(struct kvm_vcpu *vcpu)
+ 
+ static int invlpga_interception(struct kvm_vcpu *vcpu)
+ {
++	struct vcpu_svm *svm = to_svm(vcpu);
+ 	gva_t gva = kvm_rax_read(vcpu);
+ 	u32 asid = kvm_rcx_read(vcpu);
+ 
+@@ -2514,8 +2515,39 @@ static int invlpga_interception(struct kvm_vcpu *vcpu)
+ 
+ 	trace_kvm_invlpga(to_svm(vcpu)->vmcb->save.rip, asid, gva);
+ 
+-	/* Let's treat INVLPGA the same as INVLPG (can be optimized!) */
+-	kvm_mmu_invlpg(vcpu, gva);
++	/*
++	 * APM is silent about using INVLPGA to flush the host ASID (i.e. 0).
++	 * Do the logical thing and handle it like INVLPG.
++	 */
++	if (asid == 0) {
++		kvm_mmu_invlpg(vcpu, gva);
++		return kvm_skip_emulated_instruction(vcpu);
++	}
++
++	/*
++	 * Check if L1 specified the L2 ASID we are currently tracking. If it
++	 * isn't, do nothing as we have to handle the TLB flush when switching
++	 * to the new ASID anyway.
++	 */
++	if (asid == svm->nested.last_asid)
++		invlpga(gva, svm_nested_asid(vcpu->kvm));
++
++	/*
++	 * If NPT is disabled, sync the shadow page tables as L1 is invalidating
++	 * mappings for L2. Sync all roots as ASIDs are not tracked in the MMU
++	 * role.
++	 *
++	 * As we are not flushing the current context, skip the gva flush from
++	 * __kvm_mmu_invalidate_addr(), it would flush the wrong ASID anyway.
++	 * The correct TLB flush was done above (if needed).
++	 *
++	 * This always operates on root_mmu because L1 and L2 share an MMU when
++	 * NPT is disabled. This can be optimized by invalidating guest roots
++	 * only.
++	 */
++	if (!npt_enabled)
++		__kvm_mmu_invalidate_addr(vcpu, &vcpu->arch.root_mmu, gva,
++					  KVM_MMU_ROOTS_ALL, false);
+ 
+ 	return kvm_skip_emulated_instruction(vcpu);
+ }
 -- 
 2.49.0.395.g12beb8f557-goog
 
