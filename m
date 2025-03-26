@@ -1,127 +1,167 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C636B19DF48
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:10:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1401A0BCD;
+	Wed, 26 Mar 2025 08:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742976628; cv=none; b=SXKZY/Y5ZhX3pnGKRuf+BYvJpKuNnI+/FuPLthqyw3na4tPcnh0E9XRTb0CUgpNJ4zIlhaKSS29W41ZC4p++4dnN8JQV/iCdApg0tJPVh/4fLDuQUsC2uKGRBbZG6YVdTOy1GaFCUH3iyH9n6+h7F8N1YewLpgbqyiGfWVkXo8k=
+	t=1742976664; cv=none; b=Cj6Qxp/SqI8mDRQz10q5gZ0NY9j/3CebmVgDv0lVZGX9sgHD+ANR/2uOOP3SeJ1FAS7YqYRq3Gy1WOG+7Zfqo2kdnnoGqU/iB/JRLO0MYBahDCYeLURb00qRQQ0SONstJR6qOViig6oWVtiJUngqugPww1t+nE7vO7GUKJ4yCZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742976628; c=relaxed/simple;
-	bh=tPcx2OUnS88u4uZ3rmQxImoG8Yl21ahza5/N7F+fo5s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GsonvxrK7KzXJjXz+ghp86jNdtXS2vExSyVJawu0hrHy2DI5e8/FUIx0Iuql6Lvm1Uh/dgW8GTrfa5BBokXyE0N1t+nmnbY/u9o6tmBa2egFt20dxdj762qxDjiK6EBIpes5LLbb5NBkMFQIyz7tRHfw9+HrdUC8OUzNV445/oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=tt/oHxaa; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1742976664; c=relaxed/simple;
+	bh=gR/j5qAdGCDtCQy0dd8RZSzdFIIk90FGMUJmnZcVeoc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=OTAAObSjec6Psiqlm/Tj7jREd595xoZ2zaMcPdiCiMUW0Dm5sP6btVcUNDHzOLFyxPHHc/AOrfXXvMW3eBN9qYV0w5Ah4a06/6haFtHWbhIdoqYUZzaz1qinawchcfS67eygn3VbHm63eO2VGM2RthhHQE0kgEmEgRJKK07oXbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mMXRYIwa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="tt/oHxaa"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e61375c108so8544173a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 01:10:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1742976625; x=1743581425; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zvoZdGIIh0nptv4x2hyk3srE7837z4cLxs0snnCK7ls=;
-        b=tt/oHxaaLS5vdqiomQt4scANeIjqufBGAtuWUEomqpWNHU9ZlDHAN4SW2yhbliKvLn
-         ucZscRnTojdHVTsAaDVQO7MhBcokgUv8WKSUvqQCcB5FA0bvUlcA8dXXC4Z7Qwe1K7Mh
-         Yc1vbWc3P1hADUCVMx8IQyKHg7hSxNkXgrDNQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742976625; x=1743581425;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zvoZdGIIh0nptv4x2hyk3srE7837z4cLxs0snnCK7ls=;
-        b=wKDAhKqSDUvLfnmpibCaDwVXYGtTKKa1eeTR9ItGPO2LEbno/TpKEFjXGy/mMVf/9H
-         DKD7BAZmmxfQiKIe35i3FWulbU78388uZs/1HOXRdlR/7UoLYg9XDd+3MiBs3KfjyBof
-         mh6omP0msNjZbyUik2uNAinIz6j7eIAm36ttyBaRUhbI5UjIyn88BMU9gMBU3FCgh1/+
-         kPmH6zPdGv+VOQXwzkX+juAqdOuOrPZB6lYyigD0ObFP585QFZJaH0RiE5plAcZJ3Ib8
-         LG+AsSx6KtPSRcfsQgwQhNrhBQEoAT0mIl5ggq7UohklvmDYZPrNbKm57YkHmXlEHzUo
-         bsIA==
-X-Forwarded-Encrypted: i=1; AJvYcCVefT8KE/JgRzGh99XoSvbM7r9FNYjY7HgzMbz6DIVMtvBO4KcrviQA52WbBbdiu6WBOcq2vFTvnEjB2SQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytlcvQMObF08iyGcbCmCQP5n/ZjAyMeQqfKVbvhK0o/owhiFUU
-	HEf4BbHpDK1p7/QQI99KqAwFZWJ0MTk90rOmCaibwtgZOAe/DAF2oyB+GUBWJkY=
-X-Gm-Gg: ASbGncsZPiEzZSZ7dnDVYMxZVGrzLHDs/PqoyiC3nAb/HyDgpxCqlzTUkQFlSqZu95H
-	Es5Tv/1K+ZZ+crEz0Fj8CLrfiNqQ4Q/BWEHQ6mfRgSb0Op3pSSbvDCJxPGcrZoTpjhLesgCOtM2
-	K97/cy2cDMd4ogLgs82s8IzXg2zxXJVOP+FRrOGKbmpcDLjHxRlkWxBB6w58EHx1723FNrfB31U
-	ZB6uYATjEeQPgIWrI+yY3af18hrrlza17NoJt2HzyqgvJozV7OM6S72JJOLdHyzikur1G3BcwSW
-	DWEwJ9Hi0kd1HuBCNbNQe+m2vFCB3Cjp4sh+oe0Jt97GQlNoqw==
-X-Google-Smtp-Source: AGHT+IFk/oQ4dEeG6SP1NjnX7dgOQ//K7a8iza3+Ms4rsYBb+Te5rd3AJ8dLKHMNssy8DXdKiQsVgA==
-X-Received: by 2002:a05:6402:4306:b0:5dc:c531:e5c0 with SMTP id 4fb4d7f45d1cf-5ebcd519e7fmr18000389a12.27.1742976624991;
-        Wed, 26 Mar 2025 01:10:24 -0700 (PDT)
-Received: from localhost ([84.78.159.3])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5ebccfb0e97sm9080244a12.45.2025.03.26.01.10.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 01:10:24 -0700 (PDT)
-Date: Wed, 26 Mar 2025 09:10:23 +0100
-From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Daniel Gomez <da.gomez@kernel.org>,
-	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-	Bjorn Helgaas <helgaas@kernel.org>, linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v3 3/3] PCI/MSI: Convert pci_msi_ignore_mask to per MSI
- domain flag
-Message-ID: <Z-O2bwbYFvOzZw0t@macbook.local>
-References: <20250320210741.GA1099701@bhelgaas>
- <846c80f8-b80f-49fd-8a50-3fe8a473b8ec@suse.com>
- <qn7fzggcj6qe6r6gdbwcz23pzdz2jx64aldccmsuheabhmjgrt@tawf5nfwuvw7>
- <Z-GbuiIYEdqVRsHj@macbook.local>
- <kp372led6jcryd4ubpyglc4h7b3erramgzsjl2slahxdk7w575@jganskuwkfvb>
- <Z-Gv6TG9dwKI-fvz@macbook.local>
- <87y0wtzg0z.ffs@tglx>
- <87v7rxzct0.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mMXRYIwa"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C3E96C4CEF2;
+	Wed, 26 Mar 2025 08:11:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742976663;
+	bh=gR/j5qAdGCDtCQy0dd8RZSzdFIIk90FGMUJmnZcVeoc=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=mMXRYIwasdyRC/A0kqvlETTzRaNd5IDpvg4yxB6VqHJCpW1HMF6oDxXT1+d/x1rz9
+	 wGBSrC5XVs580rPD7IF1Szk9F/GwnLf/P3sitT3aY+y1LrCMhR026nth6rzqmKAH+n
+	 SwarAfIB6XFDNJtYoBsD6ZzxT8Wwj2pReatcdI/YdGQsREnqpD9Vv5HwL7K2shyEJk
+	 CCt40Q7s9r9niaxNxM/nqr9/fJ0kq5qaop60O4RfIw/A/w2K46DEhai40gyjFroT7n
+	 cL8ooj49A2H5+ybMmJEMe7/vhqapdtI7UvFP700PQTQyIpvArnv1qmeI6aaGRzRyp0
+	 Ka8uQphHr8Haw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9C4C36011;
+	Wed, 26 Mar 2025 08:11:03 +0000 (UTC)
+From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
+Date: Wed, 26 Mar 2025 12:10:56 +0400
+Subject: [PATCH v7 2/6] phy: qualcomm: qcom-uniphy-pcie 28LP add support
+ for IPQ5018
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87v7rxzct0.ffs@tglx>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250326-ipq5018-pcie-v7-2-e1828fef06c9@outlook.com>
+References: <20250326-ipq5018-pcie-v7-0-e1828fef06c9@outlook.com>
+In-Reply-To: <20250326-ipq5018-pcie-v7-0-e1828fef06c9@outlook.com>
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Nitheesh Sekar <quic_nsekar@quicinc.com>, 
+ Varadarajan Narayanan <quic_varada@quicinc.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Praveenkumar I <quic_ipkumar@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, George Moussalem <george.moussalem@outlook.com>, 
+ 20250317100029.881286-1-quic_varada@quicinc.com, 
+ 20250317100029.881286-2-quic_varada@quicinc.com, 
+ Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742976660; l=2535;
+ i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
+ bh=kYH6vXN/WlVTNUTrZPgBDmJJfb+EoAkdo/0WziGGijo=;
+ b=Ma/+ghqQ1vbu85eRfMhm40tdOdvQ/+8Gmo/1EOCdGV6tE0sBXPzZjL17x7NHV+9e7JNQrsgmc
+ IovVQfcOn6iAfGAOk7O8jjYSFXn5Dms/U43reXLfSvivjtgABeJ/mZj
+X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
+ pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
+X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
+ with auth_id=364
+X-Original-From: George Moussalem <george.moussalem@outlook.com>
+Reply-To: george.moussalem@outlook.com
 
-On Tue, Mar 25, 2025 at 10:20:43AM +0100, Thomas Gleixner wrote:
-> On Tue, Mar 25 2025 at 09:11, Thomas Gleixner wrote:
-> 
-> > On Mon, Mar 24 2025 at 20:18, Roger Pau Monné wrote:
-> >> On Mon, Mar 24, 2025 at 07:58:14PM +0100, Daniel Gomez wrote:
-> >>> The issue is that info appears to be uninitialized. So, this worked for me:
-> >>
-> >> Indeed, irq_domain->host_data is NULL, there's no msi_domain_info.  As
-> >> this is x86, I was expecting x86 ot always use
-> >> x86_init_dev_msi_info(), but that doesn't seem to be the case.  I
-> >> would like to better understand this.
-> >
-> > Indeed. On x86 this should not happen at all. On architectures, which do
-> > not use (hierarchical) interrupt domains, it will return NULL.
-> >
-> > So I really want to understand why this happens on x86 before such a
-> > "fix" is deployed.
-> 
-> So after staring at it some more it's clear. Without XEN, the domain
-> returned is the MSI parent domain, which is the vector domain in that
-> setup. That does not have a domain info set. But on legacy architectures
-> there is not even a domain.
-> 
-> It's really wonderful that we have a gazillion ways to manage the
-> backends of PCI/MSI....
-> 
-> So none of the suggested pointer checks will cover it correctly. Though
-> there is already a function which allows to query MSI domain flags
-> independent of the underlying insanity. Sorry for not catching it in
-> review.
-> 
-> Untested patch below.
+From: Nitheesh Sekar <quic_nsekar@quicinc.com>
 
-As I'm getting reports of other people hitting this issue, is there
-anything that needs to be done from my side to get the fix into
-linux-next?
+The Qualcomm UNIPHY PCIe PHY 28LP is found on both IPQ5332 and IPQ5018.
+Adding the PHY init sequence, pipe clock rate, and compatible for IPQ5018.
 
-Thanks, Roger.
+Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+---
+ drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c | 45 ++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+
+diff --git a/drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c b/drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c
+index c8b2a3818880ea3bf7bee67f5c1c075c1ac650e4..324c0a5d658e43e03597b285e761d3604761508e 100644
+--- a/drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c
++++ b/drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c
+@@ -75,6 +75,40 @@ struct qcom_uniphy_pcie {
+ 
+ #define phy_to_dw_phy(x)	container_of((x), struct qca_uni_pcie_phy, phy)
+ 
++static const struct qcom_uniphy_pcie_regs ipq5018_regs[] = {
++	{
++		.offset = SSCG_CTRL_REG_4,
++		.val = 0x1cb9,
++	}, {
++		.offset = SSCG_CTRL_REG_5,
++		.val = 0x023a,
++	}, {
++		.offset = SSCG_CTRL_REG_3,
++		.val = 0xd360,
++	}, {
++		.offset = SSCG_CTRL_REG_1,
++		.val = 0x1,
++	}, {
++		.offset = SSCG_CTRL_REG_2,
++		.val = 0xeb,
++	}, {
++		.offset = CDR_CTRL_REG_4,
++		.val = 0x3f9,
++	}, {
++		.offset = CDR_CTRL_REG_5,
++		.val = 0x1c9,
++	}, {
++		.offset = CDR_CTRL_REG_2,
++		.val = 0x419,
++	}, {
++		.offset = CDR_CTRL_REG_1,
++		.val = 0x200,
++	}, {
++		.offset = PCS_INTERNAL_CONTROL_2,
++		.val = 0xf101,
++	},
++};
++
+ static const struct qcom_uniphy_pcie_regs ipq5332_regs[] = {
+ 	{
+ 		.offset = PHY_CFG_PLLCFG,
+@@ -88,6 +122,14 @@ static const struct qcom_uniphy_pcie_regs ipq5332_regs[] = {
+ 	},
+ };
+ 
++static const struct qcom_uniphy_pcie_data ipq5018_data = {
++	.lane_offset	= 0x800,
++	.phy_type	= PHY_TYPE_PCIE_GEN2,
++	.init_seq	= ipq5018_regs,
++	.init_seq_num	= ARRAY_SIZE(ipq5018_regs),
++	.pipe_clk_rate	= 125 * MEGA,
++};
++
+ static const struct qcom_uniphy_pcie_data ipq5332_data = {
+ 	.lane_offset	= 0x800,
+ 	.phy_type	= PHY_TYPE_PCIE_GEN3,
+@@ -212,6 +254,9 @@ static inline int phy_pipe_clk_register(struct qcom_uniphy_pcie *phy, int id)
+ 
+ static const struct of_device_id qcom_uniphy_pcie_id_table[] = {
+ 	{
++		.compatible = "qcom,ipq5018-uniphy-pcie-phy",
++		.data = &ipq5018_data,
++	}, {
+ 		.compatible = "qcom,ipq5332-uniphy-pcie-phy",
+ 		.data = &ipq5332_data,
+ 	}, {
+
+-- 
+2.49.0
+
+
