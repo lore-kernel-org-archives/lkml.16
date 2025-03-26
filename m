@@ -1,240 +1,148 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F241F5839
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 16:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BD41F5433;
+	Wed, 26 Mar 2025 16:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743006075; cv=none; b=Qmq6j/y6wG2iJ+Qe+npHgEiDqu2dg7/YCQJrCrF83v1D4vQCj0EtV4GxJrsrkMuxWCahyuuFY61rfbz+k2QXicYq7QNN2PR2rn0f8QDWCq/ESKDOgxdjDSar4xzsnQ3/pahs1hCnhUBTsO1glbCJ11qh0bfDtikDarJzPahFep0=
+	t=1743006085; cv=none; b=kyU8pegQ4fXuBpb2vKxWQ1qfSHNl9XJT4sPbMvy6H7TuY5ZutVRsIrcsmYikLf+URNuadSlAG7iBs9vEpaIblfU3Q8jdJh1xFzaoTqK0jO/VZHpUt9lz3XsZ4T7rvOgYBQQ2jMi0z2FvGrOV0ZLc7RzWwU4iXJcfBw9ml82UCGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743006075; c=relaxed/simple;
-	bh=xejv/BHNYIpVxEwvi1agd8alfJnmDYOHhuQeSbz9TdE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ixu/ezuGjpgpROz2VF4FasDEXYUWWzexIuHmnevuWHdf7Iyqtj8g1xXSpzgKBZcgN3Ae1KX9bQa/Mdge2CJVwLjKtdGg2Y/Lotz/MnazRslToYVhuQr3ApD8goNRc/AoTXhBDjt8L7Gqqzpgfq5AmsGIAIXN7koUu/mpu/B614A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aaKZ8p1O; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743006085; c=relaxed/simple;
+	bh=nT6VRtgopQ8G6LxyrDepOfBp6qLTXcRbja01PY+hu7M=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n60JBnKj17gW5I1GaZVYeBi2ThsUtNFALdhb2mR54ZxAJuCvBem8E4myG7HfmMB2Y1ruqs/A2QSH/dvUycjXrHmfALooQdzrZJX/FFFAGX0KDszE/6bzeEYadUwQYgorESwJVqnY7aevYJ8FIBt+YLJf8vbjjVGDSLxipYMjmkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=QS8p2MJB; arc=none smtp.client-ip=52.119.213.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aaKZ8p1O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743006072;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7rhDUOfYTdvyvV/eFaMDlyCyK0NwjyAggH/NGIgz/Q8=;
-	b=aaKZ8p1O/38HRcje+X7dOQqacFQscNz/V6iLrEQWynnJayrRYsZyrDvzbTk0ba7Ohsp74W
-	FwLxhWn2N5OG8dH98TwglFKDBA7UtccFwATkd5jFG43+hQAUzB8es7QyzP3O4oYLxQg99d
-	Jt7QZ9T6aQe/URFqY+AGAi2vbFg1bOc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-669-ULwPe55JNySpiKppj3RZhQ-1; Wed, 26 Mar 2025 12:21:10 -0400
-X-MC-Unique: ULwPe55JNySpiKppj3RZhQ-1
-X-Mimecast-MFC-AGG-ID: ULwPe55JNySpiKppj3RZhQ_1743006069
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4394c489babso171795e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 09:21:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743006069; x=1743610869;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7rhDUOfYTdvyvV/eFaMDlyCyK0NwjyAggH/NGIgz/Q8=;
-        b=XUiUrZDQ08x46nf5KTvr3r3vK0sX+KeTdvNJzdzJLwMJawhH9GCur7cAkH3BhWddhT
-         +JcYFepLYsg30pRxmqgkjB7K+ep2kK3IgLG3+3CZ982QsxHbvEYLkoFBK6zlAaqDWVBv
-         M5ojTxqPbtNNeV5dU08tz2BSiuoQIKF6grMfWi3S7Y0K7undte0S4Q2vxBjez/eZNJE8
-         hwF2XR2Oi3FRCp2NFU2JjRLX3KcvSErAuhUwqcqoIDYjUF+13uqE5L5VmigW61taZwi/
-         2EwQ59fv0j7h7IYsSY+Fm5Nk4LGXk1sW2vykwfullxH85FHLLHByarScLt8llooUvDAa
-         /i/w==
-X-Forwarded-Encrypted: i=1; AJvYcCXtW3x4QpJMX+Qem0Yr+s02o8V5DEAMv/1OliSFRKm8SAE0wp0CSWHzWH+EiXDrxK9521GKkQYq8fwIDXU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxToxOSULTmmlvyWefUKUedOtL2/WTyWqz97xaqrmvcSutDchsZ
-	V8/eoXK/vvLQMj0BBqulY9HCGH+cKwTGPwsofyoUARWfbIkHSRh7+DwmofAq7VjZDL25am0rWXW
-	71BWbDGqXW0GKcCAn3rSHXuJCE5IhWDSTynD77PU4fKUsyk8cO2eP7OQ3Nmk8ZA==
-X-Gm-Gg: ASbGncvR2Q3jpxAyNKdDnjrKb3Gcwr1kNcUSV4q/rhQ41sEwd7zR1vDAqPPtp2EaDh4
-	qnTktzJWso1018Q+L3YlcZPPmRCobPO124qpWYTIeLYqP6efC2NxnSYdh6OiUP/WECoaAhqALeh
-	tK2Se2ucFDMXADyWY/UQMkFSGWWYuC6Vqka4qylku7++19V/EtYSJ65eArvCQ2e5WntVK9r9WXe
-	M5i/7hyB6mm4k4RdAlm8DvPzd6QfAG3Ufvec1QXJIFef3abLzGirycGN3CNW9HgYYANGsjm6T4d
-	2Ob/81iBvb+WsowTLE++jwE49smqvta4sx8+KrgrVP4sRTsSITHbDvhhdKuujLK6
-X-Received: by 2002:a05:600c:5126:b0:43d:abd:ad0e with SMTP id 5b1f17b1804b1-43d84fb9f22mr885725e9.18.1743006069143;
-        Wed, 26 Mar 2025 09:21:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGx8/eCeBPFFtCPoCe1ZXCccXEQdNSFsGJQ/ayYaSjeZ5wE7SFAm2rdiOMf/B0yRu5sY+HFTg==
-X-Received: by 2002:a05:600c:5126:b0:43d:abd:ad0e with SMTP id 5b1f17b1804b1-43d84fb9f22mr885245e9.18.1743006068534;
-        Wed, 26 Mar 2025 09:21:08 -0700 (PDT)
-Received: from sgarzare-redhat (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9e6445sm17341376f8f.71.2025.03.26.09.21.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 09:21:07 -0700 (PDT)
-Date: Wed, 26 Mar 2025 17:21:03 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Luigi Leonardi <leonardi@redhat.com>
-Cc: Michal Luczaj <mhal@rbox.co>, virtualization@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Hyunwoo Kim <v4bel@theori.io>
-Subject: Re: [PATCH net-next v2] vsock/test: Add test for null ptr deref when
- transport changes
-Message-ID: <qp67w36nyzgyd45wi7oosxe6syx7dzcifc5s2eg47engirtrnf@ewnk6ngqw7h3>
-References: <20250314-test_vsock-v2-1-3c0a1d878a6d@redhat.com>
- <85a034b7-a22d-438f-802e-ac193099dbe7@rbox.co>
- <ghik6xpa5oxhb5lc4ztmqlwm3tkv5qbkj63h5mfqs33vursd5y@6jttd2lwwo7h>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="QS8p2MJB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1743006084; x=1774542084;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=nhr7gIYRxszAnMd29YWnQ+sqjq5QqSN5i/GFVwNuhZA=;
+  b=QS8p2MJBdiua1B492roh7kCbYQWNqmt7NC0MFSIZApqKL0G4ayyLbE3n
+   SHJEtiEflx0/IEHC8d70Z+MOqeMFDIqjfGley9I8oGQUB3WQcgEIZ4Nx8
+   9uRd9UM6nTWYIEbLYfo178Oy43S5AO6rku69oWusY/xVmH/u30aDSnldh
+   4=;
+X-IronPort-AV: E=Sophos;i="6.14,278,1736812800"; 
+   d="scan'208";a="77909939"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 16:21:19 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.21.151:64354]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.9.87:2525] with esmtp (Farcaster)
+ id 1abbc2fe-9a1d-48e3-9635-300968de39f9; Wed, 26 Mar 2025 16:21:18 +0000 (UTC)
+X-Farcaster-Flow-ID: 1abbc2fe-9a1d-48e3-9635-300968de39f9
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 26 Mar 2025 16:21:17 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.106.100.44) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 26 Mar 2025 16:21:14 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <john.johansen@canonical.com>, <kuniyu@amazon.com>,
+	<linux-kernel@vger.kernel.org>, <linux-next@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <pabeni@redhat.com>, <sfr@canb.auug.org.au>
+Subject: Re: linux-next: build failure after merge of the apparmor tree
+Date: Wed, 26 Mar 2025 09:19:56 -0700
+Message-ID: <20250326162104.20801-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250326042655.4e160022@kernel.org>
+References: <20250326042655.4e160022@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <ghik6xpa5oxhb5lc4ztmqlwm3tkv5qbkj63h5mfqs33vursd5y@6jttd2lwwo7h>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D044UWB004.ant.amazon.com (10.13.139.134) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On Wed, Mar 26, 2025 at 04:14:20PM +0100, Luigi Leonardi wrote:
->Hi Michal,
->
->On Wed, Mar 19, 2025 at 01:27:35AM +0100, Michal Luczaj wrote:
->>On 3/14/25 10:27, Luigi Leonardi wrote:
->>>Add a new test to ensure that when the transport changes a null pointer
->>>dereference does not occur[1].
->>>
->>>Note that this test does not fail, but it may hang on the client side if
->>>it triggers a kernel oops.
->>>
->>>This works by creating a socket, trying to connect to a server, and then
->>>executing a second connect operation on the same socket but to a
->>>different CID (0). This triggers a transport change. If the connect
->>>operation is interrupted by a signal, this could cause a null-ptr-deref.
->>
->>Just to be clear: that's the splat, right?
->>
->>Oops: general protection fault, probably for non-canonical address 0xdffffc000000000c: 0000 [#1] PREEMPT SMP KASAN NOPTI
->>KASAN: null-ptr-deref in range [0x0000000000000060-0x0000000000000067]
->>CPU: 2 UID: 0 PID: 463 Comm: kworker/2:3 Not tainted
->>Workqueue: vsock-loopback vsock_loopback_work
->>RIP: 0010:vsock_stream_has_data+0x44/0x70
->>Call Trace:
->>virtio_transport_do_close+0x68/0x1a0
->>virtio_transport_recv_pkt+0x1045/0x2ae4
->>vsock_loopback_work+0x27d/0x3f0
->>process_one_work+0x846/0x1420
->>worker_thread+0x5b3/0xf80
->>kthread+0x35a/0x700
->>ret_from_fork+0x2d/0x70
->>ret_from_fork_asm+0x1a/0x30
->>
->
->Yep! I'll add it to the commit message in v3.
->>>...
->>>+static void test_stream_transport_change_client(const struct test_opts *opts)
->>>+{
->>>+	__sighandler_t old_handler;
->>>+	pid_t pid = getpid();
->>>+	pthread_t thread_id;
->>>+	time_t tout;
->>>+
->>>+	old_handler = signal(SIGUSR1, test_transport_change_signal_handler);
->>>+	if (old_handler == SIG_ERR) {
->>>+		perror("signal");
->>>+		exit(EXIT_FAILURE);
->>>+	}
->>>+
->>>+	if (pthread_create(&thread_id, NULL, test_stream_transport_change_thread, &pid)) {
->>>+		perror("pthread_create");
->>
->>Does pthread_create() set errno on failure?
->It does not, very good catch!
->>
->>>+		exit(EXIT_FAILURE);
->>>+	}
->>>+
->>>+	tout = current_nsec() + TIMEOUT * NSEC_PER_SEC;
->>
->>Isn't 10 seconds a bit excessive? I see the oops pretty much immediately.
->Yeah it's probably excessive. I used because it's the default timeout 
->value.
->>
->>>+	do {
->>>+		struct sockaddr_vm sa = {
->>>+			.svm_family = AF_VSOCK,
->>>+			.svm_cid = opts->peer_cid,
->>>+			.svm_port = opts->peer_port,
->>>+		};
->>>+		int s;
->>>+
->>>+		s = socket(AF_VSOCK, SOCK_STREAM, 0);
->>>+		if (s < 0) {
->>>+			perror("socket");
->>>+			exit(EXIT_FAILURE);
->>>+		}
->>>+
->>>+		connect(s, (struct sockaddr *)&sa, sizeof(sa));
->>>+
->>>+		/* Set CID to 0 cause a transport change. */
->>>+		sa.svm_cid = 0;
->>>+		connect(s, (struct sockaddr *)&sa, sizeof(sa));
->>>+
->>>+		close(s);
->>>+	} while (current_nsec() < tout);
->>>+
->>>+	if (pthread_cancel(thread_id)) {
->>>+		perror("pthread_cancel");
->>
->>And errno here.
->>
->>>+		exit(EXIT_FAILURE);
->>>+	}
->>>+
->>>+	/* Wait for the thread to terminate */
->>>+	if (pthread_join(thread_id, NULL)) {
->>>+		perror("pthread_join");
->>
->>And here.
->>Aaand I've realized I've made exactly the same mistake elsewhere :)
->>
->>>...
->>>+static void test_stream_transport_change_server(const struct test_opts *opts)
->>>+{
->>>+	time_t tout = current_nsec() + TIMEOUT * NSEC_PER_SEC;
->>>+
->>>+	do {
->>>+		int s = vsock_stream_listen(VMADDR_CID_ANY, opts->peer_port);
->>>+
->>>+		close(s);
->>>+	} while (current_nsec() < tout);
->>>+}
->>
->>I'm not certain you need to re-create the listener or measure the time
->>here. What about something like
->>
->>	int s = vsock_stream_listen(VMADDR_CID_ANY, opts->peer_port);
->>	control_expectln("DONE");
->>	close(s);
->>
->Just tried and it triggers the oops :)
+From: Jakub Kicinski <kuba@kernel.org>
+Date: Wed, 26 Mar 2025 04:26:55 -0700
+> On Wed, 26 Mar 2025 15:01:48 +1100 Stephen Rothwell wrote:
+> > After merging the apparmor tree, today's linux-next build (x86_64
+> > allmodconfig) failed like this:
+> > 
+> > security/apparmor/af_unix.c: In function 'unix_state_double_lock':
+> > security/apparmor/af_unix.c:627:17: error: implicit declaration of function 'unix_state_lock'; did you mean 'unix_state_double_lock'? [-Wimplicit-function-declaration]
+> >   627 |                 unix_state_lock(sk1);
+> >       |                 ^~~~~~~~~~~~~~~
+> >       |                 unix_state_double_lock
+> > security/apparmor/af_unix.c: In function 'unix_state_double_unlock':
+> > security/apparmor/af_unix.c:642:17: error: implicit declaration of function 'unix_state_unlock'; did you mean 'unix_state_double_lock'? [-Wimplicit-function-declaration]
+> >   642 |                 unix_state_unlock(sk1);
+> >       |                 ^~~~~~~~~~~~~~~~~
+> >       |                 unix_state_double_lock
+> 
+> Thanks Stephen! I'll pop this into the tree in a few hours,
+> just giving Kuniyuki a bit more time to ack.
 
-If this works (as I also initially thought), we should check the result 
-of the first connect() in the client code. It can succeed or fail with 
--EINTR, in other cases we should report an error because it is not 
-expected.
+Thanks for catching this, Stephen !
 
-And we should check also the second connect(), it should always fail, 
-right?
+The patch itself looks good, for the patch:
 
-For this I think you need another sync point to be sure the server is 
-listening before try to connect the first time:
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
 
-client:
-     // pthread_create, etc.
 
-     control_expectln("LISTENING");
+John:
 
-     do {
-         ...
-     } while();
+I had a cursory look at this commit and the exact user of
+unix_state_lock() is broken for SOCK_DGRAM.
 
-     control_writeln("DONE");
+https://web.git.kernel.org/pub/scm/linux/kernel/git/jj/linux-apparmor.git/commit/?h=apparmor-next&id=c05e705812d179f4b85aeacc34a555a42bc4f9ac
 
-server:
-     int s = vsock_stream_listen(VMADDR_CID_ANY, opts->peer_port);
-     control_writeln("LISTENING");
-     control_expectln("DONE");
-     close(s);
+---8<---
++
++	/* TODO: update sock label with new task label */
++	unix_state_lock(sock->sk);
++	peer_sk = unix_peer(sock->sk);
++	if (peer_sk)
++		sock_hold(peer_sk);
++
++	is_sk_fs = is_unix_fs(sock->sk);
++	if (is_sk_fs && peer_sk)
++		sk_req = request;
++	if (sk_req)
++		error = unix_label_sock_perm(subj_cred, label, op, sk_req,
++					     sock);
++	unix_state_unlock(sock->sk);
++	if (!peer_sk)
++		return error;
++
++	unix_state_double_lock(sock->sk, peer_sk);
 
-Thanks,
-Stefano
+Here, unix_peer(sock->sk) could have been changed and must be
+double checked.  See unix_dgram_sendmsg().
 
+The patch seems to be written in 2022 and recently merged.
+I'm not sure if it's reviewed by netdev folks at that time,
+but please cc me and netdev next time for patches regarding
+AF_UNIX.
+
+Thanks!
+
+
++	if (!is_sk_fs && is_unix_fs(peer_sk)) {
++		last_error(error,
++			   unix_fs_perm(op, request, subj_cred, label,
++					unix_sk(peer_sk)));
++	} else if (!is_sk_fs) {
++		struct aa_sk_ctx *pctx = aa_sock(peer_sk);
++
++		last_error(error,
++			xcheck(aa_unix_peer_perm(subj_cred, label, op,
++						 MAY_READ | MAY_WRITE,
++						 sock->sk, peer_sk, NULL),
++			       aa_unix_peer_perm(file->f_cred, pctx->label, op,
++						 MAY_READ | MAY_WRITE,
++						 peer_sk, sock->sk, label)));
++	}
++	unix_state_double_unlock(sock->sk, peer_sk);
+---8<---
