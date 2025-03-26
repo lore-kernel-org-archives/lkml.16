@@ -1,127 +1,119 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.74])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0661253340;
-	Wed, 26 Mar 2025 19:28:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD511F416F
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 19:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743017293; cv=none; b=Vyv+yj/tXgTqihm4S8U+qplUwl891VWQiXR7XYk+z8um9vKwnCpYN/vjj83RltFrOaGJhO6P9JIfU3Q7DTQPiJkJAwRwK3xYVy78ftr980yAby/SHg48pOx3YhHBngNIP58SP816bAmA7XgyzkSTNM/j1kaKupfAN25FzZCOKWw=
+	t=1743017353; cv=none; b=gBxuUYPvvf6wA25yuBxZthFKoUOsy/9id05BFEn1OyRJTfgoxOZdrzyguio19Ypo58HucZvbKbSf1e8FB4uLMAQgXGTRbZBbQgoVYOmzo0y2n2CJ3DlH1gjTOITZV8ziFVvYzMCetJKijhJ2z+GuKhokPf5ksI3VUo5+FyCnFvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743017293; c=relaxed/simple;
-	bh=qPuud6hQtUOpq0TI0kySy61SAsgR3IbvzwnPgGwUfOQ=;
+	s=arc-20240116; t=1743017353; c=relaxed/simple;
+	bh=fsm4/swelvXW96SQIxi75KS0V72OLyJnZi8zkA0ewxo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dT0FCIuvbuhmPZeuKmps9O8xr47fpIR0eTPJW2BrXCYsXXaQ+/3+iHjTRa6TlLvvELslE5uPMeGqaW70535n8W3hS/ki8sf5Pq1S7VSQ6ihK1jGNDhdgBY4IRcfjkujDH61r7VOVaPegcdhD6ANHLSO7izTM6Me8QFh2Yvka3XU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=MonWK9k/; arc=none smtp.client-ip=217.72.192.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	 Content-Type:Content-Disposition:In-Reply-To; b=SUALK8j0tA/kXG7kHylBYEFXSCASKW90/lstBUwzpAggtm4kEdwUdhdMcIW4P3VwDHjjJW/I1KpI9M89D/Lf8jFogjBJ5A6F+qgYhfD1hSbFVd+eLfL6Kuh5GUxzKfkwqbAEILHEw9xF1+kJHy478NqwykInFoysSBbmGx425Sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H4Ob30Ax; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="MonWK9k/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1743017282; x=1743622082; i=christian@heusel.eu;
-	bh=cC0SZP7Q4aEIS3+NUzVkYwY2u4HQnTUh3X+v+jKFAgQ=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=MonWK9k/1PAumiE9Z2jZeDQa10q4Am54K5UXjqinvtCWYGuo1Vzx2fCMKGIwitoS
-	 HWCPM2oS1xpeVSpyBUElzSuH76oEVXdCgka0YdrHfYBkZTfRrK9uyFM4XD7w4xTFY
-	 qg2Sqn/mZ0bYETN5TnUYmacl3eUPrxEUQPiDOVQmM/EGOGeejWe00Q99E1jt9BjGL
-	 FFgqG0vnez/0BwCpTqYqXlCwDi9rgar3SPvB1RP2RelFn1l/RzpFLefjo6Kz/fVjl
-	 aZK6DI8gnX+ZFx0Uk1+hhnecJBTlET4f9qViblTKfjDBJEpZbXr2lZ8xeFTfUFyWP
-	 w0PKFl3rgfgI1q67Fg==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([80.187.64.202]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M8xsm-1u1M4k3Nqw-00Fyj0; Wed, 26 Mar 2025 20:21:36 +0100
-Date: Wed, 26 Mar 2025 20:21:34 +0100
-From: Christian Heusel <christian@heusel.eu>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, 
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, 
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, 
-	hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.13 000/119] 6.13.9-rc1 review
-Message-ID: <f2b079f7-d666-48c1-bfc9-0155dcc9b4a5@heusel.eu>
-References: <20250325122149.058346343@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H4Ob30Ax"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0AB7C4CEE2;
+	Wed, 26 Mar 2025 19:29:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743017352;
+	bh=fsm4/swelvXW96SQIxi75KS0V72OLyJnZi8zkA0ewxo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H4Ob30AxxE8pcmhK5XDYw7dnctJwcwk3XpLSPbny9Xi4N3gCvijUJFTXe/1TOSuIH
+	 DmRuaVVJLr6BLIq0r74M7A24glNIVd74ShwiilwkVN2+7cQ8eHVsQl9S+BbxgVaswO
+	 UybsBLMK7oWC4EOu4LBaWn39Yg2F2H3E32RuEcMpqAnoiHiXnTd4auD1aKHtuj774e
+	 1dXBlFcWwEv0RYu4x2B0wNPAK5TwepsdQxcT9+/YQ4iBtfjT/DkipFyvHviUpQmblH
+	 BM4jgCcn61CH+b8KWgeC02UJ05h5ipKTC0I+A/zvpI2PlLV7v3VpjHnDc9KJG1/Wh3
+	 tHxHO6xHVCsTQ==
+Date: Wed, 26 Mar 2025 15:29:10 -0400
+From: Mike Rapoport <rppt@kernel.org>
+To: Ye Liu <ye.liu@linux.dev>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Ye Liu <liuye@kylinos.cn>
+Subject: Re: [PATCH] mm/show_mem: Optimize si_meminfo_node by reducing
+ redundant code
+Message-ID: <Z-RVhrZuybsQj7l0@kernel.org>
+References: <20250325073803.852594-1-ye.liu@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qrugcju3lf3vwyjc"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250325122149.058346343@linuxfoundation.org>
-X-Provags-ID: V03:K1:HpQe7Dut4b0aICmrtZlF2dG1x9jQ8/S/5haSr79leaLIkettg+9
- eI2bfciN7c2GW7ds+YwYouBbaS/4jGgagQSwKGuTCyBtF1+AwGxQDNW36oIlWDcA70uJwI9
- WFypvTi22lwsD9heSsYU01BRQfOE1e5MxVFrSwSK4hh0RbJCQIiMIuWt6t/SalEWdLOq56O
- Q5+3RdYZI+4VOvPuRNRXA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:W9n4chH9dQc=;Bn0KuvoPImKhPVdunsFnOE9+VmO
- UdaXA3sqHyXooaKge5snmAF6QxJaM4WuKYhWMBfI8HSHnphghQSttiY8Szh6n+KWabMPQMGt5
- 7MjdbAztV8N2fWGuCSI/EOHpdpO/NThekqcHT1jlb5Ks95/iI+td8wKoOgTk/eOukVVpL4UCy
- PgsHpKz9ShYl23A17lVpsDO8+E9D1Yngg1r3bXiPXhrsNFTWSXBNYAgrzyYVqaMsA93A9uTyP
- ElcBbvmMDXgHwQF0usb3Qhq18nKUyNsAiiPDIiZOyg3lQ6CBhRDlZ2hyZBTy/sgmhQjUFGuPT
- z9z9gSc6JSDcKFmNv/R7Kuj/+3wvssw3K8gnSDYfWpLtBcHE14JOebHRSBP2XUP5posKKIS+T
- Yza5qnmnaQM96o9QWLZJAT/UWUqnG8D/M3MztPQg3EEYa4Y4ZVDXtRiIkTlHtvCN6VxZ5wiS4
- apdNh/5yBeQCoUPyzs4E/r+14HR+0OZpMsYsTPdRFuCPHxWSTSI1P3IPqILyU9aYzCHEcuu6N
- gGWrdLIbqmo7v/SSW7mRKIEGXmMBH0VuUY5aSSX5c5X6EgirXlj8ySnDw2lOz7dUyxoiFLqoy
- 3PHPOyz+HEFfTO4RSD3v/NOgYOGxzzi80WXb/2bTUnu6CQ/JwxdkNjG9J+0mxU5wtLTqOmWqu
- MJBaQoKz3ZQnN7P3clsAux2VEuujzdpEV2LoUYORu3mKx3H3KoY2WghWThiaYNS1b4SScqMGW
- QY2T79uZVCquNgcMkxFFfj8RQWDz126XniYDxNJpW+4WmU5ADaJoC+LmhiDHiD1TfnlGEBeDR
- t1Dk7QX/a7mtcS7FeulHEhn8IFr5ZNSFUIWvqCr3135bUCvA0BRN9wCffakQfmW3n6g5kSm+v
- WlvGmkKjuOj3V2fTpO6Tqi1oCu1z3YbGta51ttxEwG0z6p0vJxvd8UzsLcvQiTW1XtO2QCkHi
- 4yQ3HVoMf8bN9oXRwS17KtpKbBjM6sfVRYhEBUJirtosQ79AXpTMyAN+gZEUHATufcJQ5LYn+
- ao4u/bsR2ZGUuZVvESgPEXXTKJcZjib9vw/M5ez8cUCcq5gpZFYqs5tFLAZBUCwndxZWoSsoQ
- 2pXpvOeNcIYWrSO2Fx9kJS7b3b+gICv4s4jEja+ldNuTmOiDghCo5wo3Qfc4NWA6FDMtqvtnY
- MYCA/Dt+wyj203z+/gwXeFYfy4ccawX7dYiK4wxF9gcPG7jDN1UXNhFR77tADO5OAkhK53lro
- oXEjc+u74lUBZ3KPGVMy7EsvT5/ciOAIfbfTZrT+OLObdqQ1h1pJitCyk8JBBGN26Tlo5PNVB
- wuirkJ5Zy3vKGeDHcAiFBa711XfGlJzhTakTTiDybUx7DhKm0hPqlV/LFbcAOWWxpP1L7ZLUz
- H52ttxLXR8zb1vv0qkrXdk4QUryP0RjarxEKg=
+In-Reply-To: <20250325073803.852594-1-ye.liu@linux.dev>
 
+On Tue, Mar 25, 2025 at 03:38:03PM +0800, Ye Liu wrote:
+> From: Ye Liu <liuye@kylinos.cn>
+> 
+> Refactors the si_meminfo_node() function by reducing redundant code and
+> improving readability.
+> 
+> Moved the calculation of managed_pages inside the existing loop that
+> processes pgdat->node_zones, eliminating the need for a separate loop.
+> 
+> Simplified the logic by removing unnecessary preprocessor conditionals.
+> 
+> Ensured that both totalram, totalhigh, and other memory statistics are
+> consistently set without duplication.
+> 
+> This change results in cleaner and more efficient code without altering
+> functionality.
+> 
+> Signed-off-by: Ye Liu <liuye@kylinos.cn>
+> ---
+>  mm/show_mem.c | 16 +++++-----------
+>  1 file changed, 5 insertions(+), 11 deletions(-)
+> 
+> diff --git a/mm/show_mem.c b/mm/show_mem.c
+> index 6af13bcd2ab3..ad373b4b6e39 100644
+> --- a/mm/show_mem.c
+> +++ b/mm/show_mem.c
+> @@ -94,26 +94,20 @@ void si_meminfo_node(struct sysinfo *val, int nid)
+>  	unsigned long free_highpages = 0;
+>  	pg_data_t *pgdat = NODE_DATA(nid);
+>  
+> -	for (zone_type = 0; zone_type < MAX_NR_ZONES; zone_type++)
+> -		managed_pages += zone_managed_pages(&pgdat->node_zones[zone_type]);
+> -	val->totalram = managed_pages;
+> -	val->sharedram = node_page_state(pgdat, NR_SHMEM);
+> -	val->freeram = sum_zone_node_page_state(nid, NR_FREE_PAGES);
+> -#ifdef CONFIG_HIGHMEM
+>  	for (zone_type = 0; zone_type < MAX_NR_ZONES; zone_type++) {
+>  		struct zone *zone = &pgdat->node_zones[zone_type];
+> -
+> +		managed_pages += zone_managed_pages(zone);
 
---qrugcju3lf3vwyjc
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 6.13 000/119] 6.13.9-rc1 review
-MIME-Version: 1.0
+nit: don't remove the empty line after the declaration
 
-On 25/03/25 08:20AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.9 release.
-> There are 119 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Thu, 27 Mar 2025 12:21:27 +0000.
-> Anything received after that time might be too late.
+>  		if (is_highmem(zone)) {
+>  			managed_highpages += zone_managed_pages(zone);
 
-Tested-by: Christian Heusel <christian@heusel.eu>
+Looks like highmem pages get counted twice, no?
 
-Tested on a ThinkPad E14 Gen 3 with a AMD Ryzen 5 5500U CPU and on the
-Steam Deck (LCD variant) aswell as a Framework Desktop.
+>  			free_highpages += zone_page_state(zone, NR_FREE_PAGES);
+>  		}
+>  	}
+> +
+> +	val->totalram = managed_pages;
+> +	val->sharedram = node_page_state(pgdat, NR_SHMEM);
+> +	val->freeram = sum_zone_node_page_state(nid, NR_FREE_PAGES);
+>  	val->totalhigh = managed_highpages;
+>  	val->freehigh = free_highpages;
+> -#else
+> -	val->totalhigh = managed_highpages;
+> -	val->freehigh = free_highpages;
+> -#endif
+>  	val->mem_unit = PAGE_SIZE;
+>  }
+>  #endif
+> -- 
+> 2.25.1
+> 
+> 
 
---qrugcju3lf3vwyjc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmfkU74ACgkQwEfU8yi1
-JYXu9g//R27iUOFq4JnHuIVIxt0JYN/uwQZwLB+hUTkCU00fal/OOKai9pRfG1HM
-mZRj2nC+e5spYiQ4104WsLP1ZvwRqPTNZ6nzzGTW65F3ejZADNoJbBUA1C2yr9r0
-R7nwQ3Cz0Vfi15JeSHnj5rSo2+OPf1hV6U6uJgk+7cF/vKiVkBw3VIWqEyPO5o1W
-/zBQCTrmnIp8ksqWaR1wevSYuaC781d64RCaBHyfoRw/wuKdw/qCwmFut6knqx49
-Rlr+5NSjz3eeWlK77zD5KBMTIzBdJLhlmylZn2IJoPx5lSPpIxVRfZdbXBodECSB
-iRBaDqnQ83Kw9+U3sRae1zRwTHcDYAygSw9R3Ghjrbl9oLQ8Plc91RdMv5qsGGe8
-4Ne+hdybWh9HvT2eeU0JP8UF1q24JqaDzQzJYWx0QSgItnG3Hrt9gv3AoyHzvCJg
-sWvz3VSNnQ5HeYfjs7dppozgGFuGVpbitqIS4TPnIrm+jpGyOqt/LGM8FG1p3qKL
-cqyFnv/LStdhtUrSFNLeeKlkHseIcgMzLmOHQ4LSog+TCMTR1PPghjc4G6Bu5/06
-9HigW7KXcc4aQiQamKhR7HXlFTWHXmFytjCrZm6k78c/MyapvBqiAt4F3/3bEkC/
-29Aimt0mPaFiNSKx6nmYE06urulqztt7J638Ja8h17WioT/uB4k=
-=Fnl+
------END PGP SIGNATURE-----
-
---qrugcju3lf3vwyjc--
+-- 
+Sincerely yours,
+Mike.
