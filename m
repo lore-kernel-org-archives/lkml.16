@@ -1,162 +1,96 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0298625FA27;
-	Wed, 26 Mar 2025 22:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18FEA19D88B
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 22:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743027407; cv=none; b=uyQFXTpXBn6kqoYD0KP/SvjZ/SW11FEl8/HF9fTrB7sK36aV01xnXdTM457qD60BKSXtTKtaHIB84HEPQfB1JiNgRo/HQ23fJPrCYFlemHNTkpglns6AUZbN85dzD+9uXbLMFb8lJOod2Dgk878zr8tIyZB452bo4N1qBCGDhDM=
+	t=1743027454; cv=none; b=n+9Y+PvQEwCd8gZhtLWHX9FyUM2owG8GaK+Q8wko2MzF9oVrXuQiBAVRzE++pqiYL+8YbJn1/F4Fo/vro7iSpO3O/HWMtrAeG9KclkLh3Q6qnHNsfW83xlQWgHjEYGlzZ/tsiC0hxk9tXEGnjo1WUDOB/UdbZxoaclAcjbvwf4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743027407; c=relaxed/simple;
-	bh=L44KeKP+YK8ms0QSB3LVnrGLyrHBNU8opCfBoB1E/EU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pIWjzLLDH9EACqIE40KShKsSOa29ABOZgBWkKnPVjU+Ag6sQQwbE5TGt3/WnE2Oz2APQcaFVyDrgv7aMSTCsAfKgozJUP9fHjw6dw2ooSWi4pwUnkzlEBGd7pEasRF26mUS0rrJhLz5W6jiR9nZ/6a1KICXF/fuCCQQkYiXQr1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V5BNzKMd; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743027454; c=relaxed/simple;
+	bh=0/mbINWzm5w7ZZuAByidfAmTAHs4CoyB7y716YB2WXQ=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=rGlS9g5BkkubsO8k063Lt6oBPMR6J3fA1aN5LetIFjtRgyp5jaku1vzPaFpognBvoRhGcqtXRkx3Udqyh07J6fJIClo8s+BLcoXjjRlIsKYTyShttNwfGaxsqokQfEZ7sxV+A/hLk1qwR6M0TK9RIQR/Ak94S26d16EP4vlg2sQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M90avTcq; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V5BNzKMd"
-Date: Wed, 26 Mar 2025 22:16:37 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743027402;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wG7XTWpkE3LKZFt50WsjetypYEWpdI63n5wJpfKwCQw=;
-	b=V5BNzKMdUy9S3LTERH5dXimRKArNQxtvaHKrC12Hrv7O7VUXBpSUjb4Cyfekagu0qYCX8Z
-	cehTEUvaWfk7XwVsV9krSv3mTw1kTo6UIat34EChThgU8gW0l2wJXqWif6kTZXnHjY2K4A
-	tRCUgjh2EVwd7kvAfpDz69fWDrvuwIo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jim Mattson <jmattson@google.com>,
-	x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: x86: Unify cross-vCPU IBPB
-Message-ID: <Z-R8xRbsjv4lalAX@google.com>
-References: <20250320013759.3965869-1-yosry.ahmed@linux.dev>
- <Z-RnjKsXPwNWKsKU@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M90avTcq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743027453; x=1774563453;
+  h=date:from:to:cc:subject:message-id;
+  bh=0/mbINWzm5w7ZZuAByidfAmTAHs4CoyB7y716YB2WXQ=;
+  b=M90avTcqvf3wm7dGvXd7JBL5TDjix0UINpz3K+qnL3Y3qy/8mw1WqOTF
+   CWdG11+LsFL8ST8s5/SGis+55WmjKwbIwwK81Om0M5Z0MO2F10DLs3KKa
+   JAlr4zmtcF7uVC9/850uZ8HMoTCxeuyfqtTj9jwB2R8JLgG+FGVZUoUoA
+   1iuoCIrmewhpBNNWnk/xte2kY2pjIoefi2dGT5t0LqTh6JfiwBDVfFBEd
+   GyBwQZIqUml7JZWZShXIkj0w/zUlWEsezmopJTjCdjmL45r04bnZgZWyo
+   rSdLIaGKrPX+sDU7HFwYV0oA2vi7eeFKwGsBycstzSJjFABSvQHy/nwCR
+   A==;
+X-CSE-ConnectionGUID: zJNZDaDlTL+upxd+jGSTzA==
+X-CSE-MsgGUID: /Fqb/QwUT56eiOiNaTBoPQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="55337665"
+X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
+   d="scan'208";a="55337665"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 15:17:32 -0700
+X-CSE-ConnectionGUID: 0PzLTFNzTf253qQZJ7DPqg==
+X-CSE-MsgGUID: CCcKltZfR1yqLCFQg4RNlQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
+   d="scan'208";a="124936849"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by orviesa006.jf.intel.com with ESMTP; 26 Mar 2025 15:17:30 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1txZ3u-00067v-1h;
+	Wed, 26 Mar 2025 22:17:27 +0000
+Date: Thu, 27 Mar 2025 06:17:17 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/asm] BUILD SUCCESS
+ 0717b1392dc7e3f350e5a5d25ea794aa92210684
+Message-ID: <202503270608.6NWxibY6-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-RnjKsXPwNWKsKU@google.com>
-X-Migadu-Flow: FLOW_OUT
 
-On Wed, Mar 26, 2025 at 01:46:04PM -0700, Sean Christopherson wrote:
-> On Thu, Mar 20, 2025, Yosry Ahmed wrote:
-> >  arch/x86/kvm/svm/svm.c    | 24 ------------------------
-> >  arch/x86/kvm/svm/svm.h    |  2 --
-> >  arch/x86/kvm/vmx/nested.c |  6 +++---
-> >  arch/x86/kvm/vmx/vmx.c    | 15 ++-------------
-> >  arch/x86/kvm/vmx/vmx.h    |  3 +--
-> >  arch/x86/kvm/x86.c        | 19 ++++++++++++++++++-
-> >  6 files changed, 24 insertions(+), 45 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> > index 8abeab91d329d..89bda9494183e 100644
-> > --- a/arch/x86/kvm/svm/svm.c
-> > +++ b/arch/x86/kvm/svm/svm.c
-> > @@ -1484,25 +1484,10 @@ static int svm_vcpu_create(struct kvm_vcpu *vcpu)
-> >  	return err;
-> >  }
-> >  
-> > -static void svm_clear_current_vmcb(struct vmcb *vmcb)
-> > -{
-> > -	int i;
-> > -
-> > -	for_each_online_cpu(i)
-> > -		cmpxchg(per_cpu_ptr(&svm_data.current_vmcb, i), vmcb, NULL);
-> 
-> Ha!  I was going to say that processing only online CPUs is likely wrong, but
-> you made that change on the fly.  I'll probably split that to a separate commit
-> since it's technically a bug fix.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/asm
+branch HEAD: 0717b1392dc7e3f350e5a5d25ea794aa92210684  x86/bitops: Use TZCNT mnemonic in <asm/bitops.h>
 
-Good call. To be completely honest I didn't even realize I fixed this. I
-just used for_each_possible_cpu() in kvm_arch_vcpu_destroy() because I
-thought that's the right thing to do, and I didn't notice that the SVM
-code was using for_each_online_cpu() :)
+elapsed time: 1448m
 
-> 
-> A few other nits, but I'll take care of them when applying.
+configs tested: 19
+configs skipped: 126
 
-Thanks!
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> 
-> Overall, nice cleanup!
-> 
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 69c20a68a3f01..4034190309a61 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -4961,6 +4961,8 @@ static bool need_emulate_wbinvd(struct kvm_vcpu *vcpu)
-> >  	return kvm_arch_has_noncoherent_dma(vcpu->kvm);
-> >  }
-> >  
-> > +static DEFINE_PER_CPU(struct kvm_vcpu *, last_vcpu);
-> > +
-> >  void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-> >  {
-> >  	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> > @@ -4983,6 +4985,18 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-> >  
-> >  	kvm_x86_call(vcpu_load)(vcpu, cpu);
-> >  
-> > +	if (vcpu != per_cpu(last_vcpu, cpu)) {
-> 
-> I have a slight preference for using this_cpu_read() (and write) so that it's more
-> obvious this is operating on the current CPU.
+tested configs:
+i386                         allmodconfig    gcc-12
+i386                          allnoconfig    gcc-12
+i386                         allyesconfig    gcc-12
+i386    buildonly-randconfig-001-20250326    gcc-12
+i386    buildonly-randconfig-002-20250326    clang-20
+i386    buildonly-randconfig-003-20250326    clang-20
+i386    buildonly-randconfig-004-20250326    clang-20
+i386    buildonly-randconfig-005-20250326    gcc-12
+i386    buildonly-randconfig-006-20250326    clang-20
+i386                            defconfig    clang-20
+x86_64                        allnoconfig    clang-20
+x86_64                       allyesconfig    clang-20
+x86_64  buildonly-randconfig-001-20250326    clang-20
+x86_64  buildonly-randconfig-002-20250326    gcc-11
+x86_64  buildonly-randconfig-003-20250326    clang-20
+x86_64  buildonly-randconfig-004-20250326    clang-20
+x86_64  buildonly-randconfig-005-20250326    clang-20
+x86_64  buildonly-randconfig-006-20250326    clang-20
+x86_64                          defconfig    gcc-11
 
-Hmm I think it's confusing that a cpu is passed into
-kvm_arch_vcpu_load(), yet we use the current CPU here. In practice it
-seems to me that they will always be the same, but if we want to make
-this clear I'd rather we do it on the scope of the entire function.
-
-We can probably stop passing in a CPU and just use the current CPU
-throughout the function, and just add an assertion that preemption is
-disabled.
-
-> 
-> > +		/*
-> > +		 * Flush the branch predictor when switching vCPUs on the same physical
-> > +		 * CPU, as each vCPU should have its own branch prediction domain. No
-> > +		 * IBPB is needed when switching between L1 and L2 on the same vCPU
-> > +		 * unless IBRS is advertised to the vCPU. This is handled on the nested
-> > +		 * VM-Exit path.
-> > +		 */
-> > +		indirect_branch_prediction_barrier();
-> > +		per_cpu(last_vcpu, cpu) = vcpu;
-> > +	}
-> > +
-> >  	/* Save host pkru register if supported */
-> >  	vcpu->arch.host_pkru = read_pkru();
-> >  
-> > @@ -12367,10 +12381,13 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
-> >  
-> >  void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
-> >  {
-> > -	int idx;
-> > +	int idx, cpu;
-> >  
-> >  	kvmclock_reset(vcpu);
-> >  
-> > +	for_each_possible_cpu(cpu)
-> > +		cmpxchg(per_cpu_ptr(&last_vcpu, cpu), vcpu, NULL);
-> 
-> It's definitely worth keeping a version of SVM's comment to explaining the cross-CPU
-> nullification.
-
-Good idea. Should I send a new version or will you take care of this as
-well while applying?
-
-> 
-> > +
-> >  	kvm_x86_call(vcpu_free)(vcpu);
-> >  
-> >  	kmem_cache_free(x86_emulator_cache, vcpu->arch.emulate_ctxt);
-> > -- 
-> > 2.49.0.395.g12beb8f557-goog
-> > 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
