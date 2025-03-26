@@ -1,84 +1,115 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B247419C569;
-	Wed, 26 Mar 2025 23:14:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC05C5028C;
+	Wed, 26 Mar 2025 23:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743030885; cv=none; b=PfajpzEE6v2NbpqOm31jpN943o+ApTPY/k2OLVfSbPujsI5Ovs0nKfBgsuC28paat0xgs/PJ1E6yyUFRakJyCuToqgTENUuNNzaf/LPjHbvSZVByjFDRnltViLKV0vmeAkgKrAHCou66lb0supL6njCK4/za+t4kffPXjSxreGY=
+	t=1743030980; cv=none; b=h6ChpevNxZVPVLKTyIcNirDpMHsiWU7EbHCKRMY43k0I8GgzIJOzGkL5G2QS/gaZMiDSLSn+9+YDtAUxtALAfMbl9R2oKn3uUHfPKSE1hOMFhAf7SyAG6kKwraawNVRNyfQ6ZkkH9Y6KvJuzeFuJ6Ip3il9V7rHL+yr84tLWu4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743030885; c=relaxed/simple;
-	bh=NRxhzX97zbLNqsKqNz31eZbURDBwCrCNRXlfK0yFU6I=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=X07cbKcRkgNXZ4Z+hTVCUWUSKHIIv7CRyns7+V7attsWVq4nXyhyggwMJkLSIj9PdMf8shaxXt/AZw4LdNzuSjil5sYe8yVLtzrA5dyH2dkFIGbB3e1rErmxjFA92nbLln4WJ/VSbL02sGMdEqg5g6TDXJd0+k46GPVLA6bvIBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=x/EEL1ja; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1743030980; c=relaxed/simple;
+	bh=iibPQi1jbEKb8TuwjxFEMZOgHjBaf0QzPvAicONf/PA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bAPCoLc9O7GCdny5Hf4xj9Ntg2JJ32D7SWdY9h3Nuz2nGeh3pP4ahd2RWZSU9maJ0zo15pqQ140W1VK2K+HWafGBFKrBEH1OsbP+tblSc0vTiGigryX82gVpPnQmN6HPm1pcjRX4u5bToVXhBS6TyMs+ms8f0Othjg4QZ7TNRAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Tv3VntZD; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="x/EEL1ja"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=NRxhzX97zbLNqsKqNz31eZbURDBwCrCNRXlfK0yFU6I=;
-	t=1743030883; x=1744240483; b=x/EEL1ja1n0FpYr0sDGlWFxeEgs7/QwJVuDntw0gzrfhavm
-	mb5qlkdKrYgxZ+Weo3yTMSmBLwUVe606Nnpo1KULQAIw7pAau46NulauJfYGjOZ/qMoHD+n60SVn+
-	Z5N0hhO13cVWFlGy78HdVLDcEeX+FfKc+rIseP9l4ftFl8SoPTh2OixyT33BBqqmBc5+H/ntLJ7++
-	8hBeKlf/89k0AnMkBHc+JO58m1CbSObjQpHIGgSltZBA/LGfqzzPpTC/TIr3zr0snviokudTAynh2
-	/2mhiMK/OfzVxFnxduw+FI62EC7I1xexuhuwuqdFLpky39MO9pHzK+Dvyl3Zfa2Q==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1txZx1-00000006USq-3r9X;
-	Thu, 27 Mar 2025 00:14:24 +0100
-Message-ID: <69bd300d79f7f6317a964030930252b307b85007.camel@sipsolutions.net>
-Subject: Re: [PATCH v5 0/5] dt-bindings: net: Add network-class.yaml schema
-From: Johannes Berg <johannes@sipsolutions.net>
-To: David Heidelberg <david@ixit.cz>, Rob Herring <robh@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,  Krzysztof Kozlowski	
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Mailing List	
- <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Bianconi
-	 <lorenzo@kernel.org>, van Spriel <arend@broadcom.com>, 
- =?ISO-8859-1?Q?J=E9r=F4me?= Pouiller	 <jerome.pouiller@silabs.com>, Bjorn
- Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- Andy Gross <agross@kernel.org>, Mailing List	
- <devicetree-spec@vger.kernel.org>, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, linux-arm-msm@vger.kernel.org, Janne Grunau
-	 <j@jannau.net>
-Date: Thu, 27 Mar 2025 00:14:19 +0100
-In-Reply-To: <4B465FA3-E6B5-4EB1-A712-0C8874402FCE@ixit.cz>
-References: <20250324-dt-bindings-network-class-v5-0-f5c3fe00e8f0@ixit.cz>
-	 <3452b67752228665fa275030a7d8100b73063392.camel@sipsolutions.net>
-	 <CAL_JsqLv9THitHzj8nj7ppCp-aKn010-Oz=s+AUNKOCoDmBnbQ@mail.gmail.com>
-	 <bfb7433131cb9aeebc75666f86a67a6c71521229.camel@sipsolutions.net>
-	 <4B465FA3-E6B5-4EB1-A712-0C8874402FCE@ixit.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Tv3VntZD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1743030971;
+	bh=sLtfBn0Pq3cONRZPmTGBl06p95bTjzxsgyIlXm8HOmM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Tv3VntZDDr3RGZwV0JlMK7lZMxA6ZtTsHwSYxR1p6hROukjipsjNIOjyWtlxVOLOC
+	 z627CcHArro7OxrQIO+5jjgX6PAJACINhUtRUfKboclUcA6bhXcdv7lE5t1+RePBiE
+	 i1XJv1EOUiWn6TkF2/7aTEp2uhCA+SMekvSmoiUYmWWvm6YpAx3mvmGeNLcbNG4Db7
+	 ANPHBbDFDwrAWa14x5BMoGze8DdXlAVgnHpSymEHKPJoWlu/a+iC/F57kmBwjy15GS
+	 rkK9azwvCNUqvJRwsfm2xYWi5ANMYKa8ATkZeeS/iG4lGB7hDnt756zJOC8zi/PWJ+
+	 C3j8sdJVuELhA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZNN2M1QQqz4wbx;
+	Thu, 27 Mar 2025 10:16:10 +1100 (AEDT)
+Date: Thu, 27 Mar 2025 10:16:10 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andrew Morton <akpm@linux-foundation.org>, Masahiro Yamada
+ <masahiroy@kernel.org>
+Cc: Oliver Glitta <glittao@gmail.com>, Jeff Johnson
+ <jeff.johnson@oss.qualcomm.com>, Alessandro Carminati
+ <acarmina@redhat.com>, Guenter Roeck <linux@roeck-us.net>, Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the kbuild tree
+Message-ID: <20250327101610.45f13473@canb.auug.org.au>
+In-Reply-To: <20250324103048.3d8230f9@canb.auug.org.au>
+References: <20250324103048.3d8230f9@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: multipart/signed; boundary="Sig_/YO42.FBf5s2aLCbKoHOlXTm";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Wed, 2025-03-26 at 23:08 +0000, David Heidelberg wrote:
-> > I can do that, but I suppose it's 6.16 material at this point.
+--Sig_/YO42.FBf5s2aLCbKoHOlXTm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+On Mon, 24 Mar 2025 10:30:48 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> After merging the kbuild tree, today's linux-next build (powerpc
+> ppc64_defconfig) failed like this:
 >=20
-> Hi Johannes.=20
+> ERROR: modpost: missing MODULE_DESCRIPTION() in lib/kunit/backtrace-suppr=
+ession-test.o
+> ERROR: modpost: missing MODULE_DESCRIPTION() in lib/slub_kunit.o
+
+This is now lib/tests/slub_kuni.c
+
+> Caused by commits
 >=20
-> I assume you meant 6.15?=20
+>   19f3496e6241 ("kunit: add test cases for backtrace warning suppression")
+>=20
+> from the mm-nonmm-unstable branch of the mm tree and
+>=20
+>   1f9f78b1b376 ("mm/slub, kunit: add a KUnit test for SLUB debugging func=
+tionality")
+>=20
+> from Linus' tree (in v5.14rc1) interacting with commit
+>=20
+>   6c6c1fc09de3 ("modpost: require a MODULE_DESCRIPTION()")
+>=20
+> from the kbuild tree.
+>=20
+> I have temporarily reverted the latter commit until the former are
+> fixed up.
 
-No. 6.15 merge window just opened.
+I am still reverting that commit.
 
-> This patchset should mainly clarify where these properties can be used an=
-d address incorrect warnings regarding device-tree verification.=20
+--=20
+Cheers,
+Stephen Rothwell
 
-I'm not really convinced that makes it a bugfix for the rc series
-though?
+--Sig_/YO42.FBf5s2aLCbKoHOlXTm
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-johannes
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfkiroACgkQAVBC80lX
+0GxdbQf/aQKxRk4LtsWM+dWwv18xlIZOfEhbFPkWhBmjkmR7ozuM4LwrNpn1XH9r
++q0QUpN4MHXFTPPbSHSWTwWCzB6Hpb2TsX1jeKRBfuCpDERKA8elKmpnBECSza7y
+E6yR1zg818wZ0D7NeaSBPDL0wWab+YN4DjBVX5w+OVfNdPVwPqU0D9N3UdPLMGlk
+CrcguiiLl+y219jaoxBkF0c0rfinJZ7jIEa5OeENBJHtXjPoHAW/m9VHfpgkiA/H
+xFL7025Zg3YkELVHeSokG+1r0DzmjVcVKU7m+x9MtpMmqQwO2TGroLLM9psJNJRe
+qrIQ/REUmsf3daRqlvkl4wsblnusEg==
+=aVzn
+-----END PGP SIGNATURE-----
+
+--Sig_/YO42.FBf5s2aLCbKoHOlXTm--
