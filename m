@@ -1,63 +1,63 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C8A1A0BFD;
-	Wed, 26 Mar 2025 23:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5289264F8A;
+	Wed, 26 Mar 2025 23:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743032151; cv=none; b=CPooCrneTjvoMqaw91KuOxuogAQ37rDIJbgi2tmchFTTiaPNOKu9AMVH3jHrgI7EowquwIANIyE/Kq9usD0kI433RibU+BfRj0VMt/WUgWHkAsaQD89jD6gbIGI4rBagrFh9vPxDwGp1+z2uFqNValr5btmZRN6aFMvG44eKZcg=
+	t=1743032154; cv=none; b=pKG6gsy04geC/RdBAamn5pYaErF4qNgGZ+Pmnp/kqaz6a1Rx+k/evv3hXnMRpLVeBULvGrgX3u0b3xwhF1yihkTO91zjO6cjcAXrxwF54D4G9DAjGzYllOqtkrwIP8gaqC+FZ2kZKsgSbjMfp0F0P5zTvv3xkMqq91M0YV0UptI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743032151; c=relaxed/simple;
-	bh=NpGUNcQcCAfV32dzaQfeI3JW+XetOOZuTafzemIdVyU=;
+	s=arc-20240116; t=1743032154; c=relaxed/simple;
+	bh=aaP5jjL1QpF5Nj21o9Xb0lF9G3T0YoMhm8JsQ1WNWVU=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LUdmKTSVRMvLNgg7zrkBuvFDrZgzC6w133TcOTskHiFn7dF93ruQHrWMFe25Tat6h60lHrnbgadxnrDqltdgWtlP4PDPqtAM6RMKnxS28jLV5IN7ioL5NPnqfWqm2XMZL5vIV2D17cjYYCxOmpxYbn7Lv+mZeLHIkWCqVF/SXUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kp23+GVo; arc=none smtp.client-ip=209.85.221.45
+	 MIME-Version; b=SebclYdcl/pMFL67SQ6S/J5OchrcYu5l6BkY53aBhejSfaISckB9bqhp5hC8Wa7y65psfOl8+JTDXmuP20KRWGMB2W6jHYioxy/ECzaSUo69qtUEBt1n61F2vUkEk5u5EWcqOQrF0SOnkyCo9ddLDJhVegb3lAM700Y5vButNy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c4gG70e9; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kp23+GVo"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3914aba1ce4so263234f8f.2;
-        Wed, 26 Mar 2025 16:35:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c4gG70e9"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso267930f8f.2;
+        Wed, 26 Mar 2025 16:35:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743032147; x=1743636947; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743032151; x=1743636951; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HGNFF9mdW4/LwY16ltXob4GyXnkFffpDCwFDo+VwVvI=;
-        b=Kp23+GVo+XzR+E+Q75PV21veJxdQk3LbVzed0TUWJyNSiFEiDxiaGS3fxARz/IQ5Oi
-         flCTS6tY4IziomhzGvtan09BCxCepLfmRkl4ms0O3fALLhA+VcDsAEjZoe9NgJWDxugC
-         aNtR+eV1cuBoJ4fGXFYhWMzWq5Bo4/CQK7jkj0c9YXwvFaN6X4bmVQd0PbmGLqGuiUMr
-         vp/PsDcIRSAqym7RVR+NwFs3kkH8eW5YKC/miR3R5fjmpBdweDxg9AaEUj3+D8hPipxP
-         jZAJLYLSarEUtMUSvdc8M28wJndeYxIMm1NvM1j5bnXOoJigZgp6Xaqlcp48F1LWuiig
-         W+EQ==
+        bh=7GVOqH2dtb9yz9XSZOrN5yDH4kiqYTHV4lLBUZDoMkU=;
+        b=c4gG70e9mqVteghtXEbd41WjIF91Kv+CutxcYqCSZibH/QMoCPIcH9AJd6K5taxRjA
+         9ayko0n8EzzFEjG4Ua+n9XbELAgXjjAHIWvmB2uH6xFDZQv23caYPOMrmBikc7gC9d5l
+         nenhowVJseTkzOMPFP3Eyi2JYnSVUiewo683VWyUdzj8z5fLb0SjM9ToGML6U9Btxg/l
+         XVe0EASzo6uAC2Z3PCc5XowXupAt0WQpz3LUSGsBMDYieZiHnS2TGSQ7QgXRT5XkaYXa
+         oGJgm1+8T3iPF3a2mfPgIDnggSXT1r4qD9wJoclfDWc7Q8JTeevnxX0f6FX2xcHwLkeS
+         bhwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743032147; x=1743636947;
+        d=1e100.net; s=20230601; t=1743032151; x=1743636951;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HGNFF9mdW4/LwY16ltXob4GyXnkFffpDCwFDo+VwVvI=;
-        b=aPl2fkc2YCHgkLnOvW4VukEVExlXxThiYyNhiqs485epHMHf0xPFeY6bCwZ7QCTcZg
-         bKrEYemlY02lAT/LRzjPgoLu72HgjcFzYd+icVilFJx0moePRH9s30girmrj0rQL0dHB
-         HF4IpEJvQZJqkWVduoi+F6YynnTfrVsYNKlgjzGlotP2srRjmxrRTyJdC+P/3X4SyQxv
-         J8VQCpTGcpd1wMwXy/W2oaqgVbKO6Z14E5ONddyuLOurKh5ZCyWc7nO3SpJ+j4t8I9rT
-         Eg963qyTZVe4qzKaSg5j+211ASdsnhedDwPVSUqPhdnVOVW6SgxUDyyTpaTPiX+Wm1w+
-         1k7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV4z3y/xyDgQRKgvOCSDtc+5xhseE2emeQRMKme36YMXVqi11QJXzFh6003EEEaSqVE6S5d0fFE@vger.kernel.org, AJvYcCWsIe4lOdA3D6xktQ36K2irX2ucG0CbCJKKxNAxBTQ/aQDKWcuL/ErwMPDBX4N3MkyujvKx+LiN2Asm@vger.kernel.org, AJvYcCXk0yidYQu3dT/0b4jlkN446Mq3i5s0neMhk/C1T2epOPalp6+65I8LjCaCHz0p3NP9xGTxSFM78RYuSZYF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yye+CtI8BMeOhQI+3GlDyE1LB2r/C/fgeDJJ2EyeGqW6GF5ZBns
-	2SwdijtsJUQ28/6bZ5rOvXmiSj6wrT8PCNYFwXgJFdRuyV7nREE6
-X-Gm-Gg: ASbGncsnJ4ApAnI0flB0TJeJPcuVNjt4wRvfR2xD5oLPW5jCPUiZJj5VJvbOcCHBa7Y
-	rBToYuIRJOx0u9Ln8Dr1y71D/llBYnY8ptkJQ+SNk7cgKtv8ygsFNJyJ5JfD58fvSWYm4QmIcOL
-	8h1nNGeDKiON5i/nLBAhxXYUztPDBV/3QNHrFiAp/An5fWxsaMwbO3YU2ovL+ManWzQ/RRpo9en
-	YMYr5aj1vfbDDyLVhLmC8mpj5rkiXKz+8txIkWV21Fz7SEweb9yYRh4g+bB3d5uSxVBOJ5hjWm+
-	G9nuCEt1To6/8QFGX+UmjTXkphULgjdpbuUlJtJVm0djkFiUcoAja+d7gSU79MiLLwIKCPKl0WF
-	0NI8Mf+XlBRroUA==
-X-Google-Smtp-Source: AGHT+IG5VZmLcryV/dX8sqI2wB4LKLaJg6MkIxOvOw9IVo3Yr7abYa934fXVcmGLL7HigWulcNeWCw==
-X-Received: by 2002:a05:6000:1fa1:b0:391:2e31:c7e1 with SMTP id ffacd0b85a97d-39ad173d249mr1120453f8f.4.1743032146928;
-        Wed, 26 Mar 2025 16:35:46 -0700 (PDT)
+        bh=7GVOqH2dtb9yz9XSZOrN5yDH4kiqYTHV4lLBUZDoMkU=;
+        b=E29ZYJljNmc4dGUFjOJijmFzr2JbPhUE4ZVJRhdWumS1XvUENoju8bRpBK/0f9rLtv
+         3Aajxq4691ZOdgML9/CXUzoWdYH4tCnsOAThks3tjH+q1NkHb5bB8Y3If0WbvnUY4LQW
+         J2IAjbEpxO+IoFSdekzhlanuLseOg1gi5xKaAsKz25Y7JUg7DETVo0Gj2yIymGYKeN01
+         RnwiJTJM6O6uBo3jyldfXPZbTu7IKwMlcy9I6iOXKRxMwiJvuRDN9olCnb8sCE/NseJm
+         DsFOWoeGeYwEWZn1k5Q7Sb5xagXJZH7f5Npwd5oByJgaejfvgOx2igMVE4bKtCft8GxW
+         IGhA==
+X-Forwarded-Encrypted: i=1; AJvYcCU97o1lKmiF2bleZE+4Ko8zO/BF0VeR8L1JtBaxiLPNzH79j4TYNjSfpg69M4oYOy/9f0U5OjKO71kHe8G4@vger.kernel.org, AJvYcCVRzyEKVM02xYc3GhYlUytQf0mpskf0BdjBBAbbg+dmkIl+96Qa9UiycjqQ2C62nyOHeeoRVCwE@vger.kernel.org, AJvYcCXtAxdQhwYRstdy70on7BKEC7CoYAJVaunFLC9YwtasCx0AAet6u/uqc+mxvnrsLu8NH71e1Swgz3TQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/3Do2qGHQKfta7Z+REnMipel3CQSQWogRafX7KbTz0f0nr71f
+	N+kmG7BVUaKhljnWB6vzQF2df1X/d5AiKtBk000cOgNhby0qK5NCBQ5UTg==
+X-Gm-Gg: ASbGnctQGA54uv+gBGBIUcPXOdgN9yZmUKP/dcyWCSVy8L8HHvuWoYYR3Ttpk70inJz
+	kpC3hZZB5Kz1Aw1DY/qTimp8Kz0XLnmA/ckKKZASvfrX3wbeFE+tuWtTCEk0j5P0y/I3tPbMyDb
+	GEv8U2sfjAKUaNIVHwlYTlEyDY88yf4wdySX/SqjwOVILdKfOjWLqb3Dbd5UVB3oE3C+byIE0q1
+	BrI+/WjIHk51SCl+EsibRm2t0DPdIGlmVOXsvj4fdS7cQHtXcXjsc/oLPmykIgNI9OrE2Veg3NW
+	opf/rx2Bbz7RTxUgBb1VGh1Gz5eyT3ybmkGNGLWjux8ZsPBjaHlU38tf39XyazxnO5TympyMH7x
+	w5VH59+VW4x58qQ==
+X-Google-Smtp-Source: AGHT+IFOa8WBGjFsJmHmRWSTbNPfcCi7DBXbnYepm+dNeI31EeMdbL+3WWzWWeVUU99LlcbWl2kQPQ==
+X-Received: by 2002:a05:6000:1ace:b0:391:29f:4f70 with SMTP id ffacd0b85a97d-39ad17544e8mr1002400f8f.3.1743032150980;
+        Wed, 26 Mar 2025 16:35:50 -0700 (PDT)
 Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3997f99579bsm18390328f8f.19.2025.03.26.16.35.45
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3997f99579bsm18390328f8f.19.2025.03.26.16.35.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 16:35:46 -0700 (PDT)
+        Wed, 26 Mar 2025 16:35:50 -0700 (PDT)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Christian Marangi <ansuelsmth@gmail.com>,
 	Andrew Lunn <andrew+netdev@lunn.ch>,
@@ -78,9 +78,9 @@ To: Christian Marangi <ansuelsmth@gmail.com>,
 	netdev@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [net-next RFC PATCH v3 1/4] net: phy: pass PHY driver to .match_phy_device OP
-Date: Thu, 27 Mar 2025 00:35:01 +0100
-Message-ID: <20250326233512.17153-2-ansuelsmth@gmail.com>
+Subject: [net-next RFC PATCH v3 4/4] dt-bindings: net: Document support for Aeonsemi PHYs
+Date: Thu, 27 Mar 2025 00:35:04 +0100
+Message-ID: <20250326233512.17153-5-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250326233512.17153-1-ansuelsmth@gmail.com>
 References: <20250326233512.17153-1-ansuelsmth@gmail.com>
@@ -92,282 +92,162 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Pass PHY driver pointer to .match_phy_device OP in addition to phydev.
-Having access to the PHY driver struct might be useful to check the
-PHY ID of the driver is being matched for in case the PHY ID scanned in
-the phydev is not consistent.
+Document support for Aeonsemi PHYs and the requirement of a firmware to
+correctly work. Also document the max number of LEDs supported and what
+PHY ID expose when no firmware is loaded.
 
-A scenario for this is a PHY that change PHY ID after a firmware is
-loaded, in such case, the PHY ID stored in PHY device struct is not
-valid anymore and PHY will manually scan the ID in the match_phy_device
-function.
+Supported PHYs AS21011JB1, AS21011PB1, AS21010JB1, AS21010PB1,
+AS21511JB1, AS21511PB1, AS21510JB1, AS21510PB1, AS21210JB1,
+AS21210PB1 that all register with the PHY ID 0x7500 0x9410 on C45
+registers before the firmware is loaded.
 
-Having the PHY driver info is also useful for those PHY driver that
-implement multiple simple .match_phy_device OP to match specific MMD PHY
-ID. With this extra info if the parsing logic is the same, the matching
-function can be generalized by using the phy_id in the PHY driver
-instead of hardcoding.
-
-Suggested-by: Russell King (Oracle) <linux@armlinux.org.uk>
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
- drivers/net/phy/bcm87xx.c              |  6 ++++--
- drivers/net/phy/icplus.c               |  6 ++++--
- drivers/net/phy/marvell10g.c           | 12 ++++++++----
- drivers/net/phy/micrel.c               |  6 ++++--
- drivers/net/phy/nxp-tja11xx.c          |  6 ++++--
- drivers/net/phy/phy_device.c           |  2 +-
- drivers/net/phy/realtek/realtek_main.c | 27 +++++++++++++++++---------
- drivers/net/phy/teranetics.c           |  3 ++-
- include/linux/phy.h                    |  3 ++-
- 9 files changed, 47 insertions(+), 24 deletions(-)
+ .../bindings/net/aeonsemi,as21xxx.yaml        | 122 ++++++++++++++++++
+ MAINTAINERS                                   |   1 +
+ 2 files changed, 123 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml
 
-diff --git a/drivers/net/phy/bcm87xx.c b/drivers/net/phy/bcm87xx.c
-index e81404bf8994..1e1e2259fc2b 100644
---- a/drivers/net/phy/bcm87xx.c
-+++ b/drivers/net/phy/bcm87xx.c
-@@ -185,12 +185,14 @@ static irqreturn_t bcm87xx_handle_interrupt(struct phy_device *phydev)
- 	return IRQ_HANDLED;
- }
+diff --git a/Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml b/Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml
+new file mode 100644
+index 000000000000..69eb29dc4d7b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml
+@@ -0,0 +1,122 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/aeonsemi,as21xxx.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Aeonsemi AS21XXX Ethernet PHY
++
++maintainers:
++  - Christian Marangi <ansuelsmth@gmail.com>
++
++description: |
++  Aeonsemi AS21xxx Ethernet PHYs requires a firmware to be loaded to actually
++  work. The same firmware is compatible with various PHYs of the same family.
++
++  A PHY with not firmware loaded will be exposed on the MDIO bus with ID
++  0x7500 0x7500 or 0x7500 0x9410 on C45 registers.
++
++  This can be done and is implemented by OEM in 2 different way:
++    - Attached SPI flash directly to the PHY with the firmware. The PHY
++      will self load the firmware in the presence of this configuration.
++    - Manually provided firmware loaded from a file in the filesystem.
++
++  Each PHY can support up to 5 LEDs.
++
++  AS2xxx PHY Name logic:
++
++  AS21x1xxB1
++      ^ ^^
++      | |J: Supports SyncE/PTP
++      | |P: No SyncE/PTP support
++      | 1: Supports 2nd Serdes
++      | 2: Not 2nd Serdes support
++      0: 10G, 5G, 2.5G
++      5: 5G, 2.5G
++      2: 2.5G
++
++allOf:
++  - $ref: ethernet-phy.yaml#
++
++select:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - ethernet-phy-id7500.9410
++          - ethernet-phy-id7500.9402
++          - ethernet-phy-id7500.9412
++          - ethernet-phy-id7500.9422
++          - ethernet-phy-id7500.9432
++          - ethernet-phy-id7500.9442
++          - ethernet-phy-id7500.9452
++          - ethernet-phy-id7500.9462
++          - ethernet-phy-id7500.9472
++          - ethernet-phy-id7500.9482
++          - ethernet-phy-id7500.9492
++  required:
++    - compatible
++
++properties:
++  reg:
++    maxItems: 1
++
++  firmware-name:
++    description: specify the name of PHY firmware to load
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++if:
++  properties:
++    compatible:
++      contains:
++        const: ethernet-phy-id7500.9410
++then:
++  required:
++    - firmware-name
++else:
++  properties:
++    firmware-name: false
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/leds/common.h>
++
++    mdio {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        ethernet-phy@1f {
++            compatible = "ethernet-phy-id7500.9410",
++                         "ethernet-phy-ieee802.3-c45";
++
++            reg = <31>;
++            firmware-name = "as21x1x_fw.bin";
++
++            leds {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                led@0 {
++                    reg = <0>;
++                    color = <LED_COLOR_ID_GREEN>;
++                    function = LED_FUNCTION_LAN;
++                    function-enumerator = <0>;
++                    default-state = "keep";
++                };
++
++                led@1 {
++                    reg = <1>;
++                    color = <LED_COLOR_ID_GREEN>;
++                    function = LED_FUNCTION_LAN;
++                    function-enumerator = <1>;
++                    default-state = "keep";
++                };
++            };
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9a2df6d221bd..59a863dd3b70 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -649,6 +649,7 @@ AEONSEMI PHY DRIVER
+ M:	Christian Marangi <ansuelsmth@gmail.com>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml
+ F:	drivers/net/phy/as21xxx.c
  
--static int bcm8706_match_phy_device(struct phy_device *phydev)
-+static int bcm8706_match_phy_device(struct phy_device *phydev,
-+				    const struct phy_driver *phydrv)
- {
- 	return phydev->c45_ids.device_ids[4] == PHY_ID_BCM8706;
- }
- 
--static int bcm8727_match_phy_device(struct phy_device *phydev)
-+static int bcm8727_match_phy_device(struct phy_device *phydev,
-+				    const struct phy_driver *phydrv)
- {
- 	return phydev->c45_ids.device_ids[4] == PHY_ID_BCM8727;
- }
-diff --git a/drivers/net/phy/icplus.c b/drivers/net/phy/icplus.c
-index bbcc7d2b54cd..c0c4f19cfb6a 100644
---- a/drivers/net/phy/icplus.c
-+++ b/drivers/net/phy/icplus.c
-@@ -520,12 +520,14 @@ static int ip101a_g_match_phy_device(struct phy_device *phydev, bool ip101a)
- 	return ip101a == !ret;
- }
- 
--static int ip101a_match_phy_device(struct phy_device *phydev)
-+static int ip101a_match_phy_device(struct phy_device *phydev,
-+				   const struct phy_driver *phydrv)
- {
- 	return ip101a_g_match_phy_device(phydev, true);
- }
- 
--static int ip101g_match_phy_device(struct phy_device *phydev)
-+static int ip101g_match_phy_device(struct phy_device *phydev,
-+				   const struct phy_driver *phydrv)
- {
- 	return ip101a_g_match_phy_device(phydev, false);
- }
-diff --git a/drivers/net/phy/marvell10g.c b/drivers/net/phy/marvell10g.c
-index 623bdb8466b8..2994a3570128 100644
---- a/drivers/net/phy/marvell10g.c
-+++ b/drivers/net/phy/marvell10g.c
-@@ -1284,7 +1284,8 @@ static int mv3310_get_number_of_ports(struct phy_device *phydev)
- 	return ret + 1;
- }
- 
--static int mv3310_match_phy_device(struct phy_device *phydev)
-+static int mv3310_match_phy_device(struct phy_device *phydev,
-+				   const struct phy_driver *phydrv)
- {
- 	if ((phydev->c45_ids.device_ids[MDIO_MMD_PMAPMD] &
- 	     MARVELL_PHY_ID_MASK) != MARVELL_PHY_ID_88X3310)
-@@ -1293,7 +1294,8 @@ static int mv3310_match_phy_device(struct phy_device *phydev)
- 	return mv3310_get_number_of_ports(phydev) == 1;
- }
- 
--static int mv3340_match_phy_device(struct phy_device *phydev)
-+static int mv3340_match_phy_device(struct phy_device *phydev,
-+				   const struct phy_driver *phydrv)
- {
- 	if ((phydev->c45_ids.device_ids[MDIO_MMD_PMAPMD] &
- 	     MARVELL_PHY_ID_MASK) != MARVELL_PHY_ID_88X3310)
-@@ -1317,12 +1319,14 @@ static int mv211x_match_phy_device(struct phy_device *phydev, bool has_5g)
- 	return !!(val & MDIO_PCS_SPEED_5G) == has_5g;
- }
- 
--static int mv2110_match_phy_device(struct phy_device *phydev)
-+static int mv2110_match_phy_device(struct phy_device *phydev,
-+				   const struct phy_driver *phydrv)
- {
- 	return mv211x_match_phy_device(phydev, true);
- }
- 
--static int mv2111_match_phy_device(struct phy_device *phydev)
-+static int mv2111_match_phy_device(struct phy_device *phydev,
-+				   const struct phy_driver *phydrv)
- {
- 	return mv211x_match_phy_device(phydev, false);
- }
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 9c0b1c229af6..dde7604f2575 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -766,7 +766,8 @@ static int ksz8051_ksz8795_match_phy_device(struct phy_device *phydev,
- 		return !ret;
- }
- 
--static int ksz8051_match_phy_device(struct phy_device *phydev)
-+static int ksz8051_match_phy_device(struct phy_device *phydev,
-+				    const struct phy_driver *phydrv)
- {
- 	return ksz8051_ksz8795_match_phy_device(phydev, true);
- }
-@@ -886,7 +887,8 @@ static int ksz8061_config_init(struct phy_device *phydev)
- 	return kszphy_config_init(phydev);
- }
- 
--static int ksz8795_match_phy_device(struct phy_device *phydev)
-+static int ksz8795_match_phy_device(struct phy_device *phydev,
-+				    const struct phy_driver *phydrv)
- {
- 	return ksz8051_ksz8795_match_phy_device(phydev, false);
- }
-diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
-index ed7fa26bac8e..08dda6926732 100644
---- a/drivers/net/phy/nxp-tja11xx.c
-+++ b/drivers/net/phy/nxp-tja11xx.c
-@@ -646,12 +646,14 @@ static int tja1102_match_phy_device(struct phy_device *phydev, bool port0)
- 	return !ret;
- }
- 
--static int tja1102_p0_match_phy_device(struct phy_device *phydev)
-+static int tja1102_p0_match_phy_device(struct phy_device *phydev,
-+				       const struct phy_driver *phydrv)
- {
- 	return tja1102_match_phy_device(phydev, true);
- }
- 
--static int tja1102_p1_match_phy_device(struct phy_device *phydev)
-+static int tja1102_p1_match_phy_device(struct phy_device *phydev,
-+				       const struct phy_driver *phydrv)
- {
- 	return tja1102_match_phy_device(phydev, false);
- }
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 46713d27412b..f7cbffe305f1 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -511,7 +511,7 @@ static int phy_bus_match(struct device *dev, const struct device_driver *drv)
- 		return 0;
- 
- 	if (phydrv->match_phy_device)
--		return phydrv->match_phy_device(phydev);
-+		return phydrv->match_phy_device(phydev, phydrv);
- 
- 	if (phydev->is_c45) {
- 		for (i = 1; i < num_ids; i++) {
-diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
-index 210fefac44d4..d448c5ca39c9 100644
---- a/drivers/net/phy/realtek/realtek_main.c
-+++ b/drivers/net/phy/realtek/realtek_main.c
-@@ -1114,13 +1114,15 @@ static bool rtlgen_supports_mmd(struct phy_device *phydev)
- 	return val > 0;
- }
- 
--static int rtlgen_match_phy_device(struct phy_device *phydev)
-+static int rtlgen_match_phy_device(struct phy_device *phydev,
-+				   const struct phy_driver *phydrv)
- {
- 	return phydev->phy_id == RTL_GENERIC_PHYID &&
- 	       !rtlgen_supports_2_5gbps(phydev);
- }
- 
--static int rtl8226_match_phy_device(struct phy_device *phydev)
-+static int rtl8226_match_phy_device(struct phy_device *phydev,
-+				    const struct phy_driver *phydrv)
- {
- 	return phydev->phy_id == RTL_GENERIC_PHYID &&
- 	       rtlgen_supports_2_5gbps(phydev) &&
-@@ -1136,32 +1138,38 @@ static int rtlgen_is_c45_match(struct phy_device *phydev, unsigned int id,
- 		return !is_c45 && (id == phydev->phy_id);
- }
- 
--static int rtl8221b_match_phy_device(struct phy_device *phydev)
-+static int rtl8221b_match_phy_device(struct phy_device *phydev,
-+				     const struct phy_driver *phydrv)
- {
- 	return phydev->phy_id == RTL_8221B && rtlgen_supports_mmd(phydev);
- }
- 
--static int rtl8221b_vb_cg_c22_match_phy_device(struct phy_device *phydev)
-+static int rtl8221b_vb_cg_c22_match_phy_device(struct phy_device *phydev,
-+					       const struct phy_driver *phydrv)
- {
- 	return rtlgen_is_c45_match(phydev, RTL_8221B_VB_CG, false);
- }
- 
--static int rtl8221b_vb_cg_c45_match_phy_device(struct phy_device *phydev)
-+static int rtl8221b_vb_cg_c45_match_phy_device(struct phy_device *phydev,
-+					       const struct phy_driver *phydrv)
- {
- 	return rtlgen_is_c45_match(phydev, RTL_8221B_VB_CG, true);
- }
- 
--static int rtl8221b_vn_cg_c22_match_phy_device(struct phy_device *phydev)
-+static int rtl8221b_vn_cg_c22_match_phy_device(struct phy_device *phydev,
-+					       const struct phy_driver *phydrv)
- {
- 	return rtlgen_is_c45_match(phydev, RTL_8221B_VN_CG, false);
- }
- 
--static int rtl8221b_vn_cg_c45_match_phy_device(struct phy_device *phydev)
-+static int rtl8221b_vn_cg_c45_match_phy_device(struct phy_device *phydev,
-+					       const struct phy_driver *phydrv)
- {
- 	return rtlgen_is_c45_match(phydev, RTL_8221B_VN_CG, true);
- }
- 
--static int rtl_internal_nbaset_match_phy_device(struct phy_device *phydev)
-+static int rtl_internal_nbaset_match_phy_device(struct phy_device *phydev,
-+						const struct phy_driver *phydrv)
- {
- 	if (phydev->is_c45)
- 		return false;
-@@ -1179,7 +1187,8 @@ static int rtl_internal_nbaset_match_phy_device(struct phy_device *phydev)
- 	return rtlgen_supports_2_5gbps(phydev) && !rtlgen_supports_mmd(phydev);
- }
- 
--static int rtl8251b_c45_match_phy_device(struct phy_device *phydev)
-+static int rtl8251b_c45_match_phy_device(struct phy_device *phydev,
-+					 const struct phy_driver *phydrv)
- {
- 	return rtlgen_is_c45_match(phydev, RTL_8251B, true);
- }
-diff --git a/drivers/net/phy/teranetics.c b/drivers/net/phy/teranetics.c
-index 752d4bf7bb99..46c5ff7d7b56 100644
---- a/drivers/net/phy/teranetics.c
-+++ b/drivers/net/phy/teranetics.c
-@@ -67,7 +67,8 @@ static int teranetics_read_status(struct phy_device *phydev)
- 	return 0;
- }
- 
--static int teranetics_match_phy_device(struct phy_device *phydev)
-+static int teranetics_match_phy_device(struct phy_device *phydev,
-+				       const struct phy_driver *phydrv)
- {
- 	return phydev->c45_ids.device_ids[3] == PHY_ID_TN2020;
- }
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 19f076a71f94..48a2f56d3724 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -1042,7 +1042,8 @@ struct phy_driver {
- 	 * driver for the given phydev.	 If NULL, matching is based on
- 	 * phy_id and phy_id_mask.
- 	 */
--	int (*match_phy_device)(struct phy_device *phydev);
-+	int (*match_phy_device)(struct phy_device *phydev,
-+				const struct phy_driver *phydrv);
- 
- 	/**
- 	 * @set_wol: Some devices (e.g. qnap TS-119P II) require PHY
+ AF8133J THREE-AXIS MAGNETOMETER DRIVER
 -- 
 2.48.1
 
