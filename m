@@ -1,62 +1,62 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2020E1F3BB4;
-	Wed, 26 Mar 2025 14:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80CD1FBC89;
+	Wed, 26 Mar 2025 14:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743000014; cv=none; b=MW+FuABdOV7+3S7ymzBow1ci8phNrF4ubx162aVOUNcnXYN1OajH7Pk8GXiSZYp8GpIDmdMlPcniMPluCVG2z0HzFYofq39kCyQY4NnvkglEKfXCRVR4i+xvQCsr2BNcbZV0kfumLISPZMug8RKnPNr2xQMtM1mACUs4TV7Z3Qk=
+	t=1743000017; cv=none; b=hwrb+Itr1r4l2f4slfIeJQ5GAMDCZVSFFCnGUn5eQFw0tfaF9J/ctUod8ScpT5FvP8wYLmwRD/INaOCovYDI0RuY3avbAJMlESTfYJ0iT5rdhHhCJDHH5uxskwAD/ec7dZT48amsc1B3ZQ0Uq1Mogfzz4OhtReOZmnvnlBwndQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743000014; c=relaxed/simple;
-	bh=CrSZzbNupfiCxBmSg0vAgeWQUShwmv4joaP4OfGWSHQ=;
+	s=arc-20240116; t=1743000017; c=relaxed/simple;
+	bh=o5hgzM4VQ5OJeGEXkCVX1VygAU/9FrnkB/FemZCGrts=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oeRaD6jEsRbPBAQ3pnNQFYNTt/c4dxNdbrgLXVV2qzGw5GFuFoMxgWF2QDM9lHainMqOkYfCUwbdTI7SvvdBa5elHXgd1/pVkpaRDAGyqIy4wT2LbVBlGlbbBGXH5QKpexzTvER7Nyw5I0bCpN+CFBxz1AKQis2hMlFfFX9zwI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bs6VsrTP; arc=none smtp.client-ip=209.85.221.45
+	 MIME-Version; b=qtrCEzQE65i6gFvseZ9Ls0IsgKbpAyDBrW8iGahqVCHNH+8HJokQ+mm1PIgq8uHnTRG+fVhgzg8LBPRZDYUDMd3TNzyuZb9DJQmFA20I8zTQm7O4nrC86uwJXMmSg7HLxhixLUglayjGX/my3VnXAmD/jTNqlswGqeX5ivMbcrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OP/gs54w; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bs6VsrTP"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3912e96c8e8so3885372f8f.2;
-        Wed, 26 Mar 2025 07:40:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OP/gs54w"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39ac56756f6so2712934f8f.2;
+        Wed, 26 Mar 2025 07:40:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743000010; x=1743604810; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743000013; x=1743604813; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GUzZZKdRA/nrtwrVMsRSl600s/LtFe+i4gqc1g40AFI=;
-        b=bs6VsrTP0dXbZ2PaV3Tj+KTvuOZjUUcObQbpRrOUuXIOErDSFnR4DUZUo45gXJ3I3+
-         q0HZuoBhhCBtw1ZGAJGRyg/F4y0lD2StpmuhA2wNSstM8rJsZNZOMY2A/rL/nyXRmzHH
-         WvpBVnsav89DsJ7vCaKjSphw+Sb8DO3iDHrfIvEK/XJlOfJOzUF+LL9lqgLojD46Kef1
-         Xzy/pWSED4VkbjMZwdt64RWbDwoXqlz7AWOUrGHFcu3wmZgWhRrt1kHFJ2nK7e8Uu3gY
-         7XVbNAj4jOMU3yjbtXR3Aeo3TpPpbgy6ABrLsYxvBVpJ01ZHND7pdVchref12XrVGVaY
-         kHpA==
+        bh=C6hfLsSuXXkQW+oQprMpqK3KHzdpSf8DxnzIWa6RWKI=;
+        b=OP/gs54w5Z1Z+soZcS12XJrcEM2ELQGu9DScYlalcvnIIlyeEfGDycOsi+SY0JLPNB
+         YBuJo5q583QX/GSzCwH25hqtF7YBO2CQMiYMmkGWr0lRFeGBbiYmCae4qR032R3MI/m+
+         VDsZRY2X9OCP7HjUPuXxKZRJ9TRw1atH+NkcLVZNms1TjqFbizVzWc1hU67tmocJrHTD
+         bdxtsnCooijKIOUIUk29fl3Vn6DJpecdMKka8esIjRYcuiONS2hcgF9cJlvvKeMD03lz
+         i6rh71+e1xBJXdt5kph21eSVxb4X+NJPhEUun53eUtUUc0RKL+x4TZS+/kyhYRKFXatj
+         HwDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743000010; x=1743604810;
+        d=1e100.net; s=20230601; t=1743000013; x=1743604813;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GUzZZKdRA/nrtwrVMsRSl600s/LtFe+i4gqc1g40AFI=;
-        b=q+kaLIpfyqWah8Zm9a6khl/OohJWkFFwL4sOn1ikxDKCU9BxFgCVEUfI3fpMYf9m/A
-         +Q4gVAopCtuDrwmRbDXI74w5FT6eSaA8NyenqwpCmjw13ve2omYTFlzNRueTxw2wCMhT
-         S9ojncWsJtWpN2FNO50SPUCHjXQRvijaBvyvSy2Wl3DPuJ+wcxD0QyCi5rH8BhYLnR5d
-         a9JLw7zu7FEdgBboPIarO1m8SsqUAK3OxLkFIu3vM6iL5eQM46789CI5ntfihI1oQ4Hp
-         2joJt0utJtwxvCHxiCzKFgF9aRbmjjZoQNBdwljTINgUMa1hjgzyJsw2S1clb6u8c0xn
-         AWJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUMJU0zokb4dKweppXCJ2stGu3oyhQCakorIMiEMko1R45Hmnf5iSeptVIcFRxSgG0gYvLl8xzYUcx4@vger.kernel.org, AJvYcCUgpocFkzvtPpeEWsc3cZKJuV54vtwh0FaWdOSAVEEKJ2IMrZSqgex0J8h8a9xGZDmp+SZajvsonvab3Q==@vger.kernel.org, AJvYcCUl3tysNYaGx7x0HpKK61A2YVQbZxIxZeg8d3PvFQKqtt+a2+3FZF50m8FJyJVhkjG7oME7ZlWWToEOT4Gw@vger.kernel.org, AJvYcCV3qx8O39SdGCKms3s6dvHnNrbEBP4WmtwvyiXWvWhkA+weTtOCjmnYw1Gfu0UmCVzX5xwiMWp6KtaT@vger.kernel.org, AJvYcCVtwH7AeZL/amDR0Lk64Ff8rt1z+tWg4L3SLBPJ9EMo9ehkwM84NxsQApuHoN15UMEtPq2WsqBEI/uh@vger.kernel.org, AJvYcCWPJOoJX6f/zOWteXMQepOz55jc+Y+rHj4po7zPLFLPgj+I4U1woJUox5W/uKLePtedpEYI+/pNGdWxTy7j@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxw/fT+NXr32rl+bhelOTCsXK1AFPPyxluX81oc7qDIOJi8/p8m
-	3kscamr/hE/sIgjzOMvvDB0x+D+Ukfipkwm30GLzV4LWrNQ7Hjwl
-X-Gm-Gg: ASbGncvg833qlsHlL1TfqjPFoQb151b4wDNAsRO3yn8JfloSthdF7+xIPf/hbyScpc+
-	D89TTVIlv2jewOnUftvAdAcxzACcdO2V+40tzJDfvNnL3hveVDCcOM238Aa8BSlYdid7AARjxVw
-	015da1kY2gH1Gvc+h0nVQMAtuuwHYCg1FBle+tgUwtI4hcqwFD+RrWRO7IRhXvivV+4jzQbUGv5
-	7MWfUPjAXa+zkbr7ZlGfMB7FK3T6WVrfjLXcM2hhlKj6lwsVlbCVaQqKWR1CHmQPldPrkMZuLnU
-	lAUKo3PmGzf5rE1BRqUX6vsmG/5yzDL8lI8IhH3+XeX/4MrIkFKcvuNL5drNZ2GtV+1r
-X-Google-Smtp-Source: AGHT+IFEK+jlhPNvUrwlDVkGSbJqrzn40ggqtTSLr7IlAExJnoyHZvyqsCwFub0v2F1dz21J46ontg==
-X-Received: by 2002:a05:6000:2cd:b0:390:eacd:7009 with SMTP id ffacd0b85a97d-3997f92d09bmr17718923f8f.42.1743000010107;
-        Wed, 26 Mar 2025 07:40:10 -0700 (PDT)
+        bh=C6hfLsSuXXkQW+oQprMpqK3KHzdpSf8DxnzIWa6RWKI=;
+        b=F7isUU8tjSUpF7dk3HSblhCjJAzq9SRlBhOvcckb4UNJYNpjcvNTTg4CGD+1SPvTp7
+         LLX1imvFi07saTld5u7rQXQwY67dVGXL6WPOp3tq6Mfd6INDenzMbOq+rNkS0QuMyRfA
+         NU7UUQuLSihWq6rV+pb67GTbirChdmktAl9PFjB+Yw0Wl2GWnSv3/BX/A+9YesU7hCSY
+         qLToi+f3a5Qi6vbNwGZbtc5sJGybUpn2O13LYpBj59ym0tme+kmP1HWFCd5kPzXQ1Ln3
+         WZH//96uUi9nbwSsghxj976WDqxa7U97He+Eb859Cm2KQwSR7rF7c481kBJd/CIcd5RO
+         +CRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFKatmHLXoL6rEA6LaJ02qkHNU3aiM/QWfIw5lKVL/5MluEMGqNnsU8+8iuwRm2MQjkkYc+k5xtr7yV2FX@vger.kernel.org, AJvYcCV1nhF/1s03PozkmImGgzN6HTZYGAv74McNUVhCYGAkdRtCm3ciCVQ1OKDMIMt+D7TA6A9GHA9fn5MA@vger.kernel.org, AJvYcCVVS4RI7++P55el0xyOewPdlUrOeTLP6phZI9F4cEMlynNVtBtCtCfoOE0O5S9yzzsAiuwnbkqBgwMe@vger.kernel.org, AJvYcCVkKuEsLrYLW7LM5b492kta3ix8CK+KsSjlNU/BWaxn4u7DUHfdpOYhY3F9T8UpA/qLtP62b6nHJBfijQ==@vger.kernel.org, AJvYcCWXTZWYPUOdq0pdURqDH75HLwsOi++RtnstSwnbUNm7Ekf3GSqBXhvv6Tt4OSa01+3Av5zzF55HXnbF@vger.kernel.org, AJvYcCXzIMsMVMwD7p7kEOH7Lg6OlHHrgWL6b+YIsxe5j2ViLDB8eeNOYI/cS1JN/KCdWcYj3qjgmZewrJ7yfbJU@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzueyocH0Vs/sAnK6B+vQIUYRZwPfxjaa7NwM+U6v6PoYqsFTe
+	OrxeDh71SBIdm32Yw3A4RuzYQvcnaoWvTkV4joULxUJLC4ZcDAi7
+X-Gm-Gg: ASbGncvKp9eS9Pz4/GEsKZrzaAoj3U3Fm4LmFOLEK7r56TOTPpRUquR4Mw0nSclqrqX
+	BC5fqyUcoyRf/rqYxcgzPMeHTuB26DThwtYNrxrkIStb3tUS1ScZ7tIziumuMdzjLw7BHy7IYqn
+	xwT7cB+ngNbRMt6ea1bb6ncG57hia60xxpPH5xOlnrB7KSbcyz2TNALDHN2RwiKsyTvztqSJlw9
+	lAD0MDf97h6l0b+8dafT7Z9KjCwQilxMA6TxOm9iQvXsAyMs++Q9uTzGKbku/qgbBnAdoOifH1C
+	bqhxoxd3aEWzzYJzemvthVnf7uQxGBG+0BE9cjh+MlfYuJmMxHJT2WmcFhfsjsrJhIuY
+X-Google-Smtp-Source: AGHT+IE4qtcNDA9+68gnJpQW7sH+JjJZJUZhlD6D7jXeTF/bWc027ggNQ2cK9NDwA9P5cuQE+xB1mA==
+X-Received: by 2002:a05:6000:2cd:b0:390:fc5a:91c8 with SMTP id ffacd0b85a97d-3997f940ec2mr19210115f8f.53.1743000012657;
+        Wed, 26 Mar 2025 07:40:12 -0700 (PDT)
 Received: from iku.Home ([2a06:5906:61b:2d00:e63e:b0d:9aa3:d18d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efe9b4sm3891885e9.20.2025.03.26.07.40.08
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efe9b4sm3891885e9.20.2025.03.26.07.40.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 07:40:09 -0700 (PDT)
+        Wed, 26 Mar 2025 07:40:11 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -85,9 +85,9 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 10/15] clk: renesas: rzv2h: Add support for RZ/V2N SoC
-Date: Wed, 26 Mar 2025 14:39:40 +0000
-Message-ID: <20250326143945.82142-11-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 12/15] pinctrl: renesas: rzg2l: Add support for RZ/V2N SoC
+Date: Wed, 26 Mar 2025 14:39:42 +0000
+Message-ID: <20250326143945.82142-13-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -101,245 +101,100 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-The clock structure for RZ/V2N is almost identical to RZ/V2H(P) SoC
-with less IP blocks compared to RZ/V2H(P). For eg: CRU2/3 are present
-only on the RZ/V2H(P) SoC.
+Add pinctrl support for the Renesas RZ/V2N SoC by reusing the existing
+RZ/V2H(P) pin configuration data. The PFC block is nearly identical, with
+the only difference being the absence of `PCIE1_RSTOUTB` on RZ/V2N.
 
-Add minimal clock and reset entries required to boot the Renesas
-RZ/V2N EVK and binds it with the RZ/V2H CPG family driver.
+To accommodate this, move the `PCIE1_RSTOUTB` entry to the end of the
+`rzv2h_dedicated_pins` array and set `.n_dedicated_pins` to
+`ARRAY_SIZE(rzv2h_dedicated_pins) - 1` in the RZ/V2N OF data.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
- drivers/clk/renesas/Kconfig         |   5 +
- drivers/clk/renesas/Makefile        |   1 +
- drivers/clk/renesas/r9a09g056-cpg.c | 152 ++++++++++++++++++++++++++++
- drivers/clk/renesas/rzv2h-cpg.c     |   6 ++
- drivers/clk/renesas/rzv2h-cpg.h     |   1 +
- 5 files changed, 165 insertions(+)
- create mode 100644 drivers/clk/renesas/r9a09g056-cpg.c
+ drivers/pinctrl/renesas/Kconfig         |  1 +
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 36 ++++++++++++++++++++++++-
+ 2 files changed, 36 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/renesas/Kconfig b/drivers/clk/renesas/Kconfig
-index 5a4bc3f94d49..50c20119d12a 100644
---- a/drivers/clk/renesas/Kconfig
-+++ b/drivers/clk/renesas/Kconfig
-@@ -41,6 +41,7 @@ config CLK_RENESAS
- 	select CLK_R9A08G045 if ARCH_R9A08G045
- 	select CLK_R9A09G011 if ARCH_R9A09G011
- 	select CLK_R9A09G047 if ARCH_R9A09G047
-+	select CLK_R9A09G056 if ARCH_R9A09G056
- 	select CLK_R9A09G057 if ARCH_R9A09G057
- 	select CLK_SH73A0 if ARCH_SH73A0
- 
-@@ -199,6 +200,10 @@ config CLK_R9A09G047
-        bool "RZ/G3E clock support" if COMPILE_TEST
-        select CLK_RZV2H
- 
-+config CLK_R9A09G056
-+       bool "RZ/V2N clock support" if COMPILE_TEST
-+       select CLK_RZV2H
+diff --git a/drivers/pinctrl/renesas/Kconfig b/drivers/pinctrl/renesas/Kconfig
+index 3c18d908b21e..e16034fc1bbf 100644
+--- a/drivers/pinctrl/renesas/Kconfig
++++ b/drivers/pinctrl/renesas/Kconfig
+@@ -42,6 +42,7 @@ config PINCTRL_RENESAS
+ 	select PINCTRL_RZG2L if ARCH_RZG2L
+ 	select PINCTRL_RZV2M if ARCH_R9A09G011
+ 	select PINCTRL_RZG2L if ARCH_R9A09G047
++	select PINCTRL_RZG2L if ARCH_R9A09G056
+ 	select PINCTRL_RZG2L if ARCH_R9A09G057
+ 	select PINCTRL_PFC_SH7203 if CPU_SUBTYPE_SH7203
+ 	select PINCTRL_PFC_SH7264 if CPU_SUBTYPE_SH7264
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index c72e250f4a15..ae5e040f3276 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -2304,7 +2304,6 @@ static struct rzg2l_dedicated_configs rzv2h_dedicated_pins[] = {
+ 	{ "SD1DAT3", RZG2L_SINGLE_PIN_PACK(0xc, 3, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
+ 						    PIN_CFG_IEN | PIN_CFG_PUPD)) },
+ 	{ "PCIE0_RSTOUTB", RZG2L_SINGLE_PIN_PACK(0xe, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
+-	{ "PCIE1_RSTOUTB", RZG2L_SINGLE_PIN_PACK(0xe, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
+ 	{ "ET0_MDIO", RZG2L_SINGLE_PIN_PACK(0xf, 0, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
+ 						     PIN_CFG_IEN | PIN_CFG_PUPD)) },
+ 	{ "ET0_MDC", RZG2L_SINGLE_PIN_PACK(0xf, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR |
+@@ -2359,6 +2358,14 @@ static struct rzg2l_dedicated_configs rzv2h_dedicated_pins[] = {
+ 	{ "ET1_RXD1", RZG2L_SINGLE_PIN_PACK(0x14, 5, (PIN_CFG_PUPD)) },
+ 	{ "ET1_RXD2", RZG2L_SINGLE_PIN_PACK(0x14, 6, (PIN_CFG_PUPD)) },
+ 	{ "ET1_RXD3", RZG2L_SINGLE_PIN_PACK(0x14, 7, (PIN_CFG_PUPD)) },
 +
- config CLK_R9A09G057
-        bool "RZ/V2H(P) clock support" if COMPILE_TEST
-        select CLK_RZV2H
-diff --git a/drivers/clk/renesas/Makefile b/drivers/clk/renesas/Makefile
-index 2d6e746939c4..f9075bca6e95 100644
---- a/drivers/clk/renesas/Makefile
-+++ b/drivers/clk/renesas/Makefile
-@@ -38,6 +38,7 @@ obj-$(CONFIG_CLK_R9A07G054)		+= r9a07g044-cpg.o
- obj-$(CONFIG_CLK_R9A08G045)		+= r9a08g045-cpg.o
- obj-$(CONFIG_CLK_R9A09G011)		+= r9a09g011-cpg.o
- obj-$(CONFIG_CLK_R9A09G047)		+= r9a09g047-cpg.o
-+obj-$(CONFIG_CLK_R9A09G056)		+= r9a09g056-cpg.o
- obj-$(CONFIG_CLK_R9A09G057)		+= r9a09g057-cpg.o
- obj-$(CONFIG_CLK_SH73A0)		+= clk-sh73a0.o
- 
-diff --git a/drivers/clk/renesas/r9a09g056-cpg.c b/drivers/clk/renesas/r9a09g056-cpg.c
-new file mode 100644
-index 000000000000..e2712a25c43a
---- /dev/null
-+++ b/drivers/clk/renesas/r9a09g056-cpg.c
-@@ -0,0 +1,152 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Renesas RZ/V2N CPG driver
-+ *
-+ * Copyright (C) 2025 Renesas Electronics Corp.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+
-+#include <dt-bindings/clock/renesas,r9a09g056-cpg.h>
-+
-+#include "rzv2h-cpg.h"
-+
-+enum clk_ids {
-+	/* Core Clock Outputs exported to DT */
-+	LAST_DT_CORE_CLK = R9A09G056_GBETH_1_CLK_PTP_REF_I,
-+
-+	/* External Input Clocks */
-+	CLK_AUDIO_EXTAL,
-+	CLK_RTXIN,
-+	CLK_QEXTAL,
-+
-+	/* PLL Clocks */
-+	CLK_PLLCM33,
-+	CLK_PLLCLN,
-+	CLK_PLLDTY,
-+	CLK_PLLCA55,
-+
-+	/* Internal Core Clocks */
-+	CLK_PLLCM33_DIV16,
-+	CLK_PLLCLN_DIV2,
-+	CLK_PLLCLN_DIV8,
-+	CLK_PLLDTY_ACPU,
-+	CLK_PLLDTY_ACPU_DIV4,
-+
-+	/* Module Clocks */
-+	MOD_CLK_BASE,
-+};
-+
-+static const struct clk_div_table dtable_1_8[] = {
-+	{0, 1},
-+	{1, 2},
-+	{2, 4},
-+	{3, 8},
-+	{0, 0},
-+};
-+
-+static const struct clk_div_table dtable_2_64[] = {
-+	{0, 2},
-+	{1, 4},
-+	{2, 8},
-+	{3, 16},
-+	{4, 64},
-+	{0, 0},
-+};
-+
-+static const struct cpg_core_clk r9a09g056_core_clks[] __initconst = {
-+	/* External Clock Inputs */
-+	DEF_INPUT("audio_extal", CLK_AUDIO_EXTAL),
-+	DEF_INPUT("rtxin", CLK_RTXIN),
-+	DEF_INPUT("qextal", CLK_QEXTAL),
-+
-+	/* PLL Clocks */
-+	DEF_FIXED(".pllcm33", CLK_PLLCM33, CLK_QEXTAL, 200, 3),
-+	DEF_FIXED(".pllcln", CLK_PLLCLN, CLK_QEXTAL, 200, 3),
-+	DEF_FIXED(".plldty", CLK_PLLDTY, CLK_QEXTAL, 200, 3),
-+	DEF_PLL(".pllca55", CLK_PLLCA55, CLK_QEXTAL, PLLCA55),
-+
-+	/* Internal Core Clocks */
-+	DEF_FIXED(".pllcm33_div16", CLK_PLLCM33_DIV16, CLK_PLLCM33, 1, 16),
-+
-+	DEF_FIXED(".pllcln_div2", CLK_PLLCLN_DIV2, CLK_PLLCLN, 1, 2),
-+	DEF_FIXED(".pllcln_div8", CLK_PLLCLN_DIV8, CLK_PLLCLN, 1, 8),
-+
-+	DEF_DDIV(".plldty_acpu", CLK_PLLDTY_ACPU, CLK_PLLDTY, CDDIV0_DIVCTL2, dtable_2_64),
-+	DEF_FIXED(".plldty_acpu_div4", CLK_PLLDTY_ACPU_DIV4, CLK_PLLDTY_ACPU, 1, 4),
-+
-+	/* Core Clocks */
-+	DEF_FIXED("sys_0_pclk", R9A09G056_SYS_0_PCLK, CLK_QEXTAL, 1, 1),
-+	DEF_DDIV("ca55_0_coreclk0", R9A09G056_CA55_0_CORE_CLK0, CLK_PLLCA55,
-+		 CDDIV1_DIVCTL0, dtable_1_8),
-+	DEF_DDIV("ca55_0_coreclk1", R9A09G056_CA55_0_CORE_CLK1, CLK_PLLCA55,
-+		 CDDIV1_DIVCTL1, dtable_1_8),
-+	DEF_DDIV("ca55_0_coreclk2", R9A09G056_CA55_0_CORE_CLK2, CLK_PLLCA55,
-+		 CDDIV1_DIVCTL2, dtable_1_8),
-+	DEF_DDIV("ca55_0_coreclk3", R9A09G056_CA55_0_CORE_CLK3, CLK_PLLCA55,
-+		 CDDIV1_DIVCTL3, dtable_1_8),
-+	DEF_FIXED("iotop_0_shclk", R9A09G056_IOTOP_0_SHCLK, CLK_PLLCM33_DIV16, 1, 1),
-+};
-+
-+static const struct rzv2h_mod_clk r9a09g056_mod_clks[] __initconst = {
-+	DEF_MOD_CRITICAL("gic_0_gicclk",	CLK_PLLDTY_ACPU_DIV4, 1, 3, 0, 19,
-+						BUS_MSTOP(3, BIT(5))),
-+	DEF_MOD("scif_0_clk_pck",		CLK_PLLCM33_DIV16, 8, 15, 4, 15,
-+						BUS_MSTOP(3, BIT(14))),
-+	DEF_MOD("sdhi_0_imclk",			CLK_PLLCLN_DIV8, 10, 3, 5, 3,
-+						BUS_MSTOP(8, BIT(2))),
-+	DEF_MOD("sdhi_0_imclk2",		CLK_PLLCLN_DIV8, 10, 4, 5, 4,
-+						BUS_MSTOP(8, BIT(2))),
-+	DEF_MOD("sdhi_0_clk_hs",		CLK_PLLCLN_DIV2, 10, 5, 5, 5,
-+						BUS_MSTOP(8, BIT(2))),
-+	DEF_MOD("sdhi_0_aclk",			CLK_PLLDTY_ACPU_DIV4, 10, 6, 5, 6,
-+						BUS_MSTOP(8, BIT(2))),
-+	DEF_MOD("sdhi_1_imclk",			CLK_PLLCLN_DIV8, 10, 7, 5, 7,
-+						BUS_MSTOP(8, BIT(3))),
-+	DEF_MOD("sdhi_1_imclk2",		CLK_PLLCLN_DIV8, 10, 8, 5, 8,
-+						BUS_MSTOP(8, BIT(3))),
-+	DEF_MOD("sdhi_1_clk_hs",		CLK_PLLCLN_DIV2, 10, 9, 5, 9,
-+						BUS_MSTOP(8, BIT(3))),
-+	DEF_MOD("sdhi_1_aclk",			CLK_PLLDTY_ACPU_DIV4, 10, 10, 5, 10,
-+						BUS_MSTOP(8, BIT(3))),
-+	DEF_MOD("sdhi_2_imclk",			CLK_PLLCLN_DIV8, 10, 11, 5, 11,
-+						BUS_MSTOP(8, BIT(4))),
-+	DEF_MOD("sdhi_2_imclk2",		CLK_PLLCLN_DIV8, 10, 12, 5, 12,
-+						BUS_MSTOP(8, BIT(4))),
-+	DEF_MOD("sdhi_2_clk_hs",		CLK_PLLCLN_DIV2, 10, 13, 5, 13,
-+						BUS_MSTOP(8, BIT(4))),
-+	DEF_MOD("sdhi_2_aclk",			CLK_PLLDTY_ACPU_DIV4, 10, 14, 5, 14,
-+						BUS_MSTOP(8, BIT(4))),
-+};
-+
-+static const struct rzv2h_reset r9a09g056_resets[] __initconst = {
-+	DEF_RST(3, 0, 1, 1),		/* SYS_0_PRESETN */
-+	DEF_RST(3, 8, 1, 9),		/* GIC_0_GICRESET_N */
-+	DEF_RST(3, 9, 1, 10),		/* GIC_0_DBG_GICRESET_N */
-+	DEF_RST(9, 5, 4, 6),		/* SCIF_0_RST_SYSTEM_N */
-+	DEF_RST(10, 7, 4, 24),		/* SDHI_0_IXRST */
-+	DEF_RST(10, 8, 4, 25),		/* SDHI_1_IXRST */
-+	DEF_RST(10, 9, 4, 26),		/* SDHI_2_IXRST */
-+};
-+
-+const struct rzv2h_cpg_info r9a09g056_cpg_info __initconst = {
-+	/* Core Clocks */
-+	.core_clks = r9a09g056_core_clks,
-+	.num_core_clks = ARRAY_SIZE(r9a09g056_core_clks),
-+	.last_dt_core_clk = LAST_DT_CORE_CLK,
-+	.num_total_core_clks = MOD_CLK_BASE,
-+
-+	/* Module Clocks */
-+	.mod_clks = r9a09g056_mod_clks,
-+	.num_mod_clks = ARRAY_SIZE(r9a09g056_mod_clks),
-+	.num_hw_mod_clks = 25 * 16,
-+
-+	/* Resets */
-+	.resets = r9a09g056_resets,
-+	.num_resets = ARRAY_SIZE(r9a09g056_resets),
-+
-+	.num_mstop_bits = 192,
-+};
-diff --git a/drivers/clk/renesas/rzv2h-cpg.c b/drivers/clk/renesas/rzv2h-cpg.c
-index 88ab26a077ae..34a3145d72eb 100644
---- a/drivers/clk/renesas/rzv2h-cpg.c
-+++ b/drivers/clk/renesas/rzv2h-cpg.c
-@@ -1373,6 +1373,12 @@ static const struct of_device_id rzv2h_cpg_match[] = {
- 		.data = &r9a09g047_cpg_info,
- 	},
- #endif
-+#ifdef CONFIG_CLK_R9A09G056
-+	{
-+		.compatible = "renesas,r9a09g056-cpg",
-+		.data = &r9a09g056_cpg_info,
-+	},
-+#endif
- #ifdef CONFIG_CLK_R9A09G057
- 	{
- 		.compatible = "renesas,r9a09g057-cpg",
-diff --git a/drivers/clk/renesas/rzv2h-cpg.h b/drivers/clk/renesas/rzv2h-cpg.h
-index a7aa1da181e5..8a2466f10deb 100644
---- a/drivers/clk/renesas/rzv2h-cpg.h
-+++ b/drivers/clk/renesas/rzv2h-cpg.h
-@@ -326,6 +326,7 @@ struct rzv2h_cpg_info {
++	/*
++	 * This pin is only available on the RZ/V2H(P) SoC and not on the RZ/V2N.
++	 * Since this array is shared with the RZ/V2N SoC, this entry should be placed
++	 * at the end. This ensures that on the RZ/V2N, we can set
++	 * `.n_dedicated_pins = ARRAY_SIZE(rzv2h_dedicated_pins) - 1,`.
++	 */
++	{ "PCIE1_RSTOUTB", RZG2L_SINGLE_PIN_PACK(0xe, 1, (PIN_CFG_IOLH_RZV2H | PIN_CFG_SR)) },
  };
  
- extern const struct rzv2h_cpg_info r9a09g047_cpg_info;
-+extern const struct rzv2h_cpg_info r9a09g056_cpg_info;
- extern const struct rzv2h_cpg_info r9a09g057_cpg_info;
+ static struct rzg2l_dedicated_configs rzg3e_dedicated_pins[] = {
+@@ -3349,6 +3356,29 @@ static struct rzg2l_pinctrl_data r9a09g047_data = {
+ 	.bias_param_to_hw = &rzv2h_bias_param_to_hw,
+ };
  
- #endif	/* __RENESAS_RZV2H_CPG_H__ */
++static struct rzg2l_pinctrl_data r9a09g056_data = {
++	.port_pins = rzv2h_gpio_names,
++	.port_pin_configs = r9a09g057_gpio_configs,
++	.n_ports = ARRAY_SIZE(r9a09g057_gpio_configs),
++	.dedicated_pins = rzv2h_dedicated_pins,
++	.n_port_pins = ARRAY_SIZE(r9a09g057_gpio_configs) * RZG2L_PINS_PER_PORT,
++	.n_dedicated_pins = ARRAY_SIZE(rzv2h_dedicated_pins) - 1,
++	.hwcfg = &rzv2h_hwcfg,
++	.variable_pin_cfg = r9a09g057_variable_pin_cfg,
++	.n_variable_pin_cfg = ARRAY_SIZE(r9a09g057_variable_pin_cfg),
++	.num_custom_params = ARRAY_SIZE(renesas_rzv2h_custom_bindings),
++	.custom_params = renesas_rzv2h_custom_bindings,
++#ifdef CONFIG_DEBUG_FS
++	.custom_conf_items = renesas_rzv2h_conf_items,
++#endif
++	.pwpr_pfc_lock_unlock = &rzv2h_pwpr_pfc_lock_unlock,
++	.pmc_writeb = &rzv2h_pmc_writeb,
++	.oen_read = &rzv2h_oen_read,
++	.oen_write = &rzv2h_oen_write,
++	.hw_to_bias_param = &rzv2h_hw_to_bias_param,
++	.bias_param_to_hw = &rzv2h_bias_param_to_hw,
++};
++
+ static struct rzg2l_pinctrl_data r9a09g057_data = {
+ 	.port_pins = rzv2h_gpio_names,
+ 	.port_pin_configs = r9a09g057_gpio_configs,
+@@ -3389,6 +3419,10 @@ static const struct of_device_id rzg2l_pinctrl_of_table[] = {
+ 		.compatible = "renesas,r9a09g047-pinctrl",
+ 		.data = &r9a09g047_data,
+ 	},
++	{
++		.compatible = "renesas,r9a09g056-pinctrl",
++		.data = &r9a09g056_data,
++	},
+ 	{
+ 		.compatible = "renesas,r9a09g057-pinctrl",
+ 		.data = &r9a09g057_data,
 -- 
 2.49.0
 
