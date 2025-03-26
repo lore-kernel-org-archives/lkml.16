@@ -1,71 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C80118BC2F;
-	Wed, 26 Mar 2025 22:35:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D2618BC2F;
+	Wed, 26 Mar 2025 22:36:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743028560; cv=none; b=ra/5th/BS6jeHlxV2UxFV6BjjZIxyJFyq2rtHlDLtSfRTOT86s61EMg1Db+stKwkU28l+3BeCLAd3ykduKhg+6nptbtr/g8rFxuq5PICxdD+lS/2XaGMHM2SdI5/QAPQGxERWmgdA1jqJtC1qVyEiTHWm1eS3ehQZW7eJWFNPEg=
+	t=1743028608; cv=none; b=WbrsOPZ2ORao+U7UpY8l5W54221pGsSt7g8nHyH1kWINZ9/PN0foLeD6A2Ji0gQZRvBCk6aedVu7J0DvOIC+7TDR+Y25ajZRsQOffnp7kSH/z4FMBzaaIsqN7eQa7cs4Sov/bv870RUoRWAOLXX+rdKsJ6GKjpykawGAPrFxzVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743028560; c=relaxed/simple;
-	bh=eOTKzmRs+bwoW5lr5TNvNEtSGFqce0QMmgSQHH0xkMM=;
+	s=arc-20240116; t=1743028608; c=relaxed/simple;
+	bh=uf9/CA9iY7R55UcAmNn+mkDY0iXT9Kbinev+Y+8u/eE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=asi8w3SgjJ9NfDjpHKNM/aVFn6IoZuvJPC1LOYd34XXHt2hifodpm0+Z69U+q2GgkkhOmLBo4H4IVe32J0LjxbdT7mVni3Gl7x7Un2YFdVr+ExdI6odqguHXb0+riwmT8g4cUTphDRwiTFrVFeSxDN40Yyzhq0WhJeUHabgjYwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qokUbgcG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ubO6a4eNVfrvwidQraHxuB9HBvt9Dh/oT/aQTZfKozN3Sy4+69hgUb/IbX9NlWGgDfQUc8ma0UX1DjmGgKTaqzbZ0Kp9etZd1TEYZf7u+LAutWYV3K/IoWcFCG+xiEIwxUJLdkexHixO6YyVkyabIEiuWgaSNQ9d2tmD5yI537U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cghPgQCU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qokUbgcG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84079C4CEE5;
-	Wed, 26 Mar 2025 22:35:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cghPgQCU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30E2FC4CEE2;
+	Wed, 26 Mar 2025 22:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743028559;
-	bh=eOTKzmRs+bwoW5lr5TNvNEtSGFqce0QMmgSQHH0xkMM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qokUbgcG8rzF734QjCiM09F2xGV9YyKqr59sZjOR7SXH+rbIEC8RV46/5J2lVhZMu
-	 m01RWqyOp5Fim68h4UYoKkQ3MO8gzKN0P3Eo9Z75jV4FyPM4fYlyz6A/N1kRCIfvGR
-	 eheZ2qSSkVAtapZS8LVYJiulLAG2yXNVYadbWH6I2vJgaT49Z42O/nct4XmadMQ+V0
-	 mSQEx0DWFd4iVX5671HXui+NsRYy7Q75LnDUwwhA2IV7mEpWYG90Oqow0nU1seA2hX
-	 XGtxclvUk6yZlve3beJPvMVgE40IhRPdsvkgFNhrCkq0+WTm73TS9O//i+zYg001SQ
-	 tRmE0bRsbimVg==
-Date: Wed, 26 Mar 2025 15:35:54 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] lib/string.c: Add wcslen()
-Message-ID: <20250326223554.GB378784@ax162>
-References: <20250326-string-add-wcslen-for-llvm-opt-v2-0-d864ab2cbfe4@kernel.org>
- <20250326-string-add-wcslen-for-llvm-opt-v2-2-d864ab2cbfe4@kernel.org>
- <CAHp75Vd_mJggRRLfziWUf0tgr3K125uVBNh9VdSo9LHVJz2r_w@mail.gmail.com>
+	s=k20201202; t=1743028608;
+	bh=uf9/CA9iY7R55UcAmNn+mkDY0iXT9Kbinev+Y+8u/eE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=cghPgQCUZ18NnUn/67ceC3Xl987BbFsoO0cdtPKNSIBYvN/lgL8CpG7buyS/eWuKx
+	 TdpSpxapwSluEus48VFPWzJdemmuGVqrJxmt7NIlJK8Jn99qV1m6PE8ud8ac6hHB5x
+	 hbrnGnDhHLLfSXq9mD+0dbuZ4EPvAZqePUpTEVg3eP3M4/twy3Gv/aXZE8wxDAy/cU
+	 eqV6D/ptcQVXFMFtPwx0jg2mJ1+Jrjl1AaSLpESTk+9wPMm0JKE/fOPb/rtnrtMX7N
+	 e9PN1amBYT7kemorBiMKiXeJRE86PtsVVGqINN62AGAA7lrjaHPq4cl1ktVn3df2us
+	 P/iveq9bzI9dQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id CEBCDCE0C2A; Wed, 26 Mar 2025 15:36:47 -0700 (PDT)
+Date: Wed, 26 Mar 2025 15:36:47 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>, rcu@vger.kernel.org
+Subject: Re: [PATCH 2/3] rcu: Add warning to ensure rcu_seq_done_exact() is
+ working
+Message-ID: <4a40eba2-ebd3-42a8-a25f-b7a0ff94256b@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250324170156.469763-1-joelagnelf@nvidia.com>
+ <20250324170156.469763-3-joelagnelf@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vd_mJggRRLfziWUf0tgr3K125uVBNh9VdSo9LHVJz2r_w@mail.gmail.com>
+In-Reply-To: <20250324170156.469763-3-joelagnelf@nvidia.com>
 
-On Wed, Mar 26, 2025 at 08:39:37PM +0200, Andy Shevchenko wrote:
-> On Wed, Mar 26, 2025 at 7:19 PM Nathan Chancellor <nathan@kernel.org> wrote:
-> >  #ifndef __HAVE_ARCH_STRNLEN
-> >  extern __kernel_size_t strnlen(const char *,__kernel_size_t);
-> >  #endif
-> > +extern __kernel_size_t wcslen(const wchar_t *s);
+On Mon, Mar 24, 2025 at 01:01:54PM -0400, Joel Fernandes wrote:
+> The previous patch improved the rcu_seq_done_exact() function by adding
+> a meaningful constant for the guardband.
 > 
-> I'm wondering why we still continue putting this 'extern' keyword.
-> Yes, I see that the rest is like this, but for new code do we really
-> need it?
+> Ensure that this is working for the future by a quick check during
+> rcu_gp_init().
+> 
+> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
 
-Yeah, I just did it to keep it consistent with what is around it but
-there should be no reason that it cannot be removed. I am happy to do
-that in v3 if desired.
+This is a good test for the guardband being way too short.
 
-Cheers,
-Nathan
+Are there other tests the should be run, possibly on a separate gp_seq
+used only for testing?  Should the test below be under CONFIG_PROVE_RCU?
+
+							Thanx, Paul
+
+> ---
+>  kernel/rcu/tree.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 659f83e71048..29ddbcbea25e 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -1798,6 +1798,7 @@ static noinline_for_stack bool rcu_gp_init(void)
+>  	struct rcu_data *rdp;
+>  	struct rcu_node *rnp = rcu_get_root();
+>  	bool start_new_poll;
+> +	unsigned long old_gp_seq;
+>  
+>  	WRITE_ONCE(rcu_state.gp_activity, jiffies);
+>  	raw_spin_lock_irq_rcu_node(rnp);
+> @@ -1825,7 +1826,11 @@ static noinline_for_stack bool rcu_gp_init(void)
+>  	 */
+>  	start_new_poll = rcu_sr_normal_gp_init();
+>  	/* Record GP times before starting GP, hence rcu_seq_start(). */
+> +	old_gp_seq = rcu_state.gp_seq;
+>  	rcu_seq_start(&rcu_state.gp_seq);
+> +	/* Ensure that rcu_seq_done_exact() guardband doesn't give false positives. */
+> +	WARN_ON_ONCE(rcu_seq_done_exact(&old_gp_seq, rcu_seq_snap(&rcu_state.gp_seq)));
+> +
+>  	ASSERT_EXCLUSIVE_WRITER(rcu_state.gp_seq);
+>  	trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq, TPS("start"));
+>  	rcu_poll_gp_seq_start(&rcu_state.gp_seq_polled_snap);
+> -- 
+> 2.43.0
+> 
