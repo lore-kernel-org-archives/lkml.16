@@ -1,98 +1,104 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296184430
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 21:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7ED64D
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 21:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743024572; cv=none; b=muae3vpkXs7I2rkhC6WMZVwOTgkAXnb5+t9GGVZ12lMXCvrctuBL+oV8H2/r2KDRUDv2uK4ulRb32C/oHeT/3eaXhJ9imx2HcRuWu2cAtanrU4QER2O8HAwImyQfQxfhL31T9/hbEAZknxEJuWHRwPsfuqGFofOpqcbwXFj1elo=
+	t=1743024785; cv=none; b=Q2wsJx3yDQX5D+pCfRLgMxzEHbch0O5nVBemO5tz1eRtCWNj17x5XO/q/E6Q4G2Xv0Uqg0S1v7AzsAS/MpiBUxJmS0/SH2P+j6lV7nk8tbFeJastCSMLGqsWXJIFCGKudQij0jqzxvVbNPu4U5yzP8PfodJAmbPwjrai67+1Whg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743024572; c=relaxed/simple;
-	bh=U/QNVHD9GlOlEUG/VEeH8nSY88NV88yWPEcw1EmM+oA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JQVJmAN6g0cqfJYy3z6OTkivFYRdvPE3m9dP2uAjrsHthmYjnzz2UlYoKENHVC9jkV36hvVhqvlHLTf77dQVSUFDgwWPC9wKB9g33mhkQbeTcd+9PPnOnV59pEPcYHhe1qZrio1IgTZlb8dwyuPz7Th5xfqGB0EmwJ1YIW/dNAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--colinmitchell.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y0tBBETj; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--colinmitchell.bounces.google.com
+	s=arc-20240116; t=1743024785; c=relaxed/simple;
+	bh=leaS4SvSV2zHkFi2/L7bjdXd3fiAwHQgxhILUDyRsz4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UzBpA7gQ6lETH/efEQIUPXETGuH7T8mfeWKMAcertNdaec+fZc4NelynoC5CJ84vgo90zU5zAXyYoYaHpzQxmz49bJd9/qVZjd48zfxIGsld/x30F9mGMNdmnYvfSZ1wGUVON3A3d2NPS/PLlxCUqef53jqMsJX9cghJOxmnofE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=mCdVDqKC; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y0tBBETj"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2254e500a73so4356295ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:29:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743024570; x=1743629370; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4ePkkCPe4N3YuNMZ8IiEAqlfQIXgkmbf4lUcWGQ8Jt4=;
-        b=y0tBBETj3d3Thh3EOpMYmJ4uimEeCT8wwPsEtW3ECGT//KldJCNS+wtqjQF/Ep6UuY
-         wa8O5SOtMq16N6N9QqSSO2PhGnZDAZvuMnyL3nslMUvT4dd1yCv0+Z58ahsEgVV7q1my
-         qrvknF1yFTKgjV3d9vfOLT5L7PxqO7bXxM7PRpaiUzbIHzSVKq/BI6+BtiFLSXGoDYnp
-         vd35kJfoEnr3vVJu/kGF+4h6wJ41/Gg84yyZeIPdj48luq3b2CV9sVpInHCghbpsthiC
-         YT/XA0jIaIvn2cFXcOiwdQ/z/OYlUNsj0eA5D//wak0Uznl+cfcVzXSuizhhTw4IaK+l
-         ITuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743024570; x=1743629370;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4ePkkCPe4N3YuNMZ8IiEAqlfQIXgkmbf4lUcWGQ8Jt4=;
-        b=MXeRI+Yo4TBBizdm46FKRvtPqVchun8GICLn7CYwBO/ipvl71zDM43Hf1w+lmYO6XX
-         f0+BkjU2+xD8RywI1achykw/hzsZd8/1YTr7LDBXK151Asrw57OWWvshEk5kq1dWOwOm
-         ARTKwlv+qzOsFqrXoRxFGy58qqVBXNcn6VfA2zKjexvc2cjJB8xDWM1GmZOXSn0hfnHx
-         gTg4stzdWmum7kOJjR3dM4piz0ru6WMkTXNxexFX/skf/UQleINnesbk8A1Sz9mPW2Fj
-         R5DnrkNXp4IZW36tZPJIajFp4LKSoJBYPeN9nytVTtBTW5gF6kmc8xFyTLcRSgBxidE0
-         qOeg==
-X-Forwarded-Encrypted: i=1; AJvYcCWbAGJ4vjktgHENVHItox7fjv4dzJqxyvo7sdMr7y6JoEf9fchj/BvZsX1PhggkWkjkhJcQmVGzovcbFfk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwESLR1dOecQLp7n80Qpo18MZlGNG1djDDnjW4xu3kjHer/lLDp
-	+lrdw0BxyvsbAY2MKRgAVVf0s2Iro/yOOzLiYNMgc0ykYakLBBWZsiCmT5gCHZyvkl1XzAQjyqX
-	qKqKAqY3rMYqcFp1TXkVmLduXSF36CA==
-X-Google-Smtp-Source: AGHT+IECHrGH2YtJBZxqnBaK0vvOGtBKjm36ZJE+wsbQNbDv3xVBnCGsaqDsSmtRCMheHW1Yz5R+mY6VPSt//Quts2Qu
-X-Received: from pfbb8.prod.google.com ([2002:a05:6a00:ac88:b0:739:3659:ad9])
- (user=colinmitchell job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:2290:b0:736:3c6a:be02 with SMTP id d2e1a72fcca58-739610373e4mr1354749b3a.11.1743024570397;
- Wed, 26 Mar 2025 14:29:30 -0700 (PDT)
-Date: Wed, 26 Mar 2025 14:29:28 -0700
-In-Reply-To: <526df712-6091-4b04-97d5-9007789dc750@intel.com>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="mCdVDqKC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=TVG3
+	NrT4nDXRnkvQhvpjCeYgyn37R5QccDFEdP43qZo=; b=mCdVDqKCqgBUB+UzOKnz
+	3A8qHGCSutVpubxGowDSyP8aaNB5ir+J/TFHqvI3ABH9wXjISl9RopKb1i6NSk9Y
+	nJIZF2yYX3NaNC2lwGPGpjULXr3h/72eRa4wfsr5nBTnvmlIiOgpMyHVKNaVZyDj
+	9SHI1NEpN0toEM2/thjXMjyfzmeNN0+mABgHDc64bAvPMei4gVQ7ehrE43ZkzAnh
+	lBsQBkjU7plbyVSdsmRkLhj4WNKG5thlFm0qP6alrlivcg2Z+vNWFLU3qXLt47xi
+	zLbqA9/QdOdSE83SRZBlUkbtn7UWbu6yLr+Lo+M366lneTEYR4Wfwi7sntMg3cB6
+	Zw==
+Received: (qmail 3763028 invoked from network); 26 Mar 2025 22:32:58 +0100
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 26 Mar 2025 22:32:58 +0100
+X-UD-Smtp-Session: l3s3148p1@Vdq7lEUxQsQujnsv
+Date: Wed, 26 Mar 2025 22:32:56 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: syzbot <syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com>,
+	gregkh@linuxfoundation.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH v2] media: dvb: usb: Fix WARNING in
+ dib0700_i2c_xfer/usb_submit_urb
+Message-ID: <Z-RyiI1X9BN43feQ@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	syzbot <syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com>,
+	gregkh@linuxfoundation.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+References: <6bb3b80b-a808-4992-8666-535ed9a5c980@rowland.harvard.edu>
+ <67e2fed5.050a0220.a7ebc.0053.GAE@google.com>
+ <29db5fdc-13c9-45f0-9183-c80d637725c6@rowland.harvard.edu>
+ <Z-MKiV0Ei5lmWik6@shikoro>
+ <d0fd60d7-5660-42ed-b1c7-4dfd6b8e74b0@rowland.harvard.edu>
+ <Z-MrfICsY06DZV-2@shikoro>
+ <f8e975a0-87d2-4f83-b580-6858050a252d@rowland.harvard.edu>
+ <Z-QjIRoOWpoWaL6l@shikoro>
+ <c6bed13c-38df-43a6-ba5f-0da03b91f3df@rowland.harvard.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <526df712-6091-4b04-97d5-9007789dc750@intel.com>
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250326212928.2360063-1-colinmitchell@google.com>
-Subject: Re: [PATCH 0/6] x86/microcode: Support for Intel Staging Feature
-From: Colin Mitchell <colinmitchell@google.com>
-To: dave.hansen@intel.com
-Cc: bp@alien8.de, chang.seok.bae@intel.com, colinmitchell@google.com, 
-	dave.hansen@linux.intel.com, linux-kernel@vger.kernel.org, mingo@redhat.com, 
-	tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="XLbJ/AnYw39ABaGM"
+Content-Disposition: inline
+In-Reply-To: <c6bed13c-38df-43a6-ba5f-0da03b91f3df@rowland.harvard.edu>
 
-> On 2/28/25 14:52, Borislav Petkov wrote:
-> You can't load any microcode anymore if you've disabled the legacy method
-> too.
 
-Staging, if I've read the code correctly here, is only used for late loading.
-There is performance reason to use staging for early kernel microcode 
-loading pre-SMP. Therefore, if staging perpetually fails, it can be applied
-without staging on the next reboot.
+--XLbJ/AnYw39ABaGM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On 2/28/25 15:23, Dave Hansen wrote:
-> You seem to be saying that you'd rather be (for instance) insecure
-> running old microcode than have the latency blip from a legacy microcode
-> load.
-> What action would you take if a staging-load fails? Retry again a few
-> times? Go back to the CPU vendor and get a new image? Or just ignore it?
 
-That's correct, but the latency tradeoff scales with the platform specific
-size of the microcode patch. I'd prefer to have a more deterministic
-update path and believe the potential latency blip would be significant
-enough to justify the option.
+> Which maintainer should this go through?  Mauro Chebab?
 
-Adding configuration would allow me to handle the error as needed.
-A retry loop would be a first step but I could also look to migrate VMs
-off the machine if the platform specific latency blip would negatively 
-affect sensitive guest VMs. While an ideal solution imo would then
-allow me to force legacy loading, I could also settle with it being done
-through a reboot where early boot would already skip staging.
+I'd say yes.
 
+$ scripts/get_maintainer.pl -f drivers/media/usb/dvb-usb/dvb-usb-i2c.c
+Mauro Carvalho Chehab <mchehab@kernel.org>
+linux-media@vger.kernel.org
+linux-kernel@vger.kernel.org
+
+
+--XLbJ/AnYw39ABaGM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfkcoQACgkQFA3kzBSg
+KbZ5bg//ZPEJY6x3slIfjpARKrlSNGopIIdRFX0jToiEJ8TN6IePes7xB+LXy/Gi
+4I3KX3Ff+fB5mtClhDcIqrBgMlqBrt+yDh+Dq0F8R+X+EoTFWr2IlJf5VZU50Z7s
+KR7+U/0mPmwtedPObZqBLVZTIjoQScxMMilJBoraZFd9vice3vQbQc86yg+MbPW+
+cRInfYWjy6WjeKx3RFvjGBXnxNCOiCd/Qebv5TAzldkIeLkXuF7ZIJ4FRqtrmHKp
+KAU8FE+Z+PMoFkwPNR5gzYEdaT0INO8xU2ysrHhYpJy3JazLEkQfq7rknwfW+N7Q
+Y8KXLcfeMC/k6QfX0Y8thrtDZOnh0xpTOnFf4Gbf4KI7kyWlCL6lf9F7X2jiZJqg
+PT3nAmaQ/4r8cStncJR+6e97OpyK6pzQLxBB/a4IQjiZ+7XpwKOoO8NOy8F30q9v
+srwZghPqVG4N4llCeKqDexnMQCIjZuVFGH5f5ylzOiG0W0XTjuveb7Hp+IH60amz
+2+RkF2QwXhViyUX/kP8MsMhTYAwBXesT1DbKtc+YDEMBzx90BKpQrqsyMj2lRNXC
+qr8yWi5HZ9WDGS75eMQHmFboUfezp9dpNxwwhSDMPGxVcLhE5amhkwqSQDBQjSqG
+FUtaLbof0/MIYrKDi5BMqLdIu3UWEs+W+At/zxStY8y+ORDTcfo=
+=gNyU
+-----END PGP SIGNATURE-----
+
+--XLbJ/AnYw39ABaGM--
