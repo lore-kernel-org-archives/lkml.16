@@ -1,313 +1,162 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B1B1FA164;
-	Wed, 26 Mar 2025 17:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0117D1E868
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 17:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743009197; cv=none; b=dAJn+Hewe3XWa8VTRU5wrVCCWK24w37nhKL3DDBV/FOhBTHjup5iCwX6WvMU1ywS+0F7ufY34alQEg82ZpspDk6MLbkw5bNPw9F10VxqOj0KDMQm6Y/yPGhOmH/x0bPPAmPjj/L0swnNSEnz08RKxqi06TXF737BjNH50UKfOjc=
+	t=1743009258; cv=none; b=PpDBgRy2UrEUCRGkYxBvGupnBOtDFGkJSY9JbaMAoycjfKwO3R1Wx5HD/QRQsviYerCLkxBuLryKvd63w7Y69hY918Xnkg7Iz4xAhIDlvSDfxChOyBDwAzgoQub+X7PZUtqz1PWadtp0mcyGarwtmZlH5oFNKUUt5xyLInyalag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743009197; c=relaxed/simple;
-	bh=SJQZvtTgdJKskCStI02l1U/vGQD2WnA3AdgZFUp51ek=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uhmlea9ODLFbpA1zyDE9qnuwyErE++dtoxhOYqATNAEB93I9kkuOr0MAcAQqXgy0csbdIEm7mJ06MWvHz0Ud1UGysibrS3ZTVmY7vpvY9Ku/Z/MXFrre9NrAW2fq8Rg/NpKDN37M/7jP7CsY7tB+UFy3/mLoJinQ1Z5tsiek80o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tevs6xPA; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743009258; c=relaxed/simple;
+	bh=+whv4evDGy64r+tSDhIokFOzmu0gIBgVUNUDF3GyFx0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o8Nau2bPyinyo0/cWfu82eHrQj4/YOHlulcemwg2+Ijmi1cH3Zem70zLnwABJrc7jgXoe+dKBrMlU60lMGkEHMrmqLQEOp4hFUtCd/wKCX9B2+oz7byCM+lE+JCmWlBtiGt9Zn1KvTV8fk++GeT+FgGv9xjNCdXFUqd7RExDdw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xaTzyJ2M; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tevs6xPA"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3913958ebf2so5755509f8f.3;
-        Wed, 26 Mar 2025 10:13:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xaTzyJ2M"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cf7c2c351so85445e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 10:14:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743009193; x=1743613993; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GtJfHAqIrf0tmW6pGHYaGsbHQhJJ95x4qtQyEirDDbw=;
-        b=Tevs6xPAuQaQLbDmjUEidaYHN8Na9hv/JoiPneQvkJwhIZoAgGF1dEGU5hy1zTMg6u
-         7ixSDOuId0F/mnZ5oyaLjH21qWvoHzrKdD9WyeSiMXzB2+KSyOF95qlJuKpUdSMmnWZl
-         8SKno3HLvxtoL8/tFL6gyYQ8iXXKQERXv0SlNE9P5h4TXZPe8DMLdY+Uq8p6xVnWzyFG
-         21ANt9H73IJk2JBiP1t8KuvfUZBT81IT3LpLGRNEKcqm8UasGpRd8sBNaQ6n0G2Y7L0r
-         FD4GE3n2R2zv52aY5LykSWtMzkKFO8bKxCuqlqeIelF9xqj49/3xTyGdUtbjopjhe5+H
-         TAZQ==
+        d=linaro.org; s=google; t=1743009255; x=1743614055; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=CuqCGg1eQPAkW/MRbEsK3o8RtVuoVTX78ZnPAJ2tBZg=;
+        b=xaTzyJ2MdmqHZVBH3m2mRtHjXWGllH0hhlFWbQsqiIRbkLHlV95pW4nyMRh5/VER42
+         P4RbECmWBhihxJf3x1ktwcBBjENd+dRoQFon9Ur7pDAXbMms1hcQDrGb3UQq8A6X4s1E
+         nbKZfjcspTy+c5UVLaYtZJ9zvTkUp6f/qgFolI3a73b3ZHzr9QPsxvS0wkd327AtIjBl
+         jnkAApQLdH2xKEVduCv65HEuUuRfH3Tj727LiIN4kbRDxlyRYvIq+IvlOCxY+QObBwPQ
+         TL6jttFppqiHNA7tVLnBqhfdueREpvgtkJIp3elgAI7S4r27J/Th5O5UZXjBva5Rs3bn
+         Ih8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743009193; x=1743613993;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GtJfHAqIrf0tmW6pGHYaGsbHQhJJ95x4qtQyEirDDbw=;
-        b=OFbxHPoaF3/yxBanpZxuwjH7DFawQQ+LgbNy30TgIqN/uynelPi+UoqTSsF5dELfx9
-         SInuV0PlAbDh3/dyNgFRX7s3QsJZoaCu6o4hMs9i/uHO714eLivrP683eu+JoXFXippE
-         XRg0bKV4g/mgkAx97MWLuzF/UwsTkLghoEVWjYpVlnWZ84uQ+0PVohlo1TMvYap1Fg8V
-         Wq+Es2rtFDkD6KylJ2obJXws69h1CdoJ2aGV2dz+wkIhHnnZQmyVqKMZ+Pujont3/Qh4
-         5qdEQL0j2jOzNnpHN+8guD2dQkOVk8K6yCJQskk1UjzA/BlZ8WeHCEf/UejM9a+/laW4
-         aICw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2WU7otQax4ty3NvLtqDznM5f9lTuN4ujupZj+jRPu4ksbguWIy7i59t96MEQA0Nr3ZYgc7v8DbnXUYoY=@vger.kernel.org, AJvYcCV7VzPjXQme7D1G81WE6ykP5hjGRScOW+NiThI6qwy4f/rSilu8xLMqtOJawMhijbjpfd1cHq/KW2sQ+h+Jp7s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+4wv4WWd9sU+H9xEVyyo6wERgreNEyh0jEjHdo3h6gyVw+Efc
-	gNQo/+U7lnndBrGFxpbvSNsVJfXxWOl0KWQusYEWKVdLZdTJFSBZ
-X-Gm-Gg: ASbGnct10j2rqcsXC6X3ZWpZpR8b3CH95QH7SDPKBIvd0k02AaUTWV3M9xBiv67UwCX
-	nv1SAXUn+T3rsTq7y4TsXa8iF3BvpuypjSeZxryHMBWz9kTFI1G6P7wd+d7hvE06MdtM6/Af4uD
-	zcpfl29gzC90JLASRIyLZX+ibQvL+SxRqEFmDv+6/PLaLGch+1OjeiSxhP+emWYg1xtc45K69u+
-	PFWcvIVt9CSUpI6m/m+fNtuOnoAeN9P0RlwO5wrLDGEtexIDG64cpap3FTce1HoXCWBHug++1N3
-	5t5oY0NEne6Sh64jxKHpE4EbuI5+mfxL+yJH8LpgSS7/DIdAXT12kyZlHk1r8Ne+jWBMtlgtpZf
-	sq3rBPmzp
-X-Google-Smtp-Source: AGHT+IES84MAr3U6c2mA1k7oT3HKN/0OPo/aOG+Tpfb/MWjS1YI0LksmvIu1gdYyE3ccxKYBUEJKhA==
-X-Received: by 2002:a05:6000:1f8f:b0:391:3207:2e75 with SMTP id ffacd0b85a97d-39ad1743b3emr212770f8f.18.1743009193211;
-        Wed, 26 Mar 2025 10:13:13 -0700 (PDT)
-Received: from localhost (cpc1-brnt4-2-0-cust862.4-2.cable.virginm.net. [86.9.131.95])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9b5193sm17689828f8f.55.2025.03.26.10.13.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 10:13:12 -0700 (PDT)
-Date: Wed, 26 Mar 2025 17:13:11 +0000
-From: Stafford Horne <shorne@gmail.com>
-To: Sahil Siddiq <icegambit91@gmail.com>
-Cc: jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
-	sahilcdq@proton.me, linux-openrisc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] openrisc: Add cacheinfo support
-Message-ID: <Z-Q1p4eMUC4PZ8bB@antec>
-References: <20250323195544.152948-1-sahilcdq@proton.me>
- <20250323195544.152948-4-sahilcdq@proton.me>
+        d=1e100.net; s=20230601; t=1743009255; x=1743614055;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CuqCGg1eQPAkW/MRbEsK3o8RtVuoVTX78ZnPAJ2tBZg=;
+        b=tTPc7sgRwpRskQ3aP2KnTsoFea3IGzdkmnHllRwLROoizx7eiuu+Gf6kErw9z5Ch8x
+         GSlhZYEsKm3LSiw3LEjqtKaB0kfi5sphEce91kL5xpG64fYtWW3bChSghc6i/28w740Y
+         CT74sWLzZHLx5QZTWFgo0N436V6NA2Q2+1loYovx484xKAJr9J/0FUkP6s6NsGngP3op
+         pJEhDTD0yjNLAfN9uy0P8Cw7l40IRDKpt5LMFMWdNmPU18CyfW1IMEgvOR7FqcKOFq+0
+         P6FuY76Uvb3uwQlnkR1mSWFUe/S+KZ3K+BlpSw8RdEFLcRiRsYgXB64bj9u+unEGi+bG
+         M4hw==
+X-Forwarded-Encrypted: i=1; AJvYcCUuu9rUHCRpxhZQV5ZFn4xi3BPRV3UqGuVA2fkHj0udzZuaMRVbWXgevzZKIHov0W7u3Wf9AgP8Im5XmIw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxry0HoSwQHn4bX610JR6YLIHolgmo8PHyfDOYA6eoA5uifaeLw
+	YxWDL3SEyzI++L2QQg2tbwkGjn7VKkA7IfoUHv0HydbT9TmVrreBCT7TidfzVBQ=
+X-Gm-Gg: ASbGncvtrBGcaGGZ3pAK4idw8xO34D2Vv1Ryoy0Y2QEHo+rMjNQeANS4VBtz8NcEycQ
+	Xrt6TWxWUsgrdYhHKJJngqxa5DAVFn3wzQ1RLm8Ru2gRv4kfW+Im1BZcXS16Cthn5L3Yfv5oH+l
+	aCrN08Np4k0zSEnm/YZqt+GgPc3FD/SFJwU7UEfhfH39ulv8v5xfLwuFGeum36cdZnJvQ7UK4mv
+	sJ5GQHuOtz+H8PUJ5sLt9hJyJiEh2xwJcZXPTi4fPXlj9GSlnWTe8drqEV87KXsJcbOgzJTS4wP
+	MM/VUYgFNsZYZxfijXxWNSVDRfHHc2/F9F10vsQ2zoTaV0mjsxZ7TrtgIEwRxLV54jBWQ5vRrA=
+	=
+X-Google-Smtp-Source: AGHT+IH0pMOmLg52ydzIRAGz+vqzh8QzEr1moG6oYV/aOV0biMkfZdZIZiyHjdO978n0orP9jbTcfg==
+X-Received: by 2002:a05:600c:1548:b0:439:9909:c785 with SMTP id 5b1f17b1804b1-43d8529f4d2mr739745e9.7.1743009255291;
+        Wed, 26 Mar 2025 10:14:15 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.198.86])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efeacasm8472175e9.23.2025.03.26.10.14.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Mar 2025 10:14:14 -0700 (PDT)
+Message-ID: <658c41d0-734b-4397-9687-80b6a219c61c@linaro.org>
+Date: Wed, 26 Mar 2025 18:14:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250323195544.152948-4-sahilcdq@proton.me>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] power: supply: max77705: Fix error code in
+ max77705_get_health()
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ Dzmitry Sankouski <dsankouski@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Lee Jones <lee@kernel.org>,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <0ea50e87-2b63-4062-8c2a-17537495f481@stanley.mountain>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <0ea50e87-2b63-4062-8c2a-17537495f481@stanley.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 24, 2025 at 01:25:44AM +0530, Sahil Siddiq wrote:
-> Add cacheinfo support for OpenRISC.
+On 21/03/2025 15:34, Dan Carpenter wrote:
+> Return -EINVAL if the health is bad.  Don't return success.
 > 
-> Currently, a few CPU cache attributes pertaining to OpenRISC processors
-> are exposed along with other unrelated CPU attributes in the procfs file
-> system (/proc/cpuinfo). However, a few cache attributes remain unexposed.
-> 
-> Provide a mechanism that the generic cacheinfo infrastructure can employ
-> to expose these attributes via the sysfs file system. These attributes
-> can then be exposed in /sys/devices/system/cpu/cpuX/cache/indexN. Move
-> the implementation to pull cache attributes from the processor's
-> registers from arch/openrisc/kernel/setup.c with a few modifications.
-> 
-> This implementation is based on similar work done for MIPS and LoongArch.
-> 
-> Link: https://raw.githubusercontent.com/openrisc/doc/master/openrisc-arch-1.4-rev0.pdf
-> 
-> Signed-off-by: Sahil Siddiq <sahilcdq@proton.me>
-
-Other than the test robot's complaint about the unused variable this looks ok to
-me.
-
--Stafford
-
+> Fixes: a6a494c8e3ce ("power: supply: max77705: Add charger driver for Maxim 77705")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 > ---
-> Changes from v2 -> v3:
-> - arch/openrisc/kernel/cacheinfo.c:
->   1. Use new functions introduced in patch #2.
->   2. Address review comments regarding coding style.
-> - arch/openrisc/kernel/setup.c:
->   (print_cpuinfo): Don't remove detection of UPR register.
+>  drivers/power/supply/max77705_charger.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->  arch/openrisc/kernel/Makefile    |   2 +-
->  arch/openrisc/kernel/cacheinfo.c | 104 +++++++++++++++++++++++++++++++
->  arch/openrisc/kernel/setup.c     |  38 -----------
->  3 files changed, 105 insertions(+), 39 deletions(-)
->  create mode 100644 arch/openrisc/kernel/cacheinfo.c
-> 
-> diff --git a/arch/openrisc/kernel/Makefile b/arch/openrisc/kernel/Makefile
-> index 79129161f3e0..e4c7d9bdd598 100644
-> --- a/arch/openrisc/kernel/Makefile
-> +++ b/arch/openrisc/kernel/Makefile
-> @@ -7,7 +7,7 @@ extra-y	:= vmlinux.lds
->  
->  obj-y	:= head.o setup.o or32_ksyms.o process.o dma.o \
->  	   traps.o time.o irq.o entry.o ptrace.o signal.o \
-> -	   sys_call_table.o unwinder.o
-> +	   sys_call_table.o unwinder.o cacheinfo.o
->  
->  obj-$(CONFIG_SMP)		+= smp.o sync-timer.o
->  obj-$(CONFIG_STACKTRACE)	+= stacktrace.o
-> diff --git a/arch/openrisc/kernel/cacheinfo.c b/arch/openrisc/kernel/cacheinfo.c
-> new file mode 100644
-> index 000000000000..61230545e4ff
-> --- /dev/null
-> +++ b/arch/openrisc/kernel/cacheinfo.c
-> @@ -0,0 +1,104 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * OpenRISC cacheinfo support
-> + *
-> + * Based on work done for MIPS and LoongArch. All original copyrights
-> + * apply as per the original source declaration.
-> + *
-> + * OpenRISC implementation:
-> + * Copyright (C) 2025 Sahil Siddiq <sahilcdq@proton.me>
-> + */
-> +
-> +#include <linux/cacheinfo.h>
-> +#include <asm/cpuinfo.h>
-> +#include <asm/spr.h>
-> +#include <asm/spr_defs.h>
-> +
-> +static inline void ci_leaf_init(struct cacheinfo *this_leaf, enum cache_type type,
-> +				unsigned int level, struct cache_desc *cache, int cpu)
-> +{
-> +	this_leaf->type = type;
-> +	this_leaf->level = level;
-> +	this_leaf->coherency_line_size = cache->block_size;
-> +	this_leaf->number_of_sets = cache->sets;
-> +	this_leaf->ways_of_associativity = cache->ways;
-> +	this_leaf->size = cache->size;
-> +	cpumask_set_cpu(cpu, &this_leaf->shared_cpu_map);
-> +}
-> +
-> +int init_cache_level(unsigned int cpu)
-> +{
-> +	struct cpuinfo_or1k *cpuinfo = &cpuinfo_or1k[smp_processor_id()];
-> +	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
-> +	int leaves = 0, levels = 0;
-> +	unsigned long upr = mfspr(SPR_UPR);
-> +	unsigned long iccfgr, dccfgr;
-> +
-> +	if (!(upr & SPR_UPR_UP)) {
-> +		printk(KERN_INFO
-> +		       "-- no UPR register... unable to detect configuration\n");
-> +		return -ENOENT;
-> +	}
-> +
-> +	if (cpu_cache_is_present(SPR_UPR_DCP)) {
-> +		dccfgr = mfspr(SPR_DCCFGR);
-> +		cpuinfo->dcache.ways = 1 << (dccfgr & SPR_DCCFGR_NCW);
-> +		cpuinfo->dcache.sets = 1 << ((dccfgr & SPR_DCCFGR_NCS) >> 3);
-> +		cpuinfo->dcache.block_size = 16 << ((dccfgr & SPR_DCCFGR_CBS) >> 7);
-> +		cpuinfo->dcache.size =
-> +		    cpuinfo->dcache.sets * cpuinfo->dcache.ways * cpuinfo->dcache.block_size;
-> +		leaves += 1;
-> +		printk(KERN_INFO
-> +		       "-- dcache: %d bytes total, %d bytes/line, %d set(s), %d way(s)\n",
-> +		       cpuinfo->dcache.size, cpuinfo->dcache.block_size,
-> +		       cpuinfo->dcache.sets, cpuinfo->dcache.ways);
-> +	} else
-> +		printk(KERN_INFO "-- dcache disabled\n");
-> +
-> +	if (cpu_cache_is_present(SPR_UPR_ICP)) {
-> +		iccfgr = mfspr(SPR_ICCFGR);
-> +		cpuinfo->icache.ways = 1 << (iccfgr & SPR_ICCFGR_NCW);
-> +		cpuinfo->icache.sets = 1 << ((iccfgr & SPR_ICCFGR_NCS) >> 3);
-> +		cpuinfo->icache.block_size = 16 << ((iccfgr & SPR_ICCFGR_CBS) >> 7);
-> +		cpuinfo->icache.size =
-> +		    cpuinfo->icache.sets * cpuinfo->icache.ways * cpuinfo->icache.block_size;
-> +		leaves += 1;
-> +		printk(KERN_INFO
-> +		       "-- icache: %d bytes total, %d bytes/line, %d set(s), %d way(s)\n",
-> +		       cpuinfo->icache.size, cpuinfo->icache.block_size,
-> +		       cpuinfo->icache.sets, cpuinfo->icache.ways);
-> +	} else
-> +		printk(KERN_INFO "-- icache disabled\n");
-> +
-> +	if (!leaves)
-> +		return -ENOENT;
-> +
-> +	levels = 1;
-> +
-> +	this_cpu_ci->num_leaves = leaves;
-> +	this_cpu_ci->num_levels = levels;
-> +
-> +	return 0;
-> +}
-> +
-> +int populate_cache_leaves(unsigned int cpu)
-> +{
-> +	struct cpuinfo_or1k *cpuinfo = &cpuinfo_or1k[smp_processor_id()];
-> +	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
-> +	struct cacheinfo *this_leaf = this_cpu_ci->info_list;
-> +	int level = 1;
-> +
-> +	if (cpu_cache_is_present(SPR_UPR_DCP)) {
-> +		ci_leaf_init(this_leaf, CACHE_TYPE_DATA, level, &cpuinfo->dcache, cpu);
-> +		this_leaf->attributes = ((mfspr(SPR_DCCFGR) & SPR_DCCFGR_CWS) >> 8) ?
-> +					CACHE_WRITE_BACK : CACHE_WRITE_THROUGH;
-> +		this_leaf++;
-> +	}
-> +
-> +	if (cpu_cache_is_present(SPR_UPR_ICP))
-> +		ci_leaf_init(this_leaf, CACHE_TYPE_INST, level, &cpuinfo->icache, cpu);
-> +
-> +	this_cpu_ci->cpu_map_populated = true;
-> +
-> +	return 0;
-> +}
-> diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
-> index 66207cd7bb9e..caac492d045e 100644
-> --- a/arch/openrisc/kernel/setup.c
-> +++ b/arch/openrisc/kernel/setup.c
-> @@ -113,21 +113,6 @@ static void print_cpuinfo(void)
->  		return;
->  	}
->  
-> -	if (upr & SPR_UPR_DCP)
-> -		printk(KERN_INFO
-> -		       "-- dcache: %4d bytes total, %2d bytes/line, %d set(s), %d way(s)\n",
-> -		       cpuinfo->dcache.size, cpuinfo->dcache.block_size,
-> -		       cpuinfo->dcache.sets, cpuinfo->dcache.ways);
-> -	else
-> -		printk(KERN_INFO "-- dcache disabled\n");
-> -	if (upr & SPR_UPR_ICP)
-> -		printk(KERN_INFO
-> -		       "-- icache: %4d bytes total, %2d bytes/line, %d set(s), %d way(s)\n",
-> -		       cpuinfo->icache.size, cpuinfo->icache.block_size,
-> -		       cpuinfo->icache.sets, cpuinfo->icache.ways);
-> -	else
-> -		printk(KERN_INFO "-- icache disabled\n");
-> -
->  	if (upr & SPR_UPR_DMP)
->  		printk(KERN_INFO "-- dmmu: %4d entries, %lu way(s)\n",
->  		       1 << ((mfspr(SPR_DMMUCFGR) & SPR_DMMUCFGR_NTS) >> 2),
-> @@ -155,7 +140,6 @@ static void print_cpuinfo(void)
->  void __init setup_cpuinfo(void)
->  {
->  	struct device_node *cpu;
-> -	unsigned long iccfgr, dccfgr;
->  	int cpu_id = smp_processor_id();
->  	struct cpuinfo_or1k *cpuinfo = &cpuinfo_or1k[cpu_id];
->  
-> @@ -163,20 +147,6 @@ void __init setup_cpuinfo(void)
->  	if (!cpu)
->  		panic("Couldn't find CPU%d in device tree...\n", cpu_id);
->  
-> -	iccfgr = mfspr(SPR_ICCFGR);
-> -	cpuinfo->icache.ways = 1 << (iccfgr & SPR_ICCFGR_NCW);
-> -	cpuinfo->icache.sets = 1 << ((iccfgr & SPR_ICCFGR_NCS) >> 3);
-> -	cpuinfo->icache.block_size = 16 << ((iccfgr & SPR_ICCFGR_CBS) >> 7);
-> -	cpuinfo->icache.size =
-> -	    cpuinfo->icache.sets * cpuinfo->icache.ways * cpuinfo->icache.block_size;
-> -
-> -	dccfgr = mfspr(SPR_DCCFGR);
-> -	cpuinfo->dcache.ways = 1 << (dccfgr & SPR_DCCFGR_NCW);
-> -	cpuinfo->dcache.sets = 1 << ((dccfgr & SPR_DCCFGR_NCS) >> 3);
-> -	cpuinfo->dcache.block_size = 16 << ((dccfgr & SPR_DCCFGR_CBS) >> 7);
-> -	cpuinfo->dcache.size =
-> -	    cpuinfo->dcache.sets * cpuinfo->dcache.ways * cpuinfo->dcache.block_size;
-> -
->  	if (of_property_read_u32(cpu, "clock-frequency",
->  				 &cpuinfo->clock_frequency)) {
->  		printk(KERN_WARNING
-> @@ -319,14 +289,6 @@ static int show_cpuinfo(struct seq_file *m, void *v)
->  		seq_printf(m, "revision\t\t: %d\n", vr & SPR_VR_REV);
->  	}
->  	seq_printf(m, "frequency\t\t: %ld\n", loops_per_jiffy * HZ);
-> -	seq_printf(m, "dcache size\t\t: %d bytes\n", cpuinfo->dcache.size);
-> -	seq_printf(m, "dcache block size\t: %d bytes\n",
-> -		   cpuinfo->dcache.block_size);
-> -	seq_printf(m, "dcache ways\t\t: %d\n", cpuinfo->dcache.ways);
-> -	seq_printf(m, "icache size\t\t: %d bytes\n", cpuinfo->icache.size);
-> -	seq_printf(m, "icache block size\t: %d bytes\n",
-> -		   cpuinfo->icache.block_size);
-> -	seq_printf(m, "icache ways\t\t: %d\n", cpuinfo->icache.ways);
->  	seq_printf(m, "immu\t\t\t: %d entries, %lu ways\n",
->  		   1 << ((mfspr(SPR_DMMUCFGR) & SPR_DMMUCFGR_NTS) >> 2),
->  		   1 + (mfspr(SPR_DMMUCFGR) & SPR_DMMUCFGR_NTW));
-> -- 
-> 2.48.1
-> 
+> diff --git a/drivers/power/supply/max77705_charger.c b/drivers/power/supply/max77705_charger.c
+> index 329b430d0e50..0e347353c41e 100644
+> --- a/drivers/power/supply/max77705_charger.c
+> +++ b/drivers/power/supply/max77705_charger.c
+> @@ -285,7 +285,7 @@ static int max77705_get_health(struct max77705_charger_data *charger, int *val)
+>  	if (is_online) {
+>  		ret = max77705_get_vbus_state(regmap, val);
+>  		if (ret || (*val != POWER_SUPPLY_HEALTH_GOOD))
+> -			return ret;
+> +			return -EINVAL;
+
+
+I don't think this is right. First, your commit msg should mention why
+returning -EINVAL in such case.
+
+Second, if get_vbus_state succeeded, but 'val' is not good (e.g.
+overvoltage), the callback is supposed to return 0 as success of
+retrieving the data, no? So the user-space can read 'val' and figure out
+whatever it needs to figure out (overvoltage).
+
+The EINVAL is when the data could not be read, thus user-space should
+ignore 'val'.
+
+
+Best regards,
+Krzysztof
