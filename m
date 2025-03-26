@@ -1,135 +1,131 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DEE31F543F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298D31F582F;
 	Wed, 26 Mar 2025 14:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743000009; cv=none; b=S4Kmj2c7Rh3x3GxsA2THA9zRDqyanOL8GInj+bvXCxX6D0BO9Lp5B7UNJiKJ104meWsR0pXVyGhZcnGTspleLDkNWqjdA5UamRM51fj+Yea215gFcp0OUgGV3Ld7dBDEnQmWl+q1L4QxrnvS2FKhEU0apIB92Yj3QqRaeguHyxM=
+	t=1743000010; cv=none; b=W1471XB5Cu6Ag4am2RJNfChKtkYl2wIjr3KwHkO+WOdTIkygEj/5UFCgt8zmktHLtpkoPudChfGrbgs3aVc28g+9FvMyVSxnxw/nSDHySdym8W0TUIgvKOz/G7FckJDDf+0/t7zTJt9PZ3U8aXzEvVTEATK8pDg1T2Yf32xY8ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743000009; c=relaxed/simple;
-	bh=Im/ujHBZDbDagi4RGHUSi6sQR6/F1nq9HzO7V8ZfdGk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rjaWl6+wOMhqK756IoBts7AC9Xm1cqK1ocNigI3NPgh3OwMVUY4gvULnd+wnbLyhk3Rqj7nDZhJfOEU/zopjJ25rCy89iAgLUMsP3ZgM6qQM2l/S11O8Eg1Cooc/hyucutf/VIgj7Ux1ppoGOHCB8qBpUrSzBW0RcDQzaSUqSVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YJ8yihbh; arc=none smtp.client-ip=209.85.208.179
+	s=arc-20240116; t=1743000010; c=relaxed/simple;
+	bh=f1CbqiCxzwDj/7ZOEmQUbfPFa15B5e0tpP4hyDRWljM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jVrqSVOCipQk6YUgQhntZdMxDlcXhNDDG0WEjlq5IDrtyvQswHY6X5rb3vE2yAScziHqdh5zNW6ViCNrxerwIKrTcVN5aBrNpcCjYJabm/Zqm/ImPkF3SJnyRb2WSlqGdDcTzVldBhsRgxWHw9gEv8R5CCT2Uxi76g+NhmBG4UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UBAMnQ+L; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJ8yihbh"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30c2d427194so71125921fa.0;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UBAMnQ+L"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4394036c0efso44928625e9.2;
         Wed, 26 Mar 2025 07:40:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743000005; x=1743604805; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6EuDjXKidQBl0tqYxtEZ2ruC/3IuVI6jN86tCBBzL/s=;
-        b=YJ8yihbhK17QH+DR3Xx0l8wqv0so3t9d1+1YDtX6RX6l/GYNq0CmvoVWNoC0TMA5nZ
-         h4+gBH8J0IoUiE6gTlkf41ZXH3TTTTjnyGloiqKXoeNbErtS22l2hsiO60eHZBjg2GEA
-         jQ9SUGBc6BEMei79oRpz0vHQtZUKXl8kgBTuc2wgTOpkBviiTMfuTktOAJj8TZNYsnxr
-         Z7m4txpKe4/7s3ckh820ugLjwU8ftfqP8RVhyXx8dJ5/IauDAMqULoIxBQkftEFeLKcg
-         PYQimfGkaJQRv1ytnx7Xv3U4lG8uBuXoe33BKrK5YehupZhoHg9Iyvzl6DUjAQlHs+yl
-         5VPg==
+        d=gmail.com; s=20230601; t=1743000006; x=1743604806; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4lXjgaJ30mX5cDcOLM5e2+yWI/YHl60h4te+LJZ26is=;
+        b=UBAMnQ+LiX+fEL+ZDdDez+Nhn1KOCpWQ+DlNVaG40WAh9R/lELyONozsqtVNk7+Gq8
+         o+W2hcR8Z/RY3q9y9xh+1t7+qSUuS8+Ignml30U0+3Vw+2/9+bBE2u36jyMiXZr2uVKW
+         CEvlWbZRuyzkFcIUFy+4k82S79+FK4onpgYbm/BsEwneruLzCNalOiIbvYT7Yyq0BEWp
+         02+PaYbcpQg/p8U4KRwM/FUW6OyLg87lQgS1R9aKb7SeP3E8YMiaWlkiVoCrTNlxfPoy
+         WniXhg9Hz7fczXKTzzTwn04H1jbXe2OgbslNlo9MYOBnhN/gQ0XWa647s/CSsnCUA7yf
+         MOMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743000005; x=1743604805;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6EuDjXKidQBl0tqYxtEZ2ruC/3IuVI6jN86tCBBzL/s=;
-        b=kIrpqW0RGxV7GonQpQPjjiKfpmqi3VKB4+INPRwniCcRwWy0OzwybUD4NiQpCaW21/
-         nbYtGGCZifXkqDbsAipLJ3zKlq9xI2nQ59UdTV+IFl7PUc+TgSk3298cX4YMf3IeYuF1
-         fVVLdYunOZsQBg2EUXKkmHuiaNDSMV42u5rpdmjMUlRx+wAl8nDwpHa279n+9ZEbKlBS
-         hub3ppYKO0pP4U1RT7UEhAsOvxPDWSqJxMkVwhuY8DOw6czmIHB/Q98WQH7vgk2SUeim
-         NZotbFC1tcg8wVmBn3jtOykHO5iWX40AKIFsj+6AdeXcUlORgLYrWB5zabQDObUrsI24
-         JQ9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVCvd57792gg5Hau+GNjgdT23atzFFPd3rjUn7e/Hzrm8CtV3T2AdvYonAJlmj5pSX0XoQm42vCIsVzcx3l@vger.kernel.org, AJvYcCVaA62SZPYRDU3i17fwlGvffBmSBAo9j7Q2VYf+lfkTA1wAwbm2KJ9yWSV/M8M67li3s7L1QgwdpUA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytUDSnVKplRJPtQGikUgatP/T2Fri34VzzJeTbrstpvtBNSsnG
-	IAj+ndK9ZLIvmObyYtFyZ2FPp463eX281IZAD6G+ZnQTQesVmNlQ8MnRtmxjdHs=
-X-Gm-Gg: ASbGncu8f8wj3CilacpxdyydeT58+bEEQPMNarkmfBFR7buxOzT5+ZwuCMBhlNHiPpw
-	8KkBoQkU5J9rl+6RZYwv5b+Lm9mcvy1j82SMeUBA0Odqk6iD7ZSKT8RoquIn9kvFSN0hY/rCO9V
-	z6F+tpxCu48ukFUCJIrki6K/QAYSy2A9lHstXNWBySFO850lUeZQ72P6KN+lp3smnia3/B/POut
-	Lt8HT139znwrtr9K8BG3tX1WN8njMbn7UiNJ4bA1Ih8vpUDb4wPabqS1YbIOhV8e3Vm+8M6JYsy
-	MLknN4o15Y6twlTh9V8tapf2rjWYElLw6Nx0KCmZMjnqM07EM+vgDq3wTrCPktJJ9SunDPMd9gs
-	zUuUAdXmwM23O/27ngcWgG/o=
-X-Google-Smtp-Source: AGHT+IGGn5bSE4gjHMGAHWfQJJacrQvAex99kJygteLoNoccgFY1I0pKwaSx1wgBttcnB2NtTW5XBQ==
-X-Received: by 2002:a05:651c:c9:b0:30b:ef98:4653 with SMTP id 38308e7fff4ca-30dc5f50f0fmr19151fa.36.1743000004960;
-        Wed, 26 Mar 2025 07:40:04 -0700 (PDT)
-Received: from [192.168.1.11] (83-233-6-197.cust.bredband2.com. [83.233.6.197])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30d7d7e05f8sm21595771fa.32.2025.03.26.07.40.03
+        d=1e100.net; s=20230601; t=1743000006; x=1743604806;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4lXjgaJ30mX5cDcOLM5e2+yWI/YHl60h4te+LJZ26is=;
+        b=tO3m6InARhND0MYsC8SjzNUjOC2YKHwAaq3eg+3xjUFO2pnoI3qXAFn6ah6OBDo+mj
+         eQfSSlg8xZ57K9Z3z2ykdiMNQyAVQOTocGUMvPXdcmTiDeQaKpKpy4t1u6RC+00YzyQZ
+         epm1lkB2z3Gy9swzZzNnw+w9BetSkg4AwHQK3bJKFTiM05CHfsAaS67OBvZpOVy66YX+
+         bBTODBK44DojsV8O/UCNzmoaKHS/jdEuugyZX1YX0E5NlQ3RtmQu7hxC7h/85payTryb
+         6fIto1GH94XLNT8F26By90AyqjQ58kMOoHfDv4a8K4wQH1qQQFwL3dO9ILfievfAAo4z
+         sc6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUvd69Ohzg/2kvUGe7/Hx5AGuwqSXX1Gdipy1KqzNyiXxhJADyAi0dsSO9aWmoU9Bdt8FjIobASRWZI@vger.kernel.org, AJvYcCVDBZQyvOFlWcDuewRXmY6mW1pX+d8xjXt5X6eGrLn2V5b8AuRSMglbuZmF+A77A6DzVYCEP0YTNxqZ@vger.kernel.org, AJvYcCVmz4ismeZLlMdS+E6g2DArnAiKqDy9zC8ViJ1FvZ3bI3Ew/y2U7OgxJIBKpC/OIabZGilpzJgarvyT7g==@vger.kernel.org, AJvYcCWTv1n/berZJ4JvDKOoxbfUuWVZ/DMjiV2c11jZWPNd2IBZlMsCvkf3ltA+CN3VEeSoVx3CM/gal8mnqG73@vger.kernel.org, AJvYcCWVBXENf6Ob3djnNLL+A9j1YcmS9WsRYetHAakmX1DVp/eASmXRRwbmGr35m0cBBN6dmbycKYUhR2mKve8F@vger.kernel.org, AJvYcCXbdHBQfAylLJp5IlHkMZGyvvMxCKT//kfOZ8w2JsuMOwjUz0MJgNohBOVLoCKkK0W2AU0jMkELsp0e@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfoKyoSN9ggXPaaGqMnsNrHe1p7axjj1w6iBntq28FZ+2fQ4tQ
+	I7HPM9S3XXaM1gcbEVwyJHAJ6cycT4z9+wBrhCQzxl2O3vfRkVOg
+X-Gm-Gg: ASbGnctGiFWClDhEMRxkiGvWA2lGndEKc2U/3Z5duM1T0AGTzB069cjPFSnGatjP/e9
+	AMR7j2BV5XFAWstqYaTXA1btOopCS1IVmubCH1HOhifSgeDDqUf6qqH5fozThcT6DP5isRO9RZu
+	P55s6MG514fAHQTk3r1xx8CaZh3PGriLZr7X4MsWv76k2sYpxnw4IJaihfHA+6KmNu0QmHBRYph
+	wjgFrp9eItZOfgbrCmFyUB/AjRrHCLfaknnBW/NSLZtCqnYHCliz61rHBjKvAn9C4LI0O2iMl7c
+	1skLm1bJB6iVwsULG/G+Agbqrw6awjXH3q4kwVaaIYaAsZcn8ZrqVW1fjzdU7v2QV0LC
+X-Google-Smtp-Source: AGHT+IH46KfQuYDthexFM9JOF37fPKyd4C3Ozaj4K3acaAOPvFJgrgx3LcP7JO5sXYRF9Zdn87Jt9Q==
+X-Received: by 2002:a05:6000:2b08:b0:38f:2678:d790 with SMTP id ffacd0b85a97d-3997f9104acmr15697964f8f.33.1743000006086;
+        Wed, 26 Mar 2025 07:40:06 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:e63e:b0d:9aa3:d18d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efe9b4sm3891885e9.20.2025.03.26.07.40.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 07:40:04 -0700 (PDT)
-From: Marcus Folkesson <marcus.folkesson@gmail.com>
-Date: Wed, 26 Mar 2025 15:39:47 +0100
-Subject: [PATCH] i2c: davinci: add I2C_FUNC_PROTOCOL_MANGLING to feature
- list
+        Wed, 26 Mar 2025 07:40:05 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 07/15] dt-bindings: mmc: renesas,sdhi: Document RZ/V2N support
+Date: Wed, 26 Mar 2025 14:39:37 +0000
+Message-ID: <20250326143945.82142-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250326-i2c-v1-1-82409ebe9f2b@gmail.com>
-X-B4-Tracking: v=1; b=H4sIALIR5GcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDYyMz3UyjZF1TUzPDpDQLU+M0ixQloMqCotS0zAqwKdGxtbUA+hD6FVU
- AAAA=
-X-Change-ID: 20250326-i2c-5561bf853f8d
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Marcus Folkesson <marcus.folkesson@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1325;
- i=marcus.folkesson@gmail.com; h=from:subject:message-id;
- bh=Im/ujHBZDbDagi4RGHUSi6sQR6/F1nq9HzO7V8ZfdGk=;
- b=owEBbQKS/ZANAwAIAYiATm9ZXVIyAcsmYgBn5BG9NAOxehASk4e1pFtaO3cbQpTn2CrmEBGM2
- YmGZqjRpYmJAjMEAAEIAB0WIQQFUaLotmy1TWTBLGWIgE5vWV1SMgUCZ+QRvQAKCRCIgE5vWV1S
- MpMqD/0ZBxXUzH+XujR8gYWy6eMIbJDaF2Aov8H/slrc+vlPbqozidmexoUC7AoEB4s9tdotYmx
- hF2ko8DQXK4XFcyqI37/JoB+OEb+cce00U0sHGA3jJypk4Dj5KkwL4IgAKkuObZ9YmiX0xZ3F1H
- tSOgVQNmhI88KbUNV57wDPmMr2z8KYHK+D/7pi56iCRVr4VvCS84tyBcN8gZSAi3ayYObAkgTx1
- M7gG60WyPOZmobjQPacpz+lFslnBHj5UExruDrGvPTffQQZsc3wykz5zutpLVrqlbbrV/XfybmC
- KWzxI9dFp9Zb+nTiMT+ge3qbwYbvU5Lh5urpn0ImO2aUVdo1hvMqi5ezjnPEBA7y1WMU5vW/Dwy
- V0R8fYx5vPVhTmNSQDm9dega5t2AR2uO+bSq1cyowU5GWcrZ0nl/bdj4cuIQw68XCoHOWQjsXI/
- UqyrXLxz4773FZzS3kAEZaQbiOnJUcOcI7W89rjY9dXoKkdULqbuY91I0vKcCe5dHwLHixUm39m
- w+yMLA04IukrY6rNCXMhWwsR9qLbclRWpCKCTabz1U2eAgJZeHdD46UYu7yO9Na+46I2ulrC4gk
- vs10XGNbwEjp7/mxQ6zR22GSRa4qYcyGjWQ8BLRAUT/DzpZS6sziUQoFPwkAG7l/2LqPLzVk8bL
- kdabjV5sNdNojog==
-X-Developer-Key: i=marcus.folkesson@gmail.com; a=openpgp;
- fpr=AB91D46C7E0F6E6FB2AB640EC0FE25D598F6C127
+Content-Transfer-Encoding: 8bit
 
-The driver do support I2C_M_IGNORE_NAK, so add
-I2C_FUNC_PROTOCOL_MANGLING to the feature list.
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+Add SDHI bindings for the Renesas RZ/V2N (a.k.a R9A09G056) SoC. Use
+`renesas,sdhi-r9a09g057` as a fallback since the SD/MMC block on
+RZ/V2N is identical to the one on RZ/V2H(P), allowing reuse of the
+existing driver without modifications.
+
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
-The driver do support I2C_M_IGNORE_NAK, so the
-I2C_FUNC_PROTOCOL_MANGLING bit should be set.
+ Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-I2C_M_IGNORE_NAK is the only supported "mangling-feature" though, but
-other i2c bus drivers also seems to support only a subset of available
-mangling-features, so I guess this is ok.
----
- drivers/i2c/busses/i2c-davinci.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/i2c/busses/i2c-davinci.c b/drivers/i2c/busses/i2c-davinci.c
-index 6a909d339681214ed4f382b62f8cd924f4295e69..6a3d4e9e07f45ecc228943e877cde1fd9d72e8cb 100644
---- a/drivers/i2c/busses/i2c-davinci.c
-+++ b/drivers/i2c/busses/i2c-davinci.c
-@@ -551,7 +551,8 @@ i2c_davinci_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
+diff --git a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
+index 773baa6c2656..7563623876fc 100644
+--- a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
++++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
+@@ -69,7 +69,9 @@ properties:
+               - renesas,sdhi-r9a09g011 # RZ/V2M
+           - const: renesas,rzg2l-sdhi
+       - items:
+-          - const: renesas,sdhi-r9a09g047 # RZ/G3E
++          - enum:
++              - renesas,sdhi-r9a09g047 # RZ/G3E
++              - renesas,sdhi-r9a09g056 # RZ/V2N
+           - const: renesas,sdhi-r9a09g057 # RZ/V2H(P)
  
- static u32 i2c_davinci_func(struct i2c_adapter *adap)
- {
--	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
-+	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL |
-+		I2C_FUNC_PROTOCOL_MANGLING;
- }
- 
- static void terminate_read(struct davinci_i2c_dev *dev)
-
----
-base-commit: 1e26c5e28ca5821a824e90dd359556f5e9e7b89f
-change-id: 20250326-i2c-5561bf853f8d
-
-Best regards,
+   reg:
 -- 
-Marcus Folkesson <marcus.folkesson@gmail.com>
+2.49.0
 
