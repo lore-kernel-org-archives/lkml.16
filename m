@@ -1,97 +1,122 @@
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60FD31A072C;
-	Wed, 26 Mar 2025 12:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AB91E1DEC
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 12:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742992749; cv=none; b=EczcjwJytzJBb0UutwyOi+6uEF616UMtoINMfBD3VdJH0IQeLZBxOFHXokXz5A5sfFcXltqCqx1ltWXEd2LfchXQrcfFmv1YeCej8B43VvOxOBVzem7Cet6ArRRHHDu21mWBNKk+h2Ja2zoK+DZFH0f2w47y/pUQ7E4aQwbcou4=
+	t=1742992823; cv=none; b=pXCDK7rl8ScHQXwR0Tqp3av6o35xlRhJJQTeqjsa0/rXaIl93w/pBkwuRL4gcHqyS/0SMkQice/r5D2je1QLmJUmzyT11+HD4UmnqkXxg+e8q0HjsZPIO2AxNsVl66Kg4rUwXse+xHCWLhIsog6xr1e64aTJcInKOhJ3ehhsxYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742992749; c=relaxed/simple;
-	bh=6e+77XVzjGIr2FQqdqP61PJFEmYdLdA3NSK+T5RU3yk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=g09/OlX3YdnOzisXKPenDsT+rXE66gSgFwutUQzCgEgV7TkW7FLwzM69uH/ow9/0HDLd37P2ib8rCyeS/9KlH6bW6XD2Avsyz1/Gw6LiLeu2wN9Y0GzIjkUnxyz8UIKwdHlFXJM8/ZFRun0X9mB0yRuaZD7txGzfUKEJVtfTVr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 613AF2022B6;
-	Wed, 26 Mar 2025 13:30:56 +0100 (CET)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 21774202163;
-	Wed, 26 Mar 2025 13:30:56 +0100 (CET)
-Received: from lsv03121.swis.in-blr01.nxp.com (lsv03121.swis.in-blr01.nxp.com [92.120.146.118])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id C472B1800092;
-	Wed, 26 Mar 2025 20:30:54 +0800 (+08)
-From: Manjunatha Venkatesh <manjunatha.venkatesh@nxp.com>
-To: alexandre.belloni@bootlin.com,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	bbrezillon@kernel.org,
-	linux-i3c@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	frank.li@nxp.com
-Cc: rvmanjumce@gmail.com,
-	Manjunatha Venkatesh <manjunatha.venkatesh@nxp.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v6] i3c: Add NULL pointer check in i3c_master_queue_ibi()
-Date: Wed, 26 Mar 2025 18:00:46 +0530
-Message-ID: <20250326123047.2797946-1-manjunatha.venkatesh@nxp.com>
-X-Mailer: git-send-email 2.46.1
+	s=arc-20240116; t=1742992823; c=relaxed/simple;
+	bh=EidWf1smEcccrMWZMH5+INfITris3Gt4B5G1RWuRqyw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=pK+TzNqGrayNBoVzqTW/NPkRe/UYWBZzJ/f0HFywnevt1+HpyH0wSerNmHyWybouopYMb5MSsAqNleX1kAUV1KN4Wo86zbCHPahRgTt4kKdg12l646wQh3/wWvksAqK6e0wl/4ULY6oZQ/wKjlJQGzvtYQyKqm3t3qblaT+aM7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JPENa9Ws; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JPENa9Ws"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac6ed4ab410so76273566b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 05:40:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742992820; x=1743597620; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=57GGOAaZN1XoYLh8BKnwS9BMIWEfDl/68HkmO3s4Tj4=;
+        b=JPENa9WsF4s6hGGEk3Gz1wOMe3mwLfwdr8/sFRWZ4zRs6hbKvyzQHIyo2ff4jzGYDw
+         jWVo784rIMD5XQEtuzwYFzgDZRTKdhTHPYwCeTruqwffO+Y44tSbpc8Ebxb4mK7cDVjA
+         3e21TE2l4MQN/BKkCCyKPfr8o72KjNv70cHwGJnMOCTdFxAh0RtK2FBWdWk+UMMd9sFy
+         bVJ9EGfFqfY/NNLPFak36QzTC1qlGqK8wejPD9/MCKfsEmpyUUvvODQzYAMFSvS7fBi7
+         ZwHMYmi9M28FzRIKf3w2tS0W/Hsi/t6PfCGh5eo9DGxjMEHQJcfYUh/FYPjBHghpvWiP
+         tMnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742992820; x=1743597620;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=57GGOAaZN1XoYLh8BKnwS9BMIWEfDl/68HkmO3s4Tj4=;
+        b=LwAkW8PvNTLjsscNeIoWOl1CX81CSbGwsabH+t7IbfSto+zRHd29zKI2F9kNygtImc
+         idlWsYtpmwAN1I42bed5iAAOkAxRvn5XN3y7MtKnUE5CCx/UWVO4wFz/c1SB1UUyLXIH
+         jovqWEVapiIsVfe8LAecbrE38wXpx/s86wzEW1tns+sn8SURG3280VkLMRIqReMH4fl6
+         X5iGhnrnVydCtVwlKwsivDh186HQ1ovDw7/LFuMdT5BFJ0xAdNfPoOn4AOj9P0Nb2fPn
+         ynr/UMfgn8Yhra0qpalIYGFrV/WIHxSDaaSbWEpdhv2kHCOyvyW5/GW8lWc9b9bMHe5j
+         /Wcg==
+X-Forwarded-Encrypted: i=1; AJvYcCUk10vd+QHduQ3TYniiTzxWbhKUMEH7kSrKSHc2Kf7B+XaW3Vw0aQtlxEemUubhP33kHArXyRegRvUuvHc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyf+Cb8pnk6BHzGg/n6ccGiepfzgERSKmjTzvE1tQ3Bg9i0IT0j
+	VwF/0GWeUh8kmH/INYbR4NAmU3gKkzh7TlvLxOUKqJr/jW9ju9jE+sU1jEHQ
+X-Gm-Gg: ASbGncsgQN0sMfL8Ye00IwbEVhfvOE7UwQ8RtKfT6HD36miE15175Tei8KEk3XRtlua
+	AWY3qb1VpEB0+0P+q7OgGY+M11L9k6lOiiXvaJUjLbaoiwC01s2UXPthpAOWZq5CAbKzcfisAZo
+	rExbJ0CyqdF7lohqHznA1K0jzdfCWrGcM6G1HStysqGUOHsmQQFqaJ55iK4+b+dNe2Zb2ShBs5z
+	Hd86db9kAYYjJtHIAFowClFEjLnw3TQQTFKicLGFx/y9AbM+QOzjARAF/rkOR6QpC7sQwKkWG9Z
+	7EbjchcKZHrFwgJsVOF+pdJKcgyrnZLrlJjFO6DOlkKD6On/wg==
+X-Google-Smtp-Source: AGHT+IGYAScV+oczm6r/JGUZSx4iBrHklfsgOR7nh1Ox+2Mbys7FxPkGsbq+bEKXPKTG0i7XEVIsFQ==
+X-Received: by 2002:a17:907:7295:b0:ac6:dd5c:bdfc with SMTP id a640c23a62f3a-ac6dd5cec3cmr454680066b.50.1742992819282;
+        Wed, 26 Mar 2025 05:40:19 -0700 (PDT)
+Received: from HP-650 ([105.112.229.243])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac6d28d26dcsm211942966b.60.2025.03.26.05.40.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 05:40:18 -0700 (PDT)
+Date: Wed, 26 Mar 2025 13:40:05 +0100
+From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	outreachy@lists.linux.dev, Julia Lawall <julia.lawall@inria.fr>
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] staging: rtl8723bs: remove braces around single statements
+Message-ID: <Z+P1pfLSKpiRtpaF@HP-650>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The I3C master driver may receive an IBI from a target device that has not
-been probed yet. In such cases, the master calls `i3c_master_queue_ibi()`
-to queue an IBI work task, leading to "Unable to handle kernel read from
-unreadable memory" and resulting in a kernel panic.
+The code contains braces around single statements in the if blocks
+which are unnecessary according to the Linux kernel coding style.
 
-Typical IBI handling flow:
-1. The I3C master scans target devices and probes their respective drivers.
-2. The target device driver calls `i3c_device_request_ibi()` to enable IBI
-   and assigns `dev->ibi = ibi`.
-3. The I3C master receives an IBI from the target device and calls
-   `i3c_master_queue_ibi()` to queue the target device driver’s IBI
-   handler task.
+Remove the braces to improve readability and maintain consistency.
 
-However, since target device events are asynchronous to the I3C probe
-sequence, step 3 may occur before step 2, causing `dev->ibi` to be `NULL`,
-leading to a kernel panic.
+Reported by checkpatch:
 
-Add a NULL pointer check in `i3c_master_queue_ibi()` to prevent accessing
-an uninitialized `dev->ibi`, ensuring stability.
+WARNING: braces {} are not necessary for single statement blocks
 
-Fixes: 3a379bbcea0af ("i3c: Add core I3C infrastructure")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/lkml/Z9gjGYudiYyl3bSe@lizhi-Precision-Tower-5810/
-Signed-off-by: Manjunatha Venkatesh <manjunatha.venkatesh@nxp.com>
+Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
 ---
-Changes since v5:
-  - Updated subject and commit message  with some more information.
+Changes since v2:
+	- Add more patch recipent
 
- drivers/i3c/master.c | 3 +++
- 1 file changed, 3 insertions(+)
+Changes since v1:
+	- Remove extra blank line
+---
+ drivers/staging/rtl8723bs/core/rtw_pwrctrl.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-index d5dc4180afbc..c65006aa0684 100644
---- a/drivers/i3c/master.c
-+++ b/drivers/i3c/master.c
-@@ -2561,6 +2561,9 @@ static void i3c_master_unregister_i3c_devs(struct i3c_master_controller *master)
-  */
- void i3c_master_queue_ibi(struct i3c_dev_desc *dev, struct i3c_ibi_slot *slot)
- {
-+	if (!dev->ibi || !slot)
-+		return;
-+
- 	atomic_inc(&dev->ibi->pending_ibis);
- 	queue_work(dev->ibi->wq, &slot->work);
+diff --git a/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c b/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c
+index c60e179bb2e1..74a8fcf18e84 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c
++++ b/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c
+@@ -56,9 +56,8 @@ int _ips_leave(struct adapter *padapter)
+ 		pwrpriv->ips_leave_cnts++;
+ 
+ 		result = rtw_ips_pwr_up(padapter);
+-		if (result == _SUCCESS) {
++		if (result == _SUCCESS)
+ 			pwrpriv->rf_pwrstate = rf_on;
+-		}
+ 		pwrpriv->bips_processing = false;
+ 
+ 		pwrpriv->bkeepfwalive = false;
+@@ -549,9 +548,8 @@ void LeaveAllPowerSaveMode(struct adapter *Adapter)
+ 
+ 		LPS_Leave_check(Adapter);
+ 	} else {
+-		if (adapter_to_pwrctl(Adapter)->rf_pwrstate == rf_off) {
++		if (adapter_to_pwrctl(Adapter)->rf_pwrstate == rf_off)
+ 			ips_leave(Adapter);
+-		}
+ 	}
  }
+ 
 -- 
-2.46.1
+2.34.1
 
