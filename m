@@ -1,150 +1,99 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6BB189919
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 09:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D05189919;
+	Wed, 26 Mar 2025 09:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742982556; cv=none; b=e8R1SsjNJCIvrKJrgnrrDcV45Yn8a8ai6OKTCssRDjZMTKgOIXD/BaOZPybPZU9Byl0EGkYoeZSmpWQ4OTD5PeZQ9KZL62NRSEpgnX0AV8js9dIjWpo2FjwWt73GYJ7afqG4iELyQxmd4GtO4cbBfOxJ01762Mn/lFg4jBSKbOQ=
+	t=1742982602; cv=none; b=E+Lpo7vIwfhDs793/NRRc8LQdVa7sNGPt2ibDVbfWN3Zr/y+BclJZWVuCG55bi+YIzgyNH2VUCvJSNEKkH5e9g9G2lViNCmSnpM9rvDzfGQmgt0S4RjMUCb78L3s0FtJF7qAQjkwoXVscZdZzXM4/vXKSGkmZUIUrbICtl2Lask=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742982556; c=relaxed/simple;
-	bh=blgLyvcFFzX3lL2NYcAaYVnF+2egtRAqz36Nl4gpGqs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mFAvHOv8JFngSUC2cdD8AafdOFP2Ji3xZKzcShIDGyFqNjSqaCosUzY2UYnrCN3dhfysZgC5rSpL9NgMy1koFnmmZkAKpfR3+fUCslYAGghyD8Gmcx6olijFv+SS5lle+UNWrv+LlpY1CTSueFqrKmNXH7beAYSXFPVipng6Ksg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Os6QRL5+; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Os6QRL5+"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso44584935e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 02:49:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1742982552; x=1743587352; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AMf8LZah20pBW0IGNKJCh7GjeqLh0QSKun39aHvg0gk=;
-        b=Os6QRL5+gdIuPCGaNWS4H+v4ko4JUHImORsYKgMf/LG+q+UXaleWXEe9Er2HEnAfv/
-         pUM9JRKnDQLZGOf8zpFU3M8if7gPeTy1fxOFqlfAGz/S2Dkgyh5U4Q311UFFcBtBToMK
-         YquaEi0nRNJI+e3uHSFsOMgk9oGgkIxZiXeGoScbDZOF060Sat7zlx01sLL5XEDlqkGY
-         Wg5d6zULGnBb/9HMWkL+RsOBlC8QSJcbeSuWCiCTSamnS1QJrOJ+IauMqXVNxLQADfM7
-         6vjD51SzaPMEL+B+MqRnOgSql2gPhOo/ggD3wkB9IeoYJ368PO2A2WjwZp0g4RoaEk5p
-         52ng==
+	s=arc-20240116; t=1742982602; c=relaxed/simple;
+	bh=SmXL+JiIJjhi5GvCwXWqvq1ZakYPzIcHbkmSh7WHMLw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JKo3h38TsQA96ucclLZowTDT1GcSN8pq+zrBVvFOMh8loqp879nEuj0RtruVRizVD0BOaowwJ+2TToWZk4VPi2UmNVcVJefnqw5jpIcN1CWiOVQSN8+11JmItmRw6D88VBk+pv/w9TAajj9JDprAb1B98O5NKG440e7XeGifROc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-86feb84877aso513510241.3;
+        Wed, 26 Mar 2025 02:50:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742982552; x=1743587352;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AMf8LZah20pBW0IGNKJCh7GjeqLh0QSKun39aHvg0gk=;
-        b=vfwdhqfEpCUUUvmvzKytytySSsyrhLTnDWVcjBbKYX4dAp8yU46FhyyJlMoItldUir
-         44Cl6yHye7znsz+t6ig4WmTdwrZyP0NkTYGjSpe15VKmi95vOpo1UNWZEV74l648TIeH
-         inOX9V8MkuObACwP9Jzdk1wwuGBN3/gDEkDZUHj80rruDZ3ybW5e0yVNXmk4J0uDhpR0
-         2VbMktoAL/sxXeLqew9gGWt4l9iiIR46hsp6NIHURrgaGBmR1sN6ZmJ0WxssdA12uKky
-         PkGGQFLHPPAcSpPBelFTCUz/FDXg1+SwRtAFbttMkfXyXMS3l+rNwgiBy6ydYUZH0YGL
-         UXWw==
-X-Forwarded-Encrypted: i=1; AJvYcCUSte68fePeNGQWFKXzlv1Ix3ckQ3YhOL92Y3Sq8WapzQbfPK1aLeAQgSQbvQeDXoiCuqVQvmcnCsPHchc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfKSUfh1w2ouhNGWnaF7J1aUZ+wWwbHwKcRR7J2zeJP3IB2gVR
-	BMOjagjauBwS3+ssopfQGuQ2oWTHDGghwG/4lFJ1yOLgOnmyeIzIudYUr/Mbhfc=
-X-Gm-Gg: ASbGncsAMjSrGbyiyaTzSLNSnAShPBIzbKwBZNkzFKPuRamIwLimOaMdebEVmzBkP3y
-	RXTfbo5llHgOq/jQgchipKd0YNcS5FPr57zmGGEVHSH/3qeyOPZfbEFLol6buA8Qy1w1qgxZKH/
-	PRaCG+TfxBBOvpxes4vo6np49Q7MXvdpX/MQfK+5eDUKIs+nlDalQibTo9Y85gd1NMV7kaYlOsk
-	bJ9R053QpYkp2lw3aZlGEXmjS4vmx0eU05+24GnVOhXDybvxgrFmWF1YLH5QjFDhnkCy4dIUlep
-	XjWszkpPn/XgyVYkoYk6YmLFqBbjP8ay7T9Uf3/DmMy6WxQ6Nl4NcTUSpA==
-X-Google-Smtp-Source: AGHT+IGRViDMKK6wKXb6OhyBa/rHykXthCXSj7KFfLD1Z+8vJvxSt4VQhKgttI4B1gO+tM6LXwgGbw==
-X-Received: by 2002:a05:600c:1d81:b0:43d:10a:1b90 with SMTP id 5b1f17b1804b1-43d509f8691mr195871375e9.16.1742982552228;
-        Wed, 26 Mar 2025 02:49:12 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fd27b59sm176543075e9.23.2025.03.26.02.49.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 02:49:11 -0700 (PDT)
-Date: Wed, 26 Mar 2025 10:49:10 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>, mingo@kernel.com,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, jpoimboe@kernel.org,
-	jikos@kernel.org, mbenes@suse.cz, joe.lawrence@redhat.com,
-	linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [RFC][PATCH] sched,livepatch: Untangle cond_resched() and
- live-patching
-Message-ID: <Z-PNll7fJQzCDH35@pathway.suse.cz>
-References: <20250324134909.GA14718@noisy.programming.kicks-ass.net>
+        d=1e100.net; s=20230601; t=1742982599; x=1743587399;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jKQO23Cx9d0LvjJBqoaXpMi995oqQPpXgcgXRWzNSKQ=;
+        b=ADLWTlo8YZDaSS948sCm8e+MlWzfP4pFPNqeIVYV60krTcufcL1KM6HOy8AAWqQqkI
+         XqAKp9b1EYuLeLyVvopLrxZlyaC+EWdNi7tV0zM5XxX7rPuGf9p54OxZ6lQPwvnBPpeE
+         nPIz25FZys2liBljn1Jxymkc6NhK/MnA1nwPns8Eoa6NfbxvnCcqNJgHlqfYbRrF4uUA
+         Z9IHve25bSbf2mUoc7YEjxItQK1QzC/NPEGnrt4fTSjdU/padKmFvjGllRfqeHWKg7iX
+         MqX0dquWfSn7ZLmpE7g9Z87N2skPnd9fEBoMOOgQ3RKGPGPgUlUrPSH0Q/eQvQJlUd0t
+         6w6A==
+X-Forwarded-Encrypted: i=1; AJvYcCWiUf7bhsymNEHP9g6b3STyv1Kl5IzrWa/FIe8dm8sxOPWKj1XH4RjHeg7n2gbxgy+vee6OEgGmhITyEfPEqEn0DJE=@vger.kernel.org, AJvYcCX0DULBs0c9Fzkvceu/fdDamMu9McCnm78FZZuFJ//DnQZgQ8TwJdEpiz5cWjZzhglR7SXqoyhQSXjW1KU=@vger.kernel.org, AJvYcCXmHQ3SLgenj6UhU45vygkaibwV7/hY1CusF71wya5oEPKWK0HzA5geik4ievXwVbrr7Z90HdTGtFYXAgb0@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJy9znsgjGTLxCOPWvapx0Q93vMlDSRgHMQ2el2OjivB/n6vfS
+	V4L3W3+vQgXCiL5c14gjI6Or3/hqVtezB0RAnn4ioV27+AIWXOI9625ITd/YgPE=
+X-Gm-Gg: ASbGnctFAorLFlGFJI8sZEArxPNDL/UVVjjHHp/jqUBtEr4h43sDC6AaH6dr/L63iCW
+	Z6pBhEK+JG/ALV/rorp8vk4UioVdM6TYYwHAR35fZouzSv93QaAikCdZedDtfM+FB+bA7OdOlmO
+	eVYadurGAhRMo56/7nw+dCUkf7e+em3QFC5ukdBhcVVs62GTw1b4AW0nNYvhISc3K0ZsFb4eDVj
+	UjJsYIDBfv2Wuy4okgUsNfKHX92nbrA3b5OtPMVGHrtaIGzxpS5G4VFaf6aa0yJlgmkJ4GWfy+9
+	6HkpXUYIhI3U+uKaKt7ic5pejVpei6abrV8vwc5mPNyeIW6uL+kYIrst25op3+GViCK8mRSimrp
+	RoaeRgSHxGYz1yVuxwg==
+X-Google-Smtp-Source: AGHT+IGSIQIrLPlJ1yxx0QKt6Drz5lBprJ8+ZBSCsuZtGJ/IGUo9ksb8HCdhUOdXwD3vkDSjKrcy/Q==
+X-Received: by 2002:a05:6102:5091:b0:4bb:e8c5:b172 with SMTP id ada2fe7eead31-4c50d4d117emr14592193137.8.1742982599060;
+        Wed, 26 Mar 2025 02:49:59 -0700 (PDT)
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-86f9f3c2d01sm2469491241.16.2025.03.26.02.49.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Mar 2025 02:49:58 -0700 (PDT)
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86feb84877aso513501241.3;
+        Wed, 26 Mar 2025 02:49:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUBtWlt2/NfzxGNjZxm/7Xcte/2jUpc8s32AqEwHqn6i74YKW/psMz5VTuiBB59QMcnbiHtbcablLmfybT6AQmELzk=@vger.kernel.org, AJvYcCV/eYUv9K9r88Xcje1N5dqjIw81frbfYqK4gkkIKxxFHtKXmb5kZxO2dfdZMPMDj9EJnfYTq7ndOHvK+Tc5@vger.kernel.org, AJvYcCWabhW8L4xXG++WNszBgtMDLIwFuXffa83ZKb63oJokPsxWKBfLEAr8GH00zivBSxuT/rYLTRyUpkcZbDY=@vger.kernel.org
+X-Received: by 2002:a05:6102:a51:b0:4c4:e018:326f with SMTP id
+ ada2fe7eead31-4c50d513aa4mr14555149137.10.1742982598730; Wed, 26 Mar 2025
+ 02:49:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324134909.GA14718@noisy.programming.kicks-ass.net>
+References: <20250325160904.2688858-1-thierry.bultel.yh@bp.renesas.com> <20250325160904.2688858-8-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <20250325160904.2688858-8-thierry.bultel.yh@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 26 Mar 2025 10:49:46 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUsdk+qDDwE_4vJrLRqK9Dhb8Mc_tDEXMHeLL9P_u3XuQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JrSAYUiq-6TpwJ18nNff1QGHnNZxD4aPKNO7SMpE-lLvCcSuM5mkMeIRhQ
+Message-ID: <CAMuHMdUsdk+qDDwE_4vJrLRqK9Dhb8Mc_tDEXMHeLL9P_u3XuQ@mail.gmail.com>
+Subject: Re: [PATCH v5 07/13] serial: sh-sci: Fix a comment about SCIFA
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org, 
+	paul.barker.ct@bp.renesas.com, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon 2025-03-24 14:49:09, Peter Zijlstra wrote:
-> 
-> With the goal of deprecating / removing VOLUNTARY preempt, live-patch
-> needs to stop relying on cond_resched() to make forward progress.
-> 
-> Instead, rely on schedule() with TASK_FREEZABLE set. Just like
-> live-patching, the freezer needs to be able to stop tasks in a safe /
-> known state.
+On Tue, 25 Mar 2025 at 17:09, Thierry Bultel
+<thierry.bultel.yh@bp.renesas.com> wrote:
+> The comment was correct when it was added, at that time RZ/T1 was
+> the only SoC in the RZ/T line. Since then, further SoCs have been
+> added with RZ/T names which do not use the same SCIFA register
+> layout and so the comment is now misleading.
+>
+> So we update the comment to explicitly reference only RZ/T1 SoCs.
+>
+> Reviewed-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 
-> Compile tested only.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  include/linux/livepatch_sched.h | 15 +++++--------
->  include/linux/sched.h           |  6 -----
->  kernel/livepatch/transition.c   | 30 ++++++-------------------
->  kernel/sched/core.c             | 50 +++++++----------------------------------
->  4 files changed, 21 insertions(+), 80 deletions(-)
-> 
-> diff --git a/include/linux/livepatch_sched.h b/include/linux/livepatch_sched.h
-> index 013794fb5da0..7e8171226dd7 100644
-> --- a/include/linux/livepatch_sched.h
-> +++ b/include/linux/livepatch_sched.h
-> @@ -3,27 +3,24 @@
->  #define _LINUX_LIVEPATCH_SCHED_H_
->  
->  #include <linux/jump_label.h>
-> -#include <linux/static_call_types.h>
-> +#include <linux/sched.h>
-> +
->  
->  #ifdef CONFIG_LIVEPATCH
->  
->  void __klp_sched_try_switch(void);
->  
-> -#if !defined(CONFIG_PREEMPT_DYNAMIC) || !defined(CONFIG_HAVE_PREEMPT_DYNAMIC_CALL)
-> -
->  DECLARE_STATIC_KEY_FALSE(klp_sched_try_switch_key);
->  
-> -static __always_inline void klp_sched_try_switch(void)
-> +static __always_inline void klp_sched_try_switch(struct task_struct *curr)
->  {
-> -	if (static_branch_unlikely(&klp_sched_try_switch_key))
-> +	if (static_branch_unlikely(&klp_sched_try_switch_key) &&
-> +	    READ_ONCE(curr->__state) & TASK_FREEZABLE)
->  		__klp_sched_try_switch();
->  }
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Do we really need to check the TASK_FREEZABLE state, please?
+Gr{oetje,eeting}s,
 
-My understanding is that TASK_FREEZABLE is set when kernel kthreads go into
-a "freezable" sleep, e.g. wait_event_freezable().
+                        Geert
 
-But __klp_sched_try_switch() should be safe when the task is not
-running and the stack is reliable. IMHO, it should be safe anytime
-it is being scheduled out.
 
-Note that wait_event_freezable() is a good location. It is usually called in
-the main loop of the kthread where the stack is small. So that the chance
-that it is not running a livepatched function is higher than on
-another random schedulable location.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-But we actually wanted to have it in cond_resched() because
-it might take a long time to reach the main loop, and sleep there.
-
-Best Regards,
-Petr
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
