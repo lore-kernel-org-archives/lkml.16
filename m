@@ -1,121 +1,158 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655BA1DE2A1
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 12:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98CD51E505;
+	Wed, 26 Mar 2025 12:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742993811; cv=none; b=inKd3SIyCY14FEaqdBGjqdbkOx/cgQQWplfPy1Fa20xgsbIrhSARVnruGYKXktx+y9NKCKrV57kVdIeMskN81Fp9RykKYUcpm3FBodPXVn37xGbOtKWoLv4fKwOjosRO3c9JrhrOiqNclBt16P/d4Pmw0zK71muPrfI1LsB8DNg=
+	t=1742993862; cv=none; b=kTue2w5U7uQncawKToqJTtD8v0z/dhkjfn53s6xOwlsArRyfMRnvQxZeZF3STpJDwlkVbG4CoJTBnKKnBUSId0weZqMfQ1jdgPIpQipSCw0y8muSNNFqeuSdPABBDCxhDzxot7B/EvBJz+4D42wZ5NCmsAINac5u7B6YwX8ie5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742993811; c=relaxed/simple;
-	bh=xvdRNCWSoMb4LFMgO8nhLmxtocYZrWldrhUAbUspffI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kPvSlEt8ZZap/Sv7WEcQw0ekEWrGhlHf5nz9QmMo353beWno4OFkoCOvx/LSG4rK5ffXuCTivuibWLGxRA9gV2Es9aHeOXvl6sK+PsSutsUqoGmOSw4EZNcRD9weqKBm15Lcos5Fabn+WbbRK7pkdWGwLNug4TOtGRK0LVAjLyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b=WjfcLfDt; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
+	s=arc-20240116; t=1742993862; c=relaxed/simple;
+	bh=bHXC3fXWuum1FoL9zvTiL1eryoAtkD94lq5aJl7xK+g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YPIHpT8d3Qdsil/4nTSkhQRn8lC7QTzV8dR5hAGzIppJHv9MIwt8rLUcqWLV91S/rVoJHwQzlrcnP30f41O1LdVKt6cf3xDmuTgPeWpxciIbWJiUgJ9CpwolbljVrEhwkyQAXH6SJ3vny4iQ0Nw9v2Lccb24+DLcZ6DgT10BSe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=nkgU++pT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MUrGBGmD; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b="WjfcLfDt"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3018e2d042bso8262209a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 05:56:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=futuring-girl.com; s=google; t=1742993809; x=1743598609; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dRQTudAEXM13GUB8NKDUowp/QnTU6FFua+8YuPXk7Rs=;
-        b=WjfcLfDthWyohLKliE5IJApO0G4dYpBvNwIlZUDZx+Zh1w14DPLUfCZVSeapDnUfj0
-         Z9M9Cish/3QTFlkIGtiOJU/Q3tGGT5m2ODDVOlyWo2bDnV1IzCZe0zz23Fx6gzUiFQIq
-         wRSEbursI2uvzdrU6QrBryyjVKTsQANZf5Uyhdg9bMimckPmF5c9SS+00BhxluwX5Ad9
-         TNzMLLXMOL05m5xwk3uBMs3vLUumLW7hZhNwe0oGV6NehT7M/6gAHvKLmicN01P9wAKo
-         IA2VBYATDTrOgqUM0kDuAAXl7KvMFEzDgxvl8mir3xxapsd8Fvj4iMIvh/ILT0Koymdt
-         knZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742993809; x=1743598609;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dRQTudAEXM13GUB8NKDUowp/QnTU6FFua+8YuPXk7Rs=;
-        b=xOlhpBslppdx1sLy4n3Tx1ofAvAspuJbUmlRRxhFgFTEL+EOKv8AtbxkWWq4dGbnUh
-         x69EEDseaspUxBqel4BfvdNRBqbAA2CqLT+1FzPZRRc6BCGohEqFI7rxKzzI8iL4Hlc2
-         7eYFz0OZF8HU/owLt6Suivl2jaFuVf7p9mKfsCuLPRkFOQaYS//KG7TgDKmH9NvqeFri
-         NvJEl/sXKJWQVUP4gGmaRJTyZc2pM7/jyT5QmP2hOWvuN4h0HuqwVJiofln8C9IAdBCt
-         YrHquu7PQy7gYGAQJ0JwNyGPq/GWLZiajkWlYElMWwuKdMNLKOkFLlLHnN+1kNL+exHg
-         7kAw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXP1JRw3EpGtRFRNzk7hG96P3bapBJlgSnrA83O8T2PtW/ySjYoMv3hAv+6OjEwfWWcTFuAEn8+9p++HM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBsLgj4O82y0ZFu6EXeKHePdZSR+PBmFFVsv5EjN3cuvA0TStC
-	fnEgqCBD3X2UPuWTWqtxjh97K94BisXlzkn6TH78+q5+UBNfR8cFuqqBEBsctxpBQaoE2sHW00G
-	4x7WXkbXDiL3HRCwSMKll7vA8yT66QxXZLnUDIg==
-X-Gm-Gg: ASbGncvSjL2Zrwr4ORKJyLZEdKNsw8869QFL3JBg0x2Q3GeLOO4PfFKHtZWFs0D7xHF
-	8sqEMoljeVWO5A8xtLw191aTE7yXxbHrncTxtKLYQPgGfiGaMPxvtepWq//a01iNXuzbh4Uajyf
-	hTAaaXbOI9Wi8bvo1BJDFXVbypJw==
-X-Google-Smtp-Source: AGHT+IEHnIi6oFcX3sSPTlCWyPe5+ORCR0E86AOeljuBB1GhwoNwr9EkT7VwDALSkS463AkNJD21fbYSqSYAoxTdCy0=
-X-Received: by 2002:a17:90b:554e:b0:2fa:228d:5af2 with SMTP id
- 98e67ed59e1d1-3030fea0d35mr35976364a91.15.1742993809451; Wed, 26 Mar 2025
- 05:56:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="nkgU++pT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MUrGBGmD"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 69B441140114;
+	Wed, 26 Mar 2025 08:57:37 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-12.internal (MEProxy); Wed, 26 Mar 2025 08:57:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1742993857; x=
+	1743080257; bh=NAlqLH3kwcPC2CJDpUxLUmmxOvp3Wd9C6S24VbRA/0Q=; b=n
+	kgU++pTI+DRP6wPoVBNl14Gl+Vt26pSU9GJ7VMcr0nKES1/JdMEckN3kOFEmlY1A
+	H6N/9uMHxsYLVWlE1nHCBLiWedNX2/9FJp6hTnBOg3wRRsamDq9Y2dSKClpU60mv
+	EeRms+5z6MKxZnPIu2QbhVRs38uQ4KgWyrrYzBrSR2ArsEHIgX5gsZoSH6rK2BZU
+	KtM3Z6Oxt1YI8GdpKAdlfnnKMiCAckIeDBPx/YQlBn/ySNGo1W246HBItlNRch6t
+	Ki93u2cIgvAQr0HnmMtJKwBPrWse2WljKRGX4z+L7SkpQFLQsYAMjX4VgSKJDEiO
+	bbGnXRCdxGtISgN9rKwcA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1742993857; x=1743080257; bh=NAlqLH3kwcPC2CJDpUxLUmmxOvp3Wd9C6S2
+	4VbRA/0Q=; b=MUrGBGmDmcb55nJGHAEGycJC6ifRqDRh6iuFHDwmvXpu8yvNYlM
+	FghbhppplFPo/n70YG4LfwJOvuga7U/Yi2GNJbVV9nSS2zKsFwMbUS/aAui2YI9m
+	7IeR+1mMR47H+6VF//0w59yjpfVwlCwDqTYK46xP2b/l27pnVwDI3DxDFER8FJXR
+	2kDQcLMULRDydIgjwmuNyV9jpuhzCLfYjDTFwsqSgH6RYZwowz/6Qnu9wIO60Hxi
+	DC9DWmzpW3jD6OxnO37X6ecxlxTWBoUnbPiJW/BWoTQ1Tl2JiXS0R6jhshNksYzW
+	VcLE3EfVyJMvU39ln3Bj917GuOm3vunwA5Q==
+X-ME-Sender: <xms:wfnjZ5cUF4Rpzzol7SK7PN-DT2RyF6bx0ay9VpBtNgNbT_dORSqWVQ>
+    <xme:wfnjZ3OKfS_87ntSKVm8lUOVrKFvsFHpccNCK67p-equMD5yfNd7nSMb2UB0r-e79
+    5roTYhlbth_hVs2-1U>
+X-ME-Received: <xmr:wfnjZyidO1ZXzHiZJsyNjE-tI36RZpBUKv7e2YJOnzj7LnM8w8AA6F58omdq>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieehheelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    jeenucfhrhhomhepufgrsghrihhnrgcuffhusghrohgtrgcuoehsugesqhhuvggrshihsh
+    hnrghilhdrnhgvtheqnecuggftrfgrthhtvghrnhepuefhhfffgfffhfefueeiudegtdef
+    hfekgeetheegheeifffguedvuefffefgudffnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepshgusehquhgvrghshihsnhgrihhlrdhnvghtpdhn
+    sggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehpuhhrvh
+    grhigvshhhihehhedtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggr
+    vhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegushgrhhgvrhhnsehkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthht
+    ohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvug
+    hhrghtrdgtohhmpdhrtghpthhtohephhhorhhmsheskhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
+    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:wfnjZy9GVxwB7SzXoeofemHgrGglut-6hDUUnKNBhtGciJwjUCjb1Q>
+    <xmx:wfnjZ1vgzivMMOuN6MXo2absrlKTyCb4juWjpS_SXbo5NGvNtOQUSQ>
+    <xmx:wfnjZxHlccPKhjIt_ISGXK3JpVu8qAriWoDzre9R3JF1jhlA7ip2wg>
+    <xmx:wfnjZ8NfleetIkJ02qKgvT_qBCRoV0Ar_JYfu-IaN55HSW3uyld7Xw>
+    <xmx:wfnjZ7JQFmvV8RB_SyBDgflWCq6Yr2-vbsFrKznQpMKmn3hWL0uFuNEN>
+Feedback-ID: i934648bf:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 26 Mar 2025 08:57:36 -0400 (EDT)
+Date: Wed, 26 Mar 2025 13:57:34 +0100
+From: Sabrina Dubroca <sd@queasysnail.net>
+To: Purva Yeshi <purvayeshi550@gmail.com>
+Cc: "David S . Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: ipv6: Fix NULL dereference in ipv6_route_check_nh
+Message-ID: <Z-P5vvrdA5MHMW_o@krikkit>
+References: <20250326105215.23853-1-purvayeshi550@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325122149.058346343@linuxfoundation.org>
-In-Reply-To: <20250325122149.058346343@linuxfoundation.org>
-From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
-Date: Wed, 26 Mar 2025 21:56:32 +0900
-X-Gm-Features: AQ5f1JoR9ImdCw0Rs5T9hQLB-tj_Cg1W61XlOGDrmHp1wfzXHUlPxH1S6OVVqCA
-Message-ID: <CAKL4bV66BuvB=-qkecDrkRw9AwOxv7pF6CGz_pLX28DQ+Dgdfg@mail.gmail.com>
-Subject: Re: [PATCH 6.13 000/119] 6.13.9-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250326105215.23853-1-purvayeshi550@gmail.com>
 
-Hi Greg
+2025-03-26, 16:22:15 +0530, Purva Yeshi wrote:
+> Fix Smatch-detected error:
+> net/ipv6/route.c:3427 ip6_route_check_nh() error:
+> we previously assumed '_dev' could be null
 
-On Tue, Mar 25, 2025 at 10:13=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.13.9 release.
-> There are 119 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 27 Mar 2025 12:21:27 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.13.9-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.13.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+I don't think this can actually happen. ip6_route_check_nh only gets
+called via fib6_nh_init -> ip6_validate_gw -> ip6_route_check_nh, and
+ip6_validate_gw unconditionally does dev = *_dev. Which is fine,
+because its only caller (fib6_nh_init) passes &dev, so that can't be
+NULL (and same for idev).
 
-6.13.9-rc1 tested.
+> Ensure _dev and idev are checked for NULL before dereferencing in
+> ip6_route_check_nh. Assign NULL explicitly when fib_nh_dev is NULL
+> to prevent unintended dereferences.
 
-Build successfully completed.
-Boot successfully completed.
-No dmesg regressions.
-Video output normal.
-Sound output normal.
+That's a separate issue (if it's really possible - I haven't checked)
+than the smatch report you're quoting above. And if it is, it would
+deserve a Fixes tag for the commit introducing this code.
 
-Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
+> 
+> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> ---
+>  net/ipv6/route.c | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
+> 
+> diff --git a/net/ipv6/route.c b/net/ipv6/route.c
+> index ef2d23a1e3d5..ad5b3098eba0 100644
+> --- a/net/ipv6/route.c
+> +++ b/net/ipv6/route.c
+> @@ -3424,9 +3424,20 @@ static int ip6_route_check_nh(struct net *net,
+>  		if (dev != res.nh->fib_nh_dev)
+>  			err = -EHOSTUNREACH;
+>  	} else {
+> -		*_dev = dev = res.nh->fib_nh_dev;
+> -		netdev_hold(dev, dev_tracker, GFP_ATOMIC);
+> -		*idev = in6_dev_get(dev);
+> +		if (res.nh->fib_nh_dev) {  /* Ensure fib_nh_dev is valid */
 
-[    0.000000] Linux version 6.13.9-rc1rv-g3d21aad34dfa
-(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 14.2.1 20250207, GNU ld (GNU
-Binutils) 2.44) #1 SMP PREEMPT_DYNAMIC Wed Mar 26 21:01:17 JST 2025
+I don't think any of these comments are particularly helpful. It's
+pretty clear that you're checking for NULL/setting NULL in all those
+cases.
 
-Thanks
+> +			dev = res.nh->fib_nh_dev;
+> +
+> +			if (_dev)  /* Only assign if _dev is not NULL */
+> +				*_dev = dev;
+> +
+> +			netdev_hold(dev, dev_tracker, GFP_ATOMIC);
+> +			*idev = in6_dev_get(dev);
+> +		} else {
+> +			if (_dev)
+> +				*_dev = NULL;  /* Explicitly set NULL */
+> +			if (idev)
+> +				*idev = NULL;  /* Explicitly set NULL */
+> +		}
+>  	}
+>  
+>  	return err;
 
-Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
+-- 
+Sabrina
