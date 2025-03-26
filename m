@@ -1,149 +1,89 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E5919E7E2;
-	Wed, 26 Mar 2025 13:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889991EB5EB
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 13:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742995507; cv=none; b=YnEUjPwMVpRHk3uGx2CP6LXB9tRRJrWcijblQWC4RBXfKklHApnjvk6/RXkPgSNWi5ULnpglYwg+mC6BhQC39ZVhagBZQeENF9dG9OyIz7PobzggyUXZKql5Pf3iVU66bQQkSyq7kAP1zAhc6wJG9dEFqDjHVC5AZru73sC40fg=
+	t=1742995518; cv=none; b=S7DjfPbiTiP+xSYvY5vfghNOKJ+AtUHWPbnlDPiECMqMc3JAlZ70/r1dHvQf5U7qz1VAcpu4UTg4rFRjzVOJ//uC+alFfX+8tbq8Snd47gwXJyvkZfqEeN4DOdRnTvpyG/ERXsaesHO2AjnrV5uiNZbTMuOtVQgRgQiK5PhrNHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742995507; c=relaxed/simple;
-	bh=Nl+10FAzfsORuUu1DCuzZNgcTfzPXOUYYQaR/dcvcHw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qvsTO0yqhlLSua52+JZrYSAcHQPEk+5vGy7SA9damo8QujJFbMjE7qUE0g7omeiZkRBpKL5nSjc/KdOwa7Ypj/lQnYhwWG57yuoDo8Vj0f3I726fyv+nb7zZNz0AYCpnbyoHa+USHmMmye3t02nVnrtavSKfp0VdJ2klAwrCGAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=lKiFVRlT; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1742995518; c=relaxed/simple;
+	bh=OhIw89YZkaS3K3MXCywHnvtvlklUf24YtHt6tXGm3sg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=isxTjZ0MRCjR9wgkkv60b9vLoaOkbDqzsuDun2hV/oRSSe9BCuYATlPvh5UQQ2jQcQBSzFmTIFQhqeuAWHmKx7gAadGEPWxqcFt/B1BYpRtCqpKofZdEHVlLF4LgPq1CjGfp+4COgZxSv89huMPaZTUCtgEmaA4GTF7PXPUIUgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJrjX8zt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="lKiFVRlT"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52Q9Vo3V014128;
-	Wed, 26 Mar 2025 09:24:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=DKIM; bh=gWv2MyO/NWHLdJ26ZZhkCq82dNl
-	g2t2fpQcAb3y2jdI=; b=lKiFVRlTZ7ylDmYIBQ9QQnAonywvaMpibkrNBgA7BjX
-	iIMbVHKh1UF/xj0cBlxM6Rg7bbqfn4dEkjzSetpedxtmd72Db14njMGYOZDSZ+kG
-	ajV1WfieJgU/LP0hOnrYhFsMtRlx4tbZ5N2h+IJTKN+ZoBWQ9S9wu/AsRymS2zz7
-	9G9Iyqeh+7zDsiRApURpxIqQEe8ibn9nZmdMtfqsk4HlXKxqkV7ZuPVCrm0WCFtK
-	j0LZWYmW3SGFbNaxKK97WE12Vk0xL4oa1+O4kPdpDBwF5uu0Xge1IzyOpSb20Mkg
-	8NDBZxcRinO/YRhkXbALQZioaVQYkPBns1Pby/A0idA==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 45mf1h0y35-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Mar 2025 09:24:35 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 52QDOY0n042990
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 26 Mar 2025 09:24:34 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Wed, 26 Mar 2025 09:24:34 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Wed, 26 Mar 2025 09:24:34 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Wed, 26 Mar 2025 09:24:34 -0400
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 52QDOJbU007524;
-	Wed, 26 Mar 2025 09:24:21 -0400
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <linux-iio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <corbet@lwn.net>, <dlechner@baylibre.com>,
-        <marcelo.schmitt1@gmail.com>
-Subject: [PATCH v3 0/4] iio: adc: ad4000: Add SPI offload support
-Date: Wed, 26 Mar 2025 10:24:15 -0300
-Message-ID: <cover.1742992305.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJrjX8zt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72030C4CEE2;
+	Wed, 26 Mar 2025 13:25:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742995517;
+	bh=OhIw89YZkaS3K3MXCywHnvtvlklUf24YtHt6tXGm3sg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bJrjX8zt+D0Nh9F+su0AXC6mefdS0Fb/VueSXUSlRhiZHOI1YTqX513PKUGwAMEfu
+	 ZlCSF4krPTGW+2HcbakE9Qrc5QylZN0U0/uyR4HwAGxodxKGMIOsNPmMBbg5jzrwRm
+	 3Nc2d2XI/NI3Us5cyNM7yLHMztypm5F1uaS7M6RYuEYEWFHcDWz20Cz0+xijCaDVE2
+	 EliOYCOb/M6/iwpm/bw0rU+nfj9lMR4Q6KcNyMe9MybmTxgKQKNJms1DVE1hFQFwsK
+	 XN33SBCK6rDsEkmOiYM7ynonfeTardP8MIP0Ja2BfEbxaX4N5JriMm24oBHFy0aZpc
+	 f2VduwlH+5gGQ==
+Date: Wed, 26 Mar 2025 13:25:12 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Brady Norander <bradynorander@gmail.com>
+Cc: linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	u.kleine-koenig@baylibre.com, Wu Bo <bo.wu@vivo.com>
+Subject: Re: [PATCH 3/3] ASoC: dwc: always enable/disable i2s irqs
+Message-ID: <98b92d09-435b-4aa4-9b21-496b51ce7d5f@sirena.org.uk>
+References: <20250325211805.2099278-1-bradynorander@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=B5+50PtM c=1 sm=1 tr=0 ts=67e40013 cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8 a=yEi1-Fu5WF2DL2A3visA:9
-X-Proofpoint-ORIG-GUID: -MccmbZBhSl6WKwg86snZMKUqdphdZn_
-X-Proofpoint-GUID: -MccmbZBhSl6WKwg86snZMKUqdphdZn_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-26_06,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- suspectscore=0 phishscore=0 mlxscore=0 impostorscore=0 spamscore=0
- clxscore=1015 bulkscore=0 priorityscore=1501 lowpriorityscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503260082
-
-This patch series extends the ad4000 driver to support SPI offloading.
-In addition to that, ad4000 IIO documentation is expanded to:
-- list PulSAR parts supported by the ad4000 driver.
-- describe some characteristics of AD4000 IIO device.
-- describe changes when SPI offload is being used.
-
-Change log v2 -> v3
-- Dropped patch 1 of v2 series and reverted buffer endianness and SPI transfer
-  bits_per_word configurations to the way they were in v1.
-- Removed dummy transfer in ad4000_prepare_offload_turbo_message().
-- Unified offload message preparation.
-- Removed spi->cs_hold.value to use cs_inactive to set CNV/CS high time.
-- Adjusted max sample rate for AD7983 and AD7984.
-- Dropped AD4000_TCONV_NS and made all time related constants a time_spec field.
-- Removed _offl param from _CHANNELS() macros and added a comment about that.
-- Commented IIO_BE check in ad4000_prepare_3wire_mode_message().
-- Now using predisable to balance with postenable.
-- Put spi/offload/consumer.h include right after spi/spi.h.
-- Removed unrelated brackets in info_mask_separate_available assignment
-- Added blank line after if.
-
-Change log v1 -> v2
-- Fixed passing inappropriate pointer instead of ret to dev_err_probe()
-- [new patch] Set transfer bits_per_word to have data in CPU endianness
-- Set iio_dev num_channels close to where channels is set.
-- Complement offload message comment about first sample being invalid
-- Document why the first buffer sample is invalid when offloading
-- Added blank line before a 'simple return'.
-
-Link to v2: https://lore.kernel.org/linux-iio/cover.1742394806.git.marcelo.schmitt@analog.com/
-Link to v1: https://lore.kernel.org/linux-iio/cover.1741970538.git.marcelo.schmitt@analog.com/
-
-v3 was tested and worked with the following setups
-- ADAQ4003 on CoraZ7 with SPI offload support;
-- AD7687 on CoraZ7 with SPI offload support;
-- AD7687 on rpi (no SPI offload support).
-The Linux image ran on cora was built from IIO testing branch.
-The Linux image ran on rpi was built from rpi tree rpi-6.14.y branch with
-some adaptations to cope with old iio_device_claim_direct_mode() and addition
-of the following patches
-iio: adc: ad4000: Stop using iio_device_claim_direct_scoped()
-spi: add basic support for SPI offloading
-spi: offload: add support for hardware triggers
-dt-bindings: trigger-source: add generic PWM trigger source
-spi: offload-trigger: add PWM trigger driver
-spi: add offload TX/RX streaming APIs
-iio: buffer-dmaengine: split requesting DMA channel from allocating buffer
-iio: buffer-dmaengine: add devm_iio_dmaengine_buffer_setup_with_handle()
-
-Marcelo Schmitt (4):
-  iio: adc: ad4000: Add support for SPI offload
-  Documentation: iio: ad4000: Add new supported parts
-  Documentation: iio: ad4000: Add IIO Device characteristics section
-  Documentation: iio: ad4000: Describe offload support
-
- Documentation/iio/ad4000.rst |  86 +++++++-
- drivers/iio/adc/Kconfig      |   7 +-
- drivers/iio/adc/ad4000.c     | 405 ++++++++++++++++++++++++++++++++---
- 3 files changed, 463 insertions(+), 35 deletions(-)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="uz6+6+wQfmh8uPot"
+Content-Disposition: inline
+In-Reply-To: <20250325211805.2099278-1-bradynorander@gmail.com>
+X-Cookie: To err is humor.
 
 
-base-commit: af94f401e26f686f7391ce79b38a6129417c22dc
-prerequisite-patch-id: 3d517eef53a799adba5922815fe684b913e36773
--- 
-2.47.2
+--uz6+6+wQfmh8uPot
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Mar 25, 2025 at 05:18:05PM -0400, Brady Norander wrote:
+
+> Commit a42e988 ("ASoC: dwc: add DMA handshake control") changed the
+> behavior of the driver to not enable or disable i2s irqs if using DMA. Th=
+is
+> breaks platforms such as AMD ACP. Revert to the old behavior by always
+> enabling and disabling i2s irqs while keeping DMA handshake control.
+>=20
+> Fixes: a42e988 ("ASoC: dwc: add DMA handshake control")
+> Signed-off-by: Brady Norander <bradynorander@gmail.com>
+
+Same issue with dependencies here - what's going on?  It also doesn't
+seem like the changelog is describing what's goin on well, if all AMD
+systems were broken by a change from 2023 I'd really expect to have
+heard about it by now.  We've had AMD themselves doing fairly extensive
+work without reporting any issues.  What specifically is the problem you
+are seeing?
+
+--uz6+6+wQfmh8uPot
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfkADcACgkQJNaLcl1U
+h9AK/gf9ENDYToKaTXb4Hrcx9P0XxvUvlF84RfS1/ib0Hb8qCgU/lMj8niSuv92B
+Fm7tRT82kaMCWuHIJIiB0IoTBd6WTqOiuWM2Tu6xJjhy26FZIGnXFh6Sdsm918iu
+qsIFKt1MVJCy21/aDuOvRE6D0ZbPuh98Cz+vG65A5mV3eMNWMCd02bBffcFw/Fvr
+ewQ1/Mea4BBPy545Xmq+1EeoBRZL6jAG+lQWlR8Xnn6iPtCIZ7C1YeccUL1SUYU1
+oMAr61TtcP+o3vME6qPp3XJVfM+xXR0bDZinSZdzpoBHpPiSSv51eEGz6s06d9Bm
+sCvKcd0POaQ8jsWW/Yga9/GVsquIxQ==
+=PlC9
+-----END PGP SIGNATURE-----
+
+--uz6+6+wQfmh8uPot--
