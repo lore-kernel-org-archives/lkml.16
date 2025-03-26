@@ -1,76 +1,64 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13DD81A23AD;
-	Wed, 26 Mar 2025 08:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F9A1A072C;
+	Wed, 26 Mar 2025 08:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742976704; cv=none; b=SqASAZt5UhV3iF548ofm7wjQ+naG1COLAeAj6F+SGfiCVgUSGSiC7xypLxgqJ/qiKD9b4J6NabqlrQPL84ojfIeLeGIxJD+BjxZI7FLpObeeZuKQ8JeZpSgkF7ZhrPkM347y2GupNipOc5WWVROV0Zz8oY+Eq90hLEo6u9DNbfw=
+	t=1742976822; cv=none; b=DNanHUuYLR++gHognPbzV72N7XPD65Y/+zQ1VTuaJadbawOl+9dJuLYcWhqcN/g11QOouy4OG1d6Y6GeoW+BN3Yyrfe2Nq4ExOZCOO7wM8ZMe064DWn+RPUAzEwvbGvmtSdZjtmdguyLuFF3q54RofJYq20PkglSb3xI1tXy/bU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742976704; c=relaxed/simple;
-	bh=wCzUubWpI7qbmQBS32q7t9ANxbIzbn/3ILLojBnJFaI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=vDmTfxGO+hU4sc/qfVa51laBo23oczq05dXG05L5HKspzg6KbrLaa880E9/I3xa77+PF5zys5fQEa5iqDvj1Qt3epypXcFkgvU0P8LB02gNv4dG5avn1ZN5dlaDzltkbNcSy9QARDrhNb+4trMuS+i677CiIwSgT2nafu4OpCHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=RgXrxQ0K reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1742976822; c=relaxed/simple;
+	bh=mxd9NklVcoOr+WMrk13jMbsMArO4Lmm6XiRTjoB62+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZSuClFrf31T5qMyPlKbhsh1ViFXbFStxuVEB7OMECIUXTCCIJBByRAlL8+Yy93CQ3CiGfXn8FqMqx5T26HuNpbXJmjjKevpIva5LP/ZqxLopXk0QLlPFZkl1kBr28A5B4EIul4/K+eTKdrnDirHSBjLXGnOpQE5uHpXs2lg3+UY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WmVrElu2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="RgXrxQ0K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=ww0BkFy4aWA0YRYiXhyPOQOR4G2Nus3Dw378EDkmqd8=; b=R
-	gXrxQ0Kh0sHRTtUVhdTIMLk5EjQc46fR/N7c+l6i772hwD+5qoYZE7LNfGQ2pidY
-	b98Z+JZlBaiVh3OCRe+PsPAfu6Mc0EQrEFI6Li1AHFZ1+KxBdpBPKVDWW39ePtlr
-	gzBNQPg8JML3FAbw0Xqqd56fPeHXyrd6YbUMlWI+Ck=
-Received: from andyshrk$163.com ( [58.22.7.114] ) by
- ajax-webmail-wmsvr-40-115 (Coremail) ; Wed, 26 Mar 2025 16:10:40 +0800
- (CST)
-Date: Wed, 26 Mar 2025 16:10:40 +0800 (CST)
-From: "Andy Yan" <andyshrk@163.com>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>
-Cc: heiko@sntech.de, conor+dt@kernel.org, krzk+dt@kernel.org,
-	robh@kernel.org, hjc@rock-chips.com, devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	"Andy Yan" <andy.yan@rock-chips.com>
-Subject: Re:Re: [PATCH v2 2/6] dt-bindings: display: rockchip,inno-hdmi:
- Document GRF for RK3036 HDMI
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <20250326-poetic-happy-peacock-a79d29@krzk-bin>
-References: <20250325132944.171111-1-andyshrk@163.com>
- <20250325132944.171111-3-andyshrk@163.com>
- <20250326-poetic-happy-peacock-a79d29@krzk-bin>
-X-NTES-SC: AL_Qu2fAPWcuU4v5iabY+kfmkcVgOw9UcO5v/Qk3oZXOJF8jDzp/xADZW1jPVTtweeEIS+ujTi3dDVRxcBmeZlRU6UgfbysO0M0gOJZSe6spqRDuA==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WmVrElu2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73E82C4CEE2;
+	Wed, 26 Mar 2025 08:13:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742976820;
+	bh=mxd9NklVcoOr+WMrk13jMbsMArO4Lmm6XiRTjoB62+Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WmVrElu2k6+b07kci6agVxrhNtwTVcVrEHwz/uJwdd0/tcqZu3PYR7K0pIxoWl9A4
+	 S1EmzqUUWkuuqtwPl44MWn4f4nwp/JpsEsR6XfFfAmWWsULn85BPrsrRrKqDgX8PSj
+	 qzw7LiC3GI2jy75clApJmZvt/jA9QNXEDmiqVLHDbMnd7QgMTAOBAnuIlzV06Xr/9T
+	 0ELkZRKuy0hzXjYf3r27PByyt8rtI0hDyz5iBhgOmip+M8s2xm8hi7Oc7Vr1HLdGtG
+	 V1ea5RHwiVek0BJ+ZwXlu7lmx+LXItRDH+djAwsdKWd7KzRbv13/29NFkbCag7lxyz
+	 iU2A/+Hj5cf6w==
+Date: Wed, 26 Mar 2025 09:13:36 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Hu Ziji <huziji@marvell.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-mmc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: mmc: marvell,xenon-sdhci: Allow
+ "dma-coherent" and "iommus"
+Message-ID: <20250326-accurate-remarkable-caiman-a73cd6@krzk-bin>
+References: <20250320-dt-marvell-mmc-v1-0-e51002ea0238@kernel.org>
+ <20250320-dt-marvell-mmc-v1-1-e51002ea0238@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <617e3d7f.77d1.195d180e680.Coremail.andyshrk@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:cygvCgD3v8uAtuNnBmmNAA--.58577W
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqB4cXmfjtY8XaAABs0
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250320-dt-marvell-mmc-v1-1-e51002ea0238@kernel.org>
 
-CkhpCgpBdCAyMDI1LTAzLTI2IDE1OjU5OjI1LCAiS3J6eXN6dG9mIEtvemxvd3NraSIgPGtyemtA
-a2VybmVsLm9yZz4gd3JvdGU6Cj5PbiBUdWUsIE1hciAyNSwgMjAyNSBhdCAwOToyOTozNlBNICsw
-ODAwLCBBbmR5IFlhbiB3cm90ZToKPj4gRnJvbTogQW5keSBZYW4gPGFuZHkueWFuQHJvY2stY2hp
-cHMuY29tPgo+PiAKPj4gSERNSSBvbiBSSzMwMzYgdXNlIEdSRiBjb250cm9sIHRoZSBIU1lOQy9W
-U1lOQyBwb2xhcml0eSwgYnV0IHRoaXMgcGFydAo+PiBpcyBtaXNzaW5nIHdoZW4gaXQgZmlyc3Qg
-bGFuZGluZyB1cHN0cmVhbS4KPj4gCj4+IERvY3VtZW50IHRoYXQgaXQgaXMgbWFuZGF0b3J5IGZv
-ciBSSzMwMzYgSERNSS4KPj4gCj4+IFNpZ25lZC1vZmYtYnk6IEFuZHkgWWFuIDxhbmR5LnlhbkBy
-b2NrLWNoaXBzLmNvbT4KPj4gLS0tCj4+IAo+PiAobm8gY2hhbmdlcyBzaW5jZSB2MSkKPgo+V2hl
-cmUgd2FzIHYxPyBJIGNhbm5vdCBmaW5kIGl0LgoKU29ycnksIEkgZm9yZ290IHRvIG1lbnRpb24g
-aXQgOiAiIHRoaXMgcGF0Y2ggaXMgZmlyc3QgaW5jbHVkZWQgaW4gdGhpcyBzZXJpZXMiCgoKPgo+
-YjQgZGlmZiAnMjAyNTAzMjUxMzI5NDQuMTcxMTExLTMtYW5keXNocmtAMTYzLmNvbScKPkNoZWNr
-aW5nIGZvciBvbGRlciByZXZpc2lvbnMKPkdyYWJiaW5nIHNlYXJjaCByZXN1bHRzIGZyb20gbG9y
-ZS5rZXJuZWwub3JnCj5Ob3RoaW5nIG1hdGNoaW5nIHRoYXQgcXVlcnkuCj4tLS0KPkFuYWx5emlu
-ZyA3IG1lc3NhZ2VzIGluIHRoZSB0aHJlYWQKPkNvdWxkIG5vdCBmaW5kIGxvd2VyIHNlcmllcyB0
-byBjb21wYXJlIGFnYWluc3QuCj4KPkJlc3QgcmVnYXJkcywKPktyenlzenRvZgo+Cj4KPl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj5MaW51eC1yb2NrY2hp
-cCBtYWlsaW5nIGxpc3QKPkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKPmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2NoaXAK
+On Thu, Mar 20, 2025 at 04:35:46PM -0500, Rob Herring (Arm) wrote:
+> The Marvell xenon-sdhci block can be cache-coherent and needs the
+> "dma-coherent" property. It can also be behind an IOMMU and needs the
+> "iommus" property.
+> 
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml | 5 +++++
+>  1 file changed, 5 insertions(+)
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
+
