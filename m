@@ -1,110 +1,140 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00300601.pphosted.com (mx0a-00300601.pphosted.com [148.163.146.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F8C1A2541;
-	Wed, 26 Mar 2025 20:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D7701A2642;
+	Wed, 26 Mar 2025 21:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.146.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743022741; cv=none; b=PJER/dooEzHcJGmJr92yCQrn6zffMV3UODclhwpHGr7MBNGxpjlODq5Ba4PatL0BcrjOza2G9FZaB3pU6sfgraXK+e5b+NXXaiH6Yx22ipEd0lexPxEn2HmgV/GvhSwS6zIbgV6/Zgyuh4HZ1pJ8tCPf+rWt7erVF9jCb80lzQ4=
+	t=1743022819; cv=none; b=c5Ws6YBjuMjgLnvga0oenedly9mE6sFHw1ja9Y8JXENs559qyOJS/PQjTY0DZl9+9fIP79VdbT7f9Of8kiQRXu/HkkwUQkF+bF+72P9IHBEksUSj2K6jFW2OlhpFL/Z8fziG3SMXwGyWMKLmWw5k3TuWIfe3hG6JE5uH+v0jAoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743022741; c=relaxed/simple;
-	bh=e+GGi5UAmM6CVgxPTUQNBJPDl18un1EucT6xzYFlgk8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a1bohUCaEO7zHlhJPwNBAnpAKCiHh5w8LtpM6ubqSteewL8ovQefpl7jUapLpUa9zGYYn7TCrE32HxF0iSya9/8ds21Fs1lEQ4xsYDcAOu+qxaKGZYZAGFaLhswVHKbWZpFolnuDKUIGCJUXpJpSz8VDFHmnt0HVjpjl/V2FVjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G2BHT/sS; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743022819; c=relaxed/simple;
+	bh=YMRAohbi2Dz401n4V/wa16n/WSG1I7lPaLiUl2Qf1rI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oXv6btFxA/HFMXFvTEl/6lCe0PRPUDr0x8prHSEBpQw3PnREMF5Dqae7rfhEzkqncmUem/ybyKBPTMzm+Rm6H5LmDSDbjF79YSsyGiWK8NUXRFyv7VlDGNlNFgcxo3KTFBKzZeSS+J8G/dLePv/qSTN/PMvqWCuhgRL7JOl4X4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ni.com; spf=pass smtp.mailfrom=ni.com; dkim=pass (2048-bit key) header.d=ni.com header.i=@ni.com header.b=ZCu3Bhe1; arc=none smtp.client-ip=148.163.146.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ni.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ni.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G2BHT/sS"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-72bb9725de1so94831a34.2;
-        Wed, 26 Mar 2025 13:58:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743022739; x=1743627539; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WXN/ZGcBHJP5iRy6/nH6o1Y5X0gNKUlaCg+l1e82JK0=;
-        b=G2BHT/sS9m/tb21oAhS691GPACCGIyUgJtW8/zMXiGjnleEgN+kvPJLu8OgekQdeNL
-         ikLgzd2jeMvtS0AsjcmXffj15NlGqUHSyrn8u8GMpdme4Q0E7weLqpMkaf5x2wQhnZGJ
-         3EwNf/FaZ2X3xumS7y7EMN87w80bEUIbc0/Wn9iDco5q5XwpwGj8FwAlb4sfGGpNrdHx
-         0Yx7t8ZobHzfZP2grMOT8PyfE+/iWrRreenK4KPwyITq6xR5AZgaqA/1Xa2q0h+PeLER
-         HzPWbP9aIxS5BlvmWD8rL7EpTi3YeKvJiKAGXiKjUWagvLJMIgKoqfPAYKXYSj76VHSL
-         1/Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743022739; x=1743627539;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WXN/ZGcBHJP5iRy6/nH6o1Y5X0gNKUlaCg+l1e82JK0=;
-        b=TKg+ODP6EXxLKkWQi49D+UtJOuSvPCqGuerdBT64ztxTnINX8nbB8zm63bIXXOUPhw
-         U/RWQUnM9TSdkl9rW1D/9N3LmrF6F8Joo0vx+Q+b4fa57tPcaB7kzkSBDn37U89Ccdcv
-         jt4vxGAr+QZEHxvtTwkrExzX6FeJX8XJ7emFS0GULJspxXymaefVzQsp3UiG5JI/xdZ5
-         nA/hNPnTbf4Hni0DgAsgnyXJQbLEaQkShmH81fK3h4II4p4jNXvKuPpmTMnpLuZcM3wx
-         FpGJkr/vSyPOCmMBCBVqZXM2qnNceg5shQ+WBTREx5fTIJ1lpHE7fLcm5M3JqNMrtAsY
-         d6QA==
-X-Forwarded-Encrypted: i=1; AJvYcCVeykMmuwbfi+GCOSxYO2ADRyDQBdZGFp/IJwPGcZBWXczWyGxSO0XcwigVOjINaRpPIYw1rOs+9J9T/WOPsJA=@vger.kernel.org, AJvYcCWIaVpFbfiSQbi+6Ou70uPzHxGPIrQEP8M9RAvlzAQRbjBxGhsTDFmbDyEV50RadmDMCRwvb3Dzk0Qctw==@vger.kernel.org, AJvYcCXExLvJUdC6opEo6RNdOdLlo2Qvxl5oeRSr8VYuBLRjJcWVt5Pe1cdh2cDbbHkqJcwzw1Mnb4tQDssk@vger.kernel.org, AJvYcCXHX+2x3u+EvDiWl6nXtC1s7GG3Ko3hiBwYeSutLBx92eEO92sOCdG9UY1RbzFJ5IlKzD/2y4QSWTPkXAFa@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9IfS+8o43WwTFPSNfeAYwytOkZFy1jzhkz7YS+BKeZDYwNNe1
-	+JG4CWAH3yasexHrhZw1/pexiSQNguQah6snfRHSgVNfOBGkamX9
-X-Gm-Gg: ASbGncu0jnlhDT6Iz4umWGNeQ9TW2qfjrs3oHtZDUpRzTmjroivDxVlA6kPryRsyWAa
-	0u7zO+7mb9P7KJ/FWfqdPOs2UNRN8RgyiurQVcuDB6yMyqxmoxZMQiyGHAv3oakLZ4IeoYhEeWa
-	i8ZN8dvNWC974xkyd5nSCg9Mn3hPELibC1vqTUpgLfM9Xi8Z1CTmsgnYkoDznHJsIU0Jnafh13i
-	suRxc5URpK3nz28SjuTvMUaQ79p7oh+nE7t6Vwm6VhlhYU5kv/LIoSKKzKs/GaZc8Rg/4mIn34K
-	ecHDaCelMIRZ8Ub/hMTX1dUNCJxm6nfkLzvLGW9GJp18KIcLOIbeaCgeuMThb0LtvBJ4Hm17tRa
-	NRnZHgtPEiJkHGWtH
-X-Google-Smtp-Source: AGHT+IExZRuAc5UJfWGIbTEZTnqZsDFY3noP0suiYY1Ncy03PZIt5gv/Z9c/ftM829fSUbo+KHtRtw==
-X-Received: by 2002:a05:6830:651a:b0:72b:9bb3:67cf with SMTP id 46e09a7af769-72c4c96f232mr1041730a34.9.1743022738446;
-        Wed, 26 Mar 2025 13:58:58 -0700 (PDT)
-Received: from my-computer.lan (c-73-76-29-249.hsd1.tx.comcast.net. [73.76.29.249])
-        by smtp.googlemail.com with ESMTPSA id 46e09a7af769-72c419ccf46sm553122a34.12.2025.03.26.13.58.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 13:58:58 -0700 (PDT)
-From: Andrew Ballance <andrewjballance@gmail.com>
-To: remo@buenzli.dev
-Cc: a.hindborg@kernel.org,
-	alex.gaynor@gmail.com,
-	aliceryhl@google.com,
-	andriy.shevchenko@linux.intel.com,
-	benno.lossin@proton.me,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	dakr@kernel.org,
-	devicetree@vger.kernel.org,
-	dirk.behme@de.bosch.com,
-	djrscally@gmail.com,
-	gary@garyguo.net,
-	gregkh@linuxfoundation.org,
-	heikki.krogerus@linux.intel.com,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ojeda@kernel.org,
-	rafael@kernel.org,
-	robh@kernel.org,
-	rust-for-linux@vger.kernel.org,
-	sakari.ailus@linux.intel.com,
-	saravanak@google.com,
-	tmgross@umich.edu
-Subject: Re: [PATCH 01/10] rust: Move property_present to property.rs
-Date: Wed, 26 Mar 2025 15:58:38 -0500
-Message-ID: <20250326205838.695261-1-andrewjballance@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250326171411.590681-2-remo@buenzli.dev>
-References: <20250326171411.590681-2-remo@buenzli.dev>
+	dkim=pass (2048-bit key) header.d=ni.com header.i=@ni.com header.b="ZCu3Bhe1"
+Received: from pps.filterd (m0142705.ppops.net [127.0.0.1])
+	by mx0b-00300601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52QHT8kv034503;
+	Wed, 26 Mar 2025 19:30:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ni.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=PPS11142024;
+	 bh=PU6PYT3MiOC/wAJweX5b3OMOWC8qcVg8pqlmsFdmaxM=; b=ZCu3Bhe1Xp1F
+	AOxQRmio3pG65LQAkv9FSTU1FN/mFdcmHnEDftNNMdNNJlS/pxEBqHifQcIdas8K
+	6WeUx58eai2gKudgcLj3K4ciTILIRW/WApfEl3DIMKzCpDrdfoXnLKQ72wKU7oj3
+	0FwbZOWNm/kTqGmdmjHG9WDA5Rm7/41DXTspJA+cV/dAD/Xl4BBkZ+AgBQ89sZnM
+	UecHm9KlrbWl5Vv9UT3agYyeadFGKCaEEULy0AfLrCX3DwYDiGopS9pW7znqBIOA
+	L5zggHT+tdJRu+VJl0ZH3u1qaDGkI5j6Hd2k4yiyE6ZS3zANBTcj2pTbpvrt5mps
+	iJ6QOWi/tQ==
+Received: from us-aus-excas-p2.ni.corp.natinst.com ([130.164.94.74])
+	by mx0b-00300601.pphosted.com (PPS) with ESMTPS id 45mp15acqu-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Mar 2025 19:30:49 +0000 (GMT)
+Received: from us-aus-excas-p2.ni.corp.natinst.com (130.164.68.18) by
+ us-aus-excas-p2.ni.corp.natinst.com (130.164.68.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Wed, 26 Mar 2025 14:30:47 -0500
+Received: from ershephe-ubuntu.amer.corp.natinst.com (172.18.68.33) by
+ us-aus-excas-p2.ni.corp.natinst.com (130.164.68.18) with Microsoft SMTP
+ Server id 15.2.1258.28 via Frontend Transport; Wed, 26 Mar 2025 14:30:47
+ -0500
+From: Erick Shepherd <erick.shepherd@ni.com>
+To: <adrian.hunter@intel.com>
+CC: <andy-ld.lu@mediatek.com>, <avri.altman@wdc.com>, <dsimic@manjaro.org>,
+        <erick.shepherd@ni.com>, <jason.lai@genesyslogic.com.tw>,
+        <jeff.johnson@oss.qualcomm.com>, <jonathan@raspberrypi.com>,
+        <keita.aihara@sony.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <ulf.hansson@linaro.org>,
+        <victor.shih@genesyslogic.com.tw>, <wsa+renesas@sang-engineering.com>
+Subject: Re: [PATCH] mmc: Add quirk to disable DDR50 tuning
+Date: Wed, 26 Mar 2025 14:30:47 -0500
+Message-ID: <20250326193047.1902835-1-erick.shepherd@ni.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <c6093207-2b68-4e3a-8a70-7ab4541ac59f@intel.com>
+References: <c6093207-2b68-4e3a-8a70-7ab4541ac59f@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: anLfp7SwaW9XeKnc41Y_e7vegjp6DCEB
+X-Proofpoint-GUID: anLfp7SwaW9XeKnc41Y_e7vegjp6DCEB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 mlxlogscore=968 malwarescore=0 clxscore=1015
+ adultscore=0 mlxscore=0 priorityscore=1501 bulkscore=0 suspectscore=0
+ phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503260119
 
-On Wed, Mar 26, 2025 at 12:13 PM Remo Senekowitsch Wrote: 
-> +        // SAFETY: `fwnode_handle` is valid. Its lifetime is tied to `&self`. We
-> +        // return a reference instead of an `ARef<FwNode>` because `dev_fwnode()`
-> +        // doesn't increment the refcount.
-> +        unsafe { &*fwnode_handle.cast() }
-
-
-this safety comment should say why it is safe to cast from a
-struct fwnode_handle* to a *const FwNode
-
-Andrew
+> Perhaps make a helper function (untested):=0D
+=0D
+Making a helper function seems like a good idea to me. How does this=0D
+look? I tested it using the SD card with our issue to confirm the I/O=0D
+errors no longer appear. I also tested it with another DDR50 SD card=0D
+to make sure the tuning is still executed in that case. I don't have a=0D
+SDR50 or SDR104 card on hand but could try to find them if you believe=0D
+the helper function needs to be tested further.=0D
+=0D
+diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c=0D
+index cc757b850e79..fc3416027033 100644=0D
+--- a/drivers/mmc/core/sd.c=0D
++++ b/drivers/mmc/core/sd.c=0D
+@@ -613,6 +613,29 @@ static int sd_set_current_limit(struct mmc_card *card,=
+ u8 *status)=0D
+ 	return 0;=0D
+ }=0D
+ =0D
++/*=0D
++ * Determine if the card should tune or not.=0D
++ */=0D
++static bool mmc_sd_use_tuning(struct mmc_card *card)=0D
++{=0D
++	/*=0D
++	 * SPI mode doesn't define CMD19 and tuning is only valid for SDR50 and=0D
++	 * SDR104 mode SD-cards. Note that tuning is mandatory for SDR104.=0D
++	 */=0D
++	if (mmc_host_is_spi(card->host))=0D
++		return false;=0D
++=0D
++	switch (card->host->ios.timing) {=0D
++	case MMC_TIMING_UHS_SDR50:=0D
++	case MMC_TIMING_UHS_SDR104:=0D
++		return true;=0D
++	case MMC_TIMING_UHS_DDR50:=0D
++		return !mmc_card_no_uhs_ddr50_tuning(card);=0D
++	}=0D
++=0D
++	return false;=0D
++}=0D
++=0D
+ /*=0D
+  * UHS-I specific initialization procedure=0D
+  */=0D
+@@ -656,14 +679,7 @@ static int mmc_sd_init_uhs_card(struct mmc_card *card)=
+=0D
+ 	if (err)=0D
+ 		goto out;=0D
+ =0D
+-	/*=0D
+-	 * SPI mode doesn't define CMD19 and tuning is only valid for SDR50 and=0D
+-	 * SDR104 mode SD-cards. Note that tuning is mandatory for SDR104.=0D
+-	 */=0D
+-	if (!mmc_host_is_spi(card->host) &&=0D
+-		(card->host->ios.timing =3D=3D MMC_TIMING_UHS_SDR50 ||=0D
+-		 card->host->ios.timing =3D=3D MMC_TIMING_UHS_DDR50 ||=0D
+-		 card->host->ios.timing =3D=3D MMC_TIMING_UHS_SDR104)) {=0D
++	if (mmc_sd_use_tuning(card)) {=0D
+ 		err =3D mmc_execute_tuning(card);=0D
+ =0D
+ 		/*=0D
+=0D
+Regards,=0D
+Erick=0D
