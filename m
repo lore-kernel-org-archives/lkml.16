@@ -1,85 +1,106 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE93A253B59;
-	Wed, 26 Mar 2025 20:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B6F215196;
+	Wed, 26 Mar 2025 20:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743019935; cv=none; b=VLgtVaDBF2T7RWoEN7qfhDHGHoOV4ZlDHIJFO+zqcK25r+6sxgWLqxH5xgO5+3j+RNlroM66vBR74cgHCMGS6LSTgal1pEsJvy07vBcVCZT9fuk1NCsytRzASeODuqn1rGuk4LdT7+T0SfJpVaK2sqiaSuL9KcI1c0bdy72GyLA=
+	t=1743019984; cv=none; b=FM8EzhyIwfWzVsEtTG0Mc6l45K58GysRSUu5h3PLOaOviQjTZhbBoOXqGlbWuRaQ2J2Fq1Co3rjUTYUkKOD8ml5YjHoT1BRNRoow1iBAONAsO78i27nlwVataGkVQPNSg62mCf0Sa+elX8jbNw1+7MRjDSdrduzyVJmR1O3DWYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743019935; c=relaxed/simple;
-	bh=DLVhu0vtl8L7mHg1TiLT36ykzz3ITYF1djo57NTnUSw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OGbwbmjry4nLND2oCa/r5p1oFi0KALM1RU0IFduicxn88pcvx3kU2yIb5HWoH0oSUF4PrPmm02tE7w7h00Wmr7g0AYs5R2PeDA7GfxavrYN4bgdUyCnfIje5GseKJnH+NBZWvAMSBDAzhjrHKRV8IQ6dZAZJ0FUFR+7RMavVxus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=lVlzVs2g; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1743019984; c=relaxed/simple;
+	bh=stYmGGDpjD4/tFiBC4B/cjq8Qdu/fF5PqqR/CNBxpus=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O/OAHhYx0VBnjCE1eKyixKCTnLD4VzBIvRtB2sPasWd63/TWlRAjjQxs9efjTdAzQYj9n2Z2WqZu/Le/X+VktEXfd6saMbx8+n6xnH6uvQf2iE7N+ozM4pj+7/TeSV4zzR4/jHTXlnbe3Q9ZNgh4Kkib2kpP56r8VexRoA3goos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aEA1SiU4; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="lVlzVs2g"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.3.1)
- id b1b41c0b5c00127b; Wed, 26 Mar 2025 21:12:10 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 3A72F7F6388;
-	Wed, 26 Mar 2025 21:12:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1743019930;
-	bh=DLVhu0vtl8L7mHg1TiLT36ykzz3ITYF1djo57NTnUSw=;
-	h=From:Subject:Date;
-	b=lVlzVs2gOkOpqnTEzpKwmDe0VjpB2bGyfEc5qiDrFLPGslBZiYPc5Ih45+hYbAuD1
-	 twyNiKsN8DiCqU9mBuIpjDCmgRLNQiEupDpc4FOkiRRQhFcF0U2NvvstUoH0wBBIFt
-	 9yDmq1a0qzovSbWL2eSSm2pptO9l3MSse55IWh5i/GCl0GZCn6j+dbVA4eYUhzBYeb
-	 JAbwCPQwGRFSNPmzqLzWwyUBXRbEoJtV1GV46sYAj5YMUZOsfu1fH/rTvH7WHsvNxd
-	 0cZSxOqZIQ1uxmhmvLR7PWRD2P2ZlUL7h7+hcemyaBUA7dynUz/ehAjzd2ocJiUTNK
-	 /oZL3+/rk2mjA==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux ACPI <linux-acpi@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Bob Moore <robert.moore@intel.com>,
- Saket Dumbre <saket.dumbre@intel.com>
-Subject: [PATCH v1 0/8] ACPICA: ACPICA 20241212
-Date: Wed, 26 Mar 2025 21:04:13 +0100
-Message-ID: <5873907.DvuYhMxLoT@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aEA1SiU4"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bf8632052so2940471fa.0;
+        Wed, 26 Mar 2025 13:13:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743019980; x=1743624780; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LvGhRgUQQTe7LDrfZkfw77IPStuXrPdo85w1zZBpkJw=;
+        b=aEA1SiU4auebeRCdPBJTqqj+d6z/6NJaK1Vv2GemllEKsDu/u6j+9B7gPwn7GUlcwu
+         GjfyaO8TJ2GgwBzxx+txyfKPq4OjElxI0K4mifttBGLNfIDJmRnM/SHAi22SlgLch2c6
+         xEoOIIVRpFdTj2cW6BOgNK/d1SycWYVMfNHd/mwbRCeP+Utim+2bxB2oOKjBRcNL+G6b
+         zbkZqh59MU+E0tBgQJQfZYeTYGzW1E3skG+ryynRxWJJ04ZoD5meRO1IPHNi6cURnEep
+         Z7pdW2zweXgHoN0+qD5clE0eqY4BbsfqY220zQ6YQDOFEr69VWiaEVC8vxKSd3YWf7wM
+         UX8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743019980; x=1743624780;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LvGhRgUQQTe7LDrfZkfw77IPStuXrPdo85w1zZBpkJw=;
+        b=arvHt8WlWDOX6ZAf4JOk3LzrTs0gs5JSe2MhfAG3dl3gI6nFFeuzIwaNYFB5ggaJaR
+         F50VgruYmp/eyso5CZHHha5iyJt+lJlIrZMZcvLFArVuAhwtfK0ipN0aGj+7M3Oo3fcr
+         tT01a9tSGJ2IZXkLW52/BdDyF7N1RWXAu47XnIBXeOxXiJgX2ffUpg/OzPshDq2mxvTG
+         ECFTSpAXkwrYS+jJlG8wXwdaPnFK+vR0PaAIviL+GfGKzyF0bHotHdFS3BWh8AqUsFNO
+         shdMxpAdzpdg/836gn6E8hDu3acVnO3gWmdyH3+5nt3UIXTmqtPzuwb5V+4eR0MMuK+d
+         wJug==
+X-Forwarded-Encrypted: i=1; AJvYcCWFzP5gTEZUUe/2mQ4pf73ptKckv6Fk2euOgPN8qvy7sTBSo7B2r5jN8DBs7Qdl1exGr1J278j1xPhH3T0=@vger.kernel.org, AJvYcCWahAA9m97pEfaUuPo1//KTJ7HcbtMs7ms9phYy7AwaRByWRPt9m0wKjUEkoobcYlp9OMAyoIzHwn4saT0b8X4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywm9N0GBz5SABJA+DrJ4ENFoS5g4eipSNR6hP8ieeGXgsmHHbTQ
+	3gmbOSpwX0i1n/5H0Fbp00pQ56rSvK/hMrVVLtP0JscNskDQiThC
+X-Gm-Gg: ASbGncvnTWNjOIvtfwQScugnZ9m3YAg4qSlrwThZ7vwb/TiXSXt4BnY7+bjRnG/Jait
+	PZlfmrKEwhpeTcB4k+ffq4+Cj0/2/dBet2ebdGEZebjevzRi4X4KQHZTe/dCzJgAWOBGrKh5ldP
+	VTc6JCfBBWx9jiGW7UbWLIFU1mbVeIzY58HSllq9FwgNkW/kCtu99Q67tQy5tKp1nIrYjCHG4tS
+	njDbVjFTzTdVH8sC8Z0E/+XGpCWi/VuK+NHvqwpZK5VAxi6kcfko2Xb5vLL0n+7rI6/hEezQPMw
+	e4djvLNbgi9dDXgikc0XZ6FEC9PNkUSdU83dow4IUiRVYyk/TMt7dIiQntfvMRS89+OQow/rnJf
+	Gn3u06Cd2GG/dQKR19BnneA==
+X-Google-Smtp-Source: AGHT+IH+TqDP71XrNIXqtEqJEpXk/B2z8Fv+6HePdoMFwLb0bvleEmB5zHlEOlYypeoPyLwRZuNHKw==
+X-Received: by 2002:a05:6512:1393:b0:549:6bad:3977 with SMTP id 2adb3069b0e04-54b011dd205mr454607e87.31.1743019980249;
+        Wed, 26 Mar 2025 13:13:00 -0700 (PDT)
+Received: from abj-NUC9VXQNX.. (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ad646873asm1872136e87.46.2025.03.26.13.12.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 13:12:58 -0700 (PDT)
+From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+To: a.hindborg@kernel.org,
+	ojeda@kernel.org
+Cc: Danilo Krummrich <dakr@kernel.org>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	rust-for-linux@vger.kernel.org (open list:DMA MAPPING HELPERS DEVICE DRIVER API [RUST]),
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS),
+	linux-kernel@vger.kernel.org (open list),
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>
+Subject: [PATCH 0/3] Additional fixes for dma coherent allocator
+Date: Wed, 26 Mar 2025 22:11:41 +0200
+Message-ID: <20250326201230.3193329-1-abdiel.janulgue@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieeigeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepffffffekgfehheffleetieevfeefvefhleetjedvvdeijeejledvieehueevueffnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepgedprhgtphhtthhopehlihhnuhigqdgrtghpihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgsvghrthdrmhhoohhrvgesihhnthgvlhdrtghomhdprhgtphhtthhopehsrghkvghtrdguuhhmsghrvgesihhnthgvlhdrtghomh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
+Content-Transfer-Encoding: 8bit
 
-Hi All,
+Additional fixups to improve the documentation and make the read/write
+macros return Result as suggested by Andreas Hindborg as well as support
+for reading and writing large blocks of data.
 
-This series of patches represents upstream ACPICA changes made between
-the 20240827 release and the 20241212 release that have not been included
-into the Linux source code yet.
+Abdiel Janulgue (3):
+  rust: dma: be consistent in using the `coherent` nomenclature
+  rust: dma: convert the read/write macros to return Result
+  rust: dma: add as_slice/write functions for CoherentAllocation
 
-It contains the following material:
-
-Adam Lackorzynski (1):
-      ACPICA: Fix typo in comments for SRAT structures
-
-Saket Dumbre (3):
-      ACPICA: New release 20240927
-      ACPICA: Fix warnings from PR #295 merge
-      ACPICA: Logfile: Changes for version 20241212
-
-Seunghun Han (2):
-      ACPICA: fix acpi operand cache leak in dswstate.c
-      ACPICA: fix acpi parse and parseext cache leaks
-
-Zaid Alali (2):
-      ACPICA: actbl1: Update values to hex to follow ACPI specs
-      ACPICA: actbl1: Add EINJv2 get error type action
-
-Thanks!
+ rust/kernel/dma.rs       | 153 +++++++++++++++++++++++++++++++--------
+ samples/rust/rust_dma.rs |  21 ++----
+ 2 files changed, 131 insertions(+), 43 deletions(-)
 
 
+base-commit: e6ea10d5dbe082c54add289b44f08c9fcfe658af
+-- 
+2.43.0
 
