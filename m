@@ -1,163 +1,177 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A971C8606;
-	Wed, 26 Mar 2025 10:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF551CEAA3
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 10:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742986763; cv=none; b=gz4SnmCQbnBpM5jxEgWpcJoCkr7RmVpqrXIYjfMeCxlHuPCl7v0P0df5pa3Y8AhPjv0pTJzW9+W6sEd7REu8HnFGKUMPScwVkD8PAbGmiYd4g5KFIYI8in/jePa2A8FPWwNUXd+8waeBo9Z/MiMlyUe19opuzIvTwcxEJokv+Do=
+	t=1742986797; cv=none; b=nwh3goct2oKClbhNys1ObDs5xeLLDpzNqoKvhyuvPKr+WOfkjEYOMRJdEE43EzUWNLiUWlvCsgML9N/bPoElOahVzub27iqvu9r5fC9RTnbhY6mCjV8dgBsIy00KqqKBUH+YJave7IlJ7eLAcaBcm22mruedecZ2ZYhqzbRXA8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742986763; c=relaxed/simple;
-	bh=xM0pKJ8sRe+w6GWU9I1Dy+FTjnKA3yceusf+jKEC0+A=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=K/QrADEqdLeFh7nr9vymLCy7o0HfSkXMQzgMHwQ7fp/PxHX8jGRlgu4sG/GIlT4ixMwZ1r3O/Bs66XHVZMuJeWMukO+mpZyE5e2582yxJBwPz4sw5z3Tm+biyfyDl1tCR0LQOHA5Fof3eeU3c4LqNlrTTL0sVfY9hzPviDQgxms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FUGEgc/7; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FUGEgc/7"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 080264435E;
-	Wed, 26 Mar 2025 10:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742986758;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0t5QSc/Inlh5P0gL04QSWLOfREn/t3CkeGZkKLYdjDE=;
-	b=FUGEgc/7iedXlqTTbqAcAA02XV8B6oh9Y7Bqm+fFLGpWd49hbrCIc0l/Bom4tRDfAdpfxN
-	C+mSXaVZjS8viJztlY0tp1Jmw0hvhW/1ceZPdb5wiGtYc1je6aAFI5TiHdO+P9FJKmRmfx
-	eWncdS7EimoRYsZHB++4IT3E0MlwDx4w9Fe5zz49duRxQWN0qvat+MtfFrTz2J8U2Xd7HU
-	Hc/jtwjqt9d5o94wNdn1lcwKBr/jAF9Kb1AcdXPCVatvLn8mKVBVsKR/p4LNlXi6/kl63Q
-	qxddGv2E69HVgUqlyM1jbWK1dNqK8asjSsiq1ina4MTDSp9PAqFA/y2O6mk2EA==
+	s=arc-20240116; t=1742986797; c=relaxed/simple;
+	bh=kkjqnVRPCV2DoxeCh4E7Xz9+T1Pv3W2b8jvWw3szNfk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RlAXCzzBvE7rxUD/nLYeGvKkmnXwPT2X4cS1mth2Nu/mNcDfrHRe06RjFRgXM/UBCq3wnN7o6JjalzPNo1eait0UCqMSwe2als0p57bLOPNzWkzS8eF6C9hnharkGH0IyR+UXPQOROZIuZzjCXtWOrUI6zyq796xoZEWBqgUGfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <sha@pengutronix.de>)
+	id 1txOU5-0003ci-0J; Wed, 26 Mar 2025 11:59:45 +0100
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1txOU3-001jWl-1t;
+	Wed, 26 Mar 2025 11:59:44 +0100
+Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1txOU3-0005SN-2v;
+	Wed, 26 Mar 2025 11:59:43 +0100
+Date: Wed, 26 Mar 2025 11:59:43 +0100
+From: Sascha Hauer <s.hauer@pengutronix.de>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Francesco Dolcini <francesco@dolcini.it>,
+	Johannes Berg <johannes.berg@intel.com>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	David Lin <yu-hao.lin@nxp.com>, kernel@pengutronix.de
+Subject: Re: [PATCH wireless-next v5 10/10] wifi: mwifiex: drop asynchronous
+ init waiting code
+Message-ID: <Z-PeH1ChtvvYPE7_@pengutronix.de>
+References: <20250324-mwifiex-cleanup-1-v5-0-1128a2be02af@pengutronix.de>
+ <20250324-mwifiex-cleanup-1-v5-10-1128a2be02af@pengutronix.de>
+ <Z-MtVj4NpcLuZxJv@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 26 Mar 2025 11:59:13 +0100
-Message-Id: <D8Q58KMGV4R4.ELW8TLEK5W5V@bootlin.com>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH net-next 08/13] net: macb: introduce DMA descriptor
- helpers (is 64bit? is PTP?)
-Cc: "Andrew Lunn" <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Rob
- Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>, "Nicolas Ferre"
- <nicolas.ferre@microchip.com>, "Claudiu Beznea" <claudiu.beznea@tuxon.dev>,
- "Paul Walmsley" <paul.walmsley@sifive.com>, "Palmer Dabbelt"
- <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre
- Ghiti" <alex@ghiti.fr>, "Samuel Holland" <samuel.holland@sifive.com>,
- "Richard Cochran" <richardcochran@gmail.com>, "Russell King"
- <linux@armlinux.org.uk>, "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
- <gregory.clement@bootlin.com>, <netdev@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-riscv@lists.infradead.org>, <linux-mips@vger.kernel.org>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>
-To: "Maxime Chevallier" <maxime.chevallier@bootlin.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250321-macb-v1-0-537b7e37971d@bootlin.com>
- <20250321-macb-v1-8-537b7e37971d@bootlin.com>
- <20250324095522.2ab1c38b@fedora.home>
-In-Reply-To: <20250324095522.2ab1c38b@fedora.home>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieehfeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkhffuvefvofhfjgesthhqredtredtjeenucfhrhhomhepvfhhrohoucfnvggsrhhunhcuoehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeluefgiefgtdegfeehjeetteevveejkefgiedtkeefteejgfdvkeffgeejhfduieenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepjeejrddufeehrdekuddrieehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepjeejrddufeehrdekuddrieehpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvkedprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnv
- ghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: theo.lebrun@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-MtVj4NpcLuZxJv@google.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hello Maxime,
+Hi Brian,
 
-On Mon Mar 24, 2025 at 9:55 AM CET, Maxime Chevallier wrote:
-> On Fri, 21 Mar 2025 20:09:39 +0100
-> Th=C3=A9o Lebrun <theo.lebrun@bootlin.com> wrote:
->
->> Introduce macb_dma_is_64b() and macb_dma_is_ptp() helper functions.
->> Many codepaths are made simpler by dropping conditional compilation.
->>=20
->> This implies three changes:
->>  - Always compile related structure definitions inside <macb.h>.
->>  - Make the field hw_dma_cap in struct macb always present.
->>  - MACB_EXT_DESC can be dropped as it is useless now.
->>=20
->> The common case is:
->>=20
->> 	#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
->> 		struct macb_dma_desc_64 *desc_64;
->> 		if (bp->hw_dma_cap & HW_DMA_CAP_64B) {
->> 			desc_64 =3D macb_64b_desc(bp, desc);
->> 			// ...
->> 		}
->> 	#endif
->>=20
->> And replaced by:
->>=20
->> 	struct macb_dma_desc_64 *desc_64;
->> 	if (macb_dma_is_64b(bp)) {
->> 		desc_64 =3D macb_64b_desc(bp, desc);
->> 		// ...
->> 	}
->
-> Just a thought, but this is adding some more branches in the hotpath on
-> 32 bits DMA setups. Did you measure any performance changes on
-> these platforms (if you have access to one :) )
->
-> As the caps can't be changed dynamically, maybe these helpers could be
-> replaced more efficiently with some static_key ? This would benefit
-> both 32 and 64 bits systems as the following would be more efficient
->
-> 	if (bp->hw_dma_cap & HW_DMA_CAP_64B) {
-> 		//  ...
-> 	}
->
-> Just a thought of course, maybe this patch doesn't really hurt perfs :)
+On Tue, Mar 25, 2025 at 03:25:26PM -0700, Brian Norris wrote:
+> Hi Sascha,
+> 
+> On Mon, Mar 24, 2025 at 02:24:11PM +0100, Sascha Hauer wrote:
+> > Historically all commands sent to the mwifiex driver have been
+> > asynchronous. The different commands sent during driver initialization
+> > have been queued at once and only the final command has been waited
+> > for being ready before finally starting the driver.
+> > 
+> > This has been changed in 7bff9c974e1a ("mwifiex: send firmware
+> > initialization commands synchronously"). With this the initialization
+> > is finished once the last mwifiex_send_cmd_sync() (now
+> > mwifiex_send_cmd()) has returned. This makes all the code used to
+> > wait for the last initialization command to be finished unnecessary,
+> > so it's removed in this patch.
+> > 
+> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> 
+> There are a few things that confuse me in here. See below.
+> 
+> > ---
+> >  drivers/net/wireless/marvell/mwifiex/cmdevt.c  | 16 ----------------
+> >  drivers/net/wireless/marvell/mwifiex/init.c    | 18 +++++-------------
+> >  drivers/net/wireless/marvell/mwifiex/main.c    | 25 +++----------------------
+> >  drivers/net/wireless/marvell/mwifiex/main.h    |  6 ------
+> >  drivers/net/wireless/marvell/mwifiex/sta_cmd.c |  6 ------
+> >  drivers/net/wireless/marvell/mwifiex/util.c    | 18 ------------------
+> >  6 files changed, 8 insertions(+), 81 deletions(-)
+> > 
+> ...
+> > diff --git a/drivers/net/wireless/marvell/mwifiex/init.c b/drivers/net/wireless/marvell/mwifiex/init.c
+> > index 8b61e45cd6678..fc58ca1a60ca8 100644
+> > --- a/drivers/net/wireless/marvell/mwifiex/init.c
+> > +++ b/drivers/net/wireless/marvell/mwifiex/init.c
+> > @@ -487,7 +487,6 @@ int mwifiex_init_fw(struct mwifiex_adapter *adapter)
+> >  	int ret;
+> >  	struct mwifiex_private *priv;
+> >  	u8 i, first_sta = true;
+> > -	int is_cmd_pend_q_empty;
+> >  
+> >  	adapter->hw_status = MWIFIEX_HW_STATUS_INITIALIZING;
+> >  
+> > @@ -509,7 +508,6 @@ int mwifiex_init_fw(struct mwifiex_adapter *adapter)
+> >  	}
+> >  	if (adapter->mfg_mode) {
+> >  		adapter->hw_status = MWIFIEX_HW_STATUS_READY;
+> > -		ret = -EINPROGRESS;
+> 
+> Why are you dropping this line? To be fair, I'm not sure I understand
+> all the manufacturing-mode support anyway, but I equally don't
+> understand why you're dropping this.
 
-Good question! I asked myself the same thing before posting.
+Short version: This change is correct. I started a lengthy explanation
+why I did this, but realized that it's better to split this patch
+further up to make it more clear. I'll create a new series from this
+patch.
 
-We go from:
+> 
+> >  	} else {
+> >  		for (i = 0; i < adapter->priv_num; i++) {
+> >  			ret = mwifiex_sta_init_cmd(adapter->priv[i],
+> > @@ -521,18 +519,12 @@ int mwifiex_init_fw(struct mwifiex_adapter *adapter)
+> >  		}
+> >  	}
+> >  
+> > -	spin_lock_bh(&adapter->cmd_pending_q_lock);
+> > -	is_cmd_pend_q_empty = list_empty(&adapter->cmd_pending_q);
+> 
+> I believe your reasoning around the synchronous command logic, but would
+> it help to include any sort of fail-safe here for the future? Something
+> like:
+> 
+> 	WARN_ON(!list_empty(&adapter->cmd_pending_q));
+> 
+> ? Or am I being overly cautious?
 
-	void bar(struct macb *bp) {
-	#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
-		if (bp->hw_dma_cap & HW_DMA_CAP_64B) {
-			foo();
-		}
-	#endif
-	}
+mwifiex_init_fw() might be called from some obscure firmware command
+time out path, so let's add it just to be sure. Better safe than sorry.
 
-To:
+> 
+> > -	spin_unlock_bh(&adapter->cmd_pending_q_lock);
+> > -	if (!is_cmd_pend_q_empty) {
+> > -		/* Send the first command in queue and return */
+> > -		if (mwifiex_main_process(adapter) != -1)
+> > -			ret = -EINPROGRESS;
+> 
+> You need to update the function comments now that you're dropping this.
 
-	static bool macb_dma_is_64b(struct macb *bp)
-	{
-		return IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT) &&
-		       bp->hw_dma_cap & HW_DMA_CAP_64B;
-	}
+Will do.
 
-	void bar(struct macb *bp) {
-		if (macb_dma_is_64b(bp)) {
-			foo();
-		}
-	}
+> > diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+> > index f2e9f582ae818..199a8e52e5b16 100644
+> > --- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+> > +++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+> > @@ -2418,11 +2418,5 @@ int mwifiex_sta_init_cmd(struct mwifiex_private *priv, u8 first_sta, bool init)
+> >  	ret = mwifiex_send_cmd(priv, HostCmd_CMD_11N_CFG,
+> >  			       HostCmd_ACT_GEN_SET, 0, &tx_cfg, true);
+> >  
+> > -	if (init) {
+> 
+> The 'init' function parameter is no longer used. Can you drop it from
+> the function signature?
 
-In the first case, we use explicit preprocessor directives to remove
-code if CONFIG_ARCH_DMA_ADDR_T_64BIT isn't defined.
+Good point. I'll make an extra patch from this though to not further
+obfuscate this patch.
 
-In the second case, our compiler optimises away the IS_ENABLED() call.
- - If false, then the branch doesn't appear.
- - If true, then only the capability check is inlined in bar().
-I checked the assembly on arm/arm64/MIPS.
+Sascha
 
-Conclusion: the hotpath doesn't change.
-
-Thanks,
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
