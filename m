@@ -1,194 +1,118 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290031E5B96
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 13:48:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524DD1F03E6
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 13:48:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742996884; cv=none; b=c0ow9gIkKmsQV9OIIbJP2b8UPnLYML7NBo1Lpul5kozj+jE6NGGLXJmlgpGhc6thPYF9alVrHo9OBiIe4F2h6VaWBInL2sNlk/jD2QQq8QkfZZaNx6dFvBlA4aFzl2dzZLNfdEQdt39HTd3jJ8u5h9C6ct0mWRnhf3jr3EP2UCU=
+	t=1742996900; cv=none; b=ZvDBEYWoTiObQNA2Vwpr8DPsrCWkpZnzngXao4V/3r73WYCTQkF5+sC1sQh8dlqiJk9VVh6LrQgdg23Fcbxb3IrLm5//4mEHWbJ7rMVdi0zkEgcQ/bBsLt2Td1u1Ee8PTCQ3Te1Gy8WueZ1CSQXv9y7ArMheYkk0bEYKVymGaYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742996884; c=relaxed/simple;
-	bh=jh7jltZ0TL82geu3pwoRxx7NSA3ad7amVPFL5zvX4uU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qO9ebcoo/I7o1dcmQj20AoR/CviFnbjw3quHS55dsGQfW/EMjWwGeL4o2g11IxiP9qT33+Q90k7ZgtLBbAvR0qwZM6IJBEhGQPzWQuKS/EoNQyabUl++nGXePwgQMW03utCSgbjX/ya9T5lyQ7ub3NoB/wJnE6PMOuy6hUz5Vgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PGNxvXV5; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742996900; c=relaxed/simple;
+	bh=DneVULK5GeNGdz2DKZMYPE4LSlT6BfGchhP1Ey/JcVw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=WYM0U5NMuLmf8I9kdSy2cIfH5chxHhvIcq2+pVgmtIh0En8i/cFKg+FNeweeiA0DgKhdQB1NRTMA5tpqAyKfnU/vjqGPoVfrNcnuaxOyqiAB0xh2wkK7LRn9pwW7eMMe9rvwmvOXUb50wJRi7r4eQJEGjTCGhb9Pyxz9EkQJP80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ncox97gA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=K/zATkkH; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ncox97gA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=K/zATkkH; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PGNxvXV5"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e6167d0536so332488a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 06:48:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742996880; x=1743601680; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x9sT5gYMVXxegd6ePB7XNS/u3ZsbMZydYpHA0nFGyi0=;
-        b=PGNxvXV5jXU+X1Mx/BHNbpEZaAt8G18eCR1b7Kc+zJ+o01Rxk8+//CVeIFl+epKDlD
-         efhZikQPmkuqOiDJ6aEuWYxw0PwtY9jwujmGhCJPjk50wkjJjj+BHOSkdWluVJ4/r4NA
-         934wUzicdjHV2o2ViBW5vq2PY8tyz1XYiNRcRBwKXwTa0rXNKK3jar+55q0FKaBUtaa4
-         JxMftMjkJHgPhDtRbj5ReD7Xs3kBmpn/P76wz89HKmKMGhvGd6twCIolFpLHIg4YPfcL
-         1X1t7VGqevOmviCmuFu13zUyeHbMAfd2eoYc+UVC/nsQ8yieFtd6hR6nVD4z25ulxnzO
-         KShw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742996880; x=1743601680;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x9sT5gYMVXxegd6ePB7XNS/u3ZsbMZydYpHA0nFGyi0=;
-        b=ZaCzlAegEMRAfGrcG6Czd5Z237uhCKWB7vmjEcZlPjQx4EU3WKkNLvH8nXsXPEhG2a
-         3cbJUz04pbELU9HGl0p0vTskntmL9m0oErOSmEAtmYY0h2V/7oFVfft6emXx1G94xIEr
-         lmhIuNYrjsDpAw7Z5LaDF1ribNsxjjRtXiZF1iXGNsnI9jVMVMwhA9YnBApoj0oaEy4+
-         Z9W+isWlP4rjubY7iofmqXpKiQJKiFzP4h+e9Ygl7JeF+phbT5PekWqT802Nf/PkD2yC
-         xANP50OTogPGGi7c7X+2PRSG1c5FLHKq7BDIs9vkT7fUWmaFRqYwrWpjLpGNVGahjtGz
-         Bu7g==
-X-Forwarded-Encrypted: i=1; AJvYcCU4859maY4H60ioZvEUGEwnqrDTmjwn8ngQKSgKHmYunvWDMAZTVvv7TXancv31HgDZeosconWK2w5Z/+Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGZwbrE8AB+UrsROKEdB3faY2NOMfe2X97ouCjbB9+SuN1aHj+
-	EY17hewRuvEto+iEemDFc3yKfHop2+olg9BDvP0GPjcxSP8KzdA2AMioaZevPIUUDMccDEXkSd+
-	E+WNA6dRZA6EAyogGi6rpPDAOvENsctuS8KO5Gw==
-X-Gm-Gg: ASbGnctKOp4HgV12e1LXJ0Foie+1BwTIVYBCGuokbmhADxZDGSKs9vSP6qgwyUdq1sw
-	V9X1yWYh2DJHS60b2n68Iun4W1QtjrgcrEC1YqCeYQjdfC34LAnnj91UVcNHdeNa+1ttei7vfSW
-	kqJp8CNo/dgRvRUEwKbxfE3IRLfp/m+qkBTFSXXQ==
-X-Google-Smtp-Source: AGHT+IEGSuYC4bKSUuP+CAwNwXG++bb6dx5rZNBEpA4UsLdcOk6cHr5Psu1CDRSptNtuO+3Eu1NGzt7joB7V/dpX/1E=
-X-Received: by 2002:a05:6402:520c:b0:5ed:1841:18c5 with SMTP id
- 4fb4d7f45d1cf-5ed1841200amr5524723a12.30.1742996880315; Wed, 26 Mar 2025
- 06:48:00 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ncox97gA";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="K/zATkkH";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ncox97gA";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="K/zATkkH"
+Received: from pobox.suse.cz (unknown [10.100.2.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7921B21179;
+	Wed, 26 Mar 2025 13:48:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1742996897; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CpgOCEZuVIUWNep2gTFj8ylP6/HyHac52qszIRih0MA=;
+	b=ncox97gATOX1alCd8mq6tMQ+oN4cqL7jSUyXj457qSKzkZ0wwVDb6s22LmHLmdDrIbEv7m
+	tj3S82ZSwDi6rr+7+VSppcricoX2dq5P1xkjwCeILRV/CCugFh0R8HvF244ewHqntUeqIi
+	qL4FhvAbn/7+FK07EUFQosNn6jztpWs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1742996897;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CpgOCEZuVIUWNep2gTFj8ylP6/HyHac52qszIRih0MA=;
+	b=K/zATkkHnM9kjBG8iYRQBG1YwQdnPko+sQoF0gFiV6R2inYPMAgxuA+dkiqlZ7RKLx7Nqa
+	i9I2r+OSAeN/C6Dg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1742996897; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CpgOCEZuVIUWNep2gTFj8ylP6/HyHac52qszIRih0MA=;
+	b=ncox97gATOX1alCd8mq6tMQ+oN4cqL7jSUyXj457qSKzkZ0wwVDb6s22LmHLmdDrIbEv7m
+	tj3S82ZSwDi6rr+7+VSppcricoX2dq5P1xkjwCeILRV/CCugFh0R8HvF244ewHqntUeqIi
+	qL4FhvAbn/7+FK07EUFQosNn6jztpWs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1742996897;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CpgOCEZuVIUWNep2gTFj8ylP6/HyHac52qszIRih0MA=;
+	b=K/zATkkHnM9kjBG8iYRQBG1YwQdnPko+sQoF0gFiV6R2inYPMAgxuA+dkiqlZ7RKLx7Nqa
+	i9I2r+OSAeN/C6Dg==
+Date: Wed, 26 Mar 2025 14:48:17 +0100 (CET)
+From: Miroslav Benes <mbenes@suse.cz>
+To: Song Liu <song@kernel.org>
+cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+    linux-toolchains@vger.kernel.org, live-patching@vger.kernel.org, 
+    indu.bhagat@oracle.com, puranjay@kernel.org, wnliu@google.com, 
+    irogers@google.com, joe.lawrence@redhat.com, jpoimboe@kernel.org, 
+    mark.rutland@arm.com, peterz@infradead.org, roman.gushchin@linux.dev, 
+    rostedt@goodmis.org, will@kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH v3 1/2] arm64: Implement arch_stack_walk_reliable
+In-Reply-To: <20250320171559.3423224-2-song@kernel.org>
+Message-ID: <alpine.LSU.2.21.2503261447500.4152@pobox.suse.cz>
+References: <20250320171559.3423224-1-song@kernel.org> <20250320171559.3423224-2-song@kernel.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325200740.3645331-1-m.felsch@pengutronix.de>
- <Z-Pc6C1YUqLyej3Z@casper.infradead.org> <20250326110718.qzbwpmaf6xlcb4xf@pengutronix.de>
-In-Reply-To: <20250326110718.qzbwpmaf6xlcb4xf@pengutronix.de>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Wed, 26 Mar 2025 14:47:46 +0100
-X-Gm-Features: AQ5f1JrG9ZILdyykC_tS8t95UZ2cSs2k_HAmhl1CAgx9Sf_jLK7aZpBeM1uOp1g
-Message-ID: <CAHUa44FUK_73oKSaqGdiPqB3geZbTNDFsC1Mh=KN3YPWr9=7gQ@mail.gmail.com>
-Subject: Re: [PATCH v2] tee: shm: fix slab page refcounting
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: Matthew Wilcox <willy@infradead.org>, sumit.garg@kernel.org, vbabka@suse.cz, 
-	akpm@linux-foundation.org, kernel@pengutronix.de, 
-	op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-On Wed, Mar 26, 2025 at 12:07=E2=80=AFPM Marco Felsch <m.felsch@pengutronix=
-.de> wrote:
->
-> On 25-03-26, Matthew Wilcox wrote:
-> > On Tue, Mar 25, 2025 at 09:07:39PM +0100, Marco Felsch wrote:
-> > > Skip manipulating the refcount in case of slab pages according commit
-> > > b9c0e49abfca ("mm: decline to manipulate the refcount on a slab page"=
-).
-> >
-> > This almost certainly isn't right.  I know nothing about TEE, but that
-> > you are doing this indicates a problem.  The hack that we put into
-> > networking should not be blindly replicated.
-> >
-> > Why are you taking a reference on the pages to begin with?  Is it copy
-> > and pasted from somewhere else, or was there actual thought put into it=
-?
->
-> Not sure, this belongs to the TEE maintainers.
+On Thu, 20 Mar 2025, Song Liu wrote:
 
-I don't know. We were getting the user pages first, so I assume we
-just did the same thing when we added support for kernel pages.
+> With proper exception boundary detection, it is possible to implment
+> arch_stack_walk_reliable without sframe.
+> 
+> Note that, arch_stack_walk_reliable does not guarantee getting reliable
+> stack in all scenarios. Instead, it can reliably detect when the stack
+> trace is not reliable, which is enough to provide reliable livepatching.
+> 
+> Signed-off-by: Song Liu <song@kernel.org>
 
->
-> > If it's "prevent the caller from freeing the allocation", well, it neve=
-r
-> > accomplished that with slab allocations.  So for callers that do kmallo=
-c
-> > (eg setup_mm_hdr()  in drivers/firmware/efi/stmm/tee_stmm_efi.c), you
-> > have to rely on them not freeing the allocation while the TEE driver
-> > has it.
-> >
-> > And if that's your API contract, then there's no point in taking
-> > refcounts on other kinds of pages either; it's just unnecessary atomic
-> > instructions.  So the right patch might be something like this:
-> >
-> > +++ b/drivers/tee/tee_shm.c
-> > @@ -15,29 +15,11 @@
-> >  #include <linux/highmem.h>
-> >  #include "tee_private.h"
->
-> I had the same diff but didn't went this way since we can't be sure that
-> iov's are always slab backed. As far as I understood IOVs. In
-> 'worst-case' scenario an iov can be backed by different page types too.
+Looks good to me.
 
-We're only using kvec's. Briefly, before commit 7bdee4157591 ("tee:
-Use iov_iter to better support shared buffer registration") we checked
-with is_vmalloc_addr() || is_kmap_addr(). I like Matthew's suggestion,
-it's nice to fix problems by deleting code. :-)
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
 
-Sumit, you know the callers better. What do you think?
-
-Cheers,
-Jens
-
->
-> Regards,
->   Marco
->
-> > -static void shm_put_kernel_pages(struct page **pages, size_t page_coun=
-t)
-> > -{
-> > -       size_t n;
-> > -
-> > -       for (n =3D 0; n < page_count; n++)
-> > -               put_page(pages[n]);
-> > -}
-> > -
-> > -static void shm_get_kernel_pages(struct page **pages, size_t page_coun=
-t)
-> > -{
-> > -       size_t n;
-> > -
-> > -       for (n =3D 0; n < page_count; n++)
-> > -               get_page(pages[n]);
-> > -}
-> > -
-> >  static void release_registered_pages(struct tee_shm *shm)
-> >  {
-> >         if (shm->pages) {
-> >                 if (shm->flags & TEE_SHM_USER_MAPPED)
-> >                         unpin_user_pages(shm->pages, shm->num_pages);
-> > -               else
-> > -                       shm_put_kernel_pages(shm->pages, shm->num_pages=
-);
-> >
-> >                 kfree(shm->pages);
-> >         }
-> > @@ -321,13 +303,6 @@ register_shm_helper(struct tee_context *ctx, struc=
-t iov_iter *iter, u32 flags,
-> >                 goto err_free_shm_pages;
-> >         }
-> >
-> > -       /*
-> > -        * iov_iter_extract_kvec_pages does not get reference on the pa=
-ges,
-> > -        * get a reference on them.
-> > -        */
-> > -       if (iov_iter_is_kvec(iter))
-> > -               shm_get_kernel_pages(shm->pages, num_pages);
-> > -
-> >         shm->offset =3D off;
-> >         shm->size =3D len;
-> >         shm->num_pages =3D num_pages;
-> > @@ -341,10 +316,8 @@ register_shm_helper(struct tee_context *ctx, struc=
-t iov_iter *iter, u32 flags,
-> >
-> >         return shm;
-> >  err_put_shm_pages:
-> > -       if (!iov_iter_is_kvec(iter))
-> > +       if (iter_is_uvec(iter))
-> >                 unpin_user_pages(shm->pages, shm->num_pages);
-> > -       else
-> > -               shm_put_kernel_pages(shm->pages, shm->num_pages);
-> >  err_free_shm_pages:
-> >         kfree(shm->pages);
-> >  err_free_shm:
-> >
-> >
+M
