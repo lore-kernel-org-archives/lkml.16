@@ -1,446 +1,143 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1620518027
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 23:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431D81C8624;
+	Wed, 26 Mar 2025 23:57:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743033164; cv=none; b=LZAhc8oe1jZitlVlywbiaYPxNdf1kJwcMpZDj8tXEQTNlCz3deHRyM6yw3L7cVpMN4dzD+TM0M1iO4QkGjUnRNjTWoDTiE6Wl/lUSjceJWHTjIYpwOhvyI/wKJMKCSFzwiIpuLUeBCfjXgYRXRAWPF/i6jsLFUCNzJotQTe1Egc=
+	t=1743033454; cv=none; b=KPF9xrNuVls/5pEieSMhpMeeOrrPlzYrNB+9hSO26A1YUEsoZ1+2KtUbe6Nm0e6pWXXvC4DoIiHX9OAqtPmWrnDeXM/2GQH6oz0ioEcIr35tYa4XJDlVzYVciX7MCVnPhtiFZwJzaP5LxL5u6VoYmrpWSCnYLV7XNghynZNdwk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743033164; c=relaxed/simple;
-	bh=xVp2QMfLt7PK7AmAqU2aS2o/Vv+VexUF9/S5FnYX/LM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Ss7Q+DQZcdk5/AMOw1CrvqbQCcdp2w6HVe5hRx2ho/Paw+4sZPo4u1ByAeIx8EJrxRzSvkvBOdOeyRy6inShXUE/MSu4G6V2Oy2hyws0xiOf6xDNs7oyZnjakKOkgLXKROGNj6Bn7ti9wlgr332WwBv482Abnfshh3/cLVpJqxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oUpqypyi; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1743033454; c=relaxed/simple;
+	bh=/STihoPYXRHMOjpcglX1vRTqVYy77WjuYmkOE5ojoNg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fqQ3HDWsXRDq7b73HhLblFHMUOT87XXRAF4oIKTcGUbBA6k4y50o9MQRXbfspT3XjsZzYVXzoPM8sxFFbdi7gwf1qOMozb2qYZkQ6q7zA2PpECR/6VUNHV07WiAlJ8S1d+adtM1Burq1EKxG6m8xUtIeBhYnZExsvQo+VnCGndM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=noAec5Dl; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oUpqypyi"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2254bdd4982so9161075ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 16:52:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="noAec5Dl"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5cd420781so661336a12.2;
+        Wed, 26 Mar 2025 16:57:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743033162; x=1743637962; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=x90XvYEzFqcvfnyhuh/NjS2NoQXwJjkpKyy6gPyPFcE=;
-        b=oUpqypyiplWGtGdCn03TTocyRV2GD3pVROePObteUVslQXF8t/GdWo33SwQWBVN30A
-         d1bm2HwAHRIB+ADFMyQ/r6k5w9F6fiUKmwa+GO8wpspEnN2m1eIbxyGzDJXGdHV9XpKx
-         ea5ftE6P2eiDgB0O18VVIdMYLXv4WVwvJgGRrAMbCF0Fvk5k+Kf8kgc3B3j7tdkZHi8I
-         xLB+DCJG2brd3mVXfEj/PYcPEMOmS8Ecr3bcLoozVc40Dyt3YVU5Gom++7VQaADe8nTc
-         6nkRTZPQ6xpY7V+CiDYANMu3GWzKZjlDAb/EyBOeGLUzHUFROp41YJznsEDM7g68zDC/
-         NWjA==
+        d=gmail.com; s=20230601; t=1743033451; x=1743638251; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tfL0zZBVe1RxEvNcNmE6dfxCA/2Hz+Ouu0xAFqUlH9A=;
+        b=noAec5DlT40uQNDq+09GuZcbhIwqottn5Ws8dk4QTz1ljpTbSL5xFJfZrRuvRxxWJ6
+         oBO2eOK/iWd7jADHXmT0ymi3MPdVRDjVeSdOxFfM3m4OIeOACbVqrsDSGYS4EF+8J4U1
+         3lCe+QGa/O9l4TR4uGVqcvs0nAW2kHAE75ig3xWhgcW004PfOfYrjjg7TNhnhyRzHo2k
+         pO1uTatQd8qVjC6zwlwRKeltRwTiieKOajY9lyUwObm0Ld1j7EbmEopNyaFxuPSU5cQZ
+         Y36P0TNLCizVhPf6oI1RLEf6WlUZsiVzuQR/CAMdQFHZW2BbdDe8nJPEs8/UtABgvaR6
+         go7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743033162; x=1743637962;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x90XvYEzFqcvfnyhuh/NjS2NoQXwJjkpKyy6gPyPFcE=;
-        b=Gakqa+IWUw/HbphxlUtNcWCQ2oDF8AG+yWnk2d225qUQ7pckRMG++lV9XzdFwwKgum
-         dCHj56SVg+EAMWKxsqAt2pSnsNmFI5TNtZ3OvSL8EXqSStsBSwqLnbn2J/eigi4VmEb+
-         6PtxOa0cfOudlDjHm5mC1XcVutrUYczhuN2zdkrOTwv6JTJmOjkdANbWs88l0l1tpyJ8
-         h/N5Z66OmM2kmW/daU3B1ZMgWxKbDbumOqkYYdIhrBiiYEFyrcdLYneBN0j8vSuWFJeY
-         tJHxGZjMxDMtnqxdRFZCk1CFZit9x8j7/blOrZTR/UFQ2EiBAspDfgW7CzBau4W9PdqX
-         lETg==
-X-Gm-Message-State: AOJu0Yyn4kvctM/LJnJi8x6emMREqzvL1HazKRu6goLnikxCY6iyC3ne
-	0zsNm8vqpK6YIncIEEwUmvqiCrDbPyeNH05BsgfpSrihDYxGHkA1pveu4AXozCEmhIhj7ttRdbl
-	PeOyH6xb4ZT7M14EM6aqQb9E9rPhCSD7jarI+TavRfPfxvmVZqQjBZh+tCCnHtwTTxV8G/JwmoS
-	75H4GNdLbdz5N52X1s9G6zuqRdyLQStWxYcwfJp5De
-X-Google-Smtp-Source: AGHT+IHDXEo6LkpH675QoZfsVFOYEDRrNppU08Rfa+cGSrzioV6wNeqQmVyyBL+VZB8bDIo624XJIuSnL5Q=
-X-Received: from plqt12.prod.google.com ([2002:a17:902:a5cc:b0:21f:14cc:68b0])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f548:b0:223:6455:8752
- with SMTP id d9443c01a7336-2280498703dmr18329665ad.43.1743033162148; Wed, 26
- Mar 2025 16:52:42 -0700 (PDT)
-Date: Wed, 26 Mar 2025 16:42:36 -0700
-In-Reply-To: <20250326234758.480431-1-ctshao@google.com>
+        d=1e100.net; s=20230601; t=1743033451; x=1743638251;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tfL0zZBVe1RxEvNcNmE6dfxCA/2Hz+Ouu0xAFqUlH9A=;
+        b=gxNjW2bjyKFsIokwW1ImhQ7rWO4Auv8prAWKfUqRbAITnIqfBLW+VZuub8M5W2O325
+         CQXTX1rrC1NDI+qpMofOGzVT0kvA1QOT28BYcD7MfZagQlM2PUm9b8qy0b/8VBdPREEa
+         IhqqhzVnUNgBUNIMLKN7Mnc3M2k7qNCueLjxkremK6ek/E60xo3eSdY477gGS++1qvsM
+         Ja2O+v766HnmwGMLsaEgwlrquHRzzsYSfkHLzy5wRqds0YsZH2YXLbBnFNVWDHaG0arf
+         e70gTp5fKhtqZyNrbkQseXTcGqlPekzNMKQpn2A3BPyBxRppgCoiRJOkFy/HsCivdaZX
+         mJsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX5KLn/Zc1LOnrOnSGWQcwmJJlJULV43Dis9/B82yw9jgiNYJIg9sfCIAHChMyIJWHiafAOFgd7@vger.kernel.org, AJvYcCXbBR6V44XnltvcD4h5d1ZECfkpQHVgF1QABTVzVkFv5zJAPf7aQMHOsTk4hHQ2ZL1/VOvrQ0yiTNS6ykJL@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyvb00CdkfI9iVJHlSL9m3EynUKmaoxpTJCQYGD2KD2N2nmE/Jc
+	Zs+s4DwqF0WSPU6r5mBY16VvYTPfjQz17xFnKu+IrKbPpTd2laa/scIxIsCsRLwd/Xe74HRilHf
+	HQv9Ymewz08XqHXF6PDzL51rzxCU=
+X-Gm-Gg: ASbGncvIknfOzdFUNhegwdtgc/zHHNrmSRQXKkj7aFHRWevV5h9g541x2qik/JINeCM
+	XT41pdrrQjxglHY4Qsli7xHwBYtZQL3TPm6XBniwWG9ElhJnvSzb50+Yc4FqUyNXFBbzHW9QUfY
+	MnRr2FbLqtEgwvcT/IbLWLlOxU
+X-Google-Smtp-Source: AGHT+IFN//Xoa5xJhfjM1LYOOVmakekz4BFhgDXTCCePBITSricx0HscPMedKrQZtphZGJnjbaiTDTJRdWnY+Rhiu3Q=
+X-Received: by 2002:a05:6402:3596:b0:5eb:ca97:7c60 with SMTP id
+ 4fb4d7f45d1cf-5ed8df6a56bmr1585288a12.6.1743033451157; Wed, 26 Mar 2025
+ 16:57:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250326234758.480431-1-ctshao@google.com>
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250326234758.480431-3-ctshao@google.com>
-Subject: [PATCH v1 2/2] perf parse-events: Use wildcard processing to set an
- event to merge into
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Ian Rogers <irogers@google.com>, Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, james.clark@linaro.org, howardchu95@gmail.com, 
-	weilin.wang@intel.com, yeoreum.yun@arm.com, linux@treblig.org, 
-	ak@linux.intel.com, asmadeus@codewreck.org, linux-perf-users@vger.kernel.org
+MIME-Version: 1.0
+References: <20250319071330.898763-1-gthelen@google.com> <u5kcjffhyrjsxagpdzas7q463ldgqtptaafozea3bv64odn2xt@agx42ih5m76l>
+ <Z9r-YQDAXIur81i0@slm.duckdns.org>
+In-Reply-To: <Z9r-YQDAXIur81i0@slm.duckdns.org>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Thu, 27 Mar 2025 00:57:19 +0100
+X-Gm-Features: AQ5f1JpbmDohO9ocCxEGWIoauJamJ5UA7T8ZC7rvjrjfnqAmW-PgRpsHSi5vYXc
+Message-ID: <CAGudoHHBs5Bo3PKS1SzrkUjTXFdGNDZ=3NyHuTezz1AUbauQ2A@mail.gmail.com>
+Subject: Re: [PATCH] cgroup/rstat: avoid disabling irqs for O(num_cpu)
+To: Tejun Heo <tj@kernel.org>
+Cc: Greg Thelen <gthelen@google.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	=?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Eric Dumazet <edumzaet@google.com>, 
+	Yosry Ahmed <yosryahmed@google.com>, cgroups@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Ian Rogers <irogers@google.com>
+On Wed, Mar 19, 2025 at 6:26=E2=80=AFPM Tejun Heo <tj@kernel.org> wrote:
+>
+> On Wed, Mar 19, 2025 at 11:47:32AM +0100, Mateusz Guzik wrote:
+> ...
+> > Is not this going a little too far?
+> >
+> > the lock + irq trip is quite expensive in its own right and now is
+> > going to be paid for each cpu, as in the total time spent executing
+> > cgroup_rstat_flush_locked is going to go up.
+>
+> Lock/unlock when the cacheline is already on the cpu is pretty cheap and =
+on
+> modern x86 cpus at least irq on/off are also only a few cycles, so you
+> probably wouldn't be able to tell the difference.
+>
 
-From: Ian Rogers <irogers@google.com>
+This does not line up with what I had seen on x86-64 uarchs up to this
+point, including Sapphire Rapids, which I think still counts as
+reasonably new.
 
-The merge stat code fails for uncore events if they are repeated
-twice, for example `perf stat -e clockticks,clockticks -I 1000` as the
-counts of the second set of uncore events will be merged into the
-first counter. Reimplement the logic to have a first_wildcard_match so
-that merged later events correctly merge into the first wildcard event
-that they will be aggregated into.
+Most notably I see smp_mb() as a factor on my profiles, which compiles
+to lock add $0 to a stack pointer -- a very much cache hot variable.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Tested-by: Chun-Tse Shao <ctshao@google.com>
----
- tools/perf/util/evsel.c        | 15 ++++++------
- tools/perf/util/evsel.h        |  7 ++++--
- tools/perf/util/parse-events.c | 45 ++++++++++++++++++++--------------
- tools/perf/util/stat-display.c |  2 +-
- tools/perf/util/stat.c         | 40 +++---------------------------
- 5 files changed, 44 insertions(+), 65 deletions(-)
+However, the cost of an atomic op has a lot of to do with state
+accumulated around it -- the more atomics in short succession, the
+lesser the impact. That is to say it may be given code is slow enough
+that adding a lock-prefixed instruction does not add notable overhead.
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index f00cfff119aa..84e56691c49f 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -552,11 +552,11 @@ struct evsel *evsel__clone(struct evsel *dest, struct evsel *orig)
- 
- 	evsel->exclude_GH = orig->exclude_GH;
- 	evsel->sample_read = orig->sample_read;
--	evsel->auto_merge_stats = orig->auto_merge_stats;
- 	evsel->collect_stat = orig->collect_stat;
- 	evsel->weak_group = orig->weak_group;
- 	evsel->use_config_name = orig->use_config_name;
- 	evsel->pmu = orig->pmu;
-+	evsel->first_wildcard_match = orig->first_wildcard_match;
- 
- 	if (evsel__copy_config_terms(evsel, orig) < 0)
- 		goto out_err;
-@@ -3949,11 +3949,6 @@ bool evsel__set_needs_uniquify(struct evsel *counter, const struct perf_stat_con
- 		return true;
- 	}
- 
--	if (counter->merged_stat) {
--		/* Counter won't be shown. */
--		return false;
--	}
--
- 	if (counter->use_config_name || counter->is_libpfm_event) {
- 		/* Original name will be used. */
- 		return false;
-@@ -3980,6 +3975,12 @@ bool evsel__set_needs_uniquify(struct evsel *counter, const struct perf_stat_con
- 		/* Always unique with no aggregation. */
- 		counter->needs_uniquify = true;
- 		return true;
-+	} else if (counter->first_wildcard_match != NULL) {
-+		/*
-+		 * It is under aggregation mode and the counter won't be shown (the counts should be
-+		 * aggreated to the `first_wildcard_match` evsel)
-+		 */
-+		return false;
- 	}
- 
- 	/*
-@@ -3987,7 +3988,7 @@ bool evsel__set_needs_uniquify(struct evsel *counter, const struct perf_stat_con
- 	 * uniquify is necessary.
- 	 */
- 	evlist__for_each_entry(counter->evlist, evsel) {
--		if (evsel == counter || evsel->merged_stat || evsel->pmu == counter->pmu)
-+		if (evsel == counter || evsel->first_wildcard_match || evsel->pmu == counter->pmu)
- 			continue;
- 
- 		if (evsel__name_is(counter, evsel__name(evsel))) {
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 76ccb7c7e8c2..2cc046894e30 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -70,6 +70,11 @@ struct evsel {
- 		const char		*unit;
- 		struct cgroup		*cgrp;
- 		const char		*metric_id;
-+		/*
-+		 * This point to the first evsel with the same name, intended to store the
-+		 * aggregated counts in aggregation mode.
-+		 */
-+		struct evsel		*first_wildcard_match;
- 		/* parse modifier helper */
- 		int			exclude_GH;
- 		int			sample_read;
-@@ -78,7 +83,6 @@ struct evsel {
- 		bool			percore;
- 		bool			precise_max;
- 		bool			is_libpfm_event;
--		bool			auto_merge_stats;
- 		bool			collect_stat;
- 		bool			weak_group;
- 		bool			bpf_counter;
-@@ -115,7 +119,6 @@ struct evsel {
- 	bool			ignore_missing_thread;
- 	bool			forced_leader;
- 	bool			cmdline_group_boundary;
--	bool			merged_stat;
- 	bool			reset_group;
- 	bool			errored;
- 	bool			needs_auxtrace_mmap;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 5152fd5a6ead..0985fea17a26 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -228,7 +228,7 @@ __add_event(struct list_head *list, int *idx,
- 	    struct perf_event_attr *attr,
- 	    bool init_attr,
- 	    const char *name, const char *metric_id, struct perf_pmu *pmu,
--	    struct list_head *config_terms, bool auto_merge_stats,
-+	    struct list_head *config_terms, struct evsel *first_wildcard_match,
- 	    struct perf_cpu_map *cpu_list, u64 alternate_hw_config)
- {
- 	struct evsel *evsel;
-@@ -262,9 +262,9 @@ __add_event(struct list_head *list, int *idx,
- 	evsel->core.own_cpus = perf_cpu_map__get(cpus);
- 	evsel->core.requires_cpu = pmu ? pmu->is_uncore : false;
- 	evsel->core.is_pmu_core = pmu ? pmu->is_core : false;
--	evsel->auto_merge_stats = auto_merge_stats;
- 	evsel->pmu = pmu;
- 	evsel->alternate_hw_config = alternate_hw_config;
-+	evsel->first_wildcard_match = first_wildcard_match;
- 
- 	if (name)
- 		evsel->name = strdup(name);
-@@ -423,7 +423,7 @@ bool parse_events__filter_pmu(const struct parse_events_state *parse_state,
- static int parse_events_add_pmu(struct parse_events_state *parse_state,
- 				struct list_head *list, struct perf_pmu *pmu,
- 				const struct parse_events_terms *const_parsed_terms,
--				bool auto_merge_stats, u64 alternate_hw_config);
-+				struct evsel *first_wildcard_match, u64 alternate_hw_config);
- 
- int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
- 			   struct parse_events_state *parse_state,
-@@ -433,6 +433,7 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
- 	bool found_supported = false;
- 	const char *config_name = get_config_name(parsed_terms);
- 	const char *metric_id = get_config_metric_id(parsed_terms);
-+	struct evsel *first_wildcard_match = NULL;
- 
- 	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
- 		LIST_HEAD(config_terms);
-@@ -449,10 +450,14 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
- 			 */
- 			ret = parse_events_add_pmu(parse_state, list, pmu,
- 						   parsed_terms,
--						   perf_pmu__auto_merge_stats(pmu),
-+						   first_wildcard_match,
- 						   /*alternate_hw_config=*/PERF_COUNT_HW_MAX);
- 			if (ret)
- 				return ret;
-+
-+			if (first_wildcard_match == NULL)
-+				first_wildcard_match =
-+					container_of(list->prev, struct evsel, core.node);
- 			continue;
- 		}
- 
-@@ -480,11 +485,13 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
- 		}
- 
- 		if (__add_event(list, idx, &attr, /*init_attr*/true, config_name ?: name,
--				metric_id, pmu, &config_terms, /*auto_merge_stats=*/false,
-+				metric_id, pmu, &config_terms, first_wildcard_match,
- 				/*cpu_list=*/NULL,
- 				/*alternate_hw_config=*/PERF_COUNT_HW_MAX) == NULL)
- 			return -ENOMEM;
- 
-+		if (first_wildcard_match == NULL)
-+			first_wildcard_match = container_of(list->prev, struct evsel, core.node);
- 		free_config_terms(&config_terms);
- 	}
- 	return found_supported ? 0 : -EINVAL;
-@@ -1415,7 +1422,7 @@ static bool config_term_percore(struct list_head *config_terms)
- static int parse_events_add_pmu(struct parse_events_state *parse_state,
- 				struct list_head *list, struct perf_pmu *pmu,
- 				const struct parse_events_terms *const_parsed_terms,
--				bool auto_merge_stats, u64 alternate_hw_config)
-+				struct evsel *first_wildcard_match, u64 alternate_hw_config)
- {
- 	struct perf_event_attr attr;
- 	struct perf_pmu_info info;
-@@ -1451,7 +1458,7 @@ static int parse_events_add_pmu(struct parse_events_state *parse_state,
- 		evsel = __add_event(list, &parse_state->idx, &attr,
- 				    /*init_attr=*/true, /*name=*/NULL,
- 				    /*metric_id=*/NULL, pmu,
--				    /*config_terms=*/NULL, auto_merge_stats,
-+				    /*config_terms=*/NULL, first_wildcard_match,
- 				    /*cpu_list=*/NULL, alternate_hw_config);
- 		return evsel ? 0 : -ENOMEM;
- 	}
-@@ -1521,7 +1528,7 @@ static int parse_events_add_pmu(struct parse_events_state *parse_state,
- 	evsel = __add_event(list, &parse_state->idx, &attr, /*init_attr=*/true,
- 			    get_config_name(&parsed_terms),
- 			    get_config_metric_id(&parsed_terms), pmu,
--			    &config_terms, auto_merge_stats, /*cpu_list=*/NULL,
-+			    &config_terms, first_wildcard_match, /*cpu_list=*/NULL,
- 			    alternate_hw_config);
- 	if (!evsel) {
- 		parse_events_terms__exit(&parsed_terms);
-@@ -1554,6 +1561,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 	int ok = 0;
- 	const char *config;
- 	struct parse_events_terms parsed_terms;
-+	struct evsel *first_wildcard_match = NULL;
- 
- 	*listp = NULL;
- 
-@@ -1586,17 +1594,14 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 	INIT_LIST_HEAD(list);
- 
- 	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
--		bool auto_merge_stats;
--
- 		if (parse_events__filter_pmu(parse_state, pmu))
- 			continue;
- 
- 		if (!perf_pmu__have_event(pmu, event_name))
- 			continue;
- 
--		auto_merge_stats = perf_pmu__auto_merge_stats(pmu);
- 		if (!parse_events_add_pmu(parse_state, list, pmu,
--					  &parsed_terms, auto_merge_stats, hw_config)) {
-+					  &parsed_terms, first_wildcard_match, hw_config)) {
- 			struct strbuf sb;
- 
- 			strbuf_init(&sb, /*hint=*/ 0);
-@@ -1605,11 +1610,13 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 			strbuf_release(&sb);
- 			ok++;
- 		}
-+		if (first_wildcard_match == NULL)
-+			first_wildcard_match = container_of(list->prev, struct evsel, core.node);
- 	}
- 
- 	if (parse_state->fake_pmu) {
- 		if (!parse_events_add_pmu(parse_state, list, perf_pmus__fake_pmu(), &parsed_terms,
--					  /*auto_merge_stats=*/true, hw_config)) {
-+					 first_wildcard_match, hw_config)) {
- 			struct strbuf sb;
- 
- 			strbuf_init(&sb, /*hint=*/ 0);
-@@ -1640,6 +1647,7 @@ int parse_events_multi_pmu_add_or_add_pmu(struct parse_events_state *parse_state
- 	struct perf_pmu *pmu;
- 	int ok = 0;
- 	char *help;
-+	struct evsel *first_wildcard_match = NULL;
- 
- 	*listp = malloc(sizeof(**listp));
- 	if (!*listp)
-@@ -1650,14 +1658,14 @@ int parse_events_multi_pmu_add_or_add_pmu(struct parse_events_state *parse_state
- 	/* Attempt to add to list assuming event_or_pmu is a PMU name. */
- 	pmu = perf_pmus__find(event_or_pmu);
- 	if (pmu && !parse_events_add_pmu(parse_state, *listp, pmu, const_parsed_terms,
--					 /*auto_merge_stats=*/false,
-+					 first_wildcard_match,
- 					 /*alternate_hw_config=*/PERF_COUNT_HW_MAX))
- 		return 0;
- 
- 	if (parse_state->fake_pmu) {
- 		if (!parse_events_add_pmu(parse_state, *listp, perf_pmus__fake_pmu(),
- 					  const_parsed_terms,
--					  /*auto_merge_stats=*/false,
-+					  first_wildcard_match,
- 					  /*alternate_hw_config=*/PERF_COUNT_HW_MAX))
- 			return 0;
- 	}
-@@ -1667,15 +1675,16 @@ int parse_events_multi_pmu_add_or_add_pmu(struct parse_events_state *parse_state
- 	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
- 		if (!parse_events__filter_pmu(parse_state, pmu) &&
- 		    perf_pmu__wildcard_match(pmu, event_or_pmu)) {
--			bool auto_merge_stats = perf_pmu__auto_merge_stats(pmu);
--
- 			if (!parse_events_add_pmu(parse_state, *listp, pmu,
- 						  const_parsed_terms,
--						  auto_merge_stats,
-+						  first_wildcard_match,
- 						  /*alternate_hw_config=*/PERF_COUNT_HW_MAX)) {
- 				ok++;
- 				parse_state->wild_card_pmus = true;
- 			}
-+			if (first_wildcard_match == NULL)
-+				first_wildcard_match =
-+					container_of((*listp)->prev, struct evsel, core.node);
- 		}
- 	}
- 	if (ok)
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index d427e0ca98a1..7e2ec33e8c99 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -1011,7 +1011,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
- 	os->evsel = counter;
- 
- 	/* Skip already merged uncore/hybrid events */
--	if (counter->merged_stat)
-+	if (config->aggr_mode != AGGR_NONE && counter->first_wildcard_match)
- 		return;
- 
- 	val = aggr->counts.val;
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 1f7abd8754c7..355a7d5c8ab8 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -535,35 +535,6 @@ static int evsel__merge_aggr_counters(struct evsel *evsel, struct evsel *alias)
- 
- 	return 0;
- }
--/*
-- * Events should have the same name, scale, unit, cgroup but on different core
-- * PMUs or on different but matching uncore PMUs.
-- */
--static bool evsel__is_alias(struct evsel *evsel_a, struct evsel *evsel_b)
--{
--	if (strcmp(evsel__name(evsel_a), evsel__name(evsel_b)))
--		return false;
--
--	if (evsel_a->scale != evsel_b->scale)
--		return false;
--
--	if (evsel_a->cgrp != evsel_b->cgrp)
--		return false;
--
--	if (strcmp(evsel_a->unit, evsel_b->unit))
--		return false;
--
--	if (evsel__is_clock(evsel_a) != evsel__is_clock(evsel_b))
--		return false;
--
--	if (evsel_a->pmu == evsel_b->pmu || evsel_a->pmu == NULL || evsel_b->pmu == NULL)
--		return false;
--
--	if (evsel_a->pmu->is_core)
--		return evsel_b->pmu->is_core;
--
--	return perf_pmu__name_no_suffix_match(evsel_a->pmu, evsel_b->pmu->name);
--}
- 
- static void evsel__merge_aliases(struct evsel *evsel)
- {
-@@ -572,10 +543,9 @@ static void evsel__merge_aliases(struct evsel *evsel)
- 
- 	alias = list_prepare_entry(evsel, &(evlist->core.entries), core.node);
- 	list_for_each_entry_continue(alias, &evlist->core.entries, core.node) {
--		/* Merge the same events on different PMUs. */
--		if (evsel__is_alias(evsel, alias)) {
-+		if (alias->first_wildcard_match == evsel) {
-+			/* Merge the same events on different PMUs. */
- 			evsel__merge_aggr_counters(evsel, alias);
--			alias->merged_stat = true;
- 		}
- 	}
- }
-@@ -588,11 +558,7 @@ static bool evsel__should_merge_hybrid(const struct evsel *evsel,
- 
- static void evsel__merge_stats(struct evsel *evsel, struct perf_stat_config *config)
- {
--	/* this evsel is already merged */
--	if (evsel->merged_stat)
--		return;
--
--	if (evsel->auto_merge_stats || evsel__should_merge_hybrid(evsel, config))
-+	if (!evsel->pmu || !evsel->pmu->is_core || evsel__should_merge_hybrid(evsel, config))
- 		evsel__merge_aliases(evsel);
- }
- 
--- 
-2.49.0.472.ge94155a9ec-goog
+In order to not just handwave, here is overhead of __legitimize_mnt()
+while performing a path lookup for access() on my test box. smp_mb()
+is the stock variant. irq() merely toggles interrupts, it does not
+provide any sanity for the routine, but lets me see the cost if it got
+planted there for some magic reason. Finally the last bit is what I
+expect the final routine to have -- merely a branch to account for bad
+mounts (taking advantage of synchronize_rcu() on unmount).
+smp_mb:         3.31%
+irq:            1.44%
+nothing:        0.63%
 
+These would be higher if it was not for  the fact that memory
+allocation (for path buffer) is dog slow.
+
+And indeed I get over a 3% speed up in access() rate by not suffering
+that smp_mb() [I note I don't have a viable patch for it, rather I
+whacked it for benchmarking purposes to see if pursuing proper removal
+is worth it]
+
+I'll note though that profiling open()+close() shows virtually no
+difference (less than 0.5%) -- but that's not an argument for atomics
+being cheap, instead it is an argument for open() in particular being
+slow (which it is, I'm working on it though).
+
+If you want I can ship you the test case, diffs and kernel config to
+reproduce on your own.
+
+
+
+
+
+
+
+
+
+--
+Mateusz Guzik <mjguzik gmail.com>
