@@ -1,323 +1,182 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2123.outbound.protection.outlook.com [40.107.255.123])
+Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013014.outbound.protection.outlook.com [52.101.72.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866684086A;
-	Wed, 26 Mar 2025 01:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EFA7404E
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 01:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.14
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742954211; cv=fail; b=iSIJyXA/hm21HeYHm/jeNfLYQ0rK5Fo1UjM11Pm8tp2rWFQc6oJIpOn/e/iU+hlHOk449inEo2fRj2QAflUwUPF2baDaBipZ6MxG19GNLMGVFezzr0O883DsvxqtSmbfUP3CE35pkiDL9187SrMNpAdH2i9XoE0LIeQeHUFMVZo=
+	t=1742954334; cv=fail; b=g4E1v27xMtO1Q8Ye56dbCTeuk2HFiq/JIH2am1m2J7stiVDaYxWf/UzkcDQrzvaRY/VA5oO5sH/6w1pPYKOln78XhHOcdQ99TIoApU5ulA2eAaPkOnKDOwYDQhAJ5TalKtv9qDm/HDNMv0I29sd8p/quZh84MBKk9FdfHm9igAk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742954211; c=relaxed/simple;
-	bh=PA2pS+GKLbDTH8FyKEqCwS03134DTnjlBItude3iZn0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YhRZ6b+QDsruEuuL+GVOw0wx7ZPZ+shReEbgtfLpPuAafWQLaTzbuGW6waw47liSQyPSj4W7XPKtJE5/dxGPE7zWBrAMqFaoPH6EUtWvPEQuTqnjUFKTrng6P8PhQ6RGf3RetaKmVsKG7ybRJj4HGQXmG+lJjkuwl0OG6Bprzms=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.255.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+	s=arc-20240116; t=1742954334; c=relaxed/simple;
+	bh=qm41Rcf/Fo4dDKtX0dFTBPF46I0W4fgZCg5EQ/t1lbY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=kWE3Mzyj16z0YstjqP8C2iaCEbLOtRBJDWKQoB+TivpzQd6qPMDrIDdk9wtXYWmzMy0AFdahbYQIcXNxoiFgP+mvsTdraDGzdc7fmwJ7RrG06KkJcFJ3akGz8aRgoJKtkY3GTBEEUBsm0a1Cih6SVaSDIHSB6n+hhto649E5YXA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=EKwDNW4J; arc=fail smtp.client-ip=52.101.72.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="EKwDNW4J"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LnkrTRahDGFEmqZ+RXfHVSZL00tu+DQ//Q0s6n+DC7vaEn8DqnLRPDAk6pEge9/3aYSnSzSF0uyKYMUSFg3SaUF0AVbZga6S8ceMKQ7QXS+Vbn19RbaCQIETD63GhsoGm8kUoTTaekXSlBZvB0iS6B4BI2LUeXZGJeoGAkWoL4ur40Xt6imBMa1TIWrIPRIBus/HdiqpxUMdeJxun0KUAmEw+jpZc1VubITv2cA3uAQszhFJ1F1SqWDhiuQBeVu43dI1q3x/GF5h66DOauZyo01RjP8VkNqmnuxVRyyHjAxJezGj1S3ap2bsmb6pKi+0LMBQG3GCIUjtf+76VL6BhQ==
+ b=VuwHqq74NOMhXslpRG6UxA9HQTQgxMNRBEm1h1lxWCUTo35A10QttXAdQ6z0efjlkS9leCoMOSJQ8tp5N+faFqXyJ2Fuq1kItjqGMVFl7Hvjosn8vFzF+ZYj7UQxDT4dDGs/E0U7B5EOyQ3xSdLeDSns9xGEbkcZ2cAus7pBMym+Yw4u4EqJCNcQQ3t523k/+++ciUM9daXNXLWPkC/nL9xdZ2d4MrpEpiwFG8vkhKqe3Mk7b/H74mvD1HbfrBquLGXKvZpBfRpoOs9+ghcw1PCNOP1r3tlHN9xCoxATg1KL8HVqk8Z4K0YU/qrD4cPxW+Pp3fhFkgOlNfHeKYkkDg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PugqvdqHcuCBZvNsgBPKrpw/hgFa+/7KSaVbwkc1FK4=;
- b=eJA3WIwj3wTMXHVKz+Dc9D0TIXA5QFL9POvi/ukhlvuLimEjUluyrwTN/p3onx0iA8W0WPCQ5agj3tIN3ioJYhY3Fse4UXOw3RPQbIAmNDgw+YmDJSw8yimN5/x2CeJvl/UpolIewjJhtKLm1jsjMVrnm64a0SWB+t+8j0t2pXguSOn+CvvwTSU5fWg0xSEziemiFMSMqJddfjC5gsjzVRy40r6Doo+vf8zg+4goDNoLq8wkNbDupzUvOO3WkrT982Tbrn9lCKfWYS4svUOA3sSg0W/dBh3Eqbbt7kAtIJ6KaSRKQUq+1+MBaqfQ0w0D6mPaVwH22POn15qjS8PTYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=bootlin.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from TY2PR0101CA0026.apcprd01.prod.exchangelabs.com
- (2603:1096:404:8000::12) by SEZPR06MB6689.apcprd06.prod.outlook.com
- (2603:1096:101:17c::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Wed, 26 Mar
- 2025 01:56:42 +0000
-Received: from TY2PEPF0000AB88.apcprd03.prod.outlook.com
- (2603:1096:404:8000:cafe::27) by TY2PR0101CA0026.outlook.office365.com
- (2603:1096:404:8000::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.42 via Frontend Transport; Wed,
- 26 Mar 2025 01:56:42 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- TY2PEPF0000AB88.mail.protection.outlook.com (10.167.253.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.20 via Frontend Transport; Wed, 26 Mar 2025 01:56:41 +0000
-Received: from [172.16.64.208] (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 4934A4160CA0;
-	Wed, 26 Mar 2025 09:56:40 +0800 (CST)
-Message-ID: <9ba07a35-ec55-49ba-9484-e2ab9e511534@cixtech.com>
-Date: Wed, 26 Mar 2025 09:56:39 +0800
+ bh=Lvmv/YjyP2BsBolHU4w6h12pYcCOC7Uc8SmJWXhZbwE=;
+ b=QHITPASLL1HcL9cKNf0WCSIFTxdlTw183nBbXEKe7Zrp61FsFTt+ZPy1SIcFWL3JSu808f/LimuaB5He5VL5lCLTErAId7MZ2JE13NY8RwWbPD29o+ESVvMlskHIQFMJauo32guzGeEf0D/c0OafcrgkAPRK0xJFZG/vfetq8gyCbhXlPu5OJvX3d3HBQtGYEzOgFSi9clHi/sakitg6XK0xMHQihL8zXMUgE7ORIXQhNjuiq8VX8ENmleSBJUj3nxAXhrCcmJ3sNUSFV2+CHZMs5I2rksIPEr19AhjUt7iQqX5yxuxlKacO97jjkiz5LoyRJS1gyrmHUtZv6MHHGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Lvmv/YjyP2BsBolHU4w6h12pYcCOC7Uc8SmJWXhZbwE=;
+ b=EKwDNW4JgFkd41WhfaVbMQTmapjSokBBtwmn4Qo5jd5dG+hqG4Ibv/qTkdzvnAfmwzjm0Ymb83FBkE0KcEnWRwNXqkb/vsD0T0BW2UnGqPsewcTCBLkSWKGGDI8S7xknPtXaeMCbTV83XKLU9qQ9BshyMJeM9J1vf9CPjL1N6tEbOUD8mcRCOsdzrOXg8zNMD5ytnswWZeyemSthnHtAT97rc8Xg5BAZC691YC4d7Q1z3ekgdE9+kjGl8321HIFGA/e4Br7zx2z9H+YtCWX3KkJaF1OV0TD8VhYalqvzb3aJc78I6vEI19/ob3IvteAE7oKrJ17MZJ0yDg7o4DAKXg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DB8PR04MB7051.eurprd04.prod.outlook.com (2603:10a6:10:fd::20)
+ by DB8PR04MB6890.eurprd04.prod.outlook.com (2603:10a6:10:117::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Wed, 26 Mar
+ 2025 01:58:48 +0000
+Received: from DB8PR04MB7051.eurprd04.prod.outlook.com
+ ([fe80::8f9d:4273:ea83:167a]) by DB8PR04MB7051.eurprd04.prod.outlook.com
+ ([fe80::8f9d:4273:ea83:167a%6]) with mapi id 15.20.8534.040; Wed, 26 Mar 2025
+ 01:58:48 +0000
+Message-ID: <e82e2cb1-d48c-42f3-9fec-1750717d9ca1@nxp.com>
+Date: Wed, 26 Mar 2025 10:00:07 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/imx: legacy-bridge: fix inconsistent indenting
+ warning
+To: Charles Han <hanchunchao@inspur.com>, andrzej.hajda@intel.com,
+ neil.armstrong@linaro.org, rfoss@kernel.org,
+ Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+ jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+ shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+ festevam@gmail.com
+Cc: dri-devel@lists.freedesktop.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250325075503.3852-1-hanchunchao@inspur.com>
+From: Liu Ying <victor.liu@nxp.com>
+Content-Language: en-US
+In-Reply-To: <20250325075503.3852-1-hanchunchao@inspur.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2PR06CA0009.apcprd06.prod.outlook.com
+ (2603:1096:4:186::17) To DB8PR04MB7051.eurprd04.prod.outlook.com
+ (2603:10a6:10:fd::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] Loadable Module support for PCIe Cadence and J721E
-To: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
-Cc: Peter Chen <peter.chen@cixtech.com>,
- Siddharth Vadapalli <s-vadapalli@ti.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
- <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "vigneshr@ti.com" <vigneshr@ti.com>, "kishon@kernel.org"
- <kishon@kernel.org>, "cassel@kernel.org" <cassel@kernel.org>,
- "wojciech.jasko-EXT@continental-corporation.com"
- <wojciech.jasko-EXT@continental-corporation.com>,
- "thomas.richard@bootlin.com" <thomas.richard@bootlin.com>,
- "bwawrzyn@cisco.com" <bwawrzyn@cisco.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "srk@ti.com" <srk@ti.com>
-References: <20250307103128.3287497-1-s-vadapalli@ti.com>
- <Z9pffxeXHVOsoi4O@nchen-desktop> <20250319062534.ollh3s5t7znf5zqs@uda0492258>
- <Z9qO1f5MgNcwO5A4@nchen-desktop> <20250319095511.hf3y2c6vbbnm3ien@thinkpad>
- <a8966792-fa0e-4e8e-aceb-427819ae4ef5@cixtech.com>
- <bkw4xm4jwe3iuf6sixxl4udosea3bhlwogfua66naf5echbyzv@dlwcbscedh6w>
- <96940e1e-a395-49bc-ac29-7ca86bfb8ad7@cixtech.com>
- <2sxwud7mllpbtymfvlw5sshv3fhz3rpk37x23x5ywpzle2qlg4@7bsqhcimnfqp>
-Content-Language: en-US
-From: Hans Zhang <hans.zhang@cixtech.com>
-In-Reply-To: <2sxwud7mllpbtymfvlw5sshv3fhz3rpk37x23x5ywpzle2qlg4@7bsqhcimnfqp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB88:EE_|SEZPR06MB6689:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2db02264-cf18-42e9-7f6d-08dd6c09743d
+X-MS-TrafficTypeDiagnostic: DB8PR04MB7051:EE_|DB8PR04MB6890:EE_
+X-MS-Office365-Filtering-Correlation-Id: c9d4c66f-0f3e-4540-3c99-08dd6c09bfa4
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|82310400026|1800799024;
+ BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bFBrQmtWWWR1ZG43K1c5c1pnVGFpSEwvUGpzSThUQkprK2x2a2w2cDdMQS9y?=
- =?utf-8?B?SzdrbC9QQmFPcklCUUdXQkRGZVlyT1p5Q2hmTEFtMzlTTGNOZDIrZWF2VWE0?=
- =?utf-8?B?RmVPUTZpUU43SEhPTFhUMk9hN3pUTDltT3VTNC9NWEphT0lLNFlHZGNEUmls?=
- =?utf-8?B?NnRQMDlseVFZQ2tKT3c4UHhrNDNIeGIvNUxSQkhUVUgwaGlvTzJGV0NBWlFw?=
- =?utf-8?B?cVJ4RUZ0c2sveW9Yc2w5d1Z4MmN0VXZGTUd6SUwzMi9uZXlNajFVazNQaHlJ?=
- =?utf-8?B?RTh4YUwzTDNsc3BrbFF1cHhqWGN5L3U3Mm1RS00xQ2VkMkhCUDhIZGlQTUow?=
- =?utf-8?B?TStWbFV5cHIzMnhiTUVoWHAyYVRyZHptbXJHelNsaW9iTlN2WiswSE9jUHRl?=
- =?utf-8?B?dU41bVRiMUNudDRPOGNrWkplcEhMYUlUcmJUUUlCVW5UVGVYZG1sdkpBdmF4?=
- =?utf-8?B?TlRzWVhDdWV5dVlhTTIwZXVnRlUxNGRvTXRtMjF5OUpYb0NBRDdZSHdUL2Vq?=
- =?utf-8?B?a3BGUTlVVzVBc0ZvMS85bTZjbjVCeE9ubUdmMDdqNkoxeEliNFRYSG1KUWNq?=
- =?utf-8?B?Uzd5Q1pzWGp5SzEzb3hkbDhZWG05UDh3K0g2T0FXNnlIVVJCQjY2Zy91N3V2?=
- =?utf-8?B?Vk5VREg1RVM3ZHcySms4Um5ydEp3YndzNSt5c1c2VjFHNkRvTWliM3pKeTdD?=
- =?utf-8?B?aUR6Vy9mWWdjQlVPbzRkWU1aR3M2aTdWZEp1Vm9QdlJueXc3ay8rSllQQk5U?=
- =?utf-8?B?SFdmRU1yeVR1TW15czE2c2lPakxJMTZSQ3F0UDREMTJXRDA1c00vcU1ZYXNv?=
- =?utf-8?B?dWgzWkJRS0tDZVl6SzM2Y1g0MVFhV0FWcTBIcVY2RnNhcTh5bmFtRHJMOUpk?=
- =?utf-8?B?QTl1VUJkenpGODJWT3lLMjFYSDJTUnhkTDB0TzZwTWp0alQ4dnpOSVRHbUlH?=
- =?utf-8?B?Vkh5OVZpd0E1ZHo5MkFndmJNM2VMU0pwaVpnZ1ozYnJ0Nk1vbm1YZEl2TTB4?=
- =?utf-8?B?WEJGOGtNRGJyVHRJbXNyeUJ2aDR0cmlESGlUMHk2YmNYS2xiV2hRdFM0RTh2?=
- =?utf-8?B?clA4ckxlQjk1SngzU3B4WFJxMDgxNHZoUVIzaVZBdUdSVzFSdXh6V2Q5MlJm?=
- =?utf-8?B?U3lZNXRzQ1BjWndiV1RWR3B1TmtDZFo2MzNCSGRwRDlDRmxYeDJlcVF2U2gy?=
- =?utf-8?B?RmN4dDlvaXVTZzJrSW5NZTBLOFM3V0NpNS9yUVppem5ydGhqSHA4YkpRMmJG?=
- =?utf-8?B?NUoyOFlXQ1RJQVozVTlIeVpMYnNUNUNpYm1mZnF2cnFVd2RyNEJYeEVxWTda?=
- =?utf-8?B?dXlKTkl1TSt4bkdjQmRvdFc2amtsbVRPbGx6LzZjM1hzMHBWSU16Z010SXBn?=
- =?utf-8?B?R1RaOW40bmppNGhPOWdiNXJDUy9KQWtaWlFPT241blA5WXNWNmdNa2cwbnpM?=
- =?utf-8?B?enZvekJhM2hOUVI2bnBlR1FUL0pReENJbjlVZXVaZEJMVE0yYW1YNmJYR0Ev?=
- =?utf-8?B?SE5BWGp5c2N6Y1VqOG1vMVhUSFozUXNCc2NkL3BmQ3FBUFVSNTloNS9MSFg3?=
- =?utf-8?B?cUcydTMxdE5KWUN2RVlKaFlwZndhVk1TWWVUNVFEdXJXT0RGeS9IK2ljaWNG?=
- =?utf-8?B?ckw5Tk9pUWxjTndrV2RXSHkzS3E5YkZ3K1djbHZDd2dXMUhUQ2JaNWJHK0Q5?=
- =?utf-8?B?WlVSZ0xDK2k5djU2WHA0SmU0ZjZQQTZhNWo2ZHBxNkxrcDBqS2phTDcyOFZm?=
- =?utf-8?B?dzBxWGtWcDEwb09lN1ZvWXBEY1Vab0hVUS9PTmtLM3dnOW16SUE1bUhWV01S?=
- =?utf-8?B?bjNVd2c0YkI4ak5odGMxdnkyZ0RxdDJ4cWJHWHJJWjc0dEgzSUNsNXdBV0ph?=
- =?utf-8?B?WmJoejZXN3dsSjdhQUw0TUlsK3hadHFacVNrMWhCOFMvVnJHTE5La01NbEFu?=
- =?utf-8?B?ZWdZVWRkQ3NvVS9ITHZyQUMvcEZJdGJYenNhU1diQll2NUY3K1daQm5aeVZN?=
- =?utf-8?Q?TNbRIPBj0yt29AqHKIGgWHUmnX7ytY=3D?=
+ =?utf-8?B?WU1lWTRIa3k0bHk4NWhYU3ZMWDRXMFFBZTZRWnpKNGI4VUtabG9CK2RHVGI0?=
+ =?utf-8?B?S1EzOXJaN1RaaWNxYXIzd2ZQTXhhaEJJRTlTZlY5WGp2S24xbSsvOXBNeVh0?=
+ =?utf-8?B?RFhVZG9ac3N6ejFJNlVLNkRPendreFNNcE9leVphZlJTUDhKd3hwZTZZSUNT?=
+ =?utf-8?B?dlU1N3lvVEJGankrT2t1Wmx2VHNCVk92RHJvNmV6QysvWlN4Smcza1QrQWxy?=
+ =?utf-8?B?MHYxVFhyVjE2QjJtZjRWSkgydFhVdHdYaDZuQURUazFIZVZDOVc4TlAyWWZS?=
+ =?utf-8?B?VGNzbzZkcU91TVlDZlhScFJaS2tiUHRUSmprSTE5K3RXcmZuVVZ1ZnNzZnVx?=
+ =?utf-8?B?UnNhWnpnRkJnWGlvUlpQb3hxempxeVBuczhucWxZYnl2d3l3Ykl5RzRFbERp?=
+ =?utf-8?B?Lzl2VTRVQjBOdTlzdXhibys4WlJ3aHBsZGJHNEJEWHZvWEV4RktrSmxWeXl6?=
+ =?utf-8?B?aFM0UFZJaXRzNXEwSVlualE0NmtQR1dVbmp0N0dVc3JaNnRmaUVVR2pjbUhq?=
+ =?utf-8?B?NU43WlVMREZPelQwT2RMUkpBWTRsaHB4L3RKSnVqQXBGak16L1RXZEQ5RmtQ?=
+ =?utf-8?B?YS9KbzlvMXVzVTFDUmQrVDFadE9WMERhUXJsaG44QnlmRDZOcklEUWY5K3hN?=
+ =?utf-8?B?eGlFR0YyblBIZmNpRktrdHhhNjVNQ05FLy9tZWEvMXFrZHNnRnRLR0wya01H?=
+ =?utf-8?B?Wnd2SzVtNkx3Z1hFTUxzY0MydjlPUHlyYWl6NDA0SEtVNnRVYm5kS2E2M1E3?=
+ =?utf-8?B?R3o2OEJYaG9ubml3ZGJyUkczSEU1OGxHdTVoa254dlo0L0M2SW51SkUrUjI5?=
+ =?utf-8?B?emFNT0Z0SElyc3VrWkY0dGg2SWxxWUhUU2pMYTErajB4b2RNZTNGWTJ6eFNw?=
+ =?utf-8?B?MXdhZ2lza1BuNDgrV090ajJ0RHE3UFJEMnBwN3owYXNuZVg0V1VDUjRWWXcw?=
+ =?utf-8?B?T00zL0x4bzV0cVZIRFNBbHhyQ3l3WW5id0dxUEx2WW5Ga3F4K0JBRVJlbHJj?=
+ =?utf-8?B?WGdEMXkyL2FySHVoc002ZE5FYUNrdWR6S0prcjFCUlJ0SmZlT3RVcklyM1JM?=
+ =?utf-8?B?UjJReDh5WXN2K1c1L2RWOGlIU1RBWHZrOTg1QUtSVFREN0ZUc2VjVHlSWE9L?=
+ =?utf-8?B?WSs1SXhxelVScmJHUDhpSlhUS09ETXpscyt2R3ZUNGlwSDhPNENXc2VWTEw4?=
+ =?utf-8?B?L3dlR1MvaE1qWjFEZERJN0lOTXd6RVZaekh0bTAyM2tMRVRwTUZBSGtXMmN6?=
+ =?utf-8?B?RUtDeUpXTGZnYXUzTmYrMlViZHdGKzh5RGhJamhWM2hZS1N1anNrUzdCd04v?=
+ =?utf-8?B?c0Z1dWRXNmF1Z2M5ZSszSG5SSkQ4SEw2OTBpamFHSHlXYUVFd25sZnBteXdO?=
+ =?utf-8?B?bGlwcDUxOXNlMVFmVnhON1FMSUlYeHpHSnp0T09JK1FPNlQzRE1xaGJnR3ZK?=
+ =?utf-8?B?c2I2ZDNKR1pPcWZsR1VCVForY3lxbXJkWEpoYzVRVkJ3ZlU5VDZVZllpUVg4?=
+ =?utf-8?B?SEdrV1NTTWNKK1orQnhtNm5PbFNhNFdjRUk1clh4WjhmZXp6eVV6WE1ER09D?=
+ =?utf-8?B?T1FEU1VYOFdraFRYQW9SbEt3N2hYSFkwWW5nYTlBUERNZzNTZXIyRy9VcVBK?=
+ =?utf-8?B?VEFvOUVMcWM2dDR6bENXUnZIV2ZOdnRIN3JMK1NxWmZ5czdBOFA3allPdjRQ?=
+ =?utf-8?B?U2x6QzRpVEtWVWlxODJpdVEzN3dNSmxtOGpjVVF0VzB0akJjYWF4eVU2Uldh?=
+ =?utf-8?B?c1ZaQTFmOWFKRTVjc1M3SDkwWkR4cFJTR2ZFaCtQSnJTK2wxdGc1eEloN00v?=
+ =?utf-8?Q?LlZjk3lLBBp7ibu4DwkRkK3ecetyhaj4vdcIg=3D?=
 X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2025 01:56:41.4826
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB7051.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?V2lhK1RIcW1rUkhoTXE3b1NvWFd0eS95MkUzMkxjWlp4WmNla1FyTG1ybXFF?=
+ =?utf-8?B?alRYV1U2cEFuWTRqWGQvTjRKczd4eGswYVJNZXRaL3ZDTFREK0FheDd1VWww?=
+ =?utf-8?B?aFBMOGhMenVrTHJMYTZaL0VRQkRvSEl4ZUl3eWdpWVJCVExkcE13OVBsMlJk?=
+ =?utf-8?B?c21PZnd0M3hMRGtvZzNsS0EzUml4RjJsSkpvTzREdGN2NWg1Q1pQU2VjVDFZ?=
+ =?utf-8?B?eHo0bGlreGQ0cURsRUpiZlhwWWVwckNvRFliQ2FCbGs4bVI0bWVVMlFpVCt1?=
+ =?utf-8?B?ek12c0g1a3BJYkFMbExnRkk4RXpvOWthMFlscStVckxFSFhnd2huMkpyV2Fi?=
+ =?utf-8?B?MWIvT1NyNHBPT3V4ZTF3Y1YwbFJoWXIrN1YvdXUrVXh2SS9tQktSOHV5Vlkv?=
+ =?utf-8?B?MG51cmxGb3d2dVFoai9mUkw4cVZ6Yk1EajM1c2xJQUE5QTMvcng4aVRhRDBx?=
+ =?utf-8?B?MXY3NDZvOWVNZDFBeXErWUVtRGd2cWRWb3B2ZU1UV1B5WlBwQ283OGZYMzQ2?=
+ =?utf-8?B?ODhOOWFPTnRvS1NWV1IxZDE2WXp2Z3pqY2dURVVBWC9EdlgxMDBabjBJNmxa?=
+ =?utf-8?B?QXlOL3Z3VEc2aUpONFRYY0hnR3JJclNXQm5DdHNrRDRjdzcyWjd3Z1dFZHQ4?=
+ =?utf-8?B?QnJkTndYUTFvSHZBY2RCcnNvcHVndzB2eFdOaWgwL2RBdXBnTUMrQ2JtQjNl?=
+ =?utf-8?B?ejVqV1ZVd3RYNVZDRisyNXJsOUxNRUw4MWUzbW9rMHFmdTNGYmRyMlFLSDlB?=
+ =?utf-8?B?NHdkcjUxWnkzZ3dsVnplbkRmU0oxditCYURBeEhOWGFteFJBUkt3WTV2QjRS?=
+ =?utf-8?B?NmJEWTBOVy9NdzlOVkhJdGcybWpJUWQ4MjdtNHhwSzZSMWZUazNHVTNOaDdl?=
+ =?utf-8?B?Qm5RemZwZUpvcWRKY29hRE1MNVhsMENOTy92MjhUQzkyQlVJdGVldmpqTmxZ?=
+ =?utf-8?B?ZWZvNGJISnB0YUwveFhhdFc2Qk1uRWNGZG0wQ1ZQOUlwbUZhcWVMZ0xiK2VL?=
+ =?utf-8?B?KzQzejNSZ2ZlR291eFYwcG9GS2ZuVzFwVVhra3FidXRqaVh6RHp5SUU2NG5K?=
+ =?utf-8?B?cHlYTG5Dd21zeHl3djVsb21PeEZhUFJEUHFJQWQxZU9vMnlZL1B1QXJPc2pI?=
+ =?utf-8?B?Y0kvbEhYV1E3a0U1SGNucm51QWJlc3RjQmdER0dwY285SkFXejNPZHZYMUJs?=
+ =?utf-8?B?bjF4a2w3Z3J0TmNlYnYzUHg2NjlQZkFRaDkzWXQrL3FFNVp1VGh0d0laOVNv?=
+ =?utf-8?B?T2Fpek1OakxwUHRzVVRsOUhxUlcvWmlZbmRPcndUWktsYzNkcTJVa0wvVUZl?=
+ =?utf-8?B?aEdzcCtINC9ZUjQ1ekNGVjFRZjhwb0RUTUNVcWp1TXRPVjdrWjdCWXVtZ1NF?=
+ =?utf-8?B?WVJYN2NpdmY0N0pvaTM5YXE5OU8xaktKempWSVBkOXIwdlYzM1Q0cHpzK2hr?=
+ =?utf-8?B?NDN5cyswWm5nc0VyVW5LM2c1OFVnbkdJcG1yd2xSNmI4M1lKNlpSRGNUSzNH?=
+ =?utf-8?B?TlMxaGZialJYQmk2dmhudEVDNHRnK0x0bjdBNmV5OTlmUVRFZ1lvdStzeTlP?=
+ =?utf-8?B?ZGRRMldUcHV5ZExhVE1HT1NMck9FR2hoY3dFQ2IrZjliQ0s2Nzd2NUN1cDdr?=
+ =?utf-8?B?UUR4Mmk4cUtFZlFOVnd0Vy82UEY3b1o3OTNCclNNVHdndFNGWVNTNlh3d091?=
+ =?utf-8?B?MjB2MkJCbWEwNVBBSUozUUgyVXR6Y1lYZHVMcFFQbkNPN29RUGdncmozb1Vx?=
+ =?utf-8?B?SnhkMFY4ZFZZK1lHNVluU25rZzJ5SHBMWTBydjFPdjRXYVpCcm1VWjF3Y0NL?=
+ =?utf-8?B?bXJFQmxZTkFJdXVQanMzZFRGUDRWdWxLcW9GWXVtOFZxdWhOUHVncVdiNStY?=
+ =?utf-8?B?bEUvS24yeFZ5U2FKNHlOQkpwckIrS0d4OHdhNERmWlBxV0VKNmF2SWtpSk5S?=
+ =?utf-8?B?aHdCL0x0dThISEFFaDZrdjYxek8yM1ZCVGUwcVZTME03bXFDY0ExN1ZINXNX?=
+ =?utf-8?B?NUNxQXhQa25uSGxMR2tXbFZtZzVGa04zTlhyQ2dZTG0xc2VNRWVDQ0UyS1Z3?=
+ =?utf-8?B?NExHTDNjSHQ1MWNDTGhsSndWTlZrSlVZRkU5ODNodmNEVUZGWWdySk4xYnJt?=
+ =?utf-8?Q?QAS8X+ofD5D9DT7VWByILkC4Y?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9d4c66f-0f3e-4540-3c99-08dd6c09bfa4
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB7051.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2025 01:58:48.5607
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2db02264-cf18-42e9-7f6d-08dd6c09743d
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource: TY2PEPF0000AB88.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB6689
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: X6fsQdsVmtQ8Ia9tdQdAgYGpnyxbgccM8RblK4IDvDv5QX1Sp0uFAr863mSjB04ZoeTjrZqFhRnxVAy5m8Wp4g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6890
 
-
-
-On 2025/3/26 00:36, manivannan.sadhasivam@linaro.org wrote:
-> EXTERNAL EMAIL
+On 03/25/2025, Charles Han wrote:
+> Fix below inconsistent indenting smatch warning.
+> smatch warnings:
+> drivers/gpu/drm/bridge/imx/imx-legacy-bridge.c:79 devm_imx_drm_legacy_bridge() warn: inconsistent indenting
 > 
-> On Wed, Mar 26, 2025 at 12:03:01AM +0800, Hans Zhang wrote:
->>
->>
->> On 2025/3/25 23:26, manivannan.sadhasivam@linaro.org wrote:
->>> EXTERNAL EMAIL
->>>
->>> On Thu, Mar 20, 2025 at 10:14:02AM +0800, hans.zhang wrote:
->>>>
->>>>
->>>> On 2025/3/19 17:55, manivannan.sadhasivam@linaro.org wrote:
->>>>> EXTERNAL EMAIL
->>>>>
->>>>> On Wed, Mar 19, 2025 at 05:31:01PM +0800, Peter Chen wrote:
->>>>>> On 25-03-19 14:25:34, Siddharth Vadapalli wrote:
->>>>>>>>>
->>>>>>>>> Hello,
->>>>>>>>>
->>>>>>>>> This series enables support to build the PCIe Cadence Controller drivers
->>>>>>>>> and the PCI J721E Application/Wrapper/Glue driver as Loadable Kernel
->>>>>>>>> Modules. The motivation for this series is that PCIe is not a necessity
->>>>>>>>> for booting the SoC, due to which it doesn't have to be a built-in
->>>>>>>>> module. Additionally, the defconfig doesn't enable the PCIe Cadence
->>>>>>>>> Controller drivers and the PCI J721E driver, due to which PCIe is not
->>>>>>>>> supported by default. Enabling the configs as of now (i.e. without this
->>>>>>>>> series) will result in built-in drivers i.e. a bloated Linux Image for
->>>>>>>>> everyone who doesn't have the PCIe Controller.
->>>>>>>>
->>>>>>>> If the user doesn't enable PCIe controller device through DTS/ACPI,
->>>>>>>> that's doesn't matter.
->>>>>>>
->>>>>>> The Linux Image for arm64 systems built using:
->>>>>>> arch/arm64/configs/defconfig
->>>>>>> will not have support for the Cadence PCIe Controller and the PCIe J721e
->>>>>>> driver, because these configs aren't enabled.
->>>>>>>
->>>>>>>>
->>>>>>>>> @@ -209,6 +209,12 @@ CONFIG_NFC=m
->>>>>>>>>     CONFIG_NFC_NCI=m
->>>>>>>>>     CONFIG_NFC_S3FWRN5_I2C=m
->>>>>>>>>     CONFIG_PCI=y
->>>>>>>>> +CONFIG_PCI_J721E=m
->>>>>>>>> +CONFIG_PCI_J721E_HOST=m
->>>>>>>>> +CONFIG_PCI_J721E_EP=m
->>>>>>>>> +CONFIG_PCIE_CADENCE=m
->>>>>>>>> +CONFIG_PCIE_CADENCE_HOST=m
->>>>>>>>> +CONFIG_PCIE_CADENCE_EP=m
->>>>>>>>
->>>>>>>> The common Cadence configuration will be select if the glue layer's
->>>>>>>> configuration is select according to Kconfig.
->>>>>>>>
->>>>>>>> Please do not set common configuration as module, some user may need
->>>>>>>> it as build-in like dw's. Considering the situation, the rootfs is at
->>>>>>>> NVMe.
->>>>>>>
->>>>>>> The common configuration at the moment is "DISABLED" i.e. no support for
->>>>>>> the Cadence Controller at all. Which "user" are you referring to? This
->>>>>>> series was introduced since having the drivers built-in was pushed back at:
->>>>>>
->>>>>> We are using Cadence controller, and prepare upstream radxa-o6 board
->>>>>> whose rootfs is at PCIe NVMe.
->>>>>>
->>>>>
->>>>> It doesn't matter. Only criteria AFAIK to build the driver as built-in in
->>>>> defconfig is that it should be a depedency for console. For some time, storage
->>>>> was also a dependency, but for sure PCIe is not.
->>>>>
->>>>> Moreover, CONFIG_BLK_DEV_NVME is built as a module in ARM64 defconfig. So it
->>>>> doesn't matter if you build PCIe controller driver as a built-in or not. You
->>>>> need to load the NVMe driver somehow.
->>>>>
->>>>> So please use initramfs.
->>>>>
->>>>>> You could build driver as module for TI glue layer, but don't force
->>>>>> other vendors using module as well, see dwc as an example please.
->>>>>>
->>>>>
->>>>> DWC is a bad example here. Only reason the DWC drivers are not loadable is due
->>>>> to the in-built MSI controller implementation as irqchip. People tend to build
->>>>> the irqchip controllers as always built-in for some known issues. Even then some
->>>>> driver developers prefer to built them as loadable module but suppress unbind to
->>>>> avoid rmmoding the module.
->>>> Hi Mani,
->>>>
->>>> I think the MSI RTL module provided by Synopsys PCIe controller IP is not a
->>>> standard operation. The reason for this MSI module is probably to be used by
->>>> some cpus that do not have ITS(LPI interrupt) designed. Or RISC-V SOC, etc.
->>>> MSI is defined as an MSI/MSIX interrupt that starts with a direct write
->>>> memory access.
->>>>
->>>
->>> Yeah, DWC MSI controller is not a great design. The older ones are even more
->>> horrible (using SPI interrupts for reporting AERs etc...).
->>
->> Hi Mani,
->>
->> Currently Synopsys and Cadence provide SPI interrupts for reporting AERs
->> etc... This IP vendor only provides an alternative approach that actually
->> requires SOC design companies to design according to PCIe SPEC and conform
->> to linux OS software behavior.
->>
->> I have a way to workaround AER is SPI interrupt. It can also use aer.c
->> drivers. However, I have been afraid to submit patch, because this is a
->> problem of SOC designers themselves, which does not conform to the port
->> driver of linux os (aer.c). So it will certainly not be accepted.
->>
-> 
-> Right. There is not clean way afaik.
-> 
->>
->>>
->>>> There are also SOC vendors that do not use the built-in MSI RTL module.
->>>> Instead, MSI/MSIX interrupts are transmitted directly to the GIC's ITS
->>>> module via the GIC V3/V4 interface. For example, RK3588, they do not use the
->>>> PCIe controller built-in MSI module. Some Qualcomm platforms also modify the
->>>> PCIe controller's built-in MSI modules to connect each of them to 32 SPI
->>>> interrupts to the GIC. I was under the impression that the SDM845 was
->>>> designed that way. The only explanation is that SPI interrupts are faster
->>>> than LPI interrupts without having to look up some tables.
->>>>
->>>
->>> If ITS is available, platforms should make use of that. There is no way DWC MSI
->>> is superior than ITS. We are slowly migrating the Qcom platforms to use ITS.
->>>
->>
->> I agree with you.
->>
->>> And btw, Qcom DWC MSI controller raise interrupts for AER/PME sent by the
->>> downstream components. So enabling ITS is uncovering AER errors which were
->>> already present :)
->>>
->>>> So the dwc driver can also compile to ko?
->>>>
->>>
->>> Only if the MSI support is made as a build time option and there is a guarantee
->>> that the platform will never use it (which is difficult to do as the driver can
->>> only detect it during the runtime based on devicetree).
->>
->> Anyway, I would still like to request that the Cadence PCIe controller
->> driver not be in module mode. Cadence also has a lot of customers, we are
->> one of them, it's just that many customers don't have upstream. We are about
->> to upstream.
->>
->> This series was introduced since having the drivers built-in was pushed back
->> at:
->> https://lore.kernel.org/linux-arm-kernel/20250122145822.4ewsmkk6ztbeejzf@slashing/
->>
->> Hans:
->> The Cadence PCIe root port driver can not be made into module mode because
->> of TI's idea. We should consider the ideas of other customers. If you have
->> to make it module mode, I think all peripheral drivers should be module
->> mode. Maybe I'm being direct, but that's probably the case.
->>
-> 
-> It is not about one company's idea to make the driver as a module. Linux kernel
-> community in general strongly encourages developers to build the drivers as
-> module unless there are exceptions (which I have already quoted). If you keep
-> building the drivers as built-in, it will result in a bloated kernel image. For
-> sure vendors would want *their* interested drivers to be built-in so that they
-> do not need to package the drivers in initramfs/rootfs, but that's not a
-> practice which is encouraged by the Linux community.
-> 
-> So I'm in favor of making the PCIe controllers as module if there are no
-> technical issues.
-> 
+> Signed-off-by: Charles Han <hanchunchao@inspur.com>
+> ---
+>  drivers/gpu/drm/bridge/imx/imx-legacy-bridge.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-Hi Mani,
+This was applied[1], as I mentioned in [2].
 
-Okay, you must be more thoughtful than I am.
+[1] https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/5f7a654b5ed2828e0da8e8331f236854c70f0893
+[2] https://patchwork.freedesktop.org/patch/641089/?series=145843&rev=1
 
-Best regards,
-Hans
-
-
+-- 
+Regards,
+Liu Ying
