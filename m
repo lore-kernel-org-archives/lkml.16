@@ -1,96 +1,111 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48BDD3D6A
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05503D6A
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742978867; cv=none; b=P5mnfYpkd9bx2U4liYppiIOGy0bgAxeGYUG4KjAtcPsk2pt+hVWUqOy5vv5iY7tOzEQNhvqccIak/QqaDIMG7wTfROCZmr5cDezKLPMuAuH1EsdHlZVXCnMG6ea8rm/uyQIBiA6KONRBva9TnLntJeCocrAxNmW39io/+Fa69v8=
+	t=1742978882; cv=none; b=ErcoOYIMya6osqjHGVTks8NDkLMcHPz1SfFKz2KEq+dCpgEDOEr3GJYnD1IEwrRUKq9dxxyneT3iteBdGUPEmdRHvHB/T3tKs4CQ3ntK0VgF9YpJYd+BMjHOT+8tGA+RLWtlumuBcSKWc1lNzbLGzC9s3gJlQ31zWnqVma/ESgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742978867; c=relaxed/simple;
-	bh=Fp/WQjQ/c+kx+e/v6g7c5IPvw1yAX4VKRzGqaxxUEWI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=g9BEIbfCbEQ/NpU71S54xVzcNy9cVXCY0MRe9JL2y8ZkndhzhV4IQRdVlUcOcVD9XV29Kj0w1W2W2xq7Yh5cKH/JuTkiJ0R+e7TzQMuMYt+HIxwX91EON3BKayuGVbRuCd8Xr1s+2HGEdG/bVWXTjg46a0Sw5XWnF0JTPavHoNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 52Q8kcNi031891;
-	Wed, 26 Mar 2025 16:46:38 +0800 (+08)
-	(envelope-from Zhiguo.Niu@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4ZN0kQ3yz2z2KhRXC;
-	Wed, 26 Mar 2025 16:46:06 +0800 (CST)
-Received: from bj08434pcu.spreadtrum.com (10.0.73.87) by
- BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.48; Wed, 26 Mar 2025 16:46:36 +0800
-From: Zhiguo Niu <zhiguo.niu@unisoc.com>
-To: <jaegeuk@kernel.org>, <chao@kernel.org>
-CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-        <daehojeong@google.com>, <niuzhiguo84@gmail.com>,
-        <zhiguo.niu@unisoc.com>, <ke.wang@unisoc.com>,
-        <Hao_hao.Wang@unisoc.com>
-Subject: [RFC PATCH] f2fs: remove some redundant flow about FI_ATOMIC_DIRTIED
-Date: Wed, 26 Mar 2025 16:46:01 +0800
-Message-ID: <1742978761-16264-1-git-send-email-zhiguo.niu@unisoc.com>
-X-Mailer: git-send-email 1.9.1
+	s=arc-20240116; t=1742978882; c=relaxed/simple;
+	bh=mat+8/FxE+NX07JNoYJiF2mWZIrg/gu+SimMIdPoEWE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RWFqGoEXLhwxxENeKq5y93gQMTiBCpU/6ehTiRs138lxgj2syAYBgo+6y5bMSRwtfO+Pf5GEY0Sr45KPjkpDAra2wKTkeGKLJOqB81TSKyy4qheC8oJqYVeYfBbL1gcZ6HSE+IP2A5aFtrYxJi8K8y5YsjWdFqoKFhWhocylcMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vtdfgdsm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vtdfgdsm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 080BFC4CEE2;
+	Wed, 26 Mar 2025 08:48:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742978882;
+	bh=mat+8/FxE+NX07JNoYJiF2mWZIrg/gu+SimMIdPoEWE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VtdfgdsmDqpIg68IXAhbmpAXyHC4YLddsCQLnP71fU0COXrMRJ42fhOaAOQIyktgD
+	 adFnFchrNm8wSd8OFcW1ocED4E6RVDhchOol8332byrANgbxS3T36Mn/07u/N4wLiF
+	 +/doKLrNSuQpnf0TX2mC8T/4bpu1NUqweHTUcTBeFMF2f2Ym4F/zpwrcmzLCIZDKc9
+	 UAccppxch8ZiafaeQxYeys+stDma5XwW1l7x1buzjFAgy6qCi3uKJgw/3kXcCaw4Ko
+	 EfkALH6V5kIWQ8ATvHu7C4Jc/VAjB0lhFUqEDc7gPNqnrF7NJ5/iACRb9aeFNlsEsT
+	 Y3xS4j1j0VvKw==
+From: Ingo Molnar <mingo@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 0/5] Improve WARN_ON_ONCE() output by adding the condition string
+Date: Wed, 26 Mar 2025 09:47:45 +0100
+Message-ID: <20250326084751.2260634-1-mingo@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL:SHSQR01.spreadtrum.com 52Q8kcNi031891
+Content-Transfer-Encoding: 8bit
 
-Commit fccaa81de87e ("f2fs: prevent atomic file from being dirtied before commit")
-adds the processing of FI_ATOMIC_DIRTIED in the following two positions,
-[1]
-f2fs_commit_atomic_write
- - __f2fs_commit_atomic_write
-  - sbi->committed_atomic_block += fi->atomic_write_cnt;
-  - set_inode_flag(inode, FI_ATOMIC_COMMITTED);
-  - if (is_inode_flag_set(inode, FI_ATOMIC_DIRTIED)) {
-  -    clear_inode_flag(inode, FI_ATOMIC_DIRTIED);
-  -    f2fs_mark_inode_dirty_sync(inode, true);
-  - }
-[2]
-f2fs_abort_atomic_write
-  - if (is_inode_flag_set(inode, FI_ATOMIC_DIRTIED)) {
-  -    clear_inode_flag(inode, FI_ATOMIC_DIRTIED);
-  -    f2fs_mark_inode_dirty_sync(inode, true);
-  - }
+This series improves the current WARN_ON_ONCE() output from:
 
-but [1] seems to be redundant:
-The atomic file flag FI_ATOMIC_FILE is still set here, so f2fs_mark_inode_dirty_sync
-still does not set the dirty state to vfs. If FI_ATOMIC_DIRTIED was originally set
-when atomic file is committing, then FI_ATOMIC_DIRTIED is just cleared here, and
-then do the repeating action of setting FI_ATOMIC_DIRTIED?
-So is it enough to do this only in [2]?
+  WARN_ON_ONCE(idx < 0 && ptr);
+  ...
 
-Cc: Daeho Jeong <daehojeong@google.com>
-Fixes: fccaa81de87e ("f2fs: prevent atomic file from being dirtied before commit")
-Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
----
- fs/f2fs/segment.c | 4 ----
- 1 file changed, 4 deletions(-)
+  WARNING: CPU: 0 PID: 0 at kernel/sched/core.c:8511 sched_init+0x20/0x410
+  CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.14.0-01616-g94d7af2844aa #4 PREEMPT(undef)
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 396ef71..d4ea3af 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -376,10 +376,6 @@ static int __f2fs_commit_atomic_write(struct inode *inode)
- 	} else {
- 		sbi->committed_atomic_block += fi->atomic_write_cnt;
- 		set_inode_flag(inode, FI_ATOMIC_COMMITTED);
--		if (is_inode_flag_set(inode, FI_ATOMIC_DIRTIED)) {
--			clear_inode_flag(inode, FI_ATOMIC_DIRTIED);
--			f2fs_mark_inode_dirty_sync(inode, true);
--		}
- 	}
- 
- 	__complete_revoke_list(inode, &revoke_list, ret ? true : false);
+to (on x86):
+
+  WARNING: [idx < 0 && ptr] kernel/sched/core.c:8511 sched_init+0x20/0x410
+  CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.14.0-01616-g94d7af2844aa #4 PREEMPT(undef)
+
+and on non-x86 architectures (the CPU/PID fields in the WARNING line are skipped):
+
+  WARNING: kernel/sched/core.c:8511 sched_init+0x20/0x410
+  CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.14.0-01616-g94d7af2844aa #4 PREEMPT(undef)
+
+The motivation is the SCHED_WARN_ON() primitive that got removed in this
+merge window:
+
+  f7d2728cc032 ("sched/debug: Change SCHED_WARN_ON() to WARN_ON_ONCE()")
+
+... which produced more informative debug output, as it included the
+WARN_ON_ONCE() condition string - at the expense of worse code generation.
+
+This series, based on Linus's latest Git tree, merges the code generation
+benefits of modern WARN_ON_ONCE() bug_entry architecture code with the expanded
+information content of SCHED_WARN_ON().
+
+The cost is about +100K more .data on a defconfig kernel, and no runtime
+code generation impact:
+
+       text       data        bss         dec        hex    filename
+   29523998    7926322    1389904    38840224    250a7a0    vmlinux.x86.defconfig.before
+   29523998    8024626    1389904    38938528    25227a0    vmlinue.x86.defconfig.after
+
+The series was build and boot tested on x86, with an expectation for it to
+work on other architectures (with no testing at the moment to back up that
+expectation).
+
+Thanks,
+
+    Ingo
+
+================>
+Ingo Molnar (5):
+  bugs/core: Extend __WARN_FLAGS() with the 'cond_str' parameter
+  bugs/core: Pass down the condition string of WARN_ON_ONCE(cond) warnings to __WARN_FLAGS()
+  bugs/x86: Extend _BUG_FLAGS() with the 'cond_str' parameter
+  bugs/x86: Augment warnings output by concatenating 'cond_str' with the regular __FILE__ string in _BUG_FLAGS()
+  bugs/core: Do not print CPU and PID values in__warn() output
+
+ arch/arm64/include/asm/bug.h     |  2 +-
+ arch/loongarch/include/asm/bug.h |  2 +-
+ arch/parisc/include/asm/bug.h    |  4 ++--
+ arch/powerpc/include/asm/bug.h   |  2 +-
+ arch/riscv/include/asm/bug.h     |  2 +-
+ arch/s390/include/asm/bug.h      |  2 +-
+ arch/sh/include/asm/bug.h        |  2 +-
+ arch/x86/include/asm/bug.h       | 14 +++++++-------
+ include/asm-generic/bug.h        |  7 ++++---
+ kernel/panic.c                   |  7 ++-----
+ 10 files changed, 21 insertions(+), 23 deletions(-)
+
 -- 
-1.9.1
+2.45.2
 
