@@ -1,112 +1,157 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2070249659;
-	Wed, 26 Mar 2025 21:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B82749659
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 21:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743023430; cv=none; b=q1xlMx8/NPMRMG5KUvRIaAKi0T5LKlmx44VXlHaxXcTNzK6my/Lshf7KPKaH1PQKDAuTjIi/ohgOTB799fMHGIBF91MUyTZABYXfruh9AtHksgGc/aQ5+liYFT0GIFEc/DNyeUaZ0Yd2kjzw309fWrVPNkvAuCpT/wR45mFwMr4=
+	t=1743023499; cv=none; b=gx0XlzoPZ9aU1nYBv/hbXfou2TmWfLG5XL/K0M8MCsSVmvA545qtx2dKvk/ml6Y81lvvFqR2mKZfy4ZSXWU3x3SYe7DtI7DuyVajFraj7FUBFU4MgESr1nbrLl4fW1ucIZuaREnvUXMSHOUZYNNhva/ykMx/KD+E+QYNWUU4uTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743023430; c=relaxed/simple;
-	bh=iRDZJi2k5yP2Vo5JX6MJ6DeS8rM0uYFO+Y9AZyRctyg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ffY5CwiggQij7EkRbC/fpDU8HC0XlRxQ2b02iO98rpyqWuT3IDowPN1EFIQTcXSM6JKHRcUXACPA8pUz0ihvFlAXhTAp1Rz9BN/Jj9gZCv23QWIGx+s2x3euxHEHdTpftJX4N76cttsTFDhHAeMr2nilME4rMtlH0C6X4EMrOGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ipevxhGM; arc=none smtp.client-ip=209.85.167.178
+	s=arc-20240116; t=1743023499; c=relaxed/simple;
+	bh=DZXrdqc+VEpRE2lIne3ziRcrT+tDB7NoQbmTHhMMVwo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F15FaVjGR89ss2Wu2qZJRwFkLOqcEVRQFC3CI8SzThBaou8QZf1+i1PF/SAp8bBCWR9r+a2DRiFAE6Om/PrT8NxXG/lntaXxm4IC+r5bEcU0uxSyvMC7tGYZHe0sut22V2Oy2jPje2pxbhmNhRX+i7ubX1TXXcbYVWLepv5uHa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QwqtnQ3U; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipevxhGM"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3feb0db95e6so141379b6e.1;
-        Wed, 26 Mar 2025 14:10:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QwqtnQ3U"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so2681405e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:11:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743023428; x=1743628228; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BmXIx6lw3bResXaqVN0/2AUl10eW55ftDrxkKYdDctE=;
-        b=ipevxhGMGu+5172Q9JibPP07eiD0NjL60ORUcf/hEYdJ0bokVuGNqbNd+hVmYkjanU
-         bz64SyDI8dXY15rFqQxC4Vr0hxikdguFOS/5exQ8cdA9Qxk4Y2fYm9yUf5KunjwdYFBU
-         76h8syFGz/h6Is+ANumN6XSKoO8vzYWwzxNFKcLnUfqIeB8K3YAi27QdiUhF+Ql9tQ8J
-         NcdBteb7tnEvg56TvwSnVviz9SHL6+vmcdESUjb1Zv56WZk80W9Gaow9A8q6xycK4/q2
-         HR/AHcXSHdNXSQTlKQDWgVuAQifR9MSI4N6gbCeRFk44zWKDERECPOHo22v+mLHlNMvJ
-         7DHA==
+        d=gmail.com; s=20230601; t=1743023496; x=1743628296; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ADWf6svSkXJlABZrsXSNaYONnC7bUNNzGtHknmI+bTw=;
+        b=QwqtnQ3U9MvRBjwJlwy1IOf0ky1Of/k+rvqy0cs4pRYKA2sb3uksCdcQ022GVO6zLF
+         6nB6bPhehuvQlVb0nfTO1gqTW4MLVLQTXbwJu2L9tx3sP5vQ3VPFv/tPBMiKJjTKxUge
+         I7NgUihisQXwC1B8D4JGuFw7MYDwGiH+7iLFsMEygZUFAW5Q2H6rYXFZy9wBI/4Oyte7
+         323AXOojJokfuE2c7d0jZiH+sZFfK6INVGqDvNF8JjVqJWfuqw3wrKDBP7Dnpo9b4M3t
+         Q91pChmMGTLdoALGnuluFKT/knpiF2yVnS0c5gYYc16Yw8n71IF6RKoUNQHk6SexCDbT
+         59oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743023428; x=1743628228;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BmXIx6lw3bResXaqVN0/2AUl10eW55ftDrxkKYdDctE=;
-        b=JVQPABWxYVuIaVDgaGxATHVWPx1/jI3TUP2/ps1xBKKfIO23v831IGJmR2KbfZw3TC
-         Hy8DzpfLjBB0L3ExrjKSXEQrUhJyfmgjoJ7sStdVYg9NLmM7wqNs2Bs5l1Bbt5+x0QfE
-         SS6+Pdy4sXUCrdshYinAHNNUuMWhpIiYcK5cgnDNNlUFfUQdtSL0iI6r9CnKmzkKpzav
-         lLo9iT9CBk7U+A8zBMmBxbMfBvMk31pCMUQu1iVRL4FedGbyTw4CSicbUHovnODkLCWc
-         LGaD+NOCsPMNyOBjklzCF26xvKBadEEPwToDN9PQs3pxuDrT1sSlRSsdzwENGVpCw/Lt
-         zTEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlQpaeYa1T95/mEE0IShbksCtKJw4mVOv4Xf1yVyCzmhzBVFF99nKbv322wEcJbCy7NcBBOdxZHQibLUebkAs=@vger.kernel.org, AJvYcCX1DoGR40yWbP66fG3PkwaPStruE2Dgq9LJLb1MNo/10QLMKZzEHkcbLoZEo2y20fIhti3yvRJpaknqFww9@vger.kernel.org, AJvYcCXK1TC3MdRnDflM6qjZH8vqLCK5VOMi9xt0nqa9lD0AOnUTpEwx5dpqxeMtDGmYZu04IxQWSkmgRpXz@vger.kernel.org, AJvYcCXVqPPEwoA0SnufXi9pW7oYU09o11zW8ndSCJ/VmCROxi9iOs7SZUsXUe3y4ydL7ctBljAhgdo14ZNn9w==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYeDmXUSF2Un2HCbN0+CXi4B7dmn/G61YshXSV422UR+RU2Eh3
-	/qUD9cC5oDdbJgLZt4oZcvKBhvPfLHPxYJwqozaXKXB4eTkC84vJ
-X-Gm-Gg: ASbGncu6RJ/lAQU0xhXomc147l8z/akImOkk9KksJrvbzLw834J1IiAQ7C0zPG7s4Zm
-	vuOk2VGQVQYqcRs0gwl9Fm20YJvlpTmufpJK4xOHZZAX2b3LONtOwDhvtb5oqJHBZad1C/6+cxl
-	TkoiG8F4YHHU9l2ztEqeAuLpDitph3Fb62C5sq2Ch4hTSZVzpP9OPLx08JirJmmucUqU1o99zhj
-	KTjRpbRbCo6N33oOF7MmamiwuAWSh4+RsKGzjnO+ng/xJZL13aRIO9MA/bSaKKCLIg/snigMqbB
-	qAnYW5RFg4HBFoJoYlbxh40HUJer0uNzT8++J2FbIVb62AM6H9eIhcZeZ0WDC1lkfyyBnJ6NYGW
-	XBFFnkfgC7MwdorsEezqMwonMylg=
-X-Google-Smtp-Source: AGHT+IGr7K3MeJvrN0pjniNa9v3V5nH4q3LMTZ9m/DyIjiFtUWjHaZNIloO5JjzQVN0t73CR/ha4rA==
-X-Received: by 2002:a05:6808:6f93:b0:3fe:b0ad:f935 with SMTP id 5614622812f47-3fefa4eaa14mr713457b6e.4.1743023427977;
-        Wed, 26 Mar 2025 14:10:27 -0700 (PDT)
-Received: from my-computer.lan (c-73-76-29-249.hsd1.tx.comcast.net. [73.76.29.249])
-        by smtp.googlemail.com with ESMTPSA id 5614622812f47-3febf6e94e7sm2538721b6e.17.2025.03.26.14.10.22
+        d=1e100.net; s=20230601; t=1743023496; x=1743628296;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ADWf6svSkXJlABZrsXSNaYONnC7bUNNzGtHknmI+bTw=;
+        b=MUTsDPc1sxd54Op6Dg2dk9VrkV0XUcoC1P2GQPENBCJ/pV/cMoWtYMuz1mg25mpDyC
+         wPi69/ZY+Umnf/aSVOPSqw0VqotBbyyI4FajuLRKniDfJoJq6Wh3wiFVJKPD1Agg7kh/
+         XMik+13FkZHjlvy9qPCSjVHTGgSZKQMf0KEQmXi+YDwIUP+kogVJ38sygR00gzns8ZZ8
+         GHQnQSfQDNbwKU/2n3nbPQKMMA8c0n8gZ/bCvR/epbfv8/Hu6tfRtnK/SmytJytBBfhp
+         sJ6SP2sgAo1EjR53BHIFd9BdeUMtJndVZzOUE7hdiATAiWCKNBqyIf2QfX2ZCgkE/nvF
+         QZQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+wyKpJG6JxQsqqGNsYu4fQk99NpeNclbjjCsXk4nd3+rVCLxuoy9WmEEDRXAv05+eNBlK8cqubYUVvsc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywm3QJ92j0tpHV8ZCd873OhltvdMPCZzR2BDzcuu+VJCsW01/Vh
+	7MyRtgj4IhcfwzllMV0TEaGPFJ47g7zbXhVtAmRhGI/v0HZ/v24fFam+TA==
+X-Gm-Gg: ASbGnctXfePUuU7UApafbMUntBVbgHj3ZOhKzFc12n01561qQbrpKbBI7PZBFtYYlrv
+	xpVRbTmdX8KsQ8gk2E84L8JaC2vLjJ/xVI4O8bJoBkvyDryoWoRO+V9qY4gVFenS4UF4l5RGEi/
+	wcHQc9UL1jmD1ibIrQRphWVdoR9cuuFgCqPNYzR9z4ezuIFU6Bi7qN+lRSAhfD/gyHgeyiSzKsA
+	aIU9MXxFOkqvJr7HOimBdOLNHxlPUTIPP0ImpOooECDaiup+oHyowA63RGTM+QXJ487+YKcDXi+
+	MNVjZdz+myQoN5HgJikpX6cI/2r/HIa8K1/4A+1w+529MtajMvDolh1g7SGO
+X-Google-Smtp-Source: AGHT+IGkUCkr1x6x9IgRq8UbgNXMDAJO1+RXsn6Pk+rx1bb+mTleAvrVTcY/EHJLBdEflDljB3MD/g==
+X-Received: by 2002:a05:600c:190b:b0:43c:f81d:f with SMTP id 5b1f17b1804b1-43d84f94cbemr8231035e9.8.1743023495136;
+        Wed, 26 Mar 2025 14:11:35 -0700 (PDT)
+Received: from f (cst-prg-80-192.cust.vodafone.cz. [46.135.80.192])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9b25c9sm17676643f8f.42.2025.03.26.14.11.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 14:10:27 -0700 (PDT)
-From: Andrew Ballance <andrewjballance@gmail.com>
-To: remo@buenzli.dev
-Cc: a.hindborg@kernel.org,
-	alex.gaynor@gmail.com,
-	aliceryhl@google.com,
-	andriy.shevchenko@linux.intel.com,
-	benno.lossin@proton.me,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	dakr@kernel.org,
-	devicetree@vger.kernel.org,
-	dirk.behme@de.bosch.com,
-	djrscally@gmail.com,
-	gary@garyguo.net,
-	gregkh@linuxfoundation.org,
-	heikki.krogerus@linux.intel.com,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ojeda@kernel.org,
-	rafael@kernel.org,
-	robh@kernel.org,
-	rust-for-linux@vger.kernel.org,
-	sakari.ailus@linux.intel.com,
-	saravanak@google.com,
-	tmgross@umich.edu,
-	andrewjballance@gmail.com
-Subject: Re: [PATCH 09/10] rust: property: Add PropertyGuard
-Date: Wed, 26 Mar 2025 16:10:06 -0500
-Message-ID: <20250326211006.696727-1-andrewjballance@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250326171411.590681-10-remo@buenzli.dev>
-References: <20250326171411.590681-10-remo@buenzli.dev>
+        Wed, 26 Mar 2025 14:11:34 -0700 (PDT)
+Date: Wed, 26 Mar 2025 22:11:23 +0100
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, 
+	lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Eric Dumazet <edumazet@google.com>, Benjamin Segall <bsegall@google.com>, 
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [tip:timers/core] [posix]  1535cb8028:
+ stress-ng.epoll.ops_per_sec 36.2% regression
+Message-ID: <6sn76aya225pqikijue5uv5h3lyqk262hc6ru3vemn7xofdftd@sw7gith52xh7>
+References: <202503241406.5c9cb80a-lkp@intel.com>
+ <87pli4z02w.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <87pli4z02w.ffs@tglx>
 
-On Wed, Mar 26, 2025 at 12:13 PM Remo Senekowitsch Wrote: 
-> +/// A helper for reading device properties.
-> +///
-> +/// Use [Self::required] if a missing property is considered a bug and
-> +/// [Self::optional] otherwise.
-> +///
-> +/// For convenience, [Self::or] and [Self::or_default] are provided.
-> +pub struct PropertyGuard<'fwnode, 'name, T> {
+On Wed, Mar 26, 2025 at 09:07:51AM +0100, Thomas Gleixner wrote:
+> On Mon, Mar 24 2025 at 14:39, kernel test robot wrote:
+> > kernel test robot noticed a 36.2% regression of stress-ng.epoll.ops_per_sec on:
+> >
+> > commit: 1535cb80286e6fbc834f075039f85274538543c7 ("posix-timers: Improve hash table performance")
+> > https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git timers/core
+> >
+[snip]
+> > | testcase: change | stress-ng: stress-ng.epoll.ops_per_sec 124.9% improvement                       |
+> 
+> How on earth can this commit result in both a 36% regression and a 25%
+> improvement with the same test?
+> 
+> Unfortunately I can't reproduce any of it. I checked the epoll test
+> source and it uses a posix timer, but that commit makes the hash less
+> contended so there is zero explanation.
+> 
 
-nit: when linking items in rustdoc comments you should suround them like [`this`]
+The short summary is:
+1. your change is fine
+2. stress-ng is doing seriously weird stuff here resulting in the above
+3. there may or may not be something the scheduler can do to help
 
-Andrew
+for the regression stats are saying:
+feb864ee99a2d8a2 1535cb80286e6fbc834f075039f
+---------------- ---------------------------
+         %stddev     %change         %stddev
+             \          |                \
+      5.97 ± 56%     +35.8       41.74 ± 24%  mpstat.cpu.all.idle%
+      0.86 ±  3%      -0.3        0.51 ± 11%  mpstat.cpu.all.irq%
+      0.10 ±  3%      +2.0        2.11 ± 13%  mpstat.cpu.all.soft%
+     92.01 ±  3%     -37.7       54.27 ± 18%  mpstat.cpu.all.sys%
+      1.06 ±  3%      +0.3        1.37 ±  8%  mpstat.cpu.all.usr%
+     27.83 ± 38%     -84.4%       4.33 ± 31%  mpstat.max_utilization.seconds
+
+As in system time went down and idle went up.
+
+Your patch must have a side effect where it messes with some of the
+timings between workers.
+
+However, there is a possibility the scheduler may be doing something
+better here -- the testcase spawned as is has wildly unstable
+performance, literally orders of magnitude difference between runs and
+tons of idle and it stabilizes if I use a taskset.
+
+In an attempt to narrow it down I tried with few workers:
+taskset --cpu-list 1,2 stress-ng --timeout 10 --times --verify --metrics --no-rand-seed --epoll 1
+
+--epoll 1 spawns two worker threads and both are bound to only execute
+on cores 1 and 2.
+
+With this I consistently see high CPU usage and total executed ops
+hanging around 190k.  Sample time output:
+1.31s user 18.67s system 199% cpu 10.02s (10.023) total
+
+If I whack the taskset or extend it to 1,2,3,4:
+taskset --cpu-list 1,2,3,4 stress-ng --timeout 10 --times --verify --metrics --no-rand-seed --epoll 1
+
+... I'm back to non-nensical perf, all the way down to 18k ops/s on the
+lower end and over 200k on the higher one.
+
+Sample time outputs in consecutive runs:
+0.02s user 0.38s system 3% cpu 10.06s (10.060) total
+0.34s user 4.59s system 48% cpu 10.13s (10.132) total
+
+As in during the first run this spent almost the entire time off CPU.
+During the second one it only used about a quarter of CPU time it could.
+
+The testcase is doing a lot of weird stuff, including calling yield()
+for every loop iteration. On top of that if the other worker does not
+win the race there is also a sleep of 0.1s thrown in. I commented these
+suckers out and weird anomalies persisted.
+
+All that said, I'm not going to further look into it. Was curious wtf
+though hence the write up.
