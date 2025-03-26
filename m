@@ -1,211 +1,133 @@
-Received: from gw2.atmark-techno.com (gw2.atmark-techno.com [35.74.137.57])
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D29919F48D
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.74.137.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA2F1547C0;
+	Wed, 26 Mar 2025 08:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742978439; cv=none; b=PaLWHdTKN4SAJ1r48iJQh9F0PiSzMprErwhDNnB//luR8lKw6mQpNixJFwLmzwpIZ8gf35trTuBQAIBYMyDCvl41B7PPdTG4OKNmBkzJ3JNAwtYu8xIwMm8K/cyE0dtwRme9SERvdHaHwkmjX6eCySKFVMupAm3vOHkSygXUOLQ=
+	t=1742978547; cv=none; b=PEo20yDwTx1Y1xRsBOItR39h6ohncsFpb3jRWwHDM42HbLdItVzOEVmYNTL59Vs0Uflijp9yer5L73t1i0QhZTHK56nfYuovtEHwkaxQnXLsitzOdQqeHT4ucPPfDRlFkyP7Ac8/DUmNBywNH1xwUPmObWVJbaJWFXwBiWero+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742978439; c=relaxed/simple;
-	bh=0cRbGra4b0bceGn7QIieNJyYHJGW+QjN+ZSB/kGRFrs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=nc66Mh7UJ3JJ+tkw0u6p14pcr3XIaNXgGn7tPpXKJfB3VgvVQuop2AsLOvqPtuaesyQWtlCoBaqZJkcKh2yB7u1g9XsKvvUGpC24taoeKviIQL2FmShJJKxRkOSmfooPac4/FD5zjmAYG2sNnbZlghjgDwk9ebG3dLS+Au9YwWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atmark-techno.com; spf=pass smtp.mailfrom=atmark-techno.com; dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b=KyCrqoNk; dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b=h2goKGQl; arc=none smtp.client-ip=35.74.137.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atmark-techno.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atmark-techno.com
+	s=arc-20240116; t=1742978547; c=relaxed/simple;
+	bh=My34K5TKuUnMrc1gVZKgmQLkVhJoBVbQZG2R52GRxSs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xw4GBAg+6/O03Vd6gTBx6bgFQzh6jBeb/wsGnbeFXrAXYzCE26dCE/stGNXa8JzW/4Eby3IZh5ZjvX2FGRpatnK7DaI5DH/7AeYcy7RjWP1tDF0tQ81K805a/tBWzoR6MecOXVqZz2MvzeOAKNEdwvv57ZGp7amBzuANIXpjGls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=bC87zUeD; arc=none smtp.client-ip=54.254.200.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b="KyCrqoNk";
-	dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b="h2goKGQl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=atmark-techno.com;
-	s=gw2_bookworm; t=1742977962;
-	bh=0cRbGra4b0bceGn7QIieNJyYHJGW+QjN+ZSB/kGRFrs=;
-	h=From:Date:Subject:To:Cc:From;
-	b=KyCrqoNkC/Ia0M/HbiXwWcLsxM8OrshBP9wjlnNgcWcxZj5PwXtNIoAj2w+CM2TLq
-	 1oTpVat0ToFbCoGNSzJmTW9ZOdZrdhKd4GP2C4+ieuVlFL1FSonDLrGqv+e9fMTo/L
-	 UZP7ToyIt0LggI+GOIMGc9EL866E3OOj/rH9/qMMzqB/buhKcOwsv7oV0cULSqGN8e
-	 hcwcPuIlxQTiez3Ygo2GsBL3ef4d1TJg87loQ222xei3n2IKQrtwe1DolOv0ExumMa
-	 X+h9je/nTKdEc+ICXNqjNq/V2LIRXRwI0Y1TOIwskr2IFLa/de1EM9HDcOFubQ2Gzx
-	 DtviG9Evqls/w==
-Received: from gw2.atmark-techno.com (localhost [127.0.0.1])
-	by gw2.atmark-techno.com (Postfix) with ESMTP id 933F96BD
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 17:32:42 +0900 (JST)
-Authentication-Results: gw2.atmark-techno.com;
-	dkim=pass (2048-bit key; unprotected) header.d=atmark-techno.com header.i=@atmark-techno.com header.a=rsa-sha256 header.s=google header.b=h2goKGQl;
-	dkim-atps=neutral
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by gw2.atmark-techno.com (Postfix) with ESMTPS id 26F726BD
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 17:32:41 +0900 (JST)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-224347aef79so167252995ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 01:32:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atmark-techno.com; s=google; t=1742977960; x=1743582760; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5X6bjgAmnqJeE1zDjlF2ZnFDYz5C8T4cY+6ErJYvhHI=;
-        b=h2goKGQld0eoGhF77+DQSgRmo3kWimf+unycQe/Bdn17nVOWYEmD0tvB6pwJTmlp3i
-         jfKhfGjCXlx+EjdZuV3Iq3ixmJgRr2FUj4TunOt4NXH5Ddk+6aX9tTT4otStGETiON/l
-         i1QQLi6IuyfN4ZHs55vqvU11mjMxYHM8Ncmn4oAiUeYIhWRc90X1aebbujkjnAe638r6
-         iEPfHzk9rGETDzXyhgIEg8wRj2UDCOv6q3odsKZ+8bXEvEhsnMrKbblGEvslCXXrsxPQ
-         qBC1DUUE0S6U+IBLX5bg/BBQUw5tfvE6E/KU9YDqAjD3wtpf7MwYM88XQbhusLd8v9od
-         Hnew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742977960; x=1743582760;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5X6bjgAmnqJeE1zDjlF2ZnFDYz5C8T4cY+6ErJYvhHI=;
-        b=BMIC6yOqeCdCCxb6WPqqtVjLhmU7BtFPjWW4mfM+y1mdKaREEZFLec+rH8zDg0rJI5
-         WsJ/9kLsGRF+1Dn8/9wRb8Insq2vHMF/xhWg8u7ATVT2jqUEYZtOALhm2jXCIGqru/ou
-         cg6eLFphiC3UU1BWwE6LjCRWarYcDhA2QO7b/QteSuNquGPmYVnfxKiDLtZRN/ZTKLIl
-         EUoY/xeoSfsvMAhVvUDZYzNxH3cF0PcRDqQDZRQRxeH4LTfXz+OrVwuAgTbkOOitR3XW
-         66x8aICfJ2JZt2Fz18hm8ZUOGjMDAOzVU4D4cYzQ4IYkvdbU87wFQGr2HzFfOikqRJNq
-         7gbg==
-X-Forwarded-Encrypted: i=1; AJvYcCVdO3OJKcSkofiDULy7HzMNzY6fHqplW1MIeTwNXReeXL6/VbbqcfRza+lviZXwCHHRWyn24CIgd2KX+tw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzX9SZNPweFRtjNvyclfL7xXM6dKzowQXy/ySvxSndB/tCMy/iP
-	2/UXJwynEYSpWTsLPL4hLzoXMxVpwphJHHJEEL+OeE2INHhkJ+Fuj9hK6WfW0z6jac4e29xGgsG
-	qFekmGloISTQC4kTegK21zweECe3KLnw/wt5mxBFFUryQDvdlX9nCbJb5A1MVPm4=
-X-Gm-Gg: ASbGncv37ertmcxjVGXU9eVad1t++phb94MyRSyc2BxOzuQV29eLTY5QNLGeh6OyoiM
-	mk6o/jGrQuExfsOvgjcOIXoP7/P1WmLZxS3X2U0IIVzO5UXfLXadR95RJhXs9ieziNI3tniG3DA
-	yLP0OTL0YrZPvXjYlAZDXjr/cXfhNU/qrSaDLErlxH8HZWN/M0KR2TYktaati77dlOgiMXYUhv6
-	nKwggkwowJnq5HVALPYZBEoM/ubV4iAZpn3kodY0P8TECrMyeN2ET/1S+QqsviEs207JZqcYZ/q
-	Bn/btPhJCvxn7IeiU8ZydbMfOT8ZGBv7l25Kjs+acAR20cNyh6p3sA2wMfmQafs8t7kUgHC1Xsc
-	=
-X-Received: by 2002:a17:903:1790:b0:223:90ec:80f0 with SMTP id d9443c01a7336-22780d7ffafmr331282005ad.22.1742977959944;
-        Wed, 26 Mar 2025 01:32:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFl/5IlHXqH0aB13xDFaYCORfVdtz8hAaULYBSzwHSWdGQtUhQFGCFwqrNs+4G3fTBWpyPAKA==
-X-Received: by 2002:a17:903:1790:b0:223:90ec:80f0 with SMTP id d9443c01a7336-22780d7ffafmr331281685ad.22.1742977959446;
-        Wed, 26 Mar 2025 01:32:39 -0700 (PDT)
-Received: from localhost (117.209.187.35.bc.googleusercontent.com. [35.187.209.117])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811faae6sm104137995ad.245.2025.03.26.01.32.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Mar 2025 01:32:38 -0700 (PDT)
-From: Dominique Martinet <dominique.martinet@atmark-techno.com>
-Date: Wed, 26 Mar 2025 17:32:36 +0900
-Subject: [PATCH v2] net: usb: usbnet: restore usb%d name exception for
- local mac addresses
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="bC87zUeD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1742978513;
+	bh=JtRy+QMeUiWjWHK0VCeWHxKW/SYd2pDjqLrvJqHva9s=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=bC87zUeDk5btGvGbTAL/rSeoBdkzz9iRcXW9yM6Hw/wWq9PbAXnvku8bOzdErr80L
+	 v1RKThO7moKP1w+uxzb8UKpq8p7RuiXXJCqH9K5J68cLYffDaBQbwSqUt4LqIzaFkA
+	 6oE1tl6HWJdqN7/EMqLTHZLtuaK4el8kR17q+qIk=
+X-QQ-mid: bizesmtpip4t1742978501t2w2yga
+X-QQ-Originating-IP: ShppA27fghodDXEBV+PsrNeueFJPD/tjZ0fOco6mXRQ=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 26 Mar 2025 16:41:39 +0800 (CST)
+X-QQ-SSF: 0002000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 5189072839362077449
+EX-QQ-RecipientCnt: 9
+From: WangYuli <wangyuli@uniontech.com>
+To: marcel@holtmann.org,
+	luiz.dentz@gmail.com
+Cc: linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>,
+	Hao Li <lihao1@uniontech.com>
+Subject: [PATCH] Bluetooth: btusb: Add RTL8851BE device 0x0bda:0xb850
+Date: Wed, 26 Mar 2025 16:41:35 +0800
+Message-ID: <933CB507F0C72912+20250326084135.18674-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250326-usbnet_rename-v2-1-57eb21fcff26@atmark-techno.com>
-X-B4-Tracking: v=1; b=H4sIAKO742cC/x3Myw6CMBCF4Vchs7akNyC68j0MMZUO0BhaMwOoI
- by7leV/kvNtwEgBGS7FBoRr4JBiDn0qoBtdHFAEnxu01JU0uhYLPyLOd8LoJhS+75VCK5vaWMi
- fF2EfPod3a3OPgedE34Nf1X/9S1ZpaZSRtmrKs7RGV0IJx5PzuPC1Sx7fhN2zTDRAu+/7DweKv
- MCmAAAA
-X-Change-ID: 20250326-usbnet_rename-dff11e407634
-To: Oliver Neukum <oneukum@suse.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-usb@vger.kernel.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Ahmed Naseef <naseefkm@gmail.com>, 
- Dominique Martinet <dominique.martinet@atmark-techno.com>
-X-Mailer: b4 0.15-dev-7be4f
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3726;
- i=dominique.martinet@atmark-techno.com; h=from:subject:message-id;
- bh=0cRbGra4b0bceGn7QIieNJyYHJGW+QjN+ZSB/kGRFrs=;
- b=owEBbQKS/ZANAwAKAfKKYH/WjHEHAcsmYgBn47ulGDPu0y4xObg81ZeM/RGWZMEWrb8QgxT73
- LoFtKKYgBOJAjMEAAEKAB0WIQQoFSiLMD+txr0veJbyimB/1oxxBwUCZ+O7pQAKCRDyimB/1oxx
- By9LEACUn0d0TrNeqwWIw2qkse0TqsuERFt3yevQMkJbWUaS2XYL8ghnOPm84VKxBxllN8QBeC4
- ONXojVb5taUPBWbBaG0hQOMXDC8eEHdMAhBvYvezEHLC6DEadWg6WBHGFPT7IK9KaIx/PQ88I0Z
- bLFJ5utzVk6qi+V9NYvI82qTvv/SmDNzR1X5u9fHo94g7xz/bTDG1VXTYDqqCXjSd9Do3XFwmZr
- 0PCb1OlERU0xg4udUZd24YwGT+r9A/I4jbSEkY+CdQE6MpOkxApZ6SzmAwgdM4jujAkQVZjOgR1
- YMWHXH/QkZDnbmSSX+Pb/Acsl90jDm/IZuGDS8P4PgQP0QDH8c9PnatPEm4Mi1QGt+qjfeTs1ol
- NnqeEXpl9DS0/YVKGyFgYd+D9ut5Tla1OS0uqbmW8kK5ED5YeUfCAPBNacb9beTc/didmW369iN
- oFbfaxxfoZtHCXvbNfRqLTnj571uoX45/dz64m1e2jcvIRHEaLglaUFsGpO801+9XYrIk1USY6c
- 4Sjv52xgDr2miXkVcVHoXWb+d5rsz+9vrzYo9JZZ2vKVUW800CaPPYAo9tUFOc0iBDbMLZGl1dr
- dXE13tC6yobHnPrOWAFc5ruyHDXa1XhzLK8AXhQeE+JTpk+TVV5DlyuTYQkpm+5tltAa6xm2L/x
- sHz8VJHReSVsAdg==
-X-Developer-Key: i=dominique.martinet@atmark-techno.com; a=openpgp;
- fpr=2815288B303FADC6BD2F7896F28A607FD68C7107
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: N01He0LwNYkc0xWyT26piAoGbZ9yM0qU2WkAtR+i2CfXLKiorODxUJnZ
+	KKWc4PvW9Mnq5wDCp/aDoEkIXwPB1URB3E8yfcAqjr5j6c0csWC04Cx5tZ1h+kUTxl77PGJ
+	LYVAR5U6Y7Iz0v/HtsRrvYYkL2jYNAVngLYh/pzTShG5dxI0OFgeV3R1mFmQWMBiYrOHOnD
+	Wg0HTUyGn2uLTUwCYBs/OYuRyE3mfw9ooGfepa9CbCBegMvo5xMYI3AseLUJsleZF+R9R94
+	y+geGTzH8btTDDpjrWhArxbXEc5WWmxQnqnJQdHnWmXDQ4Gj5wCw4TaCRbd9eAxqabNPnqo
+	B4dcwoFu0ratN/YkxiHffx1J8CyeDNxMA6+BDaPNPK4C/85TV1+2DiBiS+6eYRK7f6Y6Ila
+	MAe4uW1vIXSSh3lTS5IHghG3sgppZ8OSTT40e1ZF8WOFaE8YcbZkhju8j3sYK4hDeJQY3mt
+	Yhu9hyk2se0CbofiFHQCyJRZVXvXnmW3McFV0hPGbf1U2dFNNvld/penypb3jkZ1VDb36Ew
+	oWfup6bI7fSR3NzpV9C+63lyy1QlYbgv3IPNV5qi2GpGnhvd3NPlpyS7RILpLM5LSOjRTCL
+	w21RVN5AxLhHiH5lq0gZ8iTZ1XmOHIFwq9euPDmH/B8tV+sNri80I9R2DfFdac3ZrOo+kuh
+	xeDWpQYcKo4mFfwrAcTr15CoG2lFKX8JLLMpFGdkpRCIAUcgBaI1FmfBenRLy+rZ7Ecbhgl
+	TxMfbEFBfc47f7VUm90AXNDRjmuj6CFmrgQdtoVJjbF2Htorn7wHEa75GBYDRZF+T57o21C
+	Um7GaWLnen5PM+9Yxyt1gXqXOGPjfaah6+CKmeDJNvnQN78El7QjjGCzk81+QE+TE0WFt8M
+	jS56EN6kzlLEKipDtCAnGdkc7CmrJGV7fk738GMrk0W3+lS8lpvAgyYSNIWUT8fqx91d2yH
+	VK0WQ4qujGdZx4Q4SbMamFluv8cUcujsUFhh2fZbTbgob4+1gaRHJh54dx2WDUvr17qjdpf
+	ApD9baMjuxKQNDqW4a
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-QQ-RECHKSPAM: 0
 
-commit 8a7d12d674ac ("net: usb: usbnet: fix name regression") assumed
-that local addresses always came from the kernel, but some devices hand
-out local mac addresses so we ended up with point-to-point devices with
-a mac set by the driver, renaming to eth%d when they used to be named
-usb%d.
+The information in /sys/kernel/debug/usb/devices about the Bluetooth
+device is listed as the below:
 
-Userspace should not rely on device name, but for the sake of stability
-restore the local mac address check portion of the naming exception:
-point to point devices which either have no mac set by the driver or
-have a local mac handed out by the driver will keep the usb%d name.
+T:  Bus=01 Lev=01 Prnt=01 Port=01 Cnt=02 Dev#=  3 Spd=12   MxCh= 0
+D:  Ver= 1.00 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
+P:  Vendor=0bda ProdID=b850 Rev= 0.00
+S:  Manufacturer=Realtek
+S:  Product=Bluetooth Radio
+S:  SerialNumber=00e04c000001
+C:* #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
+E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+I:  If#= 1 Alt= 6 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  63 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  63 Ivl=1ms
 
-(some USB LTE modems are known to hand out a stable mac from the locally
-administered range; that mac appears to be random (different for
-mulitple devices) and can be reset with device-specific commands, so
-while such devices would benefit from getting a OUI reserved, we have
-to deal with these and might as well preserve the existing behavior
-to avoid breaking fragile openwrt configurations and such on upgrade.)
-
-Link: https://lkml.kernel.org/r/20241203130457.904325-1-asmadeus@codewreck.org
-Fixes: 8a7d12d674ac ("net: usb: usbnet: fix name regression")
-Cc: stable@vger.kernel.org
-Tested-by: Ahmed Naseef <naseefkm@gmail.com>
-Signed-off-by: Dominique Martinet <dominique.martinet@atmark-techno.com>
+Co-developed-by: Hao Li <lihao1@uniontech.com>
+Signed-off-by: Hao Li <lihao1@uniontech.com>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
 ---
-Changes in v2:
-- Added Cc stable as requested
-- Fix block comment style (checkpatch warning)
-- Added some more details about the local device handing out local macs
-and openwrt, thank you for the reminder Ahmed.
-(FWIW this commit has been in our downstream tree all this time and we've
-had no obvious errors due to it)
-- Link to v1: https://lore.kernel.org/r/20241203130457.904325-1-asmadeus@codewreck.org
----
- drivers/net/usb/usbnet.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ drivers/bluetooth/btusb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-index 44179f4e807fc350f3d5710f0bc5f42e6414fd6e..aeab2308b15008185336f717172b090739f4f9d0 100644
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -178,6 +178,17 @@ int usbnet_get_ethernet_addr(struct usbnet *dev, int iMACAddress)
- }
- EXPORT_SYMBOL_GPL(usbnet_get_ethernet_addr);
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index a0fc465458b2..8744496a9687 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -485,6 +485,7 @@ static const struct usb_device_id quirks_table[] = {
+ 						     BTUSB_WIDEBAND_SPEECH },
  
-+static bool usbnet_needs_usb_name_format(struct usbnet *dev, struct net_device *net)
-+{
-+	/* Point to point devices which don't have a real MAC address
-+	 * (or report a fake local one) have historically used the usb%d
-+	 * naming. Preserve this..
-+	 */
-+	return (dev->driver_info->flags & FLAG_POINTTOPOINT) != 0 &&
-+		(is_zero_ether_addr(net->dev_addr) ||
-+		 is_local_ether_addr(net->dev_addr));
-+}
-+
- static void intr_complete (struct urb *urb)
- {
- 	struct usbnet	*dev = urb->context;
-@@ -1762,13 +1773,11 @@ usbnet_probe (struct usb_interface *udev, const struct usb_device_id *prod)
- 		if (status < 0)
- 			goto out1;
+ 	/* Realtek 8851BE Bluetooth devices */
++	{ USB_DEVICE(0x0bda, 0xb850), .driver_info = BTUSB_REALTEK },
+ 	{ USB_DEVICE(0x13d3, 0x3600), .driver_info = BTUSB_REALTEK },
  
--		// heuristic:  "usb%d" for links we know are two-host,
--		// else "eth%d" when there's reasonable doubt.  userspace
--		// can rename the link if it knows better.
-+		/* heuristic: rename to "eth%d" if we are not sure this link
-+		 * is two-host (these links keep "usb%d")
-+		 */
- 		if ((dev->driver_info->flags & FLAG_ETHER) != 0 &&
--		    ((dev->driver_info->flags & FLAG_POINTTOPOINT) == 0 ||
--		     /* somebody touched it*/
--		     !is_zero_ether_addr(net->dev_addr)))
-+		    !usbnet_needs_usb_name_format(dev, net))
- 			strscpy(net->name, "eth%d", sizeof(net->name));
- 		/* WLAN devices should always be named "wlan%d" */
- 		if ((dev->driver_info->flags & FLAG_WLAN) != 0)
-
----
-base-commit: 0fed89a961ea851945d23cc35beb59d6e56c0964
-change-id: 20250326-usbnet_rename-dff11e407634
-
-Best regards,
+ 	/* Realtek 8852AE Bluetooth devices */
 -- 
-Dominique Martinet <dominique.martinet@atmark-techno.com>
-
+2.49.0
 
