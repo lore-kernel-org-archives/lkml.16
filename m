@@ -1,159 +1,119 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912EC24EF7D;
-	Wed, 26 Mar 2025 18:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C112624EF7D;
+	Wed, 26 Mar 2025 18:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743012397; cv=none; b=lGywtpWVnGIDn3LT7bsRDUeMPBVRr8FWEfGvsNptk3EzFHjE0Qjzq/DH1P9i8/QfGr7zIKwwoYKHWSJ7yQsXBCnSkLCZeQlRyLoWHJ0fPFc4XDgJ72tT+IrBgpefwVNtXWi84EQNggREK9Wm2v/S0qAyVEiurc3exgzNcqEBtRI=
+	t=1743012407; cv=none; b=ramQvHYWrllfkizPlmq77VDd40wu9mX9Y1yGlQxAv+fB0A8E16FyrR8gAzxi/RawHyIpal5RHrsInIdITWKEWm1uexXDOY/PpX+3qwrOCuZgjoDwOkINcQa1wbw4uu8Vj1lnZpZmSK41nwOPSftoQ/UhVrMZ6UwA9IJ4huEWjhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743012397; c=relaxed/simple;
-	bh=gbjKAFgB71V9E3Bslr8DsOC6gEuRlewbUsD3uvKJu6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bn14RdtlIr0UyCvyJHh+Sq1TkkKRBVgls4AY5En7TwXS0RJydMrcmHivlIPMOsxCdb0H9HpUGkH27zeBnCZVa0E4gj0JBMbWUqY/5VCpA0ux7YLCZU8KvCkjqVo7xAvk8krdLoK9+uFBfPYxyJhC7ocuQ7XYzITvwfgFlyYt97w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=jwollrath@web.de header.b=Eos81tew; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1743012407; c=relaxed/simple;
+	bh=MSSjAmLOkE9JyRhSQ5swPcfZ2dZeTxEf9ibc8TYM/38=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Dqee0Dow7LgDf6Hf+f/iB2qwV0ZSPAUZLMppuQqhwP5JDDLJ3m5BZDLqtoidsdDEzcnmOBNoLXWRrMMz9HpD1Vil/z3C+2x1PDV0ggnrCARn0BIE4sfdv62CkyvelTiczKoF2UnS1Jbqt+uDKdXeVFtbAlpwD8nq259ZQ/R0tBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=NfQXfFxN; arc=none smtp.client-ip=54.254.200.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=jwollrath@web.de header.b="Eos81tew"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743012375; x=1743617175; i=jwollrath@web.de;
-	bh=bpRhe6RCKqjpwMwkouG+nGcRPzNhh2JSM9SYfRCWoAw=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Eos81tewP6FLrCWlbSdLx+8Hb7BFMxEswteE84RUz5HRCG90kWVE8ySt5pmg6zod
-	 epP9lXjgNcBCOfPcDDHXwm2fEhFf/NhJv+xiF0WHvO29OzYmdpgYrM5rnEvoKzI0t
-	 vrMxAaepJLhet3mF3RaUG+U49ke7PY6SddOELerXhW0irh4cV+ntUey+DUzbBFxBW
-	 n+eZc6B3R+zc6GjoelrLUOg0jPWcP43c7fpLPdpiXv8tq+adlyerk0kMoQyYewLjK
-	 qG1iXxCQZ1mr9vrrZO+7pA96wfKnYI4lS2u7+jzAEiB/cPSuz6bkD4fhK51plqM8s
-	 IU5WlKJ1Jpk9IdROSw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from mayene ([178.195.12.4]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M2Pda-1tzA6K3iMY-008mYC; Wed, 26
- Mar 2025 19:06:14 +0100
-Date: Wed, 26 Mar 2025 18:48:27 +0100
-From: Julian Wollrath <jwollrath@web.de>
-To: Baochen Qiang <quic_bqiang@quicinc.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>, Jeff Johnson
- <jjohnson@kernel.org>, <linux-wireless@vger.kernel.org>,
- <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Muhammad
- Usama Anjum <usama.anjum@collabora.com>
-Subject: Re: [PATCH ath-next v2 0/6] wifi: ath11k: bring hibernation support
- back
-Message-ID: <20250326184754.0ca1e54d@mayene>
-In-Reply-To: <20250326-ath11k-bring-hibernation-back-v2-0-87fdc2d6428f@quicinc.com>
-References: <20250326-ath11k-bring-hibernation-back-v2-0-87fdc2d6428f@quicinc.com>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="NfQXfFxN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1743010976;
+	bh=qN/Fi4R0Hpw1uQbJbeIB3oDRZ/puUHLgAA+ehJo29ls=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=NfQXfFxNl6auTeIMXTu42E302BnDcOrce7X+9NFSopxRy9LD7P4Op9yskIy/QYQeI
+	 lCSMVnb02Qkx+dgA1JEn5cm7nrVzuajIKaHmaDSPkjDufrWxbWQf46KAMJfISSfHl9
+	 4+OREgFguC2cqW6vMrbQp91Up6lvCGtMeAzKspxE=
+X-QQ-mid: bizesmtpip4t1743010928txj9agk
+X-QQ-Originating-IP: 9+IYxNSIzCojtcRcEE9Uzk+rNAnv9SS9KlFz7C1pX2s=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 27 Mar 2025 01:42:06 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 10032576578829145953
+EX-QQ-RecipientCnt: 11
+From: WangYuli <wangyuli@uniontech.com>
+To: masahiroy@kernel.org,
+	nathan@kernel.org,
+	nicolas@fjasle.eu
+Cc: linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	samitolvanen@google.com,
+	petr.pavlu@suse.com,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH] kbuild: deb-pkg: Add libdw-dev:native to Build-Depends-Arch
+Date: Thu, 27 Mar 2025 01:41:55 +0800
+Message-ID: <39FF69551D01924F+20250326174156.390126-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:XKlqPR7CaYFNVTeUed8hujZfTgJ3sgDDS1VsGg5S/aYXvpRCQSU
- hDKheiL0r7qwRqEAHRBZV9VgtB/PrVZqvQBBq0K903ZqLk7KZ0LrcUoANfuTOyab015H9j7
- NehcQSyK9Of1IwPuYvdv1qi+6vUN3ub81KVgG+Sev25r5vsg67aR0ooVwF+fmFd3grx8PHT
- 5AEbLCzAcnq0jCSk47cLA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:wg4lQbYzcsk=;QSlL76JITTF3FjDt65v9xEBXzYI
- zrl1LC9yaIXU0mgcEXVJUXuxklNOTSv3/wCgUfhNd47YVa6+T4ZPk9P4i7Upoj49VlBcUodf9
- Ksj9+/lLie6ZXRR7QdouGcsoLQwaoXhBYahUDs0uFXnyxkt9xabEBYbqvtviOudMGZyi/s41w
- VSpoMNbPZXSVLThlqjlc5vu2P8Fl6a1Dv5pbNd+9BiPeoZyPnxtekBP9yOqgiqqWAhNAefQnw
- unTyF9AEfMMEPLLSuhJY4X9fq8G9BYkg4L9o3MUKLrDhRuMJAJm4YJCfh32kW6I/1/xwin0En
- EF3NHovUNCam8/Ee53V29RZwBkWGbi/x9o80XLWwy1ZO3udbP90MRT6LsGx+WY7O7tBBXvR0O
- HWQ9N4kPjvZNhKG4Ig0IBTC8i1F6LZdoVyylgaSZnp6eDpTtZgjeY17f+09+oypWu1C6erFX0
- 3mRe5Y5g7njMcKuSKrbfHgjJ+xqTsj4jXGiBILRVbaSetNhA3d33QfpcyMlGZgmOXrfpvkgr9
- CV0Lk45fNUCxw2l6CjaXWGHOXLavPqlaAbdsk/7MDfwTzD4L2BSAYf61H3j++r/xwNM/xVnEK
- g6P9a9iGIHNRXUaXZhzj2peFFDHrIk4L97igFl5BTwrKUOEKe4UAVHtIZM3v1EBHA1KT3sn5m
- pFGCdj5bTJFGO3UllQLpsZD9Z+vJ3vz7XKVcK/K88tG4B33l4lCp7L5qNYBEl7zNw9tOub7eX
- N2V8KIPVo2pvPG/QNJONcr8q3q/MsDPQzolvdn4wLP5x5k8/ZAChhgoh07kGgOd58lDnkuen3
- qXaSaNN7q0nJhhyUQCaEFqbL6i33qDJ/XyD7yMF8m5Y90oVNA6f1lsBulHeVkxnDNUllBPTdU
- SNj8p5y8ufDunWt0RNonN2kyLG1CDQbCUVxk9+0s6z+Y4/ziDNe7alray7GzNmVSaiNSegCMr
- H+bFBHPdnQoqBsbed0FfRkMsbqCYCL+50THDdNKbVqpnQTUG1HFR5CRAcaqhS3x9eYyR/JTZv
- Vhe4MmMGXeo6Aq2cNeMggXEGZ+G3cjQVLktLOjp1pwA3kiCIYzr4H5wykflB4Nh0qPakKaOmh
- FtcuagQv+AURc6++62Wb6JEBzOehPK6x4GCB7lEUU52OP84vcPxZaJ6JvPSlY4NBxvPdv+ROd
- hGzKbPPtihRSbulmcZjxreqOU5sG/wiSdmJxzeJEEVR50zbpnoPneaXBsR7BTuhqDRrxFqxGl
- IEkUWKT3/e3cvio7x4TAEkL8skEaln7tFkKbTsA0XeEBEhaDmQnezSv+fVYq51njdrIZd5byM
- czneFwgc65yBnsgX29JWnQH0iXoSYWTYGQ9M1TTePgpDVP85uVLNtrLMUoDbcuJgk9FfGmwl3
- 3YyBuGlVluaXtwJfb7Du3XbuGkvy9wHhAgxCaJdU0/jkWMZD0JblcH65ZlWkv7oSwYBXidNiX
- 2+KebJQ==
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NyA5aDdnpEEQLQ2HjA0XclJH7PX82FiC8bIdkcS+J7O0yXuQuAaRk1Yd
+	lgz8myf7WDKaw2Zg6hS9oK+mRuJN/CMO1dYVDci0PnSNVxqu87GkxzENScTytmwgiFXyMNw
+	bTSEaAH4skJDeds0XXHTAeBRVSXOtVmhBw/2kZrRSAiYF7dqVgCND+TiVKsF8Su3zmbhZQx
+	9DxacdXGtXjLxClQ5fyEt+YxqbS2uvBYkpEFrjahPZJc2S02S4F8UwJfGS/ZzayQvDX+6Ci
+	9zTPdv2L1hv9WZOTwreraWGD2dgbqts7pwtmXa1fNYV+SdT6qIHabq5q7D8euRzoEmkJ+PA
+	K6bA+mBSbF4L9gQnaGWvUOQ3tiZCKXepga58kod0CQCpipE6xJYkxbj6YsdScnr+a66qX19
+	mht8Y7mIC4uJ+aPBLj/xGXyO2vMUH/W+Z+uvUI7JVCCR/40otiR8JY44sWHV17ZwiNzF70E
+	tdivZ20yHus430G2ZRBgzEZoPAjTMmziDmg/mHVqAg6NqN+jOskEiX1CUnKdUDIr3BLi278
+	BfZD+vaohPd1RmaoCLJfE/bKvGqOJiAQCIFnCWIzUIHkuePf5qaYqcjzEZOMREGUr+0uyRN
+	RSS6FmP2+Tefu3G03O3uXskaEl8NcoWrMmJhXWXsinM3URE3BFiYIlSOD+bnU+v2pnURrL/
+	1XrmgE4ZqRUyYSPXExDmTq2wuBy1LWH3/PVYJt2+LSRuMEc+aUzOQhC9Sa7OjCjVCWPSOgF
+	RWntBicPhfFQlme3ssEjNDejcsmUmox803Cu9wTQVDrH/TYhR0ufJSTlG8DvaJxSG2QGXK9
+	DLTB/rohzqvi0YKZ3/vAeLmXwHsoRDzzqAOIGzCg15Gi6XDuPHrg7yw+TkKKBgHgdyRVC3g
+	Yns9Icvi8WB+pxStZS7Fid5kVTwoXM4sK/qKtPbZ+Sv3hrn28+JwNP2jG3nNrXgCFuZXOCW
+	SarMG+wbuJ95OsQTJAOEbJX8Vu89OgE0wMSve46W912Kb8/vDeKV5MYwE+ZxQiRA8JCO6h8
+	3HWXhUN6M0gbCrwpbaiJ4Z5u+fLLx8oiA9dNO1QmDrDQSYgpPU
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-Hi,
+The dwarf.h header, which is included by
+scripts/gendwarfksyms/gendwarfksyms.h, resides within the libdw-dev
+package.
 
-Am Mi, 26 M=C3=A4r 2025 09:33:04 +0800
-schrieb Baochen Qiang <quic_bqiang@quicinc.com>:
+This portion of the code is compiled under the condition that
+CONFIG_GENDWARFKSYMS is enabled.
 
-> To handle the Lenovo unexpected wakeup issue [1], previously we revert
-> commit 166a490f59ac ("wifi: ath11k: support hibernation"). However we
-> need to bring it back, of course with additional changes such that
-> Lenovo machines would not break.
->=20
-> For suspend (S3), as those machines work well in WoWLAN mode, the
-> thought here is that we put WLAN target into WoWLAN mode on those
-> machines while into non-WoWLAN mode (which is done in the reverted
-> commit) on other machines. This requires us to identify Lenovo
-> machines from others. For that purpose, read machine info from DMI
-> interface, match it against all known affected machines. If there is
-> a match, choose WoWLAN suspend mode, else choose non-WoWLAN mode.
-> This is done in patches [1 - 4/6]
->=20
-> For hibernation (S4), non-WoWLAN mode is chosen for all machines. The
-> unexpected wakeup issue should not happen in this mode, since WLAN
-> target power is cut off. To know if the system is going to suspend or
-> to hibernate, register a notifier such that kernel can notify us of
-> such infomation. This is done in patch [5/6]
+Consequently, add libdw-dev to Build-Depends-Arch to prevent
+unforeseen compilation failures.
 
-with this, I just want to confirm, everything now works as expected
-after hibernation.
+Fix follow possible error:
+  In file included from scripts/gendwarfksyms/cache.c:6:
+  scripts/gendwarfksyms/gendwarfksyms.h:6:10: fatal error: 'dwarf.h' file not found
+      6 | #iIn file included from nscripts/gendwarfksyms/symbols.cc:lude6 :
+  <dwarf.hscripts/gendwarfksyms/gendwarfksyms.h>:6
+  :      10| :          ^~~~~~~~~
+  fatal error: 'dwarf.h' file not found
+    6 | #include <dwarf.h>
+      |          ^~~~~~~~~
 
+Fixes: f28568841ae0 ("tools: Add gendwarfksyms")
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ scripts/package/mkdebian | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards,
-Julian
+diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
+index 0178000197fe..25edee97fff7 100755
+--- a/scripts/package/mkdebian
++++ b/scripts/package/mkdebian
+@@ -209,7 +209,7 @@ Rules-Requires-Root: no
+ Build-Depends: debhelper-compat (= 12)
+ Build-Depends-Arch: bc, bison, flex,
+  gcc-${host_gnu} <!pkg.${sourcename}.nokernelheaders>,
+- kmod, libelf-dev:native,
++ kmod, libdw-dev:native, libelf-dev:native,
+  libssl-dev:native, libssl-dev <!pkg.${sourcename}.nokernelheaders>,
+  python3:native, rsync
+ Homepage: https://www.kernel.org/
+-- 
+2.49.0
 
->=20
-> The last patch bring the reverted "wifi: ath11k: restore country code
-> during resume" commit back.
->=20
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D219196
->=20
-> Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
-> ---
-> Changes in v2:
-> - fix compile warnings
-> - support hibernation on Lenovo machines listed in quirk table
-> - Link to v1:
-> https://lore.kernel.org/linux-wireless/20250320023003.65028-1-quic_bqiang=
-@quicinc.com/
->=20
-> ---
-> Baochen Qiang (6):
->       wifi: ath11k: determine PM policy based on machine model
->       wifi: ath11k: introduce ath11k_core_continue_suspend_resume()
->       wifi: ath11k: refactor ath11k_core_suspend/_resume()
->       wifi: ath11k: support non-WoWLAN mode suspend as well
->       wifi: ath11l: choose default PM policy for hibernation
->       Reapply "wifi: ath11k: restore country code during resume"
->=20
->  drivers/net/wireless/ath/ath11k/ahb.c  |   4 +-
->  drivers/net/wireless/ath/ath11k/core.c | 294
-> ++++++++++++++++++++++++++++++---
-> drivers/net/wireless/ath/ath11k/core.h |  16 ++
-> drivers/net/wireless/ath/ath11k/hif.h  |  14 +-
-> drivers/net/wireless/ath/ath11k/mhi.c  |  14 +-
-> drivers/net/wireless/ath/ath11k/mhi.h  |   5 +-
-> drivers/net/wireless/ath/ath11k/pci.c  |  45 ++++-
-> drivers/net/wireless/ath/ath11k/qmi.c  |   4 +- 8 files changed, 350
-> insertions(+), 46 deletions(-) ---
-> base-commit: b6f473c96421b8b451a8df8ccb620bcd71d4b3f4
-> change-id: 20250324-ath11k-bring-hibernation-back-e11ad8e82adf
->=20
-> Best regards,
-
-
-
---=20
- ()  ascii ribbon campaign - against html e-mail=20
- /\                        - against proprietary attachments
