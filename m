@@ -1,92 +1,61 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9B22E337C
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 19:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743018898; cv=pass; b=QkKQZ/5uL3yXpqPYp3IcteAi9Nq6PtPc4rRX0Rc19zBt7J3WLKDAPxg6FCuPHtHPMoX9jzRIHZ8sOo6g5RqKYjOdv3uJPjBnNHCAO/X5eqvC0T8E1lzgsjwse/Z08KxxCFxAv53FIxBggeEMreTJupWKXutkT2aikHfUi28XZc8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743018898; c=relaxed/simple;
-	bh=Dy0J6EBrPQWCBVq9Slx+LWeV6rTwnEG6MDzoQ5GyC0g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UnZqaEo1Yp5rmAD2spT1MO+cFMJgXtIsmbZ1bG4FiYE+hdSZubuEherNhjKUk3qgg9AGKGcBAeomeEp6uIrxArzj9UTFzCIUSHDnmV/u5YS4OAzF9zzJu1Md/aW2oQSdtyhwy0jAp41cMLSBGHxIfFGnM3uRhzzEC3NCiijZcfI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=BN0sZyrp; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E7A1F30DE
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 19:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743018922; cv=none; b=RjYUJ61TDgBeYdSr3taV8EQ/j28o60zDg7Y+Airj6aADoiEU01j4dOdunyR1Zt23dP/uvuaAWkEoCRy4ogYex3An5v/f10mv6Y2BWuSwadVqNpWh0i9K4NTywvl6W7i6o4T+lU6o1hK7tq1iGm6QX3MaGDhE4AUAikz7whas9YU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743018922; c=relaxed/simple;
+	bh=nFrsPsXGyg7m+ZZ6UQ4BRIYIgHOwnQskzRMAesy+Du0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=JDzyb5tuXpzB3S3xk6GL/vzV8RVZZ6ShrpwAVqdrSXXAThA9IfZCaErn+PVS69iB2Zf6yFHrOjWXmeWr0iOUzS2+v25Axf97A6Dx5BLujYazeAx/m7QMHhrlg42zmFy8quvC3hWLVqvNYAWqHQIco+ePdi8NQXvzGD5Fsyyuqzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=doJ1Wddb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="BN0sZyrp"
-ARC-Seal: i=1; a=rsa-sha256; t=1743018874; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=carkWtiol7Q6Etgnz18adBGw7YwbrRsciQm0GpsF7Ffgbfnbn85C4n6J4ZDvYkeqlLFqFXiDyeo9ZxFfYPoe+MmduF8YP81xznk+0ihqgGyULjrKN+EOZk4a9W90UUb09MhPZHx4C5IOvgyi9hN8LMsHy7n3z6aQ/uoN2698mPY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743018874; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=iWHtsRfC6sDeLCSXa8Igd46o0WY5wleHKKN8wZjwzWo=; 
-	b=k2OPFthXhz+BwvZ6G5wpRr42R8nICmVLRAfcjcLv1SBln6h7uCof+UvJMAkonf4jBuCS2t8TtAYO4J5KF44GyQ3mnWwOHCHDCosoT1rKY96/sakdM/8fknwlC0+xsifAhYAl1qtze4xW+PZEdPEwZJ4Q3zglYASnvfXRSDSeXio=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743018874;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=iWHtsRfC6sDeLCSXa8Igd46o0WY5wleHKKN8wZjwzWo=;
-	b=BN0sZyrpUhLauOFR/PvagqgfCxqvjZZcXLFFrDlC557mlg+KM83XxoOhXC1wYFCv
-	i3Jebm9yeoCdXk58yd+sKFJHAaBh75YN75nvlnGkwWjxYI/8/VJtnyV1YMQ3v0Nmo0L
-	5LKuGG+5zDu2RD3UvzHc9MPZPIo57PGdG2JC5DBw=
-Received: by mx.zohomail.com with SMTPS id 17430188720701011.2938235750142;
-	Wed, 26 Mar 2025 12:54:32 -0700 (PDT)
-Message-ID: <e4f41400-b300-43ee-843f-8bc407aa9f76@collabora.com>
-Date: Wed, 26 Mar 2025 22:54:27 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="doJ1Wddb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF4E3C4CEE2;
+	Wed, 26 Mar 2025 19:55:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743018922;
+	bh=nFrsPsXGyg7m+ZZ6UQ4BRIYIgHOwnQskzRMAesy+Du0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=doJ1WddbUcYChQOFokGgl3KdzGDlzBfhe6fkJbReCCmt6xhxinm/FoT9DQGNAhaYZ
+	 7UcEjps/yH0faors5yXpHFdxXIU/ZANQ9ZLEq+qgLrCtJD0YMWWZlXMKvsDnHLBKZq
+	 /eCAhQhWle9NPpVUYlWiiV5Km3Qr2vGLnZSQkWWnwk9zZDFFjymgfJeGYH11akq20e
+	 XWf/3DeU2vNMMR8RZpMeBnK34VSwTnx9zgNzBhajnKmiVaiU+Lw+xEgKpLLSL/iF+E
+	 vEQfLv5S1RiXxYT3Rd+IqKeNuMHEgTT5cZoW3apsv+R7vTdTxnB2d9HS/tMeX92//M
+	 x0dM56g/0E5PA==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Yao Zi <ziyao@disroot.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>,
+ Ying Sun <sunying@isrc.iscas.ac.cn>, Arnd Bergmann <arnd@arndb.de>, Yao Zi
+ <ziyao@disroot.org>, Kent Overstreet <kent.overstreet@linux.dev>, Li
+ Zhengyu <lizhengyu3@huawei.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv/kexec_file: Fix comment in purgatory relocator
+In-Reply-To: <20250326073450.57648-2-ziyao@disroot.org>
+References: <20250326073450.57648-2-ziyao@disroot.org>
+Date: Wed, 26 Mar 2025 20:55:19 +0100
+Message-ID: <87tt7fk1nc.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 3/6] drm/shmem: Implement sparse allocation of
- pages for shmem objects
-To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Rob Herring <robh@kernel.org>, Steven Price <steven.price@arm.com>,
- Liviu Dudau <liviu.dudau@arm.com>
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-References: <20250326021433.772196-1-adrian.larumbe@collabora.com>
- <20250326021433.772196-4-adrian.larumbe@collabora.com>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250326021433.772196-4-adrian.larumbe@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 3/26/25 05:14, Adrián Larumbe wrote:
-> +static struct sg_table *
-> +drm_gem_shmem_sparse_get_sgt_range(struct drm_gem_shmem_object *shmem,
-> +				   unsigned int n_pages, pgoff_t page_offset,
-> +				   gfp_t gfp)
-> +{
-> +	struct drm_gem_object *obj = &shmem->base;
-> +	struct sg_table *sgt;
-> +	int ret;
-> +
-> +	if (drm_WARN_ON(obj->dev, !shmem->sparse))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	/* If the page range wasn't allocated, then bail out immediately */
-> +	if (xa_load(&shmem->xapages, page_offset) == NULL)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	sgt = kzalloc(sizeof(*sgt), GFP_NOWAIT);
+Yao Zi <ziyao@disroot.org> writes:
 
-You likely meant to use the gfp arg here.
+> Apparently sec_base doesn't mean relocated symbol value, which seems a
+> copy-pasting error in the comment. Assigned with the address of section
+> indexed by sym->st_shndx, it should represent base address of the
+> relevant section. Let's fix the comment to avoid possible confusion.
+>
+> Fixes: 838b3e28488f ("RISC-V: Load purgatory in kexec_file")
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
 
--- 
-Best regards,
-Dmitry
+Reviewed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
