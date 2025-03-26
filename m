@@ -1,139 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB63419D07A;
-	Wed, 26 Mar 2025 10:32:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB6F1AD41F;
+	Wed, 26 Mar 2025 10:35:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742985128; cv=none; b=Biwh0+MPQHc2TPwtgVE0H7LmrdRvSAAMgKmgy4AEsB5RI2qad7p5ObPGydqw5LcWYrwlrJSE7xk8CwX0CCNKhGkGKqIrGFHSQqSEfDGLePFIDMhzG6e2PDbqi7yDnKhitEQutSaHPv1515YHeVotcMbKrCXx71tS7uZqfE/REE8=
+	t=1742985331; cv=none; b=ijlI10QgZBTn6EvATJzTzD1VxgkFAe01oDBe63k6tkAYm/Q+ace93hxp9UoRmpttdQbu9OScJLxy3oynQNyvPliMa8599eh9FEpyILzQiv+DkqcJ0OMo9S0Pu4YngdIA7rWB1rSQiIlp5XPW2ofYidr0KJ6HelfXLFmD49cpnw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742985128; c=relaxed/simple;
-	bh=pLZ7Hikim1hFAJMmXV9OSSK0+eRNe8C1ji9XUz/DthQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j/4KJ7pWv4sEN6qz94Agy1xYQkZiBj+cqxvp6T9wsVVXnO3KWMD+PeTyfGxCtIfhndnvVn18YugJBvygmi852msHQMM8h292/YcfAtjEB35Y5SThy2fzKbQpEklP1wE3NePH30kHCog7RCG6MEryQE1JxjbbvPwjTqjI8b9JtMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kjnLrUZJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742985331; c=relaxed/simple;
+	bh=Sppx97QIO2UiCanc36x9EickmLREHYObHBI6U0GInro=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SudPvvE1HFXNk1dzhQhdD6Zv2QpaZELSF5n2aG/3yS8sgBcEkBqYTOZaT0dGNVZ6ZV7UbYKWgqUcapiRZ6s/Qg7aWi0LIMUGyIYDYAOhdLs+4XXkHbWLTmox79vUGYY6ZoDOTZ7GvwQJAkQO+YnCtalE/O0XEeUo5v5FI4zfA74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uXQwYnr1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kjnLrUZJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 877B9C4CEE2;
-	Wed, 26 Mar 2025 10:32:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uXQwYnr1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 729F1C4CEE2;
+	Wed, 26 Mar 2025 10:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742985128;
-	bh=pLZ7Hikim1hFAJMmXV9OSSK0+eRNe8C1ji9XUz/DthQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kjnLrUZJCrUpN/4FS70xv0YmBlKd+hW4qxp7LiRPUIz5RNZNQTTfgDcnbfelukTxe
-	 Iyd3kSzF75YP93AeOU6zSkl0Kih9yee8UgnjO5/pTE5X1EqrrTJHK+JZOO301MgIAW
-	 fdg/CfQj05VettXh660+dVuxFAiP0CV6i7MumxdzTuSzzRiuNJsvD3dWlNJfnJjIla
-	 k+IRN9UMqSKnGC9t8djBXTJ0s/Pa34soLwcjPBR63XxaV6TLXrdlKBh3ckGlOzpRbZ
-	 KRZLqX/OSk2KfVk+dKM7+AadveGgTGLLQPCcfuEE7gQEVLoMvhyk70W0KlwDQp/yqJ
-	 9SHCFFwny/Eeg==
-Message-ID: <69bb8311-c0f7-4940-8c69-8b6de4f7c30e@kernel.org>
-Date: Wed, 26 Mar 2025 11:32:02 +0100
+	s=k20201202; t=1742985331;
+	bh=Sppx97QIO2UiCanc36x9EickmLREHYObHBI6U0GInro=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uXQwYnr1W5s+0kXY0bTs0RXTvpiMCIAiO4o7Gz1N3YjPrzx2BsSyNn3YgObaLAsxs
+	 wCNnutkXBprVaUSfRX2EmdUqHMpMa7H9T7nhJmcOMk5xFj+Drf3u5Pxqzo+MDGsqOJ
+	 76g/wYa+au6w+EVsCCoWxkWLZ4EY8iZFzKhqW4L/5tK+8HbesSljgbi5ZN0izyfz+l
+	 P+7ebqVCXlMBLhH7e3v1GoHnlnzfp1PhIuOJbrKDl1ouzxJ9P5R3hl4dcVTVYjJ72Q
+	 KwqnfGjw2dSOxA3/Mp4hM8S76idcSzMxWdKKVhwlAgfu5bqevXLUtjwUwnjY/q2wv8
+	 zavuS98ir5p3Q==
+Date: Wed, 26 Mar 2025 11:35:28 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>
+Cc: linux-tip-commits@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
+Subject: Re: [tip: objtool/urgent] objtool, pwm: mediatek: Prevent
+ theoretical divide-by-zero in pwm_mediatek_config()
+Message-ID: <4avdt2nru6cpypssyw5chxiuadh74qcobfboopwsske2ycr565@qnb6utlyxuj4>
+References: <fb56444939325cc173e752ba199abd7aeae3bf12.1742852847.git.jpoimboe@kernel.org>
+ <174289169184.14745.2432058307739232322.tip-bot2@tip-bot2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 02/13] dt-bindings: clock: Add cpg for the Renesas
- RZ/T2H SoC
-To: Paul Barker <paul.barker.ct@bp.renesas.com>,
- Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org,
- geert@linux-m68k.org, Geert Uytterhoeven <geert+renesas@glider.be>,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250325160904.2688858-1-thierry.bultel.yh@bp.renesas.com>
- <20250325160904.2688858-3-thierry.bultel.yh@bp.renesas.com>
- <20250326-enigmatic-cuscus-of-enhancement-410130@krzk-bin>
- <d2d09918-5555-47a7-8b82-f88e9ff022d7@bp.renesas.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <d2d09918-5555-47a7-8b82-f88e9ff022d7@bp.renesas.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hvfawdrhoecikzcm"
+Content-Disposition: inline
+In-Reply-To: <174289169184.14745.2432058307739232322.tip-bot2@tip-bot2>
 
-On 26/03/2025 11:28, Paul Barker wrote:
-> On 26/03/2025 07:49, Krzysztof Kozlowski wrote:
->> On Tue, Mar 25, 2025 at 05:08:50PM +0100, Thierry Bultel wrote:
->>> Document RZ/T2H (a.k.a r9a09g077) cpg-mssr (Clock Pulse Generator) binding.
->>>
->>> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
->>> ---
->>> Changes v4->v5:
->>>   - Set reg minItems and maxItems defaults at top level
->>> Changes v3->v4:
->>>   - Handle maxItems and clocks names properly in schema. 
->>
->>
->> Can you start using b4 or send patchsets in standard way? No links to
->> previous versions in changelog and b4 diff does not work:
->>
->> b4 diff '20250325160904.2688858-1-thierry.bultel.yh@bp.renesas.com'
->> Grabbing thread from lore.kernel.org/all/20250325160904.2688858-1-thierry.bultel.yh@bp.renesas.com/t.mbox.gz
->> Checking for older revisions
->> Grabbing search results from lore.kernel.org
->>   Added from v4: 14 patches
->> ---
->> Analyzing 140 messages in the thread
->> Preparing fake-am for v4: dt-bindings: soc: Add Renesas RZ/T2H (R9A09G077) SoC
->> ERROR: Could not fake-am version v4
->> ---
->> Could not create fake-am range for lower series v4
-> 
-> Hi Krzysztof,
-> 
-> The above b4 command works for me. Which b4 version are you using and
-> which base tree do you have checked out?
-> 
-> FYI, this series now applies cleanly on top of tty-next as Geert's
-> patch [1] has been integrated.
-> 
-> [1]: https://lore.kernel.org/linux-renesas-soc/11c2eab45d48211e75d8b8202cce60400880fe55.1741114989.git.geert+renesas@glider.be/T/#u
-Latest b4 and latest next (next-20250321). I tried next-20250317 as well.
 
-Best regards,
-Krzysztof
+--hvfawdrhoecikzcm
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [tip: objtool/urgent] objtool, pwm: mediatek: Prevent
+ theoretical divide-by-zero in pwm_mediatek_config()
+MIME-Version: 1.0
+
+[I forgot a comma in the original post and so the list of Cc: was
+broken. Here comes a resend, sorry to everyone who get the mail twice
+now. If you reply, please do so on this copy to not continue using the
+broken address.]
+
+Hello,
+
+On Tue, Mar 25, 2025 at 08:34:51AM +0000, tip-bot2 for Josh Poimboeuf wrote:
+> The following commit has been merged into the objtool/urgent branch of ti=
+p:
+>
+> Commit-ID:     2becbc66a151500636046503f541255af6acf4fa
+> Gitweb:        https://git.kernel.org/tip/2becbc66a151500636046503f541255=
+af6acf4fa
+> Author:        Josh Poimboeuf <jpoimboe@kernel.org>
+> AuthorDate:    Mon, 24 Mar 2025 14:56:11 -07:00
+> Committer:     Ingo Molnar <mingo@kernel.org>
+> CommitterDate: Tue, 25 Mar 2025 09:20:32 +01:00
+
+I wonder a bit about procedures here. While I like that warnings that
+pop up in drivers/pwm (and elsewhere) are cared for, I think that the
+sensible way to change warning related settings is to make it hard to
+enable them first (harder than "depends on !COMPILE_TEST" "To avoid
+breaking bots too badly") and then work on the identified problems
+before warning broadly. The way chosen here instead seems to be enabling
+the warning immediately and then post fixes to the warnings and merge
+them without respective maintainer feedback in less than 12 hours.
+
+> objtool, pwm: mediatek: Prevent theoretical divide-by-zero in pwm_mediate=
+k_config()
+>
+> With CONFIG_COMPILE_TEST && !CONFIG_CLK, pwm_mediatek_config() has a
+> divide-by-zero in the following line:
+>
+>       do_div(resolution, clk_get_rate(pc->clk_pwms[pwm->hwpwm]));
+>
+> due to the fact that the !CONFIG_CLK version of clk_get_rate() returns
+> zero.
+>
+> This is presumably just a theoretical problem: COMPILE_TEST overrides
+> the dependency on RALINK which would select COMMON_CLK.  Regardless it's
+
+RALINK and ARCH_MEDIATEK. The latter enables COMMON_CLK as it depends on
+ARM or ARM64 which both select COMMON_CLK.
+
+> a good idea to check for the error explicitly to avoid divide-by-zero.
+>
+> Fixes the following warning:
+>
+>   drivers/pwm/pwm-mediatek.o: warning: objtool: .text: unexpected end of =
+section
+>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+
+Fixes: caf065f8fd58 ("pwm: Add MediaTek PWM support")
+
+would be nice.
+
+> Cc: "Uwe Kleine-K=F6nig" <ukleinek@kernel.org> (maintainer:PWM SUBSYSTEM)
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Link: https://lore.kernel.org/r/fb56444939325cc173e752ba199abd7aeae3bf12.=
+1742852847.git.jpoimboe@kernel.org
+
+I fail to reproduce the warning here for an x86_64 build on
+1e26c5e28ca5. I have:
+
+        $ grep -E 'CONFIG_(CLK|PWM_MEDIATEK|OBJTOOL_WERROR)\>' .config
+        CONFIG_PWM_MEDIATEK=3Dm
+        CONFIG_OBJTOOL_WERROR=3Dy
+
+and the build works fine for me and there is no warning about
+drivers/pwm/pwm-mediatek.o. What am I missing?
+
+Best regards
+Uwe
+
+--hvfawdrhoecikzcm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfj2GsACgkQj4D7WH0S
+/k7Ragf+MBsmN1FwP/Dpj/5cu97qxUT/mIQy92v3DPR6KSFtN9+x1Uejlwi0n3ru
+sq6cK4BEgbI84Nx2E7WjSSnBbK3IJ5stDosbP0kUkd+13gx0reLeiSbgkKkpC0o2
+pkh1tEtO8/gdAoH7wDlfYEkIsSKMFFRQScL4a2cdwr3E3gFP7j7wXxjMsKAU7JT6
+IPn8Rx38iCsgmDaZyJEHwQrlWQzvi8TdylKMNGTnOQL9N3lnDKCtY1tSZhMs2Gp7
+xM016kX6E4VOSXGgiqP1JGnQkWB50S/r6IRm+jfqjaHaZY9j6/BujupHUJ60ZN7V
+A+wX22IzsN+ebJJ2tmJflRUa+RdYYA==
+=QuOy
+-----END PGP SIGNATURE-----
+
+--hvfawdrhoecikzcm--
