@@ -1,306 +1,118 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73511199938;
-	Wed, 26 Mar 2025 07:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C399C19E99E;
+	Wed, 26 Mar 2025 07:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742973745; cv=none; b=K5vyETkoiIuyXauuolKwNM48aH7a9UZYXIJP+K/v409MbA+pjYV+kQ/7lJzHlWAkWVPFfsvcdKVz/HSyyD0f4XOf+HptHwjxQXvQ4OCnVIXj2M9KUntTKu6ERPOeN4V3r8SOFz6Aprc/s03i4hMyddn8iY3XGlnBMbHTvkLgMk0=
+	t=1742973746; cv=none; b=kZcGVoHmCF1HcY8i6OfpzzGPxBoA0+1/TVuH885pVQ3EqcSQBhjH/d53eclG0AB8ECTkuNbsWhGZG24PqHh+Usku3Yb2huz3+r7HHZEu8eZ6slYUg945hFQgnjIxHjr7gCzmt/zw6hqNHPXYea7wGSVmSB0u0NhAmtmfiIg68Ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742973745; c=relaxed/simple;
-	bh=8VYqpJBwzckNJtWP0ZHwgshXfd1CjjdPlbtTRY4ocIs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GnhQYDZhXDA39MrjG3cUy7MQck/c8VBHQMlXYT1mgGAMWkO+GeO1p8LRTtGqV64SP0VYtsiYTo3YStUy/8b8iBI+ICzZuCo/Ht2enDnqxztI1vCSCV0/71uMjWKWJwwX3FAO14P9LuuvhC9j3sLZt1mhs1TtvtFW6K6QI6NuS5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=W0VjzKfB; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1742973746; c=relaxed/simple;
+	bh=3FVu++ACO5iLB7mLMJ3UP5egk6lWRT7jlsPK4mNFA4U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LmalhqJcp/mzLfyYZJFxJkNlHod202rg3u1mnvVo8iQE9p//aXD9adjnuMobh9GM6B/yZCYJ5Wqly3A2XoUHZfQUrBcjtbNsXcljTm8l0jfqhnivO5k58L81faiX38WEYV4Pi0c4RhQ5zEGp4ASdQTIMreTLNQ03BVXTlg7teRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H9WbIFc7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="W0VjzKfB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1742973744; x=1774509744;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8VYqpJBwzckNJtWP0ZHwgshXfd1CjjdPlbtTRY4ocIs=;
-  b=W0VjzKfBZzWXuzQQk0H0mqEhmyaqcOrosJMaYuMwqLkLD9Jmaqtih7kS
-   TSVLPp/qxVV2ZK8S1rHzVAKv6ZrrcTUMcRH0k3ZKMDl8YTMCW5DQzMdV8
-   awpGSwtTftvynV/NH1grBli4MhiRyJxiz/sYI6IYEcp9mTqlqF1OpdH5L
-   M+3KPwiwNVNd6j1uYKyMkS7n5JK27/8r1aMfyVlmvFwVbdkyiH8P804kB
-   MlK2rzG0SE3twbUsOG4fvCJUMvHuZS7uj74fkzvDCr9ioyeZy2vuH1UV8
-   lqoBDpDdVrgIoqnbUZDSed05aT+RZhxLuwZ1A9KMfTtossciXn7wx+W2a
-   g==;
-X-CSE-ConnectionGUID: QApF+UAWRZutY2upgn7tGQ==
-X-CSE-MsgGUID: VAFzNfzLQ5+vOs3yEZkekg==
-X-IronPort-AV: E=Sophos;i="6.14,277,1736838000"; 
-   d="scan'208";a="271100166"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 26 Mar 2025 00:22:23 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 26 Mar 2025 00:22:02 -0700
-Received: from che-lt-i67131.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Wed, 26 Mar 2025 00:21:56 -0700
-From: Manikandan Muralidharan <manikandan.m@microchip.com>
-To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <tudor.ambarus@linaro.org>,
-	<pratyush@kernel.org>, <mwalle@kernel.org>, <miquel.raynal@bootlin.com>,
-	<richard@nod.at>, <vigneshr@ti.com>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mtd@lists.infradead.org>
-CC: <manikandan.m@microchip.com>
-Subject: [PATCH v2 1/3] mtd: spi-nor: sfdp: parse SFDP SST vendor map and register EUI addresses into NVMEM framework
-Date: Wed, 26 Mar 2025 12:51:38 +0530
-Message-ID: <20250326072140.172244-2-manikandan.m@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250326072140.172244-1-manikandan.m@microchip.com>
-References: <20250326072140.172244-1-manikandan.m@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H9WbIFc7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 105E0C4CEE9;
+	Wed, 26 Mar 2025 07:22:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742973746;
+	bh=3FVu++ACO5iLB7mLMJ3UP5egk6lWRT7jlsPK4mNFA4U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=H9WbIFc7erv7Of89dLswcex/NrlhJLnC1nQuO96n7P9ffqX0yHjEarM7ZZAYX+YeJ
+	 PhtCeeZPbZfWOyFz/6Y+RBOz9BjWeroQFUx+C3a1uyAEPglxEXi2mBZsBTsajutQfK
+	 Pzp1/cIBI89t5LYbKK6WEHIscZp/44ehLrZ4m/l9PPndBEHXpvHO03KEmVyC5aiNaS
+	 lKzmTzO0b13M/ms1fmG006FQ0FeOOw14rQi1c7B+vMjETkVo2hcWA/Z7XRMs/Zy3Sk
+	 FyoZlVXMQXMXcg0jzFoTuqgfs5+VEgnl0G5qH80B9TQFxXNHiCcX7Xfy3A8+mF+okO
+	 wG7A6lXkj4ZPQ==
+Message-ID: <ac259b12-4fa1-4dd1-8a58-a24faa0bf619@kernel.org>
+Date: Wed, 26 Mar 2025 08:22:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 14/34] mfd: sec: sort struct of_device_id entries and the
+ device type switch
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Peter Griffin <peter.griffin@linaro.org>,
+ Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+ linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
+References: <20250323-s2mpg10-v1-0-d08943702707@linaro.org>
+ <20250323-s2mpg10-v1-14-d08943702707@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250323-s2mpg10-v1-14-d08943702707@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-Some SST flash like SST26VF064BEUI serial quad flash memory is programmed
-at the factory with a globally unique EUI-48 and EUI-64 identifiers stored
-in the SFDP vendor parameter table and it is permanently write-protected.
+On 23/03/2025 23:39, André Draszik wrote:
+> Sort struct of_device_id entries and the device type switch in _probe()
+> alphabetically, which makes it easier to find the right place where to
+> insert new entries in the future.
+> 
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> ---
+>  drivers/mfd/sec-i2c.c | 18 +++++++++---------
 
-Add SST Vendor table SFDP parser to read the EUI-48 and EUI-64
-Mac Addresses and allocate them using resource-managed devm_kcalloc
-which will be freed on driver detach.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Regitser the Addresses into NVMEM framework and parse them when
-requested using the nvmem properties in the DT by the net drivers.
-In kernel the Ethernet MAC address relied on U-Boot env variables or
-generated a random address, which posed challenges for boards without
-on-board EEPROMs or with multiple Ethernet ports.
-This change ensures consistent and reliable MAC address retrieval
-from QSPI benefiting boards like the sama5d29 curiosity and
-sam9x75 curiosity.
-
-Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
----
- drivers/mtd/spi-nor/sfdp.c  | 161 ++++++++++++++++++++++++++++++++++++
- include/linux/mtd/spi-nor.h |   7 ++
- 2 files changed, 168 insertions(+)
-
-diff --git a/drivers/mtd/spi-nor/sfdp.c b/drivers/mtd/spi-nor/sfdp.c
-index 21727f9a4ac6..920708ae928a 100644
---- a/drivers/mtd/spi-nor/sfdp.c
-+++ b/drivers/mtd/spi-nor/sfdp.c
-@@ -31,6 +31,7 @@
- 					 * Register Map Offsets for Multi-Chip
- 					 * SPI Memory Devices.
- 					 */
-+#define SFDP_MCHP_SST_ID	0x01bf
- 
- #define SFDP_SIGNATURE		0x50444653U
- 
-@@ -1344,6 +1345,163 @@ static int spi_nor_parse_sccr_mc(struct spi_nor *nor,
- 	return ret;
- }
- 
-+#define SFDP_MCHP_PARAM_TABLE_LEN	28
-+#define SFDP_SST26VF064BEUI_ID		0xFF4326BFU
-+
-+#define SFDP_MCHP_EUI48			0x30
-+#define SFDP_MCHP_EUI48_MASK		GENMASK(7, 0)
-+#define SFDP_MCHP_EUI48_MAC_LEN		6
-+
-+#define SFDP_MCHP_EUI64			0x40
-+#define SFDP_MCHP_EUI64_MASK		GENMASK(31, 24)
-+#define SFDP_MCHP_EUI64_MAC_LEN		8
-+
-+/**
-+ * spi_nor_mchp_sfdp_read_addr()- read callback to copy the EUI-48 or EUI-68
-+ *				  Addresses for device that request via NVMEM
-+ *
-+ * @priv: User context passed to read callbacks.
-+ * @offset: Offset within the NVMEM device.
-+ * @val: pointer where to fill the ethernet address
-+ * @bytes: Length of the NVMEM cell
-+ *
-+ * Return: 0 on success, -EINVAL  otherwise.
-+ */
-+static int spi_nor_mchp_sfdp_read_addr(void *priv, unsigned int off,
-+				       void *val, size_t bytes)
-+{
-+	struct spi_nor *nor = priv;
-+
-+	if (SFDP_MCHP_PARAM_TABLE_LEN == nor->mchp_eui->vendor_param_length) {
-+		switch (bytes) {
-+		case SFDP_MCHP_EUI48_MAC_LEN:
-+			memcpy(val, nor->mchp_eui->ethaddr_eui48, SFDP_MCHP_EUI48_MAC_LEN);
-+			break;
-+		case SFDP_MCHP_EUI64_MAC_LEN:
-+			memcpy(val, nor->mchp_eui->ethaddr_eui64, SFDP_MCHP_EUI64_MAC_LEN);
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * spi_nor_parse_mchp_sfdp() - Parse the Microchip vendor specific parameter table
-+ *			       Read and store the EUI-48 and EUI-64 address to
-+ *			       struct spi_nor_sst_mchp_eui_info if the addresses are
-+ *			       programmed in the SST26VF064BEUI sst flag
-+ *
-+ * @nor:		pointer to a 'struct spi_nor'
-+ * @sccr_header:	pointer to the 'struct sfdp_parameter_header' describing
-+ *			the Microchip vendor parameter header length and version.
-+ *
-+ * Return: 0 on success of if addresses are not programmed, -errno otherwise.
-+ */
-+static int spi_nor_parse_mchp_sfdp(struct spi_nor *nor,
-+				   const struct sfdp_parameter_header *mchp_header)
-+{
-+	struct nvmem_device *nvmem;
-+	struct nvmem_config nvmem_config = { };
-+	struct spi_nor_sst_mchp_eui_info *mchp_eui;
-+	u32 *dwords, addr, sst_flash_id;
-+	size_t len;
-+	int ret = 0, size = 0;
-+
-+	if (SFDP_MCHP_PARAM_TABLE_LEN != mchp_header->length)
-+		return -EINVAL;
-+
-+	addr = SFDP_PARAM_HEADER_PTP(mchp_header);
-+	/* Get the SST SPI NOR FLASH ID */
-+	ret = spi_nor_read_sfdp_dma_unsafe(nor, addr, sizeof(sst_flash_id),
-+					   &sst_flash_id);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Check the SPI NOR FLASH ID */
-+	if (le32_to_cpu(sst_flash_id) != SFDP_SST26VF064BEUI_ID)
-+		return -EINVAL;
-+
-+	len = mchp_header->length * sizeof(*dwords);
-+	dwords = kmalloc(len, GFP_KERNEL);
-+	if (!dwords)
-+		return -ENOMEM;
-+
-+	ret = spi_nor_read_sfdp(nor, addr, len, dwords);
-+	if (ret)
-+		goto out;
-+
-+	le32_to_cpu_array(dwords, mchp_header->length);
-+
-+	mchp_eui = devm_kzalloc(nor->dev, sizeof(*mchp_eui), GFP_KERNEL);
-+	if (!mchp_eui) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	if (SFDP_MCHP_EUI48 == FIELD_GET(SFDP_MCHP_EUI48_MASK,
-+					 dwords[SFDP_DWORD(25)])) {
-+		mchp_eui->ethaddr_eui48 = devm_kcalloc(nor->dev,
-+						       SFDP_MCHP_EUI48_MAC_LEN,
-+						       sizeof(u8), GFP_KERNEL);
-+		if (!mchp_eui->ethaddr_eui48) {
-+			ret = -ENOMEM;
-+			devm_kfree(nor->dev, mchp_eui);
-+			goto out;
-+		}
-+		memcpy(mchp_eui->ethaddr_eui48, (u8 *)&dwords[SFDP_DWORD(25)] + 1,
-+		       SFDP_MCHP_EUI48_MAC_LEN);
-+		size = SFDP_MCHP_EUI48_MAC_LEN;
-+	}
-+
-+	if (SFDP_MCHP_EUI64 == FIELD_GET(SFDP_MCHP_EUI64_MASK,
-+					 dwords[SFDP_DWORD(26)])) {
-+		mchp_eui->ethaddr_eui64 = devm_kcalloc(nor->dev,
-+						       SFDP_MCHP_EUI64_MAC_LEN,
-+						       sizeof(u8), GFP_KERNEL);
-+		if (!mchp_eui->ethaddr_eui64) {
-+			ret = -ENOMEM;
-+			devm_kfree(nor->dev, mchp_eui->ethaddr_eui48);
-+			devm_kfree(nor->dev, mchp_eui);
-+			goto out;
-+		}
-+		memcpy(mchp_eui->ethaddr_eui64, (u8 *)&dwords[SFDP_DWORD(27)],
-+		       SFDP_MCHP_EUI64_MAC_LEN);
-+		size += SFDP_MCHP_EUI64_MAC_LEN;
-+	}
-+
-+	/*
-+	 * Return if SST26VF064BEUI sst flash is not programmed
-+	 * with EUI-48 or EUI-64 information
-+	 */
-+	if (!size) {
-+		devm_kfree(nor->dev, mchp_eui);
-+		goto out;
-+	}
-+
-+	mchp_eui->vendor_param_length = mchp_header->length;
-+	nor->mchp_eui = mchp_eui;
-+	nvmem_config.word_size = 1;
-+	nvmem_config.stride = 1;
-+	nvmem_config.dev = nor->dev;
-+	nvmem_config.size = size;
-+	nvmem_config.priv = nor;
-+	nvmem_config.reg_read = spi_nor_mchp_sfdp_read_addr;
-+
-+	nvmem = devm_nvmem_register(nor->dev, &nvmem_config);
-+	if (IS_ERR(nvmem)) {
-+		dev_err(nor->dev, "failed to register NVMEM device: %ld\n",
-+			PTR_ERR(nvmem));
-+		ret = PTR_ERR(nvmem);
-+	}
-+
-+out:
-+	kfree(dwords);
-+	return ret;
-+}
-+
- /**
-  * spi_nor_post_sfdp_fixups() - Updates the flash's parameters and settings
-  * after SFDP has been parsed. Called only for flashes that define JESD216 SFDP
-@@ -1564,6 +1722,9 @@ int spi_nor_parse_sfdp(struct spi_nor *nor)
- 			err = spi_nor_parse_sccr_mc(nor, param_header);
- 			break;
- 
-+		case SFDP_MCHP_SST_ID:
-+			err = spi_nor_parse_mchp_sfdp(nor, param_header);
-+			break;
- 		default:
- 			break;
- 		}
-diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-index cdcfe0fd2e7d..051078d23ea1 100644
---- a/include/linux/mtd/spi-nor.h
-+++ b/include/linux/mtd/spi-nor.h
-@@ -339,6 +339,12 @@ struct flash_info;
- struct spi_nor_manufacturer;
- struct spi_nor_flash_parameter;
- 
-+struct spi_nor_sst_mchp_eui_info {
-+	u8 vendor_param_length;
-+	u8 *ethaddr_eui48;
-+	u8 *ethaddr_eui64;
-+};
-+
- /**
-  * struct spi_nor - Structure for defining the SPI NOR layer
-  * @mtd:		an mtd_info structure
-@@ -408,6 +414,7 @@ struct spi_nor {
- 	u32			flags;
- 	enum spi_nor_cmd_ext	cmd_ext_type;
- 	struct sfdp		*sfdp;
-+	struct spi_nor_sst_mchp_eui_info *mchp_eui;
- 	struct dentry		*debugfs_root;
- 
- 	const struct spi_nor_controller_ops *controller_ops;
--- 
-2.25.1
-
+Best regards,
+Krzysztof
