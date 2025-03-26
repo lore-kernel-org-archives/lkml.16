@@ -1,121 +1,103 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B27F25E476
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 20:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8921F8901;
+	Wed, 26 Mar 2025 20:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743022093; cv=none; b=Ai+SQBmjm91+fFE4gO6Y8bbEtUD62TUWDak4uFb5C2/Ish0CusPBemB2jtrhAmw7H0BZwkuNjEayaxCJ7UBMCwnAzh997ZXnEovBUc/V2odzyUSSoCZ6n4SOoCrDgqci95uFYJzn31VF0X075O+StzJBRvLSMcsLoDjobMKtDqc=
+	t=1743022123; cv=none; b=s+WY01TVKeAnRvNVvOIj1XYkKgKT8wQ7s2e8Iqd1IisJGbc4yvtwuP5g7YuMhMIP1/l/NYCjBr21jQoqqnpX4uddPVty67qaKGguHraVFmtu3wKqfzYwLU4OiDaT1PDuYJAvyZWI2eAkx3qKzbJs6nZIq35GI0ZUl6dzW7eIFtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743022093; c=relaxed/simple;
-	bh=lkwNgZSqUlm9DJirk/oVV9tPmlsUXC77j/zjRQBf3B8=;
+	s=arc-20240116; t=1743022123; c=relaxed/simple;
+	bh=WA5K+7T4bGA2EQSuajb34nL2J84mbXlMPZ65nIWTCMg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cr5YoUrcQAOTQdwX6zaZuTvyU9hzbTGiRTHFQO10Xn5QqeafVlZJA7WepyWhIdP/9nqfV7drMmjz4+vZ1vqnUMkG4/p5t+9/TPvjC/B6aC96RfIT8619v38akTqshZCAIKII4gP76aqOQRNac8jscfq802tLbMyor54ucpLWUbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=F6X62d2+; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	 To:Cc:Content-Type; b=TkUNpNqvRIBx9vV2K+4xwLSTrYnme3IRlAOnrw4qGn+kAekYL37o2Xsh9HY4WVhAyenj7rkwA53tXl3bbYVRfQK5gEJ1kGiYp2FhUzy3LbQyYfMYhxzTnOCrzh1+/JDPI0Urors4AmWUxvOqbil/C4Nn3o1+yhI7HNsZr3KGvTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hcpcvDF5; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="F6X62d2+"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6ff1814102aso11841167b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 13:48:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hcpcvDF5"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22792ef6215so782015ad.2;
+        Wed, 26 Mar 2025 13:48:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1743022091; x=1743626891; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743022122; x=1743626922; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2KugdLRUS2IB/bWcBImczTBUF8xvxY/0i4eovnJ/pJc=;
-        b=F6X62d2+OJfKCwhsA6Vh+qLbkDeDYnzecTxBZ15ubeyfAk61vWwZ84hUXEwJ7g2BYW
-         oEM8vlHrNHVSukS3R+XmA9xwuEelzlnX/Vv/l36Z1qZp1i4O+S7SYuIaQ0qMbjVTxQRY
-         9VUAfCQFo2HslAoLchRsXyWDpKfzSLpOYPyFiHKdFEj11TZF9GXxwAiszDzgqhhHkM8K
-         pq+S4P2Csytc9k1Sw9nrc2g39a/1uaUl2LhAICIHHMb+xua1adF41MvYD2vPn2GYZVj0
-         IVpVAwg//tQ+u268GeHltkrFYbQpmmlfg8Xk90bsrpmEX3rWqar989mwT3nMQK4jWLN0
-         F92A==
+        bh=WA5K+7T4bGA2EQSuajb34nL2J84mbXlMPZ65nIWTCMg=;
+        b=hcpcvDF5zZm3uzlte2G0hEOHLUErnSXPhZqEyqvdGKb+ucVMFGkAbxdoclei0U67WO
+         lcG9jhW+7UD3wcwkiAfnwyPChSJvjILVLJog1OVLR1EFDuGjmLMlGn0gyx46AA2yOeWb
+         aK72OccAKRXfuUwE0rStv8OOJ+K7Vx12ZSWMnV4gJhmFcbtHYJiSm9ufBH25HNaTAqoV
+         WJaFBvw5jGJv9uZqEg9dI7f3WT2zIgmIpe9ckkFtkgDw1C2Wp+AEo2zDTsZVrpOUm+FH
+         uk9sLFdnqXqx4diG87rUxACxmfwjeb7Zk7U5WqvWJtpDRioNoaiSx+fqqkaeidliwN49
+         Ul+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743022091; x=1743626891;
+        d=1e100.net; s=20230601; t=1743022122; x=1743626922;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2KugdLRUS2IB/bWcBImczTBUF8xvxY/0i4eovnJ/pJc=;
-        b=ZzbkU7p68tSXzVM+/WVy1VvrmXmF8VSCezO0mrTr8XDXo24/0epXlZTOrL4md3YTXl
-         Mwki2VQRPzk1tJ+7RaOeidtxPVn7qkyDq5HMKWMRktQjZrLo9GUPTevTnAVHH5CQHKc2
-         U+FyxDC0lyTcEVHaK2b4moPID7WJZJz2aufSa9XtHqfvL3NGHkJNdbim/mWLjaNVk8hT
-         sLZ8ZMW68vcyfc9BH/IQgt8HTZigwuYOxJ4DP9OCpgCjsbMnz6UCa9tC3KXwk471InSZ
-         Hk9EMPQeJioXLtSylXLyJfj8Iex2hQP+LEyNm0eXmZtW0YCKSe+EZPI30FESulwplSgh
-         esTw==
-X-Forwarded-Encrypted: i=1; AJvYcCUzcN9LT6fT0kmZx3OAuprS2OcwuMLFEFjomVTY1e4YH1AZcUuwWa3Jw/3DxDddXnH8iJJwwYTPbL2Yscc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFz2rMMeUDtu7zILrj5te0A2nGDBDK86KlBAOfXg61U1OyUS2C
-	uVQdy2y59lX3KLCD05gHNgmcOguov3358qXKzzd7TZSUoxle9+76qIzUn1MSUjm2LCs5tgeM4G9
-	Unrhm33ZCzIR34il0rhk3VdoORggTi8k7RaTs
-X-Gm-Gg: ASbGncv0xF11vpcgGGVjESvWg0Ts4MkQkrwGs3VL6PYkTOXiSHwf1H44rURy8Qeg67J
-	4htDfmD1SrQdeoJQmnRlEYRpfrMe7XqUvaLv2+Qsug6pa7IubNRjJNwO9diU3b4LPXyfho0xHXI
-	vtHb0mp7Or5MCqciA1DbiPIWhM/Q==
-X-Google-Smtp-Source: AGHT+IH2jQrsJDcBGNU0CPjcKd4UHxAwQucgB3nqCzI3sVup8fdoHxy8f+YJtEB/KLQhTPeRracAiI//nfAKZ0B6MVY=
-X-Received: by 2002:a05:6902:2808:b0:e5b:32f5:e38c with SMTP id
- 3f1490d57ef6-e692ecfbe45mr7747622276.8.1743022090883; Wed, 26 Mar 2025
- 13:48:10 -0700 (PDT)
+        bh=WA5K+7T4bGA2EQSuajb34nL2J84mbXlMPZ65nIWTCMg=;
+        b=Sfg5oKmYTGOZX/BP6W9m/9KUdIgNfTcCGDKbApQb9DJdL+lnGqmZHY0eT/co/cdISZ
+         +/QJcAubZh6XTy7ATnSwmgGvNLUR05UZ/QixfARQARnJZQT2VCCOirnrB8mgJHtm7zf8
+         OLsT2GRYBbOsgzcN3H2lofovsEqZKg0udTdzXRvbbw2uCEUU4G4gEtziegGnUwuu91sf
+         s6VimnR7ZuC3bfjTNK0oSrsMmUzESchYngHAth4oMgyBsO5HPLk7u0YBFcyxhc193hPg
+         Q+bM9raQV+6YCM5LTjpXDKXrqo5ZYlme5ocXMmDt4T8etkTx00CSEZxl8dW+Zp5q+tAW
+         zFpA==
+X-Forwarded-Encrypted: i=1; AJvYcCU4sN6iFRQw3cjOQJg9b4JJdjLRWhl6oA/FCzoUum01B91jBWEfDejikI30uGgCLTxe4k9INkD4yrWFQdwXEjo=@vger.kernel.org, AJvYcCVCSlsz7FYobKgnUEp2BLhW61brKh8g0q3yE26t3xqS45Nh8IuZNQYP1uOKLU0w2J4+xbe4BlI1ir48qLc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/BUmq70TnBqcheBoc7eCYa2FMgSHW74wGYsS/xvhryo7p/OZU
+	EK1jf0jKGGnLxLlngIPptpZoFVD25LJPycdmf5ofGwZkst34mM4CUcMwddgcFwSvISCaUpcwJNr
+	RC7NAObNYeH/E2dHOhwCulvmnM38=
+X-Gm-Gg: ASbGncuuN/fgaL6DDIvrTzLl6WqXu/n3gD4ISublj4wC+8hmy2FQRuKl84nxen/szyJ
+	TSh18PXB7v4jC0fEwY12tcOlZOolbPwgwKXnsGGjHXf8NUBHEtfKcal7RLb90CJ/65LXDfSIbbr
+	9/5YgfLBdGQQBRZPToiAby3N8D
+X-Google-Smtp-Source: AGHT+IEkgyd0Gw0RYVd7hriwBM8pB5+QBTlDc75EX5QoUKCuGmCDXcwwiHJreLAOJyb4Rs06wgOreHMsKtnM/6qI/Ig=
+X-Received: by 2002:a17:903:2343:b0:224:252c:eae1 with SMTP id
+ d9443c01a7336-22806880276mr1811855ad.6.1743022121703; Wed, 26 Mar 2025
+ 13:48:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <d0ade43454dee9c00689f03e8d9bd32a@paul-moore.com>
- <CAHk-=wjbahY4JjLCXNT4o3xVq2cejqBG69z+MNfHsN9FQBnbOw@mail.gmail.com>
- <CAHC9VhRExVqdhHqs0njs7NY6bFg0BfcE-gMpS30HW9O7MSDfWQ@mail.gmail.com> <CAHk-=wi9m8-_3cywQCohJQEQtuQ+teS4gOtBkWZrhFWzNy-5_A@mail.gmail.com>
-In-Reply-To: <CAHk-=wi9m8-_3cywQCohJQEQtuQ+teS4gOtBkWZrhFWzNy-5_A@mail.gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 26 Mar 2025 16:48:00 -0400
-X-Gm-Features: AQ5f1JqLL8hQNV93T465HG7TmuUvsJm2aGb-Tsdg4Dg6IQiLpz7nTzcvVAy5xw4
-Message-ID: <CAHC9VhT3D7X=4SpO5xbYm=JUwJqTa7tn=J6QMDBV96c7VBUw4g@mail.gmail.com>
-Subject: Re: [GIT PULL] selinux/selinux-pr-20250323
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Cameron K. Williams" <ckwilliams.work@gmail.com>, "Kipp N. Davis" <kippndavis.work@gmx.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, selinux@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250326201230.3193329-1-abdiel.janulgue@gmail.com> <20250326201230.3193329-3-abdiel.janulgue@gmail.com>
+In-Reply-To: <20250326201230.3193329-3-abdiel.janulgue@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 26 Mar 2025 21:48:27 +0100
+X-Gm-Features: AQ5f1Josk2qyDu9QczrMqqIYKYpwwuKnjwLwKqau9a4_X5mWRfRxRycStY1Iryo
+Message-ID: <CANiq72mjGf1pBG7PM7fKJA_EZkphp5he2H9pvg1mxJYZb-WGxw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] rust: dma: convert the read/write macros to return Result
+To: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+Cc: a.hindborg@kernel.org, ojeda@kernel.org, 
+	Danilo Krummrich <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, 
+	"open list:DMA MAPPING HELPERS DEVICE DRIVER API [RUST]" <rust-for-linux@vger.kernel.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, 
+	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 26, 2025 at 3:40=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Wed, 26 Mar 2025 at 11:36, Paul Moore <paul@paul-moore.com> wrote:
-> >
-> > From my perspective this is largely a continuation of our discussion
-> > last April, and considering that you ignored my response then, I'm not
-> > sure typing out a meaningful reply here is a good use of my time.
+On Wed, Mar 26, 2025 at 9:13=E2=80=AFPM Abdiel Janulgue
+<abdiel.janulgue@gmail.com> wrote:
 >
-> What you are saying is that I have complained about added overhead
-> before, and you aren't even willing to explain why new code was added?
+> As suggested by Andreas Hindborg, we could do better here by
+> having the macros return `Result`, so that we don't have to wrap
+> these calls in a closure for validation which is confusing.
+>
+> Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
 
-My comment is simply that you have a habit of disrespecting the work
-done in the security/ space (e.g. "security theater"), and despite
-explaining how that behavior is detrimental you seemingly choose to
-ignore these concerns and repeat the same tired language.
+I would suggest:
 
-If you want to have a discussion about something substantive, I would
-suggest refraining from insulting those you want to engage.
+Suggested-by: Andreas Hindborg <a.hindborg@kernel.org>
+Link: https://lore.kernel.org/rust-for-linux/87h63qhz4q.fsf@kernel.org/
 
-> In other words: why were new policy entries added? The commit message
-> and the list explains what the commit *does*, but doesn't explain
-> *why* it does it.
+Maybe also consider if Co-developed-by etc. makes sense since he
+provided the diff.
 
-Looking at the pre-patched code one can see that SELinux only enforced
-access controls on kernel module loading; other operations such as
-kexec images, firmware, policy, etc. were not originally included.  As
-this happened back in the v4.x time frame I would have to go dig
-through the archives to provide a fully accurate reasoning as to why
-SELinux only concerned itself with kernel module loading at that point
-in time.  However, speaking solely from memory, I believe that the
-initial focus was limited to modules simply because that was the area
-of largest concern at the time, and many of the other file types were
-not yet gated by the LSM hooks.  Moving forward to the recent pull
-request, the LSM hooks do have the ability to gate these additional
-file types, and for a LSM such as SELinux that aims to provide
-comprehensive access controls, adding support for enforcing controls
-on these additional file types is a logical thing to do and consistent
-with our other work.  The fact that these changes didn't happen at the
-same time as the enabling support for the other file types is likely
-due to an ongoing challenge we face where we sometimes fail to keep
-current with all facets of kernel development.
+Thanks!
 
---=20
-paul-moore.com
+Cheers,
+Miguel
