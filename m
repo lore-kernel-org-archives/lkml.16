@@ -1,119 +1,107 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442461F2BAE;
-	Wed, 26 Mar 2025 14:18:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293C81F2BAE;
+	Wed, 26 Mar 2025 14:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742998690; cv=none; b=pmldpp6iYuRYpd4IxJDOf4N9mgjFLUX6l6HDpVrzseH+hPdD/WI9MjdoKWl+s2cuyWSRBry8qkVK3GsnHuw+vAG/+dLoq91JB5LZ6hjs4rBAfnXaCoPM3J6Xpor/7t5g9at1uabo2/2LSLc3AwIUix5b36IEL6d57HR+DwaxlJ0=
+	t=1742998700; cv=none; b=AE0R0Pww0as0YbqlmYXfVbbXmaadDEtg717o+H218zEmZiKwpTNjH60HxSCjdc54Ax2bUAQyT95ZdYxGEg0xCRpz17KShBLZH8iGvHFIPwKHLEzPDigrVMVSd9PJMpdy19vuRB1BaCLjDta0xsFols5nTWLXBU51fGyKTEVCs5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742998690; c=relaxed/simple;
-	bh=aKcmtA5lkFzC4WFrowCeIusAiSx2X9W1t9Thma4ek78=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n/3w3wQzyC/P70NRiSKn9NwGBa1y2HNLv+LYG3hpAbRLY5LPNpCFqODMOkq8wSnxL1U/qywFP3CSa9Mdz4KmOGRpHVBLnwPoiTjiyGHS87FBV5/f3bqPi39UQFARanXx+XNaB2mhoBwjKhvPgNLFqzammYeuWeqrZrur3zz2s64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QXG5olSV; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1742998700; c=relaxed/simple;
+	bh=8bcK5d2/qC8I3AUmJEOcDuylXBqQR2veB+WRzdPZfSs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FSGrUcDUAWofmLsOfR77zqfkbGF1FkOkzpF6QYSHkx4aN+wg13b5A7nuljeDGbAtKFE8TjAItzPmiG7hCPrAHLQ5/zdWDxLARUkLebIUdxPnRND4+AjIfNjxHryZ3DXZDJwW+mCjYOnGWnUmNL7kuacyKagcKwHtBVjaOvMSx9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hu8n+etb; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QXG5olSV"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52QA1iTB025349;
-	Wed, 26 Mar 2025 14:17:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=g8D1AHueHUr
-	cVmkO6f+i5MqKOLRrmZ+jY2jBvdZvW18=; b=QXG5olSVPEREOY01BzffxEjVv23
-	NeE0gHDLoUjpsGPNkB14+Q/VEvB8yTo+wLjL8yuby9wMnsXIZYd3qmcsTUmvrvnB
-	SH8IZMdVDn3AjOANlLO/WyVST1Q4adKxjLL9bGvVC5fpWaY+G2X7o/zg/JVRvz02
-	ji003rNM31uj/SE2XKNecezuq/jm5r9+MI4w08Hlgm5509SfdGkIo48ACiRWIwwh
-	YOCMav+Gisxb8eT1GrKECY5ZPkML3Wj0zM5fNZmRnQguKeYpYmY45W1cShlzgMFs
-	f1gdKOjpqBgDj03R1hQl9tcklE/JehVBGFsCcfHksbzLIc3FKQQ56IGD4Jw==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45mffcgpjp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Mar 2025 14:17:54 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 52QEHeWj025752;
-	Wed, 26 Mar 2025 14:17:50 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 45hp9mdsj4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Mar 2025 14:17:50 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 52QEHoAh025818;
-	Wed, 26 Mar 2025 14:17:50 GMT
-Received: from hu-maiyas-hyd.qualcomm.com (hu-msavaliy-hyd.qualcomm.com [10.213.110.207])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 52QEHoIh025817
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Mar 2025 14:17:50 +0000
-Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 429934)
-	id A36932343B; Wed, 26 Mar 2025 19:47:49 +0530 (+0530)
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-To: alexandre.belloni@bootlin.com, robh@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, jarkko.nikula@linux.intel.com,
-        linux-i3c@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: andersson@kernel.org, konradybcio@kernel.org,
-        Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Subject: [PATCH v2 3/3] MAINTAINERS: Add maintainer for Qualcomm's I3C driver
-Date: Wed, 26 Mar 2025 19:46:41 +0530
-Message-Id: <20250326141641.3471906-4-quic_msavaliy@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250326141641.3471906-1-quic_msavaliy@quicinc.com>
-References: <20250326141641.3471906-1-quic_msavaliy@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hu8n+etb"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-225df540edcso18867765ad.0;
+        Wed, 26 Mar 2025 07:18:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742998694; x=1743603494; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WdfuJsHH9Fc/T6Cr0np3SRpFWTfbwtIC0r6vigC/3Dk=;
+        b=hu8n+etbuNehWE69nTiLxye4DkJyREAT3EBjej71xU7R9X+Qvu8QyZhmj1q8YFjw5v
+         Yl0lNAOgO/BKYfrclbKeX9UB4zxhXyozXHGoXvvrdMgR7UwsiapDWvONMncu50XRBNzX
+         Hf+XdgbFdGAkFOjvKR5mM6Y5bZQhfw/XT+VOx0EYAa/QniOiuIX3peM/s78X05ei7JeS
+         PO9EBxQFb6H6fC/57ZzjXBkZmluNEAuAvEvpp0uG+tazV5E6W9rJ7RD488mqku/lC9Og
+         O6j6jVCHaD7EVALpT4gk0jUcjfLTfCLAq6pAx4qyBfdgubFvrl7z8DTSTHonnJYWeng3
+         s2Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742998694; x=1743603494;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WdfuJsHH9Fc/T6Cr0np3SRpFWTfbwtIC0r6vigC/3Dk=;
+        b=JgSLQodP45+j3v03bJEC3DVV8YVLjTViPrS1hAWr6GKtOOjnXFOvSf8OsnXYRyRK1U
+         VKcYegZ1YNsQLF4GcMXcSDyjaH2VJHRRL+1jAl28T4ajIWJZfwL3bBZ2GJxiNK6BEBlW
+         EFEQiavZm0h6rmYX2aQmOzQYP10ADi4gH1Rhz8O1mXs9a3A33gQwIs4rcy3M+adfSdC0
+         wChOHzPscPnF+6GH+mPED2gmmF7w+wVMNLduPaCM1ULm/jgo4qEedDyfHM+Wl7XEGcNO
+         UjdXkw6XFosK2YYv9x2LxCYLd0SzoXeVn8JrqjG4mT3uSwZtgrziHQ8A7ULqOQWD9doN
+         fOpA==
+X-Forwarded-Encrypted: i=1; AJvYcCWL7JMGy6DcptiCpxxeSLqupxAwJ8j2wtm/hnlW8x/64XXskFHEBnZ+Aj3Wr2Xp9/S42OxodFEp5BuvKVQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkKYSNu7XOHH+N/ng+CwjipbaLJEUwrcEeg294Vrs9Iv8O0c4P
+	e4BUuCpmFMxRC8/qZh9oUorMZIlvLOI7ErdcIjpjaqyI6F5jzKRk
+X-Gm-Gg: ASbGncvSKZLjs5GUhgH4IUxHHt9byX+AewhGmYYLU3/DqRzs17f2xb2m1zYNAzuhVnm
+	PU37pUhvq5+zJ4fCiRWFivGCvhDIxs1IJwH2aThs/+/2zZAbU0srfJH0EI20FXjA2DgGbvaosC+
+	QUyoIJLVmkP/PgZbyUMw7xU7rNimC5ZuPAAnRfuYigOUEtrb2f0m1JFefPH6MST6I2GSCG/34I+
+	2YUNAlIRJzcppiD8bbqayiOR6vSlO//j31sG8EUDxkpY6dWA+6yEQFj4Fgvb7zztWabU9dsodoI
+	QiArsDvgCJECx7tOS902i+70LnlHEVtorwPdr53GqMpsYxdn2w==
+X-Google-Smtp-Source: AGHT+IEOEN6P4Ub7FQAgAAwCVbor5mBmKHEVuSk33lHmPw4pAlsWd6k6ZtUxZsdr0hm51IOR/+fweA==
+X-Received: by 2002:a05:6a00:21c8:b0:732:1ce5:4a4c with SMTP id d2e1a72fcca58-739514f8495mr5928844b3a.1.1742998694122;
+        Wed, 26 Mar 2025 07:18:14 -0700 (PDT)
+Received: from fedora ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73905fab1a3sm12236219b3a.21.2025.03.26.07.18.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 07:18:13 -0700 (PDT)
+Date: Wed, 26 Mar 2025 14:18:06 +0000
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: Jakub Kicinski <kuba@kernel.org>, Jay Vosburgh <jv@jvosburgh.net>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Simon Horman <horms@kernel.org>, Cosmin Ratiu <cratiu@nvidia.com>,
+	linux-kernel@vger.kernel.org, Liang Li <liali@redhat.com>
+Subject: Re: [PATCH net] bonding: use permanent address for MAC swapping if
+ device address is same
+Message-ID: <Z-QMniz1QK2oqZJQ@fedora>
+References: <20250319080947.2001-1-liuhangbin@gmail.com>
+ <20250325062416.4d60681b@kernel.org>
+ <Z-PVgs4OIDZx5fZD@fedora>
+ <20250326043213.5fce3b81@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=CdgI5Krl c=1 sm=1 tr=0 ts=67e40c92 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=JfrnYn6hAAAA:8 a=VwQbUJbxAAAA:8 a=P-IC7800AAAA:8 a=D_kyvCtT9-f2LXH0VCIA:9
- a=TjNXssC_j7lpFel5tvFf:22 a=1CNFftbPRP8L7MoqJWF3:22 a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-GUID: EAytn2Mv06FP1fxgvtcHaf9Rvl0zRWe1
-X-Proofpoint-ORIG-GUID: EAytn2Mv06FP1fxgvtcHaf9Rvl0zRWe1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-26_07,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- spamscore=0 mlxlogscore=953 lowpriorityscore=0 suspectscore=0 phishscore=0
- clxscore=1015 bulkscore=0 impostorscore=0 adultscore=0 priorityscore=1501
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503260087
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250326043213.5fce3b81@kernel.org>
 
-Add a new entry for the I3C QCOM GENI driver to the MAINTAINERS file.
-This entry includes the maintainer's name and contact information,
-ensuring proper maintainership and communication for the new driver.
+On Wed, Mar 26, 2025 at 04:32:13AM -0700, Jakub Kicinski wrote:
+> On Wed, 26 Mar 2025 10:22:58 +0000 Hangbin Liu wrote:
+> > > I don't know much about bonding, but this seems like a problem already
+> > > to me. Assuming both eth0 and eth1 are on the same segment we now have
+> > > two interfaces with the same MAC on the network. Shouldn't we override
+> > > the address of eth0 to a random one when it leaves?  
+> > 
+> > Can we change an interface mac to random value after leaving bond's control?
+> > It looks may break user's other configures.
+> 
+> Hard to speculate but leaving two interfaces with the same MAC is even
+> worse? I guess nobody hit this problem in practice.
 
-Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+It's the default behavior for bonding as bond will take the first link's
+MAC address. If release the first link, then we will have 2 interfaces (bond
+and first link) has same MAC address.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3520ce6f9859..047d804122ba 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11016,6 +11016,14 @@ S:	Orphan
- F:	Documentation/devicetree/bindings/i3c/snps,dw-i3c-master.yaml
- F:	drivers/i3c/master/dw*
- 
-+I3C DRIVER FOR QUALCOMM GENI CONTROLLER IP
-+M:	Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-+L:	linux-i3c@lists.infradead.org (moderated for non-subscribers)
-+L:	linux-arm-msm@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/i3c/qcom,i3c-master.yaml
-+F:	drivers/i3c/master/qcom-i3c-master.c
-+
- I3C SUBSYSTEM
- M:	Alexandre Belloni <alexandre.belloni@bootlin.com>
- L:	linux-i3c@lists.infradead.org (moderated for non-subscribers)
--- 
-2.25.1
+Usually, People doesn't release the link after adding to bond, but it do happens.
 
+Hi Jay, any comments?
+
+Thanks
+Hangbin
