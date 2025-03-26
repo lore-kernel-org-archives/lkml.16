@@ -1,94 +1,189 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C4224EF7C;
-	Wed, 26 Mar 2025 21:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6F417A2E6;
+	Wed, 26 Mar 2025 21:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743024361; cv=none; b=idEb0xzwLzkTuQame5qwDYNSayhC4CAcWuN7TG4BWLt48jMehxjD3ckeF9zox13boDUUEvOgg/PdJqSQOFnoBum/ZtGLKoo6rDlVEovj7F2tw6Z4bHIrXMh+xiuOhja0l8thIusLo6R2U0cbxqc78mfh+gckefHbxew2ZuQqY+I=
+	t=1743024437; cv=none; b=NFdinG28UTVq+crYnq9D0WaMq9uf39FQRw+s8ZA53/YQEBpB8NJxZKkvu43JZW1wVnTprXgo78i/uOYPz2A9/9resm6xvrcx12GxW7+KwxQYbQ7YFzMKt3Iki+cKMxXV4XZoIf4XRW9fLZRo1Ersq3wVvrcVcSlAA7Zke1DnwQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743024361; c=relaxed/simple;
-	bh=5dd6mTNGubCGg1g4nFzCM8Oi/0JxeDqx+tX2b+VPkns=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xz51dGJdoKgTsdKvt0h7PJ3H0saArr3P7n3hRYku4uSW60w0xACsfopfV5AVNPAxiQM9d2axJhr9OCZl67Pi4H2wBw+5IX9M8+HRSCWp1j/NDreOwLf0X0rUm2HzesjAepec9tJC5SEQXl3DUgCzsx/USSlG/3bhVFSrXGob9Yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TbyAMKOl; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743024437; c=relaxed/simple;
+	bh=FGZ7ys+40W7ESYcVCxVQVeb6iDW6mrS2/OJOCHus2Wc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DdttIaIZYdBWsFWZMOYK1aSbFRK2kZ7T0mFSzeRXxBzPSLx/Of+4GuJQBK+RhOIB580vLn/5JqgWuogTyTjbpeglQCDEg4iqr5zLgPxM57OPFxzsTV1cmfE+y2vUry/2AYkq8wvQoYgIm0WP/YTWPYDhhzLvY+3XNHspkPz1Zok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=h/F2QKX2; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TbyAMKOl"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ff6ce72844so56225a91.2;
-        Wed, 26 Mar 2025 14:25:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743024359; x=1743629159; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5dd6mTNGubCGg1g4nFzCM8Oi/0JxeDqx+tX2b+VPkns=;
-        b=TbyAMKOlvkq+bGfxrrfGJ5ETNVACo+g/nBUoq1ULP89GameFvBBytVMP0QiqIEAUVm
-         jY/ZF/R6ZwDUIkZHUn55PKAOBHjiyMNRm5hWhwBN0NHVaVyZ/vgG5N3q6xVrUDpLxxWF
-         cWzQImTtkEqPU/g5XrGjArolyK2iUMpzClXgK69MfV3cPA6G3zCZblzmqTBkZtboC4c4
-         ojac0FiYlbIsPhShX4H/eatefqZjk0okuxqyeBgEOIt9h4Yi4bKOGPSWP2693W7PFT+Q
-         NPFXaizC6kvLlAWryYIbXRuLSbs8haRe6rn5VBUctapTwl2/ewCV8wJ+0XQ//DF3499s
-         hglw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743024359; x=1743629159;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5dd6mTNGubCGg1g4nFzCM8Oi/0JxeDqx+tX2b+VPkns=;
-        b=BvZgpWoYwQBzMKofDM146lA6L/ZipZm59Hw7v4Xb4AMFU4ZMGeLt5uo3FG28ynKhdJ
-         cqEszevy2XnCp9TTsKM8nXj/WajmjfLNYgNXqe7Mi+xBdef4vfIKsM1DJ70G8lmm7SBF
-         wgGE/NzvL2EyOL4bTU9IUYLvY9qspRsUJ4gGj88GuysbRiLdQ2E47WfqXjJarRGzn3o+
-         C6r+YLN7YWknrJ3SGByqYccURSE+UnZZ1wgKkCKvvew0ZP2SPNaNiy9jFvS7Sm4kKXCa
-         SZizzGvGOddqbCl8SWa4dAy8iu6Gj7dLXJzKfcWkYCsqwBxZ5V48d3eWAEMrcotUdkTj
-         8ybw==
-X-Forwarded-Encrypted: i=1; AJvYcCUin4JPoylc2b4WJHYg82y790zfFrgSTDaQT2kE9QtCIF6lU6DDAFOgHxiTC54gy9iGtjbAkfrp/h2l1A==@vger.kernel.org, AJvYcCUsAHIWEM8HoQoc1nQMDvbeXKCp/XPeSHtBLHr+bZTqmWExj8jafY8G2hm8y5pySxOhoSxWwiMvfWADI+3BV1w=@vger.kernel.org, AJvYcCWpaIMFVMc/+qM4LljseC9DtV0QhN9ngF2cWzGzLPiatobiEBl2SVSOuMYQKdclxIfoHDk1DlOlEBvvh8Hv@vger.kernel.org, AJvYcCXEH14pwJLdTuLl1XCHO8VFqFDps+vFxzs5l8g4YZRYC3cE9X1Dgrq6zbJ8NGUK6F+K/375pMV8YUI7@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMLj6UVzurinENqH+ogjXKJKZgcRErdFXbrziekTJ5jGeU4keZ
-	BqHQmpQJR6GwT90AsMYa9WkCKtnyfyDimoi3g17C50kKP48g587ms+mhPLxidE/t+cQcGGyP895
-	pT6LSxSVz5M2Lzr+qlCwS6L4QGiA=
-X-Gm-Gg: ASbGncvf20ZPphsj3bTSU+rQxcCaqMEvY2eexCYjXXErN1W+M76Q0CBHa44L2GjlXW/
-	ZQgIH2IcA7r6MwGOAS1lS2mfTa1RiIFI14zs1mie/yc47+YdOFuWmT+ltXKhjSQpOLE6r7i4yWZ
-	ArPEzHCTSuxvlLee1PGbosQgCn
-X-Google-Smtp-Source: AGHT+IEED3VZRyXSj1RWmXvdwtqZOUHywyrSkL0ECd59uK04S5vf0a3JXMoziVw+bs6ZQOSa5dnlhNjG/4as8bSJVCk=
-X-Received: by 2002:a17:90b:4b0f:b0:2fe:b77a:2eba with SMTP id
- 98e67ed59e1d1-303a7d5b70cmr671784a91.1.1743024358841; Wed, 26 Mar 2025
- 14:25:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="h/F2QKX2"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A0356102EB802;
+	Wed, 26 Mar 2025 22:27:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1743024426; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=b6RKGXQH70hN/26lMgtvVKQRQMPme4MC9VIAU6oygE0=;
+	b=h/F2QKX2TF17qdZE5CpxqRAAdG9oeiGJ+djfVnvV1KnMrvTSlPIWRA0vdQNWi3As0X+b9q
+	JTbAXiGKWu2T5BMKUJstkJk1Ymy02h1SVWmnK7pJnhQ+7iP2UBkS9NLB5b7DmY+cT5TJZj
+	emVS4W3zQCOTojswaALJYF1iORdksh/UuAHioGD39mxBd/R3JwcXW8NG0/zogdGqQR6JzC
+	p0RNGIS6dFqZJaas0jehjsYONv5xn3KFjKb8szL6YSo/ZoIIhw3AWvhCZdo847UKOItivt
+	k1cyf2XoQoDGXtByHroKqkw3oNWKmeIIIXezpkwCuTnzmLxYaMXEAovAm5A7Qw==
+Date: Wed, 26 Mar 2025 22:27:02 +0100
+From: Lukasz Majewski <lukma@denx.de>
+To: Conor Dooley <conor@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
+ Noah Wang <noahwang.wang@outlook.com>, Michal Simek <michal.simek@amd.com>,
+ Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] dt-bindings: trivial-devices: Document SPI
+ measurement on LWE boards
+Message-ID: <20250326222702.436f115b@wsk>
+In-Reply-To: <20250326-bulge-outdated-9787da68e2d3@spud>
+References: <20250326140930.2587775-1-lukma@denx.de>
+	<20250326-unluckily-consuming-948176031b08@spud>
+	<20250326184240.77e2bdc9@wsk>
+	<20250326-bulge-outdated-9787da68e2d3@spud>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326171411.590681-9-remo@buenzli.dev> <20250326210735.696416-1-andrewjballance@gmail.com>
-In-Reply-To: <20250326210735.696416-1-andrewjballance@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 26 Mar 2025 22:25:46 +0100
-X-Gm-Features: AQ5f1Jp0Rp7E84Il1vwCrqKhN7FBkfP8izd3SLqtwQoJKmWnVsdDbD-_koYxdjo
-Message-ID: <CANiq72nP3EEYH6cdZRj2S9XZUYyi=RyyQARypGCFj3ULEB=+fQ@mail.gmail.com>
-Subject: Re: [PATCH 08/10] rust: property: Add property_get_reference_args
-To: Andrew Ballance <andrewjballance@gmail.com>
-Cc: remo@buenzli.dev, a.hindborg@kernel.org, alex.gaynor@gmail.com, 
-	aliceryhl@google.com, andriy.shevchenko@linux.intel.com, 
-	benno.lossin@proton.me, bjorn3_gh@protonmail.com, boqun.feng@gmail.com, 
-	dakr@kernel.org, devicetree@vger.kernel.org, dirk.behme@de.bosch.com, 
-	djrscally@gmail.com, gary@garyguo.net, gregkh@linuxfoundation.org, 
-	heikki.krogerus@linux.intel.com, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ojeda@kernel.org, rafael@kernel.org, 
-	robh@kernel.org, rust-for-linux@vger.kernel.org, sakari.ailus@linux.intel.com, 
-	saravanak@google.com, tmgross@umich.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/JVzrlJU+vTy2I3H3ZW7lB1L";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Last-TLS-Session-Version: TLSv1.3
+
+--Sig_/JVzrlJU+vTy2I3H3ZW7lB1L
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 26, 2025 at 10:07=E2=80=AFPM Andrew Ballance
-<andrewjballance@gmail.com> wrote:
->
-> This function is missing safety comments.
+Hi Conor,
 
-Yeah -- that should be spotted by Clippy.
+> On Wed, Mar 26, 2025 at 06:42:40PM +0100, Lukasz Majewski wrote:
+> > Hi Conor,
+> >  =20
+> > > On Wed, Mar 26, 2025 at 03:09:30PM +0100, Lukasz Majewski wrote: =20
+> > > > The measurement device on Liebherr's (LWE) boards is used to
+> > > > monitor the overall state of the device. It does have SPI
+> > > > interface to communicate with Linux host via spidev driver.
+> > > > Document the SPI DT binding as trivial SPI device.
+> > > >=20
+> > > > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> > > > ---   =20
+> > >=20
+> > > You should not do a resend with no explanation as to why.
+> > > Additionally, I would like to know why my review on the original
+> > > patch was ignored:
+> > > https://lore.kernel.org/all/20250225-despair-rural-dc10216005f4@spud/=
+#t
+> > >  =20
+> >=20
+> > I've made a mistake, as I've used the lwe prefix, which is the
+> > different branch office for Liebherr.
+> >=20
+> > As we discussed last time - it would be better to use the already
+> > present 'lwn' vendor prefix as several other boards from this
+> > company use it (display5, bk4, xea, btt3).
+> >=20
+> > And this was apparent, after I've resent the patches. My mistake.
+> >=20
+> > Regarding the comment - on xea, btt the binding would be used, as
+> > those two boards (based on imx287) are using it.
+> >=20
+> > Hence, single "trivial device" would be OK.
+> >=20
+> > The v2 of this patch has the proper 'lwn,btt' binding. =20
+>=20
+> I'm sorry, I don't understand how this excuses using the same binding
+> for different devices.
 
-Remo: did you build with `CLIPPY=3D1`?
+Ok, so maybe I will just explain how things are on those devices and we
+can find some solution.
 
-Thanks!
+So we do have two devices - based on imx287: XEA (rev 1,2) and BTT (rev
+0,1,2).
 
-Cheers,
-Miguel
+We do have a measurement device connected to SPI (on both above
+devices). This device has a protocol, which is fully served in user
+space (just the /dev/spidevX.Y is required for it).
+
+Hence the 'lwn,btt' can be used for all those measurement devices.
+
+As pointed out by Fabio, there is also 'lwn,bk4-spi' which is totally
+different device, with different protocol used.
+
+
+>=20
+> >  =20
+> > > Cheers,
+> > > Conor.
+> > >  =20
+> > > >  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+> > > >  1 file changed, 2 insertions(+)
+> > > >=20
+> > > > diff --git
+> > > > a/Documentation/devicetree/bindings/trivial-devices.yaml
+> > > > b/Documentation/devicetree/bindings/trivial-devices.yaml index
+> > > > fadbd3c041c8..5d736a9792c2 100644 ---
+> > > > a/Documentation/devicetree/bindings/trivial-devices.yaml +++
+> > > > b/Documentation/devicetree/bindings/trivial-devices.yaml @@
+> > > > -161,6 +161,8 @@ properties:
+> > > >            - jedec,spd5118
+> > > >              # Linear Technology LTC2488
+> > > >            - lineartechnology,ltc2488
+> > > > +            # Liebherr on-board measurement SPI device
+> > > > +          - lwe,btt
+> > > >              # 5 Bit Programmable, Pulse-Width Modulator
+> > > >            - maxim,ds1050
+> > > >              # 10 kOhm digital potentiometer with I2C interface
+> > > > --=20
+> > > > 2.39.5
+> > > >    =20
+> >=20
+> >=20
+> >=20
+> >=20
+> > Best regards,
+> >=20
+> > Lukasz Majewski
+> >=20
+> > --
+> >=20
+> > DENX Software Engineering GmbH,      Managing Director: Erika Unter
+> > HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell,
+> > Germany Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email:
+> > lukma@denx.de =20
+>=20
+>=20
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/JVzrlJU+vTy2I3H3ZW7lB1L
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmfkcSYACgkQAR8vZIA0
+zr0zUQf/QEYcbk8e/7WYLDh466wg0pzuEp8El+44ZV75SZeMnmSJ4HmwGT+dvMsk
+pdgySz4drBFb/X1a0w2i0vxEUKiXa/XlQGHjP57WCYWTjjuM3iSlXS4/gCird5vh
+nOClclALhJuRo5rcTCRHEMS685yXRSQWAnyD7lenUqgg7eWMKa/jkLTvgw9h8h9S
+TnrZ1BM3D3I9Y9lcXZHAUEk9hQ4/jYYTk7OeQP6cLJDivEumw0y6t+sHt3WFgiy/
+Q2PXN9+kDY1KrsWk2s5cMcFF/LQ2ad4dcOQpicuOtRJaK58lkVI8F5ePd1P9lD7O
+vtxYEwvoRdVqPsrdWOlocyNTw3vqnA==
+=CiAq
+-----END PGP SIGNATURE-----
+
+--Sig_/JVzrlJU+vTy2I3H3ZW7lB1L--
