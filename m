@@ -1,134 +1,166 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC561ACECB;
-	Wed, 26 Mar 2025 22:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C5314A4E0;
+	Wed, 26 Mar 2025 22:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743026902; cv=none; b=YEYXUcgQdKI6xKK1noskHNzkPUdvSd/9KfqmhuIjqht1KAV+h06nUyCwBVuOlkQtfpbBN8oCRpPdiq5jIfPTjYDU+8dO9OXduVktUmHpYz+wPglMrNKMSKtFJ51b0OxtsQ2ZOhjG6s+EfbVXuhDYS+/PeZOdIY89HoSopdbMnNM=
+	t=1743027001; cv=none; b=Xexb1JGlScjtz8EfkGFvKc+GI9cC9Xst4DNAYZ4bAclY+nwtqgrCZgZ6tb1/Fa4s+NkllZCgWP3V2t1pTypXSz0UPO6yVsmcGBGU6rDJ22Y27O3Ug+mTs4EZaYlLBptajcDze0ag5D5kWKpsK6ANQa3pNOQB3HMhZR6/5cFWmvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743026902; c=relaxed/simple;
-	bh=kLOlkXjCw1Rz9e4ReVflPmCb9SWGd7poFDkwJw2RJxc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O4GbF2iYQ+h9NHrrOZRrGYY/QnU1dUl442Yoc20qFiLk4f/yY5BfC9E7Ph4CkU5OC2ZfZrCGYKXm4+1c3vUFjKGhB0GANjEvtAAjMHg+ev6mLt6BO7s6jJ3q8BeQYo/SLSoBHhyru1dTS3gfNveSulLrcbI0NjU3rud0l8XBXYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gteqSKsO; arc=none smtp.client-ip=209.85.221.52
+	s=arc-20240116; t=1743027001; c=relaxed/simple;
+	bh=25Tr7RM7XhHf1JCtkM+bWEr7gcCanZ/l1B2na6DpLrY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QE3l01OmJvmL/jfnM6oaQUfvExV/N/2SfID19zogj+E6y+r+tjfnAEN9Oi3yWqczeGUgldtsOcM7AAhXF/dz8dnqXPgCx4WarnMFuXrgRr3e0h71cRauOhhTNaqd1WzlqSi+04LK5ldPmiz44YeBrxryH35cgxohF5xrCh55Obw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MpNYGiYO; arc=none smtp.client-ip=209.85.208.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gteqSKsO"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-390f5f48eafso160066f8f.0;
-        Wed, 26 Mar 2025 15:08:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpNYGiYO"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bf5d7d107so3074791fa.2;
+        Wed, 26 Mar 2025 15:09:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743026899; x=1743631699; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=h6oiZH5gcZ7BMvTrr6/43qzGYdLE3CzxYnGqiADPdlg=;
-        b=gteqSKsOPvo6XptD2859IRzNseTw1XXz0WqgmpULo7fIb/oB/zBbdUvc5SWS8pAzih
-         Uwa5wWNBwjKZyKsE0aGLPo0q5Rf289Dg+brv5Y3aGNC4mw958MBOLMgAu5ia2mH3UTi6
-         5bMNiUzFMOAaiXmXaxrdZDL7ryI6ETOLf9OtQ7MTDhtdwG0zV4wzj0WCOMilILnCdlf3
-         TifiUjt9C94SKbRkHYNwFn3sGgZLLhu58mZ1HXG3OyOZKgXPO+X/DHAeyeXtYOwErTV3
-         GrLgLzrb4NoSIu50iYv8+GzDE4+76ZpOhVyP+Q0oNjCOaDeTl/Fc9HkAQAqabLL5FOgM
-         6jkw==
+        d=gmail.com; s=20230601; t=1743026997; x=1743631797; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=25Tr7RM7XhHf1JCtkM+bWEr7gcCanZ/l1B2na6DpLrY=;
+        b=MpNYGiYO4yDbsQe6zzpDaE0Jd/jCtiogrX12Ioy6whfOJAU3y9m1k7l7cW70JIG+Fm
+         Ca5xdpz3VgWvEwzfx678zlvFel4PwLXnZarxoDYD0/CD4p7a4wOEXCoLKEW+ghVwzRUS
+         PCtqfP2RgGi7+V+iX+AZvoImf2ieXhPxYjagUGKBRNOMrScdIRA8j9aq1K5+L1HQD4Sl
+         rda++dZgGs66cUqhdWsC7o6SS3Ks/ln4rZcxL/cfXmeIo+KSCD+hjhRR3j5Ewb6Q+y8B
+         UJjCN6CBI1oJ8Hzq2ekfv8eAvUfWa6CWH0vgkaw6LOoGY7NTmChGhgI4g2DwJUxOA1kz
+         b3Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743026899; x=1743631699;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=h6oiZH5gcZ7BMvTrr6/43qzGYdLE3CzxYnGqiADPdlg=;
-        b=xOpUKtONYzOC0z5VNZj/ysNYfV2xWZDI1+7VsUrzSNM2Nw/AP+BGdwst4zFn2cTSj5
-         kR2FFgFqiyfjq1bUj2YEIgcH93ec5gR2wz68ra8lboRgt8zuO2pGfh4EalK0xpV+Crg5
-         COjIU766tTT2bHplqw0LW/Jia15brBNQRxUkQdTfW9DSOAHLnXMRmtF0gs/atWNKHo/Z
-         L7k3hphiHtcFSIIsMcj51pm/ZRmqCZQsRmPN5hQj6F0ZrSHiVt5IDcRVXEMGz3Dy9pS3
-         yD8RrfnllXP6pu51G7b1sqo/1LBct9nDFG57o6Erd4XzhYZ1uDzSfSaam7nnk8HDtsLm
-         5JKA==
-X-Forwarded-Encrypted: i=1; AJvYcCW773ckP6o6z+f2G0G1xVuywXuDOYfnnWAYtoQQ/lTnUh/905qklo9iU8vnZ33RZsJQ//3J5ko5a8KLxkUmZPuWVas=@vger.kernel.org, AJvYcCWc+8hptAvMvcRxdzD5gUoedJT/LEOjCN0TftvejUijpH0T4TWVvzyHyQY0GdzAd8d2h0yobaQqez36SD0=@vger.kernel.org, AJvYcCXkFZYC8G2zqrDeKIDIhOYtcjNcEEda4dcQY6Wf9/svz8Wint00ZCGO/PQgbOYThUlS6Qcak2ZuiKt4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz49JuE5Xz+APWe+k6ha6hVaD7Es1bhSBNf5gVwnDhrLrOE2kGa
-	rgwVKpmrgeRWTpqsNu/6qCGiaVK6bmHdsqb5s6cOd1vhP/zOAM0y+NR5fS/4Qe4=
-X-Gm-Gg: ASbGncuzJyi2KrCytDbUCAS7Bh5dOFvWbNhRZUCGacwttcleQ2POckkM6A1Oiwh2TnP
-	d3u9GdaZ+CV3awtPR6DRIMefsJ3kedtXGQnYaTpxLcjvdQmwYhpOhYRaFv11HTspxZ+3vhvVqkx
-	IhmMrBBqqwo2eI1fRnKAjspv+iKJ06FuctPHWc06pgDCsFivVdtsvxDbZlSTIDW9xX3B21tiwzA
-	Kh4CzQXdvdvJ1tPTvoFpBT7uZ33VxXO4Oo9LSpgc2NQrenRnCndvuEiUsAACrgINSVc4afY5zWM
-	DSM+YR9eU9z6u3kbNeZk3sqZ+7sYq1qFD3CMEP0yQDP82uocBs2nK3W98i7x7GSEsA==
-X-Google-Smtp-Source: AGHT+IEBtC2HcAgrMzjhUYPtK2LyFmuRfaHNPj31mlpJYmz3Dr5XZRrGjmIwHllevGUhb5qjRIFVnA==
-X-Received: by 2002:a5d:47c1:0:b0:391:952:c728 with SMTP id ffacd0b85a97d-39ad1740184mr841026f8f.4.1743026898974;
-        Wed, 26 Mar 2025 15:08:18 -0700 (PDT)
-Received: from sikorsky.fritz.box ([2001:a61:3520:1701:ab0b:8a05:b05e:8738])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efdffdsm15649315e9.18.2025.03.26.15.08.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 15:08:18 -0700 (PDT)
-From: Ruslan Piasetskyi <ruslan.piasetskyi@gmail.com>
-To: wsa+renesas@sang-engineering.com
-Cc: ulf.hansson@linaro.org,
-	salauyou.ihar@gmail.com,
-	linux-mmc@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ruslan Piasetskyi <ruslan.piasetskyi@gmail.com>
-Subject: [PATCH] mmc: renesas_sdhi: Fix error handling in renesas_sdhi_probe
-Date: Wed, 26 Mar 2025 23:06:38 +0100
-Message-Id: <20250326220638.460083-1-ruslan.piasetskyi@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1743026997; x=1743631797;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=25Tr7RM7XhHf1JCtkM+bWEr7gcCanZ/l1B2na6DpLrY=;
+        b=EMRytNpPpeJSBetJzjSFTNS0vQeO+9oYZ0JjSI4HpnASXXIzpgGodVN64YJiGCOJrf
+         WXgRFVxgfoGolk41nmX5L+SvkyvWH2FGO9h7BXYG/pWg71az88gvNKi4Cn983ritjucF
+         xgM2aSElRrNqwuYzUPB3QYXMO5nthSEplRGTbPNO331Mn57vOGQS05xt30IsvsbWugrV
+         nevDTK+uwqJ47nf9Ci+ljD26gjrn1xN20AR51Pi3K5/iK6k97TTouxkCQnKniDpHaUwe
+         sjj6KgnVV57I5g9ssT87RtIwHUCgnEoh5M4o7UcR0knv1SK4kw66sQURAhSEs+pwumcC
+         /zGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUxleR5oNwQo7SV8hTsRlmt2UDGO9ONUyzGgtHvASQ9PKfKpHrYGJnHIMu7bwdlyQK4Dm+T1Yl0@vger.kernel.org, AJvYcCWKDY38m5VfGk0LJ07aVGUFhYCj/M9174jxGRw3meHwL0EgxDIqz0fi+swWWcxVIAY/ifjMbRO6Kg41uoQNtbI8@vger.kernel.org, AJvYcCWo6rR5PHOu1XlVVThMr4NWdahdatc8N3yzFedHlKVkA4CFymTro5Q+bEvFUcTAN3sK5/uCe+1e+V/aTdAUA+4=@vger.kernel.org, AJvYcCWywqkt2fq4j2ELv/C9JHaAjMnBiwZXnfODfGj4sq/gG7TqUgEgZ+2tYLWrqjFDIUaiEzxgLAgoKR7taZE=@vger.kernel.org, AJvYcCX9g1T5j2VtYsAWGFoQkn9qJfvka0LRu1usnStjIwPp29eOcO9uOIvz9OD1x7gti+dvkJLoC4Umtk3d@vger.kernel.org, AJvYcCXMo3mMrUjLf1kvQh5GGuK6Gcm/7gjny2lXHOdbztCNO2HcFsTWXOwk9mzzRwjLydUMhBhZpuJFNjU3@vger.kernel.org, AJvYcCXy05nECEpnzM8zjSunTd39mnCQKezQcSnxH/2CwJ5rEYFFAO3He8JUMFCfCa5EydxNxBtUbWcnFDfQ0gA+@vger.kernel.org, AJvYcCXypFzzZdXDMuzBUet+Kw7QrQrRKPVTs1YZc6j+mA+JQoKPf5pJl/y3dXx4PQeGmdTy/hWfUkEs9o+d5XNV@vger.kernel.org
+X-Gm-Message-State: AOJu0YxitNT2j9+EmgpBzSQEgBHFiWEMkJl/jpJLKXa/u1LG7+9TnddQ
+	FjoB9Yo/yv9bgtsIvY3pt79U5B9o1v7CN11ONwAOWu0xxZNpOjXfsiyL2NnzGoEVtDzUAkpqnWZ
+	oSptoz6UcBd04FA3lkSGyfuz7G/Y=
+X-Gm-Gg: ASbGncszqYk7+OX+x3vd8arnrbRXtlPaOu4YfZ36ZmsCAZSEWMNuZQyIBOwvcksI8ss
+	YmpywSGPlRFzUqbZll5iBMvgyJXD3UxXB1RtYr7ds5NNrimApp47Vigx1JduJClx7E7DukK0ks0
+	7x9sG7M4ZYhVOjnH+qaLiEF4FWwWg3VP/wmwiatdfh/A==
+X-Google-Smtp-Source: AGHT+IHX4HWxiuDcJh6RFBYB0z4mv1VQdnwmt/CKhKHr01wYV9yimExXiWC5KliSOM/5II+nRJgfsPlCyM8KCWUVSdg=
+X-Received: by 2002:a2e:9982:0:b0:300:26bc:4311 with SMTP id
+ 38308e7fff4ca-30dc5dd50b1mr5206711fa.18.1743026996866; Wed, 26 Mar 2025
+ 15:09:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250325-ptr-as-ptr-v7-0-87ab452147b9@gmail.com>
+ <D8PPIYIJCNX8.13VPQULEI0ALN@proton.me> <CAJ-ks9k6220j6CQSOF4TDrgY9qq4PfV9uaMXz1Qk4m=eeSr5Ag@mail.gmail.com>
+ <D8Q4MSXXZ7OI.1NC226MO02VSN@proton.me> <CAJ-ks9nHKpQPuSBypXTSATYhbAFkQTJzUq8jN0nu4t=Kw+0xxg@mail.gmail.com>
+ <D8QCK3CQES3Y.3LTZ4MVO5B3KT@proton.me> <CAJ-ks9nKT2PUDm6=b4AB1QUWwwvcqPn7Vz60=c0B+uFMZrqPew@mail.gmail.com>
+ <D8QDOBUM6NF0.CGJY7ZA5KD9S@proton.me> <CAJ-ks9ntTxBM=c5nUZWGv3MoRt-LveBchn-c1Xy-DGap7fLVRA@mail.gmail.com>
+ <D8QI804Q3DAS.2BV4WSL81H52Z@proton.me>
+In-Reply-To: <D8QI804Q3DAS.2BV4WSL81H52Z@proton.me>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Wed, 26 Mar 2025 18:09:20 -0400
+X-Gm-Features: AQ5f1Jr4h_VyjyWTUSlSb_WqvOkQ5GTUuP7SqBZOv0icJYUW2AkHAvgmWwY4H9E
+Message-ID: <CAJ-ks9mA5QDeZ3EvOD3THayFt4TtDysgm0jp2aiSF2mQCrhWiQ@mail.gmail.com>
+Subject: Re: [PATCH v7 7/7] rust: enable `clippy::ref_as_ptr` lint
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
+	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-After moving tmio_mmc_host_probe down, error handling has to be
-adjusted.
+On Wed, Mar 26, 2025 at 5:09=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
+>
+> On Wed Mar 26, 2025 at 8:06 PM CET, Tamir Duberstein wrote:
+> > On Wed, Mar 26, 2025 at 1:36=E2=80=AFPM Benno Lossin <benno.lossin@prot=
+on.me> wrote:
+> >> On Wed Mar 26, 2025 at 5:57 PM CET, Tamir Duberstein wrote:
+> >> > In the current code you're looking at, yes. But in the code I have
+> >> > locally I'm transmuting `[u8]` to `BStr`. See my earlier reply where=
+ I
+> >> > said "Hmm, looking at this again we can just transmute ref-to-ref an=
+d
+> >> > avoid pointers entirely. We're already doing that in
+> >> > `CStr::from_bytes_with_nul_unchecked`".
+> >>
+> >> `CStr::from_bytes_with_nul_unchecked` does the transmute with
+> >> references. That is a usage that the docs of `transmute` explicitly
+> >> recommend to change to an `as` cast [1].
+> >
+> > RIght. That guidance was written in 2016
+> > (https://github.com/rust-lang/rust/pull/34609) and doesn't present any
+> > rationale for `as` casts being preferred to transmute. I posted a
+> > comment in the most relevant issue I could find:
+> > https://github.com/rust-lang/rust/issues/34249#issuecomment-2755316610.
+>
+> Not sure if that's the correct issue, maybe we should post one on the
+> UCG (unsafe code guidelines). But before that we probably should ask on
+> zulip...
+>
+> >> No idea about provenance still.
+> >
+> > Well that's not surprising, nobody was thinking about provenance in
+> > 2016. But I really don't think we should blindly follow the advice in
+> > this case. It doesn't make an iota of sense to me - does it make sense
+> > to you?
+>
+> For ptr-to-int transmutes, I know that they will probably remove
+> provenance, hence I am a bit cautious about using them for ptr-to-ptr or
+> ref-to-ref.
+>
+> >> [1]: https://doc.rust-lang.org/std/mem/fn.transmute.html#alternatives
+> >>
+> >> >> I tried to find some existing issues about the topic and found that
+> >> >> there exists a clippy lint `transmute_ptr_to_ptr`. There is an issu=
+e
+> >> >> asking for a better justification [1] and it seems like nobody prov=
+ided
+> >> >> one there. Maybe we should ask the opsem team what happens to prove=
+nance
+> >> >> when transmuting?
+> >> >
+> >> > Yeah, we should do this - but again: not relevant in this discussion=
+.
+> >>
+> >> I think it's pretty relevant.
+> >
+> > It's not relevant because we're no longer talking about transmuting
+> > pointer to pointer. The two options are:
+> > 1. transmute reference to reference.
+> > 2. coerce reference to pointer, `as` cast pointer to pointer (triggers
+> > `ptr_as_ptr`), reborrow pointer to reference.
+> >
+> > If anyone can help me understand why (2) is better than (1), I'd
+> > certainly appreciate it.
+>
+> I am very confident that (2) is correct. With (1) I'm not sure (see
+> above), so that's why I mentioned it.
 
-Fixes: 74f45de394d9 ("mmc: renesas_sdhi: register irqs before registering controller")
-Reviewed-by: Ihar Salauyou <salauyou.ihar@gmail.com>
-Signed-off-by: Ruslan Piasetskyi <ruslan.piasetskyi@gmail.com>
----
- drivers/mmc/host/renesas_sdhi_core.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/mmc/host/renesas_sdhi_core.c b/drivers/mmc/host/renesas_sdhi_core.c
-index f73b84bae0c4..6ebb3d1eeb4d 100644
---- a/drivers/mmc/host/renesas_sdhi_core.c
-+++ b/drivers/mmc/host/renesas_sdhi_core.c
-@@ -1112,26 +1112,26 @@ int renesas_sdhi_probe(struct platform_device *pdev,
- 	num_irqs = platform_irq_count(pdev);
- 	if (num_irqs < 0) {
- 		ret = num_irqs;
--		goto eirq;
-+		goto edisclk;
- 	}
- 
- 	/* There must be at least one IRQ source */
- 	if (!num_irqs) {
- 		ret = -ENXIO;
--		goto eirq;
-+		goto edisclk;
- 	}
- 
- 	for (i = 0; i < num_irqs; i++) {
- 		irq = platform_get_irq(pdev, i);
- 		if (irq < 0) {
- 			ret = irq;
--			goto eirq;
-+			goto edisclk;
- 		}
- 
- 		ret = devm_request_irq(&pdev->dev, irq, tmio_mmc_irq, 0,
- 				       dev_name(&pdev->dev), host);
- 		if (ret)
--			goto eirq;
-+			goto edisclk;
- 	}
- 
- 	ret = tmio_mmc_host_probe(host);
-@@ -1143,8 +1143,6 @@ int renesas_sdhi_probe(struct platform_device *pdev,
- 
- 	return ret;
- 
--eirq:
--	tmio_mmc_host_remove(host);
- edisclk:
- 	renesas_sdhi_clk_disable(host);
- efree:
--- 
-2.34.1
-
+Can you help me understand why you're confident about (2) but not (1)?
