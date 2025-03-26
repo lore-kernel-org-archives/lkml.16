@@ -1,72 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5C31F4736
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 20:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE93A253B59;
+	Wed, 26 Mar 2025 20:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743019932; cv=none; b=Gj5OBVG2avxV6N1GcSACmFu+iYoqo8/HfcW3EXe0t9H/mEo+GhqR+lb833BfYtKWedsyU2QskBPyfBq3RpOQKbS96Is4tb/qaz9YqYowtX313JapZgT+xHTSHpSJLE/jRfxo8LlN2zvQ8Ogm8GZ2hXyj5OTELpBMHFzv5SKFluw=
+	t=1743019935; cv=none; b=VLgtVaDBF2T7RWoEN7qfhDHGHoOV4ZlDHIJFO+zqcK25r+6sxgWLqxH5xgO5+3j+RNlroM66vBR74cgHCMGS6LSTgal1pEsJvy07vBcVCZT9fuk1NCsytRzASeODuqn1rGuk4LdT7+T0SfJpVaK2sqiaSuL9KcI1c0bdy72GyLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743019932; c=relaxed/simple;
-	bh=P2Bu+JrD1ebUe0fy98h9H0HTrMnKVVvDOMeazGj1ih0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Lkg22bKe7pCtMvuUmAz7Rw05/aoWXJH9WlmEY1x+EwUEkjqfHjxA/bvXWNkkx0qV3BMABfxkjs4dD9HZy1PN/5C0l+fTZQbu7uDDT876Geq49BRjSFT/ZLPnqyp9NTk2mssfIb5pGueioZaXAwmM8Idc1cWNhAcI+HTx0Gvhnyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s2ARqfRg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743019935; c=relaxed/simple;
+	bh=DLVhu0vtl8L7mHg1TiLT36ykzz3ITYF1djo57NTnUSw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OGbwbmjry4nLND2oCa/r5p1oFi0KALM1RU0IFduicxn88pcvx3kU2yIb5HWoH0oSUF4PrPmm02tE7w7h00Wmr7g0AYs5R2PeDA7GfxavrYN4bgdUyCnfIje5GseKJnH+NBZWvAMSBDAzhjrHKRV8IQ6dZAZJ0FUFR+7RMavVxus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=lVlzVs2g; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s2ARqfRg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C662C4CEE2;
-	Wed, 26 Mar 2025 20:12:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743019932;
-	bh=P2Bu+JrD1ebUe0fy98h9H0HTrMnKVVvDOMeazGj1ih0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=s2ARqfRgjILCH1iif/OyrjXtXmzbJFZK/mHJ6g+Nce8yrMVRWqggD/DxWLt1QqnNA
-	 Jb6SH+OazUcdKPKIbmM42lZYz0PoAnMkJfGO2W5nz51UcEtXHbx8Y7nSbqFPFTI11G
-	 9ngHS4qkf4uFdvuNh9wyF/iI8virTirfIym+WFOXTAqGZnuJuEsBtBp4Mk8vTYjs5d
-	 IRo9LswksrJoH9JJ9Qf/bckDoTerlxMW8gMN54OclRGsVG5WPY/TotRNRz5EEB4SqK
-	 uzLG+5eEmHVOOzs9Gdq79ucwI7ZvlbMdvc1167ppVztKlSNr9xKJiS9bkr7+Pq7etQ
-	 aajcEwoMLMDog==
-Date: Wed, 26 Mar 2025 10:12:11 -1000
-From: Tejun Heo <tj@kernel.org>
-To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH sched_ext/for-6.15-fixes] sched_ext: Remove a meaningless
- conditional goto in scx_select_cpu_dfl()
-Message-ID: <Z-Rfm5MVdm5rDyYC@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="lVlzVs2g"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.3.1)
+ id b1b41c0b5c00127b; Wed, 26 Mar 2025 21:12:10 +0100
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 3A72F7F6388;
+	Wed, 26 Mar 2025 21:12:10 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1743019930;
+	bh=DLVhu0vtl8L7mHg1TiLT36ykzz3ITYF1djo57NTnUSw=;
+	h=From:Subject:Date;
+	b=lVlzVs2gOkOpqnTEzpKwmDe0VjpB2bGyfEc5qiDrFLPGslBZiYPc5Ih45+hYbAuD1
+	 twyNiKsN8DiCqU9mBuIpjDCmgRLNQiEupDpc4FOkiRRQhFcF0U2NvvstUoH0wBBIFt
+	 9yDmq1a0qzovSbWL2eSSm2pptO9l3MSse55IWh5i/GCl0GZCn6j+dbVA4eYUhzBYeb
+	 JAbwCPQwGRFSNPmzqLzWwyUBXRbEoJtV1GV46sYAj5YMUZOsfu1fH/rTvH7WHsvNxd
+	 0cZSxOqZIQ1uxmhmvLR7PWRD2P2ZlUL7h7+hcemyaBUA7dynUz/ehAjzd2ocJiUTNK
+	 /oZL3+/rk2mjA==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux ACPI <linux-acpi@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Bob Moore <robert.moore@intel.com>,
+ Saket Dumbre <saket.dumbre@intel.com>
+Subject: [PATCH v1 0/8] ACPICA: ACPICA 20241212
+Date: Wed, 26 Mar 2025 21:04:13 +0100
+Message-ID: <5873907.DvuYhMxLoT@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieeigeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepffffffekgfehheffleetieevfeefvefhleetjedvvdeijeejledvieehueevueffnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepgedprhgtphhtthhopehlihhnuhigqdgrtghpihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgsvghrthdrmhhoohhrvgesihhnthgvlhdrtghomhdprhgtphhtthhopehsrghkvghtrdguuhhmsghrvgesihhnthgvlhdrtghomh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
 
-scx_select_cpu_dfl() has a meaningless conditional goto at the end. Remove
-it. No functional changes.
+Hi All,
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Andrea Righi <arighi@nvidia.com>
----
-Applied to sched_ext/for-6.15-fixes. Thanks.
+This series of patches represents upstream ACPICA changes made between
+the 20240827 release and the 20241212 release that have not been included
+into the Linux source code yet.
 
- kernel/sched/ext_idle.c | 2 --
- 1 file changed, 2 deletions(-)
+It contains the following material:
 
-diff --git a/kernel/sched/ext_idle.c b/kernel/sched/ext_idle.c
-index 45061b584380..b5f451e616d4 100644
---- a/kernel/sched/ext_idle.c
-+++ b/kernel/sched/ext_idle.c
-@@ -584,8 +584,6 @@ s32 scx_select_cpu_dfl(struct task_struct *p, s32 prev_cpu, u64 wake_flags, u64
- 	 * increasing distance.
- 	 */
- 	cpu = scx_pick_idle_cpu(p->cpus_ptr, node, flags);
--	if (cpu >= 0)
--		goto out_unlock;
- 
- out_unlock:
- 	rcu_read_unlock();
--- 
-2.48.1
+Adam Lackorzynski (1):
+      ACPICA: Fix typo in comments for SRAT structures
+
+Saket Dumbre (3):
+      ACPICA: New release 20240927
+      ACPICA: Fix warnings from PR #295 merge
+      ACPICA: Logfile: Changes for version 20241212
+
+Seunghun Han (2):
+      ACPICA: fix acpi operand cache leak in dswstate.c
+      ACPICA: fix acpi parse and parseext cache leaks
+
+Zaid Alali (2):
+      ACPICA: actbl1: Update values to hex to follow ACPI specs
+      ACPICA: actbl1: Add EINJv2 get error type action
+
+Thanks!
+
+
 
