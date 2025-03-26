@@ -1,85 +1,64 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B246225634
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E4825634;
+	Wed, 26 Mar 2025 14:33:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742999587; cv=none; b=Ws9AQ8ff1u4VjGteEB1Imze0syjUUPuaK5Mcx8Rl4h1K7vQt3ku1I5VZOUkLDG2LHd8xuzNrSIKzmBo9knRWAlOI1qC0E6DrtgfTROOCf60gnoJd/i/rgGTc+Su3ZHsQr243MYGe0BJQSRfvpY+bJ0egHxkB9I2NyPxDMkqC3qE=
+	t=1742999614; cv=none; b=MC28dRWSeySlj3BfiM3ufbr4sBvW5/yRH1TTNbQd31j/NrvcYmzX3XS8V2usn275nH1Fjsvpy/K9uxqxNuV2IdHQ78P3qRo9haFDp+YKH6nwHSjtaQNiJqzJNfhJsqxcYTOQcZI+X5B7IoVdB0Gn5pvqevoqQkQ61pZiLWYS5W0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742999587; c=relaxed/simple;
-	bh=M6qGQDYdrnKd0XzX+SovExI/OI3k3iR6/syeSjhXkdk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hTuXvkcYtOmnE1i9aG+pkHyYTocSZci2FW4ZHqsatm9gyb1dpUvggZbdDkJXEJGVHqazsUr6y0d+PBaLpFj++vzEWvGxkVq/77sGy1zm3HaJzBQ5ext8v0awbjlb4ErqI8udLN8bACp/DNhjRnZjIT8NHSiqR4JR3XyBrLUajWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lM1pi7ar; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lM1pi7ar"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6e89a2501a0so65069406d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 07:33:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742999584; x=1743604384; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w1uhRb9K89jUKMKB6y+F6EuR3ESBnpoH3ZCy82us1NA=;
-        b=lM1pi7arefp9Mk3+Qsur5cQ43L5GVXrSX1nKMr43kSQLaEj3IIJzDW3QfDcBuGo4fL
-         7aM8vAlPEHhcypaDuQD1uJukQei1ymhJZks1idokeN5ekMlQNQRvoHPtNcUd+YN8dL5D
-         wgpulBRBUujw4VK5mgdvk2Uqn3D2FLEDUhuPNtVOuFlZYvzEheVuSiu3/HSZnSObL1CK
-         jTfhkc0uVE1UjkFaFoS7nyPqUZ4pzFXdt9p9MWLJ+kJf40/lqjsacuNCpFxCWDlQxCKf
-         iIcJJ0wSacTgx622+COI6ngyaBTyUing2iQAl+woH5iBTxnaUq8ramL7tMEVq58G9CCv
-         BnWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742999584; x=1743604384;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w1uhRb9K89jUKMKB6y+F6EuR3ESBnpoH3ZCy82us1NA=;
-        b=U1ZztEA2FSYQ/YKmxBOOtQcnMlA1KOm+eIRdwXp+QoDDW/MJw8PHtig8hgG/bAF/QB
-         wtHsJoGGyuAGG1OJRpSgbrgp7wr5kB2s5oVyKibWZFdbWdfoVo6vaUcn45/AGU2l1y/6
-         HQZIusJKSucG1u276KLusPatHFcbKM23RJ4hGdr2fSsZjoD9bXDC7sDE/UAMcntTpF8D
-         vF25GzStLcE+zXy5S+rRQmqMatf8a6jLt+4tzIMHYt37bGUPUltmt/StJCPAkkXNR0k8
-         /Sq7nQXtOWtqO0QaQQ347yvfbEp1nGGiQPo2cE5IsEfj9JCdJm9dhAMprX5PtSlFH+ny
-         BBNg==
-X-Forwarded-Encrypted: i=1; AJvYcCXusiY1c5cWHIAaqsn6P75pEmN3Dvwqk4nhJ+LJgfA8h9tt0Tf9xXgiNPw8Z9Jbf1Ouz6gDq9zId2bhpGc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUoUk6TuLDm2pk4sYpWALmeATcZeFoVHH9DVzUuy0k00FbsHLI
-	Z+R2mi0YUr3H5LkVtjrhLyQur1Pnf6Pc2YoBaQSMCdOaiSTLnYlGRAa4MGcplfLJ6m48n8WWXV3
-	+OdIr6UFYkOLdlhB84ejV3+MNoKk=
-X-Gm-Gg: ASbGncu3Jvn0/XnLnfedy2928V196k35U/qaxLwqQRbkq/bvxKY56yt32d/fq16xS76
-	kEvUVNN9Zx4HNL2V0ofe+Nl82B7giIq0Vjj/ZWKFwSzrGdiaLM/tOIv1pN4L9KImQADYL39HRnf
-	OiDTAUY4vmUlnFsMwjzE0Lks0V
-X-Google-Smtp-Source: AGHT+IEy4QwMcoxRYrmXEpDrE1WuuA/DkCs2XGD7ZcOO1nkjn3xOpqcPeYTc079GXmvxXeoFkdR9hULyEOGPkh/cy0o=
-X-Received: by 2002:a05:6214:19cd:b0:6e8:f2aa:a8b0 with SMTP id
- 6a1803df08f44-6eb3f2c2e84mr375223416d6.18.1742999584466; Wed, 26 Mar 2025
- 07:33:04 -0700 (PDT)
+	s=arc-20240116; t=1742999614; c=relaxed/simple;
+	bh=MaULBIdNn2vB8Nor2XI3gLXRhcvwPLrW8fdv5CNl2O0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qTsEUl63KvJmfCl6mT4+ED2tkGq089O94Lrmbi9PKmRTKc0yF7lxDkok2kG5za+BQuA9unQz58SUt927Vh1J82jY0so/Q4PXbj35yjLUnFBEnxmxa59McMokWAKkg5Os1tmTdUX6x/5KzDAM9/ox+j9AUhn1pYkhRWjq6uKr6P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B764C4CEE2;
+	Wed, 26 Mar 2025 14:33:33 +0000 (UTC)
+Date: Wed, 26 Mar 2025 10:34:19 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Quentin Monnet <qmo@kernel.org>
+Cc: Tomas Glozar <tglozar@redhat.com>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org, John Kacur
+ <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, Venkat Rao
+ Bagalkote <venkat88@linux.ibm.com>
+Subject: Re: [PATCH] tools/build: Use SYSTEM_BPFTOOL for system bpftool
+Message-ID: <20250326103419.7e833208@gandalf.local.home>
+In-Reply-To: <67e8c04d-e021-4f98-8020-5ee030fa24e3@kernel.org>
+References: <20250326004018.248357-1-tglozar@redhat.com>
+	<67e8c04d-e021-4f98-8020-5ee030fa24e3@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <tencent_2C3830CD73C3B917ECA59895C90CB43BF009@qq.com>
-In-Reply-To: <tencent_2C3830CD73C3B917ECA59895C90CB43BF009@qq.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Wed, 26 Mar 2025 10:32:52 -0400
-X-Gm-Features: AQ5f1JohpB2NJyAFsZS2q943wYbt3ZP4eVbj9_4_TbzAzCAIQm4S3Yxw6fAYmeg
-Message-ID: <CAKEwX=N98tC5Tq+XYLgAP4MDUBAO01ceE4e+mrk9i3YniL2Vkw@mail.gmail.com>
-Subject: Re: Linux6.14-rc5 BUG: spinlock bad magic in z3fold_zpool_free
-To: ffhgfv <xnxc22xnxc22@qq.com>
-Cc: "vitaly.wool" <vitaly.wool@konsulko.com>, linmiaohe <linmiaohe@huawei.com>, 
-	akpm <akpm@linux-foundation.org>, linux-mm <linux-mm@kvack.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 26, 2025 at 10:11=E2=80=AFAM ffhgfv <xnxc22xnxc22@qq.com> wrote=
-:
->
-> Hello, I found a bug titled " BUG: spinlock bad magic in z3fold_zpool_fre=
-e   " with modified syzkaller in the Linux6.14-rc5.
-> If you fix this issue, please add the following tag to the commit:  Repor=
-ted-by: Jianzhou Zhao <xnxc22xnxc22@qq.com>,    xingwei lee <xrivendell7@gm=
-ail.com>, Zhizhuo Tang <strforexctzzchange@foxmail.com>
+On Wed, 26 Mar 2025 09:59:12 +0000
+Quentin Monnet <qmo@kernel.org> wrote:
 
-Please stop using z3fold :) We already removed it upstream.
+> > Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> > Closes: https://lore.kernel.org/linux-kernel/5df6968a-2e5f-468e-b457-fc201535dd4c@linux.ibm.com/
+> > Suggested-by: Quentin Monnet <qmo@qmon.net>  
+> 
+> 
+> Let's use <qmo@kernel.org> if possible, please.
+
+Updated.
+
+> 
+> 
+> > Fixes: 8a635c3856dd ("tools/build: Add bpftool-skeletons feature test")
+> > Signed-off-by: Tomas Glozar <tglozar@redhat.com>  
+> 
+> Looks good, thanks a lot!
+> 
+> Acked-by: Quentin Monnet <qmo@kernel.org>
+
+I added this to my queue.
+
+Thanks everyone.
+
+-- Steve
