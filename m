@@ -1,64 +1,66 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8213B17A2E1
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131C81A3160
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742978198; cv=none; b=Z4U/YprONG2vCtYl8JcEKQ3+RcyxL1e7kVPoFgJcX+6PKS7GK6AhNTDB0l2gZIPCoePPhBCPKn9E8iTywuf4G37Gc54W27HCJ6WmzphHH6iRzIRnbn0FO7Dd5u/nAf/WY2XYPeTZs+BvdsZT98qvceK+AF5LSrXCRa6vmik/Hk8=
+	t=1742978199; cv=none; b=iI3QlqCqeViZOomOyapKL2G9N/HFb7TsMELDEmBFbh8O4FE9TC8dbWRiURGTuRtABgt7tbg4aqpMtsC1IhAUZIlWehE//czJ5u2Ed0gcLmBzEYW7SGlTWBqWgIqRKeq4ctv+9ktEtNrh5eybKMg1YdrLeXf1Nm/HHgmaHWikTYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742978198; c=relaxed/simple;
-	bh=qW0MfqD72uuYHhfTPBfmoh9IPsaychLi7eXpoJZr+B8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=TMB4UaHAzQSWWipZQQiu+Ze3cQHsICLMJvFgiUU+pi+Ca7RO9/W+FWeHfki+KrVJu/V+MKSMziHS99I7mdKCdRzpwqeNCPmA491ucaMRfr94Leb95UinYDtGVu4iEqlRjelhUQUQukW3o1pt1gsaEMMbNUz2MJo1vaG/ilASTgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pCrSJ57l; arc=none smtp.client-ip=209.85.128.52
+	s=arc-20240116; t=1742978199; c=relaxed/simple;
+	bh=wE8gm9EgRvG/eMhMjuvwanQvEYBa02D0Xd2GnqsJRZE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=g1693lUqAeN3LX3elLfxvHhkgyuvESG/zfEh8xxffGS81qQTQ+z78Tkl+Wqx/qp4428FpbkzwzGi/8R1jApBW557sHOssE574iEUnUxc0E7oDyTYxY+3Cy0yLSgSu007d5r9MvMZoqeHPojE+8B8p+CnoOCNVRupOWDXRkTfT14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tKnjiw2o; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pCrSJ57l"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so45342125e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 01:36:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tKnjiw2o"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43690d4605dso46013935e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 01:36:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742978195; x=1743582995; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iy2+7jXA7YG4CzY9gHuiVJnNuIcRimh4miDrVOlcZkc=;
-        b=pCrSJ57l389XgX5DbMJjTqU8YwxTptSsnyC67pJGxt0haub74t6UXNyhxkNLi2SQuU
-         +eyBFd1pVgoWmffXXW+1bf/1RnpDBQhFsa3PEwb4eWnjm1HyX2jaiZN75PaFYPtM6R4s
-         uZ00npU57I/PbLDJux1gxbcKSns6j+aNtDI2k+a6i6oqoloMeiQjCcQMHbdbXT/bro9L
-         bATqRiSdtH06f3E+0tGe6oU/AZsPkTKdVE8U9EumcxcwOXLyqpUGD5UIcqhM9mVzCX03
-         ueI3J54krlk2ge3ApQDiT5j+tzvZBU4CpW3//FY3zK9m41dOC6wYtS9/ig8RusD39Usw
-         KWvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742978195; x=1743582995;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1742978196; x=1743582996; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=iy2+7jXA7YG4CzY9gHuiVJnNuIcRimh4miDrVOlcZkc=;
-        b=UCDapjNKZuMkVsY9VzqVPUK8rUs8bTiGy9tF/b8Ghs29QDwlJ7Z0kkQ3YUgExRCTNK
-         g2BxrKXJA+0tn8TtgT5Lpy6Gr0Dr20IhNlmREyjGxidCPgCfKSIbrC5OT/SKE/p5fXjx
-         R4UktAI5vobvZaZ5AC1xfTD2t2QYMOx39VodxO8ZkoJlsA7/zrtNjL+0vTvjQ71/mqiN
-         ZF8wr2Bv8I5wM42O1eLNTfyYimdLvPad71eBb9zR36v7KXXzV8Vq78JHCfcPFDqWb9ty
-         Yrf8Np4c7nvLtryiylfpLFRe4X4I6nElNVGtY82OkzeGm1Prilt+BspfIjIdYu9NGFRP
-         Nb7A==
-X-Forwarded-Encrypted: i=1; AJvYcCWmjuYWgjLBvy7Rg8X+y7HBCNsHIOfKdPUK1LLZw/xZjAQIvMkr8n5rs+pBlAC9buAMeRWiVK5EE9alK94=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/AgrTFZ5sanX/TNRSzXGRfZh5fCq5ayglwIfONZOVNkvqq3DV
-	A3C4rObJJbYta7bOCTtOHT9tLX3f+tbYEcMpVHqdX0/Qw0JPnEkDgn7he7W0Jqc=
-X-Gm-Gg: ASbGncvsHWuZrAzoQDsokX7VdgWUlkkAdVvU5wuauL/Krg/b2KXJ6yeZJQDIdJwHrBY
-	nF4SLBqpv9WF3ixqLV6XHxafQLLF9Ie0VXV7Dl34o4ETZNwyT9WDk2SYzqsigWuAU9zLbyVKi4U
-	tO5Y43ik1o3/waYmgCV6dmmJQBdJt/ywIVrLcukdCUzkWOp8a76NoXQ5MfzQG/j5bnACo6jLSvl
-	j7oMRNcDKqGLg6479XtGk3QWPWZFW1E1P491lMao+qQc6l//JkR1/m1FC0rggO1tRjfvLh2wTq8
-	JQjoYsyZs12rhGzokIBwbwvBTexvvzb2w+V17ze2dFWRSAyEv5ltg0JtH56j//fRdQ==
-X-Google-Smtp-Source: AGHT+IEkBse8k5+iznvBOzE/fliiY0CgZWEA0SCOidqUwsYgoXLyby4x3PPNA12r5TjnBrbnSRw6GA==
-X-Received: by 2002:a05:600c:1d95:b0:43c:fd72:f028 with SMTP id 5b1f17b1804b1-43d50a4b226mr208496955e9.29.1742978194763;
-        Wed, 26 Mar 2025 01:36:34 -0700 (PDT)
+        bh=9sXhQr7pB1oHUL5QRg4aIUf1ZBqM0s1gNre1HeSuBZY=;
+        b=tKnjiw2ob3bcCxOku+5sP6cqjtbUsuglW7ot0NaXlxRRIkCvtxEQBbZ07oyAbdtVy1
+         5Nx1oYCVuiUvWV1jtsMKwXGGG4QFiPyQ/HlVpDEeP1OtsmLhU93nUpyCQn6bUG0Mg/BX
+         IT2RTNrEwmA0wq04Zs3FKi0J2tP+wjOyW2Gw8ADEzV3IQBlVRbqrA2TNhXq18QYlEj/6
+         z/S+AWqSyv3MSQcIu12cw7nyXevNrZoqFxJxTvdzjg+gf2NEhsb0aXyRTbh0Js9F0xnj
+         v3QTgtFqvF9XerVPaLNz4wTj32Mg8Md8vJgic1HDQMQQnkKwafCVdl4INd8d9wxC/R7/
+         7/kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742978196; x=1743582996;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9sXhQr7pB1oHUL5QRg4aIUf1ZBqM0s1gNre1HeSuBZY=;
+        b=VwMducc6BPTbXtX88TgCaE5YX2Vgmcx3nc07CkS0WK8lJshMJvgditKMNtz8cpywbu
+         PbQZ2fzWy0xEoPWs0r4qf/VIOfeh/ZRXlSR0HtkJIxpzeupjC1pu5ouzGNzCe7p9tFF9
+         /b9y0AuNzlcErdEkf295Ng7AoaVHXYgCqG0m51mXKtjSIefVe2ybEK2Cp7pvPUzmdIxl
+         Gh13isrcwUaU26BVsYwtXFcap5z60QgsLqxb/AJH5mr8fq3vTwMgOJJH3xRHjyUP3SfF
+         Rw4CqGdJzStg/MwHY2qJlRG6NnLugkHMIm4Bs00d1zv1HC/uWEf867HZFMRsjjKEWfnv
+         Lkww==
+X-Forwarded-Encrypted: i=1; AJvYcCVc8J5P431Qu7p3uo2O26y2Fmi6p79h25XxeWEmZtW+wpa0LQp7Vr8GClou8HTOgTezkKdLriw78SF9YD0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJtM1ylp6w2R+H8PNN5iokjBvqpwIg4xx+hwfDis4YtbN8mAn1
+	HimTEGI1rTiEit6Zvje8IqwI9fH5pEZEK5YXxxUaE96n2YsK58jc4/Xf7qA4UiI=
+X-Gm-Gg: ASbGnct0fqNpEWOI0AcWb7gvTQjSN0llBhfOG/71kGQ3IAwBcltnxn0wrCr5SqoTUUZ
+	trUDHQ1hYnn+aELRNVdSFczcpkE/tGo92iL6nw75Epeu58fi2hw7xwEhPSrI4EFkVB32PL0t0W7
+	ZYJ2ccUdi2KJl4QTX6ycaubjhzOM4ci8QN10aeQr9dKkjF8PO6/ZuYwjOdJwpuNUW9MjLlz9JLC
+	55EphndKHcOdgA0AvQIUTx7b1IuyLAmrRH7lucKgUWtwS4TO9I+PGQzGEFHrQBOT/6Va3rXSoiB
+	hl6rm6aXzQHfxITtLJb4mbLUX9PdpEkHH2X1IDLSCkH+w/iAbX2+9CqF8i6jgV1fgA==
+X-Google-Smtp-Source: AGHT+IG1Q4B0jZrBWVEeQlwx58g1s02zlaV9ZCA48T2H2C8bquy4+GUMl9fJnB7E3asz6f++aEx6jw==
+X-Received: by 2002:a05:600c:1e18:b0:43c:eea9:f45d with SMTP id 5b1f17b1804b1-43d509f64b8mr212933905e9.18.1742978196325;
+        Wed, 26 Mar 2025 01:36:36 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fcea400sm176823365e9.2.2025.03.26.01.36.34
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fcea400sm176823365e9.2.2025.03.26.01.36.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 01:36:34 -0700 (PDT)
+        Wed, 26 Mar 2025 01:36:36 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: [PATCH RFC v2 0/2] ufs: core: cleanup and threaded irq handler
-Date: Wed, 26 Mar 2025 09:36:31 +0100
-Message-Id: <20250326-topic-ufs-use-threaded-irq-v2-0-7b3e8a5037e6@linaro.org>
+Date: Wed, 26 Mar 2025 09:36:33 +0100
+Subject: [PATCH RFC v2 2/2] ufs: core: delegate the interrupt service
+ routine to a threaded irq handler
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,11 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAI+842cC/42NTQrCMBBGr1Jm7UiTGv9WguAB3EoXsZm0A5LUS
- VuU0rsbegKX733wvhkSCVOCczGD0MSJY8igNwU0nQ0tIbvMoEttykorHGLPDY4+4ZgIh07IOnL
- I8kZTWV+VXht98pADvZDnzxp/wP12hTrLjtMQ5bseTmqd/mlPChUerDFHtbe7p3KXFwcrcRulh
- XpZlh8NXryzygAAAA==
-X-Change-ID: 20250321-topic-ufs-use-threaded-irq-53af30f2529f
+Message-Id: <20250326-topic-ufs-use-threaded-irq-v2-2-7b3e8a5037e6@linaro.org>
+References: <20250326-topic-ufs-use-threaded-irq-v2-0-7b3e8a5037e6@linaro.org>
+In-Reply-To: <20250326-topic-ufs-use-threaded-irq-v2-0-7b3e8a5037e6@linaro.org>
 To: Alim Akhtar <alim.akhtar@samsung.com>, 
  Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>, 
  "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
@@ -80,20 +80,20 @@ Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
  linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1611;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4010;
  i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=qW0MfqD72uuYHhfTPBfmoh9IPsaychLi7eXpoJZr+B8=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBn47yQ5tVslE7udxPuo53IuZ9MtxZuvWreizAWupAA
- kPf5xM+JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ+O8kAAKCRB33NvayMhJ0ZkuD/
- 42Y2CuSduot1byRoMmGnoX1TTktw6Ci1kYJGdd/PtNduNDHxrRJ3+5h2zrb0fxSDqBwUB1/Mxugrkv
- 5m+cmF++9mDyBxwz6shfeX3swxJs/L+S1pqtvFte+PUr0uO7CsOuGTfr/oZAi98XETH3hzSG9doc3L
- FxSTI1A4bM0wlt9AhYV4V7CiNhFY35VdFfVjjYu5XD8g2O+PbUdjfQF9iSpsu+TS0dBu29MmUhriof
- 1E9hNI3o/YCj6KI4QOhFOQ4rS3nw38TCm8cEARnxwkVqa+828hoCbcBO0rj+knBy2b02Kcgux1ILxi
- TkJKoxCDJm0yQsX5BS1g+UgOExq9VpZtt0bR+C6Lvvw2HK7SVHgXLOZKZzxaiMhrl4lbSfFAHPoema
- 8Dn8l1c3DIS8h7Aqp+LUsV+KRJQfWnSuzi7S6+xQeC0IHdJwDIcjRhpJhuSU/I+C5ux203NvRzGzAw
- kRhGLsVawzx23hRC84xl+iEYd0psLbiYhAl+hKWEWJJjYApjG2B1kfd5/5Rmd0W2JyjlQWR9B3TjXT
- akr/mjFz9CUsOAJb21vLH8UuIBvLxUziSsoyYw8fk5oewF+al5B7NWuNeBIL1ICKcAmdP23fAbUXna
- bd0CtVeFBmg1IZwggM71Wqsw0hU+0NLXSP3Po9mRweslQefC+prZOLZSeEgQ==
+ bh=wE8gm9EgRvG/eMhMjuvwanQvEYBa02D0Xd2GnqsJRZE=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBn47yRna6KR2O+2/McFt5fyFm0PMrm1cbhH9l1pHzK
+ g1qu/BeJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ+O8kQAKCRB33NvayMhJ0TzYD/
+ 0eCpa3SlSIbYqvFInXTVu4P0tKFO3IpuJhif3hUszZLZetR+HXaSpZKfrRCjmQbbIVxUmFxkir2lc0
+ B/y1uC1O77OOUw2+2QGhyVgepk+Z1H5hCvNmz+U0N9xhumCSMjD1fiKk2u2Qn5YDzHxmENz5ap+pcK
+ D4USQvC7aXT5UJJvMuVgs/LR6a6eLEziEhQmJ2bQeKIJNiWXv/Yt+10WDTtC3JDyqigA8QpvN1eo9R
+ 3wy+FhxmwGMD9xAZX+wtjzP/qXaiYH+lq/NVU3+VdyAGh+k3ibtrk3N4e1Nsxtu780N8qsIqFefvUM
+ zNGPy8+kliMuo8zaAKcyJ3VrSiH1AOYFV7JP7KiKkVLZ/CT02XHBWFgapI0GA7mm0GqQqkJrZbU8NN
+ QMvY4GsfK5NROXjz5UlvcLZ2Bkx5SzzmBc1T9A8RCL1Dsd/RKARu9GROm3Dci0ftdG3eKZLtdTb42X
+ hiQTrs/zkrCjq6QWAsmZBVzA4M+HKdUke2p2WUqpLQIXdoVsv73qRyZIwkEiV4sxrKKuRNoE+nwR1m
+ 9RBHJV6za9v2FIEJm24BCSkfnes/Dg5/g0sdKKmrbAHA92DDWqKpnGB0HljD+V2ieMF1mcI3Aew/di
+ gYn0CgM29pNf7KK2jkQbcYzIT3YPYuMgsanfBbBGmfT4k0b5kluyjMp2syqw==
 X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
  fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
@@ -102,6 +102,19 @@ the current design of the interrupt handler can delay handling of
 other subsystems interrupts causing display artifacts, GPU stalls
 or system firmware requests timeouts.
 
+Since the interrupt routine can take quite some time, it's
+preferable to move it to a threaded handler and leave the
+hard interrupt handler save the status and disable the irq
+until processing is finished in the thread.
+
+When MCQ & Interrupt Aggregation are supported, the interrupt
+are directly handled in the "hard" interrupt routine to
+keep IOPs high since queues handling is done in separate
+per-queue interrupt routines.
+
+This fixes all encountered issued when running FIO tests
+on the Qualcomm SM8650 platform.
+
 Example of errors reported on a loaded system:
  [drm:dpu_encoder_frame_done_timeout:2706] [dpu error]enc32 frame done timeout
  msm_dpu ae01000.display-controller: [drm:hangcheck_handler [msm]] *ERROR* 67.5.20.1: hangcheck detected gpu lockup rb 2!
@@ -109,27 +122,80 @@ Example of errors reported on a loaded system:
  msm_dpu ae01000.display-controller: [drm:hangcheck_handler [msm]] *ERROR* 67.5.20.1:     submitted fence: 74286
  Error sending AMC RPMH requests (-110)
 
+Reported bandwidth is not affected on various tests.
+
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
-Changes in v2:
-- Removed last_intr_status/last_intr_ts stats
-- Handle irq in prinmary handler for MCQ case
-- Stop touching REG_INTERRUPT_ENABLE register
-- Link to v1: https://lore.kernel.org/r/20250321-topic-ufs-use-threaded-irq-v1-1-7a55816a4b1d@linaro.org
+ drivers/ufs/core/ufshcd.c | 34 +++++++++++++++++++++++++++++++---
+ 1 file changed, 31 insertions(+), 3 deletions(-)
 
----
-Neil Armstrong (2):
-      ufs: core: drop last_intr_status/ts stats
-      ufs: core: delegate the interrupt service routine to a threaded irq handler
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index 5e73ac1e00788f3d599f0b3eb6e2806df9b6f6c3..5de25fc978dd7c4c1ac3b9ccbca2ab3f13d6aa65 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -6971,7 +6971,7 @@ static irqreturn_t ufshcd_sl_intr(struct ufs_hba *hba, u32 intr_status)
+ }
+ 
+ /**
+- * ufshcd_intr - Main interrupt service routine
++ * ufshcd_threaded_intr - Threaded interrupt service routine
+  * @irq: irq number
+  * @__hba: pointer to adapter instance
+  *
+@@ -6979,7 +6979,7 @@ static irqreturn_t ufshcd_sl_intr(struct ufs_hba *hba, u32 intr_status)
+  *  IRQ_HANDLED - If interrupt is valid
+  *  IRQ_NONE    - If invalid interrupt
+  */
+-static irqreturn_t ufshcd_intr(int irq, void *__hba)
++static irqreturn_t ufshcd_threaded_intr(int irq, void *__hba)
+ {
+ 	u32 last_intr_status, intr_status, enabled_intr_status = 0;
+ 	irqreturn_t retval = IRQ_NONE;
+@@ -7018,6 +7018,33 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ 	return retval;
+ }
+ 
++/**
++ * ufshcd_intr - Main interrupt service routine
++ * @irq: irq number
++ * @__hba: pointer to adapter instance
++ *
++ * Return:
++ *  IRQ_HANDLED     - If interrupt is valid
++ *  IRQ_WAKE_THREAD - If handling is moved to threaded handled
++ *  IRQ_NONE        - If invalid interrupt
++ */
++static irqreturn_t ufshcd_intr(int irq, void *__hba)
++{
++	struct ufs_hba *hba = __hba;
++
++	/*
++	 * Move interrupt handling to thread when MCQ is not supported
++	 * or when Interrupt Aggregation is not supported, leading to
++	 * potentially longer interrupt handling.
++	 */
++	if (!is_mcq_supported(hba) || !ufshcd_is_intr_aggr_allowed(hba))
++		return IRQ_WAKE_THREAD;
++
++	/* Directly handle interrupts since MCQ handlers does the hard job */
++	return ufshcd_sl_intr(hba, ufshcd_readl(hba, REG_INTERRUPT_STATUS) &
++				   ufshcd_readl(hba, REG_INTERRUPT_ENABLE));
++}
++
+ static int ufshcd_clear_tm_cmd(struct ufs_hba *hba, int tag)
+ {
+ 	int err = 0;
+@@ -10576,7 +10603,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+ 	ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
+ 
+ 	/* IRQ registration */
+-	err = devm_request_irq(dev, irq, ufshcd_intr, IRQF_SHARED, UFSHCD, hba);
++	err = devm_request_threaded_irq(dev, irq, ufshcd_intr, ufshcd_threaded_intr,
++					IRQF_ONESHOT | IRQF_SHARED, UFSHCD, hba);
+ 	if (err) {
+ 		dev_err(hba->dev, "request irq failed\n");
+ 		goto out_disable;
 
- drivers/ufs/core/ufshcd.c | 45 ++++++++++++++++++++++++++++++++++-----------
- include/ufs/ufshcd.h      |  5 -----
- 2 files changed, 34 insertions(+), 16 deletions(-)
----
-base-commit: ff7f9b199e3f4cc7d61df5a9a26a7cbb5c1492e6
-change-id: 20250321-topic-ufs-use-threaded-irq-53af30f2529f
-
-Best regards,
 -- 
-Neil Armstrong <neil.armstrong@linaro.org>
+2.34.1
 
