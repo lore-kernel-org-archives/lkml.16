@@ -1,93 +1,123 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E7E1A5B8E;
-	Wed, 26 Mar 2025 21:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2446F1F460E;
+	Wed, 26 Mar 2025 21:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743025282; cv=none; b=oZGuHXo9QQCJgXhFTbWUJSjXLm3NsW1V4fZprAtcusy5YHfrtaqGFhNr0yDFdgcZ43/uKTbnf3mCCKxjpsWJrUIoIeswyO0N7A2/xTY4rP2ApPgcqypGF8iLDYBhATcy2mfhauBChX5fxWF4ERXuVB1Z9Axh9SS4a0G254qzJf8=
+	t=1743025411; cv=none; b=opQiULyka7lVxagPsHpNYBryP9TTvxoS0gWAqwAs+2yKPAkw2zDyurfLXdp9GnkIPtotNFKGenYQ+YWJHAjBxtSinL2f/dlqu7EsZlphhjBwH+TDlo28v9zSNg40ZHzszqv7brAfMtSBnsIwtsX7uir0c2iYsFTxr0yIiqV91Ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743025282; c=relaxed/simple;
-	bh=XPtYS0ul4743X7wmk39kQREthn/srdHqkuLRRws+L7M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=muAWi+bbT3ChktrBbWSwgpaWb0r7tMYGxVDeYRHHkug8RXya6pmb68Iuq/G1rdpFL/sKDVDROG+N9XYiGHl0OxRZ3evDTdxCc+WNdiu+5u/eNE3qD/xCnkLuJWow0F5VcL4gAdrceS3veGoj6v/WhqJCsVnpxhFTyGE6hD5CP+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=egkW6/X1; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743025411; c=relaxed/simple;
+	bh=RIm2iQ3s/e/fPL2X39oO+OfIIkezi9eH0r/BTF0Mc78=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nEjHLs1EbRPULl91kgDvuyJoUqds48QY4N7l0RpfVWmKERo3H0dbMn+esyx5/ZTy39N72ZXiGo3iEEquyuXiGojKsM1Tz8npLtj4su89g3n00/Ho+0JDZpVw25cthpiW+pLsM+lZFEeBsv2FMzAriWLCpqkCbSig+FuFlP7Z6gU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EDGhT6TH; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="egkW6/X1"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-30332dfc821so382943a91.3;
-        Wed, 26 Mar 2025 14:41:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743025280; x=1743630080; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tMsucVvxGJgWy5E5JgVuhP4u313WUb25G3PqvcbV6wE=;
-        b=egkW6/X1niIQxenAr5W5wLr4Kj1/AgMvnMCorbL0+D2jTct2nZUeTB4xwXWUkSnToz
-         m6FkMFGwtSpklWZ9P6YfakAUXCOhnC2YSO+DuX0+rmLJ+QoccrCOJ6YMR2PNW7y11KDV
-         eGP0j1uNNI7KqSCH8tdfZLiiF9SL7Habxr2V7c8KiCR0DVmS2mfnNVlLO+59Zr+/Tvlj
-         NRgIyWI+hYfDUtBHGCRhawj8OmmxPejs/FsKUmOfD578LLyyq7gMCegGHr/R/IC+/EER
-         gVDMfrHY7QUH18Kq91CqBlDl6y5MPW8pXE/RD+PF1guXVOvl7ObCCnSYoiZrfatgIcqd
-         owIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743025280; x=1743630080;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tMsucVvxGJgWy5E5JgVuhP4u313WUb25G3PqvcbV6wE=;
-        b=QVtQa8LviArb+DUqCCBB5r3Gq5iM1sV5miC8hV47uMR6fClRjNEFhWebgxBRkmZRtt
-         hy2AYKDVZ2OFB7xZTjGS2i4a6a94Jyg2EXfwnLNikIiks4ClHsmngwnbT0tgu0v9/+4o
-         cFuHN0Xg73IN+X9mC9n8Rf/psf3sFRtOTt9TPJLEyBAq6Y0NRRu4PTWnystdo8Vb2o9q
-         rMGFLC/FLhg5ad+oreI6aOWaiC2AQB4iv5PWYjQlv/vlnUB2fzxiW3Z4veW8KB9F8amQ
-         GJHcMaayWP6QF1mm5IHWVFwrXcuIQadA5uYGUSZ2Kq1V2BRXKjOdgyadDwihkxDU8AKP
-         QC6A==
-X-Forwarded-Encrypted: i=1; AJvYcCUQPpj4NPVcpc8Z4V4jE/d4X5Cca+Eu9Qrcf9vtTTUa4uJjavVPeUsPTcA9FAuCx/oklff4INYITtJrTrI=@vger.kernel.org, AJvYcCWrvqi5mX34ZBT7pe2IFlhK3XoJkvnikeexDnozm/jupuuF3lt+F5JS/hQgaOA/lYRce6g9xde2@vger.kernel.org, AJvYcCXQk0iUu3aV+Mb7jnFFDhXh7mUTG4S1jOToh5Fm9Wp0/FtTbgQxTdJO9V9l403A3ukAu+QIDqZaSyKP0DPtU/f7@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6xbBhG+wb28Wvx67sag8rt5AqLCF5k/Ltfimuy5xT+O7uYaGi
-	E4A9stx6isV2vXSXiq+lwH1QwZ9pJZJncsBHYSr//sB8GSqVUE2LoGE1iw8qlGd/ghipokjc+Nr
-	lNgwumQEA0Dv7qhw6YPkBV6/D2dA=
-X-Gm-Gg: ASbGncuXyIhNYorpJ3v2MdGAmWvv3b6Jg4Nxt0cGt6rF8scJgkofuUe/1x1umxcKTlY
-	1cybx9BEB2+SwwdKiwvG3I//BsA0oNVBu/UEfPly176Ll8BZMR4KSvWpNIKvYjbv7beq6K/LuS2
-	CaeHYBxYKVJASLrUs9czMvHVU/yA==
-X-Google-Smtp-Source: AGHT+IHJ7R1UFk58IEiMFut0asR/eUWy1XSjookypawS1eNEqRJQE40wE8bZFNlcS08YUnlnyHsDGWSLn1BkkPONWHI=
-X-Received: by 2002:a17:90b:3c4d:b0:2ff:7331:18bc with SMTP id
- 98e67ed59e1d1-303a85c8389mr1527123a91.26.1743025280063; Wed, 26 Mar 2025
- 14:41:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EDGhT6TH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743025410; x=1774561410;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RIm2iQ3s/e/fPL2X39oO+OfIIkezi9eH0r/BTF0Mc78=;
+  b=EDGhT6THMxO2SFytLw0Gzd3IbGtUfDR9c4TJNPRNaSD5oWSQhoizZ571
+   SX6caqptluXstqJGAKbdpRlsEPoaIrxq/EEJLjl8wmQIC1ArfoA16nlix
+   uu4TQS5+QCYArLh8sa2MkVyQC9RbZe7DVPZAqGKFIWT38vYDinYsIweJr
+   drVPMZ/Ahv+sj3MMneNQRP8Vg8CUovXHHVdJISFMCPO1c8hwN6YMqm07I
+   4AnNlTm1S/HALsh69EqzHwYnJRYSGwz5alhMZ9AdusaGlMamDlLCwueNo
+   jxbs9AWRR99gA8J4MgCQd98IxWr1z88mk4WEX4qUaQuDNv4/WxSK5iIxx
+   g==;
+X-CSE-ConnectionGUID: bS4rCjdoSdWOtKzgN79S1A==
+X-CSE-MsgGUID: n00tdjo4SmGZKBch+2cD5g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44521367"
+X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
+   d="scan'208";a="44521367"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 14:43:29 -0700
+X-CSE-ConnectionGUID: Didorik1Q0CUaWp1ofD6TA==
+X-CSE-MsgGUID: LRnfdugRTHWmIjo3hrcb1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
+   d="scan'208";a="124723729"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by fmviesa006.fm.intel.com with ESMTP; 26 Mar 2025 14:43:27 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1txYWy-000663-38;
+	Wed, 26 Mar 2025 21:43:24 +0000
+Date: Thu, 27 Mar 2025 05:42:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 2/3] PCI: dwc: Add sysfs support for PTM context
+Message-ID: <202503270545.z7lzaIQz-lkp@intel.com>
+References: <20250324-pcie-ptm-v2-2-c7d8c3644b4a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319-tcp-ao-selftests-polling-v2-0-da48040153d1@gmail.com>
- <20250325061525.01d34952@kernel.org> <CAJwJo6YoGz1aPv5nkJJKa05mxF-Zhc+B4U6kRw95KSduLCApaw@mail.gmail.com>
- <20250326130005.0f12741d@kernel.org>
-In-Reply-To: <20250326130005.0f12741d@kernel.org>
-From: Dmitry Safonov <0x7f454c46@gmail.com>
-Date: Wed, 26 Mar 2025 21:41:08 +0000
-X-Gm-Features: AQ5f1Jrs_2ISpI4K_R5ayTBFqMn7YOSiUc7R7H_Qzpc-litNnB3y2ei4ujseGN0
-Message-ID: <CAJwJo6a-fODO+r3u_CEpzRzNsdKNMTuX6yN7Zb8Pqt588J=rsQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 0/7] selftests/net: Mixed select()+polling
- mode for TCP-AO tests
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250324-pcie-ptm-v2-2-c7d8c3644b4a@linaro.org>
 
-On Wed, 26 Mar 2025 at 20:00, Jakub Kicinski <kuba@kernel.org> wrote:
->
-> On Wed, 26 Mar 2025 19:48:16 +0000 Dmitry Safonov wrote:
-> > Should I send the potential fix now for -net or wait until the merge
-> > window closes and send for -net-next?
->
-> I reckon you can send it now, maybe other maintainers will disagree
-> but to me test stability fixes should be okay during the MW.
-> You can tag it as net-next for the benefit of the build bot,
-> tho we'll end up merging it to net once/if Linus pulls.
+Hi Manivannan,
 
-Thanks! Will do!
+kernel test robot noticed the following build warnings:
 
-Thanks
-             Dmitry
+[auto build test WARNING on 1f5a69f1b3132054d8d82b8d7546d0af6a2ed4f6]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam-via-B4-Relay/PCI-Add-sysfs-support-for-exposing-PTM-context/20250324-181039
+base:   1f5a69f1b3132054d8d82b8d7546d0af6a2ed4f6
+patch link:    https://lore.kernel.org/r/20250324-pcie-ptm-v2-2-c7d8c3644b4a%40linaro.org
+patch subject: [PATCH v2 2/3] PCI: dwc: Add sysfs support for PTM context
+config: i386-randconfig-062-20250326 (https://download.01.org/0day-ci/archive/20250327/202503270545.z7lzaIQz-lkp@intel.com/config)
+compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250327/202503270545.z7lzaIQz-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503270545.z7lzaIQz-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/pci/controller/dwc/pcie-designware-sysfs.c:222:21: sparse: sparse: symbol 'dw_pcie_ptm_ops' was not declared. Should it be static?
+
+vim +/dw_pcie_ptm_ops +222 drivers/pci/controller/dwc/pcie-designware-sysfs.c
+
+   221	
+ > 222	struct pcie_ptm_ops dw_pcie_ptm_ops = {
+   223		.check_capability = dw_pcie_ptm_check_capability,
+   224		.context_update_store = dw_pcie_ptm_context_update_store,
+   225		.context_update_show = dw_pcie_ptm_context_update_show,
+   226		.context_valid_store = dw_pcie_ptm_context_valid_store,
+   227		.context_valid_show = dw_pcie_ptm_context_valid_show,
+   228		.local_clock_show = dw_pcie_ptm_local_clock_show,
+   229		.master_clock_show = dw_pcie_ptm_master_clock_show,
+   230		.t1_show = dw_pcie_ptm_t1_show,
+   231		.t2_show = dw_pcie_ptm_t2_show,
+   232		.t3_show = dw_pcie_ptm_t3_show,
+   233		.t4_show = dw_pcie_ptm_t4_show,
+   234		.context_update_visible = dw_pcie_ptm_context_update_visible,
+   235		.context_valid_visible = dw_pcie_ptm_context_valid_visible,
+   236		.local_clock_visible = dw_pcie_ptm_local_clock_visible,
+   237		.master_clock_visible = dw_pcie_ptm_master_clock_visible,
+   238		.t1_visible = dw_pcie_ptm_t1_visible,
+   239		.t2_visible = dw_pcie_ptm_t2_visible,
+   240		.t3_visible = dw_pcie_ptm_t3_visible,
+   241		.t4_visible = dw_pcie_ptm_t4_visible,
+   242	};
+   243	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
