@@ -1,74 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail3.lpse.lkpp.go.id (mail2.lpse.lkpp.go.id [103.55.160.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56513C1F;
-	Wed, 26 Mar 2025 00:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD13B3C1F
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 00:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.55.160.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742950012; cv=none; b=mzIRIJgCB7RJMGUHaJkMvDM9gSuBlVlpl7GEufF0VJv+ChxKGHLoTINWP2Ea5agCFje2d8L0eRzKqF3njs7tAe7uJkYeIFx7du7Gtn+8NxRiGMe8kbQrGyvRjaj4FYoua36BmSzFS94Pxc5EeHjnHa3vHnX+JDLmMxr1HpGJZ+U=
+	t=1742950079; cv=none; b=r2CAZ5d785qjvTZgYcIkr8Il/RGmin7pjP/DjrY1sR7G6Gsb1M4p8KvMT7iN/lA0TUTa5b1/XEvErg8ze/7VtwMICxixi5bZtbxZns+syhvgvmUjkg2ojskw+GImI+oMwY8pDL+rH0cDPVn5DSQpzj9Sb2aVSYod9FFVIdD3IjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742950012; c=relaxed/simple;
-	bh=EJhGVtvblB5u8mqKayDM9dm4ZKNJvU7x/R5GvShO35o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UWLQmgW79YPdy1aCtPrLvtUQXpJE7ye7iPlyBD/r2Ortw2pLj+JeJFAvXUcOWqPf/HLruNPt/XEOe/fErBArK14DdjjslmDctpiMOFgDkcMkMrjT3+3dPc7XjaHQMOtzpzM6QtEEVA4+TY7RsI5DE/wZpXZnmWmzUMkpXgvgZb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=HozrPrDr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="HozrPrDr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F14A3C4CEE4;
-	Wed, 26 Mar 2025 00:46:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742950012;
-	bh=EJhGVtvblB5u8mqKayDM9dm4ZKNJvU7x/R5GvShO35o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HozrPrDr2j/VNcNpZlHoxZfE1VOBIt1G4x0F+vVKAY2VkgxWUBs+TYSdoprsCfTnJ
-	 kUfhsNuLOf5CE7B/s4v96Xx/woXAx/ipEzzAD/ti5ZvlWkXfX5mbwNBhLMXBZJK5U4
-	 CBatyIaPdDBwbDEdFikfNxbJ2UFU5pHagGaW9Fb4=
-Date: Tue, 25 Mar 2025 20:45:29 -0400
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Raag Jadav <raag.jadav@intel.com>, Lee Jones <lee@kernel.org>,
-	giometti@enneenne.com, raymond.tan@intel.com,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] mfd: intel_ehl_pse_gpio: Introduce Intel Elkhart
- Lake PSE GPIO and TIO
-Message-ID: <2025032514-ipad-schilling-9928@gregkh>
-References: <20250307052231.551737-1-raag.jadav@intel.com>
- <20250307052231.551737-2-raag.jadav@intel.com>
- <20250314124450.GP3890718@google.com>
- <Z9QxqH3DJvyW3sjo@smile.fi.intel.com>
- <20250314135735.GQ3890718@google.com>
- <Z9z49lfWV6LjUnaI@black.fi.intel.com>
- <2025032115-gloomily-cubbyhole-dd8e@gregkh>
- <Z91oHCpfOkvgJmzP@smile.fi.intel.com>
+	s=arc-20240116; t=1742950079; c=relaxed/simple;
+	bh=yX/HUEArgxAuc3R2cUhlvLuGpwX74Hql+acxSqkXmDo=;
+	h=Content-Type:MIME-Version:Subject:To:From:Date:Message-Id; b=J01h5LcH51KTvuN7nxyQgyn3WB9HfHnQrY062519pdE7LxRO8XSfsXLfGRoJigSbo4eHwvJLZfGRt6W01QRukKCBAbdR5yyKpU/bUgQQSv41pDntY9J9jKqKEFeDtJMdw+Z5cn2WclL1hOf+RzM+YZ84D1tWWphVRlinDzlm324=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=ecovista.az; spf=fail smtp.mailfrom=ecovista.az; arc=none smtp.client-ip=103.55.160.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=ecovista.az
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=ecovista.az
+Received: from localhost (localhost [127.0.0.1])
+	by mail3.lpse.lkpp.go.id (Postfix) with ESMTP id 741D0F88F4
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 07:28:53 +0700 (WIB)
+X-Virus-Scanned: Debian amavisd-new at mail7.lpse.lkpp.go.id
+Received: from mail3.lpse.lkpp.go.id ([127.0.0.1])
+	by localhost (mail2.lpse.lkpp.go.id [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 2KHoTUko5Qbb for <linux-kernel@vger.kernel.org>;
+	Wed, 26 Mar 2025 07:28:53 +0700 (WIB)
+Received: from [77.239.124.122] (localhost [127.0.0.1])
+	by mail3.lpse.lkpp.go.id (Postfix) with ESMTP id E2EDDF88F1
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 07:28:52 +0700 (WIB)
+Content-Type: text/plain; charset="iso-8859-1"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z91oHCpfOkvgJmzP@smile.fi.intel.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: gloria
+To: linux-kernel@vger.kernel.org
+From: "Gloria" <hasan.alakbarzade@ecovista.az>
+Date: Wed, 26 Mar 2025 01:28:51 +0100
+Reply-To: office@pgindonesia.net
+Message-Id: <20250326002852.E2EDDF88F1@mail3.lpse.lkpp.go.id>
 
-On Fri, Mar 21, 2025 at 03:22:36PM +0200, Andy Shevchenko wrote:
-> On Fri, Mar 21, 2025 at 06:04:38AM -0700, Greg KH wrote:
-> > On Fri, Mar 21, 2025 at 07:28:22AM +0200, Raag Jadav wrote:
-> > > On Fri, Mar 14, 2025 at 01:57:35PM +0000, Lee Jones wrote:
-> > > > On Fri, 14 Mar 2025, Andy Shevchenko wrote:
-> 
-> ...
-> 
-> > > > Also, Greg has been quite vocal about converting PCI devices to Platform
-> > > > ones in the past.  We may wish to run this past him before continuing.
-> > > 
-> > > Greg, any objections on moving forward with platform device?
-> > 
-> > I have no context here at all, why would a PCI device EVER be a platform
-> > device?  That feels wrong on so many levels...
-> 
-> It's a multi-functional device, in other words that device provides a set of
-> (dependent or independent) subdevices. But do you have other suggestion?
-> The auxiliary bus?
+Hello.....
 
-Yes, that is exactly what the auxiliary bus code was designed and
-written for.
+
+Good day to you I am writing this message to you to seek your
+consent regarding onward investment plan,  in any country of yours.
+
+My name is Ms Gloria Johson., I'm the CEO of AMP
+Resources  LTD. We are involved in all sectors of oil and gas production.
+
+Our operation range from crude extraction , transportation, retail and dist=
+ribution. =
+
+I am a Canadian born Russian resident in Saint Petersburg
+Russia. =
+
+
+Because of the war in Russia ,  I want to start moving my funds to a truste=
+d person.
+funds out of countries i mentioned as  I can't no longer stand the hard san=
+ctions, over my funds in Holland and Paris and UK
+Base on.russian sanctions  is facing as a result of Putin and his stubbornn=
+ess. I
+have deposits i would like to move, each of the deposit is 20m l need a tru=
+sted
+person to manage the heritage.
+
+
+
+
+
+Best regards,
+
+Ms Gloria Johson.
