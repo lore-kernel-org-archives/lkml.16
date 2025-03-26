@@ -1,142 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAB5202C5D;
-	Wed, 26 Mar 2025 17:19:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677962045A5;
+	Wed, 26 Mar 2025 17:20:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743009582; cv=none; b=Ux1g5LfGgbJW8ePJos6Nb5OswxjeeHzb4+oZoQfVGq2DyBZcWBd1Bn4erejMuA+lZz9eAH0oNBKfn+hM1ak1rr4eWihQSkjCIDjaqQFNXLreKFb+K9pa3EgvCujYf+KAZ9D+oPQNpVg0vM6DxECxGWm8fDd92/btnM3w+sDyfrY=
+	t=1743009602; cv=none; b=ID7GNIMokGz6pkbTvOD/uLnzYDNidCK3i1klnXxS6TgQ/KMH8+fXYTO10FfLGm7SKggevp/EQezl1f7WxCSQiGC1jkFkRX2QFFbytLqWURqrsbmQdT5MF5Hr5bm8gVMCwdGfZycnyttQZHYM2QFRdqU6g1oYzaq3w43hWnkCLKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743009582; c=relaxed/simple;
-	bh=KTBrm4WbDj3jrDr3AvU95JjjtHXOiRQkBglBixZek4c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ih4mZ55pG76FXifjZRcPtVfKiet3aa054GDUM3tp1pToVImswGyVe7gUtVzUXVpW92y7fHDtRu7ufeI4vz6EwSi3EqLl08aPzXAjWDpEVIPH/txtwdJT9GpEZn5liUnHmAF+m8aWm7YJVp7i0A1FX0DMA2kA3IEWwQP9QBnEos4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=un2i0acs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743009602; c=relaxed/simple;
+	bh=TV35+h4e/crRXr07a3kD1VYKyr2CqtTlwDZAljJRtfM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jXiUorpZ/XBRAw+BnbdM7a9OoWmLBx3aMmShdSB8NEoOu8B6p1GtSvYdGJS5X1fpyHj8c3ChDiioJhseQPBMmHJMT588Zj5q2wKqGXzovhg15z3bbPdmP9tVpoFmhKTcLfjwmXE10i2oF25F6CSR1XGvQPmx0hTflzJlyaEm3yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S0lIUjLs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="un2i0acs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AAA3C4CEE2;
-	Wed, 26 Mar 2025 17:19:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S0lIUjLs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42D91C4CEE2;
+	Wed, 26 Mar 2025 17:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743009581;
-	bh=KTBrm4WbDj3jrDr3AvU95JjjtHXOiRQkBglBixZek4c=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=un2i0acsg1hjYpObtYDIR1yN6uezD9ce40Kn3vxvjIE9aGWA47y8fRSxI4IFrXP0e
-	 EDGl/HSKrc7qLOeMgdcm6K6mY5W61SJwUdz6v8FNzE2yrLv7PlTZJfLfKlMpk/RUxu
-	 02lokKZBHA+oesOGar3aOmEBv5JDzsHajUNelW5invbE/UJdRw4moFS7t0P6qLFxa9
-	 QojoMEoMmItJrtQvgb9zct3lDMe1hG/mCrdKVEsSl04KcS/AAyfNHPu71OW7yz3iDl
-	 rqVn/VLNOkRhCJtkkWHenlR3zm7HLxoHs13Ph/VqRywa/c/Hp/Sp3hlLezqQvTJfvQ
-	 p9dBr+cKhbTPQ==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Wed, 26 Mar 2025 09:32:32 -0700
-Subject: [PATCH v2 2/2] lib/string.c: Add wcslen()
+	s=k20201202; t=1743009601;
+	bh=TV35+h4e/crRXr07a3kD1VYKyr2CqtTlwDZAljJRtfM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=S0lIUjLsvOKGzXvuU3du1tzyOLQm0Hxh2DcDAvjPwapFq9edH0GX164iidVHmOCIh
+	 RgcQI+MeTIquWXGXN/izub6tmM7VgEnFmTVfRM3F+vogH+LBEzmYiuH4iVGkYXd0WA
+	 HPE9jb2osqKEjh1S+tRjflX7jOkYRTxBVLSJSplZKc5ZL1Lw0wAcX/8BizToTQJOjn
+	 JtAnaOfbk3DkgAo0vzjL7HBo33128KeNXVB4jaisiU39K5PibZew6A7Q5dNXCZvQoW
+	 3Yf18oQR2lwz/ZxApvA4cx/++TQfQZWKL0k32KlrLW5pQGlTSilAtBX7rK0rsZwvlL
+	 etJ+WPzXq4D6A==
+Message-ID: <c1959f95-9ee1-4597-b6ec-fbedc8a872db@kernel.org>
+Date: Wed, 26 Mar 2025 18:19:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: dt-bindings: Add OmniVision OV02C10
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, robh@kernel.org,
+ hdegoede@redhat.com, mchehab@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bod@kernel.org
+References: <20250324171508.GA668235-robh@kernel.org>
+ <20250326150114.71401-1-bryan.odonoghue@linaro.org>
+ <W8_0Ch2J0PWJ5pKHojZjFbM8huvxWlaWajtl_uhQF3UszGH_O8WTRZdQxh_eHs2JzLOx7CCxx01UZDHPQqAyCA==@protonmail.internalid>
+ <1dd46a9e-e97d-415a-9e33-67ee234c4bac@kernel.org>
+ <0de575dc-5afb-40fb-be30-99906d0e493b@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <0de575dc-5afb-40fb-be30-99906d0e493b@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250326-string-add-wcslen-for-llvm-opt-v2-2-d864ab2cbfe4@kernel.org>
-References: <20250326-string-add-wcslen-for-llvm-opt-v2-0-d864ab2cbfe4@kernel.org>
-In-Reply-To: <20250326-string-add-wcslen-for-llvm-opt-v2-0-d864ab2cbfe4@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Andy Shevchenko <andy@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, llvm@lists.linux.dev, 
- stable@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3083; i=nathan@kernel.org;
- h=from:subject:message-id; bh=KTBrm4WbDj3jrDr3AvU95JjjtHXOiRQkBglBixZek4c=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDOlPzFWVThj1n0lOqLQ/fu1pX21+WNfWUy6e5/a4xUdk/
- az/Ivyro5SFQYyLQVZMkaX6sepxQ8M5ZxlvnJoEM4eVCWQIAxenAExEfgEjw9XCxco+M7W5an31
- bQ1ibD2MPqnbCaq6sD8ymXH7Cv/WGwx/5bu1K/tmviphUZ+spz3n7fec/MUR8x/XN5197XNh2s4
- 7bAA=
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-A recent optimization change in LLVM [1] aims to transform certain loop
-idioms into calls to strlen() or wcslen(). This change transforms the
-first while loop in UniStrcat() into a call to wcslen(), breaking the
-build when UniStrcat() gets inlined into alloc_path_with_tree_prefix():
+On 26/03/2025 18:09, Bryan O'Donoghue wrote:
+> On 26/03/2025 15:40, Krzysztof Kozlowski wrote:
+>> On 26/03/2025 16:01, Bryan O'Donoghue wrote:
+>>> Add bindings for OVO2C10 a two megapixel 1080p RGB sensor.
+>>>
+>> You already sent this and got some review. What's more, it's exactly the
+>> same as OV02E10, so just put it to that file.
+>>
+>> Best regards,
+>> Krzysztof
+> 
+> They aren't exactly the same.
+> 
+> The i2c address of the sensors is different 0x10 for one and 0x36 the other.
+> 
+> Also different data-rates for each chip.
 
-  ld.lld: error: undefined symbol: wcslen
-  >>> referenced by nls_ucs2_utils.h:54 (fs/smb/client/../../nls/nls_ucs2_utils.h:54)
-  >>>               vmlinux.o:(alloc_path_with_tree_prefix)
-  >>> referenced by nls_ucs2_utils.h:54 (fs/smb/client/../../nls/nls_ucs2_utils.h:54)
-  >>>               vmlinux.o:(alloc_path_with_tree_prefix)
 
-The kernel does not build with '-ffreestanding' (which would avoid this
-transformation) because it does want libcall optimizations in general
-and turning on '-ffreestanding' disables the majority of them. While
-'-fno-builtin-wcslen' would be more targeted at the problem, it does not
-work with LTO.
+I meant bindings are exactly the same, unless I missed something.
+Devices are similar enough as well.
 
-Add a basic wcslen() to avoid this linkage failure. While no
-architecture or FORTIFY_SOURCE overrides this, add it to string.c
-instead of string_helpers.c so that it is built with '-ffreestanding',
-otherwise the compiler might transform it into a call to itself.
+> Seems simpler to me to have two separate files ?
 
-Cc: stable@vger.kernel.org
-Link: https://github.com/llvm/llvm-project/commit/9694844d7e36fd5e01011ab56b64f27b867aa72d [1]
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
- include/linux/string.h |  2 ++
- lib/string.c           | 11 +++++++++++
- 2 files changed, 13 insertions(+)
+Not really, more files to maintain, more trivialities to fix if we
+decide to change something in all bindings (e.g. style).
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 0403a4ca4c11..4a48f8eac301 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -7,6 +7,7 @@
- #include <linux/cleanup.h>	/* for DEFINE_FREE() */
- #include <linux/compiler.h>	/* for inline */
- #include <linux/types.h>	/* for size_t */
-+#include <linux/nls_types.h>	/* for wchar_t */
- #include <linux/stddef.h>	/* for NULL */
- #include <linux/err.h>		/* for ERR_PTR() */
- #include <linux/errno.h>	/* for E2BIG */
-@@ -203,6 +204,7 @@ extern __kernel_size_t strlen(const char *);
- #ifndef __HAVE_ARCH_STRNLEN
- extern __kernel_size_t strnlen(const char *,__kernel_size_t);
- #endif
-+extern __kernel_size_t wcslen(const wchar_t *s);
- #ifndef __HAVE_ARCH_STRPBRK
- extern char * strpbrk(const char *,const char *);
- #endif
-diff --git a/lib/string.c b/lib/string.c
-index eb4486ed40d2..2c6f8c8f4159 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -21,6 +21,7 @@
- #include <linux/errno.h>
- #include <linux/limits.h>
- #include <linux/linkage.h>
-+#include <linux/nls_types.h>
- #include <linux/stddef.h>
- #include <linux/string.h>
- #include <linux/types.h>
-@@ -429,6 +430,16 @@ size_t strnlen(const char *s, size_t count)
- EXPORT_SYMBOL(strnlen);
- #endif
- 
-+size_t wcslen(const wchar_t *s)
-+{
-+	const wchar_t *sc;
-+
-+	for (sc = s; *sc != '\0'; ++sc)
-+		/* nothing */;
-+	return sc - s;
-+}
-+EXPORT_SYMBOL(wcslen);
-+
- #ifndef __HAVE_ARCH_STRSPN
- /**
-  * strspn - Calculate the length of the initial substring of @s which only contain letters in @accept
-
--- 
-2.49.0
-
+Best regards,
+Krzysztof
