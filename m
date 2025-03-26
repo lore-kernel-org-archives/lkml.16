@@ -1,139 +1,131 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29FC82899;
-	Wed, 26 Mar 2025 22:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9D882899
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 22:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743028847; cv=none; b=OwSYe5wrJ6SwI6jYT7OISCUguZHBcGwTUWxkCQK1vxbL/moAcmLYrjKeltDp68vtahPmmSXSClUN1HQbTZFF9eDyUNMldAS/y+3gO64i+kdNq9XD44gd79WP1JHu/qDIaIMXqVCQPW5TA5Lj6ltUhsWuxSmZWM2lvGeIzQARNqY=
+	t=1743028864; cv=none; b=eRF1YPFo+6HjIianiymHP0gHllkDwe0UEQlwOLvQM63/wbYu47Tto1LobpoVRaO+OenrkAixwZjk0mDyF82xhAhLpcRvBD8DZO30jjKkyJcyvSx/LlmHETsyJrp36OI+tbTs4E6nM/suWyCHyZTbFlcZUNFMS5C0kTyLygG6P9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743028847; c=relaxed/simple;
-	bh=L9A15sjzLr1fEWncr19j20ydfM7A+gAYG8NML9w9nKk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N39AOSb7aczcv4AGyHXFZ1SF76xfN6n7s5Xjknxi7pYn8Yk+IlJpYknhRNuPxkm1bSteJB0cF0XfqU49NLUGzsgSLn9kqK3nMKpKUTe2IFGAf8UPcwUs24oC2sqejv6JcbRgZKK5Ng8e6yMm1MIHqlXcekpaUDjcHXfruFMBuCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NH+DuR3B; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743028864; c=relaxed/simple;
+	bh=QTPpgTyCOHd4BJPeY2buBn0sbwn91/ympFJZZ9fXfVk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HefBtsClM+wip99NRF2PfJZ8srnY1Fi9sJsgJuVUW67nhf8ghxdFL6gMM/ixD9hpn0MNue9FQZrtrEyuR/XKeTsILpiA3ylyodX9cTvrYrAF3KqN0SHuOJ2Yj2x+xhvj5yBmxmmJc1fxvsQVa+1oG2stxCdTlHeUxNq2WrYbn/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ogqu1Y9n; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NH+DuR3B"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac289147833so65407466b.2;
-        Wed, 26 Mar 2025 15:40:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ogqu1Y9n"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5cbd8b19bso1817a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:41:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743028844; x=1743633644; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XV50vEzrK1pDVZvoneCyBVVV/DstYz+cH9XtIlryO4Y=;
-        b=NH+DuR3B77N95lDmvkKyCTdyYKoUYwxfOWOwicKKsuMEnZmDNJdlHFpokrFGn/Vcrj
-         mIQdvA1zul5a06JlkuGLIwfDQOdNUNCZgPWWwettTh9C3PLsMqBFqd78IGLv4KnBRoDh
-         tbVAVcRsN11XCta0OsI8T1RSaYUrLhoE05x7s3wbJraG4qF5WhstNYr3R9CSysgFGb/6
-         oZhLsohhsKoq7TtrpsCY6tUEvrc7RZS6cOkx8XcPVGvZ8zNVzMO/krIPzYjGYu6bTcgH
-         dGFGiW8jmPbQ+HHmLU+D4X5U/268rW1wUUNQt3+ten2XJLgkR0lwACvC/gQUJqyek6wt
-         uWbA==
+        d=google.com; s=20230601; t=1743028861; x=1743633661; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kCAjqCKmDiWM+c5x9zuKEJ8IWxkQGJKcWbRaE9Ofars=;
+        b=ogqu1Y9nsFZ9fmffSDe0WKbE43fOOtrNF11uJdwzrKqIzA1GGVE6NomnTbnbD7Np8w
+         KGrwScRg/1rF2CAdpfpKz64tPliTyZKhaYUo7jOanZOjsdQtin60u8+7THWOaRayA7NU
+         saAfndo96Z+A4ostQJ1BCxuw1lS2p3gmagyzGBTL8klz0o1uQ1AW//+Fgub0uupKVpFo
+         Owj1Dg+sW7UR1hDzHKZ0APahXVsb7ZsbP5w6DamK8rq/IYEWrRF3nWqOBrWjggoR+Nc9
+         4GwIr4oRsFDeCQh7oJ9LSgOhAnr2y+s+km0UwDEq6zkgp4WtRFf+Psdh94sVipQVwQpt
+         VsRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743028844; x=1743633644;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XV50vEzrK1pDVZvoneCyBVVV/DstYz+cH9XtIlryO4Y=;
-        b=Os7Rh1wMF/vHnvlYEpKXz25WhwzDMCFXmiPg3wmgmby3x/pVfMXXpXFb2XNghDHgp8
-         bBqJWbo29QdOizlktfvUN5nEkCrNRRL75rT3UwR+PTXa/OHZlwtMG27jViFlzno/0Ovl
-         42d4O4ocnbRS3GnDTyQpE59aBdIJL3Q6Uq6r+hiFx1pMvk14YOlmCso7n29MwkQ4ddZ4
-         qGcoqkCPcyY0PAELyLMep/G/rBFC1RXIAJcYuQrKUV+wvRU+BYBuw3Ni16MU9roluBKZ
-         sHN9FeFqu6El1KDrkLKt0RVMGyQKWInx+KvE0YCLrTH9Lh5xK7b1JHcjMrhxcXE4MncT
-         8ZJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWSAtq2caXIGWB3lDg9GmnSuJcSSdHL8nq+y9ccWvdHkYiVVppDiKRCe9yn5HrrT/Tqo9BYDsekfe/+e08=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc0pNBnbVPFhbY84SPiasrrTGomDITAurzuP74ULM955PTdvTC
-	31G0QcuePR4UUTP2DALpqBW4LLzvF87/Y04QuiLYQi2wXDXBAFDPDFu78Q==
-X-Gm-Gg: ASbGnct+riHarBXGKqxtlJSAkbfQZP1y1rUkiWPuxYS+5VkA3xoT7ljEwmmLxJmSwJX
-	AwLhmaDKSrwMZn300L9sd1cNCYH9msnm0oWmLznGkbpc67jLsPfeHeHNAygmKnTZ35aBpj7calf
-	nL/7PyVeM3SfSjfTTdh5nB6zDB2iYDazoswCVB1IPYq8rrDgh6pkfpUwy7+pLuPLVVVEiT5CpoU
-	rTaODhL/S00Nb93mzHCVCKEHYMaiQXWVEWGSa5n7BSSvDKP3BMcvAoToypCO/AUb3jlnLFyNbHv
-	lWU5UX5RZDIMuzKV4C18UG7Z+2PxelRol+l3bq/cw1SBTPmPMEaWpg==
-X-Google-Smtp-Source: AGHT+IG61eFdSVp6Z+C4dXoYNCupfDKO+csq0BW5TxID1dFzHv41/oAlZoAKK+Xkv1PEo0FJyclu3g==
-X-Received: by 2002:a17:907:6e90:b0:ac2:b1e2:4b85 with SMTP id a640c23a62f3a-ac6fae493e7mr86588866b.3.1743028843907;
-        Wed, 26 Mar 2025 15:40:43 -0700 (PDT)
-Received: from [192.168.8.100] ([85.255.233.207])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef869f72sm1095396766b.32.2025.03.26.15.40.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Mar 2025 15:40:43 -0700 (PDT)
-Message-ID: <e5fb965e-25a4-4f72-bc68-17ccd1fba794@gmail.com>
-Date: Wed, 26 Mar 2025 22:41:31 +0000
+        d=1e100.net; s=20230601; t=1743028861; x=1743633661;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kCAjqCKmDiWM+c5x9zuKEJ8IWxkQGJKcWbRaE9Ofars=;
+        b=vEGDp7vZ1O8xfkRB8cRwJMzbNXZxm3rQUkca2OVwOnekACfJsgz0LrCkVtTrG/FOnU
+         AuSmHOPfL/X86jES5KS0TOAnlsoMXMcutRvx+9BjiBZXf4XTQxt9GabcYa/77Xwjt2/0
+         uJrEi95qFCWN2gzch19lqWYTzRq9QZbUH0Xn0Onje4rlpX77xBpsS5dFSDmKOzi64jnh
+         l8Vbei8+b+Z6MpdPa2r4fs1iDKH+8jR6eq/UAswiywdjI1Yci9N43HxrmI1xV0WaYWRT
+         lRoVFaxZw5AV1jz68aUL2+6xvCXI7XIAssBb1Y+yZBCicxRUcoSX5H5tCWPRlSum9GJB
+         a/fw==
+X-Forwarded-Encrypted: i=1; AJvYcCW7bWYlSvJ2f4Mi7Ti4JWli6BKbfPLibke+hTPviBjZM5gBOmMn53ApvSj9XQLyozk4Vybo/qL3ZglpftE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPEU4rSdJk9i+2VaW1R1qYJibuAqQxQqzU1ed5Cf9WX5v/4le+
+	BzSZ18U4uPaQLf8gTNelwo/6BGsdPmXmYNeblaFCGx+A8nYl8Rndr7DDwT8MOQI0CBHw/GuNB+e
+	/EMnuiWlk5/iNM048K8H5/05ggv7YjOI3qtHV
+X-Gm-Gg: ASbGncvBG3rWOxFeKWoLgxxa7Tf0hwkOmjrKasDMmd95/T7KSorW2SspDpRCRHDh82y
+	im4OmG0ZvKyjazD1T0ynZM5nRmoYMNosk4KCJFeJ7eohaP4i2ZDPw4ZthF0ekNGr9Vh3wZU83RT
+	vxP8i32ZXYTGldbsG6/XN+dpgPAmWlR66dqQ==
+X-Google-Smtp-Source: AGHT+IE21vOhXCZ+0e+Y62cuSV2yJue8B99CFKpOojbrdWLK6qi64Al8ktq+5pMyclA7qwzF8RL5mFM6DvPZizL4J8Q=
+X-Received: by 2002:a50:99d9:0:b0:5e6:15d3:ffe7 with SMTP id
+ 4fb4d7f45d1cf-5edac33de81mr17286a12.7.1743028860754; Wed, 26 Mar 2025
+ 15:41:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] io_uring/net: use REQ_F_IMPORT_BUFFER for send_zc
-To: Jens Axboe <axboe@kernel.dk>,
- Caleb Sander Mateos <csander@purestorage.com>
-Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250325143943.1226467-1-csander@purestorage.com>
- <5b6b20d7-5230-4d30-b457-4d69c1bb51d4@gmail.com>
- <CADUfDZoo11vZ3Yq-6y4zZNNoyE+YnSSa267hOxQCvH66vM1njQ@mail.gmail.com>
- <9770387a-9726-4905-9166-253ec02507ff@kernel.dk>
- <CADUfDZr0FgW4O3bCtq=Yez2cHz799=Tfud6uA6SHEGT4hdwxiA@mail.gmail.com>
- <570272b0-4d96-4e98-bf73-e313cc49918c@kernel.dk>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <570272b0-4d96-4e98-bf73-e313cc49918c@kernel.dk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <39FF69551D01924F+20250326174156.390126-1-wangyuli@uniontech.com>
+In-Reply-To: <39FF69551D01924F+20250326174156.390126-1-wangyuli@uniontech.com>
+From: Sami Tolvanen <samitolvanen@google.com>
+Date: Wed, 26 Mar 2025 15:40:24 -0700
+X-Gm-Features: AQ5f1Jp0Jo48hdofqbBlQASQBtWdmyqysx7wSPwMT5oCtUtcj5ZzxpqGYEV4jb8
+Message-ID: <CABCJKue38PPo8LXSuBN1xyJqSey6Wxe6_+jL=tx7c0R4btNV7w@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: deb-pkg: Add libdw-dev:native to Build-Depends-Arch
+To: WangYuli <wangyuli@uniontech.com>
+Cc: masahiroy@kernel.org, nathan@kernel.org, nicolas@fjasle.eu, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	petr.pavlu@suse.com, zhanjun@uniontech.com, niecheng1@uniontech.com, 
+	guanwentao@uniontech.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/26/25 17:31, Jens Axboe wrote:
-> On 3/26/25 11:23 AM, Caleb Sander Mateos wrote:
->> On Wed, Mar 26, 2025 at 10:05?AM Jens Axboe <axboe@kernel.dk> wrote:
->>>
->>> On 3/26/25 11:01 AM, Caleb Sander Mateos wrote:
->>>> On Wed, Mar 26, 2025 at 2:59?AM Pavel Begunkov <asml.silence@gmail.com> wrote:
->>>>>
->>>>> On 3/25/25 14:39, Caleb Sander Mateos wrote:
->>>>>> Instead of a bool field in struct io_sr_msg, use REQ_F_IMPORT_BUFFER to
->>>>>> track whether io_send_zc() has already imported the buffer. This flag
->>>>>> already serves a similar purpose for sendmsg_zc and {read,write}v_fixed.
->>>>>
->>>>> It didn't apply cleanly to for-6.15/io_uring-reg-vec, but otherwise
->>>>> looks good.
->>>>
->>>> It looks like Jens dropped my earlier patch "io_uring/net: import
->>>> send_zc fixed buffer before going async":
->>>> https://lore.kernel.org/io-uring/20250321184819.3847386-3-csander@purestorage.com/T/#u
->>>> .
->>>> Not sure why it was dropped. But this change is independent, I can
->>>> rebase it onto the current for-6.15/io_uring-reg-vec if desired.
->>>
->>> Mostly just around the discussion on what we want to guarantee here. I
->>> do think that patch makes sense, fwiw!
->>
->> I hope the approach I took for the revised NVMe passthru patch [1] is
->> an acceptable compromise: the order in which io_uring issues
->> operations isn't guaranteed, but userspace may opportunistically
->> submit operations in parallel with a fallback path in case of failure.
->> Viewed this way, I think it makes sense for the kernel to allow the
->> operation using the fixed buffer to succeed even if it goes async,
->> provided that it doesn't impose any burden on the io_uring
->> implementation. I dropped the "Fixes" tag and added a paragraph to the
->> commit message clarifying that io_uring doesn't guarantee this
->> behavior, it's just an optimization.
->>
->> [1]: https://lore.kernel.org/io-uring/20250324200540.910962-4-csander@purestorage.com/T/#u
-> 
-> It is, I already signed off on that one, I think it's just waiting for
-> Keith to get queued up. Always a bit tricky during the merge window,
-> particularly when it ends up depending on multiple branches. But should
-> go in for 6.15.
-> 
-> When you have time, resending the net one would be useful. I do think
-> that one makes sense too.
+Hi,
 
-If that's about "io_uring/net: import send_zc fixed buffer before going
-async" please don't, because the next second you'll be arguing that
-it's a regression to change it and so it's essentially uapi, and we
-end up with 2 step prep with semantics nobody ever will be able to
-sanely describe, not without listing all the cases where it can fail.
+On Wed, Mar 26, 2025 at 11:06=E2=80=AFAM WangYuli <wangyuli@uniontech.com> =
+wrote:
+>
+> The dwarf.h header, which is included by
+> scripts/gendwarfksyms/gendwarfksyms.h, resides within the libdw-dev
+> package.
+>
+> This portion of the code is compiled under the condition that
+> CONFIG_GENDWARFKSYMS is enabled.
+>
+> Consequently, add libdw-dev to Build-Depends-Arch to prevent
+> unforeseen compilation failures.
+>
+> Fix follow possible error:
+>   In file included from scripts/gendwarfksyms/cache.c:6:
+>   scripts/gendwarfksyms/gendwarfksyms.h:6:10: fatal error: 'dwarf.h' file=
+ not found
+>       6 | #iIn file included from nscripts/gendwarfksyms/symbols.cc:lude6=
+ :
+>   <dwarf.hscripts/gendwarfksyms/gendwarfksyms.h>:6
 
--- 
-Pavel Begunkov
+I think something went wrong when copying the error message?
 
+>   :      10| :          ^~~~~~~~~
+>   fatal error: 'dwarf.h' file not found
+>     6 | #include <dwarf.h>
+>       |          ^~~~~~~~~
+>
+> Fixes: f28568841ae0 ("tools: Add gendwarfksyms")
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+> ---
+>  scripts/package/mkdebian | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
+> index 0178000197fe..25edee97fff7 100755
+> --- a/scripts/package/mkdebian
+> +++ b/scripts/package/mkdebian
+> @@ -209,7 +209,7 @@ Rules-Requires-Root: no
+>  Build-Depends: debhelper-compat (=3D 12)
+>  Build-Depends-Arch: bc, bison, flex,
+>   gcc-${host_gnu} <!pkg.${sourcename}.nokernelheaders>,
+> - kmod, libelf-dev:native,
+> + kmod, libdw-dev:native, libelf-dev:native,
+>   libssl-dev:native, libssl-dev <!pkg.${sourcename}.nokernelheaders>,
+>   python3:native, rsync
+>  Homepage: https://www.kernel.org/
+
+But the change looks correct to me. Thanks!
+
+Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
+
+Sami
