@@ -1,204 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77AE22ACD1;
-	Wed, 26 Mar 2025 17:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3450423E226
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 17:38:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743010714; cv=none; b=cMxxVS2ISajpUjomQFEmEA/BTPC/st92xp99S8M5867rSjTvqnzr76QNClycr10YqL/Vvqu2ziIqIt9YdEIrfYvImf5YzKgZMGzVNNNstNxAm//R/IgA+hQEbeY+O3YQ1WkXi13iULR75Ser3gAttpQhOAHcebYVzHhsv7AUReE=
+	t=1743010720; cv=none; b=sA/LM4s8JZu+eTs8xKodUOZuQnXn5ctGj3lNoQ7CyrxILfhFuUnMhvygMzRrWorIQKIr5fHGaYY5ulvbEryvRNyvO7c3V2hqNXiu/wEXVHFtrMaCwakbXZcNxjJBRCF+66w+zI+od81Gou3oxsUBdZ93yo12pN+UXltAD5ufoK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743010714; c=relaxed/simple;
-	bh=ZyxutTsVh46fH3XEd2TbSh2/N648DOeEQ0+sSrSt2iU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Asemec58egtuRTClSYCLV+fxyUmoI7oUH6+tRQUuNnWf6HVlk3Pbpj25UNYoNeZar/k2UGx9gHzu1xaVnxaA/An1EyBi/khNWodEiUlu9eRiDWwYQ3m8hd27J7oJ8icKiAOe4rLYIjziKjX+aOAFfAPi2BOQTe0vfVLphlgGz5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fNLiZKgm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743010720; c=relaxed/simple;
+	bh=2oIE0G5XW4T1LPwCREw3CNOAFjNp0UmQyd+rq0p3SvM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tuGEM5oby90YMubdOEOkuGINiPxRMXZbFecnZAQOYBlLCIIUqoSjDHfCZLgnnO60I79QBvPx8Ajj2RqnEw6X6T4tDOxlauDbF5cNwCw9LREz/OdII4zhLtYn+XUhZWejvRZJPs9mW/n1a87UCSg9ErT+qQU9GhjW+9Woon0rtmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qAf8GKhs; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fNLiZKgm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B513C4CEF2;
-	Wed, 26 Mar 2025 17:38:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743010714;
-	bh=ZyxutTsVh46fH3XEd2TbSh2/N648DOeEQ0+sSrSt2iU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fNLiZKgmPihLdjwoInNV7fqOMOc/StItt6c3ipl+qfnrjmUIPCojqIbIqcgR3kQr2
-	 QZUV1QTiYfD0eOU/hR9LUwbm5c4ZGkQZNt1LsTm6MYi+LkgedCgFQd0mgNn8Vi/RqU
-	 j5s6ws2mKKQp81hDDZrpKh70ICJngD3NOB1Fe3Ttbf0MimxG64mF6bxx3ciqBoXNhS
-	 8Odoew8ggFEnzscFFQbgxWZqorgkQPCi3GW7yHmrKM0n0gGEF2Xq5r0QlFZPsj7nX9
-	 G89yQcs34d7wUxOtGWZGCdtqlnh5wShQKEbncOC/SnfYfRoIA5kK5l/AerhpyxHnjs
-	 ko+095DmLIqzg==
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-600038877ebso70287eaf.0;
-        Wed, 26 Mar 2025 10:38:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU6XxPbL831fg9pWAv14daxpE8o+WawW9TbWmVqXtvFHkrDHc7q6aIcnjjnQGBPvObNf+1eXlSaez5L@vger.kernel.org, AJvYcCULBsBL7/5ubP/nU+8O611BEALjgMn6e6pEA3iFtXSe1B8ORy0plqNCs5DpE2Tzg1GXbtZ5JDJLYWQaOHY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwD1egAa81CVr5fZAxzQsgtgek7ipXz1MqiBHP4hqciSORwQK39
-	QXeLfbR8ZOlBj32mLfKL1wGWR5vJmBL6qGD8zYNFvaMGtiCjbJvLvUbN8E/oTmmhbyumJIEhJXc
-	SB0/pC0Knz1v9cReikLc7MiwV884=
-X-Google-Smtp-Source: AGHT+IGg7eH9QWYfbDrBJ2FJDudyXDT9YK3hV3X5mb5l8doONA3okbIYrYqOJiry/b3Gtou6+i/QFZ04lWY33we4Jao=
-X-Received: by 2002:a05:6870:5b9b:b0:2c1:3d93:c192 with SMTP id
- 586e51a60fabf-2c848221302mr204027fac.37.1743010713193; Wed, 26 Mar 2025
- 10:38:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qAf8GKhs"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cef035a3bso1013735e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 10:38:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743010716; x=1743615516; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8qVND4tenJBQx/xK/Ve6LMeZrg3oeI6UK9LzOuingT0=;
+        b=qAf8GKhs0mwZ5APlu1v6/MlD3HXENHCsRwusJcb2T7JaxMCsb20kceDcdrvEyfYgJf
+         zAEynptz/CFcxNrXFHvTQXP3Q1HoP8n5CwBEvhY2vHmbeIwVPzm0LOrGb4Xg4q8zAgLb
+         fpH25XTmjLsrkFDyGb1gjjWqi7T7p3BYlFW8R4MWW50qZCu7VRZ8vCgVlYC1N82glLW3
+         QqK/G2jFgfSEJ3jpJusF6XYYiWqRCXiQDDxXg/4DTd7f+BG6l/6iGNX0tJY1XYdFDj9d
+         Ww5h9TAekOIIeCo+wgdQoEN8m4yH4Q3DAgAqfEo9oOFHcetzq4ViBfy10+m9j+hqG6/i
+         k8+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743010716; x=1743615516;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8qVND4tenJBQx/xK/Ve6LMeZrg3oeI6UK9LzOuingT0=;
+        b=N2nuGEZOtehiJsGkDAMcauukl2YzHEJU3tXSO7LEeyEnb29pAvjzgRiQGVKjSPiiiQ
+         KAHsdKsOX0sx/1OPyfYD+scuGh+tA11/2Xd+DgS87Ip6y40wBMQ8DhpSBhyMNBmOYnTi
+         R8oQYN9iX3ItcoV6hTZ3evkJtgJG71gHvyUhTB5dNQF8Do4Ioyr1uddhr3App75boQcr
+         AvzES9XoTKaBbJHyA9jIdwwVvAPRkfb6lgiIsnR3EIgyOqOMcx5v5YtcRaH3VCV8Lfxy
+         rACNI/rJvp1TJ/LXxCDUqMbATRNDtYxY54HdxH5kQ0pKgT85Xm6iivtnq2MZRa/N+/E8
+         SRPw==
+X-Forwarded-Encrypted: i=1; AJvYcCWf+rR6D0fVZFtlD+gUxa6Rya59pirCy30mWaQH7GKwzM72XrXNVYr1x/dKVkH1OPtyi9Z2liD/EQcPwkU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgYhiJFcglgFS/TWsxGg3idp89SZBjCjroc6ghcM+0rUHSuC1F
+	ysnhEN1xX6zRRcs7D4Y0MHmEWYEbxDmzUg94GeTKsZUjcxzDl12IF5EFGqvicJg=
+X-Gm-Gg: ASbGncvR6+7rmw5hinAk72iDWNZ+yAUj16TqX3Upv8CjdTbmXB0Iy12AlEGj2crtBKV
+	X8ZuVr2uVSIo1hvCt7sgngMOEtzpXao4E9PpwI7MyNvHnEC/dcXCY1RhRbdLDkkswOdtFhjr0tP
+	JMcF5+4iKhH1drn1xfwTXH+F2g3RjbsS/wAdXd5OLw0xaZuXbWpmWX5H0cYKyhU9bvNJ4HceB4e
+	45aeqBa6SIQA+TuxAnyKjiynpYZtaQUX0MDyrFUvWFn0f2juhiJ8CDJ+zE/QNx0DvFoHkAxWI6n
+	C2dplKuxrsZvl3b/sVMt25S2xXMQbzl0bVL1uN640oD50BGFJQ==
+X-Google-Smtp-Source: AGHT+IFWImSgAxE2tnY9m2ZViZ+epH+rNo6E42n/cKyi3Pxy880VgCejpCzrgRBe13sBLMsd3ILXAQ==
+X-Received: by 2002:a05:600c:1e0d:b0:43d:10c:2f60 with SMTP id 5b1f17b1804b1-43d8524f43cmr2296105e9.24.1743010716400;
+        Wed, 26 Mar 2025 10:38:36 -0700 (PDT)
+Received: from [192.168.1.247] ([77.81.75.81])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a6326sm17050515f8f.29.2025.03.26.10.38.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Mar 2025 10:38:36 -0700 (PDT)
+Message-ID: <f7d543f6-2660-460f-88ac-741dd47ed440@linaro.org>
+Date: Wed, 26 Mar 2025 17:38:34 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317093445.361821-1-csokas.bence@prolan.hu> <20250317093445.361821-2-csokas.bence@prolan.hu>
-In-Reply-To: <20250317093445.361821-2-csokas.bence@prolan.hu>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 26 Mar 2025 18:38:22 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0hJZBxU6SSq9C8gp2peETFWu0jbhrM82B5GvQkVXPR+9Q@mail.gmail.com>
-X-Gm-Features: AQ5f1JrcLyMXU0AXf56Zv0FLxsWH5M_UdoHXg48ickDdwk4WFSdM0LXMMkgNyG4
-Message-ID: <CAJZ5v0hJZBxU6SSq9C8gp2peETFWu0jbhrM82B5GvQkVXPR+9Q@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] pm: runtime: Add new devm functions
-To: =?UTF-8?B?QmVuY2UgQ3PDs2vDoXM=?= <csokas.bence@prolan.hu>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Varshini Rajendran <varshini.rajendran@microchip.com>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
-	Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Alexander Dahl <ada@thorsis.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Pavel Machek <pavel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 5/8] KVM: arm64: Introduce module param to
+ partition the PMU
+To: Colton Lewis <coltonlewis@google.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: kvm@vger.kernel.org, robh@kernel.org, linux@armlinux.org.uk,
+ catalin.marinas@arm.com, will@kernel.org, maz@kernel.org,
+ oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
+ yuzenghui@huawei.com, mark.rutland@arm.com, pbonzini@redhat.com,
+ shuah@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+ linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <gsnt1pulnepv.fsf@coltonlewis-kvm.c.googlers.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <gsnt1pulnepv.fsf@coltonlewis-kvm.c.googlers.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 17, 2025 at 10:35=E2=80=AFAM Bence Cs=C3=B3k=C3=A1s <csokas.ben=
-ce@prolan.hu> wrote:
->
-> Add `devm_pm_runtime_set_active()` and
-> `devm_pm_runtime_get_noresume()` for
-> simplifying common use cases in drivers.
->
-> Signed-off-by: Bence Cs=C3=B3k=C3=A1s <csokas.bence@prolan.hu>
-> ---
->  drivers/base/power/runtime.c | 36 ++++++++++++++++++++++++++++++++++++
->  include/linux/pm_runtime.h   |  4 ++++
->  2 files changed, 40 insertions(+)
->
-> diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-> index 9589ccb0fda2..821a8b4961d4 100644
-> --- a/drivers/base/power/runtime.c
-> +++ b/drivers/base/power/runtime.c
-> @@ -1568,6 +1568,24 @@ void pm_runtime_enable(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(pm_runtime_enable);
->
-> +static void pm_runtime_set_suspended_action(void *data)
-> +{
-> +       pm_runtime_set_suspended(data);
-> +}
-> +
-> +/**
-> + * devm_pm_runtime_set_active - devres-enabled version of pm_runtime_set=
-_active.
-> + *
-> + * @dev: Device to handle.
-> + */
-> +int devm_pm_runtime_set_active(struct device *dev)
-> +{
-> +       pm_runtime_set_active(dev);
-> +
-> +       return devm_add_action_or_reset(dev, pm_runtime_set_suspended_act=
-ion, dev);
-> +}
-> +EXPORT_SYMBOL_GPL(devm_pm_runtime_set_active);
 
-I said I didn't like it and I'm still not liking it.
 
-The problem is that the primary role of pm_runtime_set_active() is to
-prepare the device for enabling runtime PM, so in the majority of
-cases it should be followed by pm_runtime_enable().  It is also not
-always necessary to call pm_runtime_set_suspended() after disabling
-runtime PM for a device, like when the device has been
-runtime-suspended before disabling runtime PM for it.  This is not
-like releasing a resource that has been allocated and using devm for
-it in the above way is at least questionable.
+On 25/03/2025 6:32 pm, Colton Lewis wrote:
+> Hi James,
+> 
+> Thanks for the review.
+> 
+> James Clark <james.clark@linaro.org> writes:
+> 
+>> On 13/02/2025 6:03 pm, Colton Lewis wrote:
+>>> For PMUv3, the register MDCR_EL2.HPMN partitiones the PMU counters
+>>> into two ranges where counters 0..HPMN-1 are accessible by EL1 and, if
+>>> allowed, EL0 while counters HPMN..N are only accessible by EL2.
+> 
+>>> Introduce a module parameter in KVM to set this register. The name
+>>> reserved_host_counters reflects the intent to reserve some counters
+>>> for the host so the guest may eventually be allowed direct access to a
+>>> subset of PMU functionality for increased performance.
+> 
+>>> Track HPMN and whether the pmu is partitioned in struct arm_pmu
+>>> because both KVM and the PMUv3 driver will need to know that to handle
+>>> guests correctly.
+> 
+>>> Due to the difficulty this feature would create for the driver running
+>>> at EL1 on the host, partitioning is only allowed in VHE mode. Working
+>>> on nVHE mode would require a hypercall for every register access
+>>> because the counters reserved for the host by HPMN are now only
+>>> accessible to EL2.
+> 
+>>> The parameter is only configurable at boot time. Making the parameter
+>>> configurable on a running system is dangerous due to the difficulty of
+>>> knowing for sure no counters are in use anywhere so it is safe to
+>>> reporgram HPMN.
+> 
+> 
+>> Hi Colton,
+> 
+>> For some high level feedback for the RFC, it probably makes sense to
+>> include the other half of the feature at the same time. I think there is
+>> a risk that it requires something slightly different than what's here
+>> and there ends up being some churn.
+> 
+> I agree. That's what I'm working on now. I justed wanted an iteration or
+> two in public so I'm not building on something that needs drastic change
+> later.
+> 
+>> Other than that I think it looks ok apart from some minor code review 
+>> nits.
+> 
+> Thank you
+> 
+>> I was also thinking about how BRBE interacts with this. Alex has done
+>> some analysis that finds that it's difficult to use BRBE in guests with
+>> virtualized counters due to the fact that BRBE freezes on any counter
+>> overflow, rather than just guest ones. That leaves the guest with branch
+>> blackout windows in the delay between a host counter overflowing and the
+>> interrupt being taken and BRBE being restarted.
+> 
+>> But with HPMN, BRBE does allow freeze on overflow of only one partition
+>> or the other (or both, but I don't think we'd want that) e.g.:
+> 
+>>    RNXCWF: If EL2 is implemented, a BRBE freeze event occurs when all of
+>>    the following are true:
+> 
+>>    * BRBCR_EL1.FZP is 1.
+>>    * Generation of Branch records is not paused.
+>>    * PMOVSCLR_EL0[(MDCR_EL2.HPMN-1):0] is nonzero.
+>>    * The PE is in a BRBE Non-prohibited region.
+> 
+>> Unfortunately that means we could only let guests use BRBE with a
+>> partitioned PMU, which would massively reduce flexibility if hosts have
+>> to lose counters just so the guest can use BRBE.
+> 
+>> I don't know if this is a stupid idea, but instead of having a fixed
+>> number for the partition, wouldn't it be nice if we could trap and
+>> increment HPMN on the first guest use of a counter, then decrement it on
+>> guest exit depending on what's still in use? The host would always
+>> assign its counters from the top down, and guests go bottom up if they
+>> want PMU passthrough. Maybe it's too complicated or won't work for
+>> various reasons, but because of BRBE the counter partitioning changes go
+>> from an optimization to almost a necessity.
+> 
+> This is a cool idea that would enable useful things. I can think of a
+> few potential problems.
+> 
+> 1. Partitioning will give guests direct access to some PMU counter
+> registers. There is no reliable way for KVM to determine what is in use
+> from that state. A counter that is disabled guest at exit might only be
+> so temporarily, which could lead to a lot of thrashing allocating and
+> deallocating counters.
+> 
+> 2. HPMN affects reads of PMCR_EL0.N, which is the standard way to
+> determine how many counters there are. If HPMN starts as a low number,
+> guests have no way of knowing there are more counters
+> available. Dynamically changing the counters available could be
+> confusing for guests.
+> 
 
-Now, there is a reason why calling pm_runtime_set_suspended() on a
-device after disabling runtime PM for it is a good idea at all.
-Namely, disabling runtime PM alone does not release the device's
-suppliers or its parent, so if you want to release them after
-disabling runtime PM for the device, you need to do something more.
-I'm thinking that this is a  mistake in the design of the runtime PM
-core.
+Yes I was expecting that PMCR would have to be trapped and N reported to 
+be the number of physical counters rather than how many are in the guest 
+partition.
 
-If there were functions like pm_runtime_enable_in_state() (taking an
-additional state argument and acquiring all of the necessary
-references on the parent and suppliers of the target device) and
-pm_runtime_disable_and_forget() (that in addition to disabling runtime
-PM would drop the references acquired by the former), then it would
-make a perfect sense to provide a devm variant of
-pm_runtime_enable_in_state() with the cleanup action pointing to
-pm_runtime_disable_and_forget().
+> 3. If guests were aware they could write beyond HPMN and get the
+> counters allocated to them, nothing stops them from writing at counter
+> N and taking as many counters as possible to starve the host.
+> 
 
-If this helps, I can do some work on providing
-pm_runtime_enable_in_state() and pm_runtime_disable_and_forget() or
-equivalent.
+Is that much different than how it is now with virtualized PMUs? As in, 
+the guest can use all of the counters and the host's events will have to 
+contend with them.
 
-> +
->  static void pm_runtime_disable_action(void *data)
->  {
->         pm_runtime_dont_use_autosuspend(data);
-> @@ -1590,6 +1608,24 @@ int devm_pm_runtime_enable(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(devm_pm_runtime_enable);
->
-> +static void pm_runtime_put_noidle_action(void *data)
-> +{
-> +       pm_runtime_put_noidle(data);
-> +}
-> +
-> +/**
-> + * devm_pm_runtime_get_noresume - devres-enabled version of pm_runtime_g=
-et_noresume.
-> + *
-> + * @dev: Device to handle.
-> + */
-> +int devm_pm_runtime_get_noresume(struct device *dev)
-> +{
-> +       pm_runtime_get_noresume(dev);
-> +
-> +       return devm_add_action_or_reset(dev, pm_runtime_put_noidle_action=
-, dev);
-> +}
-> +EXPORT_SYMBOL_GPL(devm_pm_runtime_get_noresume);
-> +
->  /**
->   * pm_runtime_forbid - Block runtime PM of a device.
->   * @dev: Device to handle.
-> diff --git a/include/linux/pm_runtime.h b/include/linux/pm_runtime.h
-> index 7fb5a459847e..364355da349a 100644
-> --- a/include/linux/pm_runtime.h
-> +++ b/include/linux/pm_runtime.h
-> @@ -96,7 +96,9 @@ extern void pm_runtime_new_link(struct device *dev);
->  extern void pm_runtime_drop_link(struct device_link *link);
->  extern void pm_runtime_release_supplier(struct device_link *link);
->
-> +int devm_pm_runtime_set_active(struct device *dev);
->  extern int devm_pm_runtime_enable(struct device *dev);
-> +int devm_pm_runtime_get_noresume(struct device *dev);
->
->  /**
->   * pm_suspend_ignore_children - Set runtime PM behavior regarding childr=
-en.
-> @@ -294,7 +296,9 @@ static inline bool pm_runtime_blocked(struct device *=
-dev) { return true; }
->  static inline void pm_runtime_allow(struct device *dev) {}
->  static inline void pm_runtime_forbid(struct device *dev) {}
->
-> +static inline int devm_pm_runtime_set_active(struct device *dev) { retur=
-n 0; }
->  static inline int devm_pm_runtime_enable(struct device *dev) { return 0;=
- }
-> +static inline int devm_pm_runtime_get_noresume(struct device *dev) { ret=
-urn 0; }
->
->  static inline void pm_suspend_ignore_children(struct device *dev, bool e=
-nable) {}
->  static inline void pm_runtime_get_noresume(struct device *dev) {}
-> --
-> 2.48.1
->
->
->
+You can still have a module param, except it's more of a limit to the 
+size of the partition rather than fixing it upfront. The default value 
+would be the max number of counters, allowing the most flexibility for 
+the common use case where it's unlikely that both host and guests are 
+contending for all counters. But if you really want to make sure the 
+host doesn't get starved you can set it to a lower value.
+
+All this does sound a bit like it could be done on top of the simple 
+partitioning though. And it's mainly for making BRBE more accessible, 
+which I'm not 100% convinced that the blackout windows are that big of a 
+problem. We could say BRBE may have some holes if the host happens to be 
+using counters at the same time, and if you want to be certain of no 
+holes, use a host with partitioned counters.
+
+James
+
