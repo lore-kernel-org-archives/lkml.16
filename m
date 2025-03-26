@@ -1,108 +1,136 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-oo1-f97.google.com (mail-oo1-f97.google.com [209.85.161.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9DD19644B;
-	Wed, 26 Mar 2025 23:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7A0219E8F
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 23:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743030290; cv=none; b=ocNhLyaOGyLyvCp4ZnvswN3lSzjWODBiLk2woPmKKwkfStV+oyQ3K+uTfidQt56j9J9h2LOpMiSr9zyRs6VT/o16fx0AzIzFFgoSrYnBhm4GjCdRymOstDxq8gUcn255EsDttD5nNa2eXrsKEY747V1SUQt4489/9sxztvXjgbo=
+	t=1743030503; cv=none; b=JRy2I/50egRJwMRwGuPXVL3gDFtimnV13VbYRnr92Rk2gcwvedJ6z6L5EU4cjD9QqmtgSvPG9HfFalCagaDk0zC5vrjITRRuIjzfgeTXx8A9qS1HyqZn7Ua80ntRXP0NIzwkiXHPyWNsYIwSpDYgvyNomFGTbca6FiWbJ9SjCnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743030290; c=relaxed/simple;
-	bh=lu0985pnAiWIeLqiiXNJyyeE3/4K9/7b88UOr7N8zC8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NeY9c5tX6pVzgs9lLMxMuZKXKN9mlc7cJA06nErRlCx4S6tzTb9felFqiIzXzh0tCkQcHZi9z3L6jfQ3jFbgLqVYKgmjTkgOLpU4SWteezoZR2YS/QOcSukq1NzlGmTBPz2OJb32v2V8854tJNtRARvfx0FgGOn3q4WnQc89hTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=aYbkrPBV; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1743030503; c=relaxed/simple;
+	bh=UIucPY8Hw6s1pIjj0T40L+yyxKLaVSlySiCPpLn2cd4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SZaxbWpH3cB1/KATEK+TP/O9bIcHmt2UJdX3GlSWDzF9VFHbHXorJ4oCSFy1hsonbPFCiu3xUZjLIXjqY8p6a0W9NiRW1PjfzZgjnd1XKM/NaV08TRjpUh/V+AQWpxZ/9r1AsjFoNip51s2KoB0YeOs3ldFDIC4t5/ziXPzfHA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=S+CytnhC; arc=none smtp.client-ip=209.85.161.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="aYbkrPBV"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso987852f8f.1;
-        Wed, 26 Mar 2025 16:04:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="S+CytnhC"
+Received: by mail-oo1-f97.google.com with SMTP id 006d021491bc7-601ad30bc0cso927909eaf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 16:08:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1743030287; x=1743635087; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=G1Db4+giVOhxRRsgeVFOY4J55f6l7WCs95jCreUUDT4=;
-        b=aYbkrPBVn/XMIAFeb2dfpqq8KLWfH0dnDpQ0qgHiWTix4h0gyoPTy+Pa4LCPAd1ojJ
-         401VBsHHt7r101DuKjbboYoGmYHvtvwKxhnS2eaBntLCyPYvAmeJPECk9UAUEJLRPSZG
-         aXtwNW5kPOq1StwpoHgAiByZMOQMZA34FPlWRTBIBqC5AgP4du5BQ6YfVma96/opSX/8
-         bvwIF4SHnUIyYtVtsAeFVpWjfVMig2ouKQmOiMDKP5E54YS1vVX8YtzpzszbFbr3j0Ii
-         Ym4UbmOIdCA6N4Mz82NZd286rWKevb7HrCYco5r/YKJsczhI/QpZSCIBfP7vMgDjFkUr
-         1VJQ==
+        d=purestorage.com; s=google2022; t=1743030501; x=1743635301; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8rVT5gyP0OGTon/Wq3WnQYduId/TZ40NupCn3Es6UaA=;
+        b=S+CytnhCujIqDOAGDu6jJWVwbefFUYR5QQE+QDd86pIuWCDioun9cgd9ZiHBxLEvmK
+         9QG3drlbcLV6Ce94OMqta6qurINg8+hLrlu+E9+j9Kysi07LevrA3aUwVRPbL5jc8/Jp
+         qPDoPa+bC9dwblkw/thRI11KCLH84Jvw7SdOrdvsRo88uD7w003kqNNHFvMEZoiDzImu
+         YFD3LZJTrIDJcfBPq8sIFf9vAwRmSbDnzCcVNOVceBnNxny1JWpJZr1J2JaeNRjxw/3f
+         jU7SH/Kd2nR8bbPSUwl0cuvZVjIQ8XyDosUPYl2/fDPOO4VOaJEondV5GCn/1ZS3zapb
+         9Ykg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743030287; x=1743635087;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G1Db4+giVOhxRRsgeVFOY4J55f6l7WCs95jCreUUDT4=;
-        b=n/MwUfV0PAcivbASyRi98aNd5D0uu+JxpNY6NdMwS5Lc1ORYNiWNPVpL3nbd99kk92
-         TWBYDaxQDIHLTCqx7uckEWxLlJwFzlTQTUi1JRSLVJmx0LwwlvxX9N9LohjljmDYi9cy
-         jXSqbVGfCIkFDDHLcbYnLuNl7ut/5kS0en1aKb7Q06/hQMEkPUHoxAh9XX43x48HZdlT
-         VZIEupQutlDCPxloWPmwnLZjsA8XhE65vTEbHTpSw86TzF7WUZozl8gXkBKiybQ9CWzW
-         hDF1hC2bYh9xsisI5uQE6zk0VMMumKaMZeD0co3K3HgiyfwEx8CRy0udepy3zXNYO6rJ
-         Fv1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUa7lk1pz/fPwhGs5JIPWcjrri2CTrAzZK+ZGYJ8uNeRkbFV6wv3MOppTvL31V/n8McMS8gszFI@vger.kernel.org, AJvYcCWe+lBGtldHJP8cSPjQ6Sl6ujrUcTMUnfxICx3+5v1yWv/tUth7Ahsk4s7N+GLUntgIVznTLbDop/pSlsg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/wog5iEysEwilqPR91p6S/zdn5SymjjyR/e/yoAXU29RAej7q
-	lLbA7aELIwW8m/Lu0vjEou5U2oj016EPiiAksivoKcHlZ5FLqMM=
-X-Gm-Gg: ASbGncs9dIlqy2STCfzlpCkmQxYs1msdgAK4r+IbSCe1MYc/yY9dTlkoRW/38hXppfU
-	VwTSMHcPs1PPoig/BLQhWGK+4k7xZyKmDoyNtk/Aw4X7H8fx6FWOMvY3tusLAAQZTFJdOQeAcVg
-	Th6OYve/tugTEBHWX8ccycVOv15irm9LczfB7T9Sosk0caxyIQ10AkVLqSWt+ccqm94z04aPcLJ
-	PtCnd/KJWGpxOesRKXvC0umPcRSELxt9y0CBWmhb9qBgv3p7Kp35bWH/T1eBCeHpSzkAp8EoJDj
-	Q9Do3vPrQzz/QbZG6Ve6bZkGtYn80wi/Tl+LIZgJFCuliyvaoHsCCEeUQSOfwtb/W5NIYOxFQyj
-	J59iceIhClKeg7MpbbfQG
-X-Google-Smtp-Source: AGHT+IEYCg6JrwvA9ri9z4o/+GNt/2rRyXIUH7v3Awan8sMK7hJCRKxqpK5ZlWFLSeEigUNOVXrQJg==
-X-Received: by 2002:a5d:6d01:0:b0:390:f9d0:5e7 with SMTP id ffacd0b85a97d-39ad14f7f07mr1284508f8f.13.1743030287279;
-        Wed, 26 Mar 2025 16:04:47 -0700 (PDT)
-Received: from [192.168.1.3] (p5b057a21.dip0.t-ipconnect.de. [91.5.122.33])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39ad0c6bae8sm1940263f8f.68.2025.03.26.16.04.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Mar 2025 16:04:44 -0700 (PDT)
-Message-ID: <d3ca01f7-08a1-4725-9007-b6d127de0b1d@googlemail.com>
-Date: Thu, 27 Mar 2025 00:04:42 +0100
+        d=1e100.net; s=20230601; t=1743030501; x=1743635301;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8rVT5gyP0OGTon/Wq3WnQYduId/TZ40NupCn3Es6UaA=;
+        b=Yk8WKTFiIxtwMc1yxM1cXvrG8kQBtq+QX+d1yCyoA9r5atihpUq5WykmejQTJncTwN
+         vOSOP/1trNhkd1jRsnmopYQ8hOvGX2Q6xsKBwLP1MG3GZrSkzmVOZy4ddkTbPlQwD3TV
+         NAVKJLX4DkRZ54dIz1nM+uZU7hISpT5Opz02NKy0HbepjpKxg9GsjHGQ88z1fandWirg
+         QcF/sjW2cdKVzbKeooT1IqTYB2VfMZViEFy0kHKQHAoEt2RDzmcUj+cwV9IDcjL9UW0R
+         Aw2GYfjOmYS0pUR/3TX38A5j1yPrUxup/XCjjnD5xQEhkxcCF0fBwPDb4/KLco8NTIdq
+         oGEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXpiz/rZSEx391Nep6Bb4cE+bGG4jVKUlTKnEtQy5l+zloRQrdtQe12Wh5qokWGGIg6Ckt/s6TNNmjSQ8Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzipdkpCjqdNHD9F/8KK8TF7A6w/4LIEKEqPa8zrmNx6bN18ONC
+	2dasmbaHze+ybHe3DTK8ao0H5vWKU8lMuKvQODoNUqnuxy+WERu4WTpk/wZuQNSZx1tUv6u3Tsb
+	b35+Pb8/+C2ZF42WjRdU3LV9v7rE6O6lE
+X-Gm-Gg: ASbGncuX4puvirIfyvaOrNmGuq3bjiWz+zRhPXybV+NiRILWhHkCdH9NQ59vwuR59RT
+	IFCta4URKPfrex7+SD4wppIgc4x+tAuMhB8EHXr3hJCgZdqP7d7FLgNmV8p8w/CBPdeBTGS8yKQ
+	LZ0NQ+PzkYSiI2ODx+XB6Xxh4rrgZxWTrFqD3jIPI4luUxgntKh0DnZI46bfXXrTVU9zweVqH2s
+	HDr+HPztSkoJPCWBPb2JRo4gOKcFMGXLnoENAXPBJ5/gUSEUYT9dOaWYOxSG6qj7GFT9pEQ0TMb
+	ESekhRWIYa8ecFLOpPtvkTn1/1npK5yY1lIiWuNFQLCBHHwc0Q==
+X-Google-Smtp-Source: AGHT+IEPeX5QO7+np0lHt1JqQH6URXpDSCirYyHJkWTJBvVF0t+eQSx2Y6evgmmZSMAjZEj8DhgivwD6H6cm
+X-Received: by 2002:a05:6870:2a45:b0:2c1:d516:66c1 with SMTP id 586e51a60fabf-2c826ccb975mr3678918fac.12.1743030500879;
+        Wed, 26 Mar 2025 16:08:20 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
+        by smtp-relay.gmail.com with ESMTPS id 586e51a60fabf-2c77f0ab523sm496151fac.37.2025.03.26.16.08.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 16:08:20 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 25C4C340199;
+	Wed, 26 Mar 2025 17:08:19 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id 153F7E40310; Wed, 26 Mar 2025 17:08:19 -0600 (MDT)
+Date: Wed, 26 Mar 2025 17:08:19 -0600
+From: Uday Shankar <ushankar@purestorage.com>
+To: Ming Lei <ming.lei@redhat.com>
+Cc: Shuah Khan <shuah@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] ublk: improve handling of saturated queues when ublk
+ server exits
+Message-ID: <Z+SI4x+0J52rCJpN@dev-ushankar.dev.purestorage.com>
+References: <20250325-ublk_timeout-v1-0-262f0121a7bd@purestorage.com>
+ <20250325-ublk_timeout-v1-4-262f0121a7bd@purestorage.com>
+ <Z-OS2_J7o0NKHWmj@fedora>
+ <Z+Q/SNmX+DpVQ5ir@dev-ushankar.dev.purestorage.com>
+ <Z+RN+CPnWO69aJD5@dev-ushankar.dev.purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.13 000/119] 6.13.9-rc1 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250325122149.058346343@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250325122149.058346343@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z+RN+CPnWO69aJD5@dev-ushankar.dev.purestorage.com>
 
-Am 25.03.2025 um 13:20 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.13.9 release.
-> There are 119 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, Mar 26, 2025 at 12:56:56PM -0600, Uday Shankar wrote:
+> On Wed, Mar 26, 2025 at 11:54:16AM -0600, Uday Shankar wrote:
+> > > ublk_abort_requests() should be called only in case of queue dying,
+> > > since ublk server may open & close the char device multiple times.
+> > 
+> > Sure that is technically possible, however is any real ublk server doing
+> > this? Seems like a strange thing to do, and seems reasonable for the
+> > driver to transition the device to the nosrv state (dead or recovery,
+> > depending on flags) when the char device is closed, since in this case,
+> > no one can be handling I/O anymore.
+> 
+> I see ublksrv itself is doing this :(
+> 
+> /* Wait until ublk device is setup by udev */
+> static void ublksrv_check_dev(const struct ublksrv_ctrl_dev_info *info)
+> {
+> 	unsigned int max_time = 1000000, wait = 0;
+> 	char buf[64];
+> 
+> 	snprintf(buf, 64, "%s%d", "/dev/ublkc", info->dev_id);
+> 
+> 	while (wait < max_time) {
+> 		int fd = open(buf, O_RDWR);
+> 
+> 		if (fd > 0) {
+> 			close(fd);
+> 			break;
+> 		}
+> 
+> 		usleep(100000);
+> 		wait += 100000;
+> 	}
+> }
+> 
+> This seems related to some failures in ublksrv tests
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+Actually this is the only issue I'm seeing - after patching this up in
+ublksrv, make T=generic test appears to pass - I don't see any logs
+indicating failures, and no kernel panics.
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+So the question is, does this patch break existing ublk servers? It does
+break ublksrv as shown above, but I think one could argue that the above
+code is just testing for file existence, and it's a bit weird to do that
+by opening and closing the file (especially given that it's a device
+special file). It can be patched to just use access or something
+instead.
 
-
-Beste Grüße,
-Peter Schneider
-
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
-
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
