@@ -1,119 +1,94 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C112624EF7D;
-	Wed, 26 Mar 2025 18:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 065D724EF9C;
+	Wed, 26 Mar 2025 18:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743012407; cv=none; b=ramQvHYWrllfkizPlmq77VDd40wu9mX9Y1yGlQxAv+fB0A8E16FyrR8gAzxi/RawHyIpal5RHrsInIdITWKEWm1uexXDOY/PpX+3qwrOCuZgjoDwOkINcQa1wbw4uu8Vj1lnZpZmSK41nwOPSftoQ/UhVrMZ6UwA9IJ4huEWjhM=
+	t=1743012417; cv=none; b=igbiZPWsMzNJRaEi6c6Q83xjcevCysECMkSUtBv2iSONQbY6GyYxW1d4iEpPb6Ye2pTs7lioTLHXzhPMT7gkA/fwWXjY72BZvrG6a3dE1J9KO9vt536Gxa3omZxqEIh7WAhcV8IPjBoz39210SAMcuSXVtPjrzrvCvReugS8v+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743012407; c=relaxed/simple;
-	bh=MSSjAmLOkE9JyRhSQ5swPcfZ2dZeTxEf9ibc8TYM/38=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Dqee0Dow7LgDf6Hf+f/iB2qwV0ZSPAUZLMppuQqhwP5JDDLJ3m5BZDLqtoidsdDEzcnmOBNoLXWRrMMz9HpD1Vil/z3C+2x1PDV0ggnrCARn0BIE4sfdv62CkyvelTiczKoF2UnS1Jbqt+uDKdXeVFtbAlpwD8nq259ZQ/R0tBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=NfQXfFxN; arc=none smtp.client-ip=54.254.200.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1743012417; c=relaxed/simple;
+	bh=xZmto6xy2FwJIOZh4Ms9BaBl9VJWAQErx7qe5FfI9Ps=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gGcfspX/LX4ou8l5aCWlnG4A3fcM1mC5PpOJLe4pJoJjwTBUGpYDo0CarTbPiX0lgPdsGY0HaT+ysDMqmb40hIVYVSfJwLntKE3ZRFIuREljwIdwnCWP4xBDqyj+d2pBI3eiUFtBOUEP91NhEGZu3NOZUYyhsIVisnllu4pOXhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KJGvO2cp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="NfQXfFxN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1743010976;
-	bh=qN/Fi4R0Hpw1uQbJbeIB3oDRZ/puUHLgAA+ehJo29ls=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=NfQXfFxNl6auTeIMXTu42E302BnDcOrce7X+9NFSopxRy9LD7P4Op9yskIy/QYQeI
-	 lCSMVnb02Qkx+dgA1JEn5cm7nrVzuajIKaHmaDSPkjDufrWxbWQf46KAMJfISSfHl9
-	 4+OREgFguC2cqW6vMrbQp91Up6lvCGtMeAzKspxE=
-X-QQ-mid: bizesmtpip4t1743010928txj9agk
-X-QQ-Originating-IP: 9+IYxNSIzCojtcRcEE9Uzk+rNAnv9SS9KlFz7C1pX2s=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 27 Mar 2025 01:42:06 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 10032576578829145953
-EX-QQ-RecipientCnt: 11
-From: WangYuli <wangyuli@uniontech.com>
-To: masahiroy@kernel.org,
-	nathan@kernel.org,
-	nicolas@fjasle.eu
-Cc: linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	samitolvanen@google.com,
-	petr.pavlu@suse.com,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	guanwentao@uniontech.com,
-	WangYuli <wangyuli@uniontech.com>
-Subject: [PATCH] kbuild: deb-pkg: Add libdw-dev:native to Build-Depends-Arch
-Date: Thu, 27 Mar 2025 01:41:55 +0800
-Message-ID: <39FF69551D01924F+20250326174156.390126-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KJGvO2cp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91847C4CEE2;
+	Wed, 26 Mar 2025 18:06:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743012416;
+	bh=xZmto6xy2FwJIOZh4Ms9BaBl9VJWAQErx7qe5FfI9Ps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KJGvO2cpUVz1UYns6XwtDkaMcSSuLLWiPEInQ4aMgR3h6HoaEjccgoG8NxK3YnvjV
+	 zp863Il9wP/cAQ34QXwVPkNqoTC9sCqtNG+edcXrYdl+3NNLUaMiaW+CXWqsO4m17g
+	 7o7sWdvcsKrA6I3q9fYaegv5jwXmaK8HCxr3NwifBIkokrgb/FqzwJDDugRvaCVmY1
+	 Z1dM+GppZZ8+9xZCqLtT5u9cVnDysRmJrr+sw7uRpUAzWXS8/BND94k4hUkAAmX8CO
+	 v5gHOlaOnbUQTuBPjUl/ousdRYcUcSn6dwFRS+HVXmcgRSY3KJ955BGHNLeDGUAA1G
+	 9YakQDM3cT7qw==
+Date: Wed, 26 Mar 2025 18:06:52 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] spi: spidev: Add compatible for LWE's btt device
+Message-ID: <5f514949-5162-4944-8424-bf19318c5611@sirena.org.uk>
+References: <20250326174228.14dfdf8c@wsk>
+ <20250326172445.2693640-1-lukma@denx.de>
+ <83685ed2-f41a-456c-8a22-0ac069304386@sirena.org.uk>
+ <20250326184553.0756c496@wsk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NyA5aDdnpEEQLQ2HjA0XclJH7PX82FiC8bIdkcS+J7O0yXuQuAaRk1Yd
-	lgz8myf7WDKaw2Zg6hS9oK+mRuJN/CMO1dYVDci0PnSNVxqu87GkxzENScTytmwgiFXyMNw
-	bTSEaAH4skJDeds0XXHTAeBRVSXOtVmhBw/2kZrRSAiYF7dqVgCND+TiVKsF8Su3zmbhZQx
-	9DxacdXGtXjLxClQ5fyEt+YxqbS2uvBYkpEFrjahPZJc2S02S4F8UwJfGS/ZzayQvDX+6Ci
-	9zTPdv2L1hv9WZOTwreraWGD2dgbqts7pwtmXa1fNYV+SdT6qIHabq5q7D8euRzoEmkJ+PA
-	K6bA+mBSbF4L9gQnaGWvUOQ3tiZCKXepga58kod0CQCpipE6xJYkxbj6YsdScnr+a66qX19
-	mht8Y7mIC4uJ+aPBLj/xGXyO2vMUH/W+Z+uvUI7JVCCR/40otiR8JY44sWHV17ZwiNzF70E
-	tdivZ20yHus430G2ZRBgzEZoPAjTMmziDmg/mHVqAg6NqN+jOskEiX1CUnKdUDIr3BLi278
-	BfZD+vaohPd1RmaoCLJfE/bKvGqOJiAQCIFnCWIzUIHkuePf5qaYqcjzEZOMREGUr+0uyRN
-	RSS6FmP2+Tefu3G03O3uXskaEl8NcoWrMmJhXWXsinM3URE3BFiYIlSOD+bnU+v2pnURrL/
-	1XrmgE4ZqRUyYSPXExDmTq2wuBy1LWH3/PVYJt2+LSRuMEc+aUzOQhC9Sa7OjCjVCWPSOgF
-	RWntBicPhfFQlme3ssEjNDejcsmUmox803Cu9wTQVDrH/TYhR0ufJSTlG8DvaJxSG2QGXK9
-	DLTB/rohzqvi0YKZ3/vAeLmXwHsoRDzzqAOIGzCg15Gi6XDuPHrg7yw+TkKKBgHgdyRVC3g
-	Yns9Icvi8WB+pxStZS7Fid5kVTwoXM4sK/qKtPbZ+Sv3hrn28+JwNP2jG3nNrXgCFuZXOCW
-	SarMG+wbuJ95OsQTJAOEbJX8Vu89OgE0wMSve46W912Kb8/vDeKV5MYwE+ZxQiRA8JCO6h8
-	3HWXhUN6M0gbCrwpbaiJ4Z5u+fLLx8oiA9dNO1QmDrDQSYgpPU
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="KOmYkEZJBTd6ttoT"
+Content-Disposition: inline
+In-Reply-To: <20250326184553.0756c496@wsk>
+X-Cookie: To err is humor.
 
-The dwarf.h header, which is included by
-scripts/gendwarfksyms/gendwarfksyms.h, resides within the libdw-dev
-package.
 
-This portion of the code is compiled under the condition that
-CONFIG_GENDWARFKSYMS is enabled.
+--KOmYkEZJBTd6ttoT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Consequently, add libdw-dev to Build-Depends-Arch to prevent
-unforeseen compilation failures.
+On Wed, Mar 26, 2025 at 06:45:53PM +0100, Lukasz Majewski wrote:
+> > On Wed, Mar 26, 2025 at 06:24:45PM +0100, Lukasz Majewski wrote:
 
-Fix follow possible error:
-  In file included from scripts/gendwarfksyms/cache.c:6:
-  scripts/gendwarfksyms/gendwarfksyms.h:6:10: fatal error: 'dwarf.h' file not found
-      6 | #iIn file included from nscripts/gendwarfksyms/symbols.cc:lude6 :
-  <dwarf.hscripts/gendwarfksyms/gendwarfksyms.h>:6
-  :      10| :          ^~~~~~~~~
-  fatal error: 'dwarf.h' file not found
-    6 | #include <dwarf.h>
-      |          ^~~~~~~~~
+> > Note also that as previously mentioned I expect to see a binding
+> > document update too which doesn't appear to be here.
 
-Fixes: f28568841ae0 ("tools: Add gendwarfksyms")
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- scripts/package/mkdebian | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> I've just send it to be accepted to trivial-devices.yaml
 
-diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
-index 0178000197fe..25edee97fff7 100755
---- a/scripts/package/mkdebian
-+++ b/scripts/package/mkdebian
-@@ -209,7 +209,7 @@ Rules-Requires-Root: no
- Build-Depends: debhelper-compat (= 12)
- Build-Depends-Arch: bc, bison, flex,
-  gcc-${host_gnu} <!pkg.${sourcename}.nokernelheaders>,
-- kmod, libelf-dev:native,
-+ kmod, libdw-dev:native, libelf-dev:native,
-  libssl-dev:native, libssl-dev <!pkg.${sourcename}.nokernelheaders>,
-  python3:native, rsync
- Homepage: https://www.kernel.org/
--- 
-2.49.0
+As previously mentioned you should send the bindings update along with
+the driver code.
 
+> > Please don't send new patches in reply to old patches or serieses,
+> > this makes it harder for both people and tools to understand what is
+> > going on - it can bury things in mailboxes and make it difficult to
+> > keep track of what current patches are, both for the new patches and
+> > the old ones.
+
+> Ok, I thought that it would be the opposite - that you would see v2 as
+> the reply to the old one - especially that the change is just a single
+> letter.
+
+That's exactly the problem.
+
+--KOmYkEZJBTd6ttoT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfkQjsACgkQJNaLcl1U
+h9CV1Af8C2RDdHT2B4JLU3zx122STiDveRWhulz2BqVkulBmEStb3Bem1f5YDj2j
+EHNS/ZpQ2/Hyz+pCtoMg+rFvu7iMJ16M0+FpDtH+I1T+h3ESsPR78MGEs5ou88Nh
+N8ZSExLFOl/IYJY3ydbDHHgHxBs8NjgjufCTvHHcNXtHXmkJtWvgD2ZWJtSChWGY
+RuQuEvB+UQAO/zARGfaSOE9CLmGhPc7ys1EExo3W9zrvLpnwVF3wbaPIGvCkmMyF
+dGT/JK3Obru58bNaiZBxMCJFIcWwqH9wgVazw44JfoWHooEH68X+VzYAcQpHi5pR
+KZyW+58iVuD8KXMQX1oz3Vj1SlUrGg==
+=oY37
+-----END PGP SIGNATURE-----
+
+--KOmYkEZJBTd6ttoT--
