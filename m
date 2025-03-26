@@ -1,276 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240141F9A95
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5991A76BC;
+	Wed, 26 Mar 2025 15:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743003507; cv=none; b=MQoTkZSNNsOYnVgQWGKdZ1oV7uY3RTgImo9zRH8nc59NUAiaGjD71HxJT9lbNLNnzroPCUJ+CXpcKpi5qNmG7JuMhlKQAOzMTbpvePsTeajsBzZ6PBoRRC9zGfhlrZMRgcE/zP1PJVsK3oqFQmkg3b0da1XZJJnz7fCfaxQlCIY=
+	t=1743003592; cv=none; b=trhabaG62ywpUJQegnmjmr837/s1028pZhSG2CCDQzvqlWXV1u2wnR6GZQL15k772eHL9AAe0YHOowEcZJlBMRp7+3NKi03Wtxc6k3+oK+exnVrszKFes/Dlook7fQNAWWaJzlP0/1sfNO1m2z7spI9Nnur815fJVvp76QMhmjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743003507; c=relaxed/simple;
-	bh=v6xyr5sQzPhwnMiPig6iTdAKcLxvTau35Jqv1TFXB8U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=acxShxTopid0rAdVMeM6vgNAB2IyRbSVpwCWtwHJSJA/RFOtF+qtANzn9mFw1m3i0X+RMPBt79VBhME+qjvMLNNzaxzHAbpXMgzTfYRudBENtNyuNnSdewwAyBer2YkHeKNep2BGsgntaOHS6kWbox8OPpMbGH5+BHBGbtjTbW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GbjfB7dv; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743003592; c=relaxed/simple;
+	bh=MioeGIezwwdGYv/pB4JH5XaSr/E6sfesoiSMxsiaI7k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l2a3McOzbzyZi+YS4wAsVzC3E5EyXhBK8v6s48zAjjQd1gC43x44pq/kR4xoeA+TuLqzoOKS1rZ+xktAbX7Iz7oOsAWXZ1bHO4JmRDy2LEWQ0a7il0MucBsLyNW1GquGsnXo/7ImpEo5Gxo86M6uGv01y06xWs2knZOzuaWJobc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=neqyJbrf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GbjfB7dv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743003506; x=1774539506;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=v6xyr5sQzPhwnMiPig6iTdAKcLxvTau35Jqv1TFXB8U=;
-  b=GbjfB7dvcb9HBFjPC86V7fQuJB/rtw/369YYdn1ka7UhCmu6WI5G9tgJ
-   J9UMSugvZiMjfTE2kBlwpPX2Zrv9x01XAzq9wQRGLwaap53mFdsPwlVwm
-   0hyFHfFGgkd3e2cC/TId+i5E2xV7WfrPNGbZWByoEG0+iiCzEaG5EpOy+
-   hFAP/xRIhJha3WJXfXPrH+W52hh+fwHaB1qCJvCfKjNpask0P08LOj9gN
-   O58KPtFwuxIgMxA/nGHKTtKrUClKj1Lic1mO68utv9BMdjqWTvtu5vRX6
-   +91jrVrJ4SXuxx06Mck4S+I52jvvjr/2Aik036hzR+lZFSDfG1YJQ5Hih
-   g==;
-X-CSE-ConnectionGUID: Blpia6+fSEeJNAuq9Or/SA==
-X-CSE-MsgGUID: mk1HEXOzQLeZUnVQ7pePcg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="55665624"
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="55665624"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 08:38:26 -0700
-X-CSE-ConnectionGUID: Oul6/7jGTm2bWlDEGhW+UQ==
-X-CSE-MsgGUID: W9iuWNxQR9yFlnKzDh+fyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="129923580"
-Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 08:38:20 -0700
-From: Alexander Usyskin <alexander.usyskin@intel.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Karthik Poosa <karthik.poosa@intel.com>
-Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
-	Oren Weil <oren.jer.weil@intel.com>,
-	linux-mtd@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Abliyev,
-	Alexander Usyskin <alexander.usyskin@intel.com>
-Subject: [PATCH v7 12/12] drm/xe/nvm: add support for non-posted erase
-Date: Wed, 26 Mar 2025 17:26:23 +0200
-Message-ID: <20250326152623.3897204-13-alexander.usyskin@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250326152623.3897204-1-alexander.usyskin@intel.com>
-References: <20250326152623.3897204-1-alexander.usyskin@intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="neqyJbrf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E111C4CEE2;
+	Wed, 26 Mar 2025 15:39:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1743003591;
+	bh=MioeGIezwwdGYv/pB4JH5XaSr/E6sfesoiSMxsiaI7k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=neqyJbrfYHpRRtikUQc6ND36EToMki3dXmsIEPOUq7zObSZO2C0/mEJanoYyZPYph
+	 DUxtJPCShPRg9EL/BSeQW5cSnzMwINmHP5c5/xojB3xfjUK+pvMOnX0atwjYmihZoj
+	 34cSvKArPntqapxlCGQDxL29DIlHJf9GlzWayKsk=
+Date: Wed, 26 Mar 2025 11:38:27 -0400
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Dragan Simic <dsimic@manjaro.org>
+Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org,
+	Heiko Stuebner <heiko@sntech.de>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Darren Kenny <darren.kenny@oracle.com>,
+	Diederik de Haas <didi.debian@cknow.org>
+Subject: Re: [PATCH 6.6 00/77] 6.6.85-rc1 review
+Message-ID: <2025032656-closure-exile-38fe@gregkh>
+References: <20250325122144.259256924@linuxfoundation.org>
+ <CA+G9fYvWau1nC8wmpWkxG8gWPaRMP9pbkh2eNsAZoUMeRPgzqA@mail.gmail.com>
+ <a823454af9915fe3acfcb66fd84dc826@manjaro.org>
+ <751cf2c6-c692-4595-98e9-fa3ae4dfd10a@oracle.com>
+ <0001e7e020145983055d154488f5c460@manjaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <0001e7e020145983055d154488f5c460@manjaro.org>
 
-From: "Abliyev, Reuven" <reuven.abliyev@intel.com>
+On Wed, Mar 26, 2025 at 04:56:18AM +0100, Dragan Simic wrote:
+> Hello Harshit and Greg,
+> 
+> On 2025-03-26 03:33, Harshit Mogalapalli wrote:
+> > On 25/03/25 21:37, Dragan Simic wrote:
+> > > On 2025-03-25 16:07, Naresh Kamboju wrote:
+> > ...
+> > > > Build regression: arm64 dtb rockchip non-existent node or label
+> > > > "vcca_0v9"
+> > > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > > > 
+> > > > ## Build log
+> > > > arch/arm64/boot/dts/rockchip/rk3399.dtsi:221.23-266.4: ERROR
+> > > > (phandle_references):
+> > > > /pcie@f8000000: Reference to non-existent node or label "vcca_0v9"
+> > > > 
+> > > >   also defined at arch/arm64/boot/dts/rockchip/rk3399-
+> > > > rockpro64.dtsi:659.8-669.3
+> > ...
+> > > 
+> > > This is caused by another patch from the original series failing
+> > > to apply due to some bulk regulator renaming.  I'll send backported
+> > > version of that patch soon, which should make everything fine.
+> > 
+> > On ARM configs, we do see the same issue that Naresh reported.
+> > 
+> > arch/arm64/boot/dts/rockchip/rk3399.dtsi:221.23-266.4: ERROR
+> > (phandle_references): /pcie@f8000000: Reference to non-existent node
+> > or label "vcca_0v9"
+> >  also defined at
+> > arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi:659.8-669.3
+> > ERROR: Input tree has errors, aborting (use -f to force output)
+> > make[3]: *** [scripts/Makefile.lib:423:
+> > arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.dtb] Error 2
+> > make[3]: *** Waiting for unfinished jobs....
+> > arch/arm64/boot/dts/rockchip/rk3399.dtsi:221.23-266.4: ERROR
+> > (phandle_references): /pcie@f8000000: Reference to non-existent node
+> > or label "vcca_0v9"
+> >  also defined at
+> > arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi:659.8-669.3
+> > ERROR: Input tree has errors, aborting (use -f to force output)
+> > make[3]: *** [scripts/Makefile.lib:423:
+> > arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtb] Error 2
+> > make[2]: *** [scripts/Makefile.build:480: arch/arm64/boot/dts/rockchip]
+> > Error 2
+> > make[2]: *** Waiting for unfinished jobs....
+> > 
+> > Caused by commit: 1e4bd0ec5a47 ("arm64: dts: rockchip: Add missing
+> > PCIe supplies to RockPro64 board dtsi") -- PATCH 42/77 of this series.
+> > 
+> > We see same problem with 6.12.21-rc1 as well.
+> > 
+> > Notes:
+> > -----
+> > I think Dragan was referring to upstream commit: bd1c959f37f3 ("arm64:
+> > dts: rockchip: Add avdd HDMI supplies to RockPro64 board dtsi") which
+> > will fix this problem but fails to apply due to regulator renaming in
+> > commit: 5c96e6330197 ("arm64: dts: rockchip: adapt regulator nodenames
+> > to preferred form") which is not in stable kernels(6.6.y and 6.12.y)
+> 
+> Exactly, the direct dependency is the commit bd1c959f37f3 ("arm64:
+> dts: rockchip: Add avdd HDMI supplies to RockPro64 board dtsi"),
+> for which I haven't sent the backported version yet.
+> 
+> As Diederik pointed it out already in a separate message [*] from
+> a couple of days ago, it might be the best to include the commit
+> 5c96e6330197 ("arm64: dts: rockchip: adapt regulator nodenames to
+> preferred form") into stable kernels as well.
+> 
+> Obviously, including the commit 5c96e6330197 pretty much goes
+> against the rules of stable kernels, but it would save a lot of
+> time and effort in the future.
+> 
+> [*] https://lore.kernel.org/stable/D8ONE4WEF7A2.1OE1YY8J34MM3@cknow.org/
 
-Erase command is slow on discrete graphics storage
-and may overshot PCI completion timeout.
-BMG introduces the ability to have non-posted erase.
-Add driver support for non-posted erase with polling
-for erase completion.
+As that's a big change, and no one seems to be sending it to me for
+inclusion, I'll just go drop the patch that broke the builds for now and
+wait for someone to send working ones later.
 
-Signed-off-by: Abliyev, Reuven <reuven.abliyev@intel.com>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
----
- drivers/gpu/drm/xe/xe_nvm.c        | 25 +++++++++++++++++
- drivers/mtd/devices/mtd_intel_dg.c | 43 ++++++++++++++++++++++++++++--
- include/linux/intel_dg_nvm_aux.h   |  2 ++
- 3 files changed, 68 insertions(+), 2 deletions(-)
+thanks,
 
-diff --git a/drivers/gpu/drm/xe/xe_nvm.c b/drivers/gpu/drm/xe/xe_nvm.c
-index 8aec20bc629a..dd91f2e37661 100644
---- a/drivers/gpu/drm/xe/xe_nvm.c
-+++ b/drivers/gpu/drm/xe/xe_nvm.c
-@@ -14,7 +14,15 @@
- #include "xe_sriov.h"
- 
- #define GEN12_GUNIT_NVM_BASE 0x00102040
-+#define GEN12_DEBUG_NVM_BASE 0x00101018
-+
-+#define GEN12_CNTL_PROTECTED_NVM_REG 0x0010100C
-+
- #define GEN12_GUNIT_NVM_SIZE 0x80
-+#define GEN12_DEBUG_NVM_SIZE 0x4
-+
-+#define NVM_NON_POSTED_ERASE_CHICKEN_BIT BIT(13)
-+
- #define HECI_FW_STATUS_2_NVM_ACCESS_MODE BIT(3)
- 
- static const struct intel_dg_nvm_region regions[INTEL_DG_NVM_REGIONS] = {
-@@ -28,6 +36,16 @@ static void xe_nvm_release_dev(struct device *dev)
- {
- }
- 
-+static bool xe_nvm_non_posted_erase(struct xe_device *xe)
-+{
-+	struct xe_gt *gt = xe_root_mmio_gt(xe);
-+
-+	if (xe->info.platform != XE_BATTLEMAGE)
-+		return false;
-+	return !(xe_mmio_read32(&gt->mmio, XE_REG(GEN12_CNTL_PROTECTED_NVM_REG)) &
-+		 NVM_NON_POSTED_ERASE_CHICKEN_BIT);
-+}
-+
- static bool xe_nvm_writable_override(struct xe_device *xe)
- {
- 	struct xe_gt *gt = xe_root_mmio_gt(xe);
-@@ -85,6 +103,7 @@ void xe_nvm_init(struct xe_device *xe)
- 	nvm = xe->nvm;
- 
- 	nvm->writable_override = xe_nvm_writable_override(xe);
-+	nvm->non_posted_erase = xe_nvm_non_posted_erase(xe);
- 	nvm->bar.parent = &pdev->resource[0];
- 	nvm->bar.start = GEN12_GUNIT_NVM_BASE + pdev->resource[0].start;
- 	nvm->bar.end = nvm->bar.start + GEN12_GUNIT_NVM_SIZE - 1;
-@@ -92,6 +111,12 @@ void xe_nvm_init(struct xe_device *xe)
- 	nvm->bar.desc = IORES_DESC_NONE;
- 	nvm->regions = regions;
- 
-+	nvm->bar2.parent = &pdev->resource[0];
-+	nvm->bar2.start = GEN12_DEBUG_NVM_BASE + pdev->resource[0].start;
-+	nvm->bar2.end = nvm->bar2.start + GEN12_DEBUG_NVM_SIZE - 1;
-+	nvm->bar2.flags = IORESOURCE_MEM;
-+	nvm->bar2.desc = IORES_DESC_NONE;
-+
- 	aux_dev = &nvm->aux_dev;
- 
- 	aux_dev->name = "nvm";
-diff --git a/drivers/mtd/devices/mtd_intel_dg.c b/drivers/mtd/devices/mtd_intel_dg.c
-index 9f4bb15a03b8..c898107a588f 100644
---- a/drivers/mtd/devices/mtd_intel_dg.c
-+++ b/drivers/mtd/devices/mtd_intel_dg.c
-@@ -28,6 +28,9 @@ struct intel_dg_nvm {
- 	struct mtd_info mtd;
- 	struct mutex lock; /* region access lock */
- 	void __iomem *base;
-+	void __iomem *base2;
-+	bool non_posted_erase;
-+
- 	size_t size;
- 	unsigned int nregions;
- 	struct {
-@@ -44,6 +47,7 @@ struct intel_dg_nvm {
- #define NVM_VALSIG_REG        0x00000010
- #define NVM_ADDRESS_REG       0x00000040
- #define NVM_REGION_ID_REG     0x00000044
-+#define NVM_DEBUG_REG         0x00000000
- /*
-  * [15:0]-Erase size = 0x0010 4K 0x0080 32K 0x0100 64K
-  * [23:16]-Reserved
-@@ -75,6 +79,9 @@ struct intel_dg_nvm {
- #define NVM_FREG_ADDR_SHIFT 12
- #define NVM_FREG_MIN_REGION_SIZE 0xFFF
- 
-+#define NVM_NON_POSTED_ERASE_DONE BIT(23)
-+#define NVM_NON_POSTED_ERASE_DONE_ITER 3000
-+
- static inline void idg_nvm_set_region_id(struct intel_dg_nvm *nvm, u8 region)
- {
- 	iowrite32((u32)region, nvm->base + NVM_REGION_ID_REG);
-@@ -370,11 +377,30 @@ idg_erase(struct intel_dg_nvm *nvm, u8 region, loff_t from, u64 len, u64 *fail_a
- {
- 	u64 i;
- 	const u32 block = 0x10;
-+	u32 reg;
-+	u32 iter = 0;
- 	void __iomem *base = nvm->base;
-+	void __iomem *base2 = nvm->base2;
- 
- 	for (i = 0; i < len; i += SZ_4K) {
- 		iowrite32(from + i, base + NVM_ADDRESS_REG);
- 		iowrite32(region << 24 | block, base + NVM_ERASE_REG);
-+		if (nvm->non_posted_erase) {
-+			/* Wait for Erase Done */
-+			reg = ioread32(base2 + NVM_DEBUG_REG);
-+			while (!(reg & NVM_NON_POSTED_ERASE_DONE) &&
-+				++iter < NVM_NON_POSTED_ERASE_DONE_ITER) {
-+				msleep(10);
-+				reg = ioread32(base2 + NVM_DEBUG_REG);
-+			}
-+			if (reg & NVM_NON_POSTED_ERASE_DONE) {
-+				/* Clear Erase Done */
-+				iowrite32(reg, base2 + NVM_DEBUG_REG);
-+			} else {
-+				*fail_addr = from + i;
-+				return -ETIME;
-+			}
-+		}
- 		/* Since the writes are via sguint
- 		 * we cannot do back to back erases.
- 		 */
-@@ -383,7 +409,8 @@ idg_erase(struct intel_dg_nvm *nvm, u8 region, loff_t from, u64 len, u64 *fail_a
- 	return len;
- }
- 
--static int intel_dg_nvm_init(struct intel_dg_nvm *nvm, struct device *device)
-+static int intel_dg_nvm_init(struct intel_dg_nvm *nvm, struct device *device,
-+			     bool non_posted_erase)
- {
- 	int ret;
- 	unsigned int i, n;
-@@ -443,7 +470,10 @@ static int intel_dg_nvm_init(struct intel_dg_nvm *nvm, struct device *device)
- 			n++;
- 	}
- 
-+	nvm->non_posted_erase = non_posted_erase;
-+
- 	dev_dbg(device, "Registered %d regions\n", n);
-+	dev_dbg(device, "Non posted erase %d\n", nvm->non_posted_erase);
- 
- 	/* Need to add 1 to the amount of memory
- 	 * so it is reported as an even block
-@@ -778,7 +808,16 @@ static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
- 		goto err;
- 	}
- 
--	ret = intel_dg_nvm_init(nvm, device);
-+	if (invm->non_posted_erase) {
-+		nvm->base2 = devm_ioremap_resource(device, &invm->bar2);
-+		if (IS_ERR(nvm->base2)) {
-+			dev_err(device, "base2 mmio not mapped\n");
-+			ret = PTR_ERR(nvm->base2);
-+			goto err;
-+		}
-+	}
-+
-+	ret = intel_dg_nvm_init(nvm, device, invm->non_posted_erase);
- 	if (ret < 0) {
- 		dev_err(device, "cannot initialize nvm %d\n", ret);
- 		goto err;
-diff --git a/include/linux/intel_dg_nvm_aux.h b/include/linux/intel_dg_nvm_aux.h
-index 68df634c994c..bee25dfc6982 100644
---- a/include/linux/intel_dg_nvm_aux.h
-+++ b/include/linux/intel_dg_nvm_aux.h
-@@ -17,7 +17,9 @@ struct intel_dg_nvm_region {
- struct intel_dg_nvm_dev {
- 	struct auxiliary_device aux_dev;
- 	bool writable_override;
-+	bool non_posted_erase;
- 	struct resource bar;
-+	struct resource bar2;
- 	const struct intel_dg_nvm_region *regions;
- };
- 
--- 
-2.43.0
-
+greg k-h
