@@ -1,104 +1,170 @@
-Received: from server02.seltendoof.de (server02.seltendoof.de [168.119.48.163])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9383419DF4A;
-	Wed, 26 Mar 2025 10:44:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.48.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDBC1ACEA6
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 10:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742985886; cv=none; b=elRt6wnKR7GjCPqYi8uSB5MyIJjWsDM8Y0Ilmjxqm/Dr1tUzVzAKj2bjIIQbUjwcouRhKWXNcIP++NYTQJZQQ7P3bg96IibYQNwhJywFceb9rl/HL/E2fOSk5s/zet5DY6BDVjj+tAaWbKiab9PMSSP4zMdz7fCbNWpMv2dRFJw=
+	t=1742985929; cv=none; b=BC2Fw3n8cUBGjlp7w2A6PZvLZ042KZ5bVevWOOS6AK7KgWo0imUgoLn2H0ImR2Px3r/QTw7feaogwH5zeozR4jxhhivzIwFccfSY+E+GTV8DTvQTYzAzVRE/C2FMe0f8bmWnpYOArRMbIXOiLCaNczU0GVc5qfXcvNO4Q+ppD4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742985886; c=relaxed/simple;
-	bh=9Tu1NPoHREO5KCMLTljMMco/ZIML/4h+5x/5DN/1080=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oEDR3TH7d8AzZ+XVY+nmmBz+u4HQpAJtJNc7i3MqT5OaFMBFmAwmqrowoPuH7g15c3QDSMi1claaQbHR07NZyXOgN7GdF2z0KAMt40OzqkLml73LcGXOg7eDVOOtP2r+dQMeNipxNt3ZCvaTn61mebCnlnlxTGKrRYbtjWIlCHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de; spf=pass smtp.mailfrom=seltendoof.de; dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b=KP6VJ4Zi; arc=none smtp.client-ip=168.119.48.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seltendoof.de
+	s=arc-20240116; t=1742985929; c=relaxed/simple;
+	bh=TeVLOGY3oC6jCtD+U4GHaV57vwWRjlfcCuYfEofJ1cc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S7P6ME54JUMRFwkKjuPOGJzum1t2D7/qDSAk4dNPh9U6uOCcqIpFUAjikCfMHHmNUI9p4y2YihvW4jb/gDqbujdhzwNFM3DSVAyhLMSXz9dNGzQWz0coF6K3+e1pxrrToi0asnaGi56my60rzpEcfeoPhoYWpmyhtq9a1lUUZ/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Rf6cLOBm; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b="KP6VJ4Zi"
-From: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgoettsche@seltendoof.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seltendoof.de;
-	s=2023072701; t=1742985520;
-	h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=PXzJ60ydahUKlZREbw7QqW/SQ79Dg/dg31FTuvz+gew=;
-	b=KP6VJ4Zi35QZ3i5fop5jmr/bqjQ1/OMuohYmAG1hCKO63iVvfy62TfpaN27sGvw/QWbVDx
-	e0U7LX1XXWpMIjtCXHA0/36PeCfjDz09nVQQ+ckiJHQPL48z4il8bqFjwzcP23XzruheVi
-	JzP6iU2ZYM/nZygSrb6+1o7J72fCkWPPx2BVSJUQDsUFF8gpQeyYKacnM7Yqfh4yTWttUi
-	HOOqO5rDiWUwalDfu73Hu4qIjG5lxryZNJNlqMaMJLNhf/wyugKA/8miV7M2GG4BlzkNSH
-	NGODIhOvfPcf+2/f4EY3RYTRoTmpU7TFved+It0RR4sIdr9C0opHMnyziFj63w==
-To: 
-Cc: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
-	Paul Moore <paul@paul-moore.com>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Ondrej Mosnacek <omosnace@redhat.com>,
-	=?UTF-8?q?Thi=C3=A9baud=20Weksteen?= <tweek@google.com>,
-	Miklos Szeredi <mszeredi@redhat.com>,
-	=?UTF-8?q?Bram=20Bonn=C3=A9?= <brambonne@google.com>,
-	"Kipp N. Davis" <kippndavis.work@gmx.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	selinux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] selinux: rename io_uring permission to match syscall
-Date: Wed, 26 Mar 2025 11:38:11 +0100
-Message-ID: <20250326103819.93387-1-cgoettsche@seltendoof.de>
-Reply-To: cgzones@googlemail.com
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rf6cLOBm"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf848528aso55511835e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 03:45:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742985926; x=1743590726; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sj9IC/ITgYzbYCPda8r17Blt5shGufVre2k2P1fl+Zg=;
+        b=Rf6cLOBm2LT4kG7FUEtbHDMHqRpDu3hUHaVNqmEhDsHYclnqNzEZvb0b0HY1wv26h1
+         6yy2GwKowcvXSgwc4xL/941kLdtbraL1AvOgIe5NhcZ7cxkiYxSa7onBlsRIHVGu24N1
+         DywHjXvpO1oZX0tpiX90KIqbBT1hh/A3BtnjPWUxfNPXfdAcXpTxKdh9aiVL/lTYUWS9
+         k6ONO/nXw5+sGIdQZXjQ1cXxJ0Y8Xm+LMAroGiIREy4qkbQ9LIokB0aeHUVsEnoj26vp
+         NVJPf5TgLbR0suYhEngCWQetLaPHIPo26+ZoN8FQe/4da+0v0LaltsyD6nwVc/+JXrX8
+         LcAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742985926; x=1743590726;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Sj9IC/ITgYzbYCPda8r17Blt5shGufVre2k2P1fl+Zg=;
+        b=gFPwXd/q+BLid3ea3dbOvjq1IELGa7iNma8yEk5lcqt/7T7gngQdBoMJjP5mtF/5Kh
+         M9ZbjjWkmaxTkniqEbDbyUTLdWDOnJgiR4mVhjTXVaD9p4riblCxhEdLCp4vmEQVzCWf
+         q0EV5Gl1obwuHBdH4dbjjCX1IbjHv+HlggNLutwexwZFNEnFhZN6sQIjOxC0cbQF5zUw
+         slvWfcfGdv54MBwa0hzaUqKHfZGt5MaRropdxXgJDtnbeFEiwEtfbo3IKxPlyCpAoSBC
+         30szTcdJIG65Ech+WownZX2TVlbvlg1g/4AM22Wz3630Qg4wIszGv4HJA4gn70rnvAy9
+         9gvg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3kM/OwT2ZRVkU/OzuwfNiaaRIyvzL3vi/ldzdZ6/8WAKOhviPP+h5+S6F1PdK+dIm1QbymQRR8RRUm7M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4+shsHIApb8ZnmaOuQIP1K+UndqDKFTBEw52bTVEcux8Vrppb
+	1sBPcuJc4QDsHeH1DoJAddQ6NJlza2nxWmvH7EegNCGSiGOt4DRb2IUvW/benQ==
+X-Gm-Gg: ASbGnctOCkuv5mgkw/eaKbVeDVO2vBJFvB+Oa5CmmEsfdWFS7L8t4DcVXxFTsomUwea
+	OKGGpYLp9HPFFQQ5Pg5NOlhpxvw6XrHpjrPK7f35DXQ2pykOGy26BxPu2OzUDbZE5ZCV0QI9bc8
+	KW7ot67F0XOOQ8ZuSiStCZ2MLLs9PzOmx9Le+lCA3lrmgZH02SMfaXX23cos2D/1hTugkz4yMpH
+	jGmLvpX4iTw6aA2gZu/b8DiiTKRUYVUGAbMWA39yOGagXjlHomcDU14vCOXSmwZWgHm/vlefFF/
+	/aA9n7t3ejUNRukzFIMvk9wiz8sh1/p8O13+z152inn8r/YAupZUHazIgGi7OlCculzgEOTow0p
+	aYZU=
+X-Google-Smtp-Source: AGHT+IFBLSf5Cc3mFyYZdvuynNJIpSKOy4KRKa6vJr8hwGbWkLycXjgd1M0s6yReqROa/HVWBrx5NA==
+X-Received: by 2002:a05:600c:34cc:b0:439:9b2a:1b2f with SMTP id 5b1f17b1804b1-43d5f8b9236mr144487305e9.3.1742985925530;
+        Wed, 26 Mar 2025 03:45:25 -0700 (PDT)
+Received: from google.com (158.100.79.34.bc.googleusercontent.com. [34.79.100.158])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f995611sm16697147f8f.15.2025.03.26.03.45.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 03:45:24 -0700 (PDT)
+Date: Wed, 26 Mar 2025 10:45:20 +0000
+From: Keir Fraser <keirf@google.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Kristina Martsenko <kristina.martsenko@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] arm64: mops: Do not dereference src reg for a set
+ operation
+Message-ID: <Z-PawJpGJRcSTMnc@google.com>
+References: <20250326070255.2567981-1-keirf@google.com>
+ <Z-PWZ98oNna6nVu1@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-PWZ98oNna6nVu1@J2N7QTR9R3>
 
-From: Christian Göttsche <cgzones@googlemail.com>
+On Wed, Mar 26, 2025 at 10:26:47AM +0000, Mark Rutland wrote:
+> On Wed, Mar 26, 2025 at 07:02:55AM +0000, Keir Fraser wrote:
+> > The register is not defined and reading it can result in a UBSAN
+> > out-of-bounds array access error, specifically when the srcreg field
+> > value is 31.
+> 
+> I'm assuming this is for a MOPS exception taken from a SET* sequence
+> with XZR as the source?
 
-Commit c6ad9fdbd44b ("io_uring,lsm,selinux: add LSM hooks for
-io_uring_setup()") introduced the LSM hook `uring_allowed` and
-implemented it in SELinux via a new `io_uring` class permission
-`allowed`.  Rename the permission to `setup` since most permission verbs
-are named after the corresponding syscall, in this case
-io_uring_setup(2), and avoid confusing policy rules with an allow
-keyword and an allowed permission.
+Yes.
 
-Fixes: c6ad9fdbd44b ("io_uring,lsm,selinux: add LSM hooks for io_uring_setup()")
-Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
----
-Note: this patch targets torvalds/master
----
- security/selinux/hooks.c            | 2 +-
- security/selinux/include/classmap.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> It'd be nice to say that explicitly, as this is the only case where any
+> of the src/dst/size fields in the ESR can be reported as 31. In all
+> other cases where a CPY* or SET* instruction takes register 31 as an
+> argument, the behaviour is CONSTRAINED UNPREDICTABLE and cannot generate
+> a MOPS exception.
 
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 7150c953fec3..bcc66dea8bdc 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -7188,7 +7188,7 @@ static int selinux_uring_allowed(void)
- {
- 	u32 sid = current_sid();
- 
--	return avc_has_perm(sid, sid, SECCLASS_IO_URING, IO_URING__ALLOWED,
-+	return avc_has_perm(sid, sid, SECCLASS_IO_URING, IO_URING__SETUP,
- 			    NULL);
- }
- #endif /* CONFIG_IO_URING */
-diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
-index 04a9b480885e..49fb584f2056 100644
---- a/security/selinux/include/classmap.h
-+++ b/security/selinux/include/classmap.h
-@@ -179,7 +179,7 @@ const struct security_class_mapping secclass_map[] = {
- 	{ "perf_event",
- 	  { "open", "cpu", "kernel", "tracepoint", "read", "write", NULL } },
- 	{ "anon_inode", { COMMON_FILE_PERMS, NULL } },
--	{ "io_uring", { "override_creds", "sqpoll", "cmd", "allowed", NULL } },
-+	{ "io_uring", { "override_creds", "sqpoll", "cmd", "setup", NULL } },
- 	{ "user_namespace", { "create", NULL } },
- 	/* last one */ { NULL, {} }
- };
--- 
-2.49.0
+Okay, will do.
 
+> Note that in ARM DDI 0487 L.a there's a bug where:
+> 
+> * The prose says that SET* taking XZR as a src is CONSTRAINED
+>   UNPREDICTABLE, per K1.2.17.1.1 linked from C6.2.332.
+> 
+>   The title for the K1.2.17.1.1 is "Memory Copy and Memory Set CPY*",
+>   which looks like an editing error.
+> 
+> * The pseudocode is explicit that the CONSTRAINED UNPREDICTABLE
+>   behaviours differ for CPY* and SET* per J1.1.3.121
+>   CheckCPYConstrainedUnpredictable() and J1.1.3.125
+>   CheckSETConstrainedUnpredictable().
+> 
+> ... and I'll go file a ticket about that soon if someone doesn't beat me
+> to it.
+> 
+> > Cc: Kristina Martsenko <kristina.martsenko@arm.com>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Marc Zyngier <maz@kernel.org>
+> > Cc: stable@vger.kernel.org
+> 
+> Looks like this should have:
+> 
+> Fixes: 2de451a329cf662b ("KVM: arm64: Add handler for MOPS exceptions")
+> 
+> Prior to that, the code in do_el0_mops() was benign as the use of
+> pt_regs_read_reg() prevented the out-of-bounds access. It'd also be nice
+> to note that in the commit message.
+
+I will add this too. And Marc's reviewed-by. And re-send as v2. Thanks!
+
+ Keir
+
+> Mark.
+> 
+> > Signed-off-by: Keir Fraser <keirf@google.com>
+> > ---
+> >  arch/arm64/include/asm/traps.h | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm64/include/asm/traps.h b/arch/arm64/include/asm/traps.h
+> > index d780d1bd2eac..82cf1f879c61 100644
+> > --- a/arch/arm64/include/asm/traps.h
+> > +++ b/arch/arm64/include/asm/traps.h
+> > @@ -109,10 +109,9 @@ static inline void arm64_mops_reset_regs(struct user_pt_regs *regs, unsigned lon
+> >  	int dstreg = ESR_ELx_MOPS_ISS_DESTREG(esr);
+> >  	int srcreg = ESR_ELx_MOPS_ISS_SRCREG(esr);
+> >  	int sizereg = ESR_ELx_MOPS_ISS_SIZEREG(esr);
+> > -	unsigned long dst, src, size;
+> > +	unsigned long dst, size;
+> >  
+> >  	dst = regs->regs[dstreg];
+> > -	src = regs->regs[srcreg];
+> >  	size = regs->regs[sizereg];
+> >  
+> >  	/*
+> > @@ -129,6 +128,7 @@ static inline void arm64_mops_reset_regs(struct user_pt_regs *regs, unsigned lon
+> >  		}
+> >  	} else {
+> >  		/* CPY* instruction */
+> > +		unsigned long src = regs->regs[srcreg];
+> >  		if (!(option_a ^ wrong_option)) {
+> >  			/* Format is from Option B */
+> >  			if (regs->pstate & PSR_N_BIT) {
+> > -- 
+> > 2.49.0.395.g12beb8f557-goog
+> > 
