@@ -1,156 +1,166 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23411F4193
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E8431F2369;
+	Wed, 26 Mar 2025 15:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743003162; cv=none; b=qvrgLhumvsemWGoTq6/wofYPHjojawWAR5XJgFFcj1vm6eCK//r9TWRJo17KjhqDYO82X0NXiQGRcnhVwPRcGCu1Fym85kxNPcC35NXkDd97ukv6Djf55DzZiTOBNMgvP68mz8+XEzi/zap9K73thI+zDv5WSA69lzIIMpOuJ2A=
+	t=1743003176; cv=none; b=hUQXm4FDE3TSnkqysZJ6rmZR/N+xmxESqrZqGDOQeqyGSy3GJQvcTSh+3gZGTAscYdXDBtG5uKD7StB8stB+1scZf78j7uvOBdmpFSL2bv0L9+JeEsGT/nI/4f04dbYw/KnqhAT32w/vfgqgCX66hkKqrUx0Xm3vSchqE35Rt48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743003162; c=relaxed/simple;
-	bh=3FJc+P6b3zzJcpkV8eK+FP3TgtJw7jYvpWP0TF2ajgA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bTocDMDeLW30ynSsNzrfXnGIwaZpPcfRfvjp2PzZFv5Y6xaLtEX19/3CUsa/DjCrHOqNYuxGcdVbtAe73KaM08n8MXHFJSej/dXYVLbssO9+nJ3Zxo+THhcMNTDFYz6h+FhPtWAAu+jWvFv+3hj1Totom34OwnhsBgZzTvxALIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N7WtAonl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743003176; c=relaxed/simple;
+	bh=QfFKHtPjhnsVEIyS3XzuUBPioCudwzrqL/GSdI3aKa8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MrR3+R4CLs0PFi1jp19GbhXBjZyEif48CJhoGDk2avP0TCepY6sHjgKngSInTbbjmRLWH1VBUrd1zBuEKfEjQFDFluG+SROraYYlaasND8PED7opOLEfB3Y3UCD5JWsrOsTK6VKaaVwTciv45zDo+HKzvWrGCfQFSes9nk2sCa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=h9CXDAO1; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N7WtAonl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743003158;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cy6PJe0sMeoJhLcbhlkwSjbydSqh6/me/pxc/YeYWRY=;
-	b=N7WtAonlr0t1Sl2SXdAVEzVAqyP2yHKw1ltaWCGcxqs5lrK7zIwCGXbwvdEVAsbZ+BOJee
-	fQOOobfVWllsWPExOy+hNvMaWxps/LMZhJN/ShoAt/X2FAFMgdrZzJDyzjah9SNiSWwnC3
-	UB8E7Mr3wbJygr3jbYvx4x9Ab2mAAAI=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-561-s1LNed1rNYmQWzo7Xzy9iA-1; Wed, 26 Mar 2025 11:32:36 -0400
-X-MC-Unique: s1LNed1rNYmQWzo7Xzy9iA-1
-X-Mimecast-MFC-AGG-ID: s1LNed1rNYmQWzo7Xzy9iA_1743003153
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d01024089so51731075e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:32:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743003152; x=1743607952;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cy6PJe0sMeoJhLcbhlkwSjbydSqh6/me/pxc/YeYWRY=;
-        b=NE4f7pNgnlvOTqHAyqzepxy32f4vtO2rxA6x87bC58wnlXWDE4l1bIHkQ3ZRI0F+fH
-         rEAEFcAP4c08gljGq2fWL1YDaxejpFzlqYVGfAfa50ktZ/ND4+wRsr1bRIeqvNk1A0id
-         lnKZzi9i+67UjoYKCG1w5sE8tpZgrNqnHygXbKEsFpqkIssSRY6q8peFISFKwGZjZHUq
-         Yzuebe5mF+MX6GGchxrmsz+MJd/oXZLN9ixcw90hW5kN5n3MgVJCgjiDL3opT6YrrrZo
-         n7e3y6QZfVN0x+jr/MqYSXX7WVCfEZSXfa6+cmKDxAQMcwa1P0VPMkFNiYcPHWKLV1md
-         oYEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWAIG2CqRhc4VWwG4JGEOY8UwogJMutxBnw48s70625bWumlcarlslkvG5snGWKY0UsXFZg3Ts6cP4vWfw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMauwZnsMDnXcoxOi2Tjqf56mLqjHYmubO/7p3AmmT6AqItNdD
-	zkfoS1p1bNcZsKc5IVxAUCB2ohA974K3uyCcoPfGh5SCLKONM+RZJv+DRJVcdrhWQc5LSKIxoWd
-	hUQYgwXY2+Uo4Qhmm0Pdia1u2Pg1agq+6LPfWNYAeI+NAbohUqVZkGYIqCM3WUEuqz7ZObAy+
-X-Gm-Gg: ASbGnctCqlGYSqv/UDxdE/uyti4J8XRIJeh0GFeesn8wcljPC9TT7win9V10u5v70YU
-	hvppjKnsl+58rBuZoBphEggNgV6yU7O4p0dfGqbLV5CQPvWPUVcg42AhG46IwI86pLn4dnpP3Fl
-	izU+VJybkRPNJ4rNEiL2E92VfCO4j80nBNQLFoXifoFEVeEChza9Zv4XcGBEzsOzgd4bKaBQFPh
-	C+GOtAFjFxy10i5S4rjyb0QGJqtjmi01J+v+MQJVwXl6q7BRPTIRhBcTWfQ43DlZVD27foAkkZQ
-	JmsHpal7l2wFiMDYt6OjL5R8KP5BUcQI16OMsHtiKIyy/Mla/NKPRnJ6ZXb2jc9L
-X-Received: by 2002:a05:600c:3d93:b0:43d:300f:fa4a with SMTP id 5b1f17b1804b1-43d58db553amr142517305e9.12.1743003152356;
-        Wed, 26 Mar 2025 08:32:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFRLuNTDcftGdYLrF6TRN76YPNKGjROf60zN8Q6h9HxP9LzdIxTJHT5qWOkTTFeksKVqeo81g==
-X-Received: by 2002:a05:600c:3d93:b0:43d:300f:fa4a with SMTP id 5b1f17b1804b1-43d58db553amr142517035e9.12.1743003151832;
-        Wed, 26 Mar 2025 08:32:31 -0700 (PDT)
-Received: from sgarzare-redhat (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82e834a5sm5891945e9.13.2025.03.26.08.32.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 08:32:30 -0700 (PDT)
-Date: Wed, 26 Mar 2025 16:32:26 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Luigi Leonardi <leonardi@redhat.com>
-Cc: Michal Luczaj <mhal@rbox.co>, virtualization@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Hyunwoo Kim <v4bel@theori.io>
-Subject: Re: [PATCH net-next v2] vsock/test: Add test for null ptr deref when
- transport changes
-Message-ID: <7ursz6zrffsljkvo25qvgaa5vroflpibtrgnz446ga36kzqtfc@l7v62brwdvod>
-References: <20250314-test_vsock-v2-1-3c0a1d878a6d@redhat.com>
- <85a034b7-a22d-438f-802e-ac193099dbe7@rbox.co>
- <ghik6xpa5oxhb5lc4ztmqlwm3tkv5qbkj63h5mfqs33vursd5y@6jttd2lwwo7h>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="h9CXDAO1"
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A914B210C320;
+	Wed, 26 Mar 2025 08:32:53 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A914B210C320
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743003174;
+	bh=5dEhZXpJIQDYjKp44/xRbSpFUSHWMuuE2+/dnL6k/lU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=h9CXDAO1ZrAH2QmyDPeZh9D575YKdAtnwcuvQxr+2h+cWYYQEZjW0lE1GdOfjm8h0
+	 WTL8D4VFuAxQbfVPl4CANyl7MImvzKVJrV1UkEJ6ZDQRtMcF1/oXVnUIM04GP/33qq
+	 SoTHHkrgirDlGx5JlRlVXulkrfzJWIihHsu4hJNE=
+Message-ID: <f8ccc874-e153-4b78-8159-9923dfa77fc3@linux.microsoft.com>
+Date: Wed, 26 Mar 2025 08:32:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <ghik6xpa5oxhb5lc4ztmqlwm3tkv5qbkj63h5mfqs33vursd5y@6jttd2lwwo7h>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v6 10/11] ACPI: irq: Introduce
+ acpi_get_gsi_dispatcher()
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+ catalin.marinas@arm.com, conor+dt@kernel.org, dan.carpenter@linaro.org,
+ dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com,
+ hpa@zytor.com, joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com,
+ kys@microsoft.com, lenb@kernel.org, lpieralisi@kernel.org,
+ manivannan.sadhasivam@linaro.org, mark.rutland@arm.com, maz@kernel.org,
+ mingo@redhat.com, oliver.upton@linux.dev, robh@kernel.org,
+ ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
+ tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org,
+ yuzenghui@huawei.com, devicetree@vger.kernel.org, kvmarm@lists.linux.dev,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
+ apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
+ sunilmut@microsoft.com
+References: <20250315001931.631210-1-romank@linux.microsoft.com>
+ <20250315001931.631210-11-romank@linux.microsoft.com>
+ <CAJZ5v0g1bX_3zRUUf-=euuvhm1dPB6bjEXPH9O-kMGcZjRspcw@mail.gmail.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <CAJZ5v0g1bX_3zRUUf-=euuvhm1dPB6bjEXPH9O-kMGcZjRspcw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 26, 2025 at 04:14:20PM +0100, Luigi Leonardi wrote:
->Hi Michal,
->
->On Wed, Mar 19, 2025 at 01:27:35AM +0100, Michal Luczaj wrote:
->>On 3/14/25 10:27, Luigi Leonardi wrote:
->>>Add a new test to ensure that when the transport changes a null pointer
->>>dereference does not occur[1].
->>>
->>>Note that this test does not fail, but it may hang on the client side if
->>>it triggers a kernel oops.
->>>
->>>This works by creating a socket, trying to connect to a server, and then
->>>executing a second connect operation on the same socket but to a
->>>different CID (0). This triggers a transport change. If the connect
->>>operation is interrupted by a signal, this could cause a null-ptr-deref.
->>
->>Just to be clear: that's the splat, right?
->>
->>Oops: general protection fault, probably for non-canonical address 0xdffffc000000000c: 0000 [#1] PREEMPT SMP KASAN NOPTI
->>KASAN: null-ptr-deref in range [0x0000000000000060-0x0000000000000067]
->>CPU: 2 UID: 0 PID: 463 Comm: kworker/2:3 Not tainted
->>Workqueue: vsock-loopback vsock_loopback_work
->>RIP: 0010:vsock_stream_has_data+0x44/0x70
->>Call Trace:
->>virtio_transport_do_close+0x68/0x1a0
->>virtio_transport_recv_pkt+0x1045/0x2ae4
->>vsock_loopback_work+0x27d/0x3f0
->>process_one_work+0x846/0x1420
->>worker_thread+0x5b3/0xf80
->>kthread+0x35a/0x700
->>ret_from_fork+0x2d/0x70
->>ret_from_fork_asm+0x1a/0x30
->>
->
->Yep! I'll add it to the commit message in v3.
->>>...
->>>+static void test_stream_transport_change_client(const struct test_opts *opts)
->>>+{
->>>+	__sighandler_t old_handler;
->>>+	pid_t pid = getpid();
->>>+	pthread_t thread_id;
->>>+	time_t tout;
->>>+
->>>+	old_handler = signal(SIGUSR1, test_transport_change_signal_handler);
->>>+	if (old_handler == SIG_ERR) {
->>>+		perror("signal");
->>>+		exit(EXIT_FAILURE);
->>>+	}
->>>+
->>>+	if (pthread_create(&thread_id, NULL, test_stream_transport_change_thread, &pid)) {
->>>+		perror("pthread_create");
->>
->>Does pthread_create() set errno on failure?
->It does not, very good catch!
->>
->>>+		exit(EXIT_FAILURE);
->>>+	}
->>>+
->>>+	tout = current_nsec() + TIMEOUT * NSEC_PER_SEC;
->>
->>Isn't 10 seconds a bit excessive? I see the oops pretty much immediately.
->Yeah it's probably excessive. I used because it's the default timeout 
->value.
 
-Please define a new macro with less time, something like we did with
-ACCEPTQ_LEAK_RACE_TIMEOUT.
 
-Thanks,
-Stefano
+On 3/26/2025 7:55 AM, Rafael J. Wysocki wrote:
+> On Sat, Mar 15, 2025 at 1:19 AM Roman Kisel <romank@linux.microsoft.com> wrote:
+[...]
+> 
+> This basically looks OK to me except for a couple of coding style
+> related nits below.
+> 
+
+Appreciate taking time to review this very much! Will squash the nits in
+the next version.
+
+>> ---
+>>   drivers/acpi/irq.c   | 15 +++++++++++++--
+>>   include/linux/acpi.h |  5 ++++-
+>>   2 files changed, 17 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/acpi/irq.c b/drivers/acpi/irq.c
+>> index 1687483ff319..8eb09e45e5c5 100644
+>> --- a/drivers/acpi/irq.c
+>> +++ b/drivers/acpi/irq.c
+>> @@ -12,7 +12,7 @@
+>>
+>>   enum acpi_irq_model_id acpi_irq_model;
+>>
+>> -static struct fwnode_handle *(*acpi_get_gsi_domain_id)(u32 gsi);
+>> +static acpi_gsi_domain_disp_fn acpi_get_gsi_domain_id;
+>>   static u32 (*acpi_gsi_to_irq_fallback)(u32 gsi);
+>>
+>>   /**
+>> @@ -307,12 +307,23 @@ EXPORT_SYMBOL_GPL(acpi_irq_get);
+>>    *     for a given GSI
+>>    */
+>>   void __init acpi_set_irq_model(enum acpi_irq_model_id model,
+>> -                              struct fwnode_handle *(*fn)(u32))
+> 
+> Please retain the indentation here and analogously below.
+> 
+>> +       acpi_gsi_domain_disp_fn fn)
+>>   {
+>>          acpi_irq_model = model;
+>>          acpi_get_gsi_domain_id = fn;
+>>   }
+>>
+>> +/**
+>> + * acpi_get_gsi_dispatcher - Returns dispatcher function that
+>> + *                           computes the domain fwnode for a
+>> + *                           given GSI.
+>> + */
+> 
+> I would format this kerneldoc comment a bit differently:
+> 
+> /*
+>   * acpi_get_gsi_dispatcher() - Get the GSI dispatcher function
+>   *
+>   * Return the dispatcher function that computes the domain fwnode for
+> a given GSI.
+>   */
+> 
+>> +acpi_gsi_domain_disp_fn acpi_get_gsi_dispatcher(void)
+>> +{
+>> +       return acpi_get_gsi_domain_id;
+>> +}
+>> +EXPORT_SYMBOL_GPL(acpi_get_gsi_dispatcher);
+>> +
+>>   /**
+>>    * acpi_set_gsi_to_irq_fallback - Register a GSI transfer
+>>    * callback to fallback to arch specified implementation.
+>> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+>> index 4e495b29c640..abc51288e867 100644
+>> --- a/include/linux/acpi.h
+>> +++ b/include/linux/acpi.h
+>> @@ -336,8 +336,11 @@ int acpi_register_gsi (struct device *dev, u32 gsi, int triggering, int polarity
+>>   int acpi_gsi_to_irq (u32 gsi, unsigned int *irq);
+>>   int acpi_isa_irq_to_gsi (unsigned isa_irq, u32 *gsi);
+>>
+>> +typedef struct fwnode_handle *(*acpi_gsi_domain_disp_fn)(u32);
+>> +
+>>   void acpi_set_irq_model(enum acpi_irq_model_id model,
+>> -                       struct fwnode_handle *(*)(u32));
+>> +       acpi_gsi_domain_disp_fn fn);
+>> +acpi_gsi_domain_disp_fn acpi_get_gsi_dispatcher(void);
+>>   void acpi_set_gsi_to_irq_fallback(u32 (*)(u32));
+>>
+>>   struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
+>> --
+> 
+> With the above addressed, please feel free to add
+> 
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> to the patch and route it along with the rest of the series.
+> 
+
+Will do, thanks!
+
+> Thanks!
+
+-- 
+Thank you,
+Roman
 
