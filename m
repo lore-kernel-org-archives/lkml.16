@@ -1,170 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f99.google.com (mail-io1-f99.google.com [209.85.166.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898DA215058;
-	Wed, 26 Mar 2025 18:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7038218027
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 18:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743015182; cv=none; b=WZFxFyMHwiw1ExweVc3H5qjGAWR2tDkFwYpp+eQM36RWtb5bGSbm0KZNn4kkjKCFMyFxZuC3YZhlbPfgmF5blK8aKtMMkI8cruGtb1UMdHSCy1aFf7PKnEPg5zIp/w2SpcnDVFiV+ooiKSeYbaNmHCFAG6UfPDw5EZgvHSsr85w=
+	t=1743015420; cv=none; b=OSvyE7JmsSAxc0mpEq6H8UEMXQnZ5YJik21+RyU5Di0MqdZGqEpq/bBkzwJoP+0u/o4s8+jg5L3tLE4GRMfaOiKWNUMAn7W/lqRxRNHRdVxz0hJBe8um5MLbtcPfGN1TnXflQ2OHNpZUidznOdOybkL4yL1i6ILItXJWCtt/ca8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743015182; c=relaxed/simple;
-	bh=7tnbCUTKMpPo8aoqQiYW410Hhe5LPNkwVR28/52KUGY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CR63jnP6nLxtdHeFRa7TEtEaikeVTIesVTzKY4GhAp/L4QsNnTZAjyRmIQAygariWrzHBGXMKELn30Lf4gZkWFtbRf1c4CL513oQiWY4p7nSrFzGUgpcX0yfa2F0Z+ACn/gpMBd8U+8VEKfG9FqH7CgSVqarrXYeNV9/Gzd6h4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=snLlwT1B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743015420; c=relaxed/simple;
+	bh=jGpiZ3lPuBCyjBbQjqjfHfoJjy55SOzqxjPMosf7Ot8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QEVfqFNFmSrnfGj/k+DStnsPPzQZKL5+dzoRNBUuAFOJEwsPdgxuLwX8emBuWdxx6YIMMpPSHcabxpLrsyihW/ECIDBHULoYY2n9PusEEPPlYBqOithja4+AU1ql1koLy2GmUfiBHLh0o+90oC3dMqg1npfImS7Oyqs9rj6nHgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=eLoz/+G3; arc=none smtp.client-ip=209.85.166.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="snLlwT1B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FD20C4CEF0;
-	Wed, 26 Mar 2025 18:53:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743015182;
-	bh=7tnbCUTKMpPo8aoqQiYW410Hhe5LPNkwVR28/52KUGY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=snLlwT1ByOOZ8VDdLTGeiVAiEWrHtg3EvWVkctlzQIGFZzDT7XBzN2DIIFpHVRuA4
-	 QWSXjBNoMYxPNGrYI7EhmcSj0AeKKRNkXc7ncCYbP0fslp4P4+jMIkZIAktw92xzl9
-	 f/6pVTEXC4NSXGu4xof5rtvBej+C0GDqtW1wkGhV6Wi2YRwu2jpb0Lyghf8UlzytoG
-	 WwQ6DMNodUQHQk2VpoXa2/y89pLaPCLpwF+ISbR4hp6cRaabZWfTVWMtcr/ZSfSmh8
-	 jwKqvjyFp2FKpKOIs73vDRG4Rw8NplM2rXgHf/zkk7H07J9bPh8EYwSA5OcJVoLYAh
-	 Co5wZxznPQ7aQ==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5ec9d24acfbso2301933a12.0;
-        Wed, 26 Mar 2025 11:53:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCULByM3gBBPd93iQ9H5PkPbQbq7kXP4TicXA1aaKhpWmsdmWepvEb/nR3B7VV16xeV0U8PGJHJ71U9hqUh0@vger.kernel.org, AJvYcCV0d2Z38X05xlfAoQnlAoZYMTdejD+bwfDdVf4t6X70lo65Ix3nQfiLBMxWgNglM7M+DaMcWLb4EbLRlJGfbCueqA==@vger.kernel.org, AJvYcCVaZjgj5CxrS201Md3PY0KWIUM4WMPBMgXlS68gXmX22VfTcNNKcFVNXWo7DmkmVQtfSlaoYxgYhpC9Umww2g==@vger.kernel.org, AJvYcCXMybBh7e9IkBvVBDeMDF9I/TjndgEwHovuHdgD3YhIS/H8HejuG/wk5Ih3Kgjbq5p5QyA4ZSWNDsFO@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwgTrQephHReQ0rUXSL3XoX0/ynn3bV+dKHD38pxVRGzvA7F8i
-	E8yfNBpgf+FpHTUnpv27E5mPywKuwkadqEsZ6DjrVrBP7R43zceG3JYesxfKEOckx44bmFER8AN
-	kNIKYWD8g6TfjOeM7Koee1qsmbQ==
-X-Google-Smtp-Source: AGHT+IEi/FLkb6+pDXS2OgDct0wDDLVjgAusO19cQUp3SH7xeV/KwpO2rct7/toV7PxXM7MD6oHfl5OWID6sUvuLyTI=
-X-Received: by 2002:a17:907:7295:b0:ac2:26a6:febf with SMTP id
- a640c23a62f3a-ac6e0d3384emr557164766b.20.1743015180452; Wed, 26 Mar 2025
- 11:53:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="eLoz/+G3"
+Received: by mail-io1-f99.google.com with SMTP id ca18e2360f4ac-85b41281b50so7184139f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 11:56:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1743015417; x=1743620217; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nMSYNUtEXougJlHExQh8eBet5bvIJeI5uFDV0DD+oQ0=;
+        b=eLoz/+G3BzzyNWtS6MMGQA9TZmjUWCr6TwBsq93oAoRAht4ZR9c1HzLyc0HyRtkfVG
+         X8UYuaPODWt51YCJpAqb8W9p1jp0/v9wob52JL3qcnP9rQEua0asIpKPuyLwHPorzp/7
+         Xsas89nirOm1+2L8cgDwX2oowCUW9kL4jB8ajkSjH/shOgFxGsAZdJ1mHMooe0xDMEOh
+         Dnp8vMNPNZ0ZmGrTngsz/wOOi2yGbeBNKicRQeT+HMfl/uBz6Ao4b2QGCQ+cmVkAJqFR
+         OnWNuSxfgoaIdZOy+vbi1I8tLN0xmZZ1eYa6CnHYJzKRFCENc5iCxF+wOh9kSR0SLnha
+         +XmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743015417; x=1743620217;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nMSYNUtEXougJlHExQh8eBet5bvIJeI5uFDV0DD+oQ0=;
+        b=knH1Ic8eyEBYGWVoZKy/a4/eqgdwPEOybSOvQxptYBWvqrUS8fK3fjagEuHwI+nRA6
+         P6IWzkNLYTwZ2IobOHgSceie0RwRUejbfQY72JIZzBv9uG9JytPMIyfriorqRigPfU/7
+         NjoLvbmfSSbQTRk3AdMP6uCZEAZ3pZGfqTHTps53XO+e4LV0naHAam9QplFeteP04ZFV
+         Vrwk+riuqNu6UhjdT1H1O/p+cVTLhc7jC9ZBhvwSYFSowe/Xu4b8moFQPBozGYNO3eVt
+         3Z1r6n9sdqIJC0ovdbuD6DSLTEgLmi6q/HfcECYkAkPlwOFbuuJvBE62SFyVojgvZ9SI
+         8KfA==
+X-Forwarded-Encrypted: i=1; AJvYcCXIHRBc/nIj1sY+bukSmcBAi7iR6j7Ulwy0MhwOSqM8yb2cM4XbawLpApEEWg7Jh34p9KEVc0+4/OGRCLM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoKneb/KEOf4mguIBpgM36sBIJJE0Ptj3j2Yk0l7T6TC9Q2hsu
+	2ftjAWICPDpKdSQLWg2q2pv/UrPhAUJ1a1PI2aDtXaomHeIWXfTodvxELPM23uJd0ns1LA44RM9
+	mVguV/hFmXVEzeMXrPnVQdF+LYnvIbg0B
+X-Gm-Gg: ASbGncvJu5mcELoLQIfuaqLieBFA/mFxSxFmpCnn6xWAHLNBtnMwA4Nx7xIZUl8D/7T
+	C69uj6pX8Bz/WCnKvNnrUGdFnx2QVuKScXuBDc0jsZ2aMGNzUWxLwJICQDU81lL+lj9O3y9LLlL
+	pQiBtDsmF9Z+ZuVWuO5AaRCNXzEDrW0Jq3lPOdVYTcGvcZC003nXBCxeEsxUg1FzocN2R6PXpnn
+	y+LuMgbB5pZPTBoh08aku+QvVRuJ8Ac+PG0/Mc2Cl/JxClv6sY4AnCK+YwcunwEdxfSS4N3gSvK
+	+xa/sqQ3FZy5c3ueI9QwiYjwux4DIK3m5qxwMNpbmDZnscFxyw==
+X-Google-Smtp-Source: AGHT+IFprfUQX7hl7ALwRYy+fGTAFCgg2CZhgcsHAI4AVmaA2YLgu/KYeOGvdhWmwZaou7Txa0q9P1fZ+A3n
+X-Received: by 2002:a05:6602:7286:b0:85b:3f1a:30aa with SMTP id ca18e2360f4ac-85e82127fb2mr121287439f.9.1743015417329;
+        Wed, 26 Mar 2025 11:56:57 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
+        by smtp-relay.gmail.com with ESMTPS id 8926c6da1cb9f-4f2cbf03468sm574746173.57.2025.03.26.11.56.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 11:56:57 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 6300234024A;
+	Wed, 26 Mar 2025 12:56:56 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id 6BAF0E40158; Wed, 26 Mar 2025 12:56:56 -0600 (MDT)
+Date: Wed, 26 Mar 2025 12:56:56 -0600
+From: Uday Shankar <ushankar@purestorage.com>
+To: Ming Lei <ming.lei@redhat.com>
+Cc: Shuah Khan <shuah@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] ublk: improve handling of saturated queues when ublk
+ server exits
+Message-ID: <Z+RN+CPnWO69aJD5@dev-ushankar.dev.purestorage.com>
+References: <20250325-ublk_timeout-v1-0-262f0121a7bd@purestorage.com>
+ <20250325-ublk_timeout-v1-4-262f0121a7bd@purestorage.com>
+ <Z-OS2_J7o0NKHWmj@fedora>
+ <Z+Q/SNmX+DpVQ5ir@dev-ushankar.dev.purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317232426.952188-1-robh@kernel.org> <20250317232426.952188-3-robh@kernel.org>
- <CAGb2v65djD5DLQnjQrp9kSHTQYVd9p_vP9WySj2Cx81rHmh5Mw@mail.gmail.com>
-In-Reply-To: <CAGb2v65djD5DLQnjQrp9kSHTQYVd9p_vP9WySj2Cx81rHmh5Mw@mail.gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 26 Mar 2025 13:52:49 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLoJAwPeWjXyQYK1rvVzn6Meapz3iS9gW+QqYpYKuJkBQ@mail.gmail.com>
-X-Gm-Features: AQ5f1Jqmc05lmNw-rFmLFhT71JwYvVm4xio8OJGuHie4RorDqomqBJbJolJsSNo
-Message-ID: <CAL_JsqLoJAwPeWjXyQYK1rvVzn6Meapz3iS9gW+QqYpYKuJkBQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] of: Simplify of_dma_set_restricted_buffer() to use of_for_each_phandle()
-To: wens@kernel.org
-Cc: Saravana Kannan <saravanak@google.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Mathieu Poirier <mathieu.poirier@linaro.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Patrice Chotard <patrice.chotard@foss.st.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-remoteproc@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z+Q/SNmX+DpVQ5ir@dev-ushankar.dev.purestorage.com>
 
-On Wed, Mar 26, 2025 at 1:44=E2=80=AFAM Chen-Yu Tsai <wens@kernel.org> wrot=
-e:
->
-> Hi,
->
-> On Tue, Mar 18, 2025 at 7:29=E2=80=AFAM Rob Herring (Arm) <robh@kernel.or=
-g> wrote:
-> >
-> > Simplify of_dma_set_restricted_buffer() by using of_property_present()
-> > and of_for_each_phandle() iterator.
-> >
-> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > ---
-> >  drivers/of/device.c | 34 +++++++++++++---------------------
-> >  1 file changed, 13 insertions(+), 21 deletions(-)
-> >
-> > diff --git a/drivers/of/device.c b/drivers/of/device.c
-> > index edf3be197265..bb4a47d58249 100644
-> > --- a/drivers/of/device.c
-> > +++ b/drivers/of/device.c
-> > @@ -35,44 +35,36 @@ EXPORT_SYMBOL(of_match_device);
-> >  static void
-> >  of_dma_set_restricted_buffer(struct device *dev, struct device_node *n=
-p)
-> >  {
-> > -       struct device_node *node, *of_node =3D dev->of_node;
-> > -       int count, i;
-> > +       struct device_node *of_node =3D dev->of_node;
-> > +       struct of_phandle_iterator it;
-> > +       int rc, i =3D 0;
-> >
-> >         if (!IS_ENABLED(CONFIG_DMA_RESTRICTED_POOL))
-> >                 return;
-> >
-> > -       count =3D of_property_count_elems_of_size(of_node, "memory-regi=
-on",
-> > -                                               sizeof(u32));
-> >         /*
-> >          * If dev->of_node doesn't exist or doesn't contain memory-regi=
-on, try
-> >          * the OF node having DMA configuration.
-> >          */
-> > -       if (count <=3D 0) {
-> > +       if (!of_property_present(of_node, "memory-region"))
-> >                 of_node =3D np;
-> > -               count =3D of_property_count_elems_of_size(
-> > -                       of_node, "memory-region", sizeof(u32));
-> > -       }
-> >
-> > -       for (i =3D 0; i < count; i++) {
-> > -               node =3D of_parse_phandle(of_node, "memory-region", i);
-> > +       of_for_each_phandle(&it, rc, of_node, "memory-region", NULL, 0)=
- {
-> >                 /*
-> >                  * There might be multiple memory regions, but only one
-> >                  * restricted-dma-pool region is allowed.
-> >                  */
-> > -               if (of_device_is_compatible(node, "restricted-dma-pool"=
-) &&
-> > -                   of_device_is_available(node)) {
-> > -                       of_node_put(node);
-> > -                       break;
-> > +               if (of_device_is_compatible(it.node, "restricted-dma-po=
-ol") &&
-> > +                   of_device_is_available(it.node)) {
-> > +                       if (!of_reserved_mem_device_init_by_idx(dev, of=
-_node, i)) {
-> > +                               of_node_put(it.node);
-> > +                               return;
-> > +                       }
-> >                 }
-> > -               of_node_put(node);
-> > +               i++;
-> >         }
-> >
-> > -       /*
-> > -        * Attempt to initialize a restricted-dma-pool region if one wa=
-s found.
-> > -        * Note that count can hold a negative error code.
-> > -        */
-> > -       if (i < count && of_reserved_mem_device_init_by_idx(dev, of_nod=
-e, i))
-> > -               dev_warn(dev, "failed to initialise \"restricted-dma-po=
-ol\" memory node\n");
-> > +       dev_warn(dev, "failed to initialise \"restricted-dma-pool\" mem=
-ory node\n");
->
-> This changes the behavior. Before this patch, it was:
->
->     if a restricted dma pool was found, but initializing it failed, print
->     a warning.
->
-> Whereas now it has become:
->
->      print a warning unless a restricted dma pool was found and successfu=
-lly
->      initialized.
->
-> This change causes the kernel to print out the warning for devices that
-> don't even do DMA:
+On Wed, Mar 26, 2025 at 11:54:16AM -0600, Uday Shankar wrote:
+> > ublk_abort_requests() should be called only in case of queue dying,
+> > since ublk server may open & close the char device multiple times.
+> 
+> Sure that is technically possible, however is any real ublk server doing
+> this? Seems like a strange thing to do, and seems reasonable for the
+> driver to transition the device to the nosrv state (dead or recovery,
+> depending on flags) when the char device is closed, since in this case,
+> no one can be handling I/O anymore.
 
-Thanks. I fixed it up to only warn if i is non-zero.
+I see ublksrv itself is doing this :(
 
-Rob
+/* Wait until ublk device is setup by udev */
+static void ublksrv_check_dev(const struct ublksrv_ctrl_dev_info *info)
+{
+	unsigned int max_time = 1000000, wait = 0;
+	char buf[64];
+
+	snprintf(buf, 64, "%s%d", "/dev/ublkc", info->dev_id);
+
+	while (wait < max_time) {
+		int fd = open(buf, O_RDWR);
+
+		if (fd > 0) {
+			close(fd);
+			break;
+		}
+
+		usleep(100000);
+		wait += 100000;
+	}
+}
+
+This seems related to some failures in ublksrv tests
+
