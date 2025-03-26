@@ -1,121 +1,104 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251EF24C082;
-	Wed, 26 Mar 2025 23:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF9318027;
+	Wed, 26 Mar 2025 23:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743032679; cv=none; b=CuyaGhr9PFjIw/7guNCkl/1Sc7VHojRUbd3dpPVgjPAhmg1pouezsml/tYKUbUgIuVmSNXAs6vSXEvvmPbwp+SdIERo9XsslSBYSZMtQB+Rqw/d7uGR4S8SJlLWg2A3D0D2gicscFuwYBo10FzUOuAhjy0rjiYfHWUWNz0Y/npQ=
+	t=1743032754; cv=none; b=Vp8RGosC/FOQYPiFeGtk4sc5k+ea6AiD38O767ORQZsPoE47o27KS57qdoHjjSIYv37exO7dKxHOGttFpLGghETa0eB9ogCtW07nRuBoWiwj2afhENCI5ahnP15ICtSn/J3loco9X/33mMi50PMwyVbHE3mrEEyI6nezGJQvVFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743032679; c=relaxed/simple;
-	bh=D1apogL4fCUbwrUIBOk7sBJ0HDf+NbhOpks7NTMIzdM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MuiUvgw2c18odf1YDg5A68k+pcReLOrqTXD2jgF54FLXXRAPLCzoY7FUDJIoQYhmnzkbZw3Zy6ctLodqHYLue5VdTpgd19Nkr8phPzbUqfYLdA4IuUOj+0f/bXRS3mVb+04X8Eyh7mU5H1ly863B7GWIQKh07beZzwTW1W2/zp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MD36ZbOf; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1743032754; c=relaxed/simple;
+	bh=xenkETHNq21MnE2o5q2f8tGsWGGsqyf3/hSbvPMf/SM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hX70JN0X98v23nV2wQrhZdW9uO5zSiDpTIYkUNL7aoZfdPBMUFEpilDIE/BMZBlmCNEb1bsTxbXPs4qG7mlnrIFakveilk8sYWgTwBAVS9qulqQEWCM+/V6PFk4BkZHj/8B1thdyhp2MQKUE9hj3QJ5//Uotw7dFkXSpFCILFpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=opg24X0/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MD36ZbOf"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52QLF1Nt008791;
-	Wed, 26 Mar 2025 23:44:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Pb0iPc
-	dEeHebXeBafq6Cz5IsD8ru0VAgrLo98xb9RWo=; b=MD36ZbOfUkPrFh5VqvRb7v
-	+Kt2tEfGngQGbB4KcQ126tLOG4YYdJWL3Com+ciIHdHK+1QXL92XGb06MMAOz0kS
-	fdxKcbXQpA8ptNlQ9nhWiOutiRk5eDBLjr/moSQ6wSejDISOsYb4YKF8wmcZ1B9+
-	/upSEo/DPU1iXFrTJKRTNL81Ct7PPlvkaf7TLth0drdpuFqBPy3TAyzwA8G5r6Pc
-	Y2MHc4tXmKeASyZL8RD1W1QfSUY2f9O7Y/+NBlglnA4s4e4SvsyD9GCzKHGtA9BR
-	CD7mFmYMc4xMeoI1JJLCX7QhE8SZjq5jb/ZQGL7azqipu6q8qoNlpBzmw1/z/LrA
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45mk0qatqb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Mar 2025 23:44:10 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52QN7oei009737;
-	Wed, 26 Mar 2025 23:44:09 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45j9rktmv5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Mar 2025 23:44:09 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52QNi8JM30737142
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Mar 2025 23:44:08 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 87A7658059;
-	Wed, 26 Mar 2025 23:44:08 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B48D65805D;
-	Wed, 26 Mar 2025 23:44:06 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.98.130])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 26 Mar 2025 23:44:06 +0000 (GMT)
-Message-ID: <af61537d6d4b293813f86c4b55dcfe15a3139085.camel@linux.ibm.com>
-Subject: Re: [PATCH v10 6/8] ima: kexec: move IMA log copy from kexec load
- to execute
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: steven chen <chenste@linux.microsoft.com>, Baoquan He <bhe@redhat.com>
-Cc: stefanb@linux.ibm.com, roberto.sassu@huaweicloud.com,
-        roberto.sassu@huawei.com, eric.snowberg@oracle.com,
-        ebiederm@xmission.com, paul@paul-moore.com, code@tyhicks.com,
-        bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
-        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
-        nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
-        vgoyal@redhat.com, dyoung@redhat.com
-Date: Wed, 26 Mar 2025 19:44:06 -0400
-In-Reply-To: <2d2ea573-1ddd-44b4-8ba3-4ae86313d63f@linux.microsoft.com>
-References: <20250318010448.954-1-chenste@linux.microsoft.com>
-	 <20250318010448.954-7-chenste@linux.microsoft.com>
-	 <Z9t4LVpE470DMBYU@MiWiFi-R3L-srv>
-	 <3d7b5e06-5166-46bb-89dc-a0b95ca7c767@linux.microsoft.com>
-	 <Z+E7X6LuQ82q1i5V@MiWiFi-R3L-srv>
-	 <6583378c-55ee-4192-a95f-ebaf3f708bbb@linux.microsoft.com>
-	 <Z+NmLtn0vojVYJ3H@MiWiFi-R3L-srv>
-	 <2d2ea573-1ddd-44b4-8ba3-4ae86313d63f@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="opg24X0/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0F64C4CEE2;
+	Wed, 26 Mar 2025 23:45:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743032752;
+	bh=xenkETHNq21MnE2o5q2f8tGsWGGsqyf3/hSbvPMf/SM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=opg24X0/bGiv56vNxDDcZdo1UJoz5PWVnh4h5LFfFnudRKEaU2AX7XRMK1XIALnZQ
+	 nFUuQYEz/RvxwSmJzPJ2+GhXrO/oSuF2eskQAVSqU4EnLpF+9IW5sRlPvz/jZnRRMY
+	 12X0Wjrq9aKm1Tf55DnDMQ6+d60RU5SHNtTtxInLlFpzvg0wQMMBu9sGrUqk8qDE1M
+	 ZsrtAz7zQH2Lwy6VPdLKmrOrI2UIcqydjFvZPKWjjk+OArTqE8MgzSAid9YFSO3ZNW
+	 HSTpH1DrCiv4EtGw2ORbx6A5k5RenXvM9M6BCQWcaglci7tzAE6VwQMo8rlGJNDNzQ
+	 mlj1TRxuGzpsQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 5BBFACE0C2A; Wed, 26 Mar 2025 16:45:52 -0700 (PDT)
+Date: Wed, 26 Mar 2025 16:45:52 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+	iommu@lists.linux.dev
+Subject: Re: [BUG] vmlinux.o: warning: objtool: iommu_dma_sw_msi() falls
+ through to next function alloc_io_pgtable_ops()
+Message-ID: <88ef4efd-9736-4c37-9b05-212e65602322@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <5dd1f35e-8ece-43b7-ad6d-86d02d2718f6@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 7gAqfQEYtFE5MeYFzlmWitnjt9waQDRW
-X-Proofpoint-ORIG-GUID: 7gAqfQEYtFE5MeYFzlmWitnjt9waQDRW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 phishscore=0 mlxscore=0 mlxlogscore=665 impostorscore=0
- malwarescore=0 adultscore=0 bulkscore=0 clxscore=1015 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503260146
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5dd1f35e-8ece-43b7-ad6d-86d02d2718f6@paulmck-laptop>
 
+On Wed, Mar 26, 2025 at 04:18:51PM -0700, Paul E. McKenney wrote:
+> Hello!
+> 
+> Building next-20250326 using clang version 19.1.7 (CentOS 19.1.7-1.el9)
+> gets me the following warning:
 
-> > Hmm, it's easier, while maybe not good. We should not repeatedly
-> > introduce similar things into codes. Here, it's similar as
-> > what kexec_apply_relocations() and arch_kexec_apply_relocations() are
-> > doing.
-> >=20
-> > int machine_kexec_post_load(struct kimage *image)
+Apologies, but make that gcc version 11.5.0 20240719 (Red Hat 11.5.0-5) (GCC).
+(Hey, it has almost always been clang in the past...)
 
-(As discussed) just as kexec_apply_relocation calls
-arch_kexec_apply_relocations().  Name this function kexec_post_load() and c=
-all
-machine_kexec_post_load().
+Also, the runs that have this problem are the ones whose kernels are
+built with CONFIG_DEBUG_LOCK_ALLOC=y, but that do *not* enable KASAN.
+For rcutorture, these are scenarios SRCU-P, TREE02, TREE05, TASKS01,
+TRACE02, RUDE01, SRCU-T, and TINY02.
 
-Mimi
+							Thanx, Paul
 
-> > {
-> > #ifdef CONFIG_IMA_KEXEC
-> >          ima_kexec_post_load(image);
-> > #endif
-> > 	return arch_machine_kexec_post_load();
-> > }
->=20
+> vmlinux.o: warning: objtool: iommu_dma_sw_msi() falls through to next function alloc_io_pgtable_ops()
+> 
+> This surprised me for a couple of reasons.  First, from what I
+> can see, iommu_dma_sw_msi() does not fall through.  Second, it
+> is in drivers/iommu/dma-iommu.c while alloc_io_pgtable_ops() is in
+> drivers/iommu/io-pgtable.c, though maybe the compiler and/or linker saw
+> fit to rearrange these functions' object code.
+> 
+> Please let me know of any debug patches or fixes that I could apply,
+> or any additional information that you might need.
+> 
+> 						Thanx, Paul
+> 
+> Note to self: Run 2025.03.26-14.37.10-remote on first test system.  ;-)
+> 
+> ------------------------------------------------------------------------
+> 
+> int iommu_dma_sw_msi(struct iommu_domain *domain, struct msi_desc *desc,
+> 		     phys_addr_t msi_addr)
+> {
+> 	struct device *dev = msi_desc_to_dev(desc);
+> 	const struct iommu_dma_msi_page *msi_page;
+> 
+> 	if (!has_msi_cookie(domain)) {
+> 		msi_desc_set_iommu_msi_iova(desc, 0, 0);
+> 		return 0;
+> 	}
+> 
+> 	iommu_group_mutex_assert(dev);
+> 	msi_page = iommu_dma_get_msi_page(dev, msi_addr, domain);
+> 	if (!msi_page)
+> 		return -ENOMEM;
+> 
+> 	msi_desc_set_iommu_msi_iova(desc, msi_page->iova,
+> 				    ilog2(cookie_msi_granule(domain)));
+> 	return 0;
+> }
