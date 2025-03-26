@@ -1,97 +1,106 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7621B1F8AD3
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 17:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E1B1F791C
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 17:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743008736; cv=none; b=EKDUUpoIYvmgzi+SDczSo2rGXngFZhQW6Xa3sJF3y2bDu/RD+QcVVedjSgRcRK1zihL9bwIoeBo1ZWUZRFl+wdZB+2VHyoqCQSD7mfkE5dLsaE2mykmvLhkpI00qem0aTIL8qX8ke8LxLq9kEZ0gQNfI14Ns2lLsuSPkMc/zKbg=
+	t=1743009003; cv=none; b=m9xgPOuH1bIF5YdV9uXKj3CU9nA88bUGIv43NGNtdgLDvwGz858U7Zt5MILz3yiAFnBKAUZ9O2200nkND+ucUtj9MLDqJauR53mk4+4ENbQoKuW6cNpVhsGQhiMwE/94eTrXQvxOFMeMgTYd/iU48eTTPx1z+uwUHh5/iPjnaao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743008736; c=relaxed/simple;
-	bh=Qq9xeVTsSXaWrZtIjspbgDu/IPbsHTxCkEBGsVWCAIE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Gn9Z0DArQSzI25nKB4HUkYGhZfABZPIuOHGPMc8o5i994885y6Tnn4qgyrEE+hZlrQQAvKc+fUYsvc511CjpK6p7+kYmgJeLxlTWgblmG8tLDtlNBp8HssDJzNQD5B9rxpR9Nu2VjOVMh3esalnyQvq6h9mZkUzOzd8Wa+Y1EAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=hPlUboZl; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1743009003; c=relaxed/simple;
+	bh=s9hN7Yb2FDLvip8w32MVrFLFzpBsY05WU4O19Z4Nkz4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uBlTYjPJlDe5/Tpg9vDlWb9GmC16+I6JO+fU3cmt1QyAMekBxWeh96yHjr5UI4cHgES5Ga0sULL9sMP6dTOOHmAK/ClCstaRZVPvFQEDLEzieQIwtzBTLrZiXCUQ64iCbpkufri6heUhNaREQMrZlyrunmK7w8CHPGPM1OCuTUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qR2sTKIn; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="hPlUboZl"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c54f67db99so100827385a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 10:05:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qR2sTKIn"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso1025235e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 10:10:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1743008734; x=1743613534; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h9As/VLL7jHovW+piH2w50VnhaugZ9QsJT0naURZU3s=;
-        b=hPlUboZlxAvk1LP1CPBu9cna6hWQL0PLsoANt2igLSm7vOO6iBDPddOQCh5sBFheVw
-         FPPmucjHTuGylH7hJKqGgvGHh3EXLwfnGd4u8kY9P3bQC1Vm9vhZp4pLPIqZS8UH+C7K
-         qmysvawarO/QQVVBa+ObIdc5+ogKi60xEntJ7vcfpSbuCuPw3ynNKe5z2xsuPAR8bv+z
-         6hveFnWKAACx6DaUtw6+EVEd1KQUZjrnclZPFP2g236PGqH+LgHEwcY+8BdY8E8Jaw10
-         tOIp6Csqabtm5aBWt/bqap6YahiHQH2u19jUqUuD+cAZ3zlC5ZoQJrC/dkl47hk1yKF3
-         miPg==
+        d=linaro.org; s=google; t=1743008999; x=1743613799; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3wp2aYV7Lf882bB2x9wggl6yd0pKTlalba7I61amZfg=;
+        b=qR2sTKInVEi9i10XSbjDLQhiZptNt9O3zqFML/mYYTq1Y3P0ej4KsEuz/MohTYHfhJ
+         rDawGswDJzqWxEUbJ04IrukQcCaXCGP/2sS2TAIt8nzQv/pWx0/sk6pOHwIyiwVnVaBb
+         yMfuRnxBBQDRfePfYiAbKzC3ZpO7b7Jpd8Ulyn/Ae8uJ9DlJ6EJ8SxLqTh+jHKYAgZzj
+         pHgbSFvang9MRfiCH28KjqdVIz6Hbiu/Cx/bBk9dxRC5C7bFosZBo7+ATWbwFw7TdQ91
+         W7DIFVE1I35+b4oTy3ruB7/ZWuPgyy5ivcWhWnMZDEr9rzozejyBx1sIZPPAdryt+DBh
+         xx3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743008734; x=1743613534;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h9As/VLL7jHovW+piH2w50VnhaugZ9QsJT0naURZU3s=;
-        b=rI7xsVvansxvOx8WpMddY2BqqwKaMUfLROLE9LLQdI+XVyK6CL5yUzwQ7v/EJbSp8T
-         XJRBdOT5ManMp3A0ZfkBBP9jAXXKrNSbntO9Vj1kyBgyn/AODGUKKaN64hxY/MRr7RfR
-         SgJIVSy6qOCZPJBZ1oY5fM95/1HVZw4tRlXrAebhEA2Xa8+Z17G0VFGZnq6UABkbZhHZ
-         bQ8zNWZqscI5hrt/Un8YtznJUxHlOft7pV39rFLaZyErooBAAImR35+z94wqRJhZ4iN1
-         IkGKpgszyiWfKSTq3XGQjgaZGa57m7Q7ZI5sKCp2EdWN0diXQZ+0EfF7rkinFnjhM8Sv
-         aihA==
-X-Forwarded-Encrypted: i=1; AJvYcCWX6Gtm0B4RhkD3vv+qRC3/ZIUL+GiHYaKki/3eGhn4HnkJ51t3wfXjAm2a9zMitVlWBiyw4K6w3TM72uA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSaJwcq5uLvmpr0Rg2jIQVKg/Fr6GN8NTA/xAIIA0wX+cu2wdI
-	BKK7TfJfHgyNKYLs4aXeTTHxtO9D2vRmDHE2KC1fdSkaCF8nHgTyDB0lxsBt8E8=
-X-Gm-Gg: ASbGnctxj5FwVc2X6JkdHvqTe/BQzZfdtjmOdq65tRxYted7HANM7QBZ247EQgW/Kw7
-	JM/aE6eqcOkoK3dheUA7+nA8PQPLtirg/sQVzU+768xhZHKP/WYGmFXMKp7z5BtOcE6ceoauQZp
-	0h6gDowAosUQmKh2jC5BEpLwGI0N+EghUe8Aqwf9JDzPOAA6JncS0/OZzs5/gax47N38XIYsql7
-	afk6SU2WxhDqdY2Jl5h45k6giKu9q4JnKay4tj2w88oLXLNESsgSNI5xYaq9pHw0QL+iW2e0DZN
-	K+WIG0VJuGuLanfTFNWNk2pw0gA/WdRMWeYn
-X-Google-Smtp-Source: AGHT+IFeLSGd4Zfnuo5L5NOGuK2qSDCrKThLu2mY3DoydhUk3XKALRXNLIwLS8tpDg+SjvhEf9vfJw==
-X-Received: by 2002:a05:620a:2239:b0:7be:73f6:9e86 with SMTP id af79cd13be357-7c5e49344a2mr543314085a.20.1743008734233;
-        Wed, 26 Mar 2025 10:05:34 -0700 (PDT)
-Received: from [127.0.0.1] ([99.209.85.25])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b9355ac1sm787733885a.110.2025.03.26.10.05.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 10:05:33 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: Pavel Begunkov <asml.silence@gmail.com>, 
- Caleb Sander Mateos <csander@purestorage.com>
-Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250325143943.1226467-1-csander@purestorage.com>
-References: <20250325143943.1226467-1-csander@purestorage.com>
-Subject: Re: [PATCH v2] io_uring/net: use REQ_F_IMPORT_BUFFER for send_zc
-Message-Id: <174300873298.1283773.3716596596961630041.b4-ty@kernel.dk>
-Date: Wed, 26 Mar 2025 11:05:32 -0600
+        d=1e100.net; s=20230601; t=1743008999; x=1743613799;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3wp2aYV7Lf882bB2x9wggl6yd0pKTlalba7I61amZfg=;
+        b=ZctGfJnlMv/ZtphX3aSINQO1drClPl+TVKc0YHEHNyOJFls4iLvJ4bpeYBVXxkZHq5
+         qKqbyfjwwnvwS8hsBZmIqJ91FvSADzQUzgg0RH6lJjwSvmYA2+qal4axpJNMggIdraVY
+         tELrP8i0dtJOpvnHttpSQN7REB+jxaYc3jLodO5P63ydEKk8XaeUPuJ7D6Baf3s6CByo
+         q5qkkiTtVvumccENVnvSazuaRqJUN1Dc30knBcrMt/IUfho3BQyJ8HIxqxXBkdsF8O1d
+         8cbsqTHkJiMJgNNT3+hPEJ3SPMQfEFQ4/dsZY5PKXMBpIkIgbJ3Lqps+j9eiCfMu8VNB
+         4f2w==
+X-Forwarded-Encrypted: i=1; AJvYcCWJ2Y95gsfTo1Xqwwk22XAJqNSkPnxcbRUqyVnkZlVLj7R3mLxGyVD6ddhM2TMtCtXWDkC63xCqJ/c92fc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQywlxUmux0ZjC3GgSocXSSHEfFu0M/MOp/sM1dNg3P8wfRQtD
+	HG0O3t0AA+4TrDYaHepduD1QNxnRop3QlcG0sbDiBFtcNqewgi0wBh84Z0xeLxE=
+X-Gm-Gg: ASbGncsefNw7l/raUSZyTVtKL0001yuq/2YXBeZbLlQL+znelcBkmfq2KSINmJCwXpC
+	I29hQqwDtNrUwHp2VoWDhJ8L6/B7gKtPBH9ZNuWWUOdSXUwV5VgAoQg8t0AV1OILGpexn8U1GR1
+	ifEiJgv4weAdfPqywaZiYdP7LaF0RPXjXhAS2q7sNAOP27wvkZmuVzEOr4qQ5RF29UKwaj5db/1
+	m75fX8oWrlftPNVJF0GwWme6vV5Spm1REiAnC8c6G8xUKHswHWIs0mnMNTKwZkAix2xiAd14OAa
+	49/72ECqjxs9yB31tMLQRR32VzE/nnmjjQn/dc01gSzEFUZ0szqc/2KKWJ86IyrSEpfegb7I7fG
+	t2PZHZSHQ5w==
+X-Google-Smtp-Source: AGHT+IEaYcMyM2J73jN2KiJCnMVfuWrigIIuNN4q+hixY4NKk9003rs6CwEym3avXQ9u768D6WfaBg==
+X-Received: by 2002:a05:600c:1549:b0:43d:2313:7b54 with SMTP id 5b1f17b1804b1-43d84f5dfa7mr2331165e9.3.1743008999500;
+        Wed, 26 Mar 2025 10:09:59 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82dede2csm8298775e9.5.2025.03.26.10.09.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Mar 2025 10:09:59 -0700 (PDT)
+Message-ID: <0de575dc-5afb-40fb-be30-99906d0e493b@linaro.org>
+Date: Wed, 26 Mar 2025 17:09:57 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: dt-bindings: Add OmniVision OV02C10
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, robh@kernel.org,
+ hdegoede@redhat.com, mchehab@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bod@kernel.org
+References: <20250324171508.GA668235-robh@kernel.org>
+ <20250326150114.71401-1-bryan.odonoghue@linaro.org>
+ <W8_0Ch2J0PWJ5pKHojZjFbM8huvxWlaWajtl_uhQF3UszGH_O8WTRZdQxh_eHs2JzLOx7CCxx01UZDHPQqAyCA==@protonmail.internalid>
+ <1dd46a9e-e97d-415a-9e33-67ee234c4bac@kernel.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <1dd46a9e-e97d-415a-9e33-67ee234c4bac@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-7b9b9
 
-
-On Tue, 25 Mar 2025 08:39:42 -0600, Caleb Sander Mateos wrote:
-> Instead of a bool field in struct io_sr_msg, use REQ_F_IMPORT_BUFFER to
-> track whether io_send_zc() has already imported the buffer. This flag
-> already serves a similar purpose for sendmsg_zc and {read,write}v_fixed.
+On 26/03/2025 15:40, Krzysztof Kozlowski wrote:
+> On 26/03/2025 16:01, Bryan O'Donoghue wrote:
+>> Add bindings for OVO2C10 a two megapixel 1080p RGB sensor.
+>>
+> You already sent this and got some review. What's more, it's exactly the
+> same as OV02E10, so just put it to that file.
 > 
-> 
+> Best regards,
+> Krzysztof
 
-Applied, thanks!
+They aren't exactly the same.
 
-[1/1] io_uring/net: use REQ_F_IMPORT_BUFFER for send_zc
-      commit: 73b6dacb1c6feae8ca4a6ff120848430aeb57fbd
+The i2c address of the sensors is different 0x10 for one and 0x36 the other.
 
-Best regards,
--- 
-Jens Axboe
+Also different data-rates for each chip.
 
+Seems simpler to me to have two separate files ?
 
-
+---
+bod
