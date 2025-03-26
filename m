@@ -1,201 +1,135 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73EB825D524;
-	Wed, 26 Mar 2025 18:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471F725333E
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 18:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743013602; cv=none; b=B+lfBENgT2i0m0j9XCMJUrrFx3sp1z9up6o6nPZjRToas81YhbKhR9n3ObH5vWgPEuMHL0QkeEWwHz2vq89ZEccT6+FhFI7JgpD6gcrpeXnc9xYN9cGcX+ENg47XjF5z6JSnh0/d8BU59P+o6BzG9rcCOdBo9sIb/TzQsqLbeco=
+	t=1743013621; cv=none; b=eNDODIt1XQm6u88yHkD2m/42P69bGo6prqWL2PVXKVTJk+E1N2mh/otJ2k2BUwSkAEUDUzlUXkfaoDoKaG3reKHlrr9++MlZzHZGnoRkv3KjrIlzXJtifSSOaMlFGPlpXA5a+cfXx7tXD/pi3JVBJEWReE11IMipWDAxzENOlCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743013602; c=relaxed/simple;
-	bh=2hOOkKfJ2O24FeBerSRc7TzBcA7RAdNIvqDCbUOqPBs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bIMeYPny+SRWPFKI0XKfB8Q9o3AFAU43srAyHanFMTgfVnNj4Fg+2paIFXEhfZ3GS59BC9pZtNpidXgfGteCTJPMSuPLvemvG7il5/3zQ0feBXLBGbpW8p5FG5AAwaXLpXq53cEtgGoa1NvxkMqp/jJ+4BBIt2xDiIxEZxHsRWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WQBePKR6; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1743013621; c=relaxed/simple;
+	bh=rjqzotPitDbSi6AMoocqz7K3keGzhX35QvWXCskJ6fI=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=WSc1TVTJ3xwKMnIaYMUeeQWM5AWuhI7H2W5mnJd0EEXALy0mo+wBPWuaazUveuiTu4Ca6JcH08JUEHMmKXGub3lP1LuwWt4uZ5LyIeEPlPJKWi5ZT5/YqS7npUHiQkorq2uYrG7f7Y4WkxFw91yFWhUc3B+rRAnto7hho+BTs5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TdgO+cMV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WQBePKR6"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BD6F844447;
-	Wed, 26 Mar 2025 18:26:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743013598;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TdgO+cMV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743013618;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=G6fDJAgeivWwEjOlUOt+sxMAv2+TjUSgdeW6xREfgQ4=;
-	b=WQBePKR6H4Qi0pPpju+j0GA4z4uw2abs39R6ZvrmXUT7QQXG06s56xvKtQtO4KjWqdF7Df
-	dpT/YQ+1W6kwCwSyqW5+tjpfVHHzIO7tqSJA6+/0WUtzbpDlMCnHdEw8jMrzTPnlmIObSK
-	8vUfxrXsB+MtbES6OucJb75vs1SRo8cWbcHk/7m5OzXaD2pqSNWeIsg6oDca6m9kLRw2CD
-	PQZUTQsucwmimu2Yl3CYP0VIZrfNDvNJr398UMc4+x4Iu5MIlwJD2F6CQW3d2ZYKzF2Tv6
-	0mbek6lj9SZIX133MF4YJtQ33N8t8yElehLWVozJtTLRsqIvOfycZjMwUxP2Vw==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Date: Wed, 26 Mar 2025 19:26:25 +0100
-Subject: [PATCH RFC 10/10] clk: Fix the ABBA locking issue with runtime PM
- subcalls
+	bh=RD1tduM0JJrmq9tfzMhxIULme7KP22Adkm/XMP1vPHo=;
+	b=TdgO+cMVRPka4Zl/MpgbbGaVsWZPOQTcbbUwRSedIlrwSB6EdunYWWBy/gd+XaeRWgQoUR
+	Z4jpXfVEB+NHKOQr6NXaKNyFGq5dtH1hC9TOJOywJ2DKPpY6U4cQK7DjJ8uR7ksoiD/G6x
+	SchmIZFC8wfwBZ+tSSk6al2+18b5lGU=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-693-qUmfqAOaMLuVZG0-S0VZpQ-1; Wed, 26 Mar 2025 14:26:56 -0400
+X-MC-Unique: qUmfqAOaMLuVZG0-S0VZpQ-1
+X-Mimecast-MFC-AGG-ID: qUmfqAOaMLuVZG0-S0VZpQ_1743013616
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85dad58e80fso36029139f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 11:26:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743013616; x=1743618416;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RD1tduM0JJrmq9tfzMhxIULme7KP22Adkm/XMP1vPHo=;
+        b=XG+aiEYGfExQfwxgOC2ZtB++wQ18kltFPqjvhenZDJgnf3C4F+9g9esOm5KYBLgqHq
+         exzBSatdfxLJYAAJjinTVjyADjHK1toUZ8doTp83ZYsQMUhICNKy+pKgiJG+gNjWGpOI
+         SEaJzEDuidAalXqGMkbzOlcYUnAeHWnZx+K/nv+OK1f4cAGB65XTysFOr1cp3X3BUDk7
+         ut8BgtpnXZYC3H8pq4qQPqFc1KLCC4jKmjNbnozAEtoYo2WGFm80h6LgNCTax9une2Wm
+         br4qzktlZTzRdYjedWq3ZJPYceFAhvrS+ioZbCv5B3q+qntYdQOr+QN8kZ93sZjpV1ab
+         zT2g==
+X-Forwarded-Encrypted: i=1; AJvYcCXPPYwuTotflNLzJDroLhMXsCYgt6w/QhVlNutsizzGvGTncTtG7hBlL4LncgjxoVo5N5cDx8zvPfX9hv8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvW7+e+vBkgMt2RPe4gXoR4jS7+kWpsEZ6UKYSO4xibteQu6qi
+	eg/9/va0nTkOh5j0YeSC1ZppL5HZx3az/VxapI4s9rUEG9K/PfmmFu7TmEExNlVrxCgSVlSPMC9
+	t6pYkg68bBn+A0Sy9KwCc9cw6duu9es0JSARux+Cr8vrep0faHCRhYgNxeXtm1Q==
+X-Gm-Gg: ASbGncsrN/nxB1JKBgQTTW21C/XWl7G+GEA2vwHZ+gxr/R4o2beG5Fv13A1sh8Ukjxl
+	0d6nuqVPc/qJiZoRQ3G4bL5MbVBTXdpFPTACFkfALk4BLky+66pvdEMYn7dWowkPqoUWOkMN2IF
+	qsWT0nB3EXBdFZ0yqWtcFSfOkQu1GM3qrpyWK46MGM+kcLHGyJta4uNIPfEOwFh0ZlCSxU1fiab
+	sB3S5K4eKKrxWiZEk8bEpZ7iRzix/jyutxJuU69raZMxinlji0qys3gzSDo7hfLcIys0McNK6bM
+	0ab1VQ0nxbwnRWdEsgafREnUAjACcigmxlLSBx8MU0QJvI8R1EqGUkbPjSBSnA==
+X-Received: by 2002:a05:6602:3f08:b0:85d:a5d3:618c with SMTP id ca18e2360f4ac-85e821415d9mr99697239f.11.1743013615984;
+        Wed, 26 Mar 2025 11:26:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFa7giVwJxWHhd8d6z4Js/FPx25T/j6DcERtcIBtPbM3be5/ybdDEVBhZBGciMSfyOBbMrCpQ==
+X-Received: by 2002:a05:6602:3f08:b0:85d:a5d3:618c with SMTP id ca18e2360f4ac-85e821415d9mr99694639f.11.1743013615549;
+        Wed, 26 Mar 2025 11:26:55 -0700 (PDT)
+Received: from ?IPV6:2601:188:c100:5710:315f:57b3:b997:5fca? ([2601:188:c100:5710:315f:57b3:b997:5fca])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f2cbdb3b79sm2938719173.1.2025.03.26.11.26.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Mar 2025 11:26:55 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <5f02cf04-74bf-46e5-8104-a62d4aca2bfd@redhat.com>
+Date: Wed, 26 Mar 2025 14:26:53 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] locking: lockdep: Decrease nr_unused_locks if lock unused
+ in zap_class()
+To: Boqun Feng <boqun.feng@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>
+References: <20250326180831.510348-1-boqun.feng@gmail.com>
+Content-Language: en-US
+In-Reply-To: <20250326180831.510348-1-boqun.feng@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250326-cross-lock-dep-v1-10-3199e49e8652@bootlin.com>
-References: <20250326-cross-lock-dep-v1-0-3199e49e8652@bootlin.com>
-In-Reply-To: <20250326-cross-lock-dep-v1-0-3199e49e8652@bootlin.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
- Len Brown <len.brown@intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Danilo Krummrich <dakr@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-clk@vger.kernel.org, Chen-Yu Tsai <wenst@chromium.org>, 
- Lucas Stach <l.stach@pengutronix.de>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Marek Vasut <marex@denx.de>, Ulf Hansson <ulf.hansson@linaro.org>, 
- Kevin Hilman <khilman@kernel.org>, Fabio Estevam <festevam@denx.de>, 
- Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>, 
- Shawn Guo <shawnguo@kernel.org>, Shengjiu Wang <shengjiu.wang@nxp.com>, 
- linux-imx@nxp.com, Ian Ray <ian.ray@gehealthcare.com>, 
- =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>, 
- Saravana Kannan <saravanak@google.com>, 
- Miquel Raynal <miquel.raynal@bootlin.com>
-X-Mailer: b4 0.15-dev
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieeivdehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelgfehvdduieefieeikeffgffggfdttdeugeffieetheeuleelfeehffdtffetveenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpeeknecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrdegvddrgeeingdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvkedprhgtphhtthhopehmrghrvgigseguvghngidruggvpdhrtghpthhtoheplhhinhhugidqihhmgiesnhigphdrtghomhdprhgtphhtthhopehlihhnuhigqdgtlhhksehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihgrnhdrrhgrhiesghgvhhgvrghlthhhtggrrhgvrdgtohhmpdhrtghpthhtohepmhhtuhhrqhhuvghtthgvsegsrgihlhhisghrvgdrtghomhdpr
- hgtphhtthhopehssghohigusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkhhhilhhmrghnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
-X-GND-Sasl: miquel.raynal@bootlin.com
 
-The clock subsystem is calling runtime PM callbacks after having
-acquired its own lock, which is in general problematic, especially
-because when PM callbacks enter the power domain subsystem, we have the
-following scenario:
-mutex_lock(prepare_lock)
-mutex_lock(genpd_lock)
-But on the other side, devices may enable power domains, which
-themselves might require clocks, forcing the following path:
-mutex_lock(genpd_lock)
-mutex_lock(prepare_lock)
 
-The clk core has been modified in order to avoid the need for "late"
-runtime PM calls (ie. inside the clk prepare_lock), so what remains to
-be done is to simply remove these inner runtime calls.
+On 3/26/25 2:08 PM, Boqun Feng wrote:
+> Currently, when a lock class is allocated, nr_unused_locks will be
+> increased by 1, until it gets used: nr_unused_locks will be decreased by
+> 1 in mark_lock(). However, one scenario is missed: a lock class may be
+> zapped without even being used once. This could result into a situation
+> that nr_unused_locks != 0 but no unused lock class is active in the
+> system, and when `cat /proc/lockdep_stats`, a WARN_ON() will
+> be triggered in a CONFIG_DEBUG_LOCKDEP=y kernel:
+>
+> [...] DEBUG_LOCKS_WARN_ON(debug_atomic_read(nr_unused_locks) != nr_unused)
+> [...] WARNING: CPU: 41 PID: 1121 at kernel/locking/lockdep_proc.c:283 lockdep_stats_show+0xba9/0xbd0
+>
+> And as a result, lockdep will be disabled after this.
+>
+> Therefore, nr_unused_locks needs to be accounted correctly at
+> zap_class() time.
+>
+> Cc: stable@vger.kernel.org
+> Signee-off-by: Boqun Feng <boqun.feng@gmail.com>
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/clk/clk.c | 31 +++++--------------------------
- 1 file changed, 5 insertions(+), 26 deletions(-)
+Typo: "Signee-off-by"?
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 26af3a134fa7b9d7f4a77ff473df7e79fd465789..652551860201f2d4ed606c55079dc4fb655d9fa0 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -1961,10 +1961,9 @@ static unsigned long clk_recalc(struct clk_core *core,
- {
- 	unsigned long rate = parent_rate;
- 
--	if (core->ops->recalc_rate && !clk_pm_runtime_get(core)) {
-+	if (core->ops->recalc_rate)
- 		rate = core->ops->recalc_rate(core->hw, parent_rate);
--		clk_pm_runtime_put(core);
--	}
-+
- 	return rate;
- }
- 
-@@ -2458,9 +2457,6 @@ static void clk_change_rate(struct clk_core *core)
- 		best_parent_rate = core->parent->rate;
- 	}
- 
--	if (clk_pm_runtime_get(core))
--		return;
--
- 	if (core->flags & CLK_SET_RATE_UNGATE) {
- 		clk_core_prepare(core);
- 		clk_core_enable_lock(core);
-@@ -2523,8 +2519,6 @@ static void clk_change_rate(struct clk_core *core)
- 	/* handle the new child who might not be in core->children yet */
- 	if (core->new_child)
- 		clk_change_rate(core->new_child);
--
--	clk_pm_runtime_put(core);
- }
- 
- static unsigned long clk_core_req_round_rate_nolock(struct clk_core *core,
-@@ -2562,7 +2556,6 @@ static int clk_core_set_rate_nolock(struct clk_core *core,
- {
- 	struct clk_core *top, *fail_clk;
- 	unsigned long rate;
--	int ret;
- 
- 	if (!core)
- 		return 0;
-@@ -2582,28 +2575,21 @@ static int clk_core_set_rate_nolock(struct clk_core *core,
- 	if (!top)
- 		return -EINVAL;
- 
--	ret = clk_pm_runtime_get(core);
--	if (ret)
--		return ret;
--
- 	/* notify that we are about to change rates */
- 	fail_clk = clk_propagate_rate_change(top, PRE_RATE_CHANGE);
- 	if (fail_clk) {
- 		pr_debug("%s: failed to set %s rate\n", __func__,
- 				fail_clk->name);
- 		clk_propagate_rate_change(top, ABORT_RATE_CHANGE);
--		ret = -EBUSY;
--		goto err;
-+		return -EBUSY;
- 	}
- 
- 	/* change the rates */
- 	clk_change_rate(top);
- 
- 	core->req_rate = req_rate;
--err:
--	clk_pm_runtime_put(core);
- 
--	return ret;
-+	return 0;
- }
- 
- /**
-@@ -2953,16 +2939,12 @@ static int clk_core_set_parent_nolock(struct clk_core *core,
- 		p_rate = parent->rate;
- 	}
- 
--	ret = clk_pm_runtime_get(core);
--	if (ret)
--		return ret;
--
- 	/* propagate PRE_RATE_CHANGE notifications */
- 	ret = __clk_speculate_rates(core, p_rate);
- 
- 	/* abort if a driver objects */
- 	if (ret & NOTIFY_STOP_MASK)
--		goto runtime_put;
-+		return ret;
- 
- 	/* do the re-parent */
- 	ret = __clk_set_parent(core, parent, p_index);
-@@ -2975,9 +2957,6 @@ static int clk_core_set_parent_nolock(struct clk_core *core,
- 		__clk_recalc_accuracies(core);
- 	}
- 
--runtime_put:
--	clk_pm_runtime_put(core);
--
- 	return ret;
- }
- 
+Other than that, LGTM
 
--- 
-2.48.1
+Reviewed-by: Waiman Long <longman@redhat.com>
+
+> ---
+>   kernel/locking/lockdep.c | 3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index b15757e63626..686546d52337 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -6264,6 +6264,9 @@ static void zap_class(struct pending_free *pf, struct lock_class *class)
+>   		hlist_del_rcu(&class->hash_entry);
+>   		WRITE_ONCE(class->key, NULL);
+>   		WRITE_ONCE(class->name, NULL);
+> +		/* class allocated but not used, -1 in nr_unused_locks */
+> +		if (class->usage_mask == 0)
+> +			debug_atomic_dec(nr_unused_locks);
+>   		nr_lock_classes--;
+>   		__clear_bit(class - lock_classes, lock_classes_in_use);
+>   		if (class - lock_classes == max_lock_class_idx)
 
