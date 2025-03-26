@@ -1,46 +1,47 @@
 Received: from mx08-00376f01.pphosted.com (mx08-00376f01.pphosted.com [91.207.212.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043B81F7075;
-	Wed, 26 Mar 2025 16:49:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890751F7910;
+	Wed, 26 Mar 2025 16:49:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743007762; cv=none; b=VkMoIroPaSIQYEbwNRG333l0FpYIJy1Wg23ztaUJYujKt58cMW6g8vN4a2Li3tXejKOEHdavzni72HvyqfZIqS+i+C7vv0W2YFZcZyHuj9wqaCYbozAGiCKT6/5+e2cnRI9gGHarSAhURhJ7tuW/ZnfgTa9SeIAM7shIWy5ecSA=
+	t=1743007763; cv=none; b=lehFo9KC9CfHp7WhBGDAL56SL2hE7RTFVwEq6bs2ksS7VvuM0e2nu4cgelSyomKUxG2WD6Vv2aW6lXy4gTrQER6y4jkGhCRnStljnvl2We1mnUAIb0zlatN+DOJnSxKDoRqYaaz+bWrp5pzx05seqnDXMriVOKFXLIPcTmFux4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743007762; c=relaxed/simple;
-	bh=cuRSvO1eOEafnKu7X3PgbR/Y8psC3LBkz8+bU72XPOk=;
+	s=arc-20240116; t=1743007763; c=relaxed/simple;
+	bh=Dh7Bftx9jZ4NPSJxmakvCLWAI3U7kb2XzIL6qnjlS+E=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=MOZpDV7GIzpwoCvntySbkXD92uEiyuhEco5wAIuC2ueenU3w9JN302ViRY0eWkRBmgRJip5oV155ZyY7zR2UXyEI/I8PkBvR/4OnApHSU0mUzMpq/N80Red11+oOEetxV5aTOCxxfQttS094egmQ0UrUZfogd2Hntf2erAxKc2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=JvMRbRvS; arc=none smtp.client-ip=91.207.212.86
+	 In-Reply-To:To:CC; b=Y2iRLob1hb8ikukuEgD/mLqK67dp7sgrcpC20yxSZlYFWwoY2ZtlcvaLs/alXJQ5Zo1BIJAG2EVkSLMQzqkTGVepXChk53w+Azn+Hgf6h7hbLqIjvXyR2L5o3SzmvIXAF977qk2LFwah1mnx9k5ex1X6VTTCMsNQE1UzSmLB/kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=mjtWe4+N; arc=none smtp.client-ip=91.207.212.86
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="JvMRbRvS"
+	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="mjtWe4+N"
 Received: from pps.filterd (m0168888.ppops.net [127.0.0.1])
-	by mx08-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52QBt2Sl012691;
-	Wed, 26 Mar 2025 16:49:00 GMT
+	by mx08-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52QBt2Se012691;
+	Wed, 26 Mar 2025 16:48:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=dk201812; bh=1
-	X3VXAfAUTQ5dmrL5d5WTeYcHdMc31iK5gOsYY0uF5Q=; b=JvMRbRvSdLJU3dh6P
-	mLg6EvmCtGjIqCxYD9yE23vUvPyES1dG10kFEtlFkLWPG2tbDSP2jmdnTO6tVY6g
-	Iz74iVBI1E9O42umC1Hh4uaOh5WDvoenpAjgdU0EutZJUlsAuIyzm+3O+hCT3MEC
-	wCdGi7apskrXHNFemB53RjkMsPnqIUe3czgBDDz7IRgwZ2zEQnmmI3ma9eEYRnqP
-	nNxCgDNx7arbPmXEyXPzOokcrbA/AKQRYE153RnL0wvYG26V9JrXT820dL+NZhGA
-	B6o5NCEDSO+mHraZCyMHrJy59RunprZdWbq6CspTAw+rCVx5Vk8SwBezc5YHu5uC
-	xrIpQ==
+	:message-id:mime-version:references:subject:to; s=dk201812; bh=Z
+	GXJ8vAVm5GpKFPjMgJKp9B5XEamiML4z9GNBKepyk0=; b=mjtWe4+NzfNvEPzfr
+	Uslb7uRxFW50pIX8t+RsawoMFTXuuw0E4qDxyvgYdyzNeOt1414lufU5yU8JuoiS
+	CIuoWhfegfc1PVobEoSgScODdAAVCM6LkeRmnbv7EHbJm4FLopNkJ3PpGLq6xdxf
+	gCr8mq8WlKIalGVML4PM4EKa3nQ+ZMDHSU0hkzrRYfe4grY8mHOUTiKXe341CHef
+	1J6WxI7x58sv8Pmt8ZCyWezPtUR2RZelJntELABqv7MfVKG+j67jaRaXtFqSJ+LL
+	yYHeceiZ0WqXt9eFd6QO7Bx0mzwCAqKvJBq6mLu1S8hvul+qVVoIMCgkl4Ng0R2N
+	AnUiw==
 Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
-	by mx08-00376f01.pphosted.com (PPS) with ESMTPS id 45kbmy9d6d-14
+	by mx08-00376f01.pphosted.com (PPS) with ESMTPS id 45kbmy9d6d-7
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 26 Mar 2025 16:48:59 +0000 (GMT)
+	Wed, 26 Mar 2025 16:48:56 +0000 (GMT)
 Received: from
  1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
  (172.25.0.133) by HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 26 Mar 2025 16:48:50 +0000
+ 15.1.2507.44; Wed, 26 Mar 2025 16:48:44 +0000
 From: Matt Coster <matt.coster@imgtec.com>
-Date: Wed, 26 Mar 2025 16:48:33 +0000
-Subject: [PATCH v5 13/18] drm/imagination: Move ELF fw utils to common file
+Date: Wed, 26 Mar 2025 16:48:26 +0000
+Subject: [PATCH v5 06/18] drm/imagination: Mask GPU IRQs in threaded
+ handler
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +50,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250326-sets-bxs-4-64-patch-v1-v5-13-e4c46e8280a9@imgtec.com>
+Message-ID: <20250326-sets-bxs-4-64-patch-v1-v5-6-e4c46e8280a9@imgtec.com>
 References: <20250326-sets-bxs-4-64-patch-v1-v5-0-e4c46e8280a9@imgtec.com>
 In-Reply-To: <20250326-sets-bxs-4-64-patch-v1-v5-0-e4c46e8280a9@imgtec.com>
 To: Frank Binns <frank.binns@imgtec.com>,
@@ -74,229 +75,88 @@ CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
 	<alessio.belle@imgtec.com>,
         Alexandru Dadu <alexandru.dadu@imgtec.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7616;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2425;
  i=matt.coster@imgtec.com; h=from:subject:message-id;
- bh=cuRSvO1eOEafnKu7X3PgbR/Y8psC3LBkz8+bU72XPOk=;
- b=owGbwMvMwCFWuUfy8817WRsYT6slMaQ/0X9qUzV1m2ABk3f1Tv+p953NjKZM+f1mYjmP3ynGR
- VkKzeIiHaUsDGIcDLJiiiw7VliuUPujpiVx41cxzBxWJpAhDFycAjARdRZGhufq5p58Wo33a8O4
- tD8bcTNa/fE9tPf/7ufzxGce3rHct56RYcrqOJ3koyLb5XveLnnSvjBF946Zwf45k0XeH/04/YT
- KZlYA
+ bh=+56HizUNukrV1UPbwW3RErbxjFb9fVb+4F+2bHgS3B4=;
+ b=owGbwMvMwCFWuUfy8817WRsYT6slMaQ/0X/yxuXB7F9H5c/s8Ip7e0nq3W3x47NUbqyNTuEon
+ lf9fHv2zI4SFgYxDgZZMUWWHSssV6j9UdOSuPGrGGYOKxPIEAYuTgGYCIszI8OSY+tZNu4/maP6
+ nymKOddE+o0Fy9KmNjurwNJF8bkTfrkzfHf5yTG9fNeBgKK1d/91PWKQ5XBIOLrBR03Xw9Mt5OJ
+ fLgA=
 X-Developer-Key: i=matt.coster@imgtec.com; a=openpgp;
  fpr=05A40CFCE7269D61D97100A1747F0A9036F90DFA
 X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Proofpoint-ORIG-GUID: IIl5MWwDn4cilyGIytf476HrPsgrViQe
-X-Authority-Analysis: v=2.4 cv=L+sdQ/T8 c=1 sm=1 tr=0 ts=67e42ffb cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=ETbM1kImDFEA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=gtgaOig2gG6QrLUE_6sA:9
+X-Proofpoint-ORIG-GUID: 1o7_5ICtEc8rfmKRAzjciJK_fah1gZLT
+X-Authority-Analysis: v=2.4 cv=L+sdQ/T8 c=1 sm=1 tr=0 ts=67e42ff8 cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=ETbM1kImDFEA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=MXbv0OSQah28ATDbmwsA:9
  a=QEXdDO2ut3YA:10 a=t8nPyN_e6usw4ciXM-Pk:22
-X-Proofpoint-GUID: IIl5MWwDn4cilyGIytf476HrPsgrViQe
+X-Proofpoint-GUID: 1o7_5ICtEc8rfmKRAzjciJK_fah1gZLT
 
-Currently only MIPS firmware processors use ELF-formatted firmware. When
-adding support for RISC-V firmware processors, it will be useful to have
-ELF handling functions ready to go.
+From: Alessio Belle <alessio.belle@imgtec.com>
 
+Pass IRQF_ONESHOT flag to request_threaded_irq(), so that interrupts will
+be masked by the kernel until the end of the threaded IRQ handler. Since
+the calls to pvr_fw_irq_enable() and pvr_fw_irq_disable() are now
+redundant, remove them.
+
+Interrupts to the host from the soon-to-be-added RISC-V firmware
+processors cannot be masked in hardware. This change allows us to continue
+using the threaded handler in GPUs with a RISC-V firmware.
+
+For simplicity, the same approach is taken for all firmware processors.
+
+Signed-off-by: Alessio Belle <alessio.belle@imgtec.com>
 Signed-off-by: Matt Coster <matt.coster@imgtec.com>
 ---
 Changes in v5:
 - None
-- Link to v4: https://lore.kernel.org/r/20250320-sets-bxs-4-64-patch-v1-v4-13-d987cf4ca439@imgtec.com
+- Link to v4: https://lore.kernel.org/r/20250320-sets-bxs-4-64-patch-v1-v4-6-d987cf4ca439@imgtec.com
 Changes in v4:
 - None
-- Link to v3: https://lore.kernel.org/r/20250310-sets-bxs-4-64-patch-v1-v3-13-143b3dbef02f@imgtec.com
+- Link to v3: https://lore.kernel.org/r/20250310-sets-bxs-4-64-patch-v1-v3-6-143b3dbef02f@imgtec.com
 Changes in v3:
-- None
-- Link to v2: https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-16-3fd45d9fb0cf@imgtec.com
-Changes in v2:
-- None
-- Link to v1: https://lore.kernel.org/r/20241105-sets-bxs-4-64-patch-v1-v1-16-4ed30e865892@imgtec.com
+- Added
 ---
- drivers/gpu/drm/imagination/Makefile      |  1 +
- drivers/gpu/drm/imagination/pvr_fw.h      |  5 +++
- drivers/gpu/drm/imagination/pvr_fw_mips.c | 59 +--------------------------
- drivers/gpu/drm/imagination/pvr_fw_util.c | 67 +++++++++++++++++++++++++++++++
- 4 files changed, 75 insertions(+), 57 deletions(-)
+ drivers/gpu/drm/imagination/pvr_device.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/imagination/Makefile b/drivers/gpu/drm/imagination/Makefile
-index 9bc6a3884c2239e44265f3cdebee149841b270de..077e4762c7c383b6e339da1584c3865d830ef8d6 100644
---- a/drivers/gpu/drm/imagination/Makefile
-+++ b/drivers/gpu/drm/imagination/Makefile
-@@ -16,6 +16,7 @@ powervr-y := \
- 	pvr_fw_mips.o \
- 	pvr_fw_startstop.o \
- 	pvr_fw_trace.o \
-+	pvr_fw_util.o \
- 	pvr_gem.o \
- 	pvr_hwrt.o \
- 	pvr_job.o \
-diff --git a/drivers/gpu/drm/imagination/pvr_fw.h b/drivers/gpu/drm/imagination/pvr_fw.h
-index ab69f40a7fbc6304171f16dd16d825a68b0362a5..e120eae06bf78633b5bae79a77adac63aa5e06d3 100644
---- a/drivers/gpu/drm/imagination/pvr_fw.h
-+++ b/drivers/gpu/drm/imagination/pvr_fw.h
-@@ -478,4 +478,9 @@ pvr_fw_object_get_fw_addr(struct pvr_fw_object *fw_obj, u32 *fw_addr_out)
- 	pvr_fw_object_get_fw_addr_offset(fw_obj, 0, fw_addr_out);
+diff --git a/drivers/gpu/drm/imagination/pvr_device.c b/drivers/gpu/drm/imagination/pvr_device.c
+index 1704c0268589bdeb65fa6535f9ec63182b0a3e94..b6ce936f07c8bb26d240e50b72a1d991dbe4b045 100644
+--- a/drivers/gpu/drm/imagination/pvr_device.c
++++ b/drivers/gpu/drm/imagination/pvr_device.c
+@@ -169,8 +169,6 @@ static irqreturn_t pvr_device_irq_thread_handler(int irq, void *data)
+ 		ret = IRQ_HANDLED;
+ 	}
+ 
+-	/* Unmask FW irqs before returning, so new interrupts can be received. */
+-	pvr_fw_irq_enable(pvr_dev);
+ 	return ret;
  }
  
-+/* Util functions defined in pvr_fw_util.c. These are intended for use in pvr_fw_<arch>.c files. */
-+int
-+pvr_fw_process_elf_command_stream(struct pvr_device *pvr_dev, const u8 *fw, u8 *fw_code_ptr,
-+				  u8 *fw_data_ptr, u8 *fw_core_code_ptr, u8 *fw_core_data_ptr);
-+
- #endif /* PVR_FW_H */
-diff --git a/drivers/gpu/drm/imagination/pvr_fw_mips.c b/drivers/gpu/drm/imagination/pvr_fw_mips.c
-index 524a9bd0a20b64c509f5708cc61d93b4c864b835..7f341ceb0661c61ac059654faeec91e149036467 100644
---- a/drivers/gpu/drm/imagination/pvr_fw_mips.c
-+++ b/drivers/gpu/drm/imagination/pvr_fw_mips.c
-@@ -8,7 +8,6 @@
- #include "pvr_rogue_mips.h"
- #include "pvr_vm_mips.h"
+@@ -181,10 +179,6 @@ static irqreturn_t pvr_device_irq_handler(int irq, void *data)
+ 	if (!pvr_fw_irq_pending(pvr_dev))
+ 		return IRQ_NONE; /* Spurious IRQ - ignore. */
  
--#include <linux/elf.h>
- #include <linux/err.h>
- #include <linux/types.h>
+-	/* Mask the FW interrupts before waking up the thread. Will be unmasked
+-	 * when the thread handler is done processing events.
+-	 */
+-	pvr_fw_irq_disable(pvr_dev);
+ 	return IRQ_WAKE_THREAD;
+ }
  
-@@ -16,60 +15,6 @@
- #define ROGUE_FW_HEAP_MIPS_SHIFT 24 /* 16 MB */
- #define ROGUE_FW_HEAP_MIPS_RESERVED_SIZE SZ_1M
+@@ -213,9 +207,13 @@ pvr_device_irq_init(struct pvr_device *pvr_dev)
+ 	pvr_fw_irq_clear(pvr_dev);
+ 	pvr_fw_irq_enable(pvr_dev);
  
--/**
-- * process_elf_command_stream() - Process ELF firmware image and populate
-- *                                firmware sections
-- * @pvr_dev: Device pointer.
-- * @fw: Pointer to firmware image.
-- * @fw_code_ptr: Pointer to FW code section.
-- * @fw_data_ptr: Pointer to FW data section.
-- * @fw_core_code_ptr: Pointer to FW coremem code section.
-- * @fw_core_data_ptr: Pointer to FW coremem data section.
-- *
-- * Returns :
-- *  * 0 on success, or
-- *  * -EINVAL on any error in ELF command stream.
-- */
--static int
--process_elf_command_stream(struct pvr_device *pvr_dev, const u8 *fw, u8 *fw_code_ptr,
--			   u8 *fw_data_ptr, u8 *fw_core_code_ptr, u8 *fw_core_data_ptr)
--{
--	struct elf32_hdr *header = (struct elf32_hdr *)fw;
--	struct elf32_phdr *program_header = (struct elf32_phdr *)(fw + header->e_phoff);
--	struct drm_device *drm_dev = from_pvr_device(pvr_dev);
--	u32 entry;
--	int err;
--
--	for (entry = 0; entry < header->e_phnum; entry++, program_header++) {
--		void *write_addr;
--
--		/* Only consider loadable entries in the ELF segment table */
--		if (program_header->p_type != PT_LOAD)
--			continue;
--
--		err = pvr_fw_find_mmu_segment(pvr_dev, program_header->p_vaddr,
--					      program_header->p_memsz, fw_code_ptr, fw_data_ptr,
--					      fw_core_code_ptr, fw_core_data_ptr, &write_addr);
--		if (err) {
--			drm_err(drm_dev,
--				"Addr 0x%x (size: %d) not found in any firmware segment",
--				program_header->p_vaddr, program_header->p_memsz);
--			return err;
--		}
--
--		/* Write to FW allocation only if available */
--		if (write_addr) {
--			memcpy(write_addr, fw + program_header->p_offset,
--			       program_header->p_filesz);
--
--			memset((u8 *)write_addr + program_header->p_filesz, 0,
--			       program_header->p_memsz - program_header->p_filesz);
--		}
--	}
--
--	return 0;
--}
--
- static int
- pvr_mips_init(struct pvr_device *pvr_dev)
- {
-@@ -100,8 +45,8 @@ pvr_mips_fw_process(struct pvr_device *pvr_dev, const u8 *fw,
- 	u32 page_nr;
- 	int err;
++	/*
++	 * The ONESHOT flag ensures IRQs are masked while the thread handler is
++	 * running.
++	 */
+ 	return request_threaded_irq(pvr_dev->irq, pvr_device_irq_handler,
+ 				    pvr_device_irq_thread_handler,
+-				    IRQF_SHARED, "gpu", pvr_dev);
++				    IRQF_SHARED | IRQF_ONESHOT, "gpu", pvr_dev);
+ }
  
--	err = process_elf_command_stream(pvr_dev, fw, fw_code_ptr, fw_data_ptr, fw_core_code_ptr,
--					 fw_core_data_ptr);
-+	err = pvr_fw_process_elf_command_stream(pvr_dev, fw, fw_code_ptr, fw_data_ptr,
-+						fw_core_code_ptr, fw_core_data_ptr);
- 	if (err)
- 		return err;
- 
-diff --git a/drivers/gpu/drm/imagination/pvr_fw_util.c b/drivers/gpu/drm/imagination/pvr_fw_util.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..7bc8a5c48e9b0eed2045607ab2cfed80a60a32b5
---- /dev/null
-+++ b/drivers/gpu/drm/imagination/pvr_fw_util.c
-@@ -0,0 +1,67 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+/* Copyright (c) 2024 Imagination Technologies Ltd. */
-+
-+#include "pvr_device.h"
-+#include "pvr_fw.h"
-+
-+#include <drm/drm_device.h>
-+#include <drm/drm_print.h>
-+
-+#include <linux/elf.h>
-+#include <linux/string.h>
-+#include <linux/types.h>
-+
-+/**
-+ * pvr_fw_process_elf_command_stream() - Process ELF firmware image and populate
-+ *                                       firmware sections
-+ * @pvr_dev: Device pointer.
-+ * @fw: Pointer to firmware image.
-+ * @fw_code_ptr: Pointer to FW code section.
-+ * @fw_data_ptr: Pointer to FW data section.
-+ * @fw_core_code_ptr: Pointer to FW coremem code section.
-+ * @fw_core_data_ptr: Pointer to FW coremem data section.
-+ *
-+ * Returns :
-+ *  * 0 on success, or
-+ *  * -EINVAL on any error in ELF command stream.
-+ */
-+int
-+pvr_fw_process_elf_command_stream(struct pvr_device *pvr_dev, const u8 *fw,
-+				  u8 *fw_code_ptr, u8 *fw_data_ptr,
-+				  u8 *fw_core_code_ptr, u8 *fw_core_data_ptr)
-+{
-+	struct elf32_hdr *header = (struct elf32_hdr *)fw;
-+	struct elf32_phdr *program_header = (struct elf32_phdr *)(fw + header->e_phoff);
-+	struct drm_device *drm_dev = from_pvr_device(pvr_dev);
-+	u32 entry;
-+	int err;
-+
-+	for (entry = 0; entry < header->e_phnum; entry++, program_header++) {
-+		void *write_addr;
-+
-+		/* Only consider loadable entries in the ELF segment table */
-+		if (program_header->p_type != PT_LOAD)
-+			continue;
-+
-+		err = pvr_fw_find_mmu_segment(pvr_dev, program_header->p_vaddr,
-+					      program_header->p_memsz, fw_code_ptr, fw_data_ptr,
-+					      fw_core_code_ptr, fw_core_data_ptr, &write_addr);
-+		if (err) {
-+			drm_err(drm_dev,
-+				"Addr 0x%x (size: %d) not found in any firmware segment",
-+				program_header->p_vaddr, program_header->p_memsz);
-+			return err;
-+		}
-+
-+		/* Write to FW allocation only if available */
-+		if (write_addr) {
-+			memcpy(write_addr, fw + program_header->p_offset,
-+			       program_header->p_filesz);
-+
-+			memset((u8 *)write_addr + program_header->p_filesz, 0,
-+			       program_header->p_memsz - program_header->p_filesz);
-+		}
-+	}
-+
-+	return 0;
-+}
+ /**
 
 -- 
 2.49.0
