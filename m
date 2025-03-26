@@ -1,144 +1,136 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2D04642D
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 22:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D477A19049A
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 22:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743029112; cv=none; b=EaJXE2NdtaIq7RTTx7CsCVrLdLxYmbim6v1MH/LPfA0Bl0QT4f3ob8vd1sUCe4mrYzNE28KvwXss2p4ZIJYw6NXlNBgD2WyBV+ZtCEqeTqzxUH2pEkD6ZqsaLJaGHAzeFbcqWDYn5qUKBCuzBDPgdQ5iFKc2Zwt9U0AViBFdk9g=
+	t=1743029134; cv=none; b=dvAdla50W7pv+4WqYbSy4gAZ/kER1UsnLg0Z1phhD1MpjvbswAL/pFgUrH/xAbSq91jGKa0UQANrQkEJGqpA6Ok0vwjmDCO5dSuryoAM+GDoZqKojMNNTuGx9NqDqreKmspLj0/8Rn56/gi1cjB5EsZbOcdOSUuNFSz4cRpVots=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743029112; c=relaxed/simple;
-	bh=80bJNYItYmA9eRll2ejcc3f8OAcHtthhcCCMr+8Acww=;
+	s=arc-20240116; t=1743029134; c=relaxed/simple;
+	bh=BVLc4Cs+kPGHHIapTf7b2/6k7Pv1AD4F+S0N9LLwE90=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qB3ZCWEByYL8nTK5qzCrl9RakSGrHQTt6f5zw9mOYu0DLf6fXe2jamEXTgRCSPQ66uYB9AjBoulYjZ7QqNrMhV3NpSv/3TeU74JT2rHJmGlkX0hU9YYs5scO+cbyOk2yvMK88FtHUjCUE+oUsE90+ZMaxjUeWxsA+19pRwoMm+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=NqYOkDVf; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	 MIME-Version:Content-Type; b=JbBwyC/sHiRHtPGRKVDo+J4Vl3d+sdzChkEjOHtGQtIAgwIh7httC+W6V40eTD64vS/eaE2+IdFX938v+lybsmwvSzcf8OY0hJ5rpCRhs65i1Lr93YopmAmtLquSpB+E/siQzOhmxYtOVX0K+uvh7TbbcCq5qSbB9H9QYoJUi0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BG0eYod7; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NqYOkDVf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1743029105;
-	bh=0JXlYSci0PBdC2H0zJnDExHP8ogwtP2mDptfTEHu4Zc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NqYOkDVfqmMxRxGKkcTgNXTqRTTB8q0/IkvENLocSL+jQOiMOuxuFokvs6Mikd4W/
-	 UA3a0dBGg1KCRXPpse2eqhrecDBc3idkKI+xo7PFcnHPpwKNSHAyeFwQMQ2ub2Qv1c
-	 m6G0zxEJXVeq0YfE9gOogkxATqxC0R+2zPsIGz3IM94eK6Ar9SvYzEZo2UD6gYlsZt
-	 3rpxlHxEofHxTwTgquTqM9svUDw0Ct/VUQq+lbtM+At1Qn69rKjjzGbfcvPS4tAcYY
-	 cpwdu0lu6rXU2xy2KrAPozHyK8ZM71QobQMBd3U6pmzvIKH9gtNxPpdIGaly3/dYsp
-	 iwhx5B2esGrdg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZNMLS0770z4wbx;
-	Thu, 27 Mar 2025 09:45:03 +1100 (AEDT)
-Date: Thu, 27 Mar 2025 09:45:02 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Steven Rostedt
- <rostedt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Konstantin Ryabitsev <mricon@kernel.org>
-Subject: Re: [GIT PULL] arm64 updates 6.15-rc1
-Message-ID: <20250327094502.6ae56227@canb.auug.org.au>
-In-Reply-To: <CAHk-=wiXEvC2r=Sa_tpYjd=g+AxZDxxjSdq1WADTvZYZ9oUi_g@mail.gmail.com>
-References: <20250325195322.3243734-1-catalin.marinas@arm.com>
-	<CAADWXX-0hMgpyeQw_7Ko14hNMciqSnKJAROEWS5vwAdMKUt_zw@mail.gmail.com>
-	<Z-NHugcLdLqkEHFR@arm.com>
-	<CAHk-=wg_HipugbtswxFnekQy2g_ksKKXj+yht8naj2FEMtRMgA@mail.gmail.com>
-	<20250326124025.1966bf8a@gandalf.local.home>
-	<CAHk-=whwmmU+hv1SyMoyr8yAGP2JiAAP+g5BZaMajzAukzrM9w@mail.gmail.com>
-	<20250326131200.1c86c657@gandalf.local.home>
-	<CAHk-=wiXEvC2r=Sa_tpYjd=g+AxZDxxjSdq1WADTvZYZ9oUi_g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BG0eYod7"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43d04ea9d9aso1540195e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:45:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743029131; x=1743633931; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iS9lo6v9uqzT79qsPERG/X1mPvo0CpW/ilxnQt/Lclw=;
+        b=BG0eYod7dNLta+Whs+pHV4NRzSSHbSybVYxi5vIz8DokYLAQjinvaGQhlZ3gOW+uL7
+         IpOCLija67W0W5hBEYcAoS7X1sCEIjDnUzZ8nyVfUcY/VjCJ2VlaDh1ANZpoaxvXodqA
+         KNXCjupwC1V28GpgKgcrnDvitWTtxV2109Esdv+tt2BKFySzVUIkITFw0+5GvBU86vzb
+         NsCnxinFwojsKK9Skku16KMn84Sx7EjI4eoe1LMwdbD3eeMfP0TQzhNxdy2wNYU0gikU
+         rnUeUzYW2M0fcIgiS8x7psR3eW2y2RjXTzspCyrsPNE+ggp+K6EZn5eCB7W0eRJZhdmk
+         07UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743029131; x=1743633931;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iS9lo6v9uqzT79qsPERG/X1mPvo0CpW/ilxnQt/Lclw=;
+        b=AXd1yzcBpJu07D217Sx0af/0iSYZGUaikCrrBjsH6D3RYL4uXW/kZR3xnN9hwrRDw+
+         nDArB2RtvN8jPnrjzNAAefCoK6GOp5pIKEigtf9WJ5uaev9saVSWyzViDjozDgTcsxGV
+         iyGEJ6DN8pWcXUwO8vgkyqHoFA02EDqtRUjFs3rXBZ+3XO/tn2Vi9+ehDsKYm2ugOcQe
+         8mjN7C0GXpQwlJVY0lclon0kQp3nJBxmmtKcFH05bzDELdFj5jxBLOpw5zvlYPYc0hR6
+         QHGMyAtI5hQugibYaD8pxkc1R6/JAYJNqHWvYO7ouRwHUGnVjq1h+vjCS6P2gzsLPr53
+         9OpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1QXUmwqx07bvNBsrqZQpX3o5ADDGfeKaPxCBDPz2MzYnwnY9UqZ2+KiBVuGun2/fPsj6FfA7veFGb4Pc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRFissDETEJeXuUn+B5dY8QvhP21XVTi5leRWKH7QP+krAd1/2
+	UxtDIPSsxehJ39OfcQmJV9F8BYeHLECF7aRVt58y25yiRYjLYTpW
+X-Gm-Gg: ASbGncs0eQZeWm48saiURJcwWqM3MdWl4hRU7H8wdX0DbxjpTJoIZLLENyJKD2QPk4c
+	xtrjXIPYVTOnhO7qaLAnsS9e6rQQhZuSU1tWWByUpqGLeSNXgW5X/cYsncB9ZF+WAMAKQ8DX/Cm
+	h0jaI6X0nYx1+DHoQQkXDw3rRizwSeu3NQE/rt5ReaJaYlnt84eAuD93Xd3Z/luxXdpjgfIBoTm
+	+2rRKEk/D8T5XuEUTAQMWVQX4JsPPef9aMc25TaHMg7R8DGq+d9VYJK76nfJnHIbNGISRyWeyMQ
+	RJCAnTKGxFRsIaoncSraHd3BOuMTx5r+SJmZXPRiKue9Q/Kj/jrURZ1+VRyjnPC2zMICMSxza1X
+	W3HhFyTE=
+X-Google-Smtp-Source: AGHT+IGbdP8c63lTJLIt4kC+AH9ZhmPIkxANQSWDYKC1hULMCRkqfFuZm2V6NAjr9d7ZqsQrCPYgfA==
+X-Received: by 2002:a05:600c:4f94:b0:43c:eea9:f45d with SMTP id 5b1f17b1804b1-43d850fd6aemr12139275e9.18.1743029130752;
+        Wed, 26 Mar 2025 15:45:30 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82e835fesm16972295e9.10.2025.03.26.15.45.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 15:45:30 -0700 (PDT)
+Date: Wed, 26 Mar 2025 22:45:27 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Herton Krzesinski <hkrzesin@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Mateusz Guzik
+ <mjguzik@gmail.com>, x86@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ olichtne@redhat.com, atomasov@redhat.com, aokuliar@redhat.com,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86: handle the tail in rep_movs_alternative() with an
+ overlapping store
+Message-ID: <20250326224527.10105902@pumpkin>
+In-Reply-To: <CAJmZWFHTG8cR77zrUpKF81tphcTQ1fyDO6vqnY57ptcs2yM=-A@mail.gmail.com>
+References: <20250320190514.1961144-1-mjguzik@gmail.com>
+	<CAHk-=whd82fzhEbFRw9d_EMtR1SeefOJabjCHcm4-6jzeqqd3g@mail.gmail.com>
+	<CAGudoHGNFT+LC24842ZKLWBxD3vvvddBqDKa6gkixN4Esor+RQ@mail.gmail.com>
+	<CAHk-=wjo__Bj3JNw_7E8HhTDUF65LVOApvN0D2cofgotJoqpmg@mail.gmail.com>
+	<CAHk-=wjxi0poUzCd666Kx5wCjgOwN5v=-zG8xSAL7Wj_ax8Zvw@mail.gmail.com>
+	<20250321204723.1e21cb23@pumpkin>
+	<CAJmZWFHTG8cR77zrUpKF81tphcTQ1fyDO6vqnY57ptcs2yM=-A@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/I/36lLAiTRXRUsoZiXLI4d=";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/I/36lLAiTRXRUsoZiXLI4d=
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hi Linus,
+On Tue, 25 Mar 2025 19:42:09 -0300
+Herton Krzesinski <hkrzesin@redhat.com> wrote:
 
-On Wed, 26 Mar 2025 10:25:22 -0700 Linus Torvalds <torvalds@linux-foundatio=
-n.org> wrote:
->
-> On Wed, 26 Mar 2025 at 10:11, Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > So it definitely goes through kernel.org.
-> >
-> > But it has no DKIM headers. =20
->=20
-> Funky.
->=20
-> There's definitely something strange going on, because your *previous*
-> email to me did have the DKIM signature:
->=20
->   Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF624C4CEE2...
->   DKIM-Signature: v=3D1; a=3Drsa-sha256; c=3Drelaxed/simple; d=3Dkernel.o=
-rg;[..]
->   [...]
->   Date: Wed, 26 Mar 2025 12:40:25 -0400
->   Subject: Re: [GIT PULL] arm64 updates 6.15-rc1
->   Message-ID: <20250326124025.1966bf8a@gandalf.local.home>
->=20
-> and gmail was explicitly happy with it:
->=20
->   ARC-Authentication-Results: i=3D1; mx.google.com;
->        dkim=3Dpass [...]
->=20
-> but then this later one didn't:
->=20
->   Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CDA5C4CEE2...
->   [...]
->   Date: Wed, 26 Mar 2025 13:12:00 -0400
->   Message-ID: <20250326131200.1c86c657@gandalf.local.home>
->=20
-> and for some reason gmail also didn't actually react to the lack of
-> DKIM on that second one and only talks about how spf was fine.
->=20
-> Konstantin? Can you tell what's going on?
+...
+> I have been trying to also measure the impact of changes like above, however,
+> it seems I don't get improvement or it's limited due impact of
+> profiling, I tried
+> to uninline/move copy_user_generic() like this:
 
-My understanding is this:
+If you use the PERF_COUNT_HW_CPU_CYCLES counter bracketed by 'mfence'
+you can get reasonably consistent cycle counts for short sequences.
 
-for normal SPF checks (i.e. not DMARC's SPF checks) the test is done on
-the envelope sender and in Steve's case, goodmis.org DNS SPF record
-says that anything from goodmis.org can come from the kernel.org
-servers.  DMARC applies the SPF check to the From: header address.
+The problem here is that you need the specific cpu that is causing issues.
+Probably zen2 or zen3.
 
-for DKIM checks, the test is against the From: header address.  The
-kernel.org servers can only sign emails that have a From header using a
-kernel.org email address (or any other domain they have access to the
-private DKIM keys for).  So they cannot sign emails that have a From:
-header using a goodmis.org email address (presumably).
+Benchmarking 'rep movsb' on a zen5 can be summarised:
+Test overhead: 195 clocks ('rep movb' asm with a 'nop') subtracted from the
+other values.
+  length    clocks
+       0       7
+   1..3f       5
+      40       4
+  41..7f       5
+  80..1ff     39 (except 16c with is 4 clocks faster!)
+      200     38
+ 201..23f     40
+      240     38
+ 241..27f     41
+      280     39
+The pattern then continues much the same, increasing by 1 clock every 64 bytes
+with the multiple of 64 being a bit cheaper.
 
-Presumably the SPF check passing is sufficient for the GMail servers.
+With a 'sailing wind' a copy loop should do 8 bytes/clock.
+(Faster if the cpu supports more than one write/clock.)
+So might be faster for lengths between 128 and ~256.
 
-DMARC requires that its SPF check or its DKIM check to pass.  (But
-goodmis.org has no DMARC DNS record, while kernel.org does)
---=20
-Cheers,
-Stephen Rothwell
+Misaligning the addresses doesn't usually make any difference.
+(There is a small penalty for destinations in the last cache line of a page.)
 
---Sig_/I/36lLAiTRXRUsoZiXLI4d=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+But there is strange oddity.
+If (dest - src) % 4096 is between 1 and 63 then short copies are 55 clocks
+jumping to 75 at 128 bytes and then increasing slowly.
+(I think that matches what I've seen.)
 
------BEGIN PGP SIGNATURE-----
+	David
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfkg24ACgkQAVBC80lX
-0GwmmAf/VYJKpukOi/5sN/6Sycd2bzfHpS+AiWJld30LN9ZdTOQva6vhAtO79tHw
-+U4f/xMgKjvOlnP1t+900xg2yt4YckB7uZllB61eP10cj1ORSShtowN6loKErkWa
-pL5XlgPH2Sk3BZvepM7A2YVDNNEgmWix0oZ4xC8IZ0K5xYlrVaw4yEhaMUTC6/XQ
-CeFIzVcNzrEipaBgv3szSbHCYn4fz+SN4SGYJ0UClh5amP2FlUs/svtuUnumhIIO
-12DkqB3Auv8QVwD+aqY6TJ8/a441IxvFvuO2EwrhtRxsch2CUqke1CvKcVfu412x
-feCSlum+x2a40XC7YRpi59StWyjrPg==
-=ow6i
------END PGP SIGNATURE-----
 
---Sig_/I/36lLAiTRXRUsoZiXLI4d=--
