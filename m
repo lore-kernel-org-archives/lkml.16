@@ -1,253 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128C918B0F;
-	Wed, 26 Mar 2025 15:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D7EF13C8EA
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743002587; cv=none; b=OxCN4xeQxTrieBYhFVjMwPHWWVdIeK/gyDDlBlXeAtGiH3T9jBYbXuT0mWU6Q/ba/emGp1wlICIVAdv6Szp5rBf/uqUsMiKN3bnmjbxbH/5uN/jGcQV5MkGH/sHDI7MEUXmGeicfBSnxX/TvrBFai2h+iegLhHAuFoWF8cfMU98=
+	t=1743002608; cv=none; b=lf7cea2iddp0yIFTPdvS3zQ9r1sBVoayWGzGvMug0p/x5TQM4jHJxJS31wqKARic8+Kd8gQt1qferpiq5G00F3pxQf2HwFJHUCNAw8EtoKFtpWH+iC4NBz9+Sqb10mVpR+eZqnBNmeTZG6uCI6itI3VXU5UHgb+azyxIK2G+Bxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743002587; c=relaxed/simple;
-	bh=2ZQQrfoMCkW8KTsHXP4erfvYUa6Js4OjFNugSnhgNCM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BH63iBAOzCkb9FgR5N7bcy7ae/DHI4bSPaTPY2nDZR3PgdNThcmPMQ6lboBhw8uEFE2PNszM4l91+vFgU9W2BDcg15S4lH31TVNzeSzXJdoVLqlKhgD1JsN5BLgtRI0oUa8d4WcdKTcLbBnzE6FQJLCl1c01hOtcUBC77xe4s/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RybmhwP6; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743002608; c=relaxed/simple;
+	bh=k7CJgaBictxhGds/SNqY01GFqGuOdurOMdG05jQsVEY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QwTe+393Xbio0VjIRAEaxqUGsnflq6BE0VnluTpzdCK+uwIVKGaPmSjhCCwlI4ZxgdtDyjK/Bra+uAAr2Socd1rQ309sRkSkseC+BAfjdufJ9MUBMkp+oYbzb6eabM+awOZEGv/D5NB73GQIp5OUk+HP3ceUZiVaXWeGL0poPAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VnSG6YCs; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RybmhwP6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743002586; x=1774538586;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=2ZQQrfoMCkW8KTsHXP4erfvYUa6Js4OjFNugSnhgNCM=;
-  b=RybmhwP6Vv7hegRTwG7Ei1KgpQVYoluffC4gDJ7nDc2oyl+Kcug/gtdy
-   JWJplXpxW4Qo/dV+DcO8U/98rEMI6++VVPJyZ7Ci69HWD+PjQmEcmL2Bp
-   Cj4qR9eyGaAl0b27PEB+AtTNZbSF8CzIyHq+dNC8MTTPkdj7Yu7NXbYKt
-   eZneOHoNBZeltSI+ZcO4wSVPR0pmW6FNibPFBb13HryU0W4DXLTzZYVFT
-   E6kLS6Lhe1HCiBMNFp+tQtygcIoI40DrBdiQhFgyJFVXjL8lJWVRtp/32
-   p1xWi0NmJS6/M4GSnxR2i1JQcIxx5tbrebKdRD0x53kiiVwo2spzIo4LJ
-   A==;
-X-CSE-ConnectionGUID: xS7e12P4TpueLppitTkO4g==
-X-CSE-MsgGUID: 6YxexMuPQM6Hmm656Gcy5g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="55296921"
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="55296921"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 08:23:00 -0700
-X-CSE-ConnectionGUID: Q+f2VCQiSRuWz7lMYmRRPQ==
-X-CSE-MsgGUID: s2xmdai3Rm2siOCMWMNiag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="155712192"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.5])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 08:22:55 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 26 Mar 2025 17:22:50 +0200 (EET)
-To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
-cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
-    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-    Michal Wajdeczko <michal.wajdeczko@intel.com>, 
-    Lucas De Marchi <lucas.demarchi@intel.com>, 
-    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
-    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-    Maxime Ripard <mripard@kernel.org>, 
-    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-    Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
-Subject: Re: [PATCH v6 5/6] PCI: Allow drivers to control VF BAR size
-In-Reply-To: <20250320110854.3866284-6-michal.winiarski@intel.com>
-Message-ID: <7374beef-46ed-ab53-ccb5-48565526545c@linux.intel.com>
-References: <20250320110854.3866284-1-michal.winiarski@intel.com> <20250320110854.3866284-6-michal.winiarski@intel.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VnSG6YCs"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2241053582dso73287775ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:23:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1743002606; x=1743607406; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oLxpsj3MlyrxzxcTIdl+re05Lx90Epv1ZYMgB2IEZX8=;
+        b=VnSG6YCsDLu06T3AZofWIZpF3sCASyaBAApDq+oBCE4Yo9kK/1YRCgQ2tRVMVfF2vz
+         9h2hYpvMz6HRbSVw0fXN4hpnFABKKO7c/W35uxVnCbGlM+DYQiCQBRf3L7Ly6594b84K
+         /+ze7jiWHufPywIOQl7ML1ZLNXAh7+MSYC+ag=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743002606; x=1743607406;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oLxpsj3MlyrxzxcTIdl+re05Lx90Epv1ZYMgB2IEZX8=;
+        b=ZjsAZF/jpEfHXxW0mVQ8yQLYh//oDiqrNPX6XGQy+//0O+grCVJIkJhY7L91vNK1zs
+         BWFHvhf4L8wdKl1767xmM90YVOvr611wm1X40hbXzrLoj7TF1bWaXOXteFkKQWYCSmXr
+         2WBU1qPBkkYCVVpmjC2jzRpgZEOIVrzv1lC2ZDwyQ38mHWi3C8VPajdM0ob0PmTQ1OFD
+         5azWfNk0l17WScTcWC1hS+vgA65TEXxPv8jqZSz4oDJHD0ixpswNLimnTkKKU8toDHMw
+         pkuZNu8GC9whFRT5BB8FdbWNDvngyNO9sEzsaAJbE8Yb3zQN5/t8OYtKK179DETZ3Z8r
+         cJnw==
+X-Forwarded-Encrypted: i=1; AJvYcCU5dX4drxMVDQ8FaJ6p7ACux2yKEQCGur2kKqvBiv/kh/nouxVb4j/vc6vuHYTLngdnjq2SZPEoTteIstI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOGycZUF9kmYSHAT92S/RyXhMokNm2moH/aqhHeiSgwVummgwJ
+	lgMt1EuUh9llmCWGBga40XYCKdnFf9S1I7etN1G2uq8Dqa4LD14eDoUj6wxwHDnOS9vsdfm1XNU
+	=
+X-Gm-Gg: ASbGncvON/HteMxe2WaC+MyCGdO87NgQTEQwEL8OImSyAAWbqSdos+zIQrG2MQNFKNF
+	5/FuDZe9xwpzmdNllbdYU4nKweZfODCv6+epHUrTn+691q4nAvxGfNjaa6drBIP249hOQEq7Lgy
+	X7Y/U3hNdXhRP0aRmOsGATylR7ktGeH0Bhho2H6lfQ6QFmyePYmBEdwwhGi+oGmsNi5g5FY3aQY
+	seJajr4xLvg5rXJyvzfNWNMBE48Ap7MUv6cFwUr3bH7BLwT0dYBG9AFvMXdHkiAhihDQmcRDxMc
+	zO3dA1CR+cLkkFxMwGE9bATAEGcuZb715/yIdVMUW0SjFHdC1ee4CnV7kW/RF6OsuP+pYsRwGoy
+	xfyj1IuQ=
+X-Google-Smtp-Source: AGHT+IEvRqUnkr5RYindS5V2XIwmBMS49KB5BhJjqPUOz/O93KkRT4qX6ryr2KWxJyl0iEG0vMiRlg==
+X-Received: by 2002:a17:902:e88a:b0:21d:3bd7:afdd with SMTP id d9443c01a7336-2280456c1f9mr431375ad.0.1743002606123;
+        Wed, 26 Mar 2025 08:23:26 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:b885:47c3:6268:77fb])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7390611bd23sm12735632b3a.96.2025.03.26.08.23.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Mar 2025 08:23:25 -0700 (PDT)
+Date: Wed, 26 Mar 2025 08:23:23 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Jeff Chen <jeff.chen_1@nxp.com>,
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"johannes@sipsolutions.net" <johannes@sipsolutions.net>,
+	Pete Hsieh <tsung-hsien.hsieh@nxp.com>,
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Subject: Re: [EXT] Re: [PATCH v4 1/2] wifi: mwifiex: Fix premature release of
+ RF calibration data.
+Message-ID: <Z-Qb6_1-sTZ_LTPs@google.com>
+References: <20250220061143.1417420-2-jeff.chen_1@nxp.com>
+ <20250318050739.2239376-2-jeff.chen_1@nxp.com>
+ <20250319162842.GA46894@francesco-nb>
+ <PAWPR04MB9910FE139C88507DE5904ABD9CA72@PAWPR04MB9910.eurprd04.prod.outlook.com>
+ <Z-PwgtSRNoCd2L3z@gaggiata.pivistrello.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2132874728-1743002570=:942"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-PwgtSRNoCd2L3z@gaggiata.pivistrello.it>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, Mar 26, 2025 at 01:18:10PM +0100, Francesco Dolcini wrote:
+> On Tue, Mar 25, 2025 at 04:43:33PM +0000, Jeff Chen wrote:
+> > From: Francesco Dolcini <francesco@dolcini.it>
+> > > On Tue, Mar 18, 2025 at 01:07:38PM +0800, Jeff Chen wrote:
+> > > > This patch resolves an issue where RF calibration data was being
+> > > > released before the download process. Without this fix, the external
+> > > > calibration data file would not be downloaded at all.
+> > > >
+> > > > Fixes: d39fbc88956e ("mwifiex: remove cfg_data construction")
+> > > > Signed-off-by: Jeff Chen <jeff.chen_1@nxp.com>
+> > > 
+> > > The code looks ok to me, however I do not understand the commit you
+> > > selected as fixes tag.
+> > > 
+> > > From what I understand releasing the data before using it was done since the
+> > > initial commit 388ec385d5ce ("mwifiex: add calibration data download
+> > > feature"). What am I missing?
+> > 
+> > Thank you for reviewing the patch. You are correct-the Fixes tag I included was incorrect.
+> > After re-examining the issue, I found that the premature release of RF calibration data 
+> > cannot be reproduced, which invalidates the problem statement for this patch.  
+> > 
+> > I have decided to withdraw the patch. I appreciate your feedback and attention to detail, 
+> > which helped identify this oversight.  
+> 
+> To me the code change is correct, and it is also merged in wireless-next. No
+> reason to drop it because of my comment on the fixes tag.
+> 
+> Brian: are you ok with that?
 
---8323328-2132874728-1743002570=:942
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Oh, sorry, I don't think I really analyzed the nature of the reasons for
+"withdrawal". Yes, if it's just the Fixes tag, then reverting isn't even
+that helpful. I'm fine with keeping it as-is.
 
-On Thu, 20 Mar 2025, Micha=C5=82 Winiarski wrote:
-
-> Drivers could leverage the fact that the VF BAR MMIO reservation is
-> created for total number of VFs supported by the device by resizing the
-> BAR to larger size when smaller number of VFs is enabled.
->=20
-> Add a pci_iov_vf_bar_set_size() function to control the size and a
-> pci_iov_vf_bar_get_sizes() helper to get the VF BAR sizes that will
-> allow up to num_vfs to be successfully enabled with the current
-> underlying reservation size.
->=20
-> Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
-> ---
->  drivers/pci/iov.c   | 78 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pci.h |  6 ++++
->  2 files changed, 84 insertions(+)
->=20
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 861273ad9a580..751eef232685c 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -1291,3 +1291,81 @@ int pci_sriov_configure_simple(struct pci_dev *dev=
-, int nr_virtfn)
->  =09return nr_virtfn;
->  }
->  EXPORT_SYMBOL_GPL(pci_sriov_configure_simple);
-> +
-> +/**
-> + * pci_iov_vf_bar_set_size - set a new size for a VF BAR
-> + * @dev: the PCI device
-> + * @resno: the resource number
-> + * @size: new size as defined in the spec (0=3D1MB, 31=3D128TB)
-> + *
-> + * Set the new size of a VF BAR that supports VF resizable BAR capabilit=
-y.
-> + * Unlike pci_resize_resource(), this does not cause the resource that
-> + * reserves the MMIO space (originally up to total_VFs) to be resized, w=
-hich
-> + * means that following calls to pci_enable_sriov() can fail if the reso=
-urces
-> + * no longer fit.
-> + *
-> + * Returns 0 on success, or negative on failure.
-
-Return: is the correct kernel doc style.
-
-> + */
-> +int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size)
-> +{
-> +=09int ret;
-> +=09u32 sizes;
-> +
-> +=09if (!pci_resource_is_iov(resno))
-> +=09=09return -EINVAL;
-> +
-> +=09if (pci_iov_is_memory_decoding_enabled(dev))
-> +=09=09return -EBUSY;
-> +
-> +=09sizes =3D pci_rebar_get_possible_sizes(dev, resno);
-> +=09if (!sizes)
-> +=09=09return -ENOTSUPP;
-> +
-> +=09if (!(sizes & BIT(size)))
-> +=09=09return -EINVAL;
-> +
-> +=09ret =3D pci_rebar_set_size(dev, resno, size);
-> +=09if (ret)
-> +=09=09return ret;
-> +
-> +=09pci_iov_resource_set_size(dev, resno, pci_rebar_size_to_bytes(size));
-> +
-> +=09return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_iov_vf_bar_set_size);
-> +
-> +/**
-> + * pci_iov_vf_bar_get_sizes - get VF BAR sizes allowing to create up to =
-num_vfs
-> + * @dev: the PCI device
-> + * @resno: the resource number
-> + * @num_vfs: number of VFs
-> + *
-> + * Get the sizes of a VF resizable BAR that can be accommodated within t=
-he
-> + * resource that reserves the MMIO space if num_vfs are enabled.
-
-I'd rephrase to:
-
-Get the sizes of a VF resizable BAR that can be accommodate @num_vfs=20
-within the currently assigned size of the resource @resno.
-
-> + *
-> + * Returns 0 if BAR isn't resizable, otherwise returns a bitmask in form=
-at
-
-Return:
-
-a bitmask of sizes
-
-> + * defined in the spec (bit 0=3D1MB, bit 31=3D128TB).
-> + */
-> +u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num_vfs=
-)
-> +{
-> +=09resource_size_t size;
-> +=09u32 sizes;
-> +=09int i;
-> +
-> +=09sizes =3D pci_rebar_get_possible_sizes(dev, resno);
-> +=09if (!sizes)
-> +=09=09return 0;
-> +
-> +=09while (sizes > 0) {
-> +=09=09i =3D __fls(sizes);
-> +=09=09size =3D pci_rebar_size_to_bytes(i);
-> +
-> +=09=09if (size * num_vfs <=3D pci_resource_len(dev, resno))
-> +=09=09=09break;
-> +
-> +=09=09sizes &=3D ~BIT(i);
-> +=09}
-
-Couldn't this be handled without a loop:
-
-=09bar_sizes =3D (round_up(pci_resource_len(dev, resno) / num_vfs) - 1) >>
-=09=09    ilog2(SZ_1M);
-
-=09sizes &=3D bar_sizes;
-
-(Just to given an idea, I wrote this into the email so it might contain=20
-some off-by-one errors or like).
-
-> +
-> +=09return sizes;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_iov_vf_bar_get_sizes);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 0e8e3fd77e967..c8708f3749757 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -2389,6 +2389,8 @@ int pci_sriov_set_totalvfs(struct pci_dev *dev, u16=
- numvfs);
->  int pci_sriov_get_totalvfs(struct pci_dev *dev);
->  int pci_sriov_configure_simple(struct pci_dev *dev, int nr_virtfn);
->  resource_size_t pci_iov_resource_size(struct pci_dev *dev, int resno);
-> +int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno, int size);
-> +u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num_vfs=
-);
->  void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool probe);
-> =20
->  /* Arch may override these (weak) */
-> @@ -2441,6 +2443,10 @@ static inline int pci_sriov_get_totalvfs(struct pc=
-i_dev *dev)
->  #define pci_sriov_configure_simple=09NULL
->  static inline resource_size_t pci_iov_resource_size(struct pci_dev *dev,=
- int resno)
->  { return 0; }
-> +static inline int pci_iov_vf_bar_set_size(struct pci_dev *dev, int resno=
-, int size)
-> +{ return -ENODEV; }
-> +static inline u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resn=
-o, int num_vfs)
-> +{ return 0; }
->  static inline void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool pr=
-obe) { }
->  #endif
-> =20
->=20
-
---=20
- i.
-
---8323328-2132874728-1743002570=:942--
+Brian
