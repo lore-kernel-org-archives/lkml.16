@@ -1,52 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6FF4430;
-	Wed, 26 Mar 2025 22:33:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864571EA7F3;
+	Wed, 26 Mar 2025 22:35:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743028402; cv=none; b=KkYE1mKeCWf1AEijSqSZ2mG1c5qQXWABsuLflw5BezDYhxmkFat7lt7rhauxGN7Njz7dx6Xjk19I6lJ2yNgKf1CyoQ7xrUs796s+93SvHsNSXPJ7sJ6w1onwZJURXeBsrjs2fbaFewOFjBXgCInAxBFKZQrx18cpNjFCS8eucOk=
+	t=1743028517; cv=none; b=Z5F5lAlRjO6C/Wl4vU4rXliUxj+Z6Eos6DYkbaW/HJMTiwq5OBEejsezidGr044a7AxKrDRErgxdB3JiGOByePQw27Z8uz7xVloTEod1biPR/DQ8r6qTuIZMbAOFxGjepCbfEsSRVr4dJBGa00xow6gYQMU//Lv1RjtfXc5XzSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743028402; c=relaxed/simple;
-	bh=ISqhImE6eYwjv1Cg06qLnLLs52vZAesQPPWVCd4N+64=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SO7eiXlbIVPC7nRdE9Y5H9k0cVdompVdsl+gBZABG1IrhojocLrSaNPEp6WTfmQIPWjyKLgFhlU5qgvNyefDs3vDf2BG6aGruT/5kM7dwiFBzfR7dwTonTEfUjd1tmbqEnfPhLyRROAhFmHDe9UsTlmwLgZpwqI6A9QzJHkLLsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NsHxzSXK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743028517; c=relaxed/simple;
+	bh=h2/FjSfnO5tJCgplmMq/TCSw9ir41yrKi5nabwTvw6Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=n9Nqax1lKEQSDnZqxKeKXbnx6/VM0+nlJd1VSH/WZ9VIzhkOB3UB/YLGjcKbUaJTa8hjfPb9lBzMOX2JsHM7nK/eXAfu9EzgUAXL59Gi26iZy8QFWVg4/8XaU64alj2KWLVTKwdTfTON30/dyQ3KPYe+HRwoqYodAcmxET++KVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ajWO2PEj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NsHxzSXK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDB6FC4CEE2;
-	Wed, 26 Mar 2025 22:33:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ajWO2PEj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C09BC4CEE5;
+	Wed, 26 Mar 2025 22:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743028401;
-	bh=ISqhImE6eYwjv1Cg06qLnLLs52vZAesQPPWVCd4N+64=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=NsHxzSXKDXPzF/dGzhQdtG+24ZPYDCYiX6Y3Pm7VA030tuRzWvsSQV253s/XPD7eU
-	 B63G8fs6MmYqxI5KFV5UWADoUqbh8VPszJNls+jZ67zcluKeU7rv0MPJGXqmXcUOIp
-	 p4EFgf8+PtsHb+3Z+zc7nKU3hDr12AXw1C8SZYtfvoRcHFoU+K7VJvLFSLY2yc5Auo
-	 QVoj0Vm0krlyYQ8vQ+6yjGyueYqjKP3zAEPIfT52z9M3Dg+tOyqHGT+WIQ2nBbYM2d
-	 OcDQMEKxvlS9HdcvwCpRUuxlVAlCfMWBEEOshbca2vLKgnvZF+x+uJnAz37JwswlgJ
-	 +91qQiOSrsVmA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 4CC77CE0C2A; Wed, 26 Mar 2025 15:33:21 -0700 (PDT)
-Date: Wed, 26 Mar 2025 15:33:21 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>, rcu@vger.kernel.org
-Subject: Re: [PATCH 1/3] rcu: Replace magic number with meaningful constant
- in rcu_seq_done_exact()
-Message-ID: <eeda52c2-5397-4aad-ad01-ca04e5b0b80f@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250324170156.469763-1-joelagnelf@nvidia.com>
- <20250324170156.469763-2-joelagnelf@nvidia.com>
+	s=k20201202; t=1743028516;
+	bh=h2/FjSfnO5tJCgplmMq/TCSw9ir41yrKi5nabwTvw6Q=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ajWO2PEjA+UzL2cs0zSXt+8Ca37WkTkpWlyFQy3H6smrpaUgoep2xYSKHtf4lc+Qd
+	 yHGoPzFDjh72YQBJ/koHFDmosC6d4/7GdxYDsoh7GdqOJeMW7Gv7RAsXuyBA3L7x2m
+	 L14j5r2v8KyOJdAY5INFNWQicXGtfZ41p037k1wdz1/DBPywFej1n3femDl7YfW6vi
+	 BSR0wZQCCmhQKuu8E6GnpXpxbR1756sdUXlGtnF0kRXngmjmfETby33J4tai+WL8pg
+	 bSk2UJQ+zJB9yfuden7W1h5+tCEpNT3BHdYeijBcBS2vbIJwyGmmG/l7Y0D0IC9RMD
+	 0NmTdef4DtwwQ==
+Date: Wed, 26 Mar 2025 16:35:13 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Lukasz Majczak <lma@chromium.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Benson Leung <bleung@chromium.org>
+Cc: chrome-platform@lists.linux.dev, linux-watchdog@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] watchdog: cros-ec: Avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <Z-SBITmMfwjocYwL@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,87 +47,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250324170156.469763-2-joelagnelf@nvidia.com>
 
-On Mon, Mar 24, 2025 at 01:01:53PM -0400, Joel Fernandes wrote:
-> The rcu_seq_done_exact() function checks if a grace period has completed by
-> comparing sequence numbers. It includes a guard band to handle sequence number
-> wraparound, which was previously expressed using the magic number calculation
-> '3 * RCU_SEQ_STATE_MASK + 1'.
-> 
-> This magic number is not immediately obvious in terms of what it represents.
-> 
-> Instead, the reason we need this tiny guardband is because of the lag between
-> the setting of rcu_state.gp_seq_polled and root rnp's gp_seq in rcu_gp_init().
-> 
-> This guardband needs to be at least 2 GPs worth of counts, to avoid recognizing
-> the newly started GP as completed immediately, due to the following sequence
-> which arises due to the delay between update of rcu_state.gp_seq_polled and
-> root rnp's gp_seq:
-> 
-> rnp->gp_seq = rcu_state.gp_seq = 0
-> 
->     CPU 0                                           CPU 1
->     -----                                           -----
->     // rcu_state.gp_seq = 1
->     rcu_seq_start(&rcu_state.gp_seq)
->                                                     // snap = 8
->                                                     snap = rcu_seq_snap(&rcu_state.gp_seq)
->                                                     // Two full GP differences
->                                                     rcu_seq_done_exact(&rnp->gp_seq, snap)
->     // rnp->gp_seq = 1
->     WRITE_ONCE(rnp->gp_seq, rcu_state.gp_seq);
-> 
-> This can happen due to get_state_synchronize_rcu_full() sampling
-> rcu_state.gp_seq_polled, however the poll_state_synchronize_rcu_full()
-> sampling the root rnp's gp_seq. The delay between the update of the 2
-> counters occurs in rcu_gp_init() during which the counters briefly go
-> out of sync.
-> 
-> Make the guardband explictly 2 GPs. This improves code readability and
-> maintainability by making the intent clearer as well.
-> 
-> Suggested-by: Frederic Weisbecker <frederic@kernel.org>
-> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-One concern is that a small error anywhere in the code could cause this
-minimal guard band to be too small.  This is not a problem for some
-use cases (rcu_barrier() just does an extra operation, and normal grace
-periods are protected from forever-idle CPUs by ->gpwrap), but could be
-an issue on 32-bit systems for user of polled RCU grace periods.
+Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-In contrast, making the guard band a bit longer than it needs to be
-has little or no downside.
+So, with these changes, fix the following warning:
 
-							Thanx, Paul
+rivers/watchdog/cros_ec_wdt.c:29:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-> ---
->  kernel/rcu/rcu.h | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
-> index eed2951a4962..5e1ee570bb27 100644
-> --- a/kernel/rcu/rcu.h
-> +++ b/kernel/rcu/rcu.h
-> @@ -57,6 +57,9 @@
->  /* Low-order bit definition for polled grace-period APIs. */
->  #define RCU_GET_STATE_COMPLETED	0x1
->  
-> +/* A complete grace period count */
-> +#define RCU_SEQ_GP (RCU_SEQ_STATE_MASK + 1)
-> +
->  extern int sysctl_sched_rt_runtime;
->  
->  /*
-> @@ -162,7 +165,7 @@ static inline bool rcu_seq_done_exact(unsigned long *sp, unsigned long s)
->  {
->  	unsigned long cur_s = READ_ONCE(*sp);
->  
-> -	return ULONG_CMP_GE(cur_s, s) || ULONG_CMP_LT(cur_s, s - (3 * RCU_SEQ_STATE_MASK + 1));
-> +	return ULONG_CMP_GE(cur_s, s) || ULONG_CMP_LT(cur_s, s - (2 * RCU_SEQ_GP));
->  }
->  
->  /*
-> -- 
-> 2.43.0
-> 
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/watchdog/cros_ec_wdt.c | 30 +++++++++++++-----------------
+ 1 file changed, 13 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/watchdog/cros_ec_wdt.c b/drivers/watchdog/cros_ec_wdt.c
+index 716c23f4388c..f6dba17d1036 100644
+--- a/drivers/watchdog/cros_ec_wdt.c
++++ b/drivers/watchdog/cros_ec_wdt.c
+@@ -25,26 +25,22 @@ static int cros_ec_wdt_send_cmd(struct cros_ec_device *cros_ec,
+ 				union cros_ec_wdt_data *arg)
+ {
+ 	int ret;
+-	struct {
+-		struct cros_ec_command msg;
+-		union cros_ec_wdt_data data;
+-	} __packed buf = {
+-		.msg = {
+-			.version = 0,
+-			.command = EC_CMD_HANG_DETECT,
+-			.insize  = (arg->req.command == EC_HANG_DETECT_CMD_GET_STATUS) ?
+-				   sizeof(struct ec_response_hang_detect) :
+-				   0,
+-			.outsize = sizeof(struct ec_params_hang_detect),
+-		},
+-		.data.req = arg->req
+-	};
+-
+-	ret = cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
++	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data,
++			sizeof(union cros_ec_wdt_data));
++
++	buf->version = 0;
++	buf->command = EC_CMD_HANG_DETECT;
++	buf->insize  = (arg->req.command == EC_HANG_DETECT_CMD_GET_STATUS) ?
++		   sizeof(struct ec_response_hang_detect) :
++		   0;
++	buf->outsize = sizeof(struct ec_params_hang_detect);
++	((union cros_ec_wdt_data *)buf->data)->req = arg->req;
++
++	ret = cros_ec_cmd_xfer_status(cros_ec, buf);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	arg->resp = buf.data.resp;
++	arg->resp = ((union cros_ec_wdt_data *)buf->data)->resp;
+ 
+ 	return 0;
+ }
+-- 
+2.43.0
+
