@@ -1,199 +1,134 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A36C2FB
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 23:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3EA9C2FB
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 23:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743030142; cv=none; b=nLVfdwF5ckf3M1Ka+sTp4EXsQiZjpIn6dCMn3kHw6LDwJLBnUsKqRWqNfxIFL+xKf1P2FhdQq5PZ257bZFSLQOGiGjsmhhTrry+hQWT0A7kdxxgI6durD67+YSZVar0bbhDcENj5w7zGEMvDy7VV3IwDu7th/EewNhArFydfbbo=
+	t=1743030181; cv=none; b=jFbNDqwT/iiWrD9gFE6nqbtF8ga95A35Zzq62nFiTaQNqyDLrvnwVs/C83IYmUVPMUEn6XnWDrstUkWjIJsdtWij6uft3TvbSE6iq3yFtwGACD7beBOupXBM0mW0NyuGR4eCi8JSApSo74ByfZ1Yo8ZW8V64HnBZjpS5SS/hwA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743030142; c=relaxed/simple;
-	bh=xSOAajQntCtHl4GLaye/tTmnfrS75eoHWjSB4wSRKsY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TOx34x3OMcv4kOBzNR9C8sdvaLDvK4DbrKOijPfmnorAVezF4O7FpqGTfEgo1hV3uKzMh2tK/8NKK8ZYuw8UfyeeinhhsunS01KFCNLaiTuICOv4HSzfrdgtFPlnRL/6O/N1k+D4FvEZjFDaQ+o2q7rJJPv4SFGoSzdU7+nPhBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q/cbg21N; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743030181; c=relaxed/simple;
+	bh=jPUH8cHEITF2cPzC/ZmZ0ONxB+dyH7o21Er3HkXtDvs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nPos7unQoErz8lLU8IN/ZA2nFFxhYAoTRlQ/lvuRR150eLVni0Kq7HFx5Xa5POCNsZxlKeFAAi4soM2F4EOeN7jcGhaEdBTDbImzs7hXGpY8SNuwQI9onCjQ8loCVB+E27kEC/9PTYXHO9E8fK/Ys4/qokV+2G+ZuUMjv8/Sci0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=SvkcW293; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q/cbg21N"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso3719625e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 16:02:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="SvkcW293"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e46ebe19368so414726276.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 16:02:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743030139; x=1743634939; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VBAey2CYAn1IfkgNKIKzYr/G0OGSAHAFC+JscJQi/kk=;
-        b=Q/cbg21NH9FjHxm5/Jj/DXB0u84IrpgBzaHiJeVhn74WIjdngs2DiBqU8BInt190P7
-         hpWaiquGLDPTEUPARwiLB8HY9Vo8SNExKJLzObpGPWJr1Z4O48v5D01NlwfqURq+tUW2
-         GoJzaJLDPSyTMmgyHx8OudbERsZHY+0iYnPGLBwf/GRGlEbXaShdId62SD/XBbGjRdmz
-         rBRScD+wYkYXk266i/JHKTJYA9roZzEaOIJ8cUdzp23vVoa3ALySLnSvnRpZgQn/g9rQ
-         BjiCdmTLm/80vmTrMd4ityn5Z8kW4EVJehPh6s+wECeWUt3rw+Fe2zrfwMyHHkY+YV04
-         U3og==
+        d=paul-moore.com; s=google; t=1743030179; x=1743634979; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xB9UYcH5AdqIyBolCZJx21sb/shumgTj8OuXokPvO7Y=;
+        b=SvkcW293mh0HY0jomhpu7kdz3qpx0PViSONxHoknNmnzXuzevmGnYoW0IDb99wfcSg
+         LW/ntXYlQbJ8Fd2YLf4/b8vFNpKPR5sR8DEfUULAbJej2ni6bSfO01gt2Ef+jSHi8QRq
+         eZqXdB4mkNAInBCcxKXo02FqP8hGJomeU0/GlSqQ89lZ5mY+SGVZ4gMpU66EJL3V5gau
+         RqwOr7VMvK5jT3Pcof1Z7MWRg9SM8mzwIRBrlwvaTSo7GsFodvziuZwqFgU0Ou+pww5D
+         gkystDi+tJ03YeNKNe61++YFt0kwYlE+yHPtMdMsv6EeVzek1DK6hHIL17SqmGk8K6xa
+         sZgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743030139; x=1743634939;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VBAey2CYAn1IfkgNKIKzYr/G0OGSAHAFC+JscJQi/kk=;
-        b=oZKDKA1Fc8po2TRawMNsanRNykLpEPwnvFCPHrw+EcnzxcraKfpfAuDJqUBDAFJ8RU
-         PelKZLqUHzmkwdz3IUYqh3plFmYv+GerjQcW3fi4NYiL0VPhdwTTnt3yQWTQx9w4WXtJ
-         4EzFCjGhKYWW8EvOcgMViEZKDfi4ozwMxEUxKEdIp95TP0mp9g9A8+ROXvAIKDopDknC
-         sbPqIYA1YDA01eOgf66br9vT1VA8+m2QhhOkavHRhIVybXxOsGVGEslTQRWklIzEPiFQ
-         7MXvWw7Qr81E6c35yN3ZU3xtPWeRploKP7I7r4GB0c9yrlDb5dwDcZCbFV3k/oh4iI+u
-         +T6g==
-X-Forwarded-Encrypted: i=1; AJvYcCXkHZlseZExfB/c6jinVS7zst5wKM1/Hk9xMle5E5ewQKG9ToUoWYIzzIgtLMIiWkO0AbjsIcmkhHDyVQk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzrvv2n2tOwgliy91JeL8cWcwchs2DZQrOn5uqcBgoKwWS1W1FJ
-	1TsSBuPE43vfFup1BtHdqUMt9TeaLf5KvQp4LB9GwKRMV6hiLngSEx99ThAkBgQ=
-X-Gm-Gg: ASbGncsRpft+kufFqn5jGsfxepns1i/CvBDRNuH3SEkLkybudNSjlYEgALR37WN0mCY
-	aRS+lP1mE7DCHzCOXNh9z5O/rirpQt/y/Mbk0WoUPis1CFT+Ldn+ULMEoxNrakK6ef/7ytFY9VN
-	Mo3ST47N6KmWMwJYe1Bk8O8+WtZAE2HafCIp4Aa102DBKtOSYjYjh8pUqQJCbeu8UGpJkFBePah
-	HVlZjudeLSUaNR7ir1cXXfSdJKCq9ScjXd/TY2RTXK5r7K7SVp8VId/m5BkIH4gv7GpKh2eUFe1
-	fhjb1Zo12gvk7PnQb4Jd28lXKdXGjivZafhxbOlPdkS3YysDLtibc4RPu4bHqbWr2ze7l+0t8tR
-	ysfcPjnBhuw==
-X-Google-Smtp-Source: AGHT+IHo3V3WAkhhLW/juCyU+C0ZLz5NgHhcA8b9a1zmLzsrrFgyHzgv+rPSmP54zNjAkwZ1Y7+wdg==
-X-Received: by 2002:a05:600c:138e:b0:43c:eb63:415d with SMTP id 5b1f17b1804b1-43d84fb70a0mr13406635e9.14.1743030138757;
-        Wed, 26 Mar 2025 16:02:18 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9e65casm18360073f8f.69.2025.03.26.16.02.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Mar 2025 16:02:18 -0700 (PDT)
-Message-ID: <9fd63681-28c3-4797-9ed0-f4b05e77e330@linaro.org>
-Date: Wed, 26 Mar 2025 23:02:16 +0000
+        d=1e100.net; s=20230601; t=1743030179; x=1743634979;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xB9UYcH5AdqIyBolCZJx21sb/shumgTj8OuXokPvO7Y=;
+        b=bqAfWRr3iJTyowAkOz/uwLvJ1gsAqBmfbWzl3W+VZ10v3v0dDGiMxrdpb7xeBlI+/E
+         t6sPv2wZT336hJ18WgNivDWYTYa+BG3tiOUFP9MMHEyKrKuycvCnfS4o9kMN+1p/6nOS
+         VHVsl+roMdFbmjdDnM76HJxRcD10IsKSA/TZHyezjvV2n2xEwtSexeLL8tHC+d8Ccwc5
+         Bg+7FsuduCTRDKg6KbeB24jRfo3v9rzjeNkitpsAtJmOd6TNDrUgGnstJ2ovkgvtI+Sf
+         D2nYCX7jDQTTQntbQlckSf4n4CXsnLlL3tT2P2/YUOwykD8+B/Sqce0pJPm2fuWnGfrp
+         4UeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVoOkz/SbzzuJbC8DZS01M+6oApaDHS+Z8v69BWSQ/rA/jwL9s6EDGz2QaSxhdE9altfYPVQwhHknPg3tQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWFH3AaxG5FZXoJPb4ZJHjPcEafAhRE14FFZray17PcK4UT5dF
+	lDBBvtO4pu0ZyhCiEfl6cCymnR1uZEW+T3msgh4a2+pMA4RhI/BjlDDuDwRg9i3lJGdkae/4hua
+	b72eAIQAb7rtLLc63yGkspOp+WRW3nx0Ih11q
+X-Gm-Gg: ASbGncu0fRkZv6uXJ9+wCQF/VIt7DV6BOgZRAvch49t89C/TGDqnkzkiovD/Ekzdt6z
+	z5bzNcW/Xcf7pKqrXKnkUeMlQS7DlmpCdfbvIBaXRgOH5mCYzVxoooSNFXuUTGjgDvXWzWI+GJi
+	x4CFygp9vnfj22nknrP3WuvqiWcA==
+X-Google-Smtp-Source: AGHT+IE5Pt/Vffo+1JRWLwabWNqS6xEZLcnPafMLRISgkt7U3sr2Fb1QpXN7gcExs5dAKsCpr+YNc+v2PsCBNTv6dd8=
+X-Received: by 2002:a05:6902:240f:b0:e69:1f19:cc3a with SMTP id
+ 3f1490d57ef6-e694377e6f5mr1997953276.30.1743030178518; Wed, 26 Mar 2025
+ 16:02:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/8] arm64: dts: qcom: sc7280: Add WSA SoundWire and
- LPASS support
-To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel@oss.qualcomm.com, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-References: <20250317054151.6095-1-quic_pkumpatl@quicinc.com>
- <NEOU_bSQGIua5HanDOIfAKJq_XghfrHr5H_120hNUkXtFyurq1rHIe-4_cKpCtH7rr4MJzu89TrHWrpxUfR0_Q==@protonmail.internalid>
- <20250317054151.6095-3-quic_pkumpatl@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250317054151.6095-3-quic_pkumpatl@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <d0ade43454dee9c00689f03e8d9bd32a@paul-moore.com>
+ <CAHk-=wjbahY4JjLCXNT4o3xVq2cejqBG69z+MNfHsN9FQBnbOw@mail.gmail.com>
+ <CAHC9VhRExVqdhHqs0njs7NY6bFg0BfcE-gMpS30HW9O7MSDfWQ@mail.gmail.com>
+ <CAHk-=wi9m8-_3cywQCohJQEQtuQ+teS4gOtBkWZrhFWzNy-5_A@mail.gmail.com>
+ <CAHC9VhT3D7X=4SpO5xbYm=JUwJqTa7tn=J6QMDBV96c7VBUw4g@mail.gmail.com> <CAHk-=wiH3hoPTxX3=xTRzRuCwktf3pNzFWP45-x6AwoVAjUsUQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wiH3hoPTxX3=xTRzRuCwktf3pNzFWP45-x6AwoVAjUsUQ@mail.gmail.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Wed, 26 Mar 2025 19:02:47 -0400
+X-Gm-Features: AQ5f1Jp1vWdVeq6koEuglRdSXOOkCRBFnBJO34u8phUSwAMef3byd67a9AAqfD4
+Message-ID: <CAHC9VhT5G6W7g9pB3VM6W7wCEJjWfYSUWNgWF+rRiQ4ZQbGMEQ@mail.gmail.com>
+Subject: Re: [GIT PULL] selinux/selinux-pr-20250323
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "Cameron K. Williams" <ckwilliams.work@gmail.com>, "Kipp N. Davis" <kippndavis.work@gmx.com>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, selinux@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 17/03/2025 05:41, Prasad Kumpatla wrote:
-> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-> 
-> Add WSA macroLPASS Codecs along with SoundWire controller.
-> 
-> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> ---
->   arch/arm64/boot/dts/qcom/sc7280.dtsi | 68 ++++++++++++++++++++++++++++
->   1 file changed, 68 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> index 39fbd3c40e47..90b2f6e2b7c0 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> @@ -2602,6 +2602,64 @@ swr1: soundwire@3230000 {
->   			status = "disabled";
->   		};
-> 
-> +		lpass_wsa_macro: codec@3240000 {
-> +			compatible = "qcom,sc7280-lpass-wsa-macro";
-> +			reg = <0x0 0x03240000 0x0 0x1000>;
-> +
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&lpass_wsa_swr_clk>, <&lpass_wsa_swr_data>;
-> +
-> +			clocks = <&lpass_aon LPASS_AON_CC_TX_MCLK_CLK>,
-> +				 <&lpass_aon LPASS_AON_CC_TX_MCLK_2X_CLK>,
-> +				 <&lpass_va_macro>;
-> +			clock-names = "mclk", "npl", "fsgen";
+On Wed, Mar 26, 2025 at 5:06=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> *WHY* is that policy needed at all?
+>
+> As you correctly point out, it has NOT EXISTED for a long long time
+> already, and the code has been the old way since 4.x timeframe.
+>
+> So my question literally boils down to "WHY SHOULD IT EXIST NOW"?
 
-clocks* go before pinctrl*
+SELinux is different things to different people, but for this
+discussion I think one of the more relevant aspects is the fact that
+SELinux is designed in such a way that you can analyze the security
+policy and reason about the security properties of the system.  For
+example, how does data from application A flow through the system?
+Can application B ever read from file C either directly or through
+some chain of applications/users?  What about writing to file D?  Who
+can manage device E, or configure various runtime knobs in the kernel.
+I could go on, but the important part is that SELinux allows an admin
+to reason about the security properties of a system in ways that
+simply aren't possible using traditional Linux access controls (mode
+bits, capabilities, etc.).  If you're curious the collection of
+analysis tools can be found below:
 
-> +
-> +			power-domains = <&lpass_hm LPASS_CORE_CC_LPASS_CORE_HM_GDSC>,
-> +					<&lpass_aon LPASS_AON_CC_LPASS_AUDIO_HM_GDSC>;
-> +			power-domain-names = "macro", "dcodec";
-> +
-> +			#clock-cells = <0>;
-> +			clock-output-names = "mclk";
-> +			#sound-dai-cells = <1>;
-> +
-> +			status = "disabled";
-> +		};
-> +
-> +		swr2: soundwire@3250000 {
-> +			compatible = "qcom,soundwire-v1.6.0";
-> +			reg = <0x0 0x03250000 0x0 0x2000>;
-> +
-> +			interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&lpass_wsa_macro>;
-> +			clock-names = "iface";
-> +
-> +			qcom,din-ports = <2>;
-> +			qcom,dout-ports = <6>;
-> +
-> +			resets = <&lpass_audiocc LPASS_AUDIO_SWR_WSA_CGCR>;
-> +			reset-names = "swr_audio_cgcr";
+https://github.com/SELinuxProject/setools
 
-vendor prefixes should come after standard names
+An important prerequisite of this is that any "security relevant"
+operation on the system needs to have a SELinux access control point.
+If an access control is missing, the quality of the policy analysis
+suffers.
 
-Documentation/devicetree/bindings/dts-coding-style.rst
-"Order of Properties in Device Node"
+> And I do not not see the point of allowing a driver module load (which
+> *is* a policy, and has been for a long time), and then disallowing
+> loading the firmware that the driver needs.
+>
+> That's insane. So explain to me why you added what looks like
+> completely insane policy hooks.
 
-> +
-> +			qcom,ports-sinterval-low = /bits/ 8 <0x07 0x1f 0x3f 0x07
-> +								0x1f 0x3f 0x0f 0x0f>;
-> +			qcom,ports-offset1 = /bits/ 8 <0x01 0x02 0x0c 0x06 0x12 0x0d 0x07 0x0a>;
-> +			qcom,ports-offset2 = /bits/ 8 <0xff 0x00 0x1f 0xff 0x00 0x1f 0x00 0x00>;
-> +			qcom,ports-hstart = /bits/ 8 <0xff 0xff 0xff 0xff 0xff 0xff 0xff 0xff>;
-> +			qcom,ports-hstop = /bits/ 8 <0xff 0xff 0xff 0xff 0xff 0xff 0xff 0xff>;
-> +			qcom,ports-word-length = /bits/ 8 <0xff 0xff 0xff 0xff 0xff 0xff 0xff 0xff>;
-> +			qcom,ports-block-pack-mode = /bits/ 8 <0xff 0xff 0x01 0xff 0xff 0x01
-> +							       0xff 0xff>;
-> +			qcom,ports-block-group-count = /bits/ 8 <0xff 0xff 0xff 0xff 0xff 0xff
-> +								0xff 0xff>;
-> +			qcom,ports-lane-control = /bits/ 8 <0xff 0xff 0xff 0xff 0xff 0xff
-> +							    0xff 0xff>;
-> +
-> +			#address-cells = <2>;
-> +			#size-cells = <0>;
-> +			#sound-dai-cells = <1>;
-> +
-> +			status = "disabled";
-> +		};
-> +
->   		lpass_audiocc: clock-controller@3300000 {
->   			compatible = "qcom,sc7280-lpassaudiocc";
->   			reg = <0 0x03300000 0 0x30000>,
-> @@ -2808,6 +2866,16 @@ lpass_tx_swr_data: tx-swr-data-state {
->   				pins = "gpio1", "gpio2", "gpio14";
->   				function = "swr_tx_data";
->   			};
-> +
-> +			lpass_wsa_swr_clk: wsa-swr-clk-state {
-> +				pins = "gpio10";
-> +				function = "wsa_swr_clk";
-> +			};
-> +
-> +			lpass_wsa_swr_data: wsa-swr-data-state {
-> +				pins = "gpio11";
-> +				function = "wsa_swr_data";
-> +			};
->   		};
-> 
->   		gpu: gpu@3d00000 {
-> --
-> 2.34.1
-> 
-> 
+In the security_kernel_read_file() LSM hook, the SELinux callback
+examines if the current task has the ability to perform the designated
+read operation on file A.  Loading a kernel module and loading its
+associated firmware are two events inside the kernel with the current
+task loading data from two different files, each with potentially
+different security properties, and we want to perform an access check
+on each file to ensure it is permitted under the security policy
+defined by the admin.  For example, with the kernel enforcing kernel
+module signing one administrator might be inclined to allow a given
+process to load a kernel module from a file that is more widely
+writable than a firmware image without any form of integrity
+protection.  Having two distinct permissions, system/module_load and
+system/firmware_load, allows the administrator to distinguish between
+the two different file reads in the SELinux policy.
 
+--=20
+paul-moore.com
