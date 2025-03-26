@@ -1,406 +1,250 @@
-Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC1F23E34C
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 18:02:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553CE24CEE1;
+	Wed, 26 Mar 2025 18:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743012141; cv=none; b=QP6VqtKXahUMn7G7DvUiYT2xOo9PP6PeDUSvJ0fqonwYMTaeOp5uMWy/rHCrn+AGs+Rg7b2zuPQaw5dtXUetT2VenAKoeMYhlbaJ+4h76Aa+cUHFQq2kDB2ZQmNc+8hUS5xPJyY4EQQL0uKGfoYRpElbn3S/0zE+QTilQtYofoI=
+	t=1743012145; cv=none; b=dZdCrSFrapc2BWUMURiq1msN7SfpI0eMMFbTTyn5q7k+QzRjYylAs10Iv31WHu+rfquxpa4IFhvRX7PjeEgjSwZd2e0ezSzC2SA6qWck02JfCAOJktDhzEq4wNY7QEZyR0nNPtGbJwv4nq6ftoGMggW42fBDNl78G112bhnDa5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743012141; c=relaxed/simple;
-	bh=biad3HzuhaFgGu9xfqSfJN5c/l/g3QaTrs2tMs0K1iY=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Eatsf1D2DB+CKOM9Cu9sdqf7AQzVrT7z6LYD6Dj+TM9r+tg8MfGxP/AuajaClJFVCJhgIFQ8gX62MU31RYH5BQiRpZvltVUKlqBQ4UwNCzhsksTJvTwjRU7stQpmye8T3UiOM+8x/3q/tbvOjuuSWmlFSBsDZaw0ewf0ryrMbro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=l2dmXFCR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=vhciMl9T; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1743012145; c=relaxed/simple;
+	bh=k8k8tgCAZbed6quGFSWS3FiDb3hamN2ebexnotY7V1A=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hy3mdFlC6Z1l8Ah6RhOhhCdUX9N3IC3QJu0UWfWpbbAWNwPRT90947JMOl4Qepw7EyAgTV8E1PD8cfuj41Gm4y4H11jummNlkZyrgVGiWOY3PxCkMppphj1REoJ6xYZGpcol59VnPsIZn2u+nkAGnyd3AJpcKt6ElV9/i583KKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lEfAQ7h1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="l2dmXFCR";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vhciMl9T"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 564C6114009D;
-	Wed, 26 Mar 2025 14:02:17 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Wed, 26 Mar 2025 14:02:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1743012137;
-	 x=1743098537; bh=folkTxEknBV+MSNwPp+JwEhz/PCaLSgjK8cYy1qLXnQ=; b=
-	l2dmXFCRSCDD4bFaUdSI8p0ec49KydsSXTThF74zItpryxzyVQ39Vb6F8o+juSsw
-	JyOTbySNceP+6MWzOu+EYtXHsvRPjGo77xtYHEDb6TnOP8vlWtGncKYbkD+ISLke
-	LruntGcc36lZ4mAl1TmYq5N/gmdqENGyrQNtnXhce8G6SlPFSVcsw6hcubL6CqVq
-	u7adRLOHbv2lAlmlKY5HthOssMoAoIYHLbnf9SMDcCEWddCt4J7uRONvXiTldWwX
-	U15EfkhLQiGTb9/51Wn1r+htwe13zp3cZQLDPelKQ2sTxCrvbLUT1hhCszQrRpza
-	Ht7lg+Eyl7Em6KM//MhsWQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743012137; x=
-	1743098537; bh=folkTxEknBV+MSNwPp+JwEhz/PCaLSgjK8cYy1qLXnQ=; b=v
-	hciMl9TAaq8UEVLS8DIvCuYKeCjRufB7R+GItc+cD1H58NkKTXxuh4keI32d6QcH
-	ArjkMqulP8o8y0EJxkVG7uzPZj/2Gkhw0i0ynsaGJJiQ8pWuOTms6x4bmGyaPZCn
-	pOUqb168S/p5AUYGdFuhdtPZ/sQP7UEupUAEWFNkWF/nKeIHPaooujp+Hj0iHYHu
-	SmN7m+hEXWiEPmvW1242BDSP93krBYTroknt8Sg7XNd71sxHH35rOW3MBU5MCBa2
-	jrhXnzHmAm3VQXjDJBiOhxp6eV47ax6A6EhzBPmtCQx5gHw1kwJqXbxIqMCwdvkU
-	pkVd2sUl4UFKRD3FaJQFQ==
-X-ME-Sender: <xms:KEHkZ5dduo_CbMB3J5zxAwBuxEgjeDBaonBv0hWZjoaBD7QNfFyLVQ>
-    <xme:KEHkZ3OfmSOaPatpRog1quWKb6-WrwdvjafMs0hWu1O5P0m2B4V_WDwLBgeMg3WHr
-    PhggVCUTmVDjmEFpj0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieeivddtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfeltdejgfeitdeuffefieelgfffvdejiefh
-    uddvffelffduuddvffevueetueejnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpgh
-    hithhhuhgsrdgtohhmpdhpvghnghhuthhrohhnihigrdguvgenucevlhhushhtvghrufhi
-    iigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpd
-    hnsggprhgtphhtthhopeegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtohhr
-    vhgrlhgusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplh
-    hinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhg
-    pdhrtghpthhtohepshhotgeslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhope
-    hlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:KUHkZyiODt2s6TplGG7pyMEYxrx2v9aXXarmXJLnvqYCuWWlgWf5KQ>
-    <xmx:KUHkZy_jrTTMQiKF5UsW0imO1rUsMoeYf4PiJC04tgA3fPoRYaTzOA>
-    <xmx:KUHkZ1u5vRVaXoZgWHThumQ6TGHRMC80zWNyuBzfdKz8lddNvJ361w>
-    <xmx:KUHkZxFKGgH5q0nfHkMQ71Yn0IuHTdKiEUnZmYsbjwEDQO1BonDZ1g>
-    <xmx:KUHkZ9KAgaHKZPZLg-yH3eoiXhP5FFI2ZnaprneGejNfMRBY5bY8IJjN>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id E49B72220073; Wed, 26 Mar 2025 14:02:16 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lEfAQ7h1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 818CDC4CEE2;
+	Wed, 26 Mar 2025 18:02:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743012144;
+	bh=k8k8tgCAZbed6quGFSWS3FiDb3hamN2ebexnotY7V1A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lEfAQ7h1jREVeaeYNMtbEH7rFvcHCZkck7zd6vOki3iX0BoKT+BmoAZF3es89Zq5w
+	 2cJZyg2vASNPa/guJM0lseb7TZveOEUMVW6lAb/uaX4hyb2WahJm/qGBohfbBo4SaS
+	 Q5p5nEW+wHLyBz9m1ypBuQcD62+qeUDS9VavKLoSTuqEeRnPutsnj3Fp+8RJQkDbId
+	 OiSkwXluYNZlYchTgCGnvOqIDp1+rGqqYhJ+GJci9IImLxLoNodZ7geTITj3bscNwX
+	 DRIllMGEAl5PuswF5C8xHxAC+HyZpNcIvyp6jTPKzW38rnS2F+NoDXzmvLCRQKjw6Q
+	 UjthYoA47DetQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1txV54-00HOK2-3x;
+	Wed, 26 Mar 2025 18:02:22 +0000
+Date: Wed, 26 Mar 2025 18:02:21 +0000
+Message-ID: <86wmcbllg2.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Ankit Agrawal <ankita@nvidia.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	"joey.gouly@arm.com" <joey.gouly@arm.com>,
+	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"ryan.roberts@arm.com" <ryan.roberts@arm.com>,
+	"shahuang@redhat.com" <shahuang@redhat.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"david@redhat.com" <david@redhat.com>,
+	Aniket Agashe <aniketa@nvidia.com>,
+	Neo Jia <cjia@nvidia.com>,
+	Kirti Wankhede <kwankhede@nvidia.com>,
+	"Tarun Gupta (SW-GPU)" <targupta@nvidia.com>,
+	Vikram Sethi <vsethi@nvidia.com>,
+	Andy Currid <acurrid@nvidia.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Dan Williams <danw@nvidia.com>,
+	Zhi Wang <zhiw@nvidia.com>,
+	Matt Ochs <mochs@nvidia.com>,
+	Uday Dhoke <udhoke@nvidia.com>,
+	Dheeraj Nigam <dnigam@nvidia.com>,
+	Krishnakant Jaju <kjaju@nvidia.com>,
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+	"sebastianene@google.com" <sebastianene@google.com>,
+	"coltonlewis@google.com" <coltonlewis@google.com>,
+	"kevin.tian@intel.com" <kevin.tian@intel.com>,
+	"yi.l.liu@intel.com" <yi.l.liu@intel.com>,
+	"ardb@kernel.org" <ardb@kernel.org>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"gshan@redhat.com" <gshan@redhat.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"ddutile@redhat.com" <ddutile@redhat.com>,
+	"tabba@google.com" <tabba@google.com>,
+	"qperret@google.com" <qperret@google.com>,
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 1/1] KVM: arm64: Allow cacheable stage 2 mapping using VMA flags
+In-Reply-To: <Z-QnBcE1TKPChQay@google.com>
+References: <Z9nJ42PllG8a7AY7@linux.dev>
+	<20250318230909.GD9311@nvidia.com>
+	<Z9pryQwy2iwa2bpJ@linux.dev>
+	<20250319170429.GK9311@nvidia.com>
+	<Z9sItt8BIgvbBY8M@arm.com>
+	<20250319192246.GQ9311@nvidia.com>
+	<Z9s7r2JocpoM_t-m@arm.com>
+	<SA1PR12MB7199C7BD48EB39F536DD34DBB0A62@SA1PR12MB7199.namprd12.prod.outlook.com>
+	<Z-QU7qJOf8sEA5R8@google.com>
+	<86y0wrlrxt.wl-maz@kernel.org>
+	<Z-QnBcE1TKPChQay@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-ThreadId: T2e1b8447a49b63d2
-Date: Wed, 26 Mar 2025 19:00:31 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Linus Torvalds" <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- soc@lists.linux.dev
-Message-Id: <ab627300-24c0-46fb-a236-f94751afffc1@app.fastmail.com>
-In-Reply-To: <1ef00af5-0196-46c4-95f3-7c6b90f3e293@app.fastmail.com>
-References: <1ef00af5-0196-46c4-95f3-7c6b90f3e293@app.fastmail.com>
-Subject: [GIT PULL 2/4] soc: driver updates for 6.15, part 1
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: seanjc@google.com, ankita@nvidia.com, catalin.marinas@arm.com, jgg@nvidia.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, will@kernel.org, ryan.roberts@arm.com, shahuang@redhat.com, lpieralisi@kernel.org, david@redhat.com, aniketa@nvidia.com, cjia@nvidia.com, kwankhede@nvidia.com, targupta@nvidia.com, vsethi@nvidia.com, acurrid@nvidia.com, apopple@nvidia.com, jhubbard@nvidia.com, danw@nvidia.com, zhiw@nvidia.com, mochs@nvidia.com, udhoke@nvidia.com, dnigam@nvidia.com, kjaju@nvidia.com, alex.williamson@redhat.com, sebastianene@google.com, coltonlewis@google.com, kevin.tian@intel.com, yi.l.liu@intel.com, ardb@kernel.org, akpm@linux-foundation.org, gshan@redhat.com, linux-mm@kvack.org, ddutile@redhat.com, tabba@google.com, qperret@google.com, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-The following changes since commit 0ad2507d5d93f39619fc42372c347d6006b64319:
+On Wed, 26 Mar 2025 16:10:45 +0000,
+Sean Christopherson <seanjc@google.com> wrote:
+> 
+> On Wed, Mar 26, 2025, Marc Zyngier wrote:
+> > On Wed, 26 Mar 2025 14:53:34 +0000,
+> > Sean Christopherson <seanjc@google.com> wrote:
+> > > 
+> > > On Wed, Mar 26, 2025, Ankit Agrawal wrote:
+> > > > > On Wed, Mar 19, 2025 at 04:22:46PM -0300, Jason Gunthorpe wrote:
+> > > > > > On Wed, Mar 19, 2025 at 06:11:02PM +0000, Catalin Marinas wrote:
+> > > > > > > On Wed, Mar 19, 2025 at 02:04:29PM -0300, Jason Gunthorpe wrote:
+> > > > > > > > On Wed, Mar 19, 2025 at 12:01:29AM -0700, Oliver Upton wrote:
+> > > > > > > > > You have a very good point that KVM is broken for cacheable PFNMAP'd
+> > > > > > > > > crap since we demote to something non-cacheable, and maybe that
+> > > > > > > > > deserves fixing first. Hopefully nobody notices that we've taken away
+> > > > > > > > > the toys...
+> > > > > > > >
+> > > > > > > > Fixing it is either faulting all access attempts or mapping it
+> > > > > > > > cachable to the S2 (as this series is trying to do)..
+> > > > > > >
+> > > > > > > As I replied earlier, it might be worth doing both - fault on !FWB
+> > > > > > > hardware (or rather reject the memslot creation), cacheable S2
+> > > > > > > otherwise.
+> > > > > >
+> > > > > > I have no objection, Ankit are you able to make a failure patch?
+> > > > >
+> > > > > I'd wait until the KVM maintainers have their say.
+> > > > > 
+> > > > 
+> > > > Maz, Oliver any thoughts on this? Can we conclude to create this failure
+> > > > patch in memslot creation?
+> > > 
+> > > That's not sufficient.  As pointed out multiple times in this thread, any checks
+> > > done at memslot creation are best effort "courtesies" provided to userspace to
+> > > avoid terminating running VMs when the memory is faulted in.
+> > > 
+> > > I.e. checking at memslot creation is optional, checking at fault-in/mapping is
+> > > not.
+> > > 
+> > > With that in place, I don't see any need for a memslot flag.  IIUC, without FWB,
+> > > cacheable pfn-mapped memory is broken and needs to be disallowed.  But with FWB,
+> > > KVM can simply honor the cacheability based on the VMA.  Neither of those requires
+> > 
+> > Remind me how this work with stuff such as guestmemfd, which, by
+> > definition, doesn't have a userspace mapping?
+> 
+> Definitely not through a memslot flag.  The cacheability would be a property of
+> the guest_memfd inode, similar to how it's a property of the underlying device
+> in this case.
 
-  Linux 6.14-rc3 (2025-02-16 14:02:44 -0800)
+It's *not* a property of the device. It's a property of the mapping.
 
-are available in the Git repository at:
+> I don't entirely see what guest_memfd has to do with this.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/soc-drivers-6.15-1
+You were the one mentioning sampling the cacheability via the VMA. As
+far as I understand guestmemfd, there is no VMA to speak of.
 
-for you to fetch changes up to 2124055fb5c6554cab0fdd7a09235526cacaac23:
+> One of the big
+> advantages of guest_memfd is that KVM has complete control over the lifecycle of
+> the memory.  IIUC, the issue with !FWB hosts is that KVM can't guarantee there
+> are valid host mappings when memory is unmapped from the guest, and so can't do
+> the necessary maintenance.  I agree with Jason's earlier statement that that's a
+> solvable kernel flaw.
+>
+> For guest_memfd, KVM already does maintenance operations when memory is reclaimed,
+> for both SNP and TDX.  I don't think ARM's cacheability stuff would require any
+> new functionality in guest_memfd.
 
-  Merge tag 'zynqmp-soc-for-6.15' of https://github.com/Xilinx/linux-xlnx into soc/drivers (2025-03-20 17:53:38 +0100)
+I don't know how you reconcile the lack of host mapping and cache
+maintenance. The latter cannot take place without the former.
 
-----------------------------------------------------------------
-soc: driver updates for 6.15, part 1
+> 
+> > > a memslot flag.  A KVM capability to enumerate FWB support would be nice though,
+> > > e.g. so userspace can assert and bail early without ever hitting an
+> > > ioctl error.
+> > 
+> > It's not "nice". It's mandatory. And FWB is definitely *not* something
+> > we want to expose as such.
+> 
+> I agree a capability is mandatory if we're adding a memslot flag, but I don't
+> think it's mandatory if this is all handled through kernel plumbing.
 
-These are the updates for SoC specific drivers and related subsystems:
+It is mandatory, full stop. Otherwise, userspace is able to migrate a
+VM from an FWB host to a non-FWB one, start the VM, blow up on the
+first page fault. That's not an acceptable outcome.
 
- - Firmware driver updates for SCMI, FF-A and SMCCC firmware interfaces,
-   adding support for additional firmware features including SoC
-   identification and FF-A SRI callbacks as well as various bugfixes
+> 
+> > > If we want to support existing setups that happen to work by dumb luck or careful
+> > > configuration, then that should probably be an admin decision to support the
+> > > "unsafe" behavior, i.e. an off-by-default KVM module param, not a memslot flag.
+> > 
+> > No. That's not how we handle an ABI issue. VM migration, with and
+> > without FWB, can happen in both direction, and must have clear
+> > semantics. So NAK to a kernel parameter.
+> > 
+> > If I have a VM with a device mapped as *device* on FWB host, I must be
+> > able to migrate it to non-FWB host, and back. A device mapped as
+> > *cacheable* can only be migrated between FWB-capable hosts.
+> 
+> But I thought the whole problem is that mapping this fancy memory as device is
+> unsafe on non-FWB hosts?  If it's safe, then why does KVM needs to reject anything
+> in the first place?
 
- - Memory controller updates for Nvidia and Mediatek
+I don't know where you got that idea. This is all about what memory
+type is exposed to a guest:
 
- - Reset controller support for microchip sam9x7 and imx8qxp/imx8qm
+- with FWB, no need for CMOs, so cacheable memory is allowed if the
+  device supports it (i.e. it actually exposes memory), and device
+  otherwise.
 
- - New hardware support for multiple Mediatek, Renesas and Samsung Exynos chips
+- without FWB, CMOs are required, and we don't have a host mapping for
+  these pages. As a fallback, the mapping is device only, as this
+  doesn't require any CMO by definition.
 
- - Minor updates on Zynq, Qualcomm, Amlogic, TI, Samsung, Nvidia and Apple chips
+There is no notion of "safety" here.
 
-There will be a follow up with a few more driver updates that are still
-causing build regressions at the moment.
+> > Importantly, it is *userspace* that is in charge of deciding how the
+> > device is mapped at S2. And the memslot flag is the correct
+> > abstraction for that.
+>  
+> I strongly disagree.  Whatever owns the underlying physical memory is in charge,
+> not userspace.  For memory that's backed by a VMA, userspace can influence the
+> behavior through mmap(), mprotect(), etc., but ultimately KVM needs to pull state
+> from mm/, via the VMA.  Or in the guest_memfd case, from guest_memfd.
 
-----------------------------------------------------------------
-Ahmad Fatoum (1):
-      MAINTAINERS: match mxc in file names by IMX / MXC entry
+I don't buy that. Userspace needs to know the semantics of the memory
+it gives to the guest. Or at least discover that the same device
+plugged into to different hosts will have different behaviours. Just
+letting things rip is not an acceptable outcome.
 
-Alexey Minnekhanov (1):
-      soc: qcom: pd-mapper: Add support for SDM630/636
+> I have no objection to adding KVM uAPI to let userspace add _restrictions_, e.g.
+> to disallow mapping memory as writable even if the VMA is writable.  But IMO,
+> adding a memslot flag to control cacheability isn't purely substractive.
 
-Andrew Davis (1):
-      soc: ti: k3-socinfo: Do not use syscon helper to build regmap
+I don't see how that solves the problem at hand: given the presence or
+absence of FWB, allow userspace to discover as early as possible what
+behaviour a piece of memory provided by a device will have, and
+control it to handle migration.
 
-AngeloGioacchino Del Regno (8):
-      soc: mediatek: mtk-mutex: Add DPI1 SOF/EOF to MT8188 mutex tables
-      soc: mediatek: mtk-mmsys: Fix MT8188 VDO1 DPI1 output selection
-      soc: mediatek: mtk-mmsys: Add compile time check for mmsys routes
-      soc: mediatek: mt8188-mmsys: Migrate to MMSYS_ROUTE() macro
-      soc: mediatek: mt8167-mmsys: Fix missing regval in all entries
-      soc: mediatek: mt8365-mmsys: Fix routing table masks and values
-      soc: mediatek: mmsys: Migrate all tables to MMSYS_ROUTE() macro
-      soc: mediatek: mt8188-mmsys: Add support for DSC on VDO0
+	M.
 
-Arnd Bergmann (21):
-      Merge tag 'renesas-drivers-for-v6.15-tag1' of https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel into soc/drivers
-      Merge tag 'asahi-soc-rtkit-6.15' of https://github.com/AsahiLinux/linux into soc/drivers
-      Merge tag 'smccc-update-6.15' of https://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into soc/drivers
-      Merge tag 'scmi-updates-6.15' of https://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into soc/drivers
-      Merge tag 'ffa-updates-6.15' of https://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into soc/drivers
-      firmware: arm_scmi: use ioread64() instead of ioread64_hi_lo()
-      Merge tag 'mtk-soc-for-v6.15' of https://git.kernel.org/pub/scm/linux/kernel/git/mediatek/linux into soc/drivers
-      soc: samsung: include linux/array_size.h where needed
-      reset: imx: fix incorrect module device table
-      Merge tag 'tegra-for-6.15-soc' of https://git.kernel.org/pub/scm/linux/kernel/git/tegra/linux into soc/drivers
-      Merge tag 'tegra-for-6.15-firmware' of https://git.kernel.org/pub/scm/linux/kernel/git/tegra/linux into soc/drivers
-      Merge tag 'samsung-drivers-6.15' of https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux into soc/drivers
-      Merge tag 'samsung-soc-6.15' of https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux into soc/drivers
-      Merge tag 'imx-drivers-6.15' of https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into soc/drivers
-      Merge tag 'ti-driver-soc-for-v6.15' of https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux into soc/drivers
-      Merge tag 'reset-for-v6.15' of git://git.pengutronix.de/pza/linux into soc/drivers
-      Merge tag 'memory-controller-drv-6.15' of https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-mem-ctrl into soc/drivers
-      Merge tag 'amlogic-drivers-for-v6.15' of https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux into soc/drivers
-      Merge tag 'qcom-drivers-for-6.15' of https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux into soc/drivers
-      Merge tag 'qcom-drivers-for-6.15-2' of https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux into soc/drivers
-      Merge tag 'zynqmp-soc-for-6.15' of https://github.com/Xilinx/linux-xlnx into soc/drivers
-
-Asahi Lina (2):
-      soc: apple: rtkit: Check & log more failures
-      soc: apple: rtkit: Pass the crashlog to the crashed() callback
-
-Chenyuan Yang (1):
-      soc: samsung: exynos-chipid: Add NULL pointer check in exynos_chipid_probe()
-
-Christophe JAILLET (2):
-      bus: qcom-ssc-block-bus: Remove some duplicated iounmap() calls
-      bus: qcom-ssc-block-bus: Fix the error handling path of qcom_ssc_block_bus_probe()
-
-Claudiu Beznea (2):
-      soc: renesas: Add SYSC driver for Renesas RZ family
-      soc: renesas: rz-sysc: Move RZ/G3S SoC detection to the SYSC driver
-
-Colin Ian King (1):
-      firmware: Exynos ACPM: Fix spelling mistake "Faile" -> "Failed"
-
-Fei Shao (1):
-      soc: mediatek: mtk-socinfo: Restructure SoC attribute information
-
-Frank Li (2):
-      dt-bindings: firmware: imx: add property reset-controller
-      reset: imx: Add SCU reset driver for i.MX8QXP and i.MX8QM
-
-Guillaume La Roque (1):
-      firmware: config: ti-sci: Default set to ARCH_K3 for the ti sci driver
-
-Harshit Mogalapalli (1):
-      soc: apple: rtkit: Fix use-after-free in apple_rtkit_crashlog_rx()
-
-Hector Martin (1):
-      soc: apple: rtkit: Implement OSLog buffers properly
-
-Ivaylo Ivanov (7):
-      dt-bindings: soc: samsung: usi: add USIv1 and samsung,exynos8895-usi
-      soc: samsung: usi: add a routine for unconfiguring the ip
-      soc: samsung: usi: implement support for USIv1 and exynos8895
-      dt-bindings: soc: samsung: exynos-sysreg: add sysreg compatibles for exynos2200
-      dt-bindings: soc: samsung: exynos-pmu: add exynos2200 compatible
-      dt-bindings: hwinfo: samsung,exynos-chipid: add exynos2200 compatible
-      soc: samsung: exynos-chipid: add exynos2200 SoC support
-
-Janne Grunau (3):
-      soc: apple: rtkit: Add and use PWR_STATE_INIT instead of _ON
-      soc: apple: rtkit: Use high prio work queue
-      soc: apple: rtkit: Cut syslog messages after the first '\0'
-
-Jishnu Prakash (1):
-      dt-bindings: soc: qcom: qcom,pmic-glink: Document SM8750 compatible
-
-John Madieu (3):
-      soc: renesas: rz-sysc: Add support for RZ/G3E family
-      soc: renesas: rz-sysc: Move RZ/V2H SoC detection to the SYS driver
-      soc: renesas: r9a09g057-sys: Add a callback to print SoC-specific extra features
-
-Kaustabh Chakraborty (3):
-      dt-bindings: hwinfo: samsung,exynos-chipid: add exynos7870-chipid compatible
-      dt-bindings: soc: samsung: exynos-pmu: add exynos7870-pmu compatible
-      soc: samsung: exynos-chipid: add support for exynos7870
-
-Krzysztof Kozlowski (7):
-      memory: tegra20-emc: Drop redundant platform_get_irq() error printk
-      soc: samsung: Use syscon_regmap_lookup_by_phandle_args
-      soc: qcom: Use str_enable_disable-like helpers
-      Merge branch 'for-v6.15/samsung-soc-dt-bindings' into next/drivers
-      soc: qcom: Do not expose internal servreg_location_entry_ei array
-      soc/tegra: pmc: Use str_enable_disable-like helpers
-      dt-bindings: soc: samsung: exynos-usi: Drop unnecessary status from example
-
-Louis-Alexis Eyraud (4):
-      soc: mediatek: mtk-socinfo: Add entry for MT8370AV/AZA Genio 510
-      soc: mediatek: mtk-socinfo: Add entry for MT8390AV/AZA Genio 700
-      soc: mediatek: mtk-socinfo: Avoid using machine attribute in SoC detection log
-      soc: mediatek: mtk-socinfo: Add extra entry for MT8395AV/ZA Genio 1200
-
-Paul Benoit (1):
-      firmware: smccc: Support optional Arm SMCCC SOC_ID name
-
-Rayyan Ansari (1):
-      dt-bindings: power: qcom,kpss-acc-v2: add qcom,msm8916-acc compatible
-
-Siva Durga Prasad Paladugu (1):
-      firmware: xilinx: Dont send linux address to get fpga config get status
-
-Sudeep Holla (24):
-      firmware: arm_scmi: Relax duplicate name constraint across protocol ids
-      firmware: arm_scmi: Add name and protocol id attributes
-      firmware: arm_scmi: Emit modalias for SCMI devices
-      firmware: arm_ffa: Replace SCMI by FF-A in the macro
-      firmware: arm_ffa: Replace UUID buffer to standard UUID format
-      firmware: arm_ffa: Align sync_send_receive{,2} function prototypes
-      firmware: arm_ffa: Fix big-endian support in __ffa_partition_info_get()
-      firmware: arm_ffa: Fix big-endian support in __ffa_partition_info_regs_get()
-      firmware: arm_ffa: Handle the presence of host partition in the partition info
-      firmware: arm_ffa: Unregister the FF-A devices when cleaning up the partitions
-      firmware: arm_ffa: Helper to check if a partition can receive REQUEST2 messages
-      firmware: arm_ffa: Add support for passing UUID in FFA_MSG_SEND2
-      firmware: arm_ffa: Upgrade FF-A version to v1.2 in the driver
-      firmware: arm_ffa: Reject higher major version as incompatible
-      firmware: arm_ffa: Remove unnecessary declaration of ffa_partitions_cleanup()
-      firmware: arm_ffa: Refactoring to prepare for framework notification support
-      firmware: arm_ffa: Stash ffa_device instead of notify_type in notifier_cb_info
-      firmware: arm_ffa: Add support for {un,}registration of framework notifications
-      firmware: arm_ffa: Add support for handling framework notifications
-      firmware: arm_ffa: Allow multiple UUIDs per partition to register SRI callback
-      firmware: arm_ffa: Handle ffa_notification_get correctly at virtual FF-A instance
-      firmware: arm_ffa: Explicitly cast return value from FFA_VERSION before comparison
-      firmware: arm_ffa: Explicitly cast return value from NOTIFICATION_INFO_GET
-      firmware: arm_ffa: Skip the first/partition ID when parsing vCPU list
-
-Thomas Zimmermann (1):
-      ARM: s3c: Do not include <linux/fb.h>
-
-Tudor Ambarus (7):
-      soc: qcom: ice: introduce devm_of_qcom_ice_get
-      mmc: sdhci-msm: fix dev reference leaked through of_qcom_ice_get
-      scsi: ufs: qcom: fix dev reference leaked through of_qcom_ice_get
-      soc: qcom: ice: make of_qcom_ice_get() static
-      dt-bindings: firmware: add google,gs101-acpm-ipc
-      firmware: add Exynos ACPM protocol driver
-      MAINTAINERS: add entry for the Samsung Exynos ACPM mailbox protocol
-
-Varshini Rajendran (1):
-      dt-bindings: reset: atmel,at91sam9260-reset: add sam9x7
-
-Viken Dadhaniya (1):
-      dt-bindings: qcom: geni-se: Add 'firmware-name' property for firmware loading
-
-Viresh Kumar (2):
-      firmware: arm_ffa: Refactor addition of partition information into XArray
-      firmware: arm_ffa: Set dma_mask for ffa devices
-
-Xianwei Zhao (2):
-      dt-bindings: interrupt-controller: Add support for Amlogic A4 and A5 SoCs
-      irqchip: Add support for Amlogic A4 and A5 SoCs
-
-Xueqi Zhang (1):
-      memory: mtk-smi: Add ostd setting for mt8192
-
-Zhu Jun (1):
-      firmware: tegra: bpmp: Fix typo in bpmp-abi.h
-
- .../devicetree/bindings/firmware/fsl,scu.yaml      |  12 +
- .../bindings/firmware/google,gs101-acpm-ipc.yaml   |  50 ++
- .../bindings/hwinfo/samsung,exynos-chipid.yaml     |   2 +
- .../amlogic,meson-gpio-intc.yaml                   |  19 +-
- .../bindings/power/qcom,kpss-acc-v2.yaml           |   4 +-
- .../bindings/reset/atmel,at91sam9260-reset.yaml    |   4 +
- .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml |   5 +
- .../bindings/soc/qcom/qcom,pmic-glink.yaml         |   1 +
- .../bindings/soc/samsung/exynos-pmu.yaml           |   2 +
- .../bindings/soc/samsung/exynos-usi.yaml           | 100 ++-
- .../soc/samsung/samsung,exynos-sysreg.yaml         |   5 +
- MAINTAINERS                                        |  11 +
- arch/arm/mach-s3c/devs.c                           |   1 -
- arch/arm/mach-s3c/setup-fb-24bpp-s3c64xx.c         |   1 -
- drivers/bus/qcom-ssc-block-bus.c                   |  34 +-
- drivers/firmware/Kconfig                           |   2 +
- drivers/firmware/Makefile                          |   1 +
- drivers/firmware/arm_ffa/bus.c                     |  14 +-
- drivers/firmware/arm_ffa/driver.c                  | 532 ++++++++++----
- drivers/firmware/arm_scmi/bus.c                    |  69 +-
- drivers/firmware/arm_scmi/driver.c                 |  10 -
- drivers/firmware/samsung/Kconfig                   |  14 +
- drivers/firmware/samsung/Makefile                  |   4 +
- drivers/firmware/samsung/exynos-acpm-pmic.c        | 224 ++++++
- drivers/firmware/samsung/exynos-acpm-pmic.h        |  29 +
- drivers/firmware/samsung/exynos-acpm.c             | 769 +++++++++++++++++++++
- drivers/firmware/samsung/exynos-acpm.h             |  23 +
- drivers/firmware/smccc/soc_id.c                    |  80 +++
- drivers/firmware/xilinx/zynqmp.c                   |   6 +-
- drivers/irqchip/irq-meson-gpio.c                   |  48 +-
- drivers/memory/mtk-smi.c                           |  33 +
- drivers/memory/tegra/tegra20-emc.c                 |   4 +-
- drivers/mmc/host/sdhci-msm.c                       |   2 +-
- drivers/nvme/host/apple.c                          |   2 +-
- drivers/reset/Kconfig                              |   7 +
- drivers/reset/Makefile                             |   1 +
- drivers/reset/reset-imx-scu.c                      | 101 +++
- drivers/soc/apple/rtkit-internal.h                 |   1 +
- drivers/soc/apple/rtkit.c                          | 112 ++-
- drivers/soc/mediatek/mt8167-mmsys.h                |  31 +-
- drivers/soc/mediatek/mt8173-mmsys.h                |  99 ++-
- drivers/soc/mediatek/mt8183-mmsys.h                |  50 +-
- drivers/soc/mediatek/mt8186-mmsys.h                |  88 +--
- drivers/soc/mediatek/mt8188-mmsys.h                | 266 ++++---
- drivers/soc/mediatek/mt8192-mmsys.h                |  71 +-
- drivers/soc/mediatek/mt8195-mmsys.h                | 632 ++++++++---------
- drivers/soc/mediatek/mt8365-mmsys.h                |  84 +--
- drivers/soc/mediatek/mtk-mmsys.h                   |  14 +
- drivers/soc/mediatek/mtk-mutex.c                   |   6 +
- drivers/soc/mediatek/mtk-socinfo.c                 |  22 +-
- drivers/soc/qcom/ice.c                             |  51 +-
- drivers/soc/qcom/pdr_internal.h                    |   1 -
- drivers/soc/qcom/qcom_aoss.c                       |   3 +-
- drivers/soc/qcom/qcom_pd_mapper.c                  |  12 +
- drivers/soc/qcom/qcom_pdr_msg.c                    |   3 +-
- drivers/soc/renesas/Kconfig                        |  18 +
- drivers/soc/renesas/Makefile                       |   4 +
- drivers/soc/renesas/r9a08g045-sysc.c               |  23 +
- drivers/soc/renesas/r9a09g047-sys.c                |  67 ++
- drivers/soc/renesas/r9a09g057-sys.c                |  67 ++
- drivers/soc/renesas/renesas-soc.c                  |  33 +-
- drivers/soc/renesas/rz-sysc.c                      | 137 ++++
- drivers/soc/renesas/rz-sysc.h                      |  46 ++
- drivers/soc/samsung/exynos-asv.c                   |   1 +
- drivers/soc/samsung/exynos-chipid.c                |   5 +
- drivers/soc/samsung/exynos-pmu.c                   |   1 +
- drivers/soc/samsung/exynos-usi.c                   | 108 ++-
- drivers/soc/samsung/exynos3250-pmu.c               |   1 +
- drivers/soc/samsung/exynos5250-pmu.c               |   1 +
- drivers/soc/samsung/exynos5420-pmu.c               |   1 +
- drivers/soc/tegra/pmc.c                            |   3 +-
- drivers/soc/ti/k3-socinfo.c                        |  13 +-
- drivers/ufs/host/ufs-qcom.c                        |   2 +-
- include/dt-bindings/soc/samsung,exynos-usi.h       |  17 +-
- include/linux/arm-smccc.h                          |  40 ++
- include/linux/arm_ffa.h                            |  22 +-
- .../linux/firmware/samsung/exynos-acpm-protocol.h  |  49 ++
- include/linux/soc/apple/rtkit.h                    |   2 +-
- include/soc/qcom/ice.h                             |   3 +-
- include/soc/tegra/bpmp-abi.h                       |   2 +-
- 80 files changed, 3325 insertions(+), 1113 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml
- create mode 100644 drivers/firmware/samsung/Kconfig
- create mode 100644 drivers/firmware/samsung/Makefile
- create mode 100644 drivers/firmware/samsung/exynos-acpm-pmic.c
- create mode 100644 drivers/firmware/samsung/exynos-acpm-pmic.h
- create mode 100644 drivers/firmware/samsung/exynos-acpm.c
- create mode 100644 drivers/firmware/samsung/exynos-acpm.h
- create mode 100644 drivers/reset/reset-imx-scu.c
- create mode 100644 drivers/soc/renesas/r9a08g045-sysc.c
- create mode 100644 drivers/soc/renesas/r9a09g047-sys.c
- create mode 100644 drivers/soc/renesas/r9a09g057-sys.c
- create mode 100644 drivers/soc/renesas/rz-sysc.c
- create mode 100644 drivers/soc/renesas/rz-sysc.h
- create mode 100644 include/linux/firmware/samsung/exynos-acpm-protocol.h
+-- 
+Without deviation from the norm, progress is not possible.
