@@ -1,129 +1,135 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D981C84C9
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 10:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 316C51B412B
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 10:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742986478; cv=none; b=nAcBz01OERW5ZCSd5sgbCsqTt+n5vi3ocWoDJ885AUAE5S7W5fqfGLplqCxzNqCFTggcjjwH6+HG+Lblmt4AiB6InE+X7DXZBWRIWVgiL0F2oxopo208hdT2XsGmyFbK5jL+9VQDlQMV9utAk03xgoE2Q+wjlJMEDY6+UyEFzzk=
+	t=1742986761; cv=none; b=Di9wwD4KjMmYF62JfcO8Lv5YSZEJRsCwxtL8TvsUPX3nyxkoA8KYNqQ2W7X54AfKiUXLxc5bX2ToQwLA7jJOifw4lBSS7yd64ta/c76jXaiTL2M64pp9v6nk6CMLJtYLvAFWdgPNyEw5WY3oOYkQ4NAnGnHDCgIyRb9/E2VPKM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742986478; c=relaxed/simple;
-	bh=kqvc9gqaZFqz4zk2Z1WI6mBz6fpdOjwBd3T92JdtEOA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JX14YKPVmq5TLhBwZJ5pemUjJ+PhfPUivTIBVoCxoVvMkUXAfqhQt8ywzR/ilt3jx2LPIqpYWoDXK+A8kfnlpKbQdLSGwXJY0VlR+J7mKexu9zvXEugg8GK/xnTbR6Kgyyn6O+Zq+74qqA/7FdEuBS7qIeKSMzXTdIw038sORtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WVonhhUL; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1742986761; c=relaxed/simple;
+	bh=uN1vr/Fb0iYszlHwQ7A2qkr2YXVD6KSqZVcwTPfuI+k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=OlRlT0cMqiSGQHwEX3iBkGfVa862o2MkQ4Jmvimm1va9t7GRXAj32MZvTpdEZ91xJqdE4yo4L1fErn1y5+lKxi/8Px8VgZQMy20QBwp1gMrIWKJelgKHWTyJ/Pl6eTwuy3YOZTIubg7oNC9GvsGrjcS8F9+SE0ZRfNglDcd9nOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com; spf=none smtp.mailfrom=readmodwrite.com; dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b=ybCwoLqf; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=readmodwrite.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WVonhhUL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=nbnBL06pB45fzWAHqKwSaMaHJhZWmXAUhJuqN+ACJZI=; b=WVonhhULebs82is9MN1i1h5rEy
-	sOwlwgC1wimWJ6Udx5JFUb7htc15dJoA0ePi+33p6uqbf4aLT7YxGpfe6TpUfngCZ2VL9GmH0UL4s
-	BXnTn9Iw91yX8zkC8Pd4ZKhMMVglQEVBR46FsWAUr/afS/dfPV9ydOasLFqeipvIO4n6L0WNPXwB1
-	JWgsGZySqx7VKnlxLeptGJ72nynJam7V8a2XVHm72kA1VxKpTBh2KckEAW5DT5QqNGQSDnDPKmyTS
-	0niBJBgo7srUPhqR7mz+8z0+Ixz5CFeTiwyoi6b+xzHr0NT+v+fsuEBuUl6gVfuy7mcScE/AXQrCg
-	iMQbtlew==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1txOP2-0000000HPuG-1AbF;
-	Wed, 26 Mar 2025 10:54:32 +0000
-Date: Wed, 26 Mar 2025 10:54:32 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: jens.wiklander@linaro.org, sumit.garg@kernel.org, vbabka@suse.cz,
-	akpm@linux-foundation.org, kernel@pengutronix.de,
-	op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tee: shm: fix slab page refcounting
-Message-ID: <Z-Pc6C1YUqLyej3Z@casper.infradead.org>
-References: <20250325200740.3645331-1-m.felsch@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b="ybCwoLqf"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso42005635e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 03:59:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=readmodwrite-com.20230601.gappssmtp.com; s=20230601; t=1742986757; x=1743591557; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zkYrvJH8MLboZJYN3SET+tKv3pjaS9s/Q33mAFg+/Ks=;
+        b=ybCwoLqfgz9r8ysTBw7NmfiRIHD5TC4BJGuoq3IVFmNOnEY012oZArULW5cake8jFK
+         po4G+HZSz3Mh/74Y2FPDQ1NYVTOqvbm2ZU2IhnUhdRO4AlDiXtaV2pJSjGZsi2OfTEX+
+         Dm0imzxUO78R7nE89UEivoMYLQCsbicet8CMlts2+f5ri4/76yngat11BkqPp5uwnmEy
+         BlnFZvrS6eGOwqgi0LQiT+YfIoeApuQYOV7pOTk9nOmFOraSR4cxVk0uOShRXqyWLbTr
+         H1SqcDmZcKrCVt45Aiv/1C6FeWZc5vTqghmLaGi0lCrdffev1H2wWgNhYn4ZXfXcrRKe
+         v/mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742986757; x=1743591557;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zkYrvJH8MLboZJYN3SET+tKv3pjaS9s/Q33mAFg+/Ks=;
+        b=MoHa+pg9w+nD3Co3TVUcjISpiQ0Ru+F+7EODyoqlSJQ8Aadj86xwDmf7kLA4M8M1WU
+         J60MYe/NB8KcI5WxOjOECU9dYJ6Ujt2Ond0TsWzWmwiefOu63r7UVbPXr7hrNXBZk0ee
+         lhhya2LnjX2S/9iEflCchTYyEp3SfspxKWjxNvVUgrSgMX2M5beMZAupuUFx62CO8Y1z
+         5XuEjECFgx3jyGC7p21aLDybXBQ0UOE8lU1js/5q/uefvvo5bJkaV7E3sUJPAc0kUETg
+         kmFwDNrwCYaVshF6lUPIeNz9jaH23u1esXa8HVNJkHQ+xcXfi0Bm+j1OZ7iKoxPdZdhs
+         w9Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCVeFuStM6y/JdUZMXe3wIRH+W8BMuLm34iTqeTqm1O6Ry9zTpTev3pUWSZzbv0bfx79VH2u1esAVIHOLtU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywr/Cdo42+8m+EZ8sHwnsE7DYq+JgJidVwj17rp8rqCIdgNd6li
+	+EXyVxAkMPsRfCBHWtOK7onaohWF34ItGTE1hxlh8oUFencHY6RsXckIq4a++SU=
+X-Gm-Gg: ASbGncvhbG1XyqNwrWKuEURsjHfFVqXZv1uHRvmr9OMxVBQlzsMO8+ODcJE/VpuufeX
+	fJeqys+Nv9BpvAafkJORUlXOwX9ckR5ZHggZb5CaUMhcROfMMvRfTR3b20OHoClA6eGi0vXWDy/
+	+kyrzmV6AXI8dC/5ff48yJ7PIFgx1GtcgQPsDcDBeE/ZDdL2iPr3diqss7LWMYU1/cy59AuOy02
+	eO8A7+toRq/CwVS8U1GmVnnrjZbQJiVsKNUzAmlRiBnATDdLKMBudmdfKkTCF/IbKXh8QVA0zcx
+	8J7ZOXgt1lkIp/kfGywPu0qEoWMoJ1q7ny4QoUqqu8/+gh3f
+X-Google-Smtp-Source: AGHT+IGsynMjLeM6MvbAOiFyQWhOSUi+GKcc6H4q6k5SLyMO29JdoL407k9GE1BOdU9b67T9vRhDlw==
+X-Received: by 2002:a5d:6d86:0:b0:38d:d701:419c with SMTP id ffacd0b85a97d-3997f92da9amr21706605f8f.41.1742986757289;
+        Wed, 26 Mar 2025 03:59:17 -0700 (PDT)
+Received: from matt-Precision-5490.. ([2a09:bac1:28e0:840::179:137])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f99540bsm16374900f8f.2.2025.03.26.03.59.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 03:59:16 -0700 (PDT)
+From: Matt Fleming <matt@readmodwrite.com>
+To: willy@infradead.org
+Cc: adilger.kernel@dilger.ca,
+	akpm@linux-foundation.org,
+	linux-ext4@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	luka.2016.cs@gmail.com,
+	tytso@mit.edu,
+	Barry Song <baohua@kernel.org>,
+	kernel-team@cloudflare.com,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>
+Subject: Re: Potential Linux Crash: WARNING in ext4_dirty_folio in Linux kernel v6.13-rc5
+Date: Wed, 26 Mar 2025 10:59:14 +0000
+Message-Id: <20250326105914.3803197-1-matt@readmodwrite.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <Z8kvDz70Wjh5By7c@casper.infradead.org>
+References: <Z8kvDz70Wjh5By7c@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250325200740.3645331-1-m.felsch@pengutronix.de>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 25, 2025 at 09:07:39PM +0100, Marco Felsch wrote:
-> Skip manipulating the refcount in case of slab pages according commit
-> b9c0e49abfca ("mm: decline to manipulate the refcount on a slab page").
+On Thu, Mar 06, 2025 at 05:13:51 +0000, Matthew wrote:
+> This is the exact same problem I just analysed for you.  Except this
+> time it's ext4 rather than FAT.
+>
+> https://lore.kernel.org/linux-mm/Z8kuWyqj8cS-stKA@casper.infradead.org/
+> for the benefit of the ext4 people who're just finding out about this.
 
-This almost certainly isn't right.  I know nothing about TEE, but that
-you are doing this indicates a problem.  The hack that we put into
-networking should not be blindly replicated.
+Hi there,
 
-Why are you taking a reference on the pages to begin with?  Is it copy
-and pasted from somewhere else, or was there actual thought put into it?
+I'm also seeing this PF_MEMALLOC WARN triggered from kswapd in 6.12.19.
 
-If it's "prevent the caller from freeing the allocation", well, it never
-accomplished that with slab allocations.  So for callers that do kmalloc
-(eg setup_mm_hdr()  in drivers/firmware/efi/stmm/tee_stmm_efi.c), you
-have to rely on them not freeing the allocation while the TEE driver
-has it.
+Does overlayfs need some kind of background inode reclaim support?
 
-And if that's your API contract, then there's no point in taking
-refcounts on other kinds of pages either; it's just unnecessary atomic
-instructions.  So the right patch might be something like this:
+  Call Trace:
+   <TASK>
+   __alloc_pages_noprof+0x31c/0x330
+   alloc_pages_mpol_noprof+0xe3/0x1d0
+   folio_alloc_noprof+0x5b/0xa0
+   __filemap_get_folio+0x1f3/0x380
+   __getblk_slow+0xa3/0x1e0
+   __ext4_get_inode_loc+0x121/0x4b0
+   ext4_get_inode_loc+0x40/0xa0
+   ext4_reserve_inode_write+0x39/0xc0
+   __ext4_mark_inode_dirty+0x5b/0x220
+   ext4_evict_inode+0x26d/0x690
+   evict+0x112/0x2a0
+   __dentry_kill+0x71/0x180
+   dput+0xeb/0x1b0
+   ovl_stack_put+0x2e/0x50 [overlay]
+   ovl_destroy_inode+0x3a/0x60 [overlay]
+   destroy_inode+0x3b/0x70
+   __dentry_kill+0x71/0x180
+   shrink_dentry_list+0x6b/0xe0
+   prune_dcache_sb+0x56/0x80
+   super_cache_scan+0x12c/0x1e0
+   do_shrink_slab+0x13b/0x350
+   shrink_slab+0x278/0x3a0
+   shrink_node+0x328/0x880
+   balance_pgdat+0x36d/0x740
+   kswapd+0x1f0/0x380
+   kthread+0xd2/0x100
+   ret_from_fork+0x34/0x50
+   ret_from_fork_asm+0x1a/0x30
+   </TASK>
 
-+++ b/drivers/tee/tee_shm.c
-@@ -15,29 +15,11 @@
- #include <linux/highmem.h>
- #include "tee_private.h"
-
--static void shm_put_kernel_pages(struct page **pages, size_t page_count)
--{
--       size_t n;
--
--       for (n = 0; n < page_count; n++)
--               put_page(pages[n]);
--}
--
--static void shm_get_kernel_pages(struct page **pages, size_t page_count)
--{
--       size_t n;
--
--       for (n = 0; n < page_count; n++)
--               get_page(pages[n]);
--}
--
- static void release_registered_pages(struct tee_shm *shm)
- {
-        if (shm->pages) {
-                if (shm->flags & TEE_SHM_USER_MAPPED)
-                        unpin_user_pages(shm->pages, shm->num_pages);
--               else
--                       shm_put_kernel_pages(shm->pages, shm->num_pages);
-
-                kfree(shm->pages);
-        }
-@@ -321,13 +303,6 @@ register_shm_helper(struct tee_context *ctx, struct iov_iter *iter, u32 flags,
-                goto err_free_shm_pages;
-        }
-
--       /*
--        * iov_iter_extract_kvec_pages does not get reference on the pages,
--        * get a reference on them.
--        */
--       if (iov_iter_is_kvec(iter))
--               shm_get_kernel_pages(shm->pages, num_pages);
--
-        shm->offset = off;
-        shm->size = len;
-        shm->num_pages = num_pages;
-@@ -341,10 +316,8 @@ register_shm_helper(struct tee_context *ctx, struct iov_iter *iter, u32 flags,
-
-        return shm;
- err_put_shm_pages:
--       if (!iov_iter_is_kvec(iter))
-+       if (iter_is_uvec(iter))
-                unpin_user_pages(shm->pages, shm->num_pages);
--       else
--               shm_put_kernel_pages(shm->pages, shm->num_pages);
- err_free_shm_pages:
-        kfree(shm->pages);
- err_free_shm:
-
+Thanks,
+Matt
