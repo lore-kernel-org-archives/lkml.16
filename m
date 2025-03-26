@@ -1,112 +1,90 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9849F263F20
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 22:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F961F55FB
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 22:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743028915; cv=none; b=R++OWC+Yxo7N8seH4xHhMil5H6pIAHIVH/FM9X4HY+1rBRBF0EaVe5NUKIeYj5uCzrKrLJVsa+Os/3n9YOqNnL1Vh3CaPtRe0UNu5gsD7Z0QKST2xXzZSa5y3vpi85ag5mKqX1LXS+FVx5wQh0sqtIhBPqHLxQAhUewujjDgEvo=
+	t=1743028924; cv=none; b=bYE/Eq52dUow9r+l0xGFclYPb3fVi3kR+Xbq8CVI7PtEBZAQLMJo9M0eXsc/OT8eX7Wsl9NcdYdL2HQHxTMAUGBOg5LT3Q3BTyge8QvS2z7CzG3EVG51EfE9/H6Cmap+3cCGSjmJni4tc8ImJhoIq3XecqTAeJnoMYgr92o01Vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743028915; c=relaxed/simple;
-	bh=tmaH+3YPGuLoi/3X44ITjHuWcR3F46JKpcVfWvhcJH0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MQbzOU3GBdaEPPXbfVsM8SeCPV0FF6St/lKLHpuk4kHBXuGxSFx13HDl889EO95itusXUlrRl6UMH3aDKYFi0Q9/EheD27SaYeGmXSe8wNfmynn1Ls/SyALycz6fXsg3KRAPeR8P43ak4cANFu26Ug7q+Sp+eMlaOMIrsLjOSOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ReQC449N; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743028924; c=relaxed/simple;
+	bh=AbWkigPd0QkLkTgXoysYAH5asAePIGZGp7Nv9IKt5Tg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=H6ij1EJVKAXk5l7NnjXPh8kslbzJyQeVEbow7isg3Hr7IdqNHguDdic2TAITIzMCECMpLwPW17VYZd/Fmq9NRUzs4onjTx7zSN2/nxfs7LscD8ayb6Rg246Xvd0ViSIg+gvI95kAbHG6sZMnzOioFtdKcr+lM4cZZ9fTQ1FsQ4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ka/SXI/x; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ReQC449N"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac2ab99e16eso71935566b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:41:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ka/SXI/x"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2241ae15dcbso7539515ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:42:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743028911; x=1743633711; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HIsAwdBBYfPSxKw2X4bvTfKKiRWcts7FEK1QYHHkrFs=;
-        b=ReQC449NseeJGhn8J693F2P3b7fqk9SnwnfmxR+xZcFHmKCxfuAQrIBfYAS5xoDtdy
-         e8Q1kaRj4dNWBKHwx1iENTruqAdSUblNpfw/5JGwKulBOMYcZtzD+zNelKv+rEGEYnB9
-         prjwRkrfJBCUMq0eFHk+fHFd0bg8ILjqllqww=
+        d=google.com; s=20230601; t=1743028922; x=1743633722; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KqH3Q2jgpouZEVkOO8Bb1Ojl5Go4pZMng8lP/lx7p2Y=;
+        b=Ka/SXI/xn/viMb8FWyvig0p5njgN6FQz+ke7I0cm67nSBfUOcMXXhv6M/KfM7dQb/s
+         UCKAdjvG/PxCOKyV6YTJooiuiOIPdv+34wh3T0hLeg8J4u9tHz/8UlYQIzFSYqJH7h6B
+         v/TYJAyswFUn1rQXopgeljjkR4ViqcExpLnJ/WJjJ1yjqyNTJr8Qoi2W/SnRYni0huU8
+         ylm9MWnV2A0VBWoRsWg4X9SPAPEwArvtvo63EcrQt3dkBUyAG31+1ZD5/vJ/8OPPPSRc
+         vghMygky2grJthgjg4VIsz8wx795UI9MGndxEdhv+8fjNtSifE0E1P3+GT9uIA5t9/sG
+         hNew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743028911; x=1743633711;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HIsAwdBBYfPSxKw2X4bvTfKKiRWcts7FEK1QYHHkrFs=;
-        b=IL264VUYaiqG7Gw6P2Lseer8QPLVqBgj7Y5ktcfHQCT+iHH3LzBTrAyihqu+XolBcR
-         awIm1OVujS/LfwmAEwcJ5PM3gvQUPAR8Qhta7KJMvfXlwJZYTyNeCQf0zUzwa1XXpqor
-         rjKIfGNGcHUSnw2wbzemTWjYFmScCG1XomOy/ulQLxTrmrZt8i40y+9kQp5i5+DZRjvo
-         +CtACJgQknz5KH7XSb9a0oyRxqSW50IEpXqKQ6v8C/YkBezLg93pt55UmbYOi0ZCYibQ
-         vuACAVJm5nck72N7m7QDyo/xvHxEJX2jvQLuskPLrUL45GEKRZniJwvpBUePUWFdaEV0
-         Ay0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWMQgVSzFApwQ68sXlgaWq0/kmX+YHQHbzHfFhs7Qpw4mOFKgV7mKOTTBr4BSC1hM4yMUr95CPaSLl8Jhg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbnzISVf4L6/Z22n+/n0qTP4eikyIfHc6b2XQMjnvTfKbDLN9M
-	ZOUlMzt6CTCk2tzy2zbeQ8Zc201AeH8YBa0iJgbLe52g6FZLM1A3T7yJOrtYU0DKqlGKHj/twhz
-	JCwo=
-X-Gm-Gg: ASbGncuI9Xf9PwZdBnKYhjrutA0bWlUJ4LHCghnMgVcWRzWVE40MhYdD6fLX/OV0d3t
-	tyh0MQjtreh2D3V0q9TgHunrr76A8PFhMXtpt8G3OZeE2bdBH7MUQA/0lw1yThFCBquXvmT6YjM
-	BtHQcdooarrVUd1Mx+jR1JgMN7wqQTAOzwOeJeMqPzcLrNB+1vGwfOxQZNjL2eOZH2TBa3hxupn
-	n+sxBOvMt6AJG4gde1oDRDblVe1q7J8tf41U+UJIIwEZwwqdcGNwYwYCMTrT4zcx2YklJM1kMR4
-	tCIuubIckVNpX1aw7t8KDJendYTHqfU0CT0RrV0zRObLNaT7rnctGWx5WSlUzOyi/JtSzDMWioE
-	uOZEjkFdEPAWlEIfXNQKU/FRLz/36kQ==
-X-Google-Smtp-Source: AGHT+IFtKBPkZB+ucSjvx1Uq1Gzfj0n+kYeEVrzugD+zG1tL+47DYWup9Vl4Ww3lDMOuBKpuoEJwvQ==
-X-Received: by 2002:a17:907:9611:b0:ac2:7d72:c2aa with SMTP id a640c23a62f3a-ac6fb1bd18dmr94542266b.51.1743028911522;
-        Wed, 26 Mar 2025 15:41:51 -0700 (PDT)
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef8d39basm1103587366b.44.2025.03.26.15.41.50
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Mar 2025 15:41:50 -0700 (PDT)
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac2ab99e16eso71930566b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:41:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWGdvQdqy/g4Mgt6tUNzd2WuMLOizcJ3PK1nLBIZ+fb2jMBWrrhGe0kUcSK6mYZAGl+IVuXs+Z0uIEky+A=@vger.kernel.org
-X-Received: by 2002:a17:907:d1a:b0:ac4:3d4:50b with SMTP id
- a640c23a62f3a-ac6faf4bc92mr92400166b.32.1743028910518; Wed, 26 Mar 2025
- 15:41:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743028922; x=1743633722;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KqH3Q2jgpouZEVkOO8Bb1Ojl5Go4pZMng8lP/lx7p2Y=;
+        b=ScnZh4o9B2AOIEy3i7fy0Zivq33nB5U4sOI9f1gtv3r2brGokdUT+WZcIDd8Ti5iFi
+         7MMXmWGk6pTC2sCD3FAzoz6d6E1qXDvbO1aDAQIz3qrMHeqOuDZrrWg7X5oNuDEY9Mcp
+         xCbzH0s0pAqoRa9Lo59NTwh6or9McZHsNGr5fi+ZT0LOfFwV6jNYKIa9pu+9ZviZFPlA
+         +lnbQtfIaPWhiMJ0ElDp/+V9ZD9lXII7OUzl608TZWeuBVVL+fYZhZKmeQlJdJfPaxrG
+         vwArsf3ru+mvswaQZrPr1xCHtXcoKIith2Fy1MX1VsXyHfB3q7qm4g8SmAi/sc9mpDQU
+         UyGg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdpFhEZ42iC2b6msCoClpgZUBg3sQp5/KHRvbi01Lkweo7kBIH76KllYONtE1cFbGIEBCjYD0uxJ21T60=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyboQpkZqJTWIsNFIL+deie6utJ5dYSGqi3rvXotlwWVQRo9fnG
+	h7qa9zmWAmZr/9XUyH/2j7AalU/oLRl0EOMgtznL79b2rQ0ipXKQc736c7X+xOPY43xZQIVbta+
+	75A==
+X-Google-Smtp-Source: AGHT+IE7jpn3hz0DvE2VgEstnENVTCX8dh1jBNBDLDNRPJuJX01TLo3BnVQahHmZrbhz36uFKjKUTDhpYUk=
+X-Received: from pfbfa14.prod.google.com ([2002:a05:6a00:2d0e:b0:730:7485:6b59])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ce02:b0:224:1acc:14db
+ with SMTP id d9443c01a7336-22804882b2fmr22534895ad.29.1743028922455; Wed, 26
+ Mar 2025 15:42:02 -0700 (PDT)
+Date: Wed, 26 Mar 2025 15:42:00 -0700
+In-Reply-To: <Z-R8xRbsjv4lalAX@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250326-rwaat-fix-v1-1-600f411eaf23@google.com> <4b412238-b20a-4346-bf67-f31df0a9f259@app.fastmail.com>
-In-Reply-To: <4b412238-b20a-4346-bf67-f31df0a9f259@app.fastmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 26 Mar 2025 15:41:34 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wikuhxhdSEgqb-Lkb2ibQM_hAHR1Cu7yxg-gHZu1NF+ug@mail.gmail.com>
-X-Gm-Features: AQ5f1JrEsmQAOCm7pL6ucQGxLbFedCV1cucSaJ5TtT64ECZtdWuo9mNf3TsYhHg
-Message-ID: <CAHk-=wikuhxhdSEgqb-Lkb2ibQM_hAHR1Cu7yxg-gHZu1NF+ug@mail.gmail.com>
-Subject: Re: [PATCH] rwonce: fix crash by removing READ_ONCE() for unaligned read
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jann Horn <jannh@google.com>, Marco Elver <elver@google.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20250320013759.3965869-1-yosry.ahmed@linux.dev>
+ <Z-RnjKsXPwNWKsKU@google.com> <Z-R8xRbsjv4lalAX@google.com>
+Message-ID: <Z-SCuESxIaOR0bCw@google.com>
+Subject: Re: [PATCH] KVM: x86: Unify cross-vCPU IBPB
+From: Sean Christopherson <seanjc@google.com>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Jim Mattson <jmattson@google.com>, x86@kernel.org, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, 26 Mar 2025 at 14:24, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> I've applied this on top of the asm-generic branch, but I just sent
-> the pull request with the regression to Linus an hour ago.
->
-> I'll try to get a new pull request out tomorrow.
+On Wed, Mar 26, 2025, Yosry Ahmed wrote:
+> On Wed, Mar 26, 2025 at 01:46:04PM -0700, Sean Christopherson wrote:
+> > > @@ -12367,10 +12381,13 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
+> > >  
+> > >  void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+> > >  {
+> > > -	int idx;
+> > > +	int idx, cpu;
+> > >  
+> > >  	kvmclock_reset(vcpu);
+> > >  
+> > > +	for_each_possible_cpu(cpu)
+> > > +		cmpxchg(per_cpu_ptr(&last_vcpu, cpu), vcpu, NULL);
+> > 
+> > It's definitely worth keeping a version of SVM's comment to explaining the cross-CPU
+> > nullification.
+> 
+> Good idea. Should I send a new version or will you take care of this as
+> well while applying?
 
-I will ignore that pull request, and wait for your updated one.
-
-That said, this whole thing worries me. The fact that the compiler
-magically makes READ_ONCE() require alignment that it normally doesn't
-require seems like a bug waiting to happen somewhere else.
-
-Because I do think that we might want READ_ONCE() on unaligned data in
-general. Should said places generally use "get_unaligned()"? Sure. And
-are unaligned accesses potentially non-atomic anyway because of
-hardware? Also sure.
-
-But one reason for READ_ONCE() isn't for some kind of hardware
-atomicity, it is to avoid any ToCToU issues due to compilers doing bad
-things.
-
-And then this seems to be a serious issue with the whole "READ_ONCE()
-now requires alignment that it didn't require before".
-
-Put another way: I wonder what other cases may lurk around this all...
-
-           Linus
+I'll fixup when applying.
