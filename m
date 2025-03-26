@@ -1,107 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF7725FA2B;
-	Wed, 26 Mar 2025 22:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8814430;
+	Wed, 26 Mar 2025 22:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743028141; cv=none; b=KvQaZkoOEKUDhmKlepgequRvg7r9rM9ifFItLztmdSoE3A6w8XJLV9ffrdWnWLte8XY6u8vpMu6x9IXv/+AvRqG1Ai/DQtqc+WnxzH9pxl73j/oG6Mi/ZiNMA4SiAx5EJGZ1DYG6I8iIitP/Vq5deuVO1QweIawLhnVe3Vo+AX4=
+	t=1743028239; cv=none; b=ZCZkToUsTFwv2B7l183KCXoT7em++8FClD2ehCAG9FRedAU3MMY6xYc7sMJX4bHW2IEBEAgvELLWuy1hywHq5xyNgRaYTdkybnoOxv3QfdkyZ5kBeClksxIfq1icdHuUqqj/SJx3h3jxuoPF2RfBBIUiaMw90kA7yuBgnaqxnXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743028141; c=relaxed/simple;
-	bh=RGQ79AL+YiCZDMaPjLjHdeFsWSeNiy/I9zBCHtxfCFk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nwWDkQo0i4gp3U1lceJUKMBwjOj5AAuEX5Zjd2duOfYFt6RmKjrXRG52DuUvPLdQLwi0WgVGnZKoGPrXvA2cxmoD+HursLcIWqaEXPaVI9pWP01Lom0Kl0hn+whrKJQjLOdU1OZUoTAgq+StQklZoaDdCzP7ah9nIGgiCWq/95Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uwSh2KGo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743028239; c=relaxed/simple;
+	bh=tuEwC67X2K6KPMrZGkJtbrLf5Sp30oMIKRWl3wkeBGY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KYumlpbjGJRq0PdE5QUuAj11D0rensIwE2H8Lt/bEySGx/C4lkauM1g8458EPcF3Ax/FAK8SJ9Cv+2MwgmmujSsvt2CKQYZIBCTxVBcMuShXWmtL0vpt51zEXDk300F21XeeE192ZDBKgAU55vKhpRCn+utYogShAICl9zLFLAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mccaYWhh; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uwSh2KGo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68863C4CEE2;
-	Wed, 26 Mar 2025 22:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743028140;
-	bh=RGQ79AL+YiCZDMaPjLjHdeFsWSeNiy/I9zBCHtxfCFk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uwSh2KGoDSh0k9ts3ex8EcysqoerhYeP/RsZiGcucNqQVE1V3ACizOw2bsLjFPc5L
-	 ohKa3ymzYuSCCleA4smeL3fXqp2s2/mPaTlYJQPECmIzIqUY8r3qBPYiFw1yz77owJ
-	 cRc1+91Ctf2zNlup9JhvmjNTNL20h9RqpHqSMyb1VgyMy+dE5fT+busfiPQcDSIXGf
-	 an6FrcoaFmKjm8sBW0fxJ2UYxjvrX+1SQL9VcfE4oYvWC/PGXWd/fFVrt3+qtg7NMj
-	 k0x8Ws2Q1pZkFa1uKog0G7WNcJ9S2fY+QVXVzsde9F6U1eEZL9lmslwuTwa52L8uzs
-	 xKzZzFRwmHvEQ==
-Date: Wed, 26 Mar 2025 15:28:55 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] lib/string.c: Add wcslen()
-Message-ID: <20250326222855.GA378784@ax162>
-References: <20250326-string-add-wcslen-for-llvm-opt-v2-0-d864ab2cbfe4@kernel.org>
- <20250326-string-add-wcslen-for-llvm-opt-v2-2-d864ab2cbfe4@kernel.org>
- <CAHp75Vd_mJggRRLfziWUf0tgr3K125uVBNh9VdSo9LHVJz2r_w@mail.gmail.com>
- <CAHp75VdQv=0wvgMDGNoXojALWh2B-92gjkO7zrv=d42ocamM4Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mccaYWhh"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e6194e9d2cso623178a12.2;
+        Wed, 26 Mar 2025 15:30:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743028236; x=1743633036; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9Mb5LQqfnEcJgziIU9UWtOckujfFuIn52pCw2YFX8Sg=;
+        b=mccaYWhhCXB6RdUNvZkWuKBelZN9bkD7zcEIzwdxHeid2pqzRTyLjh7A0/W7c4adow
+         21MN0i6Tc2Q2QBrFRtGBWV1KEuzkFBXBCXVUIdHMNFOYPIsYx/FRTg7g3zGOgC3l7aVH
+         7PaFTzCITU5YZYBod3oLIZktuHShXBzxHaDSnKg5/AjYIZsn8h5/Akw4VZRNzF/riPhG
+         JgmfTMYU+W8w9dbMUcgigiBEC/5deqKArNgXhIvBAlIkW19YrJ/m4+RFcHod29VNdKFW
+         JTK+41LsHrGDPlFmtaO89zRMVH/PP0hDSKzNJXpkzobbBv0Tnnpq3jSdVkS2QW3fuqkC
+         mbtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743028236; x=1743633036;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9Mb5LQqfnEcJgziIU9UWtOckujfFuIn52pCw2YFX8Sg=;
+        b=u7ZPZcp32Qj4oqdEOTE5JcVrt80jVEC9h3748dPuxNv4pleK5Zuf6b4OKsDkeZXxoG
+         TYpu5Fvw5XBLDHFFtmvpNRVNkR+kzRTk7eaM0MIMNApP0L76v7t5nv3fN5sY9J45w6A8
+         nI56Ywoqsb4y4pbp2zUsNqZUNVOIK3fNyqrKYbZUN2GvkXxho3ajBvuwoUHSZKfKf6+X
+         DOV9+eUF1kNxPJH8H3mifC1e+CS9UKon8AlLbUkaVVVwl5NY08wmfB5+nD02GE5LdR1l
+         6mBj9GIr+4eMfmpOfk1vOWkArIuUPWkyhrVN/sNF7pM2Z1yNtNL70Bt2vGG3kfSeYrG6
+         tN9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUAyEYXsfVMZB508xbAFe8gOwcMjwumdwebdOM6eN9GVjZIpMoeB4bDQ41V1GjSEc9SZ/ei/DJOrDgwZbk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7dx35wdMnxS4EBqcZpKocrngj/iuO64knCKH9ZudSINf2Gmnt
+	F9sw/q8R4/daKoE/5/inM1tZW3n99Zm4W7bGkbuLVM6TmQ0dp+kb
+X-Gm-Gg: ASbGnctBuz4+FgIUOsIkwGbK2umMNFj1ExdxV1TK6OUEd+b2+HPxenwW8721qjCP1JP
+	waETWEUS4Z210+nDHO3c7PiuT2Oz+5mAyaaNeST4qV2E2Si4YXqILjyH/RKc3LCzquueOPMd7tf
+	BU/zchvOIvABleR3likXEh7Rtx4qH7n5q6aBCWRy5IBTqvAp6Z6QDwLNMalEqt/ozkGQFXVXVls
+	qzwe9P/28PCR/icY/fkxfu2mxPU2uYgoywiyt+PSi2gqA1cLdTwW3GkWvdGAgXOqdqw3w3BWQPF
+	w/UAU+7HU8qhtb/VUL51tVRY94VVkkUHGEoTqodgx/UOOGl/SNKFLGOXeiXhkGYr
+X-Google-Smtp-Source: AGHT+IE8tsEYj2xepuB3HQp5nRkqZ5nof2dW3KzPEr1y2H9FbJdUbIxwbLPu5rhoAsFm9A0igk2QaQ==
+X-Received: by 2002:a05:6402:2813:b0:5e7:8501:8c86 with SMTP id 4fb4d7f45d1cf-5ed8ec1e7eamr1106620a12.22.1743028235838;
+        Wed, 26 Mar 2025 15:30:35 -0700 (PDT)
+Received: from [192.168.8.100] ([85.255.233.207])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ebccf687fbsm9987978a12.4.2025.03.26.15.30.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Mar 2025 15:30:35 -0700 (PDT)
+Message-ID: <d1bf1b35-126d-4484-8bb5-0a720717ad78@gmail.com>
+Date: Wed, 26 Mar 2025 22:31:23 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VdQv=0wvgMDGNoXojALWh2B-92gjkO7zrv=d42ocamM4Q@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] io_uring/net: use REQ_F_IMPORT_BUFFER for send_zc
+To: Jens Axboe <axboe@kernel.dk>,
+ Caleb Sander Mateos <csander@purestorage.com>
+Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250325143943.1226467-1-csander@purestorage.com>
+ <5b6b20d7-5230-4d30-b457-4d69c1bb51d4@gmail.com>
+ <CADUfDZoo11vZ3Yq-6y4zZNNoyE+YnSSa267hOxQCvH66vM1njQ@mail.gmail.com>
+ <9770387a-9726-4905-9166-253ec02507ff@kernel.dk>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <9770387a-9726-4905-9166-253ec02507ff@kernel.dk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 26, 2025 at 08:41:44PM +0200, Andy Shevchenko wrote:
-> On Wed, Mar 26, 2025 at 8:39 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Wed, Mar 26, 2025 at 7:19 PM Nathan Chancellor <nathan@kernel.org> wrote:
+On 3/26/25 17:05, Jens Axboe wrote:
+> On 3/26/25 11:01 AM, Caleb Sander Mateos wrote:
+>> On Wed, Mar 26, 2025 at 2:59?AM Pavel Begunkov <asml.silence@gmail.com> wrote:
+>>>
+>>> On 3/25/25 14:39, Caleb Sander Mateos wrote:
+>>>> Instead of a bool field in struct io_sr_msg, use REQ_F_IMPORT_BUFFER to
+>>>> track whether io_send_zc() has already imported the buffer. This flag
+>>>> already serves a similar purpose for sendmsg_zc and {read,write}v_fixed.
+>>>
+>>> It didn't apply cleanly to for-6.15/io_uring-reg-vec, but otherwise
+>>> looks good.
+>>
+>> It looks like Jens dropped my earlier patch "io_uring/net: import
+>> send_zc fixed buffer before going async":
+>> https://lore.kernel.org/io-uring/20250321184819.3847386-3-csander@purestorage.com/T/#u
+>> .
+>> Not sure why it was dropped. But this change is independent, I can
+>> rebase it onto the current for-6.15/io_uring-reg-vec if desired.
 > 
-> ...
+> Mostly just around the discussion on what we want to guarantee here. I
+> do think that patch makes sense, fwiw!
 > 
-> > > --- a/include/linux/string.h
-> > > +++ b/include/linux/string.h
-> > > @@ -7,6 +7,7 @@
-> > >  #include <linux/cleanup.h>     /* for DEFINE_FREE() */
-> > >  #include <linux/compiler.h>    /* for inline */
-> > >  #include <linux/types.h>       /* for size_t */
-> >
-> > > +#include <linux/nls_types.h>   /* for wchar_t */
-> >
-> > I know it's not ordered, but can we at least not make it worse, i.e.
-> > squeeze this to be after the compiler.h? Or even somewhere after below
-> > the err*.h? Whatever gives a better (sparsely) ordered overall
-> > result...
+>>> Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+>>
+>> Thanks!
+>>
+>>>
+>>>> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+>>>> Suggested-by: Pavel Begunkov <asml.silence@gmail.com>
+>>>
+>>> Note for the future, it's a good practice to put your sob last.
+>>
+>> Okay. Is the preferred order of tags documented anywhere? I ran
+>> scripts/checkpatch.pl, but it didn't have any complaints.
 > 
-> I just checked, and the only unordered piece is those two: types +
-> stddef right now, and if you move nls_types.h after errno.h it will
-> keep the status quo.
-> 
-> > >  #include <linux/stddef.h>      /* for NULL */
-> > >  #include <linux/err.h>         /* for ERR_PTR() */
+> I think that one is minor, as it's not reordering with another SOB. Eg
+> mine would go below it anyway. But you definitely should always include
+> a list of what changed since v1 when posting v2, and so forth. Otherwise
+> you need to find the old patch and compare them to see what changed.
+> Just put it below the --- line in the email.
 
-Yeah, I had noticed there was no alphabetical consistency, so I decided
-to use this place to keep the types together but I have no strong
-opinion. I can send v3 tomorrow unless Kees is happy with this version
-and is okay with just applying this diff on top.
+Minor, yes. But to answer why, because it's normally chronological.
+By default I read it as Suggested-by was added later and not by the
+patch author, which nobody cares too much about, but that's why Jens
+mentions ordering b/w sob of other people.
 
-Cheers,
-Nathan
+-- 
+Pavel Begunkov
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 4a48f8eac301..750715768a62 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -7,10 +7,10 @@
- #include <linux/cleanup.h>	/* for DEFINE_FREE() */
- #include <linux/compiler.h>	/* for inline */
- #include <linux/types.h>	/* for size_t */
--#include <linux/nls_types.h>	/* for wchar_t */
- #include <linux/stddef.h>	/* for NULL */
- #include <linux/err.h>		/* for ERR_PTR() */
- #include <linux/errno.h>	/* for E2BIG */
-+#include <linux/nls_types.h>	/* for wchar_t */
- #include <linux/overflow.h>	/* for check_mul_overflow() */
- #include <linux/stdarg.h>
- #include <uapi/linux/string.h>
