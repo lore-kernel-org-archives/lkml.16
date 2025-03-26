@@ -1,75 +1,59 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC81A1B0F0B
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 10:11:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB16C1B5EA4
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 10:11:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742983899; cv=none; b=MD6B4JASJy2IowPwECysuMdOPIlo60h5vXCnhwxh1oh0Oe4jrDaZYbTillkaKj/EKm4jgbxrIf1a1pH8QVGy2m1iMVR1f8YTcb5U4oj65l6bezsLvqa/n/DdnWg5ufOf1Cu+6DpJNq8FyBqZGpRY1zAQWLA2ncsKBShMUZuJ2y8=
+	t=1742983906; cv=none; b=ewJufPrhgqwky6zJL+sqitepgXOTPAf6IIZI9m7aWJcrFq9gYmcQOvgL6EEicsXYqZRgF+XZrN7KhLbXhKFIZW+HxxRptY9oO5+wE9aHa0mgSFDAB1T6V5vEp36viP5INkjYcai5vQgZrnkcfohlFuhdccdqGfA2MYEp2ZrAg7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742983899; c=relaxed/simple;
-	bh=4Nnyi+PoxYAN4XPNcDNy27jX047zMPSBm9/kG0KA1OI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gZI/SLhUpgZsiLEDvsLAIm3SOi/69CkfP8bfiTOl5P66BT7EF3gxlwfGJ3wB6mRmGM6Erd+yQm+qCTvxQr6Nq+3mJidgFLMD/4kbAN95TcWxYFWJJoIt/P+IPRcqUM9dfaqeYkhXPoH7uV0ATKtq4DPbK2fr2m+zab9bwnbhsjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=eqUuyep5; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=dbgKxfsT reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1742983906; c=relaxed/simple;
+	bh=o1OW7eMPI7BT9Kuja4q/FC0vO0bwCYy1NuCvSDE5Qag=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=iolj+z9BDnj/2zan0UaKKFE4brAq+0/HrDOApn6hXZmNm0563QAVOGkhnIkuzggH2NGwpOXpvEqrte0COsXKB3rz8MR/54CLj2u9w4vUIV9JN/5WWv8zg+AKZLCykTuNoEmYz/oQ4j/ZS0zMUZXCUgA/ot6FHz/MDFqMBB/WvS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=kt1TsZrP; arc=none smtp.client-ip=162.62.57.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="eqUuyep5";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="dbgKxfsT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1742983896; x=1774519896;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=gcPX+MhjshuhvQyvdiQ0n7EixqOoTHSCclQvp5UsEFA=;
-  b=eqUuyep5Nc6C4WHGPQvsHeZSr1tABn1EntbusM8a/Gap8SawNJjr9itt
-   TwSkVyRpw/f8wTgahW4PnirD6Fu3OqQiMqJdyJhdlw5Wn2g0ey57uJ45B
-   dTa7xudtpo8Gd/bhIosx4DbQ4jo1VnRaW5kY5WBEyo9XuHo5dBZiOkdK9
-   hpWh8O53FjitngT1wZ5arxzqK4nO7JQOxk/bsGx8tjGtCK097jqTN9h+p
-   G1WgATahRvXpPMUPz+7j3Oo5tbys+flHmDCWAMZSdJyb1Yz199S6T8HoQ
-   Oi+pH4RF8Zt9qHF5qLpFuIKSYgnk9zITXghNAuZNhaTK90DpE9w8ISDwN
-   Q==;
-X-CSE-ConnectionGUID: vhz97e2HTFquRzcrZIGHDw==
-X-CSE-MsgGUID: peAVOKBtQWmqrIvCUMu0ZQ==
-X-IronPort-AV: E=Sophos;i="6.14,277,1736809200"; 
-   d="scan'208";a="43167020"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 26 Mar 2025 11:11:33 +0100
-X-CheckPoint: {67E3D2D4-3A-2417938-F0170C2B}
-X-MAIL-CPID: 6A3CDC2D590C636681E70A4B03ACA4A3_2
-X-Control-Analysis: str=0001.0A006396.67E3D2CC.0093,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id DAD48166EFA;
-	Wed, 26 Mar 2025 11:11:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1742983888;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=gcPX+MhjshuhvQyvdiQ0n7EixqOoTHSCclQvp5UsEFA=;
-	b=dbgKxfsTjezsKLfDY5Gzv+v2w5Q0ipknSkPV7sC5ZDaz0s6BxuAIhLb3smJVHAwM6thDPw
-	ApQVdxLPk2fttq26zUP4KY8+dCrzz1FB7tsoL94nXklcD335CeO9HWcrMbZRhCX8JTapVY
-	qTn2LKM/+E0uQrpqWxxr0zbUmlAWjyycq7LecR9PWradZhgRJAVzzlZIhq5Wac7EVYkFY4
-	wMICdbFJNFPqNi+UAroGqxf6rZgT7tGhCMymGicVHd5fKOAlrqQih0ikEQoC+JFP1jWUgf
-	HR2gJ8GvN4cap47f2nHmDHWuoZMSlhdzgnVPPRt67bG0VkEVHabXuHCL9jobJw==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] drm/bridge: sii902x: Set bridge type
-Date: Wed, 26 Mar 2025 11:11:23 +0100
-Message-ID: <20250326101124.4031874-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="kt1TsZrP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1742983598; bh=11V6Ppzqx37uke9W1v3EMjT5frvAqdD1NpkPS7WBiS8=;
+	h=From:To:Cc:Subject:Date;
+	b=kt1TsZrPEDQyg5p7UhwVmm95Po8cT+Ti6uCtmbvW5X5Nhn7zuaJuKlEZlL82T2BwD
+	 6eMs0w3KMczW+1k5rCAPvMy7JDSuIahCgcsyKigJOoxRgfuh6vDGKyesmQ2K6/wxyO
+	 h63bXiBBPj6OhMkVH7mBsH6+KqO5+RpdeHVSYMQQ=
+Received: from localhost.localdomain ([116.128.244.169])
+	by newxmesmtplogicsvrszgpua8-1.qq.com (NewEsmtp) with SMTP
+	id 1A40FA8D; Wed, 26 Mar 2025 18:06:36 +0800
+X-QQ-mid: xmsmtpt1742983596t640hwne1
+Message-ID: <tencent_08386388426E23693951B6B09D78BF0E2508@qq.com>
+X-QQ-XMAILINFO: MKQst53PCfggzNBQsZ5bQi6ShZPnoKO5qX6Ouz5NkULKXT45QLP4IxOVxq2LsD
+	 iauNHEUlYuFx4YynfKf1RxBfe74ZLYIgwojAy4GTpEQ+UHrnqw/b5v2jgGq0tNOKyGqa4Y2lyU2U
+	 CaiZvlK+0tvUGPnJGVV6HLDvjTtAW8UHLHMPClxfEa5bj6zTDGnaZx7nu4EFgOo16n89XUykUWsx
+	 oLZQkG2bG3dl4x1ecNjmWNTsCj8eCaSGfJCQ+Lkzu2x7JqNV5c2LZpiul8Yfu0aavwN1Yh5JqW/u
+	 hGH3NpuPOQWIZMN+Q29Oeif5Krv+iNgBn2pw0KkaYD/zaBpP0KEfVKsuTm/WPfmVCIcElbYGKk1w
+	 dS0AXTXX+KusbXeIbclk7tYPDrP2UNQs8WMf5jecUmhiY0NPUCJjwJ7Cz1VwzOTEzf+fBpbtBP/B
+	 2Dn8/Bizjl18+dwCa1PJeZhK66gqVAK/T7enFW0mW7CSPopHrZqwCWulGF54KCJngE3jYBSHXHjF
+	 R/akBSYQgKFYy3wbFJ3790WeTjFI+MxvxL33Tk5Zdv6aLs8i0o26ae3FSe+74hof8rK6xsEOZCsh
+	 +gtqXriEPVCvozXpBr/tmoO5xeyWuW1qPho8Nl+QMVY5C9MZTxNE8xMi/f3kJ1MdIqD4e56JCmAG
+	 onvAjVvezGcEajpvcK0IFhPdMXcu0fHiixz3S0I1LRVH253rKeFk2uBld+ka4uOt3eFoNP93E29K
+	 nJreqAX7juwhMxPMu6VyjD5Zw+UtumuKe4OfIwqD14FNvBFx+Y1tjupCxUgEYxS9rmt+B7i2Fm2v
+	 spR3AocO/j185/xYGPlvbe9YBEYiU/PcVtyA+hnaNl28C7k8VYIss1Ndp7RGfWfNpklbNjZob/Ru
+	 9OyJ0PoVMHtA0OMqKY1uwuOaqnYTGLkugJYDJExpvY7Se4hkGZn2qzMROr/YKxSaPOzeH+fLVk9C
+	 CWmY05CPEHgPa0ZeCyVYURjrzILtGRtCyEK5CwTSt9EjMmZzhih1FVdJlOVRgmrZcURwJsz1TaWu
+	 5oLo1mNA==
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+From: Yaxiong Tian <iambestgod@qq.com>
+To: kbusch@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	sagi@grimberg.me
+Cc: linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Yaxiong Tian <tianyaxiong@kylinos.cn>
+Subject: [PATCH 0/3] nvme: Add sysfs interface for APST configuration management
+Date: Wed, 26 Mar 2025 18:06:31 +0800
+X-OQ-MSGID: <20250326100634.1319638-1-iambestgod@qq.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,27 +61,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 
-This is a RGB to HDMI bridge, so set the bridge type accordingly.
+From: Yaxiong Tian <tianyaxiong@kylinos.cn>
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
- drivers/gpu/drm/bridge/sii902x.c | 1 +
- 1 file changed, 1 insertion(+)
+This series enhances NVMe APST (Autonomous Power State Transition) support by:
+1. Adding warnings for PST table allocation failures
+2. Exposing APST tables via sysfs for runtime inspection
+3. Providing per-controller sysfs interface for APST configuration
 
-diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
-index 914a2609a685f..ab70df3b60eb8 100644
---- a/drivers/gpu/drm/bridge/sii902x.c
-+++ b/drivers/gpu/drm/bridge/sii902x.c
-@@ -1138,6 +1138,7 @@ static int sii902x_init(struct sii902x *sii902x)
- 	sii902x->bridge.of_node = dev->of_node;
- 	sii902x->bridge.timings = &default_sii902x_timings;
- 	sii902x->bridge.ops = DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_EDID;
-+	sii902x->bridge.type = DRM_MODE_CONNECTOR_HDMIA;
- 
- 	if (sii902x->i2c->irq > 0)
- 		sii902x->bridge.ops |= DRM_BRIDGE_OP_HPD;
+The changes allow better visibility and control of power management settings
+through userspace tools while maintaining the existing functionality.
+
+Yaxiong Tian (3):
+  nvme: Add warning for PST table memory allocation failure in
+    nvme_configure_apst
+  nvme: add sysfs interface for APST table updates
+  nvme: add per-controller sysfs interface for APST configuration
+
+ drivers/nvme/host/core.c  | 24 ++++++++++------
+ drivers/nvme/host/nvme.h  |  6 ++++
+ drivers/nvme/host/sysfs.c | 59 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 81 insertions(+), 8 deletions(-)
+
 -- 
-2.43.0
+2.25.1
 
