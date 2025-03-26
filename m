@@ -1,103 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF2F23AE79;
-	Wed, 26 Mar 2025 21:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743023970; cv=none; b=bPVn0xNlALYhVJ+4tiIUFwjFHrngdOdhd2MN3KYS+JCjSaLkGeHwgc47q3xhWL8sfHTseGOQxM6udXJAoch886dN/bfIGR0f32+rcdCJizxssv+gJuz2a3CoS7bUtAChJo7ajWurkICNSn/aB4DId6wMX26tQz4dtQfzIrl0Tk4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743023970; c=relaxed/simple;
-	bh=Hu0LgRWcUyyVLEgb/8MX2IeiP6lnhn6n5T862wdMvuE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eoSnmg2zFs3tltW3dGg3Ix3Ukdh46nDiCYZOd5rxjJ4ZEEtEUbKxPc5Vlu+pqmCl+BMMxv1ZxZTNsjW9mRtEHWUrSO1V4QU/uSKKa0vVYQzhRG5b3Is/WcteMP8zMSSRWKhHIfKaDtQfohF6I8+x2hpW/vHud/pFGJzmuZHOvK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HuNnF2AR; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A8A19FA93;
+	Wed, 26 Mar 2025 21:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743024100; cv=pass; b=UKnD+BsTOmTF/2SvJj2S+N2c16o2ymQcDTbQVnC2p+8e/c6zxmOFBvMNqbRgeNbH/d++80QVuhl07KX8bYOQz9vZMRLrsEeZbUn784WR66RK4SPK1GrstYmOhfx8wfjYV5zAAeEyg3C321Thwa7DYg9FJWknoJ/actsndK8I/UA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743024100; c=relaxed/simple;
+	bh=F63fFdYs0fz6uWRNYJ3Ghsjh4HTrIv7hPfU0NUX/Dxg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=NRjl6m7CysP8cdVZmvnJELE2GFtQKrZ//LZtB6BmZ6QVPvyjRSKlCmsnEU7DaFsWI6bYkV1Yyv7wvzxSfrRkkQ46jPE68nUXCXKoXHcUNdc0S4oVSrnE2MHBy1dX5kckoY7chgsEyfXghJjf7Hb7TMy1O1yRm3BYJJnLQEGVXJI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=a98shuttle.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=Cfd1elyL; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=52iAlqyY; arc=pass smtp.client-ip=85.215.255.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a98shuttle.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HuNnF2AR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743023968; x=1774559968;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Hu0LgRWcUyyVLEgb/8MX2IeiP6lnhn6n5T862wdMvuE=;
-  b=HuNnF2ARVUlVzWu/FSv1lf7y0E1x3GrxrLxc4BbbB9CbW3MEuFZ6umqP
-   U6yb2p49kkEybz0KJq/szB07N5AMlhgaiSp9WleNHtgISAmmo4rirWWRP
-   CYGvJ80YE5Z/ljyUjGhc4X22hximsjrtCteq9gSXbcthZZf7u+UxeUQ22
-   v6auqt7nCeq2UmsLo+bKvUgtKXLWpb7g6gMWaqZQTRX26LcB0mFfm+Gja
-   z2HOcEXjudzSRcSPUttDoLaBLeoOHetZRh0rV3jB9OltSi3qTaLt7q6Jk
-   vBC3wmW5ipPi3Y5REtUry5qq14cC//TG3/ciZH0aHi1WeUNngUp1TmvYH
-   A==;
-X-CSE-ConnectionGUID: 1RqD1yjsR2We1V6WXQGbnw==
-X-CSE-MsgGUID: mnUewp2IRqSmcdsXtO1rYA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="61731288"
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="61731288"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 14:19:27 -0700
-X-CSE-ConnectionGUID: 0hIXxHHJS0aD7ZcIevd12Q==
-X-CSE-MsgGUID: mEhSnXkkRcK6U98OTXHazw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="129075278"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by fmviesa003.fm.intel.com with ESMTP; 26 Mar 2025 14:19:24 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1txY9i-00065D-0V;
-	Wed, 26 Mar 2025 21:19:22 +0000
-Date: Thu, 27 Mar 2025 05:18:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v2 1/3] PCI: Add sysfs support for exposing PTM context
-Message-ID: <202503270447.SYoXEBQd-lkp@intel.com>
-References: <20250324-pcie-ptm-v2-1-c7d8c3644b4a@linaro.org>
+	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="Cfd1elyL";
+	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="52iAlqyY"
+ARC-Seal: i=1; a=rsa-sha256; t=1743024088; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=WxOaG+26Zz2If2HE16CEu3bdTZeElu/oDfVq7kaN6YgCKYOkFFs8hzTpyQ3/URBenL
+    49sQuxAQzOGSJhbXZkhTQGtwLoa8r1FwjCjBnZ/AlspuERXErbriXVuj3dl9euNR/z+g
+    KtpsfKQZkMTerxHrDDm4+6d/tqjVWmO66ADFjNNqVZN047zZa3aQLYCRwu/omlHwcuvo
+    44NEb+zmTf9A7Gra0ZFps8WcWJOjbA9ECEeuzhncl36ngm2+DRVCzXg9Ko9t3UcrFIkQ
+    6NRdNlJTFPAn2Fg0NZLPi84Vq/M5C+eyNXyxS9gF9BZUalNYdwzextyRkpT8skRWDsXv
+    h86w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1743024088;
+    s=strato-dkim-0002; d=strato.com;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=yWEPi8jGfbaRWRhMdiXrLYQ+ysihTn9YVJHYg4hFbo0=;
+    b=C5b9oSZ1ZJT0Atw30fWBGnJAews3tE+ufiW/t0nO6J3XQDT5StfkMdh3O+2jZvBy1T
+    aZkjWtwkCfp+/K5kDGydkzMr/yhqNGGvtL1dHmHe4C5Q6UWwUQ27Djwp/m320v9/qDlM
+    8atddEhLdLKsrdyTQgd8M3lq8l4+W4OM2v8ZXAPqWB4cZJI5AC59uXTjrBfBQsWS80cw
+    5TeogOZ8qw1SQZtJ2zqOn+vIPDf0S8Rp5hQwwdOh1zRydyAbSnA1zJGbPhQZ3Cf6XQAU
+    rK7f4TsPXlZ8zjh2lrDmQx/Pu1RuzJ5ruOQACiUizaKZQf3NBOKeooUJ3SLFAOBxwC5D
+    QGjA==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1743024088;
+    s=strato-dkim-0002; d=fossekall.de;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=yWEPi8jGfbaRWRhMdiXrLYQ+ysihTn9YVJHYg4hFbo0=;
+    b=Cfd1elyLX5xgWo/7G1nx79pjZ13UE3s1LrJvf1LW5Kyc4Hzk2TDS3nc6bva10s6Y1d
+    Aln1RESfmiyZ/TVbAyrPt0OlYyWcH613SjQ1eMpIIHxNk3CemmEbP79YDLHdM0Aqjwg/
+    15BPDO5ErJ6oOCI/Dn4Ynr0Tqe/RgcYZORPAlEZ5HuDBXx/GVqXlqPe2Gt15aAsOyAjs
+    NQ6KFi9x+y7m4aBYIhNaL+QGhF1qfYyIf0/k5MvIVBGyJZrBxvOr1qSG/XGdREalzfxy
+    0yFey1o6H4JcD2EUYFcItZdFCtc97bpdmroLSLrl3HNewlK8w3H03GdCz5C6vLVvzPB5
+    1fGQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1743024088;
+    s=strato-dkim-0003; d=fossekall.de;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=yWEPi8jGfbaRWRhMdiXrLYQ+ysihTn9YVJHYg4hFbo0=;
+    b=52iAlqyY+abRjJ/NJrkt5e0iruQpKnDRe8nPeD4Nl1gvt+x+MZJnBIaJTPo5eIH/m4
+    xt9e0Ja7kmho47X7Z+AA==
+X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
+Received: from aerfugl
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id f28b3512QLLS1Hx
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Wed, 26 Mar 2025 22:21:28 +0100 (CET)
+Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
+	by aerfugl with smtp (Exim 4.96)
+	(envelope-from <michael@a98shuttle.de>)
+	id 1txYBj-0000hd-1Y;
+	Wed, 26 Mar 2025 22:21:27 +0100
+Received: (nullmailer pid 100253 invoked by uid 502);
+	Wed, 26 Mar 2025 21:21:27 -0000
+From: Michael Klein <michael@fossekall.de>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Michael Klein <michael@fossekall.de>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [net-next v5 0/4] net: phy: realtek: Add support for PHY LEDs on
+Date: Wed, 26 Mar 2025 22:21:21 +0100
+Message-Id: <20250326212125.100218-1-michael@fossekall.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324-pcie-ptm-v2-1-c7d8c3644b4a@linaro.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Manivannan,
+Changes in V5:
+- Split cleanup patch and improve code formatting
 
-kernel test robot noticed the following build warnings:
+Changes in V4:
+- Change (!ret) to (ret == 0)
+- Replace set_bit() by __set_bit()
 
-[auto build test WARNING on 1f5a69f1b3132054d8d82b8d7546d0af6a2ed4f6]
+Changes in V3:
+- move definition of rtl8211e_read_ext_page() to patch 2
+- Wrap overlong lines
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam-via-B4-Relay/PCI-Add-sysfs-support-for-exposing-PTM-context/20250324-181039
-base:   1f5a69f1b3132054d8d82b8d7546d0af6a2ed4f6
-patch link:    https://lore.kernel.org/r/20250324-pcie-ptm-v2-1-c7d8c3644b4a%40linaro.org
-patch subject: [PATCH v2 1/3] PCI: Add sysfs support for exposing PTM context
-config: i386-randconfig-061-20250326 (https://download.01.org/0day-ci/archive/20250327/202503270447.SYoXEBQd-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250327/202503270447.SYoXEBQd-lkp@intel.com/reproduce)
+Changes in V2:
+- Designate to net-next
+- Add ExtPage access cleanup patch as suggested by Andrew Lunn
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503270447.SYoXEBQd-lkp@intel.com/
+Michael Klein (4):
+  net: phy: realtek: Group RTL82* macro definitions
+  net: phy: realtek: Clean up RTL8211E ExtPage access
+  net: phy: realtek: use __set_bit() in rtl8211f_led_hw_control_get()
+  net: phy: realtek: Add support for PHY LEDs on RTL8211E
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/pci/pcie/ptm.c:13:15: sparse: sparse: symbol 'ptm_device' was not declared. Should it be static?
-
-vim +/ptm_device +13 drivers/pci/pcie/ptm.c
-
-    12	
-  > 13	struct device *ptm_device;
-    14	
+ drivers/net/phy/realtek/realtek_main.c | 201 ++++++++++++++++++++-----
+ 1 file changed, 160 insertions(+), 41 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.5
