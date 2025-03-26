@@ -1,541 +1,230 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93933187876;
-	Wed, 26 Mar 2025 14:07:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742998024; cv=none; b=Y8fUavvNfwsK172uRx6eD2d0u0nmzktcrh7zBmoPuA6DRMJsA0yIiBhWSyCznYRuWUsdAZmQ6FOc0fgAisBzZfbv9kbt6jPVPeWG6Fso0IZ/QieE2AuVVTP1KgftTn+GppumssQJqlIHAjkFzf5B5SShEC/D5xomzvtDks9qUXY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742998024; c=relaxed/simple;
-	bh=5Dy3e01ZqWRkJMYkOCiJkNVEqowWn6MqPCFMtDszpRM=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=lqNI0wgSHQuUEZd/UkM2YMeM7bVDZR2f0ruWiY0/v2pbcewjahcZhZo9F4cGuzbfQq/qfctlPAEEJ6f4atIGPlVjmcrWC0bmYzxie5z1ipCBcji11HR4vBu7QExNTfA6AHsDoDSqCeGIN+Hj0vdOJEABQnyGUVgJkOpopK2gRiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kz+MlTam; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 920CD187876;
+	Wed, 26 Mar 2025 14:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742998033; cv=pass; b=eJ4Ibaw/lCj6w+VBVkmvKB9wFJTKeuF7LgCRWr+KlAzky0vPgvzEnNgJDpS1IMR0w6bAhrP18fBzbaUJRX+gEpUscp9/vujjDPeiSv9mQbGE8mP1u1UAbjU/7iMtw9JcgbyCyuL9DrnDLRdLX63VVI4xMkRXyiFzxiwT1JrXvf4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742998033; c=relaxed/simple;
+	bh=SBLV0VJC/LnEEvBmOyWQROgZ89YKVg0CGQjMw5ekcxU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=g5fG5Zqd//rhM6NfHghAr7wr6L1Y1Bt6CvhTzh+gll954PwRuVj+xuFNXzhEMDbnH7ApWfgH9p/5zuHWyqPu07zYR1IsRxBEbduVKSgZ7VoPF5fCrhUuKwxlrevy4NxcrYDf+sZGjBU0N4vdyw1JE+D+DCiT6vl8Q2WHkUg9kEM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=Y0Hd/jYo; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kz+MlTam"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742998023; x=1774534023;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=5Dy3e01ZqWRkJMYkOCiJkNVEqowWn6MqPCFMtDszpRM=;
-  b=kz+MlTam9r19v0pIwK7FICU15EIrAu8GwogSn4lIzoniVNWyZDnR7z0U
-   lrEUG0FzI/de3fYODRovDgdJDBAuWUZKJMGvyE3N1zFyIjjA0p0/+1vYk
-   I5jjn9eXnLfQ8oAsOqLin3C35F6W0e66gQ6vHonuYxQc5RGyJ/jzSUJ0+
-   MDFF1pl/hH03/lohJRXeY9P6ExfB6DC2Ki3es/jonkvwanLp2zlGh31DP
-   /8gikKJHNnH5ZTx8ApoDmbTU0h/goimg1opOGyWG0G2qvmKj5OMOcvFbw
-   fX1OoJ12cXF6bXVzBLV471c5Lfl1iztZRKHVnDw4di3bFzQXPva2Mv6E3
-   A==;
-X-CSE-ConnectionGUID: bC/oIXPpTlq07NY0M0Dqig==
-X-CSE-MsgGUID: WCc/qecERdWwYdiYtrZUFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="47941977"
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="47941977"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 07:07:03 -0700
-X-CSE-ConnectionGUID: TjCskTLVSPiwjcMkj8E2jA==
-X-CSE-MsgGUID: CqxseajRTX+OG7KY6BQp6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="129903829"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.5])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 07:06:59 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
-Date: Wed, 26 Mar 2025 15:59:34 +0200
-Subject: [GIT PULL] platform-drivers-x86 for v6.15-1
-Message-ID: <pdx86-pr-20250326155934-163925309@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="Y0Hd/jYo"
+ARC-Seal: i=1; a=rsa-sha256; t=1742998000; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=a6ZbH/fP0TXeV+gCcj7pb2rCecVxw0gzvKZnxTPhF0su2k4yESLDmIrhb109E+ooiwM7Llxrow2QkRupfbN+Kdsqkoc3aEPesJ5Wkusy5HJRKHHmPy89qND07QtmFjGN9eenAwvj/f+DiZGJOil6iQtCEirJULZV88QGF1s327g=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1742998000; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=J4LCGwLp6spQjk9n9SscwRTpBKc1KoEtML4ye4gzsxI=; 
+	b=Rg9hv1FcQYwp9/mIyiAa14deBefm6+WTPSrZFcfmO4VPCj1VxsMX4+JnS7nYQgFYrZeNEATTQ0wEAexlhc2gqAqOOxCihLaDZbnr5h8DuIh5uGv4IWik2RMEs7w3vEQRsQE5dwzyXVciIZbKwWQqBwYc3ypsCPHNhzCNNWyVZAo=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742998000;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
+	bh=J4LCGwLp6spQjk9n9SscwRTpBKc1KoEtML4ye4gzsxI=;
+	b=Y0Hd/jYoO0Jko14vfKqw09Bekb9j2Msw/L4P/nJloj0IpRUZQ4LssD7dhr8yN0bE
+	269TByWf023oL8iEbOhA5mMYhDYTtvH1eFf3zHvEO5HnB/7Gmzhw6D4erZb0DendHR1
+	OY7i71GZcHBRY0quX6J7oDWgyjv0fl+b1Ulhlzos=
+Received: by mx.zohomail.com with SMTPS id 1742997998123534.8338467980343;
+	Wed, 26 Mar 2025 07:06:38 -0700 (PDT)
+From: Daniel Almeida <daniel.almeida@collabora.com>
+Date: Wed, 26 Mar 2025 11:06:20 -0300
+Subject: [PATCH v5] rust: kernel: add support for bits/genmask macros
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250326-topic-panthor-rs-genmask-v5-1-bfa6140214da@collabora.com>
+X-B4-Tracking: v=1; b=H4sIANsJ5GcC/33NTQrCMBCG4atI1kaSTKLiynuIi+l0YoPalKQUp
+ fTuRqG48Gf5fjDPjCJzCpzFbjGKxEPIIbYl3HIhqMH2xDLUpYVRxmplQPaxCyQ7bPsmJpmyPHF
+ 7xXyWHityG/DsLYhy3iX24faiD8fSTch9TPfXp8E81xm1v9HBSC23zsCGtFfEuKd4uWAVE64oX
+ sUTHmDGnNJG/8GgYI6gqr3RxMp9w+wbA739g9mCgVPKesI10gc2TdMDRXDx5l4BAAA=
+X-Change-ID: 20241023-topic-panthor-rs-genmask-fabc573fef43
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ Fiona Behrens <me@kloenk.dev>, 
+ Daniel Almeida <daniel.almeida@collabora.com>
+X-Mailer: b4 0.14.2
+X-ZohoMailClient: External
+
+In light of bindgen being unable to generate bindings for macros,
+manually define the bit and genmask C macros in Rust.
+
+Bit and genmask are frequently used in drivers, and are simple enough to
+just be redefined. Their implementation is also unlikely to ever change.
+
+These macros are converted from their kernel equivalent. Versions for
+u64, u32, u16 and u8 are provided in order to reduce the number of casts
+for callers.
+
+Reviewed-by: Fiona Behrens <me@kloenk.dev>
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+---
+Changes in v5:
+- Added versions for u16 and u8 in order to reduce the amount of casts
+  for callers. This came up after discussing the issue with Alexandre
+  Courbot in light of his "register" abstractions.
+- Link to v4: https://lore.kernel.org/r/20250318-topic-panthor-rs-genmask-v4-1-35004fca6ac5@collabora.com
+
+Changes in v4:
+- Split bits into bits_u32 and bits_u64
+- Added r-b's
+- Rebased on top of rust-next
+- Link to v3: https://lore.kernel.org/r/20250121-topic-panthor-rs-genmask-v3-1-5c3bdf21ce05@collabora.com
+
+Changes in v3:
+- Changed from declarative macro to const fn
+- Added separate versions for u32 and u64
+- Link to v2: https://lore.kernel.org/r/20241024-topic-panthor-rs-genmask-v2-1-85237c1f0cea@collabora.com
+
+Changes in v2:
+
+- Added ticks around `BIT`, and `h >=l` (Thanks, Benno).
+- Decided to keep the arguments as `expr`, as I see no issues with that
+- Added a proper example, with an assert_eq!() (Thanks, Benno)
+- Fixed the condition h <= l, which should be h >= l.
+- Checked that the assert for the condition above is described in the
+  docs.
+---
+ rust/kernel/bits.rs | 93 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs  |  1 +
+ 2 files changed, 94 insertions(+)
+
+diff --git a/rust/kernel/bits.rs b/rust/kernel/bits.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..ddae8a5be4698bb7df66ee2c42ac6c2bc07eae7e
+--- /dev/null
++++ b/rust/kernel/bits.rs
+@@ -0,0 +1,93 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Bit manipulation macros.
++//!
++//! C header: [`include/linux/bits.h`](srctree/include/linux/bits.h)
++
++/// Produces a literal where bit `n` is set.
++///
++/// Equivalent to the kernel's `BIT` macro.
++pub const fn bit_u64(n: u32) -> u64 {
++    1u64 << n as u64
++}
++
++/// Produces a literal where bit `n` is set.
++///
++/// Equivalent to the kernel's `BIT` macro.
++pub const fn bit_u32(n: u32) -> u32 {
++    1u32 << n
++}
++
++/// Produces a literal where bit `n` is set.
++///
++/// Equivalent to the kernel's `BIT` macro.
++pub const fn bit_u16(n: u32) -> u16 {
++    1u16 << n as u16
++}
++
++/// Produces a literal where bit `n` is set.
++///
++/// Equivalent to the kernel's `BIT` macro.
++pub const fn bit_u8(n: u32) -> u8 {
++    1u8 << n as u8
++}
++
++/// Create a contiguous bitmask starting at bit position `l` and ending at
++/// position `h`, where `h >= l`.
++///
++/// # Examples
++/// ```
++///     use kernel::bits::genmask_u64;
++///     let mask = genmask_u64(39, 21);
++///     assert_eq!(mask, 0x000000ffffe00000);
++/// ```
++///
++pub const fn genmask_u64(h: u32, l: u32) -> u64 {
++    assert!(h >= l);
++    (!0u64 - (1u64 << l) + 1) & (!0u64 >> (64 - 1 - h))
++}
++
++/// Create a contiguous bitmask starting at bit position `l` and ending at
++/// position `h`, where `h >= l`.
++///
++/// # Examples
++/// ```
++///     use kernel::bits::genmask_u32;
++///     let mask = genmask_u32(9, 0);
++///     assert_eq!(mask, 0x000003ff);
++/// ```
++///
++pub const fn genmask_u32(h: u32, l: u32) -> u32 {
++    assert!(h >= l);
++    (!0u32 - (1u32 << l) + 1) & (!0u32 >> (32 - 1 - h))
++}
++
++/// Create a contiguous bitmask starting at bit position `l` and ending at
++/// position `h`, where `h >= l`.
++///
++/// # Examples
++/// ```
++///     use kernel::bits::genmask_u16;
++///     let mask = genmask_u16(9, 0);
++///     assert_eq!(mask, 0x000003ff);
++/// ```
++///
++pub const fn genmask_u16(h: u32, l: u32) -> u16 {
++    assert!(h >= l);
++    (!0u16 - (1u16 << l) + 1) & (!0u16 >> (16 - 1 - h))
++}
++
++/// Create a contiguous bitmask starting at bit position `l` and ending at
++/// position `h`, where `h >= l`.
++///
++/// # Examples
++/// ```
++///     use kernel::bits::genmask_u8;
++///     let mask = genmask_u8(7, 0);
++///     assert_eq!(mask, 0x000000ff);
++/// ```
++///
++pub const fn genmask_u8(h: u32, l: u32) -> u8 {
++    assert!(h >= l);
++    (!0u8 - (1u8 << l) + 1) & (!0u8 >> (8 - 1 - h))
++}
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index c92497c7c655e8faefd85bb4a1d5b4cc696b8499..a90aaf7fe6755a5a42055b7b4008714fcafe6f6f 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -36,6 +36,7 @@
+ pub use ffi;
+ 
+ pub mod alloc;
++pub mod bits;
+ #[cfg(CONFIG_BLOCK)]
+ pub mod block;
+ #[doc(hidden)]
+
+---
+base-commit: cf25bc61f8aecad9b0c45fe32697e35ea4b13378
+change-id: 20241023-topic-panthor-rs-genmask-fabc573fef43
+
+Best regards,
+-- 
+Daniel Almeida <daniel.almeida@collabora.com>
 
-Hi Linus,
-
-Here is the main PDx86 PR for v6.15.
-
-Highlights:
-
- - alienware-wmi: Refactor and split WMAX/legacy drivers
-
- - dell-ddv:
-
-    - Correct +0.1 offset in temperature
-
-    - Use the power supply extension mechanism for battery temperatures
-
- - intel/pmc:
-
-    - Refactor init to mostly use a common init function
-
-    - Add support for Arrow Lake U/H
-
-    - Add support for Panther Lake
-
- - intel/sst:
-
-    - Improve multi die handling
-
-    - Prefix header search path with sysroot (fixes cross-compiling)
-
- - lenovo-wmi-hotkey-utilities: Support for mic & audio mute LEDs
-
- - samsung-galaxybook: Add driver for Samsung Galaxy Book series
-
- - wmi:
-
-    - Rework WCxx/WExx ACPI method handling
-
-    - Enable data block collection when the data block is set
-
- - platform/arm:
-
-    - Add Huawei Matebook E Go EC driver
-
- - platform/mellanox:
-
-    - Relocate to drivers/platform/mellanox/
-
-    - mlxbf-bootctl: RTC battery status sysfs support
-
- - Miscellaneous cleanups / refactoring / improvements
-
-Regards, i.
-
-
-The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
-
-  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.15-1
-
-for you to fetch changes up to 2c30357e755b087217c7643fda2b8aea6d6deda4:
-
-  platform/x86: x86-android-tablets: Add select POWER_SUPPLY to Kconfig (2025-03-24 15:51:15 +0200)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.15-1
-
-Highlights:
-
- - alienware-wmi: Refactor and split WMAX/legacy drivers
-
- - dell-ddv:
-
-    - Correct +0.1 offset in temperature
-
-    - Use the power supply extension mechanism for battery temperatures
-
- - intel/pmc:
-
-    - Refactor init to mostly use a common init function
-
-    - Add support for Arrow Lake U/H
-
-    - Add support for Panther Lake
-
- - intel/sst:
-
-    - Improve multi die handling
-
-    - Prefix header search path with sysroot (fixes cross-compiling)
-
- - lenovo-wmi-hotkey-utilities: Support for mic & audio mute LEDs
-
- - samsung-galaxybook: Add driver for Samsung Galaxy Book series
-
- - wmi:
-
-    - Rework WCxx/WExx ACPI method handling
-
-    - Enable data block collection when the data block is set
-
- - platform/arm:
-
-    - Add Huawei Matebook E Go EC driver
-
- - platform/mellanox:
-
-    - Relocate to drivers/platform/mellanox/
-
-    - mlxbf-bootctl: RTC battery status sysfs support
-
- - Miscellaneous cleanups / refactoring / improvements
-
-The following is an automated shortlog grouped by driver:
-
-alienware-wmi:
- -  Add a state container for LED control feature
- -  Add a state container for thermal control methods
- -  Add alienware-wmi.h
- -  Add WMI Drivers
- -  Refactor hdmi, amplifier, deepslp methods
- -  Refactor LED control methods
- -  Refactor thermal control methods
- -  Rename alienware-wmi.c
- -  Split DMI table
- -  Split the alienware-wmi driver
- -  Update alienware-wmi config entries
- -  Update header and module information
-
-amd/pmc:
- -  fix leak in probe()
- -  Move macros and structures to the PMC header file
- -  Notify user when platform does not support s0ix transition
- -  Remove unnecessary line breaks
- -  Use managed APIs for mutex
-
-amd/pmf:
- -  convert timeouts to secs_to_jiffies()
-
-amd:
- -  Use *-y instead of *-objs in Makefiles
-
-arm64:
- -  add Huawei Matebook E Go EC driver
-
-arm64: dts: qcom: gaokun3:
- -  Add Embedded Controller node
-
-compal-laptop:
- -  Do not include <linux/fb.h>
-
-dell-ddv:
- -  Fix temperature calculation
- -  Use devm_battery_hook_register
- -  Use the power supply extension mechanism
-
-dell: dell-wmi-sysman:
- -  Use *-y instead of *-objs in Makefile
-
-dell:
- -  Modify Makefile alignment
- -  Use *-y instead of *-objs in Makefile
-
-dell-uart-backlight:
- -  Make dell_uart_bl_serdev_driver static
-
-dt-bindings: platform:
- -  Add Huawei Matebook E Go EC
-
-hp-bioscfg:
- -  Replace deprecated strncpy() with strscpy()
- -  Use wmi_instance_count()
-
-hp:
- -  Use *-y instead of *-objs in Makefile
-
-hwmon:
- -  (hp-wmi-sensors) Use the WMI bus API when accessing sensors
-
-ideapad-laptop:
- -  use dev_groups to register attribute groups
-
-int3472:
- -  Call "func" "con_id" instead
-
-intel/pmc:
- -  Add Arrow Lake U/H support to intel_pmc_core driver
- -  Add Panther Lake support to intel_pmc_core
- -  Create generic_core_init() for all platforms
- -  Make tgl_core_generic_init() static
- -  Move arch specific action to init function
- -  Remove duplicate enum
- -  Remove simple init functions
- -  Remove unnecessary declarations in header
- -  Remove unneeded extern keyword in header
-
-intel:
- -  Use *-y instead of *-objs in Makefile
-
-irqdomain: platform/x86:
- -  Switch to irq_domain_create_linear()
-
-lenovo-wmi-hotkey-utilities.c:
- -  Support for mic and audio mute LEDs
-
-lenovo-yoga-tab2-pro-1380-fastcharger:
- -  Make symbol static
-
-MAINTAINERS:
- -  Add documentation reference for Mellanox platform
- -  Update ALIENWARE WMI DRIVER entry
-
-mellanox:
- -  Relocate mlx-platform driver
-
-mlxbf-bootctl:
- -  Support sysfs entries for RTC battery status
-
-mlx-platform:
- -  Change register name
- -  Cosmetic changes
-
-samsung-galaxybook:
- -  Add samsung-galaxybook driver
- -  Fix block_recording not supported logic
-
-sonypi:
- -  Use str_on_off() helper in sonypi_display_info()
-
-think-lmi:
- -  Use ACPI object when extracting strings
- -  Use WMI bus API when accessing BIOS settings
-
-thinkpad_acpi:
- -  check the return value of devm_mutex_init()
- -  convert timeouts to secs_to_jiffies()
- -  Do not include <linux/fb.h>
- -  Move HWMON initialization to tpacpi_hwmon_pdriver's probe
- -  Move subdriver initialization to tpacpi_pdriver's probe.
-
-tools/power/x86/intel-speed-select:
- -  Die ID for IO dies
- -  Fix the condition to check multi die system
- -  Prefix header search path with sysroot
- -  Prevent increasing MAX_DIE_PER_PACKAGE
- -  v1.22 release
-
-wmi:
- -  Call WCxx methods when setting data blocks
- -  Rework WCxx/WExx ACPI method handling
- -  Update documentation regarding the GUID-based API
- -  Use devres to disable the WMI device
-
-x86-android-tablets:
- -  Add select POWER_SUPPLY to Kconfig
-
-Merges:
- -  Merge branch 'fixes' into for-next
- -  Merge branch 'intel-sst' of https://github.com/spandruvada/linux-kernel into review-ilpo-next
-
-----------------------------------------------------------------
-Armin Wolf (11):
-      hwmon: (hp-wmi-sensors) Use the WMI bus API when accessing sensors
-      platform/x86: think-lmi: Use ACPI object when extracting strings
-      platform/x86: think-lmi: Use WMI bus API when accessing BIOS settings
-      platform/x86: hp-bioscfg: Use wmi_instance_count()
-      platform/x86: wmi: Use devres to disable the WMI device
-      platform/x86: wmi: Rework WCxx/WExx ACPI method handling
-      platform/x86: wmi: Call WCxx methods when setting data blocks
-      platform/x86: wmi: Update documentation regarding the GUID-based API
-      platform/x86: dell-ddv: Fix temperature calculation
-      platform/x86: dell-ddv: Use devm_battery_hook_register
-      platform/x86: dell-ddv: Use the power supply extension mechanism
-
-Bartosz Golaszewski (1):
-      platform/x86: thinkpad_acpi: check the return value of devm_mutex_init()
-
-Dan Carpenter (1):
-      platform/x86/amd/pmc: fix leak in probe()
-
-Dmitry Kandybka (1):
-      platform/x86/intel: pmc: fix ltr decode in pmc_core_ltr_show()
-
-Easwar Hariharan (2):
-      platform/x86: thinkpad_acpi: convert timeouts to secs_to_jiffies()
-      platform/x86/amd/pmf: convert timeouts to secs_to_jiffies()
-
-Fedor Pchelkin (1):
-      platform/x86: ideapad-laptop: pass a correct pointer to the driver data
-
-Hans de Goede (1):
-      platform/x86: x86-android-tablets: Add select POWER_SUPPLY to Kconfig
-
-Ilpo Järvinen (4):
-      Merge branch 'fixes' into for-next
-      platform/x86: lenovo-yoga-tab2-pro-1380-fastcharger: Make symbol static
-      platform/x86: dell-uart-backlight: Make dell_uart_bl_serdev_driver static
-      Merge branch 'intel-sst' of https://github.com/spandruvada/linux-kernel into review-ilpo-next
-
-Jackie Dong (1):
-      platform/x86:lenovo-wmi-hotkey-utilities.c: Support for mic and audio mute LEDs
-
-Jiri Slaby (SUSE) (1):
-      irqdomain: platform/x86: Switch to irq_domain_create_linear()
-
-Jithu Joseph (1):
-      platform/x86/intel/ifs: Update documentation with image download path
-
-Joshua Grisham (2):
-      platform/x86: samsung-galaxybook: Add samsung-galaxybook driver
-      platform/x86: samsung-galaxybook: Fix block_recording not supported logic
-
-Khem Raj (1):
-      tools/power/x86/intel-speed-select: Prefix header search path with sysroot
-
-Kurt Borja (21):
-      platform/x86: alienware-wmi: Add a state container for LED control feature
-      platform/x86: alienware-wmi: Add WMI Drivers
-      platform/x86: alienware-wmi: Add a state container for thermal control methods
-      platform/x86: alienware-wmi: Refactor LED control methods
-      platform/x86: alienware-wmi: Refactor hdmi, amplifier, deepslp methods
-      platform/x86: alienware-wmi: Refactor thermal control methods
-      platform/x86: alienware-wmi: Split DMI table
-      MAINTAINERS: Update ALIENWARE WMI DRIVER entry
-      platform/x86: Rename alienware-wmi.c
-      platform/x86: Add alienware-wmi.h
-      platform/x86: Split the alienware-wmi driver
-      platform/x86: dell: Modify Makefile alignment
-      platform/x86: Update alienware-wmi config entries
-      platform/x86: alienware-wmi: Update header and module information
-      platform/x86: dell: Use *-y instead of *-objs in Makefile
-      platform/x86: thinkpad_acpi: Move subdriver initialization to tpacpi_pdriver's probe.
-      platform/x86: thinkpad_acpi: Move HWMON initialization to tpacpi_hwmon_pdriver's probe
-      platform/x86: dell: dell-wmi-sysman: Use *-y instead of *-objs in Makefile
-      platform/x86: amd: Use *-y instead of *-objs in Makefiles
-      platform/x86: hp: Use *-y instead of *-objs in Makefile
-      platform/x86: intel: Use *-y instead of *-objs in Makefile
-
-Mark Pearson (2):
-      platform/x86: thinkpad_acpi: Support for V9 DYTC platform profiles
-      platform/x86: thinkpad_acpi: Fix registration of tpacpi platform driver
-
-Ovidiu Panait (1):
-      platform/x86: ideapad-laptop: use dev_groups to register attribute groups
-
-Pengyu Luo (3):
-      dt-bindings: platform: Add Huawei Matebook E Go EC
-      platform: arm64: add Huawei Matebook E Go EC driver
-      arm64: dts: qcom: gaokun3: Add Embedded Controller node
-
-Sakari Ailus (3):
-      platform/x86: int3472: Use correct type for "polarity", call it gpio_flags
-      platform/x86: int3472: Call "reset" GPIO "enable" for INT347E
-      platform/x86: int3472: Call "func" "con_id" instead
-
-Shyam Sundar S K (4):
-      platform/x86/amd/pmc: Notify user when platform does not support s0ix transition
-      platform/x86/amd/pmc: Move macros and structures to the PMC header file
-      platform/x86/amd/pmc: Remove unnecessary line breaks
-      platform/x86/amd/pmc: Use managed APIs for mutex
-
-Srinivas Pandruvada (4):
-      tools/power/x86/intel-speed-select: Prevent increasing MAX_DIE_PER_PACKAGE
-      tools/power/x86/intel-speed-select: Fix the condition to check multi die system
-      tools/power/x86/intel-speed-select: Die ID for IO dies
-      tools/power/x86/intel-speed-select: v1.22 release
-
-Sybil Isabel Dorsett (1):
-      platform/x86: thinkpad_acpi: Fix invalid fan speed on ThinkPad X120e
-
-Thomas Zimmermann (2):
-      platform/x86: compal-laptop: Do not include <linux/fb.h>
-      platform/x86: thinkpad-acpi: Do not include <linux/fb.h>
-
-Thorsten Blum (2):
-      sonypi: Use str_on_off() helper in sonypi_display_info()
-      platform/x86: hp-bioscfg: Replace deprecated strncpy() with strscpy()
-
-Vadim Pasternak (4):
-      mellanox: Relocate mlx-platform driver
-      platform: mellanox: mlx-platform: Cosmetic changes
-      platform: mellanox: mlx-platform: Change register name
-      MAINTAINERS: Add documentation reference for Mellanox platform
-
-Xi Pardee (9):
-      platform/x86:intel/pmc: Make tgl_core_generic_init() static
-      platform/x86/intel/pmc: Remove duplicate enum
-      platform/x86:intel/pmc: Create generic_core_init() for all platforms
-      platform/x86/intel/pmc: Remove simple init functions
-      platform/x86/intel/pmc: Add Arrow Lake U/H support to intel_pmc_core driver
-      platform/x86:intel/pmc: Move arch specific action to init function
-      platform/x86/intel/pmc: Add Panther Lake support to intel_pmc_core
-      platform/x86/intel/pmc: Remove unnecessary declarations in header
-      platform/x86/intel/pmc: Remove unneeded extern keyword in header
-
-Xiangrong Li (1):
-      mlxbf-bootctl: Support sysfs entries for RTC battery status
-
- .../ABI/testing/sysfs-platform-mellanox-bootctl    |   10 +
- Documentation/admin-guide/laptops/index.rst        |    1 +
- .../admin-guide/laptops/samsung-galaxybook.rst     |  174 +++
- .../bindings/platform/huawei,gaokun-ec.yaml        |  124 ++
- Documentation/wmi/acpi-interface.rst               |    3 +
- Documentation/wmi/driver-development-guide.rst     |    4 +
- MAINTAINERS                                        |   31 +-
- .../boot/dts/qcom/sc8280xp-huawei-gaokun3.dts      |  163 +++
- drivers/char/sonypi.c                              |   11 +-
- drivers/hwmon/hp-wmi-sensors.c                     |    4 +-
- drivers/platform/arm64/Kconfig                     |   21 +
- drivers/platform/arm64/Makefile                    |    1 +
- drivers/platform/arm64/huawei-gaokun-ec.c          |  825 ++++++++++++
- drivers/platform/mellanox/Kconfig                  |   13 +
- drivers/platform/mellanox/Makefile                 |    1 +
- drivers/platform/{x86 => mellanox}/mlx-platform.c  |   17 +-
- drivers/platform/mellanox/mlxbf-bootctl.c          |   20 +
- drivers/platform/mellanox/mlxbf-bootctl.h          |    5 +
- drivers/platform/x86/Kconfig                       |   41 +-
- drivers/platform/x86/Makefile                      |    7 +-
- drivers/platform/x86/amd/Makefile                  |    2 +-
- drivers/platform/x86/amd/hsmp/Makefile             |    6 +-
- drivers/platform/x86/amd/pmc/Makefile              |    6 +-
- drivers/platform/x86/amd/pmc/pmc.c                 |  113 +-
- drivers/platform/x86/amd/pmc/pmc.h                 |   82 ++
- drivers/platform/x86/amd/pmf/Makefile              |    8 +-
- drivers/platform/x86/amd/pmf/acpi.c                |    2 +-
- drivers/platform/x86/asus-tf103c-dock.c            |    2 +-
- drivers/platform/x86/compal-laptop.c               |    1 -
- drivers/platform/x86/dell/Kconfig                  |   30 +-
- drivers/platform/x86/dell/Makefile                 |   45 +-
- drivers/platform/x86/dell/alienware-wmi-base.c     |  491 +++++++
- drivers/platform/x86/dell/alienware-wmi-legacy.c   |   95 ++
- drivers/platform/x86/dell/alienware-wmi-wmax.c     |  768 +++++++++++
- drivers/platform/x86/dell/alienware-wmi.c          | 1249 -----------------
- drivers/platform/x86/dell/alienware-wmi.h          |  117 ++
- drivers/platform/x86/dell/dell-uart-backlight.c    |    2 +-
- drivers/platform/x86/dell/dell-wmi-ddv.c           |   84 +-
- drivers/platform/x86/dell/dell-wmi-sysman/Makefile |    2 +-
- drivers/platform/x86/hp/hp-bioscfg/Makefile        |    2 +-
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.c       |   15 +-
- drivers/platform/x86/ideapad-laptop.c              |   25 +-
- drivers/platform/x86/intel/ifs/Makefile            |    2 +-
- drivers/platform/x86/intel/ifs/ifs.h               |    9 +-
- drivers/platform/x86/intel/int3472/discrete.c      |  105 +-
- drivers/platform/x86/intel/pmc/Makefile            |    2 +-
- drivers/platform/x86/intel/pmc/adl.c               |   56 +-
- drivers/platform/x86/intel/pmc/arl.c               |  137 +-
- drivers/platform/x86/intel/pmc/cnp.c               |   29 +-
- drivers/platform/x86/intel/pmc/core.c              |  119 +-
- drivers/platform/x86/intel/pmc/core.h              |  199 +--
- drivers/platform/x86/intel/pmc/icl.c               |   24 +-
- drivers/platform/x86/intel/pmc/lnl.c               |   67 +-
- drivers/platform/x86/intel/pmc/mtl.c               |  109 +-
- drivers/platform/x86/intel/pmc/ptl.c               |  550 ++++++++
- drivers/platform/x86/intel/pmc/spt.c               |   45 +-
- drivers/platform/x86/intel/pmc/tgl.c               |   59 +-
- drivers/platform/x86/lenovo-wmi-hotkey-utilities.c |  212 +++
- .../x86/lenovo-yoga-tab2-pro-1380-fastcharger.c    |    2 +-
- drivers/platform/x86/samsung-galaxybook.c          | 1425 ++++++++++++++++++++
- drivers/platform/x86/think-lmi.c                   |   51 +-
- drivers/platform/x86/think-lmi.h                   |    2 +
- drivers/platform/x86/thinkpad_acpi.c               |  242 ++--
- drivers/platform/x86/wmi.c                         |  143 +-
- drivers/platform/x86/x86-android-tablets/Kconfig   |    1 +
- include/linux/platform_data/huawei-gaokun-ec.h     |   79 ++
- tools/power/x86/intel-speed-select/Makefile        |    2 +-
- tools/power/x86/intel-speed-select/isst-config.c   |   22 +-
- tools/power/x86/intel-speed-select/isst-display.c  |   11 +-
- 69 files changed, 6100 insertions(+), 2227 deletions(-)
- create mode 100644 Documentation/admin-guide/laptops/samsung-galaxybook.rst
- create mode 100644 Documentation/devicetree/bindings/platform/huawei,gaokun-ec.yaml
- create mode 100644 drivers/platform/arm64/huawei-gaokun-ec.c
- rename drivers/platform/{x86 => mellanox}/mlx-platform.c (99%)
- create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
- create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
- create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
- delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
- create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
- create mode 100644 drivers/platform/x86/intel/pmc/ptl.c
- create mode 100644 drivers/platform/x86/lenovo-wmi-hotkey-utilities.c
- create mode 100644 drivers/platform/x86/samsung-galaxybook.c
- create mode 100644 include/linux/platform_data/huawei-gaokun-ec.h
