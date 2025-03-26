@@ -1,139 +1,120 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F84114A4C6
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28821A316C;
+	Wed, 26 Mar 2025 15:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743004462; cv=none; b=fHO9g/foQOqvidkcTfj4ylrCXH3M7x6DMl8MmEEuPjK54y9JrMoyOy7a2eAe9DHrTGDuZHUHh/oS+4rPP++uy2oJGqMRo6ZC0slSexBqePM6xhGCHo0VPVljfONK66t9lHd8gd5C4VJNpgTZo98oubhqEcqfcKdz+tyYfsM0VWE=
+	t=1743004484; cv=none; b=hhMIXiYG4EaSBbWa4iXRj4LJRiu4uIOV43rkmH6d/IPhi200Nw01RwKbZ1l/1z9lSXK8liM+rF27+MGmegqXTj9U/Lzuf5wkl3H787zthozsmDPV3Ztv1kpzuyuEH/mZ1fGUWFzNNOqsmIQx2iY+IqjnyrS2mCFRr6FtgzpfYYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743004462; c=relaxed/simple;
-	bh=FDUGpv8wkh/L+zMY5NUyNY08daDDaIIU0e+pvQ9oYY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DQr2CB0J+KjsnGqBSVT8TJr4YfyiD4KUGsgszGbnBRzoOxDAMsqNblf+6hPW+FXxki4pMo50J9TMUJRqA/8hXfVgIEqRJZ20jg2k4MstdZFq7GNGMAYvlCo7Tb/Ada6EBHho3rBjulCJS8gmO4X/63w+yD91b1v06PgLQvNkjz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=h2mDSSnc; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1743004484; c=relaxed/simple;
+	bh=HoFQ0CMsHtsOWwRp+axH4plbdqn46HCLuFc8O9n7neA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OlXr8XbyI7c5nE9UyD6UlaCIPDGdF0OI/ulSaHqP2p3cIj4qEfoCEGVa0rRZi0xmSD/Ezjk5YHzNmmauKKyu73reBSOx8ctF/8lsFH7hVH9hWgc3fbqRxeM+HEJRagOyo3TwjNkfIhJIh7BXKDGfANNA+Xwki+bwDbusLa9v1mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VWFLWXSJ; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="h2mDSSnc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=zSLh
-	6u4uG99qS3Ry66qHxhfF2ZHYx/p/tn5fAPvS/l8=; b=h2mDSSnclj1MbnFQxta1
-	sCPwt85MjWu75wLtwX+zd4fkTII+ZZilK4FjkrDY//3Rlr2g5qRFl0/MBMz/jMng
-	v5MAmMYS9INt2nMfSVrqzpoKXBiRZ+cXrdZxCDvdK6hK2dXIbTIm2kVgHXkyOtk0
-	djQLFRZazRVKxP+BHqWUT0kqrE8DqdGJSubN1oNA1dtbNrAOkifdN+7+ghmb6sZq
-	V2ST7/Axd5GaHmH+clfvXilpbiw5kGsh0KsA8nJvG5h4jp3PALiR4EiW/Y641ST/
-	YHe3AfyuGnqW46PM/XYdXxm1Gyx6HzqTG2n732dQLYl/R0ewiURj8ugbybhqtYbb
-	og==
-Received: (qmail 3662529 invoked from network); 26 Mar 2025 16:54:10 +0100
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 26 Mar 2025 16:54:10 +0100
-X-UD-Smtp-Session: l3s3148p1@rV0S2UAxBNIujnsv
-Date: Wed, 26 Mar 2025 16:54:09 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: syzbot <syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com>,
-	gregkh@linuxfoundation.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH v2] media: dvb: usb: Fix WARNING in
- dib0700_i2c_xfer/usb_submit_urb
-Message-ID: <Z-QjIRoOWpoWaL6l@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	syzbot <syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com>,
-	gregkh@linuxfoundation.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-References: <6bb3b80b-a808-4992-8666-535ed9a5c980@rowland.harvard.edu>
- <67e2fed5.050a0220.a7ebc.0053.GAE@google.com>
- <29db5fdc-13c9-45f0-9183-c80d637725c6@rowland.harvard.edu>
- <Z-MKiV0Ei5lmWik6@shikoro>
- <d0fd60d7-5660-42ed-b1c7-4dfd6b8e74b0@rowland.harvard.edu>
- <Z-MrfICsY06DZV-2@shikoro>
- <f8e975a0-87d2-4f83-b580-6858050a252d@rowland.harvard.edu>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VWFLWXSJ"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30bee1cb370so320291fa.1;
+        Wed, 26 Mar 2025 08:54:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743004481; x=1743609281; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UybmRcOazmn4aXjSAlX40t+X4m/5tOX2sqBJ95HrPb4=;
+        b=VWFLWXSJKz2x67b/b3OSCyBlb2/p0ngB6qido0KMBSmnL3xNLU89o6o5pMFD3INReM
+         3DVOOjlHmJRlJjOvvaHoBkzO1ACbw+uGLDJcQylI/FqQvX8c8wDvoFDTxOGFGYzytBuD
+         1IliDpv/Nv0E0R19vGc9+V0xg/H35cNzKd+IxxTMmW4q0C6m8oGUSCFXA0R0Mn+ZtpFM
+         +5jhtVrbAXl/YZ8NEznJPYX49g3aM9pdAOOMAV7k/hqvq06XG3v8RqY9DtDQuoGo8C24
+         q4w2r5oo1ixFxmcyIqycQvWDYzpFEx0TEtENDNg7mtglAQEPFRnA9n0WqMHaNRQdzFqg
+         zHYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743004481; x=1743609281;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UybmRcOazmn4aXjSAlX40t+X4m/5tOX2sqBJ95HrPb4=;
+        b=K0kzhVY+cQkB6eR6j1DACcxg2XHMUC10hP5qt6u1aZ/MP3pfZZdT8pNDsQlJ0RNTAf
+         uwQCikR5NfMdAgKpCpglaxw7OhvwXkzILj4YiKFuWITgOAKQfOiAhTP5vNWcgTymDYHN
+         aHjW1DHwhMkbs+U99H+7nWQiB/HtswoC/AmVYgLLoi+W09CKuAigk5hOBiK2bhYQxElU
+         w23gYrJ4PEB4+bB+JfqNd9dS2/VDo2GosxtdrdrSXXgIoLzwBCHTttKuSWxAJMZd0Mnq
+         UT/mRnmorXId/kdMEzEApTg53S7njzG3ynPuZuSJzYU8G00duyIHwJUoMswTuDL0eA4u
+         F5Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCUZOL6uEpDzXlFaRQwZj7HfJtb0WCa13raVttQrzKcDtEginlW/6tXeAA8ivP4ms2KwVD4=@vger.kernel.org, AJvYcCX285F6Q0xg5UgC8ZoDbWVz/meAC+WdleAYLVqiVlv85Ujj0mxKiHIiDOETCaCkBZQdZwm7h58UzoHV6o+y@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBSZA5/k0IXT2JuP6NnYpuEjtTQKgveHkvQFevPSDGMPc7JKnV
+	pyPQ20zwEM1pWjf7RiKgnUBI5ZjeXhtWlelheeYPxUo2NqUxn8FaK/zdGs28WwDI36B/OMmk+Ng
+	vWradk966G/k8A6QnIdG8Jy/NmRE=
+X-Gm-Gg: ASbGnct9CB+9I2+9C5mpEud7nIYAikB2isAxhzaj9PET2pTrD7bVsFhTTlx+irReaAc
+	lv1rmz+CQJxY919LTiQ5p1D7is7Axhoqx7G51FjeH+w+KPprllOHheNczNg8lbjhpZ6qKH7NkNt
+	E64xlHhwFKFEf2ybvPSsaXIbdF9Uab
+X-Google-Smtp-Source: AGHT+IHt67fKJz4mYXdeEUbFX10Q4Jar36IOSOchTP5tfyVaZlVasO/43yApkgEaRZK0npcm6aa4HTklzlS7Goi+BO0=
+X-Received: by 2002:a05:651c:154a:b0:30b:b956:53c2 with SMTP id
+ 38308e7fff4ca-30dc5dd011emr1366581fa.11.1743004480685; Wed, 26 Mar 2025
+ 08:54:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6+vuiCGawqSgBAHG"
-Content-Disposition: inline
-In-Reply-To: <f8e975a0-87d2-4f83-b580-6858050a252d@rowland.harvard.edu>
-
-
---6+vuiCGawqSgBAHG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <facda6e2-3655-4f2c-9013-ebb18d0e6972@gmail.com>
+ <Z-HiqG_uk0-f6Ry1@google.com> <4eda127551d240b9e19c1eced16ad6f6ed5c2f80.camel@infradead.org>
+In-Reply-To: <4eda127551d240b9e19c1eced16ad6f6ed5c2f80.camel@infradead.org>
+From: Ming Lin <minggr@gmail.com>
+Date: Wed, 26 Mar 2025 08:54:27 -0700
+X-Gm-Features: AQ5f1JqngjMEuNhWms46ut3gIH5kOFUVoPA5VbOb2u_rTRu2lBbhRvNuTSzrf1c
+Message-ID: <CAF1ivSbVZVSibZq+=VaDrETP_hEurCyyftCCaDEMa5r7HAV67A@mail.gmail.com>
+Subject: Re: pvclock time drifting backward
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 26, 2025 at 11:28:19AM -0400, Alan Stern wrote:
-> The syzbot fuzzer reported a WARNING related to the dib0700 dvb-usb
-> driver:
->=20
-> usb 1-1: BOGUS control dir, pipe 80000f80 doesn't match bRequestType c0
-> WARNING: CPU: 1 PID: 5901 at drivers/usb/core/urb.c:413 usb_submit_urb+0x=
-11d9/0x18c0 drivers/usb/core/urb.c:411
-> ...
-> Call Trace:
->  <TASK>
->  usb_start_wait_urb+0x113/0x520 drivers/usb/core/message.c:59
->  usb_internal_control_msg drivers/usb/core/message.c:103 [inline]
->  usb_control_msg+0x2b1/0x4c0 drivers/usb/core/message.c:154
->  dib0700_ctrl_rd drivers/media/usb/dvb-usb/dib0700_core.c:95 [inline]
->  dib0700_i2c_xfer_legacy drivers/media/usb/dvb-usb/dib0700_core.c:315 [in=
-line]
->  dib0700_i2c_xfer+0xc53/0x1060 drivers/media/usb/dvb-usb/dib0700_core.c:3=
-61
->  __i2c_transfer+0x866/0x2220
->  i2c_transfer+0x271/0x3b0 drivers/i2c/i2c-core-base.c:2315
->  i2cdev_ioctl_rdwr+0x452/0x710 drivers/i2c/i2c-dev.c:306
->  i2cdev_ioctl+0x759/0x9f0 drivers/i2c/i2c-dev.c:467
->  vfs_ioctl fs/ioctl.c:51 [inline]
->=20
-> Evidently the fuzzer submitted an I2C transfer containing a length-0
-> read message.  The dib0700 driver translated this more or less
-> literally into a length-0 USB read request.  But the USB protocol does
-> not allow reads to have length 0; all length-0 transfers are
-> considered to be writes.  Hence the WARNING above.
->=20
-> Fix the problem by adding the I2C_AQ_NO_ZERO_LEN_READ adapter quirk
-> flag to all the USB I2C adapter devices managed by dvb-usb-i2c.c,
-> following Wolfram Sang's suggestion.  This tells the I2C core not to
-> allow length-0 read messages.
->=20
-> Reported-by: syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com
-> Tested-by: syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com
-> Suggested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-> Link: https://lore.kernel.org/linux-usb/67e1a1f5.050a0220.a7ebc.0029.GAE@=
-google.com/
+On Tue, Mar 25, 2025 at 4:07=E2=80=AFAM David Woodhouse <dwmw2@infradead.or=
+g> wrote:
+>
+> On Mon, 2025-03-24 at 15:54 -0700, Sean Christopherson wrote:
+> >
+> > David can confirm, but I'm pretty sure the drift you are observing is a=
+ddressed
+> > by David's series to fix a plethora of kvmclock warts.
+> >
+> > https://lore.kernel.org/all/20240522001817.619072-1-dwmw2@infradead.org
+>
+> Yes, that looks like exactly the problem my series is addressing. We
+> shouldn't update the pvclock so often. And if/when we do, we shouldn't
+> clamp it to some *other* clock which progresses at a different rate to
+> the pvclock, because that causes steps in the pvclock.
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+I applied the patch series on top of 6.9 cleanly and tested it with my
+debug tool patch.
+But it seems the time drift still increased monotonically.
 
-Thanks for taking care of it!
+Would you help take a look if the tool patch makes sense?
+https://github.com/minggr/linux/commit/5284a211b6bdc9f9041b669539558a6a858e=
+88d0
 
+The tool patch adds a KVM debugfs entry to trigger time calculations
+and print the results.
+See my first email for more detail.
 
---6+vuiCGawqSgBAHG
-Content-Type: application/pgp-signature; name="signature.asc"
+Test Script:
+#!/bin/bash
 
------BEGIN PGP SIGNATURE-----
+qemu_pid=3D$(pidof qemu-system-x86_64)
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfkIx4ACgkQFA3kzBSg
-KbZQlA/9F/3h5gABvKbiy6ojaD5HfokFTVzFJ/YjhFlvQTXoyoZRIH4BxNRWH2v7
-nVafhaGZ9ynojOtXwxASFODJLRgaEQmB3+8Bot9brgaV0ei9TY8mVknRK3mCby/I
-a7YtMM5QsLtlrr3NB6jegE5qKhCKRtLOArYseRGh+fnpb2FkL8rnnZt/p9IsiiVe
-8zVDnBBpc7BjrRuD7bg9zANX53YTlLjVQ2VhxzMyyvxIkUBneMWxxoqgFOSG9OEz
-VlrioknZ6zxjBHBzlzliQylbRUWPBq6Cn4Rt20ST/VaMWg8tPPP/CLKDIvGeq0be
-R3YU67eSLmuj56uk8OVmnJcf1To4LCyeT3yvvsrVhNu72olMYwxP+tRabhxVphwL
-6eWL1jdJt1BbfSdNXCiKiP6l3hD0bKz04N3tj+bIyLHRiUxd474+H4Vgzzped/j1
-4734hpxf5QWsz35CVGAMXGZl7sr39lhB3cU2RZQsigUferCMwz4pD78u19TbkFpz
-Vx/EPpxLSpCHBE/UimG2hEpr5/R8e23D44Bu6diZpeFoRVa75MO9fi78RAUqk5we
-cduCy7Ciuhagp+a0Im+OkxoVuk/7u/3/dMUgr9Kh2yRKKhuuD8Tljss32sHBJpDb
-QpLjPlpdqKoGSts9dr/K8HRm5PBX62WA668VkkUnZLjSutYjW0I=
-=Qco2
------END PGP SIGNATURE-----
+while [ 1 ] ; do
+     echo "=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D"
+     echo "Guest OS running time: $(ps -p $qemu_pid -o etime=3D | awk
+'{print $1}')"
+     cat /sys/kernel/debug/kvm/*/pvclock
+     echo
+     sleep 10
+done
 
---6+vuiCGawqSgBAHG--
+Thanks,
+Ming
