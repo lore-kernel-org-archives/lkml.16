@@ -1,143 +1,114 @@
-Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65A11531F0
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 09:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54A71A5BA2
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 09:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742982118; cv=none; b=Fh89lpaP99crurFnmSwJq2o/JR6PwiNCGDaKehqPBrL/uoCI6em4bdWCzd+ZstcuXSQAbmTIBCAp+dBk9X9GjlTjSiawBL4qP/N3+7TCFqEcaOJBow79TKiTo1sLS0wtTUCUa8Sn79+nh1oHVZa/3BNA4auewdkLWqYzasPw12A=
+	t=1742982171; cv=none; b=Oanw5besf1WTdHMYQoCWO6DCYEoW3biTaX5h9De0CNw6TMbnwti1IHUSe+Gzvp4DJp3kXQYpU+KLRmreBUfKX953ecxK0OXE2ZaIxGdchefyhmHtM2UY2yzxo1a3CL78aCiZgfnzUUez9sk03e20DspIo9VAriky+fHECKzoRi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742982118; c=relaxed/simple;
-	bh=I2stVIQnV1JMUDp1WceN/ExXStfJmwaVDIpVO4V2QNw=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=XmeE1EzZjTG1NpK6zXm7AkxCmc9eqhF5Q9/Kef/8kSxfL0MJJ3LjL9WQZM1Ig/H4rByU3vHrXDuxV2d/WEUiE+gqUijlw48XOh7EIHbeM0i+dPYhftR8UTSulFqlmkRGa8PoWfRRyD4H8bHTRYJElseh4wORDR8M0z3THJQPc8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=jZVjnh6K; arc=none smtp.client-ip=109.224.244.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1742982171; c=relaxed/simple;
+	bh=oK9w0PHHeYSQoiTSBw6ii01fBfUomipWqhc0pGmOdEs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=SFGcBCG2m9xKrlwIB4mmDIkL+ZQzcIwK1z1uXqqGdX1SX10j68zuwr/JZnfRnwyyCg9ekR0X4UVBMKxqHzkpz9zoYEPHHdIo19JARYQCEx/a5jpn6AJ3Pvhe5M3/qkH0eM57/SooussaPwodA3OkSC5IECOnpU1hkpZXAxTicY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zqjeVpyr; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="jZVjnh6K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1742982113; x=1743241313;
-	bh=A2xev0rDxddos5NidDPQixrRYQvSFIIjKdpJyFe5F/U=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=jZVjnh6KxiiiSZ8FMDmYqlAvj6KYufYGaxoIYNUN8FVm51W5BE9owLZCxlmYgwVya
-	 SEtV6MNL48HEcK1h0US6LhkI8sxvTsrdzIYIbp8Iy0DqBI6J22OWUdCrdPnG0EiIDF
-	 iESuN1VkWT101Pq9ypqEhcW88vNoREdUW7uhjD2Osye80fV9pc6Y6qZ+hKRq2VjYul
-	 4cSXKeLY9eHbdo6fh5KzxJ5DIe8arfC6Jc1S9UPA+js16T/pafGj3MWso4hIG8pBH7
-	 +YhhCsu4A90Pocl4ch26jAeFalvDonZIX7/XSFM/e/tiWll9iWL1fSKlT1Fvy556Cv
-	 0lqF3gkVwHmgQ==
-Date: Wed, 26 Mar 2025 09:41:46 +0000
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-From: "Michael C. Pratt" <mcpratt@pm.me>
-Cc: Christian Lamparter <chunkeey@gmail.com>, =?utf-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, linux-kernel@vger.kernel.org, "Michael C . Pratt" <mcpratt@pm.me>, INAGAKI Hiroshi <musashino.open@gmail.com>
-Subject: [PATCH] nvmem: layouts: u-boot-env: remove crc32 endianness conversion
-Message-ID: <20250326094034.18716-1-mcpratt@pm.me>
-Feedback-ID: 27397442:user:proton
-X-Pm-Message-ID: fad14ea4aa54eaed7e41f0b39f50320cc573ce37
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zqjeVpyr"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-390f5f48eafso3630728f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 02:42:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742982167; x=1743586967; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oK9w0PHHeYSQoiTSBw6ii01fBfUomipWqhc0pGmOdEs=;
+        b=zqjeVpyrhgQ/NXGty1PgUN3b8mwx56PVRJzxDHl4Ock4WqFoi73/XTjZ0yMA2yGROM
+         nJHE7xet4YKfMUS4U1/t8DktJHik+cttkZ+x3CZzDXWd2wzIB/JlvsvevgJMj6NMoCrV
+         GVw1nag1t9U5b6r2H18ZqB3HquVxcwr6sO3qS0gdw3kL+Vd/4v0fR23qVSZERRq/hjDr
+         YFMsw4ULzqT4HhK/pRkwhtPYJW881jF+5yaeABRjneatqdKAq/TVWfSYTCgfDL7TaI0i
+         2l0uPOn+yEea31cxsVGhvUoO2GhphEGl9wqrQ07X5p+fTdiJxmjar+h3MHwXGb2S76+C
+         nfRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742982167; x=1743586967;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oK9w0PHHeYSQoiTSBw6ii01fBfUomipWqhc0pGmOdEs=;
+        b=WJwkuzlQBZ9R+navG25gK+D3ZAyAv6sCei6mlgSNCyAIfeog7C2zp/A5JDzA7qbxII
+         /eLJCYu74w/BRONa/N19GTPEjZSqQn9otanbjECe+UbbD0YQIRRigGHeJnnNRwxdAYle
+         tfufaxjtkVSa9OjpQPx0QKH5AIJrBMwTITfZNCYO9KeYzz8qeKkR1OXrCreL6Mp25pYJ
+         BNhlKyYrtl7PmIjoCLsCzaNQWQesmS4/5MBwSLyIqlUcqj6I1GNyQYGibYGHbgDObEie
+         YiqXNaWUdfyh9wIabGq4VxBKdwzlPcNHUwFvxiR43/1lZBgbcHpavnHF9M7NxIzU9jQ/
+         nXMg==
+X-Forwarded-Encrypted: i=1; AJvYcCU3/xV94wykPNq6efKmDPjRYa27cU+74Yu6BenekWuMs0Nh7/WTdfFTF5FHwvawSQXizRuSoyWZRi6p3SU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQAiDsi1YWPJn2FhMfdGEgpB0lUoJkWNetUmOdlIzhdJWOPUy/
+	nOcRHS+F3Bi5AT1+Df007wTu1u97CvwcFQgaiyHrlCRLJxJ8q3Zsr/RSyL94uUM=
+X-Gm-Gg: ASbGncsyZUFXR17Wz/rTFJVr2d1SiITmwzVB6NCoUBvnW/oxoLJG6fAe6K8XDntRUb2
+	6YNI0FaXNBqzwTQL7KASVpF9SYwf3WVnXZ4ONXNrIlUtyAzmSi7R+VbLH8dAUC5GIxJEWk9rBhz
+	Bfqjx7lB8RWONJUiDBRUfZ6YFUHMDh9DmVgqtGRdFR1zRl9v7iHepjjb2zy6Q3dntmxj1r2jZ9H
+	OET7yL+IH/XJF+Y7ZFTXngqTpiT0LiK4ZylCjFXGmo4/Yf7LVkbz4Z6obkjTpKfc567w9Qs6+Wq
+	reaEwNo+N0fJrOjLN/ldB0O9nkm2KdOA8I0PVNSeU3NzS9adqQ==
+X-Google-Smtp-Source: AGHT+IFPYFB/K6M208ce6TYKpgzYD2gbxBVrga6S1jcpfDNM/sLdTcLlHMBJoMx/mLpGmNEqFLCYBQ==
+X-Received: by 2002:a5d:64a2:0:b0:391:2c0c:1270 with SMTP id ffacd0b85a97d-3997f8ed9d4mr17888571f8f.1.1742982166969;
+        Wed, 26 Mar 2025 02:42:46 -0700 (PDT)
+Received: from [10.1.1.109] ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f995778sm16406564f8f.11.2025.03.26.02.42.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 02:42:45 -0700 (PDT)
+Message-ID: <53e7fd763da3748dbc7a5205b4f93cdf9476aded.camel@linaro.org>
+Subject: Re: [PATCH 15/34] mfd: sec: use dev_err_probe() where appropriate
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, Rob
+ Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Sylwester
+ Nawrocki	 <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>,
+ Alim Akhtar	 <alim.akhtar@samsung.com>, Michael Turquette
+ <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas	 <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Alexandre Belloni	 <alexandre.belloni@bootlin.com>
+Cc: Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus
+	 <tudor.ambarus@linaro.org>, Will McVicker <willmcvicker@google.com>, 
+	kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rtc@vger.kernel.org
+Date: Wed, 26 Mar 2025 09:42:44 +0000
+In-Reply-To: <e3dee29a-dcee-40b5-8bf4-22a6a8a7993a@kernel.org>
+References: <20250323-s2mpg10-v1-0-d08943702707@linaro.org>
+	 <20250323-s2mpg10-v1-15-d08943702707@linaro.org>
+	 <e3dee29a-dcee-40b5-8bf4-22a6a8a7993a@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.53.2-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-On 11 Oct 2022, it was reported that the crc32 verification
-of the u-boot environment failed only on big-endian systems
-for the u-boot-env nvmem layout driver with the following error.
+On Wed, 2025-03-26 at 08:24 +0100, Krzysztof Kozlowski wrote:
+> On 23/03/2025 23:39, Andr=C3=A9 Draszik wrote:
+> > dev_err_probe() exists to simplify code and harmonise error messages,
+> > there's no reason not to use it here.
+> >=20
+> > While at it, harmonise some error messages.
+> >=20
+> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> Maybe such cleanups should be before you start moving the code and
+> splitting modules into i2c/core/acpm.
 
-  Invalid calculated CRC32: 0x88cd6f09 (expected: 0x096fcd88)
+Sure, I can re-order them. I didn't want the new PMIC to depend on
+all that cleanup, as I believe that had been previous feedback (but
+maybe I misremember :-), and also to avoid the new PMIC being blocked
+on potentially contentious earlier cleanup patches, if any.
 
-This problem has been present since the driver was introduced,
-and before it was made into a layout driver.
 
-The suggested fix at the time was to use further endianness
-conversion macros in order to have both the stored and calculated
-crc32 values to compare always represented in the system's endianness.
-This was not accepted due to sparse warnings
-and some disagreement on how to handle the situation.
-Later on in a newer revision of the patch, it was proposed to use
-cpu_to_le32() for both values to compare instead of le32_to_cpu()
-and store the values as __le32 type to remove compilation errors.
+> Anyway:
+>=20
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-The necessity of this is based on the assumption that the use of crc32()
-requires endianness conversion because the algorithm uses little-endian,
-however, this does not prove to be the case and the issue is unrelated.
-
-Upon inspecting the current kernel code,
-there already is an existing use of le32_to_cpu() in this driver,
-which suggests there already is special handling for big-endian systems,
-however, it is big-endian systems that have the problem.
-
-This, being the only functional difference between architectures
-in the driver combined with the fact that the suggested fix
-was to use the exact same endianness conversion for the values
-brings up the possibility that it was not necessary to begin with,
-as the same endianness conversion for two values expected to be the same
-is expected to be equivalent to no conversion at all.
-
-After inspecting the u-boot environment of devices of both endianness
-and trying to remove the existing endianness conversion,
-the problem is resolved in an equivalent way as the other suggested fixes.
-
-Ultimately, it seems that u-boot is agnostic to endianness
-at least for the purpose of environment variables.
-In other words, u-boot reads and writes the stored crc32 value
-with the same endianness that the crc32 value is calculated with
-in whichever endianness a certain architecture runs on.
-
-Therefore, the u-boot-env driver does not need to convert endianness.
-Remove the usage of endianness macros in the u-boot-env driver,
-and change the type of local variables to maintain the same return type.
-
-If there is a special situation in the case of endianness,
-it would be a corner case and should be handled by a unique "compatible".
-
-Even though it is not necessary to use endianness conversion macros here,
-it may be useful to use them in the future for consistent error printing.
-
-Fixes: d5542923f200 ("nvmem: add driver handling U-Boot environment variabl=
-es")
-Reported-by: INAGAKI Hiroshi <musashino.open@gmail.com>
-Link: https://lore.kernel.org/all/20221011024928.1807-1-musashino.open@gmai=
-l.com
-Signed-off-by: Michael C. Pratt <mcpratt@pm.me>
----
- drivers/nvmem/layouts/u-boot-env.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/nvmem/layouts/u-boot-env.c b/drivers/nvmem/layouts/u-b=
-oot-env.c
-index 731e6f4f12b2..21f6dcf905dd 100644
---- a/drivers/nvmem/layouts/u-boot-env.c
-+++ b/drivers/nvmem/layouts/u-boot-env.c
-@@ -92,7 +92,7 @@ int u_boot_env_parse(struct device *dev, struct nvmem_dev=
-ice *nvmem,
- =09size_t crc32_data_offset;
- =09size_t crc32_data_len;
- =09size_t crc32_offset;
--=09__le32 *crc32_addr;
-+=09uint32_t *crc32_addr;
- =09size_t data_offset;
- =09size_t data_len;
- =09size_t dev_size;
-@@ -143,8 +143,8 @@ int u_boot_env_parse(struct device *dev, struct nvmem_d=
-evice *nvmem,
- =09=09goto err_kfree;
- =09}
-=20
--=09crc32_addr =3D (__le32 *)(buf + crc32_offset);
--=09crc32 =3D le32_to_cpu(*crc32_addr);
-+=09crc32_addr =3D (uint32_t *)(buf + crc32_offset);
-+=09crc32 =3D *crc32_addr;
- =09crc32_data_len =3D dev_size - crc32_data_offset;
- =09data_len =3D dev_size - data_offset;
-=20
-
-base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
---=20
-2.30.2
-
+Thanks!
+Andre'
 
