@@ -1,81 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7731C701C;
-	Wed, 26 Mar 2025 13:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5391C701C
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 13:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742994752; cv=none; b=USWBfOApG7JEAOXYHLARHRc958IN90d0YWi2kbiaUYmKA++UPFqhypPvXKbf0I4Uw22Iw5gbXFFLrrnKnPOJWpD+hdk5M1iveeL+wcbC8KUuWYrhmHFZ9dcU1448Qx9/SWPDe9trJWongxAntd+lXYRX5T97eFF8NWUDCprfvbU=
+	t=1742994801; cv=none; b=roxvgrOqpAu1feSgpvaDZoihomCpACsyiRJETmAZGg2/Vqo//AnUHsz4Oi890WZQSTxmhtMYkDKopYnjoMCuYrjHWIyOpQtJI8U/7rVLP6194MU0u4LizcGVQal0PvbWqt1RRLgi0vA8qMbncP/8KCfwcCIwsw8PNyDRu3StQa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742994752; c=relaxed/simple;
-	bh=HCfzXEsmtAEgS/9JjKgGe5pakNcg/XMKKdGR8ISCZXI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EyoA/vELafLXmHlkGpToHbwuCciQVmeFDvOr/EXd1K65uzXz28Ag7vr2AHsEQ7LgySpp7XWRw0nUyeW5gNOLpaidYmPq6t/ylRPEYTO1fdsFJ1Ud3EK/CXt86oqiw5oq9YvgaeivA1LkG9yOBv/ZL1AvHW8wEVLdw8a3JbUGEbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cNi6fQYb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742994801; c=relaxed/simple;
+	bh=jFg9wv/JLVp4O097cPYsg6wFFeya5WHBKUv3ztZpqeE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KID14IWeiwTp/e4fcmKIxEtLrtdZeB+0EJCiOleIYsr3VHR/iWVU7R7QCNqjXBmNAYh1VtIoe4X4j8zflRu1MjR2JI3gywrLb8AKDsAl5iFli2F6HXiA2fquVUoRpcPSXoe5aZWCvxbWrBotbR3JR6FHbkAcf6hLh6FTuQWL/80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=RiCfGsPc; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cNi6fQYb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D43B9C4CEE2;
-	Wed, 26 Mar 2025 13:12:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742994750;
-	bh=HCfzXEsmtAEgS/9JjKgGe5pakNcg/XMKKdGR8ISCZXI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cNi6fQYbJ2INpUGj5Td0RZZyyhMhK6LATG+fi99VgDytpBEjxu8+UEVe3dlxGEIsI
-	 Csz2MfjOEnsIv9eaGovhVXazMhqb/jjucX+/Zk73o824Jvhs9yTZxweYB5wrcRfVAy
-	 WmnXKemTFJYlfCdETLjA2fD/m/iaa7GXRda2hiTm79bWqR8QP17czHzU+FSipawK5o
-	 ZpVDnw1svwgN8NRS61AyTRCfkhpjIpQkKeKTtMLe1DjgMSIbhhQxebonL/0qGHh/Nm
-	 85cC8HJTLqWmjGjodhGYiKJCdnVBJgFkdL0ru5bvL5Uw/Tne3P7voGCKq7YmQppeTI
-	 58KFaTfJaT2Dw==
-Date: Wed, 26 Mar 2025 13:12:25 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 13/14] regulator: bd96801: Support ROHM BD96806 PMIC
-Message-ID: <7c07c3e2-9586-40a2-97b6-2552c36b8ac4@sirena.org.uk>
-References: <cover.1742802856.git.mazziesaccount@gmail.com>
- <734397c8bdb86419fbced3432c7074badaad6657.1742802856.git.mazziesaccount@gmail.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RiCfGsPc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1742994791;
+	bh=jFg9wv/JLVp4O097cPYsg6wFFeya5WHBKUv3ztZpqeE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RiCfGsPc7e5xvuhP9Wq75plR8oHjMy5cT6wSVosydGXL2iOCVz61cj88vcPI624NA
+	 U6Egcb4q5mRkdBgtfrgpOcG5ID1vqyi3Y07nLXnkDs0555kgP0vGK2Rlcvzn9Trv21
+	 loVMHQLdgsZ2LpmXmUtEhxbSu6N6rzV0Qzb3Lhv/MoRswhS4FCXq6EqPV0kY1IMcBi
+	 lD3Vnfw9fxsJZRLJTI80JXfitrpfMMzewXSWLmiFDwNZlY9QD+1gcLZf4R4wgqF1Is
+	 5B7XIiHswIalC4gVMFKEZUB38QpwBit2xkQdU9yq856L44cxKi78CEOe0RmVGLOEQ0
+	 KfQ54jgCo9Cmw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZN6fZ1PhPz4wbp;
+	Thu, 27 Mar 2025 00:13:10 +1100 (AEDT)
+Date: Thu, 27 Mar 2025 00:13:08 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, "H.
+ Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] objtool: Fix NULL printf() '%s' argument
+Message-ID: <20250327001308.05910bd9@canb.auug.org.au>
+In-Reply-To: <Z-OsCFQ_qUHjRVmV@gmail.com>
+References: <a814ed8b08fb410be29498a20a5fbbb26e907ecf.1742952512.git.jpoimboe@kernel.org>
+	<20250326151014.6a006c93@canb.auug.org.au>
+	<Z-OsCFQ_qUHjRVmV@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="BPARvkvKQ2c1mBWe"
-Content-Disposition: inline
-In-Reply-To: <734397c8bdb86419fbced3432c7074badaad6657.1742802856.git.mazziesaccount@gmail.com>
-X-Cookie: To err is humor.
+Content-Type: multipart/signed; boundary="Sig_/FOgQcg9IXkWp2jybJTrx0IN";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/FOgQcg9IXkWp2jybJTrx0IN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
---BPARvkvKQ2c1mBWe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Ingo,
 
-On Mon, Mar 24, 2025 at 10:57:12AM +0200, Matti Vaittinen wrote:
-> The ROHM BD96806 is from the software perspective almost identical to
-> the ROHM BD96802. The main difference is different voltage tuning
-> ranges.
+On Wed, 26 Mar 2025 08:26:00 +0100 Ingo Molnar <mingo@kernel.org> wrote:
+>
+> Thanks, I've re-spun tip/urgent, so the next -next iteration ought to=20
+> pick up the fix.
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
+Excellent.
 
---BPARvkvKQ2c1mBWe
-Content-Type: application/pgp-signature; name="signature.asc"
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/FOgQcg9IXkWp2jybJTrx0IN
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfj/TkACgkQJNaLcl1U
-h9BoTQgAgSWrLYyVR17nX9AQefzS+HztJBxcKixoh/hX2jZWTsPI2wR2lMPPQssW
-6hlc61JuWNiIVIQ5TeoSBZ2kO8quAf27c8nzE2if7E8c2Guz22C6b8tb4zBuzS6s
-bQbaJP3HiFgHdqkAqyw2AHgDqCK+dH2SjF3Nuoelm5BqJ2aAvLCuJBFR3LLpm4XS
-gYnoVTZK8c8hpYmDImIBwYmEtN0Zd3Nq93tH0kKgE3B5DGPDcaRmLlAX39Vv7WCs
-knR5eWvT+Sxa2JCRESRuU99b/fV9vUKx7QE0utmM/Fx5G+a/32eDjP24Klc91/p9
-kAtSK+tXh0urTtGRrKjntVjhSKgO4w==
-=LOE9
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfj/WQACgkQAVBC80lX
+0GzTHQf+IQ4oxn68rqcr0vqDzGTfcb1co5NiVuNR4NehyXpTPef9vRPzfiOTmrWV
+3dVBGejgNfPXhIpNHzmCB4xuTiJo/UJ5WNJfqQWNiX929xsigtbCsRSkn4BohwQi
+ROn/TqORxyUshyov3+w4y6moLDN6mgZbnd14SNPMQnLCah5FtYX+LJgFTqLBgDro
+/24NYfzbb1/Sh8S0QudCeMkdd7VXbaIqs6+l79m0x8XAeevMy8PH3nlqRswEaIVf
+tVSNgpXX/cvjSNjgIEmYsqcJtmi7as6IJmwOVzIfZ3/O1WO6hTRC5gMMMWT8Z6a8
+37GkClz1gb60YvxjYWMlxNv3D8uZSw==
+=jSpu
 -----END PGP SIGNATURE-----
 
---BPARvkvKQ2c1mBWe--
+--Sig_/FOgQcg9IXkWp2jybJTrx0IN--
