@@ -1,36 +1,36 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA741ACEC6
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 09:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229371B87F2
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 09:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742980995; cv=none; b=q0p/hdWWhFaHURA51DeAqGRgmWpz2Us+43IW9eavxb/f2QufcDCcM1v25nvZewFmU+NPdbgyqDgmUT8p80nXC+25enJnGYzWjmsd6lLrY0SftoW+Dxfkb+9PnWIbVfIlWCHxJEFsNXSMC9coVypGZsMPese4efOmH8381KhZhmA=
+	t=1742980998; cv=none; b=f36fyZcICn70RwCPVrzeiEMZdxHCCI9KKHiDOcFyTVuPtW5xRRt8g5szUxhgPJ5EKdaZdUlUKpFtKnQA1HvYA6DbdW1Ksij7fxcj/Ff3WI1Th13KMcPqMRrA+lgwcAkFmVUmhjrxHWmcSQJtGj+1ZnkB3/Wwq9ej2kjmBFPkBaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742980995; c=relaxed/simple;
-	bh=fDEagyklU36acP9gWnzlOwhHIcNzCkAKnAd1SrSbpew=;
+	s=arc-20240116; t=1742980998; c=relaxed/simple;
+	bh=TkX7GRD83crxV0cIdZxGrHFycvQ+HvgrCq/ma8D0WyM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rblBqCaFp3w1DMgW9TJIITvXL5IXbnd0CqH89FIW8e9glRDLEKJ2riiH0iOUGhiK2tT1RSR+nX4KRBwWz4tDlGLhE24Xl8xx0P+QFTw8DyFDwZhJ5mdreXzuSz1Xfnm2FB9BpToHBThaV9xkjwDlxu6dIG3aEoMurQIBC6T2OmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KLu2vuse; arc=none smtp.client-ip=217.70.183.201
+	 MIME-Version:Content-Type; b=tQL34JcQNyWHa+NmET/Qq+XgTV6Cb31OGi6/k6ZOb1AANbdQXnPVkjBTaPt1vppXD3bhhMFys5c+OWYI/kCwhSbS+XpjUHVWBL2dUGZREM5pk8TXEryvN1nZTbpCl5EZzKtw+MQbufRdqSdpxQIin4LvSC0Ynv/GNm2YFhQgQsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=e2Q0yR+p; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KLu2vuse"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 566884341A;
-	Wed, 26 Mar 2025 09:23:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="e2Q0yR+p"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 802AB432FF;
+	Wed, 26 Mar 2025 09:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742980986;
+	t=1742980993;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JsEyj+lTR3bdUdE++96P2r98RujtLyXQv06vTnGR8p4=;
-	b=KLu2vuse3BgDkRGWJCGipYhivSvJ1dwKmjSCBREKhVNVvVY75CiZU6rOIByUexIPRPG0eC
-	3QHPZlMeN/SBMMb74hwbCR8JnqJ74bKO4+YQNQmbzum9Fg2KSpmWOZY/TZHehv3fjk6a0j
-	k1RPq+uoF3KosMgRfxi7ehli9J77pL3vijKfjYpLfhtL5qdDve3IZj6ubs1E9tjZsd1aNa
-	GwwC1fFllKG6AZQb3705XmfVHjNwpYuhlO+FipY7evaD4yrUr9AbvsfH8+wQ6va1sVcfrQ
-	DxcWwcJExrF2dL+7wty8DCwT9DQUJPw49fEDTV6Kk9zvDK+csegTkW39ZiTqzg==
-Date: Wed, 26 Mar 2025 10:23:04 +0100
+	bh=bIUNbdZ1cK4glJwv9l0XaozvLRNEJu3A/7luDT3RxbE=;
+	b=e2Q0yR+pZ6VR4pRDdKj91Higiu4U5Ypt1Lm0E9+WXKr8veeIROpEy2xkfwt3eSG1fC0+XG
+	unmDZB7CMqmKZc6qMuB4TeX+VXXQbBGWfkQdRj2aqSPxnNTz8UI46gv24JdcY9KcOpVdK1
+	maK+WsXVwiT43R55ubruhvUTgSHu4PXlHtZufh1wnGXRR37iIKnk9gVhcDc98OBBcy/cWM
+	IzfVOfRD4bOnYYV8S2Lo3ah5l3o8Kq4dL0WcticfS8X0vCDRpAi6B9hWXh0FlGQ7dwbR7K
+	dP5s5rWMf9PakUMubWP7souudDqvN/YmwefeWnO2lFhTBIJ9D5gdq1+cIu5rJQ==
+Date: Wed, 26 Mar 2025 10:23:11 +0100
 From: Luca Ceresoli <luca.ceresoli@bootlin.com>
 To: Anusha Srivatsa <asrivats@redhat.com>
 Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
@@ -39,11 +39,11 @@ Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
  Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
  Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] drm/panel: Add refcount support
-Message-ID: <20250326102304.49510630@booty>
-In-Reply-To: <20250325-b4-panel-refcounting-v1-2-4e2bf5d19c5d@redhat.com>
+Subject: Re: [PATCH 4/5] drm/panel: deprecate old-style panel allocation
+Message-ID: <20250326102311.0e27a5ab@booty>
+In-Reply-To: <20250325-b4-panel-refcounting-v1-4-4e2bf5d19c5d@redhat.com>
 References: <20250325-b4-panel-refcounting-v1-0-4e2bf5d19c5d@redhat.com>
-	<20250325-b4-panel-refcounting-v1-2-4e2bf5d19c5d@redhat.com>
+	<20250325-b4-panel-refcounting-v1-4-4e2bf5d19c5d@redhat.com>
 Organization: Bootlin
 X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
@@ -56,88 +56,20 @@ Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieehudeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeeftdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeehffejffekudfhkeeklefgjeeuheekffelheejgfeijeehieelkedttdfhjedtnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheprghsrhhivhgrthhssehrvgguhhgrthdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtohepqhhuihgtpghjvghsshiihhgrnhesqhhui
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieehudeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheprghsrhhivhgrthhssehrvgguhhgrthdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtohepqhhuihgtpghjvghsshiihhgrnhesqhhui
  hgtihhntgdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthh
 X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Tue, 25 Mar 2025 13:24:09 -0400
+On Tue, 25 Mar 2025 13:24:11 -0400
 Anusha Srivatsa <asrivats@redhat.com> wrote:
 
-> Allocate panel via reference counting.
-> Add _get() and _put() helper functions
-> to ensure panel allocations are refcounted.
-> Avoid use after free by ensuring panel is
-> valid and can be usable till the last reference
-> is put. This avoids use-after-free
-
-"panel is valid and can be usable" is not totally correct. When there
-are still references held, you ensure the panel struct is still
-_allocated_, not necessarily valid and usable.
-
-Minor nit: you are wrapping at less than 50 columns, which is a bit
-tight. I think 75 is the expected value for wrapping.
-
+> Start moving to the new refcounted allocations using
+> the new API devm_drm_panel_alloc(). Deprecate any other
+> allocation.
+> 
 > Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
 
-[...]
-
-> +/**
-> + * drm_panel_get - Acquire a panel reference
-> + * @panel: DRM panel
-> + *
-> + * This function increments the panel's refcount.
-> + *
-> + */
-
-Not sure it's mandatory, but documenting the returned value is good
-practice , e.g.:
-
- * Returns:
- * Pointer to @panel.
-
-> +/**
-> + * drm_panel_put - Release a panel reference
-> + * @panel: DRM panel
-> + *
-> + * This function decrements the panel's reference count and frees the
-> + * object if the reference count drops to zero.
-> + */
-> +struct drm_panel *drm_panel_put(struct drm_panel *panel)
-> +{
-> +	if (!panel)
-> +		return panel;
-> +
-> +	kref_put(&panel->refcount, __drm_panel_free);
-> +
-> +	return panel;
-
-While this is using the same structure as my bridge work, I now realize
-the _put() should probably not return the panel (or bridge) pointer, it
-should just be a void function. The reason is the pointer might have
-been freed when _put() returns (depending on the refcount) so that
-pointer value might be dangling and whoever calls _put() must not use
-that pointer anymore.
-
-Other get/put APIs do this, e.g. of_node_get/put().
-
-So I'm going to change drm_bridge_put() to return void, unless there
-are good reasons to keep it and that I'm missing.
-
-> @@ -280,7 +291,10 @@ void *__devm_drm_panel_alloc(struct device *dev, size_t size, size_t offset,
->   * @member: the name of the &drm_panel within @type
->   * @funcs: callbacks for this panel
->   * @connector_type: connector type of the driver
-> - * The returned refcount is initialised to 1
-> + *
-> + * The returned refcount is initialised to 1. This  reference will
-> + * be automatically dropped via devm (by calling
-> + * drm_bridge_put()) when @dev is removed.
-          ^^^^^^
-"panel". Same in a few other places in this patch. Please search in all
-this series in case there are more. It's easy to forget about replacing
-some of those in the comments. :)
-
-Luca
+Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
 -- 
 Luca Ceresoli, Bootlin
