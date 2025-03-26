@@ -1,136 +1,136 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D477A19049A
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 22:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7B65149C41;
+	Wed, 26 Mar 2025 22:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743029134; cv=none; b=dvAdla50W7pv+4WqYbSy4gAZ/kER1UsnLg0Z1phhD1MpjvbswAL/pFgUrH/xAbSq91jGKa0UQANrQkEJGqpA6Ok0vwjmDCO5dSuryoAM+GDoZqKojMNNTuGx9NqDqreKmspLj0/8Rn56/gi1cjB5EsZbOcdOSUuNFSz4cRpVots=
+	t=1743029220; cv=none; b=F7jWyz9067Qisg3/GLDyq1B8Hf7AqCEL7N4qokuMJCiPx7w5V2IRDTJ9g0Nnrri5UMm3SlD61PcaBXZqC01j4fx03u7wsSD+BU1DtAvIRLS1Sxt6mhk24A2lbzWO2HInC+ef3qzcWnFO4bHLBlMK4dM6DSE6FPQHAhD+XQFYN9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743029134; c=relaxed/simple;
-	bh=BVLc4Cs+kPGHHIapTf7b2/6k7Pv1AD4F+S0N9LLwE90=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JbBwyC/sHiRHtPGRKVDo+J4Vl3d+sdzChkEjOHtGQtIAgwIh7httC+W6V40eTD64vS/eaE2+IdFX938v+lybsmwvSzcf8OY0hJ5rpCRhs65i1Lr93YopmAmtLquSpB+E/siQzOhmxYtOVX0K+uvh7TbbcCq5qSbB9H9QYoJUi0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BG0eYod7; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743029220; c=relaxed/simple;
+	bh=7P3UYO+P9hGo9sz9SOt5vSKtq1wCmqOzSFvHPDcbymk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sKo0xzU1k1nfUKMRllQkj8MWudvMgCH7imq7qeZW1KNioB2ySc0hKkPsJXqOvqYTGRHkKYJYC+AeHWehp5xslKmYUaASkkx5b24PWxd30bSnXkp3C2/N2ANJ0PxT6r/2jEFDnpBivFIgw6DohYPZbh9c4KYNFaHrUtRN5HJGzxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=sKgV6M9w; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BG0eYod7"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43d04ea9d9aso1540195e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:45:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743029131; x=1743633931; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iS9lo6v9uqzT79qsPERG/X1mPvo0CpW/ilxnQt/Lclw=;
-        b=BG0eYod7dNLta+Whs+pHV4NRzSSHbSybVYxi5vIz8DokYLAQjinvaGQhlZ3gOW+uL7
-         IpOCLija67W0W5hBEYcAoS7X1sCEIjDnUzZ8nyVfUcY/VjCJ2VlaDh1ANZpoaxvXodqA
-         KNXCjupwC1V28GpgKgcrnDvitWTtxV2109Esdv+tt2BKFySzVUIkITFw0+5GvBU86vzb
-         NsCnxinFwojsKK9Skku16KMn84Sx7EjI4eoe1LMwdbD3eeMfP0TQzhNxdy2wNYU0gikU
-         rnUeUzYW2M0fcIgiS8x7psR3eW2y2RjXTzspCyrsPNE+ggp+K6EZn5eCB7W0eRJZhdmk
-         07UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743029131; x=1743633931;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iS9lo6v9uqzT79qsPERG/X1mPvo0CpW/ilxnQt/Lclw=;
-        b=AXd1yzcBpJu07D217Sx0af/0iSYZGUaikCrrBjsH6D3RYL4uXW/kZR3xnN9hwrRDw+
-         nDArB2RtvN8jPnrjzNAAefCoK6GOp5pIKEigtf9WJ5uaev9saVSWyzViDjozDgTcsxGV
-         iyGEJ6DN8pWcXUwO8vgkyqHoFA02EDqtRUjFs3rXBZ+3XO/tn2Vi9+ehDsKYm2ugOcQe
-         8mjN7C0GXpQwlJVY0lclon0kQp3nJBxmmtKcFH05bzDELdFj5jxBLOpw5zvlYPYc0hR6
-         QHGMyAtI5hQugibYaD8pxkc1R6/JAYJNqHWvYO7ouRwHUGnVjq1h+vjCS6P2gzsLPr53
-         9OpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX1QXUmwqx07bvNBsrqZQpX3o5ADDGfeKaPxCBDPz2MzYnwnY9UqZ2+KiBVuGun2/fPsj6FfA7veFGb4Pc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRFissDETEJeXuUn+B5dY8QvhP21XVTi5leRWKH7QP+krAd1/2
-	UxtDIPSsxehJ39OfcQmJV9F8BYeHLECF7aRVt58y25yiRYjLYTpW
-X-Gm-Gg: ASbGncs0eQZeWm48saiURJcwWqM3MdWl4hRU7H8wdX0DbxjpTJoIZLLENyJKD2QPk4c
-	xtrjXIPYVTOnhO7qaLAnsS9e6rQQhZuSU1tWWByUpqGLeSNXgW5X/cYsncB9ZF+WAMAKQ8DX/Cm
-	h0jaI6X0nYx1+DHoQQkXDw3rRizwSeu3NQE/rt5ReaJaYlnt84eAuD93Xd3Z/luxXdpjgfIBoTm
-	+2rRKEk/D8T5XuEUTAQMWVQX4JsPPef9aMc25TaHMg7R8DGq+d9VYJK76nfJnHIbNGISRyWeyMQ
-	RJCAnTKGxFRsIaoncSraHd3BOuMTx5r+SJmZXPRiKue9Q/Kj/jrURZ1+VRyjnPC2zMICMSxza1X
-	W3HhFyTE=
-X-Google-Smtp-Source: AGHT+IGbdP8c63lTJLIt4kC+AH9ZhmPIkxANQSWDYKC1hULMCRkqfFuZm2V6NAjr9d7ZqsQrCPYgfA==
-X-Received: by 2002:a05:600c:4f94:b0:43c:eea9:f45d with SMTP id 5b1f17b1804b1-43d850fd6aemr12139275e9.18.1743029130752;
-        Wed, 26 Mar 2025 15:45:30 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82e835fesm16972295e9.10.2025.03.26.15.45.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 15:45:30 -0700 (PDT)
-Date: Wed, 26 Mar 2025 22:45:27 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Herton Krzesinski <hkrzesin@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Mateusz Guzik
- <mjguzik@gmail.com>, x86@kernel.org, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- olichtne@redhat.com, atomasov@redhat.com, aokuliar@redhat.com,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86: handle the tail in rep_movs_alternative() with an
- overlapping store
-Message-ID: <20250326224527.10105902@pumpkin>
-In-Reply-To: <CAJmZWFHTG8cR77zrUpKF81tphcTQ1fyDO6vqnY57ptcs2yM=-A@mail.gmail.com>
-References: <20250320190514.1961144-1-mjguzik@gmail.com>
-	<CAHk-=whd82fzhEbFRw9d_EMtR1SeefOJabjCHcm4-6jzeqqd3g@mail.gmail.com>
-	<CAGudoHGNFT+LC24842ZKLWBxD3vvvddBqDKa6gkixN4Esor+RQ@mail.gmail.com>
-	<CAHk-=wjo__Bj3JNw_7E8HhTDUF65LVOApvN0D2cofgotJoqpmg@mail.gmail.com>
-	<CAHk-=wjxi0poUzCd666Kx5wCjgOwN5v=-zG8xSAL7Wj_ax8Zvw@mail.gmail.com>
-	<20250321204723.1e21cb23@pumpkin>
-	<CAJmZWFHTG8cR77zrUpKF81tphcTQ1fyDO6vqnY57ptcs2yM=-A@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sKgV6M9w"
+Received: from [10.17.64.132] (unknown [131.107.147.132])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 0EFD4210235E;
+	Wed, 26 Mar 2025 15:46:57 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0EFD4210235E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743029217;
+	bh=WpQRiPMWre5w+oBe5t52C7npv5APr1INrJO/mypsiTE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sKgV6M9wLQw9WiOTCQUm1nhq24BoZZcDn4uhQq9k6apxualjEFDdcPOgCFCoz572i
+	 ciFXzhFzDl/Cyy2JIVFr2Z9s8ffkrWtdsNDF/CSiODCu6HqGrq3dMBIDm8fz/T4P+j
+	 snRRve0tkABnzrVk+X1KBYQKlJSd7CM9tW3yEt/w=
+Message-ID: <2d2ea573-1ddd-44b4-8ba3-4ae86313d63f@linux.microsoft.com>
+Date: Wed, 26 Mar 2025 15:46:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 6/8] ima: kexec: move IMA log copy from kexec load to
+ execute
+To: Baoquan He <bhe@redhat.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
+ nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
+ vgoyal@redhat.com, dyoung@redhat.com
+References: <20250318010448.954-1-chenste@linux.microsoft.com>
+ <20250318010448.954-7-chenste@linux.microsoft.com>
+ <Z9t4LVpE470DMBYU@MiWiFi-R3L-srv>
+ <3d7b5e06-5166-46bb-89dc-a0b95ca7c767@linux.microsoft.com>
+ <Z+E7X6LuQ82q1i5V@MiWiFi-R3L-srv>
+ <6583378c-55ee-4192-a95f-ebaf3f708bbb@linux.microsoft.com>
+ <Z+NmLtn0vojVYJ3H@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <Z+NmLtn0vojVYJ3H@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Tue, 25 Mar 2025 19:42:09 -0300
-Herton Krzesinski <hkrzesin@redhat.com> wrote:
+On 3/25/2025 7:27 PM, Baoquan He wrote:
+> On 03/25/25 at 03:27pm, steven chen wrote:
+>> On 3/24/2025 4:00 AM, Baoquan He wrote:
+>>> On 03/21/25 at 09:23am, steven chen wrote:
+>>>> On 3/19/2025 7:06 PM, Baoquan He wrote:
+>>>>> On 03/17/25 at 06:04pm, steven chen wrote:
+>>>>> ...snip...
+>>>>>> ---
+>>>>>>     kernel/kexec_file.c                | 10 ++++++
+>>>>>>     security/integrity/ima/ima_kexec.c | 51 ++++++++++++++++++------------
+>>>>>>     2 files changed, 40 insertions(+), 21 deletions(-)
+>>>>>>
+>>>>>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+>>>>>> index 606132253c79..ab449b43aaee 100644
+>>>>>> --- a/kernel/kexec_file.c
+>>>>>> +++ b/kernel/kexec_file.c
+>>>>>> @@ -201,6 +201,13 @@ kimage_validate_signature(struct kimage *image)
+>>>>>>     }
+>>>>>>     #endif
+>>>>>> +static void kimage_file_post_load(struct kimage *image)
+>>>>>> +{
+>>>>>> +#ifdef CONFIG_IMA_KEXEC
+>>>>>> +	ima_kexec_post_load(image);
+>>>>>> +#endif
+>>>>>> +}
+>>>>>> +
+>>>>>>     /*
+>>>>>>      * In file mode list of segments is prepared by kernel. Copy relevant
+>>>>>>      * data from user space, do error checking, prepare segment list
+>>>>>> @@ -428,6 +435,9 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+>>>>>>     	kimage_terminate(image);
+>>>>>> +	if (!(flags & KEXEC_FILE_ON_CRASH))
+>>>>>> +		kimage_file_post_load(image);
+>>>>> machine_kexec_post_load() is called by both kexec_load and kexec_file_load,
+>>>>> we should use it to do things post load, but not introducing another
+>>>>> kimage_file_post_load().
+>>>> Hi Baoquan,
+>>>>
+>>>> Could you give me more detail about this?
+>>> I mean machine_kexec_post_load() is the place where post load operations
+>>> are done, including kexec_load and kexec_file_load. There's no need to
+>>> specifically introduce a kimage_file_post_load() to do post load
+>>> operaton for kexec_file_load.
+>> Hi Baoquan,
+>>
+>> Updating the machine_kexec_post_load() API to carry flags would indeed
+>> require changes to multiple files. This approach involves the condition
+>> check if (!(flags & KEXEC_FILE_ON_CRASH)) and ensuring that the flags are
+>> properly passed and handled across the relevant file
+>>
+>> if just adding a API kimage_file_post_load() here, it is much easy and
+>> clean, right?
+> Hmm, it's easier, while maybe not good. We should not repeatedly
+> introduce similar things into codes. Here, it's similar as
+> what kexec_apply_relocations() and arch_kexec_apply_relocations() are
+> doing.
+>
+> int machine_kexec_post_load(struct kimage *image)
+> {
+> #ifdef CONFIG_IMA_KEXEC
+>          ima_kexec_post_load(image);
+> #endif
+> 	return arch_machine_kexec_post_load();
+> }
+>
+> Then a generic arch_machine_kexec_post_load(struct kimage *image)
+> {return 0;} version, and a arm64 specific version.
+>
+> Is it OK to you?
 
-...
-> I have been trying to also measure the impact of changes like above, however,
-> it seems I don't get improvement or it's limited due impact of
-> profiling, I tried
-> to uninline/move copy_user_generic() like this:
+Hi Baoquan,
 
-If you use the PERF_COUNT_HW_CPU_CYCLES counter bracketed by 'mfence'
-you can get reasonably consistent cycle counts for short sequences.
+Thanks for your suggestion. I will update in the next version.
 
-The problem here is that you need the specific cpu that is causing issues.
-Probably zen2 or zen3.
-
-Benchmarking 'rep movsb' on a zen5 can be summarised:
-Test overhead: 195 clocks ('rep movb' asm with a 'nop') subtracted from the
-other values.
-  length    clocks
-       0       7
-   1..3f       5
-      40       4
-  41..7f       5
-  80..1ff     39 (except 16c with is 4 clocks faster!)
-      200     38
- 201..23f     40
-      240     38
- 241..27f     41
-      280     39
-The pattern then continues much the same, increasing by 1 clock every 64 bytes
-with the multiple of 64 being a bit cheaper.
-
-With a 'sailing wind' a copy loop should do 8 bytes/clock.
-(Faster if the cpu supports more than one write/clock.)
-So might be faster for lengths between 128 and ~256.
-
-Misaligning the addresses doesn't usually make any difference.
-(There is a small penalty for destinations in the last cache line of a page.)
-
-But there is strange oddity.
-If (dest - src) % 4096 is between 1 and 63 then short copies are 55 clocks
-jumping to 75 at 128 bytes and then increasing slowly.
-(I think that matches what I've seen.)
-
-	David
-
+Steven
 
