@@ -1,98 +1,79 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5766615B54A
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 04:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3363E2AF0A
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 04:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742962588; cv=none; b=e5Aw0f5BkyvoENyrABvHYjn97cUAVHYw47KNtdcEo82Q0MKwAS3y3nxyrVIwOrDrNe8IAV0hXNDjWQXv/SvhMddmXBNMiLU/LhWOE9waqLs4KROJJvdVk0KUosyUZ1TgClD/Bb0Fp4SyVoz9E3555OllvKikMvfCkS3BqWxZcL8=
+	t=1742962990; cv=none; b=K8S6eN8weccFMGj8OjPkJxamQI0Uw63Ymfhp2FWw0NQ3CgyEYF2GZLlSii/b3yCnCNoOsRY9oyoUMrukLPltEIkPsb81rQiVJTws3rPMv/W5kdlvIv66FwVtyCZSQ4gEY2kSQmztQTGJREYWk+Qr2UAJAzmtaswUt6+i+iUZi3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742962588; c=relaxed/simple;
-	bh=b3T0lc8NDDkNuPDjnYtA5sSPkSNqY6j3pHq3/4T/aUc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SEJhcCcSmpeLzhMt668LBfTh7ori9vLhoVZLHK6upAlZ2GTba6qiScotgfmN+1eRqPt79ytb2yDTlpSvrDh/gy61MeqVsHaIAiH57AYa5zkg0mxCEiv7qYAs8p4z9s8GrUtB0U9VgtFVW6P+YA6c0IHAq2+1uxH3N9kOTSERACY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SiA3AGId; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SiA3AGId"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2260c91576aso107325025ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 21:16:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1742962585; x=1743567385; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AILLZeGov018ovsXda9kodqh4SjOH5TnCaDx9SjPjrk=;
-        b=SiA3AGIdUz6JqUrFz9CwulBJBjYKAsmcmggzpqBUu2tEs+Nu4XHhdmjovedJoH2FaR
-         XxWz8V5oxwdzqTc9Xr7h9hobSkvRIx3t9Zc4lgoR46m+tE2L17R0k9SsHxJL4blpHFEq
-         IfSFWTgZitn0+xBWSsAOzmdlrsBCyQ7T80o9E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742962585; x=1743567385;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AILLZeGov018ovsXda9kodqh4SjOH5TnCaDx9SjPjrk=;
-        b=W0+dIUhijnR/WVovcHLbCfxnGkWLUc1ac4AgrUgiO+vQhcY+DfXK+j+7lEPE9gfWak
-         MBHQbYR7pDBc4X9rXUeqKzrd+EARYmYFlwCPeSPRbNE1BQ8QW18D2g4lDSaQRkh0yzxN
-         0wE0j3Qd3XlbNcOm8utchBWEM4ft+9jNPPLQLiquXg1I/z0NOLU2FnjPGKC7dLcSwJcW
-         pIgduRqVQvj2R8yd6OGyy8PRiEyaAYbV0daccrrPI528bKyW1VF/Xq2bn5FwBaFBg+Lr
-         pimIzF6rsatuJ6d2oaKUDoh2dWhTXHUXmOWD4POKzkMLbQqGmJGbfHVZq51rBIBNeRbz
-         FpnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0I+PpfKx6Epy/W9anjrAYKclmwZ2rXNvs5q4IpQVI9j7qlGj37xp/7BrHNfRmiI7Yc6EFI3gWnT6831k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDwQf/PrfSEq51Z6lRRGv3+LafM8cQ4N06pAIYBMr+il+anH8m
-	M3Y1jgEY9y1C/pkcu2IDRRCGXIXIZu77JBZV+Dti2kY4D0cGRs0tMtG5bQdjNw==
-X-Gm-Gg: ASbGnctetJVTsDbQCF+TeyD4Y2cyplJkylDHHAnP4SprBaPPBuj+TnUlabg89iq2lbh
-	cpqfzkEG5+8g7MXpH2RGUMlZInN2McHD6AMo7OAIpYxZVLYmTNQ/KpIHudLg/BW1rQZMkbQi2oZ
-	nCi5+tqmOLdJwo+e/gUi1/s6RNmgHC7500/f9VT54zD2y9FMGIVV5GoHlRtvYhHoSRHQ5kEK4NK
-	ihvEMAugibRA6eP7vYGKYoHehBu4PuaytiY50JG6DwXJmQQoCUvw5pTlVQKS9sJU94s+K0cjytU
-	SIlYr0EuwDvveoW4R2/i22plaebMGmbtkXJNf8/51cgZvLauDA9CF793NDQ=
-X-Google-Smtp-Source: AGHT+IEYD4I81caHizx4b3QwHmB36Sk1YdKjB4tHwyQyr2ZnnKdYtVGO8dghifNfsTi3mSOEzVl/sw==
-X-Received: by 2002:a05:6a20:3d89:b0:1f5:535c:82dc with SMTP id adf61e73a8af0-1fe4330dcf3mr32728235637.42.1742962585550;
-        Tue, 25 Mar 2025 21:16:25 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:d343:29c5:4565:9d95])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73905fab633sm11527409b3a.18.2025.03.25.21.16.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Mar 2025 21:16:25 -0700 (PDT)
-Date: Wed, 26 Mar 2025 13:16:20 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Richard Chang <richardycc@google.com>
-Cc: Minchan Kim <minchan@kernel.org>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Brian Geffon <bgeffon@google.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] zram: modernize writeback interface
-Message-ID: <5l4pjqlgu4afndn3ysa7ynecjmvepkfjlh56ycm5jt5e4mioqm@dujakwaomhlk>
-References: <20250325034210.3337080-1-senozhatsky@chromium.org>
- <Z-MlsM2Gmxdvl_1D@google.com>
- <CALC_0q8Mv_UWvFjo3HW_gRsG2N8P--R1OqDj7=2x_98XiRXy4w@mail.gmail.com>
+	s=arc-20240116; t=1742962990; c=relaxed/simple;
+	bh=4RLVWi51Pcf+yC82Yda0DuKmc+fKle+xF6kOZxe9+Aw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KjTZkMyvAnpDtLcN4g8tHE7/pMxPWt70cx2/kkY71Mk5zG2Q0iibDNwdWhgmYGuGRx7ngLsTl7wSmGK3fJQPQmTdpPIz9w9RP78mkG0Ikx3H/RkweiN8ywQbplnPWP8HGEnuup+km9e4t4gf0U77QSfsaFS9yaA2v9YeQU1srng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-03 (Coremail) with SMTP id rQCowAAn0j4ZgeNnuvCyAQ--.39892S2;
+	Wed, 26 Mar 2025 12:22:50 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: mark.rutland@arm.com,
+	lpieralisi@kernel.org,
+	sudeep.holla@arm.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] smccc: kvm_guest: Remove unneeded semicolon
+Date: Wed, 26 Mar 2025 12:06:59 +0800
+Message-Id: <20250326040659.1190696-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALC_0q8Mv_UWvFjo3HW_gRsG2N8P--R1OqDj7=2x_98XiRXy4w@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowAAn0j4ZgeNnuvCyAQ--.39892S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZFWDuF4rXw4DWry5CFWfKrg_yoW3uFbEkr
+	1qgwsrWFyUWrZ0gF45Zw43ur15Zw4kX3Z2vF4S93yay347Zw4UWFW8W3WfAw13ArW0yFy5
+	AFy3trsYkw10gjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbx8FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
+	0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AF
+	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUDPE
+	fUUUUU=
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Hi,
+Remove unnecessary semicolons reported by Coccinelle/coccicheck and the
+semantic patch at scripts/coccinelle/misc/semicolon.cocci.
 
-On (25/03/26 12:03), Richard Chang wrote:
-> Hi Sergey,
-> Since the input buffer length is only PAGE_SIZE long, can we reduce
-> the duplicated "page_index_range=" strings?
-> Eg:
-> Turn
-> echo page_index_range=100-200 \
->          page_index_range=500-700 > zram0/writeback
-> To:
-> echo page_index_range=100-200,500-700 > zram0/writeback
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/firmware/smccc/kvm_guest.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Do you expect to ever have so many ranges that PAGE_SIZE buffer
-would be too small?  I didn't want to put a list parser into
-the kernel, I wanted to keep arguments parsing as simple as
-possible.  But if you really need to writeback that many pages
-then I guess I can implement it as a list of ranges.
+diff --git a/drivers/firmware/smccc/kvm_guest.c b/drivers/firmware/smccc/kvm_guest.c
+index 5767aed25cdc..ffe9f3c013df 100644
+--- a/drivers/firmware/smccc/kvm_guest.c
++++ b/drivers/firmware/smccc/kvm_guest.c
+@@ -103,7 +103,7 @@ void  __init kvm_arm_target_impl_cpu_init(void)
+ 		target[i].midr = res.a1;
+ 		target[i].revidr = res.a2;
+ 		target[i].aidr = res.a3;
+-	};
++	}
+ 
+ 	if (!cpu_errata_set_target_impl(max_cpus, target)) {
+ 		pr_warn("Failed to set target implementation CPUs\n");
+-- 
+2.25.1
 
-Alternatively:
-We don't necessarily need to use page_index_range key, which is a
-little long, but can use page_indices=/page_indexes= or just pages=?
