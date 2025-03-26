@@ -1,96 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18FEA19D88B
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 22:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A24019D88B;
+	Wed, 26 Mar 2025 22:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743027454; cv=none; b=n+9Y+PvQEwCd8gZhtLWHX9FyUM2owG8GaK+Q8wko2MzF9oVrXuQiBAVRzE++pqiYL+8YbJn1/F4Fo/vro7iSpO3O/HWMtrAeG9KclkLh3Q6qnHNsfW83xlQWgHjEYGlzZ/tsiC0hxk9tXEGnjo1WUDOB/UdbZxoaclAcjbvwf4U=
+	t=1743027464; cv=none; b=WZ1Dj76SWraGtnlruLMOljB1qfHjfFPb5nhsh3c3o8sbQH0h1mHnos/eTVJe0ckLeaQ/a57PrVBv1iZLrcXMftl7Viajo33++vxDC2MnHAOOlDg2tRKoD2b+nGA1ePS1ubFkWh/2zNzkYsxyqWcOxiM4TP+k5HZLdxJobViQov4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743027454; c=relaxed/simple;
-	bh=0/mbINWzm5w7ZZuAByidfAmTAHs4CoyB7y716YB2WXQ=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=rGlS9g5BkkubsO8k063Lt6oBPMR6J3fA1aN5LetIFjtRgyp5jaku1vzPaFpognBvoRhGcqtXRkx3Udqyh07J6fJIClo8s+BLcoXjjRlIsKYTyShttNwfGaxsqokQfEZ7sxV+A/hLk1qwR6M0TK9RIQR/Ak94S26d16EP4vlg2sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M90avTcq; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743027464; c=relaxed/simple;
+	bh=ztcSyDM8688dY/x4+PbD/IkRXQaivYoZnohIQ5z1uOk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Qg2y2bGmu1s4ioSDIlWGbMHj5Ele88soFGAIoMj+yEvYZsTbWGY53bbMecrEoERJngmzagRuO2Moq1mpIUVpJVqWQzjqP3U7I4Yu95cZQyvy0VOXYV0V0qMFU8Fr7pUDO+MRI8ITN92ZOGV/RUM2YrM0uh/H8q8AmS0duuDAY6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZjKyefw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M90avTcq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743027453; x=1774563453;
-  h=date:from:to:cc:subject:message-id;
-  bh=0/mbINWzm5w7ZZuAByidfAmTAHs4CoyB7y716YB2WXQ=;
-  b=M90avTcqvf3wm7dGvXd7JBL5TDjix0UINpz3K+qnL3Y3qy/8mw1WqOTF
-   CWdG11+LsFL8ST8s5/SGis+55WmjKwbIwwK81Om0M5Z0MO2F10DLs3KKa
-   JAlr4zmtcF7uVC9/850uZ8HMoTCxeuyfqtTj9jwB2R8JLgG+FGVZUoUoA
-   1iuoCIrmewhpBNNWnk/xte2kY2pjIoefi2dGT5t0LqTh6JfiwBDVfFBEd
-   GyBwQZIqUml7JZWZShXIkj0w/zUlWEsezmopJTjCdjmL45r04bnZgZWyo
-   rSdLIaGKrPX+sDU7HFwYV0oA2vi7eeFKwGsBycstzSJjFABSvQHy/nwCR
-   A==;
-X-CSE-ConnectionGUID: zJNZDaDlTL+upxd+jGSTzA==
-X-CSE-MsgGUID: /Fqb/QwUT56eiOiNaTBoPQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="55337665"
-X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
-   d="scan'208";a="55337665"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 15:17:32 -0700
-X-CSE-ConnectionGUID: 0PzLTFNzTf253qQZJ7DPqg==
-X-CSE-MsgGUID: CCcKltZfR1yqLCFQg4RNlQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
-   d="scan'208";a="124936849"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 26 Mar 2025 15:17:30 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1txZ3u-00067v-1h;
-	Wed, 26 Mar 2025 22:17:27 +0000
-Date: Thu, 27 Mar 2025 06:17:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/asm] BUILD SUCCESS
- 0717b1392dc7e3f350e5a5d25ea794aa92210684
-Message-ID: <202503270608.6NWxibY6-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZjKyefw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C32DC4CEE2;
+	Wed, 26 Mar 2025 22:17:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743027463;
+	bh=ztcSyDM8688dY/x4+PbD/IkRXQaivYoZnohIQ5z1uOk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=aZjKyefwZKYW7LeGPlItgSyUrpIMQulGkTH7hGBOcy36+7XQoK4Una1scZ6ZVHlax
+	 WaKJRvg4WEcH7nrTkKZCrZv5Lagw9FRHfG6zutH3FgYnIdrjgn/bc76FOlfgd38VgU
+	 Yp9g5LKLFsH6vrWDjxJywPxkBeXiavmEH4zl0wcNKSHr5tlb4BIBOXRRQPdfODkIla
+	 SJvWdMdjhjy6repYF27U25o5E6JpVyMr0HBpNOmsccm/fhEHc4FREkWs23WNG8dZp4
+	 t4Q2rN4/UZVh1/palTutmswlnOOFiuQi7AlXTIM0aLpWkGdCQgkUCzRzUQzmL28ba9
+	 BtMEoboYuKvsA==
+Date: Wed, 26 Mar 2025 16:17:41 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Alan Stern <stern@rowland.harvard.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] usb: ehci-fsl: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <Z-R9BcnSzrRv5FX_@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/asm
-branch HEAD: 0717b1392dc7e3f350e5a5d25ea794aa92210684  x86/bitops: Use TZCNT mnemonic in <asm/bitops.h>
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-elapsed time: 1448m
+Move the conflicting declaration to the end of the structure. Notice
+that `struct ehci_hcd` is a flexible structure --a structure that
+contains a flexible-array member.
 
-configs tested: 19
-configs skipped: 126
+Fix the following warning:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+drivers/usb/host/ehci-fsl.c:414:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-tested configs:
-i386                         allmodconfig    gcc-12
-i386                          allnoconfig    gcc-12
-i386                         allyesconfig    gcc-12
-i386    buildonly-randconfig-001-20250326    gcc-12
-i386    buildonly-randconfig-002-20250326    clang-20
-i386    buildonly-randconfig-003-20250326    clang-20
-i386    buildonly-randconfig-004-20250326    clang-20
-i386    buildonly-randconfig-005-20250326    gcc-12
-i386    buildonly-randconfig-006-20250326    clang-20
-i386                            defconfig    clang-20
-x86_64                        allnoconfig    clang-20
-x86_64                       allyesconfig    clang-20
-x86_64  buildonly-randconfig-001-20250326    clang-20
-x86_64  buildonly-randconfig-002-20250326    gcc-11
-x86_64  buildonly-randconfig-003-20250326    clang-20
-x86_64  buildonly-randconfig-004-20250326    clang-20
-x86_64  buildonly-randconfig-005-20250326    clang-20
-x86_64  buildonly-randconfig-006-20250326    clang-20
-x86_64                          defconfig    gcc-11
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/usb/host/ehci-fsl.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff --git a/drivers/usb/host/ehci-fsl.c b/drivers/usb/host/ehci-fsl.c
+index 26f13278d4d6..c720d55f4982 100644
+--- a/drivers/usb/host/ehci-fsl.c
++++ b/drivers/usb/host/ehci-fsl.c
+@@ -411,12 +411,13 @@ static int ehci_fsl_setup(struct usb_hcd *hcd)
+ }
+ 
+ struct ehci_fsl {
+-	struct ehci_hcd	ehci;
+-
+ #ifdef CONFIG_PM
+ 	/* Saved USB PHY settings, need to restore after deep sleep. */
+ 	u32 usb_ctrl;
+ #endif
++
++	/* Must be last --ends in a flexible-array member. */
++	struct ehci_hcd	ehci;
+ };
+ 
+ #ifdef CONFIG_PM
+-- 
+2.43.0
+
