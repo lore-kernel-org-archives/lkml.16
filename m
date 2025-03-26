@@ -1,161 +1,140 @@
-Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A602F24C676;
-	Wed, 26 Mar 2025 19:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887DA1F874C;
+	Wed, 26 Mar 2025 19:44:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743018248; cv=none; b=udrENRW9zz5T9pPyK7vAZGJbe4oDilSMJCuOcB7A44avyeSekXtfJli3LHxKEwVOXZOC6jBmFUm9wNARAmhgG/qehBB7P4DfTUo+p7XxM3RHDqd7vUV+alQIlheiaUvsmRvI1Lx49efwL4tlPWBzkas19tM5BTe/qf4UEBVRTEo=
+	t=1743018293; cv=none; b=m+giM1oWNfXj84OWkJB9p17ygr66FsTSAG0nBmOzjENgKNPAZHDFemzuqgfAVgsvR9GyHxEbLBCE9g8fXhcaBTSehxJfb2xwSAIfrC1UfmCGvTfcBssL/MTndHXTSZoP9OvEz+b5oQbrrhe5AuyEAgjwHCqqYkA/8k2j5+6Fj8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743018248; c=relaxed/simple;
-	bh=1zxp2JuUA4SoDWupkMfGgw89XKTQK0YYH4Zgo6ukpTA=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:Subject:Content-Type; b=kftkV/QettKczyC6GsAp8vwf+6ltOQWQM1905tkeM/Y5ZAg763s0PxQlC7FC4QLeJftURm89oqMg/FOaafoLIus79U75iZ24opT7mDCJC7A01x5E3bLwHhC6TXvfilENBcVRuYTLhh38OA9q8iTB7R16Tf7a2CaD+rZKv71bvro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=UT3WLwHu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iOINO0mI; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1743018293; c=relaxed/simple;
+	bh=ZuGZdlxag0lNcb4sPp3slceQhcfQ2ep2MXXbfB+zpKc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kGYu43fkWUJSeQV8CcBx/YZoDqAcl14H+hjGwGu2TsVW6jF5weye6zoAVSy6fhA02ofk3yZh4oeixjWIKsshPagOKU7+aveWmmv3+SYbG6i7bJ0/FDwgNss4dB3SZnsUbO8sjWRHmRQwvMq+SXvU5mH9vWzZDQcwGtM2UJr6MyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nhPRtKO0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="UT3WLwHu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iOINO0mI"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id B92271140114;
-	Wed, 26 Mar 2025 15:44:04 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Wed, 26 Mar 2025 15:44:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm1; t=1743018244; x=1743104644; bh=3B
-	m37zrfytA9X0z64bKtWgE5xF7qOkcmjrE7cIKq4Ic=; b=UT3WLwHuQ4zO/l7HL7
-	mpLvPA5inrnRi6CiRK1kbyAv8iYoo36IXEnZfCnb0CHIcsGGd4Z/b/C5DZLaK7To
-	iH1SEUW+8JU5lJv0HvA85vuhXhTpgAhWcEujfUiTh0gE/DQIYXPvlbkIdHVfvfcf
-	Rg/3pFQQYfFw8pEdNoKuDoAfjUkcza01jy1Bctsj4JEeBqumg5HZfJ3jfC6om3zE
-	9TKIpkg773kaMrhnt0MMMW7iZHFphLdBPwt5I1XOS/Cjd0w+Ig+wYZw8sHmVgHiZ
-	OLFAeV+tBLYIDGEdC+OotQpD28Jzy3MLLE4+QiVDN1sIlhxkY440kYNUO2KPe0bJ
-	BDAA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1743018244; x=1743104644; bh=3Bm37zrfytA9X0z64bKtWgE5xF7q
-	OkcmjrE7cIKq4Ic=; b=iOINO0mIM9RRAi7zjek2lg7mhlBvjBbDZH6mKbfu8xZY
-	omml4VdjlxSBXhTO6j0QhIqTnz+YcKyKqDLOcYybC2/3Wf1JTVGqXPsv42/du0rG
-	p0f0T4HfbakgNzGxHAUyDBXgT7cSmrCe3gFLKhKp6+wH9ZUX+UrV7tUR6CGEM01F
-	8eF3qaGusqp8XC0atx9SK7PJBWWlETc7lONB3kVXPsLty5zhr6O35tpreKFupxbj
-	VH9ClbLB+6NMR07Eu7nB+5LM+xHNYbp9c3p5hh4Qudr8G1owtWjFY8rLt1Vte2D2
-	rimHpQvf6oyHrzDIjNYjH2OtT2pb4d489/esnzcUxA==
-X-ME-Sender: <xms:BFnkZ3j921VnGC1yrnpG8vL22xupYMdJVt8k64K5N69wNiyswUyJWw>
-    <xme:BFnkZ0DY-jZagIPfq95Qa9wLEeAk0ngQSav29hCxUsPUkZoIuBPzAfqYg_Ncpncz9
-    U5NyfhzAof8nRVTBiY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieeigedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkffutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhepudelieegkeevueegtedtjedttdelgeehhfdvhfeu
-    heethfduleffuddvueelveetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghr
-    nhgusgdruggvpdhnsggprhgtphhtthhopeefpdhmohguvgepshhmthhpohhuthdprhgtph
-    htthhopehtohhrvhgrlhgusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhr
-    tghpthhtoheplhhinhhugidqrghrtghhsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:BFnkZ3Hrd5muDsWKP7KqcnGC1Tx_8o1Ut2hXgTwX97pxTa0Kpo2aeA>
-    <xmx:BFnkZ0QxpmSTH6WKS1m7PswQJumsjJKS4nS9mwfLYpbcEl1OrfrKYA>
-    <xmx:BFnkZ0zW-cnWrrSFwye9wRb8pFH7KBBsyNeezJ86_r54OQLErrinHw>
-    <xmx:BFnkZ64i32xTSlL2g3Zku-5siRbCb3JZmQCYFGBaceeJtr0J7azkiQ>
-    <xmx:BFnkZ__gFB-BuRFfL6dkeR-gD5uGbOxrwdVyszy4NNpJiGDj1SyjZ-SL>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 569CF2220073; Wed, 26 Mar 2025 15:44:04 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nhPRtKO0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95C59C4CEE2;
+	Wed, 26 Mar 2025 19:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743018293;
+	bh=ZuGZdlxag0lNcb4sPp3slceQhcfQ2ep2MXXbfB+zpKc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nhPRtKO0AnQM/NBgN6SXiSCbRBpj4AQWfUmkF3LraRAwVzbFk37x9f+j+tCD/d4Hw
+	 irv6oMAB6BM6RRGVl3DbqptIy4ZPDBAsHwKMTN/o0/slRGYaZi1f2c0CLWGOlIZz4g
+	 PgD659cqbqphj54H41vFwTHUUtG/9ptbORcF8LVCHOFTFQnPiQVX4YohKp1YR8A6TD
+	 1gcI3yygcJGaCa0Uc4mO04devWFuNghggfJDFjZ6EVTKIxSFTiLYJ5xoKvLIK8MUEy
+	 UY3BZyMxZWYrjW/0EO/ZuCsvb5v0//QoZ4tjVjBl4DsgS8M5IOnonqcuX9f0sZ3Y5a
+	 6sZjtkRHQAm+g==
+Date: Wed, 26 Mar 2025 12:44:51 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf trace: Fix possible insufficient allocation of
+ argument formats
+Message-ID: <Z-RZM7X_XCSCxpJV@google.com>
+References: <20250324235245.613063-1-howardchu95@gmail.com>
+ <Z-RFu_PLmKMq8YFU@google.com>
+ <CAH0uvoi-uxLNOoZ8P1g--jBZUnax_1vCu42SjFCNS7mdAH6Ozg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 26 Mar 2025 20:43:17 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Linus Torvalds" <torvalds@linux-foundation.org>
-Cc: Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org
-Message-Id: <31097083-a444-4bd1-8722-d8b7c4b7a43a@app.fastmail.com>
-Subject: [GIT PULL] asm-generic changes for 6.15
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH0uvoi-uxLNOoZ8P1g--jBZUnax_1vCu42SjFCNS7mdAH6Ozg@mail.gmail.com>
 
-The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+On Wed, Mar 26, 2025 at 11:30:11AM -0700, Howard Chu wrote:
+> Hello Namhyung,
+> 
+> LGTM. This is better. :)
 
-  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+Great, can you please resend it with my Suggested-by?
 
-are available in the Git repository at:
+Thanks,
+Namhyung
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git tags/asm-generic-6.15
-
-for you to fetch changes up to ece69af2ede103e190ffdfccd9f9ec850606ab5e:
-
-  rwonce: handle KCSAN like KASAN in read_word_at_a_time() (2025-03-25 17:50:38 +0100)
-
-----------------------------------------------------------------
-asm-generic changes for 6.15
-
-This is mainly set of cleanups of asm-generic/io.h, resolving problems
-with inconsistent semantics of ioread64/iowrite64 that were causing
-runtime and build issues.
-
-The "GENERIC_IOMAP" version that switches between inb()/outb() and
-readb()/writeb() style accessors is now only used on architectures that
-have PC-style ISA devices that are not memory mapped (x86, uml, m68k-q40
-and powerpc-powernv), while alpha and parisc use a more complicated
-variant and everything else just maps the ioread interfaces to plan MMIO
-(readb/writeb etc).
-
-In addition there are two small changes from Raag Jadav to simplify
-the asm-generic/io.h indirect inclusions and from Jann Horn to fix
-a corner case with read_word_at_a_time.
-
-----------------------------------------------------------------
-Arnd Bergmann (10):
-      asm-generic/io.h: rework split ioread64/iowrite64 helpers
-      alpha: stop using asm-generic/iomap.h
-      sh: remove duplicate ioread/iowrite helpers
-      parisc: stop using asm-generic/iomap.h
-      powerpc: asm/io.h: remove split ioread64/iowrite64 helpers
-      mips: drop GENERIC_IOMAP wrapper
-      m68k/nommu: stop using GENERIC_IOMAP
-      mips: fix PCI_IOBASE definition
-      mips: export pci_iounmap()
-      m68k: coldfire: select PCI_IOMAP for PCI
-
-Jann Horn (1):
-      rwonce: handle KCSAN like KASAN in read_word_at_a_time()
-
-Raag Jadav (2):
-      drm/draw: include missing headers
-      io.h: drop unused headers
-
- arch/alpha/include/asm/io.h                    |  31 ++---
- arch/m68k/Kconfig                              |   3 +-
- arch/m68k/include/asm/io_no.h                  |   4 -
- arch/mips/Kconfig                              |   2 +-
- arch/mips/include/asm/io.h                     |  25 ++--
- arch/mips/include/asm/mach-loongson64/spaces.h |   5 +-
- arch/mips/include/asm/mach-ralink/spaces.h     |   2 +-
- arch/mips/lib/iomap-pci.c                      |  10 ++
- arch/mips/loongson64/init.c                    |   4 +-
- arch/parisc/include/asm/io.h                   |  36 ++++--
- arch/powerpc/include/asm/io.h                  |  48 --------
- arch/sh/include/asm/io.h                       |  30 +----
- arch/sh/kernel/Makefile                        |   3 -
- arch/sh/kernel/iomap.c                         | 162 -------------------------
- arch/sh/kernel/ioport.c                        |   5 -
- arch/sh/lib/io.c                               |   4 +-
- drivers/gpu/drm/drm_draw.c                     |   2 +
- drivers/sh/clk/cpg.c                           |  25 ++--
- include/asm-generic/iomap.h                    |  36 ++----
- include/asm-generic/rwonce.h                   |   7 +-
- include/linux/io-64-nonatomic-hi-lo.h          |  16 +++
- include/linux/io-64-nonatomic-lo-hi.h          |  16 +++
- include/linux/io.h                             |   3 -
- lib/iomap.c                                    |  40 +++---
- 24 files changed, 163 insertions(+), 356 deletions(-)
- delete mode 100644 arch/sh/kernel/iomap.c
+> 
+> On Wed, Mar 26, 2025 at 11:21 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Mon, Mar 24, 2025 at 04:52:45PM -0700, Howard Chu wrote:
+> > > In my previous fix of runtime error(Link:
+> > > https://lore.kernel.org/linux-perf-users/20250122025519.361873-1-howardchu95@gmail.com/),
+> > > I made a mistake of decrementing one unconditionally, regardless of
+> > > whether an extra 'syscall_nr' or 'nr' field was present in
+> > > libtraceevent's tp_format. This may cause perf trace to allocate one
+> > > fewer arg_fmt entry than needed for the accurate representation of syscall
+> > > arguments.
+> > >
+> > > This patch corrects the mistake by checking the presence of'syscall_nr' or
+> > > 'nr', and adjusting the length of arg_fmt[] accordingly.
+> >
+> > Thanks for the fix.  I've noticed this too but I feel like we can make
+> > syscall__alloc_arg_fmts() a bit simpler.
+> >
+> > How about this?
+> >
+> > Thanks,
+> > Namhyung
+> >
+> >
+> > ---8<---
+> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > index 6ac51925ea4249c2..b9bdab52f5801c3a 100644
+> > --- a/tools/perf/builtin-trace.c
+> > +++ b/tools/perf/builtin-trace.c
+> > @@ -2022,9 +2022,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+> >  {
+> >         int idx;
+> >
+> > -       if (nr_args == RAW_SYSCALL_ARGS_NUM && sc->fmt && sc->fmt->nr_args != 0)
+> > -               nr_args = sc->fmt->nr_args;
+> > -
+> >         sc->arg_fmt = calloc(nr_args, sizeof(*sc->arg_fmt));
+> >         if (sc->arg_fmt == NULL)
+> >                 return -1;
+> > @@ -2034,7 +2031,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+> >                         sc->arg_fmt[idx] = sc->fmt->arg[idx];
+> >         }
+> >
+> > -       sc->nr_args = nr_args;
+> >         return 0;
+> >  }
+> >
+> > @@ -2176,14 +2172,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
+> >                 return err;
+> >         }
+> >
+> > -       /*
+> > -        * The tracepoint format contains __syscall_nr field, so it's one more
+> > -        * than the actual number of syscall arguments.
+> > -        */
+> > -       if (syscall__alloc_arg_fmts(sc, sc->tp_format->format.nr_fields - 1))
+> > -               return -ENOMEM;
+> > -
+> >         sc->args = sc->tp_format->format.fields;
+> > +       sc->nr_args = sc->tp_format->format.nr_fields;
+> > +
+> >         /*
+> >          * We need to check and discard the first variable '__syscall_nr'
+> >          * or 'nr' that mean the syscall number. It is needless here.
+> > @@ -2194,6 +2185,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
+> >                 --sc->nr_args;
+> >         }
+> >
+> > +       if (syscall__alloc_arg_fmts(sc, sc->nr_args))
+> > +               return -ENOMEM;
+> > +
+> >         sc->is_exit = !strcmp(name, "exit_group") || !strcmp(name, "exit");
+> >         sc->is_open = !strcmp(name, "open") || !strcmp(name, "openat");
+> >
+> > --
+> > 2.49.0.395.g12beb8f557-goog
+> >
