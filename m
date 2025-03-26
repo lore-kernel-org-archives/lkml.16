@@ -1,47 +1,47 @@
 Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0F849659;
-	Wed, 26 Mar 2025 21:12:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1D925EFAE;
+	Wed, 26 Mar 2025 21:12:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743023528; cv=none; b=cT5ME7oovIIkKlPBOFs78ynSj/1WhJw1SYVH6iPuxujeAJmqzYl9eGW0fzFUwAU7K3xkvR2NgEoGF2urU2/omJkGg0xUqfHwqLuGu0M5L6uoyQsO5WQwCsIoiMkIEhlsa+cr/UF4TvldDswFWvAkZOO1Vl3HnIvoBOpXceaYrDw=
+	t=1743023529; cv=none; b=blaU7cPmX/lRTpPAkdFRK0RHg3c4HIlensihzlpzpE+hf0ErCN2T26yMGcjf3+8JkAR6pNT+gRUhe525r3Pi9cfieAytNpyZRILjGpTusNm68qnHBlsX14Dkid8y1ceA5MWTwck12xGrxkLRzPQ+dAPdrXhqOyd+3eh1zHUr7HQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743023528; c=relaxed/simple;
-	bh=KE/5QmfLMOgm0zVoq1QF1iuJCaWhuNwtm0KhXGhBjrM=;
+	s=arc-20240116; t=1743023529; c=relaxed/simple;
+	bh=lX6+zTT7ArT628pQvMIt/Li9iIBWCbQgHcaF3SsxxTI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VMrN7iBoiN7Gq6X6Tn4JkgNcQl9BAjkOj5DVQavqWquimJafZAl2Z87bEYdGBCcn/9a75+ioUMvyks5uMOGmI7nGpTOgq1mCvCzkfchs1z9j0sNtFisHwtBNbIdXuP6uCRziB/L6r2LQw2kX3Zp9rPWgaRcOWz8FILmnx2DnF9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=TZyVDbOv; arc=none smtp.client-ip=79.96.170.134
+	 MIME-Version:Content-Type; b=ShG4N0+7VPTLQnG/uJ9NO+xxGNd4Go6Sd3BZmMeYXGpgy1byCNP4V6IkOahxfwk7UVKbxZdruQwQQrDRuGHfcWEaF2COk34DXd+Kwm6aW35DZ3noYzQD7eP4Mb1ScI3rwVa4Aht60tWKZ1keXXz9CcDaI/HCscP0cRBwtIektks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=repq7EoR; arc=none smtp.client-ip=79.96.170.134
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="TZyVDbOv"
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="repq7EoR"
 Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
  by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.3.1)
- id 3821ec9f594a68db; Wed, 26 Mar 2025 21:12:04 +0100
+ id a7671533f0b139b5; Wed, 26 Mar 2025 21:12:05 +0100
 Received: from kreacher.localnet (unknown [195.136.19.94])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id A5D097F6388;
-	Wed, 26 Mar 2025 21:12:03 +0100 (CET)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id E0D777F6388;
+	Wed, 26 Mar 2025 21:12:04 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1743019924;
-	bh=KE/5QmfLMOgm0zVoq1QF1iuJCaWhuNwtm0KhXGhBjrM=;
+	s=dkim; t=1743019925;
+	bh=lX6+zTT7ArT628pQvMIt/Li9iIBWCbQgHcaF3SsxxTI=;
 	h=From:Subject:Date;
-	b=TZyVDbOvqodQUIFUfmJC4yKETSbungb7RkWBBD3segCD9Wmy2eTemXOQu7FxDy/Db
-	 kVKvxbqa2at/rdXXhaLr5ZX3D0kjG5gtI+PRSPQwXp0Rv2AQyZFz1iXZ0p/kpAlW0S
-	 20tc1UykQ1Lsq8ECWGbxg4weNZ8ypXPDzA3j8s0hZMeaLrTeb7gPzfVR1kmfLFoqEL
-	 CwFlgVnmQ33JeDVKUFNXbHzaq0MW4BiGuUh2PQSgxoRAAmberZVffrS9zI/dJ3rF3h
-	 UqOBKXhZBGfoSOo7tRnaXrik0wnDYklsZwkJ0xixsElLXEuKPPDid3vzCqnTtF60gk
-	 aOjt6lNRd9aUw==
+	b=repq7EoRo2qmYCfKMkh4S/MFsi3kW12Y9MZSxy+cIVEQMEKcF7CK0PG/uJPVttLPl
+	 HyTcZirPEGrNazlYhj/dRMm3E125CSvzBKDvCy4NLj9AKENMhsOSu1B4gF7vhpZBXt
+	 TrZ8sbe56lojaJ47r2Gq5g4xCrJq49cQWqidI0U98YqnVsmNopgDo8jsVrNBVcdip5
+	 A93LxB+FlAJt+IlgOhK6vX88k35rAHWYiJGGxojfb48DUciAVUQAoBuPGzbitiaRQa
+	 fvOz7D0LEM3LiccW68jPvBRijxkXxH6i+ozm+6552cI/8uY50daGvTufzzvPCRQbdH
+	 wSn9J460AYLzw==
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To: Linux ACPI <linux-acpi@vger.kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Bob Moore <robert.moore@intel.com>,
  Saket Dumbre <saket.dumbre@intel.com>
-Subject: [PATCH v1 7/8] ACPICA: Fix warnings from PR #295 merge
-Date: Wed, 26 Mar 2025 21:10:39 +0100
-Message-ID: <2304653.iZASKD2KPV@rjwysocki.net>
+Subject: [PATCH v1 6/8] ACPICA: Fix typo in comments for SRAT structures
+Date: Wed, 26 Mar 2025 21:09:53 +0100
+Message-ID: <8507690.T7Z3S40VBb@rjwysocki.net>
 In-Reply-To: <5873907.DvuYhMxLoT@rjwysocki.net>
 References: <5873907.DvuYhMxLoT@rjwysocki.net>
 Precedence: bulk
@@ -58,37 +58,30 @@ X-VADE-SPAMSTATE: clean
 X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieeigeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepledtieekkeekveeikeetgffgteeuteefjeevjeegudelvdduheeiuedvieehieevnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosggvrhhtrdhmohhorhgvsehinhhtvghlrdgtohhmpdhrtghpthhtohepshgrkhgvthdrughumhgsrhgvsehinhhtvghlrdgtohhm
 X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
 
-From: Saket Dumbre <saket.dumbre@intel.com>
+From: Adam Lackorzynski <adam@l4re.org>
 
-Possible loss of data from u32 to u8 conversions.
+ACPICA commit 218b5b3654b355e7481cbee8209f5212201b1196
 
-ACPICA commit 1d7a0aa04793ff731da13f2070877ec7a9498571
-
-Link: https://github.com/acpica/acpica/commit/1d7a0aa0
-Signed-off-by: Saket Dumbre <saket.dumbre@intel.com>
+Link: https://github.com/acpica/acpica/commit/218b5b36
+Signed-off-by: Adam Lackorzynski <adam@l4re.org>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/acpi/acpica/dsutils.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/acpi/actbl3.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/acpica/dsutils.c b/drivers/acpi/acpica/dsutils.c
-index 2bdae8a25e08..baf6a1f27605 100644
---- a/drivers/acpi/acpica/dsutils.c
-+++ b/drivers/acpi/acpica/dsutils.c
-@@ -723,11 +723,11 @@ acpi_ds_create_operands(struct acpi_walk_state *walk_state,
- 	 * pop everything off of the operand stack and delete those
- 	 * objects
- 	 */
--	walk_state->num_operands = i;
-+	walk_state->num_operands = (u8)(i);
- 	acpi_ds_obj_stack_pop_and_delete(new_num_operands, walk_state);
+diff --git a/include/acpi/actbl3.h b/include/acpi/actbl3.h
+index 5cd755143b7d..14082dd445f2 100644
+--- a/include/acpi/actbl3.h
++++ b/include/acpi/actbl3.h
+@@ -269,7 +269,7 @@ struct acpi_srat_gicc_affinity {
  
- 	/* Restore operand count */
--	walk_state->num_operands = prev_num_operands;
-+	walk_state->num_operands = (u8)(prev_num_operands);
+ #define ACPI_SRAT_GICC_ENABLED     (1)	/* 00: Use affinity structure */
  
- 	ACPI_EXCEPTION((AE_INFO, status, "While creating Arg %u", index));
- 	return_ACPI_STATUS(status);
+-/* 4: GCC ITS Affinity (ACPI 6.2) */
++/* 4: GIC ITS Affinity (ACPI 6.2) */
+ 
+ struct acpi_srat_gic_its_affinity {
+ 	struct acpi_subtable_header header;
 -- 
 2.43.0
 
