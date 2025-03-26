@@ -1,123 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2446F1F460E;
-	Wed, 26 Mar 2025 21:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1A5263F59
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 21:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743025411; cv=none; b=opQiULyka7lVxagPsHpNYBryP9TTvxoS0gWAqwAs+2yKPAkw2zDyurfLXdp9GnkIPtotNFKGenYQ+YWJHAjBxtSinL2f/dlqu7EsZlphhjBwH+TDlo28v9zSNg40ZHzszqv7brAfMtSBnsIwtsX7uir0c2iYsFTxr0yIiqV91Ws=
+	t=1743025416; cv=none; b=ubDD44DHFrlBS010f9zph6r/8yDkbMZRD02lwD6p09FjnRFVNAbZQotsiPm7e17nAoM1fHusHnstwBMXJVQ7jxGI0YnbMg2ppiUZ9smSdAra3DyAKUI/8MRkrxdAE/rP2SipflgQuawS/HjXr3yoXmNzOPZWupW8BHhIkgZgM6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743025411; c=relaxed/simple;
-	bh=RIm2iQ3s/e/fPL2X39oO+OfIIkezi9eH0r/BTF0Mc78=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nEjHLs1EbRPULl91kgDvuyJoUqds48QY4N7l0RpfVWmKERo3H0dbMn+esyx5/ZTy39N72ZXiGo3iEEquyuXiGojKsM1Tz8npLtj4su89g3n00/Ho+0JDZpVw25cthpiW+pLsM+lZFEeBsv2FMzAriWLCpqkCbSig+FuFlP7Z6gU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EDGhT6TH; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743025416; c=relaxed/simple;
+	bh=OsP7wE2EtJcuyDUU3LnpDBMfiZeaPmZK7m+jKaBQfKs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Gi4g5jd7cr7zB9eg8hj62G4fnmncro2Zv6MbYbC/PYwtOW/jg6A3IOQhXCtv4003qQ3U4y1U7dhgF9bLJifHlQeJzc47yGc5eQ5ikzhgD5q0m+R/WgfGhrxOwAv1KyN/vWITn4c0OFW0FcKrbhRr1myHUVx7zL83wqT+mtRtP04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RJOYoObM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TPKQaMF3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EDGhT6TH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743025410; x=1774561410;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RIm2iQ3s/e/fPL2X39oO+OfIIkezi9eH0r/BTF0Mc78=;
-  b=EDGhT6THMxO2SFytLw0Gzd3IbGtUfDR9c4TJNPRNaSD5oWSQhoizZ571
-   SX6caqptluXstqJGAKbdpRlsEPoaIrxq/EEJLjl8wmQIC1ArfoA16nlix
-   uu4TQS5+QCYArLh8sa2MkVyQC9RbZe7DVPZAqGKFIWT38vYDinYsIweJr
-   drVPMZ/Ahv+sj3MMneNQRP8Vg8CUovXHHVdJISFMCPO1c8hwN6YMqm07I
-   4AnNlTm1S/HALsh69EqzHwYnJRYSGwz5alhMZ9AdusaGlMamDlLCwueNo
-   jxbs9AWRR99gA8J4MgCQd98IxWr1z88mk4WEX4qUaQuDNv4/WxSK5iIxx
-   g==;
-X-CSE-ConnectionGUID: bS4rCjdoSdWOtKzgN79S1A==
-X-CSE-MsgGUID: n00tdjo4SmGZKBch+2cD5g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44521367"
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="44521367"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 14:43:29 -0700
-X-CSE-ConnectionGUID: Didorik1Q0CUaWp1ofD6TA==
-X-CSE-MsgGUID: LRnfdugRTHWmIjo3hrcb1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="124723729"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by fmviesa006.fm.intel.com with ESMTP; 26 Mar 2025 14:43:27 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1txYWy-000663-38;
-	Wed, 26 Mar 2025 21:43:24 +0000
-Date: Thu, 27 Mar 2025 05:42:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v2 2/3] PCI: dwc: Add sysfs support for PTM context
-Message-ID: <202503270545.z7lzaIQz-lkp@intel.com>
-References: <20250324-pcie-ptm-v2-2-c7d8c3644b4a@linaro.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RJOYoObM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TPKQaMF3"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743025412;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TGXt0FaS0lGjt19aTsHqtHOk4mXbjNvWVmWotjvykLk=;
+	b=RJOYoObMu8fSitUel2NLJyxLfe0N63Y5DUEO6GPjCVFI/9vtfTtfjA/eKWlv85Dt1dJD2n
+	3EXqJBhHnoZif60dak4P3QXpFCJBsrYjB+Ul4H5ZRixDn/PmGZVMvQlamjvgLN8DkKCWRQ
+	/xT7F/BCpvJXLx8xPLcahdDUwrUp2P1M2bYyvYKjlkmyn8SY+manYY9NJc/OXcdCNRm8Aa
+	dmu+pGToYLxNG6KEJgVbDmgDvho9ei3yf2tgfey/SssaXQrZFnJIU9wWjlyFr2som8+EqI
+	QwhVl/njee41IMaoCWCGN7UeRihefX0OgFmIwC5qEADWacH/lsjsi+XWeUehhA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743025412;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TGXt0FaS0lGjt19aTsHqtHOk4mXbjNvWVmWotjvykLk=;
+	b=TPKQaMF3z2Wp8HAaVWs66hsHnJuNUKtO3CejDr10QD7CSfjPk6HSGEQfFX+SS9xRa6OoNx
+	UJ64xVefSC+05/CA==
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+ lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org, Eric Dumazet
+ <edumazet@google.com>, Benjamin Segall <bsegall@google.com>, Frederic
+ Weisbecker <frederic@kernel.org>
+Subject: Re: [tip:timers/core] [posix]  1535cb8028:
+ stress-ng.epoll.ops_per_sec 36.2% regression
+In-Reply-To: <6sn76aya225pqikijue5uv5h3lyqk262hc6ru3vemn7xofdftd@sw7gith52xh7>
+References: <202503241406.5c9cb80a-lkp@intel.com> <87pli4z02w.ffs@tglx>
+ <6sn76aya225pqikijue5uv5h3lyqk262hc6ru3vemn7xofdftd@sw7gith52xh7>
+Date: Wed, 26 Mar 2025 22:43:32 +0100
+Message-ID: <87cye3zcvv.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324-pcie-ptm-v2-2-c7d8c3644b4a@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Manivannan,
+On Wed, Mar 26 2025 at 22:11, Mateusz Guzik wrote:
+> On Wed, Mar 26, 2025 at 09:07:51AM +0100, Thomas Gleixner wrote:
+>> How on earth can this commit result in both a 36% regression and a 25%
+>> improvement with the same test?
+>>=20
+>> Unfortunately I can't reproduce any of it. I checked the epoll test
+>> source and it uses a posix timer, but that commit makes the hash less
+>> contended so there is zero explanation.
+>>=20
+>
+> The short summary is:
+> 1. your change is fine
+> 2. stress-ng is doing seriously weird stuff here resulting in the above
+> 3. there may or may not be something the scheduler can do to help
+>
+> for the regression stats are saying:
+> feb864ee99a2d8a2 1535cb80286e6fbc834f075039f
+> ---------------- ---------------------------
+>          %stddev     %change         %stddev
+>              \          |                \
+>       5.97 =C2=B1 56%     +35.8       41.74 =C2=B1 24%  mpstat.cpu.all.id=
+le%
+>       0.86 =C2=B1  3%      -0.3        0.51 =C2=B1 11%  mpstat.cpu.all.ir=
+q%
+>       0.10 =C2=B1  3%      +2.0        2.11 =C2=B1 13%  mpstat.cpu.all.so=
+ft%
+>      92.01 =C2=B1  3%     -37.7       54.27 =C2=B1 18%  mpstat.cpu.all.sy=
+s%
+>       1.06 =C2=B1  3%      +0.3        1.37 =C2=B1  8%  mpstat.cpu.all.us=
+r%
+>      27.83 =C2=B1 38%     -84.4%       4.33 =C2=B1 31%  mpstat.max_utiliz=
+ation.seconds
+>
+> As in system time went down and idle went up.
+>
+> Your patch must have a side effect where it messes with some of the
+> timings between workers.
 
-kernel test robot noticed the following build warnings:
+It does as it removes the global lock and the potential contention on
+it.
 
-[auto build test WARNING on 1f5a69f1b3132054d8d82b8d7546d0af6a2ed4f6]
+> The testcase is doing a lot of weird stuff, including calling yield()
+> for every loop iteration. On top of that if the other worker does not
+> win the race there is also a sleep of 0.1s thrown in. I commented these
+> suckers out and weird anomalies persisted.
+>
+> All that said, I'm not going to further look into it. Was curious wtf
+> though hence the write up.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam-via-B4-Relay/PCI-Add-sysfs-support-for-exposing-PTM-context/20250324-181039
-base:   1f5a69f1b3132054d8d82b8d7546d0af6a2ed4f6
-patch link:    https://lore.kernel.org/r/20250324-pcie-ptm-v2-2-c7d8c3644b4a%40linaro.org
-patch subject: [PATCH v2 2/3] PCI: dwc: Add sysfs support for PTM context
-config: i386-randconfig-062-20250326 (https://download.01.org/0day-ci/archive/20250327/202503270545.z7lzaIQz-lkp@intel.com/config)
-compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250327/202503270545.z7lzaIQz-lkp@intel.com/reproduce)
+Thak you for taking the time and looking into this. The analysis of this
+"benchmark" is a fun read and I agree that it matches my impression of
+looking into the source of this thing that it does weird stuff, which
+does not make any sense at all.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503270545.z7lzaIQz-lkp@intel.com/
+Thanks,
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/pci/controller/dwc/pcie-designware-sysfs.c:222:21: sparse: sparse: symbol 'dw_pcie_ptm_ops' was not declared. Should it be static?
-
-vim +/dw_pcie_ptm_ops +222 drivers/pci/controller/dwc/pcie-designware-sysfs.c
-
-   221	
- > 222	struct pcie_ptm_ops dw_pcie_ptm_ops = {
-   223		.check_capability = dw_pcie_ptm_check_capability,
-   224		.context_update_store = dw_pcie_ptm_context_update_store,
-   225		.context_update_show = dw_pcie_ptm_context_update_show,
-   226		.context_valid_store = dw_pcie_ptm_context_valid_store,
-   227		.context_valid_show = dw_pcie_ptm_context_valid_show,
-   228		.local_clock_show = dw_pcie_ptm_local_clock_show,
-   229		.master_clock_show = dw_pcie_ptm_master_clock_show,
-   230		.t1_show = dw_pcie_ptm_t1_show,
-   231		.t2_show = dw_pcie_ptm_t2_show,
-   232		.t3_show = dw_pcie_ptm_t3_show,
-   233		.t4_show = dw_pcie_ptm_t4_show,
-   234		.context_update_visible = dw_pcie_ptm_context_update_visible,
-   235		.context_valid_visible = dw_pcie_ptm_context_valid_visible,
-   236		.local_clock_visible = dw_pcie_ptm_local_clock_visible,
-   237		.master_clock_visible = dw_pcie_ptm_master_clock_visible,
-   238		.t1_visible = dw_pcie_ptm_t1_visible,
-   239		.t2_visible = dw_pcie_ptm_t2_visible,
-   240		.t3_visible = dw_pcie_ptm_t3_visible,
-   241		.t4_visible = dw_pcie_ptm_t4_visible,
-   242	};
-   243	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+        tglx
