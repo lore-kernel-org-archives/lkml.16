@@ -1,141 +1,135 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF4E1E502
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF611E502
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743000883; cv=none; b=gzA1UneQhwKQSDoEb7HXvC9X9mCBqRmo23HnSCiIYuA6D8vVGUmknx2CPcjqMZr8Ipk7ydxgQiP4ADzZJlZLK5bXl5HOTu8dm8uJIHooEoGhrhY0b50pebYYcfbN924lfyqoNR6mAMiYOQSPIcMQlA7JjlW0in/mE0/tF0hNGIs=
+	t=1743000891; cv=none; b=NJPAQcdTsMC/EFewEMqJL7RG8IRKAHifjVYLOfwXubr0oIAuNr9a2o8XO350XA+DfoiEU5MQvDrdJFqmuhUqMFAUNI9daUsR7KyVuF2wUHug6CcNcnfHt5qnYFjABGbfgSr5wZrciHK2RUj6khohrgDwlvrP77RqraRM2UjjHhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743000883; c=relaxed/simple;
-	bh=AGunnTLAw5lTuH6SsD/sMvxG9Gr1cJo6gPHAUcIVnFk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=cy2SIcxzOaQny9rLI9NRL47yXaMGd8+RQw+ZNyoHOreIZFfoRJxMY2knH0g41WfZ4ht8ADCN7dzLH1Z/vsIqZQ9XyQaA9fYW5DehtzJ9N9ShPpLV4nCDaS6Hjm3tAh2v7TVmJZTOP267IHWd00IiUFA7FaFI85IpF1HwOWyHYTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=B8qKfZkW; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1743000891; c=relaxed/simple;
+	bh=rGHzZernclzfEZzSSzphkFFLUtZYXt411TaLEpWyxhA=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=W6bjsVioBDEEBhXTdFRhixYpb+FwqrLtTqSHjkQfaEJQ5HJvL65hCgaQKow8Xrg5TT1FTKT7+pYgfmcJCHI546qSdFE0p7CjQpaB4E5TNKRCmbUSbvkrUqSI0vlD3D6SZzC19Wtw67/ZN6SOtHmpFl9Pvx1DqP938eq2JTIYimE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ijULDyRK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=JGYCJ44/; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ijULDyRK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=JGYCJ44/; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="B8qKfZkW"
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250326144921epoutp03551c184e29b60cd03d353e64085945b3~wYcaUdo4l2128721287epoutp03L
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:49:21 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250326144921epoutp03551c184e29b60cd03d353e64085945b3~wYcaUdo4l2128721287epoutp03L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1743000561;
-	bh=PvMcIFBpghuJtM2xf/uXNWsaSErjxIY7zcXBIjwPBxw=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=B8qKfZkW9HoJyF1/sXAkBx2t0kzRq2Y+GCp6phehgCUA0qnGvYlIWr2aLiNvhRvk3
-	 jg2blhoN30NjRK15vpwOQPswtU4X9/XFhLrG/nIXcVZuaOTi/3o6vcIx2Yk4dqXlCt
-	 DQLBhoj8GczccZiM6R/2emUYeqDTJ42vO4/ZDijQ=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas1p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250326144920epcas1p1600652c78cdba835e964c248d4be8405~wYcZgqUcf2108921089epcas1p1U;
-	Wed, 26 Mar 2025 14:49:20 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.36.227]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4ZN8nX0l02z6B9m4; Wed, 26 Mar
-	2025 14:49:20 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-	epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	BF.1D.10189.FE314E76; Wed, 26 Mar 2025 23:49:20 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250326144918epcas1p1bf704db657010812a18e9fef5c3a6784~wYcYJKFtO2109021090epcas1p19;
-	Wed, 26 Mar 2025 14:49:18 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250326144918epsmtrp10915de4994d13fa30065075f8a332688~wYcYIanw42811128111epsmtrp1x;
-	Wed, 26 Mar 2025 14:49:18 +0000 (GMT)
-X-AuditID: b6c32a35-737e8700000027cd-eb-67e413ef0064
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	05.70.07818.EE314E76; Wed, 26 Mar 2025 23:49:18 +0900 (KST)
-Received: from u20pb1-0435.tn.corp.samsungelectronics.net (unknown
-	[10.91.133.14]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250326144918epsmtip101730a348a9d61efdbe7a43f38ed3c30~wYcX7tfee2376823768epsmtip1j;
-	Wed, 26 Mar 2025 14:49:18 +0000 (GMT)
-From: Sungjong Seo <sj1557.seo@samsung.com>
-To: linkinjeon@kernel.org, yuezhang.mo@sony.com
-Cc: sjdev.seo@gmail.com, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, cpgs@samsung.com, Sungjong Seo
-	<sj1557.seo@samsung.com>, stable@vger.kernel.org
-Subject: [PATCH] exfat: fix potential wrong error return from get_block
-Date: Wed, 26 Mar 2025 23:48:48 +0900
-Message-Id: <20250326144848.3219740-1-sj1557.seo@samsung.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ijULDyRK";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="JGYCJ44/";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ijULDyRK";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="JGYCJ44/"
+Received: from pobox.suse.cz (unknown [10.100.2.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 27A5F21175;
+	Wed, 26 Mar 2025 14:54:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743000888; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Nj7qnn1zPrsquxyNyEVdjhlDD4L+SsWm9vlyd/xPZAQ=;
+	b=ijULDyRKEnIecmUhlsdbCqOpP/QmoFHZ40deQxGm408qOnb2vF6/kCOOB3RProH9XueokH
+	A8Fm7juu6Oxqtb1QeyfzuY3Iy+9Illivtu44d6VJeT2TjOa1KsDQf+QDC/dhP7Jn5w5c6I
+	oQDtuhLyqcF2Fc7X7tTJ/LGYbg3qiZ0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743000888;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Nj7qnn1zPrsquxyNyEVdjhlDD4L+SsWm9vlyd/xPZAQ=;
+	b=JGYCJ44/8ga5JDLLmdLD2tV8sMEU4sQp1+PPOs2EiUzhiZNnNInSVojPxx2TmWw9wtWTz3
+	w6sqYNZXKwELI/DQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743000888; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Nj7qnn1zPrsquxyNyEVdjhlDD4L+SsWm9vlyd/xPZAQ=;
+	b=ijULDyRKEnIecmUhlsdbCqOpP/QmoFHZ40deQxGm408qOnb2vF6/kCOOB3RProH9XueokH
+	A8Fm7juu6Oxqtb1QeyfzuY3Iy+9Illivtu44d6VJeT2TjOa1KsDQf+QDC/dhP7Jn5w5c6I
+	oQDtuhLyqcF2Fc7X7tTJ/LGYbg3qiZ0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743000888;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Nj7qnn1zPrsquxyNyEVdjhlDD4L+SsWm9vlyd/xPZAQ=;
+	b=JGYCJ44/8ga5JDLLmdLD2tV8sMEU4sQp1+PPOs2EiUzhiZNnNInSVojPxx2TmWw9wtWTz3
+	w6sqYNZXKwELI/DQ==
+Date: Wed, 26 Mar 2025 15:54:48 +0100 (CET)
+From: Miroslav Benes <mbenes@suse.cz>
+To: Peter Zijlstra <peterz@infradead.org>
+cc: Josh Poimboeuf <jpoimboe@redhat.com>, mingo@kernel.com, 
+    juri.lelli@redhat.com, vincent.guittot@linaro.org, 
+    dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
+    mgorman@suse.de, vschneid@redhat.com, jpoimboe@kernel.org, 
+    jikos@kernel.org, pmladek@suse.com, joe.lawrence@redhat.com, 
+    linux-kernel@vger.kernel.org, live-patching@vger.kernel.org, 
+    Thomas Gleixner <tglx@linutronix.de>, 
+    Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [RFC][PATCH] sched,livepatch: Untangle cond_resched() and
+ live-patching
+In-Reply-To: <20250324134909.GA14718@noisy.programming.kicks-ass.net>
+Message-ID: <alpine.LSU.2.21.2503261552360.4152@pobox.suse.cz>
+References: <20250324134909.GA14718@noisy.programming.kicks-ass.net>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMJsWRmVeSWpSXmKPExsWy7bCmnu4H4SfpBhs2M1m8PKRpMXHaUmaL
-	PXtPslhc3jWHzWLLvyOsFi8+bGCzWLDxEaPF9TcPWR04PHbOusvusWlVJ5tH35ZVjB7tE3Yy
-	e3zeJBfAGtXAaJNYlJyRWZaqkJqXnJ+SmZduqxQa4qZroaSQkV9cYqsUbWhopGdoYK5nZGSk
-	Z2oUa2VkqqSQl5ibaqtUoQvVq6RQlFwAVJtbWQw0ICdVDyquV5yal+KQlV8Kcr9ecWJucWle
-	ul5yfq6SQlliTinQCCX9hG+MGbePnWQreM9WcWvlBaYGxi2sXYycHBICJhJbHh4Ds4UEdjBK
-	fGphhLA/MUrsn+PSxcgFZH9jlFi4oI8dpqFh4VZGiMReRomDDZeYIZx2Jokzx7aAtbMJaEss
-	b1oGlODgEBHQl2hpqgKpYRZYySixalMjM0iNsIC7xLxHt8FWswioSszZ3Q5m8wrYSjTOb4A6
-	T15i5qXv7BBxQYmTM5+wgNjMQPHmrbOZIWousUtc7GWEsF0kLp+fDHWpsMSr41ugbCmJl/1t
-	7CBHSAh0M0oc//iOBSIxg1FiSYcDhG0v0dzazAZyNLOApsT6XfoQu/gk3n3tgbqHV6Jh42+o
-	mYISp691g/0IEu9oE4IIq0h8/7CTBWbtlR9XmSBsD4mTvxYwQ0I3VqL3xGGmCYwKs5B8NgvJ
-	Z7MQjljAyLyKUSy1oDg3PbXYsMAQOYo3MYLTq5bpDsaJbz/oHWJk4mA8xCjBwawkwnuM9WG6
-	EG9KYmVValF+fFFpTmrxIcZkYFhPZJYSTc4HJvi8knhDMzNLC0sjE0NjM0NDwsImlgYmZkYm
-	FsaWxmZK4rwXtrWkCwmkJ5akZqemFqQWwWxh4uCUamDKX828t/tfvqTNpPo7+w57rp4u2Vz8
-	ZeN89Sdbvotp3eI85OYVZiK8+qHgRa/dNf2bZx948fxRRsYCxSf+lnUy+TV3dk39pmTPU/FB
-	8NCDift9XCfr/RPsncIbLGeQdEU4q+3XpM09ActX7j1+7Zbg3rizttaHj32YI3w7T0B0+dEP
-	e0x1y3z0Il5HmDy8fPiyi3p8yIue1dPKq1ecmBHr3+Nro37h4ouLe/73PA+uuPJmo/l0nYNZ
-	qr2rPqxlv9Ow4FFv0/ETeRsN9m5XLlToTG/qWBl9r8M3JeL9T5Pb77oqpM0XGK9+N/eJl5+z
-	2Q9Jt7agN30Xeu0f3F3X5sgV9pY7+RVzssyZTsEvpt67lViKMxINtZiLihMB9kR97WYEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrELMWRmVeSWpSXmKPExsWy7bCSnO474SfpBtNmmVm8PKRpMXHaUmaL
-	PXtPslhc3jWHzWLLvyOsFi8+bGCzWLDxEaPF9TcPWR04PHbOusvusWlVJ5tH35ZVjB7tE3Yy
-	e3zeJBfAGsVlk5Kak1mWWqRvl8CVcfvYSbaC92wVt1ZeYGpg3MLaxcjJISFgItGwcCtjFyMX
-	h5DAbkaJvQeOsXQxcgAlpCQO7tOEMIUlDh8uhihpZZI42neAHaSXTUBbYnnTMmYQW0TAUGLD
-	4r3sIEXMAusZJZqerWADSQgLuEvMe3QbbBmLgKrEnN3tYDavgK1E4/wGqCPkJWZe+s4OEReU
-	ODnzCQuIzQwUb946m3kCI98sJKlZSFILGJlWMUqmFhTnpucmGxYY5qWW6xUn5haX5qXrJefn
-	bmIEB6uWxg7Gd9+a9A8xMnEwHmKU4GBWEuE9xvowXYg3JbGyKrUoP76oNCe1+BCjNAeLkjjv
-	SsOIdCGB9MSS1OzU1ILUIpgsEwenVAOTqPCpY7+mbbl9ybZqv3/PonyXr6yeVRuKTaKj82Ym
-	RB2NL7DOtvvTrOAl6VxZYHBPd92BlhTfrbdDCkvjJjYZXTq+zKf7uV+D85uIOa12FR6/f0a6
-	buGdkS7E5RZY2WTQxJN2WuH6hC3rZkTFdvhr3MiJmCjhIvNR741OvWbBqniW/sZrxW9ZE2WN
-	VqpPS98jEJ+X+FrgybGVBlfZ4x+18nX2WVhWnHTkfCE+q61iy8FV/hbRgr8dDH+2/95TGrRU
-	xN6Kp2XWeYerewVv9kz4EDy7aVHEZWumt9abPymJMNhLR6vwr2Zb7/LkQGJQxI/jJrOnXNG5
-	mBY0Id/isvC+03mnvBh/7V0V/H/rDCWW4oxEQy3mouJEAFlDL0fFAgAA
-X-CMS-MailID: 20250326144918epcas1p1bf704db657010812a18e9fef5c3a6784
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-X-CPGSPASS: Y
-X-ArchiveUser: EV
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250326144918epcas1p1bf704db657010812a18e9fef5c3a6784
-References: <CGME20250326144918epcas1p1bf704db657010812a18e9fef5c3a6784@epcas1p1.samsung.com>
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_ZERO(0.00)[0];
+	ARC_NA(0.00)[];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-If there is no error, get_block() should return 0. However, when bh_read()
-returns 1, get_block() also returns 1 in the same manner.
+>  void __klp_sched_try_switch(void)
+>  {
+> -	if (likely(!klp_patch_pending(current)))
+> -		return;
+> -
+>  	/*
+>  	 * This function is called from cond_resched() which is called in many
+>  	 * places throughout the kernel.  Using the klp_mutex here might
+> @@ -377,14 +365,14 @@ void __klp_sched_try_switch(void)
+>  	 * klp_try_switch_task().  Thanks to task_call_func() they won't be
+>  	 * able to switch this task while it's running.
+>  	 */
+> -	preempt_disable();
+> +	lockdep_assert_preemption_disabled();
+>  
+>  	/*
+>  	 * Make sure current didn't get patched between the above check and
+>  	 * preempt_disable().
+>  	 */
+>  	if (unlikely(!klp_patch_pending(current)))
+> -		goto out;
+> +		return;
 
-Let's set err to 0, if there is no error from bh_read()
+It does not look correct. We just make sure that 
+klp_patch_pending(current) did not change here. It would be highly 
+unlikely. However, we should keep the likely way out (the first removed 
+condition above). So let's also s/unlikely/likely/ here.
 
-Fixes: 11a347fb6cef ("exfat: change to get file size from DataLength")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
----
- fs/exfat/inode.c | 2 ++
- 1 file changed, 2 insertions(+)
+And the comments in the function should be updated as well.
 
-diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
-index f3fdba9f4d21..a23677de4544 100644
---- a/fs/exfat/inode.c
-+++ b/fs/exfat/inode.c
-@@ -391,6 +391,8 @@ static int exfat_get_block(struct inode *inode, sector_t iblock,
- 			/* Zero unwritten part of a block */
- 			memset(bh_result->b_data + size, 0,
- 			       bh_result->b_size - size);
-+
-+			err = 0;
- 		} else {
- 			/*
- 			 * The range has not been written, clear the mapped flag
--- 
-2.25.1
-
+Miroslav
