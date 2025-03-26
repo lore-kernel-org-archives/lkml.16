@@ -1,112 +1,79 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE311E1E0A
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 12:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9480A56B81
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 12:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742991543; cv=none; b=UqPX/XCg1UqGLONua9mzN6XnSoTQ+hIcLC6QHeSLn3bp8NBctlPyeyvtjgE4EKrBWjfO+2zQ33JqZrWrqXKL+FNlH91XkJE8ckNPlyjP4l/3ljPDLgM+3jhsWZn0bIhmPewc87ouYmCjfQ6P7E72xx+dZ63SRuNdVtwgdJ3R6e4=
+	t=1742991586; cv=none; b=i2lmRoNHzN6Ycv9aPG1s5AnwdVsYj1806H0sD1nJ04wVQwi1HdSqr1d8JOm5gBxQUHxt15lV9WVDTqWMR6X2lsuAg0E570IqKwxG4rYXOqOPxyVEdiyhCupq5DhHMya3gN4cQzRnC1TlYW2FL6WkxFvcYSZft2zGyNp5cqPrJDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742991543; c=relaxed/simple;
-	bh=XC+qboCsiOOjLMsuFgsRa+8+JW7ckO4azwS4iUwWNS8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=LSgudMZ+nrOSvJH7jRFttwALwgqgOYL/s6L6rTFfawFwQI2r4qh7UyjaBhTYNYjo2vugusv4pBmNJ+fSJYqsLLNjbsA5aAtMoBuGqRb8Pg6iIMCz8Xxlpd4/VXb/FnhJIxbwPlsmLFl9N309rGiKxQU2rNFVDMmLwjiE6xWkZ0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1txPiN-0005sh-HM; Wed, 26 Mar 2025 13:18:35 +0100
-Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1txPiM-001kIr-2N;
-	Wed, 26 Mar 2025 13:18:35 +0100
-Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
-	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1txPiN-000aOn-0C;
-	Wed, 26 Mar 2025 13:18:35 +0100
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH do not merge 0/4] wifi: mwifiex: add iw61x support
-Date: Wed, 26 Mar 2025 13:18:30 +0100
-Message-Id: <20250326-mwifiex-iw61x-v1-0-ff875ed35efc@pengutronix.de>
+	s=arc-20240116; t=1742991586; c=relaxed/simple;
+	bh=tvwT/fpOuTFYDbfORjAlX35n2nxm8ikfrhI81rjIqYE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WX8L0k4KyHlV/iV6WIEneLYxoKzL9YnIrGnIOjf5utyRXYHCuTssAkJS7WgP6S0QjGfHAoNwZoLQS3cpwc+qoPy1eXU7844jne1yZemARuDKYR6o9rKcIh3JTBZ8KuDxD2NQHlIfy3oNuWboXYh8QKZM5BULwBbZn4OLGMx5TEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dTz/KXdR; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dTz/KXdR"
+Date: Wed, 26 Mar 2025 08:19:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1742991579;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/oaVHLFbWzKfUEG7Im5cPFtABNfTMHVrsIL6fXyC1Gk=;
+	b=dTz/KXdRsI44K0SbkNy86I+cCZp2Dz0Xl3EzwAlFHMIEIOhmqWsRbn1YSd2Q3oEQ+DhoPW
+	N2N3a5dWi6J8qRoNOwh9+/yFlL9zhbiY+A6x2AsynSziDlS4GvDwtnQYqGFH0WE7YRrufQ
+	Jr4sh3AqEGax7XnAW39N0LMtZapqPjI=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Alan Huang <mmpgouride@gmail.com>
+Cc: Roxana Nicolescu <nicolescu.roxana@protonmail.com>, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] bcachefs: replace deprecated strncpy() with strscpy()
+Message-ID: <bmjvipermsvb454mdh5zmlmw4gv4oub5fgh4eowedlit75gqei@3or3va3e52ce>
+References: <20250326094449.16473-1-nicolescu.roxana@protonmail.com>
+ <5F3AB2BC-43DA-47A6-A07A-72540B327D11@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJbw42cC/x2MwQqAIBAFfyX2nGCKRf1KdKhcaw9paKQQ/nvWa
- ZiB9x4I6AkDDNUDHm8K5GyRpq5g3We7ISNdHAQXikvRsiOSIUyMYtsktvSq44uRvJMKyub0aCj
- 9fyNo9yXrrg8H+g1hyvkFda0LRXMAAAA=
-To: Brian Norris <briannorris@chromium.org>, 
- Francesco Dolcini <francesco@dolcini.it>, 
- Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-mmc@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742991515; l=1915;
- i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
- bh=XC+qboCsiOOjLMsuFgsRa+8+JW7ckO4azwS4iUwWNS8=;
- b=Pv6fTiWkqhq7BhJ8zpUKkrzmH1XGDqzV5/57BO539EM4DVkMssQAcI6vgtidNdMqxtCR5dUOQ
- kTWySoIPPBLDdYYCQbladHXHxUSAaIvo9keP7u7bx3YoYsWc58P7Ous
-X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
- pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: s.hauer@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5F3AB2BC-43DA-47A6-A07A-72540B327D11@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-This series adds iw61x support to the mwifiex driver. It works for me,
-but is not yet ready to be merged. Some people showed interest in it, so
-I am sending it here.
+On Wed, Mar 26, 2025 at 06:02:31PM +0800, Alan Huang wrote:
+> On Mar 26, 2025, at 17:44, Roxana Nicolescu <nicolescu.roxana@protonmail.com> wrote:
+> > 
+> > strncpy() is deprecated for NUL-terminated destination buffers. Use
+> > strscpy() instead.
+> > 
+> > Link: https://github.com/KSPP/linux/issues/90
+> > Signed-off-by: Roxana Nicolescu <nicolescu.roxana@protonmail.com>
+> > ---
+> > fs/bcachefs/btree_trans_commit.c | 2 +-
+> > 1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/bcachefs/btree_trans_commit.c b/fs/bcachefs/btree_trans_commit.c
+> > index c4f524b2ca9a..7ab25b425d11 100644
+> > --- a/fs/bcachefs/btree_trans_commit.c
+> > +++ b/fs/bcachefs/btree_trans_commit.c
+> > @@ -364,7 +364,7 @@ static noinline void journal_transaction_name(struct btree_trans *trans)
+> > struct jset_entry_log *l =
+> > container_of(entry, struct jset_entry_log, entry);
+> > 
+> > - strncpy(l->d, trans->fn, JSET_ENTRY_LOG_U64s * sizeof(u64));
+> > + strscpy(l->d, trans->fn, JSET_ENTRY_LOG_U64s * sizeof(u64));
+> 
+> The last time I asked Kent about this line, he didn’t want this.
 
-All testing and review feedback appreciated.
+Yes, the destination buffer isn't required to be nul terminated.
 
-During startup I get these messages:
-
-[   12.078010] mwifiex_sdio mmc1:0001:1: Unknown GET_HW_SPEC TLV type: 0xff
-[   12.078018] mwifiex_sdio mmc1:0001:1: Unknown GET_HW_SPEC TLV type: 0xff
-[   12.078024] mwifiex_sdio mmc1:0001:1: Unknown GET_HW_SPEC TLV type: 0x23e
-[   12.078029] mwifiex_sdio mmc1:0001:1: Unknown GET_HW_SPEC TLV type: 0x25c
-
-Not sure what these are about, I can't see these handled in the
-downstream mwifiex driver as well. Could also be there is some parsing
-error. Nevertheless the driver seems to work.
-
-The series applies to v6.14, but should apply to my mwifiex cleanup
-series as well.
-
-Sascha
-
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
-Sascha Hauer (4):
-      wifi: mwifiex: release firmware at remove time
-      wifi: mwifiex: handle VDLL
-      wifi: mwifiex: wait longer for SDIO card status
-      wifi: mwifiex: add iw61x support
-
- drivers/net/wireless/marvell/mwifiex/cmdevt.c    | 86 ++++++++++++++++++++++++
- drivers/net/wireless/marvell/mwifiex/fw.h        | 16 +++++
- drivers/net/wireless/marvell/mwifiex/main.c      |  9 +--
- drivers/net/wireless/marvell/mwifiex/main.h      |  4 ++
- drivers/net/wireless/marvell/mwifiex/sdio.c      | 81 +++++++++++++++++++++-
- drivers/net/wireless/marvell/mwifiex/sdio.h      |  3 +
- drivers/net/wireless/marvell/mwifiex/sta_event.c |  4 ++
- drivers/net/wireless/marvell/mwifiex/uap_event.c |  4 ++
- include/linux/mmc/sdio_ids.h                     |  3 +
- 9 files changed, 205 insertions(+), 5 deletions(-)
----
-base-commit: 1e26c5e28ca5821a824e90dd359556f5e9e7b89f
-change-id: 20250326-mwifiex-iw61x-b9570bf30735
-
-Best regards,
--- 
-Sascha Hauer <s.hauer@pengutronix.de>
-
+But it seems we should add a comment explaining that :)
