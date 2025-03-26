@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E09E264F8C
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 21:55:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEE0264FAE
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 21:55:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743026155; cv=none; b=nqgLMM+DpdqcMq/tZh8EcVSDpEOMFDOAwvE1GmWAeRz4QndxqulRQpcnGOF8ehPcNd1Amivzgs9xN/gIsUcjoPe29+HIIqhnxqUIyLyi7R1Ce/RAumICY8Y4C21B8nFOFo3v9SRtZKOJ++xbtHLo2RjB24vl//l8QhjBqlrjOBE=
+	t=1743026158; cv=none; b=c5pPOVLvsYZF4stcb0eOk15mUkgc0wkWRJNsB01slH/T/qjIejYzoMUNVsDhvt5O4An5eNLsGA0pW1QB0C30vuaAyKf+YVFS2IvOj0y/iK0j036+84F8T/IAyVLIVstrQpooAWFXntnbTBzGoQhShIEMJtMkbpd07b373GEDI0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743026155; c=relaxed/simple;
-	bh=Rm0pSLzGDttp6pRIj+5Mmw/lG8TrofiU0Ov8yG4KxXw=;
+	s=arc-20240116; t=1743026158; c=relaxed/simple;
+	bh=/wl5mv0P6SicGkmS9UB05MMQjCKZA3KBnf+P3Gic6hk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dm4F5dhiSwiqmm4aGhJpcBjtw39w3B37V8h7yXbEOXCb4I2zJpLHS5k5jbb5bcPD5zMBSJYFoA9Bd9RiCK9RAYbqs83v/vVBMiJ6x2Raqafr0NDGnHqBzqJuz7bYRIL3YyEOZcJxqRzEeXbnj8gVtUULh44zYIwUOX9/nPc0C/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fDip3NNb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fufCNGDjdWHE+dYWAebcwAWOTqYsed+nqULjySj6Pn9Gzcf8vilgTQbYNUVkgL094IM33ME9+I9tbEa9JNwUTPG2h2RWfklKkzXdgYM4Qi/+BpNYzex069m+rp0y936KG24Nusq95mHHdL/zRXKvTvOo1JkzVRkShn9EdmF0RhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W6xHN67M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fDip3NNb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 091D6C4CEE5;
-	Wed, 26 Mar 2025 21:55:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W6xHN67M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 751C4C4CEED;
+	Wed, 26 Mar 2025 21:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743026154;
-	bh=Rm0pSLzGDttp6pRIj+5Mmw/lG8TrofiU0Ov8yG4KxXw=;
+	s=k20201202; t=1743026157;
+	bh=/wl5mv0P6SicGkmS9UB05MMQjCKZA3KBnf+P3Gic6hk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fDip3NNboEON8k6fKYuyrEEGy67eMFDcevrDcfpdrQr+elwsN+580PO8uw3B6uZst
-	 9wJRsFrvefRVKMoa6OiA4JDBnFmAGbustua/wz3S46qMvl3shhmFK10rLgNwcUW9p2
-	 DUnoVs4WXCLrA/DOIN2HkOXvkaQFyYmLVlW4QtctaUtqoM4nBWp4ZASM3//j1AlVvs
-	 OfB+q19qxS7p+GLdVJyphQynXHdv+QocuZiDExvxItQK2ACDzlDRuI1lQOJecB/v84
-	 uI2ktYBmr2QcX8/1/sR33ob/+0Gu+enBdUx7E/z/GIa9fNgCECMlsQE/6WlqlTOQPO
-	 VoEqwx1d411HA==
+	b=W6xHN67MzzGrD8xstgl/imo7G9ZP+0QaNz5OowUpWXukDgjR5foFlyr5G0wyUJhWz
+	 fvrJTMEoe42j/iZFSSgTSiMY4Ltxx8/QYMpvTky93Djl6wT0qsqsZqvewt+kz9YXoT
+	 N8peYZNtWs5TxSlmd55pErLsTLTfeV4ryfUJkvLugwV6xrko0qFHNFa8zLcsGwBJ7n
+	 aEdKY2CUpXmiS57J/PaIKS/4Kbtgmum0V/XPrD6L/uAoSkWEBFyCQppP789LfHYs3O
+	 1tY5QgMue9XXJ+xJ84rnTcyS6x8jRszEc/6ZypkyrUPqdlK4Od2ybbkhoIBwrLTxQZ
+	 QaTQaMUtXf7bQ==
 From: Mike Rapoport <rppt@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Dan Williams <dan.j.williams@intel.com>,
@@ -34,9 +34,9 @@ Cc: Dan Williams <dan.j.williams@intel.com>,
 	Peter Xu <peterx@redhat.com>,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] MAINTAINERS: mm: add entry for numa memblocks and numa emulation
-Date: Wed, 26 Mar 2025 23:55:40 +0200
-Message-ID: <20250326215541.1809379-4-rppt@kernel.org>
+Subject: [PATCH 4/4] MAINTAINERS: mm: add entry for secretmem
+Date: Wed, 26 Mar 2025 23:55:41 +0200
+Message-ID: <20250326215541.1809379-5-rppt@kernel.org>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250326215541.1809379-1-rppt@kernel.org>
 References: <20250326215541.1809379-1-rppt@kernel.org>
@@ -52,26 +52,24 @@ From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- MAINTAINERS | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index baff55807a65..882fa62bcb28 100644
+index 882fa62bcb28..e3dfc4c34086 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -15208,6 +15208,16 @@ S:	Maintained
- F:	include/linux/execmem.h
- F:	mm/execmem.c
+@@ -15218,6 +15218,14 @@ F:	mm/numa.c
+ F:	mm/numa_emulation.c
+ F:	mm/numa_memblks.c
  
-+MEMORY MANAGEMENT - NUMA MEMBLOCKS AND NUMA EMULATION
++MEMORY MANAGEMENT - SECRETMEM
 +M:	Andrew Morton <akpm@linux-foundation.org>
 +M:	Mike Rapoport <rppt@kernel.org>
 +L:	linux-mm@kvack.org
 +S:	Maintained
-+F:	include/linux/numa_memblks.h
-+F:	mm/numa.c
-+F:	mm/numa_emulation.c
-+F:	mm/numa_memblks.c
++F:	include/linux/secretmem.h
++F:	mm/secretmem.c
 +
  MEMORY MANAGEMENT - USERFAULTFD
  M:	Andrew Morton <akpm@linux-foundation.org>
