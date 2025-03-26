@@ -1,166 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39611EB5DD;
-	Wed, 26 Mar 2025 16:18:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885A01B3950;
+	Wed, 26 Mar 2025 16:20:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743005933; cv=none; b=qojEN9YPxWqtzryw/i9KHmdJZHwXv03aIy666X3ZZe6RHbJLD7iYWjYrbAfCGSKx07B0Q+iTIrZJip1lGeafRzavXwz7BkRA7PDWr+6k7czKAcaHJqot4+baWJFmck76qHDp865VFDgO98Z73srQNk6Dg3gm/my9ohrHSXkx96Q=
+	t=1743006027; cv=none; b=G8YRKZbZ67P0oFiZ8BW4oOs9eDCAWsAXnXYmOPtYEnQfaPcWnnsdW+V0i1DFbFFebE9mK8RQVd45Z7ln3z7iB3DAuHSVB7fAb4lF2WNzBOBsKHK8gROwbYMWbfdLBnqQ7XGpFDjC3XVGD5ZSYjrOObV+13iOooveqdX6ZRQtVQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743005933; c=relaxed/simple;
-	bh=Z4mfmOoHDjZnf6VjFetSlpm7EqU2U/ycpOa/pXxe3As=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AScncm2LssmMJdn91Uo7bUOcJRGXPJelygVPluMTeSocpfo80f72h/SecAaNb1OzZ4MLk3Hx+K1BKR8TXSrwgPMH9srnGalfTG3fcPqJc8Bkbts/LnbGcLe1PC+kizm6OtbW2RQe/RG51EnSjxoupEqt0f+ZLcaGBW5SPgJlRUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IFTmpIbS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743006027; c=relaxed/simple;
+	bh=NlyzFBEeZY6V7OLkIjQjuzyo0eIa9iyxmf4xj+EVJ5g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nToS9J2bfzUvnJuCMu3TB4Yz077SuwQtT1fzXH/8XKHa1NTb8FZGIA0mwTPVKG9FOwILAV6KpsUk/O4kpXlw1Kk4bzhH0D8uYOQjHazrkuq5GnNylY9sN82KqXbqmRVUlovZrnEgSMQsXF+ozQaRwVTbAI69yln9rvexVEX+9Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jhU7SCX1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IFTmpIbS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C89A4C4CEE2;
-	Wed, 26 Mar 2025 16:18:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jhU7SCX1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8312BC4CEE2;
+	Wed, 26 Mar 2025 16:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743005933;
-	bh=Z4mfmOoHDjZnf6VjFetSlpm7EqU2U/ycpOa/pXxe3As=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IFTmpIbSr02+z+3hzqVTVDVY47MUu+MuOh7sDPYKYTz9W4Zd/sQYszYl0O9V5NxkX
-	 ro8eQdeLPbf81UJ3rEAvCcKETeaMaTqNFybysQaLVDVYznROqZeReYdk/zIVHvahJq
-	 9ub88mDc/Pt283gQ59XiLm+C9NSbnzXBRqfXfGd0t7ndfTI+mubG4wdWd4PQ22mWzW
-	 dsUOJb01Ceo80+PjgjrRba4l13mM8/hI54RB52yN+lJJ4vjihzew2lQ4C8wnS4gjPu
-	 +LJwqrfHSl17NMWgSVk0Cc9LPF7bZyeEoR3qEwkiK4C4I3PtZGepUm6BlN0gr2FO8O
-	 +gaWp82UNZkIQ==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: linux-integrity@vger.kernel.org
-Cc: Sumit Garg <sumit.garg@kernel.org>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	James Bottomley <James.Bottomley@HansenPartnership.com>,
-	Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] tpm: Make chip->{status,cancel,req_canceled} opt
-Date: Wed, 26 Mar 2025 18:18:38 +0200
-Message-Id: <20250326161838.123606-1-jarkko@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=k20201202; t=1743006027;
+	bh=NlyzFBEeZY6V7OLkIjQjuzyo0eIa9iyxmf4xj+EVJ5g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jhU7SCX1EZkfMdCUrAoOdmzMsYCvS9EBOn96zC+5i4ZUMK71ZfjOtCLBGFv/GtzwH
+	 tYawjy9n4mSiaGGwQ3RQUPiNYB5KKkMobVUrWtZXbW2tzKGAnM5C2euC+OlSffvtKy
+	 IC1yxRP5NXTBkJArG40KVjLQ4aKZK539+8hzbi1ssT19QPC9q8cAkKHDu5DVxsAD2w
+	 ULGYiOBVZGZENJAWg9rXLcVPT1fd0br1Qauu1yQLRd0olVKEtmHS8R9kSGxxYRxtaO
+	 soOdvXEd/Ig5sM8jmhXY7Q64o1WHKrD3ruC+QIXdOePbcvwVmFmjJawjIUqs0bTHOW
+	 5JBMRXLlpw9VQ==
+Date: Wed, 26 Mar 2025 16:20:22 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Petr Tesarik <ptesarik@suse.com>,
+	Grant Likely <grant.likely@secretlab.ca>,
+	linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH] spi: Ensure memory used for spi_write_then_read() is DMA
+ safe
+Message-ID: <8ff02f5a-fa66-4403-b193-a18c23879e0d@sirena.org.uk>
+References: <20130205142128.2E28D3E1265@localhost>
+ <20250320124330.480d652d@mordecai.tesarici.cz>
+ <ca70e24d-57b6-4250-bd0d-7f5c72e1d282@sirena.org.uk>
+ <b37480a4-5344-4cf4-8fd1-400e2588fc28@app.fastmail.com>
+ <db36bbf0-0ad5-4c37-bfcc-917508805eba@sirena.org.uk>
+ <efe910db-77d0-4ddf-8fc2-df4955e7b9f3@app.fastmail.com>
+ <06435855-531b-4a3b-9f2e-1a5caea0d65b@sirena.org.uk>
+ <38fe54d2-bd8a-4655-863d-cd1c482ac9a8@app.fastmail.com>
+ <Z917hRQM2ZhSwvFx@finisterre.sirena.org.uk>
+ <6a3a4b10-f51b-43e2-8281-057f6751424b@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="XACVXunMOL7SbzcG"
+Content-Disposition: inline
+In-Reply-To: <6a3a4b10-f51b-43e2-8281-057f6751424b@app.fastmail.com>
+X-Cookie: To err is humor.
 
-From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
 
-tpm_ftpm_tee does not require chip->status, chip->cancel and
-chip->req_canceled. Make them optional.
+--XACVXunMOL7SbzcG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
----
- drivers/char/tpm/tpm-interface.c | 31 ++++++++++++++++++++++++++++---
- drivers/char/tpm/tpm_ftpm_tee.c  | 20 --------------------
- 2 files changed, 28 insertions(+), 23 deletions(-)
+On Fri, Mar 21, 2025 at 08:42:12PM +0100, Arnd Bergmann wrote:
+> On Fri, Mar 21, 2025, at 15:45, Mark Brown wrote:
 
-diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
-index f62f7871edbd..10ba47a882d8 100644
---- a/drivers/char/tpm/tpm-interface.c
-+++ b/drivers/char/tpm/tpm-interface.c
-@@ -58,6 +58,30 @@ unsigned long tpm_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal)
- }
- EXPORT_SYMBOL_GPL(tpm_calc_ordinal_duration);
- 
-+static void tpm_chip_cancel(struct tpm_chip *chip)
-+{
-+	if (!chip->ops->cancel)
-+		return;
-+
-+	chip->ops->cancel(chip);
-+}
-+
-+static u8 tpm_chip_status(struct tpm_chip *chip)
-+{
-+	if (!chip->ops->status)
-+		return 0;
-+
-+	return chip->ops->status(chip);
-+}
-+
-+static bool tpm_chip_req_canceled(struct tpm_chip *chip, u8 status)
-+{
-+	if (!chip->ops->req_canceled)
-+		return false;
-+
-+	return chip->ops->req_canceled(chip, status);
-+}
-+
- static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
- {
- 	struct tpm_header *header = buf;
-@@ -65,6 +89,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
- 	ssize_t len = 0;
- 	u32 count, ordinal;
- 	unsigned long stop;
-+	u8 status;
- 
- 	if (bufsiz < TPM_HEADER_SIZE)
- 		return -EINVAL;
-@@ -104,12 +129,12 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
- 
- 	stop = jiffies + tpm_calc_ordinal_duration(chip, ordinal);
- 	do {
--		u8 status = chip->ops->status(chip);
-+		status = tpm_chip_status(chip);
- 		if ((status & chip->ops->req_complete_mask) ==
- 		    chip->ops->req_complete_val)
- 			goto out_recv;
- 
--		if (chip->ops->req_canceled(chip, status)) {
-+		if (tpm_chip_req_canceled(chip, status)) {
- 			dev_err(&chip->dev, "Operation Canceled\n");
- 			return -ECANCELED;
- 		}
-@@ -118,7 +143,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
- 		rmb();
- 	} while (time_before(jiffies, stop));
- 
--	chip->ops->cancel(chip);
-+	tpm_chip_cancel(chip);
- 	dev_err(&chip->dev, "Operation Timed out\n");
- 	return -ETIME;
- 
-diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
-index 8d9209dfc384..53ba28ccd5d3 100644
---- a/drivers/char/tpm/tpm_ftpm_tee.c
-+++ b/drivers/char/tpm/tpm_ftpm_tee.c
-@@ -164,30 +164,10 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t len)
- 	return 0;
- }
- 
--static void ftpm_tee_tpm_op_cancel(struct tpm_chip *chip)
--{
--	/* not supported */
--}
--
--static u8 ftpm_tee_tpm_op_status(struct tpm_chip *chip)
--{
--	return 0;
--}
--
--static bool ftpm_tee_tpm_req_canceled(struct tpm_chip *chip, u8 status)
--{
--	return false;
--}
--
- static const struct tpm_class_ops ftpm_tee_tpm_ops = {
- 	.flags = TPM_OPS_AUTO_STARTUP,
- 	.recv = ftpm_tee_tpm_op_recv,
- 	.send = ftpm_tee_tpm_op_send,
--	.cancel = ftpm_tee_tpm_op_cancel,
--	.status = ftpm_tee_tpm_op_status,
--	.req_complete_mask = 0,
--	.req_complete_val = 0,
--	.req_canceled = ftpm_tee_tpm_req_canceled,
- };
- 
- /*
--- 
-2.39.5
+> > Hrm, right.  I think that usage is reasonable so we probably should
+> > allow it rather than forcing things to do an allocation for a transfer
+> > that ends up being PIOed anyway almost all the time, OTOH the same API
+> > is also used for large transfers like firmware downloads where we don't
+> > want to trigger a spurious copy.  Having different requirements at
+> > different times would be miserable though so I think we need to just
+> > accept any buffer and then figure it out inside the API, but I've not
+> > fully thought that through yet.
 
+> My feeling so far is that we want the default regmap interface
+> to just take any buffer (stack, misaligned, vmalloc, kmap) and
+> leave it up to the underlying bus to make sure this works in
+> a sensible way.
+
+Definitely for regmap, I was thinking about the implementation of that -
+it feels like something other places will want to do.
+
+> Using dma_alloc_noncoherent() should make the implementation
+> much nicer than GFP_DMA in the past, so we could add a bus
+> specific helper for SPI that checks if the controller actually
+> wants to do DMA and whether the buffer is problematic at all,
+> and then decides to either allocate a bounce buffer and
+> fill the sg table with the correct DMA address, map the
+> existing buffer, or pass it without mapping depending on
+> what the device needs.
+
+That query feels a lot like spi_optimize_message().  Which should
+possibly then just do the bouncing if it's needed.
+
+--XACVXunMOL7SbzcG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfkKUYACgkQJNaLcl1U
+h9B4UAf9GaUDUOeQdHmkgV5BxLQkyrxGtsAfFN7ZmUrJUK86sTReHhC4HlaIYj1h
+xin3gvNNNzvxSUEkNgEaYKmKlMw7ctR+z5+EPkCc5C6nzAEbi4lOkwLhOh9ZAFh0
+6pYikgGsc2DsiBs9xvT6qsb62/Tzoh79OEKD7SIrh4diID4QSdCbwT7O6/8r55qP
+VNL/5tWUFGAQ/1fXTv1Hc8dM4kWnFtVR6DcLIq6D32QZxapHGTdKxHzauu2Na70W
+XkjgBK8Jp1pQWwgFEXn2kLpOrmMnqlIV4xNMvXVRtHOU9XQn9TnGMIgphxAMChav
+Heoaq1jZqd6/nSnRnunRyaOcpVYG2w==
+=6pQl
+-----END PGP SIGNATURE-----
+
+--XACVXunMOL7SbzcG--
