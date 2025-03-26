@@ -1,123 +1,125 @@
-Received: from mail.stravers.net (mail.stravers.net [185.170.214.80])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95251B87F2;
-	Wed, 26 Mar 2025 11:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.170.214.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978311D79B3;
+	Wed, 26 Mar 2025 11:34:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742988787; cv=none; b=sKVvqKuxBaDFnf/jE2iNqux+hHxI5czm4xlsL7v6aOBZBO1b7DAw4oxVVaW/n9hYTnqyOHuL3Wyxdm1NmRCamBI7wafHZ/lIEKMzaibKvQkWmk+2h91utZPMvosFSRfhXVofeifd4GFmE667Gc2KGU9BWkx3hVIzHO9m5FEKDU4=
+	t=1742988864; cv=none; b=BfF97kvop2Ch87JdfHwAOzDdbgD6VUA9LqspcTfglaKI+l29w71+tbzwk08bapznbZyOtSmcltu0eYY0tBtqfUTxp7HNr7t3AN105K3EBc41VLfA4YydbfVWMdCdhI4uN2OuALu+3kSgJB9P7ebQ+raHirNoWLdWMD+ISsTIAb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742988787; c=relaxed/simple;
-	bh=APYVVjVsS3qCZ/z1wxK6HUjwQSli5QEkKwva+CQeZhM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VyidLyF1Jg47kFf10FVT643NUXw6alnb902iK7M6q6LfS8kMK70pML/VvFGchgbNMnDWIjbodbGUVL1ILE3ylmeQtt2RB+hDUtwtb8xmyrHeF3flndNYEQTKoC3rj3pyFLr8JToMAfmYAibE2oh7qx8MR+g8Np6JzRZCktcDV0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=stravers.net; spf=pass smtp.mailfrom=stravers.net; dkim=fail (1024-bit key) header.d=stravers.net header.i=@stravers.net header.b=gYozEA4H reason="signature verification failed"; arc=none smtp.client-ip=185.170.214.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=stravers.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stravers.net
+	s=arc-20240116; t=1742988864; c=relaxed/simple;
+	bh=cPNRXbKHXeYbN7MqMsZP5cCAL4pCe92DtlpwCIrTgTU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=P+TjxhUqEycQFJa84fV/q+c9sITkj9qP3JxiamuRMrNZs9uzw0+y+nbdkLHAepTK5kFCqimmONdrC78e38UXTiVDaaedLqt6bh7lSSOrpPyd06/9noiyZl7FOhVHbx41gbjIIVyQKnIz/kyLhStoipxYHoY/b5C+AeRUHhdJXtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ibYTr7Mt; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=stravers.net header.i=@stravers.net header.b="gYozEA4H"
-From: Kevin Robert Stravers <kevin@stravers.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stravers.net;
-	s=mail; t=1742988776;
-	bh=RjhMLAf+se+V4P+5Mfr5CunsJkkri+FoJWfxa75R8Ds=;
-	h=From:To:Cc:Subject:Date;
-	b=gYozEA4HfSSDpGRgoBOTzsGxowNFSb5GSQF6OJy0wqY/Vk+oWPNNrtfTyWaNerUYy
-	 I2V6JvBYsCBI2TeGstQGYusI9TufDFL2K0cuzba5q/qzZ5nufk+nzm25yxvl4U7sdo
-	 nmsE8/hmL3RA9+XNk6K2ujm3xShJn4OBK3qvwB2o=
-To: linux-kernel@vger.kernel.org
-Cc: Kevin Robert Stravers <kevin@stravers.net>,
-	Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D. Jones" <luke@ljones.dev>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org (open list:ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS)
-Subject: [PATCHv5] platform/x86: asus-wmi: Add quirk for ASUS Vivobook S14
-Date: Wed, 26 Mar 2025 07:31:56 -0400
-Message-ID: <20250326113157.2341184-1-kevin@stravers.net>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ibYTr7Mt"
+Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 549473A4;
+	Wed, 26 Mar 2025 12:32:32 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1742988752;
+	bh=cPNRXbKHXeYbN7MqMsZP5cCAL4pCe92DtlpwCIrTgTU=;
+	h=From:Subject:Date:To:Cc:From;
+	b=ibYTr7MtlScqXZeuS0rszG/NwLkF3XnNV0n+exjUpGpG0evMo1kXC0Zsj7orRaumE
+	 BCuPOGbJ7GSpDZppgJzB1ZKvUuXRLAcsOc9vn8P2ilHeRhyvawhGARjjTOYVjFoYcM
+	 2+XIgeP4nOpv7MAhK98BeFSFMwGfTF6nEOOErRqQ=
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Subject: [PATCH v7 0/3] media: ti: cal: Add streams support
+Date: Wed, 26 Mar 2025 13:34:00 +0200
+Message-Id: <20250326-cal-streams-v7-0-659df87ad231@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACjm42cC/3XOzU7EIBSG4VuZsJbmHP4KrrwP44JSsMQpGGiIZ
+ tJ7l05iJuq4/JJznrwXUn2JvpLH04UU32KNOfUxPpyIW2x69TTOfRMGjIMGTZ0907oVb9dKJ4N
+ cA3PKBEH6x3vxIX5cteeXvkPJK92WfnwzODAEGKUc0CAqQZFueY1Ds+c3H5NPT3H2tuY0ZVvmw
+ eX1kJdYt1w+r5lNHP79onZ4GPioEDwYof5qR1iTN8LgL0JSoEJLDDDyILX9h1DfhATOxE9CdYJ
+ pZ3iYdABn7hD7vn8BsZiqgH0BAAA=
+X-Change-ID: 20230808-cal-streams-b913802c69f4
+To: linux-media@vger.kernel.org, 
+ Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Benoit Parrot <bparrot@ti.com>
+Cc: Kieran Bingham <kieran.bingham@ideasonboard.com>, 
+ Jai Luthra <jai.luthra@ideasonboard.com>, linux-kernel@vger.kernel.org, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2072;
+ i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
+ bh=cPNRXbKHXeYbN7MqMsZP5cCAL4pCe92DtlpwCIrTgTU=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBn4+Y3662s+sdJ/g2Y654Taxe+8sobeJ9mq9YF+
+ PxILVgadI2JAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ+PmNwAKCRD6PaqMvJYe
+ 9d8dD/9lYWtvSO74Oo156BabgTLwsg6WwB6Z8ux4BK2KocMTemKjHt5WNJQKfuLpZpVKCsShcSw
+ kK1PnNy+QoCQmFIVRwjpmX9donnrv7FfSv609/F7Yklu7bmrRaY9/bpfqQ+SE3y1PR93x4LQ54d
+ IuU31pYMakmyq5wcsS/ukaKFG9T3kl0FElQg8N/rfKOgN8a+eCPlFMeusEluqV4iGSRye10h/Rm
+ IsYSZn3TI1rq4OamX4Oj50WVkCUcX42oIh+WXDd2/oReLN6pRLCJvcEowFCHP0StRR2CINQ/axH
+ Ftg1MB59JRhuBIEAapMun799RYMX7wFmYhUB/wrs9OjY0JZUKJKoWK3bmZI31gwr0u9/qu8iI4j
+ z0U/8Ly4jR5+acf4FmDL1gx4o0xy1gClg1nDiKlXn861mxRZBdyt3PU4ppsuSNYu/qGVSbzpEEb
+ KGDO4a3gJxTTuYa4d33envzKGACpcJTkqjyq7RdO5q/zQgpkbMEFYs552B2aOGR2HCih24UhgyI
+ 89L07BLn38rsLyLY3Nsb1fmjpSTnMo/q1skaKBy3Rj9+GuSSZy6HubuFD821SbYUSfTuBxeZM7Z
+ Ny2M7f8qfvI5eVntuBRTXNhMV+ysm7ITD9U/oXNa6f1uUTScC966ZCW72pGPhJmYOZJly90B0+W
+ 4ToPTfCelU+LluQ==
+X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
+ fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-The ASUS Vivobook S14 will have wifi disabled on boot as well as
-resumption from suspend if the asus-wmi driver invokes rfkill functions.
+This adds streams support to TI CAL driver (and two minor improvements).
 
-This patch disables asus-wmi's rfkill usage to prevent the wifi card
-from being software disabled.
+The previous version was sent in 2023, but there has been no changes
+except from rebasing to upstream.
+
+ Tomi
+
 ---
- drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
- drivers/platform/x86/asus-wmi.c    |  5 +++++
- drivers/platform/x86/asus-wmi.h    |  1 +
- 3 files changed, 19 insertions(+)
+Changes in v7:
+- Add Kieran's RBs
+- Fix checkpatch warnings wrt. formatting
+- Link to v6: https://lore.kernel.org/r/20250324-cal-streams-v6-0-28c93fb8f0c9@ideasonboard.com
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 3f8b2a324efd..1e6fb9308560 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -150,6 +150,10 @@ static struct quirk_entry quirk_asus_zenbook_duo_kbd = {
- 	.ignore_key_wlan = true,
- };
- 
-+static struct quirk_entry quirk_asus_vivobook_s14 = {
-+	.skip_rfkill = true,
-+};
-+
- static int dmi_matched(const struct dmi_system_id *dmi)
- {
- 	pr_info("Identified laptop model '%s'\n", dmi->ident);
-@@ -530,6 +534,15 @@ static const struct dmi_system_id asus_quirks[] = {
- 		},
- 		.driver_data = &quirk_asus_zenbook_duo_kbd,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUS VivoBook S14",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "S5406SA"),
-+		},
-+		.driver_data = &quirk_asus_vivobook_s14,
-+	},
- 	{},
- };
- 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 38ef778e8c19..42e58a28c3e2 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -2138,6 +2138,8 @@ static int asus_new_rfkill(struct asus_wmi *asus,
- 
- static void asus_wmi_rfkill_exit(struct asus_wmi *asus)
- {
-+	if (asus->driver->quirks->skip_rfkill)
-+		return;
- 	if (asus->driver->wlan_ctrl_by_user && ashs_present())
- 		return;
- 
-@@ -2188,6 +2190,9 @@ static void asus_wmi_rfkill_exit(struct asus_wmi *asus)
- 
- static int asus_wmi_rfkill_init(struct asus_wmi *asus)
- {
-+	if (asus->driver->quirks->skip_rfkill)
-+		return 0;
-+
- 	int result = 0;
- 
- 	mutex_init(&asus->hotplug_lock);
-diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-index 018dfde4025e..3692de24e326 100644
---- a/drivers/platform/x86/asus-wmi.h
-+++ b/drivers/platform/x86/asus-wmi.h
-@@ -41,6 +41,7 @@ struct quirk_entry {
- 	bool wmi_ignore_fan;
- 	bool filter_i8042_e1_extended_codes;
- 	bool ignore_key_wlan;
-+	bool skip_rfkill;
- 	enum asus_wmi_tablet_switch_mode tablet_switch_mode;
- 	int wapf;
- 	/*
+Changes in v6:
+- Rebase on top of v4.16-rc7
+- Add two small patches (not related to streams as such)
+- Dropper the metadata patch for now, to make the series apply to plain
+  upstream
+- Link to v5: https://lore.kernel.org/r/20230918-cal-streams-v5-0-4851f073f58a@ideasonboard.com
+
+Changes in v5:
+- Some improvements in the patch description of the first patch
+- Add "media: ti: cal: Add metadata streams support"
+- Link to v4: https://lore.kernel.org/r/20230808-cal-streams-v4-1-1f37610e0946@ideasonboard.com
+
+Changes in v4:
+- A few minor formatting changes
+- Small changes regarding how the code handles metadata formats.
+  No metadata formats are supported yet, but we do have some code to
+  ensure that metadata formats aren't allowed on video nodes in video
+  capture mode. A future patch will enable metadata capture, allowing
+  the runtime change of video nodes between video and meta capture.
+- Link to v3: https://lore.kernel.org/all/20230302100755.191164-6-tomi.valkeinen@ideasonboard.com/
+
+---
+Tomi Valkeinen (3):
+      media: ti: cal: Use printk's fourcc formatting
+      media: ti: cal: Fix wrong goto on error path
+      media: ti: cal: Add streams support
+
+ drivers/media/platform/ti/cal/cal-camerarx.c | 270 +++++++++++++++++++++------
+ drivers/media/platform/ti/cal/cal-video.c    | 157 ++++++++++------
+ drivers/media/platform/ti/cal/cal.c          |  45 +++--
+ drivers/media/platform/ti/cal/cal.h          |   3 +-
+ 4 files changed, 347 insertions(+), 128 deletions(-)
+---
+base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+change-id: 20230808-cal-streams-b913802c69f4
+
+Best regards,
 -- 
-2.48.1
+Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 
