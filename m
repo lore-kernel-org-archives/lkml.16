@@ -1,133 +1,78 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F3D15C15F;
-	Wed, 26 Mar 2025 09:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D062A1B2;
+	Wed, 26 Mar 2025 09:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742982847; cv=none; b=ABwDYpy3tgHyQ2PueyY0VDczJJsHsv7QyC8j3YTVV3IRxLdUgCmKie1HkGnT9zQJY6aeQO3BPXiflFyZuvJGS7rVsJMCSiWQbKohg4PpGa09HrnV3k82nR/+2+75g+Rv7oayDvta3LLVN2IAsU58HgonySXi2rKzelsq7cfDIR0=
+	t=1742982898; cv=none; b=uzzl5qNHP1gF2B7KVXQA6SMwoxscsdzVqDcM0AA4VFGeetJw5cKM24Q/SozCs9B7rlO05p5w38YS8P8W6QRxg23yfSnZpa1P6lHySLhbs2Luly9zJd9xHbZJZWfuNCFU0Z4qUhdQyokiGrZSB7BIvQj71i+DlriKs4SwGAF0mG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742982847; c=relaxed/simple;
-	bh=k3xOx2L5T5uwhIlLEsuP7+yjMjaqocpL/LO1sdtSp6I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=B23FkWuBQKupWBei8N8+PraFFyI/9zuGzQlw+koHI1d8kUqRHtzZeuDoIIWANZaJjA53L+TQOkuo4+b/wepfcjA8Lro7u52mVm2vnIU9SwoJjeSS5E4B1eRvvu/Nm6tvVsAxG10nP9G7mrCGVSG61y6ahdW+rfKlAmTMZik4mSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kQs7lNn3; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1742982898; c=relaxed/simple;
+	bh=Ov1AgyYh3kM4hCEm6V6qb5sdi+6O1RBZvGdEtbZlBnU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=bchcsYllnrmrfBnnExEQCAWd8ASYQNUMQVYr6poNd5U0/Zri7DnWT+DrPQ4rNjrUbkjdVhH3e9StrHlIWsZKxrZ5vBARbxQ3Ldv6fEGqV2Xicef/bk5TW52gT8GaYMNB5FVzV3lf5u0MFBOzRSH/blppQJTQaCZIjXGDjPWbmkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BxBm/3zm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kQs7lNn3"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52Q73Aof014495;
-	Wed, 26 Mar 2025 09:53:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ceZG7l6B0d1+aYQcqeMCmDD0PGRx5R8qbIHuQdIywsg=; b=kQs7lNn3wot6jpCw
-	TxzSYiigHdUuOOzzRMfCRqdwW8eOPrsYwK+wBwroqug3aMJ9ozZHufa+wwkdmasF
-	JOpYO+fMO8i142VdbNDshvTJo4OK7kwzO4KlvzKcXDbQ4JC1WF5uiT2ba4tui43t
-	fzc2T61+0edmUvS8/+5gLLIrDN+Kawk3/5z0em9Q5qW07/rHouufBKymL1heDCoi
-	hzw95JS2XKj68Ypah0covKGfOPwkLQ/RoTnEj+tZJY5VihAs6aV63BMJaK3onD2X
-	IwiGKjkdKI6iT7HzxJDD/a7sjxFX7aKo0Am791yO3HuyYvLAdB1VHy0C8yJQUlsf
-	OfPYWQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45mb9mrrwu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Mar 2025 09:53:50 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52Q9rnfL023987
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Mar 2025 09:53:49 GMT
-Received: from [10.217.217.240] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 26 Mar
- 2025 02:53:45 -0700
-Message-ID: <33c03e94-5e8b-44cf-be32-fb571ca73a17@quicinc.com>
-Date: Wed, 26 Mar 2025 15:23:30 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BxBm/3zm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41EE3C4CEE2;
+	Wed, 26 Mar 2025 09:54:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742982896;
+	bh=Ov1AgyYh3kM4hCEm6V6qb5sdi+6O1RBZvGdEtbZlBnU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=BxBm/3zmwoyfzil4KP1ekcmQhwFLh874LJq8SGnYExJvY+7ZDKuNTo9eeo2Gqf4Gz
+	 QWs5eH48XqvcMr+C0NSY2tbdj+JWPRoJeK5nTwTstf8vojgyaCrpIJubgiMvQ/0eEG
+	 4SGQQf2C4Rhxk9mhuYPMeW0d++3UieNW0TkhcwmghOI7EyulZOxpBpvXRsBYCOUPIV
+	 GZ0d08KcjZmN1cwA4J0wH2IVz1ZuqF0/zrsBZwhEYtdw56Oqz6zXA83nba0ve8R/Bn
+	 T7H3BmH+qcMiQ49qWglS45TPgGcpIyDBG2NaFnOtoRImVVw5EdTw5kwolR+x/aAytj
+	 01hFUS+/XcKcA==
+Date: Wed, 26 Mar 2025 10:54:53 +0100 (CET)
+From: Jiri Kosina <jikos@kernel.org>
+To: Aditya Garg <gargaditya08@live.com>
+cc: Aditya Garg <adityagarg1208@gmail.com>, 
+    Benjamin Tissoires <bentiss@kernel.org>, 
+    "admin@kodeit.net" <admin@kodeit.net>, 
+    "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>, 
+    "kekrby@gmail.com" <kekrby@gmail.com>, 
+    "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, 
+    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+    "orlandoch.dev@gmail.com" <orlandoch.dev@gmail.com>
+Subject: Re: [PATCH RESEND 5/5] HID: multitouch: add device ID for Apple
+ Touch Bar
+In-Reply-To: <PN3PR01MB95979ECF0C403CA6622E56D0B8A72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Message-ID: <7rsn5334-npo6-408r-8442-6o3qo3qp05q7@xreary.bet>
+References: <bzb6rk7q7rs27kbonihpfftkgueievpux7vpqjgrgsud5pf5g2@tuxymj7vk3it> <219B5F93-611D-48FA-A4D9-F9B71401A57D@gmail.com> <PN3PR01MB95979ECF0C403CA6622E56D0B8A72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ufs: qcom: Add quirks for Samsung UFS devices
-To: Bart Van Assche <bvanassche@acm.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        "James E.J. Bottomley"
-	<James.Bottomley@HansenPartnership.com>,
-        "Martin K. Petersen"
-	<martin.petersen@oracle.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_nitirawa@quicinc.com>,
-        <quic_bhaskarv@quicinc.com>, <quic_rampraka@quicinc.com>,
-        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>
-References: <20250325083857.23653-1-quic_mapa@quicinc.com>
- <c0691392-1523-4863-a722-d4f4640e4e28@acm.org>
-Content-Language: en-US
-From: MANISH PANDEY <quic_mapa@quicinc.com>
-In-Reply-To: <c0691392-1523-4863-a722-d4f4640e4e28@acm.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=cs+bk04i c=1 sm=1 tr=0 ts=67e3ceae cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=hD80L64hAAAA:8 a=knVEYwfTpz3OwYGDc58A:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: 5pM4El_C-nyUT3i7996LadfatyjJQgU-
-X-Proofpoint-ORIG-GUID: 5pM4El_C-nyUT3i7996LadfatyjJQgU-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-26_02,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- bulkscore=0 mlxlogscore=589 malwarescore=0 lowpriorityscore=0
- clxscore=1011 adultscore=0 priorityscore=1501 phishscore=0 suspectscore=0
- mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503260060
+Content-Type: text/plain; charset=US-ASCII
 
+On Tue, 25 Mar 2025, Aditya Garg wrote:
 
-
-On 3/25/2025 5:12 PM, Bart Van Assche wrote:
-> On 3/25/25 4:38 AM, Manish Pandey wrote:
->> Introduce quirks for Samsung UFS devices to override PA hibern8 time,
->> PA TX HSG1 sync length, and TX_HS_EQUALIZER for the Qualcomm UFS Host
->> controller. These adjustments are essential to maintain the proper
->> functionality of Samsung UFS devices for Qualcomm UFS Host controller.
+> >>> Yes I can move hid_find_field to the original location as well. But, 
+> >>> I would not want to devm_kzalloc as well unnecessarily if the 
+> >>> touchbar is in the basic mode instead of drm mode which will cause 
+> >>> this -ENODEV to be executed right?
+> >> 
+> >> It shouldn't matter. hid_core calls devres_open_group() before calling
+> >> .probe(), and calls devres_release_group() on failure. So yes, we'll
+> >> allocate a piece of memory and release it after, but it's not something
+> >> uncommon.
+> > 
+> > Fair. I'll send a v2
 > 
-> Which of these quirks are required for all host controllers and which of
-> these quirks are only required for Qualcomm host controllers?
-> 
+> I've sent a v2 from my gmail address. Outlook is being too fussy these 
+> days, so hopefully I don't have to sign off twice using gmail as well as 
+> outlook.
 
-PA_TX_HSG1_SYNC_LENGTH and PA_TX_DEEMPHASIS_TUNING are specific to the 
-Qualcomm host controller.
+Thanks. Please always make sure that either in the cover letter or in the 
+individual patches you otline the differences between individual patch 
+submissions.
 
-The QUIRK_PA_HIBER8TIME may also be necessary for other SoC vendors host 
-controllers. For instance, the ufs-exynos.c file implements a similar 
-approach in the fsd_ufs_post_link() function:
-
-ufshcd_dme_set(hba, UIC_ARG_MIB(0x15A7), max_rx_hibern8_time_cap + 1);
-
-https://lore.kernel.org/lkml/001101d874c1$3d850eb0$b88f2c10$@samsung.com/
-
-Should we consider moving the QUIRK_PA_HIBER8TIME quirk to the ufshcd 
-driver? Please advise.
-
->> +    equalizer_val = (gear == 5) ? DEEMPHASIS_3_5_dB : NO_DEEMPHASIS;
-> > I think that the parenthesis can be removed from the above statement
-> without reducing readability of the code.
-> 
-> Thanks,
-> 
-> Bart.
-
-equalizer_val = gear == 5 ? DEEMPHASIS_3_5_dB : NO_DEEMPHASIS;
-equalizer_val = (gear == 5) ? DEEMPHASIS_3_5_dB : NO_DEEMPHASIS;
-
-i have used parenthesis for better readability and to make the 
-conditional expression more explicit.
-
-Thanks
-Manish
+-- 
+Jiri Kosina
+SUSE Labs
 
