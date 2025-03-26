@@ -1,254 +1,232 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A253724CEEE;
-	Wed, 26 Mar 2025 18:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743014430; cv=pass; b=JLUQ94V23riuhU/P408y+BgLPzkdURSeEqBp5dPSyQXMY2kdXZ1ZhRVNfmnTAuPbFdEmY/u0cIQogNeX9Cqqjn+yy4vo0bzgb0AL3fqxjjUeygW9HUedrq/iJXrS0NtSnqIfSm1U0uyBffnk4KTuSlxHPXQ+bz83rY6S3qWvE3k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743014430; c=relaxed/simple;
-	bh=wdSpG9pKEWrUXR3mxaT5h1jsNyYVPvOw9miNLdLz2vM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=sE4nrHkgy3bx79yR5Cyd5bxXGwSnTgCijl/1xxi7QimdYSraWIEE67GvfylqhFwo0vlx5Dw9FzDuGLCs1/EyA/sRHl8uyP7NhA+LcWP0uL5yRWgDYsZx/OdNkmWlLebtIPOibHKh6BWuU3T9NQB/KwyOT3GJ2KWY6r3eZMgdUfo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=ex2fV3fX; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DE124EAB0
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 18:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743014507; cv=none; b=fs3M5e46wB5CflVUrKlxmRSmEKqsMooX7Fn3g716Ga1IbGMY2k8nQZ4Cn8zvxXrCZ9a5Qbl1++RzyorniwtaW0zZH5j0igDAseG3I5Wj7yfN7EGXLoQUXiy9iTRgRBhZNHad/vvIxbG2Ail3AegnTi21TYcqB9dihcuSvBP+ixk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743014507; c=relaxed/simple;
+	bh=VVc2l+RicUNkNGY2b16Zifrn/ayX0O/xBaNwcPR177s=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=bUJ+aFQjU3E9diFjwfnBD5viKzy77DTScWZ8nf/d56TCdukTgDv5TUxW/ciAayqHVjHlV44REC4p7fp7K6K1KIMg/tn+LBaTCpKRySS+5o9lsEX1wiaPFYLAVOICW6xEunwSKt5SdcpDSQYJwCYlWxUv4JQHeU0tfH2AhArzN7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xz8HToQ+; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="ex2fV3fX"
-ARC-Seal: i=1; a=rsa-sha256; t=1743014401; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=FXFptQGX4pYpP62a4MfX24346PEEtBgvXJEGKg0bqKXjNAjiL6OvMaGgDfKMQM5LLorZC2Lmd1GXLVOSdFNELLc7LpvsjLJIbl24Kflboa2m5XjaLl4KrKv24k6Pa1VBccS4LreRoFA6/5mm9b7/ThaxNuEsIuWBb5r60hsI4Ao=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743014401; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=iDQo+X1Ei3V6zqm2gyyhSXHeLOFRXcPxDWMQLfLdBhU=; 
-	b=DmRNNTFeXmz3oIrJ3q98CvtUGIhIY390vcIjLWrAsao08WQAkecGPa0bFy7zklsBSQPs2I7AoQNU9ERNGPz0FbSByTFSNE9kIGv1ieceLWYHclfZ62Q6Tk8cDQROZWaAnwFN42LMD2PI3Qm7gpY3Yke6oo1LkokXuMlVUgq+xmA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743014401;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
-	bh=iDQo+X1Ei3V6zqm2gyyhSXHeLOFRXcPxDWMQLfLdBhU=;
-	b=ex2fV3fXz9wZs/0ufKry7Dx1ZjuIc+keyRWBaIr5p1nBwnUBtiILSBv7g2vZLIKA
-	U9H5vC+7A4MUwiu0mzeqZTtP/vMBoaDfQyZp8Gdr9YDJs7SMmLWjr7dxjni8P7hHD/5
-	Od/XVZ19Q2ocS7QR2Sk+hLzg03E35tHU/uQiLWKg=
-Received: by mx.zohomail.com with SMTPS id 1743014398341520.5026499088717;
-	Wed, 26 Mar 2025 11:39:58 -0700 (PDT)
-From: Daniel Almeida <daniel.almeida@collabora.com>
-Date: Wed, 26 Mar 2025 15:39:33 -0300
-Subject: [PATCH RESEND v2] rust: regulator: add a bare minimum regulator
- abstraction
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xz8HToQ+"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-301bbe9e084so270444a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 11:41:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743014504; x=1743619304; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=b0rQ7XUfLkQfGZ5vjukC+h9cixCqTMdpfEOutTgyqNI=;
+        b=xz8HToQ+ylbG0V6i48ssIeX9WI/dVoFrhOeEvWWshavZQq5x+FsNpg67X01+6cK/QG
+         gDsmKDWZqwLD+2mhpUGNTfCjwfqM3rnVq86um8iJ64gsFgPOuJcJUogCQrH+ljlTJEM4
+         YY7E2PZaf/om9R1m5pKq7/TsEzJPfXdwHByj1107orAeyn63iDnAwgzZJ8o0y6fOeQQ8
+         n8bvwOcZ/ElfXox5msnNrP9xliL/i0J3u/gTkTf0Bfa3y/8pDBNmb6xMyj0i2jL4ASOD
+         jywiNyr7RXz8tSoeMOLa7kreTBV2vEGmU2LTfMgQTkf5DLEdrUFpirlrNtYRrdv48kQB
+         bdVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743014504; x=1743619304;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=b0rQ7XUfLkQfGZ5vjukC+h9cixCqTMdpfEOutTgyqNI=;
+        b=nYSsB3i+Tl84YrKw9brvRpiVpZS0jEWKCHSy5UWonVeCj5nsFCh61WWW+gRwhC4QZt
+         njyqWUjwuYansWFKm5GucNo+5E1bqU3Efv36Up8JLCNIS2brhj5VVmuGFXgy6Yrzw00y
+         iqv8I9LuwPmRGhVRWuBbLOdq5LshSpVpgOaKZXRAEPUhLD+s6pZkwXFJH1NLtkMsqE7f
+         sLOHQfM+pUAFezIv3x0hA4GrM5nZGkL4ogMalUiNFKbp8+9abI5yS9rwGdx1uti44qdt
+         yx6JYGTemISWOaGt41RDxHeBXCbXDaTClxxQnu73urqxRNx0MW9XrNu8CdKC4GTTG7Og
+         Kcqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVrwsi6JDjEewMpADpMDl9wyMlpIendFwUEZChOhb40Sc89/nAewqHuoDS16QOmVH723mdAx6a4AOlIKJo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz20ZEayd3PEooS+imZsmvkWrjD3FzYM2oKrc06AnRFz9RzmNu6
+	bXlj4pq8fFbKvS3JBeuFLXsQ3yUpGfxMR0JYwjWAV0r0ZvcDdB2ts/ngOqYhIbORvaE8pi3ybfT
+	ulg==
+X-Google-Smtp-Source: AGHT+IGYOoK6Qcw78W9ZnM4jh2jTBVQGR9cWfoA9Lc2F9ro2+49zKJCs1PFrziVBd1fP1tMWosQcGl/OD1k=
+X-Received: from pjl13.prod.google.com ([2002:a17:90b:2f8d:b0:2ea:46ed:5d3b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:c106:b0:2ff:6aa6:47a3
+ with SMTP id 98e67ed59e1d1-303a9171aa0mr1173178a91.25.1743014504284; Wed, 26
+ Mar 2025 11:41:44 -0700 (PDT)
+Date: Wed, 26 Mar 2025 11:41:42 -0700
+In-Reply-To: <CADrL8HWrgbV+coEod_EUnvG27HX3WtJDMua3FPiReCRCtXaNhw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20250325015741.2478906-1-mlevitsk@redhat.com> <20250325015741.2478906-3-mlevitsk@redhat.com>
+ <CADrL8HWrgbV+coEod_EUnvG27HX3WtJDMua3FPiReCRCtXaNhw@mail.gmail.com>
+Message-ID: <Z-RKZsQngjEgcfVU@google.com>
+Subject: Re: [PATCH v2 2/2] KVM: selftests: access_tracking_perf_test: add
+ option to skip the sanity check
+From: Sean Christopherson <seanjc@google.com>
+To: James Houghton <jthoughton@google.com>
+Cc: Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-kernel@vger.kernel.org, 
+	Shuah Khan <shuah@kernel.org>, Claudio Imbrenda <imbrenda@linux.ibm.com>, 
+	Oliver Upton <oliver.upton@linux.dev>, Paolo Bonzini <pbonzini@redhat.com>, 
+	linux-kselftest@vger.kernel.org, Anup Patel <anup@brainfault.org>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250326-topics-tyr-regulator-v2-1-780b0362f70d@collabora.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Boris Brezillon <boris.brezillon@collabora.com>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>, lgirdwood@gmail.com, 
- broonie@kernel.org
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- Daniel Almeida <daniel.almeida@collabora.com>
-X-Mailer: b4 0.14.2
-X-ZohoMailClient: External
+Content-Transfer-Encoding: quoted-printable
 
-Add a bare minimum regulator abstraction to be used by Rust drivers.
-This abstraction adds a small subset of the regulator API, which is
-thought to be sufficient for the drivers we have now.
+On Tue, Mar 25, 2025, James Houghton wrote:
+> On Mon, Mar 24, 2025 at 6:57=E2=80=AFPM Maxim Levitsky <mlevitsk@redhat.c=
+om> wrote:
+> >
+> > Add an option to skip sanity check of number of still idle pages,
+> > and set it by default to skip, in case hypervisor or NUMA balancing
+> > is detected.
+> >
+> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+>=20
+> Thanks Maxim! I'm still working on a respin of this test with MGLRU
+> integration, like [1]. Sorry it's taking me so long. I'll apply my
+> changes on top of yours.
+>=20
+> [1]: https://lore.kernel.org/kvm/20241105184333.2305744-12-jthoughton@goo=
+gle.com/
+>=20
+> > ---
+> >  .../selftests/kvm/access_tracking_perf_test.c | 33 ++++++++++++++++---
+> >  .../testing/selftests/kvm/include/test_util.h |  1 +
+> >  tools/testing/selftests/kvm/lib/test_util.c   |  7 ++++
+> >  3 files changed, 37 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/tools/testing/selftests/kvm/access_tracking_perf_test.c b/=
+tools/testing/selftests/kvm/access_tracking_perf_test.c
+> > index 3c7defd34f56..6d50c829f00c 100644
+> > --- a/tools/testing/selftests/kvm/access_tracking_perf_test.c
+> > +++ b/tools/testing/selftests/kvm/access_tracking_perf_test.c
+> > @@ -65,6 +65,8 @@ static int vcpu_last_completed_iteration[KVM_MAX_VCPU=
+S];
+> >  /* Whether to overlap the regions of memory vCPUs access. */
+> >  static bool overlap_memory_access;
+> >
+> > +static int warn_on_too_many_idle_pages =3D -1;
+> > +
+> >  struct test_params {
+> >         /* The backing source for the region of memory. */
+> >         enum vm_mem_backing_src_type backing_src;
+> > @@ -184,11 +186,10 @@ static void mark_vcpu_memory_idle(struct kvm_vm *=
+vm,
+> >          * are cached and the guest won't see the "idle" bit cleared.
+> >          */
+> >         if (still_idle >=3D pages / 10) {
+> > -#ifdef __x86_64__
+> > -               TEST_ASSERT(this_cpu_has(X86_FEATURE_HYPERVISOR),
+> > +               TEST_ASSERT(warn_on_too_many_idle_pages,
+>=20
+> I think this assertion is flipped (or how warn_on_too_many_idle_pages
+> is being set is flipped, see below).
+>=20
+> >                             "vCPU%d: Too many pages still idle (%lu out=
+ of %lu)",
+> >                             vcpu_idx, still_idle, pages);
+> > -#endif
+> > +
+> >                 printf("WARNING: vCPU%d: Too many pages still idle (%lu=
+ out of %lu), "
+> >                        "this will affect performance results.\n",
+> >                        vcpu_idx, still_idle, pages);
+> > @@ -342,6 +343,8 @@ static void help(char *name)
+> >         printf(" -v: specify the number of vCPUs to run.\n");
+> >         printf(" -o: Overlap guest memory accesses instead of partition=
+ing\n"
+> >                "     them into a separate region of memory for each vCP=
+U.\n");
+> > +       printf(" -w: Skip or force enable the check that after dirtying=
+ the guest memory, most (90%%) of \n"
+> > +              "it is reported as dirty again (0/1)");
+> >         backing_src_help("-s");
+> >         puts("");
+> >         exit(0);
+> > @@ -359,7 +362,7 @@ int main(int argc, char *argv[])
+> >
+> >         guest_modes_append_default();
+> >
+> > -       while ((opt =3D getopt(argc, argv, "hm:b:v:os:")) !=3D -1) {
+> > +       while ((opt =3D getopt(argc, argv, "hm:b:v:os:w:")) !=3D -1) {
+> >                 switch (opt) {
+> >                 case 'm':
+> >                         guest_modes_cmdline(optarg);
+> > @@ -376,6 +379,11 @@ int main(int argc, char *argv[])
+> >                 case 's':
+> >                         params.backing_src =3D parse_backing_src_type(o=
+ptarg);
+> >                         break;
+> > +               case 'w':
+> > +                       warn_on_too_many_idle_pages =3D
+> > +                               atoi_non_negative("1 - enable warning, =
+0 - disable",
+> > +                                                 optarg);
+>=20
+> We still get a "warning" either way, right? Maybe this should be
+> called "fail_on_too_many_idle_pages" (in which case the above
+> assertion is indeed flipped). Or "warn_on_too_many_idle_pages" should
+> mean *only* warn, i.e., *don't* fail, in which case, below we need to
+> flip how we set it below.
 
-Regulators provide the power needed by many hardware blocks and thus are
-likely to be needed by a lot of drivers.
 
-It was tested on rk3588, where it was used to power up the "mali"
-regulator in order to power up the GPU.
+Agreed.  I like the "warn" terminology,  Maybe this?
 
-Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
----
-Changes from v1:
-  - Rebased on rust-next
-  - Split the design into two types as suggested by Alice Ryhl.
-  - Modify the docs to highlight how users can use kernel::types::Either
-    or an enum to enable and disable the regulator at runtime.
----
- rust/bindings/bindings_helper.h |   1 +
- rust/kernel/lib.rs              |   2 +
- rust/kernel/regulator.rs        | 127 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 130 insertions(+)
+	printf(" -w: Control whether the test warns or fails if more than 10%\n"
+               "     of pages are still seen as idle/old after accessing gu=
+est\n"
+               "     memory.  >0 =3D=3D warn only, 0 =3D=3D fail, <0 =3D=3D=
+ auto.  For auto\n"
+               "     mode, the test fails by default, but switches to warn =
+only\n"
+               "     if NUMA balancing is enabled or the test detects it's =
+running\n"
+               "     in a VM.");
 
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index ccb988340df69c84a702fe39a09addcc2663aebe..374f48b5ce2a602b4d1a5791201514ed8a535844 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -30,6 +30,7 @@
- #include <linux/poll.h>
- #include <linux/property.h>
- #include <linux/refcount.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/sched.h>
- #include <linux/security.h>
- #include <linux/slab.h>
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index ba0f3b0297b27dbda6a7b5d9ef8fdb8b7e6463dc..5b3228e8c80b1eb33bf36929ce3671b982efaf4a 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -72,6 +72,8 @@
- pub mod prelude;
- pub mod print;
- pub mod rbtree;
-+#[cfg(CONFIG_REGULATOR)]
-+pub mod regulator;
- pub mod revocable;
- pub mod security;
- pub mod seq_file;
-diff --git a/rust/kernel/regulator.rs b/rust/kernel/regulator.rs
-new file mode 100644
-index 0000000000000000000000000000000000000000..4ac9b6c537dff4cfc7f2f99d48aec3cecc3151e8
---- /dev/null
-+++ b/rust/kernel/regulator.rs
-@@ -0,0 +1,127 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Regulator abstractions.
-+//!
-+//! C header: [`include/linux/regulator/consumer.h`](srctree/include/linux/regulator/consumer.h)
-+//!
-+//! Regulators are modeled with two types: [`Regulator`] and
-+//! [`EnabledRegulator`].
-+//!
-+//! The transition between these types is done by calling
-+//! [`Regulator::enable()`] and [`EnabledRegulator::disable()`] respectively.
-+//!
-+//! Use an enum or [`kernel::types::Either`] to gracefully transition between
-+//! the two states at runtime if needed. Store [`EnabledRegulator`] directly
-+//! otherwise.
-+
-+use crate::{
-+    bindings,
-+    device::Device,
-+    error::{from_err_ptr, to_result, Result},
-+    prelude::*,
-+};
-+
-+use core::{mem::ManuallyDrop, ptr::NonNull};
-+
-+/// A `struct regulator` abstraction.
-+///
-+/// # Invariants
-+///
-+/// - [`Regulator`] is a non-null wrapper over a pointer to a `struct
-+///   regulator` obtained from `regulator_get()`.
-+/// - Each instance of [`Regulator`] is associated with a single count of `regulator_get()`.
-+pub struct Regulator {
-+    inner: NonNull<bindings::regulator>,
-+}
-+
-+impl Regulator {
-+    /// Obtains a [`Regulator`] instance from the system.
-+    pub fn get(dev: &Device, name: &CStr) -> Result<Self> {
-+        // SAFETY: It is safe to call `regulator_get()`, on a device pointer
-+        // received from the C code.
-+        let inner = from_err_ptr(unsafe { bindings::regulator_get(dev.as_raw(), name.as_ptr()) })?;
-+
-+        // SAFETY: We can safely trust `inner` to be a pointer to a valid
-+        // regulator if `ERR_PTR` was not returned.
-+        let inner = unsafe { NonNull::new_unchecked(inner) };
-+
-+        Ok(Self { inner })
-+    }
-+
-+    /// Enables the regulator.
-+    pub fn enable(self) -> Result<EnabledRegulator> {
-+        // SAFETY: Safe as per the type invariants of `Regulator`.
-+        let res = to_result(unsafe { bindings::regulator_enable(self.inner.as_ptr()) });
-+        res.map(|()| EnabledRegulator { inner: self })
-+    }
-+}
-+
-+impl Drop for Regulator {
-+    fn drop(&mut self) {
-+        // SAFETY: By the type invariants, we know that `self` owns a reference,
-+        // so it is safe to relinquish it now.
-+        unsafe { bindings::regulator_put(self.inner.as_ptr()) };
-+    }
-+}
-+
-+/// A `struct regulator` abstraction that is known to be enabled.
-+///
-+/// # Invariants
-+///
-+/// - [`EnabledRegulator`] is a valid regulator that has been enabled.
-+/// - Each instance of [`EnabledRegulator`] is associated with a single count
-+///   of `regulator_enable()`.
-+pub struct EnabledRegulator {
-+    inner: Regulator,
-+}
-+
-+impl EnabledRegulator {
-+    fn as_ptr(&self) -> *mut bindings::regulator {
-+        self.inner.inner.as_ptr()
-+    }
-+
-+    /// Disables the regulator.
-+    pub fn disable(self) -> Result<Regulator> {
-+        // Keep the count on `regulator_get()`.
-+        let regulator = ManuallyDrop::new(self);
-+
-+        // SAFETY: Safe as per the type invariants of `Self`.
-+        let res = to_result(unsafe { bindings::regulator_disable(regulator.as_ptr()) });
-+
-+        res.map(|()| Regulator {
-+            inner: regulator.inner.inner,
-+        })
-+    }
-+
-+    /// Sets the voltage for the regulator.
-+    pub fn set_voltage(&self, min_uv: Microvolt, max_uv: Microvolt) -> Result {
-+        // SAFETY: Safe as per the type invariants of `Regulator`.
-+        to_result(unsafe { bindings::regulator_set_voltage(self.as_ptr(), min_uv.0, max_uv.0) })
-+    }
-+
-+    /// Gets the current voltage of the regulator.
-+    pub fn get_voltage(&self) -> Result<Microvolt> {
-+        // SAFETY: Safe as per the type invariants of `Regulator`.
-+        let voltage = unsafe { bindings::regulator_get_voltage(self.as_ptr()) };
-+        if voltage < 0 {
-+            Err(Error::from_errno(voltage))
-+        } else {
-+            Ok(Microvolt(voltage))
-+        }
-+    }
-+}
-+
-+impl Drop for EnabledRegulator {
-+    fn drop(&mut self) {
-+        // SAFETY: By the type invariants, we know that `self` owns a reference,
-+        // so it is safe to relinquish it now.
-+        unsafe { bindings::regulator_disable(self.as_ptr()) };
-+    }
-+}
-+
-+/// A voltage in microvolts.
-+///
-+/// The explicit type is used to avoid confusion with other multiples of the
-+/// volt, which can be desastrous.
-+#[repr(transparent)]
-+pub struct Microvolt(pub i32);
+And let the user explicitly select auto:
 
----
-base-commit: e6ea10d5dbe082c54add289b44f08c9fcfe658af
-change-id: 20250326-topics-tyr-regulator-e8b98f6860d7
+		case 'w':
+			warn_only =3D atoi_paranoid(optarg);
+			break;
 
-Best regards,
--- 
-Daniel Almeida <daniel.almeida@collabora.com>
+Then the auto resolving works as below, and as James pointed out, the asser=
+t
+becomes
 
+		TEST_ASSERT(!warn_only, ....);
+
+>=20
+> > +                       break;
+> >                 case 'h':
+> >                 default:
+> >                         help(argv[0]);
+> > @@ -386,6 +394,23 @@ int main(int argc, char *argv[])
+> >         page_idle_fd =3D open("/sys/kernel/mm/page_idle/bitmap", O_RDWR=
+);
+> >         __TEST_REQUIRE(page_idle_fd >=3D 0,
+> >                        "CONFIG_IDLE_PAGE_TRACKING is not enabled");
+> > +       if (warn_on_too_many_idle_pages =3D=3D -1) {
+> > +#ifdef __x86_64__
+> > +               if (this_cpu_has(X86_FEATURE_HYPERVISOR)) {
+> > +                       printf("Skipping idle page count sanity check, =
+because the test is run nested\n");
+> > +                       warn_on_too_many_idle_pages =3D 0;
+> > +               } else
+> > +#endif
+> > +               if (is_numa_balancing_enabled()) {
+> > +                       printf("Skipping idle page count sanity check, =
+because NUMA balance is enabled\n");
+> > +                       warn_on_too_many_idle_pages =3D 0;
+> > +               } else {
+> > +                       warn_on_too_many_idle_pages =3D 1;
+> > +               }
+> > +       } else if (!warn_on_too_many_idle_pages) {
+> > +               printf("Skipping idle page count sanity check, because =
+this was requested by the user\n");
+
+Eh, I vote to omit this.  The sanity check is still there, it's just degrad=
+ed to
+a warn.  I'm not totally against it, just seems superfluous and potentially=
+ confusing.
