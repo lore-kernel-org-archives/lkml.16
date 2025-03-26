@@ -1,274 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C3818027;
-	Wed, 26 Mar 2025 23:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743032941; cv=fail; b=fMtGy1mZVw0DUjAbj3pZjrKbZ/pIF7pd0xXG0xDo0XPUCUaobXseK7xxI4MR9M+eQhiq3lUiOvM04tQ9QMcensxFypXjo81wN+t435gAKiEuMsUWNob69oJzqa9/SUY9Wfd2GsAgO6uEyMnfcARdOXMUJLPtGpLXoBMmixk6tXU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743032941; c=relaxed/simple;
-	bh=RHGlvVMa1LsnQNO4ECi+6tmB3EWMVzAVc5onYNyVhgM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=MnbDgPITVr1AN6QsFtoE8GuS3IrQ+gSdbuF0d9YAZm/WV2gdAeBPoBAbqVXpgtXHofbvZrgc0jRXDN5weXYvdQ2gH/4eNJ59adv1rm8z23MxMVgztgXq6S2nPQsV63cpr4Dd30ZsPxBCPwncUvRjm24kw2YsAdKQ5iMBxliZzPA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l7GO8M64; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7CA189BB5
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 23:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743032999; cv=none; b=Pa5A8B6YqrnQY9ihhHK1il+pKIM75O1h1OfynKOnYPgrXePhxAnO656r4PYkPTq4YgIit0RpLG6w9JOFTf2UoBYl+WiRcuZ+/rUqVIoyHsU0bDzxzevfl8tus8eVJnD2JGInfHWWYGWR/Mt+vQC64v4UzOO8J15MjxPcMWnS50c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743032999; c=relaxed/simple;
+	bh=keMtSMjDnv93jDKJMLt0sqILs5/cqtbnZJWeDCHSVeU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=t4hrZDctxW+TDIpFqt5MDNmkhDI3A9lV0Fa1PoQQ2Y/uw69uj1IAUMo9sOExySJrxFUGykJxY5htn3uchDSMM7Zc3yUhujw9xeB87Ow94bervs2usLEkPhgDE+bM9UBoapzvtSf2MogmcaGookstXf3TFfKVTc/smvnZjH4MX9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WNUyXtet; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l7GO8M64"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743032939; x=1774568939;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=RHGlvVMa1LsnQNO4ECi+6tmB3EWMVzAVc5onYNyVhgM=;
-  b=l7GO8M64NzyJnHFM1WmoS8/QVX4tvkR+QWsWmcipoQNEABAnidNrUC9c
-   DWBiS1kwtsXOX35u/3pH5ExuxEorGgaJf4eigGnlGsL8pK3MPeHLuTrv3
-   Sg4icmQB/K2asaw1059Li5XO25gIkcY3bLenJ+vRQNmhwAVA3XDUwAD6k
-   2wMbNz830fEsLdw8QWetkoUemVY8EHAA0xNE0vMMFnBcJbDBPTV5Gfa1V
-   qbTVpwn7PSpqISSnFg2/neEKrT09DhQFS6YfnJlVx7nhRJ65DxuFwnc72
-   8M25uEfgjnpFUYgCEs5EKULoBxup78ciaQ6Tizy0P4sZ8ya6UGgqORODn
-   w==;
-X-CSE-ConnectionGUID: 80J+HzUuTlixR2V0R4vg2Q==
-X-CSE-MsgGUID: I1tB963bTH2N5yAYEyKuSg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="55721842"
-X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
-   d="scan'208";a="55721842"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 16:48:58 -0700
-X-CSE-ConnectionGUID: s6h/wvlrTJKFO7qhIOzVnA==
-X-CSE-MsgGUID: VfkGshXKSdK2s7W11C3vSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
-   d="scan'208";a="124707995"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 16:48:57 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 26 Mar 2025 16:48:57 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 26 Mar 2025 16:48:57 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 26 Mar 2025 16:48:56 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eRgFM7Ke8YjAYQn5p7fCUV9YcSq3l3TdvZda3xgbUJ3/zlDYkiFvaGFuY3cgv761wU45SepbBBWIPHWhSFnJc6EcuWPm34Pql052MgYBITZc4dMzRphvVz1Iro/vBiHZWtRgdFQw3cc+I9Q4oM5CHELTGr6T4QAS9o3YQqPk3EBoJ3kY5f2BNll5YQkynns9fXBiEhr6mwom0j+wqxvye3CMVBipV4cvmm+s0jIcFLx5CgdzdeizQM7vLkIG3u9xSh/nbmBxwNa44erXLcYt34Yrtpei4Tc8maUopktJP3/6i+TZw6Kn+3SFg2+RL60vUFww3f0ItIiPj3a0Lz74Eg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7rGVTyne+pd7qP03st70JnTcyV8FPeeP3bI1Dc4AWKw=;
- b=TVclzTvesLujCGIi9RQwUfKsDkY1EG/bSh8HYpc+VzY03Iv3G7GWH6fqvGInubE9IPG1bINiKorlEk7Wj3Zxo5c/zzFUi744coeBv6JFuXtYUD3Rw9KKyLPj5WT0wFAgbQgAShGuxybCtMkQKZ6wluNdWMl65bok5LRWfGoEHq3lsuJTEaGMvSMnVpojDDkPZrbp1/R9LK/Bd9n959/++FSvnU1nWgFLs2SkA/0kY6GzCBgmDdhVZ3JNk+8/qvBNOsvvaxBD8zNw59lTE6HcjdWvioCl/u19qjYosMXzn7mrqC+zU37LHg1hgsIEFmCXpddWt17QyHhoEtlZf1aI7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by MW3PR11MB4523.namprd11.prod.outlook.com (2603:10b6:303:5b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Wed, 26 Mar
- 2025 23:48:53 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8534.043; Wed, 26 Mar 2025
- 23:48:53 +0000
-Date: Wed, 26 Mar 2025 19:48:46 -0400
-From: Dan Williams <dan.j.williams@intel.com>
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>,
-	<Jonathan.Cameron@huawei.com>, <dan.j.williams@intel.com>, <rppt@kernel.org>,
-	<akpm@linux-foundation.org>, <david@redhat.com>, <bfaccini@nvidia.com>,
-	<rafael@kernel.org>, <lenb@kernel.org>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <rrichter@amd.com>,
-	<haibo1.xu@intel.com>
-CC: <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <chenbaozi@phytium.com.cn>, Yuquan Wang
-	<wangyuquan1236@phytium.com.cn>
-Subject: Re: [RFC PATCH v3 2/2] ACPI: NUMA: debug invalid unused PXM value
- for CFMWs
-Message-ID: <67e4925eda2a5_13cb294fd@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20250321023602.2609614-1-wangyuquan1236@phytium.com.cn>
- <20250321023602.2609614-3-wangyuquan1236@phytium.com.cn>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250321023602.2609614-3-wangyuquan1236@phytium.com.cn>
-X-ClientProxiedBy: MW4PR03CA0350.namprd03.prod.outlook.com
- (2603:10b6:303:dc::25) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WNUyXtet"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff78dd28ecso686472a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 16:49:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743032997; x=1743637797; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZZ0fc1ltTj5WbPOlX297bPHnO9yVWtFkeuONJmH1pFQ=;
+        b=WNUyXtetYCI8wfb6Vy8CHFNBD5KTMriTusxBPv86hCpsDNBakN99S946+eGY+yV/R6
+         acYvo0/ecmyZ4wwOQz94Qnn7hKRWGgWzXxRliJXhEH0jkmMAXTrcQF4nQ9Wddr2VrQRy
+         wZA9PU+CpXM297tLVcEKFHWHJ53xyTt8NcIMScjsO0Er6AH6p65idpM+t5hKau9gTxt3
+         +HAthYkE7PiWNLjSwnOt6c/qpdiGpgpTUEhdsSskPY4uMcL0wos8Q+k60v22nB6JgdPI
+         64JDe8Ps3Xdga58S4TETm5PnOToD+LnwwL2aBi6qhQvmdgwGAL2MEVH5ZosFNIg+gAxx
+         BMMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743032997; x=1743637797;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZZ0fc1ltTj5WbPOlX297bPHnO9yVWtFkeuONJmH1pFQ=;
+        b=f1d/aATRPbeUpo3m+0MI7CkWzpAjWFu5xhn98bijD8hj26IRl0LZkjclxHRKMcQVEy
+         8affUyelccJJOdJU2Mx3YzkNFZU6X0WVkKcA5d/lEErsbH3TxjsKoXFeDULZUjwYnd0V
+         bJFHCHe9C2EYmsJkxn9YpnPWNyEHytHBgxaQygOSmulxhWellMIxL9nPByyQGvcrQCDB
+         gnuS42u0ZjwfLSg5YOUEPnLeTCBCXi2oult67VJl88vvPan/P2NMOK3+E7K0CnLFG9Hx
+         t2Ssc+arH89gJFq3eEtrGPAzEXRY5OXHT+csGoeC9FSkdq3V86O9YYnR4puQ2qJZWQ7k
+         P5Sw==
+X-Gm-Message-State: AOJu0Yy08S/beVDgRBro3QWiAR1+/58jl4u9x0Mdt67c4GBHHVLWIFlX
+	+YOkFV1EA6kYp2SrHGSbnWCcvZW+d4znhCPnJ44pmSnMHzlQ7ZxhyMoAHb+NwbF/Epr9lSW5KYk
+	g5gTatLxIIwI9EGO1FjLQwqpBGeXQDnM98/dKEqL1JwWjTaAEHPfgW81DP6wGhlE5bn7HQa6fIp
+	vaeg5UMJS0DZ+xUw2qJAUtRHb+3qYavmyyONE4L7Oe
+X-Google-Smtp-Source: AGHT+IHuxfv+OBIl9/J81mua/RNG90Wjmu3VKhxyGeO+4Ev1kYpLPx35UWgI7ReZrLAj2fovQ/an0xqG390=
+X-Received: from pfblk23.prod.google.com ([2002:a05:6a00:7217:b0:734:6f4e:794])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6e48:b0:1fe:90c5:7cee
+ with SMTP id adf61e73a8af0-1fea2f36e5fmr2804813637.28.1743032997293; Wed, 26
+ Mar 2025 16:49:57 -0700 (PDT)
+Date: Wed, 26 Mar 2025 16:42:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|MW3PR11MB4523:EE_
-X-MS-Office365-Filtering-Correlation-Id: 22cf0edc-95dd-45ee-cb1d-08dd6cc0c3ec
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007|921020;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?NQ+M0Vj90nj+6iE9Rt3jJmPLvHC9YS7ZzLR6DbHYsDzxahTzD5sxwULecFa8?=
- =?us-ascii?Q?YBS/WgRnkPXCWf9KcuAnciv9lgLjFo+7UI/B9Ja7pY9v0iXAqugh4vKU1H07?=
- =?us-ascii?Q?FK4HLfdsuVV1KcbzRfswd2Ii0LSzD74/n0ZS5vR/CZMnnXeugQ4RCkpqw6iR?=
- =?us-ascii?Q?3ARbXqi4AoAHydZlXWzFHqudxbzVcJg65kPjC/0fpSG8GC7RcBumooe1NX/3?=
- =?us-ascii?Q?dUsqFLMLm07zvvKPxURBMvnqSLrg+qyqln23A8FpzB1T87JZmgwBVYdjDV4O?=
- =?us-ascii?Q?ARcV24r49auoBNB/J9dRo7FQLDdY7cuvOHjDsPFtJIIc8P7EZ3QpPJnHoFVV?=
- =?us-ascii?Q?2TkSBZCSYyrg/l8fW7hjVgr0Kns2dKKeV1g9nYyaCHHu5GbQxRptbfYsG4uh?=
- =?us-ascii?Q?pMhnNfDBh39Q0pW74eT7+DZTyCCMqRWZ0k6zq5E7uC/C5oNnJ6/n4X+Kuv5X?=
- =?us-ascii?Q?iNWc25wUV594tFu3O0hl8mE8zWTIlpP7AcVt3u3mtbva38aAtYoaIHCGrTAY?=
- =?us-ascii?Q?4oHNbganBXXYgwfPxHkJwxXNT8Qqg+VnJqXCWDdO9/1QHp7hJ0q0HqelQ9nN?=
- =?us-ascii?Q?ma+i8htr4HUJI+fm/iqKiBKbe6knu3vGTwraDDU5ioTgVkAGOjFTlsP9e2RW?=
- =?us-ascii?Q?y8ZG/GgndVrM8ZO00biW/1iElXbWvneyt8MahLaRWBc0ruud5APFax3R73JU?=
- =?us-ascii?Q?E3MIhgR5/g+BvBjkAX0HptDtspBgpZXTEl3Ztbwe7tC6iWrK4DpBXQYSHrsM?=
- =?us-ascii?Q?uk8hIoQB7efQIg73NkOGjwpxVil90L0PwBto7AUw2oZnAOAI7Te3AptqRkkT?=
- =?us-ascii?Q?bJ3Ckwxcs4cFlFdGpZqKz1fkZ8KcQaYJ6S1/ifYNYrWhbr0F9qqXP5IQxU5K?=
- =?us-ascii?Q?8og/acBhnoiO1TdTH7jr3Y7Iylpcb7sMSYb6Vb7zCczsuWSpoq7LSZNTxrRE?=
- =?us-ascii?Q?V9nqHSvX81HI++dPuclVYdl+8skxj9BAZcZsFZfieQteK2F+mfLh02GlW5qH?=
- =?us-ascii?Q?Q0ZU0bMQTkVDF+voycO/Krs5V04UDp28SN4fhTRweH3r5NL1IITy6/s1Ytsj?=
- =?us-ascii?Q?FXJhjjxbx8PNJboWoJh2Q0R3aeuGACGMDnDS+4nRHoJfbcU18l9TfBNfKby4?=
- =?us-ascii?Q?naT6bmRergcLpKwZ45gYkH+fAze+y0feaOGqhfQd4tBxJ+LmWoXoBUPF1Tz3?=
- =?us-ascii?Q?qgsidcT1WWSxQewMwYETEeaQbXV03WD4fOV0n9mL7QhCcNvSQyDJ15braNq/?=
- =?us-ascii?Q?+kwihoM16OiaKJ5UAw+AZwjmkOt1f8zdHX9nl0gDcD4E+i+XA8eEb4d/iAC+?=
- =?us-ascii?Q?tDXqFt3vqLPzCY62V65Z/S8Bq7DmbCOiunZ+VJvUkV3iYlRbPr5mJNt1ZGzt?=
- =?us-ascii?Q?5ruGbU2Rr7Aky/F47rO9D9wtNcgLkDyZ4jq3hSKh5SeuBCL6uQpmtBilCDiS?=
- =?us-ascii?Q?XA8kd45hWPU=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Nm8TBpym3vzgSudZsgKljUqVHB326dc1/KG4yX+KFd1uqVrjhme/kZ0jEnrP?=
- =?us-ascii?Q?Y6wCHk5tX54SmMJJ1vGg4E+z4NluMWeymnnXM0N45uVgcK1KUbCn6vVUgF1+?=
- =?us-ascii?Q?Tc0DsMxC4wszGLD2eHePWcFHge4+/BSlCRaPqNMSMKvWgbOl3TF1ShY9iMEH?=
- =?us-ascii?Q?w+GnfEjNaXAAn9Z4TsKCRACuoR67S+0ZqiuxeqpoPoFM+uA0yadNN9Qy3tib?=
- =?us-ascii?Q?rBHjoik3b8ddZhWV/9SsDVxxPjpK8J3Y6wSzWiliZLrOKCt/3BV+/4luPRV9?=
- =?us-ascii?Q?/wO7KH6ChEj19Ep/ekx/EH2YggQSGSwfiD3vrM25OrYFW2TpsOmF5PMi3Cu1?=
- =?us-ascii?Q?9ArNHVI5O2/e3OUWm6Y90dKQAZG0eSoHzUXNFNLEn1Ru9MgxfAKFqj4DmSmd?=
- =?us-ascii?Q?VRItEkV5/P4zAXhzMY1v3Vou8+Z11lI14sQJYAOwRpMEjrmFboY25vDKzyho?=
- =?us-ascii?Q?qK4z5wntAaB+y4fPdpZwwZyjqX2CcvpiAfvRP83cv/BY/gIJT5IW7NfVdSQv?=
- =?us-ascii?Q?4KC1Ts+NAwk7RX5ge2sK4cmBWExUlCxGkv55XF65nwE1uQbZaKx4BjydN3e5?=
- =?us-ascii?Q?yrr66jK9CEozxp9cVqWC8zHXrXdyZ0hgS5OqKmJuIKZ8scAK7H8gxCowxYNp?=
- =?us-ascii?Q?c00PorSUd16dFxpWIKbtAKmNbExBpq3y6LdDNAWksUBJoYhfSC7OxvCWgk1M?=
- =?us-ascii?Q?X61iTGMjdYknSnqnOQsMdXSTzK/PwDtEqIded0csz+OwagVIvG5k4yixz53a?=
- =?us-ascii?Q?BscU4DLLCZ/QM2n4f5m8lZMt/q/1hA+4sFxYXbqKGdVTXkIaWYt+loq3/RF+?=
- =?us-ascii?Q?ynFdSheiJawBWVQApsu3DjfXFwjmr/jB6X2v4CIZy6sTHFpoBYzBsdmJSUho?=
- =?us-ascii?Q?ZpjRpz3YPvkK90drMPt85Z2YWdo85H7X+xLXYjYFfSNejgIwmJpxDX4MiREG?=
- =?us-ascii?Q?NC4juwN/U7DYhpL13tAlDgKWwLzgy7l6EjVB3fKlxlUReUrnMIbsG4gLgGN7?=
- =?us-ascii?Q?NxhVPVZFPKzgkiLuFA+Jjnpd6MEDcf9hVtDY7GFTyKBoDR+MuATjAZfUgp6f?=
- =?us-ascii?Q?+XPKZUr7ZRPrU2boNCFX6dZyUys+Sosc0cb2XtQlG4AZdc1DwW5p2Skrc6lg?=
- =?us-ascii?Q?3Q7/GC/phpMnfXLJQmp5OBpLlCKmMherG9MraxVGF+FFXgbFhAp9oM/xkCpF?=
- =?us-ascii?Q?5cNnBz46d7cCnQlG5sQSoD5b7XJDCEBMEPEI4L3m/O6OkRnu4VY7pjPJ5M2y?=
- =?us-ascii?Q?pQKdxLePEkSkQKWTZ4uB7nvKesoaxvXToutXKXCq+519yKUxHp2wwOAgT+h0?=
- =?us-ascii?Q?RCfshYe132junjykaaVnmaF6pmeJwsvJlocKHluWzfZKuXzGaz4uxpN6iM49?=
- =?us-ascii?Q?kxUNrP18+kB98dTo1Dwwt6Y3l0dMnrI2se2bzfsVVy1RovlzRvf4zTZb0d+X?=
- =?us-ascii?Q?7KWynTGh2WEh8RpaBKURRbEj/4LMz6R7YKFmXV8VgRh5pAa5ydHQfzQ8YXHl?=
- =?us-ascii?Q?VAIXBVrieg8CWibDQNztIFSfk/hw3k5gutLPRhypHcMzAaDgSY0PTruYUsaF?=
- =?us-ascii?Q?w3h8y6e2vrUP3bQvU24HdC6r2aBYdBzmgezq5Bti5jdAnB1EYw1loW78neUQ?=
- =?us-ascii?Q?nQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22cf0edc-95dd-45ee-cb1d-08dd6cc0c3ec
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2025 23:48:53.4575
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WaOJBjSO1YuYgA6WSWCPd/h6H6IQ37ABmB/RbRmkQc/ZWCFmQrKk61YhLlmvHvsFneB10VIjebYdX7fmM1Rn2RBnhunPsskq5dTtXbXJghg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4523
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
+Message-ID: <20250326234758.480431-1-ctshao@google.com>
+Subject: [PATCH v1 0/2] Fix incorrect counts when count the same uncore event
+ multiple times
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, james.clark@linaro.org, 
+	howardchu95@gmail.com, linux@treblig.org, yeoreum.yun@arm.com, 
+	ak@linux.intel.com, weilin.wang@intel.com, asmadeus@codewreck.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Yuquan Wang wrote:
-> The absence of SRAT would cause the fake_pxm to be -1 and increment
-> to 0, then send to acpi_parse_cfmws(). If there exists CXL memory
-> ranges that are defined in the CFMWS and not already defined in the
-> SRAT, the new node (node0) for the CXL memory would be invalid, as
-> node0 is already in "used", and all CXL memory might be online on
-> node0.
+Let's take a look an example, the machine is SKX with 6 IMC devices.
 
-It is still not clear to me why this is a problem. If there is no SRAT
-and CXL is the first memory proximity domain in the system then it
-should be 0.
+  perf stat -e clockticks,clockticks -I 1000
+  #           time             counts unit events
+       1.001127430      6,901,503,174      uncore_imc_0/clockticks/
+       1.001127430      3,940,896,301      uncore_imc_0/clockticks/
+       2.002649722        988,376,876      uncore_imc_0/clockticks/
+       2.002649722        988,376,141      uncore_imc_0/clockticks/
+       3.004071319      1,000,292,675      uncore_imc_0/clockticks/
+       3.004071319      1,000,294,160      uncore_imc_0/clockticks/
 
-In other words, if it is a problem that the kernel is picking node0 for
-CXL memory when there is no SRAT, the problem is that there is no SRAT.
+1) The events name should not be uniquified.
+2) The initial count for the first `clockticks` is doubled.
+3) Subsequent count only report for the first IMC device.
 
+The first patch fixes 1) and 3), and the second patch fixes 2).
 
-> This utilizes node_set(0, nodes_found_map) to set pxm&node map. With
-> this setting, acpi_map_pxm_to_node() could return the expected node
-> value even if no SRAT.
-> 
-> If SRAT is valid, the numa_memblks_init() would then utilize
-> numa_move_tail_memblk() to move the numa_memblk from numa_meminfo to
-> numa_reserved_meminfo in CFMWs fake node situation.
-> 
-> If SRAT is missing or bad, the numa_memblks_init() would fail since
-> init_func() would fail. And it causes that no numa_memblk in
-> numa_reserved_meminfo list and the following dax_cxl driver could
-> find the expected fake node.
-> 
-> Use numa_add_reserved_memblk() to replace numa_add_memblk(), since
-> the cxl numa_memblk added by numa_add_memblk() would finally be moved
-> to numa_reserved_meminfo, and numa_add_reserved_memblk() here could
-> add cxl numa_memblk into reserved list directly. Hence, no matter
-> SRAT is good or not, cxl numa_memblk could be allocated to reserved
-> list.
+After these fix:
 
-Do you not have other problems due to numa_register_meminfo() not being
-called?
+  perf stat -e clockticks,clockticks -I 1000
+  #           time             counts unit events
+       1.001127586      4,126,938,857      clockticks
+       1.001127586      4,121,564,277      clockticks
+       2.001686014      3,953,806,350      clockticks
+       2.001686014      3,953,809,541      clockticks
+       3.003121403      4,137,750,252      clockticks
+       3.003121403      4,137,749,048      clockticks
 
-I would really like to say that the platform is buggy without an SRAT
-and you should not expect anything useful from a NUMA perspective on
-such a platform. Everything showing up in node0 in that case sounds
-right.
+I also tested `-A`, `--per-socket`, `--per-die` and `--per-core`, all
+looks good.
 
-> 
-> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-> ---
->  drivers/acpi/numa/srat.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-> index 00ac0d7bb8c9..50bfecfb9c16 100644
-> --- a/drivers/acpi/numa/srat.c
-> +++ b/drivers/acpi/numa/srat.c
-> @@ -458,11 +458,12 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->  		return -EINVAL;
->  	}
->  
-> -	if (numa_add_memblk(node, start, end) < 0) {
-> +	if (numa_add_reserved_memblk(node, start, end) < 0) {
+Ian Rogers (2):
+  perf evlist: Make uniquifying counter names consistent
+  perf parse-events: Use wildcard processing to set an event to merge
+    into
 
-This change can move to patch1 with the new justification I suggested.
+ tools/perf/builtin-record.c    |   7 +-
+ tools/perf/builtin-top.c       |   7 +-
+ tools/perf/util/evlist.c       |  66 +++++++++-----
+ tools/perf/util/evlist.h       |   3 +-
+ tools/perf/util/evsel.c        | 116 ++++++++++++++++++++++++-
+ tools/perf/util/evsel.h        |  11 ++-
+ tools/perf/util/parse-events.c |  45 ++++++----
+ tools/perf/util/stat-display.c | 151 +--------------------------------
+ tools/perf/util/stat.c         |  40 +--------
+ 9 files changed, 214 insertions(+), 232 deletions(-)
 
-...then we can have the pxm fixup discussion separately.
-
->  		/* CXL driver must handle the NUMA_NO_NODE case */
->  		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
->  			node, start, end);
->  	}
-> +
->  	node_set(node, numa_nodes_parsed);
->  
->  	/* Set the next available fake_pxm value */
-> @@ -646,8 +647,12 @@ int __init acpi_numa_init(void)
->  		if (node_to_pxm_map[i] > fake_pxm)
->  			fake_pxm = node_to_pxm_map[i];
->  	}
-> -	last_real_pxm = fake_pxm;
-> -	fake_pxm++;
-> +
-> +	/* Make sure CFMWs fake node >= 1 */
-> +	fake_pxm = max(fake_pxm, 0);
-> +	last_real_pxm = fake_pxm++;
-> +	node_set(0, nodes_found_map);
-> +
->  	acpi_table_parse_cedt(ACPI_CEDT_TYPE_CFMWS, acpi_parse_cfmws,
->  			      &fake_pxm);
->  
-> -- 
-> 2.34.1
-> 
-
+--
+2.49.0.472.ge94155a9ec-goog
 
