@@ -1,171 +1,126 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4219123AE79;
-	Wed, 26 Mar 2025 21:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743024101; cv=pass; b=O7PxjmRwXbTzgbf7zjonscdPOSmnUg5bkSvgKdDOxTz9IWzCIlIFnnq5sgeVRkSUl7l8O41fILUpJJARiE6/4AZ5LDL890CUBotc10bDQLrMlwGgWDHMiy2MXNJjoK+3YXN54wKv2KUPXeHNqP0MCQ2b1ucF5ItnJ75LMLOLFR0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743024101; c=relaxed/simple;
-	bh=pWwN1fHpqKDNb8P33HMUlglgT5oRXv79Ga1dRUm3KX0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qgYY84fhl2tDaNnj/yUsHYaWtUmIInXSpCkVBVuH++WXcmL+yKtVi+BTJNfO2nqizxSpzMsXTB2EUStMU9Hs0bSYWZPvH7aExUV+5ZGCX6Sc3uTbF2fHn0ezJEoLdZx5O7ypBSqL5ZggKJDaKRUZSh3B8sxV99knOZLdzZyPUKY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=a98shuttle.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=rqH8yA98; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=TM72ppF0; arc=pass smtp.client-ip=85.215.255.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a98shuttle.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC46E1A3BA1
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 21:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743024116; cv=none; b=OT2ysl/lV1mwuk1iKtuuPWmud41tRYTUcAZNYvH+Xzx3ReoTemigK6386MoaIt1+W1tc9/AamzAOslHUE9jYzIhDJZIhcnXFw2CXEx9GnWFm5yWo8q8TDCGKeqw1xVsA9znqmkwVmBR7r/ly1y8/+1QS6z3ODckLVwT9cGDbV+c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743024116; c=relaxed/simple;
+	bh=P6V9ol/irj61zvGkj49jPh2uWIAWA/KyBPVCWmTBZC8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bpzux2oFFsSR4iaiPfmegxwq+gydjQ0c6BiNRywVqE3NJJhSQgZUre4zkRWgxzJNgEkOA+n4T3DtwBWYWX04Nw0uCnq3fMJn3niNJ9lBd32DUGxvXXq07CTYs8gZ+GR/4jfMFLPgMLonHlvfqRZZogSIfJtV2j9UAI+FmnL3c4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KpNCyLAu; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="rqH8yA98";
-	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="TM72ppF0"
-ARC-Seal: i=1; a=rsa-sha256; t=1743024090; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=IgU6YfFYT1FnmQNQFV4aSMVRJgb6nnSPR2Xt5xLnG/Pc0wTgGdL9gz/rmy75GX+9tv
-    Vj/lNbEFcWvaz/FZnyQHXe7WiNVgnU4deKph1xr7A2gSJVZ6DWONs9omd38u816j22z6
-    FFCRIK3AysLM/fWMjH1SaDTaDVCkDM27TY877dvbR6Fse7hS3oUqtYxgsuCimnX9MnwA
-    vj4/4926uqep36bvJAeszvOVlKVORwzpsBRa6k9Y3EdsiVcss2E1l8KZmoviIA24gTY5
-    s0A11wSw4mfjyge6oVeKwhhx4yxvQZxvvEjn//2GUv/lqKrrmpzCaG3i/bZTXloWYUd4
-    uMoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1743024090;
-    s=strato-dkim-0002; d=strato.com;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=DRQWVNflVTSKFHFB9UYyJnOIp+l42TmftpYogCcmRdw=;
-    b=UCihouW8TeHkbkggDKHdRo5x1YmdvRxWNtiXLmj67IHwYEviOeMuBoJ7sQA+u2XgM+
-    ovgknh/Mqs29iSc0YsNCQ7yrrZJEIB3L6DZHgjeSXtXzFsrg4opZO0EvWqWW+OUYH0SZ
-    4A5KEihjfYmezxccH7AfBlQIDAVPIeDyjaABV+qSDvZohM6pU15PSRPJqb7SmUuqV3Sf
-    Q9Xf+Aza25VvDgsEDyeEzsFoQpFpVkidNfucZ4uuG3R9tKlw5Lq+JGwtqKxzfZtchWWz
-    +ZMLb1XmOt1dAxdx7mR7ht1xarPIpF/sWY/x81E0CW7xDlxqR8+dw1pLJIl28kOC6VBb
-    6v/A==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1743024090;
-    s=strato-dkim-0002; d=fossekall.de;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=DRQWVNflVTSKFHFB9UYyJnOIp+l42TmftpYogCcmRdw=;
-    b=rqH8yA98e93pKOxJSdvN57PXbZ230fTB25qqwlBbL3i5K6jvH68VkWFV0mqH+9WVsL
-    E+XhWuPwklk4HLKvrRaIKkinYKeCNBktwmg20Mok5rX5NAW1XZUCPGvpIMUD188DcBSc
-    u2vVuOf4hZyqTi7XIR+MegkEowp060TwlkmN7KH2AJVJOpQ6xij3WFy0BurXnpAcl/DH
-    09bK4EZHZ3WXHGd2bxNEk3ijr3AdhiigzvlC5aEX2u5TtepSBvsYUP9d6ZMKUNOeHoG/
-    ui9xM5RQYLhW3/oPBp4tL6/hAd9elrf6OoWHccYaXb7hGaoopMxGbdhzrehsyz2FPwrU
-    LHDg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1743024090;
-    s=strato-dkim-0003; d=fossekall.de;
-    h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=DRQWVNflVTSKFHFB9UYyJnOIp+l42TmftpYogCcmRdw=;
-    b=TM72ppF0Jt4aJodxAr8EVMXDKw32JGbPB4X9EtU0oIESniVfLBqh2M48sKI0AAxKGX
-    ryL8Hwwu9HGyHV+pfGAQ==
-X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
-Received: from aerfugl
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id f28b3512QLLU1Hy
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Wed, 26 Mar 2025 22:21:30 +0100 (CET)
-Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
-	by aerfugl with smtp (Exim 4.96)
-	(envelope-from <michael@a98shuttle.de>)
-	id 1txYBl-0000hv-0t;
-	Wed, 26 Mar 2025 22:21:29 +0100
-Received: (nullmailer pid 100268 invoked by uid 502);
-	Wed, 26 Mar 2025 21:21:29 -0000
-From: Michael Klein <michael@fossekall.de>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Michael Klein <michael@fossekall.de>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [net-next v5 1/4] net: phy: realtek: Group RTL82* macro definitions
-Date: Wed, 26 Mar 2025 22:21:22 +0100
-Message-Id: <20250326212125.100218-2-michael@fossekall.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250326212125.100218-1-michael@fossekall.de>
-References: <20250326212125.100218-1-michael@fossekall.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KpNCyLAu"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e789411187so1278a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:21:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743024113; x=1743628913; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FxMIaxzdKd25j5BobKFtyp9BpbbkbtzKIEHTHbqVE8I=;
+        b=KpNCyLAuF95VLGzdkKDKEvlMDsW6LLf21KmfH2CCLO4EFh9TgXapMF78JmSgjWR3wm
+         CxR9tQ0/DfytuDN+3Am5WmjySI1DbNuDQ6iYxQaLbbtVSBS+hgYLM3nEjle2so4JBTMP
+         HoGBKrf8riD5vKJafwMZzxm/HN2kCtBX2zjypMdtbN77PGuyFJG8cQ+TAGOXWw2IxrKE
+         qmIX7N7MKQWP7c5HiV566cdSZ8p2LrJCrUS0VCuWlW7zW5vV+4nq25/cKZWDcb15NDjz
+         T66HbOHZhwyEJx3azG6DIakjZd3+kb70rJLMc3Z7Eq9PHBykbJkZRPFckqtWNfWzuHX5
+         PcrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743024113; x=1743628913;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FxMIaxzdKd25j5BobKFtyp9BpbbkbtzKIEHTHbqVE8I=;
+        b=jJTuZ6uX72lmgP1ZAcdbLoTm9q1fV8Jb5xubY7iZ3wSkttj5glhJPUIsXlU9eow/F/
+         tj/LrYw19FqJeR2SgLUV81w0vGMea6B/EmfE0o6PHiVYOpXCrGTSh+cSxQwTQRfGPmhI
+         XanuQyQQWg1u/uigr8YWi213EwWELBETkCXlcC8rgoqZYv/mnWp2pKtiurg8EH8oPKQq
+         H9rKGlPQy4GHHmPHf0nRKuNYvckTWYsodwva/WrunldDQy2ew9kqitBY77lbrriT0Si8
+         i05GE494G+blcgi9jOScMI1s/Oepn0/LTTtL2FJhswWd5IKK1FtRxeOftSQE4kBglj6k
+         aLdw==
+X-Forwarded-Encrypted: i=1; AJvYcCVb3UbI6VmoQvtl9g/5bNiOWaW3+SPs+DAkoPqgOls4/RkiyltSRMcjcLV9NSjBzslocJiFrqos1d8wQIM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHmY2zOAnvY3OUc5h3FskWHejAJlNNWngo70jG+U/1IDkDG0uu
+	dJJadOaIqcbEe8hqVxfEO6+H81/EL53Zdvg1ap/aYS2qfV19pt5Kb4CtJZmmSMmVA9AcTIcFiGy
+	v+tfQOkHNQgETt1MBa3/hfhY7OeKfPqIJtzpm
+X-Gm-Gg: ASbGncth0jeAIRIEIIZwwF2sWY7uSUYQs6EUMxChSmkIKjy6l+dhdLiSNP3H2T/CUWM
+	ifgIDhCLoTuMLqsiIDlmqp9HiO/1jrUFE1Bkdj4pBVEfq8GeCy4zHQbNaw4nx//gbEzpnxfr3BW
+	Syskjt7s16umaney+nr57nyEheegcQS2sorb1j6aATF3kvxyW8OvrwYeQ=
+X-Google-Smtp-Source: AGHT+IE8kzG9HOPQV9zW2XiAapRcWyf13sKtcWkvsQE8PgKGtGYn8uvp97F8cRQncQNiapCuYJZbMoC+j+wiotiTmdU=
+X-Received: by 2002:aa7:d688:0:b0:5e4:afad:9a83 with SMTP id
+ 4fb4d7f45d1cf-5edaa299a33mr12983a12.2.1743024112866; Wed, 26 Mar 2025
+ 14:21:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20250325-kcsan-rwonce-v1-1-36b3833a66ae@google.com>
+ <20250326203926.GA10484@ax162> <CAG48ez05PsJ3-JUBUMrM=zd5aMJ_ZQT4mhavgnCbXTYvxFPOhQ@mail.gmail.com>
+In-Reply-To: <CAG48ez05PsJ3-JUBUMrM=zd5aMJ_ZQT4mhavgnCbXTYvxFPOhQ@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Wed, 26 Mar 2025 22:21:16 +0100
+X-Gm-Features: AQ5f1JquhTVerEmqgNAhgQCsPngLTzI4uGjqymw9DsbgV3pWRPJXXIrAKOz8bcU
+Message-ID: <CAG48ez3uh48VZCVO3JD3uv9k5kZBHahr3dAita4hkHsLqyyA9w@mail.gmail.com>
+Subject: Re: [PATCH] rwonce: handle KCSAN like KASAN in read_word_at_a_time()
+To: Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com, 
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Group macro definitions by chip number in lexicographic order.
+On Wed, Mar 26, 2025 at 9:44=E2=80=AFPM Jann Horn <jannh@google.com> wrote:
+> On Wed, Mar 26, 2025 at 9:39=E2=80=AFPM Nathan Chancellor <nathan@kernel.=
+org> wrote:
+> > On Tue, Mar 25, 2025 at 05:01:34PM +0100, Jann Horn wrote:
+> > > Also, since this read can be racy by design, we should technically do
+> > > READ_ONCE(), so add that.
+> > >
+> > > Fixes: dfd402a4c4ba ("kcsan: Add Kernel Concurrency Sanitizer infrast=
+ructure")
+> > > Signed-off-by: Jann Horn <jannh@google.com>
+> > ...
+> > > diff --git a/include/asm-generic/rwonce.h b/include/asm-generic/rwonc=
+e.h
+> > > index 8d0a6280e982..e9f2b84d2338 100644
+> > > --- a/include/asm-generic/rwonce.h
+> > > +++ b/include/asm-generic/rwonce.h
+> > > @@ -79,11 +79,14 @@ unsigned long __read_once_word_nocheck(const void=
+ *addr)
+> > >       (typeof(x))__read_once_word_nocheck(&(x));                     =
+ \
+> > >  })
+> > >
+> > > -static __no_kasan_or_inline
+> > > +static __no_sanitize_or_inline
+> > >  unsigned long read_word_at_a_time(const void *addr)
+> > >  {
+> > > +     /* open-coded instrument_read(addr, 1) */
+> > >       kasan_check_read(addr, 1);
+> > > -     return *(unsigned long *)addr;
+> > > +     kcsan_check_read(addr, 1);
+> > > +
+> > > +     return READ_ONCE(*(unsigned long *)addr);
+> >
+> > I bisected a boot hang that I see on arm64 with LTO enabled to this
+> > change as commit ece69af2ede1 ("rwonce: handle KCSAN like KASAN in
+> > read_word_at_a_time()") in -next. With LTO, READ_ONCE() gets upgraded t=
+o
+> > ldar / ldapr, which requires an aligned address to access, but
+> > read_word_at_a_time() can be called with an unaligned address. I
+> > confirmed this should be the root cause by removing the READ_ONCE()
+> > added above or removing the selects of DCACHE_WORD_ACCESS and
+> > HAVE_EFFICIENT_UNALIGNED_ACCESS in arch/arm64/Kconfig, which avoids
+> > the crash.
+>
+> Oh, bleeeh. Thanks for figuring that out. I guess that means we should
+> remove that READ_ONCE() again to un-break the build. I'll send a patch
+> in a bit...
 
-Signed-off-by: Michael Klein <michael@fossekall.de>
----
- drivers/net/phy/realtek/realtek_main.c | 30 +++++++++++++-------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
-index 893c82479671..b27c0f995e56 100644
---- a/drivers/net/phy/realtek/realtek_main.c
-+++ b/drivers/net/phy/realtek/realtek_main.c
-@@ -17,6 +17,15 @@
- 
- #include "realtek.h"
- 
-+#define RTL8201F_ISR				0x1e
-+#define RTL8201F_ISR_ANERR			BIT(15)
-+#define RTL8201F_ISR_DUPLEX			BIT(13)
-+#define RTL8201F_ISR_LINK			BIT(11)
-+#define RTL8201F_ISR_MASK			(RTL8201F_ISR_ANERR | \
-+						 RTL8201F_ISR_DUPLEX | \
-+						 RTL8201F_ISR_LINK)
-+#define RTL8201F_IER				0x13
-+
- #define RTL821x_PHYSR				0x11
- #define RTL821x_PHYSR_DUPLEX			BIT(13)
- #define RTL821x_PHYSR_SPEED			GENMASK(15, 14)
-@@ -31,6 +40,10 @@
- #define RTL821x_EXT_PAGE_SELECT			0x1e
- #define RTL821x_PAGE_SELECT			0x1f
- 
-+#define RTL8211E_CTRL_DELAY			BIT(13)
-+#define RTL8211E_TX_DELAY			BIT(12)
-+#define RTL8211E_RX_DELAY			BIT(11)
-+
- #define RTL8211F_PHYCR1				0x18
- #define RTL8211F_PHYCR2				0x19
- #define RTL8211F_CLKOUT_EN			BIT(0)
-@@ -47,6 +60,8 @@
- #define RTL8211F_LEDCR_MASK			GENMASK(4, 0)
- #define RTL8211F_LEDCR_SHIFT			5
- 
-+#define RTL8211F_LED_COUNT			3
-+
- #define RTL8211F_TX_DELAY			BIT(8)
- #define RTL8211F_RX_DELAY			BIT(3)
- 
-@@ -54,19 +69,6 @@
- #define RTL8211F_ALDPS_ENABLE			BIT(2)
- #define RTL8211F_ALDPS_XTAL_OFF			BIT(12)
- 
--#define RTL8211E_CTRL_DELAY			BIT(13)
--#define RTL8211E_TX_DELAY			BIT(12)
--#define RTL8211E_RX_DELAY			BIT(11)
--
--#define RTL8201F_ISR				0x1e
--#define RTL8201F_ISR_ANERR			BIT(15)
--#define RTL8201F_ISR_DUPLEX			BIT(13)
--#define RTL8201F_ISR_LINK			BIT(11)
--#define RTL8201F_ISR_MASK			(RTL8201F_ISR_ANERR | \
--						 RTL8201F_ISR_DUPLEX | \
--						 RTL8201F_ISR_LINK)
--#define RTL8201F_IER				0x13
--
- #define RTL822X_VND1_SERDES_OPTION			0x697a
- #define RTL822X_VND1_SERDES_OPTION_MODE_MASK		GENMASK(5, 0)
- #define RTL822X_VND1_SERDES_OPTION_MODE_2500BASEX_SGMII		0
-@@ -112,8 +114,6 @@
- #define RTL_8221B_VN_CG				0x001cc84a
- #define RTL_8251B				0x001cc862
- 
--#define RTL8211F_LED_COUNT			3
--
- MODULE_DESCRIPTION("Realtek PHY driver");
- MODULE_AUTHOR("Johnson Leung");
- MODULE_LICENSE("GPL");
--- 
-2.39.5
-
+I sent a patch at
+<https://lore.kernel.org/all/20250326-rwaat-fix-v1-1-600f411eaf23@google.co=
+m/>.
