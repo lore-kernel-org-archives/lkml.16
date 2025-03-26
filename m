@@ -1,67 +1,135 @@
-Received: from mail-244107.protonmail.ch (mail-244107.protonmail.ch [109.224.244.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572BC23C8CD;
-	Wed, 26 Mar 2025 19:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CAB253F1F
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 19:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743017230; cv=none; b=RxS6NRiKK82xA2xyaJWxqa5jWJR5Emzua614Eq0UKsp2SP7zeSecN/dsZ0BEHWOBDXesgCYVnU70+B5dVkfHZjWJQuFLD2YCcD+C/aqLok3t+ijHgED1nYslsr05wCesAowWyQqgCjnXC22j1Sy+uCKX99UI2fd4MN2zFI3QAtc=
+	t=1743017233; cv=none; b=SWOjEM2IJZyQNCs0xeTfNWH4eMqvW/otjfCLV1z9+W8OdS1Yh5EkKztLSDweqvwsRybcoJs/+tBgvinRIJkBieU7m125Vbe7an1ocgb+mWvAe0OvisOb+xCDRUf7Ii+VjhzOMjT9EUx55uRL6rO/1KQmra2TDUZGxJ+gJSEtWqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743017230; c=relaxed/simple;
-	bh=yAId1LVyBbc4r4brsJg50UoxxOnjUNXUtVQSvaU9dvM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iieuOdap/GVls974zdmOrkUhDjvtUUrsKDRSL72q29L+iwnq3EKHkbGUhBGHu+ck4XGW1ZlqpJfOJaAoXVLJNkr8Jau9oqD+PNwFKBukjIryBibtckutA5ikBU2UbskhRz9E6Tb4ET2OZCx4K9Om7yeQnhZADLLm17b4juAtDiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=patcody.io; spf=pass smtp.mailfrom=patcody.io; dkim=pass (2048-bit key) header.d=patcody.io header.i=@patcody.io header.b=4GIKHMx5; arc=none smtp.client-ip=109.224.244.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=patcody.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=patcody.io
+	s=arc-20240116; t=1743017233; c=relaxed/simple;
+	bh=+U1O+GCFM+kfSFm0eIkLWeuXl8Ro1RJubQKh9PZzrw4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Uh6ToQeqyKTWzWDUVRVaWUKIeBD2fDc7Yn984vR1bhiVh8DErGywsW92KSFLWxKW/W5S8RK2OgM1Vdz/wlf1dniVVSQn39gTEchth//8vUJ5rZ5XEBtNyuaaWpOm05+Hc6KifRM9+8/Aylq0Spz+Kpu2Zy/JB3ivcR3ja4e+weo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U78CtHDd; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=patcody.io header.i=@patcody.io header.b="4GIKHMx5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=patcody.io;
-	s=protonmail; t=1743017219; x=1743276419;
-	bh=csafadTp80E+2AhxL0L/Gfe0jTEubxOlvpB5ESKE150=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:In-Reply-To:From:To:
-	 Cc:Date:Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=4GIKHMx5iKEXtXNz/tLPeulnlEiX31I9L+UgJuubcTDfAbX3Bs/29qDAe8HbjBm7B
-	 iyaAK5gEUM3YAYnS78+xh/L7dmWFdQNveh9tG5/Roueal9oVar96AF+Nl2QrBPDtp2
-	 P6hEEExNaOWZMJWt+bIbJG3YFUHxoRvTb+wM2vCwT/7u81XZ2yK8ZRmZkFbBMmzbyV
-	 gIC6sdOcQ1w+AhOlfhapxctifo42euIn1pmnViLOk4FrZai4YCGVvt35JbDlhkQwx1
-	 +hHNgo4V6hbjMIScr693Qi1I0a8pMJfxvOgzQXBMGsZZ2XJEDilWbkB3Ex7SetLV12
-	 rDiocQE40Un/Q==
-X-Pm-Submission-Id: 4ZNGxn6v6kz4CV
-Date: Wed, 26 Mar 2025 12:26:52 -0700
-From: Pat Cody <pat@patcody.io>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org,
-	riel@surriel.com, patcody@meta.com, kernel-team@meta.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] sched/fair: Add null pointer check to pick_next_entity()
-Message-ID: <Z+RU/ONNC0D3neQz@devvm1948.rva0.facebook.com>
-References: <20250320205310.779888-1-pat@patcody.io>
- <20250324115613.GD14944@noisy.programming.kicks-ass.net>
- <Z+LH3k2RyXOg9fn4@devvm1948.rva0.facebook.com>
- <20250325185907.GC31413@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U78CtHDd"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff69646218so376829a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 12:27:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743017231; x=1743622031; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IohNF223XL3lH0XqoriWRvDMNHxugR0378pliy8M2k8=;
+        b=U78CtHDdwIdCTpa2wHy/8e4yaF4RxhQhQb7qa7IBsJhwt+QqBhXDMZ/l77HOHFGwJM
+         WVwURBQ0UD9LR4a82f7/kJcagYlIOrTsEgvrTHGumTMk/KPD56FVJAkUpu/NRaHNn+GX
+         qH3q+2yCBX5bkQj1NhmJ80Pox2MiKyEyWC1LdQE3jjnAEwOUmzusDRq8rfVRANgAUPPb
+         zfaZi2rL4EvelavbDTSqcDnt4CA6natUdMKVkQUxOJOmtdUpZns+5Gr40G631VnXwRXB
+         ttpA4bRNOVM98raGI32DvBIGEAWxcTEmF70v8mdE0P0pBzrajFl4EbRTMbUCuglCKWWN
+         AvWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743017231; x=1743622031;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IohNF223XL3lH0XqoriWRvDMNHxugR0378pliy8M2k8=;
+        b=Ea8Dd0z9h5kklUj+bTsfi7lX6ctPl5Gm0ydyoTdNRYgtSbr3U/W5Uh+N3HpZqDMAWP
+         pXk8YGTKvkQp/dio+6pfcKgxs9uzBl/oI4YIKOep0VYKDlsPyGCK9VSPgyrJ7j9e2UMm
+         PqjP/vxjRuyfOHOPPIr0yvHZuEkTYSVCBmtgvONhwMgkqBSICgLVNdS8UDdfwbXEuaAg
+         pUj0G9nGsh80pDE7KWT5Hu9Lh+xoYWTSFYryv2B/XI8tyRDz2K1APfo59f/mCeOR7cQR
+         Tk3H0abuxtM7pdkm59I6wlfFVQN66TXhs9gKb5AlGGrmzLbsU7bB2+xx8q3JmWCiBd0j
+         RsVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXQUqw0Heariw8eLabP9UQyZn0Utx+2gBefMqdCzMHOI/2xI8yKN6WIYM3SwkMkdm7mblqDy1OL7Mhrpr0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzivQ1FLm7bEnkL1FYCGxkEW2Yhbkqy6Gyr871NGXF2eivCXIiQ
+	7h4pZvPbNviY9AduuI4KNz1UWLMyO/Xl34YTO6KYk9tC12eoVWWExsWucg7jcjDJ8/hLrc+0DY1
+	rvA==
+X-Google-Smtp-Source: AGHT+IF5Vq2DzJpQNzldBZKP+C7bbGIGWzkK3jj6QX/Dtg84AwGkvpnqQi8XzN9QF/JkIytLyWzgiVzVlO4=
+X-Received: from pjl13.prod.google.com ([2002:a17:90b:2f8d:b0:2fc:2e92:6cf])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4c85:b0:2ea:a25d:3baa
+ with SMTP id 98e67ed59e1d1-303a7c5d2e8mr953814a91.5.1743017231491; Wed, 26
+ Mar 2025 12:27:11 -0700 (PDT)
+Date: Wed, 26 Mar 2025 12:27:09 -0700
+In-Reply-To: <CADrL8HV=ERo3dB7u-24VhjVQ6muBHEXeAfZYY7cuE7cxALRRRA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250325185907.GC31413@noisy.programming.kicks-ass.net>
+Mime-Version: 1.0
+References: <20250325015741.2478906-1-mlevitsk@redhat.com> <20250325015741.2478906-3-mlevitsk@redhat.com>
+ <CADrL8HWrgbV+coEod_EUnvG27HX3WtJDMua3FPiReCRCtXaNhw@mail.gmail.com>
+ <Z-RKZsQngjEgcfVU@google.com> <CADrL8HV=ERo3dB7u-24VhjVQ6muBHEXeAfZYY7cuE7cxALRRRA@mail.gmail.com>
+Message-ID: <Z-RVDQC4HNxrD-pI@google.com>
+Subject: Re: [PATCH v2 2/2] KVM: selftests: access_tracking_perf_test: add
+ option to skip the sanity check
+From: Sean Christopherson <seanjc@google.com>
+To: James Houghton <jthoughton@google.com>
+Cc: Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-kernel@vger.kernel.org, 
+	Shuah Khan <shuah@kernel.org>, Claudio Imbrenda <imbrenda@linux.ibm.com>, 
+	Oliver Upton <oliver.upton@linux.dev>, Paolo Bonzini <pbonzini@redhat.com>, 
+	linux-kselftest@vger.kernel.org, Anup Patel <anup@brainfault.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 25, 2025 at 07:59:07PM +0100, Peter Zijlstra wrote:
-> > To clarify- are you asking about if we've tried reverting 4423af84b297?
-> > We have not tried that yet.
-> > 
-> > Or if we've included "sched/fair: Adhere to place_entity() constraints",
-> > which we have already done- https://lore.kernel.org/all/20250207-tunneling-tested-koel-c59d33@leitao/
-> 
-> This; it seems it got lost. I'll try and get it queued up.
+On Wed, Mar 26, 2025, James Houghton wrote:
+> On Wed, Mar 26, 2025 at 11:41=E2=80=AFAM Sean Christopherson <seanjc@goog=
+le.com> wrote:
+> > Then the auto resolving works as below, and as James pointed out, the a=
+ssert
+> > becomes
+> >
+> >                 TEST_ASSERT(!warn_only, ....);
+>=20
+> I think the auto-resolving below needs to be flipped, and the
+> TEST_ASSERT should be for `warn_only`, not `!warn_only`.
+>=20
+> If warn_only =3D=3D 1, the assert should pass.
 
-Given that we've already included the patch in what we're running, and
-we're seeing this null pointer exception, any suggestions for how to
-proceed?
+/facepalm, yep
+
+> > > > +                       break;
+> > > >                 case 'h':
+> > > >                 default:
+> > > >                         help(argv[0]);
+> > > > @@ -386,6 +394,23 @@ int main(int argc, char *argv[])
+> > > >         page_idle_fd =3D open("/sys/kernel/mm/page_idle/bitmap", O_=
+RDWR);
+> > > >         __TEST_REQUIRE(page_idle_fd >=3D 0,
+> > > >                        "CONFIG_IDLE_PAGE_TRACKING is not enabled");
+> > > > +       if (warn_on_too_many_idle_pages =3D=3D -1) {
+> > > > +#ifdef __x86_64__
+> > > > +               if (this_cpu_has(X86_FEATURE_HYPERVISOR)) {
+> > > > +                       printf("Skipping idle page count sanity che=
+ck, because the test is run nested\n");
+> > > > +                       warn_on_too_many_idle_pages =3D 0;
+> > > > +               } else
+> > > > +#endif
+> > > > +               if (is_numa_balancing_enabled()) {
+> > > > +                       printf("Skipping idle page count sanity che=
+ck, because NUMA balance is enabled\n");
+> > > > +                       warn_on_too_many_idle_pages =3D 0;
+> > > > +               } else {
+> > > > +                       warn_on_too_many_idle_pages =3D 1;
+> > > > +               }
+> > > > +       } else if (!warn_on_too_many_idle_pages) {
+> > > > +               printf("Skipping idle page count sanity check, beca=
+use this was requested by the user\n");
+> >
+> > Eh, I vote to omit this.  The sanity check is still there, it's just de=
+graded to
+> > a warn.  I'm not totally against it, just seems superfluous and potenti=
+ally confusing.
+>=20
+> I agree, it's not adding much.
+>=20
+> Separately: I've finished the MGLRU version of this test. It uses
+> MGLRU if it is available, and marking pages as idle is much faster
+> when using it. If MGLRU is enabled but otherwise not usable, the test
+> fails, as the idle page bitmap is no longer usable for this test.
+>=20
+> I'm happy to post a new version of Maxim's patch with the MGLRU
+> patches too, Maxim, if you're okay with that.
