@@ -1,119 +1,64 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1A5263F59
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 21:43:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8942AD02;
+	Wed, 26 Mar 2025 21:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743025416; cv=none; b=ubDD44DHFrlBS010f9zph6r/8yDkbMZRD02lwD6p09FjnRFVNAbZQotsiPm7e17nAoM1fHusHnstwBMXJVQ7jxGI0YnbMg2ppiUZ9smSdAra3DyAKUI/8MRkrxdAE/rP2SipflgQuawS/HjXr3yoXmNzOPZWupW8BHhIkgZgM6w=
+	t=1743025559; cv=none; b=EQO84UcRHUOt8ihS15lGHPy4dRzl5t8nMXawXARZtxPbX8LT+X6QLKOhfhIYJ6b/8s2FRm0QU3JsVNG73gyMM0nTI6nj/rr88jPe3IADwX1sQf8wi/0ShBaiiQ5YjQoj4SKuh6QeQllKyPFPto4XKjfwBD4Tkz3cup9JZd1eYX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743025416; c=relaxed/simple;
-	bh=OsP7wE2EtJcuyDUU3LnpDBMfiZeaPmZK7m+jKaBQfKs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Gi4g5jd7cr7zB9eg8hj62G4fnmncro2Zv6MbYbC/PYwtOW/jg6A3IOQhXCtv4003qQ3U4y1U7dhgF9bLJifHlQeJzc47yGc5eQ5ikzhgD5q0m+R/WgfGhrxOwAv1KyN/vWITn4c0OFW0FcKrbhRr1myHUVx7zL83wqT+mtRtP04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RJOYoObM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TPKQaMF3; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RJOYoObM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TPKQaMF3"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743025412;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TGXt0FaS0lGjt19aTsHqtHOk4mXbjNvWVmWotjvykLk=;
-	b=RJOYoObMu8fSitUel2NLJyxLfe0N63Y5DUEO6GPjCVFI/9vtfTtfjA/eKWlv85Dt1dJD2n
-	3EXqJBhHnoZif60dak4P3QXpFCJBsrYjB+Ul4H5ZRixDn/PmGZVMvQlamjvgLN8DkKCWRQ
-	/xT7F/BCpvJXLx8xPLcahdDUwrUp2P1M2bYyvYKjlkmyn8SY+manYY9NJc/OXcdCNRm8Aa
-	dmu+pGToYLxNG6KEJgVbDmgDvho9ei3yf2tgfey/SssaXQrZFnJIU9wWjlyFr2som8+EqI
-	QwhVl/njee41IMaoCWCGN7UeRihefX0OgFmIwC5qEADWacH/lsjsi+XWeUehhA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743025412;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TGXt0FaS0lGjt19aTsHqtHOk4mXbjNvWVmWotjvykLk=;
-	b=TPKQaMF3z2Wp8HAaVWs66hsHnJuNUKtO3CejDr10QD7CSfjPk6HSGEQfFX+SS9xRa6OoNx
-	UJ64xVefSC+05/CA==
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
- lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org, Eric Dumazet
- <edumazet@google.com>, Benjamin Segall <bsegall@google.com>, Frederic
- Weisbecker <frederic@kernel.org>
-Subject: Re: [tip:timers/core] [posix]  1535cb8028:
- stress-ng.epoll.ops_per_sec 36.2% regression
-In-Reply-To: <6sn76aya225pqikijue5uv5h3lyqk262hc6ru3vemn7xofdftd@sw7gith52xh7>
-References: <202503241406.5c9cb80a-lkp@intel.com> <87pli4z02w.ffs@tglx>
- <6sn76aya225pqikijue5uv5h3lyqk262hc6ru3vemn7xofdftd@sw7gith52xh7>
-Date: Wed, 26 Mar 2025 22:43:32 +0100
-Message-ID: <87cye3zcvv.ffs@tglx>
+	s=arc-20240116; t=1743025559; c=relaxed/simple;
+	bh=j25v/qjjP3KBffQSnhKDwsAfPrQGIRAAQTXdb3BOQQE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ffrnSpPNhCFnyjy43uOdCcgb3ilwFnz26vHVezkl4jIipn5dOf7piTMpdruBUtUy2c9zO59qEVVENTmkVzWG/+GKf9ae67XziMY2e4dtgmoYmWPy2q2sblDR3ObQ+L6jufUlmK/5Tkpz2qF5+D9R/lVvL11pBPIg7Nj0dBf2Ieo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4ZNL2925bGz9t8B;
+	Wed, 26 Mar 2025 22:45:53 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 26 Mar 2025 22:45:48 +0100
+Message-Id: <D8QIZMNSUBM7.1TEVU3UW4C305@buenzli.dev>
+Cc: <a.hindborg@kernel.org>, <alex.gaynor@gmail.com>,
+ <aliceryhl@google.com>, <andriy.shevchenko@linux.intel.com>,
+ <benno.lossin@proton.me>, <bjorn3_gh@protonmail.com>,
+ <boqun.feng@gmail.com>, <dakr@kernel.org>, <devicetree@vger.kernel.org>,
+ <dirk.behme@de.bosch.com>, <djrscally@gmail.com>, <gary@garyguo.net>,
+ <gregkh@linuxfoundation.org>, <heikki.krogerus@linux.intel.com>,
+ <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <ojeda@kernel.org>, <rafael@kernel.org>, <robh@kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <sakari.ailus@linux.intel.com>,
+ <saravanak@google.com>, <tmgross@umich.edu>
+Subject: Re: [PATCH 08/10] rust: property: Add property_get_reference_args
+From: "Remo Senekowitsch" <remo@buenzli.dev>
+To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>, "Andrew Ballance"
+ <andrewjballance@gmail.com>
+References: <20250326171411.590681-9-remo@buenzli.dev>
+ <20250326210735.696416-1-andrewjballance@gmail.com>
+ <CANiq72nP3EEYH6cdZRj2S9XZUYyi=RyyQARypGCFj3ULEB=+fQ@mail.gmail.com>
+In-Reply-To: <CANiq72nP3EEYH6cdZRj2S9XZUYyi=RyyQARypGCFj3ULEB=+fQ@mail.gmail.com>
+X-Rspamd-Queue-Id: 4ZNL2925bGz9t8B
 
-On Wed, Mar 26 2025 at 22:11, Mateusz Guzik wrote:
-> On Wed, Mar 26, 2025 at 09:07:51AM +0100, Thomas Gleixner wrote:
->> How on earth can this commit result in both a 36% regression and a 25%
->> improvement with the same test?
->>=20
->> Unfortunately I can't reproduce any of it. I checked the epoll test
->> source and it uses a posix timer, but that commit makes the hash less
->> contended so there is zero explanation.
->>=20
+On Wed Mar 26, 2025 at 10:25 PM CET, Miguel Ojeda wrote:
 >
-> The short summary is:
-> 1. your change is fine
-> 2. stress-ng is doing seriously weird stuff here resulting in the above
-> 3. there may or may not be something the scheduler can do to help
->
-> for the regression stats are saying:
-> feb864ee99a2d8a2 1535cb80286e6fbc834f075039f
-> ---------------- ---------------------------
->          %stddev     %change         %stddev
->              \          |                \
->       5.97 =C2=B1 56%     +35.8       41.74 =C2=B1 24%  mpstat.cpu.all.id=
-le%
->       0.86 =C2=B1  3%      -0.3        0.51 =C2=B1 11%  mpstat.cpu.all.ir=
-q%
->       0.10 =C2=B1  3%      +2.0        2.11 =C2=B1 13%  mpstat.cpu.all.so=
-ft%
->      92.01 =C2=B1  3%     -37.7       54.27 =C2=B1 18%  mpstat.cpu.all.sy=
-s%
->       1.06 =C2=B1  3%      +0.3        1.37 =C2=B1  8%  mpstat.cpu.all.us=
-r%
->      27.83 =C2=B1 38%     -84.4%       4.33 =C2=B1 31%  mpstat.max_utiliz=
-ation.seconds
->
-> As in system time went down and idle went up.
->
-> Your patch must have a side effect where it messes with some of the
-> timings between workers.
+> Remo: did you build with `CLIPPY=3D1`?
 
-It does as it removes the global lock and the potential contention on
-it.
+I didn't! Usually I have rust-analyzer configured with clippy, but that doe=
+sn't seem to work here.
+I added it to my build scripts and can see the warnings now, future patches=
+ should be free of clippy warnings.
 
-> The testcase is doing a lot of weird stuff, including calling yield()
-> for every loop iteration. On top of that if the other worker does not
-> win the race there is also a sleep of 0.1s thrown in. I commented these
-> suckers out and weird anomalies persisted.
->
-> All that said, I'm not going to further look into it. Was curious wtf
-> though hence the write up.
+Thanks for the tip!
 
-Thak you for taking the time and looking into this. The analysis of this
-"benchmark" is a fun read and I agree that it matches my impression of
-looking into the source of this thing that it does weird stuff, which
-does not make any sense at all.
-
-Thanks,
-
-        tglx
+Remo
