@@ -1,147 +1,220 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BA714B965
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 06:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F13823DE;
+	Wed, 26 Mar 2025 06:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742971231; cv=none; b=Y5aT8ASMqvMhB8Vygw4NS3f7fFIqoh2qnd9R0MBzxPIdVeMracJ4k6FifcS5glmFSFfGS2cH2yc32i5uuNgm0KupXSGn1dBYw3LBEyrpMfv74bLnne77q7vf2WEOHqnRtWdChc0gunu3XlNI3mpdXeXeYFZHg7l0+c4G5sDr7fg=
+	t=1742971491; cv=none; b=pkuZUmLSglBQjuEtK0BR0NkpOCSz9AOaDlilSAwqswd9YBDw7V082I6+F436L4PuWuPt9FGI3R7Zcg+9p2qVvpdaCoz+BN9ChWw7JECGb4fGC48WzUDBNSHUqbtLnVu7YOGXMi8RJvlI8J0kCFqcczMrgr4ZcEoYxmHCIjjpGTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742971231; c=relaxed/simple;
-	bh=6q09F5c4pHQQSvnekcl2wDEjLn2OddB7yXpI33oM3j8=;
+	s=arc-20240116; t=1742971491; c=relaxed/simple;
+	bh=N+Le9MFtc/k1LZ1LVkIPmZk2oGdIyqo4T5HKb+AHZPQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OOvfkORHwZ+riY2iMnVoRtMdNwtOUUVY0PFE6iI9Qxk9AZcHUhM56bvcx/yVXxpTCWnpNaSq/uSisTUtDcr3fafyV/RbpwGW80uG+hm6BlVqWVDQBS/SbBMrl92uRrxI+lwxTsOanG9yOMTjE38lLvASExt9K2KTe0T3vKolCZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N8/sRWYr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=qUT15Ve5bPs/JkfsZl+Xe1j0zLM4JT4Dof5SrRG7BubS+VRqM15ohoiDIv/lIgkp4OJqhOHMQjBIZmqECFn22dVpRABz61K04O8qWC0kB2NgzdKSOVudimx6xy8Eta/41KjjWKWfrHGMgFCqlx7LHxfXPcYcI4nC/Sy2gAxUW+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mGexHaIg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N8/sRWYr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742971227;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ezHVFsZe1v4BDvN1xzAQ5TFbS1moNinE5s1cTaUBmso=;
-	b=N8/sRWYr6GVuxCoHLJYJIe2mI3wWQwFMO4fv2Sgpl+19R7ni8BkRRjYRvC9mE67Vl9wABl
-	3efV8602h6q8r2OK0n9UsFrNXM4rel/KaaMKemhtk45aXDTExrJnAB3FkqwETXq2xAPlUF
-	7o1HzTLnKKziJtePE2qkT1Nklkf31bk=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-255-oeUoUYbLPPSmYuAlgLskSw-1; Wed, 26 Mar 2025 02:40:26 -0400
-X-MC-Unique: oeUoUYbLPPSmYuAlgLskSw-1
-X-Mimecast-MFC-AGG-ID: oeUoUYbLPPSmYuAlgLskSw_1742971225
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2ff6af1e264so18402663a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 23:40:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742971224; x=1743576024;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ezHVFsZe1v4BDvN1xzAQ5TFbS1moNinE5s1cTaUBmso=;
-        b=pyFTa6Ux9fr7FddO9WiFrPYGwPelVagvHu/Aw98/jSu/Ov7PBjA1UwEChgaHthGYHA
-         L9H4DGrUFadr2AfRZeXpPdKzcXsiOqVmJP4uCge6+Oc68muVo15+oHd2/s4upyORy8xz
-         GzXCos0T5diFRiuSY6V27I7okMDAS2FFMSdPS+yjXLX02fCRv4G0bhHm9NogqUYDFc4k
-         IzVX6UtiAcZrYuzNU3gyLfwPaLgLTedYGOBB0zbuXwZ5UarUuCBm7W+NPnYVXps7Kek2
-         XGn45v116MeYmE+Lya3BX9VpAIkYUrU+ZDXwU/wKLQP3FtA31E7MkKFiyIEjrEK4qZf8
-         kmoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVU1AlYrXuZRU3+ET7fTwlcqz/CU5QuIhKTl1RY9/OqxqBRx68R6uKoldI5EVTv2V0o88ReHjF9lujBhk4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwK1Hzj9bC8ZCsPSGD/XegbDFA6BRboCdg1nxYA5qC5WePc0oBv
-	N6QeIuJLsc7aL4eLoiYLjw64E4T/mLzZh1+x2aTOhiywd87MKmEdfsUPUUsRlt+y0ti7PzsDUIR
-	CU74JmYNNQmKOjnz21U0PhnOT6V73CdLWOjEjlr70u3zb8SKQHACjrMNWCruDO3JvplCPzCODAP
-	DDvyFc/d6xCLg3tGnnQGOjM6n8+xcZ+yiU+olWOIvWstMb
-X-Gm-Gg: ASbGncvFVyRAy5tS77YPuFIS3lkOZYgI3L7IQS1evojNkDmKW62v14ohrJYQcYwS9Pf
-	T93NapuTK9msETnjjGIwDbcFkZAiekr615DvJwNtAjftDjkYStDwWkd+3NnG8jUXaXUR5URM=
-X-Received: by 2002:a17:90b:1d51:b0:2ff:62f3:5b31 with SMTP id 98e67ed59e1d1-3030ff06711mr31920768a91.29.1742971224331;
-        Tue, 25 Mar 2025 23:40:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFFUGcW4JXSeMZI46/HJNxiBTQIzR50w5i1JUFe2fdLyrEXV1sMUCl3RQeMRWq9Y5cXb5aVu+LPH0QeOT9MfrA=
-X-Received: by 2002:a17:90b:1d51:b0:2ff:62f3:5b31 with SMTP id
- 98e67ed59e1d1-3030ff06711mr31920735a91.29.1742971223830; Tue, 25 Mar 2025
- 23:40:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mGexHaIg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 876BAC4CEED;
+	Wed, 26 Mar 2025 06:44:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742971490;
+	bh=N+Le9MFtc/k1LZ1LVkIPmZk2oGdIyqo4T5HKb+AHZPQ=;
+	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
+	b=mGexHaIgLbSTRVHs1aAeFQlPGcyoCZW7ra4H38PmdGzDelCOcdKx1PSXmCzV7zHg4
+	 t4BXlaPJZl4M++7SmdtJc6OS8JjvQRphtWZwBCWtmx/alHR1Io5/u7TZToVoyJOSou
+	 96VjLRob86BRO7cjMzROfgRLhBnxIvMMr+R4vtlIUeOGTcng2xdyftnauroj5ZowGD
+	 xzqLtB/oFZyge5ZZJr/oxGRcBJ2TtgorNnVd6M4vPVwtA8/remvhxw2JO6w5AmNBGW
+	 LWfgRtD9plTNy/EtRrTL21OA4Ltzhsl8gLg9J9a66/mPT8tJvI+frlHwy6w6//C7jk
+	 Cj6THAiU6V/PQ==
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30c416cdcc0so66700351fa.2;
+        Tue, 25 Mar 2025 23:44:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVrmuqXy0K9cajr0azmFL4+Pf6aBWNe3qYxGW0g2O/hfr5Lcj66UTi8OLbcqOmB7DfRjc364FcBdqT0@vger.kernel.org, AJvYcCVzTu2309+2Q4uD9wIfI0yq+XWdKBq62p4IY1yhlVgcrkjs4Un9AgSf6K+qZdYcbD250UTVuZaDIL+hAmrm@vger.kernel.org, AJvYcCX22mXorEkFKLJ0KozHNYfK+7KjiR4EBG+qA1xn9QhQlKOXnXQtUG8QdEHbLtbg6PPMdD3QsDhmvpMIDy2o2w==@vger.kernel.org, AJvYcCXYa84ydnApj4NIDQwClnlzVJFosKZsXWTnNOmUfwvoEU0a4sWVpF75yBx/u8AoGKfUlIbOOopmxiNh5S8cz+gpAg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzw67eBUdY2FzEQWUbBU42acRzwWpawS/ryPLQQDkLkF/ciZTNz
+	TqXDmz9tVm++JqWhZNtWsy7wowpNTCfQlT1Hyhh5q25YpcDoM2rLyc6HqKjshjkIcQeaM53LvlU
+	9ZZ8DqpW8UUdaVRffXvNXDqT7qpk=
+X-Google-Smtp-Source: AGHT+IGMF6j2X+Jr6WCvccPSUBNATvTU7YZt+i3mWvl9VVSwRgH7cCtIrbRrCInxLepNvpLKepp5tmas4mw+ODC5pdo=
+X-Received: by 2002:a05:651c:201c:b0:30b:f924:3554 with SMTP id
+ 38308e7fff4ca-30d7e236c49mr59160551fa.21.1742971488912; Tue, 25 Mar 2025
+ 23:44:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324054333.1954-1-jasowang@redhat.com> <CAPpAL=x4BWNh__YpzkzpErkseh04FT7WNLmg=xMXtfZ0S9BabQ@mail.gmail.com>
-In-Reply-To: <CAPpAL=x4BWNh__YpzkzpErkseh04FT7WNLmg=xMXtfZ0S9BabQ@mail.gmail.com>
-From: Eugenio Perez Martin <eperezma@redhat.com>
-Date: Wed, 26 Mar 2025 07:39:47 +0100
-X-Gm-Features: AQ5f1JqS06N3aPblaGlfScL2r-BwUXS_ZG-zwaqN3wVN6CTRzZJOuSitX0ZLN4Q
-Message-ID: <CAJaqyWdtKEYiY2tBB0F477LqxVs8fzaix96551WSMa=KdT3C5Q@mail.gmail.com>
-Subject: Re: [PATCH 00/19] virtio_ring in order support
-To: Lei Yang <leiyang@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>, mst@redhat.com, xuanzhuo@linux.alibaba.com, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250317232426.952188-1-robh@kernel.org> <20250317232426.952188-3-robh@kernel.org>
+In-Reply-To: <20250317232426.952188-3-robh@kernel.org>
+Reply-To: wens@kernel.org
+From: Chen-Yu Tsai <wens@kernel.org>
+Date: Wed, 26 Mar 2025 14:44:36 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65djD5DLQnjQrp9kSHTQYVd9p_vP9WySj2Cx81rHmh5Mw@mail.gmail.com>
+X-Gm-Features: AQ5f1Jq6AIDujd8iNXwgSFrroWq7EbdFM1zyiw-quoSbfHrKnBQnEEqsHIIoRaI
+Message-ID: <CAGb2v65djD5DLQnjQrp9kSHTQYVd9p_vP9WySj2Cx81rHmh5Mw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] of: Simplify of_dma_set_restricted_buffer() to use of_for_each_phandle()
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Saravana Kannan <saravanak@google.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Patrice Chotard <patrice.chotard@foss.st.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-remoteproc@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 24, 2025 at 3:44=E2=80=AFPM Lei Yang <leiyang@redhat.com> wrote=
-:
+Hi,
+
+On Tue, Mar 18, 2025 at 7:29=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org>=
+ wrote:
 >
-> QE tested this series of patches with virtio-net regression tests,
-> everything works fine.
+> Simplify of_dma_set_restricted_buffer() by using of_property_present()
+> and of_for_each_phandle() iterator.
 >
-
-Hi Lei,
-
-Is it possible to test this series also with virtio-net-pci,...,in_order=3D=
-on?
-
-Thanks!
-
-> Tested-by: Lei Yang <leiyang@redhat.com>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  drivers/of/device.c | 34 +++++++++++++---------------------
+>  1 file changed, 13 insertions(+), 21 deletions(-)
 >
-> On Mon, Mar 24, 2025 at 1:45=E2=80=AFPM Jason Wang <jasowang@redhat.com> =
-wrote:
-> >
-> > Hello all:
-> >
-> > This sereis tries to implement the VIRTIO_F_IN_ORDER to
-> > virtio_ring. This is done by introducing virtqueue ops so we can
-> > implement separate helpers for different virtqueue layout/features
-> > then the in-order were implmeented on top.
-> >
-> > Tests shows 5% imporvemnt in RX PPS with KVM guest + testpmd on the
-> > host.
-> >
-> > Please review.
-> >
-> > Thanks
-> >
-> > Jason Wang (19):
-> >   virtio_ring: rename virtqueue_reinit_xxx to virtqueue_reset_xxx()
-> >   virtio_ring: switch to use vring_virtqueue in virtqueue_poll variants
-> >   virtio_ring: unify logic of virtqueue_poll() and more_used()
-> >   virtio_ring: switch to use vring_virtqueue for virtqueue resize
-> >     variants
-> >   virtio_ring: switch to use vring_virtqueue for virtqueue_kick_prepare
-> >     variants
-> >   virtio_ring: switch to use vring_virtqueue for virtqueue_add variants
-> >   virtio: switch to use vring_virtqueue for virtqueue_add variants
-> >   virtio_ring: switch to use vring_virtqueue for enable_cb_prepare
-> >     variants
-> >   virtio_ring: use vring_virtqueue for enable_cb_delayed variants
-> >   virtio_ring: switch to use vring_virtqueue for disable_cb variants
-> >   virtio_ring: switch to use vring_virtqueue for detach_unused_buf
-> >     variants
-> >   virtio_ring: use u16 for last_used_idx in virtqueue_poll_split()
-> >   virtio_ring: introduce virtqueue ops
-> >   virtio_ring: determine descriptor flags at one time
-> >   virtio_ring: factor out core logic of buffer detaching
-> >   virtio_ring: factor out core logic for updating last_used_idx
-> >   virtio_ring: move next_avail_idx to vring_virtqueue
-> >   virtio_ring: factor out split indirect detaching logic
-> >   virtio_ring: add in order support
-> >
-> >  drivers/virtio/virtio_ring.c | 856 ++++++++++++++++++++++++++---------
-> >  1 file changed, 653 insertions(+), 203 deletions(-)
-> >
-> > --
-> > 2.42.0
-> >
-> >
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index edf3be197265..bb4a47d58249 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -35,44 +35,36 @@ EXPORT_SYMBOL(of_match_device);
+>  static void
+>  of_dma_set_restricted_buffer(struct device *dev, struct device_node *np)
+>  {
+> -       struct device_node *node, *of_node =3D dev->of_node;
+> -       int count, i;
+> +       struct device_node *of_node =3D dev->of_node;
+> +       struct of_phandle_iterator it;
+> +       int rc, i =3D 0;
 >
+>         if (!IS_ENABLED(CONFIG_DMA_RESTRICTED_POOL))
+>                 return;
+>
+> -       count =3D of_property_count_elems_of_size(of_node, "memory-region=
+",
+> -                                               sizeof(u32));
+>         /*
+>          * If dev->of_node doesn't exist or doesn't contain memory-region=
+, try
+>          * the OF node having DMA configuration.
+>          */
+> -       if (count <=3D 0) {
+> +       if (!of_property_present(of_node, "memory-region"))
+>                 of_node =3D np;
+> -               count =3D of_property_count_elems_of_size(
+> -                       of_node, "memory-region", sizeof(u32));
+> -       }
+>
+> -       for (i =3D 0; i < count; i++) {
+> -               node =3D of_parse_phandle(of_node, "memory-region", i);
+> +       of_for_each_phandle(&it, rc, of_node, "memory-region", NULL, 0) {
+>                 /*
+>                  * There might be multiple memory regions, but only one
+>                  * restricted-dma-pool region is allowed.
+>                  */
+> -               if (of_device_is_compatible(node, "restricted-dma-pool") =
+&&
+> -                   of_device_is_available(node)) {
+> -                       of_node_put(node);
+> -                       break;
+> +               if (of_device_is_compatible(it.node, "restricted-dma-pool=
+") &&
+> +                   of_device_is_available(it.node)) {
+> +                       if (!of_reserved_mem_device_init_by_idx(dev, of_n=
+ode, i)) {
+> +                               of_node_put(it.node);
+> +                               return;
+> +                       }
+>                 }
+> -               of_node_put(node);
+> +               i++;
+>         }
+>
+> -       /*
+> -        * Attempt to initialize a restricted-dma-pool region if one was =
+found.
+> -        * Note that count can hold a negative error code.
+> -        */
+> -       if (i < count && of_reserved_mem_device_init_by_idx(dev, of_node,=
+ i))
+> -               dev_warn(dev, "failed to initialise \"restricted-dma-pool=
+\" memory node\n");
+> +       dev_warn(dev, "failed to initialise \"restricted-dma-pool\" memor=
+y node\n");
 
+This changes the behavior. Before this patch, it was:
+
+    if a restricted dma pool was found, but initializing it failed, print
+    a warning.
+
+Whereas now it has become:
+
+     print a warning unless a restricted dma pool was found and successfull=
+y
+     initialized.
+
+This change causes the kernel to print out the warning for devices that
+don't even do DMA:
+
+simple-pm-bus soc: failed to initialise "restricted-dma-pool" memory node
+simple-pm-bus 10006000.syscon: failed to initialise
+"restricted-dma-pool" memory node
+mtk-tphy soc:t-phy@11c80000: failed to initialise
+"restricted-dma-pool" memory node
+mtk-tphy soc:t-phy@11ca0000: failed to initialise
+"restricted-dma-pool" memory node
+mediatek-mipi-tx 11cc0000.dsi-phy: failed to initialise
+"restricted-dma-pool" memory node
+mediatek-mipi-tx 11cc0000.dsi-phy: can't get nvmem_cell_get, ignore it
+clk-mt8186-apmixed 1000c000.syscon: failed to initialise
+"restricted-dma-pool" memory node
+clk-mt8186-topck 10000000.syscon: failed to initialise
+"restricted-dma-pool" memory node
+clk-mt8186-infra-ao 10001000.syscon: failed to initialise
+"restricted-dma-pool" memory node
+clk-mt8186-cam 1a000000.clock-controller: failed to initialise
+"restricted-dma-pool" memory node
+clk-mt8186-cam 1a04f000.clock-controller: failed to initialise
+"restricted-dma-pool" memory node
+clk-mt8186-cam 1a06f000.clock-controller: failed to initialise
+"restricted-dma-pool" memory node
+clk-mt8186-img 15020000.clock-controller: failed to initialise
+"restricted-dma-pool" memory node
+clk-mt8186-img 15820000.clock-controller: failed to initialise
+"restricted-dma-pool" memory node
+clk-mt8186-imp_iic_wrap 11017000.clock-controller: failed to
+initialise "restricted-dma-pool" memory node
+clk-mt8186-ipe 1c000000.clock-controller: failed to initialise
+"restricted-dma-pool" memory node
+clk-mt8186-mcu c53a000.syscon: failed to initialise
+"restricted-dma-pool" memory node
+clk-mt8186-mdp 1b000000.clock-controller: failed to initialise
+"restricted-dma-pool" memory node
+clk-mt8186-mfg 13000000.clock-controller: failed to initialise
+"restricted-dma-pool" memory node
+clk-mt8186-vdec 1602f000.clock-controller: failed to initialise
+"restricted-dma-pool" memory node
+clk-mt8186-venc 17000000.clock-controller: failed to initialise
+"restricted-dma-pool" memory node
+clk-mt8186-wpe 14020000.clock-controller: failed to initialise
+"restricted-dma-pool" memory node
+mt-pmic-pwrap 1000d000.pwrap: failed to initialise
+"restricted-dma-pool" memory node
+platform 1000d000.pwrap:pmic: failed to initialise
+"restricted-dma-pool" memory node
+mtk-svs 1100bc00.svs: failed to initialise "restricted-dma-pool" memory nod=
+e
+
+
+ChenYu
+>  }
+>
+>  /**
+> --
+> 2.47.2
+>
+>
