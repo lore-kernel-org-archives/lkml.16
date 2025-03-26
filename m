@@ -1,81 +1,57 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D70815381A
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 09:36:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA8F13D539;
+	Wed, 26 Mar 2025 09:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742981794; cv=none; b=A0R2RlyQRILxCjH50UCONcVfCwZMLXqo3k4C7Gu0cjtKU68nYaI1SWO+x7JM0ANLgIYrXvfTUxByg9slB64zY0FLD36afiRhMxTVMLRirxAvHs6POH3GdiiHYizQ3zLDxqMYLEwupy0wuei55mptnq+aOhYXO/yK1Clk9NAkFg8=
+	t=1742981932; cv=none; b=B9iQrVPzA1mYx/Qa1ljhd9J6X9WIU3sAuhpwNJ/3/40i4KI2WRQHLn2nsP7oVYXL/N1okaS6KnmDrrwF/65p/dfi4JH2DlXtb5++HwA5he5kGPSsQ6SN3vN7i9jW70v/IHBfZH+tATXVmcd6L7yZQrNPIJlxTiKKaCTfRz1nD+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742981794; c=relaxed/simple;
-	bh=41XofzCZDdQ3muIFfZrbxCbfYMdS/sULdl7mKTywH1I=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=c++IYU7Q93DfV27ORz4YInu0zQAFIb20uK/9j+lxSUyu6GmEqgR4BQiNlfclUcaV1UXpiD9JlEAM4Hqqyn8fDRLJkaFdWcsRMQgcGJVudGI2/qRrpVkfSFqtudopHQWl5hqQOiVM/dopcQ/P5wLyGRFLJEheSpFrSyDoi+SVctI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LQpLvIQJ; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742981932; c=relaxed/simple;
+	bh=G6UbKjsg9joraVPAmFvugruvd+PtNhFl3BmnBmylux0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cd+x2rFN540AalkukSQuOP86Sx+c2KyI2bkNYoLKxR5frOKDUyt3FpiFaRTSoqF3axDTqjzWZaCd5aolafEONf+Y+EV7rMb5crEsxHVUtyhtLCWquONaYRcBq8eqBPYg6jpDVWUUrhChdfZEZbfmPD9TLqg9wMsgX7B4iB7Rhb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ifqv2Mdx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LQpLvIQJ"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30c05fd126cso58056121fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 02:36:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742981791; x=1743586591; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=41XofzCZDdQ3muIFfZrbxCbfYMdS/sULdl7mKTywH1I=;
-        b=LQpLvIQJvOpRHI0JUPHJCIHI7JDzQ7+ABfJREVxZngmtulE2ceFo2gWUTgCuCqzlRN
-         i9PT6m650YRk3nJiLtwo4MBKJD24eIyqmKG6etaFVG1X5I9HbjllixfYbNX7jX5YkvBv
-         OcDqIrIErxc9OiIkGu+0luNZMTWeQOnGuxYC6OE3oOrljntpDUJpk6MQsGorx0GgLPl9
-         8SdG+kaZmhDEKPPuO3ZB/56Dvvr6t8CvUDBB8oF5UnbaiAfHY8ShexxRisMMLZ4QDjGB
-         Wtqq1OKD9g+v2hoak0QshA/GJNmG3O+p4j5kQ+gpirtXVGcW7gPPKJAQ/zzP9OUWO0ag
-         94JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742981791; x=1743586591;
-        h=cc:to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=41XofzCZDdQ3muIFfZrbxCbfYMdS/sULdl7mKTywH1I=;
-        b=LedeAjj2hQ00zPAlbVOQRulEcpg19YdRUlMW+u8AzPTDOyJR9y8OO1BlrM5eBpLz9w
-         Z4O+Uwus7VO6r7ykWubMAtGLY1hfgpm0PezRbgpPOLtA9urzfjyU21NvxEgV6zA0EOtz
-         XjuGUi9eRByAej6NRJit/S+/FS9yo5QS2/+lrLJ2vyfwBP4NAS7FsonSasL/c1fqp86P
-         cKktjoYRqlkaxIpFeNg/IUUqhux/sndbdMe/n2d0Fk4ndbKKWKt6ML8+OJXgvSLMxUor
-         BZgCoGuFpNNm+T7tAUEPZTJWMK0J5wYMGcf0D+Judd7c2nlhhe2WbCp+ofMQGHu+2rFT
-         PAaw==
-X-Gm-Message-State: AOJu0YzwIugu8HnXdireQHPQTvO239JRSfcPnhw3jXjQ/9dHvAD9pgmq
-	SMQekDBJdxyk5IMA4X2B+5ZQAvVdDYZB/F0HrprU+ucTfzA/R7f0RrftmchkJ3wngeeajR3yFtk
-	dCUz/FjyIQfs1Rbec4Bv1ha01cWc=
-X-Gm-Gg: ASbGncsuRTkQB32bUuUAM/uUM8K2DiethQ+XBhTFPU4qrdkBYmHb9g/h3zKpPIe6IQJ
-	CbeqrbnKByrCYOj7qaUNRtmldISPQ8VwcPXpMVtsPaS+dPcuq25bzKSq6fDk+4K3hKarD9K9hlh
-	LBjarc8iTo59VjghrVCrmdAW1IoC1h
-X-Google-Smtp-Source: AGHT+IHVCVzJywQtI7xUtqkGya9R/4lk2Ir0ez0fQvOEygus1ZrNZ+sgrT4TS9VuoYrh4vsQS36mgSGK1NMzGPByF1U=
-X-Received: by 2002:a05:6512:350f:b0:54a:fa47:b2a5 with SMTP id
- 2adb3069b0e04-54afa47b3bdmr1105871e87.23.1742981790917; Wed, 26 Mar 2025
- 02:36:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ifqv2Mdx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7451C4CEE2;
+	Wed, 26 Mar 2025 09:38:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742981931;
+	bh=G6UbKjsg9joraVPAmFvugruvd+PtNhFl3BmnBmylux0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ifqv2MdxBUU67/TW5gV2dsD5l1PBiRob5ltQZqjEWJxGX3rd6KooeElqfaAbOexXX
+	 r5FrCMLnpyjsYMixwkZdEPL9QrUKYBYlZLL5R1+bxlcfzCsz9bH/kGIeJkNTYW6CHx
+	 SG/lI9bQV1DYjj75ebX04NsZ6LGDadVN4V1LUom8UzMRoXg2R2nYTUkrcIODyCCSsF
+	 ExR+MLmaoPl4uzIPuIaoT+NUZrnzUWUyXiH4NzJmX4isqfv5UxPxjybLXgxPb0L/os
+	 UT/PqUqB0VPQ6yNRDXYYkNOhxNpUZaW87ICFhu8kGPGcHN4VBsYJSfwsq6ZgpT9L+J
+	 AceSW6wzK9GsQ==
+Date: Wed, 26 Mar 2025 10:38:47 +0100
+From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Arnd Bergmann <arnd@kernel.org>, 
+	Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>, Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH] platform: cznic: fix function parameter names
+Message-ID: <l77cp7hlskzkauoohviwonal53upcyc74j7x57ycn7sdfkmu4f@fsm4tv2lbtn6>
+References: <20250321085315.915808-1-arnd@kernel.org>
+ <20250325155906.GA1886499@ax162>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Reply-To: sedat.dilek@gmail.com
-From: Sedat Dilek <sedat.dilek@gmail.com>
-Date: Wed, 26 Mar 2025 10:35:53 +0100
-X-Gm-Features: AQ5f1Joiar9OLwlwiBbZuWU3M4o3psZUGdRn779I-qQ8NF6j2dddDvL3o0PDvto
-Message-ID: <CA+icZUV6dLN3qBgzZFFq2gcG3Bssp6UShafLF-3A3BLpGAGt6g@mail.gmail.com>
-Subject: [Linus Git] nginx - 403 Forbidden
-To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, helpdesk@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250325155906.GA1886499@ax162>
 
-Hi Konstantin,
+> 
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> 
+> You will be taking this I assume?
 
-I see several ERRORs when reading Linus Git online.
+Arnd already took it into for-next:
+  https://web.git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git/log/?h=for-next
 
-Example:
-
-Merge tag 'x86_cache_for_v6.15' of git://git.kernel.org/pub/scm/linux/kernel/...
-
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2899aa3973efa3b0a7005cb7fb60475ea0c3b8a0
-
-^^ This one is reproducible.
-
-Best regards,
--Sedat-
