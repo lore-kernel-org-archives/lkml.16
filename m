@@ -1,84 +1,95 @@
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
+Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8FE36124;
-	Wed, 26 Mar 2025 10:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C98D187FFA
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 10:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742984101; cv=none; b=Zi3PLL8Sg+uhDy6HVXCS9SM9IFmVCPeoH7Lv7LxpVBn9DIDTYw89WmEq57g3fMhRvGA1iWWP2hEPZ1WNIHOrMYtMgMgsUM5bx9EGCo7W1kr7fruYfKaIO+UDLcxP74SziFJ7l261suss0N60IlGsTJddTCsPhR4so2dZdW+155w=
+	t=1742984114; cv=none; b=G4yKHdYzBaL71q4iUr4n/XDSDG+qy5lCWmSiSUVq3ZojXbHW2n5YzDLZH+E4khkuIXPWqhEEKipEYTqDuhxCk8xSqgXpRPjBEQDvFtcayUK8CPUsyN60Dj0b5yebPhsbSKjIO/P27SLmKrfSo1XNCZQ0Ajv4WC98gY9+QxBWHlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742984101; c=relaxed/simple;
-	bh=kXaKKpHXSslrbwHTWT5CPLZBU7qrIImltiwwUCWX1DA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W/UkQJ0uZ3JkxL4jXzZA8JI/aTaBsxdo3T4VhvmheYBI1IyfuInfcEfL20fWWsGHiRQsSYMYFqHOdHQtUPX4epF3+CywAXfBmdoNmN9w6J139rpG5sRfvtx3v0UHSctnkoFMHb4bdx6wibMEcBpzlbxDrlwQ3n2hgAmdZw9P7rA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTPS id 4ZN2Gy10QbzsRwR;
-	Wed, 26 Mar 2025 17:55:54 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 7FC691400DD;
-	Wed, 26 Mar 2025 17:56:14 +0800 (CST)
-Received: from [10.221.98.126] (unknown [10.221.98.126])
-	by APP1 (Coremail) with SMTP id LxC2BwDna0o1z+NnTirkBA--.50162S2;
-	Wed, 26 Mar 2025 10:56:14 +0100 (CET)
-Message-ID: <b39bc11b-11d6-4847-9afd-0e8ead173af8@huaweicloud.com>
-Date: Wed, 26 Mar 2025 10:56:02 +0100
+	s=arc-20240116; t=1742984114; c=relaxed/simple;
+	bh=CdInnaW2IoMquTqrJ0EaLqunLOWjgUx9zTs/KAhtqgA=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=kOzUnkz96t/zDqQCU255/TfRc6MLYksdlwn8H7iiQEYp+80txx53QZ54O5bcFBqCFeA+pcUApxpbTQZS/degJGqx20PkElA/LQDkBuA5MjW3WAfe4RhHMyTrbcgWbIgTbIyiFHdfCZK5vuau6pBJ1pO4guikYBsIJDtizOdV7no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=wi+fRXn0; arc=none smtp.client-ip=162.62.57.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="wi+fRXn0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1742984107; bh=PjXUOGWXY+dEUkurv+VbTf8nEAUGXROEdkAf6TL7DIo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=wi+fRXn0vlqTGbsDsCqCf/OO72c4cxz78MqWCvsFE+t6RrunMMW4Tc3FunG61vZEQ
+	 nC40zRQiEYYX5y4ErIKodiSsGmbWe19vMOHZJFNHpqu4v8WCR9KQ2uJCMuvrXrgR6g
+	 I59Ja6KE17RNjDYRzWaqgX01j9jirawEr0xpUL0U=
+Received: from localhost.localdomain ([116.128.244.169])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id 3C53A2C6; Wed, 26 Mar 2025 18:15:05 +0800
+X-QQ-mid: xmsmtpt1742984105tcv5o0dar
+Message-ID: <tencent_0E548E922D6CA7EC6F5789C998AF10CE0806@qq.com>
+X-QQ-XMAILINFO: OakVxA/3u/8RmOETleq5qSYaxMMIZGSFHnTuqvXwD+wdwhyhxE3ajGIfwmEmYX
+	 7rN/G8ggiWvIGXiq6qzeqkhu19z285WgraWDfHA2xlH0Xij4AfdR0uOulp46tASOUrcvkDyuf3Mk
+	 +p+hc9sVa/+eXR9mKZ82HvCnI+MVxlSDLwOl+m3zWxcGJ5XjQD75SvFVHPj0axcafhq0+20woQwT
+	 BwdNvBObmKGj5JfPHlbNlmooaZDiy9sAoPtYpoYXs5l1spBbspPdHxFDvwr6jZM1iDmJoF2vr6/i
+	 v4kPWgYJnwkInJ8hG3wxJirJixPpkFxTVSQOLhBSwpWM8909p4xgMhAdT2+MJplO0lH9tgJwoZi5
+	 4u352/QJmWSYgevQ3L3TY599RxTybjgtsaxchGyzpXZQNhfUEk0Q5OoMZbr7j4k5+/vQCNWiZ1Op
+	 o+QPEC76E0KBQwZfc4SB58ppb7jPV0vDizTbh3sovw1NUEw1CIGiRJZ1FcdxHxeQe0YEu0aZ0qsV
+	 0umS5y2RtZxQtXdg3sotFBmaZLaqJeYHfN1VfqMHa+QoXcacsf/hC4HobN/kT3jUppWZYEqYBwc/
+	 X4jvW/9GMenGGTowETfGPKb2pBVsozHUD8rehlFIw9jtBui+K+6n5c0japyFVzdEsD9opXmpETsW
+	 pvOBSydFZj19ky8u2WbyDJ7yaT0qP+on9wAYO5TSgCrxgSt0x3NwQkYVnscvVqGrHXUrQWieZbDp
+	 /lRXUjHQGzBBCjxp86VcZOt0HeWl1p7QBM43NAcfvaOaDsy1jLtC78DeljYLiS+JZVxw/wIbz1jj
+	 mpgtCI8qv8unColQed8KJlqpV/QfwFap3GeV7Dt9q01oTE4+74juLPPCbJUg+lLurDEPq9ER7r30
+	 KCOLBs6O0zwcOGKEmwuKotwUGj390MJJQuXCccQoE3hGdax7tvHkS+siLxQl0PYeEAtcj5G2/QVs
+	 P9nDz0yz0=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+From: Yaxiong Tian <iambestgod@qq.com>
+To: kbusch@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	sagi@grimberg.me
+Cc: linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Yaxiong Tian <tianyaxiong@kylinos.cn>
+Subject: [PATCH 1/3] nvme: Add warning for PST table memory allocation failure in nvme_configure_apst
+Date: Wed, 26 Mar 2025 18:15:02 +0800
+X-OQ-MSGID: <20250326101502.1348301-1-iambestgod@qq.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <tencent_FD614E97ED4F67FE2F74C9C158AB50E7C806@qq.com>
+References: <tencent_FD614E97ED4F67FE2F74C9C158AB50E7C806@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ima: process_measurement() needlessly takes inode_lock()
- on MAY_READ
-To: Frederick Lawler <fred@cloudflare.com>, Mimi Zohar <zohar@linux.ibm.com>,
- Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
- Roberto Sassu <roberto.sassu@huawei.com>
-Cc: Eric Snowberg <eric.snowberg@oracle.com>,
- "Serge E. Hallyn" <serge@hallyn.com>, linux-ima-devel@lists.sourceforge.net,
- linux-integrity@vger.kernel.org, linux-ima-user@lists.sourceforge.net,
- linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@cloudfalre.com
-References: <20250325181616.79540-2-fred@cloudflare.com>
- <Z-LzWCbROAI2H2Dx@CMGLRV3>
-Content-Language: en-US
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-In-Reply-To: <Z-LzWCbROAI2H2Dx@CMGLRV3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:LxC2BwDna0o1z+NnTirkBA--.50162S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYs7kC6x804xWl14x267AKxVW8JVW5JwAF
-	c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
-	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xv
-	wVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjc
-	xK6I8E87Iv6xkF7I0E14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
-	FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr
-	0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY
-	04v7MxAIw28IcxkI7VAKI48JMxAqzxv26xkF7I0En4kS14v26r1q6r43MxC20s026xCaFV
-	Cjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWl
-	x4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r
-	1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_
-	JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
-	sGvfC2KfnxnUUI43ZEXa7IU1zuWJUUUUU==
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgATBGfjp1oCQgAAss
+Content-Transfer-Encoding: 8bit
 
-On 3/25/2025 7:18 PM, Frederick Lawler wrote:
-> My mistake, this is PATCH v2. I forgot to change the subject in git
-> send-email. I can resend if that's needed.
+From: Yaxiong Tian <tianyaxiong@kylinos.cn>
 
-No problem. However, let's change:
+Currently the function fails silently on PST table memory allocation failure.
+Add warning messages to improve error visibility.
 
-mask & MAY_WRITE
+Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
+---
+ drivers/nvme/host/core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-with
-
-file->f_mode & FMODE_WRITE
-
-Thanks
-
-Roberto
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index c2d89fac86c5..fb0404fee551 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2678,8 +2678,10 @@ static int nvme_configure_apst(struct nvme_ctrl *ctrl)
+ 	}
+ 
+ 	table = kzalloc(sizeof(*table), GFP_KERNEL);
+-	if (!table)
++	if (!table) {
++		dev_warn(ctrl->device, "Failed to allocate pst table; not using APST\n");
+ 		return 0;
++	}
+ 
+ 	if (!ctrl->apst_enabled || ctrl->ps_max_latency_us == 0) {
+ 		/* Turn off APST. */
+-- 
+2.25.1
 
