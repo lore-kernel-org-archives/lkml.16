@@ -1,119 +1,84 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D7EF13C8EA
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5264A13C8EA
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743002608; cv=none; b=lf7cea2iddp0yIFTPdvS3zQ9r1sBVoayWGzGvMug0p/x5TQM4jHJxJS31wqKARic8+Kd8gQt1qferpiq5G00F3pxQf2HwFJHUCNAw8EtoKFtpWH+iC4NBz9+Sqb10mVpR+eZqnBNmeTZG6uCI6itI3VXU5UHgb+azyxIK2G+Bxc=
+	t=1743002615; cv=none; b=Us0enKbJCTWqbGwVZhX5QT3nZpsXxrnmrcyFGsFk+3NQXol5CvvQLytTQHWnS5R8DeSagmXjY1DO+8fh01lyVI95hdQbL8EhNcj2DwMEap13RpwlSsKSOw1LvptBy0n9x/oV+dQj+/vxYcEqJhgTtQjfzLio5HG9ul1LTTVnhxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743002608; c=relaxed/simple;
-	bh=k7CJgaBictxhGds/SNqY01GFqGuOdurOMdG05jQsVEY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QwTe+393Xbio0VjIRAEaxqUGsnflq6BE0VnluTpzdCK+uwIVKGaPmSjhCCwlI4ZxgdtDyjK/Bra+uAAr2Socd1rQ309sRkSkseC+BAfjdufJ9MUBMkp+oYbzb6eabM+awOZEGv/D5NB73GQIp5OUk+HP3ceUZiVaXWeGL0poPAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VnSG6YCs; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1743002615; c=relaxed/simple;
+	bh=hKYD7R73oolCHvjraiUeKjWLt49wqH7/On7cg1Pq7Fs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gc6L7dYUFzJrKNflNcKtUV9eZ0XZo7dz8AJdQgFkfLVL2epmMqYppeQSGcy6rj8OXh/Br/vQT1a64aFQnrrQKIOfqwKxAw3LZQc2sBBruI5mzpN9uZ8R+ExcwQExBYdJzf8RhcZWiFOTYhRHb58UsTd2i/R5qR7hOO4A41N5DYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NYbcBESR; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VnSG6YCs"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2241053582dso73287775ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:23:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743002606; x=1743607406; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oLxpsj3MlyrxzxcTIdl+re05Lx90Epv1ZYMgB2IEZX8=;
-        b=VnSG6YCsDLu06T3AZofWIZpF3sCASyaBAApDq+oBCE4Yo9kK/1YRCgQ2tRVMVfF2vz
-         9h2hYpvMz6HRbSVw0fXN4hpnFABKKO7c/W35uxVnCbGlM+DYQiCQBRf3L7Ly6594b84K
-         /+ze7jiWHufPywIOQl7ML1ZLNXAh7+MSYC+ag=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743002606; x=1743607406;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oLxpsj3MlyrxzxcTIdl+re05Lx90Epv1ZYMgB2IEZX8=;
-        b=ZjsAZF/jpEfHXxW0mVQ8yQLYh//oDiqrNPX6XGQy+//0O+grCVJIkJhY7L91vNK1zs
-         BWFHvhf4L8wdKl1767xmM90YVOvr611wm1X40hbXzrLoj7TF1bWaXOXteFkKQWYCSmXr
-         2WBU1qPBkkYCVVpmjC2jzRpgZEOIVrzv1lC2ZDwyQ38mHWi3C8VPajdM0ob0PmTQ1OFD
-         5azWfNk0l17WScTcWC1hS+vgA65TEXxPv8jqZSz4oDJHD0ixpswNLimnTkKKU8toDHMw
-         pkuZNu8GC9whFRT5BB8FdbWNDvngyNO9sEzsaAJbE8Yb3zQN5/t8OYtKK179DETZ3Z8r
-         cJnw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5dX4drxMVDQ8FaJ6p7ACux2yKEQCGur2kKqvBiv/kh/nouxVb4j/vc6vuHYTLngdnjq2SZPEoTteIstI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOGycZUF9kmYSHAT92S/RyXhMokNm2moH/aqhHeiSgwVummgwJ
-	lgMt1EuUh9llmCWGBga40XYCKdnFf9S1I7etN1G2uq8Dqa4LD14eDoUj6wxwHDnOS9vsdfm1XNU
-	=
-X-Gm-Gg: ASbGncvON/HteMxe2WaC+MyCGdO87NgQTEQwEL8OImSyAAWbqSdos+zIQrG2MQNFKNF
-	5/FuDZe9xwpzmdNllbdYU4nKweZfODCv6+epHUrTn+691q4nAvxGfNjaa6drBIP249hOQEq7Lgy
-	X7Y/U3hNdXhRP0aRmOsGATylR7ktGeH0Bhho2H6lfQ6QFmyePYmBEdwwhGi+oGmsNi5g5FY3aQY
-	seJajr4xLvg5rXJyvzfNWNMBE48Ap7MUv6cFwUr3bH7BLwT0dYBG9AFvMXdHkiAhihDQmcRDxMc
-	zO3dA1CR+cLkkFxMwGE9bATAEGcuZb715/yIdVMUW0SjFHdC1ee4CnV7kW/RF6OsuP+pYsRwGoy
-	xfyj1IuQ=
-X-Google-Smtp-Source: AGHT+IEvRqUnkr5RYindS5V2XIwmBMS49KB5BhJjqPUOz/O93KkRT4qX6ryr2KWxJyl0iEG0vMiRlg==
-X-Received: by 2002:a17:902:e88a:b0:21d:3bd7:afdd with SMTP id d9443c01a7336-2280456c1f9mr431375ad.0.1743002606123;
-        Wed, 26 Mar 2025 08:23:26 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:b885:47c3:6268:77fb])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7390611bd23sm12735632b3a.96.2025.03.26.08.23.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Mar 2025 08:23:25 -0700 (PDT)
-Date: Wed, 26 Mar 2025 08:23:23 -0700
-From: Brian Norris <briannorris@chromium.org>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Jeff Chen <jeff.chen_1@nxp.com>,
-	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"johannes@sipsolutions.net" <johannes@sipsolutions.net>,
-	Pete Hsieh <tsung-hsien.hsieh@nxp.com>,
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [EXT] Re: [PATCH v4 1/2] wifi: mwifiex: Fix premature release of
- RF calibration data.
-Message-ID: <Z-Qb6_1-sTZ_LTPs@google.com>
-References: <20250220061143.1417420-2-jeff.chen_1@nxp.com>
- <20250318050739.2239376-2-jeff.chen_1@nxp.com>
- <20250319162842.GA46894@francesco-nb>
- <PAWPR04MB9910FE139C88507DE5904ABD9CA72@PAWPR04MB9910.eurprd04.prod.outlook.com>
- <Z-PwgtSRNoCd2L3z@gaggiata.pivistrello.it>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NYbcBESR"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52QFNL0d1598969
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 26 Mar 2025 10:23:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1743002601;
+	bh=P4QnCOX2GK7YXvkBqaJnRbYLteCrwPQwCSdaBxf6DOY=;
+	h=From:To:CC:Subject:Date;
+	b=NYbcBESRB3/JWd15SIxYTospyNmZY4k4ehqb9NnCFRhu+SRl0VVtqeg2SsGCb641y
+	 ltY5QXBvxn/Wy7J3c3fCgETrTe3nDn77Wclr1pPhfjtrNNdn109Asem6PyCJ4NZvNC
+	 RUmUQ17IOMerySfK68fD6iAcxG8/7/an3i7PVFl0=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52QFNL0l005607
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 26 Mar 2025 10:23:21 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
+ Mar 2025 10:23:21 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 26 Mar 2025 10:23:21 -0500
+Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52QFNK7C076812;
+	Wed, 26 Mar 2025 10:23:21 -0500
+From: Devarsh Thakkar <devarsht@ti.com>
+To: <vkoul@kernel.org>, <kishon@kernel.org>, <mripard@kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: <sakari.ailus@linux.intel.com>, <u.kleine-koenig@baylibre.com>,
+        <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>, <s-jain1@ti.com>,
+        <r-donadkar@ti.com>, <tomi.valkeinen@ideasonboard.com>
+Subject: [PATCH v2 0/2] Fix PLL lock timeout and calibration wait time
+Date: Wed, 26 Mar 2025 20:53:18 +0530
+Message-ID: <20250326152320.3835249-1-devarsht@ti.com>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-PwgtSRNoCd2L3z@gaggiata.pivistrello.it>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Mar 26, 2025 at 01:18:10PM +0100, Francesco Dolcini wrote:
-> On Tue, Mar 25, 2025 at 04:43:33PM +0000, Jeff Chen wrote:
-> > From: Francesco Dolcini <francesco@dolcini.it>
-> > > On Tue, Mar 18, 2025 at 01:07:38PM +0800, Jeff Chen wrote:
-> > > > This patch resolves an issue where RF calibration data was being
-> > > > released before the download process. Without this fix, the external
-> > > > calibration data file would not be downloaded at all.
-> > > >
-> > > > Fixes: d39fbc88956e ("mwifiex: remove cfg_data construction")
-> > > > Signed-off-by: Jeff Chen <jeff.chen_1@nxp.com>
-> > > 
-> > > The code looks ok to me, however I do not understand the commit you
-> > > selected as fixes tag.
-> > > 
-> > > From what I understand releasing the data before using it was done since the
-> > > initial commit 388ec385d5ce ("mwifiex: add calibration data download
-> > > feature"). What am I missing?
-> > 
-> > Thank you for reviewing the patch. You are correct-the Fixes tag I included was incorrect.
-> > After re-examining the issue, I found that the premature release of RF calibration data 
-> > cannot be reproduced, which invalidates the problem statement for this patch.  
-> > 
-> > I have decided to withdraw the patch. I appreciate your feedback and attention to detail, 
-> > which helped identify this oversight.  
-> 
-> To me the code change is correct, and it is also merged in wireless-next. No
-> reason to drop it because of my comment on the fixes tag.
-> 
-> Brian: are you ok with that?
+This fixes PLL lockup and O_CMN_READY timeout by moving the polling
+function after common state machine gets enabled. Also fix the
+calibration wait time to optimize the polling time.
 
-Oh, sorry, I don't think I really analyzed the nature of the reasons for
-"withdrawal". Yes, if it's just the Fixes tag, then reverting isn't even
-that helpful. I'm fine with keeping it as-is.
+Changelog:
+V1: https://lore.kernel.org/all/20241230125319.941372-1-devarsht@ti.com/
 
-Brian
+Test logs:
+Link: https://gist.github.com/devarsht/89e4830e886774fcd50aa6e29cce3a79
+
+Devarsh Thakkar (2):
+  phy: cadence: cdns-dphy: Fix PLL lock and O_CMN_READY polling
+  phy: cadence: cdns-dphy: Update calibration wait time for startup
+    state machine
+
+ drivers/phy/cadence/cdns-dphy.c | 60 ++++++++++++++++++++++++++++-----
+ 1 file changed, 52 insertions(+), 8 deletions(-)
+
+-- 
+2.39.1
+
