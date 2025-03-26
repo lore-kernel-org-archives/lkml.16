@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8712E1A2557;
-	Wed, 26 Mar 2025 08:11:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0EC1A0B08;
+	Wed, 26 Mar 2025 08:11:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742976664; cv=none; b=uxPU+riTBSNUcuJ7N87YiavtIgSCfU2EawYU5mUrEKCY1qmJ0t5MOF5SOWfrPrJ3/aERbLsDd5WbncFercsz8bLKx09y3ANNJgdUG3dTqpqwlxfM/pzpz1OxYLok5U9x71zDE7NDKIbIlEcuwTlTBBUOHZNKpxE4OJRnPxne76M=
+	t=1742976664; cv=none; b=HvzoKA65rQL3XFWR34RTRovbFp+SxIeKnkcHRgKSDEdLExSCC4mKwPG2BZJ8XEwWwIkEg/KmTkgiC310lxHPgLq3f3iVmsq/d5t9vYwa5BYMaM7zJcWZTFBMK5o53yvH5An4dSQrModbnPnNt/iD6ynXgwM0OIHFpZiB2XRs/nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742976664; c=relaxed/simple;
-	bh=EdwmW2qM72zprO32J7oN9gsX7eRHVgABO9JcM6BsASE=;
+	bh=/Vpaz4x9fwZAnHLG6IUAAxI34tMKek2Ai8IRZhy83/o=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZQNB0mdSfxnMWOKT5h9nSXU33LPO1TppBYqPHyokjg1EroYGV2kNytI8MirrKggborkLITrMMyrF/k/ztu8i4Rntqs75djdZN8sfMhsz2++3rCl1BIz003Xpl6bevkd1O6xPSAONoGTauusGQG+ECCgUiGSqFo36BPghIGeZ5jA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8XsTaJA; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=fWVZ2QOWd8Rt+rS+Xg2tchLoCtfXgd8CHBiHHAC4h1qdRCIf2cZpBwaqjYxwg6jBqhTG3cj1uXoza/Zd/tOeaaOx2it+zAlRtCCURIUEFBC2sZfKfB49rNqqhCoFKt9kNub7aMeMkTfmeiHTt1aPJDg/jbLClaupEZAmQb9raG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KTxD9f33; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8XsTaJA"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E44F4C4CEFA;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KTxD9f33"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B4659C4CEEE;
 	Wed, 26 Mar 2025 08:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1742976663;
-	bh=EdwmW2qM72zprO32J7oN9gsX7eRHVgABO9JcM6BsASE=;
+	bh=/Vpaz4x9fwZAnHLG6IUAAxI34tMKek2Ai8IRZhy83/o=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=r8XsTaJAk5X9kS+219oygnAzpwGGY+LTmLSB2V5hqXPgvOzHnzYCANvsQo9zPgWew
-	 YgFuUsbJZYrvsLN8XupiMgaodwP9pHkn4eSWzLLdAE/Y4UzuqY6a/ooAVqtOHar9vj
-	 uTH85Acrny//1bH3BmfM6evYpqbmBJpJlhQMO/FnqUUvMwqEdxhzurzA1gMV5txt9C
-	 ex5GW3yrIsG62UNvj4gU5DSHXux2uYFYeeHfzsX+ezat8VZ/fbPjexTSETKeQ1dydl
-	 qOv6oHZbjD5/VE599RouLiw9MKcaLqIAum5Z1/6A8LvPPckWQufpslc8l2Dktbzm2a
-	 gbPmE7yS+oCkA==
+	b=KTxD9f33jCY0ifiaGstq1XH3RQug2uFPDjuOzo9cVNfO2585VVDbXF+wcuAgfu8XB
+	 qTSLqw0NZrlxaRiKpuNnf/H/ugCtZPFilkR3ZneZPNeXQ46ml3LjH649YNIWCuuaJG
+	 gHDDukl0RF2lDSDg5qVuh3XNyPCOOBdWB8W8cS1SByKjkzHlM4i65p5K8Hv6J0iib9
+	 a3TDO86xeOIaLquSzU+/c5tv51ZYmN7O7Cj3pGxWRV5E2Fmacig8J+ebEpi0Dzj9kX
+	 uLeGA5oEyam7OY0/jnX+S6yNBrbpDIFdsHN0eHF8vClyTljwaBwsJzZD9b43Q7qJRG
+	 hY8R+albo0XHg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A5DC36012;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9658FC36010;
 	Wed, 26 Mar 2025 08:11:03 +0000 (UTC)
 From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Wed, 26 Mar 2025 12:10:58 +0400
-Subject: [PATCH v7 4/6] PCI: qcom: Add support for IPQ5018
+Date: Wed, 26 Mar 2025 12:10:55 +0400
+Subject: [PATCH v7 1/6] dt-bindings: phy: qcom: uniphy-pcie: Add ipq5018
+ compatible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250326-ipq5018-pcie-v7-4-e1828fef06c9@outlook.com>
+Message-Id: <20250326-ipq5018-pcie-v7-1-e1828fef06c9@outlook.com>
 References: <20250326-ipq5018-pcie-v7-0-e1828fef06c9@outlook.com>
 In-Reply-To: <20250326-ipq5018-pcie-v7-0-e1828fef06c9@outlook.com>
 To: Vinod Koul <vkoul@kernel.org>, 
@@ -61,13 +62,13 @@ Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
  linux-pci@vger.kernel.org, George Moussalem <george.moussalem@outlook.com>, 
  20250317100029.881286-1-quic_varada@quicinc.com, 
  20250317100029.881286-2-quic_varada@quicinc.com, 
- Sricharan R <quic_srichara@quicinc.com>
+ Sricharan Ramabadhran <quic_srichara@quicinc.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742976660; l=1385;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742976660; l=2649;
  i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=FsXklbRpyC0apFWHqB5KrikZCLRTZbjSPVIiKdW78OE=;
- b=Zp1bIqvTXpB9oF8bNmqLmdvwXdOl5iP/n6rAOWaDSvKsmtJXozhPEk6tGVRs/PcfquGPGhiKA
- 2XhKJN2NQf8DpGMww8KYvyFKnxY76JvKzPt/r7Qq01svykybuwpaLXe
+ bh=RzhX10TqIYEMB/NTuvqI/PKN5F5WXtFaWjatLWvgFzo=;
+ b=We7QB78QZlBFHrnitOO1crJOewYZbnsm+wFqF8GMYO4mDAoi39LqgTDfWSRsKwbk5JS6DOMns
+ 4m2j+S/p4SeCATSyFaa2NTvp1ioS0J+sMT4G+JUb1pF1U4mGWJXikdF
 X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
  pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
 X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
@@ -77,32 +78,96 @@ Reply-To: george.moussalem@outlook.com
 
 From: Nitheesh Sekar <quic_nsekar@quicinc.com>
 
-Add IPQ5018 platform with is based on Qcom IP rev. 2.9.0
-and Synopsys IP rev. 5.00a.
+The IPQ5018 SoC contains a Gen2 1 and 2-lane PCIe UNIPHY which is the
+same as the one found in IPQ5332. As such, add IPQ5018 compatible.
 
-The platform itself has two PCIe Gen2 controllers: one single-lane and
-one dual-lane. So let's add the IPQ5018 compatible and re-use 2_9_0 ops.
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
-Signed-off-by: Sricharan R <quic_srichara@quicinc.com>
+Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml | 49 ++++++++++++++++++----
+ 1 file changed, 41 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index dc98ae63362db0422384b1879a2b9a7dc564d091..e91bbe2185692871d1727274aea50f0f0c52a94b 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1840,6 +1840,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
- 	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
- 	{ .compatible = "qcom,pcie-ipq4019", .data = &cfg_2_4_0 },
-+	{ .compatible = "qcom,pcie-ipq5018", .data = &cfg_2_9_0 },
- 	{ .compatible = "qcom,pcie-ipq6018", .data = &cfg_2_9_0 },
- 	{ .compatible = "qcom,pcie-ipq8064", .data = &cfg_2_1_0 },
- 	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
+diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml
+index e39168d55d23c6d361b6f89f00a897e121479714..6e9df81441e94d82d78761aa4a25ea4ece65d36a 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml
+@@ -11,26 +11,24 @@ maintainers:
+   - Varadarajan Narayanan <quic_varada@quicinc.com>
+ 
+ description:
+-  PCIe and USB combo PHY found in Qualcomm IPQ5332 SoC
++  PCIe and USB combo PHY found in Qualcomm IPQ5018 & IPQ5332 SoCs
+ 
+ properties:
+   compatible:
+     enum:
++      - qcom,ipq5018-uniphy-pcie-phy
+       - qcom,ipq5332-uniphy-pcie-phy
+ 
+   reg:
+     maxItems: 1
+ 
+   clocks:
+-    items:
+-      - description: pcie pipe clock
+-      - description: pcie ahb clock
++    minItems: 1
++    maxItems: 2
+ 
+   resets:
+-    items:
+-      - description: phy reset
+-      - description: ahb reset
+-      - description: cfg reset
++    minItems: 2
++    maxItems: 3
+ 
+   "#phy-cells":
+     const: 0
+@@ -53,6 +51,41 @@ required:
+ 
+ additionalProperties: false
+ 
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,ipq5018-uniphy-pcie-phy
++    then:
++      properties:
++        clocks:
++          items:
++            - description: pcie pipe clock
++        resets:
++          items:
++            - description: phy reset
++            - description: cfg reset
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,ipq5332-uniphy-pcie-phy
++    then:
++      properties:
++        clocks:
++          items:
++            - description: pcie pipe clock
++            - description: pcie ahb clock
++        resets:
++          items:
++            - description: phy reset
++            - description: ahb reset
++            - description: cfg reset
++
+ examples:
+   - |
+     #include <dt-bindings/clock/qcom,ipq5332-gcc.h>
 
 -- 
 2.49.0
