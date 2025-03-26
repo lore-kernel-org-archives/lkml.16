@@ -1,110 +1,127 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6431547C0;
-	Wed, 26 Mar 2025 08:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED0E1862BB
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742978599; cv=none; b=FJgqaKWlRxJ6LHhEFoOFxd04PMVhHGRc9DmL50dXdg4sf+f4igTd1mw8WOI3qVXIzM5YxRCvW+aMz3WvImDB0mGbqMvCTMe1wU+DYXZAdm3lhOnlKz7WEhZQ8UbHgSkT8qfBEL9a3SJrAgT3LOLEcipIZfCOoxsKxJ+YTTO4le0=
+	t=1742978601; cv=none; b=cA6KlMS8hyChpjr4Mj3NfeWLyM+QkOMti3uCRNcaXnXh2NLmGp683KGhNMqeJjTTWkjqRWBK7fgmfIiVZ4A6azifBUTzYD/Pp2FUuwrBmVsTg5vrt6B3IcmZ7YfMOKhnKMcXQYIiILYytxh5b3W/e2xWvP6EKy7O+C5rX3ZqLZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742978599; c=relaxed/simple;
-	bh=4l7vlhJA3EENd5t9D26zfYMMPZkHcSqBOes9iuJ2l5s=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g/xk8/aj2lUu1bz7kZSEG2FMzWsZ+Lh0nrtpnXk1jWU7oP6PLhDLL2QLGhVicYneaS/7ZDbzpF1Ly28EQW8/GS78l8zsGtEtFNdUwtUToKIaKfPZyhouGl77arv7/b4pO+O3x8HqdXmERuDoH+MjrsCFZ9zvtsENHg173vQMewM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=kZtf6gQt; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1742978601; c=relaxed/simple;
+	bh=UmuNGhXyzS0bvxy9u1JJ5f2Rt/zKH8lNNhSRKgiDkK0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=gi7J6Le0xvIjBquDPY2OLDn5wPCEH1qGHlTVA45Sb5WGSO8Dk/aFR6Qbof2joJVPwLX+GfMa2m/UeIkZb4JCyAcTK3RE135DdZ5G4zblqtecOG01pAo2MnQ7nC312FKYltKSkN7NHv8jupFMsm4E76qzm/haowDP01BZN+vEyY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=aUkLl7+h; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="kZtf6gQt"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52Q7YPIE019497;
-	Wed, 26 Mar 2025 09:42:50 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	tjQ6jzp5petaGXfP90uNsQR+cc1MZ23TGQzGVRHgV0E=; b=kZtf6gQth6RK04zU
-	1OQPPLmEdGqZICiwIrbCfRTqLX5vuWf7hLrbXnfQOG9FVTqovq87y3Pe0JuKvqNF
-	kC7DmoL/H5DVauLclCJcplVXEWkNRh5XbsNd/yEkOzgTsQCYhnAej5nDsZ1v+rja
-	kF4XkCSnV0k1q1Dcw3KpHnH1aSScCj6SiYmKt7sZd/qVQfFmwCJvZ9ZQfuUXtD7E
-	6fIIWAkkn9EBjC3rBuGU1Dkrt1YuK/A2AAJi3kPHJ0DHsPZJCwmekp8G5ZfkRZOy
-	KLdTDiEHCHXLGcGJ75oTwrnNIgugBj/TMEoXqflWLgJg405XOGkH6NMK9LixN9iQ
-	+OcihQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45j91se31e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Mar 2025 09:42:50 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A138340053;
-	Wed, 26 Mar 2025 09:41:50 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node5.st.com [10.75.129.134])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 048BF87F424;
-	Wed, 26 Mar 2025 09:40:02 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE5.st.com
- (10.75.129.134) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Mar
- 2025 09:40:01 +0100
-Received: from localhost (10.48.86.121) by SAFDAG1NODE1.st.com (10.75.90.17)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Mar
- 2025 09:40:01 +0100
-From: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-To: Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC: <devicetree@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Arnaud Pouliquen
-	<arnaud.pouliquen@foss.st.com>
-Subject: [PATCH 1/2] dt-bindings: remoteproc: stm32-rproc: Add firmware-name property
-Date: Wed, 26 Mar 2025 09:39:11 +0100
-Message-ID: <20250326083912.12714-2-arnaud.pouliquen@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250326083912.12714-1-arnaud.pouliquen@foss.st.com>
-References: <20250326083912.12714-1-arnaud.pouliquen@foss.st.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aUkLl7+h"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52Q8h6hq1486280
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 26 Mar 2025 03:43:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1742978586;
+	bh=Qr9W6z+JJYeihhasB/vZ/Hf84PDMhGoU60JFUmJ8jLk=;
+	h=Date:Subject:From:To:CC:References:In-Reply-To;
+	b=aUkLl7+hgek4R5Lmjo/k63gKCPuuSJmWBvVTvJLsadv3j8WjXMYvy+KN+dDFPqIEx
+	 EuU6bJvRJOi2mxTIawGPGLnKr/Xit9cSHeo4XPP2i7XmdRCSJSeEdhJC6im/BmkOjY
+	 6pm0ce5DOIGUwb0Om0TDRwzXN8gEHwKcUDnRy8wY=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52Q8h6iT010985
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 26 Mar 2025 03:43:06 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
+ Mar 2025 03:43:06 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 26 Mar 2025 03:43:05 -0500
+Received: from [172.24.227.40] (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52Q8h3Pq022655;
+	Wed, 26 Mar 2025 03:43:04 -0500
+Message-ID: <41fd2bb3-7115-42c3-8ee5-e8e9e54fa86b@ti.com>
+Date: Wed, 26 Mar 2025 14:13:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SAFCAS1NODE1.st.com (10.75.90.11) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-26_02,2025-03-26_02,2024-11-22_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] lib: scatterlist: Fix sg_split_phys to preserve original
+ scatterlist offsets
+From: T Pratham <t-pratham@ti.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+CC: Jens Axboe <axboe@kernel.dk>, Robert Jarzmik <robert.jarzmik@free.fr>,
+        Kamlesh Gurudasani <kamlesh@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>, <linux-kernel@vger.kernel.org>
+References: <20250319111437.1969903-1-t-pratham@ti.com>
+ <20250319184605.809fc9ce3b169478102b9313@linux-foundation.org>
+ <7647126a-5986-4a2c-9bb0-9efb0ff9c131@ti.com>
+Content-Language: en-US
+In-Reply-To: <7647126a-5986-4a2c-9bb0-9efb0ff9c131@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Add the 'firmware-name' property to the remote processor binding
-to allow specifying the default firmware name in the device tree.
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
----
- .../devicetree/bindings/remoteproc/st,stm32-rproc.yaml       | 5 +++++
- 1 file changed, 5 insertions(+)
+On 20/03/25 10:28, T Pratham wrote:
+> On 20/03/25 07:16, Andrew Morton wrote:
+>> On Wed, 19 Mar 2025 16:44:38 +0530 T Pratham <t-pratham@ti.com> wrote:
+>>
+>>> The split_sg_phys function was incorrectly setting the offsets of all
+>>> scatterlist entries (except the first) to 0. Only the first scatterlist
+>>> entry's offset and length needs to be modified to account for the skip.
+>>> Setting the rest entries' offsets to 0 could lead to incorrect data
+>>> access.
+>>>
+>>> This patch removes the offending code, ensuring that the page offsets
+>>> in the input scatterlist are preserved in the output scatterlist.
+>> Is this merely from code inspection, or is this issues known to have
+>> observable runtime effects?
+>>
+>> If the latter, please provide a complete description.
+> Hi,
+>
+> I am using this function in a crypto driver that I'm currently
+> developing (not yet sent to mailing list). During testing, it was
+> observed that the output scatterlists (except the first one) contained
+> incorrect garbage data.
+>
+> I narrowed this issue down to the call of sg_split(). Upon debugging
+> inside this function, I found that this resetting of offset is the cause
+> of the problem, causing the subsequent scatterlists to point to
+> incorrect memory locations in a page. By removing this code, I am
+> obtaining expected data in all the split output scatterlists. Thus, this
+> was indeed causing observable runtime effects!
+>
+> Regards
+> T Pratham <t-pratham@ti.com>
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
-index 370af61d8f28..a0a16bfe8ef7 100644
---- a/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
-+++ b/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
-@@ -139,6 +139,11 @@ properties:
-       If defined, when remoteproc is probed, it loads the default firmware and
-       starts the remote processor.
- 
-+  firmware-name:
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    maxItems: 1
-+    description: Default name of the remote processor firmware.
-+
- required:
-   - compatible
-   - reg
--- 
-2.25.1
+Hi Andrew,
 
+Do you need the above details to be incorporated into the commit message
+and be resent? Kindly let me know.
+
+Regards
+T Pratham <t-pratham@ti.com>
+
+>>> ...
+>>>
+>>> --- a/lib/sg_split.c
+>>> +++ b/lib/sg_split.c
+>>> @@ -88,8 +88,6 @@ static void sg_split_phys(struct sg_splitter *splitters, const int nb_splits)
+>>>  			if (!j) {
+>>>  				out_sg->offset += split->skip_sg0;
+>>>  				out_sg->length -= split->skip_sg0;
+>>> -			} else {
+>>> -				out_sg->offset = 0;
+>>>  			}
+>>>  			sg_dma_address(out_sg) = 0;
+>>>  			sg_dma_len(out_sg) = 0;
+>>> -- 
+>>> 2.34.1
