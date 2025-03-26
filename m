@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F7C1EA7F9;
-	Wed, 26 Mar 2025 14:15:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BAF54652;
+	Wed, 26 Mar 2025 14:17:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742998525; cv=none; b=TugAH4T2p3wlTXCO1rmOSoFstVCHF/1cO7RR2XdqgyDd36be8C51xQOW/b2Pix0ndmFs4hF0v7Q8hy7fCUZpj3GcvscbXGgmTiniSk6f6wyi8ItvCgi8zBwaZ2HdQzh2q+qaapAym3TYxMYYYJ3TZWhapqEhk44S/dzNEu4SB/U=
+	t=1742998639; cv=none; b=Vond3QPWxeCZjbQDtSOtQK7B/1F80r9MBVCZ72QfylacAMQ4otAKAeXwIUWC1/pDdHyUPONqH7qrF7kO0xibIqEkgUwmRxzMgjq3zsfcWJPckfNUTaOGQUdcvyoJFSiO+3qs3gHc9qsw9x2IumTMbvvFtx0KN9J478I7yBqEJMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742998525; c=relaxed/simple;
-	bh=vG0DOe3IBVr+HcgMZZgwW/F29/365bkkNGRl4wzfDMs=;
+	s=arc-20240116; t=1742998639; c=relaxed/simple;
+	bh=HPPma/sz3Bshew6p5UOmYAxgSUqPUy/fDmusBpt5nxQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UBT7bYWjT/oIzMifn5flbJQ8lE6Pur1ntAbioby64lvTB+Mb/CmrGVdk7tIt6CG5+Qk2fcg+Lxi3s9FLdbpKZ0UHDQaLC51anbhWdycjeRMgErZLXvuwYpmDVVhqB+TehYkKTAvtB7QUaJX+x6s4jWkGmG5eeTYLJPHnouWSIkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=garKwtRj; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=EW0sNBnx0Uk6AXsGI/U8TzKU3mdPbzO+/YHNUdMmRsyfCOkuq251HrYAWpwRYq7KfVOvuYDD5mlBorr/wZgfdqgT+hCY+PxCot5GtQEePfTu4+uYGAobFggwgoRXhq8Agi5vpFyaIfZjinPU8w5rMwTmmXtLUO0Glzk/slV3uP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KqoKp+dK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="garKwtRj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E77DDC4CEE2;
-	Wed, 26 Mar 2025 14:15:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KqoKp+dK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DEC4C4CEE2;
+	Wed, 26 Mar 2025 14:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742998524;
-	bh=vG0DOe3IBVr+HcgMZZgwW/F29/365bkkNGRl4wzfDMs=;
+	s=k20201202; t=1742998636;
+	bh=HPPma/sz3Bshew6p5UOmYAxgSUqPUy/fDmusBpt5nxQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=garKwtRj7KwpwKzUP4RYPlVsPY9w10dYR7v2T7G0zn1KWQjQO/+pPLlu/5HPtNNH2
-	 Bt5Jz9bs+LiWua3X+chxD6Oavk14NpoEDmTaxFTqJjXaOHhYrPdhPQXzUrOga8+VZ/
-	 ilxV3THATr5K4bGmCvfP+ay3tQLjujvlCxZVS30HpdGJodz65xwVXZ1t9V5iHf4UO3
-	 hXenuZ4YA9XEGeX7802BGi0hs65kwr2FRqpLVl4eAqKxzkYDIq47H0GBE+XuWcMFEr
-	 7UJGTtbfdoPQvc+DDRyV4hmm+X90csiIZJGboVhN+yongGOsIZu22jGSXuFCmnPnFU
-	 gt4/2/mdnh8EA==
-Message-ID: <aac75b30-d63e-4206-9173-231edeb69c05@kernel.org>
-Date: Wed, 26 Mar 2025 15:15:14 +0100
+	b=KqoKp+dKtuMHnjn/bytxmpa17DsmXAQzSrvcYpEyVkMqOkmmGq04Tlx7tNfXx1EGj
+	 3sUQg5RUaZLIlua1r14SCdEQcFMYVJj9AIlt62Se+oa15YNaNHedBiFPqRftrGB51/
+	 GXTrryLKkknM44G9UVrN7IDFQoUtgPwTByGv3uKkHCNPJsGBLQDP5C+gcq72amk06z
+	 39g1uE9BpdNs7Cfnr1EuzgpTex3uZrMgiCFMizJegk0C1GvhpzbZcJHuEU62d5IY1i
+	 bYRVfqPj0ZR73InLul7LigAv/f8pxUadHrMF0+iuOeAoaScse6RtDWB7sYYp96gabC
+	 O3XXKC7aHCCOw==
+Message-ID: <845d620b-9d5b-49bd-8f36-6376ecf14249@kernel.org>
+Date: Wed, 26 Mar 2025 15:17:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,22 +35,25 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] dt-bindings: net: Add MTIP L2 switch description
- (fec,mtip-switch.yaml)
-To: Lukasz Majewski <lukma@denx.de>, Andrew Lunn <andrew@lunn.ch>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>, Paolo Abeni <pabeni@redhat.com>,
- Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
- davem@davemloft.net, Andrew Lunn <andrew+netdev@lunn.ch>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>,
- netdev@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>
-References: <20250325115736.1732721-1-lukma@denx.de>
- <20250325115736.1732721-3-lukma@denx.de>
- <2ccab52d-5ed1-4257-a8f1-328c76127ebe@lunn.ch> <20250326144316.2ca252f7@wsk>
+Subject: Re: [RFC PATCH v2 2/9] dt-bindings: soc: microchip: document the
+ simple-mfd syscon on PolarFire SoC
+To: Conor Dooley <conor@kernel.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Conor Dooley
+ <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>,
+ pierre-henry.moussay@microchip.com, valentina.fernandezalanis@microchip.com,
+ Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Jassi Brar <jassisinghbrar@gmail.com>, Lee Jones <lee@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+ linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250321-cuddly-hazily-d0ab1e1747b5@spud>
+ <20250321-ramrod-scabby-a1869f9979b6@spud>
+ <20250325-quiet-waxbill-of-realization-675469@krzk-bin>
+ <20250325-feline-roundworm-dc391b755673@spud>
+ <58bb1186-08ee-41cf-8593-a6664bd874e6@kernel.org>
+ <20250326-tricycle-hesitate-e58633e62545@spud>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -96,37 +99,46 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250326144316.2ca252f7@wsk>
+In-Reply-To: <20250326-tricycle-hesitate-e58633e62545@spud>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 26/03/2025 14:43, Lukasz Majewski wrote:
-> Hi Andrew,
-> 
->>> +  phy-reset-gpios:
->>> +    deprecated: true
->>> +    description:
->>> +      Should specify the gpio for phy reset.  
+On 26/03/2025 12:00, Conor Dooley wrote:
+> On Wed, Mar 26, 2025 at 07:53:55AM +0100, Krzysztof Kozlowski wrote:
+>> On 25/03/2025 17:03, Conor Dooley wrote:
+>>> On Tue, Mar 25, 2025 at 09:13:22AM +0100, Krzysztof Kozlowski wrote:
+>>>> On Fri, Mar 21, 2025 at 05:22:35PM +0000, Conor Dooley wrote:
+>>>>> +title: Microchip PolarFire SoC Microprocessor Subsystem (MSS) sysreg register region
+>>>>> +
+>>>>> +maintainers:
+>>>>> +  - Conor Dooley <conor.dooley@microchip.com>
+>>>>> +
+>>>>> +description:
+>>>>> +  An wide assortment of registers that control elements of the MSS on PolarFire
+>>>>> +  SoC, including pinmuxing, resets and clocks among others.
+>>>>> +
+>>>>> +properties:
+>>>>> +  compatible:
+>>>>> +    items:
+>>>>> +      - const: microchip,mpfs-mss-top-sysreg
+>>>>> +      - const: syscon
+>>>>> +      - const: simple-mfd
+>>>>
+>>>> You need to list the children if you use simple-mfd. Commit msg
+>>>> mentioned clock controller, so where is it?
+>>>
+>>> I don't think a child node is required here, there's not enough
 >>
->> It seem odd that a new binding has deprecated properties. Maybe add a
->> comment in the commit message as to why they are there. I assume this
->> is because you are re-using part of the FEC code as is, and it
->> implements them?
->>
+>> Then this is not a simple-mfd.
 > 
-> In the case of MTIP L2 switch, the reset gpio line (in my case, but
-> also on e.g. imx28-evk, and vf610) is single for both PHYs.
+> The pinctrl will have one, whenever I get around to actually working on
+> that. I can leave the simple-mfd out until I establish exactly what
+> that's going to look like if that's what you want?
 
-That's kind of proof that property was not placed in correct place.
 
-> 
-> I could move the reset to mdio child nodes, but this would be
-> problematic, as asserting reset on one PHY would reset the second one.
-
-It wouldn't if you used reset controller framework for that GPIO. Please
-move the GPIOs to the device actually having the line, so the GPIOs.
-
-Since a year such workarounds are not allowed in kernel anymore.
+I want complete hardware, so simple-mfd with children, but if that is
+not possible for some reason then at least accurate picture, thus drop
+simple-mfd for now.
 
 Best regards,
 Krzysztof
