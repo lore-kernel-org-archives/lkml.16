@@ -1,134 +1,146 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09504EEBB
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 04:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEFAEEEBB;
+	Wed, 26 Mar 2025 04:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742964627; cv=none; b=Sj6uKye9wBbTDApODiJdeTgjJ981ev4lg4Ruas48zQKVCfHEEEijel4F40MFu03/af2meXREZHBHXNdJGBOuP/KHD6oJ+j/HrIz8C4qy23e4aCw/1lYB/JdLUqH2pXedLsxQZEQP7fLXM34S8znb5Y1Su/x3WuUdAe6EVm4NDzE=
+	t=1742964848; cv=none; b=toIrcmzetdYcWpWF8UkdNpbH4GFgptF7KBrEs1/aBX+k6evDGB/nhnxOkngSX4/gNnhig3iTtnq5LdKvLAHGl7go+RCeqlmmGBhAKXYtFnpU3dPklFCkydwPDqUjYmicfk2Q2SkuscIN1Ai2XwNylM8WjH9TIlwg6v5pIaViJr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742964627; c=relaxed/simple;
-	bh=HxEqycPP9HinSyYeSHR46VuVCTfZ52flfMnn6myBy50=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=PrtPQ6H+E0pWscQtsWf9VQOxvvDwZyp9UV0fmZbGMF2zx6RNjZesIbKWWSVhcrlKcN6E6mSEwh/uPDRwFEhx87GT+ovePFL710S29iCIwBwvhEgybeMCyh1cZQ8enp2sFxQPOwQFPie0fWay3TrWOsGgjTFOZtO27I+pkkHWFZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bd/j6VUh; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1742964848; c=relaxed/simple;
+	bh=VuGoz/xwlw7kYr3ecx01YvOEM8Jthtu0J0dyHUcL6BY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VIKHykfAr5GYIjq3GVy7jbNVzxq0Ln0Prkp9+ai6bdn7w0fR9MYMeXwwHrarvBsOLbnBDr7Qy5OVNZ3hqm27Pjknpa9OuTvrPAATg3NbKHtpL+n95yShE+UhC56uK0HU4yTyQ+h4jDSvEUL/lo8eDa6zJV6HNxMDVBJRd4pUKqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=LSUt4L88; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bd/j6VUh"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52PGaWfv008053
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 04:29:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	U2vV/YNuPMazCXGTha4yHCmP5M+2x7nFoXODhO281M8=; b=bd/j6VUhLR411mxX
-	q8XGlOLfd2Mb1Tr3MG2bbIoK6/uJ4ozK2xvOIJA6Ft9FeWcVEqw8sH6v9xV1F1D8
-	Oh8VKET3Vr4K1/zdESRPGi09MJZJxjv4xvIjnGAFYs4xT5PmEYaCubcV6OZOpVVz
-	TkhtQgdfOnHD5lr8Brg5pVqc/IsO5ZMNlBJWk4WeXIzyJ1CoOZPOi/Hprfse+GP9
-	BBt6PSKpFmheilAvotPaVhEODutKqE1KRSErVX8s0BefgWHh1pMV5R9M0jM5c/7O
-	KdhwWd8gs8oMvbnBSHQh+8Bs66GX5HHE6cugbem8PpNABtxRWEjAawGXruEIFk9L
-	o5LusQ==
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45kmd33m3g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 04:29:36 +0000 (GMT)
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2254e500a73so78554935ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 21:29:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742963375; x=1743568175;
-        h=content-transfer-encoding:in-reply-to:from:cc:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U2vV/YNuPMazCXGTha4yHCmP5M+2x7nFoXODhO281M8=;
-        b=XjT+PrGe8NX1H6NXnk82/7Ww05aWkymsxnxMFs4toU28kXi7H3gAnPvfX664PDg1lt
-         5tM0iwyQ0xt5X+1sLZSpRIGwkUbe8kULlc1AqQVf+6LQ0tXJCsdkZH/9Hk0n+oFL35vW
-         kV+RgN5Z6nGXhdGAkzduHVOBfwaQReijB75gldvgKZVkuADclSWZBfpyltVFvbkzLO2A
-         1O2ua1G0BVsFtYV/ayKz12oWOpTZ1E3c3SWp7cHI/4MmJxP71jluXgpPe//G+f2e6Pwz
-         lXwIFQcd4qung+3PUN80DscC54il3dfqdqOFBe0ElepQo9vp2LbylfLtb5yoHN0XSddf
-         aGzg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQZ8BeWnVK0NWvwZV3urKLftyNBJa10raRuP+7gYLmCM+iIAh89hol9ITJAERQs3IWfYIam98nK3t+mxg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxV4g6gLcaEPIoGh85YXUu7QYgGoACHa4z7KIh0pL0tzs28kDOP
-	rjEGdQbq//NNmeFjWc5eOBXJiI8vWC+81MPA45QX8UVK4xy/CMg3JJscwq3eiX4a3xE39T2Ymq1
-	GASb7lLQLwOs9jUx9pxuGWY/d1SeUDRJUDyfl/8qyu5IA+6s5jgkXzvPzEhrZo3QGgaEUDlI=
-X-Gm-Gg: ASbGncu3iHs/HLIOlVO0F+4w+7547bM/JK+syxRycTQfDrLB4nlc/CbHCNEr8OaOBaH
-	QqguprA10jDZIBMB/1LTZMFOzq44ZoNtA0vgc5yB+DsZdr2owX+MrkUCp3a76E80wp+NHHBLg68
-	d55AivU7J/LV0z6PYHTo0+4d6tMi9SkzXJ5WeupavoRe3LcOzSmhy6tj/UnZbwJ2zzxv1KhtrK+
-	N6ty3lZ+0GKQPMfAaB07r8OAXLVQ3/MzmpiEXMAknMe8hZfURJSKaL73bXVXuRuoY31m7V+YyHt
-	4fF92ZYHrMEcjhH3OJThsC8v5ij5dDyObwBnR4IfTUYc+WapNDXshcPoql3DeBb9
-X-Received: by 2002:a17:902:d4ca:b0:223:4537:65b1 with SMTP id d9443c01a7336-22780e10a22mr293314175ad.36.1742963375309;
-        Tue, 25 Mar 2025 21:29:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGu9uKVox+HgHgxuBVealSCpl1kM6cDkzy79Gz9VEoiNRLHgTsPn59JlgKifX6/ISeyS9dHLw==
-X-Received: by 2002:a17:902:d4ca:b0:223:4537:65b1 with SMTP id d9443c01a7336-22780e10a22mr293313975ad.36.1742963374987;
-        Tue, 25 Mar 2025 21:29:34 -0700 (PDT)
-Received: from [192.168.225.142] ([157.48.123.149])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3030f5b7823sm11343675a91.10.2025.03.25.21.29.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Mar 2025 21:29:34 -0700 (PDT)
-Message-ID: <50395ba6-8954-66fc-9d94-a58d22606a85@oss.qualcomm.com>
-Date: Wed, 26 Mar 2025 09:59:30 +0530
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LSUt4L88"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1742964842;
+	bh=n8P2vqZQTi1XkXDVCJcE0ki1sFp8gyJvqMuQ+EhAdjw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=LSUt4L88En+aBeojYCqxLItxPdaV6e00pjs+TwuUB2zml5tWrv/xv2A2QqS7gyo4z
+	 x399evephmevJAi3ArkpvMoUy0yCL80cRIA2xsV2OUXO8lMuKuBPTcPs1dOWSGGSKG
+	 8aN441+FfaO5/Qr+rPgLju0T0Rzqqp8MuY6txFM7/J9ums+130hLcmkzRnoUgvqjf9
+	 TSgte997qb0h0hDS8UGB87dcmjWbGkoYwtwRwS4L2ZMefMsGy+UwKshClHDMz8Coyj
+	 wj6YW97vQ/ii5dFc1EfylWiMI7fmpOMRHoIr43J6YiEIME/amFZbpOs1UCemAhE0Hl
+	 QUTP9KJuGpRcw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZMvZd6vbvz4x21;
+	Wed, 26 Mar 2025 15:54:01 +1100 (AEDT)
+Date: Wed, 26 Mar 2025 15:54:01 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Kees Cook <kees@kernel.org>, David Miller <davem@davemloft.net>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Networking <netdev@vger.kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Tamir Duberstein <tamird@gmail.com>
+Subject: Re: linux-next: manual merge of the kspp tree with the net-next
+ tree
+Message-ID: <20250326155401.634d8c79@canb.auug.org.au>
+In-Reply-To: <20250213151927.1674562e@canb.auug.org.au>
+References: <20250213151927.1674562e@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] wifi: ath12k: extend dma mask to 36 bits
-Content-Language: en-US
-To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>, ath12k@lists.infradead.org
-References: <20250321162331.19507-1-johan+linaro@kernel.org>
- <b1e44988-a80c-4e60-a093-434e0834aa1a@quicinc.com>
-Cc: Jeff Johnson <jjohnson@kernel.org>,
-        Stephan Gerhold <stephan.gerhold@linaro.org>,
-        linux-kernel@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>
-From: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
-In-Reply-To: <b1e44988-a80c-4e60-a093-434e0834aa1a@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: Sr0aUBqXakq1BEZXbrQ2vDY20Z45YPRw
-X-Proofpoint-ORIG-GUID: Sr0aUBqXakq1BEZXbrQ2vDY20Z45YPRw
-X-Authority-Analysis: v=2.4 cv=P646hjAu c=1 sm=1 tr=0 ts=67e382b0 cx=c_pps a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=fyovRE7uNSHUze5DQk8o8A==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=BeArKKMxub_AxtE4Z8IA:9 a=QEXdDO2ut3YA:10
- a=GvdueXVYPmCkWapjIL-Q:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-25_10,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
- suspectscore=0 phishscore=0 mlxlogscore=842 priorityscore=1501 bulkscore=0
- mlxscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503260024
+Content-Type: multipart/signed; boundary="Sig_/dSRl7syyRB8ezowbLxeXi_h";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Adding original to and cc list back.
+--Sig_/dSRl7syyRB8ezowbLxeXi_h
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-When replying please keep all the email addresses as in the original mail.
+Hi all,
 
-On 3/25/2025 12:34 PM, Raj Kumar Bhagat wrote:
-> On 3/21/2025 9:53 PM, Johan Hovold wrote:
->> Extend the DMA mask to 36 bits to avoid using bounce buffers on machines
->> without an iommu (under OS control) similar to what was done for ath11k
->> in commit dbd73acb22d8 ("wifi: ath11k: enable 36 bit mask for stream
->> DMA").
->>
->> This specifically avoids using bounce buffers on Qualcomm Snapdragon X
->> Elite machines like the Lenovo ThinkPad T14s when running at EL1.
->>
->> Note that the mask could possibly be extended further but unresolved DMA
->> issues with 64 GiB X Elite machines currently prevents that from being
->> tested.
->>
->> Also note that the driver is limited to 32 bits for coherent
->> allocations and that there is no need to check for errors when setting
->> masks larger than 32 bits.
->>
->> Tested-on: WCN7850 hw2.0 WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
-> 
-> Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.4.1-00199-QCAHKSWPL_SILICONZ-1
-> 
-> Tested-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-> 
-> Validated iperf traffic on QCN9274 with FW version -
-> WLAN.WBE.1.4.1-00199-QCAHKSWPL_SILICONZ-1
-> 
+On Thu, 13 Feb 2025 15:19:27 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the kspp tree got a conflict in:
+>=20
+>   lib/Makefile
+>=20
+> between commit:
+>=20
+>   b341f6fd45ab ("blackhole_dev: convert self-test to KUnit")
+>=20
+> from the net-next tree and commit:
+>=20
+>   db6fe4d61ece ("lib: Move KUnit tests into tests/ subdirectory")
+>=20
+> from the kspp tree.
+>=20
+> I fixed it up (I used the latter version of this file and applied the
+> following merge fix patch) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Thu, 13 Feb 2025 14:50:27 +1100
+> Subject: [PATCH] fix up for "lib: Move KUnit tests into tests/ subdirecto=
+ry"
+>=20
+> interacting with commit
+>=20
+>   b341f6fd45ab ("blackhole_dev: convert self-test to KUnit")
+>=20
+> from the net-next tree.
+>=20
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  lib/tests/Makefile                    | 1 +
+>  lib/{ =3D> tests}/blackhole_dev_kunit.c | 0
+>  2 files changed, 1 insertion(+)
+>  rename lib/{ =3D> tests}/blackhole_dev_kunit.c (100%)
+>=20
+> diff --git a/lib/tests/Makefile b/lib/tests/Makefile
+> index 8696d778d92f..8961fbcff7a4 100644
+> --- a/lib/tests/Makefile
+> +++ b/lib/tests/Makefile
+> @@ -6,6 +6,7 @@
+>  CFLAGS_bitfield_kunit.o :=3D $(DISABLE_STRUCTLEAK_PLUGIN)
+>  obj-$(CONFIG_BITFIELD_KUNIT) +=3D bitfield_kunit.o
+>  obj-$(CONFIG_BITS_TEST) +=3D test_bits.o
+> +obj-$(CONFIG_BLACKHOLE_DEV_KUNIT_TEST) +=3D blackhole_dev_kunit.o
+>  obj-$(CONFIG_CHECKSUM_KUNIT) +=3D checksum_kunit.o
+>  obj-$(CONFIG_CMDLINE_KUNIT_TEST) +=3D cmdline_kunit.o
+>  obj-$(CONFIG_CPUMASK_KUNIT_TEST) +=3D cpumask_kunit.o
+> diff --git a/lib/blackhole_dev_kunit.c b/lib/tests/blackhole_dev_kunit.c
+> similarity index 100%
+> rename from lib/blackhole_dev_kunit.c
+> rename to lib/tests/blackhole_dev_kunit.c
+> --=20
+> 2.45.2
+
+This is now a conflict between Linus' tree and the net-next tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/dSRl7syyRB8ezowbLxeXi_h
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfjiGkACgkQAVBC80lX
+0GwuKwf7B9RhnPiIvGid2Ou93o3mJTsvXXGItsci28BgeezwHY9bAB6bWsenEdQJ
+7FKesiieWAVmrrwo03Geu6uDror5qSV67TEgmjmu1NirDdOn18FIut5zDHppifEH
+DGrWgMTphoZVFKIq7WfPFy06sLKxNPIYYsM7Wps7uuzb1jsPHPX72ddELvl3lsyK
+fNfKLUyBC5Ifo6+urEVwfaoJaiusGpPIUMteraKvfPx1wmT/Ts/Xwmqix7zzlBDO
+i1MFpyAr1kpfbLvAdQhIxILND0vDkUXxYR0hKJtuxLrduAoMxvMdFeO2qyHvk2j/
+cGsRH+M7Fvq9fB7di/s54MtAGfARPg==
+=SUpa
+-----END PGP SIGNATURE-----
+
+--Sig_/dSRl7syyRB8ezowbLxeXi_h--
