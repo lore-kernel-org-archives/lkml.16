@@ -1,124 +1,71 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8BD2AD02;
-	Wed, 26 Mar 2025 21:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF692AD02;
+	Wed, 26 Mar 2025 21:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743025880; cv=none; b=sQXa1QFndp0iPWio7vL5TlSPniueO8sBxg9eNQFJc8LWhhuJ2UzZ1jN4/fCobQ5Z6cFfLi9pnyv0O51SgJDDrMlF82J8SUEQOQf/E3QO2K1aac2q8sZT1ppUswKXX5hYwEsluTRmrph8+c3su/zZN6aCi+RxadsNmYL1tC2hzM4=
+	t=1743025927; cv=none; b=GzBISzHmcgatpmXdG9hv4KFCj0DBx+yhxs1IQqOitMwRzl4mMyyzV/L8tVfdao1xCItYAvr4wPOetfuBgyJ/Kp+C9hfctc1Rs5ySBR+v99R2dc3/JMXx9xWl80/PlVnafijk/Vx1E2zPYW8oS0L6aWSAWYCrWrP1N+8k4XyJXcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743025880; c=relaxed/simple;
-	bh=057SRzMfijCNDKCImBfeVk1oDT4K2sIo/2bJO/oFWSw=;
+	s=arc-20240116; t=1743025927; c=relaxed/simple;
+	bh=E7kr/pxzFv3vUyE91rsLl/E9VrXg3DOOVZED/WIMboo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T+wlDon0awwWAXRzKoUBX7t9Av/YLfdq1RW3dd8ngopZAGd4fbsMMnWVP6YQXuYvu5jupZNsqxRqdwFs4bjjX74QIEgCJwWlqE/1P21JP0TKHjMAAyVikLGwXXMlySLqcv8QJLQDSVdwJ4dgoxu8nl2Cq5fRnhUfnZJHKtAIyQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nSTVxpql; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=hO2ycgJ/JlhiAN6nQULAlYQBuclr6T1H7kn3cVPXgjAyMgMZ+mRy7t2b8B1Xo+XcqttXCss7OyeaOytm1HsW2q5XHYHfYb0F0kovb2aVlEj2nbbUqxFa5EeGWs+v7Q5ah0zmzvsEBHJS0U+DeaNll4K5ilZ5KbLfxDxNAZH2gPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=ccwE1uBt; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSTVxpql"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2241053582dso9454845ad.1;
-        Wed, 26 Mar 2025 14:51:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743025878; x=1743630678; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=u3tYy/kGS0BXULb658AxYn46DDhxyfH6Cn5tP3N9OA4=;
-        b=nSTVxpqlKYMkK+51cOl/A4CnB/MlnbzlUhnG2ME/KFD88G4qEz4BSKLRywv5t+cRYF
-         MrP26LthdOBh1zFcDomZiahawpsNrpS83fJu7yRrtSeKJG6O2rXwMMbvE2+fUBREHY3t
-         7rh5CjKJjWXtYbxPaWBRJYdj3SDBh2qMIyFHDn/u+kC0bmiuAJQbngVEAZncMz83QEiv
-         VNvMRA3LwfeJlEJjLZ/EUJReDBE819XF5o/RjOdkZQsx4dkj2ar8qHoz4DVmjZnIEcAF
-         z2VR70NStfMx1lZZxTS5fNRwpVry2X9p1/66F7/cXPstd4JCHZZFEBqMexgi2GeRw5DM
-         Vi3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743025878; x=1743630678;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u3tYy/kGS0BXULb658AxYn46DDhxyfH6Cn5tP3N9OA4=;
-        b=oMiNc9w4Dhg7VjPBJ2rbYk+J0YKz80gkNGRVH1fL7jKDofZkbcEl11r9UJExKdGR8G
-         FrlEAX7glhEcbtaFlQ9s0XJewuO7WVMShCS2KqYoFjbSgqqcoV49PpPKa98wzPR2Qx/e
-         xtd9A0d1KbcaPAq4QiPixy5APt01xu1cqLIPAX9wKwP2chv5LcjgaOGvRIMdVHEE2uYb
-         8wt3aV1fVHDhZXgNdqePgtOv+ugxpTcRaos2F0xc1WxVpeT9DhO91oeF7Fr5dij5aXwn
-         JIkuTyqn5RePY5wehOD8gxL8xc7DRk+pW01u7kA+nRi9ThPFPQuh1SxJF9bEUswOBto8
-         Y/mg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1tjt8DEfi2AL1HIbKQsjnIR8DkzCFEE/utR9/aJbgnpRerpKoQMTU/ThPx6cZLmvGgrXMUpne/j0=@vger.kernel.org, AJvYcCUamasn3ALdU1pUivfKnlf+8S3lfqZZqD5mj0aCikIKtT02gt4+0KmE7eg4Jhqe0T4aJLdLQXzPnogqsVbl@vger.kernel.org, AJvYcCUqrSIFo+NhRKwTV/yoTiPbbx3bXGaUOs2H+B+1xtObrDqm6/PtCuyU+5zdAzuIQS4sTL/c5LyMerAi@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvtdkZVeFbMNRuqySVGg4gO3kOHzPKzK+K4K22P7by8gPtx+Rk
-	3UYMf86aoOvbVjtRYVV9vcnIBxq3RIHe6MsnTIkWFvplav4L1hej
-X-Gm-Gg: ASbGncs/843PP9V0XUcttqBt3mNaR5LQ9BvQcl0bpKYMr0Cz5uVSakqc7pJvYh3boIK
-	GSQvxWxraJT+Q2F4YXTa1UdfXWO3tKGgcjm9xczqzKlRwnf4h4ZmHyU6nJsfyY2zMDJh4JbUtkA
-	sG17YWuXBmdiG0YqNqu+jF79kcG42jFMgwhMpwDO3bFKNjYK/+sol6AW3ca17Wz8mLswPdgE2A2
-	b5G1fCAca7LPXDDEYgW57wAXcwoG0OoUZUos0ebgiEMb/mWWfTaLWCPTeZlOsSSB7t8DrA5is8X
-	ZHp55ujpkcmzDm+QhCq/LBJoQs1LMRi6czU/sxvEKh3IOzsvwh7wB+4=
-X-Google-Smtp-Source: AGHT+IG81JBcoxCSpL/yba99zPCKx3gG10RaIXSaNybvimLBCJcKk3Mk9P6fzw2KJkuwaPEoBz3r3A==
-X-Received: by 2002:a17:903:19e8:b0:220:e023:8fa6 with SMTP id d9443c01a7336-2280495aa82mr17551805ad.50.1743025877614;
-        Wed, 26 Mar 2025 14:51:17 -0700 (PDT)
-Received: from localhost ([2804:30c:1f10:1900:2580:2d5b:b16d:c55b])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-227811f4383sm114338945ad.229.2025.03.26.14.51.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 14:51:16 -0700 (PDT)
-Date: Wed, 26 Mar 2025 18:52:19 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Olivier Moysan <olivier.moysan@foss.st.com>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] iio: dac: ad3552r-hs: add support for internal ramp
-Message-ID: <Z-R3E23hWiUKDc6q@debian-BULLSEYE-live-builder-AMD64>
-References: <20250321-wip-bl-ad3552r-fixes-v1-0-3c1aa249d163@baylibre.com>
- <20250321-wip-bl-ad3552r-fixes-v1-4-3c1aa249d163@baylibre.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="ccwE1uBt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1743025915;
+	bh=E7kr/pxzFv3vUyE91rsLl/E9VrXg3DOOVZED/WIMboo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ccwE1uBtbu2l/p5le7kqE45+XoDN4GZPzFyUFdjRoOnMTj3Va12W8jW3FuW7v8llV
+	 isxvg9JY6cULw1qBQykv1mcSMK0nv7U02cW6IbVAgKF4xiEP2edXEAUSTDGS5Y0XWE
+	 pb3yC61nwKHq0cHmGwGNa/7AeCrnzyGQ7QSA+Xp4=
+Date: Wed, 26 Mar 2025 22:51:54 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+Cc: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "Maciej W. Rozycki" <macro@orcam.me.uk>, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] tools/nolibc: MIPS: entrypoint cleanups and
+ N32/N64 ABIs
+Message-ID: <60e78caf-49e5-42ad-900c-9813518d838b@t-8ch.de>
+References: <20250225-nolibc-mips-n32-v2-0-664b47d87fa0@weissschuh.net>
+ <20250326205434.bPx_kVUx@breakpoint.cc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250321-wip-bl-ad3552r-fixes-v1-4-3c1aa249d163@baylibre.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250326205434.bPx_kVUx@breakpoint.cc>
 
-Hello Angelo,
+On 2025-03-26 21:54:34+0100, Sebastian Andrzej Siewior wrote:
+> On 2025-02-25 18:02:34 [+0100], Thomas Weißschuh wrote:
+> > Introduce support for the N32 and N64 ABIs. As preparation, the
+> > entrypoint is first simplified significantly. Thanks to Maciej for all
+> > the valuable information.
+> > 
+> > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> 
+> Tested-by: Sebastian Andrzej Siewior <sebastian@breakpoint.cc> [ICT Loongson-3]
 
-Patch looks good to me.
-One minor comment bellow.
+Thanks!
 
-On 03/21, Angelo Dureghello wrote:
-> From: Angelo Dureghello <adureghello@baylibre.com>
-> 
-> The ad3552r can be feeded from the HDL controller by an internally
-> generated 16bit ramp, useful for debug pourposes. Add debugfs a file
-> to enable or disable it.
-> 
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-> ---
->  drivers/iio/dac/ad3552r-hs.c | 106 ++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 100 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/iio/dac/ad3552r-hs.c b/drivers/iio/dac/ad3552r-hs.c
-> index 37397e188f225a8099745ec03f7c604da76960b1..41fe78d982a68980db059b095fc27b37ea1a461b 100644
-> --- a/drivers/iio/dac/ad3552r-hs.c
-> +++ b/drivers/iio/dac/ad3552r-hs.c
-> @@ -7,6 +7,7 @@
-...
-> +
-> +static ssize_t ad3552r_hs_write_data_source(struct file *f,
-> +					    const char __user *userbuf,
-> +					    size_t count, loff_t *ppos)
-> +{
-> +	struct ad3552r_hs_state *st = file_inode(f)->i_private;
-> +	char buf[64];
-> +	int ret;
-> +
-> +	ret = simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, userbuf,
-> +				     count);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	buf[count] = 0;
-Shouldn't it be
-	buf[count] = '\0';
-?
+> mips32le works as-is.
+> For mips64le I had to s/-march=mips64r6/-march=mips64r2 to match the
+> ABI. Which makes me wonder: Why do do we need to pass -march here and
+> can't rely on toolchain defaults?
+
+The goal here is to have an as-wide-as-possible test matrix for
+nolibc-test, which will mostly be running on QEMU anyways.
+Also we need to run the correct QEMU user variant; by fixing the
+architecture this is easy to do.
+
+
+Thomas
