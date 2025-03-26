@@ -1,91 +1,155 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F7B1DFDE
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2D92628C
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 08:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742978766; cv=none; b=As9d+Qzp86nPinY8mkqgd873T4jWQuYyc+hKov4GpokMqarBmIK9a80wxjZIo3ufWKReVDUDi+tectbpojiwERBtacA5nGCjZlLxr5Eg3mr8/x+SPyDbI/JqRNrafqeRNlcp4VU+MT4c9BFAnkXK12NPj3ulT9/McfW+K8WmlSQ=
+	t=1742978791; cv=none; b=oIEg2BuwaIrrE0qOtM5H8qARnL+fLME/wUkmOUMYmxfpdxl3trOSdqxQWc6V34UTw7Rb8S+1L83QdNzWqMZn3u4I8Fph9EeX1eCPAFGSG7Ydv8IjmexRlKHgOSOPKKmqFRV7O15sMnFtg9PdTx/+FVn3D39suChbx/Eaz8Mx9Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742978766; c=relaxed/simple;
-	bh=D9Q6Bq7rIfP8pL1DuBYQK0tNWYv+vU65XyhnzF+UYlg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tto5h3fxxYv0eoISPgwKWSL8JPUHmdZB0ulyu1lS2g25+BiJr7e9/4WfKHW8RG6vceTz2tbc5Fha/pRMKNFJj/si21Aff8v7IXDxlW5cTcHMMC6iVsXhIv7IWdEnq+cke3VsDB6FgN/f7s65u7o3VWOWbxQtxgA0IvUeXCWY8W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ess85WSl; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1742978791; c=relaxed/simple;
+	bh=K/dtw6Zy7JkO/qW/mn8P9kjeYNUEvGBSWGjYZWAiAkw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nXoKGPaJg6TQbX5NbC3i31tZxRQ6/MZfwJZhlQVMkmOS5VKj0B7T7akziXhRToIBsVYWOk2cEoVSPdSosB+//utjzNrD8pEDVJE5/ACF4vVaTg1MkYxVtKJe61XXDQyLdR32kEAHsWTEEABWIeAwCONvgNazHSvbW80tM3AcnFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L+bV07uZ; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ess85WSl"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3015001f862so8178363a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 01:46:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L+bV07uZ"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30bfd4d4c63so66604741fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 01:46:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1742978762; x=1743583562; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mTKaj6KL96qFCBnkU6QrFMZuOf/XUp8SJyy8b7qf9F8=;
-        b=Ess85WSlnZVBdTgu/A0jRK/1NY11CAbwbVSOjI/O/98jt6k9jQYkjywsXCUgv1pNuq
-         tRmBbUtqfWVF4rXhdXto5INHbw5e2AgMSfVzZIts3audVsqZBeXZmGWo7ueDv4hEJOXR
-         nCdxb3GFQ694gG6PBVLEfaz9mwAuKwYbz74oY=
+        d=gmail.com; s=20230601; t=1742978787; x=1743583587; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1AhgH9UIweYAk5QdmzyUWPpgLDiJpug8oPX2Zm0hwCE=;
+        b=L+bV07uZXBODBctneo/I7dWob+nSGIgQ3wWsqLoY1kK8QYIePhdLrqbQkFTLiJmeyt
+         OJjeoKPVnr8wvuP3FEQgqsUtOpqrSzYdkAMYs9tJY55PZIg4+xGrZ5Pv8zdFIn4k+CsY
+         3AS4b6B+gg7MGQdZKUXdS2uqnhLAeO/GUg3Scdas7eFb5pie1DUPhLFvao74/yHtjMKz
+         d01bs+8vzVFZdhoFntIje6o+08LCHH9keeoihA3fH707nAyQIX2kglk2inkGhS/sDEcn
+         iK26hN7rWDiEDKPAqMYm0H3cQvjbxA+FlfyhVWm4IXLzqPeQX6onIGPSrfKribVjdhl9
+         bxMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742978762; x=1743583562;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mTKaj6KL96qFCBnkU6QrFMZuOf/XUp8SJyy8b7qf9F8=;
-        b=XoJDszGTBNsU0xRBgzEYdg6KciS8TUH7CbR0BQ5JAZFW9YH2UKQDEpk5VBwtwupPcX
-         jePZxlLyT8S9wpHVzrYku9ficQ4a/JCXUj5i2tsR9omFc4bYn03rqR/W/CbkAzam/cVq
-         5S6Nz/0VgK5hm9CFBp+W4mJXXFBOcoJI3itqUe6jaILmapssVRL8Vg1NrHF6rebBmpvy
-         eutfP4osgLNfj70996IVyLGAAH4tdrthgBpcacKSLO2M0+rE8YLyHRK2VheulwEgramH
-         7tpfrdnwyTsU+2kwxs+01U8m6rd+Vvxm+NlR7c7niEDA3Ol66kKW3FtmOuQqCjxhiGuE
-         16Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCXVoyRZYQpHlp4h3q7AlhtHQg1zxHELCz/UTR/onVF0dDc2fsf9m+aoHEyoXvoJgktV2lklBoHLpG9kftg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdnnUkQt4Todvh2VQNaZXgS3YHZ3fZj4QPiULeW8DXszoJp63w
-	7UAUlzZi5AIY3ZCl+qQDSrPPegTSNRcqG01H/4pOpReUhVAc/t4Y7JcfWT5WaA==
-X-Gm-Gg: ASbGncuCKd9a71WsyBDBT74trJEy2b1QADk5TsH0+VzEO/HLJlMavH1NGxak95HcDA5
-	iI4/uE2dYTX30YMQht5X71vJ3cXx9BvMWSd1MZfBDA1PjJRcUUuKeHKR70OnjdvBm6EDWVhuVwB
-	Iu0gycMUtM+gFp39ryNdzvhZ/tGcZK3Gf7y6LNJigLNpDuWC+YhfR9eYGc2Hm84zhUScBrczkgR
-	M+zVzgD3Y1HlrO6XSYOclJCgp01psA9Edwx7g/LukzuronJPiu6MGDkQm5VRpDAWNJxG90Ako93
-	T48aB/hUoERGkah+y9flITsnEIxGr9WMXOll+BZdglJ/YxCP
-X-Google-Smtp-Source: AGHT+IGisvnfs4SlEXOwlnXep8AOnrWVjOmA+e82dVgBI4R5OxY1nQbWHtCBn1UGC10gQ6jKlVnTrA==
-X-Received: by 2002:a17:90b:134c:b0:2ff:53ad:a0f4 with SMTP id 98e67ed59e1d1-3030fe93f0dmr39067080a91.12.1742978761631;
-        Wed, 26 Mar 2025 01:46:01 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:d343:29c5:4565:9d95])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3037c8ecaf8sm843442a91.0.2025.03.26.01.45.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 01:46:01 -0700 (PDT)
-Date: Wed, 26 Mar 2025 17:45:56 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Richard Chang <richardycc@google.com>
-Cc: Minchan Kim <minchan@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Brian Geffon <bgeffon@google.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH] zram: modernize writeback interface
-Message-ID: <awuyw4jfm2nwxxunchaxazc27m6gqkcyn7zx4gkin7fqg3ogrc@uq55swn7atrx>
-References: <20250325034210.3337080-1-senozhatsky@chromium.org>
- <Z-MlsM2Gmxdvl_1D@google.com>
- <CALC_0q8Mv_UWvFjo3HW_gRsG2N8P--R1OqDj7=2x_98XiRXy4w@mail.gmail.com>
- <5l4pjqlgu4afndn3ysa7ynecjmvepkfjlh56ycm5jt5e4mioqm@dujakwaomhlk>
- <CALC_0q9hRAX=46Zd+qh5Pq1myXx+=9gSTT5hu7t1s_Ko4xd_Og@mail.gmail.com>
- <iiav3vvvvu7lzcl3e2rzfh4kyz6kwymqurncjdsv62wvlge63k@ewgbdmzdnb2p>
+        d=1e100.net; s=20230601; t=1742978788; x=1743583588;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1AhgH9UIweYAk5QdmzyUWPpgLDiJpug8oPX2Zm0hwCE=;
+        b=uUi8sxlBb+SzhRPkpUo9XhBQosyGWg5C6UZXN64HjBs68w6/kazlFdj49xrfW8t5s5
+         RKIHMZ9HG83/YtrgJEAjt+xTR0wFYE9LQmjgLbkDLRyryRxFVwVVZMJTLY80hwirUMWn
+         Otp4BPDyn9HeGLL1TpZd2Yrim+c1fs5cazqu9hmXc9uIgeJL3+wfCWefNk3QJA2h2VCd
+         KFDGfNV3NXJkptP9pzbEV/2DaGrr3XZ0GhjmheYhYnT5cTc62xQUjh62O7TL+HIVI56Z
+         NaEBgbOR+zOxL5HwKtMgcS0w+RjDI1cKPhIS4doHeQ+Wnnqr1bRK9CQ+W76KW/PZ4yup
+         znCA==
+X-Forwarded-Encrypted: i=1; AJvYcCWDlC+vxNRA37GJS1i/77GSvsBKBMVpNG4t1RDwcRelT7VXs5C4mi+p0oQPXvtwzHU4YCp74fHKQi+4fr8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwcvGn3dU1jgFG9e150jk48lIbJO8RS9wmp6Fif2Qc31npbTxu
+	ZRINYX5BmFmo4Q9Q6y8Iw1ODO7BMKAcrfctzcAt9/bR729GqZvz/dRzgbjV0b+7WRzBsyrpDUsz
+	PpgEASYhmYkdQExNge71+xlYyabY=
+X-Gm-Gg: ASbGncumDwbly+22FyZ1w572ez4hWgY3R3xEwjGgZRXWiY9J8KGC0MUhKiBA0dBcFlb
+	mYGuBkz4JL5bMtapghsaCU3bErymgerRbayFNLWb8piyXVM42K6Pc74lJDvhrouNhgynMV06l++
+	jOhePCvr1qfcqa0wgBQrW4cTAu/w==
+X-Google-Smtp-Source: AGHT+IG7g9IsMKWIX3zdEoCpgKg06FS6rhOt/4tehElEjIFgWetLBkAHQT+YNTwVtU6x0HA3Lzb+HE4Tc/IwVWm9yvA=
+X-Received: by 2002:a2e:91ce:0:b0:30d:886b:1fff with SMTP id
+ 38308e7fff4ca-30d886b204fmr63125391fa.37.1742978787269; Wed, 26 Mar 2025
+ 01:46:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <iiav3vvvvu7lzcl3e2rzfh4kyz6kwymqurncjdsv62wvlge63k@ewgbdmzdnb2p>
+References: <20250325175215.330659-1-ubizjak@gmail.com> <20250325175215.330659-2-ubizjak@gmail.com>
+ <Z-MjgKSzJKIVooFI@gmail.com>
+In-Reply-To: <Z-MjgKSzJKIVooFI@gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Wed, 26 Mar 2025 09:46:15 +0100
+X-Gm-Features: AQ5f1JodvbFUEHOT27u4WA367MR6cTVH8DIzGeDW4NhheCu_Q2xwIyKAwCYewyY
+Message-ID: <CAFULd4agDYNCJrQQ8bji09eGVJp1D46LH=fOpcfciza2qhKJfg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] x86/bitops: Fix false output register dependency of
+ TZCNT insn
+To: Ingo Molnar <mingo@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: multipart/mixed; boundary="000000000000777bad06313adf37"
 
-On (25/03/26 17:15), Sergey Senozhatsky wrote:
-> On (25/03/26 15:07), Richard Chang wrote:
-> [..]
-> > Another alternative thought, how about page_index supporting both
-> > single instance and ranges?
-> > The key is shorter and the parser is relatively simpler.
-> > Eg: page_index=500 page_index=10000-10001
-> 
-> I probably can look into it.
+--000000000000777bad06313adf37
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Can't say I really like that "index" will mean both index and
-a range of indexes.  But let me think more.
+On Tue, Mar 25, 2025 at 10:43=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wro=
+te:
+>
+>
+> * Uros Bizjak <ubizjak@gmail.com> wrote:
+>
+> > On Haswell and later Intel processors, the TZCNT instruction appears
+> > to have a false dependency on the destination register. Even though
+> > the instruction only writes to it, the instruction will wait until
+> > destination is ready before executing. This false dependency
+> > was fixed for Skylake (and later) processors.
+> >
+> > Fix false dependency by clearing the destination register first.
+> >
+> > The x86_64 defconfig object size increases by 4215 bytes:
+> >
+> >           text           data     bss      dec            hex filename
+> >       27342396        4642999  814852 32800247        1f47df7 vmlinux-o=
+ld.o
+> >       27346611        4643015  814852 32804478        1f48e7e vmlinux-n=
+ew.o
+>
+> Yeah, so Skylake was released in 2015, about a decade ago.
+>
+> So we'd be making the kernel larger for an unquantified
+> micro-optimization for CPUs that almost nobody uses anymore.
+> That's a bad trade-off.
+
+Yes, 4.2k seems a bit excessive. OTOH, I'd not say that the issue is a
+micro-optimization, it is bordering on the hardware bug.
+
+An alternative (also answering Peter's question) would be to make
+instruction dependent only on the input (so, matching input and output
+operand, making insn destructive), requiring MOV if the input operand
+is to be reused. A quick test (x86_64 defconfig) with the attached
+patch shows much less impact:
+
+  text    data     bss     dec     hex filename
+27564120        4642423  814852 33021395        1f7ddd3 vmlinux-old.o
+27564679        4642423  814852 33021954        1f7e002 vmlinux-new.o
+
+The increase is now 559 bytes, which IMHO is an acceptable trade-off.
+Please also note that:
+
+       asm("tzcnt %1,%0"
+               : "=3Dr" (word)
+               : "r" (~word));
+       return word;
+
+emits NOT insn that is also destructive and already requires copying
+of the input operand if the operand is to be reused.
+
+Thanks,
+Uros.
+
+--000000000000777bad06313adf37
+Content-Type: text/plain; charset="US-ASCII"; name="p.diff.txt"
+Content-Disposition: attachment; filename="p.diff.txt"
+Content-Transfer-Encoding: base64
+Content-ID: <f_m8pnzupc0>
+X-Attachment-Id: f_m8pnzupc0
+
+ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2JpdG9wcy5oIGIvYXJjaC94ODYvaW5j
+bHVkZS9hc20vYml0b3BzLmgKaW5kZXggYmJhZjc1ZWE2NzAzLi4zNzgxOTQ2ODdiZWMgMTAwNjQ0
+Ci0tLSBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2JpdG9wcy5oCisrKyBiL2FyY2gveDg2L2luY2x1
+ZGUvYXNtL2JpdG9wcy5oCkBAIC0yNTAsNyArMjUwLDcgQEAgc3RhdGljIF9fYWx3YXlzX2lubGlu
+ZSB1bnNpZ25lZCBsb25nIHZhcmlhYmxlX19mZnModW5zaWduZWQgbG9uZyB3b3JkKQogewogCWFz
+bSgidHpjbnQgJTEsJTAiCiAJCTogIj1yIiAod29yZCkKLQkJOiBBU01fSU5QVVRfUk0gKHdvcmQp
+KTsKKwkJOiAiMCIgKHdvcmQpKTsgLyogYXZvaWQgZmFsc2Ugb3V0cHV0IGRlcGVuZGVuY3kgKi8K
+IAlyZXR1cm4gd29yZDsKIH0KIApAQCAtMjY3LDEwICsyNjcsNyBAQCBzdGF0aWMgX19hbHdheXNf
+aW5saW5lIHVuc2lnbmVkIGxvbmcgdmFyaWFibGVfX2Zmcyh1bnNpZ25lZCBsb25nIHdvcmQpCiAK
+IHN0YXRpYyBfX2Fsd2F5c19pbmxpbmUgdW5zaWduZWQgbG9uZyB2YXJpYWJsZV9mZnoodW5zaWdu
+ZWQgbG9uZyB3b3JkKQogewotCWFzbSgidHpjbnQgJTEsJTAiCi0JCTogIj1yIiAod29yZCkKLQkJ
+OiAiciIgKH53b3JkKSk7Ci0JcmV0dXJuIHdvcmQ7CisJcmV0dXJuIHZhcmlhYmxlX19mZnMofndv
+cmQpOwogfQogCiAvKioK
+--000000000000777bad06313adf37--
