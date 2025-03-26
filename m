@@ -1,175 +1,121 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825DB14A4C6;
-	Wed, 26 Mar 2025 15:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C1A1E8349
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 15:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743002781; cv=none; b=g686PwssVT+RJuTVUevI+LpmA+6BdPL82pTq01fZg11TYhJtSE1th3ocgk0MYseIixa+On+oy0ZIxZLkjJE7cb+G9n0q5bSvguFrNCeWk1RP0y8SgviNGhoLNy8T2opQ/Q+Ub1fd3OiPdbpkMYxCK7QTpl8T/sFbqZsjdzVzuNY=
+	t=1743002810; cv=none; b=YmZnn3Kws3qPeMv6PUgWcDLO5ksdvqaCpdLTsI4q/m0ua49wcjitLa4Ropn3FpdOZl7nKHiA3YskpdVoj+W0QdQz1PphHtP6rg3za2JG86OsM8Yu0aTI5+K4L6i3YwpLCDd+OLMOSHRdgItlTJoR1nNh7hjgR8OT3Bf/yj+pnso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743002781; c=relaxed/simple;
-	bh=KcLx+LUsuQ+1FVIso4P5u4UhRImurn8WgvxTB/HPrz8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vyh0ZJ5lTl9Hx+3iqDQMGl/N/vbclolNcf0A85j0pOCWT7b4ET54u2U8OLIC+EctIkX3s+rsdVscNZOyz7WvCUb9v1BM1rvDpRBBCyQANkzW++7TsHNF9aYm1uOZFLfDpcHAzyWljBuqzWwJpDgnmVbBcSS+pUDiZZcTljtdMV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fMKrbAZ9; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743002810; c=relaxed/simple;
+	bh=E3LVCXLoRzbhs4MzPU/33YNPn5UAO0vP8mj3ilyU6MU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pLtjr7iTPuEb00R54mXm1U+QjiTPEp/rI/fm6nGTHaPfXi8mAFxeTG5c+8h6n44YeugVOnGkjKuHAigUc5k/ianyyqxWlxANmD0MbMcgUzH8e1LXxSDjK91sivnjsv+0hnTJbFgEZWZEVY5ZQYX16+ooduXOoIWDaSVUoYWDFZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibhRk9N+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fMKrbAZ9"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743002776;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=EZLo1jQQXln+Xf5Ba7tBgf55edk8Etnb6mTfw0jd+O0=;
-	b=fMKrbAZ95CgFQx1idRLbepXmVc+5F+vVd/5nGzLidOuej04JwpEj0X7PHCYyIkPSakfpvt
-	f1FAlskEJ+PoDpuNcerDcjYSN52EF2JAGwbuiHyVCiwAxmxLkVKMU2n8XUcy9xrd9jxj6b
-	SEIB62cQDziFrnhiJRWaGCgve8x50Bw=
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: linux-bcachefs@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibhRk9N+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD585C4CEE2;
+	Wed, 26 Mar 2025 15:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743002810;
+	bh=E3LVCXLoRzbhs4MzPU/33YNPn5UAO0vP8mj3ilyU6MU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ibhRk9N+8JE80IkNKOMMxpqqoMdJJsAZ7apRKKEOTN17yaiQBtdMMPI8Qnu4WlT9e
+	 p02y4Op1o8uWoq2qdPHVjYsjl/O+CUFdMIcLF4CU6YT1efrGgfEUkeKmAPpcvW3Wuy
+	 hrtsVDWnjiFPemqHMG7LEGmlvHmFWwPo2LJG4+Nq88zffW6Tib0SzqhuXxHZSh87M3
+	 E5GcfkttsX/C3G3yk3zFkDM0RO3O/tPutcaa1REMUfemtCfdu1TRCae5APvbGj0S+Z
+	 MhABIa2aq+dfzWBb7PicBNq94fMySf4sTALjbFVaGnJMEnM0GCutN/9lpsQQvHk0z6
+	 VeYzPfk7jn7aQ==
+Date: Wed, 26 Mar 2025 16:26:47 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Anusha Srivatsa <asrivats@redhat.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
 	linux-kernel@vger.kernel.org
-Cc: Kent Overstreet <kent.overstreet@linux.dev>,
-	Kuan-Wei Chiu <visitorckw@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH] lib/sort.c: Add _nonatomic() variants with cond_resched()
-Date: Wed, 26 Mar 2025 11:26:06 -0400
-Message-ID: <20250326152606.2594920-1-kent.overstreet@linux.dev>
+Subject: Re: [PATCH 1/5] drm/panel: Add new helpers for refcounted panel
+ allocatons
+Message-ID: <20250326-camouflaged-satisfied-quokka-8d5afc@houat>
+References: <20250325-b4-panel-refcounting-v1-0-4e2bf5d19c5d@redhat.com>
+ <20250325-b4-panel-refcounting-v1-1-4e2bf5d19c5d@redhat.com>
+ <20250326102259.3bdbc22d@booty>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="kx76iyfxdbnxqini"
+Content-Disposition: inline
+In-Reply-To: <20250326102259.3bdbc22d@booty>
 
-Andrew - if you're ok with this patch I'd like to get it in soon as a
-bugfix, I've been getting quite a few reports on this one.
 
-I don't much care for the naming though, thoughts there?
+--kx76iyfxdbnxqini
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/5] drm/panel: Add new helpers for refcounted panel
+ allocatons
+MIME-Version: 1.0
 
--- >8 --
+On Wed, Mar 26, 2025 at 10:22:59AM +0100, Luca Ceresoli wrote:
+> Hello Anusha,
+>=20
+> On Tue, 25 Mar 2025 13:24:08 -0400
+> Anusha Srivatsa <asrivats@redhat.com> wrote:
+>=20
+> > Introduce reference counted allocations for panels to avoid
+> > use-after-free. The patch adds the macro devm_drm_bridge_alloc()
+> > to allocate a new refcounted panel. Followed the documentation for
+> > drmm_encoder_alloc() and devm_drm_dev_alloc and other similar
+> > implementations for this purpose.
+> >=20
+> > Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+>=20
+> [...]
+>=20
+> > +void *__devm_drm_panel_alloc(struct device *dev, size_t size, size_t o=
+ffset,
+> > +			     const struct drm_panel_funcs *funcs,
+> > +			     int connector_type);
+> > +
+> > +/**
+> > + * devm_drm_panel_alloc - Allocate and initialize an refcounted panel
+>                                                      ^^
+> "a refcounted panel"
+>=20
+> > + * @dev: struct device of the panel device
+> > + * @type: the type of the struct which contains struct &drm_panel
+> > + * @member: the name of the &drm_panel within @type
+> > + * @funcs: callbacks for this panel
+> > + * @connector_type: connector type of the driver
+>=20
+> I'd say it's the connector type in the hardware, rather than of the
+> driver (the driver follows what is in the hardware. Maybe you can just
+> copy the description present in the drm_panel_init kdoc:
+>=20
+>  * @connector_type: the connector type (DRM_MODE_CONNECTOR_*) correspondi=
+ng to
+>  *      the panel interface (must NOT be DRM_MODE_CONNECTOR_Unknown)
+>=20
+> Other than that it looks good!
 
-bcachefs calls sort() during recovery to sort all keys it found in the
-journal, and this may be very large - gigabytes on large machines.
+Heh, Unknown is fine, but you're right for the rest. I'd use the
+drm_panel_init doc for that field actually.
 
-This has been causing "task blocked" warnings, so needs a
-cond_resched().
+Maxime
 
-Cc: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
----
- include/linux/sort.h | 11 +++++++++++
- lib/sort.c           | 46 +++++++++++++++++++++++++++++++++++++++-----
- 2 files changed, 52 insertions(+), 5 deletions(-)
+--kx76iyfxdbnxqini
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/include/linux/sort.h b/include/linux/sort.h
-index e163287ac6c1..8e5603b10941 100644
---- a/include/linux/sort.h
-+++ b/include/linux/sort.h
-@@ -13,4 +13,15 @@ void sort(void *base, size_t num, size_t size,
- 	  cmp_func_t cmp_func,
- 	  swap_func_t swap_func);
- 
-+/* Versions that periodically call cond_resched(): */
-+
-+void sort_r_nonatomic(void *base, size_t num, size_t size,
-+		      cmp_r_func_t cmp_func,
-+		      swap_r_func_t swap_func,
-+		      const void *priv);
-+
-+void sort_nonatomic(void *base, size_t num, size_t size,
-+		    cmp_func_t cmp_func,
-+		    swap_func_t swap_func);
-+
- #endif
-diff --git a/lib/sort.c b/lib/sort.c
-index 8e73dc55476b..60b51dac00ec 100644
---- a/lib/sort.c
-+++ b/lib/sort.c
-@@ -186,6 +186,8 @@ static size_t parent(size_t i, unsigned int lsbit, size_t size)
- 	return i / 2;
- }
- 
-+#include <linux/sched.h>
-+
- /**
-  * sort_r - sort an array of elements
-  * @base: pointer to data to sort
-@@ -212,10 +214,11 @@ static size_t parent(size_t i, unsigned int lsbit, size_t size)
-  * O(n*n) worst-case behavior and extra memory requirements that make
-  * it less suitable for kernel use.
-  */
--void sort_r(void *base, size_t num, size_t size,
--	    cmp_r_func_t cmp_func,
--	    swap_r_func_t swap_func,
--	    const void *priv)
-+static void __sort_r(void *base, size_t num, size_t size,
-+		     cmp_r_func_t cmp_func,
-+		     swap_r_func_t swap_func,
-+		     const void *priv,
-+		     bool may_schedule)
- {
- 	/* pre-scale counters for performance */
- 	size_t n = num * size, a = (num/2) * size;
-@@ -286,6 +289,9 @@ void sort_r(void *base, size_t num, size_t size,
- 			b = parent(b, lsbit, size);
- 			do_swap(base + b, base + c, size, swap_func, priv);
- 		}
-+
-+		if (may_schedule)
-+			cond_resched();
- 	}
- 
- 	n -= size;
-@@ -293,8 +299,25 @@ void sort_r(void *base, size_t num, size_t size,
- 	if (n == size * 2 && do_cmp(base, base + size, cmp_func, priv) > 0)
- 		do_swap(base, base + size, size, swap_func, priv);
- }
-+
-+void sort_r(void *base, size_t num, size_t size,
-+	    cmp_r_func_t cmp_func,
-+	    swap_r_func_t swap_func,
-+	    const void *priv)
-+{
-+	__sort_r(base, num, size, cmp_func, swap_func, priv, false);
-+}
- EXPORT_SYMBOL(sort_r);
- 
-+void sort_r_nonatomic(void *base, size_t num, size_t size,
-+		      cmp_r_func_t cmp_func,
-+		      swap_r_func_t swap_func,
-+		      const void *priv)
-+{
-+	__sort_r(base, num, size, cmp_func, swap_func, priv, true);
-+}
-+EXPORT_SYMBOL(sort_r_nonatomic);
-+
- void sort(void *base, size_t num, size_t size,
- 	  cmp_func_t cmp_func,
- 	  swap_func_t swap_func)
-@@ -304,6 +327,19 @@ void sort(void *base, size_t num, size_t size,
- 		.swap = swap_func,
- 	};
- 
--	return sort_r(base, num, size, _CMP_WRAPPER, SWAP_WRAPPER, &w);
-+	return __sort_r(base, num, size, _CMP_WRAPPER, SWAP_WRAPPER, &w, false);
- }
- EXPORT_SYMBOL(sort);
-+
-+void sort_nonatomic(void *base, size_t num, size_t size,
-+		    cmp_func_t cmp_func,
-+		    swap_func_t swap_func)
-+{
-+	struct wrapper w = {
-+		.cmp  = cmp_func,
-+		.swap = swap_func,
-+	};
-+
-+	return __sort_r(base, num, size, _CMP_WRAPPER, SWAP_WRAPPER, &w, true);
-+}
-+EXPORT_SYMBOL(sort_nonatomic);
--- 
-2.49.0
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ+QctgAKCRDj7w1vZxhR
+xW8DAQD40+ulGnIJEDIE/lvd8rfwdrKdgFym/9bSB9uZ01XXHAEA5MNcCIEyKhj4
+MGIvSR/D/1GUWfEkNBH4dz32KHIupgA=
+=9uMY
+-----END PGP SIGNATURE-----
+
+--kx76iyfxdbnxqini--
