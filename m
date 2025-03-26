@@ -1,80 +1,82 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DAB21BD03F
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 20:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743019769; cv=pass; b=kZMq3WH7xkHeHJPd9noECoTkZzyK0AINPN175+rzLQZkVzRXpdWei9uZ+tmpzFEV5zpvLGjf9kbWuLVdkEyM4gdbziIGfxQj8cFmmc47/AvusKccF5ApMkg1McFxzvRtKLE9qRlZ9RHla7f42RXt2yOud0rkl5ULk1D24yumQ0w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743019769; c=relaxed/simple;
-	bh=f2UtcRRZub/HpkPVYMefrEyU7OxM4hgtJ27zHGLc6mg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E1rQ6/C7yZVfMSB2J8BCHWRaJzjJSleLno1K2Toh7iAZH301liRitYpawc2TY0jmmAoaz/DcfLbXmWjxFDKf7HLijhPs+gUfBevFrGJxFmHl4/HXvA5FL+/8XTPfxUMZAA6GlSEdL0Pdg9PtGuaCr0RHmrI6On/QLWAMyEpi8UI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=EsH2tnBR; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB2D21CD1F;
+	Wed, 26 Mar 2025 20:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743019792; cv=none; b=KhiIUC6H27MOl33tizM8El8dea6y87PAq0yqo/PTw3dmH6ueNkBnnuJ+a45H8c41uSTLwkZ8l83d+FFiSikZ4fouiHG/nFdyZ6CKTtj4arPTJNIhhIGXKCleMGxsFoYmvzg39tXeFAu6Jl09jC3XmWHMLQEO0L0orMK7inXb63Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743019792; c=relaxed/simple;
+	bh=32KmifOOGoqSmOn9dvxSLSt7llFi98ixPAQF7D8wpcc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rTqyBoDh01k/isxrfRKRCNZHekgnktDcYIUhKDUrlkVzoQu0+8GiIA8Y9aLwNsFUsb0f9mYDZTJAs2rhaNP0zNnFRAEYbQKsBF1GfmidimYXDtSLxw4WNJ+jhXxOMDcFMPUGjCEy5u9khQonr8NIsJCvThcHvIw6RRaUKXb8ENA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tYsG9+uS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="EsH2tnBR"
-ARC-Seal: i=1; a=rsa-sha256; t=1743019743; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=d+c7ESZdkyR1GlQ6EZ4v8xLwEw/oKw0riRg66riBzhCfJSrAeGexqUzmzdfwFyCq7meKu7F2yQVysGolZvL7Unxzhpo0TkMRjfrfGn0+j8mwHiY6dCDTV4/9LH1TzQqdwGcsgoHiQ2wPp/Fy7KT7gTU79nc4pKQaRVfkPrBLX6Q=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743019743; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=lJEcZ1DcNk21RCbuiJsB6ijhomxJfvHr1TaAlYoZBCc=; 
-	b=GkIPcwwh7HB/IGpBH2AnXkqZAd4hdXSX3bj/p9sRcqnTLoUqRvjppr5kmQrz21LxgY/pqfJ4TCiM4jCPBuZmjJDJCz+ON117sz7dWksI/MYToc92QMLbfl9MJdMxJVhLMRkRrqbVZ2PDmcI0dMBhS0Y5oCqG0AuL6X2RDdIn8xA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743019743;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=lJEcZ1DcNk21RCbuiJsB6ijhomxJfvHr1TaAlYoZBCc=;
-	b=EsH2tnBRrr7dJdta9C+6iQk5/8TN4hAk1rhugDnJmCZNu7aO1o4Sq397v7a8Wu9u
-	qu9mW3vOAy4mXE+LfgV636KHGGerkSq7tI2cZ81xUI3TdVgkFiFCMBiLoct9ynRoq/X
-	MbGrIE07MV+DWEpqWf2cgezHYDTN4KRdxov+11Cg=
-Received: by mx.zohomail.com with SMTPS id 1743019741127156.797910467649;
-	Wed, 26 Mar 2025 13:09:01 -0700 (PDT)
-Message-ID: <1c9daef3-cd64-4f2f-8021-6ab2f17ae572@collabora.com>
-Date: Wed, 26 Mar 2025 23:08:55 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tYsG9+uS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B221C4CEE2;
+	Wed, 26 Mar 2025 20:09:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743019792;
+	bh=32KmifOOGoqSmOn9dvxSLSt7llFi98ixPAQF7D8wpcc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tYsG9+uSmMlzNU68yDKOcPAH/hj4JOWVzXq05wujHeibPJoBIVKL9S4yYHTODlzDZ
+	 IFRTG+PnoqYA4Usbc8NG/aNQxHO+STrtC1ZigYa9nImSe+EuSCEfE6Lv7BDfKg/bj/
+	 T42+jYO2l3TzER4JMJPgChcE2/Hok1jo4irdYvYk95WAIYfM71aS9Fk2aOEmC9V924
+	 X5wytt6w5QY+/0Ae0U73HRphlb9IfP5UU5UauAiat2suKcckK4SGgodnCaIbhZjDrL
+	 BfTaYU3OD6AkHIGKpk4uJ7solP3YUGpggOYVG0TX9L/emUKA5aiC5bJDF22zQLWd1V
+	 RDPL6mrJABKrQ==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	stable@vger.kernel.org,
+	David Binderman <dcb314@hotmail.com>
+Subject: [PATCH] arm64/crc-t10dif: fix use of out-of-scope array in crc_t10dif_arch()
+Date: Wed, 26 Mar 2025 13:09:18 -0700
+Message-ID: <20250326200918.125743-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 00/10] Add generic DRM-shmem memory shrinker (part 1)
-To: Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Gerd Hoffmann <kraxel@redhat.com>, Qiang Yu <yuq825@gmail.com>,
- Steven Price <steven.price@arm.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com
-References: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
- <0e0686da-ae96-4a7a-81b2-b9ece1fa4837@suse.de>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <0e0686da-ae96-4a7a-81b2-b9ece1fa4837@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-On 3/25/25 17:17, Thomas Zimmermann wrote:
-> I've looked through this before, so
-> 
-> Acked-by: Thomas Zimmermann <tzimmermann@suse.d>
-> 
-> for the series.
+From: Eric Biggers <ebiggers@google.com>
 
-Applied to misc-next, thanks!
+Fix a silly bug where an array was used outside of its scope.
 
+Fixes: 2051da858534 ("arm64/crc-t10dif: expose CRC-T10DIF function through lib")
+Cc: stable@vger.kernel.org
+Reported-by: David Binderman <dcb314@hotmail.com>
+Closes: https://lore.kernel.org/r/AS8PR02MB102170568EAE7FFDF93C8D1ED9CA62@AS8PR02MB10217.eurprd02.prod.outlook.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ arch/arm64/lib/crc-t10dif-glue.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/arch/arm64/lib/crc-t10dif-glue.c b/arch/arm64/lib/crc-t10dif-glue.c
+index a007d0c5f3fed..bacd18f231688 100644
+--- a/arch/arm64/lib/crc-t10dif-glue.c
++++ b/arch/arm64/lib/crc-t10dif-glue.c
+@@ -43,13 +43,11 @@ u16 crc_t10dif_arch(u16 crc, const u8 *data, size_t length)
+ 
+ 			kernel_neon_begin();
+ 			crc_t10dif_pmull_p8(crc, data, length, buf);
+ 			kernel_neon_end();
+ 
+-			crc = 0;
+-			data = buf;
+-			length = sizeof(buf);
++			return crc_t10dif_generic(0, buf, sizeof(buf));
+ 		}
+ 	}
+ 	return crc_t10dif_generic(crc, data, length);
+ }
+ EXPORT_SYMBOL(crc_t10dif_arch);
+
+base-commit: 1e26c5e28ca5821a824e90dd359556f5e9e7b89f
 -- 
-Best regards,
-Dmitry
+2.49.0
+
