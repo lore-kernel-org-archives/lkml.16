@@ -1,193 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26B619FA93;
-	Wed, 26 Mar 2025 21:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8750A19FA93;
+	Wed, 26 Mar 2025 21:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743024475; cv=none; b=K36D74DxGE/bDzWec+g2KhGZeTsaaGMWon68qafngMNP2s00pNAEFUKX+ACuWZ0zOlmPm+tTWDOK+DcrsYTz8yHGXdHkbi1iqtxjcBNtRoHFNzxQOUZsWAmJqXOZNwQvLwKpAxQ8BP536JTTqTtM01Aia10K23sF/qi1m0sw5rY=
+	t=1743024498; cv=none; b=RLhT2ksuKrEYymgaRvUNU8JHa2UmuP5xQN9CkRf02/R8Y7z7WhDh6mbJWN/T/egeMbhO1FnUX2mLDb3aDBgFNhvOVmV3o6IneoXA5YhYXCKDfXoKTXe6ymjZjdqIaO1kC0G8FXfGgFFeALjl4h3dgkHFOMihGMSiRKIoA58Tpc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743024475; c=relaxed/simple;
-	bh=rel0LO6wnZX0yamOBZ2Hr0Q9Kjf4GnVHzzI1nENcclc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eBgHdCC4ixKk7RLNq9eHMcVWOSsN/+XbEfnrzn8NaUEKcBBxSnistrCxGW6jZOra3tcR4GfvqZ2WVuFCtCvaOc9KnThgGRheI1bxPrFHt34TPZERVi3x7C5EjaLLRBDGWbF1h3VyVuEUQeXi2CsoKoPYJzkhcSymRgABY+6j7xQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJdT/eTR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743024498; c=relaxed/simple;
+	bh=OBw9ipfX8DLQWYwCbr3x/zmBXAhxvC081tQVlHAiy+c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XF90GPXJBV6jlGoNa9cwpFoGnm849O/qPl/tvg2RQPsABU5e170Ynj14iE12Q7IPfRPNmYUviqbPNXUN683xBNTl5efoLGh2rO//KRvQy1RjNftxvqE8qm7K3KRuPkK0TaZw99FHWvAhe7qnrNhSDQa8M9cKL8nZurZfw7ikhrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=A0tc0IoH; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJdT/eTR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02E69C4CEE2;
-	Wed, 26 Mar 2025 21:27:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743024474;
-	bh=rel0LO6wnZX0yamOBZ2Hr0Q9Kjf4GnVHzzI1nENcclc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mJdT/eTRAHvGAOCaMQrlGca1CdQRPyRIC4GWPhsZdS5Cveg6IVcs06MFgLWOoiFc6
-	 7eDhVMI1FPp513/EB/liAG5epgFpDSbrWW6qcuxu5fT/I84tAi1mLO4DGPuZFoy/hl
-	 yhJFsxFWW4duYwMY5UEWQTBiIxWrJTaGEFWSMZUkAUVlgIi54fcTBXl+z/i26zNJ7h
-	 Tes2xS47a7G4y4ITvCWvx7Up40J35SfQGMmTomRhTwLVWDi/pulQuINith0lKr/Sza
-	 CzoXM+2/etQGpvOB6ot50QsmGuCCK/YYUGczOHpHn4ZpMid4el9wWyK9UDQUHXmGjd
-	 20iq6iCgQ46Mw==
-Date: Wed, 26 Mar 2025 16:27:53 -0500
-From: Rob Herring <robh@kernel.org>
-To: Remo Senekowitsch <remo@buenzli.dev>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Dirk Behme <dirk.behme@de.bosch.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 04/10] rust: Add bindings for reading device properties
-Message-ID: <20250326212753.GA2844851-robh@kernel.org>
-References: <20250326171411.590681-1-remo@buenzli.dev>
- <20250326171411.590681-5-remo@buenzli.dev>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="A0tc0IoH"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0F69C102EB802;
+	Wed, 26 Mar 2025 22:28:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1743024492; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=F8xEET/KGibHoNetoXRxyjjf3phhHE3/7Rrox+PgyYc=;
+	b=A0tc0IoHhQmVH+iKTnDidJKCMtXcGfXyDU5bXXYHDPXwha6s64aFrEvupYQho2JACGAcY4
+	GhR0i91+sl4Q17s5n0iI2KgWPA3M8RdfLK3cWtFpnN6KXTv7KW6Ufn8u6Xw+8DzFUqJGHv
+	5XXTHLTISwWbP4YTiDqWymwt7/Y2Ua56KjVxwaEvoTFQ7M0DXaNLAHd/jUUeqnowbgEz0q
+	vCyJcdigmcsI/NwlhIMz2M9aoW+l/Mk1IbxWJ6nZR8BOWFASE48IoTh/mvai1lDdDsCF12
+	UFOmDPTm9JfbgEo1VnBprC/cIfXxWl5D3jTfD1fZk3NXW5wyxgkcUnX9mTUXRQ==
+Date: Wed, 26 Mar 2025 22:28:11 +0100
+From: Lukasz Majewski <lukma@denx.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] spi: spidev: Add compatible for LWE's btt device
+Message-ID: <20250326222811.5313429d@wsk>
+In-Reply-To: <5f514949-5162-4944-8424-bf19318c5611@sirena.org.uk>
+References: <20250326174228.14dfdf8c@wsk>
+	<20250326172445.2693640-1-lukma@denx.de>
+	<83685ed2-f41a-456c-8a22-0ac069304386@sirena.org.uk>
+	<20250326184553.0756c496@wsk>
+	<5f514949-5162-4944-8424-bf19318c5611@sirena.org.uk>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250326171411.590681-5-remo@buenzli.dev>
+Content-Type: multipart/signed; boundary="Sig_/Ks3BX76zcDf=4OtGr_CtXxi";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Wed, Mar 26, 2025 at 06:13:43PM +0100, Remo Senekowitsch wrote:
-> The device property API is a firmware agnostic API for reading
-> properties from firmware (DT/ACPI) devices nodes and swnodes.
-> 
-> While the C API takes a pointer to a caller allocated variable/buffer,
-> the rust API is designed to return a value and can be used in struct
-> initialization. Rust generics are also utilized to support different
-> sizes of properties (e.g. u8, u16, u32).
-> 
-> Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
-> ---
->  rust/kernel/property.rs | 153 +++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 151 insertions(+), 2 deletions(-)
-> 
-> diff --git a/rust/kernel/property.rs b/rust/kernel/property.rs
-> index b0a4bb63a..4756ea766 100644
-> --- a/rust/kernel/property.rs
-> +++ b/rust/kernel/property.rs
-> @@ -4,9 +4,17 @@
->  //!
->  //! C header: [`include/linux/property.h`](srctree/include/linux/property.h)
->  
-> -use core::ptr;
-> +use core::{ffi::c_void, mem::MaybeUninit, ptr};
->  
-> -use crate::{bindings, device::Device, str::CStr, types::Opaque};
-> +use crate::{
-> +    alloc::KVec,
-> +    bindings,
-> +    device::Device,
-> +    error::{to_result, Result},
-> +    prelude::*,
-> +    str::{CStr, CString},
-> +    types::{Integer, Opaque},
-> +};
->  
->  impl Device {
->      /// Obtain the fwnode corresponding to the device.
-> @@ -26,6 +34,41 @@ fn fwnode(&self) -> &FwNode {
->      pub fn property_present(&self, name: &CStr) -> bool {
->          self.fwnode().property_present(name)
->      }
-> +
-> +    /// Returns if a firmware property `name` is true or false
-> +    pub fn property_read_bool(&self, name: &CStr) -> bool {
-> +        self.fwnode().property_read_bool(name)
-> +    }
-> +
-> +    /// Returns the index of matching string `match_str` for firmware string property `name`
+--Sig_/Ks3BX76zcDf=4OtGr_CtXxi
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Comment doesn't match the function.
+Hi Mark,
 
-> +    pub fn property_read_string(&self, name: &CStr) -> Result<CString> {
-> +        self.fwnode().property_read_string(name)
-> +    }
-> +
-> +    /// Returns the index of matching string `match_str` for firmware string property `name`
-> +    pub fn property_match_string(&self, name: &CStr, match_str: &CStr) -> Result<usize> {
-> +        self.fwnode().property_match_string(name, match_str)
-> +    }
-> +
-> +    /// Returns firmware property `name` integer scalar value
-> +    pub fn property_read<T: Integer>(&self, name: &CStr) -> Result<T> {
-> +        self.fwnode().property_read(name)
-> +    }
-> +
-> +    /// Returns firmware property `name` integer array values
-> +    pub fn property_read_array<T: Integer, const N: usize>(&self, name: &CStr) -> Result<[T; N]> {
-> +        self.fwnode().property_read_array(name)
-> +    }
-> +
-> +    /// Returns firmware property `name` integer array values in a KVec
-> +    pub fn property_read_array_vec<T: Integer>(&self, name: &CStr, len: usize) -> Result<KVec<T>> {
-> +        self.fwnode().property_read_array_vec(name, len)
-> +    }
-> +
-> +    /// Returns integer array length for firmware property `name`
-> +    pub fn property_count_elem<T: Integer>(&self, name: &CStr) -> Result<usize> {
-> +        self.fwnode().property_count_elem::<T>(name)
-> +    }
->  }
->  
->  /// A reference-counted fwnode_handle.
-> @@ -57,6 +100,112 @@ pub fn property_present(&self, name: &CStr) -> bool {
->          // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
->          unsafe { bindings::fwnode_property_present(self.as_raw().cast_const(), name.as_char_ptr()) }
->      }
-> +
-> +    /// Returns if a firmware property `name` is true or false
-> +    pub fn property_read_bool(&self, name: &CStr) -> bool {
-> +        // SAFETY: `name` is non-null and null-terminated. `self.as_raw` is valid
-> +        // because `self` is valid.
-> +        unsafe { bindings::fwnode_property_read_bool(self.as_raw(), name.as_char_ptr()) }
-> +    }
-> +
-> +    /// Returns the index of matching string `match_str` for firmware string property `name`
+> On Wed, Mar 26, 2025 at 06:45:53PM +0100, Lukasz Majewski wrote:
+> > > On Wed, Mar 26, 2025 at 06:24:45PM +0100, Lukasz Majewski wrote: =20
+>=20
+> > > Note also that as previously mentioned I expect to see a binding
+> > > document update too which doesn't appear to be here. =20
+>=20
+> > I've just send it to be accepted to trivial-devices.yaml =20
+>=20
+> As previously mentioned you should send the bindings update along with
+> the driver code.
 
-Same comment copy-n-paste mismatch.
+Ok, so first shall be the patch 0001, which updates
+trivial-devices.yaml and then 0002, with changes for spidev (this
+patch).
 
-> +    pub fn property_read_string(&self, name: &CStr) -> Result<CString> {
-> +        let mut str = core::ptr::null_mut();
-> +        let pstr: *mut _ = &mut str;
-> +
-> +        // SAFETY: `name` is non-null and null-terminated. `self.as_raw` is
-> +        // valid because `self` is valid.
-> +        let ret = unsafe {
-> +            bindings::fwnode_property_read_string(self.as_raw(), name.as_char_ptr(), pstr as _)
-> +        };
-> +        to_result(ret)?;
-> +
-> +        // SAFETY: `pstr` contains a non-null ptr on success
-> +        let str = unsafe { CStr::from_char_ptr(*pstr) };
-> +        Ok(str.try_into()?)
-> +    }
+>=20
+> > > Please don't send new patches in reply to old patches or serieses,
+> > > this makes it harder for both people and tools to understand what
+> > > is going on - it can bury things in mailboxes and make it
+> > > difficult to keep track of what current patches are, both for the
+> > > new patches and the old ones. =20
+>=20
+> > Ok, I thought that it would be the opposite - that you would see v2
+> > as the reply to the old one - especially that the change is just a
+> > single letter. =20
+>=20
+> That's exactly the problem.
 
-There's a problem with the C version of this function that I'd like to 
-not repeat in Rust especially since ownership is clear. 
+Ok. I will not use --in-reply-to=3D switch.
 
-The issue is that we never know when the returned string is no longer 
-needed. For DT overlays, we need to be able free the string when/if an 
-overlay is removed. Though overlays are somewhat orthogonal to this. 
-It's really just when the property's node refcount goes to 0 that the 
-property value could be freed.
 
-So this function should probably return a copy of the string that the 
-caller owns.
+Best regards,
 
-Rob
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/Ks3BX76zcDf=4OtGr_CtXxi
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmfkcWsACgkQAR8vZIA0
+zr3r7Af9F6q/GhqW88ZJpgmdXjoUCT3appA+loaa8LkyXE5J/k2jEsL5oWAkp7e2
+bPhjl2yBDggw6MrpodSSH01/A41obcGI/2cMTwEfYXw3458vhxBgz8rxgD7S2CPR
+XNESHJMiWAgmxvLJVP9vDqiwKKAWs5aBtFSkQpko41M316+8g2AYTaInMMnm3MuT
+2P1oZf+AuCxksrjrta+Ct003xNJfAAghsaaRgulAXT2tDwCSxuXsWyTceQQKCcTq
+1wRLXd885bDrxuzUxsA9UaYwGRosHK3Wz0+E6iOusuDa4Y0MRD7nMv8Ocvy3ox/N
+ksRdPyEh/XLN/MzhUnsQ1mL6t4/djA==
+=hRyJ
+-----END PGP SIGNATURE-----
+
+--Sig_/Ks3BX76zcDf=4OtGr_CtXxi--
