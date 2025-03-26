@@ -1,77 +1,89 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2085E18E34A
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 19:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE9E1DD539
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 19:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743018760; cv=none; b=Dq7Qobt/0HihWRaJBUyvrEs47YtIhWDd4bK7SrszuqR0j0OxYZ7Vbvyn2wYEX+OH6IpNOmoGAG950ZQwk9gzjPvY0P9oqeqcnErGx3zFvOIsEb24Ty5QwEZn5VR3TB9JLU53Bnyu1cjDRHurEItcKZEvbF9bQ9h0We2ZsRUaBNE=
+	t=1743018898; cv=none; b=P5BGwPYMDyO325a1ldpUP+dEfTuwr7Rt3kHIHCsOao4sr3qoLv4lOaNLG4+X5OsRHchQlhU2pOS+DWFdoMRzsD3Bztq0mq/KQYldyc1VOMdRcUf1SJd0kaDGuO1DEUoqVyr2d/vGcAFstctqdWuFMnt51qlQi9VUIvszko6pAJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743018760; c=relaxed/simple;
-	bh=8j/pMZObftENplg4deoaM1S6jWxUldrn0AWjkmEiUcs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qJZsY6GtikvLL1QR+47AI6BmnK7tH6loWsmCTPxYmaQFc/yhCdA8T1B5iYX95N8rpKFJggsv4e31pmxV5u6z2E91Jwf6tMDLOI3FikcHWUk9Rxdx2XK8EKUeMBKCkrGQdYp1pw6vk2NVq5KWcIUqqDMpa/4xCh2eZ/jt/9v8U1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CYtCvibk; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743018898; c=relaxed/simple;
+	bh=nJdi+8s1W+HMSPaTDyc5/leo0zsB9OTHXjIF969gMCM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=hIjCgwOiOcKzb9MMDCxh3i0kZjLf/TP8M9mTOhEvnBuPorvNeBC5wwpAvh0omedyip15fWqnwNbbWwdFICw1nshqcA1WDQ+sXDsgIYTSWRvhA5ddQ8wdD7s2s90INwnFOIz/N3YrKqQ5MlSrRv6ZWcXnfnSeMpZhn4I9086Bdw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PZ7ATmg1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CYtCvibk"
-Date: Wed, 26 Mar 2025 19:52:20 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743018747;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zzUfRFRmyA5Roo3UjviLOYKBv7xMeHy4PTNRPVwZ90I=;
-	b=CYtCvibkcPwHarZgZ5JQ81lUW0Ke/is/DxOPkUeE1GMRy7rkw2Q5eGydsPtSw1x1uIz/7B
-	cFfiV1yR3LKkExx+jhN4J4rcwc3R1nTXe0xAKMyoH6UhZ2wNO8pyTGie+uoZdMXHMMONGX
-	V7e9fm/G5SLrDPuEDgdm5JhcU2uRb+w=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Sean Christopherson <seanjc@google.com>
-Cc: x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jim Mattson <jmattson@google.com>,
-	David Kaplan <David.Kaplan@amd.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] Unify IBRS virtualization
-Message-ID: <Z-Ra9FYKP_xX4UBm@google.com>
-References: <20250221163352.3818347-1-yosry.ahmed@linux.dev>
- <Z9NMxr0Ri7VUlJzM@google.com>
- <Z-RaJVo1MKuI90G0@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PZ7ATmg1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41EBAC4CEE9;
+	Wed, 26 Mar 2025 19:54:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743018897;
+	bh=nJdi+8s1W+HMSPaTDyc5/leo0zsB9OTHXjIF969gMCM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=PZ7ATmg1MTJY8x0AB42UeFq2UfnmXvGnw1JeL3woN1O+dyTTvoQZJRpvL7Mmx6k4g
+	 9DUqaQmjFCdsok+YC1sqc+3pUWs8lxH3gY6zJqpXc7OtNKRHausY+EKyQwftkgEA+6
+	 Uxyn7VaVTjR4Fc8t1c3MRcceTXM74iEn6fb9hEzC431vtOoqrvd1Uo15iIilOEl0Xt
+	 NRM8aP99dWiogqt6gid3He65o8XFBOldC6O3fyvNVlxfF6f/T9pre2Z3p2Ojk9en5Z
+	 lwo14PbhT19hp+sz8y3Xdl6OibVlXb60BRoVlW1wISccuVivkiRr0D8sgxSwOsHPnL
+	 DMHvOiXpdnBsQ==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Yao Zi <ziyao@disroot.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Pasha Tatashin
+ <pasha.tatashin@soleen.com>, Kent Overstreet <kent.overstreet@linux.dev>,
+ Petr Tesarik <petr@tesarici.cz>, Ying Sun <sunying@isrc.iscas.ac.cn>,
+ Samuel Holland <samuel.holland@sifive.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Han Gao
+ <rabenda.cn@gmail.com>, Yao Zi <ziyao@disroot.org>
+Subject: Re: [PATCH] riscv/kexec_file: Handle R_RISCV_64 in purgatory relocator
+In-Reply-To: <877c4bg1us.fsf@all.your.base.are.belong.to.us>
+References: <20250326051445.55131-2-ziyao@disroot.org>
+ <877c4bg1us.fsf@all.your.base.are.belong.to.us>
+Date: Wed, 26 Mar 2025 20:54:54 +0100
+Message-ID: <87y0wrk1o1.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-RaJVo1MKuI90G0@google.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 26, 2025 at 12:48:53PM -0700, Sean Christopherson wrote:
-> On Thu, Mar 13, 2025, Yosry Ahmed wrote:
-> > On Fri, Feb 21, 2025 at 04:33:49PM +0000, Yosry Ahmed wrote:
-> > > To properly virtualize IBRS on Intel, an IBPB is executed on emulated
-> > > VM-exits to provide separate predictor modes for L1 and L2.
-> > > 
-> > > Similar handling is theoretically needed for AMD, unless IbrsSameMode is
-> > > enumerated by the CPU (which should be the case for most/all CPUs
-> > > anyway). For correctness and clarity, this series generalizes the
-> > > handling to apply for both Intel and AMD as needed.
-> > > 
-> > > I am not sure if this series would land through the kvm-x86 tree or the
-> > > tip/x86 tree.
-> > 
-> > Sean, any thoughts about this (or general feedback about this series)?
-> 
-> No feedback, I just you and Jim to get mitigation stuff right far more than I
-> trust myself :-)
-> 
-> I'm planning on grabbing this for 6.16.
+Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
 
-Awesome, thanks!
+> Yao Zi <ziyao@disroot.org> writes:
+>
+>> Commit 58ff537109ac ("riscv: Omit optimized string routines when
+>> using KASAN") introduced calls to EXPORT_SYMBOL() in assembly string
+>> routines, which result in R_RISCV_64 relocations against
+>> .export_symbol section. As these rountines are reused by RISC-V
+>> purgatory and our relocator doesn't recognize these relocations, this
+>> fails kexec-file-load with dmesg like
+>>
+>> 	[   11.344251] kexec_image: Unknown rela relocation: 2
+>> 	[   11.345972] kexec_image: Error loading purgatory ret=3D-8
+>>
+>> Let's support R_RISCV_64 relocation to fix kexec on 64-bit RISC-V.
+>> 32-bit variant isn't covered since KEXEC_FILE and KEXEC_PURGATORY isn't
+>> available.
+>
+> Hi!
+>
+> This patch does fix the vmlinux loading for kexec-file -- very nice!
+> However, I haven't been able to get kexec to successfully boot a kernel
+> from qemu, i.e.:
+>
+>   kexec -s -l /path/to/vmlinux # fixed w/ your patch
+>   kexec -e # hangs after "Bye..."
+>
+> Same when I try vanilla kexec (kexec -c -l /path/to/vmlinux). kexec with
+> an Image works for me in qemu.
+>
+> Before I start to bisect too much; What config/qemu did you use to test
+> this?
+
+Nevermind! Got it to work; Sorry for the noise.
+
+Tested-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+Reviewed-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
