@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46911F3BA4
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:55:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047081F3D59
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:55:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743000917; cv=none; b=R2g6OYqldkDEK6cOfSil6binEo6YIvQ6VrNu85thH/d8yYkayn7muljiKmZS+QXVisDRPD2qz6jvq933VT83LkNCmQilXRtRnaD/kJuDe33qFylfLsqL1Rdl8pAgNT9e6aeG9r8Oljapd07u34Vj9TpZyV8ka2Q9Flg89EQOwqs=
+	t=1743000918; cv=none; b=J+/lGognGYQ8I58UJ2slPSOIqyG3iV/pbkCnt+aN+JBmX7dLLCJL6kKFw56upuVAy/aJKBMecBd2UxXYJO4L13SgNu3vo6t4MG5NTnWXZqm4qkdCFAjNzgSAusUm1J5XNWGnu1fyGMcyM5bHL8qmT50A2fyi4YDUlwS1NsmDyow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743000917; c=relaxed/simple;
-	bh=IaqyKWPwwjeWngeDaXAYsAb/BKumclTNuSAL5upMQ2M=;
+	s=arc-20240116; t=1743000918; c=relaxed/simple;
+	bh=RbxTpL00A5cqTlR0YQKwZWmt521LefRA9dXYwCczeU0=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=nuUFMXuCr/8NWyky27tC9tlwKaUyyp73pMc2YvTAKHKTJBO/9Hz1pYIvoBPBFJoFJjCON4UgcDG5RDkaM8TEqbqe+UsAQUZkjOI0BjY9dzqplIvq2jo7OjNrEoNTe7M3kV0gucqBLwzmTPJYR1qx8qw6bRrwDaH7IlB9G0JJbyQ=
+	 Content-Type; b=iGJQcKNWDtjDiSgMPZIP8Va9gHTphpMJ8+R5cSxNUMkw9VV6PBKj0f/jaUQW0h3kn+GbE8B5nhQdJJBKzxnX2ceWox6L8K4jF1W1faooAj22P+e6ghDWyMQXeJshC8x+E29wtYZfeDaFKB2Vff4CtC4Euu8Pb3USHMrSxRGxlhA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69D29C4CEE9;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4566C4CEEB;
 	Wed, 26 Mar 2025 14:55:17 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1txSAm-00000002kDb-1DGH;
+	id 1txSAm-00000002kF3-3NUe;
 	Wed, 26 Mar 2025 10:56:04 -0400
-Message-ID: <20250326145604.138550459@goodmis.org>
+Message-ID: <20250326145604.654551325@goodmis.org>
 User-Agent: quilt/0.68
-Date: Wed, 26 Mar 2025 10:55:52 -0400
+Date: Wed, 26 Mar 2025 10:55:55 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Tomas Glozar <tglozar@redhat.com>,
  John Kacur <jkacur@redhat.com>,
  Luis Goncalves <lgoncalv@redhat.com>
-Subject: [for-next][PATCH 3/9] rtla/osnoise: Unify params struct
+Subject: [for-next][PATCH 6/9] rtla: Always set all tracer options
 References: <20250326145549.978154551@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -38,373 +38,238 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Tomas Glozar <tglozar@redhat.com>
 
-Instead of having separate structs osnoise_top_params and
-osnoise_hist_params, use one struct osnoise_params for both.
+rtla currently only sets tracer options that are explicitly set by the
+user, with the exception of OSNOISE_WORKLOAD.
 
-This allows code using the structs to be shared between osnoise-top and
-osnoise-hist.
+This leads to improper behavior in case rtla is run with those options
+not set to the default value. rtla does reset them to the original
+value upon exiting, but that does not protect it from starting with
+non-default values set either by an improperly exited rtla or by another
+user of the tracers.
+
+For example, after running this command:
+
+$ echo 1 > /sys/kernel/tracing/osnoise/stop_tracing_us
+
+all runs of rtla will stop at the 1us threshold, even if not requested
+by the user:
+
+$ rtla osnoise hist
+Index   CPU-000   CPU-001
+1             8         5
+2             5         9
+3             1         2
+4             6         1
+5             2         1
+6             0         1
+8             1         1
+12            0         1
+14            1         0
+15            1         0
+over:         0         0
+count:       25        21
+min:          1         1
+avg:       3.68      3.05
+max:         15        12
+rtla osnoise hit stop tracing
+
+Fix the problem by setting the default value for all tracer options if
+the user has not provided their own value.
+
+For most of the options, it's enough to just drop the if clause checking
+for the value being set. For cpus, "all" is used as the default value,
+and for osnoise default period and runtime, default values of
+the osnoise_data variable in trace_osnoise.c are used.
 
 Cc: Luis Goncalves <lgoncalv@redhat.com>
-Link: https://lore.kernel.org/20250320092500.101385-2-tglozar@redhat.com
+Link: https://lore.kernel.org/20250320092500.101385-5-tglozar@redhat.com
+Fixes: 1eceb2fc2ca5 ("rtla/osnoise: Add osnoise top mode")
+Fixes: 829a6c0b5698 ("rtla/osnoise: Add the hist mode")
+Fixes: a828cd18bc4a ("rtla: Add timerlat tool and timelart top mode")
+Fixes: 1eeb6328e8b3 ("rtla/timerlat: Add timerlat hist mode")
 Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 Reviewed-by: John Kacur <jkacur@redhat.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- tools/tracing/rtla/src/osnoise.c      |  1 -
- tools/tracing/rtla/src/osnoise.h      | 47 +++++++++++++++++++++++
- tools/tracing/rtla/src/osnoise_hist.c | 52 ++++++--------------------
- tools/tracing/rtla/src/osnoise_top.c  | 54 +++++----------------------
- tools/tracing/rtla/src/timerlat.h     |  1 -
- 5 files changed, 68 insertions(+), 87 deletions(-)
+ tools/tracing/rtla/src/osnoise.c  | 56 ++++++++++++++---------------
+ tools/tracing/rtla/src/timerlat.c | 59 +++++++++++++++----------------
+ 2 files changed, 56 insertions(+), 59 deletions(-)
 
 diff --git a/tools/tracing/rtla/src/osnoise.c b/tools/tracing/rtla/src/osnoise.c
-index 85f398b89597..93d485c0e949 100644
+index a71618d876e9..2dc3e4539e99 100644
 --- a/tools/tracing/rtla/src/osnoise.c
 +++ b/tools/tracing/rtla/src/osnoise.c
-@@ -14,7 +14,6 @@
- #include <stdio.h>
+@@ -17,6 +17,9 @@
  
  #include "osnoise.h"
--#include "utils.h"
  
++#define DEFAULT_SAMPLE_PERIOD	1000000			/* 1s */
++#define DEFAULT_SAMPLE_RUNTIME	1000000			/* 1s */
++
  /*
   * osnoise_get_cpus - return the original "osnoise/cpus" content
-diff --git a/tools/tracing/rtla/src/osnoise.h b/tools/tracing/rtla/src/osnoise.h
-index 056c8b113dee..f78ffbdc8c8d 100644
---- a/tools/tracing/rtla/src/osnoise.h
-+++ b/tools/tracing/rtla/src/osnoise.h
-@@ -1,8 +1,55 @@
- // SPDX-License-Identifier: GPL-2.0
- #pragma once
+  *
+@@ -1127,46 +1130,43 @@ osnoise_apply_config(struct osnoise_tool *tool, struct osnoise_params *params)
+ 	if (!params->sleep_time)
+ 		params->sleep_time = 1;
  
-+#include "utils.h"
- #include "trace.h"
+-	if (params->cpus) {
+-		retval = osnoise_set_cpus(tool->context, params->cpus);
+-		if (retval) {
+-			err_msg("Failed to apply CPUs config\n");
+-			goto out_err;
+-		}
++	retval = osnoise_set_cpus(tool->context, params->cpus ? params->cpus : "all");
++	if (retval) {
++		err_msg("Failed to apply CPUs config\n");
++		goto out_err;
+ 	}
  
-+enum osnoise_mode {
-+	MODE_OSNOISE = 0,
-+	MODE_HWNOISE
-+};
+ 	if (params->runtime || params->period) {
+ 		retval = osnoise_set_runtime_period(tool->context,
+ 						    params->runtime,
+ 						    params->period);
+-		if (retval) {
+-			err_msg("Failed to set runtime and/or period\n");
+-			goto out_err;
+-		}
++	} else {
++		retval = osnoise_set_runtime_period(tool->context,
++						    DEFAULT_SAMPLE_PERIOD,
++						    DEFAULT_SAMPLE_RUNTIME);
+ 	}
+ 
+-	if (params->stop_us) {
+-		retval = osnoise_set_stop_us(tool->context, params->stop_us);
+-		if (retval) {
+-			err_msg("Failed to set stop us\n");
+-			goto out_err;
+-		}
++	if (retval) {
++		err_msg("Failed to set runtime and/or period\n");
++		goto out_err;
+ 	}
+ 
+-	if (params->stop_total_us) {
+-		retval = osnoise_set_stop_total_us(tool->context, params->stop_total_us);
+-		if (retval) {
+-			err_msg("Failed to set stop total us\n");
+-			goto out_err;
+-		}
++	retval = osnoise_set_stop_us(tool->context, params->stop_us);
++	if (retval) {
++		err_msg("Failed to set stop us\n");
++		goto out_err;
+ 	}
+ 
+-	if (params->threshold) {
+-		retval = osnoise_set_tracing_thresh(tool->context, params->threshold);
+-		if (retval) {
+-			err_msg("Failed to set tracing_thresh\n");
+-			goto out_err;
+-		}
++	retval = osnoise_set_stop_total_us(tool->context, params->stop_total_us);
++	if (retval) {
++		err_msg("Failed to set stop total us\n");
++		goto out_err;
++	}
 +
-+struct osnoise_params {
-+	/* Common params */
-+	char			*cpus;
-+	cpu_set_t		monitored_cpus;
-+	char			*trace_output;
-+	char			*cgroup_name;
-+	unsigned long long	runtime;
-+	unsigned long long	period;
-+	long long		threshold;
-+	long long		stop_us;
-+	long long		stop_total_us;
-+	int			sleep_time;
-+	int			duration;
-+	int			set_sched;
-+	int			cgroup;
-+	int			hk_cpus;
-+	cpu_set_t		hk_cpu_set;
-+	struct sched_attr	sched_param;
-+	struct trace_events	*events;
-+	int			warmup;
-+	int			buffer_size;
-+	union {
-+		struct {
-+			/* top only */
-+			int			quiet;
-+			int			pretty_output;
-+			enum osnoise_mode	mode;
-+		};
-+		struct {
-+			/* hist only */
-+			int			output_divisor;
-+			char			no_header;
-+			char			no_summary;
-+			char			no_index;
-+			char			with_zeros;
-+			int			bucket_size;
-+			int			entries;
-+		};
-+	};
-+};
++	retval = osnoise_set_tracing_thresh(tool->context, params->threshold);
++	if (retval) {
++		err_msg("Failed to set tracing_thresh\n");
++		goto out_err;
+ 	}
+ 
+ 	if (params->hk_cpus) {
+diff --git a/tools/tracing/rtla/src/timerlat.c b/tools/tracing/rtla/src/timerlat.c
+index 448fb1f7d3a6..c29e2ba2d7d8 100644
+--- a/tools/tracing/rtla/src/timerlat.c
++++ b/tools/tracing/rtla/src/timerlat.c
+@@ -16,6 +16,8 @@
+ 
+ #include "timerlat.h"
+ 
++#define DEFAULT_TIMERLAT_PERIOD	1000			/* 1ms */
 +
  /*
-  * osnoise_context - read, store, write, restore osnoise configs.
+  * timerlat_apply_config - apply common configs to the initialized tool
   */
-diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-index f4c9051c33c4..4721f15f77cd 100644
---- a/tools/tracing/rtla/src/osnoise_hist.c
-+++ b/tools/tracing/rtla/src/osnoise_hist.c
-@@ -14,38 +14,8 @@
- #include <time.h>
- #include <sched.h>
+@@ -27,49 +29,44 @@ timerlat_apply_config(struct osnoise_tool *tool, struct timerlat_params *params)
+ 	if (!params->sleep_time)
+ 		params->sleep_time = 1;
  
--#include "utils.h"
- #include "osnoise.h"
+-	if (params->cpus) {
+-		retval = osnoise_set_cpus(tool->context, params->cpus);
+-		if (retval) {
+-			err_msg("Failed to apply CPUs config\n");
+-			goto out_err;
+-		}
+-	} else {
++	retval = osnoise_set_cpus(tool->context, params->cpus ? params->cpus : "all");
++	if (retval) {
++		err_msg("Failed to apply CPUs config\n");
++		goto out_err;
++	}
++
++	if (!params->cpus) {
+ 		for (i = 0; i < sysconf(_SC_NPROCESSORS_CONF); i++)
+ 			CPU_SET(i, &params->monitored_cpus);
+ 	}
  
--struct osnoise_hist_params {
--	char			*cpus;
--	cpu_set_t		monitored_cpus;
--	char			*trace_output;
--	char			*cgroup_name;
--	unsigned long long	runtime;
--	unsigned long long	period;
--	long long		threshold;
--	long long		stop_us;
--	long long		stop_total_us;
--	int			sleep_time;
--	int			duration;
--	int			set_sched;
--	int			output_divisor;
--	int			cgroup;
--	int			hk_cpus;
--	cpu_set_t		hk_cpu_set;
--	struct sched_attr	sched_param;
--	struct trace_events	*events;
--	char			no_header;
--	char			no_summary;
--	char			no_index;
--	char			with_zeros;
--	int			bucket_size;
--	int			entries;
--	int			warmup;
--	int			buffer_size;
--};
--
- struct osnoise_hist_cpu {
- 	int			*samples;
- 	int			count;
-@@ -126,7 +96,7 @@ static struct osnoise_hist_data
- static void osnoise_hist_update_multiple(struct osnoise_tool *tool, int cpu,
- 					 unsigned long long duration, int count)
- {
--	struct osnoise_hist_params *params = tool->params;
-+	struct osnoise_params *params = tool->params;
- 	struct osnoise_hist_data *data = tool->data;
- 	unsigned long long total_duration;
- 	int entries = data->entries;
-@@ -168,7 +138,7 @@ static void osnoise_destroy_trace_hist(struct osnoise_tool *tool)
-  */
- static int osnoise_init_trace_hist(struct osnoise_tool *tool)
- {
--	struct osnoise_hist_params *params = tool->params;
-+	struct osnoise_params *params = tool->params;
- 	struct osnoise_hist_data *data = tool->data;
- 	int bucket_size;
- 	char buff[128];
-@@ -253,7 +223,7 @@ static void osnoise_read_trace_hist(struct osnoise_tool *tool)
-  */
- static void osnoise_hist_header(struct osnoise_tool *tool)
- {
--	struct osnoise_hist_params *params = tool->params;
-+	struct osnoise_params *params = tool->params;
- 	struct osnoise_hist_data *data = tool->data;
- 	struct trace_seq *s = tool->trace.seq;
- 	char duration[26];
-@@ -292,7 +262,7 @@ static void osnoise_hist_header(struct osnoise_tool *tool)
-  * osnoise_print_summary - print the summary of the hist data to the output
-  */
- static void
--osnoise_print_summary(struct osnoise_hist_params *params,
-+osnoise_print_summary(struct osnoise_params *params,
- 		       struct trace_instance *trace,
- 		       struct osnoise_hist_data *data)
- {
-@@ -370,7 +340,7 @@ osnoise_print_summary(struct osnoise_hist_params *params,
-  * osnoise_print_stats - print data for all CPUs
-  */
- static void
--osnoise_print_stats(struct osnoise_hist_params *params, struct osnoise_tool *tool)
-+osnoise_print_stats(struct osnoise_params *params, struct osnoise_tool *tool)
- {
- 	struct osnoise_hist_data *data = tool->data;
- 	struct trace_instance *trace = &tool->trace;
-@@ -508,10 +478,10 @@ static void osnoise_hist_usage(char *usage)
- /*
-  * osnoise_hist_parse_args - allocs, parse and fill the cmd line parameters
-  */
--static struct osnoise_hist_params
-+static struct osnoise_params
- *osnoise_hist_parse_args(int argc, char *argv[])
- {
--	struct osnoise_hist_params *params;
-+	struct osnoise_params *params;
- 	struct trace_events *tevent;
- 	int retval;
- 	int c;
-@@ -731,7 +701,7 @@ static struct osnoise_hist_params
-  * osnoise_hist_apply_config - apply the hist configs to the initialized tool
-  */
- static int
--osnoise_hist_apply_config(struct osnoise_tool *tool, struct osnoise_hist_params *params)
-+osnoise_hist_apply_config(struct osnoise_tool *tool, struct osnoise_params *params)
- {
- 	int retval;
+-	if (params->stop_us) {
+-		retval = osnoise_set_stop_us(tool->context, params->stop_us);
+-		if (retval) {
+-			err_msg("Failed to set stop us\n");
+-			goto out_err;
+-		}
++	retval = osnoise_set_stop_us(tool->context, params->stop_us);
++	if (retval) {
++		err_msg("Failed to set stop us\n");
++		goto out_err;
+ 	}
  
-@@ -808,7 +778,7 @@ osnoise_hist_apply_config(struct osnoise_tool *tool, struct osnoise_hist_params
-  * osnoise_init_hist - initialize a osnoise hist tool with parameters
-  */
- static struct osnoise_tool
--*osnoise_init_hist(struct osnoise_hist_params *params)
-+*osnoise_init_hist(struct osnoise_params *params)
- {
- 	struct osnoise_tool *tool;
- 	int nr_cpus;
-@@ -842,7 +812,7 @@ static void stop_hist(int sig)
-  * osnoise_hist_set_signals - handles the signal to stop the tool
-  */
- static void
--osnoise_hist_set_signals(struct osnoise_hist_params *params)
-+osnoise_hist_set_signals(struct osnoise_params *params)
- {
- 	signal(SIGINT, stop_hist);
- 	if (params->duration) {
-@@ -853,7 +823,7 @@ osnoise_hist_set_signals(struct osnoise_hist_params *params)
+-	if (params->stop_total_us) {
+-		retval = osnoise_set_stop_total_us(tool->context, params->stop_total_us);
+-		if (retval) {
+-			err_msg("Failed to set stop total us\n");
+-			goto out_err;
+-		}
++	retval = osnoise_set_stop_total_us(tool->context, params->stop_total_us);
++	if (retval) {
++		err_msg("Failed to set stop total us\n");
++		goto out_err;
+ 	}
  
- int osnoise_hist_main(int argc, char *argv[])
- {
--	struct osnoise_hist_params *params;
-+	struct osnoise_params *params;
- 	struct osnoise_tool *record = NULL;
- 	struct osnoise_tool *tool = NULL;
- 	struct trace_instance *trace;
-diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index dacec2f99017..7f393019bbf5 100644
---- a/tools/tracing/rtla/src/osnoise_top.c
-+++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -14,40 +14,6 @@
- #include <sched.h>
  
- #include "osnoise.h"
--#include "utils.h"
--
--enum osnoise_mode {
--	MODE_OSNOISE = 0,
--	MODE_HWNOISE
--};
--
--/*
-- * osnoise top parameters
-- */
--struct osnoise_top_params {
--	char			*cpus;
--	cpu_set_t		monitored_cpus;
--	char			*trace_output;
--	char			*cgroup_name;
--	unsigned long long	runtime;
--	unsigned long long	period;
--	long long		threshold;
--	long long		stop_us;
--	long long		stop_total_us;
--	int			sleep_time;
--	int			duration;
--	int			quiet;
--	int			set_sched;
--	int			cgroup;
--	int			hk_cpus;
--	int			warmup;
--	int			buffer_size;
--	int			pretty_output;
--	cpu_set_t		hk_cpu_set;
--	struct sched_attr	sched_param;
--	struct trace_events	*events;
--	enum osnoise_mode	mode;
--};
+-	if (params->timerlat_period_us) {
+-		retval = osnoise_set_timerlat_period_us(tool->context, params->timerlat_period_us);
+-		if (retval) {
+-			err_msg("Failed to set timerlat period\n");
+-			goto out_err;
+-		}
++	retval = osnoise_set_timerlat_period_us(tool->context,
++						params->timerlat_period_us ?
++						params->timerlat_period_us :
++						DEFAULT_TIMERLAT_PERIOD);
++	if (retval) {
++		err_msg("Failed to set timerlat period\n");
++		goto out_err;
+ 	}
  
- struct osnoise_top_cpu {
- 	unsigned long long	sum_runtime;
-@@ -158,7 +124,7 @@ osnoise_top_handler(struct trace_seq *s, struct tep_record *record,
-  */
- static void osnoise_top_header(struct osnoise_tool *top)
- {
--	struct osnoise_top_params *params = top->params;
-+	struct osnoise_params *params = top->params;
- 	struct trace_seq *s = top->trace.seq;
- 	char duration[26];
  
-@@ -218,7 +184,7 @@ static void clear_terminal(struct trace_seq *seq)
-  */
- static void osnoise_top_print(struct osnoise_tool *tool, int cpu)
- {
--	struct osnoise_top_params *params = tool->params;
-+	struct osnoise_params *params = tool->params;
- 	struct trace_seq *s = tool->trace.seq;
- 	struct osnoise_top_cpu *cpu_data;
- 	struct osnoise_top_data *data;
-@@ -258,7 +224,7 @@ static void osnoise_top_print(struct osnoise_tool *tool, int cpu)
-  * osnoise_print_stats - print data for all cpus
-  */
- static void
--osnoise_print_stats(struct osnoise_top_params *params, struct osnoise_tool *top)
-+osnoise_print_stats(struct osnoise_params *params, struct osnoise_tool *top)
- {
- 	struct trace_instance *trace = &top->trace;
- 	static int nr_cpus = -1;
-@@ -286,7 +252,7 @@ osnoise_print_stats(struct osnoise_top_params *params, struct osnoise_tool *top)
- /*
-  * osnoise_top_usage - prints osnoise top usage message
-  */
--static void osnoise_top_usage(struct osnoise_top_params *params, char *usage)
-+static void osnoise_top_usage(struct osnoise_params *params, char *usage)
- {
- 	int i;
+-	if (params->print_stack) {
+-		retval = osnoise_set_print_stack(tool->context, params->print_stack);
+-		if (retval) {
+-			err_msg("Failed to set print stack\n");
+-			goto out_err;
+-		}
++	retval = osnoise_set_print_stack(tool->context, params->print_stack);
++	if (retval) {
++		err_msg("Failed to set print stack\n");
++		goto out_err;
+ 	}
  
-@@ -354,9 +320,9 @@ static void osnoise_top_usage(struct osnoise_top_params *params, char *usage)
- /*
-  * osnoise_top_parse_args - allocs, parse and fill the cmd line parameters
-  */
--struct osnoise_top_params *osnoise_top_parse_args(int argc, char **argv)
-+struct osnoise_params *osnoise_top_parse_args(int argc, char **argv)
- {
--	struct osnoise_top_params *params;
-+	struct osnoise_params *params;
- 	struct trace_events *tevent;
- 	int retval;
- 	int c;
-@@ -553,7 +519,7 @@ struct osnoise_top_params *osnoise_top_parse_args(int argc, char **argv)
-  * osnoise_top_apply_config - apply the top configs to the initialized tool
-  */
- static int
--osnoise_top_apply_config(struct osnoise_tool *tool, struct osnoise_top_params *params)
-+osnoise_top_apply_config(struct osnoise_tool *tool, struct osnoise_params *params)
- {
- 	int retval;
- 
-@@ -640,7 +606,7 @@ osnoise_top_apply_config(struct osnoise_tool *tool, struct osnoise_top_params *p
- /*
-  * osnoise_init_top - initialize a osnoise top tool with parameters
-  */
--struct osnoise_tool *osnoise_init_top(struct osnoise_top_params *params)
-+struct osnoise_tool *osnoise_init_top(struct osnoise_params *params)
- {
- 	struct osnoise_tool *tool;
- 	int nr_cpus;
-@@ -674,7 +640,7 @@ static void stop_top(int sig)
- /*
-  * osnoise_top_set_signals - handles the signal to stop the tool
-  */
--static void osnoise_top_set_signals(struct osnoise_top_params *params)
-+static void osnoise_top_set_signals(struct osnoise_params *params)
- {
- 	signal(SIGINT, stop_top);
- 	if (params->duration) {
-@@ -685,7 +651,7 @@ static void osnoise_top_set_signals(struct osnoise_top_params *params)
- 
- int osnoise_top_main(int argc, char **argv)
- {
--	struct osnoise_top_params *params;
-+	struct osnoise_params *params;
- 	struct osnoise_tool *record = NULL;
- 	struct osnoise_tool *tool = NULL;
- 	struct trace_instance *trace;
-diff --git a/tools/tracing/rtla/src/timerlat.h b/tools/tracing/rtla/src/timerlat.h
-index e452d385cb0f..cadc613dc82e 100644
---- a/tools/tracing/rtla/src/timerlat.h
-+++ b/tools/tracing/rtla/src/timerlat.h
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "utils.h"
- #include "osnoise.h"
- 
- struct timerlat_params {
+ 	if (params->hk_cpus) {
 -- 
 2.47.2
 
