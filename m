@@ -1,422 +1,242 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013038.outbound.protection.outlook.com [40.107.159.38])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D885F85270
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 01:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742954347; cv=none; b=OcrxAqmvdjRVpDcsXmhvzc6zqZLF1GIQ80JiIo+jIiqGC44/Et44rQN5YnjIgR+2WO0jY2nl/PqSLPiQ4GVpfr1luxRz2eS01EHzr7QVs3YMstOYBy7Zz//JCzFmKwpThQUJZAUOJRjkKz4Sc6vnBkmACsHrVULVC3CXmsB5H5I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742954347; c=relaxed/simple;
-	bh=WVwXpsaxWtSxyJwhFPIYqMB7fzY/pHXBLGss72k/2SY=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=CoZse84xPWKG1C92vmk3wPYGrkZWjJudNIPonh/JoilGhurXcw5mPVM3ftG6MX10hFqIHUghfIgq/kDGK8faU7Tq0CZopFQPkZrZrC7OmGBN/KynZ5LZZ9Kaj9jhfbkFrYV91+wjHTq6xmAJqazipFJR902Oz8+RDBIKUDUW91o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d5b3819ff9so22683315ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Mar 2025 18:59:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742954344; x=1743559144;
-        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
-         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yy2nnZnPh0qyaK4Z14QpCXIUWFLUG2dFuN+uKSMqr4c=;
-        b=N80KJLavHMfY1yYBqEkBIDzWTAzCIMK2xlOEmns50JX2kzJZXnHpY7Tp2Gf8Wl9h1t
-         4XZ3ENsHdAJQ3V2CmI3VMCtpyMLuq14mckDGP5UoHS6CXgr32qzJuCty3HKHZyBlgM9Y
-         5KieEv1tSnJSD6ozQB/ILkOdnX5+CxKnqNB5wVPfS9oJxAvR7Z9blSlHSI2EsRfn4H8u
-         Vk/elcx7R9OojpgY0jUQyjl34eZl/thi2DaHEFBZUwk5vzLhInrKIIOFveHz9Fc9eZ0E
-         HaYC/HktYFgLguqG3qIqUjqjlKcFSYahDk0+ZV9M+x6m9hNmK/XCDMN+rA74uAcfMaZ7
-         5jzA==
-X-Gm-Message-State: AOJu0Yxrcs55clUi7nwOCWu7nBdr6RpygVgi0Ep9MxY8Zm8Mz7rldn+k
-	grb4mG8bB6AnSsMjdAIXccj+r0Abit0NlfnBVx/yFwB9bSrstLMfTy7oZE/o4Nvw8Haln9olpK3
-	z5tinD0BlmXmXGV4eqD/a6H2+LlyWKtqGQF9xOTOFQNI0c33hh5ArOP0=
-X-Google-Smtp-Source: AGHT+IEY3VY5yH8q/bMpJLgdmFKRteDTdiTCK3XfiyzhTWfW9vhxT/EujtU0R6hmbBh5ZsIL7KYPyTsnNlBPbxYiHfmzLoCTBxlI
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7867846BF;
+	Wed, 26 Mar 2025 02:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.38
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742954617; cv=fail; b=ds9I9nXv+G+mqEvRP3RW/UMwpCGCLH3kcXJvwHRWeB8/uRdK8XCk9orRVI3QVRYdvj8A/w0RT5kapQ6IMFPrQjdZTnySKoCKEV2Co1Sd8z8ogag7Hngt1TVxfpz37PlwbYBaZCRyYogW/rEQs2vlRijNW1SF//ePej5X2bvt+F4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742954617; c=relaxed/simple;
+	bh=CxDhcO280VUqZSiX9t9tKQrZNRsfZ42QqkoGSs7Okcg=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=nR9XIYocC7kUHO7j7aFzK16HX0GLCmnJTQiKrPxLe9WO8Wcxbf7Ry74xWuRKd8Es+qWcRFQLjM7XexLX+5/neNygunqOn3PQmKySJBpTCMyc/48Ci2Get7y6v/EvTqs5/RyY1xzU3n+apQoQjhigWN8l79lkJ/eb4Dpw7+vJWAg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=mTT6fTOY; arc=fail smtp.client-ip=40.107.159.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="mTT6fTOY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xxMue/TNn731lEA06Z3LsvbMr193uSSyhHTvdCPKFhc7iq0yTV+FQpzFe0wNrMzXa20VVZy3Jo7ppfSDTfHrbGuAlFUa6xOjSPLNBa3XEdKVz+pMQieZwoKLYkUAbLtBJucMf4j0s48Pz+lKacvJp/0XvCvwzmDWBCIGGW6mTp1jSblFVG+sjAkGLMpEdsgf4+IG2gE+GiDQznNkxa4xvEM9euhZ7pKvwwdoFJt88fG0Y1n6+r2q3BTeYK9O3sDs8+UreZoarhA3gypLUvkkwsYSXifco1O18jpc+80wpDeZG3iy16kaS0qOJ4EQKtneUEyn03p5nZ85OjpIdgGHKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ns9THAzNwEoiMFLUvpYRaJVK5Uy/4JQ9bLoxBkFcNoE=;
+ b=lNRXI2sgOnyA80RWEi/g68d6YzhQQHk9ZAs0k2eAXVBAy54NGTC29Q5Kj/0IXsvbw3pGPMvsKosx5o2Koan9q/2beI5DzrH4b3sosMdfouWdegYnZUE0Kpt+4L+1aBV8M/ghiAIA2tqYTE5kMe7MNcpVdQ1Kx14rdTWjRpJ55KNpjWNkTBKCv2twzS5rYrszlH1he9uyI85utYQxPVom7zGP7bnOVB/vpGmLQajKT5flG8ibkbdamQMR7DxyQuF19CCKLcm85C+9A0swchtK7medulBcClaST69Vgvy6H7exKYFApluRXe7FEt21NC2xcfway9rvWwYS4H66VPQG1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ns9THAzNwEoiMFLUvpYRaJVK5Uy/4JQ9bLoxBkFcNoE=;
+ b=mTT6fTOYw91Q9D1/nP9w5/Df3rfN6M7HYOcLYv+XmvqYtvggo28EK3csqn7+voiXgNSIWlRbfCl/za0nFefd7vYVE4zMoI17ZMY6L50PAr+X5Ykv9k5z4g2f8bJxedna5j/MFLU1XFG6EqUgnuFyablnP3HMCJDSYuxdGCgSHppO0p69610tGFExpJIvmkuuut3CbDgsAtTtcGYeN9vzEnSHwJ3VeP6+GD4GPERzwuwv5RiPYGriJVsc7xn92nPhPI+RnZMkEW/xjXj+9Rh3CTQOFEtKTfSI/LhRQnGxwuumh4uIjSvQjbsFY6dAmVoZDc76oaR0VsjdCjUrRIe7+w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by DU2PR04MB8934.eurprd04.prod.outlook.com (2603:10a6:10:2e1::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Wed, 26 Mar
+ 2025 02:03:31 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8534.040; Wed, 26 Mar 2025
+ 02:03:31 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+	linux-remoteproc@vger.kernel.org (open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V2] remoteproc: core: Clear table_sz when rproc_shutdown
+Date: Wed, 26 Mar 2025 10:02:14 +0800
+Message-Id: <20250326020215.3689624-1-peng.fan@oss.nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR04CA0004.apcprd04.prod.outlook.com
+ (2603:1096:4:197::22) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:188b:b0:3d2:b0f1:f5bd with SMTP id
- e9e14a558f8ab-3d5960bf875mr177765045ab.3.1742954343786; Tue, 25 Mar 2025
- 18:59:03 -0700 (PDT)
-Date: Tue, 25 Mar 2025 18:59:03 -0700
-In-Reply-To: <20250326012356.9099-1-richard120310@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67e35f67.050a0220.1ec46.0004.GAE@google.com>
-Subject: Re: [syzbot] [ocfs2?] KMSAN: uninit-value in _find_next_bit
-From: syzbot <syzbot+7ea0b96c4ddb49fd1a70@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, ocfs2-devel@lists.linux.dev, 
-	richard120310@gmail.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|DU2PR04MB8934:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2b899529-dcbf-428c-dd14-08dd6c0a681f
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?M6cofbm7aDfV9lWNUwuFp9CkKFjxj1BgCZxfH7b0U+Jf+Mx1vp+LGUQOQCZH?=
+ =?us-ascii?Q?ki8Yaia5kaG+g9ftIhdtkvANKNItlJ71xfv3/13+QYfgr2i8LPdIQfG/n/he?=
+ =?us-ascii?Q?piNU3uI8Dntr93XZ9iIT+aCa+b71fwJNLKovdBYufyv9H7KwpoVpAQMvQ9Sp?=
+ =?us-ascii?Q?sEUxWvFPgiK2W4xOVBAJApp8MmfFKWBz9W1y8PRLPj/x55irEIupowRsl5//?=
+ =?us-ascii?Q?/kmGJgAl4v05I6NuvtVd6krcigyj47Q5yr7Z/spFhW2tT5gT1Z8tRvLnmYgG?=
+ =?us-ascii?Q?RdVjOLhn6iMapShcNw/zT1DTiCEnTFe2OnyRhi1slaalVUwv0M6oYExFNhV2?=
+ =?us-ascii?Q?fniD8fJcQ+ytI5ORjDMmegzQ5XPJYGQAcmmU19hppGb9oMTgMMt1vMdyE3me?=
+ =?us-ascii?Q?d4hIu2bSUPbTZd8EWAjgDvmnaPOlFZ4g5PArklTqoQoQXJDglWjQ6Q0DE6q3?=
+ =?us-ascii?Q?MHI6mHHMq9xcHkQ85oODEZcuiQ8MqxhXZQkIGDZniQm5K3TL2GslyLnb3JtN?=
+ =?us-ascii?Q?IKiCEM5TlT0uohW38jqksCLzmI73/9hfS9wiFWC+zYXx2NOQBSrB7dEpoJGw?=
+ =?us-ascii?Q?lLi5i/19YnyGGoq27JPUMC3R7NbS2EfRDOrAP0iTfIdJ3QbR09/owhjlAE/b?=
+ =?us-ascii?Q?ZbKYbJQK/UZCkGEck2zn/V2PGe1T9XSRiWjgQHmraIuj/Qw2tbUd274aW2pH?=
+ =?us-ascii?Q?7JOvjv5HBawCEzXKxMr9xGu5UQn20NRWMKN6TV57Z1QwBMgxEEr3BkU8Z6MI?=
+ =?us-ascii?Q?4mO9cDKU77SxSvc+unMRN0u5hbIJfpFCkN8Bpb4yUB+9/1n3dCxx0UNj3YlI?=
+ =?us-ascii?Q?KzUnK3fAbr9d2gCDya9ih/cCLDtCr9KWiOuwnCVBt4/XOYltOVfsEz3Ts3Wu?=
+ =?us-ascii?Q?aYCe19iD3MmkGrZe3rbMeHzcVvJY+2JK/wbnSEqB2986TT67TPlj+r4OWbGc?=
+ =?us-ascii?Q?24cQybgLLLSx+v+muqbCuRdWNSrCuAzrFo9kZfK/UHLhby5rxn5BAfBA1i6L?=
+ =?us-ascii?Q?LcU+8rO+/PEh0Ds5px8Q+5l5Lu0heojBMX7AG4RAAmVbfEunL80Bvw/HJRfh?=
+ =?us-ascii?Q?BOtGTK0apeUcon9VrZQq/qTCZXH/21MURK2jWn3HZf8dIU1dG5GSrasFOq32?=
+ =?us-ascii?Q?e7dlGVr+rZoIOegtPcoGda4I3Ij/thHX8s7Oq1j//b+ozWuCZfC+Y7jovsBV?=
+ =?us-ascii?Q?6xtn+WCPH+xhjqfrzvUMfr4iTeXABTSvOFEUNAMJbTICFBcDHEPIHADdzEFv?=
+ =?us-ascii?Q?Tkb9feQOw+u8Af+rC4lTlXFzRBVA35ugntQS45gTJow/piqMr0KiejQP1Dol?=
+ =?us-ascii?Q?x1cnefKme7MiFed8jBWxmtHjX1iwH2aXcLnGc0EAV9TfzRMXKIdxaMt+jQYN?=
+ =?us-ascii?Q?vLuD8r2lvKQQBBpVN2o3x0M/2JWZudf6b2n43EIWNL7bbJbkoPXO2KA04wRx?=
+ =?us-ascii?Q?XZY4GqX0YN4NCXmtwAEJ6TVzjF3zw+03?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Me0miDFWVJTbmbFki8W9BqvGk2R8G3ZZe6wB5IhVNmXWvwYO7GxkJz9Z+zTH?=
+ =?us-ascii?Q?IgFc8Yrc2/WEtyN7p+V1FQmAZJJ1Bp/NOwAMZp69r/vBF1+737u2eVYWio2c?=
+ =?us-ascii?Q?Cn+M2HWI54z6LDwr9EWFQsDif8wjNG45pJ3AlT5nbEJ3qOFlwfGqmWo1BMOX?=
+ =?us-ascii?Q?MA7dTc9QMU4Thy8ILNwmV4clJA6IZPQps2CWtcrLKh5LOQgjGEw8PQE3wnq/?=
+ =?us-ascii?Q?gcwL+f83+ytXwrcjZ1Z2kt19tsI35+njc51KMsZJ/iMfL0/cWeLntqZgCdjw?=
+ =?us-ascii?Q?jmhvjnjmU3miWdKWlLSBFxV7GJwtw9hmBRcn7uNznxiB3I2t8mY4dapblww4?=
+ =?us-ascii?Q?fmsJqthJ07Yp7oIoN6ErL2YnApjSR2+9e5AWy/m5hbKKvW6+GsV4Rj0EguBO?=
+ =?us-ascii?Q?t3Acj2ckU2Du6InZHj6vRPF0CFclfa1L4Rz1qCgTnvRTPOrYnPDPwPNOr7jk?=
+ =?us-ascii?Q?wDjpDR1lFcXUmzC7ls+bZTGkwTbz8Kr3kiF2P642kuICxPYYYz6U4NRqxvJO?=
+ =?us-ascii?Q?vw/vjZ8WH2GtIYbfUY06LBTOtt3L/yMM195WB1UJbT6eeNM9lpuHpLKt4JLc?=
+ =?us-ascii?Q?8s9+8Zea5HWYIF44nYTOXxbJIWoBGshoJq5zHODcxPDFQrujQ22oATxANtQa?=
+ =?us-ascii?Q?z9vSEs5dA6i9FvaP59d5qAH24sxyPWTN+pQz7Y4OnzfDhEPvN2tZGIqRQqLI?=
+ =?us-ascii?Q?6LoPUIxaI1hAK/jHMsope0mLrn+PTHjNx4SZoGhb1tj985+trpICQnAz0TcI?=
+ =?us-ascii?Q?0S2DQpuPczOjnp+HSxyU+4XLn+uhJ4c5ssskH59uwoHgQdAQ9Y0HVrTpNX+5?=
+ =?us-ascii?Q?0VEe5lfCaJ6Gat776Ngz/hH5LpAriIG8cT06KdEb2HQT7Bl9r9/GNtIr3SnO?=
+ =?us-ascii?Q?o1nEg3PSp5RlWWQoqdBH/Ls4NiPEc6LSJ1840ZEuLZJwCpVZAPSPwndJrC/K?=
+ =?us-ascii?Q?CJcNOylUI/JOpFM1/0+5k82j6SaZWHv+ywE7j06OWEjwZSlc8OfDZA9jZkdN?=
+ =?us-ascii?Q?tYUSlsmr52gym4hKzbFi7NAGLKbIbVQYoPyDxeJbhKVW+JyyR8kjBpTtxyGd?=
+ =?us-ascii?Q?wXYHdlX1SCy2k/DaVirZ1pmduF81ZUonentuCLa47u5LEmgu1rZNPH1Gch3+?=
+ =?us-ascii?Q?sp/OujV3+oALIPtnae6C2T/aVH4Zk0tbTneFERI8YQxnaz3zbqgEQlgteLsT?=
+ =?us-ascii?Q?lPQLw7ogmS707Q1W2ZdeBTbU2euPQtQd8Of8miAGtg8ZuoyBYSNZiPtdaBZs?=
+ =?us-ascii?Q?wfk3euj96Q4srUHHa0KuYvbOmiFhqY9j/xegjTlEUNQfMRn81mmFj8TfZ4v0?=
+ =?us-ascii?Q?dt8zmOC5RgKixHZWD30vD4/LSqAj6BqI7zTdUrHppmY0fkOOGOIxknsKvy2k?=
+ =?us-ascii?Q?oX6HSa6X10/zlwtd1mmIKL6RNTBZTzUOSFCJzldJaCMKpY06GG7osb13ryo8?=
+ =?us-ascii?Q?I6jRQPUtUxWp0gQ0OfGwt+0oIrHN8lQEGDqMrjPbhtflbudZNAqT5U8iBD6t?=
+ =?us-ascii?Q?CVDr79zEkfqAuu00FELuW/Hmq/4oXYRhwfCdFj0YBUbOFM3SvNkGbePI9y10?=
+ =?us-ascii?Q?KINtZizQD61xgTRYiuBAt16hotuIqAoEptZR0za/?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b899529-dcbf-428c-dd14-08dd6c0a681f
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2025 02:03:31.2696
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DY2aQXaiteW7wYTmR7ALemKPxKOUkP1RzlOVcZ2h9SH/8gFxoGFMNyWGnqngrDm3UhRHSD4nS0gjqcARax19BQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8934
 
-Hello,
+From: Peng Fan <peng.fan@nxp.com>
 
-syzbot tried to test the proposed patch but the build/boot failed:
+There is case as below could trigger kernel dump:
+Use U-Boot to start remote processor(rproc) with resource table
+published to a fixed address by rproc. After Kernel boots up,
+stop the rproc, load a new firmware which doesn't have resource table
+,and start rproc.
 
-us 0000:00: resource 4 [io  0x0000-0x0cf7 window]
-[    6.611729][    T1] pci_bus 0000:00: resource 5 [io  0x0d00-0xffff windo=
-w]
-[    6.614346][    T1] pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bff=
-ff window]
-[    6.616924][    T1] pci_bus 0000:00: resource 7 [mem 0xc0000000-0xfebfef=
-ff window]
-[    6.624654][    T1] pci 0000:00:00.0: Limiting direct PCI/PCI transfers
-[    6.628537][    T1] PCI: CLS 0 bytes, default 64
-[    6.630437][    T1] PCI-DMA: Using software bounce buffering for IO (SWI=
-OTLB)
-[    6.632704][    T1] software IO TLB: mapped [mem 0x00000000bbffd000-0x00=
-000000bfffd000] (64MB)
-[    6.635938][    T1] ACPI: bus type thunderbolt registered
-[    6.765209][    T1] RAPL PMU: API unit is 2^-32 Joules, 0 fixed counters=
-, 10737418240 ms ovfl timer
-[    6.850100][    T1] kvm_amd: CPU 1 isn't AMD or Hygon
-[    6.851373][    T1] clocksource: tsc: mask: 0xffffffffffffffff max_cycle=
-s: 0x1fb6eddb419, max_idle_ns: 440795238405 ns
-[    6.857108][    T1] clocksource: Switched to clocksource tsc
-[    6.883495][   T65] kworker/u8:4 (65) used greatest stack depth: 11832 b=
-ytes left
-[    6.889522][   T66] kworker/u8:3 (66) used greatest stack depth: 10984 b=
-ytes left
-[   27.208530][    T1] Initialise system trusted keyrings
-[   27.218330][    T1] workingset: timestamp_bits=3D40 max_order=3D21 bucke=
-t_order=3D0
-[   27.231513][    T1] DLM installed
-[   27.247670][    T1] squashfs: version 4.0 (2009/01/31) Phillip Lougher
-[   27.271132][    T1] NFS: Registering the id_resolver key type
-[   27.277462][    T1] Key type id_resolver registered
-[   27.282686][    T1] Key type id_legacy registered
-[   27.288363][    T1] nfs4filelayout_init: NFSv4 File Layout Driver Regist=
-ering...
-[   27.296225][    T1] nfs4flexfilelayout_init: NFSv4 Flexfile Layout Drive=
-r Registering...
-[   27.333103][    T1] Key type cifs.spnego registered
-[   27.339373][    T1] Key type cifs.idmap registered
-[   27.352720][    T1] ntfs3: Enabled Linux POSIX ACLs support
-[   27.358946][    T1] ntfs3: Read-only LZX/Xpress compression included
-[   27.366297][    T1] efs: 1.0a - http://aeschi.ch.eu.org/efs/
-[   27.372753][    T1] romfs: ROMFS MTD (C) 2007 Red Hat, Inc.
-[   27.379120][    T1] QNX4 filesystem 0.2.3 registered.
-[   27.384778][    T1] qnx6: QNX6 filesystem 1.0.0 registered.
-[   27.392301][    T1] fuse: init (API version 7.42)
-[   27.403332][    T1] orangefs_debugfs_init: called with debug mask: :none=
-: :0:
-[   27.412516][    T1] orangefs_init: module version upstream loaded
-[   27.420673][    T1] JFS: nTxBlock =3D 8192, nTxLock =3D 65536
-[   27.468138][    T1] SGI XFS with ACLs, security attributes, realtime, qu=
-ota, no debug enabled
-[   27.496532][    T1] 9p: Installing v9fs 9p2000 file system support
-[   27.504768][    T1] NILFS version 2 loaded
-[   27.509106][    T1] befs: version: 0.9.3
-[   27.514617][    T1] ocfs2: Registered cluster interface o2cb
-[   27.521829][    T1] ocfs2: Registered cluster interface user
-[   27.531815][    T1] OCFS2 User DLM kernel interface loaded
-[   27.557799][    T1] gfs2: GFS2 installed
-[   27.602711][    T1] ceph: loaded (mds proto 32)
-[   31.788483][    T1] NET: Registered PF_ALG protocol family
-[   31.794660][    T1] xor: automatically using best checksumming function =
-  avx      =20
-[   31.802658][    T1] async_tx: api initialized (async)
-[   31.808258][    T1] Key type asymmetric registered
-[   31.813372][    T1] Asymmetric key parser 'x509' registered
-[   31.819440][    T1] Asymmetric key parser 'pkcs8' registered
-[   31.825504][    T1] Key type pkcs7_test registered
-[   31.831461][    T1] Block layer SCSI generic (bsg) driver version 0.4 lo=
-aded (major 238)
-[   31.842315][    T1] io scheduler mq-deadline registered
-[   31.848032][    T1] io scheduler kyber registered
-[   31.853733][    T1] io scheduler bfq registered
-[   31.872561][    T1] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN=
-:00/input/input0
-[   31.882251][  T127] kworker/u8:5 (127) used greatest stack depth: 10624 =
-bytes left
-[   31.896988][    T1] ACPI: button: Power Button [PWRF]
-[   31.904914][    T1] input: Sleep Button as /devices/LNXSYSTM:00/LNXSLPBN=
-:00/input/input1
-[   31.915245][    T1] ACPI: button: Sleep Button [SLPF]
-[   31.950129][    T1] ioatdma: Intel(R) QuickData Technology Driver 5.00
-[   32.035057][    T1] ACPI: \_SB_.LNKC: Enabled at IRQ 11
-[   32.040824][    T1] virtio-pci 0000:00:03.0: virtio_pci: leaving for leg=
-acy driver
-[   32.114546][    T1] ACPI: \_SB_.LNKD: Enabled at IRQ 10
-[   32.120352][    T1] virtio-pci 0000:00:04.0: virtio_pci: leaving for leg=
-acy driver
-[   32.195707][    T1] ACPI: \_SB_.LNKB: Enabled at IRQ 10
-[   32.201394][    T1] virtio-pci 0000:00:06.0: virtio_pci: leaving for leg=
-acy driver
-[   32.258757][    T1] virtio-pci 0000:00:07.0: virtio_pci: leaving for leg=
-acy driver
-[   33.408986][    T1] N_HDLC line discipline registered with maxframe=3D40=
-96
-[   33.416297][    T1] Serial: 8250/16550 driver, 4 ports, IRQ sharing enab=
-led
-[   33.429926][    T1] 00:03: ttyS0 at I/O 0x3f8 (irq =3D 4, base_baud =3D =
-115200) is a 16550A
-[   33.462358][    T1] 00:04: ttyS1 at I/O 0x2f8 (irq =3D 3, base_baud =3D =
-115200) is a 16550A
-[   33.491731][    T1] 00:05: ttyS2 at I/O 0x3e8 (irq =3D 6, base_baud =3D =
-115200) is a 16550A
-[   33.524186][    T1] 00:06: ttyS3 at I/O 0x2e8 (irq =3D 7, base_baud =3D =
-115200) is a 16550A
-[   33.577101][    T1] Non-volatile memory driver v1.3
-[   33.587337][    T1] BUG: kernel NULL pointer dereference, address: 00000=
-00000000000
-[   33.594496][    T1] #PF: supervisor read access in kernel mode
-[   33.594496][    T1] #PF: error_code(0x0000) - not-present page
-[   33.594496][    T1] PGD 0 P4D 0=20
-[   33.594496][    T1] Oops: Oops: 0000 [#1] SMP PTI
-[   33.594496][    T1] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.1=
-4.0-syzkaller-01979-g61af143fbea4-dirty #0 PREEMPT(undef)=20
-[   33.624396][    T1] Hardware name: Google Google Compute Engine/Google C=
-ompute Engine, BIOS Google 02/12/2025
-[   33.634086][    T1] RIP: 0010:msix_capability_init+0x95c/0x18c0
-[   33.644292][    T1] Code: ff ff ff 48 89 9d 60 fe ff ff 48 89 9d 08 ff f=
-f ff 48 83 bd 30 ff ff ff 00 4c 8b 75 c8 0f 85 1d 02 00 00 48 8b bd 58 ff f=
-f ff <44> 8b 27 b8 00 00 40 00 41 21 c4 e8 b4 b2 ad fb 8b 18 44 8b 3a 41
-[   33.664287][    T1] RSP: 0000:ffff888100642fb0 EFLAGS: 00010246
-[   33.664287][    T1] RAX: ffff8880bba43080 RBX: ffffc90000b3f008 RCX: 000=
-0000100243080
-[   33.674041][    T1] RDX: ffff888100243080 RSI: ffff88813fffacc0 RDI: 000=
-0000000000000
-[   33.684352][    T1] RBP: ffff888100643178 R08: ffffea000000000f R09: 000=
-0000000000000
-[   33.694105][    T1] R10: ffff8880bba43020 R11: ffffffff86cfbc29 R12: 000=
-0000000000000
-[   33.694105][    T1] R13: 0000000000000000 R14: ffff8881408d0b58 R15: 000=
-000000000000b
-[   33.704327][    T1] FS:  0000000000000000(0000) GS:ffff8881ab2b0000(0000=
-) knlGS:0000000000000000
-[   33.714083][    T1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   33.724299][    T1] CR2: 0000000000000000 CR3: 0000000011a80000 CR4: 000=
-00000003526f0
-[   33.734034][    T1] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000=
-0000000000000
-[   33.734034][    T1] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 000=
-0000000000400
-[   33.744273][    T1] Call Trace:
-[   33.754028][    T1]  <TASK>
-[   33.754028][    T1]  ? show_trace_log_lvl+0x268/0x3d0
-[   33.764298][    T1]  ? __pci_enable_msix_range+0xad9/0xc40
-[   33.764298][    T1]  ? __die_body+0xce/0x1a0
-[   33.774026][    T1]  ? __die+0x20f/0x270
-[   33.774026][    T1]  ? page_fault_oops+0xe58/0xfb0
-[   33.774026][    T1]  ? exc_page_fault+0x56c/0x700
-[   33.784287][    T1]  ? asm_exc_page_fault+0x2b/0x30
-[   33.794040][    T1]  ? __pci_enable_msix_range+0xad9/0xc40
-[   33.794040][    T1]  ? msix_capability_init+0x95c/0x18c0
-[   33.804364][    T1]  __pci_enable_msix_range+0xad9/0xc40
-[   33.804364][    T1]  ? kmsan_get_metadata+0x13e/0x1c0
-[   33.814074][    T1]  ? kmsan_internal_set_shadow_origin+0x6c/0x100
-[   33.814074][    T1]  pci_alloc_irq_vectors_affinity+0x111/0x3a0
-[   33.824317][    T1]  vp_find_vqs_msix+0x84d/0x1560
-[   33.834083][    T1]  ? kmsan_internal_unpoison_memory+0x14/0x20
-[   33.834083][    T1]  vp_find_vqs+0x6c/0xa80
-[   33.844490][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xb0
-[   33.844490][    T1]  ? __pfx_vp_find_vqs+0x10/0x10
-[   33.854046][    T1]  probe_common+0x3b4/0x970
-[   33.854046][    T1]  ? __pfx_random_recv_done+0x10/0x10
-[   33.864284][    T1]  ? kmsan_get_metadata+0x13e/0x1c0
-[   33.864284][    T1]  virtrng_probe+0x2d/0x40
-[   33.874036][    T1]  ? __pfx_virtrng_probe+0x10/0x10
-[   33.874036][    T1]  virtio_dev_probe+0x1640/0x19a0
-[   33.884351][    T1]  ? __pfx_virtio_dev_probe+0x10/0x10
-[   33.884351][    T1]  really_probe+0x4dc/0xd90
-[   33.894100][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xb0
-[   33.894100][    T1]  __driver_probe_device+0x2ab/0x5d0
-[   33.904311][    T1]  driver_probe_device+0x72/0x890
-[   33.914058][    T1]  __driver_attach+0x7ea/0xb50
-[   33.914058][    T1]  bus_for_each_dev+0x350/0x540
-[   33.914058][    T1]  ? __pfx___driver_attach+0x10/0x10
-[   33.924300][    T1]  driver_attach+0x51/0x70
-[   33.934048][    T1]  bus_add_driver+0x74c/0xdb0
-[   33.934048][    T1]  driver_register+0x3fb/0x660
-[   33.934048][    T1]  __register_virtio_driver+0xf1/0x120
-[   33.944314][    T1]  ? __pfx_virtio_rng_driver_init+0x10/0x10
-[   33.954051][    T1]  virtio_rng_driver_init+0x2e/0x40
-[   33.954051][    T1]  do_one_initcall+0x228/0xbf0
-[   33.964344][    T1]  ? __pfx_virtio_rng_driver_init+0x10/0x10
-[   33.964344][    T1]  ? kmsan_internal_unpoison_memory+0x14/0x20
-[   33.974071][    T1]  ? irqentry_enter+0x37/0x60
-[   33.980235][    T1]  ? sysvec_apic_timer_interrupt+0x52/0x90
-[   33.984318][    T1]  ? kmsan_get_metadata+0x13e/0x1c0
-[   33.994074][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xb0
-[   33.994074][    T1]  ? kmsan_get_metadata+0x13e/0x1c0
-[   34.004347][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xb0
-[   34.004347][    T1]  ? parameq+0x43a/0x470
-[   34.014040][    T1]  ? kmsan_get_metadata+0x13e/0x1c0
-[   34.014040][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xb0
-[   34.024360][    T1]  ? parse_args+0xfde/0x10a0
-[   34.024360][    T1]  ? kmsan_get_metadata+0x13e/0x1c0
-[   34.034052][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xb0
-[   34.034052][    T1]  ? __pfx_virtio_rng_driver_init+0x10/0x10
-[   34.044310][    T1]  do_initcall_level+0x140/0x350
-[   34.054046][    T1]  do_initcalls+0x1a6/0x2f0
-[   34.054046][    T1]  ? __pfx_native_smp_prepare_cpus+0x10/0x10
-[   34.054046][    T1]  do_basic_setup+0x22/0x30
-[   34.066107][    T1]  kernel_init_freeable+0x306/0x4c0
-[   34.074047][    T1]  ? __pfx_kernel_init+0x10/0x10
-[   34.074047][    T1]  kernel_init+0x2f/0x800
-[   34.084307][    T1]  ? __pfx_kernel_init+0x10/0x10
-[   34.084307][    T1]  ret_from_fork+0x6d/0x90
-[   34.094354][    T1]  ? __pfx_kernel_init+0x10/0x10
-[   34.094354][    T1]  ret_from_fork_asm+0x1a/0x30
-[   34.104353][    T1] RIP: 1f0f:0x0
-[   34.104353][    T1] Code: Unable to access opcode bytes at 0xfffffffffff=
-fffd6.
-[   34.114061][    T1] RSP: 0000:0000000000000000 EFLAGS: 841f0f2e66 ORIG_R=
-AX: 1f0f2e6600000000
-[   34.124569][    T1] RAX: 0000000000000000 RBX: 1f0f2e6600000000 RCX: 2e6=
-6000000000084
-[   34.124569][    T1] RDX: 0000000000841f0f RSI: 000000841f0f2e66 RDI: 008=
-41f0f2e660000
-[   34.134075][    T1] RBP: 00841f0f2e660000 R08: 00841f0f2e660000 R09: 000=
-000841f0f2e66
-[   34.144315][    T1] R10: 0000000000841f0f R11: 2e66000000000084 R12: 000=
-000841f0f2e66
-[   34.154402][    T1] R13: 0000000000841f0f R14: 2e66000000000084 R15: 1f0=
-f2e6600000000
-[   34.164295][    T1]  </TASK>
-[   34.164295][    T1] Modules linked in:
-[   34.164295][    T1] CR2: 0000000000000000
-[   34.174038][    T1] ---[ end trace 0000000000000000 ]---
-[   34.174038][    T1] RIP: 0010:msix_capability_init+0x95c/0x18c0
-[   34.184305][    T1] Code: ff ff ff 48 89 9d 60 fe ff ff 48 89 9d 08 ff f=
-f ff 48 83 bd 30 ff ff ff 00 4c 8b 75 c8 0f 85 1d 02 00 00 48 8b bd 58 ff f=
-f ff <44> 8b 27 b8 00 00 40 00 41 21 c4 e8 b4 b2 ad fb 8b 18 44 8b 3a 41
-[   34.204268][    T1] RSP: 0000:ffff888100642fb0 EFLAGS: 00010246
-[   34.214047][    T1] RAX: ffff8880bba43080 RBX: ffffc90000b3f008 RCX: 000=
-0000100243080
-[   34.214047][    T1] RDX: ffff888100243080 RSI: ffff88813fffacc0 RDI: 000=
-0000000000000
-[   34.224282][    T1] RBP: ffff888100643178 R08: ffffea000000000f R09: 000=
-0000000000000
-[   34.234034][    T1] R10: ffff8880bba43020 R11: ffffffff86cfbc29 R12: 000=
-0000000000000
-[   34.244291][    T1] R13: 0000000000000000 R14: ffff8881408d0b58 R15: 000=
-000000000000b
-[   34.254082][    T1] FS:  0000000000000000(0000) GS:ffff8881ab2b0000(0000=
-) knlGS:0000000000000000
-[   34.264357][    T1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   34.264357][    T1] CR2: 0000000000000000 CR3: 0000000011a80000 CR4: 000=
-00000003526f0
-[   34.274080][    T1] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000=
-0000000000000
-[   34.284395][    T1] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 000=
-0000000000400
-[   34.294083][    T1] Kernel panic - not syncing: Fatal exception
-[   34.294083][    T1] Kernel Offset: disabled
-[   34.294083][    T1] Rebooting in 86400 seconds..
+When starting rproc with a firmware not have resource table,
+`memcpy(loaded_table, rproc->cached_table, rproc->table_sz)` will
+trigger dump, because rproc->cache_table is set to NULL during the last
+stop operation, but rproc->table_sz is still valid.
 
+This issue is found on i.MX8MP and i.MX9.
 
-syzkaller build log:
-go env (err=3D<nil>)
-GO111MODULE=3D'auto'
-GOARCH=3D'amd64'
-GOBIN=3D''
-GOCACHE=3D'/syzkaller/.cache/go-build'
-GOENV=3D'/syzkaller/.config/go/env'
-GOEXE=3D''
-GOEXPERIMENT=3D''
-GOFLAGS=3D''
-GOHOSTARCH=3D'amd64'
-GOHOSTOS=3D'linux'
-GOINSECURE=3D''
-GOMODCACHE=3D'/syzkaller/jobs-2/linux/gopath/pkg/mod'
-GONOPROXY=3D''
-GONOSUMDB=3D''
-GOOS=3D'linux'
-GOPATH=3D'/syzkaller/jobs-2/linux/gopath'
-GOPRIVATE=3D''
-GOPROXY=3D'https://proxy.golang.org,direct'
-GOROOT=3D'/syzkaller/jobs-2/linux/gopath/pkg/mod/golang.org/toolchain@v0.0.=
-1-go1.23.6.linux-amd64'
-GOSUMDB=3D'sum.golang.org'
-GOTMPDIR=3D''
-GOTOOLCHAIN=3D'auto'
-GOTOOLDIR=3D'/syzkaller/jobs-2/linux/gopath/pkg/mod/golang.org/toolchain@v0=
-.0.1-go1.23.6.linux-amd64/pkg/tool/linux_amd64'
-GOVCS=3D''
-GOVERSION=3D'go1.23.6'
-GODEBUG=3D''
-GOTELEMETRY=3D'local'
-GOTELEMETRYDIR=3D'/syzkaller/.config/go/telemetry'
-GCCGO=3D'gccgo'
-GOAMD64=3D'v1'
-AR=3D'ar'
-CC=3D'gcc'
-CXX=3D'g++'
-CGO_ENABLED=3D'1'
-GOMOD=3D'/syzkaller/jobs-2/linux/gopath/src/github.com/google/syzkaller/go.=
-mod'
-GOWORK=3D''
-CGO_CFLAGS=3D'-O2 -g'
-CGO_CPPFLAGS=3D''
-CGO_CXXFLAGS=3D'-O2 -g'
-CGO_FFLAGS=3D'-O2 -g'
-CGO_LDFLAGS=3D'-O2 -g'
-PKG_CONFIG=3D'pkg-config'
-GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
- -ffile-prefix-map=3D/tmp/go-build647643234=3D/tmp/go-build -gno-record-gcc=
--switches'
+Dump as below:
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+Mem abort info:
+  ESR = 0x0000000096000004
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+  FSC = 0x04: level 0 translation fault
+Data abort info:
+  ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+user pgtable: 4k pages, 48-bit VAs, pgdp=000000010af63000
+[0000000000000000] pgd=0000000000000000, p4d=0000000000000000
+Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 2 UID: 0 PID: 1060 Comm: sh Not tainted 6.14.0-rc7-next-20250317-dirty #38
+Hardware name: NXP i.MX8MPlus EVK board (DT)
+pstate: a0000005 (NzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : __pi_memcpy_generic+0x110/0x22c
+lr : rproc_start+0x88/0x1e0
+Call trace:
+ __pi_memcpy_generic+0x110/0x22c (P)
+ rproc_boot+0x198/0x57c
+ state_store+0x40/0x104
+ dev_attr_store+0x18/0x2c
+ sysfs_kf_write+0x7c/0x94
+ kernfs_fop_write_iter+0x120/0x1cc
+ vfs_write+0x240/0x378
+ ksys_write+0x70/0x108
+ __arm64_sys_write+0x1c/0x28
+ invoke_syscall+0x48/0x10c
+ el0_svc_common.constprop.0+0xc0/0xe0
+ do_el0_svc+0x1c/0x28
+ el0_svc+0x30/0xcc
+ el0t_64_sync_handler+0x10c/0x138
+ el0t_64_sync+0x198/0x19c
 
-git status (err=3D<nil>)
-HEAD detached at 22a6c2b175
-nothing to commit, working tree clean
+Clear rproc->table_sz to address the issue.
 
+While at here, also clear rproc->table_sz when rproc_fw_boot and
+rproc_detach.
 
-tput: No value for $TERM and no -T specified
-tput: No value for $TERM and no -T specified
-Makefile:31: run command via tools/syz-env for best compatibility, see:
-Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
-ing.md#using-syz-env
-go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
-s/syz-sysgen
-make .descriptions
-tput: No value for $TERM and no -T specified
-tput: No value for $TERM and no -T specified
-Makefile:31: run command via tools/syz-env for best compatibility, see:
-Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
-ing.md#using-syz-env
-bin/syz-sysgen
-touch .descriptions
-GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
-/syzkaller/prog.GitRevision=3D22a6c2b1752ef57d8d612e233d35f6be8c3bf7df -X '=
-github.com/google/syzkaller/prog.gitRevisionDate=3D20250318-101307'" -o ./b=
-in/linux_amd64/syz-execprog github.com/google/syzkaller/tools/syz-execprog
-mkdir -p ./bin/linux_amd64
-g++ -o ./bin/linux_amd64/syz-executor executor/executor.cc \
-	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wfr=
-ame-larger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-forma=
-t-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -=
-static-pie -std=3Dc++17 -I. -Iexecutor/_include   -DGOOS_linux=3D1 -DGOARCH=
-_amd64=3D1 \
-	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"22a6c2b1752ef57d8d612e233d35f6be8c=
-3bf7df\"
-/usr/bin/ld: /tmp/ccvpz9QI.o: in function `Connection::Connect(char const*,=
- char const*)':
-executor.cc:(.text._ZN10Connection7ConnectEPKcS1_[_ZN10Connection7ConnectEP=
-KcS1_]+0x104): warning: Using 'gethostbyname' in statically linked applicat=
-ions requires at runtime the shared libraries from the glibc version used f=
-or linking
+Fixes: 9dc9507f1880 ("remoteproc: Properly deal with the resource table when detaching")
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
 
+V2:
+ Clear table_sz when rproc_fw_boot and rproc_detach per Arnaud
 
-Error text is too large and was truncated, full error text is at:
-https://syzkaller.appspot.com/x/error.txt?x=3D1584024c580000
+ drivers/remoteproc/remoteproc_core.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-
-Tested on:
-
-commit:         61af143f Merge tag 'Smack-for-6.15' of https://github...
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dc96d28eebe225e1=
-2
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D7ea0b96c4ddb49fd1=
-a70
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debia=
-n) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D1058024c5800=
-00
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index c2cf0d277729..1efa53d4e0c3 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -1442,6 +1442,7 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+ 	kfree(rproc->cached_table);
+ 	rproc->cached_table = NULL;
+ 	rproc->table_ptr = NULL;
++	rproc->table_sz = 0;
+ unprepare_rproc:
+ 	/* release HW resources if needed */
+ 	rproc_unprepare_device(rproc);
+@@ -2025,6 +2026,7 @@ int rproc_shutdown(struct rproc *rproc)
+ 	kfree(rproc->cached_table);
+ 	rproc->cached_table = NULL;
+ 	rproc->table_ptr = NULL;
++	rproc->table_sz = 0;
+ out:
+ 	mutex_unlock(&rproc->lock);
+ 	return ret;
+@@ -2091,6 +2093,7 @@ int rproc_detach(struct rproc *rproc)
+ 	kfree(rproc->cached_table);
+ 	rproc->cached_table = NULL;
+ 	rproc->table_ptr = NULL;
++	rproc->table_sz = 0;
+ out:
+ 	mutex_unlock(&rproc->lock);
+ 	return ret;
+-- 
+2.37.1
 
