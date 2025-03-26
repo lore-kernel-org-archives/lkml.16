@@ -1,76 +1,142 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B10F215058;
-	Wed, 26 Mar 2025 18:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60B924CEEE;
+	Wed, 26 Mar 2025 18:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743014292; cv=none; b=jIZht0GQ3AsXHBYyxBxn0m5chYVIa7O1yhP5xZtf2GPTMus85j6dOfksRsAtDA4m4EUPYk4I1py74XRcxEDyFZ6km/YIIHVdy0Ev4YfZ5XaPKjF6omw+qOdblM8MF4c3dNrFyjWLypNUUvBKwaHGnktl6h2i87D0NJ1lhyoRsz0=
+	t=1743014417; cv=none; b=KNBlWwxa2DvOB/NeLIQj100iE5R2qrXk1KIhTr7u8xnuSl0c+/9xQtp4dcarz36g76qbCmKFTeVbEACU/TExK6DAMXA2GgAjQiEgPkHVQVj+GqLHXIuOWbSbdWa4iJ2EvjPhFUTmJm4DHCMAc4nkcYns5vHT+sTu7rcAZb68eww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743014292; c=relaxed/simple;
-	bh=1t7xODy4KH9rbWcPUjlVK/xwCOzHA+TpyiyRoAef0o4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TxVX/rt3DYe4bPvyb0SeGIqSIkrnL5I4EtCRNx/N3drEuwGE6Pzco3LP0Jii1BADSFgLbUcrgqIfCSQyAfWiS+MPdjBgQvaFfnLJ4K+ctvnZUgf7cPn2wz58YrWz9/df5wGAMB26SHewLOKWn1x3Eo/Xey+B4iCVNZLho9ALktE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=VudsCLYv; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1743014417; c=relaxed/simple;
+	bh=F5Y3RF0ndf8/9azcsuLfDmtYTAz9gCrDPqNMbnYLM/c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iW1MaRX1lPV3oPCjwNX5o/R5nafaUmqrkDKnEXQAPbjGx/EvsjtOkeuo1ksZHSQjWFHPVOXUx+XAyn2PswCgPRpyndarTISvCRql68426IqEOc2oRPWm5I4l770ezWlDgbEk1T1aeuOUO091AzSAKpe8cITIm3q3YQkbga+O7no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R5GNfyBu; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="VudsCLYv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=HsaZBwcIMs6THkgSKphP0b6hPFh+WRNHRlYSs0zUBAQ=; b=VudsCLYviQlgmSrK+6NYoTkxD1
-	a1kGIbl4zzF4rgUHHpNbxB1gnYglkfIGFvTu1h8wpJq19/iVkK8mhYjxYKIrxgiDEeBdupKxnBNTX
-	RRmB70l/ZQh6ppGtCCVUSleGXWIiiVEMKJdAuubuEB4wrAplAKqrXS0JBOs9hQNZh4sw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1txVdX-007Cha-4S; Wed, 26 Mar 2025 19:37:59 +0100
-Date: Wed, 26 Mar 2025 19:37:59 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
-Cc: Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	UNGLinuxDriver@microchip.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: Re: [PATCH] net: dsa: felix: check felix_cpu_port_for_conduit() for
- failure
-Message-ID: <3370aa96-a320-4b8e-b37b-b8100094d3c9@lunn.ch>
-References: <20250326161251.7233-1-v.shevtsov@mt-integration.ru>
- <dc85eb72-cdec-43a1-8ad7-6cd7db9c6b25@lunn.ch>
- <20250326232929.809a37357877ef3168dfc097@mt-integration.ru>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R5GNfyBu"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e8be1c6ff8so246953a12.1;
+        Wed, 26 Mar 2025 11:40:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743014414; x=1743619214; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sOrtiNV+oGhM+385d+TAFbT9mzLoUCEIKut5q82hzIo=;
+        b=R5GNfyBus4A7nney46YC6LA4g0kZ5jJauSUQT2USKS0yaqq498/WbbRytLe9U63Y1v
+         C5yuP88u1TWK6Yu9GgK/78pq7Z5EoaC0G/0Ckr/tfg799viwijUpzOhFfoJRyATnZNoO
+         ft7z857N1nzDfscRqJ3hY5aGJkHDiRD+Z+42JXgQYLZkN1RRYLkPxF2MOI5DKVgdshPb
+         nNGUPsdwa+t6ULJcdeNwpJg61S9XhB7vON52aaEjLyBd4/D4xqJ0svJPlNJSxbkmNW8n
+         M0b8QDMWQntANFwGqSVLi2bOkyYe/MvVTGmYkLblhIc+BfFPotAPbozKh336vqSwSCEi
+         Ak4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743014414; x=1743619214;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sOrtiNV+oGhM+385d+TAFbT9mzLoUCEIKut5q82hzIo=;
+        b=tfJWbQEq+1yeRMp/4jruCcudQQg6KzN+rKO610c3BXJDneV+4Yh/o0f/LBwkYazOuK
+         8NLkS3pZuJBLJrQY9k2iNjpgKLEcM3Pqdxl9l9BqVLeIgBc/DSB2rugTVqHwQLggQif8
+         qAZifM8b0BNqEn1AK9oyNF1I+jalxIoFxfcmeqUejxDfHoygYGW/oz7Xwx75CbNUFnei
+         kNcNSy2NvjlruwbP3vadlz7DyL3Liie7kh+UwUF5V1zTaUXZz4oUdCUQKbQUqQp9VKwR
+         I77+HkMD9/Vaor2OeD23D7DTcv401VjoWNkNq4oiRgRUPJxJOJh4URA/hDJjsSElAfqo
+         DjSg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXlwQcZ7Y1elfHg/qJrx0x6+88M30QCVTnmEMU1VX1iwWhUZSk4XjVnHutdDkt0aesPX0bdrE4@vger.kernel.org, AJvYcCVrjOIt5xe+BQ5rkIU7Xurr1xcLD68JVEffzvndYd3eYsMdjWtSYsB7cCTC7ijEosejKgX5JVSCRGEVWOVL@vger.kernel.org, AJvYcCXTHhknumUFIymQbN6cHXnqlyKmLiH/Y++JKRegDeji6OMsZe2TtijPCAZ0i/VMikrRgCxEdf39c4ceFpg3R5I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwO/tvLWCpMmTfiCXo3kPSjNgEKPSc+i2rQBa4sgZekbHMVBKdB
+	jpq8yWoGM1zdaqV4ehGaE5gmSUJZoVCSoc9phpIq676nmUPs8qhWazCnxpaeeBlOzyPHgktWcsP
+	0dqRpN8mnpdcBpwP7QG+cBS0LwsM=
+X-Gm-Gg: ASbGncuhW4he5pmh6VLHD65R2pDnBsmyY5ww+MHnXpWdtH6n69s/J+rakpjmhLth9Jv
+	kyjiM9MKjBd3nBsrJJHhAcsi1suSgeACjqKr4CCjY3tF4HpchoI+pp+MZ+WEv6kn0IlIzHSbV4+
+	B4HllRvGSNvbByRRblxahTGX59tw==
+X-Google-Smtp-Source: AGHT+IG/c8A09fmH4Hvi2r2iNvibbo0gF+QCVgYY3qZ1UUFDvGnHQ5yFC2x9sm4XWN8Ulm3xGBe6lcMopbawOHcqDlo=
+X-Received: by 2002:a17:907:3da1:b0:ac2:6bb5:413c with SMTP id
+ a640c23a62f3a-ac6faf45fbcmr48841566b.31.1743014413852; Wed, 26 Mar 2025
+ 11:40:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250326232929.809a37357877ef3168dfc097@mt-integration.ru>
+References: <20250326-string-add-wcslen-for-llvm-opt-v2-0-d864ab2cbfe4@kernel.org>
+ <20250326-string-add-wcslen-for-llvm-opt-v2-2-d864ab2cbfe4@kernel.org>
+In-Reply-To: <20250326-string-add-wcslen-for-llvm-opt-v2-2-d864ab2cbfe4@kernel.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 26 Mar 2025 20:39:37 +0200
+X-Gm-Features: AQ5f1JqlCAtx3V-rK5Wv2QTv2YVgCmrK0MvTDzYhi8EajWnLgB-2pLN4PzLaYE0
+Message-ID: <CAHp75Vd_mJggRRLfziWUf0tgr3K125uVBNh9VdSo9LHVJz2r_w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] lib/string.c: Add wcslen()
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 26, 2025 at 11:29:29PM +0500, Vitaliy Shevtsov wrote:
-> On Wed, 26 Mar 2025 19:22:07 +0100, Andrew Lunn wrote:
-> 
-> > If i'm reading the code correctly you mean ocelot_bond_get_id()
-> > returns -ENOENT?
-> > 
-> > If so, you should return the ENOENT, not replace it by EINVAL.
-> > 
-> > 	Andrew
-> 
-> Or maybe it's better to just return negative cpu value instead?
+On Wed, Mar 26, 2025 at 7:19=E2=80=AFPM Nathan Chancellor <nathan@kernel.or=
+g> wrote:
+>
+> A recent optimization change in LLVM [1] aims to transform certain loop
+> idioms into calls to strlen() or wcslen(). This change transforms the
+> first while loop in UniStrcat() into a call to wcslen(), breaking the
+> build when UniStrcat() gets inlined into alloc_path_with_tree_prefix():
+>
+>   ld.lld: error: undefined symbol: wcslen
+>   >>> referenced by nls_ucs2_utils.h:54 (fs/smb/client/../../nls/nls_ucs2=
+_utils.h:54)
+>   >>>               vmlinux.o:(alloc_path_with_tree_prefix)
+>   >>> referenced by nls_ucs2_utils.h:54 (fs/smb/client/../../nls/nls_ucs2=
+_utils.h:54)
+>   >>>               vmlinux.o:(alloc_path_with_tree_prefix)
+>
+> The kernel does not build with '-ffreestanding' (which would avoid this
+> transformation) because it does want libcall optimizations in general
+> and turning on '-ffreestanding' disables the majority of them. While
+> '-fno-builtin-wcslen' would be more targeted at the problem, it does not
+> work with LTO.
+>
+> Add a basic wcslen() to avoid this linkage failure. While no
+> architecture or FORTIFY_SOURCE overrides this, add it to string.c
+> instead of string_helpers.c so that it is built with '-ffreestanding',
+> otherwise the compiler might transform it into a call to itself.
 
-Yes, that is what i meant. The typical pattern is:
+...
 
-			int lag = ocelot_bond_get_id(ocelot, bond);
-			if (lag < 0)
-				return lag
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -7,6 +7,7 @@
+>  #include <linux/cleanup.h>     /* for DEFINE_FREE() */
+>  #include <linux/compiler.h>    /* for inline */
+>  #include <linux/types.h>       /* for size_t */
 
-	Andrew
+> +#include <linux/nls_types.h>   /* for wchar_t */
+
+I know it's not ordered, but can we at least not make it worse, i.e.
+squeeze this to be after the compiler.h? Or even somewhere after below
+the err*.h? Whatever gives a better (sparsely) ordered overall
+result...
+
+>  #include <linux/stddef.h>      /* for NULL */
+>  #include <linux/err.h>         /* for ERR_PTR() */
+
+...
+
+>  #ifndef __HAVE_ARCH_STRNLEN
+>  extern __kernel_size_t strnlen(const char *,__kernel_size_t);
+>  #endif
+> +extern __kernel_size_t wcslen(const wchar_t *s);
+
+I'm wondering why we still continue putting this 'extern' keyword.
+Yes, I see that the rest is like this, but for new code do we really
+need it?
+
+>  #ifndef __HAVE_ARCH_STRPBRK
+>  extern char * strpbrk(const char *,const char *);
+>  #endif
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
