@@ -1,96 +1,114 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F641ADFE3
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 13:37:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E471A0BDB;
+	Wed, 26 Mar 2025 13:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742996269; cv=none; b=hNungQvGHap7m+Dv8GbCk+HaBBpyFlPxLnCjkChvuAcCEVoA813qhlv/4A4gPoQKB2cb9u6IsjDFTfxlnszCT0UkpQkOy1y03Ez9t5RKX2k/aTEr+2cFEYMJxaROCaajW9TnBQqLdUotb2fRv9HE4FyiIcHCQroNZCyGWA0hTPk=
+	t=1742996372; cv=none; b=eFII0J4zA0NowMqI1AOUT3NCzhx0lOrxvENwKK0/p0QPbRi8C88Dg2gNIh8DrfpqSceDqNgz6OtaS/UQHNdH7BYEZFWjDXPnWqyjS/QFPRpZhSnZqsG3UE5ynz+NFxZZ5d00U3ZqKFyHP1yeJiuuW+hKavZ0l4+7xQhYu8Ih9Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742996269; c=relaxed/simple;
-	bh=F0gVAlZt3PFIyMFmwclbSlHQh1ACgb6y5gUJyY/u//0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BbSfm0zji5xUXol64fb+jc8/qDeLEcUDbUwV4YpihlcG4M9tN6LpkukFBgR/VfiPia2inewYs6/4F5pAOs9gzlLxjH7LVnbdL6zq2j9mTths/+AA+umSGPc2vl6Ujz5s8GmDfqaO+Ef1uXMV96KV6IKACctsoai6iVEEGddKb54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BHOBi0Jo; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1742996372; c=relaxed/simple;
+	bh=G+1bPq00pfcw5FfGpQnUUBW55ek4LCDQ4SLjYNHQC1U=;
+	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
+	 Cc:In-Reply-To:To; b=kSF5iodjGxhEQEZzafBUWag3dtT8RTVjC6T93E/8aWPWgWL+QPtvvb76hydVRGKuEu4fnaK1OnYDd5jthF91IJncOUgs1RDXrd/y5mWEn0E3zrwg70tiFvFhckSTTaiH94JUEYXt4oO/+YxAk4XhwgjNUchfTbOUgNtmFwFh8Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nFl3hxgg; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BHOBi0Jo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ikBZoS5Vo9Qpno7GOV1ZtclF7TV6GXjP7ScaDjkRxXA=; b=BHOBi0JoU0tmoxAJjITSfOK7Wz
-	gxV4qExHWkTJlBbLei8HPmKgVlALX0+H93uG4z3yKs/OcrbUbPEPu7wPeBO0IkP0faUKFPXNYXLZ6
-	fR9X7o0kkICssBtrJWZL0/u3wrzLt4gjOmNaEJanRBDEEJRDeGQq4XL6rb9OV/RAcyxUGcKMY+NnC
-	wumuOwYL4DRlKDNBTI9vgEHuZMy5jF4NnR0geZxKJ5z/x6Ic3042IJo33EfhUIEX6hpWwOJtFid6q
-	S4H1nLL0Oxm7qj4K+eNY9xc8json8vK/jZwE39/KvxvahnveVpP4YZzZaxhdvybJ2sVW0/UQE+9UC
-	jKfWuoGQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1txQwr-00000005oNk-090j;
-	Wed, 26 Mar 2025 13:37:37 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 961DA3003C4; Wed, 26 Mar 2025 14:37:36 +0100 (CET)
-Date: Wed, 26 Mar 2025 14:37:36 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 20/21] futex: Implement FUTEX2_NUMA
-Message-ID: <20250326133736.GF25239@noisy.programming.kicks-ass.net>
-References: <20250312151634.2183278-1-bigeasy@linutronix.de>
- <20250312151634.2183278-21-bigeasy@linutronix.de>
- <fc3a6902-a845-4b11-ace8-514f10194288@linux.ibm.com>
- <20250325225600.GP36322@noisy.programming.kicks-ass.net>
- <4d0059f1-d834-44d5-bc57-7425980f5a97@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFl3hxgg"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e5dc299deb4so6561974276.1;
+        Wed, 26 Mar 2025 06:39:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742996370; x=1743601170; darn=vger.kernel.org;
+        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
+         :from:content-transfer-encoding:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G+1bPq00pfcw5FfGpQnUUBW55ek4LCDQ4SLjYNHQC1U=;
+        b=nFl3hxgg4qtS8MhKp5uVKlhmZzxOFb7EjRHyA6uricrrz9KDIGLyRVOvH39GFdLVRn
+         bHvSBoTL7wwtPweK6wzEx2Tw8C4eh5OdpNCbAccTLAO91jN8HhHiPTee0t0KmSMDma4h
+         pwinCF+QAeTvXN/YarCQb+FVZnxf/rRlpdW8W5bVW8z929XJwcy3Lzr96M4SiQ1CkNAX
+         oPZBgEvMGMZohHBPqDm2Oe1rtwb7P0V4LrbWw/JUIvgP7dJqU4FZV401/a62+MNXC9Jr
+         I9ZEDOlu3qFv4huBO0UaeFvwyb6EymcGBJMqLpn2wgAEhuGa/o4i+jeEpbPp1fmgQouc
+         84yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742996370; x=1743601170;
+        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
+         :from:content-transfer-encoding:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G+1bPq00pfcw5FfGpQnUUBW55ek4LCDQ4SLjYNHQC1U=;
+        b=GV+mHxskOiDhtPmOHh+uf+Ptoeed0qfej9VSkKHSYrzOqsC++3H0SD5m3eHck6EiAN
+         bdd2+SpjthsFmyIWFfExUPWdpd/vdp1rr0mwcfV2ySBqvm9laLvIRyzpYkPiEexODzaq
+         kDYvzqEoJWL5ubAO9d5QxQgVwJ3DJtfbNCIq5NTTa9feG47+f6ra5E2kks+6mht+6GTz
+         yTa6OTLi0/yCHox78DF+Br+5FzX/2YcvlyvekoSSFElJ9NFHFGfLlh2cgng6rG1ftzjx
+         Ug/bSULGFGZDZ7uO7WwyYrLR3BDzuHD14WVNA+eEN3S9YgH7mNMUQ+YA6YIh9Rx7MoRy
+         4ZcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUuIAtsjJsCRmhtwWWRYrg2++ky3sjwSiExsVFvJ2bFRDQO6r33YdRtNoqV4Bv0eA5bercyb7rcJZbgsMrY@vger.kernel.org, AJvYcCVfTf6mgowzB+W6B1jMZYZTTTmU6j5XtoVVLnMx3gqlBQnwUDHtUypNXUiWtkwd9p+MsDthTj7B8DFcqQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyz4NvPn5Z46Aa12O//62LMvpGy17x7f5nSU3wV9+1bPsdumLXV
+	LqfDTgjULAYsDHvfHpx6QZfRvX5KcvjQbWy2vwQ1+y29VG9vN85oZsMT9dFE
+X-Gm-Gg: ASbGncu/iU0vQL7iSA026smPey1uyvpYpI+6YXmcdZJBmooP5m0eRx1/IxmnytX6494
+	sC0xOlynGbPez2se1DIfON5OXdkyuirVzViaVx+w+OGTAmtrZYKehLqTfNzhmoH1LVHa9vOaFJL
+	ObYB53dzFOpi6MqVjLLzN+5u4+CC6VAinYbDESFQBP9asw1NX+PDDrXIuyRgT8ZJ+XkGaUeROp6
+	/wImWtHyYeZk5v7zLiNywwzh/GcJS+YPq/u8HFPvMlm4quXapCYtxYZw8ibbmH5RHiZO+XMzztb
+	zLPieq3cMUWe6oFG+CwtVqxsYolBFZX4B8vrswbSoO4Zq7r6CIyRt0HnIH7TqbLfTil6CIxkFjr
+	f
+X-Google-Smtp-Source: AGHT+IG86fcKoiR1bNMN+dvMrq8PLxwv5hDITg/IDjKGisvGVwDdZViNu+LxypbQ2NlHjGuuF8VcNQ==
+X-Received: by 2002:a05:690c:c14:b0:700:a988:59dc with SMTP id 00721157ae682-700bad227e3mr277562707b3.31.1742996370017;
+        Wed, 26 Mar 2025 06:39:30 -0700 (PDT)
+Received: from smtpclient.apple ([2401:4900:5fb3:22d:130:8957:5645:7f3c])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-700ba76cb4fsm25124437b3.43.2025.03.26.06.39.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Mar 2025 06:39:29 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: Aditya Garg <adityagarg1208@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4d0059f1-d834-44d5-bc57-7425980f5a97@linux.ibm.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH RESEND 5/5] HID: multitouch: add device ID for Apple Touch Bar
+Date: Wed, 26 Mar 2025 19:09:15 +0530
+Message-Id: <CB167906-8D50-44AE-B873-DDEA9A370066@gmail.com>
+References: <7rsn5334-npo6-408r-8442-6o3qo3qp05q7@xreary.bet>
+Cc: Aditya Garg <gargaditya08@live.com>,
+ Benjamin Tissoires <bentiss@kernel.org>, admin@kodeit.net,
+ benjamin.tissoires@redhat.com, kekrby@gmail.com, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, orlandoch.dev@gmail.com
+In-Reply-To: <7rsn5334-npo6-408r-8442-6o3qo3qp05q7@xreary.bet>
+To: Jiri Kosina <jikos@kernel.org>
+X-Mailer: iPad Mail (22D82)
 
-On Wed, Mar 26, 2025 at 06:27:20PM +0530, Shrikanth Hegde wrote:
-> 
-> 
-> On 3/26/25 04:26, Peter Zijlstra wrote:
-> > On Wed, Mar 26, 2025 at 01:22:19AM +0530, Shrikanth Hegde wrote:
-> > 
-> > > > +	return &futex_queues[node][hash & futex_hashmask];
-> > 
-> >                              ^^^^^^^
-> > 
-> > > > +	hashsize = 256 * num_possible_cpus();
-> > > > +	hashsize /= num_possible_nodes();
-> > > 
-> > > Wouldn't it be better to use num_online_nodes? each node may get a bigger
-> > > hash bucket which means less collision no?
-> > 
-> > No. There are two problems with num_online_nodes, and both are evident
-> > above.
-> > 
-> > Consider the case of a sparse set.
-> 
-> I am sorry, i didn't understand. Could you please explain?
 
-I was confused; I should've just gone sleep :-)
 
-The futex_queues[] array is sized MAX_NUMNODES, such that every possible
-node_id has a spot. I thought we did dynamic sizing, but not so.
+> On 26 Mar 2025, at 3:24=E2=80=AFPM, Jiri Kosina <jikos@kernel.org> wrote:
+>=20
+> =EF=BB=BFOn Tue, 25 Mar 2025, Aditya Garg wrote:
+>=20
+>>>>> Yes I can move hid_find_field to the original location as well. But,
+>>>>> I would not want to devm_kzalloc as well unnecessarily if the
+>>>>> touchbar is in the basic mode instead of drm mode which will cause
+>>>>> this -ENODEV to be executed right?
+>>>>=20
+>>>> It shouldn't matter. hid_core calls devres_open_group() before calling
+>>>> .probe(), and calls devres_release_group() on failure. So yes, we'll
+>>>> allocate a piece of memory and release it after, but it's not something=
 
-Anyway, using online here would lead to having to deal with hotplug,
-which in turn either leads to more over-all hash buckets in the system,
-or having to resize and rehash everything.
+>>>> uncommon.
+>>>=20
+>>> Fair. I'll send a v2
+>>=20
+>> I've sent a v2 from my gmail address. Outlook is being too fussy these
+>> days, so hopefully I don't have to sign off twice using gmail as well as
+>> outlook.
+>=20
+> Thanks. Please always make sure that either in the cover letter or in the
+> individual patches you otline the differences between individual patch
+> submissions.
+>=20
+Sorry about that. I recently switched to git send-email and it took time for=
+ me to get familiar with it. Such minor mistakes do happen in such cases. In=
+ case a v3 is needed, I'll share the Changelog. For v2 that I sent, changelo=
+g is:
 
-Neither are really attractive options.
-
+v2: keep parse at original location in patch 5 as suggested by Benjamin
