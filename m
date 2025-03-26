@@ -1,280 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.stravers.net (mail.stravers.net [185.170.214.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615AA1B87F2;
-	Wed, 26 Mar 2025 11:32:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95251B87F2;
+	Wed, 26 Mar 2025 11:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.170.214.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742988756; cv=none; b=sr0PRe7pxZVCBePKeCtLbUiZ+lrnT1sB2/NrSreBGvwUuiYjvIEYlJf9rpuHZXRpupA88N4vHLPYx2ki7YZZxvItIN+1ws2la5Eyk2DUIMNMDUM0gXUsADndzUaHG+xebI2J0HMmM9hmoXkUpzrP8bSLdcv0Pvl5Dmc116e2K8k=
+	t=1742988787; cv=none; b=sKVvqKuxBaDFnf/jE2iNqux+hHxI5czm4xlsL7v6aOBZBO1b7DAw4oxVVaW/n9hYTnqyOHuL3Wyxdm1NmRCamBI7wafHZ/lIEKMzaibKvQkWmk+2h91utZPMvosFSRfhXVofeifd4GFmE667Gc2KGU9BWkx3hVIzHO9m5FEKDU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742988756; c=relaxed/simple;
-	bh=q7DwmVhXt+r1eeJ0Yd69/IgoEkDDwrwkgbKKbHqRxU0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pKoZWE4a+1qxAIbT9kuZDPXUYayYxab13KbQG+lrbffSJgAjlIQ9wUAOK3Fv71PLvT/HHszXvAp/NEHgchIT9u/hbnX26tMmwVERuX0mvatSE3GqLtRsxYMZVHMPi8lGRMkpZtB+YpxJeEra49W/jbox23sWI1vXrqIDl2a4w70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Edwfmcyr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742988787; c=relaxed/simple;
+	bh=APYVVjVsS3qCZ/z1wxK6HUjwQSli5QEkKwva+CQeZhM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VyidLyF1Jg47kFf10FVT643NUXw6alnb902iK7M6q6LfS8kMK70pML/VvFGchgbNMnDWIjbodbGUVL1ILE3ylmeQtt2RB+hDUtwtb8xmyrHeF3flndNYEQTKoC3rj3pyFLr8JToMAfmYAibE2oh7qx8MR+g8Np6JzRZCktcDV0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=stravers.net; spf=pass smtp.mailfrom=stravers.net; dkim=fail (1024-bit key) header.d=stravers.net header.i=@stravers.net header.b=gYozEA4H reason="signature verification failed"; arc=none smtp.client-ip=185.170.214.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=stravers.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stravers.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Edwfmcyr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A4C5C4CEE2;
-	Wed, 26 Mar 2025 11:32:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742988755;
-	bh=q7DwmVhXt+r1eeJ0Yd69/IgoEkDDwrwkgbKKbHqRxU0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EdwfmcyrXDvf31OBxyvyihmDkKIQPI2mAzbKc8SR5GVWC+iqa72B26AnUzIl1uDJS
-	 XiqdGYWRZ6qHKvuvfkgzJl0IYpsJduxAz1c/QoAxfe2tq0L9t1xVWnN4yaH/GijBsO
-	 vDpJeb0BpX5pgjdk9xkErgWlW03xElTgNj2eG/HJE1oBp19Z3YM10PIIs7edcGz0ww
-	 jehnRQldpiXoOtqVnY8sDKb4VjbtzCEVpbNayZe1VejxLOATydEgxOTSbPAhTTTuW/
-	 abD3lhWOt0xHdKNsHG1z5tDm9Hq3xSyKYunpgHsxmTn8CjS8rYpCuTJukgHg6mb2i7
-	 oXsywjveHQH3g==
-Date: Wed, 26 Mar 2025 12:32:33 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] pwm: ehrpwm: add get_state function to retrieve
- PWM channel state
-Message-ID: <vri7ypbwczwj3mrsdocy27k6g4umk3swq5uw34yds2yvri2sq3@7wnx5klo4gfs>
-References: <20250207212954.934-1-rafael.v.volkmer@gmail.com>
- <20250207213234.1026-1-rafael.v.volkmer@gmail.com>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=stravers.net header.i=@stravers.net header.b="gYozEA4H"
+From: Kevin Robert Stravers <kevin@stravers.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stravers.net;
+	s=mail; t=1742988776;
+	bh=RjhMLAf+se+V4P+5Mfr5CunsJkkri+FoJWfxa75R8Ds=;
+	h=From:To:Cc:Subject:Date;
+	b=gYozEA4HfSSDpGRgoBOTzsGxowNFSb5GSQF6OJy0wqY/Vk+oWPNNrtfTyWaNerUYy
+	 I2V6JvBYsCBI2TeGstQGYusI9TufDFL2K0cuzba5q/qzZ5nufk+nzm25yxvl4U7sdo
+	 nmsE8/hmL3RA9+XNk6K2ujm3xShJn4OBK3qvwB2o=
+To: linux-kernel@vger.kernel.org
+Cc: Kevin Robert Stravers <kevin@stravers.net>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org (open list:ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS)
+Subject: [PATCHv5] platform/x86: asus-wmi: Add quirk for ASUS Vivobook S14
+Date: Wed, 26 Mar 2025 07:31:56 -0400
+Message-ID: <20250326113157.2341184-1-kevin@stravers.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="dzn5ynb6ngfdh3pz"
-Content-Disposition: inline
-In-Reply-To: <20250207213234.1026-1-rafael.v.volkmer@gmail.com>
+Content-Transfer-Encoding: 8bit
 
+The ASUS Vivobook S14 will have wifi disabled on boot as well as
+resumption from suspend if the asus-wmi driver invokes rfkill functions.
 
---dzn5ynb6ngfdh3pz
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 2/3] pwm: ehrpwm: add get_state function to retrieve
- PWM channel state
-MIME-Version: 1.0
+This patch disables asus-wmi's rfkill usage to prevent the wifi card
+from being software disabled.
+---
+ drivers/platform/x86/asus-nb-wmi.c | 13 +++++++++++++
+ drivers/platform/x86/asus-wmi.c    |  5 +++++
+ drivers/platform/x86/asus-wmi.h    |  1 +
+ 3 files changed, 19 insertions(+)
 
-Hello Rafael,
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 3f8b2a324efd..1e6fb9308560 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -150,6 +150,10 @@ static struct quirk_entry quirk_asus_zenbook_duo_kbd = {
+ 	.ignore_key_wlan = true,
+ };
+ 
++static struct quirk_entry quirk_asus_vivobook_s14 = {
++	.skip_rfkill = true,
++};
++
+ static int dmi_matched(const struct dmi_system_id *dmi)
+ {
+ 	pr_info("Identified laptop model '%s'\n", dmi->ident);
+@@ -530,6 +534,15 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_zenbook_duo_kbd,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUS VivoBook S14",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "S5406SA"),
++		},
++		.driver_data = &quirk_asus_vivobook_s14,
++	},
+ 	{},
+ };
+ 
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 38ef778e8c19..42e58a28c3e2 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -2138,6 +2138,8 @@ static int asus_new_rfkill(struct asus_wmi *asus,
+ 
+ static void asus_wmi_rfkill_exit(struct asus_wmi *asus)
+ {
++	if (asus->driver->quirks->skip_rfkill)
++		return;
+ 	if (asus->driver->wlan_ctrl_by_user && ashs_present())
+ 		return;
+ 
+@@ -2188,6 +2190,9 @@ static void asus_wmi_rfkill_exit(struct asus_wmi *asus)
+ 
+ static int asus_wmi_rfkill_init(struct asus_wmi *asus)
+ {
++	if (asus->driver->quirks->skip_rfkill)
++		return 0;
++
+ 	int result = 0;
+ 
+ 	mutex_init(&asus->hotplug_lock);
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 018dfde4025e..3692de24e326 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -41,6 +41,7 @@ struct quirk_entry {
+ 	bool wmi_ignore_fan;
+ 	bool filter_i8042_e1_extended_codes;
+ 	bool ignore_key_wlan;
++	bool skip_rfkill;
+ 	enum asus_wmi_tablet_switch_mode tablet_switch_mode;
+ 	int wapf;
+ 	/*
+-- 
+2.48.1
 
-On Fri, Feb 07, 2025 at 06:32:34PM -0300, Rafael V. Volkmer wrote:
-> The ehrpwm driver was missing a get_state function, which is required
-> to properly retrieve the current state of the PWM channel. This commit
-> adds the ehrpwm_get_state() function, allowing users to query the
-> enabled state, period, duty cycle, and polarity of the PWM output.
-
-s/This commit adds/Add/
-
-> The function reads the relevant registers (AQCSFRC, AQCTLx, TBPRD, CMPA)
-> to determine:
-> - Whether the PWM is enabled or disabled
-> - The configured period and duty cycle
-> - The polarity based on action-qualifier configurations
->=20
-> Additionally, this commit updates the pwm_ops structure to include
-> .get_state, ensuring proper integration with the PWM subsystem.
-
-The last two paragraphs are too verbose. I'd drop them.
-
-> Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
-> ---
->  drivers/pwm/pwm-tiehrpwm.c | 122 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 122 insertions(+)
->=20
-> diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-> index 50516f46ab04..52527136c507 100644
-> --- a/drivers/pwm/pwm-tiehrpwm.c
-> +++ b/drivers/pwm/pwm-tiehrpwm.c
-> @@ -81,7 +81,9 @@
->  #define AQCTL_ZRO_MASK			GENMASK(1, 0)
->  #define AQCTL_PRD_MASK			GENMASK(3, 2)
->  #define AQCTL_CAU_MASK			GENMASK(5, 4)
-> +#define AQCTL_CAD_MASK			GENMASK(7, 6)
->  #define AQCTL_CBU_MASK			GENMASK(9, 8)
-> +#define AQCTL_CBD_MASK			GENMASK(11, 10)
-> =20
->  /*
->   * FORCE LOW	=3D> 0b01
-> @@ -495,9 +497,129 @@ static int ehrpwm_pwm_apply(struct pwm_chip *chip, =
-struct pwm_device *pwm,
->  	return err;
->  }
-> =20
-> +/**
-> + * ehrpwm_get_state - Retrieves the current state of the eHRPWM channel
-> + * @chip:	pointer to the PWM chip structure
-> + * @pwm:	pointer to the PWM device structure
-> + * @state:	pointer to the pwm_state structure to be filled
-> + *
-> + * @return:	0 on success or a negative error code on failure
-> + */
-> +static int ehrpwm_get_state(struct pwm_chip *chip, struct pwm_device *pw=
-m,
-> +							struct pwm_state *state)
-> +{
-> +	int ret =3D 0u;
-> +
-> +	struct ehrpwm_pwm_chip *pc =3D NULL;
-> +
-> +	unsigned long long tbclk_rate =3D 0u;
-> +
-> +	/* Registers */
-> +	u16 aqcsfrc_reg =3D 0u;
-> +	u16 aqctl_reg =3D 0u;
-> +	u16 tbprd_reg =3D 0u;
-> +	u16 cmpa_reg =3D 0u;
-
-No need to initialize these. Also please drop the u suffix (which is
-also inconsistant as you used U in patch #1). And then they can group
-them in single code lines (i.e.
-
-	u16 aqcsfrc_reg, aqctl_reg, tbprd_reg, cmpa_reg;
-
-).
-
-> +	/* Bits */
-> +	u8 csf_bits =3D 0u;
-> +
-> +	/* Values */
-> +	u64 period_cycles =3D 0u;
-> +	u64 duty_cycles =3D 0u;
-> +
-> +	/* Actions */
-> +	u8 up_action =3D 0u;
-> +	u8 down_action =3D 0u;
-> +
-> +	if (chip =3D=3D NULL || pwm =3D=3D NULL || state =3D=3D NULL)
-> +		return -EINVAL;
-
-Drop this check, the core makes sure these are all valid.
-
-> +	pc =3D to_ehrpwm_pwm_chip(chip);
-> +	if (pc =3D=3D NULL || pwm =3D=3D NULL || state =3D=3D NULL)
-> +		return -EINVAL;
-
-Some of these you already checked above (so drop these, too). In my eyes
-you can assume that to_ehrpwm_pwm_chip() doesn't return NULL.
-
-> +	tbclk_rate =3D clk_get_rate(pc->tbclk);
-> +	if (tbclk_rate <=3D 0)
-> +		return -EINVAL;
-
-tbclk_rate is long long while the return value of clk_get_rate is long
-only. Also given that tbclk_rate is unsigned <=3D doesn't make much sense.
-
-Also note that clk_get_rate() is only supposed to be called for an
-enabled clock.
-
-> +	/*< Get if EHRPWM is enable by checking registers values >*/
-
-s/enable/enabled/
-
-> +	/*
-> +	 * The 'hwpwm' field identifies which hardware output channel (e.g.,
-> +	 * 0 for channel A and 1 for channel B) of the eHRPWM module is in use.
-> +	 */
-> +	if (pwm->hwpwm =3D=3D 0) {
-> +		aqcsfrc_reg =3D readw(pc->mmio_base + AQCSFRC);
-> +		csf_bits =3D FIELD_GET(AQCSFRC_CSFA_MASK, aqcsfrc_reg);
-> +		aqctl_reg =3D readw(pc->mmio_base + AQCTLA);
-> +	} else {
-> +		aqcsfrc_reg =3D readw(pc->mmio_base + AQCSFRC);
-> +		csf_bits =3D FIELD_GET(AQCSFRC_CSFB_MASK, aqcsfrc_reg);
-> +		aqctl_reg =3D readw(pc->mmio_base + AQCTLB);
-> +	}
-> +
-> +	if (csf_bits)
-> +		state->enabled =3D false;
-> +
-> +	else if (aqctl_reg)
-> +		state->enabled =3D true;
-
-	else
-		state->enable is uninitialized :-\
-
-> +	/*< Get EHRPWM Period by checking registers values >*/
-
-This is kind of obvious. What is that /*< style? Looks like a bird :-)
-
-> +	tbprd_reg =3D readw(pc->mmio_base + TBPRD);
-> +	period_cycles =3D (u64)(tbprd_reg + 1u);
-
-Maybe you need to cast first and then add 1?
-
-> +	/*
-> +	 * period (in ns) =3D (period_cycles * 1e9) / tbclk_rate
-> +	 * Using DIV_ROUND_UP_ULL to avoid floating-point operations.
-> +	 */
-> +	state->period =3D DIV_ROUND_UP_ULL(period_cycles * NSEC_PER_SEC, tbclk_=
-rate);
-> +
-> +	/*< Get EHRPWM Duty Cycle by checking registers values >*/
-> +	cmpa_reg =3D readw(pc->mmio_base + CMPA);
-> +	duty_cycles =3D cmpa_reg;
-> +
-> +	/*
-> +	 * duty_cycle (in ns) =3D (duty_cycles * 1e9) / tbclk_rate
-> +	 * Using DIV_ROUND_UP_ULL to avoid floating-point operations.
-> +	 */
-> +	state->duty_cycle  =3D DIV_ROUND_UP_ULL(duty_cycles * NSEC_PER_SEC, tbc=
-lk_rate);
-
-s/  / /
-
-> +
-> +	/*< Get EHRPWM polarity by checking registers values >*/
-> +
-> +	/*
-> +	 * The 'hwpwm' field identifies which hardware output channel (e.g.,
-> +	 * 0 for channel A and 1 for channel B) of the eHRPWM module is in use.
-> +	 */
-> +	if (pwm->hwpwm =3D=3D 0) {
-> +		aqctl_reg =3D readw(pc->mmio_base + AQCTLA);
-> +		up_action =3D FIELD_GET(AQCTL_CAU_MASK, aqctl_reg);
-> +		down_action =3D FIELD_GET(AQCTL_CAD_MASK, aqctl_reg);
-> +	} else {
-> +		aqctl_reg =3D readw(pc->mmio_base + AQCTLB);
-> +		up_action =3D FIELD_GET(AQCTL_CBU_MASK, aqctl_reg);
-> +		down_action =3D FIELD_GET(AQCTL_CBD_MASK, aqctl_reg);
-> +	}
-> +
-> +	/*
-> +	 * Evaluate the actions to determine the PWM polarity:
-> +	 *  - If an up-count event sets the output (AQCTL_FRCHIGH) and a down-c=
-ount
-> +	 *    event clears it (AQ_CLEAR), then polarity is NORMAL.
-> +	 *  - If an up-count event clears the output (AQ_CLEAR) and a down-count
-> +	 *    event sets it (AQCTL_FRCLOW), then polarity is INVERSED.
-> +	 */
-> +	if (up_action =3D=3D AQCTL_FRCHIGH && down_action =3D=3D AQCTL_FRCLOW)
-> +		state->polarity =3D PWM_POLARITY_NORMAL;
-> +
-> +	else if (up_action =3D=3D AQCTL_FRCLOW && down_action =3D=3D AQCTL_FRCH=
-IGH)
-> +		state->polarity =3D PWM_POLARITY_INVERSED;
-
-	else ??? (maybe return an error?)
-
-> +	return ret;
-> +}
-> +
-
-Best regards
-Uwe
-
---dzn5ynb6ngfdh3pz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfj5c4ACgkQj4D7WH0S
-/k4utwgAmsr1tEJGrSSugB+yqB0uNpRNpyYQOnz0rQCx8dNFYSm66VKV41oUtXBN
-k+x+LxC9c11itQNuBOY2QIhORp54XXawyE60NeLf21AVssjpkNWY/j4r/h+px6lB
-62HeNdk6o/VZmsEqNyqQcIbhqqM9tiBeiQBlu1on49/e0xUhGJxOepv/L+PPliHt
-SFzHgQ41mwZ9tzQEkRpaTA/tbnMaiDRsPRQHaETPrvoRKCGC92XP1PIgRn+JMttS
-o3Pz8HbZoqEtYxBa1K1rZsGztb3qPM9BppuEKGlYWAAqQWSd/d9srU7UW1Ksyd4W
-XwinP2suXvTa/rxSrid1TSLoTJIfuQ==
-=r6LV
------END PGP SIGNATURE-----
-
---dzn5ynb6ngfdh3pz--
