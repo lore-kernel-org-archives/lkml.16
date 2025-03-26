@@ -1,37 +1,37 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C824A29
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15BBD1A5B88
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 14:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742999062; cv=none; b=VGD/u3Fm7STWvUThlIhS6c27d3CVfGgq7K76OC40AwZFodgWd6+YIX7CL7C4VoHlx6cpQvFvT6hDqrJpz9J8hR/XhiFCdq+lDmOz6GJKE5UfxS1v968rx8yokVffmD3rJNxns10Fy/tMU2CMr+dFUBzkjTjAwtQIC2/F8z/G4X0=
+	t=1742999062; cv=none; b=G4t23LD27hhwD5ylmszPRCACbRuqNNdG4K6ZwhRrqi0TGjKY3/3+HOc7MrhCEO3Gmjd2l9K7Vwq89YMePSbnh/tFbQf8iXf71zxxX62tYepmqQQqE1SRJrH6rgWbIRsAdtktQHs6ErYW5Jhy0GWsZN/W7xXPBxG2yuvhJhVzM1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742999062; c=relaxed/simple;
-	bh=JDICYBBBEqK2mxI6tNT3Xlbx5yX6kASUL5PXpHSj9rU=;
+	bh=LPYTFJLkVUz93ptjFs/WmCXExh3Nde3M4ahTLdn2bjc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CwhPGWwyrCAAoSuOnU5a4nlL2m+wsXrLzFtGeIzQP35jCsedrVKTccdA0TSgUWawuD7GaOnzrkt8uNXsH7tw5fVwZpS7Vmw0hQCES3yFKY/hMF8qulrw+ICiRLFnYwT0FM6iBC6h4gQ3umRX28MFJC+5bP23LLiTSJ8BNpP1wUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ihBfG6LF; arc=none smtp.client-ip=90.155.92.199
+	 MIME-Version; b=XN6puXSrafcTJ5r6q76aWDOHHemQaaI0HRGw47VHhWweU9XGj7a2y/yQ5Rj/Yio4viCu4hGdnGxEhPmewLes5NvfmXJFVwRsKA7+O6bcvbmY6Bo/cBi92SIy98JUOBFiJD8usxjV1hOI3y5hLte+UmHgnBJA+wq6z5ypaWTcE6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QK3NxM+L; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ihBfG6LF"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QK3NxM+L"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
+	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=yk/3sFewOE8EhIIKk8WOQXeNRX9bKeatD8VLAtRoVvA=; b=ihBfG6LFHcgoYlBL5qr1qJ20U3
-	hcA7QIyGlUNUYAhNAVgyq8yvVptqZcyvMINl7lfV4MjI90h3HJsfKfzMikfyqxmM8ta2sMQ3VXnhi
-	6Nk1bcmLDK9+NyVnbL9iCgMmumEKxmc/khkwOfnkv2Eiyez28k4Ex/gEe0gMvY02dd9FDrv6onFxh
-	C8d4IttkFFfmKN2L3U+Xn5sqUOEht6hmfuYTNe+nm4JlcMxPq0xR2Jcg1/T9KKijKEVMzBUvN9vmz
-	0/Ev/6UAqS3cE1VcjZ3lPI30u6BBdNb0q9Z8+03Z0Oq11lG/rwgKk3ukjiEIuWdDeKEF2weSzrG8b
-	gDQne/qg==;
+	bh=jMnqwnKFeunkNFt2xA902escEge7LjBq+yD8v//V6S4=; b=QK3NxM+L8hY5loEuRFMnINQ7nQ
+	pSdpzFlRSRA1/KhyK290WhDGv4aJnouPOFloJrej2srPkW7zXnET1KWmYLbUF3602qS5E17+VmF+B
+	3rxUugDIBIsAKzwPOgeKUyrM5jggzWIL7nHolh4+7MS+HQ824L7UavTw1QbF56NxOa5Eq7LNmQre8
+	GlDsRRFLSJcg8/3eoaJ8Ion7H15fGhSVG9y+39OQ0SlcfBF0miY/jVIuCL4yhhEy6b/NPq+mqpies
+	W4JUMBPHLBDu9MKFFzbTCwnvg0IXiDChIdpv4ScsexT07PEYhcLZXs8ocjmaXar1e3/vjgnFsvga2
+	FaFwGtog==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1txRfr-00000005oet-0Vkx;
+	by casper.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1txRfq-000000005rh-3ZZ7;
 	Wed, 26 Mar 2025 14:24:07 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1txRfq-00000001A9I-1zxT;
+	id 1txRfq-00000001A9U-2chY;
 	Wed, 26 Mar 2025 14:24:06 +0000
 From: David Woodhouse <dwmw2@infradead.org>
 To: kexec@lists.infradead.org
@@ -51,9 +51,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	jpoimboe@kernel.org,
 	bsz@amazon.de
-Subject: [PATCH v9 1/4] x86/kexec: Add 8250 serial port output
-Date: Wed, 26 Mar 2025 14:16:01 +0000
-Message-ID: <20250326142404.256980-2-dwmw2@infradead.org>
+Subject: [PATCH v9 4/4] selftests/kexec: Add x86_64 selftest for kexec-jump and exception handling
+Date: Wed, 26 Mar 2025 14:16:04 +0000
+Message-ID: <20250326142404.256980-5-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250326142404.256980-1-dwmw2@infradead.org>
 References: <20250326142404.256980-1-dwmw2@infradead.org>
@@ -65,125 +65,170 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: David Woodhouse <dwmw2@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-If a serial port was configured for early_printk, use it for debug output
-from the relocate_kernel exception handler too.
+Add a self test which exercises both the kexec-jump facility, and the
+kexec exception handling.
+
+Invoke a trivial payload which just does an int3 and returns,
+flip-flopping its entry point for the next invocation between two
+implementations of the same thing.
 
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- arch/x86/include/asm/kexec.h         |  1 +
- arch/x86/kernel/early_printk.c       |  6 +++++
- arch/x86/kernel/relocate_kernel_64.S | 39 +++++++++++++++++++++++-----
- 3 files changed, 40 insertions(+), 6 deletions(-)
+ tools/testing/selftests/kexec/Makefile        |  7 ++
+ .../testing/selftests/kexec/test_kexec_jump.c | 72 +++++++++++++++++++
+ .../selftests/kexec/test_kexec_jump.sh        | 42 +++++++++++
+ 3 files changed, 121 insertions(+)
+ create mode 100644 tools/testing/selftests/kexec/test_kexec_jump.c
+ create mode 100755 tools/testing/selftests/kexec/test_kexec_jump.sh
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index fb4537c58b54..9601094ac0ba 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -64,6 +64,7 @@ extern unsigned long kexec_pa_table_page;
- extern unsigned long kexec_pa_swap_page;
- extern gate_desc kexec_debug_idt[];
- extern unsigned char kexec_debug_exc_vectors[];
-+extern uint16_t kexec_debug_8250_port;
- #endif
+diff --git a/tools/testing/selftests/kexec/Makefile b/tools/testing/selftests/kexec/Makefile
+index 67fe7a46cb62..e3000ccb9a5d 100644
+--- a/tools/testing/selftests/kexec/Makefile
++++ b/tools/testing/selftests/kexec/Makefile
+@@ -8,6 +8,13 @@ ifeq ($(ARCH_PROCESSED),$(filter $(ARCH_PROCESSED),x86 ppc64le))
+ TEST_PROGS := test_kexec_load.sh test_kexec_file_load.sh
+ TEST_FILES := kexec_common_lib.sh
  
- /*
-diff --git a/arch/x86/kernel/early_printk.c b/arch/x86/kernel/early_printk.c
-index fc1714bad045..b756ebcbd827 100644
---- a/arch/x86/kernel/early_printk.c
-+++ b/arch/x86/kernel/early_printk.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/console.h>
- #include <linux/kernel.h>
++include ../../../scripts/Makefile.arch
++
++ifeq ($(IS_64_BIT)$(ARCH_PROCESSED),1x86)
++TEST_PROGS += test_kexec_jump.sh
++test_kexec_jump.sh: $(OUTPUT)/test_kexec_jump
++endif
++
+ include ../lib.mk
+ 
+ endif
+diff --git a/tools/testing/selftests/kexec/test_kexec_jump.c b/tools/testing/selftests/kexec/test_kexec_jump.c
+new file mode 100644
+index 000000000000..fbce287866f5
+--- /dev/null
++++ b/tools/testing/selftests/kexec/test_kexec_jump.c
+@@ -0,0 +1,72 @@
++#include <unistd.h>
++#include <errno.h>
++#include <stdio.h>
++#include <stdlib.h>
 +#include <linux/kexec.h>
- #include <linux/init.h>
- #include <linux/string.h>
- #include <linux/screen_info.h>
-@@ -144,6 +145,11 @@ static __init void early_serial_hw_init(unsigned divisor)
- 	static_call(serial_out)(early_serial_base, DLL, divisor & 0xff);
- 	static_call(serial_out)(early_serial_base, DLH, (divisor >> 8) & 0xff);
- 	static_call(serial_out)(early_serial_base, LCR, c & ~DLAB);
++#include <linux/reboot.h>
++#include <sys/reboot.h>
++#include <sys/syscall.h>
 +
-+#if defined(CONFIG_KEXEC_CORE) && defined(CONFIG_X86_64)
-+	if (static_call_query(serial_in) == io_serial_in)
-+		kexec_debug_8250_port = early_serial_base;
-+#endif
- }
- 
- #define DEFAULT_BAUD 9600
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 29cb399a34d4..21011cd19c48 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -39,6 +39,7 @@ SYM_DATA(kexec_va_control_page, .quad 0)
- SYM_DATA(kexec_pa_table_page, .quad 0)
- SYM_DATA(kexec_pa_swap_page, .quad 0)
- SYM_DATA_LOCAL(pa_backup_pages_map, .quad 0)
-+SYM_DATA(kexec_debug_8250_port, .word 0)
- 
- 	.balign 16
- SYM_DATA_START_LOCAL(kexec_debug_gdt)
-@@ -380,24 +381,50 @@ SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
- SYM_CODE_END(swap_pages)
- 
- /*
-- * Generic 'print character' routine (as yet unimplemented)
-+ * Generic 'print character' routine
-  *  - %al: Character to be printed (may clobber %rax)
-  *  - %rdx: MMIO address or port.
-  */
--SYM_CODE_START_LOCAL_NOALIGN(pr_char)
-+#define XMTRDY          0x20
++asm(
++    "  .code64\n"
++    "  .data\n"
++    "purgatory_start:\n"
 +
-+#define TXR             0       /*  Transmit register (WRITE) */
-+#define LSR             5       /*  Line Status               */
++    // Trigger kexec debug exception handling
++    "  int3\n"
 +
-+SYM_CODE_START_LOCAL_NOALIGN(pr_char_8250)
- 	UNWIND_HINT_FUNC
- 	ANNOTATE_NOENDBR
-+	addw	$LSR, %dx
-+	xchg	%al, %ah
-+.Lxmtrdy_loop:
-+	inb	%dx, %al
-+	testb	$XMTRDY, %al
-+	jnz	.Lready
-+	rep nop
-+	jmp .Lxmtrdy_loop
++    // Set load address for next time
++    "  leaq purgatory_start_b(%rip), %r11\n"
++    "  movq %r11, 8(%rsp)\n"
 +
-+.Lready:
-+	subw	$LSR, %dx
-+	xchg	%al, %ah
-+	outb	%al, %dx
-+pr_char_null:
-+	ANNOTATE_NOENDBR
++    // Back to Linux
++    "  ret\n"
 +
- 	ANNOTATE_UNRET_SAFE
- 	ret
--SYM_CODE_END(pr_char)
-+SYM_CODE_END(pr_char_8250)
- 
- /*
-  * Load pr_char function pointer into %rsi and load %rdx with whatever
-  * that function wants to see there (typically port/MMIO address).
-  */
--.macro	pr_setup
--	/* No output; pr_char just returns */
--	leaq	pr_char(%rip), %rsi
-+.macro pr_setup
-+	leaq	pr_char_8250(%rip), %rsi
-+	movw	kexec_debug_8250_port(%rip), %dx
-+	testw	%dx, %dx
-+	jnz	1f
++    // Same again
++    "purgatory_start_b:\n"
 +
-+	leaq	pr_char_null(%rip), %rsi
-+1:
- .endm
- 
- /* Print the nybble in %bl, clobber %rax */
++    // Trigger kexec debug exception handling
++    "  int3\n"
++
++    // Set load address for next time
++    "  leaq purgatory_start(%rip), %r11\n"
++    "  movq %r11, 8(%rsp)\n"
++
++    // Back to Linux
++    "  ret\n"
++
++    "purgatory_end:\n"
++    ".previous"
++);
++extern char purgatory_start[], purgatory_end[];
++
++int main (void)
++{
++        struct kexec_segment segment = {};
++	int ret;
++
++	segment.buf = purgatory_start;
++	segment.bufsz = purgatory_end - purgatory_start;
++	segment.mem = (void *)0x400000;
++	segment.memsz = 0x1000;
++	ret = syscall(__NR_kexec_load, 0x400000, 1, &segment, KEXEC_PRESERVE_CONTEXT);
++	if (ret) {
++		perror("kexec_load");
++		exit(1);
++	}
++
++	ret = syscall(__NR_reboot, LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, LINUX_REBOOT_CMD_KEXEC);
++	if (ret) {
++		perror("kexec reboot");
++		exit(1);
++	}
++
++	ret = syscall(__NR_reboot, LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, LINUX_REBOOT_CMD_KEXEC);
++	if (ret) {
++		perror("kexec reboot");
++		exit(1);
++	}
++	printf("Success\n");
++	return 0;
++}
++
+diff --git a/tools/testing/selftests/kexec/test_kexec_jump.sh b/tools/testing/selftests/kexec/test_kexec_jump.sh
+new file mode 100755
+index 000000000000..6ae977054ba2
+--- /dev/null
++++ b/tools/testing/selftests/kexec/test_kexec_jump.sh
+@@ -0,0 +1,42 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++#
++# Prevent loading a kernel image via the kexec_load syscall when
++# signatures are required.  (Dependent on CONFIG_IMA_ARCH_POLICY.)
++
++TEST="$0"
++. ./kexec_common_lib.sh
++
++# kexec requires root privileges
++require_root_privileges
++
++# get the kernel config
++get_kconfig
++
++kconfig_enabled "CONFIG_KEXEC_JUMP=y" "kexec_jump is enabled"
++if [ $? -eq 0 ]; then
++	log_skip "kexec_jump is not enabled"
++fi
++
++kconfig_enabled "CONFIG_IMA_APPRAISE=y" "IMA enabled"
++ima_appraise=$?
++
++kconfig_enabled "CONFIG_IMA_ARCH_POLICY=y" \
++	"IMA architecture specific policy enabled"
++arch_policy=$?
++
++get_secureboot_mode
++secureboot=$?
++
++if [ $secureboot -eq 1 ] && [ $arch_policy -eq 1 ]; then
++    log_skip "Secure boot and CONFIG_IMA_ARCH_POLICY are enabled"
++fi
++
++./test_kexec_jump
++if [ $? -eq 0 ]; then
++    log_pass "kexec_jump succeeded"
++else
++    # The more likely failure mode if anything went wrong is that the
++    # kernel just crashes. But if we get back here, sure, whine anyway.
++    log_fail "kexec_jump failed"
++fi
 -- 
 2.48.1
 
