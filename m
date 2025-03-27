@@ -1,125 +1,170 @@
-Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039AB6FC5;
-	Thu, 27 Mar 2025 08:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FD7204F76;
+	Thu, 27 Mar 2025 08:40:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743064752; cv=none; b=ps9SKzClL4h7j6ZA6Fyi4Ogz+gm07Zo3iygILGX2zd9nxwwG+14Ucy0eeDNaD5YmI2d25Q40DfsF0eW0FmpFhBo/buNA5nKhiKKeegAItR0I3KQF+I8AoF4f15m6z4o9a1iE884sWEWzZkWdZw/E6n30gBZ79mjd0MiHmFpzFgo=
+	t=1743064819; cv=none; b=iXzFicyNN46vhXRGaqKYatyDT+r/MGg8S7iT5TnNmjI+pKS6IjwlOkCFkv/He99XbNseSBav0AG/l1DLfhsWzaBfT6rF3tXLbDUd0xx6vTBfMMyXqY49VtkWQU3i/Q5mjuozleYB+YVo4ii37y/CXEBS2/ErmsJ3IIYWgUnoC2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743064752; c=relaxed/simple;
-	bh=KfGaRhTm6ixCemo4eZD2yTY/z/CY2m9ljqRhlgt/0cU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:Subject:Content-Type; b=kGVEA6i5YS59DUkCBLsV4iAjQ/IlW0UhWP1zIrzcV+8X1mfGhb+PGbKdjHwKSO0EX4ksXMv79CU9e8fGl9TkIat6kPokFv7yDMPN9mRfFi2Tfd2siTDzc1m+0H0ieloilPvLxjOzjb6EoTDpMdbbpO4qAiiFQvoDlzo24PFE1jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Hf5uE91L; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=A1/9Fq0v; arc=none smtp.client-ip=202.12.124.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1743064819; c=relaxed/simple;
+	bh=M7YLTOwmxz8VNCLJQrpSFgrai1rDE44BnsnAtSQ+8g8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SO+5oNEkQcCTV/G76mNq+YjusLAibrsgtgiaRjJAAC6oPfmfDqhotr9vHSkUr3J4v/3uEolfCJg2XPhtqgmFHcj6ncIh3sMjN7qqoJt0dD2bTrMU9jwafyvR9SNwc+SZfoo7XBjYLb1NBGIBe1z0HkDImIuaHVoyEjouPe8xlXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bdf6RvOv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Hf5uE91L";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A1/9Fq0v"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfout.stl.internal (Postfix) with ESMTP id 79ACB1140113;
-	Thu, 27 Mar 2025 04:39:08 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Thu, 27 Mar 2025 04:39:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm1; t=1743064748; x=1743151148; bh=sC
-	6kwcffvUzg+ykz/SRQ10mbgOFLy5yHYsWPM/tgN3A=; b=Hf5uE91LZJ1Oq9rRGP
-	qYmlWJIqfz/v+1txHTTwvONA2BKf7LFcQ0whUv1GRDBrJ7QfVkbQParGIo0374PN
-	P/Uoq5WT4s93o6XdMGcL03UGXEmt/ZC+3k3cCsujAgSkKd2sB9nA/SNcc+WvgOLH
-	TLZDc4vzM72+5owKwOKDNHGfCACpWMPLf35K+uEu2/148gbhgdaBpsciCD/g1xD/
-	56cb2vJnBbigJwzDCfY1VUmFiBh3Vzxh6FhQIg2dhp+EKk3nte2Jo34rk8HfOaXq
-	WJiA9JmB3PGHXQ3YI7D6baRkZ18oVhef8OVOc2S5INURkbxFstvx68ainurGC4tb
-	Gevg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1743064748; x=1743151148; bh=sC6kwcffvUzg+ykz/SRQ10mbgOFL
-	y5yHYsWPM/tgN3A=; b=A1/9Fq0v4D1+Tdd8rDMUe4jIzZhFz5p39KoR6SJNThlf
-	NAwkyjY8dWDYOZ0m3QjYne0aNbZFlZVAu5t0TKbHmaclKPijiyckhpSLfRN07rYS
-	igYEAv2yc9hTfl4iKocJMJRyvblnd9lUQLiZm31hzUu/RGX2pubI7yJSMZBV8PDy
-	A9kpLm/ZKd30Qh/4We7IkfLMiKdhu/kRb+5xI7cYcMn9HGrKjmM7OaUFZi5acIK9
-	mAV5ugtqRSTMhNkki4VIGt+nwCwQ95Y+sUZd5H9Ph545L1gnZTfu1ojJ/JjkETUy
-	xxsWcVFGWVaLyJvRt7iC4lFCpoInpQb3dhWvmMcQAA==
-X-ME-Sender: <xms:qg7lZw8LCjlUCfsrjQPWAdXcLfWz72eZy9tTxvhIZsroXCxW9PFMog>
-    <xme:qg7lZ4tLAMsJriG8T_X-bunTbHch2WQxnyNNgAk_oT8udBP2iiUjofsDlLkcmi-QI
-    H3oFMMfSQ1juwPKS3I>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieejleehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkffutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhepudelieegkeevueegtedtjedttdelgeehhfdvhfeu
-    heethfduleffuddvueelveetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghr
-    nhgusgdruggvpdhnsggprhgtphhtthhopedviedpmhhouggvpehsmhhtphhouhhtpdhrtg
-    hpthhtohepsghpsegrlhhivghnkedruggvpdhrtghpthhtohepghgrrhihsehgrghrhihg
-    uhhordhnvghtpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomh
-    dprhgtphhtthhopegsohhquhhnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthho
-    pehsvghrghhiohdrtgholhhlrgguohesghhmrghilhdrtghomhdprhgtphhtthhopeihrg
-    hkohihohhkuhesghhmrghilhdrtghomhdprhgtphhtthhopegrlhhitggvrhihhhhlsehg
-    ohhoghhlvgdrtghomhdprhgtphhtthhopegurghvihgughhofiesghhoohhglhgvrdgtoh
-    hmpdhrtghpthhtohepkhhunhhithdquggvvhesghhoohhglhgvghhrohhuphhsrdgtohhm
-X-ME-Proxy: <xmx:qg7lZ2Bkg9iaRmz2dDWSVDycHQr6veGXRJ8Q3FM0HF2FWTV2__37zw>
-    <xmx:qg7lZwdpg0m4MQVuyuYvAVsQKuo2BWJqzKXaXtuaZZ5-fu6RblbXKg>
-    <xmx:qg7lZ1PGB372FDsBpbYELQpAaf_gczl1hrlafqVafyRPsoEa57bDsA>
-    <xmx:qg7lZ6mf6PQWaa1f0x5Qtbp95f-CW4JH2AeKGaDkLFbclw-HkDMTFw>
-    <xmx:rA7lZ3X-Rj9hxQsRSs9u_TGB-F0nzb_eoQt9u8TommkPhQ6eiH3QT7Bj>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 740772220073; Thu, 27 Mar 2025 04:39:06 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bdf6RvOv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AD14C4CEE5;
+	Thu, 27 Mar 2025 08:40:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743064818;
+	bh=M7YLTOwmxz8VNCLJQrpSFgrai1rDE44BnsnAtSQ+8g8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Bdf6RvOvjEYGXlZr9JhtetcwgGmZLV4uKQvjuyvEWbnJDYHu1tbclQY2tjfznu1FQ
+	 zbi/zRNqFeRhmiWVpaxPSug73eKw25hU31ypTmaQdw5i+07Mrz9mUdnaYloqrCOOEk
+	 XfkG/SAOQm6ZDkq/7ym88pdQ6V0qQdDpkqqWkA3daJmzv1NzZCxCFJhvi1nIiRye/o
+	 CeqnIvKDHUSDBA2gq11N2l8n3Qj1bSrH/qNyrw5S1OF4nLwiGyGxUCRdyRd6KIzI4Q
+	 EQnfw5OfTtxqYFyHJXw3aPv6KurYyzCbqi0oUtmQX+D5/BBRr2R6QURTVmZ1FU/lJb
+	 AOQyB4RR4EBDw==
+Message-ID: <b2e1da92-0dfe-42c6-9f36-32486b768220@kernel.org>
+Date: Thu, 27 Mar 2025 09:40:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 27 Mar 2025 09:38:46 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: =?UTF-8?Q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>,
- "Brendan Higgins" <brendan.higgins@linux.dev>,
- "David Gow" <davidgow@google.com>, "Miguel Ojeda" <ojeda@kernel.org>,
- "Alex Gaynor" <alex.gaynor@gmail.com>, linux-kselftest@vger.kernel.org,
- kunit-dev@googlegroups.com, sergio.collado@gmail.com,
- "Dave Hansen" <dave.hansen@linuax.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, "Josh Poimboeuf" <jpoimboe@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>
-Cc: "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@samsung.com>,
- "Alice Ryhl" <aliceryhl@google.com>, "David Rheinsberg" <david@readahead.eu>,
- rust-for-linux@vger.kernel.org, skhan@linuxfoundation.org,
- ricardo.marliere@suse.com, "Thomas Gleixner" <tglx@linutronix.de>,
- "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
- "Martin Rodriguez Reboredo" <yakoyoku@gmail.com>,
- linux-kernel@vger.kernel.org
-Message-Id: <66f3f697-530a-4d22-979a-1472c8e8de3a@app.fastmail.com>
-Subject: Symbol too long for allsyms warnings on KSYM_NAME_LEN
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 5/6] arm64: dts: cix: add initial CIX P1(SKY1) dts
+ support
+To: Peter Chen <peter.chen@cixtech.com>
+Cc: Marc Zyngier <maz@kernel.org>, soc@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com,
+ will@kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ cix-kernel-upstream@cixtech.com, marcin@juszkiewicz.com.pl,
+ kajetan.puchalski@arm.com,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Fugang Duan <fugang.duan@cixtech.com>
+References: <20250324062420.360289-1-peter.chen@cixtech.com>
+ <20250324062420.360289-6-peter.chen@cixtech.com>
+ <865xjxmlgl.wl-maz@kernel.org> <Z-Nz0DU441Wwj1i4@nchen-desktop>
+ <861pukm9yd.wl-maz@kernel.org> <Z-Tz1moMNozx23k6@nchen-desktop>
+ <e43b1a00-b221-413b-a36a-3a65e17f800f@kernel.org>
+ <Z-UNufwSNmZreKya@nchen-desktop>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <Z-UNufwSNmZreKya@nchen-desktop>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-My randconfig builds sometimes (around one in every 700 configs) run
-into this warning on x86:
+On 27/03/2025 09:35, Peter Chen wrote:
+> On 25-03-27 08:16:33, Krzysztof Kozlowski wrote:
+>>>>
+>>>> No, you are deliberately choosing to make this platform useless.
+>>>>
+>>>> That's a bit sad, and a waste of everybody's time.
+>>>>
+>>>
+>>> Hi Marc,
+>>>
+>>> Thanks for your interesting of our platform, and your comments
+>>> help us a lot. But I don't think it wastes reviewers and maintainers
+>>> time, a clean patch set saves everyone's time during upstream process.
+>>>
+>>> For how to organize the patch set for SoC, Krzysztof gave good summary
+>>> at [1]. We are going on upstream [2], this patch set is just a start
+>>> and base but not like you said for marketing purpose.
+>>
+>>
+>> I do not think I suggested in [1] to ever send new SoC containing only
+>> CPUs and interrupt controller, without even serial. My instruction [1]
+>> was how to organize it. The DTS can be even fully complete, see the
+>> upstreaming example I have been using all the time - Qualcomm SM8650:
+>>
+>> https://lore.kernel.org/all/20231124-topic-sm8650-upstream-dt-v4-0-e402e73cc5f0@linaro.org/
+>>
+>> Entire SoC sent to mailing list on the day one of public release of that
+>> flagship Qualcomm SoC. The SoC DTSI and board DTS have almost complete
+>> picture, except few trickier pieces... but it even has full display and
+>> GPU! Plus, as I explained on my email on samsung-soc, that DTS/DTSI
+>> patchset references all other bindings with their state, so SoC
+>> maintainers can understand what is the overall progress and what will be
+>> the result in DT schema checks, if they apply the patchset.
+>>
+> 
+> Hi Krzysztof,
+> 
+> Like I said in this thread before, without this initial support,
+> we can't even add mailbox binding that the dt_binding_check will
+> report warnings/errors [1], the reason is "cix" has not existed
+> at vendor-prefixes binding. How we handle this dependency?
 
-Symbol __pfx_snnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7n too long for kallsyms (517 >= 512).
-Please increase KSYM_NAME_LEN both in kernel and kallsyms.c
+Not different than all other SoCs. There is no dependency, you just send
+your patch and tell where the bindings are. Just like I asked in the [1]
+you linked on samsung-soc. Just like all Qualcomm upstreaming goes, e.g.
+SM8650 I linked here.
 
-The check that gets triggered was added in commit c104c16073b
-("Kunit to check the longest symbol length"), see
-https://lore.kernel.org/all/20241117195923.222145-1-sergio.collado@gmail.com/
+Just like maintainer-soc profiles are explaining. I told you to read
+them on IRC.
 
-and the overlong identifier seems to be the result of objtool adding
-the six-byte "__pfx_" string to a symbol in elf_create_prefix_symbol()
-when CONFIG_FUNCTION_PADDING_CFI is set.
+Your way is contradictory to three sources describing process and two of
+these sources - my samsung-soc posting and maintainers-soc-clean-dts
+profile - are known to you.
 
-I think the suggestion to "Please increase KSYM_NAME_LEN both in
-kernel and kallsyms.c" is misleading here and should probably be
-changed. I don't know if this something that objtool should work
-around, or something that needs to be adapted in the test.
+> 
+> I thought we need to move one step and step before, and keep clean
+> and avoid warning and error for every submission, but it seems not
+> the way you prefer. 
 
-      Arnd
+No, from where did you get such impression? Maintainers-soc-clean-dts
+explicitly covers this case and I WROTE IT, so how can I prefer
+something else?
+
+Follow SM8650 style or what's written in maintainer soc profiles.
+
+Best regards,
+Krzysztof
