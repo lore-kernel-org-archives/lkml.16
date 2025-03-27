@@ -1,125 +1,236 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2070.outbound.protection.outlook.com [40.107.104.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B56F14D2B7;
-	Thu, 27 Mar 2025 15:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743087825; cv=none; b=bThpLuehLetB3sKrsddIX75A297v97EIwxxB0vomUKKc4qiwQ367G9fwmSh3U07n2eE0AFjlQfnqy/dng/qWrhgjuWdTiwAz5bMRntXuG1etAPVSvqLomdhApPSypAXMKsIUrJS32x/c2fjQrTBiBGN1qefq+n505swQWD/dvBA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743087825; c=relaxed/simple;
-	bh=qhNaZMqHRNgrvn2itfynRD7HiiYGkt6KoXYBf4VPZVw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M9J+O/nFNss6SZt3wfPXtdz+CwjdPRyErNX0SjDC/lgqKnRPFqvAnN/M79j1l/KiwID8QBissM/IufhVg5srGejmCSVkopLT9ZahzA1MuKpxx8S2mF5ZMn0XjYCtVvXvJLL1AmY4Vnn8po1/kJqeaUvHpdG5f2gif6z1X14DQYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EAnzToYv; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97916146D6A;
+	Thu, 27 Mar 2025 15:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743087824; cv=fail; b=qcN/kII7BMZf2ufTPyaq3o8h2JFJA6OssJ37PBnY50WFvOMuzMxlpgJx9n/D+sVYSDmc6KZtUOkiLOLDSCLU+/Lz2dHIKCKkXzn3H6JrUJjeW9U0HuADgIroOTFP/gWKTviYhJ85jruEijp7h9optj3B6O9io9QwVSIq8aiLWlw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743087824; c=relaxed/simple;
+	bh=Qp9yAv8VpyDy8LfQoVhZBwr4gmuliFJe4qOIu5gn5+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=KKGTWjnCzG1o/6xnK0ZGM5swPHreNJAIim3l7BD5SzfoLmYmWqmPA4XCsUNjMfDMjqaHcNdmHTqF5MJaV1YlA6OJfiGw1TQRhtqmXXmsQSUpFnb1ORZJH5q5KFhu/BI72I8SzV9MExtrwkRZnROsrClNNDXRvepxpd6iWxoxt4g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=kmClW6g8; arc=fail smtp.client-ip=40.107.104.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EAnzToYv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C79BBC4CEDD;
-	Thu, 27 Mar 2025 15:03:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743087825;
-	bh=qhNaZMqHRNgrvn2itfynRD7HiiYGkt6KoXYBf4VPZVw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EAnzToYvV7cdR79GN/juteoi+4GOjZj0gJx4MyYeq6/r5GQGrSYIgIciTXl4C6vj8
-	 QToXCvwcnRSrFUbeRgMBW6Zp4P9sSIxvpdwfbO+8maiAPooUbs9FwyQEbHfC2eU4W3
-	 Lss/03kBwumTJtopMQ2MULG4on2Xm7NP5gKCLawyu/ZYWgN3ZwIKgc52mtFenVRQqL
-	 FSC4JJca926tf+SnBMo/bVA8yAKNSLIxZ3FnuYAY83EEIJjTqC4YwGz3oGZmEUBwTt
-	 weycV6LSbzLgYch6i3f0neFpsotIxVWW0MGmhnJv2vOPtRDrCUMHhKmVwtkEg2C4Yc
-	 /jYXbffxCbz7Q==
-Date: Thu, 27 Mar 2025 15:03:40 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Petr Tesarik <ptesarik@suse.com>,
-	Grant Likely <grant.likely@secretlab.ca>,
-	linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH] spi: Ensure memory used for spi_write_then_read() is DMA
- safe
-Message-ID: <8bf5fb34-a554-4ab3-b774-470c08971447@sirena.org.uk>
-References: <ca70e24d-57b6-4250-bd0d-7f5c72e1d282@sirena.org.uk>
- <b37480a4-5344-4cf4-8fd1-400e2588fc28@app.fastmail.com>
- <db36bbf0-0ad5-4c37-bfcc-917508805eba@sirena.org.uk>
- <efe910db-77d0-4ddf-8fc2-df4955e7b9f3@app.fastmail.com>
- <06435855-531b-4a3b-9f2e-1a5caea0d65b@sirena.org.uk>
- <38fe54d2-bd8a-4655-863d-cd1c482ac9a8@app.fastmail.com>
- <Z917hRQM2ZhSwvFx@finisterre.sirena.org.uk>
- <6a3a4b10-f51b-43e2-8281-057f6751424b@app.fastmail.com>
- <8ff02f5a-fa66-4403-b193-a18c23879e0d@sirena.org.uk>
- <92817727-d0f2-4d91-8fef-84ee92ab42e7@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="kmClW6g8"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tk0vqwUJLycHYolEQSz8ODbzjR8FhgNTUS19J03mqKgF7WlD2HAolPCf0Zli/6ULuVw1Dgks1fGQKEogOK9qJAP/8Ylc/JDGI2maLDSHYykS/62IuVbZppF1l6Ys22xihpF4yEq+Q3ZkZQ47EzPvcfQR7F1vdqZOumeEuEUsSfbbik2XQqoLc1NOF/EHgGAU6kTElaZd3NRndOF/D426FxYZLfepSDwNozsYLCx6a/o1LbgwSvZOxApH/PNr7XtdXU8jgb0ys3fFf0Sff4zxRmfXpcDq3Re/Hd7njdnx8jcgWlQwgGX2pToloJ9/ah5aK6MRvDuLJEJ3ZUFWv/KMfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PCn6yLHn2xMU+ugyHhGpkx1E1LnELisSV566o2MYqT8=;
+ b=im33MbC/DDHaNHCoNvnBvkMXqliks+aliLD3u5yYdTby/CiRiBqoQ/V0K+tIQEOMsE9tyci6pFPRhCPQnOck/KVhTflKk4QiqiGZWJYvV529vkTYwUWjVPO+bS6XrgTDc14K6pajUUMWAhHqwhJBk+tJ3jHYM1xYeKl7JoOUxSQrcvE3Ww+XYnSfCCrg2UG2X3Ud4DtC4k825JS+i8pujJWJ6+i2lvbY96VQXs35lUwaPPYQULGijhh62O57+eZnDF2/ZkyckxWJRI51Mx+XKe6yLLUuPB4uCOvaVGfzsIopDDD0bz8THieu6afBorBcf2uQVxvEurlmXrf+PzP/rg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PCn6yLHn2xMU+ugyHhGpkx1E1LnELisSV566o2MYqT8=;
+ b=kmClW6g8DTNmQ9dH7HUDNQxUKMx70316ZtKO+7rkaNZDvkHwpeaEzpCYXGsKNTazzuBLvhbfD3WRBc9aVXgkmYt4rCotqOHo+fojQnzsJmKtGqsrZ6/QAtEAVrMGQQBcdi5K0Gv1tkniPySEozQsJ5Gvgqn3s8ozAQIOBGjaGvu0Nvtt8m/lYAalx1ugUmH/6cDMXBr5glzN7xslM2+gyctNDzzgws9fKyiisvmPaFW5+504jFZSGtV/RBXfkcVlCRIl82XbtH1YxHzNsmoQQdSfovl2QJ+9OAS4nhJ0C00mTDQPWvWFfzLYo+Ar7hCFkDxYlHusup8guTd9B7oT2w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM7PR04MB7190.eurprd04.prod.outlook.com (2603:10a6:20b:115::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
+ 2025 15:03:39 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%3]) with mapi id 15.20.8534.040; Thu, 27 Mar 2025
+ 15:03:39 +0000
+Date: Thu, 27 Mar 2025 11:03:33 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/7] ARM: dts: ls1021a-tqmals1021a: Add overlay for
+ CDTech DC44 RGB display
+Message-ID: <Z+VoxVoRVKM3dMAC@lizhi-Precision-Tower-5810>
+References: <20250327144118.504260-1-alexander.stein@ew.tq-group.com>
+ <20250327144118.504260-7-alexander.stein@ew.tq-group.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250327144118.504260-7-alexander.stein@ew.tq-group.com>
+X-ClientProxiedBy: PH8PR02CA0051.namprd02.prod.outlook.com
+ (2603:10b6:510:2da::21) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="tf2yxVVdxALET0IF"
-Content-Disposition: inline
-In-Reply-To: <92817727-d0f2-4d91-8fef-84ee92ab42e7@app.fastmail.com>
-X-Cookie: Multics is security spelled sideways.
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM7PR04MB7190:EE_
+X-MS-Office365-Filtering-Correlation-Id: 41686239-104d-4311-b459-08dd6d408e56
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|366016|1800799024|376014|7053199007|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?bRJujJZ2H3aDK86BGbFzDq+yWlEZhxx9ssOXNDgG8luOIMDNwA9FA5Dtl4LJ?=
+ =?us-ascii?Q?fZ61mcedZ/UdKdOoXjFJJmLmX35k8H8bqxuRIzKSamFN4m6C7SZ8okFLfkku?=
+ =?us-ascii?Q?fA0ce6nW2PwS+yDWq0rBQSHCUNQycKX0n6X9WBNn2pbGauKEFcd/ayqqnIXS?=
+ =?us-ascii?Q?s8Ewp85mhMmsHKC6JTUqc7Mn0kHtV6fW+aeC6U/D4ePIb6Ql/J333u8m/P2z?=
+ =?us-ascii?Q?aiXuZxY8D2VN3PJb61U6h5UmCZ75PiiPSl4Wlt93aB6zdShoxucv0Q4DhB5Z?=
+ =?us-ascii?Q?Xb/R5lzvWB24pD6Av1Fyot4yH6R1oqoaKgmPdbpajF1Vzdiv2QfQS2JcFTRZ?=
+ =?us-ascii?Q?I6lOCbwSOlFBjIc2f/kR5g4UDIh33ThG3+zp8T5GvGq0BDb7W2plTZ+uFwDl?=
+ =?us-ascii?Q?caY739Ur/z4UJHrHKfVFbiGnUne0+/4pFIg4xhiEN5HBTaU9y+TBLxs0/cQ4?=
+ =?us-ascii?Q?5MRcbDslGiElqBqfDSbC+75i1Ig49Xnt9QJzOIZOMzixZ2NEIE7Dpw4x2aIe?=
+ =?us-ascii?Q?2e/qwdAkThzTXavHRjtfJb6XDhEWPB4zuQbE5hJqfGgm7jX/m8NNTW1IEiQw?=
+ =?us-ascii?Q?WfsnjUMkwv23dPWfAznN2A+zKBRveLYau9Gi6UDwGLR3D4gbjBB0uThhEV39?=
+ =?us-ascii?Q?rwjb/vCCA6GV54L1OE06gknj4q1m6O9oRlu6OOu0cPhxtsnt74Id0LuFQXUF?=
+ =?us-ascii?Q?N5Jt2be0HF+6ZhR70IzZwx0p6hK5qkbzPAtgxaLXMle0kA+/AP/m5/NcLgD0?=
+ =?us-ascii?Q?XnNDX9FUhE0H/auuGdaZLbMY05OAagZZ8jjjNCTYHig2+CDWI+tSEe8qDefj?=
+ =?us-ascii?Q?pCNXtUFNz7GAx6B/R7iyEaB+6IlRdiZsYKhGuPkXIJcM7zZkSAGBZrHND/k6?=
+ =?us-ascii?Q?pi4Ey6sR1PQ8AHcLFgh73XWIy7BWT4fhIIH8jsx+S0NJqNsCa2eN033ZRv/8?=
+ =?us-ascii?Q?PIml5soRWYZXf7/h1Y2FAEVWFACzm7zcv0TnztoVexZb7J3VyFvgyVcI2KEH?=
+ =?us-ascii?Q?H473SKf4HeC0CcZEatMTRG9E2CThyfhz3hubfIY+HpW0Iw8XVeXo6+o5iN0Y?=
+ =?us-ascii?Q?k7ZnECMEDMulG5vfTZ6ZMfdXRZ3CRLkHT6CVOvxuCbs0nDTD0xzV5OLlr/zG?=
+ =?us-ascii?Q?c9xZ9v627nyikRRfsECpOdExVa6WiYmiCIQ5rgfL4/B7mqHF6J5YYfTIqZ6V?=
+ =?us-ascii?Q?RnQRgOIubgIN6QuWXEVdzazXkzdF9yEo3RJad4BbZ7CScPlCl9t0ftEu5dpi?=
+ =?us-ascii?Q?vfrW4iSEZgbDLKuNrlPHVchpnWCUV+MCrwp14HPtmePQvOJ8uiHJS66o1JIq?=
+ =?us-ascii?Q?s4vyQzpwE+DRPV5mJt2Mhya9Bp2rA6f6X+e+ua4uc2jQbPnPKdcUiMhd9jSv?=
+ =?us-ascii?Q?YYMYTjd8iFX+Anc2nxjyJM4ASYLcUmaetqR1XrbZQOoWB8pMp7rpTChxqSgI?=
+ =?us-ascii?Q?8o0w78+rGNJH6JxgYYv1hqpdzpX8dFOh?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(366016)(1800799024)(376014)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?fANootka66PpSAstdexlhiikV9BkXJ30xEtDfE4ZhPNB9gESrgKBYeDQ7mhp?=
+ =?us-ascii?Q?cZQwxKO2HDLZwuCMS0T+moGDxIIAM1ynvbV5Maxql21AyXd7vKibB0Bj6UA8?=
+ =?us-ascii?Q?HltDu2RhFVOUsBTbfJrgQKIut9872yYdZP5w2tT6sG+gT6Klw8fbm4Rd4d4/?=
+ =?us-ascii?Q?3QvrIOxZ9hn1ozoaUKB1NB58mnfvLIMTNAiuDAwppZ7us3zFSIXW9Rk5K+W1?=
+ =?us-ascii?Q?2arkdo1F5LDMFcrOy2rdXDQ+M5+o8OzuHtcf/R1Fdl5nlGFeJyNFfB2sI7vd?=
+ =?us-ascii?Q?XcVZeN34ZiV0dFUpMRgkpAZ5FIliAQOUvJLSXoxaPwr014bAgDpvxaBEf6Xa?=
+ =?us-ascii?Q?RAXdjufxNB6d3QUGBu3ZCkbca1bTHQbF8YP5S2OGCb6c2tQzftoh3ZgbSMoU?=
+ =?us-ascii?Q?Lwr8rAnCkL9aPw44Cc2fd44GF08Y1z8I5DJ5zZjYGrIR10bkQu47HlCCL4dj?=
+ =?us-ascii?Q?yoMcbzQh/yhFc3Pe2K+5yk2/IZPwP6BOjSz8ct4ih6ElTxqjg1nElQypFPyd?=
+ =?us-ascii?Q?T2+cSLnK0ib73CxP2zE9Eg/Xs2xNbwg5JqRbP652jq5IfjjDFKFF0kzKfi0u?=
+ =?us-ascii?Q?viS9t2pds/XPn8HBSk6+4GcUTtO1Rfo/O0eYE+HeVsh/YG72pu/gSC08q1eW?=
+ =?us-ascii?Q?J9ku1IP5P5x83Ud1UhQh7QbK/pGdx+0OBhpvAchsBdw/JHLkuOtYhNipWToI?=
+ =?us-ascii?Q?+LuL6aqbZkHLCNejcAtItRTHv2qRsmXNVbeS+7ItGluj7LpytinMKvlOk5JP?=
+ =?us-ascii?Q?+PCxyQe5HgCF39T/RVV2NyVjUhUcdpL8u5M+XkaLUPokKqE8+y/kJSlPXE1I?=
+ =?us-ascii?Q?yICVZCS8/uJgEAcSadWJ1OJo3t5pnEIJcTRtWqAtTWQTAoFR153wboN4KtbU?=
+ =?us-ascii?Q?qRlPS0OGX3xQxotiHcyXuejzV9ecTEA9PFfyslC9utfjegboDFo9FQ6QUrXZ?=
+ =?us-ascii?Q?BCvUmPZX6I8K61gzPltYxjQSVw7eJsmKzzYnXMsQ1dUwHloP5B61EQh2c421?=
+ =?us-ascii?Q?NS4g33xD5sW9OmGayrQVsOdo5AfjTlKhBRvPAZ10Ghe3lzFE6fmaENrGok4J?=
+ =?us-ascii?Q?NZhl8EOV7KxQFGMoZkjH1PUuikWOHzjp8VeQE/0o0knjkHGAaIR3fAZ1d8Mg?=
+ =?us-ascii?Q?BIx4ou4Vgz/v5G9xFmoFDc+nFElA5JwsZbsg9qEUsGUIW4MS13HZ0HNxC4B6?=
+ =?us-ascii?Q?ZnxJ1M9pddCyRzRgs/wtlnAPE9fgJdknFyLc5ybnwYpfwdK4HnpL0iNlgwYK?=
+ =?us-ascii?Q?VRIHv7gQhdpDEy7R8KnOr14czIr70muy/GfQ6+oEt01OFZYBk9yqE1Zqy3y3?=
+ =?us-ascii?Q?bre2iZPFEvzLWd5QCQbazIUFkwV0mfXQlUA2p4A96DMuzxbXxqEncPGhKdUr?=
+ =?us-ascii?Q?H8s731pClSyNBOLn5jrqHREXsotzKd02WkKSlZg4jVduaKwLqjClCWpJ36Bo?=
+ =?us-ascii?Q?rjFF5eWhY4IMdzPEaB79dfvYYr3qcEHqD7mgfAF+IQwTgjzM/4BF3SCZ5mGV?=
+ =?us-ascii?Q?/pARSTjFR7u/lFIjtGUTi9UOD7d84koqPBkb5nuVMCV4eBMO7Ghuw6YxtOMj?=
+ =?us-ascii?Q?lvpjCpeQkml2F6Y4IoQdq4Q4Y7Ag7whSsVWErjeQ?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41686239-104d-4311-b459-08dd6d408e56
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 15:03:39.1704
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lgf769n7Emx6LnnlPFTR/Dp+xJY5PtEEoWpa0Amgiuw+DskwDxkYxPYjdjSKH0JQa25Kxbt7E2D2+aj9PSThFg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7190
 
+On Thu, Mar 27, 2025 at 03:41:12PM +0100, Alexander Stein wrote:
+> This adds an overlay for the supported RGB display CDTech DC44.
+> DCU graphics chain is configured accordingly.
+>
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 
---tf2yxVVdxALET0IF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-On Wed, Mar 26, 2025 at 10:45:57PM +0100, Arnd Bergmann wrote:
-> On Wed, Mar 26, 2025, at 17:20, Mark Brown wrote:
-> > On Fri, Mar 21, 2025 at 08:42:12PM +0100, Arnd Bergmann wrote:
-
-> >> Using dma_alloc_noncoherent() should make the implementation
-> >> much nicer than GFP_DMA in the past, so we could add a bus
-> >> specific helper for SPI that checks if the controller actually
-> >> wants to do DMA and whether the buffer is problematic at all,
-> >> and then decides to either allocate a bounce buffer and
-> >> fill the sg table with the correct DMA address, map the
-> >> existing buffer, or pass it without mapping depending on
-> >> what the device needs.
-
-> > That query feels a lot like spi_optimize_message().  Which should
-> > possibly then just do the bouncing if it's needed.
-
-> Would that require attaching the temporary buffer to the message
-> or could that be a permanent bounce buffer?
-
-We probably want to be able to do both - have a permanent buffer for
-normal operation, and allocate a separate one when
-spi_optimize_message() is explicitly called by the client code since the
-idea is with the explicit calls is to be able to have the message baked
-for a long time and you might have multiple messages ready.
-
-> The advantage of using a permanent buffer is that it
-> avoids both the kmalloc and the iommu mapping in the fast
-> path and only needs to do the dma_sync_single_()
-> for cache management, which should be faster for small
-> transfers.
-
-> The downside would be a higher memory usage and the
-> need for a mutex.
-
-Yes, the memory consumption is a potential issue.  We only tend to have
-small numbers of SPI controllers though so if it's a page or two per
-controller it's not too bad.  We could potentially make the buffer
-discardable and allocate it on demand and release it under memory
-pressure but that feels like a worry about when it's an issue kind of
-thing.
-
-For cases where we could use the source buffer directly we also have to
-work out when it saves more overhead to use the existing mapping vs
-doing a new mapping that skips a copy.
-
---tf2yxVVdxALET0IF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmflaMwACgkQJNaLcl1U
-h9A1pQf+JDEsvjbk+opIKoib4mniCmWAV/h2nR8tAGNT3pnQsgYBRzPL9BLlXO2V
-ge0/mawK3854sMFtGweFmcxkj86eDsUJ3IDdf0p7cel10MRu2suvdVxYxDwEQlw/
-GLxRS5fm7boCBF+U+AbKQOE0Y6ZyDhvWfc11tB/1QCQslC1enmaN/wBGjQNSw715
-dQY+1j48jI4iwOJp7ytWtcaKX+UZDv+PVy2M8sgzhb7A3ZNa1JCLrUlkak3Rk+tH
-2eSDoEbM6PyCSHZWeAdpepdgzLZwcCkcvlBrbvbICtiL5y60cTnb94dfCyxqqv+m
-M07enFRLku5ZcJv1IdF+jVJjAPqdsg==
-=zXrV
------END PGP SIGNATURE-----
-
---tf2yxVVdxALET0IF--
+> ---
+>  arch/arm/boot/dts/nxp/ls/Makefile             |  2 +
+>  ...-tqmls1021a-mbls1021a-rgb-cdtech-dc44.dtso | 55 +++++++++++++++++++
+>  2 files changed, 57 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-dc44.dtso
+>
+> diff --git a/arch/arm/boot/dts/nxp/ls/Makefile b/arch/arm/boot/dts/nxp/ls/Makefile
+> index 7b97b718ebc16..53240b04c9688 100644
+> --- a/arch/arm/boot/dts/nxp/ls/Makefile
+> +++ b/arch/arm/boot/dts/nxp/ls/Makefile
+> @@ -9,7 +9,9 @@ dtb-$(CONFIG_SOC_LS1021A) += \
+>
+>  ls1021a-tqmls1021a-mbls1021a-hdmi-dtbs += ls1021a-tqmls1021a-mbls1021a.dtb ls1021a-tqmls1021a-mbls1021a-hdmi.dtbo
+>  ls1021a-tqmls1021a-mbls1021a-lvds-tm070jvhg33-dtbs += ls1021a-tqmls1021a-mbls1021a.dtb ls1021a-tqmls1021a-mbls1021a-lvds-tm070jvhg33.dtbo
+> +ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-dc44-dtbs += ls1021a-tqmls1021a-mbls1021a.dtb ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-dc44.dtbo
+>  ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21-dtbs += ls1021a-tqmls1021a-mbls1021a.dtb ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtbo
+>  dtb-$(CONFIG_SOC_LS1021A) += ls1021a-tqmls1021a-mbls1021a-hdmi.dtb
+>  dtb-$(CONFIG_SOC_LS1021A) += ls1021a-tqmls1021a-mbls1021a-lvds-tm070jvhg33.dtb
+> +dtb-$(CONFIG_SOC_LS1021A) += ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-dc44.dtb
+>  dtb-$(CONFIG_SOC_LS1021A) += ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtb
+> diff --git a/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-dc44.dtso b/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-dc44.dtso
+> new file mode 100644
+> index 0000000000000..146d45601f693
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-dc44.dtso
+> @@ -0,0 +1,55 @@
+> +// SPDX-License-Identifier: (GPL-2.0-or-later OR MIT)
+> +/*
+> + * Copyright 2013-2014 Freescale Semiconductor, Inc.
+> + * Copyright 2018-2025 TQ-Systems GmbH <linux@ew.tq-group.com>,
+> + * D-82229 Seefeld, Germany.
+> + * Author: Alexander Stein
+> + */
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +
+> +&backlight_dcu {
+> +	status = "okay";
+> +};
+> +
+> +&dcu {
+> +	status = "okay";
+> +
+> +	port {
+> +		dcu_out: endpoint {
+> +			remote-endpoint = <&panel_in>;
+> +		};
+> +	};
+> +};
+> +
+> +&display {
+> +	compatible = "cdtech,s070swv29hg-dc44";
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	polytouch: touchscreen@38 {
+> +		compatible = "edt,edt-ft5406", "edt,edt-ft5x06";
+> +		reg = <0x38>;
+> +		interrupt-parent = <&pca9554_0>;
+> +		interrupts = <6 IRQ_TYPE_EDGE_FALLING>;
+> +		/* LCD_PWR_EN -> TSC_WAKE */
+> +		wake-gpios = <&pca9554_1 4 GPIO_ACTIVE_HIGH>;
+> +		iovcc-supply = <&reg_3p3v>;
+> +		vcc-supply = <&reg_3p3v>;
+> +		gain = <20>;
+> +		touchscreen-size-x = <800>;
+> +		touchscreen-size-y = <480>;
+> +	};
+> +};
+> +
+> +&panel_in {
+> +	remote-endpoint = <&dcu_out>;
+> +};
+> --
+> 2.43.0
+>
