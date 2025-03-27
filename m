@@ -1,127 +1,116 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98CF40849
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 02:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E675E17741;
+	Thu, 27 Mar 2025 02:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743041355; cv=none; b=bnH4cj0ZY2MhJ35wdSra9QkVGGfbSTwZ48GWTp43ios5lcfamChx9jGxx4G0aXk03NwwL680pN7u1zj6BO45f7fKeRhcwNtgFvBXnlRfeyvIlKIp4EUtLjFfHIa4yA6eonU2YC9S1qqVkZkGdrOAJhCE+2eG9nMw0t2BX8bZmwA=
+	t=1743041829; cv=none; b=PbBkWIFyiGJ6tXuORV/niJJlkIZPs0vUSAzWyZtsstQ207qiWWrLkBH7qeoCkD7k3qPC4wLDHt7JkP6e7wKHOn52azCZAUsnWKe2ha8zxU/HgHOb+H3aLdDKBiztRB6cYW9usEbN0+m4tL9mHrOTWS6apUbLJvEFCB7I/Qwz5tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743041355; c=relaxed/simple;
-	bh=5spy1yKHVXpEg3P9hBw5222af7PjVTx5S03lVn/BFcY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gIUc3IoFU3Ea+DtCkr52SxBum1N3axcH0Wor2yuvll7TweT8tUXBWC7SO6uk51Dx5Mtyznvz5kiM8uZDL4D07MXgpcfiIup+n2JriGVLcf9WLu+lfs6T3psHCfPPqfgY1oHNPLR++HNb19Lu5CiK6OKVKTwU43tWll+DdIwI1Hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=d72qPCjL; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="d72qPCjL"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c542ffec37so56610985a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 19:09:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1743041353; x=1743646153; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=79cx+8ACjWKrZ89232rtiJEaOIGqZ26RyTWzZJhy7rQ=;
-        b=d72qPCjLXFg2ujvQP06HaAQ35FvR0/ewvXDWnrEBS/+4q3UDIvnftbcSJxI37Q821r
-         Zdys61KDWeIYIzhIu8CRfwY49coWuRiQA+5cgXQ6KgPvvMGwWsagvwByPgsQfq9pvhYq
-         ZpL4w2tYaVIXn4Ui9wcD9NFE1hDPTbyHSYzcdLfKkisW5PDrvImO3p2/0NLhljYrmSK0
-         o48ld+BkRNJEmYkdfCHay3G4utW6HpnjBRp1X8DQHZVolLv3Ww9KAvv+PDsb5WDhQViM
-         8OyNwysFWyb006TOAfSfryGbzdYGRBdKJRj0COyFBmnOLb7lASrCmIZwe1YXRdeqiL+/
-         rzBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743041353; x=1743646153;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=79cx+8ACjWKrZ89232rtiJEaOIGqZ26RyTWzZJhy7rQ=;
-        b=pnWNfLvuqZjlbhk271VgW+yYyg97NokpHLW8H9k4fBDnnEJtWaE1klyO5gLwb5DXqI
-         oKiMQElEzNGeIKZq13+nGaw8nbLVt6+d7kC/QZO/wjbox9X2KNdP4ILrCG53B5doOcDU
-         BxQYzApeQVzu844/dgZJ+sT23Ovpc02eZl3tF+s5U598UhLX0zeflO3x6gwnbCM3Krat
-         e4bBwsOrOvt29081WtaGz2b6nJqGV+jV3fDvgu9KUPRKdA6EeMDzjvq8mYajJSlrwYpz
-         C29QV/9OPN5M6uedtA/CWNWq/AohPlI74Rr3cMpqvBGhhca8AHwIDkRp4F+65PUfXVcw
-         JExA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0NCnMYCBV0AJxbp7QEc+/ZULJyFnzZFqFraQLZ2EvyFd+SkuhwgbNalU/on9zi2644bA2mGwk8TzGqYI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVCduL2CXRqVaiPyLoKo0/8IjTcUcybX7aQ/OVwT3GJOURTrxV
-	EKLEch+J9SHH44yCk2+DgFipWwWEC4yOQKE7Jq3Bbv2PYGKdfmmCqqM8uAm/yQ==
-X-Gm-Gg: ASbGncunWwnIM/UNGwpoMTJUvdvTD6lv9Q+A+5xlJDySzwYQK9hjI00O9X3+BqSjx/l
-	CePMPJc2N8b9243fdi5qZdnpCh4pItRvMPNxsSVq+MfOqAd0PF2Xeq6URF/4D31LJCAXg7OML59
-	BqegswmL6/6WGlM3HYGyjy4mob5xr0vIANnnko2Nt9YSe7BkgCbnzpHKwv1mZKvCj1Pwsg6AdYb
-	0i6Ngd1L511oyt6muC2roa0FR6BU9kSXhPtAJtgwBtIkCvM9oBSGeNbvcelaDBkAt7SwyC9Q+ye
-	EXwKA0UlejaRkacYhUtqVqNwCNCPj8Yb0fw+OI3hHXjc/SbZWayOtn9E
-X-Google-Smtp-Source: AGHT+IFnqxtiuuABbBZmtaPkF+aX7XG7GD0zxD8mthtjaohOMNrpHGKcsX6ZEzPbik1dgKeWFmUp+Q==
-X-Received: by 2002:a05:620a:1a28:b0:7c5:47d3:10c2 with SMTP id af79cd13be357-7c5eda81867mr304509085a.52.1743041352647;
-        Wed, 26 Mar 2025 19:09:12 -0700 (PDT)
-Received: from rowland.harvard.edu ([2601:19b:681:fd10::419f])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b92cfe65sm835006885a.28.2025.03.26.19.09.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 19:09:12 -0700 (PDT)
-Date: Wed, 26 Mar 2025 22:09:09 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] usb: ehci-fsl: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <1e82761e-8554-4168-8feb-561abbe49f7e@rowland.harvard.edu>
-References: <Z-R9BcnSzrRv5FX_@kspp>
+	s=arc-20240116; t=1743041829; c=relaxed/simple;
+	bh=yFRnNojw1Od6L/ePqAwB1Zg9yTfTMA9aFbKENuuihFg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c7xMZGpsEY0FLa4cFVm6SZM7CFjm3bS/GJBlfCqITxeRa2G1Jw9lN3W1v6YCIYVAB/mQNhxgXpZeTDn9xZGJMEDPjjpMbI+MC/N7MY0RHV/sAus6SYRm8hCWxCPHgP/EsIbbOIWyUa/MlKNkmC1YE7zocrl9Uow72PfCmu+5D64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.54.180])
+	by gateway (Coremail) with SMTP id _____8AxQK0eteRnsbynAA--.2271S3;
+	Thu, 27 Mar 2025 10:17:02 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.180])
+	by front1 (Coremail) with SMTP id qMiowMAxj8UcteRnpXFiAA--.32467S2;
+	Thu, 27 Mar 2025 10:17:01 +0800 (CST)
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+To: lee@kernel.org,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	peterhuewe@gmx.de,
+	jarkko@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-crypto@vger.kernel.org,
+	jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org,
+	pmenzel@molgen.mpg.de,
+	Qunqin Zhao <zhaoqunqin@loongson.cn>
+Subject: [PATCH v6 0/6] Drivers for Loongson security engine
+Date: Thu, 27 Mar 2025 10:18:03 +0800
+Message-ID: <20250327021809.29954-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-R9BcnSzrRv5FX_@kspp>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxj8UcteRnpXFiAA--.32467S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7KFW8GrWxJrWxAr1xWFW7Awc_yoW8Zw1DpF
+	43C3yrCr4UJr47Crn3JFW8CFyfZa4fWr9xKay2qw1UWr9rAa4UJ3y3CFyUCa9rAF18JryI
+	qFZ5Cr4UCF1UuacCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUUU==
 
-On Wed, Mar 26, 2025 at 04:17:41PM -0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Move the conflicting declaration to the end of the structure. Notice
-> that `struct ehci_hcd` is a flexible structure --a structure that
-> contains a flexible-array member.
-> 
-> Fix the following warning:
-> 
-> drivers/usb/host/ehci-fsl.c:414:25: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/usb/host/ehci-fsl.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/host/ehci-fsl.c b/drivers/usb/host/ehci-fsl.c
-> index 26f13278d4d6..c720d55f4982 100644
-> --- a/drivers/usb/host/ehci-fsl.c
-> +++ b/drivers/usb/host/ehci-fsl.c
-> @@ -411,12 +411,13 @@ static int ehci_fsl_setup(struct usb_hcd *hcd)
->  }
->  
->  struct ehci_fsl {
-> -	struct ehci_hcd	ehci;
-> -
->  #ifdef CONFIG_PM
->  	/* Saved USB PHY settings, need to restore after deep sleep. */
->  	u32 usb_ctrl;
->  #endif
-> +
-> +	/* Must be last --ends in a flexible-array member. */
-> +	struct ehci_hcd	ehci;
->  };
->  
->  #ifdef CONFIG_PM
+Loongson security engine supports random number generation, hash,
+symmetric encryption and asymmetric encryption. Based on these
+encryption functions, TPM2 have been implemented in it.
 
-While the sentiment is laudable, this mechanical change simply will not 
-work.  The driver was written incorrectly to begin with, and the change 
-will probably break it.
+mfd is the baser driver, crypto and tpm are users.
 
-I'll try to find time soon to create a proper fix.  In short, the 
-usb_ctrl field should have been stored in the .priv flex member of the 
-ehci_hcd structure all along, and the .extra_priv_size member of 
-ehci_fsl_overrides should have been set to the size of this u32 field, 
-not the size of the entire ehci_fsl structure.
+v6: mfd :MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
 
-Alan Stern
+    crypto :CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,
+    ls6000se-rng.c ->loongson-rng.c
+
+    tpm: TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
+
+v5: Registered "ls6000se-rng" device in mfd driver.
+v4: Please look at changelog in tpm and MAINTAINERS. No changes to mfd
+    and crypto.
+v3: Put the updates to the MAINTAINERS in a separate patch.
+v2: Removed misc driver. Added tpm driver.
+
+Qunqin Zhao (6):
+  mfd: Add support for Loongson Security Module
+  MAINTAINERS: Add entry for Loongson Security Module driver
+  crypto: loongson - add Loongson RNG driver support
+  MAINTAINERS: Add entry for Loongson RNG driver
+  tpm: Add a driver for Loongson TPM device
+  MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
+
+ MAINTAINERS                            |  14 +
+ drivers/char/tpm/Kconfig               |   9 +
+ drivers/char/tpm/Makefile              |   1 +
+ drivers/char/tpm/tpm_loongson.c        | 103 +++++++
+ drivers/crypto/Kconfig                 |   1 +
+ drivers/crypto/Makefile                |   1 +
+ drivers/crypto/loongson/Kconfig        |   6 +
+ drivers/crypto/loongson/Makefile       |   2 +
+ drivers/crypto/loongson/loongson-rng.c | 190 +++++++++++++
+ drivers/mfd/Kconfig                    |  10 +
+ drivers/mfd/Makefile                   |   2 +
+ drivers/mfd/loongson-se.c              | 374 +++++++++++++++++++++++++
+ include/linux/mfd/loongson-se.h        |  75 +++++
+ 13 files changed, 788 insertions(+)
+ create mode 100644 drivers/char/tpm/tpm_loongson.c
+ create mode 100644 drivers/crypto/loongson/Kconfig
+ create mode 100644 drivers/crypto/loongson/Makefile
+ create mode 100644 drivers/crypto/loongson/loongson-rng.c
+ create mode 100644 drivers/mfd/loongson-se.c
+ create mode 100644 include/linux/mfd/loongson-se.h
+
+
+base-commit: b904243247d1acb0ebbd4978feb639441dc51fc1
+-- 
+2.45.2
+
