@@ -1,102 +1,115 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A26211261;
-	Thu, 27 Mar 2025 11:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01692116F6;
+	Thu, 27 Mar 2025 11:07:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743073659; cv=none; b=KbwbV+dbO3kJAuAQQd5RFoNEmqPfoiI08t9HvHj8YMsbe1QFV+ZrZNdbLTysikTz0kjb8uvfEvIBplfVY9qsV9ZNBpJdGu/QsgO+5qjActVUAB2wx8Rf322PlcyJMEO4v5QCYxmPBoSpPU3REamfSvRpvERj/oO0FDG+eDzKk40=
+	t=1743073660; cv=none; b=o3INqBvV/3ZR4QReWGVr6hUrtjuv2nJXSqS/paBNGCIoYHx4+rglUD23LHpykuwIJ+NrOtQcpnd/DSK6fQgOSkO9IQmMFBnNR0CxupciH7ufW0PtaOY4mRiGXrrxBvrSrEptZ42Wj/F0qdLvXfIfytthnkHj8whWZfihJOK1Uxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743073659; c=relaxed/simple;
-	bh=iUwlzKQcSJXS8+bcSJdrfEtFRAl1OnhjN9CsrsWizcU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LlsZJCOS6KgpudfWyvTgYgoDjjDk7mUP+QIhdFvf8PjA92dA5SHgHq2BeBmKcJUgBA9agfuKbl1JymO+o/der0Ka1YlnCuvZBqnw3HTFwc9hgYiVKd3A4RIyNmbYxDk0U/8eFyb//6OxVTak4Gq582eq+3jnBU065sBPO3NAHcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=WqKOpCJw; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1743073660; c=relaxed/simple;
+	bh=FbMtkhsM4PEe39tIGPItq+7v4k2UfpBD4FAsk8XjaX8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BEiKt9GWJWf1stsIxzFB/dSbL0a50ChS2azY6SY0iE38YbencSB7FlRaTqioS/nvt9CY8VDR3/BeUYPV0PTns9mCaYi+PZ5KSmzqQAXY3Ahhwt+rHEqncJF2zsn3VyGD9s4zMoP4eMCO33qKMg/I+OGliYIHsrt/bafpDY5mZ8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CK/nszKP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="WqKOpCJw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=WZqb+6ZduzORjFqfT2budPi5gkMW/3J6mbS3Z4qhKJI=; b=WqKOpCJwUCCRxAWTzc+Zhf8/ag
-	qvEPB2pNoyfOnLwCRl4aTnPj2AnLckChSlAsqqOusG7XqUB4i2FOMVXO9hYO7+LfHb0bPjJWiYMyh
-	1na9SHYDsUrGTjkVw1T0I3DEwos1Lj8CNB18qpWAh+qIPMr88+5U9/BegR90MxQ/bkhrfhidZ4sKH
-	rBQarEIl0lC3f19L9k9nhMnqp6p4GzcZ3TphTWrZbe/nLacCEl98CftWI5Wj6c3THpTiRLuF3whi4
-	Tg+U2zaSuNflYbDsSf1pREbhXcVs/Whw4In2gRlw+7/uuAPxT087Lzab9gai4/weVc0boQ0B2bWxV
-	3XzYlkvg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40456)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1txl4z-00078z-0Z;
-	Thu, 27 Mar 2025 11:07:22 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1txl4u-0005Zf-2Q;
-	Thu, 27 Mar 2025 11:07:16 +0000
-Date: Thu, 27 Mar 2025 11:07:16 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Eric Woudstra <ericwouds@gmail.com>,
-	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [net-next RFC PATCH v3 1/4] net: phy: pass PHY driver to
- .match_phy_device OP
-Message-ID: <Z-UxZMJR7-Hp_7d0@shell.armlinux.org.uk>
-References: <20250326233512.17153-1-ansuelsmth@gmail.com>
- <20250326233512.17153-2-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CK/nszKP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA787C4CEDD;
+	Thu, 27 Mar 2025 11:07:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743073660;
+	bh=FbMtkhsM4PEe39tIGPItq+7v4k2UfpBD4FAsk8XjaX8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=CK/nszKPNstpezxlJ6vsP33DRgLrjAXRU9wzHYMq9d9dyuAG7liRcBMiwgVYlF4w5
+	 J1X8SbknLh3+nkYXz+A63rCvk50RV5ViM+vOT4BJm0erNBg4h+xDGrVpHzXZ0RtiPS
+	 Z6MVQ0tzkyrzYOJcExGbTuKZDojclPVwUzDR3zaygpXhPsFxH979r068IsQ/wq1pWY
+	 A9RcEoKk8421N0ZugstLA8+vQe+KUbzPry2LoWHTvnyEQI9G4/N7hXVzordXYnrVuq
+	 cZPO0KXX6gp8uftZMvcVp+pIDnm4RDvRpHGr1Od2aFiiMluxWsAjCJQiW/AWZDQnLw
+	 5Aqkc4ZKBs3Ug==
+From: Philipp Stanner <phasta@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Jens Axboe <axboe@kernel.dk>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Yang Yingliang <yangyingliang@huawei.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Li Zetao <lizetao1@huawei.com>,
+	Anuj Gupta <anuj20.g@samsung.com>
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Philipp Stanner <phasta@kernel.org>
+Subject: [PATCH 1/2] mtip32xx: Remove unnecessary PCI function calls
+Date: Thu, 27 Mar 2025 12:07:07 +0100
+Message-ID: <20250327110707.20025-3-phasta@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250327110707.20025-2-phasta@kernel.org>
+References: <20250327110707.20025-2-phasta@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250326233512.17153-2-ansuelsmth@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 27, 2025 at 12:35:01AM +0100, Christian Marangi wrote:
-> Pass PHY driver pointer to .match_phy_device OP in addition to phydev.
-> Having access to the PHY driver struct might be useful to check the
-> PHY ID of the driver is being matched for in case the PHY ID scanned in
-> the phydev is not consistent.
-> 
-> A scenario for this is a PHY that change PHY ID after a firmware is
-> loaded, in such case, the PHY ID stored in PHY device struct is not
-> valid anymore and PHY will manually scan the ID in the match_phy_device
-> function.
-> 
-> Having the PHY driver info is also useful for those PHY driver that
-> implement multiple simple .match_phy_device OP to match specific MMD PHY
-> ID. With this extra info if the parsing logic is the same, the matching
-> function can be generalized by using the phy_id in the PHY driver
-> instead of hardcoding.
-> 
-> Suggested-by: Russell King (Oracle) <linux@armlinux.org.uk>
+pcim_iounmap_regions() is deprecated. Moreover, it is not necessary to
+call it in the driver's remove() function or if probe() fails, since it
+does cleanup automatically on driver detach.
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Remove all calls to pcim_iounmap_regions().
 
-Please also update the email address in the suggested-by to match the
-one in my reviewed-by for the next resend.
+Signed-off-by: Philipp Stanner <phasta@kernel.org>
+---
+ drivers/block/mtip32xx/mtip32xx.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-Thanks!
-
+diff --git a/drivers/block/mtip32xx/mtip32xx.c b/drivers/block/mtip32xx/mtip32xx.c
+index 95361099a2dc..63b9c41d3c25 100644
+--- a/drivers/block/mtip32xx/mtip32xx.c
++++ b/drivers/block/mtip32xx/mtip32xx.c
+@@ -3717,7 +3717,7 @@ static int mtip_pci_probe(struct pci_dev *pdev,
+ 	rv = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+ 	if (rv) {
+ 		dev_warn(&pdev->dev, "64-bit DMA enable failed\n");
+-		goto setmask_err;
++		goto iomap_err;
+ 	}
+ 
+ 	/* Copy the info we may need later into the private data structure. */
+@@ -3733,7 +3733,7 @@ static int mtip_pci_probe(struct pci_dev *pdev,
+ 	if (!dd->isr_workq) {
+ 		dev_warn(&pdev->dev, "Can't create wq %d\n", dd->instance);
+ 		rv = -ENOMEM;
+-		goto setmask_err;
++		goto iomap_err;
+ 	}
+ 
+ 	memset(cpu_list, 0, sizeof(cpu_list));
+@@ -3830,8 +3830,6 @@ static int mtip_pci_probe(struct pci_dev *pdev,
+ 		drop_cpu(dd->work[1].cpu_binding);
+ 		drop_cpu(dd->work[2].cpu_binding);
+ 	}
+-setmask_err:
+-	pcim_iounmap_regions(pdev, 1 << MTIP_ABAR);
+ 
+ iomap_err:
+ 	kfree(dd);
+@@ -3907,7 +3905,6 @@ static void mtip_pci_remove(struct pci_dev *pdev)
+ 
+ 	pci_disable_msi(pdev);
+ 
+-	pcim_iounmap_regions(pdev, 1 << MTIP_ABAR);
+ 	pci_set_drvdata(pdev, NULL);
+ 
+ 	put_disk(dd->disk);
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.48.1
+
