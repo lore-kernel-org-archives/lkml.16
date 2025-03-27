@@ -1,153 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826B1217670;
-	Thu, 27 Mar 2025 16:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA5F213E7C;
+	Thu, 27 Mar 2025 16:55:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743094518; cv=none; b=r8+3f7X8zbICx5Umw6MCEffkj4inppKGSJOu/aX835v9H+/LKoXZMm9P5OHfTTdgLXxhpShjeUEQXJBSUWEJt0EHj4QDQGJhQF4sQPtY+QYncPtY/5iy2Xdno/wkz87joX4xxNjLd6O1ujhFWSKD5pZIM0ieEwPIVTPejmnAUfg=
+	t=1743094541; cv=none; b=DhdzA9JnaC2YuIbHBUYDua180ncao2+hQKWB7nyRo43hRcpPwVwTIX8RQCzSBtvPvFrmgp+vKYZ9AGMqz7DVGplxD+mO/28NvkIh2Q8B6VsGhbepsp1TrlcnQ/OtXvSy92Stzf7OLHI6oEiJoXXwlD8H2su/mtRzYyay0gCSlzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743094518; c=relaxed/simple;
-	bh=bOiGMS5IFLwpPyvTlc8kPp3YoVdO404F/VJ7Phk+pNE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cxLU9gxjB9ZYFo5H2GVZmeKQ8NThNWtpVN7sa0txLrqhvolJJLA294UFtREGTNRU04LqC6W0BjG/YFb7+oCIimrDdQL+xnbaZPP2KbXUWasJ+PrUqXx6u9+h7m7Liox2UJxnd2Qe/mxZmKgRyTtpG0BNiTD9mY3jMr+EpKntkLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H3tgKHNG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743094541; c=relaxed/simple;
+	bh=Uon3qEGg/NvHUBBVl/pz1yTtWiws1AYFbn/fiq0Yx1I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ct1mct70cUV9bz4tYwlp5Rb64SOlyLX4uOM9Zr1vR8/bupsAIXXXhC2Ct9pjk3mD73yMJY70NEiDxMEx4crCTx/tXyEda0kuhhd3t5KTdfLXm5kB2rmGEI6LMDcwWicueqPnGnYF1KsFk70clqD/ou2kAmNOwugVnOVdbhBWtLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DNd43Tpn; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H3tgKHNG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC287C4CEDD;
-	Thu, 27 Mar 2025 16:55:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743094516;
-	bh=bOiGMS5IFLwpPyvTlc8kPp3YoVdO404F/VJ7Phk+pNE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H3tgKHNGsuZmeF2wyTGHWzjYawUpyeM+p0RGl7Hou+KmvlpBPd2U0Ga3IEJQ8pp+W
-	 e5lMhyCG6dVcPOJBRCMYMN811mdtjfLQ2hkOhuWKz1zIk5OdFQBNNvpEb+kFboqp1o
-	 vxHOQFs/UIshgnNmzuhdoP2ka5q64YVwN+80fDnsVemRFV5l+opWBw1ykQpAyDuN66
-	 xEnU08KRumJBNC7JvTMVhFrcKlwM3QMPmlceJIKyOAKgoGa0tMagyPuu7dNaRl5di3
-	 rbVf4g//jeTT3w5vlleSyhBSICNGxHDgMQkLkFSOUpK1pDlGf8MWDcago0PBSBaOKp
-	 REOFMpYy4cQbw==
-Message-ID: <a3fe0456-49ca-4335-ab7d-1999607a7ff0@kernel.org>
-Date: Thu, 27 Mar 2025 17:55:06 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DNd43Tpn"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30362ee1312so2117172a91.0;
+        Thu, 27 Mar 2025 09:55:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743094539; x=1743699339; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ByFON7q3KhC7QtbeHTvpKs4Q2ulFdF7osJUVJMISfK0=;
+        b=DNd43TpnkyEO/KqQxwefjbHysI54sg0kxri3AkSQhDcZNi/GytHOCbyurZbRy6xtou
+         LRvefrbkL8EJrQBeSt2BLHDutAHXb60Bhn9htVRzIy82Cl2ZBFv5H7FRnmY5Xb+zHeLR
+         bl/y/f3eCHs/hYEFtsRvIZHWpFBNnDChMJ9peLZe48Bn9a6pUSRC5R3bxwLaVfveCpHY
+         EE6QZwYVAYe6TCZ3YGtixxQk6wfKkv1SWMGXQ+w9qCuIvfXX/0GZe/LbbYriq2OXoC20
+         9ZsFwz/3dQF40CbICpjWi8EKXO3nLotmgn+eU0XilDbP4oSgZOSm6EeyNd9XQFHoOBPA
+         LOrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743094539; x=1743699339;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ByFON7q3KhC7QtbeHTvpKs4Q2ulFdF7osJUVJMISfK0=;
+        b=A00lRcrZEKs+3MaKzaF/6S4FxG91xwKMnpn3V551uypJffh+4NzpNcJya8Waz6bQgX
+         wRCcvN5/A9E5jR5pL+tUlTpdNHbUpDfZb83ZpuFgrjFd4/9wsgdc3I76goD4kwKHZCyS
+         /166xZwuWSeSuQtYbKswjq7VBwH7qjbXBdw7dIKnuFSVWpGp61OsFJKFu/TUKoOnCch3
+         B2g+fHe/rbTBQKedRMhmtp1UMfD8WJ0yExYCnKqUSqY0g02A8ScTzCXsbWfR64sqlmUj
+         RNTzC29tWiqq8DryPgoJnnVP0yuafl3NDGh7ELyJGb7JuJlB/V305DgudHWz7CRlimDL
+         HFJw==
+X-Forwarded-Encrypted: i=1; AJvYcCULmQWmi4cQ0sPmsErfvzMYoS1fVlWiO504ku2zHTwnjqX07HRf7PSEB+8DSO5lX0npeetCpaFzEQ==@vger.kernel.org, AJvYcCVJ2ghDsedckmu8oEILSD5o717h+yd2Jt34HvlDkreYTnoDKYO4nEg5dhQD/704i2w3m3a7TMpNZHRqrBEQkQ5Heofo6+rL@vger.kernel.org, AJvYcCXnGN1rH2wzEQwe3CzhvDmo7X2Y3ELDt8U7SIXnuyDp6vIBcZYy3MeQOJCfMOGG8+SypfnruQyz3FXqbmo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNrJszBRmS696/7cVvWKjEbci98kPUaeQPbQ1rDdvYUS9h4cRK
+	Ak8ypm73dUbzW1AXeIu6NLHKD0KkTae+ZgXjQnQ3n1jETMWBNASGDvF+Ohosv6oMKRtyFENW7ii
+	25Rx8dxnjzfPag9Wdb37tRH7qHU4=
+X-Gm-Gg: ASbGncsKxruXINmO3ha44EoYP2DiKWT1GQAYYJToLB3XMTjudxkfpKC5fmBkhKezeJ5
+	uU8u7uSYaVsjzDp9Gh55x9VLLfMrb4vmKCUUvTQoyVrERNgX8skO7wDg8Yt3NVN4etSOs8tNFkA
+	xJjqkqKf55D0h5Em385aKoAeyI9Q==
+X-Google-Smtp-Source: AGHT+IEfiQ0zED9sdnJweqipuxK1ghpqF1l+FajTofew22k1VjuHajI64waSNC6gzwEHJhqs05Y9D1svRzrWb1HRpJc=
+X-Received: by 2002:a17:90a:dfcb:b0:2ff:58a4:9db5 with SMTP id
+ 98e67ed59e1d1-303a8e76718mr6457357a91.30.1743094539334; Thu, 27 Mar 2025
+ 09:55:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/34] mfd: sec: fix open parenthesis alignment
- (of_property_read_bool)
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Peter Griffin <peter.griffin@linaro.org>,
- Tudor Ambarus <tudor.ambarus@linaro.org>,
- Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
- linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
-References: <20250323-s2mpg10-v1-0-d08943702707@linaro.org>
- <20250323-s2mpg10-v1-8-d08943702707@linaro.org>
- <e91b214f-3198-403a-be61-fcfe5645be61@kernel.org>
- <4eb7800206faeb3bb729e28e7785595e196a12ca.camel@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <4eb7800206faeb3bb729e28e7785595e196a12ca.camel@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <d0ade43454dee9c00689f03e8d9bd32a@paul-moore.com>
+ <CAHk-=wjbahY4JjLCXNT4o3xVq2cejqBG69z+MNfHsN9FQBnbOw@mail.gmail.com>
+ <CAHC9VhRExVqdhHqs0njs7NY6bFg0BfcE-gMpS30HW9O7MSDfWQ@mail.gmail.com>
+ <CAHk-=wi9m8-_3cywQCohJQEQtuQ+teS4gOtBkWZrhFWzNy-5_A@mail.gmail.com>
+ <CAHC9VhT3D7X=4SpO5xbYm=JUwJqTa7tn=J6QMDBV96c7VBUw4g@mail.gmail.com>
+ <CAHk-=wiH3hoPTxX3=xTRzRuCwktf3pNzFWP45-x6AwoVAjUsUQ@mail.gmail.com>
+ <CAHC9VhT5G6W7g9pB3VM6W7wCEJjWfYSUWNgWF+rRiQ4ZQbGMEQ@mail.gmail.com>
+ <CAHk-=whwQhJtafHN4B1w-z2Gno__xLHS4NouKKHrYNTYa8kz3g@mail.gmail.com>
+ <CA+zpnLeK2Ecj1mBod2rFe4ymd9eXiJkbyYwFh4Yrmck3DVB2SA@mail.gmail.com>
+ <CAHk-=wiBH8FBL+pnXui8O-FSdyoG-yX81mUF9bsZcC6rR5ZtgQ@mail.gmail.com>
+ <CA+zpnLe_AOpS_F1UBNOvN3YRswUSy_3=0jjUAy4GPxEHYumD0g@mail.gmail.com>
+ <CAHk-=wgJ0gzYJD+MghfVW-YeGLW6sLU5soFY13KWmPAxobk5Mw@mail.gmail.com>
+ <CABXk95AqgpqGtjzK2o=mxWJg5RUZG80dAEaKF9JdUT6n5eFENQ@mail.gmail.com> <CAHk-=wh1refm6JkAB__TmC8OBJyNdH2DmNQAbvcL=tKepkHrYw@mail.gmail.com>
+In-Reply-To: <CAHk-=wh1refm6JkAB__TmC8OBJyNdH2DmNQAbvcL=tKepkHrYw@mail.gmail.com>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+Date: Thu, 27 Mar 2025 12:55:27 -0400
+X-Gm-Features: AQ5f1JrIU0ct8VM_xqsE5wWw1tRmHSeiBAX7NfO2AF4-t-sBob2lPIYKMYUi4go
+Message-ID: <CAEjxPJ6XnBmbzH44YVQxxv8WOyPN7N81fpj7OYonEOTB=rn6wg@mail.gmail.com>
+Subject: Re: [GIT PULL] selinux/selinux-pr-20250323
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jeffrey Vander Stoep <jeffv@google.com>, =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>, 
+	Paul Moore <paul@paul-moore.com>, "Cameron K. Williams" <ckwilliams.work@gmail.com>, 
+	"Kipp N. Davis" <kippndavis.work@gmx.com>, selinux@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Nick Kralevich <nnk@google.com>, Kees Cook <kees@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 26/03/2025 10:21, André Draszik wrote:
-> On Wed, 2025-03-26 at 08:06 +0100, Krzysztof Kozlowski wrote:
->> On 23/03/2025 23:39, André Draszik wrote:
->>> As a preparation for adding support for Samsung's S2MPG10, which is
->>> connected via SPEEDY / ACPM rather than I2C, we're going to split out
->>> (move) all I2C-specific driver code into its own kernel module, and
->>> create a (common) core transport-agnostic kernel module.
->>>
->>> That move of code would highlight some unexpected alignment which
->>> checkpatch would complain about. To avoid that, address the error now,
->>> before the split, to keep the amount of unrelated changes to a minimum
->>> when actually doing the split.
->>>
->>> Signed-off-by: André Draszik <andre.draszik@linaro.org>
->>> ---
->>>  drivers/mfd/sec-core.c | 10 ++++++----
->>>  1 file changed, 6 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/mfd/sec-core.c b/drivers/mfd/sec-core.c
->>> index 83693686567df61b5e09f7129dc6b01d69156ff3..b931f66f366571d93ce59c301265fe1c9550b37d 100644
->>> --- a/drivers/mfd/sec-core.c
->>> +++ b/drivers/mfd/sec-core.c
->>> @@ -276,10 +276,12 @@ sec_pmic_i2c_parse_dt_pdata(struct device *dev)
->>>  	if (!pd)
->>>  		return ERR_PTR(-ENOMEM);
->>>  
->>> -	pd->manual_poweroff = of_property_read_bool(dev->of_node,
->>> -						"samsung,s2mps11-acokb-ground");
->>> -	pd->disable_wrstbi = of_property_read_bool(dev->of_node,
->>> -						"samsung,s2mps11-wrstbi-ground");
->>> +	pd->manual_poweroff =
->>> +		of_property_read_bool(dev->of_node,
->>> +				      "samsung,s2mps11-acokb-ground");
->>
->> I don't think this code more readable. The continued line should be
->> re-aligned.
-> 
-> Agree, but I've tried to stay below 80 columns. I'll just move the string to
-> the right in the next version so it is aligned with the '(' (but becomes a
-> longer line).
+On Thu, Mar 27, 2025 at 11:50=E2=80=AFAM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Thu, 27 Mar 2025 at 01:59, Jeffrey Vander Stoep <jeffv@google.com> wro=
+te:
+> >
+> > The value here isn't so much about checking the source context
+> > "kernel", but rather about checking the target context and enforcing
+> > that firmware can only come from trusted filesystems. So even a
+> > compromised privileged process that sets firmware_class.path cannot
+> > cause the kernel to load firmware from an arbitrary source.
+>
+> Yes, and that's literally why I earlier in the thread pointed out the
+> new code in selinux_kernel_load_data()
+>
+>   "I'm looking at selinux_kernel_load_data() in particular, where you
+>    don't even pass it a file at all, so it's not like it could check for
+>    "is this file integrity-protected" or anything like that"
+>
+> because I understand that you might want to verify the *file* the
+> firmware comes from, but I think verifying the context in which the
+> firmware is loaded is absolutely insane and incorrect.
 
-Lee expressed in the past that he is happy with 100. Coding style
-accepts longer lines.
+So the only use case I could see for that particular check would be if
+we wanted to block loading firmware directly from memory/blobs rather
+than from files. If that's not a valid use case, then we can get rid
+of that particular check if desired; it just seemed inconsistent
+between the two hooks otherwise. What's the purpose of having the
+LOADING_FIRMWARE enum or hook call on that code path at all then?
 
-Best regards,
-Krzysztof
+> And that is literally *all* that the new case in
+> selinux_kernel_load_data() does. There is no excuse for that craziness
+> that I can come up with.
+>
+> And yes, I'm harping on this, because I really *hate* how the security
+> layer comes up in my performance profiles so much. It's truly
+> disgusting. So when I see new hooks that don't make sense to me, I
+> react *very* strongly.
+
+If you have constructive suggestions (or patches!) to improve
+performance of LSM and/or SELinux, we'd be glad to take them. Or even
+helpful hints on how to best measure and see the same overheads you
+are seeing and where.
+
+>
+> Do I believe this insanity matters for performance? No.
+>
+> But do I believe that the security code needs to *think* about the
+> random hooks it adds more? Yes. YES!
+>
+> Which is why I really hate seeing new random hooks where I then go
+> "that is complete and utter nonsense".
+>
+> [ This whole patch triggered me for another reason too - firmware
+> loading in particular has a history of user space actively and
+> maliciously screwing the kernel up.
+>
+>   The reason we load firmware directly from the kernel is because user
+> space "policy" decisions actively broke our original "let user space
+> do it" model.
+>
+>   So if somebody thinks I'm overreacting, they are probably right, but
+> dammit, this triggers two of my big red flags for "this is horribly
+> wrong" ]
+>
+>                 Linus
