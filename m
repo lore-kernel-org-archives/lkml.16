@@ -1,127 +1,114 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D2642AA1;
-	Thu, 27 Mar 2025 14:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F112342AA1;
+	Thu, 27 Mar 2025 14:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743085695; cv=none; b=lpiOX68yglvO6xwcy305JxbMlyeqvtBavobub3UI6LgpCCixkzSXexgzkt6g65v1PSz9Jx1a6MIp4BcPyZCL4d6p60EP2bZad8p3oM2pt29aRshjGYpcrUL+hQvZx2DA7+RnllEdcu5rOhF2PngawDm8PlDb4ppXoiKju3cfDag=
+	t=1743085750; cv=none; b=lJF2Y0KFzsiJZRX1pkXlPp9FkaEXiQKN69MZbScmJiivIvKZ5S8AjhMtXg4wipdONkvtvnimkxJuGBM1VToHkXChH8PgDpxAgRdvFmmkFVnIBYqIBPx8x4dc5ZVCHJhk6TzsrFU6qPEkfZ1pvtnbW3Zm6966szKZqklu0tqhF7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743085695; c=relaxed/simple;
-	bh=9CrKK6cIee4YnDPya25QS1ETKuZvPVbxmWE9N6/dhh0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
-	 References:In-Reply-To; b=Enydjp/rPI3zIbOH87DZnKER3uqoIy2lOJK/kW/4Q2q68d1lI3yHyAXuTd1pxU8pAoDfa3A/j9xjcPY644dmxwGpKCAt8ooyfAuxbNx0iXZdfhR/wNfTLn73Rtj3U09yYTiE29ENTw69IfSGlrVhMbWRFE0q5EYFL+iXd+ukAt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IqwuBRNy; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1743085750; c=relaxed/simple;
+	bh=NiNtawr9A+v8YCmvyfEAy8wjPDxpKpRJsTNG3j+fQ28=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KeRvlt22uNJsmBsarQe/Gk7JIQjff3wAn+qpiCcykp0tywFPtw2KHVNXzgut4G+2O3pJKOekeqk/J9UE4WoNxhhrE9bzO2aSC7udgAypgwyRprEv/6dp9FXBUgSdZgRJp+ZbGVsZJDiEWkIMonU7AkiyP0Ir/ld3V6FNBuhWqvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UzJOo3sq; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IqwuBRNy"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2DFFF4333F;
-	Thu, 27 Mar 2025 14:28:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743085690;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qHbjzZHIWdF+oJ+tIyzeK9jgZa7NadpudWM3f7DicPI=;
-	b=IqwuBRNyA4E0gslvSstg36KzfFTokLev68oyPz0MzCj/JzXu2DJkHIGq5rXA1xZmzd1VBu
-	0LPHI3KMhedExRlsC9GVOpgkW4LjhnIzk5K0M3SOBUjBiSJQdA6K7B31QiOx2upEp5Qv3+
-	O+t1HTHsUb/8XEEIToMeedsDrKm3lYtDjcXTY6sQ8X9DqCcPuWDHDHXJKn1QtTXBR972WA
-	dvkI3XsuMWds/u9MsuWKyjoV0wP/HmigOyg5AXDW8Yg60toupM2/kni4hWHzuQaEDt9GPe
-	gH0+bpbK2aRAbbe/gc5nczrBRskIXMRW4D2rKnonQy+6XaEf+zFR1cwMxQi3iw==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UzJOo3sq"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-224100e9a5cso21406515ad.2;
+        Thu, 27 Mar 2025 07:29:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743085748; x=1743690548; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rDAG6v2LHjM6KDlx2nFQi5f53vc0tn2ixt91kpIk98k=;
+        b=UzJOo3sqZVZYYYbNP1lO5+Bp+4JyCpRir4i5Oij6hkQd32VEu8GyB65DHhlIw/38lU
+         HJkWsVjBzPaVACWAeUhS6aET161UZ13x/WKq65gUoVb8bFumT96zP8bqLCSc2RNrv6pF
+         ljJxOzAcbmWIPmV8otCZbzNzqKe13xgjJpZDqL7hPgxtEqQeccSRCGZNc/xXR9NL/E+U
+         ZLpYKaIQ/meDUrMzjE3AgLJNDxh5mz3NmItHedXlthG3g08cF/NntDVIrw+vTFmEF15u
+         MyXiLyDUfpi/IAA3leKyp6UnYteuJp+TYEY8lOt4yeE8OzQBdl/mLVYnsISH29EN2Dbn
+         wOrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743085748; x=1743690548;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rDAG6v2LHjM6KDlx2nFQi5f53vc0tn2ixt91kpIk98k=;
+        b=XOHT5ITTGKTnhhcQTdMHgeQCoKclLmRwMBHGbXCsRo+6++yJD50yMPrILXYfExgGs6
+         SjRyb9kMzjVxCCnKelN2sde3kYpfnlio3yeJFCUsffing67Z8qcb8w0O/1vI1ch7eNwz
+         J2+dt4s9+J7uMZ9RMDUghXP3NrSJXBvqD22a4Fe0hOJ6VpE39IqAYfkiHGegc5oTiNOd
+         cwvZLVfv7MZaLTHF47EDOBVjQYeg/PgWCtk7ymfzCRZa4/Jyl0i6e0QrU3Aa+v1ZmyIZ
+         o9jJgo8rF9washaAC4lZu873QKAAbtYE807Z21ATON01FapkFGxZm5jHDVA7dDNiH2t8
+         /r3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVuxtzQj9gCHQnAAMNJ7J4Z9epSDps4EW/VPRZebhNkfTPpjv7xl5kNt5EOLtvVQrPAbORxTz1WFUwfxZcP@vger.kernel.org, AJvYcCW0PGLIMoFSJm0DOv0g7bhGTZ1Vf6mZNGFEHcBKPoUnW7tWV4XBHl8M9r1UoKWQm5qlVU+PF9dzdUVmMRGbVw==@vger.kernel.org, AJvYcCXJ08FJJtnhVyz2ZA5wHbfIphR40StAqv1kJxKjwzR/Tz8DstMyX+JyVVR8j0wAdBP1b9pqXbn0wCk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzu3fZViEp7C1NAzoGcYa/DdbwvqDPfUROsaYHuYernCOw+eErR
+	O169azGwAaEai7F+4wlDnDGJ5GwSRBKrnJ7PpStb+cLOVRjmdufZSgaOtFR/
+X-Gm-Gg: ASbGnctPgIso7EX2mN/xUD0Xa+vebsjZIhnm3RsJi/PggzesGUuqwmfixDdwmTkqgoV
+	RSgAnaGsVxnbBgrfb/m/GCPHWRz0/2asdTKUDkU+V4I8/zBgA9OqMG6+0cwMhX9LJnJ5coABptf
+	EfylFMVDTTejtiqcRB04AcFAZHsN8Ow22S8zL38nok4Gok2U+5WrbmDjmjvxDGSt89AOHS6eDjJ
+	apXsGPZgFw+XbqAnsCtTdcpyJVGa+9157ayWdKX24Jg7XLPo0IQ4Q3hHC4tCKKq1AMmIMyOPg7R
+	5x3tqd2IEKMu5bIYjc/fFMqYO1E+NqGtGzd1A/RLu/W8qXG9CoMAgzKDQFxMw62eiuPJ1wD5
+X-Google-Smtp-Source: AGHT+IGNWcsPx7tNMqqWJOiOb+NqlelcQPXCaG5itHSGXRVxKNM4Et0vtqGeM2qGNRiqHZhvKiWapw==
+X-Received: by 2002:a17:903:2f85:b0:220:d601:a704 with SMTP id d9443c01a7336-22804858faamr37358655ad.18.1743085747950;
+        Thu, 27 Mar 2025 07:29:07 -0700 (PDT)
+Received: from vaxr-BM6660-BM6360 ([2001:288:7001:2703:ccef:3c67:33df:4a11])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811bc272sm128939295ad.146.2025.03.27.07.29.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 07:29:07 -0700 (PDT)
+Date: Thu, 27 Mar 2025 22:29:03 +0800
+From: I Hsin Cheng <richard120310@gmail.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: corbet@lwn.net, linux-fsdevel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] docs: vfs: Update struct file_system_type
+Message-ID: <Z-Vgrx0XSDASGnpg@vaxr-BM6660-BM6360>
+References: <20250323034725.32329-1-richard120310@gmail.com>
+ <Z-AZiYwkE9PsST90@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 27 Mar 2025 15:28:08 +0100
-Message-Id: <D8R4B2PKIWSU.2LWTN50YP7SMX@bootlin.com>
-Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Lee Jones"
- <lee@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
- <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, "Michael Walle" <mwalle@kernel.org>, "Mark
- Brown" <broonie@kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Danilo Krummrich" <dakr@kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
- <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
- <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
- <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
- <hinocg3itjqizbmzgaxv6cfnhtus6wbykouiy6pa27cxnjjuuk@l5ppwh7md6ul>
- <Z9vydaUguJiVaHtU@smile.fi.intel.com>
- <D8PF958QL5AK.2JIE4F1N1NI0F@bootlin.com>
- <Z-LSHoYA1enEOeHC@smile.fi.intel.com>
- <D8QA116WPNUE.11VKIHSG9N0OZ@bootlin.com>
- <Z-Qh8yBMaCMhv_Ny@smile.fi.intel.com>
-In-Reply-To: <Z-Qh8yBMaCMhv_Ny@smile.fi.intel.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieekieehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefhvffuofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeftedvgfegteehjeejtdefgffhteevvddtvdejleeghfefuefgledtteduvdetkeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtohepuhhklhgvihhnvghksehkv
- ghrnhgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhg
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-AZiYwkE9PsST90@casper.infradead.org>
 
-On Wed Mar 26, 2025 at 4:49 PM CET, Andy Shevchenko wrote:
-> The use of this API is inappropriate here AFAICT. It drops the parent ref=
-count
-> and on the second call to it you will have a warning from refcount librar=
-y.
->
-> It should be as simple as device_set_node().
->
-> >         }
->
-> With that, the conditional becomes
->
-> 	} else if (is_of_node(fwnode)) {
-> 		device_set_node(&pdev->dev, fwnode);
-> 	}
->
-> where fwnode is something like
->
-> 	struct fwnode_handle *fwnode =3D dev_fwnode(parent);
+On Sun, Mar 23, 2025 at 02:24:09PM +0000, Matthew Wilcox wrote:
+> On Sun, Mar 23, 2025 at 11:47:25AM +0800, I Hsin Cheng wrote:
+> > The structure definition now in the kernel adds macros defining the
+> > value of "fs_flags", and the value "FS_NO_DCACHE" no longer exists,
+> > update it to an existing flag value.
+> 
+> What value does it add to duplicate these flag definitions in the
+> documentation?  I would not do this.
+> 
+> > @@ -140,7 +148,7 @@ members are defined:
+> >  	"msdos" and so on
+> >  
+> >  ``fs_flags``
+> > -	various flags (i.e. FS_REQUIRES_DEV, FS_NO_DCACHE, etc.)
+> > +	various flags (i.e. FS_REQUIRES_DEV, FS_BINARY_MOUNTDATA, etc.)
+> 
+> This should be "eg.", not "i.e."
 
-Hi,
+Hi Matthew,
 
-I tried to use device_set_node(), but then I got some other issue: as we
-now have several devices with the same firmware node, they all share the
-same properties. In particular, if we do use pinctrl- properties to
-apply some pinmmuxing, all devices will try to apply this pinmuxing and
-of course all but one will fail.
+Thanks for your kindly reply!
 
-And this makes me think again about the whole thing, maybe copying the
-fwnode or of_node from the parent is not the way to go.
+> What value does it add to duplicate these flag definitions in the
+> documentation?  I would not do this.
 
-So today we rely on the parent node for four drivers:
-- keypad and rotary, just to ease a bit the parsing of some properties,
-  such as the keymap with matrix_keypad_build_keymap(). I can easily do
-  it another way.
-- PWM and pinctrl drivers, are a bit more complicated, as in both case
-  the device tree node associated with the device is used internally. In
-  one case to find the correct PWM device for PWM clients listed in the
-  device tree, in the other case to find the pinctrl device when
-  applying pinctrl described in the device tree.
+I thought the documentation should follow the exact code as in the
+kernel, if it only serves as a roughly example, I agree with you then.
 
-So maybe I have to find a better way for have this association. One way
-would be to modify the device tree bindings to add a PWM and a pinctrl
-node, with their own compatible, so they are associated to the
-corresponding device. But maybe there is a better way to do it.
+> This should be "eg.", not "i.e."
 
+Sure, I'll change it and send v2.
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Let me know if anything more is needed to be correct, thanks!
 
+Best regards,
+I Hsin Cheng
