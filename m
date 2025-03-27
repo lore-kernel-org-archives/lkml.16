@@ -1,301 +1,101 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D26335964;
-	Thu, 27 Mar 2025 17:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423571C6BE
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 17:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743095616; cv=none; b=bKy+zKFJ/0lYZI4eu1+s7rgbOcudta+NjzatjZ9EYpdMBLY6sjHaj/8t8iQado/QZ+G/ro6UCGt3cp3mgvyuVZSR0B6Ia7/EMbXPQzrq3KO4vFCgmywBsJpqMl9sebLwJVrYrP985YUi5NAw15qmRwXmN8hCBGZmuSX5Ck1lPR4=
+	t=1743095716; cv=none; b=ghw9uRWydiasUBhd00Xl+b5+he3xb8qMFkv5yBUrB/5Apjk9WFJUcm0JkT4X5p9+fxM25rFiQlgQbwc5YHo2QTbv32CdGpE59tPclTozDNihCBNhzjdqZcKEjDPN1azLs2cO6i1ESPVb6NFkN7J3kZePkxGQHNUIyLGX4i+1rMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743095616; c=relaxed/simple;
-	bh=0F5hDRGrtH34ZiFv8FHU4LvUue9UPi9JIQv3kr2M8Lg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bS0SnAXd2PuHwnVrDARKBDuCjQPS469hwG1GuIrZis1GHZD5DDFxco7do+KASnXS3nPrur+P3pxN3VnDMbcAHUexLFOAaij8BffJsdqAoad2hGNreOX2GSYotXlfNhJ3/tZgD0KZ349kXq+yDXBwduRqhtnJMdpRXdZCvF6xXYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=I8/r+u3L; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743095716; c=relaxed/simple;
+	bh=XaxcQXpPxWph3tPLDdKeyJZT3+t/ezOqoO9iEb5MYJQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=V5Dt7zzmItkRGXc18vlNzqb59EEUxkqGAaDY4IsibCPTuQoMU5mXT7FjgOtc07G808Dg0hae/qDkWblQrnhC8GCek8PCKGC2nnlCVxLBUuMnIJ/ttYO9YWCdMF//bNvp2/W9tkO/2iWw3yvU7XoIEpdFFRwDqnVVTB89gKyabII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4cNmFeCk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w3QRts2A; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="I8/r+u3L"
-Date: Thu, 27 Mar 2025 17:13:21 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743095610;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4cNmFeCk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w3QRts2A"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743095707;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=T4vVy2hfIRDZguybe4291Ps0BWWaT7ji3NBdsRJu5BE=;
-	b=I8/r+u3LNiMkvufXflcdlzfC5h8JpimuFTL4sAT60ECX00tBtHwZpzm8McvgYkonkIaZ0L
-	ECyJLbvwkjEDlgG+ZDHPdqTsRKH0E1Gyr0Au/4nlKOW3Rse5LHkTIvwC9o0+7X3xtIToXW
-	8uhJkc3+b403Gkk72aUrJ7ZMSMwUScc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Nikunj A Dadhania <nikunj@amd.com>
-Cc: Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jim Mattson <jmattson@google.com>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Rik van Riel <riel@surriel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Manali Shukla <manali.shukla@amd.com>, santosh.shukla@amd.com
-Subject: Re: [RFC PATCH 01/24] KVM: VMX: Generalize VPID allocation to be
- vendor-neutral
-Message-ID: <Z-WHMZPvCNLsXZ_1@google.com>
-References: <20250326193619.3714986-1-yosry.ahmed@linux.dev>
- <20250326193619.3714986-2-yosry.ahmed@linux.dev>
- <855xjun3jc.fsf@amd.com>
+	bh=DJDk75Im6ervBBRjq6fKnSLFVU+dlDo/KKEKEkr7Auk=;
+	b=4cNmFeCkW2iZ8ZUEGQivwsJp+uCH9mMA0h4rC/EuafqSzgZ8gzhMm8jbLncWzaQWq1d02u
+	SC1wZsp5muYbgjWtyHKvVsRzCdKv2qs3pAzyzWiTeMjRLRjzRI/lvM3oEt9SCnx8NztgHX
+	/iXUrK6Zif/RHo7GZyMyjFEoHDotTl26zPcd0YEUeSYDl5IqD7MtoQG8v3tpzZm8+Ma78Z
+	jfhwF29LIHnaYVT+yd0jZHa0KIdQQ6EnixIbmoHzKVTpVqQboimheYKNAAQSE5ougFq0s9
+	ElqN2WDA5y7+4zFNOV8zWPjzJRAxajmtNk7jxSGNMCY0zYWfglxE2FoHO6fuGg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743095707;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DJDk75Im6ervBBRjq6fKnSLFVU+dlDo/KKEKEkr7Auk=;
+	b=w3QRts2ASOC8iwk9se3XLKqDsMDTioEv833GA9oFFKlGqZOsFzbBs6gnRzVJoTOrDV9Xwc
+	7WrduEYRd817nbAQ==
+To: Fernando Fernandez Mancera <ffmancera@riseup.net>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: dwmw@amazon.co.uk, mhkelley@outlook.com, mingo@kernel.org, Fernando
+ Fernandez Mancera <ffmancera@riseup.net>
+Subject: Re: [PATCH v2] x86/i8253: fix possible deadlock when turning off
+ the PIT
+In-Reply-To: <20250327152258.3097-1-ffmancera@riseup.net>
+References: <20250327152258.3097-1-ffmancera@riseup.net>
+Date: Thu, 27 Mar 2025 18:15:05 +0100
+Message-ID: <87ecyixuna.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <855xjun3jc.fsf@amd.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
 
-On Thu, Mar 27, 2025 at 10:58:31AM +0000, Nikunj A Dadhania wrote:
-> Yosry Ahmed <yosry.ahmed@linux.dev> writes:
-> 
-> > Generalize the VMX VPID allocation code and make move it to common
-> > code
-> 
-> s/make//
-> 
-> > in preparation for sharing with SVM. Create a generic struct
-> > kvm_tlb_tags, representing a factory for VPIDs (or ASIDs later), and use
-> > one for VPIDs.
-> >
-> > Most of the functionality remains the same, with the following
-> > differences:
-> > - The enable_vpid checks are moved to the callers for allocate_vpid()
-> >   and free_vpid(), as they are specific to VMX.
-> > - The bitmap allocation is now dynamic (which will be required for SVM),
-> >   so it is initialized and cleaned up in vmx_hardware_{setup/unsetup}().
-> > - The range of valid TLB tags is expressed in terms of min/max instead
-> >   of the number of tags to support SVM use cases.
-> >
-> > Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
-> > ---
-> >  arch/x86/kvm/vmx/nested.c |  4 +--
-> >  arch/x86/kvm/vmx/vmx.c    | 38 +++++--------------------
-> >  arch/x86/kvm/vmx/vmx.h    |  4 +--
-> >  arch/x86/kvm/x86.c        | 58 +++++++++++++++++++++++++++++++++++++++
-> >  arch/x86/kvm/x86.h        | 13 +++++++++
-> >  5 files changed, 82 insertions(+), 35 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> > index d06e50d9c0e79..b017bd2eb2382 100644
-> > --- a/arch/x86/kvm/vmx/nested.c
-> > +++ b/arch/x86/kvm/vmx/nested.c
-> > @@ -343,7 +343,7 @@ static void free_nested(struct kvm_vcpu *vcpu)
-> >  	vmx->nested.vmxon = false;
-> >  	vmx->nested.smm.vmxon = false;
-> >  	vmx->nested.vmxon_ptr = INVALID_GPA;
-> > -	free_vpid(vmx->nested.vpid02);
-> > +	kvm_tlb_tags_free(&vmx_vpids, vmx->nested.vpid02);
-> >  	vmx->nested.posted_intr_nv = -1;
-> >  	vmx->nested.current_vmptr = INVALID_GPA;
-> >  	if (enable_shadow_vmcs) {
-> > @@ -5333,7 +5333,7 @@ static int enter_vmx_operation(struct kvm_vcpu *vcpu)
-> >  		     HRTIMER_MODE_ABS_PINNED);
-> >  	vmx->nested.preemption_timer.function = vmx_preemption_timer_fn;
-> >  
-> > -	vmx->nested.vpid02 = allocate_vpid();
-> > +	vmx->nested.vpid02 = enable_vpid ? kvm_tlb_tags_alloc(&vmx_vpids) : 0;
-> >  
-> >  	vmx->nested.vmcs02_initialized = false;
-> >  	vmx->nested.vmxon = true;
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index b70ed72c1783d..f7ce75842fa26 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -496,8 +496,7 @@ DEFINE_PER_CPU(struct vmcs *, current_vmcs);
-> >   */
-> >  static DEFINE_PER_CPU(struct list_head, loaded_vmcss_on_cpu);
-> >  
-> > -static DECLARE_BITMAP(vmx_vpid_bitmap, VMX_NR_VPIDS);
-> > -static DEFINE_SPINLOCK(vmx_vpid_lock);
-> > +struct kvm_tlb_tags vmx_vpids;
-> >  
-> >  struct vmcs_config vmcs_config __ro_after_init;
-> >  struct vmx_capability vmx_capability __ro_after_init;
-> > @@ -3972,31 +3971,6 @@ static void seg_setup(int seg)
-> >  	vmcs_write32(sf->ar_bytes, ar);
-> >  }
-> >  
-> > -int allocate_vpid(void)
-> > -{
-> > -	int vpid;
-> > -
-> > -	if (!enable_vpid)
-> > -		return 0;
-> > -	spin_lock(&vmx_vpid_lock);
-> > -	vpid = find_first_zero_bit(vmx_vpid_bitmap, VMX_NR_VPIDS);
-> > -	if (vpid < VMX_NR_VPIDS)
-> > -		__set_bit(vpid, vmx_vpid_bitmap);
-> > -	else
-> > -		vpid = 0;
-> > -	spin_unlock(&vmx_vpid_lock);
-> > -	return vpid;
-> > -}
-> > -
-> > -void free_vpid(int vpid)
-> > -{
-> > -	if (!enable_vpid || vpid == 0)
-> > -		return;
-> > -	spin_lock(&vmx_vpid_lock);
-> > -	__clear_bit(vpid, vmx_vpid_bitmap);
-> > -	spin_unlock(&vmx_vpid_lock);
-> > -}
-> > -
-> >  static void vmx_msr_bitmap_l01_changed(struct vcpu_vmx *vmx)
-> >  {
-> >  	/*
-> > @@ -7559,7 +7533,7 @@ void vmx_vcpu_free(struct kvm_vcpu *vcpu)
-> >  
-> >  	if (enable_pml)
-> >  		vmx_destroy_pml_buffer(vmx);
-> > -	free_vpid(vmx->vpid);
-> > +	kvm_tlb_tags_free(&vmx_vpids, vmx->vpid);
-> >  	nested_vmx_free_vcpu(vcpu);
-> >  	free_loaded_vmcs(vmx->loaded_vmcs);
-> >  	free_page((unsigned long)vmx->ve_info);
-> > @@ -7578,7 +7552,7 @@ int vmx_vcpu_create(struct kvm_vcpu *vcpu)
-> >  
-> >  	err = -ENOMEM;
-> >  
-> > -	vmx->vpid = allocate_vpid();
-> > +	vmx->vpid = enable_vpid ? kvm_tlb_tags_alloc(&vmx_vpids) : 0;
-> >  
-> >  	/*
-> >  	 * If PML is turned on, failure on enabling PML just results in failure
-> > @@ -7681,7 +7655,7 @@ int vmx_vcpu_create(struct kvm_vcpu *vcpu)
-> >  free_pml:
-> >  	vmx_destroy_pml_buffer(vmx);
-> >  free_vpid:
-> > -	free_vpid(vmx->vpid);
-> > +	kvm_tlb_tags_free(&vmx_vpids, vmx->vpid);
-> >  	return err;
-> >  }
-> >  
-> > @@ -8373,6 +8347,7 @@ void vmx_hardware_unsetup(void)
-> >  		nested_vmx_hardware_unsetup();
-> >  
-> >  	free_kvm_area();
-> > +	kvm_tlb_tags_destroy(&vmx_vpids);
-> >  }
-> >  
-> >  void vmx_vm_destroy(struct kvm *kvm)
-> > @@ -8591,7 +8566,8 @@ __init int vmx_hardware_setup(void)
-> >  	kvm_caps.has_bus_lock_exit = cpu_has_vmx_bus_lock_detection();
-> >  	kvm_caps.has_notify_vmexit = cpu_has_notify_vmexit();
-> >  
-> > -	set_bit(0, vmx_vpid_bitmap); /* 0 is reserved for host */
-> > +	/* VPID 0 is reserved for host, so min=1  */
-> > +	kvm_tlb_tags_init(&vmx_vpids, 1, VMX_NR_VPIDS - 1);
-> 
-> This needs to handle errors from kvm_tlb_tags_init().
-> 
-> >  
-> >  	if (enable_ept)
-> >  		kvm_mmu_set_ept_masks(enable_ept_ad_bits,
-> > diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> > index 951e44dc9d0ea..9bece3ea63eaa 100644
-> > --- a/arch/x86/kvm/vmx/vmx.h
-> > +++ b/arch/x86/kvm/vmx/vmx.h
-> > @@ -376,10 +376,10 @@ struct kvm_vmx {
-> >  	u64 *pid_table;
-> >  };
-> >  
-> > +extern struct kvm_tlb_tags vmx_vpids;
-> > +
-> >  void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu,
-> >  			struct loaded_vmcs *buddy);
-> > -int allocate_vpid(void);
-> > -void free_vpid(int vpid);
-> >  void vmx_set_constant_host_state(struct vcpu_vmx *vmx);
-> >  void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu);
-> >  void vmx_set_host_fs_gs(struct vmcs_host_state *host, u16 fs_sel, u16 gs_sel,
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 69c20a68a3f01..182f18ebc62f3 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -13992,6 +13992,64 @@ int kvm_sev_es_string_io(struct kvm_vcpu *vcpu, unsigned int size,
-> >  }
-> >  EXPORT_SYMBOL_GPL(kvm_sev_es_string_io);
-> >  
-> > +int kvm_tlb_tags_init(struct kvm_tlb_tags *tlb_tags, unsigned int min,
-> > +		      unsigned int max)
-> > +{
-> > +	/*
-> > +	 * 0 is assumed to be the host's TLB tag and is returned on failed
-> > +	 * allocations.
-> > +	 */
-> > +	if (WARN_ON_ONCE(min == 0))
-> > +		return -1;
-> 
-> Probably -EINVAL ?
+On Thu, Mar 27 2025 at 16:22, Fernando Fernandez Mancera wrote:
+> As the PIT could be disabled during the init, it can possibly cause a
+> deadlock. hpet_time_init()->pit_timer_init() is called without IRQ off.
+> It assumes that clockevent_i8253_disable() is IRQ-safe, which it isn't.
 
-Yeah we can use error codes for clarity, thanks.
+It assumes nothing and all the missing interrupt disable is causing is a
+lockdep false positive.
 
-> 
-> > +
-> > +	/*
-> > +	 * Allocate enough bits to index the bitmap directly by the tag,
-> > +	 * potentially wasting a bit of memory.
-> > +	 */
-> > +	tlb_tags->bitmap = bitmap_zalloc(max + 1, GFP_KERNEL);
-> > +	if (!tlb_tags->bitmap)
-> > +		return -1;
-> 
-> -ENOMEM ?
-> 
-> > +
-> > +	tlb_tags->min = min;
-> > +	tlb_tags->max = max;
-> > +	spin_lock_init(&tlb_tags->lock);
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(kvm_tlb_tags_init);
-> > +
-> > +void kvm_tlb_tags_destroy(struct kvm_tlb_tags *tlb_tags)
-> > +{
-> > +	bitmap_free(tlb_tags->bitmap);
-> 
-> Do we need to take tlb_tabs->lock here ?
+Lockdep complains correctly due to the observed contexts, but in reality
+there is no possible deadlock at all. Definitely not the one your
+subject line is claiming to be possible.
 
-Hmm we could, but I think it's a bug from the caller if they allow
-kvm_tlb_tags_destroy() and any of the other functions (init/alloc/free)
-to race. kvm_tlb_tags_destroy() should be called when we are done using
-the factory.
+At the point where pit_timer_init() is invoked there is no other usage
+of 8253_lock possible because the system is still in the very early boot
+stage.
 
-> 
-> > +}
-> > +EXPORT_SYMBOL_GPL(kvm_tlb_tags_destroy);
-> > +
-> > +unsigned int kvm_tlb_tags_alloc(struct kvm_tlb_tags *tlb_tags)
-> > +{
-> > +	unsigned int tag;
-> > +
-> > +	spin_lock(&tlb_tags->lock);
-> > +	tag = find_next_zero_bit(tlb_tags->bitmap, tlb_tags->max + 1,
-> > +				 tlb_tags->min);
-> > +	if (tag <= tlb_tags->max)
-> > +		__set_bit(tag, tlb_tags->bitmap);
-> > +	else
-> > +		tag = 0;
-> 
-> In the event that the KVM runs out of tags, adding WARN_ON_ONCE() here will
-> help debugging.
+So disabling interrupt here just prevents lockdep triggering a false
+positive and not more.
 
-Yeah I wanted to do that, but we do not currently WARN in VMX if we run
-out of VPIDs. I am fine with doing adding it if others are. My main
-concern was if there's some existing use case that routinely runs out of
-VPIDs (although I cannot imagine one).
+Please analyze problems properly instead of assuming that the lockdep
+splat is the ultimate truth.
 
-> 
-> Regards
-> Nikunj
-> 
+>  bool __init pit_timer_init(void)
+>  {
+> +	unsigned long flags;
+> +
+>  	if (!use_pit()) {
+>  		/*
+>  		 * Don't just ignore the PIT. Ensure it's stopped, because
+>  		 * VMMs otherwise steal CPU time just to pointlessly waggle
+>  		 * the (masked) IRQ.
+>  		 */
+> +		local_irq_save(flags);
+
+Why save()? You just established that interrupts are enabled here, so
+this really wants to be:
+
+                scoped_guard(irq)()
+	              	clockevent_i8253_disable();
+  		return false;
+
+Thanks,
+
+        tglx
