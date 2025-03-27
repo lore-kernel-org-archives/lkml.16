@@ -1,118 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74152114;
-	Thu, 27 Mar 2025 00:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03669BE65
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 00:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743033790; cv=none; b=SHE3uGmfsJGcnZ0irax4375NSHtGBAx4QMbvc2GKrvqWvFz29trsfYDQ6zh+L5zS27/55rcOd4wej8jcK/xmLPySCKNk5ScA0rxEKbrJb9y4r2X1CwPhWFQRWlp+cHhLPIhdaXFeEwzRmq1QRYTzqic3W6mwZXdZerRRDrCoUnQ=
+	t=1743033799; cv=none; b=Bd/2wtA/fimbbKq4dgbiigXv+5ZWftEyYff5Koynvziz0EbTMkqtEcB+wAPK/hXPaz3gV5ZiU5jPTkfWtcuEF9qk8hYCWyl8GEr8ePAFaPbq/ooNy6QsFUtJrwI7rloBEZDm/xvuajJxuQjL29Sxci6lRXC/TIqLxx4E49Taqm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743033790; c=relaxed/simple;
-	bh=CCjSPDZVo2hoLF4g6LePOKhEhcRY89Xy5MCm450/MOU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mGjvi71tfcSCvviMv6nessEEMLWpY8bKKnQK38bGpia2t7OFsvxkJnZcfMtvjJMZ5Jp/WNMsSnj4HMUp+ubRfETsVhWqJHxsx6bpN0ohZEUjESERiXnzmoEk85XUGXZKrKkbE1vxqHz8Gb2RFnmzKMpboFzIkAGWVYiCcZ54CII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vL+NKwqp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743033799; c=relaxed/simple;
+	bh=htb/S+ZRiTwzP4pBgtK5fDRVA5do0TWaJU3ztrMHz74=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SIujNr/VQ0dvURA0Ub7WuroUC/6uQTUgZxS/hE5FOdXegyYXo9NVAZj6gRyAbfLN/Ww5jccl0ZzZB5o6BOlSizUYUTQabTykL/1C1QyPfYtKvntm8N/oXDbPq0MqGV3LMsgH3/qDQ3wGZs/Olnbf44CyeomTHsGFgc4JEYWkTqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=PbNCQWU9; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vL+NKwqp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EF98C4CEE2;
-	Thu, 27 Mar 2025 00:03:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743033790;
-	bh=CCjSPDZVo2hoLF4g6LePOKhEhcRY89Xy5MCm450/MOU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=vL+NKwqp8c9HC5c30Q6ri1Y5yuTsi/EpenHjDf9CNMaeXqpxghA8YA6YWhwz1hQ+F
-	 VUWA5uSym/8DTgSLWQImCc80GnbJE3NnA1VWdjal24PqvWRmIOA+gf/9OAo9DRVTRW
-	 3JpAp9PAt7xs7L0tLjRrrvowhdrURlG2LlCwfG/tg/1NGrjUnDxkvAEGYyM3fu6RLx
-	 eIjePamEWaufKTbh1ZSrGZGKhmIlxxiVVLjS89zWUt1kPQy/79qOwHN+ej0psdlae/
-	 tzkFnZyhZjYS/msFoHekHQO90cwrJ+u7NsVP8yS0Xu7SCYrhnD/BlOLShy4MmLa0OC
-	 A/Ffz0TWBl1XA==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e5e8274a74so616917a12.1;
-        Wed, 26 Mar 2025 17:03:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV2n2u31D6yVidZr7RcImNkQfw0HmVVHa7aiKsQ6HwmexO1b+49n9obxfGrSQ8dBz4N5hOzUZLa3BP4bA==@vger.kernel.org, AJvYcCVcDrf0PJX7ciz8oUIQ1S6BwjMyvmbWYZkV8rj4GQTq7pU1jlwDLziR+7SOK1snnErdgJsRGzHRIR2u0kMF@vger.kernel.org, AJvYcCVkwJdWe+ySZCXd8eloOvyNFIrbCGBgkOD+/ftzjk9mCy9VgWYCVa/tW9ovVkcMqvUqowpVoezGEtJd@vger.kernel.org, AJvYcCWWftW046uoOpveLYzNSAgFTN3Sdt7PItfTjZmHna+HvP1eeLDWtdH8hgJLqaoS1A+mo5K75VPkHaYPU/1Cl3w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3U7e55GOL+UndvZdMfZgC12m9LnuqxhgzCgnVjBPNARS6UTdo
-	hfM7bB5u+E+u9FZcJs0Zb/2gex9vwcIf+U0rjL3m3SObMhOK28+ZETQ+T2jZAPFLYDEGu+6/fxA
-	YfI3Z8MYKZBBanSMwHEPjgAOHFw==
-X-Google-Smtp-Source: AGHT+IERzT0kl1LknG2usIHMI1+Lt1VD4s7YUfGbLkTeY7qe+y/QCZpxxzGJSyF5y3Gin8FJCELvt/lRJqwoZFoadfA=
-X-Received: by 2002:a17:907:d89:b0:ac6:d9cb:58c0 with SMTP id
- a640c23a62f3a-ac6fb1a73c2mr107112066b.50.1743033788647; Wed, 26 Mar 2025
- 17:03:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="PbNCQWU9"
+Received: from eig-obgw-6008a.ext.cloudfilter.net ([10.0.30.227])
+	by cmsmtp with ESMTPS
+	id xXr4tNs7diuzSxaiDtsbPi; Thu, 27 Mar 2025 00:03:10 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id xaiCtKVFznR6exaiDtNy2Z; Thu, 27 Mar 2025 00:03:09 +0000
+X-Authority-Analysis: v=2.4 cv=QoNY30yd c=1 sm=1 tr=0 ts=67e495bd
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=7vwVE5O1G3EA:10
+ a=GbADBbLF9kGFZ1da6xcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=hTR6fmoedSdf3N0JiVF8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=tVHrW2e/AoqyF452N5nVLVSp8tcM0SyxkR0ST/C9luY=; b=PbNCQWU9Dskq6IY9VssaMJEp6h
+	XQiFqufIRAcRxNz9LehXKu+RHL37B37uSDvsslOY07eaoKVB0GBwMfEI9uzYf06QPVqQWBTocYMSs
+	7ALpth02E0kAnR+zF2egH9SokdP0SZykWNX3CZ2t6C178424TiqkKkLykCtXzrkRlHzQvCrKYw7DD
+	V5uw7RAs/QoZMD90RfchUngNPJKAo+YzC7ckwD8FyloSKweJmQ4p0JoakNrjr18IzNT+nhVFkNT+Y
+	3YLOgJRVvVU6XCbPQqm0UCD5b2qXXrvXxTRNzI8n/EdhrL6UXWwXJ5tIzhbRUmVmtlEpuqgDWVTIo
+	APTcgrPw==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:42036 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1txaiA-00000000syi-39PO;
+	Wed, 26 Mar 2025 18:03:06 -0600
+Message-ID: <c254f837-69a9-45df-8780-113ebfbf16f0@w6rz.net>
+Date: Wed, 26 Mar 2025 17:03:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326171411.590681-1-remo@buenzli.dev> <20250326171411.590681-11-remo@buenzli.dev>
- <20250326220129.GD2844851-robh@kernel.org> <D8QJSRGJIYHS.K4H9W8N8N0YO@buenzli.dev>
-In-Reply-To: <D8QJSRGJIYHS.K4H9W8N8N0YO@buenzli.dev>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 26 Mar 2025 19:02:56 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqK0SH+HTtquxDNvp8jCLwJgg7YJDNQT8h=kHO=nJChk4Q@mail.gmail.com>
-X-Gm-Features: AQ5f1JpETx50vOdiMhHoK95MGuYfdGvgMOPx1IsTpXGdDGU44Po8M857aSNDVHs
-Message-ID: <CAL_JsqK0SH+HTtquxDNvp8jCLwJgg7YJDNQT8h=kHO=nJChk4Q@mail.gmail.com>
-Subject: Re: [PATCH 10/10] samples: rust: platform: Add property read examples
-To: Remo Senekowitsch <remo@buenzli.dev>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Dirk Behme <dirk.behme@de.bosch.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Saravana Kannan <saravanak@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.1 000/197] 6.1.132-rc2 review
+To: Peter Schneider <pschneider1968@googlemail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250326154349.272647840@linuxfoundation.org>
+ <9dd8bb33-465f-4417-b179-10fdf7f8b440@googlemail.com>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <9dd8bb33-465f-4417-b179-10fdf7f8b440@googlemail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1txaiA-00000000syi-39PO
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:42036
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 16
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfDvgOOVLd4OFEjPyRFQVdlJT5jV5uVPdNV236v4hT55dKxOa0HDrFJMrl3Vjjr9DamsqkHqstMT6acX1xSYJ8Hh50/VzgQcvAdGTYUISpQnb1cH+VcDX
+ HebJV7ntP5y0S/KWE8EUKLq4C27OBpEgFSOKceiOpLxJF8rvtYUEEmtY1g9lAu/hLYpADCmM9+yaes9lDNhgs9KosHe1ydmSO1I=
 
-On Wed, Mar 26, 2025 at 5:24=E2=80=AFPM Remo Senekowitsch <remo@buenzli.dev=
-> wrote:
+On 3/26/25 13:10, Peter Schneider wrote:
+> Am 26.03.2025 um 16:44 schrieb Greg Kroah-Hartman:
+>> This is the start of the stable review cycle for the 6.1.132 release.
+>> There are 197 patches in this series, all will be posted as a response
+>> to this one.  If anyone has any issues with these being applied, please
+>> let me know.
 >
-> On Wed Mar 26, 2025 at 11:01 PM CET, Rob Herring wrote:
-> >>
-> >> +        let prop =3D dev
-> >> +            .property_read::<bool>(c_str!("test,bool-prop"))
-> >> +            .required()?;
-> >
-> > The 'required' is kind of odd for boolean properties. They are never
-> > required as not present is the only way to to get false.
 >
-> Agreed. I can think of a few alternatives:
+> Trying to build on my 2-socket Ivy Bridge Xeon E5-2697 v2 server 
+> (X86_64), I get a build error:
 >
-> * Make the trait `Property` more flexible to allow each implementor to sp=
-ecify
->   what its output type for the `read` function is, via an associated type=
-.
->   I really don't like this idea, because overly generic APIs can mess wit=
-h type
->   inference and become less ergonomic because of it.
+>   CALL    scripts/checksyscalls.sh
+>   DESCEND objtool
+>   DESCEND bpf/resolve_btfids
+>   INSTALL libsubcmd_headers
+>   CC [M]  fs/xfs/libxfs/xfs_alloc.o
+> In file included from ./include/linux/string.h:5,
+>                  from ./include/linux/uuid.h:12,
+>                  from ./fs/xfs/xfs_linux.h:10,
+>                  from ./fs/xfs/xfs.h:22,
+>                  from fs/xfs/libxfs/xfs_alloc.c:6:
+> fs/xfs/libxfs/xfs_alloc.c: In function '__xfs_free_extent_later':
+> fs/xfs/libxfs/xfs_alloc.c:2551:51: error: 'mp' undeclared (first use 
+> in this function); did you mean 'tp'?
+>  2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
+>       |                                                   ^~
+> ./include/linux/compiler.h:78:45: note: in definition of macro 'unlikely'
+>    78 | # define unlikely(x)    __builtin_expect(!!(x), 0)
+>       |                                             ^
+> fs/xfs/libxfs/xfs_alloc.c:2551:13: note: in expansion of macro 
+> 'XFS_IS_CORRUPT'
+>  2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
+>       |             ^~~~~~~~~~~~~~
+> fs/xfs/libxfs/xfs_alloc.c:2551:51: note: each undeclared identifier is 
+> reported only once for each function it appears in
+>  2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
+>       |                                                   ^~
+> ./include/linux/compiler.h:78:45: note: in definition of macro 'unlikely'
+>    78 | # define unlikely(x)    __builtin_expect(!!(x), 0)
+>       |                                             ^
+> fs/xfs/libxfs/xfs_alloc.c:2551:13: note: in expansion of macro 
+> 'XFS_IS_CORRUPT'
+>  2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
+>       |             ^~~~~~~~~~~~~~
+> ./fs/xfs/xfs_linux.h:225:63: error: left-hand operand of comma 
+> expression has no effect [-Werror=unused-value]
+>   225 | __this_address), \
+> |                                                               ^
+> fs/xfs/libxfs/xfs_alloc.c:2551:13: note: in expansion of macro 
+> 'XFS_IS_CORRUPT'
+>  2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
+>       |             ^~~~~~~~~~~~~~
+> cc1: all warnings being treated as errors
+> make[3]: *** [scripts/Makefile.build:250: fs/xfs/libxfs/xfs_alloc.o] 
+> Error 1
+> make[2]: *** [scripts/Makefile.build:503: fs/xfs] Error 2
+> make[1]: *** [scripts/Makefile.build:503: fs] Error 2
+> make: *** [Makefile:2010: .] Error 2
+> root@linus:/usr/src/linux-stable-rc#
 >
-> * Use `propert_present` instead. That doesn't perfectly express the inten=
-tion,
->   because it doesn't warn if the property is present but has a type other=
- than
->   bool.
+>
+> I have attached my .config file for review.
+>
+>
+> Beste Grüße,
+> Peter Schneider
+>
+Seeing this on RISC-V also.
 
-Right. I've been cleaning up the tree to use of_property_read_bool()
-on bools and of_property_present() on non-bools, so don't want to go
-back to 1 function. The C code now warns on a mismatch.
-
-> * Add an additional inherent method `property_read_bool`, which returns a=
- plain
->   `bool` instead of `PropertyGuard<bool>`. Then there will be three sligh=
-tly
->   different ways to read a bool: `property_present`, `property_read_bool`=
- and
->   `property_read::<bool>`. Maybe that's confusing.
->
-> * Add `property_read_bool` and remove `impl Property for bool`. That woul=
-d avoid
->   confusion between `property_read_bool` and `property_read::<bool>`, onl=
-y the
->   former would work.
-
-I think I would go with this option. Easier to add another way later
-than remove one.
-
-Rob
