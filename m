@@ -1,116 +1,130 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B014220B1F5
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:56:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D449320B209
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743065807; cv=none; b=r78IJrB7GNjf27ezgDdCk1nyiwf6fQY5PD7rhLNr2XyqlIv2TbLbAYPtgWK//LzXfFE1NgcfJYHNl4BzA4Kc+11X0x9EJ67gGRLXHDmHDTnO07tJtC3TXS5jRyA/XuwD3yoih56fUwIOKQqI5kUrOn9kmv7rs7TKKJlITbLXATY=
+	t=1743065863; cv=none; b=kkEKbD14gEIeYQ3zUBwAAKK4juZOyDvJKkaQxQ2kOcQYPJZ7iadX26fpGh7yiyc5lSbt3iL46IlpB3bSo6NbPvxmWiPhNm5mRtRXF7jv1I6RDkhXlHopbSEBfOvkpVy5A3LYRmBsS/kv5s3Rv0F5CkH3Z/+PZPzJYj6gviZImYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743065807; c=relaxed/simple;
-	bh=FIYwhtEw1euleTwTcbZCNX9K84qUUjXQZZcm3DuTqE0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=CCTO9zG0hsNPtEMd/g5N38yys/oNMMvvZcvszCnoNqwrhtiEMGFlHth7Qf6aAk2EtpyOa17OWjKzjz+wK8ZrUpUvzMEam7y3EeohZEXp3j0JtfX1TmhKqC+t4VsFuBm/zuNGDXP0oI9v33q0S+LJtjZy18e+/1CarT7m/lohajE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f9EIa3z+; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743065863; c=relaxed/simple;
+	bh=zA3DMC1VmWmNMDN8cvaRBASwF4IuKwVTadBoBZ7jbhg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ya/80zRDxMIzP1A+RlboAlkuVmaZRNvv8nPo3J72mpJrpVdJiKAFRN2UrsW+f4/WxPNW0/g6th4d5f1/yICYT1SLKQXhYdItwRrtVxy3P0dQrhdxMVyHecwCkUBNe0vChYjSoGBQyvECk5gIvUh5rtp9cptBQUcwxdOMexAmBYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=LXWs4mA0; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f9EIa3z+"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39141ffa9fcso537431f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 01:56:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="LXWs4mA0"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso495992f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 01:57:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743065804; x=1743670604; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FIYwhtEw1euleTwTcbZCNX9K84qUUjXQZZcm3DuTqE0=;
-        b=f9EIa3z+WG3ihErGNo5scvrjbc3TWVbr1yXum03sHB5O1vlZwZJ2LWsWhi9c/Erpyz
-         pDHBJrhhg/kl1JYkoUW2DvVwv5zXmNrBIpnoGDK7t3r0LErmLGK4mt+b9oDq6dR/ACbT
-         h3yO8ewgkhjzo0ULTYzEeX8AMKfEHWN7uiMOQO2OBcBuoNEPW537c7kP9L0EFehXJC+w
-         W6mFwVOxXIgUVd8FY1GafWAdg+kfCix8vS7Uk9nkAh/cjjiBIfLxT1r/4JL0eE02Uf9R
-         pWb9MJag9OwNf9ymAFuL7xvWnOhlwPATHgmw4mihphDFXarzPumdjSnZ4nnOVPSwxr1s
-         xpTg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743065859; x=1743670659; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ILDVNVv1RvawRizYUQVDbq/vojCQOenZ2+2HfMuJMPA=;
+        b=LXWs4mA0uf+uDk4bcBJAuIDVZK93dzIF36ZSSclJol+62HdH2bDQ2uM5N48zBSoDD0
+         BXhU7/aqYgtc3XWyWQcwoO9X2nkxXNfnxleeWmPaidYraeGHPUUAvgG7IBCElLSluP/l
+         TSgnIjfmM8/D0OY2KLboLc/51XGXtLjAS3s+m+C0tW6UZGsQ8pZRJcCxHiu44RfD4un5
+         aXmeq6eBNFU0Bk+PkRRyqmxV0mIvpBugD2nXrwApqbW71MYo9dg6RxZJVZP5oitnPRKs
+         M24NVse44XDvw3UYqpwRgfmxrJV0bJtgr/WZV6YIdfgsHOquzi5p1HdhdXN+t3Rk6Dg6
+         AXaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743065804; x=1743670604;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FIYwhtEw1euleTwTcbZCNX9K84qUUjXQZZcm3DuTqE0=;
-        b=WVyBoPEinpgJ1Zzp01d9jAkXTZQJc5xnGAKXID1lv/bSKS2LRUpcesq5Ft1KS54Pp8
-         FqWEsG5G5xQGckV3r6t/prZx6hFA0pnsReCeiUiCsMZKBhRf4Ndk1XUpbMJ6EkOk8SLn
-         1cMpK0LQjiqXL5UVtnvl9lBM1pov3+v9/gmjeGGqT9IbDg3/qcfV6S0GcFsjmIeWeXFD
-         +P+gA01Ioo3jpUgjwA4wzequbbtUztpGfE/eun6VsZhANEfk8yZE1bSP6qh+kFM4/032
-         h/TReIB5pD04N63/lFQTf5ggs3yL39vWtprb/AmJfDbXyd/KjJPnaUCj7jzkg305cqYT
-         aDcw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXCyi4DfWzbxD0VwDPG7CJI/k62GTW4rqBYMbP8fp9RDjWHOtg9hYmSjcXGyGrTHeWckvRThI/KwuU7vQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEqcqWFf52OPocRQ6tGqKzk/83yi8fG0dQP4tDBfw1EnhIQTgs
-	RLBVXTz4IZtD0MchEDRzL0OQEpo9sCl/3knKNd0U5ONdkyJ/AghHVNfe+PdqbVM=
-X-Gm-Gg: ASbGncs/5gplJrOKo7LUa0WDATXLvNhsZqEOQPdsTMjvzT0iHhlzdj97qTsrdDp4nPY
-	g2W8gX+O8omfyLXYRz/O1NaYG28N5fTwNkK4vH3uKlliWvC6IWI/6E7zDNJxOqzZudSvOxBQ9DM
-	X+5yHX5TcT+tKGkEEgxQp7VJqTGoYqC4iC5Dj7luiEcvdif8ied4+dUWM1lcl1oKQjPKYWLyvEg
-	0VaL4bonuQonVFoU3d7spFaDHyMVzH84dqdmAkA4NaOgZLGCJjYUR9tzna1HZAgtSxbQw+P/AgO
-	OOsWR6ufFPWi6EuvzlFOmKENaZhV0H4xL8Av3MRu1Lq/vsjXzw==
-X-Google-Smtp-Source: AGHT+IFYnqDl6ib4NKqjPWss5rPeynt8Vendp/W2yLiXx4uK7gmEAWHDdxKjvkNq1tkjNGSpWl64yQ==
-X-Received: by 2002:a5d:59a7:0:b0:38d:eb33:79c2 with SMTP id ffacd0b85a97d-39ad174e4famr1984580f8f.32.1743065803956;
-        Thu, 27 Mar 2025 01:56:43 -0700 (PDT)
-Received: from [10.1.1.109] ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82f1bb80sm30629875e9.28.2025.03.27.01.56.42
+        d=1e100.net; s=20230601; t=1743065859; x=1743670659;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ILDVNVv1RvawRizYUQVDbq/vojCQOenZ2+2HfMuJMPA=;
+        b=a9KZMMaBvc4fbJ1JBwlkqikcj+5WXEZJt5DvYmsNsLIbUa8mNpScyKHsK26I5+4vsl
+         G9cQlteXjt+FDOA8ublXJuU57sOrh8d/RA+H06LavSjV4nHSwtg4yl8UnVV7V0k082v+
+         RLiLDSAGnhT0ja9gKDjS7g0kndqJkm+OwQ3M7zBQqhaemEkgCeWIs84qseQ1vKgYDumu
+         eRKlrUtigZWsqJDsQzUMX99Y9bsAoQuvctH6u2KIX/kjfYpur7X4DT/xh8Mjwr4Oydg2
+         ImIDPZ2G5kuXFmQbTgMxNM2PX0d0S4VDGO65Lc0d0eJWu3FW62pndYOa2PG2kHnnz51A
+         zOgw==
+X-Forwarded-Encrypted: i=1; AJvYcCWKL5phDgBX8WHE1qjnqx75Gn0vFk0p8IJuFYTkevuwEKsanwDqN/iQgPFdBR0mjDzfUYShLte8+5ekmn0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYi4h3+sUgQLI0Eg31D4kZfaOcM3xGETn3xgJH5zoK0o19ARX8
+	AzgYHoZutsMGwUBhqe098xn8iH93EnSZcITo5a048zvlvp5BGcKnv7PhkfPRtYI=
+X-Gm-Gg: ASbGncvP1O0gDnJ9G/FY6F0XJ5wmE64WIiP0h+wIZavfqMrNxzWFTP/22ZlQQvG1Fr0
+	CE5RrCuHS9/tgDdvyUu4Q7FOpwBiJgXHqjsFQWxqQ+RJM8XbpuvV/TfMTJW0/RoVmVhmo5pdn2g
+	mS673w2qr+eHLpzy4XqmC/SVktlJTAcxkbg4/x8hvjQsp7g50Yq/lSjFeWC/L4Z/AOkvWuLHGDy
+	fSPun+t93zDVidpnEqSCZTMXIYZUO+JU00tTJ1B4kSBQuWXFCbvDtK3PsSCOr6qirXsILW317jn
+	sQDUjoUMtkUasyujokFSRQL9UQGGbhJyDsp1a5VkwcmppJGm7nRmYKpFf8FbO2U2WluYLky7r9b
+	5ybbetKJu8pauGKGyLsc=
+X-Google-Smtp-Source: AGHT+IF831tQlelv85SsABv3DgsXTx7KGpQ21LJbgFu8q9NZS/DONYGdNcdiUm3qsfAnp3/ISEkoUA==
+X-Received: by 2002:a05:6000:188c:b0:399:737f:4df4 with SMTP id ffacd0b85a97d-39ad17583c0mr1910197f8f.28.1743065859078;
+        Thu, 27 Mar 2025 01:57:39 -0700 (PDT)
+Received: from archlinux (host-87-14-238-193.retail.telecomitalia.it. [87.14.238.193])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9efca6sm19475766f8f.93.2025.03.27.01.57.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 01:56:43 -0700 (PDT)
-Message-ID: <62bf00c37566964d6be794ed12a34cd057d9bb1d.camel@linaro.org>
-Subject: Re: [PATCH 11/34] defconfigs: rename CONFIG_MFD_SEC_CORE to
- CONFIG_MFD_SEC_I2C
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, Rob
- Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Sylwester
- Nawrocki	 <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>,
- Alim Akhtar	 <alim.akhtar@samsung.com>, Michael Turquette
- <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas	 <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Alexandre Belloni	 <alexandre.belloni@bootlin.com>
-Cc: Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus
-	 <tudor.ambarus@linaro.org>, Will McVicker <willmcvicker@google.com>, 
-	kernel-team@android.com, linux-kernel@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rtc@vger.kernel.org
-Date: Thu, 27 Mar 2025 08:56:41 +0000
-In-Reply-To: <b733eff2-171e-4ab6-8546-565d87d5ba84@kernel.org>
-References: <20250323-s2mpg10-v1-0-d08943702707@linaro.org>
-	 <20250323-s2mpg10-v1-11-d08943702707@linaro.org>
-	 <b733eff2-171e-4ab6-8546-565d87d5ba84@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2-1 
+        Thu, 27 Mar 2025 01:57:38 -0700 (PDT)
+Date: Thu, 27 Mar 2025 09:56:26 +0100
+From: Angelo Dureghello <adureghello@baylibre.com>
+To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc: Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Jonathan Corbet <corbet@lwn.net>, Olivier Moysan <olivier.moysan@foss.st.com>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] iio: dac: ad3552r-hs: add support for internal ramp
+Message-ID: <yxhvtline3ey3ekybqfe3k4y4sm6746wpqwpydxv2brryironl@u2ezr3sryqxs>
+References: <20250321-wip-bl-ad3552r-fixes-v1-0-3c1aa249d163@baylibre.com>
+ <20250321-wip-bl-ad3552r-fixes-v1-4-3c1aa249d163@baylibre.com>
+ <Z-R3E23hWiUKDc6q@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-R3E23hWiUKDc6q@debian-BULLSEYE-live-builder-AMD64>
 
-On Wed, 2025-03-26 at 08:16 +0100, Krzysztof Kozlowski wrote:
-> On 23/03/2025 23:39, Andr=C3=A9 Draszik wrote:
-> > We are adding support for Samsung PMICs that aren't using I2C and
-> > therefore had to rename the Kconfig symbol.
-> >=20
-> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+On 26.03.2025 18:52, Marcelo Schmitt wrote:
+> Hello Angelo,
+> 
+> Patch looks good to me.
+> One minor comment bellow.
+> 
+> On 03/21, Angelo Dureghello wrote:
+> > From: Angelo Dureghello <adureghello@baylibre.com>
+> > 
+> > The ad3552r can be feeded from the HDL controller by an internally
+> > generated 16bit ramp, useful for debug pourposes. Add debugfs a file
+> > to enable or disable it.
+> > 
+> > Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
 > > ---
-> > =C2=A0arch/arm/configs/exynos_defconfig=C2=A0=C2=A0 | 2 +-
-> > =C2=A0arch/arm/configs/multi_v7_defconfig | 2 +-
-> > =C2=A0arch/arm/configs/pxa_defconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 =
-+-
-> > =C2=A0arch/arm64/configs/defconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 | 2 +-
-> > =C2=A04 files changed, 4 insertions(+), 4 deletions(-)
-> defconfigs go separate tree, so this must not be in the middle of the
-> patchset. Bisectability, as for defconfig, is anyway broken in previous
-> change, so no benefit of putting this in the middle anyway.
+> >  drivers/iio/dac/ad3552r-hs.c | 106 ++++++++++++++++++++++++++++++++++++++++---
+> >  1 file changed, 100 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/iio/dac/ad3552r-hs.c b/drivers/iio/dac/ad3552r-hs.c
+> > index 37397e188f225a8099745ec03f7c604da76960b1..41fe78d982a68980db059b095fc27b37ea1a461b 100644
+> > --- a/drivers/iio/dac/ad3552r-hs.c
+> > +++ b/drivers/iio/dac/ad3552r-hs.c
+> > @@ -7,6 +7,7 @@
+> ...
+> > +
+> > +static ssize_t ad3552r_hs_write_data_source(struct file *f,
+> > +					    const char __user *userbuf,
+> > +					    size_t count, loff_t *ppos)
+> > +{
+> > +	struct ad3552r_hs_state *st = file_inode(f)->i_private;
+> > +	char buf[64];
+> > +	int ret;
+> > +
+> > +	ret = simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, userbuf,
+> > +				     count);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	buf[count] = 0;
+> Shouldn't it be
+> 	buf[count] = '\0';
 
-OK. Should it still be part of this series, e.g. at the start, after
-the binding changes, or a completely separate stand-alone patch with
-a reference to this series?
+Why ? I am zero-terminating the string properly.
 
-Cheers,
-Andre'
+> ?
 
+Regards,
+angelo
