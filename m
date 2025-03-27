@@ -1,293 +1,129 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD5A218EB3
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5AC213E7C;
+	Thu, 27 Mar 2025 16:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743094701; cv=none; b=if+DVQUrUO2QsnTDuK7DPP8lZRRO88QW7WDojlLEJZDWYADhwxwjStp9+xAhENnptBlea8Ovpu4a43HLVbQQ/Ukzaw/OM1Muy9g1qxx8wyRtxaqLbF8SdQYmgrgSdYxUlGwMSf5WnD9042IcG62OkaW9bln/AR71tTK0ieYo6nw=
+	t=1743094747; cv=none; b=RC0RMe94BIkg3KRl/Nr6PADK90O9yP0hlDhimSwQlblyKnzk76q202NnPGAmhSfbqKVTp9BssW0/5GmoMLMTxABb++X7eLvoTjVE1LRBdmKwselo25PxewWdAwM6a67wWyPIinjAtS9KhJJOz+bIxuQ5ev22lJwbwCqUrvS1bIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743094701; c=relaxed/simple;
-	bh=RT138KMBYvf8p/dIxpN4afKsBebrfEQuxVX6N0QW8Xw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lv+zrQdyYLszMo3k+IO9b/pc555GVrvKw7AiBg2UI7+9HHOMmbTlDJrryJEXe6b4tsz+2srTFJ4mCCk/CERP1zi1q/O5V9ylLKPNU5LQTkGT/jTFUlzTDjq1rWBLidVnQfshpcGVBuhvjaphKx8RmkvqnG87VNqrMXT662fXWAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MDrtgMmt; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743094747; c=relaxed/simple;
+	bh=5NtcoshgRtxufku9YJABlgnqk6ZvaIJtmkUl5omRUG4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=GRmuPrfvZ6/8e+Z2sGIYSBhFWu5OItuwX3SncwzarmmW7EMOSjG5gr+eIKsRYZA7qu0yNu578NWhyxxs4HxEVKD4vIQvCNxPmMAC0lLgA1X2QdHzg358dE6ZYBhCCGz/PS7tkBv2yVCXaMoX6MYwbNWSRWHSVblGCkpT9ewBJ1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YRM3L2l0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MDrtgMmt"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22403cbb47fso29178885ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:58:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743094699; x=1743699499; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=X69JYKuhz4RcL0yZqHBKQzuXmiTmjL3ropZ+qzIq5VI=;
-        b=MDrtgMmtAynrGqubGVIIq04TYGL20X6HwGq/T3U9fEj7J/k18Esk6GZycE4B/RgKRm
-         T7VLV2GGqb7blCFrqO2zWv5r4WL6aEhb4EpIhrV3FD59wLQ/nIEyD4QQLef4xyaref5r
-         O3+ihFmE8xmHoKq5bMler3ySZkql129fbRibhkXAWDqrKmdxlnsISHavt9OSe5HW4wBd
-         hwZbuIIboGcJkzGMvnB7zVfs/Bx9yKAUMDJRFPlx1zBkqld16VMp4LpBjR7im1F+d7xT
-         mbqB9cD8jDja5HDjWF6Nil+DvPnCihzHXUoHXfp9H+h+E+AVk4kYab2Ry1ZeimQAq21l
-         q/ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743094699; x=1743699499;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X69JYKuhz4RcL0yZqHBKQzuXmiTmjL3ropZ+qzIq5VI=;
-        b=ml6R4frf44YXVGlZv7rtBivFhnql3EFvw6yVzKPOV5RB1D/PeObVHYKWp7/fKtauy1
-         yoBjC5vrItf1kUagNyFttL08LXCT8xx99UIp0yICMSk3TcKMyPzKNbzb6iisLX+8wBlK
-         +tfCvOSxnOGcgDdLQ6bAbmFzRjStaq/jvtc36oD2VMlAvemPBCj76YBfNG1ERJ40Pagv
-         Gba9T8Hy/UHl3splrWhaS0WS8jr+jMXgQYjnzztFX1BiNDbz3UUtw876WuBmfWumbqIY
-         L8VQ8w14SCPSYZUMRz5yXMtZYD+lrSRj3ORnTFyTJLcqsH1qOEZb7mDcy+zt3vPDWxR6
-         MJ7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUJKsLk40VyjcpNXp6bL8wXXoKLxAVEMFva/aX+7mr/uu9KbeiSXLkT3eAG3iY+crbQsbQfLefOWejmTXs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdMlx0Uapb2XgJIXgd1e+dpq6SReQ3zrq9Mis2asTGFO+cyIck
-	XL4crAAlgeUPaSh5TgHuPT0DsbGBLZOFuJLuwUsH5Ncv1FYyFgI1o4MXkNj4Lg==
-X-Gm-Gg: ASbGncvj3Q3QDRkUivhs5Lwp6I4mmJAogFEcurj4JlvIO+bXGUVohKv5zFcOfsvueh7
-	M7G9OoQf5UoXz92faVH0oqqEy6BvOMoOTgwuD4ee0S1E1A66dEjQZfS2MgPgqb+GhG4C8M7HRjd
-	DoVSyTjG2jmn4Fq500RAePFjQTU91hqacQu+xK9qVbElMU9jOL5KRdKDfUPRzwvKcyQOCx0CSSK
-	Ij1HYMpiitpRVFXNb25BnDYUBImjrr0P76lcbu1WwEDYMQAW5yGUy1LugeA6H2YZBrowwW9nvXj
-	ApN8Sgq2/QBgmD9jNV4wyx3i77RI5/qJYnwrCT1HkAZe82qkizZMfgY=
-X-Google-Smtp-Source: AGHT+IHwuPY0Fx7bxAhLHvSP9n9cJk7C+cgwdhW0NMvfUo8FmmlkrLe6GLIwmYsoS5A7Qo0poTq5fw==
-X-Received: by 2002:a17:903:228c:b0:215:b75f:a1cb with SMTP id d9443c01a7336-2280481cce0mr59185335ad.9.1743094699295;
-        Thu, 27 Mar 2025 09:58:19 -0700 (PDT)
-Received: from thinkpad ([120.60.71.118])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cf8fesm1848975ad.110.2025.03.27.09.58.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 09:58:18 -0700 (PDT)
-Date: Thu, 27 Mar 2025 22:28:15 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
-	bhelgaas@google.com, jingoohan1@gmail.com, thomas.richard@bootlin.com, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [v6 1/5] PCI: Introduce generic capability search functions
-Message-ID: <d6bxw26swugn6kmod5faycruzcmz4mbjcck3mhljikhmm7h4y3@o5voponyug2w>
-References: <20250323164852.430546-1-18255117159@163.com>
- <20250323164852.430546-2-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YRM3L2l0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C50BC4CEE5;
+	Thu, 27 Mar 2025 16:59:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743094747;
+	bh=5NtcoshgRtxufku9YJABlgnqk6ZvaIJtmkUl5omRUG4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=YRM3L2l02bFFw1py9egSBn+Jm0qJwTV0H2WQ1tLff3t5DcUcMZ6jCVVTzGitgCDZd
+	 ujS5ooaI672EasL0l69zwN1JFj2lsa+B/ffK3/B/R+18f/SH0fFMJwvws5HOKxubTH
+	 i3Ol5ut3kmxgV99/OM0jcmpmQhLm6PsAwpJUckzQO0Zohfy1S2Aw4dIvL7dMZF35xH
+	 k6C3C2FlBGsLrMp8H/FTC0aFZExURNYVbd2//G2tMOp09RO1/Sd6+rRlNcitSeNY+A
+	 VGcgu21pr/zTVsrcjQh0emUHB8tkw0hDSzzMAL7K/FVn0Vz28mU8PLBblFdYQAF0Ba
+	 mHzmvStstVtQg==
+Date: Thu, 27 Mar 2025 10:59:04 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] w1: Avoid -Wflex-array-member-not-at-end warnings
+Message-ID: <Z-WD2NP_1A0ratnI@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250323164852.430546-2-18255117159@163.com>
 
-On Mon, Mar 24, 2025 at 12:48:48AM +0800, Hans Zhang wrote:
-> Existing controller drivers (e.g., DWC, custom out-of-tree drivers)
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Oh, you should not mention 'out-of-tree drivers' as this patch is not anyway
-intented to benefit them. We certainly do not care about out of tree drivers.
+Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
+a flexible structure where the size of the flexible-array member
+is known at compile-time, and refactor the rest of the code,
+accordingly.
 
-- Mani
+So, with these changes, fix the following warnings:
 
-> duplicate logic for scanning PCI capability lists. This creates
-> maintenance burdens and risks inconsistencies.
-> 
-> To resolve this:
-> 
-> Add pci_host_bridge_find_*capability() in pci-host-helpers.c, accepting
-> controller-specific read functions and device data as parameters.
-> 
-> This approach:
-> - Centralizes critical PCI capability scanning logic
-> - Allows flexible adaptation to varied hardware access methods
-> - Reduces future maintenance overhead
-> - Aligns with kernel code reuse best practices
-> 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> ---
-> Changes since v5:
-> https://lore.kernel.org/linux-pci/20250321163803.391056-2-18255117159@163.com
-> 
-> - If you put the helpers in drivers/pci/pci.c, they unnecessarily enlarge
->   the kernel's .text section even if it's known already at compile time
->   that they're never going to be used (e.g. on x86).
-> 
-> - Move the API for find capabilitys to a new file called
->   pci-host-helpers.c.
-> 
-> Changes since v4:
-> https://lore.kernel.org/linux-pci/20250321101710.371480-2-18255117159@163.com
-> 
-> - Resolved [v4 1/4] compilation warning.
-> - The patch commit message were modified.
-> ---
->  drivers/pci/controller/Kconfig            | 17 ++++
->  drivers/pci/controller/Makefile           |  1 +
->  drivers/pci/controller/pci-host-helpers.c | 98 +++++++++++++++++++++++
->  drivers/pci/pci.h                         |  7 ++
->  4 files changed, 123 insertions(+)
->  create mode 100644 drivers/pci/controller/pci-host-helpers.c
-> 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 9800b7681054..0020a892a55b 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -132,6 +132,23 @@ config PCI_HOST_GENERIC
->  	  Say Y here if you want to support a simple generic PCI host
->  	  controller, such as the one emulated by kvmtool.
->  
-> +config PCI_HOST_HELPERS
-> +	bool
-> +	prompt "PCI Host Controller Helper Functions" if EXPERT
-> + 	help
-> +	  This provides common infrastructure for PCI host controller drivers to
-> +	  handle PCI capability scanning and other shared operations. The helper
-> +	  functions eliminate code duplication across controller drivers.
-> +
-> +	  These functions are used by PCI controller drivers that need to scan
-> +	  PCI capabilities using controller-specific access methods (e.g. when
-> +	  the controller is behind a non-standard configuration space).
-> +
-> +	  If you are using any PCI host controller drivers that require these
-> +	  helpers (such as DesignWare, Cadence, etc), this will be
-> +	  automatically selected. Say N unless you are developing a custom PCI
-> +	  host controller driver.
-> +
->  config PCIE_HISI_ERR
->  	depends on ACPI_APEI_GHES && (ARM64 || COMPILE_TEST)
->  	bool "HiSilicon HIP PCIe controller error handling driver"
-> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-> index 038ccbd9e3ba..e80091eb7597 100644
-> --- a/drivers/pci/controller/Makefile
-> +++ b/drivers/pci/controller/Makefile
-> @@ -12,6 +12,7 @@ obj-$(CONFIG_PCIE_RCAR_HOST) += pcie-rcar.o pcie-rcar-host.o
->  obj-$(CONFIG_PCIE_RCAR_EP) += pcie-rcar.o pcie-rcar-ep.o
->  obj-$(CONFIG_PCI_HOST_COMMON) += pci-host-common.o
->  obj-$(CONFIG_PCI_HOST_GENERIC) += pci-host-generic.o
-> +obj-$(CONFIG_PCI_HOST_HELPERS) += pci-host-helpers.o
->  obj-$(CONFIG_PCI_HOST_THUNDER_ECAM) += pci-thunder-ecam.o
->  obj-$(CONFIG_PCI_HOST_THUNDER_PEM) += pci-thunder-pem.o
->  obj-$(CONFIG_PCIE_XILINX) += pcie-xilinx.o
-> diff --git a/drivers/pci/controller/pci-host-helpers.c b/drivers/pci/controller/pci-host-helpers.c
-> new file mode 100644
-> index 000000000000..cd261a281c60
-> --- /dev/null
-> +++ b/drivers/pci/controller/pci-host-helpers.c
-> @@ -0,0 +1,98 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCI Host Controller Helper Functions
-> + *
-> + * Copyright (C) 2025 Hans Zhang
-> + *
-> + * Author: Hans Zhang <18255117159@163.com>
-> + */
-> +
-> +#include <linux/pci.h>
-> +
-> +#include "../pci.h"
-> +
-> +/*
-> + * These interfaces resemble the pci_find_*capability() interfaces, but these
-> + * are for configuring host controllers, which are bridges *to* PCI devices but
-> + * are not PCI devices themselves.
-> + */
-> +static u8 __pci_host_bridge_find_next_cap(void *priv,
-> +					  pci_host_bridge_read_cfg read_cfg,
-> +					  u8 cap_ptr, u8 cap)
-> +{
-> +	u8 cap_id, next_cap_ptr;
-> +	u16 reg;
-> +
-> +	if (!cap_ptr)
-> +		return 0;
-> +
-> +	reg = read_cfg(priv, cap_ptr, 2);
-> +	cap_id = (reg & 0x00ff);
-> +
-> +	if (cap_id > PCI_CAP_ID_MAX)
-> +		return 0;
-> +
-> +	if (cap_id == cap)
-> +		return cap_ptr;
-> +
-> +	next_cap_ptr = (reg & 0xff00) >> 8;
-> +	return __pci_host_bridge_find_next_cap(priv, read_cfg, next_cap_ptr,
-> +					       cap);
-> +}
-> +
-> +u8 pci_host_bridge_find_capability(void *priv,
-> +				   pci_host_bridge_read_cfg read_cfg, u8 cap)
-> +{
-> +	u8 next_cap_ptr;
-> +	u16 reg;
-> +
-> +	reg = read_cfg(priv, PCI_CAPABILITY_LIST, 2);
-> +	next_cap_ptr = (reg & 0x00ff);
-> +
-> +	return __pci_host_bridge_find_next_cap(priv, read_cfg, next_cap_ptr,
-> +					       cap);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_host_bridge_find_capability);
-> +
-> +static u16 pci_host_bridge_find_next_ext_capability(
-> +	void *priv, pci_host_bridge_read_cfg read_cfg, u16 start, u8 cap)
-> +{
-> +	u32 header;
-> +	int ttl;
-> +	int pos = PCI_CFG_SPACE_SIZE;
-> +
-> +	/* minimum 8 bytes per capability */
-> +	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
-> +
-> +	if (start)
-> +		pos = start;
-> +
-> +	header = read_cfg(priv, pos, 4);
-> +	/*
-> +	 * If we have no capabilities, this is indicated by cap ID,
-> +	 * cap version and next pointer all being 0.
-> +	 */
-> +	if (header == 0)
-> +		return 0;
-> +
-> +	while (ttl-- > 0) {
-> +		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
-> +			return pos;
-> +
-> +		pos = PCI_EXT_CAP_NEXT(header);
-> +		if (pos < PCI_CFG_SPACE_SIZE)
-> +			break;
-> +
-> +		header = read_cfg(priv, pos, 4);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +u16 pci_host_bridge_find_ext_capability(void *priv,
-> +					pci_host_bridge_read_cfg read_cfg,
-> +					u8 cap)
-> +{
-> +	return pci_host_bridge_find_next_ext_capability(priv, read_cfg, 0, cap);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_host_bridge_find_ext_capability);
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 01e51db8d285..8d1c919cbfef 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -1034,4 +1034,11 @@ void pcim_release_region(struct pci_dev *pdev, int bar);
->  	(PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
->  	 PCI_CONF1_EXT_REG(reg))
->  
-> +typedef u32 (*pci_host_bridge_read_cfg)(void *priv, int where, int size);
-> +u8 pci_host_bridge_find_capability(void *priv,
-> +				   pci_host_bridge_read_cfg read_cfg, u8 cap);
-> +u16 pci_host_bridge_find_ext_capability(void *priv,
-> +					pci_host_bridge_read_cfg read_cfg,
-> +					u8 cap);
-> +
->  #endif /* DRIVERS_PCI_H */
-> -- 
-> 2.25.1
-> 
+drivers/w1/w1_netlink.c:198:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/w1/w1_netlink.c:219:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/w1/w1_netlink.c | 41 +++++++++++++++++++----------------------
+ 1 file changed, 19 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/w1/w1_netlink.c b/drivers/w1/w1_netlink.c
+index 691978cddab7..845d66ab7e89 100644
+--- a/drivers/w1/w1_netlink.c
++++ b/drivers/w1/w1_netlink.c
+@@ -194,16 +194,16 @@ static void w1_netlink_queue_status(struct w1_cb_block *block,
+ static void w1_netlink_send_error(struct cn_msg *cn, struct w1_netlink_msg *msg,
+ 	int portid, int error)
+ {
+-	struct {
+-		struct cn_msg cn;
+-		struct w1_netlink_msg msg;
+-	} packet;
+-	memcpy(&packet.cn, cn, sizeof(packet.cn));
+-	memcpy(&packet.msg, msg, sizeof(packet.msg));
+-	packet.cn.len = sizeof(packet.msg);
+-	packet.msg.len = 0;
+-	packet.msg.status = (u8)-error;
+-	cn_netlink_send(&packet.cn, portid, 0, GFP_KERNEL);
++	DEFINE_RAW_FLEX(struct cn_msg, packet, data,
++			sizeof(struct w1_netlink_msg));
++	struct w1_netlink_msg *pkt_msg = (struct w1_netlink_msg *)packet->data;
++
++	memcpy(packet, cn, sizeof(*packet));
++	memcpy(pkt_msg, msg, sizeof(*pkt_msg));
++	packet->len = sizeof(*pkt_msg);
++	pkt_msg->len = 0;
++	pkt_msg->status = (u8)-error;
++	cn_netlink_send(packet, portid, 0, GFP_KERNEL);
+ }
+ 
+ /**
+@@ -215,22 +215,19 @@ static void w1_netlink_send_error(struct cn_msg *cn, struct w1_netlink_msg *msg,
+  */
+ void w1_netlink_send(struct w1_master *dev, struct w1_netlink_msg *msg)
+ {
+-	struct {
+-		struct cn_msg cn;
+-		struct w1_netlink_msg msg;
+-	} packet;
+-	memset(&packet, 0, sizeof(packet));
++	DEFINE_RAW_FLEX(struct cn_msg, packet, data,
++			sizeof(struct w1_netlink_msg));
+ 
+-	packet.cn.id.idx = CN_W1_IDX;
+-	packet.cn.id.val = CN_W1_VAL;
++	packet->id.idx = CN_W1_IDX;
++	packet->id.val = CN_W1_VAL;
+ 
+-	packet.cn.seq = dev->seq++;
+-	packet.cn.len = sizeof(*msg);
++	packet->seq = dev->seq++;
++	packet->len = sizeof(*msg);
+ 
+-	memcpy(&packet.msg, msg, sizeof(*msg));
+-	packet.msg.len = 0;
++	memcpy(packet, msg, sizeof(*msg));
++	((struct w1_netlink_msg *)packet->data)->len = 0;
+ 
+-	cn_netlink_send(&packet.cn, 0, 0, GFP_KERNEL);
++	cn_netlink_send(packet, 0, 0, GFP_KERNEL);
+ }
+ 
+ static void w1_send_slave(struct w1_master *dev, u64 rn)
 -- 
-மணிவண்ணன் சதாசிவம்
+2.43.0
+
