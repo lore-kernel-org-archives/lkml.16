@@ -1,111 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A90140E30;
-	Thu, 27 Mar 2025 15:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141ED1494DF
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:33:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743089610; cv=none; b=mbzN4zCw1xgQzQwR+7znyWVLqN5z7cnzG++md+wDWUQ6+bFd1deVwPX2fgZQuM8ErjFR1dgDjd9LBaQcQuEXl8OZ+GZYucnjEM6sM62FbYaJNshLeANbcvnYgx7/2HH4ca8IsOIK6kYjSkCiAfakdo7C6K43En+vn7+K1XRKGNw=
+	t=1743089630; cv=none; b=JWKyB784WwMN72J4ECPO1m9e8ohyxV7ygEwmqfl/KZCVnjPHJSs42LV8uIZkunN4+25siZ7eZMOBsXo4gGh0HiWMdQxDGxZrHhIDbZswYGWpn0YCu115TfZ34fiPFey1AttfJxES4C30bPjI+fnI7lngdTAkcJjrL7RUtjObvr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743089610; c=relaxed/simple;
-	bh=0KDQW9+C3D+KXwtbTogcCrI3F0K6VvQRKUDhTMU1Lp0=;
+	s=arc-20240116; t=1743089630; c=relaxed/simple;
+	bh=HQ0Ef72EnhxykKElz27nhTsC4zNkLX6xKFDXcXCafbc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UzR7J1vqRZgqiIoFUNiUBdhTUCcHVfUFXipX4efUx94k8EBZrz/7KOwUayiWHx7xyd5McQn+zVxWF4WCnyr/R8HemmlYQLVHdvOt0qwmYOTJb+X60Kpa3XZHqyhS6SScozEjw8NVmO2AkypJwDPs4gNjjSgW7oQbnAl/rZztRbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nSS9HWM2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kbFsAtDbWGMM+DypedAmqohj3IG2J5KLvsue3p9Hm+9dL0j4pR+Oqcu6vEHJUm3omI4Gz6qAgRbQ7wOAd6znoRJL3Ek7SL8r5aS3th17dEWfKO94R00vo79R7klitAFZr3O4ge5gG+JK3elqLUJaI/wao+Jb+GPA7hh5i64t40M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M9917aAO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nSS9HWM2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03A6AC4CEDD;
-	Thu, 27 Mar 2025 15:33:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743089610;
-	bh=0KDQW9+C3D+KXwtbTogcCrI3F0K6VvQRKUDhTMU1Lp0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nSS9HWM2nAIfW9XwGL5KbsuKDnmV4IJY9eoebBhcfR9Hu4Xe2hypKXmDN7Ai3m7Ls
-	 XvkQMaFSrnMy3V2Fr+xi1j6B8btyM4iZzX95/oCTN/IQii+O3wSrB7UD8usykj/zYx
-	 b1xzwGK5r5R2vpMFz5xiXtje+GtORpYRz2O0I187ZhfqikrzJ86ZdHkIdbTG7KkkbT
-	 EVGdXE2ARUoJ7ZCsLh7bGRTUXlamgbjv2ET7MFMkFrS5TuJQSP4cQZyeCCTF2blvMt
-	 0iowcCqtqLlMR54RbBKdel2b2SJB24WTkkq/46MhZcRG25RbzNofTjxwjUVAvR5FCJ
-	 cglV8hkYoRY9g==
-Date: Thu, 27 Mar 2025 15:33:24 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Vishwaroop A <va@nvidia.com>,
-	krzk+dt@kernel.org, robh@kernel.org, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: spi: Add DT schema for Tegra SPIDEV
- controller
-Message-ID: <9760cd70-cbd6-4865-92b9-b48eb2cdea55@sirena.org.uk>
-References: <925fe847-68b4-4689-832c-08f8de3dfeb1@nvidia.com>
- <48f9c8c0-5cac-4812-8d06-501193be731b@sirena.org.uk>
- <909f0c92-d110-4253-903e-5c81e21e12c9@nvidia.com>
- <48248165-c800-484f-be62-7c48b3c6829b@sirena.org.uk>
- <4zic633abvwj377kfqem42zmc2yruflbwfmmqrpvjjgr6jae6h@jthoycb3vzzz>
- <ljxxml7z2k6xniamzzw4ssi7u75qqfpcvmidzy3ekr3imtoxau@eztnxovsjplg>
- <499703ae-dba1-49a6-869b-a60b44c2a85f@sirena.org.uk>
- <2oxhmcrhbwlwqgyqy62p77eoag6nkavhjwmwfjfizcrhunrkjv@eaxjy6uoxszq>
- <25857b7f-5c10-46ec-b0b7-9ff89ca5ab1e@sirena.org.uk>
- <63b87feb-32ee-423c-8d82-61445414c6f7@nvidia.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M9917aAO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743089626;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n2vfWjdPjd1igi+HrBJvoMOSZHPLNEOz1XXFk58tFSs=;
+	b=M9917aAOhf/zkFowWBQk+pfCxpGQIdo17YDIiCmN9qcwiB+HyqzXum5C6Fqylxl2JCXLdK
+	hdPUsh78iYvaFP88R/2Lsi2SMwzEylnOzjJ8xPNMiKtH/UbOoWxnIqdUGz9koaM+ctkEcr
+	Omb2gkAxsnEmBc+U50wr/N0476tZFIk=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-584-zw4Zy353OiCgrJiFxLrTSw-1; Thu, 27 Mar 2025 11:33:45 -0400
+X-MC-Unique: zw4Zy353OiCgrJiFxLrTSw-1
+X-Mimecast-MFC-AGG-ID: zw4Zy353OiCgrJiFxLrTSw_1743089624
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3912539665cso1079027f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:33:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743089624; x=1743694424;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n2vfWjdPjd1igi+HrBJvoMOSZHPLNEOz1XXFk58tFSs=;
+        b=bDP/8xLlRBLDMEAKUQnzUPG3MgKMkaUNJ3ZyQ0EppNRLemCKahxBbkfv8gFnL135/R
+         tnCMmdAEMHRCzVRXfbVwL7bgPPbLqyDr6nK5oAk1HJEdkCncEPH0H3OCJwbVDDHkE1X2
+         Iud+wywS2lG1aF3JCc2uD+dicKeLMVIyFOs8I+N4VDcnXf0RLrWM9nm2P+X08cPMyu6H
+         sp7ghBqR9Gaf+Jg4XN2LoEC867vvouPLVOWb1PN1ypMGl4DUvn0kD/mIzQLcJE0evzyy
+         SmPOxxhcv/WhRa4LAQfaPhLSafx52PIfWJRjJ/jqjffQRZT7K5g7QcnEv9v5QCIsjcvO
+         zz3w==
+X-Forwarded-Encrypted: i=1; AJvYcCWSzXzOlaL1BlxA66f0/CsupCtXEXwBNFD8oxwycRjp0SWhA8Rgdwmx/cFD7HOrd1+fuNHZPKhqHdt3jJs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxes+AWqdy9AHYZpcvAQtsfkS3D954NPOPWgVBkCXd/KSvVj5Fm
+	/2s56VGQ3otLsNCab3JvSPkVLJemkV6PS/Saq3xLowOBlInd4rECy9Hf7lFLk5tgDhUmg11M7Ps
+	F7qpTGFJhV/4ZMn0SdvwbzG2+/biWiD26aO3x01rNRWEmPtKBMfb8SPCbl29sfQ==
+X-Gm-Gg: ASbGncsXKTUIWVQwSHZfuqc3NYCbnvWT/HwOU2SpW2+wLWwNurpVqal0Xe5abE+GNki
+	/tFQLC7Nf8Lwn3Ebh89pVve/o8JGLoUKFO98I5OLjKzKzG1VXqKNLhW8g2SwFN2aKyKJOXLBT25
+	iNeRzrNhCc+AOy/Dt/J+2XiUaRMSOlnJzX0F8VVP5Pe/9ECxlGqX0TsCohwvEUBJjyp3fbHu75d
+	D99rfPhzXMtv0oJDWB3EnI7dpimaOwMW0PXcBwkwrZ4rp7BQ0UODeyxHmEJDBYUrs6GEkKeydBl
+	s75tU/Qc4x4Ww/z6R9R5irl7vdG6xwIPwySXZ3gR2G8D/VE1ZTt3WyFC0BURoEjD
+X-Received: by 2002:a05:6000:2ab:b0:39a:c9ae:a198 with SMTP id ffacd0b85a97d-39c0999ce73mr930204f8f.1.1743089624177;
+        Thu, 27 Mar 2025 08:33:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEbW6gDJheuO35EEv4q38v+8yZH1/WUMW1a7B/qNPyI6GOHHawUBbYyx6/8xdWkIjzghJsuoA==
+X-Received: by 2002:a05:6000:2ab:b0:39a:c9ae:a198 with SMTP id ffacd0b85a97d-39c0999ce73mr930152f8f.1.1743089623522;
+        Thu, 27 Mar 2025 08:33:43 -0700 (PDT)
+Received: from sgarzare-redhat (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82e835fesm41649215e9.10.2025.03.27.08.33.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 08:33:42 -0700 (PDT)
+Date: Thu, 27 Mar 2025 16:33:37 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: linux-integrity@vger.kernel.org, Sumit Garg <sumit.garg@kernel.org>, 
+	Jens Wiklander <jens.wiklander@linaro.org>, James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>, Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tpm: Make chip->{status,cancel,req_canceled} opt
+Message-ID: <gknnbjutmstexcitncmpyapwu6eo2qarvjkknkpzdurc4dffxw@onqqs5x2raug>
+References: <20250326161838.123606-1-jarkko@kernel.org>
+ <exzxzomw7wcobjuoje37x6i2ta54xzx5ho74t3atd7g74xltlb@ymw2pn3yo27b>
+ <Z-VRWy8jLkA0cpow@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="V6enJj/euRlY3UZ2"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <63b87feb-32ee-423c-8d82-61445414c6f7@nvidia.com>
-X-Cookie: Multics is security spelled sideways.
+In-Reply-To: <Z-VRWy8jLkA0cpow@kernel.org>
 
+On Thu, Mar 27, 2025 at 03:23:39PM +0200, Jarkko Sakkinen wrote:
+>On Thu, Mar 27, 2025 at 10:58:00AM +0100, Stefano Garzarella wrote:
+>> On Wed, Mar 26, 2025 at 06:18:38PM +0200, Jarkko Sakkinen wrote:
+>> > From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+>> >
+>> > tpm_ftpm_tee does not require chip->status, chip->cancel and
+>> > chip->req_canceled. Make them optional.
+>> >
+>> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+>> > ---
+>> > drivers/char/tpm/tpm-interface.c | 31 ++++++++++++++++++++++++++++---
+>> > drivers/char/tpm/tpm_ftpm_tee.c  | 20 --------------------
+>> > 2 files changed, 28 insertions(+), 23 deletions(-)
+>> >
+>> > diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+>> > index f62f7871edbd..10ba47a882d8 100644
+>> > --- a/drivers/char/tpm/tpm-interface.c
+>> > +++ b/drivers/char/tpm/tpm-interface.c
+>> > @@ -58,6 +58,30 @@ unsigned long tpm_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal)
+>> > }
+>> > EXPORT_SYMBOL_GPL(tpm_calc_ordinal_duration);
+>> >
+>> > +static void tpm_chip_cancel(struct tpm_chip *chip)
+>> > +{
+>> > +	if (!chip->ops->cancel)
+>> > +		return;
+>> > +
+>> > +	chip->ops->cancel(chip);
+>> > +}
+>> > +
+>> > +static u8 tpm_chip_status(struct tpm_chip *chip)
+>> > +{
+>> > +	if (!chip->ops->status)
+>> > +		return 0;
+>> > +
+>> > +	return chip->ops->status(chip);
+>> > +}
+>> > +
+>> > +static bool tpm_chip_req_canceled(struct tpm_chip *chip, u8 status)
+>> > +{
+>> > +	if (!chip->ops->req_canceled)
+>> > +		return false;
+>> > +
+>> > +	return chip->ops->req_canceled(chip, status);
+>> > +}
+>> > +
+>> > static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+>> > {
+>> > 	struct tpm_header *header = buf;
+>> > @@ -65,6 +89,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+>> > 	ssize_t len = 0;
+>> > 	u32 count, ordinal;
+>> > 	unsigned long stop;
+>> > +	u8 status;
+>>
+>> Why move `status` out of the do/while block?
+>
+>I'm not a huge fan of stack allocations inside blocks, unless there is
+>a particular reason to do so.
+>
+>
+>>
+>> >
+>> > 	if (bufsiz < TPM_HEADER_SIZE)
+>> > 		return -EINVAL;
+>> > @@ -104,12 +129,12 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+>> >
+>>
+>> What about doing an early return avoiding also calling
+>> tpm_calc_ordinal_duration()?
+>>
+>> I mean something like this:
+>>
+>>                 rc = 0;
+>>         }
+>>
+>> -       if (chip->flags & TPM_CHIP_FLAG_IRQ)
+>> +       if (!chip->ops->status || chip->flags & TPM_CHIP_FLAG_IRQ)
+>>                 goto out_recv;
+>>
+>>
+>> Anyway, those are small things, the patch LGTM and it's a great cleanup
+>> for ftpm and the svsm driver I'm developing!
+>
+>If you refined send() and had that the sync flag, this would become:
+>
+>	if (chip->flags & (TPM_CHIP_FLAG_IRQ | TPM_CHIP_FLAG_SYNC))
+>		goto out_recv;
 
---V6enJj/euRlY3UZ2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yep, good point!
 
-On Wed, Mar 26, 2025 at 12:16:53PM +0000, Jon Hunter wrote:
-> On 25/03/2025 17:05, Mark Brown wrote:
+>
+>>
+>>
+>> Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+>
+>Thank you.
 
-> > > The way I imagine it, exporting would involve writing a chip-select to a
-> > > specific SPI controller's "export" sysfs attribute to have a SPI device
-> > > created for that particular chip-select and bind it to spidev.
+You're welcome!
+Stefano
 
-> > My general feeling with those is that if you're building for them you're
-> > probably either already modifiying your kernel or easily able to cope
-> > with doing so.
-
-> That's definitely what we do today, modify the kernel directly to achieve
-> what we need. I am trying to avoid carrying too many out of tree patches for
-> stuff like this and have something in the kernel that works by default. This
-> is even more important for 3rd party Linux distros that will not accept
-> non-upstream code.
-
-Overlays should work well for that case too!
-
-> Our devkits, very much like Raspberry PI, allow users to connect various
-> hardware for development and so having an easy way to connect a SPI device
-> is useful. For any production systems, users will definitely want a proper
-> device and device-tree bindings. So I am just trying to explore what would
-> be acceptable. If it is acceptable to have a sysfs interface for creating a
-> SPI device at runtime, then we can look into that.
-
-The main issue I see with the sysfs thing is that you have to describe
-the presence of the device somehow which currently needs a device of
-some kind there, it's not like I2C where you can just use the address.
-
---V6enJj/euRlY3UZ2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmflb8MACgkQJNaLcl1U
-h9DsHQf+NXjnU8ML3q8LwR6HQSbPEMS/nn66hHJ7e1y2wdqwvw94h4+/K4wKEU2P
-RZ8O344/O37YkKwHYkB0x9g2dlnPxxU4bsmAF8+/+E3E+LU0cz0rS6mBZQro7XTs
-ZIvKeQ0bccC+I5yulZ+j3dCtbXEeFhtz1fXUq2s0J+602XBfHYnx2pYGOPrOmFvY
-aAbF/lgMi2eRUWkxXHqDxXSFRmz+cPxZh4vOPG4OqKqiFhi3CU135eDxzAO3Lh3L
-9OIoBZlADkghIluiOo/DHUk4rmvNdOPjjecMQJJlVawNT770QeZswZDaRHMforCa
-8u0plKE9d9ramj7w1Yvb/zdG+JCFOA==
-=YS3V
------END PGP SIGNATURE-----
-
---V6enJj/euRlY3UZ2--
