@@ -1,464 +1,307 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D2D1AC892;
-	Thu, 27 Mar 2025 17:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942EF1B0437;
+	Thu, 27 Mar 2025 17:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743095247; cv=none; b=qngFHRDoI4ICngmPgAlRiAMkz3UA7T9AJdJQbCa9rGdbLHSS7X+p56QQRMMQKCfJZwZDJPbyCLQaEo81P2f6/L9x9F9lPAdtC1AyIwvUJgcNlKNbMVC9N+91fqM0qW8Bp2AvD+lOwBUox0yxr9eF7MAVI2fzuosIMB44dx/ADV8=
+	t=1743095249; cv=none; b=LMxZEqSG8yvHe4iFZO8cBPc5p8OasA8k/GARZiprt8tBVAhwxU9fgvVw2xU78ymCnQV0ALf5jhcf48+U6Be0pvKk9evZuL7BM3Zkb8MnzoyvjbefuaeLOK/7pbxBOWnub3VrTHTWtLJIL93E6dn6G1+g3eiAjRU6iJasUUjsv4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743095247; c=relaxed/simple;
-	bh=e2ZR1na0kfPg1TOS8cY2zXA6oRZpojV4SKCF71wlszI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K9GQDTzaglXbtcRk+I+f5cQw5ip4qyVmkuypIghLNi8aYxIJXYmSkrbu1HJfxaAVyUJg/RufCa5kIjphjZCVkuzsvZFExSEX5L9oFeBiMcWXxqiMBhroVQR0ALZBGS86d501oI5snwkQKO+qv9E5oCCpDz9zPlV8qvqxL86uu0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ZzQuCNzE; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1743095249; c=relaxed/simple;
+	bh=eIXFtol+0vZBbIYFckLTPfC2WG9dNrHXYKkM9EBg79A=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
+	 References:In-Reply-To; b=b52IFeDjfE7TBjDsrsr30ccnunHwPuDudveZVoiBTuL9dkRcZK4mLDz2tan0W4Bo+XL6EKs6v67QeA1RA/zNv+zlFOff+x7OdopsZO5wpsxji/PcbYDXUFCYNwbfUfydIRJ1BIQZQVH3j4E7356r8vrOjJp5UR1/szx2QgmXPcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pquV8/Lv; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ZzQuCNzE"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id D84BE446;
-	Thu, 27 Mar 2025 18:05:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743095134;
-	bh=e2ZR1na0kfPg1TOS8cY2zXA6oRZpojV4SKCF71wlszI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZzQuCNzE28zwLZIiVc4DmqtswkYsJeK9e6YOtJHXX4u1UhFfg0T6FXJuUDisi+zWx
-	 XxqY/iFp9Xj0Y1lfNwEvKeia+7zlnyrdvzFAj3EGl+bQzjmGychnSTLIlTdLGLcscc
-	 zkuXl1tDCVjcI8+3Ux1wpjsBj1qRtIm5gAlBSp1c=
-Date: Thu, 27 Mar 2025 19:06:59 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
-	Tommaso Merciai <tomm.merciai@gmail.com>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 11/17] media: rzg2l-cru: Add register mapping support
-Message-ID: <20250327170659.GD4861@pendragon.ideasonboard.com>
-References: <20250303160834.3493507-1-tommaso.merciai.xr@bp.renesas.com>
- <20250303160834.3493507-12-tommaso.merciai.xr@bp.renesas.com>
- <TY3PR01MB113467D4C0BE9691A6E4630C786D02@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <Z9LJFCBbqbdlDP8k@tom-desktop>
- <20250327101554.GA18306@pendragon.ideasonboard.com>
- <Z-WAsxVJ1QpDa8fx@tom-desktop>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pquV8/Lv"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6E20B4424E;
+	Thu, 27 Mar 2025 17:07:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743095239;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UdhTLdNrpirrNqXWYpfQ6mk/u/0zez3SEY7a+4LtZhQ=;
+	b=pquV8/LvdCRSxF1toX4HU3e4N4ii7PO8LWLGS+EgcwbdcmadVNBPmg5Nf/azep1I0TZUIE
+	m/nnZlbO7I1ftRSXTmW+JI+AwbHWQiMBEWgYlUip+F7xF5XXhHqIW5FRGxkD8EmvG49Y1s
+	ednGhlGdPjkrxnYTdXROvmp6wLAAPv+yRAyZx4oR6biquHn4qRlp7V/QdsI6Fdz/JHqRhx
+	Czhn71bpeZpnq4UBjrkXkMtrAQmgqUJ3tUWvZ2lGJE2Je1WGMP2WvyHVKPYPhUyLI5scod
+	OjFzxi+gCgnjgZksfgD+049BKcvlUgDPOXp5WlXi0MSBZMUAf9p7asMmoLDI5A==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z-WAsxVJ1QpDa8fx@tom-desktop>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 27 Mar 2025 18:07:13 +0100
+Message-Id: <D8R7OVRDZF3J.3FH8JD5J0AWWF@bootlin.com>
+Cc: "Andrew Lunn" <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Rob
+ Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Nicolas Ferre"
+ <nicolas.ferre@microchip.com>, "Claudiu Beznea" <claudiu.beznea@tuxon.dev>,
+ "Paul Walmsley" <paul.walmsley@sifive.com>, "Palmer Dabbelt"
+ <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre
+ Ghiti" <alex@ghiti.fr>, "Samuel Holland" <samuel.holland@sifive.com>,
+ "Richard Cochran" <richardcochran@gmail.com>, "Russell King"
+ <linux@armlinux.org.uk>, "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
+ <gregory.clement@bootlin.com>, "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>, "devicetree@vger.kernel.org"
+ <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org"
+ <linux-riscv@lists.infradead.org>, "linux-mips@vger.kernel.org"
+ <linux-mips@vger.kernel.org>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>
+To: "Katakam, Harini" <harini.katakam@amd.com>, "Andrew Lunn"
+ <andrew@lunn.ch>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH net-next 07/13] net: macb: move HW IP alignment value to
+ macb_config
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250321-macb-v1-0-537b7e37971d@bootlin.com>
+ <20250321-macb-v1-7-537b7e37971d@bootlin.com>
+ <45b3e613-90c6-4499-b50b-383106172184@lunn.ch>
+ <D8OOPAXK16CI.3TE75O760JRSL@bootlin.com>
+ <967fcb66-6a64-4e97-8293-a38b0ef1bc01@lunn.ch>
+ <SJ2PR12MB8739A1E03E116F9D6A312EB99EA62@SJ2PR12MB8739.namprd12.prod.outlook.com>
+In-Reply-To: <SJ2PR12MB8739A1E03E116F9D6A312EB99EA62@SJ2PR12MB8739.namprd12.prod.outlook.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieekleeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefvhffuofhfjgesthhqredtredtjeenucfhrhhomhepvfhhrohoucfnvggsrhhunhcuoehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeigfelffeuffetteetuddufffghefhudeuteeigeekteevgeeileejgfdvffelheenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeiieegsgemfhdtfhhfmehfvgdutdemlegvfhgunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeiieegsgemfhdtfhhfmehfvgdutdemlegvfhgupdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvledprhgtphhtthhopehhrghrihhnihdrkhgrthgrkhgrmhesrghmugdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpt
+ hhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Thu, Mar 27, 2025 at 05:45:39PM +0100, Tommaso Merciai wrote:
-> Hi Laurent,
-> 
-> Thanks for your comment.
-> 
-> On Thu, Mar 27, 2025 at 12:15:54PM +0200, Laurent Pinchart wrote:
-> > Hi Tommaso,
-> > 
-> > Thanks for being patient (and reminding me about this). Apparently,
-> > Embedded World is bad for e-mail backlogs.
-> 
-> I can imagine.
-> I skipped the EW this year, hope you had fun there :)
-> No worries.
-> 
-> > 
-> > On Thu, Mar 13, 2025 at 01:01:24PM +0100, Tommaso Merciai wrote:
-> > > On Wed, Mar 12, 2025 at 01:37:25PM +0000, Biju Das wrote:
-> > > > On 03 March 2025 16:08, Tommaso Merciai wrote:
-> > > > > 
-> > > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > > 
-> > > > > Prepare for adding support for RZ/G3E and RZ/V2HP SoCs, which have a CRU-IP that is mostly identical
-> > > > > to RZ/G2L but with different register offsets and additional registers. Introduce a flexible register
-> > > > > mapping mechanism to handle these variations.
-> > > > > 
-> > > > > Define the `rzg2l_cru_info` structure to store register mappings and pass it as part of the OF match
-> > > > > data. Update the read/write functions to check out-of-bound accesses and use indexed register offsets
-> > > > > from `rzg2l_cru_info`, ensuring compatibility across different SoC variants.
-> > > > > 
-> > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > > Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-> > > > > ---
-> > > > > Changes since v2:
-> > > > >  - Implemented new rzg2l_cru_write/read() that now are checking out-of-bound
-> > > > >    accesses as suggested by LPinchart.
-> > > > >  - Fixed AMnMBxADDRL() and AMnMBxADDRH() as suggested by LPinchart.
-> > > > >  - Update commit body
-> > > > > 
-> > > > >  .../platform/renesas/rzg2l-cru/rzg2l-core.c   | 46 ++++++++++++-
-> > > > >  .../renesas/rzg2l-cru/rzg2l-cru-regs.h        | 66 ++++++++++---------
-> > > > >  .../platform/renesas/rzg2l-cru/rzg2l-cru.h    |  4 ++
-> > > > >  .../platform/renesas/rzg2l-cru/rzg2l-video.c  | 58 ++++++++++++++--
-> > > > >  4 files changed, 139 insertions(+), 35 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-> > > > > b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-> > > > > index eed9d2bd0841..abc2a979833a 100644
-> > > > > --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-> > > > > +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-> > > > > @@ -22,6 +22,7 @@
-> > > > >  #include <media/v4l2-mc.h>
-> > > > > 
-> > > > >  #include "rzg2l-cru.h"
-> > > > > +#include "rzg2l-cru-regs.h"
-> > > > > 
-> > > > >  static inline struct rzg2l_cru_dev *notifier_to_cru(struct v4l2_async_notifier *n)  { @@ -269,6
-> > > > > +270,9 @@ static int rzg2l_cru_probe(struct platform_device *pdev)
-> > > > > 
-> > > > >  	cru->dev = dev;
-> > > > >  	cru->info = of_device_get_match_data(dev);
-> > > > > +	if (!cru->info)
-> > > > > +		return dev_err_probe(dev, -EINVAL,
-> > > > > +				     "Failed to get OF match data\n");
-> > > > > 
-> > > > >  	irq = platform_get_irq(pdev, 0);
-> > > > >  	if (irq < 0)
-> > > > > @@ -317,8 +321,48 @@ static void rzg2l_cru_remove(struct platform_device *pdev)
-> > > > >  	rzg2l_cru_dma_unregister(cru);
-> > > > >  }
-> > > > > 
-> > > > > +static const u16 rzg2l_cru_regs[] = {
-> > > > > +	[CRUnCTRL] = 0x0,
-> > > > > +	[CRUnIE] = 0x4,
-> > > > > +	[CRUnINTS] = 0x8,
-> > > > > +	[CRUnRST] = 0xc,
-> > > > > +	[AMnMB1ADDRL] = 0x100,
-> > > > > +	[AMnMB1ADDRH] = 0x104,
-> > > > > +	[AMnMB2ADDRL] = 0x108,
-> > > > > +	[AMnMB2ADDRH] = 0x10c,
-> > > > > +	[AMnMB3ADDRL] = 0x110,
-> > > > > +	[AMnMB3ADDRH] = 0x114,
-> > > > > +	[AMnMB4ADDRL] = 0x118,
-> > > > > +	[AMnMB4ADDRH] = 0x11c,
-> > > > > +	[AMnMB5ADDRL] = 0x120,
-> > > > > +	[AMnMB5ADDRH] = 0x124,
-> > > > > +	[AMnMB6ADDRL] = 0x128,
-> > > > > +	[AMnMB6ADDRH] = 0x12c,
-> > > > > +	[AMnMB7ADDRL] = 0x130,
-> > > > > +	[AMnMB7ADDRH] = 0x134,
-> > > > > +	[AMnMB8ADDRL] = 0x138,
-> > > > > +	[AMnMB8ADDRH] = 0x13c,
-> > > > > +	[AMnMBVALID] = 0x148,
-> > > > > +	[AMnMBS] = 0x14c,
-> > > > > +	[AMnAXIATTR] = 0x158,
-> > > > > +	[AMnFIFOPNTR] = 0x168,
-> > > > > +	[AMnAXISTP] = 0x174,
-> > > > > +	[AMnAXISTPACK] = 0x178,
-> > > > > +	[ICnEN] = 0x200,
-> > > > > +	[ICnMC] = 0x208,
-> > > > > +	[ICnMS] = 0x254,
-> > > > > +	[ICnDMR] = 0x26c,
-> > > > > +};
-> > > > > +
-> > > > > +static const struct rzg2l_cru_info rzgl2_cru_info = {
-> > > > > +	.regs = rzg2l_cru_regs,
-> > > > > +};
-> > > > > +
-> > > > >  static const struct of_device_id rzg2l_cru_of_id_table[] = {
-> > > > > -	{ .compatible = "renesas,rzg2l-cru", },
-> > > > > +	{
-> > > > > +		.compatible = "renesas,rzg2l-cru",
-> > > > > +		.data = &rzgl2_cru_info,
-> > > > > +	},
-> > > > >  	{ /* sentinel */ }
-> > > > >  };
-> > > > >  MODULE_DEVICE_TABLE(of, rzg2l_cru_of_id_table); diff --git a/drivers/media/platform/renesas/rzg2l-
-> > > > > cru/rzg2l-cru-regs.h b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru-regs.h
-> > > > > index 1c9f22118a5d..86c320286246 100644
-> > > > > --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru-regs.h
-> > > > > +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru-regs.h
-> > > > > @@ -10,71 +10,77 @@
-> > > > > 
-> > > > >  /* HW CRU Registers Definition */
-> > > > > 
-> > > > > -/* CRU Control Register */
-> > > > > -#define CRUnCTRL			0x0
-> > > > >  #define CRUnCTRL_VINSEL(x)		((x) << 0)
-> > > > > 
-> > > > > -/* CRU Interrupt Enable Register */
-> > > > > -#define CRUnIE				0x4
-> > > > >  #define CRUnIE_EFE			BIT(17)
-> > > > > 
-> > > > > -/* CRU Interrupt Status Register */
-> > > > > -#define CRUnINTS			0x8
-> > > > >  #define CRUnINTS_SFS			BIT(16)
-> > > > > 
-> > > > > -/* CRU Reset Register */
-> > > > > -#define CRUnRST				0xc
-> > > > >  #define CRUnRST_VRESETN			BIT(0)
-> > > > > 
-> > > > >  /* Memory Bank Base Address (Lower) Register for CRU Image Data */
-> > > > > -#define AMnMBxADDRL(x)			(0x100 + ((x) * 8))
-> > > > > +#define AMnMBxADDRL(x)			(AMnMB1ADDRL + (x) * 2)
-> > > > > 
-> > > > >  /* Memory Bank Base Address (Higher) Register for CRU Image Data */
-> > > > > -#define AMnMBxADDRH(x)			(0x104 + ((x) * 8))
-> > > > > +#define AMnMBxADDRH(x)			(AMnMB1ADDRH + (x) * 2)
-> > > > > 
-> > > > > -/* Memory Bank Enable Register for CRU Image Data */
-> > > > > -#define AMnMBVALID			0x148
-> > > > >  #define AMnMBVALID_MBVALID(x)		GENMASK(x, 0)
-> > > > > 
-> > > > > -/* Memory Bank Status Register for CRU Image Data */
-> > > > > -#define AMnMBS				0x14c
-> > > > >  #define AMnMBS_MBSTS			0x7
-> > > > > 
-> > > > > -/* AXI Master Transfer Setting Register for CRU Image Data */
-> > > > > -#define AMnAXIATTR			0x158
-> > > > >  #define AMnAXIATTR_AXILEN_MASK		GENMASK(3, 0)
-> > > > >  #define AMnAXIATTR_AXILEN		(0xf)
-> > > > > 
-> > > > > -/* AXI Master FIFO Pointer Register for CRU Image Data */
-> > > > > -#define AMnFIFOPNTR			0x168
-> > > > >  #define AMnFIFOPNTR_FIFOWPNTR		GENMASK(7, 0)
-> > > > >  #define AMnFIFOPNTR_FIFORPNTR_Y		GENMASK(23, 16)
-> > > > > 
-> > > > > -/* AXI Master Transfer Stop Register for CRU Image Data */
-> > > > > -#define AMnAXISTP			0x174
-> > > > >  #define AMnAXISTP_AXI_STOP		BIT(0)
-> > > > > 
-> > > > > -/* AXI Master Transfer Stop Status Register for CRU Image Data */
-> > > > > -#define AMnAXISTPACK			0x178
-> > > > >  #define AMnAXISTPACK_AXI_STOP_ACK	BIT(0)
-> > > > > 
-> > > > > -/* CRU Image Processing Enable Register */
-> > > > > -#define ICnEN				0x200
-> > > > >  #define ICnEN_ICEN			BIT(0)
-> > > > > 
-> > > > > -/* CRU Image Processing Main Control Register */
-> > > > > -#define ICnMC				0x208
-> > > > >  #define ICnMC_CSCTHR			BIT(5)
-> > > > >  #define ICnMC_INF(x)			((x) << 16)
-> > > > >  #define ICnMC_VCSEL(x)			((x) << 22)
-> > > > >  #define ICnMC_INF_MASK			GENMASK(21, 16)
-> > > > > 
-> > > > > -/* CRU Module Status Register */
-> > > > > -#define ICnMS				0x254
-> > > > >  #define ICnMS_IA			BIT(2)
-> > > > > 
-> > > > > -/* CRU Data Output Mode Register */
-> > > > > -#define ICnDMR				0x26c
-> > > > >  #define ICnDMR_YCMODE_UYVY		(1 << 4)
-> > > > > 
-> > > > > +enum rzg2l_cru_common_regs {
-> > > > > +	CRUnCTRL,	/* CRU Control */
-> > > > > +	CRUnIE,		/* CRU Interrupt Enable */
-> > > > > +	CRUnINTS,	/* CRU Interrupt Status */
-> > > > > +	CRUnRST, 	/* CRU Reset */
-> > > > > +	AMnMB1ADDRL,	/* Bank 1 Address (Lower) for CRU Image Data */
-> > > > > +	AMnMB1ADDRH,	/* Bank 1 Address (Higher) for CRU Image Data */
-> > > > > +	AMnMB2ADDRL,    /* Bank 2 Address (Lower) for CRU Image Data */
-> > > > > +	AMnMB2ADDRH,    /* Bank 2 Address (Higher) for CRU Image Data */
-> > > > > +	AMnMB3ADDRL,    /* Bank 3 Address (Lower) for CRU Image Data */
-> > > > > +	AMnMB3ADDRH,    /* Bank 3 Address (Higher) for CRU Image Data */
-> > > > > +	AMnMB4ADDRL,    /* Bank 4 Address (Lower) for CRU Image Data */
-> > > > > +	AMnMB4ADDRH,    /* Bank 4 Address (Higher) for CRU Image Data */
-> > > > > +	AMnMB5ADDRL,    /* Bank 5 Address (Lower) for CRU Image Data */
-> > > > > +	AMnMB5ADDRH,    /* Bank 5 Address (Higher) for CRU Image Data */
-> > > > > +	AMnMB6ADDRL,    /* Bank 6 Address (Lower) for CRU Image Data */
-> > > > > +	AMnMB6ADDRH,    /* Bank 6 Address (Higher) for CRU Image Data */
-> > > > > +	AMnMB7ADDRL,    /* Bank 7 Address (Lower) for CRU Image Data */
-> > > > > +	AMnMB7ADDRH,    /* Bank 7 Address (Higher) for CRU Image Data */
-> > > > > +	AMnMB8ADDRL,    /* Bank 8 Address (Lower) for CRU Image Data */
-> > > > > +	AMnMB8ADDRH,    /* Bank 8 Address (Higher) for CRU Image Data */
-> > > > > +	AMnMBVALID,	/* Memory Bank Enable for CRU Image Data */
-> > > > > +	AMnMBS,		/* Memory Bank Status for CRU Image Data */
-> > > > > +	AMnAXIATTR,	/* AXI Master Transfer Setting Register for CRU Image Data */
-> > > > > +	AMnFIFOPNTR,	/* AXI Master FIFO Pointer for CRU Image Data */
-> > > > > +	AMnAXISTP,	/* AXI Master Transfer Stop for CRU Image Data */
-> > > > > +	AMnAXISTPACK,	/* AXI Master Transfer Stop Status for CRU Image Data */
-> > > > > +	ICnEN,		/* CRU Image Processing Enable */
-> > > > > +	ICnMC,		/* CRU Image Processing Main Control */
-> > > > > +	ICnMS,		/* CRU Module Status */
-> > > > > +	ICnDMR,		/* CRU Data Output Mode */
-> > > > > +	RZG2L_CRU_MAX_REG,
-> > > > > +};
-> > > > > +
-> > > > >  #endif /* __RZG2L_CRU_REGS_H__ */
-> > > > > diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
-> > > > > b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
-> > > > > index 8b898ce05b84..00c3f7458e20 100644
-> > > > > --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
-> > > > > +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
-> > > > > @@ -80,6 +80,10 @@ struct rzg2l_cru_ip_format {
-> > > > >  	bool yuv;
-> > > > >  };
-> > > > > 
-> > > > > +struct rzg2l_cru_info {
-> > > > > +	const u16 *regs;
-> > > > > +};
-> > > > > +
-> > > > >  /**
-> > > > >   * struct rzg2l_cru_dev - Renesas CRU device structure
-> > > > >   * @dev:		(OF) device
-> > > > > diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > > > > b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > > > > index cd69c8a686d3..792f0df51a4b 100644
-> > > > > --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > > > > +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> > > > > @@ -42,16 +42,66 @@ struct rzg2l_cru_buffer {
-> > > > >  /* -----------------------------------------------------------------------------
-> > > > >   * DMA operations
-> > > > >   */
-> > > > > -static void rzg2l_cru_write(struct rzg2l_cru_dev *cru, u32 offset, u32 value)
-> > > > > +static void __rzg2l_cru_write(struct rzg2l_cru_dev *cru, u32 offset,
-> > > > > +u32 value)
-> > > > >  {
-> > > > > -	iowrite32(value, cru->base + offset);
-> > > > > +	const u16 *regs = cru->info->regs;
-> > > > > +
-> > > > > +	/*
-> > > > > +	 * CRUnCTRL is a first register on all CRU supported SoCs so validate
-> > > > > +	 * rest of the registers have valid offset being set in cru->info->regs.
-> > > > > +	 */
-> > > > > +	if (WARN_ON(offset >= RZG2L_CRU_MAX_REG) ||
-> > > > > +	    WARN_ON(offset != CRUnCTRL && regs[offset] == 0))
-> > > > > +		return;
-> > > > > +
-> > > > > +	iowrite32(value, cru->base + regs[offset]); }
-> > > > > +
-> > > > > +static u32 __rzg2l_cru_read(struct rzg2l_cru_dev *cru, u32 offset) {
-> > > > > +	const u16 *regs = cru->info->regs;
-> > > > > +
-> > > > > +	/*
-> > > > > +	 * CRUnCTRL is a first register on all CRU supported SoCs so validate
-> > > > > +	 * rest of the registers have valid offset being set in cru->info->regs.
-> > > > > +	 */
-> > > > > +	if (WARN_ON(offset >= RZG2L_CRU_MAX_REG) ||
-> > > > > +	    WARN_ON(offset != CRUnCTRL && regs[offset] == 0))
-> > > > > +		return 0;
-> > > > > +
-> > > > > +	return ioread32(cru->base + regs[offset]);
-> > > > >  }
-> > > > > 
-> > > > > -static u32 rzg2l_cru_read(struct rzg2l_cru_dev *cru, u32 offset)
-> > > > > +static inline void
-> > > > > +__rzg2l_cru_write_constant(struct rzg2l_cru_dev *cru, u32 offset, u32 value)
-> > > > >  {
-> > > > > -	return ioread32(cru->base + offset);
-> > > > > +	const u16 *regs = cru->info->regs;
-> > > > > +
-> > > > > +	BUILD_BUG_ON(offset >= RZG2L_CRU_MAX_REG);
-> > > > > +
-> > > > > +	iowrite32(value, cru->base + regs[offset]);
-> > > >
-> > > > Do you need this code as the purpose is to test compile time constant and
-> > > > It won't execute at run time?
-> > 
-> > Biju, I'm not sure to understan this comment.
-> > __rzg2l_cru_write_constant() is called at runtime, with a compile-time
-> > constant offset. The BUILD_BUG_ON() verifies at compile time that the
-> > offset is valid, causing compilation errors if it isn't.
-> > 
-> > __rzg2l_cru_write(), on the other hand, is called when the offset is not
-> > known at compile time, because it's computed dynamically. That's a small
-> > subset of the calls. It needs to check the offset at runtime for
-> > overflows.
-> > 
-> > What do you mean by "won't execute at runtime", and what code do you
-> > think is not needed ?
-> > 
-> > > It was suggested in a previous review.
-> > > 
-> > > I've done some investigation on the above bot issue here.
-> > > Using __always_inline for constant read/write issue seems solved.
-> > > 
-> > > I found this link: https://www.kernel.org/doc/local/inline.html
-> > > 
-> > > But tbh I'm not finding an example into the kernel that use both 
-> > > BUILD_BUG_ON and  __always_inline.
-> > > 
-> > > Laurent what do you think about? Do you have some hints?
-> > > Thanks in advance.
-> > 
-> > Do you mean that the compile-time assertions are caused by
-> > __rzg2l_cru_write_constant() not being inlined ?
-> 
-> Seems yes.
-> Using __always_inline seems to solve the issue reported by the bot test.
-> 
-> > The function could be
-> > marked as __always_inline I suppose. Or the BUILD_BUG_ON() check could
-> > be moved to the rzg2l_cru_write() macro.
-> 
-> Mmm not sure that I completely got this way.
-> 
-> Actually we have:
-> 
-> #define rzg2l_cru_write(cru, offset, value) \
-> 	(__builtin_constant_p(offset) ? \
-> 	 __rzg2l_cru_write_constant(cru, offset, value) : \
-> 	 __rzg2l_cru_write(cru, offset, value))
-> 
-> And BUILD_BUG_ON() can only be user on constant offset.
+Hello Harini, Andrew,
 
-There seems to be quite a few examples of usage of __always_inline with
-BUILD_BUG_ON(), so we can go that way. Otherwise, you could write
-something like (untested)
+On Wed Mar 26, 2025 at 6:01 AM CET, Katakam, Harini wrote:
+> [AMD Official Use Only - AMD Internal Distribution Only]
+>
+> Hi Theo,
+>
+>> -----Original Message-----
+>> From: Andrew Lunn <andrew@lunn.ch>
+>> Sent: Tuesday, March 25, 2025 12:06 AM
+>> To: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+>> Cc: Andrew Lunn <andrew+netdev@lunn.ch>; David S. Miller
+>> <davem@davemloft.net>; Eric Dumazet <edumazet@google.com>; Jakub Kicinsk=
+i
+>> <kuba@kernel.org>; Paolo Abeni <pabeni@redhat.com>; Rob Herring
+>> <robh@kernel.org>; Krzysztof Kozlowski <krzk+dt@kernel.org>; Conor Doole=
+y
+>> <conor+dt@kernel.org>; Nicolas Ferre <nicolas.ferre@microchip.com>; Clau=
+diu
+>> Beznea <claudiu.beznea@tuxon.dev>; Paul Walmsley
+>> <paul.walmsley@sifive.com>; Palmer Dabbelt <palmer@dabbelt.com>; Albert =
+Ou
+>> <aou@eecs.berkeley.edu>; Alexandre Ghiti <alex@ghiti.fr>; Samuel Holland
+>> <samuel.holland@sifive.com>; Richard Cochran <richardcochran@gmail.com>;
+>> Russell King <linux@armlinux.org.uk>; Thomas Bogendoerfer
+>> <tsbogend@alpha.franken.de>; Vladimir Kondratiev
+>> <vladimir.kondratiev@mobileye.com>; Gregory CLEMENT
+>> <gregory.clement@bootlin.com>; netdev@vger.kernel.org;
+>> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+>> riscv@lists.infradead.org; linux-mips@vger.kernel.org; Thomas Petazzoni
+>> <thomas.petazzoni@bootlin.com>; Tawfik Bayouk <tawfik.bayouk@mobileye.co=
+m>
+>> Subject: Re: [PATCH net-next 07/13] net: macb: move HW IP alignment valu=
+e to
+>> macb_config
+>>
+>> On Mon, Mar 24, 2025 at 06:49:05PM +0100, Th=C3=A9o Lebrun wrote:
+>> > Hello Andrew,
+>> >
+>> > On Fri Mar 21, 2025 at 10:06 PM CET, Andrew Lunn wrote:
+>> > > On Fri, Mar 21, 2025 at 08:09:38PM +0100, Th=C3=A9o Lebrun wrote:
+>> > >> The controller does IP alignment (two bytes).
+>> > >
+>> > > I'm a bit confused here. Is this hard coded, baked into the silicon?
+>> > > It will always do IP alignment? It cannot be turned off?
+>> >
+>> > Yes, the alignment is baked inside the silicon.
+>> > I looked but haven't seen any register to configure the alignment.
+>> >
+>> > Sorry the commit message isn't clear, it needs improvements.
+>> >
+>> > >>  skb_reserve(skb, NET_IP_ALIGN);
+>> > >
+>> > > Why not just replace this with
+>> > >
+>> > >         skb_reserve(skb, 2);
+>> >
+>> > On arm64, NET_IP_ALIGN=3D0. I don't have HW to test, but the current
+>> > code is telling us that the silicon doesn't do alignment on those:
+>>
+>> This is part of the confusion. You say the hardware does alignment, and =
+then say it
+>> does not....
+>>
+>> >    skb =3D netdev_alloc_skb(...);
+>> >    paddr =3D dma_map_single(..., skb->data, ...);
+>> >    macb_set_addr(..., paddr);
+>> >
+>> >    // arm   =3D> NET_IP_ALIGN=3D2 =3D> silicon does alignment
+>> >    // arm64 =3D> NET_IP_ALIGN=3D0 =3D> silicon doesn't do alignment
+>> >    skb_reserve(skb, NET_IP_ALIGN);
+>> >
+>> > The platform we introduce is the first one where the silicon alignment
+>> > (0 bytes) is different from the NET_IP_ALIGN value (MIPS, 2 bytes).
+>>
+>> This is starting to make it clearer. So the first statement that the con=
+troller does IP
+>> alignment (two bytes) is not the full story. I would start there, explai=
+n the full story,
+>> otherwise readers get the wrong idea.
+>>
+>> > >>     Compatible             |  DTS folders              |  hw_ip_ali=
+gn
+>> > >>    ------------------------|---------------------------|-----------=
+-----
+>> > >>    cdns,at91sam9260-macb   | arch/arm/                 | 2
+>> > >>    cdns,macb               | arch/{arm,riscv}/         | NET_IP_ALI=
+GN
+>> > >>    cdns,np4-macb           | NULL                      | NET_IP_ALI=
+GN
+>> > >>    cdns,pc302-gem          | NULL                      | NET_IP_ALI=
+GN
+>> > >>    cdns,gem                | arch/{arm,arm64}/         | NET_IP_ALI=
+GN
+>> > >>    cdns,sam9x60-macb       | arch/arm/                 | 2
+>> > >>    atmel,sama5d2-gem       | arch/arm/                 | 2
+>> > >>    atmel,sama5d29-gem      | arch/arm/                 | 2
+>> > >>    atmel,sama5d3-gem       | arch/arm/                 | 2
+>> > >>    atmel,sama5d3-macb      | arch/arm/                 | 2
+>> > >>    atmel,sama5d4-gem       | arch/arm/                 | 2
+>> > >>    cdns,at91rm9200-emac    | arch/arm/                 | 2
+>> > >>    cdns,emac               | arch/arm/                 | 2
+>> > >>    cdns,zynqmp-gem         | *same as xlnx,zynqmp-gem* | 0
+>> > >>    cdns,zynq-gem           | *same as xlnx,zynq-gem*   | 2
+>> > >>    sifive,fu540-c000-gem   | arch/riscv/               | 2
+>> > >>    microchip,mpfs-macb     | arch/riscv/               | 2
+>> > >>    microchip,sama7g5-gem   | arch/arm/                 | 2
+>> > >>    microchip,sama7g5-emac  | arch/arm/                 | 2
+>> > >>    xlnx,zynqmp-gem         | arch/arm64/               | 0
+>> > >>    xlnx,zynq-gem           | arch/arm/                 | 2
+>> > >>    xlnx,versal-gem         | NULL                      | NET_IP_ALI=
+GN
+>
+> Thanks for the patch. xlnx,versal-gem is arm64 and NET_IP_ALIGN is 0.
+>
+> AFAIK, IP alignment is controlled by the register field " receive buffer =
+offset "
+> in the NW config register. The only exception is when " gem_pbuf_rsc " i.=
+e.
+> receive coalescing is enabled in the RTL in the IP. In that case, the Cad=
+enc
+> specification states that these bits are ignored.
+> So to summarize, if RSC is not enabled (see bit 26 of designcfg_debug6),
+> then the current implementation works for all architectures i.e. these tw=
+o
+> statements are in sync:
+> config |=3D MACB_BF(RBOF, NET_IP_ALIGN);  /* Make eth data aligned */
+> skb_reserve(skb, NET_IP_ALIGN);
+>
+> Hope this helps simplify the patch (and also fill up the table that Andre=
+w suggested)
 
-#define rzg2l_cru_write(cru, offset, value)				\
-({									\
-	u32 __offset = (offset);					\
-	if (__builtin_constant_p(__offset)) {				\
-		BUILD_BUG_ON(__offset >= RZG2L_CRU_MAX_REG);		\
-		__rzg2l_cru_write_constant(cru, __offset, value);	\
-	} else {							\
-		__rzg2l_cru_write(cru, __offset, value));		\
-	}								\
-})
+Well, big thanks! That'll make the patch much simpler. Either EyeQ5
+is the first compatible with RSC enabled, or others with RSC enabled
+have NET_IP_ALIGN=3D0.
 
-> > > > >  }
-> > > > > 
-> > > > > +static inline u32
-> > > > > +__rzg2l_cru_read_constant(struct rzg2l_cru_dev *cru, u32 offset) {
-> > > > > +	const u16 *regs = cru->info->regs;
-> > > > > +
-> > > > > +	BUILD_BUG_ON(offset >= RZG2L_CRU_MAX_REG);
-> > > > > +
-> > > > > +	return ioread32(cru->base + regs[offset]); 
-> > > > 
-> > > > Do you need this code as the purpose is to test compile time constant and
-> > > > It won't execute at run time?
-> > > > 
-> > > > Not sure, maybe adding an entry with MAX_ID in LUT,
-> > > > that will avoid buffer overflows and you can take out
-> > > > All out of bound array checks?
-> > > > 
-> > > > Cheers,
-> > > > Biju
-> > > > 
-> > > > }
-> > > > > +
-> > > > > +#define rzg2l_cru_write(cru, offset, value) \
-> > > > > +	(__builtin_constant_p(offset) ? \
-> > > > > +	 __rzg2l_cru_write_constant(cru, offset, value) : \
-> > > > > +	 __rzg2l_cru_write(cru, offset, value))
-> > > > > +
-> > > > > +#define rzg2l_cru_read(cru, offset) \
-> > > > > +	(__builtin_constant_p(offset) ? \
-> > > > > +	 __rzg2l_cru_read_constant(cru, offset) : \
-> > > > > +	 __rzg2l_cru_read(cru, offset))
-> > > > > +
-> > > > >  /* Need to hold qlock before calling */  static void return_unused_buffers(struct rzg2l_cru_dev *cru,
-> > > > >  				  enum vb2_buffer_state state)
+Below is what the patch could look like for V2.
+ - We detect at probe if the HW is RSC-capable.
+ - If it isn't, we keep the code the same.
+ - If it is, that means the alignment feature isn't available.
+   We can't respect our arch alignment request.
 
--- 
-Regards,
+That removes all the macb_config->hw_ip_align mess. Much better.
 
-Laurent Pinchart
+Note: I tried checking if the RBOF field is read-only when the "receive
+buffer offset" isn't available but it isn't.
+
+-
+
+diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cad=
+ence/macb.h
+index d8ee7878e144..478152f70563 100644
+--- a/drivers/net/ethernet/cadence/macb.h
++++ b/drivers/net/ethernet/cadence/macb.h
+@@ -525,6 +525,8 @@
+ /* Bitfields in DCFG6. */
+ #define GEM_PBUF_LSO_OFFSET        27
+ #define GEM_PBUF_LSO_SIZE       1
++#define GEM_PBUF_RSC_OFFSET        26
++#define GEM_PBUF_RSC_SIZE       1
+ #define GEM_PBUF_CUTTHRU_OFFSET       25
+ #define GEM_PBUF_CUTTHRU_SIZE         1
+ #define GEM_DAW64_OFFSET        23
+@@ -736,6 +738,7 @@
+ #define MACB_CAPS_NEED_TSUCLK         BIT(10)
+ #define MACB_CAPS_QUEUE_DISABLE       BIT(11)
+ #define MACB_CAPS_NO_LSO        BIT(12)
++#define MACB_CAPS_RSC_CAPABLE         BIT(13)
+ #define MACB_CAPS_PCS           BIT(24)
+ #define MACB_CAPS_HIGH_SPEED       BIT(25)
+ #define MACB_CAPS_CLK_HW_CHG       BIT(26)
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/etherne=
+t/cadence/macb_main.c
+index db8da8590fe0..51e82d66403b 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -1329,8 +1329,19 @@ static void gem_rx_refill(struct macb_queue *queue)
+         dma_wmb();
+         macb_set_addr(bp, desc, paddr);
+
+-        /* Properly align Ethernet header. */
+-        skb_reserve(skb, NET_IP_ALIGN);
++        /* Properly align Ethernet header.
++         *
++         * Hardware can add dummy bytes if asked using the RBOF
++         * field inside the NCFGR register. That feature isn't
++         * available if hardware is RSC capable.
++         *
++         * We cannot fallback to doing the 2-byte shift before
++         * DMA mapping because the address field does not allow
++         * setting the low 2/3 bits.
++         * It is 3 bits if HW_DMA_CAP_PTP.
++         */
++        if (!(bp->caps & MACB_CAPS_RSC_CAPABLE))
++           skb_reserve(skb, NET_IP_ALIGN);
+      } else {
+         desc->ctrl =3D 0;
+         dma_wmb();
+@@ -2788,7 +2799,9 @@ static void macb_init_hw(struct macb *bp)
+   macb_set_hwaddr(bp);
+
+   config =3D macb_mdc_clk_div(bp);
+-  config |=3D MACB_BF(RBOF, NET_IP_ALIGN); /* Make eth data aligned */
++  /* Make eth data aligned. If RSC capable, that offset is ignored. */
++  if (!(bp->caps & MACB_CAPS_RSC_CAPABLE))
++     config |=3D MACB_BF(RBOF, NET_IP_ALIGN);
+   config |=3D MACB_BIT(DRFCS);    /* Discard Rx FCS */
+   if (bp->caps & MACB_CAPS_JUMBO)
+      config |=3D MACB_BIT(JFRAME);   /* Enable jumbo frames */
+@@ -4109,6 +4122,8 @@ static void macb_configure_caps(struct macb *bp,
+      dcfg =3D gem_readl(bp, DCFG2);
+      if ((dcfg & (GEM_BIT(RX_PKT_BUFF) | GEM_BIT(TX_PKT_BUFF))) =3D=3D 0)
+         bp->caps |=3D MACB_CAPS_FIFO_MODE;
++     if (GEM_BFEXT(PBUF_RSC, gem_readl(bp, DCFG6)))
++        bp->caps |=3D MACB_CAPS_RSC_CAPABLE;
+      if (gem_has_ptp(bp)) {
+         if (!GEM_BFEXT(TSU, gem_readl(bp, DCFG5)))
+            dev_err(&bp->pdev->dev,
+
+Thanks Andrew & Harini,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
