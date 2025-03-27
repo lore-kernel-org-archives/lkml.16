@@ -1,124 +1,114 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE2821422C
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18190216E30;
+	Thu, 27 Mar 2025 14:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743085375; cv=none; b=owG5r2BoTiZ1NFPF0souM2cEpJVzZvdPtj0FeHjM+vJB7kZRteMl2nydeuvh4RcgQGYTOfWORXftrp+lbyF3qz9PxK6gmycLVBk9PUyxoiPPctvroSJQYloJguA2TnOfxtZVNC9pQaxTqTwvWeYRJ/qy7MQW+NsFymU950MNI9I=
+	t=1743085499; cv=none; b=kQ9ca814J9P+dmkh3JjJVcc0r6mFYVq2S9Wn6s1sFlzpjUoPdMc/RB6TTi1Hh2SaQWzGbdr6Fn+76tcioR7vf4d41icMdaJSHacWApvSslgipyTzi7Ig6V3+BPDGfF5RSieRHlal54jV06zB6MVtYzOHOM+iJ5zd/NuLqWQKXb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743085375; c=relaxed/simple;
-	bh=fjzgEC9sE1O7WE9Cc67Qkqp6QucKVRp1A2FAVFdolFk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N1K6bCgQ6GFevw+2Fq/rJw+vb4qjlssZR4BYv4WpHIdyHoQHdt0zaE0yebOtZJOYVdfC6cE2vLaL1yEtDKh53HIhvTP/Xrw/4+klokOpt3/tmEjeHzuO+xKX/VjtqkLOMoxvROGqlq9VfjYcDAU6qobV7WpulVI660dK6uZgU1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JuUOGvgg; arc=none smtp.client-ip=209.85.219.49
+	s=arc-20240116; t=1743085499; c=relaxed/simple;
+	bh=yEABp3GiFg/+0kZlvIxOmAhS8Jdg7pfZN6WQVp7VoUI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PbpXkefjAA9/v0f7GBCL811pbheO/G+5MsvblyD8mv8eAlZwvdIcVCcwXuqvNJZCWJfnw3ZEfL8dYWZcbOa0Ndr9ZUHCrvGXK3YARlYaABN1BoNZfJaXJjW+cx+Xjv8kYqnQryK3XoFRiAAggbbrUCfocFbWalAqZZhmm5gAQJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GFxsw9dy; arc=none smtp.client-ip=209.85.216.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JuUOGvgg"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6eeb7589db4so4638856d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 07:22:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GFxsw9dy"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-30155bbbed9so1304275a91.1;
+        Thu, 27 Mar 2025 07:24:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743085373; x=1743690173; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hX4sahM5YSPdcjm7sUg4I+6OXP63Z2ITLCKrFRCwRg8=;
-        b=JuUOGvggDnP9HM/z4ru5E9w1ZwnsykeyHhKlw7O76mMebhm+QzrkNwvbyLL+ZF72N1
-         /g8nlFK3pgeZKerKtZFKSMFPltdJFe3F34szAbZl7Djdqp9n0RCj03G1IpsiSxhUHUcL
-         K0vo9ZxQgZ7h1kDhpYSLKqJfQwbxfuSjuffeiTioYEihl7NUxnV8qldOIyi/JDrgO5G+
-         +8e8hT+G1IFvT8ktHUBNWffHJPQyLF1Z9PVrq7tx29/ivnmoC4o0pZPEdgfTtsk524D2
-         jxEcVbwtVHMXBGpnWpzix66vZoD+22hZrtW03T5B1G337S9V5j4eL7Qk8TZ7K8EhxClF
-         +k4w==
+        d=gmail.com; s=20230601; t=1743085497; x=1743690297; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ui62GSc9Eq6wueICfZ+2gQlUUj34FyRWiYMHHZxzwpY=;
+        b=GFxsw9dyRH78yUblxh0cDrQk9chef0waLDO+7fU+isICdbE28bbL/mUZqciaaGO2QT
+         gHHWViBmlnfRZ6JL2bhpbGwndhTDEJNQo2ekn2JEoQHbTiEEH3AI1SSKwZ5s47efHQLh
+         OMhkxCRjJ6eex4Wd4GizuHKfMr1N32BoOTjyU+D0R9sdjO5JuJQi5IbXTsfP6a87bvwC
+         +KZ1e/hVbVc7iDaddNbA+uEUtnJWxZnrimzbZsJMw84rhOOsiE176XP/gTgj9nFOb5iN
+         trrVBkox714MvvJFRwihaiPLpcfUUEeND3o4aPhDqYGPo2yzktm0dqUUcYzrqUrf3Fnd
+         PVgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743085373; x=1743690173;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hX4sahM5YSPdcjm7sUg4I+6OXP63Z2ITLCKrFRCwRg8=;
-        b=VkxfNgU45ZMhEZVu0Gr4B7ABgCzUpd6pprm2hI3XAFh1nQ0Uh2CdXrPPwS0kbiMCO2
-         XTauLZa9YMn433SqsRa/LiAMz8Pp3Ij0QdokWCWzGMBSVlf+1ZY4ic5+NWjn0flXUmKX
-         KA3j+uwFE0GlVUoSYcBuFoq5sGUaAuf0zGe1CfZxBUygFINw9PDubm/PKWkAYiP+2UX6
-         IxjUpA4QbNiu/KNs3nEjdU0occUnQZJSPh6PrZXcBIs+Dp2bXPcZunorsBxucGv+nJY9
-         E9dCdZGW8LDux/RgwZP28x7XxBZZyRyPcC0mGgMA3/62ceH8zv+1rTR/tcQmMEpbsa2g
-         G/WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKowoOZt/IXT7M7D0LZxzlyoCcyrhtEDHm9LamVolMooG12ULubTYZdduCNiqCyA3U8sbT7FLWiFgHP0I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0Fb19jFkvqSG2CNUMZ9S9L1cxvHWZpx/08F2rvHCvsT4y/qqm
-	mjzFbXezfHf2oty7qrZhFcI+ZjfuZYC8qM2ueag0shu0i/CcTaDlKuDw+kFRzFnxQH/TypITdgu
-	V83KyzhZt61a54yDbvA2oOMDi33g=
-X-Gm-Gg: ASbGncs9YX1zyF/k/qfaX+xsvnq2cfl8RAqn4Tyw7cSk6nKdpI2nk6Jbf/nVI8wVHc5
-	SAVLIiCZPML530Hmbj2Emloakbr8nYpakpSDjOHctjgNt/DLl1M2d6BjW93EL0/UwsilwZlfPDV
-	nIk7muE8QGzhHj5JYEaGQ0xmGh
-X-Google-Smtp-Source: AGHT+IFmVUdRMPT0jOoO+WnV3SCwL4L2KHCpdirUKfb/Y+CP0Y7a7L4QWgyfiMBN9yXO+A9DvjPj409roZoHIlgYGYI=
-X-Received: by 2002:a05:6214:410f:b0:6e8:9e9c:d20f with SMTP id
- 6a1803df08f44-6ed23897d79mr63094496d6.21.1743085372831; Thu, 27 Mar 2025
- 07:22:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743085497; x=1743690297;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ui62GSc9Eq6wueICfZ+2gQlUUj34FyRWiYMHHZxzwpY=;
+        b=m7WWJ8GXmMh30P1juqRed5ZG7gyEL96mAnqOjIkNS0dO+Rm+8sK4bKBr5HgzMwd1NU
+         EDWfaB7B02wNfe7QKhp+ctQF33CIJVLPSUXM3vy+xa2kfpqUnIU/VYjtZqFUUSh26KAl
+         UvPBYSlLguXdNV8k9q+o7enDd9i+VZzEPBbMdN6/f2ZKIrvOhHY78pAEfXlDWXT58xTD
+         AszGtHHWsQFwaH4dM0Wp5m8U9sc3bD5F3mEjVeveT/7lYAEecRs7nLDnUhOhoDkThWRK
+         S5gzvIdVSXNTKO1Z1Ex7v4yNxaCiRYDhKthbarftzMrV4hyqeDegHDy0NMXpKIrMfNLS
+         fYQw==
+X-Forwarded-Encrypted: i=1; AJvYcCWLRr4e6iXbLRUWyyVKT9TphxZJrKue+xk7+IjJovHlZdxf8KBNkXAJJIu+a0s5Y/w7R1owJSzytJHuQZw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0jgA9cnnTqrTIIk0vCfzK96mG1JStZ5mPARcVOiJE6A+pvWpI
+	szcuhAfUpKvv02u2K0u5Crl6PABDsudTbjAW/LgP3a/7e2nbl3oB
+X-Gm-Gg: ASbGncsFHSh47Kuxm3yw+wyjt9CoIjH46PNJ2Lt2fEOlU4RF/AGOLHpvqVUbXkpEXA7
+	yMYsWmGJo5TZLqXRV+eq8h22jel64fHHUfR5Sc1q4tElhnA0XR3ZG8+rMF5RHvCPmEBEDs7wCmA
+	qIpQglTZ0JFTHQEmWOJx8VFRcv/bmgXlx+KRonHi64RYGOjKFzVT4e7POzXzJmylKc7Ww9cIB3n
+	CdT0i9bv+6WADn7WrOMHoQF4CkimQn79As4npd+xFwwDFnW5ZEwG90QjYsnC1ukuTrkB2oHzxE+
+	1c7d+rOsR64cwY4YaCPwx3tLPz1Y9Hx6Fl4UG1n3HihWaG1Vs3Etc4a3aYIXdQ==
+X-Google-Smtp-Source: AGHT+IELMj2xTDIqmJ3olXE5sPSsOQeADisXw6ErmX9HsLW4/v/8UhpHXEub4NyNRuVwWrSKIIhZQA==
+X-Received: by 2002:a17:90b:4a4f:b0:2fe:a77b:d97e with SMTP id 98e67ed59e1d1-303a7d66285mr5967141a91.11.1743085497131;
+        Thu, 27 Mar 2025 07:24:57 -0700 (PDT)
+Received: from vaxr-BM6660-BM6360 ([2001:288:7001:2703:ccef:3c67:33df:4a11])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811f65casm128759295ad.230.2025.03.27.07.24.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 07:24:56 -0700 (PDT)
+Date: Thu, 27 Mar 2025 22:24:52 +0800
+From: I Hsin Cheng <richard120310@gmail.com>
+To: johannes@sipsolutions.net
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [RFC PATCH] wifi: mac80211: Replace strncpy() with strscpy()
+Message-ID: <Z-VftFBpDBT6l1f6@vaxr-BM6660-BM6360>
+References: <20250327141108.182585-1-richard120310@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <tencent_2C3830CD73C3B917ECA59895C90CB43BF009@qq.com>
- <CAKEwX=N98tC5Tq+XYLgAP4MDUBAO01ceE4e+mrk9i3YniL2Vkw@mail.gmail.com>
- <CAKEwX=NbpaQcq_awoPKmAuPWL=D4C2W7o_9D3J_SuDFvtbo9Ag@mail.gmail.com> <Z-Rmo_xx_btMKO99@casper.infradead.org>
-In-Reply-To: <Z-Rmo_xx_btMKO99@casper.infradead.org>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Thu, 27 Mar 2025 10:22:41 -0400
-X-Gm-Features: AQ5f1Jpcqo2aPvJKeqa0SWvW6GV0i6-uOAUDw9ucZg5DBq1PSgU1PPwluoGO3Qw
-Message-ID: <CAKEwX=NqqsO6ajKffUFE1Y4B-YUhABudPbgAKy=16nN_k_-+fQ@mail.gmail.com>
-Subject: Re: Linux6.14-rc5 BUG: spinlock bad magic in z3fold_zpool_free
-To: Matthew Wilcox <willy@infradead.org>
-Cc: ffhgfv <xnxc22xnxc22@qq.com>, "vitaly.wool" <vitaly.wool@konsulko.com>, 
-	linmiaohe <linmiaohe@huawei.com>, akpm <akpm@linux-foundation.org>, 
-	linux-mm <linux-mm@kvack.org>, linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250327141108.182585-1-richard120310@gmail.com>
 
-On Wed, Mar 26, 2025 at 4:42=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
-> wrote:
+On Thu, Mar 27, 2025 at 10:11:08PM +0800, I Hsin Cheng wrote:
+> The name of vif which is "vif_name" should be NULL-terminated to be a
+> valid string, however "strncpy()" doesn't guarantee that. Replace it
+> with "strscpy()" to make sure the content within "vif_name" is
+> NULL-terminated.
+> 
+> Link: https://github.com/KSPP/linux/issues/90
+> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+> ---
+>  net/mac80211/trace.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/mac80211/trace.h b/net/mac80211/trace.h
+> index 72fad8ea8bb9..37f5b1c87709 100644
+> --- a/net/mac80211/trace.h
+> +++ b/net/mac80211/trace.h
+> @@ -1725,7 +1725,7 @@ TRACE_EVENT(drv_switch_vif_chanctx,
+>  				SWITCH_ENTRY_ASSIGN(vif.vif_type, vif->type);
+>  				SWITCH_ENTRY_ASSIGN(vif.p2p, vif->p2p);
+>  				SWITCH_ENTRY_ASSIGN(link_id, link_conf->link_id);
+> -				strncpy(local_vifs[i].vif.vif_name,
+> +				strscpy(local_vifs[i].vif.vif_name,
+>  					sdata->name,
+>  					sizeof(local_vifs[i].vif.vif_name));
+>  				SWITCH_ENTRY_ASSIGN(old_chandef.control_freq,
+> -- 
+> 2.43.0
 >
-> On Wed, Mar 26, 2025 at 03:43:28PM -0400, Nhat Pham wrote:
-> > On Wed, Mar 26, 2025 at 10:32=E2=80=AFAM Nhat Pham <nphamcs@gmail.com> =
-wrote:
-> > > On Wed, Mar 26, 2025 at 10:11=E2=80=AFAM ffhgfv <xnxc22xnxc22@qq.com>=
- wrote:
-> > > >
-> > > > Hello, I found a bug titled " BUG: spinlock bad magic in z3fold_zpo=
-ol_free   " with modified syzkaller in the Linux6.14-rc5.
-> > > > If you fix this issue, please add the following tag to the commit: =
- Reported-by: Jianzhou Zhao <xnxc22xnxc22@qq.com>,    xingwei lee <xrivende=
-ll7@gmail.com>, Zhizhuo Tang <strforexctzzchange@foxmail.com>
-> > >
-> > > Please stop using z3fold :) We already removed it upstream.
-> >
-> > To clarify a little bit - we've found that z3fold is buggy (for a very
-> > long time), and does not outperform zsmalloc in many of the workloads
-> > we test on (both microbenchmark and real production workloads). We've
-> > deprecated it since 6.12:
-> >
-> > https://github.com/torvalds/linux/commit/7a2369b74abf76cd3e54c45b30f6ad=
-db497f831b
-> >
-> > and will remove it altogether:
-> >
-> > https://lore.kernel.org/all/20250129180633.3501650-1-yosry.ahmed@linux.=
-dev/
-> >
-> > Perhaps Vitaly can fix the issue for stability's sake (or in case
-> > there is a reason why you MUST use z3fold)? But I strongly recommend
-> > you experiment with zsmalloc :)
->
-> This group are syzkaller kiddies.  They have no understanding of what
-> they're testing; they're just running their fuzzer and sending emails.
-> They don't care what's useful, so there's a lot of noise from unmaintaine=
-d
-> filesystems and so on.
 
-You're right - I just realized they did it once already for zswap:
+> The name of vif which is "vif_name" should be NULL-terminated to be a
+Or maybe it should be trailing NULL-padding when sources is shorter, if
+it's the case we should consider strscpy_pad() or other alternatives.
 
-https://lore.kernel.org/all/tencent_49DA3E780998A9B96ADC9FF658CC84641808@qq=
-.com/
+Let me know if there's any mistakes or tests I can help to validate,
+thanks!
 
-It was also due to the (soon-to-be-removed) z3fold backend. To save
-time, I'll stop engaging from now on, unless it's a proper issue.
+Best regards,
+I Hsin Cheng
