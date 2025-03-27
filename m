@@ -1,170 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FD7204F76;
-	Thu, 27 Mar 2025 08:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146542080D0
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743064819; cv=none; b=iXzFicyNN46vhXRGaqKYatyDT+r/MGg8S7iT5TnNmjI+pKS6IjwlOkCFkv/He99XbNseSBav0AG/l1DLfhsWzaBfT6rF3tXLbDUd0xx6vTBfMMyXqY49VtkWQU3i/Q5mjuozleYB+YVo4ii37y/CXEBS2/ErmsJ3IIYWgUnoC2Y=
+	t=1743064835; cv=none; b=eRn9kQ4iylVnF7lK3Y4zDEsnUXn9KMN/dgTLG+Ad0bSTBNjTfLZWFnh9ggY390D7rlRZZCmHqpoDjohU942a3ErHuQpIOkCQJOsixOpUQLIVyzrkNZPJ+EjKlr5d7gfsaNFmigjRkGkvOK4Lzgpm+g99bh5eeFLuEuALZxWvdFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743064819; c=relaxed/simple;
-	bh=M7YLTOwmxz8VNCLJQrpSFgrai1rDE44BnsnAtSQ+8g8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SO+5oNEkQcCTV/G76mNq+YjusLAibrsgtgiaRjJAAC6oPfmfDqhotr9vHSkUr3J4v/3uEolfCJg2XPhtqgmFHcj6ncIh3sMjN7qqoJt0dD2bTrMU9jwafyvR9SNwc+SZfoo7XBjYLb1NBGIBe1z0HkDImIuaHVoyEjouPe8xlXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bdf6RvOv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743064835; c=relaxed/simple;
+	bh=tX45f4SgJzV0BzxhEgpd0/lEHTr9TcXiXqeGEs6DGTs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Cm/PiF2H0o891LXBvQZNBd+NQqrRjjnl9Qo1ogbK4awlkuHENbqzo2j5mfvK4+nREG0x84/0VD9weXcoEmBZu4g6xGJVZRPNvDguy/27kfymvK1cke0oXAscDChv75JGH5GpIjxRGc7203gWtK+aomo4IbbgiUWnoBp/otR6/4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WbhOZPYz; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bdf6RvOv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AD14C4CEE5;
-	Thu, 27 Mar 2025 08:40:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743064818;
-	bh=M7YLTOwmxz8VNCLJQrpSFgrai1rDE44BnsnAtSQ+8g8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Bdf6RvOvjEYGXlZr9JhtetcwgGmZLV4uKQvjuyvEWbnJDYHu1tbclQY2tjfznu1FQ
-	 zbi/zRNqFeRhmiWVpaxPSug73eKw25hU31ypTmaQdw5i+07Mrz9mUdnaYloqrCOOEk
-	 XfkG/SAOQm6ZDkq/7ym88pdQ6V0qQdDpkqqWkA3daJmzv1NzZCxCFJhvi1nIiRye/o
-	 CeqnIvKDHUSDBA2gq11N2l8n3Qj1bSrH/qNyrw5S1OF4nLwiGyGxUCRdyRd6KIzI4Q
-	 EQnfw5OfTtxqYFyHJXw3aPv6KurYyzCbqi0oUtmQX+D5/BBRr2R6QURTVmZ1FU/lJb
-	 AOQyB4RR4EBDw==
-Message-ID: <b2e1da92-0dfe-42c6-9f36-32486b768220@kernel.org>
-Date: Thu, 27 Mar 2025 09:40:10 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WbhOZPYz"
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-520847ad493so805874e0c.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 01:40:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743064833; x=1743669633; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=drLMpc31hHP8DJqxvldHizaDERYv7LoBBB4sM1BPDHc=;
+        b=WbhOZPYzJBZFpHvI7EN/ARNKhvi87i32PHvu/BTzI4E1jKzQHtDKyGPVEu75Y50B2C
+         p7v0sHsEnlcA/6wHireBajjjtkfaUGR7a4/0Ofv7/N1u/h3P6wJ0PqdJugLSBSgGJwo7
+         SerLB0E2m9Hd+K88wwhRYsOqsAFhZ2AZH5R/vygL2x0F+cw+QfERQ/g29TIFZPaoTpG5
+         hRr1kVEPXiz8SysEjLnsZhgzWZSDsXsYCmqlcg+VH4JZU+wdib/h/QE14oa9BuqaxNET
+         GuO3Uu4CADgnFje1B0Ec3qq2VBTFdYfRlyRpOcQt5v692UzQdYRbitRpaBQKwAULMSRS
+         XN2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743064833; x=1743669633;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=drLMpc31hHP8DJqxvldHizaDERYv7LoBBB4sM1BPDHc=;
+        b=b4cl+yBZvEFzI2E8W1QpLVr9uzrOYtcWMuctjKTjCS9oJyS4zpcHMz3X2fLioPtq2L
+         ltTeQ9INS1y4tFTOG/unRk4v+N9RWg/1RneeQK6l3GsS4cWODMRJa6vjDsmUNhIcZao4
+         aRtFAxCzpGggfnaFs4fsAQqIVPCS42X340NhKED+wjLeF3efKA1ZpkpeMRSZH16JW0gP
+         yKLM7nfqYeF0/GAE1NVyI7Cj598p2YJDqAJRU55Scquq7k0PTlIV/N0B6t+gxl3ORr47
+         4LfQrg6CID00si9zZeaUu2lEl7vdhRsjxE3XzoWNLxDMQwyWsXtMfZ141wEuZk7bmOG9
+         hZ4A==
+X-Forwarded-Encrypted: i=1; AJvYcCXUsjzZ9qMPHmfZLizbPq5HCG5v1fUihVyOYBoenutmZHnDxukPdm0qxfeHAds3dj1gZTzPDafcKXETHdI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpfT3MfxyDyOQwPIFLmygIxhupRAZq/6hT/8omxUnRjqeUjE4J
+	ifwoYVHTCV4opxDzVswphjaf3Ik/a19ztuK0n5olKqUAZNinJ5NTl64+yd0LX9OJXzZ1oV+4MLV
+	71uLP7hp+qZw5EDSddmHugZK0u8M06ImSJwUDRw==
+X-Gm-Gg: ASbGnctQ9FuciuzwQfg7/yXzGW5i4F6dduqQiK5BkDu/0yKwQcU3wHMO2fGjOBV8gJi
+	fag9WgAMADAii4hX34IR0atlBIIUtxkG4v1UGoenW7N0FZH0hPwhzQAoux2Mt7mo9seuAFHnPPW
+	faGxD6xGwqJHsA432/30UMnl4SBOma5e/BjUeqa/nAi6nT8Q6h0EQNqa3UblA=
+X-Google-Smtp-Source: AGHT+IGOGcjqwfMP9mXiNbxB6MtctF0dET/SKTnUAdsnVBHT+F80EMzrMsZihZOJ8DAzX0n8EDiMCpkMZMySY3I6Ims=
+X-Received: by 2002:a05:6122:8c02:b0:520:9688:d1bb with SMTP id
+ 71dfb90a1353d-526008d082fmr2054719e0c.2.1743064832775; Thu, 27 Mar 2025
+ 01:40:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/6] arm64: dts: cix: add initial CIX P1(SKY1) dts
- support
-To: Peter Chen <peter.chen@cixtech.com>
-Cc: Marc Zyngier <maz@kernel.org>, soc@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com,
- will@kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- cix-kernel-upstream@cixtech.com, marcin@juszkiewicz.com.pl,
- kajetan.puchalski@arm.com,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Fugang Duan <fugang.duan@cixtech.com>
-References: <20250324062420.360289-1-peter.chen@cixtech.com>
- <20250324062420.360289-6-peter.chen@cixtech.com>
- <865xjxmlgl.wl-maz@kernel.org> <Z-Nz0DU441Wwj1i4@nchen-desktop>
- <861pukm9yd.wl-maz@kernel.org> <Z-Tz1moMNozx23k6@nchen-desktop>
- <e43b1a00-b221-413b-a36a-3a65e17f800f@kernel.org>
- <Z-UNufwSNmZreKya@nchen-desktop>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <Z-UNufwSNmZreKya@nchen-desktop>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CA+G9fYs4-4y=edxddERXQ_fMsW_nUJU+V0bSMHFDL3St7NiLxQ@mail.gmail.com>
+ <b6df035d-74b5-4113-84c3-1a0a18a61e78@stanley.mountain> <Z-LDdPeTsnBi8gAU@macbook.local>
+In-Reply-To: <Z-LDdPeTsnBi8gAU@macbook.local>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 27 Mar 2025 14:10:21 +0530
+X-Gm-Features: AQ5f1JpOCRetHukvs6jfAS61Q6C2j3250sLzDARLwQB5DraQTDosJm5QyiXZRkA
+Message-ID: <CA+G9fYumyaftJ9FaK+74g5iw-v9RV4qDT-SLg1XGk8G7ub2EXA@mail.gmail.com>
+Subject: Re: next-20250324: x86_64: BUG: kernel NULL pointer dereference __pci_enable_msi_range
+To: =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, PCI <linux-pci@vger.kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	shivamurthy.shastri@linutronix.de, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Sasha Levin <sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 27/03/2025 09:35, Peter Chen wrote:
-> On 25-03-27 08:16:33, Krzysztof Kozlowski wrote:
->>>>
->>>> No, you are deliberately choosing to make this platform useless.
->>>>
->>>> That's a bit sad, and a waste of everybody's time.
->>>>
->>>
->>> Hi Marc,
->>>
->>> Thanks for your interesting of our platform, and your comments
->>> help us a lot. But I don't think it wastes reviewers and maintainers
->>> time, a clean patch set saves everyone's time during upstream process.
->>>
->>> For how to organize the patch set for SoC, Krzysztof gave good summary
->>> at [1]. We are going on upstream [2], this patch set is just a start
->>> and base but not like you said for marketing purpose.
->>
->>
->> I do not think I suggested in [1] to ever send new SoC containing only
->> CPUs and interrupt controller, without even serial. My instruction [1]
->> was how to organize it. The DTS can be even fully complete, see the
->> upstreaming example I have been using all the time - Qualcomm SM8650:
->>
->> https://lore.kernel.org/all/20231124-topic-sm8650-upstream-dt-v4-0-e402e73cc5f0@linaro.org/
->>
->> Entire SoC sent to mailing list on the day one of public release of that
->> flagship Qualcomm SoC. The SoC DTSI and board DTS have almost complete
->> picture, except few trickier pieces... but it even has full display and
->> GPU! Plus, as I explained on my email on samsung-soc, that DTS/DTSI
->> patchset references all other bindings with their state, so SoC
->> maintainers can understand what is the overall progress and what will be
->> the result in DT schema checks, if they apply the patchset.
->>
-> 
-> Hi Krzysztof,
-> 
-> Like I said in this thread before, without this initial support,
-> we can't even add mailbox binding that the dt_binding_check will
-> report warnings/errors [1], the reason is "cix" has not existed
-> at vendor-prefixes binding. How we handle this dependency?
+On Tue, 25 Mar 2025 at 20:23, Roger Pau Monn=C3=A9 <roger.pau@citrix.com> w=
+rote:
+>
+> On Tue, Mar 25, 2025 at 04:56:33PM +0300, Dan Carpenter wrote:
+> > If I had to guess, I'd say that it was related to Fixes: d9f2164238d8
+> > ("PCI/MSI: Convert pci_msi_ignore_mask to per MSI domain flag").  I
+> > suspect d->host_data can be NULL.  I could be wrong, but let's add Roge=
+r
+> > to the CC list just in case.
+>
+> Indeed, sorry.  There's a patch from Thomas to switch to using
+> pci_msi_domain_supports() for fetching the flag, as there's no
+> guarantee all call contexts will have an associated msi_domain_info:
 
-Not different than all other SoCs. There is no dependency, you just send
-your patch and tell where the bindings are. Just like I asked in the [1]
-you linked on samsung-soc. Just like all Qualcomm upstreaming goes, e.g.
-SM8650 I linked here.
+Thanks Roger for the clarification.
+LKFT started noticing this issue on the Linus Torvalds master branch from
+March 26, 2025 at git describe: v6.14-1979-g61af143fbea4
 
-Just like maintainer-soc profiles are explaining. I told you to read
-them on IRC.
+Anders bisected and confirmed that,
+  # first bad commit:
+     [c3164d2e0d181027da8fc94f8179d8607c3d440f]
+     PCI/MSI: Convert pci_msi_ignore_mask to per MSI domain flag
 
-Your way is contradictory to three sources describing process and two of
-these sources - my samsung-soc posting and maintainers-soc-clean-dts
-profile - are known to you.
+>
+> https://lore.kernel.org/xen-devel/87v7rxzct0.ffs@tglx/
 
-> 
-> I thought we need to move one step and step before, and keep clean
-> and avoid warning and error for every submission, but it seems not
-> the way you prefer. 
+Lore report link,
+ - https://lore.kernel.org/all/CA+G9fYs4-4y=3DedxddERXQ_fMsW_nUJU+V0bSMHFDL=
+3St7NiLxQ@mail.gmail.com/
 
-No, from where did you get such impression? Maintainers-soc-clean-dts
-explicitly covers this case and I WROTE IT, so how can I prefer
-something else?
-
-Follow SM8650 style or what's written in maintainer soc profiles.
-
-Best regards,
-Krzysztof
+>
+> Regards, Roger.
