@@ -1,91 +1,109 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676A119DF40;
-	Thu, 27 Mar 2025 11:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAC120FAA9;
+	Thu, 27 Mar 2025 11:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743073708; cv=none; b=UIAft8R54ORXi2snAzI5dS9LxH4o5J7M5bCYOmln+2qmd3lf3h/n8vtMg4tCW6Tj68awl3nOqPnUWOx4NAXHOLF7WudZKEsK2b7+wv9w5BOer6/fYZoS/mMr9IP6hCYpJq7JaJaYfddlZGiNDdchzM/zvhOpKEeOxts1a4y6uEs=
+	t=1743073731; cv=none; b=oBrqRtLImmlNGtQVnmMTQQuxbn9FsmtMW8OITR4oGiUvkCk1nJvq5g5qVwA/ywRmmN41G5mIoKiXMRUmpRggAdnO7m0RyKV6YeOXAEs+YYlanIfpHzkVTCGJ71A4urRd0OTZZPkjrwQGAksb57v6VoYtTRVc1hO2ud15zEJrX3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743073708; c=relaxed/simple;
-	bh=OH7QZFUu0ryv+8vHFEw/qfGsxEIKnrUvyYNH7cBsr6Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bYR4vBpl4TlPOQEiGPS1varRgEOzgdFc0fl+qbxC67wovP0vdkDvLqtnIZOE4Re22SFeJ4G/LtPI+zyNB06ylQG0VJ+EC8jq1YhI54iNCNtiiBnmRMXs63EgSpHoaruAyFA27BpTu+POTcjt4hsAThsHyf+Q0ZgltyQPgFjY3ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=yeqleNWE; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1743073731; c=relaxed/simple;
+	bh=T/C1IUzTPhJ0AN1d10OTPlRbro4QgLVWrO1x971kKwc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Nn9rhxBvHw9MTG4rnUGLZoj3v/8+kz52LEAnsMprrSRZHlSX/ydRDUGp1sjAPDyrQl9kOz/LVyald9p2yOxyhrvRZYL7gggq7iBXo7OWDcywc/unTjvIG9/uG4BXqZHl849WthB+kHtI+XZRw9J/AUpYpw+C3Dq6kVEMLnVLhuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NyIYuwq9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="yeqleNWE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=eDRJrQ3U6xuh69yqSFaehCOw5/haYnaDh2eIcuzErB4=; b=yeqleNWELw2zHB8EUUeaahqPLo
-	Vz+nQMQwLNLInu8vGPIAqYylmE2bkIB8gIySyWA0RhiZpGdGOSQzCLh8/KAFN//WG2tgUUuiTIoap
-	7jMqIiLZWbgBbKsdYgPW2mzF45+pATbEU3QhSNR1N9cdr6xxkIKEAtFExzMYLQKGnNLjpzO/F3lom
-	aWazSL6Qd81e7t5DCtKHW/3dXyr+HYRAQiPo8cETIxpf5nWz786TJi/hTfw6+WdTyZdHCGaAIlLCd
-	xlaCu0aDraKeo/dGFZ4HZboXYaPZqsOg3JqJckmMuQK9jmODbkFAWrxivUkP4IyjOF0tnyLHDx6sP
-	GrL7K0Dw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:60216)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1txl5s-00079I-36;
-	Thu, 27 Mar 2025 11:08:17 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1txl5r-0005Zn-16;
-	Thu, 27 Mar 2025 11:08:15 +0000
-Date: Thu, 27 Mar 2025 11:08:15 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Eric Woudstra <ericwouds@gmail.com>,
-	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [net-next RFC PATCH v3 2/4] net: phy: bcm87xx: simplify
- .match_phy_device OP
-Message-ID: <Z-Uxn3hlJQ62bBGw@shell.armlinux.org.uk>
-References: <20250326233512.17153-1-ansuelsmth@gmail.com>
- <20250326233512.17153-3-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NyIYuwq9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3A43C4CEEA;
+	Thu, 27 Mar 2025 11:08:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743073730;
+	bh=T/C1IUzTPhJ0AN1d10OTPlRbro4QgLVWrO1x971kKwc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NyIYuwq92qkpapnL1++RMaYr29mPEFFyI9WshKXFK9pLSq4lxwFq42yWJOufZ6zLR
+	 fVPRSAHkfDsKTmttLhgeL3SkJ3HvdoQRyR8+Ktkj2dHQ2RS9tEmrtrMPYYMBDJCxLX
+	 Ad/+IFymViK6TuMRCpqKIWVXX17RK9vQ3Dzv6Ij6aH7m1++NMJPQzcaYFzZ9hQ/bua
+	 cpO5UV1B9i07C0iyZJJGk8IjTePBYgzNYzgsh/gjqGQdJZh9CF8L/QbTGIvAflcKVk
+	 9X7NOUWLUTVT18Infp5WvNgmmaFB7sRbCWsOlbncGD7sVGAQAKkZSZDsZgqMxzd1+8
+	 7+DHZkNDF9HbQ==
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-602513d2201so454873eaf.0;
+        Thu, 27 Mar 2025 04:08:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU2QXQ5r1UrSDJUqeNGFNbGlonu6Ra+wn8IKm80LmTtsNE2skikeMN/z8GQMFimsuL8S0JL1rbNugRHzh0=@vger.kernel.org, AJvYcCX3j3i30O78ayRO49corQsjZ/fwrV1khhnLnuypTEcb7aTLUR/NMlNQl2QaxPuUbxWgkA2ovzcA2Ikp@vger.kernel.org, AJvYcCXlPWrz9MvoZMPsnEAxfGddNKVPTx+mShQWBL54B9oJFdsbY+7ofW1w9yy7pjRByjjyqm9JYdUd6X8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9/CJthQu4tmrT3FpqfmnZ6yjph/afb2WyWhEsDMcaC9Izldg2
+	p/NUtpNgFRfcZHwsJLvJBfIN8mPB3erMuCylUjuA9n5a6gU+9Ib0KZUuyDk4f0ci/hJZyeicB1K
+	IMPVo2/yDIMduOK9SVR+py5UNxl0=
+X-Google-Smtp-Source: AGHT+IEzurn8PX84DTZbLqJSvwaaZ/eB8XCLr0efqELPQTTYzC0Yup16jliPriSvS/8iQ71yl9XaN5ogWrNYP+wzo1I=
+X-Received: by 2002:a05:6870:391e:b0:29e:6394:fd4a with SMTP id
+ 586e51a60fabf-2c847f04c10mr1532382fac.2.1743073730142; Thu, 27 Mar 2025
+ 04:08:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250326233512.17153-3-ansuelsmth@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+References: <20250317093445.361821-1-csokas.bence@prolan.hu>
+ <20250317093445.361821-2-csokas.bence@prolan.hu> <CAJZ5v0hJZBxU6SSq9C8gp2peETFWu0jbhrM82B5GvQkVXPR+9Q@mail.gmail.com>
+ <3e6d7071-1ba9-484c-9dcb-c5da6ad1ffe3@prolan.hu>
+In-Reply-To: <3e6d7071-1ba9-484c-9dcb-c5da6ad1ffe3@prolan.hu>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 27 Mar 2025 12:08:39 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0jka2r9PaKsF0FE2qJaFfnVNGd8sZRE6Aay-Ugpzot44w@mail.gmail.com>
+X-Gm-Features: AQ5f1JpUPqZNN73veAwvZFBlgl93lXp6y3hqKwdnBmubsLfvOeNP8EFhQHFKtCM
+Message-ID: <CAJZ5v0jka2r9PaKsF0FE2qJaFfnVNGd8sZRE6Aay-Ugpzot44w@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] pm: runtime: Add new devm functions
+To: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Varshini Rajendran <varshini.rajendran@microchip.com>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Len Brown <len.brown@intel.com>, 
+	Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Alexander Dahl <ada@thorsis.com>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Pavel Machek <pavel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 27, 2025 at 12:35:02AM +0100, Christian Marangi wrote:
-> Simplify .match_phy_device OP by using a generic function and using the
-> new phy_id PHY driver info instead of hardcoding the matching PHY ID.
-> 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
->  drivers/net/phy/bcm87xx.c | 14 ++++----------
->  1 file changed, 4 insertions(+), 10 deletions(-)
+On Thu, Mar 27, 2025 at 10:02=E2=80=AFAM Cs=C3=B3k=C3=A1s Bence <csokas.ben=
+ce@prolan.hu> wrote:
+>
+> Hi,
+>
+> On 2025. 03. 26. 18:38, Rafael J. Wysocki wrote:
+> > I said I didn't like it and I'm still not liking it.
+>
+> You didn't really elaborate further, but now I'm glad I could understand
+> your dislike.
+>
+> > The problem is that the primary role of pm_runtime_set_active() is to
+> > prepare the device for enabling runtime PM, so in the majority of
+> > cases it should be followed by pm_runtime_enable().  It is also not
+> > always necessary to call pm_runtime_set_suspended() after disabling
+> > runtime PM for a device, like when the device has been
+> > runtime-suspended before disabling runtime PM for it.  This is not
+> > like releasing a resource that has been allocated and using devm for
+> > it in the above way is at least questionable.
+> >
+> > Now, there is a reason why calling pm_runtime_set_suspended() on a
+> > device after disabling runtime PM for it is a good idea at all.
+> > Namely, disabling runtime PM alone does not release the device's
+> > suppliers or its parent, so if you want to release them after
+> > disabling runtime PM for the device, you need to do something more.
+> > I'm thinking that this is a  mistake in the design of the runtime PM
+> > core.
+>
+> Well, this is the order in which the original driver worked before
+> anyways. As a quick fix, would it work if we created a devm function
+> that would pm_runtime_set_active(), immediately followed by
+> pm_runtime_enable(), and on cleanup it would pm_runtime_set_suspended()
+> followed by pm_runtime_disable_action() (i.e.
+> pm_runtime_dont_use_autosuspend() and pm_runtime_disable())?
 
-Great! Less code! :)
+On cleanup you'd need to ensure that pm_runtime_disable() is followed
+by pm_runtime_set_suspended() (not the other way around).  Also
+pm_runtime_dont_use_autosuspend() needs to be called when runtime PM
+is still enabled.
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-
-Thanks!
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+With the above taken into account, it would work.
