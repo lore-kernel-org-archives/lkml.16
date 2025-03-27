@@ -1,235 +1,150 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1CE21931C;
-	Thu, 27 Mar 2025 17:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC801B6D18;
+	Thu, 27 Mar 2025 17:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743098252; cv=none; b=pmIb/Fc6cDwbWgNn/wnClsAW+wAQilXGO7sGCob2V3Q6aET8T9x4ups4jUkCDNT6cuo2r9UiGDEojRGB3HbFntPCXOJqcN+/pzb7HYhbYQthvbJw2LnZy+mkxBNIC0wiKHWHJt9At2nFAiH9AazjXviPWYF7mzDfEy9DczaQH5M=
+	t=1743098318; cv=none; b=Fbxb5/WEea2pPhRzfqBMH6O5Zq8c6ZLP450iAvRB6wnwpPx0lwTJG/JXOnRIjRp8HK3PE/dEq3pU3lZbrBrDNC91X8Qa9eW4V7eWm/7XpEDYmFC0oq42zBy2lotPMlKO6Gy8xiwmfRvfp4QNcI61z7j4T8VLCs1HrR731OLUVhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743098252; c=relaxed/simple;
-	bh=1Yg5KBVlclJs9tOsVs9Fdz2Dmbf81mrCNTGgd4h267s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sntdy2ISHR4SVy00n+rpgY28NDhG9SGKh8bUqHaTxXTIwg0IQ1gPPW24h5jddPIGZ8jybZAycx/7tisy1H8XOJcp5quBEJnH39i2l4xc6MCQJQr3Hul8czpKpDUbs+ekOZWGrpLK6xpo6gZaHI1nzXN6Gta9eHxYMgy/acy4CZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=YZHJBFTK; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1743098318; c=relaxed/simple;
+	bh=Mrrsr3fGnwTT6iJ6kMjdrgIfTMBV32KTwyyigzONlOE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zrtzq4mWIRqRUhpUgAQ5uR6Q8FO72JSNfVdqPc7vNmPHqSZ0Lu/WNi+tk++XXqEKOpZuzkI/kVQrLTkBfPmgPBrsToxcS1YlbS6AEK4kFXxWC6r5aG1k1Q2A+7wyj2KHugseRDw6EMMer0oMmPrma7Xd4KAi9CIvuHkx/szQnzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jEu0YeFD; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="YZHJBFTK"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 30834446;
-	Thu, 27 Mar 2025 18:55:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743098140;
-	bh=1Yg5KBVlclJs9tOsVs9Fdz2Dmbf81mrCNTGgd4h267s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YZHJBFTKuyqblxm+KFFwDkxCUbVumEFR396szEcacv80cVgD+mip4SDkEEPSGSQu3
-	 WUlu4TKMDMS6W6Udzse6bw5AHL3cdLAThVWt2fjt4vOb71Vc7Aw0ipsWo5ONS60Fwd
-	 +JI3biCZppnl2KZfUmVYzVF77p+qrVj/yMcz/Er8=
-Date: Thu, 27 Mar 2025 19:57:06 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: Re: [PATCH v5 3/5] media: uvcvideo: Increase/decrease the PM counter
- per IOCTL
-Message-ID: <20250327175706.GC11416@pendragon.ideasonboard.com>
-References: <20250303-uvc-granpower-ng-v5-0-a3dfbe29fe91@chromium.org>
- <20250303-uvc-granpower-ng-v5-3-a3dfbe29fe91@chromium.org>
- <20250327175225.GA11416@pendragon.ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jEu0YeFD"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso10588335e9.2;
+        Thu, 27 Mar 2025 10:58:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743098314; x=1743703114; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zNFPKRqMQqLZ9Eg05/SyM0SNg2unRMSrNmUUeu7DAM4=;
+        b=jEu0YeFDBCNjEkfFgIHKfChvLeFf673g9UoX7Ikf/KNlM6eH8eFB6xfjGTNMldFtF1
+         CxG1d5BXF+F537NWQr6CqclNmfrvQTAQNCpzNIXfxXW/I0CPmIOD2hjJ5azSP9Q4y/Cj
+         KgpP76cKR2v/MTn9ZZ2y2mkJWP+CF4O+E7n3XtmR2igobCW/Li/wgfAh4piSbBWxN9Q8
+         OMxugg2sB7uI7+g/SItD9odB5dIdG7jGGHRAdj04SK5Jv3YUhjPh0J0pHD/q6AZB4N54
+         m65s8qFOukqBMtbf8TstBEMcdZNFR0WUv9VBTMmzRuCulngF6DDBA2bEGUTxW/t1F1n+
+         rilA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743098314; x=1743703114;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zNFPKRqMQqLZ9Eg05/SyM0SNg2unRMSrNmUUeu7DAM4=;
+        b=qZ45NfFN8k+Rz0/xZP0ypktCNkn5s36kHhlb/yG8MXC3ZuSmdsTEuPFfbewu4kcsND
+         0KDPuQXtFiJrq7FSVlBrGzBBLL5knMpqQBML/2Mxc8MnLfZrd2fgEZE1z2gGGC+nXrv+
+         kOEwBLBT5OhZY9jZtYwjQoBhPRG2nwd6K2xdCXsZOlbg1yz93zG0C+p54hr1p7BA5M03
+         5gcl3aKENvqUdnZP0BDwFfPVyz4fnWkN9Srto3mB+fZR2GeG3wN5PSR/wE0CqSVpX0SU
+         o6A1XE/oGlmtBRmU8KCIDrPMoqrvp6WQzWg3fxPYPVg8Noy0sm57te6cA6TKBPDY9xMf
+         uovA==
+X-Forwarded-Encrypted: i=1; AJvYcCW5zIwFq1bOvHVN2fDlpNVa1w0A+ukYdTg5MHkUTknixJst3jm+seBb2nsBz1EWksYwDqCjVhpG6Qkmbg==@vger.kernel.org, AJvYcCWgF7n33ykmZh1rW5gLPquJVmWHpYsldjcwAtqdbnI0+Y3q7yD5VB4UhS3WgP6hJiKMGr6eoOBu@vger.kernel.org, AJvYcCXH1tXe6lF/ectf9vA1RfD6/nEHvGb+F5tflA6YQdgLfPk5fnnkdfQEhwqLhcFAqptogTX/bI3AZiqH32U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrpMVJz//rBQ4q+a6RNDhgmWeiQrZL4DDYWms+Jsr1d3H88agy
+	nF/CJSjDZXpS0f3qcfq7XO/lPjuQBVv4+Fzmor+aFsQQmoRSoRku
+X-Gm-Gg: ASbGncu+L7EWuuJ/duwQzdSypQXUvN/JvJWvoA8qM7v/MBar1pBkO9bk2sRs5n+7X4B
+	rPRZ4i6+0KMLEDvgIh44ZO75qHU97druufadzioCEeSrl3WK/i7RgBdfEjFtS57Xtv3VHTeDJXA
+	3ccU8k59o4TYZfdPu7NZJ4txhbBLbTobYJxjUlXSIZ3TQ2kE7AeWXYCB+/ves5sHIzKVgBuiW4Z
+	YIgHGDeAmAahTr8kU98vDPlajIkV3ROkAnAWc4l/PqztcO6Xh7CsTQ/TbJYj86e29dclyMcAd35
+	tAnBssAvJ7k6JyIa+YMIWah2uRpPFBeIUBYF9zAxLqXvNfDEpbKHAzCGBGtsSnHuxA==
+X-Google-Smtp-Source: AGHT+IGwPvCqvpr/tpWh0Z1pqQBc8JjT9+vNiek0QDxNjWt3pW1vfUneUWjh2F2SC5tL61T5+z6AIA==
+X-Received: by 2002:a05:6000:4205:b0:390:f902:f973 with SMTP id ffacd0b85a97d-39ad1742fc3mr4309017f8f.8.1743098314093;
+        Thu, 27 Mar 2025 10:58:34 -0700 (PDT)
+Received: from [172.27.19.238] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82e6adf6sm44366535e9.15.2025.03.27.10.58.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 10:58:33 -0700 (PDT)
+Message-ID: <ea6a499b-c267-4fa3-8ed6-983ab96b3b9e@gmail.com>
+Date: Thu, 27 Mar 2025 19:58:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250327175225.GA11416@pendragon.ideasonboard.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] net/mlx5e: SHAMPO, Make reserved size independent of
+ page size
+To: Simon Horman <horms@kernel.org>, Tariq Toukan <tariqt@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Eric Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Gal Pressman <gal@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>,
+ Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
+ netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Moshe Shemesh <moshe@nvidia.com>,
+ Mark Bloch <mbloch@nvidia.com>, Lama Kayal <lkayal@nvidia.com>
+References: <1742732906-166564-1-git-send-email-tariqt@nvidia.com>
+ <20250325140431.GQ892515@horms.kernel.org>
+Content-Language: en-US
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <20250325140431.GQ892515@horms.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 27, 2025 at 07:52:27PM +0200, Laurent Pinchart wrote:
-> Hi Ricardo,
-> 
-> Thank you for the patch.
-> 
-> On Mon, Mar 03, 2025 at 07:13:40PM +0000, Ricardo Ribalda wrote:
-> > Now we call uvc_pm_get/put from the device open/close. This low
-> > level of granularity might leave the camera powered on in situations
-> > where it is not needed.
-> > 
-> > Increase the granularity by increasing and decreasing the Power
-> 
-> You're decreasing the granularity, not increasing it.
-> 
-> > Management counter per ioctl. There are two special cases where the
-> > power management outlives the ioctl: async controls and streamon. Handle
-> > those cases as well.
-> > 
-> > In a future patch, we will remove the uvc_pm_get/put from open/close.
-> > 
-> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > ---
-> >  drivers/media/usb/uvc/uvc_ctrl.c | 13 +++++++++++--
-> >  drivers/media/usb/uvc/uvc_v4l2.c | 23 +++++++++++++++++++++--
-> >  drivers/media/usb/uvc/uvcvideo.h |  1 +
-> >  3 files changed, 33 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-> > index 4e58476d305e..47188c7f96c7 100644
-> > --- a/drivers/media/usb/uvc/uvc_ctrl.c
-> > +++ b/drivers/media/usb/uvc/uvc_ctrl.c
-> > @@ -1594,12 +1594,15 @@ static void uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl,
-> >  
-> >  		if (ctrl->handle) {
-> >  			WARN_ON(!ctrl->handle->pending_async_ctrls);
-> > -			if (ctrl->handle->pending_async_ctrls)
-> > +			if (ctrl->handle->pending_async_ctrls) {
-> >  				ctrl->handle->pending_async_ctrls--;
-> > +				uvc_pm_put(handle->chain->dev);
-> 
-> Shouldn't this be
-> 
-> 				uvc_pm_put(ctrl->handle->chain->dev);
-> 
-> ? In practice it won't make a difference as dev will be the same for
-> both, but it seems clearer.
-> 
-> > +			}
-> >  		}
-> >  
-> >  		ctrl->handle = new_handle;
-> >  		handle->pending_async_ctrls++;
-> > +		uvc_pm_get(handle->chain->dev);
-> 
-> Similarly, we should use ctrl->handle here too (including for the
-> pending_async_ctrls++).
-> 
-> >  		return;
-> >  	}
-> >  
-> > @@ -1611,6 +1614,7 @@ static void uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl,
-> >  	if (WARN_ON(!handle->pending_async_ctrls))
-> >  		return;
-> >  	handle->pending_async_ctrls--;
-> > +	uvc_pm_put(handle->chain->dev);
-> >  }
-> >  
-> >  void uvc_ctrl_status_event(struct uvc_video_chain *chain,
-> > @@ -2815,6 +2819,7 @@ int uvc_ctrl_init_device(struct uvc_device *dev)
-> >  void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
-> >  {
-> >  	struct uvc_entity *entity;
-> > +	int i;
-> >  
-> >  	guard(mutex)(&handle->chain->ctrl_mutex);
-> >  
-> > @@ -2829,7 +2834,11 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
-> >  		}
-> >  	}
-> >  
-> > -	WARN_ON(handle->pending_async_ctrls);
-> > +	if (!WARN_ON(handle->pending_async_ctrls))
-> > +		return;
-> > +
-> > +	for (i = 0; i < handle->pending_async_ctrls; i++)
-> > +		uvc_pm_put(handle->stream->dev);
-> >  }
-> >  
-> >  /*
-> > diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> > index de1e105f7263..1c9ac72be58a 100644
-> > --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> > +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> > @@ -691,6 +691,9 @@ static int uvc_v4l2_release(struct file *file)
-> >  	if (uvc_has_privileges(handle))
-> >  		uvc_queue_release(&stream->queue);
-> >  
-> > +	if (handle->is_streaming)
-> > +		uvc_pm_put(stream->dev);
-> > +
-> >  	/* Release the file handle. */
-> >  	uvc_dismiss_privileges(handle);
-> >  	v4l2_fh_del(&handle->vfh);
-> > @@ -857,6 +860,7 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
-> >  		return ret;
-> >  
-> >  	handle->is_streaming = true;
-> > +	uvc_pm_get(stream->dev);
 
-Another comment: shouldn't you handle the return value (here and
-elsewhere, including where you use guards) ?
 
-> >  
-> >  	return 0;
-> >  }
-> > @@ -873,7 +877,10 @@ static int uvc_ioctl_streamoff(struct file *file, void *fh,
-> >  	guard(mutex)(&stream->mutex);
-> >  
-> >  	uvc_queue_streamoff(&stream->queue, type);
-> > -	handle->is_streaming = false;
-> > +	if (handle->is_streaming) {
-> > +		handle->is_streaming = false;
-> > +		uvc_pm_put(stream->dev);
-> > +	}
-> >  
-> >  	return 0;
-> >  }
-> > @@ -1410,6 +1417,8 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
-> >  	void __user *up = compat_ptr(arg);
-> >  	long ret;
-> >  
-> > +	guard(uvc_pm)(handle->stream->dev);
-> > +
-> >  	switch (cmd) {
-> >  	case UVCIOC_CTRL_MAP32:
-> >  		ret = uvc_v4l2_get_xu_mapping(&karg.xmap, up);
-> > @@ -1444,6 +1453,16 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
-> >  }
-> >  #endif
-> >  
-> > +static long uvc_v4l2_video_ioctl2(struct file *file,
-> > +				  unsigned int cmd, unsigned long arg)
-> > +{
-> > +	struct uvc_fh *handle = file->private_data;
-> > +
-> > +	guard(uvc_pm)(handle->stream->dev);
-> > +
-> > +	return video_ioctl2(file, cmd, arg);
-> > +}
-> > +
-> >  static ssize_t uvc_v4l2_read(struct file *file, char __user *data,
-> >  		    size_t count, loff_t *ppos)
-> >  {
-> > @@ -1529,7 +1548,7 @@ const struct v4l2_file_operations uvc_fops = {
-> >  	.owner		= THIS_MODULE,
-> >  	.open		= uvc_v4l2_open,
-> >  	.release	= uvc_v4l2_release,
-> > -	.unlocked_ioctl	= video_ioctl2,
-> > +	.unlocked_ioctl	= uvc_v4l2_video_ioctl2,
+On 25/03/2025 16:04, Simon Horman wrote:
+> On Sun, Mar 23, 2025 at 02:28:26PM +0200, Tariq Toukan wrote:
+>> From: Lama Kayal <lkayal@nvidia.com>
+>>
+>> When hw-gro is enabled, the maximum number of header entries that are
+>> needed per wqe (hd_per_wqe) is calculated based on the size of the
+>> reservations among other parameters.
+>>
+>> Miscalculation of the size of reservations leads to incorrect
+>> calculation of hd_per_wqe as 0, particularly in the case of large page
+>> size like in aarch64, this prevents the SHAMPO header from being
+>> correctly initialized in the device, ultimately causing the following
+>> cqe err that indicates a violation of PD.
 > 
-> I'd have named this uvc_v4l2_unlocked_ioctl.
+> Hi Lama, Tariq, all,
 > 
-> >  #ifdef CONFIG_COMPAT
-> >  	.compat_ioctl32	= uvc_v4l2_compat_ioctl32,
-> >  #endif
-> > diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> > index fbe3649c7cd6..eb8e374fa4c5 100644
-> > --- a/drivers/media/usb/uvc/uvcvideo.h
-> > +++ b/drivers/media/usb/uvc/uvcvideo.h
-> > @@ -766,6 +766,7 @@ void uvc_status_put(struct uvc_device *dev);
-> >  /* PM */
-> >  int uvc_pm_get(struct uvc_device *dev);
-> >  void uvc_pm_put(struct uvc_device *dev);
-> > +DEFINE_GUARD(uvc_pm, struct uvc_device *, uvc_pm_get(_T), uvc_pm_put(_T))
-> >  
-> >  /* Controls */
-> >  extern const struct v4l2_subscribed_event_ops uvc_ctrl_sub_ev_ops;
+> If I understand things correctly, hd_per_wqe is calculated
+> in mlx5e_shampo_hd_per_wqe() like this:
+> 
+> u32 mlx5e_shampo_hd_per_wqe(struct mlx5_core_dev *mdev,
+>                              struct mlx5e_params *params,                                                    struct mlx5e_rq_param *rq_param)
+> {
+>          int resv_size = BIT(mlx5e_shampo_get_log_rsrv_size(mdev, params)) * PAGE_SIZE;
+>          u16 num_strides = BIT(mlx5e_mpwqe_get_log_num_strides(mdev, params, NULL));
+>          int pkt_per_resv = BIT(mlx5e_shampo_get_log_pkt_per_rsrv(mdev, params));
+>          u8 log_stride_sz = mlx5e_mpwqe_get_log_stride_size(mdev, params, NULL);
+>          int wqe_size = BIT(log_stride_sz) * num_strides;                                u32 hd_per_wqe;
+> 
+>          /* Assumption: hd_per_wqe % 8 == 0. */
+>          hd_per_wqe = (wqe_size / resv_size) * pkt_per_resv;                             mlx5_core_dbg(mdev, "%s hd_per_wqe = %d rsrv_size = %d wqe_size = %d pkt_per_resv = %d\n",                                                                                    __func__, hd_per_wqe, resv_size, wqe_size, pkt_per_resv);
+>          return hd_per_wqe;
+> }
+> 
+> I can see that if PAGE_SIZE was some multiple of 4k, and thus
+> larger than wqe_size, then this could lead to hd_per_wqe being zero.
+> 
+> But I note that mlx5e_mpwqe_get_log_stride_size() may return PAGE_SHIFT.
+> And I wonder if that leads to wqe_size being larger than expected by this
+> patch in cases where the PAGE_SIZE is greater than 4k.
+> 
+> Likewise in mlx5e_shampo_get_log_cq_size(), which seems to have a large overlap
+> codewise with mlx5e_shampo_hd_per_wqe().
+> 
+>>
 
--- 
-Regards,
+Hi Simon,
 
-Laurent Pinchart
+Different settings lead to different combinations of num_strides and 
+stride_size. However, they affect each other in a way that the resulting 
+wqe_size has the expected (~preset) value.
+
+In mlx5e_mpwqe_get_log_num_strides() you can see that if stride_size 
+grows, then num_strides decreases accordingly.
+
+In addition, to reduce mistakes/bugs, we have a few WARNs() along the 
+calculations, in addition to a verifier function 
+mlx5e_verify_rx_mpwqe_strides().
+
+Thanks,
+Tariq
+
