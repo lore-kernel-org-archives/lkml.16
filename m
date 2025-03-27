@@ -1,40 +1,41 @@
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA7621770C;
-	Thu, 27 Mar 2025 14:10:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC9621771F;
+	Thu, 27 Mar 2025 14:10:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743084642; cv=pass; b=k1rFxJNS6fvdRj8J28UOKwtppW5NJ6O92Sw5VLVSbo0XsPu3Xom3MsO7YcP/zTnbuLs+Z78LP7Ppcffqwz0DwV9M8awp4M0KNLyl33mDJ0Tr03aEL4kSaDg5VXIWHQ8qSWZ8DbymOYg0qnbgxIuHALWAigJTcwwxGGQ4D/lT8uY=
+	t=1743084643; cv=pass; b=fkS6DiaQzyYxszmedQ8wsg32+XJtLqU+N/rOyJ7N6zCWD4iqg1XLCsdq1PWlcFkbay9MzapleqnZGK0/NrhoGFOFAR8ijcqOfQtanW54hMtHYrPqv+7bx2MuBlcXvnzPW2lPMeyDX4az3/U/44BF+Iqx7MlDWCNbt8i+gPxrZzE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743084642; c=relaxed/simple;
-	bh=2I0jbfIOFyC3rlWREtZbP7iXGq5fytZU/yKAbJ6gRyU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VVtaANuyJ0O6S4HEzbsUmOExwYiRsX2ndUzHhV5ptcyWpQDW/r+CeLxb/ah8hnwQGu7RfgiE0Ob2hPWsqfsL6kBMYy/C+6vuenvLq7KJo7wb+eVjeVnWYgdqpHC6orWckCd/JNXjs3RMR+3oPpoC00x6ZBE1PcwsZ+5med5y/98=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=NKbxoAz9; arc=pass smtp.client-ip=136.143.188.112
+	s=arc-20240116; t=1743084643; c=relaxed/simple;
+	bh=tBtSNilaVtcYTf1qUqv4pvLw5UBotgYdQGZuPbdIzP8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PAEF2C53gOvZcof+BYo0n4uRNwXtnNQ49qx28CfX9g5SUazyb3YFAQ/fJNUBAnd2MAGERYYaeyb5/g0ASp0X7iueQqq3+/QPWmBut1fQVBKnGXXOCC3aKgYmEzz0nNzpN+I0jUvXtRMgp25jlRDaHWyC9SLAuT5HVjZro5OW8Aw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=TC/gfFrI; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="NKbxoAz9"
-ARC-Seal: i=1; a=rsa-sha256; t=1743084607; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="TC/gfFrI"
+ARC-Seal: i=1; a=rsa-sha256; t=1743084619; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=Ix4ekuq6nF7aEqJgbNhX2cWRTGmSr2Eqjx1KwqwhAbVyOKNaBy7XZJoqDEynY/E52nSekItdp6qGyMtT/feSyufrswTcbZd4atwHeBGmqNFmW1VXivC9kWDJm09/Aqn42RrIS6uYybChK3W8j5ukB+JTQZHJ0SumZCNp3K6yjRY=
+	b=EpODsqB+uhIS3m+FtajyUBkj1eLo20uuvX7Zp5nAlPIjxZtj2n1CSEGE1wl0DxT9CkUI0chFZEZdde+NvNKuyhRz/NQjOuiJEoI69G9VfnAQiQMKbBplxJW9orET8lzsMFsSfdIsK5/D0wS3H6Wjx6b0EO0rbEXLuiJJdA0Gx9I=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743084607; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=n6bkGovYDWEwPMuhmGO3/APdXBLQXfsjmkhnXRHkumk=; 
-	b=IM1TyO7xLEJ1k1z0dlAlCttU+hcU+NDiy3hoc6NAUugupIcapU1/mEpJCZlV6znDeB+3Y3Ca//YJtxwbEt7OLb+l6ziJaBkPI4EjzHmDgjHGDH6cWEFYxAgUpLgSfbS4X/QFArnMF+ZJIJ/Sr1zmWlraTPKL65M4G8GK6tRtw3A=
+	t=1743084619; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=nrcg46tqZM6Jsi4nqwQjxLvX1XPelYZmMEvRF3bNsc4=; 
+	b=A+MdFevODd+7IDeLm+QnyM6vdcdCRUVBxa2saMkpNqkjjjAqlaogMwCevKCFGYcNQI8T5M+8vEeErUdbZzL6M2j8do69o0dSHcRgMMxXCARpKPf/LKvF6bQjNfcD0kSKNLsd4dorI4RrFoawNaynot4t6r0X9tmIF9IPjwhiU/M=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
 	dmarc=pass header.from=<adrian.larumbe@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743084607;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743084619;
 	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=n6bkGovYDWEwPMuhmGO3/APdXBLQXfsjmkhnXRHkumk=;
-	b=NKbxoAz9ZYyZbmjeP4irPQN8c5DHrGlePcnyfvXsLD+vG5SJbV+qJI2xyMfRX4q1
-	ZzbvNr6LEvTpNxCsOtWSK4+MsHXYjfQ4DW2apwLrCnNFKLZ0uKyg4dNFdkd6Hkpd69m
-	BPPKZY6Ie4TGNlXoqVdXlDHUCx1n0qH7HJdAvDj8=
-Received: by mx.zohomail.com with SMTPS id 1743084604813824.3329284862294;
-	Thu, 27 Mar 2025 07:10:04 -0700 (PDT)
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=nrcg46tqZM6Jsi4nqwQjxLvX1XPelYZmMEvRF3bNsc4=;
+	b=TC/gfFrIeIv56krCY3Ax9576vs4IefUjkHuASfkv7ITRoPgMLTwCV9y/dDu3fiEA
+	TZjaGkvHmH5ulb3DD7adS4V9VRdtjSOlzJGBNxwYwXFKulhriWkMAcv1/dCWXeMv9mV
+	DqcDrV7ERRdjqzs6pPzu0Z9uakANYd2a7C+Bpv90=
+Received: by mx.zohomail.com with SMTPS id 1743084618753168.38338198540464;
+	Thu, 27 Mar 2025 07:10:18 -0700 (PDT)
 From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
 To: ?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>,
 	Boris Brezillon <boris.brezillon@collabora.com>,
@@ -52,10 +53,12 @@ Cc: kernel@collabora.com,
 	linux-kernel@vger.kernel.org,
 	linux-media@vger.kernel.org,
 	linaro-mm-sig@lists.linaro.org
-Subject: [PATCH v3 0/4] Panthor BO tagging and GEMS debug display
-Date: Thu, 27 Mar 2025 14:08:33 +0000
-Message-ID: <20250327140845.105962-1-adrian.larumbe@collabora.com>
+Subject: [PATCH v3 4/4] drm/panthor: Display heap chunk entries in DebugFS GEMS file
+Date: Thu, 27 Mar 2025 14:08:37 +0000
+Message-ID: <20250327140845.105962-5-adrian.larumbe@collabora.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250327140845.105962-1-adrian.larumbe@collabora.com>
+References: <20250327140845.105962-1-adrian.larumbe@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,39 +68,95 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This patch series is aimed at providing UM with detailed memory profiling
-information in debug builds. It is achieved through a device-wide list of
-DRM GEM objects, and also implementing the ability to label BO's from UM
-through a new IOCTL.
+Expand the driver's DebugFS GEMS file to display entries for the heap
+chunks' GEM objects, both those allocated at heap creation time through an
+ioctl(), or in response to a tiler OOM event.
 
-The new debugfs file shows a list of driver DRM GEM objects in tabular mode.
-To visualise it, cat sudo cat /sys/kernel/debug/dri/*.gpu/gems.
-To test this functionality from UM, please refer to this Mesa patch series:
+Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+---
+ drivers/gpu/drm/panthor/panthor_gem.c  | 12 +-----------
+ drivers/gpu/drm/panthor/panthor_gem.h  | 14 ++++++++++++++
+ drivers/gpu/drm/panthor/panthor_heap.c |  3 +++
+ 3 files changed, 18 insertions(+), 11 deletions(-)
 
-https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/34224
-
-Changelog:
- v3:
-  - Replaced kfree() with kfree_const() when freeing a bo label
-  - Rearranged functions for delaing with GEMs list adding and deleting
-  - Changed Kernel BO labelling format not to include quotes
-  - Return error in labelling ioctl when string length is too long
-
-
-Adrián Larumbe (4):
-  drm/panthor: Introduce BO labeling
-  drm/panthor: Add driver IOCTL for setting BO labels
-  drm/panthor: show device-wide list of DRM GEM objects over DebugFS
-  drm/panthor: Display heap chunk entries in DebugFS GEMS file
-
- drivers/gpu/drm/panthor/panthor_device.c |   5 +
- drivers/gpu/drm/panthor/panthor_device.h |  11 ++
- drivers/gpu/drm/panthor/panthor_drv.c    |  66 ++++++++++
- drivers/gpu/drm/panthor/panthor_gem.c    | 158 +++++++++++++++++++++++
- drivers/gpu/drm/panthor/panthor_gem.h    |  60 +++++++++
- drivers/gpu/drm/panthor/panthor_heap.c   |   3 +
- include/uapi/drm/panthor_drm.h           |  19 +++
- 7 files changed, 322 insertions(+)
-
---
+diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/panthor/panthor_gem.c
+index fbf560920194..efc14c179680 100644
+--- a/drivers/gpu/drm/panthor/panthor_gem.c
++++ b/drivers/gpu/drm/panthor/panthor_gem.c
+@@ -22,16 +22,6 @@ static void panthor_gem_debugfs_bo_init(struct panthor_gem_object *bo)
+ 	get_task_comm(bo->gems.creator.process_name, current->group_leader);
+ }
+ 
+-static void panthor_gem_debugfs_bo_add(struct panthor_gem_object *bo)
+-{
+-	struct panthor_device *ptdev =  container_of(bo->base.base.dev,
+-						     struct panthor_device, base);
+-
+-	mutex_lock(&ptdev->gems.lock);
+-	list_add_tail(&bo->gems.node, &ptdev->gems.node);
+-	mutex_unlock(&ptdev->gems.lock);
+-}
+-
+ static void panthor_gem_debugfs_bo_rm(struct panthor_gem_object *bo)
+ {
+ 	struct panthor_device *ptdev = container_of(bo->base.base.dev,
+@@ -44,9 +34,9 @@ static void panthor_gem_debugfs_bo_rm(struct panthor_gem_object *bo)
+ 	list_del_init(&bo->gems.node);
+ 	mutex_unlock(&ptdev->gems.lock);
+ }
++
+ #else
+ static void panthor_gem_debugfs_bo_init(struct panthor_gem_object *bo) {}
+-static void panthor_gem_debugfs_bo_add(struct panthor_gem_object *bo) {}
+ static void panthor_gem_debugfs_bo_rm(struct panthor_gem_object *bo) {}
+ #endif
+ 
+diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/panthor/panthor_gem.h
+index 7c896ec35801..95093b98b990 100644
+--- a/drivers/gpu/drm/panthor/panthor_gem.h
++++ b/drivers/gpu/drm/panthor/panthor_gem.h
+@@ -11,6 +11,8 @@
+ #include <linux/iosys-map.h>
+ #include <linux/rwsem.h>
+ 
++#include "panthor_device.h"
++
+ struct panthor_vm;
+ 
+ /**
+@@ -182,6 +184,18 @@ void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo);
+ #ifdef CONFIG_DEBUG_FS
+ void panthor_gem_debugfs_print_bos(struct panthor_device *pfdev,
+ 				   struct seq_file *m);
++
++static inline void panthor_gem_debugfs_bo_add(struct panthor_gem_object *bo)
++{
++	struct panthor_device *ptdev =  container_of(bo->base.base.dev,
++						     struct panthor_device, base);
++
++	mutex_lock(&ptdev->gems.lock);
++	list_add_tail(&bo->gems.node, &ptdev->gems.node);
++	mutex_unlock(&ptdev->gems.lock);
++}
++#elif
++static inline void panthor_gem_debugfs_bo_add(struct panthor_gem_object *bo) {}
+ #endif
+ 
+ #endif /* __PANTHOR_GEM_H__ */
+diff --git a/drivers/gpu/drm/panthor/panthor_heap.c b/drivers/gpu/drm/panthor/panthor_heap.c
+index db0285ce5812..30136b386869 100644
+--- a/drivers/gpu/drm/panthor/panthor_heap.c
++++ b/drivers/gpu/drm/panthor/panthor_heap.c
+@@ -180,6 +180,9 @@ static int panthor_alloc_heap_chunk(struct panthor_device *ptdev,
+ 	heap->chunk_count++;
+ 	mutex_unlock(&heap->lock);
+ 
++	panthor_gem_kernel_bo_set_label(chunk->bo, "Tiler heap chunk");
++	panthor_gem_debugfs_bo_add(to_panthor_bo(chunk->bo->obj));
++
+ 	return 0;
+ 
+ err_destroy_bo:
+-- 
 2.48.1
+
