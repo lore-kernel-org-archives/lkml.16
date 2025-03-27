@@ -1,172 +1,86 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B224C20D4E9
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9D820DD64;
+	Thu, 27 Mar 2025 10:01:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743069692; cv=none; b=W8nWNgDYc/xsBHpd80/k3rIwV0HChYIxKUbbE+juIt1GKrVoV46bPo3WIwcsMbE3Ckc+hVhE2OJTYFWRnG9CNSGmZwyqYNRf6Frru6wNJL/a1b/YxqKHNdlYE4NICI42LNMW7O6bZq3yv6LDUW5/ZUNqDqQYJRjAp6xFGzsRwPA=
+	t=1743069695; cv=none; b=MD+hrF6CD+DXxu062a/OzcQ+LolUzyUlBrhm6wNoSSaCph/L/B4T7XzHUKIvS2Q5Uho+SrP/S2cE5PzkkGEUmPfvJ6Xm3Km40JO1Kg/3VNoRU6LyliCXGhlBfhmQEwoP7a0+6L0rueEYq6Hi4I2RA2l2MmNRBi9yfcAEllo3BhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743069692; c=relaxed/simple;
-	bh=j1u/b6iCpo77sQix5aePB/OgDjxe3cQtEhK8F+Ct0bs=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Mz/asg6WEIFztL6SV6U6fqDteRuHvTFSu4DpkMv9UjEB7F1xFZruH7dymamjEqr8DAIfWPm4PmV/tUj7Iw17BccmJqwv2ubR5AX5Ln6yJP/lKXn1LU5khbBSABMtsC2Xv6rs45OSay2nofDyTXxEytoy+eFFRPIFfG3oljSEjqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d2b3882febso6767915ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:01:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743069690; x=1743674490;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9FCTDFjot83WRhacSWxYLmYj5o4MLFgu3vOAVYbujYg=;
-        b=Eyyjz5DIBHwfJCF0sNbyvsUEIjyJQ709a8PV9S3QyhkYtjwQ1javQY9y5pqcMDY+bF
-         a5z21kDNE90ER0IXVhF4+gPU+MRDgsgkWp9/DHSgYVYSoa1gxZ4PF1qkC8q7jD/1aIO3
-         Z7JUTYIV/oPvhZaAmp2YoEC/bywyoRSPZ/GDZD5CDQm9gHOWfSdslIxBLa2seIhLGcrN
-         MnQXO5PgoiRgPfO64f3Tcv3fHCJ51+jITW7NOY6Rqc2Q/SzlaaZzbFpehyChvhWgsWge
-         SQ+UViDrzm4IiqJLfN5p00RVydc/H66N5oKgKnc8mthbqUFfF6vsICWhoIg0F96FX/RS
-         2Y3A==
-X-Forwarded-Encrypted: i=1; AJvYcCWmsA6Srwwp8/IMesVGTYV/CBBhrpUEDWBDuSGqfM9GNjk9ODegtpSaDIywlpsc68MBUt+oUtMKhFwA9P8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzqXwJ6/4Wqt7vKIGjoy3auuzbdV44pD+QcQJ+9kH90vnfefVH
-	I2FvsUd27iMAT7rRtwaa7Wn5bDLfQNj3C7JnwXtQESFB6BCwPumcC0MqdJb2UZD4c8NCK0s3u4m
-	QY2zxwd0aXm4JXWI0Ivx//HyNXYMgbiA8TarlFXklRvwTV5VQixWaGkM=
-X-Google-Smtp-Source: AGHT+IFoLzbWRAGxKnp3Q6LF8u6vpecr4X5rw2S7Dfi5RcsMZULrf0k/LG9uP0ha6SzXHmOTVZxaiPIg6mVyBWNbag8BbF2FfSyj
+	s=arc-20240116; t=1743069695; c=relaxed/simple;
+	bh=pgI8gXBei/XNkeEYc0bn3IgQ90Gj7blDgaIoeHja1Tc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VwOnSh2qBjHF/V2KhvbbiKHvf3iCoGxkpCWHUgwuGubqktYF2e1P41XB3QGNZIydfL2/JiFbXDlztMsu6AxK3zyag3wYMR00vHX0BG68CsVvfCgH5plX3XbklJu/R59vh1g+1A6EZYrM4pS5JOvJ9ot58EXTNrSwBpcQZjoJPNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=mGszbYpj; arc=none smtp.client-ip=95.143.211.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="mGszbYpj"
+From: Denis Arefev <arefev@swemel.ru>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
+	t=1743069687;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BHLOBT3idkFgvXNfDI3YEo7317l4Nl2O9zMCAnRi99A=;
+	b=mGszbYpj2K9Vh0CF1hIrPcsW7W/IVtKUzYXFFwYUsJh+5+FeSpElBHENDfuzKXhql1p9+A
+	hD2QEep9xllE9+UnTztpT+2/QCBj8Hbi/Hx/3CpAOmbmjLnaKhCcQFNmhbZQ6P/7o4lz5W
+	WWtbdUcnEN5joJ6396r7valD+k+PbMA=
+To: Helge Deller <deller@gmx.de>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+	Jani Nikula <jani.nikula@intel.com>,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH 1/1] fbdev: atyfb: Fix buffer overflow
+Date: Thu, 27 Mar 2025 13:01:24 +0300
+Message-ID: <20250327100126.12585-2-arefev@swemel.ru>
+In-Reply-To: <20250327100126.12585-1-arefev@swemel.ru>
+References: <20250327100126.12585-1-arefev@swemel.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2192:b0:3d3:eeec:89f3 with SMTP id
- e9e14a558f8ab-3d5ccdd5473mr31428105ab.13.1743069689682; Thu, 27 Mar 2025
- 03:01:29 -0700 (PDT)
-Date: Thu, 27 Mar 2025 03:01:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67e521f9.050a0220.2f068f.0026.GAE@google.com>
-Subject: [syzbot] [net?] kernel BUG in skbprio_enqueue
-From: syzbot <syzbot+a3422a19b05ea96bee18@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	jhs@mojatatu.com, jiri@resnulli.us, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+The value LCD_MISC_CNTL is used in the 'aty_st_lcd()' function to
+calculate an index for accessing an array element of size 9.
+This may cause a buffer overflow.
 
-syzbot found the following issue on:
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-HEAD commit:    f6e0150b2003 Merge tag 'mtd/for-6.15' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13a14a4c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=46a07195688b794b
-dashboard link: https://syzkaller.appspot.com/bug?extid=a3422a19b05ea96bee18
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=109e343f980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1037abb0580000
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-f6e0150b.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/7ade4c34c9b1/vmlinux-f6e0150b.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/1fe37b97ec9d/bzImage-f6e0150b.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a3422a19b05ea96bee18@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-kernel BUG at net/sched/sch_skbprio.c:127!
-Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
-CPU: 0 UID: 0 PID: 5396 Comm: kworker/0:11 Not tainted 6.14.0-syzkaller-03565-gf6e0150b2003 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: mld mld_ifc_work
-RIP: 0010:skbprio_enqueue+0x1123/0x1150 net/sched/sch_skbprio.c:127
-Code: 4c 89 fe e8 df 18 28 fb 4c 8b 6c 24 10 48 ba 00 00 00 00 00 fc ff df e9 87 f5 ff ff e8 76 2c b6 f7 90 0f 0b e8 6e 2c b6 f7 90 <0f> 0b 89 f9 80 e1 07 80 c1 03 38 c1 7c 88 e8 aa 58 1e f8 eb 81 89
-RSP: 0018:ffffc9000d9de960 EFLAGS: 00010293
-RAX: ffffffff8a0d4a22 RBX: 0000000000000002 RCX: ffff88801ed8a440
-RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000001
-RBP: 0000000000000000 R08: ffffffff8a0d41e8 R09: 0000000000000000
-R10: ffff888043706c80 R11: ffffed10086e0d92 R12: ffff8880493798c0
-R13: ffff888049378000 R14: 000000000000008e R15: ffff888049379dc0
-FS:  0000000000000000(0000) GS:ffff88808c824000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fb035bc92f0 CR3: 000000000e938000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- qdisc_enqueue include/net/sch_generic.h:850 [inline]
- tbf_enqueue+0x362/0x6e0 net/sched/sch_tbf.c:258
- dev_qdisc_enqueue+0x4b/0x290 net/core/dev.c:4008
- __dev_xmit_skb net/core/dev.c:4104 [inline]
- __dev_queue_xmit+0xf13/0x3f60 net/core/dev.c:4618
- dev_queue_xmit include/linux/netdevice.h:3313 [inline]
- neigh_hh_output include/net/neighbour.h:523 [inline]
- neigh_output include/net/neighbour.h:537 [inline]
- ip_finish_output2+0xcd5/0x12e0 net/ipv4/ip_output.c:236
- iptunnel_xmit+0x560/0x9c0 net/ipv4/ip_tunnel_core.c:82
- udp_tunnel_xmit_skb+0x264/0x3c0 net/ipv4/udp_tunnel_core.c:173
- geneve_xmit_skb drivers/net/geneve.c:916 [inline]
- geneve_xmit+0x2119/0x2c30 drivers/net/geneve.c:1039
- __netdev_start_xmit include/linux/netdevice.h:5151 [inline]
- netdev_start_xmit include/linux/netdevice.h:5160 [inline]
- xmit_one net/core/dev.c:3800 [inline]
- dev_hard_start_xmit+0x27a/0x7d0 net/core/dev.c:3816
- __dev_queue_xmit+0x1b80/0x3f60 net/core/dev.c:4652
- dev_queue_xmit include/linux/netdevice.h:3313 [inline]
- neigh_hh_output include/net/neighbour.h:523 [inline]
- neigh_output include/net/neighbour.h:537 [inline]
- ip6_finish_output2+0x128c/0x17e0 net/ipv6/ip6_output.c:141
- __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
- ip6_finish_output+0x421/0x840 net/ipv6/ip6_output.c:226
- NF_HOOK+0xa0/0x440 include/linux/netfilter.h:314
- mld_sendpack+0x84a/0xdb0 net/ipv6/mcast.c:1868
- mld_send_cr net/ipv6/mcast.c:2169 [inline]
- mld_ifc_work+0x7d9/0xd90 net/ipv6/mcast.c:2702
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
- worker_thread+0x870/0xd30 kernel/workqueue.c:3400
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:skbprio_enqueue+0x1123/0x1150 net/sched/sch_skbprio.c:127
-Code: 4c 89 fe e8 df 18 28 fb 4c 8b 6c 24 10 48 ba 00 00 00 00 00 fc ff df e9 87 f5 ff ff e8 76 2c b6 f7 90 0f 0b e8 6e 2c b6 f7 90 <0f> 0b 89 f9 80 e1 07 80 c1 03 38 c1 7c 88 e8 aa 58 1e f8 eb 81 89
-RSP: 0018:ffffc9000d9de960 EFLAGS: 00010293
-RAX: ffffffff8a0d4a22 RBX: 0000000000000002 RCX: ffff88801ed8a440
-RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000001
-RBP: 0000000000000000 R08: ffffffff8a0d41e8 R09: 0000000000000000
-R10: ffff888043706c80 R11: ffffed10086e0d92 R12: ffff8880493798c0
-R13: ffff888049378000 R14: 000000000000008e R15: ffff888049379dc0
-FS:  0000000000000000(0000) GS:ffff88808c824000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fb035bc92f0 CR3: 000000000e938000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Denis Arefev <arefev@swemel.ru>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/video/fbdev/aty/atyfb_base.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/video/fbdev/aty/atyfb_base.c b/drivers/video/fbdev/aty/atyfb_base.c
+index 210fd3ac18a4..93eb5eb6042b 100644
+--- a/drivers/video/fbdev/aty/atyfb_base.c
++++ b/drivers/video/fbdev/aty/atyfb_base.c
+@@ -149,6 +149,8 @@ static const u32 lt_lcd_regs[] = {
+ void aty_st_lcd(int index, u32 val, const struct atyfb_par *par)
+ {
+ 	if (M64_HAS(LT_LCD_REGS)) {
++		if ((u32)index >= ARRAY_SIZE(lt_lcd_regs))
++			return;
+ 		aty_st_le32(lt_lcd_regs[index], val, par);
+ 	} else {
+ 		unsigned long temp;
+@@ -164,6 +166,8 @@ void aty_st_lcd(int index, u32 val, const struct atyfb_par *par)
+ u32 aty_ld_lcd(int index, const struct atyfb_par *par)
+ {
+ 	if (M64_HAS(LT_LCD_REGS)) {
++		if ((u32)index >= ARRAY_SIZE(lt_lcd_regs))
++			return 0;
+ 		return aty_ld_le32(lt_lcd_regs[index], par);
+ 	} else {
+ 		unsigned long temp;
+-- 
+2.43.0
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
