@@ -1,206 +1,154 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2135.outbound.protection.outlook.com [40.107.255.135])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94839145B3F;
-	Thu, 27 Mar 2025 09:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.135
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743068842; cv=fail; b=hiBJvwkj45l/WJ5NZETRDNeAZdV+ILlis65r3A5q/t56f98DymmKvoPVwKAaFZ3vfkWA5asicm4puQdcHr/9ec33AUIToLlM/nTtliC8h2hNisaprwVoHWaY0bSjPj5VU4reynPEkHzvAtXfcdlT9bnRJm9Dted1KZSXy7rOltE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743068842; c=relaxed/simple;
-	bh=NENqihCpHih2h/mLPqGIjuvZlC/rkYS6Y2wHNJmxFBw=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140051BC41
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743068913; cv=none; b=L976+65AS9kyJk1mnxudlbCXxPuQyHElLbHtaYZ22krMN+3tM+aeRbR+17oDxpWjv2+QXnA4ePXmeSZPc44Ttf8+dS6ViAjmZmcBEGFcpZyW9E2bv1w3x97g1ZU9YcRrgYnsZgO7d+oKTQNLy11nwjo3aatzbJ011yUM3x+eikU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743068913; c=relaxed/simple;
+	bh=V7nXQu1ECzd1snnn8NgRK9qAIOJWvh1THW88GlNDZo4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UOxLEkWLZ3OW+EmgT3tUAdWKToRL+gN83xLRzsH05BavA3ypyiG2gL48LmYXppGCfxU22r+QbqZZAnx+bHEnUHNbHcVVLslt2d51wf94a1W6FHr/+wnjqSSTYBTC2P9/BGqdtlcc0M2NHyTRWW+LiPX4Cf0M6IAeu7uTG74YQOk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.255.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kOxbAs8SxEF1VSpcV3R/EDJDFf+NORPO+uzv7yT4sWVsMob3M/exAuQmr4clMALNoimVElf19osOEU2u72n/ucIOPqvwc49X7kQM4/O+gtibwpRsIaonY0YqTfuKPiGvCl2Ix1WZrLTWjR13bwgIfTA1iH8Xez4sRyMikf8COHEozoxqdsNi4yKa02tkfZIYa1weFEs/UqEMVTzA+Bxwu4ID0JZFyjWKuTrk7IFh6HG47OIOv8s0lt217nYIe2vSt/UZlhej9qBjIt3lD7n+qbW9/OrapMtrPf59fr22lzeBAuivjza1y9AbkOs0Je8YTt+9OeMMp0yfuuctMG6UNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ruq63O1ZHy3gynEQ791pfwWnaKmV9hfjYcQ9SkilbFE=;
- b=V7tRHB9DSlh2+Zl6Nh0rAqm7UV1e2a8/cnbXw6kf7YQ+SVwZBpCTsg9/qgf6/M9FTPIlUX9EHSgIpyacf/HaawAo9vuRGprV77EQ2dAY0O8XjcHVjKI1flY4bG2fGySRk/jxFG3+XjHVbTONxFSMg33QqQlhSatGJMS6826RYtPT7/goG687IT12dbOt8u1zvMJIql+hXJrIAIF2RNwzm76glUOthCtehvrQl7O9+XTjCJIVQaivYHaSJDkF9Mw6BIaIWjoiWeIe3rnwROzJBUP/bUBU2v+D5gaJhSE+FnU6ov0tSbVoStCb61ZmYCUNtCSSpo1mR8VKWuXelO24Nw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from PS2PR02CA0039.apcprd02.prod.outlook.com (2603:1096:300:59::27)
- by SEZPR06MB6140.apcprd06.prod.outlook.com (2603:1096:101:f0::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
- 2025 09:47:15 +0000
-Received: from HK3PEPF0000021F.apcprd03.prod.outlook.com
- (2603:1096:300:59:cafe::81) by PS2PR02CA0039.outlook.office365.com
- (2603:1096:300:59::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.43 via Frontend Transport; Thu,
- 27 Mar 2025 09:47:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- HK3PEPF0000021F.mail.protection.outlook.com (10.167.8.41) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.20 via Frontend Transport; Thu, 27 Mar 2025 09:47:14 +0000
-Received: from nchen-desktop (unknown [172.16.64.25])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 4C15A4160CA0;
-	Thu, 27 Mar 2025 17:47:13 +0800 (CST)
-Date: Thu, 27 Mar 2025 17:47:12 +0800
-From: Peter Chen <peter.chen@cixtech.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, soc@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com,
-	will@kernel.org, arnd@arndb.de,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
-	marcin@juszkiewicz.com.pl, kajetan.puchalski@arm.com,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Fugang Duan <fugang.duan@cixtech.com>
-Subject: Re: [PATCH v5 5/6] arm64: dts: cix: add initial CIX P1(SKY1) dts
- support
-Message-ID: <Z-UeoIe4CPD3LwJv@nchen-desktop>
-References: <20250324062420.360289-1-peter.chen@cixtech.com>
- <20250324062420.360289-6-peter.chen@cixtech.com>
- <865xjxmlgl.wl-maz@kernel.org>
- <Z-Nz0DU441Wwj1i4@nchen-desktop>
- <861pukm9yd.wl-maz@kernel.org>
- <Z-Tz1moMNozx23k6@nchen-desktop>
- <e43b1a00-b221-413b-a36a-3a65e17f800f@kernel.org>
- <Z-UNufwSNmZreKya@nchen-desktop>
- <b2e1da92-0dfe-42c6-9f36-32486b768220@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=omduNyAsvk3aOuMnndFg1sNt11I4UjmAIFC/lhXU87iBGcqBQTCSmI0bDxSfyqYVTvq9szk6uP61DffEpH7XwJZBZGu4eFgyUFfew01XKn5s8NoO0FlzUGtORQnNXpj2U2BCLTVFT+eg4GDwual6kC1ioPoFTxaUcHg7uqrn93I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KNKJUiS5; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KNKJUiS5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743068911;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PkXA0CSGaLLhec1NiuD/8heU6GNQwO9LkiS1P4clsaU=;
+	b=KNKJUiS5l+tg1alfVjPTgGUIP2NpuG+UbnIrZUjPjBispAEUV5CTQBjuSkEqFh6amTTE0U
+	Fal1/nqs1A/1VAnaoxu0M6Zii2xUlmcLtj9c/j4Oz+35ixclDgsNyYVibwWhHIhfYf2s1U
+	km9ABxRadcajLA1E5x1AlCOV4f9dxHo=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-543-DkYQCauDMuWe7M_xR_eJLw-1; Thu, 27 Mar 2025 05:48:24 -0400
+X-MC-Unique: DkYQCauDMuWe7M_xR_eJLw-1
+X-Mimecast-MFC-AGG-ID: DkYQCauDMuWe7M_xR_eJLw_1743068903
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5e5dd82d541so789008a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 02:48:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743068903; x=1743673703;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PkXA0CSGaLLhec1NiuD/8heU6GNQwO9LkiS1P4clsaU=;
+        b=NBIpIjB27hix/QepANk2NPXiRBu1QIhX37jaQWV3ac6V+95qlu7b85H+nf6o8GXKce
+         ZQBYpboSE4XnLI5e37BMGxyJTmTTrcdupx7/szveP8q01k1rT5R52uuNVnb804Fbu8O3
+         FdwjrnUyw9yXxa992sEsqo5iejuaAngMw6CfmCGlMiNAhngTKF2Uazp2bNEb9Gxfq3BM
+         5iO4xBBDo2stmov6Q5tGfvOY9O2RvSWLrqvd8P40Yj4A+SBA8b656Yp72S9BK+fXvqoH
+         3Dp7dpoNulvp85pvFPaob6R279ZROL7GRVU5DQpWjSITyiVwzPHF6SfD1dVPXfDubY1e
+         CsZg==
+X-Forwarded-Encrypted: i=1; AJvYcCXxqtUaLQtFQnNF+Z4EV0iun6MCtdNNkZVWfHzEtSLh8THew4HrJVGJ+p26el10iy0mWWZjZE8X9IO8DVM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxALcg10eSwT1/OkAHyOWhj6gAqTs2NuqN3oaoHybnIdySuGPUt
+	qhLPv3EOpqbUbOSUo151hLuEAQf4RLRpqIPV144HsCFHWE2kk/KiPawNohCrxw6b2TUJgiYGFXp
+	RYUW/Q5EDQ8ViRlEbYz18gbEXzbo9/EAzDc6rfsDTWkl72f/UkoK+l/672qXlFpCOOxhKTqXa
+X-Gm-Gg: ASbGncsNAAK/+xP9Jr/1LAtEBc/btk0TKNRd16AmeITSm2DtpaaVYnwxrY0KzPDycFF
+	EBojLYZxOCHMfCXH0R/Tj4jUbmG6bfKpu2Ei/+gWWJ1zMe/km2A1WUMYjEWJomyJJhYnIxREoaY
+	FMJ7fa3Gvwp4dCXY6xPsIYkzWKwQ6AYrqLzbD5UTVW5E8ggGymSTvHB62PlRJ+9rHbYeNT2lLm2
+	kxEhQuW76K+j7fxqrQ6WbG3XQiD3R0sA1nj0WUnadI/cXCxSdIEKsnc+eAhhpU+h6xTWM5vuGCe
+	v5H9662v8w9W0uBaAkNQKp4UFqCGgRbC6pdCln4MssdZ/Ldqv0N06Kapd/6UQ81i
+X-Received: by 2002:a05:6402:35c4:b0:5e0:4276:c39e with SMTP id 4fb4d7f45d1cf-5ed8f5f6b76mr2945701a12.30.1743068903054;
+        Thu, 27 Mar 2025 02:48:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IECYBEVoCF81aAT+yw30nu+qGDuMQaL77qfuPpJGrMzLEon8pvfMD/dETVYWcOlt5YmfSMM3w==
+X-Received: by 2002:a05:6402:35c4:b0:5e0:4276:c39e with SMTP id 4fb4d7f45d1cf-5ed8f5f6b76mr2945665a12.30.1743068902509;
+        Thu, 27 Mar 2025 02:48:22 -0700 (PDT)
+Received: from sgarzare-redhat (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ebccf67e70sm10747368a12.6.2025.03.27.02.48.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 02:48:21 -0700 (PDT)
+Date: Thu, 27 Mar 2025 10:48:17 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org, 
+	Peter Huewe <peterhuewe@gmx.de>, linux-integrity@vger.kernel.org, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, Jens Wiklander <jens.wiklander@linaro.org>, 
+	Sumit Garg <sumit.garg@kernel.org>
+Subject: Re: [PATCH 1/2] tpm: add send_recv() op in tpm_class_ops
+Message-ID: <eidmcwgppc4uobyupns4hzqz562wguapiocpyyqq67j5h26qbl@muhbnfxzqvqt>
+References: <20250320152433.144083-1-sgarzare@redhat.com>
+ <20250320152433.144083-2-sgarzare@redhat.com>
+ <Z-QxH7aDjlixl2gp@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <b2e1da92-0dfe-42c6-9f36-32486b768220@kernel.org>
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HK3PEPF0000021F:EE_|SEZPR06MB6140:EE_
-X-MS-Office365-Filtering-Correlation-Id: 78bfbb01-c765-46cf-ad43-08dd6d145ab3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?2f/tSXcshgn60z7ZqVfZGtgmR8H7ji3cWBaCEYWRnH1NvC6znaG9CB5Kn/h3?=
- =?us-ascii?Q?Fg2l5Xg0tZws4qpJEH5grA+8y6OA8uV8b4ekIo4yvKWKok8v8rBGubUktpr7?=
- =?us-ascii?Q?lxgupfAYYglGxdkzWe6fFUmTsuo5x9Hn2qdnTPCmvQfUNMSF4akdnrve6sa2?=
- =?us-ascii?Q?i0IM7xLe6h6mST6oBPPAoM0csJs9oStBPM2qqivKlfTKgeWe+3UepNwlVRgf?=
- =?us-ascii?Q?U1naQcOoxooE4B3vMLMy0a5EJ4wnDIR+FUDvXj+DAp6NecpjrEChKDOVQdVX?=
- =?us-ascii?Q?TOF/QmZXY9/W8Oz+DBsjbdte/Rck67TMt75+ixja4jr60Niv2Lvz/tm5zl70?=
- =?us-ascii?Q?zIxI5tE3GQd/3bgjSEhTuv1rbBxliWgFnRz2lSWrxI8CnVBkh14oXCW/2RuX?=
- =?us-ascii?Q?cjCPZUH5MzkjGoHrEcbMfQdhvgML0aZdWo8q4K67CHvZXDs0Xbwi7YbscqD9?=
- =?us-ascii?Q?0I/RpE/k2v0s4pUlMGThshCC+4zfO7O4l8AkXYtHMP1pv0DKgcHP7YsB/nUj?=
- =?us-ascii?Q?Vxp/vw1SfFMPx1K+vJF03GV8J0nFeP6Dj2fQXHhWjI81u1KBqu8p3uw+w3BA?=
- =?us-ascii?Q?DiZ9jjkj5edWk+PaSyudDm36RCETZIoPLXXYkm+C6T+ymE/4CSygCjdVKAXG?=
- =?us-ascii?Q?BV7xCaIn3NwVGk+L3g/rekcQLVDOxBZqbyqg4biPZDUkrL1Grc4FSZyEDNoP?=
- =?us-ascii?Q?DM5AP20IPo06ZKHTSnFGH8xeV5snoEHuQxYyPYsfJ8YxyR5vdzFM06K5UOU0?=
- =?us-ascii?Q?1LvTKyTTvOJF+1ODMnF2N443q23gBTauoZeUSEZAnMsvLmKR3SPOoSIS0Qwd?=
- =?us-ascii?Q?zoPr8YEc5kSEu2kmrPeOtov8PRTuzkk64Vsn7bIy+yBV/PP/DD9LNAbLXkwE?=
- =?us-ascii?Q?VKeeNRhX1XFYjnaFHGtt0gu5a5UbzfZkaxACLt1zZf64mtIq3Yxjzf0SLWn0?=
- =?us-ascii?Q?Wb/ADOEcU5/0lLOubfrOTSFTbVtgavSHz1cwy2vhNTYPtiRwzndAvM9Ah4SZ?=
- =?us-ascii?Q?g0qF8flrdaCeKos42sjgZXPaBQ/vdDf3i9RFaMMQBOt/3nqDh6S45Of4qAZG?=
- =?us-ascii?Q?OUQS8gWsUmxTpx6hO7kzqHbBd8YfrhMsQAWZGYKrKjipvNlMjthv6eYPRigl?=
- =?us-ascii?Q?YlqVlD9d1ZaDlf3r505i+2/NDydF/qSoRKEyWi0xvAZmg3I3BIl47bJGVxAT?=
- =?us-ascii?Q?739CQXV7Oa1jTqi+ce6HGs45b83kUUoHMUV4ASw/bqiyLVQqQn33mH8IXzIX?=
- =?us-ascii?Q?D21EPLmtroVOPnBy9kAFP+SiCXE1IGzRJKD2lybPze0JEI7pkl8xuiW2S4WJ?=
- =?us-ascii?Q?Xfm9T+fzgjDvkfwz8BtjA+UXsY1kgotMZSaml5OrUlp6ATQ0B4+L00b0amBX?=
- =?us-ascii?Q?dHGv9BVNKwQa3Rz7VMi0DU+pFjd0Z4IFDIpwmrNLSkFYlykjpy/tHmr1nqk/?=
- =?us-ascii?Q?Q2SP4nNY+XGDxToptKaXbvfR9S5EZVTYBq35garQ4d5q6kavEEBFi9Fe2cje?=
- =?us-ascii?Q?AdlGHmiwiMvXl4I=3D?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014)(7416014);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 09:47:14.2476
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78bfbb01-c765-46cf-ad43-08dd6d145ab3
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource: HK3PEPF0000021F.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB6140
+In-Reply-To: <Z-QxH7aDjlixl2gp@kernel.org>
 
-On 25-03-27 09:40:10, Krzysztof Kozlowski wrote:
-> EXTERNAL EMAIL
-> 
-> On 27/03/2025 09:35, Peter Chen wrote:
-> > On 25-03-27 08:16:33, Krzysztof Kozlowski wrote:
-> >>>>
-> >>>> No, you are deliberately choosing to make this platform useless.
-> >>>>
-> >>>> That's a bit sad, and a waste of everybody's time.
-> >>>>
-> >>>
-> >>> Hi Marc,
-> >>>
-> >>> Thanks for your interesting of our platform, and your comments
-> >>> help us a lot. But I don't think it wastes reviewers and maintainers
-> >>> time, a clean patch set saves everyone's time during upstream process.
-> >>>
-> >>> For how to organize the patch set for SoC, Krzysztof gave good summary
-> >>> at [1]. We are going on upstream [2], this patch set is just a start
-> >>> and base but not like you said for marketing purpose.
-> >>
-> >>
-> >> I do not think I suggested in [1] to ever send new SoC containing only
-> >> CPUs and interrupt controller, without even serial. My instruction [1]
-> >> was how to organize it. The DTS can be even fully complete, see the
-> >> upstreaming example I have been using all the time - Qualcomm SM8650:
-> >>
-> >> https://lore.kernel.org/all/20231124-topic-sm8650-upstream-dt-v4-0-e402e73cc5f0@linaro.org/
-> >>
-> >> Entire SoC sent to mailing list on the day one of public release of that
-> >> flagship Qualcomm SoC. The SoC DTSI and board DTS have almost complete
-> >> picture, except few trickier pieces... but it even has full display and
-> >> GPU! Plus, as I explained on my email on samsung-soc, that DTS/DTSI
-> >> patchset references all other bindings with their state, so SoC
-> >> maintainers can understand what is the overall progress and what will be
-> >> the result in DT schema checks, if they apply the patchset.
-> >>
-> >
-> > Hi Krzysztof,
-> >
-> > Like I said in this thread before, without this initial support,
-> > we can't even add mailbox binding that the dt_binding_check will
-> > report warnings/errors [1], the reason is "cix" has not existed
-> > at vendor-prefixes binding. How we handle this dependency?
-> 
-> Not different than all other SoCs. There is no dependency, you just send
-> your patch and tell where the bindings are. Just like I asked in the [1]
-> you linked on samsung-soc. Just like all Qualcomm upstreaming goes, e.g.
-> SM8650 I linked here.
-> 
-> Just like maintainer-soc profiles are explaining. I told you to read
-> them on IRC.
-> 
-> Your way is contradictory to three sources describing process and two of
-> these sources - my samsung-soc posting and maintainers-soc-clean-dts
-> profile - are known to you.
-> 
-> >
-> > I thought we need to move one step and step before, and keep clean
-> > and avoid warning and error for every submission, but it seems not
-> > the way you prefer.
-> 
-> No, from where did you get such impression? Maintainers-soc-clean-dts
-> explicitly covers this case and I WROTE IT, so how can I prefer
-> something else?
-> 
+On Wed, Mar 26, 2025 at 06:53:51PM +0200, Jarkko Sakkinen wrote:
+>On Thu, Mar 20, 2025 at 04:24:32PM +0100, Stefano Garzarella wrote:
+>> From: Stefano Garzarella <sgarzare@redhat.com>
+>>
+>> Some devices do not support interrupts and provide a single operation
+>> to send the command and receive the response on the same buffer.
+>>
+>> To support this scenario, a driver could set TPM_CHIP_FLAG_IRQ in the
+>> chip's flags to get recv() to be called immediately after send() in
+>> tpm_try_transmit(), or it needs to implement .status() to return 0,
+>> and set both .req_complete_mask and .req_complete_val to 0.
+>>
+>> In order to simplify these drivers and avoid temporary buffers to be
+>
+>Simplification can be addressed with no callback changes:
+>
+>https://lore.kernel.org/linux-integrity/20250326161838.123606-1-jarkko@kernel.org/T/#u
+>
+>I also noticed that tpm_ftpm_tee initalized req_complete_mask and
+>req_complete_val explictly while they would be already implicitly
+>zero.
+>
+>So it reduces this just a matter of getting rid off the extra
+>buffer.
 
-Krzysztof, I did not mean soc dts, I mean the mailbox binding checking
-warning which depends on this patch set.
+Yep, as mentioned I think your patch should go either way. So here I can 
+rephrase and put the emphasis on the temporary buffer and the driver 
+simplification.
 
-https://lore.kernel.org/lkml/174290730775.1655008.14031380406017771195.robh@kernel.org/
+>
+>> used between the .send() and .recv() callbacks, introduce a new callback
+>> send_recv(). If that callback is defined, it is called in
+>> tpm_try_transmit() to send the command and receive the response on
+>> the same buffer in a single call.
+>
+>I don't find anything in the commit message addressing buf_len an
+>cmd_len (vs "just len"). Why two lengths are required?
+>
+>Not completely rejecting but this explanation is incomplete.
 
--- 
+Right.
 
-Best regards,
-Peter
+The same buffer is used as input and output.
+For input, the buffer contains the command (cmd_len) but the driver can 
+use the entire buffer for output (buf_len).
+It's basically the same as in tpm_try_transmit(), but we avoid having to 
+parse the header in each driver since we already do that in 
+tpm_try_transmit().
+
+In summary cmd_len = count = be32_to_cpu(header->length).
+
+I admit I'm not good with names, would you prefer a different name or is 
+it okay to explain it better in the commit?
+
+My idea is to add this:
+
+     `buf` is used as input and output. It contains the command
+     (`cmd_len` bytes) as input. The driver will be able to use the
+     entire buffer (`buf_len` bytes) for the response as output.
+     Passing `cmd_len` is an optimization to avoid having to access the
+     command header again in each driver and check it.
+
+WDYT?
+
+Thanks,
+Stefano
+
