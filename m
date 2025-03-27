@@ -1,138 +1,110 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C1418AE2;
-	Thu, 27 Mar 2025 19:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B07E18AE2;
+	Thu, 27 Mar 2025 19:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743105346; cv=none; b=Vm+N4DE3Y74HFmvHHuershawoqX/spLiNSIZce9hdu1nOQ4L5PXbSLv2KaaJ8PEFkROeJqcGqY2YA1/Wj+2BxXS6QWC+gp7R/0oubS5to75rvWYDOVgKrdHQWliaH1u1OqAqT7xEKxexDFk8N0jUhZJyncWe8BhcsitAoBHhTks=
+	t=1743105589; cv=none; b=CXR3Z+J0uAi/D0mAzRJzLkbCAOJUCa6kXVNZ2V//t1BZeCZW4eRm2VaaLFS3yvvcash7MOjbBccjzUi6Br08mZ9J5W8FQo6wFRUXtd4Mczm/LbrbBgktRyYdw5j4dE4VOe+UtdfOTWLrhVlE1W/E6lCjMupxTbHY3UkFQd4uayo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743105346; c=relaxed/simple;
-	bh=2WNWM9kf9hPjB2M8fdeez0uvpVDEQQZTBElzx+pQr2E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Aj1pH6YOYmKXYQofp4gGTja4GsOgzt2fa/Z/riISabjFzBtJlaBf2LPHuzhcdzLWrSba1kKhtBMV5XdUi4sN7Xd06cth8HE/H1hGpNgyuZfe/jI+PnRmMtwP6WElI1jWRRQPKlgUrknoTzjxuMEiELvUi7qaZib7kiD3w7EzeJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=btDuSomF; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1743105589; c=relaxed/simple;
+	bh=SoMaNrVV51gxBQhSR5uOLfOfT7ilMR1drag2BCwWNOA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GIR5VY2W68Wr/jT9kzAE5PKoRv4dLGolMzmpQ5nOg+F1ax7DAWrHetlQSN/44f0UI5iOp6X1n/SOI3JureqkXy8Y0BNIejPuSYQArW8XM6SIiWx3TpGVPrAvvDCoe9C4aELRe9aVwGm72vfsnC4xMdZBFGxXE2hL2pDrS9TNJwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=VwB2A6eC; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="btDuSomF"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 85C1F446;
-	Thu, 27 Mar 2025 20:53:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743105234;
-	bh=2WNWM9kf9hPjB2M8fdeez0uvpVDEQQZTBElzx+pQr2E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=btDuSomFB2B+2MnMXMOVOR1LJ4pat4LuKmecXbaVDZxhFE3Zr5pFZYj0f/M21ze8P
-	 R3K7Z9ek9b7+qKS+V0iA4qz0LXIrSD96M/RISaKnyBPndmJedXF/DOXr6qj9q5lSOF
-	 tmG8NM80yzbsNJraioK9EE/NuUaEWaVZw/6Oe2Ys=
-Date: Thu, 27 Mar 2025 21:55:20 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-	Robert Chiras <robert.chiras@nxp.com>,
-	"Guoniu.zhou" <guoniu.zhou@nxp.com>
-Subject: Re: [PATCH v3 04/12] media: nxp: imx8-isi: Allow num_sources to be
- greater than num_sink
-Message-ID: <20250327195520.GH4861@pendragon.ideasonboard.com>
-References: <20250210-8qxp_camera-v3-0-324f5105accc@nxp.com>
- <20250210-8qxp_camera-v3-4-324f5105accc@nxp.com>
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="VwB2A6eC"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id A84D7A06AB;
+	Thu, 27 Mar 2025 20:59:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=mail; bh=MLKLWQghRFfoCawFKRGWPxJXg92KIL/1MA9aUdW+dqQ=; b=
+	VwB2A6eC6Aa9C1iipDu3RgNMnNOfZ0DpKu3n0j8q1KxLIBiTlbCcknGQK5o95Zlk
+	itfUhB5F7B0gbJH8nhea4cWdJieeY81OH+UrTkb1YYYfm279pfgzz29de6/neuuF
+	pL+BIr80ZCcwPqPIHNqU3r90H5Xa58WYz/V6Dvy41ktCTdfRvKwkWAxzkvjLOgVM
+	EbNlGbYHgcIGQhQVo8i+08997sV8Nt8IXE4AcU855itsXTeV7mlYm5tcNCK63BxK
+	T0ORrdpcK1jxd1vdfIS2UEaYrBV3mgBFQ1ejfw0QWBbT4UOLzPbffj3JZ1PqVnHo
+	IdWDMsIQRvoglZNwMnHWUDz6n8jQm4Mk0jPcfzWRFoSmf3ZEBeSB0tVCLP7JQdby
+	tNdyvnOtI8uDeyJ7Wx3eoYfEXL8C6CCQh5K4YNxGZO3WIh2C/kZED9vtO3jpQPf5
+	d+gIGu+17HLaQ4vR59wAuV7HtVmTtQmYEWKMP50IFBLfgGzyF1Oqus8WMGpv3+LQ
+	Sv4HlmISSznJuNHT5momCbm2J2g8TR4aos2H/sycet84VYUVG1MZnFegxY7jvVYJ
+	iK4ZLTph8xLsSnmwDLRs3DKetyNNhDgyspJtyw0z+C/GHq1Is0dcajUFa/Go1RqG
+	h0wJOJM64uL8bpvVw3ytZBxC5PGeCgbANpsWglkqWcY=
+From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+To: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	=?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>, "Varshini
+ Rajendran" <varshini.rajendran@microchip.com>, Tudor Ambarus
+	<tudor.ambarus@linaro.org>, Mark Brown <broonie@kernel.org>,
+	<linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+	Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>, Alexander Dahl <ada@thorsis.com>,
+	"Nicolas Ferre" <nicolas.ferre@microchip.com>, Alexandre Belloni
+	<alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Subject: [PATCH v6 0/2] Add more devm_ functions to fix PM imbalance in spi/atmel-quadspi.c
+Date: Thu, 27 Mar 2025 20:59:25 +0100
+Message-ID: <20250327195928.680771-2-csokas.bence@prolan.hu>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250210-8qxp_camera-v3-4-324f5105accc@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1743105582;VERSION=7987;MC=2827852488;ID=112013;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D948526C776A
 
-Hi Frank,
+The probe() function of the atmel-quadspi driver got quite convoluted,
+especially since the addition of SAMA7G5 support, that was forward-ported
+from an older vendor kernel. During the port, a bug was introduced, where
+the PM get() and put() calls were imbalanced. To alleivate this - and
+similar problems in the future - an effort was made to migrate as many
+functions as possible, to their devm_ managed counterparts. The few
+functions, which did not yet have a devm_ variant, are added in patch 1 of
+this series. Patch 2 then uses these APIs to fix the probe() function.
 
-Thank you for the patch.
+Change in v4:
+* the DMA cleanup was split out and will be submitted separately for 6.15
 
-On Mon, Feb 10, 2025 at 03:59:23PM -0500, Frank Li wrote:
-> Allow num_sources (drvdata: num_channels) to be greater than num_sink
-> (drvdata: num_ports + 1).
-> 
-> ISI support stream multiplexing, such as differentiates multiple cameras
-> from a single 2-lane MIPI input, or duplicates input stream into multiple
-> outputs. So num_channels may be greater than num_ports at some platform.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> change from v1 to v3
-> - none
-> ---
->  drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
-> index 93a55c97cd173..ba5b2d3617a23 100644
-> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
-> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
-> @@ -188,11 +188,11 @@ static int mxc_isi_crossbar_init_state(struct v4l2_subdev *sd,
->  	 * Create a 1:1 mapping between pixel link inputs and outputs to
->  	 * pipelines by default.
->  	 */
+Change in v5:
+* rebased to linux-pm/linux-next, will now target 6.15
 
-Move
+Change in v6:
+* add `devm_pm_runtime_set_active_enabled()`, which is safer
 
-	routing.num_routes = xbar->num_sinks - 1;
+Links to previous versions:
+pre-series:
+https://lore.kernel.org/linux-kernel/20250114222851.1023194-1-csokas.bence@prolan.hu/
+v1:
+https://lore.kernel.org/linux-kernel/20250115160244.1102881-1-csokas.bence@prolan.hu/
+v2:
+https://lore.kernel.org/linux-kernel/20250124085221.766303-8-csokas.bence@prolan.hu/
+v3:
+https://lore.kernel.org/linux-kernel/20250207124802.165408-1-csokas.bence@prolan.hu/
+v4:
+https://lore.kernel.org/linux-kernel/20250210111008.248929-1-csokas.bence@prolan.hu/
+v5:
+https://lore.kernel.org/linux-kernel/20250317093445.361821-1-csokas.bence@prolan.hu
 
-here, and use routing.num_routes below to replace xbar->num_sinks - 1.
+Bence Csókás (2):
+  pm: runtime: Add new devm functions
+  spi: atmel-quadspi: Fix unbalanced pm_runtime by using devm_ API
 
-This assumes that there will always be as many or more pipelines than
-pixel links. It's true for all the currently supported SoCs and the ones
-you add in this series, but maybe we could make it safer with
+ drivers/base/power/runtime.c | 44 ++++++++++++++++++++++++++++++++++++
+ drivers/spi/atmel-quadspi.c  | 17 ++++----------
+ include/linux/pm_runtime.h   |  4 ++++
+ 3 files changed, 52 insertions(+), 13 deletions(-)
 
-	routing.num_routes = min(xbar->num_sinks - 1, xbar->num_sources);
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> -	routes = kcalloc(xbar->num_sources, sizeof(*routes), GFP_KERNEL);
-> +	routes = kcalloc(xbar->num_sinks - 1, sizeof(*routes), GFP_KERNEL);
->  	if (!routes)
->  		return -ENOMEM;
->  
-> -	for (i = 0; i < xbar->num_sources; ++i) {
-> +	for (i = 0; i < xbar->num_sinks - 1; ++i) {
->  		struct v4l2_subdev_route *route = &routes[i];
->  
->  		route->sink_pad = i;
-> @@ -200,7 +200,7 @@ static int mxc_isi_crossbar_init_state(struct v4l2_subdev *sd,
->  		route->flags = V4L2_SUBDEV_ROUTE_FL_ACTIVE;
->  	}
->  
-> -	routing.num_routes = xbar->num_sources;
-> +	routing.num_routes = xbar->num_sinks - 1;
->  	routing.routes = routes;
->  
->  	ret = __mxc_isi_crossbar_set_routing(sd, state, &routing);
-> @@ -453,7 +453,7 @@ int mxc_isi_crossbar_init(struct mxc_isi_dev *isi)
->  	 * the memory input.
->  	 */
->  	xbar->num_sinks = isi->pdata->num_ports + 1;
-> -	xbar->num_sources = isi->pdata->num_ports;
-> +	xbar->num_sources = isi->pdata->num_channels;
->  	num_pads = xbar->num_sinks + xbar->num_sources;
->  
->  	xbar->pads = kcalloc(num_pads, sizeof(*xbar->pads), GFP_KERNEL);
-
+base-commit: 8f61ea3ebb4de9a4cacff995b6885e91450cb094
 -- 
-Regards,
+2.49.0
 
-Laurent Pinchart
+
