@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39722210F4A
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:30:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87274211712
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:30:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743071409; cv=none; b=WO2iacSOeroDoAuACpW36y3Q6Bf/PpX5WoxQMy9jRvSXul80c5NzK3Tcdcv8CYJ4Qrpz7vZhWa2Buf1FkodNnn5KAOphEr9Retbcxx2enk+tN3EW0sXtSb6trIvUHRfBCddMeW4AV4jyate28ColMTX/ZR/nDJowfrJvR/eUF74=
+	t=1743071410; cv=none; b=n7mcX8g5A4oauCBOKEZveXeLoL1xqr5fGh9Fm0E2fauMZzLr3FXjFCAQMQY03f3FeQi4izAhKaWvs4Fygv333hr98wDMn5GO9yVhz6ZTlWcg92pBNIXp36Gt8psHmh05Tc2TimzFNR/HLpGAyngK5Jo0TTuj86w9uZfCPeUkWA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743071409; c=relaxed/simple;
-	bh=3aJ6T4I0hOstaWRJQ16Hr5v+WsyZZUl5P2e65fi6MxQ=;
+	s=arc-20240116; t=1743071410; c=relaxed/simple;
+	bh=lbZJml6REyBa5Wqf6whljObeSVlpAH/8U8yaPU9LXBQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BY766NuKCmiwEwOq0Gv1kGnNGgb90n7yEvxg8XdPk568Rz0gB/PWOWv5Xkq9lfYX/rQpj2ozwl3GG+YxDjmfr1GsQIhDihCnOuGUkJRa8k+nuAgBN2NEdb525SjtycieYzNvb0ONXUBW8BY7r5KriL783bNQUu3JZaopLNvGLW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lDA3hMvW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fuW5SDMY6dCQXbnOtqIPp69w0oXeCC7t9YTdyQwCLcEDMwZK1R8JJgb1FoPywueq539OKAwDpiXtE/GTbqT7jW+fifIH7d2EFI+OmxPeE4j3UTvsh7flfJW5kgTg+YCMlzyU8RSzTbv01mBgJlNUMt/sH0xd+4gEdOLLMfzGGug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YiFnNZke; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lDA3hMvW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74220C4CEEA;
-	Thu, 27 Mar 2025 10:30:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YiFnNZke"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33020C4CEDD;
+	Thu, 27 Mar 2025 10:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743071408;
-	bh=3aJ6T4I0hOstaWRJQ16Hr5v+WsyZZUl5P2e65fi6MxQ=;
+	s=k20201202; t=1743071410;
+	bh=lbZJml6REyBa5Wqf6whljObeSVlpAH/8U8yaPU9LXBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lDA3hMvWEnJ0W5ZTeCfKDG6TL4P6UUUKFAwHfIigGseQCJaqfV25bzloCTGyJbqfm
-	 aN+YRVHaGutZhtQ66IUdJ0NOQu1ncgjKWJblsUqKEM0BqIZqmvYNPG979lweT6i3wG
-	 On4KXXGXpVyIrLZIfcYmjW3rGzEKsuw8NMKo6sYA0JLvcZqHHlf7hX+qxZ/lMLs18M
-	 mNv9ohQL3FS7irbZ2ZzR/FVrOdLyb06SpJQdd/5aYU/5RqZ05aXmfyrWhY4/zF1mES
-	 ZrAGpPaxm78NqEuIWUucd4eZ/AfUz689x9C6Tly6dqW+J12a+zSzAe6NRcXS0vBFbc
-	 dNPXOv94AXG+g==
+	b=YiFnNZkeI7JgpBv25HYkHSKNyzApg2CQ2eRNboSy/UcBlKzQW3qfCpQrI4xhgwLne
+	 UAEclnxYT9ZIT7TA6QQbEYjk3QmUMj/oLKJsokeR//XjU2nZcXAxK54Kggv/p+ImpN
+	 Kb9pXl+++HkJ3RFd3lkL16p0k9Bz+27Op6mMm1tUVvga8NxidAlXI5AfXiLU8y93hh
+	 4vqv688S2ZnGiwtj+K+xuv1GhFDPLdzMInhyd7QE2Jswv7x6Poz1rhwJDfK96/LuYN
+	 NFzeYQhSTDKmYkNBvUA9aLvPSaNvBAOksMBVrS8X8gKMkHforFysVmWmZ+ql1NTSRf
+	 3iuLxBmvHuveA==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 04/14] bugs/x86: Augment warnings output by concatenating 'cond_str' with the regular __FILE__ string in _BUG_FLAGS()
-Date: Thu, 27 Mar 2025 11:29:43 +0100
-Message-ID: <20250327102953.813608-5-mingo@kernel.org>
+Subject: [PATCH 05/14] bugs/powerpc: Pass in 'cond_str' to BUG_ENTRY()
+Date: Thu, 27 Mar 2025 11:29:44 +0100
+Message-ID: <20250327102953.813608-6-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250327102953.813608-1-mingo@kernel.org>
 References: <20250327102953.813608-1-mingo@kernel.org>
@@ -44,46 +44,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This allows the reuse of the UD2 based 'struct bug_entry' low-overhead
-_BUG_FLAGS() implementation and string-printing backend, without
-having to add a new field.
+Pass in the condition string from __WARN_FLAGS(), WARN_ON()
+and BUG_ON(), but don't use it yet.
 
-An example:
-
-If we have the following WARN_ON_ONCE() in kernel/sched/core.c:
-
-	WARN_ON_ONCE(idx < 0 && ptr);
-
-Then previously _BUG_FLAGS() would store this string in bug_entry::file:
-
-	"kernel/sched/core.c"
-
-After this patch, it would store and print:
-
-	"[idx < 0 && ptr] kernel/sched/core.c"
-
-Which is an extended string that will be printed in warnings.
-
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Naveen N Rao <naveen@kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org
 Cc: <linux-arch@vger.kernel.org>
 ---
- arch/x86/include/asm/bug.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/include/asm/bug.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
-index aff1c6b7a7f3..e966199c8ef7 100644
---- a/arch/x86/include/asm/bug.h
-+++ b/arch/x86/include/asm/bug.h
-@@ -50,7 +50,7 @@ do {									\
- 		     "\t.org 2b+%c3\n"					\
- 		     ".popsection\n"					\
- 		     extra						\
--		     : : "i" (__FILE__), "i" (__LINE__),		\
-+		     : : "i" (cond_str __FILE__), "i" (__LINE__),		\
- 			 "i" (flags),					\
- 			 "i" (sizeof(struct bug_entry)));		\
+diff --git a/arch/powerpc/include/asm/bug.h b/arch/powerpc/include/asm/bug.h
+index 34d39ec79720..b5537ba176b5 100644
+--- a/arch/powerpc/include/asm/bug.h
++++ b/arch/powerpc/include/asm/bug.h
+@@ -51,7 +51,7 @@
+ 	".previous\n"
+ #endif
+ 
+-#define BUG_ENTRY(insn, flags, ...)			\
++#define BUG_ENTRY(cond_str, insn, flags, ...)		\
+ 	__asm__ __volatile__(				\
+ 		"1:	" insn "\n"			\
+ 		_EMIT_BUG_ENTRY				\
+@@ -67,12 +67,12 @@
+  */
+ 
+ #define BUG() do {						\
+-	BUG_ENTRY("twi 31, 0, 0", 0);				\
++	BUG_ENTRY("", "twi 31, 0, 0", 0);			\
+ 	unreachable();						\
  } while (0)
+ #define HAVE_ARCH_BUG
+ 
+-#define __WARN_FLAGS(cond_str, flags) BUG_ENTRY("twi 31, 0, 0", BUGFLAG_WARNING | (flags))
++#define __WARN_FLAGS(cond_str, flags) BUG_ENTRY(cond_str, "twi 31, 0, 0", BUGFLAG_WARNING | (flags))
+ 
+ #ifdef CONFIG_PPC64
+ #define BUG_ON(x) do {						\
+@@ -80,7 +80,7 @@
+ 		if (x)						\
+ 			BUG();					\
+ 	} else {						\
+-		BUG_ENTRY(PPC_TLNEI " %4, 0", 0, "r" ((__force long)(x)));	\
++		BUG_ENTRY(#x, PPC_TLNEI " %4, 0", 0, "r" ((__force long)(x)));	\
+ 	}							\
+ } while (0)
+ 
+@@ -90,7 +90,7 @@
+ 		if (__ret_warn_on)				\
+ 			__WARN();				\
+ 	} else {						\
+-		BUG_ENTRY(PPC_TLNEI " %4, 0",			\
++		BUG_ENTRY(#x, PPC_TLNEI " %4, 0",			\
+ 			  BUGFLAG_WARNING | BUGFLAG_TAINT(TAINT_WARN),	\
+ 			  "r" (__ret_warn_on));	\
+ 	}							\
 -- 
 2.45.2
 
