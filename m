@@ -1,198 +1,162 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D719433B1;
-	Thu, 27 Mar 2025 17:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F169C1A3150;
+	Thu, 27 Mar 2025 17:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743097693; cv=none; b=kb/ez5Udsbhm4gaSnpwK3EFxrqbtg9WcXrebbLIGYKrPNKe7oBUiEiG3BJx+z5pRGzODuaqalLc2sbWyLdDUs7Bg6AyoVUH6ic/PUEOgPTfpMOBJGeWWXHzG0HLwI7mzTm/Id9Q3M6hr/cIB5JAKBEGFxICIA3rCh8+UNhfEpEc=
+	t=1743097711; cv=none; b=JhAC4apw1Mno1KWJ0Q3Aca8XkFvquleS1uYH29ZEO+yFeK9m2DhluPhrH8T/YhIP63nQ2IoazXoLSr3uzjfXyw947aolYa/q/LmQXfee003WgvHzV+BakCLe2KT1443SPTiBBhe3o++3JiPLFBEQ3nyJ54+99hqj4Paxjw7jHLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743097693; c=relaxed/simple;
-	bh=9e8h+C2pdlvCU+8CMtrRPLcUHm9spPtbCKdoxLV65hY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qz6yZCYbpfLgyhJdsat6mtNyP8LvO9zX8CxTR955bKhjAkYoevuYrHv/vXeyzEhHCzTW7uKX1TMKe5bu6UKIGGp2BjEvVJkBRgpTDBy84AKsmLDC1LTlUyZdAo7jHTEABHeFN7d0ppHrkuOPRDuiYo8dFshnSaop6nBUq8pw4z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hk6iKQWa; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743097711; c=relaxed/simple;
+	bh=n5Fgyxwm/3OJhV9wcL6Q3xhIZkO171ATh9/xVS/7iCA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dbfcgBhgcjTS1hv4ofyMPb0XM2S3p+7mui/T45GamQykMvUsF3uMk900lW23HJWTP0eKd+406zFpq9zli0dc1EXqM1iI3sfajPgFYifqfwfthl3TdfHXPFaHLeSDmAuM1FFv04Z6vX2wxYVN+Euwliu65AzMk21HkzwcpLcxt2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MFNMyCtZ; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hk6iKQWa"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e677f59438so1991046a12.2;
-        Thu, 27 Mar 2025 10:48:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743097689; x=1743702489; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NHz+Ccq4y4In5QM8QHHqPDgkxTMlvKloGXrTWL6Om+g=;
-        b=Hk6iKQWasj1aaFYVPtmTur08ATVOIDjxtq4aPfhxMLudmRqT6/oKA4eKTt5achA4k5
-         bIuD+CjfRyl8P+DYcCQ8UZfeLRtMzBcSno7kgkcEI64O2MJnjpjAwz/Tf3PqRDqSRUON
-         N0OVb0uHh33Q7wlZ+SnERYvzHUDaZW5oZWHp+aGOtcdzAM20yfXfcCm2IkVylRLLFBZd
-         u8cL9enXWr3+H/0RUbiRA2Zqhr9kG4TfD2dXAmLrlTBbrxFx4hdwjTqJjTpZFdldWbMa
-         g10geMS11D218gPiqIVCXyI0I6MLdNVburuI6pupRRpSYiNY6QezPKEA+U7aUhA4NMgU
-         MUmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743097689; x=1743702489;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NHz+Ccq4y4In5QM8QHHqPDgkxTMlvKloGXrTWL6Om+g=;
-        b=ko4hzQ17zFDB8zvwtA9wyXmx7Hcytheif6XC3Rgj/deBbB8ZoSKBDAB8cfJPnlzBR0
-         GotlTMo1lY3WoXPVxNZW7UajxxAON7qPGR7brQu3+3I4MapPoCr0B8rGocQdzzPEAA8X
-         QXG2nh8+V6doL+RGgFmOe+ZEqQRlrLO/UKzKnBniTPqExD2shtIG5+DpZS0vaFhtuhzJ
-         8Lffob0CNyql4ou1M3qW1f+gRxBXXA6W/NFyLT6BtbR7FMIVG3PdfXKF4yGOIGS1H63n
-         laeAbaRzE4x9aY14sKh3dxUvjrVxMHjgVfzBdx94m3b7jY1NeLseHk9/tpievkr4HGji
-         BWeg==
-X-Forwarded-Encrypted: i=1; AJvYcCUCJX+nmMcXD94BfRhnZITFx4zHJ6VGchlmj8wAp9HUpjbbJ9geCuaUPi23jYKEddpSFmnHT8Z2Fh8tVrIW@vger.kernel.org, AJvYcCWUB4oUUtU00ouMZsu6WXZ4xz7xhjdTwvqAm0sa9NMTmO7Xxv1aEZznMYn/EPkr2QJDHbNhDChT@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUoUFC1qRXQemrjoQxI90QSIEBrmA4Lu9q30Eh7ILknTHf8Aw2
-	IJUeB93GVbi0AE8Z/DeG7rvUoseNCFsrmCLVcaYmW8nBVfZglJnT6eLLiKiZYs2Fe5S+qxIQk1t
-	SrZR0f9eojddowAWNO6PlG53u+hs=
-X-Gm-Gg: ASbGncsQq8NRl3faJrX8Hm6BzsBKYzTHmCSBJ7J2mrPzeQ5ivOf6Wa1Fj0sUsRCnMY7
-	OSZPEurMICSEWxESfRvODhrbKLdBCc0Jx/ZZdlUe9AY4JJOQY/Igz6ESI6lNdaNl6PRyVCkSOGf
-	TDSLxyfLzFIMCzvGja9znOXMMhehHsZvftq6Y=
-X-Google-Smtp-Source: AGHT+IHLz7Hd7zwr8CdH3MUmiQ27N1XbY21K7o2Ht6T9pVr9uanxh8tkVxriW4wUWJJi1IrGKk7/tBQ/Dwyel4aAsZI=
-X-Received: by 2002:a05:6402:278a:b0:5e7:f707:d7c4 with SMTP id
- 4fb4d7f45d1cf-5ed8f902a81mr3792714a12.31.1743097688940; Thu, 27 Mar 2025
- 10:48:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MFNMyCtZ"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52RDLLC3029908;
+	Thu, 27 Mar 2025 17:48:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=49rk5v8MEFhz//kPC0D7Mb2Oyq2KyjRDj30MErMoW
+	mM=; b=MFNMyCtZycV5O2cQpkygJsTeLycyZUtMHkGH914bnOphaWIen71xkpvhN
+	l6Ug4L7Elq9kqzf0ds/nGWKdCnnM2C4lvx0BhNHy7lzKUCMGt7sbeB+YPOagtfOL
+	2xCoXAM4zusQu0AuJBIYGsoNhYSBvbGqceb9QVZKzjbCPLF+ukfVRL8TRlekE/EB
+	1vulaan+UGSU54LZ+oAx5gMasYHdGkUzh141vPEyH0WL9Z9CADbau6bD8rvEIhF+
+	cJz08HmCBkSWk7c3iKv6ow16B+gv/aOWDpUKzD0mZ7syVR0iZtCuzakKBLyoEfyC
+	ssuDW0o++slxrYqgqLWS8WHBQ4wHQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45my29c9mh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Mar 2025 17:48:15 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52RHmF5E022686;
+	Thu, 27 Mar 2025 17:48:15 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45my29c9me-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Mar 2025 17:48:15 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52REbqOd030325;
+	Thu, 27 Mar 2025 17:48:14 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 45j7htpq81-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Mar 2025 17:48:14 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52RHmCSG46268900
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Mar 2025 17:48:12 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 754AD20043;
+	Thu, 27 Mar 2025 17:48:12 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B2E8120040;
+	Thu, 27 Mar 2025 17:48:10 +0000 (GMT)
+Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.124.215.70])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 27 Mar 2025 17:48:10 +0000 (GMT)
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: linux-ext4@vger.kernel.org, "Theodore Ts'o" <tytso@mit.edu>
+Cc: Jan Kara <jack@suse.cz>, Baokun Li <libaokun1@huawei.com>,
+        Ritesh Harjani <ritesh.list@gmail.com>, Zhang Yi <yi.zhang@huawei.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ext4: Make block validity check resistent to sb bh corruption
+Date: Thu, 27 Mar 2025 23:18:09 +0530
+Message-ID: <c434eb50ee5161e23036d58a6166a7e216f6d6a0.1743097281.git.ojaswin@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319071330.898763-1-gthelen@google.com> <u5kcjffhyrjsxagpdzas7q463ldgqtptaafozea3bv64odn2xt@agx42ih5m76l>
- <Z9r8TX0WiPWVffI0@google.com> <2vznaaotzkgkrfoi2qitiwdjinpl7ozhpz7w6n7577kaa2hpki@okh2mkqqhbkq>
- <Z-WIDWP1o4g-N5mg@google.com>
-In-Reply-To: <Z-WIDWP1o4g-N5mg@google.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 27 Mar 2025 18:47:56 +0100
-X-Gm-Features: AQ5f1JrXAHRzHRyquIDDNJZAWzDXofV8J8rFba84g_qbEzkzCrXyFGy0GURok_Y
-Message-ID: <CAGudoHHgMOQuvi5SJwNQ58XB=tDasy_-5SULPykWXOca6b=sDQ@mail.gmail.com>
-Subject: Re: [PATCH] cgroup/rstat: avoid disabling irqs for O(num_cpu)
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Greg Thelen <gthelen@google.com>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Eric Dumazet <edumzaet@google.com>, cgroups@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Eric Dumazet <edumazet@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: NS8pO99WOpbBs9d1vwYYBuBlxRyP6Q1n
+X-Proofpoint-ORIG-GUID: B7eaVkTv9x_7fArkdXN1_QQlY7GkXAf5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-27_02,2025-03-26_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 clxscore=1015 phishscore=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 mlxlogscore=948 suspectscore=0 impostorscore=0
+ spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503270116
 
-On Thu, Mar 27, 2025 at 6:17=E2=80=AFPM Yosry Ahmed <yosry.ahmed@linux.dev>=
- wrote:
->
-> On Thu, Mar 27, 2025 at 03:38:50PM +0100, Mateusz Guzik wrote:
-> > On Wed, Mar 19, 2025 at 05:18:05PM +0000, Yosry Ahmed wrote:
-> > > On Wed, Mar 19, 2025 at 11:47:32AM +0100, Mateusz Guzik wrote:
-> > > > Is not this going a little too far?
-> > > >
-> > > > the lock + irq trip is quite expensive in its own right and now is
-> > > > going to be paid for each cpu, as in the total time spent executing
-> > > > cgroup_rstat_flush_locked is going to go up.
-> > > >
-> > > > Would your problem go away toggling this every -- say -- 8 cpus?
-> > >
-> > > I was concerned about this too, and about more lock bouncing, but the
-> > > testing suggests that this actually overall improves the latency of
-> > > cgroup_rstat_flush_locked() (at least on tested HW).
-> > >
-> > > So I don't think we need to do something like this unless a regressio=
-n
-> > > is observed.
-> > >
-> >
-> > To my reading it reduces max time spent with irq disabled, which of
-> > course it does -- after all it toggles it for every CPU.
-> >
-> > Per my other e-mail in the thread the irq + lock trips remain not cheap
-> > at least on Sapphire Rapids.
-> >
-> > In my testing outlined below I see 11% increase in total execution time
-> > with the irq + lock trip for every CPU in a 24-way vm.
-> >
-> > So I stand by instead doing this every n CPUs, call it 8 or whatever.
-> >
-> > How to repro:
-> >
-> > I employed a poor-man's profiler like so:
-> >
-> > bpftrace -e 'kprobe:cgroup_rstat_flush_locked { @start[tid] =3D nsecs; =
-} kretprobe:cgroup_rstat_flush_locked /@start[tid]/ { print(nsecs - @start[=
-tid]); delete(@start[tid]); } interval:s:60 { exit(); }'
-> >
-> > This patch or not, execution time varies wildly even while the box is i=
-dle.
-> >
-> > The above runs for a minute, collecting 23 samples (you may get
-> > "lucky" and get one extra, in that case remove it for comparison).
-> >
-> > A sysctl was added to toggle the new behavior vs old one. Patch at the
-> > end.
-> >
-> > "enabled"(1) means new behavior, "disabled"(0) means the old one.
-> >
-> > Sum of nsecs (results piped to: awk '{ sum +=3D $1 } END { print sum }'=
-):
-> > disabled:     903610
-> > enabled:      1006833 (+11.4%)
->
-> IIUC this calculates the amount of elapsed time between start and
-> finish, not necessarily the function's own execution time. Is it
-> possible that the increase in time is due to more interrupts arriving
-> during the function execution (which is what we want), rather than more
-> time being spent on disabling/enabling IRQs?
+Block validity checks need to be skipped in case they are called
+for journal blocks since they are part of system's protected
+zone.
 
-I can agree irq handlers have more opportunities to execute in the
-toggling case and that the time accounted in the way above will
-include them. I don't think explains it, but why not, let's test
-without this problem.
+Currently, this is done by checking inode->ino against
+sbi->s_es->s_journal_inum, which is a direct read from the ext4 sb
+buffer head. If someone modifies this underneath us then the
+s_journal_inum field might get corrupted. To prevent against this,
+change the check to directly compare the inode with journal->j_inode.
 
-I feel compelled to note atomics on x86-64 were expensive for as long
-as the architecture was around so I'm confused what's up with the
-resistance to the notion that they remain costly even with modern
-uarchs. If anything, imo claims that they are cheap require strong
-evidence.
+**Slight change in behavior**: During journal init path,
+check_block_validity etc might be called for journal inode when
+sbi->s_journal is not set yet. In this case we now proceed with
+ext4_inode_block_valid() instead of returning early. Since systems zones
+have not been set yet, it is okay to proceed so we can perform basic
+checks on the blocks.
 
-That said, I modified the patch to add a section which issues
-conditional relock if needed and smp_mb otherwise -- irqs remain
-disabled, but we are still paying for a full fence. smp_mb is a lock
-add $0 on the stack pointer. Note this has less work to do than what
-was added in your patch.
+Suggested-by: Baokun Li <libaokun1@huawei.com>
+Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+---
 
-It looks like this:
-switch (READ_ONCE(magic_tunable)) {
-case 1:
-        __cgroup_rstat_unlock(cgrp, cpu);
-        if (!cond_resched())
-                cpu_relax();
-        __cgroup_rstat_lock(cgrp, cpu);
-        break;
-case 2:
-        if (need_resched() || spin_needbreak(&cgroup_rstat_lock)) {
-                __cgroup_rstat_unlock(cgrp, cpu);
-                if (!cond_resched())
-                        cpu_relax();
-                __cgroup_rstat_lock(cgrp, cpu);
-        } else {
-                smp_mb();
-        }
-        break;
-default:
-        if (need_resched() || spin_needbreak(&cgroup_rstat_lock)) {
-                __cgroup_rstat_unlock(cgrp, cpu);
-                if (!cond_resched())
-                        cpu_relax();
-                __cgroup_rstat_lock(cgrp, cpu);
-        }
-        break;
-}
+** Changes since v1 [1] **
 
-With this in place I'm seeing about 4% increase in execution time
-measured the same way, so irq handlers sneaking in don't explain it.
-Note smp_mb() alone is a smaller cost than the locked instruction +
-func calls + irq trips. I also state I'm running this in a VM
-(24-way), where paravirt spinlocks also issue a lock-prefixed
-instruction to release the lock. I would say this very much justifies
-the original claim of 11% with the patch as proposed.
+- instead of using an sbi field direction check against jorunal->j_inode
+- let block validity perform basic checks on journal blocks as well
+	during init path
+- kvm-xfstests quick tests are passing
 
---=20
-Mateusz Guzik <mjguzik gmail.com>
+[1] https://lore.kernel.org/linux-ext4/d1a9328a41029f6210a1924b192a59afcd3c5cee.1741952406.git.ojaswin@linux.ibm.com/
+
+ fs/ext4/block_validity.c | 5 ++---
+ fs/ext4/inode.c          | 9 +++++----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
+index 87ee3a17bd29..e8c5525afc67 100644
+--- a/fs/ext4/block_validity.c
++++ b/fs/ext4/block_validity.c
+@@ -351,10 +351,9 @@ int ext4_check_blockref(const char *function, unsigned int line,
+ {
+ 	__le32 *bref = p;
+ 	unsigned int blk;
++	journal_t *journal = EXT4_SB(inode->i_sb)->s_journal;
+ 
+-	if (ext4_has_feature_journal(inode->i_sb) &&
+-	    (inode->i_ino ==
+-	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
++	if (journal && inode == journal->j_inode)
+ 		return 0;
+ 
+ 	while (bref < p+max) {
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 365d31004bd0..8b048be14008 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -384,10 +384,11 @@ static int __check_block_validity(struct inode *inode, const char *func,
+ 				unsigned int line,
+ 				struct ext4_map_blocks *map)
+ {
+-	if (ext4_has_feature_journal(inode->i_sb) &&
+-	    (inode->i_ino ==
+-	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
+-		return 0;
++	journal_t *journal = EXT4_SB(inode->i_sb)->s_journal;
++
++	if (journal && inode == journal->j_inode)
++			return 0;
++
+ 	if (!ext4_inode_block_valid(inode, map->m_pblk, map->m_len)) {
+ 		ext4_error_inode(inode, func, line, map->m_pblk,
+ 				 "lblock %lu mapped to illegal pblock %llu "
+-- 
+2.48.1
+
