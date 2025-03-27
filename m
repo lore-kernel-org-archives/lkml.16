@@ -1,141 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B2620E039
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9190C20CCF2;
+	Thu, 27 Mar 2025 10:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743070417; cv=none; b=p1M20W3c+wStwUHP1cCjKZ0yuu+TVX0Rz5APsQ8c80rqPyUEByyVnUEjq3puZjO7Fzx1Dc9n6WNLnVDg0AyeVolnqjUBhYyP6gk+8cfvfCcPsvr8Vz8vo0/u5CX/cKySeCX9rkXhEmxA9r1jtUDCp2laae5P77eRyMJjrV5HsSk=
+	t=1743070474; cv=none; b=nnBOQNXKaBzaOtZbUagAHzPK5VuWOJNuDTnlg3YJ/bA2pJ6gFfzbBo1pkM6M8rBbQC3XzJHmTk0SIphnZdGMUGcE4gYRluv/CGCP6gCnhakQRUC8ifEbgmYHHOwIUAMaepBp10T3ya2WKyFvfKEtnpgS6KUV3wLTmPStFb651wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743070417; c=relaxed/simple;
-	bh=H6nLXwiIEvSFqpSB3wQ8ExOnH42MrNk+uWhZm9orWyg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p5D+1k0OrZlKKxT55pqXpktTgc4z4nAsaAyzhfHq41eYe8/GIWH/uN0qLtQ3yKHOMtAYz+OKH1VAYNDOIreFOS/HZDQnyzw8wHPYpl/Ft0D+5ZQG89o4bkc1yDgKBggi9Qla2vfI7V3t6B+dmce3AM2aSok2DBKygsnspRcjSXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P0j22AjY; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1743070474; c=relaxed/simple;
+	bh=giySu6xIZjlmmNFPqaCfRdb3ApliqH0pfCPum+wMMX0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=k6BfCx7/q/g64JgYKyRCV6SOZ3IfNmg0FPt+L5lrQvyTQz48lSKYpUoRjQYM4JEgtNZN3sE0sRth8RfmEARvrZMXmyxM3iB6TlNQ+8HT10MqJU1Jnosi/ZfU6d4Ol8WKAkDJn+MK5A7KR7z70TytPlP0CCesCpeqjS4PcBh1WXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EcizOs1J; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P0j22AjY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743070414;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z1V7Tj5XppP4TZCf7Oi5My5u1vfz1nFkHzifF2QtL7E=;
-	b=P0j22AjYBULR7U/KhymCqZTJHJFZ7/uyBlP1fCwGyHHX5bAKBQKM6ixsfHRylqd2FnPnDi
-	oqba/LV0AVV0l1WajopAEpEuRVseFmSC+3q7x9MJRZJ0hi4oqDlK/W8+T6NDNVTzfqPw8a
-	LYss/9pz78Ep+QV1aDrbsFsVlhizQeM=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-685-UWzUlS9HNv6Ijb3fRkty2w-1; Thu, 27 Mar 2025 06:13:33 -0400
-X-MC-Unique: UWzUlS9HNv6Ijb3fRkty2w-1
-X-Mimecast-MFC-AGG-ID: UWzUlS9HNv6Ijb3fRkty2w_1743070412
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2ff799be8f5so1402623a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:13:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743070412; x=1743675212;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z1V7Tj5XppP4TZCf7Oi5My5u1vfz1nFkHzifF2QtL7E=;
-        b=pR8Y0TzSqOTDks9tDN5Pdw8sEilTtP6fGH7f0LtBpasbZAWt9/krZTgnpdPxoLUXMD
-         B9rIanf0P62GhNFWhSOkP+kX4SozP6zXPnjFEAP7ZwCX/jfGd2Z2tHv9wXBi6YrYmzbI
-         opzL5GTkJuOQeX2/5EhZEPtsVC9bNa1jHf9SYCtYX4hdYsZ9mBMi2WCPH1FoSCm26TBh
-         OHQJue5sRlPpNikywZ983sSbq/HNuavejH6TNtUzZNEwjg9Wtf+y6rBsq8HecWu+sYkf
-         nLqFbWuducJWQm8XpneZbRtUrsxt316uXafkpN5EIRxOBst0Fl2lwz69Py50NMcOUJ7w
-         x5EA==
-X-Forwarded-Encrypted: i=1; AJvYcCUsL66f2//mzU0FHMAjoFuMgVqdSCFviGI2v1vwm0P3bDVv4ntFbdcw5Eu01b/WcKUxmVGR3uroKl+o6Mg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdVrEPagXPHSVNFUbfizpYQNFmZUPgzTkL4j502LiEiig75CaN
-	2DbB4QzKs2rHY0/KJopCsRu9FQsUuW0cSnRyewUvbcHHXToHu+R2KfFTuUUoVXe3zTm+EOMUaiO
-	LHxu809DubLMarehqHUW+LL1JEqv6SWnkRW0gYVYCBOEcmUd9U+xNj/vcCFdjMwlRmAKjZyJ3H4
-	F6qM5RJU6VvbyQCZVrt+5fggYvfRXz7ZfngmavTX0ysLAb
-X-Gm-Gg: ASbGncugcCyeJx83oqI/ZftZcKs+aeiq64YnQYBg20AuaQZvNYJEmjwWg+UoSkBxtlT
-	/vczpe/ciLGW+qrkMemR6emng6bT1n/2uoiZU9ej4sOmayx32BZOaqBLyo3Rq9KneKgy+RbU=
-X-Received: by 2002:a17:90b:1b47:b0:2ff:6e72:b8e9 with SMTP id 98e67ed59e1d1-303a906c30emr4333004a91.25.1743070411733;
-        Thu, 27 Mar 2025 03:13:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGo6BSnN/7DnWwsrPKsPzsp5vwYeekx/yw1uXydp3cTFY2lLZ6RC9pAe31IwHQYeL/C+jGIXOHxziJ1HikRcBo=
-X-Received: by 2002:a17:90b:1b47:b0:2ff:6e72:b8e9 with SMTP id
- 98e67ed59e1d1-303a906c30emr4332968a91.25.1743070411193; Thu, 27 Mar 2025
- 03:13:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EcizOs1J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743070472; x=1774606472;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=giySu6xIZjlmmNFPqaCfRdb3ApliqH0pfCPum+wMMX0=;
+  b=EcizOs1J1/dYWhEzA0lbazBkh97uc324l1f+sXkKGANvPQsWSR9jLEXk
+   fudZ6FSqVJdXfLaEqbtB84BrRk/PdmGnrgMwg48ykD6YeDCzW+08ATwjB
+   gkKzqYBEvZdsbX3ONykApp2mr08oxh5g2NHbRrnQghf8SjJsDcwohBrja
+   OFlX4H3L4OCkROXYxa8HzxmGuFy1onbdmIBK1gqfhxA9ZoJivN6LGP8sd
+   6zmkBy+isV/SSB+JdTfHIQhd8VZt6UEO5e1mp1L3aA+rWRnD/t56gyMsY
+   /g/5HWLIEnUMlWv3XTtCb5IcIyo01S7kgpy6vJD6behWTAPiKbGctIRnr
+   g==;
+X-CSE-ConnectionGUID: jKbCipX/S7KX6XDby/Vvvw==
+X-CSE-MsgGUID: 1s2k79+YQTOoSno87JMtSg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="69755452"
+X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
+   d="scan'208";a="69755452"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 03:14:32 -0700
+X-CSE-ConnectionGUID: BviyDncsTJKOyQmh/7vWTQ==
+X-CSE-MsgGUID: EWJfyvPNTu27FiuKthCc2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
+   d="scan'208";a="130189060"
+Received: from ncintean-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.17])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 03:14:29 -0700
+From: Jani Nikula <jani.nikula@intel.com>
+To: Denis Arefev <arefev@swemel.ru>, Helge Deller <deller@gmx.de>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ lvc-project@linuxtesting.org
+Subject: Re: [PATCH 1/1] fbdev: atyfb: Fix buffer overflow
+In-Reply-To: <20250327100126.12585-2-arefev@swemel.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250327100126.12585-1-arefev@swemel.ru>
+ <20250327100126.12585-2-arefev@swemel.ru>
+Date: Thu, 27 Mar 2025 12:14:26 +0200
+Message-ID: <87pli26arh.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324103048.3d8230f9@canb.auug.org.au> <20250327101610.45f13473@canb.auug.org.au>
- <e9c50bf0-e85f-4c71-b46b-b9b919955045@oss.qualcomm.com>
-In-Reply-To: <e9c50bf0-e85f-4c71-b46b-b9b919955045@oss.qualcomm.com>
-From: Alessandro Carminati <acarmina@redhat.com>
-Date: Thu, 27 Mar 2025 11:13:19 +0100
-X-Gm-Features: AQ5f1JpEcUZC0l9g0TEutF6ljQnWodfEfcECrFj9kOh5Fz3DBBEkrKeTMe2-9MY
-Message-ID: <CAGegRW7ONApvTPMSvYfpvH5=r06pPNpUAo7zBLfAhr-qcycFMw@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the kbuild tree
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Oliver Glitta <glittao@gmail.com>, 
-	Guenter Roeck <linux@roeck-us.net>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hello,
+On Thu, 27 Mar 2025, Denis Arefev <arefev@swemel.ru> wrote:
+> The value LCD_MISC_CNTL is used in the 'aty_st_lcd()' function to
+> calculate an index for accessing an array element of size 9.
+> This may cause a buffer overflow.
 
-On Thu, Mar 27, 2025 at 1:20=E2=80=AFAM Jeff Johnson
-<jeff.johnson@oss.qualcomm.com> wrote:
+The fix is to fix it, not silently brush it under the carpet.
+
+BR,
+Jani.
+
 >
-> On 3/26/2025 4:16 PM, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > On Mon, 24 Mar 2025 10:30:48 +1100 Stephen Rothwell <sfr@canb.auug.org.=
-au> wrote:
-> >>
-> >> After merging the kbuild tree, today's linux-next build (powerpc
-> >> ppc64_defconfig) failed like this:
-> >>
-> >> ERROR: modpost: missing MODULE_DESCRIPTION() in lib/kunit/backtrace-su=
-ppression-test.o
-> >> ERROR: modpost: missing MODULE_DESCRIPTION() in lib/slub_kunit.o
-> >
-> > This is now lib/tests/slub_kuni.c
-> >
-> >> Caused by commits
-> >>
-> >>   19f3496e6241 ("kunit: add test cases for backtrace warning suppressi=
-on")
-> >>
-> >> from the mm-nonmm-unstable branch of the mm tree and
-> >>
-> >>   1f9f78b1b376 ("mm/slub, kunit: add a KUnit test for SLUB debugging f=
-unctionality")
-> >>
-> >> from Linus' tree (in v5.14rc1) interacting with commit
-> >>
-> >>   6c6c1fc09de3 ("modpost: require a MODULE_DESCRIPTION()")
-> >>
-> >> from the kbuild tree.
-> >>
-> >> I have temporarily reverted the latter commit until the former are
-> >> fixed up.
-> >
-> > I am still reverting that commit.
-> >
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
 >
-> Guenter & Oliver, can you add MODULE_DESCRIPTION() macros to your respect=
-ive modules?
-Yes, sure.
-I'll do it asap.
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Signed-off-by: Denis Arefev <arefev@swemel.ru>
+> ---
+>  drivers/video/fbdev/aty/atyfb_base.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 >
-> Context:
-> https://lore.kernel.org/all/20250311-moddesc-error-v1-1-79adedf48d0e@oss.=
-qualcomm.com/
->
+> diff --git a/drivers/video/fbdev/aty/atyfb_base.c b/drivers/video/fbdev/aty/atyfb_base.c
+> index 210fd3ac18a4..93eb5eb6042b 100644
+> --- a/drivers/video/fbdev/aty/atyfb_base.c
+> +++ b/drivers/video/fbdev/aty/atyfb_base.c
+> @@ -149,6 +149,8 @@ static const u32 lt_lcd_regs[] = {
+>  void aty_st_lcd(int index, u32 val, const struct atyfb_par *par)
+>  {
+>  	if (M64_HAS(LT_LCD_REGS)) {
+> +		if ((u32)index >= ARRAY_SIZE(lt_lcd_regs))
+> +			return;
+>  		aty_st_le32(lt_lcd_regs[index], val, par);
+>  	} else {
+>  		unsigned long temp;
+> @@ -164,6 +166,8 @@ void aty_st_lcd(int index, u32 val, const struct atyfb_par *par)
+>  u32 aty_ld_lcd(int index, const struct atyfb_par *par)
+>  {
+>  	if (M64_HAS(LT_LCD_REGS)) {
+> +		if ((u32)index >= ARRAY_SIZE(lt_lcd_regs))
+> +			return 0;
+>  		return aty_ld_le32(lt_lcd_regs[index], par);
+>  	} else {
+>  		unsigned long temp;
 
-
---=20
----
-172
-
+-- 
+Jani Nikula, Intel
