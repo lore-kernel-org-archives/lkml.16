@@ -1,93 +1,96 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C3A20CCC4;
-	Thu, 27 Mar 2025 09:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8EF1482E7;
+	Thu, 27 Mar 2025 09:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743068480; cv=none; b=URyaUKZixvTs9GALoI00VEyRlyv97f26ez/VYSAmBjKWsEn/TEKvVYVktYGWvH1KGlpjDk8CxnhN+4OEvpj7GXzUcMtDPPgrYIbFGk8Xhddq2qpgYb3Tl/1ac7V0/DvV+rqBLRjnzh+L7vtiLzrXObQ1T7bw+3ZGMJiwlsLq5ts=
+	t=1743068560; cv=none; b=garC+I179itrLiqk8LC/H0X5tSdY3H/U1/BiHA/DNukZY0UNkz4WiDRXBeAkbVgTo2ZubTU6MCd5jTkYhs0h+Cdp7UKuJqEyh0GcExHkRixY/pc4eKf9zPdv3PWAxi9BwIgE+tgKz2O3c/Y7culFSHIoT69GxnUd8tfkAsMtua4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743068480; c=relaxed/simple;
-	bh=glMrtPRMwCf/hTpSOg9es/RCOrRO2mA/9DknAIORiEk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NohBBC7bIQ28Fu6zg5vtWY6GLky3S8ymDanSYYcJHElwIz5qKxtopvVPy7dJE7wNE9inke93rMhS1g2VY2Wg5ZPrHlIfvR76IS7BJ8vkPvB4kilZnnUr7HY6z0UsVVtXg+jKdLmq7kr0uiSfkzmSHV2J3ZkYaTJcqURaGa26ksA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=OSXflsOk; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1743068560; c=relaxed/simple;
+	bh=KUvjtgFESozOCVhk6gc946bOYRryku7PZ7BF3vqTv3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mv7MXABoJzZkVbTOMmwQIekgcQOjnMdl8q/fZwQ09iCJ6MUs18Ne3RhUl24kepScAE7JHiilUodVB5dyf0M071IPJ0/Ot7VoqwXnX9cIzv3Ot62xFhcsAFfHu/QirNe84H/MC3pCt1hkXj7iXED16nusfeSB1qzxJGi7ht7tJSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=DuwZxVMe; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="OSXflsOk"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R75SFE012762;
-	Thu, 27 Mar 2025 02:40:59 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:message-id:mime-version:subject:to; s=
-	pfpt0220; bh=Ei2z18ex06t1MQHQoeuQQd5olVFTcCe9I9eJdiosu0w=; b=OSX
-	flsOkEMG/ruUFHOrfPAnaJL4dNn/7286kE5YlozUodOfHNaY6lYGGoBz39ofL1Th
-	1vHnC1WMm6Jtv0ONjCC6k/bowl8JwODbSDKVU4WcusHNFFyzHPf1MP44bzegqE6a
-	+SGNo0u3Ua9wkNSPj1QRNtc3/6fgrCJpKMhW3K9GwSJG3UQYiqbSqdwSIuADtJwm
-	BX7lClax2vy/u27lNbaxqHIbU1aggCuhfMaexpN0YRCKetaIa2/Y6SCIXBCbKZuW
-	R916uBsIZz308J2HRRojBhLk4S0pPE2dwijZqQAm53olKIEW3MCvVEJuB7qyfA4g
-	tcatW0YxibwMzgpYUqQ==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 45n1yv89kb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 02:40:59 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 27 Mar 2025 02:40:58 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Thu, 27 Mar 2025 02:40:58 -0700
-Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
-	by maili.marvell.com (Postfix) with ESMTP id 562C65E6869;
-	Thu, 27 Mar 2025 02:40:55 -0700 (PDT)
-From: Geetha sowjanya <gakula@marvell.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <kuba@kernel.org>, <davem@davemloft.net>, <pabeni@redhat.com>,
-        <edumazet@google.com>, <sgoutham@marvell.com>, <gakula@marvell.com>,
-        <sbhatta@marvell.com>, <hkelam@marvell.com>, <tduszynski@marvell.com>
-Subject: [net PATCH] octeontx2-af: Free NIX_AF_INT_VEC_GEN irq
-Date: Thu, 27 Mar 2025 15:10:54 +0530
-Message-ID: <20250327094054.2312-1-gakula@marvell.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="DuwZxVMe"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 652F41C00EF; Thu, 27 Mar 2025 10:42:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1743068548;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TgWAlIrkZR4hJ4WarQEwsPmAzFkrsZtxh5149Xr1POc=;
+	b=DuwZxVMe0RF6jW91bf43uKoDiO4x4mK1xiEUGi7xFG3tzRfjBCfzTZnHwD8nJyTK9ofh+w
+	jIoiH9kwmP5Ak1B1Lx8GqCvKFEBsRztZ4VluDXUiE4cLWzAr5XPo5YVOy3QulagcSmbs7n
+	vNNTwtkBiTm5/C/QYZz4UnoGBGYxX6k=
+Date: Thu, 27 Mar 2025 10:42:27 +0100
+From: Pavel Machek <pavel@ucw.cz>
+To: Clark Williams <williams@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	linux-rt-users <linux-rt-users@vger.kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Carsten Emde <C.Emde@osadl.org>, John Kacur <jkacur@redhat.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Daniel Wagner <daniel.wagner@suse.com>,
+	Tom Zanussi <tom.zanussi@linux.intel.com>,
+	Joseph Salisbury <joseph.salisbury@oracle.com>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Subject: Re: [ANNOUNCE] 6.1.128-rt49
+Message-ID: <Z+Udg9qlQL2Z/aZX@duo.ucw.cz>
+References: <173930775249.796803.15441220010102177762@demetrius>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: O9ga0dYAkM2jHIK0rodNJKKbROtFkzQu
-X-Authority-Analysis: v=2.4 cv=dKCmmPZb c=1 sm=1 tr=0 ts=67e51d2b cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=Vs1iUdzkB0EA:10 a=M5GUcnROAAAA:8 a=x9ZtOMo8CBIAi1-txUEA:9 a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-GUID: O9ga0dYAkM2jHIK0rodNJKKbROtFkzQu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gWEQOM0S4GcZQLoH"
+Content-Disposition: inline
+In-Reply-To: <173930775249.796803.15441220010102177762@demetrius>
 
-Due to the incorrect initial vector number in 
-rvu_nix_unregister_interrupts(), NIX_AF_INT_VEC_GEN is not
-geeting free. Fix the vector number to include NIX_AF_INT_VEC_GEN
-irq.
 
-Fixes: 5ed66306eab6 ("octeontx2-af: Add devlink health reporters for NIX")
-Signed-off-by: Geetha sowjanya <gakula@marvell.com>
----
- drivers/net/ethernet/marvell/octeontx2/af/rvu_devlink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--gWEQOM0S4GcZQLoH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_devlink.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_devlink.c
-index dab4deca893f..27c3a2daaaa9 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_devlink.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_devlink.c
-@@ -207,7 +207,7 @@ static void rvu_nix_unregister_interrupts(struct rvu *rvu)
- 		rvu->irq_allocated[offs + NIX_AF_INT_VEC_RVU] = false;
- 	}
- 
--	for (i = NIX_AF_INT_VEC_AF_ERR; i < NIX_AF_INT_VEC_CNT; i++)
-+	for (i = NIX_AF_INT_VEC_GEN; i < NIX_AF_INT_VEC_CNT; i++)
- 		if (rvu->irq_allocated[offs + i]) {
- 			free_irq(pci_irq_vector(rvu->pdev, offs + i), rvu_dl);
- 			rvu->irq_allocated[offs + i] = false;
--- 
-2.25.1
+Hi!
 
+> I'm pleased to announce the 6.1.128-rt49 stable release.
+>=20
+> You can get this release via the git tree at:
+>=20
+>   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+>=20
+>   branch: v6.1-rt
+>   Head SHA1: 7faf422b9217de411f016245ab3f2f5e03c9899c
+
+CIP project would like to do 6.1-cip-rt release approximately once a
+month. Is there chance to get 6.1-rt "soon"?
+
+Is there some kind of schedule for 6.1-rt? IOW should I try to adjust
+6.1-cip-rt releases to once a two months?
+
+Best regards,
+								Pavel
+--=20
+I don't work for Nazis and criminals, and neither should you.
+Boycott Putin, Trump, and Musk!
+
+--gWEQOM0S4GcZQLoH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZ+UdgwAKCRAw5/Bqldv6
+8t/PAKCgiJV/mcCCdzZubU54sYe3SDTcsQCeKx94B7ikV5/1PjC0+nSwSux9wNs=
+=Cw2g
+-----END PGP SIGNATURE-----
+
+--gWEQOM0S4GcZQLoH--
