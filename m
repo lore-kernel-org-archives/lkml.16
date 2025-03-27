@@ -1,132 +1,68 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7AEA20DD4D;
-	Thu, 27 Mar 2025 13:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743083223; cv=pass; b=DsMfWXEGi4xxsamCy/js1e/8vL83ZM3HGB2dVP1x5O/Rr+8eJqTE67pY9+JtigUyI2TrPxlG8OQ/kGivyYT3PyXdCpCB/4xB5vPkl6LK7ku/ku0QKQFziyBQr9OeOmPtLvCBv0LRD1y5gDcOVQBOAzPm1maciIR81dTcGdGwFoU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743083223; c=relaxed/simple;
-	bh=SLUxjfTytuTXkm0ZV5mwqh8ZxkVkPIHWO5tXHBHT3Fw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nDT0UGj7ocEIw2JVriUn7faaEAxgs99D2zu4iTpg7nmtxjOcboNyiFo9kh4ri4AeKY8ZiZOID+h2+TWXfHVIVE3sO/1Gb+WtNNk57TMWWz+gcud2Hki7usJYDbiFKmHmNnHF4MeFPHqBNW/yOsni/QF5GOsgdjZ07vtmutk3CpI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=lQ5T7J3T; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC8420CCEA;
+	Thu, 27 Mar 2025 13:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743083230; cv=none; b=ht2fKMrvBHL23zFPlrh6KBNWMYsGNfmB/KN84oOqYjMwTBpN27CzMp75iD7FXmn0rMbP8OfJV+wu4ND+imeYpw8LNU3RlKlBF4lEcI6PW4HEjj4Oh3sDEfa0e22lAj9ALrdJI9EEizEfU+cR5D+NHdA2WMZvi1kjU6b+6jGijEs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743083230; c=relaxed/simple;
+	bh=RF3wdOFzL4vQqrB1B0vZ2iCYv5b2RA5x1OV5kLSU3FE=;
+	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=bRNrZpZ+2F8i8iDlA7ZwesLxYd/Ndo7gR5U328agm3BetwtRtm1R9RdqZIvV5fqjgrJf8KDPoYFlXDYEF7+Lca6Nv0obPQztkzmfQuHD7dnHkl/DtzaOhKhYksxpl6DRUgf+QFLNIz1G7ps/+e0Swj+Aitc+VsxOicm8uRZbt5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRYR+wJJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="lQ5T7J3T"
-ARC-Seal: i=1; a=rsa-sha256; t=1743083196; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=NVYMy9HnNLqGZG42kIKaNWeUamhFYNAVgfBG1tqLMhUYnILfAzLS908F1HdJRSnBQS+SUnnTcODgzoZKoFqiq7brP0Lrh0EC3JOw7Wv8YMk8XRhFoVMb2cnWx1r9FAD4xTC8c0l+9DBUC033oV7Zwf9js4JarkF+UT2mVoeRVJo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743083196; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ehwn0eQcEIVrlPhTdcgJsA+l7jiw8BKWzcfn+2hit6M=; 
-	b=hZYTrDx5O5oJwTQz+FUWaSxwevdbjO0lZYBxCAi41ON4LOZUWtQ/uANBaTPaopo5aWysI8Fc5+2Nah8SuE8fZOrAE2jPAFYsHMXvcWat6h90/WdL2wHfptFsdn0MWtsp4m8Cm+5sAmzKj4ijkT8Iet0VJX/0XU6OqUdjmEHKEM0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743083196;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=ehwn0eQcEIVrlPhTdcgJsA+l7jiw8BKWzcfn+2hit6M=;
-	b=lQ5T7J3TIvcUHiFIKN9JmJLijCyY3Auv4iBU4toqnmwDQJ0k0gUeyjGSj+M7tgOW
-	LwUoTEhd9ZtAFeNNukjUNwmY9mCOZX+c70L9AlIbf9dacIPOh7drc11ROC8BEN3G0a7
-	fXJqer+Jpvu2luXFR7SqELomUkaDRPRdVamPoy/c=
-Received: by mx.zohomail.com with SMTPS id 1743083195187729.6171611042369;
-	Thu, 27 Mar 2025 06:46:35 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 669F4180510; Thu, 27 Mar 2025 14:46:30 +0100 (CET)
-Date: Thu, 27 Mar 2025 14:46:30 +0100
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Boris Brezillon <boris.brezillon@collabora.com>, lgirdwood@gmail.com, broonie@kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH RESEND v2] rust: regulator: add a bare minimum regulator
- abstraction
-Message-ID: <opip2gbm6tpjqnx4hqk4mghbkhv7egexeqs5ukfn7oz3mm7nev@y7qffwz5ckdz>
-References: <20250326-topics-tyr-regulator-v2-1-780b0362f70d@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRYR+wJJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91924C4CEDD;
+	Thu, 27 Mar 2025 13:47:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743083230;
+	bh=RF3wdOFzL4vQqrB1B0vZ2iCYv5b2RA5x1OV5kLSU3FE=;
+	h=Date:From:To:Subject:In-Reply-To:References:Cc:From;
+	b=TRYR+wJJTnUYnvc1ODN4B9vpFKwvFoCczHvPyqf3uyWcee9vc7G3HqduxGVF99hGj
+	 2Anar/GswBgL04kQZ9wHQpotK+vz0ZpPE6+J7Eb/VTi2PcOmI2BZq3zNIwPhwtQdXG
+	 QbWKDgA4NBm1Wl/MModaDXner0J3IDHY/sZSU8C+1n6tLKZCMO4ElsgXDUpeelYVmE
+	 cv8Vp7Iain2yESM5cV0XyZbYHErfh63L4j48/Ex3hgmA1YRD5vqNgxkueELk2ceCHU
+	 7vcG8O9KKTohmlyEUFTgtyiTklRJvINQ1fdoDiG+RpkeAFVVaw9+WescKG+IQ5mZKj
+	 gfYcPqQWUU29A==
+Message-ID: <83d859d94aeedacc2d5fb058a84bfdac@kernel.org>
+Date: Thu, 27 Mar 2025 13:47:07 +0000
+From: "Maxime Ripard" <mripard@kernel.org>
+To: "Luca Ceresoli" <luca.ceresoli@bootlin.com>
+Subject: Re: [PATCH v9 2/5] drm/bridge: add support for refcounting
+In-Reply-To: <20250326-drm-bridge-refcount-v9-2-5e0661fe1f84@bootlin.com>
+References: <20250326-drm-bridge-refcount-v9-2-5e0661fe1f84@bootlin.com>
+Cc: dri-devel@lists.freedesktop.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "Andrzej
+ Hajda" <andrzej.hajda@intel.com>, "Anusha Srivatsa" <asrivats@redhat.com>, "David
+ Airlie" <airlied@gmail.com>, "Dmitry Baryshkov" <lumag@kernel.org>, "Fabio
+ Estevam" <festevam@gmail.com>, =?utf-8?b?SGVydsOpIENvZGluYQ==?= <herve.codina@bootlin.com>, "Hui
+ Pu" <Hui.Pu@gehealthcare.com>, "Inki Dae" <inki.dae@samsung.com>, "Jagan
+ Teki" <jagan@amarulasolutions.com>, "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Jonas
+ Karlman" <jonas@kwiboo.se>, "Laurent Pinchart" <Laurent.pinchart@ideasonboard.com>, "Maarten
+ Lankhorst" <maarten.lankhorst@linux.intel.com>, "Marek Szyprowski" <m.szyprowski@samsung.com>, "Marek
+ Vasut" <marex@denx.de>, "Maxime Ripard" <mripard@kernel.org>, "Neil
+ Armstrong" <neil.armstrong@linaro.org>, "Paul Kocialkowski" <paulk@sys-base.io>, "Pengutronix
+ Kernel Team" <kernel@pengutronix.de>, "Robert Foss" <rfoss@kernel.org>, "Sascha
+ Hauer" <s.hauer@pengutronix.de>, "Shawn Guo" <shawnguo@kernel.org>, "Simona
+ Vetter" <simona@ffwll.ch>, "Stefan Agner" <stefan@agner.ch>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>, "Thomas Zimmermann" <tzimmermann@suse.de>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ublvsxzjg6uy6qpe"
-Content-Disposition: inline
-In-Reply-To: <20250326-topics-tyr-regulator-v2-1-780b0362f70d@collabora.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.2/243.29.94
-X-ZohoMailClient: External
 
+On Wed, 26 Mar 2025 18:47:36 +0100, Luca Ceresoli wrote:
+> DRM bridges are currently considered as a fixed element of a DRM card, and
+> thus their lifetime is assumed to extend for as long as the card
+> exists. New use cases, such as hot-pluggable hardware with video bridges,
+> require DRM bridges to be added to and removed from a DRM card without
+> tearing the card down. This is possible for connectors already (used by DP
+>=20
+> [ ... ]
 
---ublvsxzjg6uy6qpe
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH RESEND v2] rust: regulator: add a bare minimum regulator
- abstraction
-MIME-Version: 1.0
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
 
-Hi,
-
-On Wed, Mar 26, 2025 at 03:39:33PM -0300, Daniel Almeida wrote:
-> +    pub fn get(dev: &Device, name: &CStr) -> Result<Self> {
-> +        // SAFETY: It is safe to call `regulator_get()`, on a device pointer
-> +        // received from the C code.
-> +        let inner = from_err_ptr(unsafe { bindings::regulator_get(dev.as_raw(), name.as_ptr()) })?;
-> +
-> +        // SAFETY: We can safely trust `inner` to be a pointer to a valid
-> +        // regulator if `ERR_PTR` was not returned.
-> +        let inner = unsafe { NonNull::new_unchecked(inner) };
-> +
-> +        Ok(Self { inner })
-> +    }
-
-I think it's worth discussing using regulator_get() VS
-regulator_get_optional(). We somehow ended up with the C regulator
-API being more or less orthogonal to other in-kernel C APIs (clocks,
-gpio, reset, LED) with the _optional suffixed version returning
--ENODEV for a missing regulator (and thus needing explicit handling)
-and the normal version creating a dummy regulator (and a warning).
-
-Considering the Rust API is new, it would be possible to let the
-Rust get() function call regulator_get_optional() instead and then
-introduce something like get_or_dummy() to call the normal
-regulator_get() C function.
-
-I see reasons in favor and against this. I just want to make sure it
-has been considered before the API is being used, which makes it a
-lot harder to change.
-
-Greetings,
-
--- Sebastian
-
---ublvsxzjg6uy6qpe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmflVrIACgkQ2O7X88g7
-+pq9zA/9FENRJp4Q0a5/LfXxwh5lGHBar89GysLA5RJRRQG6kURjfTzWhMeND0tU
-ZN0o9TA9vfg85DmYM3zLFvuNBKZvclGIQrapwVjWgYFomQL3O9EGSf6GG/fdIhIF
-M4k4qQPsDWhd+/pKS15bBPQp1XhSRhxxFrCwEQkn6uBiRhPupxBfaU3ezrqz8/yB
-samus3LsVYXHa6eKZ6BT52rnFyPkNeDvjJte6WRNMRTKxnmLNVVcH3yJ6BXG2J5f
-wJzdjyCY1nk7JbDKGOiClsZbR17LyQdQMjZD6Vh/0ejddY83IZ1EPylyMP2t0AHm
-DLL6WXo53CWd024SMRiC9cPOFpFTBTK1AjgleJRmls4G6LqrPX7TTYisH0IqDEVA
-DqTACMskQovxZ9ObR9tX1j24275IlBBneLbi6f9UqeZ9opu4u/Fk3s0luEySKU4+
-gaggrWgo9o6MQzFiLK5F1RqQ8yhSDYQuSd8DRgSKdfwrORGN6wmz5vnOGz3Qf/ba
-uNDeK9GtuhWD7A+hdM1kAGdHxC2Fi0KZD/ob/T+R4QEKvUHepaNtuhy0euhARQtT
-UN6ymILyCuhU6p5zLfmL7pUjaE+JmVO8qo977Ja6mY1Gwv8z77yR1GOBi3FI1H6d
-UW0eGuLAr8p0eEn5ieWgzvDvL3X/SjOPipmhyf7ORGT7azxuV+g=
-=NRAH
------END PGP SIGNATURE-----
-
---ublvsxzjg6uy6qpe--
+Thanks!
+Maxime
