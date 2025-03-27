@@ -1,189 +1,132 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2040.outbound.protection.outlook.com [40.107.20.40])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8F0140E30;
-	Thu, 27 Mar 2025 15:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743089766; cv=fail; b=VXOLeBVcJT3HFilnHAtOWw9pBRPFWqvA9No68S8V2vzZZLaQe1ujP2kupvSsjgRTxzMx8Az1+hzbruuTCb5NnTDc5BbOfwp7Z60P7Ov5dMtxXYQzmgywQm92MIkKFUJKk7B1pD9SqjWAEksh6uzhcmzVXhZtzrw2h6UkRYLKTVw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743089766; c=relaxed/simple;
-	bh=w0eEp+IRklFNB5t56CMrp8NAevN3B9bHK7kozic8PNg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=OHO2p7/gHnTzh0gLIwx5ErWGF+8eKrSzDqcuDFfUn15IVqViw+MpH1G2O6I4AE4iy7/FW5rSMN6mTUhzY6ZV+6/Y+hogczZ4JjgVuPKB4HIYQyd0Shw40lFlXfwGGgaNzS7HDwN05apNhnGX2IGoyXqTVanZnjiTiptZeoAJe2o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=C92qyCSK; arc=fail smtp.client-ip=40.107.20.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8826F12C7FD
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743089844; cv=none; b=tUZXBjBrpTkSX4PfxHZnibMs6Jc+15yKmYzC6Lu0MDbqHhoYtcB/89RdRihaZHZ16gOc+0YIK+CpfvTKM+/gFNq15VArI4JdvaZihSNYcEMCQB7XsgHEwTTQKsxAojY+U8p5GzpWaMAhvHUUyqyXjKvzqRPSw650j9ZmZ0ODuTg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743089844; c=relaxed/simple;
+	bh=qnzyEE09SZhDRDJ0WiICCQ/E3IQ1fEs6f/i6o9E83Wk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aDsrvPPR7vrMUWJv8Y9iT2uw4unPsiYA8NXB+pMUDlnZhRQommfdzbnpDnTFhwGCHsSe73wc+7okqk6z4OvTeY8uMuq/cm1bLyii14wjKUc+rjcWJyAJRzPtIOw1QTliwv3AWlEjdupLBRX2NZ5UWNg9MnGS/PzLFoKCKoMspPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RQp6Fq33; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="C92qyCSK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=e6T/zPV5v07cMhZhLna7Mcs74bA2G9HXIT+yeGYCabmF1lbkQkLg7lR6/0tnkupWdfxZz94g8y7xUHLbKb4E6VLm71+p3MTdK8HCPwJW46skxOuOnY8DlALYi2bQn8VMPmjg9koBuBZWiv9tmjCxW/f9xTBZzxB6GBv6STsUh3fnDPbu3GyJ5aOjBGqTVdA+BCF3lzpuU4fDxe9MZ4BQFPXYQLLSa/Z79dHJ9gY+uubVhPaOxHAYwsj/Kz4siQbuurezh+PQwx4BdN6DHoO/ixYhzmUp+6a4NBTdGyttpm598UXaV/orbkFSvOGNrmoDCQxsrYIyxwyqTjdMS9NbHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QualKuC++MMZqc/QVTygHCWYi3XpWFZFsfAavvBhhmg=;
- b=ITC3qPHuHKD7fCxrSjADTmQMeokXwN3nTcZg3l18mwpjJO5PR/Bfv0jyRuRgad6VR5sBlVxjpP2WaSKR9PKyv3vFL9JuX3n/bYPfGk7krFWLkK1F/OS0PBdkKJV5mXwwtjtnZwjTHkOLgwHnA2mmQQ4v3HvkFCCFjnYV0b/u2KVptJSGmtF7y4CGUW5IbN4OXygSdWkXar9yCYZ+RyopShXFVVAXnZoCQ5IrAp1fawK4IIFaXPFSyFSzmNighdptIf0zAxoqjzyPFPenHdsoWAp2eCIM40IeXQ//icP7KgE65eH6nMFr7/+sMhXylDLi4aY2NPbExHTNGkayJsIePQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QualKuC++MMZqc/QVTygHCWYi3XpWFZFsfAavvBhhmg=;
- b=C92qyCSKy2YJe/1d352CxObGdQAZg/v6T4vZZ7jV//lSxscxVnKIlf4D8IikWB63i5qR+vdrCXY/EUgMDGp1YpQbqzCa+ROOwE+VAd8CJURo6UmGKRlTaRbHnTDEAA48MsPIlRAEsU8Xv/PPi+3IQS1B/mOnRFAQ4gk+alSxz/ClQYWxlmgkRcHpet41BS0Oa81Khz6O8ov8FsD33vUvG1rzRpOKsSpu/N44emzS+Ki8Hk8rnlRa9rXozLSx1v3ruEM6l8Do92IEktl6ap2htTRy2FBShdmjUAr5TN1zFxCizWG6/wPxuZmkRLiymr1405N+iyyvrTBkg+BQC8No8A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM8PR04MB7377.eurprd04.prod.outlook.com (2603:10a6:20b:1de::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Thu, 27 Mar
- 2025 15:36:01 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%3]) with mapi id 15.20.8534.040; Thu, 27 Mar 2025
- 15:36:01 +0000
-Date: Thu, 27 Mar 2025 11:35:53 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Ioana Ciornei <ioana.ciornei@nxp.com>, bhelgaas@google.com
-Cc: Roy Zang <roy.zang@nxp.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-pci@vger.kernel.org, imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: layerscape: fix index passed to
- syscon_regmap_lookup_by_phandle_args
-Message-ID: <Z+VwWRWh3mn8bJqE@lizhi-Precision-Tower-5810>
-References: <20250327151949.2765193-1-ioana.ciornei@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327151949.2765193-1-ioana.ciornei@nxp.com>
-X-ClientProxiedBy: SJ0PR03CA0141.namprd03.prod.outlook.com
- (2603:10b6:a03:33c::26) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RQp6Fq33"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743089841;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nFK7RsCREQDGF8kx/OiRKPVegGlb+uhCY2SliHPC3Zw=;
+	b=RQp6Fq330aJFeTwIrAqD1SszzkgS8Q1L3nO6QMO1IOsX8wBoFzD6DZuypnAc8tYbZ5Cbd2
+	9lax5Byl47lYDZrBbV7Y46H7Xnnp38RGT2Pc1K46/1btnGRNtkmVoLXvcJnASvicBGf2vd
+	aere+39pg30ZfcJnXC3JxHvXY7IsjxY=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-605-CKVF4hsbP2KPrTg21o0bYA-1; Thu, 27 Mar 2025 11:37:20 -0400
+X-MC-Unique: CKVF4hsbP2KPrTg21o0bYA-1
+X-Mimecast-MFC-AGG-ID: CKVF4hsbP2KPrTg21o0bYA_1743089839
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39142ce2151so553364f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:37:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743089839; x=1743694639;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nFK7RsCREQDGF8kx/OiRKPVegGlb+uhCY2SliHPC3Zw=;
+        b=PbGuS5NAHkYrsVXacqeYqpaAb0Tssl++gwiB+sOb/R5TqEMELtW5z7j2Z8mQ2Xp1TP
+         pH49/THjDeLfiXnk4C1NHvV2YrWZ1GwazRswCLqlGUQ+dzQp8BcBT1iJq0FrALf2CYsj
+         IhCtc2obNrZX0ifdCvAVRr/BQXYR0z7KnjyMI0XQ9sbGDRd/0azs9X5VZM1tReQ3ZItA
+         sxDzNqzVuxaXDCYjZ0z7T+JwYbi2+gnXmFFfY44rCtrfe1JLaaxzoW9B21h8g2FOk+dj
+         r7kuTaANtoIaS44VD/nhZd+0laHiLwdOD1/S+U8RUAsC3Pa5M55ckZ0Q33KY96H8Q8fK
+         3CTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAP54orjqD153a0GMLGOKyOsHoHBc7or6rCgI5zUtBd/nqZ+I2GlPwZtNNh3+RslDFkrjv7/QRQSLFC3c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyztsIy5lVGRJediDZEb6FHacyVA6xFBZTpusu8u4T6awoWafqj
+	8JB1hdkDkjlbDH+fKA+PauCCUu8yBipl2vshoLzKYrwlX12L+5VBkuh8ync+cS/DlNKxByfGQg/
+	kMQ4wL5lcy2wQnEtnEuhsLez8LWkKktWPwZCH569zELo4adYzS8yamJXbGTo8IA==
+X-Gm-Gg: ASbGnctJQGupXzi1PwisfAY9ep9UmEHHD5bEMRFBN5arf0MbD+jXY0hT6/pTo9yvpgI
+	hedBSBADkd2j204YsRPHY4lO+Qa+S+gmVmuT0mp3i0sdGayl05Bf1gdsMi9cVdbOoMYXgHyuARU
+	SrCEuMxToKROwvFPCaKX7YN25x6CxCrsTNFxgrx3VJit+lBQK4GUlTMsmC+rCwzm2roIN25ns8I
+	5fucysmIrW7RiyXKdlze0Kjly1dtFf2pZyt2vcEMxrJjC+TlHL8Na/dgQ2SYJthyBsng7yu+Jc1
+	0Jew/ZRrsX69RnklYqtjibQICSWgmaFheiRTpWoiDCAaeDnEn1sYHjQ6NUp9mdga
+X-Received: by 2002:a05:6000:2913:b0:391:3f4f:a169 with SMTP id ffacd0b85a97d-39ad175bf85mr3118547f8f.32.1743089838994;
+        Thu, 27 Mar 2025 08:37:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEiZcHoFwp0VdacVvgmlY4YT/HkKYT+1vUl9P2aKDuscGeuEHQ+PoWJjg4v6oTuSINpFMBLJA==
+X-Received: by 2002:a05:6000:2913:b0:391:3f4f:a169 with SMTP id ffacd0b85a97d-39ad175bf85mr3118513f8f.32.1743089838413;
+        Thu, 27 Mar 2025 08:37:18 -0700 (PDT)
+Received: from sgarzare-redhat (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39abfc2115asm14199964f8f.4.2025.03.27.08.37.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 08:37:17 -0700 (PDT)
+Date: Thu, 27 Mar 2025 16:37:13 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	linux-integrity@vger.kernel.org, Sumit Garg <sumit.garg@kernel.org>, 
+	Jens Wiklander <jens.wiklander@linaro.org>, Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>, 
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tpm: Make chip->{status,cancel,req_canceled} opt
+Message-ID: <bxm7fa2st6glsegemyxbwj4q47azl7h3qmg4vo7o4xqa4ahstj@frtabtwa7jok>
+References: <20250326161838.123606-1-jarkko@kernel.org>
+ <exzxzomw7wcobjuoje37x6i2ta54xzx5ho74t3atd7g74xltlb@ymw2pn3yo27b>
+ <Z-VRWy8jLkA0cpow@kernel.org>
+ <56428ff1ac4355482df881e6226518c2a62beb6d.camel@HansenPartnership.com>
+ <Z-Vn91fADShpp65e@kernel.org>
+ <Z-VpjSZSMOk73_Dg@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM8PR04MB7377:EE_
-X-MS-Office365-Filtering-Correlation-Id: bbe2c103-6f75-4098-9ebb-08dd6d4513de
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|52116014|1800799024|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?EfF4i/8XQK2jvDy+HhM7Ip2OT0AIYD90KMBFGS2NV7OSimqcnXs0cR1PQRV4?=
- =?us-ascii?Q?yBo0LXQvIyrH/5+93kaYNRQyctFhpw4gYazVc2qtxm0XfzKJwxawrdVYM/el?=
- =?us-ascii?Q?iXXNf+Ec5uZqaPdvZ8BRKdbvOYCdct/v0OOOGrLsFQBnuktKR4tnqlPb9yr4?=
- =?us-ascii?Q?eDBcXMj28tx3YJpNkufoG3NNkeIigtNWS3n52tQCeigzFay/7CpoTz+pO8AY?=
- =?us-ascii?Q?2cDFj/PQ0orGXvCoyut907yX6sNvPqpYPZ8aPZNssmt7rjL9O/dY3xf81tja?=
- =?us-ascii?Q?5RP/gmXpA1mIGuRfygGBKLT7/ihfucgi9YQEBjqW8I++7Pg+r1YqMwMHquBs?=
- =?us-ascii?Q?VuzAh+a+9iB7jb4SoUnb46TRrQt5eTBiVpxDv3QoV/+zBhDfxbkHa5pigXB/?=
- =?us-ascii?Q?wFmTYIBIaECQJ5YbC/GjIL9sZ0A18N3a1L8c6ahq3Lx1S/yWgxAAF8uLm1pf?=
- =?us-ascii?Q?3eq8uaWIT+/0yHwJS4yWq76Uj3GuL2UiMbYdqFJA7olnmvJgfXonGCN2gGNh?=
- =?us-ascii?Q?7arUWwfefHafWpMYi83edcOJQ2fV6fuV3D/3ZHA+YfyD53nF+cHLCzkDgzqq?=
- =?us-ascii?Q?8LPS1U4aSXITTjfShRbFcdJ5IFrOHMfTDd/SQ8AZKifEeD6vJOQjIqrN2ObY?=
- =?us-ascii?Q?Kx1BuwjFqbKF+s4zSUYv02p7PwwKB4aaWcuh22mdISAexjvgwyIaSaQmcwno?=
- =?us-ascii?Q?HnlQDidNESH1ZEVslYt1UxJ09dNOL78O7Uj5bR/FvSmx7gvwu/zmXnUppvEP?=
- =?us-ascii?Q?GFAXBQ4RsPEcQ5iHQFSPWMdqjMO5pRYkEUfs28iiIaNUSKUPI4Ntio05Q3aW?=
- =?us-ascii?Q?fMVWMoucoCt+/oqPtFCEih2PUXkQArPi49wQibmhYK/b5fm+mI0M0f8uvMv5?=
- =?us-ascii?Q?O8pyg9tbY9S8AeGLJWR87T0SjxzMoPWNyVTBAk/539oXKYD4ejYf8ctCsYRn?=
- =?us-ascii?Q?94RnTD4HUrSpr9byUxz0wsnStBN8fy8Oiqt0Or4zupwGCYjN0ZAJieYM5h/Q?=
- =?us-ascii?Q?30vXVMwmEQ+SOyCcC98KqtNeFrhXqXwG7WJHXo3nY24kW2ruvRUX0O0eTvyV?=
- =?us-ascii?Q?QDh6nlq5gYZ7EK8YwpuPFVNWdaiy0C+VAUrIvEDFpoXSA08g/ICcyG88ytPX?=
- =?us-ascii?Q?UuxAIio5fmW2iKO20BEcKbAN8gTw5PrYGe1yZOXy8OI4B/83OB6Qjv3k/5Yg?=
- =?us-ascii?Q?GYJChcEp8SaUY1SFKEYMXm1IgSIk3koYrMm1G7doUb+uDoh0ORQTxfvFRdF2?=
- =?us-ascii?Q?zlwNWvNlFk+bmJtzeYpHaMswvW2TRhpQorBfTufVnw6HfS056RLHILac92oq?=
- =?us-ascii?Q?73v5hiZNSArfgMlwU0cuVaIDrzouP1pDIGbPsMHVuBJp19mmt9fjgJgS8GOU?=
- =?us-ascii?Q?mwHCVoLm981EzZJLEXHqEcYB9lIevhv7vYXWZvtqs3PleQRrU02X5Y8Fzh54?=
- =?us-ascii?Q?V/qpUp8bFm8+pdgQwg1pkw0AdpHH2Ckd?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?E0ClYjUYy05yjfJ79k56TCdjoEA0ZcQVtoseB8txe1PGvqP4AFXlWaTfH6C8?=
- =?us-ascii?Q?BKb1COF5OvLQi0PzwHYM9AfUKImezaQkZr7SaUoJcWHgQjMFLoAsZtpzLC3i?=
- =?us-ascii?Q?5M5a+1blBC52fpqj4tyCJNaYtfIMi0rjCgOjxgcDAr7U5MQjRXi7n4QFiPzx?=
- =?us-ascii?Q?xmsEe2nw8NKpcJbOG/DjVhjUZJTCWaJpWbBlG00okeWIuSi8QDt38Ek4s8YK?=
- =?us-ascii?Q?xnJW+xbrpIiz9Xvjn7reCEJF/LC1GsmLrMD9w9d5tYqRcnjluMLwvtUE9EQH?=
- =?us-ascii?Q?6qDzuNSVcjd7TAT/e2dTw9lHGonGM0y6m/wtdm+TeBiWEVdtirEhs/8RHcSX?=
- =?us-ascii?Q?MtHje9tmNoX1r4iMzwyZhalPtBeKVowTgsuj/LuXo4Rf7z54bcIjW9uFwQQg?=
- =?us-ascii?Q?3kfpNBh1D9L9/KXbe89vUrbsu6d8tdisL5lIDyTCiTT4a2mmZ4HCeUtUq/cn?=
- =?us-ascii?Q?nvvS/GlQt4r0KiGbFtP/5hj3dlGlU9H4CwesjnVApRq+2wvG71luf4O3p8Rq?=
- =?us-ascii?Q?TbfpL+uLIGrU6FHSVaGLv0RfWBLrtOfcLwJJCCxspzE+mvuJGCOpgV36AE0k?=
- =?us-ascii?Q?cKVJRYcl4TpWDbuQNNxWYO8k636NV7KNCIZOHdBrBH4qJVpGyXmNKEsez0nm?=
- =?us-ascii?Q?Fq2RIh0rtDshapUacLP2fS5xCHMmlMG72iMLuvBMunfgdFISJDiGMNT8NkgR?=
- =?us-ascii?Q?K1lJVWhhTpgxFLWLlWESVfGmE2AEpwUrY9Zpe6dLFRun8pIAwJ+R4zixpkbx?=
- =?us-ascii?Q?SREz8EssDrKEKA90dpDZgkukA5QkytGjdnQxK6KirvyZvbXMq686nxLq1vg5?=
- =?us-ascii?Q?LS59JygPhHbHinwvMYfII+KJZsGSAxhlGo7tBMYCnyQ3prD4LQiyvN2nqmnH?=
- =?us-ascii?Q?1ljSqwTKOVm5MRYRcQ6QqyC6lBbjjfp4JIiMH7BX16bXTNVWLOK97GSCkFuP?=
- =?us-ascii?Q?xtriFvYErpl4Dud8M/dSza7bMWpSRhVS8rDiTiI9K04U5S8qZePqV452kWWr?=
- =?us-ascii?Q?PIyKq6hzqmmqFWRyN62hcXcyOo430AWRY0k8gl8aseHePQ/+JeOwrVy4HGHh?=
- =?us-ascii?Q?QvKRROS5URDl8VRfWQsJDNOaa+HntJ/TbaRJgiiU1QILp1Oy4H6Yx88a5hms?=
- =?us-ascii?Q?eFq/FVI3uc1wUfi36dQ9fADHYPnaII8C9c2B2MHk3dOy2fRNRgrPejbCSDWb?=
- =?us-ascii?Q?1wSnbTNPW+D2eiIxzrTazfNecXKIMOxgjiNpWkzqBzGdh8FKjCCWnLpi3eHA?=
- =?us-ascii?Q?+7nfV7XzTbFvpZg9Wo+hQp2zIFQZCQrFn60b7OcPRCullYQ67+szhbWOASsm?=
- =?us-ascii?Q?tqEZDfLUisx0KwsNfNMdaIFZGsUtGzonxmdTRsPuibjCvtFCXs7pqg6d3B2G?=
- =?us-ascii?Q?WUgcNs+e3JCNGyR8EW43w1JR8G7ATBo1FEZcopnELwhXXYAsFLVggC8yrWeX?=
- =?us-ascii?Q?u54VGU2ucfa7lIEHBrOLWdw+uuRi7Q1UXAgv6SV1BnTpIdNqldNkuooH2JYX?=
- =?us-ascii?Q?gAaUMkX7uuhlqfyNZzY1mxVA6gempB8cuP1Sv4U0ISsJw93iO8yQ2uJPQsVK?=
- =?us-ascii?Q?Wz04meUntni9yqadIXl65qR61YcsDtiE7E+qugzE?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbe2c103-6f75-4098-9ebb-08dd6d4513de
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 15:36:01.2615
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3rxg8sX2b4DEl8ZtiNrERr1W1Q9NHXibUT2suG2Ryu7WvR8yH/KWEpwp+5SjiSUEkoqYQwDsmx4wr83Pdp30mA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7377
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <Z-VpjSZSMOk73_Dg@kernel.org>
 
-On Thu, Mar 27, 2025 at 05:19:49PM +0200, Ioana Ciornei wrote:
-> The arg_count variable passed to the
-> syscon_regmap_lookup_by_phandle_args() function represents the number of
-> argument cells following the phandle. In this case, the number of
-> arguments should be 1 instead of 2 since the dt property looks like
-> below.
-> 	fsl,pcie-scfg = <&scfg 0>;
+On Thu, Mar 27, 2025 at 05:06:53PM +0200, Jarkko Sakkinen wrote:
+>On Thu, Mar 27, 2025 at 05:00:11PM +0200, Jarkko Sakkinen wrote:
+>> On Thu, Mar 27, 2025 at 10:12:36AM -0400, James Bottomley wrote:
+>> > On Thu, 2025-03-27 at 15:23 +0200, Jarkko Sakkinen wrote:
+>> > > On Thu, Mar 27, 2025 at 10:58:00AM +0100, Stefano Garzarella wrote:
+>> > [...]
+>> > > > > @@ -65,6 +89,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip
+>> > > > > *chip, void *buf, size_t bufsiz)
+>> > > > > 	ssize_t len = 0;
+>> > > > > 	u32 count, ordinal;
+>> > > > > 	unsigned long stop;
+>> > > > > +	u8 status;
+>> > > >
+>> > > > Why move `status` out of the do/while block?
+>> > >
+>> > > I'm not a huge fan of stack allocations inside blocks, unless there
+>> > > is a particular reason to do so.
+>> >
+>> > The move to scope based locking and freeing in cleanup.h necessitates
+>> > using scope based variables as well, so they're something we all have
+>> > to embrace.  They're also useful to tell the compiler when it can
+>> > reclaim the variable and they often create an extra stack frame that
+>> > allows the reclaim to be effective (even if the compiler can work out
+>> > where a variable is no longer reference, the space can't be reclaimed
+>> > if it's in the middle of an in-use stack frame).  I'd say the rule of
+>> > thumb should be only do something like this if it improves readability
+>> > or allows you to remove an additional block from the code.
+>>
+>> Reclaiming here is only shift in the frame pointer, nothing to do with
+>> reclaiming resources or freeing locks. Consolidating value state into
+>> single location does improve readability as far as I'm concerned.
 >
-> Without this fix, layerscape-pcie fails with the following message on
-> LS1043A:
+>Anyhow, I reverted that change given the feedback :-)
 >
-> [    0.157041] OF: /soc/pcie@3500000: phandle scfg@1570000 needs 2, found 1
-> [    0.157050] layerscape-pcie 3500000.pcie: No syscfg phandle specified
-> [    0.157053] layerscape-pcie 3500000.pcie: probe with driver layerscape-pcie failed with error -22
->
-> Fixes: 149fc35734e5 ("PCI: layerscape: Use syscon_regmap_lookup_by_phandle_args")
-> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-> ---
+>Since I'm late sending PR, I'll put this patch to my 6.15 PR.
 
-Bjorn:
-	This is hot fix for some layerscape platform, which block pcie
-functions. 149fc35734e5 still in v6.14 next.
+Okay, so I'll not include it in my series and I'll rebase my series on 
+your tree.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Thanks,
+Stefano
 
->  drivers/pci/controller/dwc/pci-layerscape.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-> index 239a05b36e8e..a44b5c256d6e 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
-> @@ -356,7 +356,7 @@ static int ls_pcie_probe(struct platform_device *pdev)
->  	if (pcie->drvdata->scfg_support) {
->  		pcie->scfg =
->  			syscon_regmap_lookup_by_phandle_args(dev->of_node,
-> -							     "fsl,pcie-scfg", 2,
-> +							     "fsl,pcie-scfg", 1,
->  							     index);
->  		if (IS_ERR(pcie->scfg)) {
->  			dev_err(dev, "No syscfg phandle specified\n");
-> --
-> 2.34.1
->
