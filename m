@@ -1,189 +1,313 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7023B4C96;
-	Thu, 27 Mar 2025 12:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E49772153EB;
+	Thu, 27 Mar 2025 12:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743079651; cv=none; b=EvAQMG5VESu7WGFcANCMq8XWSQ2ypSObJdG/8OQivYqTeVgXP5HzTziTSfSvJvtE6aRRLtqKFSiOFasws7eHyo1ZD+k90BQ/Df+zYjHLVpZFQMsqWTGXY434u1C9jksHTrCR9jzi/jmZygMgejsKlUaO4Vb8kp6qhT7q6N/e1/Q=
+	t=1743079656; cv=none; b=emgFwEeB9MJpKIsQ3zIXmVPI6Ny4JUFNGe++W93LUk878Ysdl6d/aj5QtGIHAXuYDK6Er9Vxn5HMIKNStMXh4J4kPNy2CSq5roi/2MbMbt3f7c2ZfB9IrIApa99gleFVj2sBiwmhKxIghmaLTM/d8jccUBlg5IPGNacEurOWC+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743079651; c=relaxed/simple;
-	bh=tWRtgxQFfYLGIe+M3bP4npfrIUeWm1/2DsIIszdvZ1Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=k4S+jnDoUCWuvrSHqjDtgq+sqlvtRW/6KtExIwqX7DNH2wgZF2T25JuLZL4BJ+S3D77oX9pgflFDjXTpJS+i0f0kmBsSbhIzTdwX6YMKnAKJo9jEBl2pLn0ItHPJmkKzK3eApkIEqFphg4iD84nXNJgt5aGXasmbTRs6aOxaKuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ry+3lJ4j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743079656; c=relaxed/simple;
+	bh=usAMiobjFxKRah9pWwPRgeZUpHFWYtn4e1pZQPUw4ms=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Xd3swFr8g8HWG/4zKODiC4nC6Xo7uTt4OL0wb1j3B0FSXs89hik1iMcsxQGpJIEp7e+88C96Bc9nowhF/uNCG2rmFnPn89JH7LLNpQG3djmktjU4jSDw7ywKyCIqQJaq+Z1gGt/ZcDytMBQhuMmpRaY0K0NwahHav+X+Lax2KrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q56eqkeo; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ry+3lJ4j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA731C4CEF5;
-	Thu, 27 Mar 2025 12:47:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743079650;
-	bh=tWRtgxQFfYLGIe+M3bP4npfrIUeWm1/2DsIIszdvZ1Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:From;
-	b=ry+3lJ4jOXxi94y5mI1NbXnalzo+G/pnZhSjrID66dTcLVpvSN5jxYLjoTFSpm8t2
-	 RVmKewcN7zdZNd9LKSrvUmI7Bitb6RSvE7xtBxsyaXOJotG+IzA+4cSiX8s5XJcd4a
-	 Gflk19wroRN6hPkMWa+MtGfvaJAZL2ppLItlCErXCvjy0HVn2BGenZE8FkLMdyZJYX
-	 btnwncSVrJy5++ND3g+6x3gmSehP4lsafQ7UigXG8+8I+Idsw/U+sgz5n2nwr8zWSp
-	 H++QkUGRCbXL4b+bUxPVKQyPP9wfeJA4D52pvQD5Qmb8PrgNvDFT5Gco7rpxg0Rv5D
-	 +Xv0BqRwjjbZg==
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3913d129c1aso661635f8f.0;
-        Thu, 27 Mar 2025 05:47:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU5hcNep0PjlWuCjj4NMUHFm818rHYcrYyQ+DkL6NGKfFUJ4v/BcyFUrkel3sqzxPC+7UF4Gw0g7dKhWw==@vger.kernel.org, AJvYcCUpRF0LMC3Q/GxxnFl/SikHq8Eg1luCylG1nbvLCJPcP1H53E4fn+LAE7K8vpNsMPpG/fJCB/D7+PaJPcWB@vger.kernel.org, AJvYcCVsX2WU+aFIb+EtrTeOVhAhki8Xl8hnQccFte3jiXy7c+SoP336Isp5FOeu28FBGIlB2ROIeI3963eLc8op175jdLwY@vger.kernel.org, AJvYcCVsk9ryKBUmTtDTK3JMNACZZtZh3qUdTXBK9AUM7MpPooozj33rGfhHocYseLf3Hdvnbmv5iThAw60eV2s=@vger.kernel.org, AJvYcCW47Pl062oNYCMWE8maqYFeRsEBRX/OxIBtYxI+7yUwLObmkUp5z0ZRT6ORYTgwSsjyqPGDyRK1@vger.kernel.org, AJvYcCWMFNhPKyVBg8HzwapRAVSxnRnVozy30gmOACtgCyfhUIQf8mrsaEm6Sr0iSgGBOwVXrSe4RcIX6ekyUeg=@vger.kernel.org, AJvYcCWfBcnAb8xTLS1kbS+egemf7Ox6oWbJw8R88CXPeQ0Glbkxo3FEAp9vMhTnXT5oEvMPFPp8IajlFhVU@vger.kernel.org, AJvYcCWiTPAJ35xrAthksX8h3zgALJzAxpvYYIzj4lBvCXKn6jSapgtIYpu8ec64/MPLpAN6Lk/O4smDXiCYNlWYHlZrng==@vger.kernel.org, AJvYcCXAaymzApg5BY0elxAd++hiveDmgW/TXCPDnh29ZmDTNqH2o51O7w2VXjIPXhfRsvNGxrY=@vger.kernel.org, AJvYcCXHDwYP6ZaCTiL9My6z7yC6suW8qxpYc6dfkuhtoE/tOzDutoWCp0ns7baqRFBrVHzAXoQZ0151LFwp1WvP@vger.kernel.org, AJvYcCXL7YZFQf+f7P0qMC6EyEWiFbU79B0NU19DRu6ijcezGqQaBzbRmZ5mucWTZSA6w/8E70sTbVqSWZUdpnw=@vger.kernel.org, AJvYcCXbhSiKRWI9uyLNQQIsOEaFgZ/HxBAa7FVwybOlYAZASlseozeXHHaatK5zgAC488cNoZTwVseTG0h4VovH@vger.kernel.org, AJvYcCXc6FX30ucCj0pToZvuhkKqueU0sQe1vh6WfGO6OeFMjQYGCKQ709smTtbZe+9HllwgggFsuYuz695hqA==@vger.kernel.org, AJvYcCXd8kfvoPg1KTWlkTs6C90VCMZcmZaq9dnCLd/cBTgsqBFc5W0Cbbsci/9CyNUK3B65G5+bbV3X0RKSJF8U4ACe@vger.kernel.org, AJvYcCXgDYubmSZhvljBWKbJvpmcObj9oe/3BqtnZEQzuGIRwSlPUW2zpRQConp7qmzVn5I3i6VYXSB9+8ITYsFDTA==@vger.kernel.org, AJvYcCXjVLv+hm+wtOOo17m+XfrZWp3wVaANCLv+x+sHaEYWHFOqWt6rWdfRrUC8LpXl+CWVf08r@vger.kernel.org, AJvYcCXmUOIyGgfZKIULNMQLTqLSv8rJGp/ez2BeSn9pjUHExJDst1Bcq5xifH/YedVQF4xWXsxckkx1bYzA@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJoiSfrI8TdhC5XKmUGK85XKg9Y46zYQOWy/j6Hv+i2J0vqjyE
-	eSR/rKOCuNSh8OsxjIXx1kSpDAAggC3xYT7ED8pCXthmRDFmY4F1Whz1DfDNzZMcDuRKcQa6C4W
-	p0wmuvj1AH6Wi7z+BkqbF/M8p9Ss=
-X-Google-Smtp-Source: AGHT+IHmUYVhD/X+fFCk9mo6iUY3GGy6zSlwPlvt9V5E3bXgq4+AzDcNpwzxGBSsif+BeffRslEST7FtUwPlgXmmxiQ=
-X-Received: by 2002:a5d:5f43:0:b0:391:65c:1b05 with SMTP id
- ffacd0b85a97d-39c099cd2bbmr115764f8f.11.1743079648810; Thu, 27 Mar 2025
- 05:47:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q56eqkeo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743079655; x=1774615655;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=usAMiobjFxKRah9pWwPRgeZUpHFWYtn4e1pZQPUw4ms=;
+  b=Q56eqkeo4pgl/HLhyH42QAWbyUsNVGAKgwKL+Ez1fesjO5u9mEvbOFhi
+   oCg9PuFtHSW1UMNyd/exc7k8FhfWSCWm0qQNcjeY29VvjFxgijpobo5Qn
+   4EHYf6IoWWm5XFdroaJuwV4IMnSHclAULnf8ZdZjGVC5evTXhg5oWFweL
+   /TKlBjRVKW4eQc4J1b3IHmv9oMMOWzu3mm5HgZ48iY1pUXPfbneactbkp
+   kSpwlnaTliSbi1ryVaSCbFvVmxUzA3Td8SzuzJaTleNhDwLmU0oGZRqDK
+   InZVKFRv02ZK1rxDQimPldPpqQTjLZknQhQDY6BTwjhw/0y/1NYSjNJKw
+   A==;
+X-CSE-ConnectionGUID: 5H8FFOtQRnOUvznsdb99eA==
+X-CSE-MsgGUID: pjPpuUExQlyqVczTu6VCEA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="48192198"
+X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
+   d="scan'208";a="48192198"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 05:47:34 -0700
+X-CSE-ConnectionGUID: Y4I1KlL/Q92r467PwK54pQ==
+X-CSE-MsgGUID: ZHa5QilpT6e92V//FhpJHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
+   d="scan'208";a="129283527"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.180])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 05:47:29 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 27 Mar 2025 14:47:24 +0200 (EET)
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
+    Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>, 
+    Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>, 
+    Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
+    "Cody T . -H . Chiu" <codyit@gmail.com>, 
+    John Martens <johnfanv2@gmail.com>, platform-driver-x86@vger.kernel.org, 
+    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 3/6 RESEND] platform/x86: Add Lenovo WMI Events
+ Driver
+In-Reply-To: <20250317144326.5850-4-derekjohn.clark@gmail.com>
+Message-ID: <59af0332-725b-fea2-0baf-37cf421a8229@linux.intel.com>
+References: <20250317144326.5850-1-derekjohn.clark@gmail.com> <20250317144326.5850-4-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325121624.523258-1-guoren@kernel.org> <20250325121624.523258-32-guoren@kernel.org>
- <4gph4xikdbg6loy2id72uyxgldsldecc7gquhymusl3vreiw3a@ephk5ahhrdw7>
-In-Reply-To: <4gph4xikdbg6loy2id72uyxgldsldecc7gquhymusl3vreiw3a@ephk5ahhrdw7>
-From: Guo Ren <guoren@kernel.org>
-Date: Thu, 27 Mar 2025 20:47:15 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTSR+jh04BT7rCjALL6eWek=VWm7nFTW57vzwshkTbrtVg@mail.gmail.com>
-X-Gm-Features: AQ5f1JoN57xvarY3Pp887PY64wPP4HS8fDT1YiKKfNiabWlzF5M2aRc4_YpAz7M
-Message-ID: <CAJF2gTSR+jh04BT7rCjALL6eWek=VWm7nFTW57vzwshkTbrtVg@mail.gmail.com>
-Subject: Re: [RFC PATCH V3 31/43] rv64ilp32_abi: maple_tree: Use BITS_PER_LONG
- instead of CONFIG_64BIT
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, guoren@kernel.org, arnd@arndb.de, 
-	gregkh@linuxfoundation.org, torvalds@linux-foundation.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, anup@brainfault.org, 
-	atishp@atishpatra.org, oleg@redhat.com, kees@kernel.org, tglx@linutronix.de, 
-	will@kernel.org, mark.rutland@arm.com, brauner@kernel.org, 
-	akpm@linux-foundation.org, rostedt@goodmis.org, edumazet@google.com, 
-	unicorn_wang@outlook.com, inochiama@outlook.com, gaohan@iscas.ac.cn, 
-	shihua@iscas.ac.cn, jiawei@iscas.ac.cn, wuwei2016@iscas.ac.cn, drew@pdp7.com, 
-	prabhakar.mahadev-lad.rj@bp.renesas.com, ctsai390@andestech.com, 
-	wefu@redhat.com, kuba@kernel.org, pabeni@redhat.com, josef@toxicpanda.com, 
-	dsterba@suse.com, mingo@redhat.com, peterz@infradead.org, 
-	boqun.feng@gmail.com, xiao.w.wang@intel.com, qingfang.deng@siflower.com.cn, 
-	leobras@redhat.com, jszhang@kernel.org, conor.dooley@microchip.com, 
-	samuel.holland@sifive.com, yongxuan.wang@sifive.com, 
-	luxu.kernel@bytedance.com, david@redhat.com, ruanjinjie@huawei.com, 
-	cuiyunhui@bytedance.com, wangkefeng.wang@huawei.com, qiaozhe@iscas.ac.cn, 
-	ardb@kernel.org, ast@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-mm@kvack.org, 
-	linux-crypto@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-input@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, maple-tree@lists.infradead.org, 
-	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-atm-general@lists.sourceforge.net, linux-btrfs@vger.kernel.org, 
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
-	linux-nfs@vger.kernel.org, linux-sctp@vger.kernel.org, 
-	linux-usb@vger.kernel.org, linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Mar 26, 2025 at 3:10=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
-e.com> wrote:
->
-> * guoren@kernel.org <guoren@kernel.org> [250325 08:24]:
-> > From: "Guo Ren (Alibaba DAMO Academy)" <guoren@kernel.org>
-> >
-> > The Maple tree algorithm uses ulong type for each element. The
-> > number of slots is based on BITS_PER_LONG for RV64ILP32 ABI, so
-> > use BITS_PER_LONG instead of CONFIG_64BIT.
-> >
-> > Signed-off-by: Guo Ren (Alibaba DAMO Academy) <guoren@kernel.org>
-> > ---
-> >  include/linux/maple_tree.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/maple_tree.h b/include/linux/maple_tree.h
-> > index cbbcd18d4186..ff6265b6468b 100644
-> > --- a/include/linux/maple_tree.h
-> > +++ b/include/linux/maple_tree.h
-> > @@ -24,7 +24,7 @@
-> >   *
-> >   * Nodes in the tree point to their parent unless bit 0 is set.
-> >   */
-> > -#if defined(CONFIG_64BIT) || defined(BUILD_VDSO32_64)
-> > +#if (BITS_PER_LONG =3D=3D 64) || defined(BUILD_VDSO32_64)
->
-> This will break my userspace testing, if you do not update the testing as
-> well.  This can be found in tools/testing/radix-tree.  Please also look
-> at the Makefile as well since it will generate a build flag for the
-> userspace.
-I think you are talking about the following:
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-../shared/shared.mk:
-ifndef LONG_BIT
-LONG_BIT :=3D $(shell getconf LONG_BIT)
-endif
+On Mon, 17 Mar 2025, Derek J. Clark wrote:
 
-generated/bit-length.h: FORCE
-        @mkdir -p generated
-        @if ! grep -qws CONFIG_$(LONG_BIT)BIT generated/bit-length.h; then =
-  \
-                echo "Generating $@";                                      =
-  \
-                echo "#define CONFIG_$(LONG_BIT)BIT 1" > $@;               =
-  \
-                echo "#define CONFIG_PHYS_ADDR_T_$(LONG_BIT)BIT 1" >> $@;  =
-  \
-        fi
+> Adds lenovo-wmi-events driver. The events driver is designed as a
+> general entrypoint for all Lenovo WMI Events. It acts as a notification
+> chain head that will process event data and pass it on to registered
+> drivers so they can react to the events.
+> 
+> Currently only the Gamezone interface Thermal Mode Event GUID is
+> implemented in this driver. It is documented in the Gamezone
+> documentation.
+> 
+> Suggested-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> ---
+> v4:
+>  - Remove the Thermal Mode Event GUID from Gamezone and add this driver.
+> ---
+>  MAINTAINERS                              |   2 +
+>  drivers/platform/x86/Kconfig             |   4 +
+>  drivers/platform/x86/Makefile            |   1 +
+>  drivers/platform/x86/lenovo-wmi-events.c | 132 +++++++++++++++++++++++
+>  drivers/platform/x86/lenovo-wmi-events.h |  21 ++++
+>  5 files changed, 160 insertions(+)
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-events.c
+>  create mode 100644 drivers/platform/x86/lenovo-wmi-events.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3a370a18b806..6dde75922aaf 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13164,6 +13164,8 @@ L:	platform-driver-x86@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+>  F:	Documentation/wmi/devices/lenovo-wmi-other.rst
+> +F:	drivers/platform/x86/lenovo-wmi-events.c
+> +F:	drivers/platform/x86/lenovo-wmi-events.h
+>  F:	drivers/platform/x86/lenovo-wmi-helpers.c
+>  F:	drivers/platform/x86/lenovo-wmi-helpers.h
+>  
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index bece1ba61417..13b8f4ac5dc5 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -459,6 +459,10 @@ config IBM_RTL
+>  	 state = 0 (BIOS SMIs on)
+>  	 state = 1 (BIOS SMIs off)
+>  
+> +config LENOVO_WMI_EVENTS
+> +	tristate
+> +	depends on ACPI_WMI
+> +
+>  config LENOVO_WMI_HELPERS
+>  	tristate
+>  	depends on ACPI_WMI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 5a9f4e94f78b..fc039839286a 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -69,6 +69,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+>  obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
+>  obj-$(CONFIG_YT2_1380)		+= lenovo-yoga-tab2-pro-1380-fastcharger.o
+>  obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
+> +obj-$(CONFIG_LENOVO_WMI_EVENTS)	+= lenovo-wmi-events.o
+>  obj-$(CONFIG_LENOVO_WMI_HELPERS)	+= lenovo-wmi-helpers.o
+>  
+>  # Intel
+> diff --git a/drivers/platform/x86/lenovo-wmi-events.c b/drivers/platform/x86/lenovo-wmi-events.c
+> new file mode 100644
+> index 000000000000..3ea0face3c0d
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo-wmi-events.c
+> @@ -0,0 +1,132 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Lenovo WMI Events driver. Lenovo WMI interfaces provide various
+> + * hardware triggered events that many drivers need to have propagated.
+> + * This driver provides a uniform entrypoint for these events so that
+> + * any driver that needs to respond to these events can subscribe to a
+> + * notifier chain.
+> + *
+> + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
+> + */
+> +
+> +#include <linux/list.h>
+> +#include <linux/notifier.h>
+> +#include <linux/types.h>
+> +#include <linux/wmi.h>
+> +#include "lenovo-wmi-events.h"
+> +
+> +/* Interface GUIDs */
+> +#define THERMAL_MODE_EVENT_GUID "D320289E-8FEA-41E0-86F9-911D83151B5F"
+> +
+> +#define LENOVO_WMI_EVENT_DEVICE(guid, type)                        \
+> +	.guid_string = (guid), .context = &(enum lwmi_events_type) \
+> +	{                                                          \
+> +		type                                               \
+> +	}
+> +
+> +static BLOCKING_NOTIFIER_HEAD(events_chain_head);
+> +
+> +struct lwmi_events_priv {
+> +	struct wmi_device *wdev;
+> +	enum lwmi_events_type type;
+> +};
+> +
+> +/* Notifier Methods */
+> +int lwmi_events_register_notifier(struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_register(&events_chain_head, nb);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(lwmi_events_register_notifier, "LENOVO_WMI_EVENTS");
+> +
+> +int lwmi_events_unregister_notifier(struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_unregister(&events_chain_head, nb);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(lwmi_events_unregister_notifier, "LENOVO_WMI_EVENTS");
+> +
+> +static void devm_lwmi_events_unregister_notifier(void *data)
+> +{
+> +	struct notifier_block *nb = data;
+> +
+> +	lwmi_events_unregister_notifier(nb);
+> +}
+> +
+> +int devm_lwmi_events_register_notifier(struct device *dev,
+> +				       struct notifier_block *nb)
+> +{
+> +	int ret;
+> +
+> +	ret = lwmi_events_register_notifier(nb);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return devm_add_action_or_reset(dev,
+> +				devm_lwmi_events_unregister_notifier, nb);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(devm_lwmi_events_register_notifier, "LENOVO_WMI_EVENTS");
+> +
+> +/* Driver Methods */
+> +static void lwmi_events_notify(struct wmi_device *wdev, union acpi_object *obj)
+> +{
+> +	struct lwmi_events_priv *priv = dev_get_drvdata(&wdev->dev);
+> +	int sel_prof;
+> +	int ret;
+> +
+> +	switch (priv->type) {
+> +	case THERMAL_MODE_EVENT:
+> +		if (obj->type != ACPI_TYPE_INTEGER)
+> +			return;
+> +
+> +		sel_prof = obj->integer.value;
+> +		ret = blocking_notifier_call_chain(&events_chain_head,
+> +						   THERMAL_MODE_EVENT, &sel_prof);
+> +		if (ret == NOTIFY_BAD)
+> +			dev_err(&wdev->dev,
+> +				"Failed to send notification to call chain for WMI Events\n");
+> +		break;
+> +	default:
+> +		return;
+> +	}
+> +}
+> +
+> +static int lwmi_events_probe(struct wmi_device *wdev, const void *context)
+> +{
+> +	struct lwmi_events_priv *priv;
+> +
+> +	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	if (!context)
+> +		return -EINVAL;
+> +
+> +	priv->wdev = wdev;
+> +	priv->type = *(enum lwmi_events_type *)context;
+> +
+> +	dev_set_drvdata(&wdev->dev, priv);
+> +	return 0;
+> +}
+> +
+> +static const struct wmi_device_id lwmi_events_id_table[] = {
+> +	{ LENOVO_WMI_EVENT_DEVICE(THERMAL_MODE_EVENT_GUID,
+> +				  THERMAL_MODE_EVENT) },
+> +	{}
+> +};
+> +
+> +static struct wmi_driver lwmi_events_driver = {
+> +	.driver = {
+> +		.name = "lenovo_wmi_events",
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.id_table = lwmi_events_id_table,
+> +	.probe = lwmi_events_probe,
+> +	.notify = lwmi_events_notify,
+> +	.no_singleton = true,
+> +};
+> +
+> +module_wmi_driver(lwmi_events_driver);
+> +
+> +MODULE_DEVICE_TABLE(wmi, lwmi_events_id_table);
+> +MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
+> +MODULE_DESCRIPTION("Lenovo WMI Events Driver");
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/platform/x86/lenovo-wmi-events.h b/drivers/platform/x86/lenovo-wmi-events.h
+> new file mode 100644
+> index 000000000000..a3fa934eaa10
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo-wmi-events.h
+> @@ -0,0 +1,21 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later
+> + *
+> + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
+> + */
+> +
+> +#include <linux/notifier.h>
+> +#include <linux/types.h>
 
-$ grep CONFIG_64BIT * -r -A 2
-generated/bit-length.h:#define CONFIG_64BIT 1
-generated/bit-length.h-#define CONFIG_PHYS_ADDR_T_64BIT 1
---
-maple.c:#if defined(CONFIG_64BIT)
-maple.c-static noinline void __init check_erase2_testset(struct maple_tree =
-*mt,
-maple.c-                const unsigned long *set, unsigned long size)
---
-maple.c:#if CONFIG_64BIT
-maple.c-        MT_BUG_ON(mt, data_end !=3D mas_data_end(&mas));
-maple.c-#endif
---
-maple.c:#if CONFIG_64BIT
-maple.c-        MT_BUG_ON(mt, data_end - 2 !=3D mas_data_end(&mas));
-maple.c-#endif
---
-maple.c:#if CONFIG_64BIT
-maple.c-        MT_BUG_ON(mt, data_end - 4 !=3D mas_data_end(&mas));
-maple.c-#endif
---
-maple.c:#if defined(CONFIG_64BIT)
-maple.c-        /* Captures from VMs that found previous errors */
-maple.c-        mt_init_flags(&tree, 0);
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Includes should appear after the ifndef/define, however, neither of these 
+are neaded as you can just forward declare struct notifier_block.
 
-First, we don't introduce rv64ilp32-abi user space, which means these
-testing codes can't run on rv64ilp32-abi userspace currently. So, the
-problem you mentioned doesn't exist.
+> +
+> +#ifndef _LENOVO_WMI_EVENTS_H_
+> +#define _LENOVO_WMI_EVENTS_H_
+> +
+> +enum lwmi_events_type {
+> +	THERMAL_MODE_EVENT = 1,
+> +};
+> +
+> +int lwmi_events_register_notifier(struct notifier_block *nb);
+> +int lwmi_events_unregister_notifier(struct notifier_block *nb);
+> +int devm_lwmi_events_register_notifier(struct device *dev,
 
-Second, CONFIG_32BIT is determined by LONG_BIT, so there's no issue in
-maple.c with future rv64ilp32-abi userspace.
-That means rv64ilp32-abi userspace would use CONFIG_32BIT to test
-radix-tree. It's okay.
+Please forward declare struct device too.
 
->
-> This raises other concerns as the code is found with a grep command, so
-> I'm not sure why it was missed and if anything else is missed?
->
-> If you consider this email to be the (unasked) question about what to do
-> here, then please CC me, the maintainer of the files including the one
-> you are updating here.
->
-> Thank you,
-> Liam
->
+> +				       struct notifier_block *nb);
+> +
+> +#endif /* !_LENOVO_WMI_EVENTS_H_ */
+> 
 
+-- 
+ i.
 
---=20
-Best Regards
- Guo Ren
