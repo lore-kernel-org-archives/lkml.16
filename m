@@ -1,219 +1,215 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from MA0PR01CU009.outbound.protection.outlook.com (mail-southindiaazon11020108.outbound.protection.outlook.com [52.101.227.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DA63C463;
-	Thu, 27 Mar 2025 11:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743073356; cv=none; b=kZyB+KJRfMXbq3Yy9hdiTbJ8u9zkXDZvYiA6xix4Hc0k7s3sMWZ0tMk4Ze3diSOdgXg1nL3yz8eZbsCLsnTio2fERRxhdHjTDXNs69asGcM8cEYxM8XP/nrs0+gWVQ/cuTu3OoRPPZ/IS7RoTGWr1RLt/vOcq7aS2InBK7rGMIw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743073356; c=relaxed/simple;
-	bh=KycBfGkDC/ffdrmTGu72+/Q3uISnruqLt7VmIcVAtfc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qTSaciUFzqbATZ/SL5cZhanPXvmIi510pzu5+kxc20/yWSqqO/aHtzUJYAlv1raPnZa37wmNg1B/ZqlvwUO+YzxwZKxhAh9/9FGKfVd5w6ByEaftd+I/5xsRGIF+R27OJsllLXNVgOxD+OtnbJZWzoLh6PVl/l4xaWu3Sa5llfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZxwZiJAn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZxwZiJAn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47AF3C4CEEA;
-	Thu, 27 Mar 2025 11:02:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743073356;
-	bh=KycBfGkDC/ffdrmTGu72+/Q3uISnruqLt7VmIcVAtfc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZxwZiJAndOQzuhMcOTxzCVMUjBOiVwIHGk99CbSalXhzvGrJuH2RZDG0DxXhazyMx
-	 cRimSXk6TGJrLWxLqm3lopy/8erGiflrxxsvrAlv9HTBe5p/UY1FClc1HPGzIffBSf
-	 cPt7h90iOSumRCuB6RVCyVpqQu/XCSBaeT1y5ZDU2flDaFb8bxwipqwYc69hNWC5wK
-	 T5LKCYXM3tBp/TWA5E76gTTcldPPB8NT/mpK/5ZgQ6IikUVhc5yDaVw6MBr2fqj6kj
-	 YekOfDn2R9ADtqUpadiCl60XOXVNqyATL5/SOlMkwCZVur056RSmueUjUEyy10i1ml
-	 DQ6a7GGRjT2aw==
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3feaedb39e9so197664b6e.1;
-        Thu, 27 Mar 2025 04:02:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUECKoYiNPq2J1XCS+dj9DYu7jcF6FRHbFjwUxO483TZCXE3bpEQuLs9pkrPwY/VUXiFikK7M/LJxBy@vger.kernel.org, AJvYcCVipcfW+V6hqKWvHYhaPW+WlXvK21hXFuNevON9X/dgSCLHFYPOHSXx6utEOIcG5N68Tg8soquMC6yafjcE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc7j3yyhPTRjM6vQLLbzn9ZRL4IGjbhX8n4II0vAFkZIjFXpeJ
-	eetiNHKEqCBw/d0glgQv3kpoLwcTVDaVmatiVm4QpdN9CtO3pRax3YoRwcfru3XuQrnlRf/w2vb
-	+76F+Y5ZL9JN/phi+GWovHE/hZcU=
-X-Google-Smtp-Source: AGHT+IHe8auTSWvnicaZa+CBt1EQ35ftbxVUkmn26GHSu5ft6JmVevRgocMBJwcwwlMJ8HrY4FOwUzBfnAIOpQw1jRA=
-X-Received: by 2002:a05:6870:2012:b0:29f:97af:a1a0 with SMTP id
- 586e51a60fabf-2c8481b2dfamr1388442fac.24.1743073355458; Thu, 27 Mar 2025
- 04:02:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FA820F08C;
+	Thu, 27 Mar 2025 11:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.227.108
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743073363; cv=fail; b=T/n2kP8qaF/j91DOppoq2newAJtcIXOM9WBCD+Sy/GwYKvhPuBEZKGpslK4UBGLCIthruCPSRI2spgEIPDPd/LtZ3zSRE+xLuEif19nPz2GeSAJG8M1Xaxy1LLjxajkJn1x/4e3KuZg949eJChsiGwygEN1Dw/MrtwtcDSEEZ6Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743073363; c=relaxed/simple;
+	bh=4rW24NElgdavEJgHCVfylZ+PhfUO3QYyfZGs309cdnk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UyggBbGdMxcRf/DfFrfLjLfViuLEYHz7iy6/Mpqv5Wj2mpWfgZrl9hHB1tNTiNHGZD3FUrFbpJWjj78b0iRI+FPJ5oZmzTDfPF5HiO1tWRnxhPBKKdw0+MdoCJou4h0E+0vRek6VRR2vvsvK1nPFzGJe36jvVjln9icaRkD0RwM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io; spf=pass smtp.mailfrom=siliconsignals.io; arc=fail smtp.client-ip=52.101.227.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siliconsignals.io
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wRJ4/KUpr6tlja+gl3CxxrnGqr/PbdcQNr6TXWr7sngEdE/+54/9AYiPUG6l4uktg5a9R8sygVs/neicnZhF757vDPN8AAnr4WAFq8YxUymxfys0Hg1MKGHV/sNzUpT+6i+qiyQC/zlA+lKQkPJwbmCBDgi96aOusu6+4xNJQW8iEPEYimeopTNdx/oQgjDit04qKU4bcyBRIQ6qNOPmQC+anC5duTIthW46pFKMRHN3B9coSMEn8Iu/G2w1ZWXPeSYq/AFWM4uwmAN9sWbYC50D15Efn9yMA+6RXgwAkONxt4bql4X3O6Rclabiqe7NWJmfWcjY0g+ZUWvb3p5RgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4rW24NElgdavEJgHCVfylZ+PhfUO3QYyfZGs309cdnk=;
+ b=EQerqoWQiV4+s0K6gEVfZ30LrGwXzs9pMRTwXsuq9k6MZj06aTn3YCIyk4tNDfHKtspJ3hZx8WEJX23N70565Qi7IZoNz3M3+Jp8Vlxz6CAvPgKZEja9+JeDGm5dhDzGPxAlczdpQXcdZfNX0tNAm8gfxvM+XbKL1hlVx7D52WDCxo6kvmHr7j04Icwb/wYC2tw71Sn8v6NGH8Q2sR5S/yRDyv6qyhZXBpBRaB353B2CYZubITDebT5DGfJwaT/0iw0stEmEjGvYjopgKoarWNSReOFosx6motKIJpOMs1fPMfgBqmpyEF8MJIiv99M8tKOdn77qZZXIbS1+aXmGEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siliconsignals.io; dmarc=pass action=none
+ header.from=siliconsignals.io; dkim=pass header.d=siliconsignals.io; arc=none
+Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:199::7)
+ by PN0P287MB0357.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:da::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
+ 2025 11:02:33 +0000
+Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+ ([fe80::58ec:81a0:9454:689f]) by PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+ ([fe80::58ec:81a0:9454:689f%4]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
+ 11:02:33 +0000
+From: Tarang Raval <tarang.raval@siliconsignals.io>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+CC: "kieran.bingham@ideasonboard.com" <kieran.bingham@ideasonboard.com>,
+	"Shravan.Chippa@microchip.com" <Shravan.Chippa@microchip.com>, Mauro Carvalho
+ Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Laurent
+ Pinchart <laurent.pinchart@ideasonboard.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Julien Massot
+	<julien.massot@collabora.com>, Zhi Mao <zhi.mao@mediatek.com>, Mikhail
+ Rudenko <mike.rudenko@gmail.com>, Benjamin Mugnier
+	<benjamin.mugnier@foss.st.com>, Luis Garcia <git@luigi311.com>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 6/6] media: i2c: imx334: Enable runtime PM before
+ sub-device registration
+Thread-Topic: [PATCH 6/6] media: i2c: imx334: Enable runtime PM before
+ sub-device registration
+Thread-Index: AQHbkYzk1Y22sh7QN0aZHNR/YEI867OG3MCAgAAOBOI=
+Date: Thu, 27 Mar 2025 11:02:33 +0000
+Message-ID:
+ <PN3P287MB1829B0776EF3D34D0CA78CB18BA12@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
+References: <20250310071751.151382-1-tarang.raval@siliconsignals.io>
+ <20250310071751.151382-7-tarang.raval@siliconsignals.io>
+ <Z-UjLSsATevtLT2k@kekkonen.localdomain>
+In-Reply-To: <Z-UjLSsATevtLT2k@kekkonen.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siliconsignals.io;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PN3P287MB1829:EE_|PN0P287MB0357:EE_
+x-ms-office365-filtering-correlation-id: 797fa730-44ac-49f2-8889-08dd6d1edffc
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?HcUcvTAJ2+YnoyC1PS5WjKdajFSZ0zA2X0hylanvesDhKHhpW/RJH3ngYr?=
+ =?iso-8859-1?Q?BvTUgfhOzjdTS8TJw1VN3AxtbtG0PsnaAFdld+K7VBwHc3P81DjIq1kiZu?=
+ =?iso-8859-1?Q?ENkwMM1SfRzd1R2U+5junn1qJakOGrJxT8i7XqWVLhNbuzewoDkdSj63u9?=
+ =?iso-8859-1?Q?3T1SfljCAnQ6zCxXay9YaGHWUQ2DR0IFWXSheCRCvDyVVO3qA7I3Dlrkiy?=
+ =?iso-8859-1?Q?jP6gI60LGnARl4jqRO5ZmnTkSKU17Cm/x1a2qzOQNpYIs4oFw0h8V+1xZB?=
+ =?iso-8859-1?Q?MG4A4u+uzfgAMsdiDHBkUK3E8DjkW0i4nPaJUwgkxTmrwGJg1vrhKrqj/3?=
+ =?iso-8859-1?Q?pHh+Z/Nb4EANFd99V1JNJB91HBFxd9PcZFJt3lmA+UI89HI4RDmx56r4/M?=
+ =?iso-8859-1?Q?lQQ7leg5rCr51cJbGgL0ta+tHRVc/lYncnK2LgK1VNnFG77M16Cg5HgIUS?=
+ =?iso-8859-1?Q?UMzImkLAUjC+nUJThFinap7qBqcPaadPfKVcAssAUIT0we2Jp29rNvYSNv?=
+ =?iso-8859-1?Q?eRYG0SOaAefzjAkR3+M2VIK8jwJ5kN43rcc2Q4iPV2g08noztcUlU/Zcfc?=
+ =?iso-8859-1?Q?IRgDGlKhKCclLPzPnGfiQjJGZs1OWolGQgEaTpCGPHgxgqd3HApdSXYpBv?=
+ =?iso-8859-1?Q?o0sKIVyYUlmkXl0sGRtXQvYxO2yt/7rx7+65dzBF5Uz40zJ8GsjsGMqoxp?=
+ =?iso-8859-1?Q?0umyBIaYmeIAY1XhYk7caE3SXYv27DfB+8tBK8/gDkifR3Zm7+g1oolT2A?=
+ =?iso-8859-1?Q?YAaN9CIdtsIRcYnOyXp+HuHMltXo525twacFO7R8GMztFmWtL7CXCQF0PZ?=
+ =?iso-8859-1?Q?/bSCYEdv0dzpwrZ1ftlZd7YSC3UBW7mx9APJEI+1D8KK42VN1oZv0fFdKL?=
+ =?iso-8859-1?Q?kaTgveAi8y1XUB4h3M8WNe1jr+S+28y5hp1MrDD2A7E61sUsABUNiBROht?=
+ =?iso-8859-1?Q?uA2Y3W0UFR0mnwEZY4/vmiUVhhSV7bGlW2rctjiL0zsmqYyjs9sNBShf/o?=
+ =?iso-8859-1?Q?pHTa8/z91HoWkhhfLoSyq5WNHAdCh1FstTD2/lJl30cm/h+xWdLAFuHl08?=
+ =?iso-8859-1?Q?2iFYpIkylwx8QSFY+F55I/beMvSdwdy9L6SU2iDUaY9tmczYV42RA/KW3X?=
+ =?iso-8859-1?Q?CC91RhW/5furCmfNgrEfzixfkNjXMd+cNTWRy2SMCguYH2ELjh6uHlYd8c?=
+ =?iso-8859-1?Q?EActXcaVKMfs3zwo7GBT/oATxLcNXF20oFImZMM88By13Xu3PRytMmbYyL?=
+ =?iso-8859-1?Q?xgonHcVpKC9mWiFri3lSwDebIMLlpiVzT4h4HwVhHBn4jQAUUNHJ9xER77?=
+ =?iso-8859-1?Q?r6NhftiEVHs7F/X5j/sKm7r+W/Qk2tNCoGUjksNhEGO3z/BLdZoi6R/Pmk?=
+ =?iso-8859-1?Q?vcJGErXBP7d2eN2ydg0gKtmpMhuzk4cEfA80dqY48N2Pu6IfX1wqaWm/XY?=
+ =?iso-8859-1?Q?I/7VP50v72TgSzn2IdTWQCpWdQ7N11qLwy4CRnurCLjDLKJ4hoDIdD7ssy?=
+ =?iso-8859-1?Q?PiClmACsdl4wgnc4uyG0EQ?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN3P287MB1829.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?lbRgien0KepZGjLlnbzsSMvlh2dyRH+3uRJqblONN8BeiLNEw7Vd/WTi7V?=
+ =?iso-8859-1?Q?OPmkb0olfUhReY+4rhHyhj1uT3vsguwkS8lmsyPMJBaBclqDDGhVSVU4Pw?=
+ =?iso-8859-1?Q?kd7VH9OedaHsZ9I0KsHeXXz/E36kW1D2OlgFzyNjZfP21DlehCvFRobueM?=
+ =?iso-8859-1?Q?RW1HjrLC1LzDC/qGb0jhFFcsWVNsSZ+Eiia0pJW5yzedVwRJGBLwN7/su8?=
+ =?iso-8859-1?Q?g9zIYYlXMgsku7OQuf54vFQhv6MgYTxELZrGu2ey6s58Nh4q4pJ0KiBfxl?=
+ =?iso-8859-1?Q?IHEjsNHUNMKRpUJd80YyVw+eJ35IEomUJSGapXsXxd2wJoXwwsOicrlqbz?=
+ =?iso-8859-1?Q?fLkcXsvu9kzqnMneVN2ru3WNUTt7JrirGJ9JVxr6mdO+qNiftrNynnfk1x?=
+ =?iso-8859-1?Q?BOdJx2VXP6JMNtrF9+oqn+xxEJjekmZa+MFCvcU8XD66s7LNyG6+Cz0hYR?=
+ =?iso-8859-1?Q?A9dkWLN87FQSqXMXRju3s4kF4zQTD/Yq1aZCUaPHja2oiNM/odZe/Tdt+z?=
+ =?iso-8859-1?Q?bOPysGttZeWTnyEHpnWMtRso9Awlhot8q3nM9zRvC+8Mer/QqYKfTfxg+a?=
+ =?iso-8859-1?Q?8e4zp4Xta20JuKg3nDc8LwcbHT0PDolayFcbxAI3R1dtyyrclPskguJ9d9?=
+ =?iso-8859-1?Q?LbtiFmu+3AdP1IF/PWkrAZG91mVKwKThJe0cudQCn5Avn60ZviGTL1EBMf?=
+ =?iso-8859-1?Q?ers8IOPq1T5rukG96KD+CwHOAD8KUYc9PM7yW1UH0TfmUWXsY43bVr8T4I?=
+ =?iso-8859-1?Q?cAkQjaugD/NUkSyGGnMxD8FH2UP0ZutsgrZ/s4qxq2qC7NqnalkNi6hZsu?=
+ =?iso-8859-1?Q?9wACKQWiQ4DmWbs/3DBYypSqYBZy+PYF3UrrevCd8sp64L22wXK08BhTsq?=
+ =?iso-8859-1?Q?QcgOps59a8Jff6/W4o5At4rN4h/y6vXhT2mo2mI+807tQa3ehRZenN+TPN?=
+ =?iso-8859-1?Q?Mp9wXGgDzClN/2VkXVS6XCmxlsvsRGlx//zsmA2Odx6JE7hVMG3NuvfTfa?=
+ =?iso-8859-1?Q?jl+i63AXHG0XLy5bAU7s5vnUqkYHjOZZ4CZmoD4roIfKHK8EWtfzjo1F/y?=
+ =?iso-8859-1?Q?sGcR/CzBt67j7JQmKTOPoJv4iOPWeO+tsI5PO1Blz906tZAY/HEdo1PtF1?=
+ =?iso-8859-1?Q?v3tR/5OboT6WatK6ZnjT5mDCLlHeAhuffV2HKnTeKEGC+2hBUf2h9VG7fQ?=
+ =?iso-8859-1?Q?0SOgYmxGTO9j7B6Fwl/DRbWZDDHZi2u5NI6mTD0mswsAIfHJ/TCEU8x6kK?=
+ =?iso-8859-1?Q?63OBtNibD8dulzERDjRTkQruFG4B0Z0tVsrRKrTRgtrtZNeqtoKsSN/e7K?=
+ =?iso-8859-1?Q?fE6iEixIxVj/NujN0GqObicoKmONzkyKrzxsja5AyeMmdeKtJ9CZCT0wrE?=
+ =?iso-8859-1?Q?q6i87N1b0r22fyFvO8CWdWaVPMNWBMlWlMhlG/zw/+A7HxTD8Qwe4B4kLy?=
+ =?iso-8859-1?Q?ugODK6T2PCc1pH4WptQyIFLEvvaFFRLyPE84Vu8uy52wEof90qZIDjuj6t?=
+ =?iso-8859-1?Q?VNSuil0diiGz+WpQDrusA+v578ky9+QqhBggLg/CpPXKilkC3/TYB8S7DE?=
+ =?iso-8859-1?Q?iBwsSgL6AilGazZFL/NtfOcAjAZFN4cOm66XuurTNekKr8zsm5F0vZOJb7?=
+ =?iso-8859-1?Q?UKByz7RdcOiO6xGyH6kIGLe/SmYQayy21g4p+1EQcfAtT08s6KuUq1uA?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z-ShAR59cTow0KcR@mail-itl> <3796f2d9-738f-4cdf-a4a2-61c4aa99c310@suse.com>
-In-Reply-To: <3796f2d9-738f-4cdf-a4a2-61c4aa99c310@suse.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 27 Mar 2025 12:02:24 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0jn_gv92ywZiTZDdGN3Z+GNW0BJ5=kBD=8MpQ0Pt+y8TQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JrRebIXAiv4lIfOtz-NN0gA4kEIc0Bg2UKWbFdxXV2wbKoCesQt-GE76b0
-Message-ID: <CAJZ5v0jn_gv92ywZiTZDdGN3Z+GNW0BJ5=kBD=8MpQ0Pt+y8TQ@mail.gmail.com>
-Subject: Re: NULL pointer dereference in cpufreq_update_limits(?) under Xen PV
- dom0 - regression in 6.13
-To: Jan Beulich <jbeulich@suse.com>, 
-	=?UTF-8?Q?Marek_Marczykowski=2DG=C3=B3recki?= <marmarek@invisiblethingslab.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, xen-devel <xen-devel@lists.xenproject.org>, 
-	Juergen Gross <jgross@suse.com>, regressions@lists.linux.dev, 
-	Viresh Kumar <viresh.kumar@linaro.org>
-Content-Type: multipart/mixed; boundary="0000000000002b914c063150e400"
+X-OriginatorOrg: siliconsignals.io
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 797fa730-44ac-49f2-8889-08dd6d1edffc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2025 11:02:33.0176
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 7ec5089e-a433-4bd1-a638-82ee62e21d37
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SFWBf6Mv8fhr9PD21aDqChEtSr8cp+V2ofnE54DcDDcu9susmMoIld3b2MsvnV8ImFpsfgCMAD3nG+TivlEU7M5SGHPy3QEMyWptpdRa3m8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0P287MB0357
 
---0000000000002b914c063150e400
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Mar 27, 2025 at 11:14=E2=80=AFAM Jan Beulich <jbeulich@suse.com> wr=
-ote:
->
-> On 27.03.2025 01:51, Marek Marczykowski-G=C3=B3recki wrote:
-> > Hi,
-> >
-> > I've got a report[1] that 6.13.6 crashes as listed below. It worked fin=
-e in
-> > 6.12.11. We've tried few simple things to narrow the problem down, but
-> > without much success.
-> >
-> > This is running in Xen 4.17.5, PV dom0, which probably is relevant here=
-.
-> > This is running on AMD Ryzen 9 7950X3D, with ASRock X670E Taichi
-> > motherboard.
-> > There are few more details in the original report (link below).
-> >
-> > The kernel package (including its config saved into /boot) is here:
-> > https://yum.qubes-os.org/r4.2/current/host/fc37/rpm/kernel-latest-6.13.=
-6-1.qubes.fc37.x86_64.rpm
-> > https://yum.qubes-os.org/r4.2/current/host/fc37/rpm/kernel-latest-modul=
-es-6.13.6-1.qubes.fc37.x86_64.rpm
-> >
-> > The crash message:
-> > [    9.367048] BUG: kernel NULL pointer dereference, address: 000000000=
-0000070
-> > [    9.368251] #PF: supervisor read access in kernel mode
-> > [    9.369273] #PF: error_code(0x0000) - not-present page
-> > [    9.370346] PGD 0 P4D 0
-> > [    9.371222] Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
-> > [    9.372114] CPU: 0 UID: 0 PID: 128 Comm: kworker/0:2 Not tainted 6.1=
-3.6-1.qubes.fc37.x86_64 #1
-> > [    9.373184] Hardware name: ASRock X670E Taichi/X670E Taichi, BIOS 3.=
-20 02/21/2025
-> > [    9.374183] Workqueue: kacpi_notify acpi_os_execute_deferred
-> > [    9.375124] RIP: e030:cpufreq_update_limits+0x10/0x30
-> > [    9.375840] Code: 84 00 00 00 00 00 0f 1f 40 00 90 90 90 90 90 90 90=
- 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b 05 98 e4 21 02=
- <48> 8b 40 70 48 85 c0 74 06 e9 a2 36 38 00 cc e9 ec fe ff ff 66 66
-> > [    9.377009] RSP: e02b:ffffc9004058be28 EFLAGS: 00010246
-> > [    9.377667] RAX: 0000000000000000 RBX: ffff888005bf4800 RCX: ffff888=
-05d635fa8
-> > [    9.378415] RDX: ffff888005bf4800 RSI: 0000000000000085 RDI: 0000000=
-000000000
-> > [    9.379127] RBP: ffff888005cd7800 R08: 0000000000000000 R09: 8080808=
-080808080
-> > [    9.379887] R10: ffff88800391abc0 R11: fefefefefefefeff R12: ffff888=
-004e8aa00
-> > [    9.380669] R13: ffff88805d635f80 R14: ffff888004e8aa15 R15: ffff888=
-0059baf00
-> > [    9.381514] FS:  0000000000000000(0000) GS:ffff88805d600000(0000) kn=
-lGS:0000000000000000
-> > [    9.382345] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [    9.383045] CR2: 0000000000000070 CR3: 000000000202c000 CR4: 0000000=
-000050660
-> > [    9.383786] Call Trace:
-> > [    9.384335]  <TASK>
-> > [    9.384886]  ? __die+0x23/0x70
-> > [    9.385456]  ? page_fault_oops+0x95/0x190
-> > [    9.386036]  ? exc_page_fault+0x76/0x190
-> > [    9.386636]  ? asm_exc_page_fault+0x26/0x30
-> > [    9.387215]  ? cpufreq_update_limits+0x10/0x30
-> > [    9.387805]  acpi_processor_notify.part.0+0x79/0x150
-> > [    9.388402]  acpi_ev_notify_dispatch+0x4b/0x80
-> > [    9.389013]  acpi_os_execute_deferred+0x1a/0x30
-> > [    9.389610]  process_one_work+0x186/0x3b0
-> > [    9.390205]  worker_thread+0x251/0x360
-> > [    9.390765]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [    9.391376]  ? __pfx_worker_thread+0x10/0x10
-> > [    9.391957]  kthread+0xd2/0x100
-> > [    9.392493]  ? __pfx_kthread+0x10/0x10
-> > [    9.393043]  ret_from_fork+0x34/0x50
-> > [    9.393575]  ? __pfx_kthread+0x10/0x10
-> > [    9.394090]  ret_from_fork_asm+0x1a/0x30
-> > [    9.394621]  </TASK>
-> > [    9.395106] Modules linked in: gpio_generic amd_3d_vcache acpi_pad(-=
-) loop fuse xenfs dm_thin_pool dm_persistent_data dm_bio_prison amdgpu amdx=
-cp i2c_algo_bit drm_ttm_helper ttm crct10dif_pclmul drm_exec crc32_pclmul g=
-pu_sched
-> > crc32c_intel drm_suballoc_helper polyval_clmulni drm_panel_backlight_qu=
-irks polyval_generic drm_buddy ghash_clmulni_intel sha512_ssse3 drm_display=
-_helper sha256_ssse3 sha1_ssse3 xhci_pci cec nvme sp5100_tco xhci_hcd nvme_=
-core nvme_auth
-> > video wmi xen_acpi_processor xen_privcmd xen_pciback xen_blkback xen_gn=
-talloc xen_gntdev xen_evtchn scsi_dh_rdac scsi_dh_emc scsi_dh_alua uinput d=
-m_multipath
-> > [    9.398698] CR2: 0000000000000070
-> > [    9.399266] ---[ end trace 0000000000000000 ]---
-> > [    9.399880] RIP: e030:cpufreq_update_limits+0x10/0x30
-> > [    9.400528] Code: 84 00 00 00 00 00 0f 1f 40 00 90 90 90 90 90 90 90=
- 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b 05 98 e4 21 02=
- <48> 8b 40 70 48 85 c0 74 06 e9 a2 36 38 00 cc e9 ec fe ff ff 66 66
-> > [    9.401673] RSP: e02b:ffffc9004058be28 EFLAGS: 00010246
-> > [    9.402316] RAX: 0000000000000000 RBX: ffff888005bf4800 RCX: ffff888=
-05d635fa8
-> > [    9.403060] RDX: ffff888005bf4800 RSI: 0000000000000085 RDI: 0000000=
-000000000
-> > [    9.403819] RBP: ffff888005cd7800 R08: 0000000000000000 R09: 8080808=
-080808080
-> > [    9.404581] R10: ffff88800391abc0 R11: fefefefefefefeff R12: ffff888=
-004e8aa00
-> > [    9.405332] R13: ffff88805d635f80 R14: ffff888004e8aa15 R15: ffff888=
-0059baf00
-> > [    9.406063] FS:  0000000000000000(0000) GS:ffff88805d600000(0000) kn=
-lGS:0000000000000000
-> > [    9.406830] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [    9.407561] CR2: 0000000000000070 CR3: 000000000202c000 CR4: 0000000=
-000050660
-> > [    9.408318] Kernel panic - not syncing: Fatal exception
-> > [    9.409022] Kernel Offset: disabled
-> > (XEN) Hardware Dom0 crashed: 'noreboot' set - not rebooting.
-> >
-> > Looking at the call trace, it's likely related to ACPI, and Xen too, so
-> > I'm adding relevant lists too.
-> >
-> > Any ideas?
-> >
-> > #regzbot introduced: v6.12.11..v6.13.6
->
-> That code looks to have been introduced for 6.9, so I wonder if so far yo=
-u merely
-> were lucky not to have observed any "highest perf changed" notification. =
-See
-> 9c4a13a08a9b ("ACPI: cpufreq: Add highest perf change notification"), whi=
-ch imo
-> merely adds a 2nd path to a pre-existing problem: cpufreq_update_limits()=
- assumes
-> that cpufreq_driver is non-NULL, and only checks cpufreq_driver->update_l=
-imits.
-> But of course the assumption there may be legitimate, and it's logic else=
-where
-> which is or has become flawed.
-
-cpufreq_update_limits() needs to ensure that the driver is there.
-
-The attached patch should address this issue, Marek please verify.
-
---0000000000002b914c063150e400
-Content-Type: text/x-patch; charset="US-ASCII"; name="cpufreq-update-limits-fix.patch"
-Content-Disposition: attachment; filename="cpufreq-update-limits-fix.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_m8r8tx2z0>
-X-Attachment-Id: f_m8r8tx2z0
-
-LS0tCiBkcml2ZXJzL2NwdWZyZXEvY3B1ZnJlcS5jIHwgICAgOCArKysrKysrKwogMSBmaWxlIGNo
-YW5nZWQsIDggaW5zZXJ0aW9ucygrKQoKLS0tIGEvZHJpdmVycy9jcHVmcmVxL2NwdWZyZXEuYwor
-KysgYi9kcml2ZXJzL2NwdWZyZXEvY3B1ZnJlcS5jCkBAIC0yNzgxLDEwICsyNzgxLDE4IEBACiAg
-Ki8KIHZvaWQgY3B1ZnJlcV91cGRhdGVfbGltaXRzKHVuc2lnbmVkIGludCBjcHUpCiB7CisJc3Ry
-dWN0IGNwdWZyZXFfcG9saWN5ICpwb2xpY3k7CisKKwlwb2xpY3kgPSBjcHVmcmVxX2NwdV9nZXQo
-Y3B1KTsKKwlpZiAoIXBvbGljeSkKKwkJcmV0dXJuOworCiAJaWYgKGNwdWZyZXFfZHJpdmVyLT51
-cGRhdGVfbGltaXRzKQogCQljcHVmcmVxX2RyaXZlci0+dXBkYXRlX2xpbWl0cyhjcHUpOwogCWVs
-c2UKIAkJY3B1ZnJlcV91cGRhdGVfcG9saWN5KGNwdSk7CisKKwljcHVmcmVxX2NwdV9wdXQocG9s
-aWN5KTsKIH0KIEVYUE9SVF9TWU1CT0xfR1BMKGNwdWZyZXFfdXBkYXRlX2xpbWl0cyk7CiAK
---0000000000002b914c063150e400--
+Hi Sakari,=0A=
+=0A=
+Thanks for the review.=0A=
+=0A=
+> On Mon, Mar 10, 2025 at 12:47:48PM +0530, Tarang Raval wrote:=0A=
+> > Runtime PM is fully initialized before calling=0A=
+> > v4l2_async_register_subdev_sensor(). Moving the runtime PM initializati=
+on=0A=
+> > earlier prevents potential access to an uninitialized or powered-down d=
+evice.=0A=
+> >=0A=
+> > Signed-off-by: Tarang Raval <tarang.raval@siliconsignals.io>=0A=
+> > ---=0A=
+> > =A0drivers/media/i2c/imx334.c | 5 +++--=0A=
+> > =A01 file changed, 3 insertions(+), 2 deletions(-)=0A=
+> >=0A=
+> > diff --git a/drivers/media/i2c/imx334.c b/drivers/media/i2c/imx334.c=0A=
+> > index ffa39bb317f7..8964d60324e2 100644=0A=
+> > --- a/drivers/media/i2c/imx334.c=0A=
+> > +++ b/drivers/media/i2c/imx334.c=0A=
+> > @@ -1295,6 +1295,9 @@ static int imx334_probe(struct i2c_client *client=
+)=0A=
+> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto error_handler_free;=0A=
+> > =A0 =A0 =A0 }=0A=
+> >=0A=
+> > + =A0 =A0 pm_runtime_set_active(imx334->dev);=0A=
+> > + =A0 =A0 pm_runtime_enable(imx334->dev);=0A=
+> > +=0A=
+> > =A0 =A0 =A0 ret =3D v4l2_async_register_subdev_sensor(&imx334->sd);=0A=
+> > =A0 =A0 =A0 if (ret < 0) {=0A=
+> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_err(imx334->dev,=0A=
+> > @@ -1302,8 +1305,6 @@ static int imx334_probe(struct i2c_client *client=
+)=0A=
+> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto error_media_entity;=0A=
+> > =A0 =A0 =A0 }=0A=
+> >=0A=
+> > - =A0 =A0 pm_runtime_set_active(imx334->dev);=0A=
+> > - =A0 =A0 pm_runtime_enable(imx334->dev);=0A=
+>=A0=0A=
+> Please also change error handling accordingly.=0A=
+=0A=
+Oh, I missed that.=0A=
+ =A0=0A=
+> Btw. the remove function calls pm_runtime_suspended() that does nothing=
+=0A=
+> (use pm_runtime_set_suspended() instead). Could you add a patch to fix it=
+?=0A=
+ =0A=
+Should I include these changes in this patch, or should I create a separate=
+ =0A=
+patch for them.=0A=
+=0A=
+Best Regards,=0A=
+Tarang=0A=
+> > =A0 =A0 =A0 pm_runtime_idle(imx334->dev);=0A=
+> >=0A=
+> > =A0 =A0 =A0 return 0;=0A=
+>=A0=0A=
+> --=0A=
+> Regards,=0A=
+>=A0=0A=
+> Sakari Ailus=
