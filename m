@@ -1,66 +1,49 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31D020E302
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43FF20E6FB;
+	Thu, 27 Mar 2025 10:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743070482; cv=none; b=Abtu3bgbGjS8Xb3HSanGzGpD4pq8x3UPP5Vbwk0V63rFcvfVVXY0xsMeMlw7tEwBSb0IXWfJna9h+1YaPJNwhdVq7NVjLGUU2538VSakbkpOp/YofBS9jW8E1PQyLEayLJ5fPbb3vul3vZjlbhg6w46K6i4pZmm3sUNyVSGQAHg=
+	t=1743070485; cv=none; b=CrGiG925HQuoKR1fZozIyVKsWWjakOAkkbujJ4lsmyDBPW0trTo8ZBSV2cB4uri9DC3gKSRwDmTkAcdV/QLg+v12cbZXNUcrKuOP0Aa+QwdNGEFKDsm+etOiCAEImk2qZenOMPsqJDPLoWgeKqFTyhusga+r4IuTP8RNEQAVyt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743070482; c=relaxed/simple;
-	bh=mBOblcfMWCKyDXGapWwCTQYegZlR2y8I30LIqPbI/Es=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nq8VuQbNlW2gVvhwF2yMhlKjoTB4lfMqFWg4ay3BXzh3zGdBXo6hsoq6ghVa96c1vabF4r6S1KbFLO0rqPQ+Aq5PJ52+l0jTfADNhl+oQ1B2i8rOmecm9hIjDqKwklj3luLgf4hpMJ3frVS8CIJRgibD3Zdw9Uz2nkLwJlvG/HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PfEYJezL; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1743070485; c=relaxed/simple;
+	bh=rnzBvdRbSTyIG6cy6l+uIjLmvLq18jqXRfIor1Iq/hI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=NhzCAJTtUiSqrNjUedPtKXTi/NPZ8ZJ+xRHLDKhoIFO4G33m8goMH807bZq89k0+fBV6efRYAk5HSg91/8MXyLHasM+Qwq2xYK4lFr6toxttYy77orEzj5PCFP2Au7MP+5uSWCAiLCbtnGwGWTNLdS1D3J7Rp+A3kS2RO7NvEdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=H9BSvqmm; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="PfEYJezL"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38f2f391864so385539f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:14:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743070479; x=1743675279; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=8QIJATbl4wLG4OdrsHUeIGEbyiXBb/oACeqPdaFMavw=;
-        b=PfEYJezLvNy0MVvcoUjw7/Qux2PDaYy4eXc+7k/+c+jYtiLht+5y3KjdqU/YhPjbiS
-         OGu1/vAb8WDy0nbQH6/IipDgOQ5aw8U9jOAo/Dt4ZQbceyvnmPXj59tO2kzdTfcqEsmw
-         M44ieoC4YTKym9j/JVWmvapQcl2vYN0g30XDkvlwKZkQQj6U7U3B0cRT6KzDCK2DVAMQ
-         iHGo/BqUcOrzaq043GIbI7GIKjmaADV3Y6XDrqVifTHNNE0VcJojc62pgNmdIlpNFChJ
-         JCsnhyvnGsRbVZDWRDej1Ddzh1yD1m8TOLoNX2eFPtOE+AHVoBzQK8P3ZJ5F1GIMHM+v
-         TKNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743070479; x=1743675279;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8QIJATbl4wLG4OdrsHUeIGEbyiXBb/oACeqPdaFMavw=;
-        b=p0qDtG1WLK5LGZYYk/0RCxPVRspVMb6qx4S2q2xNDhm1fnvcy4hPZcO1Il0+0BD+oN
-         hzZElTUGzj3ngeh/RXGRpAI90ElMhzcc4S69MjOMnc6KRv11iQ+0cNovMS3gEZkJbW8q
-         KWCI7wniQtmcdXfwzovEl6fKoxQMhXg0ht/r+gldvrc71xUZ7CcFiIkpDH0HKD7lfzGq
-         yQ0OllFifca98oQPWdF480mzKfIcqlu3iTd0IIwf3DWE4pSkgK/M5zb26qqvtzVJTGbB
-         HcA2WZNLTXZwznZwbc+ECKH19oAJowY3u6beBzdXhOhp5KVkzEbQO0BDrkt7g5nmqtmZ
-         WXlg==
-X-Forwarded-Encrypted: i=1; AJvYcCXUY4YDzB6h6ZNJPYVvV/r1WJ/s7kd05jQgZwq9zv1KxEnCZi/WtvW686DNsgY1yv4kowkrC73v1vNP9AA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/Nn0oS/0nMRctzCoPjR6riwKCkEFGMeMzEoog+PdYmHsQz0X4
-	oGs7u5THifmlQQbVUDvnwuqHfZAMHmi4+5FuNwEayjr2QQABhdWCwqSzg3S+Bg==
-X-Gm-Gg: ASbGnctG+ywRG3EVQtVvnh+qZgcu6zbQPxd+M2H6mq1zxDwWRciFllU6dGqKjcdjXg6
-	rTlLwtwCvAnDnrXj816qIN4vPxvbuxXnQDlsbOm880odZ0HCazT4npGdVidtlXVcFDPLLg9i9d3
-	Xi6T0h1j7HbmXHeAwdcgFxxoqEk7Cx2avpHmhzbuUcE8QrQVm7K1f7jQ+rPqzWb6zycHqJ7aYr7
-	fxRpktbi8tmAnh/GD5+F0MjhkKHnQI+VhIhhL/D+AW++l1UHCpwo1YtVZbpvKcilex/3GUQ51tf
-	BF7wpuqkRUVVBw/JSepH9ZaRPPJROPWPC99U+X1JSH6PExRTTXPUaahPOc+65o9yRj6fsEQphZ4
-	ijTx0g05f5cCSpLcydrHGXYZhsEbBnQ==
-X-Google-Smtp-Source: AGHT+IHgHVz/7dbVkSCT2Llln75bv9PXy0vAF5ynyfKbcKddVwqAfZuLGuMyHldhkr298BSA9jh8aw==
-X-Received: by 2002:a05:6000:2ca:b0:38f:503a:d93f with SMTP id ffacd0b85a97d-39ad1770526mr2679967f8f.40.1743070478824;
-        Thu, 27 Mar 2025 03:14:38 -0700 (PDT)
-Received: from [10.156.60.236] (ip-037-024-206-209.um08.pools.vodafone-ip.de. [37.24.206.209])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f995423sm19196181f8f.20.2025.03.27.03.14.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 03:14:38 -0700 (PDT)
-Message-ID: <3796f2d9-738f-4cdf-a4a2-61c4aa99c310@suse.com>
-Date: Thu, 27 Mar 2025 11:14:37 +0100
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H9BSvqmm"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52RAEEx22362126
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Mar 2025 05:14:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1743070454;
+	bh=X9teR79IJRxW3SQmh9ToGw/nunmVP9SzQFNAQN9VgFI=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=H9BSvqmmEyWsWMn3L2ssLCJHJPF2vfzqmRaEY7qtbvYc6QUFro12AhoQf3CJcKqiZ
+	 GlGqs0yP4Ky0QNl1NzgYsUOiwZpta3ABZ+WWiFmZpuKy5jH+Y5TqLrUMntqOy8GkDA
+	 mFlJ322ej1oO72C4dtoqDP572Ojsk4sGSERx46iY=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52RAEEqL111973
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 27 Mar 2025 05:14:14 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 27
+ Mar 2025 05:14:13 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 27 Mar 2025 05:14:13 -0500
+Received: from [172.24.227.193] (devarsh-precision-tower-3620.dhcp.ti.com [172.24.227.193])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52RAE9Zj131057;
+	Thu, 27 Mar 2025 05:14:10 -0500
+Message-ID: <7a6966e8-dbbe-49de-84e4-127c22c7ca33@ti.com>
+Date: Thu, 27 Mar 2025 15:44:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,134 +51,82 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: NULL pointer dereference in cpufreq_update_limits(?) under Xen PV
- dom0 - regression in 6.13
-To: =?UTF-8?Q?Marek_Marczykowski-G=C3=B3recki?=
- <marmarek@invisiblethingslab.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org, xen-devel <xen-devel@lists.xenproject.org>,
- Juergen Gross <jgross@suse.com>, regressions@lists.linux.dev,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>
-References: <Z-ShAR59cTow0KcR@mail-itl>
+Subject: Re: [PATCH 3/6] media: ti: j721e-csi2rx: Fix source subdev link
+ creation
+To: Jai Luthra <jai.luthra@ideasonboard.com>,
+        Jai Luthra
+	<jai.luthra@linux.dev>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans
+ Verkuil <hverkuil@xs4all.nl>,
+        Tomi Valkeinen
+	<tomi.valkeinen@ideasonboard.com>,
+        Sakari Ailus
+	<sakari.ailus@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>
+CC: Rishikesh Donadkar <r-donadkar@ti.com>,
+        Vaishnav Achath
+	<vaishnav.a@ti.com>,
+        Changhuang Liang <changhuang.liang@starfivetech.com>,
+        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <20250324-probe_fixes-v1-0-5cd5b9e1cfac@ideasonboard.com>
+ <20250324-probe_fixes-v1-3-5cd5b9e1cfac@ideasonboard.com>
 Content-Language: en-US
-From: Jan Beulich <jbeulich@suse.com>
-Autocrypt: addr=jbeulich@suse.com; keydata=
- xsDiBFk3nEQRBADAEaSw6zC/EJkiwGPXbWtPxl2xCdSoeepS07jW8UgcHNurfHvUzogEq5xk
- hu507c3BarVjyWCJOylMNR98Yd8VqD9UfmX0Hb8/BrA+Hl6/DB/eqGptrf4BSRwcZQM32aZK
- 7Pj2XbGWIUrZrd70x1eAP9QE3P79Y2oLrsCgbZJfEwCgvz9JjGmQqQkRiTVzlZVCJYcyGGsD
- /0tbFCzD2h20ahe8rC1gbb3K3qk+LpBtvjBu1RY9drYk0NymiGbJWZgab6t1jM7sk2vuf0Py
- O9Hf9XBmK0uE9IgMaiCpc32XV9oASz6UJebwkX+zF2jG5I1BfnO9g7KlotcA/v5ClMjgo6Gl
- MDY4HxoSRu3i1cqqSDtVlt+AOVBJBACrZcnHAUSuCXBPy0jOlBhxPqRWv6ND4c9PH1xjQ3NP
- nxJuMBS8rnNg22uyfAgmBKNLpLgAGVRMZGaGoJObGf72s6TeIqKJo/LtggAS9qAUiuKVnygo
- 3wjfkS9A3DRO+SpU7JqWdsveeIQyeyEJ/8PTowmSQLakF+3fote9ybzd880fSmFuIEJldWxp
- Y2ggPGpiZXVsaWNoQHN1c2UuY29tPsJgBBMRAgAgBQJZN5xEAhsDBgsJCAcDAgQVAggDBBYC
- AwECHgECF4AACgkQoDSui/t3IH4J+wCfQ5jHdEjCRHj23O/5ttg9r9OIruwAn3103WUITZee
- e7Sbg12UgcQ5lv7SzsFNBFk3nEQQCACCuTjCjFOUdi5Nm244F+78kLghRcin/awv+IrTcIWF
- hUpSs1Y91iQQ7KItirz5uwCPlwejSJDQJLIS+QtJHaXDXeV6NI0Uef1hP20+y8qydDiVkv6l
- IreXjTb7DvksRgJNvCkWtYnlS3mYvQ9NzS9PhyALWbXnH6sIJd2O9lKS1Mrfq+y0IXCP10eS
- FFGg+Av3IQeFatkJAyju0PPthyTqxSI4lZYuJVPknzgaeuJv/2NccrPvmeDg6Coe7ZIeQ8Yj
- t0ARxu2xytAkkLCel1Lz1WLmwLstV30g80nkgZf/wr+/BXJW/oIvRlonUkxv+IbBM3dX2OV8
- AmRv1ySWPTP7AAMFB/9PQK/VtlNUJvg8GXj9ootzrteGfVZVVT4XBJkfwBcpC/XcPzldjv+3
- HYudvpdNK3lLujXeA5fLOH+Z/G9WBc5pFVSMocI71I8bT8lIAzreg0WvkWg5V2WZsUMlnDL9
- mpwIGFhlbM3gfDMs7MPMu8YQRFVdUvtSpaAs8OFfGQ0ia3LGZcjA6Ik2+xcqscEJzNH+qh8V
- m5jjp28yZgaqTaRbg3M/+MTbMpicpZuqF4rnB0AQD12/3BNWDR6bmh+EkYSMcEIpQmBM51qM
- EKYTQGybRCjpnKHGOxG0rfFY1085mBDZCH5Kx0cl0HVJuQKC+dV2ZY5AqjcKwAxpE75MLFkr
- wkkEGBECAAkFAlk3nEQCGwwACgkQoDSui/t3IH7nnwCfcJWUDUFKdCsBH/E5d+0ZnMQi+G0A
- nAuWpQkjM1ASeQwSHEeAWPgskBQL
-In-Reply-To: <Z-ShAR59cTow0KcR@mail-itl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Devarsh Thakkar <devarsht@ti.com>
+In-Reply-To: <20250324-probe_fixes-v1-3-5cd5b9e1cfac@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 27.03.2025 01:51, Marek Marczykowski-Górecki wrote:
-> Hi,
+On 24/03/25 17:31, Jai Luthra wrote:
+> We don't use OF ports and remote-endpoints to connect the CSI2RX bridge
+> and this device in the device tree, thus it is wrong to use
+> v4l2_create_fwnode_links_to_pad() to create the media graph link between
+> the two.
 > 
-> I've got a report[1] that 6.13.6 crashes as listed below. It worked fine in
-> 6.12.11. We've tried few simple things to narrow the problem down, but
-> without much success.
+> It works out on accident, as neither the source nor the sink implement
+> the .get_fwnode_pad() callback, and the framework helper falls back on
+> using the first source and sink pads to create the link between them.
 > 
-> This is running in Xen 4.17.5, PV dom0, which probably is relevant here.
-> This is running on AMD Ryzen 9 7950X3D, with ASRock X670E Taichi
-> motherboard.
-> There are few more details in the original report (link below).
+> Instead, manually create the media link from the first source pad of the
+> bridge to the first sink pad of the J721E CSI2RX.
 > 
-> The kernel package (including its config saved into /boot) is here:
-> https://yum.qubes-os.org/r4.2/current/host/fc37/rpm/kernel-latest-6.13.6-1.qubes.fc37.x86_64.rpm
-> https://yum.qubes-os.org/r4.2/current/host/fc37/rpm/kernel-latest-modules-6.13.6-1.qubes.fc37.x86_64.rpm
-> 
-> The crash message:
-> [    9.367048] BUG: kernel NULL pointer dereference, address: 0000000000000070
-> [    9.368251] #PF: supervisor read access in kernel mode
-> [    9.369273] #PF: error_code(0x0000) - not-present page
-> [    9.370346] PGD 0 P4D 0
-> [    9.371222] Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
-> [    9.372114] CPU: 0 UID: 0 PID: 128 Comm: kworker/0:2 Not tainted 6.13.6-1.qubes.fc37.x86_64 #1
-> [    9.373184] Hardware name: ASRock X670E Taichi/X670E Taichi, BIOS 3.20 02/21/2025
-> [    9.374183] Workqueue: kacpi_notify acpi_os_execute_deferred
-> [    9.375124] RIP: e030:cpufreq_update_limits+0x10/0x30
-> [    9.375840] Code: 84 00 00 00 00 00 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b 05 98 e4 21 02 <48> 8b 40 70 48 85 c0 74 06 e9 a2 36 38 00 cc e9 ec fe ff ff 66 66
-> [    9.377009] RSP: e02b:ffffc9004058be28 EFLAGS: 00010246
-> [    9.377667] RAX: 0000000000000000 RBX: ffff888005bf4800 RCX: ffff88805d635fa8
-> [    9.378415] RDX: ffff888005bf4800 RSI: 0000000000000085 RDI: 0000000000000000
-> [    9.379127] RBP: ffff888005cd7800 R08: 0000000000000000 R09: 8080808080808080
-> [    9.379887] R10: ffff88800391abc0 R11: fefefefefefefeff R12: ffff888004e8aa00
-> [    9.380669] R13: ffff88805d635f80 R14: ffff888004e8aa15 R15: ffff8880059baf00
-> [    9.381514] FS:  0000000000000000(0000) GS:ffff88805d600000(0000) knlGS:0000000000000000
-> [    9.382345] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    9.383045] CR2: 0000000000000070 CR3: 000000000202c000 CR4: 0000000000050660
-> [    9.383786] Call Trace:
-> [    9.384335]  <TASK>
-> [    9.384886]  ? __die+0x23/0x70
-> [    9.385456]  ? page_fault_oops+0x95/0x190
-> [    9.386036]  ? exc_page_fault+0x76/0x190
-> [    9.386636]  ? asm_exc_page_fault+0x26/0x30
-> [    9.387215]  ? cpufreq_update_limits+0x10/0x30
-> [    9.387805]  acpi_processor_notify.part.0+0x79/0x150
-> [    9.388402]  acpi_ev_notify_dispatch+0x4b/0x80
-> [    9.389013]  acpi_os_execute_deferred+0x1a/0x30
-> [    9.389610]  process_one_work+0x186/0x3b0
-> [    9.390205]  worker_thread+0x251/0x360
-> [    9.390765]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [    9.391376]  ? __pfx_worker_thread+0x10/0x10
-> [    9.391957]  kthread+0xd2/0x100
-> [    9.392493]  ? __pfx_kthread+0x10/0x10
-> [    9.393043]  ret_from_fork+0x34/0x50
-> [    9.393575]  ? __pfx_kthread+0x10/0x10
-> [    9.394090]  ret_from_fork_asm+0x1a/0x30
-> [    9.394621]  </TASK>
-> [    9.395106] Modules linked in: gpio_generic amd_3d_vcache acpi_pad(-) loop fuse xenfs dm_thin_pool dm_persistent_data dm_bio_prison amdgpu amdxcp i2c_algo_bit drm_ttm_helper ttm crct10dif_pclmul drm_exec crc32_pclmul gpu_sched
-> crc32c_intel drm_suballoc_helper polyval_clmulni drm_panel_backlight_quirks polyval_generic drm_buddy ghash_clmulni_intel sha512_ssse3 drm_display_helper sha256_ssse3 sha1_ssse3 xhci_pci cec nvme sp5100_tco xhci_hcd nvme_core nvme_auth
-> video wmi xen_acpi_processor xen_privcmd xen_pciback xen_blkback xen_gntalloc xen_gntdev xen_evtchn scsi_dh_rdac scsi_dh_emc scsi_dh_alua uinput dm_multipath
-> [    9.398698] CR2: 0000000000000070
-> [    9.399266] ---[ end trace 0000000000000000 ]---
-> [    9.399880] RIP: e030:cpufreq_update_limits+0x10/0x30
-> [    9.400528] Code: 84 00 00 00 00 00 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b 05 98 e4 21 02 <48> 8b 40 70 48 85 c0 74 06 e9 a2 36 38 00 cc e9 ec fe ff ff 66 66
-> [    9.401673] RSP: e02b:ffffc9004058be28 EFLAGS: 00010246
-> [    9.402316] RAX: 0000000000000000 RBX: ffff888005bf4800 RCX: ffff88805d635fa8
-> [    9.403060] RDX: ffff888005bf4800 RSI: 0000000000000085 RDI: 0000000000000000
-> [    9.403819] RBP: ffff888005cd7800 R08: 0000000000000000 R09: 8080808080808080
-> [    9.404581] R10: ffff88800391abc0 R11: fefefefefefefeff R12: ffff888004e8aa00
-> [    9.405332] R13: ffff88805d635f80 R14: ffff888004e8aa15 R15: ffff8880059baf00
-> [    9.406063] FS:  0000000000000000(0000) GS:ffff88805d600000(0000) knlGS:0000000000000000
-> [    9.406830] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    9.407561] CR2: 0000000000000070 CR3: 000000000202c000 CR4: 0000000000050660
-> [    9.408318] Kernel panic - not syncing: Fatal exception
-> [    9.409022] Kernel Offset: disabled
-> (XEN) Hardware Dom0 crashed: 'noreboot' set - not rebooting.
-> 
-> Looking at the call trace, it's likely related to ACPI, and Xen too, so
-> I'm adding relevant lists too.
-> 
-> Any ideas?
-> 
-> #regzbot introduced: v6.12.11..v6.13.6
+> Fixes: b4a3d877dc92 ("media: ti: Add CSI2RX support for J721E")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
 
-That code looks to have been introduced for 6.9, so I wonder if so far you merely
-were lucky not to have observed any "highest perf changed" notification. See
-9c4a13a08a9b ("ACPI: cpufreq: Add highest perf change notification"), which imo
-merely adds a 2nd path to a pre-existing problem: cpufreq_update_limits() assumes
-that cpufreq_driver is non-NULL, and only checks cpufreq_driver->update_limits.
-But of course the assumption there may be legitimate, and it's logic elsewhere
-which is or has become flawed.
+Reviewed-by: Devarsh Thakkar <devarsht@ti.com>
 
-Jan
+Regards
+Devarsh
+> ---
+>   drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c | 7 +++++--
+>   1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
+> index 6d406925e092660cb67c04cc2a7e1e10c14e295e..ad51d033b6725426550578bdac1bae8443458f13 100644
+> --- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
+> +++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
+> @@ -53,6 +53,8 @@
+>   #define DRAIN_TIMEOUT_MS		50
+>   #define DRAIN_BUFFER_SIZE		SZ_32K
+>   
+> +#define CSI2RX_BRIDGE_SOURCE_PAD	1
+> +
+>   struct ti_csi2rx_fmt {
+>   	u32				fourcc;	/* Four character code. */
+>   	u32				code;	/* Mbus code. */
+> @@ -427,8 +429,9 @@ static int csi_async_notifier_complete(struct v4l2_async_notifier *notifier)
+>   	if (ret)
+>   		return ret;
+>   
+> -	ret = v4l2_create_fwnode_links_to_pad(csi->source, &csi->pad,
+> -					      MEDIA_LNK_FL_IMMUTABLE | MEDIA_LNK_FL_ENABLED);
+> +	ret = media_create_pad_link(&csi->source->entity, CSI2RX_BRIDGE_SOURCE_PAD,
+> +				    &vdev->entity, csi->pad.index,
+> +				    MEDIA_LNK_FL_IMMUTABLE | MEDIA_LNK_FL_ENABLED);
+>   
+>   	if (ret) {
+>   		video_unregister_device(vdev);
+> 
