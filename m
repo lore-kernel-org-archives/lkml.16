@@ -1,102 +1,141 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13386125B2
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 22:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA98D1E1DF0
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 22:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743115955; cv=none; b=lJzwHvZ4Ogqx2ydtwBUtOwzd08G/KyZABgKWocU6kSvU+oXV4ndcWhBN6K9aNTgV87P37tEXTBr8D4QEg0KvisCp7+6KjI4+18t7fuJwlNQMuEsGuzqMu2o0Fn7deZxLRjUot3fM4ek580shwv8mctWWQW5mcbpT1jhBs0XuSLg=
+	t=1743115958; cv=none; b=Zna9cMAg93hssQol8K6KYakO2l0jWyTfxy5OWRVnrljCfC1ZgPTUtG65JVRxErEN+BKvG7AdmDiTJpZVfVJM51mJj2AGy4I5PoCdRgy6SlJvna75Wlz7MHK3pFW6Ap4mi2xtbbIoftRcH5gZZjSZs9f3oq5mOUwPrnDg1ZVOUrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743115955; c=relaxed/simple;
-	bh=+3nolFJS3GDU61tRWYyiY4l61kABXZK0asxpUNd0eHU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WHx/aHv15RBgXNBQOre1wCtKXYuB2py63m0H5+/pWxbJKMFhCK9MCqUCUy9bLNyWN49mHVT88O0CqIO4/QcQ3b42wzgS/WY9wOg7K4eVxwAzyB5bqIhe0SqXcPXEHciMWVaPoO63AoGccQeUo5AgfYIApWhbsyo/2YY8/KXLy2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NqH8SnvR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Onm9Zo8r; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743115958; c=relaxed/simple;
+	bh=04MuPzuXvPrWYZpyfrG/qxOsUxH6sKfHzhd+lnURa04=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WB8MIugBeIQaU1snVOjBLg4lvYt3Iy0NvlUF+KM8X3u7I/nwSV+WEV6owcdxNvqJaVovKQmRn0R7PzYQi7lYB9oPh5Nvv4n7xtMcgoBdj/skTxNRAYj92CAK7xUYOJstGvKVSTkdS7V7WublZSYyLawgEv+4xLUGnbs+W8I4JdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=N8Qs+4qJ; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NqH8SnvR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Onm9Zo8r"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743115951;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D6yyZnt8KqfLHyHM7P38OJddKZk6nvBIoDwIAEF8g2k=;
-	b=NqH8SnvRcISwtgLZRUcsloj3O/ZudaIRaT3mcjw38LjMag9g2Hns2YEYPo3GVZyaa8Nwv8
-	USofFnrQRtDtOrGL9qdfvVYQU/g5du5Mn4EqR8MrulayVtOD8J4cjkfWPG6rX5IjSesumw
-	zocnPQz8y3czFEiLjlETKgvKD5zK4VpD63OGSBiTNchJvPmM9cot3IPBLXzLCCC994hh5f
-	gnqKH+vliR3pPRu9NC5LHc5N6A+VLwMU2Q4Eu5B0Mn1jKgdk0LWFbRS6Oyn0sQPygz/UES
-	ycxqigtBmAL1p0Nktfb0cIYLC/c4+ZTBxJb2SGb1/tKK3UYDAoRdUqVJxZMwtQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743115951;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D6yyZnt8KqfLHyHM7P38OJddKZk6nvBIoDwIAEF8g2k=;
-	b=Onm9Zo8raRd6c1kFpqDesNqUR9JwJIN1SVaQCF7Qgr9ZZUlplEeB+ODK9m0/URtCyrz1nR
-	RQga/rlRWiDHmdDA==
-To: Fernando Fernandez Mancera <ffmancera@riseup.net>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: dwmw@amazon.co.uk, mhkelley@outlook.com, mingo@kernel.org
-Subject: Re: [PATCH v2] x86/i8253: fix possible deadlock when turning off
- the PIT
-In-Reply-To: <878qoqxjew.ffs@tglx>
-References: <20250327152258.3097-1-ffmancera@riseup.net>
- <87ecyixuna.ffs@tglx> <1a89af34-8f7a-486b-a7f8-0a56d0447ce7@riseup.net>
- <878qoqxjew.ffs@tglx>
-Date: Thu, 27 Mar 2025 23:52:31 +0100
-Message-ID: <87y0wqw0gg.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="N8Qs+4qJ"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id BC509446;
+	Thu, 27 Mar 2025 23:50:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1743115845;
+	bh=04MuPzuXvPrWYZpyfrG/qxOsUxH6sKfHzhd+lnURa04=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N8Qs+4qJ/w31JqrublP+vX9igLskTPOvYYYH0hRLBZiGDKCJFOScz1C6gSOSiEaeQ
+	 JOb9I7pHgSh1vhwWW+WQnWmJceRYCLwc3QPg+Fz9PYQs+SRrQ+E2PE9Kx5OqAM+U/3
+	 kdeWvISioZ3MswcRgNteAYnwdB50LOgAJD3v5rCs=
+Date: Fri, 28 Mar 2025 00:52:09 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Vishal Sagar <vishal.sagar@amd.com>,
+	Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Michal Simek <michal.simek@amd.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH v4 09/11] drm: xlnx: zynqmp: Add support for Y8 and
+ Y10_P32
+Message-ID: <20250327225209.GB16629@pendragon.ideasonboard.com>
+References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
+ <20250326-xilinx-formats-v4-9-322a300c6d72@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250326-xilinx-formats-v4-9-322a300c6d72@ideasonboard.com>
 
-On Thu, Mar 27 2025 at 22:17, Thomas Gleixner wrote:
-> Though I really want people to sit down and think about the factual
-> impact of a tool based problem observation. Tools are good in detecting
-> problems, but they are patently bad in properly analysing them. And no,
-> AI is not going to fix that anytime soon, quite the contrary.
+Hi Tomi,
 
-May I recommend you to ask your favorite AI model of the moment the
-following question:
+Thank you for the patch.
 
- "Explain the discussion in the email thread starting at:
-  https://lore.kernel.org/all/20250327152258.3097-1-ffmancera@riseup.net"
+On Wed, Mar 26, 2025 at 03:22:52PM +0200, Tomi Valkeinen wrote:
+> Add support for Y8 and Y10_P32 formats. We also need to add new csc
+> matrices for the y-only formats.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> ---
+>  drivers/gpu/drm/xlnx/zynqmp_disp.c | 26 +++++++++++++++++++++++++-
+>  1 file changed, 25 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+> index 1dc77f2e4262..ae8b4073edf6 100644
+> --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
+> +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+> @@ -307,6 +307,16 @@ static const struct zynqmp_disp_format avbuf_vid_fmts[] = {
+>  		.buf_fmt	= ZYNQMP_DISP_AV_BUF_FMT_NL_VID_YV16CI_10,
+>  		.swap		= false,
+>  		.sf		= scaling_factors_101010,
+> +	}, {
+> +		.drm_fmt	= DRM_FORMAT_Y8,
+> +		.buf_fmt	= ZYNQMP_DISP_AV_BUF_FMT_NL_VID_MONO,
+> +		.swap		= false,
+> +		.sf		= scaling_factors_888,
+> +	}, {
+> +		.drm_fmt	= DRM_FORMAT_Y10_P32,
+> +		.buf_fmt	= ZYNQMP_DISP_AV_BUF_FMT_NL_VID_YONLY_10,
+> +		.swap		= false,
+> +		.sf		= scaling_factors_101010,
 
-I'm sure that I'm patently bad at AI prompt engineering, but that does
-not justify the utter insanities which these models threw back at me.
+Assuming the DRM format definitions get approved, this looks good to me.
 
- ChapGPT:
+>  	},
+>  };
+>  
+> @@ -697,6 +707,16 @@ static const u32 csc_sdtv_to_rgb_offsets[] = {
+>  	0x0, 0x1800, 0x1800
+>  };
+>  
+> +static const u16 csc_sdtv_to_rgb_yonly_matrix[] = {
 
-   "....
-    This patch adds a selftest (automated test) for the nftables
-    flowtable feature using a netdevice. It targets the netfilter
-    subsystem, which is responsible for packet filtering, NAT, and other
-    packet mangling in the Linux kernel."
+TODO: Add support for colorspaces to the driver.
 
- Grok:
+> +	0x0, 0x0, 0x1000,
+> +	0x0, 0x0, 0x1000,
+> +	0x0, 0x0, 0x1000,
 
-   See
+This surprises me a bit, I was expecting 0x1000 to be in the first
+column. What am I missing ?
 
-        https://tglx.de/~tglx/grok.html
-   
-   for the full glory of AI hallucinations.
+> +};
+> +
+> +static const u32 csc_sdtv_to_rgb_yonly_offsets[] = {
+> +	0x1800, 0x1800, 0x0
 
-At least those two were halfways reasonable:
+Why do you need offsets ? Those values correspond to -128 in a 8-bit
+range, and that's what would need to be applied to the chroma values.
+There's no chroma here. I think you could use csc_zero_offsets.
 
- Gemini:
+> +};
+> +
+>  /**
+>   * zynqmp_disp_blend_set_output_format - Set the output format of the blender
+>   * @disp: Display controller
+> @@ -846,7 +866,11 @@ static void zynqmp_disp_blend_layer_enable(struct zynqmp_disp *disp,
+>  				ZYNQMP_DISP_V_BLEND_LAYER_CONTROL(layer->id),
+>  				val);
+>  
+> -	if (layer->drm_fmt->is_yuv) {
+> +	if (layer->drm_fmt->format == DRM_FORMAT_Y8 ||
+> +	    layer->drm_fmt->format == DRM_FORMAT_Y10_P32) {
+> +		coeffs = csc_sdtv_to_rgb_yonly_matrix;
+> +		offsets = csc_sdtv_to_rgb_yonly_offsets;
+> +	} else if (layer->drm_fmt->is_yuv) {
+>  		coeffs = csc_sdtv_to_rgb_matrix;
+>  		offsets = csc_sdtv_to_rgb_offsets;
+>  	} else {
 
-   "API REQUEST ERROR Reason: Unknown."
+-- 
+Regards,
 
- Claude:
-
-   "I don't have access to the specific URL you've provided ...
-    my knowledge cutoff was in October 2024 ..."
-
-Seriously?
-
+Laurent Pinchart
