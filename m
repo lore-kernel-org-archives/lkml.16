@@ -1,144 +1,112 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3BB1C5F0C;
-	Thu, 27 Mar 2025 11:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D8F20D504;
+	Thu, 27 Mar 2025 11:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743073580; cv=none; b=iJ3cK9b1zqxsp0qvgZeKCVtmABdPS7ITGqGQ6pKMBCm4p66hmlKZRhTLQ3eZty8em2S57YteJR1n0vu4iMU1yiCLmFQcAE+zgXhKYnq6SV7OJBe77tNqIo108NstVw9kcpXxSt9bKrkwkOMBbFasSjijwerT6+e+n8alKqGe7U4=
+	t=1743073622; cv=none; b=eDxEARLMtGunLVTatXf66sNZCiO3XIIAJvjxM0JG7T4Z2+0/yNOyTWj2oIKIySfg5Q7bSrs+qbyVrIBaXZEY4kjy4N0zWK0bVUFEdApmpGVqRvVPZi4DZNG4D2ff4pzUShap7G9lxN+4I6UXiTLSAZ6apnEv/INKZ/U33W0XQ7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743073580; c=relaxed/simple;
-	bh=8UUznqJLxUHqllIRI8qBPHeFZBZRwz7mZOFkmk1D6wg=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=oWxcvaLtuXSFuZeqWpvD7B7dhs7g2Zu/rY+P/m4xht37WPUiPf7t2tfHhN1TlcbiWZx72fReGo8zw+XgMjgfyXaMTX4y2XDpSpqoY+lFAHdvomABxfVgFjITNkYPPveZ+eBo2skLyEYa7BsIHanEHDTxbtaTy5Al3j71SI9zfh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4G6zAMPt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DYn/x+Y/; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743073622; c=relaxed/simple;
+	bh=BuQdKLqrhWHmhs+mT0ivoRzo7Ii9+wiV5JhiJYZKvi8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mf5nx1JR7Leugvce2FGxqUdMOdbnqd/yXAHL2LXznIK3aforDQDfqYXk5Ge+RFqCz2G/ci3IayaP57917wn1IdlScyIQHhBzvTdjTYhF81anyLPhMyZEHeRp9cocl3af1aKJb021jA5+cAT2UnB42m2AX1o3qWxz9x02LNN0bxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UQbVgKTX; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4G6zAMPt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DYn/x+Y/"
-Date: Thu, 27 Mar 2025 11:06:09 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743073573;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oi1QEh6TyWE+/E+NgsgA9xeiEXGongDXbr9Dv7hhQV0=;
-	b=4G6zAMPtvAkPSNfeSK0y64L6nWe08qW6XtnOaO2Tpq3WLxdObrRQtKK1mB8mM7+IMwm1Lr
-	sbc3Q804wpT5lB6wFiPYftMZOdzCJw4JUOwmP88tO0Pvhaur1q+33b55eCk8O0hllpn8/f
-	ho6QCjRdcwIxdwGR3g3ygoyp6ini0LWgE2qFKiE3D+8vTKUUpbeDAGNKhYzruhFtONr7hC
-	VKhNmuoF/EI8EgCw91n65Iw/y2CKkYephFkaURNcBO9U9PQDlnPQiKUXspPVm5eEUYnT4o
-	DpXdIDLLQAgwLxErsCkm1xZCQASQWY+FNQXQDhetATLfiKuEQu+Wl1pW7Lijzw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743073574;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oi1QEh6TyWE+/E+NgsgA9xeiEXGongDXbr9Dv7hhQV0=;
-	b=DYn/x+Y/h/VDJ5Cd+IK+IokRsmFWkcUaeBctXsNC8DNY1C91wT1F/wYcXSG16NZUox+nQY
-	ZyYfONY9WfT3cyAQ==
-From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/urgent] objtool, pwm: mediatek: Prevent theoretical
- divide-by-zero in pwm_mediatek_config()
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- ukleinek@kernel.org, Linus Torvalds <torvalds@linux-foundation.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To:
- <fb56444939325cc173e752ba199abd7aeae3bf12.1742852847.git.jpoimboe@kernel.org>
-References:
- <fb56444939325cc173e752ba199abd7aeae3bf12.1742852847.git.jpoimboe@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UQbVgKTX"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-523f19d39d3so452112e0c.2;
+        Thu, 27 Mar 2025 04:07:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743073619; x=1743678419; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BuQdKLqrhWHmhs+mT0ivoRzo7Ii9+wiV5JhiJYZKvi8=;
+        b=UQbVgKTX1tZzQhqimw3SmQ42Fbvcy8lKOpP8LzoB2JZ3xHxOJCgSjKYvlHFrl2+mKy
+         BdjwYF8crc1guEZIskZmPDbQIfqFigtunQwsQcbUfBioqGfUFH2mppzxC4sEPKWwh5xt
+         duThTIAtmTDQ73crJPN1ogTOjJ0PrpADURtgl6lReu/x1ta+nDSKI/X20bVDr/5t06F8
+         9V5uD976YCBZ+KaW/DJdtwHtD5Nqqb8z/N/v1bpLTcqzr4vg9zXgzHzpWsw+7x1KtTu8
+         Al8UcET38BobFo57T4/wLXTO/Y+wJ77gIq2v9YJx2zyc+Q1WNi4b+HWX60LVhPl0wtdD
+         Piog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743073619; x=1743678419;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BuQdKLqrhWHmhs+mT0ivoRzo7Ii9+wiV5JhiJYZKvi8=;
+        b=QHLm8NrYwFBS14AkuXpv6HjlFrzN2yH/Xc5eBruQXYrqkWrdfkUF0pvq90E/ZQTidc
+         6i3bXgJ5AtWpWbOwAkLXnYLdg1Y78KGrXJzCzAkonnF2tcG0dKRqVp1eTnBrTXvgZMWW
+         xfwx20gtUQb4/By/O9MNUNqZktxhVohoAP9LQNNoEN8cQN45JnnFVkqz5gafqRPBYZvK
+         4rAShcqcPXcjp0buHtue6D7FFm8bVgG/N5FVC0pLycvG93QVd9cwKcrNaIArLvt1ggDh
+         H5edoF7V9lPp6iqptURO4cPP1YW4Z8l3MgC3QRtmoiIsr0B8/t+ZxLI1Nsfk/KdamSvb
+         aP9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV+gEWke3N30/b9uGxoDsVdlsRYQfkECgkXPEAKgZLPe9EmhgKYLqtLZ6wqs26eYw+SpAuXpMsxEXSoB5P6PYnfTP4=@vger.kernel.org, AJvYcCV5EGAl7LKrQ5pqCOJAlPJexyperLpFZFfBDaitRXND0hRFiWnTBTqyUwHQG1pNxOTh1oPUmICf6dMo@vger.kernel.org, AJvYcCVd4mbAzzzS8ILoR5aLQ2D2kkGg7hUupntErxUOUbLKFrSFrH9+YJbER3DCbt3Fx7fD3DVLNICQdzXmgFc8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1ZJIn8wK76dXncxJTqtFV9vNkqPYdcBvj1yTIgJ8Z7G6X4Mw4
+	PEijXB7H676C3ilgDTxkTnpgTZfaZmGsIZpGHCrdGGYcLA8RAEUlY129VQadW3SPg1d1GiEa5S/
+	UeKuzMt86DM+2NtMo2wZpSbLzpoU=
+X-Gm-Gg: ASbGnctpNUI5G4XI22tkK839Lc9DNktm1hOuvUhxbmuoSsRmOj9Gc3jcKuWFDgAGB/E
+	iLg5LusxO0r0yTvCVm6RD5yysctNk39P2MSzE9J+R+V29IS+aYfmh3QqS9p0LpRz/Tp7fZSeDc1
+	CsWFjqn78JrHi4gsD6QvVM9lMDyXcZ/5G4JQAv3i3cO7NhFHwnMLfFdgjvfyo=
+X-Google-Smtp-Source: AGHT+IEOm9cUCIzbmcm35mwEwgAg+CYjQj2nruO0LZ2GtSnT5RPVCXqpeRK85lo+9GVPGIgUHTU0QTXBaUZG5i4aiHQ=
+X-Received: by 2002:a05:6122:430c:b0:520:60c2:3fb with SMTP id
+ 71dfb90a1353d-52600705addmr1888914e0c.0.1743073619001; Thu, 27 Mar 2025
+ 04:06:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174307356945.14745.9373897017806755891.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+References: <20250305123915.341589-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250305123915.341589-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250305-cesspool-headlock-4d28a2a1333e@spud> <CA+V-a8uQTL+SHYqVU_J0th4PT6YPF7q6ypzDu33nS_6onWLoOQ@mail.gmail.com>
+ <20250306-slather-audition-a6b28ba1483e@spud> <18780ad4be2c28999af314c97ae4104fb161a691.camel@pengutronix.de>
+ <CA+V-a8tYv_u4UM5XVysVMPbfJoVwKFHqucLdJOmDP-xrXZ0L5Q@mail.gmail.com>
+In-Reply-To: <CA+V-a8tYv_u4UM5XVysVMPbfJoVwKFHqucLdJOmDP-xrXZ0L5Q@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Thu, 27 Mar 2025 11:06:33 +0000
+X-Gm-Features: AQ5f1Jo2y4aHX-Ul1mcjzUHpwZcTz5IMogldURDHGCK5Eh0UhKB7pBr8uELbClA
+Message-ID: <CA+V-a8sfx-QwzPz_zEEmGAyAoqha5cfMs9CvWDVJ_b0-D7QfpQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Document RZ/V2H(P) USB2PHY Control
+To: Philipp Zabel <p.zabel@pengutronix.de>, Conor Dooley <conor@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-The following commit has been merged into the objtool/urgent branch of tip:
+Hi Philipp and Conor
 
-Commit-ID:     4e8af314386ec3e0b842f47705321e074b1dd556
-Gitweb:        https://git.kernel.org/tip/4e8af314386ec3e0b842f47705321e074b1=
-dd556
-Author:        Josh Poimboeuf <jpoimboe@kernel.org>
-AuthorDate:    Mon, 24 Mar 2025 14:56:11 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 27 Mar 2025 11:57:45 +01:00
+On Thu, Mar 13, 2025 at 1:17=E2=80=AFPM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+>
+> Hi Philipp,
+>
+> On Thu, Mar 13, 2025 at 1:09=E2=80=AFPM Philipp Zabel <p.zabel@pengutroni=
+x.de> wrote:
+> >
+> > On Do, 2025-03-06 at 16:26 +0000, Conor Dooley wrote:
+> > [...]
+> > > That sounds awfully like "it was wrong before, and I want to keep usi=
+ng
+> > > the wrong node name"... If you're claiming to be some other class of
+> > > device, "ctrl" should really be "controller" like all the other sorts=
+ of
+> > > controllers ;)
+> >
+> > There are "usb-phy-controller" nodes on the rcar-gen2 SoCs.
+> >
+> Ok, I will rename the node name to "usb-phy-controller".
+>
+Fyi to chime in with other reset drivers I'll rename this binding file
+to `renesas,rzv2h-usb2phy-reset.yaml` and have the node named
+`usb2phy-reset@15830000` in the example node.
 
-objtool, pwm: mediatek: Prevent theoretical divide-by-zero in pwm_mediatek_co=
-nfig()
-
-With CONFIG_COMPILE_TEST && !CONFIG_CLK, pwm_mediatek_config() has a
-divide-by-zero in the following line:
-
-	do_div(resolution, clk_get_rate(pc->clk_pwms[pwm->hwpwm]));
-
-due to the fact that the !CONFIG_CLK version of clk_get_rate() returns
-zero.
-
-This is presumably just a theoretical problem: COMPILE_TEST overrides
-the dependency on RALINK which would select COMMON_CLK.  Regardless it's
-a good idea to check for the error explicitly to avoid divide-by-zero.
-
-Fixes the following warning:
-
-  drivers/pwm/pwm-mediatek.o: warning: objtool: .text: unexpected end of sect=
-ion
-
-Fixes: caf065f8fd58 ("pwm: Add MediaTek PWM support")
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: "Uwe Kleine-K=C3=B6nig" <ukleinek@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/fb56444939325cc173e752ba199abd7aeae3bf12.1742=
-852847.git.jpoimboe@kernel.org
----
- drivers/pwm/pwm-mediatek.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index 01dfa0f..7eaab58 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -121,21 +121,25 @@ static int pwm_mediatek_config(struct pwm_chip *chip, s=
-truct pwm_device *pwm,
- 	struct pwm_mediatek_chip *pc =3D to_pwm_mediatek_chip(chip);
- 	u32 clkdiv =3D 0, cnt_period, cnt_duty, reg_width =3D PWMDWIDTH,
- 	    reg_thres =3D PWMTHRES;
-+	unsigned long clk_rate;
- 	u64 resolution;
- 	int ret;
-=20
- 	ret =3D pwm_mediatek_clk_enable(chip, pwm);
--
- 	if (ret < 0)
- 		return ret;
-=20
-+	clk_rate =3D clk_get_rate(pc->clk_pwms[pwm->hwpwm]);
-+	if (!clk_rate)
-+		return -EINVAL;
-+
- 	/* Make sure we use the bus clock and not the 26MHz clock */
- 	if (pc->soc->has_ck_26m_sel)
- 		writel(0, pc->regs + PWM_CK_26M_SEL);
-=20
- 	/* Using resolution in picosecond gets accuracy higher */
- 	resolution =3D (u64)NSEC_PER_SEC * 1000;
--	do_div(resolution, clk_get_rate(pc->clk_pwms[pwm->hwpwm]));
-+	do_div(resolution, clk_rate);
-=20
- 	cnt_period =3D DIV_ROUND_CLOSEST_ULL((u64)period_ns * 1000, resolution);
- 	while (cnt_period > 8191) {
+Cheers
+Prabhakar
