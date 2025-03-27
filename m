@@ -1,80 +1,77 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592311AA1E0
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 23:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE801AA1E0
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 23:44:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743118849; cv=none; b=hvBakFmjB7uEuEMjLXH685A2JKcDeFek7zuObxSTzlv1F/gkrOjuXGB1gJHcNA6nrJBNxOz+uES9CELQ311jMOcTDvwR0S3sobyuhsdats3pEaW7WH9KvrCr5m/DiYefSV7LuOB0aFFu8/Y8d3wOPLouynE/oOYd5mYekEm43tM=
+	t=1743119046; cv=none; b=U+oGKe/9f5hGE7BEHthW65Cz/VlUM0dSPBF2Jwfop4JuH5YXbJ8E9qMA6yw5bAbahYarNv4BLBITi10A65sjM9aBhyDqyPwVIvuOvhip1zcWPeF2D/TTM1owC1Rn5u8SrcN5IjomPfHuBw9T1R087KPiyBy6mpHi7FbnQZj2dAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743118849; c=relaxed/simple;
-	bh=4mZ5loR1n2RQh8haFBL1ne3Pd5C5k/X3Gfa2nHEbdsA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uKyzPo9rVbmVDVyz6ZKGyNM7/vSrji5swNHQwXIldBAcirr5+qQA3FpBVgzEvpw7pBbyJZb9WQBwpluGhMYOaIugda58ZvTVX2Nut8Y0z1cRhDq1N3Z6qaqM9Jia/3tJfWdp6XTNzhpdoxwNI9fPBfY18Nt8CHC++EMU2EHCZFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ayjKaoAi; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ayjKaoAi"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4C09F40E021E;
-	Thu, 27 Mar 2025 23:40:41 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Uq__qQZ0tv6C; Thu, 27 Mar 2025 23:40:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1743118836; bh=oI4FPLSsvMMsGRjS5/ggg98WeoNDTnygYAZClij+M2g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ayjKaoAimU1Qh3vhMGTkuh1VGezcWowXkZItJLNZlqnp+wiGcjQOA3grRzEQ0hyRp
-	 +cUNb/kK9TwA5XS0WIDrcmSlDp1qUER4OZKUKcDESSmF5EPBPG1Pd/GM743cagxyV1
-	 hjB5RntRpyEF4+eLhvzXune5Mwre1mtrndwlBKXbQUxgNhqGmq1SbmbnRJu6zMdeAa
-	 G6D77A0vatZIPxYJhCmgpZGm8+0p1lDLMXX9V9G56Xc6y8n7e4d5DUp5C/ATOxpded
-	 WQJWNrpE20l9CdyemKqJrH/A3OMQ4UBb9a2bKVU3Gis5gBBZo9mpn+G2n9+DbJ6pg5
-	 +60ZrBOHTnxnlH1mCkROzT5HJ+8ELV4zTFXNgEES4+W82rfmeLlIl5uea/7XqU6jYy
-	 LOtii/s+OaJA2DJLHfykYQ6+bEm1I6g4IipcBEqjFJRm8Hd0OB8xIUpdx6ZDmeA9+i
-	 AXjfP4ZldbpdzY6DSas4uqIsGjfhHZDCvkC8kxKH4eldeV0Cpprg4giBWFAI0fhxFy
-	 I7xXbK+5a8l17TjeyJqtpIKTumhkqE3mNIi3uudY7ztoikhStTgR4sD0HttYqqLNsv
-	 0ZA3I0M22KQ2JALmfwI4ZJ6Z2gJ4fI6RLAdsBBD5aJvSov49rjv1rmLJ9bHKIwcLhz
-	 L1nCVfHkWu68Gq55gOOx/7mc=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 52D0940E0169;
-	Thu, 27 Mar 2025 23:40:28 +0000 (UTC)
-Date: Fri, 28 Mar 2025 00:40:21 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: boris.ostrovsky@oracle.com
-Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com
-Subject: Re: [PATCH 0/2] Clear AMD's microcode cache on load failure
-Message-ID: <20250327234021.GEZ-Xh5TM0GCqvwScL@fat_crate.local>
-References: <20250327210305.1694664-1-boris.ostrovsky@oracle.com>
- <Z-XEPVvEDhC5vzR4@gmail.com>
- <f8ec905f-04d4-46f6-909c-7f79b151c0df@oracle.com>
+	s=arc-20240116; t=1743119046; c=relaxed/simple;
+	bh=zJfe+ntDz0a5gqUOPpRgPJsQIkqcEFey64SoptgS/Iw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=do0tXDAkNOVSD/djUJ39itc866pcnZZapDFo1hjHdz5TK29g3hCD0ZwWYzrA+GyrdILicBZCTYF3ySMRBh5QInsxLUk0vyPpvT3g0L0nOXLJiocSHk3SJxZfIGmeF/nIGIYuk0ardpejU3bxfDD7v6OzlBKGyee/pjDz+k6OIlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d43b460962so27770825ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:44:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743119044; x=1743723844;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9HyMx14slmZO48hXwKrnjOU7rwzYOFJJ2XuwciiG24c=;
+        b=RGFy+zanuU0NwmQq/Z8DlDe8iVWKCYpUO7bWQdYvHb9xmjogx1annhqtoFCDbgVnhu
+         VQo3XxzM6Z1xCbwQi/XSXpTZAz4uvSuHR+8a4cXCBtIGvQL52YU+k+2NnaDK59DX0n3g
+         KQL+SbKV/DGwatEjT/CIPvN78S8PKkWKZINIp5+1cmyqmC4bNn41AOzIjj+3Rnq05dTC
+         mJVIVDRH1KoH4v/720I2OcCVLfNkVVI9e0El5CVsWhW3GEiGBu+s4NgkMp1PCPYKmlZY
+         dSkYuwuI13xjUNN4JTqKuIdRaOwAgQKQjWRQFBqJEMVQAAJ/XBPmuk7mvy/fam6cQ39y
+         0o6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVCUAE6D4fVpRSj60ZY+N4BhFuwasWCKX4tMqvCsjfC64b5FUdfms+T9e6CMwM4AmEL2nJTcrFVwWylZyo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGloTiV++2woSoHx9QA8ceZCPRcbl8xehKCLNBDA6+jRJ58rrj
+	n9TyHZvQOnfZLH89tq3Nneppy7Mj/4KTUlljrZSAnIKXdbiPVNK3a5vvoIIw8/xdkOaXwmxlCOR
+	V+1SsYeXjLNrtLPUX+3QPObq/yggmvtxQoh06ffZOqj+ODVwl58ltVw0=
+X-Google-Smtp-Source: AGHT+IGP0KfS302a6JahnEaFSrCURrW/iARLg9wT0HWhuDbr6UaQ3NEOiHKp2eCied/LzPpIPMg8HST/OAGgBXsb5bJEocyXgbCb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f8ec905f-04d4-46f6-909c-7f79b151c0df@oracle.com>
+X-Received: by 2002:a05:6e02:1fed:b0:3d3:f6ee:cc4c with SMTP id
+ e9e14a558f8ab-3d5ccce76c2mr58974305ab.0.1743119043917; Thu, 27 Mar 2025
+ 16:44:03 -0700 (PDT)
+Date: Thu, 27 Mar 2025 16:44:03 -0700
+In-Reply-To: <6772fd43.050a0220.2f3838.04cd.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67e5e2c3.050a0220.2f068f.0050.GAE@google.com>
+Subject: Re: [syzbot] [ext4?] KASAN: use-after-free Read in ext4_find_extent (4)
+From: syzbot <syzbot+ee60e584b5c6bb229126@syzkaller.appspotmail.com>
+To: adilger.kernel@dilger.ca, jack@suse.cz, linux-ext4@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com, ritesh.list@gmail.com, 
+	syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Mar 27, 2025 at 05:44:32PM -0400, boris.ostrovsky@oracle.com wrote:
-> Will resend.
+syzbot has bisected this issue to:
 
-No need to resend - I'll sort it out.
+commit 93cdf49f6eca5e23f6546b8f28457b2e6a6961d9
+Author: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+Date:   Sat Mar 25 08:13:39 2023 +0000
 
-Thx.
+    ext4: Fix best extent lstart adjustment logic in ext4_mb_new_inode_pa()
 
--- 
-Regards/Gruss,
-    Boris.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1566b43f980000
+start commit:   1e1ba8d23dae Merge tag 'timers-clocksource-2025-03-26' of ..
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1766b43f980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1366b43f980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2edddb53537e0320
+dashboard link: https://syzkaller.appspot.com/bug?extid=ee60e584b5c6bb229126
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1623343f980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1123343f980000
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Reported-by: syzbot+ee60e584b5c6bb229126@syzkaller.appspotmail.com
+Fixes: 93cdf49f6eca ("ext4: Fix best extent lstart adjustment logic in ext4_mb_new_inode_pa()")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
