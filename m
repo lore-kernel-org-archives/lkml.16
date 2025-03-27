@@ -1,127 +1,115 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C660E14AA9;
-	Thu, 27 Mar 2025 17:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17ABF9FE;
+	Thu, 27 Mar 2025 17:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743094902; cv=none; b=RY0gn8Jmzsxz27I2HIIMNVBEkox2mjUJAv/VMM2gA2wsK9IuZGi770KJxeg2S3J8lBxC8b0BKEl2vWab2sIUqP8vElVr8MSCHG2yvUEO+tktutWqdc4IOCY428qlODUE7xHxG87DirX7Z9FLa56mxeOPxTjAcGgatun7BN74pXI=
+	t=1743094978; cv=none; b=tF6XW4qqRwp8C2A8BxX98qF+QWPSlUzp8/Zt1enBoGsB1cogkuHIuCiekp1VdwPH6nhFAUv8P5dzSxR1nSyLsYKACN+i/DVPOw/BkbDhCJI6VXSwXbaULZ9C5l69wk+6oCc55vsmGVnXjS8I9dJF77Ir4H+VzuYV0Gu3BObw5G4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743094902; c=relaxed/simple;
-	bh=yDp5v2+EtKv7vIooGT7aK2o6WBhVIV8zl9ZQR/gjQiY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A+4CBxCo4DQeNLC6gLiye+VHNKt/RkoGBtrgGB+5CqMx1ZcVkMuxq/wPf/4/QOMuWuhZXhNXAN8Vn4xQGGVAoH5ARBXLNssPrPcFcE4lsekvh3QbGj87tgrWHLV/Rrs2sNW7WgoUEYUS0oxQ7aDtieirCqbs1kGtCSQjAaIGYKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VrZu7i0y; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743094978; c=relaxed/simple;
+	bh=+UJ3ZfnrEWAe92blxZH9heLkwYRbmnDsgPjcauBk7AA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m3+KSwR6EKngtScZRc6njsTQBhjixo8ZID9OCWMiLbnyEmZiz14m4B5Mc6wlUFMvymEpkh3vqqZpibzWlPdAhSmxw/zrVvM0zWxnEkazYRu6H2dbEryTa2peFiF0TMNPl2aDtSM0pjtV/102F4QCl/61RyutO0BZAxkMNCbVOMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=U4cVd5wO; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VrZu7i0y"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-301302a328bso2172671a91.2;
-        Thu, 27 Mar 2025 10:01:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743094899; x=1743699699; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ro7wdwaqUs2f5wAR7wtoF+lx+yF3AkxnaK0zSEVn14o=;
-        b=VrZu7i0ygBtabUr4T7u/PGEU8KhWie4xlvMEP6Z2PXL8yEKCsTwo8kAC3Z0xHrpYoz
-         dtJyMGZLe3CQL2v1yktp32cyISQIjAvfwbnHhiMMYPXMuEl+/rZvM6+zBfM4lm+qnqSA
-         BV2/CZCrQO6zA9OAHXcSiB83FNOnz5VjKZfDTuE+zM97nL7Irrm2JS89nDDIFZA26lG1
-         WahtsaT++7zpcY3rYyu1Z8/Xp3fJTe+bOutKMO+bNH5WHLuhxFD3cpkwm5P96+vDvfI2
-         eFbdur31Kbq+qkDHn7Ut6QJIijx75RBxg36TchgWo62Yp0PEvDjNPPZyYtdM2Z6UxRgI
-         Gbqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743094899; x=1743699699;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ro7wdwaqUs2f5wAR7wtoF+lx+yF3AkxnaK0zSEVn14o=;
-        b=ilssSQhvnK659GMzaqhuQ49HUUn61D8CPmu566hRcFNPRqJqD4NqEL75QIrljD0h0V
-         Ai9CMWLmeYtaG8I3Webd22brJVWB9Dr9x4eXT51XjtgwuLMuW2DVqKffKmP8s9y7GfvM
-         qDM0PBgngMS8cj2hrLBDPr9k+SvwU8jlLn/xcL6tjx5D0WBiRUW3ovU07Vi3sF7M01n4
-         sXdRhAzbVNHJ8M24H2CAiakSJqCX+ro4rOdGqTCxCH4bDuy783eN/q+oikldbMW+6xNJ
-         FGGemeBKP7XD2vYxlH2rJns5m9qfQIWqC63bYm37WkVlSWdVgJdLTePLJ83+OReeavEv
-         EYqA==
-X-Forwarded-Encrypted: i=1; AJvYcCVuDCZWmlM6CG1piIkg1uOW2QUEhsbGzdQK9bwYxJkhl5jzqXOOzyHYeoYV/+vwPOV5iF+otujj8Q/1i7jG@vger.kernel.org, AJvYcCXXKQWZkqNBqMS5IG5Jof44NN2xG1XC+BqEu7CGoPhymjubZ8AFcT43UeGJbdHSRNqVe6JpWzex+5Za@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjCvbIqvt4ksKyc1n5MzMSDoLEk8dXURqLqtgS9xPQeKGBZ4gN
-	HufreyNJe4tsf3dMW+GKOWoRbHgy0BZv3ySJBeu9p+xMmEOnBwytH1zu6ob6
-X-Gm-Gg: ASbGncsHcdYkMLczXC3WE81EzQKg2rI3fQ6UsjxxUlPqkSjIsyfnfLZ3k4xUG2o04bW
-	PDhhDW/S3n0J0GudHvetv2FahrAQuW/JKf+LSUURPA2qsO8iEprH51b4G8WnH5FdNqAKu1gCwcK
-	Kk5x2VtXTEM1uPwO29/C4Nl9Ad4frXo1lLbPUAnzjUDHHyn8OyRIArqjrxvbjbcdXlHFj5iXyEg
-	QHj85S/DlLlISdc7QMAbZoip0+dm0QDmbRMQj8IfuuYDg9tqmp8rBmdibBCcsdWgnPh1iOPlypp
-	RaIxFWRVjY+GcWMRs3xY6ipTsQhilgjdcgjBBJhAcci/PXN4unCaquRGz1i4Jw==
-X-Google-Smtp-Source: AGHT+IHQM/Pp/PibTbh/PCo5gLJC81Gdm5sJP68OC1Cj7UsrJA+UFQlDiFaPCECD9hR0PiABxPXOrQ==
-X-Received: by 2002:a17:90b:3eca:b0:2ff:592d:23bc with SMTP id 98e67ed59e1d1-303a7c5a48amr6562193a91.4.1743094899030;
-        Thu, 27 Mar 2025 10:01:39 -0700 (PDT)
-Received: from localhost.localdomain ([129.126.185.185])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1df4acsm1860195ad.199.2025.03.27.10.01.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 10:01:38 -0700 (PDT)
-From: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
-To: linux-xfs@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org,
-	Christoph Hellwig <hch@lst.de>,
-	John Garry <john.g.garry@oracle.com>,
-	brauner@kernel.org,
-	djwong@kernel.org,
-	dchinner@redhat.com,
-	linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com,
-	linux-ext4@vger.kernel.org,
-	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
-Subject: [PATCH] iomap: Fix conflicting values of iomap flags
-Date: Fri, 28 Mar 2025 01:01:19 +0800
-Message-ID: <20250327170119.61045-1-ritesh.list@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="U4cVd5wO"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 16E0140E020E;
+	Thu, 27 Mar 2025 17:02:52 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id XYkpMZ1b9u1p; Thu, 27 Mar 2025 17:02:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1743094965; bh=IRroS5Aq4fm3j99yiL8SYLl/wPiF4M3AoqI3PR/tB7E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U4cVd5wOPnxt4yWyBLfmqQ+WUieDZ99QsIYy/WEAR+7FhmXt3ZsIaUuHmqeG5Byxc
+	 WnDS9D2PXn6v9coYLoqKa47clsCYYTISfxbBgT1/VPR2mWzAAXaYGEd2DI49k6Y6Zp
+	 2JBSU56Vt7UIlGD3znx8NyX56QNIFfbGyRnhNEtJL+NOd3VnvxxwOkuYGOTG3oUhvb
+	 9hCol2/o+qPy+mE6mP8TFg8fEZ3VQbYgB3XmDi+6yZIk/zFTD0cUib8aduoGUXC4XM
+	 TOfLxk3k8gA6Pm3fxDcr7lpZ+dji+dO/qVPOG2cbyhkZnTQDwGObUAkxeQAKro/V6/
+	 GWK7tg9r8fkx5U11UjE6Vr5YW97tBdtzHJ3IxeO73ys7vo/bmelVhbfM7hGCPQgOAI
+	 AibW/XCexM2Jy0RoPw0BGyv0irML1HCy5U2npjM4kLZlsRbDx01SaiaqCC5GWRQyw9
+	 qhepP8UbRKuUqfbZSDlX/MOnjonNIjrNgrYBOqNHIW6U9M8PSzes5FQAJE1vwcyiqO
+	 IUtrjfnmwY65WU+k+nI1xM1CYg6gDFoD0D13ZHDEEYACyGoPzT5tHcmXeYqPoNgChO
+	 +CHAuuMz8QFNI22EpYTrs6eDKL/k+pOCiEAjCfU4wJwV6pQ32JQbjuaQN18unQy3na
+	 4/dhhv1pkI56QyswR0Pc5QXU=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 579A840E0196;
+	Thu, 27 Mar 2025 17:02:02 +0000 (UTC)
+Date: Thu, 27 Mar 2025 18:01:56 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: shiju.jose@huawei.com
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, david@redhat.com, Vilas.Sridharan@amd.com,
+	linux-edac@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	tony.luck@intel.com, rafael@kernel.org, lenb@kernel.org,
+	mchehab@kernel.org, leo.duran@amd.com, Yazen.Ghannam@amd.com,
+	rientjes@google.com, jiaqiyan@google.com, Jon.Grimm@amd.com,
+	dave.hansen@linux.intel.com, naoya.horiguchi@nec.com,
+	james.morse@arm.com, jthoughton@google.com, somasundaram.a@hpe.com,
+	erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
+	gthelen@google.com, wschwartz@amperecomputing.com,
+	dferguson@amperecomputing.com, wbs@os.amperecomputing.com,
+	nifan.cxl@gmail.com, tanxiaofei@huawei.com,
+	prime.zeng@hisilicon.com, roberto.sassu@huawei.com,
+	kangkang.shen@futurewei.com, wanghuiqiang@huawei.com,
+	linuxarm@huawei.com
+Subject: Re: [PATCH v2 7/8] cxl/memfeature: Add CXL memory device soft PPR
+ control feature
+Message-ID: <20250327170156.GCZ-WEhNREaxQaH_ya@fat_crate.local>
+References: <20250320180450.539-1-shiju.jose@huawei.com>
+ <20250320180450.539-8-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250320180450.539-8-shiju.jose@huawei.com>
 
-IOMAP_F_ATOMIC_BIO mistakenly took the same value as of IOMAP_F_SIZE_CHANGED
-in patch '370a6de7651b ("iomap: rework IOMAP atomic flags")'.
-Let's fix this and let's also create some more space for filesystem reported
-flags to avoid this in future. This patch makes the core iomap flags to start
-from bit 15, moving downwards. Note that "flags" member within struct iomap
-is of type u16.
+On Thu, Mar 20, 2025 at 06:04:44PM +0000, shiju.jose@huawei.com wrote:
+> diff --git a/drivers/edac/mem_repair.c b/drivers/edac/mem_repair.c
+> index 3b1a845457b0..bf7e01a8b4dd 100755
+> --- a/drivers/edac/mem_repair.c
+> +++ b/drivers/edac/mem_repair.c
+> @@ -45,6 +45,11 @@ struct edac_mem_repair_context {
+>  	struct attribute_group group;
+>  };
+>  
+> +const char * const edac_repair_type[] = {
+> +	[EDAC_PPR] = "ppr",
+> +};
+> +EXPORT_SYMBOL_GPL(edac_repair_type);
 
-Fixes: 370a6de7651b ("iomap: rework IOMAP atomic flags")
-Signed-off-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
----
- include/linux/iomap.h | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+Why is this thing exported instead of adding a getter function and having all
+its users pass in proper defines as arguments?
 
-diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-index 02fe001feebbd4..68416b135151d7 100644
---- a/include/linux/iomap.h
-+++ b/include/linux/iomap.h
-@@ -78,6 +78,11 @@ struct vm_fault;
- #define IOMAP_F_ANON_WRITE	(1U << 7)
- #define IOMAP_F_ATOMIC_BIO	(1U << 8)
+And "EDAC_PPR" is not a proper define - it doesn't tell me what it is.
 
-+/*
-+ * Flag reserved for file system specific usage
-+ */
-+#define IOMAP_F_PRIVATE		(1U << 12)
-+
- /*
-  * Flags set by the core iomap code during operations:
-  *
-@@ -88,14 +93,8 @@ struct vm_fault;
-  * range it covers needs to be remapped by the high level before the operation
-  * can proceed.
-  */
--#define IOMAP_F_SIZE_CHANGED	(1U << 8)
--#define IOMAP_F_STALE		(1U << 9)
--
--/*
-- * Flags from 0x1000 up are for file system specific usage:
-- */
--#define IOMAP_F_PRIVATE		(1U << 12)
--
-+#define IOMAP_F_SIZE_CHANGED	(1U << 14)
-+#define IOMAP_F_STALE		(1U << 15)
+It should be more likely a
 
- /*
-  * Magic value for addr:
+EDAC_REPAIR_PPR,
+EDAC_REPAIR_ROW_SPARING,
+EDAC_REPAIR_BANK_SPARING,
+
+and so on.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
