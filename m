@@ -1,194 +1,182 @@
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B131C5D44
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 18:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CE41C5D44;
+	Thu, 27 Mar 2025 18:58:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743101819; cv=none; b=QvzcX+MrE617KwbiWf2xbUrlcHRmj9d8WMXKAhpd+H5svKT3PL7pruO7k353JPlGTf3T2M7w6I7U6MVlVLv5a/u/O9RV31XZGW55Wwg0QX/Rmp4G2HduO+2cOIVQHkV0in2dijAgTwZJSQZ+4m/xw/TJ8pi5q9v+odn9MJcXCP4=
+	t=1743101882; cv=none; b=L5CaC8MJGxA+92YNkdQqFCTdNxtmHm8Gu9CB3o8OXcjCQJkkSuxOpHzDzdyrQQJvWRmS5Xw0Kn/X+JaPFoqOYPP9unYPsgrf2zdNeaYIaeOezb/3RNg5w5sqK0D7PIiERC2pZH97I9k7U7LOlhbR/kjx7R9NQnZpuc8wXFYPn0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743101819; c=relaxed/simple;
-	bh=aL7jAvW1zq17+CkLFMN0vR9BHYTKgDypZs9AcsEJ2U0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g3A49W1AkIN9rn5kMpwH8FxEzL7YujooME8E9x9lB2zsTShOL2LJqbbi+4FZ5TU0X3qgey7K0sm699fgDZkorYCWKJTnmxBWmCPgUuWOm+T3MR2ECf7L0pRYc6+dy7eqUtppeHjwbxUErwXwclUm/83+g8zLppLZxhM7qX89TE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=X0BESfn/; arc=none smtp.client-ip=209.85.210.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1743101882; c=relaxed/simple;
+	bh=NCRgSlQwiTeN8gTk1gYPpD6+NtqKakLmbR8E4o+Ga3A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tw8XmF/Yr+dMf75Gzt8/2X5SMGb9wQsnHnDBi9D7VLh6bCvJDsWC/H+d1m+/bMbbHEnoNprImdiiOQGM6OmBL4iKVD9FUO7XBxMfYfdUV+uIzeZvoycYMk7DNERbECID0tS5vdyL65aLQ6AJpGkx2ga6U0N571+LPq5fbl0xlrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WJ1q1wZu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="X0BESfn/"
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-72be60c1d7dso224363a34.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 11:56:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743101816; x=1743706616; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ppDgiMP1+TTl1CVJagamGzQJqV2s8GHoMlgEqGIQygU=;
-        b=X0BESfn/8DCN09dbPQRaSXiTBdh7dGAS2Drg2E9cWVMd2elTNBNn5aCxjTlz9kf2LU
-         f7xpbRw0bN2ahvPBGAgGDKmLiD+FZTA61F+iEwk3NqdJ7nr/wCvAUPffCA6fhyROQRBQ
-         M09/bkGcrSwp83wx7+jzIUC+UUK8b6TRsqo65wPQQHo0XpHu4+sKldMK2Kb6NEyFH5S+
-         +tDmFb26Xzq1EPpk3N+sLpOGUXkGY/CngFgR2y31+jDBFaDjXmJ4nx69n7DQHFDeePwH
-         QO7RfXE8yRx/8U2VtIN6u7lJ5NwUvtAjs7MvCahHtKUpfm6+uGUW65y9pOaZP+ZCELta
-         fgmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743101816; x=1743706616;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ppDgiMP1+TTl1CVJagamGzQJqV2s8GHoMlgEqGIQygU=;
-        b=U/1pWe0OWDAwvwnujkSffJijQj8r60mg4N49u6cqp18DmSjgYLoUMDI695QyvXUwbb
-         bGRSJ5dkBweRVNr5GPvmG6BYe2bY99SuVoVwwHUCY2DbQv5E8iQeR4uDF3ywpv0QERWa
-         E4QcvN4YhvuTNY/F7jyWxzvHf37EUn3Mp13e2JyAb5pJMsAPQspkznVkoyGpYfe/ZqKQ
-         6vQPGe77LnHq526Kzn6w99m2UdgBmz+YZFCy8ZbeZahqyjnjNLehBLy1vQbwa4s1+ZCE
-         Kp0QKwxPXZGdaScir7PwAfjkGJKFTUZLPjUsNxo24MpemXcSVseNZosIdKfNmkoK0zVG
-         +Jbw==
-X-Forwarded-Encrypted: i=1; AJvYcCWcW/pLEKLYRpKfpU43fPRQ3mm7JgO5h9dzmyYx7yu9owqYN4Mzwy3TlwIlNFkLDxDCSX9nU+LgnqNu01Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4RHD8EuMMKqNtEvRsJTiYwCx/DwwZ7FT05xT42w33Ot1Q6cw2
-	U0irLjr6zvjfqWFzQPia7gRzjRAn3IO7VcHK8d+AisIJNtgDlJZafA5IdT3XeyQ=
-X-Gm-Gg: ASbGnctMx+VHkXM8NCCkc+fE4oMeqt2nRTUKwoeEuiMubg/Ix2oIg0slnda0P2G8B1A
-	92C5D6EQ0TFL5BAkINWuh4ReOl1Sj1lfIpEU0G5irUWqn1zehdMPBQrugmKzTC/OHzd+DrinnzO
-	0hG3j5iG2m9Gdxn6jnG+iOJeP8YlKkLTzVpy8qubZibsvbA8W+P7/Nryska603SZa5rRGrZLEV2
-	aMV2sjnykuXOlVHaGXstsnaO8q4bx1NT5ZYDpHTD4z6mkDc/bXKvVE5ClCck8rY7cFnVoPJJVFq
-	B7vifawOGFdlJ9u7RMSSwfp4PoD84axmvEnrTjbWP2VqetN0FTqjcbzEXAbtKI2VuRURsHCMRyi
-	qfI55uQ==
-X-Google-Smtp-Source: AGHT+IEQ7yeeO97qge5eKvr5YgK7xRNfEO9wfjwIfT1DcQqiR9u2xozYXLpQrS2Y9HkfQp6VTfz+Mg==
-X-Received: by 2002:a05:6808:1113:b0:3fe:af0a:f8da with SMTP id 5614622812f47-3fefa622addmr2224838b6e.38.1743101816034;
-        Thu, 27 Mar 2025 11:56:56 -0700 (PDT)
-Received: from [192.168.0.113] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3ff0516733csm36666b6e.2.2025.03.27.11.56.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 11:56:55 -0700 (PDT)
-Message-ID: <55553cdc-db84-49a6-9576-3e9e630647e0@baylibre.com>
-Date: Thu, 27 Mar 2025 13:56:53 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WJ1q1wZu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0918C4CEE5;
+	Thu, 27 Mar 2025 18:58:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743101881;
+	bh=NCRgSlQwiTeN8gTk1gYPpD6+NtqKakLmbR8E4o+Ga3A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WJ1q1wZuQ9iz9n544qCGhY7nAYiEdWN8bufMkmbmn2NSTuJz9pIqYy6X6khzKWo51
+	 92dD2fdBWguyo2H+9J4/wM0ViHVsA9t2KqShsOms8p1v0utWF4HbOjS3t4/7a1g3mq
+	 iosY3vvg8r8nYgRsD9PvR/qcPLMfoHqqN4RT/qVP3xjUBXrilNKgDRATmxWgfAJ2oX
+	 fEcUlTK7ReTjqnEmcNGngD+UxFCQrrsskhA1EBNjm+UF05QNkBxV8fS13+Hye+lwef
+	 mP+vxD0zxNP7N9YI4HIgJ6UxAG64mkqM7QgE4EzwHlsuui/x8O5gj4x4Jm//bWjJ75
+	 8dXivYyJEGRbA==
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2c77f0136e9so393672fac.3;
+        Thu, 27 Mar 2025 11:58:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU9vkC7WX5a/lguvcoKkjkqNezn+7syDJBRg9CiATwsRmvn1vdhsLhA7hQ7EPWJtR/LTlbl7xrI9l4j@vger.kernel.org, AJvYcCUvImwkj+DbLB57Uh2oMNe2QrkVvf/dlXTLzM+srRd1Nb/kKgKL71/0XILf2F7n32Ubu83UxKDGK8TwsYO0@vger.kernel.org, AJvYcCWtjxX37zLJ5BqiC/q1hv07L7wMpYAuHTlxpVsnBlha2XBCTFmH1OCuSwimWTurmn56lbRmICYwRxZn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5n8WjqtPkn+so9ylbEBhoe81U3eC7osdWHCaJFWMIy2+Guh/A
+	ST7zboUf+S9KKk1LDmd+l6wMUPpcEIyWvF0oaZk+HQ2p4DmfeBSnzvuhhNZOQD5ZtzunTpUQTRo
+	a7z90vrCEbaEtSCG26MyBn1mtRFk=
+X-Google-Smtp-Source: AGHT+IHYW2ZTnoKkUTlzbiUwZcIeb1IO+JEoeqODsoDJB/s8N43IeFO6nFa7Oes6d62s9LbY8f2hVLzaHXcM+PQPbbw=
+X-Received: by 2002:a05:6870:b85:b0:2c2:416e:cf43 with SMTP id
+ 586e51a60fabf-2c847fad778mr2816156fac.12.1743101881047; Thu, 27 Mar 2025
+ 11:58:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/4] iio: adc: ad4000: Add support for SPI offload
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, jic23@kernel.org,
- lars@metafoo.de, Michael.Hennerich@analog.com, corbet@lwn.net
-References: <cover.1742992305.git.marcelo.schmitt@analog.com>
- <d67e71b9fab270d16b6b5e26a3594dfc73be1ae5.1742992305.git.marcelo.schmitt@analog.com>
- <35f4d22a-e478-4a43-bbb6-f9d34ce1f888@baylibre.com>
- <Z-WRMih3UCFjym9p@debian-BULLSEYE-live-builder-AMD64>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <Z-WRMih3UCFjym9p@debian-BULLSEYE-live-builder-AMD64>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250313100658.15805-1-zhoushengqing@ttyinfo.com>
+In-Reply-To: <20250313100658.15805-1-zhoushengqing@ttyinfo.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 27 Mar 2025 19:57:49 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0jBrTuuf_RJ45Eu2OwpRNXS-hFyL-PxGMv2K+jYVQtn2w@mail.gmail.com>
+X-Gm-Features: AQ5f1Jp1J_eN6hewA6UUzyBXH_BVl2jaLQ_7gV07nxC_OS-JOnVwRvNKQ-vuaFs
+Message-ID: <CAJZ5v0jBrTuuf_RJ45Eu2OwpRNXS-hFyL-PxGMv2K+jYVQtn2w@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] Add rev 2 check for PRESERVE_BOOT_CONFIG function
+To: Zhou Shengqing <zhoushengqing@ttyinfo.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, lenb@kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, rafael@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/27/25 12:56 PM, Marcelo Schmitt wrote:
+On Thu, Mar 13, 2025 at 11:07=E2=80=AFAM Zhou Shengqing
+<zhoushengqing@ttyinfo.com> wrote:
+>
+> Per PCI Firmware Specification Revision 3.3 Table 4-7 _DSM Definitions
+> for PCI. Preserve PCI Boot Configuration Initial Revision ID changed to 2=
+.
+>
+> And add acpi_check_dsm() for DSM_PCI_PRESERVE_BOOT_CONFIG.
+>
+> Signed-off-by: Zhou Shengqing <zhoushengqing@ttyinfo.com>
+> ---
+> v5:follow Bjorn advice, add acpi_check_dsm for PCI _DSM.
+> v4:Initialize *obj to NULL.
+> v3:try revision id 1 first, then try revision id 2.
+> v2:add Fixes tag.
+>
+> Fixes: 9d7d5db8e78e ("PCI: Move PRESERVE_BOOT_CONFIG _DSM evaluation to p=
+ci_re")
+> ---
+>  drivers/pci/pci-acpi.c | 43 ++++++++++++++++++++++++++++++------------
+>  1 file changed, 31 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index af370628e583..4f9e0548c96d 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -122,24 +122,43 @@ phys_addr_t acpi_pci_root_get_mcfg_addr(acpi_handle=
+ handle)
+>
+>  bool pci_acpi_preserve_config(struct pci_host_bridge *host_bridge)
+>  {
+> -       if (ACPI_HANDLE(&host_bridge->dev)) {
+> -               union acpi_object *obj;
+> +       bool rc =3D false;
+> +       union acpi_object *obj;
 
-...
++ u64 rev;
 
->>>  	case AD4000_SDI_VIO:
->>> -		indio_dev->info = &ad4000_info;
->>> -		indio_dev->channels = chip->chan_spec;
->>> +		if (st->using_offload) {
->>> +			indio_dev->info = &ad4000_offload_info;
->>> +			indio_dev->channels = &chip->offload_chan_spec;
->>> +			indio_dev->num_channels = 1;
->>> +
->>> +			/* Set CNV/CS high time for when turbo mode is not used */
->>> +			if (!st->cnv_gpio) {
->>> +				spi->cs_inactive.value = st->time_spec->t_conv_ns;
->>> +				spi->cs_inactive.unit = SPI_DELAY_UNIT_NSECS;
->>
->> I'm still not sold on this. We know it has no effect with AXI SPI Engine and
->> it is writing over something that usually comes from DT. It is misleading.
-> 
-> I thought it was okay to set cs_inactive and call spi_setup() from the field
-> doc in include/linux/spi/spi.h.
-> 
-> 	set_cs_timing() method is for SPI controllers that supports
-> 	configuring CS timing.
-> 	
-> 	This hook allows SPI client drivers to request SPI controllers
-> 	to configure specific CS timing through spi_set_cs_timing() after
-> 	spi_setup().
-> 
-> Would it be better to set spi-cs-inactive-delay-ns in ADC dt node?
-> Or it still doesn't look like a proper use of cs_inactive?
-> 
->>
->> And the non-offload case already does:
->>
->> 	xfers[0].cs_change_delay.value = st->time_spec->t_conv_ns;
->>
->> which actually does work with the AXI SPI Engine. So why not be consistent and
->> do it the same way for the offload case?
-> 
-> One of the points in using `bits_per_word` in spi transfers was to reach high
-> frequency sample rate, right? I think it makes sense to use them for SPI offload
-> transfers. But we were also trying to set a proper CNV/CS dealy so that ADC
-> conversion could complete properly before starting requesting the data. That
-> also sound reasonable to me. But, spi_transfer struct doesn't provide a good
-> way of setting a CS inactive delay if only one transfer is executed. If we
-> use `cs_change_delay`, we would then be running two transfers, no? 
+>
+> -               /*
+> -                * Evaluate the "PCI Boot Configuration" _DSM Function.  =
+If it
+> -                * exists and returns 0, we must preserve any PCI resourc=
+e
+> -                * assignments made by firmware for this host bridge.
+> -                */
+> +       if (!ACPI_HANDLE(&host_bridge->dev))
+> +               return false;
+> +
+> +       /*
+> +        * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
+> +        * exists and returns 0, we must preserve any PCI resource
+> +        * assignments made by firmware for this host bridge.
+> +        *
+> +        * Per PCI Firmware r3.2, released Jan 26, 2015,
+> +        * DSM_PCI_PRESERVE_BOOT_CONFIG Revision ID is 1. But PCI Firmwar=
+e r3.3,
+> +        * released Jan 20, 2021, changed sec 4.6.5 to say
+> +        * "lowest valid Revision ID value: 2". So check rev 1 first, the=
+n rev 2.
+> +        */
 
-We would still only be doing one xfer per SPI offload trigger. The only
-difference it would make is that it would ensure that the second trigger
-could not come too soon after the CS deassert of the previous message.
++         for (rev =3D 1; rev <=3D 2; rev++) {
++                 if (!acpi_check_dsm(ACPI_HANDLE(&host_bridge->dev),
+&pci_acpi_dsm_guid,
++                                   rev, BIT(DSM_PCI_PRESERVE_BOOT_CONFIG))=
+)
++                         continue;
++
++                obj =3D
+acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridge->dev), ,
+&pci_acpi_dsm_guid,
++                                  rev, BIT(DSM_PCI_PRESERVE_BOOT_CONFIG));
++                if (obj && obj->integer.value =3D=3D 0)
++                        rc =3D true;
++
++                ACPI_FREE(obj);
++
++                if (rc)
++                       return true;
++         }
++
++         return false;
 
-In other words, the sampling frequency is already supplying this delay
-between subsequent SPI messages. Setting xfers[0].cs_change_delay just
-adds insurance that if the next trigger comes too soon, it will be ignored.
-This could happen, e.g. if someone sets the max SCLK rate to something
-low enough that the single xfer takes longer than the trigger period at
-the max sampling frequency.
+would achieve the same with fewer lines of code and less code
+duplication if I'm not mistaken.
 
-In most cases though, we won't actually see cs_change_delay having any
-effect because the trigger to start the next SPI message doesn't come
-until later.
-
-> Plus, the ADC
-> would be doing two conversions (one after CS deasert of previous message and
-> one after CS deassert at the end of the first transfer) while we only read one
-> of them.
-> 
-> The offload message preparation would look like what we had in v2:
-> 
-> static int ad4000_prepare_offload_turbo_message(struct ad4000_state *st,
-> 						const struct iio_chan_spec *chan)
-> {
-> 	struct spi_transfer *xfers = st->offload_xfers;
-> 
-> 	/* Dummy transfer to guarantee enough CS high time. */
-> 	xfers[0].cs_change = 1;
-> 	xfers[0].cs_change_delay.value = st->time_spec->t_quiet1_ns;
-> 	xfers[0].cs_change_delay.unit = SPI_DELAY_UNIT_NSECS;
-> 
-> 	xfers[1].bits_per_word = chan->scan_type.realbits;
-> 	xfers[1].len = chan->scan_type.realbits > 16 ? 4 : 2;
-> 	xfers[1].delay.value = st->time_spec->t_quiet2_ns;
-> 	xfers[1].delay.unit = SPI_DELAY_UNIT_NSECS;
-> 	xfers[1].offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
-> 
-> 	spi_message_init_with_transfers(&st->offload_msg, xfers, 2);
-> 	st->offload_msg.offload = st->offload;
-> 
-> 	return devm_spi_optimize_message(&st->spi->dev, st->spi, &st->offload_msg);
-> }
-> 
-> Are we worried about a few clock cycles in between transfers but not worried
-> about running an entire dummy transfer?
-> 
-> Plus, I've tested the single-transfer offload message version with ADAQ4003 on
-> CoraZ7 and verified the results were correct.
-> FWIW, I put a copy of the dts I used for the tests at the end of this email.
-> 
->>
->> It also seems safe to omit this altogether in the offload case and assume that
->> the max sample rate will also ensure that the miniumum time for CS deasserted
->> is respected.
-> 
-> If we can assume that, then I think that's another reason why we don't need
-> a dummy transfer to set CS high delay.
-> 
-
-I agree we don't need two xfers, especially in turbo mode.
+> +       if (acpi_check_dsm(ACPI_HANDLE(&host_bridge->dev),
+> +                               &pci_acpi_dsm_guid, 1, BIT(DSM_PCI_PRESER=
+VE_BOOT_CONFIG))) {
+>                 obj =3D acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridge-=
+>dev),
+> -                                             &pci_acpi_dsm_guid,
+> -                                             1, DSM_PCI_PRESERVE_BOOT_CO=
+NFIG,
+> -                                             NULL, ACPI_TYPE_INTEGER);
+> +                                               &pci_acpi_dsm_guid,
+> +                                               1, DSM_PCI_PRESERVE_BOOT_=
+CONFIG,
+> +                                               NULL, ACPI_TYPE_INTEGER);
+>                 if (obj && obj->integer.value =3D=3D 0)
+> -                       return true;
+> +                       rc =3D true;
+> +               ACPI_FREE(obj);
+> +       } else if (acpi_check_dsm(ACPI_HANDLE(&host_bridge->dev),
+> +                                       &pci_acpi_dsm_guid, 2, BIT(DSM_PC=
+I_PRESERVE_BOOT_CONFIG))) {
+> +               obj =3D acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridge-=
+>dev),
+> +                                               &pci_acpi_dsm_guid,
+> +                                               2, DSM_PCI_PRESERVE_BOOT_=
+CONFIG,
+> +                                               NULL, ACPI_TYPE_INTEGER);
+> +               if (obj && obj->integer.value =3D=3D 0)
+> +                       rc =3D true;
+>                 ACPI_FREE(obj);
+>         }
+>
+> -       return false;
+> +       return rc;
+>  }
+>
+>  /* _HPX PCI Setting Record (Type 0); same as _HPP */
+> --
