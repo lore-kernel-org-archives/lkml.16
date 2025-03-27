@@ -1,141 +1,227 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6C120D504
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B1520E003
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743069489; cv=none; b=KtWCASXaMPJnxsrjLXIiQa9cWKpzit30SAD/pHa9IeMIQLB3rnG2/d1s0uv5E0tRZ7X5LEBwPhJn2GpLhKR7QAsiAup/ZW2LmBRT9reulIcLMqY0XSfB7r4v9/EHTFgFmaLBFwQAodizTH/I6Stom/pBrNXoBiVFwo79PpqYQzU=
+	t=1743069491; cv=none; b=SFjMgiQfoAHKOWtU4aGKl44DCIO8AN+FXy11Wt4icNHMsJRchHYxlFX5tsNq8OGu/VFaW39Hm8SWbafrKW6fNCyT+MxD2k8YHVJKWDj8s3KZ3FI1r5Hi3QlWtqxeBMfg+T5kD6R8AGldy9lLWV3e4Fqlzfx64X/ieBwlGPA5nok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743069489; c=relaxed/simple;
-	bh=p3JC4yQhrsYhpFs8EKo57zPThjeS/Gbcpw5YS1QEuI4=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=agd4yhl4vVtz/QElR0wXrWq0eesRA/N4g+cJLyAXj1OvUPL/7I0rHWjEhcNMZExsav+fOFeqCpVLIsDK9F97xoWyF0aXZ6K9gBLIDJnSCFDXSJwHk9X80LSjHAbOlFNB+PW8WhMBWzk9AKmOs7k4fhtFQKRJqpn4/1YSiTD1zMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=kG+/ZIg7; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1743069491; c=relaxed/simple;
+	bh=vWFcy9MqBkU3MS0rkYQfag+265Y0WSAQStIYd8p8iC4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZOKwe3/KNbOx4ulWajin5qXmEbGAzjlKw339XbsU5W1arhrw/bT+Mmb50mgbIBaoXDxnI9/Pa8uSyP35OR+rOSKhfPpwAnyGWv3ultXp1kIvqgYqz1LX5R6ok5NMtsyxzhxxOIgLLFT+6W/b2nhAvPsnUF+zsZt6NZnbbVCBpvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fvYIFBXb; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="kG+/ZIg7"
-Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com [209.85.161.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id A977B3FE2F
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1743069163;
-	bh=B77IjrCuB6vIebp/9p2+ET8GiOtyI9dx9sa72qBo+cs=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=kG+/ZIg7s24EVWtPf3XKfIm1jil8ZtsoxNK+5eOD3TiO9Azs91VwzGnDa2JAryzJT
-	 aQRTtLfhl0aH63EH33ByxYyb4PL+IFhWiklxIRumORZaDk2Pll1Gx4hpRPGpP6y8vN
-	 ObLPwb2bB4sFnrum/fkCDPbsgTkVYv3C+dHb8/DU6XUHJvLyvug3ElJ3BEzyRjv4Ui
-	 //FJOeAHqky3Oj/0gCFz4GEeQJ0I+ANtUdirkL6XAr9F1PEg1qVnsB2vQsd4oDmx46
-	 3GdRSTc8OWFSoT+l2ik7c6YqoIWz4zxrg8nbcLcLkdE4qNg/nm6kO4CxdxUDXXpK9P
-	 yYWo5Ao9qSxFg==
-Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-601e231e8d2so622311eaf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 02:52:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fvYIFBXb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743069488;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o5WRdT56UXd0npVrp/2U96P0CSz3ps8f9h79oyQ+jKU=;
+	b=fvYIFBXbceGgFWsQS337Nb7sN8ixc4P5cX3Ih9mYKrk43IJ7fm64mTLD1Ve120VQ/fL5yU
+	GEOsXtw3pN3ABmdFHD7EguF+JGRPAWGyyWE/QkX6ypupw5jq1Mxy3XDqd4R3Ape7C7zsoy
+	7IqF+GuuDt92pJF22PPfiEmfxsGFLS8=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-657-3xvBKBHONw-ReK7hkmgBmg-1; Thu, 27 Mar 2025 05:58:06 -0400
+X-MC-Unique: 3xvBKBHONw-ReK7hkmgBmg-1
+X-Mimecast-MFC-AGG-ID: 3xvBKBHONw-ReK7hkmgBmg_1743069486
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac6ef2d1b7dso70205666b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 02:58:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743069162; x=1743673962;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B77IjrCuB6vIebp/9p2+ET8GiOtyI9dx9sa72qBo+cs=;
-        b=aY4uzf7y+2Kni2BfnItL6UxD/A9fyfHsMVH7k2rNV6A4Dz17Wev5QrY/eXXsrF497Q
-         s4Cjp87CV5cFdXUi/ckOpe0wHX0/eISCeEJIGn695uG8hPdPtN0NcYbOl2GCrpe8LxwY
-         VYbhCFWPOOyk3JI4lejv7QZaiA+/m60bMOx39kZAF9BFP6297EB4HZptalKj/uuZIJ5t
-         Gau4XG0PaEZj1ba7SobFyAXrtKalp9vMgS6qnb6eOYs9yotJk8Y1vfyNpD99h0Pj/3SN
-         sHJhFhephV1HGud81mRC9R+9/v/arb08JRM59Gez0ExhaHnYA6BP5gaye9lxPQb6oUu/
-         P0Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhygehkEJQFqrkAP6O+UhFgALXytnNlWbswbX4b6VUFuaXABuus4cfbHzSPHZqa3tSgVKwp0a0lT/2zFs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkB4D2wqzqakmYe3e3RXzy5dK5mX+xiUCRRZ+YztPPxa+GRJ4D
-	P+R0d3im+XBkiY8P5vZj2E7z47cqu7q2N17xu8rimg5GWVjW81UJEM6RwCZfL372kFXo6C9UrQz
-	+rQysW5OcmbyM6iOABFJDV5iO90biyM3a7O4Xsbri7wiOZIpwRrQiUlRgM2aB531xCkQvvrPRl7
-	K1eZ1Gpv6IqMr1gnRoZlw54zQ2SbcBsI4BkqVzHrQ05oMSuPaispMk
-X-Gm-Gg: ASbGncvuZ8Awp/qG3GAiwmgha1qjtmdjVVoxXCug8E2vm24ESLGyWhKytfV0wDAitQy
-	Ngd6idC9ATCZ8lZ8eY7VchNt3MJ++CwHNgwJpFSqeS+GCa0eFpSzlM4Qi0883cHyIaVoIVBql
-X-Received: by 2002:a05:6870:d24f:b0:2c1:504f:42ed with SMTP id 586e51a60fabf-2c84819f95bmr1979674fac.29.1743069161479;
-        Thu, 27 Mar 2025 02:52:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE83awQwNx+dMBWzJP2MzicfAHDKESqCJA4TNMWkSjbXkwlUAjf18/JZSrbIX0oCS21SczuNPt9Cl5/K55Brwg=
-X-Received: by 2002:a05:6870:d24f:b0:2c1:504f:42ed with SMTP id
- 586e51a60fabf-2c84819f95bmr1979649fac.29.1743069161029; Thu, 27 Mar 2025
- 02:52:41 -0700 (PDT)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 27 Mar 2025 02:52:40 -0700
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 27 Mar 2025 02:52:40 -0700
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <CH3PR04MB89282DDB25C289C34581DC0083A62@CH3PR04MB8928.namprd04.prod.outlook.com>
-References: <20250320105449.2094192-1-pinkesh.vaghela@einfochips.com>
- <20250320105449.2094192-10-pinkesh.vaghela@einfochips.com>
- <CAJM55Z-LUoeh0pSDnPKpduub_UBOPeg4g3t20JA0GBosJKuiAQ@mail.gmail.com> <CH3PR04MB89282DDB25C289C34581DC0083A62@CH3PR04MB8928.namprd04.prod.outlook.com>
+        d=1e100.net; s=20230601; t=1743069485; x=1743674285;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o5WRdT56UXd0npVrp/2U96P0CSz3ps8f9h79oyQ+jKU=;
+        b=upPYB1OqoOADuBpMk0ir1IL0NXGdu9F7n7So7UrjwAa/veQHAnX/N5zpmnL6kh5sA0
+         UMUjuEOYsM8t8n9dfhTU3dU8yZMhUQ9TFQqy8hm0eLjtU2/OD2g/XhwCP4XYF/I/ntVJ
+         Fq3ccfRycGuG0baCpoar9RsZhuN0gAitVZBV5hECR3qNG3GWLEQlG5jfroGZiqlKQpSP
+         HMFkmhdKnzCyjZLhiVKDrdeGL2slioHPv7c02AkWDiZimWrffxw5slWwfyuQeb8LzFkW
+         FVPIyDeSoQaEwAkc14z7UJZhL21PNMbBfAsX2W1G/vMsFkkxz1aY4WgG6Z4eSsFC44rZ
+         wcuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXlReBF+7PJOlRnBJXB6zvSFjDdo+ZE4GUAbhNijEgkKApWUBIEvyNsEjyyS15f0nJzIEWRPhUEQ+42sEk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8jn4kz95EaUuxoaiYzRk71MdiITI1Pit038j0XewDu477pI2L
+	81ItNDLRwBCsi1WvkKAAUdY748t5hzhNH3Ut03deSIeoSBFBKN2Bf1bt65FXE4YPN0TCWRP1Ofb
+	YSflXfvwI45W2+JsYPd2VRBFVgjfsj/qvTO6rKBQOnlZJrQmi6Vs7raJ4UvT/xA==
+X-Gm-Gg: ASbGncvg00V5xF+YZ31o1QtkiXXlMpQqysrH/tm2AxXlUhKqp6raS3kbubP4nU8Ww00
+	VF0cWJF2HHwcmjtsfAXXdqo8LWe8WJyPZixDrDY8n7JjRc8khrpK3A95IwKdqhHny/EBk9+ypZe
+	RNT4F94kZ/3iruCn+O+MV3m0rnkKqQtzYfWNb+/wcAppTAs92CveYlez5aIBXvqcqUz5kSfRxtN
+	s7R3Fr+W5iAOoDFKohcHglQkTMUp2F79YLB09nWh3JMICz7Hp2RMcyDkysPsXxPn9yvaqXAysY7
+	Ng8gngbjzlAmJe+kRnqC2YTFxMkKdq6q2AUW/A9MdipMWyQ/8aFbGCVNpwX9Oq1g
+X-Received: by 2002:a17:907:1c27:b0:ac2:cf0b:b809 with SMTP id a640c23a62f3a-ac6faefb3c6mr235704566b.31.1743069485404;
+        Thu, 27 Mar 2025 02:58:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEGFF/kF/t3t8RCCYix4B11GQ276Qy+zARToPx5UPq3eGAAcl4NqTpfSAcxFafRrGcMJ2i/Eg==
+X-Received: by 2002:a17:907:1c27:b0:ac2:cf0b:b809 with SMTP id a640c23a62f3a-ac6faefb3c6mr235701966b.31.1743069484718;
+        Thu, 27 Mar 2025 02:58:04 -0700 (PDT)
+Received: from sgarzare-redhat (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef86e56dsm1184197466b.37.2025.03.27.02.58.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 02:58:03 -0700 (PDT)
+Date: Thu, 27 Mar 2025 10:58:00 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: linux-integrity@vger.kernel.org, Sumit Garg <sumit.garg@kernel.org>, 
+	Jens Wiklander <jens.wiklander@linaro.org>, James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>, Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tpm: Make chip->{status,cancel,req_canceled} opt
+Message-ID: <exzxzomw7wcobjuoje37x6i2ta54xzx5ho74t3atd7g74xltlb@ymw2pn3yo27b>
+References: <20250326161838.123606-1-jarkko@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Thu, 27 Mar 2025 02:52:40 -0700
-X-Gm-Features: AQ5f1JqCbdx_VNT37OdJPVr3F0efA0rT47C_sey_CmVIAYSwd2z2XmZaZ3-bc1k
-Message-ID: <CAJM55Z9=0sxXiC20OEe=W0E5S_jHd6JW+7SWvW5JFiu4vpr=nQ@mail.gmail.com>
-Subject: Re: [PATCH v2 09/10] riscv: dts: add initial support for EIC7700 SoC
-To: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>, 
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>, Conor Dooley <conor@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Min Lin <linmin@eswincomputing.com>, 
-	Pritesh Patel <pritesh.patel@einfochips.com>, Yangyu Chen <cyy@cyyself.name>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	Yu Chien Peter Lin <peterlin@andestech.com>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Kanak Shilledar <kanakshilledar@gmail.com>, 
-	Darshan Prajapati <darshan.prajapati@einfochips.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
-	Aradhya Bhatia <a-bhatia1@ti.com>, "rafal@milecki.pl" <rafal@milecki.pl>, Anup Patel <anup@brainfault.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250326161838.123606-1-jarkko@kernel.org>
 
-Pinkesh Vaghela wrote:
-> >
-> > Hi Pinkesh,
-> >
-> > Thank your for the patches!
-> >
-> > Should this not be marked dma-noncoherent to avoid having to mark each
-> > peripheral as such?
+On Wed, Mar 26, 2025 at 06:18:38PM +0200, Jarkko Sakkinen wrote:
+>From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
 >
-> Thanks for your feedback.
+>tpm_ftpm_tee does not require chip->status, chip->cancel and
+>chip->req_canceled. Make them optional.
 >
-> We have not added "dma-noncoherent" because there are no DMA-capable
-> peripherals in the devicetree yet.
-> We planned to add this later when we add any DMA capable devices
-> i.e. sdhci, gmac, sata, pcie, spi.
+>Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
+>---
+> drivers/char/tpm/tpm-interface.c | 31 ++++++++++++++++++++++++++++---
+> drivers/char/tpm/tpm_ftpm_tee.c  | 20 --------------------
+> 2 files changed, 28 insertions(+), 23 deletions(-)
 >
-> Do you recommend to add this property in current version?
+>diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+>index f62f7871edbd..10ba47a882d8 100644
+>--- a/drivers/char/tpm/tpm-interface.c
+>+++ b/drivers/char/tpm/tpm-interface.c
+>@@ -58,6 +58,30 @@ unsigned long tpm_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal)
+> }
+> EXPORT_SYMBOL_GPL(tpm_calc_ordinal_duration);
+>
+>+static void tpm_chip_cancel(struct tpm_chip *chip)
+>+{
+>+	if (!chip->ops->cancel)
+>+		return;
+>+
+>+	chip->ops->cancel(chip);
+>+}
+>+
+>+static u8 tpm_chip_status(struct tpm_chip *chip)
+>+{
+>+	if (!chip->ops->status)
+>+		return 0;
+>+
+>+	return chip->ops->status(chip);
+>+}
+>+
+>+static bool tpm_chip_req_canceled(struct tpm_chip *chip, u8 status)
+>+{
+>+	if (!chip->ops->req_canceled)
+>+		return false;
+>+
+>+	return chip->ops->req_canceled(chip, status);
+>+}
+>+
+> static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+> {
+> 	struct tpm_header *header = buf;
+>@@ -65,6 +89,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+> 	ssize_t len = 0;
+> 	u32 count, ordinal;
+> 	unsigned long stop;
+>+	u8 status;
 
-Yeah, Conor also answered this already.
+Why move `status` out of the do/while block?
 
-> > > +             gpio@51600000 {
-> > > +                     compatible = "snps,dw-apb-gpio";
-> > > +                     reg = <0x0 0x51600000 0x0 0x80>;
-> > > +                     #address-cells = <1>;
-> > > +                     #size-cells = <0>;
-> > > +
-> > > +                     porta: gpio-port@0 {
-> >
-> > Maybe these labels could be something like gpioA, gpioB, etc. to not be
-> > confused with an HDMI port fx.
 >
-> The gpio node labels are based on the example provided in
-> "snps,dw-apb-gpio.yaml" dt-binding and other dtsi.
+> 	if (bufsiz < TPM_HEADER_SIZE)
+> 		return -EINVAL;
+>@@ -104,12 +129,12 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
 >
-> Could you clarify more on how these labels cause confusion with HDMI
-> port as I don't see any example for HDMI port using name as porta, portb?
 
-Sure. Try git grep 'port.*:' -- '*.dts*' and you'll see that "port" labels are
-used for many things that aren't GPIOs. It'll be a lot easier to scan through
-the device tree and see what <&gpioA 27 0> references.
+What about doing an early return avoiding also calling
+tpm_calc_ordinal_duration()?
 
-/Emil
+I mean something like this:
+
+                 rc = 0;
+         }
+
+-       if (chip->flags & TPM_CHIP_FLAG_IRQ)
++       if (!chip->ops->status || chip->flags & TPM_CHIP_FLAG_IRQ)
+                 goto out_recv;
+
+
+Anyway, those are small things, the patch LGTM and it's a great cleanup
+for ftpm and the svsm driver I'm developing!
+
+
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+
+
+> 	stop = jiffies + tpm_calc_ordinal_duration(chip, ordinal);
+> 	do {
+>-		u8 status = chip->ops->status(chip);
+>+		status = tpm_chip_status(chip);
+> 		if ((status & chip->ops->req_complete_mask) ==
+> 		    chip->ops->req_complete_val)
+> 			goto out_recv;
+>
+>-		if (chip->ops->req_canceled(chip, status)) {
+>+		if (tpm_chip_req_canceled(chip, status)) {
+> 			dev_err(&chip->dev, "Operation Canceled\n");
+> 			return -ECANCELED;
+> 		}
+>@@ -118,7 +143,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+> 		rmb();
+> 	} while (time_before(jiffies, stop));
+>
+>-	chip->ops->cancel(chip);
+>+	tpm_chip_cancel(chip);
+> 	dev_err(&chip->dev, "Operation Timed out\n");
+> 	return -ETIME;
+>
+>diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
+>index 8d9209dfc384..53ba28ccd5d3 100644
+>--- a/drivers/char/tpm/tpm_ftpm_tee.c
+>+++ b/drivers/char/tpm/tpm_ftpm_tee.c
+>@@ -164,30 +164,10 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t len)
+> 	return 0;
+> }
+>
+>-static void ftpm_tee_tpm_op_cancel(struct tpm_chip *chip)
+>-{
+>-	/* not supported */
+>-}
+>-
+>-static u8 ftpm_tee_tpm_op_status(struct tpm_chip *chip)
+>-{
+>-	return 0;
+>-}
+>-
+>-static bool ftpm_tee_tpm_req_canceled(struct tpm_chip *chip, u8 status)
+>-{
+>-	return false;
+>-}
+>-
+> static const struct tpm_class_ops ftpm_tee_tpm_ops = {
+> 	.flags = TPM_OPS_AUTO_STARTUP,
+> 	.recv = ftpm_tee_tpm_op_recv,
+> 	.send = ftpm_tee_tpm_op_send,
+>-	.cancel = ftpm_tee_tpm_op_cancel,
+>-	.status = ftpm_tee_tpm_op_status,
+>-	.req_complete_mask = 0,
+>-	.req_complete_val = 0,
+>-	.req_canceled = ftpm_tee_tpm_req_canceled,
+> };
+>
+> /*
+>-- 
+>2.39.5
+>
+
