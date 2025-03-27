@@ -1,118 +1,237 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BE946BF;
-	Thu, 27 Mar 2025 09:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FD020CCC8
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743068005; cv=none; b=r0XBesJt1S5PX2XptubXv/FrJLcL61VNmI+tKzw6afxjUjVUjCAMpMx+rn3Llsi10mJ3Nih9ME8pcsH9nY4LRynRbcN14W6VWR08Mf9e1TzMEIausWMz3o4R0+hLEZu4xvDpyi1G3qHTIZaBZmXx3qeaQ1YKvYNIA3D1Jm9qhaI=
+	t=1743068037; cv=none; b=UXGp1qsCh5ptdj1uWlHJm2WWw9mWt6x6+fmyUHFu975WJNNk3ouP9HsL8fyNdPztPWGO2xHtm6UPEY2dCyRWunTdolBdOcDpo/KiiItyiDAuuDigS5Y0oncvSjHnsf+K38wHcpiRxDvXT51g2huL3aPuFsV4N2+ldbtziD1BW7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743068005; c=relaxed/simple;
-	bh=YNClJrH/6e1Dbh2WpS6rrVYn/ndunKC5gv1xJfe069U=;
+	s=arc-20240116; t=1743068037; c=relaxed/simple;
+	bh=Ux2uTvJSKDFlMu3udvsF6mFtz0qXJP724SLPGRRJ9wc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JN1FNZK64cU5VD+nz/LFnGzXSHXE5LDTf2x4BkS5YTe2ZE/rXDJyp8+3oT3ZFEJK1WRAOLBPcH64UNe0HZ1XMpLwbhG3IC4qx1pvsmnAiXfmKWXFehmmc79to2hYHQMaHHBBdyZw/k3bgwGuD867YMAKxy1Fr+wdwr4E82pA6K4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=UplFAUBB; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	 Content-Type:Content-Disposition:In-Reply-To; b=EtKTPw4zAJE6ZNA/0hhvN2gMOIRevG7qUWUkrsJ5Ff3gnSKrz/t4LhdOMqA4hzCP7sAKLSStmXzpK/lCcoQamIbGhZWl0S0vVWpAySxPT6zMZ1WbRii1kb1qN1h2pfDXyyef8yHBADJaUTgDxvwLF83ID8u8Am/GVJI/DN5roaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aPUVrtRY; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="UplFAUBB"
-Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 59BF41FAC7;
-	Thu, 27 Mar 2025 10:33:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1743067998;
-	bh=78GL+QiKQ+5E/NSdfh6mkzgQppQMhSIUOSmEkzEVLQ8=;
-	h=Received:From:To:Subject;
-	b=UplFAUBBAPfNrEvetkl/PyOlSxnXjzZFTFe7zuyx9KmaKYN3joFaCEkxSTb4/oXkk
-	 6RpSbFxaRKYctavYUh5c4C7JEO1Z41/xfuMDFHvLFKG4L25jmtHcWHod3dsa0jnCQR
-	 Ci4ogRLz00JVzVBggVFS8SoquZUv1kDrc+qtU4EZHtfUfWsdk+yWulZ3lh6S6PCKes
-	 jAbITEiXHe8Wjt9mTvSZa5d+y5MbX2w0rKdvBSYs7Aeh9WGhYSEy9NUPK+9wwXcWOT
-	 d81EmE7DBsuVRY3ndM9n8dz1YuHctEivTd845XSfw8YYA8s7eQhm+R3JUvmoAoOu1E
-	 Ig+LONXHoidoA==
-Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
-	id 045E37F9D6; Thu, 27 Mar 2025 10:33:17 +0100 (CET)
-Date: Thu, 27 Mar 2025 10:33:17 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Francesco Dolcini <francesco@dolcini.it>,
-	Brian Norris <briannorris@chromium.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org
-Subject: Re: [PATCH do not merge 4/4] wifi: mwifiex: add iw61x support
-Message-ID: <Z-UbXduYmx2i0kxz@gaggiata.pivistrello.it>
-References: <20250326-mwifiex-iw61x-v1-0-ff875ed35efc@pengutronix.de>
- <20250326-mwifiex-iw61x-v1-4-ff875ed35efc@pengutronix.de>
- <Z-Pxx983jcb0GTtg@gaggiata.pivistrello.it>
- <Z-QHG0fyM8wRy2FH@pengutronix.de>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aPUVrtRY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743068033;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=h5CNfk8nfXsjqd7Al/TA3/xzYA4Q3Hci3BjuX9fq6Hk=;
+	b=aPUVrtRYOQtJ2L+tR7sL6cHKz7s6DrTZWVcI0kVc/Mc0u6z05FJ0C8gKXSuVhF8OLtl6hn
+	ovGpsmw5FStcEAGXmL67YVjC6xR06fggP4g7/bSCwi+upNPVMjQ8q5gRNmRaK0s40soGTM
+	kNS/oukt7pEWp6YkqtcoGJMFdH3LEp4=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-610-tQkcSQrjM6a5PcEGBpm0rQ-1; Thu, 27 Mar 2025 05:33:52 -0400
+X-MC-Unique: tQkcSQrjM6a5PcEGBpm0rQ-1
+X-Mimecast-MFC-AGG-ID: tQkcSQrjM6a5PcEGBpm0rQ_1743068030
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ac3e0c13278so58124866b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 02:33:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743068030; x=1743672830;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h5CNfk8nfXsjqd7Al/TA3/xzYA4Q3Hci3BjuX9fq6Hk=;
+        b=Ip5n7osexWQZQqfh1/n6HUSbX19FT/l4izOSt2iJuIme8wBDLLR42890tpGcwx+tKp
+         gH4kiHgEF0/GJLfuXOh4zARbawyyItQgvP4DditQBEx3vuEG0J9ERMcJ8/3Qy6xnISIU
+         dhOPoPnOMQA3h77VwpFS7ihyza/HZrOAGTB1HXQkubrBn/k5hvLI7cVChYIQAJZp9dpX
+         VdHqgxQZIpz5Sc+NcWZUYkeFsitxh16JlEvCQQaBr44DEoWTwXSc9t64haEQP0ImIvln
+         Trx+TioR0xMNMskWyPXviBndbR3m/fh6hIR7NtI78+QFJfL/j73/g+XtW8sQEutE7Rex
+         Ew9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXLAUMl/hDZPfmmL/FPBgwXcbvMmiTH9nMDisoSrcpM1awXEbv4PBxEXmbl4Ba9U1lf9McSv63n3vd/26M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjhJT1NYPZpOif7eDZ1WW93VkI64PTc39WovRA87oFDpR0B/fo
+	wXote9LpvU98oeK+IdN+Y0/td/kQ2zIkva/EHRkDLcaBqP4HTrjE/bHmFEmadVV07D9fn7SJGS9
+	7CjazRTEDdZnTp15LnLr+zbSG4thSM9DMNazyTWK1hNAlEL7mkYrJgdqTAFps
+X-Gm-Gg: ASbGncvqb/hZu/qNFg8009fXrT9K/hKrKC65j6rARs9NBsM26WiMTHGZjWHVeI/i9dU
+	A9DJAxVbd49QE0zqKBCevDzsb79YgFAcZ9VcRk5BOfMOsvu75sN3lb/gDieeswQhvl0kqvRWtuC
+	HBIEkWbb5YAp5mdvEtocXn7VzXFehVacB3ydWrvm9juhTXJtSLj3ytFG+ANSzBLaaw26RDJwTCF
+	CunsRDtqw6RFHue37HGh1YFcOo+AXD+ohLwO/e3mIUsJOXzW2sKDgQyq6QrWLs+kyjcVuvXsK26
+	+QY5RFhorPe6/04G3ezPjqGdxi3rE9CjG24=
+X-Received: by 2002:a17:907:9485:b0:ac2:87b0:e4a5 with SMTP id a640c23a62f3a-ac6faeaf925mr243559866b.2.1743068030169;
+        Thu, 27 Mar 2025 02:33:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE2zYSC7bMfUbOdY5puF0aDWWJJczWfClUA+AIABeR6/ROC8MRiCRtqFsrSolJNpWyhPAQwww==
+X-Received: by 2002:a17:907:9485:b0:ac2:87b0:e4a5 with SMTP id a640c23a62f3a-ac6faeaf925mr243555966b.2.1743068029638;
+        Thu, 27 Mar 2025 02:33:49 -0700 (PDT)
+Received: from thinky (ip-217-030-074-039.aim-net.cz. [217.30.74.39])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efd47f44sm1185448066b.163.2025.03.27.02.33.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 02:33:49 -0700 (PDT)
+Date: Thu, 27 Mar 2025 10:33:47 +0100
+From: Andrey Albershteyn <aalbersh@redhat.com>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Richard Henderson <richard.henderson@linaro.org>, 
+	Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] fs: introduce getfsxattrat and setfsxattrat
+ syscalls
+Message-ID: <faqun3wrpvwrhwukql3niqvvauy5ngrpytx5bxbrv5xkounez3@m7j2znjuzapu>
+References: <20250321-xattrat-syscall-v4-0-3e82e6fb3264@kernel.org>
+ <20250321-xattrat-syscall-v4-3-3e82e6fb3264@kernel.org>
+ <CAOQ4uxj2Fqmc_pSD4bqqoQu7QjmgSVp2V15FbmBdTNqQ03aPGQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z-QHG0fyM8wRy2FH@pengutronix.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOQ4uxj2Fqmc_pSD4bqqoQu7QjmgSVp2V15FbmBdTNqQ03aPGQ@mail.gmail.com>
 
-On Wed, Mar 26, 2025 at 02:54:35PM +0100, Sascha Hauer wrote:
-> On Wed, Mar 26, 2025 at 01:23:35PM +0100, Francesco Dolcini wrote:
-> > On Wed, Mar 26, 2025 at 01:18:34PM +0100, Sascha Hauer wrote:
-> > > This adds iw61x aka SD9177 support to the mwifiex driver. It is named
-> > > SD9177 in the downstream driver, I deliberately chose the NXP name in
-> > > the driver.
-> > > 
-> > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > > ---
-> > >  drivers/net/wireless/marvell/mwifiex/sdio.c | 79 +++++++++++++++++++++++++++++
-> > >  drivers/net/wireless/marvell/mwifiex/sdio.h |  3 ++
-> > >  include/linux/mmc/sdio_ids.h                |  3 ++
-> > >  3 files changed, 85 insertions(+)
-> > > 
-> > > diff --git a/drivers/net/wireless/marvell/mwifiex/sdio.c b/drivers/net/wireless/marvell/mwifiex/sdio.c
-> > > index cbcb5674b8036..7b4045a40df57 100644
-> > > --- a/drivers/net/wireless/marvell/mwifiex/sdio.c
-> > > +++ b/drivers/net/wireless/marvell/mwifiex/sdio.c
-> > 
-> > ...
-> > 
-> > > @@ -3212,3 +3289,5 @@ MODULE_FIRMWARE(SD8978_SDIOUART_FW_NAME);
-> > >  MODULE_FIRMWARE(SD8987_DEFAULT_FW_NAME);
-> > >  MODULE_FIRMWARE(SD8997_DEFAULT_FW_NAME);
-> > >  MODULE_FIRMWARE(SD8997_SDIOUART_FW_NAME);
-> > > +MODULE_FIRMWARE(IW612_DEFAULT_FW_NAME);
-> > > +MODULE_FIRMWARE(IW612_SDIOUART_FW_NAME);
-> > > diff --git a/drivers/net/wireless/marvell/mwifiex/sdio.h b/drivers/net/wireless/marvell/mwifiex/sdio.h
-> > > index 65d142286c46e..97759456314b0 100644
-> > > --- a/drivers/net/wireless/marvell/mwifiex/sdio.h
-> > > +++ b/drivers/net/wireless/marvell/mwifiex/sdio.h
-> > > @@ -29,6 +29,9 @@
-> > >  #define SD8987_DEFAULT_FW_NAME "mrvl/sd8987_uapsta.bin"
-> > >  #define SD8997_DEFAULT_FW_NAME "mrvl/sdsd8997_combo_v4.bin"
-> > >  #define SD8997_SDIOUART_FW_NAME "mrvl/sdiouart8997_combo_v4.bin"
-> > > +#define IW612_DEFAULT_FW_NAME "nxp/sdsd_nw61x.bin"
-> > > +#define IW612_SDIOUART_FW_NAME "nxp/sd_w61x.bin"
-> > 
-> > Is there a way to have BT over SDIO with iw61x? I was sure only sd-uart was
-> > possible.
+On 2025-03-23 09:56:25, Amir Goldstein wrote:
+> On Fri, Mar 21, 2025 at 8:49 PM Andrey Albershteyn <aalbersh@redhat.com> wrote:
+> >
+> > From: Andrey Albershteyn <aalbersh@redhat.com>
+> >
+> > Introduce getfsxattrat and setfsxattrat syscalls to manipulate inode
+> > extended attributes/flags. The syscalls take parent directory fd and
+> > path to the child together with struct fsxattr.
+> >
+> > This is an alternative to FS_IOC_FSSETXATTR ioctl with a difference
+> > that file don't need to be open as we can reference it with a path
+> > instead of fd. By having this we can manipulated inode extended
+> > attributes not only on regular files but also on special ones. This
+> > is not possible with FS_IOC_FSSETXATTR ioctl as with special files
+> > we can not call ioctl() directly on the filesystem inode using fd.
+> >
+> > This patch adds two new syscalls which allows userspace to get/set
+> > extended inode attributes on special files by using parent directory
+> > and a path - *at() like syscall.
+> >
+> > CC: linux-api@vger.kernel.org
+> > CC: linux-fsdevel@vger.kernel.org
+> > CC: linux-xfs@vger.kernel.org
+> > Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
+> > Acked-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> ...
+> > +SYSCALL_DEFINE5(setfsxattrat, int, dfd, const char __user *, filename,
+> > +               struct fsxattr __user *, ufsx, size_t, usize,
+> > +               unsigned int, at_flags)
+> > +{
+> > +       struct fileattr fa;
+> > +       struct path filepath;
+> > +       int error;
+> > +       unsigned int lookup_flags = 0;
+> > +       struct filename *name;
+> > +       struct mnt_idmap *idmap;.
 > 
-> The communication to the Bluetooth module indeed is UART only.
+> > +       struct dentry *dentry;
+> > +       struct vfsmount *mnt;
+> > +       struct fsxattr fsx = {};
+> > +
+> > +       BUILD_BUG_ON(sizeof(struct fsxattr) < FSXATTR_SIZE_VER0);
+> > +       BUILD_BUG_ON(sizeof(struct fsxattr) != FSXATTR_SIZE_LATEST);
+> > +
+> > +       if ((at_flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH)) != 0)
+> > +               return -EINVAL;
+> > +
+> > +       if (!(at_flags & AT_SYMLINK_NOFOLLOW))
+> > +               lookup_flags |= LOOKUP_FOLLOW;
+> > +
+> > +       if (at_flags & AT_EMPTY_PATH)
+> > +               lookup_flags |= LOOKUP_EMPTY;
+> > +
+> > +       if (usize > PAGE_SIZE)
+> > +               return -E2BIG;
+> > +
+> > +       if (usize < FSXATTR_SIZE_VER0)
+> > +               return -EINVAL;
+> > +
+> > +       error = copy_struct_from_user(&fsx, sizeof(struct fsxattr), ufsx, usize);
+> > +       if (error)
+> > +               return error;
+> > +
+> > +       fsxattr_to_fileattr(&fsx, &fa);
+> > +
+> > +       name = getname_maybe_null(filename, at_flags);
+> > +       if (!name) {
+> > +               CLASS(fd, f)(dfd);
+> > +
+> > +               if (fd_empty(f))
+> > +                       return -EBADF;
+> > +
+> > +               idmap = file_mnt_idmap(fd_file(f));
+> > +               dentry = file_dentry(fd_file(f));
+> > +               mnt = fd_file(f)->f_path.mnt;
+> > +       } else {
+> > +               error = filename_lookup(dfd, name, lookup_flags, &filepath,
+> > +                                       NULL);
+> > +               if (error)
+> > +                       return error;
+> > +
+> > +               idmap = mnt_idmap(filepath.mnt);
+> > +               dentry = filepath.dentry;
+> > +               mnt = filepath.mnt;
+> > +       }
+> > +
+> > +       error = mnt_want_write(mnt);
+> > +       if (!error) {
+> > +               error = vfs_fileattr_set(idmap, dentry, &fa);
+> > +               if (error == -ENOIOCTLCMD)
+> > +                       error = -EOPNOTSUPP;
 > 
-> I think nxp/sdsd_nw61x.bin contains firmwares for both the WiFi and
-> Bluetooth chip. When using this you can use the Bluetooth UART directly
-> without uploading a separate Bluetooth firmware.
+> This is awkward.
+> vfs_fileattr_set() should return -EOPNOTSUPP.
+> ioctl_setflags() could maybe convert it to -ENOIOCTLCMD,
+> but looking at similar cases ioctl_fiemap(), ioctl_fsfreeze() the
+> ioctl returns -EOPNOTSUPP.
 > 
-> nxp/sd_w61x.bin only contains the WiFi firmware, so you have to
-> upload a separate Bluetooth firmware over the UART interface.
+> I don't think it is necessarily a bad idea to start returning
+>  -EOPNOTSUPP instead of -ENOIOCTLCMD for the ioctl
+> because that really reflects the fact that the ioctl is now implemented
+> in vfs and not in the specific fs.
+> 
+> and I think it would not be a bad idea at all to make that change
+> together with the merge of the syscalls as a sort of hint to userspace
+> that uses the ioctl, that the sycalls API exists.
+> 
+> Thanks,
+> Amir.
+> 
 
-If that the case what you did here is not correct.
+Hmm, not sure what you're suggesting here. I see it as:
+- get/setfsxattrat should return EOPNOTSUPP as it make more sense
+  than ENOIOCTLCMD
+- ioctl_setflags returns ENOIOCTLCMD which also expected
 
-The 2 firmware files here are used file depending on the BT host interface used
-on the Wi-Fi/BT chip, and this is read from some strapping register. See commit
-255ca28a659d ("mwifiex: Select firmware based on strapping").
+Don't really see a reason to change what vfs_fileattr_set() returns
+and then copying this if() to other places or start returning
+EOPNOTSUPP.
 
-BTW, this name sdsd_nw61x.bin is confusing, I would have expected this to be
-something like sduart_nw61x.bin.
-
-Francesco
+-- 
+- Andrey
 
