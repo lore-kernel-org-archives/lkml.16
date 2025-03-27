@@ -1,58 +1,58 @@
 Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8019621A42C;
-	Thu, 27 Mar 2025 14:42:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A777A21A42C;
+	Thu, 27 Mar 2025 14:42:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743086536; cv=none; b=VNqdbzNZYATpCm1vxPkfssao0x1Fe06UJNqDTLel71N4uaDVuCIW+Vn1ZDDVkpjfSFq+22Mo/A0Qu0WJWmIuBnddqR+B27UY0Ea5LJlhyp90ybMhD3eUP7/KJi8fZ+cV4ejisWI+Zv06cjZgvnASGvKMHiu1qv5xhegCRNdHkOc=
+	t=1743086542; cv=none; b=j7rjadvR/LIokpFP2FqjFbEBA4zx2BzXzXJaM/WTwmL5rzk4SCZQ785k85ZCmvTVWZA+u6iSf91rHImDBLzN0YRTdRw4rgyijhJzvp4WX3GLY+sfU6GRptMNncFziBzZNTxUoksIDHeqmj5fkemFZGAxDaAcAyGvR+QW24jsSuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743086536; c=relaxed/simple;
-	bh=xgfSMByKcbji7aWh8I6gCHTwWvN5zOwylGHfEdIZuQ0=;
+	s=arc-20240116; t=1743086542; c=relaxed/simple;
+	bh=K4hbuDBtgMNqSlKw4GfKX7Ni5NNKcWd6SVVRt1I/7AQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NA33yei4aVNV+NEmzJm9SS9x6pkCm1olZMGcDD+RPKdGc83mGSj42pguonjO4YyQg7GQ48nhjpfA8BdRz8YilAeAFvhVaIUo27GF3cy3mGm6bur2tFcYvfXLt0czg8LiZEaP3Mat+R5b3UoE0I/EFKjcF6Jw+1/O9lsB9r5On6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=DEGZ1kDp; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Kv7Xr2NN reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+	 MIME-Version; b=nPSJy1Gl7NtGx55di2aGc/3DHSy/gyhgz5RugGk81MoFAC2trqtwW+s99Y3gYt4P3He4ajPcGEjy81uwTXS3G/1EBqSjl5Zfkv0mf3bYHWFLYcO2/X9s3WZ+vxrVzt0/3ZlTO4A2RWQ+9e5Jbi7ARJJSHBhGwifDtARG/Lb+ORk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=aui0HEVK; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=iaBD9b9v reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="DEGZ1kDp";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Kv7Xr2NN"
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="aui0HEVK";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="iaBD9b9v"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1743086535; x=1774622535;
+  t=1743086541; x=1774622541;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=6YNfkmjBEpl78C8o+VXKeiiZ5HsFlTCVKYcfoP2BLoQ=;
-  b=DEGZ1kDpbRYJbdCTX/CsMuQy/EKUzAjGKXXA+TpNSIHD3mYy5BbaxN7D
-   0R2k5qB7p2NNtdtI9b/HXVpFwSU6jw5kEifRRlm/v40JwmDxDImUmV9Fx
-   tBd5X2C8HWRyl4dbrG6CAHv5bGNxw9ohAc5MjgaxOmmvj78OvDNLT/2JM
-   7SCjaQ53OVGXUBuyRvMGFzRTgDW8efrpzKe2O+AfUJKcyMBIljTx+FKt3
-   vExf54RxokbzyCOQWNw+T/bKs6hSnaSSUyysK7jFHrv0V78YpQn3Zlr5j
-   5/CVeWXeHNWVlFHDbD8lhBOCjVQTNGhd3FXlBZz+3qHf0R1+ZhimSnjkf
+  bh=srwM4VsZ3yBl7ZsVSs0wHvvduH05/skwoi+WfoH3Tmo=;
+  b=aui0HEVKp5NeKdJxzHC3T9sGq4vah9aq1GHnmTpKB/soX01vgN+o/5qM
+   ikdmxUHn7Rk7Zbvxcm4HZEicZxg7RmrQsJeBfUOD96wZMtsL7fOSULdlU
+   krBczcRRMRLQ9wAuSuLI55VJbKNqed0VqbwZ9IS5l3J3bVWY3mN8P7rGc
+   hrlTDur0q7Oq23sH0py7q7klIo6DtICSRsaULkMTiXavP7XnRabpyqd4t
+   kXEFpDWF/WdvwjspleAI/ErykHktdd9ilUUBAMxhrc7ok1cPJd1cnCuGe
+   bvMpiR7Wg1XfH13jZTN2MIMhnFhwirwD2PldiXhDcR6uQBXSX1KN91B93
    g==;
-X-CSE-ConnectionGUID: Br8qnwf0Qq60ESe56KU3NQ==
-X-CSE-MsgGUID: BLyB5sCWQPKYXU1SEfhd7w==
+X-CSE-ConnectionGUID: pS1I6QmnQoO+BIuMOgiltg==
+X-CSE-MsgGUID: iFM4zChRT5e9kvjR21TWOA==
 X-IronPort-AV: E=Sophos;i="6.14,280,1736809200"; 
-   d="scan'208";a="43199529"
+   d="scan'208";a="43199531"
 Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 27 Mar 2025 15:42:14 +0100
-X-CheckPoint: {67E563C5-2A-2417938-F0170C2B}
-X-MAIL-CPID: 75030C97507DB47327ED4CC8C6056591_2
-X-Control-Analysis: str=0001.0A006378.67E563BF.0005,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B671E16C181;
-	Thu, 27 Mar 2025 15:42:07 +0100 (CET)
+  by mx1.tq-group.com with ESMTP; 27 Mar 2025 15:42:20 +0100
+X-CheckPoint: {67E563CB-1D-903EAEAC-E04C76C8}
+X-MAIL-CPID: 94219BFC4AF9ED8D941571B08335DEB8_5
+X-Control-Analysis: str=0001.0A006396.67E563C4.0009,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 69A4E16C181;
+	Thu, 27 Mar 2025 15:42:14 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1743086529;
+	s=dkim; t=1743086535;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6YNfkmjBEpl78C8o+VXKeiiZ5HsFlTCVKYcfoP2BLoQ=;
-	b=Kv7Xr2NNYpuS7yGBvdEV7vx+l+Oz1rICsQjR1xUZSTZBoprZZWoXuH2ToqgyP9K6LxPv7o
-	nyzwSiSxb9fceQXmxwFSGz1lDCzK2mcqkoxgPrY4X156MGYmGQSeOMZiohmC5Iknng7UH/
-	tjN6uf35QC4YSk8Y+oNJcanzxvk5VwpDAeVt7cNz0CIh8jwHlTLxF2EufXqOPcxto0rks6
-	3SIe8ddk98a7KHJ1Kvr8rejmjHt11gbqAUWdwZvreye/kQCG4zPFJrDt2Jq5j3VQy9//av
-	dHl5gb71ZXYPvAEuaJq3/kodRPrv6Av9aK+N8XO1w0EcNtkoVH4weOU+7J0L1w==
+	bh=srwM4VsZ3yBl7ZsVSs0wHvvduH05/skwoi+WfoH3Tmo=;
+	b=iaBD9b9vTEq2NAOOIK5ytG3gc3B/jeqSt17kFp2XUUAvYSbfRn+rdT8CfiweucE6GH+cCY
+	SXEbXx0GJih0T20HHB/TRe4CanZwQfcaFHDW+YXFAA1tVBCqbda+090dI+KbWLb3hqRc5M
+	iWJQk/lb8uoYx77p696vrjzIgTrxqhhwjEls/mVR/B95LWi8sRmblnA/J5MCP9Xr/PFbpz
+	5RTh5xaVZz3wtqvUzTlRYPtLZDf0IxZ+1S0Iq4H1nHS6BrPAt3MjJ5biYltytMiNPf/x2B
+	n4JSyFNYRpcVojUcLNpQWdwMDrOd/qsoDHeWCtD57xTnWEgGQeCdP7YNNRI8Hg==
 From: Alexander Stein <alexander.stein@ew.tq-group.com>
 To: Shawn Guo <shawnguo@kernel.org>,
 	Rob Herring <robh@kernel.org>,
@@ -62,9 +62,9 @@ Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 6/7] ARM: dts: ls1021a-tqmals1021a: Add overlay for CDTech DC44 RGB display
-Date: Thu, 27 Mar 2025 15:41:12 +0100
-Message-ID: <20250327144118.504260-7-alexander.stein@ew.tq-group.com>
+Subject: [PATCH 7/7] ARM: dts: ls1021a-tqmals1021a: change sound card model name
+Date: Thu, 27 Mar 2025 15:41:13 +0100
+Message-ID: <20250327144118.504260-8-alexander.stein@ew.tq-group.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250327144118.504260-1-alexander.stein@ew.tq-group.com>
 References: <20250327144118.504260-1-alexander.stein@ew.tq-group.com>
@@ -77,91 +77,33 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-This adds an overlay for the supported RGB display CDTech DC44.
-DCU graphics chain is configured accordingly.
+The card name for ALSA is generated from the model name string and
+is limited to 16 characters. Use a shorter name to prevent cutting the
+name.
+MBLS1021A uses the same audio codec as most i.MX based starter kits
+by TQ-Systems. Adjust the sound card model to i.MX based platforms,
+as done by commit e6303798b6ac4 ("arm64: dts: imx8mp-tqma8mpql-mba8mpxl:
+change sound card model name"). This allows sharing a default asound.conf
+in BSP over all the kits.
 
 Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 ---
- arch/arm/boot/dts/nxp/ls/Makefile             |  2 +
- ...-tqmls1021a-mbls1021a-rgb-cdtech-dc44.dtso | 55 +++++++++++++++++++
- 2 files changed, 57 insertions(+)
- create mode 100644 arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-dc44.dtso
+ arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/nxp/ls/Makefile b/arch/arm/boot/dts/nxp/ls/Makefile
-index 7b97b718ebc16..53240b04c9688 100644
---- a/arch/arm/boot/dts/nxp/ls/Makefile
-+++ b/arch/arm/boot/dts/nxp/ls/Makefile
-@@ -9,7 +9,9 @@ dtb-$(CONFIG_SOC_LS1021A) += \
+diff --git a/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a.dts b/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a.dts
+index 80dae0c09542d..5606585dd5607 100644
+--- a/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a.dts
++++ b/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a.dts
+@@ -157,7 +157,7 @@ port {
  
- ls1021a-tqmls1021a-mbls1021a-hdmi-dtbs += ls1021a-tqmls1021a-mbls1021a.dtb ls1021a-tqmls1021a-mbls1021a-hdmi.dtbo
- ls1021a-tqmls1021a-mbls1021a-lvds-tm070jvhg33-dtbs += ls1021a-tqmls1021a-mbls1021a.dtb ls1021a-tqmls1021a-mbls1021a-lvds-tm070jvhg33.dtbo
-+ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-dc44-dtbs += ls1021a-tqmls1021a-mbls1021a.dtb ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-dc44.dtbo
- ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21-dtbs += ls1021a-tqmls1021a-mbls1021a.dtb ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtbo
- dtb-$(CONFIG_SOC_LS1021A) += ls1021a-tqmls1021a-mbls1021a-hdmi.dtb
- dtb-$(CONFIG_SOC_LS1021A) += ls1021a-tqmls1021a-mbls1021a-lvds-tm070jvhg33.dtb
-+dtb-$(CONFIG_SOC_LS1021A) += ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-dc44.dtb
- dtb-$(CONFIG_SOC_LS1021A) += ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtb
-diff --git a/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-dc44.dtso b/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-dc44.dtso
-new file mode 100644
-index 0000000000000..146d45601f693
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-dc44.dtso
-@@ -0,0 +1,55 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR MIT)
-+/*
-+ * Copyright 2013-2014 Freescale Semiconductor, Inc.
-+ * Copyright 2018-2025 TQ-Systems GmbH <linux@ew.tq-group.com>,
-+ * D-82229 Seefeld, Germany.
-+ * Author: Alexander Stein
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/dts-v1/;
-+/plugin/;
-+
-+&backlight_dcu {
-+	status = "okay";
-+};
-+
-+&dcu {
-+	status = "okay";
-+
-+	port {
-+		dcu_out: endpoint {
-+			remote-endpoint = <&panel_in>;
-+		};
-+	};
-+};
-+
-+&display {
-+	compatible = "cdtech,s070swv29hg-dc44";
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	polytouch: touchscreen@38 {
-+		compatible = "edt,edt-ft5406", "edt,edt-ft5x06";
-+		reg = <0x38>;
-+		interrupt-parent = <&pca9554_0>;
-+		interrupts = <6 IRQ_TYPE_EDGE_FALLING>;
-+		/* LCD_PWR_EN -> TSC_WAKE */
-+		wake-gpios = <&pca9554_1 4 GPIO_ACTIVE_HIGH>;
-+		iovcc-supply = <&reg_3p3v>;
-+		vcc-supply = <&reg_3p3v>;
-+		gain = <20>;
-+		touchscreen-size-x = <800>;
-+		touchscreen-size-y = <480>;
-+	};
-+};
-+
-+&panel_in {
-+	remote-endpoint = <&dcu_out>;
-+};
+ 	sound {
+ 		compatible = "fsl,imx-audio-tlv320aic32x4";
+-		model = "ls1021a-mbls1021a-tlv320aic32";
++		model = "tqm-tlv320aic32";
+ 		ssi-controller = <&sai1>;
+ 		audio-codec = <&tlv320aic32x4>;
+ 	};
 -- 
 2.43.0
 
