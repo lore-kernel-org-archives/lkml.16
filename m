@@ -1,178 +1,178 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090EA219A9D;
-	Thu, 27 Mar 2025 19:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F97321D3C0
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 19:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743104417; cv=none; b=h16tXbVzO3fa1G6pSi5zPE92VF0fo0xrKDaakhomQ/YPcH/fmqZpUVyUrLlhH/5hoeudcEt0VNhk7NUFHf44YY5JJPltiAUFGCeexxg97zCe3tOj0x4Wnkqb9v6JldWbOTAL3YXBNC/PKnm4dgxRlc+Cyhr5j5QBeZ7oDsdLmoo=
+	t=1743104431; cv=none; b=qqGQ//fFjHi+kIlnhXNm0xUfKsJpjj65fmmvLCtq/TfwVa/0yPuTpVzmEDN9xmCCtdE5+ly5Q9ex1hpTT482/skqFlMeSAIswaQ2MPHE34MgiAtef9CH7Izp0Av5d9ZQk5xjrWiWF61TOyurDRxko2nNi3Ll62h1PV+XUteRRoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743104417; c=relaxed/simple;
-	bh=sExg9F8y8vGlQy/7nA7zkKPHGm1kx8ymbfVtL2PE38A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LA5qqbqDGGUHpA03lZNpN+a/W3UzjnoabqgYVijH2+VyEXGeeohEdXQdwf5Pdu9NCOvUU8PWwwRTU0q40DDguI+SaR6yTFterKrNNaNHUpVIXJ1QLJBkHzYchlLKUQHeZLKN/hhcnbMtFi2FTFVSFwsqSQRRZgYFfkk3N+3C6VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=plHOSKhi; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1743104431; c=relaxed/simple;
+	bh=Am6MfhmhhKahON+wcT6CJkFPn4eNFrNyfxwl40UWhHE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JJO0V50GkNAUJgp/CPbMAvwYr5HdyJBpQ/CQW37+Sl6PSDKwm1hiMS59b4ogF7jKzyejggRwrTgauSu/B+/FwEVOZDdjKsJmrjDYK/jkAy+Wgm7IBmWuOqRvr2ZBpJ4j9HAqFO2+TH/UPrbu/X+Nny77oZxKlqwgAT6OkohG7yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=T90HRIns; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="plHOSKhi"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6C0DA446;
-	Thu, 27 Mar 2025 20:38:25 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743104305;
-	bh=sExg9F8y8vGlQy/7nA7zkKPHGm1kx8ymbfVtL2PE38A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=plHOSKhi6KcECMrx+0gSCODQ0vqJGdU7L/Uu+YerzWTQYTmEqNYh76XmD/FrNZVD0
-	 e12hkjaI5AV2PvOMlsUxjYOY0O/wjAAlR4H2nkJvKXoVaipBKQA8HQcOlXStQ9WH0O
-	 E4r3BiGX2gKE3S6ndMahDXFx6fluDFjVyjOU36Jk=
-Date: Thu, 27 Mar 2025 21:39:51 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-	Robert Chiras <robert.chiras@nxp.com>,
-	"Guoniu.zhou" <guoniu.zhou@nxp.com>
-Subject: Re: [PATCH v3 06/12] media: dt-bindings: nxp,imx8mq-mipi-csi2: Add
- i.MX8QM(QXP) compatible strings
-Message-ID: <20250327193951.GF4861@pendragon.ideasonboard.com>
-References: <20250210-8qxp_camera-v3-0-324f5105accc@nxp.com>
- <20250210-8qxp_camera-v3-6-324f5105accc@nxp.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="T90HRIns"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e5c9662131so2203996a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:40:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1743104427; x=1743709227; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1JEq/0HpybPrPkftoA0ZBHzqv4jivtz6CrXQUZogyrs=;
+        b=T90HRInsQS0OK8MZrmYTQjIXtw7B5RJCo3tWDPvbIl7rcqLazG+zCtXkMZrdaLZi67
+         Con/ATOCTkO27H6ajxNcAxbkiNAC4wXXaR9GLQn44QnPhiN5BqZW08OBQrN8mMXCUCtV
+         7rfOBBAcdFen1xBXzbxhqPSsEaLJEqwSotXNo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743104427; x=1743709227;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1JEq/0HpybPrPkftoA0ZBHzqv4jivtz6CrXQUZogyrs=;
+        b=Sv3rsY6Cmv3xEJY8PSPp0RexVaNO0MzVDT08ztgsbOhdGHlAVff4YZcEmOSA1FrN5A
+         nMs1WlWdyEZ9V7ilwVVh6iTor55rmi3iGAUP0hDOJOpURmKVCj8Yq3kBmJ1iONhZriVL
+         udYgYr/jodHN64xGW0VPmuCVyx53bRxm3a+riVCQOWpaxHE3qNI6lhXFcB4xUBjCzA9U
+         kK8vYG7ftqSGgj7nLVyy2nQE8KoMK9TvZZIMOLSIaUNhYfRBaTG+Lsji5CcgYxzcBsHx
+         lf6GQ1i1rM04ZR/kMNUkWiWcXolJBTSzYgnY19eQuhJ67FT17ZTxc1ZWMATyzgcdUrnP
+         7LjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUyt0bC/62w0kNUz/oSqh/7/52KP3faJrpncp1vO3n4WB/+jvCAmcAtYB3V3JqPcunDUIznSJcYK1VEOew=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3jZ3SYIUGTqjxaJNEl0+6FYpPLLFWmwDJw47ESL+II5wyo6Rt
+	psx0P16EW9eE/D3Z7GJf7wqxnNIeqxqwFtS8+S+YBcCS+yoaSqbfoE/Pf/duexKC3ss6k7JMvGY
+	xDfg=
+X-Gm-Gg: ASbGncut3ztbjZhMev0+eHnPTooD/oHrnfzWpLcFJI6N/JAg6HYxu1EUHr3pA0Ea7Nf
+	ip3kRFGd3bsMuScIerbRP6L6Nwyb1wCwzhX4kOaLM/KHnts5pUirkI5pba6DscILGMjSuraGkJZ
+	2I9gx25Wkxc7ZtYz4cGOlcrfsa1sFtWN4OvRcUNyY3UdA0oi2InabfHZfv2IBQgSJqODLkDP1D3
+	vYFuUlM8DvG6Y2vbIsc1aWCX4c74X8Kev/S+/jQKmlZeQg87LE1Wn6QqQR3YNUq7t4GbUHSZXqF
+	hHZ9VLhx/L8pJUdC8KYb696rAcq92xTSeYLdAmCLiC8kBr/9CpyxyK9+u1+Ce7LWodzsQvoL0br
+	8AJNEoDbVYdq1XGGGR2g=
+X-Google-Smtp-Source: AGHT+IFCJkMwjzmoCtCHW5tBV1Ug26Ch4MBTRqDO6raepp4s1sXJRWFmpfvuvuQfwczGw/tV1vUM+Q==
+X-Received: by 2002:a17:906:794a:b0:ac2:dfcf:3e09 with SMTP id a640c23a62f3a-ac6fb100848mr518883466b.43.1743104427233;
+        Thu, 27 Mar 2025 12:40:27 -0700 (PDT)
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com. [209.85.218.53])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7196e954csm40500666b.171.2025.03.27.12.40.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 12:40:26 -0700 (PDT)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso213241266b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:40:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUh5LM383iLpwS67b7y4s1LymsqrMQ4i3tPxoJ4+mxG66AMJb+bCae6Ai63fyOKBWqnyup/w0PLuJVN4D8=@vger.kernel.org
+X-Received: by 2002:a17:906:794a:b0:ac2:dfcf:3e09 with SMTP id
+ a640c23a62f3a-ac6fb100848mr518877966b.43.1743104426218; Thu, 27 Mar 2025
+ 12:40:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250210-8qxp_camera-v3-6-324f5105accc@nxp.com>
+References: <d0ade43454dee9c00689f03e8d9bd32a@paul-moore.com>
+ <CAHk-=wjbahY4JjLCXNT4o3xVq2cejqBG69z+MNfHsN9FQBnbOw@mail.gmail.com>
+ <CAHC9VhRExVqdhHqs0njs7NY6bFg0BfcE-gMpS30HW9O7MSDfWQ@mail.gmail.com>
+ <CAHk-=wi9m8-_3cywQCohJQEQtuQ+teS4gOtBkWZrhFWzNy-5_A@mail.gmail.com>
+ <CAHC9VhT3D7X=4SpO5xbYm=JUwJqTa7tn=J6QMDBV96c7VBUw4g@mail.gmail.com>
+ <CAHk-=wiH3hoPTxX3=xTRzRuCwktf3pNzFWP45-x6AwoVAjUsUQ@mail.gmail.com>
+ <CAHC9VhT5G6W7g9pB3VM6W7wCEJjWfYSUWNgWF+rRiQ4ZQbGMEQ@mail.gmail.com>
+ <CAHk-=whwQhJtafHN4B1w-z2Gno__xLHS4NouKKHrYNTYa8kz3g@mail.gmail.com>
+ <CA+zpnLeK2Ecj1mBod2rFe4ymd9eXiJkbyYwFh4Yrmck3DVB2SA@mail.gmail.com>
+ <CAHk-=wiBH8FBL+pnXui8O-FSdyoG-yX81mUF9bsZcC6rR5ZtgQ@mail.gmail.com>
+ <CA+zpnLe_AOpS_F1UBNOvN3YRswUSy_3=0jjUAy4GPxEHYumD0g@mail.gmail.com>
+ <CAHk-=wgJ0gzYJD+MghfVW-YeGLW6sLU5soFY13KWmPAxobk5Mw@mail.gmail.com>
+ <CABXk95AqgpqGtjzK2o=mxWJg5RUZG80dAEaKF9JdUT6n5eFENQ@mail.gmail.com>
+ <CAHk-=wh1refm6JkAB__TmC8OBJyNdH2DmNQAbvcL=tKepkHrYw@mail.gmail.com>
+ <CAEjxPJ6XnBmbzH44YVQxxv8WOyPN7N81fpj7OYonEOTB=rn6wg@mail.gmail.com>
+ <CAHk-=wguzgJu4p_khuEXKHmh-6abSN7xLJdCTuyVEfjsopY7iQ@mail.gmail.com>
+ <CAHk-=wh4H3j3TYWn6KSgznUsOXz8vfHMOfTNmFvjGr=hwULWsw@mail.gmail.com> <CAEjxPJ4fzoONpiy3z8QOZ55w35=WfWQ+hiTg24LMEHPpnaC87Q@mail.gmail.com>
+In-Reply-To: <CAEjxPJ4fzoONpiy3z8QOZ55w35=WfWQ+hiTg24LMEHPpnaC87Q@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 27 Mar 2025 12:40:09 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjbSRL7LM7CvckB+goQdUokMa_6G-iirdbtxrFSFe3mfA@mail.gmail.com>
+X-Gm-Features: AQ5f1JpsgpsoU5qvy0FXDgptv2LfsiQnXe2KM7mTv3DMgNv1TpFR9zIlmzjZ8ug
+Message-ID: <CAHk-=wjbSRL7LM7CvckB+goQdUokMa_6G-iirdbtxrFSFe3mfA@mail.gmail.com>
+Subject: Re: [GIT PULL] selinux/selinux-pr-20250323
+To: Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc: Jeffrey Vander Stoep <jeffv@google.com>, =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>, 
+	Paul Moore <paul@paul-moore.com>, "Cameron K. Williams" <ckwilliams.work@gmail.com>, 
+	"Kipp N. Davis" <kippndavis.work@gmx.com>, selinux@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Nick Kralevich <nnk@google.com>, Kees Cook <kees@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Frank,
+On Thu, 27 Mar 2025 at 12:16, Stephen Smalley
+<stephen.smalley.work@gmail.com> wrote:
+>
+> Where could/would we cache that information so that it was accessible
+> directly by the VFS layer?
 
-Thank you for the patch.
+So the VFS layer already does this for various other things. For this
+case, the natural thing to do would be to add another IOP_xyzzy flag
+in inode->i_opflags.
 
-On Mon, Feb 10, 2025 at 03:59:25PM -0500, Frank Li wrote:
-> From: Robert Chiras <robert.chiras@nxp.com>
-> 
-> Add compatible strings for i.MX8QM/i.MX8QXP platform. Remove
-> fsl,mipi-phy-gpr from required properties and add new reg space, since
-> i.MX8QM and i.MX8QXP use dedicate control and status register(csr) space.
-> 
-> Keep the same restriction for other compatible strings.
-> 
-> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> change from v2 to v3
-> - use dedicate csr register space
-> change from v1 to v2
-> - remove internal review tags
-> - remove reg maxitems:1
-> - remove 8ulp part
-> - add 8qxp compatible string and make 8qm failback to 8qxp
-> - limit reset and power domain number to 1 for 8qxp and 8qm
-> - remove power-domains change because 8qm/8qxp only need 1 power domain
-> ---
->  .../bindings/media/nxp,imx8mq-mipi-csi2.yaml       | 38 +++++++++++++++++++---
->  1 file changed, 34 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/nxp,imx8mq-mipi-csi2.yaml b/Documentation/devicetree/bindings/media/nxp,imx8mq-mipi-csi2.yaml
-> index 2a14e3b0e0040..522449e50079e 100644
-> --- a/Documentation/devicetree/bindings/media/nxp,imx8mq-mipi-csi2.yaml
-> +++ b/Documentation/devicetree/bindings/media/nxp,imx8mq-mipi-csi2.yaml
-> @@ -16,11 +16,19 @@ description: |-
->  
->  properties:
->    compatible:
-> -    enum:
-> -      - fsl,imx8mq-mipi-csi2
-> +    oneOf:
-> +      - enum:
-> +          - fsl,imx8mq-mipi-csi2
-> +          - fsl,imx8qxp-mipi-csi2
-> +      - items:
-> +          - const: fsl,imx8qm-mipi-csi2
-> +          - const: fsl,imx8qxp-mipi-csi2
->  
->    reg:
-> -    maxItems: 1
-> +    items:
-> +      - description: mipi csi2 rx host controller register.
+That's how we already say things like "this inode has no
+filesystem-specific i_op->permission function" (IOP_FASTPERM), so that
+we don't even have to follow the "inode->i_op->permission" pointer
+chain to see a NULL pointer.
 
-s/mipi csi2 rx/MIPI CSI-2 RX/
+Yes, the VFS layer is *heavily* optimized like that. It literally does
+that IOP_FASTPERM to avoid chasing two pointers - not even the call,
+just the "don't even bother to follow pointers to see if it's NULL".
+See do_inode_permission().
 
-> +      - description: mipi csi2 control and status register (csr).
+And we have 16 bits in that inode->i_opflags, and currently only use 7
+of those bits. Adding one bit for a IOP_NO_SECURITY_LOOKUP kind of
+logic (feel free to rename that - just throwing a random name out as a
+suggestion) would be a complete no-brainer.
 
-Same here, and s/csr/CSR/
+NOTE! The rule for the i_opflags accesses is that *reading* them is
+done with no locking at all, but changing them takes the inode
+spinlock (and we should technically probably use WRITE_ONCE() and
+READ_ONCE(), but we don't).
 
-> +    minItems: 1
->  
->    clocks:
->      items:
-> @@ -46,6 +54,7 @@ properties:
->        - description: CORE_RESET reset register bit definition
->        - description: PHY_REF_RESET reset register bit definition
->        - description: ESC_RESET reset register bit definition
-> +    minItems: 1
+And notice that the "no locking at all for reading" means that if you
+*change* the bit - even though that involves locking - there may be
+concurrent lookups in process that won't see the change, and would go
+on as if the lookup still does not need any security layer call. No
+serialization to readers at all (although you could wait for an RCU
+period after changing if you really need to, and only use the bit in
+the RCU lookup).
 
-Is this because on QM and QXP the three resets are handled by the SCU,
-which exposes them as a single reset ? The reset description is then not
-very accurate anymore, but I suppose we can live with that.
+That should be perfectly fine - I really don't think serialization is
+even needed. If somebody is changing the policy rules, any file
+lookups *concurrent* to that change might not see the new rules, but
+that's the same as if it happened before the change.
 
-With the above small changes,
+I just wanted to point out that the serialization is unbalanced: the
+spinlock for changing the flag is literally just to make sure that two
+bits being changed at the same time don't stomp on each other (because
+it's a 16-bit non-atomic field, and we didn't want to use a "unsigned
+long" and atomic bitops because the cache layout of the inode is also
+a big issue).
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+And you can take the IOP_FASTPERM thing as an example of how to do
+this: it is left clear initially, and what happens is that during the
+permission lookup, if it *isn't* set, we'll follow those
+inode->i_io->permission pointers, and notice that we should set it:
 
->  
->    fsl,mipi-phy-gpr:
->      description: |
-> @@ -113,9 +122,30 @@ required:
->    - clock-names
->    - power-domains
->    - resets
-> -  - fsl,mipi-phy-gpr
->    - ports
->  
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - fsl,imx8qxp-mipi-csi2
-> +    then:
-> +      properties:
-> +        reg:
-> +          minItems: 2
-> +        resets:
-> +          maxItems: 1
-> +    else:
-> +      properties:
-> +        reg:
-> +          maxItems: 1
-> +        resets:
-> +          minItems: 3
-> +      required:
-> +        - fsl,mipi-phy-gpr
-> +
->  additionalProperties: false
->  
->  examples:
+        if (unlikely(!(inode->i_opflags & IOP_FASTPERM))) {
+                if (likely(inode->i_op->permission))
+                        return inode->i_op->permission(idmap, inode, mask);
 
--- 
-Regards,
+                /* This gets set once for the inode lifetime */
+                spin_lock(&inode->i_lock);
+                inode->i_opflags |= IOP_FASTPERM;
+                spin_unlock(&inode->i_lock);
+        }
 
-Laurent Pinchart
+and I think the security layer could take a very similar approach: not
+setting that IOP_NO_SECURITY_LOOKUP initially, but *when* a
+security_inode_permission() call is made with just MAY_NOT_BLOCK |
+MAY_LOOKUP, and the security layer notices that "this inode has no
+reason to care", it could set the bit so that *next* time around the
+VFS layer won't bother to call into security_inode_permission()
+unnecessarily.
+
+Does that clarify?
+
+             Linus
