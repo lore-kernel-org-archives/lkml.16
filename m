@@ -1,129 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5AC213E7C;
-	Thu, 27 Mar 2025 16:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C6C218EB1;
+	Thu, 27 Mar 2025 16:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743094747; cv=none; b=RC0RMe94BIkg3KRl/Nr6PADK90O9yP0hlDhimSwQlblyKnzk76q202NnPGAmhSfbqKVTp9BssW0/5GmoMLMTxABb++X7eLvoTjVE1LRBdmKwselo25PxewWdAwM6a67wWyPIinjAtS9KhJJOz+bIxuQ5ev22lJwbwCqUrvS1bIo=
+	t=1743094762; cv=none; b=p4tS7+SHak4EzsbfbzbgrYLXHI+8fjhZeEy8EXw6Cw2U+Npn1MabG8oODqSwTobwiupc3seXjxKHJvlIChDxgAuu02+xQPaIt0uaROgChbIT4baDzE0scc6/E9e+3CmrNyJJqzggh8tk9oPopZwniQ22oGXqOZi/x+Vfi/5zUPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743094747; c=relaxed/simple;
-	bh=5NtcoshgRtxufku9YJABlgnqk6ZvaIJtmkUl5omRUG4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=GRmuPrfvZ6/8e+Z2sGIYSBhFWu5OItuwX3SncwzarmmW7EMOSjG5gr+eIKsRYZA7qu0yNu578NWhyxxs4HxEVKD4vIQvCNxPmMAC0lLgA1X2QdHzg358dE6ZYBhCCGz/PS7tkBv2yVCXaMoX6MYwbNWSRWHSVblGCkpT9ewBJ1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YRM3L2l0; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YRM3L2l0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C50BC4CEE5;
-	Thu, 27 Mar 2025 16:59:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743094747;
-	bh=5NtcoshgRtxufku9YJABlgnqk6ZvaIJtmkUl5omRUG4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=YRM3L2l02bFFw1py9egSBn+Jm0qJwTV0H2WQ1tLff3t5DcUcMZ6jCVVTzGitgCDZd
-	 ujS5ooaI672EasL0l69zwN1JFj2lsa+B/ffK3/B/R+18f/SH0fFMJwvws5HOKxubTH
-	 i3Ol5ut3kmxgV99/OM0jcmpmQhLm6PsAwpJUckzQO0Zohfy1S2Aw4dIvL7dMZF35xH
-	 k6C3C2FlBGsLrMp8H/FTC0aFZExURNYVbd2//G2tMOp09RO1/Sd6+rRlNcitSeNY+A
-	 VGcgu21pr/zTVsrcjQh0emUHB8tkw0hDSzzMAL7K/FVn0Vz28mU8PLBblFdYQAF0Ba
-	 mHzmvStstVtQg==
-Date: Thu, 27 Mar 2025 10:59:04 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] w1: Avoid -Wflex-array-member-not-at-end warnings
-Message-ID: <Z-WD2NP_1A0ratnI@kspp>
+	s=arc-20240116; t=1743094762; c=relaxed/simple;
+	bh=ZBWtgGydzDpTfxzGWzX9C6AwYBx8VOMDnHl+miUOL4E=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=g4PKwTLZLjPM0aFl23JVATrVf8dBDSZtPKkKA3ZMtLbP9DQV/xUYkPQwnUxfiNNRvlHcx9tSsk7hSefGk2Z+yYoMFidQCttYPvW6VRL0J2FPyYwQBvkpJ65XUiQnS/6BO5qIUviTiQr/2txuGkcige/tK8/irYVkAvag3+iyqt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZNqXr6JTqz6M4Ql;
+	Fri, 28 Mar 2025 00:55:40 +0800 (CST)
+Received: from frapeml100006.china.huawei.com (unknown [7.182.85.201])
+	by mail.maildlp.com (Postfix) with ESMTPS id 26E2A14051A;
+	Fri, 28 Mar 2025 00:59:11 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100006.china.huawei.com (7.182.85.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 27 Mar 2025 17:59:10 +0100
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Thu, 27 Mar 2025 17:59:10 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Dan Williams <dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>
+CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
+	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "leo.duran@amd.com"
+	<leo.duran@amd.com>, "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
+	"rientjes@google.com" <rientjes@google.com>, "jiaqiyan@google.com"
+	<jiaqiyan@google.com>, "Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>, "james.morse@arm.com"
+	<james.morse@arm.com>, "jthoughton@google.com" <jthoughton@google.com>,
+	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>, "erdemaktas@google.com"
+	<erdemaktas@google.com>, "pgonda@google.com" <pgonda@google.com>,
+	"duenwen@google.com" <duenwen@google.com>, "gthelen@google.com"
+	<gthelen@google.com>, "wschwartz@amperecomputing.com"
+	<wschwartz@amperecomputing.com>, "dferguson@amperecomputing.com"
+	<dferguson@amperecomputing.com>, "wbs@os.amperecomputing.com"
+	<wbs@os.amperecomputing.com>, "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
+	tanxiaofei <tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH v2 1/8] cxl: Add helper function to retrieve a feature
+ entry
+Thread-Topic: [PATCH v2 1/8] cxl: Add helper function to retrieve a feature
+ entry
+Thread-Index: AQHbmcKr5anTvL2xzU6u4SEaFigSYLOF6PqAgAFGedA=
+Date: Thu, 27 Mar 2025 16:59:10 +0000
+Message-ID: <610691bb7c6949b5a2137c568bc66fe2@huawei.com>
+References: <20250320180450.539-1-shiju.jose@huawei.com>
+	<20250320180450.539-2-shiju.jose@huawei.com>
+ <67e47285c1974_152c29442@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+In-Reply-To: <67e47285c1974_152c29442@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+>-----Original Message-----
+>From: Dan Williams <dan.j.williams@intel.com>
+>Sent: 26 March 2025 21:33
+>To: Shiju Jose <shiju.jose@huawei.com>; linux-cxl@vger.kernel.org;
+>dan.j.williams@intel.com; dave@stgolabs.net; Jonathan Cameron
+><jonathan.cameron@huawei.com>; dave.jiang@intel.com;
+>alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
+>david@redhat.com; Vilas.Sridharan@amd.com
+>Cc: linux-edac@vger.kernel.org; linux-acpi@vger.kernel.org; linux-
+>mm@kvack.org; linux-kernel@vger.kernel.org; bp@alien8.de;
+>tony.luck@intel.com; rafael@kernel.org; lenb@kernel.org;
+>mchehab@kernel.org; leo.duran@amd.com; Yazen.Ghannam@amd.com;
+>rientjes@google.com; jiaqiyan@google.com; Jon.Grimm@amd.com;
+>dave.hansen@linux.intel.com; naoya.horiguchi@nec.com;
+>james.morse@arm.com; jthoughton@google.com; somasundaram.a@hpe.com;
+>erdemaktas@google.com; pgonda@google.com; duenwen@google.com;
+>gthelen@google.com; wschwartz@amperecomputing.com;
+>dferguson@amperecomputing.com; wbs@os.amperecomputing.com;
+>nifan.cxl@gmail.com; tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B)
+><prime.zeng@hisilicon.com>; Roberto Sassu <roberto.sassu@huawei.com>;
+>kangkang.shen@futurewei.com; wanghuiqiang <wanghuiqiang@huawei.com>;
+>Linuxarm <linuxarm@huawei.com>; Shiju Jose <shiju.jose@huawei.com>
+>Subject: Re: [PATCH v2 1/8] cxl: Add helper function to retrieve a feature=
+ entry
+>
+>shiju.jose@ wrote:
+>> From: Shiju Jose <shiju.jose@huawei.com>
+>>
+>> Add helper function to retrieve a feature entry from the supported
+>> features list, if supported.
+>>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Reviewed-by: Fan Ni <fan.ni@samsung.com>
+>> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+>> ---
+>>  drivers/cxl/core/core.h     |  2 ++
+>>  drivers/cxl/core/features.c | 23 +++++++++++++++++++++++
+>>  2 files changed, 25 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h index
+>> 1803aedb25ca..16bc717376fc 100644
+>> --- a/drivers/cxl/core/core.h
+>> +++ b/drivers/cxl/core/core.h
+>> @@ -123,6 +123,8 @@ int cxl_ras_init(void);  void cxl_ras_exit(void);
+>>
+>>  #ifdef CONFIG_CXL_FEATURES
+>> +struct cxl_feat_entry *cxl_get_feature_entry(struct cxl_dev_state *cxld=
+s,
+>> +					     const uuid_t *feat_uuid);
+>
+>It is unfortunate that this naming choice is too similar to cxl_get_featur=
+e().
+>However, as I go to suggest a new name I find that this is a duplicate of
+>get_support_feature_info() in Dave's fwctl series. Just drop this patch in=
+ favor of
+>that.
 
-Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
-a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+Hi Dan,
 
-So, with these changes, fix the following warnings:
+I am fine to use get_support_feature_info() for the EDAC features.=20
+However this function is defined as static in the fwctl series and=20
+takes struct fwctl_rpc_cxl * as input for RPC instead of  uuid_t *
+as in cxl_get_feature_entry().
 
-drivers/w1/w1_netlink.c:198:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/w1/w1_netlink.c:219:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+static struct cxl_feat_entry *
+get_support_feature_info(struct cxl_features_state *cxlfs,
+			 const struct fwctl_rpc_cxl *rpc_in)
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/w1/w1_netlink.c | 41 +++++++++++++++++++----------------------
- 1 file changed, 19 insertions(+), 22 deletions(-)
+Can you suggest how to use get_support_feature_info() from within the CXL d=
+river=20
+to retrieve a supported feature entry (for e.g an EDAC feature)?
 
-diff --git a/drivers/w1/w1_netlink.c b/drivers/w1/w1_netlink.c
-index 691978cddab7..845d66ab7e89 100644
---- a/drivers/w1/w1_netlink.c
-+++ b/drivers/w1/w1_netlink.c
-@@ -194,16 +194,16 @@ static void w1_netlink_queue_status(struct w1_cb_block *block,
- static void w1_netlink_send_error(struct cn_msg *cn, struct w1_netlink_msg *msg,
- 	int portid, int error)
- {
--	struct {
--		struct cn_msg cn;
--		struct w1_netlink_msg msg;
--	} packet;
--	memcpy(&packet.cn, cn, sizeof(packet.cn));
--	memcpy(&packet.msg, msg, sizeof(packet.msg));
--	packet.cn.len = sizeof(packet.msg);
--	packet.msg.len = 0;
--	packet.msg.status = (u8)-error;
--	cn_netlink_send(&packet.cn, portid, 0, GFP_KERNEL);
-+	DEFINE_RAW_FLEX(struct cn_msg, packet, data,
-+			sizeof(struct w1_netlink_msg));
-+	struct w1_netlink_msg *pkt_msg = (struct w1_netlink_msg *)packet->data;
-+
-+	memcpy(packet, cn, sizeof(*packet));
-+	memcpy(pkt_msg, msg, sizeof(*pkt_msg));
-+	packet->len = sizeof(*pkt_msg);
-+	pkt_msg->len = 0;
-+	pkt_msg->status = (u8)-error;
-+	cn_netlink_send(packet, portid, 0, GFP_KERNEL);
- }
- 
- /**
-@@ -215,22 +215,19 @@ static void w1_netlink_send_error(struct cn_msg *cn, struct w1_netlink_msg *msg,
-  */
- void w1_netlink_send(struct w1_master *dev, struct w1_netlink_msg *msg)
- {
--	struct {
--		struct cn_msg cn;
--		struct w1_netlink_msg msg;
--	} packet;
--	memset(&packet, 0, sizeof(packet));
-+	DEFINE_RAW_FLEX(struct cn_msg, packet, data,
-+			sizeof(struct w1_netlink_msg));
- 
--	packet.cn.id.idx = CN_W1_IDX;
--	packet.cn.id.val = CN_W1_VAL;
-+	packet->id.idx = CN_W1_IDX;
-+	packet->id.val = CN_W1_VAL;
- 
--	packet.cn.seq = dev->seq++;
--	packet.cn.len = sizeof(*msg);
-+	packet->seq = dev->seq++;
-+	packet->len = sizeof(*msg);
- 
--	memcpy(&packet.msg, msg, sizeof(*msg));
--	packet.msg.len = 0;
-+	memcpy(packet, msg, sizeof(*msg));
-+	((struct w1_netlink_msg *)packet->data)->len = 0;
- 
--	cn_netlink_send(&packet.cn, 0, 0, GFP_KERNEL);
-+	cn_netlink_send(packet, 0, 0, GFP_KERNEL);
- }
- 
- static void w1_send_slave(struct w1_master *dev, u64 rn)
--- 
-2.43.0
+>
 
+Thanks,
+Shiju
