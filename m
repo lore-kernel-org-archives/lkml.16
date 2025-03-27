@@ -1,348 +1,204 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC11812E5B;
-	Thu, 27 Mar 2025 01:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C7218AE2
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 01:06:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743037443; cv=none; b=XDcXMO5+V1AI83Jm2jn45O6CX91PejWImYfDr6ckAj4ZZvaJEfnY2guBENsYt9DBzizvMh6DV79ecrqD5PMGmaTq1t4CcyhMd1FtpP8r2mg/JMF6uLjv8u8deiMv9yETmZ93iexdM/uzWwN66J6iKTcZmLq3REOZ/x8jlF7cc7A=
+	t=1743037616; cv=none; b=QIKH2s+KPlpPR9wneRpSJUCtdOFk9kFnTdr9cQqjrUvyQ9YF9mG7DAad3H4AbZkM0pt/ugUXTZZHnEbdu1CjqEYMAGoVln6UOL5AzxpdoGh8/XqBEEzG5aETFcgUJPor/L9zkzdbSILTDe2E7TkaPZDcKUoeOYN/IQcdOoSuh2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743037443; c=relaxed/simple;
-	bh=PLB0c6EJQTg+fnqSJCfAE/vpnJq8T/eX+sJGgyAmlOU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hmkm2u0ljWoDKGqMSpo4SqsiundKrVvZ8pY1K6+QUTHMZDyX17cBPueFyouA3g1da06ZNmQ9BdaCfplPSgtAQ+m2U316Iqj7OKd3IckUKbpMub5xWV0rNBwBY9/66es34nVyHlr+p0fGwa/bqwy+X5FKuLp2WELM7CuSdRYb/oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=YKUcrK3Q; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1743037616; c=relaxed/simple;
+	bh=PDzZXzGgpa+3aT/pBp71bWpbRe/VUEFk4HVLQOHBTLE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NNFQWXaB59bsw7ZaZigSXZu1/2E8kkTfbOa///GwFvCApXnk/LaHy2zQgdRgPIWRlj3ooj2sZsEMnSmhsnjeg42W6GE3LTYXAWP+WGx+q49HvbTQ110MVf8UAEUs3c8GoBbtcYiIndHKStTxrC7HSVh8/Qur+hGDk8VBGoglqaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rAdqY/wM; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="YKUcrK3Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1743037423; x=1743642223; i=w_armin@gmx.de;
-	bh=q2m3aSc2OrJA/5cgniVycmxbmUOUmwnokNZ4ZsQo1s8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=YKUcrK3Q4OUjU+m23LtBlx7Lcu5PN6/zcRN+T6UoC0g9TS/obgzFdd30Eoyas01q
-	 pbWpQTghFqk1bHXs7XJ/vQmIROyhUjaJRWzLKguitw9X5lKKvyQ4BWlZhQ+pqwX23
-	 DadRfRGubLRT3KyeY7Km2tZiNOAD6kypRfp1ABtT7cIz38S8JFnWNshX9nSE6ILGT
-	 MtuUntUL5FRR8K50G9cMpdNfN6UuCecFX96IcTISFqIo7BT4fIEIKUsBJlChq5NbW
-	 anKahqsfDiZ5RYOPp6yEaxhDeFisLWN8/WyW/lEG69s45r086smcpOJoPH5JQxp3b
-	 uZ3UeUZKL0U2IxRkcg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MN5if-1tfFpD3qy5-00NHyG; Thu, 27
- Mar 2025 02:03:43 +0100
-Message-ID: <cf6be9ba-03e4-4d9d-9f62-91cd11e6ee30@gmx.de>
-Date: Thu, 27 Mar 2025 02:03:37 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rAdqY/wM"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-549a2997973so2105e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 18:06:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743037613; x=1743642413; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+L1qMxOdQhRml0aQ1zbxnH+K6qVWg32HMVNaSIUwDs4=;
+        b=rAdqY/wMwmTL1BtQcfdKy/9jyTiw6nGun+WVHFX+cLo70Bq8WXfXz0soESNXhUUOp3
+         +AyVrv7x9A4DzU7HPv+m3GIzq71uwUlCwcKaAGJznkfyT7MLLfmefuAnxa0w35Okn5Hh
+         K31r3mEjwA7DMEkR8xPjwiErddQUwqijYxWZa+DcWz82V55rYRRhwBwKPvCFgB/FPtrT
+         KvzNMJsg12EWYJBylo35V336mdSGwUouwf7FX+P9NS64riwdlEglWI+9aZ/l9FW8V4F3
+         6sMx1UNZ2gicvQT5SAZ1ij7FXmYXvNsCdFAosENg7Rg5HF2xgI4kvaagvntj02kJcQpc
+         6Zsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743037613; x=1743642413;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+L1qMxOdQhRml0aQ1zbxnH+K6qVWg32HMVNaSIUwDs4=;
+        b=DNkaAXDOyiX103Od8UKZ2lrqiX93IEpeI1IHrOaymAQo0A7nLjdo6QRwpIThubO5Sg
+         PPd17IoM9sYc+A7pmWoZe+uripOjtnPWuJZUh4X1MzwRxbEHPDdRJx0sDQ/Zx7Aqlt2N
+         +mZLoOLiRaG6yigUNNQs6ddS7RuJJrcgyhI3HJqttNgLEVIYYAiRvn2cV5G0sgrDkuKF
+         YMLi3RA5DO1EcN8bMKmGz+BngjmqfOhi5uFmVILa0EfWJzVwYHwzRKO1WdW/Wsa9Bn+L
+         Oq86hcfWhM7gtLP8QWsDcV0LjhSECUQVU8JsFW50CUDRT4yukxj8DXhEH+ZBbQXAid83
+         32MQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWB6NtAJzFRNluEhOS4fLg/Fdl8iS4Dkk5RJ5OFGn9tBj6YpBsbNqZswmfQoPJ92nZvszk2UHPYg/VusPE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqRZl4XLv4MzZ/crCTL/AEglokF5MK3hX//xw77HyjQiARX2/k
+	E3DrHZzP5tP4SnVDpCmQmM0Df25tbzmN2d3NV7jsk7r/MCDH0Q4iEt1sg1CnH/HwrG/kOv4dxRi
+	iIxPMsDz4I08kR5EdWq3pYVrgFZ4vc+lEwTAA
+X-Gm-Gg: ASbGncvinXiLaAGlfKzZnWiRHzQ/fdaTGgsLc8wVh3PJSWOeH+F4i24a8OcRfEi7Ocl
+	8icm0KXrxiVvbVh07rGwC79AHbinhKqgYRYtpojvu3ZIeGWbFASIWVeNstu16Viv40QaOscE+iv
+	Oda8IlJUpk3hDh231HUBoPOed1dbLhMFu1Sejw
+X-Google-Smtp-Source: AGHT+IH/NMWE5Itnv3tw+53wI1lOQywMDWedrWlQ4fGn4pZ7pLbjFx8IamRwmDSAIYEZTiYzWdFsUx8z9SXMlCHmCqo=
+X-Received: by 2002:ac2:58cf:0:b0:549:7c56:5300 with SMTP id
+ 2adb3069b0e04-54b0467226amr19427e87.1.1743037612625; Wed, 26 Mar 2025
+ 18:06:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/6 RESEND] platform/x86: Add Lenovo WMI Events Driver
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>,
- Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
- Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
- platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250317144326.5850-1-derekjohn.clark@gmail.com>
- <20250317144326.5850-4-derekjohn.clark@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20250317144326.5850-4-derekjohn.clark@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <d0ade43454dee9c00689f03e8d9bd32a@paul-moore.com>
+ <CAHk-=wjbahY4JjLCXNT4o3xVq2cejqBG69z+MNfHsN9FQBnbOw@mail.gmail.com>
+ <CAHC9VhRExVqdhHqs0njs7NY6bFg0BfcE-gMpS30HW9O7MSDfWQ@mail.gmail.com>
+ <CAHk-=wi9m8-_3cywQCohJQEQtuQ+teS4gOtBkWZrhFWzNy-5_A@mail.gmail.com>
+ <CAHC9VhT3D7X=4SpO5xbYm=JUwJqTa7tn=J6QMDBV96c7VBUw4g@mail.gmail.com>
+ <CAHk-=wiH3hoPTxX3=xTRzRuCwktf3pNzFWP45-x6AwoVAjUsUQ@mail.gmail.com>
+ <CAHC9VhT5G6W7g9pB3VM6W7wCEJjWfYSUWNgWF+rRiQ4ZQbGMEQ@mail.gmail.com> <CAHk-=whwQhJtafHN4B1w-z2Gno__xLHS4NouKKHrYNTYa8kz3g@mail.gmail.com>
+In-Reply-To: <CAHk-=whwQhJtafHN4B1w-z2Gno__xLHS4NouKKHrYNTYa8kz3g@mail.gmail.com>
+From: =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
+Date: Thu, 27 Mar 2025 12:06:35 +1100
+X-Gm-Features: AQ5f1Jp_Nje7aoSlbd15PFGYPfjSW2D9aFtyUaNl9O0IYPmTo4b3NCAHsDLolFw
+Message-ID: <CA+zpnLeK2Ecj1mBod2rFe4ymd9eXiJkbyYwFh4Yrmck3DVB2SA@mail.gmail.com>
+Subject: Re: [GIT PULL] selinux/selinux-pr-20250323
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul Moore <paul@paul-moore.com>, "Cameron K. Williams" <ckwilliams.work@gmail.com>, 
+	"Kipp N. Davis" <kippndavis.work@gmx.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
+	selinux@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Nick Kralevich <nnk@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:7h8yO+WRsiuNEs+JRWEOr3YdNx90kJJ1tvQBReKEnfZecWrSer1
- 6TAfViehuOfHw1BvPJXYha/j/cf1PzzsdrOtIaMv3Vmm6eiJ39jN1mfA+FIflW3z9pGsja0
- fXofTPFBJKZydGjzSozIj24fdLsdcjznM7L9YfJRjAaNDYDmreXxkFmmhuvlPaljF9VTUx9
- HJSMUFPu7oHakF1XSDC8g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:j+SFepbjCvY=;qlK7prp7ub0/i6J2tOZOKv4iwxp
- eO3uA0utpvxr2gBgyvHjttuqz9ASKLWzHKQCmbErd4a7y6ksx2FH6CygvGFGmC3xRpBBViQjg
- ki4Z0JfJWq1SCyMz8C1/ugqJj7M0IKoUl8oCaeXfcfGewMhkQ9QS/F8bfdCuXlizxZo5dldbg
- iSKw0l5fKTsKH6wDSKTPEzbHF24HD8n7jIm2xBs+nDjZORNLC6vTITPKQ9+CMl0MhmcPAcdAF
- 6azBQyPW11nfn0JZx8H1NSYSnweoJBmwbdVDa5gtOkHf5gqnLBR6dXOWfY85b7mLV1Fy6YKoS
- gnCP7Dhsh2nl5PdzcIQ3G6pQKS6+UkZNiIyhvolGXdcDlILVWTGiDf17vYZ/F1dHxuIppeAQ4
- fRMxcAp4EWx75QQe40Ei6mVcKi7lpnqZ3qi+K7Cvqq2ZqzaQNWeo+DUfzVijC5DyU0hLwdG92
- DmqRsw8DU/+F8DAFgAyo9hZpG7Uyrxo266aQljCsnGkSSchLxczcGvLgeonaLt9pzSC0AOfYF
- DfVmaX+WmSu3QZoUW9GG2jasWHApNL91jX+5+n7pWp8z32Ti/rJdn0iPqVPD0CoSKFpbfYZ1+
- wZfLth3RdU9Ct9UWAsuhIsCF142OB2EqZj82m0ck6EPdDpdXc2zMtYfN4kK55w5nMRYRLz1V1
- yn0FuMI2PJE/gvIqP/bsLpBb9/t9uE7lUTSeSZIcht3hFMGdS+gqBu5UQktqfxcCeLn0EhMkz
- a98+8pe8HMFLuCEFR020mWT8ub2NTy95PKoF0U55kOqlRrc3Xvu23kgbMJn2Rmkp/uq/7Nfe3
- W8ZrclMdAKRBguaLxtdeFMqRA8N9rlafniHVMIr5wXO03jiigcbieoK9gRf4fSeiDba5zpCwi
- Si/vVyNfa1MGfWeRCHO2Az/0/LTDh0P0ZZ4nkQ851VEw68d/EoWOwVlLi9ctG4Ahk5VGAXNLm
- 3Zcr6B/EQrbjAlGPSIuEXhwkFXvSikNs4iGSpLdhMfQBpffnPNT3TvGODW0iR239s+lTKNlmT
- xAW26VcPKrV077HTogwoh3UM31Z22tz7nW5GyH8+31TdozysB2v5hjgNSCeEfpjqNe0u/mK7W
- tWEqQaRvp1ltems18wzluiwt7RY1OHL2Y5jiJet6CVhYEziCh4blm/3ImNL/qAd0eDSA4zznW
- Oe2pXL6+cocsN7kxDbcYZFqrPg8ACBQOWAfoTMB1+N15aa/0jthI9hSBLroYUDx0E48HYITQO
- E3XDF1qjZ0Boo1zAEkvz1mIBtyGMDSLq2+GcpS/fU9hr//Y8MGbkLKYNXUUDhwXrIaXPgV4r4
- 4p8AGpyGzMzibNtvrp0OmUSjz9BTwgGOrbAyzk5mr145NsJSk5CoKhAKWSXxWVSk6B3/I8doB
- c6j99CDedbIWKtldEjYttib7GnhuQnOI248zW8vLOYmG045BxMCfoHoSxK1booSAt7zxO/3t1
- bheFJx25/C0delEimuwkW7haAT/Q=
 
-Am 17.03.25 um 15:43 schrieb Derek J. Clark:
-
-> Adds lenovo-wmi-events driver. The events driver is designed as a
-> general entrypoint for all Lenovo WMI Events. It acts as a notification
-> chain head that will process event data and pass it on to registered
-> drivers so they can react to the events.
+On Thu, Mar 27, 2025 at 11:43=E2=80=AFAM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> Currently only the Gamezone interface Thermal Mode Event GUID is
-> implemented in this driver. It is documented in the Gamezone
-> documentation.
+> On Wed, 26 Mar 2025 at 16:03, Paul Moore <paul@paul-moore.com> wrote:
+> >
+> > On Wed, Mar 26, 2025 at 5:06=E2=80=AFPM Linus Torvalds
+> > <torvalds@linux-foundation.org> wrote:
+> > > That's insane. So explain to me why you added what looks like
+> > > completely insane policy hooks.
+> >
+> > In the security_kernel_read_file() LSM hook, the SELinux callback
+> > examines if the current task has the ability to perform the designated
+> > read operation on file A.  Loading a kernel module and loading its
+> > associated firmware are two events inside the kernel with the current
+> > task loading data from two different files, each with potentially
+> > different security properties, and we want to perform an access check
+> > on each file to ensure it is permitted under the security policy
+> > defined by the admin.
+
+Paul, Linus,
+
+Thank you for discussing the reasoning behind this patch. We wanted to
+share how Android will leverage the new hooks introduced here.
+Hopefully, this should help move forward this discussion and show why
+these changes have concrete value to projects using SELinux like
+Android.
+
+Android, for a long time, has used the module loading hooks to ensure
+that kernel modules are loaded from cryptographically signed,
+dm-verity protected partitions. Even if an attacker compromised a
+userspace process with CAP_SYS_MODULE, they cannot leverage this to
+load modules from outside of protected partitions.
+
+The changes presented in this merge request build upon this functionality.
+
+Taking one example from this merge request: kexec image loading.
+
+Currently, any process which has CAP_SYS_BOOT can use kexec to replace
+the existing kernel. Android has 5 processes with CAP_SYS_BOOT, only 1
+of which needs kexec functionality [1]. By using these new
+permissions, we will ensure that this process is able to call kexec,
+while prohibiting other processes. SELinux provides us strong, kernel
+enforced guarantees which can be checked at policy compile time.
+Extending on this, we will use this patchset to guarantee that kernels
+and ramdisks executed by kexec come from known, good sources.
+
+The other hooks are of similar value to Android.
+
+Thiebaud and Nick
+
+[1] https://cs.android.com/android/platform/superproject/main/+/main:system=
+/sepolicy/microdroid/system/private/kexec.te;l=3D12
+
 >
-> Suggested-by: Armin Wolf <W_Armin@gmx.de>
-> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> ---
-> v4:
->   - Remove the Thermal Mode Event GUID from Gamezone and add this driver=
-.
-> ---
->   MAINTAINERS                              |   2 +
->   drivers/platform/x86/Kconfig             |   4 +
->   drivers/platform/x86/Makefile            |   1 +
->   drivers/platform/x86/lenovo-wmi-events.c | 132 +++++++++++++++++++++++
->   drivers/platform/x86/lenovo-wmi-events.h |  21 ++++
->   5 files changed, 160 insertions(+)
->   create mode 100644 drivers/platform/x86/lenovo-wmi-events.c
->   create mode 100644 drivers/platform/x86/lenovo-wmi-events.h
+> What this tells me is that there wasn't actually any real ask for
+> this, and you're trying to make up arguments for a silly patch.
 >
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3a370a18b806..6dde75922aaf 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13164,6 +13164,8 @@ L:	platform-driver-x86@vger.kernel.org
->   S:	Maintained
->   F:	Documentation/wmi/devices/lenovo-wmi-gamezone.rst
->   F:	Documentation/wmi/devices/lenovo-wmi-other.rst
-> +F:	drivers/platform/x86/lenovo-wmi-events.c
-> +F:	drivers/platform/x86/lenovo-wmi-events.h
->   F:	drivers/platform/x86/lenovo-wmi-helpers.c
->   F:	drivers/platform/x86/lenovo-wmi-helpers.h
+> First off, "loading a module" and then "the module loads the firmware"
+> file are *not* two distinct things with distinct security properties.
 >
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index bece1ba61417..13b8f4ac5dc5 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -459,6 +459,10 @@ config IBM_RTL
->   	 state =3D 0 (BIOS SMIs on)
->   	 state =3D 1 (BIOS SMIs off)
+> The module DOES NOT WORK without the firmware file. So the argument
+> that they are independent action is complete nonsense. If you don't
+> trust the firmware, then don't load the module. It's that simple.
 >
-> +config LENOVO_WMI_EVENTS
-> +	tristate
-> +	depends on ACPI_WMI
-> +
->   config LENOVO_WMI_HELPERS
->   	tristate
->   	depends on ACPI_WMI
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefi=
-le
-> index 5a9f4e94f78b..fc039839286a 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -69,6 +69,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+=3D think-lmi.o
->   obj-$(CONFIG_YOGABOOK)		+=3D lenovo-yogabook.o
->   obj-$(CONFIG_YT2_1380)		+=3D lenovo-yoga-tab2-pro-1380-fastcharger.o
->   obj-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D lenovo-wmi-camera.o
-> +obj-$(CONFIG_LENOVO_WMI_EVENTS)	+=3D lenovo-wmi-events.o
->   obj-$(CONFIG_LENOVO_WMI_HELPERS)	+=3D lenovo-wmi-helpers.o
+> Second, your argument that there are different tasks involved is true,
+> but no, that doesn't mean that there are "potentially different
+> security properties".
 >
->   # Intel
-> diff --git a/drivers/platform/x86/lenovo-wmi-events.c b/drivers/platform=
-/x86/lenovo-wmi-events.c
-> new file mode 100644
-> index 000000000000..3ea0face3c0d
-> --- /dev/null
-> +++ b/drivers/platform/x86/lenovo-wmi-events.c
-> @@ -0,0 +1,132 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Lenovo WMI Events driver. Lenovo WMI interfaces provide various
-> + * hardware triggered events that many drivers need to have propagated.
-> + * This driver provides a uniform entrypoint for these events so that
-> + * any driver that needs to respond to these events can subscribe to a
-> + * notifier chain.
-> + *
-> + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
-> + */
-> +
-> +#include <linux/list.h>
-> +#include <linux/notifier.h>
-> +#include <linux/types.h>
-> +#include <linux/wmi.h>
-> +#include "lenovo-wmi-events.h"
-
-Hi,
-
-please also include linux/acpi.h, linux/export.h and linux/module.h. Also =
-why do you import
-linux/list.h?
-
-> +
-> +/* Interface GUIDs */
-> +#define THERMAL_MODE_EVENT_GUID "D320289E-8FEA-41E0-86F9-911D83151B5F"
-> +
-> +#define LENOVO_WMI_EVENT_DEVICE(guid, type)                        \
-> +	.guid_string =3D (guid), .context =3D &(enum lwmi_events_type) \
-> +	{                                                          \
-> +		type                                               \
-> +	}
-> +
-> +static BLOCKING_NOTIFIER_HEAD(events_chain_head);
-> +
-> +struct lwmi_events_priv {
-> +	struct wmi_device *wdev;
-> +	enum lwmi_events_type type;
-> +};
-> +
-> +/* Notifier Methods */
-> +int lwmi_events_register_notifier(struct notifier_block *nb)
-> +{
-> +	return blocking_notifier_chain_register(&events_chain_head, nb);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(lwmi_events_register_notifier, "LENOVO_WMI_EVENTS"=
-);
-> +
-> +int lwmi_events_unregister_notifier(struct notifier_block *nb)
-> +{
-> +	return blocking_notifier_chain_unregister(&events_chain_head, nb);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(lwmi_events_unregister_notifier, "LENOVO_WMI_EVENT=
-S");
-> +
-> +static void devm_lwmi_events_unregister_notifier(void *data)
-> +{
-> +	struct notifier_block *nb =3D data;
-> +
-> +	lwmi_events_unregister_notifier(nb);
-> +}
-> +
-> +int devm_lwmi_events_register_notifier(struct device *dev,
-> +				       struct notifier_block *nb)
-> +{
-> +	int ret;
-> +
-> +	ret =3D lwmi_events_register_notifier(nb);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return devm_add_action_or_reset(dev,
-> +				devm_lwmi_events_unregister_notifier, nb);
-
-Please remove this line break here.
-
-> +}
-> +EXPORT_SYMBOL_NS_GPL(devm_lwmi_events_register_notifier, "LENOVO_WMI_EV=
-ENTS");
-> +
-> +/* Driver Methods */
-> +static void lwmi_events_notify(struct wmi_device *wdev, union acpi_obje=
-ct *obj)
-> +{
-> +	struct lwmi_events_priv *priv =3D dev_get_drvdata(&wdev->dev);
-> +	int sel_prof;
-> +	int ret;
-> +
-> +	switch (priv->type) {
-> +	case THERMAL_MODE_EVENT:
-> +		if (obj->type !=3D ACPI_TYPE_INTEGER)
-> +			return;
-> +
-> +		sel_prof =3D obj->integer.value;
-> +		ret =3D blocking_notifier_call_chain(&events_chain_head,
-> +						   THERMAL_MODE_EVENT, &sel_prof);
-> +		if (ret =3D=3D NOTIFY_BAD)
-> +			dev_err(&wdev->dev,
-> +				"Failed to send notification to call chain for WMI Events\n");
-> +		break;
-> +	default:
-> +		return;
-> +	}
-> +}
-> +
-> +static int lwmi_events_probe(struct wmi_device *wdev, const void *conte=
-xt)
-> +{
-> +	struct lwmi_events_priv *priv;
-> +
-> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	if (!context)
-> +		return -EINVAL;
-> +
-> +	priv->wdev =3D wdev;
-> +	priv->type =3D *(enum lwmi_events_type *)context;
-> +
-> +	dev_set_drvdata(&wdev->dev, priv);
-> +	return 0;
-> +}
-> +
-> +static const struct wmi_device_id lwmi_events_id_table[] =3D {
-> +	{ LENOVO_WMI_EVENT_DEVICE(THERMAL_MODE_EVENT_GUID,
-> +				  THERMAL_MODE_EVENT) },
-> +	{}
-> +};
-> +
-> +static struct wmi_driver lwmi_events_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "lenovo_wmi_events",
-> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
-> +	},
-> +	.id_table =3D lwmi_events_id_table,
-> +	.probe =3D lwmi_events_probe,
-> +	.notify =3D lwmi_events_notify,
-> +	.no_singleton =3D true,
-> +};
-> +
-> +module_wmi_driver(lwmi_events_driver);
-> +
-> +MODULE_DEVICE_TABLE(wmi, lwmi_events_id_table);
-> +MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
-> +MODULE_DESCRIPTION("Lenovo WMI Events Driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/platform/x86/lenovo-wmi-events.h b/drivers/platform=
-/x86/lenovo-wmi-events.h
-> new file mode 100644
-> index 000000000000..a3fa934eaa10
-> --- /dev/null
-> +++ b/drivers/platform/x86/lenovo-wmi-events.h
-> @@ -0,0 +1,21 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later
-
-The SPDX license identifier needs to be a separate comment.
-
-With those minor issues being fixed:
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-
-> + *
-> + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
-> + */
-> +
-> +#include <linux/notifier.h>
-> +#include <linux/types.h>
-> +
-> +#ifndef _LENOVO_WMI_EVENTS_H_
-> +#define _LENOVO_WMI_EVENTS_H_
-> +
-> +enum lwmi_events_type {
-> +	THERMAL_MODE_EVENT =3D 1,
-> +};
-> +
-> +int lwmi_events_register_notifier(struct notifier_block *nb);
-> +int lwmi_events_unregister_notifier(struct notifier_block *nb);
-> +int devm_lwmi_events_register_notifier(struct device *dev,
-> +				       struct notifier_block *nb);
-> +
-> +#endif /* !_LENOVO_WMI_EVENTS_H_ */
+> Why? Because as mentioned, loading the module very much implies having
+> to be able to load the firmware for it - but yes, the firmware loading
+> might actually happen _later_ and in a different and completely
+> independent context.
+>
+> In particular, drivers can do their firmware loads at various random time=
+s.
+>
+> Yes, one common situation is that they do it during module load, for
+> example, in which case it would be done in the same context that the
+> module load itself happened.
+>
+> But it's *also* common that it is done asynchronously while scanning
+> for devices.
+>
+> Or done when the device is opened.
+>
+> Or the firmware file is reloaded when the system resumes from suspend,
+> because the device lost all its context, so now it's reloading
+> something that it loaded earlier in a very *different* context, and
+> that had better not start randomly failing resulting in basically
+> impossible-to-debug resume problems.
+>
+> In other words, the context of actual firmware loading is pretty much
+> random. It isn't necessarily tied to the module loading, but it *also*
+> isn't necessarily tied to a particular other actor.
+>
+> So any argument that depends on the context of the firmware load is
+> bogus a priori. Since there isn't some well-defined context the load
+> happens in, any policy based on such a context is garbage.
+>
+> To put it bluntly, your whole argument for why separate policy makes
+> sense seems completely made-up and has no actual reality behind it.
+>
+> It also very much sounds like this change was *not* triggered by
+> anybody actually needing it, and as in fact sounds like just "let's
+> pattern-match and do the same thing for these things that look similar
+> but aren't".
+>
+> This is *EXACTLY* the kind of thing that I think the security layers
+> should absolutely NOT DO.
+>
+> You should not add nonsensical policy hooks "just because".
+>
+> Security policy needs to have some thought behind it, not be some
+> mindless random thing. And there should have been a documented case of
+> people needing it.
+>
+> This is literally why I was asking for the reasoning behind that
+> patch. The patch looked nonsensical. And I have not at all been
+> convinced otherwise.
+>
+>                      Linus
+>
