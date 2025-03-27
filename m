@@ -1,92 +1,102 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C6412CDA5
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743072489; cv=pass; b=nVx8bc1CK0HSpK5hM3uN7wt97VZ92o4JV7DTGa1Y3q0xSlQVETIjaM4HFpfAFGeeqKOs/oUK11U77hKM4qkYjCCUkGcTJRTsga8aW3vi4hD/nOiOGbxmRIpMKRjo7DeXx1Z+jIj4WcRWx/3QMM8ozQZpPcV0cAb5Mm65kYNNrYY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743072489; c=relaxed/simple;
-	bh=kZoBRLrhM+P17lhrXH7LoJ851fbGcbrJDkrLGDoYYSY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H2C3Heg9CkzJskt2nIsBj4hgrcoHhcjuALABiYexqrEDtJYmjmuS83iBoRDPNl2kOGvY6KmM8UuKdfdwVSb4dGLnY9m/1sV/oZhII1MpQyuc/osJsXXwVHA89DLpQwV20jtMOlqC9wv87UsIAu3vqr4HsJ769o0qJ5bH/oyZZe0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=OOD1fd6l; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0153B12CDA5;
+	Thu, 27 Mar 2025 10:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743072495; cv=none; b=TVTfKvwT0hZf4x8OmyMorLe8g72vy8sShVPFOFh4yGgoMvfQSNANhuTwfSRIS3lrKea/ynz6QE+sNnq7RfmKfNW0k4tvSvaQ0OFAy3jIeZ3x5xghY/SzCUmcFs07Ld11gdl0TIypmyPnolI7IcQCOuJt5ag7wdW3nfC8qFLmJ00=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743072495; c=relaxed/simple;
+	bh=cc+rihPL886jm67zgwnhpdSaWFW4sArwqBrkbQ93OEU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N84Dmo7jI3DahFFqJnM715m5/IyBghvU3F4kJ9AMtkSTHAnOzZYzGUc4hrJ5DkHpGk9YRtwmvMuHQ0EqSBbGwcXpPyMRYouWwa0ZWTQZBL6/MgKwwaEVeWBI4tYLpojH++wt9EqD6EOkkV1LoVUEZ/krzdcaGIhrwsnNfWE3Isg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=jIpW6AQ8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="OOD1fd6l"
-ARC-Seal: i=1; a=rsa-sha256; t=1743072458; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=kKiWg6QUy451BUDU2CsSbDHKO4Ht/NOLLSEUguTpZhHNFg3+oy65McxxEsuJnSuidZ8g+QlF81kYERKuo878UxqIYugLBqFQdXDYfO5medDTzhLgS8XbpysEIDkiYmjyTGveEc4Qqc4D80YhWNfPwAcv9g2AqRD4WtuJ49xFbLQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743072458; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=tso8tShyCAlR9Ojf8bTQYqSzBPMtPFXqnm1L3DLSMTc=; 
-	b=Skhh5B89wVhUUHvrCTi0/M/EgOSvOIxwJFkkaVtCIqeim/YUb+8TWOtclWNXjBMSzSfUuXBL0i6zPGq6dPxKpPJKRVnxOb4fnV+ekjxI9RqdsOeMyBQsKPdsYwDq45S/4TPdvxhCPdqHSb5tBgbYtq3QUiyAJg9B+CEQJ49br80=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743072458;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=tso8tShyCAlR9Ojf8bTQYqSzBPMtPFXqnm1L3DLSMTc=;
-	b=OOD1fd6lS5WRaWgR6qM1Fd+JZdVZuY+tUwyjjo0nDItXqpnRxg1/DuROVt/P/YyZ
-	5iRypRyCwyxtlhxMlV5e7wJ45zTmgjlST8LWDEIvfBWMuB7F1FSI3ft1BZX2huiB8N5
-	dZh+zdUSOC22erPAjAp2ZP/k7KDXc6X9RUDrVaEo=
-Received: by mx.zohomail.com with SMTPS id 1743072456214636.3840766945316;
-	Thu, 27 Mar 2025 03:47:36 -0700 (PDT)
-Message-ID: <c2c5db3c-ebb3-4448-b7ab-6133857da109@collabora.com>
-Date: Thu, 27 Mar 2025 13:47:29 +0300
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="jIpW6AQ8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB5FCC4CEE8;
+	Thu, 27 Mar 2025 10:48:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1743072494;
+	bh=cc+rihPL886jm67zgwnhpdSaWFW4sArwqBrkbQ93OEU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jIpW6AQ8T5RYpWHEGnZ9YQNZSgS2s8IYLWSN7kYrB/izjUOcJHkgtE4n9udupx3ea
+	 dIcro9GGdFLCLwNlHc+mCFMNOslXRLd698jpM7b2u0frFPFiBHFEP89bxH4CEBiPeN
+	 j+GGTkWrFDc5xledDW6VSIOqcxtP8dSDxEU8bQZY=
+Date: Thu, 27 Mar 2025 11:48:11 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Puma Hsu <pumahsu@google.com>
+Cc: Wesley Cheng <quic_wcheng@quicinc.com>, srinivas.kandagatla@linaro.org,
+	mathias.nyman@intel.com, perex@perex.cz, conor+dt@kernel.org,
+	dmitry.torokhov@gmail.com, corbet@lwn.net, broonie@kernel.org,
+	lgirdwood@gmail.com, krzk+dt@kernel.org,
+	pierre-louis.bossart@linux.intel.com, Thinh.Nguyen@synopsys.com,
+	tiwai@suse.com, robh@kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-sound@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
+	Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: [PATCH v36 01/31] xhci: sideband: add initial api to register a
+ secondary interrupter entity
+Message-ID: <2025032756-aliens-ibuprofen-79e5@gregkh>
+References: <20250319005141.312805-1-quic_wcheng@quicinc.com>
+ <20250319005141.312805-2-quic_wcheng@quicinc.com>
+ <CAGCq0LZoi0MOJLJYUeQJW6EfOU_Ch=v1Sg8L4_B-KhdDCx1fCw@mail.gmail.com>
+ <2025032734-reward-fantasize-dc16@gregkh>
+ <CAGCq0LamxvvE8b45VAshw9aWJNC2so_vK9t+pzXd3C7Y7tfYAg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 00/10] Add generic DRM-shmem memory shrinker (part 1)
-To: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Gerd Hoffmann <kraxel@redhat.com>, Qiang Yu <yuq825@gmail.com>,
- Steven Price <steven.price@arm.com>, Frank Binns <frank.binns@imgtec.com>,
- Matt Coster <matt.coster@imgtec.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, kernel@collabora.com
-References: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
- <0e0686da-ae96-4a7a-81b2-b9ece1fa4837@suse.de>
- <1c9daef3-cd64-4f2f-8021-6ab2f17ae572@collabora.com>
- <20250327114520.5b470d8e@collabora.com>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250327114520.5b470d8e@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGCq0LamxvvE8b45VAshw9aWJNC2so_vK9t+pzXd3C7Y7tfYAg@mail.gmail.com>
 
-On 3/27/25 13:45, Boris Brezillon wrote:
-> On Wed, 26 Mar 2025 23:08:55 +0300
-> Dmitry Osipenko <dmitry.osipenko@collabora.com> wrote:
+On Thu, Mar 27, 2025 at 06:14:00PM +0800, Puma Hsu wrote:
+> On Thu, Mar 27, 2025 at 3:02 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Thu, Mar 27, 2025 at 02:27:00PM +0800, Puma Hsu wrote:
+> > > Hi,
+> > >
+> > > We have implemented and verified the USB audio offloading feature with
+> > > the xhci sideband driver on our Google Pixel products. We would
+> > > appreciate it if this solution can be accepted. Thank you all for the
+> > > work!
+> > >
+> >
+> > Great, can you properly send a "Tested-by:" line for this against the
+> > 00/XX email so that it will be properly saved?
+> >
 > 
->> On 3/25/25 17:17, Thomas Zimmermann wrote:
->>> I've looked through this before, so
->>>
->>> Acked-by: Thomas Zimmermann <tzimmermann@suse.d>
->>>
->>> for the series.  
->>
->> Applied to misc-next, thanks!
-> 
-> Looks like the accel drivers were left behind. I just sent a patch
-> series to address that [1].
-> 
-> [1]https://lore.kernel.org/r/dri-devel/20250327104300.1982058-1-boris.brezillon@collabora.com/
+> We(Google Pixel) only use the xhci sideband related changes and two
+> changes in the sound card driver. For the details, what we actually
+> tested are patch [01], [02], [03], [04], [05], [06], [08], and [12].
+> Do I still send the "Tested-by:" line to 00/31 email? Or should I just
+> send the "Tested-by:" line to the 8 changes above? (I added
+> "Tested-by" line for this [01/31] first.)
 
-Accel drivers weren't on my radar, thanks a lot!
+Send it to the commits that you used if you only used portions.
 
--- 
-Best regards,
-Dmitry
+But that feels odd, why are you only using portions here?  Why not the
+whole thing?  Are you going to have to revert portions of this series in
+order for your device to work properly?
+
+> > Also, I think a new version of the series is coming, can you test that
+> > to verify it works properly?  We have to wait until after -rc1 is out
+> > anyway.
+> >
+> 
+> I think this v36 is the last version of the series as I discussed with
+> QCOM Wesley. And for sure I will test it if they do have a new
+> version.
+
+See:
+	https://lore.kernel.org/r/ee95520b-cdcc-4e10-a70e-683993cafe36@quicinc.com
+for where the need for a new version is discussed.
+
+thanks,
+
+greg k-h
