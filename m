@@ -1,88 +1,63 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81EA9156236
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DB118C932;
+	Thu, 27 Mar 2025 03:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743047582; cv=none; b=eeJRyyQyAZjNrdJHlgkckiej+W4isyNM5wgDB7adw2oMq2+DnKndKqrXl2GQ7F4BDG1FKNF/AQrknwFDWN9TzwImBrK9E3xa64M1Fy8BBetNB8/80JIppKcND3SLkCwiWdx7CIBNJXRcnBfBWW3WC0p++zoSa1nb+76dZJVzzns=
+	t=1743047995; cv=none; b=qDpC6CzyujHVW8mM5BblGGaPlQCkh2v/fk3o+At6lMzqUTNgMNSaP2EDOnrq/6ZA1DY1O4iz6HYWJHCGfEYlDW5Kj9mZ7wujB6Z3t9u2Hz2ZJdqbyKkU3kbck71h2RLC2QTS5yG9MxVEsuCM543IHjoQLuZMYpAAt1YfpRhUKi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743047582; c=relaxed/simple;
-	bh=LYypvfF7D397wb3i8Q4RY46I0a3eMvUOY6tCjPz+7l8=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=EeOnLdIzFG8joUBJI3gsyn6oIhyCDyzfZqaG9UAt9C5obbzF8nq8+LJqMNy1SUKBRkDDQyHlXlJ2Y/C4igaXVFd8YgvSX63cMSyZO/XqrooL7XaDdUDKVHWqSkP/Vdba0kPMyxA+rxeD1dV/OEGooodZH8vUl9+45NHNQ4DImCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZNV9g1bjGz8R039;
-	Thu, 27 Mar 2025 11:52:55 +0800 (CST)
-Received: from xaxapp05.zte.com.cn ([10.99.98.109])
-	by mse-fl1.zte.com.cn with SMTP id 52R3qlTU062070;
-	Thu, 27 Mar 2025 11:52:47 +0800 (+08)
-	(envelope-from shao.mingyin@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Thu, 27 Mar 2025 11:52:49 +0800 (CST)
-Date: Thu, 27 Mar 2025 11:52:49 +0800 (CST)
-X-Zmail-TransId: 2af967e4cb912ab-3778d
-X-Mailer: Zmail v1.0
-Message-ID: <20250327115249185_vgGyzfhDZjf43eXFwKqX@zte.com.cn>
+	s=arc-20240116; t=1743047995; c=relaxed/simple;
+	bh=2snSLY0mD7LyKLMgKKtW5zTBCIxRtrzELpDJYRw2ENk=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=l0cpix/9/YQGgnU06OSfsjBYD58lMF2am6VJk+akQq5//A5HXpZIBlSFXKGzZamqHSTtvC6aAp9CkQAmWFUZrn98NE0zoQHihJOv3rjb95sMnKXf/3r8Uo8I9/TzzHgJ8O1MW+6KeiaDq5yW7Wh0UNNYLqKj1cGTwAXyi5OaX6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nsSm7vQR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nsSm7vQR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8A74C4CEDD;
+	Thu, 27 Mar 2025 03:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743047995;
+	bh=2snSLY0mD7LyKLMgKKtW5zTBCIxRtrzELpDJYRw2ENk=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=nsSm7vQRuQaSESVKGOu8o2PP437PUEtWTVtVTPPlMW1Q9S/vG9+aX+f86EEXLN15N
+	 tAk70NH9X7n66NSQvuDdIDDiEs2TWlWXnCIniZWCQ9gyrdizV1267lSVqs79OSwUwP
+	 QArDaplOWT0Cdq+bdEY/4LCGNNm7vDYkbKF8PetRFpbboTsAqDPb/xofj1f5Mut6tn
+	 pb6Kr3lUX9lujndaYuS81mDdlDjCTY1uY1vugLc5ADNOKYkMTTmJoIOoLo2UKLsIQ1
+	 hnF4SfpXi0w1nwTyxCwHR3sPk7AZ5/Vig2yBmyc9Qw7PTTT8KU4gcae4DyPh4x8qcs
+	 29nALj/hJdJgQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 4E44F380AAFE;
+	Thu, 27 Mar 2025 04:00:33 +0000 (UTC)
+Subject: Re: [GIT PULL] SCSI updates for the 6.14+ merge window
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <e9a26bbadd5e1b7d263a88d70cde134200d2c57c.camel@HansenPartnership.com>
+References: <e9a26bbadd5e1b7d263a88d70cde134200d2c57c.camel@HansenPartnership.com>
+X-PR-Tracked-List-Id: <linux-scsi.vger.kernel.org>
+X-PR-Tracked-Message-Id: <e9a26bbadd5e1b7d263a88d70cde134200d2c57c.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
+X-PR-Tracked-Commit-Id: 8db816c6f176321e42254badd5c1a8df8bfcfdb4
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 2e3fcbcc3b0eb9b96d2912cdac920f0ae8d1c8f2
+Message-Id: <174304803195.1563585.16049097429711162018.pr-tracker-bot@kernel.org>
+Date: Thu, 27 Mar 2025 04:00:31 +0000
+To: James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, linux-scsi <linux-scsi@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <shao.mingyin@zte.com.cn>
-To: <laurent.pinchart@ideasonboard.com>
-Cc: <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
-        <laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
-        <jernej.skrabec@gmail.com>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <ye.xingchen@zte.com.cn>,
-        <linux-kernel@vger.kernel.org>, <zhang.enpei@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIHYyXSBkcm0vYnJpZGdlOiB0aGM2M2x2ZDEwMjQ6IFVzZSBkZXZfZXJyX3Byb2JlKCk=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 52R3qlTU062070
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67E4CB97.000/4ZNV9g1bjGz8R039
 
-From: Zhang Enpei <zhang.enpei@zte.com.cn>
+The pull request you sent on Wed, 26 Mar 2025 15:11:31 -0400:
 
-Replace the open-code with dev_err_probe() to simplify the code.
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
 
-Signed-off-by: Zhang Enpei <zhang.enpei@zte.com.cn>
-Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
----
-v2:
-	- reduce a PTR_ERR call since dev_err_probe() will add
-	  the error value to the message
- drivers/gpu/drm/bridge/thc63lvd1024.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/2e3fcbcc3b0eb9b96d2912cdac920f0ae8d1c8f2
 
-diff --git a/drivers/gpu/drm/bridge/thc63lvd1024.c b/drivers/gpu/drm/bridge/thc63lvd1024.c
-index bba10cf9b4f9..8f3096fa3dd7 100644
---- a/drivers/gpu/drm/bridge/thc63lvd1024.c
-+++ b/drivers/gpu/drm/bridge/thc63lvd1024.c
-@@ -188,14 +188,9 @@ static int thc63_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, thc63);
+Thank you!
 
- 	thc63->vcc = devm_regulator_get(thc63->dev, "vcc");
--	if (IS_ERR(thc63->vcc)) {
--		if (PTR_ERR(thc63->vcc) == -EPROBE_DEFER)
--			return -EPROBE_DEFER;
--
--		dev_err(thc63->dev, "Unable to get \"vcc\" supply: %ld\n",
--			PTR_ERR(thc63->vcc));
--		return PTR_ERR(thc63->vcc);
--	}
-+	if (IS_ERR(thc63->vcc))
-+		return dev_err_probe(thc63->dev, PTR_ERR(thc63->vcc),
-+				     "Unable to get \"vcc\" supply\n");
-
- 	ret = thc63_gpio_init(thc63);
- 	if (ret)
 -- 
-2.25.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
