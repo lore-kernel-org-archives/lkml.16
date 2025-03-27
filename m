@@ -1,138 +1,129 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F822F2A;
-	Thu, 27 Mar 2025 12:53:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E27214237
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743080037; cv=none; b=SNAdRAJfL/+e1WF4dSR3auc6OCRruOUCMauJCYBhU/rU3Dnj75EARqtA/J6yyZ+tAsncN07V70txvAPAEZ/B4Wg0/9QgqQCCNxkNxpudYuvbBt4PXZ+wVDnqlQMvnxN+l9MF4iiNLIR9iTSovEwtM3dCfaVv3JLH/yCtXwAtrew=
+	t=1743080072; cv=none; b=SvQpn+lCRBG47bWfxAodwmOoE9qRMqUFIZBLYQu2u+CAOLWewiGm/0kltNeevCmPpkBtShcqZ1E/mCyGIvk14MUe2HhnkscI3mXt93vmwFyjsm0dJx6qUW23ruUaESX9ey6lK6HKWNqPoUde5+e2V37gTHDbnpYIwAvhhD2IJrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743080037; c=relaxed/simple;
-	bh=OyRxuRbuBHV8b3o0/C8mCF4e1TUCtATMDlYeAK82uTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S2xLBEMNGgf6mqfcABQfZn5GajgbocuwHQ/5Wt1EtgNgS2xTAEr0UFEUTkS/PQCD+WnhDB6zU43RT4vfc2VvfZXgD52Wlt+DGmBKZ4Vu6buOtdiUZdZxNC+6hrNg41OiCjFj670cemn37XsuTmMmhAsS0Smy0Yu+3sDoDF6qoiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JpAdgq0l; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743080072; c=relaxed/simple;
+	bh=ychP7TGSX/2wGk0uS2WMYhYRS2eiEVwJPcEBtkIB0sU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HeXe8v2GCaOBK9nCl8bmJIcTmSSQg8KNMZkOej5mhv9TBUy57yFPRekOW8UmOQts4Cx2oDm583Jh077DdbXIfyNUQPGqiqEt7Brk01YTH/N9Q0G6IEDSNyeNAPnXlLHrEQ5mzR1eI5bQcqNju4rtOLvqA3fzOQFHPVzBDlyXmfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uP+YcO9b; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JpAdgq0l"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ff85fec403so4081997a91.1;
-        Thu, 27 Mar 2025 05:53:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uP+YcO9b"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5ed1ac116e3so1570657a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 05:54:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743080035; x=1743684835; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=A5ANoobHoDZEVP9qldav0lDqDxXbZjBZcAW871XBMXM=;
-        b=JpAdgq0lCl6vKVnfyScWNoH53efLiWj97Gt5pmoSLnunAtYKax0sprZOC/wJytJ01O
-         hSZ6OwptyhnfLafbREyaddkUEqCdTaByN8ASQCGdQc2bt3VwKl1eGHt5WrVkhVRfwKdv
-         SybvQ9woyZoUPDEV1UM6/5x51fu0uwRDCVgfTriUf/QQDak2OBCyLzotcDsji27t1Szv
-         qnmX+uJ4rM268bAJjsVzuEJIh7/T8WyDVF1DKvKuv5i+1gMbZgGQFJyu+kn+LE/80pCw
-         opp3C+gzm61O8QxflsYoS3dltmEFqPnf/2xSdx/DOjXaHkjnYge8Rt6M3+AEAhiR6I31
-         0eIw==
+        d=linaro.org; s=google; t=1743080069; x=1743684869; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EkkCTZBIAWTTIL0zgzo8V5WU2QfnJ7YXlyAxklDZZHE=;
+        b=uP+YcO9bofeanEsNF+LkFj6+L3KrR699Du1eNDtscnJ0BwssGbfVJM7c/4PS1TbxWO
+         CHU5XKcbYMohu+Q4Vp+bSXst/fSZ3w2GPc6mJTCxEktyv7L2ym7xXK8jpvw1dPI25y0m
+         S6POIIk7UXuBoobuWOXoObP8Ys2C4FI+RzdM2/4fMVB2RQt8gOJPlTSlzQn9mpTkrFx/
+         YAp0lqIJFtuECcDJzrXuBcO6MkJEW9ZimolFO9FTQksGrkufKuBYYVAz4P4iOPjD6svX
+         3MXFoZb881/6/mKZ0I8TWMg11gdSvHEhRbbmFaAqki7CqYVvToEPOOZAT009x+fZBEFh
+         Jb1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743080035; x=1743684835;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A5ANoobHoDZEVP9qldav0lDqDxXbZjBZcAW871XBMXM=;
-        b=ZufRPs4s5HVbStuXA16Ct+EOKR9WJi5z7xLPysLzlvpNIGG7y9gFKo57kFHgqbJbWm
-         HArn4PziKMpKdJyMZ3M8GBwc6TEgXj1YsHPdlX1QTc3BE5S9u7SiZh+flg0zjihvcjSA
-         cEFyKhs6jNg63e3AjVhTIsK7m5lPUnoAWqkzCbYOCyC/zQg+7o3IMv+T8wTMgzTzhERL
-         uomWNx5wzwOpsyLZW6E8hE6r6NGQKH9OMo6P9WJY1NN5KV/efdiwaD9X+iXi8rCx8tfn
-         BPbvWkPDHF0kohNtaITabmvk5VHjSTGfGmeYt1p5TfPPGjzyskR/j4CDIUhAx7z2UfLp
-         Ajnw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXxRKf8L0XbfwYBCxRV8+Nwe7G2UHDe0IqNT4swl6kSP/qQARiKx6f0WaMucbargWiTzmkLvNDprPYehmm@vger.kernel.org, AJvYcCW6pBNIR3EvvcRcq3X/MCfOtyJH4prSHhZVa4nZQHYUnKYJbc3vPF3v2zanboycapJEEhzaJr8h6mM=@vger.kernel.org, AJvYcCXr9Db1d169zmRULq16bTvdQP5EYV+eFnBQhhlh0FFd/VgNfMO1wYgJA0/go/EZ2RQC9uUfvXbD9K+D@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSC7Siw4SSm5aeapC9B9DOux8dykSKME2MRAb0xH3pa0bIHTcX
-	c9FYOaDkmvVNrOi5p99+t2Fx5bbpu31llCOn9Qb4nwlgdqxKL617Y95wHPO+Wfc=
-X-Gm-Gg: ASbGncskA2Og6NrrgR/8EnJbgQK5DZ14y7QYR6se/oBjVht1tcmBMjdyKR3jlOm2dYS
-	0VuUg8TmDZuEproF0nVKtWAfToIE9Fa446sbychTHQJpPc8870TOxsCQFaujLCcrlwQ8oo+qfT9
-	pAHOoqY9Mz+g/UAG/C+rHzeKzfCkqHi8ZjLcibc19W4Q98neCTQ4mvlP0Wjk2aUhPEnBvlwDl5T
-	1U4BUeQ3kKJL9li3NgGUdGX18zffkfN57d/R2bddnoRLQvy+a47CnoaEB9x6P90dMTTpclzGN0Z
-	pvm+jDFV2nX8Kw4CWnuGOYBPVQK/6ubI482KK094EcVodQvbHN2hUg==
-X-Google-Smtp-Source: AGHT+IGjhVr6O2SlTvqKgsVrxF/ajlGqycQ2y9uDLDOtgp3ufhWNbAK1/lC/V40ITVpV2fLLH8Pqdg==
-X-Received: by 2002:a17:90b:3cd0:b0:2ff:5267:e7da with SMTP id 98e67ed59e1d1-3050bcf1544mr59423a91.3.1743080035191;
-        Thu, 27 Mar 2025 05:53:55 -0700 (PDT)
-Received: from localhost ([2804:30c:b03:ee00:e0b8:a8b8:44aa:8d0b])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3039e10b0d1sm2301777a91.22.2025.03.27.05.53.53
+        d=1e100.net; s=20230601; t=1743080069; x=1743684869;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EkkCTZBIAWTTIL0zgzo8V5WU2QfnJ7YXlyAxklDZZHE=;
+        b=XxPRuR1wW1LgUZLR8pvjvJx7nod9Y86D90xfpDHT2Aj8x1NLoG4X7itUAHDofMayz0
+         gP4RllppqVpRSFpAHuPQL+z36C4wjw0T5tiisXdOPnooxsF2wjd2a2w5Ps1TJKf6kfqA
+         llpYe+o1cpu0pHEjZu5EpKoaNVfJWXBKbofEbuvWNLLQ0wMN1rblYUmzX4jpFqtvEuzM
+         NlITdUseHVZB4qJgqRzIs/SdpSsbKdCWkIAmhMzLC5nbH04Ghnek5J3mJS0Qwr+Ix4Ad
+         lbdPZdUDRhbYP1P/rwD6eslaRDRynYHGhGnSyiQ98tUMXjdmXpGP+MUl6+VtFVDjBff/
+         zllg==
+X-Forwarded-Encrypted: i=1; AJvYcCX0h/G4HwSe5xDpMzN3o4ZghFPnxWF03wIbz7XCBnpYy3HkCp5JFbeKuq0mKqYqrEItEJzyZc4XqaIq7iM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQjbytBEEHG+DnfsX/flnQkIH9JZvFNc33A2B4GbMbeZLay3ME
+	Y6WMR/aOCZy7H0i+9sjfk6jQUv/5HcgHNX28Za32xsket0F1fWEo61qBethw5uI=
+X-Gm-Gg: ASbGncurgnI4vSHqvL697rSxMwI0WYwmW/C0KU5SYiFXb8r4U+CBDlgV8dK3tnbmDDU
+	VoeRDwtZaS9nQOU3Yrg5KaY9+TcY89hTx8uvfsRHtznJ684U5jrW+mFDYsSN0413XOpcaqF/kU6
+	MdvlGc5lUzFmDsZMUEz/NeXGGVM97g3aH1h/h1mThKlF817PDX09DTCo69WtpiX6Lh2xjnqt3E+
+	i1Q81NGJQ1tSjuUDb1Qe5koQNqwJ7zMprb8eZh7QiVgxAvBa6V9ac7R5pZsJG2kdSsYBPPeaoPY
+	tCCt2jdlcF1M+owMHWpGcW8Epn94c0T1Bs0khxIJgpUBKbD/nWzDDxRWNiaSeueTrAZq8rigdnc
+	dNpkhqXOXMDy0mfKI50ibOTnjUbcT
+X-Google-Smtp-Source: AGHT+IEVuF11DqXI4fu8QPcna7hms3onAO1YAcy+0T0YnqsvYmZH1rxVRZNLDer4YXPTGOn0rM72Vg==
+X-Received: by 2002:a17:907:940e:b0:ac1:e6bd:a568 with SMTP id a640c23a62f3a-ac6fb142aacmr283746566b.37.1743080068712;
+        Thu, 27 Mar 2025 05:54:28 -0700 (PDT)
+Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efd47e9dsm1205410266b.167.2025.03.27.05.54.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 05:53:54 -0700 (PDT)
-Date: Thu, 27 Mar 2025 09:54:56 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Olivier Moysan <olivier.moysan@foss.st.com>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] docs: iio: add documentation for ad3552r driver
-Message-ID: <Z-VKoNjmdQ5kdREF@debian-BULLSEYE-live-builder-AMD64>
-References: <20250321-wip-bl-ad3552r-fixes-v1-0-3c1aa249d163@baylibre.com>
- <20250321-wip-bl-ad3552r-fixes-v1-1-3c1aa249d163@baylibre.com>
- <Z-R_fiDpOqV6yXcd@debian-BULLSEYE-live-builder-AMD64>
- <uvpbdx7nzydkzigvtkx2loz2swkdrikgcbhgnlnwa3umk6ejk6@miwwdfqy3leu>
+        Thu, 27 Mar 2025 05:54:28 -0700 (PDT)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Subject: [PATCH 0/2] firmware: exynos-acpm: clients (PMIC, clocks, etc.)
+ will become children
+Date: Thu, 27 Mar 2025 12:54:26 +0000
+Message-Id: <20250327-acpm-children-v1-0-0afe15ee2ff7@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <uvpbdx7nzydkzigvtkx2loz2swkdrikgcbhgnlnwa3umk6ejk6@miwwdfqy3leu>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAIJK5WcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDYyNz3cTkglzd5IzMnJSi1Dxdc4Pk1CQDQ2OLFDNjJaCegqLUtMwKsHn
+ RsbW1AGvVOHpfAAAA
+X-Change-ID: 20250327-acpm-children-70ceb0138d63
+To: Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Peter Griffin <peter.griffin@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.14.2
 
-Hi Angelo,
+ACPM clients (PMIC, clocks, etc.) will be modeled as children of the
+ACPM interface.
 
-On 03/27, Angelo Dureghello wrote:
-> Hi Marcelo,
-> 
-> On 26.03.2025 19:28, Marcelo Schmitt wrote:
-> > The doc seems to be all about the high-speed setup despite classical SPI support
-> > being mentioned. It would be interesting to see how the regular SPI and hs
-> > ad3552r IIO devices differ from each other (wiring connections, IIO device
-> > interfaces (attributes, debug files, ...), any other relevant peculiarities).
-> > Some comments about that inline.
-> > 
-> 
-> had to add this file mainly to describe ramp generator usage.
-> 
-> The ad3552r (classic SPI) is quite old stuff, may work with whatever
-> controller with classic simple SPI (SDI/SDO/S_CLK/CS) so no particular
-> wiring diagram or explainations should be needed. 
-> 
-Okay, then maybe say so in the doc too. Otherwise this looks like a doc about
-ad3552r driver that is said to support both SPI and hs SPI setups, but only
-info about hs SPI is provided.
+This necessitates two changes in this driver:
+* child platform_devices from device tree need to be populated here
+* child drivers will need to be able to get the ACPM handle via a
+  struct device_node, not via a DT property name
 
-> > On 03/21, Angelo Dureghello wrote:
-> > > From: Angelo Dureghello <adureghello@baylibre.com>
-> > > 
-> > > Add documentation for ad3552r driver, needed to describe the high-speed
-> > > driver debugfs attributes and shows how the user may use them.
-> > > 
-> > > Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-> > > ---
-...
-> > > +High speed features
-> > > +===================
-> > > +
-> > > +Device attributes
-> > > +-----------------
-> > This is only describing the debugfs file. What about also listing the usual
-> > IIO device channels and attributes (out_voltageX_raw, out_voltageX_en, ...)?
-> > 
-> 
-> they are already documented, since part of the iio stuff.
-> Please see Documentation/ABI/testing/sysfs-bus-iio.
+This series implements these changes and is a prerequisite for v2 of
+https://lore.kernel.org/all/20250323-s2mpg10-v1-0-d08943702707@linaro.org/
 
-Agree, the sysfs interface we often refer to as device attributes is documented
-in sysfs-bus-iio. Though, some of the docs for other IIO drivers complement the
-ABI doc by elaborating on the regular sysfs interface they provide. If there
-would be anything else to say about AD3552R interface, it could be added here.
-Anyway, I think it's also fine to only have the debugfs if there is nothing
-special about the other sysfs files.
+--- dependency note ---
 
-Regards,
-Marcelo
+To apply cleanly, patch 2 must be applied after
+https://lore.kernel.org/all/20250319-acpm-fixes-v2-2-ac2c1bcf322b@linaro.org/
+due to touching similar areas of the code.
+
+I can merge that and this series into one if that is preferred instead,
+please let me know if so.
+
+--- dependency note end ---
+
+Cheers,
+Andre'
+
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
+---
+André Draszik (1):
+      firmware: exynos-acpm: introduce devm_acpm_get_by_node()
+
+Tudor Ambarus (1):
+      firmware: exynos-acpm: populate devices from device tree data
+
+ drivers/firmware/samsung/exynos-acpm.c             | 25 +++++++++-------------
+ .../linux/firmware/samsung/exynos-acpm-protocol.h  |  6 ++++--
+ 2 files changed, 14 insertions(+), 17 deletions(-)
+---
+base-commit: cc024fd4c6640be5e2e0989cc98f2c68e31289d5
+change-id: 20250327-acpm-children-70ceb0138d63
+
+Best regards,
+-- 
+André Draszik <andre.draszik@linaro.org>
+
