@@ -1,151 +1,209 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FD3218599;
-	Thu, 27 Mar 2025 14:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D549D1392;
+	Thu, 27 Mar 2025 14:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743086802; cv=none; b=YlhdNkiejlC8YCMU4BfFl4GGr5mjcGzGV9v5sYulmuZS9xFE29XD+sJlzGDNBlHjiqslgH+KfBZwWHM6eY63TD2a2iXwwZSNzHG299RhLGQ5liT1RiluJIc1TjEYx9Fy9SdIBkTSbODQDA0ISqX718rwRsugszFLCdFxlfuzxS8=
+	t=1743086910; cv=none; b=g8IvPhvPjbkZBr/HzF0zP84SJaf9qeLBGNvwP2fk5mESZpeV/+ds9saDH7YJeuSCDd1Lj1iYv0o2hM+D8HikwZfCvL6kT3rGddLW0Gp/xxK9QjwtEREPhhbM07TTJJm6Z9pBAL9WOXlhEF97oEtOwG7KnJCnXpqIsUzbQ7j9XPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743086802; c=relaxed/simple;
-	bh=0IS2pMWtxT2/IW5Qmk77oGRS1/NePt9GgXDSeHFA8cA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oA2SwKdIwe1qutfGDxbDeETpjdfboREg62QjAEFWR0GmSL8XjLKnw6QNzQroW0j5MJBWPriRKM/uvOsFqg2wthViPYFZvCyAMFACD39quyrSy3OYS4ntlUlFLOrjjdkIc8MnN95t9XP80tDqT7YvTeqPceNQEPKtdc5hsbqEvnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GdqAVGG2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743086910; c=relaxed/simple;
+	bh=srbg5hU/kX9GEqR+4GxYh6W7OhpBwZ2zLL+OHMRWn/w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ad92Wq5+A2SX4alaC1tZgGKpAFL4GRUqODraVWIRojPkV43/4ZcbUeOoTf8q8XS+E4Zc2IuEE6RvhbNTjVzortPRQ0xSpc6KJHFEkNaNwuzhLDaVx1soOLhImn+h3xcEzqHNdmNk/FHjRZzANtyWwk2+A+fWYPA263qZbjuzj/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ELSsyA9U; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GdqAVGG2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DD98C4CEDD;
-	Thu, 27 Mar 2025 14:46:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743086801;
-	bh=0IS2pMWtxT2/IW5Qmk77oGRS1/NePt9GgXDSeHFA8cA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GdqAVGG2KMSFQJZuTGpjZ+tttV6KEbBcWmvvld3HKWQ5sK9EBZBdGsPabTXmxV04v
-	 I75nuvTkSL5yHu5nTvafZ4Igbr2qAA4sLP/EUJ1V2KN6yFxevp50t3C1ptEuGOPMso
-	 ixdFuyZQNj8ZXhkIeC/6gR8UKzz03uIwalxgsIqpkncM+2RAA2BLUh3SVaQnEnEAE3
-	 dTEeBPLrLOUQ6a8HSdnWD6aKeDMVWF0+ETCHqr1AoJodqSN/mr/u22FoNfDT4tFipN
-	 FvG9ZT8reTzc2KMG0DFo644evqC54Wz22IKvY03hLd25rV3rxbrbzqlm8lF8TaEmzo
-	 7T2nLGdglsmyA==
-Message-ID: <fd16ef30-90f5-4a8c-858e-3328fe75321b@kernel.org>
-Date: Thu, 27 Mar 2025 15:46:34 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ELSsyA9U"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6e17d3e92d9so7791386d6.1;
+        Thu, 27 Mar 2025 07:48:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743086908; x=1743691708; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9og7QHW7yZ4FvbucctyT5rc0uqSsMWzyqs7LNH+w4zk=;
+        b=ELSsyA9UCL4z+6lZDleZRpgubDb8T6/n51moSdSNd7kKwee/6h8IGhaiGN32Zz1cOV
+         apluqLdgW3OcDGGqRKxiuKBRDnwdotVZq6R/sU+yBSEJiSec3feCV/E2TBp0Ng+8rPGC
+         a8p0zfqRRPVCE+ye2jzS+D+ntQF1rC1W6qcrtPl7blT7+L3EfTfhudai6yPJH9i3tkUp
+         9ufTzs9qOWjScongbSfBo92M3wDe9A41+DjGJ8n7McoDW4Oo5vNevwBl3KAwB1sJpR/p
+         r3GzqMOWM7lQE7t+epiuG7qxgtMmPgYsRA2kpEveZKGcJuvzQZChEarlSItmfSAi+5ix
+         3WDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743086908; x=1743691708;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9og7QHW7yZ4FvbucctyT5rc0uqSsMWzyqs7LNH+w4zk=;
+        b=YXk/ymb6oJjyOlFRyHgLXmICr2M7OJQOi/Zb4D0BGdE6iVLzP3dZ1r6+1uUL8oPO3Z
+         m/roOcZY02dCTLVrJvYXiiartv1j+jsbPrkHU3mIhELVOSFJYrkE405WBJaIMDKOc9hH
+         6ZqJGdROxSvNJs2dNQG+nIU/42SaGMw3xH9GqASfTm5tsXF5xxFh7wD1QCDtGG12ULRi
+         aKqGQdi6pBmdlV6vqBh+BYcuyc9doy7lACsq/Tqvf+FEMAH2KjN2b8G7Jl9zRqRoHrC7
+         FUduAhp8ncnS2dTkFr+zrYBoXBye8qItggg3+K70bchSLcLKv4uujiCA95gL2rAE63Qy
+         hoGw==
+X-Forwarded-Encrypted: i=1; AJvYcCXlb5yK+x/uyDjA4zepNCdAps7OLb8XfCm/qfJcrYQci9mLy7JEGbv4oShUPpF8Oo90v1zSznrg3xH1BR4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztvX2fonxhl0S0wMNDaNFUkAJ1dEqRne4+dVVBklnJzB0RQpiT
+	VgUpo43h1irmTi6DnzjuZ9n0OxOkpaynzafYw48d4JthdgD9JQZ/
+X-Gm-Gg: ASbGnctIEY4vx4oKBMiJ2AC5I9RS7CqvJcjG73k5UGWLcuaxPR4ab4uvyBVyySpmHDO
+	3VMLMByJLUyr4krcVx2gBHWHF7DX4lXDa9pRCE1xrzYIH3ORHN7jrq3XwaWCjUIENsbMrnImeYt
+	tOSslgrUD5v799fz3fIquEYgs2201JMzjDodH/TtrWvpqkjayoSn83ZCSCtYrpF20b8pHFr1YQk
+	c1j1Aq6uFFDvTAUrJX08PaZsqc8LS0ZeUNzTlCg9kq1rYZX2KD4+tPJpE4iClYlRKVDZwVtjSO6
+	9J6GZuBi74NIWXHgfcr6BuB40joPIIfyDcNcX6NGZktF+RBBSOtIqUnSpw6/7pd8J238ieuoVuF
+	SYjAIWpJg65w80FMvYRXQlcm/yGhzloE7vYQHY4tzTsgq0w==
+X-Google-Smtp-Source: AGHT+IFZ0iTeup043Uaqa4k8vNniJp3yD6375e4R3nCqSubhPSwoSDkhZWAnx74Ht6mOe6vI5TarXg==
+X-Received: by 2002:a05:6214:2483:b0:6d8:b3a7:75a5 with SMTP id 6a1803df08f44-6ed2399af9emr61996706d6.42.1743086907453;
+        Thu, 27 Mar 2025 07:48:27 -0700 (PDT)
+Received: from localhost.localdomain (219.sub-174-198-10.myvzw.com. [174.198.10.219])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eec9645d1esm115796d6.35.2025.03.27.07.48.25
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 27 Mar 2025 07:48:26 -0700 (PDT)
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To: torvalds@linux-foundation.org
+Cc: bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@kernel.org,
+	peterz@infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] BPF resilient spin_lock for 6.15
+Date: Thu, 27 Mar 2025 10:48:23 -0400
+Message-Id: <20250327144823.99186-1-alexei.starovoitov@gmail.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/7] Enhance the PCIe controller driver
-To: Manikandan Karunakaran Pillai <mpillai@cadence.com>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
- <kw@linux.com>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
- Milind Parab <mparab@cadence.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250327105429.2947013-1-mpillai@cadence.com>
- <CH2PPF4D26F8E1CA951AF03C17D11C7BEB3A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
- <fc1c6ded-2246-4d09-90b4-c0a264962ab3@kernel.org>
- <CH2PPF4D26F8E1CE0395D8E80DA73829B4EA2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <CH2PPF4D26F8E1CE0395D8E80DA73829B4EA2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 27/03/2025 15:43, Manikandan Karunakaran Pillai wrote:
-> 
-> 
->> -----Original Message-----
->> From: Krzysztof Kozlowski <krzk@kernel.org>
->> Sent: Thursday, March 27, 2025 7:47 PM
->> To: Manikandan Karunakaran Pillai <mpillai@cadence.com>;
->> bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
->> manivannan.sadhasivam@linaro.org; robh@kernel.org; krzk+dt@kernel.org;
->> conor+dt@kernel.org; Milind Parab <mparab@cadence.com>
->> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
->> kernel@vger.kernel.org
->> Subject: Re: [PATCH 0/7] Enhance the PCIe controller driver
->>
->> EXTERNAL MAIL
->>
->>
->> On 27/03/2025 11:59, Manikandan Karunakaran Pillai wrote:
->>> Enhances the exiting Cadence PCIe controller drivers to support second
->>> generation PCIe controller also referred as HPA(High Performance
->>> Architecture) controllers.
->>>
->>> The scripts/checkpatch.pl has been run on the patches with and without
->>> --strict. With the --strict option, 4 checks are generated on 1 patch
->>> (patch 0002 of the series), which can be ignored. There are no code
->>> fixes required for these checks. The rest of the 'scripts/checkpatch.pl'
->>> is clean.
->>>
->>
->> Why your patches are not properly threaded? I see only one patch.
->>
-> I don’t have git send-email enabled from the organization and hence need to send from Microsoft outlook.
+Hi Linus,
 
-That's your problem to fix, not ours to deal with. It is really not okay
-to make this my problem.
+The following changes since commit ae0a457f5d33c336f3c4259a258f8b537531a04b:
 
-Especially that it is solveable with b4 relay.
+  bpf: Make perf_event_read_output accessible in all program types. (2025-03-18 10:21:59 -0700)
 
+are available in the Git repository at:
 
-> I use git send-email to send it to my  Outlook account and then forward it from there to the 
-> Linux mail list. (While sending from linux git send-email, I am using the Message-ID of the cover letter)
-> Any suggestions on how to fix ?
+  https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git tags/bpf_res_spin_lock
 
-b4 relay or just use normal (non-Microsoft) systems.
+for you to fetch changes up to 6ffb9017e9329168b3b4216d15def8e78e1b1fac:
 
-Where is the changelog and versioning?
+  Merge branch 'resilient-queued-spin-lock' (2025-03-19 08:03:06 -0700)
 
-Best regards,
-Krzysztof
+----------------------------------------------------------------
+Please merge this pull request after main BPF changes.
+
+This patch set introduces Resilient Queued Spin Lock (or rqspinlock with
+res_spin_lock() and res_spin_unlock() APIs).
+
+This is a qspinlock variant which recovers the kernel from a stalled
+state when the lock acquisition path cannot make forward progress. This
+can occur when a lock acquisition attempt enters a deadlock situation
+(e.g. AA, or ABBA), or more generally, when the owner of the lock (which
+we’re trying to acquire) isn’t making forward progress.
+Deadlock detection is the main mechanism used to provide instant recovery,
+with the timeout mechanism acting as a final line of defense. Detection is
+triggered immediately when beginning the waiting loop of a lock slow path.
+
+Additionally, BPF programs attached to different parts of the kernel
+can introduce new control flow into the kernel, which increases the
+likelihood of deadlocks in code not written to handle reentrancy. There
+have been multiple syzbot reports surfacing deadlocks in internal kernel
+code due to the diverse ways in which BPF programs can be attached to
+different parts of the kernel.  By switching the BPF subsystem’s lock
+usage to rqspinlock, all of these issues are mitigated at runtime.
+
+This spin lock implementation allows BPF maps to become safer and remove
+mechanisms that have fallen short in assuring safety when nesting
+programs in arbitrary ways in the same context or across different
+contexts.
+
+We run benchmarks that stress locking scalability and perform comparison
+against the baseline (qspinlock). For the rqspinlock case, we replace
+the default qspinlock with it in the kernel, such that all spin locks in
+the kernel use the rqspinlock slow path. As such, benchmarks that stress
+kernel spin locks end up exercising rqspinlock.
+
+More details in the merge commit cover letter.
+
+In this patchset we convert BPF hashtab, LPM, and percpu_freelist
+to res_spin_lock:
+  kernel/bpf/hashtab.c         | 102 ++++++++++++++++++++++++-----------
+  kernel/bpf/lpm_trie.c        |  25 ++++++++++-----------
+  kernel/bpf/percpu_freelist.c | 113 +++++++++++++++++------------------
+  kernel/bpf/percpu_freelist.h |   4 ++--
+  4 files changed, 73 insertions(+), 171 deletions(-)
+
+Other BPF mechansims: queue_stack, local storage, ringbuf
+will be converted in the follow-ups.
+
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+----------------------------------------------------------------
+Alexei Starovoitov (1):
+      Merge branch 'resilient-queued-spin-lock'
+
+Kumar Kartikeya Dwivedi (24):
+      locking: Move MCS struct definition to public header
+      locking: Move common qspinlock helpers to a private header
+      locking: Allow obtaining result of arch_mcs_spin_lock_contended
+      locking: Copy out qspinlock.c to kernel/bpf/rqspinlock.c
+      rqspinlock: Add rqspinlock.h header
+      rqspinlock: Drop PV and virtualization support
+      rqspinlock: Add support for timeouts
+      rqspinlock: Hardcode cond_acquire loops for arm64
+      rqspinlock: Protect pending bit owners from stalls
+      rqspinlock: Protect waiters in queue from stalls
+      rqspinlock: Protect waiters in trylock fallback from stalls
+      rqspinlock: Add deadlock detection and recovery
+      rqspinlock: Add a test-and-set fallback
+      rqspinlock: Add basic support for CONFIG_PARAVIRT
+      rqspinlock: Add macros for rqspinlock usage
+      rqspinlock: Add entry to Makefile, MAINTAINERS
+      rqspinlock: Add locktorture support
+      bpf: Convert hashtab.c to rqspinlock
+      bpf: Convert percpu_freelist.c to rqspinlock
+      bpf: Convert lpm_trie.c to rqspinlock
+      bpf: Introduce rqspinlock kfuncs
+      bpf: Implement verifier support for rqspinlock
+      bpf: Maintain FIFO property for rqspinlock unlock
+      selftests/bpf: Add tests for rqspinlock
+
+ MAINTAINERS                                        |   2 +
+ arch/arm64/include/asm/rqspinlock.h                |  93 +++
+ arch/x86/include/asm/rqspinlock.h                  |  33 +
+ include/asm-generic/Kbuild                         |   1 +
+ include/asm-generic/mcs_spinlock.h                 |   6 +
+ include/asm-generic/rqspinlock.h                   | 250 +++++++
+ include/linux/bpf.h                                |  10 +
+ include/linux/bpf_verifier.h                       |  19 +-
+ kernel/bpf/Makefile                                |   2 +-
+ kernel/bpf/btf.c                                   |  26 +-
+ kernel/bpf/hashtab.c                               | 102 +--
+ kernel/bpf/lpm_trie.c                              |  25 +-
+ kernel/bpf/percpu_freelist.c                       | 113 +---
+ kernel/bpf/percpu_freelist.h                       |   4 +-
+ kernel/bpf/rqspinlock.c                            | 737 +++++++++++++++++++++
+ kernel/bpf/rqspinlock.h                            |  48 ++
+ kernel/bpf/syscall.c                               |   6 +-
+ kernel/bpf/verifier.c                              | 248 +++++--
+ kernel/locking/lock_events_list.h                  |   5 +
+ kernel/locking/locktorture.c                       |  57 ++
+ kernel/locking/mcs_spinlock.h                      |  10 +-
+ kernel/locking/qspinlock.c                         | 193 +-----
+ kernel/locking/qspinlock.h                         | 201 ++++++
+ .../selftests/bpf/prog_tests/res_spin_lock.c       |  98 +++
+ tools/testing/selftests/bpf/progs/irq.c            |  53 ++
+ tools/testing/selftests/bpf/progs/res_spin_lock.c  | 143 ++++
+ .../selftests/bpf/progs/res_spin_lock_fail.c       | 244 +++++++
+ 27 files changed, 2312 insertions(+), 417 deletions(-)
+ create mode 100644 arch/arm64/include/asm/rqspinlock.h
+ create mode 100644 arch/x86/include/asm/rqspinlock.h
+ create mode 100644 include/asm-generic/rqspinlock.h
+ create mode 100644 kernel/bpf/rqspinlock.c
+ create mode 100644 kernel/bpf/rqspinlock.h
+ create mode 100644 kernel/locking/qspinlock.h
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/res_spin_lock.c
+ create mode 100644 tools/testing/selftests/bpf/progs/res_spin_lock.c
+ create mode 100644 tools/testing/selftests/bpf/progs/res_spin_lock_fail.c
