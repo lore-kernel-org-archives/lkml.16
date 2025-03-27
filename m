@@ -1,32 +1,32 @@
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6CA1C84AE
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 23:06:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2438E1C84AE
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 23:07:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743116807; cv=none; b=K/AEXvhK8hA5SNANDF330Q3WWm5R1Am/vMazIxXlMsRBj0tPTg9+SO48iNK3nbx5yQlmCPMuT8ru31AHx3ot6n4NWjjU7CsWTfDvorByh+f4bexGELH/QqkcLm1qTKTN9LtDRIp58/MWVU0AigT49BLmGBwwe8iQlVio+bJHEUk=
+	t=1743116862; cv=none; b=ZY7GGo/ExDLncb0tuMx/6EGJi0VxekRITf9vE8kgvYO1B3Ih0ffi9kENnTUbbiqvhIO77mnXeuWxpG+X8TSQZSb17GP92/sXFbqD1DQjr46BJJE7s34awX7iOMJve3TCgeRvP58fe0BTvVCmKR1WieJh+kOBeawkFSMI73rrurA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743116807; c=relaxed/simple;
-	bh=Jg0lay9DQTanzPgGVu0GDPUwJJjKFNGOTQpAD6wb1LU=;
+	s=arc-20240116; t=1743116862; c=relaxed/simple;
+	bh=CAfB333k6yq4QzaN/HakF7NHaUX45kEF0papiauE75w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fbe8JRoFRYBA4Wc1q7D4mKNXIk4/KKqoMNqInfR0Di/lpO0RecrobO+1FH1bAygRhFbqjmLUkhLzUwVjIdc2rO+D6cVr9o/StnKumcJnc7kGrNeAVgmGgInGpeU/I2VeLg2TWD5pVgULc9JTCMqn/M8IoFJ0vwDk6oe+tP8x05M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=FLbtod8/; arc=none smtp.client-ip=213.167.242.64
+	 Content-Type:Content-Disposition:In-Reply-To; b=gbCjWeu04YxPUYNEnjpeg2SRihG+RO2hOA5jSG/tRO/iK2AExnT/ZnM1kiVwh3nRfPp3w06Nhguu6oFBJHqEbSGtFL/PmBeOTFFZwf/Der2k02NBDpMNJw/Tv6Qm/NQKmhF4oHftbtHkGqPrGzrsKWqosyO98GAlPFzGZh0n9hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=WI/Zj2Id; arc=none smtp.client-ip=213.167.242.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="FLbtod8/"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WI/Zj2Id"
 Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 57E5D3DA;
-	Fri, 28 Mar 2025 00:04:54 +0100 (CET)
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C7B873DA;
+	Fri, 28 Mar 2025 00:05:50 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743116694;
-	bh=Jg0lay9DQTanzPgGVu0GDPUwJJjKFNGOTQpAD6wb1LU=;
+	s=mail; t=1743116751;
+	bh=CAfB333k6yq4QzaN/HakF7NHaUX45kEF0papiauE75w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FLbtod8/qhWpgj251QPTnmeCPBgmLYhkvNKL3C8DvdM9NmjpjMCJGIDAJCw9AhQnl
-	 Nx2RAVQ37idvF4rViSSvA7i3IlltNWvibGwdyJb06oSoXyr41UGNRJcQNiPpmGy18D
-	 pNp3d6ht1KaEwOedYgcULuxNsBgppRE5MNDpLCYI=
-Date: Fri, 28 Mar 2025 01:06:19 +0200
+	b=WI/Zj2Id1WyTAx5VFjIm/0/6bpLBczldsZYX508ciHKynMmsof3l/V20nhbvdN5bu
+	 X6Lkn65r4NO34I0qBfjYahU0zeWC1YbYE87h+wv05n4/99MBkbxCm57cfqFbKi7LHe
+	 eGyQcE1PhtRFVgVvgNlJkM006nNy74iIRGnO1T6k=
+Date: Fri, 28 Mar 2025 01:07:15 +0200
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 Cc: Vishal Sagar <vishal.sagar@amd.com>,
@@ -40,10 +40,10 @@ Cc: Vishal Sagar <vishal.sagar@amd.com>,
 	linux-arm-kernel@lists.infradead.org,
 	Geert Uytterhoeven <geert@linux-m68k.org>,
 	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: Re: [PATCH v4 11/11] drm: xlnx: zynqmp: Add support for XVUY2101010
-Message-ID: <20250327230619.GF16629@pendragon.ideasonboard.com>
+Subject: Re: [PATCH v4 06/11] drm/fourcc: Add DRM_FORMAT_XVUY2101010
+Message-ID: <20250327230715.GG16629@pendragon.ideasonboard.com>
 References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
- <20250326-xilinx-formats-v4-11-322a300c6d72@ideasonboard.com>
+ <20250326-xilinx-formats-v4-6-322a300c6d72@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,43 +52,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250326-xilinx-formats-v4-11-322a300c6d72@ideasonboard.com>
+In-Reply-To: <20250326-xilinx-formats-v4-6-322a300c6d72@ideasonboard.com>
 
 Hi Tomi,
 
 Thank you for the patch.
 
-On Wed, Mar 26, 2025 at 03:22:54PM +0200, Tomi Valkeinen wrote:
-> Add support for XVUY2101010 format.
+On Wed, Mar 26, 2025 at 03:22:49PM +0200, Tomi Valkeinen wrote:
+> Add XVUY2101010, a 10 bits per component YCbCr format in a 32 bit
+> container.
 > 
 > Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> ---
->  drivers/gpu/drm/xlnx/zynqmp_disp.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> index ce685dfbf31f..79f58e06f38f 100644
-> --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> @@ -322,6 +322,11 @@ static const struct zynqmp_disp_format avbuf_vid_fmts[] = {
->  		.buf_fmt	= ZYNQMP_DISP_AV_BUF_FMT_NL_VID_YV24_10,
->  		.swap		= false,
->  		.sf		= scaling_factors_101010,
-> +	}, {
-> +		.drm_fmt	= DRM_FORMAT_XVUY2101010,
-> +		.buf_fmt	= ZYNQMP_DISP_AV_BUF_FMT_NL_VID_YUV444_10,
-> +		.swap		= false,
-> +		.sf		= scaling_factors_101010,
-
-I'll have to trust your word on this, the documentation is just too
-wrong in too many places to trust it. Assuming you've tested this
-format,
 
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
->  	},
->  };
+> ---
+>  drivers/gpu/drm/drm_fourcc.c  | 1 +
+>  include/uapi/drm/drm_fourcc.h | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
+> index 60684f99f4a7..81e5fcdcc234 100644
+> --- a/drivers/gpu/drm/drm_fourcc.c
+> +++ b/drivers/gpu/drm/drm_fourcc.c
+> @@ -280,6 +280,7 @@ const struct drm_format_info *__drm_format_info(u32 format)
+>  		{ .format = DRM_FORMAT_VYUY,		.depth = 0,  .num_planes = 1, .cpp = { 2, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
+>  		{ .format = DRM_FORMAT_XYUV8888,	.depth = 0,  .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
+>  		{ .format = DRM_FORMAT_VUY888,          .depth = 0,  .num_planes = 1, .cpp = { 3, 0, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
+> +		{ .format = DRM_FORMAT_XVUY2101010,     .depth = 0,  .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .is_yuv = true },
+>  		{ .format = DRM_FORMAT_AYUV,		.depth = 0,  .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 1, .vsub = 1, .has_alpha = true, .is_yuv = true },
+>  		{ .format = DRM_FORMAT_Y210,            .depth = 0,  .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
+>  		{ .format = DRM_FORMAT_Y212,            .depth = 0,  .num_planes = 1, .cpp = { 4, 0, 0 }, .hsub = 2, .vsub = 1, .is_yuv = true },
+> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+> index 10d77f6f6e95..552438128f51 100644
+> --- a/include/uapi/drm/drm_fourcc.h
+> +++ b/include/uapi/drm/drm_fourcc.h
+> @@ -246,6 +246,7 @@ extern "C" {
+>  #define DRM_FORMAT_XVUY8888	fourcc_code('X', 'V', 'U', 'Y') /* [31:0] X:Cr:Cb:Y 8:8:8:8 little endian */
+>  #define DRM_FORMAT_VUY888	fourcc_code('V', 'U', '2', '4') /* [23:0] Cr:Cb:Y 8:8:8 little endian */
+>  #define DRM_FORMAT_VUY101010	fourcc_code('V', 'U', '3', '0') /* Y followed by U then V, 10:10:10. Non-linear modifier only */
+> +#define DRM_FORMAT_XVUY2101010	fourcc_code('X', 'Y', '3', '0') /* [31:0] x:Cr:Cb:Y 2:10:10:10 little endian */
 >  
+>  /*
+>   * packed Y2xx indicate for each component, xx valid data occupy msb
 
 -- 
 Regards,
