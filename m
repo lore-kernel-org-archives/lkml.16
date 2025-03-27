@@ -1,320 +1,373 @@
-Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B119D20B209;
-	Thu, 27 Mar 2025 08:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0231482E7;
+	Thu, 27 Mar 2025 08:58:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743065906; cv=none; b=GcDlVGnE6vo3M2FsoIzy3T2zrmDB02Q6ukLmEYtUp0JUcmU2UOun+x7BI15D7m6EuCtNrTlcWEpI4kscG7Ukz1PgKCDk0/SoF/OAEQUg7hVk0wqN1kVLX2tjrUoTX2kuy0qFiQ3NW2chJ8fsDgkh8JltpDkG9AZ8Rk4WGMKVMkI=
+	t=1743065927; cv=none; b=M1dLLyYdjp1P+i+fwcxDZNWz4/CaAvCQjQsM05A4xFAEd8PwQXCdyAsrdY4gzuqbTeHScYlneJXZQxSKooNYHPYA/Y4jy4RI+FvqDkZmGDTOW4NcgB1DhaJ+7l8W0Gv+RFF35J3c2R7rLYLSd7tMmTReIAbuIbnsUV4yuRvVHk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743065906; c=relaxed/simple;
-	bh=sj5YtaT2XLXqDNLKObm5IbS8Iy4CLVlvpJVevuo9AvU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L+y5oAWYul/MFK+ARSkel5sV6yaRjSpAo4CPm+WoKrfAaWCfktA25iSl2mfmGfLHf4q68C9M7cY6RqJ2RKDgvVJh6GPpJpEwtX67kcWxL36hMx7O4r9B7wfQmBEGXs8n496F0L6tSe3ygrNs2M8VCtoiHj1widQd9XPXwdCqbUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=SDStPgrp; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GD4orJ9C; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
+	s=arc-20240116; t=1743065927; c=relaxed/simple;
+	bh=NvQv40PgoIwHA+FVjuhp/W1Bb3N44fzFpPdp20nqTK4=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=QbStd0nxVMW0R2LZgHFWgfmEpZ6APxLXulxM9kT6e3Wm9v/GPvZGBjRhcGNSJlneWvaVc1jfxVN6kqufQz+sL/spnZm3XSi7LKd1FvXOHBIXp2IiSCJICg9ITOqp9qQHR4j8QJPUX0T2QMfwQ7f+Pzjtp949d3GwMfJOgnwm1wY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I8ZmYkVh; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="SDStPgrp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GD4orJ9C"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id D8ADB11400AF;
-	Thu, 27 Mar 2025 04:58:21 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Thu, 27 Mar 2025 04:58:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1743065901; x=1743152301; bh=kk50b7VQtC
-	oi6qqeYirs2opyA8yqIK4cNax+DA6HcVk=; b=SDStPgrprdwR4zU/vpSycIzboL
-	BckAU7v7+qBwG8T2n+RKeKBdcKTyR7J453IDULDyOAuY5egBXoOn/r4UtapRipen
-	FHGlr0FRDAxX1G2oD8cwg0B3SaMl4hkN3xuIihof8V47vokjd69mA6m0yqpbZ0aT
-	+AXhl9GgGwDOTjvtiX7r2GYGqa5rrKR7rCd62uXg4wQJBABE4QLx6xjjbFg24UC4
-	wZwWCK8BA7Vci7Th1Xt33UjHRD49aasLZ890SEoVZ5dKgfT83hi/Az6EtUIHwHdP
-	Focp4h93tEsihHbeouGmMrLDnFNTiXLRtlgV+jwCexfE+/EHoofL7u2TNRGQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1743065901; x=1743152301; bh=kk50b7VQtCoi6qqeYirs2opyA8yqIK4cNax
-	+DA6HcVk=; b=GD4orJ9C4CVwvieaU8+w9R65kDp4fev0YJ/aQe0Grxsv84MkqWK
-	fulQ5b7PLsUxgTXBos3mGEABasQAXrqNYTzGCIWEe25H2qoOkthlp76NuB4bWvmR
-	FS9ej14XAvzh2Zjv8oFMYSM6xB/Xcb07+0VdzlNnZmw3Lrve3On/+MZfUFKtf5zq
-	iLm5ejVZ8TDzdV7lxhCQvR9gvmyqYPVgzylrqR/vFBBjmQKs94PVo888vjY6VHpx
-	kSLqSaSmZm3k88X3LBb8UPqsPTK2fmx7ZCZ+38Z5j0zVSvqippjz9RvyvLm/Syl7
-	5TXAZlfNqhd7nPeSKu12BsAEvcixttRtvNQ==
-X-ME-Sender: <xms:LBPlZ9-tuEFAOM2UFp5LzNOUAvcmYKEqVu62dce2vVQaEu7hAm7EXw>
-    <xme:LBPlZxt-YtvoZjIipyWScSrwNTfF4_ZtOPIIR_1LgzRdphb9ALYfuybn_GHpp4jp6
-    TX2qMTfINyxsmFDLHw>
-X-ME-Received: <xmr:LBPlZ7BLgIikfi0Gw1mLxIyPhx8NjGa1e6OKyDqeKs2wiuEOAM2IJtjXVXfjUzeWxe5Tl08qycEGV5kvO2NsUDUjeDYdIBusKA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieejleelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    jeenucfhrhhomheplfgrnhhnvgcuifhruhhnrghuuceojhesjhgrnhhnrghurdhnvghtqe
-    enucggtffrrghtthgvrhhnpedtgedvfeevteeltdegjeegvdeugeefheevhffhveelgeej
-    geejieejhffhkeektdenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhfrhgvvgguvg
-    hskhhtohhprdhorhhgpdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-    necurfgrrhgrmhepmhgrihhlfhhrohhmpehjsehjrghnnhgruhdrnhgvthdpnhgspghrtg
-    hpthhtohepvdekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrlhihshhsrges
-    rhhoshgvnhiifigvihhgrdhiohdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrd
-    gtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehm
-    rggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtg
-    hpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhm
-    mhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlh
-    drohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhr
-    tghpthhtohepsghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:LBPlZxfGww1FiQO3h-LVVP5BVt47aMjxmO2cPlRoG13crGVqXaFMIw>
-    <xmx:LBPlZyPGy4vBVbqGcrRx5fZZXCdnItH_5auozgxJ2dHVkdoORVSMOA>
-    <xmx:LBPlZzlr8Rzp-yzf_bIxeDLMAnlR4OiPS9ddmMLSLaXgkZ3_f2A2Gw>
-    <xmx:LBPlZ8tuSfISNq9YrpiAa1v2hsNmm3Vmlu2CoxBkUmTjoJoeeoYOUg>
-    <xmx:LRPlZ3YZpTDLeE7EZ8niGwFbP0ssZi7F_sRe5DQ6GpBtPyroG5zTzs_1>
-Feedback-ID: i47b949f6:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 27 Mar 2025 04:58:19 -0400 (EDT)
-Date: Thu, 27 Mar 2025 09:58:17 +0100
-From: Janne Grunau <j@jannau.net>
-To: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,	Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Faith Ekstrand <faith.ekstrand@collabora.com>,
-	Sven Peter <sven@svenpeter.dev>, Jonathan Corbet <corbet@lwn.net>,
-	Sergio Lopez Pascual <slp@sinrega.org>,
-	Ryan Houdek <sonicadvance1@gmail.com>, linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, rust-for-linux@vger.kernel.org,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, Asahi Lina <lina@asahilina.net>,
-	Simona Vetter <simona.vetter@ffwll.ch>
-Subject: Re: [PATCH v5] drm: Add UAPI for the Asahi driver
-Message-ID: <20250327085817.GA341311@robin.jannau.net>
-References: <20250326-agx-uapi-v5-1-04fccfc9e631@rosenzweig.io>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I8ZmYkVh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743065926; x=1774601926;
+  h=message-id:date:mime-version:from:subject:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=NvQv40PgoIwHA+FVjuhp/W1Bb3N44fzFpPdp20nqTK4=;
+  b=I8ZmYkVhxCXwbKghv/wp1pa7KrJogy57WgpuyOpPKvSAS0W50ugSuoTs
+   qJXDZ1lC3qURAp9VNtMkgHJgfnAsuB4Z5N646yUq00cSohJSRt420eidG
+   xhcRdd12ndmimRajl5/ExqyT3SvKo37i1/tkJtZolH4HSVQzIjXOdCY04
+   OFOK+bfxdwNGodP/tKB7yVGcCQyiu/yyF4fUQ2CR14zAByw26lpaSpGLS
+   pXZxQceDWtJVe7uuJOjdhHcsCMTd+DXVB3zeqBWfQ2wOS/zsj24m1xTbl
+   Zyg9xYAp84eAPUR8D1pVfZM/9bRM1hcbKOJxFvzhuJ7e/dl7ASYQSZdUW
+   A==;
+X-CSE-ConnectionGUID: V4RN/eM8Rmy5cSKz7HbIfw==
+X-CSE-MsgGUID: Jme++oD5S4WEKY9B09wVnA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="55386954"
+X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
+   d="scan'208";a="55386954"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 01:58:45 -0700
+X-CSE-ConnectionGUID: 5XbVzjMHRX+E2FIsFU1wjA==
+X-CSE-MsgGUID: LtTSrn9HQfi2eKRQONfSLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
+   d="scan'208";a="129761035"
+Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.94.0.53]) ([10.94.0.53])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 01:58:40 -0700
+Message-ID: <30338b42-661e-463d-ae3f-3b8f1d4fdbdc@linux.intel.com>
+Date: Thu, 27 Mar 2025 09:58:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250326-agx-uapi-v5-1-04fccfc9e631@rosenzweig.io>
+User-Agent: Mozilla Thunderbird
+From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
+ <amadeuszx.slawinski@linux.intel.com>
+Subject: Re: [PATCH v6 1/2] ASoC: codecs: add support for ES8389
+To: Zhang Yi <zhangyi@everest-semi.com>, broonie@kernel.org, robh@kernel.org,
+ tiwai@suse.com, devicetree@vger.kernel.org, conor+dt@kernel.org,
+ lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+ linux-sound@vger.kernel.org, perex@perex.cz, krzk+dt@kernel.org
+Cc: krzk@kernel.org
+References: <20250327081450.47690-1-zhangyi@everest-semi.com>
+ <20250327081450.47690-2-zhangyi@everest-semi.com>
+Content-Language: en-US
+In-Reply-To: <20250327081450.47690-2-zhangyi@everest-semi.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 26, 2025 at 02:16:38PM -0400, Alyssa Rosenzweig wrote:
-> This adds the UAPI for the Asahi driver targeting the GPU in the Apple
-> M1 and M2 series systems on chip. The UAPI design is based on other
-> modern Vulkan-capable drivers, including Xe and Panthor. Memory
-> management is based on explicit VM management. Synchronization is
-> exclusively explicit sync.
+On 3/27/2025 9:14 AM, Zhang Yi wrote:
+> The driver is for codec es8389 of everest which is different from ES8388
 > 
-> This UAPI is validated against our open source Mesa stack, which is
-> fully conformant to the OpenGL 4.6, OpenGL ES 3.2, OpenCL 3.0, and
-> Vulkan 1.4 standards. The Vulkan driver supports sparse, exercising the
-> VM_BIND mechanism.
-> 
-> This patch adds the standalone UAPI header. It is implemented by an open
-> source DRM driver written in Rust. We fully intend to upstream this
-> driver when possible. However, as a production graphics driver, it
-> depends on a significant number of Rust abstractions that will take a
-> long time to upstream. In the mean time, our userspace is upstream in
-> Mesa but is not allowed to probe with upstream Mesa as the UAPI is not
-> yet reviewed and merged in the upstream kernel. Although we ship a
-> patched Mesa in Fedora Asahi Remix, any containers shipping upstream
-> Mesa builds are broken for our users, including upstream Flatpak and
-> Waydroid runtimes. Additionally, it forces us to maintain forks of Mesa
-> and virglrenderer, which complicates bisects.
-> 
-> The intention in sending out this patch is for this UAPI to be
-> thoroughly reviewed. Once we as the DRM community are satisfied with the
-> UAPI, this header lands signifying that the UAPI is stable and must only
-> be evolved in backwards-compatible ways; it will be the UAPI implemented
-> in the DRM driver that eventually lands upstream. That promise lets us
-> enable upstream Mesa, solving all these issues while the upstream Rust
-> abstractions are developed.
-> 
-> https://github.com/alyssarosenzweig/linux/commits/agx-uapi-v5 contains
-> the DRM driver implementing this proposed UAPI.
-> 
-> https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/33984 contains
-> the Mesa patches to implement this proposed UAPI.
-> 
-> That Linux and Mesa branch together give a complete graphics/compute
-> stack on top of this UAPI.
-> 
-> Co-developed-by: Asahi Lina <lina@asahilina.net>
-> Signed-off-by: Asahi Lina <lina@asahilina.net>
-> Acked-by: Simona Vetter <simona.vetter@ffwll.ch>
-> Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> Signed-off-by: Zhang Yi <zhangyi@everest-semi.com>
 > ---
-> Changes in v5:
-> - Rename GEM_BIND to VM_BIND and make it take an array of bind ops. This
->   significantly decreases the # of kernel<-->user roundtrips with Vulkan
->   sparse binding. The uAPI here is lifted directly from Xe.
-> - Merge in_syncs and out_syncs arrays, but leave
->   in_sync_count/out_sync_count alone, requiring waits to precede
->   signals. This simplifies both kernel & userspace, compared to either
->   fully merged or fully separate arrays, so it seems like a Good idea.
-> - Drop queue caps, make all caps render + compute. Even GLES2 uses
->   compute to accelerate blits, and even compute workloads use render for
->   a few fallback blits. This lets us drop a bunch of crud in both kernel
->   & userspace and should slightly improve submit overhead.
-> - Reorder ioctl IDs to group a little more logically (bikeshed...).
-> - Improve some comments.
-> - Link to v4: https://lore.kernel.org/r/20250323-agx-uapi-v4-1-12ed2db96737@rosenzweig.io
+>   sound/soc/codecs/Kconfig  |   7 +-
+>   sound/soc/codecs/Makefile |   2 +
+>   sound/soc/codecs/es8389.c | 966 ++++++++++++++++++++++++++++++++++++++
+>   sound/soc/codecs/es8389.h | 140 ++++++
+>   4 files changed, 1114 insertions(+), 1 deletion(-)
+>   create mode 100644 sound/soc/codecs/es8389.c
+>   create mode 100644 sound/soc/codecs/es8389.h
+> 
+> diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+> index cfc501e98cac..e3b0ac6eda4c 100644
+> --- a/sound/soc/codecs/Kconfig
+> +++ b/sound/soc/codecs/Kconfig
+> @@ -117,6 +117,7 @@ config SND_SOC_ALL_CODECS
+>   	imply SND_SOC_ES8316
+>   	imply SND_SOC_ES8323
+>   	imply SND_SOC_ES8326
+> +	imply SND_SOC_ES8389
+>   	imply SND_SOC_ES8328_SPI
+>   	imply SND_SOC_ES8328_I2C
+>   	imply SND_SOC_ES7134
+
+Add it in alphabetical order?
+
+> @@ -1187,6 +1188,10 @@ config SND_SOC_ES8326
+>   	tristate "Everest Semi ES8326 CODEC"
+>   	depends on I2C
+>   
 
 ...
 
-> diff --git a/include/uapi/drm/asahi_drm.h b/include/uapi/drm/asahi_drm.h
+> diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
+> index d07386246b8e..bc63c2e34ed4 100644
+> --- a/sound/soc/codecs/Makefile
+> +++ b/sound/soc/codecs/Makefile
+> @@ -130,6 +130,7 @@ snd-soc-es8311-y := es8311.o
+>   snd-soc-es8316-y := es8316.o
+>   snd-soc-es8323-y := es8323.o
+>   snd-soc-es8326-y := es8326.o
+> +snd-soc-es8389-y := es8389.o
+>   snd-soc-es8328-y := es8328.o
+>   snd-soc-es8328-i2c-y := es8328-i2c.o
+>   snd-soc-es8328-spi-y := es8328-spi.o
+
+Same as above, alphabetical order?
+
+> @@ -548,6 +549,7 @@ obj-$(CONFIG_SND_SOC_ES8311)    += snd-soc-es8311.o
+>   obj-$(CONFIG_SND_SOC_ES8316)    += snd-soc-es8316.o
+>   obj-$(CONFIG_SND_SOC_ES8323)	+= snd-soc-es8323.o
+>   obj-$(CONFIG_SND_SOC_ES8326)    += snd-soc-es8326.o
+> +obj-$(CONFIG_SND_SOC_ES8389)    += snd-soc-es8389.o
+>   obj-$(CONFIG_SND_SOC_ES8328)	+= snd-soc-es8328.o
+>   obj-$(CONFIG_SND_SOC_ES8328_I2C)+= snd-soc-es8328-i2c.o
+>   obj-$(CONFIG_SND_SOC_ES8328_SPI)+= snd-soc-es8328-spi.o
+
+And also here ;)
+
+> diff --git a/sound/soc/codecs/es8389.c b/sound/soc/codecs/es8389.c
 > new file mode 100644
-> index 0000000000000000000000000000000000000000..a9465cb89ebde6f6768fbd5ba0fa4d753e2a7e32
+> index 000000000000..73c1966c30be
 > --- /dev/null
-> +++ b/include/uapi/drm/asahi_drm.h
-> @@ -0,0 +1,1211 @@
+> +++ b/sound/soc/codecs/es8389.c
+> @@ -0,0 +1,966 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * es8389.c  --  ES8389/ES8390 ALSA SoC Audio Codec
+
+The only place that mentions ES8390? Is this correct?
 
 ...
-
-> +/**
-> + * struct drm_asahi_params_global - Global parameters.
-> + *
-> + * This struct may be queried by drm_asahi_get_params.
-> + */
-> +struct drm_asahi_params_global {
-> +	/** @features: Feature bits from drm_asahi_feature */
-> +	__u64 features;
 > +
-> +	/** @gpu_generation: GPU generation, e.g. 13 for G13G */
-> +	__u32 gpu_generation;
+> +/* codec hifi mclk clock divider coefficients */
+> +static const struct _coeff_div  coeff_div[] = {
+> +	{32, 256000, 8000, 0x00, 0x57, 0x84, 0xD0, 0x03, 0xC1, 0xB0, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{36, 288000, 8000, 0x00, 0x55, 0x84, 0xD0, 0x01, 0xC1, 0x90, 0x00, 0x00, 0x23, 0x8F, 0xB7, 0xC0, 0x1F, 0x8F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{48, 384000, 8000, 0x02, 0x5F, 0x04, 0xC0, 0x03, 0xC1, 0xB0, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{64, 512000, 8000, 0x00, 0x4D, 0x24, 0xC0, 0x03, 0xD1, 0xB0, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{72, 576000, 8000, 0x00, 0x45, 0x24, 0xC0, 0x01, 0xD1, 0x90, 0x00, 0x00, 0x23, 0x8F, 0xB7, 0xC0, 0x1F, 0x8F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{96, 768000, 8000, 0x02, 0x57, 0x84, 0xD0, 0x03, 0xC1, 0xB0, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{128, 1024000, 8000, 0x00, 0x45, 0x04, 0xD0, 0x03, 0xC1, 0xB0, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{192, 1536000, 8000, 0x02, 0x4D, 0x24, 0xC0, 0x03, 0xD1, 0xB0, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{256, 2048000, 8000, 0x01, 0x45, 0x04, 0xD0, 0x03, 0xC1, 0xB0, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{288, 2304000, 8000, 0x01, 0x51, 0x00, 0xC0, 0x01, 0xC1, 0x90, 0x00, 0x00, 0x23, 0x8F, 0xB7, 0xC0, 0x1F, 0x8F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{384, 3072000, 8000, 0x02, 0x45, 0x04, 0xD0, 0x03, 0xC1, 0xB0, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{512, 4096000, 8000, 0x00, 0x41, 0x04, 0xE0, 0x00, 0xD1, 0xB0, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{768, 6144000, 8000, 0x05, 0x45, 0x04, 0xD0, 0x03, 0xC1, 0xB0, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{1024, 8192000, 8000, 0x01, 0x41, 0x06, 0xE0, 0x00, 0xD1, 0xB0, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{1536, 12288000, 8000, 0x02, 0x41, 0x04, 0xE0, 0x00, 0xD1, 0xB0, 0x40, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{1625, 13000000, 8000, 0x40, 0x6E, 0x05, 0xC8, 0x01, 0xC2, 0x90, 0x40, 0x00, 0x18, 0x95, 0xD0, 0xC0, 0x63, 0x95, 0x00, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{2048, 16384000, 8000, 0x03, 0x44, 0x01, 0xC0, 0x00, 0xD2, 0x80, 0x40, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{2304, 18432000, 8000, 0x11, 0x45, 0x25, 0xF0, 0x00, 0xD1, 0xB0, 0x40, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{3072, 24576000, 8000, 0x05, 0x44, 0x01, 0xC0, 0x00, 0xD2, 0x80, 0x40, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{32, 512000, 16000, 0x00, 0x55, 0x84, 0xD0, 0x01, 0xC1, 0x90, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{36, 576000, 16000, 0x00, 0x55, 0x84, 0xD0, 0x01, 0xC1, 0x90, 0x00, 0x00, 0x23, 0x8F, 0xB7, 0xC0, 0x1F, 0x8F, 0x01, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{48, 768000, 16000, 0x02, 0x57, 0x04, 0xC0, 0x01, 0xC1, 0x90, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{50, 800000, 16000, 0x00, 0x7E, 0x01, 0xD9, 0x00, 0xC2, 0x80, 0x00, 0x00, 0x18, 0x95, 0xD0, 0xC0, 0xC7, 0x95, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{64, 1024000, 16000, 0x00, 0x45, 0x24, 0xC0, 0x01, 0xD1, 0x90, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{72, 1152000, 16000, 0x00, 0x45, 0x24, 0xC0, 0x01, 0xD1, 0x90, 0x00, 0x00, 0x23, 0x8F, 0xB7, 0xC0, 0x1F, 0x8F, 0x01, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{96, 1536000, 16000, 0x02, 0x55, 0x84, 0xD0, 0x01, 0xC1, 0x90, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{128, 2048000, 16000, 0x00, 0x51, 0x04, 0xD0, 0x01, 0xC1, 0x90, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{144, 2304000, 16000, 0x00, 0x51, 0x00, 0xC0, 0x01, 0xC1, 0x90, 0x00, 0x00, 0x23, 0x8F, 0xB7, 0xC0, 0x1F, 0x8F, 0x01, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{192, 3072000, 16000, 0x02, 0x65, 0x25, 0xE0, 0x00, 0xE1, 0x90, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{256, 4096000, 16000, 0x00, 0x41, 0x04, 0xC0, 0x01, 0xD1, 0x90, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{300, 4800000, 16000, 0x02, 0x66, 0x01, 0xD9, 0x00, 0xC2, 0x80, 0x00, 0x00, 0x18, 0x95, 0xD0, 0xC0, 0xC7, 0x95, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{384, 6144000, 16000, 0x02, 0x51, 0x04, 0xD0, 0x01, 0xC1, 0x90, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{512, 8192000, 16000, 0x01, 0x41, 0x04, 0xC0, 0x01, 0xD1, 0x90, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{750, 12000000, 16000, 0x0E, 0x7E, 0x01, 0xC9, 0x00, 0xC2, 0x80, 0x40, 0x00, 0x18, 0x95, 0xD0, 0xC0, 0xC7, 0x95, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{768, 12288000, 16000, 0x02, 0x41, 0x04, 0xC0, 0x01, 0xD1, 0x90, 0x40, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{1024, 16384000, 16000, 0x03, 0x41, 0x04, 0xC0, 0x01, 0xD1, 0x90, 0x40, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{1152, 18432000, 16000, 0x08, 0x51, 0x04, 0xD0, 0x01, 0xC1, 0x90, 0x40, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{1200, 19200000, 16000, 0x0B, 0x66, 0x01, 0xD9, 0x00, 0xC2, 0x80, 0x40, 0x00, 0x18, 0x95, 0xD0, 0xC0, 0xC7, 0x95, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{1500, 24000000, 16000, 0x0E, 0x26, 0x01, 0xD9, 0x00, 0xC2, 0x80, 0xC0, 0x00, 0x18, 0x95, 0xD0, 0xC0, 0xC7, 0x95, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{1536, 24576000, 16000, 0x05, 0x41, 0x04, 0xC0, 0x01, 0xD1, 0x90, 0xC0, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0xFF, 0x7F, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{1625, 26000000, 16000, 0x40, 0x6E, 0x05, 0xC8, 0x01, 0xC2, 0x90, 0xC0, 0x00, 0x18, 0x95, 0xD0, 0xC0, 0x63, 0x95, 0x00, 0x12, 0x00, 0x12, 0x31, 0x0E},
+> +	{800, 19200000, 24000, 0x07, 0x66, 0x01, 0xD9, 0x00, 0xC2, 0x80, 0x40, 0x00, 0x18, 0x95, 0xD0, 0xC0, 0xC7, 0x95, 0x00, 0x12, 0x00, 0x1A, 0x49, 0x14},
+> +	{600, 19200000, 32000, 0x05, 0x46, 0x01, 0xD8, 0x10, 0xD2, 0x80, 0x40, 0x00, 0x18, 0x95, 0xD0, 0xC0, 0x63, 0x95, 0x00, 0x12, 0x00, 0x23, 0x61, 0x1B},
+> +	{32, 1411200, 44100, 0x00, 0x45, 0xA4, 0xD0, 0x10, 0xD1, 0x80, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0x7F, 0x7F, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{64, 2822400, 44100, 0x00, 0x51, 0x00, 0xC0, 0x10, 0xC1, 0x80, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0x7F, 0x7F, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{128, 5644800, 44100, 0x00, 0x41, 0x04, 0xD0, 0x10, 0xD1, 0x80, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0x7F, 0x7F, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{256, 11289600, 44100, 0x01, 0x41, 0x04, 0xD0, 0x10, 0xD1, 0x80, 0x40, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0x7F, 0x7F, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{512, 22579200, 44100, 0x03, 0x41, 0x04, 0xD0, 0x10, 0xD1, 0x80, 0xC0, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0x7F, 0x7F, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{32, 1536000, 48000, 0x00, 0x45, 0xA4, 0xD0, 0x10, 0xD1, 0x80, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0x7F, 0x7F, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{48, 2304000, 48000, 0x02, 0x55, 0x04, 0xC0, 0x10, 0xC1, 0x80, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0x7F, 0x7F, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{50, 2400000, 48000, 0x00, 0x76, 0x01, 0xC8, 0x10, 0xC2, 0x80, 0x00, 0x00, 0x18, 0x95, 0xD0, 0xC0, 0x63, 0x95, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{64, 3072000, 48000, 0x00, 0x51, 0x04, 0xC0, 0x10, 0xC1, 0x80, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0x7F, 0x7F, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{100, 4800000, 48000, 0x00, 0x46, 0x01, 0xD8, 0x10, 0xD2, 0x80, 0x00, 0x00, 0x18, 0x95, 0xD0, 0xC0, 0x63, 0x95, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{125, 6000000, 48000, 0x04, 0x6E, 0x05, 0xC8, 0x10, 0xC2, 0x80, 0x00, 0x01, 0x18, 0x95, 0xD0, 0xC0, 0x63, 0x95, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{128, 6144000, 48000, 0x00, 0x41, 0x04, 0xD0, 0x10, 0xD1, 0x80, 0x00, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0x7F, 0x7F, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{200, 9600000, 48000, 0x01, 0x46, 0x01, 0xD8, 0x10, 0xD2, 0x80, 0x00, 0x00, 0x18, 0x95, 0xD0, 0xC0, 0x63, 0x95, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{250, 12000000, 48000, 0x04, 0x76, 0x01, 0xC8, 0x10, 0xC2, 0x80, 0x40, 0x00, 0x18, 0x95, 0xD0, 0xC0, 0x63, 0x95, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{256, 12288000, 48000, 0x01, 0x41, 0x04, 0xD0, 0x10, 0xD1, 0x80, 0x40, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0x7F, 0x7F, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{384, 18432000, 48000, 0x02, 0x41, 0x04, 0xD0, 0x10, 0xD1, 0x80, 0x40, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0x7F, 0x7F, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{400, 19200000, 48000, 0x03, 0x46, 0x01, 0xD8, 0x10, 0xD2, 0x80, 0x40, 0x00, 0x18, 0x95, 0xD0, 0xC0, 0x63, 0x95, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{500, 24000000, 48000, 0x04, 0x46, 0x01, 0xD8, 0x10, 0xD2, 0x80, 0xC0, 0x00, 0x18, 0x95, 0xD0, 0xC0, 0x63, 0x95, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{512, 24576000, 48000, 0x03, 0x41, 0x04, 0xD0, 0x10, 0xD1, 0x80, 0xC0, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0x7F, 0x7F, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{800, 38400000, 48000, 0x18, 0x45, 0x04, 0xC0, 0x10, 0xC1, 0x80, 0xC0, 0x00, 0x1F, 0x7F, 0xBF, 0xC0, 0x7F, 0x7F, 0x00, 0x12, 0x00, 0x35, 0x91, 0x28},
+> +	{128, 11289600, 88200, 0x00, 0x50, 0x00, 0xC0, 0x10, 0xC1, 0x80, 0x40, 0x00, 0x9F, 0x7F, 0xBF, 0xC0, 0x7F, 0x7F, 0x80, 0x12, 0xC0, 0x32, 0x89, 0x25},
+> +	{64, 6144000, 96000, 0x00, 0x41, 0x00, 0xD0, 0x10, 0xD1, 0x80, 0x00, 0x00, 0x9F, 0x7F, 0xBF, 0xC0, 0x7F, 0x7F, 0x80, 0x12, 0xC0, 0x35, 0x91, 0x28},
+> +	{128, 12288000, 96000, 0x00, 0x50, 0x00, 0xC0, 0x10, 0xC1, 0x80, 0xC0, 0x00, 0x9F, 0x7F, 0xBF, 0xC0, 0x7F, 0x7F, 0x80, 0x12, 0xC0, 0x35, 0x91, 0x28},
+> +	{256, 24576000, 96000, 0x00, 0x40, 0x00, 0xC0, 0x10, 0xC1, 0x80, 0xC0, 0x00, 0x9F, 0x7F, 0xBF, 0xC0, 0x7F, 0x7F, 0x80, 0x12, 0xC0, 0x35, 0x91, 0x28},
+> +	{128, 24576000, 192000, 0x00, 0x50, 0x00, 0xC0, 0x18, 0xC1, 0x81, 0xC0, 0x00, 0x8F, 0x7F, 0xEF, 0xC0, 0x3F, 0x7F, 0x80, 0x12, 0xC0, 0x3F, 0xF9, 0x3F},
 > +
-> +	/** @gpu_variant: GPU variant as a character, e.g. 'G' for G13G */
-> +	__u32 gpu_variant;
-
-nit: the example can avoid the duplication of 'G' with "e.g. 'C' for
-G13C"
-
-...
-
-> +/**
-> + * struct drm_asahi_get_params - Arguments passed to DRM_IOCTL_ASAHI_GET_PARAMS
-> + */
-> +struct drm_asahi_get_params {
-> +	/** @param_group: Parameter group to fetch (MBZ) */
-> +	__u32 param_group;
+> +	{50, 400000, 8000, 0x00, 0x75, 0x05, 0xC8, 0x01, 0xC1, 0x90, 0x10, 0x00, 0x18, 0xC7, 0xD0, 0xC0, 0x8F, 0xC7, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{600, 4800000, 8000, 0x05, 0x65, 0x25, 0xF9, 0x00, 0xD1, 0x90, 0x10, 0x00, 0x18, 0xC7, 0xD0, 0xC0, 0x8F, 0xC7, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{1500, 12000000, 8000, 0x0E, 0x25, 0x25, 0xE8, 0x00, 0xD1, 0x90, 0x40, 0x00, 0x31, 0xC7, 0xC5, 0x00, 0x8F, 0xC7, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{2400, 19200000, 8000, 0x0B, 0x01, 0x00, 0xD0, 0x00, 0xD1, 0x80, 0x90, 0x00, 0x31, 0xC7, 0xC5, 0x00, 0xC7, 0xC7, 0x00, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{3000, 24000000, 8000, 0x0E, 0x24, 0x05, 0xD0, 0x00, 0xC2, 0x80, 0xC0, 0x00, 0x31, 0xC7, 0xC5, 0x00, 0x8F, 0xC7, 0x01, 0x12, 0x00, 0x09, 0x19, 0x07},
+> +	{3250, 26000000, 8000, 0x40, 0x05, 0xA4, 0xC0, 0x00, 0xD1, 0x80, 0xD0, 0x00, 0x31, 0xC7, 0xC5, 0x00, 0xC7, 0xC7, 0x00, 0x12, 0x00, 0x09, 0x19, 0x07},
 > +
-> +	/** @pad: MBZ */
-> +	__u32 pad;
-> +
-> +	/** @pointer: User pointer to write parameter struct */
-> +	__u64 pointer;
-> +
-> +	/** @size: Size of user buffer, max size supported on return */
-> +	__u64 size;
-
-The comment is misleading in the case of newer / extended kernel which
-supports a larger size than supplied. You could change it to "size
-written on return" or clarify that the value on return will not exceed
-the input value.
-
-> +};
-> +
-> +/**
-> + * struct drm_asahi_vm_create - Arguments passed to DRM_IOCTL_ASAHI_VM_CREATE
-> + */
-> +struct drm_asahi_vm_create {
-> +	/**
-> +	 * @kernel_start: Start of the kernel-reserved address range. See
-> +	 * drm_asahi_params_global::vm_kernel_min_size.
-> +	 *
-> +	 * Both @kernel_start and @kernel_end must be within the range of
-> +	 * valid VAs given by drm_asahi_params_global::vm_user_start and
-> +	 * drm_asahi_params_global::vm_user_end. The size of the kernel range
-
-This reads a little strange. Would it make sense to rename drm_asahi_params_global's
-vm_user_start and vm_user_end to vm_start/vm_end?
-
-> +	 * (@kernel_end - @kernel_start) must be at least
-> +	 * drm_asahi_params_global::vm_kernel_min_size.
-> +	 *
-> +	 * Userspace must not bind any memory on this VM into this reserved
-> +	 * range, it is for kernel use only.
-> +	 */
-> +	__u64 kernel_start;
-> +
-> +	/**
-> +	 * @kernel_end: End of the kernel-reserved address range. See
-> +	 * @kernel_start.
-> +	 */
-> +	__u64 kernel_end;
-
-...
-
-> +/**
-> + * struct drm_asahi_vm_bind - Arguments passed to
-> + * DRM_IOCTL_ASAHI_VM_BIND
-> + */
-> +struct drm_asahi_vm_bind {
-> +	/** @vm_id: The ID of the VM to bind to */
-> +	__u32 vm_id;
-> +
-> +	/** @num_binds: number of binds in this IOCTL. Must be non-zero. */
-> +	__u32 num_binds;
-> +
-> +	/**
-> +	 * @stride: If num_binds > 1, stride in bytes between consecutive binds.
-> +	 * This allows extensibility of drm_asahi_gem_bind_op.
-> +	 *
-> +	 * If num_binds == 1, MBZ. Extensibility in that case is handled at the
-> +	 * ioctl level instead.
-> +	 */
-> +	__u32 stride;
-> +
-> +	/** @pad: MBZ */
-> +	__u32 pad;
-> +
-> +	/**
-> +	 * @bind: Union holding the bind request.
-> +	 *
-> +	 * This union is named to make the Rust bindings nicer to work with.
-> +	 */
-
-This comment could use a short justification why this union does not
-defeat extensibility after the initial statement that "structures should
-not contain unions"
-
-> +	union {
-> +		/** @bind.b: If num_binds == 1, the bind */
-> +		struct drm_asahi_gem_bind_op b;
-> +
-> +		/**
-> +		 * @bind.userptr: If num_binds > 1, user pointer to an array of
-> +		 * @num_binds structures of type @drm_asahi_gem_bind_op and size
-> +		 * @stride bytes.
-> +		 */
-> +		__u64 userptr;
-> +	} bind;
 > +};
 
+Missing new line between array above and below function? I think 
+checkpatch warns about this?
+
+> +static inline int get_coeff(int mclk, int rate)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(coeff_div); i++) {
+> +		if (coeff_div[i].rate == rate &&  coeff_div[i].mclk == mclk)
+> +			return i;
+> +	}
+> +	return -EINVAL;
+> +}
+> +
+
 ...
 
-> +/**
-> + * struct drm_asahi_submit - Arguments passed to DRM_IOCTL_ASAHI_SUBMIT
-> + */
-> +struct drm_asahi_submit {
-> +	/**
-> +	 * @syncs: An optional array of drm_asahi_sync. First @in_sync_count
-> +	 * in-syncs then @out_sync_count out-syncs.
-> +	 */
-> +     __u64 syncs;
+> +
+> +static int es8389_probe(struct snd_soc_component *codec)
+> +{
+> +	int ret = 0;
+> +	struct es8389_private *es8389 = snd_soc_component_get_drvdata(codec);
 
-Would it make sense to explictly state that this is a pointer?
+Use "reverse christmas tree" notation for declaring variables? Also ret 
+gets overwritten below, so it is useless to set it.
 
-Reviewed-by: Janne Grunau <j@jannau.net>
+> +
+> +	ret = device_property_read_u8(codec->dev, "everest,mclk-src", &es8389->mclk_src);
+> +	if (ret != 0) {
+> +		dev_dbg(codec->dev, "mclk-src return %d", ret);
+> +		es8389->mclk_src = ES8389_MCLK_SOURCE;
+> +	}
+> +
+> +	es8389->mclk = devm_clk_get(codec->dev, "mclk");
+> +	if (IS_ERR(es8389->mclk))
+> +		return dev_err_probe(codec->dev, PTR_ERR(es8389->mclk),
+> +			"ES8389 is unable to get mclk\n");
+> +
+> +	if (!es8389->mclk)
+> +		dev_err(codec->dev, "%s, assuming static mclk\n", __func__);
+> +
+> +	ret = clk_prepare_enable(es8389->mclk);
+> +	if (ret) {
+> +		dev_err(codec->dev, "%s, unable to enable mclk\n", __func__);
+> +		return ret;
+> +	}
+> +
+> +	es8389_init(codec);
+> +	es8389_set_bias_level(codec, SND_SOC_BIAS_STANDBY);
+> +
+> +	return 0;
+> +}
+> +
+> +static void es8389_remove(struct snd_soc_component *codec)
+> +{
+> +	struct es8389_private *es8389 = snd_soc_component_get_drvdata(codec);
+> +
+> +	regmap_write(es8389->regmap, ES8389_MASTER_MODE, 0x28);
+> +	regmap_write(es8389->regmap, ES8389_HPSW, 0x00);
+> +	regmap_write(es8389->regmap, ES8389_VMID, 0x00);
+> +	regmap_write(es8389->regmap, ES8389_RESET, 0x00);
+> +	regmap_write(es8389->regmap, ES8389_CSM_JUMP, 0xCC);
+> +	usleep_range(500000, 550000);//500MS
+> +	regmap_write(es8389->regmap, ES8389_CSM_JUMP, 0x00);
+> +	regmap_write(es8389->regmap, ES8389_ANA_CTL1, 0x08);
+> +	regmap_write(es8389->regmap, ES8389_ISO_CTL, 0xC1);
+> +	regmap_write(es8389->regmap, ES8389_PULL_DOWN, 0x00);
+> +
+> +}
+> +
+> +static const struct snd_soc_component_driver soc_codec_dev_es8389 = {
+> +	.probe = es8389_probe,
+> +	.remove = es8389_remove,
+> +	.suspend = es8389_suspend,
+> +	.resume = es8389_resume,
+> +	.set_bias_level = es8389_set_bias_level,
+> +
+> +	.controls = es8389_snd_controls,
+> +	.num_controls = ARRAY_SIZE(es8389_snd_controls),
+> +	.dapm_widgets = es8389_dapm_widgets,
+> +	.num_dapm_widgets = ARRAY_SIZE(es8389_dapm_widgets),
+> +	.dapm_routes = es8389_dapm_routes,
+> +	.num_dapm_routes = ARRAY_SIZE(es8389_dapm_routes),
+> +	.idle_bias_on = 1,
+> +	.use_pmdown_time = 1,
+> +};
+> +
+> +static const struct regmap_config es8389_regmap = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +
+> +	.max_register = ES8389_MAX_REGISTER,
+> +
+> +	.volatile_reg = es8389_volatile_register,
+> +	.cache_type = REGCACHE_MAPLE,
+> +};
+> +
+> +static void es8389_i2c_shutdown(struct i2c_client *i2c)
+> +{
+> +	struct snd_soc_component *component;
+> +	struct es8389_private *es8389;
+> +
+> +	es8389 = i2c_get_clientdata(i2c);
+> +	component = es8389->component;
 
-ciao
-Janne
+Unused variable? And while you are removing it, you can also remove it 
+from 'struct es8389_private', as this place seems to be the only user.
+
+> +
+> +	regmap_write(es8389->regmap, ES8389_MASTER_MODE, 0x28);
+> +	regmap_write(es8389->regmap, ES8389_HPSW, 0x00);
+> +	regmap_write(es8389->regmap, ES8389_VMID, 0x00);
+> +	regmap_write(es8389->regmap, ES8389_RESET, 0x00);
+> +	regmap_write(es8389->regmap, ES8389_CSM_JUMP, 0xCC);
+> +	usleep_range(500000, 550000);//500MS
+> +	regmap_write(es8389->regmap, ES8389_CSM_JUMP, 0x00);
+> +	regmap_write(es8389->regmap, ES8389_ANA_CTL1, 0x08);
+> +	regmap_write(es8389->regmap, ES8389_ISO_CTL, 0xC1);
+> +	regmap_write(es8389->regmap, ES8389_PULL_DOWN, 0x00);
+> +}
+> +
+> +static int es8389_i2c_probe(struct i2c_client *i2c_client)
+> +{
+> +	struct es8389_private *es8389;
+> +	int ret = -1;
+
+No need to set ret as it will be overwritten anyway, and '-1' is not 
+considered a proper value. Use some error code if you must.
+
+> +
+> +	es8389 = devm_kzalloc(&i2c_client->dev, sizeof(*es8389), GFP_KERNEL);
+> +	if (es8389 == NULL)
+> +		return -ENOMEM;
+> +
+> +	i2c_set_clientdata(i2c_client, es8389);
+> +	es8389->regmap = devm_regmap_init_i2c(i2c_client, &es8389_regmap);
+> +	if (IS_ERR(es8389->regmap))
+> +		return dev_err_probe(&i2c_client->dev, PTR_ERR(es8389->regmap),
+> +			"regmap_init() failed\n");
+> +
+> +	ret =  devm_snd_soc_register_component(&i2c_client->dev,
+> +			&soc_codec_dev_es8389,
+> +			&es8389_dai,
+> +			1);
+> +
+> +	return ret;
+> +}
+> +
+
