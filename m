@@ -1,118 +1,141 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AF020E01F
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:13:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B2620E039
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743070392; cv=none; b=ZC8sKmMIJmFuXeJe/k7xXkaCRd+Yy71l4AVUDv5EAOw0RItA86aghqoHZQLF3ho20Mkb/xF1M6NXax1o/v8NJINH+ggjvkMzPCJ4QU+hG6QkHe0MEbiNIZFGNezSs1G+KhxNtEYHnfXO72BId8Kxxi7V6OairOLuZvwIw3wRqWY=
+	t=1743070417; cv=none; b=p1M20W3c+wStwUHP1cCjKZ0yuu+TVX0Rz5APsQ8c80rqPyUEByyVnUEjq3puZjO7Fzx1Dc9n6WNLnVDg0AyeVolnqjUBhYyP6gk+8cfvfCcPsvr8Vz8vo0/u5CX/cKySeCX9rkXhEmxA9r1jtUDCp2laae5P77eRyMJjrV5HsSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743070392; c=relaxed/simple;
-	bh=HqYxxVPtZO6/vDTNll1yUhXaMFK80Ex8e3/ECvl+j+k=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=PTdk/ZrSmx3E9loI+KWt+WoY255PobYCtIljUcwFxAdfEkXyMutw6OA2wx5jnqYY5nqat8hCdl/BNSYSLnqsXY6tUYjiYZHaOgFK5WthqSl2LxmuRjqu/Es1CP/JUaW2p5GuoUP/4Jqk0ltWSje6pfpOD0X4SPhVfZfKuwXs5a8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ne0uzD95; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743070417; c=relaxed/simple;
+	bh=H6nLXwiIEvSFqpSB3wQ8ExOnH42MrNk+uWhZm9orWyg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p5D+1k0OrZlKKxT55pqXpktTgc4z4nAsaAyzhfHq41eYe8/GIWH/uN0qLtQ3yKHOMtAYz+OKH1VAYNDOIreFOS/HZDQnyzw8wHPYpl/Ft0D+5ZQG89o4bkc1yDgKBggi9Qla2vfI7V3t6B+dmce3AM2aSok2DBKygsnspRcjSXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P0j22AjY; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ne0uzD95"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so4724965e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:13:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743070389; x=1743675189; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xo7iAv+9nI2kaufsKds/53FFNGXfbLXPYtYZ+pjxKuE=;
-        b=ne0uzD95tEg3U35XZioP51rXJr9xvpWc1veQT5lh0ufoVKFXwQt1zn0aBDMrJ/qt8q
-         4Y22Y0MkyFC3TvDfdd0sJaMTRvOOjdJq5+Rd+xx9inNYv8gzHHxMYKV4kVyN+CncnH+5
-         wfK0z3eNXdIF2/jor06yFkFmo3YKwBy3Gt0a+PW5MESvDkVHFfRHsqBhgOtuq7Ww9CDs
-         m0YotQKa7fgQ2IoM2JGU6T+ekVca45FRg0SqixFDxxfPwwFeNZo6hGl6y48WJX+cTpWh
-         eEdZtnW1MYxZnpNlr+7Y1Vube28p1UyrJFLPTUoIjH022a+OoTQc66cg1lmKu0GFDujk
-         Ej1g==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P0j22AjY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743070414;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z1V7Tj5XppP4TZCf7Oi5My5u1vfz1nFkHzifF2QtL7E=;
+	b=P0j22AjYBULR7U/KhymCqZTJHJFZ7/uyBlP1fCwGyHHX5bAKBQKM6ixsfHRylqd2FnPnDi
+	oqba/LV0AVV0l1WajopAEpEuRVseFmSC+3q7x9MJRZJ0hi4oqDlK/W8+T6NDNVTzfqPw8a
+	LYss/9pz78Ep+QV1aDrbsFsVlhizQeM=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-685-UWzUlS9HNv6Ijb3fRkty2w-1; Thu, 27 Mar 2025 06:13:33 -0400
+X-MC-Unique: UWzUlS9HNv6Ijb3fRkty2w-1
+X-Mimecast-MFC-AGG-ID: UWzUlS9HNv6Ijb3fRkty2w_1743070412
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2ff799be8f5so1402623a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:13:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743070389; x=1743675189;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1743070412; x=1743675212;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Xo7iAv+9nI2kaufsKds/53FFNGXfbLXPYtYZ+pjxKuE=;
-        b=c8shiqkfhsZa/W3nW6Dgw5UK+r3D+PxAgB1azQ6QS2gnpR66Cn0d33NbUHBURm01Pj
-         q8Fz8ycisWvmWIOzZ5XdWjl+D6DXdliJylhQeEJ5OOAIoO3HeDedSzjuyluqYCUS7SFn
-         kYJeK/ass4sjnq29deHEahzAaSMcZ+yWtUGBJjyf8Jgr53Sifbrt979Qz6OUdMevOjQl
-         WZ5/2fFg+3DaTL757ZPTwvJxfVi9CYVdqT9eOlnzOji5SUUN+H6AceKHmXPv/8SEtiYv
-         pM3CIxP1yi5wSq0HDHz3f+d6r7v2dgow6bzIPn0Uvdgb/3v8p33cRPBma8GQedy09nYb
-         +dsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWZXv2bUc0Vc68eVcYdcHoBZ76I174GkjaC41ZSeNtXYpb7LmUnCQzu4AxnrXZbb5pBoT5604fJbeVKN4A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhZpyIe1LbkR+Xiby97DliDDFfdbvQFf39hsqTA4KSZPd/BR52
-	iHZ6VfY7p1dC2RVA7q7Ho49+jAoO/zXsDtfXui8yKt5KWztQsB2sJGGdO3M2OXM=
-X-Gm-Gg: ASbGncvD8knFHmLGQhqVEFavARJ8a7wq7I6Zyet+7a6tE/X38PrDVVnFG9jEv9+FQle
-	hBQUWVm4PPHG3ePb3++grdSFQDiyPGJPh7FKbdCs5szn+MNwlxKnuiIuGQglmTQwGlO7+GZTsxH
-	J8VSM4lLzNbXXEyFxkgjUVP+gFwdn70cKVIIKJODgHxeW1fTfLceeRucuQYOY17U2eZALnQUK46
-	5lY30Gd8D37iN2hX4IL32dbxw0Vp4srMLmq5TLAvohSSFOqpPMZo5eUxq0UbXMbpIArvbsCFITM
-	few9Gz8NLEhnp3HygCsYCcsTXU9/XVTHmvkthxp+MQZuZztz+WxSX532P6Pz1qNNLQ==
-X-Google-Smtp-Source: AGHT+IFz+YPLrvTgN7jlfBOiq8HZmmXGzvYjXvGO0VPFIOTzfMvVnsPizrlTsSXhwRlZyW4HwIgm6A==
-X-Received: by 2002:a05:600c:4f0e:b0:43d:1bf6:15e1 with SMTP id 5b1f17b1804b1-43d8465f999mr27131955e9.1.1743070388941;
-        Thu, 27 Mar 2025 03:13:08 -0700 (PDT)
-Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efebc2sm32345205e9.21.2025.03.27.03.13.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 03:13:08 -0700 (PDT)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-To: Kevin Hilman <khilman@baylibre.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Xianwei Zhao <xianwei.zhao@amlogic.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250326-pinctrl-node-a4-v1-1-8c30639480f6@amlogic.com>
-References: <20250326-pinctrl-node-a4-v1-1-8c30639480f6@amlogic.com>
-Subject: Re: [PATCH] arm64: dts: amlogic: a4: add pinctrl node
-Message-Id: <174307038828.3221991.15446720184220513001.b4-ty@linaro.org>
-Date: Thu, 27 Mar 2025 11:13:08 +0100
+        bh=z1V7Tj5XppP4TZCf7Oi5My5u1vfz1nFkHzifF2QtL7E=;
+        b=pR8Y0TzSqOTDks9tDN5Pdw8sEilTtP6fGH7f0LtBpasbZAWt9/krZTgnpdPxoLUXMD
+         B9rIanf0P62GhNFWhSOkP+kX4SozP6zXPnjFEAP7ZwCX/jfGd2Z2tHv9wXBi6YrYmzbI
+         opzL5GTkJuOQeX2/5EhZEPtsVC9bNa1jHf9SYCtYX4hdYsZ9mBMi2WCPH1FoSCm26TBh
+         OHQJue5sRlPpNikywZ983sSbq/HNuavejH6TNtUzZNEwjg9Wtf+y6rBsq8HecWu+sYkf
+         nLqFbWuducJWQm8XpneZbRtUrsxt316uXafkpN5EIRxOBst0Fl2lwz69Py50NMcOUJ7w
+         x5EA==
+X-Forwarded-Encrypted: i=1; AJvYcCUsL66f2//mzU0FHMAjoFuMgVqdSCFviGI2v1vwm0P3bDVv4ntFbdcw5Eu01b/WcKUxmVGR3uroKl+o6Mg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdVrEPagXPHSVNFUbfizpYQNFmZUPgzTkL4j502LiEiig75CaN
+	2DbB4QzKs2rHY0/KJopCsRu9FQsUuW0cSnRyewUvbcHHXToHu+R2KfFTuUUoVXe3zTm+EOMUaiO
+	LHxu809DubLMarehqHUW+LL1JEqv6SWnkRW0gYVYCBOEcmUd9U+xNj/vcCFdjMwlRmAKjZyJ3H4
+	F6qM5RJU6VvbyQCZVrt+5fggYvfRXz7ZfngmavTX0ysLAb
+X-Gm-Gg: ASbGncugcCyeJx83oqI/ZftZcKs+aeiq64YnQYBg20AuaQZvNYJEmjwWg+UoSkBxtlT
+	/vczpe/ciLGW+qrkMemR6emng6bT1n/2uoiZU9ej4sOmayx32BZOaqBLyo3Rq9KneKgy+RbU=
+X-Received: by 2002:a17:90b:1b47:b0:2ff:6e72:b8e9 with SMTP id 98e67ed59e1d1-303a906c30emr4333004a91.25.1743070411733;
+        Thu, 27 Mar 2025 03:13:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGo6BSnN/7DnWwsrPKsPzsp5vwYeekx/yw1uXydp3cTFY2lLZ6RC9pAe31IwHQYeL/C+jGIXOHxziJ1HikRcBo=
+X-Received: by 2002:a17:90b:1b47:b0:2ff:6e72:b8e9 with SMTP id
+ 98e67ed59e1d1-303a906c30emr4332968a91.25.1743070411193; Thu, 27 Mar 2025
+ 03:13:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+References: <20250324103048.3d8230f9@canb.auug.org.au> <20250327101610.45f13473@canb.auug.org.au>
+ <e9c50bf0-e85f-4c71-b46b-b9b919955045@oss.qualcomm.com>
+In-Reply-To: <e9c50bf0-e85f-4c71-b46b-b9b919955045@oss.qualcomm.com>
+From: Alessandro Carminati <acarmina@redhat.com>
+Date: Thu, 27 Mar 2025 11:13:19 +0100
+X-Gm-Features: AQ5f1JpEcUZC0l9g0TEutF6ljQnWodfEfcECrFj9kOh5Fz3DBBEkrKeTMe2-9MY
+Message-ID: <CAGegRW7ONApvTPMSvYfpvH5=r06pPNpUAo7zBLfAhr-qcycFMw@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the kbuild tree
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Oliver Glitta <glittao@gmail.com>, 
+	Guenter Roeck <linux@roeck-us.net>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hello,
 
-On Wed, 26 Mar 2025 13:17:16 +0800, Xianwei Zhao wrote:
-> Add pinctrl device to support Amlogic A4 and add uart pinconf.
-> 
-> 
+On Thu, Mar 27, 2025 at 1:20=E2=80=AFAM Jeff Johnson
+<jeff.johnson@oss.qualcomm.com> wrote:
+>
+> On 3/26/2025 4:16 PM, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > On Mon, 24 Mar 2025 10:30:48 +1100 Stephen Rothwell <sfr@canb.auug.org.=
+au> wrote:
+> >>
+> >> After merging the kbuild tree, today's linux-next build (powerpc
+> >> ppc64_defconfig) failed like this:
+> >>
+> >> ERROR: modpost: missing MODULE_DESCRIPTION() in lib/kunit/backtrace-su=
+ppression-test.o
+> >> ERROR: modpost: missing MODULE_DESCRIPTION() in lib/slub_kunit.o
+> >
+> > This is now lib/tests/slub_kuni.c
+> >
+> >> Caused by commits
+> >>
+> >>   19f3496e6241 ("kunit: add test cases for backtrace warning suppressi=
+on")
+> >>
+> >> from the mm-nonmm-unstable branch of the mm tree and
+> >>
+> >>   1f9f78b1b376 ("mm/slub, kunit: add a KUnit test for SLUB debugging f=
+unctionality")
+> >>
+> >> from Linus' tree (in v5.14rc1) interacting with commit
+> >>
+> >>   6c6c1fc09de3 ("modpost: require a MODULE_DESCRIPTION()")
+> >>
+> >> from the kbuild tree.
+> >>
+> >> I have temporarily reverted the latter commit until the former are
+> >> fixed up.
+> >
+> > I am still reverting that commit.
+> >
+>
+> Guenter & Oliver, can you add MODULE_DESCRIPTION() macros to your respect=
+ive modules?
+Yes, sure.
+I'll do it asap.
+>
+> Context:
+> https://lore.kernel.org/all/20250311-moddesc-error-v1-1-79adedf48d0e@oss.=
+qualcomm.com/
+>
 
-Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.16/arm64-dt)
 
-[1/1] arm64: dts: amlogic: a4: add pinctrl node
-      https://git.kernel.org/amlogic/c/77fd52e77d325aac301601a18f7cf06de1565a72
-
-These changes has been applied on the intermediate git tree [1].
-
-The v6.16/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
-for inclusion in their intermediate git branches in order to be sent to Linus during
-the next merge window, or sooner if it's a set of fixes.
-
-In the cases of fixes, those will be merged in the current release candidate
-kernel and as soon they appear on the Linux master branch they will be
-backported to the previous Stable and Long-Stable kernels [2].
-
-The intermediate git branches are merged daily in the linux-next tree [3],
-people are encouraged testing these pre-release kernels and report issues on the
-relevant mailing-lists.
-
-If problems are discovered on those changes, please submit a signed-off-by revert
-patch followed by a corrective changeset.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-
--- 
-Neil
+--=20
+---
+172
 
