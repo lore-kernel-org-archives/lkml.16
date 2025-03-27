@@ -1,143 +1,118 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431D81C8624;
-	Wed, 26 Mar 2025 23:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74152114;
+	Thu, 27 Mar 2025 00:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743033454; cv=none; b=KPF9xrNuVls/5pEieSMhpMeeOrrPlzYrNB+9hSO26A1YUEsoZ1+2KtUbe6Nm0e6pWXXvC4DoIiHX9OAqtPmWrnDeXM/2GQH6oz0ioEcIr35tYa4XJDlVzYVciX7MCVnPhtiFZwJzaP5LxL5u6VoYmrpWSCnYLV7XNghynZNdwk8=
+	t=1743033790; cv=none; b=SHE3uGmfsJGcnZ0irax4375NSHtGBAx4QMbvc2GKrvqWvFz29trsfYDQ6zh+L5zS27/55rcOd4wej8jcK/xmLPySCKNk5ScA0rxEKbrJb9y4r2X1CwPhWFQRWlp+cHhLPIhdaXFeEwzRmq1QRYTzqic3W6mwZXdZerRRDrCoUnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743033454; c=relaxed/simple;
-	bh=/STihoPYXRHMOjpcglX1vRTqVYy77WjuYmkOE5ojoNg=;
+	s=arc-20240116; t=1743033790; c=relaxed/simple;
+	bh=CCjSPDZVo2hoLF4g6LePOKhEhcRY89Xy5MCm450/MOU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fqQ3HDWsXRDq7b73HhLblFHMUOT87XXRAF4oIKTcGUbBA6k4y50o9MQRXbfspT3XjsZzYVXzoPM8sxFFbdi7gwf1qOMozb2qYZkQ6q7zA2PpECR/6VUNHV07WiAlJ8S1d+adtM1Burq1EKxG6m8xUtIeBhYnZExsvQo+VnCGndM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=noAec5Dl; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=mGjvi71tfcSCvviMv6nessEEMLWpY8bKKnQK38bGpia2t7OFsvxkJnZcfMtvjJMZ5Jp/WNMsSnj4HMUp+ubRfETsVhWqJHxsx6bpN0ohZEUjESERiXnzmoEk85XUGXZKrKkbE1vxqHz8Gb2RFnmzKMpboFzIkAGWVYiCcZ54CII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vL+NKwqp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="noAec5Dl"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5cd420781so661336a12.2;
-        Wed, 26 Mar 2025 16:57:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743033451; x=1743638251; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tfL0zZBVe1RxEvNcNmE6dfxCA/2Hz+Ouu0xAFqUlH9A=;
-        b=noAec5DlT40uQNDq+09GuZcbhIwqottn5Ws8dk4QTz1ljpTbSL5xFJfZrRuvRxxWJ6
-         oBO2eOK/iWd7jADHXmT0ymi3MPdVRDjVeSdOxFfM3m4OIeOACbVqrsDSGYS4EF+8J4U1
-         3lCe+QGa/O9l4TR4uGVqcvs0nAW2kHAE75ig3xWhgcW004PfOfYrjjg7TNhnhyRzHo2k
-         pO1uTatQd8qVjC6zwlwRKeltRwTiieKOajY9lyUwObm0Ld1j7EbmEopNyaFxuPSU5cQZ
-         Y36P0TNLCizVhPf6oI1RLEf6WlUZsiVzuQR/CAMdQFHZW2BbdDe8nJPEs8/UtABgvaR6
-         go7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743033451; x=1743638251;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tfL0zZBVe1RxEvNcNmE6dfxCA/2Hz+Ouu0xAFqUlH9A=;
-        b=gxNjW2bjyKFsIokwW1ImhQ7rWO4Auv8prAWKfUqRbAITnIqfBLW+VZuub8M5W2O325
-         CQXTX1rrC1NDI+qpMofOGzVT0kvA1QOT28BYcD7MfZagQlM2PUm9b8qy0b/8VBdPREEa
-         IhqqhzVnUNgBUNIMLKN7Mnc3M2k7qNCueLjxkremK6ek/E60xo3eSdY477gGS++1qvsM
-         Ja2O+v766HnmwGMLsaEgwlrquHRzzsYSfkHLzy5wRqds0YsZH2YXLbBnFNVWDHaG0arf
-         e70gTp5fKhtqZyNrbkQseXTcGqlPekzNMKQpn2A3BPyBxRppgCoiRJOkFy/HsCivdaZX
-         mJsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX5KLn/Zc1LOnrOnSGWQcwmJJlJULV43Dis9/B82yw9jgiNYJIg9sfCIAHChMyIJWHiafAOFgd7@vger.kernel.org, AJvYcCXbBR6V44XnltvcD4h5d1ZECfkpQHVgF1QABTVzVkFv5zJAPf7aQMHOsTk4hHQ2ZL1/VOvrQ0yiTNS6ykJL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyvb00CdkfI9iVJHlSL9m3EynUKmaoxpTJCQYGD2KD2N2nmE/Jc
-	Zs+s4DwqF0WSPU6r5mBY16VvYTPfjQz17xFnKu+IrKbPpTd2laa/scIxIsCsRLwd/Xe74HRilHf
-	HQv9Ymewz08XqHXF6PDzL51rzxCU=
-X-Gm-Gg: ASbGncvIknfOzdFUNhegwdtgc/zHHNrmSRQXKkj7aFHRWevV5h9g541x2qik/JINeCM
-	XT41pdrrQjxglHY4Qsli7xHwBYtZQL3TPm6XBniwWG9ElhJnvSzb50+Yc4FqUyNXFBbzHW9QUfY
-	MnRr2FbLqtEgwvcT/IbLWLlOxU
-X-Google-Smtp-Source: AGHT+IFN//Xoa5xJhfjM1LYOOVmakekz4BFhgDXTCCePBITSricx0HscPMedKrQZtphZGJnjbaiTDTJRdWnY+Rhiu3Q=
-X-Received: by 2002:a05:6402:3596:b0:5eb:ca97:7c60 with SMTP id
- 4fb4d7f45d1cf-5ed8df6a56bmr1585288a12.6.1743033451157; Wed, 26 Mar 2025
- 16:57:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vL+NKwqp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EF98C4CEE2;
+	Thu, 27 Mar 2025 00:03:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743033790;
+	bh=CCjSPDZVo2hoLF4g6LePOKhEhcRY89Xy5MCm450/MOU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=vL+NKwqp8c9HC5c30Q6ri1Y5yuTsi/EpenHjDf9CNMaeXqpxghA8YA6YWhwz1hQ+F
+	 VUWA5uSym/8DTgSLWQImCc80GnbJE3NnA1VWdjal24PqvWRmIOA+gf/9OAo9DRVTRW
+	 3JpAp9PAt7xs7L0tLjRrrvowhdrURlG2LlCwfG/tg/1NGrjUnDxkvAEGYyM3fu6RLx
+	 eIjePamEWaufKTbh1ZSrGZGKhmIlxxiVVLjS89zWUt1kPQy/79qOwHN+ej0psdlae/
+	 tzkFnZyhZjYS/msFoHekHQO90cwrJ+u7NsVP8yS0Xu7SCYrhnD/BlOLShy4MmLa0OC
+	 A/Ffz0TWBl1XA==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e5e8274a74so616917a12.1;
+        Wed, 26 Mar 2025 17:03:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV2n2u31D6yVidZr7RcImNkQfw0HmVVHa7aiKsQ6HwmexO1b+49n9obxfGrSQ8dBz4N5hOzUZLa3BP4bA==@vger.kernel.org, AJvYcCVcDrf0PJX7ciz8oUIQ1S6BwjMyvmbWYZkV8rj4GQTq7pU1jlwDLziR+7SOK1snnErdgJsRGzHRIR2u0kMF@vger.kernel.org, AJvYcCVkwJdWe+ySZCXd8eloOvyNFIrbCGBgkOD+/ftzjk9mCy9VgWYCVa/tW9ovVkcMqvUqowpVoezGEtJd@vger.kernel.org, AJvYcCWWftW046uoOpveLYzNSAgFTN3Sdt7PItfTjZmHna+HvP1eeLDWtdH8hgJLqaoS1A+mo5K75VPkHaYPU/1Cl3w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3U7e55GOL+UndvZdMfZgC12m9LnuqxhgzCgnVjBPNARS6UTdo
+	hfM7bB5u+E+u9FZcJs0Zb/2gex9vwcIf+U0rjL3m3SObMhOK28+ZETQ+T2jZAPFLYDEGu+6/fxA
+	YfI3Z8MYKZBBanSMwHEPjgAOHFw==
+X-Google-Smtp-Source: AGHT+IERzT0kl1LknG2usIHMI1+Lt1VD4s7YUfGbLkTeY7qe+y/QCZpxxzGJSyF5y3Gin8FJCELvt/lRJqwoZFoadfA=
+X-Received: by 2002:a17:907:d89:b0:ac6:d9cb:58c0 with SMTP id
+ a640c23a62f3a-ac6fb1a73c2mr107112066b.50.1743033788647; Wed, 26 Mar 2025
+ 17:03:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319071330.898763-1-gthelen@google.com> <u5kcjffhyrjsxagpdzas7q463ldgqtptaafozea3bv64odn2xt@agx42ih5m76l>
- <Z9r-YQDAXIur81i0@slm.duckdns.org>
-In-Reply-To: <Z9r-YQDAXIur81i0@slm.duckdns.org>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 27 Mar 2025 00:57:19 +0100
-X-Gm-Features: AQ5f1JpbmDohO9ocCxEGWIoauJamJ5UA7T8ZC7rvjrjfnqAmW-PgRpsHSi5vYXc
-Message-ID: <CAGudoHHBs5Bo3PKS1SzrkUjTXFdGNDZ=3NyHuTezz1AUbauQ2A@mail.gmail.com>
-Subject: Re: [PATCH] cgroup/rstat: avoid disabling irqs for O(num_cpu)
-To: Tejun Heo <tj@kernel.org>
-Cc: Greg Thelen <gthelen@google.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	=?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Eric Dumazet <edumzaet@google.com>, 
-	Yosry Ahmed <yosryahmed@google.com>, cgroups@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>
+References: <20250326171411.590681-1-remo@buenzli.dev> <20250326171411.590681-11-remo@buenzli.dev>
+ <20250326220129.GD2844851-robh@kernel.org> <D8QJSRGJIYHS.K4H9W8N8N0YO@buenzli.dev>
+In-Reply-To: <D8QJSRGJIYHS.K4H9W8N8N0YO@buenzli.dev>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 26 Mar 2025 19:02:56 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK0SH+HTtquxDNvp8jCLwJgg7YJDNQT8h=kHO=nJChk4Q@mail.gmail.com>
+X-Gm-Features: AQ5f1JpETx50vOdiMhHoK95MGuYfdGvgMOPx1IsTpXGdDGU44Po8M857aSNDVHs
+Message-ID: <CAL_JsqK0SH+HTtquxDNvp8jCLwJgg7YJDNQT8h=kHO=nJChk4Q@mail.gmail.com>
+Subject: Re: [PATCH 10/10] samples: rust: platform: Add property read examples
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Dirk Behme <dirk.behme@de.bosch.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Saravana Kannan <saravanak@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 19, 2025 at 6:26=E2=80=AFPM Tejun Heo <tj@kernel.org> wrote:
+On Wed, Mar 26, 2025 at 5:24=E2=80=AFPM Remo Senekowitsch <remo@buenzli.dev=
+> wrote:
 >
-> On Wed, Mar 19, 2025 at 11:47:32AM +0100, Mateusz Guzik wrote:
-> ...
-> > Is not this going a little too far?
+> On Wed Mar 26, 2025 at 11:01 PM CET, Rob Herring wrote:
+> >>
+> >> +        let prop =3D dev
+> >> +            .property_read::<bool>(c_str!("test,bool-prop"))
+> >> +            .required()?;
 > >
-> > the lock + irq trip is quite expensive in its own right and now is
-> > going to be paid for each cpu, as in the total time spent executing
-> > cgroup_rstat_flush_locked is going to go up.
+> > The 'required' is kind of odd for boolean properties. They are never
+> > required as not present is the only way to to get false.
 >
-> Lock/unlock when the cacheline is already on the cpu is pretty cheap and =
-on
-> modern x86 cpus at least irq on/off are also only a few cycles, so you
-> probably wouldn't be able to tell the difference.
+> Agreed. I can think of a few alternatives:
 >
+> * Make the trait `Property` more flexible to allow each implementor to sp=
+ecify
+>   what its output type for the `read` function is, via an associated type=
+.
+>   I really don't like this idea, because overly generic APIs can mess wit=
+h type
+>   inference and become less ergonomic because of it.
+>
+> * Use `propert_present` instead. That doesn't perfectly express the inten=
+tion,
+>   because it doesn't warn if the property is present but has a type other=
+ than
+>   bool.
 
-This does not line up with what I had seen on x86-64 uarchs up to this
-point, including Sapphire Rapids, which I think still counts as
-reasonably new.
+Right. I've been cleaning up the tree to use of_property_read_bool()
+on bools and of_property_present() on non-bools, so don't want to go
+back to 1 function. The C code now warns on a mismatch.
 
-Most notably I see smp_mb() as a factor on my profiles, which compiles
-to lock add $0 to a stack pointer -- a very much cache hot variable.
+> * Add an additional inherent method `property_read_bool`, which returns a=
+ plain
+>   `bool` instead of `PropertyGuard<bool>`. Then there will be three sligh=
+tly
+>   different ways to read a bool: `property_present`, `property_read_bool`=
+ and
+>   `property_read::<bool>`. Maybe that's confusing.
+>
+> * Add `property_read_bool` and remove `impl Property for bool`. That woul=
+d avoid
+>   confusion between `property_read_bool` and `property_read::<bool>`, onl=
+y the
+>   former would work.
 
-However, the cost of an atomic op has a lot of to do with state
-accumulated around it -- the more atomics in short succession, the
-lesser the impact. That is to say it may be given code is slow enough
-that adding a lock-prefixed instruction does not add notable overhead.
+I think I would go with this option. Easier to add another way later
+than remove one.
 
-In order to not just handwave, here is overhead of __legitimize_mnt()
-while performing a path lookup for access() on my test box. smp_mb()
-is the stock variant. irq() merely toggles interrupts, it does not
-provide any sanity for the routine, but lets me see the cost if it got
-planted there for some magic reason. Finally the last bit is what I
-expect the final routine to have -- merely a branch to account for bad
-mounts (taking advantage of synchronize_rcu() on unmount).
-smp_mb:         3.31%
-irq:            1.44%
-nothing:        0.63%
-
-These would be higher if it was not for  the fact that memory
-allocation (for path buffer) is dog slow.
-
-And indeed I get over a 3% speed up in access() rate by not suffering
-that smp_mb() [I note I don't have a viable patch for it, rather I
-whacked it for benchmarking purposes to see if pursuing proper removal
-is worth it]
-
-I'll note though that profiling open()+close() shows virtually no
-difference (less than 0.5%) -- but that's not an argument for atomics
-being cheap, instead it is an argument for open() in particular being
-slow (which it is, I'm working on it though).
-
-If you want I can ship you the test case, diffs and kernel config to
-reproduce on your own.
-
-
-
-
-
-
-
-
-
---
-Mateusz Guzik <mjguzik gmail.com>
+Rob
