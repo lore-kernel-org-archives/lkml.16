@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE861A8F68;
-	Thu, 27 Mar 2025 03:23:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F39B1B0437
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:23:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743045833; cv=none; b=T4uorVp86KYqzSdC4bpF9bHexT7HItKyDYu6MuEOcPFYQhY9fGaWh8hYFGOsEeHTDD6cNi8DKKpuRyldGtoguTR4ybAWPKiukSIwyFrI75vCxp5U5OR3wiziwAYWYO/qS9U55azRYp47TPaLyHPSbkUBP0LoyKV2l7SjhhIuy9Q=
+	t=1743045836; cv=none; b=ZhhT3vqt5maqJUPCT3+JMQ84Pb3QvbqtIN7l3r6gJgjNboeWrt6F4o1baP4eSYf+xtwfsKylkNRUwtanQN1hQEHEO9PcQSZEiieJyu31VQOEffqDKtb6gKYEeCgF24igac0CMuGduQcdgLsOy5cAZF8d3n+owlfqJHhvggHycls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743045833; c=relaxed/simple;
-	bh=pCC2sGFvcufaRdmAg8yCIetKAMH3a3vUnBCLsel+L6Y=;
+	s=arc-20240116; t=1743045836; c=relaxed/simple;
+	bh=0Z+krIl+/zQYEwjG0OKDq23wYFASD/qtkJxmur+n0hk=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=jAnL2p1EfhHOAX6hEsH+gKLbizhsIbu9QORf23h59s2WCqmLei8F1YUOyApJKnP2tIKyPY4M0A/aiX8dK2qcWUHeBxbvAksq4IxxXXrSS4y66FmnCl+TRlEN0udxn9cbBx2qF9sGV77JJrt+ol93p8ew2kYE0DGt2I+OD4kbO2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fKD745VX; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=oVd2yxpooAWT9/SDqpyvNamLTqUDbNqI+LtfNIP5D/NWsguYpOWhSzcbo8Q5oHRpZLxv710TdW/mjgG8oys3bRmnPd51XM2xsH09OXob3GfUw49iONZtDrPPWvhq3wN3n3OOsX8+urrIAzq7LJ9dAPT3NQ0MziYB8XxdAAGlm9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OKIVlDks; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fKD745VX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D60A8C4CEDD;
-	Thu, 27 Mar 2025 03:23:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OKIVlDks"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BBB6C4CEDD;
+	Thu, 27 Mar 2025 03:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743045832;
-	bh=pCC2sGFvcufaRdmAg8yCIetKAMH3a3vUnBCLsel+L6Y=;
+	s=k20201202; t=1743045835;
+	bh=0Z+krIl+/zQYEwjG0OKDq23wYFASD/qtkJxmur+n0hk=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=fKD745VX76VwxxStc0QSSD/7Xyl4djR6b5/7IvZmHkFqBv3tQXcjeflW+qAUminIz
-	 RI0hOE5sy9F5CN97/jBF3mBTHWbkB4fdZAyQ2zTpcECLQ2sZFlAwwut3wwFu9xmHg6
-	 byUodYbvoKVH8bg8DEkcTcw+VSHvcv3lqK7zT6IsrKd2PWZrq9sFgJ31shS1+JwPmo
-	 hInRWDZMRQ+Ow78NBiRtNg6Uc9gtLpcWKNEjde1rmyMmNosnL+5MZgjatgxP4dbe07
-	 UzjewMzsLjk7Z/9UyzvMudlWUyizihXHx9sy1cNENRVBRep8ldGsB2BLKQc4ndKWPT
-	 YZiwenpyMMoiQ==
+	b=OKIVlDksSvYxBczefAjURc8P10kXnp2ZJbkVZgE7HDzRSkujUtWAGwVBF233EQI+O
+	 jcvaWK/tDrJ85gMIGcgr4kCT+0NqN7/+g+iXSX3VB9yjgpdUOC1lK6JNg86cH0t/S8
+	 JqNbMd34ymWgSkWulmDOapT5YVjq/p0hWV1lG6AVoW+iQQStKLUW4Wdbucb692zk6N
+	 fkFyjYBuqZGAm+sa48Xja9onPuw6finTR64EcVuCXZIG420aFm4e8wKVwByRe3C0Nc
+	 qwCYTz6u4KQiXvQCLA8WVAszXXKCVv+PhAbkIS29F6gJzFf4ZnOHKLBD/8t0/bkRGW
+	 /jJ7isU0h3IjQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70B3D380AAFD;
-	Thu, 27 Mar 2025 03:24:30 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34226380AAFD;
+	Thu, 27 Mar 2025 03:24:33 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,56 +37,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3 0/8] riscv: Unaligned access speed probing fixes and
- skipping
+Subject: Re: [PATCH v4] riscv: Call secondary mmu notifier when flushing the tlb
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <174304586925.1549280.17943998836701933910.git-patchwork-notify@kernel.org>
-Date: Thu, 27 Mar 2025 03:24:29 +0000
-References: <20250304120014.143628-10-ajones@ventanamicro.com>
-In-Reply-To: <20250304120014.143628-10-ajones@ventanamicro.com>
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
- charlie@rivosinc.com, cleger@rivosinc.com, alex@ghiti.fr,
- apatel@ventanamicro.com, corbet@lwn.net
+ <174304587200.1549280.10533939486464142848.git-patchwork-notify@kernel.org>
+Date: Thu, 27 Mar 2025 03:24:32 +0000
+References: <20250113142424.30487-1-alexghiti@rivosinc.com>
+In-Reply-To: <20250113142424.30487-1-alexghiti@rivosinc.com>
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, samuel.holland@sifive.com, ajones@ventanamicro.com,
+ aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org, cleger@rivosinc.com
 
 Hello:
 
-This series was applied to riscv/linux.git (for-next)
+This patch was applied to riscv/linux.git (for-next)
 by Alexandre Ghiti <alexghiti@rivosinc.com>:
 
-On Tue,  4 Mar 2025 13:00:15 +0100 you wrote:
-> The first six patches of this series are fixes and cleanups of the
-> unaligned access speed probing code. The next patch introduces a
-> kernel command line option that allows the probing to be skipped.
-> This command line option is a different approach than Jesse's [1].
-> [1] takes a cpu-list for a particular speed, supporting heterogeneous
-> platforms. With this approach, the kernel command line should only
-> be used for homogeneous platforms. [1] also only allowed 'fast' and
-> 'slow' to be selected. This parameter also supports 'unsupported',
-> which could be useful for testing code paths gated on that. The final
-> patch adds the documentation.
+On Mon, 13 Jan 2025 15:24:24 +0100 you wrote:
+> This is required to allow the IOMMU driver to correctly flush its own
+> TLB.
+> 
+> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> Reviewed-by: Clément Léger <cleger@rivosinc.com>
+> ---
 > 
 > [...]
 
 Here is the summary with links:
-  - [v3,1/8] riscv: Annotate unaligned access init functions
-    https://git.kernel.org/riscv/c/a00e022be531
-  - [v3,2/8] riscv: Fix riscv_online_cpu_vec
-    https://git.kernel.org/riscv/c/5af72a818612
-  - [v3,3/8] riscv: Fix check_unaligned_access_all_cpus
-    https://git.kernel.org/riscv/c/e6d0adf2eb5b
-  - [v3,4/8] riscv: Change check_unaligned_access_speed_all_cpus to void
-    https://git.kernel.org/riscv/c/813d39baee32
-  - [v3,5/8] riscv: Fix set up of cpu hotplug callbacks
-    https://git.kernel.org/riscv/c/05ee21f0fcb8
-  - [v3,6/8] riscv: Fix set up of vector cpu hotplug callback
-    https://git.kernel.org/riscv/c/2744ec472de3
-  - [v3,7/8] riscv: Add parameter for skipping access speed tests
-    https://git.kernel.org/riscv/c/aecb09e091dc
-  - [v3,8/8] Documentation/kernel-parameters: Add riscv unaligned speed parameters
-    https://git.kernel.org/riscv/c/9fe58530a8cd
+  - [v4] riscv: Call secondary mmu notifier when flushing the tlb
+    https://git.kernel.org/riscv/c/d9be2b9b6049
 
 You are awesome, thank you!
 -- 
