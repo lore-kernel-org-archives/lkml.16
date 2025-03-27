@@ -1,106 +1,130 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A221CAA85;
-	Thu, 27 Mar 2025 09:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB8AB1A8F60
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743068092; cv=none; b=LKwUqnZ+UDRs8jeKup0H3BNlZ6/lFWHa9ytSkqltaefbf0MpHgelrlYvgjpoFip4uX4Hsxh2zxF46YryDxwEGq0wgRb8vXz+iAK5+Sc8jucB4EGFnZy87yL37UZHtqAPmWGTtFYhc+2xZ1XzWArT9Ly9CBHnkzBogYd6/+s1Gw8=
+	t=1743068146; cv=none; b=K0+C2nvYZA3mKHVO0Cgc29tdDSgV1JHSpOw4EvrH/flK5Sl/h6AQiAp/aD+1XOhc0l78eycBnLz/1V+SF6IrMFUbLxm4CJvjA2INVvwnLcW3mglyb/c8pnpUI+PgPxHrSzJzHDPZzYSJkN33JXGRDaM3mRKLlpyBlSYFQW189mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743068092; c=relaxed/simple;
-	bh=feahf2RlNjMG7TuzyyRQ7CAEtCk2y5mQ9bTEbE1vmSY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pQIHt9zDG2qKEPHEeMImNiYYfIDEzFoEZcXYmit+Wu6DbiFTbhoGe/70K39ylr95EOUpMS/Z4Uckid3Z3QNGjkCF26l+L5E71ditO/2MND6iCY+SfoMi4haeK1WCNWFai3mcw2ANRfWVwsN5rRjqgkdeGkE1qRO4kZnZvPWOswY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cZmw8cvb; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cZmw8cvb"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54ac9b3ddf6so736461e87.1;
-        Thu, 27 Mar 2025 02:34:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743068089; x=1743672889; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cwthd6DvDSuYnlEHZsEaCsrecTV0g5QhuogV3nNKmcI=;
-        b=cZmw8cvbRWqSHx/74Ffc3gs+P6O/to6eG3xun2W4/JMbm0WyPJr0q+0bOz6uLFj/v9
-         nVW5Y3myodnqA4OBGpTj+FivqN8DDqz94LwOmIg4GjWwoDn4wIn5WQuNXT/cf9P6dOJg
-         P9GzTKGTMRRdNqL1LbyB8mk9zc6mC88lH++TCOZ0LMkfPMaDsxaKeUyXxqYNDTkcBI6I
-         c8Nox71k6pnBmsO22tp+Wog93NePFJirp0KN8iL2u4qDls0jvabxa46zFS8L481UQmi7
-         Hrewuv6YyLTpU3ZLY6QZkN06kl2fFDJh9cFyquGSm3eSyFs1rH6ABCpQXCDFqGzwz5fF
-         TG8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743068089; x=1743672889;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Cwthd6DvDSuYnlEHZsEaCsrecTV0g5QhuogV3nNKmcI=;
-        b=IF4jO4UnGSYF8zFfmEQ/R6Xu4Inm4uHsZYpjDLnEV7kxGsDxU97rNLnHHcfX7RWRjq
-         dUh9DOFgW/kJhSec4nt73xMfC5I+pEkGnrFqRC3j4s1/eC/KMp8l2z4O4H+c4paYwfe7
-         XJp0ioMtPPJVeNH66MSwmlSSoIJ547F9vMaKDxfQQVdW4C0KQRiAao25MQyM5P1gaYzg
-         5sEsivwsCQjZbE2x0VlsD2k3MCdlrQOm2fg9FQZg4Dn0Hr2+JwOY8wPBmyU6pmqGdbRZ
-         eelgVUUQvmUIxVaen4ZzcunVv7kfed7Tg6w3HRZqF28ruccSgTB3iTuAlld2oiiBk16T
-         q1qg==
-X-Forwarded-Encrypted: i=1; AJvYcCVZ7Xq9awTZ8bif5UjzNDog95tKPBJfjV1t68JomRxQqTS4lNGkBc5hU6N3Ve9gUrbX7o/n3NRk5vA9@vger.kernel.org, AJvYcCWq8rrgEzOyakdN34ZpzAIgWRaV0xowl07XUE9Yl71oE8ytc6wFAAIcZOV1HlD4dbfyHrml/IsvciuTFPE=@vger.kernel.org, AJvYcCXFETA2Cuqd0soz/W1x1+wMU3lu2w4UDvaSrvcIkN2qG5Jfxxa8MqyLC3VG2RNBhW29/9IbEcUc@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywx7lBXhnt5RV8bsH2Z2y2t/a5g9NBt0vRCdy0tMCRcqaeVQBGh
-	FiWKdNXzZmNeq/woSI3mvmtpg3VCDwjKfJLP/nKuImJtafrbF/nQ
-X-Gm-Gg: ASbGncusxeFgLf8DIR0XvV/WSNDISi7eAI5mLlbFsXSa5fvxEEMiSiUK3Wfg5mvQAwd
-	RS5DZcHxhUhPf7PU80XSWzkLdqtpKl6DTcNoqGYuP9rmV2QDve0l7HrEiRktJoyYfJE1t6+PUH2
-	T7dyuFlr8FscQyMFkoFlf4rStZae0Nww1bBd/qLUMIf4XssWrje25UdsWYCK+LsOlQPiwgPoD1v
-	cAiJQLlWa9FWQfA0P1kKHUthjWsqdiVFfS1GZhVBqkTI5VSct8ZzZBNYGjBRrHEO+ioVKl5f5DQ
-	OtFmrLGBFOHXbekePHxT2hQo0SwaCeu04M2cCfiscQkXg5YG0UHrfiErDGngFw==
-X-Google-Smtp-Source: AGHT+IFwgZ6kYC8A0WndQ549KjcP1lam1V9gB0x42xLQC3LqdXyaaWkYCCa3Vu+K+wV3jCMbpRX8xg==
-X-Received: by 2002:a05:6512:15a6:b0:549:8f47:e67d with SMTP id 2adb3069b0e04-54b012435a4mr969722e87.34.1743068088708;
-        Thu, 27 Mar 2025 02:34:48 -0700 (PDT)
-Received: from foxbook (adtt243.neoplus.adsl.tpnet.pl. [79.185.231.243])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ad646931esm2034295e87.42.2025.03.27.02.34.46
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Thu, 27 Mar 2025 02:34:47 -0700 (PDT)
-Date: Thu, 27 Mar 2025 10:34:43 +0100
-From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: "Rangoju, Raju" <raju.rangoju@amd.com>
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org, mathias.nyman@intel.com,
- mathias.nyman@linux.intel.com, stable@vger.kernel.org
-Subject: Re: [PATCH v4] usb: xhci: quirk for data loss in ISOC transfers
-Message-ID: <20250327103443.682f4cd1@foxbook>
-In-Reply-To: <bb78e164-f24f-49d2-b560-24d097cb2827@amd.com>
-References: <20250326074736.1a852cbc@foxbook>
-	<bb78e164-f24f-49d2-b560-24d097cb2827@amd.com>
+	s=arc-20240116; t=1743068146; c=relaxed/simple;
+	bh=Yz/tUxwIyLQ7HNXu+dzXfyR3JnuM1gjbS67S+hWQWqw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OnXg0H7NV6rDi7HI4P09XhPCDwTx301/GeDr2NOAxxQNXmdwckDrUmNks6hADVX8Ev4YFjpRGedDTFRhTPBrJhNU7KeaiwF/8TkGt09cK2DRtBrpds8d+/ar33Fgxk9225/dhjbIxNylOzpxYvhxN7FCmHsR+ALuSpYT1yGqEiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23B4A106F;
+	Thu, 27 Mar 2025 02:35:48 -0700 (PDT)
+Received: from [10.34.129.27] (e126645.nice.arm.com [10.34.129.27])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5097C3F63F;
+	Thu, 27 Mar 2025 02:35:40 -0700 (PDT)
+Message-ID: <3c21871b-4936-4143-bc78-38495a7995a6@arm.com>
+Date: Thu, 27 Mar 2025 10:35:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched/fair: Allow decaying util_est when util_avg > CPU
+ capa
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: linux-kernel@vger.kernel.org, Chritian Loehle <christian.loehle@arm.com>,
+ Hongyan Xia <hongyan.xia2@arm.com>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>
+References: <20250325150542.1077344-1-pierre.gondois@arm.com>
+ <CAKfTPtCfaH6SvBesbKBHRNfjZHJXXC1h4NF8GoFUczE5NiRunQ@mail.gmail.com>
+Content-Language: en-US
+From: Pierre Gondois <pierre.gondois@arm.com>
+In-Reply-To: <CAKfTPtCfaH6SvBesbKBHRNfjZHJXXC1h4NF8GoFUczE5NiRunQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Thu, 27 Mar 2025 12:08:53 +0530, Rangoju, Raju wrote:
-> > What if there is an ISOC IN endpoint with 64ms ESIT? I haven't yet
-> > seen such a slow isoc endpoint, but I think they are allowed by the
-> > spec. Your changelog suggests any periodic IN endpoint can trigger
-> > this bug. 
+
+
+On 3/26/25 18:25, Vincent Guittot wrote:
+> On Tue, 25 Mar 2025 at 16:06, Pierre Gondois <pierre.gondois@arm.com> wrote:
+>>
+>> commit 10a35e6812aa ("sched/pelt: Skip updating util_est when
+>> utilization is higher than CPU's capacity")
+>> prevents util_est from being updated if util_avg is higher than the
+>> underlying CPU capacity to avoid overestimating the task when the CPU
+>> is capped (due to thermal issue for instance). In this scenario, the
+>> task will miss its deadlines and start overlapping its wake-up events
+>> for instance. The task will appear as always running when the CPU is
+>> just not powerful enough to allow having a good estimation of the
+>> task.
+>>
+>> commit b8c96361402a ("sched/fair/util_est: Implement faster ramp-up
+>> EWMA on utilization increases")
+>> sets ewma to util_avg when ewma > util_avg, allowing ewma to quickly
+>> grow instead of slowly converge to the new util_avg value when a task
+>> profile changes from small to big.
+>>
+>> However, the 2 conditions:
+>> - Check util_avg against max CPU capacity
+>> - Check whether util_est > util_avg
+>> are placed in an order such as it is possible to set util_est to a
+>> value higher than the CPU capacity if util_est > util_avg, but
+>> util_est is prevented to decay as long as:
+>> CPU capacity < util_avg < util_est.
+>>
+>> Just remove the check as either:
+>> 1.
+>> There is idle time on the CPU. In that case the util_avg value of the
+>> task is actually correct. It is possible that the task missed a
+>> deadline and appears bigger, but this is also the case when the
+>> util_avg of the task is lower than the maximum CPU capacity.
+>> 2.
+>> There is no idle time. In that case, the util_avg value might aswell
+>> be an under estimation of the size of the task.
+>> It is possible that undesired frequency spikes will appear when the
+>> task is later enqueued with an inflated util_est value, but the
+>> frequency spike might aswell be deserved. The absence of idle time
+>> prevents from drawing any conclusion.
+>>
+>> Signed-off-by: Pierre Gondois <pierre.gondois@arm.com>
 > 
-> If such an endpoint is implemented, it could theoretically contribute
-> to scheduling conflicts similar to those caused by INT endpoints in
-> this context. However, our observations and testing on affected
-> platforms primarily involved periodic IN endpoints with service
-> intervals greater than 32ms interfering with ISOC OUT endpoints.
+> This change looks reasonable to me. Did you face problems related to
+> this in a particular use case ?
 
-In such case it would make sense to drop the check for
-usb_endpoint_xfer_int(&ep->desc)
-and rely on existing (xfer_int || xfer_isoc) in the outer 'if'.
+I think it was more related to the fact util_est is not decayed when:
+(runnable - util_avg) > margin
 
-> I'm not completely sure about this corner case if HS OUT endpoints
-> can inadvertently get affected when co-existing with long-interval
-> LS/FS IN endpoints. Our IP vendor confirmed that LS/FS devices are
-> not affected.
+This patch slightly helps to decay, but not that much.
 
-There is also a third case of a FS device behind an external HS hub.
-The device will look like FS to this code here, but the xHC will need
-to schedule HS transactions to service it.
+> 
+> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.rog>
 
-Regards,
-Michal
+Thanks!
+> 
+> 
+>> ---
+>>   kernel/sched/fair.c | 7 -------
+>>   1 file changed, 7 deletions(-)
+>>
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index c798d2795243..de7687e579c2 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -4918,13 +4918,6 @@ static inline void util_est_update(struct cfs_rq *cfs_rq,
+>>          if (last_ewma_diff < UTIL_EST_MARGIN)
+>>                  goto done;
+>>
+>> -       /*
+>> -        * To avoid overestimation of actual task utilization, skip updates if
+>> -        * we cannot grant there is idle time in this CPU.
+>> -        */
+>> -       if (dequeued > arch_scale_cpu_capacity(cpu_of(rq_of(cfs_rq))))
+>> -               return;
+>> -
+>>          /*
+>>           * To avoid underestimate of task utilization, skip updates of EWMA if
+>>           * we cannot grant that thread got all CPU time it wanted.
+>> --
+>> 2.25.1
+>>
