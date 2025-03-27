@@ -1,108 +1,92 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1279320B811
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:11:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919FB20C00C;
+	Thu, 27 Mar 2025 09:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743066721; cv=none; b=TYkE/MKR+mdG2M1/mbmXHd5xrsDuFyFRRPO0vNdmqe3AUG1+SjjZYvV0Z6D6AVnY5lMeZt5a4Aabo4VPXVCMopbGE+RmQ5VM/7nYi8/y4E33LCDeTwqpizzdo42+3RQeiynuMBaivmn/PlfGUvYVTDKn/67hBlF5bUUGCOGqqkc=
+	t=1743066907; cv=none; b=PQ3q9qfpYVhC4VmsOOwhwCut2TXpVF1QrmuGcuIUW9AMELcYT2UFmKB0/aRD6HOT1gpGxuUS4aK5/XhyfUViOCIvOyc37SAkvCtmV1sZK4KfxAnTLhopDIZQzd53fwR5wBsYRLQ8RDeqZ7i09QrnRX8S9FczFT+xiravSiC0Gn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743066721; c=relaxed/simple;
-	bh=97fP1qZfJrEtmKbwyo4ydQSZwvCzpq2F7825aCxbZtY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DpFE1z1x1rMz2UyP7LPEEWJ8G+e57dIHv8xbgRqngNx7VYeavqSvIXhnvd4JkKJi4RvZzLRMEmH+7H6ynDiXt2zoma9cJTP5J7crzRAz9pRXSX+Z1YNPLL/WcAtj6ldKRjwu7iP3Umbb6xpOsAMGQA751LWganAuoSeaRaF4iqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uhjzrCbR; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743066907; c=relaxed/simple;
+	bh=Cw6ejRTqbNTRy1dOrLVVDEgZ0Ll7ZxSxIn2I5fiFSAI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c2IH7ICwbgk6dWmCG+/3ABWadMhsP/HHmM8wNM7IHOdQc6Ne3/ZMWkelSeNHyy5bkUZBztcfyT/+pVegAyZojUMTQZ8I6ZQhM48di70RPIWTv2GplB/tgYSWba0pVUZstC0THjI+ABkUK4WvJPLa7eVTCwORDHg9oO1c74MVOzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=UcyhD6X5; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uhjzrCbR"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-477282401b3so8322081cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 02:11:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743066719; x=1743671519; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+b6l40FNhgRVfbAF6laWpTMxO9IIW1hJJ+UtCtzYu04=;
-        b=uhjzrCbRxZqOIeLIBho2egn2JFwr+PqHB+g11UCkEwFYcLmKt3ncmIWCy19M0uVlF4
-         kBo7rdNdTIZSksLq6s3HbRvJBrNm3vk6mFxLfvVixQ5Y9bgBWJV5tRE2WMOdglXROZ/F
-         yd5if0Pip9M7erzCrrbV4JbGngmOIUbSgYhEkVVoW5m0eNjRRqPSYqj11MrYbgYk1JJr
-         J0iMi8AU2ntxmBENusY4/idQo4wvSJ/kW6WtOD6TKT6L87sqEFYrEZflYMpgXTjKdpPy
-         m95QXn1C+mvl2raSNOoDo19ZdzXymALw684CgjCCT8TeqB7n9psLmdd7+1FAPXRUKm/y
-         U5yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743066719; x=1743671519;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+b6l40FNhgRVfbAF6laWpTMxO9IIW1hJJ+UtCtzYu04=;
-        b=U+l+r+0itBW0QGSM2HfW74fDRBIPtoi41TMKBQg/YIAOAqrmby1CYAG9074VTFnSe7
-         Jh6E3XoPAllrP+fjS9hxxECIMDvv/jEYDyD8Tb/aISUU6BfGUlYtk/55OwzUO7YMcINl
-         hquyFhs7J8BIsz4Sat4rvj3kaBNYAmTSzQ3wZ6jiAxdIYWend00JhUz/qRDlfPF6bcAl
-         g5YHB83pzVCwVqGdTvXTuijLQ+P4/r2o8IVh+at/09N3fx8JzbtErRMn5lM8WgqeSg/0
-         T+dXR05U1yzan+2bIYsYkOI1IZHeq8IiOY2dRMVQHWAi/srUClnMUbxis6ncCgKOurjZ
-         e5Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCXqxcJELaktcURRu8BFsz7SSf7G1gl17+AyQzKBGAJO/8Y2oxFvc5cQLFXX+IMI8ZZQXvVAdx/5DGdFP+g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/N0UXgf9nBJxku4e2Mv1lh6XYpJJWaLjTfI45VLtV9eE5HAg/
-	uMBbVIoDVYtvqCaijjsMSlO9tLJHQi0HyHsYQGSNqgkJBP146TK+ui0GibjSFkSD/V8QYFn1yM4
-	cymsNvNnLEBZKDn7zuzZH/OvL5IzEUuS38X4B
-X-Gm-Gg: ASbGncv5WFnFvdZusMlTdrO76DWKBkU+rhsDJDnMZw03kYhhjA4EhgRou0fgAmhaq9b
-	OkV4WUZ17a0qJQRThWERUw2nwZyPT1VrbtgkoFEVzOQ/eFlW/hV/oKRXsXATmQKgshvz27qMgv8
-	bXi+McWBu9g3GDCa9oS76wZMUHsdc=
-X-Google-Smtp-Source: AGHT+IGq3aLRbE61liibJ18xlXemuiMGmGhTJiZQWBje+7JPnjbbgDMma2RLDDWKs8QX50o9E11tAljMqxUcNwkTpE8=
-X-Received: by 2002:ac8:6906:0:b0:476:8a27:6b01 with SMTP id
- d75a77b69052e-4776e20ba52mr37064611cf.47.1743066718528; Thu, 27 Mar 2025
- 02:11:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="UcyhD6X5"
+Received: from pps.filterd (m0431383.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R75vwR014009;
+	Thu, 27 Mar 2025 02:14:50 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	pfpt0220; bh=qfACdZ3eEfdUgRMgQABnRXr5APgDUxRBai15XeOp4Gw=; b=Ucy
+	hD6X5n1NGelsCwcp5nff3o+veRXZqYYqFCf3c1R1XaABtwQZOvJeZ5UqGUGOMlzr
+	MeJXpxTjmdhui0HJPtOwmkw+7BQVX0eMNuug1At7TmXxpjby6SBUwIJYy8KRTYuj
+	giLw7oAGI+eOAl+zwn/OFqj5sr2WhCJBKk8uq3SUK7U+z4Xkd5ELggXWI32NAea/
+	Luhs15MB0RMh9TDst7XxlvpqkFumxJluXDmluXtmD7bERx6loyJvodF0Wmf2YqcH
+	Xogma/rKkbDRJHtM4XoQC35oGkxwl+illjhUp1Jp5pn169gQxwDB+lSvS1nuSh07
+	tk5zy4axqJCpbhwelXg==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 45mqr3hf38-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Mar 2025 02:14:50 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 27 Mar 2025 02:14:45 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Thu, 27 Mar 2025 02:14:45 -0700
+Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
+	by maili.marvell.com (Postfix) with ESMTP id 701EF3F7063;
+	Thu, 27 Mar 2025 02:14:42 -0700 (PDT)
+From: Geetha sowjanya <gakula@marvell.com>
+To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <kuba@kernel.org>, <davem@davemloft.net>, <pabeni@redhat.com>,
+        <edumazet@google.com>, <sgoutham@marvell.com>, <gakula@marvell.com>,
+        <sbhatta@marvell.com>, <hkelam@marvell.com>, <tduszynski@marvell.com>
+Subject: [net PATCH] octeontx2-af: Fix mbox INTR handler when num VFs > 64
+Date: Thu, 27 Mar 2025 14:44:41 +0530
+Message-ID: <20250327091441.1284-1-gakula@marvell.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202503241406.5c9cb80a-lkp@intel.com> <87pli4z02w.ffs@tglx>
- <6sn76aya225pqikijue5uv5h3lyqk262hc6ru3vemn7xofdftd@sw7gith52xh7>
- <CANn89iKjCgmxtiLeVAiXODHbbR7=gYYi5cfAS1hS5qn+z=-o1Q@mail.gmail.com>
- <877c4azyez.ffs@tglx> <CANn89iKAkio9wm73RNi9+KngNaS+Au2oaf0Tz9xOd+QEhFSkyw@mail.gmail.com>
-In-Reply-To: <CANn89iKAkio9wm73RNi9+KngNaS+Au2oaf0Tz9xOd+QEhFSkyw@mail.gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Thu, 27 Mar 2025 10:11:47 +0100
-X-Gm-Features: AQ5f1JrvFSfU0cznx95FVC7fEJsPk5YA71f3DBhzv0nVjY72RKACuxNOLZvssF4
-Message-ID: <CANn89i+nAN+p-qRypKxB4ESohXkKVPmHuV_m86j3DPv6_+C=oQ@mail.gmail.com>
-Subject: Re: [tip:timers/core] [posix] 1535cb8028: stress-ng.epoll.ops_per_sec
- 36.2% regression
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Mateusz Guzik <mjguzik@gmail.com>, kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, 
-	lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Benjamin Segall <bsegall@google.com>, Frederic Weisbecker <frederic@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Proofpoint-GUID: GORetHUyo1tBLtBLUj8WTAd9j0PlFgeR
+X-Authority-Analysis: v=2.4 cv=Yeq95xRf c=1 sm=1 tr=0 ts=67e5170a cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=Vs1iUdzkB0EA:10 a=M5GUcnROAAAA:8 a=M9fZB8FS68YcmyB56HsA:9 a=OBjm3rFKGHvpk9ecZwUJ:22
+X-Proofpoint-ORIG-GUID: GORetHUyo1tBLtBLUj8WTAd9j0PlFgeR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
 
-On Thu, Mar 27, 2025 at 9:26=E2=80=AFAM Eric Dumazet <edumazet@google.com> =
-wrote:
+When number of RVU VFs > 64, the vfs value passed to "rvu_queue_work" 
+function is incorrect. Due to which mbox workqueue entries for
+VFs 0 to 63 never gets added to workqueue.
 
-> We could place all these atomic fields in separate cache lines,
-> to keep read-only fields shared as much as possible.
->
+Fixes: 9bdc47a6e328 ("octeontx2-af: Mbox communication support btw AF and it's VFs")
+Signed-off-by: Geetha sowjanya <gakula@marvell.com>
+---
+ drivers/net/ethernet/marvell/octeontx2/af/rvu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Following one-liner seems good enough to separate the 4 atomics used
-to control/limit
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+index cd0d7b7774f1..6575c422635b 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+@@ -2634,7 +2634,7 @@ static irqreturn_t rvu_mbox_intr_handler(int irq, void *rvu_irq)
+ 		rvupf_write64(rvu, RVU_PF_VFPF_MBOX_INTX(1), intr);
+ 
+ 		rvu_queue_work(&rvu->afvf_wq_info, 64, vfs, intr);
+-		vfs -= 64;
++		vfs = 64;
+ 	}
+ 
+ 	intr = rvupf_read64(rvu, RVU_PF_VFPF_MBOX_INTX(0));
+-- 
+2.25.1
 
-UCOUNT_RLIMIT_NPROC, UCOUNT_RLIMIT_MSGQUEUE, UCOUNT_RLIMIT_SIGPENDING,
-UCOUNT_RLIMIT_MEMLOCK,
-
-
-diff --git a/include/linux/user_namespace.h b/include/linux/user_namespace.=
-h
-index 7183e5aca282..6cc3fbec3632 100644
---- a/include/linux/user_namespace.h
-+++ b/include/linux/user_namespace.h
-@@ -120,7 +120,7 @@ struct ucounts {
-        kuid_t uid;
-        atomic_t count;
-        atomic_long_t ucount[UCOUNT_COUNTS];
--       atomic_long_t rlimit[UCOUNT_RLIMIT_COUNTS];
-+       atomic_long_t ____cacheline_aligned_in_smp rlimit[UCOUNT_RLIMIT_COU=
-NTS];
- };
-
- extern struct user_namespace init_user_ns;
