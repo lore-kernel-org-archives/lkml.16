@@ -1,266 +1,178 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2085.outbound.protection.outlook.com [40.107.237.85])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8EB204F7D;
-	Thu, 27 Mar 2025 08:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743063814; cv=fail; b=g14BSb17uVCM8rouL0DGrTp1JBCdcGZKH61VT4/8FFjGvGZtO3uBkuL6xqY7f/a+8+8C8GyOZmxm/ui0VExsklkV9Tf+ku2ekvOdnMeyACZujSgT14YAzNkzqXu5sQ8qWeiUPPMM4Lmvh/28vzEsVBjs2sBHvCQ+hPtJR76GcNk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743063814; c=relaxed/simple;
-	bh=n1sln94Mb3VwMQmDXJW4F1HBR5We6KPtmQ3yUhoqsRc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Zxpk0+UlqWl21E5dj++k7FOBSlCnRgCf+igH6IPs1t533sYFnKGX8mBjOJInaDKSnvA2fGGw+zNW1NPOcVtpLxzFuDZwZ3q57KxpxgZcolNXqfjph2qXUQh6vTJHwqBbN9bAEGM+nX/cf12RFj5bbXobawo+vFEULZ+9zmF3oCE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ViYCWhyF; arc=fail smtp.client-ip=40.107.237.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0B5204F87;
+	Thu, 27 Mar 2025 08:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743063865; cv=none; b=AHFjsXqHH7rBsYkX8xg5rjNNkkEfvxwTqTzaDYKi+gQeQF5tqi5cfeCsLAbdTFavoXsMeFKDyCbDmktgCePqsz1LPKzvPVO/v9Kom7MuTiNLmhOn/2GdyfvrOxUDb5mbA9lG5td3CDkO+VsUI60kyAp7xzeapioOfG5M95hTzxY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743063865; c=relaxed/simple;
+	bh=Oo9S+xOjeLws4diGw62TueYch40yhype9WmT5f8Bm7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eLr7ZyVYtxMzPg58fLtQLaNWrVmeE++GSWGc/XHR8Fbr3BROJ9d5TxDUw42Jbv9tjlMzQQuWtlijY7qsh5HzAEvvmQDDwVbgNXoUfNORTkUXS3LNRKUK4P6XiGbByZ9p15aNWQ8moSyAzTKPfD0gmsrXkJZqeYdM/gLDgYDXBc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KZgKVwiF; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ViYCWhyF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QqkWQ4rLVZzs8XHa+y6WoVw0Abk9tkpHqrNl4XUH+w3n96e4XQzob14b/JXJoB50pFi8dtuMqm084qh4UsRG/A4lJOA7vSCPaVJTSK34ghubfGkhfnGWtTv03tujU6WxTRdBzS0mQVytdIuAN6DKHnfpo7dBOR1zEroq7e7REPANKH0SxDvP1NTH0yx2TvJYeW4WmAJFjgouZE5KFAeh/+mT/3vFYnxrAI5VxHryOTjzD9hr5e/PegSntrgXPvTkdDSp3Cf/gq8NgpoSQlvq9OnlXdIq5sImnC5NfGvlG8V/MLvwnT+FVqIv3DTw+lYBKRj5BCGf4dO+tmrbR3RqQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fAozeP+mCD2MxzQ7GjGEx0I+OU4RG+ocPGCNOooUK3I=;
- b=BsNDdxkHwXxoGWnu0cjfvbWBhgMK+U9xP/2JWI+EbhIyvQwoe99ILJ2xFRyF8zqKdEwUimsEQfPA1Clt+thsgNVjaiyXRwADb2rjlil/N5dcUwLSCTUw/ew747Fg190FygtVuejXu2SkS5WEIluMOp/6LXYMwnLZe6qKfSRW+q+xnzSsAQRFX5sEg6hKEA0SMd3YO2U+FHcg/5Zb8x58u2ZhditJ3Fqx4ItykkaBlnck4SrlStnrkeziG6MAPEkMgIEEx7xE6EE+IRI8oYVhcO6VdLvwNSo5IZ+g1kB0KD7bd7Xp5HRHfTjZNJL3VbpnnirJed0C7zZ5sg99c26vSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fAozeP+mCD2MxzQ7GjGEx0I+OU4RG+ocPGCNOooUK3I=;
- b=ViYCWhyFBcffFbKdFbRUfTPcBNyBJs/6qc1w8xk/J3A0/95UT+a1X17DPHNV/BRXdFbbPh3qDwnfWNN2p+dTUtQQ2se0qKiqCcO1PBpQllHOjOit2ci5bxT0lfBZpuBo4fouskelwqijKdmZeKC+3FwI5eBs0AKVzMX/9V3kfYk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SJ0PR12MB5673.namprd12.prod.outlook.com (2603:10b6:a03:42b::13)
- by DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
- 2025 08:23:28 +0000
-Received: from SJ0PR12MB5673.namprd12.prod.outlook.com
- ([fe80::ec7a:dd71:9d6c:3062]) by SJ0PR12MB5673.namprd12.prod.outlook.com
- ([fe80::ec7a:dd71:9d6c:3062%7]) with mapi id 15.20.8511.026; Thu, 27 Mar 2025
- 08:23:28 +0000
-Message-ID: <054797fb-ee9e-408a-a28b-81f174c7b89e@amd.com>
-Date: Thu, 27 Mar 2025 09:23:21 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/syncobj: Extend EXPORT_SYNC_FILE for timeline
- syncobjs
-To: Rob Clark <robdclark@gmail.com>
-Cc: dri-devel@lists.freedesktop.org,
- Dmitry Osipenko <dmitry.osipenko@collabora.com>,
- Rob Clark <robdclark@chromium.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b"
- <linux-media@vger.kernel.org>,
- "moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:bdma_(?:buf|fence|resv)b"
- <linaro-mm-sig@lists.linaro.org>
-References: <20250326143903.24380-1-robdclark@gmail.com>
- <342ee079-ee0e-470d-afd2-c2870115b489@amd.com>
- <CAF6AEGu2Ax+u3QmD2VADwh4A4s5TAmP5Lq4DcYYadKP4csH-=g@mail.gmail.com>
- <CAF6AEGv-Zad2GF-=gDdYQdZGkJ_u+eyBFvTNK49m5+1ycaZu9Q@mail.gmail.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <CAF6AEGv-Zad2GF-=gDdYQdZGkJ_u+eyBFvTNK49m5+1ycaZu9Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR2P281CA0003.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a::13) To SJ0PR12MB5673.namprd12.prod.outlook.com
- (2603:10b6:a03:42b::13)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KZgKVwiF"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D9D49442AC;
+	Thu, 27 Mar 2025 08:24:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1743063860;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cakyJcamr6ifEel+JnINPPg6H4O22U1iqk8+y8IL+AY=;
+	b=KZgKVwiFiDok0zNj49lyw5D4FkrgzsyLYQZvEGSYYA3irgreWf+6l2q+DBOU56ZnJW5wsA
+	z0kySULXDZJbPwysZ5bPRlOYDYGHyKTb2BscqmY/nEe3wXLd4eCAYwWyOmlECFjeOFiu7K
+	gAVC69qbrDQlfHlDzceJSEbEC7bzpCi0nUTP26F4hk8G0heA57Qc5inu17yd/EYMldik4C
+	CRYKF/+tBLAcUN512/gEL00e6oIuWFcPIGQFhtNwL6XzLKcFSNicyu4U/vlhod3XCHVC4L
+	WgvvXoKcSeHuLxgtu73pYV+r1iHHyry3owRj5DjRgtUF/GCU9WC+ikfUUk6Juw==
+Date: Thu, 27 Mar 2025 09:24:18 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Marek =?UTF-8?B?QmVow7pu?=
+ <kabel@kernel.org>, Eric Woudstra <ericwouds@gmail.com>, Daniel Golle
+ <daniel@makrotopia.org>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [net-next RFC PATCH v3 3/4] net: phy: Add support for Aeonsemi
+ AS21xxx PHYs
+Message-ID: <20250327092418.78f55466@fedora-2.home>
+In-Reply-To: <20250326233512.17153-4-ansuelsmth@gmail.com>
+References: <20250326233512.17153-1-ansuelsmth@gmail.com>
+	<20250326233512.17153-4-ansuelsmth@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ0PR12MB5673:EE_|DS7PR12MB9473:EE_
-X-MS-Office365-Filtering-Correlation-Id: fefd38fb-9bea-4472-c9db-08dd6d08a6d8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YnhvZnVDZmhjeDhaelRRL1p1a0MwYmVpdUswbWRGdWF1NTArc0xHdTd5K2hr?=
- =?utf-8?B?ckFvQ2hzcHlteWtRaVhFbTNVWG1LekpCN2Qrc25BYmswNWVpZ1dqeG5lT3dF?=
- =?utf-8?B?MDQ3NGRlb2o4ZXUrUkhlQm4veE1lZ3AzRVlxbHloUFhqemFhOEdSa1N4MjV4?=
- =?utf-8?B?S3pGSk5wNUtOLzllazl3eVpOMHBYVTBtcUZGUzFwRG9ZNGtiR0VOSW1pQzk1?=
- =?utf-8?B?aS9tQlRDV2hOTWN6ekk2SnRkWmNydGJTVlRGYTh4TnFUN296Wm9IVmZ6eVFX?=
- =?utf-8?B?QjhRUzFhUWFnUVhMZ0dZYzlROWdmRSttaEhNYjIrSXBOQis2T2dOU0xVaW9j?=
- =?utf-8?B?T0JkRStRUDVEeWllcHg4UUw5c2pZR0twdXlYNm5ubmExY1lrNEtRNXAvTlJV?=
- =?utf-8?B?UHN6SXpPVnRzNklnb0NncXNaT2RBMHV6YUdWanZlWmVwU1I0cUhIcTNpTFBR?=
- =?utf-8?B?RnRJWG9DNXdIZ29OdStpL0JoRGpqY0xrM25XWTVRWk91UWVOcFBGWjV0Rlcw?=
- =?utf-8?B?dFU1UkZYbXl5SDFOcytYQmdnc0kxWGZza0dEeGNHSTlMcEJodVNKWFo1NC9u?=
- =?utf-8?B?U3g2RjNmbDExRWZ2NW9QY3FBbHlDK2dIY0M3N25WWjRmSkJoUTFxaVJIaDA3?=
- =?utf-8?B?L29KRnRpU1BMWkIzemhwS2NRY29EcnZWbXlMb2hoZmpMeW5tbVhsSzBCcEhU?=
- =?utf-8?B?VWJ0Vms3dm1xcWJEZWc4WldjbVBjdEpsSUN0S0t1SHVuUTFyQVlEclFpQ3dM?=
- =?utf-8?B?cFZ4VGJqb2wzNE16TEVIdE4xT0FTdEJwNDEwSTc2bmd4WDkxaW1EWVllaDM3?=
- =?utf-8?B?RTRmZGlhMXZ3bmJOYkhOUGdPSFRrUHMvOHhEUWF1ZmNTeU9KaEtMem55aHpq?=
- =?utf-8?B?OEU3Nm5rb0RTb2U1Q0lacEc2ai9QN3pzdkZNaE5lUVhkTkluUEJ2TE9GZkNT?=
- =?utf-8?B?SEtzVG1YUldXWVFxM3IzNytOcmhvckJUSEZPYXUzMzNEdDhkQmtteHJPRVFx?=
- =?utf-8?B?cWJxeFliYXRvNGdMcHRPYWZlb05qaTdXY0VvQld4STNGc3h4UXJ3cjcvbjRR?=
- =?utf-8?B?Q25IWnpnNFpNMml6ME9rb1dvUk5iakV1MlpaNWFjaEhGU0dmMEV6akNvQnRo?=
- =?utf-8?B?Vk1seUJFTXVGMjFiUS91b0tpRFZlM0d5amx6WjE4WXZjNFdOQWNlbFNXYWN0?=
- =?utf-8?B?T0tsVG9tVDQ1MnBhSG52M2F2dzJHeTF0OFhNMDlnbWJQRVVqRDZNcGYwbVpP?=
- =?utf-8?B?YXU4UEJXOU92bTlyTjZQT2RRalBtVzJEWjV3bmdRQXBKZjVnREFTcHkrSGNk?=
- =?utf-8?B?RkFrN256Q2dYNzUybDBVOGl1UURUdEtoOVhLRGt4anozMzIvL0srbUlxT3Rj?=
- =?utf-8?B?YTIvWGY1YllUYlVEUTBMRWl5TFNaYW5KaUg4a0dGakYyUER2ZkZISmtuZS9B?=
- =?utf-8?B?V1prczBDK0pzaEFlU2lrcVFoSHcxZ2RmTVdKb1hhZStKQ0lSaG5adGFGUW45?=
- =?utf-8?B?cUxHVzF0cXIyQXMvQW9HRG5aUTc0MFg3cGtYNktDOEk0cVJCVk56eXd5S2pp?=
- =?utf-8?B?cHNicER5UnoybVA1ZVZxVFRRSno0a2VlYVIvUnRxVmliWllBanlCSGhwNSt1?=
- =?utf-8?B?SHEzdFVaYnR6ZlRHd3k3em5hd0VIMldEYW8wWkZWK2xFVTBOdHdYV0FBRTlR?=
- =?utf-8?B?OEpoNFZGL0g0eEI0OGhDSEE3OVYrN0s0OVhzQVdMZXZob0xZcEtEYUFTKzZw?=
- =?utf-8?B?Y0ptWEZySzIzcll3QkJ3S1VXKzdCL2ZoRklodW1ndlZ1UHB6L3FQV0NzMmtQ?=
- =?utf-8?B?RnBoZkJPNTRxUXkrc0hYZz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR12MB5673.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bUNGMWJVSCsyUXREYkhDYVJYQjF2bTE4d0xHR215MVZwTFpDMFJIbUlmaGNZ?=
- =?utf-8?B?UXhDRmRGWmNVUjJQNG9MeUdRVW1xb3VucVdQZmlocGkyeG5GR3JCTjR1NzRw?=
- =?utf-8?B?Qm03NXZjTHlYNCtnb3lCaEpqcFRhb3dYSFdpK1laMmZReWNINzM0Q1V5T2FM?=
- =?utf-8?B?Q1R5cTJ4NUpueVFIMFF1ckV5V05Edy9JbWttNUd2RkpMaDBWTDBlYURaTWNl?=
- =?utf-8?B?YWRpYlNBNjRNL1BwOFFXYWdZa1N2M0praHV4cGx3ZXBRUzlBOTNVQ0UxbDNJ?=
- =?utf-8?B?dWN6bGJlRG5QMi9rVzlkOEJ0TVlkRm5OK28ydXcyVi9GeWcyaXlNQkZPaVl0?=
- =?utf-8?B?aHdWRHRkWStZZ3dacDVqT3VCREp2VjVNTCtjc1MrVHpyN3N6QzgvV2ZYbHU3?=
- =?utf-8?B?MDVKbGVFNk9uaTNpNXIvZHI4SEtrOUQzY2liVnRFeTJhME83ZC9qT3B3aXFZ?=
- =?utf-8?B?VVBaaUtNZlhvRjVjc1V5UHZwcS90ZGppdW5hWmFIMVVEZE5HaVUrblhRRE9t?=
- =?utf-8?B?cDYzQnc2NGROT05Fd0ZMT25lOWFQVWk4TFk0ajRab2FPNnMyd241UXdFU0Nm?=
- =?utf-8?B?SzltanllWWU3VzNmVnhiV24vQ3IrTVVyS1NvcWdLcUZycjRNOUpsQWJodXA3?=
- =?utf-8?B?L09OU0NQbWJQZ3JxOEM0aXlERURtZVV1UlI3MXZ0UkM1TFVlSll1M2U3WnJk?=
- =?utf-8?B?NldHSFhQdUg1VmIxZ2Urd2NvbHRCak43VGJrV2ZOSDl2SWo5U0ZKVzI4aFV4?=
- =?utf-8?B?VDc0L1lKRHJtNW5SV016RWM2dW9wQTU3RXlOc0U1MG5nUjV0Rk9PdGZLQytW?=
- =?utf-8?B?Mys0STFHdGp0RGMvdU5Dc2UwczNsc1p2eGZ0cHBPejR4V0hsZjA5Mm8zVk9w?=
- =?utf-8?B?cVhmTUJqV2N2UlVKdUNud01LeTkzR1pVK21hTkg4djROYUczRWt2V2dqTjNT?=
- =?utf-8?B?ejZENWM5OWg2WHA5STA3cG1tVHhTdDVqVG5wN2ltNDE2K05oZjFzNnMrVkoy?=
- =?utf-8?B?a0U2Kzl5Z1Y4RHFGZW54OTlmQnp2NVdzZTAyRlAwTVlQY2hUUitqdkNRR0hi?=
- =?utf-8?B?Y25NQ1V2ODMvcmxWRk9RdDJOMGQvSXBFMjNIT1dyZkhFZXViSzBjTkZFMVFX?=
- =?utf-8?B?aGRxNnhRQk5zdXFUdHNHeFYwQ3lnbmhMSnFoL25HbnFZOWNGUno1WjhDTGph?=
- =?utf-8?B?cVdUbzRybTlFamlYY0J5cEtFd01qK3hFUlp4NlhKVG1iaGw4bFFsRkNqV2Nq?=
- =?utf-8?B?VHkxN28zQ0h0aUlDMk5lWFBvRmhkQ1hMVHd1bFppT3dVc1psZFZjVWlwWm8y?=
- =?utf-8?B?T0lZMkRvV0pFaFo1b0FmeWlCR1ZRVkRjN1pYd2lqVlV2WC84QXUyT09VNFZi?=
- =?utf-8?B?ZUduakI2bXJXM1l0RGRHQ2FqT2puTnNOWEc0TXZTOGJFYW9QYnVqcHdlM0ZH?=
- =?utf-8?B?b0l3T3h5aWdCdDF1L2lMRWsrQXl5YU8rZGUwUFRhTmNoeHFWdHpiYWQzT2ZU?=
- =?utf-8?B?ZVc1cWNLbkNpZFYzQU5kNFZhbFpJeWdPM3VqK3pYU0Ivc0g4SWptdkZQcE4z?=
- =?utf-8?B?d1ZJaCt6VDRXQkh1YTlaTXlhc29IMVFjRk5QOFVHOHZuOWtCN0xXWkIwUFJX?=
- =?utf-8?B?b0tSSzFiM25hMHhGTUpDRitjMExqYVZqVkw3Ynl1ZnJPT1FKMjltayswS2pE?=
- =?utf-8?B?cVZoOHY3bTg4RUprcjNocFBSS3VVcHRoQnNsYmg1NHRSMFdRaTVZdjJQT1Qy?=
- =?utf-8?B?UjkyNCtaamVlbWY4VmJPaUZkZWM1VG1oS1F4UkRWVEYzZFZyTWI0VWsxRkxm?=
- =?utf-8?B?Vjc5ZnQ3SUVRLy9yb29aSFREZStnUWVwZTRnSUwxanNJcURralJnMnZYei9x?=
- =?utf-8?B?QVhmWjZNanJWWi9vRjNQQTZ4a0ErTmQ4K0xicnQ0dlJkTTVyWGxLS0NEYXJ2?=
- =?utf-8?B?YS9KUk5PRXNUaDFlZXJvZUdMQU5GS3Y5bjdlNnlrUkVRWWg5Rm5pNU82Z0Nj?=
- =?utf-8?B?UnFTdHQyNUorOEVmaUFiaWdwQkhLeFJpd2NTSDVNR1hibFN3MEpxbnN5eDlQ?=
- =?utf-8?B?SDB2RXhnZWJMK0NzU1g5aEhHamRNQ2l0LzRFczlPVFdaT2tNTGdhbWJPZHdF?=
- =?utf-8?Q?YY5odj9hyZ/tHtoo/CUsTcF4s?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fefd38fb-9bea-4472-c9db-08dd6d08a6d8
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR12MB5673.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 08:23:28.5730
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7e/uSf6BAnMgIvhSHU2AqwSRObrUtr00KF/nMs+mnoxzP8HeeUzGVo7z861/Bkcm
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9473
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieejledvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiveeghefgkeegtdelvdelueeileehgeeiffdtuefhledvudefleehgeetveegnecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdqvddrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudelpdhrtghpthhtoheprghnshhuvghlshhmthhhsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtr
+ dhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Am 26.03.25 um 21:46 schrieb Rob Clark:
-> On Wed, Mar 26, 2025 at 7:46 AM Rob Clark <robdclark@gmail.com> wrote:
->> On Wed, Mar 26, 2025 at 7:41 AM Christian König
->> <christian.koenig@amd.com> wrote:
->>> Am 26.03.25 um 15:39 schrieb Rob Clark:
->>>> From: Rob Clark <robdclark@chromium.org>
->>>>
->>>> Add support for exporting a dma_fence fd for a specific point on a
->>>> timeline.
->>> Looks good on first glance. What's the userspace use case?
->> Timeline syncobj support for vtest/vpipe[1][2].. since core
->> virglrender and drm native ctx works in terms of fences (since in the
->> VM case, everything is a fence below the guest kernel uabi), we need
->> to be able to turn a point on a timeline back into a fence fd.  (Plus
->> it seemed like an odd omission from the existing uabi.)
->>
->> BR,
->> -R
->>
->> [1] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/33433
->> [2] https://gitlab.freedesktop.org/virgl/virglrenderer/-/merge_requests/805
->>
->>> Regards,
->>> Christian.
->>>
->>>> Signed-off-by: Rob Clark <robdclark@chromium.org>
->>>> ---
->>>>  drivers/gpu/drm/drm_syncobj.c | 8 ++++++--
->>>>  include/uapi/drm/drm.h        | 2 ++
->>>>  2 files changed, 8 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/gpu/drm/drm_syncobj.c b/drivers/gpu/drm/drm_syncobj.c
->>>> index 4f2ab8a7b50f..eb7a2dd2e261 100644
->>>> --- a/drivers/gpu/drm/drm_syncobj.c
->>>> +++ b/drivers/gpu/drm/drm_syncobj.c
->>>> @@ -762,7 +762,7 @@ static int drm_syncobj_import_sync_file_fence(struct drm_file *file_private,
->>>>  }
->>>>
->>>>  static int drm_syncobj_export_sync_file(struct drm_file *file_private,
->>>> -                                     int handle, int *p_fd)
->>>> +                                     int handle, u64 point, int *p_fd)
->>>>  {
->>>>       int ret;
->>>>       struct dma_fence *fence;
->>>> @@ -772,7 +772,7 @@ static int drm_syncobj_export_sync_file(struct drm_file *file_private,
->>>>       if (fd < 0)
->>>>               return fd;
->>>>
->>>> -     ret = drm_syncobj_find_fence(file_private, handle, 0, 0, &fence);
->>>> +     ret = drm_syncobj_find_fence(file_private, handle, point, 0, &fence);
->>>>       if (ret)
->>>>               goto err_put_fd;
->>>>
->>>> @@ -882,8 +882,12 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device *dev, void *data,
->>>>
->>>>       if (args->flags & DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE)
->>>>               return drm_syncobj_export_sync_file(file_private, args->handle,
->>>> +                                                 args->point,
->>>>                                                   &args->fd);
-> Hmm, maybe I should add DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE so
-> that userspace gets a clean error on older kernels, rather than having
-> the point param be silently ignored..
+Hi Christian,
 
-Sounds reasonable to me as well.
+On Thu, 27 Mar 2025 00:35:03 +0100
+Christian Marangi <ansuelsmth@gmail.com> wrote:
 
-And please include the links to the userspace code in the commit message.
+> Add support for Aeonsemi AS21xxx 10G C45 PHYs. These PHYs integrate
+> an IPC to setup some configuration and require special handling to
+> sync with the parity bit. The parity bit is a way the IPC use to
+> follow correct order of command sent.
+>=20
+> Supported PHYs AS21011JB1, AS21011PB1, AS21010JB1, AS21010PB1,
+> AS21511JB1, AS21511PB1, AS21510JB1, AS21510PB1, AS21210JB1,
+> AS21210PB1 that all register with the PHY ID 0x7500 0x7510
+> before the firmware is loaded.
+>=20
+> They all support up to 5 LEDs with various HW mode supported.
+>=20
+> While implementing it was found some strange coincidence with using the
+> same logic for implementing C22 in MMD regs in Broadcom PHYs.
+>=20
+> For reference here the AS21xxx PHY name logic:
+>=20
+> AS21x1xxB1
+>     ^ ^^
+>     | |J: Supports SyncE/PTP
+>     | |P: No SyncE/PTP support
+>     | 1: Supports 2nd Serdes
+>     | 2: Not 2nd Serdes support
+>     0: 10G, 5G, 2.5G
+>     5: 5G, 2.5G
+>     2: 2.5G
+>=20
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+=09
+ [...]
 
-Apart from that looks totally reasonable to me.
+I know this is only RFC, but I have some questions
 
-Regards,
-Christian.
+> +static int as21xxx_match_phy_device(struct phy_device *phydev,
+> +				    const struct phy_driver *phydrv)
+> +{
+> +	struct as21xxx_priv *priv;
+> +	u32 phy_id;
+> +	int ret;
+> +
+> +	/* Skip PHY that are not AS21xxx or already have firmware loaded */
+> +	if (phydev->c45_ids.device_ids[MDIO_MMD_PCS] !=3D PHY_ID_AS21XXX)
+> +		return phydev->phy_id =3D=3D phydrv->phy_id;
+> +
+> +	/* Read PHY ID to handle firmware just loaded */
+> +	ret =3D phy_read_mmd(phydev, MDIO_MMD_PCS, MII_PHYSID1);
+> +	if (ret < 0)
+> +		return ret;
+> +	phy_id =3D ret << 16;
+> +
+> +	ret =3D phy_read_mmd(phydev, MDIO_MMD_PCS, MII_PHYSID2);
+> +	if (ret < 0)
+> +		return ret;=09
+> +	phy_id |=3D ret;
+> +
+> +	/* With PHY ID not the generic AS21xxx one assume
+> +	 * the firmware just loaded
+> +	 */
+> +	if (phy_id !=3D PHY_ID_AS21XXX)
+> +		return phy_id =3D=3D phydrv->phy_id;
+> +
+> +	/* Allocate temp priv and load the firmware */
+> +	priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	mutex_init(&priv->ipc_lock);
+> +
+> +	ret =3D aeon_firmware_load(phydev);
+> +	if (ret)
+> +		return ret;
 
->
-> BR,
-> -R
->
->>>> +     if (args->point)
->>>> +             return -EINVAL;
->>>> +
->>>>       return drm_syncobj_handle_to_fd(file_private, args->handle,
->>>>                                       &args->fd);
->>>>  }
->>>> diff --git a/include/uapi/drm/drm.h b/include/uapi/drm/drm.h
->>>> index 7fba37b94401..c71a8f4439f2 100644
->>>> --- a/include/uapi/drm/drm.h
->>>> +++ b/include/uapi/drm/drm.h
->>>> @@ -912,6 +912,8 @@ struct drm_syncobj_handle {
->>>>
->>>>       __s32 fd;
->>>>       __u32 pad;
->>>> +
->>>> +     __u64 point;
->>>>  };
->>>>
->>>>  struct drm_syncobj_transfer {
+Here, and below, you leak priv by returning early.
 
+> +
+> +	ret =3D aeon_ipc_sync_parity(phydev, priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Enable PTP clk if not already Enabled */
+> +	ret =3D phy_set_bits_mmd(phydev, MDIO_MMD_VEND1, VEND1_PTP_CLK,
+> +			       VEND1_PTP_CLK_EN);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D aeon_dpc_ra_enable(phydev, priv);
+> +	if (ret)
+> +		return ret;
+
+Does all of the above with sync_parity, PTP clock cfg and so on needs
+to be done in this first pass of the matching process for this PHY ?
+
+=46rom what I got from the discussions, the only important bit is to load
+the FW to get the correct PHY id ?
+
+> +	mutex_destroy(&priv->ipc_lock);
+> +	kfree(priv);
+> +
+> +	/* Return not maching anyway as PHY ID will change after
+> +	 * firmware is loaded.
+> +	 */
+> +	return 0;
+> +}
+
+Maxime
