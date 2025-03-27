@@ -1,222 +1,385 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C294079D2
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58AC979D2
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743044615; cv=none; b=uj4W7sJE1qNJY5h2pA8M+csZMd+qcL4YLRg16JiOyXlttAk8gRK9UZnQdPQLJIkiW0fMYPVxr4zQaMmjov0xFiSmcSz2c2ae/zVBuwAvD8mS5TDgP0nOZ2ktcs6LnbACt3k99Ioo3FjArmK7MdfKdnkTL1lQAxgIL/OiRs5s3cU=
+	t=1743044713; cv=none; b=r/pgBglbilqM1qfIUmohTWXCWtI22fhjGpFFwdyZ3haTQmZNm/KRKimEx8isqVSg3AdXL/NESrRJUlOxKPn6I6S6Gxxj6hNZCeI8rGsv9MePbvsnxdlwtrGacff2c6TqSHRfyI5jMHMiEy+UqRBiNMSFPldOSWXf/7Vl+wFLiYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743044615; c=relaxed/simple;
-	bh=XJGMFJJY4MzZcnbuWmeKSo6OvdiplxkRG/TFOKzgz8w=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=UAKzXDk4IOxI+m/EwIc79dbef4B+c6Typ75x6dsN/zF/Brtbp6zWDxglKjAdmZb9gcrrOu8cRYJkMjvnRjJ8qg7q162i6z7SetefG3KLiAHB3raFtcp3+xjD8Q4zeScx1rnDtWacYSXER1L4vapTHsdRzdqC1bADnJ+u7DQAR88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85e15e32366so57976739f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 20:03:33 -0700 (PDT)
+	s=arc-20240116; t=1743044713; c=relaxed/simple;
+	bh=xaiyb+43kpLQiTaQFl7k4Q9WcQ1x12uqBToBSPpceXQ=;
+	h=Content-Type:Message-ID:Date:MIME-Version:From:Subject:To:Cc; b=LfB3Ov+BmSaB4GHGs2iF5FaXOhf3ECbCSj8T062QWpHKlHzIUQh0IhugcMbafNFIy7X9Ua6Eaka1L6mXWDS5KQYr1TKBqONlAlvSo2m8J37vzySx11dJHpQsvPJSE4oYrnPdhmzUvWaqEXvLGQSyLLEH4nqt4N5QKtNQASNET3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=TGjJlmSr; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="TGjJlmSr"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d589ed2b63so4775555ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 20:05:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1743044709; x=1743649509; darn=vger.kernel.org;
+        h=cc:to:subject:from:content-language:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=vER9VzyQlD5GTKqM8LcyXr9AQyXPj9zGCWDvSyU8x44=;
+        b=TGjJlmSr+hH3ttZwwd0sdSvd+ckS/KmIgxiuBq/TgXR//x64VdpwYP55L7wEltfcKF
+         ST9KXStEaELaFFHfwAsh8fE8XSoipyFkU28FsdhvcOp3alDnm22RIMhjd4YdvBhFWxR2
+         Ts7SsrwXE69bzrPiS3zCYtE9H2VV1udF9EMrQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743044613; x=1743649413;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BkLbVcKw2BlKBCR/plGMcvcox6XV7yfliwQ36omzTwQ=;
-        b=hW/HAU7VBdwZO4WOK9Elf+sVjD5lXLc5nBkwwBb0DedfdDNhUgpMpusl83LTchQC03
-         LNcsJM57HuODJYKhN6KRnqznk+rOFVsh+kL3EeIGbEkrRT/pjVuhqfLmIX1hHskus6Mq
-         miUe0HpRzYExAhcds5ik24iD5/smS6mj8BPwkqTg3LLZVoWUTuvM/38odIy8RIDp4h1m
-         NIuE88s+pPgEHSJsR+AIYIUlp4fCfDes+j6Ux8qQ0Nj9MhAqFJpicX8k5lqy3xN2C5Kt
-         vt241N1tYttEfMTzb0wgl19UjWG2jD9skUi/v+pJqv9jwRcJuGn5lwiDrO1aqWTuS9s1
-         AbIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXj9/zy+bvVHaaEfLdqfWOJT6KiYcJngNHSjODuySrA6e2NpbkfRVkUy1rtNJp8fqTKM4NWH7n9K+RTeBE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVOgF5jL/VOOpJXieitAt9H3pQPRwvtsk4hNBkh5Cu+5gq8IXW
-	cA4jLuKGExZQDIHqqRXKth0U5KE4h7GqBRDAecBd3XBPM0+9uoB+h7Zxd9X2OMXMl9i/ypERCZ4
-	sNV+6HSqccHpXdp8AavzsFvbWH69+WhHsWWgrV6C5UWY7p0zs2UDmIkk=
-X-Google-Smtp-Source: AGHT+IFhJMVffQwNLXxoU8HujBEdc86nSkPCIyrnSlxfNLgKC+x9BHe39htlYwOZn2kdslk2yPjKIMTHJb5O6uAxN4OaDNUg9prY
+        d=1e100.net; s=20230601; t=1743044709; x=1743649509;
+        h=cc:to:subject:from:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vER9VzyQlD5GTKqM8LcyXr9AQyXPj9zGCWDvSyU8x44=;
+        b=kO7guzXIje2FVFStg0rMHNGemjl6UekyEKv/+fcfxO1pyJYhaPEtnuvhQMJs9ST9lO
+         YdrxLBbjEFc6iSQU6dqvilJAmJDM32jxTz/LCDmHQvlDhBDI4fDX474y1frDDBhuuMnd
+         LKArGPGuYaL71V+NytBKMRJ6rmhotkGBnkgaPQM1nzWiMz0tahbIvH4VyzwDTkPEDlDS
+         DYdO03C8WXx4aVH+Fi1CY9x1FrtdG58IktGNh1wOQKd8LmCJ66X6bapvd/+vemq+MvUv
+         qN4jRN/vash5BGusrWA6kmCpj9VfMCt7bL0AXcEFYQCAbKy6B5TMLQldvFb1Z3qmSRjU
+         c6Ew==
+X-Forwarded-Encrypted: i=1; AJvYcCW81GngFxGCyulcV0mZkdsFqEbYmEW7opwWzDtygvOSTwfZM2ombaZ6Sr8YrJepXQNw9GT6oF3HpE9HSKc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9IpUVdjbY/R2nT8pvsurCqI2Wr4eMws5EPgzCFDrO+WyMYfO/
+	9d19DYL+tMMuTvKIF7WTS/1ApiCw1ZQp7ntpMAYZxTlJelv7li3tjvuQOP7SUSA=
+X-Gm-Gg: ASbGncsbr32sVMEl0fn/6U2yyfhs4sRMyKQP6hzDv0FkT4trEufyJYIofp8kgv1I71P
+	gIR5oRNp4QIo7t+JFcbE2whmHfi5EvoSuSvAQ91yJ0G0p9yI1jYiBWqx1AmkNC2HiwQJWaFBeia
+	lmjbK/9DFhQW5bbVvbJyNt0ogLHeKINiE4Pleqm6P0u1tc1+MOObYEr7SXNd3fIFscDIwZeaztd
+	1AAvlfNNV8W5zfJqCIrsOKl2VxMEJS2dyE4BB7rXO06jZGYA7NRwx+175vX44CPKfVLpmUKT4DO
+	I6sXnp4MC4PaH5hMXEtqJMom+AqocxZyXCJwHni6YqPYT2wRtaRqIViej518giaGdmCRfrvvoIO
+	9mW0ZU940B+wemBna3eD5WQ+W9Lg=
+X-Google-Smtp-Source: AGHT+IFvYsmFPjIAvF6zdgV5MREAu/X7Lbn/j8zq0F/eLHT5LR/e210sE+aarUjqFQ9uyYHqnoakdw==
+X-Received: by 2002:a05:6e02:3e03:b0:3a7:88f2:cfa9 with SMTP id e9e14a558f8ab-3d5ccdde20fmr24199955ab.11.1743044709211;
+        Wed, 26 Mar 2025 20:05:09 -0700 (PDT)
+Received: from ?IPV6:2607:fb90:350f:48e4:8567:efb1:9883:10ae? ([2607:fb90:350f:48e4:8567:efb1:9883:10ae])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f2cbdb4728sm3134805173.19.2025.03.26.20.05.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Mar 2025 20:05:08 -0700 (PDT)
+Content-Type: multipart/mixed; boundary="------------1yMU2QgZ0q3U0KcWQDaBw4Qg"
+Message-ID: <2bc29da1-5c77-45a4-ab75-7afc6f9210be@linuxfoundation.org>
+Date: Wed, 26 Mar 2025 21:05:06 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1aac:b0:3d4:3eed:2755 with SMTP id
- e9e14a558f8ab-3d5ccdd5c06mr24779775ab.12.1743044612681; Wed, 26 Mar 2025
- 20:03:32 -0700 (PDT)
-Date: Wed, 26 Mar 2025 20:03:32 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67e4c004.050a0220.2f068f.001d.GAE@google.com>
-Subject: [syzbot] [mm?] INFO: rcu detected stall in clone (7)
-From: syzbot <syzbot+adf8ed0e3c4682852da1@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, pasha.tatashin@soleen.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+Subject: [GIT PULL] kunit next update for Linux 6.15-rc1
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Kees Cook
+ <keescook@chromium.org>, "kuba@kernel.org" <kuba@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>,
+ shuah <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Networking <netdev@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
 
-Hello,
+This is a multi-part message in MIME format.
+--------------1yMU2QgZ0q3U0KcWQDaBw4Qg
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-syzbot found the following issue on:
+Hi Linus,
 
-HEAD commit:    2df0c02dab82 x86 boot build: make git ignore stale 'tools'..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=146cd43f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=235ad3ee10cb70e
-dashboard link: https://syzkaller.appspot.com/bug?extid=adf8ed0e3c4682852da1
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+Please pull the following kunit next update for Linux 6.15-rc1.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+kunit tool:
+- Changes to kunit tool to use qboot on QEMU x86_64, and build GDB scripts.
+- Fixes kunit tool bug in parsing test plan.
+- Adds test to kunit tool to check parsing late test plan.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/3e8f0b5bed43/disk-2df0c02d.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/3511fa20cc2c/vmlinux-2df0c02d.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/0ea010ba8490/bzImage-2df0c02d.xz
+kunit:
+- Clarifies kunit_skip() argument name.
+- Adds Kunit check for the longest symbol length.
+- Changes qemu_configs for sparc to use Zilog console.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+adf8ed0e3c4682852da1@syzkaller.appspotmail.com
+Conflicts in lib/Makefile
 
-rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-rcu: 	1-...!: (1 GPs behind) idle=3cb4/1/0x4000000000000000 softirq=42644/42646 fqs=134
-rcu: 	(detected by 0, t=10502 jiffies, g=30361, q=199 ncpus=2)
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 UID: 0 PID: 5827 Comm: syz-executor Not tainted 6.14.0-syzkaller-01103-g2df0c02dab82 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:__kasan_check_byte+0xa/0x50 mm/kasan/common.c:555
-Code: e9 89 fe ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 66 0f 1f 00 41 54 49 89 f4 55 <48> 89 fd 53 e8 0d 1f 00 00 89 c3 84 c0 74 0b 89 d8 5b 5d 41 5c c3
-RSP: 0018:ffffc90000a08da0 EFLAGS: 00000002
-RAX: 0000000000000001 RBX: ffff8880b8527858 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8b603266 RDI: ffff8880b8527858
-RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000000 R12: ffffffff8b603266
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-FS:  000055555862d500(0000) GS:ffff888124b54000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fe9983a6f98 CR3: 0000000067ad6000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <NMI>
- </NMI>
- <IRQ>
- kasan_check_byte include/linux/kasan.h:399 [inline]
- lock_acquire kernel/locking/lockdep.c:5840 [inline]
- lock_acquire+0xfc/0x350 kernel/locking/lockdep.c:5823
- __raw_spin_lock_irq include/linux/spinlock_api_smp.h:119 [inline]
- _raw_spin_lock_irq+0x36/0x50 kernel/locking/spinlock.c:170
- __run_hrtimer kernel/time/hrtimer.c:1805 [inline]
- __hrtimer_run_queues+0x2bc/0xad0 kernel/time/hrtimer.c:1865
- hrtimer_interrupt+0x397/0x8e0 kernel/time/hrtimer.c:1927
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1038 [inline]
- __sysvec_apic_timer_interrupt+0x108/0x3f0 arch/x86/kernel/apic/apic.c:1055
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
- sysvec_apic_timer_interrupt+0x9f/0xc0 arch/x86/kernel/apic/apic.c:1049
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-RIP: 0010:__page_table_check_ptes_set+0x3c/0x3e0 mm/page_table_check.c:214
-Code: 55 48 bd 00 00 00 00 00 fc ff df 53 48 89 f3 48 83 ec 70 48 c7 44 24 10 b3 8a b5 41 4c 8d 7c 24 10 48 c7 44 24 18 51 b5 b9 8d <49> c1 ef 03 48 c7 44 24 20 d0 47 2a 82 49 8d 04 2f c7 00 f1 f1 f1
-RSP: 0018:ffffc9000434f6e8 EFLAGS: 00000286
-RAX: 0000000000000000 RBX: ffff888036076b38 RCX: 0000000000000001
-RDX: 80000000744e2007 RSI: ffff888036076b38 RDI: ffff888029c11e00
-RBP: dffffc0000000000 R08: 0000000000000007 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-R13: ffff888029c11e00 R14: dffffc0000000000 R15: ffffc9000434f6f8
- page_table_check_ptes_set include/linux/page_table_check.h:74 [inline]
- set_ptes include/linux/pgtable.h:288 [inline]
- __copy_present_ptes mm/memory.c:967 [inline]
- copy_present_ptes mm/memory.c:1050 [inline]
- copy_pte_range mm/memory.c:1173 [inline]
- copy_pmd_range mm/memory.c:1261 [inline]
- copy_pud_range mm/memory.c:1298 [inline]
- copy_p4d_range mm/memory.c:1322 [inline]
- copy_page_range+0x20e7/0x5790 mm/memory.c:1420
- dup_mmap kernel/fork.c:748 [inline]
- dup_mm kernel/fork.c:1700 [inline]
- copy_mm kernel/fork.c:1752 [inline]
- copy_process+0x8651/0x9130 kernel/fork.c:2396
- kernel_clone+0xfc/0x960 kernel/fork.c:2811
- __do_sys_clone+0xce/0x120 kernel/fork.c:2954
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f0bc05839d3
-Code: 1f 84 00 00 00 00 00 64 48 8b 04 25 10 00 00 00 45 31 c0 31 d2 31 f6 bf 11 00 20 01 4c 8d 90 d0 02 00 00 b8 38 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 35 89 c2 85 c0 75 2c 64 48 8b 04 25 10 00 00
-RSP: 002b:00007ffdff5ea518 EFLAGS: 00000246 ORIG_RAX: 0000000000000038
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f0bc05839d3
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000001200011
-RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000001
-R10: 000055555862d7d0 R11: 0000000000000246 R12: 0000000000000000
-R13: 00000000000927c0 R14: 0000000000047f07 R15: 00007ffdff5ea6b0
- </TASK>
-rcu: rcu_preempt kthread starved for 7591 jiffies! g30361 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=0
-rcu: 	Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
-rcu: RCU grace-period kthread stack dump:
-task:rcu_preempt     state:R  running task     stack:28056 pid:16    tgid:16    ppid:2      task_flags:0x208040 flags:0x00004000
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5367 [inline]
- __schedule+0x1129/0x5c00 kernel/sched/core.c:6748
- __schedule_loop kernel/sched/core.c:6825 [inline]
- schedule+0xe7/0x3a0 kernel/sched/core.c:6840
- schedule_timeout+0x123/0x280 kernel/time/sleep_timeout.c:99
- rcu_gp_fqs_loop+0x1ea/0xb00 kernel/rcu/tree.c:2046
- rcu_gp_kthread+0x270/0x380 kernel/rcu/tree.c:2248
- kthread+0x3a4/0x760 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-rcu: Stack dump where RCU GP kthread last ran:
-CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.14.0-syzkaller-01103-g2df0c02dab82 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:native_irq_disable arch/x86/include/asm/irqflags.h:37 [inline]
-RIP: 0010:arch_local_irq_disable arch/x86/include/asm/irqflags.h:92 [inline]
-RIP: 0010:acpi_safe_halt+0x1a/0x20 drivers/acpi/processor_idle.c:112
-Code: 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 65 48 8b 05 50 00 3f 08 48 8b 00 a8 08 75 0c 66 90 0f 00 2d 68 fb a0 00 fb f4 <fa> c3 cc cc cc cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 0018:ffffffff8e007d68 EFLAGS: 00000246
-RAX: 0000000000004000 RBX: 0000000000000001 RCX: ffffffff8b5da2f9
-RDX: 0000000000000001 RSI: ffff8881442d9000 RDI: ffff8881442d9064
-RBP: ffff8881442d9064 R08: 0000000000000001 R09: ffffed10170865bd
-R10: ffff8880b8432deb R11: 0000000000000000 R12: ffff88801eb0f800
-R13: ffffffff8f02dae0 R14: 0000000000000000 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff888124a54000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f58d6613c9a CR3: 0000000067ad0000 CR4: 00000000003526f0
-DR0: 0000000100000000 DR1: 0000000000000040 DR2: 0000000000000000
-DR3: 0000000000000009 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- </IRQ>
- <TASK>
- acpi_idle_enter+0xc5/0x160 drivers/acpi/processor_idle.c:701
- cpuidle_enter_state+0xb2/0x500 drivers/cpuidle/cpuidle.c:268
- cpuidle_enter+0x4e/0xa0 drivers/cpuidle/cpuidle.c:389
- call_cpuidle kernel/sched/idle.c:155 [inline]
- cpuidle_idle_call kernel/sched/idle.c:230 [inline]
- do_idle+0x378/0x510 kernel/sched/idle.c:325
- cpu_startup_entry+0x4f/0x60 kernel/sched/idle.c:423
- rest_init+0x16b/0x2b0 init/main.c:743
- start_kernel+0x3e9/0x4d0 init/main.c:1099
- x86_64_start_reservations+0x18/0x30 arch/x86/kernel/head64.c:513
- x86_64_start_kernel+0xb0/0xc0 arch/x86/kernel/head64.c:494
- common_startup_64+0x13e/0x148
- </TASK>
+between commit:
+
+   b341f6fd45ab ("blackhole_dev: convert self-test to KUnit")
+
+from the net-next tree and commit:
+
+   c104c16073b7 ("Kunit to check the longest symbol length")
+
+The commit c104c16073b7 conflicts with the mainline now with
+62f3802332ed ("vdso: add generic time data storage") from kspp
+is now in the mainline.
+
+Stephen has the fixes for these two conflicts in next.
+(Thank you Stephen)
+
+diff is attached.
+
+thanks,
+-- Shuah
+
+----------------------------------------------------------------
+The following changes since commit a64dcfb451e254085a7daee5fe51bf22959d52d3:
+
+   Linux 6.14-rc2 (2025-02-09 12:45:03 -0800)
+
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-kunit-6.15-rc1
+
+for you to fetch changes up to 2e0cf2b32f72b20b0db5cc665cd8465d0f257278:
+
+   kunit: tool: add test to check parsing late test plan (2025-03-15 18:13:43 -0600)
+
+----------------------------------------------------------------
+linux_kselftest-kunit-6.15-rc1
+
+kunit tool:
+- Changes to kunit tool to use qboot on QEMU x86_64, and build GDB scripts.
+- Fixes kunit tool bug in parsing test plan.
+- Adds test to kunit tool to check parsing late test plan.
+
+kunit:
+- Clarifies kunit_skip() argument name.
+- Adds Kunit check for the longest symbol length.
+- Changes qemu_configs for sparc to use Zilog console.
+
+----------------------------------------------------------------
+Brendan Jackman (2):
+       kunit: tool: Use qboot on QEMU x86_64
+       kunit: tool: Build GDB scripts
+
+Kevin Brodsky (1):
+       kunit: Clarify kunit_skip() argument name
+
+Rae Moar (2):
+       kunit: tool: Fix bug in parsing test plan
+       kunit: tool: add test to check parsing late test plan
+
+Sergio González Collado (1):
+       Kunit to check the longest symbol length
+
+Thomas Weißschuh (1):
+       kunit: qemu_configs: sparc: use Zilog console
+
+  arch/x86/tools/insn_decoder_test.c         |  3 +-
+  include/kunit/test.h                       | 20 ++++----
+  lib/Kconfig.debug                          |  9 ++++
+  lib/Makefile                               |  2 +
+  lib/longest_symbol_kunit.c                 | 82 ++++++++++++++++++++++++++++++
+  tools/testing/kunit/kunit_kernel.py        |  4 +-
+  tools/testing/kunit/kunit_parser.py        |  9 ++--
+  tools/testing/kunit/kunit_tool_test.py     | 11 ++++
+  tools/testing/kunit/qemu_configs/sparc.py  |  5 +-
+  tools/testing/kunit/qemu_configs/x86_64.py |  4 +-
+  10 files changed, 128 insertions(+), 21 deletions(-)
+  create mode 100644 lib/longest_symbol_kunit.c
+----------------------------------------------------------------
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+--------------1yMU2QgZ0q3U0KcWQDaBw4Qg
+Content-Type: text/x-patch; charset=UTF-8;
+ name="linux_kselftest-kunit-6.15-rc1.diff"
+Content-Disposition: attachment;
+ filename="linux_kselftest-kunit-6.15-rc1.diff"
+Content-Transfer-Encoding: base64
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ZGlmZiAtLWdpdCBhL2FyY2gveDg2L3Rvb2xzL2luc25fZGVjb2Rlcl90ZXN0LmMgYi9hcmNo
+L3g4Ni90b29scy9pbnNuX2RlY29kZXJfdGVzdC5jCmluZGV4IDQ3MjU0MGFlYWJjMi4uNmMy
+OTg2ZDJhZDExIDEwMDY0NAotLS0gYS9hcmNoL3g4Ni90b29scy9pbnNuX2RlY29kZXJfdGVz
+dC5jCisrKyBiL2FyY2gveDg2L3Rvb2xzL2luc25fZGVjb2Rlcl90ZXN0LmMKQEAgLTEwLDYg
+KzEwLDcgQEAKICNpbmNsdWRlIDxhc3NlcnQuaD4KICNpbmNsdWRlIDx1bmlzdGQuaD4KICNp
+bmNsdWRlIDxzdGRhcmcuaD4KKyNpbmNsdWRlIDxsaW51eC9rYWxsc3ltcy5oPgogCiAjZGVm
+aW5lIHVubGlrZWx5KGNvbmQpIChjb25kKQogCkBAIC0xMDYsNyArMTA3LDcgQEAgc3RhdGlj
+IHZvaWQgcGFyc2VfYXJncyhpbnQgYXJnYywgY2hhciAqKmFyZ3YpCiAJfQogfQogCi0jZGVm
+aW5lIEJVRlNJWkUgMjU2CisjZGVmaW5lIEJVRlNJWkUgKDI1NiArIEtTWU1fTkFNRV9MRU4p
+CiAKIGludCBtYWluKGludCBhcmdjLCBjaGFyICoqYXJndikKIHsKZGlmZiAtLWdpdCBhL2lu
+Y2x1ZGUva3VuaXQvdGVzdC5oIGIvaW5jbHVkZS9rdW5pdC90ZXN0LmgKaW5kZXggNThkYmFi
+NjBmODUzLi4wZmZiOTdjNzg1NjYgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUva3VuaXQvdGVzdC5o
+CisrKyBiL2luY2x1ZGUva3VuaXQvdGVzdC5oCkBAIC01NTMsOSArNTUzLDkgQEAgdm9pZCBr
+dW5pdF9jbGVhbnVwKHN0cnVjdCBrdW5pdCAqdGVzdCk7CiB2b2lkIF9fcHJpbnRmKDIsIDMp
+IGt1bml0X2xvZ19hcHBlbmQoc3RydWN0IHN0cmluZ19zdHJlYW0gKmxvZywgY29uc3QgY2hh
+ciAqZm10LCAuLi4pOwogCiAvKioKLSAqIGt1bml0X21hcmtfc2tpcHBlZCgpIC0gTWFya3Mg
+QHRlc3Rfb3Jfc3VpdGUgYXMgc2tpcHBlZAorICoga3VuaXRfbWFya19za2lwcGVkKCkgLSBN
+YXJrcyBAdGVzdCBhcyBza2lwcGVkCiAgKgotICogQHRlc3Rfb3Jfc3VpdGU6IFRoZSB0ZXN0
+IGNvbnRleHQgb2JqZWN0LgorICogQHRlc3Q6IFRoZSB0ZXN0IGNvbnRleHQgb2JqZWN0Lgog
+ICogQGZtdDogIEEgcHJpbnRrKCkgc3R5bGUgZm9ybWF0IHN0cmluZy4KICAqCiAgKiBNYXJr
+cyB0aGUgdGVzdCBhcyBza2lwcGVkLiBAZm10IGlzIGdpdmVuIG91dHB1dCBhcyB0aGUgdGVz
+dCBzdGF0dXMKQEAgLTU2MywxOCArNTYzLDE4IEBAIHZvaWQgX19wcmludGYoMiwgMykga3Vu
+aXRfbG9nX2FwcGVuZChzdHJ1Y3Qgc3RyaW5nX3N0cmVhbSAqbG9nLCBjb25zdCBjaGFyICpm
+bXQsCiAgKgogICogVGVzdCBleGVjdXRpb24gY29udGludWVzIGFmdGVyIGt1bml0X21hcmtf
+c2tpcHBlZCgpIGlzIGNhbGxlZC4KICAqLwotI2RlZmluZSBrdW5pdF9tYXJrX3NraXBwZWQo
+dGVzdF9vcl9zdWl0ZSwgZm10LCAuLi4pCQkJXAorI2RlZmluZSBrdW5pdF9tYXJrX3NraXBw
+ZWQodGVzdCwgZm10LCAuLi4pCQkJCVwKIAlkbyB7CQkJCQkJCQlcCi0JCVdSSVRFX09OQ0Uo
+KHRlc3Rfb3Jfc3VpdGUpLT5zdGF0dXMsIEtVTklUX1NLSVBQRUQpOwlcCi0JCXNjbnByaW50
+ZigodGVzdF9vcl9zdWl0ZSktPnN0YXR1c19jb21tZW50LAkJXAorCQlXUklURV9PTkNFKCh0
+ZXN0KS0+c3RhdHVzLCBLVU5JVF9TS0lQUEVEKTsJCVwKKwkJc2NucHJpbnRmKCh0ZXN0KS0+
+c3RhdHVzX2NvbW1lbnQsCQkJXAogCQkJICBLVU5JVF9TVEFUVVNfQ09NTUVOVF9TSVpFLAkJ
+CVwKIAkJCSAgZm10LCAjI19fVkFfQVJHU19fKTsJCQkJXAogCX0gd2hpbGUgKDApCiAKIC8q
+KgotICoga3VuaXRfc2tpcCgpIC0gTWFya3MgQHRlc3Rfb3Jfc3VpdGUgYXMgc2tpcHBlZAor
+ICoga3VuaXRfc2tpcCgpIC0gTWFya3MgQHRlc3QgYXMgc2tpcHBlZAogICoKLSAqIEB0ZXN0
+X29yX3N1aXRlOiBUaGUgdGVzdCBjb250ZXh0IG9iamVjdC4KKyAqIEB0ZXN0OiBUaGUgdGVz
+dCBjb250ZXh0IG9iamVjdC4KICAqIEBmbXQ6ICBBIHByaW50aygpIHN0eWxlIGZvcm1hdCBz
+dHJpbmcuCiAgKgogICogU2tpcHMgdGhlIHRlc3QuIEBmbXQgaXMgZ2l2ZW4gb3V0cHV0IGFz
+IHRoZSB0ZXN0IHN0YXR1cwpAQCAtNTgyLDEwICs1ODIsMTAgQEAgdm9pZCBfX3ByaW50Zigy
+LCAzKSBrdW5pdF9sb2dfYXBwZW5kKHN0cnVjdCBzdHJpbmdfc3RyZWFtICpsb2csIGNvbnN0
+IGNoYXIgKmZtdCwKICAqCiAgKiBUZXN0IGV4ZWN1dGlvbiBpcyBoYWx0ZWQgYWZ0ZXIga3Vu
+aXRfc2tpcCgpIGlzIGNhbGxlZC4KICAqLwotI2RlZmluZSBrdW5pdF9za2lwKHRlc3Rfb3Jf
+c3VpdGUsIGZtdCwgLi4uKQkJCQlcCisjZGVmaW5lIGt1bml0X3NraXAodGVzdCwgZm10LCAu
+Li4pCQkJCQlcCiAJZG8gewkJCQkJCQkJXAotCQlrdW5pdF9tYXJrX3NraXBwZWQoKHRlc3Rf
+b3Jfc3VpdGUpLCBmbXQsICMjX19WQV9BUkdTX18pO1wKLQkJa3VuaXRfdHJ5X2NhdGNoX3Ro
+cm93KCYoKHRlc3Rfb3Jfc3VpdGUpLT50cnlfY2F0Y2gpKTsJXAorCQlrdW5pdF9tYXJrX3Nr
+aXBwZWQoKHRlc3QpLCBmbXQsICMjX19WQV9BUkdTX18pOwkJXAorCQlrdW5pdF90cnlfY2F0
+Y2hfdGhyb3coJigodGVzdCktPnRyeV9jYXRjaCkpOwkJXAogCX0gd2hpbGUgKDApCiAKIC8q
+CmRpZmYgLS1naXQgYS9saWIvS2NvbmZpZy5kZWJ1ZyBiL2xpYi9LY29uZmlnLmRlYnVnCmlu
+ZGV4IDFhZjk3MmE5MmQwNi4uNjJkNDNhYTllOGYwIDEwMDY0NAotLS0gYS9saWIvS2NvbmZp
+Zy5kZWJ1ZworKysgYi9saWIvS2NvbmZpZy5kZWJ1ZwpAQCAtMjgzOCw2ICsyODM4LDE1IEBA
+IGNvbmZpZyBGT1JUSUZZX0tVTklUX1RFU1QKIAkgIGJ5IHRoZSBzdHIqKCkgYW5kIG1lbSoo
+KSBmYW1pbHkgb2YgZnVuY3Rpb25zLiBGb3IgdGVzdGluZyBydW50aW1lCiAJICB0cmFwcyBv
+ZiBGT1JUSUZZX1NPVVJDRSwgc2VlIExLRFRNJ3MgIkZPUlRJRllfKiIgdGVzdHMuCiAKK2Nv
+bmZpZyBMT05HRVNUX1NZTV9LVU5JVF9URVNUCisJdHJpc3RhdGUgIlRlc3QgdGhlIGxvbmdl
+c3Qgc3ltYm9sIHBvc3NpYmxlIiBpZiAhS1VOSVRfQUxMX1RFU1RTCisJZGVwZW5kcyBvbiBL
+VU5JVCAmJiBLUFJPQkVTCisJZGVmYXVsdCBLVU5JVF9BTExfVEVTVFMKKwloZWxwCisJICBU
+ZXN0cyB0aGUgbG9uZ2VzdCBzeW1ib2wgcG9zc2libGUKKworCSAgSWYgdW5zdXJlLCBzYXkg
+Ti4KKwogY29uZmlnIEhXX0JSRUFLUE9JTlRfS1VOSVRfVEVTVAogCWJvb2wgIlRlc3QgaHdf
+YnJlYWtwb2ludCBjb25zdHJhaW50cyBhY2NvdW50aW5nIiBpZiAhS1VOSVRfQUxMX1RFU1RT
+CiAJZGVwZW5kcyBvbiBIQVZFX0hXX0JSRUFLUE9JTlQKZGlmZiAtLWdpdCBhL2xpYi9NYWtl
+ZmlsZSBiL2xpYi9NYWtlZmlsZQppbmRleCBkNWNmYzdhZmJiYjguLmU4ZmVjOWRlZmVjMiAx
+MDA2NDQKLS0tIGEvbGliL01ha2VmaWxlCisrKyBiL2xpYi9NYWtlZmlsZQpAQCAtMzkzLDYg
+KzM5Myw4IEBAIG9iai0kKENPTkZJR19GT1JUSUZZX0tVTklUX1RFU1QpICs9IGZvcnRpZnlf
+a3VuaXQubwogb2JqLSQoQ09ORklHX0NSQ19LVU5JVF9URVNUKSArPSBjcmNfa3VuaXQubwog
+b2JqLSQoQ09ORklHX1NJUEhBU0hfS1VOSVRfVEVTVCkgKz0gc2lwaGFzaF9rdW5pdC5vCiBv
+YmotJChDT05GSUdfVVNFUkNPUFlfS1VOSVRfVEVTVCkgKz0gdXNlcmNvcHlfa3VuaXQubwor
+b2JqLSQoQ09ORklHX0xPTkdFU1RfU1lNX0tVTklUX1RFU1QpICs9IGxvbmdlc3Rfc3ltYm9s
+X2t1bml0Lm8KK0NGTEFHU19sb25nZXN0X3N5bWJvbF9rdW5pdC5vICs9ICQoY2FsbCBjYy1k
+aXNhYmxlLXdhcm5pbmcsIG1pc3NpbmctcHJvdG90eXBlcykKIAogb2JqLSQoQ09ORklHX0dF
+TkVSSUNfTElCX0RFVk1FTV9JU19BTExPV0VEKSArPSBkZXZtZW1faXNfYWxsb3dlZC5vCiAK
+ZGlmZiAtLWdpdCBhL2xpYi9sb25nZXN0X3N5bWJvbF9rdW5pdC5jIGIvbGliL2xvbmdlc3Rf
+c3ltYm9sX2t1bml0LmMKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAw
+Li5lM2MyOGZmMTgwN2YKLS0tIC9kZXYvbnVsbAorKysgYi9saWIvbG9uZ2VzdF9zeW1ib2xf
+a3VuaXQuYwpAQCAtMCwwICsxLDgyIEBACisvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjog
+R1BMLTIuMAorLyoKKyAqIFRlc3QgdGhlIGxvbmdlc3Qgc3ltYm9sIGxlbmd0aC4gRXhlY3V0
+ZSB3aXRoOgorICogIC4vdG9vbHMvdGVzdGluZy9rdW5pdC9rdW5pdC5weSBydW4gbG9uZ2Vz
+dC1zeW1ib2wKKyAqICAtLWFyY2g9eDg2XzY0IC0ta2NvbmZpZ19hZGQgQ09ORklHX0tQUk9C
+RVM9eSAtLWtjb25maWdfYWRkIENPTkZJR19NT0RVTEVTPXkKKyAqICAtLWtjb25maWdfYWRk
+IENPTkZJR19SRVRQT0xJTkU9biAtLWtjb25maWdfYWRkIENPTkZJR19DRklfQ0xBTkc9bgor
+ICogIC0ta2NvbmZpZ19hZGQgQ09ORklHX01JVElHQVRJT05fUkVUUE9MSU5FPW4KKyAqLwor
+CisjZGVmaW5lIHByX2ZtdChmbXQpIEtCVUlMRF9NT0ROQU1FICI6ICIgZm10CisKKyNpbmNs
+dWRlIDxrdW5pdC90ZXN0Lmg+CisjaW5jbHVkZSA8bGludXgvc3RyaW5naWZ5Lmg+CisjaW5j
+bHVkZSA8bGludXgva3Byb2Jlcy5oPgorI2luY2x1ZGUgPGxpbnV4L2thbGxzeW1zLmg+CisK
+KyNkZWZpbmUgREkobmFtZSkgcyMjbmFtZSMjbmFtZQorI2RlZmluZSBEREkobmFtZSkgREko
+biMjbmFtZSMjbmFtZSkKKyNkZWZpbmUgRERESShuYW1lKSBEREkobiMjbmFtZSMjbmFtZSkK
+KyNkZWZpbmUgREREREkobmFtZSkgRERESShuIyNuYW1lIyNuYW1lKQorI2RlZmluZSBERERE
+REkobmFtZSkgREREREkobiMjbmFtZSMjbmFtZSkKKworLypHZW5lcmF0ZSBhIHN5bWJvbCB3
+aG9zZSBuYW1lIGxlbmd0aCBpcyA1MTEgKi8KKyNkZWZpbmUgTE9OR0VTVF9TWU1fTkFNRSAg
+RERERERJKGcxaDJpM2o0azVsNm03bikKKworI2RlZmluZSBSRVRVUk5fTE9OR0VTVF9TWU0g
+MHhBQUFBQQorCitub2lubGluZSBpbnQgTE9OR0VTVF9TWU1fTkFNRSh2b2lkKTsKK25vaW5s
+aW5lIGludCBMT05HRVNUX1NZTV9OQU1FKHZvaWQpCit7CisJcmV0dXJuIFJFVFVSTl9MT05H
+RVNUX1NZTTsKK30KKworX1N0YXRpY19hc3NlcnQoc2l6ZW9mKF9fc3RyaW5naWZ5KExPTkdF
+U1RfU1lNX05BTUUpKSA9PSBLU1lNX05BTUVfTEVOLAorIkluY29ycmVjdCBzeW1ib2wgbGVu
+Z3RoIGZvdW5kLiBFeHBlY3RlZCBLU1lNX05BTUVfTEVOOiAiCitfX3N0cmluZ2lmeShLU1lN
+X05BTUVfTEVOKSAiLCBidXQgZm91bmQ6ICIKK19fc3RyaW5naWZ5KHNpemVvZihMT05HRVNU
+X1NZTV9OQU1FKSkpOworCitzdGF0aWMgdm9pZCB0ZXN0X2xvbmdlc3Rfc3ltYm9sKHN0cnVj
+dCBrdW5pdCAqdGVzdCkKK3sKKwlLVU5JVF9FWFBFQ1RfRVEodGVzdCwgUkVUVVJOX0xPTkdF
+U1RfU1lNLCBMT05HRVNUX1NZTV9OQU1FKCkpOworfTsKKworc3RhdGljIHZvaWQgdGVzdF9s
+b25nZXN0X3N5bWJvbF9rYWxsc3ltcyhzdHJ1Y3Qga3VuaXQgKnRlc3QpCit7CisJdW5zaWdu
+ZWQgbG9uZyAoKmthbGxzeW1zX2xvb2t1cF9uYW1lKShjb25zdCBjaGFyICpuYW1lKTsKKwlz
+dGF0aWMgaW50ICgqbG9uZ2VzdF9zeW0pKHZvaWQpOworCisJc3RydWN0IGtwcm9iZSBrcCA9
+IHsKKwkJLnN5bWJvbF9uYW1lID0gImthbGxzeW1zX2xvb2t1cF9uYW1lIiwKKwl9OworCisJ
+aWYgKHJlZ2lzdGVyX2twcm9iZSgma3ApIDwgMCkgeworCQlwcl9pbmZvKCIlczoga3Byb2Jl
+IG5vdCByZWdpc3RlcmVkIiwgX19mdW5jX18pOworCQlLVU5JVF9GQUlMKHRlc3QsICJ0ZXN0
+X2xvbmdlc3Rfc3ltYm9sIGthbGxzeW1zOiBrcHJvYmUgbm90IHJlZ2lzdGVyZWRcbiIpOwor
+CQlyZXR1cm47CisJfQorCisJa3VuaXRfd2Fybih0ZXN0LCAidGVzdF9sb25nZXN0X3N5bWJv
+bCBrYWxsc3ltczoga3Byb2JlIHJlZ2lzdGVyZWRcbiIpOworCWthbGxzeW1zX2xvb2t1cF9u
+YW1lID0gKHVuc2lnbmVkIGxvbmcgKCopKGNvbnN0IGNoYXIgKm5hbWUpKWtwLmFkZHI7CisJ
+dW5yZWdpc3Rlcl9rcHJvYmUoJmtwKTsKKworCWxvbmdlc3Rfc3ltID0KKwkJKHZvaWQgKikg
+a2FsbHN5bXNfbG9va3VwX25hbWUoX19zdHJpbmdpZnkoTE9OR0VTVF9TWU1fTkFNRSkpOwor
+CUtVTklUX0VYUEVDVF9FUSh0ZXN0LCBSRVRVUk5fTE9OR0VTVF9TWU0sIGxvbmdlc3Rfc3lt
+KCkpOworfTsKKworc3RhdGljIHN0cnVjdCBrdW5pdF9jYXNlIGxvbmdlc3Rfc3ltYm9sX3Rl
+c3RfY2FzZXNbXSA9IHsKKwlLVU5JVF9DQVNFKHRlc3RfbG9uZ2VzdF9zeW1ib2wpLAorCUtV
+TklUX0NBU0UodGVzdF9sb25nZXN0X3N5bWJvbF9rYWxsc3ltcyksCisJe30KK307CisKK3N0
+YXRpYyBzdHJ1Y3Qga3VuaXRfc3VpdGUgbG9uZ2VzdF9zeW1ib2xfdGVzdF9zdWl0ZSA9IHsK
+KwkubmFtZSA9ICJsb25nZXN0LXN5bWJvbCIsCisJLnRlc3RfY2FzZXMgPSBsb25nZXN0X3N5
+bWJvbF90ZXN0X2Nhc2VzLAorfTsKK2t1bml0X3Rlc3Rfc3VpdGUobG9uZ2VzdF9zeW1ib2xf
+dGVzdF9zdWl0ZSk7CisKK01PRFVMRV9MSUNFTlNFKCJHUEwiKTsKK01PRFVMRV9ERVNDUklQ
+VElPTigiVGVzdCB0aGUgbG9uZ2VzdCBzeW1ib2wgbGVuZ3RoIik7CitNT0RVTEVfQVVUSE9S
+KCJTZXJnaW8gR29uesOhbGV6IENvbGxhZG8iKTsKZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rp
+bmcva3VuaXQva3VuaXRfa2VybmVsLnB5IGIvdG9vbHMvdGVzdGluZy9rdW5pdC9rdW5pdF9r
+ZXJuZWwucHkKaW5kZXggZDMwZjkwZWFlOWE0Li5kM2YzOWJjMWNlZWMgMTAwNjQ0Ci0tLSBh
+L3Rvb2xzL3Rlc3Rpbmcva3VuaXQva3VuaXRfa2VybmVsLnB5CisrKyBiL3Rvb2xzL3Rlc3Rp
+bmcva3VuaXQva3VuaXRfa2VybmVsLnB5CkBAIC03Miw4ICs3Miw4IEBAIGNsYXNzIExpbnV4
+U291cmNlVHJlZU9wZXJhdGlvbnM6CiAJCQlyYWlzZSBDb25maWdFcnJvcihlLm91dHB1dC5k
+ZWNvZGUoKSkKIAogCWRlZiBtYWtlKHNlbGYsIGpvYnM6IGludCwgYnVpbGRfZGlyOiBzdHIs
+IG1ha2Vfb3B0aW9uczogT3B0aW9uYWxbTGlzdFtzdHJdXSkgLT4gTm9uZToKLQkJY29tbWFu
+ZCA9IFsnbWFrZScsICdhbGwnLCAnY29tcGlsZV9jb21tYW5kcy5qc29uJywgJ0FSQ0g9JyAr
+IHNlbGYuX2xpbnV4X2FyY2gsCi0JCQkgICAnTz0nICsgYnVpbGRfZGlyLCAnLS1qb2JzPScg
+KyBzdHIoam9icyldCisJCWNvbW1hbmQgPSBbJ21ha2UnLCAnYWxsJywgJ2NvbXBpbGVfY29t
+bWFuZHMuanNvbicsICdzY3JpcHRzX2dkYicsCisJCQkgICAnQVJDSD0nICsgc2VsZi5fbGlu
+dXhfYXJjaCwgJ089JyArIGJ1aWxkX2RpciwgJy0tam9icz0nICsgc3RyKGpvYnMpXQogCQlp
+ZiBtYWtlX29wdGlvbnM6CiAJCQljb21tYW5kLmV4dGVuZChtYWtlX29wdGlvbnMpCiAJCWlm
+IHNlbGYuX2Nyb3NzX2NvbXBpbGU6CmRpZmYgLS1naXQgYS90b29scy90ZXN0aW5nL2t1bml0
+L2t1bml0X3BhcnNlci5weSBiL3Rvb2xzL3Rlc3Rpbmcva3VuaXQva3VuaXRfcGFyc2VyLnB5
+CmluZGV4IDI5ZmMyN2U4OTQ5Yi4uZGE1M2E3MDk3NzNhIDEwMDY0NAotLS0gYS90b29scy90
+ZXN0aW5nL2t1bml0L2t1bml0X3BhcnNlci5weQorKysgYi90b29scy90ZXN0aW5nL2t1bml0
+L2t1bml0X3BhcnNlci5weQpAQCAtNzU5LDcgKzc1OSw3IEBAIGRlZiBwYXJzZV90ZXN0KGxp
+bmVzOiBMaW5lU3RyZWFtLCBleHBlY3RlZF9udW06IGludCwgbG9nOiBMaXN0W3N0cl0sIGlz
+X3N1YnRlc3Q6CiAJCSMgSWYgcGFyc2luZyB0aGUgbWFpbi90b3AtbGV2ZWwgdGVzdCwgcGFy
+c2UgS1RBUCB2ZXJzaW9uIGxpbmUgYW5kCiAJCSMgdGVzdCBwbGFuCiAJCXRlc3QubmFtZSA9
+ICJtYWluIgotCQlrdGFwX2xpbmUgPSBwYXJzZV9rdGFwX2hlYWRlcihsaW5lcywgdGVzdCwg
+cHJpbnRlcikKKwkJcGFyc2Vfa3RhcF9oZWFkZXIobGluZXMsIHRlc3QsIHByaW50ZXIpCiAJ
+CXRlc3QubG9nLmV4dGVuZChwYXJzZV9kaWFnbm9zdGljKGxpbmVzKSkKIAkJcGFyc2VfdGVz
+dF9wbGFuKGxpbmVzLCB0ZXN0KQogCQlwYXJlbnRfdGVzdCA9IFRydWUKQEAgLTc2OCwxMyAr
+NzY4LDEyIEBAIGRlZiBwYXJzZV90ZXN0KGxpbmVzOiBMaW5lU3RyZWFtLCBleHBlY3RlZF9u
+dW06IGludCwgbG9nOiBMaXN0W3N0cl0sIGlzX3N1YnRlc3Q6CiAJCSMgdGhlIEtUQVAgdmVy
+c2lvbiBsaW5lIGFuZC9vciBzdWJ0ZXN0IGhlYWRlciBsaW5lCiAJCWt0YXBfbGluZSA9IHBh
+cnNlX2t0YXBfaGVhZGVyKGxpbmVzLCB0ZXN0LCBwcmludGVyKQogCQlzdWJ0ZXN0X2xpbmUg
+PSBwYXJzZV90ZXN0X2hlYWRlcihsaW5lcywgdGVzdCkKKwkJdGVzdC5sb2cuZXh0ZW5kKHBh
+cnNlX2RpYWdub3N0aWMobGluZXMpKQorCQlwYXJzZV90ZXN0X3BsYW4obGluZXMsIHRlc3Qp
+CiAJCXBhcmVudF90ZXN0ID0gKGt0YXBfbGluZSBvciBzdWJ0ZXN0X2xpbmUpCiAJCWlmIHBh
+cmVudF90ZXN0OgotCQkJIyBJZiBLVEFQIHZlcnNpb24gbGluZSBhbmQvb3Igc3VidGVzdCBo
+ZWFkZXIgaXMgZm91bmQsIGF0dGVtcHQKLQkJCSMgdG8gcGFyc2UgdGVzdCBwbGFuIGFuZCBw
+cmludCB0ZXN0IGhlYWRlcgotCQkJdGVzdC5sb2cuZXh0ZW5kKHBhcnNlX2RpYWdub3N0aWMo
+bGluZXMpKQotCQkJcGFyc2VfdGVzdF9wbGFuKGxpbmVzLCB0ZXN0KQogCQkJcHJpbnRfdGVz
+dF9oZWFkZXIodGVzdCwgcHJpbnRlcikKKwogCWV4cGVjdGVkX2NvdW50ID0gdGVzdC5leHBl
+Y3RlZF9jb3VudAogCXN1YnRlc3RzID0gW10KIAl0ZXN0X251bSA9IDEKZGlmZiAtLWdpdCBh
+L3Rvb2xzL3Rlc3Rpbmcva3VuaXQva3VuaXRfdG9vbF90ZXN0LnB5IGIvdG9vbHMvdGVzdGlu
+Zy9rdW5pdC9rdW5pdF90b29sX3Rlc3QucHkKaW5kZXggMGJjYjBjYzAwMmY4Li41ZmY0ZjZm
+ZmQ4NzMgMTAwNzU1Ci0tLSBhL3Rvb2xzL3Rlc3Rpbmcva3VuaXQva3VuaXRfdG9vbF90ZXN0
+LnB5CisrKyBiL3Rvb2xzL3Rlc3Rpbmcva3VuaXQva3VuaXRfdG9vbF90ZXN0LnB5CkBAIC0z
+NjMsNiArMzYzLDE3IEBAIGNsYXNzIEtVbml0UGFyc2VyVGVzdCh1bml0dGVzdC5UZXN0Q2Fz
+ZSk6CiAJCXNlbGYucHJpbnRfbW9jay5hc3NlcnRfYW55X2NhbGwoU3RyQ29udGFpbnMoJyAg
+SW5kZW50ZWQgbW9yZS4nKSkKIAkJc2VsZi5ub1ByaW50Q2FsbENvbnRhaW5zKCdub3Qgb2sg
+MSB0ZXN0MScpCiAKKwlkZWYgdGVzdF9wYXJzZV9sYXRlX3Rlc3RfcGxhbihzZWxmKToKKwkJ
+b3V0cHV0ID0gIiIiCisJCVRBUCB2ZXJzaW9uIDEzCisJCW9rIDQgdGVzdDQKKwkJMS4uNAor
+CQkiIiIKKwkJcmVzdWx0ID0ga3VuaXRfcGFyc2VyLnBhcnNlX3J1bl90ZXN0cyhvdXRwdXQu
+c3BsaXRsaW5lcygpLCBzdGRvdXQpCisJCSMgTWlzc2luZyB0ZXN0IHJlc3VsdHMgYWZ0ZXIg
+dGVzdCBwbGFuIHNob3VsZCBhbGVydCBhIHN1c3BlY3RlZCB0ZXN0IGNyYXNoLgorCQlzZWxm
+LmFzc2VydEVxdWFsKGt1bml0X3BhcnNlci5UZXN0U3RhdHVzLlRFU1RfQ1JBU0hFRCwgcmVz
+dWx0LnN0YXR1cykKKwkJc2VsZi5hc3NlcnRFcXVhbChyZXN1bHQuY291bnRzLCBrdW5pdF9w
+YXJzZXIuVGVzdENvdW50cyhwYXNzZWQ9MSwgY3Jhc2hlZD0xLCBlcnJvcnM9MSkpCisKIGRl
+ZiBsaW5lX3N0cmVhbV9mcm9tX3N0cnMoc3RyczogSXRlcmFibGVbc3RyXSkgLT4ga3VuaXRf
+cGFyc2VyLkxpbmVTdHJlYW06CiAJcmV0dXJuIGt1bml0X3BhcnNlci5MaW5lU3RyZWFtKGVu
+dW1lcmF0ZShzdHJzLCBzdGFydD0xKSkKIApkaWZmIC0tZ2l0IGEvdG9vbHMvdGVzdGluZy9r
+dW5pdC9xZW11X2NvbmZpZ3Mvc3BhcmMucHkgYi90b29scy90ZXN0aW5nL2t1bml0L3FlbXVf
+Y29uZmlncy9zcGFyYy5weQppbmRleCBlOTc1YzQzMzFhN2MuLjI1NmQ5NTczYjQ0NiAxMDA2
+NDQKLS0tIGEvdG9vbHMvdGVzdGluZy9rdW5pdC9xZW11X2NvbmZpZ3Mvc3BhcmMucHkKKysr
+IGIvdG9vbHMvdGVzdGluZy9rdW5pdC9xZW11X2NvbmZpZ3Mvc3BhcmMucHkKQEAgLTIsOCAr
+Miw5IEBAIGZyb20gLi5xZW11X2NvbmZpZyBpbXBvcnQgUWVtdUFyY2hQYXJhbXMKIAogUUVN
+VV9BUkNIID0gUWVtdUFyY2hQYXJhbXMobGludXhfYXJjaD0nc3BhcmMnLAogCQkJICAga2Nv
+bmZpZz0nJycKLUNPTkZJR19TRVJJQUxfODI1MD15Ci1DT05GSUdfU0VSSUFMXzgyNTBfQ09O
+U09MRT15JycnLAorQ09ORklHX1NFUklBTF9TVU5aSUxPRz15CitDT05GSUdfU0VSSUFMX1NV
+TlpJTE9HX0NPTlNPTEU9eQorJycnLAogCQkJICAgcWVtdV9hcmNoPSdzcGFyYycsCiAJCQkg
+ICBrZXJuZWxfcGF0aD0nYXJjaC9zcGFyYy9ib290L3pJbWFnZScsCiAJCQkgICBrZXJuZWxf
+Y29tbWFuZF9saW5lPSdjb25zb2xlPXR0eVMwIG1lbT0yNTZNJywKZGlmZiAtLWdpdCBhL3Rv
+b2xzL3Rlc3Rpbmcva3VuaXQvcWVtdV9jb25maWdzL3g4Nl82NC5weSBiL3Rvb2xzL3Rlc3Rp
+bmcva3VuaXQvcWVtdV9jb25maWdzL3g4Nl82NC5weQppbmRleCBkYzc5NDkwNzY4NjMuLjRh
+NmJmNGUwNDhmNSAxMDA2NDQKLS0tIGEvdG9vbHMvdGVzdGluZy9rdW5pdC9xZW11X2NvbmZp
+Z3MveDg2XzY0LnB5CisrKyBiL3Rvb2xzL3Rlc3Rpbmcva3VuaXQvcWVtdV9jb25maWdzL3g4
+Nl82NC5weQpAQCAtNyw0ICs3LDYgQEAgQ09ORklHX1NFUklBTF84MjUwX0NPTlNPTEU9eScn
+JywKIAkJCSAgIHFlbXVfYXJjaD0neDg2XzY0JywKIAkJCSAgIGtlcm5lbF9wYXRoPSdhcmNo
+L3g4Ni9ib290L2J6SW1hZ2UnLAogCQkJICAga2VybmVsX2NvbW1hbmRfbGluZT0nY29uc29s
+ZT10dHlTMCcsCi0JCQkgICBleHRyYV9xZW11X3BhcmFtcz1bXSkKKwkJCSAgICMgcWJvb3Qg
+aXMgZmFzdGVyIHRoYW4gU2VhQklPUyBhbmQgZG9lc24ndCBtZXNzIHVwCisJCQkgICAjIHRo
+ZSB0ZXJtaW5hbC4KKwkJCSAgIGV4dHJhX3FlbXVfcGFyYW1zPVsnLWJpb3MnLCAncWJvb3Qu
+cm9tJ10pCg==
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+--------------1yMU2QgZ0q3U0KcWQDaBw4Qg--
