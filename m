@@ -1,77 +1,158 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.riseup.net (mx1.riseup.net [198.252.153.129])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE801AA1E0
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 23:44:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4C01AA1E0
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 23:44:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743119046; cv=none; b=U+oGKe/9f5hGE7BEHthW65Cz/VlUM0dSPBF2Jwfop4JuH5YXbJ8E9qMA6yw5bAbahYarNv4BLBITi10A65sjM9aBhyDqyPwVIvuOvhip1zcWPeF2D/TTM1owC1Rn5u8SrcN5IjomPfHuBw9T1R087KPiyBy6mpHi7FbnQZj2dAY=
+	t=1743119050; cv=none; b=F4n+5P8rG5kIGbYJq1kQjzm5EC4epmCA7BA3G8nBMhYamWVxq23F2JtrY1LPdQqHV3YT7hBad1DeWGChQJ5z9C8mDBt65HCsHtmEyLm2IwcJgGXh5vJ//Jy1fnVSvPvnAN9cbJ1PWlwhNUGKKZjwaHZ9CifBvB/+okWqBI74BZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743119046; c=relaxed/simple;
-	bh=zJfe+ntDz0a5gqUOPpRgPJsQIkqcEFey64SoptgS/Iw=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=do0tXDAkNOVSD/djUJ39itc866pcnZZapDFo1hjHdz5TK29g3hCD0ZwWYzrA+GyrdILicBZCTYF3ySMRBh5QInsxLUk0vyPpvT3g0L0nOXLJiocSHk3SJxZfIGmeF/nIGIYuk0ardpejU3bxfDD7v6OzlBKGyee/pjDz+k6OIlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d43b460962so27770825ab.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:44:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743119044; x=1743723844;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9HyMx14slmZO48hXwKrnjOU7rwzYOFJJ2XuwciiG24c=;
-        b=RGFy+zanuU0NwmQq/Z8DlDe8iVWKCYpUO7bWQdYvHb9xmjogx1annhqtoFCDbgVnhu
-         VQo3XxzM6Z1xCbwQi/XSXpTZAz4uvSuHR+8a4cXCBtIGvQL52YU+k+2NnaDK59DX0n3g
-         KQL+SbKV/DGwatEjT/CIPvN78S8PKkWKZINIp5+1cmyqmC4bNn41AOzIjj+3Rnq05dTC
-         mJVIVDRH1KoH4v/720I2OcCVLfNkVVI9e0El5CVsWhW3GEiGBu+s4NgkMp1PCPYKmlZY
-         dSkYuwuI13xjUNN4JTqKuIdRaOwAgQKQjWRQFBqJEMVQAAJ/XBPmuk7mvy/fam6cQ39y
-         0o6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVCUAE6D4fVpRSj60ZY+N4BhFuwasWCKX4tMqvCsjfC64b5FUdfms+T9e6CMwM4AmEL2nJTcrFVwWylZyo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGloTiV++2woSoHx9QA8ceZCPRcbl8xehKCLNBDA6+jRJ58rrj
-	n9TyHZvQOnfZLH89tq3Nneppy7Mj/4KTUlljrZSAnIKXdbiPVNK3a5vvoIIw8/xdkOaXwmxlCOR
-	V+1SsYeXjLNrtLPUX+3QPObq/yggmvtxQoh06ffZOqj+ODVwl58ltVw0=
-X-Google-Smtp-Source: AGHT+IGP0KfS302a6JahnEaFSrCURrW/iARLg9wT0HWhuDbr6UaQ3NEOiHKp2eCied/LzPpIPMg8HST/OAGgBXsb5bJEocyXgbCb
+	s=arc-20240116; t=1743119050; c=relaxed/simple;
+	bh=alf3U4GcHSVeqmFlbDvuq5reIBuvm9agxUeKx/4y55g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i3NaYp8E7qf0lyCfQ+Uy+k/nw8iZL44KaSW1/Mf9RIZrXfZPo1U3eJ3jTIQngu9gRY6UiA6BpUDJ0hxOq5PfEv34fEgI9bcIF7t61F7l/mNbJ4WvHqJwKcHfFtmYY8NcSRYAfRC6QFngY1tg6iFoiHBJM4YlRXA1APibiIkYUx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=VlufetNz; arc=none smtp.client-ip=198.252.153.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="VlufetNz"
+Received: from fews02-sea.riseup.net (fews02-sea-pn.riseup.net [10.0.1.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx1.riseup.net (Postfix) with ESMTPS id 4ZP0c740lGzDqVm;
+	Thu, 27 Mar 2025 23:44:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+	t=1743119047; bh=alf3U4GcHSVeqmFlbDvuq5reIBuvm9agxUeKx/4y55g=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VlufetNzwXU8NRcUODo7oGdFcHs8Cw+lmJ6fnJXrXemx7ckgsXDJm2/o35jEoxOOL
+	 5VTc0efTvMQfBHjp0jc/xBpKSBgBpazFi7eIw4vCLQj+9LNmWgZ68xIfstaSYH+8J7
+	 OoA3qeAJzbdEXyO2rPK8rPxSCfDs6KTFhEzn/jyc=
+X-Riseup-User-ID: AA98FD0A338178116BF02F5E8D8EB66630877B08DD781AD6E5F015046AD33AE9
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	 by fews02-sea.riseup.net (Postfix) with ESMTPSA id 4ZP0c54WQZzFwfR;
+	Thu, 27 Mar 2025 23:44:05 +0000 (UTC)
+From: Fernando Fernandez Mancera <ffmancera@riseup.net>
+To: x86@kernel.org,
+	tglx@linutronix.de,
+	linux-kernel@vger.kernel.org
+Cc: dwmw@amazon.co.uk,
+	mhkelley@outlook.com,
+	mingo@kernel.org,
+	Fernando Fernandez Mancera <ffmancera@riseup.net>
+Subject: [PATCH v3] x86/i8253: Invoke clockevent_i8253_disable() with interrupts disabled
+Date: Fri, 28 Mar 2025 00:43:57 +0100
+Message-ID: <20250327234357.3383-1-ffmancera@riseup.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1fed:b0:3d3:f6ee:cc4c with SMTP id
- e9e14a558f8ab-3d5ccce76c2mr58974305ab.0.1743119043917; Thu, 27 Mar 2025
- 16:44:03 -0700 (PDT)
-Date: Thu, 27 Mar 2025 16:44:03 -0700
-In-Reply-To: <6772fd43.050a0220.2f3838.04cd.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67e5e2c3.050a0220.2f068f.0050.GAE@google.com>
-Subject: Re: [syzbot] [ext4?] KASAN: use-after-free Read in ext4_find_extent (4)
-From: syzbot <syzbot+ee60e584b5c6bb229126@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, jack@suse.cz, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com, ritesh.list@gmail.com, 
-	syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-syzbot has bisected this issue to:
+Lockdep complains correctly due to the context, but in reality there is
+no possible deadlock. At the point where pit_timer_init() is called
+there is no other possible usage of i8253_lock because the system is
+still in the very early boot stage.
 
-commit 93cdf49f6eca5e23f6546b8f28457b2e6a6961d9
-Author: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Date:   Sat Mar 25 08:13:39 2023 +0000
+pit_timer_init() should disable interrupts before calling
+clockevent_i8253_disable() and do not inflict the
+raw_spin_lock_irqsave() on the callback function. This prevents lockdep
+from detecting a false positive and future proves the code.
 
-    ext4: Fix best extent lstart adjustment logic in ext4_mb_new_inode_pa()
+[   45.408952] =====================================================
+[   45.408970] WARNING: HARDIRQ-safe -> HARDIRQ-unsafe lock order detected
+[   45.408974] 6.14.0-rc7+ #6 Not tainted
+[   45.408978] -----------------------------------------------------
+[   45.408980] systemd-sleep/3324 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
+[   45.408986] ffffffffb2c23398 (i8253_lock){+.+.}-{2:2}, at: pcspkr_event+0x3f/0xe0 [pcspkr]
+[   45.409004]
+               and this task is already holding:
+[   45.409006] ffff9c334d7c2230 (&dev->event_lock){-.-.}-{3:3}, at: input_dev_resume+0x21/0x50
+[   45.409023] which would create a new lock dependency:
+[   45.409025]  (&dev->event_lock){-.-.}-{3:3} -> (i8253_lock){+.+.}-{2:2}
+[   45.409043]
+               but this new dependency connects a HARDIRQ-irq-safe lock:
+[   45.409045]  (&dev->event_lock){-.-.}-{3:3}
+[   45.409052]
+               ... which became HARDIRQ-irq-safe at:
+[   45.409055]   lock_acquire+0xd0/0x2f0
+[   45.409062]   _raw_spin_lock_irqsave+0x48/0x70
+[   45.409067]   input_event+0x3c/0x80
+[   45.409071]   atkbd_receive_byte+0x9b/0x6e0
+[   45.409077]   ps2_interrupt+0xb2/0x1d0
+[   45.409082]   serio_interrupt+0x4a/0x90
+[   45.409087]   i8042_handle_data+0xf8/0x280
+[   45.409091]   i8042_interrupt+0x11/0x40
+[   45.409095]   __handle_irq_event_percpu+0x87/0x260
+[   45.409100]   handle_irq_event+0x38/0x90
+[   45.409105]   handle_edge_irq+0x8b/0x230
+[   45.409109]   __common_interrupt+0x5c/0x120
+[   45.409114]   common_interrupt+0x80/0xa0
+[   45.409120]   asm_common_interrupt+0x26/0x40
+[   45.409125]   pv_native_safe_halt+0xf/0x20
+[   45.409130]   default_idle+0x9/0x20
+[   45.409135]   default_idle_call+0x7a/0x1d0
+[   45.409140]   do_idle+0x215/0x260
+[   45.409144]   cpu_startup_entry+0x29/0x30
+[   45.409149]   start_secondary+0x132/0x170
+[   45.409153]   common_startup_64+0x13e/0x141
+[   45.409158]
+               to a HARDIRQ-irq-unsafe lock:
+[   45.409161]  (i8253_lock){+.+.}-{2:2}
+[   45.409167]
+               ... which became HARDIRQ-irq-unsafe at:
+[   45.409170] ...
+[   45.409172]   lock_acquire+0xd0/0x2f0
+[   45.409177]   _raw_spin_lock+0x30/0x40
+[   45.409181]   clockevent_i8253_disable+0x1c/0x60
+[   45.409186]   pit_timer_init+0x25/0x50
+[   45.409191]   hpet_time_init+0x46/0x50
+[   45.409196]   x86_late_time_init+0x1b/0x40
+[   45.409201]   start_kernel+0x962/0xa00
+[   45.409206]   x86_64_start_reservations+0x24/0x30
+[   45.409211]   x86_64_start_kernel+0xed/0xf0
+[   45.409215]   common_startup_64+0x13e/0x141
+[   45.409220]
+               other info that might help us debug this:
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1566b43f980000
-start commit:   1e1ba8d23dae Merge tag 'timers-clocksource-2025-03-26' of ..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=1766b43f980000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1366b43f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2edddb53537e0320
-dashboard link: https://syzkaller.appspot.com/bug?extid=ee60e584b5c6bb229126
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1623343f980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1123343f980000
+[   45.409222]  Possible interrupt unsafe locking scenario:
 
-Reported-by: syzbot+ee60e584b5c6bb229126@syzkaller.appspotmail.com
-Fixes: 93cdf49f6eca ("ext4: Fix best extent lstart adjustment logic in ext4_mb_new_inode_pa()")
+[   45.409224]        CPU0                    CPU1
+[   45.409226]        ----                    ----
+[   45.409228]   lock(i8253_lock);
+[   45.409234]                                local_irq_disable();
+[   45.409237]                                lock(&dev->event_lock);
+[   45.409243]                                lock(i8253_lock);
+[   45.409249]   <Interrupt>
+[   45.409251]     lock(&dev->event_lock);
+[   45.409257]
+                *** DEADLOCK ***
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Signed-off-by: Fernando Fernandez Mancera <ffmancera@riseup.net>
+---
+v1: initial patch
+v2: use local_irq_save()/restore() around clockevent_i8253_disable()
+v3: improve wording of commit message, dropped "Fixes" tag and used
+scoped_guard(irq) instead.
+---
+ arch/x86/kernel/i8253.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/i8253.c b/arch/x86/kernel/i8253.c
+index 80e262bb627f..cb9852ad6098 100644
+--- a/arch/x86/kernel/i8253.c
++++ b/arch/x86/kernel/i8253.c
+@@ -46,7 +46,8 @@ bool __init pit_timer_init(void)
+ 		 * VMMs otherwise steal CPU time just to pointlessly waggle
+ 		 * the (masked) IRQ.
+ 		 */
+-		clockevent_i8253_disable();
++		scoped_guard(irq)
++			clockevent_i8253_disable();
+ 		return false;
+ 	}
+ 	clockevent_i8253_init(true);
+-- 
+2.49.0
+
