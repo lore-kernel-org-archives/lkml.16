@@ -1,75 +1,171 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1D613C8EA;
-	Thu, 27 Mar 2025 10:43:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC571FFC45;
+	Thu, 27 Mar 2025 10:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743072234; cv=none; b=kWb+voCxVOF8dclDT8MJVKZFoZqlq0ee2HGG1na6OLL9YYAtACN05ZAnZcoYMnzCCuvyiBr4P5tHUhXq2SOg66OF5C+g6qiYdG6YsJC2KCWQpVPVeJP3ihRlmsrF7tICfUUPlpreROjUWi04TbxWg5i16/YMbULnkWx9fRAcGdg=
+	t=1743072245; cv=none; b=f4OXcIkHNvPrzw7usNKEcItQyjY97gfxCMMnI495kxZygWmQ1iBUHGhUCDG6yER40N2VN4cNCILDOuvvdoJ8vCtpGj/F4/LKc3ucXcMSbRl8tOjRSYBZVwVinaPbmOHM+dyucen6sEB7/8App1B/D0YHS05ytUBLVu46hG8OBcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743072234; c=relaxed/simple;
-	bh=LNzFD4UKrFjJu57yMLhUZafPSls/yUwU6yVnfk6edUw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qqN6dWlCz37PHPbcXe1qi7kr5eY2TORwJFBboZLBKLMAIW2GK+fLuRvwCuLuvGpMNniVRP1T1om9yBvO9Z8sooGtP9bkxX10sfxNJKHLYZiZ8ovQknXSmo/3VbwKXv1XreLTX+APOcpY3FT8Cyek8XMx/G0F9MNbw8o/IU4GkOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bCiVsCqN; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1743072245; c=relaxed/simple;
+	bh=IFw6q1pUFNq5z2c3JTgi/YJrkBAQTyo3eErhd2X2sqY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bGUKiaT/ulL8M+1eBSyhe8RTOGx3HwOmTjjju2Cswqa80ucxW92MvnjNHPN26fkvquIa6Lw7K3wckOvX/kAf1DjCtYJ2E455MCIvgKebTzA8ASSsVpWaB1YzkbugpnDSspzhuwPr1azyjrMgB8YIj1nUsyWhaxziSYnX1uJw1qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=blhDMdb6; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bCiVsCqN"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 99E8C42E81;
-	Thu, 27 Mar 2025 10:43:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743072224;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=36UvBXe9alYnqpKpGCxPQUT55PmtTW/p6TH6mKS5FV4=;
-	b=bCiVsCqNE0XhFKT1KwTmhYF+8EA1WBtLvRM1cowo0R/jz4fOoc0WmrUote4241Co9GRcBs
-	iAPFBgZw8z4jvQPe7cmkn8nQsIMmm6W7yNuZwtuYAVrBdmhO3JYvvGEl4vMvTz7o02SIVj
-	X1SF6Y6bLXrrvlC7VZhKLuRZ20yLh+0xfb44yE/sDv6TDk1Q4XwDGA6mQuEN+02o30xikn
-	mtxk61Kv/VlHuoi+CLiS877zDepr56kLIXqLZNcNfjY+JPk8OZcwnnU0f3sfWr6ROrji1A
-	66/lRj4r5IZ2VC04isD88Qt0qlsaGsi1qz4PL41BcR6pF6ucHe+W/vNIcFMkNA==
-Date: Thu, 27 Mar 2025 11:43:40 +0100
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
- <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Heiner Kallweit <hkallweit1@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- thomas.petazzoni@bootlin.com, Russell King <linux@armlinux.org.uk>, Simon
- Horman <horms@kernel.org>
-Subject: Re: [PATCH net-next] MAINTAINERS: Add dedicated entries for
- phy_link_topology
-Message-ID: <20250327114340.2b8d18a5@fedora-2.home>
-In-Reply-To: <20250313153008.112069-1-maxime.chevallier@bootlin.com>
-References: <20250313153008.112069-1-maxime.chevallier@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="blhDMdb6"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-227d6b530d8so15651645ad.3;
+        Thu, 27 Mar 2025 03:44:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743072243; x=1743677043; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uTJyz617q7cxczcoiG5Izuzs8qnkruFS6Mj8VArUtXY=;
+        b=blhDMdb6jgFMM41dgI2gf6hnCfi9lH4BRkTnJGLMavsAZsHgWGtIqKq5QMkqcC08KS
+         lXUImi25Z6Hw00HKaNpHbUW0r8XgfhBZRMEvIZuIhSKjfRy+REGuZ9z9670SAiCXKqlZ
+         LijBaPnRWn2Zi1Ga7FGVQgLtH3W9zjRxe46b7jq3Nq+y68YZ74EvGxTwuT4H+qDmW0Ix
+         NQCfJKT6ratXuDqnFIkfH9QciRG3NDYKMd6TwHpRjFwj/cXbW6CpvDiKOAG3efA6cHAs
+         8tGx9vn74TftqesH1sfmrIIgHZFMiDAxQ8QM2tmAodALbP2f/Ysp1/FgWemfpcZJke+K
+         7wBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743072243; x=1743677043;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uTJyz617q7cxczcoiG5Izuzs8qnkruFS6Mj8VArUtXY=;
+        b=YpJgIL9Wg46z2qOJWBNSOPx/XnSMnBDgaoO7EQxpMrG6D+DqCYfeMwlx9f2dMq+nnT
+         EQv26MvgKLO09cQrK6ru3dVVH+yKRs9WBuuMquFhfdZMx0KkWBM+Ku3e8efWzvMnZ/Pp
+         GEWWuuOjSWywzuSlcIy0kV/WuPQmkOavZUmvsk+rXPsY04iIpnzmimqyec8Rjj4GA7RE
+         Yy8zvCSHkCYnPKNyzjQI59rgauoxPk4tHGpDF5YfFFT+2EwJdHpZfYs+B3udEkxSIY1P
+         vVXwAP00itR3DKBC/yposwJjnamB0XUPZHfPAEWgdLb96n6Vat+UgQvhku5CIzv9KH9b
+         cWoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVi0BiU3/BP6OCKPGsHH0FW2jYue8ZwigtqiyG5G0oJpL6sM1+NTAky9g+ZOc0S7eUW27U5iKjxuQwb2bZk@vger.kernel.org, AJvYcCXOF6Vtqx382JvWos4v7dnJT3wkBcXOQLn78zQJcp21jxvekEG9WfNdBk4KjzM4NMnB0LVF0BYU9wsN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6bwwwKW4BQFwDjQmwu9z8fbsLb+rl+oBhlP1huwsH0I6drRYS
+	2YBE04EQ5EekICoTf7CluxLxp0TerE9tV2HuQwGnMIer1gCiDcYN
+X-Gm-Gg: ASbGnct4SpVlo2GLNcwIBFw3Z7+6ECuM5FiPjb33+vL4dtKAH+Wgh+bchFQ+VaQJ3ep
+	Ec1o+HKT6c4PA9kzd76asFx9zAa1jJ9eXdLRAYdShMBVCfz7TEKulnudfGw//hry7H8rNOeYW8x
+	7ALX0bfvhA0c7xwqDi/wKeG//vvtGIAIZLl+Vt9/Q0SzuY74Sgl8hrR7D5G/Ifa8TcbvBTJ8L+a
+	W1nMsruq5H8Cttkzfo0phtHG9JHI11cNZGdhh7lmEBeVoqdhu4A6WKz/X1RuO3w5u6n5elih4lU
+	Ae6KTa0EmvetaO3EQJzrED6Rbg4iMF/iNxw7d0JELt6kHLpmj/Ck9ufmMqWkwZojCsOEgEqspzz
+	90YHgHOrEkcV88Ckyofsq
+X-Google-Smtp-Source: AGHT+IHq/Y6uC/Z00BLfu9Yma5EAHMzO0zuQt7fcToR0/FheLKLnTEahpmMne9PLwBs+vl8u3GLHEA==
+X-Received: by 2002:a05:6a20:4389:b0:1ee:dcd3:80d7 with SMTP id adf61e73a8af0-1fea2c2a320mr6373055637.0.1743072242982;
+        Thu, 27 Mar 2025 03:44:02 -0700 (PDT)
+Received: from [192.168.0.11] (KD106168128197.ppp-bb.dion.ne.jp. [106.168.128.197])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af8a282be07sm12565149a12.34.2025.03.27.03.43.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 03:44:02 -0700 (PDT)
+Message-ID: <e1baa67a-d62a-477f-9ccd-83cc2dae501a@gmail.com>
+Date: Thu, 27 Mar 2025 19:43:57 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] mtd: spi-nor: use rdid-dummy-ncycles DT property
+To: Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Michael Walle <mwalle@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: Pratyush Yadav <pratyush@kernel.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-mtd@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Bacem Daassi <Bacem.Daassi@infineon.com>,
+ Takahiro Kuwano <Takahiro.Kuwano@infineon.com>,
+ Mark Brown <broonie@kernel.org>
+References: <20250319-snor-rdid-dummy-ncycles-v1-0-fbf64e4c226a@infineon.com>
+ <20250319-snor-rdid-dummy-ncycles-v1-2-fbf64e4c226a@infineon.com>
+ <20250319233024.GA2625856-robh@kernel.org>
+ <a3818477-5a67-43ad-8961-88fa02916968@linaro.org>
+ <CAL_JsqKtz5+R1kjEzjo6bVicOX2c=UauC0_STAF0T02rSDqO+w@mail.gmail.com>
+ <50de19f7-2021-433e-b8f8-d928ed7d5d57@linaro.org>
+ <D8LSAUU0358V.2H1D7QXB9WBOF@kernel.org>
+ <be8e5758-8f85-4476-b6c0-4400c8151cbe@linaro.org>
+Content-Language: en-US
+From: Takahiro Kuwano <tkuw584924@gmail.com>
+In-Reply-To: <be8e5758-8f85-4476-b6c0-4400c8151cbe@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieekvddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdqvddrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddupdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepv
- gguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Thu, 13 Mar 2025 16:30:06 +0100
-Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
-
-> The infrastructure to handle multi-phy devices is fairly standalone.
-> Add myself as maintainer for that part as well as the netlink uAPI
-> that exposes it.
+On 3/26/2025 11:44 PM, Tudor Ambarus wrote:
+> Hi, Michael,
 > 
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> ---
+> Sorry, I somehow missed your replies.
+> 
+> On 3/21/25 8:00 AM, Michael Walle wrote:
+> 
+> cut
+> 
+>>>>> The
+>>>>> problem that I see with that is that we no longer bind against the
+>>>>> generic jedec,spi-nor compatible, so people need to update their DT in
+>>>>> case they use/plug-in a different flash on their board.
+>>>>
+>>>> This chip is clearly *not* compatible with a generic chip.
+>>>
+>>> I think it is compatible. The chip defines the SFDP (serial flash
+>>> discoverable parameters) tables. At probe time we parse those tables and
+>>> initialize the flash based on them.
+>>
+>> I disagree. It's not compatible with "jedec,spi-nor", which is
+>> defined as
+>>
+> 
+> cut
+> 
+>>
+>> See my first reply, on how to possibly fix this mess (new
+>> compatible if accepted, just use RDSFDP sequence which is backed by
+>> the standard and do some fingerprinting).
+>>
+> 
+> this won't work unless there's a unique parameter or ID in the sfdp or
+> vendors tables, which I doubt. Takahiro to confirm.
+> 
+No, cyrs17b doesn't have it.
 
-Thanks Jakub and Andrew for the Acks, I'll resend on the net tree as
-per Paolo's instructions :)
+>> FWIW, a new (or rather different) compatible is needed because we
+>> cannot distinguish between random data returned during the dummy
+>> cycles and a proper manufacturer id. So there is no way we could fix
+>> this in the core itself.
+> 
+> Yes, I agree, new compatible it is then.
+> 
+> cut
+> 
+>>> I think the property vs compatible decision resumes at whether we
+>>> consider that the dummy cycles requirement for Read ID is/will be
+>>> generic or not.
+>>
+>> It is not generic. Because it will break autodetection. And that is
+>> the whole purpose of this. Adding that property means, we can just
+>> autodetect flashes within this 'group'. And personally, I think this
+>> is a bad precedent.
+>>
+> 
+> yes, I agree.
+> 
+>>> I noticed that with higher frequencies or protocol modes (e.g, octal
+>>> DTR), flashes tend to require more dummy cycles. I think with time,
+>>> we'll have more flashes with such requirement. Takahiro can jump in and
+>>> tell if it's already the case with IFX.
+>>
+>> But hopefully not with RDID. Again this doesn't play nice with other
+>> flashes (or all flashes for now). Instead of adding random delay
+>> cycles one should rather define a max clock speed for this opcode.
+> 
+> This could work, yes. But not for this flash. Or maybe encourage vendors
+> to either contribute and enlarge the SFDP database or define their own
+> vendor tables for all the flash properties that are not covered yet.
+> It's strange how Block Protection is not yet covered by SFDP after all
+> these years.
+> 
+> Thanks,
+> ta
 
-Maxime
