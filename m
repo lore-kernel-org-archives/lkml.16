@@ -1,216 +1,158 @@
-Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F0D20D4FF;
-	Thu, 27 Mar 2025 10:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118EA1A8F60
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743069814; cv=none; b=THCNmePN+vPpLOXiqZqaNZ+RkL4X+ojKTuxCscHtVQYMqIlOZf0rN47WH5K7u/nCmUaEA/zrP0h3puwU6tZE50ECrL5XJ/ckkoG0JXHSiNBDXfCWDBQXU5eftvG0Ve20Mz99inpI8e5tDcJzwRo/PdNmtZJCR1IBD7Ry1WUomSM=
+	t=1743070003; cv=none; b=hFyRfTU5AmlKcaJhnWFDnN6gt7aQ4EjM8R+1hHUPsZzbRrrfC7f67W2gjWJbYK/Fi7ZmbT41R3VKXRmnPnb9KGKDmpGO4TO5bCvcN331wUpTbh/vt7l16yb4hVQZO5i4mZthHoR/G6Ah6Zd1DdgJuNtkOB9OxdVS4+YIm0jXJtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743069814; c=relaxed/simple;
-	bh=7q5G2oViNC8w2MREEd4XQqxGVKMOap7GRu6dwYLtn00=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=mLjF+2w6zieS+V4jDY+WciGwdOJB5IHmBnoH4f7BUrcfhpSvx73N1OtTQS+pxnzLqEldC3ZOtslYqzeb2Y0PWQfuXyjvINGTbyM83MUP7223F06ugU81VmiBhmJZqECUL2tp0IemaS3RvRY+++PW4D2viSf+2CWHV9YOMCnmX6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=twVegJQU; arc=none smtp.client-ip=72.21.196.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1743070003; c=relaxed/simple;
+	bh=8S9e6bRbJzlf32iYNYG1VHGj9YP7JA4gMmMOneOUa0Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qZQ5k1uGnH/BfU2tL20VFHzxVn/voF8KFTJ/d2x1L6Dx2uH8QaLHjGJ9tnsyczd4pPU3Dt4t9ffOvCHCMr0vdXuaBwRmRvqoeCwL9AFs/D6Z8vhFsJvXCmz6ss2Yvf8kcIgA4YsHBFWYjIU5y7WdXF23/JgQOQq5NqVz1D7DIjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JSW/2Sau; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="twVegJQU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JSW/2Sau"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3913cf69784so515761f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:06:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1743069812; x=1774605812;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=1AYkt3UZmdT/puNZc9A2b9Jl693S9yxUDwwUM5aOO5U=;
-  b=twVegJQUoej3d4SkcwksHir7lQyumsz06QrC52opt6xIMCyN8XPvhLr+
-   Bi3T7blowFdmaEkePXyFVWf4+z0CCXlrG7IIlOA3io/Bc/mUCeZgfcXy7
-   qwE3OTztYs8qI1sLIuUwTqUD6l4ILLOFA1Tn9ucEBNkPz9c3wtbXor67D
-   w=;
-X-IronPort-AV: E=Sophos;i="6.14,280,1736812800"; 
-   d="scan'208";a="478704841"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 10:03:26 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.7.35:25558]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.26.232:2525] with esmtp (Farcaster)
- id a4642778-ac88-44ce-8afd-012d72d51f0e; Thu, 27 Mar 2025 10:03:25 +0000 (UTC)
-X-Farcaster-Flow-ID: a4642778-ac88-44ce-8afd-012d72d51f0e
-Received: from EX19D020UWA002.ant.amazon.com (10.13.138.222) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 27 Mar 2025 10:03:18 +0000
-Received: from EX19MTAUWC001.ant.amazon.com (10.250.64.145) by
- EX19D020UWA002.ant.amazon.com (10.13.138.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 27 Mar 2025 10:03:18 +0000
-Received: from email-imr-corp-prod-iad-all-1b-af42e9ba.us-east-1.amazon.com
- (10.25.36.210) by mail-relay.amazon.com (10.250.64.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
- 15.2.1544.14 via Frontend Transport; Thu, 27 Mar 2025 10:03:18 +0000
-Received: from dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com [172.19.91.144])
-	by email-imr-corp-prod-iad-all-1b-af42e9ba.us-east-1.amazon.com (Postfix) with ESMTP id BE3CE40570;
-	Thu, 27 Mar 2025 10:03:17 +0000 (UTC)
-Received: by dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (Postfix, from userid 23027615)
-	id 7A8925228; Thu, 27 Mar 2025 10:03:17 +0000 (UTC)
-From: Pratyush Yadav <ptyadav@amazon.de>
-To: Changyuan Lyu <changyuanl@google.com>
-CC: <linux-kernel@vger.kernel.org>, <graf@amazon.com>,
-	<akpm@linux-foundation.org>, <luto@kernel.org>, <anthony.yznaga@oracle.com>,
-	<arnd@arndb.de>, <ashish.kalra@amd.com>, <benh@kernel.crashing.org>,
-	<bp@alien8.de>, <catalin.marinas@arm.com>, <dave.hansen@linux.intel.com>,
-	<dwmw2@infradead.org>, <ebiederm@xmission.com>, <mingo@redhat.com>,
-	<jgowans@amazon.com>, <corbet@lwn.net>, <krzk@kernel.org>, <rppt@kernel.org>,
-	<mark.rutland@arm.com>, <pbonzini@redhat.com>, <pasha.tatashin@soleen.com>,
-	<hpa@zytor.com>, <peterz@infradead.org>, <robh+dt@kernel.org>,
-	<robh@kernel.org>, <saravanak@google.com>,
-	<skinsburskii@linux.microsoft.com>, <rostedt@goodmis.org>,
-	<tglx@linutronix.de>, <thomas.lendacky@amd.com>, <usama.arif@bytedance.com>,
-	<will@kernel.org>, <devicetree@vger.kernel.org>, <kexec@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>,
-	<linux-mm@kvack.org>, <x86@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory preservation
-In-Reply-To: <20250320015551.2157511-10-changyuanl@google.com>
-References: <20250320015551.2157511-1-changyuanl@google.com>
-	<20250320015551.2157511-10-changyuanl@google.com>
-Date: Thu, 27 Mar 2025 10:03:17 +0000
-Message-ID: <mafs0y0wqrdsq.fsf@amazon.de>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        d=linaro.org; s=google; t=1743070000; x=1743674800; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3+M4GNUUBAuIh9X1Zg/lIAFPSa4InwqS6apGLD7pPwU=;
+        b=JSW/2Sau+9vnGzsRJ/rShVFtS2xCJYCd7IMYrCmnXsgzt6appo8e9rpTGtqyI6mdaP
+         JsV9tBG2BmzLchmspOONtcap7CGw+zC4/4dqGXkSm4OIKVfP0CPHfHZjcRsO42/HBm53
+         b+lxs3BewC/Obydi3EoirwnBFEIMh8M8jwLZpOd6e6v/8XPVWEur3v4vJ8G3+ffBPdyo
+         ATEaXd/ys3bLWCx6waTqeLklQ9ZlKltAhKHWbYBV8O0rYyFG9Qd+e7Jvvd3LRYMJzBq4
+         /L26oVg0uIbQ/BI3fDTs8EBzuXaPNxTaMDrtVZHrPCkkv6pQoha2G4UiS0dhfNUwALJZ
+         HjsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743070000; x=1743674800;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3+M4GNUUBAuIh9X1Zg/lIAFPSa4InwqS6apGLD7pPwU=;
+        b=XYmm/Ty8JrEQ0q+HJXS5YjOXVOs3CDBC+fXsqP12VWpOLaYCYiQ637jfT7z6JgzMMY
+         1mO92gWhDaYaW8rEiJ2hVXlajNh8C0sHxJvJSEW7IWloSp4tn1g9mCu66BaQgNiyNO2C
+         pbZ8VDnWFWg5QFhT8K/JWzllGkzNry9wzhRQ/lW2PN7Auv9Hi7OnGe434OLkIAZYXKK4
+         1Eb29GJ+6AW1nylXsLdKYGf3nxa7XEDKqHTf06I5dTKcL63axyzhczBpXAAAKPvNC1Zw
+         cCWyw/wKB+l/O87aIe4tpTyy52BXDeED7c5UkEn1+gv4j+7GBRD+NwlWi5JfJwFjfcZ6
+         657A==
+X-Forwarded-Encrypted: i=1; AJvYcCX1xI4G+CZPW0v1P2IKOkm+/jMca9ad6gHx25Z0jbVdmV9mFtwBZT3KtOKkZM6K+kvm27+zy/Oh6pF6+BA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdGh1vOqcgjEijmqROlVq4J0I15j/M59rhsn3DRnBnF3jpN6js
+	vBDRifS9I5Ccwy8ZJ5WBgbggJwEPtg1la7k4s26g4LpcqbICqLYat9I0+Ssc6Us=
+X-Gm-Gg: ASbGnct7y5TmwIE5x0wx72j29z3PW1rkZeUM9+SkkkxRn6FfnhtRtrt6/doZn+ah6Wh
+	JwB7kC1rkVv81d2eefeOk62mm+lf16gnXCiOvnnao6VV6xYn3awlCjvLqOdO/76SDRlNqsJLwmZ
+	XtKH5IBDorFbxVseptK6MJSm3BMKWFoigJztEnlEB1raKEYlNAJ6zDN05/8nAF6OnYw4pNCe9T2
+	6+472yxWP74ymJx99N4Kzl8LZY9/i5m/9y6zK7YhkOChcbqiwhbkkBCLKvvwXrzpsy7QvBqqZhz
+	BdyjY9YctKpS2TvqzE4P/hnkWwj+if5Tuh/pt3Wm2VWIWEdtg1sb5g4Wvbc2Tn7FzivTDQ==
+X-Google-Smtp-Source: AGHT+IGF5C8wwArWoaTnvg18E6/GcMnWhwo06yT5gdG8w6E8bc9L3nKzs7+GFZLtwrNmL7hDXvjOFw==
+X-Received: by 2002:a05:6000:1889:b0:391:3124:f287 with SMTP id ffacd0b85a97d-39ad174b759mr2590951f8f.16.1743070000129;
+        Thu, 27 Mar 2025 03:06:40 -0700 (PDT)
+Received: from localhost.localdomain ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39ac3ce3dd1sm10843204f8f.88.2025.03.27.03.06.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 03:06:39 -0700 (PDT)
+From: srinivas.kandagatla@linaro.org
+To: peda@axentia.se,
+	broonie@kernel.org,
+	andersson@kernel.org,
+	krzk+dt@kernel.org
+Cc: ivprusov@salutedevices.com,
+	luca.ceresoli@bootlin.com,
+	zhoubinbin@loongson.cn,
+	paulha@opensource.cirrus.com,
+	lgirdwood@gmail.com,
+	robh@kernel.org,
+	conor+dt@kernel.org,
+	konradybcio@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	dmitry.baryshkov@oss.qualcomm.com,
+	linux-sound@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	johan+linaro@kernel.org,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v6 0/6] ASoC: wcd938x: enable t14s audio headset
+Date: Thu, 27 Mar 2025 10:06:27 +0000
+Message-Id: <20250327100633.11530-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Hi Changyuan,
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-On Wed, Mar 19 2025, Changyuan Lyu wrote:
+On Lenovo ThinkPad T14s, the headset is connected via a HiFi Switch to
+support CTIA and OMTP headsets. This switch is used to minimise pop and
+click during headset type switching.
 
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->
-> Introduce APIs allowing KHO users to preserve memory across kexec and
-> get access to that memory after boot of the kexeced kernel
->
-> kho_preserve_folio() - record a folio to be preserved over kexec
-> kho_restore_folio() - recreates the folio from the preserved memory
-> kho_preserve_phys() - record physically contiguous range to be
-> preserved over kexec.
-> kho_restore_phys() - recreates order-0 pages corresponding to the
-> preserved physical range
->
-> The memory preservations are tracked by two levels of xarrays to manage
-> chunks of per-order 512 byte bitmaps. For instance the entire 1G order
-> of a 1TB x86 system would fit inside a single 512 byte bitmap. For
-> order 0 allocations each bitmap will cover 16M of address space. Thus,
-> for 16G of memory at most 512K of bitmap memory will be needed for order 0.
->
-> At serialization time all bitmaps are recorded in a linked list of pages
-> for the next kernel to process and the physical address of the list is
-> recorded in KHO FDT.
+This patchset adds required bindings and changes to codec and dts to   
+tnable the regulator required to power this switch along with wiring up
+gpio that control the headset switching.
 
-Why build the xarray only to transform it down to bitmaps when you can
-build the bitmaps from the get go? This would end up wasting both time
-and memory. At least from this patch, I don't really see much else being
-done with the xarray apart from setting bits in the bitmap.
+Without this patchset, there will be lots of noise on headset and mic
+will not we functional.
 
-Of course, with the current linked list structure, this cannot work. But
-I don't see why we need to have it. I think having a page-table like
-structure would be better -- only instead of having PTEs at the lowest
-levels, you have the bitmap.
+Merge strategy:
+- mux bindings and mux patches can go independently
+- ASoC codec patches with bindings can go independently.
+- dts needs can go in parallel to Codec bindings.
 
-Just like page tables, each table is page-size. So each page at the
-lowest level can have 4k * 8 == 32768 bits. This maps to 128 MiB of 4k
-pages. The next level will be pointers to the level 1 table, just like
-in page tables. So we get 4096 / 8 == 512 pointers. Each level 2 table
-maps to 64 GiB of memory. Similarly, level 3 table maps to 32 TiB and
-level 4 to 16 PiB.
+Changes since v5:
+	- add flag to check if mux is selected or not and conditionally
+	 do deselect.
+	Also proposed mux exclusive apis https://lkml.org/lkml/2025/3/26/955
+	However, this patchset can go as it is without exclusive apis
+	We cal always do the cleanup later.
 
-Now, __kho_preserve() can just find or allocate the table entry for the
-PFN and set its bit. Similar work has to be done when doing the xarray
-access as well, so this should have roughly the same performance. When
-doing KHO, we just need to record the base address of the table and we
-are done. This saves us from doing the expensive copying/transformation
-of data in the critical path.
+Changes since v4:
+	- do not rely on as-is idle mux state, exclusively get mux
 
-I don't see any obvious downsides compared to the current format. The
-serialized state might end up taking slightly more memory due to upper
-level tables, but it should still be much less than having two
-representations of the same information exist simultaneously.
+Changes since v3:
+	- rearranged mux deselct to do better error handling.
+	- reused mux_state for gpios as well.
+	- removed tested by on bindings
 
->
-> The next kernel then processes that list, reserves the memory ranges and
-> later, when a user requests a folio or a physical range, KHO restores
-> corresponding memory map entries.
->
-> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Co-developed-by: Changyuan Lyu <changyuanl@google.com>
-> Signed-off-by: Changyuan Lyu <changyuanl@google.com>
-[...]
-> +static void deserialize_bitmap(unsigned int order,
-> +			       struct khoser_mem_bitmap_ptr *elm)
-> +{
-> +	struct kho_mem_phys_bits *bitmap = KHOSER_LOAD_PTR(elm->bitmap);
-> +	unsigned long bit;
-> +
-> +	for_each_set_bit(bit, bitmap->preserve, PRESERVE_BITS) {
-> +		int sz = 1 << (order + PAGE_SHIFT);
-> +		phys_addr_t phys =
-> +			elm->phys_start + (bit << (order + PAGE_SHIFT));
-> +		struct page *page = phys_to_page(phys);
-> +
-> +		memblock_reserve(phys, sz);
-> +		memblock_reserved_mark_noinit(phys, sz);
+Changes since v2:
+	- udpated bindings as suggested by Rob and Krzysztof
+	- cleaned up swap_gnd_mic callback
+	- updated mux gpio to use dev_err_probe.
+	- added Tested-by and reviewed-by tags 
 
-Why waste time and memory building the reserved ranges? We already have
-all the information in the serialized bitmaps, and memblock is already
-only allocating from scratch. So we should not need this at all, and
-instead simply skip these pages in memblock_free_pages(). With the
-page-table like format I mentioned above, this should be very easy since
-you can find out whether a page is reserved or not in O(1) time.
+Changes since v1:
+	- moved to using mux-controls.
+	- fixed typo in regulator naming.
 
-> +		page->private = order;
-> +	}
-> +}
-> +
-> +static void __init kho_mem_deserialize(void)
-> +{
-> +	struct khoser_mem_chunk *chunk;
-> +	struct kho_in_node preserved_mem;
-> +	const phys_addr_t *mem;
-> +	int err;
-> +	u32 len;
-> +
-> +	err = kho_get_node(NULL, "preserved-memory", &preserved_mem);
-> +	if (err) {
-> +		pr_err("no preserved-memory node: %d\n", err);
-> +		return;
-> +	}
-> +
-> +	mem = kho_get_prop(&preserved_mem, "metadata", &len);
-> +	if (!mem || len != sizeof(*mem)) {
-> +		pr_err("failed to get preserved memory bitmaps\n");
-> +		return;
-> +	}
-> +
-> +	chunk = *mem ? phys_to_virt(*mem) : NULL;
-> +	while (chunk) {
-> +		unsigned int i;
-> +
-> +		memblock_reserve(virt_to_phys(chunk), sizeof(*chunk));
-> +
-> +		for (i = 0; i != chunk->hdr.num_elms; i++)
-> +			deserialize_bitmap(chunk->hdr.order,
-> +					   &chunk->bitmaps[i]);
-> +		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
-> +	}
-> +}
-> +
->  /* Helper functions for KHO state tree */
->  
->  struct kho_prop {
-[...]
+
+Srinivas Kandagatla (6):
+  dt-bindings: mux: add optional regulator binding to gpio mux
+  mux: gpio: add optional regulator support
+  ASoC: codecs: wcd-mbhc: cleanup swap_gnd_mic api
+  ASoC: dt-bindings: wcd93xx: add bindings for audio mux controlling hp
+  ASoC: codecs: wcd938x: add mux control support for hp audio mux
+  arm64: dts: qcom: x1e78100-t14s: Enable audio headset support
+
+ .../devicetree/bindings/mux/gpio-mux.yaml     |  4 ++
+ .../bindings/sound/qcom,wcd938x.yaml          |  6 ++
+ .../qcom/x1e78100-lenovo-thinkpad-t14s.dtsi   | 25 ++++++++
+ drivers/mux/gpio.c                            |  5 ++
+ sound/soc/codecs/Kconfig                      |  1 +
+ sound/soc/codecs/wcd-mbhc-v2.c                |  2 +-
+ sound/soc/codecs/wcd-mbhc-v2.h                |  2 +-
+ sound/soc/codecs/wcd937x.c                    |  2 +-
+ sound/soc/codecs/wcd938x.c                    | 57 +++++++++++++++----
+ sound/soc/codecs/wcd939x.c                    |  2 +-
+ 10 files changed, 90 insertions(+), 16 deletions(-)
 
 -- 
-Regards,
-Pratyush Yadav
+2.39.5
+
