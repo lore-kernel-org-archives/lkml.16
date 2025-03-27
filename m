@@ -1,165 +1,124 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB4927442;
-	Thu, 27 Mar 2025 01:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452F1F9FE
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 01:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743040380; cv=none; b=ASrIsO/X0VlMaUfMwohnW//X9zw/CUyZq7R6ZPHhGqNVQZ410z7WceupAhcDDf7k5ZaG3mSfrhtiyxUfo6hu18a10UrIGsk2dhz4raXjLpTaKCSlGFS7zQmPm6rvM5KtvJLo7ooJLzz8VkWhWJTUoKrM6xE2fwtfgmjP2i1Lj+8=
+	t=1743040559; cv=none; b=RP/MwftCrWgLDf9pvLFQdwRVPLHZCyKqzz6ciWAx2kmOsWvBr3L4B18lxV4F8N+6y0Riv0dn5CLoR+q3slYaT2cYZMAVjXomDtqGe1nje5bTdYMS7SfilkRR6xwdBXCa77ZbpE7UM8pEM6FilftgMAbX4jEgFSfGejdrfT6CtfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743040380; c=relaxed/simple;
-	bh=zBkAjJYQcEjMZXrG4b9cIHSfPiz7R+bfxV7ouadcOVg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GlJKLoQUhT6T1Vo2cmna5vlQwIJlcgwkLd5cH82qBjhALFlAtvpge8IA8bTIiz3r0nPPIFUkeWywKuL6G40BZDr6dALqTxff8OXAT44S/eSgThy/MlXSlkE+Fo6KQj+FWL4aNhUA4VdcR2wf6/Qn8H5ainLpFYZZj4phgUP1O74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Glw8C/qY; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743040559; c=relaxed/simple;
+	bh=a68lz9JcQSBavQyduKhLRKpiNClg6xfa4+1OZ8ioJ9g=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=PPfCq211ZZulxPHSLcUjffEIRfrKJdUEhAi1jD5r8zifuBr8Fzs23YX/RABRd5+CNK+qhTdt5np6lCvTq9ejhQtfqYDYNWkPhNGnwV4RBaAZhBfatYSasBG8w8qitaaAqLY9pr+ap+sq48jxiruIpu57CRObT7iY7XwsZTXGPN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ge2tIvO5; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Glw8C/qY"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52QJYcer025368;
-	Thu, 27 Mar 2025 01:52:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Tk4288G6sX/3FaXUDW85OcAcHNu+8pg++zMQR478mPQ=; b=Glw8C/qYdz+Ga6iq
-	fBSm2wnLXHCFzMkyvUuakjFkNE07xgieVajAIVzrxaKEfUXFcBQlbf1/GrHR4d+l
-	7OzdPPixeyojQwY4L1LP0VSF+HCQeriC16rwkM9LpheCeu3E6MGjRXnTT+NXywbr
-	yGJ69sDMovWDBsoJbxwm9+IocadUZ24xY8otCBCunCfyWjEr+BrOHf+WOUUg+kcK
-	+GZaH0M+4hlPVAU1TPIw7oCWShmfpvhJx74pybJvd0M+1LpbjI+IoxuG64A6fG8j
-	7aHbwdsA9Vrzu2EDu7OKctd/gkedTG1pA45XCSuHoaBm/Eoqq6tkxPW+jt0XLjFC
-	qgoSVg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45mffcjbw8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 01:52:40 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52R1qd6T017730
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 01:52:39 GMT
-Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 26 Mar
- 2025 18:52:37 -0700
-Message-ID: <85c7729a-c410-43c6-9819-bd7ce415f406@quicinc.com>
-Date: Thu, 27 Mar 2025 09:52:33 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ge2tIvO5"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff6af1e264so1163663a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 18:55:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743040557; x=1743645357; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nL2Dl7aHbf0dGqs5JcynZqdOq7r3zC+FjBGKQXAT1Og=;
+        b=ge2tIvO55BIx7hvaGgWH56TAqzpoKt1asxkYalAW0ZAcl9sjJUD3Rl4Sn228ryiNbj
+         1FZExmMZfZeMgZSreNC9TPErJqq4dPLNH9wyyPmMpJkbMl2aXpeil12r8FWy20N5+35E
+         FPotpk4N1suroBOtZuIHHNX29CCnV/pbJ/5qVOkLNuBq7HNYq3Dyr9VVoREND/irn3rC
+         mPzX13gMQGpjKuOfhrDQW3ic+OJ15fyVdWNH5SzM0F4b+YmwJITQOIu5EsUvP90abaZx
+         JuRegUKYqeAj8hGf2s6x4ZTPYm3j1pD40+f3zEpvZzfnzB1mmamMTYzvwbcJG1SQLW3K
+         9QtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743040557; x=1743645357;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nL2Dl7aHbf0dGqs5JcynZqdOq7r3zC+FjBGKQXAT1Og=;
+        b=oBeiRca1EJgZbeN310b1rQnS1dBiUlikhVyrrXKQ2aqNEUbcNXoF8o1fUEovYGaczE
+         jeYEeOKCC1Ned80XyKCW//WdVdn3bQ4CQyt18Ljsl7EbJZo+tFYGicOfKmVQarU/uZgr
+         0EOKqHolNxUs0sD5vrC4j5uuu5SWecx1ijC7W0T74QPEyiv/kpfm+UV64H0v8vAnyTsL
+         d9NJuOT4OrXnP87GlvCAd1+eO9habIki4uCh8VnMCyS+t2+22qxsq6ZNK/bKs29U+gmu
+         WaHJym7QA9CZe2VzIJXOqsstseJc2qhdNqIAEgEH7HC4U2znUKJxyxhf7n9HLm1OFAsM
+         gjEA==
+X-Forwarded-Encrypted: i=1; AJvYcCUG5f4o5XUTnXbi61TK47T9PMSLME6gjEt6U4KM9eYZCdH+QwRjhh9tB5ynbrhjDwcVpmxUCPc8Dzpmmkk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBMzbC238t892m2rdLx60P/R5G6nTKADdCnzUsVS6uTUm0v3JU
+	JUmhpbnx4bGn/SgrveLeJtRYI2xFF5uCa7df8Ri9XuVkA+EN6pTYHqHRN1pxCzhWY5VG2HiHcN9
+	3gg==
+X-Google-Smtp-Source: AGHT+IEfwvWga4q7lvhLPDENhsAb7G3rkv8tEZdsZcr/UUcxc0nnbiUdoNTNjhEeozTWOF/6PLRrloEjC8g=
+X-Received: from pjyr7.prod.google.com ([2002:a17:90a:e187:b0:2ef:82c0:cb8d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:fc48:b0:301:6343:1626
+ with SMTP id 98e67ed59e1d1-303a7c5b67fmr2721967a91.1.1743040557543; Wed, 26
+ Mar 2025 18:55:57 -0700 (PDT)
+Date: Wed, 26 Mar 2025 18:55:55 -0700
+In-Reply-To: <CAHBxVyFLeZFwEnJYa-oUbAKVimdVsr=Ct76Jf=TyWeoAkHe8yQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH ath-next v2 0/6] wifi: ath11k: bring hibernation support
- back
-To: Julian Wollrath <jwollrath@web.de>
-CC: Johannes Berg <johannes@sipsolutions.net>,
-        Jeff Johnson
-	<jjohnson@kernel.org>, <linux-wireless@vger.kernel.org>,
-        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Muhammad Usama
- Anjum <usama.anjum@collabora.com>
-References: <20250326-ath11k-bring-hibernation-back-v2-0-87fdc2d6428f@quicinc.com>
- <20250326184754.0ca1e54d@mayene>
-Content-Language: en-US
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-In-Reply-To: <20250326184754.0ca1e54d@mayene>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=CdgI5Krl c=1 sm=1 tr=0 ts=67e4af68 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=-YL0jcYk9_dqnk2SXhsA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: Z6B_ToHK48bL7IwmN5IX4aquukU3rAW3
-X-Proofpoint-ORIG-GUID: Z6B_ToHK48bL7IwmN5IX4aquukU3rAW3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 lowpriorityscore=0 suspectscore=0 phishscore=0
- clxscore=1015 bulkscore=0 impostorscore=0 adultscore=0 priorityscore=1501
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503270011
+Mime-Version: 1.0
+References: <20250317-kvm_exit_fix-v1-1-aa5240c5dbd2@rivosinc.com>
+ <Z9hI5vEHngcKvvRa@google.com> <CAHBxVyFLeZFwEnJYa-oUbAKVimdVsr=Ct76Jf=TyWeoAkHe8yQ@mail.gmail.com>
+Message-ID: <Z-SwK1xO_S4phG2o@google.com>
+Subject: Re: [PATCH] RISC-V: KVM: Teardown riscv specific bits after kvm_exit
+From: Sean Christopherson <seanjc@google.com>
+To: Atish Kumar Patra <atishp@rivosinc.com>
+Cc: Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>, 
+	Anup Patel <apatel@ventanamicro.com>, kvm@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Mar 20, 2025, Atish Kumar Patra wrote:
+> On Mon, Mar 17, 2025 at 9:08=E2=80=AFAM Sean Christopherson <seanjc@googl=
+e.com> wrote:
+> > On Mon, Mar 17, 2025, Atish Patra wrote:
+> > >  arch/riscv/kvm/main.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/arch/riscv/kvm/main.c b/arch/riscv/kvm/main.c
+> > > index 1fa8be5ee509..4b24705dc63a 100644
+> > > --- a/arch/riscv/kvm/main.c
+> > > +++ b/arch/riscv/kvm/main.c
+> > > @@ -172,8 +172,8 @@ module_init(riscv_kvm_init);
+> > >
+> > >  static void __exit riscv_kvm_exit(void)
+> > >  {
+> > > -     kvm_riscv_teardown();
+> > > -
+> > >       kvm_exit();
+> > > +
+> > > +     kvm_riscv_teardown();
+> >
+> > I wonder if there's a way we can guard against kvm_init()/kvm_exit() be=
+ing called
+> > too early/late.  x86 had similar bugs for a very long time, e.g. see co=
+mmit
+> > e32b120071ea ("KVM: VMX: Do _all_ initialization before exposing /dev/k=
+vm to userspace").
+> >
+> > E.g. maybe we do something like create+destroy a VM at the end of kvm_i=
+nit() and
+> > the beginning of kvm_exit()?  Not sure if that would work for kvm_exit(=
+), but it
+> > should definitely be fine for kvm_init().
+> >
+> Yes. That would be super useful. I am not sure about the exact
+> mechanism to achieve that though.
 
+Me either :-)
 
-On 3/27/2025 1:48 AM, Julian Wollrath wrote:
-> Hi,
-> 
-> Am Mi, 26 Mär 2025 09:33:04 +0800
-> schrieb Baochen Qiang <quic_bqiang@quicinc.com>:
-> 
->> To handle the Lenovo unexpected wakeup issue [1], previously we revert
->> commit 166a490f59ac ("wifi: ath11k: support hibernation"). However we
->> need to bring it back, of course with additional changes such that
->> Lenovo machines would not break.
->>
->> For suspend (S3), as those machines work well in WoWLAN mode, the
->> thought here is that we put WLAN target into WoWLAN mode on those
->> machines while into non-WoWLAN mode (which is done in the reverted
->> commit) on other machines. This requires us to identify Lenovo
->> machines from others. For that purpose, read machine info from DMI
->> interface, match it against all known affected machines. If there is
->> a match, choose WoWLAN suspend mode, else choose non-WoWLAN mode.
->> This is done in patches [1 - 4/6]
->>
->> For hibernation (S4), non-WoWLAN mode is chosen for all machines. The
->> unexpected wakeup issue should not happen in this mode, since WLAN
->> target power is cut off. To know if the system is going to suspend or
->> to hibernate, register a notifier such that kernel can notify us of
->> such infomation. This is done in patch [5/6]
-> 
-> with this, I just want to confirm, everything now works as expected
-> after hibernation.
+> Do you just test code guarded within a new config that just
+> creates/destroys a dummy VM ?
 
-Thank you for testing.
+That's only idea I could come up with too, but I don't particulary like it.
 
-> 
-> 
-> Best regards,
-> Julian
-> 
->>
->> The last patch bring the reverted "wifi: ath11k: restore country code
->> during resume" commit back.
->>
->> [1] https://bugzilla.kernel.org/show_bug.cgi?id=219196
->>
->> Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
->> ---
->> Changes in v2:
->> - fix compile warnings
->> - support hibernation on Lenovo machines listed in quirk table
->> - Link to v1:
->> https://lore.kernel.org/linux-wireless/20250320023003.65028-1-quic_bqiang@quicinc.com/
->>
->> ---
->> Baochen Qiang (6):
->>       wifi: ath11k: determine PM policy based on machine model
->>       wifi: ath11k: introduce ath11k_core_continue_suspend_resume()
->>       wifi: ath11k: refactor ath11k_core_suspend/_resume()
->>       wifi: ath11k: support non-WoWLAN mode suspend as well
->>       wifi: ath11l: choose default PM policy for hibernation
->>       Reapply "wifi: ath11k: restore country code during resume"
->>
->>  drivers/net/wireless/ath/ath11k/ahb.c  |   4 +-
->>  drivers/net/wireless/ath/ath11k/core.c | 294
->> ++++++++++++++++++++++++++++++---
->> drivers/net/wireless/ath/ath11k/core.h |  16 ++
->> drivers/net/wireless/ath/ath11k/hif.h  |  14 +-
->> drivers/net/wireless/ath/ath11k/mhi.c  |  14 +-
->> drivers/net/wireless/ath/ath11k/mhi.h  |   5 +-
->> drivers/net/wireless/ath/ath11k/pci.c  |  45 ++++-
->> drivers/net/wireless/ath/ath11k/qmi.c  |   4 +- 8 files changed, 350
->> insertions(+), 46 deletions(-) ---
->> base-commit: b6f473c96421b8b451a8df8ccb620bcd71d4b3f4
->> change-id: 20250324-ath11k-bring-hibernation-back-e11ad8e82adf
->>
->> Best regards,
-> 
-> 
-> 
+> May be kunit test for KVM fits here in some way ?
 
+I don't think a kunit test would be a good fit, there are likely too many
+dependencies, and I'm pretty sure we'd still need to hack KVM.
