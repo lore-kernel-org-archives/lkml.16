@@ -1,204 +1,173 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2047.outbound.protection.outlook.com [40.107.21.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5BE21A45E
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 18:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743099664; cv=none; b=Ex86asBlmktjIWeCqF0nYnA9H13M6hQA/sDyus2uorz/vNBQ3CJOHX8ob+IovO/sXlzmSBGlLo6o2Oa8VhoLOV9hkr9Ovga5XySzlZUu/Jmwb3D02tUVsOWHOpuf4S4ji9NgrY5l1d4zF19QVLvK3wSB1pUScxd4CqFb54shBxA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743099664; c=relaxed/simple;
-	bh=aBLV3Sn7z0xp0njCPyD7ONfmrZSIzPT22+6XnwAJ5II=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hbIxuvAd38dHERJgeAMigqOZywhr1xhci2y+Xnszg5BH9VQVXEFF4SPWdotKB/gayWxnVhz31YEj9iLV2xUDtZ/WMSvbbzqEJWpZDPuWzJoLQe7DCza9W9dqR8h8TiQ/Sv+/tWpWSIQjV//MDNHs0kn8HvQUxQ/PqBPzojy2EUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eXCnCWX+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VjFdkMwF; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eXCnCWX+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=VjFdkMwF; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A383215F56;
+	Thu, 27 Mar 2025 18:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743099816; cv=fail; b=sNTAyWV1FDlzHfm/sfCgsp59hGhfEbCNB0Ke2inMmyReu5Jv/ImPqk5uslVAa5BZxlizQjm+1d6/GsLVP58KrEynVsfXKWirztV+I/L0nD/nzdusrrX6TrodE+E673hDhhCJ7e4itg2VegMV2yAxmNYPhfXgOxHsL9auzx/ZtCc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743099816; c=relaxed/simple;
+	bh=zT8d1FyoX1vmJnm2bVWAyFMtN+Pi2MTWbpqK7HDN43Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=c2I4rmXD81EUH9L0ApOqtqLbhwr4XU5zsQo00+0wtIXSx7eyjjqKk9iG1gBXWirkKljyBKBPcsJ3anVAl6pzKXVu+hCY655SBMiODHMrqGU+9III45Y1aBunt9/G4xvwOvqp/ZaQZAVE7w10ALjB1qbh0zJstIgeBgL8KQHka/0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=OuZtzbtB; arc=fail smtp.client-ip=40.107.21.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eXCnCWX+";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VjFdkMwF";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eXCnCWX+";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="VjFdkMwF"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id F33D62119B;
-	Thu, 27 Mar 2025 18:20:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743099659; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U1tx1jdQvYVz6iQ3XKAZ6sA3Iy0kGapu7x+JoDHx8HE=;
-	b=eXCnCWX+M5poAwOACk1QBrI5K51h3oJWu/+TTMg3aeHXutxYPLRiM0MJS/2lM25cx3dG1Q
-	IPlkr8s9HYaFY5I9s4KmUe0TC1Mm4x9clryxI4qmvViPPLdlhMjageOFzXPG5XQK5RtX8Y
-	o7iv2UHek/aTvXMy9pJqkYWDlLhjF9I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743099659;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U1tx1jdQvYVz6iQ3XKAZ6sA3Iy0kGapu7x+JoDHx8HE=;
-	b=VjFdkMwFGBOw+g6GTSrdjWCoWA4CQFBPJmrHFwkofLd9HU185GAu3kB2d8F8pNftEWV2Py
-	fPBOxzEf3aQuN8Cg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=eXCnCWX+;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=VjFdkMwF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743099659; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U1tx1jdQvYVz6iQ3XKAZ6sA3Iy0kGapu7x+JoDHx8HE=;
-	b=eXCnCWX+M5poAwOACk1QBrI5K51h3oJWu/+TTMg3aeHXutxYPLRiM0MJS/2lM25cx3dG1Q
-	IPlkr8s9HYaFY5I9s4KmUe0TC1Mm4x9clryxI4qmvViPPLdlhMjageOFzXPG5XQK5RtX8Y
-	o7iv2UHek/aTvXMy9pJqkYWDlLhjF9I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743099659;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U1tx1jdQvYVz6iQ3XKAZ6sA3Iy0kGapu7x+JoDHx8HE=;
-	b=VjFdkMwFGBOw+g6GTSrdjWCoWA4CQFBPJmrHFwkofLd9HU185GAu3kB2d8F8pNftEWV2Py
-	fPBOxzEf3aQuN8Cg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E16D3139D4;
-	Thu, 27 Mar 2025 18:20:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id /QUDNwqX5WfDKgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 27 Mar 2025 18:20:58 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 89133A082A; Thu, 27 Mar 2025 19:20:58 +0100 (CET)
-Date: Thu, 27 Mar 2025 19:20:58 +0100
-From: Jan Kara <jack@suse.cz>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	mcgrof@kernel.org, jack@suse.cz, hch@infradead.org, david@fromorbit.com, 
-	rafael@kernel.org, djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
-Subject: Re: [RFC PATCH 4/4] vfs: add filesystem freeze/thaw callbacks for
- power management
-Message-ID: <zcxwcu2ty5fmkqt7dnpwdmohkp6pi7hfhltlxgpnx2xhsutgoc@gkixsx4map3o>
-References: <20250327140613.25178-1-James.Bottomley@HansenPartnership.com>
- <20250327140613.25178-5-James.Bottomley@HansenPartnership.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="OuZtzbtB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JGbr5reKxP4qjeQtHmanV0bcWqkDwuD1sKcst8F3RS7EZAEy6yaV8CRJQ6VT94V13NfRGp5Uqmvbn5xnWU2UVW4ip5G2VBfu9O4gm89CzDwB2iMq1Ffaude8jcs5ZwarrKGY3vrLzlu1zKj91NIglqwwZtU2HkkEAK/nfVff7FUNCnVhVAgfStkgxfOsC7+8fXww/HSEaHnbKXXLeR3lpShpR8iz60au020W1lb0IkoEUHQICG8VDpZjGkG1ZyWPauV4hc0JmA6oiYhMlzd1q60odvcvYXJTsV6G7Wd9hutRxiqKHMQNIJW0jLLT/mzbfeBoUxiEoUAS2o30VrvzTg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nfAgDdDgQ92Vfc42diWxZchJVWDcSETjOVXCrOVurMY=;
+ b=wPkBQGotoDWYFZY7n6ltOJqDmNAGM4XHjwoXwPzL27YWjfF/TfKKRg3Rg3gIKu49KK1563f5eF0irkdnVeKwAT98sEespHdri/ETubI0GGjrFpk9IMWd96vvU2mdb1H+3B2O6hzNAd+SXtjdKKJ+TrxtK9OFpCqgOJ8213O7UzHCQp6p5kDWuxQvnHLsLuelDNdHvv1QenLeiWhJZircSWmxwFgdCMBxa52LUSN7KKFW05gUIwB4E8AuXHoh7+b2quqe6QRIhmye5T7v/BXJvoFO6z5TnMmCe+p5Q+g4DPFBSMOze0guRowsjcomvsaFN0WSKysOy4fJf5g6YLOnbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nfAgDdDgQ92Vfc42diWxZchJVWDcSETjOVXCrOVurMY=;
+ b=OuZtzbtBGKB0bGDpgtdPtvCdOW4b5mIxgyNX/m8Pag56/AiuNGbFE5jNxOhz2anfysl2LZXOmnRcK8Uplw60I04alXZZ8yHo7x7AShHiUVMxv3cd6db58/A+pBHAn47ZH71kNKpphTnzV/3OcP/IacQ16xhqtw0QyPrUVuYcss4NNPJzSXIh79PhH6N/iBuWxN1AQ70kxw82N95JcK9u2wXv1s4O7SSetoK3Yy55m0iQ2Tev1vhPufWN+KIe6pDslU2E+S/IZcSDI9KnZ4nZf5PA1yY34zxd8R6dUbnDW0jJGdiudTEU8SrE2K7dIgE9c6GsthgwA6Smf9iP/p+gvw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS4PR04MB9692.eurprd04.prod.outlook.com (2603:10a6:20b:4fe::20)
+ by DB8PR04MB7131.eurprd04.prod.outlook.com (2603:10a6:10:fd::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
+ 2025 18:23:30 +0000
+Received: from AS4PR04MB9692.eurprd04.prod.outlook.com
+ ([fe80::a2bf:4199:6415:f299]) by AS4PR04MB9692.eurprd04.prod.outlook.com
+ ([fe80::a2bf:4199:6415:f299%4]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
+ 18:23:30 +0000
+From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+To: marcel@holtmann.org,
+	luiz.dentz@gmail.com
+Cc: linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	amitkumar.karwar@nxp.com,
+	neeraj.sanjaykale@nxp.com,
+	sherry.sun@nxp.com
+Subject: [PATCH v1 1/2] Bluetooth: btnxpuart: Add msleep() after changing the baudrate
+Date: Thu, 27 Mar 2025 23:55:22 +0530
+Message-Id: <20250327182523.524534-1-neeraj.sanjaykale@nxp.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0033.apcprd02.prod.outlook.com
+ (2603:1096:3:18::21) To AS4PR04MB9692.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4fe::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327140613.25178-5-James.Bottomley@HansenPartnership.com>
-X-Rspamd-Queue-Id: F33D62119B
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,suse.cz,infradead.org,fromorbit.com,redhat.com,gmail.com];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:dkim,hansenpartnership.com:email,suse.com:email]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -2.51
-X-Spam-Flag: NO
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS4PR04MB9692:EE_|DB8PR04MB7131:EE_
+X-MS-Office365-Filtering-Correlation-Id: 82c6d0c1-26b5-4bb2-ed98-08dd6d5c79b0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?1AwFdcYwJQgdlaGZi24qAH67jqgNyHM2+0xJ0KZhsZuE448A7cWYYFp5EDmc?=
+ =?us-ascii?Q?Nupil2NuBW2pAgIPSNk+BL4J0A9jTAJyUF3UCHbXrxU6usk2H+fNqUadgc98?=
+ =?us-ascii?Q?X5NzfUyvGHHDLtpvpZrlNJGyGKzrK0FKrezGroUOrCKWoaXQnDJ0YzBJXliU?=
+ =?us-ascii?Q?2i2vU3zlgS88DAKckKzLNBkYTGhMB+y2Q8F4qZ0DZCDPTCMOypiaKBNna8e/?=
+ =?us-ascii?Q?AtK7ZoHXq+1bbtU6IieuPruTJXxeM4LLEhMk2KJGLtX0tH6g+3Hmxzie+mbs?=
+ =?us-ascii?Q?G9jyHBpSU6ftiM8Qi8fHkhVaXpJ8Zu2PS0sZRUYGWfTV93dpUzDX6dwaasXU?=
+ =?us-ascii?Q?srfw1mnHVTLouClya2fZg1v7F3e5BVbigLKltWSK8fxFl+B/daxl0n6mjpw9?=
+ =?us-ascii?Q?gxMzhiftCb2Ff9wD/V/JOBdhSRijxOXhNU79VmKe6+8e1jquFPEp6c6KY4ew?=
+ =?us-ascii?Q?aLOPOenZF9mIZKTd7UuaO/1jp73Ky8p8Bemuo/tHJtPrAEnnpmDqd9wV89uM?=
+ =?us-ascii?Q?PUKLsT/2Hn3Fh4OAuhcfCBpqNvo2PvLxMaMn2F83yy107LGrLPGQoY6Ln0ts?=
+ =?us-ascii?Q?jerm715JSc8OY/PfAYpzE8gUy8qNjeqK1EX1pkFsuaOc+O5laPlSZBEt6EY2?=
+ =?us-ascii?Q?7mOEwk0AtF57GjqPLepnZA4ko2HArHtZz6SEIbbiKJSDzqP35cvVGv5s5Iwh?=
+ =?us-ascii?Q?lOaB/4q+SXIkKG+L+lRRNKTsXNFfuwodINZkCRK7zIocw9XObamSoAvkS6qp?=
+ =?us-ascii?Q?dF64iM6j/sNO/unBrWgfSFXmi0IbwjxuTbtqz0AcD9Yy5kxsv6dNCo6KMplc?=
+ =?us-ascii?Q?m7ZIkhRd30LaLUQcZq/6SQrjnxR/9rEBPeoYexABYMZQbYru4m0G1gWW29V8?=
+ =?us-ascii?Q?crwcCfKHZ8UthYaeK/+3QEBbTTTSZc+q58EMyn9Gts4iufEtGZN4EqrKgC4O?=
+ =?us-ascii?Q?43IqMo7g3taQFfbUa8B8KGwIkHaWzzs6zeb65tzZVoPk/cqIyd8ybtCzkcqj?=
+ =?us-ascii?Q?j3PLKJUM1wNHm+JRjISoV0S6W7EfFtNMFDu8DTJYsjRv/4O23iLNfIUYVgyp?=
+ =?us-ascii?Q?rRVFMj0ImaWOG1cYUXTVkGOxF3njtXgLqzODj4lOoqR16pccu3NZYGjHH7bp?=
+ =?us-ascii?Q?AmHVOyYwaPt9y/YzYAystSCrV3mmfr1bOs8dBSwnYjt8aDoKMzHaWoVC+ALj?=
+ =?us-ascii?Q?CqnW4Po040o9NoOLFwSQTpozX1l5yPmIea0I1F/EpN8E/HTsUMUhI3eu221o?=
+ =?us-ascii?Q?26c6w33moNwq1ua5uNDkRmztUviaJB8XHgqmB+oscBHtBIQ/nPbeBX1CJj5U?=
+ =?us-ascii?Q?t12csIaT+O/uCTW+2ZoyD9hq27ifdQ39oJKU1ye5QIx/RD5qStVRFnVD4rOn?=
+ =?us-ascii?Q?o2ZFcdLj4fFxls/IQq3iLeQ1hukasjjBIJ+4xQGOaH+XT/c+ukisxF9Oah1B?=
+ =?us-ascii?Q?Tp5PZWz50qz4iZztsgFm2V2rPZLrqZQyQjo017V/s7hMQ0yP0yP/WlaJnII3?=
+ =?us-ascii?Q?eUq/ZHIH1ST02cU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9692.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?oCYM4RQM++tAfi/htUBOjVakEiJFo1KjKBIPcENbT99pgMSTE4nlHwfV/YN7?=
+ =?us-ascii?Q?F1tqB3s6UNp09QOx1AE9m/dG12GLa2vbhl86LaQwqK17E11gCEHnXMQL4xWh?=
+ =?us-ascii?Q?L89rV3IwEKxNaNCmYKp95YvP4svk/Mz1ZwfP1Lr2JjrLulP/zCuMJmWMrUpG?=
+ =?us-ascii?Q?vFBy3fu19dVkCbzu1gXXxsKWJm2iJR1oXXqsbMCfc2V8LDrSG7sJKXpdZwr1?=
+ =?us-ascii?Q?Tp0whk4UL4en8AQK97HZ4ezJCLslukBAVRQMy7lM5U+Bydsry7qBtavhLWkl?=
+ =?us-ascii?Q?XSMRrTvIvqA75p8/xE5X1TO4qR1QQA19P/At+ItebUcq0ZpgUjjnyqeHiPN2?=
+ =?us-ascii?Q?RM28di2AtMyJm8QkrU44pPu79i8XW+cSAPY90zrebb7LOzvC+0bnYXnq1q/D?=
+ =?us-ascii?Q?DG4L0gvOvGjQOv6I5g580Ot+zndO5amd0YWXgl7T+SVCvcOr6nHyhbLz1GpR?=
+ =?us-ascii?Q?r+GVTy8H7CObXLNa2yijAJoY+kkZhwD20HjTRxwywen+fIFe6i+u8/EOMXKh?=
+ =?us-ascii?Q?FGQzgBtq1d4nYmgXWF/aJIQtylY3wlK9CwYa/xHqdillyUwEb7ikQHV1X7xT?=
+ =?us-ascii?Q?M0o62uP/u/z0Rqbg/MZC4SqNDCdnwLLF/c9mh9/yVo4/gtUL04hXuRWvr5Ae?=
+ =?us-ascii?Q?+FDiL/veC2PNfSJLW9KmQYQmINjwLiaw/dCs7KMAEG0jdyph4d89xbbzlKRN?=
+ =?us-ascii?Q?VPKX1C3/OFD2gxUqwHS4DetpSip79UugZu941A5tE54Q9vI+k+PoBfgQw9Xw?=
+ =?us-ascii?Q?O/imtQnAzpABiIsXZvLJySvSyKx2km8Q5cgpcNhkcm56Oow4FOGBqyVmnWso?=
+ =?us-ascii?Q?ApMobUgl0Pjm7Dt8oc1kg6n2pXaiBfu+V03ts4vT7xlFXr0sAvnLriL4+U3B?=
+ =?us-ascii?Q?b/8Gh5LvmslLBSieNrt5LF4oCZa/k2WnwlJXEBwSlGEbOPmqOvqpz8kd+j6q?=
+ =?us-ascii?Q?LRw2MCPGfMpXFA9xUxt36uPva2nUpRbXuefAzcLI5HBjzbtUyygufvuQTeYu?=
+ =?us-ascii?Q?mlVlxJJGG/WFKsGHhhRXQ2ie5PkS5w/ySshoM0E/jMCCDzDCXjE9blAseorB?=
+ =?us-ascii?Q?0FG58ACcukuswy379TE2s3XMvIjfzGwZHxcOkvcrZCom23sYe2XYocOW6J2E?=
+ =?us-ascii?Q?/3GYbjK9tmo/l2rVHi2asXELYWzY1CWZBs7OMSwVd5N758FsWf1kjClrBPNk?=
+ =?us-ascii?Q?bLmL+R8ZrtnoPo8BzFGF6otyRbm6k4D1yMorUEEQwWRQHm96MCs15GdGqZov?=
+ =?us-ascii?Q?Js/jV/Pl45fLmau5O+pvKkmnx9nHFVEswXL9+7l/WXaOh88gqx4GmRAgFh31?=
+ =?us-ascii?Q?KPE4m8+HF1xYBiyNwo7T5K9+ojdyBnywErpNJba4J1CLW+rMySujW9EDqL3q?=
+ =?us-ascii?Q?gLbh97iTpNpB7M3RjH7dj0oVDscSB7fXxhz/6y1+pu2Hc1SoV5C9jWSyyNc3?=
+ =?us-ascii?Q?yhRk2j7qnCmrlGYxIvhxBco9dmehzddOzJgT7D/DgWLFniLTrlWQoSKvQweG?=
+ =?us-ascii?Q?bCvx9ikZFk4Epg1cYicir2BJ5CqU3DYgkm/q1EjNSD2teinWZEy1sA+hviZ1?=
+ =?us-ascii?Q?yzXRR/gHWzeG3VEwFyYSoIDDO2EUwRb8ZPKfWj3J0Y/6rBBRX1ugR9lvIBn/?=
+ =?us-ascii?Q?sA=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82c6d0c1-26b5-4bb2-ed98-08dd6d5c79b0
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9692.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 18:23:30.6154
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8Cy7EhfAso3iQI2k9DUJMHz4F0L54+5ovwi/9q4qM1mvew3SL/GD4MuuOBPZ4V6OX61/WPYp8WEfP0ZMcF04a6FWOoORu75OPPKLWcQ0i58=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7131
 
-On Thu 27-03-25 10:06:13, James Bottomley wrote:
-> Introduce a freeze function, which iterates superblocks in reverse
-> order freezing filesystems.  The indicator a filesystem is freezable
-> is either possessing a s_bdev or a freeze_super method.  So this can
-> be used in efivarfs, whether the freeze is for hibernate is also
-> passed in via the new FREEZE_FOR_HIBERNATE flag.
-> 
-> Thawing is done opposite to freezing (so superblock traversal in
-> regular order) and the whole thing is plumbed into power management.
-> The original ksys_sync() is preserved so the whole freezing step is
-> optional (if it fails we're no worse off than we are today) so it
-> doesn't inhibit suspend/hibernate if there's a failure.
-> 
-> Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+This adds a 100 millisec sleep after change baudrate vendor command.
 
-OK, I've seen you are setting the new FREEZE_FOR_HIBERNATE flag but I didn't
-find anything using that flag. What do you plan to use it for? Does you
-efivars usecase need it? I find passing down this detail about the caller
-down to all filesystems a bit awkward. Isn't it possible to extract the
-information "hibernate is ongoing" from PM subsystem?
+It is observed that when the baudrate change command changes the
+baudrate from 3000000 to 115200, any immediate HCI command returns an
+error -22 (Device Busy).
 
-> +/*
-> + * Kernel freezing and thawing is only done in the power management
-> + * subsystem and is thus single threaded (so we don't have to worry
-> + * here about multiple calls to filesystems_freeze/thaw().
-> + */
-> +
-> +static int freeze_flags;
+Adding a small delay after the change baudrate command complete event is
+received helps fix the issue.
 
-Frankly, the global variable to propagate flags is pretty ugly... If we
-really have to propagate some context into the iterator callback, rather do
-it explicitly like iterate_supers() does it.
+Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+---
+ drivers/bluetooth/btnxpuart.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> +static void filesystems_freeze_callback(struct super_block *sb)
-> +{
-> +	/* errors don't fail suspend so ignore them */
-> +	if (sb->s_op->freeze_super)
-> +		sb->s_op->freeze_super(sb, FREEZE_MAY_NEST
-> +				       | FREEZE_HOLDER_KERNEL
-> +				       | freeze_flags);
-> +	else if (sb->s_bdev)
-> +		freeze_super(sb, FREEZE_MAY_NEST | FREEZE_HOLDER_KERNEL
-> +			     | freeze_flags);
-
-Style nit - braces around above blocks would be IMHO appropriate.
-
-> +	else {
-> +		pr_info("Ignoring filesystem %s\n", sb->s_type->name);
-> +		return;
-> +	}
-> +
-> +	pr_info("frozen %s, now syncing block ...", sb->s_type->name);
-> +	sync_blockdev(sb->s_bdev);
-> +	pr_info("done.");
-> +}
-
-Generally this callback is not safe because it can race with filesystem
-unmount and calling ->freeze_super() after the filesystem's ->put_super()
-was called may have all sorts of interesting effects (freeze_super() itself
-will just bail with a warning, which is better but not great either).
-
-The cleanest way I see how to make the iteration safe is to grab active sb
-reference (like grab_super() does it) for the duration of freeze_super()
-calls. Another possibility would be to grab sb->s_umount rwsem exclusively
-as Luis does it in his series but that requires a bit of locking surgery
-and ->freeze_super() handlers make this particularly nasty these days so I
-think active sb reference is going to be nicer these days.
-
-								Honza
+diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
+index 5091dea762a0..e26fabe8fb3d 100644
+--- a/drivers/bluetooth/btnxpuart.c
++++ b/drivers/bluetooth/btnxpuart.c
+@@ -1238,6 +1238,8 @@ static int nxp_set_baudrate_cmd(struct hci_dev *hdev, void *data)
+ 		if (*status == 0) {
+ 			serdev_device_set_baudrate(nxpdev->serdev, nxpdev->new_baudrate);
+ 			nxpdev->current_baudrate = nxpdev->new_baudrate;
++			/* Allow sufficiant time for chip to switch to new baudrate */
++			sleep(100);
+ 		}
+ 		bt_dev_dbg(hdev, "Set baudrate response: status=%d, baudrate=%d",
+ 			   *status, nxpdev->new_baudrate);
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.25.1
+
