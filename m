@@ -1,135 +1,191 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8438225D7;
-	Thu, 27 Mar 2025 07:16:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99DFC1CDA2D;
+	Thu, 27 Mar 2025 07:16:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743059801; cv=none; b=LrdNavx8RfSkjBt1i8xUuwEp5BT8ttNqPxWYFY/5qgz8mX4eYpBjy3KSkUxC4yU65xKAClHLPCN1yZ2+ohbjimPYXkUqnKbuaVSsM66gvA+h0JxdB3UrAuY168U2Ol/ejY0t2QKytiQ52GsgojXef4YtRrkS6WL1xQaKbXE+IK0=
+	t=1743059802; cv=none; b=SA0CshNoqBgHFBJIs5fQZG8iz8fzxu7PTFuxAO9+Z63lnpbwzxpmH4ykjKyVVv9xrXqSiipVQR/vTZeCabxcL+ZReXccqAucs0fR2KhUfpF4jcNxigZaw9RX+oDTl20ilUw5J5U3hPmisAy4zxYusXuh9mKitbZeFvpTahsTguI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743059801; c=relaxed/simple;
-	bh=zhHvo/ZDWQ4l9fAWfTKydbGpXbrK382IHtHkv8djzso=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sHwyMXCWcPruIQ4+ajGEzjxHNdf41TsV1PRpV4nQQe1Fwez5NeKuxgf/HnMrnlqC9wCoIG/XXCBMvT5nTrZaNGaJNji0mNuRIxhKjg1LL1vDTkUo+aTNhsztwfhn7z052QrHw2qOQmm3cDCjJne/qPyqEBWQnP17iTDvV0wqW7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JMY1eFDG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743059802; c=relaxed/simple;
+	bh=6MsLFXJTO1nHRU7fxYGjWw4YNdH3bXJp7NDPTR8FanM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IDH6DQK2Eb62eQrkGCqlIcatdPIOJ7N8SOzCKgJFNeB3YuvUIPM59mdhlELFr5X3Nh2z9rttSFILZCZQu1OS2C6p0ImHTGyXlM7G4QAUzStlrc5AM+fXz4UOctYiwnL+KQlAEoa+Wqg7pzz+V2sFUVzfgcOje1mLsU7cWKk/NUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rfmlQaWl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JMY1eFDG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF28BC4CEE4;
-	Thu, 27 Mar 2025 07:16:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rfmlQaWl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE92AC4CEDD;
+	Thu, 27 Mar 2025 07:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743059800;
-	bh=zhHvo/ZDWQ4l9fAWfTKydbGpXbrK382IHtHkv8djzso=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JMY1eFDGsR6/qHesdAg+bEH36xpcXqyVhojK6xUUy/weCfVN38VQW5WoOrJgZ6SKN
-	 prjkSvgEnIRlKuQM114Vnh3NlTPa4m7V2aWqb2jN85/Ia1eNUrKMDQVwzbW87nI7CP
-	 ynEFWaIPRJH40ZJCkxA4mGjt3ZqnieM2CIxgzVmNymMFTk07asw0p+ZYE6psYibJH7
-	 kTS/nkgBoDGu34rIG87cnx6bjeF319p2l/IX/kYshTjKU6X5ITYbqtBHct1jlqNOKF
-	 FUD/YZ5HBEAtrMSnzYTMaFPznx+uKZH4VYmVJlzClusUGyPed15IKIPBgkakzjQAIW
-	 1/qzIyjGZ85Mw==
-Date: Thu, 27 Mar 2025 00:16:38 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf trace: Fix possible insufficient allocation of
- argument formats
-Message-ID: <Z-T7VohMjkNolhCi@z2>
-References: <20250326200540.1843856-1-howardchu95@gmail.com>
+	s=k20201202; t=1743059801;
+	bh=6MsLFXJTO1nHRU7fxYGjWw4YNdH3bXJp7NDPTR8FanM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=rfmlQaWlXP/aVoSXq9kgeLjNE7tRfLq0IHl/9h0PxFlaiIZ6J3yq1FMzN7FuS0v3v
+	 TBr8wJwKxrN1uA85rwpEXdytFMKbfAiLfZQmHY30vWG/+5k2yNZzReX3LcVUxOOdvt
+	 rbEGrSXoTriIViqdSIiJExP4BREY3TTpRPgEWbZ+Lm8PMe5vKWzxDM5K+eth+//smd
+	 wjKF8A3z/0xGem/0wwl9DZfoIpXx5o50RbdPRKFVY1Lo2q//m+mnAI8v4eRnwdt6BX
+	 eT0QjWJwkvwTbD6r2rC200BgzcxSNQ7s7yStryWKepIOQBdLXrDthNzK8CT3PUep3+
+	 3c9qpSlN1vPPw==
+Message-ID: <e43b1a00-b221-413b-a36a-3a65e17f800f@kernel.org>
+Date: Thu, 27 Mar 2025 08:16:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250326200540.1843856-1-howardchu95@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 5/6] arm64: dts: cix: add initial CIX P1(SKY1) dts
+ support
+To: Peter Chen <peter.chen@cixtech.com>, Marc Zyngier <maz@kernel.org>
+Cc: soc@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
+ marcin@juszkiewicz.com.pl, kajetan.puchalski@arm.com,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Fugang Duan <fugang.duan@cixtech.com>
+References: <20250324062420.360289-1-peter.chen@cixtech.com>
+ <20250324062420.360289-6-peter.chen@cixtech.com>
+ <865xjxmlgl.wl-maz@kernel.org> <Z-Nz0DU441Wwj1i4@nchen-desktop>
+ <861pukm9yd.wl-maz@kernel.org> <Z-Tz1moMNozx23k6@nchen-desktop>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <Z-Tz1moMNozx23k6@nchen-desktop>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 27/03/2025 07:44, Peter Chen wrote:
+>>>
+>>> On 25-03-25 10:52:10, Marc Zyngier wrote:
+>>>>> +     timer {
+>>>>> +             compatible = "arm,armv8-timer";
+>>>>> +             interrupt-names = "sec-phys", "phys", "virt", "hyp-phys", "hyp-virt";
+>>>>> +             interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW 0>,
+>>>>> +                          <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW 0>,
+>>>>> +                          <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW 0>,
+>>>>> +                          <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW 0>,
+>>>>> +                          <GIC_PPI 12 IRQ_TYPE_LEVEL_LOW 0>;
+>>>>> +     };
+>>>>> +};
+>>>>
+>>>> I don't think there is anything wrong here, but it is also a pretty
+>>>> useless DT. There isn't even a UART to interact with the machine and
+>>>> find out whether it has actually booted.
+>>>>
+>>>
+>>> UEFI uses the same UART, so we could see all kernel boot logs until
+>>> switch to use kernel UART driver for printk. If you would like boot
+>>> to the console at initramfs, just add uart node like patchset v1.
+>>
+>> What's the point in upstreaming something that requires extra changes
+>> just to boot it? It only outlines these patches are not useful as they
+>> stand.
+>>
+>>>
+>>>> I reckon this should be part of the initial DT, as this otherwise
+>>>> serves little purpose.
+>>>>
+>>>
+>>> Without this initial support, we can't add some base drivers, like
+>>> mailbox. The dt_binding_check will report warnings/errors [1].
+>>
+>> Of course you can. You just add additional patches to this series,
+>> making it something that is actually useful. So far, this series only
+>> serves as marketing material.
+>>
+>>> Full UART support depends on clock, clock control needs mailbox
+>>> to talk with FW using SCMI protocol.
+>>
+>> Then do it. You obviously have existing DT support for it already.
+>>
+>>> There is no any support for CIX SoC, so we had to add one small step by
+>>> step.
+>>
+>> No, you are deliberately choosing to make this platform useless.
+>>
+>> That's a bit sad, and a waste of everybody's time.
+>>
+> 
+> Hi Marc,
+> 
+> Thanks for your interesting of our platform, and your comments
+> help us a lot. But I don't think it wastes reviewers and maintainers
+> time, a clean patch set saves everyone's time during upstream process.
+> 
+> For how to organize the patch set for SoC, Krzysztof gave good summary
+> at [1]. We are going on upstream [2], this patch set is just a start
+> and base but not like you said for marketing purpose.
 
-On Wed, Mar 26, 2025 at 01:05:40PM -0700, Howard Chu wrote:
-> Changes in v2:
-> * Simplify the code (written by Namhyung)
 
-Please move this below "---" after S-o-b tags so that it can be ignored
-when applying.
+I do not think I suggested in [1] to ever send new SoC containing only
+CPUs and interrupt controller, without even serial. My instruction [1]
+was how to organize it. The DTS can be even fully complete, see the
+upstreaming example I have been using all the time - Qualcomm SM8650:
+
+https://lore.kernel.org/all/20231124-topic-sm8650-upstream-dt-v4-0-e402e73cc5f0@linaro.org/
+
+Entire SoC sent to mailing list on the day one of public release of that
+flagship Qualcomm SoC. The SoC DTSI and board DTS have almost complete
+picture, except few trickier pieces... but it even has full display and
+GPU! Plus, as I explained on my email on samsung-soc, that DTS/DTSI
+patchset references all other bindings with their state, so SoC
+maintainers can understand what is the overall progress and what will be
+the result in DT schema checks, if they apply the patchset.
+
+The minimum, absolute minimum submission is with the serial nodes. I
+would prefer to have some storage or any other interface as well, but
+that's fine.
+
 
 > 
-> In my previous fix of runtime error(Link:
-> https://lore.kernel.org/linux-perf-users/20250122025519.361873-1-howardchu95@gmail.com/),
-> I made a mistake of decrementing one unconditionally, regardless of
-> whether an extra 'syscall_nr' or 'nr' field was present in
-> libtraceevent's tp_format. This may cause perf trace to allocate one
-> fewer arg_fmt entry than needed for the accurate representation of syscall
-> arguments.
+> [1] https://lore.kernel.org/linux-samsung-soc/CADrjBPq_0nUYRABKpskRF_dhHu+4K=duPVZX==0pr+cjSL_caQ@mail.gmail.com/T/#m2d9130a1342ab201ab49670fa6c858ee3724c83c
+> [2] https://lore.kernel.org/lkml/20250325101807.2202758-1-guomin.chen@cixtech.com/
 > 
-> This patch corrects the mistake by checking the presence of'syscall_nr' or
-> 'nr', and adjusting the length of arg_fmt[] accordingly.
-> 
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> Suggested-by: Namhyung Kim <namhyung@kernel.org>
 
-Also please add the Fixes tag.
 
-Thanks,
-Namhyung
-
-> ---
->  tools/perf/builtin-trace.c | 16 +++++-----------
->  1 file changed, 5 insertions(+), 11 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index a102748bd0c9..439e152186da 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -2022,9 +2022,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
->  {
->  	int idx;
->  
-> -	if (nr_args == RAW_SYSCALL_ARGS_NUM && sc->fmt && sc->fmt->nr_args != 0)
-> -		nr_args = sc->fmt->nr_args;
-> -
->  	sc->arg_fmt = calloc(nr_args, sizeof(*sc->arg_fmt));
->  	if (sc->arg_fmt == NULL)
->  		return -1;
-> @@ -2034,7 +2031,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
->  			sc->arg_fmt[idx] = sc->fmt->arg[idx];
->  	}
->  
-> -	sc->nr_args = nr_args;
->  	return 0;
->  }
->  
-> @@ -2176,14 +2172,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
->  		return err;
->  	}
->  
-> -	/*
-> -	 * The tracepoint format contains __syscall_nr field, so it's one more
-> -	 * than the actual number of syscall arguments.
-> -	 */
-> -	if (syscall__alloc_arg_fmts(sc, sc->tp_format->format.nr_fields - 1))
-> -		return -ENOMEM;
-> -
->  	sc->args = sc->tp_format->format.fields;
-> +	sc->nr_args = sc->tp_format->format.nr_fields;
-> +
->  	/*
->  	 * We need to check and discard the first variable '__syscall_nr'
->  	 * or 'nr' that mean the syscall number. It is needless here.
-> @@ -2194,6 +2185,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
->  		--sc->nr_args;
->  	}
->  
-> +	if (syscall__alloc_arg_fmts(sc, sc->nr_args))
-> +		return -ENOMEM;
-> +
->  	sc->is_exit = !strcmp(name, "exit_group") || !strcmp(name, "exit");
->  	sc->is_open = !strcmp(name, "open") || !strcmp(name, "openat");
->  
-> -- 
-> 2.45.2
-> 
+Best regards,
+Krzysztof
