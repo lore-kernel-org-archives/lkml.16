@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019491E1E03
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 20:55:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F157E20102A
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 20:55:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743108932; cv=none; b=DpNKvWig3Kw5X68xz0eUIHiw/osdTNqSVR5E6mR70L7ssFZOLJdUf2/l6Yq4dXsLC47UpfQK9iZ6jDNNA3YLR0ao5c3giKk1vhH8AFk7cGdLaHTK+8Zsaq4Cokt8GHbuxdi6pSJ9aPCHhN0SORb5nF/5rc35sya8YZ+rk7cdo8Q=
+	t=1743108934; cv=none; b=CAn5xzy2Weh1wpUOn/GWc8afj1WD4rD172o8eg5fjqx9GnC18WfW4VIfArX1coSJ2E/VAtP9Yb8IoJq2tZpwCZpNjzj6VyZZOBvmL09syEe8eoNsbgV/ewc5v+4UmE0ilUbaXNbi5kMKQUe7XBByU9YisPxUw7ji2NtiIRCj4sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743108932; c=relaxed/simple;
-	bh=HoQveO0faaYUoFjWPwusKNMrw5MJAE1bF14xLtyj8eY=;
+	s=arc-20240116; t=1743108934; c=relaxed/simple;
+	bh=UjD1AYfZXQ3g8Nnd8gn7w8mDASasb2fkP86nzz+63xg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g72sMevrQD7JaERUuNg/BX3PutSfyHy2f8tZhorsl4LtmgOKceHGyUPJMtfG3DUZUbyV0ZQk4EtUBNhm5vfULZxT+uukZYo+2otVkB9OMsG90rkfBdbGovs8GcXVIEauxumjutgbKiC24vH3IWlaryn2AOLmdmjt+yuDE7u8RJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gWba+j92; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AM6e3FBB1Ed63D+jE+eZC3a2A0Tq7VYZZ5cym0MGzPFrSuzSxYMD5QUxsCepDXAVz09QcOq+QwRqKlqN4tpSU4WFUBltWxuQBqAxRpPLqCcKucnYpgRyNJk+TkXVhlu5CRSV3LiRnxWWkm1w9WI5uF+ec9ISyZiEJbxBu/KoX1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JoY7SGc7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gWba+j92"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93DEDC4CEED;
-	Thu, 27 Mar 2025 20:55:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JoY7SGc7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF392C4CEEA;
+	Thu, 27 Mar 2025 20:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743108931;
-	bh=HoQveO0faaYUoFjWPwusKNMrw5MJAE1bF14xLtyj8eY=;
+	s=k20201202; t=1743108933;
+	bh=UjD1AYfZXQ3g8Nnd8gn7w8mDASasb2fkP86nzz+63xg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gWba+j92Od66vSce4cx0+yMFEra62orchrfe1wJgiN5oko4vysfWprWVHVFWc0bGT
-	 AsThOnXwMJ/RudFMrEEURR9HBo6r2BJ4Ox3cCnsHAY61cr9LW5qYL9OFQQ/FxnJc7H
-	 3YGyamFZdYOy0h6xDA9x4sE6zVaruZOSkmqX8DMMj0R+h9tEZ3ABF4mlzEltrfIdss
-	 pjfrHGpEpOX7VKWuZbBPlfSIJ/nsyesj5esL7uThTAYCCu0aL3aBXO+GYocqG1ygG3
-	 aOm5EzJtp265msOsdNjSEx1Pv37NMrzz5MTy/5V89JcLhJ6EcNiw7E8byIHG51xHYD
-	 czSAVjVB9htlQ==
+	b=JoY7SGc7vjsPpmdxhAVyf0VOZOPDfNeGnNsMdHxeOiT9+FuTHNg8LaczKMSTxWuPk
+	 7Fmtu7hie5qsbiEb4hKtQXe4kReoP0T/q/zq8sFTPQ1D75Qo5tCJ+i08pufy2CdWd7
+	 x289Oop8/7QKi2Uxl79CiMrmylD5bMLGGKh2j62hgK6jWM9AdlUuISvbkj77iZAGTV
+	 Ai2btru7uaUs1GrYUqA2AV/25A8O1vxN7lM/mYGH7thT8xXdD3IkDPrw0hBycwVOzp
+	 bnPM5VJ1vhkjQEK8zIjebvvLDNhmeSUVDMOITp73iq/BHZ5nzUE2gRJhvoZi0IBqOu
+	 FoBbWjcnqMdjg==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
@@ -34,9 +34,9 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 38/41] x86/alternatives: Add documentation for text_poke_int3_queue()
-Date: Thu, 27 Mar 2025 21:53:51 +0100
-Message-ID: <20250327205355.378659-39-mingo@kernel.org>
+Subject: [PATCH 39/41] x86/alternatives: Move tp_array completion from text_poke_int3_finish() and text_poke_int3_flush() to text_poke_int3_batch_process()
+Date: Thu, 27 Mar 2025 21:53:52 +0100
+Message-ID: <20250327205355.378659-40-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250327205355.378659-1-mingo@kernel.org>
 References: <20250327205355.378659-1-mingo@kernel.org>
@@ -48,35 +48,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+Simplifies the code and improves code generation a bit:
+
+   text	   data	    bss	    dec	    hex	filename
+  14769	   1017	   4112	  19898	   4dba	alternative.o.before
+  14742	   1017	   4112	  19871	   4d9f	alternative.o.after
+
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/alternative.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/x86/kernel/alternative.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
 diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 6e2fab1768e2..ba322a29aefd 100644
+index ba322a29aefd..1b523496a2f6 100644
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -2873,6 +2873,19 @@ static void text_poke_int3_flush(void *addr)
+@@ -2750,6 +2750,9 @@ static void text_poke_int3_batch_process(void)
+ 		if (unlikely(!atomic_dec_and_test(refs)))
+ 			atomic_cond_read_acquire(refs, !VAL);
  	}
++
++	/* They are all completed: */
++	tp_array.nr_entries = 0;
  }
  
-+/**
-+ * text_poke_int3_queue() -- update instruction on live kernel on SMP, batched
-+ * @addr:	address to patch
-+ * @opcode:	opcode of new instruction
-+ * @len:	length to copy
-+ * @emulate:	instruction to be emulated
-+ *
-+ * Add a new instruction to the current queue of to-be-patched instructions
-+ * the kernel maintains. The patching request will not be executed immediately,
-+ * but becomes part of an array of patching requests, optimized for batched
-+ * execution. All pending patching requests will be executed on the next
-+ * text_poke_int3_finish() call.
-+ */
- void __ref text_poke_int3_queue(void *addr, const void *opcode, size_t len, const void *emulate)
+ static void text_poke_int3_loc_add(void *addr, const void *opcode, size_t len, const void *emulate)
+@@ -2857,20 +2860,16 @@ static bool tp_addr_ordered(void *addr)
+ 
+ void text_poke_int3_finish(void)
  {
- 	text_poke_int3_flush(addr);
+-	if (tp_array.nr_entries) {
++	if (tp_array.nr_entries)
+ 		text_poke_int3_batch_process();
+-		tp_array.nr_entries = 0;
+-	}
+ }
+ 
+ static void text_poke_int3_flush(void *addr)
+ {
+ 	lockdep_assert_held(&text_mutex);
+ 
+-	if (tp_array.nr_entries == TP_ARRAY_NR_ENTRIES_MAX || !tp_addr_ordered(addr)) {
++	if (tp_array.nr_entries == TP_ARRAY_NR_ENTRIES_MAX || !tp_addr_ordered(addr))
+ 		text_poke_int3_batch_process();
+-		tp_array.nr_entries = 0;
+-	}
+ }
+ 
+ /**
 -- 
 2.45.2
 
