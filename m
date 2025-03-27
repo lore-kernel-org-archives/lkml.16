@@ -1,117 +1,252 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491BC155312
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F4F190692
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743090863; cv=none; b=OSeezLWMt7gA4GdS3UCxJE1G/W3pjWPw++9k2sP6Qzp5yHTcqhX+l+3eNj+jBAL7BmXvYVNDnj3wd45vBi4PAW7NXj+kz+iIqCLM+xWJAQ4PZrwZMeUYi7eDmzSW8pB/O4mI8OxOBN0id81do52fRt839f+Be3YS2CYMDzQVhCA=
+	t=1743090863; cv=none; b=PA9CB5uVEPiFquVF6e3wlsOSwbQZo4EZ1hmJxnKfnFR3j2OpQp3AHrgduDREUEyBMNYOzthrNSoWLZtPOZ5p3VYrPQ5iuRvY2MnCyvryFZRzi6NFclmkN9rQjHunwN1r9XU9SI53GjZDVNxH6o6xVCh3OkSCbuMGs7baxRkKqhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743090863; c=relaxed/simple;
-	bh=Xn+hqAJcwF4LrOcw3aw2H3+w6fmBJDHufrOGSfYCVhY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gFvQD+f3KWw2+NbqssLwyB/huIfWJ/h1MMWDzBLwXwZ3oq1EHW9uy4OlTrqakAx/6fUuPfIRl5RTS9RZCRMdBWg3GKimHi6emsmrXbIsQxeQXuRgF3b/zXqgHIuzbGeI24cIhU6E0GQaCUPNpsEFjwwscwgMeX6VCYE2pUnBBU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SPw0/0q7; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	bh=WzDnZoRL2GHoBw2iX6vBVgEqYQTZatoXKuplpOVra0s=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=al+LnNjNVYbKSNUUWfGJeWPnJ0wpIB4/H4DmTe+RQG4RFNxxUMWY4rzTW9HSPDOUOgrgbjK5vrMSPiJo3hlbNsD6Cy9vmoo1d7SVkqzujbiZEic/pJsNAEvTjfgQwdbuJPg6gqzV7Ntn8gohdgyO/60s6qRjKvte/+yh9M9gWmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DkQBM5JX; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SPw0/0q7"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-307bc125e2eso11087721fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:54:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DkQBM5JX"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff605a7a43so2848169a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:54:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743090858; x=1743695658; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CZv00/ePRkrRXDyY8uRk/fzDNtpq9RLmjZL7rRlPdfo=;
-        b=SPw0/0q7EZ69fGBoGxpE8lzfVCkaePV1/wnhmNA4XMTr4GumSPL9oJGIgUtvh4Pkhn
-         KumNI8+I2ziu9ioj9bVHZwCnYxXfD7RhEywfsxIXToJWIAzKBNlGamgUWMOXKkS82Ptf
-         TYGTUIgv/mdGDh3oDv1QVzJ+9WCVoIUc0Ra8w=
+        d=google.com; s=20230601; t=1743090861; x=1743695661; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JPOek5XIFaCLSO51WWUE4tWRga3usE6vEqnf0+ZqRAU=;
+        b=DkQBM5JXTd5yu8ZkXh6d2FGpusQo0aP40i0C3sVZpE90RA3fuvf+B8A4QtVqYPR6Pm
+         LfFXkoANQ7aZCUZ7qzdAXJFojm6Dl07n0rgHhe7x0nnJDlqPnyzFzEtXvUwlLYPWMu06
+         kzzL3J8yXoDsaxOnhTfrvbWpn54VjUkOztop4/jgZQfFDMozuB+Wni10LLbspBTdxC/f
+         qjfEQAVEqhUJcLAA/GdScPS0TLvN8wlzadVNyE7EawByoQMNWD69I7Bhuh/ln7bFOz2n
+         pOPpVq47rfCpLcTwMWQ54IF+9a+p7wDLcOxgk51U16/MWET5LTzcUH0+2ZaWZjy43gc0
+         samQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743090858; x=1743695658;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CZv00/ePRkrRXDyY8uRk/fzDNtpq9RLmjZL7rRlPdfo=;
-        b=jT6/Iw8bacf0VaVzy6QqY3a8FCCwDXnAJW1U7djjNFcELHVfK5ODepIz+2BR/+1NlC
-         p/KaHaBgzWpFd1C6kPgQEhb7vWSr5n/OKATw2M31osmF85sJQgbatX5DuzkUXSzo69fr
-         7DolvIL0nj1QfkRHJrbwS4iulz2ohC1YOwpkHmftLrtL0Jb1AsCoQlDpLDLfbEt49jR0
-         pTt641PggJykhB4qE5R+wDPQoOOaTlV6+WybcEjrDpNnZaDi7lt6/M8wEPVFTmxkUniz
-         vdgYO1K3Sae7izrp/TqNqGHPvu9c7CQEZmihW98dQxOeC0Kd3pApah9xcajFFEnK8ACW
-         vEbg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjhzgmuxVguEl+g1FV0kY23WfAViLEmo18FGoUmRAoQDQZMOOzv81VwICzAu/RHrhVlMO52Qs5Ae8EeEY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbD4b19wTIjZuVG0PzNI31MDrAxxIEQ70yxhA9KD7OpaP/coSB
-	2XUy0Xt8T+P9vA+wIShDWRxYc/nwEyFzdOVRYld2NnlfYziZVg5ZqM646NTHV42+Hu303Uw7XvF
-	GRg==
-X-Gm-Gg: ASbGncsNMX5iVkghqmRgv9mN+TM58GgdD2qLQd4h2nkcsUKaiCZdE0loyotp21sV9KS
-	15x1eluSoiULHgLEusDYky86fuLIr9E+cu+48cETaTCexTjmZxzBqN5K9+CZjBQKLn+ahAQnNXi
-	GfmdqCYtLBnAlZqUvdrtRrW7jmf2nEjjKfm0OTMUeMOTnQqWXDPxFD4g94YD8iKKDt6jdZw1OHm
-	Q7pqHEaks3DHSbT4iwRVStoOz+JiRV0a+HN40X+GT5H7px1G8F6GsiFThBWezayUjsv5ykWtWkE
-	o7zxoikotE9ZUSOHO5HBiCQK3BAG3LcvempPHc2GGpsngRiM0IV5I36hwoWEQTfDtyN4KiCvILy
-	eelHvEFdp
-X-Google-Smtp-Source: AGHT+IEgF+jIuURlJbaB0K5f6xzzdfZehap5FkE3aRshT//fMj+Iu0eYVMglJlMbhB/reYBf81wLKw==
-X-Received: by 2002:a2e:b892:0:b0:30b:b908:ce1e with SMTP id 38308e7fff4ca-30dc5f25786mr15257731fa.29.1743090857684;
-        Thu, 27 Mar 2025 08:54:17 -0700 (PDT)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30d7d8f3c9esm25261021fa.66.2025.03.27.08.54.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 08:54:17 -0700 (PDT)
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54addb5a139so1357168e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:54:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX0ebfrBib0Shke3qJ5cZpZbrhVA1WY5Z99QP+B0V0o5u+/KtZEjOtAHYHIIMKgcBKBLYZhjuyUaytM6lw=@vger.kernel.org
-X-Received: by 2002:a05:6512:23a9:b0:549:8f21:bc0e with SMTP id
- 2adb3069b0e04-54b012201cemr1799007e87.32.1743090855396; Thu, 27 Mar 2025
- 08:54:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743090861; x=1743695661;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JPOek5XIFaCLSO51WWUE4tWRga3usE6vEqnf0+ZqRAU=;
+        b=riRwSTYyqFXslqSQ63Lo0nxE3ZiH2DNj8/RCU53lxt23h4EAya4Dbd+h9eAh+dSNvH
+         ee4KHuv+ReOHegc5kIvdd3Ux8fXygFqNzm+KEoY8dJ6V9BeYgjSFfaL4QtVUbneHffrz
+         sd4vFm9ZPoTPStC2ACR3ZKfZgusmH325yaxi8lSsVDkjvyXDa8D+0gGK2v0U0V/FszBH
+         RsnQYvlEeRzpvybZMArvJZDVf5fx16aAMSJxJMSadkDQRQ7YjOz+gbll2MIc5XcPYHGl
+         kopiKHP4oFWKDA8zSROPQJe5RZj3H7D2WFV7miaSsbnTPoOXJyvY2zrc7tMfiKlgjVQJ
+         Nrfg==
+X-Forwarded-Encrypted: i=1; AJvYcCVYjpUYB6ZM0lu70XahUF1m3FvloYQasu9K4CRoTLc5dBsIQOTACtBJyxSf/Yh3ZMQ/4rP664fn5iFwHXw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqacE6U5KqM4aI/dtLwBHytplWYTADaNg/drHv4dLcnqAX1fL8
+	DhL+4vo6kCnJSRDc4mo2QqXH0+Z/akqbHmRLchLA5TYHdREOt7HP9nNW2UT9i4GcKki3imHeJ2K
+	g/Q==
+X-Google-Smtp-Source: AGHT+IEpsv3H+6GDKLikeC+QMNXPJuol4rgiTqt3+uFNYZnj+ykaPsz001YnHBSz/X3FMFw68HdiYxMtMSU=
+X-Received: from pjbsv4.prod.google.com ([2002:a17:90b:5384:b0:2ff:6e58:8a03])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3147:b0:2fe:8c22:48b0
+ with SMTP id 98e67ed59e1d1-303a7f653d4mr6822095a91.15.1743090861520; Thu, 27
+ Mar 2025 08:54:21 -0700 (PDT)
+Date: Thu, 27 Mar 2025 08:54:19 -0700
+In-Reply-To: <20250313181629.17764-1-adrian.hunter@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250325-wip-obbardc-qcom-t14s-oled-panel-v2-0-e9bc7c9d30cc@linaro.org>
- <20250325-wip-obbardc-qcom-t14s-oled-panel-v2-1-e9bc7c9d30cc@linaro.org> <20250326-foxhound-of-nonstop-temperance-6f5a67@krzk-bin>
-In-Reply-To: <20250326-foxhound-of-nonstop-temperance-6f5a67@krzk-bin>
-From: Doug Anderson <dianders@chromium.org>
-Date: Thu, 27 Mar 2025 08:54:03 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=V4bA-kGs+qBfTJ2+zayGr1ndDMiT6Gc0d8ZCxxYLCZVQ@mail.gmail.com>
-X-Gm-Features: AQ5f1Jr0GBzGsFAxBQlSMWFiKpwbfZWxF1im_nyKl3vKfJiviUfLFt-4zl7_mZE
-Message-ID: <CAD=FV=V4bA-kGs+qBfTJ2+zayGr1ndDMiT6Gc0d8ZCxxYLCZVQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: display: panel: samsung,atna40yk20:
- document ATNA40YK20
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Christopher Obbard <christopher.obbard@linaro.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Johan Hovold <johan@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, 
-	Abel Vesa <abel.vesa@linaro.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250313181629.17764-1-adrian.hunter@intel.com>
+Message-ID: <Z-V0qyTn2bXdrPF7@google.com>
+Subject: Re: [PATCH RFC] KVM: TDX: Defer guest memory removal to decrease
+ shutdown time
+From: Sean Christopherson <seanjc@google.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: pbonzini@redhat.com, kvm@vger.kernel.org, rick.p.edgecombe@intel.com, 
+	kirill.shutemov@linux.intel.com, kai.huang@intel.com, 
+	reinette.chatre@intel.com, xiaoyao.li@intel.com, 
+	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
+	isaku.yamahata@intel.com, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com, 
+	chao.gao@intel.com
+Content-Type: text/plain; charset="us-ascii"
 
-Hi,
+On Thu, Mar 13, 2025, Adrian Hunter wrote:
+> Improve TDX shutdown performance by adding a more efficient shutdown
+> operation at the cost of adding separate branches for the TDX MMU
+> operations for normal runtime and shutdown.  This more efficient method was
+> previously used in earlier versions of the TDX patches, but was removed to
+> simplify the initial upstreaming.  This is an RFC, and still needs a proper
+> upstream commit log. It is intended to be an eventual follow up to base
+> support.
 
-On Wed, Mar 26, 2025 at 1:08=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
->
-> On Tue, Mar 25, 2025 at 07:21:26PM +0000, Christopher Obbard wrote:
-> > The Samsung ATNA40YK20 panel is a 14" AMOLED eDP panel. It is
-> > similar to the ATNA33XC20 except that it is larger and has a
-> > different resolution.
-> >
-> > Signed-off-by: Christopher Obbard <christopher.obbard@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/display/panel/samsung,atna33xc20.yam=
-l | 2 ++
-> >  1 file changed, 2 insertions(+)
->
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+...
 
-Pushed this patch to drm-misc-next:
+> == Options ==
+> 
+>   1. Start TD teardown earlier so that when pages are removed,
+>   they can be reclaimed faster.
+>   2. Defer page removal until after TD teardown has started.
+>   3. A combination of 1 and 2.
+> 
+> Option 1 is problematic because it means putting the TD into a non-runnable
+> state while it is potentially still active. Also, as mentioned above, Sean
+> effectively NAK'ed it.
 
-[1/4] dt-bindings: display: panel: samsung,atna40yk20: document ATNA40YK20
-      commit: 1822532477cb5f007313de4c70079c09aaa270d5
+Option 2 is just as gross, arguably even worse.  I NAK'd a flavor of option 1,
+not the base concept of initiating teardown before all references to the VM are
+put.
+
+AFAICT, nothing outright prevents adding a TDX sub-ioctl to terminate the VM.
+The locking is a bit heinous, but I would prefer heavy locking to deferring
+reclaim and pinning inodes.
+
+Oh FFS.  This is also an opportunity to cleanup RISC-V's insidious copy-paste of
+ARM.  Because extracting (un)lock_all_vcpus() to common code would have been sooo
+hard.  *sigh*
+
+Very roughly, something like the below (*completely* untested).
+
+An alternative to taking mmu_lock would be to lock all bound guest_memfds, but I
+think I prefer taking mmu_lock is it's easier to reason about the safety of freeing
+the HKID.  Note, the truncation phase of a PUNCH_HOLE could still run in parallel,
+but that's a-ok.  The only part of PUNCH_HOLE that needs to be blocked is the call
+to kvm_mmu_unmap_gfn_range().
+
+---
+ arch/x86/kvm/vmx/tdx.c | 61 ++++++++++++++++++++++++++++++------------
+ 1 file changed, 44 insertions(+), 17 deletions(-)
+
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index 87f188021cbd..6fb595c272ab 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -472,7 +472,7 @@ static void smp_func_do_phymem_cache_wb(void *unused)
+ 		pr_tdx_error(TDH_PHYMEM_CACHE_WB, err);
+ }
+ 
+-void tdx_mmu_release_hkid(struct kvm *kvm)
++static void __tdx_release_hkid(struct kvm *kvm, bool terminate)
+ {
+ 	bool packages_allocated, targets_allocated;
+ 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
+@@ -485,10 +485,11 @@ void tdx_mmu_release_hkid(struct kvm *kvm)
+ 	if (!is_hkid_assigned(kvm_tdx))
+ 		return;
+ 
++	if (KVM_BUG_ON(refcount_read(&kvm->users_count) && !terminate))
++		return;
++
+ 	packages_allocated = zalloc_cpumask_var(&packages, GFP_KERNEL);
+ 	targets_allocated = zalloc_cpumask_var(&targets, GFP_KERNEL);
+-	cpus_read_lock();
+-
+ 	kvm_for_each_vcpu(j, vcpu, kvm)
+ 		tdx_flush_vp_on_cpu(vcpu);
+ 
+@@ -500,12 +501,8 @@ void tdx_mmu_release_hkid(struct kvm *kvm)
+ 	 */
+ 	mutex_lock(&tdx_lock);
+ 
+-	/*
+-	 * Releasing HKID is in vm_destroy().
+-	 * After the above flushing vps, there should be no more vCPU
+-	 * associations, as all vCPU fds have been released at this stage.
+-	 */
+ 	err = tdh_mng_vpflushdone(&kvm_tdx->td);
++	/* Uh, what's going on here? */
+ 	if (err == TDX_FLUSHVP_NOT_DONE)
+ 		goto out;
+ 	if (KVM_BUG_ON(err, kvm)) {
+@@ -515,6 +512,7 @@ void tdx_mmu_release_hkid(struct kvm *kvm)
+ 		goto out;
+ 	}
+ 
++	write_lock(&kvm->mmu_lock);
+ 	for_each_online_cpu(i) {
+ 		if (packages_allocated &&
+ 		    cpumask_test_and_set_cpu(topology_physical_package_id(i),
+@@ -539,14 +537,21 @@ void tdx_mmu_release_hkid(struct kvm *kvm)
+ 	} else {
+ 		tdx_hkid_free(kvm_tdx);
+ 	}
+-
++	write_unlock(&kvm->mmu_lock);
+ out:
+ 	mutex_unlock(&tdx_lock);
+-	cpus_read_unlock();
+ 	free_cpumask_var(targets);
+ 	free_cpumask_var(packages);
+ }
+ 
++void tdx_mmu_release_hkid(struct kvm *kvm)
++{
++	cpus_read_lock();
++	__tdx_release_hkid(kvm, false);
++	cpus_read_unlock();
++}
++
++
+ static void tdx_reclaim_td_control_pages(struct kvm *kvm)
+ {
+ 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
+@@ -1789,13 +1794,10 @@ int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
+ 	struct page *page = pfn_to_page(pfn);
+ 	int ret;
+ 
+-	/*
+-	 * HKID is released after all private pages have been removed, and set
+-	 * before any might be populated. Warn if zapping is attempted when
+-	 * there can't be anything populated in the private EPT.
+-	 */
+-	if (KVM_BUG_ON(!is_hkid_assigned(to_kvm_tdx(kvm)), kvm))
+-		return -EINVAL;
++	if (!is_hkid_assigned(to_kvm_tdx(kvm)), kvm) {
++		WARN_ON_ONCE(!kvm->vm_dead);
++		return tdx_reclaim_page(pfn_to_page(pfn));
++	}
+ 
+ 	ret = tdx_sept_zap_private_spte(kvm, gfn, level, page);
+ 	if (ret <= 0)
+@@ -2790,6 +2792,28 @@ static int tdx_td_finalize(struct kvm *kvm, struct kvm_tdx_cmd *cmd)
+ 	return 0;
+ }
+ 
++static int tdx_td_terminate(struct kvm *kvm)
++{
++	struct kvm_memory_slot *slot;
++	struct kvm_memslots *slots;
++	int bkt;
++
++	cpus_read_lock();
++	guard(mutex)(&kvm->lock);
++
++	r = kvm_lock_all_vcpus();
++	if (r)
++		goto out;
++
++	kvm_vm_dead(kvm);
++	kvm_unlock_all_vcpus();
++
++	__tdx_release_hkid(kvm);
++out:
++	cpus_read_unlock();
++	return r;
++}
++
+ int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
+ {
+ 	struct kvm_tdx_cmd tdx_cmd;
+@@ -2805,6 +2829,9 @@ int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
+ 	if (tdx_cmd.hw_error)
+ 		return -EINVAL;
+ 
++	if (tdx_cmd.id == KVM_TDX_TERMINATE_VM)
++		return tdx_td_terminate(kvm);
++
+ 	mutex_lock(&kvm->lock);
+ 
+ 	switch (tdx_cmd.id) {
+
+base-commit: 2156c3c7d60c5be9c0d9ab1fedccffe3c55a2ca0
+-- 
