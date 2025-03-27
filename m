@@ -1,98 +1,61 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6331A1D63D6;
-	Thu, 27 Mar 2025 23:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+Received: from mail.hows.id.au (125-63-26-112.ip4.superloop.au [125.63.26.112])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B599E54782;
+	Thu, 27 Mar 2025 23:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=125.63.26.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743117343; cv=none; b=chIMCn5abFoXj15jBOFtart3CAsYN3PqZKqkoYrZxmRCmxMnesLGLUtFfeCiGJbBr/uI5zs/IjF4KK4e9qHeuBH1BOU3m88hunEnkHQUy+sswWoZ7PSajJ+q/WR0Et7BNnFn9DTyYd/R2FuSe4PkE5HErcw1D/hsGLsyRXYj+tA=
+	t=1743117451; cv=none; b=VIutAGp2zqVBjHXCvzUiyusc/SCn22baPsie0gFu5t6kPDmwuYRNy8Y4E1y+fRRo0tJCOO/MK56eoP8nqTPiaN9cmANXnY9guj/N71Z7oMyVgFDnneufRT11Gc5wYfe6PH+qIOlOAqinptjYF0CEhY23tzKuWql3lNejb665oFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743117343; c=relaxed/simple;
-	bh=QR2nETTMX/94QTJLoO2pHQlYPRo2EC3yJU854Hu7fmo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=COXMHRmiZc/gg1jUbFCSKSnCeY2gB/nGx/nHyyOndHk/mVEMEL4ejhGYjeW5L5FAt3YhlR2F1hCWoHQwuP31+gRTqmGlYl8igX3mIH9s77yjg5DcjpxJgfALqhbx/exDRKENRr0D9511Gr1Xbn8iqkA33OgkyHDij2cyLfOCrF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=rxRxjvY7; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rxRxjvY7"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0D28E3DA;
-	Fri, 28 Mar 2025 00:13:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743117232;
-	bh=QR2nETTMX/94QTJLoO2pHQlYPRo2EC3yJU854Hu7fmo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rxRxjvY7x1P1mACoIRjnCpIFsm/i4YJHzOZITpRIth3vVIf5+B0OAU4bkmgKRiCeN
-	 A6kKmGk2P0li6TS0SaH1HKolwDYt55P5GcNNGTPBMbtG4WVfEFqXyn5lDzxPzy+FCQ
-	 L0wavcXFzH+1giZvDCjmv6nfoOEh2aES1HarhjIk=
-Date: Fri, 28 Mar 2025 01:15:18 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: linux-media@vger.kernel.org,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Benoit Parrot <bparrot@ti.com>,
-	Kieran Bingham <kieran.bingham@ideasonboard.com>,
-	Jai Luthra <jai.luthra@ideasonboard.com>,
+	s=arc-20240116; t=1743117451; c=relaxed/simple;
+	bh=iLKFQ1XT7Gv64WulzIF36Fz95RYXU9EXLw7LTgu9jT4=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=mu3BBdfm/Aw9GOvEshARI6fFylBli9Nx0YUu2q/npeICvw7+HxWFFjmYIxGeztYAzJWID2SBl1ZJOPpL+MvD5TbxVincmHO3zO4px1De35nYytmqO5zxxF1cvoXGVdZYt0YA1D+jbjAFF1QhTgJdCs7yAvSjskys/75BnTDcNes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hows.id.au; spf=pass smtp.mailfrom=hows.id.au; arc=none smtp.client-ip=125.63.26.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hows.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hows.id.au
+Received: by mail.hows.id.au (Postfix, from userid 113)
+	id 8DF2B22F18; Fri, 28 Mar 2025 10:17:19 +1100 (AEDT)
+X-Spam-Level: 
+Received: from archibald.hows.id.au (unknown [192.168.0.157])
+	by mail.hows.id.au (Postfix) with ESMTPSA id C4CD5229C3;
+	Fri, 28 Mar 2025 10:17:11 +1100 (AEDT)
+Date: Fri, 28 Mar 2025 10:17:10 +1100
+From: David Hows <david@hows.id.au>
+To: Clemens Ladisch <clemens@ladisch.de>, Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/3] media: ti: cal: Fix wrong goto on error path
-Message-ID: <20250327231518.GM4861@pendragon.ideasonboard.com>
-References: <20250326-cal-streams-v7-0-659df87ad231@ideasonboard.com>
- <20250326-cal-streams-v7-2-659df87ad231@ideasonboard.com>
+Subject: [PATCH]hwmon: (k10temp) Add support for Zen5 Ryzen Desktop
+Message-ID: <Z-XcdvkyUo1m1alv@archibald.hows.id.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250326-cal-streams-v7-2-659df87ad231@ideasonboard.com>
 
-Hi Tomi,
+---
+ drivers/hwmon/k10temp.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Thank you for the patch.
-
-On Wed, Mar 26, 2025 at 01:34:02PM +0200, Tomi Valkeinen wrote:
-> If pm_runtime_resume_and_get() fails, we should unprepare the context,
-> but currently we skip that as we goto to a later line.
-> 
-> Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  drivers/media/platform/ti/cal/cal-video.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/platform/ti/cal/cal-video.c b/drivers/media/platform/ti/cal/cal-video.c
-> index 4eb77f46f030..29c38bf8d7a1 100644
-> --- a/drivers/media/platform/ti/cal/cal-video.c
-> +++ b/drivers/media/platform/ti/cal/cal-video.c
-> @@ -744,7 +744,7 @@ static int cal_start_streaming(struct vb2_queue *vq, unsigned int count)
->  
->  	ret = pm_runtime_resume_and_get(ctx->cal->dev);
->  	if (ret < 0)
-> -		goto error_pipeline;
-> +		goto error_unprepare;
->  
->  	cal_ctx_set_dma_addr(ctx, addr);
->  	cal_ctx_start(ctx);
-> @@ -761,8 +761,8 @@ static int cal_start_streaming(struct vb2_queue *vq, unsigned int count)
->  error_stop:
->  	cal_ctx_stop(ctx);
->  	pm_runtime_put_sync(ctx->cal->dev);
-> +error_unprepare:
->  	cal_ctx_unprepare(ctx);
-> -
->  error_pipeline:
->  	video_device_pipeline_stop(&ctx->vdev);
->  error_release_buffers:
-
+diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
+index d0b4cc9a5011..cc2ad7a324f9 100644
+--- a/drivers/hwmon/k10temp.c
++++ b/drivers/hwmon/k10temp.c
+@@ -502,6 +502,13 @@ static int k10temp_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 			k10temp_get_ccd_support(data, 12);
+ 			break;
+ 		}
++	} else if (boot_cpu_data.x86 == 0x1a) {
++		switch (boot_cpu_data.x86_model) {
++		case 0x40 ... 0x4f:	/* Zen5 Ryzen Desktop*/
++			data->ccd_offset = 0x308;
++			k10temp_get_ccd_support(data, 8);
++			break;
++		}
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(tctl_offset_table); i++) {
 -- 
-Regards,
+2.49.0
 
-Laurent Pinchart
