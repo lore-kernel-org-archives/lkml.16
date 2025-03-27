@@ -1,122 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0315C2C8;
-	Thu, 27 Mar 2025 07:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9964D1C861C;
+	Thu, 27 Mar 2025 07:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743059347; cv=none; b=EV11jt5TvoyKAFRxtHSvDyOlafbZ92bBc3XjQQGm8Jx14hUK9VOug0kjJ0M0Uv5BmtA+UcbqED5RGDUVLC4P25BTJfKveJfRw5MCs5ml4ecNok9VAZFYN3eQ9Z4kb8ZjQ3VN8BYDirS1NH8rM3UL7JC5sHunzv1Su1WNrgvkqnY=
+	t=1743059546; cv=none; b=Ge7WWKVAlQs5LG14z39gby6faF0ID2kufglbX0d7rAQ3hAGNcOAXPrCCJP8/y2LcCvp/Ku7xHIhwKk9eI5eNLMwywt1T/qiLVlp8i837F89Wu3YvN4bEMeZfDp/I0ED4TrePPxJSAh5XKVAT/c5PClmSlDgTuJ8bw4v0Ub4RjbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743059347; c=relaxed/simple;
-	bh=RTO5t/LI0jIMfKv+KM5XxXFziRhRYwgdAn1ECXSY6XM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FVh+hT0uPTsNbLpcGXo2ycwyVgv19dXcdQ5jeWMzF1Gx3pJM68RLh7KW2xp1KyLsNR/RUIGg8M3kVhL+2qznuWwPPgiX8jGaPlR9dB2ZIzWb4dNXD95VeH8Egap6nwsZQXidYt8UqBPUVu2zn/R7pFBNS7lcoBGDUdsCwIh0lmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U04CPQDc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743059546; c=relaxed/simple;
+	bh=xLDxqFPTSPn0/knZPERzvm0+bXSKlxaYfylULmtrafg=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=RjfHE96IPnshf6hhb+ZtAAsM5Ma7vJsXTe8HXoYiXGkTZ99EDigqS5ckNt36xFDJLJ3/GWADVJMa1/RDt3D4PSDqN3SUjNxwYNpkDWqsMmjwlXy051It+bqoPGcVqb0RiU2qmnuDCDZzZnV1LeV9dc9xN1SnOVvpjYlwpIQgoZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=h8AErXRy; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U04CPQDc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B918C4CEDD;
-	Thu, 27 Mar 2025 07:09:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743059347;
-	bh=RTO5t/LI0jIMfKv+KM5XxXFziRhRYwgdAn1ECXSY6XM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=U04CPQDcY3gzL8RpY9KoV0VVAL012KmNh2pSctz+IrjUMuuJUf2dQuWF/K3llVV8B
-	 cCEyG5XPLhQlOi25ILmRnCqjbpTB7u7TLyfBKIttZ9tLc+aTrDowJ9A9jLlgsQRuQO
-	 eYS/C+V7hIuUuiV/mz+Rr9WzaoE920ea4rCT/lbSjrAFDeCc4YTJzPBJ3SY+4wcQAt
-	 8OSk+wTKvxSL/qVWW/WSp48rewfqL9vpx7qQCeNXS92ic4wSrcCmTXV5aToVDRPrdE
-	 UK7Ok39Y0XVdmv4kGEgW9+PoGlxx6f7KaOyDQRvQrF2xUfEBufH55tyWCHx2NFcu+o
-	 nA0Dx3TMKlCEQ==
-Message-ID: <da93bf6c-b4bc-4c4f-9373-583fbd0c031c@kernel.org>
-Date: Thu, 27 Mar 2025 08:09:00 +0100
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="h8AErXRy"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: dt-bindings: Add OmniVision OV02C10
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, robh@kernel.org,
- hdegoede@redhat.com, mchehab@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, bod@kernel.org
-References: <20250324171508.GA668235-robh@kernel.org>
- <20250326150114.71401-1-bryan.odonoghue@linaro.org>
- <W8_0Ch2J0PWJ5pKHojZjFbM8huvxWlaWajtl_uhQF3UszGH_O8WTRZdQxh_eHs2JzLOx7CCxx01UZDHPQqAyCA==@protonmail.internalid>
- <1dd46a9e-e97d-415a-9e33-67ee234c4bac@kernel.org>
- <0de575dc-5afb-40fb-be30-99906d0e493b@linaro.org>
- <c1959f95-9ee1-4597-b6ec-fbedc8a872db@kernel.org>
- <afae182f-b264-4b57-acd7-2c2cf090e1ad@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <afae182f-b264-4b57-acd7-2c2cf090e1ad@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1743059536;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lH20vJ48RSA10XECX0SWG627PAsPjNVOUl91E9dSA10=;
+	b=h8AErXRy2tf++eIitSzH4Z7avDyXJ3XY5svwpL8omEiu/+RugNoAOmQgoAcvtxJuq2K3lF
+	OBL7yNp5z2S8UrU2xL3P/dwwPZ+z2tjk/FL5wYznfPEuLNF7EXHBeoNJV8+tdlqKW8Bysu
+	A/h8o7mVuanCMIOBx4cAJCCNpxAybAPPM/CJ3gE0Dw31mk75lBGlhtbg7J9tMANBPyuwHI
+	HmMVM/OIxMoeQoOc0MfCW/ho1u82D1qIw8Uw03DHGmPjBsRLHLDDquUAjboVscVmAKjsgv
+	eW/Y0hHCT9n8ETLIsGgsnV9HG4X25LpUQs7NAaHZTFDN+v7rAdLXnkg2C6k71w==
+Date: Thu, 27 Mar 2025 08:12:14 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>, Naresh Kamboju
+ <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
+ patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ Heiko Stuebner <heiko@sntech.de>, Vegard Nossum <vegard.nossum@oracle.com>,
+ Darren Kenny <darren.kenny@oracle.com>, Diederik de Haas
+ <didi.debian@cknow.org>
+Subject: Re: [PATCH 6.6 00/77] 6.6.85-rc1 review
+In-Reply-To: <2025032656-closure-exile-38fe@gregkh>
+References: <20250325122144.259256924@linuxfoundation.org>
+ <CA+G9fYvWau1nC8wmpWkxG8gWPaRMP9pbkh2eNsAZoUMeRPgzqA@mail.gmail.com>
+ <a823454af9915fe3acfcb66fd84dc826@manjaro.org>
+ <751cf2c6-c692-4595-98e9-fa3ae4dfd10a@oracle.com>
+ <0001e7e020145983055d154488f5c460@manjaro.org>
+ <2025032656-closure-exile-38fe@gregkh>
+Message-ID: <6a8a77a00a11ae9c22b1a2fe50cbbb34@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On 26/03/2025 18:34, Bryan O'Donoghue wrote:
->>
->> I meant bindings are exactly the same, unless I missed something.
->> Devices are similar enough as well.
->>
->>> Seems simpler to me to have two separate files ?
->>
->> Not really, more files to maintain, more trivialities to fix if we
->> decide to change something in all bindings (e.g. style).
->>
->> Best regards,
->> Krzysztof
-> 
-> Hmm, so we have two in-flight series and one yaml file.
-> 
-> OK, I'll drop this patch and add ov02c10 to the ov02e10 yaml as you suggest.
-> 
-> So long as the yaml file goes in first, the order of application of the 
-> ov02c10/ov02e10 drivers won't matter and can be fixed with a cherry-pick.
-You can combine the series or add here a dependency.
+Hello Greg,
 
-Best regards,
-Krzysztof
+On 2025-03-26 16:38, Greg Kroah-Hartman wrote:
+> On Wed, Mar 26, 2025 at 04:56:18AM +0100, Dragan Simic wrote:
+>> On 2025-03-26 03:33, Harshit Mogalapalli wrote:
+>> > On 25/03/25 21:37, Dragan Simic wrote:
+>> > > On 2025-03-25 16:07, Naresh Kamboju wrote:
+>> > ...
+>> > > > Build regression: arm64 dtb rockchip non-existent node or label
+>> > > > "vcca_0v9"
+>> > > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>> > > >
+>> > > > ## Build log
+>> > > > arch/arm64/boot/dts/rockchip/rk3399.dtsi:221.23-266.4: ERROR
+>> > > > (phandle_references):
+>> > > > /pcie@f8000000: Reference to non-existent node or label "vcca_0v9"
+>> > > >
+>> > > >   also defined at arch/arm64/boot/dts/rockchip/rk3399-
+>> > > > rockpro64.dtsi:659.8-669.3
+>> > ...
+>> > >
+>> > > This is caused by another patch from the original series failing
+>> > > to apply due to some bulk regulator renaming.  I'll send backported
+>> > > version of that patch soon, which should make everything fine.
+>> >
+>> > On ARM configs, we do see the same issue that Naresh reported.
+>> >
+>> > arch/arm64/boot/dts/rockchip/rk3399.dtsi:221.23-266.4: ERROR
+>> > (phandle_references): /pcie@f8000000: Reference to non-existent node
+>> > or label "vcca_0v9"
+>> >  also defined at
+>> > arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi:659.8-669.3
+>> > ERROR: Input tree has errors, aborting (use -f to force output)
+>> > make[3]: *** [scripts/Makefile.lib:423:
+>> > arch/arm64/boot/dts/rockchip/rk3399-rockpro64-v2.dtb] Error 2
+>> > make[3]: *** Waiting for unfinished jobs....
+>> > arch/arm64/boot/dts/rockchip/rk3399.dtsi:221.23-266.4: ERROR
+>> > (phandle_references): /pcie@f8000000: Reference to non-existent node
+>> > or label "vcca_0v9"
+>> >  also defined at
+>> > arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi:659.8-669.3
+>> > ERROR: Input tree has errors, aborting (use -f to force output)
+>> > make[3]: *** [scripts/Makefile.lib:423:
+>> > arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtb] Error 2
+>> > make[2]: *** [scripts/Makefile.build:480: arch/arm64/boot/dts/rockchip]
+>> > Error 2
+>> > make[2]: *** Waiting for unfinished jobs....
+>> >
+>> > Caused by commit: 1e4bd0ec5a47 ("arm64: dts: rockchip: Add missing
+>> > PCIe supplies to RockPro64 board dtsi") -- PATCH 42/77 of this series.
+>> >
+>> > We see same problem with 6.12.21-rc1 as well.
+>> >
+>> > Notes:
+>> > -----
+>> > I think Dragan was referring to upstream commit: bd1c959f37f3 ("arm64:
+>> > dts: rockchip: Add avdd HDMI supplies to RockPro64 board dtsi") which
+>> > will fix this problem but fails to apply due to regulator renaming in
+>> > commit: 5c96e6330197 ("arm64: dts: rockchip: adapt regulator nodenames
+>> > to preferred form") which is not in stable kernels(6.6.y and 6.12.y)
+>> 
+>> Exactly, the direct dependency is the commit bd1c959f37f3 ("arm64:
+>> dts: rockchip: Add avdd HDMI supplies to RockPro64 board dtsi"),
+>> for which I haven't sent the backported version yet.
+>> 
+>> As Diederik pointed it out already in a separate message [*] from
+>> a couple of days ago, it might be the best to include the commit
+>> 5c96e6330197 ("arm64: dts: rockchip: adapt regulator nodenames to
+>> preferred form") into stable kernels as well.
+>> 
+>> Obviously, including the commit 5c96e6330197 pretty much goes
+>> against the rules of stable kernels, but it would save a lot of
+>> time and effort in the future.
+>> 
+>> [*] 
+>> https://lore.kernel.org/stable/D8ONE4WEF7A2.1OE1YY8J34MM3@cknow.org/
+> 
+> As that's a big change, and no one seems to be sending it to me for
+> inclusion, I'll just go drop the patch that broke the builds for now 
+> and
+> wait for someone to send working ones later.
+
+Makes sense to me, thanks.  I'll send you the three patches (i.e., the
+bulk regulator renaming patch, and the two RockPro64 patches) that need
+to be included in the stable kernels, in the next couple of days.  
+Having
+the bulk regulator renaming patch included in the stable kernels should
+save us a lot of time and effort in the future.
+
+I would've sent you those patches earlier, but I'm currently in a really
+tight spot when it comes to time.
