@@ -1,117 +1,179 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B8121422C;
-	Thu, 27 Mar 2025 14:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987C0215059
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743085244; cv=none; b=YJzogbY9Hf7u1qnlTMbb8vfs4f59QpxOUAMyVQUmaf8GHJO9Wsf/X8+EnTrvNVC+ICMbk9Zox9nr9r30yfsyW1z7iRt1YvcC6IG5fiTZbQZDXM3bATRJ+7KTbwe+dKVOfzrYgKG2CxN7n17H/icSTRuRw/YN8XuWWBs6r6jm7lg=
+	t=1743085285; cv=none; b=rh4jt0wHZw1Dpb08zgg6NLm7B/d9GZAWmHYgVNu5OzXPdLqP974saVFIlVnlY5QwVbmckxNwd1QmlKM02KdroRuVkp+S/++c2jlGTGpemMMLTjmxRtwh7uZXC59D+JU80NoND09P2eMNT/XcXdmPOJ4jRtWrM94AauT8H6ca/6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743085244; c=relaxed/simple;
-	bh=Kp8tmG94C1NlHRTeGN7AQJ/wzvfSetrtkc7dV9pp+ug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AWLjIEMHBe8e/g+IOsUa08CLcfWpf5aT5Mbr/pdOFTr6YI9zwyNUqzhyx/bNMXT44NqrV9tbGWIps7ojGukSRyaaTDR4qZ6vkSDbeNR9lkFW5TKbTJ8Vad9h+01zYfToVOjXBGHExclXTc0YtBq/n3fSIXV9D5Imir+OhuYqBO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gFTd+GoG; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743085285; c=relaxed/simple;
+	bh=aCijh6dK23ppJuTHRJqIOMUqMd5KE+ya18KSNMKNiI4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gyTvwrScx8IqS6VSfzBcT3FSmR3TTnF+8iyWBWF5RpwDAWaW251iUU4f/h1cFAiqXUtejUzqBLNUU5DA3fw8vkqsTlTkxW1c1iRPbLLMv50+j7J+pFYhzuvvp37xEuXwzrIhJQU66yaPPKVCq7EEV/zbKHDu+mRZZwt59Viz9oA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=nxJFq5Bj; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gFTd+GoG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743085243; x=1774621243;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Kp8tmG94C1NlHRTeGN7AQJ/wzvfSetrtkc7dV9pp+ug=;
-  b=gFTd+GoGMeXyZtvTp1U6ciegvFIpE62SPhMe9Jas80cJmQs9akocR5Tp
-   pqadrkmq/4CNWG3DwOf757SsH0uaeyYltVryB8wezbANSS3AsZqKJtg+r
-   i9BphNyCAbJvGqHNW246Ogc9MKURDom7hlFau/njFn7yXyyjiqhcsQ5z/
-   jH0qVZ7Nyl082FzPOmK1icMO04YbIQ0sbFA7mMZIXVxEBFAZTc+9VcPyK
-   bksFwm2ld2pTvLWnUCylW1S25AE6Nb3gQPKYi961GocwECJnD9nNpDoPK
-   AAy11XAoVr1pdK8RWiiiE10DcbF6tsLm0e1kbgUx4X8yVhKVnTmhJZ2n3
-   Q==;
-X-CSE-ConnectionGUID: dAKc+rYJTt6IE810RwRirg==
-X-CSE-MsgGUID: C4SisLOMSnOtz/1R7LSDpQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44435719"
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="44435719"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 07:20:42 -0700
-X-CSE-ConnectionGUID: x5QxreAqSqa894qDKsBJ7Q==
-X-CSE-MsgGUID: PXo505ySSDCVuk2lWzsCDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="126082271"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa008.jf.intel.com with ESMTP; 27 Mar 2025 07:20:40 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id CCAB51D9; Thu, 27 Mar 2025 16:20:38 +0200 (EET)
-Date: Thu, 27 Mar 2025 16:20:38 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Andreas Noever <andreas.noever@gmail.com>,
-	Michael Jamet <michael.jamet@intel.com>,
-	Mika Westerberg <westeri@kernel.org>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCHv2] thunderbolt: do not double dequeue a request
-Message-ID: <20250327142038.GB3152277@black.fi.intel.com>
-References: <20250327114222.100293-1-senozhatsky@chromium.org>
- <20250327133756.GA3152277@black.fi.intel.com>
- <vxocwwtfwg3tmjm62kcz33ypsg22afccd2ua5jqymbxaxwcigf@nnydc53vu3gv>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="nxJFq5Bj"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id AEACA446;
+	Thu, 27 Mar 2025 15:19:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1743085172;
+	bh=aCijh6dK23ppJuTHRJqIOMUqMd5KE+ya18KSNMKNiI4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nxJFq5BjGzTg/4YWYiD9K3sn9VQwy8bC6yEpJEFG7Pv2RX4fDhu3dLbuRqxVSf+IC
+	 akkktswnmMgNtt9nPyPLeyhkCKmiOMYm0yV7VGzbTNJdVHetIaziByuOZ80tsFxsps
+	 NR37qDtLiYBXTJfBLcS6446F/7EOA9viB/zQ0tHY=
+Message-ID: <b5cf15a4-7c65-4718-9c39-a4c86179ba4c@ideasonboard.com>
+Date: Thu, 27 Mar 2025 16:21:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <vxocwwtfwg3tmjm62kcz33ypsg22afccd2ua5jqymbxaxwcigf@nnydc53vu3gv>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
+To: Pekka Paalanen <pekka.paalanen@haloniitty.fi>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+ Vishal Sagar <vishal.sagar@amd.com>,
+ Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Michal Simek <michal.simek@amd.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
+ <20250326-xilinx-formats-v4-3-322a300c6d72@ideasonboard.com>
+ <CAMuHMdXM1B1c=62EpcuUdpdpaBRZSJLXb1GBB0egzp7Fyeo5-w@mail.gmail.com>
+ <b195971c-52e6-463e-a440-83dde4346e65@ideasonboard.com>
+ <20250327112009.6b4dc430@eldfell>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ xsFNBE6ms0cBEACyizowecZqXfMZtnBniOieTuFdErHAUyxVgtmr0f5ZfIi9Z4l+uUN4Zdw2
+ wCEZjx3o0Z34diXBaMRJ3rAk9yB90UJAnLtb8A97Oq64DskLF81GCYB2P1i0qrG7UjpASgCA
+ Ru0lVvxsWyIwSfoYoLrazbT1wkWRs8YBkkXQFfL7Mn3ZMoGPcpfwYH9O7bV1NslbmyJzRCMO
+ eYV258gjCcwYlrkyIratlHCek4GrwV8Z9NQcjD5iLzrONjfafrWPwj6yn2RlL0mQEwt1lOvn
+ LnI7QRtB3zxA3yB+FLsT1hx0va6xCHpX3QO2gBsyHCyVafFMrg3c/7IIWkDLngJxFgz6DLiA
+ G4ld1QK/jsYqfP2GIMH1mFdjY+iagG4DqOsjip479HCWAptpNxSOCL6z3qxCU8MCz8iNOtZk
+ DYXQWVscM5qgYSn+fmMM2qN+eoWlnCGVURZZLDjg387S2E1jT/dNTOsM/IqQj+ZROUZuRcF7
+ 0RTtuU5q1HnbRNwy+23xeoSGuwmLQ2UsUk7Q5CnrjYfiPo3wHze8avK95JBoSd+WIRmV3uoO
+ rXCoYOIRlDhg9XJTrbnQ3Ot5zOa0Y9c4IpyAlut6mDtxtKXr4+8OzjSVFww7tIwadTK3wDQv
+ Bus4jxHjS6dz1g2ypT65qnHen6mUUH63lhzewqO9peAHJ0SLrQARAQABzTBUb21pIFZhbGtl
+ aW5lbiA8dG9taS52YWxrZWluZW5AaWRlYXNvbmJvYXJkLmNvbT7CwY4EEwEIADgWIQTEOAw+
+ ll79gQef86f6PaqMvJYe9QUCX/HruAIbAwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRD6
+ PaqMvJYe9WmFD/99NGoD5lBJhlFDHMZvO+Op8vCwnIRZdTsyrtGl72rVh9xRfcSgYPZUvBuT
+ VDxE53mY9HaZyu1eGMccYRBaTLJSfCXl/g317CrMNdY0k40b9YeIX10feiRYEWoDIPQ3tMmA
+ 0nHDygzcnuPiPT68JYZ6tUOvAt7r6OX/litM+m2/E9mtp8xCoWOo/kYO4mOAIoMNvLB8vufi
+ uBB4e/AvAjtny4ScuNV5c5q8MkfNIiOyag9QCiQ/JfoAqzXRjVb4VZG72AKaElwipiKCWEcU
+ R4+Bu5Qbaxj7Cd36M/bI54OrbWWETJkVVSV1i0tghCd6HHyquTdFl7wYcz6cL1hn/6byVnD+
+ sR3BLvSBHYp8WSwv0TCuf6tLiNgHAO1hWiQ1pOoXyMEsxZlgPXT+wb4dbNVunckwqFjGxRbl
+ Rz7apFT/ZRwbazEzEzNyrBOfB55xdipG/2+SmFn0oMFqFOBEszXLQVslh64lI0CMJm2OYYe3
+ PxHqYaztyeXsx13Bfnq9+bUynAQ4uW1P5DJ3OIRZWKmbQd/Me3Fq6TU57LsvwRgE0Le9PFQs
+ dcP2071rMTpqTUteEgODJS4VDf4lXJfY91u32BJkiqM7/62Cqatcz5UWWHq5xeF03MIUTqdE
+ qHWk3RJEoWHWQRzQfcx6Fn2fDAUKhAddvoopfcjAHfpAWJ+ENc7BTQROprNHARAAx0aat8GU
+ hsusCLc4MIxOQwidecCTRc9Dz/7U2goUwhw2O5j9TPqLtp57VITmHILnvZf6q3QAho2QMQyE
+ DDvHubrdtEoqaaSKxKkFie1uhWNNvXPhwkKLYieyL9m2JdU+b88HaDnpzdyTTR4uH7wk0bBa
+ KbTSgIFDDe5lXInypewPO30TmYNkFSexnnM3n1PBCqiJXsJahE4ZQ+WnV5FbPUj8T2zXS2xk
+ 0LZ0+DwKmZ0ZDovvdEWRWrz3UzJ8DLHb7blPpGhmqj3ANXQXC7mb9qJ6J/VSl61GbxIO2Dwb
+ xPNkHk8fwnxlUBCOyBti/uD2uSTgKHNdabhVm2dgFNVuS1y3bBHbI/qjC3J7rWE0WiaHWEqy
+ UVPk8rsph4rqITsj2RiY70vEW0SKePrChvET7D8P1UPqmveBNNtSS7In+DdZ5kUqLV7rJnM9
+ /4cwy+uZUt8cuCZlcA5u8IsBCNJudxEqBG10GHg1B6h1RZIz9Q9XfiBdaqa5+CjyFs8ua01c
+ 9HmyfkuhXG2OLjfQuK+Ygd56mV3lq0aFdwbaX16DG22c6flkkBSjyWXYepFtHz9KsBS0DaZb
+ 4IkLmZwEXpZcIOQjQ71fqlpiXkXSIaQ6YMEs8WjBbpP81h7QxWIfWtp+VnwNGc6nq5IQDESH
+ mvQcsFS7d3eGVI6eyjCFdcAO8eMAEQEAAcLBXwQYAQIACQUCTqazRwIbDAAKCRD6PaqMvJYe
+ 9fA7EACS6exUedsBKmt4pT7nqXBcRsqm6YzT6DeCM8PWMTeaVGHiR4TnNFiT3otD5UpYQI7S
+ suYxoTdHrrrBzdlKe5rUWpzoZkVK6p0s9OIvGzLT0lrb0HC9iNDWT3JgpYDnk4Z2mFi6tTbq
+ xKMtpVFRA6FjviGDRsfkfoURZI51nf2RSAk/A8BEDDZ7lgJHskYoklSpwyrXhkp9FHGMaYII
+ m9EKuUTX9JPDG2FTthCBrdsgWYPdJQvM+zscq09vFMQ9Fykbx5N8z/oFEUy3ACyPqW2oyfvU
+ CH5WDpWBG0s5BALp1gBJPytIAd/pY/5ZdNoi0Cx3+Z7jaBFEyYJdWy1hGddpkgnMjyOfLI7B
+ CFrdecTZbR5upjNSDvQ7RG85SnpYJTIin+SAUazAeA2nS6gTZzumgtdw8XmVXZwdBfF+ICof
+ 92UkbYcYNbzWO/GHgsNT1WnM4sa9lwCSWH8Fw1o/3bX1VVPEsnESOfxkNdu+gAF5S6+I6n3a
+ ueeIlwJl5CpT5l8RpoZXEOVtXYn8zzOJ7oGZYINRV9Pf8qKGLf3Dft7zKBP832I3PQjeok7F
+ yjt+9S+KgSFSHP3Pa4E7lsSdWhSlHYNdG/czhoUkSCN09C0rEK93wxACx3vtxPLjXu6RptBw
+ 3dRq7n+mQChEB1am0BueV1JZaBboIL0AGlSJkm23kw==
+In-Reply-To: <20250327112009.6b4dc430@eldfell>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On Thu, Mar 27, 2025 at 11:02:04PM +0900, Sergey Senozhatsky wrote:
-> Hi,
+On 27/03/2025 11:20, Pekka Paalanen wrote:
+> On Wed, 26 Mar 2025 15:55:18 +0200
+> Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:
 > 
-> On (25/03/27 15:37), Mika Westerberg wrote:
-> > > Another possibility can be tb_cfg_request_sync():
-> > > 
-> > > tb_cfg_request_sync()
-> > >  tb_cfg_request()
-> > >   schedule_work(&req->work) -> tb_cfg_request_dequeue()
-> > >  tb_cfg_request_cancel()
-> > >   schedule_work(&req->work) -> tb_cfg_request_dequeue()
-> > 
-> > Not sure about this one because &req->work will only be scheduled once the
-> > second schedule_work() should not queue it again (as far as I can tell).
+>> Hi,
+>>
+>> On 26/03/2025 15:52, Geert Uytterhoeven wrote:
+>>> Hi Tomi,
+>>>
+>>> On Wed, 26 Mar 2025 at 14:23, Tomi Valkeinen
+>>> <tomi.valkeinen@ideasonboard.com> wrote:
+>>>> Add greyscale Y8 format.
+>>>>
+>>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+>>>
+>>> Thanks for your patch!
+>>>    
+>>>> --- a/include/uapi/drm/drm_fourcc.h
+>>>> +++ b/include/uapi/drm/drm_fourcc.h
+>>>> @@ -405,6 +405,9 @@ extern "C" {
+>>>>    #define DRM_FORMAT_YUV444      fourcc_code('Y', 'U', '2', '4') /* non-subsampled Cb (1) and Cr (2) planes */
+>>>>    #define DRM_FORMAT_YVU444      fourcc_code('Y', 'V', '2', '4') /* non-subsampled Cr (1) and Cb (2) planes */
+>>>>
+>>>> +/* Greyscale formats */
+>>>> +
+>>>> +#define DRM_FORMAT_Y8          fourcc_code('G', 'R', 'E', 'Y')  /* 8-bit Y-only */
+>>>
+>>> This format differs from e.g. DRM_FORMAT_R8, which encodes
+>>> the number of bits in the FOURCC format. What do you envision
+>>> for e.g. DRM_FORMAT_Y16? fourcc_code('G', 'R', '1', '6')?
+>>
+>> I wanted to use the same fourcc as on V4L2 side. Strictly speaking it's
+>> not required, but different fourccs for the same formats do confuse.
+>>
+>> So, generally speaking, I'd pick an existing fourcc from v4l2 side if
+>> possible, and if not, invent a new one.
 > 
-> If the second schedule_work() happens after a timeout, that's what
-> !wait_for_completion_timeout() does, then the first schedule_work()
-> can already execute the work by that time, and then we can schedule
-> the work again (but the request is already dequeued).  Am I missing
-> something?
-
-schedule_work() does not schedule the work again if it is already
-scheduled.
-
-> > > To address the issue, do not dequeue requests that don't
-> > > have TB_CFG_REQUEST_ACTIVE bit set.
-> > 
-> > Just to be sure. After this change you have not seen the issue anymore
-> > with your testing?
+> Hi Tomi,
 > 
-> Haven't tried it yet.
+> what's the actual difference between DRM_FORMAT_R8 and DRM_FORMAT_Y8?
 > 
-> We just found it today, it usually takes several weeks before
-> we can roll out the fix to our fleet and we prefer patches from
-> upstream/subsystem git, so that's why we reach out to the upstream.
+> Is the difference that when R8 gets expanded to RGB, it becomes (R, 0,
+> 0), but Y8 gets expanded to (c1 * Y, c2 * Y, c3 * Y) where c1..c3 are
+> defined by MatrixCoefficients (H.273 terminology)?
+> 
+> That would be my intuitive assumption following how YCbCr is handled.
+> Is it obvious enough, or should there be a comment to that effect?
 
-Makes sense.
+You raise an interesting point. Is it defined how a display driver, that 
+supports R8 as a format, shows R8 on screen? I came into this in the 
+context of grayscale formats, so I thought R8 would be handled as (R, R, 
+R) in RGB. But you say (R, 0, 0), which... also makes sense.
 
-> The 0xdead000000000122 deference is a LIST_POISON on x86_64, which
-> is set explicitly in list_del(), so I'd say I'm fairly confident
-> that we have a double list_del() in tb_cfg_request_dequeue().
+I think that's a new argument in favor of Y8: Y8 means Y-only, so the 
+meaning is more explicit.
 
-Yes, I agree but since I have not seen any similar reports (sans what I saw
-ages ago), I would like to be sure the issue you see is actually fixed with
-the patch (and that there are no unexpected side-effects). ;-)
+How I see that the display controller would deal with Y8 (depending on 
+the HW):
+
+- Take the Y value as a greyscale value, if the HW supports greyscale 
+format directly.
+- Use the Y as YCbCr (Y, Cb-neutral, Cr-neutral), and use that if the HW 
+supports YCbCr directly.
+- Use the Y as YCbCr as above, and convert to RGB in the usual way.
+
+And as it's an YUV format, the limited/full range applies, which I 
+believe is not usually applied to RGB formats.
+
+Does this make sense?
+
+  Tomi
+
