@@ -1,182 +1,149 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F88A55;
-	Thu, 27 Mar 2025 19:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E179A55;
+	Thu, 27 Mar 2025 19:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743102943; cv=none; b=nRdRlTkYqXX9Z3dJL522Q84QHqPPkQadfjMbvb325rhaSwx4rEN0IXaX9LB9BqTUv2+dhK7otv3puZf5VQOCGBjzLTPAavGJunQZzufQ+rt94tCk6pzpuCjc/UGCNGm8YceHnzyN+FaIGpQsSf00++WWP2Lu264KtFAe8IsWheE=
+	t=1743103009; cv=none; b=sWrs0x0Av14ljGP36yhVbTbQVQ9kg+kwUcs5VKZBx2tiC8i4wjcbi5uFebO0LAcQ87F8wWD1dMdqwHzou9bzS7LdhEsevILpeXHSQMbuHQ14xn16guhyIhcvk+oKkABLaURcq43wXI0Zg1sjYWjFWusaFdy8ipU8dO027K88hoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743102943; c=relaxed/simple;
-	bh=Rw5YIuasHI4FgVTE4nUpNhBDzZD/qo8wURofcGnCHPA=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=HrursWj+QuPTB6DkxwmbM1YSo9NKeMhu1EVWHgmypl+dU54WQ9hiC/TbA0B1SCebHOd/+Tm6QJ0Vd9J667YH/jZpR8NHPXaPaNk3x5PYTxsCka+SMZ/Fvw9193ZHVrYoOgFfQv0g9KLjkb6Yb9EgGm2mCWv4EF2P1ADg6q7umXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fh2GXN8j; arc=none smtp.client-ip=209.85.128.49
+	s=arc-20240116; t=1743103009; c=relaxed/simple;
+	bh=kq1u3nc+mPjwQe/0bCG8uWnGvRyoTCbknqaoB563NR0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sB3GjYjmZz1mIHux4xGzr7ndluQXDh4HEOsaxFeei9uE9jwFNT2p9+BoGpO5/F5AZMtDBea+qaH+pjhzIOYGRoQXrYplASneHllbhijNU2jQhtOeWsKzzD9eMBqcZl1Vx9uPME0a/tZ7KqLjlMNjPrNaEQa30YnJqukOI/NRjVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jYv/D9al; arc=none smtp.client-ip=209.85.216.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fh2GXN8j"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4394036c0efso9598185e9.2;
-        Thu, 27 Mar 2025 12:15:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYv/D9al"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ff694d2d4dso2256930a91.0;
+        Thu, 27 Mar 2025 12:16:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743102940; x=1743707740; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zfwfv1QkpZUVspd7kmNSz+5Pyv+VFy0ns7dOJv/HVl4=;
-        b=Fh2GXN8jSFKLObAex6klCqe1FmDDjFjcR6CXTILaxhNf3Y8hR483QoPxp1O1jenUeH
-         NAhCfls2T5cZCbwuNE32CI9K9IcSc6DSEuUe+WIGP7iqPHpSaKcvop88S4M0cQ5xv32H
-         uoeB21ddooGtV7suz/5yzKN/Zs1dhMHacmu4qzRQJ6/AduAtb2o+SF73GOEgpMUUA+Oy
-         igORk4AWQye2CgM9rlWWN5xm70NSobXKl1HE98UUcakVaEW8d2aL8OIy+EFz8SGvJ9ZV
-         GpqBI426e4fHzWwoSmlgQcRLjhdkP99gtG6MiS1u48ou7iKmKLckREmUylMvuK2Sr1Kx
-         0e6w==
+        d=gmail.com; s=20230601; t=1743103007; x=1743707807; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zUVWNbQ8DtoGP0ZB/V2z4gEFJ0roP/jUX/t8f3iKZ44=;
+        b=jYv/D9alo4I1DmOz64H5/cGb4IhuYLTY0S34lk2mILM01nrTtsm3Es77zUIfvzYUzz
+         yB4RdezBM16H90aaYJcXDUucPU/HrF0hWWLmbBiybM0nSJ8T015C1UAdPjpLnhV1314c
+         B96ikKXIPHwJ1cBiHqbCSpy8T5g48x6nEel9HBfTImj4xn8eoxwa5fBaPHEvXpJ8EICa
+         AH/eDKY/FvP0J3KBayCrEGEJ3B+NH+0zOsgim6+mNpD8kQlMeWN05nBRvKSkFE6b92Bp
+         Nv3I/jYJiJAVnpV6KbypdQDTcl0s1MNek+d38sP9HHildjgY22oQPjYLazpAVYBkKPnC
+         +LAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743102940; x=1743707740;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zfwfv1QkpZUVspd7kmNSz+5Pyv+VFy0ns7dOJv/HVl4=;
-        b=Dssw4gv4a7A/G26ptVef010ugNvSw9o6xNh7G1bt9iNfGP8Bd+sdaWb0tKYlZGqHb1
-         ZGUaviOGO2lak4KEm4x1Yl+lQGcz6HOdFZi7A/fLQEUTo1Hy4TSGZG3MMSq+CDCPaJGe
-         CuoFhx6D9wpHJCkmCz/+LkwlyfCJXuCCFu8TplZe5bsr2/eCrRtyHufTuSuc5JLn+ysS
-         j/8BRr/zP5vIyrfH2YQGPaU9270F4VA+YwElAbHVCqd71Qx2MrGRGAJZdH2AU3BH7JK0
-         /k+4eM1WOnV7NqnzNq1/CyoyogSJjmC6m5PaKuIyizha3A7JJXNN4vjRDidThgA3uhmF
-         Z9PA==
-X-Forwarded-Encrypted: i=1; AJvYcCWXDd1kiV4B0etWxVrFXxcuGcuE+Kkt+ZP9wfSdcltWJeLzcSgF9tRfKVLHujftTDqV7O2BqOOx@vger.kernel.org, AJvYcCWm33hqdNTVUq+3XStstDhY+Rpq08JVWGliAaInQpPDn6/5wXouktN1k8UsgX22tdVvGaYzggARGDJVQ/W+@vger.kernel.org, AJvYcCXApjFDVsdo6T5CFahldbrAnCK2cQHr+pEr1Zij50vPe3pI4zkWnlOWieZ5E1ZXDnw93Ot721OlwkQ3QRoB@vger.kernel.org
-X-Gm-Message-State: AOJu0YxL9wZbPWTs14q36ymyRYP1eMh65IF1KoR7AsvPewAXzVRGHZPw
-	rO/Sz3vTw2BDvLGOAv2PbImam2gEz8Tx+0whEigMvMzyrPh6bGl2
-X-Gm-Gg: ASbGncs82fum2XvsvF+vE1Xjo5/xZDeSnwbEiruihtD1EAUFMH7NSnS11H/608aPW57
-	bRcJQLGCVhQy41zMfqnrr/dMVXwxtvez06Lmus81D/lI0p6SyzsT+El7qqJyNjrA/qXL4HPSyqU
-	0jcWk1CpaMOnMgd2KOyrxPZ4pKyDNlLuUOPi5SpU+pV3zWWkP9kR9Ubi0jtVdNRg+CQgtTKsGxV
-	viG9HZTMZP44+surchnlfnzjD1SQjH0ryhDg5l3Xc5jdIZeYkqqD0ZRWXSQLvb/leUMrRciO9F8
-	kyi9v5Km8cDQwF/+FsjrXU+gS5s0wW1WQi0Ta1vCSfSgaLd45KITCA==
-X-Google-Smtp-Source: AGHT+IF6wQGZ2i0qPbjE48g6AoqxPSkbrIx5QXDhbvYGV8JqzaVvMSMYLsYltI99DKGgpV1fk5VzWQ==
-X-Received: by 2002:a05:600c:5103:b0:43d:683:8caa with SMTP id 5b1f17b1804b1-43d84fbea4bmr40267415e9.15.1743102939774;
-        Thu, 27 Mar 2025 12:15:39 -0700 (PDT)
-Received: from [192.168.3.5] ([212.115.166.76])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d830f5f22sm46351685e9.30.2025.03.27.12.15.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 12:15:38 -0700 (PDT)
-Message-ID: <3b1f2031-9f91-48d8-8c79-65d470142f26@gmail.com>
-Date: Thu, 27 Mar 2025 20:15:36 +0100
+        d=1e100.net; s=20230601; t=1743103007; x=1743707807;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zUVWNbQ8DtoGP0ZB/V2z4gEFJ0roP/jUX/t8f3iKZ44=;
+        b=N1UE4/09aPs6rEpC91Fv6uSU00plvCYmTcf/bVMYVQIQQ3nMygc+PmiRpuMUbb5oND
+         fZo1y6DMxMq4YhDt/MwtCvpnlxyjZkK8qy8+IGN32AjwnIe9CwlED9KT+375qGMjZrsT
+         6tKr/Jm3edDzeoJPfUk4d/LSHQkiSdm4V12JgAEk82TcTvZTTBgcivrDElIV2ixMx/mp
+         mDJrkHgg1IhHo3/bO0gXUtAzkJofLmTExxKgxIpAgAiDTomyDXHIq2sFx3TaHKy/mV6b
+         uasUF/jkUpJifqFkhmJLNnuiJK8MGqWglY2zQW8c2CxMi8gf+rXqt5bAsOR0luzOiJO2
+         arzA==
+X-Forwarded-Encrypted: i=1; AJvYcCUX+XVUj/qZTCNGdQ3R7x5Q8daXmyywEnXt5V83iAonxILZQxEBglVVY9NUZ+yTtoLhLs8nPF5xdBS+QCzei3QlXG/jr4LI@vger.kernel.org, AJvYcCX1fE4rGhc7B2F27fhOFRsxMVGkw+se4ZeUjvNd8wpo8x4yMEbu/DESYmkOwiZ3ZlYJ6YbI1JzM8j79leI=@vger.kernel.org, AJvYcCXNnrbJbsyPc3dSI5Us/5Sy4QSL28iuDDAcj8Z1nI3xyPqjP7HmpwnrSPqOHK9CpMzxNyT73SDkNw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzleZDXlGulaUM4EA111Unus5HOp2dSHPQEXwR/hIF8kxC0TT6d
+	G3XTNAUsKECT1rNvrc6uc3r6BUTeF6zXLgTPjMcIhbxlSZKLGHwg0xmrQ+sxDWPx7TfXB1sEFse
+	4sKPCS6xpRNhohuXp2x1QSeRkpESaGw==
+X-Gm-Gg: ASbGnctNEGiBe+pBW2sW2XHkpUSx1dWj987vZQaWLEsHx7uDF6rsTHoYM5lxpqX+r2P
+	MntZ5WwVNW0kcyYoG0nuVPKLCsfBalTVO0gxIr4dIlYiDKU4IXrCWXRYRWWFuhiH1EVdV+UJAAK
+	ejg4S3altYbEi2hRirQvaf0oS6ew==
+X-Google-Smtp-Source: AGHT+IFQya5zAj8EooqHSfTbKWJR6nzXbKCBSxl7xIAxERGb/utwbH8iroVmgFyWdA4ZXwaqQZ4Mli1i6ZeOcqcA068=
+X-Received: by 2002:a17:90b:5824:b0:2f8:b2c:5ef3 with SMTP id
+ 98e67ed59e1d1-303a7f6eb13mr7391546a91.14.1743103007308; Thu, 27 Mar 2025
+ 12:16:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Attila Szasz <szasza.contact@gmail.com>
-Subject: Re: [PATCH] hfs/hfsplus: fix slab-out-of-bounds in hfs_bnode_read_key
-To: Greg KH <gregkh@linuxfoundation.org>,
- Cengiz Can <cengiz.can@canonical.com>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, lvc-patches@linuxtesting.org,
- dutyrok@altlinux.org, syzbot+5f3a973ed3dfb85a6683@syzkaller.appspotmail.com,
- stable@vger.kernel.org
-References: <20241019191303.24048-1-kovalev@altlinux.org>
- <Z9xsx-w4YCBuYjx5@eldamar.lan>
- <d4mpuomgxqi7xppaewlpey6thec7h2fk4sm2iktqsx6bhwu5ph@ctkjksxmkgne>
- <2025032402-jam-immovable-2d57@gregkh>
-Content-Language: en-US
-In-Reply-To: <2025032402-jam-immovable-2d57@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <d0ade43454dee9c00689f03e8d9bd32a@paul-moore.com>
+ <CAHk-=wjbahY4JjLCXNT4o3xVq2cejqBG69z+MNfHsN9FQBnbOw@mail.gmail.com>
+ <CAHC9VhRExVqdhHqs0njs7NY6bFg0BfcE-gMpS30HW9O7MSDfWQ@mail.gmail.com>
+ <CAHk-=wi9m8-_3cywQCohJQEQtuQ+teS4gOtBkWZrhFWzNy-5_A@mail.gmail.com>
+ <CAHC9VhT3D7X=4SpO5xbYm=JUwJqTa7tn=J6QMDBV96c7VBUw4g@mail.gmail.com>
+ <CAHk-=wiH3hoPTxX3=xTRzRuCwktf3pNzFWP45-x6AwoVAjUsUQ@mail.gmail.com>
+ <CAHC9VhT5G6W7g9pB3VM6W7wCEJjWfYSUWNgWF+rRiQ4ZQbGMEQ@mail.gmail.com>
+ <CAHk-=whwQhJtafHN4B1w-z2Gno__xLHS4NouKKHrYNTYa8kz3g@mail.gmail.com>
+ <CA+zpnLeK2Ecj1mBod2rFe4ymd9eXiJkbyYwFh4Yrmck3DVB2SA@mail.gmail.com>
+ <CAHk-=wiBH8FBL+pnXui8O-FSdyoG-yX81mUF9bsZcC6rR5ZtgQ@mail.gmail.com>
+ <CA+zpnLe_AOpS_F1UBNOvN3YRswUSy_3=0jjUAy4GPxEHYumD0g@mail.gmail.com>
+ <CAHk-=wgJ0gzYJD+MghfVW-YeGLW6sLU5soFY13KWmPAxobk5Mw@mail.gmail.com>
+ <CABXk95AqgpqGtjzK2o=mxWJg5RUZG80dAEaKF9JdUT6n5eFENQ@mail.gmail.com>
+ <CAHk-=wh1refm6JkAB__TmC8OBJyNdH2DmNQAbvcL=tKepkHrYw@mail.gmail.com>
+ <CAEjxPJ6XnBmbzH44YVQxxv8WOyPN7N81fpj7OYonEOTB=rn6wg@mail.gmail.com>
+ <CAHk-=wguzgJu4p_khuEXKHmh-6abSN7xLJdCTuyVEfjsopY7iQ@mail.gmail.com> <CAHk-=wh4H3j3TYWn6KSgznUsOXz8vfHMOfTNmFvjGr=hwULWsw@mail.gmail.com>
+In-Reply-To: <CAHk-=wh4H3j3TYWn6KSgznUsOXz8vfHMOfTNmFvjGr=hwULWsw@mail.gmail.com>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+Date: Thu, 27 Mar 2025 15:16:35 -0400
+X-Gm-Features: AQ5f1Jp8koCzhqGSEqVu74bttZPPyaFzmIgi0is9lpOBOoM43Ko_73XTP2EYb30
+Message-ID: <CAEjxPJ4fzoONpiy3z8QOZ55w35=WfWQ+hiTg24LMEHPpnaC87Q@mail.gmail.com>
+Subject: Re: [GIT PULL] selinux/selinux-pr-20250323
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jeffrey Vander Stoep <jeffv@google.com>, =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>, 
+	Paul Moore <paul@paul-moore.com>, "Cameron K. Williams" <ckwilliams.work@gmail.com>, 
+	"Kipp N. Davis" <kippndavis.work@gmx.com>, selinux@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Nick Kralevich <nnk@google.com>, Kees Cook <kees@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-hi, Attila here—the one who wrote the article and the PoC.
+On Thu, Mar 27, 2025 at 3:03=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Thu, 27 Mar 2025 at 11:15, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > The best fix would be to be able to cache the "this doesn't have any
+> > extra security rules outside of the regular POSIX ones" and avoid
+> > calling the hook entirely. That's what we've done for the ACL path,
+> > and that has turned ACL costs into almost a non-issue.
+>
+> .. just to follow up on that, because I tried to look into it, but
+> didn't know the lsm and selinux code well enough to actually make much
+> progress, so if somebody who does is really willing to take a deeper
+> look, please pester me for details.
 
-just for the record: this was a mistake then, and if one happens to 
-discover another impactful bug in a potentially orphaned filesystem or 
-another subsystem, it might EVEN get prioritized by upstream and stable 
-over /panic_on_warn/ stuff next time, right? or am I missing something?
+Would be interested in those details.
 
-On 3/24/25 17:17, Greg KH wrote:
-> On Mon, Mar 24, 2025 at 07:14:07PM +0300, Cengiz Can wrote:
->> On 20-03-25 20:30:15, Salvatore Bonaccorso wrote:
->>> Hi
->>>
->> Hello Salvatore,
->>
->>> On Sat, Oct 19, 2024 at 10:13:03PM +0300, Vasiliy Kovalev wrote:
->>>> Syzbot reported an issue in hfs subsystem:
->>>>
->>>> BUG: KASAN: slab-out-of-bounds in memcpy_from_page include/linux/highmem.h:423 [inline]
->>>> BUG: KASAN: slab-out-of-bounds in hfs_bnode_read fs/hfs/bnode.c:35 [inline]
->>>> BUG: KASAN: slab-out-of-bounds in hfs_bnode_read_key+0x314/0x450 fs/hfs/bnode.c:70
->>>> Write of size 94 at addr ffff8880123cd100 by task syz-executor237/5102
->>>>
->>>> Call Trace:
->>>>   <TASK>
->>>>   __dump_stack lib/dump_stack.c:94 [inline]
->>>>   dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
->>>>   print_address_description mm/kasan/report.c:377 [inline]
->>>>   print_report+0x169/0x550 mm/kasan/report.c:488
->>>>   kasan_report+0x143/0x180 mm/kasan/report.c:601
->>>>   kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
->>>>   __asan_memcpy+0x40/0x70 mm/kasan/shadow.c:106
->>>>   memcpy_from_page include/linux/highmem.h:423 [inline]
->>>>   hfs_bnode_read fs/hfs/bnode.c:35 [inline]
->>>>   hfs_bnode_read_key+0x314/0x450 fs/hfs/bnode.c:70
->>>>   hfs_brec_insert+0x7f3/0xbd0 fs/hfs/brec.c:159
->>>>   hfs_cat_create+0x41d/0xa50 fs/hfs/catalog.c:118
->>>>   hfs_mkdir+0x6c/0xe0 fs/hfs/dir.c:232
->>>>   vfs_mkdir+0x2f9/0x4f0 fs/namei.c:4257
->>>>   do_mkdirat+0x264/0x3a0 fs/namei.c:4280
->>>>   __do_sys_mkdir fs/namei.c:4300 [inline]
->>>>   __se_sys_mkdir fs/namei.c:4298 [inline]
->>>>   __x64_sys_mkdir+0x6c/0x80 fs/namei.c:4298
->>>>   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->>>>   do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
->>>>   entry_SYSCALL_64_after_hwframe+0x77/0x7f
->>>> RIP: 0033:0x7fbdd6057a99
->>>>
->>>> Add a check for key length in hfs_bnode_read_key to prevent
->>>> out-of-bounds memory access. If the key length is invalid, the
->>>> key buffer is cleared, improving stability and reliability.
->>>>
->>>> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
->>>> Reported-by:syzbot+5f3a973ed3dfb85a6683@syzkaller.appspotmail.com
->>>> Closes:https://syzkaller.appspot.com/bug?extid=5f3a973ed3dfb85a6683
->>>> Cc:stable@vger.kernel.org
->>>> Signed-off-by: Vasiliy Kovalev<kovalev@altlinux.org>
->>>> ---
->>>>   fs/hfs/bnode.c     | 6 ++++++
->>>>   fs/hfsplus/bnode.c | 6 ++++++
->>>>   2 files changed, 12 insertions(+)
->>>>
->>>> diff --git a/fs/hfs/bnode.c b/fs/hfs/bnode.c
->>>> index 6add6ebfef8967..cb823a8a6ba960 100644
->>>> --- a/fs/hfs/bnode.c
->>>> +++ b/fs/hfs/bnode.c
->>>> @@ -67,6 +67,12 @@ void hfs_bnode_read_key(struct hfs_bnode *node, void *key, int off)
->>>>   	else
->>>>   		key_len = tree->max_key_len + 1;
->>>>   
->>>> +	if (key_len > sizeof(hfs_btree_key) || key_len < 1) {
->>>> +		memset(key, 0, sizeof(hfs_btree_key));
->>>> +		pr_err("hfs: Invalid key length: %d\n", key_len);
->>>> +		return;
->>>> +	}
->>>> +
->>>>   	hfs_bnode_read(node, key, off, key_len);
->>>>   }
->> Simpler the better.
->>
->> Our fix was released back in February. (There are other issues in our attempt I
->> admit).
->>
->> https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/jammy/commit/?id=2e8d8dffa2e0b5291522548309ec70428be7cf5a
->>
->> If someone can pick this submission, I will be happy to replace our version.
-> any specific reason why you didn't submit this upstream?  Or did that
-> happen and it somehow not get picked up?
+> But the big high-level case for pathname lookup tends to be the calls
+> we have to do not just for the final inode, but the "every single
+> component" cases.
 >
-> And why assign a CVE for an issue that is in the mainline kernel, last I
-> checked, Canonical was NOT allowed to do that.
+> Which is a much *simpler* and more targeted security check than the
+> "any random permissions". It's the "can I use this directory for
+> lookups", and if we had an inode flag that said "this inode has no
+> security policies that change the lookup rules", just that single big
+> would likely be a *huge* improvement.
 >
-> Please work to revoke that CVE and ask for one properly.
+> Because then you don't need to try to optimize the security check
+> itself, because instead the VFS layer can optimize it all by not
+> calling into the security layer at all.
 >
-> thanks,
+> And from a "this is called too much" standpoint, the "every path
+> component" cases tend to outnumber the "final file open" case by
+> something like 5-to-1 (handwavy, but not entirely made up).
 >
-> greg k-h
+> I think the main case is
 >
+>    link_path_walk -> may_lookup -> security_inode_permission
+>
+> where the special case is that may_lookup() only sets MAY_EXEC and
+> MAY_NOT_BLOCK (for the RCU lookup case, which is what matters).
+>
+> So if inode_permission() (in fs/namei.c) could avoid calling
+> security_inode_permission() because the inode has some flag that says
+> "none of the security models disallow MAY_EXEC for this directory
+> walk", I really think that would help.
+>
+> I think trying to optimize the AVC hash table lookup further or
+> something like that is a dead end. The cost is "many many many calls",
+> and each individual call is fairly cheap on its own, but they all walk
+> different hash chains, and it all adds up to "lots of cost".
+>
+> Hmm?
+
+Where could/would we cache that information so that it was accessible
+directly by the VFS layer?
