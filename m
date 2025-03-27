@@ -1,120 +1,119 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095F228EC;
-	Thu, 27 Mar 2025 19:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02F61C7019;
+	Thu, 27 Mar 2025 19:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743104309; cv=none; b=DAWaZfE6U10HJHML86/pcTw/caKBRLDEm2uTb5mnjaOghXkRe7WZEu/YAg/4VVwLu5OcLGoB+YJQ5jE5AclnMuvkEIFPERTiEHFn+TUTv/t1yAsN7A2LWJ1RQHJL7y0QSAaxMnH0iZyGZAYvWTUJz6dqiUQBR3O/9U737myzTd0=
+	t=1743104377; cv=none; b=YVLYY7DgXQe8mKdiMB3CxYFyeHyT1Y+GI458Zu6IUGGcUCF0dvRUxaNnWwrhZ68/khCaiMZFB/x4eQ3E0ZPOBSVU3eb7jCzHd3BVkwFQyFb2/g2ieRPeOXlWjSSltonle66zAi43Oltv4lLuXhsF7QjI7wzC3A4ndiJojnBr+g0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743104309; c=relaxed/simple;
-	bh=K+zii6vFNHuzcOhQnw8D06g7wjPXYRpm/TPmJ7RXtwM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L5FFCX+EkPqk36fWQAK1fNPMJ006jGa/OBhRjHwHKIxvLjJ4WE7AluzO7TK17DgOt2IeOeArC7igoJqyo5HBiQi+ORZL38J7b/1/HtLsVJ5LSTrpM5QvmUzmtuFK7H2CkbX+Fm27Y+i46akZWvMQr4yp4mroHXpJiPR2PrigkM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MBY3Z17W; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743104377; c=relaxed/simple;
+	bh=qgcmWSQ73m/nlt+LAcujjvdRS2oaqefet/VvhLSsEG8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LLgybSzgmxNEllGwQ1aVCoJgPgOhHsp9WFFbWLwVfChB7ntpFEDLsv1Vp3zcU2gUWC4QjGI9uiF42ZJ9EXHpuVz+M7IsVfrWiRwgdr8QDVzmwZO3c4WiKOnhmYeIcChKCNtvole5xq2gIeEOnAuDnCWCwU7mKlmaodpkPmQC4AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nxsCj518; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MBY3Z17W"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-223fb0f619dso31105235ad.1;
-        Thu, 27 Mar 2025 12:38:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743104307; x=1743709107; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0Guk45ESSBgglP7oC9x5RXoPVek+jweZ2GqnmOesu1s=;
-        b=MBY3Z17W94OYnEOFAZxGK8xzT/LKUkJSUYTPpktzQFMmtg/61VUKEdrSRMxbcQx3Xk
-         VinUxMhtuY52ZjAeHH6gm1MIrk2PWqP+tKL9oPQnc+Ayv+47SkRio/jqSADswHIIEF9G
-         pRcgk1MjZ3btZESP8eI3wofWOxpkt9uxXXgGlQBvv8NtMy3rvXgDIl9qyBbYwYFSz1Fj
-         Vu6c/AGMC4HRlYslS5cklAsTQYomSqaafZmHHSwRlX748duMYEfpY0gKsG1kc+IXdEjZ
-         XTwmAMwN6WwwcFd303MelbHx0sDXUy4l5tgx2jNPbOyjN59Z1XfzhUuc7y1YfqXLW/d/
-         +l+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743104307; x=1743709107;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0Guk45ESSBgglP7oC9x5RXoPVek+jweZ2GqnmOesu1s=;
-        b=a1vNltFAqLoq+isIfX4QV8+Gn4lUk0YZMTuDNU3v0najjc9d7r3WPSOvZttN/Zo/ve
-         OCw1Jk5BLv8MzU6ugfmFNRla4KIpxntB/Gu4hnQjKxnwfzwqRqTkalYy0tfpm1dtAzVs
-         TEjPbMHNvt3GKjQcSPenwxe+duPCx2YqG2PcfKxUeqXnsl2yaoDazd5yU+8oHmKNGvwd
-         tMGArIUkHRM1cNwXrmjk23fXOP/Y+L39RHjQN+XQp+Ga7AtrfJ/S68JkQU/MSuOsSWvM
-         JCgibZgY/aWBXm4Nul4M7lGJcBjOuVXMQybUhHJ8OkE/BELJKUfn4O5xbSFhHGwltwkS
-         PaMw==
-X-Forwarded-Encrypted: i=1; AJvYcCWI4ANS3Nt4YLkz8HdCSLTbO2bSpoC1gr8SuIZ5vZUydNzj01RH8i3FZgJV6JdGHFKRV2UKZvLpFlt0u8vN@vger.kernel.org, AJvYcCWuqXZ0V5OCAr6OdA1wI0/hg+oBSfCgNg49SP5yIYKLPBXiNbpD5OiN7cIJijnPMOe8EA8aB1uyycw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyROHfmJ7rS3FFtT59aCFYgaPKebXe7z8RSTK0Fjh05Jnv0snzp
-	/wExEaZiwExK+gw+YdiVTK2pjk8PQ2Qk9GT+dZOMxQbmXlpoa87x
-X-Gm-Gg: ASbGnct5UKFKdWqoNUmJ+pRH7ade2jleXc0oPmwqxzdA/aCzEdrelXqW0quqGqn0mpc
-	7GsN3ZMal85Atct2Nu3HyrNxziy5ft8xa5LfWv7ycSwg0cnKeTdpRRoXfsHS2TBTM+Z1KZtwUYd
-	PLOsa369HaBxgFHmZVBKTSVwdcELvKJWFqMe9qOfIHCaINvA20IqOux3RsPNuxMbt6qBnMh79Zi
-	C7Mqh+6LIYg3loQUGdHbTxqcNhqyfzg96uz67pDTFEM/XYEixVDPiZUYJ3a1dnE47uReWm0tNrp
-	RQAgEVvNccQ/yefF65ExokZ/vpNNTJoqfXr4ftiIq2OX1DRmfTUpA0rwkbKtJ6dPIVWX4DfcBep
-	L6/0L74Z/WSSLXX6MmmWiCnXPEJ6RAup2Onz98LRYgT5Kw+XoKp/K
-X-Google-Smtp-Source: AGHT+IHAr+qKaoanlbTEnDzUYchwyOZbMxOmyJEyEdNMbiwlgJofBpIN7VftDJh4iPH8YZoVE5AyTg==
-X-Received: by 2002:a05:6a00:b90:b0:736:39d4:ccf6 with SMTP id d2e1a72fcca58-73960e30048mr7325286b3a.8.1743104306977;
-        Thu, 27 Mar 2025 12:38:26 -0700 (PDT)
-Received: from elbadrym.c.googlers.com.com (34.125.168.34.bc.googleusercontent.com. [34.168.125.34])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970e22496sm230943b3a.50.2025.03.27.12.38.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 12:38:26 -0700 (PDT)
-From: mohammed.0.elbadry@gmail.com
-To: avifishman70@gmail.com,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	andi.shyti@kernel.org,
-	venture@google.com
-Cc: Tali Perry <tali.perry1@gmail.com>,
-	Mohammed Elbadry <mohammed.0.elbadry@gmail.com>
-Subject: [PATCH v3] i2c: npcm: Add clock toggle recovery
-Date: Thu, 27 Mar 2025 19:38:16 +0000
-Message-ID: <20250327193816.670658-1-mohammed.0.elbadry@gmail.com>
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-In-Reply-To: <20250324205901.1274708-2-mohammed.0.elbadry@gmail.com>
-References: <20250324205901.1274708-2-mohammed.0.elbadry@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nxsCj518"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 514EEC4CEE5;
+	Thu, 27 Mar 2025 19:39:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743104377;
+	bh=qgcmWSQ73m/nlt+LAcujjvdRS2oaqefet/VvhLSsEG8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nxsCj518N1E+FFnPXHACZvvt4LT+xHzXkh4tyqzuh+xKr6dTgkMqGJnhjNmiPD8YQ
+	 R32cCzpcAwfi95dEV9mlVijk5gFZiuMsTzyu9FotswZew6+GNN5yOQx9Hor00zny2U
+	 lwpDpC0wBuEWFf7yLxtO9XyMXjZunY5rlD0vWb194YIDiP8BRXwpAncVecFgxscq1z
+	 AkscOD7hDTekILNi0Iq57H4L1yh1OxIG8UweFBGGk2W+VKSyJS0Wd7xCzCGZhW1d/b
+	 vUhBD37y3+wswgn3lowQJUPJzHUFCEJLS7n53N5QN9ZkUUYUd4TCVXx7PAvlq/svR/
+	 CTyb7QT2wwqTQ==
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2bd2218ba4fso483445fac.1;
+        Thu, 27 Mar 2025 12:39:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVtRS0xPOqK9ZiL5BwIug7ArTzJURUltV6RAng2u2UafkAbrA1FPn3/TsfbkPcmeJOZcLFwXc9X@vger.kernel.org, AJvYcCWAAb/wqWffDZQ+jykn4+Bof8gh/h9wfBzgegZdiNsPW2fq3P2fmX9AIV1oNEO9IgxsjtybODPlEX6dMfKz@vger.kernel.org, AJvYcCXefyFvMqbP9GSVO3iIdKX1eVWqJBl78hw7oFw2s6gZRhywjxAuir54eJdNCeetwN5NbgBFshcDdCyQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzyy4zRvIFdxnLtZ2uRPIlclhxuWzFQWFDdzMMvlPaqBAZ3/5i2
+	0k1Re7G5Ks5BsAdCg+YrAOP/MnC2+vmJegp/5VbpTCGBFA1zPNpcMnfyEHgcCQhEII3ZMrBym44
+	0mqZt09MQ7Y/MW7cpB3xH6XOFG6Q=
+X-Google-Smtp-Source: AGHT+IFfbF859Ml6WjNSHLFR2N7RKpUdQUPsH2SfuPMF9ozrjRYIDTtA4i7eC25mpTuXuPzO1o8vur56NH168cSn1Ew=
+X-Received: by 2002:a05:6870:e2cc:b0:2c2:3e54:553 with SMTP id
+ 586e51a60fabf-2c8481b51f1mr2832440fac.28.1743104376648; Thu, 27 Mar 2025
+ 12:39:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250318160903.77107-1-pmenzel@molgen.mpg.de> <CABbizf-uBEiujmpUHHPdZT7JftyoM+qUKVRt4wuNxa6Actqo5Q@mail.gmail.com>
+In-Reply-To: <CABbizf-uBEiujmpUHHPdZT7JftyoM+qUKVRt4wuNxa6Actqo5Q@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 27 Mar 2025 20:39:24 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0hP-tJ8YVmAiZF0ij2Z-Mjy4uEvuYoLWi9UC2XdGM6iug@mail.gmail.com>
+X-Gm-Features: AQ5f1Joqpr26DlP06rBMLqLghnMo0aVY6tHjw0TNpkbtiN-JtcTcp-SVF_uttKQ
+Message-ID: <CAJZ5v0hP-tJ8YVmAiZF0ij2Z-Mjy4uEvuYoLWi9UC2XdGM6iug@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: resource: Skip IRQ override on ASUS Vivobook 14 X1404VAP
+To: Anton Shyndin <mrcold.il@gmail.com>, Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Len Brown <lenb@kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+	All applicable <stable@vger.kernel.org>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Tali Perry <tali.perry1@gmail.com>
+On Wed, Mar 19, 2025 at 1:50=E2=80=AFPM Anton Shyndin <mrcold.il@gmail.com>=
+ wrote:
+>
+> Tested-by: Anton Shyndin <mrcold.il@gmail.com>
+>
+> On Tue, Mar 18, 2025 at 6:09=E2=80=AFPM Paul Menzel <pmenzel@molgen.mpg.d=
+e> wrote:
+> >
+> > Like the ASUS Vivobook X1504VAP and Vivobook X1704VAP, the ASUS Vivoboo=
+k 14
+> > X1404VAP has its keyboard IRQ (1) described as ActiveLow in the DSDT, w=
+hich
+> > the kernel overrides to EdgeHigh breaking the keyboard.
+> >
+> >     $ sudo dmidecode
+> >     [=E2=80=A6]
+> >     System Information
+> >             Manufacturer: ASUSTeK COMPUTER INC.
+> >             Product Name: ASUS Vivobook 14 X1404VAP_X1404VA
+> >     [=E2=80=A6]
+> >     $ grep -A 30 PS2K dsdt.dsl | grep IRQ -A 1
+> >                  IRQ (Level, ActiveLow, Exclusive, )
+> >                      {1}
+> >
+> > Add the X1404VAP to the irq1_level_low_skip_override[] quirk table to f=
+ix
+> > this.
+> >
+> > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D219224
+> > Cc: Anton Shyndin <mrcold.il@gmail.com>
+> > Cc: Hans de Goede <hdegoede@redhat.com>
+> > Cc: All applicable <stable@vger.kernel.org>
+> > Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> > ---
+> >  drivers/acpi/resource.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
+> > index b4cd14e7fa76..14c7bac4100b 100644
+> > --- a/drivers/acpi/resource.c
+> > +++ b/drivers/acpi/resource.c
+> > @@ -440,6 +440,13 @@ static const struct dmi_system_id irq1_level_low_s=
+kip_override[] =3D {
+> >                         DMI_MATCH(DMI_BOARD_NAME, "S5602ZA"),
+> >                 },
+> >         },
+> > +       {
+> > +               /* Asus Vivobook X1404VAP */
+> > +               .matches =3D {
+> > +                       DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC=
+."),
+> > +                       DMI_MATCH(DMI_BOARD_NAME, "X1404VAP"),
+> > +               },
+> > +       },
+> >         {
+> >                 /* Asus Vivobook X1504VAP */
+> >                 .matches =3D {
+> > --
 
-During init of the bus, the module checks that the bus is idle.
-If one of the lines are stuck try to recover them first before failing.
-Sometimes SDA and SCL are low if improper reset occurs (e.g., reboot).
-
-Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-Signed-off-by: Mohammed Elbadry <mohammed.0.elbadry@gmail.com>
----
- drivers/i2c/busses/i2c-npcm7xx.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-npcm7xx.c b/drivers/i2c/busses/i2c-npcm7xx.c
-index 2fe68615942e..f05cae20cb27 100644
---- a/drivers/i2c/busses/i2c-npcm7xx.c
-+++ b/drivers/i2c/busses/i2c-npcm7xx.c
-@@ -1967,10 +1967,14 @@ static int npcm_i2c_init_module(struct npcm_i2c *bus, enum i2c_mode mode,
- 
- 	/* Check HW is OK: SDA and SCL should be high at this point. */
- 	if ((npcm_i2c_get_SDA(&bus->adap) == 0) || (npcm_i2c_get_SCL(&bus->adap) == 0)) {
--		dev_err(bus->dev, "I2C%d init fail: lines are low\n", bus->num);
--		dev_err(bus->dev, "SDA=%d SCL=%d\n", npcm_i2c_get_SDA(&bus->adap),
--			npcm_i2c_get_SCL(&bus->adap));
--		return -ENXIO;
-+		dev_warn(bus->dev, " I2C%d SDA=%d SCL=%d, attempt recover\n", bus->num,
-+				 npcm_i2c_get_SDA(&bus->adap), npcm_i2c_get_SCL(&bus->adap));
-+		if (npcm_i2c_recovery_tgclk(&bus->adap)) {
-+			dev_err(bus->dev, "I2C%d init fail: lines are low, SDA=%d SCL=%d\n",
-+				bus->num, npcm_i2c_get_SDA(&bus->adap),
-+				npcm_i2c_get_SCL(&bus->adap));
-+			return -ENXIO;
-+		}
- 	}
- 
- 	npcm_i2c_int_enable(bus, true);
--- 
-2.49.0.472.ge94155a9ec-goog
-
+Applied as 6.15-rc material, thanks!
