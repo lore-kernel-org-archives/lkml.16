@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409151E1E03
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 23:49:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940CC1EB5F8
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 23:49:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743119348; cv=none; b=HtbwGExzFwqIIIt5Cly/8t6KZpAsgvD8vFfS94SqrpxmqhQkN5jLSmWUv1yR5hoYcgNCzBuUblNth90xmyFmjaxua5Ta+qGthZhd4kq30xdArae+vdnpVbCP707TqhQA54MmEnRXCAOTGUpY9O6aDTxCjeox9naGv/uWIs7ejP8=
+	t=1743119349; cv=none; b=sv412k1amup4DgrOOAcDnns1JnPVB4cRDSgTE3oSvsXZz4+xpupFGtvin+rcD+aUCJ2ZvgACucqbnXRztPIx+aqidwpJOxthe8EFgT22vFy3QcfesbIJxlaX0x1dssGnrXg9nMqglLekLFCY8Da4gmJKO4LnC5TqOJYS1ZNjvsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743119348; c=relaxed/simple;
-	bh=Xa985hyTVi3zPlwFGGC/p+nUAm9XjSASU+XjfFJsLDo=;
+	s=arc-20240116; t=1743119349; c=relaxed/simple;
+	bh=A3O1dUKmIFuVaH825Y+VuzOrdI2MI1HzpdnxKXVvGdw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uJi2ZI2Oy0vmG9x8Lw7yvvbvDYhXKq8LymulZ/28+aVXLDAszOEtSmfpbPxzPRBo3gTuLbCeyiVaSjfz+w5bdXnZvYdrbeO1P3yu+TlUPj1SeF5iyyaINEXGxVA3opgyuRtWUhzK7CQq5yz/KRNrKB8damKU/a3+FHJDYB+z5Vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I6eZhLdS; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version; b=bbr6L7itRxCKQ3kqypBcfKemv/66MMVCwO1b69mKZ/VgnRXBUDTokm2YFGNzy83Fk9HOrxRA4khD7CQt4pZDbfD3RMpB4F1Q8hlEBgJcPQ765u9bezRy5TxofSMCmW5g7q2IvFOAtWgmADQ/XSmJ0cerfy7O3y/Vtg7riVt04Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QqW3Nm9s; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I6eZhLdS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QqW3Nm9s"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743119346; x=1774655346;
+  t=1743119348; x=1774655348;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Xa985hyTVi3zPlwFGGC/p+nUAm9XjSASU+XjfFJsLDo=;
-  b=I6eZhLdSkfPn5FHw/21RYUD+NMwPziHA1gKDF3P3PJaGd6B+4XOSQOEt
-   XbAPtcCEZCwZgur+64OO1UnVn4IOqTlGyO/K+vjNH73ngJE+/pmwXFSOg
-   o7mAsbzrHBjEMFRbQEEneGJKbF+Ip6ZTmPE286FIT2GqOC9YDMSEIYNbc
-   cMoBAz7VVDxlEl+DrXMa9hOcbfbcbJDQtX0w2HR6Q5rRZnaX16GFO9kXN
-   +ToDY9pYxxexV7H3Eyd0Y+QhykkA+H8jrq+bOQ/XL/T5ybmHDg99l9kaX
-   NQwxd9W9rMT2xqZcRLXmHlTyqYW+aAqCcNggHioiatnBvgTMcriivBnjQ
-   A==;
-X-CSE-ConnectionGUID: AKMSDGKiSN6ztgMRzc3Z/g==
-X-CSE-MsgGUID: x2cYFZEuRoaFwdjPtCEIvQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="43627952"
+  bh=A3O1dUKmIFuVaH825Y+VuzOrdI2MI1HzpdnxKXVvGdw=;
+  b=QqW3Nm9sp6zjTb9Eh+PfKxf7Trm657oHQXzCpxdMDK4i/lNRE4KN2BQP
+   UDSLURSb4EQNrDot/eOMAOoN0ky1VJ+XAAIWdlfLYsFHaZdv7rSq5E9Gq
+   /IjXTTGEmxTjvTKRtVtdFUu24BuwW3GN0CW/TiSN/kAoYBjDutfR775zA
+   gfKcy918jzBvSMNSeU9UFOfuLmuiKokPRu9NX+9SDBU7nZc/T8lRGFwJt
+   NPL4PH4CRWGtGJVD8LC2HcTy+8Rnrng7IxNm9DnPtMtZSrwFRS/Im6iVP
+   qrNn/pDXsvREicAqqQ563Gi8cXv77wyYLHtygwJWdM0vazVOyFhPIV0nm
+   Q==;
+X-CSE-ConnectionGUID: DTHHjLJwT/SrRSEUvbCgkA==
+X-CSE-MsgGUID: iRXBtmPWRpqHfopFg5ib5g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="43627978"
 X-IronPort-AV: E=Sophos;i="6.14,281,1736841600"; 
-   d="scan'208";a="43627952"
+   d="scan'208";a="43627978"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 16:49:04 -0700
-X-CSE-ConnectionGUID: Px/1vkkUSveQc0G5MFfmLw==
-X-CSE-MsgGUID: QcY37n7uQr+fK9U6ILkzUA==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 16:49:06 -0700
+X-CSE-ConnectionGUID: ih1UoK6lRQe+aHr+xwxxQg==
+X-CSE-MsgGUID: AwOdvOnjSLG9tgZz5Sn2ag==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,281,1736841600"; 
-   d="scan'208";a="130150502"
+   d="scan'208";a="130150516"
 Received: from sohilmeh.sc.intel.com ([172.25.103.65])
-  by orviesa003.jf.intel.com with ESMTP; 27 Mar 2025 16:49:03 -0700
+  by orviesa003.jf.intel.com with ESMTP; 27 Mar 2025 16:49:06 -0700
 From: Sohil Mehta <sohil.mehta@intel.com>
 To: x86@kernel.org,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -62,9 +62,9 @@ Cc: Borislav Petkov <bp@alien8.de>,
 	Tony Luck <tony.luck@intel.com>,
 	Xin Li <xin@zytor.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/9] x86/nmi: Use a macro to initialize NMI descriptors
-Date: Thu, 27 Mar 2025 23:46:23 +0000
-Message-ID: <20250327234629.3953536-4-sohil.mehta@intel.com>
+Subject: [PATCH 6/9] x86/nmi: Improve and relocate NMI handler comments
+Date: Thu, 27 Mar 2025 23:46:26 +0000
+Message-ID: <20250327234629.3953536-7-sohil.mehta@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250327234629.3953536-1-sohil.mehta@intel.com>
 References: <20250327234629.3953536-1-sohil.mehta@intel.com>
@@ -76,72 +76,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The NMI descriptors for each NMI type are stored in an array. However,
-they are currently initialized using raw numbers, which makes it
-difficult to understand the code.
+Some of the comments in the default NMI handling code are out of place
+or inadequate. Move them to the appropriate locations and update them as
+needed.
 
-Introduce a macro to initialize the NMI descriptors using the NMI type
-enum values to make the code more readable.
+Move the comment related to CPU-specific NMIs closer to the actual code.
+Also, add more details about how back-to-back NMIs are detected since
+that isn't immediately obvious.
 
-No functional change.
+Opportunistically, replace an #ifdef section in the vicinity with an
+IS_ENABLED() check to make the code easier to read.
 
 Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
 ---
- arch/x86/kernel/nmi.c | 31 +++++++++++--------------------
- 1 file changed, 11 insertions(+), 20 deletions(-)
+ arch/x86/kernel/nmi.c | 35 +++++++++++++++++++++--------------
+ 1 file changed, 21 insertions(+), 14 deletions(-)
 
 diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 671d846ed620..6a5dc35522c8 100644
+index 2a07c9adc6a6..59ed74ec010e 100644
 --- a/arch/x86/kernel/nmi.c
 +++ b/arch/x86/kernel/nmi.c
-@@ -49,27 +49,20 @@ struct nmi_desc {
- 	struct list_head head;
- };
+@@ -359,17 +359,18 @@ static noinstr void default_do_nmi(struct pt_regs *regs)
+ 	bool b2b = false;
  
--static struct nmi_desc nmi_desc[NMI_MAX] = 
--{
--	{
--		.lock = __RAW_SPIN_LOCK_UNLOCKED(&nmi_desc[0].lock),
--		.head = LIST_HEAD_INIT(nmi_desc[0].head),
--	},
--	{
--		.lock = __RAW_SPIN_LOCK_UNLOCKED(&nmi_desc[1].lock),
--		.head = LIST_HEAD_INIT(nmi_desc[1].head),
--	},
--	{
--		.lock = __RAW_SPIN_LOCK_UNLOCKED(&nmi_desc[2].lock),
--		.head = LIST_HEAD_INIT(nmi_desc[2].head),
--	},
--	{
--		.lock = __RAW_SPIN_LOCK_UNLOCKED(&nmi_desc[3].lock),
--		.head = LIST_HEAD_INIT(nmi_desc[3].head),
--	},
-+#define NMI_DESC_INIT(type) { \
-+	.lock = __RAW_SPIN_LOCK_UNLOCKED(&nmi_desc[type].lock), \
-+	.head = LIST_HEAD_INIT(nmi_desc[type].head), \
-+}
- 
-+static struct nmi_desc nmi_desc[NMI_MAX] = {
-+	NMI_DESC_INIT(NMI_LOCAL),
-+	NMI_DESC_INIT(NMI_UNKNOWN),
-+	NMI_DESC_INIT(NMI_SERR),
-+	NMI_DESC_INIT(NMI_IO_CHECK),
- };
- 
-+#define nmi_to_desc(type) (&nmi_desc[type])
-+
- struct nmi_stats {
- 	unsigned int normal;
- 	unsigned int unknown;
-@@ -107,8 +100,6 @@ static int __init setup_unknown_nmi_panic(char *str)
- }
- __setup("unknown_nmi_panic", setup_unknown_nmi_panic);
- 
--#define nmi_to_desc(type) (&nmi_desc[type])
+ 	/*
+-	 * CPU-specific NMI must be processed before non-CPU-specific
+-	 * NMI, otherwise we may lose it, because the CPU-specific
+-	 * NMI can not be detected/processed on other CPUs.
+-	 */
 -
- static u64 nmi_longest_ns = 1 * NSEC_PER_MSEC;
+-	/*
+-	 * Back-to-back NMIs are interesting because they can either
+-	 * be two NMI or more than two NMIs (any thing over two is dropped
+-	 * due to NMI being edge-triggered).  If this is the second half
+-	 * of the back-to-back NMI, assume we dropped things and process
+-	 * more handlers.  Otherwise reset the 'swallow' NMI behaviour
++	 * Back-to-back NMIs are detected by comparing the RIP of the
++	 * current NMI with that of the previous NMI. If it is the same,
++	 * it is assumed that the CPU did not have a chance to jump back
++	 * into a non-NMI context and execute code in between the two
++	 * NMIs.
++	 *
++	 * They are interesting because even if there are more than two,
++	 * only a maximum of two can be detected (anything over two is
++	 * dropped due to NMI being edge-triggered). If this is the
++	 * second half of the back-to-back NMI, assume we dropped things
++	 * and process more handlers. Otherwise, reset the 'swallow' NMI
++	 * behavior.
+ 	 */
+ 	if (regs->ip == __this_cpu_read(last_nmi_rip))
+ 		b2b = true;
+@@ -383,6 +384,11 @@ static noinstr void default_do_nmi(struct pt_regs *regs)
+ 	if (microcode_nmi_handler_enabled() && microcode_nmi_handler())
+ 		goto out;
  
- static int __init nmi_warning_debugfs(void)
++	/*
++	 * CPU-specific NMI must be processed before non-CPU-specific
++	 * NMI, otherwise we may lose it, because the CPU-specific
++	 * NMI can not be detected/processed on other CPUs.
++	 */
+ 	handled = nmi_handle(NMI_LOCAL, regs);
+ 	__this_cpu_add(nmi_stats.normal, handled);
+ 	if (handled) {
+@@ -419,13 +425,14 @@ static noinstr void default_do_nmi(struct pt_regs *regs)
+ 			pci_serr_error(reason, regs);
+ 		else if (reason & NMI_REASON_IOCHK)
+ 			io_check_error(reason, regs);
+-#ifdef CONFIG_X86_32
++
+ 		/*
+ 		 * Reassert NMI in case it became active
+ 		 * meanwhile as it's edge-triggered:
+ 		 */
+-		reassert_nmi();
+-#endif
++		if (IS_ENABLED(CONFIG_X86_32))
++			reassert_nmi();
++
+ 		__this_cpu_add(nmi_stats.external, 1);
+ 		raw_spin_unlock(&nmi_reason_lock);
+ 		goto out;
 -- 
 2.43.0
 
