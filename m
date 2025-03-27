@@ -1,189 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B3E20CCFD;
-	Thu, 27 Mar 2025 14:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3118620CCFD;
+	Thu, 27 Mar 2025 14:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743084926; cv=none; b=SQUR+JH2rHdgJsO7h5h0W3BEnUmNgTTV8NgvsKUqL9aoKAU8zC/J9epjkagyMjof8Vuc94CDQ1yDExwRBRNeXUgUWrITuAfoqPECMNWRWssrobezlNW2TgQPhPz6HkOMJXJohplrfIyRNJTZWm5xjxjOlHfuq8skgQwwTAyp9nw=
+	t=1743084944; cv=none; b=DfV18fqPQOMlDdHD6+kdt82E7PNcz8kX1XtieP+ivuI8/XMdHPnmxRsiiNxcXb1tKVqem1yCvppOZ79n6QTkZBXoyMYHLWYCyUX+4sZRfQvLxKh/CAb//xwl02UhfE/0t3YLQcsayBh9ExvYWEdX/oQZXjYwaVgslzIZdg/l8xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743084926; c=relaxed/simple;
-	bh=rWlmHoCwwByfJZBJXemfVXS0IezaelLfYtPFxK1MpQQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jvORLXriYRURX0DUX9HreG94nbKUbCwh5VwVww6uZvsuyygnca1LF9/FJpifqBgHe1OiPHVj9SNpPwxUIO8y+IEY0TSGu+buiApPTObO5ntr0nElkeV9aWsB+/OgkMOomb9wFvqRx2R4LwkELmDh8J78Ap4k0Ay5NM1bolLLZ2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJEc/bkt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743084944; c=relaxed/simple;
+	bh=aK0BXGeEBRrg9wG5GiYW/OtSFnBWJxKTOuBDkNguWr0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=u6fYp4UejD6eB63wTF9w79wMISyqroGmPRDcvSGGX72CcjVdDi9v2eixPnKkjujYXfZ6xeziCZP9MZGQwDxJ9WUxJW6ZV+G5PkZypm2H4tejPbX+QSynexHq6ZeVcL1xVI8E1ni6gNmSVYmBrHnFTMQsB5JAR1tVgUTWOYmN1t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=shRbftR1; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJEc/bkt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADA6BC4CEDD;
-	Thu, 27 Mar 2025 14:15:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743084925;
-	bh=rWlmHoCwwByfJZBJXemfVXS0IezaelLfYtPFxK1MpQQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iJEc/bktrRk+2vgqvuuu9mDiEPdOHEadvIhwETiwLHQLRplFoYSwZLKilQrcVfBJg
-	 7FrIabsJwGt+oPmAEj3652O1pHNlKYTg2d3XuLU9y1gp32S3IQkTMoIgGZSb4LQgCi
-	 87kQInQYD2ltpe0KDpMZmslr7C1n9jwDShdtkipVanVvj+S30vbWYnG1BfkMXJAF7I
-	 9ZrB2fm//SanE2FKO3+sEsjw9EVCMhyt8bj5BoOXW7QycUFRGpd9gcoVBZONcLOyCW
-	 4gQv1hslis6Tt5hD/r6UWUHVjdYz2a8h569zx9vWWEVyhMOmWQ0OUmSaxbwgSTUrXc
-	 aasP++lv2mGyQ==
-Message-ID: <6a487a73-3f2d-4373-8e02-ba749181bdfb@kernel.org>
-Date: Thu, 27 Mar 2025 15:15:19 +0100
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="shRbftR1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1743084942;
+	bh=aK0BXGeEBRrg9wG5GiYW/OtSFnBWJxKTOuBDkNguWr0=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:From;
+	b=shRbftR19ePwWslzn5X95N7WRTkAI72WybEGPuBkqjQX70WrkKGfEnAPG2H4dzCkR
+	 iSpIXv3AH1SqJGIiGvbjg0F/zlowfaydppjbb2oeFfGGxpZgWfAuhgp6tuw2IrnJuh
+	 NB64Sp8BimDM1/6VUMNQQeqsZixRL38jDzNVnTbA=
+Received: from lingrow.int.hansenpartnership.com (unknown [153.66.160.227])
+	by lamorak.hansenpartnership.com (Postfix) with ESMTP id 8F3DD1C0015;
+	Thu, 27 Mar 2025 10:15:41 -0400 (EDT)
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: mcgrof@kernel.org,
+	jack@suse.cz,
+	hch@infradead.org,
+	david@fromorbit.com,
+	rafael@kernel.org,
+	djwong@kernel.org,
+	pavel@kernel.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	will@kernel.org,
+	boqun.feng@gmail.com
+Subject: [RFC PATCH 1/4] locking/percpu-rwsem: add freezable alternative to down_read
+Date: Thu, 27 Mar 2025 10:06:10 -0400
+Message-ID: <20250327140613.25178-2-James.Bottomley@HansenPartnership.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250327140613.25178-1-James.Bottomley@HansenPartnership.com>
+References: <20250327140613.25178-1-James.Bottomley@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] dt-bindings: pci: cadence: Extend compatible for new
- platform configurations
-To: Manikandan Karunakaran Pillai <mpillai@cadence.com>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
- <kw@linux.com>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <CH2PPF4D26F8E1CA951AF03C17D11C7BEB3A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
- <20250327111106.2947888-1-mpillai@cadence.com>
- <CH2PPF4D26F8E1C1CBD2A866C59AA55CD7AA2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <CH2PPF4D26F8E1C1CBD2A866C59AA55CD7AA2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 27/03/2025 12:19, Manikandan Karunakaran Pillai wrote:
-> Document the compatible property for the newly added values for PCIe EP and
-> RP configurations. Fix the compilation issues that came up for the existing
-> Cadence bindings
+Percpu-rwsems are used for superblock locking.  However, we know the
+read percpu-rwsem we take for sb_start_write() on a frozen filesystem
+needs not to inhibit system from suspending or hibernating.  That
+means it needs to wait with TASK_UNINTERRUPTIBLE | TASK_FREEZABLE.
 
-These are two different commits.
+Introduce a new percpu_down_read_freezable() that allows us to control
+whether TASK_FREEZABLE is added to the wait flags.
 
-> 
-> Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
-> ---
->  .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  12 +-
->  .../bindings/pci/cdns,cdns-pcie-host.yaml     | 119 +++++++++++++++---
->  2 files changed, 110 insertions(+), 21 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
-> index 98651ab22103..aa4ad69a9b71 100644
-> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
-> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
-> @@ -7,14 +7,22 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
->  title: Cadence PCIe EP Controller
->  
->  maintainers:
-> -  - Tom Joseph <tjoseph@cadence.com>
-> +  - Manikandan K Pillai <mpillai@cadence.com>
->  
->  allOf:
->    - $ref: cdns-pcie-ep.yaml#
->  
->  properties:
->    compatible:
-> -    const: cdns,cdns-pcie-ep
-> +    oneOf:
-> +      - const: cdns,cdns-pcie-ep
-> +      - const: cdns,cdns-pcie-hpa-ep
+Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
 
-What is hpa? Which soc is that?
+---
 
-I don't think this should keep growing, but instead use SoC based
-compatibles.
+Since this is an RFC, added the percpu-rwsem maintainers for
+information and guidance to check if we're on the right track or
+whether they would prefer an alternative API.
+---
+ include/linux/percpu-rwsem.h  | 20 ++++++++++++++++----
+ kernel/locking/percpu-rwsem.c | 13 ++++++++-----
+ 2 files changed, 24 insertions(+), 9 deletions(-)
 
-Anyway, that's enum.
+diff --git a/include/linux/percpu-rwsem.h b/include/linux/percpu-rwsem.h
+index c012df33a9f0..a55fe709b832 100644
+--- a/include/linux/percpu-rwsem.h
++++ b/include/linux/percpu-rwsem.h
+@@ -42,9 +42,10 @@ is_static struct percpu_rw_semaphore name = {				\
+ #define DEFINE_STATIC_PERCPU_RWSEM(name)	\
+ 	__DEFINE_PERCPU_RWSEM(name, static)
+ 
+-extern bool __percpu_down_read(struct percpu_rw_semaphore *, bool);
++extern bool __percpu_down_read(struct percpu_rw_semaphore *, bool, bool);
+ 
+-static inline void percpu_down_read(struct percpu_rw_semaphore *sem)
++static inline void percpu_down_read_internal(struct percpu_rw_semaphore *sem,
++					     bool freezable)
+ {
+ 	might_sleep();
+ 
+@@ -62,7 +63,7 @@ static inline void percpu_down_read(struct percpu_rw_semaphore *sem)
+ 	if (likely(rcu_sync_is_idle(&sem->rss)))
+ 		this_cpu_inc(*sem->read_count);
+ 	else
+-		__percpu_down_read(sem, false); /* Unconditional memory barrier */
++		__percpu_down_read(sem, false, freezable); /* Unconditional memory barrier */
+ 	/*
+ 	 * The preempt_enable() prevents the compiler from
+ 	 * bleeding the critical section out.
+@@ -70,6 +71,17 @@ static inline void percpu_down_read(struct percpu_rw_semaphore *sem)
+ 	preempt_enable();
+ }
+ 
++static inline void percpu_down_read(struct percpu_rw_semaphore *sem)
++{
++	percpu_down_read_internal(sem, false);
++}
++
++static inline void percpu_down_read_freezable(struct percpu_rw_semaphore *sem,
++					      bool freeze)
++{
++	percpu_down_read_internal(sem, freeze);
++}
++
+ static inline bool percpu_down_read_trylock(struct percpu_rw_semaphore *sem)
+ {
+ 	bool ret = true;
+@@ -81,7 +93,7 @@ static inline bool percpu_down_read_trylock(struct percpu_rw_semaphore *sem)
+ 	if (likely(rcu_sync_is_idle(&sem->rss)))
+ 		this_cpu_inc(*sem->read_count);
+ 	else
+-		ret = __percpu_down_read(sem, true); /* Unconditional memory barrier */
++		ret = __percpu_down_read(sem, true, false); /* Unconditional memory barrier */
+ 	preempt_enable();
+ 	/*
+ 	 * The barrier() from preempt_enable() prevents the compiler from
+diff --git a/kernel/locking/percpu-rwsem.c b/kernel/locking/percpu-rwsem.c
+index 6083883c4fe0..890837b73476 100644
+--- a/kernel/locking/percpu-rwsem.c
++++ b/kernel/locking/percpu-rwsem.c
+@@ -138,7 +138,8 @@ static int percpu_rwsem_wake_function(struct wait_queue_entry *wq_entry,
+ 	return !reader; /* wake (readers until) 1 writer */
+ }
+ 
+-static void percpu_rwsem_wait(struct percpu_rw_semaphore *sem, bool reader)
++static void percpu_rwsem_wait(struct percpu_rw_semaphore *sem, bool reader,
++			      bool freeze)
+ {
+ 	DEFINE_WAIT_FUNC(wq_entry, percpu_rwsem_wake_function);
+ 	bool wait;
+@@ -156,7 +157,8 @@ static void percpu_rwsem_wait(struct percpu_rw_semaphore *sem, bool reader)
+ 	spin_unlock_irq(&sem->waiters.lock);
+ 
+ 	while (wait) {
+-		set_current_state(TASK_UNINTERRUPTIBLE);
++		set_current_state(TASK_UNINTERRUPTIBLE |
++				  freeze ? TASK_FREEZABLE : 0);
+ 		if (!smp_load_acquire(&wq_entry.private))
+ 			break;
+ 		schedule();
+@@ -164,7 +166,8 @@ static void percpu_rwsem_wait(struct percpu_rw_semaphore *sem, bool reader)
+ 	__set_current_state(TASK_RUNNING);
+ }
+ 
+-bool __sched __percpu_down_read(struct percpu_rw_semaphore *sem, bool try)
++bool __sched __percpu_down_read(struct percpu_rw_semaphore *sem, bool try,
++				bool freeze)
+ {
+ 	if (__percpu_down_read_trylock(sem))
+ 		return true;
+@@ -174,7 +177,7 @@ bool __sched __percpu_down_read(struct percpu_rw_semaphore *sem, bool try)
+ 
+ 	trace_contention_begin(sem, LCB_F_PERCPU | LCB_F_READ);
+ 	preempt_enable();
+-	percpu_rwsem_wait(sem, /* .reader = */ true);
++	percpu_rwsem_wait(sem, /* .reader = */ true, freeze);
+ 	preempt_disable();
+ 	trace_contention_end(sem, 0);
+ 
+@@ -237,7 +240,7 @@ void __sched percpu_down_write(struct percpu_rw_semaphore *sem)
+ 	 */
+ 	if (!__percpu_down_write_trylock(sem)) {
+ 		trace_contention_begin(sem, LCB_F_PERCPU | LCB_F_WRITE);
+-		percpu_rwsem_wait(sem, /* .reader = */ false);
++		percpu_rwsem_wait(sem, /* .reader = */ false, false);
+ 		contended = true;
+ 	}
+ 
+-- 
+2.43.0
 
-> +      - const: cdns,cdns-cix-pcie-hpa-ep
-
-What is cix? If you want to stuff here soc in the middle, then no, no
-no. Please read devicetree spec and writing bindings how the compatibles
-are created.
-
-> +      - description: PCIe EP controller from cadence
-> +        items:
-> +          - const: cdns,cdns-pcie-ep
-> +          - const: cdns,cdns-pcie-hpa-ep
-> +          - const: cdns,cdns-cix-pcie-hpa-ep
-
-This makes no sense.
-
->  
->    reg:
->      maxItems: 2
-> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-> index a8190d9b100f..bb7ffb9ddaf9 100644
-> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-> @@ -7,16 +7,30 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
->  title: Cadence PCIe host controller
->  
->  maintainers:
-> -  - Tom Joseph <tjoseph@cadence.com>
-> +  - Manikandan K Pillai <mpillai@cadence.com>
->  
->  allOf:
-> -  - $ref: cdns-pcie-host.yaml#
-> +  - $ref: cdns-pcie.yaml#
-
-Why?
-
->  
->  properties:
-> +  "#size-cells":
-> +    const: 2
-> +  "#address-cells":
-> +    const: 3
-
-Huh? Why? Nothing here makes sense.
-
-
-Best regards,
-Krzysztof
