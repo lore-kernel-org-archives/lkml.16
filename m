@@ -1,249 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579CE210191;
-	Thu, 27 Mar 2025 14:04:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743084282; cv=fail; b=E4urlL5TLCez/gdWOp2Nah6to3joxckgvwz+24Qtwm7ZY2p2IpFD7okVWKBioqSew5H2+sYHLd4YOJ3yYRj4Q7tiq3Gf39yKSiQbDRSFg7sOC6oBaclvp6D4JzlULiLPEunyjAkSV9oZWEPfFTS7vndlIn6ke/7QwpYx1x0Yl+A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743084282; c=relaxed/simple;
-	bh=/WmpfakWmHC+aRT9xINoBx6NFM5PcRrClUkQoDXD1j4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PRsQ5i8oaDWahKt61X1MYIAwc9yR4g9GNrwRlM11J5Hfis+zZj06fV6InjPaAtNUebayIA5iJ21p8QaGGe7FmOsQfbX/eELglzbvMm6r4CoWzrXzj/ol/OJoHYtrJNVHjKUm5tUlsp+Y/wP3Me9Fb9TmK3oo4n84ujRbPWDQ+II=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OkwED3Rg; arc=fail smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A134717A2F2
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743084299; cv=none; b=I7FnQERE+yCGXDpuUr1ha7UwqCrY3QCkpQIYIrs71nSbvheKXLUSahZdw0gbMnXrNz9Zidqs+194FqF3rs8eVDWseBlZoUA49iotqXiPi00sAUyXnNy52gL4YVtewZrtxUa1GfH5bh5T825ZCTtcUQ5bx1oitZkFqoCpnc9dpWw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743084299; c=relaxed/simple;
+	bh=m+MQebCdoQen/iBMPXoz+KzcFef/ph4H4Nxtif+65TU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VgbocOH3yK4MWi/Thy2cNX+nR78yN7Jcckiv9GY9ahscSXZMg1y1WRxinpTSRXDOE9CkhycFKj/7WNtDG+GKorzXQsK+kLm9k5Fzy3h6uycJoZHMCIGTo2DMgo9nIm5ub5IY/n9EX+zX2oYbEjHgJt6TUUTn36WNHlr59nyqxmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EsXpenhp; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OkwED3Rg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743084280; x=1774620280;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=/WmpfakWmHC+aRT9xINoBx6NFM5PcRrClUkQoDXD1j4=;
-  b=OkwED3RgC6ZDpV+8A4CszHVUjYA4XSu7d0PCaO3oOKp21bbRVW/ubZ+N
-   zPbrKeNxsx8x9mInyK259HpLKCaiGUuNdK8iF8H2HLCK2vhWQGH7eMczs
-   6wf+1DAgLvB8DZ710+t+J6gZC3gjPFH03OkgpzC/ubBf/au6AoL4Z8V5I
-   DoSUODDa+OjDbKI/5WhqQ2ZUw5oxX2H1iyLqY1DQIpOYrSjk4fwVaPmEK
-   yYVXfYd0L942tKPoa56vPDaK6iGvxyCUsZiPIjH3LB7R3N/OCFZ6qAT4f
-   2B7zBrRYMbiFMMU9hLBQ9tyQ+BfZLWcuVhVXi22jiHa0dgd0m8mHxjTto
-   w==;
-X-CSE-ConnectionGUID: 9tOf4WwZTHObJ86xbTMIgw==
-X-CSE-MsgGUID: O9sGWZ0/TBi83YMiUjBCcA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44540337"
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="44540337"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 07:04:40 -0700
-X-CSE-ConnectionGUID: 3j+TT+4YTyqEaPYGxtNL2g==
-X-CSE-MsgGUID: BsQMcVvcRXSRUio5wxLK8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="125168190"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 Mar 2025 07:04:40 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 27 Mar 2025 07:04:39 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Thu, 27 Mar 2025 07:04:39 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.175)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 27 Mar 2025 07:04:36 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yoOFogfI0WQJMePsE8T+G/7rbt37+ZV3w7rhyWwQY0XtUIXozBpyZZ43odEqa+5/lA4OAcTBsw3Na5Sg0vl+FzXP31IYwQcZP2BpYj4SKs4BDR16TXpK8zDDLQOSqRgWs81ISwb38CLqdVeRk9RP8jNZFBJ/y5SbR1CywUbO3s454VDm5qiyluKRd5FyYgZXx+iQTrQ7xSGm17ubpPH0AL4Zz/jCseOA6mdKFccby5bJEq8jkNSHS9ORfSh7qAYsehj7IIIyAxJ6GWI+0dQ7epl3AILPXt+DAIQwA9pSVS5e2ctnJwZvOlbrROErvc91CokfGhPOZRyGWxBxHTNdGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FywzX2d8h70p2ZICHY8vL6f1o4E8gEOEs5feIPanw6c=;
- b=mzMQvm7X3JuFjNAbCWwpk0ozg3J53riOu7KCHiBhaL7M2gsUZDV0aQ1iCQOmHUAzP9FLiNE2LDez9QDjUJ4+dlDQd65MgaBPmsIJm971DXHrv7qx1/y9N4GOF6cbuHHhgK900efgmDWtHBSnCnc2NtZsqaHusH1Z21cuFr5DBL85FAMPjJWyySRzL+PG1g6n4OjHkbC9r6xLxamTiZn0nk5e2LlTU/+tIaLk4EmbOJf3llsnPrjH4pGwi9okF+DWUEdDsUy4EYUyhJT8M5OY3oiZpVWnsOG4V3N0EnTA2hUUuEXfx3kzvdu4/3PBC94jB5A++o6G0hmfrtbJbcuqCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by IA1PR11MB7366.namprd11.prod.outlook.com (2603:10b6:208:422::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
- 2025 14:03:54 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
- 14:03:53 +0000
-Date: Thu, 27 Mar 2025 10:03:48 -0400
-From: Dan Williams <dan.j.williams@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Alison Schofield
-	<alison.schofield@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	"Vishal Verma" <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
-	"Ira Weiny" <ira.weiny@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
-	"Len Brown" <lenb@kernel.org>
-CC: <nvdimm@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, "Gustavo A. R. Silva"
-	<gustavoars@kernel.org>, <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v2][next] acpi: nfit: intel: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <67e55ac4dfa2e_13cb29410@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <Z-QpUcxFCRByYcTA@kspp>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Z-QpUcxFCRByYcTA@kspp>
-X-ClientProxiedBy: MW4PR04CA0295.namprd04.prod.outlook.com
- (2603:10b6:303:89::30) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EsXpenhp"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R5jaA5023247
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:04:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=B32z0nkKxR0pV2HsaLWigtDr
+	aivyxIGGbTNez+3GvU0=; b=EsXpenhpNPJntw5TxhHhQ+qdXd3mhUo76dMPdZdJ
+	p3Q943DknIbXFlB8z1tVo2NwKhFl8lnkHVkPkDzSvaTB5xzyfgpNXvLXEbwyxhbJ
+	hKHI/enUgARl49i3dMd0Jo5TYpO5xhBYeqtAa6IYpqmmTDYf9GB7I30fvTkz6MAC
+	N9NUDR0736KeDXn/j5AQIdCGLkktBlum7mSQHRGwGOOFLzgeyHu2ARH6Ds/WBgJh
+	zHfFtCenR28HitgxWehb3Rz623D9E77p8dSJ5Txs8RrUK68Sl3TbP84xsfW59uDr
+	8M5HWNbtdmGmOoOvpdY4R8gUMHQ3oxCmkB4T+LXKPW4KSg==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45mb9mw0cp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:04:56 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5e2a31f75so280426785a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 07:04:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743084295; x=1743689095;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B32z0nkKxR0pV2HsaLWigtDraivyxIGGbTNez+3GvU0=;
+        b=MagEIoAPGi/kQl45+gecsVQLgzx6yaIYR04rhc+LBPBAgZHoD5gHWM+/JCi2CDTrDz
+         7hS8OHE/yDmdpAGk910aPWjZmbjrjdUcBbocqWHWy6BBgcQXNBuQBTbwgI3x33QvfQyq
+         0qYGuve+rTnH7rJ2KHzv7IcqK7h0vH9nxLvjB/qcTcfkKwXIGzCko1fcpt1Tag2NgXIy
+         zvcqFsh8zAqRmrfE/6O97zY49iIVQGRBN9257kj0nKbwRiAQHGBea/m9b6nqHV+vf2jM
+         HkakD5/E6ucJ9PhmRgPyzZlm+cay2/z/O/845/NLFzK+4zM6BlGL14RvZ51F+W2kxwqg
+         xfVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXC46axJbX3XX9AKCeCjjZZQX5+I2ZxaVYAEBlmbMXa14Dn4x9c/Bljt4gec/QYLhwtbLnzPYtlvYDfHz4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnnpNWuczeh3PJFZcm9cdB2urMgw5Fcwbax9Bxah+Vs7YZeznr
+	DjlgTpzZv6fTe42iwzcpb+Dph5snSOlyYTEx1DYV/CZS509fTF7T4Iy6FA+JheZKPN23Z6Wuci3
+	xYI+Z+4a1a24nTYPCxjy3Q2TfPCtm+JMrnRBdzge4V/nE76wJHKbUd8iVQeWWpVc=
+X-Gm-Gg: ASbGncvLMUaw33nIDP/XQU6RHBm83/lQpHA/Y4Tn0096V4m2CTmM9MQjfrAXWEV9sjL
+	RRyAtBeS67oFpiMJoaIpdR4MD1ogGvskucKQJzaIcuGR1v7CEhkOLMrNuqA8/ly+R7M9GdX3nca
+	JEobn/UGZZHzGITSJmHA0S1T9lkXZ4teKxW9J2ZUJfOTWvAJjNwgrST005HZYRE20g6RJKYKC3j
+	lCLFMEac6ts9yLRkznmWUrhX4K1cPrvaqO+7pVBMXzXrzFplQEU0SNxHXtUW0V7FZNN1Lev0H7t
+	W67NM4XG4AC3Tib8d6vbQFC8mJvkwkCXOZTWRu52TFnbPyyiWTx9wIX1OEnY+Wljx/7LGW+WHiZ
+	J4Jg=
+X-Received: by 2002:a05:620a:4305:b0:7c5:d888:7098 with SMTP id af79cd13be357-7c5eda60226mr530561785a.44.1743084295428;
+        Thu, 27 Mar 2025 07:04:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEG0kR4BIcRTnYfbkvx20oj3Hp4oBV0sCjN6K2E8Rob51ffUn6DV3Ut2PgRJAWGiTjCP+ZraQ==
+X-Received: by 2002:a05:620a:4305:b0:7c5:d888:7098 with SMTP id af79cd13be357-7c5eda60226mr530555885a.44.1743084294908;
+        Thu, 27 Mar 2025 07:04:54 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30d7d7fe8b9sm25208831fa.58.2025.03.27.07.04.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 07:04:54 -0700 (PDT)
+Date: Thu, 27 Mar 2025 16:04:52 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Dennis Gilmore <dgilmore@redhat.com>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: x1e78100-t14s: enable SDX62 modem
+Message-ID: <ghqzw2wxunc7yg36epcsdydm74fkrecd7iyestbqiobbsfvmys@fxhv4cs5mfvx>
+References: <20250327081427.19693-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA1PR11MB7366:EE_
-X-MS-Office365-Filtering-Correlation-Id: a44be066-dc18-434c-4ae1-08dd6d383559
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?xoDo3tgmWKHAjs57sc07upitHc2A+XR9Y/u2IP//blm94LX9rpN8oFZsrk2i?=
- =?us-ascii?Q?joYLCDaICc0+upoyAdjmZGa4nFitmm8vTJpNxXqoYO8heNboI/CrIml0hvZl?=
- =?us-ascii?Q?Jawx2ew7iCRMYREhGYVAz5jKenwdvyCIZuog/BsnhHg6vJdS2ijyQNmwFrvv?=
- =?us-ascii?Q?b2RsbKnlCImWWue+8E9QKf80upvPrCqjT495eRODB70xKN/CEF8lHB5gcdUy?=
- =?us-ascii?Q?0bpOz2Ka/+tEXkxKb0nzYteNEZK88scUOsbWJo4YlHIpGrPV0h9S1T4d7TDo?=
- =?us-ascii?Q?F0GTyhfSeBCXkm4zhxN6eXKLlv9s8m7f8rZrIoM+v8doKvS8kGKG7r++fb9f?=
- =?us-ascii?Q?Hkjk7fGywutjyuMBLqiM24CQZ7YvfCdX/5BzWFi15QFJGsdYdzz9PTsSpdwg?=
- =?us-ascii?Q?rByAJsOXS4WR8z4YT49vNFGXcv4djM9PYxbrLnx23PeseitBSkZTa/zFJWwk?=
- =?us-ascii?Q?7MWYHTE8oNj1WZJryn0ruNZSwKnsKiN9nTIfN4xIewXDIJKxJDjgQrtp3yZ+?=
- =?us-ascii?Q?C+cWOx5i+bjN5RpVUNIMHLSpLX8AprVHrR27Yfc+oUdG5WBisSJSMvaxV3Gc?=
- =?us-ascii?Q?yiPRTYQtVVtb/QCVfXVQHGroo7R5xstH6q7l5PRI4/limLn6uColIe0l303u?=
- =?us-ascii?Q?AGFUHJodmdvEjsCc5LPa7MuD07rENhy9KOmXid/+wBojspHdSrJvUTxFjAmF?=
- =?us-ascii?Q?tTeQy/ERG94c2JaGfteSfq5SuGn16KkO342VUAwYqnw6/nvjPw8Mer4SPbU6?=
- =?us-ascii?Q?kWmEyyQ4C1yXYxf612G0OOMMj38SIIRND6AwJoYX9GjS5ZjKqwwBcIEHFenS?=
- =?us-ascii?Q?z7mYRARJUQ2bsZDmUrHm1RkW7/Apc75LnGkdTVRfq+OcPrA6rz4xttvDeTpy?=
- =?us-ascii?Q?0b003cM8rrjO6K/2oxVv5YbnWDggsgBS3/f0g7on3vrgKjtyovs11a+fTN48?=
- =?us-ascii?Q?ktzjmHwANNKiqdL2B/dQBt/GMaEFlJBl3sys75rDWxXi4ToPeP3UiKP8IXWr?=
- =?us-ascii?Q?6ATDzAzfQDtEB5mO/eiiAFrbAoS6WeE7euQ9fTbnIOyROu4KKdvp2xq+ABBz?=
- =?us-ascii?Q?YQitkSfsG85Bj79FzH9dUInOK2EXeZJPb+ddpRwh9Vx/D4t8jfMQPVAbbnfz?=
- =?us-ascii?Q?0SYLZX5+8e+1T5nBxDtt1pnn+ozucz7616qTf4lOP5Ayw0ipntNkE7LpEtwR?=
- =?us-ascii?Q?2z8z+DOCxVa9uHRtcAJH+zMm583LZrA5YGj2oq0Ce+oDlPwCtNE30zr/VOyc?=
- =?us-ascii?Q?ZeAIei/OfKPp6VIahkKxTdxgI8Pos0ew6mW9Secl6LlpCberIbokMDGSRGAk?=
- =?us-ascii?Q?840NuXY2/zuaGFVc9QIRyrlNHAyk4jGXp7lFq6Rk7klO6IpTfHcLA3xpfcv+?=
- =?us-ascii?Q?hogb1yEr9iWL3ap1WA4r5pcioEQy?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?FXtwYhOGGVeVAvRy+gJIb6VUDmxE9odnEBU03RpWWuQyhaEEp0dtHgpn0Wca?=
- =?us-ascii?Q?uD06u/SeI0kcObL9+TJkqh0WIyaF+wceJYwdE0Z8j/jelPqu0lzYLCLZ6ebY?=
- =?us-ascii?Q?ZPcWEWd17i5kocXtj/iQYtcTkevH9p5gBHPYuo6BXkiafyIHzpnUCdUbh9f1?=
- =?us-ascii?Q?WBSYmyOZb9N1ImadBU4RUxPB2hEXyyUDmVmQC25bByNO3dPmPPPsbVVwK+Pm?=
- =?us-ascii?Q?yRHNBhj482DGjs+JmLUlQO1tpNlIBPaJIEI10mebqPhBjw1Z/BxMjJmAanFu?=
- =?us-ascii?Q?B0rPTj1lTrWBsPf5UnyKTQLABm5Nz/prW5uLFA0R0RCDmmFfDMZA8H0VuS0x?=
- =?us-ascii?Q?vJHI7PyoHIjv46fQw/paZz2iBLp1Z6tY/fkvKbh1A5ZcrkQmww1+TF+R+g0U?=
- =?us-ascii?Q?66Z6bckiHibdBXbVkxum8KxEXvPPZUFnnfEdE+OhCWr28fJX19HFuqQdktMK?=
- =?us-ascii?Q?kzcErkcepGhY4J/SdgA2RL2sNfwdmsh7iwob3TBwcud7kBO9p/bvgANAbu1c?=
- =?us-ascii?Q?Jje3voQ79nU507F6VeqDVwrCA9nZThVc25c64jt8q9xLxEEfaOBwcQ0izw5d?=
- =?us-ascii?Q?igTI4nlV55C6YYrdTbkiUiQ6tdBjCN9O0UhJa3S6xyoRr5hnHoDWQW/n/ln4?=
- =?us-ascii?Q?4z2kfSIn+pR7MCIY217N72kk/C67qQ4o4C4bgYAtpB5cbtQHiZ2JpYVN8MCn?=
- =?us-ascii?Q?i2wA/giANoXtLVH5bPo1Op3I8A0d0F2Y2AqjrPQ9nM5KwfebceCKKhsD1Wi9?=
- =?us-ascii?Q?hO5naVKfq8pWbudcmcxfUOYc1bOaIsdtfFHic6xE2h5HwlYfRlzcWOM7f5q4?=
- =?us-ascii?Q?8/6XkQOS8oUo9/2tQm9+yUnWfed/592KSKhD+71x/t2OmsQg1nyKq2taQ0vh?=
- =?us-ascii?Q?morbER4sEat7YnaYtbrcxDK3DeEpOIAWUegceD4sIz8ObmOebSbWfLngM6PH?=
- =?us-ascii?Q?8gPQvYACiwFClCxhN6Aj4DXfdZupglPX9mOgK8JpLHp5V4JTbfBwWPiHtgZY?=
- =?us-ascii?Q?hZmOcHFX7BQRSTe+VGEqbxRVlbOmRQgJnXXLqGZ6mC7UGYq13vkrDeAeTJOF?=
- =?us-ascii?Q?dGVVvC0f/IGG0BG0nwYyesLzIeK4bieZDuqNrlMQGHgOqVZf73BZchiO540A?=
- =?us-ascii?Q?GtM64BENRS8wF5MlEylPtUGaGf1d7mjC1osfOsluAhV5zujqe7J0OIvrkyPd?=
- =?us-ascii?Q?uARYK+nEqc/0SwbdgEdhKPCeLli+PLXQAeE86UybzVI3FcCprqa/wP7/WbKP?=
- =?us-ascii?Q?Ax0rATZWzoCuASYs1E1mBq6g4gooPCrkL/5cH7Xv7ZoeZlc+xuB+4BK40iRi?=
- =?us-ascii?Q?JmHl+7SSFpoc/b+AoOwINVnIgTdZVgE8DQtpXo/k3UI77SPRc1ZQVBxwcl3Y?=
- =?us-ascii?Q?HaHnW5pAsdwjCnstQzRLdZsCe99NyowXqroo2E9s8DM7ssB0TnNk5DARQNpG?=
- =?us-ascii?Q?lXf8i2+dqYsuTo5ljZ9K+5TRnRcCwVcsPOXxUtUgNO+SSCbr1nI2VzfKWU3E?=
- =?us-ascii?Q?t842Xw0BIvhcaXxDG7KVERMGO7VniT4dKXwoQLc8lz6Q1w1KQkum8edA7yRF?=
- =?us-ascii?Q?Dtgh4W35+odZHM7MFue2BFgi5qs0WehUfHAN8qZ1UTY8kfpCAWD8HnnBm/Pj?=
- =?us-ascii?Q?CA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a44be066-dc18-434c-4ae1-08dd6d383559
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 14:03:53.8992
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6/9xe4VyPfU0vzHP2vevL1J1KSYJ9aFAehN+vlvJ+unG3IQDscnIT5KoGxknagateUGTK9+LdlLPO2yHEba0vgNYxQb73H+YTDy4b+SYjhQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB7366
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250327081427.19693-1-johan+linaro@kernel.org>
+X-Authority-Analysis: v=2.4 cv=cs+bk04i c=1 sm=1 tr=0 ts=67e55b08 cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=LP5Qa2lKvCmapEnZnZ4A:9 a=CjuIK1q_8ugA:10 a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-GUID: ExkBQ98NFphtcRo1g0bOdnHoxAqCpeaV
+X-Proofpoint-ORIG-GUID: ExkBQ98NFphtcRo1g0bOdnHoxAqCpeaV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-27_01,2025-03-26_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ bulkscore=0 mlxlogscore=999 malwarescore=0 lowpriorityscore=0
+ clxscore=1015 adultscore=0 priorityscore=1501 phishscore=0 suspectscore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503270096
 
-Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
+On Thu, Mar 27, 2025 at 09:14:27AM +0100, Johan Hovold wrote:
+> Enable PCIe5 and the SDX62 modem present on some T14s.
 > 
-> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
-> 
-> So, with these changes, fix a dozen of the following warnings:
-> 
-> drivers/acpi/nfit/intel.c:692:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 > ---
-> Changes in v2:
->  - Use DEFINE_RAW_FLEX() instead of __struct_group().
 > 
-> v1:
->  - Link: https://lore.kernel.org/linux-hardening/Z618ILbAR8YAvTkd@kspp/
+> I don't have a modem in my T14s, but this is based on the work I did to
+> enable the modem on the CRD reference design and the T14s schematics.
 > 
->  drivers/acpi/nfit/intel.c | 388 ++++++++++++++++++--------------------
->  1 file changed, 179 insertions(+), 209 deletions(-)
+> I'm hopping Dennis will be able to help out with testing.
 > 
-> diff --git a/drivers/acpi/nfit/intel.c b/drivers/acpi/nfit/intel.c
-> index 3902759abcba..114d5b3bb39b 100644
-> --- a/drivers/acpi/nfit/intel.c
-> +++ b/drivers/acpi/nfit/intel.c
-> @@ -55,21 +55,17 @@ static unsigned long intel_security_flags(struct nvdimm *nvdimm,
->  {
->  	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
->  	unsigned long security_flags = 0;
-> -	struct {
-> -		struct nd_cmd_pkg pkg;
-> -		struct nd_intel_get_security_state cmd;
-> -	} nd_cmd = {
-> -		.pkg = {
-> -			.nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
-> -			.nd_family = NVDIMM_FAMILY_INTEL,
-> -			.nd_size_out =
-> -				sizeof(struct nd_intel_get_security_state),
-> -			.nd_fw_size =
-> -				sizeof(struct nd_intel_get_security_state),
-> -		},
-> -	};
-> +	DEFINE_RAW_FLEX(struct nd_cmd_pkg, nd_cmd, nd_payload,
-> +			sizeof(struct nd_intel_get_security_state));
-> +	struct nd_intel_get_security_state *cmd =
-> +			(struct nd_intel_get_security_state *)nd_cmd->nd_payload;
->  	int rc;
+> Note that we may possibly need a new entry for SDX62 in the MHI driver
+> device id table (mhi_pci_id_table) as well. The output of 'lspci -n'
+> will tell.
+> 
+> Johan
+> 
+> 
+>  .../qcom/x1e78100-lenovo-thinkpad-t14s.dtsi   | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+> 
+
+> @@ -1028,6 +1044,25 @@ &pcie4_phy {
+>  	status = "okay";
+>  };
 >  
-> +	nd_cmd->nd_command = NVDIMM_INTEL_GET_SECURITY_STATE;
-> +	nd_cmd->nd_family = NVDIMM_FAMILY_INTEL;
-> +	nd_cmd->nd_size_out = sizeof(struct nd_intel_get_security_state);
-> +	nd_cmd->nd_fw_size = sizeof(struct nd_intel_get_security_state);
+> +&pcie5 {
+> +	perst-gpios = <&tlmm 149 GPIO_ACTIVE_LOW>;
+> +	wake-gpios = <&tlmm 151 GPIO_ACTIVE_LOW>;
+> +
+> +	vddpe-3v3-supply = <&vreg_wwan>;
 
-Can this keep the C99 init-style with something like (untested):
+As we now have a proper PCIe slot power controls, is anything preventing
+us from using it for the modem?
 
-_DEFINE_FLEX(struct nd_cmd_pkg, nd_cmd, nd_payload,
-             sizeof(struct nd_intel_get_security_state), {
-		.pkg = {
-		        .nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
-		        .nd_family = NVDIMM_FAMILY_INTEL,
-		        .nd_size_out =
-		                sizeof(struct nd_intel_get_security_state),
-		        .nd_fw_size =
-		                sizeof(struct nd_intel_get_security_state),
-		},
-	});
-	
-
-?
+> +
+> +	pinctrl-0 = <&pcie5_default>;
+> +	pinctrl-names = "default";
+> +
+> +	status = "okay";
+> +};
+> +
+-- 
+With best wishes
+Dmitry
