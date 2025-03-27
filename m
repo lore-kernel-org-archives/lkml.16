@@ -1,106 +1,134 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40807335C0;
-	Thu, 27 Mar 2025 23:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A541DF742;
+	Thu, 27 Mar 2025 23:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743117222; cv=none; b=EhWrQ9jNPsS8oqmlaRPRse+v2+lCK3kXglrO8DAX50gSKCn7eA83jB/Tm12mukKwDszJSCz2qLXBC3Cz+l3C45Lj/R2/n9phj001XHc4GQ41Xc2MgiGS6q1AsupHbeU7uUZ1Hf7ZorhWmJiIyFHUOtL/2RkRjNr1HbswQPWXIgg=
+	t=1743117253; cv=none; b=fetu7YRir51HNsO8tQ1BrIyiWM74i/3+o2Rh+pr/OQVAHkoj4HPxte2SfnIjDUU+fv40xaRygE9RcEFkntVZV1t7dcfPCInV8jMCMm8NaZaZg+flakFUf0RlPqRhmJZPpcnAdg3qpPfOdYTMYqpEqSdVtwzGwpak1l9yGhAGSjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743117222; c=relaxed/simple;
-	bh=u53yL0a/1/RYDTw+aARftjh8UkdlgZkXzY2Gi3tTFs0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZGTmyA1Jr+Hni4stYopUdjsl57+nq6LhnV1E7Hm8/BWQdELfjJyvpSUkhYCQ0CUMz7FGDhKRMUaFpaQq+nnr90cNOUsXfvrL1Avp3iwYpT5WmcZkLXtxgVDfXBnh7w1lrmjEHTwQgg1m046Gx53uj2IL1fPPdefmIUNsJsiq9xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kW7dxmzx; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743117253; c=relaxed/simple;
+	bh=PGjgc6Nwvee3QPLv0Fc/NM7pia0GWYQkjZb2TDbpJzU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kp4SVJdYPVdFoSe+o9Yl0ZcaZ48/e7xjaQLdFOEbGd8EisD0uwgP+PXH1tR/gZLxGFMwbChrK/0i3bDEd5v+RebkuU3IFl5emufU7hLc8udFftwUwfJxmBrk8wV/8GKOY4rLc4hPyMF2DfTjRsh76vXKJTyJdfoHroBUwAtnks0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=qYQpdbHg; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kW7dxmzx"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3913b539aabso863893f8f.2;
-        Thu, 27 Mar 2025 16:13:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743117218; x=1743722018; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RMBZuLcEi1BVATpyEBDSQRvEoX2RBDn8k/CK1srt6Gg=;
-        b=kW7dxmzx7SPahYXdtcMfHhIteO9fhBScg0Ew/cG7Wnw9izTEOPTBhCmmIYH0Ro7Hq5
-         7pApfiQZ8jw6BQGUzC4btxRqRA9dgJKZ8SFunQI+C1EYzz8s+fnBTHz3mI2eKprKFEJC
-         WQonN99MBhy53H/wXO9Ws9SqhbGQbi5jTfPhwR/ZjTMI2KQpaon6ml1C3OCvLG2PJbep
-         u8K6wf21XoUOShRK3rqGwweSWZnRNuRn4yBZZTxYTa3LNbThF5l0nBhEjkUAxJbDgnWI
-         qGhQC+jkpvI3MdGndjImaLofmFK2hI6r2OL5752wguwb1yTb4GZoell2ullwrSEheVTv
-         zwwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743117218; x=1743722018;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RMBZuLcEi1BVATpyEBDSQRvEoX2RBDn8k/CK1srt6Gg=;
-        b=QOx5F+4nNze3HR3vLKMMegiijGB0OnR6MioWSqqMC2OnMYVUVtZqs7OH5KyiwypMSZ
-         F3fyKILieny1eE/w99QlUIpt/gvUfUVRkBFnZHY2GmFTGNPZMCj9TacGL+II14Csg/qS
-         UYx/2j/rOCVErTkajjyWGloxsr3lxru9GiNyks8n43b0OIe3nHiCMDFdme2i2hrKTUPe
-         TF1Culvnvx7fo902hm+sJOz6LBWoq6Nbmmn3aI50pR7glyVcvcExkETt1/p3spQVJtRA
-         wE2z9CW7ek6j/AC9ueiW9CaYKmutwlAayROZiFht/68MgAVJGo/IJZ7RWhqPNamNkDOY
-         98WA==
-X-Forwarded-Encrypted: i=1; AJvYcCWBK1WM7QKgyJq+m8kiuMSn+76njVQySWvP3dgnTu8GAkvVdaMLsXImckm8pDpCMyUpTpew/5mpXJvjtho=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxCxjm+i0AW5z+j10Q16/ZMSBUPwMjLHe5BH6sLM3xGvrbC3z3
-	hzAD1Go8h3GVVsUKGFqhNBIfrZQp3eJT3tZo9YwpIOptiqOYjqui
-X-Gm-Gg: ASbGnct6WSEUfQTTHdRPsNFVVoHEPBmY+68t0J4pwJkg9j7mXd1tH4S201Xf6ZQt3Jc
-	TKHZZfmfuFTUFAxTSBQ9YBYKreGqHeqkFo2kIych1DgTSQe06sv5fu8QVOEeiPc2zP6s0iaR830
-	Doy4FjKgmAtKi94V6P9fGRMY/8Nmy7QsOVtCr0ENJD9Jl/mi9omhhGE/UfKV+M+GouT6oXMwriF
-	G/WRu0zrdcFOUa4IiK8K0x7vFEv6e69LshajkhNp3SvbPn/UIenEc8p3ohGby/MB2vlTQMsMyId
-	HZb9YK3yDxlCIJ7Xn2lJqFeS+w9wvtqdMBZSJ6gRhl2AVw==
-X-Google-Smtp-Source: AGHT+IETOZ4c3GApnoFs7MN0qkl/1HBcaEp2e0Y5v9Jar1Q6i8U47juByr5xqoThiy0+bdfqPLYyIg==
-X-Received: by 2002:a05:6000:184c:b0:391:4095:49b7 with SMTP id ffacd0b85a97d-39ad174acd7mr5478950f8f.25.1743117218225;
-        Thu, 27 Mar 2025 16:13:38 -0700 (PDT)
-Received: from qasdev.Home ([2a02:c7c:6696:8300:80e7:c933:bc4d:7e80])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d8fcd78bdsm9151775e9.24.2025.03.27.16.13.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 16:13:37 -0700 (PDT)
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: jikos@kernel.org,
-	bentiss@kernel.org,
-	mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com
-Cc: linux-input@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qYQpdbHg"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B11B66D5;
+	Fri, 28 Mar 2025 00:12:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1743117140;
+	bh=PGjgc6Nwvee3QPLv0Fc/NM7pia0GWYQkjZb2TDbpJzU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qYQpdbHg5zdLoQdKXsbR6c2STRyus4a3R8DhBTqApSpysm2aimsysj3zr8Wetv4X5
+	 QQUnmKteysRwaq2cqfP17weweqmmQbOILHWNsjANQ1nb6SFUtLFN6ARgXtLaZ4GNNT
+	 ImlEs8InpyzgjgcocH+og0PZO5tg47GlCs0e9Ht8=
+Date: Fri, 28 Mar 2025 01:13:45 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: linux-media@vger.kernel.org,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Benoit Parrot <bparrot@ti.com>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Jai Luthra <jai.luthra@ideasonboard.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] HID: thrustmaster: fix memory leak in thrustmaster_interrupts()
-Date: Thu, 27 Mar 2025 23:11:46 +0000
-Message-Id: <20250327231146.6388-1-qasdev00@gmail.com>
-X-Mailer: git-send-email 2.39.5
+Subject: Re: [PATCH v7 1/3] media: ti: cal: Use printk's fourcc formatting
+Message-ID: <20250327231345.GL4861@pendragon.ideasonboard.com>
+References: <20250326-cal-streams-v7-0-659df87ad231@ideasonboard.com>
+ <20250326-cal-streams-v7-1-659df87ad231@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250326-cal-streams-v7-1-659df87ad231@ideasonboard.com>
 
-In thrustmaster_interrupts(), the allocated send_buf is not 
-freed if the usb_check_int_endpoints() check fails, leading 
-to a memory leak. 
+Hi Tomi,
 
-Fix this by ensuring send_buf is freed before returning in 
-the error path.
+Thank you for the patch.
 
-Fixes: 50420d7c79c3 ("HID: hid-thrustmaster: Fix warning in thrustmaster_probe by adding endpoint check")
-Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
----
- drivers/hid/hid-thrustmaster.c | 1 +
- 1 file changed, 1 insertion(+)
+On Wed, Mar 26, 2025 at 01:34:01PM +0200, Tomi Valkeinen wrote:
+> Use printk's fourcc formatting instead of a custom one.
+> 
+> Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> ---
+>  drivers/media/platform/ti/cal/cal-video.c | 26 ++++++--------------------
+>  1 file changed, 6 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/media/platform/ti/cal/cal-video.c b/drivers/media/platform/ti/cal/cal-video.c
+> index e29743ae61e2..4eb77f46f030 100644
+> --- a/drivers/media/platform/ti/cal/cal-video.c
+> +++ b/drivers/media/platform/ti/cal/cal-video.c
+> @@ -25,20 +25,6 @@
+>  
+>  #include "cal.h"
+>  
+> -/*  Print Four-character-code (FOURCC) */
+> -static char *fourcc_to_str(u32 fmt)
+> -{
+> -	static char code[5];
+> -
+> -	code[0] = (unsigned char)(fmt & 0xff);
+> -	code[1] = (unsigned char)((fmt >> 8) & 0xff);
+> -	code[2] = (unsigned char)((fmt >> 16) & 0xff);
+> -	code[3] = (unsigned char)((fmt >> 24) & 0xff);
+> -	code[4] = '\0';
+> -
+> -	return code;
+> -}
+> -
+>  /* ------------------------------------------------------------------
+>   *	V4L2 Common IOCTLs
+>   * ------------------------------------------------------------------
+> @@ -180,8 +166,8 @@ static void cal_calc_format_size(struct cal_ctx *ctx,
+>  	f->fmt.pix.sizeimage = f->fmt.pix.height *
+>  			       f->fmt.pix.bytesperline;
+>  
+> -	ctx_dbg(3, ctx, "%s: fourcc: %s size: %dx%d bpl:%d img_size:%d\n",
+> -		__func__, fourcc_to_str(f->fmt.pix.pixelformat),
+> +	ctx_dbg(3, ctx, "%s: fourcc: %p4cc size: %dx%d bpl:%d img_size:%d\n",
+> +		__func__, &f->fmt.pix.pixelformat,
+>  		f->fmt.pix.width, f->fmt.pix.height,
+>  		f->fmt.pix.bytesperline, f->fmt.pix.sizeimage);
+>  }
+> @@ -509,8 +495,8 @@ static void cal_mc_try_fmt(struct cal_ctx *ctx, struct v4l2_format *f,
+>  	if (info)
+>  		*info = fmtinfo;
+>  
+> -	ctx_dbg(3, ctx, "%s: %s %ux%u (bytesperline %u sizeimage %u)\n",
+> -		__func__, fourcc_to_str(format->pixelformat),
+> +	ctx_dbg(3, ctx, "%s: %p4cc %ux%u (bytesperline %u sizeimage %u)\n",
+> +		__func__, &format->pixelformat,
+>  		format->width, format->height,
+>  		format->bytesperline, format->sizeimage);
+>  }
+> @@ -866,8 +852,8 @@ static int cal_ctx_v4l2_init_formats(struct cal_ctx *ctx)
+>  			if (mbus_code.code == fmtinfo->code) {
+>  				ctx->active_fmt[i] = fmtinfo;
+>  				ctx_dbg(2, ctx,
+> -					"matched fourcc: %s: code: %04x idx: %u\n",
+> -					fourcc_to_str(fmtinfo->fourcc),
+> +					"matched fourcc: %p4cc: code: %04x idx: %u\n",
+> +					&fmtinfo->fourcc,
+>  					fmtinfo->code, i);
 
-diff --git a/drivers/hid/hid-thrustmaster.c b/drivers/hid/hid-thrustmaster.c
-index 3b81468a1df2..0bf70664c35e 100644
---- a/drivers/hid/hid-thrustmaster.c
-+++ b/drivers/hid/hid-thrustmaster.c
-@@ -174,6 +174,7 @@ static void thrustmaster_interrupts(struct hid_device *hdev)
- 	u8 ep_addr[2] = {b_ep, 0};
- 
- 	if (!usb_check_int_endpoints(usbif, ep_addr)) {
-+		kfree(send_buf);
- 		hid_err(hdev, "Unexpected non-int endpoint\n");
- 		return;
- 	}
+The last two lines can become one.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+>  				ctx->num_active_fmt = ++i;
+>  			}
+
 -- 
-2.39.5
+Regards,
 
+Laurent Pinchart
