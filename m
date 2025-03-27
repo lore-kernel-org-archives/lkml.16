@@ -1,112 +1,119 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7C820DD4D
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132A020E003
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:57:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743069408; cv=none; b=no/kYYovvQIASLU/F3SnfPIKB5QIaSkHUfQg1tQLUiFglDOS8OgVBkU1Y3DiWCnxKTCaCO0YiORuFycsuoB8Hia+QhaQGBKCvi5udfJJvDIipNHGPCUooghNGxZr83yv5i+RnzA8uBpEP/mp1D3H1eIS+QiNVsUDAfLkyg4gBwY=
+	t=1743069430; cv=none; b=AYt8JqQWHIinTxC90oADRs6NV7xW8+9ndy+o2pyq6tuYX4udX5k5FZiPcHSpq5e8ES1bhpfyJGAABYgMgxDi9KQNHGP752x7/XcZva80VYipqdPodw64dvzpb+7TQjc+uffT9Ury2REmYB36nSnOR2jMqp50HxbnhVPcYcAeOf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743069408; c=relaxed/simple;
-	bh=hKz2mu+pHNVmR0ycddqUf0gXQfCUTQmlkkrCoqxO3sA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R/v6VC54fwucS0awtUdzjK6BOl73z2b7J38T+8Fr3lYjR+uLHYm9FoIw3GUml6mHPAYLav4BkStALmrSxc3NszFdRAvEjOoMHQ6RArqWVMxf4/VYoBRI7xUw7l2aka+Jbslw22TzMZ53h/EmaA4iTZhS81n5bhLHGtDRqd2SS+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b40PARtO; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743069430; c=relaxed/simple;
+	bh=AZTW3sYxFHPk0sPFQTttiOZU/fA3BF1URGRK7nuIn6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c65RzypC+Jjrf7h+1vbKhkgSjjGYDlNwuXvRKFVY/lMBLumXBQPQCtQt4DsLEMorj5zP5GFlxKiJMxqfwR2TJDbmfWGWwJti8XRXJBZwWlCLCvMh7cWFtwnBhXyD/QXaFaS1XEmxw7B/Q+fUy3fIzLN8/oFZVyHrraCLAYs+dEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fAdd8c+U; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b40PARtO"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso1245397a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 02:56:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fAdd8c+U"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43d0782d787so5456985e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 02:57:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743069405; x=1743674205; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KQKK9jdW2vZQ1nSZsyOiIsmUPjwxSakOTrL/QeXtDc0=;
-        b=b40PARtOJesHJIfZkV3EWkttM+rcr6W1E7+QYeIl/xNlpZEERiLdGVPIHPic3ICGGG
-         800D6hZFooohWk9HDtHiIy+8yFg0x6zSEPHq12LSKY9f+d1IeKD0YNp8le99n0Qi1wkS
-         9UVz+MY0lO/SwoipPa2qO86OtQHVmq1wc27NScTqHtwB0QhbpFH/ZaoltiGYLquPiOBC
-         7/urv2olmjTYIIG3z5KTqqLSiVwEVO94N0BwvLEDGesLqu4F8RhpInEOGbWUTjLSlmQX
-         KFe5a5BAlYWJEs8cIA8KjyjPEiahf5BVv85fNTGuAsiV98GZWScuYD6dtwDwyROSgT99
-         iOyA==
+        d=suse.com; s=google; t=1743069426; x=1743674226; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=azhWYOyoPENmsPwsYBmojB1LmnODjI23hsEwWUC2iFY=;
+        b=fAdd8c+UPL+akUmF8P3kPcNeC/DQ+Dk/NS2oeEzYSyuHOKUjA6/BpZHEcBeZxA2TIL
+         5uwnmAj8ZEoh8azTGDDpXaLTTH+k91RSegHwAKDFpmhqECEnoWv/aKGY3u0bRIFwZWBY
+         bYOrdVF/IvDiiS8+t2LIhdN2oWPOvJpga/MCci2Tr8p1y9oSpKkZOM1gx0XzD/LzyiuR
+         MAywNWCZuDJd9VVnzqIc27aH7uK5jTQDBA0Wv6MhgvAx14Asvpt+WurlBDC4HBWuiU83
+         cUo2X+FjU093jmNHsSABMnXWIndcUBcszOcVc2lnTrkNf2S6eX0aoouiUR01Xhwzjltw
+         iwCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743069405; x=1743674205;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KQKK9jdW2vZQ1nSZsyOiIsmUPjwxSakOTrL/QeXtDc0=;
-        b=PrlSptzY30Kk8k1nKNUJd53ULyrGYyNcOuXGLNewXfNzHelrNyN0th8RyfWV4r1J9e
-         jm+iyhK0/UtmGr+JsDONI4abv+v1UE6zqsv4MlMpKk1CHEy8e0wTF6WKrKGbP3J/jug/
-         E9mthDLYvwAzMaD1Jlg/S3YyJLraQOeYwQTmqSdvoppUesCt6EGojOy050L5SOiVkKCM
-         OVBnQ1tNw2JBLuCNkP+cm0O647P82BmIGNaebgp4QRfBmCzuUGeVf33ZNULBr/F5AZD8
-         BnteYuxGGvf+r2xdnLsXZg+ylSVRIdbOE8LQl1LCQnQryoMbF/4IjGuv0Pvhy+gPNlFT
-         ivxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXv7FXJf/Oe78fzlFBUasXiLmLclL8nS2r5ukpSRKZlJcEJN03Zz+thVJ7KJJ2VFdAqJdzAn+b5uS7tOfo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3RnYjconJldQNRAYdTe85+eceaphV7wTpnBA20hRdOUzaOXrM
-	BjuS9Myuot+4y0LUNqxRGA3/iBQZQnEDxRiCtl06XKqDmKV0Lr9g
-X-Gm-Gg: ASbGncumcda9Y3m9STD68K9KegvQYn41fxyrvQFXgPZrJJlwRVqs5cdMwEIh9Du+qWr
-	uVD0PIlajXQFjDSxpRqQ3jsWlbqsJb0tjP4LH5BAAQxZbm21EvayK22g0OukUkIvVK7VAo7Bu0M
-	B2LwBvkO3U42Sww4h/bMnqd73tgAYiF8Efh+gyBCGWKWYeRinoHke8e+5+6JcmoLqk7YhkU0Zs5
-	9q7rmymrO/h+TOwDCLcFhe5e4IfUIdUNJwQr98wCSyqoE+kDY/RUaQsrzWR+fsQTKBVHfialr47
-	Uv+O5fSQZ8uXhntXQPbxwoTfDZk0IKJEInaG
-X-Google-Smtp-Source: AGHT+IFnLNNFDrtpMTpkEwig1nGVkfEVzqIzt8YKV2wz7tPtPs4O8HKQRnARyFT2s/kPMOWHAB3f/A==
-X-Received: by 2002:a17:906:7310:b0:ac2:510c:a3cc with SMTP id a640c23a62f3a-ac6fae494f8mr255847766b.1.1743069404399;
-        Thu, 27 Mar 2025 02:56:44 -0700 (PDT)
-Received: from fedora.. ([193.77.86.199])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efb51cebsm1202845666b.107.2025.03.27.02.56.43
+        d=1e100.net; s=20230601; t=1743069426; x=1743674226;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=azhWYOyoPENmsPwsYBmojB1LmnODjI23hsEwWUC2iFY=;
+        b=ldsqVHb3lcJYt14T2qKaY553jr/SIjaeufKQYhjYW0agzJlq4pJzezl32RGks39jEd
+         Yizl7uT+dZAek5xpEk8H0J+1wpqT5RebHooepM8wK2XwHtVUKcWKhgtkuUNZ2XmbVkcX
+         BhRvKoiwlNIJj9n+Lpvqcd8sbG2A7esKeFUptIiTvQd7AzQxhANoG0NdoJeKMTCToBdT
+         sSwCeabVXyc5tCfxwvSsyyzsBjUf0GecfQcoCydrk1JNY95RsLy1SwQKintQc+B75fJl
+         6MLq0wahBg3e+ERv/T4Rtb5CBuJcStGhD7XJR9jeXKvayNjtcs1Ao2uTNMPzXXqVROC+
+         RhDA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUdR9C6Zgkrx1myIq8QAw1m2pvtLJMqV/d99xq0Dv2bDRPF0XO4//xbre3gD3+VLUaCGcTKbF+P6LKtBA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzavK4vpXkOb+42NGZ5Is/L4/s+PdDHaK0BSQPOYd5ELMmtQ4Sb
+	W1ue7+xt3wWsybXebSIQkJ79CTZT5sxdP9ss5Uc0wN6A/37r10tDJGXOcgcEras=
+X-Gm-Gg: ASbGncuyVVL+pVmHWaTe4zJ9W8lB7Pk8PaW75uWyh93+yoeEjAipZkY0Q27+G8PUH1L
+	HYFFv7QwmxoRZ/LnUXguE81ehSsQ8JMGjBrVyczqyZ3dYtZEsno1X2oXbHtfUqSBtLTTqfsfSf9
+	muC6Q3WO37Ocbf1DUU0HcG70Eq3spcFraiRcXtMfqlHLBaer4KZa7R/FRxI6DOhvwsEX4vyS1ou
+	BKSBOjNnUcHniJMjZGBK/h2GzZBgy/qtbMAzkjXFltEo1abfkWvn+AU73r+C0mm6jUM2Ggp9j6J
+	4jMHTijeF1qgQKMJtQhUFz7XlLycxymavQz2xqvp1/Fa2as=
+X-Google-Smtp-Source: AGHT+IG0C4/rhsbIrvHN9c358LUEtRlf07bzJU/mmHWp5Eqp1R+dKhX+DPE3+SHx8Tl/dF1nMcvA7Q==
+X-Received: by 2002:a05:600c:1d16:b0:43c:f895:cb4e with SMTP id 5b1f17b1804b1-43d84fb5ff2mr27733065e9.17.1743069426289;
+        Thu, 27 Mar 2025 02:57:06 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82f7f9b6sm31682035e9.39.2025.03.27.02.57.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 02:56:44 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] x86/bitops: Implement variable_ffz() as variable__ffs(~word)
-Date: Thu, 27 Mar 2025 10:56:28 +0100
-Message-ID: <20250327095641.131483-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        Thu, 27 Mar 2025 02:57:05 -0700 (PDT)
+Date: Thu, 27 Mar 2025 10:57:04 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: Kees Cook <kees@kernel.org>, "tamird@gmail.com" <tamird@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] printf: add tests for generic FourCCs
+Message-ID: <Z-Ug8FeyJ9fTMhNf@pathway.suse.cz>
+References: <4378DDFE-3263-497A-8364-433DC1984FEE@live.com>
+ <202503251247.086BD45C@keescook>
+ <PN0PR01MB958842137184723FD29694E7B8A62@PN0PR01MB9588.INDPRD01.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <PN0PR01MB958842137184723FD29694E7B8A62@PN0PR01MB9588.INDPRD01.PROD.OUTLOOK.COM>
 
-Find first zero (FFZ) can be implemented by negating the
-input and using find first set (FFS).
+On Wed 2025-03-26 00:26:08, Aditya Garg wrote:
+> 
+> 
+> > On 26 Mar 2025, at 1:19 AM, Kees Cook <kees@kernel.org> wrote:
+> > 
+> > ﻿On Fri, Mar 14, 2025 at 03:45:01AM +0000, Aditya Garg wrote:
+> >> From: Aditya Garg <gargaditya08@live.com>
+> >> 
+> >> Format specifiers for printing generic 32-bit FourCCs were recently added
+> >> to vsprintf. They are going through the DRM tree alongwith the appletbdrm
+> >> driver. Since the printf tests are being converted to kunit, this separate
+> >> patch for the tests should make it easier to rebase when the merge window
+> >> opens.
+> >> 
+> >> Link: https://lore.kernel.org/dri-devel/79FA3F41-FD7A-41D9-852B-D32606AF5EB4@live.com/T/#u
+> >> Signed-off-by: Aditya Garg <gargaditya08@live.com>
+> >> ---
+> >> lib/tests/printf_kunit.c | 39 ++++++++++++++++++++++++++++++++-------
+> > 
+> > Linus has applied the kunit /lib move tree, so this patch can land via
+> > regular trees now. Who should take it?
+> 
+> For some reason DRM has not taken up the patch set yet, even after approvals.
+> I assume it's partly because gitlab.freedesktop.org was down for a whole week.
+> Now that merge window is open, I myself dunno what is gonna happen with those patches.
+> Also, I doubt DRM wants to take this up later. So, I have 2 options:
+> 
+> 1. Just wait a bit more, probably till merge window settles so that DRM can take up those patches and then you take this one up.
+> 2. I'll just send you the non DRM patch, and upstream it via you so that atleast you can get free. Then. I'll tell DRM to just upstream the DRM relevant patch, again after merge windows settles. The patch is anyways a bug fix, rather than something new.
 
-No functional changes intended.
+I prefer the first solution. I'll take this patch after the already
+queued patches reach the mainline.
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
----
- arch/x86/include/asm/bitops.h | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index bbaf75ea6703..eebbc8889e70 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -267,10 +267,7 @@ static __always_inline unsigned long variable__ffs(unsigned long word)
- 
- static __always_inline unsigned long variable_ffz(unsigned long word)
- {
--	asm("tzcnt %1,%0"
--		: "=r" (word)
--		: "r" (~word));
--	return word;
-+	return variable__ffs(~word);
- }
- 
- /**
--- 
-2.49.0
-
+Best Regards,
+Petr
