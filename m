@@ -1,77 +1,144 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DF2664C6;
-	Thu, 27 Mar 2025 02:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0D5A219E0;
+	Thu, 27 Mar 2025 02:21:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743042079; cv=none; b=dQTSZOeINuv9bjT9Gp5myd1Ob75Ow7F0aVzt2b0FiolCs9s5WYOsp/eunopJjr8SRS17XYR6GEbRwqCsYCO6EY6AzcXgv63uuM9eLv5/p5AMYJWn8ROCS+h/IBoMl6dBhpU3+zTNFtu4uXqpbKOiY3BpG/M5pVGFJvVjiWWp2Y8=
+	t=1743042079; cv=none; b=m8YwO4Su5h9SbXaTMKh53oLHJY58jPr1P0ksfUfyeT6I+d/P99n9B2SQXFnZHg6zLjFfoOsztDpdY/RmiVtf4j7Fc7qcxiuLG/1MZyAURtlyq9PaEgfkmXWJnjHmLNpCi1xgdjcKGCOCdl1hMe46pLzD2clULu7lTdwb9pOCIag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743042079; c=relaxed/simple;
-	bh=t3d4FIUWGHItNNs3ti+ImF4oUMn5pF1neCbLNlVx5GY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VAnHHA1v2XweGO1tcH672LE1ubd6QRpMPwHkehSiCyI4uqi7CGCaIq0rZwPbaTV4OZ6sgBmtJWhkH6yrTMeGUCR1h/soBCr56M85EFAxrv9i8V7I9IxKra/sx9wjRQwID8uuedxo/nDlFpFMMFISLRFQdcV1j9/6v3hxNioA7Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-05 (Coremail) with SMTP id zQCowAB3rgYStuRnOCYaAg--.28374S2;
-	Thu, 27 Mar 2025 10:21:06 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: shuah@kernel.org,
-	brauner@kernel.org,
-	amir73il@gmail.com
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] selftests/filesystems: remove duplicate sys/types.h header
-Date: Thu, 27 Mar 2025 10:13:01 +0800
-Message-Id: <20250327021301.1596533-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	bh=oqfxzTWoe11VdH17owZ33eKYWs3EWudKdqHeIIpptZ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WmXCczvamevw6jdBg4V+ZpnU2iiUW4cKSwJDwo/T+ISvfmojF0wCPFrsq6Be4OaveoJjrZCTDxHa15XqGhjKBUG9cpO+Hus+U44Gr2FkhbM6CNa9Uvx3PzHHF9ygG2RkcnJ1pXQKkk4H71pWU87O9H/YBN0km7QAlnGmNRYApsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwBnbGgMtuRnrdFqDg--.40964S2;
+	Thu, 27 Mar 2025 10:21:00 +0800 (CST)
+Received: from localhost (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwCHioYLtuRnSLxWAA--.64S2;
+	Thu, 27 Mar 2025 10:21:00 +0800 (CST)
+Date: Thu, 27 Mar 2025 10:20:43 +0800
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: Gregory Price <gourry@gourry.net>
+Cc: lsf-pc@lists.linux-foundation.org, linux-mm@kvack.org,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [LSF/MM] CXL Boot to Bash - Section 4: Interleave
+Message-ID: <Z+S1+wThBGHe888e@phytium.com.cn>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+ <Z9DQnjPWbkjqrI9n@gourry-fedora-PF4VCD3F>
+ <Z+PIoAGgz33R2c3P@phytium.com.cn>
+ <Z-P4ulrFQAbJBC_A@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAB3rgYStuRnOCYaAg--.28374S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrGrWDtF18uF15ur4DXF13Arb_yoWxXwb_A3
-	y7Arn7ZrWDAFyqy3WfX3Z09F1kCw43Wr4rXF45uF13tF1UJFWDWFs8Wr1qv3WYg398Kry3
-	Za1kWrW3Wr15GjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbVAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-	Yx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4
-	AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kK
-	e7AKxVWUAVWUtwCY02Avz4vE14v_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
-	1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
-	AIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
-	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxh
-	VjvjDU0xZFpf9x0JUqfO7UUUUU=
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-P4ulrFQAbJBC_A@gourry-fedora-PF4VCD3F>
+X-CM-TRANSID:AQAAfwCHioYLtuRnSLxWAA--.64S2
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQABAWfkXV4AIgATsw
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoWxArWDKF15ur1kuFy8WFWktFb_yoW5Cw43pF
+	yIyFy7Ka93Wr1xJw1kt34DWFWjgw1kCayUXrWDJw1xKr1kXFWrXwsYkryY9348Kas3tr92
+	qa98tFyvq3yjyaUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-Remove duplicate header which is included twice.
+On Wed, Mar 26, 2025 at 08:53:14AM -0400, Gregory Price wrote:
+> On Wed, Mar 26, 2025 at 05:28:00PM +0800, Yuquan Wang wrote:
+> > > 
+> > > Notice at both the root and the host bridge, the Interleave Ways is 2.
+> > > There are two targets at each level.  The host bridge has a granularity
+> > > of 512 to capture its parent's ways and granularity (`2*256`).
+> > > 
+> > > Each decoder is programmed with the total number of targets (4) and the
+> > > overall granularity (256B).
+> > >
+> > 
+> > Sorry, I tried to set this topology on Qemu Virt and used:
+> > "cxl create-region -d decoder0.0 -t ram -m mem0,mem1,mem2,mem3"
+> > 
+> > but it failed with:
+> > "cxl region: validate_ways: Interleave ways 2 is less than number of memdevs specified: 4"
+> > 
+> > It seems like the CFMWs IW should be 4?
+> >
+> 
+> It has been a while since i've interacted with QEMU's interleave stuff,
+> but IIRC (at least back when I was working on it) most configurations
+> had 1 device per host bridge - in which case the CFMWS IW should be 4
+> with each of the host bridges described in it.
+> 
+> I'm not sure you can do multiple devices per host bridge without a
+> switch setup.
+>
+Qemu counld add 'cxl-rp' under a cxl host bridge. Below is my qemu
+command:
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- tools/testing/selftests/filesystems/utils.c | 1 -
- 1 file changed, 1 deletion(-)
+-device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
+-device cxl-rp,port=0,bus=cxl.1,id=root_port0,chassis=0,slot=0 \
+-device cxl-rp,port=1,bus=cxl.1,id=root_port1,chassis=0,slot=1 \
+-device cxl-type3,bus=root_port0,volatile-memdev=mem2,id=cxl-mem1 \
+-device cxl-type3,bus=root_port1,volatile-memdev=mem3,id=cxl-mem2 \
+-device pxb-cxl,bus_nr=20,bus=pcie.0,id=cxl.2 \
+-device cxl-rp,port=2,bus=cxl.2,id=root_port2,chassis=0,slot=2 \
+-device cxl-rp,port=3,bus=cxl.2,id=root_port3,chassis=0,slot=3 \
+-device cxl-type3,bus=root_port2,volatile-memdev=mem4,id=cxl-mem3 \
+-device cxl-type3,bus=root_port3,volatile-memdev=mem5,id=cxl-mem4 \
+-M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.targets.1=cxl.2,cxl-fmw.0.size=2G \
 
-diff --git a/tools/testing/selftests/filesystems/utils.c b/tools/testing/selftests/filesystems/utils.c
-index e553c89c5b19..06419bf4ba19 100644
---- a/tools/testing/selftests/filesystems/utils.c
-+++ b/tools/testing/selftests/filesystems/utils.c
-@@ -3,7 +3,6 @@
- #define _GNU_SOURCE
- #endif
- #include <fcntl.h>
--#include <sys/types.h>
- #include <dirent.h>
- #include <grp.h>
- #include <linux/limits.h>
--- 
-2.25.1
+My lspci shows:
+
+-+-[0000:00]-+-00.0  Red Hat, Inc. QEMU PCIe Host bridge
+ |           +-01.0  Red Hat, Inc. Virtio network device
+ |           +-02.0  Red Hat, Inc. Virtio block device
+ |           +-03.0  Red Hat, Inc. QEMU PCIe Expander bridge
+ |           \-04.0  Red Hat, Inc. QEMU PCIe Expander bridge
+ +-[0000:0c]-+-00.0-[0d]----00.0  Intel Corporation Device 0d93 (CXL)
+ |           \-01.0-[0e]----00.0  Intel Corporation Device 0d93 (CXL)
+ \-[0000:14]-+-00.0-[15]----00.0  Intel Corporation Device 0d93 (CXL)
+             \-01.0-[16]----00.0  Intel Corporation Device 0d93 (CXL)
+
+My cxl list shows:
+[
+  {
+    "memdev":"mem1",
+    "ram_size":268435456,
+    "serial":0,
+    "host":"0000:15:00.0"
+  },
+  {
+    "memdev":"mem0",
+    "ram_size":268435456,
+    "serial":0,
+    "host":"0000:16:00.0"
+  },
+  {
+    "memdev":"mem2",
+    "ram_size":268435456,
+    "serial":0,
+    "host":"0000:0e:00.0"
+  },
+  {
+    "memdev":"mem3",
+    "ram_size":268435456,
+    "serial":0,
+    "host":"0000:0d:00.0"
+  }
+]
+
+Then:
+
+# cxl create-region -d decoder0.0 -t ram -m mem0,mem1,mem2,mem3
+cxl region: validate_ways: Interleave ways 2 is less than number of memdevs specified: 4
+cxl region: cmd_create_region: created 0 regions
+
+This case confuesed me :(
+
+Yuquan
+> ~Gregory
 
