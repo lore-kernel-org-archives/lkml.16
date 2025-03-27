@@ -1,92 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C25235280;
-	Thu, 27 Mar 2025 05:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD571FAA
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 05:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743053340; cv=none; b=e+61z+QU33W24Mzood6RWJVE+RDKE5VnV2JB9BkqKecpcGYssh3N5BWUxQyNwdYPFikiTrQxt+SypTmiy8sW9pcNW+sSdDT9dnecukFQSUvviZWqZLkq3Zw0S9Mfh3PYM9ub5ZPEaRC3dqC15pwC4Or2nWtq9SWrb2EoLV1Q/h0=
+	t=1743053406; cv=none; b=ZL9A0eAhwiH03YYA/ivsRENX0pV8IEj9/O1CMniHkVu0kPpMnhPO1vEjchBaesnokzFT4dQLr7TSp/IcQPVflxhCR3yoOqrlA3RFSwKQ24O2cDkcKgMmdS0H3Xy64DvMKHXkp3i0zHS5VIzCBRjys6dLgw9x6ZtDR28xzZ00GWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743053340; c=relaxed/simple;
-	bh=JQkF6jA2QUs6Cz9bhUGfJtAYxGyaYqob+SEALNJvCrU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eYTMq8s4VS9e8Jig91C1DB+3qxi+g7fHq1LFRr9zstY+DfVc8tLqp1pg4c83X8+Gq73KSMUOyf+ABUUESTOcyv4CZppoOimMhbjs25iUUC7fV/abcSwyBXUulAMD/41cZ/pkVhviUGBVhNTX7uGaSCK1nQg7hgtWkKFjIAjjWH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sUpoxKLy; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sUpoxKLy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20EFFC4CEDD;
-	Thu, 27 Mar 2025 05:28:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743053339;
-	bh=JQkF6jA2QUs6Cz9bhUGfJtAYxGyaYqob+SEALNJvCrU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=sUpoxKLy9tfZl8MfzcBnq6cJDmNzeQ2MU03W3wqq9A5kXil3+y1pAsUVX+wSgUQXu
-	 8uARaMjqPpCivavKgECofXUEz2upNK254ehtf7kaOnljTAVK+FOr4q1/2c8lEeklhO
-	 WB8onFw+2XSdUjSXBNVAttlqurvUG8T9rbnMir5npEqd+rcnTLNJs4SI4eNOQcno+X
-	 0XIdKxjxoJyif1gVRqA9Z8en5VtivcCcQ4AmB4TuEgLpEnbuVSKqJJIXtRIGN0oCT3
-	 mVan7oa1719i3HNcvYXlELMVs4iPRiXJxtSHwkBkc41/bbBwJgb/6B8KWR/g/G3prG
-	 59LKv+5DuIOsg==
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev,
-	Peter Zijlstra <peterz@infradead.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH] iommu: Convert unreachable() to BUG()
-Date: Wed, 26 Mar 2025 22:28:46 -0700
-Message-ID: <0c801ae017ec078cacd39f8f0898fc7780535f85.1743053325.git.jpoimboe@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1743053406; c=relaxed/simple;
+	bh=AqsjoyQO459ahleRB66FQWtF+iiRanNyBVdc7GjkcZg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=ouj5PCbubv6M7k4GTQDegAveNM4wFHsRKPi9/I/3EDnVdz9kBAmiBtem64288qN2KDW34FAIJE5qyJA3nTQKOswU4Q9okUzsC00N6P9AhL8xS8uPMJ7gHaodo1mCvhMOGYV3jLarme3pe0RS0ega5CyQfRuS2+6sSc3PtW7uu+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d43b460970so11356325ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 22:30:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743053404; x=1743658204;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ooqxJTlURcomA8Y7Qx2zL38/G+/NCRs+HW2FdYnqFqQ=;
+        b=Fvlvf0a4vh53MbumEXymIxQ8N32aQ0J9QsgGup36Mh8WRZBaEwfP2ErNVPEEHtjnY2
+         0+JL1YwVlAA/0nvWI4SQ7MPw1XozD+cKAEaPmh9mpwmghYAZSMnp5Uppdq+VABGDnaUS
+         AqtNiA8C0ouImp7PPgbZx+jQ3r1pCcNLhezrskELaaU7VpICG8XJul/3yBVK6aQ8SiU5
+         cnhT2xVSdKkClo8mDrj8tqpwH4Adt/j6xn6iZPgv5p8yy+9AoO3iRE8jjFIidN1QVJNP
+         u3ywlrAV5qN//5aGjSuCmLFCzka8vtnkhjrMGCf1XBfccylzVswP8Dfctkg4rE4rwRSe
+         +JIA==
+X-Gm-Message-State: AOJu0YzdPCcxLs2c3Uu+LxCv+4iva4yAZXmNWcs9jTxYJB01y/bGPPzu
+	L9Uk2figu1Jh6MhsGWu9M1s7dErRtvhR1LpEKAxBEXpchs029LvisDU2cEj1U5s4Y/u5ni+lqkT
+	oAwRShyrGzHca8CqVMLlRNMOlc5j1TiITq2H4TpX+DcmZQV+sH7e/vLE=
+X-Google-Smtp-Source: AGHT+IHyp80fDkB+M2fZW/X+8hhAW7+Gxejdl3WtKeGSsmI/FeHTaDikaXTTquu2bshTkB10F2+tU1YB1DNic3Lld57CzcB17i/x
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:188a:b0:3d5:8908:92d0 with SMTP id
+ e9e14a558f8ab-3d5ccdc7440mr28103215ab.3.1743053403930; Wed, 26 Mar 2025
+ 22:30:03 -0700 (PDT)
+Date: Wed, 26 Mar 2025 22:30:03 -0700
+In-Reply-To: <20250327012816.3901896-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67e4e25b.050a0220.2f068f.0020.GAE@google.com>
+Subject: Re: [syzbot] [can?] [usb?] KASAN: slab-out-of-bounds Read in ucan_probe
+From: syzbot <syzbot+79340d79a8ed013a2313@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Bare unreachable() should be avoided as it generates undefined behavior,
-e.g. falling through to the next function.  Use BUG() instead so the
-error is defined.
+Hello,
 
-Fixes the following warnings:
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-  drivers/iommu/dma-iommu.o: warning: objtool: iommu_dma_sw_msi+0x92: can't find jump dest instruction at .text+0x54d5
-  vmlinux.o: warning: objtool: iommu_dma_get_msi_page() falls through to next function __iommu_dma_unmap()
+Reported-by: syzbot+79340d79a8ed013a2313@syzkaller.appspotmail.com
+Tested-by: syzbot+79340d79a8ed013a2313@syzkaller.appspotmail.com
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Closes: https://lore.kernel.org/314f8809-cd59-479b-97d7-49356bf1c8d1@infradead.org
-Reported-by: Paul E. McKenney <paulmck@kernel.org>
-Closes: https://lore.kernel.org/5dd1f35e-8ece-43b7-ad6d-86d02d2718f6@paulmck-laptop
-Fixes: 6aa63a4ec947 ("iommu: Sort out domain user data")
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
----
- drivers/iommu/dma-iommu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Tested on:
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 7b2734de2ba9..6054d0ab8023 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -1753,7 +1753,7 @@ static size_t cookie_msi_granule(const struct iommu_domain *domain)
- 	case IOMMU_COOKIE_DMA_MSI:
- 		return PAGE_SIZE;
- 	default:
--		unreachable();
-+		BUG();
- 	};
- }
- 
-@@ -1765,7 +1765,7 @@ static struct list_head *cookie_msi_pages(const struct iommu_domain *domain)
- 	case IOMMU_COOKIE_DMA_MSI:
- 		return &domain->msi_cookie->msi_page_list;
- 	default:
--		unreachable();
-+		BUG();
- 	};
- }
- 
--- 
-2.48.1
+commit:         245aece3 MAINTAINERS: Add myself as a riscv reviewer
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git fixes
+console output: https://syzkaller.appspot.com/x/log.txt?x=17456198580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ef948fab17fe83a5
+dashboard link: https://syzkaller.appspot.com/bug?extid=79340d79a8ed013a2313
+compiler:       riscv64-linux-gnu-gcc (Debian 12.2.0-13) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: riscv64
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1152abb0580000
 
+Note: testing is done by a robot and is best-effort only.
