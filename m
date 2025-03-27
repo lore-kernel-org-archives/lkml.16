@@ -1,221 +1,104 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 710F519DF9A;
-	Thu, 27 Mar 2025 11:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7EB440C;
+	Thu, 27 Mar 2025 11:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743075049; cv=none; b=KY/h9EOhiQEaVxmNruNbaVf7mYGmNZhc5VKwF98SAWwKDd5hVWSwYLlo3jW9aLkf0ppcRQY9/4y6fz/HmpPFQcDC94Y46VEqn5Z7IwQz4FVvqG0JQZdS6yEJe7PfhCtZgysuPHIcPZxYGED1evtyYSFkrnWkwnBu/aN/jmLSxaY=
+	t=1743075129; cv=none; b=AlGwAJRnstwOl2PD1TIIda1Q/jtv5x4bi9aogDCOPHj3LHlLyig0LJO2Yqhr3OoOC5UYvF+6XF/B5IjvAqstb4MA063vbhFZO3w5LQPdYoUEPguzPH6MaI9iOL4Z91xstrhrd5N1MuDHDcYXb+xHm+b0JPj3/4YWlWXp5XLE2P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743075049; c=relaxed/simple;
-	bh=EHPAPo+AZfwZG+1db8kOeFFoN830kLP8ik9EeD2EBWs=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xtp8c2eST8JULsGmb0ZeNFgTD25MwdNO+LnhKwVAGIu7yi3pnkmiSvP2pdLIr5L9PVN/z1TqVl402WScZPf/i5XJ4N7lpuCm05SJRljhfRI5trppyKFrboCSLXvX8qqrBYrnYlS2+g8fJiCcec77UXui9BAxMjLF19AusT8fURo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ja6uwCht; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743075129; c=relaxed/simple;
+	bh=XAQmSGPGcH9aB1wqp617XxDqcfh5oqFVkf0PMvmTdXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gORYOQWMGfGLv9iiO1l4L8hrHI6jfA7F8/IXnUzPXYDTfHVT0G7VtkeyX0A225zsYvLcra84C3QZOxajaFrE/23oj7vK0olv227HO+6Vscj40H9oRN4FzdwxZIRWXdGfJfP+7Rfw541ANzzdEPTAODOp3D7e8jbLIeMOE7mWrac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uh1O7qM1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ja6uwCht"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so8038585e9.3;
-        Thu, 27 Mar 2025 04:30:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743075046; x=1743679846; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=z3xK7wMqbKOhgIgcAQyqb9TgqKuAwkkNyWljbOv4M7E=;
-        b=Ja6uwChtVvY3Pl/Rk48iIZvJgrbKUkWOUD/yXskslDRBgMdjA3uWsDLVRuNRC358x7
-         Tmx00rh3y5sMbTgJPIWlW3VIaH2fHrUK8WjnyCweN+nlvBktWEcC27ZSc+48XuHw+roD
-         qZ0Uewdu8y4GxwkC56kVpPPEHRr55LZwsh2CzX8fkiiomYM1Y+sCCMJsNy+IGOSGR/Kp
-         +KWPTzFIEhC2rN/KQ+2aYl7AFHq7WWANTLDDsot3vWwmu3yI6MD7QBWlRXzvp1mgubEH
-         IDaldCYdaTytXTAPHhsj+ejGK5xZ2vgnQTlH7on3VZ/tXyNDq4J9dSsedgdeqDfZp0Fr
-         ROSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743075046; x=1743679846;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z3xK7wMqbKOhgIgcAQyqb9TgqKuAwkkNyWljbOv4M7E=;
-        b=B4U0EjKhTzOy41GQS403ETfHE0zm+oRceBeeisSWcfiCAnkgPO+yIh6O5qGi4Dehr/
-         vtdFAjaGSDhoLQ57Z+iUpDYXtdVEkyY3j0W8ONP3hn305BuuAUzyaIbyDNvmaRY/jfYB
-         2mKArWygzJNd83nAbUyDSgFiquw3xPqy20+Q7ulMzwa9o/vL1gQXK6S+2THPoKjK5fWP
-         hTZy5YdiqxovS0YUnWOrE8KvJUuVWaJ7QV0A7nabdvB5UIbAJBw3qKVDbOKVS+KtE+S5
-         dLkPjXkTrz0ch6P4fPg2eN7fzf6kl7bDbsMJM0/1MA7zTRqctNoU5Sbxu0aVl8Lxzci2
-         higQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUv87ypUVQ0qfqjB1BP7Xbp8xNomh8AC+ylf7QJoVLs3EcE+XRBRMu/HHGkk57s60pSwq9pNShX@vger.kernel.org, AJvYcCWKd+LjXrZtpp7zFj9XJ034VKW1F9tjjN9gs04uZUoc4hAgqanKxsj6TBj42T+SkXw+SR38znbPktd3k5uJ@vger.kernel.org, AJvYcCXtYkfyjtkPgSQXGGtWSKVI0vrohfVnTJyIdzC75utVQdjtft6dRAOZhq9M7f+FM5A9kSo33Uyb3sGj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwA5cJ1crHBfXh9bf9DAiQrx5nRSDZmDgurYbhrnHaGHKyZg4dQ
-	NMjfVPkBTAmweGfa7zOfvAOlEhQZhXhhyDxwQd7J0eYtJCPQTjFM
-X-Gm-Gg: ASbGncvRUixoMtzWKcL+sGRfiGiTfPRheuDnXh76ydlWpE2JCGLngbB6s9HAGEjG+GW
-	lC5QSdRaO1BL7ED10zotUSXPT0FqXhl+0I3T1JLRe0i6wyVD2xUp3eEns48i50XWnDml6Xa1lAs
-	vsN67w7T85E0FqZK3GmVjrYIUgk3rZteikp6vyDBUsZemYJ2kEFi9/PiviFWrTDC7OLsG/JOIRP
-	cjaaVTN3vX9Fgr0H5OCJ8Tr1ldZSuAm2Q1upv9NcdHVdP/7YbPJ1IG+IPfUKLG3bbG8eUKrJ7hM
-	OtccIy1N3HPYuTb1uUYgWydfMijnpeWIkuNaB/gdMn9ewxqjSsVDCAb8njQ+p489S0qqhWPD2af
-	a
-X-Google-Smtp-Source: AGHT+IGAF7W6hH8zbCBen6FZhnftGci+tZTH4OAUOvOOonp0UwrzmwJR8ICQX/L+6Dos+txRbTtdpQ==
-X-Received: by 2002:a5d:64c7:0:b0:391:298c:d673 with SMTP id ffacd0b85a97d-39ad1783f3fmr3156801f8f.40.1743075045500;
-        Thu, 27 Mar 2025 04:30:45 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a3c90sm20197828f8f.36.2025.03.27.04.30.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 04:30:44 -0700 (PDT)
-Message-ID: <67e536e4.df0a0220.52fd8.a470@mx.google.com>
-X-Google-Original-Message-ID: <Z-U24pdejqZ7uOY_@Ansuel-XPS.>
-Date: Thu, 27 Mar 2025 12:30:42 +0100
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Eric Woudstra <ericwouds@gmail.com>,
-	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [net-next RFC PATCH v3 3/4] net: phy: Add support for Aeonsemi
- AS21xxx PHYs
-References: <20250326233512.17153-1-ansuelsmth@gmail.com>
- <20250326233512.17153-4-ansuelsmth@gmail.com>
- <Z-U1anj6IbSdPGoD@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uh1O7qM1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BC80C4CEDD;
+	Thu, 27 Mar 2025 11:32:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743075129;
+	bh=XAQmSGPGcH9aB1wqp617XxDqcfh5oqFVkf0PMvmTdXU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Uh1O7qM1Cv5KnelWc1Nsc47+nL6BNQOA+Mr6fhQMm234hBvR75gZDaZMgpwUO+wxy
+	 fyLN1msb2wHDp78AztEbJH454/MHrgx+hseEgdq8/J4xEhpkmx6xBYxxtfbLAKRP7b
+	 4sJPzcfcFNYCmc8H3nMMPl1juKf0gGP8ybYbUecyeFQndOIg74ZtyU2jTji2JprvK+
+	 Pw6P2g28uCA+lWis/epQW/wTgN9/O0SS7JZwy6sZGmMCMj80PWCFvMUepj3pGvtpir
+	 CqzoobQEjkMFv9bd9PQ15PwJToLTt/GgJvR762OckiNbEqvldHdlJFgkreBgRIHzIx
+	 fuZuCLcxy1/uA==
+Date: Thu, 27 Mar 2025 11:32:03 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH RESEND v2] rust: regulator: add a bare minimum regulator
+ abstraction
+Message-ID: <f22cbd85-1896-4842-8746-d74ee160ab3c@sirena.org.uk>
+References: <20250326-topics-tyr-regulator-v2-1-780b0362f70d@collabora.com>
+ <a98eb789-4c49-4607-ad15-76e260888d64@sirena.org.uk>
+ <0698A75E-D43C-4D02-B734-BFE1B3CC5D34@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="FKjPZJMp6SZBcqWd"
+Content-Disposition: inline
+In-Reply-To: <0698A75E-D43C-4D02-B734-BFE1B3CC5D34@collabora.com>
+X-Cookie: Multics is security spelled sideways.
+
+
+--FKjPZJMp6SZBcqWd
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z-U1anj6IbSdPGoD@shell.armlinux.org.uk>
 
-On Thu, Mar 27, 2025 at 11:24:26AM +0000, Russell King (Oracle) wrote:
-> On Thu, Mar 27, 2025 at 12:35:03AM +0100, Christian Marangi wrote:
-> > +static int as21xxx_match_phy_device(struct phy_device *phydev,
-> > +				    const struct phy_driver *phydrv)
-> > +{
-> > +	struct as21xxx_priv *priv;
-> > +	u32 phy_id;
-> > +	int ret;
-> > +
-> > +	/* Skip PHY that are not AS21xxx or already have firmware loaded */
-> > +	if (phydev->c45_ids.device_ids[MDIO_MMD_PCS] != PHY_ID_AS21XXX)
-> > +		return phydev->phy_id == phydrv->phy_id;
-> 
-> Isn't phydev->phy_id zero here for a clause 45 PHY? If the firmware
-> has been loaded, I believ eyou said that PHY_ID_AS21XXX won't be
-> used, so the if() will be true, and because we've read clause 45
-> IDs, phydev->phy_id will be zero meaning this will never match. So
-> a PHY with firmware loaded won't ever match any of these drivers.
-> This is probably not what you want.
+On Wed, Mar 26, 2025 at 04:49:26PM -0300, Daniel Almeida wrote:
+> > On 26 Mar 2025, at 15:56, Mark Brown <broonie@kernel.org> wrote:
 
-You are right. I will generalize the function to skip having to redo the
-logic. With FW loaded either c45 and c22 ID are filled in.
+> >> +    /// Disables the regulator.
+> >> +    pub fn disable(self) -> Result<Regulator> {
+> >> +        // Keep the count on `regulator_get()`.
+> >> +        let regulator = ManuallyDrop::new(self);
 
-> 
-> I'd suggest converting the tail of phy_bus_match() so that you can
-> call that to do the standard matching using either C22 or C45 IDs
-> as appropriate without duplicating that code.
-> 
-> > +
-> > +	/* Read PHY ID to handle firmware just loaded */
-> > +	ret = phy_read_mmd(phydev, MDIO_MMD_PCS, MII_PHYSID1);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +	phy_id = ret << 16;
-> > +
-> > +	ret = phy_read_mmd(phydev, MDIO_MMD_PCS, MII_PHYSID2);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +	phy_id |= ret;
-> > +
-> > +	/* With PHY ID not the generic AS21xxx one assume
-> > +	 * the firmware just loaded
-> > +	 */
-> > +	if (phy_id != PHY_ID_AS21XXX)
-> > +		return phy_id == phydrv->phy_id;
-> > +
-> > +	/* Allocate temp priv and load the firmware */
-> > +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv)
-> > +		return -ENOMEM;
-> > +
-> > +	mutex_init(&priv->ipc_lock);
-> > +
-> > +	ret = aeon_firmware_load(phydev);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = aeon_ipc_sync_parity(phydev, priv);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/* Enable PTP clk if not already Enabled */
-> > +	ret = phy_set_bits_mmd(phydev, MDIO_MMD_VEND1, VEND1_PTP_CLK,
-> > +			       VEND1_PTP_CLK_EN);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = aeon_dpc_ra_enable(phydev, priv);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	mutex_destroy(&priv->ipc_lock);
-> > +	kfree(priv);
-> > +
-> > +	/* Return not maching anyway as PHY ID will change after
-> > +	 * firmware is loaded.
-> 
-> Also "This relies on the driver probe order."
-> 
-> > +	 */
-> > +	return 0;
-> > +}
-> > +
-> > +static struct phy_driver as21xxx_drivers[] = {
-> > +	{
-> > +		/* PHY expose in C45 as 0x7500 0x9410
-> > +		 * before firmware is loaded.
-> 
-> Also "This driver entry must be attempted first to load the firmware and
-> thus update the ID registers."
-> 
-> > +		 */
-> > +		PHY_ID_MATCH_EXACT(PHY_ID_AS21XXX),
-> > +		.name		= "Aeonsemi AS21xxx",
-> > +		.match_phy_device = as21xxx_match_phy_device,
-> > +	},
-> > +	{
-> > +		PHY_ID_MATCH_EXACT(PHY_ID_AS21011JB1),
-> > +		.name		= "Aeonsemi AS21011JB1",
-> > +		.probe		= as21xxx_probe,
-> > +		.match_phy_device = as21xxx_match_phy_device,
-> > +		.read_status	= as21xxx_read_status,
-> > +		.led_brightness_set = as21xxx_led_brightness_set,
-> > +		.led_hw_is_supported = as21xxx_led_hw_is_supported,
-> > +		.led_hw_control_set = as21xxx_led_hw_control_set,
-> > +		.led_hw_control_get = as21xxx_led_hw_control_get,
-> > +		.led_polarity_set = as21xxx_led_polarity_set,
-> 
-> If I'm reading these driver entries correctly, the only reason for
-> having separate entries is to be able to have a unique name printed
-> for each - the methods themselves are all identical.
-> 
-> My feeling is that is not a sufficient reason to duplicate the driver
-> entries, which adds bloat (not only in terms of static data, but also
-> the data structures necessary to support each entry in sysfs.) However,
-> lets see what Andrew says.
->
+> > This looks like user code could manually call it which feels like asking
+> > for trouble?
 
-If you remember that was one of my crazy project in trying to reduce the
-array but I remember it did end up bad or abbandoned with the problem of
-having to reinvent each PHY. Probably my changes caused too much patch
-delta.
+> Yes, user code can call this. My understanding is that drivers may want to
+> disable the regulator at runtime, possibly to save power when the device is
+> idle?
 
-The proposal was exactly to pack all the struct that have similar OPs
-with introducing an array of PHY ID for each driver.
+> What trouble are you referring to?
 
--- 
-	Ansuel
+My understanding was that the enable was done by transforming a
+Regulator into an EnabledRegulator but if you can explicitly call
+disable() on an EnabledRegulator without destroying it then you've got
+an EnabledRegulator which isn't actually enabled.  Perhaps it's not
+clear to me how the API should work?
+
+--FKjPZJMp6SZBcqWd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmflNzIACgkQJNaLcl1U
+h9DMggf/b4lbWi031tbHHABWyBD5XIojue2XPe9oALWUHqXLWbUApO8S1OZa8hLF
+JkbE33EdHqiiFtad//64e72p72zezakjJBV46I9pZl5V6Crgd2T6wd4n61YDQ0ye
+aYXPcDZyCC5W5d9GPcfhiRfgrw5zZ70FPoVZEPViIAZQdDK7M9kJh7BT4sayQvPv
+N+DHwTovsyv2c5I9YHfKkGgXE7pqQw477J+25zdjFc4NqF269b69xz8APiA5YxZJ
+7VJ2dSSN7RRkCmFo4TcfSosIBfFinBDPybU/71P+hzYGTzb5/aNmRyxKDctAfTEy
+COJ6nJ+EUdZ5aFPrbNRmDVcJL789KA==
+=mC8Y
+-----END PGP SIGNATURE-----
+
+--FKjPZJMp6SZBcqWd--
