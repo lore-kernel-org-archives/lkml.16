@@ -1,127 +1,118 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19C820E01D
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:11:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AF020E01F
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743070306; cv=none; b=aWsA6EhpXuof0xtNHKxgHxJLjmo2danzdrR/tAhvdS/PkFCqD9VFXm0SV/XuvJjH+kGdw3W6pBp8xDstv2mpExJPmt/IZKjgg/kkQ4kFuw/+w2RnBK/7uFY43F3M9E+VwYh1casACDGnOnBdN3y3ElxFJixeJCvtOdnwcToZglI=
+	t=1743070392; cv=none; b=ZC8sKmMIJmFuXeJe/k7xXkaCRd+Yy71l4AVUDv5EAOw0RItA86aghqoHZQLF3ho20Mkb/xF1M6NXax1o/v8NJINH+ggjvkMzPCJ4QU+hG6QkHe0MEbiNIZFGNezSs1G+KhxNtEYHnfXO72BId8Kxxi7V6OairOLuZvwIw3wRqWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743070306; c=relaxed/simple;
-	bh=lmxrzIS+d76Qh3zL9kdazJJMQfZpNeJz82hwqqtwmOI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LduImw6wqxpf6Pc2OWblKfzGq31ehdM8vBdVvCnDkYwQdg1J3YxrbAbulgFpT27BUX8ftmN5SaAMHdgW1x7S7FawjOMk7Fg8T9eAManGtGE8KKxRYXuEWh5mVN9DQ5Q5Fryn3URneZnwtiLIP3vsz1bZ/MKDYyJQtx7KV9BZxbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IW8atlC/; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743070392; c=relaxed/simple;
+	bh=HqYxxVPtZO6/vDTNll1yUhXaMFK80Ex8e3/ECvl+j+k=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=PTdk/ZrSmx3E9loI+KWt+WoY255PobYCtIljUcwFxAdfEkXyMutw6OA2wx5jnqYY5nqat8hCdl/BNSYSLnqsXY6tUYjiYZHaOgFK5WthqSl2LxmuRjqu/Es1CP/JUaW2p5GuoUP/4Jqk0ltWSje6pfpOD0X4SPhVfZfKuwXs5a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ne0uzD95; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IW8atlC/"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R5jaix003117
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:11:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=v9Zn3NFoa6qbW13srYFRWI0q
-	FLJJSbYP/Owvwt3xu9A=; b=IW8atlC/ZbCqtLPdmVzYR7QaIKAQHk6HlAPOhO4W
-	q0Q9QyyxoZmdkoyJ4YKOFFDndYGN55NsprSTh+IlEfYhzpE60HmbXgBu3QceAYUF
-	19PUEMEWhme3G+WxsCNFBEIjA+fKL14fVor9ymQqp9XnVRx44+/8mHNmX+NcyDH4
-	YWtK+Y+hUeiFKgcVXBOxBgPnHf2S/NqZ8hO+ZQzWi/L+RZHfi8wqqa+xLzerHDH8
-	3cavsP072EH6sEj2hObuL3hwCgT08HY1x2oAQX/PKfHWHtA6T+2z9j2yRFIQs0uC
-	IRnJ/q6KbR7NczWZX7u3RRNVM8+lS/0x+OiPoDnvfZ0rsw==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45m0xdwryr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:11:42 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5e2a31f75so225787385a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:11:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743070302; x=1743675102;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ne0uzD95"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so4724965e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:13:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743070389; x=1743675189; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=v9Zn3NFoa6qbW13srYFRWI0qFLJJSbYP/Owvwt3xu9A=;
-        b=UfOjdglf8Jcgu/Tuk2HZLieyAnmgWC3/VVsOmhcs4Ee1R1m1/omDv1VArFGT3vfvA3
-         82aPOXyBhsqaVxgtVpjkGOd9OkDDuu15Z2YgFCOI3KlN/zmpmB0Dg/dZAeK8ifSxL/rM
-         kv8BlX8DfEryAaQIy+e1A7/qowLWsAcvS2FMsZ7AI14clwYRcZAQi1RcmvE+dwBTA7tN
-         nRrlk9yHBApVwUBF9FkVz3p2LwKZkLrfJxRZ4UdloE1rwTS3b414is/MxbW8Ax/AHfPX
-         eiS6WNzdZ2OSFf8v5vtP8hdeEMshS5MzYEsancQISKRASjc+cgeEn7wXmcd7gK4SeBZ7
-         kpRA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcnRubzKpJFJN4gmxTO3fS+yTC8DUId7KbBM7R15Yn5hE3yTUTtQxEeUhH1gl7J4Yj+DbCJ0TfSNWoaac=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwK2V6rsyzMMUM98wcaLTDXIQKUmYRsSz0UllkCwLvM6+eFfOZy
-	pzRoTUV/K8xINzXhhB+NXg1HMtoZzkm5r/aAHqQ+sRqHWmh5v6ABeGB694a4cQjrl6umXAczmNZ
-	YAjPO7ZU8grWHZwkCAPUN1FHCfw///9HGTGxqlwuv6K6Z1gV3sKjhNGp9AKJ8Tdo=
-X-Gm-Gg: ASbGncuc/c6B80zzvZVvO2/YztrczJDSq5YJB8R+AW7iMtRsl16MqcftSWPP0nM501G
-	Sc5gF9d64VX1LeqVNVEJGl6qzto4KYFfQg7iPK2jizbWOiXCWIHHYMXuaYiwgczJj2+1/tVOxJ3
-	LJ1O7wgGdEdfLUcG91cxaoBHP1BC4uXOokU2tEJof7im9rAOV1g/PZg06lHf3HDUYh4ha0xiCAH
-	QgsoQ2QSPB8ALAdeyFtiDv6OMbiNExOszsGwPRkl8LHD0QnPRvwGl6rixFenm/PJ9f6+EznJtVv
-	ZkViz8pBwSWXHD246rh4885AE0LjTWzyxctPc5sDQCZzqLIFmsKRAZ5fRoMFqrDJwA9aU3FTA3p
-	5D/w=
-X-Received: by 2002:a05:620a:2914:b0:7c5:6140:734f with SMTP id af79cd13be357-7c5ed9f4dd6mr490782885a.18.1743070301845;
-        Thu, 27 Mar 2025 03:11:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE6t2DqPJhmH7olRi6YdWjzEC6o9DeKuF8NojAtig4n9I6xDbgHy0ROgN2hW3aSNsHavREJnA==
-X-Received: by 2002:a05:620a:2914:b0:7c5:6140:734f with SMTP id af79cd13be357-7c5ed9f4dd6mr490777485a.18.1743070301405;
-        Thu, 27 Mar 2025 03:11:41 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30d7d7c18ecsm24091031fa.23.2025.03.27.03.11.37
+        bh=Xo7iAv+9nI2kaufsKds/53FFNGXfbLXPYtYZ+pjxKuE=;
+        b=ne0uzD95tEg3U35XZioP51rXJr9xvpWc1veQT5lh0ufoVKFXwQt1zn0aBDMrJ/qt8q
+         4Y22Y0MkyFC3TvDfdd0sJaMTRvOOjdJq5+Rd+xx9inNYv8gzHHxMYKV4kVyN+CncnH+5
+         wfK0z3eNXdIF2/jor06yFkFmo3YKwBy3Gt0a+PW5MESvDkVHFfRHsqBhgOtuq7Ww9CDs
+         m0YotQKa7fgQ2IoM2JGU6T+ekVca45FRg0SqixFDxxfPwwFeNZo6hGl6y48WJX+cTpWh
+         eEdZtnW1MYxZnpNlr+7Y1Vube28p1UyrJFLPTUoIjH022a+OoTQc66cg1lmKu0GFDujk
+         Ej1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743070389; x=1743675189;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Xo7iAv+9nI2kaufsKds/53FFNGXfbLXPYtYZ+pjxKuE=;
+        b=c8shiqkfhsZa/W3nW6Dgw5UK+r3D+PxAgB1azQ6QS2gnpR66Cn0d33NbUHBURm01Pj
+         q8Fz8ycisWvmWIOzZ5XdWjl+D6DXdliJylhQeEJ5OOAIoO3HeDedSzjuyluqYCUS7SFn
+         kYJeK/ass4sjnq29deHEahzAaSMcZ+yWtUGBJjyf8Jgr53Sifbrt979Qz6OUdMevOjQl
+         WZ5/2fFg+3DaTL757ZPTwvJxfVi9CYVdqT9eOlnzOji5SUUN+H6AceKHmXPv/8SEtiYv
+         pM3CIxP1yi5wSq0HDHz3f+d6r7v2dgow6bzIPn0Uvdgb/3v8p33cRPBma8GQedy09nYb
+         +dsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWZXv2bUc0Vc68eVcYdcHoBZ76I174GkjaC41ZSeNtXYpb7LmUnCQzu4AxnrXZbb5pBoT5604fJbeVKN4A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhZpyIe1LbkR+Xiby97DliDDFfdbvQFf39hsqTA4KSZPd/BR52
+	iHZ6VfY7p1dC2RVA7q7Ho49+jAoO/zXsDtfXui8yKt5KWztQsB2sJGGdO3M2OXM=
+X-Gm-Gg: ASbGncvD8knFHmLGQhqVEFavARJ8a7wq7I6Zyet+7a6tE/X38PrDVVnFG9jEv9+FQle
+	hBQUWVm4PPHG3ePb3++grdSFQDiyPGJPh7FKbdCs5szn+MNwlxKnuiIuGQglmTQwGlO7+GZTsxH
+	J8VSM4lLzNbXXEyFxkgjUVP+gFwdn70cKVIIKJODgHxeW1fTfLceeRucuQYOY17U2eZALnQUK46
+	5lY30Gd8D37iN2hX4IL32dbxw0Vp4srMLmq5TLAvohSSFOqpPMZo5eUxq0UbXMbpIArvbsCFITM
+	few9Gz8NLEhnp3HygCsYCcsTXU9/XVTHmvkthxp+MQZuZztz+WxSX532P6Pz1qNNLQ==
+X-Google-Smtp-Source: AGHT+IFz+YPLrvTgN7jlfBOiq8HZmmXGzvYjXvGO0VPFIOTzfMvVnsPizrlTsSXhwRlZyW4HwIgm6A==
+X-Received: by 2002:a05:600c:4f0e:b0:43d:1bf6:15e1 with SMTP id 5b1f17b1804b1-43d8465f999mr27131955e9.1.1743070388941;
+        Thu, 27 Mar 2025 03:13:08 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82efebc2sm32345205e9.21.2025.03.27.03.13.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 03:11:39 -0700 (PDT)
-Date: Thu, 27 Mar 2025 12:11:36 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org,
-        Marc Gonzalez <mgonzalez@freebox.fr>,
-        Dmitry Baryshkov <lumag@kernel.org>, Arnaud Vrac <avrac@freebox.fr>,
-        Sayali Lokhande <quic_sayalil@quicinc.com>,
-        Xin Liu <quic_liuxin@quicinc.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v2 09/12] arm64: dts: qcom: sm6350-pdx213: Wire up USB
- regulators
-Message-ID: <5votyeeny5k7dyozzhksaeskvcut3z6zvp7nh6qilcjhxjx7hp@zfrwhyzoaoc2>
-References: <20250327-topic-more_dt_bindings_fixes-v2-0-b763d958545f@oss.qualcomm.com>
- <20250327-topic-more_dt_bindings_fixes-v2-9-b763d958545f@oss.qualcomm.com>
+        Thu, 27 Mar 2025 03:13:08 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Kevin Hilman <khilman@baylibre.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Xianwei Zhao <xianwei.zhao@amlogic.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250326-pinctrl-node-a4-v1-1-8c30639480f6@amlogic.com>
+References: <20250326-pinctrl-node-a4-v1-1-8c30639480f6@amlogic.com>
+Subject: Re: [PATCH] arm64: dts: amlogic: a4: add pinctrl node
+Message-Id: <174307038828.3221991.15446720184220513001.b4-ty@linaro.org>
+Date: Thu, 27 Mar 2025 11:13:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327-topic-more_dt_bindings_fixes-v2-9-b763d958545f@oss.qualcomm.com>
-X-Proofpoint-ORIG-GUID: XFUX3NCTC1Fq7OEHM9hVgQ_nYRL-5W-W
-X-Proofpoint-GUID: XFUX3NCTC1Fq7OEHM9hVgQ_nYRL-5W-W
-X-Authority-Analysis: v=2.4 cv=Q43S452a c=1 sm=1 tr=0 ts=67e5245e cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=iXEU_j0xfCFYBHAbzAYA:9 a=CjuIK1q_8ugA:10 a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 spamscore=0 suspectscore=0 adultscore=0
- mlxlogscore=630 malwarescore=0 mlxscore=0 priorityscore=1501 clxscore=1015
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503270069
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Thu, Mar 27, 2025 at 02:47:11AM +0100, Konrad Dybcio wrote:
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Hi,
+
+On Wed, 26 Mar 2025 13:17:16 +0800, Xianwei Zhao wrote:
+> Add pinctrl device to support Amlogic A4 and add uart pinconf.
 > 
-> Wire up the regulators based on the downstream release to appease the
-> devicetree checker.
-> 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> ---
->  arch/arm64/boot/dts/qcom/sm6350-sony-xperia-lena-pdx213.dts | 7 +++++++
->  1 file changed, 7 insertions(+)
 > 
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.16/arm64-dt)
+
+[1/1] arm64: dts: amlogic: a4: add pinctrl node
+      https://git.kernel.org/amlogic/c/77fd52e77d325aac301601a18f7cf06de1565a72
+
+These changes has been applied on the intermediate git tree [1].
+
+The v6.16/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
+
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
+
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
+
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
 
 -- 
-With best wishes
-Dmitry
+Neil
+
