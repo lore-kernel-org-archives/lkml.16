@@ -1,103 +1,195 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9238A1FFC44
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:10:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F011FFC6E;
+	Thu, 27 Mar 2025 08:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743063048; cv=none; b=ASxfKbDBuQPjVMbizPwF1g9pKKhgSXNG/arEdX9PflXz76Cm/ZPIumbtn1v0o1N2XqxyFkffRm7cYXKjwfl1ES+7yNc/jvFE2dQOPOTJIJM4unqc332dwM2tvTDveumyb0s8rpYpiZCT587RhAZXlbR7AMtmDGuzVQY3IQJqQNA=
+	t=1743063054; cv=none; b=Eqp/eT2EyIGbhdLWr7jxb1Mv/GpzR3Rq0oaeuZ/VFEiry36ecUy1fib+tp7RdUKxjodCbOtI/5ACzCp+8rzdDvLSDUO2gRV/g8F6Q0PGj4TOaJOFzhpxMRz4YJhlvtgLsPgT9mAhU6v0ds0xA9//SDrCM6p8GbK4UlhjR7Y0w88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743063048; c=relaxed/simple;
-	bh=Ok6sbhuAHQgOj0VCWpsrZDM5gqJfXhwA7DaUP3dLmD4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=B+3zIW1U3oOMEsKf+7B0JiIxYaZgVg2wiqQQ+mwOZpTqE7nRoEOY3hzITe6N7P+uWTkXP3NND5l7Hscxa68y7L/GZAnqdNmyrZUw8GJub90t/TYWvtw0qNP5+VRAyionujarWJHZMJ0GO68patojAqQ4K1OCA25igCvs60dYkIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OX0DLUrl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o+qzkT+6; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743063054; c=relaxed/simple;
+	bh=e5odK2PRBJXEv4YxSLBFs+Dv9VVjIh1oo4VKosx0RYc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pLkYuwC5zncstaH8yObhuW8nxOnpC95k08dX1/dufxUfAaR+KWek+ss64zVBxaO2h91HyIzbBODsX5gIMAFZtv/FJ+WnEhTzV2GuPA8M6cplpRal/48bPD+YwYnRTYKWU8ynFzC3XFGT8w4RDURIMUUJ3ZFWJbhMnZCNyPqIInI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qkmx23NX; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OX0DLUrl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o+qzkT+6"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743063044;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hKLZQkdc4yEMpxWrE9FAL8M+lw5YXUz3sNPr4J+7xHU=;
-	b=OX0DLUrlW+fgg5NnLkdMX53EVPjOBtgQZTbnXRiyEg+ITLbebuSKU6OSInDWxVutaf+9iD
-	9o9J5Z9kYnc9K8BQvue0zb1JPXOzlP0x5FbIg87InVQbkLgLG6A8lCjGYMUCGXzeW1rXK+
-	YSqyZZFu3rbbNkQprdoF2dmOa5yIO1tK3S+iLQXd0xnv+KVW5K2TCasXe1sT7900yDDJAd
-	hzgDdz9HeU+qXthyhvqG/JFeZMrqKkkBgYZRF97foX99JXtRst1S90KtyAk4y1o2wleqHR
-	aM/rwW6H9VjtWV+8c3b7xxKnEU3gjWKkO2xlTJg3uImAoHcv9X5XfoOrADwx2A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743063044;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hKLZQkdc4yEMpxWrE9FAL8M+lw5YXUz3sNPr4J+7xHU=;
-	b=o+qzkT+6oSMCd+hmHu1f9f+3QPwQAX/BmaGuV+qdKtl43dl3LiWMsQa2Z4wuwoBiwa9SlI
-	g3IeWjmlQoolRJDQ==
-To: Eric Dumazet <edumazet@google.com>, Mateusz Guzik <mjguzik@gmail.com>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
- lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org, Benjamin
- Segall <bsegall@google.com>, Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: [tip:timers/core] [posix] 1535cb8028:
- stress-ng.epoll.ops_per_sec 36.2% regression
-In-Reply-To: <CANn89iKjCgmxtiLeVAiXODHbbR7=gYYi5cfAS1hS5qn+z=-o1Q@mail.gmail.com>
-References: <202503241406.5c9cb80a-lkp@intel.com> <87pli4z02w.ffs@tglx>
- <6sn76aya225pqikijue5uv5h3lyqk262hc6ru3vemn7xofdftd@sw7gith52xh7>
- <CANn89iKjCgmxtiLeVAiXODHbbR7=gYYi5cfAS1hS5qn+z=-o1Q@mail.gmail.com>
-Date: Thu, 27 Mar 2025 09:10:44 +0100
-Message-ID: <877c4azyez.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qkmx23NX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=e5odK2PRBJXEv4YxSLBFs+Dv9VVjIh1oo4VKosx0RYc=; b=qkmx23NXv+iZDjEWUA9jsE5gxY
+	lu5NZ45WkHcrQrNtd2kB6MPws1xQBjdxtNok9dSF5m/3091KImCyy1g5M4w35Dr1QdSb0GlargLSZ
+	hP9LKwFWIvHN+aSJOY0x8Ffa7QtDG25BH2dSeGwRQaCvIr9GbvlkPEcxE4vbFQgqy5j+APKslp3La
+	7T4n4RMSG6KeC4+1B2pr9ATdVjaAYlxF7y/3JPIxZZKnG73VK6GnTfG1GB4wu6WvXLyZyfuabuOfx
+	mE6WxkxkaJrpAK2wE4htbmRKJI6DUvQUFJbQqviO6gqzLioLfWznxaSew50AqznX33DGD81ic3/e2
+	Vt1i2VaQ==;
+Received: from [172.31.31.145] (helo=u09cd745991455d.lumleys.internal)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1txiK7-00000005wfh-3moI;
+	Thu, 27 Mar 2025 08:10:48 +0000
+Message-ID: <830d2e06c064e24bd143650ce97522c2bc470a90.camel@infradead.org>
+Subject: Re: pvclock time drifting backward
+From: David Woodhouse <dwmw2@infradead.org>
+To: Ming Lin <minggr@gmail.com>
+Cc: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, Paolo
+ Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org
+Date: Thu, 27 Mar 2025 08:10:47 +0000
+In-Reply-To: <CAF1ivSbVZVSibZq+=VaDrETP_hEurCyyftCCaDEMa5r7HAV67A@mail.gmail.com>
+References: <facda6e2-3655-4f2c-9013-ebb18d0e6972@gmail.com>
+	 <Z-HiqG_uk0-f6Ry1@google.com>
+	 <4eda127551d240b9e19c1eced16ad6f6ed5c2f80.camel@infradead.org>
+	 <CAF1ivSbVZVSibZq+=VaDrETP_hEurCyyftCCaDEMa5r7HAV67A@mail.gmail.com>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-PWrEyYhwl7qjzJQn6i3Q"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+
+
+--=-PWrEyYhwl7qjzJQn6i3Q
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 27 2025 at 07:21, Eric Dumazet wrote:
-> On Wed, Mar 26, 2025 at 10:11=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com=
-> wrote:
->> On Wed, Mar 26, 2025 at 09:07:51AM +0100, Thomas Gleixner wrote:
->> > Unfortunately I can't reproduce any of it. I checked the epoll test
->> > source and it uses a posix timer, but that commit makes the hash less
->> > contended so there is zero explanation.
->> >
->>
->> The short summary is:
->> 1. your change is fine
->
-> Let me rephrase this.
->
-> Absolutely wonderful series, thanks a lot Thomas for doing it.
+On Wed, 2025-03-26 at 08:54 -0700, Ming Lin wrote:
+> I applied the patch series on top of 6.9 cleanly and tested it with my
+> debug tool patch.
+> But it seems the time drift still increased monotonically.
+>=20
+> Would you help take a look if the tool patch makes sense?
+> https://github.com/minggr/linux/commit/5284a211b6bdc9f9041b669539558a6a85=
+8e88d0
+>=20
+> The tool patch adds a KVM debugfs entry to trigger time calculations
+> and print the results.
+> See my first email for more detail.
 
-Thank you!
+Your first message seemed to say that the problem occurred with live
+migration. This message says "the time drift still increased
+monotonically".=20
 
-> Next bottlenecks are now these ones, but showing up in synthetic
-> benchmarks only.
+Trying to make sure I fully understand... the time drift between the
+host's CLOCK_MONOTONIC_RAW and the guest's kvmclock increases
+monotonically *but* the guest only observes the change when its
+master_kernel_ns/master_cycle_now are updated (e.g. on live migration)
+and its kvmclock is reset back to the host's CLOCK_MONOTONIC_RAW?
 
-Right. I saw them too when working on this.
+Is this live migration from one VMM to another on the same host, so we
+don't have to worry about the accuracy of the TSC itself? The guest TSC
+remains consistent? And presumably your host does *have* a stable TSC,
+and the guest's test case really ought to be checking the
+PVCLOCK_TSC_STABLE_BIT to make sure of that?
 
->     33.36%  timer_storm      [kernel.kallsyms]           [k]
-> inc_rlimit_get_ucounts
->
->     32.85%  timer_storm      [kernel.kallsyms]           [k]
-> dec_rlimit_put_ucounts
-
-These two are not really posix-timer specific. They are also the
-standouts for any signal micro benchmark.
-
-I stared at the implementation a bit, but there is not much we can do
-about that I fear.
-
-Thanks,
-
-        tglx
+If all the above assumptions/interpretations of mine are true, I still
+think it's expected that your clock will jump on live migration
+*unless* you also taught your VMM to use the new KVM_[GS]ET_CLOCK_GUEST
+ioctls which were added in my patch series, specifically to preserve
+the mathematical relationship between guest TSC and kvmclock across a
+migration.
 
 
 
+--=-PWrEyYhwl7qjzJQn6i3Q
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyNzA4MTA0
+N1owLwYJKoZIhvcNAQkEMSIEIGYuvivYIuTKGjn6zbqLWi91ahcNZlLPCnKY+tmGUFeNMGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIARCOeb8AU32Kn
+y9jS8M4YWc7t/vkyzUGyMQ6lcXGHdo0YP0yarp2PvBMrcRVU2PVHceTuiXESHaUvBYBKtUk1RrmN
+UY+snouJT3DfElwGtC/rRl/LeanFGdf02e0T4/0KYU+YgVJFAI/RNEyMzVUdAH3aSgl3jcLOceeH
+Dc+eZYo0LatMzKjtBPAm+1P23tuNVBa8KmIwHc57rie8XctHD86HSkLRkbqYzpuyaTEmIfmHnLHo
+qCFAWsFP5aZypD8pCVm53MlYk1ZMIISLUciVV/up28ZHiMw7A2Tq6GHzHi8aP+sNTJFFs+5aaOHm
+WIJrJgd/d1acjrGL6T68YhzH9rW+Lc8B0eXkZhCQHxkKr3OtAqsMUNRebkEgA/emJkRGdyaXn9kv
+8NhOzYE9c/iL6iHhzAGscUBK8F81cvqd04CquMHJ8br7nSfBSlSDcDuij1nyPHIxahoScCNCmaRp
+1urANlDtwzo/ddCjNl7103vWVpyL/nidhfP3xMqiBJVKQ7AbHSJ/TBR1o7IUXMLEMrLxoLfb7K38
+eK9U3ucR0qr/ARq9HgARc91Iv6U9zJ2FCrr4Jizvp8D9Y95f0uTEx1NSWgyDLDdMyf4BZEpPAPE6
+Vr8rB3RlDjGWsgujShtu4VK1F8kIRiA28qi1WrvjjmwMX4ntSinS7r+gFs+N3+YAAAAAAAA=
+
+
+--=-PWrEyYhwl7qjzJQn6i3Q--
