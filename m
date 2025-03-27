@@ -1,126 +1,216 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213A820E01D;
-	Thu, 27 Mar 2025 10:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F0D20D4FF;
+	Thu, 27 Mar 2025 10:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743069805; cv=none; b=oP56ljksqrfGcij8b5ekHn1eT4bOR5qgiqK+7POaEc3iu8ooSFCPfxgaleG3FNv4HGx8EJrGQtlVczkVAOVuOinrVzJkGYQJJKndSi/NQsGJtxzE9LqsrkB2em7DD0Xj0wiR1nF3ado2NEbCzphwNdyTsj+247jWE+PZoh/itII=
+	t=1743069814; cv=none; b=THCNmePN+vPpLOXiqZqaNZ+RkL4X+ojKTuxCscHtVQYMqIlOZf0rN47WH5K7u/nCmUaEA/zrP0h3puwU6tZE50ECrL5XJ/ckkoG0JXHSiNBDXfCWDBQXU5eftvG0Ve20Mz99inpI8e5tDcJzwRo/PdNmtZJCR1IBD7Ry1WUomSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743069805; c=relaxed/simple;
-	bh=go4UBCXgE/0g2fcNmMQWe9XQzoLUyVwN+ZYXGjMEv8U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=TytspDHIlcE9I74h4EuEZ+xEC1GjgaYT+Fj4WZ0ANdg5frPSTt4xRe2n0mT6zAFnRgciXtwLj9oI7/5Mr0kUV2/mbmJ51sMy7XX6OkUo9MPmHHmkrjge4tw0N75FAu/PKqdIwVFaVJJ2UHaR3Ze2Qqc2jV4KPy+9jhw4NMtExMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Sw8auwoS; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743069814; c=relaxed/simple;
+	bh=7q5G2oViNC8w2MREEd4XQqxGVKMOap7GRu6dwYLtn00=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mLjF+2w6zieS+V4jDY+WciGwdOJB5IHmBnoH4f7BUrcfhpSvx73N1OtTQS+pxnzLqEldC3ZOtslYqzeb2Y0PWQfuXyjvINGTbyM83MUP7223F06ugU81VmiBhmJZqECUL2tp0IemaS3RvRY+++PW4D2viSf+2CWHV9YOMCnmX6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=twVegJQU; arc=none smtp.client-ip=72.21.196.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Sw8auwoS"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R5jagD023247;
-	Thu, 27 Mar 2025 10:03:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	+Oce+4CvNI900ByCYlhAiujBCHbQ75PUA1zQV+2XxPs=; b=Sw8auwoSSBhRW5qF
-	ZzwmCLoNA1a3hSHYEhiqpCIDHlHOg2d2hI5jRTGyRfkDFngDXIwNTovtIlquyQR5
-	/MxEwbI7zqV8772qUVMkYHqaxWAvRbtPsCfCvv6e+iTGX5DE91H2NodWGD9Njj1t
-	HmM+jwi6rZQIl7YR9tfAnqfUD4I9vV80qL0eEgWEsY3lrO7cIRPPPQmOUtowkQlP
-	bDgwGBBWO0QzPGxSCHPDWDNze5S3NL3DueGIuYgTL1jEncoQbvfOoE1LnHH0r8R1
-	8oLTYI3KC16YaCtJC0yBYjzrJQJ0bM5er3/HMkboYlWHhLEx67ob4wEvY1mt6/Tb
-	F7pjkg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45mb9mvb2b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 10:03:20 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52RA3Jco020457
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 10:03:19 GMT
-Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 27 Mar
- 2025 03:03:18 -0700
-Message-ID: <8435b037-8b54-401a-b4f6-b4b497c4c3eb@quicinc.com>
-Date: Thu, 27 Mar 2025 15:33:15 +0530
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="twVegJQU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1743069812; x=1774605812;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=1AYkt3UZmdT/puNZc9A2b9Jl693S9yxUDwwUM5aOO5U=;
+  b=twVegJQUoej3d4SkcwksHir7lQyumsz06QrC52opt6xIMCyN8XPvhLr+
+   Bi3T7blowFdmaEkePXyFVWf4+z0CCXlrG7IIlOA3io/Bc/mUCeZgfcXy7
+   qwE3OTztYs8qI1sLIuUwTqUD6l4ILLOFA1Tn9ucEBNkPz9c3wtbXor67D
+   w=;
+X-IronPort-AV: E=Sophos;i="6.14,280,1736812800"; 
+   d="scan'208";a="478704841"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 10:03:26 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.7.35:25558]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.26.232:2525] with esmtp (Farcaster)
+ id a4642778-ac88-44ce-8afd-012d72d51f0e; Thu, 27 Mar 2025 10:03:25 +0000 (UTC)
+X-Farcaster-Flow-ID: a4642778-ac88-44ce-8afd-012d72d51f0e
+Received: from EX19D020UWA002.ant.amazon.com (10.13.138.222) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 27 Mar 2025 10:03:18 +0000
+Received: from EX19MTAUWC001.ant.amazon.com (10.250.64.145) by
+ EX19D020UWA002.ant.amazon.com (10.13.138.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 27 Mar 2025 10:03:18 +0000
+Received: from email-imr-corp-prod-iad-all-1b-af42e9ba.us-east-1.amazon.com
+ (10.25.36.210) by mail-relay.amazon.com (10.250.64.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
+ 15.2.1544.14 via Frontend Transport; Thu, 27 Mar 2025 10:03:18 +0000
+Received: from dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com [172.19.91.144])
+	by email-imr-corp-prod-iad-all-1b-af42e9ba.us-east-1.amazon.com (Postfix) with ESMTP id BE3CE40570;
+	Thu, 27 Mar 2025 10:03:17 +0000 (UTC)
+Received: by dev-dsk-ptyadav-1c-43206220.eu-west-1.amazon.com (Postfix, from userid 23027615)
+	id 7A8925228; Thu, 27 Mar 2025 10:03:17 +0000 (UTC)
+From: Pratyush Yadav <ptyadav@amazon.de>
+To: Changyuan Lyu <changyuanl@google.com>
+CC: <linux-kernel@vger.kernel.org>, <graf@amazon.com>,
+	<akpm@linux-foundation.org>, <luto@kernel.org>, <anthony.yznaga@oracle.com>,
+	<arnd@arndb.de>, <ashish.kalra@amd.com>, <benh@kernel.crashing.org>,
+	<bp@alien8.de>, <catalin.marinas@arm.com>, <dave.hansen@linux.intel.com>,
+	<dwmw2@infradead.org>, <ebiederm@xmission.com>, <mingo@redhat.com>,
+	<jgowans@amazon.com>, <corbet@lwn.net>, <krzk@kernel.org>, <rppt@kernel.org>,
+	<mark.rutland@arm.com>, <pbonzini@redhat.com>, <pasha.tatashin@soleen.com>,
+	<hpa@zytor.com>, <peterz@infradead.org>, <robh+dt@kernel.org>,
+	<robh@kernel.org>, <saravanak@google.com>,
+	<skinsburskii@linux.microsoft.com>, <rostedt@goodmis.org>,
+	<tglx@linutronix.de>, <thomas.lendacky@amd.com>, <usama.arif@bytedance.com>,
+	<will@kernel.org>, <devicetree@vger.kernel.org>, <kexec@lists.infradead.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>,
+	<linux-mm@kvack.org>, <x86@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory preservation
+In-Reply-To: <20250320015551.2157511-10-changyuanl@google.com>
+References: <20250320015551.2157511-1-changyuanl@google.com>
+	<20250320015551.2157511-10-changyuanl@google.com>
+Date: Thu, 27 Mar 2025 10:03:17 +0000
+Message-ID: <mafs0y0wqrdsq.fsf@amazon.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V1] spi: Add support for Double Transfer Rate (DTR) mode
-To: Mark Brown <broonie@kernel.org>
-CC: <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <andersson@kernel.org>, <konradybcio@kernel.org>
-References: <20250326083954.3338597-1-quic_msavaliy@quicinc.com>
- <40db39ef-7ef3-4720-9c85-ccfe1c11c299@sirena.org.uk>
- <c89603b7-b70c-4b55-ac87-f84ce5be2c6c@quicinc.com>
- <3aa2c190-ce4d-4805-943b-f65e98ce762c@sirena.org.uk>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <3aa2c190-ce4d-4805-943b-f65e98ce762c@sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=cs+bk04i c=1 sm=1 tr=0 ts=67e52268 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=hBaITGTWXoLUBLf3d8gA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: PwVBJPQT-tSjDn9LLedsD2ZQxpO_uOa2
-X-Proofpoint-ORIG-GUID: PwVBJPQT-tSjDn9LLedsD2ZQxpO_uOa2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- bulkscore=0 mlxlogscore=999 malwarescore=0 lowpriorityscore=0
- clxscore=1015 adultscore=0 priorityscore=1501 phishscore=0 suspectscore=0
- mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503270068
+Content-Type: text/plain
 
-Thanks Mark !
+Hi Changyuan,
 
-On 3/26/2025 8:12 PM, Mark Brown wrote:
-> On Wed, Mar 26, 2025 at 07:55:05PM +0530, Mukesh Kumar Savaliya wrote:
->> On 3/26/2025 6:34 PM, Mark Brown wrote:
-> 
->>> We should have a flag in the controller indicating if it supports this,
->>> and code in the core which returns an error if a driver attempts to use
->>> it when the controller doesn't support it.
-> 
->> Have added below in spi.h which can be set by client and controller driver
->> should be using it to decide mode.
-> 
->> + bool        dtr_mode;
-> 
->> since default it's false, should continue with SDR.
->> I believe for QSPI, it supports SDR or DDR, but it's not applicable to
->> standard SPI right ? So not sure in which case we should return an error ?
-> 
-> Standard SPI is the main thing I'm thinking of here, or possibly some
-> limited QSPI controller that doesn't support DTR.  It's not something
-> that should actually come up really, it's more error handling if things
-> aren't set up properly.
+On Wed, Mar 19 2025, Changyuan Lyu wrote:
 
-IIUC, It comes to the point of first identifying if it's in context of 
-QSPI controller or SPI controller right ?
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>
+> Introduce APIs allowing KHO users to preserve memory across kexec and
+> get access to that memory after boot of the kexeced kernel
+>
+> kho_preserve_folio() - record a folio to be preserved over kexec
+> kho_restore_folio() - recreates the folio from the preserved memory
+> kho_preserve_phys() - record physically contiguous range to be
+> preserved over kexec.
+> kho_restore_phys() - recreates order-0 pages corresponding to the
+> preserved physical range
+>
+> The memory preservations are tracked by two levels of xarrays to manage
+> chunks of per-order 512 byte bitmaps. For instance the entire 1G order
+> of a 1TB x86 system would fit inside a single 512 byte bitmap. For
+> order 0 allocations each bitmap will cover 16M of address space. Thus,
+> for 16G of memory at most 512K of bitmap memory will be needed for order 0.
+>
+> At serialization time all bitmaps are recorded in a linked list of pages
+> for the next kernel to process and the physical address of the list is
+> recorded in KHO FDT.
 
-Identify if SPI/QSPI controller has this capability using dtr_caps = 
-true/false. Then check if it's supporting SDR/DDR mode. Can we then 
-introduce below struct to first mark capability as true/false and then 
-process dtr_mode ?
+Why build the xarray only to transform it down to bitmaps when you can
+build the bitmaps from the get go? This would end up wasting both time
+and memory. At least from this patch, I don't really see much else being
+done with the xarray apart from setting bits in the bitmap.
 
-if not supported (dtr_caps = false), then don't care dtr_mode.
-struct spi_caps {
-	bool dtr_mode;
-	bool dtr_caps;
-};
+Of course, with the current linked list structure, this cannot work. But
+I don't see why we need to have it. I think having a page-table like
+structure would be better -- only instead of having PTEs at the lowest
+levels, you have the bitmap.
 
-OR we can have an API spi_controller_dtr_caps() which returns this flag 
-set by individual SPI/QSPI controller. We can use above struct OR 
-separate  struct spi_controller_dtr_caps { bool dtr_caps };.
+Just like page tables, each table is page-size. So each page at the
+lowest level can have 4k * 8 == 32768 bits. This maps to 128 MiB of 4k
+pages. The next level will be pointers to the level 1 table, just like
+in page tables. So we get 4096 / 8 == 512 pointers. Each level 2 table
+maps to 64 GiB of memory. Similarly, level 3 table maps to 32 TiB and
+level 4 to 16 PiB.
 
-Please confirm if i am correct OR suggest more. Else you may approve one 
-of the above option. (Sorry if i am missing anything ).
+Now, __kho_preserve() can just find or allocate the table entry for the
+PFN and set its bit. Similar work has to be done when doing the xarray
+access as well, so this should have roughly the same performance. When
+doing KHO, we just need to record the base address of the table and we
+are done. This saves us from doing the expensive copying/transformation
+of data in the critical path.
+
+I don't see any obvious downsides compared to the current format. The
+serialized state might end up taking slightly more memory due to upper
+level tables, but it should still be much less than having two
+representations of the same information exist simultaneously.
+
+>
+> The next kernel then processes that list, reserves the memory ranges and
+> later, when a user requests a folio or a physical range, KHO restores
+> corresponding memory map entries.
+>
+> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Co-developed-by: Changyuan Lyu <changyuanl@google.com>
+> Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+[...]
+> +static void deserialize_bitmap(unsigned int order,
+> +			       struct khoser_mem_bitmap_ptr *elm)
+> +{
+> +	struct kho_mem_phys_bits *bitmap = KHOSER_LOAD_PTR(elm->bitmap);
+> +	unsigned long bit;
+> +
+> +	for_each_set_bit(bit, bitmap->preserve, PRESERVE_BITS) {
+> +		int sz = 1 << (order + PAGE_SHIFT);
+> +		phys_addr_t phys =
+> +			elm->phys_start + (bit << (order + PAGE_SHIFT));
+> +		struct page *page = phys_to_page(phys);
+> +
+> +		memblock_reserve(phys, sz);
+> +		memblock_reserved_mark_noinit(phys, sz);
+
+Why waste time and memory building the reserved ranges? We already have
+all the information in the serialized bitmaps, and memblock is already
+only allocating from scratch. So we should not need this at all, and
+instead simply skip these pages in memblock_free_pages(). With the
+page-table like format I mentioned above, this should be very easy since
+you can find out whether a page is reserved or not in O(1) time.
+
+> +		page->private = order;
+> +	}
+> +}
+> +
+> +static void __init kho_mem_deserialize(void)
+> +{
+> +	struct khoser_mem_chunk *chunk;
+> +	struct kho_in_node preserved_mem;
+> +	const phys_addr_t *mem;
+> +	int err;
+> +	u32 len;
+> +
+> +	err = kho_get_node(NULL, "preserved-memory", &preserved_mem);
+> +	if (err) {
+> +		pr_err("no preserved-memory node: %d\n", err);
+> +		return;
+> +	}
+> +
+> +	mem = kho_get_prop(&preserved_mem, "metadata", &len);
+> +	if (!mem || len != sizeof(*mem)) {
+> +		pr_err("failed to get preserved memory bitmaps\n");
+> +		return;
+> +	}
+> +
+> +	chunk = *mem ? phys_to_virt(*mem) : NULL;
+> +	while (chunk) {
+> +		unsigned int i;
+> +
+> +		memblock_reserve(virt_to_phys(chunk), sizeof(*chunk));
+> +
+> +		for (i = 0; i != chunk->hdr.num_elms; i++)
+> +			deserialize_bitmap(chunk->hdr.order,
+> +					   &chunk->bitmaps[i]);
+> +		chunk = KHOSER_LOAD_PTR(chunk->hdr.next);
+> +	}
+> +}
+> +
+>  /* Helper functions for KHO state tree */
+>  
+>  struct kho_prop {
+[...]
+
+-- 
+Regards,
+Pratyush Yadav
