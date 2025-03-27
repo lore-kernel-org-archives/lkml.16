@@ -1,159 +1,181 @@
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC9D1A83FB
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE624165F16;
+	Thu, 27 Mar 2025 16:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743093356; cv=none; b=TsFrlhpeGr0mT9TNFi+6wJO8z/XWF3fz/Zdu7C7pHpHTMQA7ybx9IZHCQgFBhghFmc+7QnEq+/pjvkDHyc0x0saqkNMm1aN38Cg0mxUxg8YbWUp5pZqhYCFECna49C2Np+GHX8roQlhEMCts4GAwFvHti+mn+OLUCb5pHgysYtI=
+	t=1743093370; cv=none; b=XPOW6NLX8uzKKKlCd9e7+nMqq+pISWxAEJUqGu+DgnkRCB/GOvsKB1z7L7ZJLxxiczVjPdcejCgui3qRI3uyBgcXnHPAFR1yyLs2hPNU9WddW4ORLrmhSPC2RUUp1NZxLQVgyTNSOLeTkjEM3VSz0v8WCJhe7WJNeHLIH9JTBLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743093356; c=relaxed/simple;
-	bh=w6fKN+ar7K8CvoopsWGztq3OYFTh8KIxp+iQRUs10/I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XuInc6Vn13vliHkkykWLvb7Cy0ZiB75cYJfw9zaB6ovhyww/tcugCUDOCNFUV4oG48+TdM2X2U6DXdDOIGsnc0hhsFzTchEcr4/uteAqECf9q5GXSnH5L5po3j7XxFWCRoy/D7nIeQoI7ETqRxiqPaWbXl8wLb6Tv9y/muxbnVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1743093370; c=relaxed/simple;
+	bh=0QNMDSoITWVt4lr443Z+qaQZ4/dI1HZ/52gROHScnRE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZmqSyTAM0mF89oyhyvFF3OdCMFpVIvHsk0T26BLR9aqwspkT2ElwqyGHOheEDk/ja/35R3FK3K6WAun6q5bFCm+i2I+aZkcdjxxn3quA0X3ibJ2+binE3Utz7oR30TDUeiLdhsslvsW88qSrUvXh6n6obH3eRNZQZeQgSHaK3QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YWH/iMod; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-86d69774081so589970241.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:35:54 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWH/iMod"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-226185948ffso27553865ad.0;
+        Thu, 27 Mar 2025 09:36:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743093368; x=1743698168; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LmxjHPEoAvJ9V++u0ZZKt2L66dWQUhIJPZo7wO/C09Q=;
+        b=YWH/iMod+xSMUQ+W7n8Mczboh8onOfl5JSOV35E8WLcCALhAcAI19AKsgVHaVMc9pN
+         HnsU58AwbdwnKw1EIKhfz+8xWqnjWS7jB3gGiubfAYBBuhTRbjT8eKHZWRLGYn3yL2On
+         ouBX6OcyZcFXIatfQew6/Cy/ScOpWymJLKdbsWYpJgooUcxhsFgK2VcZGpNoET+2tHpb
+         NXbT+njHdlOkW3h3NzVl1otCJAQamcmWNA3kT7l65gVhhvw66AjXU1hOWsBhcnMJ5Htw
+         e/I/BjPyUGE+o3S68PvJF2J7mkpiZrCV5fgXza0beSJbHsUBHQYGrICLKOr0wFpwkwZs
+         XUXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743093352; x=1743698152;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1743093368; x=1743698168;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ibdtL0f3H8DnAPyEw/T+T3QYX14z3U6slG7wOxVtOcQ=;
-        b=YWKSy3R3NCRNp3cWX9yz8HsqlZd2Ofw2nezvI7WCn0iImLlQg8a0wHcQtUI/erAoCP
-         OdKxZZml9CnHdJWhA4l+zKs9EmPr8XIMiHDjNjaVccGKgAQail1osn4dUz6Qyyi+65/V
-         u+Dg0faLDYa3dhmg6jPoWpzO0ghv03vI92D+7mq/CPpFuKsjB1hRQGdv24FBgVZvfbbs
-         RxtyFsoDYsWHubzmGVAwMZNxs5GjJZR5nRF/8cyZAIFMwUdr7eMB6zkXBTk2QyJQ9F7f
-         3hCE0nuB6/tCUCnucPmpKm4NVVSXCDoAxhJwLPrkA90Fac+hClnjS6PHRQ90knvWjQLl
-         eA1g==
-X-Forwarded-Encrypted: i=1; AJvYcCUVbcD6SgxfUz2JIpwkTTZmK8rJFfAoWbmCzhM6Hg8GU7b5mxzVH0bOb7F4BXpuH8fGI+ephL31OCI4T/U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmMdGZk5kh33qsbmf+5oc+Slqsa8L/MCWXm70bo++sl9ypwz0S
-	dLuzl8owO3rUbvJ+vltaLwZOIlpwLh26L27t5SjbAfLUG/SPaKG7MESnBL76HbM=
-X-Gm-Gg: ASbGncv4w6G+K4IY07spuNBCENGE6fP7r2Cl0H0tscBeIHc5atvhSMqw+gXDWYlhoyB
-	f/KvymwEOBUz5DkKqIOXPHusMZSv4fVXrOiXsmi4+8Hsht0ZtRYivFy/TFXySudVOSAlYd5zwfG
-	H6zVmRxJT3fAtLlyyhtxtkjQ6PK712BH43GwTNQgu/WfU5kUvmfOlsuSbW/wfLEfrkdRXsZhCdz
-	R+QMsLteADfZHEwyTKlNhjj+n/BlbmgXwqJMrAuf2uAYKUfyAzU8GwnQFmEnG3W/vUVr3SLqELL
-	58w9BGyy5mCKfr/VHsGqXDvK6V+o4VOlIizauHzN/DsNwIWEOgtHL4xitxfspi9lTveZj8l2HxB
-	2RvXpGr0=
-X-Google-Smtp-Source: AGHT+IE0iQAhqo7QIDfW20P0nxcWLW8HpMG0h6PIAInmRslCCodU9/zdPY9AGCozxxtEGrVvDg8JJA==
-X-Received: by 2002:a05:6122:c83:b0:520:60c2:3fd with SMTP id 71dfb90a1353d-52600920e5dmr3986964e0c.3.1743093352133;
-        Thu, 27 Mar 2025 09:35:52 -0700 (PDT)
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5260e7f09dasm29973e0c.19.2025.03.27.09.35.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 09:35:51 -0700 (PDT)
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-86d69774081so589939241.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:35:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU6kLHiiEDTSViV3Ggt8aPAxOPpsYNZbswoRDl9eZuumHve3HNmEbX1dHPhiZpJY0LdQh6VGshpOqH9/cI=@vger.kernel.org
-X-Received: by 2002:a05:6122:1d48:b0:520:5a87:6708 with SMTP id
- 71dfb90a1353d-5260071fe18mr3630874e0c.0.1743093351421; Thu, 27 Mar 2025
- 09:35:51 -0700 (PDT)
+        bh=LmxjHPEoAvJ9V++u0ZZKt2L66dWQUhIJPZo7wO/C09Q=;
+        b=FEIq0Ppn2jtrC5ErlQ2d3wpTZserhnXxl8wYP9iESgSssDC9hsYKjpGAzf1fR5di1M
+         UbymjaS+OOkF8D+OeTVZcCZoXjAkBASxxhipxTrUe8WduUmYlaad4UCEUIP62JJJkIc5
+         0NAretonL/pMRJ80hLvAHxhPP2dbARRMnl1w0cw5rMxla6e4urr1exZBW3aNOkcH3x47
+         1VzmcOchSjAuvl7HtFp9yI/QXcZAAES7XuBQFJR9CHcZROi2xSZsGlSpWMZW1H+QVzLf
+         h87Y2wXhQWq3yJW/nT60nDW/ND2PPAYE5d9dMno1s7b5jjg69u6XKy4jeD5kAmbtTeZk
+         1xrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBC4+BrZ1Y9PoXT5uIgOLI+HW3l5EMLp24oqpyLA2HpijYkSYh6ApOLBJ19f3sy5X2Bw9monwRe9uiNHI=@vger.kernel.org, AJvYcCXnWCM24Fmhj80yQ2QQ3IzNB29/4KMsxLxEO1xOXTHW/Zfkj+lJyo1aamFS+oQc0e1EeQiwbhnasfGbSK0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwGuOhhCzzbKSp1YXt0BQpPuyGEB8JryNcxiDWZVDLo1+EUVdG
+	nOgio9CynZKOg+Uxh+RY3XPoXem98Ki/ozMim5GU2GaPG/QWhfX+
+X-Gm-Gg: ASbGncuPSZqXpGUyQw5iYWqyHDRo+iVo/le07KVAiFxrUzv/0Y/DGnuAfJQMmD3t53r
+	wpLTzYl0s6/X2rXt8ov1huuFC2NuI3yj1pO086R3VV8R7zSFWdPlB7hoZG6cwVnJQ2U26Z8CspF
+	UfAWSlwFFQp3gbS7AiYQtGKxnExOXXo7UxZcHNlbx4if69c9iggjP9Xcc3igzBeTQgOSR2G/OY0
+	hcQ0LdMUCKlYPFJiCPSQme13CgjxxoDvXi997Gp+o1VTPbvkDTd22NetfrTSpnJb3wHyyAUQ4JI
+	DztfkMBxF92rwQdhoG+NH+lYUwLEbXVeEiBSpLYTL1MDEccfqNffw/lTvHQpTdVgTakN/Cnu/f0
+	1TRU8pouRLEiqixpOYq8=
+X-Google-Smtp-Source: AGHT+IHWZDl5zkqZIwHY29NR0GM8Q+CqAF9P42JqdFTTVI0DfFTzZMOYU6wY0UHJwzx2ehMvee/T6w==
+X-Received: by 2002:a17:902:db0f:b0:223:525b:2a7 with SMTP id d9443c01a7336-228048b23ccmr63535595ad.15.1743093367707;
+        Thu, 27 Mar 2025 09:36:07 -0700 (PDT)
+Received: from localhost ([2a00:79e0:3e00:2601:3afc:446b:f0df:eadc])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1dece6sm1539855ad.192.2025.03.27.09.36.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 09:36:07 -0700 (PDT)
+From: Rob Clark <robdclark@gmail.com>
+To: dri-devel@lists.freedesktop.org
+Cc: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+	Rob Clark <robdclark@chromium.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-media@vger.kernel.org (open list:DMA BUFFER SHARING FRAMEWORK:Keyword:\bdma_(?:buf|fence|resv)\b),
+	linaro-mm-sig@lists.linaro.org (moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:\bdma_(?:buf|fence|resv)\b)
+Subject: [PATCH v3] drm/syncobj: Extend EXPORT_SYNC_FILE for timeline syncobjs
+Date: Thu, 27 Mar 2025 09:36:05 -0700
+Message-ID: <20250327163605.54760-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
- <20250326-xilinx-formats-v4-3-322a300c6d72@ideasonboard.com>
- <CAMuHMdXM1B1c=62EpcuUdpdpaBRZSJLXb1GBB0egzp7Fyeo5-w@mail.gmail.com>
- <b195971c-52e6-463e-a440-83dde4346e65@ideasonboard.com> <20250327112009.6b4dc430@eldfell>
- <b5cf15a4-7c65-4718-9c39-a4c86179ba4c@ideasonboard.com> <20250327175842.130c0386@eldfell>
-In-Reply-To: <20250327175842.130c0386@eldfell>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 27 Mar 2025 17:35:39 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
-X-Gm-Features: AQ5f1JpeqSn4PpS1s7kqwyEJE-2D6rFE_STOfuC_nMbBosIVwkbb55ssK1rcc48
-Message-ID: <CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
-Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
-To: Pekka Paalanen <pekka.paalanen@haloniitty.fi>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Vishal Sagar <vishal.sagar@amd.com>, 
-	Anatoliy Klymenko <anatoliy.klymenko@amd.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Michal Simek <michal.simek@amd.com>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Pekka,
+From: Rob Clark <robdclark@chromium.org>
 
-On Thu, 27 Mar 2025 at 16:59, Pekka Paalanen
-<pekka.paalanen@haloniitty.fi> wrote:
-> On Thu, 27 Mar 2025 16:21:16 +0200
-> Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:
-> > On 27/03/2025 11:20, Pekka Paalanen wrote:
-> > > On Wed, 26 Mar 2025 15:55:18 +0200
-> > > Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:
-> > >> On 26/03/2025 15:52, Geert Uytterhoeven wrote:
-> > >>> On Wed, 26 Mar 2025 at 14:23, Tomi Valkeinen
-> > >>> <tomi.valkeinen@ideasonboard.com> wrote:
-> > >>>> Add greyscale Y8 format.
-> > >>>>
-> > >>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > >>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> > >>>
-> > >>> Thanks for your patch!
-> > >>>
-> > >>>> --- a/include/uapi/drm/drm_fourcc.h
-> > >>>> +++ b/include/uapi/drm/drm_fourcc.h
-> > >>>> @@ -405,6 +405,9 @@ extern "C" {
-> > >>>>    #define DRM_FORMAT_YUV444      fourcc_code('Y', 'U', '2', '4') /* non-subsampled Cb (1) and Cr (2) planes */
-> > >>>>    #define DRM_FORMAT_YVU444      fourcc_code('Y', 'V', '2', '4') /* non-subsampled Cr (1) and Cb (2) planes */
-> > >>>>
-> > >>>> +/* Greyscale formats */
-> > >>>> +
-> > >>>> +#define DRM_FORMAT_Y8          fourcc_code('G', 'R', 'E', 'Y')  /* 8-bit Y-only */
-> > >>>
-> > >>> This format differs from e.g. DRM_FORMAT_R8, which encodes
-> > >>> the number of bits in the FOURCC format. What do you envision
-> > >>> for e.g. DRM_FORMAT_Y16? fourcc_code('G', 'R', '1', '6')?
-> > >>
-> > >> I wanted to use the same fourcc as on V4L2 side. Strictly speaking it's
-> > >> not required, but different fourccs for the same formats do confuse.
-> > >>
-> > >> So, generally speaking, I'd pick an existing fourcc from v4l2 side if
-> > >> possible, and if not, invent a new one.
-> > >
-> > > what's the actual difference between DRM_FORMAT_R8 and DRM_FORMAT_Y8?
-> > >
-> > > Is the difference that when R8 gets expanded to RGB, it becomes (R, 0,
-> > > 0), but Y8 gets expanded to (c1 * Y, c2 * Y, c3 * Y) where c1..c3 are
-> > > defined by MatrixCoefficients (H.273 terminology)?
-> > >
-> > > That would be my intuitive assumption following how YCbCr is handled.
-> > > Is it obvious enough, or should there be a comment to that effect?
-> >
-> > You raise an interesting point. Is it defined how a display driver, that
-> > supports R8 as a format, shows R8 on screen? I came into this in the
-> > context of grayscale formats, so I thought R8 would be handled as (R, R,
-> > R) in RGB. But you say (R, 0, 0), which... also makes sense.
->
-> That is a good question too. I based my assumption on OpenGL behavior
-> of R8.
->
-> Single channel displays do exist I believe, but being single-channel,
-> expansion on the other channels is likely meaningless. Hm, but for the
-> KMS color pipeline, it would be meaningful, like with a CTM.
-> Interesting.
->
-> I don't know. Maybe Geert does?
+Add support for exporting a dma_fence fd for a specific point on a
+timeline.  This is needed for vtest/vpipe[1][2] to implement timeline
+syncobj support, as it needs a way to turn a point on a timeline back
+into a dma_fence fd.  It also closes an odd omission from the syncobj
+UAPI.
 
-I did some digging, and was a bit surprised that it was you who told
-me to use R8 instead of Y8?
-https://lore.kernel.org/all/20220202111954.6ee9a10c@eldfell
+[1] https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/33433
+[2] https://gitlab.freedesktop.org/virgl/virglrenderer/-/merge_requests/805
 
-Gr{oetje,eeting}s,
+v2: Add DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE
+v3: Add unstaged uabi header hunk
 
-                        Geert
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/drm_syncobj.c | 18 +++++++++++++-----
+ include/uapi/drm/drm.h        |  3 +++
+ 2 files changed, 16 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/gpu/drm/drm_syncobj.c b/drivers/gpu/drm/drm_syncobj.c
+index 4f2ab8a7b50f..bc57d6f1a22e 100644
+--- a/drivers/gpu/drm/drm_syncobj.c
++++ b/drivers/gpu/drm/drm_syncobj.c
+@@ -762,7 +762,7 @@ static int drm_syncobj_import_sync_file_fence(struct drm_file *file_private,
+ }
+ 
+ static int drm_syncobj_export_sync_file(struct drm_file *file_private,
+-					int handle, int *p_fd)
++					int handle, u64 point, int *p_fd)
+ {
+ 	int ret;
+ 	struct dma_fence *fence;
+@@ -772,7 +772,7 @@ static int drm_syncobj_export_sync_file(struct drm_file *file_private,
+ 	if (fd < 0)
+ 		return fd;
+ 
+-	ret = drm_syncobj_find_fence(file_private, handle, 0, 0, &fence);
++	ret = drm_syncobj_find_fence(file_private, handle, point, 0, &fence);
+ 	if (ret)
+ 		goto err_put_fd;
+ 
+@@ -869,6 +869,9 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device *dev, void *data,
+ 				   struct drm_file *file_private)
+ {
+ 	struct drm_syncobj_handle *args = data;
++	unsigned valid_flags = DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE |
++			       DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE;
++	u64 point = 0;
+ 
+ 	if (!drm_core_check_feature(dev, DRIVER_SYNCOBJ))
+ 		return -EOPNOTSUPP;
+@@ -876,13 +879,18 @@ drm_syncobj_handle_to_fd_ioctl(struct drm_device *dev, void *data,
+ 	if (args->pad)
+ 		return -EINVAL;
+ 
+-	if (args->flags != 0 &&
+-	    args->flags != DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE)
++	if (args->flags != 0 && (args->flags & ~valid_flags))
+ 		return -EINVAL;
+ 
++	if (args->flags & DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE)
++		point = args->point;
++
+ 	if (args->flags & DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE)
+ 		return drm_syncobj_export_sync_file(file_private, args->handle,
+-						    &args->fd);
++						    point, &args->fd);
++
++	if (args->point)
++		return -EINVAL;
+ 
+ 	return drm_syncobj_handle_to_fd(file_private, args->handle,
+ 					&args->fd);
+diff --git a/include/uapi/drm/drm.h b/include/uapi/drm/drm.h
+index 7fba37b94401..dd0fd13eadbd 100644
+--- a/include/uapi/drm/drm.h
++++ b/include/uapi/drm/drm.h
+@@ -906,12 +906,15 @@ struct drm_syncobj_destroy {
+ 
+ #define DRM_SYNCOBJ_FD_TO_HANDLE_FLAGS_IMPORT_SYNC_FILE (1 << 0)
+ #define DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_EXPORT_SYNC_FILE (1 << 0)
++#define DRM_SYNCOBJ_HANDLE_TO_FD_FLAGS_TIMELINE         (1 << 1)
+ struct drm_syncobj_handle {
+ 	__u32 handle;
+ 	__u32 flags;
+ 
+ 	__s32 fd;
+ 	__u32 pad;
++
++	__u64 point;
+ };
+ 
+ struct drm_syncobj_transfer {
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.49.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
