@@ -1,42 +1,32 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E65E4664C6;
-	Thu, 27 Mar 2025 02:18:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DF2664C6;
+	Thu, 27 Mar 2025 02:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743041940; cv=none; b=CnxztDJILZeriJ+Q84VE+Pf7hGBoKNAa0KbMY52+dZS/Hh7PRoBWaBQwpOEzRVUNnned5U0+bqx0eLoP4CBC3hqW6fFxiutcNeILeyZ+cDeq9AEKgpXQnFqTX8cRTFudKcXKJc/aTLBwwztrfTzJxQpRkoCriYcZFLEceQpvij4=
+	t=1743042079; cv=none; b=dQTSZOeINuv9bjT9Gp5myd1Ob75Ow7F0aVzt2b0FiolCs9s5WYOsp/eunopJjr8SRS17XYR6GEbRwqCsYCO6EY6AzcXgv63uuM9eLv5/p5AMYJWn8ROCS+h/IBoMl6dBhpU3+zTNFtu4uXqpbKOiY3BpG/M5pVGFJvVjiWWp2Y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743041940; c=relaxed/simple;
-	bh=DlEwUZ/5a8Jqc6JdqoVt8d9UL5upaR9WJUWmUWNmivY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JGhoum+8aX4KqDBm+4pl3UfW5jmHXsGWmHqoxoyfOzX8o7A3Js3+dBj2Pr0Q/umOWb3qmn8/R+fKiOHOnvPyPsfY7h0qiEhfIDtwVVRBpKNzkA1lzrgxn9MV7FcdhJkjgC+2+G5KENbTj0NHVIQe7EjS2OmHkSGPTKzxFC3qnDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.54.180])
-	by gateway (Coremail) with SMTP id _____8AxHHKHteRnmr2nAA--.19231S3;
-	Thu, 27 Mar 2025 10:18:47 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.54.180])
-	by front1 (Coremail) with SMTP id qMiowMBxHcV3teRnOnJiAA--.29069S3;
-	Thu, 27 Mar 2025 10:18:33 +0800 (CST)
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-To: lee@kernel.org,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	peterhuewe@gmx.de,
-	jarkko@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-crypto@vger.kernel.org,
-	jgg@ziepe.ca,
-	linux-integrity@vger.kernel.org,
-	pmenzel@molgen.mpg.de,
-	Qunqin Zhao <zhaoqunqin@loongson.cn>
-Subject: [PATCH v6 6/6] MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
-Date: Thu, 27 Mar 2025 10:19:40 +0800
-Message-ID: <20250327021940.29969-2-zhaoqunqin@loongson.cn>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250327021940.29969-1-zhaoqunqin@loongson.cn>
-References: <20250327021940.29969-1-zhaoqunqin@loongson.cn>
+	s=arc-20240116; t=1743042079; c=relaxed/simple;
+	bh=t3d4FIUWGHItNNs3ti+ImF4oUMn5pF1neCbLNlVx5GY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VAnHHA1v2XweGO1tcH672LE1ubd6QRpMPwHkehSiCyI4uqi7CGCaIq0rZwPbaTV4OZ6sgBmtJWhkH6yrTMeGUCR1h/soBCr56M85EFAxrv9i8V7I9IxKra/sx9wjRQwID8uuedxo/nDlFpFMMFISLRFQdcV1j9/6v3hxNioA7Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-05 (Coremail) with SMTP id zQCowAB3rgYStuRnOCYaAg--.28374S2;
+	Thu, 27 Mar 2025 10:21:06 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: shuah@kernel.org,
+	brauner@kernel.org,
+	amir73il@gmail.com
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] selftests/filesystems: remove duplicate sys/types.h header
+Date: Thu, 27 Mar 2025 10:13:01 +0800
+Message-Id: <20250327021301.1596533-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,49 +34,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxHcV3teRnOnJiAA--.29069S3
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrXw1DtFykXrW8JryDWw1Dtwc_yoWxWrb_Aa
-	y2ga97XF1kGFnrAa40vFZ3AryYvrWrJ3Wru3WDtw1fX34jyr90yrnFyF48K3W5CrW5CFZx
-	WayxGF93Cr13ZosvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbh8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AK
-	xVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26rWY
-	6Fy7McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04
-	k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv6xkF
-	7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUI0eHUUUUU
+X-CM-TRANSID:zQCowAB3rgYStuRnOCYaAg--.28374S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrGrWDtF18uF15ur4DXF13Arb_yoWxXwb_A3
+	y7Arn7ZrWDAFyqy3WfX3Z09F1kCw43Wr4rXF45uF13tF1UJFWDWFs8Wr1qv3WYg398Kry3
+	Za1kWrW3Wr15GjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbVAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4
+	AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kK
+	e7AKxVWUAVWUtwCY02Avz4vE14v_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+	1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
+	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxh
+	VjvjDU0xZFpf9x0JUqfO7UUUUU=
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Changes to Loongson TPM driver would be best reviewed by the Loongson
-crypto driver maintainers.
+Remove duplicate header which is included twice.
 
-Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
 ---
-v6: "tpm_lsse.c" -> "tpm_loongson"
-v4-v5: None
+ tools/testing/selftests/filesystems/utils.c | 1 -
+ 1 file changed, 1 deletion(-)
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 814205642..16fcd35ff 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13606,6 +13606,7 @@ LOONGSON CRYPTO DRIVER
- M:	Qunqin Zhao <zhaoqunqin@loongson.com>
- L:	linux-crypto@vger.kernel.org
- S:	Maintained
-+F:	drivers/char/tpm/tpm_loongson.c
- F:	drivers/crypto/loongson/
- 
- LOONGSON-2 APB DMA DRIVER
+diff --git a/tools/testing/selftests/filesystems/utils.c b/tools/testing/selftests/filesystems/utils.c
+index e553c89c5b19..06419bf4ba19 100644
+--- a/tools/testing/selftests/filesystems/utils.c
++++ b/tools/testing/selftests/filesystems/utils.c
+@@ -3,7 +3,6 @@
+ #define _GNU_SOURCE
+ #endif
+ #include <fcntl.h>
+-#include <sys/types.h>
+ #include <dirent.h>
+ #include <grp.h>
+ #include <linux/limits.h>
 -- 
-2.45.2
+2.25.1
 
