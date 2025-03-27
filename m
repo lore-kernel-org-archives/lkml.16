@@ -1,131 +1,240 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFEB15B546;
-	Thu, 27 Mar 2025 09:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBCC20B7E1
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743066503; cv=none; b=XUB8BcUEVRzH8cy1/y8PBADVcQ8P3lZOD9S+mhEMcWdjCqAKpckzpmLUhiqGQDEZrY/5BN1qUSClFSvbbpGR3MKX3chtE0V/ceIXes8LHBln1oI2YxaG6creQahdHtNevo+oHR69CR6VDkbxKMyqm5m0Eewzdc8PeIbeyiV0aNQ=
+	t=1743066629; cv=none; b=kgAvHd0aAkP+LIau9RId7rZ8oajGzSM29o5IhN/tgtHk+XAiwW6edqrp81gLj08AZY9QI2w6KuVgleLgxhvne3YO7ecBUqi0L8iuD23gihI2PTgWguX00ISNiIcqN+ohCcc2h6orlmJnwAyD6V98SOmBU1lH9EW7yoZWPFKC+WQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743066503; c=relaxed/simple;
-	bh=JhCzlrQbCB9ck2kbk+MVZ/Ff1lVui0gpSCB2l+qCxvU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OW1KehSCCMCJoPzDJ2rLOPv8xZJIksslMKFilp8uxTqfrnS+2ZV25HHf3uVDRGkLABK0jTAHM7Bz1Ctqvmm7ThpnA3iYdDmzzjh/HKUm0hk3Hl/oklipN/Vpj/BqYgirdW69I0zXs5OiUD+Ivn7Adgc5Flwkd42YkCSdoJ36OYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-525b44b7720so344565e0c.0;
-        Thu, 27 Mar 2025 02:08:21 -0700 (PDT)
+	s=arc-20240116; t=1743066629; c=relaxed/simple;
+	bh=Jsiw5KiTxUR4iNE3MqYmHnUbxOuveSDHcUBdK6NwZLw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V0ZhrxeSh6ZcCpjLYV/9jiRPfq0MJHTY5rsT5L3JRvnRvm2y24XERjKzTbTs1VZib3HobBJbi7Bq9yQFGrOnkQiffZj6O8rhm7DeQCsS0zK6WImBVnwIoce6HM7qxuuypCZjXrSEDi/h+2ukuqGt4PZWISxtrQD7rTE/OTf2DXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gS6zbWaH; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gS6zbWaH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743066626;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZcfS9YBTl7tCs/xylX6HhDzKlfrkf3xWC6I7P5nWbCM=;
+	b=gS6zbWaHZWmQjc5zcXppdxl+QiWLISctj7LYNVawIkW5cVamgCCi+pJ2r88DhlII10u9/7
+	U8MVPqIJx+LRr4AqDYrUiF+2uydelqfxZTeqDqRUDszqVi919IEXR19i5b9snNrwKSKy8C
+	FSvGJ16kZxiYEgakmHGpN2AoFKld6fg=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-54-94ubHtRKPoGL3WD8OsgIog-1; Thu, 27 Mar 2025 05:10:24 -0400
+X-MC-Unique: 94ubHtRKPoGL3WD8OsgIog-1
+X-Mimecast-MFC-AGG-ID: 94ubHtRKPoGL3WD8OsgIog_1743066623
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac21697a8ebso63176766b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 02:10:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743066499; x=1743671299;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7lMrOeFxPSKQEwncRkG8y8bWLBwAZMVmj9Oxg/obSPg=;
-        b=VoSEPV6nvpp7QxY9wfDlvAnl9LQYb+irUQmnNYVn3uGgE7CfQzl7M3RgBSYUnGHtdL
-         eYpLHllXlYxARiXwRXYYd9+zg5+nMXI5hMBKtKFARkrZYq22WkE3N0Ra9Ak/b1/5yaN5
-         nNpi4na5V7fzg/YBhejElbdxYz/39kp8E1T9a1Z/XQTGx72wX+fjcaOVRDaYQvfNfpfU
-         F1/cpYP6S83KGlPhrnsDD3hNQdV3G5jfOTiHyWZBehyVFdx6dk6/e132j8DCFR3DszGr
-         OYXrhwXx+Lpq27qx9lz4E135qoffC5G2vnX1wTAwFubhs5lMS6VwTt6hMQM9uBrJU5MP
-         QREQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVqcA+Ngo4h5j8vzOgW1ddT7A+LkPlV9W7yvg2zTUZ2FSu4urFClPsjh3pI82BfcRVQ9EqBQW0LO4S@vger.kernel.org, AJvYcCUupZKyuiZq4k38x/JBl2sUTNXeJE6y7uy4XEmHqK1B5QqjJJdwg0E2ayWaie/X0gK5jGMoThYPkgO5K4MI@vger.kernel.org, AJvYcCVDJ3Wgja4D+sXy1srstDFYGzyl8O9T6EzEc+X4mafEiiVxLIF/lML7E74RY3XZ/0BNF+ti4zHrK5zn@vger.kernel.org, AJvYcCVG8+t3KPQ27TjqFBMnQo6QQl1T10c+seVfv6fKBuWWTm+wS2HkCGD17aD9HC4+XIgI2+Mm9nkxoQY7NZR+@vger.kernel.org, AJvYcCWKcd912KdidJNqCm9mBAwLYJAJLH+B3QnbtkYvQnbrYYGd2A1I3YelKmQndvDTqi7fqG+/HsXGPyGglH96kpVYlyg=@vger.kernel.org, AJvYcCWjCbLSG5sidJ3ETlNiiU80Pmrs21Yl+4GlYGWABVHf1xvKJ5WWV1l+aru11p+RZ7yvJhWMnjqAn3shyA==@vger.kernel.org, AJvYcCXlf/u47zf5dKZwhjpqL1GLzG59fjDDHJPVkbq4ONjftRKgmdWDkdg8dcmvzGEP+mNoldL0B0BjTaQZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5gL+j3yArBdw++5+KM/CKknCwSnfLmvT6wj7ryNWWOfkStbON
-	ibwAUBCFzmBEfFmC/DvNcTZD7VTCBTz+vInTSYbD/E02tw5Tu371NsDxUSEhhZY=
-X-Gm-Gg: ASbGncuW9Dr7YM9C9UYbiL1xXz1oJBK6yKCmp+TBVIDiu7mqKMZTr1CVPaqdQJTwJYa
-	G7tAz4S5ge8olvobbVlBhyoNggn36zhoScaAme9B4Q0XtH6H5xqNzQKOq+1iNZkU3h1uIt0axhJ
-	2dVBloJvUWUueB7xB6usbKZ5uPbxcy99rw+xsTCiV4GlyMXV4Ej5KhG6iuLf7YzAHnUX89ojoc5
-	KVz99VWXkjeDn8PVrLQxaL5bRghCz6smz4YKWKR0g/DggzBYL2AMzJSXhENaDcye1S1wZyutrF0
-	fR/EHwztU1+T9uy/3Kg1dJcdmRyF9huCVfmA39COTzdgzWS0SMvLHZ7B3+slUurDyoLTMrKmTzR
-	RHSn8+tCZLseTckxiww==
-X-Google-Smtp-Source: AGHT+IGKYrEgKh5lhHbNqW4mUXJYxsqUil2a5EUQIe8NMERdqxk2zmS5+fmR+xEfQEmOaOg9XW6RGQ==
-X-Received: by 2002:a05:6122:1d48:b0:520:5a87:6708 with SMTP id 71dfb90a1353d-5260071fe18mr1854445e0c.0.1743066498983;
-        Thu, 27 Mar 2025 02:08:18 -0700 (PDT)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-525a735cddfsm2522594e0c.8.2025.03.27.02.08.17
+        d=1e100.net; s=20230601; t=1743066623; x=1743671423;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZcfS9YBTl7tCs/xylX6HhDzKlfrkf3xWC6I7P5nWbCM=;
+        b=WY6GIcKccMe9bRXD2evNWpnkeO+0zuVdaPGV8d1xJefH/IUeQMrM0iNSJl/bIswKoD
+         XUN6+LVrY3kA1uNyHTx5LqNb6HAP1knYTLyxqDZ03nfXkw/rvs3Aq2IDpTnCC831fQKJ
+         mU3aqigF3Te8Dx45IgY5Z/YF5wev8ddshDj7YpBEQMGIytUFp+hpsufvuuMM3tO9U69i
+         EqgPb/HeDkuIQIaP9nnSV3wh6Rki3rsNAov2dmTlV5HTyFhUHvWrd6reaDsaFE3kT26m
+         uGWvLePSxW2jvuvecOaL1VfLeP5VY7LT0s/jlJXCVLaAmwSJjq/8zOtyRVE/z5vWyDQq
+         cA7w==
+X-Forwarded-Encrypted: i=1; AJvYcCVwIiIguhqgzHKiafhh6ovGoHfCbDAV3+6GXhunVEH3ygeYqU3nlzj2edFTBM9H3n9/sD1LkVZYJHHl0Xg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3CJWc+AckEtGstSrvLF3V48a8ZDJhacxVyMTRGNEKPxIplQd/
+	xT7wSvoesfPzHSjLzL23AHNv2NVQl/xRx1VwIW1+wVhqQkk0ArVdhxG8HJ++0k8xKYS3F7AxN/8
+	ZGncR/X5ByaBdHDFGOxzt0BgXKcs7uiptuxipl1QkMRVjtbTc4+xGHBy5NnngfA==
+X-Gm-Gg: ASbGnctZNqHtx75fjkOIffX4qJqe8yy3Ql0X8nQItyoVv6FFNqDHtFsgLpZUK4sG2FD
+	K0JVQqMMg+/EwGtijaYuXf2ytuaEkGS/8frbFHC1PKfrsL7aXqf7N8T/Z0thwWeGq/TqtKJDSL7
+	UBKEwyCLIUXJjnWuWcvlyqElU8N4nDVt0Y/LxUdNkRTONNhiZr9Xhi61Bs8S7PmRcAyDYBpbXBs
+	ynCtQBkAeBKGrihI0Oqr9gJuNpmb1ONle70FsTeYZBYUUYXFpbd2RLBGESLPhmfgFZU5E1GSS1a
+	BFc7y8aZasvvtCOn+0cdD/PNZtdvEiHMbXs7RpTWcybeMOwkLYvIJlgXzeefQmRN2rwNyJfD0zX
+	mnNbbTUxkf0jw4vEnbPez/DvsMCCIr6F00gXDZ1Oz6XMhI8s1Aso/Hxt8hxKj/3uqvZ1b
+X-Received: by 2002:a17:907:7f8a:b0:ac6:d9fb:ede3 with SMTP id a640c23a62f3a-ac6fae622d4mr262420866b.7.1743066622842;
+        Thu, 27 Mar 2025 02:10:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFnMpoTcxNZUuQJDdtTQprA82RoG/L7k+YerCaH+dD9o3uX0yHBYKFa09X/u1y8BnCH0blwsg==
+X-Received: by 2002:a17:907:7f8a:b0:ac6:d9fb:ede3 with SMTP id a640c23a62f3a-ac6fae622d4mr262417666b.7.1743066622295;
+        Thu, 27 Mar 2025 02:10:22 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:2a07:3a01:f271:322f:26b0:6eb5? (2001-1c00-2a07-3a01-f271-322f-26b0-6eb5.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:f271:322f:26b0:6eb5])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efb52c2fsm1206008266b.100.2025.03.27.02.10.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 02:08:17 -0700 (PDT)
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-86fab198f8eso364329241.1;
-        Thu, 27 Mar 2025 02:08:17 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUEgndLn+S7qmkb64GK6noeSIIkYQP3v8ZBHSKYzbexpGILNLkMFk6xJFHHxZEflY3iJLf3nfWsK/5V@vger.kernel.org, AJvYcCVIpcuPr4TQvAZQPw1uFLZE9o8P8s73VkgxbMakDjpLRh7EH0XceiouIXa+Ql4N6gcWahHhHnoawPOy@vger.kernel.org, AJvYcCVjd9Q+wEguIBMa4cnWjEGAJ6VCt+uvlKQP0HLQhcolrMmh6Y5y3V72qpfyvEfu0KzIInIuUxl6vcz7b/9p@vger.kernel.org, AJvYcCVrnHTggrB8Syxbf4Xte+O0XVPsUtKUCCeLN0qk6PodEMgEk0qZq+/9YZAg0wccPGGA3keBX5jj5zA5eA==@vger.kernel.org, AJvYcCX8wB9qtIavoaGevd/ns6cYalPyH8pJMUvK8460DCsiiSgv4ZJAsh+aiqqlgTtAU6hkgmqRG1+1A9qR@vger.kernel.org, AJvYcCXUHAYOLGC67v58tr+dibiOLIFIzxaDCcfHXxRfQIEdOeSRApt6RnZmSwbQLdcCMjsZTTqG+kVIedg9s52k+KbHUmc=@vger.kernel.org, AJvYcCXaHG9JGWDizr6pMFWTkzkgmGokAUMq+FKvQGVkzahCsoQ8yMo4xMt1KJMvUsJ3qTLSyUWZ7oDCQV/r3k6q@vger.kernel.org
-X-Received: by 2002:a05:6102:4a81:b0:4bb:c4ff:5cb9 with SMTP id
- ada2fe7eead31-4c586fa8f21mr2548472137.15.1743066496881; Thu, 27 Mar 2025
- 02:08:16 -0700 (PDT)
+        Thu, 27 Mar 2025 02:10:21 -0700 (PDT)
+Message-ID: <927dc606-ef77-4435-81f1-f36b951be25b@redhat.com>
+Date: Thu, 27 Mar 2025 10:10:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250326143945.82142-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <41c6f512-47a5-4723-bbdc-64ed85ae8391@kernel.org> <CAMuHMdVKfL-FRhDaFfOACV8R=ziqXdhmeW7Xd4WYXqHnSbR0ZA@mail.gmail.com>
-In-Reply-To: <CAMuHMdVKfL-FRhDaFfOACV8R=ziqXdhmeW7Xd4WYXqHnSbR0ZA@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 27 Mar 2025 10:08:05 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdU5HSt5cRN8WFB5DrOZjo+Fc55X5bB6V6GzFT_Akiqdrw@mail.gmail.com>
-X-Gm-Features: AQ5f1Jo3lRIg1W6_ThZ_8jOIWrU0aCRCv9UzPJYRRcdVuf2lBsxdUWR2mmZthkU
-Message-ID: <CAMuHMdU5HSt5cRN8WFB5DrOZjo+Fc55X5bB6V6GzFT_Akiqdrw@mail.gmail.com>
-Subject: Re: [PATCH 15/15] arm64: defconfig: Enable Renesas RZ/V2N SoC
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Prabhakar <prabhakar.csengg@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] media: i2c: ov02e10: add OV02E10 image sensor
+ driver
+To: Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bryan O'Donoghue <bod@kernel.org>,
+ Hans de Goede <hansg@kernel.org>, Jingjing Xiong <jingjing.xiong@intel.com>,
+ Hao Yao <hao.yao@intel.com>, Jim Lai <jim.lai@intel.com>,
+ You-Sheng Yang <vicamo.yang@canonical.com>,
+ Alan Stern <stern@rowland.harvard.edu>, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250325-b4-media-comitters-next-25-03-13-ov02e10-v2-0-4d933ac8cff6@linaro.org>
+ <20250325-b4-media-comitters-next-25-03-13-ov02e10-v2-2-4d933ac8cff6@linaro.org>
+ <Z-UBPcSvq_oUDLAp@kekkonen.localdomain>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <Z-UBPcSvq_oUDLAp@kekkonen.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 27 Mar 2025 at 09:55, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Thu, 27 Mar 2025 at 08:43, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > On 26/03/2025 15:39, Prabhakar wrote:
-> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > >
-> > > Enable support for the Renesas RZ/V2N (R9A09G056) SoC in the ARM64
-> > > defconfig.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > ---
-> > >  arch/arm64/configs/defconfig | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> > > index 11e7d0ad8656..c7b41f86c128 100644
-> > > --- a/arch/arm64/configs/defconfig
-> > > +++ b/arch/arm64/configs/defconfig
-> > > @@ -1483,6 +1483,7 @@ CONFIG_ARCH_R9A07G054=y
-> > >  CONFIG_ARCH_R9A08G045=y
-> > >  CONFIG_ARCH_R9A09G011=y
-> > >  CONFIG_ARCH_R9A09G047=y
-> > > +CONFIG_ARCH_R9A09G056=y
-> >
-> > So the pattern will keep growing and none of you will ever bother to fix
-> > it, because you have your patchset to throw over the wall.
->
-> Yes, the pattern will keep on growing.
-> Just like the minimum kernel size will keep on growing, especially if
-> you can no longer compile a kernel without support for SoCs you do not
-> intend to run the kernel on.  Not everyone has GiBs of RAM to spare...
+Hi,
 
-<pling! :->
+On 27-Mar-25 08:41, Sakari Ailus wrote:
+> A few more comments.
+> 
+> On Tue, Mar 25, 2025 at 02:49:29PM +0000, Bryan O'Donoghue wrote:
+>> +static int ov02e10_set_format(struct v4l2_subdev *sd,
+>> +			      struct v4l2_subdev_state *sd_state,
+>> +			      struct v4l2_subdev_format *fmt)
+>> +{
+>> +	struct ov02e10 *ov02e10 = to_ov02e10(sd);
+>> +	const struct ov02e10_mode *mode;
+>> +	s32 vblank_def, h_blank;
+>> +
+>> +	mode = v4l2_find_nearest_size(supported_modes,
+>> +				      ARRAY_SIZE(supported_modes),
+>> +				      width, height, fmt->format.width,
+>> +				      fmt->format.height);
+>> +
+>> +	mutex_lock(&ov02e10->mutex);
+>> +	ov02e10_update_pad_format(mode, &fmt->format);
+>> +	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
+>> +		*v4l2_subdev_state_get_format(sd_state, fmt->pad) =
+>> +		    fmt->format;
+>> +	} else {
+>> +		ov02e10->cur_mode = mode;
+>> +		__v4l2_ctrl_s_ctrl(ov02e10->link_freq, mode->link_freq_index);
+>> +		__v4l2_ctrl_s_ctrl_int64(ov02e10->pixel_rate,
+>> +					 to_pixel_rate(mode->link_freq_index));
+>> +
+>> +		/* Update limits and set FPS to default */
+>> +		vblank_def = mode->vts_def - mode->height;
+>> +		__v4l2_ctrl_modify_range(ov02e10->vblank,
+>> +					 mode->vts_min - mode->height,
+>> +					 OV02E10_VTS_MAX - mode->height, 1,
+>> +					 vblank_def);
+> 
+> Note that this can fail.
+> 
+>> +		__v4l2_ctrl_s_ctrl(ov02e10->vblank, vblank_def);
+> 
+> As well as this one.
+> 
+>> +		h_blank = to_pixels_per_line(mode->hts, mode->link_freq_index) -
+>> +		    mode->width;
+>> +		__v4l2_ctrl_modify_range(ov02e10->hblank, h_blank, h_blank, 1,
+>> +					 h_blank);
+>> +	}
+>> +	mutex_unlock(&ov02e10->mutex);
+>> +
+>> +	return 0;
+>> +}
+> 
+> Please rely on sub-device state and the state lock instead, see e.g. imx219
+> driver for an example.
 
-/me remembers
-https://lore.kernel.org/all/6323eb7a-03e9-4678-ac4f-f90052d0aace@kernel.org/
+Or see the conversion to sub-device state in my incremental v8 posting
+of the ov02c10 series. Converting this driver should be alsmost
+identical.
 
-Gr{oetje,eeting}s,
+>> +
+>> +static int ov02e10_get_format(struct v4l2_subdev *sd,
+>> +			      struct v4l2_subdev_state *sd_state,
+>> +			      struct v4l2_subdev_format *fmt)
+>> +{
+>> +	struct ov02e10 *ov02e10 = to_ov02e10(sd);
+>> +
+>> +	mutex_lock(&ov02e10->mutex);
+>> +	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY)
+>> +		fmt->format = *v4l2_subdev_state_get_format(sd_state, fmt->pad);
+>> +	else
+>> +		ov02e10_update_pad_format(ov02e10->cur_mode, &fmt->format);
+>> +
+>> +	mutex_unlock(&ov02e10->mutex);
+>> +
+>> +	return 0;
+>> +}
+> 
+> And you won't need this with sub-device state.
 
-                        Geert
+Also see my incremental v8 posting of the ov02c10 series.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+>> +
+>> +static int ov02e10_enum_mbus_code(struct v4l2_subdev *sd,
+>> +				  struct v4l2_subdev_state *sd_state,
+>> +				  struct v4l2_subdev_mbus_code_enum *code)
+>> +{
+>> +	if (code->index > 0)
+>> +		return -EINVAL;
+>> +
+>> +	code->code = MEDIA_BUS_FMT_SGRBG10_1X10;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int ov02e10_enum_frame_size(struct v4l2_subdev *sd,
+>> +				   struct v4l2_subdev_state *sd_state,
+>> +				   struct v4l2_subdev_frame_size_enum *fse)
+>> +{
+>> +	if (fse->index >= ARRAY_SIZE(supported_modes))
+>> +		return -EINVAL;
+>> +
+>> +	if (fse->code != MEDIA_BUS_FMT_SGRBG10_1X10)
+>> +		return -EINVAL;
+>> +
+>> +	fse->min_width = supported_modes[fse->index].width;
+>> +	fse->max_width = fse->min_width;
+>> +	fse->min_height = supported_modes[fse->index].height;
+>> +	fse->max_height = fse->min_height;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int ov02e10_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
+>> +{
+>> +	struct ov02e10 *ov02e10 = to_ov02e10(sd);
+>> +
+>> +	mutex_lock(&ov02e10->mutex);
+>> +	ov02e10_update_pad_format(&supported_modes[0],
+>> +				  v4l2_subdev_state_get_format(fh->state, 0));
+> 
+> Please rely on init_cfg pad op instead.
+> 
+>> +	mutex_unlock(&ov02e10->mutex);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct v4l2_subdev_video_ops ov02e10_video_ops = {
+>> +	.s_stream = ov02e10_set_stream,
+> 
+> Please use {enable,disable}_streams instead. See e.g. imx283 driver for an
+> example.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Also see my incremental v8 posting of the ov02c10 series.
+
+Regards,
+
+Hans
+
+
