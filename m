@@ -1,117 +1,144 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8FDF26289
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 21:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A0226289
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 21:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743109791; cv=none; b=uFNrfmfakmDsauiOsJPAq5MoSwDPt+//YvmSohbWnyM+Jz/MmOrwhd0+HB+9EU5vMGVoIx/vaZ91XEy8622SdOTUZPTeqAhWmgDXoivqwSLtrXxm69T2h5z8aCzpKEjhnlSQIevewSH5Wg12VTYdwODEh76dPq05qOZJ67fVVDI=
+	t=1743109864; cv=none; b=qmku83rw8lDpkDdHfrW9wic2GCVPa10MhJJWwZ0U26gfMS7xjT6NfefR+WH8iMNAkCnHtTRo7uPKZfJmyTPFougkDpluPMMJa6NtFjN8o/pZYrZPSx+O1tbAWv/6+I5Z3qj/HrsfnYDlEpqkR28BciTR7RzmIkodNqjrv3UVzLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743109791; c=relaxed/simple;
-	bh=tzjGtYCbeNeCXpaTkMz9MrV7CLWWyWtx9pe31zDzt7U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BuN1wFJU9RJMIBnRQACUDdtit7w5Q94CjRDOuz4e/0lP91pnBIJ8Tbz/Dcd54IrrGOJ5aq3i9mEMj7UILx8Dl2S1/hQPns2ALKOf/OQwrdx7166XBw9Fs/iJL1Lo/SEtcR4MwQnxHC3LdUoHACFB86wKg18+F/3Fm0Uwh+kK8IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KiEIdEtb; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1743109864; c=relaxed/simple;
+	bh=m58IZxPeb5RHGpNeKyz0PkJCqdyCQwYkqyJiYGBY2tU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=MGXcU6y07TOjz2wQ/b+iO0bEYRiBBNebxQPmn1Ufa5MxJoOllwUA4yb+0e+OBTro3LU9PCM+GTYCoWukpBDsp0XG6njxdLHJSsg4dAloLd7aNzaWjymmdtTZjJBgMOcfCl4IEOyGwhxXSHHvn6TeT9SQMk/gU2flI+SoTg9/5OY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wx4LvZnW; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KiEIdEtb"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e6167d0536so2914989a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:09:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wx4LvZnW"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22580c9ee0aso32503725ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:11:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1743109788; x=1743714588; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u8R+j26INxHnTb7Mwq8fGCf9msi9SXZiuekCSpd0mnI=;
-        b=KiEIdEtb0hOC+fcD2crQvUWhbjjKnQ5yoj9wTgGqTX3yPcDHimj/IZZbmmhqWRbeLR
-         gzCfTFIvm2KfcjjZQkIooTUX/q4fZ4OJH+7pmMQrhdUfQwSNdMYgkM7zASBbbe/bXqsj
-         J6xhIx+CyyNLUEX002wthlgAxVYGR+3usKEMA=
+        d=google.com; s=20230601; t=1743109862; x=1743714662; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=p+8Mafd2UtcajhG07+jp866mDzieO4XMMoteXJ6/4LQ=;
+        b=wx4LvZnWcoxj/QUrdOCnIk5FE0jInjaVcMjIE/aQB6YFOb1dwgLg7eZY5B7ZZZF9nN
+         THJ89CGd0f31aO6JEpg8JxUld3punyksP/QJ6pp0LTSXdKoMBLTcFEHfyXxuUQFmEjJn
+         nD22lJav4fwaWJFBRf983zHyabDbTsDkOoG2FgwQxPYF/m829VFBe83PocnXiGlMz4oU
+         IcX9/IL4PkjWFCWMe/l/yegeedUKybzbIrriaD5z71b8E3JAuEg09mtBqNU0nH0PPh5D
+         bYqBnM/bfM48JXvR2rMxeC0+apxMAvJ76kqB68XCTX0wLsG6TadA9MSxAKNnsENj7plu
+         LROA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743109788; x=1743714588;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u8R+j26INxHnTb7Mwq8fGCf9msi9SXZiuekCSpd0mnI=;
-        b=fJaETJs1h9X6oVZ3AxhGwqksUfrPlpAcX3nnGz5SxeUG+kRJE3jmHM7s6uWUGqSicJ
-         TPC9kSLOIzYNnNILc+3XYRk40mYN4VrlMfCCxy5ivJfQbAtDFUVowKQW308+W6ULTO3J
-         cmWCaA8naHuioTnx9zXlpzT0UogH61i9UTWZ0pu5xv+sA3fZt4tUvm1voubtsPy7jcoQ
-         L4h5PhtZfejVaCX6Kv+tbxc+/vQ2TPH+LEKnJm0zgNj1vLKtqUzv+OrgBNZlucPp64iL
-         bMNtfJPa8KkIyvhF4K/5WHg2kwY99DfwpZ0ZKuahAdNmLWWBxLuzjCBMISIbUzy2TvNT
-         wrqg==
-X-Forwarded-Encrypted: i=1; AJvYcCWyplNQlPqZHn5Ab6vDcLc+aCnkMg8pNzcljKQjhSR6NYUYn8ka7p/tw74mrJu3yTXNlJlePyC5ipy2cOU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzsm6irDdD/+l8KSuyHW70dKqirRJb1tQKTM2Nhi3O9ydDOUgAy
-	MjvDqUsqjcQtkey2JOR36be3DR7vznjqGb9CEq7UrAFae4b1zBQeEYoxihqpyDAp2amQw2zJ/O+
-	/VYT1
-X-Gm-Gg: ASbGncuanykSyccSmugdAxCC8lVg3osRAsP/vnROocP1zeeLDCA/UEENzfWCuYyDz19
-	egIv8Aw6Gq/BZJvfpDUyTK+CzEBiJKT9kIHDlERSgCus3SDZZCe6sjeBbk/SPIO1vu2NpaGo6hc
-	x4c6LbPrM52+KubrZ1LPc5uRNN2VG2XZv6CqWDClcvH16hp/lL5Y27HH9L4r6Bh7hK2IyBj/Gmf
-	WJKarbTKaGENA86xKtaNO1ugN+rek+WfJMfG3h4LNBKdMD1vXJTyUJu+M+xUKCPm8rFv7NHSpzK
-	+0FflxtNgmFTp94USx0Q00O6uQyn3NhUhRDYzR9crWniQRszysB9o4/EJ22UUk7cookdDb8Sid1
-	GE9YCxiEf
-X-Google-Smtp-Source: AGHT+IFcemHvCAs4jQW9ro7Wnst6axx7lXJhwU4LVbMtTWfZ3jNgvUoudpEmhpXVbZz734qGiP3ccg==
-X-Received: by 2002:a05:6402:5106:b0:5e7:c782:ba94 with SMTP id 4fb4d7f45d1cf-5ed8e27b770mr5138938a12.13.1743109787884;
-        Thu, 27 Mar 2025 14:09:47 -0700 (PDT)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16f10d6sm345734a12.47.2025.03.27.14.09.47
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 14:09:47 -0700 (PDT)
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39143200ddaso931901f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:09:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW6bkZRG/VAmsVrKrxBeY3afFuqXvxSj1p9mW0I1d/XWtFbVDP6JdMSSWKFTHrVkT+Uyj3bsaduKySbP5s=@vger.kernel.org
-X-Received: by 2002:a05:6000:1fa6:b0:399:6af3:7a77 with SMTP id
- ffacd0b85a97d-39ad1749e17mr4689238f8f.19.1743109786837; Thu, 27 Mar 2025
- 14:09:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743109862; x=1743714662;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p+8Mafd2UtcajhG07+jp866mDzieO4XMMoteXJ6/4LQ=;
+        b=N2Ixq9QOyBf5CJYANI/DA5jOp06iHqNo06vJHo0g+zwTqTCvrsMHsraA8cfHADsWK0
+         Opwkf4jqNzjNcQLetqTwjim9suB3t1N2RZKonjsTyQxXrpa9YgCpU61wNjV0mq8igQ/A
+         +PTVNsFt2q7vFRyMv89oTPoanUR6lHdTpnVR/iVCWGmFAZXXEhUgKXNnuPmaysvIGZGf
+         JGv0FNoGBxfx6JrL2NHa6FAHeYKpBRYyT30u2aeWGbvQ8eNU3d6qUvTXM4+YP/0VAkwC
+         NknFp7PbmVzZcTeEPuXTgHjs6V2yoSVdCEgpvXX/DYsHTMJ1W2DgAKiytJPRI+OnSP6E
+         oRPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUK0RmurHD3akWymVDK+SpHMevNeA9HY+P2xucX3r9G6FWK4430DS6ElW2sw+uwOQaZbOaK+flfIXyLpwY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr1nnNDvJ2uqWdkLCyVqDq0iIabNP8TiPuURH9tE578RDPejOM
+	bppeIUFc+0jyq+E/1rxTDWcAnpvUjPDv5H65q/NSd2VvQMlXZqYUPn2crbomIg==
+X-Gm-Gg: ASbGncuvorZaUM9Vd76VfDI6KC68svaea9/gI6KMmJoveZDfYACXCIfKO5FUyzt+E5Q
+	pRS0MYfASHMLTaLL2uuRDM2qxm9gO8EucMjrXsU3gxVHpoVcmkiZ1WEABs17SAIC8tU5lL7+qtJ
+	EM28uzQtRJUkwBb0uPBtQ+vy+CRbgwoWyxiwl+992oMk8v8ZIL8FyE3PiG2ltzOn77nK+CjU0kF
+	kLCTM3l9ek6LBxVuw5jpFNn0nLLPKkJ5pQcgj068SWzuffhzCKLBUhTjFLcKO59yQnaYmxrXsaA
+	pfQ8K0sTeU0xS7BSBMXqetj4ysKMPBcpnwFVGnET1fXINLbaC84vrRoqzGlJvtA7xmagyIrFZ/a
+	lr+GApT1rD+ylU87PEK6o8oQmByNw
+X-Google-Smtp-Source: AGHT+IF5IvRZ+cIdtxE3619ORvawAtNSiXfuslCR5mL4uIrKM+QdqjqahBHj0QcOi3VXn8DYETZOZw==
+X-Received: by 2002:a17:902:e948:b0:220:e338:8d2 with SMTP id d9443c01a7336-2280485b0f8mr85602175ad.21.1743109862032;
+        Thu, 27 Mar 2025 14:11:02 -0700 (PDT)
+Received: from ynaffit-andsys.c.googlers.com (49.77.125.34.bc.googleusercontent.com. [34.125.77.49])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eec6f86sm4641855ad.5.2025.03.27.14.11.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 14:11:01 -0700 (PDT)
+From: "Tiffany Y. Yang" <ynaffit@google.com>
+To: Carlos Llamas <cmllamas@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,  Arve =?utf-8?B?SGo=?=
+ =?utf-8?B?w7hubmV2w6Vn?=
+ <arve@android.com>,  Todd Kjos <tkjos@android.com>,  Martijn Coenen
+ <maco@android.com>,  Joel Fernandes <joel@joelfernandes.org>,  Christian
+ Brauner <brauner@kernel.org>,  Suren Baghdasaryan <surenb@google.com>,
+  linux-kernel@vger.kernel.org,  kernel-team@android.com
+Subject: Re: [PATCH v2] binder: use buffer offsets in debug logs
+In-Reply-To: <Z-MV_KoW2w9F0HZw@google.com> (Carlos Llamas's message of "Tue,
+	25 Mar 2025 20:45:48 +0000")
+References: <20250324180716.1012478-3-ynaffit@google.com>
+	<Z-Go6qOLxT0ZfxyD@google.com>
+	<dbx8v7ryym9o.fsf@ynaffit-start.c.googlers.com>
+	<Z-MV_KoW2w9F0HZw@google.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Thu, 27 Mar 2025 21:11:00 +0000
+Message-ID: <dbx8h63eji1n.fsf@ynaffit-andsys.c.googlers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250312090132.1624445-1-nichen@iscas.ac.cn>
-In-Reply-To: <20250312090132.1624445-1-nichen@iscas.ac.cn>
-From: Doug Anderson <dianders@chromium.org>
-Date: Thu, 27 Mar 2025 14:09:35 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XA0q9KjkM0M9rL6ADi=umRYbACj+Sb7M5yyxSXVT_scg@mail.gmail.com>
-X-Gm-Features: AQ5f1Jplbd6tKLgHVVNpR-o-b1u7nON_NY4Ow89vJm0zuAh4ZO6OMWeppRLf-CY
-Message-ID: <CAD=FV=XA0q9KjkM0M9rL6ADi=umRYbACj+Sb7M5yyxSXVT_scg@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge: anx7625: Remove redundant 'flush_workqueue()' calls
-To: Chen Ni <nichen@iscas.ac.cn>
-Cc: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
-	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@gmail.com, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	airlied@gmail.com, simona@ffwll.ch, lumag@kernel.org, yuanhsinte@chromium.org, 
-	jani.nikula@intel.com, xji@analogixsemi.com, robh@kernel.org, 
-	sui.jingfeng@linux.dev, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hi,
+Carlos Llamas <cmllamas@google.com> writes:
 
-On Wed, Mar 12, 2025 at 2:02=E2=80=AFAM Chen Ni <nichen@iscas.ac.cn> wrote:
+> On Tue, Mar 25, 2025 at 12:41:39AM +0000, Tiffany Y. Yang wrote:
+>> Carlos Llamas <cmllamas@google.com> writes:
+>> 
+>> > On Mon, Mar 24, 2025 at 06:07:18PM +0000, Tiffany Y. Yang wrote:
+>> >> Identify buffer addresses using vma offsets instead of full user
+>> >> addresses in debug logs.
+>> >> 
+>> >> Signed-off-by: Tiffany Y. Yang <ynaffit@google.com>
+>> >> ---
+>> >>  drivers/android/binder.c | 31 ++++++++++++++++---------------
+>> >>  1 file changed, 16 insertions(+), 15 deletions(-)
+>> >> 
+>> >> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+>> >> index d1aa6d24450a..994ae205aa07 100644
+>> >> --- a/drivers/android/binder.c
+>> >> +++ b/drivers/android/binder.c
+>> >> @@ -3261,20 +3261,20 @@ static void binder_transaction(struct binder_proc *proc,
+>> >>  
+>> >>  	if (reply)
+>> >>  		binder_debug(BINDER_DEBUG_TRANSACTION,
+>> >> -			     "%d:%d BC_REPLY %d -> %d:%d, data %016llx-%016llx size %lld-%lld-%lld\n",
+>> >> +			     "%d:%d BC_REPLY %d -> %d:%d, buffer offset %lx-%lx size %lld-%lld-%lld\n",
+>> >>  			     proc->pid, thread->pid, t->debug_id,
+>> >>  			     target_proc->pid, target_thread->pid,
+>> >> -			     (u64)tr->data.ptr.buffer,
+>> >> -			     (u64)tr->data.ptr.offsets,
+>> >> +			     (unsigned long)tr->data.ptr.buffer - proc->alloc.buffer,
+>> >> +			     (unsigned long)tr->data.ptr.offsets - proc->alloc.buffer,
+>> >
+>> > These could be pointers to anywhere in user memory, not necessarily the
+>> > alloc->buffer. So there will be cases where this substraction doesn't
+>> > make sense. However, you are correct that we shouldn't log these addrs
+>> > so maybe just don't? wdyt?
+>> >
+>> 
+>> Ah, in that case I think it makes sense to remove them here. What
+>> do you think about printing the full buffer and offsets values in cases
+>> where we would print a binder_user_error or binder_transaction_error
+>> instead. Ideally, I would try to limit this to cases when the data or
+>> offsets ptr is invalid / copy would fail. Ostensibly this wouldn't
+>> reveal dangerous information about the user address space because the
+>> print statements would only happen when the data wasn't where it was
+>> supposed to be and it would help with debugging, but I'm not sure if
+>> this line of thought makes sense...
 >
-> 'destroy_workqueue()' already drains the queue before destroying it, so
-> there is no need to flush it explicitly.
+> My 2 cents...
 >
-> Remove the redundant 'flush_workqueue()' calls.
+> I'm sure there will be a _few_ exceptions in which having the pointers
+> from binder_transaction_data logged would aid debugging. However, this
+> won't be info that most users care about. In practice, logging an error
+> with "invalid buffer/offsets pointer" message is enough.
 >
-> This was generated with coccinelle:
->
-> @@
-> expression E;
-> @@
-> - flush_workqueue(E);
->   destroy_workqueue(E);
->
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
-> ---
->  drivers/gpu/drm/bridge/analogix/anx7625.c | 1 -
->  1 file changed, 1 deletion(-)
+> There are _other_ pointers that users do care about when debugging, such
+> as binder_ptr_cookie but not these. So I think is better if we don't log
+> them at all, as calculating an "offset" is not possible either.
 
-I guess nobody else is going to land this, so I went ahead and did it.
-;-) Pushed to drm-misc-next:
-
-[1/1] drm/bridge: anx7625: Remove redundant 'flush_workqueue()' calls
-      commit: c1031442d384eea6d53a1d1ec6791a2782afcdbc
+This makes sense to me! I'll drop them and send out another patch.
