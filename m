@@ -1,126 +1,267 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD6225771
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 01:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93EC82A1AA
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 01:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743038463; cv=none; b=BR91I2KW6iOVj23/HI52zmVZMc8s+BeMqEtF0r0YFapaxXm449qVgJhimBAC6s5eheG8Va+4GdrzrzDTKZrlXaDSATr8NLOFJB1Hg8TDOAxlGkfPl8eSkYA2Xq7wTDpozoGra4CP/9NCXZh2AdLRad+NOjxDoGZqDp3OdzIJcVs=
+	t=1743038621; cv=none; b=CLw9xCOJppo2Lvq28fwiO1rWIP34XexYWCFdWOrWlblbthzpBmUKkcP13W2CfhOlisA1uEo5vLCMebeKwPUpNq3KhrBIqrsmBf5UGFGUsHEbQpMkOY01L3D3n6RVyJubO5Bk2De7En9Fbm+/mYSnNTgI7yA4pGp5mzgdhGf6KAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743038463; c=relaxed/simple;
-	bh=rkxtS5suWD5Evz+m11GQWGobt3dWkXZJA9nOgREsdpE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kq8bQIjL7249Y0vetAedGW/q2VgRiZyPUGoKm2RQ+KfD41GJ9SDDcz8GA27IE3EkgloKdHxWXZmQn3dVo0KoQfS0J2slYI3UO0BIoRTBGatNiWzO1qw1YIvQbd0rf2OQRnEe2MkF5qGtHAxNuF3X4lvcLH5HU8KsRBdqTp/U/F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=fO0lC0Q5; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743038621; c=relaxed/simple;
+	bh=VbDuCviSyn2+FMz/uQocVuEzCrumYKtb2Jv266ekAHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kfVgQfyCRAA5sF6+DhKaB2GBBevm3LwnG8/tmClriy/oU2sgLD4Df8MZZECYrtvh7AZvpnwA5+aOX58De/hq9AwfOZt+yfbObRLE8PbxXwunjtfhj5N9H0MVu7t+5ijjl9BrNd3N0JLsFDTOh4zCRdip29EHF+/sbBre/CIJkzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PTrZflFb; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="fO0lC0Q5"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac2aeada833so89862266b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 18:21:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743038459; x=1743643259; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mI0EdooEMFFqAW+WoUqWF95O/QEtZzQxFpMruePbYtw=;
-        b=fO0lC0Q5L7yl7BoWFzBl5s8MdxZCFE7o7aOt/C3TcVHso3WPBWeVNkAi/HS3g3GJk1
-         ZHLjHRtkPAnHRHgdY576UtwsSsKyvhpn0JfbHDD0M9yVggBFp39i5Bk+IHCu7Yi0Ootz
-         WTaoBDttKVa7MmH+vuxUVgX4d5fVMs4Bun1qw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743038459; x=1743643259;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mI0EdooEMFFqAW+WoUqWF95O/QEtZzQxFpMruePbYtw=;
-        b=hlpzNABRW8lBsnU53vjWZfj00PAXDib4kMpQcWAR2UI0CKbyWIz7HEzR/fKFFmNTI6
-         AEnBZ7MgiVa5KK/vhavVvmGEOXDhoLAYHUdvI0Pyw6Hdll+0r2qNA7smAFBHt2sFa54V
-         q5lIOFNoLrN7M2w0HCYMJXdG28+ESNvjoOenQ5xAOh141PqHfNWkg8Wk+zqE6tsxdYBX
-         xWuTyk2R8eQMcelJIiMPvlQMaaR0yd7NJ1WZ2yMNMFBJDtQnDTNOzJhcs6thta522d4p
-         Hv1eOzCEFVDqWlvQgizvUHXgW+acZzB4QDrEQW0uB42OdzgeqxXZ2B9/6aXubMRUZnCb
-         7XyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWLDqXQWTcyQDqfrRJo4rhA7bo+tsC0PTFSt13YS0BItKdH+U2G4XAeqQa91JeDPXHWDv23cDARk1CG2cg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxjsfkNj09B8ihA6LwCN5P7zkf7JsJq/Nh6ord0Blk/sNWr7xi
-	92E+LUoiUMtjJ8T9zdts62Swu+bf3k7nQLfzUWcdE18i4bTs5yx0ypgM2uM2LvX0ui4CKsVDJXM
-	+jEw=
-X-Gm-Gg: ASbGncsTFjKXukV2ko8TJXbGGMPybelj722q7xBdz2939J1W0oqvJCVJMrmT+R+klZx
-	9L9t1zN0CGZgmB6PtI3P/UcVvEHDRuKuxW2mOwCNCEKlo6Q1lmRHVbTANWAJiGJVgrR3hCHbm4J
-	A5DJJ1GhUaG1hKK+SMqoXnnWhXu0xMlUE5RokYyMqHiMaAK8YQSh8EK4pIwiAv9SmcsSWrfe4e3
-	+poEjm/YZISXZGLbpLif03ymcZTtuH+2g1G2sGBrrBxIUkTQGGVy1tXIsBTNEhbifJ+0K7W9/5F
-	pRDhFrYz/qn+jisnqMPHzaYb9Iu4DGgLfvJ6PK7jWGijjjPZ4Ij8UhVYD19Cd2PHyj62ujrdQNA
-	3Hgc+B2HztP+gKbZ0r8I=
-X-Google-Smtp-Source: AGHT+IHQ2AKobGxiQrlWIABMl6sW3Xucteq9Lxq9LyM/28SbmBqxNAnjHbAmGZxTDme6Z80ERbv8kQ==
-X-Received: by 2002:a17:907:7204:b0:ac3:25ea:822 with SMTP id a640c23a62f3a-ac6e050a9b6mr595377666b.4.1743038458805;
-        Wed, 26 Mar 2025 18:20:58 -0700 (PDT)
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efbdfcd3sm1133684466b.132.2025.03.26.18.20.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Mar 2025 18:20:58 -0700 (PDT)
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2aeada833so89859366b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 18:20:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUsMC1csWqeC/EA5Ge32A5MFIVlt5StBeCYDaBEsEc69SeMu0ARDKZMWrJhEIWdcRfXKTe/QPCJFFtlUvQ=@vger.kernel.org
-X-Received: by 2002:a17:906:c106:b0:ac2:b813:ac25 with SMTP id
- a640c23a62f3a-ac6e0a48dc3mr490833166b.14.1743038457610; Wed, 26 Mar 2025
- 18:20:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PTrZflFb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743038617;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SRmBC+T0tFuM74bqrj1Echv7uq9vZ+375RhEm+MV7cc=;
+	b=PTrZflFb986SKqNiOuCRwzhcL6SfQqpTGHhKdoHjmbeVBYNi8PntirYZKH0eLiCIdLuUkG
+	zaxCTwii3Z10QBP1AYohEuM2j9i5ip+F4E28MKUEojwHoILEgU2bUOYWTS0PKltbYUuImc
+	ud+ohdNHAN3tSKGVU6mwsl+l3yja7HY=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-418-SOLYfYIoO2WXXJAIrp4wew-1; Wed,
+ 26 Mar 2025 21:23:33 -0400
+X-MC-Unique: SOLYfYIoO2WXXJAIrp4wew-1
+X-Mimecast-MFC-AGG-ID: SOLYfYIoO2WXXJAIrp4wew_1743038612
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4CBF21956067;
+	Thu, 27 Mar 2025 01:23:32 +0000 (UTC)
+Received: from fedora (unknown [10.72.120.3])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0AD2C180B487;
+	Thu, 27 Mar 2025 01:23:26 +0000 (UTC)
+Date: Thu, 27 Mar 2025 09:23:21 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Shuah Khan <shuah@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] ublk: improve handling of saturated queues when ublk
+ server exits
+Message-ID: <Z-SoibOdOmzOWB-C@fedora>
+References: <20250325-ublk_timeout-v1-0-262f0121a7bd@purestorage.com>
+ <20250325-ublk_timeout-v1-4-262f0121a7bd@purestorage.com>
+ <Z-OS2_J7o0NKHWmj@fedora>
+ <Z+Q/SNmX+DpVQ5ir@dev-ushankar.dev.purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <d0ade43454dee9c00689f03e8d9bd32a@paul-moore.com>
- <CAHk-=wjbahY4JjLCXNT4o3xVq2cejqBG69z+MNfHsN9FQBnbOw@mail.gmail.com>
- <CAHC9VhRExVqdhHqs0njs7NY6bFg0BfcE-gMpS30HW9O7MSDfWQ@mail.gmail.com>
- <CAHk-=wi9m8-_3cywQCohJQEQtuQ+teS4gOtBkWZrhFWzNy-5_A@mail.gmail.com>
- <CAHC9VhT3D7X=4SpO5xbYm=JUwJqTa7tn=J6QMDBV96c7VBUw4g@mail.gmail.com>
- <CAHk-=wiH3hoPTxX3=xTRzRuCwktf3pNzFWP45-x6AwoVAjUsUQ@mail.gmail.com>
- <CAHC9VhT5G6W7g9pB3VM6W7wCEJjWfYSUWNgWF+rRiQ4ZQbGMEQ@mail.gmail.com>
- <CAHk-=whwQhJtafHN4B1w-z2Gno__xLHS4NouKKHrYNTYa8kz3g@mail.gmail.com> <CA+zpnLeK2Ecj1mBod2rFe4ymd9eXiJkbyYwFh4Yrmck3DVB2SA@mail.gmail.com>
-In-Reply-To: <CA+zpnLeK2Ecj1mBod2rFe4ymd9eXiJkbyYwFh4Yrmck3DVB2SA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 26 Mar 2025 18:20:41 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiBH8FBL+pnXui8O-FSdyoG-yX81mUF9bsZcC6rR5ZtgQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JrMmGY1WBP2YbkNsM86xUUFOzf4O7ZMelOhzvZwerRqYfGCFS_CQ-gr9m8
-Message-ID: <CAHk-=wiBH8FBL+pnXui8O-FSdyoG-yX81mUF9bsZcC6rR5ZtgQ@mail.gmail.com>
-Subject: Re: [GIT PULL] selinux/selinux-pr-20250323
-To: =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
-Cc: Paul Moore <paul@paul-moore.com>, "Cameron K. Williams" <ckwilliams.work@gmail.com>, 
-	"Kipp N. Davis" <kippndavis.work@gmx.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	selinux@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Nick Kralevich <nnk@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z+Q/SNmX+DpVQ5ir@dev-ushankar.dev.purestorage.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Wed, 26 Mar 2025 at 18:06, Thi=C3=A9baud Weksteen <tweek@google.com> wro=
-te:
->
-> Taking one example from this merge request: kexec image loading.
+On Wed, Mar 26, 2025 at 11:54:16AM -0600, Uday Shankar wrote:
+> On Wed, Mar 26, 2025 at 01:38:35PM +0800, Ming Lei wrote:
+> > On Tue, Mar 25, 2025 at 04:19:34PM -0600, Uday Shankar wrote:
+> > > There are currently two ways in which ublk server exit is detected by
+> > > ublk_drv:
+> > > 
+> > > 1. uring_cmd cancellation. If there are any outstanding uring_cmds which
+> > >    have not been completed to the ublk server when it exits, io_uring
+> > >    calls the uring_cmd callback with a special cancellation flag as the
+> > >    issuing task is exiting.
+> > > 2. I/O timeout. This is needed in addition to the above to handle the
+> > >    "saturated queue" case, when all I/Os for a given queue are in the
+> > >    ublk server, and therefore there are no outstanding uring_cmds to
+> > >    cancel when the ublk server exits.
+> > > 
+> > > The second method detects ublk server exit only after a long delay
+> > > (~30s, the default timeout assigned by the block layer). Any
+> > > applications using the ublk device will be left hanging for these 30s
+> > > before seeing an error/knowing anything went wrong. This problem is
+> > > illustrated by running the new test_generic_02 against a ublk_drv which
+> > > doesn't have the fix:
+> > > 
+> > > selftests: ublk: test_generic_02.sh
+> > > dev id is 0
+> > > dd: error writing '/dev/ublkb0': Input/output error
+> > > 1+0 records in
+> > > 0+0 records out
+> > > 0 bytes copied, 30.0611 s, 0.0 kB/s
+> > > DEAD
+> > > dd took 31 seconds to exit (>= 5s tolerance)!
+> > > generic_02 : [FAIL]
+> > > 
+> > > Fix this by instead handling the saturated queue case in the ublk
+> > > character file release callback. This happens during ublk server exit
+> > > and handles the issue much more quickly than an I/O timeout:
+> > 
+> > Another solution is to override default 30sec 'timeout'.
+> 
+> Yes, but that still will introduce unnecessary delays, since it is a
+> polling-based solution (very similar to monitor_work we used to have).
+> Also it will add complexity to the unprivileged case, since that
+> actually cares about timeout and we will have to track the "real"
+> timeout separately.
+> 
+> > 
+> > > 
+> > > selftests: ublk: test_generic_02.sh
+> > > dev id is 0
+> > > dd: error writing '/dev/ublkb0': Input/output error
+> > > 1+0 records in
+> > > 0+0 records out
+> > > 0 bytes copied, 0.0376731 s, 0.0 kB/s
+> > > DEAD
+> > > generic_02 : [PASS]
+> > > 
+> > > Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> > > ---
+> > >  drivers/block/ublk_drv.c                        | 40 +++++++++++------------
+> > >  tools/testing/selftests/ublk/Makefile           |  1 +
+> > >  tools/testing/selftests/ublk/kublk.c            |  3 ++
+> > >  tools/testing/selftests/ublk/kublk.h            |  3 ++
+> > >  tools/testing/selftests/ublk/null.c             |  4 +++
+> > >  tools/testing/selftests/ublk/test_generic_02.sh | 43 +++++++++++++++++++++++++
+> > >  6 files changed, 72 insertions(+), 22 deletions(-)
+> > > 
+> > > diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+> > > index c060da409ed8a888b7e414c9065efd2cbd6d57d7..1816b2cac01056dc9d01455759594af43c5f78d6 100644
+> > > --- a/drivers/block/ublk_drv.c
+> > > +++ b/drivers/block/ublk_drv.c
+> > > @@ -1247,8 +1247,6 @@ static void ublk_queue_cmd(struct ublk_queue *ubq, struct request *rq)
+> > >  static enum blk_eh_timer_return ublk_timeout(struct request *rq)
+> > >  {
+> > >  	struct ublk_queue *ubq = rq->mq_hctx->driver_data;
+> > > -	unsigned int nr_inflight = 0;
+> > > -	int i;
+> > >  
+> > >  	if (ubq->flags & UBLK_F_UNPRIVILEGED_DEV) {
+> > >  		if (!ubq->timeout) {
+> > > @@ -1259,26 +1257,6 @@ static enum blk_eh_timer_return ublk_timeout(struct request *rq)
+> > >  		return BLK_EH_DONE;
+> > >  	}
+> > >  
+> > > -	if (!ubq_daemon_is_dying(ubq))
+> > > -		return BLK_EH_RESET_TIMER;
+> > > -
+> > > -	for (i = 0; i < ubq->q_depth; i++) {
+> > > -		struct ublk_io *io = &ubq->ios[i];
+> > > -
+> > > -		if (!(io->flags & UBLK_IO_FLAG_ACTIVE))
+> > > -			nr_inflight++;
+> > > -	}
+> > > -
+> > > -	/* cancelable uring_cmd can't help us if all commands are in-flight */
+> > > -	if (nr_inflight == ubq->q_depth) {
+> > > -		struct ublk_device *ub = ubq->dev;
+> > > -
+> > > -		if (ublk_abort_requests(ub, ubq)) {
+> > > -			schedule_work(&ub->nosrv_work);
+> > > -		}
+> > > -		return BLK_EH_DONE;
+> > > -	}
+> > > -
+> > >  	return BLK_EH_RESET_TIMER;
+> > >  }
+> > >  
+> > > @@ -1351,6 +1329,24 @@ static int ublk_ch_open(struct inode *inode, struct file *filp)
+> > >  static int ublk_ch_release(struct inode *inode, struct file *filp)
+> > >  {
+> > >  	struct ublk_device *ub = filp->private_data;
+> > > +	bool need_schedule = false;
+> > > +	int i;
+> > > +
+> > > +	/*
+> > > +	 * Error out any requests outstanding to the ublk server. This
+> > > +	 * may have happened already (via uring_cmd cancellation), in
+> > > +	 * which case it is not harmful to repeat. But uring_cmd
+> > > +	 * cancellation does not handle queues which are fully saturated
+> > > +	 * (all requests in ublk server), because from the kernel's POV,
+> > > +	 * there are no outstanding uring_cmds to cancel. This code
+> > > +	 * handles such queues.
+> > > +	 */
+> > > +
+> > > +	for (i = 0; i < ub->dev_info.nr_hw_queues; i++)
+> > > +		need_schedule |= ublk_abort_requests(ub, ublk_get_queue(ub, i));
+> > > +
+> > > +	if (need_schedule)
+> > > +		schedule_work(&ub->nosrv_work);
+> > 
+> > ublk_abort_requests() should be called only in case of queue dying,
+> > since ublk server may open & close the char device multiple times.
+> 
+> Sure that is technically possible, however is any real ublk server doing
+> this? Seems like a strange thing to do, and seems reasonable for the
+> driver to transition the device to the nosrv state (dead or recovery,
+> depending on flags) when the char device is closed, since in this case,
+> no one can be handling I/O anymore.
 
-So this is the kind of "why" I was looking for.
+ublk server should be free to open & close the char device multiple times,
+but you patch limits ublk server to open & close the char device just once.
 
-> Currently, any process which has CAP_SYS_BOOT can use kexec to replace
-> the existing kernel. Android has 5 processes with CAP_SYS_BOOT, only 1
-> of which needs kexec functionality [1]. By using these new
-> permissions, we will ensure that this process is able to call kexec,
-> while prohibiting other processes. SELinux provides us strong, kernel
-> enforced guarantees which can be checked at policy compile time.
-> Extending on this, we will use this patchset to guarantee that kernels
-> and ramdisks executed by kexec come from known, good sources.
->
-> The other hooks are of similar value to Android.
+The limit looks too strong...
 
-Now explain to me how the firmware loading hook works, not some
-hand-wavy "similar value" thing.
+> 
+> In general I feel like char device close is a nice place to centralize
+> the transition to the nosrv state. It has a few nice properties:
+> - Because all file references are released at this point, we're
+>   guaranteed that all file-related activity (uring_cmds, pread/pwrite)
+>   is quiesced.
+> - This one place can handle both saturated and unsaturated queues.
+> - It is "event-driven," i.e. our callback gets called when a certain
+>   condition is met, instead of having to poll for a condition (like the
+>   old monitor_work, or the timeout now)
+> - It looks like we can sleep in the char device close context, so we
+>   could inline nosrv_work.
 
-Because it seems entirely bogus. Exactly because the context of
-firmware loading is *not* something you can depend on. There is no
-"one special process" that has firmware loading capabilities.
+I agree all above, unless:
 
-I'm looking at selinux_kernel_load_data() in particular, where you
-don't even pass it a file at all, so it's not like it could check for
-"is this file integrity-protected" or anything like that. It seems to
-literally say "can this process load firmware", and as I've explained,
-the firmware loading is done by random processes.
+1) open() / close() need to be allowed multiple times
 
-               Linus
+2) for dealing with 1), you may have to check if queue is dying, and this
+way may have to use ->ubq_daemon, which is set when starting ublk, and cleared
+when freeing ublk char. So race is added here, which need to be addressed.
+
+> 
+> This also is a step in the right direction IMO for resurrecting this old
+> work to get rid of 1:1 ublk server thread to hctx restriction
+> 
+> https://lore.kernel.org/linux-block/20241002224437.3088981-1-ushankar@purestorage.com/T/#u
+
+That is definitely one good direction.
+
+> 
+> > For understanding if queue is dying, ->ubq_damon need to be checked,
+> > however it may not be set yet and the current context is not same with
+> > the ubq_daemon context, so I feel it is a bit fragile to bring queue
+> > reference into ->release() callback.
+> > 
+> > Many libublksrv tests are failed with this patch or kernel panic, even
+> > with the above check added:
+> > 
+> >         make test T=generic
+> 
+> Thanks, I will look at and address these failures.
+> 
+> Is there any plan to bring these tests into the new ublk selftests
+> framework?
+
+The two stress tests should be very similar with ublksrv's, just MQ isn't enabled.
+
+I will enable them later.
+
+The other big part is recovery test, which may take some time. I am a little busy
+recently, it is great if anyone would like to pull recovery test in. Otherwise,
+it may take a while.
+
+
+
+thanks,
+Ming
+
