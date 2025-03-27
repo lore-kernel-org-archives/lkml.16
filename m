@@ -1,73 +1,111 @@
-Received: from riemann.telenet-ops.be (riemann.telenet-ops.be [195.130.137.80])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE26E140E30
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A90140E30;
+	Thu, 27 Mar 2025 15:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743089600; cv=none; b=d+gtJya/+5cdCdomR+2SigkvbEukwpEuSNlvxqU/qkZe7gOi7oq8xE03tJLVeaSTA9/nPcEy/vKGBsQW5vDvCFyFJ90MyV6LQcdVJL5NOYEAyJN/DObRIuMiquoOA0LlPKCFD0p1+wFLV8VuagqmBn6xcHmyXegoEjF9ASm0Ta0=
+	t=1743089610; cv=none; b=mbzN4zCw1xgQzQwR+7znyWVLqN5z7cnzG++md+wDWUQ6+bFd1deVwPX2fgZQuM8ErjFR1dgDjd9LBaQcQuEXl8OZ+GZYucnjEM6sM62FbYaJNshLeANbcvnYgx7/2HH4ca8IsOIK6kYjSkCiAfakdo7C6K43En+vn7+K1XRKGNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743089600; c=relaxed/simple;
-	bh=erlXei2sBYo5h7v1S6Syq41Q79Vj69yo6grMNUihDdo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VipYYwE4LZoFS5AEe0p1zygZV6H97AXVzVEX5haNlvIei6o3cGyc7rm8m0i8DRke2tNkfoThY3DTIgm9KD1mehy2lS9WUijnRcHTcg7FvxohSpOc0G3426xGPQtz3oLaJAYQmO4xypscE6XeTbVve6Yp8/aj0NUL8ti83nRPQf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-	by riemann.telenet-ops.be (Postfix) with ESMTPS id 4ZNnjf3BVlz4xgDc
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:33:10 +0100 (CET)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:b1ef:107c:7814:6642])
-	by xavier.telenet-ops.be with cmsmtp
-	id VrZ32E0025Szt1p01rZ3Wy; Thu, 27 Mar 2025 16:33:03 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1txpE6-0000000Fsh6-1v3j;
-	Thu, 27 Mar 2025 16:33:03 +0100
-Received: from geert by rox.of.borg with local (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1txpE6-00000006DBv-40wM;
-	Thu, 27 Mar 2025 16:33:02 +0100
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-To: Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>,
-	Rae Moar <rmoar@google.com>
-Cc: linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] kunit: Spelling s/slowm/slow/
-Date: Thu, 27 Mar 2025 16:33:01 +0100
-Message-ID: <1f7ebf98598418914ec9f5b6d5cb8583d24a4bf0.1743089563.git.geert@linux-m68k.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1743089610; c=relaxed/simple;
+	bh=0KDQW9+C3D+KXwtbTogcCrI3F0K6VvQRKUDhTMU1Lp0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UzR7J1vqRZgqiIoFUNiUBdhTUCcHVfUFXipX4efUx94k8EBZrz/7KOwUayiWHx7xyd5McQn+zVxWF4WCnyr/R8HemmlYQLVHdvOt0qwmYOTJb+X60Kpa3XZHqyhS6SScozEjw8NVmO2AkypJwDPs4gNjjSgW7oQbnAl/rZztRbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nSS9HWM2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nSS9HWM2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03A6AC4CEDD;
+	Thu, 27 Mar 2025 15:33:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743089610;
+	bh=0KDQW9+C3D+KXwtbTogcCrI3F0K6VvQRKUDhTMU1Lp0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nSS9HWM2nAIfW9XwGL5KbsuKDnmV4IJY9eoebBhcfR9Hu4Xe2hypKXmDN7Ai3m7Ls
+	 XvkQMaFSrnMy3V2Fr+xi1j6B8btyM4iZzX95/oCTN/IQii+O3wSrB7UD8usykj/zYx
+	 b1xzwGK5r5R2vpMFz5xiXtje+GtORpYRz2O0I187ZhfqikrzJ86ZdHkIdbTG7KkkbT
+	 EVGdXE2ARUoJ7ZCsLh7bGRTUXlamgbjv2ET7MFMkFrS5TuJQSP4cQZyeCCTF2blvMt
+	 0iowcCqtqLlMR54RbBKdel2b2SJB24WTkkq/46MhZcRG25RbzNofTjxwjUVAvR5FCJ
+	 cglV8hkYoRY9g==
+Date: Thu, 27 Mar 2025 15:33:24 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Vishwaroop A <va@nvidia.com>,
+	krzk+dt@kernel.org, robh@kernel.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-tegra@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: spi: Add DT schema for Tegra SPIDEV
+ controller
+Message-ID: <9760cd70-cbd6-4865-92b9-b48eb2cdea55@sirena.org.uk>
+References: <925fe847-68b4-4689-832c-08f8de3dfeb1@nvidia.com>
+ <48f9c8c0-5cac-4812-8d06-501193be731b@sirena.org.uk>
+ <909f0c92-d110-4253-903e-5c81e21e12c9@nvidia.com>
+ <48248165-c800-484f-be62-7c48b3c6829b@sirena.org.uk>
+ <4zic633abvwj377kfqem42zmc2yruflbwfmmqrpvjjgr6jae6h@jthoycb3vzzz>
+ <ljxxml7z2k6xniamzzw4ssi7u75qqfpcvmidzy3ekr3imtoxau@eztnxovsjplg>
+ <499703ae-dba1-49a6-869b-a60b44c2a85f@sirena.org.uk>
+ <2oxhmcrhbwlwqgyqy62p77eoag6nkavhjwmwfjfizcrhunrkjv@eaxjy6uoxszq>
+ <25857b7f-5c10-46ec-b0b7-9ff89ca5ab1e@sirena.org.uk>
+ <63b87feb-32ee-423c-8d82-61445414c6f7@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="V6enJj/euRlY3UZ2"
+Content-Disposition: inline
+In-Reply-To: <63b87feb-32ee-423c-8d82-61445414c6f7@nvidia.com>
+X-Cookie: Multics is security spelled sideways.
 
-Fix a misspelling of "slow".
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- include/kunit/test.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--V6enJj/euRlY3UZ2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index 58dbab60f8530588..9b773406e01f3c43 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -67,7 +67,7 @@ enum kunit_status {
- 
- /*
-  * Speed Attribute is stored as an enum and separated into categories of
-- * speed: very_slowm, slow, and normal. These speeds are relative to
-+ * speed: very_slow, slow, and normal. These speeds are relative to
-  * other KUnit tests.
-  *
-  * Note: unset speed attribute acts as default of KUNIT_SPEED_NORMAL.
--- 
-2.43.0
+On Wed, Mar 26, 2025 at 12:16:53PM +0000, Jon Hunter wrote:
+> On 25/03/2025 17:05, Mark Brown wrote:
 
+> > > The way I imagine it, exporting would involve writing a chip-select to a
+> > > specific SPI controller's "export" sysfs attribute to have a SPI device
+> > > created for that particular chip-select and bind it to spidev.
+
+> > My general feeling with those is that if you're building for them you're
+> > probably either already modifiying your kernel or easily able to cope
+> > with doing so.
+
+> That's definitely what we do today, modify the kernel directly to achieve
+> what we need. I am trying to avoid carrying too many out of tree patches for
+> stuff like this and have something in the kernel that works by default. This
+> is even more important for 3rd party Linux distros that will not accept
+> non-upstream code.
+
+Overlays should work well for that case too!
+
+> Our devkits, very much like Raspberry PI, allow users to connect various
+> hardware for development and so having an easy way to connect a SPI device
+> is useful. For any production systems, users will definitely want a proper
+> device and device-tree bindings. So I am just trying to explore what would
+> be acceptable. If it is acceptable to have a sysfs interface for creating a
+> SPI device at runtime, then we can look into that.
+
+The main issue I see with the sysfs thing is that you have to describe
+the presence of the device somehow which currently needs a device of
+some kind there, it's not like I2C where you can just use the address.
+
+--V6enJj/euRlY3UZ2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmflb8MACgkQJNaLcl1U
+h9DsHQf+NXjnU8ML3q8LwR6HQSbPEMS/nn66hHJ7e1y2wdqwvw94h4+/K4wKEU2P
+RZ8O344/O37YkKwHYkB0x9g2dlnPxxU4bsmAF8+/+E3E+LU0cz0rS6mBZQro7XTs
+ZIvKeQ0bccC+I5yulZ+j3dCtbXEeFhtz1fXUq2s0J+602XBfHYnx2pYGOPrOmFvY
+aAbF/lgMi2eRUWkxXHqDxXSFRmz+cPxZh4vOPG4OqKqiFhi3CU135eDxzAO3Lh3L
+9OIoBZlADkghIluiOo/DHUk4rmvNdOPjjecMQJJlVawNT770QeZswZDaRHMforCa
+8u0plKE9d9ramj7w1Yvb/zdG+JCFOA==
+=YS3V
+-----END PGP SIGNATURE-----
+
+--V6enJj/euRlY3UZ2--
