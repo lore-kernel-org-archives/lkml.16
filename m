@@ -1,240 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBCC20B7E1
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B56A286A9;
+	Thu, 27 Mar 2025 09:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743066629; cv=none; b=kgAvHd0aAkP+LIau9RId7rZ8oajGzSM29o5IhN/tgtHk+XAiwW6edqrp81gLj08AZY9QI2w6KuVgleLgxhvne3YO7ecBUqi0L8iuD23gihI2PTgWguX00ISNiIcqN+ohCcc2h6orlmJnwAyD6V98SOmBU1lH9EW7yoZWPFKC+WQ=
+	t=1743066671; cv=none; b=SqddGtyuHiARQOFdD1zQCW7q3CfZWqPGI+UUCNJPx/sFXOeHbvUJkHNWDnS4XMK/hDEzne9aMVMDFpmDxoOa/5iYlIIVhv2nbk7qYhInAi/QO8gRFiEAN3KQec1bT52NGRVSwyjq0lD7w6byKvVWUXDOttDrFq/F03gHsHX7Pgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743066629; c=relaxed/simple;
-	bh=Jsiw5KiTxUR4iNE3MqYmHnUbxOuveSDHcUBdK6NwZLw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V0ZhrxeSh6ZcCpjLYV/9jiRPfq0MJHTY5rsT5L3JRvnRvm2y24XERjKzTbTs1VZib3HobBJbi7Bq9yQFGrOnkQiffZj6O8rhm7DeQCsS0zK6WImBVnwIoce6HM7qxuuypCZjXrSEDi/h+2ukuqGt4PZWISxtrQD7rTE/OTf2DXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gS6zbWaH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gS6zbWaH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743066626;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZcfS9YBTl7tCs/xylX6HhDzKlfrkf3xWC6I7P5nWbCM=;
-	b=gS6zbWaHZWmQjc5zcXppdxl+QiWLISctj7LYNVawIkW5cVamgCCi+pJ2r88DhlII10u9/7
-	U8MVPqIJx+LRr4AqDYrUiF+2uydelqfxZTeqDqRUDszqVi919IEXR19i5b9snNrwKSKy8C
-	FSvGJ16kZxiYEgakmHGpN2AoFKld6fg=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-54-94ubHtRKPoGL3WD8OsgIog-1; Thu, 27 Mar 2025 05:10:24 -0400
-X-MC-Unique: 94ubHtRKPoGL3WD8OsgIog-1
-X-Mimecast-MFC-AGG-ID: 94ubHtRKPoGL3WD8OsgIog_1743066623
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac21697a8ebso63176766b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 02:10:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743066623; x=1743671423;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZcfS9YBTl7tCs/xylX6HhDzKlfrkf3xWC6I7P5nWbCM=;
-        b=WY6GIcKccMe9bRXD2evNWpnkeO+0zuVdaPGV8d1xJefH/IUeQMrM0iNSJl/bIswKoD
-         XUN6+LVrY3kA1uNyHTx5LqNb6HAP1knYTLyxqDZ03nfXkw/rvs3Aq2IDpTnCC831fQKJ
-         mU3aqigF3Te8Dx45IgY5Z/YF5wev8ddshDj7YpBEQMGIytUFp+hpsufvuuMM3tO9U69i
-         EqgPb/HeDkuIQIaP9nnSV3wh6Rki3rsNAov2dmTlV5HTyFhUHvWrd6reaDsaFE3kT26m
-         uGWvLePSxW2jvuvecOaL1VfLeP5VY7LT0s/jlJXCVLaAmwSJjq/8zOtyRVE/z5vWyDQq
-         cA7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVwIiIguhqgzHKiafhh6ovGoHfCbDAV3+6GXhunVEH3ygeYqU3nlzj2edFTBM9H3n9/sD1LkVZYJHHl0Xg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3CJWc+AckEtGstSrvLF3V48a8ZDJhacxVyMTRGNEKPxIplQd/
-	xT7wSvoesfPzHSjLzL23AHNv2NVQl/xRx1VwIW1+wVhqQkk0ArVdhxG8HJ++0k8xKYS3F7AxN/8
-	ZGncR/X5ByaBdHDFGOxzt0BgXKcs7uiptuxipl1QkMRVjtbTc4+xGHBy5NnngfA==
-X-Gm-Gg: ASbGnctZNqHtx75fjkOIffX4qJqe8yy3Ql0X8nQItyoVv6FFNqDHtFsgLpZUK4sG2FD
-	K0JVQqMMg+/EwGtijaYuXf2ytuaEkGS/8frbFHC1PKfrsL7aXqf7N8T/Z0thwWeGq/TqtKJDSL7
-	UBKEwyCLIUXJjnWuWcvlyqElU8N4nDVt0Y/LxUdNkRTONNhiZr9Xhi61Bs8S7PmRcAyDYBpbXBs
-	ynCtQBkAeBKGrihI0Oqr9gJuNpmb1ONle70FsTeYZBYUUYXFpbd2RLBGESLPhmfgFZU5E1GSS1a
-	BFc7y8aZasvvtCOn+0cdD/PNZtdvEiHMbXs7RpTWcybeMOwkLYvIJlgXzeefQmRN2rwNyJfD0zX
-	mnNbbTUxkf0jw4vEnbPez/DvsMCCIr6F00gXDZ1Oz6XMhI8s1Aso/Hxt8hxKj/3uqvZ1b
-X-Received: by 2002:a17:907:7f8a:b0:ac6:d9fb:ede3 with SMTP id a640c23a62f3a-ac6fae622d4mr262420866b.7.1743066622842;
-        Thu, 27 Mar 2025 02:10:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFnMpoTcxNZUuQJDdtTQprA82RoG/L7k+YerCaH+dD9o3uX0yHBYKFa09X/u1y8BnCH0blwsg==
-X-Received: by 2002:a17:907:7f8a:b0:ac6:d9fb:ede3 with SMTP id a640c23a62f3a-ac6fae622d4mr262417666b.7.1743066622295;
-        Thu, 27 Mar 2025 02:10:22 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:2a07:3a01:f271:322f:26b0:6eb5? (2001-1c00-2a07-3a01-f271-322f-26b0-6eb5.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:f271:322f:26b0:6eb5])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efb52c2fsm1206008266b.100.2025.03.27.02.10.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 02:10:21 -0700 (PDT)
-Message-ID: <927dc606-ef77-4435-81f1-f36b951be25b@redhat.com>
-Date: Thu, 27 Mar 2025 10:10:20 +0100
+	s=arc-20240116; t=1743066671; c=relaxed/simple;
+	bh=y7axKAJliHD2zTOIYFEFVrRu7lE1cQmDkIumIcuNBvc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=giHTuDJiJqnC5zz+XuJNbCumQ4c/pgfzarzqGYzmNmjBRHDVu9b5ySdKUIMto7EPx+bYiV1TRDz3Q41I5wqFFuac8BDOiC9p+rDcM3zhKFkL0KXSIRULR8P60kwPYRDk6A9jVQ78HQg16FW+iIddA6kYEBdUUHMtyd9s2pt3ZCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R5wYMm005249;
+	Thu, 27 Mar 2025 02:10:32 -0700
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45hvqkde3b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 27 Mar 2025 02:10:31 -0700 (PDT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Thu, 27 Mar 2025 02:10:31 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Thu, 27 Mar 2025 02:10:26 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <stable@vger.kernel.org>
+CC: <patches@lists.linux.dev>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <jianqi.ren.cn@windriver.com>,
+        <mani@kernel.org>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <bvanassche@acm.org>,
+        <quic_asutoshd@quicinc.com>, <quic_cang@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <manivannan.sadhasivam@linaro.org>, <beanhuo@micron.com>
+Subject: [PATCH 6.6.y] scsi: ufs: qcom: Only free platform MSIs when ESI is enabled
+Date: Thu, 27 Mar 2025 17:10:26 +0800
+Message-ID: <20250327091026.1239657-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] media: i2c: ov02e10: add OV02E10 image sensor
- driver
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bryan O'Donoghue <bod@kernel.org>,
- Hans de Goede <hansg@kernel.org>, Jingjing Xiong <jingjing.xiong@intel.com>,
- Hao Yao <hao.yao@intel.com>, Jim Lai <jim.lai@intel.com>,
- You-Sheng Yang <vicamo.yang@canonical.com>,
- Alan Stern <stern@rowland.harvard.edu>, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250325-b4-media-comitters-next-25-03-13-ov02e10-v2-0-4d933ac8cff6@linaro.org>
- <20250325-b4-media-comitters-next-25-03-13-ov02e10-v2-2-4d933ac8cff6@linaro.org>
- <Z-UBPcSvq_oUDLAp@kekkonen.localdomain>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Z-UBPcSvq_oUDLAp@kekkonen.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=XNkwSRhE c=1 sm=1 tr=0 ts=67e51607 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=PY6Zn8H8AAAA:8 a=N54-gffFAAAA:8 a=yPCof4ZbAAAA:8 a=t7CeM3EgAAAA:8
+ a=5s8WT1kodU2SEgI5n5gA:9 a=cvBusfyB2V15izCimMoJ:22 a=ySS05r0LPNlNiX1MMvNp:22 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: Gqh5IStRisjoFhxzw3k-prtDyJR8ytRv
+X-Proofpoint-ORIG-GUID: Gqh5IStRisjoFhxzw3k-prtDyJR8ytRv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
+ mlxscore=0 impostorscore=0 adultscore=0 spamscore=0 phishscore=0
+ mlxlogscore=999 malwarescore=0 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2503270061
 
-Hi,
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-On 27-Mar-25 08:41, Sakari Ailus wrote:
-> A few more comments.
-> 
-> On Tue, Mar 25, 2025 at 02:49:29PM +0000, Bryan O'Donoghue wrote:
->> +static int ov02e10_set_format(struct v4l2_subdev *sd,
->> +			      struct v4l2_subdev_state *sd_state,
->> +			      struct v4l2_subdev_format *fmt)
->> +{
->> +	struct ov02e10 *ov02e10 = to_ov02e10(sd);
->> +	const struct ov02e10_mode *mode;
->> +	s32 vblank_def, h_blank;
->> +
->> +	mode = v4l2_find_nearest_size(supported_modes,
->> +				      ARRAY_SIZE(supported_modes),
->> +				      width, height, fmt->format.width,
->> +				      fmt->format.height);
->> +
->> +	mutex_lock(&ov02e10->mutex);
->> +	ov02e10_update_pad_format(mode, &fmt->format);
->> +	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
->> +		*v4l2_subdev_state_get_format(sd_state, fmt->pad) =
->> +		    fmt->format;
->> +	} else {
->> +		ov02e10->cur_mode = mode;
->> +		__v4l2_ctrl_s_ctrl(ov02e10->link_freq, mode->link_freq_index);
->> +		__v4l2_ctrl_s_ctrl_int64(ov02e10->pixel_rate,
->> +					 to_pixel_rate(mode->link_freq_index));
->> +
->> +		/* Update limits and set FPS to default */
->> +		vblank_def = mode->vts_def - mode->height;
->> +		__v4l2_ctrl_modify_range(ov02e10->vblank,
->> +					 mode->vts_min - mode->height,
->> +					 OV02E10_VTS_MAX - mode->height, 1,
->> +					 vblank_def);
-> 
-> Note that this can fail.
-> 
->> +		__v4l2_ctrl_s_ctrl(ov02e10->vblank, vblank_def);
-> 
-> As well as this one.
-> 
->> +		h_blank = to_pixels_per_line(mode->hts, mode->link_freq_index) -
->> +		    mode->width;
->> +		__v4l2_ctrl_modify_range(ov02e10->hblank, h_blank, h_blank, 1,
->> +					 h_blank);
->> +	}
->> +	mutex_unlock(&ov02e10->mutex);
->> +
->> +	return 0;
->> +}
-> 
-> Please rely on sub-device state and the state lock instead, see e.g. imx219
-> driver for an example.
+commit 64506b3d23a337e98a74b18dcb10c8619365f2bd upstream.
 
-Or see the conversion to sub-device state in my incremental v8 posting
-of the ov02c10 series. Converting this driver should be alsmost
-identical.
+Otherwise, it will result in a NULL pointer dereference as below:
 
->> +
->> +static int ov02e10_get_format(struct v4l2_subdev *sd,
->> +			      struct v4l2_subdev_state *sd_state,
->> +			      struct v4l2_subdev_format *fmt)
->> +{
->> +	struct ov02e10 *ov02e10 = to_ov02e10(sd);
->> +
->> +	mutex_lock(&ov02e10->mutex);
->> +	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY)
->> +		fmt->format = *v4l2_subdev_state_get_format(sd_state, fmt->pad);
->> +	else
->> +		ov02e10_update_pad_format(ov02e10->cur_mode, &fmt->format);
->> +
->> +	mutex_unlock(&ov02e10->mutex);
->> +
->> +	return 0;
->> +}
-> 
-> And you won't need this with sub-device state.
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
+Call trace:
+ mutex_lock+0xc/0x54
+ platform_device_msi_free_irqs_all+0x14/0x20
+ ufs_qcom_remove+0x34/0x48 [ufs_qcom]
+ platform_remove+0x28/0x44
+ device_remove+0x4c/0x80
+ device_release_driver_internal+0xd8/0x178
+ driver_detach+0x50/0x9c
+ bus_remove_driver+0x6c/0xbc
+ driver_unregister+0x30/0x60
+ platform_driver_unregister+0x14/0x20
+ ufs_qcom_pltform_exit+0x18/0xb94 [ufs_qcom]
+ __arm64_sys_delete_module+0x180/0x260
+ invoke_syscall+0x44/0x100
+ el0_svc_common.constprop.0+0xc0/0xe0
+ do_el0_svc+0x1c/0x28
+ el0_svc+0x34/0xdc
+ el0t_64_sync_handler+0xc0/0xc4
+ el0t_64_sync+0x190/0x194
 
-Also see my incremental v8 posting of the ov02c10 series.
+Cc: stable@vger.kernel.org # 6.3
+Fixes: 519b6274a777 ("scsi: ufs: qcom: Add MCQ ESI config vendor specific ops")
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Link: https://lore.kernel.org/r/20241111-ufs_bug_fix-v1-2-45ad8b62f02e@linaro.org
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+Verified the build test
+---
+ drivers/ufs/host/ufs-qcom.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> 
->> +
->> +static int ov02e10_enum_mbus_code(struct v4l2_subdev *sd,
->> +				  struct v4l2_subdev_state *sd_state,
->> +				  struct v4l2_subdev_mbus_code_enum *code)
->> +{
->> +	if (code->index > 0)
->> +		return -EINVAL;
->> +
->> +	code->code = MEDIA_BUS_FMT_SGRBG10_1X10;
->> +
->> +	return 0;
->> +}
->> +
->> +static int ov02e10_enum_frame_size(struct v4l2_subdev *sd,
->> +				   struct v4l2_subdev_state *sd_state,
->> +				   struct v4l2_subdev_frame_size_enum *fse)
->> +{
->> +	if (fse->index >= ARRAY_SIZE(supported_modes))
->> +		return -EINVAL;
->> +
->> +	if (fse->code != MEDIA_BUS_FMT_SGRBG10_1X10)
->> +		return -EINVAL;
->> +
->> +	fse->min_width = supported_modes[fse->index].width;
->> +	fse->max_width = fse->min_width;
->> +	fse->min_height = supported_modes[fse->index].height;
->> +	fse->max_height = fse->min_height;
->> +
->> +	return 0;
->> +}
->> +
->> +static int ov02e10_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
->> +{
->> +	struct ov02e10 *ov02e10 = to_ov02e10(sd);
->> +
->> +	mutex_lock(&ov02e10->mutex);
->> +	ov02e10_update_pad_format(&supported_modes[0],
->> +				  v4l2_subdev_state_get_format(fh->state, 0));
-> 
-> Please rely on init_cfg pad op instead.
-> 
->> +	mutex_unlock(&ov02e10->mutex);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct v4l2_subdev_video_ops ov02e10_video_ops = {
->> +	.s_stream = ov02e10_set_stream,
-> 
-> Please use {enable,disable}_streams instead. See e.g. imx283 driver for an
-> example.
-
-Also see my incremental v8 posting of the ov02c10 series.
-
-Regards,
-
-Hans
-
+diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+index c5a6b133d364..51ed40529f9a 100644
+--- a/drivers/ufs/host/ufs-qcom.c
++++ b/drivers/ufs/host/ufs-qcom.c
+@@ -1918,10 +1918,12 @@ static int ufs_qcom_probe(struct platform_device *pdev)
+ static int ufs_qcom_remove(struct platform_device *pdev)
+ {
+ 	struct ufs_hba *hba =  platform_get_drvdata(pdev);
++	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+ 
+ 	pm_runtime_get_sync(&(pdev)->dev);
+ 	ufshcd_remove(hba);
+-	platform_msi_domain_free_irqs(hba->dev);
++	if (host->esi_enabled)
++		platform_msi_domain_free_irqs(hba->dev);
+ 	return 0;
+ }
+ 
+-- 
+2.25.1
 
