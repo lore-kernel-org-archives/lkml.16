@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C431DF724;
-	Thu, 27 Mar 2025 03:24:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68321E1DF0
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:24:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743045862; cv=none; b=ck1vJ3JoRuslkuSH7OQivv0N7o3VYJU656Uq7tghymQE4FMsPeZJ3CtNIaWUv1KtXvhOaqFEvMhy7iSo1X8qpKnUkLSMfPp4qMs6v/A7PgRPgrGR1+hDdrndbZ9pyWF/fdcTiYEq/CgqH10cAq936fFwLca3zJiQETdX/32hWVE=
+	t=1743045863; cv=none; b=KdqWWMd5Y77eN4A3CM3o+0Ey78qPK0gLCVl6da+heZ3Xrx5MTXsf0wd4KhWvj7i5O0c92TjcHIDR37sC4amt8S39jhtJvaM7+qOSBhAHADddSbRjw6KYmCEd3x8/ntxrfDcXas5zXjudl54Af6BDlHRPyAvl+FPxSMMQZZjrGjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743045862; c=relaxed/simple;
-	bh=YtxfKvSWv2/a1oAlKoiwHfzUaB8Ez36lv4AOkIm9qzI=;
+	s=arc-20240116; t=1743045863; c=relaxed/simple;
+	bh=/iy8FtxzbwhjSmkKM7uy8++9qDW5X6I4m1nuk61UM4c=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=mDP6G8qhaKEu9fai+N0XQJK6euybNmovmrOBDFXSIvZV4cxkA2opcJjhfM2j9Zjf5xPEgF/uNN3Dt9o/VOCcznr1eB1unqxZniNlInHjDdl3JjQafye6w9LemxV3Nq1iNayiDQ3t30ePIsk0Zf4STmIVOD04L/nRv8Xw+IroP5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G4aZQfYo; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=e72gTs+00ujPM3iUQtxCrxqs44DvWlaxRSBM6TUVNWgvvZ54rMhuUiSmBu09kjkkoQ9923X50F7QKKqQMP2vRUK5JuDpEnz/+J2DgnAF75VXjfTeBkYPgS0DL1bJ5ZodvK/NXENg7kQ6WGj+wAjWDdr4m2hYRfl43PS8W97RUTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FhtRDJkj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G4aZQfYo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8B2DC4CEEA;
-	Thu, 27 Mar 2025 03:24:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FhtRDJkj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CAF9C4CEE4;
+	Thu, 27 Mar 2025 03:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743045861;
-	bh=YtxfKvSWv2/a1oAlKoiwHfzUaB8Ez36lv4AOkIm9qzI=;
+	s=k20201202; t=1743045863;
+	bh=/iy8FtxzbwhjSmkKM7uy8++9qDW5X6I4m1nuk61UM4c=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=G4aZQfYorl84c7rtvXXeCrzOmQpcx1lxEh7LOWAGryMmz8GUzjWtlRlQg9+qKFbVT
-	 rMQGjkH0KqeQ4vqQ07mPh7mnV1LSgNcttx92HBTwhFVKk0K/GrlqUB3qVs3RDQs1/r
-	 JXpn4Azp+jgBwCUQkF3KEDnm7p/aZapz2rzytNqSpafGSCZwqHZa/zUJ8J/DVb7uLX
-	 Cmz392YazAeoRLijed1VTQ/i6ssahkQ8RnsatM/9hab8/dP9CNDGVuvb8Sgi8BBcr0
-	 jAO+0ALvyK8X8YV53DV2Drwr7DW/qtCY/buqAsIPhXXdRyT8SUvxa86b3hbx8pcrgv
-	 QFrsc70/eal5w==
+	b=FhtRDJkjqxNTQn2pUK6o6ZEpsHnx2XWmufhp7tzLh/PA9OslLxfB/Vl6Xch24xU6L
+	 BlCCxLsNBMgmvggt4EvTcUnv3zAGKpTuNPD++cfWrsNU3evMlV0+p85VF3g2lsPtzP
+	 1YhxJumOoYkVKJdh83Hl6VazisBf+0SM66Svt7QsUSO4L4Wjb9Be0HT6u+SPpHUF6z
+	 Ryvq9eqpA5NK4szG/4dnhpuFpB1zSUtsHl/HRI/RtqpnNyWqYPOamYQQx1iWDeL1LS
+	 pb/j1tzk9icfcUu1Yh5+nvi1KX5sAT4JrzVVt4TIn66LmGF/O0LIaGyBNVsKhqju8e
+	 R3RzPHA+kb66w==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70FD1380AAFD;
-	Thu, 27 Mar 2025 03:24:59 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB5C9380AAFD;
+	Thu, 27 Mar 2025 03:25:00 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,44 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v7 0/3] Enable Zicbom in usermode
+Subject: Re: [PATCH] riscv: fgraph: Fix stack layout to match __arch_ftrace_regs
+ argument of ftrace_return_to_handler
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <174304589800.1549280.3544562224305376378.git-patchwork-notify@kernel.org>
-Date: Thu, 27 Mar 2025 03:24:58 +0000
-References: <20250226063206.71216-1-cuiyunhui@bytedance.com>
-In-Reply-To: <20250226063206.71216-1-cuiyunhui@bytedance.com>
-To: yunhui cui <cuiyunhui@bytedance.com>
-Cc: linux-riscv@lists.infradead.org, ajones@ventanamicro.com,
- alexghiti@rivosinc.com, andybnac@gmail.com, aou@eecs.berkeley.edu,
- charlie@rivosinc.com, cleger@rivosinc.com, conor.dooley@microchip.com,
- conor@kernel.org, corbet@lwn.net, evan@rivosinc.com, jesse@rivosinc.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, palmer@dabbelt.com,
- paul.walmsley@sifive.com, samuel.holland@sifive.com, shuah@kernel.org
+ <174304589950.1549280.17065579246811314249.git-patchwork-notify@kernel.org>
+Date: Thu, 27 Mar 2025 03:24:59 +0000
+References: <20250311132243.2178271-1-pulehui@huaweicloud.com>
+In-Reply-To: <20250311132243.2178271-1-pulehui@huaweicloud.com>
+To: Pu Lehui <pulehui@huaweicloud.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ palmer@dabbelt.com, alex@ghiti.fr, mhiramat@kernel.org, rostedt@goodmis.org,
+ naresh.kamboju@linaro.org, pulehui@huawei.com
 
 Hello:
 
-This series was applied to riscv/linux.git (for-next)
+This patch was applied to riscv/linux.git (for-next)
 by Alexandre Ghiti <alexghiti@rivosinc.com>:
 
-On Wed, 26 Feb 2025 14:32:03 +0800 you wrote:
-> v1/v2:
-> There is only the first patch: RISC-V: Enable cbo.clean/flush in usermode,
-> which mainly removes the enabling of cbo.inval in user mode.
+On Tue, 11 Mar 2025 13:22:43 +0000 you wrote:
+> From: Pu Lehui <pulehui@huawei.com>
 > 
-> v3:
-> Add the functionality of Expose Zicbom and selftests for Zicbom.
+> Naresh Kamboju reported a "Bad frame pointer" kernel warning while
+> running LTP trace ftrace_stress_test.sh in riscv. We can reproduce the
+> same issue with the following command:
+> 
+> ```
+> $ cd /sys/kernel/debug/tracing
+> $ echo 'f:myprobe do_nanosleep%return args1=$retval' > dynamic_events
+> $ echo 1 > events/fprobes/enable
+> $ echo 1 > tracing_on
+> $ sleep 1
+> ```
 > 
 > [...]
 
 Here is the summary with links:
-  - [v7,1/3] RISC-V: Enable cbo.clean/flush in usermode
-    https://git.kernel.org/riscv/c/de70b532f91b
-  - [v7,2/3] RISC-V: hwprobe: Expose Zicbom extension and its block size
-    https://git.kernel.org/riscv/c/eb1003970940
-  - [v7,3/3] RISC-V: selftests: Add TEST_ZICBOM into CBO tests
-    https://git.kernel.org/riscv/c/36dec9e44805
+  - riscv: fgraph: Fix stack layout to match __arch_ftrace_regs argument of ftrace_return_to_handler
+    https://git.kernel.org/riscv/c/67a5ba8f742f
 
 You are awesome, thank you!
 -- 
