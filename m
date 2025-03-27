@@ -1,228 +1,285 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2053.outbound.protection.outlook.com [40.107.93.53])
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11011049.outbound.protection.outlook.com [52.101.65.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9832F3B;
-	Thu, 27 Mar 2025 16:30:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28915176242;
+	Thu, 27 Mar 2025 16:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.49
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743093002; cv=fail; b=fyZMSSDxRAeIjzmCNKeOBpggxhJPW7FzmNPBjfrJeITS+dojiUEwrbfGg4MFX5yoL0kihG3yzRgckQXFmWAtIWyNK3caRK7g/7XjIvhOG+59uFTi+vVy8wYFqRnNXrVACHtJI++gyKWO1aAcGawm5JugUahVrSRSdIvEC6rsR3c=
+	t=1743093086; cv=fail; b=qAStb/DUiByLHONRxZ122pCCP5LB/bj1qYc4sBcH+LkheZYfJPn1SjxUV3TsCfo0zzqDb2ICCVHnnC/+eni+R+uTutb+eSWe2FIRtT0rox6L2eUclei9/aJwjfC63PiXoeKOg8VBPA/JMrPTCvmoL8b3SnuPV6mKGQIkRLTjLjI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743093002; c=relaxed/simple;
-	bh=TdrbiX+AFqwf7JwIWPJ+gbmKR6KIuLo7x9a/9F0Fpz0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OfW+ArETqfQNDY4hsZfIs+FOxpdhbQKkoyiG/NygcZy8olsHDjJkuL1y+ZluFU9p1yH6gq94nYFZpQRyGQuvHCd2pPxgbsld4hcvzQBjimlS4Ya/lFLscsaC0711ttciraNDG/O/HGUlQKD5woQB8PXZW+AwC1bIcJshph7tk5g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YHY44p31; arc=fail smtp.client-ip=40.107.93.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1743093086; c=relaxed/simple;
+	bh=oqkUjwD0UdYuZoK4h5KjDXRPBAiUgkw+1t3NuET7cxM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=YNcIW1AJ3RlbAQBtp/jfszQn9HggD2Noi7kV60IPUpS2G/PG4ugg3yJDoVyEY8GSWc570DsWIyRBOFiiGUtylk3PA9Fr+9bVMdzxPx/5QAbp9UT62jXow0if89/XPhiEGstKg+qtCxJBjR9OUCvKh9cyRWUOpJSznhxf7XMIxTo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=a5Z3hl8T; arc=fail smtp.client-ip=52.101.65.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YHY44p31"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="a5Z3hl8T"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ya5qVmcX4bHfgqGhD7C+l9J4gU8o5t/rQoPHDlkrr6NdM5iGK8qp4cJKAhEpwCRJH3ozrHJPp3rANBMh/mzljgxHlPb6cusf65OwnRtWt4bIk1/OEvmwJ1ENLpjpNQk88WJjTwj+pVugIAZSCYzt6hTZP2O7OTdBc5FPvYf4eJ2WBwPGUeSRSdSLx1X34etshIHVxZJXBR87AiFShRZRFX6SeJYY+6jgs41f0n2NQGhWE1WAHnWqy0MvYmZ9yvwm7FzKBkcoIEjEWJyIfoDbgtfaiXPFWWr86keWMkq0oh+dnddAlJNP0RgQOIB2WVbBx8qVXHGsXhb+Gmf0ip+8ow==
+ b=wqaFCYd2JmgDsk8vAkvC0BTLRGpjBJI2arlKxSLLuV/lbZs8jkNGBCFKK3NnsEjqgcrw7zEd29IWfZd/FpFhfp417GxkMNZPyl3wLQm38nbu/uZWt8DmciZqtauqaNUSx6oNCodgDy+TA9y1F1eEPHSmsFcUXtdLrcfEyy9a3BzwYGAEAxH5zKgYZR6Ud/PLTebay6Z4DBWJNM2zM5msGLzl/8Vh5pUQKwjoxzj5fq/PFeb2Q3waehnZm7a7vKl5yF4jZXS3+QuZ10V+A9oipjbqWr93bfIq4SKwKowd63BAuEnJeoQoNvUwPxMGZe2gynqcRSXSqOg4PcYXZeF3QA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=x4w4xp8kVZP5kHjgF6tBQ78b5CF/xDbQ/3vXHD7Lb/0=;
- b=FLJqOOebw2AZKfBAhpL2Q1nFiXHXviowrrqU0F8u0+lBncod9u+SNK98F4RVYsyP/cI6ChhObuX10xXWMpYRfxZJTMpBf7F5/3JkSTE7oeCVM8LhLgW1cKjJ7gOzV9px+8pASqWQfgLH1a6QiDt/TaNkH3NgEhEVuq1RfAsb06WmTZyRBuQmn8sVapSWc/EUAh52mm8y0ExqXrbg0y+uaOz8RyEpKjiPSNipnTGrkRwaybgMYplxYvgMvqRQw5LEufsrvCpGUXRn1kFTYdAYCoR8K1P0HNhOvHDEeC9nEEyDdI7MlOjxj58Fju+y6KOilDqu8YsIICGwTq5j73O2HQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=6/Jb/3uLp3RXtnIUrLmYGCCBaUm40W94uvMqKsV46JE=;
+ b=fWP6H94cuoAu83nRsGOnYY+ycDO9f/DvVUaCgSx2tg46GV5hm9njEZ4jH5qNokgfD8fI/9HQMOYSOyx+C8PQVDhamLhjtNWtNyq1jbfJVJZoFq0w2vgwp8cFSvS/Fch3QViKaJ72Tj+Qv6cBToP7dt1vv4kv7uPhY9Kj/nY7tgzJoaRreWhod8xraZSL2h0mZSdz+AzSKJ/M7PEAOfIuZscQZY9RGtJANijfSSv+Ku+gUBiClssZZwTysE1ZjmuO6CNXtyIphFdbP99pYrsF4PUInoi1QCp7rKYbYRjHZrwWTApO8TJOoPlrPfEwZH7YL8lAl2o3FJEx4YBtLE/2Qg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x4w4xp8kVZP5kHjgF6tBQ78b5CF/xDbQ/3vXHD7Lb/0=;
- b=YHY44p31/Z2d6Y6fgDutBO1kxCYLmeHdqwZhn1UG1VNcT9ddcER4E4PQ4CN8ueaK6eahslpyZfWmnzCRD0HorUfZ1zKtUY1JQM1Ku6vcFVdUoHWNvgxnfKvZnXmpHHL49NKaPOSoEWjQFJ/9fuOFqrwYiULRU+FJ77JdGKzPeIs=
-Received: from CH2PR10CA0018.namprd10.prod.outlook.com (2603:10b6:610:4c::28)
- by CY1PR12MB9676.namprd12.prod.outlook.com (2603:10b6:930:104::19) with
+ bh=6/Jb/3uLp3RXtnIUrLmYGCCBaUm40W94uvMqKsV46JE=;
+ b=a5Z3hl8TDLsmbIo0xNmzeI063YlHhiLbDey3lCkLzq/v5MvpF5IifG/RsehZH2daZ7spOKU3ypF+4lOU0RBKfCYRDKPuYnO9+aDTh/hSXgHQWvwSVinh//wMHTT6jIWvuRLkvBQMqKzT1fF1WyhiSC/VQbDXX9rbr7Syo6vuJ30SdZMlucYMltUkWbhrruMkJvPjBg+geJOMKMFWTpgREhIFqzRW1XL6RvdA72Sm3pCtiYTIQ1zAeiSxyopi/5JQhm1JeU9kB59YD2vSMWZVcH6skC5wobbzHfhZxd+yhZaHwj2ZRxR4+IZzBACwMk6GhfrPher3bUeHKKDLRArKCw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by GVXPR04MB10327.eurprd04.prod.outlook.com (2603:10a6:150:1e2::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
- 2025 16:29:59 +0000
-Received: from CH3PEPF00000010.namprd04.prod.outlook.com
- (2603:10b6:610:4c:cafe::9f) by CH2PR10CA0018.outlook.office365.com
- (2603:10b6:610:4c::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.44 via Frontend Transport; Thu,
- 27 Mar 2025 16:29:59 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH3PEPF00000010.mail.protection.outlook.com (10.167.244.41) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8534.20 via Frontend Transport; Thu, 27 Mar 2025 16:29:58 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 27 Mar
- 2025 11:29:58 -0500
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <bhelgaas@google.com>, <tglx@linutronix.de>, <jgross@suse.com>,
-	<roger.pau@citrix.com>, <pstanner@redhat.com>,
-	<andriy.shevchenko@linux.intel.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-coco@lists.linux.dev>
-Subject: [PATCH RESEND v2] PCI/MSI: Fix x86 VMs crash due to dereferencing NULL MSI domain
-Date: Thu, 27 Mar 2025 16:29:46 +0000
-Message-ID: <20250327162946.11347-1-Ashish.Kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
+ 2025 16:31:20 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%3]) with mapi id 15.20.8534.040; Thu, 27 Mar 2025
+ 16:31:20 +0000
+Date: Thu, 27 Mar 2025 12:31:12 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: maudspierings@gocontroll.com
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 7/8] arm64: dts: freescale: Add the BOE av101hdt-a10
+ variant of the Moduline Displayy
+Message-ID: <Z+V9UCSN1L6lIVat@lizhi-Precision-Tower-5810>
+References: <20250327-initial_display-v3-0-4e89ea1676ab@gocontroll.com>
+ <20250327-initial_display-v3-7-4e89ea1676ab@gocontroll.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250327-initial_display-v3-7-4e89ea1676ab@gocontroll.com>
+X-ClientProxiedBy: SJ0PR13CA0065.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c4::10) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PEPF00000010:EE_|CY1PR12MB9676:EE_
-X-MS-Office365-Filtering-Correlation-Id: 634881b3-2469-4cc1-2c30-08dd6d4c9de2
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|GVXPR04MB10327:EE_
+X-MS-Office365-Filtering-Correlation-Id: 58120807-0e83-4ccb-5063-08dd6d4cce21
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013;
+	BCL:0;ARA:13230040|376014|7416014|52116014|1800799024|366016|38350700014|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?OOG2fLXAeinJRGIpNXo0JKjYztFN4Qx0AtjQidr/5jYIwRAa5bgyEsK3xJ3A?=
- =?us-ascii?Q?jwafnctDsT01LpvN9RQrJh0ydsrYcjDDfCuAXZH/1YdvKcAjnQnu94BG05+h?=
- =?us-ascii?Q?4POo+lmUG+qpWxlx236zOjPT7DnodTaDAB2Bv2uoaKGUyjybyhE/UbrvAqLl?=
- =?us-ascii?Q?PL8uFXCuuRWOreL9tww4tp0p8mepNhwmRCFk7Pkg7KiAwH22gICJmB7d+qgM?=
- =?us-ascii?Q?nM3A3bk9mki6FWWzo2JpYqu9B8NwxkrcQYHlc+RpgHs+HW4RXNNZtLg0tKb/?=
- =?us-ascii?Q?vtlRwemM1SFVaN/vCJa+5HNrv/7/2SC8LHgL6m/h1nxZ/Q3NrUi7SH05fPrG?=
- =?us-ascii?Q?Y3QtHri0LAu+Uo2ThbRfDcgMBDwrVp6o2NPRKQ4crZcZXW4SeP7W7l05sz4m?=
- =?us-ascii?Q?1lxqBXTFtsQIypOctfZTuh/TVBvLjgTLY6dqOJCVX581BcVXHyEQ4I12LUa2?=
- =?us-ascii?Q?Akd5m9XjVeg6010/LjSCqbPWy1EKhdsyqvvfP+2WMrVx40UoOAcI/LaIkqH8?=
- =?us-ascii?Q?qYdSwOwoBVP4yPOpSPpUrf+gUAWETDK7YSy0v+yWrO56oXBpHcqmd4Cyh5B8?=
- =?us-ascii?Q?uAdNKncwnXdJoOqOQFmOBPeW8CqlNXmVo8Gz93hkkIkb5XXBv1woWUB7wOqw?=
- =?us-ascii?Q?n6HFeVU2ZVSqTmo5tN+NaSIHHu3wtU+L+iP6+pLyitSWkZQj+QSGU9IJYEr1?=
- =?us-ascii?Q?z6xEFTRyFgy9t8Qr4CpQ/VRsedNYLPieBIjU39o/68Kg9T6PkrfLY893c+15?=
- =?us-ascii?Q?30wHGH8RAlJuRNRQ6Ys0gYKmI6RmyY/e7cjBfjJ/1cIf13XYmflnYqlnOHJz?=
- =?us-ascii?Q?qqGajyF4CUrJApAB4b1/H6OBaKX1ydbGtENe+5Ioqylff7yYKjeQwBkdrhJD?=
- =?us-ascii?Q?zKX2+N1JqPVGFFg8POO8lPAAPlgQERjo3/Ih+QlXNHsgz7o1GVBzIQBWGDo8?=
- =?us-ascii?Q?7Bl46J4YV1XOO5hE9LOKXlKP3yXs/MbuLCPU+OnYwuv2/3BYjlaSvyk+BnO/?=
- =?us-ascii?Q?KlmaQ4dxyXwO/r1WGdPA0B5ehPP4C9EkK6Pa9bL9icXE3iqqymvFWILE4BmP?=
- =?us-ascii?Q?pW7+5SXMPM2UZjVo3yZ2+wAluSaE2/R55HXhcRLwpv0mKJ3iwzL37o7TwCZh?=
- =?us-ascii?Q?dt+C+isdeWJJz08zVN2vmjCTCxtnOZqZjL66nzqMCLSzOOtddVOr9XofNTEf?=
- =?us-ascii?Q?l6BgxM5sTF7TofPMmkax6TFNaZlpTka7r5LC8xKr2l7FVXOP+rBFVH2FvPVQ?=
- =?us-ascii?Q?IMyHTmR9vHMfm+IZ6WYjzYFh0Q5mYVWl6U6OQXii9v47+E2fmPrbAvf3DrW6?=
- =?us-ascii?Q?9LBtb/EuxK+wK++cN8syDfSCp/lEzLT3sdwI2Bwzd7ME6fHixZwJyzFSu0/w?=
- =?us-ascii?Q?YibtI503Q+ObevNoFMon/pW/w8964QbzK6kGTX/ky4IbYGiQkPB1Z8aKiNkR?=
- =?us-ascii?Q?hTHS4o/hbxCekNLiVHzYfIE14jTk45SZzFfGUuZzgo034KQPoyWNae1ZHl4U?=
- =?us-ascii?Q?W1VD+g998o88dEqtUvvex5FznUJy//795Ph9?=
+	=?us-ascii?Q?Nb2GWP9xuRqqeBpHSKKuD+b5kGxrXGsukwbXEqG0QcPJPpL32KYh2XFDLbSn?=
+ =?us-ascii?Q?vtfWu+ne1bwzaD2uAscDQBwOErMsnFXEuU7Nm33b+phL8SYQyE7zf6BTBEsl?=
+ =?us-ascii?Q?AHiZ6Zzc01iISt05obLxfIO53UYn6/sgN3/vcmSWAzbv9CIX+8xhzUcD8SRc?=
+ =?us-ascii?Q?4uPwvX7Q2GVWaB5MQbsZGj4WSvMOaxR2LvI7TD3XEjJm8xBCs4C8KBROEqD9?=
+ =?us-ascii?Q?glGvxQfA0+wF/mnUJeLeIrUWODR49XP9lVCIttEM2ke3uHFN7KI8/SKgLUL/?=
+ =?us-ascii?Q?m9KL55aN5iAh9DhKb9iJsYcdWE48L9HsWCCTvVzN2iaFM+O9/LUpy6kydv+f?=
+ =?us-ascii?Q?nsf3DQF31wIamgtSYj6xiZHgLaQaZiD9SJCqnyfagSMsaj68wVT0Zxp9CyDg?=
+ =?us-ascii?Q?9TlEFphNxcTMLJ6D7YHKGQMRZRQ7eK8OhsJpum2VJ2Qj66FuncIKviaUYbUF?=
+ =?us-ascii?Q?Nb8ukZ/2HpAePAFg/YA0LYHpk6Bdoq1pvl865ihkrHxsoYGLfg3LbVImoeOp?=
+ =?us-ascii?Q?TA+h/0n6y0GHXHxXqpSugGVn6os6tA2rPwSJeXCWEZ0G+SYob1TZW4ifqcQa?=
+ =?us-ascii?Q?Oyg5GAx1iB8JMEH4dsipS//PB+1l2fS8B/gIo+7e1Fe0JKjxxUD368ZE2Mbi?=
+ =?us-ascii?Q?kGeqwWsZ2+PiTm+E1os7wLifwJQSf5qpIIFxA7AdSY3XO5R5gRKVmNsVK8gb?=
+ =?us-ascii?Q?6U2WL0JwBqAkZZebR9f0q3s0O320hv7r3IzrOTSvER15W7Eo13kHda9tm4qB?=
+ =?us-ascii?Q?W/NqT+xsGagjRFpPhwMBibk9My1nCiut+W61o+I+WPxzetLk/b9JDY0d/n3R?=
+ =?us-ascii?Q?X3vhrMGFiJw1Ta2GQOTJdYAXMff1YeltpFHEa+3nSnQjU1nUx2GQ2341bTza?=
+ =?us-ascii?Q?uSTkecLhQOnhYXxmXUmGa/bl7+ub71Bl2oKTbvewsh01i4krt5HSXhVkHspX?=
+ =?us-ascii?Q?FjkqZbq1cOYYD0mna1LxecjKOO1znCvGDq/A4B2SY7/bf2hjy0rx5yyqehvp?=
+ =?us-ascii?Q?L9tkxj9cu80dZFM5VjTeMeBHtuNqaMclf34AsWhxOUeZP7Z5w4OAGCkfCaXh?=
+ =?us-ascii?Q?mr1lcWp3441gzEVU3VISn5FanJQxslz1jpoXZGTPcmP6fdVqmEmxBPYouncz?=
+ =?us-ascii?Q?GJ8jZvCoyxpjCYr14Jk7scYJVnIjJ8CeW3WdLLUpcT+CWqkeCLz9FNJxgX7z?=
+ =?us-ascii?Q?toG92Rafj6FQ1kA7OqeITeUN7owudIaLzgPzDLP1yIZCivKVB4fUIIpT2wE2?=
+ =?us-ascii?Q?7eqDOfPEI8S/eGZVFURqCJS/IM/eJfQAwW2PIoSCsgHVxV8V+fjru0Y7r/tg?=
+ =?us-ascii?Q?iMVQUIIQjTHdX7cO7m5kg7AweDj+WamaQotzEoWfkeDsbMGZ3ZppwSFxluCU?=
+ =?us-ascii?Q?JUiq1a9Aj6ifuLAHnssxFq+pGT8W1ORrhB1WEvtyA6NL54Srxu03deywPyqr?=
+ =?us-ascii?Q?5zMA56283gZRibGoGednKQgNwa+xzIx337hWw7qFHIRxHZiJBgfvTA=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 16:29:58.9484
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(1800799024)(366016)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?NqEikC1ij4J5ppS5XAw4OwIY6zDN+jilLpvzRFGY0B6EpTvL/Nr72oIFBJ7e?=
+ =?us-ascii?Q?f5qCpgWstkLmky/SkQET/OAeyeqTWZfEEzz4LwL0Wrvcod+2rWvzgtgvN1uD?=
+ =?us-ascii?Q?vT5VpwbXpiosqrV1f/0p0rnGX3kqhChRtNBIT5Q4a35qNmEvhLPEtdrn8J0t?=
+ =?us-ascii?Q?9ZSdCPjoc8LcZSWlCaPMxJG4BhIQXMbG/0K9lASss/PKBa4+sclViPcMK+m5?=
+ =?us-ascii?Q?9RWvJ8GMB/hG7yZWwhJJMMl2BYHpC2sB6nEEir5OPUqUAV1p4pSVnIH27hlz?=
+ =?us-ascii?Q?+dULYqQzUutm5pMzF0CzrJuk5BZ7uhlaI6LuD2fyF8LaIfBBCifg7nAb73MP?=
+ =?us-ascii?Q?d7CHxAz9xGuSKv0HZMCX3m1fKnvmJV9LxW7p5eLu9tPuumlLCkBWBUCznK3Q?=
+ =?us-ascii?Q?ud4BKKV//mubdBuvcdrtSa22WGmX6IOTtl1crOBgf9JPiDjZGf/ytbG13fx4?=
+ =?us-ascii?Q?wJ6y4gg2//SEYpRpQ6CxA7ebpuoCHbYAwcJohi+HZEQfNuwev3PWuvjUAX3y?=
+ =?us-ascii?Q?n1sbZ2G0T6KQbDmaKwD+mFRPBdKMQ3KB8hnMb15ze/zEtEQoExWXIkts7wdW?=
+ =?us-ascii?Q?uG7CDHa9lNgfbr4xjnjfJHetBWJ29Yl7VeYSpYwDqGuPu5uC2OHQROhUNhMb?=
+ =?us-ascii?Q?lprzMoRFOa4dRlTMvR4sV2ExuqNUCFa5SwPKqxK8ILeYZ2gET47sIA0GTJtp?=
+ =?us-ascii?Q?0jBPTCoi5iVMeHbgXvzyZE6cG0oO++UWS9IoWnCu0noen69F3AM61tsGi9v9?=
+ =?us-ascii?Q?ZY4Jcit2Ncsxf2OlyCAt7KZINebsZeRD05U4pe99yrAX+StwhXfEB72Op4OF?=
+ =?us-ascii?Q?OezXmxqVTI5xfGLA8VxxWBp5qdfWZhSL0u5e+tfJsRLbhLcwh3E0gul8nc3I?=
+ =?us-ascii?Q?Pk0bWGGdR5ITwvSEjQZFr9Tjtgzt3zPNO6FZAwY9ISmVCNrpao1TlyTfzpyJ?=
+ =?us-ascii?Q?8RG+bTPUPSC0zDyp6qqjgob53aXOsXdhjE63rrJ7nd60IO1T+rDwv5k5wHg8?=
+ =?us-ascii?Q?5eTpW9OIONx2qpmoZXvU1dB2DFJLHQ1WiZlRGWZYumPYeYPObc9p8B/Dem9r?=
+ =?us-ascii?Q?J9GnsGb1KGeRIyszchYJQq3duU+GNgTAHous4b0I2fQ9IF2NRd5G2fMJACTr?=
+ =?us-ascii?Q?GcJmAHCj2uABshNiF+w8BJdJoTIU4h0FoYmO3GgoGql/NZ04l9gII0bnLeav?=
+ =?us-ascii?Q?0Mrf68c8cSwkB2IJVaWKLV+2NmuGFt76EOp7NoAqp10d+EDB0C7d4UlF9LMZ?=
+ =?us-ascii?Q?MPE9OgSEzVSWKQI0N6vmYyKUeXwI1UUx1f83M5pIaAhHbx1ilv6EvYcQwGli?=
+ =?us-ascii?Q?2k8a0sJQzLttO0dlmE43uLkvgDFO7xOqCCXUZwzUiF9afQp2tSIF3HXa2HF/?=
+ =?us-ascii?Q?/FwCpSZ9v3wsJmtpavtOFXinWZCPfzQHxJnwBAow1VLEmqueI/L0jYvoVdZk?=
+ =?us-ascii?Q?WFvT5dBIoFQre2EQIpy+MAI3o1ujYz+EABnVZD0j9PLERFpd5QoVvERhB91i?=
+ =?us-ascii?Q?37SL818XiMLf+UeVemWn9mztWFZhPAoFpaI8a3W2tFv80+Qvl/ExtulaIkek?=
+ =?us-ascii?Q?ny/Llvf5G6gciS+Xl1M4psoZZl/MbMu1JXh8GDcH?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 58120807-0e83-4ccb-5063-08dd6d4cce21
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 16:31:20.1732
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 634881b3-2469-4cc1-2c30-08dd6d4c9de2
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH3PEPF00000010.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR12MB9676
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HddoCfWSpMdc4k7vTo3Yyzl08fVSwhY1JWI6HG8dLbjlFc+/nKxFe52FHJgn1XpUpqSaNGs291QTafcxIHn3zw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10327
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+On Thu, Mar 27, 2025 at 04:52:42PM +0100, Maud Spierings via B4 Relay wrote:
+> From: Maud Spierings <maudspierings@gocontroll.com>
+>
+> Add the BOE av101hdt-a10 variant of the Moduline Display, this variant
+> comes with a 10.1 1280x720 display with a touchscreen (not working in
+> mainline).
+>
+> Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
+>
+> ---
+> Currently the backlight driver is not available, this will be upstreamed
+> in a future patch series. It is a Maxim max25014atg.
+>
+> The touchscreen has a Cypress CYAT81658-64AS48 controller which as far as
+> I know is not supported upstream, the driver we currently use for this is
+> a mess and I doubt we will be able to get it in an upstreamable state.
+> ---
+>  ...tx8p-ml81-moduline-display-106-av101hdt-a10.dts | 100 +++++++++++++++++++++
+>  1 file changed, 100 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81-moduline-display-106-av101hdt-a10.dts b/arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81-moduline-display-106-av101hdt-a10.dts
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..1917e22001a1815a6540f00cf039ff352801cda8
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81-moduline-display-106-av101hdt-a10.dts
 
-Moving pci_msi_ignore_mask to per MSI domain flag is causing a panic
-with SEV-SNP VMs under KVM while booting and initializing virtio-scsi
-driver as below :
+why not use dt overlay to handle difference dsplay module.
 
-...
-[    9.854554] virtio_scsi virtio1: 4/0/0 default/read/poll queues
-[    9.855670] BUG: kernel NULL pointer dereference, address: 0000000000000000
-[    9.856840] #PF: supervisor read access in kernel mode
-[    9.857695] #PF: error_code(0x0000) - not-present page
-[    9.858501] PGD 0 P4D 0
-[    9.858501] Oops: Oops: 0000 [#1] SMP NOPTI
-[    9.858501] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-next-20250326-snp-host-f2a41ff576cc #379 VOLUNTARY
-[    9.858501] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 02/02/2022
-[    9.858501] RIP: 0010:msix_prepare_msi_desc+0x3c/0x90
-[    9.858501] Code: 89 f0 48 8b 52 20 66 81 4e 4c 01 01 c7 46 04 01 00 00 00 8b 8f b4 03 00 00 48 89 e5 89 4e 50 48 8b b7 b0 09 00 00 48 89 70 58 <8b> 0a 81 e1 00 00 40 00 75 25 0f b6 50 4d d0 ea 83 f2 01 83 e2 01
-[    9.858501] RSP: 0018:ffffa37f4002b898 EFLAGS: 00010202
-[    9.858501] RAX: ffffa37f4002b8c8 RBX: ffffa37f4002b8c8 RCX: 0000000000000017
-[    9.858501] RDX: 0000000000000000 RSI: ffffa37f400b5000 RDI: ffff984802524000
-[    9.858501] RBP: ffffa37f4002b898 R08: 0000000000000002 R09: ffffa37f4002b854
-[    9.858501] R10: 0000000000000004 R11: 0000000000000018 R12: ffff984802924000
-[    9.858501] R13: ffff984802524000 R14: ffff9848025240c8 R15: 0000000000000000
-[    9.858501] FS:  0000000000000000(0000) GS:ffff984bae657000(0000) knlGS:0000000000000000
-[    9.858501] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    9.858501] CR2: 0000000000000000 CR3: 000800003c260000 CR4: 00000000003506f0
-[    9.858501] Call Trace:
-[    9.858501]  <TASK>
-[    9.858501]  msix_setup_interrupts+0x10e/0x290
-[    9.858501]  __pci_enable_msix_range+0x2ce/0x470
-[    9.858501]  pci_alloc_irq_vectors_affinity+0xb2/0x110
-[    9.858501]  vp_find_vqs_msix+0x228/0x530
-[    9.858501]  vp_find_vqs+0x41/0x290
-[    9.858501]  ? srso_return_thunk+0x5/0x5f
-[    9.858501]  ? __dev_printk+0x39/0x80
-[    9.858501]  ? srso_return_thunk+0x5/0x5f
-[    9.858501]  ? _dev_info+0x6f/0x90
-[    9.858501]  vp_modern_find_vqs+0x1c/0x70
-[    9.858501]  virtscsi_init+0x2d2/0x340
-[    9.858501]  ? __pfx_default_calc_sets+0x10/0x10
-[    9.858501]  virtscsi_probe+0x135/0x3c0
-[    9.858501]  virtio_dev_probe+0x1b6/0x2a0
-...
-...
-[    9.934826] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
+Frank
 
-This is happening as x86 VMs only have x86_vector_domain (irq_domain)
-created by native_create_pci_msi_domain() and that does not have an
-associated msi_domain_info. Thus accessing msi_domain_info causes a
-kernel NULL pointer dereference during msix_setup_interrupts() and
-breaks x86 VMs.
+> @@ -0,0 +1,100 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +/*
+> + * Copyright 2025 GOcontroll B.V.
+> + * Author: Maud Spierings <maudspierings@gocontroll.com>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "imx8mp-tx8p-ml81-moduline-display-106.dtsi"
+> +
+> +/ {
+> +	model = "GOcontroll Moduline Display with BOE av101hdt-a10 display";
+> +
+> +	panel {
+> +		compatible = "boe,av101hdt-a10";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_panel>;
+> +		enable-gpios = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+> +		reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
+> +		power-supply = <&reg_3v3_per>;
+> +
+> +		port {
+> +			panel_lvds_in: endpoint {
+> +				remote-endpoint = <&ldb_lvds_ch0>;
+> +			};
+> +		};
+> +	};
+> +
+> +	reg_vbus: regulator-vbus {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "usb-c-vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		power-supply = <&reg_6v4>;
+> +		regulator-always-on;
+> +	};
+> +};
+> +
+> +&lcdif2 {
+> +	status = "okay";
+> +};
+> +
+> +&usb3_1 {
+> +	status = "okay";
+> +};
+> +
+> +&usb3_phy1 {
+> +	status = "okay";
+> +};
+> +
+> +&usb_dwc3_1 {
+> +	dr_mode = "host";
+> +
+> +	port {
+> +		usb1_hs_ep: endpoint {
+> +			remote-endpoint = <&high_speed_ep>;
+> +		};
+> +	};
+> +
+> +	connector {
+> +		compatible = "usb-c-connector";
+> +		pd-disable;
+> +		data-role = "host";
+> +		vbus-supply = <&reg_vbus>;
+> +
+> +		port {
+> +			high_speed_ep: endpoint {
+> +				remote-endpoint = <&usb1_hs_ep>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&lvds_bridge {
+> +	assigned-clocks = <&clk IMX8MP_CLK_MEDIA_LDB>,
+> +	<&clk IMX8MP_VIDEO_PLL1>;
 
-In comparison, for native x86, there is irq domain hierarchy created
-by interrupt remapping logic either by AMD IOMMU (AMD-IR) or Intel
-DMAR (DMAR-MSI) and they have an associated msi_domain_info, so
-moving pci_msi_ignore_mask to a per MSI domain flag works for
-native x86.
+fix indentation.
 
-Also, Hyper-V and Xen x86 VMs create "virtual" irq domains
-(XEN-MSI) or (HV-PCI-MSI) with their associated msi_domain_info,
-and they can also access pci_msi_ignore_mask as per MSI domain flag.
-
-Fixes: c3164d2e0d18 ("PCI/MSI: Convert pci_msi_ignore_mask to per MSI domain flag")
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- drivers/pci/msi/msi.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
-index d74162880d83..05c651be93cc 100644
---- a/drivers/pci/msi/msi.c
-+++ b/drivers/pci/msi/msi.c
-@@ -297,7 +297,7 @@ static int msi_setup_msi_desc(struct pci_dev *dev, int nvec,
- 	/* Lies, damned lies, and MSIs */
- 	if (dev->dev_flags & PCI_DEV_FLAGS_HAS_MSI_MASKING)
- 		control |= PCI_MSI_FLAGS_MASKBIT;
--	if (info->flags & MSI_FLAG_NO_MASK)
-+	if (info && info->flags & MSI_FLAG_NO_MASK)
- 		control &= ~PCI_MSI_FLAGS_MASKBIT;
- 
- 	desc.nvec_used			= nvec;
-@@ -612,7 +612,8 @@ void msix_prepare_msi_desc(struct pci_dev *dev, struct msi_desc *desc)
- 	desc->pci.msi_attrib.is_64		= 1;
- 	desc->pci.msi_attrib.default_irq	= dev->irq;
- 	desc->pci.mask_base			= dev->msix_base;
--	desc->pci.msi_attrib.can_mask		= !(info->flags & MSI_FLAG_NO_MASK) &&
-+	desc->pci.msi_attrib.can_mask		= info ? !(info->flags & MSI_FLAG_NO_MASK) &&
-+						  !desc->pci.msi_attrib.is_virtual :
- 						  !desc->pci.msi_attrib.is_virtual;
- 
- 	if (desc->pci.msi_attrib.can_mask) {
-@@ -747,7 +748,7 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
- 	/* Disable INTX */
- 	pci_intx_for_msi(dev, 0);
- 
--	if (!(info->flags & MSI_FLAG_NO_MASK)) {
-+	if (!info || !(info->flags & MSI_FLAG_NO_MASK)) {
- 		/*
- 		 * Ensure that all table entries are masked to prevent
- 		 * stale entries from firing in a crash kernel.
--- 
-2.34.1
-
+> +	assigned-clock-parents = <&clk IMX8MP_VIDEO_PLL1_OUT>;
+> +	/* IMX8MP_VIDEO_PLL1 = IMX8MP_CLK_MEDIA_DISP2_PIX * 2 * 7 */
+> +	assigned-clock-rates = <0>, <1054620000>;
+> +	status = "okay";
+> +
+> +	ports {
+> +		port@1 {
+> +			ldb_lvds_ch0: endpoint {
+> +				remote-endpoint = <&panel_lvds_in>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl_panel: panelgrp {
+> +		fsl,pins = <
+> +			MX8MP_IOMUXC_GPIO1_IO07__GPIO1_IO07 /* COM pin 157 */
+> +			MX8MP_DSE_X1
+> +			MX8MP_IOMUXC_GPIO1_IO09__GPIO1_IO09 /* COM pin 159 */
+> +			MX8MP_DSE_X1
+> +		>;
+> +	};
+> +};
+>
+> --
+> 2.49.0
+>
+>
