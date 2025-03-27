@@ -1,100 +1,54 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3EC92192E1;
-	Thu, 27 Mar 2025 18:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8733C2192E1;
+	Thu, 27 Mar 2025 18:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743098954; cv=none; b=TmLGVll/4B6HIGAyIHplhCilEA4miuWDJxLKa62wRHOlIweHBHedIpUgijGPU9l9AQyU8y3CjprBL7Vinr0DD/6AXGjaYbfJqbM82F18XCVHhAAaA5OtosSSwS464e+cXb4Xfn0sg3cNl9XNqH3A6k3eCE2v11m2klIKXUz5t4U=
+	t=1743098964; cv=none; b=m37yHiFJduOFPzopv527LQRGETy6SD6O1CudJm9wxTkN3Ii9kgKElvdqAtkQZSWwhwzBHrzYBg5GhfjEpvtFrtdMOI2EVb9QeGAybe98WCvKbe2gn14EIZEZsZQ1IXxl+AX8eei86YOvZn/yIuIhqS8J/ERku3DvGqeEybGqcrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743098954; c=relaxed/simple;
-	bh=WDZ/TdvVqTGFdOBs5AR+LXVDcaQB6OZOUx/p/Fq2Mv8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pFIDj710FsqKi7KlRx8fAG/1SOJcklIAwEbTE/1gDaO+BLopO2SMFCQ6dUwhJ+NXRQ4MVw1+6rJUC8/750sARlvwYjpBYAI6unsQ1+j6jprK+6wqFh9Ac3vC+1oh8O5TUd4Q0tDpMnZTLAIXuv6hxKv4C3paIsA0DTltDaNVIpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=UjJLEWuw; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1743098964; c=relaxed/simple;
+	bh=Z5ugAbxZh3x3GNeJqdDv2ia0Z0MhHrrnSc9GQAk1F3c=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=o3f35n4ngfELlCf7LTpqvqEKaHR9cs14VQ2m7UkCEgUGrhYXgNJFruTrqAmHc93jUHYK+ybT45sNbaOfMb3+/g6FeLip4BeOML/SNaGvvb+f5+cdHzi063USITwQOgeZmbw0gXQFRqgJJYuCraDl8DswCeg5bQD+ozFc0jnMlAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=POgjIecv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="UjJLEWuw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=0iI76ZxHHsT4dCo91RfA/tDxDNywYERS3l4ButZui0A=; b=UjJLEWuw4yaVByGcTP20JjLak0
-	0+Di8UCRGKCFC3BAtPn3bep04rQ5kiOASDOoesZ+AfRe6OyovW+QgoSxdYiGmgTvbsHjXmIKhHeiW
-	v+OUeG2JfDNnXQmHid0ZKghAH59P9YuyKWY6GaEMVuIHCioPejZdAmAC0EiKBietEHNjR+wakqLvT
-	zb0WwRwRE0+4uG/KlIt0FxX3dP5CfL93663AbeysSLjhm75ALjInKM2Ujx+TrLLVRSqRxCXykUGPq
-	NiKMzgE7nJJpmkq1uaSI55dXchOIefHRsOOYoLz4bGzHP6CnKIeFdi9Ktm5fNFHWX1W/10k5cSVpt
-	15SdYy6g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52902)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1txrex-0007ZR-0S;
-	Thu, 27 Mar 2025 18:08:55 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1txrer-00067y-2f;
-	Thu, 27 Mar 2025 18:08:49 +0000
-Date: Thu, 27 Mar 2025 18:08:49 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	upstream@airoha.com
-Subject: Re: [net-next PATCH 3/6] net: phylink: Correctly handle PCS probe
- defer from PCS provider
-Message-ID: <Z-WUMb-xfYIihPJQ@shell.armlinux.org.uk>
-References: <20250318235850.6411-1-ansuelsmth@gmail.com>
- <20250318235850.6411-4-ansuelsmth@gmail.com>
- <Z9rplhTelXb-oZdC@shell.armlinux.org.uk>
- <67daee6c.050a0220.31556f.dd73@mx.google.com>
- <Z9r4unqsYJkLl4fn@shell.armlinux.org.uk>
- <67db005c.df0a0220.f7398.ba6b@mx.google.com>
- <Z9sbeNTNy0dYhCgu@shell.armlinux.org.uk>
- <67e58cd2.7b0a0220.289480.1e35@mx.google.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="POgjIecv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCDF2C4CEDD;
+	Thu, 27 Mar 2025 18:09:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1743098963;
+	bh=Z5ugAbxZh3x3GNeJqdDv2ia0Z0MhHrrnSc9GQAk1F3c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=POgjIecvYMh/CdvZ0u4ipe9d0n8QVKOvwvm5XkqbERrOFZQRBuUgQRsjMjYcJR3WY
+	 iPjcZh1rjONz3rTJSJbyBecZLJMT+bWy07QKJ81Zo9qc3Awtkhf4eg62C5YapwNgnB
+	 fiQ75wSqby0UJlhT4nGpVLmS7NbhN85794/h6osI=
+Date: Thu, 27 Mar 2025 11:09:23 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, Kuan-Wei
+ Chiu <visitorckw@gmail.com>
+Subject: Re: [PATCH] lib/sort.c: Add _nonatomic() variants with
+ cond_resched()
+Message-Id: <20250327110923.41e281e75fcf5b1152a55a64@linux-foundation.org>
+In-Reply-To: <20250326152606.2594920-1-kent.overstreet@linux.dev>
+References: <20250326152606.2594920-1-kent.overstreet@linux.dev>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67e58cd2.7b0a0220.289480.1e35@mx.google.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 27, 2025 at 06:37:19PM +0100, Christian Marangi wrote:
-> OK so (I think this was also suggested in the more specific PCS patch)
-> - 1. unpublish the PCS from the provider
-> - 2. put down the link...
+On Wed, 26 Mar 2025 11:26:06 -0400 Kent Overstreet <kent.overstreet@linux.dev> wrote:
+
+> bcachefs calls sort() during recovery to sort all keys it found in the
+> journal, and this may be very large - gigabytes on large machines.
 > 
-> I feel point 2 is the big effort here to solve. Mainly your problem is
-> the fact that phylink_major_config should not handle PROBE_DEFER and
-> should always have all the expected PCS available. (returned from
-> mac_select_pcs)
+> This has been causing "task blocked" warnings, so needs a
+> cond_resched().
 
-I'm going to do a quick reply here, because I'm on a high latency LTE
-connection right now (seems Three's backhaul network for downstream is
-being overloaded.)
-
-I mad ea comment previously, and implemented it:
-
-https://lore.kernel.org/r/E1twkqO-0006FI-Gm@rmk-PC.armlinux.org.uk
-
-Remainder too painful to try and reply to at the moment.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+I assume this has been happening for a while, so a cc:stable is appropriate?
