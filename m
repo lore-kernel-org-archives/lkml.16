@@ -1,266 +1,208 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sg2apc01on2130.outbound.protection.outlook.com [40.107.215.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9401B960
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743076994; cv=none; b=e3bc5GymMmqJKaPicUIb7zTxrJjqvM8VbEHA5sd8SWqzXgSwTnmkZjNjJ7DpcVXlcqQT1tjsLqJ13jFqnAEtVvtByZV9mWUmmjwvtUbnB9GXcV2YX5fz/rCmdG31CjwuapCYEH65YD0jTjoR4gfJPSxWbfWz+DRFMHLRpsszeCI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743076994; c=relaxed/simple;
-	bh=UJkKSf7fQMEVOKFZamgTNbbKX0+pYHquQYAtDvyOvnE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ICnnHeIJZXE0s2DslAYVL+j1RsNXfDNIbaJO3JJMHNmfe5tlOyNaEWS28Zh4YRoGTVg0nblo3xYJ4Xq2wSJmSAb2pCAjylCbeybcYBQlPwZRboHT6EdXBtdMG3Zpq8FXIXMZy+PuXc6xjYy/hPiilqrBDNpqBdWWBDxTNtOcgqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=ghDmfPG2; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="ghDmfPG2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743076939; x=1743681739; i=spasswolf@web.de;
-	bh=SM1POh9VV3k0zWrqccD5VWDOjF1RncipJvSoxJViC/g=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=ghDmfPG2X/yTzwS3cAxo1t9omIZslCGC6qRb9iOd/Na9V2c6etxsU46/anZL54rM
-	 fFYPqT+7kgnRo4g5YOpD2brWvtwwYQaZMyCVlSOWh9dhcPh04MAoiQ83DNZPIyG+7
-	 gNnf19MEvZbdqe/5/VgHnwsszuglGkSa6tCdg7Vo1BrM/Z+X/Oi6VYGaHjmI4/6u3
-	 Q3K0RDUD5/n5tlEmp/pB63XJ7Ih+VFyz4hYtz241kgXA36BodEJXvAF8IvzAunt+W
-	 PmQJLZjFv1YPz+sd+R3Mzn5+XyP9ZENFemLV0BPna670NPI6CYh4fLwwCAuJLpGSr
-	 ifZhUdH3FE7BohYBvQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from localhost.localdomain ([95.223.134.88]) by smtp.web.de
- (mrweb106 [213.165.67.124]) with ESMTPSA (Nemesis) id
- 1MSZHv-1tZKEt3IHR-00ShLe; Thu, 27 Mar 2025 13:02:18 +0100
-From: Bert Karwatzki <spasswolf@web.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Bert Karwatzki <spasswolf@web.de>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Balbir Singh <balbirs@nvidia.com>,
-	Kees Cook <kees@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org
-Subject: [PATCH v0] kernel: resource: add devm_request_free_mem_region_from_end()
-Date: Thu, 27 Mar 2025 13:02:15 +0100
-Message-ID: <20250327120216.14083-1-spasswolf@web.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: Z-UuHkUPy60e1GWM@gmail.com
-References: 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56C01B960;
+	Thu, 27 Mar 2025 12:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.130
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743077003; cv=fail; b=k6dHno3ZUPD/HjdpF7vqTFU/LgUAOGRh+Y0BA+dsluP4UMSLF/c63VnZ7nKLfVIuM5zH+Pm82jZr4yWyPTiyWeoMIFR1lhj8oGoknkCb4ck48uGf6F0wppWBI7adLhWCPhIIkwbT0UXwTx2ekmGaO4ZzMTTEYwfdbYut4Cp/2v0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743077003; c=relaxed/simple;
+	bh=D/W/astpbBbKyIPRIDsrctk7V5FpM5GrerEWPMld8nQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WCaySPQ0D/K6riJM2O19wxV3QUPeuErorexnhgejAbI10+7Uht5CibcyK8FlxqDL35lphbhtKz0izYjvycOLgPybIYjew8sWQn+Yr9AHmCmDOIttlu2NuE8z+U4jO84r5xrvjhBuu04O1eOE6gfnl19IqRwp1tC69CnAvs91DvE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.215.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pmXN1TFkzaGrNMYWnTtUVDJb5PoaALezVNV6XGBFVUoYUe04S+W0xn2hTtCLt1ILzFeWeTmxZL+gz87jfdmxu3sn3QPxx03VjhXzlWSV5cNNVSC5eXrNVwNc6g1VLjL9e319m9o8KNcFedNYmr3OmwAd0KybaoSj/W8x1njcqyZbfExgk5Odp+qSC/GaVhEOuTaPfFydX2t79GRLsXY593b6YSYAZrDLwT6DWAahOsLLCTU+b3lIWmOCla+wOcjoygt75L9Ghwoatnb2tWbS8mJWeXJycey+RKkiMTjKm7Ck7xXAz/+uU3U2WmySXfkpByXaiL/JXMge+X030qZUPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YK0UPQ+t29BshZMNuF1EQBj9+yFNiQVI6nMsmuCRGf0=;
+ b=yn6+X/lmZYTjuepFDvSOZFB5Z9Bi22CkZe+9XzOrTHRhHKkygLS/Ud+EgHTCjF+zEmIZlu4zbbxaH1/JF8JhZyn5M4NSvmSXhcCWqzCJI93KeGHOUA3oaP/IKxphi148eA3yFheQ9aTypnd1WWuM5tEBl6W6IpE+BQ1URIAlh0rsKFmpgH7UvUgUesHzRSVJi9RVfqjlrYPG38f9rWqtCTlJ+CAOqbaIttJZKiYsZ1JkY7BtFnx8SndiXtvwaMgpCOLwwb4r6eyWJFEz/yh7Wy/Rvygl4K+z0BthshOcaLc2TSJmbUmCer9BC8Q6i86yjPDO5IcfBgcsrkIFy7ISFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from SI2P153CA0007.APCP153.PROD.OUTLOOK.COM (2603:1096:4:140::8) by
+ KL1PR06MB7049.apcprd06.prod.outlook.com (2603:1096:820:120::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
+ 2025 12:03:18 +0000
+Received: from SG2PEPF000B66CD.apcprd03.prod.outlook.com
+ (2603:1096:4:140:cafe::3a) by SI2P153CA0007.outlook.office365.com
+ (2603:1096:4:140::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.13 via Frontend Transport; Thu,
+ 27 Mar 2025 12:03:18 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ SG2PEPF000B66CD.mail.protection.outlook.com (10.167.240.27) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.20 via Frontend Transport; Thu, 27 Mar 2025 12:03:16 +0000
+Received: from [172.16.64.208] (unknown [172.16.64.208])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id DF25B4160CA0;
+	Thu, 27 Mar 2025 20:03:15 +0800 (CST)
+Message-ID: <ab7817d8-c998-48e1-8349-596c043d9db4@cixtech.com>
+Date: Thu, 27 Mar 2025 20:03:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:zUDI+gfzkTnaGlpjaw/Mi3OTj7Gliv+9usoAh1T1d3UUIYx0K53
- NxOTzwzE6QDKdfMpytVP+TqEqPFrU0n8kwx88EwhECN0A3vPCmsknvyDmUUU7zuHpJ/yk+j
- s5aP+CF1KAob+Q2mi2hvn7aOCpML5V6d9It/ItXJ9Os8GrDj40Ayt4JaMd8gPQDglaqzDpN
- eNPNYcupJ9auwgAjbhkPQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:U12YhXUhwvM=;GefW0zbxDptGhDwtcP8xpktjuKv
- /If+yDumaiZS5a1SiLZ103nNh9Fmde7WSW2XFr5/0ju/3iGCc0Lt0OmrRPpso2S3X04sz8gtz
- Yv7tBV/OYb+GShCCu0+LyeRLculBS+evmO2QXs7WKvz+Y6WEyUob2IX3SqPUdsexiiO2XhBWV
- CUENkTdx8bU7PU/B0cFewQMaEgbwf5EXS3tFcmEN65AMB1W1qmt0BYcOZ3ioqUW5pPPZMG/Au
- Ar8OXa7pDkm2xfPlKQBjfV6tGytEllKbqCd9lNtD0+U8AQkD/+oIzkfMo7izNq2AGyoqL7EWi
- +waQPelDKsW2wTrxu8dCyYY8alf/SisJEzyRdiqenBKhDo98LH4ZNTDAKzqHQ+qTS7KhfGhRA
- d2XgI/MR97AL0InkRGrfADNaz9JS0S5bZgFDmcYIqCoOW4bZ+vh9Tlz8V09+V4gtuVICkOgqb
- /iLULL5VzyTlz0y54onV8au5i198M7MGCfWRdyhc/K1rpWVmIpnD9c9bYFUCw31SuCOcloXA+
- o2qUmCMKJgcGLoqjSMg8lk4C7DQG1ZOuwt2uZogm8ExehqeWbJwFhuErZH0H1Jfup47VV5YQ0
- NuRD2a/5uEPVAFwaKrs7OClxKNv1tWPu5O4mNawcJJEgHIuMzb3U8IivcsoqkwQ7L+ryU7zKK
- pvPUTwyoqyZbTp6SzRrZf3OyI8WpXnC3Nwqn8iXLjqqTM7YACEGucjV3Hj1OrGdLT/ee8/dID
- GdzMI4AA80mzfZRGWvcmhrrvg+I3LCuC7HgEWAC/2LScEmav05xq2deWl6h0d85hxxDVxT/oc
- 47el1CxY1pkMKm1Who2LwAjTnMmFAive1jPMSkNPZBFE1rhauAYW0lM2F78khefz49jcjlsKS
- Nzyzs77CZi8kzRGjB97GcmuPO3Hnubz5cfsp0E7+/dxjXQCtZAFZ/M3TebtT6dUIOIN/MTruZ
- /eeCeA9g3ztcjevUk2nrk7etriUUHuTV0TDXwPhPof8fHvhYscTZGd8h74ObmcPzdBqCGormB
- XoiHYvpPWP7VFLW5LJfyFaVYfEFFKwXsB5iEGi7ZzdY336NfoZKNKwYcf0bROZBYHdszH23E3
- OPvydcWP0C+6oOhE/nds6FxCoyfysXBFLQkyMSu4C3A1Tj8iaCxUyvhoqunNnToHJCIUnnOj1
- I33MOCEoJwtr0dA814oym+8l7eOQLvdHss8LJQR1uqHEFICjyN2k7XnngBdgTXf6Jt5bB8FGy
- WMX4cgbRS31vcOuVKel4EJn6aao6tMiCviLkeBiIJRRwOQOCQOZ+1fzOHaIMcN8zJCvTk23/f
- eJ45Kgz7s9l3LNfZXEbmBmYfUq3J7Gckc0r2b44YUcAXFbGV97cTk4XQ/Uuht+6AFzmT8zFYU
- wmbC9IYVE2JGzgAgRrUrJiZIQkA9abBfQ8jbNbVCeIdSlz72PJwzMp0AM8m/ll549FDZfrMdK
- 28IESxEqkvfILUvW6LPUX7bKCI5s=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/7] Enhance the PCIe controller driver
+To: Manikandan Karunakaran Pillai <mpillai@cadence.com>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ Milind Parab <mparab@cadence.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250327105429.2947013-1-mpillai@cadence.com>
+ <CH2PPF4D26F8E1CA951AF03C17D11C7BEB3A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+Content-Language: en-US
+From: Hans Zhang <hans.zhang@cixtech.com>
+In-Reply-To: <CH2PPF4D26F8E1CA951AF03C17D11C7BEB3A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CD:EE_|KL1PR06MB7049:EE_
+X-MS-Office365-Filtering-Correlation-Id: 985b5fc2-93bf-4fc6-0771-08dd6d275bbe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WnFmUGJLSGVMMjJCNWhsZkFDNDl0SkhGZmJzODVvQlArMXpwMkJUV3Y5ZmhK?=
+ =?utf-8?B?V2h1bFZncHZha2E5QUw1MFJGMnBwanZ4bHlTRGIvdjlQcGgxVDl6WUlSZkp5?=
+ =?utf-8?B?REptaTVPdUh1MC9wQ3dhZ1lPYkw1eGJuMml6NGVjVnZtdXFPTjUydUhNaGRG?=
+ =?utf-8?B?NVBON2JEWEEyWHRLNjl0WDhLZU9pYUwyMXo1eDJKb2VrMm5aRkZYNHFVM0Fl?=
+ =?utf-8?B?WVFpUFBDSC9QV0lSdEJFWWJ2ZitwaGxpelpYUzh5TkVzdDB0L1N0TDZXNkh2?=
+ =?utf-8?B?VjhhcWswc2g5R1FWcllaNVk4UVd4OHU1OG5pajNCQTI0UlRJbTg3N2VqWmdR?=
+ =?utf-8?B?Y29JV2swRE1EcWN5T0NrRGdzaStLZ1Ura2RMUnJpZEhuaEUwNWxKRFQyOEk0?=
+ =?utf-8?B?UC9ZWVFwQTFWdFRmeFNKeFhrQjBrNU9Jc29JTVBFRkZJVDVPL3NQZ244TWJ6?=
+ =?utf-8?B?MHIwbnFXL1NQcndLdmM0ZzNqSDZOMEhTc1FNbFZEalZSbFQrOE81dXM0c0VH?=
+ =?utf-8?B?Z3hkSEE4ZU8wS3dzMXFQMW0wZWg4UmdJQ1Vmem9XSlNXYVFRbEZBS3JhMzY0?=
+ =?utf-8?B?VnlnTy96bWJOZmJXTHpuT283MlVDSlkwT3h6d0xpK29XejlRa2ZNNGNSQlNm?=
+ =?utf-8?B?TzN5QUJobkZ3Q01BNSs1bVhuQ0YyU25reHF0Mk5kNzhmTzhnbUlNZDNMY25v?=
+ =?utf-8?B?V3k3TGVFSkdhV2FSeE93Tlo1SHhRWXhnd1FmWXBWd01IY28xSWYyZ29veDZn?=
+ =?utf-8?B?aWtoTkR4andpZ3paZEhLWjFUcWRVaElpV2pWNUhwSDU3QndEUlRrdE13OUlW?=
+ =?utf-8?B?UWtpdWc1MGhvdzNLQnNKL29zUTNuS2twR3g4VU53MUpLaThXOGdlY2dNTStz?=
+ =?utf-8?B?d2FrY3hJZWNwWjVUN2hXTUY2NjN6UW96a3N1MThVVXE5ZjVYcFRSblMvUWJL?=
+ =?utf-8?B?L1cyR2dyWFY4UUFCNTdIcjduMjRqM2tjMTVWVUh3QW5zR1JEL3NtSG1NU0Jw?=
+ =?utf-8?B?MkxsSE5aQkxnTnF3b2srNE81a0llRFBhM2hwUVg1UHVIOTN3MWR5d01Ia3py?=
+ =?utf-8?B?TmpJSjU3ZFlkbElnMFZxeHlzajFlbUJxT0wwNkFVWmlJUHV0Zzl5T2tvSGZy?=
+ =?utf-8?B?T1FCN0JVandudytyNDBmZmphTGoxQkZDYS85MjNJK1U2YnMrbHZvcXN6RlFs?=
+ =?utf-8?B?cVN4Mit2bmdoNjNzTkF0cVRNZTdCek5rOGExV3VmZlQrWnVhOEtlYTFQd0R2?=
+ =?utf-8?B?cFA3MDNNOW9mVVFnb1FSaVd4SXh2cXlQbXgzRnRBYm5VaEMvY0tQaFlCUTdP?=
+ =?utf-8?B?WkFSMTVFdG5OOWpyMlpESlplVmpoZU10Um94aXRBZDBBV0wzeSsxdGNHZmNR?=
+ =?utf-8?B?a1BlNVdiWCtNU1FvWlB2TXNoVXFvYXJoWUd0UkU5MUw3dzIybHc5dXMyUnF0?=
+ =?utf-8?B?YUlJOFBYL2dQOGRiRzI3dGRPaUp0K2FkelJQTE14RG92cUhrVVNvUXRMc1lO?=
+ =?utf-8?B?VThxdjl4TXVHVk9nSkV3ZzVMVjNaSnFXTXpUMmJMck5RZHRmZGxreDlTQThW?=
+ =?utf-8?B?T1llTFNHcFZtbG90R0VWemhkbmluTXdMajlQaXhnYXdjdXl2eUkwanl2VnJn?=
+ =?utf-8?B?U1REUkU3cUtQK1JNK0xrcTZsVFptb3pMZHdpcUh5OFRZbzlOTUxzS2ZjWTNH?=
+ =?utf-8?B?WnhpMTBEdFZBYWxQVGUveSs0Z2VEVm9BcFhzM25sR1p5WFlrNmRBdlZOdkxX?=
+ =?utf-8?B?S2dBcHdrR0ZYdkxNWWpPM3hUUCtWMDJGVWNYbFRUNXV2WHJZTzFoK2lWSXhk?=
+ =?utf-8?B?SDNDdDdCcDVzTzAybUtPd2RjNnYxVU51OE5IeFNnclc4MXpkSG8yTEpTODFB?=
+ =?utf-8?B?cHh5ZGZWT0M5UzU1MXB0MmJhUG5nR1M1c0pXR3BmbHAvNWIzcTVzNm1zY3hN?=
+ =?utf-8?B?bEQ5OHR3NEhQS0xvQmhWQ2s4Z1VoN2xjei9EZXRwaktlTVJxNjA4YVV1T1Z5?=
+ =?utf-8?Q?vQHUeX4JNh1zagFnTJ6UQDH5yxtgmE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 12:03:16.5092
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 985b5fc2-93bf-4fc6-0771-08dd6d275bbe
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: SG2PEPF000B66CD.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB7049
 
-devm_request_free_mem_region() places resources at the end of the
-physical address space, DIRECT_MAP_PHYSMEM_END. If the the dma mask
-of a pci device is smaller than DIRECT_MAP_PHSYMEM_END then this
-resource is not dma accessible by the device which can cause the
-device to fallback to using 32bit dma which can lead to severe
-performance impacts.
+Hi Manikandan,
 
-This adds the devm_request_free_mem_region_from_end() function which
-allows to select the endpoint from which to place the resource
-independently from DIRECT_MAP_PHYSMEM_END.
+You should update your patch to V2, not no version at all.
 
-Link: https://lore.kernel.org/all/20250322122351.3268-1-spasswolf@web.de/
+Best regards,
+Hans
 
-Signed-off-by: Bert Karwatzki <spasswolf@web.de>
-=2D--
- drivers/gpu/drm/amd/amdkfd/kfd_migrate.c |  3 ++-
- include/linux/ioport.h                   |  3 +++
- kernel/resource.c                        | 31 ++++++++++++++++++------
- 3 files changed, 28 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c b/drivers/gpu/drm/am=
-d/amdkfd/kfd_migrate.c
-index d05d199b5e44..e1942fef3637 100644
-=2D-- a/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
-@@ -1042,7 +1042,8 @@ int kgd2kfd_init_zone_device(struct amdgpu_device *a=
-dev)
- 		pgmap->range.end =3D adev->gmc.aper_base + adev->gmc.aper_size - 1;
- 		pgmap->type =3D MEMORY_DEVICE_COHERENT;
- 	} else {
--		res =3D devm_request_free_mem_region(adev->dev, &iomem_resource, size);
-+		res =3D devm_request_free_mem_region_from_end(adev->dev,
-+				&iomem_resource, size, dma_get_mask(adev->dev));
- 		if (IS_ERR(res))
- 			return PTR_ERR(res);
- 		pgmap->range.start =3D res->start;
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index 5385349f0b8a..a9a765721ab4 100644
-=2D-- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -407,6 +407,9 @@ walk_iomem_res_desc(unsigned long desc, unsigned long =
-flags, u64 start, u64 end,
-
- struct resource *devm_request_free_mem_region(struct device *dev,
- 		struct resource *base, unsigned long size);
-+struct resource *devm_request_free_mem_region_from_end(struct device *dev=
-,
-+		struct resource *base, unsigned long size,
-+		resource_size_t seek_end);
- struct resource *request_free_mem_region(struct resource *base,
- 		unsigned long size, const char *name);
- struct resource *alloc_free_mem_region(struct resource *base,
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 12004452d999..82f40407c02d 100644
-=2D-- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -1875,12 +1875,14 @@ EXPORT_SYMBOL(resource_list_free);
- #endif
-
- static resource_size_t gfr_start(struct resource *base, resource_size_t s=
-ize,
--				 resource_size_t align, unsigned long flags)
-+				 resource_size_t align, resource_size_t seek_end,
-+				 unsigned long flags)
- {
- 	if (flags & GFR_DESCENDING) {
- 		resource_size_t end;
-
- 		end =3D min_t(resource_size_t, base->end, DIRECT_MAP_PHYSMEM_END);
-+		end =3D min_t(resource_size_t, end, seek_end);
- 		return end - size + 1;
- 	}
-
-@@ -1920,8 +1922,8 @@ static void remove_free_mem_region(void *_res)
- static struct resource *
- get_free_mem_region(struct device *dev, struct resource *base,
- 		    resource_size_t size, const unsigned long align,
--		    const char *name, const unsigned long desc,
--		    const unsigned long flags)
-+		    resource_size_t seek_end, const char *name,
-+		    const unsigned long desc, const unsigned long flags)
- {
- 	resource_size_t addr;
- 	struct resource *res;
-@@ -1946,7 +1948,7 @@ get_free_mem_region(struct device *dev, struct resou=
-rce *base,
- 	}
-
- 	write_lock(&resource_lock);
--	for (addr =3D gfr_start(base, size, align, flags);
-+	for (addr =3D gfr_start(base, size, align, seek_end, flags);
- 	     gfr_continue(base, addr, align, flags);
- 	     addr =3D gfr_next(addr, align, flags)) {
- 		if (__region_intersects(base, addr, size, 0, IORES_DESC_NONE) !=3D
-@@ -2021,17 +2023,30 @@ struct resource *devm_request_free_mem_region(stru=
-ct device *dev,
- 	unsigned long flags =3D GFR_DESCENDING | GFR_REQUEST_REGION;
-
- 	return get_free_mem_region(dev, base, size, GFR_DEFAULT_ALIGN,
--				   dev_name(dev),
-+				   DIRECT_MAP_PHYSMEM_END, dev_name(dev),
- 				   IORES_DESC_DEVICE_PRIVATE_MEMORY, flags);
- }
- EXPORT_SYMBOL_GPL(devm_request_free_mem_region);
-
-+struct resource *devm_request_free_mem_region_from_end(struct device *dev=
-,
-+		struct resource *base, unsigned long size,
-+		resource_size_t seek_end)
-+{
-+	unsigned long flags =3D GFR_DESCENDING | GFR_REQUEST_REGION;
-+
-+	return get_free_mem_region(dev, base, size, GFR_DEFAULT_ALIGN,
-+				   seek_end, dev_name(dev),
-+				   IORES_DESC_DEVICE_PRIVATE_MEMORY, flags);
-+}
-+EXPORT_SYMBOL_GPL(devm_request_free_mem_region_from_end);
-+
- struct resource *request_free_mem_region(struct resource *base,
- 		unsigned long size, const char *name)
- {
- 	unsigned long flags =3D GFR_DESCENDING | GFR_REQUEST_REGION;
-
--	return get_free_mem_region(NULL, base, size, GFR_DEFAULT_ALIGN, name,
-+	return get_free_mem_region(NULL, base, size, GFR_DEFAULT_ALIGN,
-+				   DIRECT_MAP_PHYSMEM_END, name,
- 				   IORES_DESC_DEVICE_PRIVATE_MEMORY, flags);
- }
- EXPORT_SYMBOL_GPL(request_free_mem_region);
-@@ -2055,8 +2070,8 @@ struct resource *alloc_free_mem_region(struct resour=
-ce *base,
- 	/* Default of ascending direction and insert resource */
- 	unsigned long flags =3D 0;
-
--	return get_free_mem_region(NULL, base, size, align, name,
--				   IORES_DESC_NONE, flags);
-+	return get_free_mem_region(NULL, base, size, align, DIRECT_MAP_PHYSMEM_E=
-ND,
-+				   name, IORES_DESC_NONE, flags);
- }
- EXPORT_SYMBOL_GPL(alloc_free_mem_region);
- #endif /* CONFIG_GET_FREE_REGION */
-=2D-
-2.49.0
-
-One of the problems (I'm sure there are more ...) with this patch is that
-it uses dma_get_mask(adev->dev) as the endpoint from which to place the
-memory, but dma_get_mask(adev->dev) returns the dma mask of the discrete
-GPU, but what actually is needed to avoid the bug would be the dma mask
-of the built-in GPU. In my case both are equal (44bits), but I'm not
-sure if they are equal in all cases.
-
-> So this patch does the trick for Bert, and I'm wondering what the best
-> fix here would be overall, because it's a tricky situation.
->
-> Am I correct in assuming that with enough physical memory this bug
-> would trigger, with and without nokaslr?
-
-I think the bug triggers as soon as DIRECT_MAP_PHYSMEM_END is bigger
-then the dma mask of the integrated GPU.
-
-> I *think* the best approach going forward would be to add the above
-> quirk the the x86 memory setup code, but also issue a kernel warning at
-> that point with all the relevant information included, so that the
-> driver's use_dma32 bug can at least be indicated?
->
-> That might also trigger for other systems, because if this scenario is
-> so spurious, I doubt it's the only affected driver ...
->
-> Thanks,
->
->	Ingo
-
-Or one could make the endpoint from which the memory resource will be
-placed selectable.
-
-Bert Karwatzki
+On 2025/3/27 18:59, Manikandan Karunakaran Pillai wrote:
+> EXTERNAL EMAIL
+> 
+> Enhances the exiting Cadence PCIe controller drivers to support second
+> generation PCIe controller also referred as HPA(High Performance
+> Architecture) controllers.
+> 
+> The patch set enhances the Cadence PCIe driver for the new high
+> performance architecture changes. The "compatible" property in DTS
+> is added with  more strings to support the new platform architecture
+> and the register maps that change with it. The driver read register
+> and write register functions take the updated offset stored from the
+> platform driver to access the registers. The driver now supports
+> the legacy and HPA architecture, with the legacy code being changed
+> minimal. The TI SoC continues to be supported with the changes
+> incorporated. The changes are also in tune with how multiple platforms
+> are supported in related drivers.
+> 
+> Patch 1/7 - DTS related changes for property "compatible"
+> Patch 2/7 - Updates the header file with relevant register offsets and
+>              bit definitions
+> Patch 3/7 - Platform related code changes
+> Patch 4/7 - PCIe EP related code changes
+> Patch 5/7 - Header file is updated with register offsets and updated
+>              read and write register functions
+> Patch 6/7 - Support for multiple arch by using registered callbacks
+> Patch 7/7 - TIJ72X board is updated to use the new approach
+> 
+> Comments from the earlier patch submission on the same enhancements are
+> taken into consideration. The previous submitted patch links is
+> https://lore.kernel.org/lkml/CH2PPF4D26F8E1C205166209F012D4F3A81A2A42@CH2PPF4D26F8E1C.namprd07.prod.outlook.com/
+> 
+> The scripts/checkpatch.pl has been run on the patches with and without
+> --strict. With the --strict option, 4 checks are generated on 1 patch
+> (patch 0002 of the series), which can be ignored. There are no code
+> fixes required for these checks. The rest of the 'scripts/checkpatch.pl'
+> is clean.
+> 
+> The changes are tested on TI platforms. The legacy controller changes are
+> tested on an TI J7200 EVM and HPA changes are planned for on an FPGA
+> platform available within Cadence.
+> 
+> Manikandan K Pillai (7):
+>    dt-bindings: pci: cadence: Extend compatible for new platform
+>      configurations
+>    PCI: cadence: Add header support for PCIe next generation controllers
+>    PCI: cadence: Add platform related architecture and register
+>      information
+>    PCI: cadence: Add support for PCIe Endpoint HPA controllers
+>    PCI: cadence: Update the PCIe controller register address offsets
+>    PCI: cadence: Add callback functions for Root Port and EP controller
+>    PCI: cadence: Update support for TI J721e boards
+> 
+>   .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  12 +-
+>   .../bindings/pci/cdns,cdns-pcie-host.yaml     | 119 +++++-
+>   drivers/pci/controller/cadence/pci-j721e.c    |   8 +
+>   .../pci/controller/cadence/pcie-cadence-ep.c  | 184 +++++++--
+>   .../controller/cadence/pcie-cadence-host.c    | 264 ++++++++++--
+>   .../controller/cadence/pcie-cadence-plat.c    | 145 +++++++
+>   drivers/pci/controller/cadence/pcie-cadence.c | 217 +++++++++-
+>   drivers/pci/controller/cadence/pcie-cadence.h | 380 +++++++++++++++++-
+>   8 files changed, 1259 insertions(+), 70 deletions(-)
+> 
+> --
+> 2.27.0
+> 
+> 
