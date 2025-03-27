@@ -1,243 +1,234 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3169720CCC4
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBB021516C
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743093831; cv=none; b=baaxCf2b8RoSXztd5AvRMeKn6G706Srvr0NMF90t7Fx6lllRZ/ov+pNMU1EF0R/krad2PtTcbbgyqs0nRUJ1PSyxBHgWpEmsTk49eObzgezh9M+9cEFsEJuHDc9M7bTd3bSkc4fRbYjKlxgQFJDZEoowlc/5Xabi4sSH+RzQxZo=
+	t=1743093838; cv=none; b=Tx7GgmTUs1qpXF4sJnVbfojMwRXQ8Sk6D5vlLTfhgYfs4f2ZeG5Rf7FVw68PeXLRjvCYgWfK4/De39mDrJOrYtZEDxuyRcDASbaaxRNjbeoCQ9EqP6bS2mdaTVmuyEMqcC+OiihGPRdlfAXvmDZgt1czc7ONPLIcaQplAOvE5Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743093831; c=relaxed/simple;
-	bh=VSgzcBYwY2oX2th1qZYE/J0ND1I/Q4yGhZR5vEg4m40=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V6VuioqTjJ26fN0sSiu7SA5/TX0U/I7tuZ6VL1IntsWwSpu931XWcLy6x3a6KMJlKnhCVOwszFTqVT2lvtKbDYh+of6KU/tlizYvUCjwo0zD73axBhFjFJFqj3RjV9Z3ZLRWmbd2/Zhj1uSfsmju/N98GHQKUJOndJa7KAi7i4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZgYFPyeN; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1743093838; c=relaxed/simple;
+	bh=mWnx18LstG+lVqhQMXy8C5bsKMDT6KPXknfct4NlpKY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rbXxGIQ6BLhYQcFbtmAefN4U0jddKYVc2W7zRrnSbaFlcoLuHcp7dm0uzLERS14SR4CyN5wKoGi1Fkltq5OQfQQNPIVJScIHv027Gan9Am4JTTuZa/B0fQ2AqCcgYQWpp9N6b4j8rQ9R2rt0gU/E4u+yRPrQqK0CAgCamsQkes0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GlgEJeR9; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZgYFPyeN"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf848528aso10327655e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:43:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743093827; x=1743698627; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VSgzcBYwY2oX2th1qZYE/J0ND1I/Q4yGhZR5vEg4m40=;
-        b=ZgYFPyeNp8Pb3hW+bMo9zVhKbdI1Mq+QwQROo67OySONII0wcbPwcQxRnqUrXGHJe/
-         x9JMcVA62Z2ZGLl6lQdnYCgbr8eItHbjilf2Qt6OLZ4zSDuo7sYR3HWg/1Xg13/GS5Dr
-         fWMTintuCsVQWE9+8rivLHvpEDb+Z6v/Q2k1R62VHlejqmmUXoS3Tl5j0fQHs34bGEaQ
-         mXOUDgjT5sWeC8+7GyHzEg+hI3j1htJbidV13+C+8rjnIJapgxa7hNrXIbNXbXtSByfT
-         TvjB42ajR6wv4bmrqsypm0W6EJj/SogskFUbQYo84mgAVlCX/6ssEmklTrsucymQ2KGl
-         8hog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743093827; x=1743698627;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VSgzcBYwY2oX2th1qZYE/J0ND1I/Q4yGhZR5vEg4m40=;
-        b=PkJiNEcTw81hZ9l9qfPyFU6Dh1bfYjPGMNZX32Gi2czDc7ny0aOeeppcdU7neBnwHb
-         5D3zIYXNmSuZGaJXHh9AR6udYzmAjjC8iVq0YmsbRImahjmLjb4iuuOcmAaUqauqBxz0
-         bwO3YsBcDmIUbzcjsQCRSkcFhSwUK1LkT9Ibdx5mV/xLQrUoSwcbekaHDE7NURU8ZFbq
-         LAet17qd+kvmoZ+Fq1NTiCFpOGiNuXh9KIueO5TJqRj5lfO63D337ZVWkX6xjJFqA2ty
-         7SvNyIP75HdNns4KAWDWg3fe0N2rz8/aH4eNYGAit0r69VLZepRxnaAFj2xrJ/NU78wd
-         StZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWAGZbHh9AKXxp6YEVPreQC9CX4sy00mVzfKBSO5/OI7oHJmrQtzx74A2TsRSP92R7CGPoBJ/6b5WkX6RQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxdu54uRwR+lWjQU7F6nNBhnUHO9vwDhYOmyZtUuv1IjOflRSce
-	F4ZdUvB25bNaD7ZS8LSGH4tPxEE5NaAl/YUUd9sqmkDMFTDBjrrp9cpYELaMkBY=
-X-Gm-Gg: ASbGncvlkFl5Sjggz8piHw52JGToAm/Ai3TfypecO0oOBKUkARV1CE1EXY67+eY+BlU
-	ZZzMEO1754yZwV1kRuwL8tX+JZTfGQvXkllf0oIIKfvVDU6BX8xyzesK/nHkmH5qcW1JOVJyDR2
-	tg99N+IaIZ4vmHrn34KBlI5Yqw2CQsJYlMEQhqBM4IXQ7JpS8qc2fCqKyX5/AEkzkYVhsz3zB8S
-	jTsZxk1z1+jWUIhnBDtDzMuCwCd2x216+6PNMH4E7VkgVk91q/AoayI/lKvjmkRM/SV1Q+VLTc6
-	2FgwEMXVvOOkJgCriaE0+MsIlxctkTRUDrwOpDT+IjeOULTd+G1stm7wmU5yplQuzMda4NV1lNo
-	5NbXf2plPXERjEMjvnKVT19danUhgKhQSP01VLCLkS86vvjytwZDPPmU7FRWn60FaoVOvdQ==
-X-Google-Smtp-Source: AGHT+IGETcCS+lcvQ/bSXVfV+j4aKq6osQvey1TCkg1OOeguFpcPDmpGzo2tnIRTmUzy/vERexcqMA==
-X-Received: by 2002:a05:6000:4203:b0:391:31c8:ba59 with SMTP id ffacd0b85a97d-39ad173eea2mr3280210f8f.4.1743093827292;
-        Thu, 27 Mar 2025 09:43:47 -0700 (PDT)
-Received: from ?IPV6:2003:e5:873d:1a00:8e99:ce06:aa4a:2e7b? (p200300e5873d1a008e99ce06aa4a2e7b.dip0.t-ipconnect.de. [2003:e5:873d:1a00:8e99:ce06:aa4a:2e7b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b662c1csm35842f8f.28.2025.03.27.09.43.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 09:43:46 -0700 (PDT)
-Message-ID: <385a8a49-262e-45d5-a642-50b778014e7d@suse.com>
-Date: Thu, 27 Mar 2025 17:43:45 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GlgEJeR9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=mWnx18LstG+lVqhQMXy8C5bsKMDT6KPXknfct4NlpKY=; b=GlgEJeR9y3gRdrqgQo9lS7Uhti
+	4H58mP18n0Cj9pych7GCXeNEVxXjSiSpg5X+nI5tE7P6oiFlSBdzFXp8DkdhjWIUQ5mv2uDH4I+3s
+	LQSCz09ixxmUBLRv8SSnrsoBvGkxa4kasilU95VoRCuxW+eX9CzO3Ea4ku2GQDOa0TIzV7MCsN97Z
+	9XlBobS/vToeVIniTxS0zIbCBVeo6W33dfsTWc3Df34LpwO8fxDiLCPM5AICPWx/CmhVWoht2p+MO
+	MOEWXAOXJcZCQwhZVlBTU7EUATAjKIh/e7cd6ne5hW5RHj5hqdINXK8eAMGNUx8+wvmLDs/IO7iDD
+	tTxDNIbg==;
+Received: from [172.31.31.145] (helo=u09cd745991455d.lumleys.internal)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1txqKe-000000060ZI-2S9z;
+	Thu, 27 Mar 2025 16:43:52 +0000
+Message-ID: <a440322443052abe1cba449d4b37e44719fd8839.camel@infradead.org>
+Subject: Re: [PATCH v2] x86/i8253: fix possible deadlock when turning off
+ the PIT
+From: David Woodhouse <dwmw2@infradead.org>
+To: Fernando Fernandez Mancera <ffmancera@riseup.net>, x86@kernel.org, 
+	tglx@linutronix.de, linux-kernel@vger.kernel.org
+Cc: mhkelley@outlook.com, mingo@kernel.org
+Date: Thu, 27 Mar 2025 16:43:52 +0000
+In-Reply-To: <20250327152258.3097-1-ffmancera@riseup.net>
+References: <20250327152258.3097-1-ffmancera@riseup.net>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-INDKU0KiT/AaaeZSDFgN"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/10] xenbus: add module description
-To: Arnd Bergmann <arnd@kernel.org>,
- Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Masahiro Yamada <masahiroy@kernel.org>,
- Stefano Stabellini <sstabellini@kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org,
- Arnd Bergmann <arnd@arndb.de>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-References: <20250324173242.1501003-1-arnd@kernel.org>
- <20250324173242.1501003-5-arnd@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <20250324173242.1501003-5-arnd@kernel.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------w8keZHt3rHXk8cRy2eo8QCgL"
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------w8keZHt3rHXk8cRy2eo8QCgL
-Content-Type: multipart/mixed; boundary="------------F1AG3EiYN9pow4cgn9Y0uDto";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Arnd Bergmann <arnd@kernel.org>,
- Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Masahiro Yamada <masahiroy@kernel.org>,
- Stefano Stabellini <sstabellini@kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org,
- Arnd Bergmann <arnd@arndb.de>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Message-ID: <385a8a49-262e-45d5-a642-50b778014e7d@suse.com>
-Subject: Re: [PATCH 05/10] xenbus: add module description
-References: <20250324173242.1501003-1-arnd@kernel.org>
- <20250324173242.1501003-5-arnd@kernel.org>
-In-Reply-To: <20250324173242.1501003-5-arnd@kernel.org>
 
---------------F1AG3EiYN9pow4cgn9Y0uDto
-Content-Type: multipart/mixed; boundary="------------0xl5rnPzp8wogKixk8qdxDys"
-
---------------0xl5rnPzp8wogKixk8qdxDys
-Content-Type: text/plain; charset=UTF-8; format=flowed
+--=-INDKU0KiT/AaaeZSDFgN
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: base64
 
-T24gMjQuMDMuMjUgMTg6MzIsIEFybmQgQmVyZ21hbm4gd3JvdGU6DQo+IEZyb206IEFybmQg
-QmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+DQo+IA0KPiBNb2R1bGVzIHdpdGhvdXQgYSBkZXNj
-cmlwdGlvbiBub3cgY2F1c2UgYSB3YXJuaW5nOg0KPiANCj4gV0FSTklORzogbW9kcG9zdDog
-bWlzc2luZyBNT0RVTEVfREVTQ1JJUFRJT04oKSBpbiBkcml2ZXJzL3hlbi94ZW5idXMveGVu
-YnVzX3Byb2JlX2Zyb250ZW5kLm8NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFybmQgQmVyZ21h
-bm4gPGFybmRAYXJuZGIuZGU+DQo+IC0tLQ0KPiAgIGRyaXZlcnMveGVuL3hlbmJ1cy94ZW5i
-dXNfcHJvYmVfZnJvbnRlbmQuYyB8IDEgKw0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2Vy
-dGlvbigrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMveGVuL3hlbmJ1cy94ZW5idXNf
-cHJvYmVfZnJvbnRlbmQuYyBiL2RyaXZlcnMveGVuL3hlbmJ1cy94ZW5idXNfcHJvYmVfZnJv
-bnRlbmQuYw0KPiBpbmRleCBmY2IzMzViYjdiMTguLjhiNzVmODIzNGJhZiAxMDA2NDQNCj4g
-LS0tIGEvZHJpdmVycy94ZW4veGVuYnVzL3hlbmJ1c19wcm9iZV9mcm9udGVuZC5jDQo+ICsr
-KyBiL2RyaXZlcnMveGVuL3hlbmJ1cy94ZW5idXNfcHJvYmVfZnJvbnRlbmQuYw0KPiBAQCAt
-NTEzLDQgKzUxMyw1IEBAIHN0YXRpYyBpbnQgX19pbml0IGJvb3Rfd2FpdF9mb3JfZGV2aWNl
-cyh2b2lkKQ0KPiAgIGxhdGVfaW5pdGNhbGwoYm9vdF93YWl0X2Zvcl9kZXZpY2VzKTsNCj4g
-ICAjZW5kaWYNCj4gICANCj4gK01PRFVMRV9ERVNDUklQVElPTigiRnJvbnRlbmQgZm9yIFhl
-biBidXMgcHJvYmUiKTsNCg0KTWF5IEkgc3VnZ2VzdCAiWGVuIFBWLWRldmljZSBmcm9udGVu
-ZCBzdXBwb3J0IiBpbnN0ZWFkPw0KDQoNCkp1ZXJnZW4NCg0K
---------------0xl5rnPzp8wogKixk8qdxDys
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+T24gVGh1LCAyMDI1LTAzLTI3IGF0IDE2OjIyICswMTAwLCBGZXJuYW5kbyBGZXJuYW5kZXogTWFu
+Y2VyYSB3cm90ZToKPiBBcyB0aGUgUElUIGNvdWxkIGJlIGRpc2FibGVkIGR1cmluZyB0aGUgaW5p
+dCwgaXQgY2FuIHBvc3NpYmx5IGNhdXNlIGEKPiBkZWFkbG9jay4gaHBldF90aW1lX2luaXQoKS0+
+cGl0X3RpbWVyX2luaXQoKSBpcyBjYWxsZWQgd2l0aG91dCBJUlEgb2ZmLgo+IEl0IGFzc3VtZXMg
+dGhhdCBjbG9ja2V2ZW50X2k4MjUzX2Rpc2FibGUoKSBpcyBJUlEtc2FmZSwgd2hpY2ggaXQgaXNu
+J3QuCj4gCj4gRGlzYWJsZSBpbnRlcnJ1cHQgYXJvdW5kIGNsb2NrZXZlbnRfaTgyNTNfZGlzYWJs
+ZSgpIGNhbGwgaW4KPiBwaXRfdGltZXJfaW5pdCgpLgo+IAo+IFvCoMKgIDQ1LjQwODk1Ml0gPT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPiBbwqDC
+oCA0NS40MDg5NzBdIFdBUk5JTkc6IEhBUkRJUlEtc2FmZSAtPiBIQVJESVJRLXVuc2FmZSBsb2Nr
+IG9yZGVyIGRldGVjdGVkCj4gW8KgwqAgNDUuNDA4OTc0XSA2LjE0LjAtcmM3KyAjNiBOb3QgdGFp
+bnRlZAo+IFvCoMKgIDQ1LjQwODk3OF0gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0KPiBbwqDCoCA0NS40MDg5ODBdIHN5c3RlbWQtc2xlZXAvMzMy
+NCBbSEMwWzBdOlNDMFswXTpIRTA6U0UxXSBpcyB0cnlpbmcgdG8gYWNxdWlyZToKPiBbwqDCoCA0
+NS40MDg5ODZdIGZmZmZmZmZmYjJjMjMzOTggKGk4MjUzX2xvY2speysuKy59LXsyOjJ9LCBhdDog
+cGNzcGtyX2V2ZW50KzB4M2YvMHhlMCBbcGNzcGtyXQo+IFvCoMKgIDQ1LjQwOTAwNF0KPiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGFuZCB0aGlzIHRhc2sgaXMgYWxyZWFkeSBob2xkaW5n
+Ogo+IFvCoMKgIDQ1LjQwOTAwNl0gZmZmZjljMzM0ZDdjMjIzMCAoJmRldi0+ZXZlbnRfbG9jayl7
+LS4tLn0tezM6M30sIGF0OiBpbnB1dF9kZXZfcmVzdW1lKzB4MjEvMHg1MAo+IFvCoMKgIDQ1LjQw
+OTAyM10gd2hpY2ggd291bGQgY3JlYXRlIGEgbmV3IGxvY2sgZGVwZW5kZW5jeToKPiBbwqDCoCA0
+NS40MDkwMjVdwqAgKCZkZXYtPmV2ZW50X2xvY2spey0uLS59LXszOjN9IC0+IChpODI1M19sb2Nr
+KXsrLisufS17MjoyfQo+IFvCoMKgIDQ1LjQwOTA0M10KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIGJ1dCB0aGlzIG5ldyBkZXBlbmRlbmN5IGNvbm5lY3RzIGEgSEFSRElSUS1pcnEtc2Fm
+ZSBsb2NrOgo+IFvCoMKgIDQ1LjQwOTA0NV3CoCAoJmRldi0+ZXZlbnRfbG9jayl7LS4tLn0tezM6
+M30KPiBbwqDCoCA0NS40MDkwNTJdCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAuLi4g
+d2hpY2ggYmVjYW1lIEhBUkRJUlEtaXJxLXNhZmUgYXQ6Cj4gW8KgwqAgNDUuNDA5MDU1XcKgwqAg
+bG9ja19hY3F1aXJlKzB4ZDAvMHgyZjAKPiBbwqDCoCA0NS40MDkwNjJdwqDCoCBfcmF3X3NwaW5f
+bG9ja19pcnFzYXZlKzB4NDgvMHg3MAo+IFvCoMKgIDQ1LjQwOTA2N13CoMKgIGlucHV0X2V2ZW50
+KzB4M2MvMHg4MAo+IFvCoMKgIDQ1LjQwOTA3MV3CoMKgIGF0a2JkX3JlY2VpdmVfYnl0ZSsweDli
+LzB4NmUwCj4gW8KgwqAgNDUuNDA5MDc3XcKgwqAgcHMyX2ludGVycnVwdCsweGIyLzB4MWQwCj4g
+W8KgwqAgNDUuNDA5MDgyXcKgwqAgc2VyaW9faW50ZXJydXB0KzB4NGEvMHg5MAo+IFvCoMKgIDQ1
+LjQwOTA4N13CoMKgIGk4MDQyX2hhbmRsZV9kYXRhKzB4ZjgvMHgyODAKPiBbwqDCoCA0NS40MDkw
+OTFdwqDCoCBpODA0Ml9pbnRlcnJ1cHQrMHgxMS8weDQwCj4gW8KgwqAgNDUuNDA5MDk1XcKgwqAg
+X19oYW5kbGVfaXJxX2V2ZW50X3BlcmNwdSsweDg3LzB4MjYwCj4gW8KgwqAgNDUuNDA5MTAwXcKg
+wqAgaGFuZGxlX2lycV9ldmVudCsweDM4LzB4OTAKPiBbwqDCoCA0NS40MDkxMDVdwqDCoCBoYW5k
+bGVfZWRnZV9pcnErMHg4Yi8weDIzMAo+IFvCoMKgIDQ1LjQwOTEwOV3CoMKgIF9fY29tbW9uX2lu
+dGVycnVwdCsweDVjLzB4MTIwCj4gW8KgwqAgNDUuNDA5MTE0XcKgwqAgY29tbW9uX2ludGVycnVw
+dCsweDgwLzB4YTAKPiBbwqDCoCA0NS40MDkxMjBdwqDCoCBhc21fY29tbW9uX2ludGVycnVwdCsw
+eDI2LzB4NDAKPiBbwqDCoCA0NS40MDkxMjVdwqDCoCBwdl9uYXRpdmVfc2FmZV9oYWx0KzB4Zi8w
+eDIwCj4gW8KgwqAgNDUuNDA5MTMwXcKgwqAgZGVmYXVsdF9pZGxlKzB4OS8weDIwCj4gW8KgwqAg
+NDUuNDA5MTM1XcKgwqAgZGVmYXVsdF9pZGxlX2NhbGwrMHg3YS8weDFkMAo+IFvCoMKgIDQ1LjQw
+OTE0MF3CoMKgIGRvX2lkbGUrMHgyMTUvMHgyNjAKPiBbwqDCoCA0NS40MDkxNDRdwqDCoCBjcHVf
+c3RhcnR1cF9lbnRyeSsweDI5LzB4MzAKPiBbwqDCoCA0NS40MDkxNDldwqDCoCBzdGFydF9zZWNv
+bmRhcnkrMHgxMzIvMHgxNzAKPiBbwqDCoCA0NS40MDkxNTNdwqDCoCBjb21tb25fc3RhcnR1cF82
+NCsweDEzZS8weDE0MQo+IFvCoMKgIDQ1LjQwOTE1OF0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIHRvIGEgSEFSRElSUS1pcnEtdW5zYWZlIGxvY2s6Cj4gW8KgwqAgNDUuNDA5MTYxXcKg
+IChpODI1M19sb2NrKXsrLisufS17MjoyfQo+IFvCoMKgIDQ1LjQwOTE2N10KPiDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIC4uLiB3aGljaCBiZWNhbWUgSEFSRElSUS1pcnEtdW5zYWZlIGF0
+Ogo+IFvCoMKgIDQ1LjQwOTE3MF0gLi4uCj4gW8KgwqAgNDUuNDA5MTcyXcKgwqAgbG9ja19hY3F1
+aXJlKzB4ZDAvMHgyZjAKPiBbwqDCoCA0NS40MDkxNzddwqDCoCBfcmF3X3NwaW5fbG9jaysweDMw
+LzB4NDAKPiBbwqDCoCA0NS40MDkxODFdwqDCoCBjbG9ja2V2ZW50X2k4MjUzX2Rpc2FibGUrMHgx
+Yy8weDYwCj4gW8KgwqAgNDUuNDA5MTg2XcKgwqAgcGl0X3RpbWVyX2luaXQrMHgyNS8weDUwCj4g
+W8KgwqAgNDUuNDA5MTkxXcKgwqAgaHBldF90aW1lX2luaXQrMHg0Ni8weDUwCj4gW8KgwqAgNDUu
+NDA5MTk2XcKgwqAgeDg2X2xhdGVfdGltZV9pbml0KzB4MWIvMHg0MAo+IFvCoMKgIDQ1LjQwOTIw
+MV3CoMKgIHN0YXJ0X2tlcm5lbCsweDk2Mi8weGEwMAo+IFvCoMKgIDQ1LjQwOTIwNl3CoMKgIHg4
+Nl82NF9zdGFydF9yZXNlcnZhdGlvbnMrMHgyNC8weDMwCj4gW8KgwqAgNDUuNDA5MjExXcKgwqAg
+eDg2XzY0X3N0YXJ0X2tlcm5lbCsweGVkLzB4ZjAKPiBbwqDCoCA0NS40MDkyMTVdwqDCoCBjb21t
+b25fc3RhcnR1cF82NCsweDEzZS8weDE0MQo+IFvCoMKgIDQ1LjQwOTIyMF0KPiDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIG90aGVyIGluZm8gdGhhdCBtaWdodCBoZWxwIHVzIGRlYnVnIHRo
+aXM6Cj4gCj4gW8KgwqAgNDUuNDA5MjIyXcKgIFBvc3NpYmxlIGludGVycnVwdCB1bnNhZmUgbG9j
+a2luZyBzY2VuYXJpbzoKPiAKPiBbwqDCoCA0NS40MDkyMjRdwqDCoMKgwqDCoMKgwqAgQ1BVMMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIENQVTEKPiBbwqDCoCA0NS40MDky
+MjZdwqDCoMKgwqDCoMKgwqAgLS0tLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIC0tLS0KPiBbwqDCoCA0NS40MDkyMjhdwqDCoCBsb2NrKGk4MjUzX2xvY2spOwo+IFvCoMKg
+IDQ1LjQwOTIzNF3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBsb2NhbF9pcnFfZGlzYWJsZSgpOwo+IFvCoMKgIDQ1LjQwOTIzN13C
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBsb2NrKCZkZXYtPmV2ZW50X2xvY2spOwo+IFvCoMKgIDQ1LjQwOTI0M13CoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBsb2Nr
+KGk4MjUzX2xvY2spOwo+IFvCoMKgIDQ1LjQwOTI0OV3CoMKgIDxJbnRlcnJ1cHQ+Cj4gW8KgwqAg
+NDUuNDA5MjUxXcKgwqDCoMKgIGxvY2soJmRldi0+ZXZlbnRfbG9jayk7Cj4gW8KgwqAgNDUuNDA5
+MjU3XQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAqKiogREVBRExPQ0sgKioqCj4g
+Cj4gRml4ZXM6IDcwZTZiN2Q5YWUzYyAoIng4Ni9pODI1MzogRGlzYWJsZSBQSVQgdGltZXIgMCB3
+aGVuIG5vdCBpbiB1c2UiKQo+IFNpZ25lZC1vZmYtYnk6IEZlcm5hbmRvIEZlcm5hbmRleiBNYW5j
+ZXJhIDxmZm1hbmNlcmFAcmlzZXVwLm5ldD4KPiAtLS0KPiB2MjogZGlzYWJsZSBsb2NhbCBJUlEg
+aW4gcGl0X3RpbWVyX2luaXQoKQoKVGhhbmtzLgoKUmV2aWV3ZWQtYnk6IERhdmlkIFdvb2Rob3Vz
+ZSA8ZHdtdzJAaW5mcmFkZWFkLm9yZz4KCldvcnRoIGEgV0FSTl9PTighaXJxc19kaXNhYmxlZCgp
+KSBpbiBjbG9ja2V2ZW50X2k4MjUzX2Rpc2FibGUoKSB0b28/Cgo=
 
------BEGIN PGP PUBLIC KEY BLOCK-----
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+--=-INDKU0KiT/AaaeZSDFgN
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
 
---------------0xl5rnPzp8wogKixk8qdxDys--
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCD9Aw
+ggSOMIIDdqADAgECAhAOmiw0ECVD4cWj5DqVrT9PMA0GCSqGSIb3DQEBCwUAMGUxCzAJBgNVBAYT
+AlVTMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAi
+BgNVBAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yNDAxMzAwMDAwMDBaFw0zMTEx
+MDkyMzU5NTlaMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYDVQQDExdWZXJv
+a2V5IFNlY3VyZSBFbWFpbCBHMjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMjvgLKj
+jfhCFqxYyRiW8g3cNFAvltDbK5AzcOaR7yVzVGadr4YcCVxjKrEJOgi7WEOH8rUgCNB5cTD8N/Et
+GfZI+LGqSv0YtNa54T9D1AWJy08ZKkWvfGGIXN9UFAPMJ6OLLH/UUEgFa+7KlrEvMUupDFGnnR06
+aDJAwtycb8yXtILj+TvfhLFhafxroXrflspavejQkEiHjNjtHnwbZ+o43g0/yxjwnarGI3kgcak7
+nnI9/8Lqpq79tLHYwLajotwLiGTB71AGN5xK+tzB+D4eN9lXayrjcszgbOv2ZCgzExQUAIt98mre
+8EggKs9mwtEuKAhYBIP/0K6WsoMnQCcCAwEAAaOCAVwwggFYMBIGA1UdEwEB/wQIMAYBAf8CAQAw
+HQYDVR0OBBYEFIlICOogTndrhuWByNfhjWSEf/xwMB8GA1UdIwQYMBaAFEXroq/0ksuCMS1Ri6en
+IZ3zbcgPMA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIweQYI
+KwYBBQUHAQEEbTBrMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5kaWdpY2VydC5jb20wQwYIKwYB
+BQUHMAKGN2h0dHA6Ly9jYWNlcnRzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEFzc3VyZWRJRFJvb3RD
+QS5jcnQwRQYDVR0fBD4wPDA6oDigNoY0aHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0
+QXNzdXJlZElEUm9vdENBLmNybDARBgNVHSAECjAIMAYGBFUdIAAwDQYJKoZIhvcNAQELBQADggEB
+ACiagCqvNVxOfSd0uYfJMiZsOEBXAKIR/kpqRp2YCfrP4Tz7fJogYN4fxNAw7iy/bPZcvpVCfe/H
+/CCcp3alXL0I8M/rnEnRlv8ItY4MEF+2T/MkdXI3u1vHy3ua8SxBM8eT9LBQokHZxGUX51cE0kwa
+uEOZ+PonVIOnMjuLp29kcNOVnzf8DGKiek+cT51FvGRjV6LbaxXOm2P47/aiaXrDD5O0RF5SiPo6
+xD1/ClkCETyyEAE5LRJlXtx288R598koyFcwCSXijeVcRvBB1cNOLEbg7RMSw1AGq14fNe2cH1HG
+W7xyduY/ydQt6gv5r21mDOQ5SaZSWC/ZRfLDuEYwggWbMIIEg6ADAgECAhAH5JEPagNRXYDiRPdl
+c1vgMA0GCSqGSIb3DQEBCwUAMEExCzAJBgNVBAYTAkFVMRAwDgYDVQQKEwdWZXJva2V5MSAwHgYD
+VQQDExdWZXJva2V5IFNlY3VyZSBFbWFpbCBHMjAeFw0yNDEyMzAwMDAwMDBaFw0yODAxMDQyMzU5
+NTlaMB4xHDAaBgNVBAMME2R3bXcyQGluZnJhZGVhZC5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4IC
+DwAwggIKAoICAQDali7HveR1thexYXx/W7oMk/3Wpyppl62zJ8+RmTQH4yZeYAS/SRV6zmfXlXaZ
+sNOE6emg8WXLRS6BA70liot+u0O0oPnIvnx+CsMH0PD4tCKSCsdp+XphIJ2zkC9S7/yHDYnqegqt
+w4smkqUqf0WX/ggH1Dckh0vHlpoS1OoxqUg+ocU6WCsnuz5q5rzFsHxhD1qGpgFdZEk2/c//ZvUN
+i12vPWipk8TcJwHw9zoZ/ZrVNybpMCC0THsJ/UEVyuyszPtNYeYZAhOJ41vav1RhZJzYan4a1gU0
+kKBPQklcpQEhq48woEu15isvwWh9/+5jjh0L+YNaN0I//nHSp6U9COUG9Z0cvnO8FM6PTqsnSbcc
+0j+GchwOHRC7aP2t5v2stVx3KbptaYEzi4MQHxm/0+HQpMEVLLUiizJqS4PWPU6zfQTOMZ9uLQRR
+ci+c5xhtMEBszlQDOvEQcyEG+hc++fH47K+MmZz21bFNfoBxLP6bjR6xtPXtREF5lLXxp+CJ6KKS
+blPKeVRg/UtyJHeFKAZXO8Zeco7TZUMVHmK0ZZ1EpnZbnAhKE19Z+FJrQPQrlR0gO3lBzuyPPArV
+hvWxjlO7S4DmaEhLzarWi/ze7EGwWSuI2eEa/8zU0INUsGI4ywe7vepQz7IqaAovAX0d+f1YjbmC
+VsAwjhLmveFjNwIDAQABo4IBsDCCAawwHwYDVR0jBBgwFoAUiUgI6iBOd2uG5YHI1+GNZIR//HAw
+HQYDVR0OBBYEFFxiGptwbOfWOtMk5loHw7uqWUOnMDAGA1UdEQQpMCeBE2R3bXcyQGluZnJhZGVh
+ZC5vcmeBEGRhdmlkQHdvb2Rob3Uuc2UwFAYDVR0gBA0wCzAJBgdngQwBBQEBMA4GA1UdDwEB/wQE
+AwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwewYDVR0fBHQwcjA3oDWgM4YxaHR0
+cDovL2NybDMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDA3oDWgM4YxaHR0
+cDovL2NybDQuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNybDB2BggrBgEFBQcB
+AQRqMGgwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBABggrBgEFBQcwAoY0
+aHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL1Zlcm9rZXlTZWN1cmVFbWFpbEcyLmNydDANBgkq
+hkiG9w0BAQsFAAOCAQEAQXc4FPiPLRnTDvmOABEzkIumojfZAe5SlnuQoeFUfi+LsWCKiB8Uextv
+iBAvboKhLuN6eG/NC6WOzOCppn4mkQxRkOdLNThwMHW0d19jrZFEKtEG/epZ/hw/DdScTuZ2m7im
+8ppItAT6GXD3aPhXkXnJpC/zTs85uNSQR64cEcBFjjoQDuSsTeJ5DAWf8EMyhMuD8pcbqx5kRvyt
+JPsWBQzv1Dsdv2LDPLNd/JUKhHSgr7nbUr4+aAP2PHTXGcEBh8lTeYea9p4d5k969pe0OHYMV5aL
+xERqTagmSetuIwolkAuBCzA9vulg8Y49Nz2zrpUGfKGOD0FMqenYxdJHgDCCBZswggSDoAMCAQIC
+EAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQELBQAwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoT
+B1Zlcm9rZXkxIDAeBgNVBAMTF1Zlcm9rZXkgU2VjdXJlIEVtYWlsIEcyMB4XDTI0MTIzMDAwMDAw
+MFoXDTI4MDEwNDIzNTk1OVowHjEcMBoGA1UEAwwTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJ
+KoZIhvcNAQEBBQADggIPADCCAgoCggIBANqWLse95HW2F7FhfH9bugyT/danKmmXrbMnz5GZNAfj
+Jl5gBL9JFXrOZ9eVdpmw04Tp6aDxZctFLoEDvSWKi367Q7Sg+ci+fH4KwwfQ8Pi0IpIKx2n5emEg
+nbOQL1Lv/IcNiep6Cq3DiyaSpSp/RZf+CAfUNySHS8eWmhLU6jGpSD6hxTpYKye7PmrmvMWwfGEP
+WoamAV1kSTb9z/9m9Q2LXa89aKmTxNwnAfD3Ohn9mtU3JukwILRMewn9QRXK7KzM+01h5hkCE4nj
+W9q/VGFknNhqfhrWBTSQoE9CSVylASGrjzCgS7XmKy/BaH3/7mOOHQv5g1o3Qj/+cdKnpT0I5Qb1
+nRy+c7wUzo9OqydJtxzSP4ZyHA4dELto/a3m/ay1XHcpum1pgTOLgxAfGb/T4dCkwRUstSKLMmpL
+g9Y9TrN9BM4xn24tBFFyL5znGG0wQGzOVAM68RBzIQb6Fz758fjsr4yZnPbVsU1+gHEs/puNHrG0
+9e1EQXmUtfGn4InoopJuU8p5VGD9S3Ikd4UoBlc7xl5yjtNlQxUeYrRlnUSmdlucCEoTX1n4UmtA
+9CuVHSA7eUHO7I88CtWG9bGOU7tLgOZoSEvNqtaL/N7sQbBZK4jZ4Rr/zNTQg1SwYjjLB7u96lDP
+sipoCi8BfR35/ViNuYJWwDCOEua94WM3AgMBAAGjggGwMIIBrDAfBgNVHSMEGDAWgBSJSAjqIE53
+a4blgcjX4Y1khH/8cDAdBgNVHQ4EFgQUXGIam3Bs59Y60yTmWgfDu6pZQ6cwMAYDVR0RBCkwJ4ET
+ZHdtdzJAaW5mcmFkZWFkLm9yZ4EQZGF2aWRAd29vZGhvdS5zZTAUBgNVHSAEDTALMAkGB2eBDAEF
+AQEwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDB7BgNVHR8E
+dDByMDegNaAzhjFodHRwOi8vY3JsMy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMDegNaAzhjFodHRwOi8vY3JsNC5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVtYWlsRzIu
+Y3JsMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29t
+MEAGCCsGAQUFBzAChjRodHRwOi8vY2FjZXJ0cy5kaWdpY2VydC5jb20vVmVyb2tleVNlY3VyZUVt
+YWlsRzIuY3J0MA0GCSqGSIb3DQEBCwUAA4IBAQBBdzgU+I8tGdMO+Y4AETOQi6aiN9kB7lKWe5Ch
+4VR+L4uxYIqIHxR7G2+IEC9ugqEu43p4b80LpY7M4KmmfiaRDFGQ50s1OHAwdbR3X2OtkUQq0Qb9
+6ln+HD8N1JxO5nabuKbymki0BPoZcPdo+FeRecmkL/NOzzm41JBHrhwRwEWOOhAO5KxN4nkMBZ/w
+QzKEy4PylxurHmRG/K0k+xYFDO/UOx2/YsM8s138lQqEdKCvudtSvj5oA/Y8dNcZwQGHyVN5h5r2
+nh3mT3r2l7Q4dgxXlovERGpNqCZJ624jCiWQC4ELMD2+6WDxjj03PbOulQZ8oY4PQUyp6djF0keA
+MYIDuzCCA7cCAQEwVTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMX
+VmVyb2tleSBTZWN1cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJYIZIAWUDBAIBBQCg
+ggE3MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyNzE2NDM1
+MlowLwYJKoZIhvcNAQkEMSIEIMyYqYLVG8/WZg9pn4ANt89oyqTcFwREPlxd6M1KLxQoMGQGCSsG
+AQQBgjcQBDFXMFUwQTELMAkGA1UEBhMCQVUxEDAOBgNVBAoTB1Zlcm9rZXkxIDAeBgNVBAMTF1Zl
+cm9rZXkgU2VjdXJlIEVtYWlsIEcyAhAH5JEPagNRXYDiRPdlc1vgMGYGCyqGSIb3DQEJEAILMVeg
+VTBBMQswCQYDVQQGEwJBVTEQMA4GA1UEChMHVmVyb2tleTEgMB4GA1UEAxMXVmVyb2tleSBTZWN1
+cmUgRW1haWwgRzICEAfkkQ9qA1FdgOJE92VzW+AwDQYJKoZIhvcNAQEBBQAEggIAenaTLdeJViQ4
+rWEydjJaC8dM79SNSLHsytZvuEdzjVNcHzXQ8yHrxEQcw4hzOykpMrMljeVlAMvszULUgwGJWtNY
+7aTLE9GBtZPSPRvdQ+LK061C4MI2IFz1sf3Wx8ptBdLBrSvuYX0axjJdacmnBkXeX1iVziYc2qbk
+woWK4FAtIQxKae9DJCPCgNclaCQM2R6K0l9DXZQo/iqopS1CRx955OXbn8Guu6NSZ0O6/ARaX/1v
+EdvIQ4LYqfeC8vawYaZ8/zzVHWpBgc6SxmEwxcYwMjjNdTRkvbda6TtntefJoPTEtE4Z5RqCncm8
+uce3crVH3/YAXIysrNw5Ueb0proueo3HN94UE5frPqPirXj6YazkIWMeJhEmaU4yg9fex8ficzuF
+wNx+eWAikUld9g8ruFox54MaC8u1PykokTiLQYo/FHJ06KkRBb1IXy4fbN69UJsHWFmEg6qilcNX
+bCk5i/ejr8i9aa/UHHy+/bf5MyIsGKLkVwkFZUg8Smt5+vKCPiwScPXogaxaAhpkQYQHlgriS4GF
+7rCOjBopaougj+uqz9cm0aQoCTU4b4otPNx7rjNU8hUPoaV3BAyYom6xgya+J/EDr+2zwbKEJkXw
+qRyud6ZpEpSegY7V07QBsxkVW20f/cWsQJpiKl3cYX0ex2VUXfmL60qDNaXFAlwAAAAAAAA=
 
---------------F1AG3EiYN9pow4cgn9Y0uDto--
 
---------------w8keZHt3rHXk8cRy2eo8QCgL
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmflgEIFAwAAAAAACgkQsN6d1ii/Ey8l
-Cgf/QdTgh0S8GyuOrXH4CS4NQcobLgn90Kiaq0zOu9lWQsP+ZmmErrpyL35QGksWt++2Im+FMNO2
-FuJdlBfbDHZKy+I031s09fzIaMt/8xXpQF6e8HdDQHWWUzxzZ7tsHsaXOhGmi4wDh98P9MVL9nuG
-6iJ7mRSSRW7VVoHl7A3DVUQxw4oxuiSkEl82OnBYre2bbyfl4j6PrsoFieGW+7a3LvJVqmH/sD6r
-t14w6TWb3aT6AUnQCnabc0peyZA/QHbWSZnLVDmFnGvc0sa5FlpvfTNeVjyrj9QrAodBXewg8W2A
-A/iQOgMOkxjoA3+jxig/eTaweP6QlcCcF2L06Jzi+g==
-=jn45
------END PGP SIGNATURE-----
-
---------------w8keZHt3rHXk8cRy2eo8QCgL--
+--=-INDKU0KiT/AaaeZSDFgN--
