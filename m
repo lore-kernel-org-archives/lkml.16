@@ -1,264 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4997E1E1DE4
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 23:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1A77FBA1
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 23:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743119097; cv=none; b=RlikNU1afumdVnXNRbvYfP2Q33ZFn5E0GuecrR3cj8nPKoG4W1a5+55SU8Fq2HA2U8kcVJ2ro/gokwzLoku8KNZ5p9Aj0zgj5QhK0vLjsV2s2DSdLsKDVUWAXEorN147BPJi7d6Y75qZBZ2GXx4yah3Od/jTQDLN19H+7iPOr5I=
+	t=1743119344; cv=none; b=r8qgAeM73bRHvZU0W6fIHEVmOA986abJveDXxgKX2lGhsmQEahK6+K1zq093UZIaM6KJglDBx7exAnibCQjb9pSN0jkI+MBNx3KmkTQy0w8H8Rjuxjc8D3xZq7TkIcDHTIBusaLf1aZx5IYVJywbvZm1wBywYD7vQdBMiOrQxtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743119097; c=relaxed/simple;
-	bh=Ln5pk7zODtsPxlL9Wl6nJ4QkGnnSvPEBN4wYq12bc58=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oi8yL1pqPF33PbRbmxBgcw3QWA1fyF2jMjB6uLSJWgq1hB5rCDQ9K7jeVzAt++7tkZPJ2oF6GEaglg8zfZRHNUao8QO7Q1E1zAkMcFQHOIE8fYMmkihT1AbagyagsdpJv1P0hrH4D5oLIEJzUmJPJM4CC866b4rq/sRfOxxiarA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GCgxblRS; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1743119344; c=relaxed/simple;
+	bh=4kyKLp7Ehky23r1EB2s5Va433N7WZBHjcZnTU3/Er8I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S/MlI5/jcESMxJ/FdQS1bt7Q6gREdoxrUlZGF9DtQ2R3jftnif+4IbvADF/YVrKTxEdWRaeDAz8pMJ6x3EtCjrhYq0fLEnye8JKTE11zYYxq1p3SVaUCx7IudsuVsW6Ktw9oIM5seqTq4VKFjEUf1l9sW7fn2Gso7WrmHrIRVvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kW7isZMX; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GCgxblRS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kW7isZMX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743119096; x=1774655096;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Ln5pk7zODtsPxlL9Wl6nJ4QkGnnSvPEBN4wYq12bc58=;
-  b=GCgxblRSNv0O9ff2Nd4ASoVAHCXwXsgYPqltAkjcciHpTBfxj7cPNq05
-   8999AcrHg0PlWXG6Xc6LLNS3KUk28HpZRqU2EHA0g80NCsUDBkpK7dCau
-   77DdDmj0OsrVUOigSA18PRxWoeMiz0TMsMaBN/oATbE7W34zVFhCfnSPT
-   BoPJvziGZI4Svea8e2XlmmnTBaHvg39+aIIcCq09IbS2Ei/wmnbYGLMq0
-   5+XuCDEg4vwK8jpCGMwSeih7o906mRc2f5cZodN4MhANa+6O0gLxeLzmO
-   05m/JCAos9WzFCkvsMT3AZqrGAd4Tjq7zxlWzTyGHBA00cJcer4v+NXaF
-   A==;
-X-CSE-ConnectionGUID: L9DHUtMZRkKzTe0usD2eDg==
-X-CSE-MsgGUID: k66A+WayTg6wvyORyywd8w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="66946382"
+  t=1743119343; x=1774655343;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4kyKLp7Ehky23r1EB2s5Va433N7WZBHjcZnTU3/Er8I=;
+  b=kW7isZMXlhmp3IDHMsycKS9TcljEeTg3jX4n5jNn7kOOoD0uEx/IZJ7w
+   Ftbny00eGos7RPfrN3G8PIjGF2Kld8eNObuICNmA7koKdpkFyf0aHBj9d
+   h7iI8RiHq1XWGc+J96qbp4UuOsF/8ABtPPCKSz7ZRT3CvokI4QaC2zZ9m
+   Nl3XG6C5x9oJS3I80ZiJFV6UaGq/UfeIK0BYXXsLgvnI49tpAYLZCqtSF
+   BwfyrAh7AsW1HwIVrT4oUxDfBUee0GHLrDc3madSNg0drQRW2Kx2ZFszk
+   Nun1LwrNkLmJ8hrsBDQyGSCNU2njloDzF8NdUXfcbi7ZjFy7nqdkdjGtQ
+   Q==;
+X-CSE-ConnectionGUID: BVGASZuESr+IPOAEkI2IcA==
+X-CSE-MsgGUID: oHX9DnlvRaKExPvpKBi97w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="43627931"
 X-IronPort-AV: E=Sophos;i="6.14,281,1736841600"; 
-   d="scan'208";a="66946382"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 16:44:55 -0700
-X-CSE-ConnectionGUID: WP+/Jl1ySNmvU3+IqKkcWQ==
-X-CSE-MsgGUID: vfxunjoARW62S9QtXhI7bQ==
+   d="scan'208";a="43627931"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 16:49:02 -0700
+X-CSE-ConnectionGUID: bv15OuhXSD2WSFYqEBiO3w==
+X-CSE-MsgGUID: Q1uPSpJLRMG8Hg8yWu+CQA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,281,1736841600"; 
-   d="scan'208";a="130352053"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa004.jf.intel.com with ESMTP; 27 Mar 2025 16:44:53 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1txwu0-00070s-2a;
-	Thu, 27 Mar 2025 23:44:49 +0000
-Date: Fri, 28 Mar 2025 07:44:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [tip:WIP.x86/alternatives 35/43] arch/x86/kernel/alternative.c:2614:
- warning: Excess function parameter 'tp_array.vec' description in
- 'text_poke_int3_batch_process'
-Message-ID: <202503280745.Jp7eol8r-lkp@intel.com>
+   d="scan'208";a="130150466"
+Received: from sohilmeh.sc.intel.com ([172.25.103.65])
+  by orviesa003.jf.intel.com with ESMTP; 27 Mar 2025 16:49:01 -0700
+From: Sohil Mehta <sohil.mehta@intel.com>
+To: x86@kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Kai Huang <kai.huang@intel.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Mike Rapoport <rppt@kernel.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Xin Li <xin@zytor.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/9] x86: Cleanup NMI handling
+Date: Thu, 27 Mar 2025 23:46:20 +0000
+Message-ID: <20250327234629.3953536-1-sohil.mehta@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi Ingo,
+While reworking the NMI-source patches[1], I spent quite a few days
+understanding the existing NMI handling code. The intention of this series is
+to fix the inconsistencies and redundancies that I encountered.
 
-FYI, the error/warning was bisected to this commit, please ignore it if it's irrelevant.
+This series also includes improved documentation to make the code easier to
+follow. It does not introduce any significant functional changes.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/alternatives
-head:   89555c4754bde7a509d7992c1ecefeb00229fac9
-commit: 33bc2a1341293fac4fd4e0f7035ca2397daf8fb5 [35/43] x86/alternatives: Rename 'text_poke_int3_batch()' to 'text_poke_int3_batch_process()'
-config: x86_64-buildonly-randconfig-001-20250328 (https://download.01.org/0day-ci/archive/20250328/202503280745.Jp7eol8r-lkp@intel.com/config)
-compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250328/202503280745.Jp7eol8r-lkp@intel.com/reproduce)
+I have tried to split the patches logically to make them easier to review. Let
+me know if some of them should be combined. The patches are in no particular
+order and can be picked up independently. 
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503280745.Jp7eol8r-lkp@intel.com/
+The documentation updates in patches (5, 6, 7) are to the best of my ability.
+However, I would really appreciate extra eyes to ensure it is precise.
 
-All warnings (new ones prefixed by >>):
+The updated NMI-source patches will follow this series sometime later.
 
->> arch/x86/kernel/alternative.c:2614: warning: Excess function parameter 'tp_array.vec' description in 'text_poke_int3_batch_process'
->> arch/x86/kernel/alternative.c:2614: warning: Excess function parameter 'tp_array.nr_entries' description in 'text_poke_int3_batch_process'
+@Ingo, I tried to format the commit references the way you prefer:
 
+  Commit:
+    feeaf5512947 ("x86: Move sysctls into arch/x86")
 
-vim +2614 arch/x86/kernel/alternative.c
+However, checkpatch seems to dislike it, so I reformatted them as below:
 
-17f41571bb2c4a Jiri Kosina                2013-07-23  2591  
-fd4363fff3d967 Jiri Kosina                2013-07-12  2592  /**
-33bc2a1341293f Ingo Molnar                2025-03-27  2593   * text_poke_int3_batch_process() -- update instructions on live kernel on SMP
-4cacf32f02d9e3 Ingo Molnar                2025-03-27  2594   * @tp_array.vec:		vector of instructions to patch
-4cacf32f02d9e3 Ingo Molnar                2025-03-27  2595   * @tp_array.nr_entries:	number of entries in the vector
-fd4363fff3d967 Jiri Kosina                2013-07-12  2596   *
-fd4363fff3d967 Jiri Kosina                2013-07-12  2597   * Modify multi-byte instruction by using int3 breakpoint on SMP.
-ea8596bb2d8d37 Masami Hiramatsu           2013-07-18  2598   * We completely avoid stop_machine() here, and achieve the
-ea8596bb2d8d37 Masami Hiramatsu           2013-07-18  2599   * synchronization using int3 breakpoint.
-fd4363fff3d967 Jiri Kosina                2013-07-12  2600   *
-fd4363fff3d967 Jiri Kosina                2013-07-12  2601   * The way it is done:
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2602   *	- For each entry in the vector:
-fd4363fff3d967 Jiri Kosina                2013-07-12  2603   *		- add a int3 trap to the address that will be patched
-fd4363fff3d967 Jiri Kosina                2013-07-12  2604   *	- sync cores
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2605   *	- For each entry in the vector:
-fd4363fff3d967 Jiri Kosina                2013-07-12  2606   *		- update all but the first byte of the patched range
-fd4363fff3d967 Jiri Kosina                2013-07-12  2607   *	- sync cores
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2608   *	- For each entry in the vector:
-fd4363fff3d967 Jiri Kosina                2013-07-12  2609   *		- replace the first byte (int3) by the first byte of
-fd4363fff3d967 Jiri Kosina                2013-07-12  2610   *		  replacing opcode
-fd4363fff3d967 Jiri Kosina                2013-07-12  2611   *	- sync cores
-fd4363fff3d967 Jiri Kosina                2013-07-12  2612   */
-33bc2a1341293f Ingo Molnar                2025-03-27  2613  static void text_poke_int3_batch_process(void)
-fd4363fff3d967 Jiri Kosina                2013-07-12 @2614  {
-c3d6324f841bab Peter Zijlstra             2019-06-05  2615  	unsigned char int3 = INT3_INSN_OPCODE;
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2616  	unsigned int i;
-c3d6324f841bab Peter Zijlstra             2019-06-05  2617  	int do_sync;
-9222f606506c5f Jiri Kosina                2018-08-28  2618  
-9222f606506c5f Jiri Kosina                2018-08-28  2619  	lockdep_assert_held(&text_mutex);
-9222f606506c5f Jiri Kosina                2018-08-28  2620  
-efd608fa7403ba Nadav Amit                 2022-09-21  2621  	/*
-527963ab5369ee Ingo Molnar                2025-03-27  2622  	 * Corresponds to the implicit memory barrier in try_get_tp_array() to
-296b9167381c07 Ingo Molnar                2025-03-27  2623  	 * ensure reading a non-zero refcount provides up to date tp_array data.
-efd608fa7403ba Nadav Amit                 2022-09-21  2624  	 */
-41e4ceece5913b Eric Dumazet               2025-03-25  2625  	for_each_possible_cpu(i)
-10b9345c1aa7dd Ingo Molnar                2025-03-27  2626  		atomic_set_release(per_cpu_ptr(&int3_refs, i), 1);
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2627  
-9350a629e839ca Steven Rostedt (Google     2023-05-31  2628) 	/*
-9350a629e839ca Steven Rostedt (Google     2023-05-31  2629) 	 * Function tracing can enable thousands of places that need to be
-9350a629e839ca Steven Rostedt (Google     2023-05-31  2630) 	 * updated. This can take quite some time, and with full kernel debugging
-9350a629e839ca Steven Rostedt (Google     2023-05-31  2631) 	 * enabled, this could cause the softlockup watchdog to trigger.
-9350a629e839ca Steven Rostedt (Google     2023-05-31  2632) 	 * This function gets called every 256 entries added to be patched.
-9350a629e839ca Steven Rostedt (Google     2023-05-31  2633) 	 * Call cond_resched() here to make sure that other tasks can get scheduled
-9350a629e839ca Steven Rostedt (Google     2023-05-31  2634) 	 * while processing all the functions being patched.
-9350a629e839ca Steven Rostedt (Google     2023-05-31  2635) 	 */
-9350a629e839ca Steven Rostedt (Google     2023-05-31  2636) 	cond_resched();
-9350a629e839ca Steven Rostedt (Google     2023-05-31  2637) 
-fd4363fff3d967 Jiri Kosina                2013-07-12  2638  	/*
-01651324edad9d Peter Zijlstra             2017-07-31  2639  	 * Corresponding read barrier in int3 notifier for making sure the
-4cacf32f02d9e3 Ingo Molnar                2025-03-27  2640  	 * tp_array.nr_entries and handler are correctly ordered wrt. patching.
-fd4363fff3d967 Jiri Kosina                2013-07-12  2641  	 */
-fd4363fff3d967 Jiri Kosina                2013-07-12  2642  	smp_wmb();
-fd4363fff3d967 Jiri Kosina                2013-07-12  2643  
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2644  	/*
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2645  	 * First step: add a int3 trap to the address that will be patched.
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2646  	 */
-4cacf32f02d9e3 Ingo Molnar                2025-03-27  2647  	for (i = 0; i < tp_array.nr_entries; i++) {
-4cacf32f02d9e3 Ingo Molnar                2025-03-27  2648  		tp_array.vec[i].old = *(u8 *)text_poke_int3_addr(&tp_array.vec[i]);
-4cacf32f02d9e3 Ingo Molnar                2025-03-27  2649  		text_poke(text_poke_int3_addr(&tp_array.vec[i]), &int3, INT3_INSN_SIZE);
-d769811ca93303 Adrian Hunter              2020-05-12  2650  	}
-fd4363fff3d967 Jiri Kosina                2013-07-12  2651  
-5c02ece81848db Peter Zijlstra             2019-10-09  2652  	text_poke_sync();
-fd4363fff3d967 Jiri Kosina                2013-07-12  2653  
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2654  	/*
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2655  	 * Second step: update all but the first byte of the patched range.
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2656  	 */
-4cacf32f02d9e3 Ingo Molnar                2025-03-27  2657  	for (do_sync = 0, i = 0; i < tp_array.nr_entries; i++) {
-4cacf32f02d9e3 Ingo Molnar                2025-03-27  2658  		u8 old[POKE_MAX_OPCODE_SIZE+1] = { tp_array.vec[i].old, };
-ac0ee0a9560c97 Peter Zijlstra             2023-01-23  2659  		u8 _new[POKE_MAX_OPCODE_SIZE+1];
-4cacf32f02d9e3 Ingo Molnar                2025-03-27  2660  		const u8 *new = tp_array.vec[i].text;
-4cacf32f02d9e3 Ingo Molnar                2025-03-27  2661  		int len = tp_array.vec[i].len;
-97e6c977ccf128 Peter Zijlstra             2019-10-09  2662  
-76ffa7204b1ad7 Peter Zijlstra             2019-11-11  2663  		if (len - INT3_INSN_SIZE > 0) {
-d769811ca93303 Adrian Hunter              2020-05-12  2664  			memcpy(old + INT3_INSN_SIZE,
-4cacf32f02d9e3 Ingo Molnar                2025-03-27  2665  			       text_poke_int3_addr(&tp_array.vec[i]) + INT3_INSN_SIZE,
-d769811ca93303 Adrian Hunter              2020-05-12  2666  			       len - INT3_INSN_SIZE);
-ac0ee0a9560c97 Peter Zijlstra             2023-01-23  2667  
-ac0ee0a9560c97 Peter Zijlstra             2023-01-23  2668  			if (len == 6) {
-ac0ee0a9560c97 Peter Zijlstra             2023-01-23  2669  				_new[0] = 0x0f;
-ac0ee0a9560c97 Peter Zijlstra             2023-01-23  2670  				memcpy(_new + 1, new, 5);
-ac0ee0a9560c97 Peter Zijlstra             2023-01-23  2671  				new = _new;
-ac0ee0a9560c97 Peter Zijlstra             2023-01-23  2672  			}
-ac0ee0a9560c97 Peter Zijlstra             2023-01-23  2673  
-4cacf32f02d9e3 Ingo Molnar                2025-03-27  2674  			text_poke(text_poke_int3_addr(&tp_array.vec[i]) + INT3_INSN_SIZE,
-ac0ee0a9560c97 Peter Zijlstra             2023-01-23  2675  				  new + INT3_INSN_SIZE,
-76ffa7204b1ad7 Peter Zijlstra             2019-11-11  2676  				  len - INT3_INSN_SIZE);
-ac0ee0a9560c97 Peter Zijlstra             2023-01-23  2677  
-c3d6324f841bab Peter Zijlstra             2019-06-05  2678  			do_sync++;
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2679  		}
-d769811ca93303 Adrian Hunter              2020-05-12  2680  
-d769811ca93303 Adrian Hunter              2020-05-12  2681  		/*
-d769811ca93303 Adrian Hunter              2020-05-12  2682  		 * Emit a perf event to record the text poke, primarily to
-d769811ca93303 Adrian Hunter              2020-05-12  2683  		 * support Intel PT decoding which must walk the executable code
-d769811ca93303 Adrian Hunter              2020-05-12  2684  		 * to reconstruct the trace. The flow up to here is:
-d769811ca93303 Adrian Hunter              2020-05-12  2685  		 *   - write INT3 byte
-d769811ca93303 Adrian Hunter              2020-05-12  2686  		 *   - IPI-SYNC
-d769811ca93303 Adrian Hunter              2020-05-12  2687  		 *   - write instruction tail
-d769811ca93303 Adrian Hunter              2020-05-12  2688  		 * At this point the actual control flow will be through the
-d769811ca93303 Adrian Hunter              2020-05-12  2689  		 * INT3 and handler and not hit the old or new instruction.
-d769811ca93303 Adrian Hunter              2020-05-12  2690  		 * Intel PT outputs FUP/TIP packets for the INT3, so the flow
-d769811ca93303 Adrian Hunter              2020-05-12  2691  		 * can still be decoded. Subsequently:
-d769811ca93303 Adrian Hunter              2020-05-12  2692  		 *   - emit RECORD_TEXT_POKE with the new instruction
-d769811ca93303 Adrian Hunter              2020-05-12  2693  		 *   - IPI-SYNC
-d769811ca93303 Adrian Hunter              2020-05-12  2694  		 *   - write first byte
-d769811ca93303 Adrian Hunter              2020-05-12  2695  		 *   - IPI-SYNC
-d769811ca93303 Adrian Hunter              2020-05-12  2696  		 * So before the text poke event timestamp, the decoder will see
-d769811ca93303 Adrian Hunter              2020-05-12  2697  		 * either the old instruction flow or FUP/TIP of INT3. After the
-d769811ca93303 Adrian Hunter              2020-05-12  2698  		 * text poke event timestamp, the decoder will see either the
-d769811ca93303 Adrian Hunter              2020-05-12  2699  		 * new instruction flow or FUP/TIP of INT3. Thus decoders can
-d769811ca93303 Adrian Hunter              2020-05-12  2700  		 * use the timestamp as the point at which to modify the
-d769811ca93303 Adrian Hunter              2020-05-12  2701  		 * executable code.
-d769811ca93303 Adrian Hunter              2020-05-12  2702  		 * The old instruction is recorded so that the event can be
-d769811ca93303 Adrian Hunter              2020-05-12  2703  		 * processed forwards or backwards.
-d769811ca93303 Adrian Hunter              2020-05-12  2704  		 */
-4cacf32f02d9e3 Ingo Molnar                2025-03-27  2705  		perf_event_text_poke(text_poke_int3_addr(&tp_array.vec[i]), old, len, new, len);
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2706  	}
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2707  
-c3d6324f841bab Peter Zijlstra             2019-06-05  2708  	if (do_sync) {
-fd4363fff3d967 Jiri Kosina                2013-07-12  2709  		/*
-fd4363fff3d967 Jiri Kosina                2013-07-12  2710  		 * According to Intel, this core syncing is very likely
-fd4363fff3d967 Jiri Kosina                2013-07-12  2711  		 * not necessary and we'd be safe even without it. But
-fd4363fff3d967 Jiri Kosina                2013-07-12  2712  		 * better safe than sorry (plus there's not only Intel).
-fd4363fff3d967 Jiri Kosina                2013-07-12  2713  		 */
-5c02ece81848db Peter Zijlstra             2019-10-09  2714  		text_poke_sync();
-fd4363fff3d967 Jiri Kosina                2013-07-12  2715  	}
-fd4363fff3d967 Jiri Kosina                2013-07-12  2716  
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2717  	/*
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2718  	 * Third step: replace the first byte (int3) by the first byte of
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2719  	 * replacing opcode.
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2720  	 */
-4cacf32f02d9e3 Ingo Molnar                2025-03-27  2721  	for (do_sync = 0, i = 0; i < tp_array.nr_entries; i++) {
-4cacf32f02d9e3 Ingo Molnar                2025-03-27  2722  		u8 byte = tp_array.vec[i].text[0];
-ac0ee0a9560c97 Peter Zijlstra             2023-01-23  2723  
-4cacf32f02d9e3 Ingo Molnar                2025-03-27  2724  		if (tp_array.vec[i].len == 6)
-ac0ee0a9560c97 Peter Zijlstra             2023-01-23  2725  			byte = 0x0f;
-ac0ee0a9560c97 Peter Zijlstra             2023-01-23  2726  
-ac0ee0a9560c97 Peter Zijlstra             2023-01-23  2727  		if (byte == INT3_INSN_OPCODE)
-c3d6324f841bab Peter Zijlstra             2019-06-05  2728  			continue;
-fd4363fff3d967 Jiri Kosina                2013-07-12  2729  
-4cacf32f02d9e3 Ingo Molnar                2025-03-27  2730  		text_poke(text_poke_int3_addr(&tp_array.vec[i]), &byte, INT3_INSN_SIZE);
-c3d6324f841bab Peter Zijlstra             2019-06-05  2731  		do_sync++;
-c3d6324f841bab Peter Zijlstra             2019-06-05  2732  	}
-c3d6324f841bab Peter Zijlstra             2019-06-05  2733  
-c3d6324f841bab Peter Zijlstra             2019-06-05  2734  	if (do_sync)
-5c02ece81848db Peter Zijlstra             2019-10-09  2735  		text_poke_sync();
-c3d6324f841bab Peter Zijlstra             2019-06-05  2736  
-01651324edad9d Peter Zijlstra             2017-07-31  2737  	/*
-efd608fa7403ba Nadav Amit                 2022-09-21  2738  	 * Remove and wait for refs to be zero.
-451283cd40bcec Peter Zijlstra             2025-03-25  2739  	 *
-451283cd40bcec Peter Zijlstra             2025-03-25  2740  	 * Notably, if after step-3 above the INT3 got removed, then the
-451283cd40bcec Peter Zijlstra             2025-03-25  2741  	 * text_poke_sync() will have serialized against any running INT3
-451283cd40bcec Peter Zijlstra             2025-03-25  2742  	 * handlers and the below spin-wait will not happen.
-451283cd40bcec Peter Zijlstra             2025-03-25  2743  	 *
-451283cd40bcec Peter Zijlstra             2025-03-25  2744  	 * IOW. unless the replacement instruction is INT3, this case goes
-451283cd40bcec Peter Zijlstra             2025-03-25  2745  	 * unused.
-01651324edad9d Peter Zijlstra             2017-07-31  2746  	 */
-41e4ceece5913b Eric Dumazet               2025-03-25  2747  	for_each_possible_cpu(i) {
-10b9345c1aa7dd Ingo Molnar                2025-03-27  2748  		atomic_t *refs = per_cpu_ptr(&int3_refs, i);
-41e4ceece5913b Eric Dumazet               2025-03-25  2749  
-41e4ceece5913b Eric Dumazet               2025-03-25  2750  		if (unlikely(!atomic_dec_and_test(refs)))
-41e4ceece5913b Eric Dumazet               2025-03-25  2751  			atomic_cond_read_acquire(refs, !VAL);
-41e4ceece5913b Eric Dumazet               2025-03-25  2752  	}
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2753  }
-c0213b0ac03cf6 Daniel Bristot de Oliveira 2019-06-12  2754  
+  Commit feeaf5512947 ("x86: Move sysctls into arch/x86")
 
-:::::: The code at line 2614 was first introduced by commit
-:::::: fd4363fff3d96795d3feb1b3fb48ce590f186bdd x86: Introduce int3 (breakpoint)-based instruction patching
+Is there a specific guideline for x86?
 
-:::::: TO: Jiri Kosina <jkosina@suse.cz>
-:::::: CC: H. Peter Anvin <hpa@linux.intel.com>
+[1]: https://lore.kernel.org/lkml/20240709143906.1040477-1-jacob.jun.pan@linux.intel.com/
+
+Sohil Mehta (9):
+  x86/nmi: Simplify unknown NMI panic handling
+  x86/nmi: Consolidate NMI panic variables
+  x86/nmi: Use a macro to initialize NMI descriptors
+  x86/nmi: Remove export of local_touch_nmi()
+  x86/nmi: Fix comment in unknown NMI handling
+  x86/nmi: Improve and relocate NMI handler comments
+  x86/nmi: Improve NMI header documentation
+  x86/nmi: Clean up NMI selftest
+  x86/nmi: Improve NMI duration console print
+
+ arch/x86/include/asm/nmi.h      | 49 +++++++++++++++++--
+ arch/x86/include/asm/x86_init.h |  1 +
+ arch/x86/kernel/dumpstack.c     |  2 -
+ arch/x86/kernel/nmi.c           | 87 ++++++++++++++++-----------------
+ arch/x86/kernel/nmi_selftest.c  | 52 ++++++--------------
+ arch/x86/kernel/setup.c         | 37 ++++++--------
+ include/linux/panic.h           |  2 -
+ 7 files changed, 122 insertions(+), 108 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
