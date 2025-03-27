@@ -1,41 +1,44 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8731C12CDA5;
-	Thu, 27 Mar 2025 10:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D0813C8EA;
+	Thu, 27 Mar 2025 10:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743071605; cv=none; b=r7h9NbZ6pvP+4dGFVUTuhk/y4VaudCYVshTMwpYhxJDZYH8ibGGmzGh5DinVwRTfhQ5vEo29cxyF17QaFWDsDUPaC/c9trqq69dZaJ81o+5O+4kE3bl9slJ346If7W5n7kfiDWn44AYzh9lPxqARpPl/r7zRzdM0ZxAkIpSfG90=
+	t=1743071713; cv=none; b=m57HEJMAaSegDf5cPASGOxh6EZmW+2bLg10zxD5sNk/Wnry0w1pl/OVYPrboMm3mZrte0ceQ9kp43gWkdypuUh2rzoyZQTtF5skmUUjxhZzMQFVSj2/f064pVPjqBxQvFeBtTiv6pVgWBm8c8JAU3u+h2sqOIKFdotRnQ1sL1OI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743071605; c=relaxed/simple;
-	bh=ThaI9ff2qs1t6Y8l0GWnHLtrsC+oNBuxl50t/4RdMk4=;
+	s=arc-20240116; t=1743071713; c=relaxed/simple;
+	bh=oh41vHWRsr2+lN+yXmNq1LUAseIV+ETEUuRKtR8YJSg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MbnyE1E5STIEwyCoiNsfIb88I3YXJdTMNKTCucEIsoA+PxMHsEWiDHIcIUrdSijoEIIjXnj+NTsJ+guLsKNxoBM1H5BpCjIbHdTtjCNiRDvwjcbhctrcGDbRSmJj130wXJ1+wer6NLtzAb3GlWuAUtz7YpoAJv6fWbkQrtE4RYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6gXbVHY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MuyXLRjml1LEdIH0q8dEE3umezVWcwkHRPPIanv3S5rreGM9FXZOY4zbmgF0IMKosF7ELK/hCwd7fQjmQeLXM7ydL/e1WEMXhklae8U20CXHyS6RC6zWkizBrRby+bR7gXEL3ctc7Nv2yoV03yQB2l5fRgZzhY0CqCGSgRvh4dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=4A/bz+Gd; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6gXbVHY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5AF2C4CEDD;
-	Thu, 27 Mar 2025 10:33:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743071605;
-	bh=ThaI9ff2qs1t6Y8l0GWnHLtrsC+oNBuxl50t/4RdMk4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J6gXbVHY1abhNWlKKzpDxVw5b/HCBXaHkUO7x+qb4DgD2VGj9FPdvBPcIlgpmqgyI
-	 O8Z8WwIHJynThWKEbv3wA6nwm3xI1nxVEiOwNLx8ajabPwaI3RcSfWXstI7SdeEc0w
-	 wD6VmS42xZFN/lbVOd0SNTh3YSnYNJGd44AWb0/lnOlrWZWA9W6Hemo5v8FSw63UwY
-	 CPCtHQ8mm53b6KonKoPoy/6KQArKK468Pou0szf/7optp9w7ZE1TrLokW48kxVUrzp
-	 nFF9bPpEib61wiLbFOyW7TejinulB6PeFeEYmOUKjuK4HsVjW3EFStAGyi/K5BBRd3
-	 0jplWNeepqDYQ==
-Date: Thu, 27 Mar 2025 10:33:20 +0000
-From: Simon Horman <horms@kernel.org>
-To: Geetha sowjanya <gakula@marvell.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kuba@kernel.org,
-	davem@davemloft.net, pabeni@redhat.com, edumazet@google.com,
-	sgoutham@marvell.com, sbhatta@marvell.com, hkelam@marvell.com,
-	tduszynski@marvell.com
-Subject: Re: [net PATCH] octeontx2-af: Free NIX_AF_INT_VEC_GEN irq
-Message-ID: <20250327103320.GH892515@horms.kernel.org>
-References: <20250327094054.2312-1-gakula@marvell.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="4A/bz+Gd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=vz7gwH/RO6tD9kndiyTk4n1VVx7Bqtq1KEXYkmsRw3w=; b=4A/bz+GdyJfgtb3iEz06NJCuXQ
+	FnHzoL9c0RYb0Bl7of8u6e7ryetrkThDcSkEWlILEJkCZ2N0eNV+yXX0J58r4w0HWOtveZutOKR3e
+	0M17Noio+hIFFSWbg08YBWC95JrQ+b3htaWU9WOJOMl4ZravE//KoBdodOBxClqN4bl7sKKzAwuiM
+	JrOMgDY+Fey2b9Gtsk0LtpjdOwulYw6DyllGfnnKR5LaaE/+MCkhhP8HDd/DUenujLsf1h5fcVJT+
+	0ee0KPtY0EXca5UlmWxIr9IJH6y158y9yxcC3lb9j9JqHtEK+78f3NWQ+fr4i+UduqF59zaw1F9Qg
+	tiL9r+xg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1txkZr-0000000Aic9-0zNZ;
+	Thu, 27 Mar 2025 10:35:11 +0000
+Date: Thu, 27 Mar 2025 03:35:11 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Chi Zhiling <chizhiling@163.com>
+Cc: cem@kernel.org, djwong@kernel.org, brauner@kernel.org,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, Chi Zhiling <chizhiling@kylinos.cn>
+Subject: Re: [PATCH] iomap: Rename iomap_last_written_block to
+ iomap_first_unchanged_block
+Message-ID: <Z-Up3xt1q9swlhv_@infradead.org>
+References: <20250327055706.3668207-1-chizhiling@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,16 +47,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250327094054.2312-1-gakula@marvell.com>
+In-Reply-To: <20250327055706.3668207-1-chizhiling@163.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Thu, Mar 27, 2025 at 03:10:54PM +0530, Geetha sowjanya wrote:
-> Due to the incorrect initial vector number in 
-> rvu_nix_unregister_interrupts(), NIX_AF_INT_VEC_GEN is not
-> geeting free. Fix the vector number to include NIX_AF_INT_VEC_GEN
-> irq.
+On Thu, Mar 27, 2025 at 01:57:06PM +0800, Chi Zhiling wrote:
+> From: Chi Zhiling <chizhiling@kylinos.cn>
 > 
-> Fixes: 5ed66306eab6 ("octeontx2-af: Add devlink health reporters for NIX")
-> Signed-off-by: Geetha sowjanya <gakula@marvell.com>
+> This renames iomap_last_written_block() to iomap_first_unchanged_block()
+> to better reflect its actual behavior of finding the first unmodified
+> block after partial writes, improving code readability.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Does it?  I it used in the context of a write operation where uncached
+is not exactly well define.  I'm not a native speaker, but I don't see
+an improvement here (then again I picked the current name, so I might be
+biassed).
+
+> +static inline loff_t iomap_first_unchanged_block(struct inode *inode, loff_t pos,
+
+Either way please avoid the overly long line.
 
