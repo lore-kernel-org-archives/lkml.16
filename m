@@ -1,102 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0153B12CDA5;
-	Thu, 27 Mar 2025 10:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121FE20E310;
+	Thu, 27 Mar 2025 10:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743072495; cv=none; b=TVTfKvwT0hZf4x8OmyMorLe8g72vy8sShVPFOFh4yGgoMvfQSNANhuTwfSRIS3lrKea/ynz6QE+sNnq7RfmKfNW0k4tvSvaQ0OFAy3jIeZ3x5xghY/SzCUmcFs07Ld11gdl0TIypmyPnolI7IcQCOuJt5ag7wdW3nfC8qFLmJ00=
+	t=1743072527; cv=none; b=tdSFDyHrc+nfZ5PMdv5BnShbhEF1/G9Ohg4m9ePRc2oWEr41WnXKg9C2I1VNtdZo7LQXAlNuoxrPiCIwUAmw+hmjI+P/PBBjYNTNRtDPjxz3v+HWijFnCI7zxz0cbtUV6Z/Wjp9bvGkjpSe4NBFqWHy8g04SZNLkvTM8rGjBVzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743072495; c=relaxed/simple;
-	bh=cc+rihPL886jm67zgwnhpdSaWFW4sArwqBrkbQ93OEU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N84Dmo7jI3DahFFqJnM715m5/IyBghvU3F4kJ9AMtkSTHAnOzZYzGUc4hrJ5DkHpGk9YRtwmvMuHQ0EqSBbGwcXpPyMRYouWwa0ZWTQZBL6/MgKwwaEVeWBI4tYLpojH++wt9EqD6EOkkV1LoVUEZ/krzdcaGIhrwsnNfWE3Isg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=jIpW6AQ8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743072527; c=relaxed/simple;
+	bh=rqiLxa3LoJityHTuB4MjjQsNYv2rE6IlF2K5fEOK4UM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XGG2P0R6KuZaYeuo00+xQ0r5fpAUci7s7xQ/ADponLP/hfZ+j6M4r50d0u7X+zqhvKzBBuZBGyUQAxw/2KKgErv/ELaOJtJvUhrMvycrLgzOJVpvTJYaX5o98OGj8BcdRZxrqqxOmCs1s9xKWWn85tQHW2GCzDxJhTePl4lubRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fUFbo3Aa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1oG29ihQ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="jIpW6AQ8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB5FCC4CEE8;
-	Thu, 27 Mar 2025 10:48:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743072494;
-	bh=cc+rihPL886jm67zgwnhpdSaWFW4sArwqBrkbQ93OEU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jIpW6AQ8T5RYpWHEGnZ9YQNZSgS2s8IYLWSN7kYrB/izjUOcJHkgtE4n9udupx3ea
-	 dIcro9GGdFLCLwNlHc+mCFMNOslXRLd698jpM7b2u0frFPFiBHFEP89bxH4CEBiPeN
-	 j+GGTkWrFDc5xledDW6VSIOqcxtP8dSDxEU8bQZY=
-Date: Thu, 27 Mar 2025 11:48:11 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Puma Hsu <pumahsu@google.com>
-Cc: Wesley Cheng <quic_wcheng@quicinc.com>, srinivas.kandagatla@linaro.org,
-	mathias.nyman@intel.com, perex@perex.cz, conor+dt@kernel.org,
-	dmitry.torokhov@gmail.com, corbet@lwn.net, broonie@kernel.org,
-	lgirdwood@gmail.com, krzk+dt@kernel.org,
-	pierre-louis.bossart@linux.intel.com, Thinh.Nguyen@synopsys.com,
-	tiwai@suse.com, robh@kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org,
-	Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [PATCH v36 01/31] xhci: sideband: add initial api to register a
- secondary interrupter entity
-Message-ID: <2025032756-aliens-ibuprofen-79e5@gregkh>
-References: <20250319005141.312805-1-quic_wcheng@quicinc.com>
- <20250319005141.312805-2-quic_wcheng@quicinc.com>
- <CAGCq0LZoi0MOJLJYUeQJW6EfOU_Ch=v1Sg8L4_B-KhdDCx1fCw@mail.gmail.com>
- <2025032734-reward-fantasize-dc16@gregkh>
- <CAGCq0LamxvvE8b45VAshw9aWJNC2so_vK9t+pzXd3C7Y7tfYAg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fUFbo3Aa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1oG29ihQ"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743072524;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LAeMRv1C0Anp07/ivFTaDKaXblAFGG1c20rodL/9wK0=;
+	b=fUFbo3AauL8FJJoNRFAWfroTkAx2uqqHm5QWCOzzVlGq5TlJiu2In3zWIOa2NGXrSZbwO2
+	HQtapq8XnQ0CM4sEXcB/YsOsPX2ALH5M/Q28GUmYdo355VX3PFi4fyWsdipk+2rTe4JWgN
+	BvOeNllyodMlo3Ls0eupbSUBc9ZV+wCFz+k7YeHxGqe2460kOuLJPNgYRP2GRXwgGpE3LS
+	ismiYaA/Dh1sm/srICBjlzYXRZ9vw8oD8CKdyraQaaQdbslK+R/oqPjZDZpVGPdGnPAjN0
+	kBhyWCpsmgpqtw65KLx4ii3eIKsb42pwsqICIoZtaF8QUP0WN3moIQrSmCI1bA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743072524;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LAeMRv1C0Anp07/ivFTaDKaXblAFGG1c20rodL/9wK0=;
+	b=1oG29ihQMjn1bVUJNrwK3isHy/Dn9egfQtT/YhP1g18lWkeG8uUJCnNSP1+M8wFgQXpDuf
+	wtY7/lWNRddEpIBQ==
+To: Sean Christopherson <seanjc@google.com>
+Cc: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, linux-kernel@vger.kernel.org,
+ bp@alien8.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+ Thomas.Lendacky@amd.com, nikunj@amd.com, Santosh.Shukla@amd.com,
+ Vasant.Hegde@amd.com, Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com,
+ x86@kernel.org, hpa@zytor.com, peterz@infradead.org, pbonzini@redhat.com,
+ kvm@vger.kernel.org, kirill.shutemov@linux.intel.com, huibo.wang@amd.com,
+ naveen.rao@amd.com
+Subject: Re: [RFC v2 13/17] x86/apic: Handle EOI writes for SAVIC guests
+In-Reply-To: <Z92dqEhfj1GG6Fxb@google.com>
+References: <20250226090525.231882-1-Neeraj.Upadhyay@amd.com>
+ <20250226090525.231882-14-Neeraj.Upadhyay@amd.com> <87cyea2xxi.ffs@tglx>
+ <Z92dqEhfj1GG6Fxb@google.com>
+Date: Thu, 27 Mar 2025 11:48:43 +0100
+Message-ID: <87y0wqycj8.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGCq0LamxvvE8b45VAshw9aWJNC2so_vK9t+pzXd3C7Y7tfYAg@mail.gmail.com>
+Content-Type: text/plain
 
-On Thu, Mar 27, 2025 at 06:14:00PM +0800, Puma Hsu wrote:
-> On Thu, Mar 27, 2025 at 3:02 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Mar 27, 2025 at 02:27:00PM +0800, Puma Hsu wrote:
-> > > Hi,
-> > >
-> > > We have implemented and verified the USB audio offloading feature with
-> > > the xhci sideband driver on our Google Pixel products. We would
-> > > appreciate it if this solution can be accepted. Thank you all for the
-> > > work!
-> > >
-> >
-> > Great, can you properly send a "Tested-by:" line for this against the
-> > 00/XX email so that it will be properly saved?
-> >
-> 
-> We(Google Pixel) only use the xhci sideband related changes and two
-> changes in the sound card driver. For the details, what we actually
-> tested are patch [01], [02], [03], [04], [05], [06], [08], and [12].
-> Do I still send the "Tested-by:" line to 00/31 email? Or should I just
-> send the "Tested-by:" line to the 8 changes above? (I added
-> "Tested-by" line for this [01/31] first.)
+On Fri, Mar 21 2025 at 10:11, Sean Christopherson wrote:
+> On Fri, Mar 21, 2025, Thomas Gleixner wrote:
+>> 
+>> Congrats. You managed to re-implement find_last_bit() in the most
+>> incomprehesible way.
+>
+> Heh, having burned myself quite badly by trying to use find_last_bit() to get
+> pending/in-service IRQs in KVM code...
+>
+> Using find_last_bit() doesn't work because the ISR chunks aren't contiguous,
+> they're 4-byte registers at 16-byte strides.
 
-Send it to the commits that you used if you only used portions.
+Which is obvious to solve with trivial integer math:
 
-But that feels odd, why are you only using portions here?  Why not the
-whole thing?  Are you going to have to revert portions of this series in
-order for your device to work properly?
+      bit = vector + 32 * (vector / 32);
 
-> > Also, I think a new version of the series is coming, can you test that
-> > to verify it works properly?  We have to wait until after -rc1 is out
-> > anyway.
-> >
-> 
-> I think this v36 is the last version of the series as I discussed with
-> QCOM Wesley. And for sure I will test it if they do have a new
-> version.
+ergo
 
-See:
-	https://lore.kernel.org/r/ee95520b-cdcc-4e10-a70e-683993cafe36@quicinc.com
-for where the need for a new version is discussed.
+     vector = bit - 16 * (bit / 32);
 
-thanks,
+No?
 
-greg k-h
+> That said, copy+pasting the aforementioned KVM code is absurd.  Please extract
+> KVM's find_highest_vector() to common code.
+
+No. Reimplement this with find_last_bit() and the trivial adjustment
+above and remove find_highest_vector() as there is no point to
+proliferate a bad reimplementation of find_last_bit().
+
+Thanks,
+
+        tglx
+
+
