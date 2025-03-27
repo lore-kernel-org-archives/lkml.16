@@ -1,64 +1,67 @@
-Received: from mail-vk1-f202.google.com (mail-vk1-f202.google.com [209.85.221.202])
+Received: from mail-qv1-f74.google.com (mail-qv1-f74.google.com [209.85.219.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5202A35959
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 01:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1F378F59
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 01:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743038689; cv=none; b=V15O0CZfprQEYbOHkjksFqlxN0tR/hzaER0E9kGg8VSTX6D4Rqc7BGfzrcPX90FfAUHzh9MUGeSKyTiQmsIyEsJqTqPinDlj4TBRGKXs3lUuz+exAFZjEOJMfMTYEaS/onG0Mpfi0xFCsm+hE5GI/+mL9ijK/YNnsP68kBMuZoE=
+	t=1743038694; cv=none; b=OVUjOE4jg8cVUZQ2ZC2XBbH3FDHobAKujBA6BG8uqph+Yz703xxDJsc7pGw70ReQBdnbB8kEWYAfWDXQj8rmg83NBfuSOLaHwSX6yPmXLr60wo3YUWgkewn48beevBcv3EJFiutYSnVq2VJ9cVcro6I6d5e2ORoMa2yIWE7XMjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743038689; c=relaxed/simple;
-	bh=3kxkXpBhoJScEEurm+b8lsAO1U7qWl5x/4lmhlHIsxA=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Qwu45iwIpvRK/1c+iZG2sK8C2P/ANDmm50wyxETwgQikoxXu+48Hqpt8fc+o+T8ZgY/BZyAG9tAKj4LKHoIcQAUX18LTGqhmO2oK9gbsrw+yo/RI4jpIU5VodF3nx8cn0PkBBu9W3cLF55MizpWXvY43kcPanYrJvBChcA5XIS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=smPIZ4DO; arc=none smtp.client-ip=209.85.221.202
+	s=arc-20240116; t=1743038694; c=relaxed/simple;
+	bh=sVPmJtk+M0QFe2DpgpAtXxhYDfGr4TqJUl6HVgYb1yE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=h8fpvw1HHgukeTS5ufXMB5XUZKzlmJ4K8/Alge70o4XYYouEtQL213y4DMF1TOd3QEzls4SBuFDX6XbYHAO+0jtqvo9b9juHX9VIPcl3PBa7iPDXFiRHuDnQoGhfxQjanTgCk76JOC7ZwElZCujlLbmARpl15mP9/rs2zG80xu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NDgnPe2H; arc=none smtp.client-ip=209.85.219.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="smPIZ4DO"
-Received: by mail-vk1-f202.google.com with SMTP id 71dfb90a1353d-523efd77006so84421e0c.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 18:24:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NDgnPe2H"
+Received: by mail-qv1-f74.google.com with SMTP id 6a1803df08f44-6e91a184588so10995346d6.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 18:24:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743038685; x=1743643485; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OnBfyElwB7pR2NOpIQEhHFwjTaj6cxlSHySqE1g9O24=;
-        b=smPIZ4DO9v02diZOUzVSnZP4+S4t8KfxLaB40rAD+oKbLjQEJDYakIVyYMLM6p6PyZ
-         IDBYG12flFMFcarU8zOWUITvgPgx9oQV4k8wxyom65D4TLRNwupvigR7/6UCRo/NNUQ8
-         Pmx6zSegz+5qZfGvcV0rVS6hi8xrKIaK6dmjzc7m/QDLbkvtvC03V4sZR3arGQ78j1K7
-         xRgZ5NPTjwq7g63QkEKrqQGqE3ZDac4vtsoT8PhG1oeuu4/jrZMDEMXqrwOkkjhk+FjL
-         PqfUisWScyqG6PtfDhgZMGSjvKSj1d4Ncl4qlW27pjGTvtMErEK6WWO7c3RN2GAVq80H
-         MYGw==
+        d=google.com; s=20230601; t=1743038691; x=1743643491; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=liGs0zsmCzXyApDpxJa5hQb5aVWUAwjiM/fW15pHclY=;
+        b=NDgnPe2HKi3P7wPlUM9MeskIM3MiwgVMz+sUgld+TwKnpcFg4vxMhlQlm6JNALCqxh
+         iDl29Crucip5+l6BRze2apweoyfR9Y8/+zmeqBSH/JkTWM6jSAO1k1PScLGINCsaouTu
+         AGuVD31gTbGOixL4Pk25AqwEFc4ebX2u219f43uHEoKmCziX0QJNSzIWEaYQODc+kC3j
+         LpVpkp6NiuN7Vmhhoc5zXaTU9kDWK8tE5VTub6ugCCJKuUPX0ac2XGYYLiZy2vXYP/VY
+         A1pKSrDIO87df6y5UIOYhHO22Ci98A/H7/jkw7UGw5Z+xeNX4qWJ74+UdgqcLeryPlcX
+         wk7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743038685; x=1743643485;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OnBfyElwB7pR2NOpIQEhHFwjTaj6cxlSHySqE1g9O24=;
-        b=HeYskaUsecOCjtf9ycR006EVpqGYo/5nLWaKQp4Xw05X8BffXUUaKdEDVrOOU+XlAy
-         qY8coSRovcI52XSlVhL6dLJn/L7Q7uuf25pCI51nP+CBxPvc5Ye7C/+lg952xIbx6iYR
-         8UVfqXZP57rgPDXtWTcmT6buq78balIPHOmiL6bB5Ce+91ElXZBVr3fh0Qk9FYuGZNeE
-         Uws7EzaX3fh27JUeO3NX9GbwRmkP6ES9Y1cD32PC0B1EIPttIiPcqz8hxp7qTPYdKEMA
-         3nDHrL7BPaJpmkyzcCTeZD0Ewf+TPmOi83CnCYqPW0MzjSxKDWMrUUTjAE+61yYKG0td
-         n1GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyXVhwc0XWHadc3kSdPBTKdyWIZ1znSzNQiaJADVA4cmCMQmfftkoBgKpXcVyAkIzoRDmMc9r3ss1A1Wo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzU8LZbHDg1QRFNs4XB7Xh1Cv0uYT/hBqUUDcRgEQmncSdB2Tb/
-	tdqNnhNmGQBx1OnTvxVKj9WYB9GqIzniuNzndqdxu9QEVUeqe2TtUEwqn0v2bwn4wOA1vKLf7m+
-	bubvtWPysoem/P6s81A==
-X-Google-Smtp-Source: AGHT+IEMXalzFI1RmQMmbOxY3dwo1qPrh8Qx1TkLKs2CMrepip9P0Lapptz92/BHPG+Q/ecCwOSxQ1kdXgRemPD4
-X-Received: from vkb18.prod.google.com ([2002:a05:6122:8112:b0:51c:af44:e006])
+        d=1e100.net; s=20230601; t=1743038691; x=1743643491;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=liGs0zsmCzXyApDpxJa5hQb5aVWUAwjiM/fW15pHclY=;
+        b=oIQkJYDPqBJNp4ey0mx6weiiq9c52jpidsT6+f6ICSYEuBMm/7PBNIIEFv3Gn/kFBI
+         kC8o84zvj5tym8+VCRIoQEuXC6XojaYiS/VFfnv5fWuX0SI9FkG8yBYX7KR6v7uMR935
+         4+VqtOJi8xmm18Jpj+YHfCplB3BfT3jgwjflFPGr7jHBIwlNGEfdcVnSzESrF9ZySZNj
+         71249OCm38KN1tDG+FYlQqqSdETWOBewsadcVF5Z5951Eo6u/BqHoJ5j2JJYTp+kCrLc
+         yWwL8WCA5QhcbZXIhw+BJ8s9/vDNwNlhPye0GzuGLZHxsL9q9QiLO5S2Ic8RymQoJMLB
+         lc7A==
+X-Forwarded-Encrypted: i=1; AJvYcCUbMeKnnHQGKHIVVdxIM6/BlyXo+iNSsSCCs3O82oJATaY90RcjQ0iHYJovi3DsReRVwIJ6zseAR3kJQh0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYJ17mLu2B2MT9WfGnsvx1Sa94HX/1v+R2rAgM0KvdE9NisPut
+	MYA2PatUxFNkotxm5oo1fWPt9qF0rSJcZBYAQSnDM1w0XfXfqanNAvLeS8+jlpBeKk+nFLhCjOA
+	5MsL8rJAgMuaXP+6hMg==
+X-Google-Smtp-Source: AGHT+IH7BAFDxR8LyIf/cCmDc14HH7jyC//3aG9i1kJW7Fvp8ZskK6kVxOKCBos5v4Y1+Vq5kmrmwnBeThHJhsNb
+X-Received: from qvbrf3.prod.google.com ([2002:a05:6214:5f83:b0:6ec:dd52:e52c])
  (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6122:3d0e:b0:523:9ee7:7f8e with SMTP id 71dfb90a1353d-526009144f9mr1633987e0c.4.1743038685245;
- Wed, 26 Mar 2025 18:24:45 -0700 (PDT)
-Date: Thu, 27 Mar 2025 01:23:45 +0000
+ 2002:a05:6214:2585:b0:6e8:fbe2:2db0 with SMTP id 6a1803df08f44-6ed23912adfmr23153566d6.30.1743038691331;
+ Wed, 26 Mar 2025 18:24:51 -0700 (PDT)
+Date: Thu, 27 Mar 2025 01:23:46 +0000
+In-Reply-To: <20250327012350.1135621-1-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250327012350.1135621-1-jthoughton@google.com>
 X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250327012350.1135621-1-jthoughton@google.com>
-Subject: [PATCH 0/5] KVM: selftests: access_tracking_perf_test fixes for NUMA
- balancing and MGLRU
+Message-ID: <20250327012350.1135621-2-jthoughton@google.com>
+Subject: [PATCH 1/5] KVM: selftests: Extract guts of THP accessor to
+ standalone sysfs helpers
 From: James Houghton <jthoughton@google.com>
 To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org
 Cc: Maxim Levitsky <mlevitsk@redhat.com>, Axel Rasmussen <axelrasmussen@google.com>, 
@@ -67,60 +70,87 @@ Cc: Maxim Levitsky <mlevitsk@redhat.com>, Axel Rasmussen <axelrasmussen@google.c
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-This is a follow-up from Maxim's recent v2[1] and the selftest changes
-from the v8 of the x86 lockless aging series[2].
+From: Sean Christopherson <seanjc@google.com>
 
-With MGLRU, touching a page doesn't necessarily clear the Idle flag.
-This has come up in the past, and the recommendation was to use MGLRU
-generation numbers[3], which is what this series does.
+Extract the guts of thp_configured() and get_trans_hugepagesz() to
+standalone helpers so that the core logic can be reused for other sysfs
+files, e.g. to query numa_balancing.
 
-With NUMA balancing, pages are temporarily mapped as PROT_NONE, so the
-SPTEs will be zapped, losing the Accessed bits. The fix here is, in the
-event we have lost access information to print a warning and continue
-with the test, just like what we do if the test is running a nested VM.
+Opportunistically assert that the initial fscanf() read at least one byte,
+and add a comment explaining the second call to fscanf().
 
-A flag is added for the user to specify if they wish for the test to
-always enforce or always skip this check.
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: James Houghton <jthoughton@google.com>
+---
+ tools/testing/selftests/kvm/lib/test_util.c | 35 ++++++++++++++-------
+ 1 file changed, 24 insertions(+), 11 deletions(-)
 
-Based on kvm/next.
-
-[1]: https://lore.kernel.org/all/20250325015741.2478906-1-mlevitsk@redhat.com/
-[2]: https://lore.kernel.org/kvm/20241105184333.2305744-12-jthoughton@google.com/
-[3]: https://lore.kernel.org/all/CAOUHufZeADNp_y=Ng+acmMMgnTR=ZGFZ7z-m6O47O=CmJauWjw@mail.gmail.com/
-
-James Houghton (3):
-  cgroup: selftests: Move cgroup_util into its own library
-  KVM: selftests: Build and link selftests/cgroup/lib into KVM selftests
-  KVM: selftests: access_tracking_perf_test: Use MGLRU for access
-    tracking
-
-Maxim Levitsky (1):
-  KVM: selftests: access_tracking_perf_test: Add option to skip the
-    sanity check
-
-Sean Christopherson (1):
-  KVM: selftests: Extract guts of THP accessor to standalone sysfs
-    helpers
-
- tools/testing/selftests/cgroup/Makefile       |  21 +-
- .../selftests/cgroup/{ => lib}/cgroup_util.c  |   3 +-
- .../cgroup/{ => lib/include}/cgroup_util.h    |   4 +-
- .../testing/selftests/cgroup/lib/libcgroup.mk |  12 +
- tools/testing/selftests/kvm/Makefile.kvm      |   4 +-
- .../selftests/kvm/access_tracking_perf_test.c | 263 ++++++++++--
- .../selftests/kvm/include/lru_gen_util.h      |  51 +++
- .../testing/selftests/kvm/include/test_util.h |   1 +
- .../testing/selftests/kvm/lib/lru_gen_util.c  | 383 ++++++++++++++++++
- tools/testing/selftests/kvm/lib/test_util.c   |  42 +-
- 10 files changed, 726 insertions(+), 58 deletions(-)
- rename tools/testing/selftests/cgroup/{ => lib}/cgroup_util.c (99%)
- rename tools/testing/selftests/cgroup/{ => lib/include}/cgroup_util.h (99%)
- create mode 100644 tools/testing/selftests/cgroup/lib/libcgroup.mk
- create mode 100644 tools/testing/selftests/kvm/include/lru_gen_util.h
- create mode 100644 tools/testing/selftests/kvm/lib/lru_gen_util.c
-
-
-base-commit: 782f9feaa9517caf33186dcdd6b50a8f770ed29b
+diff --git a/tools/testing/selftests/kvm/lib/test_util.c b/tools/testing/selftests/kvm/lib/test_util.c
+index 8ed0b74ae8373..3dc8538f5d696 100644
+--- a/tools/testing/selftests/kvm/lib/test_util.c
++++ b/tools/testing/selftests/kvm/lib/test_util.c
+@@ -132,37 +132,50 @@ void print_skip(const char *fmt, ...)
+ 	puts(", skipping test");
+ }
+ 
+-bool thp_configured(void)
++static bool test_sysfs_path(const char *path)
+ {
+-	int ret;
+ 	struct stat statbuf;
++	int ret;
+ 
+-	ret = stat("/sys/kernel/mm/transparent_hugepage", &statbuf);
++	ret = stat(path, &statbuf);
+ 	TEST_ASSERT(ret == 0 || (ret == -1 && errno == ENOENT),
+-		    "Error in stating /sys/kernel/mm/transparent_hugepage");
++		    "Error in stat()ing '%s'", path);
+ 
+ 	return ret == 0;
+ }
+ 
+-size_t get_trans_hugepagesz(void)
++bool thp_configured(void)
++{
++	return test_sysfs_path("/sys/kernel/mm/transparent_hugepage");
++}
++
++static size_t get_sysfs_val(const char *path)
+ {
+ 	size_t size;
+ 	FILE *f;
+ 	int ret;
+ 
+-	TEST_ASSERT(thp_configured(), "THP is not configured in host kernel");
+-
+-	f = fopen("/sys/kernel/mm/transparent_hugepage/hpage_pmd_size", "r");
+-	TEST_ASSERT(f != NULL, "Error in opening transparent_hugepage/hpage_pmd_size");
++	f = fopen(path, "r");
++	TEST_ASSERT(f, "Error opening '%s'", path);
+ 
+ 	ret = fscanf(f, "%ld", &size);
++	TEST_ASSERT(ret > 0, "Error reading '%s'", path);
++
++	/* Re-scan the input stream to verify the entire file was read. */
+ 	ret = fscanf(f, "%ld", &size);
+-	TEST_ASSERT(ret < 1, "Error reading transparent_hugepage/hpage_pmd_size");
+-	fclose(f);
++	TEST_ASSERT(ret < 1, "Error reading '%s'", path);
+ 
++	fclose(f);
+ 	return size;
+ }
+ 
++size_t get_trans_hugepagesz(void)
++{
++	TEST_ASSERT(thp_configured(), "THP is not configured in host kernel");
++
++	return get_sysfs_val("/sys/kernel/mm/transparent_hugepage/hpage_pmd_size");
++}
++
+ size_t get_def_hugetlb_pagesz(void)
+ {
+ 	char buf[64];
 -- 
 2.49.0.395.g12beb8f557-goog
 
