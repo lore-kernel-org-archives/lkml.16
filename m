@@ -1,239 +1,214 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2044.outbound.protection.outlook.com [40.107.22.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0A21547C0;
-	Thu, 27 Mar 2025 14:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743086146; cv=fail; b=ArfSdM9OFlIBPZDBjB+LvfZ7qc3/RCcdyqt1ltOxm0uQuE9tnJoSiANb6Y307BU8o0IqxP1LUYtO/ls7zaUM3s8D0R2JTDyITQJ0Keu6rsFMARw/UHvc/PfIxT2KGKFy6A6PB8TMwSEeG6pL4QwWAjJQ5+cludyfLKLyclvck/w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743086146; c=relaxed/simple;
-	bh=LkVSOg0Un5R35fmFYzVzFFaNZUEv9h5N0gicSiKqqUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=c/Z1jkmrBADcTRtNpG/Jlnrt6NkAO2SGjhAlCQ+4vDwRN/gINCJR2LOLvV0/zfzyDrHkj5prA+ccz21gSrWy4sV9ioE4MEsCjCX40xOKHON97zsl2SJqRjFYBYTys3e59JHRRIJ/tAdxTAbBS79w+GfvDT10ypxQKKqavgZk8eI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=iqZAIeNX; arc=fail smtp.client-ip=40.107.22.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752B120FAAD;
+	Thu, 27 Mar 2025 14:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743086186; cv=none; b=Zccdl5t8IIGC1abcyRS9Q030/Vn8sdvnlFPC8X/I311HoOUNggj1Omya+lsEQR4vInk1H1Stt4kq9xcIzM8wUdgQswAhSa9aDCet4IDYy3ZjYwXPSqTsWJKbe4PYbHHPzwZ9SMzoaB1Z4jyA2fsR3UKyJ4ZQpVwhbQkJP9tER+Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743086186; c=relaxed/simple;
+	bh=aRSJEE4LF/DgyqNP78KuA37ILgQD4/DkDEBzOXdalYQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m3zHnfKVQ+8FUHNF8Pbw3yUGiALdn2nlXwTustj+9BfE1uzt+CHjSeJRn23sJNDPq8RqilZqkTbl5hvs2eapg61gLqgewvV1lDyXlBs26mCKEjtwAiXT/8XePtw0tWZueRbw9Uu2TdD2zG9zZ+aLpIY84HMKWURvBzLUplgBU9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B9imn3qo; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="iqZAIeNX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bYDpbqeNyKcEMv/c76FpLcvlv35I4s8BwlxkvAbRrxiXQk3KTIJyueaYICbXJzPm9bpaSKwsYFx4LHcpBKiZYgMM6cfaehqQ35fZyy/eKX8/NRAORnhAZEQIq0ikD6QVaJITwnMUz51SRAc3sT5yNxTqkDA/ToZ9kWvj4jWzf1gY0wqRdflrtlJ/9iPq8R4BS1X91tloHbB7D8qOiSVQPPTE9rBLpZvntU5t/Z5/IXRDY2se0Df5eTuv/l65vjJ+HI8vJ3sB4GlN5BHySl2dswIKCwKdvyKkHt786pMIaIKCyfzOeO9QJASbcT/dHYE5dH9LgTVse1EsmnO38dP9gw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gJpOKYcPnj3afxuGoPg73ioZY0RwdiZPZVWWj2wi2Ho=;
- b=szIQK8L3orEwT9iX+PJ8bvlWc5bvvgxQRlVD4XLOPzyIBugECRqbyUKM3Ejt+0OFwdx7iwnisZ6NoFhy6r+p1ffoJZYEqHL9zPRho36YqO8Z0dzy2mGlErl+wEULN5P7yhGSvASGDEqJKKTsoKoUcDdwnomt4p39hhVRVlc+jdymG5vrBMctUS7NZzbuMKqPqX7T4Qf8N2ArWbfC+BpfdlJL+m1lqxKujtAzj1VS+/5H3uoc/S5b0Ymgl8ENbs70yd5nPNiQq2UcbNHnOTgHigRka8gCwR0bVIdCSym7Kf2DgXAApEwGOVeQ/0Fd+diLXgI6tDLTNgC1MF6hE5SWhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gJpOKYcPnj3afxuGoPg73ioZY0RwdiZPZVWWj2wi2Ho=;
- b=iqZAIeNXROQvmiNd9bbbZx2c1x+fYRq4GyI12fyHvCwpMrd6uC8BVN8q0dwy7E4OPCvt3F53SpAlXSmXaMr2FjlmPv4uvuc1AI/j6Lvh7eg3rvZSphpcXv2jWNOTejzeoHfATRQr1D7RFzxhzSZELtW6fUbG6A4BjYDvIv+T2lD+YL/wfk1OTulu0ciM6oOSa3W/fd4f7CsEAw9FSqfIuL5qFO1pkgFzS4/La96jwsEHN2G12+7ZAr8e+JGeqICLf10dydm4aDhtg2XVeMx4MNx+NY3uxyl+4DJjQ1tXuZmnntTSBnuwqQh0yPI99K13twhUGkDZw6BgY+34ockbtA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM0PR04MB6929.eurprd04.prod.outlook.com (2603:10a6:208:181::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
- 2025 14:35:41 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%3]) with mapi id 15.20.8534.040; Thu, 27 Mar 2025
- 14:35:41 +0000
-Date: Thu, 27 Mar 2025 10:35:32 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: ming.qian@oss.nxp.com
-Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-	mirela.rabulea@oss.nxp.com, shawnguo@kernel.org,
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-	xiahong.bao@nxp.com, eagle.zhou@nxp.com, linux-imx@nxp.com,
-	imx@lists.linux.dev, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/3] media: imx-jpeg: Enhance error handling in buffer
- allocation
-Message-ID: <Z+ViNIB7WqgmouYE@lizhi-Precision-Tower-5810>
-References: <20250327023710.549-1-ming.qian@oss.nxp.com>
- <20250327023710.549-2-ming.qian@oss.nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327023710.549-2-ming.qian@oss.nxp.com>
-X-ClientProxiedBy: BY1P220CA0007.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:59d::13) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B9imn3qo"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-227d6b530d8so21023035ad.3;
+        Thu, 27 Mar 2025 07:36:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743086184; x=1743690984; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wCmk4hmuZJ512kbCxwIcYRx/KVLFgt2B/Rg6XnWmpH0=;
+        b=B9imn3qofIk5gUlIvys2NL9TmacUxLEPIbhqOKVo5PcvlaCefmGJEBu9fgAu4Sex5a
+         rbbpMpx49ZSxIl2ctFl5HRdRxfaTbGwnz00Z4JwpJY/Rz4nhmglwikFersrDeFt9YdsY
+         eSNlPDCzFxRw0O/Nn/ehvmRI03Y0MfL7BeTh+UhCCuQxW/B6EsyUmecSTYMerQM9ED6D
+         7QSPDdRGqsQn1n22c54ZVH3XdXI/uh2rs31bGOB6wQyNBq35udLvUuLTwgBD947Qd6ti
+         /0K+Ztea2zKom8dAubCbV7CDu55lV3Jhg8t+nlbExMXDZ/jQAV8JP27ayGru4jybwxth
+         UBWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743086184; x=1743690984;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wCmk4hmuZJ512kbCxwIcYRx/KVLFgt2B/Rg6XnWmpH0=;
+        b=YA86lzX3o8qpdDFAG4koexsBOVJrTpx4lLSs2CZMxC7DSejpnUag2/GswMyVRE3MHj
+         LXyKZFpBWfsAzf0lkMcXoJUzXlH5/NALj4ygJnvCx+bsscgm+pfT8vhhqEwXPNBd+Xg9
+         zvQHNYJkNGw+6uIccSPnW4c2TDkdAvrm+W+OVgCcndhxtI3An/PIQaoA81198TKgoSkJ
+         q+Sa8Bguedch39VD3uBIaQd0SOnfihZRed+gjD1WudAXlh42yN/YcugVz8iXSGRqRFF2
+         cw4BiHfPzhbwylk2xIb/BfoiXiBKfJIM9kssGycbcxqZjoh8lo6mBM4lgav5GZJxi0FG
+         09yQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUbPi4XavMv1OMsr9qvIYAWd8qIZPOO2m7IwYirRuyQzTbZRodyXpAcDYb1FvCvJ2LfdDZ44X3h@vger.kernel.org, AJvYcCWx/inNPnxL06QeK/K/mXVLlo9Fn1Z/b/vNlyj0TkUcuqxDF8cFrck7VWzFTGc/TqmHgRv3RXSvg1IYapU=@vger.kernel.org, AJvYcCXEQjskpUB4/5wcONrkq6dt/enVWIwngUijT0FLq5dFQu+nMPZlpOplCuAXOBXKhPBfj0uF/+Ni3W8h@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBhubSu/iTZLCHa5t1jJ7AwPdJpa9jGo6RfomvYQUo1l9vppa6
+	p9Bdhn6nXZgSq7tR6rcO5v5F6BDPkHT/2jIUmRPZV8/3R4g3AJY=
+X-Gm-Gg: ASbGncsT00ArK39jCVnYlfsrPej23vh1Sh2iEUkP53EjEs45WAWGqmVU5H5Tu5wyDat
+	gvrnEVnjsFwPPo3+4vYqi5HYf0ks08IxMtjQssy6Eut9GFMSXxG5orjUhSlvgxkzs1aW4aLA4sv
+	lObgpq+F+JRsV3yTLDhFB1max/ZLxR7aagM3J7RgLKontZ3nGMeDls583qtmfvC5N58m/34ncGi
+	3scVPZtbB7jruQzSm0BPaPSK7vjRX8/2ycIplM9bHSmiQrKpdmfB7D7pE/ppB1ipaoisgSjpcTr
+	ecS5cCydLx/vvyxLe5Bltk0Bs5xH6fHPJvC0NvTuy8aX
+X-Google-Smtp-Source: AGHT+IGDGrmcXz0yo6x3fW0RJOxnKZihvpxzy9pmxAKnOwTngC++Wp2N8mMvV7YeUTAcRN/VCZxolA==
+X-Received: by 2002:a17:902:fc4f:b0:216:410d:4c53 with SMTP id d9443c01a7336-2280491aa7dmr60192305ad.41.1743086183439;
+        Thu, 27 Mar 2025 07:36:23 -0700 (PDT)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2291eec73d6sm143915ad.42.2025.03.27.07.36.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 07:36:22 -0700 (PDT)
+Date: Thu, 27 Mar 2025 07:36:22 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: syzbot <syzbot+377b71db585c9c705f8e@syzkaller.appspotmail.com>
+Cc: andrew+netdev@lunn.ch, andrew@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, eric.dumazet@gmail.com, horms@kernel.org,
+	kuba@kernel.org, linux-kernel@vger.kernel.org,
+	linux-x25@vger.kernel.org, lkp@intel.com, llvm@lists.linux.dev,
+	ms@dev.tdt.de, netdev@vger.kernel.org,
+	oe-kbuild-all@lists.linux.dev, pabeni@redhat.com, sdf@fomichev.me,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [x25?] possible deadlock in lapbeth_device_event
+Message-ID: <Z-ViZoezAdjY8TC-@mini-arch>
+References: <67cd611c.050a0220.14db68.0073.GAE@google.com>
+ <67e55c12.050a0220.2f068f.002c.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM0PR04MB6929:EE_
-X-MS-Office365-Filtering-Correlation-Id: 44e0efc1-7ce9-4d1f-9552-08dd6d3ca632
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|52116014|1800799024|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?yuKEIgrZiIxzw3pxvtPqSzZ1e0PVJVT+DjvG4MGi2ezdHREHKLc8m+oxDmg1?=
- =?us-ascii?Q?bZOzs4ms6V5JkW+HVT3YKlDDUgqe3kXzW27q9R7jp3EyB7ZxF8Z0Mj+hk0yu?=
- =?us-ascii?Q?4M5GHOXY0WdtMh9QToP+hgZNcGZ79uv+8nzRiYbSQtgAfEN6Eo4r24AUPc0+?=
- =?us-ascii?Q?D+BYmGVIfgnzrPmic3CtQFRAJ56Wusu+MjaFQ4nMp4q3qxg1n15Bu8d83+PV?=
- =?us-ascii?Q?N6CBWGNqDcN4ttXym1fZEqVbuRqQDPUkiYqAt3WLTsMowutARbWL3HjTXyyB?=
- =?us-ascii?Q?ce6rKMsU2AHDyJ1Cs/iIxp3pN4js0kxh9kVy0ErSq5PcXQW6wkdhsgO2ZSRZ?=
- =?us-ascii?Q?vrbaWGFF57xlLKi5d9uwg+Y+SocqYsZlF63DwF84TMkzhcFRf0foqMeh72DD?=
- =?us-ascii?Q?1dzWX+VnKaNKMdzvN0EcwJoetabs74Inv8lEdQnjmMXSqkYPWcBI3YCTd6RT?=
- =?us-ascii?Q?lroeOGxEXV661ljjlpaIruiLTdY9zHVRXc+VVRgHAF91USAf8Gz9FiE4YCPl?=
- =?us-ascii?Q?VMG/gazkALgMRXjTmC63L8ZFWPLehfNLnTa7xcUXSR9knPQaBCuluZRYERO0?=
- =?us-ascii?Q?nvCYk/Fu/1F7xkJ8YKuR1izFGLZ68hh7HvOWb4AQkXglcQlz7EtLZjj3zVrt?=
- =?us-ascii?Q?/JP5hjogygGovdWe6rVKfT6muRH/ZGYWsI0gNOZ+Muh6sZ4ZSY4tXuY2t9z0?=
- =?us-ascii?Q?+s6RqNM5yx0bLts9XnsV3gH9kF9bZgRrQvLSqFWX6k8Rj5TWr4faPdmEj6KS?=
- =?us-ascii?Q?+scMMxRrc33hOjHj8eRVnZUUYIMEKO29gQAw9QOnhgESq1u2sZCqhRnCN2ou?=
- =?us-ascii?Q?Jx/FxgPw3G+1g//yzAbvRw97p7SOjwtTbSwQKcORtSUg9DaVvPyU9ljJqYR2?=
- =?us-ascii?Q?GGpnXspNctUE96n9QSeUJ3IutaWVOgmr9x/+ycXbiLuKXzHS7wLgAHxw+Kdm?=
- =?us-ascii?Q?l0IgINrQporSMdJb8GWIydMdPpXuv1wVMTjv9Vb0BwrepweYWJd2UO5d5edh?=
- =?us-ascii?Q?KT9+Epep6pg46jgcfxxUYnlWNJ1LDEy98X8VXVL3laTlVLu1zLNN0tRDcpIL?=
- =?us-ascii?Q?O0dX2e42zW//zkpHBHG7jb4AVajfJSXGw+eVqjAh6x384diPhQwqvQAUb6bH?=
- =?us-ascii?Q?E2hld88mgt9nCSu20jvjtWxBJFYwfdvYVmloX6VQB4jce7pTV3GSaUJ4zt3I?=
- =?us-ascii?Q?ub0cNafK6Eg6iI1qUYaLeFDygrFeLTYuwzJ6qFZCyGgo6PEXqg/6EhE4xGbY?=
- =?us-ascii?Q?RINMwMv94t/MUVRKL3+IjrkXezo4QoXou/FKb3GmZc49EQ7H9f+bku+xsRfP?=
- =?us-ascii?Q?VNVKkWlXzUd4ltqzWBEnobj4AtkE6jkzomjVqtYNdzIQZv8dSvZrI8yyYxs2?=
- =?us-ascii?Q?kXFB4YHLe1x2O+3GUe2weLoL187tR+HuucFH9/AVxB/O+mMFy+u4kzuKmGKU?=
- =?us-ascii?Q?0C4ln+72aC6Cwa3cnKZDPybSL8oR+6k4kQ9OkPjHWK24RbdaC4k0lxRkXru9?=
- =?us-ascii?Q?WkFC59ciAQisPDU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jLWk1OVHS+sR49YdAM1T+AGUUls95kbu2s+8W7sofvGvt7frhZZTnGrm7bYn?=
- =?us-ascii?Q?HSEUnbkJcq6DDHLT57NuV2+qICik/VE5tkYBPdycKbR6qGn+d+ZpjWiQpRUi?=
- =?us-ascii?Q?1YSGloTy39SMLoHA7Z08ioleUZ3LUA0ZjX1oi7jwIayBON7hLlL4lHWKCMHD?=
- =?us-ascii?Q?sRFEjJyfsUwn+MfXjtjM18ZS8Q44OEsHLTV2C4m/or3pZNc1Mdwpp8+m+urV?=
- =?us-ascii?Q?fQXFvZwHoaJSqBCPU7lq6xUWtAYphYrBgN/ylbF9LEv/JWcDp01xP+o1/KcE?=
- =?us-ascii?Q?85sxTLyopcX+bVsz7HKVT09bk59cMOUL/vvKdjS9aWMfqDvd1nBJ3WHnNbH1?=
- =?us-ascii?Q?+t5bvv7CT3pel6SIfyLvgdHI11k8r43uxS4A+X1gIPh+h+e5e7DnyL+Jg6Ri?=
- =?us-ascii?Q?IDDo49LqZ/A4/0Yeo1UcjpKAUBdoetcZTHlOGiNcRACq9B6lL3IHOxOZIY+T?=
- =?us-ascii?Q?/SozLc5RPOC5euWWLVFAQsm2r0yNmy0uk6dBDKYOF3nGppgqkGH3727KItob?=
- =?us-ascii?Q?VbWYrZ9TSgbLvMoBeyAhjKPT32K1ruLYsfYXi5a0Q7JtAY9jLNyyxRtO+XiV?=
- =?us-ascii?Q?DzbVwMKRdVKt95Tgvur+FWum/vJSYCkHZ7zzqKSPs1iFGeeDyiQd8mdH3Pj4?=
- =?us-ascii?Q?IujyCaSsfTgNtwBoKBPqaPPKxS4GvhY5GtBK1aBDSTMuI35TWfxWIlzEXLt1?=
- =?us-ascii?Q?4HA4njiHIaMwNOOXEJTdA7LTKMpdYUP8YGJR+aDMaEiZPAI0cRlTUZYWt3w5?=
- =?us-ascii?Q?txvjLu38J2oofTQx8SDtOvHOwfpj7rPvjUnn5TYR4ByNO1EUtKrdb5boB60M?=
- =?us-ascii?Q?WJE2AU+4KBSfH/9cuuLZoDDA50qdCjItQ2m5/yx+syWnIjRrbJmGBGJKsXrc?=
- =?us-ascii?Q?tmyxPmQePOvLTpz8bLPtYxWEujpi/W0KEAZ3bfztEQrMIB4055JUgKdW5m0h?=
- =?us-ascii?Q?tH2Utkx5Tr7iCm7OZxiwIYrvS537xkUaHmCQ6GGx8emGgYkPpaVOZHY4DDCd?=
- =?us-ascii?Q?dm+Q96KhqYycYMzCsWu4YVIXIke1cUsqb5LXgYxr6NSjudTLZdG7z/+svozE?=
- =?us-ascii?Q?NisPS5ZdNXjx9sIu1l5090YDE+ruQz96av7kFIPPqugFwNB/oI56XcbSE9AZ?=
- =?us-ascii?Q?nAdbw9wcbl7naPTgUlpn0Rw8sb1HnElOnl7ycImpZC4wyFrl8wsUYX4/L1se?=
- =?us-ascii?Q?ubkUidqBUXmUShCPPhL62b6903P2Kn+2o9lmDUAjW921B6qLko4SnmXl6ptz?=
- =?us-ascii?Q?xTpI1mfz+lZPbTaMPvnsUJG5X//yMWkiFsVh+NMqfq/djLFI/Kaqy5BA6aVv?=
- =?us-ascii?Q?yLKGuavwYw6meWv6I4XfRCjr3YoWoMoVwjRPR0mxARmXEZLXVq7hTc0FwjBO?=
- =?us-ascii?Q?Ajwt8cRRzgiW07e0rB829N8Qx/Zptzw6ofoYg51R1BvDYo4Mdd5jAUbhvrwc?=
- =?us-ascii?Q?SXWqfVZjIJmOQnENaGdn5/dcS0lINEPXGETDTE66ecl8RH6+cERjFRRyL6Th?=
- =?us-ascii?Q?Pb5VJXK9NfbBYEVJfWNre2Yh8QsHzZFqd4XmbOf29wN7Myhoy9VuaEXyqj0Y?=
- =?us-ascii?Q?kVGvFkqEB6vgykAJGO/Crm3ypOjjY4DmcnGhbtXE?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 44e0efc1-7ce9-4d1f-9552-08dd6d3ca632
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 14:35:41.4203
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kM7DDOFMMFjlkSnc6kLdO9Vb8VqrBdE4NZVDjq18Qz9yoQ1wHeDAfq2VIFxb+Py+3xl1Gr+5bbnItYdcQVPojg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6929
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <67e55c12.050a0220.2f068f.002c.GAE@google.com>
 
-On Thu, Mar 27, 2025 at 10:37:05AM +0800, ming.qian@oss.nxp.com wrote:
-> From: Ming Qian <ming.qian@oss.nxp.com>
->
-> In function mxc_jpeg_alloc_slot_data, driver will allocate some dma
-> buffer, but only return error if certain allocation failed.
->
-> Without cleanup the allocation failure, the next time it will return
-> success directly, but let some buffer be uninitialized.
-> It may result in accessing a null pointer.
->
-> Clean up if error occurs in the allocation.
->
-> Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
-
-Look like it is bug fix, add fixes tags
-
-Frank
+On 03/27, syzbot wrote:
+> syzbot has found a reproducer for the following issue on:
+> 
+> HEAD commit:    1a9239bb4253 Merge tag 'net-next-6.15' of git://git.kernel..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15503804580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=95c3bbe7ce8436a7
+> dashboard link: https://syzkaller.appspot.com/bug?extid=377b71db585c9c705f8e
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=139a6bb0580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16974a4c580000
+> 
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-1a9239bb.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/bd56e2f824c3/vmlinux-1a9239bb.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/19172b7f9497/bzImage-1a9239bb.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+377b71db585c9c705f8e@syzkaller.appspotmail.com
+> 
+> ============================================
+> WARNING: possible recursive locking detected
+> 6.14.0-syzkaller-05877-g1a9239bb4253 #0 Not tainted
+> --------------------------------------------
+> dhcpcd/5649 is trying to acquire lock:
+> ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
+> ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: netif_napi_add_weight include/linux/netdevice.h:2783 [inline]
+> ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: lapbeth_new_device drivers/net/wan/lapbether.c:415 [inline]
+> ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: lapbeth_device_event+0x586/0xbe0 drivers/net/wan/lapbether.c:460
+> 
+> but task is already holding lock:
+> ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
+> ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
+> ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:39 [inline]
+> ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: dev_change_flags+0xa7/0x250 net/core/dev_api.c:67
+> 
+> other info that might help us debug this:
+>  Possible unsafe locking scenario:
+> 
+>        CPU0
+>        ----
+>   lock(&dev->lock);
+>   lock(&dev->lock);
+> 
+>  *** DEADLOCK ***
+> 
+>  May be due to missing lock nesting notation
+> 
+> 2 locks held by dhcpcd/5649:
+>  #0: ffffffff900fb268 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_net_lock include/linux/rtnetlink.h:130 [inline]
+>  #0: ffffffff900fb268 (rtnl_mutex){+.+.}-{4:4}, at: devinet_ioctl+0x26d/0x1f50 net/ipv4/devinet.c:1121
+>  #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
+>  #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
+>  #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:39 [inline]
+>  #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: dev_change_flags+0xa7/0x250 net/core/dev_api.c:67
+> 
+> stack backtrace:
+> CPU: 1 UID: 0 PID: 5649 Comm: dhcpcd Not tainted 6.14.0-syzkaller-05877-g1a9239bb4253 #0 PREEMPT(full) 
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:94 [inline]
+>  dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+>  print_deadlock_bug+0x1e9/0x240 kernel/locking/lockdep.c:3042
+>  check_deadlock kernel/locking/lockdep.c:3094 [inline]
+>  validate_chain kernel/locking/lockdep.c:3896 [inline]
+>  __lock_acquire+0xff7/0x1ba0 kernel/locking/lockdep.c:5235
+>  lock_acquire kernel/locking/lockdep.c:5866 [inline]
+>  lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
+>  __mutex_lock_common kernel/locking/mutex.c:587 [inline]
+>  __mutex_lock+0x19a/0xb00 kernel/locking/mutex.c:732
+>  netdev_lock include/linux/netdevice.h:2751 [inline]
+>  netif_napi_add_weight include/linux/netdevice.h:2783 [inline]
+>  lapbeth_new_device drivers/net/wan/lapbether.c:415 [inline]
+>  lapbeth_device_event+0x586/0xbe0 drivers/net/wan/lapbether.c:460
+>  notifier_call_chain+0xb9/0x410 kernel/notifier.c:85
+>  call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2180
+>  call_netdevice_notifiers_extack net/core/dev.c:2218 [inline]
+>  call_netdevice_notifiers net/core/dev.c:2232 [inline]
+>  __dev_notify_flags+0x12c/0x2e0 net/core/dev.c:9409
+>  netif_change_flags+0x108/0x160 net/core/dev.c:9438
+>  dev_change_flags+0xba/0x250 net/core/dev_api.c:68
+>  devinet_ioctl+0x11d5/0x1f50 net/ipv4/devinet.c:1200
+>  inet_ioctl+0x3a7/0x3f0 net/ipv4/af_inet.c:1001
+>  sock_do_ioctl+0x115/0x280 net/socket.c:1190
+>  sock_ioctl+0x227/0x6b0 net/socket.c:1311
+>  vfs_ioctl fs/ioctl.c:51 [inline]
+>  __do_sys_ioctl fs/ioctl.c:906 [inline]
+>  __se_sys_ioctl fs/ioctl.c:892 [inline]
+>  __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7effd384cd49
+> Code: 5c c3 48 8d 44 24 08 48 89 54 24 e0 48 89 44 24 c0 48 8d 44 24 d0 48 89 44 24 c8 b8 10 00 00 00 c7 44 24 b8 10 00 00 00 0f 05 <41> 89 c0 3d 00 f0 ff ff 76 10 48 8b 15 ae 60 0d 00 f7 d8 41 83 c8
+> RSP: 002b:00007ffedd440088 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 00007effd377e6c0 RCX: 00007effd384cd49
+> RDX: 00007ffedd450278 RSI: 0000000000008914 RDI: 000000000000001a
+> RBP: 00007ffedd460438 R08: 00007ffedd450238 R09: 00007ffedd4501e8
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> R13: 00007ffedd450278 R14: 0000000000000028 R15: 0000000000008914
+>  </TASK>
+> 
+> 
 > ---
->  .../media/platform/nxp/imx-jpeg/mxc-jpeg.c    | 47 +++++++++++--------
->  1 file changed, 27 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-> index 0e6ee997284b..12661c177f5a 100644
-> --- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-> +++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-> @@ -752,6 +752,32 @@ static int mxc_get_free_slot(struct mxc_jpeg_slot_data *slot_data)
->  	return -1;
->  }
->
-> +static void mxc_jpeg_free_slot_data(struct mxc_jpeg_dev *jpeg)
-> +{
-> +	/* free descriptor for decoding/encoding phase */
-> +	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
-> +			  jpeg->slot_data.desc,
-> +			  jpeg->slot_data.desc_handle);
-> +	jpeg->slot_data.desc = NULL;
-> +	jpeg->slot_data.desc_handle = 0;
-> +
-> +	/* free descriptor for encoder configuration phase / decoder DHT */
-> +	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
-> +			  jpeg->slot_data.cfg_desc,
-> +			  jpeg->slot_data.cfg_desc_handle);
-> +	jpeg->slot_data.cfg_desc_handle = 0;
-> +	jpeg->slot_data.cfg_desc = NULL;
-> +
-> +	/* free configuration stream */
-> +	dma_free_coherent(jpeg->dev, MXC_JPEG_MAX_CFG_STREAM,
-> +			  jpeg->slot_data.cfg_stream_vaddr,
-> +			  jpeg->slot_data.cfg_stream_handle);
-> +	jpeg->slot_data.cfg_stream_vaddr = NULL;
-> +	jpeg->slot_data.cfg_stream_handle = 0;
-> +
-> +	jpeg->slot_data.used = false;
-> +}
-> +
->  static bool mxc_jpeg_alloc_slot_data(struct mxc_jpeg_dev *jpeg)
->  {
->  	struct mxc_jpeg_desc *desc;
-> @@ -794,30 +820,11 @@ static bool mxc_jpeg_alloc_slot_data(struct mxc_jpeg_dev *jpeg)
->  	return true;
->  err:
->  	dev_err(jpeg->dev, "Could not allocate descriptors for slot %d", jpeg->slot_data.slot);
-> +	mxc_jpeg_free_slot_data(jpeg);
->
->  	return false;
->  }
->
-> -static void mxc_jpeg_free_slot_data(struct mxc_jpeg_dev *jpeg)
-> -{
-> -	/* free descriptor for decoding/encoding phase */
-> -	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
-> -			  jpeg->slot_data.desc,
-> -			  jpeg->slot_data.desc_handle);
-> -
-> -	/* free descriptor for encoder configuration phase / decoder DHT */
-> -	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
-> -			  jpeg->slot_data.cfg_desc,
-> -			  jpeg->slot_data.cfg_desc_handle);
-> -
-> -	/* free configuration stream */
-> -	dma_free_coherent(jpeg->dev, MXC_JPEG_MAX_CFG_STREAM,
-> -			  jpeg->slot_data.cfg_stream_vaddr,
-> -			  jpeg->slot_data.cfg_stream_handle);
-> -
-> -	jpeg->slot_data.used = false;
-> -}
-> -
->  static void mxc_jpeg_check_and_set_last_buffer(struct mxc_jpeg_ctx *ctx,
->  					       struct vb2_v4l2_buffer *src_buf,
->  					       struct vb2_v4l2_buffer *dst_buf)
-> --
-> 2.43.0-rc1
->
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+
+#syz test
+
+diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
+index 56326f38fe8a..a022e930bd8e 100644
+--- a/drivers/net/wan/lapbether.c
++++ b/drivers/net/wan/lapbether.c
+@@ -39,6 +39,7 @@
+ #include <linux/lapb.h>
+ #include <linux/init.h>
+ 
++#include <net/netdev_lock.h>
+ #include <net/x25device.h>
+ 
+ static const u8 bcast_addr[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+@@ -372,6 +373,7 @@ static void lapbeth_setup(struct net_device *dev)
+ 	dev->hard_header_len = 0;
+ 	dev->mtu             = 1000;
+ 	dev->addr_len        = 0;
++	netdev_lockdep_set_classes(netdev);
+ }
+ 
+ /*	Setup a new device.
+
