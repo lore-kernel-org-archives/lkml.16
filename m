@@ -1,249 +1,197 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8EF21ABDE
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 17:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6D41C8634
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 17:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743096553; cv=none; b=qZrt9nkhjnFUQCDpDf+694QknYsb4laaztTHEbhJdJj0205sDQP3YW/Wi3exkEhYmz6ofXFnXBMIu/Z73TcJ9eZgBxc4JeyUA3cbVw4fRZZliNWbDBRncdHxBSlKQoHAXO6mLS40Gkq2lkYzPH3xtRaz5wYGekwbSwsUtYBMMrw=
+	t=1743096582; cv=none; b=LF0+b7/9gzMXLhELkolSwxuwEZ8uF6Xe6sfZGW6enV+lj/1nJqC15HGhj+EfgelQbsgbvOQiDsTH8jwFRPqyR3iCWEPc+/qOpCAR8gHz/zwZe+lS6i4y3p8nW7RYOdUjTi3BUbW0LDmLClE9N/mQFBUSM6R7FRmgFB+WlMpd+9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743096553; c=relaxed/simple;
-	bh=vzgNlofGNJkqm9ciupIDEqsKHIbRDqsLmsTiWOEMO9I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OCf1ie7k0WikrI/wAzZLMn6hRbGt4uJtMRvKsXOWqvoi1VKw4KBhyvY9RQxQckOZ1+I1o//VyTkgTIMQe48mdgo5tRIoYgMCKZZOJ66jzq0e1Ct4BGz87dgFm1cXLCygHM+ZVlb5TL0zWSwducP5mh3zauvDqAbKapzz4nir2js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <m.felsch@pengutronix.de>)
-	id 1txr2I-0002hN-Nk; Thu, 27 Mar 2025 18:28:58 +0100
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: gregkh@linuxfoundation.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	mka@chromium.org,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	festevam@denx.de,
-	stern@rowland.harvard.edu,
-	m.felsch@pengutronix.de,
-	catalin.popescu@leica-geosystems.com,
-	radhey.shyam.pandey@amd.com
-Cc: kernel@pengutronix.de,
-	linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] usb: misc: onboard_dev: add ext-vbus-supply handling
-Date: Thu, 27 Mar 2025 18:28:03 +0100
-Message-Id: <20250327172803.3404615-5-m.felsch@pengutronix.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250327172803.3404615-1-m.felsch@pengutronix.de>
-References: <20250327172803.3404615-1-m.felsch@pengutronix.de>
+	s=arc-20240116; t=1743096582; c=relaxed/simple;
+	bh=OZOUMn7eWVEe+quoJzHzusizR9zi54OhgtUY1wqnIkE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dGLlgbY3JS48iS2VvUC4wWnR29ruBWGJpGmXrQcX2Qq798J+xdhRUiaFLe3jZHPag9K6OlwkifibkYSfZp0X4JIvt0PBThNejSq1DfZxmZrUDCR3P/gKrcCLmw3haB5dsuAWI3PH++5ErB0MsLeqaHSqPtIffcrhGetmgTOtesU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zGykoCHF; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zGykoCHF"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-224341bbc1dso27427555ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:29:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743096579; x=1743701379; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xUAnTAtDNuNnJIdSSQ+Rk9ZfVSwofE0KN7R4UOP1qhM=;
+        b=zGykoCHFQPArIFXkw7/cqDhWopIJKCzoJDZQo8VeFRWwdgralGhrO85LVSys/keiwA
+         C2pCPo5TcsVuql02vgUuuERcoXCBYfA1wXcXI5JaixleBVOVH2mj3JnLPuKouQbSCUfG
+         hO+5wZxLaphMo8FOpeELjXzJmBYiwmHa6k2Yzv3xXN4Fv4noUvLoMuT44P6EqAipg5/0
+         krsmPUBQXngU4UY4F7MkxjNmc4s7tBuMMheSjOJ5/grgCjiRG3fiLWuFSpKqHwC9QjzX
+         1WL3O3f0b4IJfCE1cIK/wyv/kkztjPpByYkRKd2nhLeIkz+UvrPwx5xEJKUnKzRU5bKB
+         7KiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743096579; x=1743701379;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xUAnTAtDNuNnJIdSSQ+Rk9ZfVSwofE0KN7R4UOP1qhM=;
+        b=c3e4n9tpZLhLMi3Xr2iJWGnGHzyEUor6okmW2IbqC1ay7vM9ZUdR5DBa/rpRp7rfFo
+         DPj9GhTG5S8A6pk5x8k4Y7FD+wbWulj9RV9aZZOiIP2dnSfjDCteZXu/NIEd8RnNxs3R
+         AR+6AQt1YEQ1wRdoP8LoEtNzADbFnfoCfYOknu4DwwfU/e3APETPixdq9RVvkIctWYJa
+         LT3KXPXMgHD/r7IIl1q8LRH6fjWkHnkVpFUdGl85b2J3yuZYZaAo2AeJwy94w+Fi3hOF
+         eByOlmk7hcaB6C9TEGF7FyPumyaoOl6MXoZ3shCMbQFfBthj7tpAbxkN/ohz05T/iZe8
+         nCNw==
+X-Forwarded-Encrypted: i=1; AJvYcCWhWWytvVej22RsohK9NrvwW7hCdvE71AL06EYRk/6wbScUnbHGHz29oBccztjQfpWE03DghinLgPMMsOo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6cyyMZdNMFKy6XVIhXOrQ/fNxlHGLIuba6H1Y/JaZS+2Qrds8
+	vlWiy2aDP7uaGGVE0O0JcHou1Uhb/Dqwe4vSgIlemwgbJgCt//2jJl1M5zyZ4A==
+X-Gm-Gg: ASbGncv+YeMXzRHaQov9OOf8kx+KzLCwCD6L0JD3qonhxq5FhVqZ0awxBFYf1m6Icmh
+	FMpIg+RJvPF8IzNlVmBmrc1SoJFjGzy9/J+u74/58gAmxBkEhgM2TVUzv1FZNl0072v6y1LRryk
+	Qyf9d2W06dc8imZmuRhJyPbCjzi8EKW4iVam/U2mgPJwbaY2XX51IZWxvjUW+JFZhpl3IoVmOZl
+	cS5gwR5MoE+TPomV7v/nkH5sQELMZwEDR7pBqunrmaJ25oJpjFY3Wm08vD2dVcCarQVcJaT3jz+
+	jkmbYID1erWZaRgsH/8yFNEMzAZIsu/rYprVyiBoJUB8UcUmyB4sn2w=
+X-Google-Smtp-Source: AGHT+IGq9WA9Mg+aD9Pf6gxE2w7nofLRKq3e9u+4e1o+z4k8xCGL05Lgi/yGgHNUkZz6Z+X/JLWE9w==
+X-Received: by 2002:a05:6a20:2589:b0:1fd:e9c8:cf3b with SMTP id adf61e73a8af0-1fea2f4c4e7mr10560727637.30.1743096579450;
+        Thu, 27 Mar 2025 10:29:39 -0700 (PDT)
+Received: from thinkpad ([120.60.71.118])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970deeea2sm81237b3a.21.2025.03.27.10.29.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 10:29:39 -0700 (PDT)
+Date: Thu, 27 Mar 2025 22:59:30 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: george.moussalem@outlook.com
+Cc: Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Nitheesh Sekar <quic_nsekar@quicinc.com>, Varadarajan Narayanan <quic_varada@quicinc.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Praveenkumar I <quic_ipkumar@quicinc.com>, 
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	20250317100029.881286-1-quic_varada@quicinc.com, 20250317100029.881286-2-quic_varada@quicinc.com, 
+	Sricharan R <quic_srichara@quicinc.com>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: Re: [PATCH v7 5/6] arm64: dts: qcom: ipq5018: Add PCIe related nodes
+Message-ID: <vmka3ediym33gjwy6vztxn25j2gwfeeht3s3nbx3ozinuz2k7n@7nho6bfvsuo5>
+References: <20250326-ipq5018-pcie-v7-0-e1828fef06c9@outlook.com>
+ <20250326-ipq5018-pcie-v7-5-e1828fef06c9@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::28
-X-SA-Exim-Mail-From: m.felsch@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20250326-ipq5018-pcie-v7-5-e1828fef06c9@outlook.com>
 
-Add support to power the port VBUS via host controlled regulators since
-some embedded hub PCB designs don't connect the dedicated USB hub port
-power GPIOs accordingly.
+On Wed, Mar 26, 2025 at 12:10:59PM +0400, George Moussalem via B4 Relay wrote:
+> From: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> 
+> Add phy and controller nodes for a 2-lane Gen2 and
+> a 1-lane Gen2 PCIe bus. IPQ5018 has 8 MSI SPI interrupts and
+> one global interrupt.
+> 
+> NOTE: the PCIe controller supports gen3, yet the phy is limited to gen2.
+> 
+> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> Signed-off-by: Sricharan R <quic_srichara@quicinc.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+> ---
+>  arch/arm64/boot/dts/qcom/ipq5018.dtsi | 246 +++++++++++++++++++++++++++++++++-
+>  1 file changed, 244 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+> index 8914f2ef0bc47fda243b19174f77ce73fc10757d..9f695f0d9c6b7f29c4564977cadd6a78b55a044f 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+> @@ -147,6 +147,40 @@ usbphy0: phy@5b000 {
+>  			status = "disabled";
+>  		};
+>  
+> +		pcie1_phy: phy@7e000{
+> +			compatible = "qcom,ipq5018-uniphy-pcie-phy";
+> +			reg = <0x0007e000 0x800>;
+> +
+> +			clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
+> +
+> +			resets = <&gcc GCC_PCIE1_PHY_BCR>,
+> +				 <&gcc GCC_PCIE1PHY_PHY_BCR>;
+> +
+> +			#clock-cells = <0>;
+> +			#phy-cells = <0>;
+> +
+> +			num-lanes = <1>;
+> +
+> +			status = "disabled";
+> +		};
+> +
+> +		pcie0_phy: phy@86000{
+> +			compatible = "qcom,ipq5018-uniphy-pcie-phy";
+> +			reg = <0x00086000 0x800>;
+> +
+> +			clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
+> +
+> +			resets = <&gcc GCC_PCIE0_PHY_BCR>,
+> +				 <&gcc GCC_PCIE0PHY_PHY_BCR>;
+> +
+> +			#clock-cells = <0>;
+> +			#phy-cells = <0>;
+> +
+> +			num-lanes = <2>;
+> +
+> +			status = "disabled";
+> +		};
+> +
+>  		tlmm: pinctrl@1000000 {
+>  			compatible = "qcom,ipq5018-tlmm";
+>  			reg = <0x01000000 0x300000>;
+> @@ -170,8 +204,8 @@ gcc: clock-controller@1800000 {
+>  			reg = <0x01800000 0x80000>;
+>  			clocks = <&xo_board_clk>,
+>  				 <&sleep_clk>,
+> -				 <0>,
+> -				 <0>,
+> +				 <&pcie0_phy>,
+> +				 <&pcie1_phy>,
+>  				 <0>,
+>  				 <0>,
+>  				 <0>,
+> @@ -387,6 +421,214 @@ frame@b128000 {
+>  				status = "disabled";
+>  			};
+>  		};
+> +
+> +		pcie1: pcie@80000000 {
+> +			compatible = "qcom,pcie-ipq5018";
+> +			reg = <0x80000000 0xf1d>,
+> +			      <0x80000f20 0xa8>,
+> +			      <0x80001000 0x1000>,
+> +			      <0x00078000 0x3000>,
+> +			      <0x80100000 0x1000>,
+> +			      <0x0007b000 0x1000>;
+> +			reg-names = "dbi",
+> +				    "elbi",
+> +				    "atu",
+> +				    "parf",
+> +				    "config",
+> +				    "mhi";
+> +			device_type = "pci";
+> +			linux,pci-domain = <0>;
+> +			bus-range = <0x00 0xff>;
+> +			num-lanes = <1>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +
+> +			/*
+> +			 * In IPQ5018, the PCIe controller supports gen3,
 
-To support the above use-case this commits adds support to parse the OF
-information and setup the regulators accordingly within the platform
-driver part. Furthermore the usb driver registers the set/clear features
-hooks via the new usb_hub_register_port_feature_hooks() if the
-onboard_dev is a hub. Afterwards all generic hub handling is passed to
-the onboard_dev driver too which allows us to control the regulators.
+nit: no need to mention IPQ5018.
 
-At the moment this feature is limited to the following hubs:
-  - usb424,2412
-  - usb424,2414
-  - usb424,2417
+- Mani
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/usb/misc/onboard_usb_dev.c | 95 ++++++++++++++++++++++++++++++
- drivers/usb/misc/onboard_usb_dev.h |  3 +
- 2 files changed, 98 insertions(+)
-
-diff --git a/drivers/usb/misc/onboard_usb_dev.c b/drivers/usb/misc/onboard_usb_dev.c
-index 75ac3c6aa92d..7ec47509937c 100644
---- a/drivers/usb/misc/onboard_usb_dev.c
-+++ b/drivers/usb/misc/onboard_usb_dev.c
-@@ -48,6 +48,8 @@ static DECLARE_WORK(attach_usb_driver_work, onboard_dev_attach_usb_driver);
- 
- /************************** Platform driver **************************/
- 
-+#define MAX_DOWNSTREAM_PORTS	7
-+
- struct usbdev_node {
- 	struct usb_device *udev;
- 	struct list_head list;
-@@ -64,6 +66,7 @@ struct onboard_dev {
- 	struct list_head udev_list;
- 	struct mutex lock;
- 	struct clk *clk;
-+	struct regulator *ext_vbus_supplies[MAX_DOWNSTREAM_PORTS];
- };
- 
- static int onboard_dev_get_regulators(struct onboard_dev *onboard_dev)
-@@ -225,6 +228,53 @@ static int onboard_dev_add_usbdev(struct onboard_dev *onboard_dev,
- 	return err;
- }
- 
-+static int onboard_dev_port_power(struct onboard_dev *onboard_dev, int port1,
-+				  bool enable)
-+{
-+	struct regulator *vbus_supply;
-+	unsigned int port = port1 - 1;
-+
-+	if (WARN_ON(port >= MAX_DOWNSTREAM_PORTS))
-+		return -EINVAL;
-+
-+	vbus_supply = onboard_dev->ext_vbus_supplies[port];
-+
-+	/* External supplies are optional */
-+	if (!vbus_supply)
-+		return 0;
-+
-+	if (enable)
-+		return regulator_enable(vbus_supply);
-+
-+	return regulator_disable(vbus_supply);
-+}
-+
-+static int onboard_dev_add_ext_vbus_supplies(struct onboard_dev *onboard_dev)
-+{
-+	struct device *dev = onboard_dev->dev;
-+	unsigned int i;
-+
-+	if (!onboard_dev->pdata->support_ext_vbus_supplies)
-+		return 0;
-+
-+	for (i = 0; i < MAX_DOWNSTREAM_PORTS; i++) {
-+		char supply_name[] = "portX-vbus";
-+		struct regulator *reg;
-+
-+		sprintf(supply_name, "port%u-vbus", i + 1);
-+		reg = devm_regulator_get_optional(dev, supply_name);
-+		if (!IS_ERR(reg)) {
-+			onboard_dev->ext_vbus_supplies[i] = reg;
-+		} else {
-+			if (PTR_ERR(reg) != -ENODEV)
-+				return dev_err_probe(dev, PTR_ERR(reg),
-+						     "failed to get %s-supply\n", supply_name);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static void onboard_dev_remove_usbdev(struct onboard_dev *onboard_dev,
- 				      const struct usb_device *udev)
- {
-@@ -383,6 +433,10 @@ static int onboard_dev_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(onboard_dev->reset_gpio),
- 				     "failed to get reset GPIO\n");
- 
-+	err = onboard_dev_add_ext_vbus_supplies(onboard_dev);
-+	if (err)
-+		return err;
-+
- 	mutex_init(&onboard_dev->lock);
- 	INIT_LIST_HEAD(&onboard_dev->udev_list);
- 
-@@ -495,6 +549,44 @@ static struct platform_driver onboard_dev_driver = {
- #define VENDOR_ID_VIA		0x2109
- #define VENDOR_ID_XMOS		0x20B1
- 
-+static int onboard_dev_port_feature(struct usb_device *udev, bool set,
-+				    int feature, int port1)
-+{
-+	struct device *dev = &udev->dev;
-+	struct onboard_dev *onboard_dev = dev_get_drvdata(dev);
-+
-+	/*
-+	 * Check usb_hub_register_port_feature_hooks() if you want to extent
-+	 * the list of handled features. At the moment only power is synced
-+	 * after adding the hook.
-+	 */
-+	switch (feature) {
-+	case USB_PORT_FEAT_POWER:
-+		return onboard_dev_port_power(onboard_dev, port1, set);
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static int
-+onboard_dev_set_port_feature(struct usb_device *udev, int feature, int port1)
-+{
-+	return onboard_dev_port_feature(udev, true, feature, port1);
-+}
-+
-+static int
-+onboard_dev_clear_port_feature(struct usb_device *udev, int feature, int port1)
-+{
-+	return onboard_dev_port_feature(udev, false, feature, port1);
-+}
-+
-+static void
-+onboard_dev_register_hub_hooks(struct usb_device *udev)
-+{
-+	usb_hub_register_port_feature_hooks(udev, onboard_dev_set_port_feature,
-+					    onboard_dev_clear_port_feature);
-+}
-+
- /*
-  * Returns the onboard_dev platform device that is associated with the USB
-  * device passed as parameter.
-@@ -554,6 +646,9 @@ static int onboard_dev_usbdev_probe(struct usb_device *udev)
- 
- 	dev_set_drvdata(dev, onboard_dev);
- 
-+	if (onboard_dev->pdata->is_hub)
-+		onboard_dev_register_hub_hooks(udev);
-+
- 	err = onboard_dev_add_usbdev(onboard_dev, udev);
- 	if (err)
- 		return err;
-diff --git a/drivers/usb/misc/onboard_usb_dev.h b/drivers/usb/misc/onboard_usb_dev.h
-index 933797a7e084..d15e501f5fc9 100644
---- a/drivers/usb/misc/onboard_usb_dev.h
-+++ b/drivers/usb/misc/onboard_usb_dev.h
-@@ -14,6 +14,7 @@ struct onboard_dev_pdata {
- 	unsigned int num_supplies;	/* number of supplies */
- 	const char * const supply_names[MAX_SUPPLIES];
- 	bool is_hub;
-+	bool support_ext_vbus_supplies;
- };
- 
- static const struct onboard_dev_pdata microchip_usb424_data = {
-@@ -21,6 +22,7 @@ static const struct onboard_dev_pdata microchip_usb424_data = {
- 	.num_supplies = 1,
- 	.supply_names = { "vdd" },
- 	.is_hub = true,
-+	.support_ext_vbus_supplies = true,
- };
- 
- static const struct onboard_dev_pdata microchip_usb2514_data = {
-@@ -28,6 +30,7 @@ static const struct onboard_dev_pdata microchip_usb2514_data = {
- 	.num_supplies = 2,
- 	.supply_names = { "vdd", "vdda" },
- 	.is_hub = true,
-+	.support_ext_vbus_supplies = true,
- };
- 
- static const struct onboard_dev_pdata microchip_usb5744_data = {
 -- 
-2.39.5
-
+மணிவண்ணன் சதாசிவம்
