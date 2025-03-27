@@ -1,163 +1,65 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E7B420E310
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4135413C682;
+	Thu, 27 Mar 2025 12:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743078997; cv=none; b=QXyvIjqhdWd+fnp3SJzZXwsOwDi0p4UnwFqsZuEoGw7lo95X2md6Y+h/NVR7k5UqxXXMnyF4uqczkLRJt9dsXt/UsYeJgEkjo7ntD884fQBU8Oc6j7NEi76VdBBy5VjGqVIZ7qo8Os7d5U+iMoExCYAn+VHc/B1/VYIYRhlsaYU=
+	t=1743079051; cv=none; b=CQoHIcn/JqDaY8hMMgS+0KkBXeqL18CsdYG7jzzqZApmdaZN7Rog+mziUWCmd5a58qy7uLGNZLLFzNBexlnqlcMBAb8M7/P1YJM+GPwz1MGTHa7ew61IlsjIuxjG1JkERNo2F3pTBI/yuWn1GCC0kBAzPi2c7ufa2oHr5hRNBV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743078997; c=relaxed/simple;
-	bh=zLWdYtqImRVpdcyhFlRIq2t/1nIjBVUrdpwk/EoErTM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZDJOWkHdFgsO5tGVTIQ8s+xURscNibHe3YK8ztn9Dc89mTyy2k9VNKXtx2g0ylkay03jF/YGE3sNXUiSthJOhqV4LYr7tGjTUHQud5hl/WdwLE5hpZOV0L5a5ay72eT79VNK4nU1T9BqXVrdOzPxlzAzP6dcJZQ7dVz5kYvAj0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B60AE1063;
-	Thu, 27 Mar 2025 05:36:38 -0700 (PDT)
-Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ACA8E3F58B;
-	Thu, 27 Mar 2025 05:36:31 -0700 (PDT)
-Date: Thu, 27 Mar 2025 12:36:28 +0000
-From: Andre Przywara <andre.przywara@arm.com>
-To: Boris Brezillon <boris.brezillon@collabora.com>, Rob Herring
- <robh@kernel.org>, Steven Price <steven.price@arm.com>
-Cc: Philippe Simons <simons.philippe@gmail.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Philipp Zabel <p.zabel@pengutronix.de>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-sunxi@lists.linux.dev, Jernej =?UTF-8?B?xaBrcmFiZWM=?=
- <jernej.skrabec@gmail.com>
-Subject: Re: [PATCH 1/2] drm/panfrost: Add PM runtime flags
-Message-ID: <20250327123628.3d33c68e@donnerap.manchester.arm.com>
-In-Reply-To: <20250312232319.25712-2-simons.philippe@gmail.com>
-References: <20250312232319.25712-1-simons.philippe@gmail.com>
-	<20250312232319.25712-2-simons.philippe@gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+	s=arc-20240116; t=1743079051; c=relaxed/simple;
+	bh=ASawpOXLYiO9EGGxFKl+iyHKlwIDpJ7N6QNXSk35rrk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=otx9cIvvh0uTwTYaAzPFk0l8QjY7Ct7m9ZuP7k9Y5guKHzFP07Ye6dMwGv43xcUS1DIU5K74jJGLKbYsp0V+/8envrd2QRzsk+SQ2jsEyfD/4ofEcUPX3xSAA8hUzdGRK1Nj8VSBwK6lEy0FheXqhPBTheNyZAzbAiuZuo3A3jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PEMIeNYB; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PEMIeNYB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=3376d4KIquRr4S14YL9iDRozqmnXLoJGM2yh6hYYuT0=; b=PEMIeNYBexW38ZaS4VC/lv0MLd
+	t+z8kTR3LFql/cB7yPDLrah2TRE0TG5BCGCNz6CxOYJzJynsGBoOHG8nixoumWsJmai643dsz8i2w
+	RvH9qReXZ6Ux4QYYPh+XcFYJ5448j8LUGDm07EIv1nkbukkFBBudo815lTZmvCt3vXNz6TGmbPxPl
+	taOlf5Pq/VfDbkdFIpX2g23gyiczzbDsPU+V33OZCPIvXG4aIthWXGL9s++tUcptvhHogmCc5zb2z
+	rGrOhEyyOQ5d1xvCaipISYtM4nsA1/s3WV2eHgb2+1yaSqRmWqC2Id707ACcUCckkZeEom5txNmz7
+	vRoqFCbQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1txmU3-0000000BrJl-1gDH;
+	Thu, 27 Mar 2025 12:37:19 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E68063004AF; Thu, 27 Mar 2025 13:37:18 +0100 (CET)
+Date: Thu, 27 Mar 2025 13:37:18 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev, Randy Dunlap <rdunlap@infradead.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] iommu: Convert unreachable() to BUG()
+Message-ID: <20250327123718.GB31358@noisy.programming.kicks-ass.net>
+References: <0c801ae017ec078cacd39f8f0898fc7780535f85.1743053325.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0c801ae017ec078cacd39f8f0898fc7780535f85.1743053325.git.jpoimboe@kernel.org>
 
-On Thu, 13 Mar 2025 00:23:18 +0100
-Philippe Simons <simons.philippe@gmail.com> wrote:
+On Wed, Mar 26, 2025 at 10:28:46PM -0700, Josh Poimboeuf wrote:
+> Bare unreachable() should be avoided as it generates undefined behavior,
+> e.g. falling through to the next function.  Use BUG() instead so the
+> error is defined.
 
-Hi Rob, Boris, Steven,
+Right; I did a pass like this a while ago and thought I'd removed all
+unreachable() abuse.
 
-> When the GPU is the only device attached to a single power domain,
-> core genpd disable and enable it when gpu enter and leave runtime suspend.
-> 
-> Some power-domain requires a sequence before disabled,
-> and the reverse when enabled.
-> 
-> Add PM flags for CLK and RST, and implement in
-> panfrost_device_runtime_suspend/resume.
-
-So some Mali configuration and integration manual I am looking at says
-that this sequence should be always observed, as the powerdown sequence
-would include disabling the clocks first, then asserting the reset, then
-turning the power switches off (and the inverse sequence on powerup).
-
-So should we make this unconditional, not depending on implementation
-specific flags?
-
-And also I am wondering if panfrost_device_init() gets this wrong as well?
-As I see it enabling clock first, then reset, then pm_domain, where it
-should be exactly the opposite?
-
-Cheers,
-Andre
-
-> 
-> Signed-off-by: Philippe Simons <simons.philippe@gmail.com>
-> ---
->  drivers/gpu/drm/panfrost/panfrost_device.c | 37 ++++++++++++++++++++++
->  drivers/gpu/drm/panfrost/panfrost_device.h |  4 +++
->  2 files changed, 41 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
-> index a45e4addcc19..189ad2ad2b32 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_device.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-> @@ -406,11 +406,38 @@ void panfrost_device_reset(struct panfrost_device *pfdev)
->  static int panfrost_device_runtime_resume(struct device *dev)
->  {
->  	struct panfrost_device *pfdev = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	if (pfdev->comp->pm_features & BIT(GPU_PM_RT_RST_ASRT)) {
-> +		ret = reset_control_deassert(pfdev->rstc);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	if (pfdev->comp->pm_features & BIT(GPU_PM_RT_CLK_DIS)) {
-> +		ret = clk_enable(pfdev->clock);
-> +		if (ret)
-> +			goto err_clk;
-> +
-> +		if (pfdev->bus_clock) {
-> +			ret = clk_enable(pfdev->bus_clock);
-> +			if (ret)
-> +				goto err_bus_clk;
-> +		}
-> +	}
->  
->  	panfrost_device_reset(pfdev);
->  	panfrost_devfreq_resume(pfdev);
->  
->  	return 0;
-> +
-> +err_bus_clk:
-> +	if (pfdev->comp->pm_features & BIT(GPU_PM_RT_CLK_DIS))
-> +		clk_disable(pfdev->clock);
-> +err_clk:
-> +	if (pfdev->comp->pm_features & BIT(GPU_PM_RT_RST_ASRT))
-> +		reset_control_assert(pfdev->rstc);
-> +	return ret;
->  }
->  
->  static int panfrost_device_runtime_suspend(struct device *dev)
-> @@ -426,6 +453,16 @@ static int panfrost_device_runtime_suspend(struct device *dev)
->  	panfrost_gpu_suspend_irq(pfdev);
->  	panfrost_gpu_power_off(pfdev);
->  
-> +	if (pfdev->comp->pm_features & BIT(GPU_PM_RT_CLK_DIS)) {
-> +		if (pfdev->bus_clock)
-> +			clk_disable(pfdev->bus_clock);
-> +
-> +		clk_disable(pfdev->clock);
-> +	}
-> +
-> +	if (pfdev->comp->pm_features & BIT(GPU_PM_RT_RST_ASRT))
-> +		reset_control_assert(pfdev->rstc);
-> +
->  	return 0;
->  }
->  
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-> index cffcb0ac7c11..f372d4819262 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-> @@ -36,10 +36,14 @@ enum panfrost_drv_comp_bits {
->   * enum panfrost_gpu_pm - Supported kernel power management features
->   * @GPU_PM_CLK_DIS:  Allow disabling clocks during system suspend
->   * @GPU_PM_VREG_OFF: Allow turning off regulators during system suspend
-> + * @GPU_PM_RT_CLK_DIS: Allow disabling clocks during system runtime suspend
-> + * @GPU_PM_RST_ASRT: Allow asserting the reset control during runtime suspend
->   */
->  enum panfrost_gpu_pm {
->  	GPU_PM_CLK_DIS,
->  	GPU_PM_VREG_OFF,
-> +	GPU_PM_RT_CLK_DIS,
-> +	GPU_PM_RT_RST_ASRT
->  };
->  
->  struct panfrost_features {
-
+Compilers see this as a clue to just stop code-gen. Very bad behaviour
+if you ever actually get there. BUG() at the very least stops the kernel
+dead, instead of continuing to run random code that comes after.
