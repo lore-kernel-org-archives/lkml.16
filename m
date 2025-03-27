@@ -1,38 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D42E2046AF
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:30:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0590A20FAB4
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:30:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743071402; cv=none; b=Ew7u0O658lJ3QiapTf6/iqSCaI5EXtz0p4C+ELPUmkS89GXgsPTNdxs64wdRCtRtizUcjrSLZwkzz+iDWeDYLMxg/hzib3EYi7y3azeh4nNsGev3Rkg+bZSoTbFxG0clQRtd+ZsJrHVQMJMU/Oqc8GM8DBGVZV3VBbaFOaR0k2c=
+	t=1743071404; cv=none; b=Lptuoc5zqlJWySQwv9WNjbMnUbPij5aD4A9MC8H1T5prLW7n8CcXwIlitdbz9P6BfdkJz57INNmqy8o+6Hq0D6Kie0zb/6YzqIo3SB6JYxyvGUHjGOZAJIA4CSlmQv3Ue5OnRvngbbvYoJD4gPEicdaY3sqzlaghwOtg7jEu3ZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743071402; c=relaxed/simple;
-	bh=5iX6MYsztni2I83p3mdAavaXBTlsxMLhK+v+CsA5CPM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FTDjyN9AjVdt+4w6jlRNcsLI8A6aNtYpUk8+v+fxaQIUQ15CsDf8Sv/FVTJas7MqRgM2p8Ru06uxN6Mkl4OxhrSNnvcVC/xHRIZBAeyKBYey/6suAtglmy1hbK3qkD8XPeJyHNg1nQy2fhYN/rG3uBa9jO8kuZ/q9IiaxPKjr04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WwKC5/vO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743071404; c=relaxed/simple;
+	bh=H074XjrmWtzSuFHce5jj8Mm94I4RRwp0SASD9hzDHoo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YAUrP3xcUtpjLGeI7FBIf4gTufaEbgbYsgRbieVVPepTPY4Kyjx/ugnV87SxUrc2yyp1ctW7nhgFT3DWssZI8fTjc0Qd1PZPzqAtcu1kqy6NGpMIKS033TDoleeN+KdbCwoJwK+qsdAM7S22CiW/V/aKiwG47GsEEgzVhWD2gFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YAevQ/7G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WwKC5/vO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81265C4CEE8;
-	Thu, 27 Mar 2025 10:30:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YAevQ/7G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45F8AC4CEDD;
+	Thu, 27 Mar 2025 10:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743071401;
-	bh=5iX6MYsztni2I83p3mdAavaXBTlsxMLhK+v+CsA5CPM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=WwKC5/vOWfRoLrDkOBfCy16t1oPJkSKLOA8qCu58XKnM+VzYKmZ6tyj5WjEc9FLqe
-	 Df27kR8pvJdR9BTQ3rl1AtGeWT9BSFCuvt1whFjjt6HkIWOztzFdE9T4pM/tuvkzfJ
-	 NDqldqnCCGpc0VaRb+Fu54ILepGQAxZNyr19GVaK7PU6sm1DRA+b7H2jilWBgy0bD0
-	 s7bhsnutTQQyR/OcfjRzjpLqnR/BhTOk4na+yDooWdw9hcoxDb8kirxycPKO+Op8Yc
-	 x3N42fiQqrYFjC+pnt8hMpdR6gStrELX2px4MwrCcah7d0T2PzWuMNsNbGT5EARmwN
-	 BbKSNIg32cTLQ==
+	s=k20201202; t=1743071403;
+	bh=H074XjrmWtzSuFHce5jj8Mm94I4RRwp0SASD9hzDHoo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YAevQ/7GlyVi5USJC3vG1zYnYTdCKA04mpM4sbIX0flGNAyG5G7yHYaB2OMbDpZ3G
+	 yKwQTf1/kIrp0fVfhJrqtfQ+6Lag3CdDy5ON8NSZIKRF+Bcj+Oxw3QdbnE1q3WDc8V
+	 t+QM9M/tPtQmg584kZZ2zkt3D69WSTcVLPQ+ox9AAeCHCYrT7OuviudNbOtbqsix5r
+	 SkpW0gUeJU9Vw/jlIMRxmc90MF9VSog60y+gpw5OsUKp0JXTz4C8O71lxoqas7+c82
+	 RUFBVF0W1y5nF2BUEpD/1ExqbsOnV+4CrbOd02M0231gF//N9mPLWumfBtJK6rpRjl
+	 /LPnievlRqyoQ==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 00/14] Improve WARN_ON_ONCE() output by adding the condition string
-Date: Thu, 27 Mar 2025 11:29:39 +0100
-Message-ID: <20250327102953.813608-1-mingo@kernel.org>
+Subject: [PATCH 01/14] bugs/core: Extend __WARN_FLAGS() with the 'cond_str' parameter
+Date: Thu, 27 Mar 2025 11:29:40 +0100
+Message-ID: <20250327102953.813608-2-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250327102953.813608-1-mingo@kernel.org>
+References: <20250327102953.813608-1-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,89 +44,177 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series improves the current WARN_ON_ONCE() output from:
+Push the new parameter down into every architecture that defines __WARN_FLAGS():
 
-  WARN_ON_ONCE(idx < 0 && ptr);
-  ...
+  arm64
+  loongarch
+  parisc
+  powerpc
+  riscv
+  s390
+  sh
+  x86
 
-  WARNING: CPU: 0 PID: 0 at kernel/sched/core.c:8511 sched_init+0x20/0x410
+Don't pass anything substantial down yet, just propagate the
+new parameter with empty strings, without generating it or
+using it.
 
-to (on all __WARN_FLAGS() using architectures except S390):
+( The string is never NULL, so it can be concatenated at the
+  preprocessor level. )
 
-  WARNING: [idx < 0 && ptr] kernel/sched/core.c:8511 at sched_init+0x20/0x410 CPU#0: swapper/0
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: <linux-arch@vger.kernel.org>
+---
+ arch/arm64/include/asm/bug.h     | 2 +-
+ arch/loongarch/include/asm/bug.h | 2 +-
+ arch/parisc/include/asm/bug.h    | 4 ++--
+ arch/powerpc/include/asm/bug.h   | 2 +-
+ arch/riscv/include/asm/bug.h     | 2 +-
+ arch/s390/include/asm/bug.h      | 2 +-
+ arch/sh/include/asm/bug.h        | 2 +-
+ arch/x86/include/asm/bug.h       | 2 +-
+ include/asm-generic/bug.h        | 7 ++++---
+ 9 files changed, 13 insertions(+), 12 deletions(-)
 
-(Note the addition of the '[condition string]', and a reorganized CPU/comm/PID trailer.)
-
-... and on S390 and non-__WARN_FLAGS architectures to:
-
-  WARNING: kernel/sched/core.c:8511 at sched_init+0x20/0x410 CPU#0: swapper/0
-
-and on non-x86 architectures (the CPU/PID fields in the WARNING line are skipped):
-
-  WARNING: kernel/sched/core.c:8511 sched_init+0x20/0x410
-  CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.14.0-01616-g94d7af2844aa #4 PREEMPT(undef)
-
-The motivation behind this series is the SCHED_WARN_ON() primitive that
-got removed in this merge window:
-
-  f7d2728cc032 ("sched/debug: Change SCHED_WARN_ON() to WARN_ON_ONCE()")
-
-... which produced more informative debug output, as it included the
-WARN_ON_ONCE() condition string - at the expense of worse code generation.
-
-This series, based on Linus's latest Git tree, merges the code generation
-benefits of modern WARN_ON_ONCE() bug_entry architecture code with the expanded
-information content of SCHED_WARN_ON().
-
-The cost is about +100K more .data on a defconfig kernel, and no runtime
-code generation impact:
-
-       text       data        bss         dec        hex    filename
-   29523998    7926322    1389904    38840224    250a7a0    vmlinux.x86.defconfig.before
-   29523998    8024626    1389904    38938528    25227a0    vmlinue.x86.defconfig.after
-
-The series was build and boot tested on x86, with an expectation for it to
-work on other architectures (with limited cross-testing on the affected
-architectures).
-
-This tree can also be found at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip WIP.core/bugs
-
-Thanks,
-
-    Ingo
-
-================>
-
-Ingo Molnar (14):
-  bugs/core: Extend __WARN_FLAGS() with the 'cond_str' parameter
-  bugs/core: Pass down the condition string of WARN_ON_ONCE(cond) warnings to __WARN_FLAGS()
-  bugs/x86: Extend _BUG_FLAGS() with the 'cond_str' parameter
-  bugs/x86: Augment warnings output by concatenating 'cond_str' with the regular __FILE__ string in _BUG_FLAGS()
-  bugs/powerpc: Pass in 'cond_str' to BUG_ENTRY()
-  bugs/powerpc: Concatenate 'cond_str' with '__FILE__' in BUG_ENTRY(), to extend WARN_ON/BUG_ON output
-  bugs/LoongArch: Pass in 'cond_str' to __BUG_ENTRY()
-  bugs/LoongArch: Concatenate 'cond_str' with '__FILE__' in __BUG_ENTRY(), to extend WARN_ON/BUG_ON output
-  bugs/s390: Pass in 'cond_str' to __EMIT_BUG()
-  bugs/riscv: Pass in 'cond_str' to __BUG_FLAGS()
-  bugs/riscv: Concatenate 'cond_str' with '__FILE__' in __BUG_FLAGS(), to extend WARN_ON/BUG_ON output
-  bugs/parisc: Concatenate 'cond_str' with '__FILE__' in __WARN_FLAGS(), to extend WARN_ON/BUG_ON output
-  bugs/sh: Concatenate 'cond_str' with '__FILE__' in __WARN_FLAGS(), to extend WARN_ON/BUG_ON output
-  bugs/core: Reorganize fields in the first line of WARNING output, add ->comm[] output
-
- arch/arm64/include/asm/bug.h     |  2 +-
- arch/loongarch/include/asm/bug.h | 25 ++++++++++++-------------
- arch/parisc/include/asm/bug.h    |  6 +++---
- arch/powerpc/include/asm/bug.h   | 12 ++++++------
- arch/riscv/include/asm/bug.h     | 10 +++++-----
- arch/s390/include/asm/bug.h      | 10 +++++-----
- arch/sh/include/asm/bug.h        |  4 ++--
- arch/x86/include/asm/bug.h       | 14 +++++++-------
- include/asm-generic/bug.h        |  7 ++++---
- kernel/panic.c                   | 16 +++++++++-------
- 10 files changed, 54 insertions(+), 52 deletions(-)
-
+diff --git a/arch/arm64/include/asm/bug.h b/arch/arm64/include/asm/bug.h
+index 28be048db3f6..bceeaec21fb9 100644
+--- a/arch/arm64/include/asm/bug.h
++++ b/arch/arm64/include/asm/bug.h
+@@ -19,7 +19,7 @@
+ 	unreachable();					\
+ } while (0)
+ 
+-#define __WARN_FLAGS(flags) __BUG_FLAGS(BUGFLAG_WARNING|(flags))
++#define __WARN_FLAGS(cond_str, flags) __BUG_FLAGS(BUGFLAG_WARNING|(flags))
+ 
+ #define HAVE_ARCH_BUG
+ 
+diff --git a/arch/loongarch/include/asm/bug.h b/arch/loongarch/include/asm/bug.h
+index f6f254f2c5db..51c2cb98d728 100644
+--- a/arch/loongarch/include/asm/bug.h
++++ b/arch/loongarch/include/asm/bug.h
+@@ -42,7 +42,7 @@
+ 	asm_inline volatile (__stringify(ASM_BUG_FLAGS(flags))		\
+ 			     extra);
+ 
+-#define __WARN_FLAGS(flags)					\
++#define __WARN_FLAGS(cond_str, flags)				\
+ do {								\
+ 	instrumentation_begin();				\
+ 	__BUG_FLAGS(BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
+diff --git a/arch/parisc/include/asm/bug.h b/arch/parisc/include/asm/bug.h
+index 833555f74ffa..1a87cf80ec3c 100644
+--- a/arch/parisc/include/asm/bug.h
++++ b/arch/parisc/include/asm/bug.h
+@@ -50,7 +50,7 @@
+ #endif
+ 
+ #ifdef CONFIG_DEBUG_BUGVERBOSE
+-#define __WARN_FLAGS(flags)						\
++#define __WARN_FLAGS(cond_str, flags)					\
+ 	do {								\
+ 		asm volatile("\n"					\
+ 			     "1:\t" PARISC_BUG_BREAK_ASM "\n"		\
+@@ -66,7 +66,7 @@
+ 			     "i" (sizeof(struct bug_entry)) );		\
+ 	} while(0)
+ #else
+-#define __WARN_FLAGS(flags)						\
++#define __WARN_FLAGS(cond_str, flags)					\
+ 	do {								\
+ 		asm volatile("\n"					\
+ 			     "1:\t" PARISC_BUG_BREAK_ASM "\n"		\
+diff --git a/arch/powerpc/include/asm/bug.h b/arch/powerpc/include/asm/bug.h
+index 1db485aacbd9..34d39ec79720 100644
+--- a/arch/powerpc/include/asm/bug.h
++++ b/arch/powerpc/include/asm/bug.h
+@@ -72,7 +72,7 @@
+ } while (0)
+ #define HAVE_ARCH_BUG
+ 
+-#define __WARN_FLAGS(flags) BUG_ENTRY("twi 31, 0, 0", BUGFLAG_WARNING | (flags))
++#define __WARN_FLAGS(cond_str, flags) BUG_ENTRY("twi 31, 0, 0", BUGFLAG_WARNING | (flags))
+ 
+ #ifdef CONFIG_PPC64
+ #define BUG_ON(x) do {						\
+diff --git a/arch/riscv/include/asm/bug.h b/arch/riscv/include/asm/bug.h
+index 1aaea81fb141..b22ee4d2c882 100644
+--- a/arch/riscv/include/asm/bug.h
++++ b/arch/riscv/include/asm/bug.h
+@@ -76,7 +76,7 @@ do {								\
+ 	unreachable();						\
+ } while (0)
+ 
+-#define __WARN_FLAGS(flags) __BUG_FLAGS(BUGFLAG_WARNING|(flags))
++#define __WARN_FLAGS(cond_str, flags) __BUG_FLAGS(BUGFLAG_WARNING|(flags))
+ 
+ #define HAVE_ARCH_BUG
+ 
+diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
+index c500d45fb465..ef3e495ec1e3 100644
+--- a/arch/s390/include/asm/bug.h
++++ b/arch/s390/include/asm/bug.h
+@@ -46,7 +46,7 @@
+ 	unreachable();					\
+ } while (0)
+ 
+-#define __WARN_FLAGS(flags) do {			\
++#define __WARN_FLAGS(cond_str, flags) do {		\
+ 	__EMIT_BUG(BUGFLAG_WARNING|(flags));		\
+ } while (0)
+ 
+diff --git a/arch/sh/include/asm/bug.h b/arch/sh/include/asm/bug.h
+index 05a485c4fabc..834c621ab249 100644
+--- a/arch/sh/include/asm/bug.h
++++ b/arch/sh/include/asm/bug.h
+@@ -52,7 +52,7 @@ do {							\
+ 	unreachable();					\
+ } while (0)
+ 
+-#define __WARN_FLAGS(flags)				\
++#define __WARN_FLAGS(cond_str, flags)			\
+ do {							\
+ 	__asm__ __volatile__ (				\
+ 		"1:\t.short %O0\n"			\
+diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+index f0e9acf72547..413b86b876d9 100644
+--- a/arch/x86/include/asm/bug.h
++++ b/arch/x86/include/asm/bug.h
+@@ -92,7 +92,7 @@ do {								\
+  * were to trigger, we'd rather wreck the machine in an attempt to get the
+  * message out than not know about it.
+  */
+-#define __WARN_FLAGS(flags)					\
++#define __WARN_FLAGS(cond_str, flags)				\
+ do {								\
+ 	__auto_type __flags = BUGFLAG_WARNING|(flags);		\
+ 	instrumentation_begin();				\
+diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
+index 387720933973..af76e4a04b16 100644
+--- a/include/asm-generic/bug.h
++++ b/include/asm-generic/bug.h
+@@ -100,17 +100,18 @@ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
+ 		instrumentation_end();					\
+ 	} while (0)
+ #else
+-#define __WARN()		__WARN_FLAGS(BUGFLAG_TAINT(TAINT_WARN))
++#define __WARN()		__WARN_FLAGS("", BUGFLAG_TAINT(TAINT_WARN))
+ #define __WARN_printf(taint, arg...) do {				\
+ 		instrumentation_begin();				\
+ 		__warn_printk(arg);					\
+-		__WARN_FLAGS(BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint));\
++		__WARN_FLAGS("", BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint));\
+ 		instrumentation_end();					\
+ 	} while (0)
+ #define WARN_ON_ONCE(condition) ({				\
+ 	int __ret_warn_on = !!(condition);			\
+ 	if (unlikely(__ret_warn_on))				\
+-		__WARN_FLAGS(BUGFLAG_ONCE |			\
++		__WARN_FLAGS("",				\
++			     BUGFLAG_ONCE |			\
+ 			     BUGFLAG_TAINT(TAINT_WARN));	\
+ 	unlikely(__ret_warn_on);				\
+ })
 -- 
 2.45.2
 
