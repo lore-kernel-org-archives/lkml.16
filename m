@@ -1,252 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2DB24C6D
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 00:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548DFA55
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 00:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743034990; cv=none; b=As/CsqNIPpLMHsO21nqmSTOh4h1AtYlxX5g940QmhzIabYKGn9RvxRqBp7Q+oOnTVEwZB+Zc7oRAUxo7D0ZgMCxbposLSXSRFIm08SaIncfJvyK7hFlP6vkFGz9Szxx3ha1oygaY4OhUEaKAX6/BZdIuB3YpTv8kCpShwJqrXjU=
+	t=1743035053; cv=none; b=if4fVOjw69uEo99mElqPSA+uFmJr1ZbrCBdOAIRpeePRVGtbiayU3RYKHBGxAvSWCpmYqEIjJjZUI0XCbjnkP/0S7zOe5dXm9XcgJ83LS1RMnzOBv6B3phXXakipJSLIKu/TiYZVO2GmaR/BKPYfOkaWv8My3RntyTddQ5v9zPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743034990; c=relaxed/simple;
-	bh=Y3ezlGK6zuVO6F9g7ngr8WO+h+p2yG0zmR7WyzpdQWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=h/EtyjmqF8TcITewpjLUi2EAgT3B4EzJgSA/8siiJKm6mRG5VH9dbPbqtkMKYcqyvxn37y/2yT/jIJLVwVeGVJFTt6Vgr2xeP2QC4hsE2Ko42Kw2AQF9icaSLehkXbognP5LWOD3/Lt9xHtJoQnrPHMPGlP8Tw8J+yst3trDb1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=msB+0MdE; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743035053; c=relaxed/simple;
+	bh=hBuiaaAx+f/L53Q11MOG6jdETYZX61xauWm5FUxuyNM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YkxVQV3qmw28Po8nZ5H0l6uQtw7PNMeqvvp22vN1PpQqL6KWsxIW3EV93GMioP2L8r35PAjhma7EBkEUjWlRt63Q5hhsV2Q6TyKWShRqQQk1E35DaTNDM84lv0JwWWG2vv7mIJedP2erl3Bmm4J7j+I4pos9vdekpneqLFD75X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=BFbcutSa; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="msB+0MdE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743034988; x=1774570988;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Y3ezlGK6zuVO6F9g7ngr8WO+h+p2yG0zmR7WyzpdQWY=;
-  b=msB+0MdEiXWFmsEaul0yIurmt+toSDFTST8F5VgKzPHTV0vOk1SlVu4d
-   4Pr5zoKIVe9xnYy2mj1hB/W1Ji/l1XY47Gn9+UR7SiZ/uO0HLg35y1xci
-   UOmuzjv4gqFLFouJdzGPdnTfzgfJbLLBfrY+VZNrgoY6YNL/1d00JlC3W
-   20Uu8TjF+nhfjZn0/XTKq38sOOzh2MsfsiRSDJSB1Lby27sxQazjPUoVI
-   dByKCjgXNga+gwSqQaCj/74M6ZaO91aTSDf9qUp6KUI5ClyYlLgbyW19r
-   Yx+cIlLj/42Zve/pRfTsOSDZm9g7pUQ8QzY8AxzS38pYl9nRiAKXRntYY
-   A==;
-X-CSE-ConnectionGUID: T/aszaObS7OakKpRNfKrjA==
-X-CSE-MsgGUID: NoiP5qooRs6l8A7QeJOQxA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44266745"
-X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
-   d="scan'208";a="44266745"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 17:23:08 -0700
-X-CSE-ConnectionGUID: jL+y0nQCQZuFmk9WadAfGg==
-X-CSE-MsgGUID: Fho/PEzXSOCNrLEvIXdN/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
-   d="scan'208";a="155868562"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 26 Mar 2025 17:23:05 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1txb1N-0006Dv-21;
-	Thu, 27 Mar 2025 00:22:58 +0000
-Date: Thu, 27 Mar 2025 08:22:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Wei Liu <wei.liu@kernel.org>,
-	Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
-	Jinank Jain <jinankjain@microsoft.com>,
-	Mukesh Rathor <mrathor@linux.microsoft.com>,
-	Muminul Islam <muislam@microsoft.com>,
-	Praveen K Paladugu <prapal@linux.microsoft.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Roman Kisel <romank@linux.microsoft.com>
-Subject: drivers/hv/mshv_eventfd.c:493:16: sparse: sparse: incorrect type in
- assignment (different base types)
-Message-ID: <202503270801.W4bHMSyJ-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BFbcutSa"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52QK0ZXq005118;
+	Thu, 27 Mar 2025 00:23:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=corp-2023-11-20; bh=4ySad
+	hY0Db63ZVl7XxfS6wGZg2aPzOj50UsYHKE/zQk=; b=BFbcutSaK5KyVhn0Iuw74
+	6fTiGaotzaK/ePf/ONr8QNepIEI415xQoqGCMo7KBVhjewCVzQwjxc5jhBh33qxD
+	yEU+eMDN+5e1pZRZ0Ixr49DFdBYYPKBuLWoGJPKcEPGxz5B/aKB3Mfl/EMuC8ILA
+	36FIz6RCBIPMX+f9NNqgMhXS32shyIerq6s8rIMyixRPt56TJdT/dPU40GtSq/k2
+	+UyirFS3+uPy+c72WIMrOk2PjzGWMUy1NPY1yfLlvmOVc7T0KYkfqmMzuHwHez6b
+	1tM29mvbixil01Gcz4ibRvgUgwT+gO0n8Ylrx6pPv4dCX82Qs+dINagaAL7BJPrD
+	g==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45hnrsk1q5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Mar 2025 00:23:54 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52QMDTGk016011;
+	Thu, 27 Mar 2025 00:23:53 GMT
+Received: from clb-2-bm-ad2.osdevelopmeniad.oraclevcn.com (clb-2-bm-ad2.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.254.172])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 45jj9465pr-2;
+	Thu, 27 Mar 2025 00:23:53 +0000
+From: Libo Chen <libo.chen@oracle.com>
+To: peterz@infradead.org, mgorman@techsingularity.net, longman@redhat.com
+Cc: linux-kernel@vger.kernel.org, mingo@redhat.com, tj@kernel.org
+Subject: [PATCH v2 1/2] sched/numa: skip VMA scanning on memory pinned to one NUMA node via cpuset.mems
+Date: Wed, 26 Mar 2025 17:23:51 -0700
+Message-ID: <20250327002352.203332-2-libo.chen@oracle.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250327002352.203332-1-libo.chen@oracle.com>
+References: <20250327002352.203332-1-libo.chen@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 phishscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
+ definitions=main-2503270001
+X-Proofpoint-GUID: S9FAdRiuyzbzDqXzqmAhbGqov1U13U7g
+X-Proofpoint-ORIG-GUID: S9FAdRiuyzbzDqXzqmAhbGqov1U13U7g
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   f6e0150b2003fb2b9265028a618aa1732b3edc8f
-commit: 621191d709b14882270dfd8ea5d7d6cdfebe2c35 Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs
-date:   5 days ago
-config: x86_64-randconfig-123-20250327 (https://download.01.org/0day-ci/archive/20250327/202503270801.W4bHMSyJ-lkp@intel.com/config)
-compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250327/202503270801.W4bHMSyJ-lkp@intel.com/reproduce)
+When the memory of the current task is pinned to one NUMA node by cgroup,
+there is no point in continuing the rest of VMA scanning and hinting page
+faults as they will just be overhead. With this change, there will be no
+more unnecessary PTE updates or page faults in this scenario.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503270801.W4bHMSyJ-lkp@intel.com/
+We have seen up to a 6x improvement on a typical java workload running on
+VMs with memory and CPU pinned to one NUMA node via cpuset in a two-socket
+AARCH64 system. With the same pinning, on a 18-cores-per-socket Intel
+platform, we have seen 20% improvment in a microbench that creates a
+30-vCPU selftest KVM guest with 4GB memory, where each vCPU reads 4KB
+pages in a fixed number of loops.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/hv/mshv_eventfd.c:493:16: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int events @@     got restricted __poll_t @@
-   drivers/hv/mshv_eventfd.c:493:16: sparse:     expected unsigned int events
-   drivers/hv/mshv_eventfd.c:493:16: sparse:     got restricted __poll_t
---
->> drivers/hv/mshv_root_main.c:1341:14: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const [noderef] __user *ptr @@     got void const * @@
-   drivers/hv/mshv_root_main.c:1341:14: sparse:     expected void const [noderef] __user *ptr
-   drivers/hv/mshv_root_main.c:1341:14: sparse:     got void const *
->> drivers/hv/mshv_root_main.c:2192:23: sparse: sparse: symbol 'mshv_reboot_nb' was not declared. Should it be static?
+Signed-off-by: Libo Chen <libo.chen@oracle.com>
+---
+ kernel/sched/fair.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-vim +493 drivers/hv/mshv_eventfd.c
-
-   373	
-   374	static int mshv_irqfd_assign(struct mshv_partition *pt,
-   375				     struct mshv_user_irqfd *args)
-   376	{
-   377		struct eventfd_ctx *eventfd = NULL, *resamplefd = NULL;
-   378		struct mshv_irqfd *irqfd, *tmp;
-   379		unsigned int events;
-   380		struct fd f;
-   381		int ret;
-   382		int idx;
-   383	
-   384		irqfd = kzalloc(sizeof(*irqfd), GFP_KERNEL);
-   385		if (!irqfd)
-   386			return -ENOMEM;
-   387	
-   388		irqfd->irqfd_partn = pt;
-   389		irqfd->irqfd_irqnum = args->gsi;
-   390		INIT_WORK(&irqfd->irqfd_shutdown, mshv_irqfd_shutdown);
-   391		seqcount_spinlock_init(&irqfd->irqfd_irqe_sc, &pt->pt_irqfds_lock);
-   392	
-   393		f = fdget(args->fd);
-   394		if (!fd_file(f)) {
-   395			ret = -EBADF;
-   396			goto out;
-   397		}
-   398	
-   399		eventfd = eventfd_ctx_fileget(fd_file(f));
-   400		if (IS_ERR(eventfd)) {
-   401			ret = PTR_ERR(eventfd);
-   402			goto fail;
-   403		}
-   404	
-   405		irqfd->irqfd_eventfd_ctx = eventfd;
-   406	
-   407		if (args->flags & BIT(MSHV_IRQFD_BIT_RESAMPLE)) {
-   408			struct mshv_irqfd_resampler *rp;
-   409	
-   410			resamplefd = eventfd_ctx_fdget(args->resamplefd);
-   411			if (IS_ERR(resamplefd)) {
-   412				ret = PTR_ERR(resamplefd);
-   413				goto fail;
-   414			}
-   415	
-   416			irqfd->irqfd_resamplefd = resamplefd;
-   417	
-   418			mutex_lock(&pt->irqfds_resampler_lock);
-   419	
-   420			hlist_for_each_entry(rp, &pt->irqfds_resampler_list,
-   421					     rsmplr_hnode) {
-   422				if (rp->rsmplr_notifier.irq_ack_gsi ==
-   423								 irqfd->irqfd_irqnum) {
-   424					irqfd->irqfd_resampler = rp;
-   425					break;
-   426				}
-   427			}
-   428	
-   429			if (!irqfd->irqfd_resampler) {
-   430				rp = kzalloc(sizeof(*rp), GFP_KERNEL_ACCOUNT);
-   431				if (!rp) {
-   432					ret = -ENOMEM;
-   433					mutex_unlock(&pt->irqfds_resampler_lock);
-   434					goto fail;
-   435				}
-   436	
-   437				rp->rsmplr_partn = pt;
-   438				INIT_HLIST_HEAD(&rp->rsmplr_irqfd_list);
-   439				rp->rsmplr_notifier.irq_ack_gsi = irqfd->irqfd_irqnum;
-   440				rp->rsmplr_notifier.irq_acked =
-   441							      mshv_irqfd_resampler_ack;
-   442	
-   443				hlist_add_head(&rp->rsmplr_hnode,
-   444					       &pt->irqfds_resampler_list);
-   445				mshv_register_irq_ack_notifier(pt,
-   446							       &rp->rsmplr_notifier);
-   447				irqfd->irqfd_resampler = rp;
-   448			}
-   449	
-   450			hlist_add_head_rcu(&irqfd->irqfd_resampler_hnode,
-   451					   &irqfd->irqfd_resampler->rsmplr_irqfd_list);
-   452	
-   453			mutex_unlock(&pt->irqfds_resampler_lock);
-   454		}
-   455	
-   456		/*
-   457		 * Install our own custom wake-up handling so we are notified via
-   458		 * a callback whenever someone signals the underlying eventfd
-   459		 */
-   460		init_waitqueue_func_entry(&irqfd->irqfd_wait, mshv_irqfd_wakeup);
-   461		init_poll_funcptr(&irqfd->irqfd_polltbl, mshv_irqfd_queue_proc);
-   462	
-   463		spin_lock_irq(&pt->pt_irqfds_lock);
-   464		if (args->flags & BIT(MSHV_IRQFD_BIT_RESAMPLE) &&
-   465		    !irqfd->irqfd_lapic_irq.lapic_control.level_triggered) {
-   466			/*
-   467			 * Resample Fd must be for level triggered interrupt
-   468			 * Otherwise return with failure
-   469			 */
-   470			spin_unlock_irq(&pt->pt_irqfds_lock);
-   471			ret = -EINVAL;
-   472			goto fail;
-   473		}
-   474		ret = 0;
-   475		hlist_for_each_entry(tmp, &pt->pt_irqfds_list, irqfd_hnode) {
-   476			if (irqfd->irqfd_eventfd_ctx != tmp->irqfd_eventfd_ctx)
-   477				continue;
-   478			/* This fd is used for another irq already. */
-   479			ret = -EBUSY;
-   480			spin_unlock_irq(&pt->pt_irqfds_lock);
-   481			goto fail;
-   482		}
-   483	
-   484		idx = srcu_read_lock(&pt->pt_irq_srcu);
-   485		mshv_irqfd_update(pt, irqfd);
-   486		hlist_add_head(&irqfd->irqfd_hnode, &pt->pt_irqfds_list);
-   487		spin_unlock_irq(&pt->pt_irqfds_lock);
-   488	
-   489		/*
-   490		 * Check if there was an event already pending on the eventfd
-   491		 * before we registered, and trigger it as if we didn't miss it.
-   492		 */
- > 493		events = vfs_poll(fd_file(f), &irqfd->irqfd_polltbl);
-   494	
-   495		if (events & POLLIN)
-   496			mshv_assert_irq_slow(irqfd);
-   497	
-   498		srcu_read_unlock(&pt->pt_irq_srcu, idx);
-   499		/*
-   500		 * do not drop the file until the irqfd is fully initialized, otherwise
-   501		 * we might race against the POLLHUP
-   502		 */
-   503		fdput(f);
-   504	
-   505		return 0;
-   506	
-   507	fail:
-   508		if (irqfd->irqfd_resampler)
-   509			mshv_irqfd_resampler_shutdown(irqfd);
-   510	
-   511		if (resamplefd && !IS_ERR(resamplefd))
-   512			eventfd_ctx_put(resamplefd);
-   513	
-   514		if (eventfd && !IS_ERR(eventfd))
-   515			eventfd_ctx_put(eventfd);
-   516	
-   517		fdput(f);
-   518	
-   519	out:
-   520		kfree(irqfd);
-   521		return ret;
-   522	}
-   523	
-
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index e43993a4e5807..6f405e00c9c7e 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3329,6 +3329,13 @@ static void task_numa_work(struct callback_head *work)
+ 	if (p->flags & PF_EXITING)
+ 		return;
+ 
++	/*
++	 * Memory is pinned to only one NUMA node via cpuset.mems, naturally
++	 * no page can be migrated.
++	 */
++	if (nodes_weight(cpuset_current_mems_allowed) == 1)
++		return;
++
+ 	if (!mm->numa_next_scan) {
+ 		mm->numa_next_scan = now +
+ 			msecs_to_jiffies(sysctl_numa_balancing_scan_delay);
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.5
+
