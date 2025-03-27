@@ -1,509 +1,593 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFBE1D52B;
-	Thu, 27 Mar 2025 14:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7715342AA1
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743085832; cv=none; b=YjA4cKmftLRib5WAg24cTLkPktJ4AjsG8Dbmq+aJriMTDs3P93AJYFgXWkTN8nZKr6TA/xijfx+MfW2GwJLmcheIAzdgshQwLXaB3GJtN4Z3jZXX02HytncRKGwshYUzCLLkRIyZbOChXCbrg4FlkpXwsxE/2zSZtCqXk9QAzgs=
+	t=1743085871; cv=none; b=jrMpsKqjmwXnOHnJ7H7ESZq0giBoTlFLv1/VAIiAQ9CE50/F9ptxPdabpq4HWv3shPi9D51nSTrKun29XkYjd99rs0bTWdM6QmMU6UIaFZ1bar7tySeVmhThb5UXYUze3n/b7Rebd4Rl/A8Vq1n+roL3HrJz/54AxbpOxATZ9SA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743085832; c=relaxed/simple;
-	bh=aarspJoJBEVtFbyeXZDaxe+El5LBSYMa9A3lBL039A0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U/pOywKBja1RCUx0Y4BRNhG6gMSHFbdufxkenenAFfRRLsnl5zTdz8hILATsHH0kfKOWYq2m7cN5EaTnLeI0nEx+f+tlGUPVwb+J1Ab1QaRL33NVMkUDBYsb6FWzxwKtpLhaN4hkxC1hHdrBYjhGi7EGUvxxEXFj5mqQ3ERHXYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ojql2q+B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743085871; c=relaxed/simple;
+	bh=o4K7se25dBada4CLqIkcdC/wRapPxOFiyJmxCAuEWSw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ga0KGX6Ond3e9WrMBO61SSWuXUVq044eg9iYWigR+3fFR4Sgzu8aNcbUakw7xCDT5/cE7ItIanX6G1eeaTbS4pE4hq9u/D2tVPXl7h5brY+CzLh9/NBuN+zdynQwZTfVeGltdo1K8Ipsi1fzcCWtFof35shMj/YJ2BFQdUTvQAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vZyirK6i; arc=none smtp.client-ip=209.85.167.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ojql2q+B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A96B4C4CEDD;
-	Thu, 27 Mar 2025 14:30:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743085830;
-	bh=aarspJoJBEVtFbyeXZDaxe+El5LBSYMa9A3lBL039A0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=ojql2q+BZJSxrOKBdQh1v38KOvvLL1Ts8GIB/qlkkN2YSOnlsXJ0qEYIeo6uKuGbZ
-	 BZLrYUunqbIcX64397Boq7kLv1Hj2yvocjD8Krt6of7TTN1WoRilgxc63I2kDldqee
-	 wnw9/ztfsP9Y2O4Q5+k3TKVXzL2HIn093WdAeGfY79PVPGgZf4sXnuKUHfFw2BcdsU
-	 JoMfhCno6o7sJhs++X+ZJffVxWUysgklxkWCrN68bZ30vviE4wCJnAF4jpncCR9L2/
-	 FJEe5hTQtnCmDTDj9dm6DfLEyyW7l5FfXeELo520NuzD40syrB1ScVcKML1z/f5PHV
-	 67j1Zhhp32YYA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 533E0CE0843; Thu, 27 Mar 2025 07:30:30 -0700 (PDT)
-Date: Thu, 27 Mar 2025 07:30:30 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Z qiang <qiang.zhang1211@gmail.com>
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	rostedt@goodmis.org
-Subject: Re: [PATCH 5/9] rcutorture: Add tests for SRCU up/down reader
- primitives
-Message-ID: <762ee713-a38f-49e5-aa4a-57e4a4da687c@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <4bf081c8-9299-4ee3-b337-d5b751cef6be@paulmck-laptop>
- <20250310183809.3576320-5-paulmck@kernel.org>
- <CALm+0cWn_wh_QnR0k-QDVTwgdBdXTEd1Xtk5SM+T27ejCchPJw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vZyirK6i"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3f8ae3ed8f4so515796b6e.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 07:31:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743085868; x=1743690668; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dk9Fx3JUX3u2dKck+McM23bRiBwQjZ7+IcAa0ZLLCpk=;
+        b=vZyirK6iUdAQ0Ps/NhfC5HpzI5eYJI+2cqHLVqlbXLTIzqR7kAwD4H1vzyp8xYZ4KY
+         7FNrlJ88i2Fr55/4vjvPzseNEk7ep+MOhE4fvRRF90PrlOGAChe4rTXRSEeBQ170BGJv
+         7yUPIXt31rFCNJr3QZce2BbySmUBFx2hL2KQjW3cVqMK9oX7bth04/VwVNN9yBPpnAqf
+         hGcHbila9vcBjRPGcn+PexFPhj58nXxkpyJ8PQKCitgHxc3a6gkBG51Oxie1THqYAvEt
+         qpo2gvrsRDhbAEFgEn/Leer9iPQFUzcf25OkAu4mW8BHuzeruCRJl0h6cRGY0qS0fO/D
+         fAIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743085868; x=1743690668;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dk9Fx3JUX3u2dKck+McM23bRiBwQjZ7+IcAa0ZLLCpk=;
+        b=t867UfTRea5eRNn8SIhC5wHD9w9kKL7BF8AiBNCMZW2iY6sH39appUaBgfV1GeG4YB
+         Jzlm6VTO7q632u8JlEl/oEiqt00sHvBN9HqFuAdJVTt4WXY3zMrCFe1hYAH7cDBHQVcR
+         A0uRyV5NnD/1jixSfhd2RrYW6QNfkODauO7nw31pfHUHclLF+l3wy6KyzQPMwzUSviok
+         ZdWODVCsZYAfXYqU1V6IEmXupfEHrRy4IQs5MwVnmJKBTfSBaMx8HE8Ikbdxu0NogSAJ
+         wkV5yFDMqS4TMjgFpnYo70XdFiRbOUlkrdVtdVe8xs3adKrrvAYSrF/qKuRZJLxSD+Z8
+         gUMA==
+X-Forwarded-Encrypted: i=1; AJvYcCWehzGcso92NE+34yANxwy2uxAou24LOQrhIdn4wfxQkd7qnl2LAqaxGUhvIWG1JuRMFah0GDUjsSYbGs0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9183Zy1pIAXwp/NDNzKJVBtDRVew7YIcr+fxZp2f/14SR5bjy
+	i2v2AveB6EJvOVwGDc+NUhiQUj0KAucfBCtN0kT//beIiROw/qQBIurL5XTff0xPdCfZnz1Ac2t
+	5bZKPBb2e6u7ZF/HJiz3cCtACkE5nhui+jttt
+X-Gm-Gg: ASbGncu9DY/dk980oguz0oLpBfHz7njZ1+dOIiLMip28K1FDTRd67wV20vhLWq8wDDb
+	c8aowMyxVeBzSgEytOcllJKZ0NNz8mgRGjF+EfvPKIAXShZ7V/I6vRNeXPCBT08HveeVreVmUvl
+	l9i+CBrQeQ6iJk3H7+yB2XAVy+hdla0ZC3PCEZadiTrmhD/spYdOlMoTDe
+X-Google-Smtp-Source: AGHT+IHFc927WC5eRCRSDfBXA0XqiOhGtyDN7XLuxTKf/qyibaNv2UtNAUxgvJbSjXDVkJNQWUugR4vM32kYYcyULrs=
+X-Received: by 2002:a05:6808:2385:b0:3f9:1fee:8030 with SMTP id
+ 5614622812f47-3fefa5093b2mr2731620b6e.9.1743085867999; Thu, 27 Mar 2025
+ 07:31:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALm+0cWn_wh_QnR0k-QDVTwgdBdXTEd1Xtk5SM+T27ejCchPJw@mail.gmail.com>
+References: <20250321111535.3740332-1-bqe@google.com> <20250321111535.3740332-4-bqe@google.com>
+ <Z92N8dyIE42ROW2t@thinkpad>
+In-Reply-To: <Z92N8dyIE42ROW2t@thinkpad>
+From: Burak Emir <bqe@google.com>
+Date: Thu, 27 Mar 2025 15:30:56 +0100
+X-Gm-Features: AQ5f1JodtcsemPDMh5HfhW33tUQpcaVdpKIHFq-B5EhP6MiA5P0AEsd7FkUBn3s
+Message-ID: <CACQBu=WyAdKOeXUwJxDWXVAtq_uvQKqxjT3S_WPiwrAYyCiPHQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/4] rust: add bitmap API.
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 27, 2025 at 11:26:01AM +0800, Z qiang wrote:
+On Fri, Mar 21, 2025 at 5:04=E2=80=AFPM Yury Norov <yury.norov@gmail.com> w=
+rote:
+>
+> On Fri, Mar 21, 2025 at 11:15:31AM +0000, Burak Emir wrote:
+> > Provides an abstraction for C bitmap API and bitops operations.
+> > Includes enough to implement a Binder data structure that was
+> > introduced in commit 15d9da3f818c ("binder: use bitmap for faster
+> > descriptor lookup"), namely drivers/android/dbitmap.h.
 > >
-> > This commit adds a new rcutorture.n_up_down kernel boot parameter
-> > that specifies the number of outstanding SRCU up/down readers, which
-> > begin in kthread context and end in an hrtimer handler.  There is a new
-> > kthread ("rcu_torture_updown") that scans an per-reader array looking
-> > for elements whose readers have ended.  This kthread sleeps between one
-> > and two milliseconds between consecutive scans.
+> > The implementation is optimized to represent the bitmap inline
+> > if it would take the space of a pointer. This saves allocations.
+> > We offer a safe API through bounds checks which panic if violated.
 > >
-> > [ paulmck: Apply kernel test robot feedback. ]
+> > We use the `usize` type for sizes and indices into the bitmap,
+> > because Rust generally always uses that type for indices and lengths
+> > and it will be more convenient if the API accepts that type. This means
+> > that we need to perform some casts to/from u32 and usize, since the C
+> > headers use unsigned int instead of size_t/unsigned long for these
+> > numbers in some places.
 > >
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > Adds new MAINTAINERS section BITMAP API [RUST].
+> >
+> > Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> > Signed-off-by: Burak Emir <bqe@google.com>
 > > ---
-> >  kernel/rcu/rcutorture.c | 227 ++++++++++++++++++++++++++++++++++++----
-> >  1 file changed, 208 insertions(+), 19 deletions(-)
+> >  MAINTAINERS           |   7 +
+> >  rust/kernel/bitmap.rs | 293 ++++++++++++++++++++++++++++++++++++++++++
+> >  rust/kernel/lib.rs    |   1 +
+> >  3 files changed, 301 insertions(+)
+> >  create mode 100644 rust/kernel/bitmap.rs
 > >
-> > diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> > index b0e96df636226..6afcd33e724ba 100644
-> > --- a/kernel/rcu/rcutorture.c
-> > +++ b/kernel/rcu/rcutorture.c
-> > @@ -55,22 +55,24 @@ MODULE_DESCRIPTION("Read-Copy Update module-based torture test facility");
-> >  MODULE_LICENSE("GPL");
-> >  MODULE_AUTHOR("Paul E. McKenney <paulmck@linux.ibm.com> and Josh Triplett <josh@joshtriplett.org>");
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 7cd15c25a43c..bc8f05431689 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -4114,6 +4114,13 @@ S:     Maintained
+> >  F:   rust/helpers/bitmap.c
+> >  F:   rust/helpers/cpumask.c
 > >
-> > -/* Bits for ->extendables field, extendables param, and related definitions. */
-> > -#define RCUTORTURE_RDR_SHIFT_1  8      /* Put SRCU index in upper bits. */
-> > -#define RCUTORTURE_RDR_MASK_1   (0xff << RCUTORTURE_RDR_SHIFT_1)
-> > -#define RCUTORTURE_RDR_SHIFT_2  16     /* Put SRCU index in upper bits. */
-> > -#define RCUTORTURE_RDR_MASK_2   (0xff << RCUTORTURE_RDR_SHIFT_2)
-> > -#define RCUTORTURE_RDR_BH       0x01   /* Extend readers by disabling bh. */
-> > -#define RCUTORTURE_RDR_IRQ      0x02   /*  ... disabling interrupts. */
-> > -#define RCUTORTURE_RDR_PREEMPT  0x04   /*  ... disabling preemption. */
-> > -#define RCUTORTURE_RDR_RBH      0x08   /*  ... rcu_read_lock_bh(). */
-> > -#define RCUTORTURE_RDR_SCHED    0x10   /*  ... rcu_read_lock_sched(). */
-> > -#define RCUTORTURE_RDR_RCU_1    0x20   /*  ... entering another RCU reader. */
-> > -#define RCUTORTURE_RDR_RCU_2    0x40   /*  ... entering another RCU reader. */
-> > -#define RCUTORTURE_RDR_NBITS    7      /* Number of bits defined above. */
-> > -#define RCUTORTURE_MAX_EXTEND   \
-> > +// Bits for ->extendables field, extendables param, and related definitions.
-> > +#define RCUTORTURE_RDR_SHIFT_1 8       // Put SRCU index in upper bits.
-> > +#define RCUTORTURE_RDR_MASK_1  (0xff << RCUTORTURE_RDR_SHIFT_1)
-> > +#define RCUTORTURE_RDR_SHIFT_2 16      // Put SRCU index in upper bits.
-> > +#define RCUTORTURE_RDR_MASK_2  (0xff << RCUTORTURE_RDR_SHIFT_2)
-> > +#define RCUTORTURE_RDR_BH      0x01    // Extend readers by disabling bh.
-> > +#define RCUTORTURE_RDR_IRQ     0x02    //  ... disabling interrupts.
-> > +#define RCUTORTURE_RDR_PREEMPT 0x04    //  ... disabling preemption.
-> > +#define RCUTORTURE_RDR_RBH     0x08    //  ... rcu_read_lock_bh().
-> > +#define RCUTORTURE_RDR_SCHED   0x10    //  ... rcu_read_lock_sched().
-> > +#define RCUTORTURE_RDR_RCU_1   0x20    //  ... entering another RCU reader.
-> > +#define RCUTORTURE_RDR_RCU_2   0x40    //  ... entering another RCU reader.
-> > +#define RCUTORTURE_RDR_UPDOWN  0x80    //  ... up-read from task, down-read from timer.
-> > +                                       //      Note: Manual start, automatic end.
-> > +#define RCUTORTURE_RDR_NBITS   8       // Number of bits defined above.
-> > +#define RCUTORTURE_MAX_EXTEND  \
-> >         (RCUTORTURE_RDR_BH | RCUTORTURE_RDR_IRQ | RCUTORTURE_RDR_PREEMPT | \
-> > -        RCUTORTURE_RDR_RBH | RCUTORTURE_RDR_SCHED)
-> > +        RCUTORTURE_RDR_RBH | RCUTORTURE_RDR_SCHED)  // Intentionally omit RCUTORTURE_RDR_UPDOWN.
-> >  #define RCUTORTURE_RDR_ALLBITS \
-> >         (RCUTORTURE_MAX_EXTEND | RCUTORTURE_RDR_RCU_1 | RCUTORTURE_RDR_RCU_2 | \
-> >          RCUTORTURE_RDR_MASK_1 | RCUTORTURE_RDR_MASK_2)
-> > @@ -110,6 +112,7 @@ torture_param(bool, gp_sync, false, "Use synchronous GP wait primitives");
-> >  torture_param(int, irqreader, 1, "Allow RCU readers from irq handlers");
-> >  torture_param(int, leakpointer, 0, "Leak pointer dereferences from readers");
-> >  torture_param(int, n_barrier_cbs, 0, "# of callbacks/kthreads for barrier testing");
-> > +torture_param(int, n_up_down, 32, "# of concurrent up/down hrtimer-based RCU readers");
-> >  torture_param(int, nfakewriters, 4, "Number of RCU fake writer threads");
-> >  torture_param(int, nreaders, -1, "Number of RCU reader threads");
-> >  torture_param(int, object_debug, 0, "Enable debug-object double call_rcu() testing");
-> > @@ -152,6 +155,7 @@ static int nrealfakewriters;
-> >  static struct task_struct *writer_task;
-> >  static struct task_struct **fakewriter_tasks;
-> >  static struct task_struct **reader_tasks;
-> > +static struct task_struct *updown_task;
-> >  static struct task_struct **nocb_tasks;
-> >  static struct task_struct *stats_task;
-> >  static struct task_struct *fqs_task;
-> > @@ -374,6 +378,8 @@ struct rcu_torture_ops {
-> >         void (*readunlock)(int idx);
-> >         int (*readlock_held)(void);   // lockdep.
-> >         int (*readlock_nesting)(void); // actual nesting, if available, -1 if not.
-> > +       int (*down_read)(void);
-> > +       void (*up_read)(int idx);
-> >         unsigned long (*get_gp_seq)(void);
-> >         unsigned long (*gp_diff)(unsigned long new, unsigned long old);
-> >         void (*deferred_free)(struct rcu_torture *p);
-> > @@ -421,6 +427,7 @@ struct rcu_torture_ops {
-> >         int no_pi_lock;
-> >         int debug_objects;
-> >         int start_poll_irqsoff;
-> > +       int have_up_down;
-> >         const char *name;
-> >  };
-> >
-> > @@ -754,6 +761,50 @@ static int torture_srcu_read_lock_held(void)
-> >         return srcu_read_lock_held(srcu_ctlp);
-> >  }
-> >
-> > +static bool srcu_torture_have_up_down(void)
-> > +{
-> > +       int rf = reader_flavor;
+> > +BITMAP API [RUST]
+> > +M:   Alice Ryhl <aliceryhl@google.com>
+> > +M:   Burak Emir <bqe@google.com>
+> > +R:   Yury Norov <yury.norov@gmail.com>
+> > +S:   Maintained
+> > +F:   rust/kernel/bitmap.rs
 > > +
-> > +       if (!rf)
-> > +               rf = SRCU_READ_FLAVOR_NORMAL;
-> > +       return !!(cur_ops->have_up_down & rf);
+> >  BITOPS API
+> >  M:   Yury Norov <yury.norov@gmail.com>
+> >  R:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> > diff --git a/rust/kernel/bitmap.rs b/rust/kernel/bitmap.rs
+> > new file mode 100644
+> > index 000000000000..118dceaf2b4b
+> > --- /dev/null
+> > +++ b/rust/kernel/bitmap.rs
+> > @@ -0,0 +1,293 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +// Copyright (C) 2025 Google LLC.
+> > +
+> > +//! Rust API for bitmap.
+> > +//!
+> > +//! C headers: [`include/linux/bitmap.h`](srctree/include/linux/bitmap=
+.h).
+> > +
+> > +use crate::alloc::{AllocError, Flags};
+> > +use crate::bindings;
+> > +use core::ptr::NonNull;
+> > +
+> > +/// Holds either a pointer to array of `unsigned long` or a small bitm=
+ap.
+> > +#[repr(C)]
+> > +union BitmapRepr {
+> > +  bitmap: usize,
+> > +  ptr: NonNull<usize>
 > > +}
 > > +
-> > +static int srcu_torture_down_read(void)
-> > +{
-> > +       int idx;
-> > +       struct srcu_ctr __percpu *scp;
-> > +
-> > +       WARN_ON_ONCE(reader_flavor & ~SRCU_READ_FLAVOR_ALL);
-> > +       WARN_ON_ONCE(reader_flavor & (reader_flavor - 1));
-> > +
-> > +       if ((reader_flavor & SRCU_READ_FLAVOR_NORMAL) || !(reader_flavor & SRCU_READ_FLAVOR_ALL)) {
-> > +               idx = srcu_down_read(srcu_ctlp);
-> > +               WARN_ON_ONCE(idx & ~0x1);
-> > +               return idx;
-> > +       }
-> > +       if (reader_flavor & SRCU_READ_FLAVOR_FAST) {
-> > +               scp = srcu_down_read_fast(srcu_ctlp);
-> > +               idx = __srcu_ptr_to_ctr(srcu_ctlp, scp);
-> > +               WARN_ON_ONCE(idx & ~0x1);
-> > +               return idx << 3;
-> > +       }
-> > +       WARN_ON_ONCE(1);
-> > +       return 0;
-> > +}
-> > +
-> > +static void srcu_torture_up_read(int idx)
-> > +{
-> > +       WARN_ON_ONCE((reader_flavor && (idx & ~reader_flavor)) || (!reader_flavor && (idx & ~0x1)));
-> > +       if (reader_flavor & SRCU_READ_FLAVOR_FAST)
-> > +               srcu_up_read_fast(srcu_ctlp, __srcu_ctr_to_ptr(srcu_ctlp, (idx & 0x8) >> 3));
-> > +       else if ((reader_flavor & SRCU_READ_FLAVOR_NORMAL) ||
-> > +                !(reader_flavor & SRCU_READ_FLAVOR_ALL))
-> > +               srcu_up_read(srcu_ctlp, idx & 0x1);
-> > +       else
-> > +               WARN_ON_ONCE(1);
-> > +}
-> > +
-> >  static unsigned long srcu_torture_completed(void)
-> >  {
-> >         return srcu_batches_completed(srcu_ctlp);
-> > @@ -811,6 +862,8 @@ static struct rcu_torture_ops srcu_ops = {
-> >         .readlock       = srcu_torture_read_lock,
-> >         .read_delay     = srcu_read_delay,
-> >         .readunlock     = srcu_torture_read_unlock,
-> > +       .down_read      = srcu_torture_down_read,
-> > +       .up_read        = srcu_torture_up_read,
-> >         .readlock_held  = torture_srcu_read_lock_held,
-> >         .get_gp_seq     = srcu_torture_completed,
-> >         .gp_diff        = rcu_seq_diff,
-> > @@ -831,6 +884,8 @@ static struct rcu_torture_ops srcu_ops = {
-> >         .irq_capable    = 1,
-> >         .no_pi_lock     = IS_ENABLED(CONFIG_TINY_SRCU),
-> >         .debug_objects  = 1,
-> > +       .have_up_down   = IS_ENABLED(CONFIG_TINY_SRCU)
-> > +                               ? 0 : SRCU_READ_FLAVOR_NORMAL | SRCU_READ_FLAVOR_FAST,
-> >         .name           = "srcu"
-> >  };
-> >
-> > @@ -856,6 +911,8 @@ static struct rcu_torture_ops srcud_ops = {
-> >         .read_delay     = srcu_read_delay,
-> >         .readunlock     = srcu_torture_read_unlock,
-> >         .readlock_held  = torture_srcu_read_lock_held,
-> > +       .down_read      = srcu_torture_down_read,
-> > +       .up_read        = srcu_torture_up_read,
-> >         .get_gp_seq     = srcu_torture_completed,
-> >         .gp_diff        = rcu_seq_diff,
-> >         .deferred_free  = srcu_torture_deferred_free,
-> > @@ -875,6 +932,8 @@ static struct rcu_torture_ops srcud_ops = {
-> >         .irq_capable    = 1,
-> >         .no_pi_lock     = IS_ENABLED(CONFIG_TINY_SRCU),
-> >         .debug_objects  = 1,
-> > +       .have_up_down   = IS_ENABLED(CONFIG_TINY_SRCU)
-> > +                               ? 0 : SRCU_READ_FLAVOR_NORMAL | SRCU_READ_FLAVOR_FAST,
-> >         .name           = "srcud"
-> >  };
-> >
-> > @@ -1985,7 +2044,7 @@ static void rcutorture_one_extend(int *readstate, int newstate, bool insoftirq,
-> >
-> >         first = idxold1 == 0;
-> >         WARN_ON_ONCE(idxold2 < 0);
-> > -       WARN_ON_ONCE(idxold2 & ~RCUTORTURE_RDR_ALLBITS);
-> > +       WARN_ON_ONCE(idxold2 & ~(RCUTORTURE_RDR_ALLBITS | RCUTORTURE_RDR_UPDOWN));
-> >         rcutorture_one_extend_check("before change", idxold1, statesnew, statesold, insoftirq);
-> >         rtrsp->rt_readstate = newstate;
-> >
-> > @@ -2061,6 +2120,11 @@ static void rcutorture_one_extend(int *readstate, int newstate, bool insoftirq,
-> >                 if (lockit)
-> >                         raw_spin_unlock_irqrestore(&current->pi_lock, flags);
-> >         }
-> > +       if (statesold & RCUTORTURE_RDR_UPDOWN) {
-> > +               cur_ops->up_read((idxold1 & RCUTORTURE_RDR_MASK_1) >> RCUTORTURE_RDR_SHIFT_1);
-> > +               WARN_ON_ONCE(idxnew1 != -1);
-> > +               idxold1 = 0;
-> > +       }
-> >
-> >         /* Delay if neither beginning nor end and there was a change. */
-> >         if ((statesnew || statesold) && *readstate && newstate)
-> > @@ -2201,7 +2265,8 @@ static bool rcu_torture_one_read_start(struct rcu_torture_one_read_state *rtorsp
-> >         rtorsp->started = cur_ops->get_gp_seq();
-> >         rtorsp->ts = rcu_trace_clock_local();
-> >         rtorsp->p = rcu_dereference_check(rcu_torture_current,
-> > -                                 !cur_ops->readlock_held || cur_ops->readlock_held());
-> > +                                         !cur_ops->readlock_held || cur_ops->readlock_held() ||
-> > +                                         (rtorsp->readstate & RCUTORTURE_RDR_UPDOWN));
-> >         if (rtorsp->p == NULL) {
-> >                 /* Wait for rcu_torture_writer to get underway */
-> >                 rcutorture_one_extend(&rtorsp->readstate, 0, myid < 0, trsp, rtorsp->rtrsp);
-> > @@ -2370,6 +2435,123 @@ rcu_torture_reader(void *arg)
-> >         return 0;
-> >  }
-> >
-> > +struct rcu_torture_one_read_state_updown {
-> > +       struct hrtimer rtorsu_hrt;
-> > +       bool rtorsu_inuse;
-> > +       struct torture_random_state rtorsu_trs;
-> > +       struct rcu_torture_one_read_state rtorsu_rtors;
-> > +};
-> > +
-> > +static struct rcu_torture_one_read_state_updown *updownreaders;
-> > +static DEFINE_TORTURE_RANDOM(rcu_torture_updown_rand);
-> > +static int rcu_torture_updown(void *arg);
-> > +
-> > +static enum hrtimer_restart rcu_torture_updown_hrt(struct hrtimer *hrtp)
-> > +{
-> > +       struct rcu_torture_one_read_state_updown *rtorsup;
-> > +
-> > +       rtorsup = container_of(hrtp, struct rcu_torture_one_read_state_updown, rtorsu_hrt);
-> > +       rcu_torture_one_read_end(&rtorsup->rtorsu_rtors, &rtorsup->rtorsu_trs, -1);
-> > +       smp_store_release(&rtorsup->rtorsu_inuse, false);
-> > +       return HRTIMER_NORESTART;
-> > +}
-> > +
-> > +static int rcu_torture_updown_init(void)
-> > +{
-> > +       int i;
-> > +       struct torture_random_state *rand = &rcu_torture_updown_rand;
-> > +       int ret;
-> > +
-> > +       if (n_up_down < 0)
-> > +               return 0;
-> > +       if (!srcu_torture_have_up_down()) {
-> > +               VERBOSE_TOROUT_STRING("rcu_torture_updown_init: Disabling up/down reader tests due to lack of primitives");
-> > +               return 0;
-> > +       }
-> > +       updownreaders = kcalloc(n_up_down, sizeof(*updownreaders), GFP_KERNEL);
-> > +       if (!updownreaders) {
-> > +               VERBOSE_TOROUT_STRING("rcu_torture_updown_init: Out of memory, disabling up/down reader tests");
-> > +               return -ENOMEM;
-> > +       }
-> > +       for (i = 0; i < n_up_down; i++) {
-> > +               init_rcu_torture_one_read_state(&updownreaders[i].rtorsu_rtors, rand);
-> > +               hrtimer_init(&updownreaders[i].rtorsu_hrt, CLOCK_MONOTONIC,
-> > +                            HRTIMER_MODE_REL | HRTIMER_MODE_SOFT);
-> > +               updownreaders[i].rtorsu_hrt.function = rcu_torture_updown_hrt;
-> > +               torture_random_init(&updownreaders[i].rtorsu_trs);
-> > +               init_rcu_torture_one_read_state(&updownreaders[i].rtorsu_rtors,
-> > +                                               &updownreaders[i].rtorsu_trs);
-> > +       }
-> > +       ret = torture_create_kthread(rcu_torture_updown, rand, updown_task);
-> > +       if (ret) {
-> > +               kfree(updownreaders);
-> > +               updownreaders = NULL;
-> > +       }
-> > +       return ret;
-> > +}
-> > +
-> > +static void rcu_torture_updown_cleanup(void)
-> > +{
-> > +       struct rcu_torture_one_read_state_updown *rtorsup;
-> > +
-> > +       for (rtorsup = updownreaders; rtorsup < &updownreaders[n_up_down]; rtorsup++) {
-> > +               if (!smp_load_acquire(&rtorsup->rtorsu_inuse))
-> > +                       continue;
-> > +               (void)hrtimer_cancel(&rtorsup->rtorsu_hrt);
-> > +               WARN_ON_ONCE(rtorsup->rtorsu_inuse);
-> 
-> Hello, Paul
-> 
-> When I rmmod rcutorture, the following warning is triggered:
-> 
->    [  809.227012] WARNING: CPU: 7 PID: 662 at
-> kernel/rcu/rcutorture.c:2506 rcu_torture_updown+0x3ff/0x620
-> [rcutorture]
->     [  809.227038] Modules linked in: rcutorture(-) torture [last
-> unloaded: rcutorture]
->     [  809.227052] CPU: 7 UID: 0 PID: 662 Comm: rcu_torture_upd Not
-> tainted 6.14.0-rc1-yoctodev-standard+ #103
-> f927b67579e64efac707898e59c492a894becb07
->     [  809.227057] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-> BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
->     [  809.227061] RIP: 0010:rcu_torture_updown+0x3ff/0x620 [rcutorture]
->     [  809.227112] Call Trace:
->     [  809.227114]  <TASK>
->     [  809.227118]  ? show_regs+0x65/0x70
->     [  809.227127]  ? __warn+0xd5/0x310
->     [  809.227137]  ? rcu_torture_updown+0x3ff/0x620 [rcutorture
-> 1eb1c0a0090f471c5e98b34f024c9030cef829ed]
->     [  809.227155]  ? report_bug+0x23e/0x490
->     [  809.227172]  ? handle_bug+0x5b/0xa0
->     [  809.227180]  ? exc_invalid_op+0x1c/0x50
->     [  809.227188]  ? asm_exc_invalid_op+0x1f/0x30
->     [  809.227210]  ? hrtimer_try_to_cancel+0x160/0x490
->     [  809.227216]  ? _raw_spin_unlock_irqrestore+0x4a/0x80
->     [  809.227225]  ? rcu_torture_updown+0x3ff/0x620 [rcutorture
-> 1eb1c0a0090f471c5e98b34f024c9030cef829ed]
->     [  809.227255]  ? rcu_torture_updown+0x340/0x620 [rcutorture
-> 1eb1c0a0090f471c5e98b34f024c9030cef829ed]
->     [  809.227320]  ? __pfx_rcu_torture_updown+0x10/0x10 [rcutorture
-> 1eb1c0a0090f471c5e98b34f024c9030cef829ed]
->     [  809.227337]  kthread+0x3d9/0x810
->     [  809.227349]  ? __pfx_kthread+0x10/0x10
->     [  809.227357]  ? rt_spin_unlock+0x4c/0x90
->     [  809.227362]  ? rt_spin_unlock+0x4c/0x90
->     [  809.227367]  ? calculate_sigpending+0x88/0xa0
->     [  809.227372]  ? __pfx_kthread+0x10/0x10
->     [  809.227380]  ret_from_fork+0x40/0x70
->     [  809.227383]  ? __pfx_kthread+0x10/0x10
->     [  809.227390]  ret_from_fork_asm+0x1a/0x30
->     [  809.227420]  </TASK>
-> 
-> If rtorsu_hrt timer is still in timer_queue, invoke hrtimer_cancel() will
-> remove it from timerqueue and directly return, so the rcu_torture_updown_hrt()
-> will not be executed and the rtorsup->rtorsu_inuse cannot be set false.
-> 
-> How about modifying it as follows:
-> 
-> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> index 04d7a2173b95..ecf3d3797f7e 100644
-> --- a/kernel/rcu/rcutorture.c
-> +++ b/kernel/rcu/rcutorture.c
-> @@ -2502,8 +2502,7 @@ static void rcu_torture_updown_cleanup(void)
->         for (rtorsup = updownreaders; rtorsup <
-> &updownreaders[n_up_down]; rtorsup++) {
->                 if (!smp_load_acquire(&rtorsup->rtorsu_inuse))
->                         continue;
-> -               (void)hrtimer_cancel(&rtorsup->rtorsu_hrt);
-> -               if (WARN_ON_ONCE(rtorsup->rtorsu_inuse)) {
-> +               if (hrtimer_cancel(&rtorsup->rtorsu_hrt) ||
-> WARN_ON_ONCE(rtorsup->rtorsu_inuse)) {
-> 
-> rcu_torture_one_read_end(&rtorsup->rtorsu_rtors, &rtorsup->rtorsu_trs,
-> -1);
->                         WARN_ONCE(rtorsup->rtorsu_nups >=
-> rtorsup->rtorsu_ndowns, "%s: Up without matching down #%zu.\n",
-> __func__, rtorsup - updownreaders);
->                         rtorsup->rtorsu_nups++;
+> > +/// Represents a bitmap.
+> > +///
+> > +/// Wraps underlying C bitmap API.
+> > +///
+> > +/// # Examples
+> > +///
+> > +/// Basic usage
+> > +///
+> > +/// ```
+> > +/// use kernel::alloc::flags::GFP_KERNEL;
+> > +/// use kernel::bitmap::Bitmap;
+> > +///
+> > +/// let mut b =3D Bitmap::new(16, GFP_KERNEL)?;
+> > +/// assert_eq!(16, b.len());
+> > +/// for i in 0..16 {
+> > +///   if i % 4 =3D=3D 0 {
+> > +///     b.set_bit(i);
+> > +///   }
+> > +/// }
+>
+> In C we separate declarations from function body with an empty line.
+> Can you do that in rust? Can you point to a rust coding style? Do you
+> guys really use 2-whitespace tabs?
 
-Good eyes, thank you!  I have applied this fix with attribution.
+Fixed the indentation.
 
-						Thanx, Paul
+I assume you the line `let mut b =3D ...` declaration.
+Added an empty line.
 
-> Thanks
-> Zqiang
-> 
-> > +
-> > +       }
-> > +       kfree(updownreaders);
-> > +       updownreaders = NULL;
+>
+> > +/// assert_eq!(Some(1), b.next_zero_bit(0));
+> > +/// assert_eq!(Some(5), b.next_zero_bit(5));
+> > +/// assert_eq!(Some(12), b.last_bit());
+> > +/// # Ok::<(), Error>(())
+> > +/// ```
+>
+> I think I already asked to make the test a separate unit. It's amazing
+> that rust understands scattered commented blocks of code and can turn
+> them into unit tests. Unfortunately, I'm not.
+>
+> Please create a separate unit and test everything there, just like we
+> do with normal C code.
+>
+> For find_bit functions we have a lib/find_bit_benchmark.c Can you add
+> a similar rust test, so we'll make sure you're not introducing
+> performance regressions with your wrappers?
+>
+> Please don't use KUNITs. It's not ready for benchmarks, and tests built
+> against it don't run on major distros.
+>
+
+I will try out the Rust unit test infrastructure that Miguel mentioned
+has landed.
+Rust unit tests are in the same file.
+
+I need to find out whether infrastructure exists for Rust benchmarks.
+
+> > +///
+> > +/// Requesting too large values results in [`AllocError`]
+> > +///
+> > +/// ```
+> > +/// use kernel::alloc::flags::GFP_KERNEL;
+> > +/// use kernel::bitmap::Bitmap;
+> > +/// assert!(Bitmap::new(1 << 31, GFP_KERNEL).is_err());
+> > +/// ```
+> > +///
+> > +/// # Invariants
+> > +///
+> > +/// * `nbits` is `<=3D i32::MAX - 1` and never changes.
+>
+> Undershoot this time. It's exactly i32::MAX.
+
+Fixed
+
+>
+> > +/// * if `nbits <=3D bindings::BITS_PER_LONG`, then `repr` is a bitmap=
+.
+> > +/// * otherwise, `repr` holds a non-null pointer that was obtained fro=
+m a
+> > +///   successful call to `bitmap_zalloc` and holds the address of an i=
+nitialized
+> > +///   array of `unsigned long` that is large enough to hold `nbits` bi=
+ts.
+>
+> Are you sure a public method description should bear implementation
+> details? I'm not. If implementation changes in future, the public API
+> should stay stable (yes, including comments).
+
+This is a good point, but there is a conflict: it is an /// #
+Invariants which helps makes sense of safety comments.
+I believe this necessarily has to mention implementation detail.
+
+Maybe this should be // comments instead of ///, but all existing code
+uses /// # Invariants.
+I'd appreciate some Rust-for-Linux guidance here, going to leave as is for =
+now.
+
+> > +pub struct Bitmap {
+> > +    /// Representation of bitmap.
+> > +    repr: BitmapRepr,
+> > +    /// Length of this bitmap. Must be `<=3D i32::MAX - 1`.
+> > +    nbits: usize,
 > > +}
 > > +
-> > +/*
-> > + * RCU torture up/down reader kthread, starting RCU readers in kthread
-> > + * context and ending them in hrtimer handlers.  Otherwise similar to
-> > + * rcu_torture_reader().
-> > + */
-> > +static int
-> > +rcu_torture_updown(void *arg)
-> > +{
-> > +       int idx;
-> > +       int rawidx;
-> > +       struct rcu_torture_one_read_state_updown *rtorsup;
-> > +       ktime_t t;
-> > +
-> > +       VERBOSE_TOROUT_STRING("rcu_torture_updown task started");
-> > +       do {
-> > +               for (rtorsup = updownreaders; rtorsup < &updownreaders[n_up_down]; rtorsup++) {
-> > +                       if (torture_must_stop())
-> > +                               break;
-> > +                       if (smp_load_acquire(&rtorsup->rtorsu_inuse))
-> > +                               continue;
-> > +                       init_rcu_torture_one_read_state(&rtorsup->rtorsu_rtors,
-> > +                                                       &rtorsup->rtorsu_trs);
-> > +                       rawidx = cur_ops->down_read();
-> > +                       idx = (rawidx << RCUTORTURE_RDR_SHIFT_1) & RCUTORTURE_RDR_MASK_1;
-> > +                       rtorsup->rtorsu_rtors.readstate = idx | RCUTORTURE_RDR_UPDOWN;
-> > +                       rtorsup->rtorsu_rtors.rtrsp++;
-> > +                       if (!rcu_torture_one_read_start(&rtorsup->rtorsu_rtors,
-> > +                                                       &rtorsup->rtorsu_trs, -1)) {
-> > +                               cur_ops->up_read(rawidx);
-> > +                               schedule_timeout_idle(HZ);
-> > +                               continue;
-> > +                       }
-> > +                       smp_store_release(&rtorsup->rtorsu_inuse, true);
-> > +                       t = torture_random(&rtorsup->rtorsu_trs) & 0xfffff; // One per million.
-> > +                       if (t < 10 * 1000)
-> > +                               t = 200 * 1000 * 1000;
-> > +                       hrtimer_start(&rtorsup->rtorsu_hrt, t,
-> > +                                     HRTIMER_MODE_REL | HRTIMER_MODE_SOFT);
-> > +               }
-> > +               torture_hrtimeout_ms(1, 1000, &rcu_torture_updown_rand);
-> > +               stutter_wait("rcu_torture_updown");
-> > +       } while (!torture_must_stop());
-> > +       rcu_torture_updown_cleanup();
-> > +       torture_kthread_stopping("rcu_torture_updown");
-> > +       return 0;
+> > +impl Drop for Bitmap {
+> > +    fn drop(&mut self) {
+> > +        if self.nbits <=3D bindings::BITS_PER_LONG as _ {
+> > +            return
+> > +        }
+> > +        // SAFETY: `self.ptr` was returned by the C `bitmap_zalloc`.
+> > +        //
+> > +        // INVARIANT: there is no other use of the `self.ptr` after th=
+is
+> > +        // call and the value is being dropped so the broken invariant=
+ is
+> > +        // not observable on function exit.
+> > +        unsafe { bindings::bitmap_free(self.as_mut_ptr()) };
+> > +    }
 > > +}
 > > +
-> >  /*
-> >   * Randomly Toggle CPUs' callback-offload state.  This uses hrtimers to
-> >   * increase race probabilities and fuzzes the interval between toggling.
-> > @@ -2620,7 +2802,7 @@ rcu_torture_print_module_parms(struct rcu_torture_ops *cur_ops, const char *tag)
-> >                  "reader_flavor=%x "
-> >                  "nocbs_nthreads=%d nocbs_toggle=%d "
-> >                  "test_nmis=%d "
-> > -                "preempt_duration=%d preempt_interval=%d\n",
-> > +                "preempt_duration=%d preempt_interval=%d n_up_down=%d\n",
-> >                  torture_type, tag, nrealreaders, nrealfakewriters,
-> >                  stat_interval, verbose, test_no_idle_hz, shuffle_interval,
-> >                  stutter, irqreader, fqs_duration, fqs_holdoff, fqs_stutter,
-> > @@ -2634,7 +2816,7 @@ rcu_torture_print_module_parms(struct rcu_torture_ops *cur_ops, const char *tag)
-> >                  reader_flavor,
-> >                  nocbs_nthreads, nocbs_toggle,
-> >                  test_nmis,
-> > -                preempt_duration, preempt_interval);
-> > +                preempt_duration, preempt_interval, n_up_down);
-> >  }
+> > +impl Bitmap {
+> > +    /// Constructs a new [`Bitmap`].
+> > +    ///
+> > +    /// If the length `nbits` is small enough to admit inline represen=
+tation, this
+>
+> The "length nbits" is a tautology.
+>
+> > +    /// implementation does not allocate.
+> > +    ///
+> > +    /// Fails with [`AllocError`] when the [`Bitmap`] could not be all=
+ocated. This
+> > +    /// includes the case when `nbits` is greater than `i32::MAX - 1`.
+> > +    #[inline]
+> > +    pub fn new(nbits: usize, flags: Flags) -> Result<Self, AllocError>=
+ {
+> > +        if nbits <=3D bindings::BITS_PER_LONG as _ {
+> > +            return Ok(Bitmap { repr: BitmapRepr { bitmap: 0 }, nbits }=
+);
+> > +        }
+> > +        if nbits <=3D i32::MAX.try_into().unwrap() {
+>
+> OK, I'm not a rust professional, but I have a serious question: is
+> this method chain the simplest way to compare two numbers?
+
+This is due to the different types: i32 and usize are different types.
+As humans,
+we can see that i32::MAX will be positive and fit into usize, and rustc wil=
+l
+figure this out during translation, but the type-system does not take range=
+s
+into account and forces us to spell out a fallible conversion.
+
+> > +            let nbits_u32 =3D u32::try_from(nbits).unwrap();
+> > +            // SAFETY: `nbits <=3D i32::MAX - 1` and the C function ha=
+ndles `nbits =3D=3D 0`.
+> > +            let ptr =3D unsafe { bindings::bitmap_zalloc(nbits_u32, fl=
+ags.as_raw()) };
+> > +            let ptr =3D NonNull::new(ptr).ok_or(AllocError)?;
+> > +            // INVARIANT: `ptr` returned by C `bitmap_zalloc` and `nbi=
+ts` checked.
+> > +            return Ok(Bitmap {
+> > +                repr: BitmapRepr { ptr },
+> > +                nbits,
+> > +            });
+> > +        }
+> > +        Err(AllocError)
+>
+> Can you revert the logic and save indentation level?
+
+Done
+
+> > +    }
+> > +
+> > +    /// Returns length of this [`Bitmap`].
+> > +    #[inline]
+> > +    pub fn len(&self) -> usize {
+> > +        self.nbits
+> > +    }
+> > +
+> > +    /// Returns a mutable raw pointer to the backing [`Bitmap`].
+> > +    #[inline]
+> > +    fn as_mut_ptr(&mut self) -> *mut usize {
+> > +        if self.nbits <=3D bindings::BITS_PER_LONG as _ {
+> > +            // SAFETY: Bitmap is represented inline.
+> > +            unsafe { core::ptr::addr_of_mut!(self.repr.bitmap) }
+> > +        } else {
+> > +            // SAFETY: Bitmap is represented as array of `unsigned lon=
+g`.
+> > +            unsafe { self.repr.ptr.as_mut() }
+> > +        }
+> > +    }
+> > +
+> > +    /// Returns a raw pointer to the backing [`Bitmap`].
+> > +    #[inline]
+> > +    fn as_ptr(&self) -> *const usize {
+> > +        if self.nbits <=3D bindings::BITS_PER_LONG as _ {
+> > +            // SAFETY: Bitmap is represented inline.
+> > +            unsafe { core::ptr::addr_of!(self.repr.bitmap) }
+> > +        } else {
+> > +            // SAFETY: Bitmap is represented as array of `unsigned lon=
+g`.
+> > +            unsafe { self.repr.ptr.as_ptr() }
+> > +        }
+> > +    }
+> > +
+> > +    /// Set bit with index `index`.
+> > +    ///
+> > +    /// # Panics
+> > +    ///
+> > +    /// Panics if `index` is greater than or equal to `self.nbits`.
+> > +    #[inline]
+> > +    pub fn set_bit(&mut self, index: usize) {
+> > +        assert!(
+> > +            index < self.nbits,
+> > +            "Bit `index` must be < {}, was {}",
+> > +            self.nbits,
+> > +            index
+> > +        );
+> > +        // SAFETY: Bit `index` is within bounds.
+> > +        unsafe { bindings::__set_bit(index as u32, self.as_mut_ptr()) =
+};
+> > +    }
+> > +
+> > +    /// Set bit with index `index`, atomically.
+> > +    ///
+> > +    /// # Panics
+> > +    ///
+> > +    /// Panics if `index` is greater than or equal to `self.nbits`.
+>
+> I think we agreed that if you decide to change set_bit() notation from
+> atomic to non-atomic, you'll add a beefy paragraph explaining your
+> choice. Please do so. Please prepend your paragraph with an ATTENTION!
+> or even WARNING! eye-catcher. Please describe it in cover-letter, commit
+> message and here, right in the source code.
+>
+> Is there any mechanism in rust to enforce the rule: set_bit_atomic() is
+> never for more than once in a raw on the same bitmap, or together with
+> a non-atomic bitmap function, like dbitmap.h does? C lacks for it despera=
+tely.
+
+Oh, this is good point.
+
+I considered making this unsafe - but it seems this is actually safe:
+
+The argument for safety would be one of exclusive access:
+- when one has a &mut reference, then there cannot be another thread
+that can call set_bit_atomic or clear_bit_atomic.
+- when multiple threads have shared referenced &bitmap, then they
+cannot call non-atomic methods.
+
+
+> > +    #[inline]
+> > +    pub fn set_bit_atomic(&self, index: usize) {
+> > +        assert!(
+> > +            index < self.nbits,
+> > +            "Bit `index` must be < {}, was {}",
+> > +            self.nbits,
+> > +            index
+> > +        );
+> > +        // SAFETY: `index` is within bounds and `set_bit` is atomic.
+> > +        unsafe { bindings::set_bit(index as u32, self.as_ptr() as *mut=
+ usize) };
+> > +    }
+> > +
+> > +    /// Clear bit with index `index`.
+>
+> Index 'index' is also a tautology. Can you just say:
+>         Clear 'index' bit
+
+Done.
+
+> > +    ///
+> > +    /// # Panics
+> > +    ///
+> > +    /// Panics if `index` is greater than or equal to `self.nbits`.
+> > +    #[inline]
+> > +    pub fn clear_bit(&mut self, index: usize) {
+> > +        assert!(
+> > +            index < self.nbits,
+> > +            "Bit `index` must be < {}, was {}",
+> > +            self.nbits,
+> > +            index
+> > +        );
+> > +        // SAFETY: `index` is within bounds.
+> > +        unsafe { bindings::__clear_bit(index as u32, self.as_mut_ptr()=
+) };
+> > +    }
+> > +
+> > +    /// Clear bit with index `index`, atomically.
+> > +    ///
+> > +    /// # Panics
+> > +    ///
+> > +    /// Panics if `index` is greater than or equal to `self.nbits`.
+> > +    #[inline]
+> > +    pub fn clear_bit_atomic(&self, index: usize) {
+> > +        assert!(
+> > +            index < self.nbits,
+> > +            "Bit `index` must be < {}, was {}",
+> > +            self.nbits,
+> > +            index
+> > +        );
+> > +        // SAFETY: `index` is within bounds and `clear_bit` is atomic.
+> > +        unsafe { bindings::clear_bit(index as u32, self.as_ptr() as *m=
+ut usize) };
+> > +    }
+> > +
+> > +    /// Copy `src` into this [`Bitmap`] and set any remaining bits to =
+zero.
+> > +    ///
+> > +    /// # Examples
+> > +    ///
+> > +    /// ```
+> > +    /// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
+> > +    /// use kernel::bitmap::Bitmap;
+> > +    ///
+> > +    /// let mut long_bitmap =3D Bitmap::new(256, GFP_KERNEL)?;
+> > +    /// assert_eq!(None, long_bitmap.last_bit());
+> > +    /// let mut short_bitmap =3D Bitmap::new(16, GFP_KERNEL)?;
+> > +    /// short_bitmap.set_bit(7);
+> > +    ///
+> > +    /// long_bitmap.copy_and_extend(&short_bitmap);
+> > +    /// assert_eq!(Some(7), long_bitmap.last_bit());
+> > +    ///
+> > +    /// long_bitmap.clear_bit(7);
+> > +    /// assert_eq!(None, long_bitmap.last_bit());
+> > +    ///
+> > +    /// # Ok::<(), AllocError>(())
+> > +    /// ```
+> > +    #[inline]
+> > +    pub fn copy_and_extend(&mut self, src: &Bitmap) {
+> > +        let len =3D core::cmp::min(src.nbits, self.nbits);
+> > +        // SAFETY: access to `self` and `src` is within bounds.
+> > +        unsafe {
+> > +            bindings::bitmap_copy_and_extend(
+> > +                self.as_mut_ptr(),
+> > +                src.as_ptr(),
+> > +                len as u32,
+> > +                self.nbits as u32,
+> > +            )
+> > +        };
+> > +    }
+> > +
+> > +    /// Finds last bit that is set.
+>
+> Find last set bit, please.
+
+Done
+
+> > +    ///
+> > +    /// # Examples
+> > +    ///
+> > +    /// ```
+> > +    /// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
+> > +    /// use kernel::bitmap::Bitmap;
+> > +    ///
+> > +    /// let bitmap =3D Bitmap::new(64, GFP_KERNEL)?;
+> > +    /// match bitmap.last_bit() {
+> > +    ///     Some(idx) =3D> {
+> > +    ///         pr_info!("The last bit has index {idx}.\n");
+> > +    ///     }
+> > +    ///     None =3D> {
+> > +    ///         pr_info!("All bits in this bitmap are 0.\n");
+> > +    ///     }
+> > +    /// }
+> > +    /// # Ok::<(), AllocError>(())
+> > +    /// ```
+> > +    #[inline]
+> > +    pub fn last_bit(&self) -> Option<usize> {
+> > +        // SAFETY: `nbits =3D=3D 0` is supported and access is within =
+bounds.
+> > +        let index =3D unsafe { bindings::_find_last_bit(self.as_ptr(),=
+ self.nbits) };
+> > +        if index =3D=3D self.nbits {
+> > +            None
+> > +        } else {
+> > +            Some(index)
+> > +        }
+> > +    }
+> > +
+> > +    /// Finds next zero bit, starting from `start`.
+> > +    ///
+> > +    /// # Panics
+> > +    ///
+> > +    /// Panics if `index` is greater than or equal to `self.nbits`.
+> > +    #[inline]
+> > +    pub fn next_zero_bit(&self, start: usize) -> Option<usize> {
+> > +        assert!(
+> > +            start < self.nbits,
+> > +            "Offset `start` must be < {}, was {}",
+>
+> The 'offset' and 'start' here are the same. You can use just 'start'.
+> Are you sure that rust printing function will handle backquotes properly?
+>
+Done. Backticks are not special in format strings.
+
+> I'm not sure that every user of bitmaps should panic if he goes out of
+> boundaries. If your assert() is similar to WARN_ON() or BUG_ON(), it's
+> wrong. You can do that in client code, but not in a generic library.
+> (Except for hardening reasons under a corresponding config.)
+
+Yes we discussed this: it is purely for hardening reasons.
+
+> for_each_set_bitrange() is an example where offset >=3D nbits is an
+> expected and normal behavior.
+
+Makes sense, but we could offer iteration in the Rust API without
+permitting offset >=3D nbits in public methods.
+
+> > +            self.nbits,
+> > +            start
+> > +        );
+> > +
+> > +        // SAFETY: access is within bounds.
+> > +        let index =3D unsafe { bindings::_find_next_zero_bit(self.as_p=
+tr(), self.nbits, start) };
+> > +        if index =3D=3D self.nbits {
+> > +            None
+> > +        } else {
+> > +            Some(index)
+> > +        }
+> > +    }
+> > +}
+> > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> > index 6b46bc481d94..9f675c0841e6 100644
+> > --- a/rust/kernel/lib.rs
+> > +++ b/rust/kernel/lib.rs
+> > @@ -36,6 +36,7 @@
+> >  pub use ffi;
 > >
-> >  static int rcutorture_booster_cleanup(unsigned int cpu)
-> > @@ -3686,6 +3868,10 @@ rcu_torture_cleanup(void)
-> >                 nocb_tasks = NULL;
-> >         }
-> >
-> > +       if (updown_task) {
-> > +               torture_stop_kthread(rcu_torture_updown, updown_task);
-> > +               updown_task = NULL;
-> > +       }
-> >         if (reader_tasks) {
-> >                 for (i = 0; i < nrealreaders; i++)
-> >                         torture_stop_kthread(rcu_torture_reader,
-> > @@ -4216,6 +4402,9 @@ rcu_torture_init(void)
-> >                 if (torture_init_error(firsterr))
-> >                         goto unwind;
-> >         }
-> > +       firsterr = rcu_torture_updown_init();
-> > +       if (torture_init_error(firsterr))
-> > +               goto unwind;
-> >         nrealnocbers = nocbs_nthreads;
-> >         if (WARN_ON(nrealnocbers < 0))
-> >                 nrealnocbers = 1;
+> >  pub mod alloc;
+> > +pub mod bitmap;
+> >  #[cfg(CONFIG_BLOCK)]
+> >  pub mod block;
+> >  #[doc(hidden)]
 > > --
-> > 2.40.1
-> >
-> >
+> > 2.49.0.395.g12beb8f557-goog
