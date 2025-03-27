@@ -1,249 +1,264 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27D4216E30
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810CD218838;
+	Thu, 27 Mar 2025 14:39:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743086341; cv=none; b=LqKyxBhnwW1lL6YmjLZQD7B+KM4PunXBh+turPGiNCu7oqsKbsY3g1BRYFe+lVBlO/kfGxx2cOVAk2yAvJYWvznVgwLW2MBE3X/u6jnYB+tHibGrpEc/zllr3DR2TT23wXjT+f9I5CoDuLlzbqq8ljEFNPdCk9TlrrkGsGV8DKs=
+	t=1743086347; cv=none; b=p/BF2KtZaXGaPHh9NJkN/AB9jvi8MOJPtf+Cgq1feLW3fKk6jKzAzxZZ/kPLT+2TPXEiKXysQGCde6SRnofoKgeeVMGWHg6tDbmVkXRUsVXx31n47EGg20wbzeX5TXpI+vBTONVbhFT7vYfLoA4rw8ljE1HUPYl0IwtZSlECC7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743086341; c=relaxed/simple;
-	bh=x9QlGDaam6o5Bpo1hcR0eOzE9bGV7mWdb2Irs7tKTKY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gUnSDxUF2gnv1GqI12Xmex0CGnOafJmv+IE5QftCPM3bvaSq2lnA2jThb4G7HX4a1Q/fOAbZ7w7AZOYql0nsEsb9bLPmJl8kvyAQMfAfyHBNpNcsPmh6E4F6unzw4VEFnY+WP5kOXdA2X/LWaWZ7i/ZCQe+9nEjBFMOpPz9q1Ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h9nkx333; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743086347; c=relaxed/simple;
+	bh=BGzyf6owM85krelMUgDqZF06wL1TDDO4HodtxJapS7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dzvLNxdJX1Mx5V8WoFYfBmt17RAHpiTT+TytuPnnd9tU71SAp5jNp2HkBLs8K+iDE8P5Z+q12OTj2xVflnJwWPjoPrcuv08jYm8IWAQ/95zzavJEaUfOtXbpENt+e0WuNexntsNZo9pB3uyy0ukL5ni7VgfSYEuLtAxPfIjvHzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FPEbSQ4q; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h9nkx333"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-477296dce76so9499671cf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 07:38:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FPEbSQ4q"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39143200ddaso671957f8f.1;
+        Thu, 27 Mar 2025 07:39:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743086338; x=1743691138; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JmMO3C6WJRKxmjElqR4h2O/T/e04udPSOOJuOLGMb8I=;
-        b=h9nkx333Ud7QKNBkTJYNHx11UdNAiNY9CEVhrXGskj8akGbCYDJyI8W5g3YYokivcB
-         fUOvswSkCPsaw82IwFJy7Jl/LMKtYkfFH2g8i7XlUbgCvreaT2PX+hpWTsgj09kveqjn
-         nan4hIggrM+2OvxgyDnM3rTnVb+xoZmxvE4e27IRLJ+GA+KMFB7XuBW3VKu4UTW8JfWv
-         pIGcFKGlWezJq8sYjUzKX0XFYCUHkXLr+nrDupDkmMHQyQAgsWdkj6euv1J1//RYaRkP
-         BgfvyItDVO1VyqUl/kEGCtr6ljwqUlDD8/kUkdKpuQsEra6hxHt8PiPB1jNnfbXiZPZr
-         zzkQ==
+        d=gmail.com; s=20230601; t=1743086344; x=1743691144; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=u82ONPXPU91yIttrfyA9Tihmj4fGNtFwpkyHVRCFmYA=;
+        b=FPEbSQ4qVWVgSnYAXASZ1oWErBdCjC3K2o+qojKwairpnkD3efXPaNtljRaAxLuNPX
+         mxHrNWE8VpNOewsQzcZ3L45rWfHMxkTP/dzWyRTWt+TZOOwPzK22dVE23uPWRHKOJc38
+         UcNbDB5ip+RMYzpOOS0lMEp+AbIZbcKraFnQbFdtVJtFSQ9o363asJC1NTbR+hV/Mdyf
+         3xsCg3RiHl9woJEyCZAAf2bMVRoVH+lfTK+tQ76kHr+z793Dtq2C3/da3vCKEbdWVitN
+         aBjV5hsdAYEMDspICRIGBKFA0l2L2YTrAuFoEV3K4vWyMCYE/0CCGrBeU8lL8qGjNXiW
+         08Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743086338; x=1743691138;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JmMO3C6WJRKxmjElqR4h2O/T/e04udPSOOJuOLGMb8I=;
-        b=Z/FFyt1+VHIeYSEuODb+eVVJN8JQb676kDVlm8xRfJaQCjfd4xiXEaO3DlDnaJQnOT
-         p2ZFTUP+D26ucsB1m+wY7A9Ajz8f4D2Cx5Ux5Dy4K3YUyWaV7d2i08hnxk3Ms+/Hvxx8
-         1iFeCRe0LAVe9brB57xzaRiaZ+79Yx5BimpiTVOfgzc7xL5AOmi8b4BE/tfiuLFVFGEP
-         LYIAHbf2nkRrIWRgiZgChfybRy2qANcqUxXykN/IhASd9ZjDHluHotOe7Ec9f806Eb4h
-         W7HAfU8NfvkydiGQLPtWcip6VDqM6tp4TJaoXZMflilB52IPcAiIZYQSYWR7+6pnmiCV
-         DS3w==
-X-Forwarded-Encrypted: i=1; AJvYcCXYEaVCsYlzxbxktMPZAsFVHeM+V8q8bJITaMizWSXXYdKa5246Fw5/OGZwzlaT4JO5PMDafFQA0qKrAvg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygZtfkpGvHeIofZd/jNjATHmjZQG5fLTxiAqP6i06Zf7KdCfj9
-	bvtj+q/7wES8RtSxG/6TAqItNkKiwlfSjU4BtBelTwT4djlOBfF2Wb1w9gdi6WA8y8mYjfeJg8y
-	/rrftX4iwT+n3PBIX3ZsE4fJfrnA54/xDQmW/
-X-Gm-Gg: ASbGncvT2S9yBgC6W+pCzNMW6VOjRcD8sxXDyRydxBd5HY8CQFiBeUd++tZzzgv+HPk
-	53bki4GAXsrl/neM7E5M+ZrJNEKUveTN0XQ7ATgkoBU0DF7BkxgWIElU4RaEGIt3OmGVXssj3uN
-	HtL31NZkITxVrgE/+gyN93URMOCMvugjS3rMujzg==
-X-Google-Smtp-Source: AGHT+IGFVNJngEaJar1RXdAZevtiNFQ10K053IOtSNqa9I3uZ3ttSMUJPFbX/FtkzoBIjo3zwAiZxXxgVo0wA00IEqM=
-X-Received: by 2002:a05:622a:4c07:b0:476:8ee8:d8a2 with SMTP id
- d75a77b69052e-4776e072fcdmr60721751cf.4.1743086338210; Thu, 27 Mar 2025
- 07:38:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743086344; x=1743691144;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u82ONPXPU91yIttrfyA9Tihmj4fGNtFwpkyHVRCFmYA=;
+        b=F3Iu6i5Bh1rIPeGeyeaYXle+tBj235ucm6igTL7MRwv6r6hZqQ8oS6JEsSA0yEE1M6
+         mSXANiHz0zovSJCaCSFBd8PkNTPwfNe1BGRH9tQcqZ+SFBkzeO/3n7thcMrACzhGDu/Z
+         slBO/aGZYoILniLFBXY/uNW8ek2dVRn4yCqXAlyTnCIrz8v7ypv371KtcHTsgPH/cvzX
+         IF0YoaU3XWcU5IBw+2TOhmPEU+DrWmBur/P4ErDVvE8Wi7I4ycYf9NSPzRuTaFi0uPsa
+         e6Q0VuYdAISs4KSa/qvXdHPshGxevb1+f/FFGpOINqbEAv7HQwX9xsJA5/0TIaV+3ygs
+         Jznw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1mkMcccBwiT69PdxTJ3a7EoelRsUZ2ZxSnJo9Y1cHNReEI4Gzr97nYG4keetb5kaS3187/GJ+@vger.kernel.org, AJvYcCVHeTg6dsoR8xgGe7IPH5Hen4JeoRPNCMz0eT+ulO0VSK2Pz8zm2vfB+6bwhWzQhEpZHkULdFMb/s61cbGF@vger.kernel.org
+X-Gm-Message-State: AOJu0YygoCBJ/C4PywCm0ntVv5PicqTkJH/tzeOtAFDV3nSpAqZhJ8LD
+	8UWu+cojONEFcdtYyi98HBNcnakugNQf1RWUaucrsI0bHnPewzBH
+X-Gm-Gg: ASbGncs9hOVZUG6PGpqh78Mzf6aa+7n5D5tSlUKPt+uHbeK2jjr+hQHbGaTQ6OWlJbo
+	F2FbRrj0Ol4I3HV9mPDQrrsYb9IAGSenOWNLCyt0SnWTV6dSuzz4noc6RI+47vlBPcdubOx2EX7
+	VWZ+/JIJqnMMk/oZNMYFN8WwaUYUjVH6T3eiovvvupDnghF00UqWuHSWOEQWQtscYkJer3neYD1
+	1A21whjGIUA9WQLLAj/dFMk9gUAWA5qlRiKSHYFE1CrgvtpjLatIYfKlEsP8S+fR4LipEBMMksK
+	1i4tYaODYzY+E4t57fHUEYFrheP86bijd6AludPwlcChd66sVJvPgHI/kg==
+X-Google-Smtp-Source: AGHT+IHIYyxBLsfyfwB72W3HrvPr9/6S85TLty5UHu4H+YbkreFKm3JMZPvoIHJpmVfVuy6D/+deUQ==
+X-Received: by 2002:a05:6000:1889:b0:391:48d4:bcf2 with SMTP id ffacd0b85a97d-39ad1749a44mr3201709f8f.12.1743086343393;
+        Thu, 27 Mar 2025 07:39:03 -0700 (PDT)
+Received: from f (cst-prg-15-56.cust.vodafone.cz. [46.135.15.56])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9e6539sm20191479f8f.77.2025.03.27.07.38.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 07:39:02 -0700 (PDT)
+Date: Thu, 27 Mar 2025 15:38:50 +0100
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Greg Thelen <gthelen@google.com>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Eric Dumazet <edumzaet@google.com>, cgroups@vger.kernel.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>
+Subject: Re: [PATCH] cgroup/rstat: avoid disabling irqs for O(num_cpu)
+Message-ID: <2vznaaotzkgkrfoi2qitiwdjinpl7ozhpz7w6n7577kaa2hpki@okh2mkqqhbkq>
+References: <20250319071330.898763-1-gthelen@google.com>
+ <u5kcjffhyrjsxagpdzas7q463ldgqtptaafozea3bv64odn2xt@agx42ih5m76l>
+ <Z9r8TX0WiPWVffI0@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67cd611c.050a0220.14db68.0073.GAE@google.com> <67e55c12.050a0220.2f068f.002c.GAE@google.com>
- <Z-ViZoezAdjY8TC-@mini-arch>
-In-Reply-To: <Z-ViZoezAdjY8TC-@mini-arch>
-From: Eric Dumazet <edumazet@google.com>
-Date: Thu, 27 Mar 2025 15:38:46 +0100
-X-Gm-Features: AQ5f1JrgTL2mJ_QuJgIZLPrm649fAWQfanOuafK0pRqr1bU-nCQUQV7h3ZW2YhA
-Message-ID: <CANn89iKXRXXA392PY9uuL560JNW0ee_hGTu3xk=6X=6jRR2OkQ@mail.gmail.com>
-Subject: Re: [syzbot] [x25?] possible deadlock in lapbeth_device_event
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: syzbot <syzbot+377b71db585c9c705f8e@syzkaller.appspotmail.com>, 
-	andrew+netdev@lunn.ch, andrew@lunn.ch, davem@davemloft.net, 
-	eric.dumazet@gmail.com, horms@kernel.org, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org, lkp@intel.com, 
-	llvm@lists.linux.dev, ms@dev.tdt.de, netdev@vger.kernel.org, 
-	oe-kbuild-all@lists.linux.dev, pabeni@redhat.com, sdf@fomichev.me, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="fqcrruvxc7rr34k3"
+Content-Disposition: inline
+In-Reply-To: <Z9r8TX0WiPWVffI0@google.com>
 
-On Thu, Mar 27, 2025 at 3:36=E2=80=AFPM Stanislav Fomichev <stfomichev@gmai=
-l.com> wrote:
->
-> On 03/27, syzbot wrote:
-> > syzbot has found a reproducer for the following issue on:
-> >
-> > HEAD commit:    1a9239bb4253 Merge tag 'net-next-6.15' of git://git.ker=
-nel..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D15503804580=
-000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D95c3bbe7ce8=
-436a7
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D377b71db585c9=
-c705f8e
-> > compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for=
- Debian) 2.40
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D139a6bb05=
-80000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D16974a4c580=
-000
-> >
-> > Downloadable assets:
-> > disk image (non-bootable): https://storage.googleapis.com/syzbot-assets=
-/7feb34a89c2a/non_bootable_disk-1a9239bb.raw.xz
-> > vmlinux: https://storage.googleapis.com/syzbot-assets/bd56e2f824c3/vmli=
-nux-1a9239bb.xz
-> > kernel image: https://storage.googleapis.com/syzbot-assets/19172b7f9497=
-/bzImage-1a9239bb.xz
-> >
-> > IMPORTANT: if you fix the issue, please add the following tag to the co=
-mmit:
-> > Reported-by: syzbot+377b71db585c9c705f8e@syzkaller.appspotmail.com
-> >
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > WARNING: possible recursive locking detected
-> > 6.14.0-syzkaller-05877-g1a9239bb4253 #0 Not tainted
-> > --------------------------------------------
-> > dhcpcd/5649 is trying to acquire lock:
-> > ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linu=
-x/netdevice.h:2751 [inline]
-> > ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: netif_napi_add_weight in=
-clude/linux/netdevice.h:2783 [inline]
-> > ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: lapbeth_new_device drive=
-rs/net/wan/lapbether.c:415 [inline]
-> > ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: lapbeth_device_event+0x5=
-86/0xbe0 drivers/net/wan/lapbether.c:460
-> >
-> > but task is already holding lock:
-> > ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linu=
-x/netdevice.h:2751 [inline]
-> > ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/=
-net/netdev_lock.h:42 [inline]
-> > ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/=
-net/netdev_lock.h:39 [inline]
-> > ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: dev_change_flags+0xa7/0x=
-250 net/core/dev_api.c:67
-> >
-> > other info that might help us debug this:
-> >  Possible unsafe locking scenario:
-> >
-> >        CPU0
-> >        ----
-> >   lock(&dev->lock);
-> >   lock(&dev->lock);
-> >
-> >  *** DEADLOCK ***
-> >
-> >  May be due to missing lock nesting notation
-> >
-> > 2 locks held by dhcpcd/5649:
-> >  #0: ffffffff900fb268 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_net_lock inclu=
-de/linux/rtnetlink.h:130 [inline]
-> >  #0: ffffffff900fb268 (rtnl_mutex){+.+.}-{4:4}, at: devinet_ioctl+0x26d=
-/0x1f50 net/ipv4/devinet.c:1121
-> >  #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include=
-/linux/netdevice.h:2751 [inline]
-> >  #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops inc=
-lude/net/netdev_lock.h:42 [inline]
-> >  #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops inc=
-lude/net/netdev_lock.h:39 [inline]
-> >  #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: dev_change_flags+0x=
-a7/0x250 net/core/dev_api.c:67
-> >
-> > stack backtrace:
-> > CPU: 1 UID: 0 PID: 5649 Comm: dhcpcd Not tainted 6.14.0-syzkaller-05877=
--g1a9239bb4253 #0 PREEMPT(full)
-> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-=
-1.16.3-2~bpo12+1 04/01/2014
-> > Call Trace:
-> >  <TASK>
-> >  __dump_stack lib/dump_stack.c:94 [inline]
-> >  dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
-> >  print_deadlock_bug+0x1e9/0x240 kernel/locking/lockdep.c:3042
-> >  check_deadlock kernel/locking/lockdep.c:3094 [inline]
-> >  validate_chain kernel/locking/lockdep.c:3896 [inline]
-> >  __lock_acquire+0xff7/0x1ba0 kernel/locking/lockdep.c:5235
-> >  lock_acquire kernel/locking/lockdep.c:5866 [inline]
-> >  lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
-> >  __mutex_lock_common kernel/locking/mutex.c:587 [inline]
-> >  __mutex_lock+0x19a/0xb00 kernel/locking/mutex.c:732
-> >  netdev_lock include/linux/netdevice.h:2751 [inline]
-> >  netif_napi_add_weight include/linux/netdevice.h:2783 [inline]
-> >  lapbeth_new_device drivers/net/wan/lapbether.c:415 [inline]
-> >  lapbeth_device_event+0x586/0xbe0 drivers/net/wan/lapbether.c:460
-> >  notifier_call_chain+0xb9/0x410 kernel/notifier.c:85
-> >  call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2180
-> >  call_netdevice_notifiers_extack net/core/dev.c:2218 [inline]
-> >  call_netdevice_notifiers net/core/dev.c:2232 [inline]
-> >  __dev_notify_flags+0x12c/0x2e0 net/core/dev.c:9409
-> >  netif_change_flags+0x108/0x160 net/core/dev.c:9438
-> >  dev_change_flags+0xba/0x250 net/core/dev_api.c:68
-> >  devinet_ioctl+0x11d5/0x1f50 net/ipv4/devinet.c:1200
-> >  inet_ioctl+0x3a7/0x3f0 net/ipv4/af_inet.c:1001
-> >  sock_do_ioctl+0x115/0x280 net/socket.c:1190
-> >  sock_ioctl+0x227/0x6b0 net/socket.c:1311
-> >  vfs_ioctl fs/ioctl.c:51 [inline]
-> >  __do_sys_ioctl fs/ioctl.c:906 [inline]
-> >  __se_sys_ioctl fs/ioctl.c:892 [inline]
-> >  __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
-> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-> >  do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
-> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> > RIP: 0033:0x7effd384cd49
-> > Code: 5c c3 48 8d 44 24 08 48 89 54 24 e0 48 89 44 24 c0 48 8d 44 24 d0=
- 48 89 44 24 c8 b8 10 00 00 00 c7 44 24 b8 10 00 00 00 0f 05 <41> 89 c0 3d =
-00 f0 ff ff 76 10 48 8b 15 ae 60 0d 00 f7 d8 41 83 c8
-> > RSP: 002b:00007ffedd440088 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> > RAX: ffffffffffffffda RBX: 00007effd377e6c0 RCX: 00007effd384cd49
-> > RDX: 00007ffedd450278 RSI: 0000000000008914 RDI: 000000000000001a
-> > RBP: 00007ffedd460438 R08: 00007ffedd450238 R09: 00007ffedd4501e8
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> > R13: 00007ffedd450278 R14: 0000000000000028 R15: 0000000000008914
-> >  </TASK>
-> >
-> >
-> > ---
-> > If you want syzbot to run the reproducer, reply with:
-> > #syz test: git://repo/address.git branch-or-commit-hash
-> > If you attach or paste a git patch, syzbot will apply it before testing=
-.
->
-> #syz test
->
-> diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
-> index 56326f38fe8a..a022e930bd8e 100644
-> --- a/drivers/net/wan/lapbether.c
-> +++ b/drivers/net/wan/lapbether.c
-> @@ -39,6 +39,7 @@
->  #include <linux/lapb.h>
->  #include <linux/init.h>
->
-> +#include <net/netdev_lock.h>
->  #include <net/x25device.h>
->
->  static const u8 bcast_addr[6] =3D { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF }=
-;
-> @@ -372,6 +373,7 @@ static void lapbeth_setup(struct net_device *dev)
->         dev->hard_header_len =3D 0;
->         dev->mtu             =3D 1000;
->         dev->addr_len        =3D 0;
-> +       netdev_lockdep_set_classes(netdev);
->  }
->
->  /*     Setup a new device.
->
 
-I can resubmit https://lore.kernel.org/netdev/Z84MME6rwU6q9aJa@mini-arch/T/
+--fqcrruvxc7rr34k3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+On Wed, Mar 19, 2025 at 05:18:05PM +0000, Yosry Ahmed wrote:
+> On Wed, Mar 19, 2025 at 11:47:32AM +0100, Mateusz Guzik wrote:
+> > Is not this going a little too far?
+> > 
+> > the lock + irq trip is quite expensive in its own right and now is
+> > going to be paid for each cpu, as in the total time spent executing
+> > cgroup_rstat_flush_locked is going to go up.
+> > 
+> > Would your problem go away toggling this every -- say -- 8 cpus?
+> 
+> I was concerned about this too, and about more lock bouncing, but the
+> testing suggests that this actually overall improves the latency of
+> cgroup_rstat_flush_locked() (at least on tested HW).
+> 
+> So I don't think we need to do something like this unless a regression
+> is observed.
+> 
+
+To my reading it reduces max time spent with irq disabled, which of
+course it does -- after all it toggles it for every CPU.
+
+Per my other e-mail in the thread the irq + lock trips remain not cheap
+at least on Sapphire Rapids.
+
+In my testing outlined below I see 11% increase in total execution time
+with the irq + lock trip for every CPU in a 24-way vm.
+
+So I stand by instead doing this every n CPUs, call it 8 or whatever.
+
+How to repro:
+
+I employed a poor-man's profiler like so:
+
+bpftrace -e 'kprobe:cgroup_rstat_flush_locked { @start[tid] = nsecs; } kretprobe:cgroup_rstat_flush_locked /@start[tid]/ { print(nsecs - @start[tid]); delete(@start[tid]); } interval:s:60 { exit(); }'
+
+This patch or not, execution time varies wildly even while the box is idle.
+
+The above runs for a minute, collecting 23 samples (you may get
+"lucky" and get one extra, in that case remove it for comparison).
+
+A sysctl was added to toggle the new behavior vs old one. Patch at the
+end.
+
+"enabled"(1) means new behavior, "disabled"(0) means the old one.
+
+Sum of nsecs (results piped to: awk '{ sum += $1 } END { print sum }'):
+disabled:	903610
+enabled:	1006833 (+11.4%)
+
+Toggle at runtime with:
+sysctl fs.magic_tunable=0 # disabled, no mandatory relocks
+sysctl fs.magic_tunable=1 # enabled, relock for every CPU
+
+I attached the stats I got for reference.
+
+I patched v6.14 with the following:
+diff --git a/fs/file_table.c b/fs/file_table.c
+index c04ed94cdc4b..441f89421413 100644
+--- a/fs/file_table.c
++++ b/fs/file_table.c
+@@ -106,6 +106,8 @@ static int proc_nr_files(const struct ctl_table *table, int write, void *buffer,
+ 	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
+ }
+ 
++unsigned long magic_tunable;
++
+ static const struct ctl_table fs_stat_sysctls[] = {
+ 	{
+ 		.procname	= "file-nr",
+@@ -123,6 +125,16 @@ static const struct ctl_table fs_stat_sysctls[] = {
+ 		.extra1		= SYSCTL_LONG_ZERO,
+ 		.extra2		= SYSCTL_LONG_MAX,
+ 	},
++	{
++		.procname	= "magic_tunable",
++		.data		= &magic_tunable,
++		.maxlen		= sizeof(magic_tunable),
++		.mode		= 0644,
++		.proc_handler	= proc_doulongvec_minmax,
++		.extra1		= SYSCTL_LONG_ZERO,
++		.extra2		= SYSCTL_LONG_MAX,
++	},
++
+ 	{
+ 		.procname	= "nr_open",
+ 		.data		= &sysctl_nr_open,
+diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+index 3e01781aeb7b..f6444bf25b2f 100644
+--- a/kernel/cgroup/rstat.c
++++ b/kernel/cgroup/rstat.c
+@@ -299,6 +299,8 @@ static inline void __cgroup_rstat_unlock(struct cgroup *cgrp, int cpu_in_loop)
+ 	spin_unlock_irq(&cgroup_rstat_lock);
+ }
+ 
++extern unsigned long magic_tunable;
++
+ /* see cgroup_rstat_flush() */
+ static void cgroup_rstat_flush_locked(struct cgroup *cgrp)
+ 	__releases(&cgroup_rstat_lock) __acquires(&cgroup_rstat_lock)
+@@ -323,12 +325,18 @@ static void cgroup_rstat_flush_locked(struct cgroup *cgrp)
+ 			rcu_read_unlock();
+ 		}
+ 
+-		/* play nice and yield if necessary */
+-		if (need_resched() || spin_needbreak(&cgroup_rstat_lock)) {
++		if (READ_ONCE(magic_tunable)) {
+ 			__cgroup_rstat_unlock(cgrp, cpu);
+ 			if (!cond_resched())
+ 				cpu_relax();
+ 			__cgroup_rstat_lock(cgrp, cpu);
++		} else {
++			if (need_resched() || spin_needbreak(&cgroup_rstat_lock)) {
++				__cgroup_rstat_unlock(cgrp, cpu);
++				if (!cond_resched())
++					cpu_relax();
++				__cgroup_rstat_lock(cgrp, cpu);
++			}
+ 		}
+ 	}
+ }
+
+
+--fqcrruvxc7rr34k3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: attachment; filename=disabled
+
+69869
+30473
+64670
+30544
+30950
+36445
+36235
+29920
+51179
+35760
+33424
+42426
+30177
+31211
+44974
+34450
+37871
+72642
+33016
+29518
+31800
+35730
+30326
+
+--fqcrruvxc7rr34k3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: attachment; filename=enabled
+
+63507
+50113
+36280
+35148
+63329
+41232
+51265
+41341
+41418
+42824
+35200
+35550
+54684
+41597
+55325
+36120
+48675
+41179
+39339
+35794
+38826
+37411
+40676
+
+--fqcrruvxc7rr34k3--
