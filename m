@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03EF1DDC2E
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 20:54:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F62E1F463D
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 20:54:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743108889; cv=none; b=FGD0VUfgRNOLvjHhz1X/YOvgNojYnminJA6Gi4+IDye9hP81Xk1uJAJDq+vqUVfqMg0anH0DN+9moU/Kk2Z3gz1DSyy6H8BS0y/3Avfr/UDgdV8jbjUdubPGqTtJIaYhPv3K4meXwH2OdR8z+CZxmipvX2tYjtlFXHlbMvWKtxk=
+	t=1743108891; cv=none; b=FYB0qix/h755BbWmki8dpx/ArXWiucOG0ur7QzmrCY3exzE34SXu5jRN3eRHL+uwdKtbJ9uaMk8Qa02zQ8kN+2/bAOThkG4k9B76IdfglIhftIDZuggi8umpFTEiDUhtb5ocUT3EZwkawmSH+BnVX0SVLMazARRthd2jLZeOu+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743108889; c=relaxed/simple;
-	bh=9GBZ9hxohiO2X7F9sa1OcOUm4FTwL2gytiXlhodCkRs=;
+	s=arc-20240116; t=1743108891; c=relaxed/simple;
+	bh=ooCiG1pF4040CksZrN8oejXD/ZlBQakpeu4sxsiC2Xk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gyi2aY1I7z65IWTDsdZq2qMj2zSXCpeyj/fWmSfRosWG27vm2qmdIDay/PzdV/zJXPiYltL9SjYtC531SLyXcdh6+u/ABhX7stRtN8mmxdz9XVA0ic+o6uM9CYxeknNoXXOV69Gp2G/EGQinLhfxunz9xwo4ix5Nirz2lhAMS4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gi7f/hK7; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=U5IesxSwf+He8O/clruvceqhutIFnwpi15BjUi+ncojeliNXEbbojfVgEQDLxInNLAw3CLgT2xtQoLPj2RZrkxTgo0cIb8VVZe+u7yd3qzhzSnLSUX/IvKGQ74um6i5LzLc1PW3+47FEGWsntZ92aN2os9eFHR7Ewp9H1+V0rpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UKjk42dl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gi7f/hK7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76F8AC4CEDD;
-	Thu, 27 Mar 2025 20:54:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UKjk42dl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D56F1C4CEE8;
+	Thu, 27 Mar 2025 20:54:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743108888;
-	bh=9GBZ9hxohiO2X7F9sa1OcOUm4FTwL2gytiXlhodCkRs=;
+	s=k20201202; t=1743108890;
+	bh=ooCiG1pF4040CksZrN8oejXD/ZlBQakpeu4sxsiC2Xk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Gi7f/hK7Fnp1PyOyaExFPyHmbZWKDyQ+VBjsFtlsxCYghkFVIsLzYEVRAlEAxrjc/
-	 o1G86acv0lswardIJz0yd1FrhrUhyVU0ft5G02+Trm+3wuesBz9ie1ZUHTKl0ugtHa
-	 53gvX+BPnlJKzqdLaje/Gd7Piy7pQI6G/ffIa/6Gli1p4tuuvfMGAPBoaWmzR3lcHP
-	 /4S1bSddj9PeVQ7hYxUuemwj+wQfeuMzhdDGXMu9Nw1HPRzVb10D2BhWdLffLEy56x
-	 c5oQtOvgVZyQJC9ZPQbzo41j7FKtdN6IGLl/ABNhjTehOGuxpoJ9ZDqZZYeDVhGLCv
-	 lzboDRWWIBxJg==
+	b=UKjk42dlf/O6lPFJE+q1Bx8MPVfGdL2T9ziIpRG8pRknsN3Fb4coYRBgcoAsC5FRK
+	 YOq4T1VdCOL5QEmrlmRzAyl2cSIAQ6h2t2kEp+DG8TdwW4McvH1UxxhqcFIW8L/jkn
+	 yQc/TtuDBqAcWKbWtDm+DqKmfqfWkyh4VJJXGvZWuTN7Bnvxigkys4gsC5g+rIeIdA
+	 WRrJR1tgfX4MXs6H2PYr8SdRPsfJtpeDqEJ00hY+cTcrXIL9dOdHuUKadIjGhOJFBx
+	 d62BtkOMLhZFIvN/RgufVpE6o0cpQL3XfolAAUlDsBjCOWagNYL10Cb7+tKhK4QjEK
+	 ul7RhU5WKwrVw==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
@@ -34,9 +34,9 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 20/41] x86/alternatives: Add text_mutex) assert to text_poke_int3_flush()
-Date: Thu, 27 Mar 2025 21:53:33 +0100
-Message-ID: <20250327205355.378659-21-mingo@kernel.org>
+Subject: [PATCH 21/41] x86/alternatives: Assert that text_poke_int3_handler() can only ever handle 'tp_vec[]' based requests
+Date: Thu, 27 Mar 2025 21:53:34 +0100
+Message-ID: <20250327205355.378659-22-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250327205355.378659-1-mingo@kernel.org>
 References: <20250327205355.378659-1-mingo@kernel.org>
@@ -48,37 +48,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It's possible to escape the text_mutex-held assert in
-text_poke_int3_batch() if the caller uses a properly
-batched and sorted series of patch requests, so add
-an explicit lockdep_assert_held() to make sure it's
-held by all callers.
-
-All text_poke_int3_*() APIs will call either text_poke_int3_batch()
-or text_poke_int3_flush() internally.
-
-The text_mutex must be held, because tp_vec and tp_vec_nr et al
-are all globals, and the INT3 patching machinery itself relies on
-external serialization.
-
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/alternative.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kernel/alternative.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index a10e1b9db7b4..f75806d699be 100644
+index f75806d699be..883c2146ce54 100644
 --- a/arch/x86/kernel/alternative.c
 +++ b/arch/x86/kernel/alternative.c
-@@ -2860,6 +2860,8 @@ static bool tp_order_fail(void *addr)
+@@ -2510,6 +2510,10 @@ static __always_inline int patch_cmp(const void *key, const void *elt)
+ 	return 0;
+ }
  
- static void text_poke_int3_flush(void *addr)
- {
-+	lockdep_assert_held(&text_mutex);
++#define TP_VEC_MAX (PAGE_SIZE / sizeof(struct text_poke_int3_loc))
++static struct text_poke_int3_loc tp_vec[TP_VEC_MAX];
++static int tp_vec_nr;
 +
- 	if (tp_vec_nr == TP_VEC_MAX || tp_order_fail(addr)) {
- 		text_poke_int3_batch(tp_vec, tp_vec_nr);
- 		tp_vec_nr = 0;
+ noinstr int text_poke_int3_handler(struct pt_regs *regs)
+ {
+ 	struct text_poke_int3_vec *desc;
+@@ -2534,6 +2538,8 @@ noinstr int text_poke_int3_handler(struct pt_regs *regs)
+ 	if (!desc)
+ 		return 0;
+ 
++	WARN_ON_ONCE(desc->vec != tp_vec);
++
+ 	/*
+ 	 * Discount the INT3. See text_poke_int3_batch().
+ 	 */
+@@ -2592,10 +2598,6 @@ noinstr int text_poke_int3_handler(struct pt_regs *regs)
+ 	return ret;
+ }
+ 
+-#define TP_VEC_MAX (PAGE_SIZE / sizeof(struct text_poke_int3_loc))
+-static struct text_poke_int3_loc tp_vec[TP_VEC_MAX];
+-static int tp_vec_nr;
+-
+ /**
+  * text_poke_int3_batch() -- update instructions on live kernel on SMP
+  * @tp:			vector of instructions to patch
 -- 
 2.45.2
 
