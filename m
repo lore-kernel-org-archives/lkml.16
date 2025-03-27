@@ -1,105 +1,99 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAED820C032;
-	Thu, 27 Mar 2025 10:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9DD20C032;
+	Thu, 27 Mar 2025 10:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743071089; cv=none; b=aSUMUy9sXbnx1jERpULnJQVJXSjEkxJVhG3JEgARvmbkTC+WxstlPw1BEWc2PQv/cvWzJsW0SqPK2L1pwIkqKi8vO6IZq+Ijo8urE8E/K2IGQ4N9pCLALQblKM4ARDNiVQefy5FsLBHsAqQkLJmJUAKeBP7BKyqs/sJUPwBLi9I=
+	t=1743071164; cv=none; b=Vl1xi85QWxqSfkkb9ixIOOBZnXsFrL8PLe45QuTlRunYNLKIcqU6QJ3WIh9s4XsBWfrwOHSD/Y+4t34fp6aYLPR3iuJ9VoI3BrINtwufCJ7wEI8sHLKMcr8Xyl78iQuqvIjFBplND3vdkJbpQzF1ISh7M+GpGbF8ThvFvkJseJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743071089; c=relaxed/simple;
-	bh=DsbXRcE3uB6DKz7Gg8lLqtEEX0d/S4O49cHK6BSoJQE=;
+	s=arc-20240116; t=1743071164; c=relaxed/simple;
+	bh=0tsbp848yXM+K/838IvLLfnAYwT3qLnRDwYA8IihXJM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=aJst25Go+W2K2GQ/szvK1Dhdf1YM1ogdiRPxqCDiZlQ15HiJl2rmd9g4KdWrD1L1oIabCpeBhKtX4IEivY3TEGVC5TJjNnzA1LCJPNXRA8YDEPBTSRTzC2sucUgB+k7Z/aExYxJKqAkEYhCPQ58O2Ku4iPgJtJw37gVB+EYqnNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=bMNlag4u; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	 In-Reply-To:Content-Type; b=TBxQlOhvdh6uDvZnrZDsAWqgKKUo264sk6swEb4/CvIuDW+lnDczHJO5eLa5YnARW/SWbhV4Kk3pdPrIe2PMQT+YYxQuMkY1vlcJvL9tkezKHoP392kOTQI9OEQhTdkxggGArE7E25cz3GGt7ZtcZixlFJQVUPdOvr4BHk1KydY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=p60j44pP; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bMNlag4u"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52RAONwW1826231
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Mar 2025 05:24:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1743071063;
-	bh=bPUPV905JI+jJQdIhqTPvxK0yMjk04lBg/pPQomUnNY=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=bMNlag4uzNuZZGlj7Vlox1efNwTAH6MaqEfDP6epYJvVuq/OEC/NWz4FbRL2+L+5D
-	 kmwryIlUN2A7n+29qXhQuuJiaxBHaMOozsS3jb5Gq3d+3QOjvIiX+kaDzQMEeO87v1
-	 CLRJ3w4PjJkbFpoFzDJCnocH+pUiXVC4qH69RGL0=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52RAON4k117628
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 27 Mar 2025 05:24:23 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 27
- Mar 2025 05:24:22 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 27 Mar 2025 05:24:22 -0500
-Received: from [172.24.227.193] (devarsh-precision-tower-3620.dhcp.ti.com [172.24.227.193])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52RAOJS6011061;
-	Thu, 27 Mar 2025 05:24:19 -0500
-Message-ID: <d60edfe6-a1c9-4e2c-8bc0-d2a3120d1605@ti.com>
-Date: Thu, 27 Mar 2025 15:54:18 +0530
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="p60j44pP"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R5jFD7024945;
+	Thu, 27 Mar 2025 10:25:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	0tsbp848yXM+K/838IvLLfnAYwT3qLnRDwYA8IihXJM=; b=p60j44pPfqOa6jw2
+	kcSDzZCs14TNVTJx3PYUEvkHI97mrZyhivOuzOPAMcSEK3EmzVbiDuulHIl61gZZ
+	nqrgcJqSJ3we7ZSAtuZ4HSkgEsISPi8CQKJDv4wjys6akRMJNmLgtEJ7J793JSx9
+	/fEwG0LLblvAnL1QejhVfaqgwyvYKvyZsJ603FZVydVuDdNR9paWrxyBMshCLKBU
+	r3a6Ex7u+039vF2kUpg+YvnWCrfPzi4N+ElBuPLnZSyeLGQWN5hbaJayag3IrBnB
+	s+fVBC9QBmXpSJXiHRkigaBzCXCBRDAEfgsxmrZAUnHxaUKJhugBjoIBNXDXWPu2
+	G5kRpw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45kmd4r6wd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Mar 2025 10:25:44 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52RAPhnB006720
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Mar 2025 10:25:43 GMT
+Received: from [10.216.8.158] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 27 Mar
+ 2025 03:25:37 -0700
+Message-ID: <8abf9cff-4931-bc8e-734d-86a2e2ad6763@quicinc.com>
+Date: Thu, 27 Mar 2025 15:55:34 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/6] media: cadence: csi2rx: Implement get_fwnode_pad op
-To: Jai Luthra <jai.luthra@ideasonboard.com>,
-        Jai Luthra
-	<jai.luthra@linux.dev>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans
- Verkuil <hverkuil@xs4all.nl>,
-        Tomi Valkeinen
-	<tomi.valkeinen@ideasonboard.com>,
-        Sakari Ailus
-	<sakari.ailus@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>
-CC: Rishikesh Donadkar <r-donadkar@ti.com>,
-        Vaishnav Achath
-	<vaishnav.a@ti.com>,
-        Changhuang Liang <changhuang.liang@starfivetech.com>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250324-probe_fixes-v1-0-5cd5b9e1cfac@ideasonboard.com>
- <20250324-probe_fixes-v1-4-5cd5b9e1cfac@ideasonboard.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 5/6] ARM: dts: qcom: sdx75-idp: Enable QPIC BAM support
 Content-Language: en-US
-From: Devarsh Thakkar <devarsht@ti.com>
-In-Reply-To: <20250324-probe_fixes-v1-4-5cd5b9e1cfac@ideasonboard.com>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <vkoul@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <manivannan.sadhasivam@linaro.org>, <miquel.raynal@bootlin.com>,
+        <richard@nod.at>, <vigneshr@ti.com>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <agross@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>
+References: <20250313130918.4238-1-quic_kaushalk@quicinc.com>
+ <20250313130918.4238-6-quic_kaushalk@quicinc.com>
+ <d964117a-6e74-42a9-a7fb-c08e3ab84217@oss.qualcomm.com>
+From: Kaushal Kumar <quic_kaushalk@quicinc.com>
+In-Reply-To: <d964117a-6e74-42a9-a7fb-c08e3ab84217@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: enttYmezz8AKXM2p1X5KcCidk_NYKs9Q
+X-Proofpoint-GUID: enttYmezz8AKXM2p1X5KcCidk_NYKs9Q
+X-Authority-Analysis: v=2.4 cv=QLZoRhLL c=1 sm=1 tr=0 ts=67e527a8 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=LYm1BIvnotKkRNd3cYoA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 adultscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=654 mlxscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0
+ bulkscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503270071
 
-On 24/03/25 17:31, Jai Luthra wrote:
-> Use v4l2_subdev_get_fwnode_pad_1_to_1() as the get_fwnode_pad operation.
-> Cadence CSI2RX maps port numbers and pad indices 1:1.
-> 
-> Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
-Reviewed-by: Devarsh Thakkar <devarsht@ti.com>
+On 3/13/2025 8:07 PM, Konrad Dybcio wrote:
+> On 3/13/25 2:09 PM, Kaushal Kumar wrote:
+>> Enable QPIC BAM devicetree node for Qualcomm SDX75-IDP board.
+>>
+>> Signed-off-by: Kaushal Kumar <quic_kaushalk@quicinc.com>
+>> ---
+> There's not reason for this to be a separate commit
+Okay, will combine it along with nand enablement in v2.
+>
+> Konrad
 
-Regards
-Devarsh
-> ---
->   drivers/media/platform/cadence/cdns-csi2rx.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media/platform/cadence/cdns-csi2rx.c
-> index 4d64df829e7585b6e305651f3ff9bdd008508ec5..b489967563cde96ac109c44a665b30e573125721 100644
-> --- a/drivers/media/platform/cadence/cdns-csi2rx.c
-> +++ b/drivers/media/platform/cadence/cdns-csi2rx.c
-> @@ -477,6 +477,7 @@ static const struct v4l2_subdev_internal_ops csi2rx_internal_ops = {
->   
->   static const struct media_entity_operations csi2rx_media_ops = {
->   	.link_validate = v4l2_subdev_link_validate,
-> +	.get_fwnode_pad = v4l2_subdev_get_fwnode_pad_1_to_1,
->   };
->   
->   static int csi2rx_async_bound(struct v4l2_async_notifier *notifier,
-> 
