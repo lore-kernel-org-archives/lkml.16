@@ -1,178 +1,230 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F97321D3C0
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 19:40:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F42A18AE2;
+	Thu, 27 Mar 2025 19:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743104431; cv=none; b=qqGQ//fFjHi+kIlnhXNm0xUfKsJpjj65fmmvLCtq/TfwVa/0yPuTpVzmEDN9xmCCtdE5+ly5Q9ex1hpTT482/skqFlMeSAIswaQ2MPHE34MgiAtef9CH7Izp0Av5d9ZQk5xjrWiWF61TOyurDRxko2nNi3Ll62h1PV+XUteRRoE=
+	t=1743104506; cv=none; b=VofcvdXPjid6GZGu4r63DWtQH+V+wkaxe9stZcua33WNG95V2Cj9v+mK5cFfdynbnkvkhBG/xf2AcK0kyBVCiJxyN6jgO67s+7GsL2D9wQEiHzmxLafn+Ydeqdg0el3S/S2bR77aG7QARht9/P+GvmxJNCpbQS9QPbzztubtAHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743104431; c=relaxed/simple;
-	bh=Am6MfhmhhKahON+wcT6CJkFPn4eNFrNyfxwl40UWhHE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JJO0V50GkNAUJgp/CPbMAvwYr5HdyJBpQ/CQW37+Sl6PSDKwm1hiMS59b4ogF7jKzyejggRwrTgauSu/B+/FwEVOZDdjKsJmrjDYK/jkAy+Wgm7IBmWuOqRvr2ZBpJ4j9HAqFO2+TH/UPrbu/X+Nny77oZxKlqwgAT6OkohG7yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=T90HRIns; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743104506; c=relaxed/simple;
+	bh=IBqTsvUGoCy/YkiVeaOE/fHgyV2HsXFMDrAO0iAIKUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Fr/kB4XDKGjQB/vBwRzI21bgt1GZ2r5MgcQ2GR/VdsAy65fzkSa+nPHrQkJOqdDDsJ9xOO0dQDZ/G+nJVX6WLa/Cd1lUd38i77iunFhpY2QwvYOgodvBTLAuiu3DKCUs2KbRbyQ1ihhr5MeUnWn3SWuRL24w5PErmzF6uzoy0zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j8QTw/c+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="T90HRIns"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e5c9662131so2203996a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:40:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743104427; x=1743709227; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1JEq/0HpybPrPkftoA0ZBHzqv4jivtz6CrXQUZogyrs=;
-        b=T90HRInsQS0OK8MZrmYTQjIXtw7B5RJCo3tWDPvbIl7rcqLazG+zCtXkMZrdaLZi67
-         Con/ATOCTkO27H6ajxNcAxbkiNAC4wXXaR9GLQn44QnPhiN5BqZW08OBQrN8mMXCUCtV
-         7rfOBBAcdFen1xBXzbxhqPSsEaLJEqwSotXNo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743104427; x=1743709227;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1JEq/0HpybPrPkftoA0ZBHzqv4jivtz6CrXQUZogyrs=;
-        b=Sv3rsY6Cmv3xEJY8PSPp0RexVaNO0MzVDT08ztgsbOhdGHlAVff4YZcEmOSA1FrN5A
-         nMs1WlWdyEZ9V7ilwVVh6iTor55rmi3iGAUP0hDOJOpURmKVCj8Yq3kBmJ1iONhZriVL
-         udYgYr/jodHN64xGW0VPmuCVyx53bRxm3a+riVCQOWpaxHE3qNI6lhXFcB4xUBjCzA9U
-         kK8vYG7ftqSGgj7nLVyy2nQE8KoMK9TvZZIMOLSIaUNhYfRBaTG+Lsji5CcgYxzcBsHx
-         lf6GQ1i1rM04ZR/kMNUkWiWcXolJBTSzYgnY19eQuhJ67FT17ZTxc1ZWMATyzgcdUrnP
-         7LjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUyt0bC/62w0kNUz/oSqh/7/52KP3faJrpncp1vO3n4WB/+jvCAmcAtYB3V3JqPcunDUIznSJcYK1VEOew=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3jZ3SYIUGTqjxaJNEl0+6FYpPLLFWmwDJw47ESL+II5wyo6Rt
-	psx0P16EW9eE/D3Z7GJf7wqxnNIeqxqwFtS8+S+YBcCS+yoaSqbfoE/Pf/duexKC3ss6k7JMvGY
-	xDfg=
-X-Gm-Gg: ASbGncut3ztbjZhMev0+eHnPTooD/oHrnfzWpLcFJI6N/JAg6HYxu1EUHr3pA0Ea7Nf
-	ip3kRFGd3bsMuScIerbRP6L6Nwyb1wCwzhX4kOaLM/KHnts5pUirkI5pba6DscILGMjSuraGkJZ
-	2I9gx25Wkxc7ZtYz4cGOlcrfsa1sFtWN4OvRcUNyY3UdA0oi2InabfHZfv2IBQgSJqODLkDP1D3
-	vYFuUlM8DvG6Y2vbIsc1aWCX4c74X8Kev/S+/jQKmlZeQg87LE1Wn6QqQR3YNUq7t4GbUHSZXqF
-	hHZ9VLhx/L8pJUdC8KYb696rAcq92xTSeYLdAmCLiC8kBr/9CpyxyK9+u1+Ce7LWodzsQvoL0br
-	8AJNEoDbVYdq1XGGGR2g=
-X-Google-Smtp-Source: AGHT+IFCJkMwjzmoCtCHW5tBV1Ug26Ch4MBTRqDO6raepp4s1sXJRWFmpfvuvuQfwczGw/tV1vUM+Q==
-X-Received: by 2002:a17:906:794a:b0:ac2:dfcf:3e09 with SMTP id a640c23a62f3a-ac6fb100848mr518883466b.43.1743104427233;
-        Thu, 27 Mar 2025 12:40:27 -0700 (PDT)
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com. [209.85.218.53])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7196e954csm40500666b.171.2025.03.27.12.40.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 12:40:26 -0700 (PDT)
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso213241266b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:40:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUh5LM383iLpwS67b7y4s1LymsqrMQ4i3tPxoJ4+mxG66AMJb+bCae6Ai63fyOKBWqnyup/w0PLuJVN4D8=@vger.kernel.org
-X-Received: by 2002:a17:906:794a:b0:ac2:dfcf:3e09 with SMTP id
- a640c23a62f3a-ac6fb100848mr518877966b.43.1743104426218; Thu, 27 Mar 2025
- 12:40:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j8QTw/c+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 658D3C4CEE5;
+	Thu, 27 Mar 2025 19:41:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743104505;
+	bh=IBqTsvUGoCy/YkiVeaOE/fHgyV2HsXFMDrAO0iAIKUA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=j8QTw/c+z3keIZR0gMkHhAtq3UEIE8KJauA8POOCjtq3dmNjjJfppIpD98QfCx106
+	 wi8m/PKXhKzKV9fP0Hdw3vkd/xxxgi//gT6Ke+gSbi/baB5vduoZcGD2GzwXpbUhQh
+	 6xFXwVGzQ1G0Jh/TcJ3HaA9C/ea/3hHaFPZDQvOBP06PR1FdnJEUIt+xds/ggkrQs7
+	 PwO0TwvWaKhnd6xOKGewooELhIBxJzWwMBy34ciXa2eIVRTzRAbuXoN01YkJ4gVb6K
+	 3tlGNnUYFwRjIt2fJMbrlnmWyPAktDSbdOO2pEQyHUNY8Ipf9s7XHazlB8/1/njqUm
+	 H5tUyG1w1DoKQ==
+Date: Thu, 27 Mar 2025 14:41:44 -0500
+From: Rob Herring <robh@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Saravana Kannan <saravanak@google.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [GIT PULL] Devicetree updates for v6.15
+Message-ID: <20250327194144.GA884505-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <d0ade43454dee9c00689f03e8d9bd32a@paul-moore.com>
- <CAHk-=wjbahY4JjLCXNT4o3xVq2cejqBG69z+MNfHsN9FQBnbOw@mail.gmail.com>
- <CAHC9VhRExVqdhHqs0njs7NY6bFg0BfcE-gMpS30HW9O7MSDfWQ@mail.gmail.com>
- <CAHk-=wi9m8-_3cywQCohJQEQtuQ+teS4gOtBkWZrhFWzNy-5_A@mail.gmail.com>
- <CAHC9VhT3D7X=4SpO5xbYm=JUwJqTa7tn=J6QMDBV96c7VBUw4g@mail.gmail.com>
- <CAHk-=wiH3hoPTxX3=xTRzRuCwktf3pNzFWP45-x6AwoVAjUsUQ@mail.gmail.com>
- <CAHC9VhT5G6W7g9pB3VM6W7wCEJjWfYSUWNgWF+rRiQ4ZQbGMEQ@mail.gmail.com>
- <CAHk-=whwQhJtafHN4B1w-z2Gno__xLHS4NouKKHrYNTYa8kz3g@mail.gmail.com>
- <CA+zpnLeK2Ecj1mBod2rFe4ymd9eXiJkbyYwFh4Yrmck3DVB2SA@mail.gmail.com>
- <CAHk-=wiBH8FBL+pnXui8O-FSdyoG-yX81mUF9bsZcC6rR5ZtgQ@mail.gmail.com>
- <CA+zpnLe_AOpS_F1UBNOvN3YRswUSy_3=0jjUAy4GPxEHYumD0g@mail.gmail.com>
- <CAHk-=wgJ0gzYJD+MghfVW-YeGLW6sLU5soFY13KWmPAxobk5Mw@mail.gmail.com>
- <CABXk95AqgpqGtjzK2o=mxWJg5RUZG80dAEaKF9JdUT6n5eFENQ@mail.gmail.com>
- <CAHk-=wh1refm6JkAB__TmC8OBJyNdH2DmNQAbvcL=tKepkHrYw@mail.gmail.com>
- <CAEjxPJ6XnBmbzH44YVQxxv8WOyPN7N81fpj7OYonEOTB=rn6wg@mail.gmail.com>
- <CAHk-=wguzgJu4p_khuEXKHmh-6abSN7xLJdCTuyVEfjsopY7iQ@mail.gmail.com>
- <CAHk-=wh4H3j3TYWn6KSgznUsOXz8vfHMOfTNmFvjGr=hwULWsw@mail.gmail.com> <CAEjxPJ4fzoONpiy3z8QOZ55w35=WfWQ+hiTg24LMEHPpnaC87Q@mail.gmail.com>
-In-Reply-To: <CAEjxPJ4fzoONpiy3z8QOZ55w35=WfWQ+hiTg24LMEHPpnaC87Q@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 27 Mar 2025 12:40:09 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjbSRL7LM7CvckB+goQdUokMa_6G-iirdbtxrFSFe3mfA@mail.gmail.com>
-X-Gm-Features: AQ5f1JpsgpsoU5qvy0FXDgptv2LfsiQnXe2KM7mTv3DMgNv1TpFR9zIlmzjZ8ug
-Message-ID: <CAHk-=wjbSRL7LM7CvckB+goQdUokMa_6G-iirdbtxrFSFe3mfA@mail.gmail.com>
-Subject: Re: [GIT PULL] selinux/selinux-pr-20250323
-To: Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc: Jeffrey Vander Stoep <jeffv@google.com>, =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>, 
-	Paul Moore <paul@paul-moore.com>, "Cameron K. Williams" <ckwilliams.work@gmail.com>, 
-	"Kipp N. Davis" <kippndavis.work@gmx.com>, selinux@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Nick Kralevich <nnk@google.com>, Kees Cook <kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Thu, 27 Mar 2025 at 12:16, Stephen Smalley
-<stephen.smalley.work@gmail.com> wrote:
->
-> Where could/would we cache that information so that it was accessible
-> directly by the VFS layer?
+Linus,
 
-So the VFS layer already does this for various other things. For this
-case, the natural thing to do would be to add another IOP_xyzzy flag
-in inode->i_opflags.
+Please pull DT updates for 6.15. There's a trivial merge conflict with 
+your tree in of_private.h (actually from fixes from me for 6.14 which I 
+never merged into this cycle's branch).
 
-That's how we already say things like "this inode has no
-filesystem-specific i_op->permission function" (IOP_FASTPERM), so that
-we don't even have to follow the "inode->i_op->permission" pointer
-chain to see a NULL pointer.
+Rob
 
-Yes, the VFS layer is *heavily* optimized like that. It literally does
-that IOP_FASTPERM to avoid chasing two pointers - not even the call,
-just the "don't even bother to follow pointers to see if it's NULL".
-See do_inode_permission().
 
-And we have 16 bits in that inode->i_opflags, and currently only use 7
-of those bits. Adding one bit for a IOP_NO_SECURITY_LOOKUP kind of
-logic (feel free to rename that - just throwing a random name out as a
-suggestion) would be a complete no-brainer.
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
 
-NOTE! The rule for the i_opflags accesses is that *reading* them is
-done with no locking at all, but changing them takes the inode
-spinlock (and we should technically probably use WRITE_ONCE() and
-READ_ONCE(), but we don't).
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
 
-And notice that the "no locking at all for reading" means that if you
-*change* the bit - even though that involves locking - there may be
-concurrent lookups in process that won't see the change, and would go
-on as if the lookup still does not need any security layer call. No
-serialization to readers at all (although you could wait for an RCU
-period after changing if you really need to, and only use the bit in
-the RCU lookup).
+are available in the Git repository at:
 
-That should be perfectly fine - I really don't think serialization is
-even needed. If somebody is changing the policy rules, any file
-lookups *concurrent* to that change might not see the new rules, but
-that's the same as if it happened before the change.
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-for-6.15
 
-I just wanted to point out that the serialization is unbalanced: the
-spinlock for changing the flag is literally just to make sure that two
-bits being changed at the same time don't stomp on each other (because
-it's a 16-bit non-atomic field, and we didn't want to use a "unsigned
-long" and atomic bitops because the cache layout of the inode is also
-a big issue).
+for you to fetch changes up to 314655d41e650b3d72c60aa80a449e0ab22e2ffd:
 
-And you can take the IOP_FASTPERM thing as an example of how to do
-this: it is left clear initially, and what happens is that during the
-permission lookup, if it *isn't* set, we'll follow those
-inode->i_io->permission pointers, and notice that we should set it:
+  scripts/make_fit: Print DT name before libfdt errors (2025-03-27 14:03:32 -0500)
 
-        if (unlikely(!(inode->i_opflags & IOP_FASTPERM))) {
-                if (likely(inode->i_op->permission))
-                        return inode->i_op->permission(idmap, inode, mask);
+----------------------------------------------------------------
+Devicetree for v6.15:
 
-                /* This gets set once for the inode lifetime */
-                spin_lock(&inode->i_lock);
-                inode->i_opflags |= IOP_FASTPERM;
-                spin_unlock(&inode->i_lock);
-        }
+DT core:
+- Fix ref counting errors in interrupt parsing code
 
-and I think the security layer could take a very similar approach: not
-setting that IOP_NO_SECURITY_LOOKUP initially, but *when* a
-security_inode_permission() call is made with just MAY_NOT_BLOCK |
-MAY_LOOKUP, and the security layer notices that "this inode has no
-reason to care", it could set the bit so that *next* time around the
-VFS layer won't bother to call into security_inode_permission()
-unnecessarily.
+- Allow "nonposted-mmio" property per device and on non-Apple h/w
 
-Does that clarify?
+- Use typed accessors in platform driver code
 
-             Linus
+- Fix mismatch between DT MAX_PHANDLE_ARGS and NR_FWNODE_REFERENCE_ARGS
+  and increase the maximum number args
+
+- Rework of_resolve_phandles() to use __free() cleanup and fix ref count
+  error
+
+- Use of_prop_cmp() in a few more places
+
+- Improve make_fit.py script error handling
+
+DT bindings:
+- Update DT property ordering rules for properties within groups (i.e.
+  common suffix)
+
+- Update DT submitting-patches doc to cover sending .dts patches and
+  SoC maintainer rules on being warning free against linux-next
+
+- Add ti,tps53681, ti,tps53681, Maxim max15301, max15303, and
+  max20751 to trivial devices
+
+- Add Renesas RZ/V2H(P) and Allwinner H616 support to Arm Mali Bifrost
+  GPU. Add Samsung exynos7870 support to Arm Mail Midgard.
+
+- Rework qcom,ebi2 and samsung,exynos4210-sram memory controller
+  bindings to split child node properties. Fix the LAN9115 binding to
+  use the child node schema so all properties are documented.
+
+- Convert nxp,lpc3220-mic and Altera ECC manager bindings to schema
+
+- Fix some issues with LVDS display panels causing validation warnings
+
+- Drop some obsolete parts of Xilinx bindings
+
+----------------------------------------------------------------
+Ahmad Fatoum (1):
+      dt-bindings: display/lvds-codec: add ti,sn65lvds822
+
+Andre Przywara (1):
+      dt-bindings: gpu: mali-bifrost: Add Allwinner H616 compatible
+
+Dragan Simic (1):
+      docs: dt-bindings: Specify ordering for properties within groups
+
+J. Neuschäfer (1):
+      scripts/make_fit: Print DT name before libfdt errors
+
+Kaustabh Chakraborty (1):
+      dt-bindings: gpu: arm,mali-midgard: add exynos7870-mali compatible
+
+Konrad Dybcio (2):
+      of: address: Expand nonposted-mmio to non-Apple Silicon platforms
+      of: address: Allow to specify nonposted-mmio per-device
+
+Krzysztof Kozlowski (5):
+      docs: dt: submitting-patches: Document sending DTS patches
+      docs: process: maintainer-soc-clean-dts: linux-next is decisive
+      dt-bindings: memory-controllers: samsung,exynos4210-srom: Enforce child props
+      dt-bindings: memory-controllers: qcom,ebi2: Enforce child props
+      dt-bindings: pps: gpio: Correct indentation and style in DTS example
+
+Lad Prabhakar (1):
+      dt-bindings: gpu: mali-bifrost: Add compatible for RZ/V2H(P) SoC
+
+Leonardo Felipe Takao Hirata (1):
+      dt-bindings: interrupt-controller: Convert nxp,lpc3220-mic.txt to yaml format
+
+Matthew Gerlach (1):
+      dt-bindings: edac: altera: socfpga: Convert to YAML
+
+Michal Simek (5):
+      dt-bindings: xilinx: Remove uartlite from xilinx.txt
+      dt-bindings: xilinx: Remove description for SystemACE
+      dt-bindings: xilinx: Remove desciption for 16550 uart
+      dt-bindings: trivial-devices: Add ti,tps546b24
+      dt-bindings: trivial-devices: Add ti,tps53681
+
+Rob Herring (Arm) (13):
+      dt-bindings: memory-controllers: Move qcom,ebi2 from bindings/bus/
+      dt-bindings: memory-controllers: qcom,ebi2: Split out child node properties
+      dt-bindings: memory-controllers: samsung,exynos4210-srom: Split out child node properties
+      dt-bindings: net: smsc,lan9115: Ensure all properties are defined
+      dt-bindings: imx: fsl,aips-bus: Ensure all properties are defined
+      of: resolver: Simplify of_resolve_phandles() using __free()
+      dt-bindings: display: mitsubishi,aa104xd12: Allow jeida-18 for data-mapping
+      dt-bindings: display: mitsubishi,aa104xd12: Adjust allowed and required properties
+      dt-bindings: fsi: ibm,p9-scom: Add "ibm,fsi2pib" compatible
+      dt-bindings: trivial-devices: Add Maxim max15301, max15303, and max20751
+      of/platform: Use typed accessors rather than of_get_property()
+      of: Move of_prop_val_eq() next to the single user
+      media: dt-bindings: mediatek,vcodec-encoder: Drop assigned-clock properties
+
+Zijun Hu (15):
+      of: unittest: Add a case to test if API of_irq_parse_one() leaks refcount
+      of/irq: Fix device node refcount leakage in API of_irq_parse_one()
+      of: unittest: Add a case to test if API of_irq_parse_raw() leaks refcount
+      of/irq: Fix device node refcount leakage in API of_irq_parse_raw()
+      of/irq: Fix device node refcount leakages in of_irq_count()
+      of/irq: Fix device node refcount leakage in API irq_of_parse_and_map()
+      of/irq: Fix device node refcount leakages in of_irq_init()
+      of/irq: Add comments about refcount for API of_irq_find_parent()
+      of: resolver: Fix device node refcount leakage in of_resolve_phandles()
+      of: Compare property names by of_prop_cmp() in of_alias_scan()
+      of: Introduce and apply private is_pseudo_property()
+      of: Correct property name comparison in __of_add_property()
+      of/platform: Do not use of_get_property() to test property presence
+      of: property: Increase NR_FWNODE_REFERENCE_ARGS
+      of: Align macro MAX_PHANDLE_ARGS with NR_FWNODE_REFERENCE_ARGS
+
+ .../bindings/display/bridge/lvds-codec.yaml        |   1 +
+ .../display/panel/mitsubishi,aa104xd12.yaml        |   6 +-
+ .../devicetree/bindings/dts-coding-style.rst       |   8 +-
+ .../bindings/edac/altr,socfpga-ecc-manager.yaml    | 323 +++++++++++++++++
+ .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 383 ---------------------
+ .../devicetree/bindings/fsi/ibm,p9-scom.yaml       |   1 +
+ .../devicetree/bindings/gpu/arm,mali-bifrost.yaml  |   3 +
+ .../devicetree/bindings/gpu/arm,mali-midgard.yaml  |   5 +-
+ .../interrupt-controller/nxp,lpc3220-mic.txt       |  58 ----
+ .../interrupt-controller/nxp,lpc3220-mic.yaml      |  68 ++++
+ .../bindings/media/mediatek,vcodec-encoder.yaml    |   6 -
+ .../bindings/memory-controllers/exynos-srom.yaml   |  36 +-
+ .../memory-controllers/mc-peripheral-props.yaml    |   2 +
+ .../qcom,ebi2-peripheral-props.yaml                |  91 +++++
+ .../{bus => memory-controllers}/qcom,ebi2.yaml     |  87 +----
+ .../samsung,exynos4210-srom-peripheral-props.yaml  |  35 ++
+ .../devicetree/bindings/net/smsc,lan9115.yaml      |   6 +-
+ .../devicetree/bindings/pps/pps-gpio.yaml          |  22 +-
+ .../devicetree/bindings/soc/imx/fsl,aips-bus.yaml  |   5 +-
+ .../devicetree/bindings/submitting-patches.rst     |  19 +-
+ .../devicetree/bindings/trivial-devices.yaml       |   9 +
+ Documentation/devicetree/bindings/xilinx.txt       |  26 --
+ Documentation/process/maintainer-soc-clean-dts.rst |   5 +-
+ MAINTAINERS                                        |   5 +
+ drivers/of/address.c                               |  13 +-
+ drivers/of/base.c                                  |   6 +-
+ drivers/of/irq.c                                   |  84 +++--
+ drivers/of/of_private.h                            |   7 +
+ drivers/of/overlay.c                               |  10 +-
+ drivers/of/platform.c                              |   8 +-
+ drivers/of/resolver.c                              |  41 +--
+ drivers/of/unittest-data/tests-interrupts.dtsi     |  13 +
+ drivers/of/unittest.c                              |  67 ++++
+ include/linux/fwnode.h                             |   2 +-
+ include/linux/of.h                                 |   8 +-
+ scripts/make_fit.py                                |   6 +-
+ 36 files changed, 766 insertions(+), 709 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/edac/altr,socfpga-ecc-manager.yaml
+ delete mode 100644 Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.yaml
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/qcom,ebi2-peripheral-props.yaml
+ rename Documentation/devicetree/bindings/{bus => memory-controllers}/qcom,ebi2.yaml (63%)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/samsung,exynos4210-srom-peripheral-props.yaml
