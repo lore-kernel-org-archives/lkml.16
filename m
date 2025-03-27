@@ -1,111 +1,117 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E67120F071
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B8121422C;
+	Thu, 27 Mar 2025 14:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743085151; cv=none; b=b2iUUZeBkZ/UwT7bEaWTq7h4qXExEYsXugdu17YFN+yDYrTHuJ9+XoG67A9tcIG8Yu7sDkWiPxu3wMCMg0xt8ves2GZ3z13zDqcxgvDgexXVljFBLdcQe7kj2/0IYaMdhPL/o/idkC2zcdfFyWKdOUzBgUkuC4eNjDFAIWrHRXQ=
+	t=1743085244; cv=none; b=YJzogbY9Hf7u1qnlTMbb8vfs4f59QpxOUAMyVQUmaf8GHJO9Wsf/X8+EnTrvNVC+ICMbk9Zox9nr9r30yfsyW1z7iRt1YvcC6IG5fiTZbQZDXM3bATRJ+7KTbwe+dKVOfzrYgKG2CxN7n17H/icSTRuRw/YN8XuWWBs6r6jm7lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743085151; c=relaxed/simple;
-	bh=n9lJXBUGa5zrXwrCUF2Kk6gcmEYUNLHmq/4L450ViQk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sWFAd4kmq0FabEwMW9k4L8x+opn8rJa0/5giYkXBroxkqRBX7hZAgXEkFAPENqtGm6s5G+upvcFKKmme3TPW51r6TSLWzrXD0GOJQ26uKp9SvbXCjOVhMUFFv0QPGDsrscMI06HRHCQ2NYMPdL2PdDzNZqJetQWsxrb7dLgotq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pAijumPJ; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1743085244; c=relaxed/simple;
+	bh=Kp8tmG94C1NlHRTeGN7AQJ/wzvfSetrtkc7dV9pp+ug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AWLjIEMHBe8e/g+IOsUa08CLcfWpf5aT5Mbr/pdOFTr6YI9zwyNUqzhyx/bNMXT44NqrV9tbGWIps7ojGukSRyaaTDR4qZ6vkSDbeNR9lkFW5TKbTJ8Vad9h+01zYfToVOjXBGHExclXTc0YtBq/n3fSIXV9D5Imir+OhuYqBO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gFTd+GoG; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pAijumPJ"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-225107fbdc7so20059955ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 07:19:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743085150; x=1743689950; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=a6zhaLPdcwFOXcRVTwEe/u/+t8uTzMuCjiG/G61KRZs=;
-        b=pAijumPJuMVuXBHMePHlf1CKrdS8grFGMPosIImDa5vKsrX6Z7LlpE2WNuKe9OyOKE
-         aWceQyCfuI5hYCeM2VgNnKNaCIDqvZpZUq6iwwOstJzMopyXy/eEiZtnPJSDL2L5Gwv9
-         NafzcpxMZ7e9vGRgCvsR6Gqun8vz+zlOzuvv+YiFSkU8wuFCWx+avv3iaXWdY0ylANJQ
-         usFqolmWw/j1yZBb33xlfmvpIUpHA2kqZ86aIBvVUqeTaCaIhqB9G+b+3/IxvXIv4+Jc
-         EIQsnpchf9qsU2Wub8zQPY59uvDawdRg3/V0DP3EK1YbL1OtujZFuj+f1brtiiRbdUcv
-         nB6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743085150; x=1743689950;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a6zhaLPdcwFOXcRVTwEe/u/+t8uTzMuCjiG/G61KRZs=;
-        b=CdaTKmeRiNkaFPVLmTmemGVlzopfIOBIbGRr2LxYJOdtXIDcfq5wtB81XH8+JDFJCa
-         ZPiYdXAr2HpAp9ZywH8sTfMsmFuG+K5qB+lm9tl1d6jekQcez40jMtB9kh5A6T1A5O/6
-         uJy7mzguL6JZrLUpZZomlyEAqMjUk3Din3LTpH/PrxusKiSPmi1zVktbh/vNBtzBzbLC
-         WbIKBbmoMrEb25D3cWjd2Z/41Z/PSQAi3k1lblMLhTxr/v195z94y/DInU1mrinvv8yp
-         4ykL2Zo2VQrCR+/xS9pC8E4tiAEIS8FZlYbpGtcN6ouL1dfLzvlU+ub86sXW5wikRMCb
-         0tFg==
-X-Forwarded-Encrypted: i=1; AJvYcCXcA+9+lx+6q75oj7Q6JxoLtY8ne2t/YKDfRYBt8rFbq3EPP2tQthqJLdB0j16ZXCSj/CIyuBWl41jdi5c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9QiDM1RZyHdlgXfVrSo3TD4Kv6D3FvVSIi/teoSn6TeqkMvjO
-	N95songy3u9miqfa07jOlf6Wm+AT9d+d/Sv0IR6Up+9nvS1gRNkBHVBlMzhGRWEOio0jlJ2+H2Q
-	gIg==
-X-Google-Smtp-Source: AGHT+IGGMam9T8WozeRkBPD4Zm4Ke69jphYD5viKBJMLvC6WDpQ9ldVOH0lnViHJMtvgvrrUpiHczcFTs7o=
-X-Received: from pfbdr9.prod.google.com ([2002:a05:6a00:4a89:b0:736:a983:dc43])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:aa7:88cb:0:b0:736:d297:164
- with SMTP id d2e1a72fcca58-73960e0bd64mr5021035b3a.1.1743085149770; Thu, 27
- Mar 2025 07:19:09 -0700 (PDT)
-Date: Thu, 27 Mar 2025 07:19:07 -0700
-In-Reply-To: <87msd6y8a7.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gFTd+GoG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743085243; x=1774621243;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Kp8tmG94C1NlHRTeGN7AQJ/wzvfSetrtkc7dV9pp+ug=;
+  b=gFTd+GoGMeXyZtvTp1U6ciegvFIpE62SPhMe9Jas80cJmQs9akocR5Tp
+   pqadrkmq/4CNWG3DwOf757SsH0uaeyYltVryB8wezbANSS3AsZqKJtg+r
+   i9BphNyCAbJvGqHNW246Ogc9MKURDom7hlFau/njFn7yXyyjiqhcsQ5z/
+   jH0qVZ7Nyl082FzPOmK1icMO04YbIQ0sbFA7mMZIXVxEBFAZTc+9VcPyK
+   bksFwm2ld2pTvLWnUCylW1S25AE6Nb3gQPKYi961GocwECJnD9nNpDoPK
+   AAy11XAoVr1pdK8RWiiiE10DcbF6tsLm0e1kbgUx4X8yVhKVnTmhJZ2n3
+   Q==;
+X-CSE-ConnectionGUID: dAKc+rYJTt6IE810RwRirg==
+X-CSE-MsgGUID: C4SisLOMSnOtz/1R7LSDpQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44435719"
+X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
+   d="scan'208";a="44435719"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 07:20:42 -0700
+X-CSE-ConnectionGUID: x5QxreAqSqa894qDKsBJ7Q==
+X-CSE-MsgGUID: PXo505ySSDCVuk2lWzsCDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
+   d="scan'208";a="126082271"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa008.jf.intel.com with ESMTP; 27 Mar 2025 07:20:40 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id CCAB51D9; Thu, 27 Mar 2025 16:20:38 +0200 (EET)
+Date: Thu, 27 Mar 2025 16:20:38 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Andreas Noever <andreas.noever@gmail.com>,
+	Michael Jamet <michael.jamet@intel.com>,
+	Mika Westerberg <westeri@kernel.org>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCHv2] thunderbolt: do not double dequeue a request
+Message-ID: <20250327142038.GB3152277@black.fi.intel.com>
+References: <20250327114222.100293-1-senozhatsky@chromium.org>
+ <20250327133756.GA3152277@black.fi.intel.com>
+ <vxocwwtfwg3tmjm62kcz33ypsg22afccd2ua5jqymbxaxwcigf@nnydc53vu3gv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250226090525.231882-1-Neeraj.Upadhyay@amd.com>
- <20250226090525.231882-14-Neeraj.Upadhyay@amd.com> <87cyea2xxi.ffs@tglx>
- <Z92dqEhfj1GG6Fxb@google.com> <87y0wqycj8.ffs@tglx> <87msd6y8a7.ffs@tglx>
-Message-ID: <Z-VeW0IuqMI8dYlH@google.com>
-Subject: Re: [RFC v2 13/17] x86/apic: Handle EOI writes for SAVIC guests
-From: Sean Christopherson <seanjc@google.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, linux-kernel@vger.kernel.org, bp@alien8.de, 
-	mingo@redhat.com, dave.hansen@linux.intel.com, Thomas.Lendacky@amd.com, 
-	nikunj@amd.com, Santosh.Shukla@amd.com, Vasant.Hegde@amd.com, 
-	Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com, x86@kernel.org, 
-	hpa@zytor.com, peterz@infradead.org, pbonzini@redhat.com, kvm@vger.kernel.org, 
-	kirill.shutemov@linux.intel.com, huibo.wang@amd.com, naveen.rao@amd.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <vxocwwtfwg3tmjm62kcz33ypsg22afccd2ua5jqymbxaxwcigf@nnydc53vu3gv>
 
-On Thu, Mar 27, 2025, Thomas Gleixner wrote:
-> On Thu, Mar 27 2025 at 11:48, Thomas Gleixner wrote:
-> 
-> > On Fri, Mar 21 2025 at 10:11, Sean Christopherson wrote:
-> >> On Fri, Mar 21, 2025, Thomas Gleixner wrote:
-> >>> 
-> >>> Congrats. You managed to re-implement find_last_bit() in the most
-> >>> incomprehesible way.
-> >>
-> >> Heh, having burned myself quite badly by trying to use find_last_bit() to get
-> >> pending/in-service IRQs in KVM code...
-> >>
-> >> Using find_last_bit() doesn't work because the ISR chunks aren't contiguous,
-> >> they're 4-byte registers at 16-byte strides.
-> >
-> > Which is obvious to solve with trivial integer math:
-> >
-> >       bit = vector + 32 * (vector / 32);
-> >
-> > ergo
-> >
-> >      vector = bit - 16 * (bit / 32);
-> >
-> > No?
-> 
-> Actually no. As this is for 8 byte alignment. For 16 byte it's 
-> 
-> 	bit = vector + 96 * (vector / 32);
-> ergo
->         vector = bit - 24 * (bit / 32);
-> 
-> Which is still just shifts and add/sub.
+Hi,
 
-IIUC, the suggestion is to use find_last_bit() to walk the entire 128-byte range
-covered by ISR registers, under the assumption that the holes are guaranteed to
-be zero.  I suppose that works for Secure AVIC, but I don't want to do that for
-KVM since KVM can't guarantee the holes are zero (userspace can stuff APIC state).
+On Thu, Mar 27, 2025 at 11:02:04PM +0900, Sergey Senozhatsky wrote:
+> Hi,
+> 
+> On (25/03/27 15:37), Mika Westerberg wrote:
+> > > Another possibility can be tb_cfg_request_sync():
+> > > 
+> > > tb_cfg_request_sync()
+> > >  tb_cfg_request()
+> > >   schedule_work(&req->work) -> tb_cfg_request_dequeue()
+> > >  tb_cfg_request_cancel()
+> > >   schedule_work(&req->work) -> tb_cfg_request_dequeue()
+> > 
+> > Not sure about this one because &req->work will only be scheduled once the
+> > second schedule_work() should not queue it again (as far as I can tell).
+> 
+> If the second schedule_work() happens after a timeout, that's what
+> !wait_for_completion_timeout() does, then the first schedule_work()
+> can already execute the work by that time, and then we can schedule
+> the work again (but the request is already dequeued).  Am I missing
+> something?
+
+schedule_work() does not schedule the work again if it is already
+scheduled.
+
+> > > To address the issue, do not dequeue requests that don't
+> > > have TB_CFG_REQUEST_ACTIVE bit set.
+> > 
+> > Just to be sure. After this change you have not seen the issue anymore
+> > with your testing?
+> 
+> Haven't tried it yet.
+> 
+> We just found it today, it usually takes several weeks before
+> we can roll out the fix to our fleet and we prefer patches from
+> upstream/subsystem git, so that's why we reach out to the upstream.
+
+Makes sense.
+
+> The 0xdead000000000122 deference is a LIST_POISON on x86_64, which
+> is set explicitly in list_del(), so I'd say I'm fairly confident
+> that we have a double list_del() in tb_cfg_request_dequeue().
+
+Yes, I agree but since I have not seen any similar reports (sans what I saw
+ages ago), I would like to be sure the issue you see is actually fixed with
+the patch (and that there are no unexpected side-effects). ;-)
