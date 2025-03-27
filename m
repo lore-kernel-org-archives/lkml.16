@@ -1,76 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB70207E1A;
-	Thu, 27 Mar 2025 08:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2D66FC5
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743064668; cv=none; b=N848TtIqzJZQNr5KA17xLHAO6PJ5Phq0V9Q3109cQi3jhV3s0JhrWDG2sEw8Mjqn525yrHDtlBOpkNN981JJ7cHlF7UiMo1crVFJeQ0KgPFU60bkPF3jV+YlJ9h8xB7zA/l+Pc/p9kO9GX8Q1Yb8jTGDy4jp5OlTt2DAnBrjMv0=
+	t=1743064738; cv=none; b=lGbt5d6uW00pB+Zp1NDFFGj6zu85U3NoojYvZ9C0CDA0RTTZUWwnD+ZNmwS0ysWv5rN43TqXtoL1uaVU8HqlKreD3lRzw5eDPOOOPd66f8y7BE0KhxBe+sYTw1Q3TDcZs8ZS1MbSgvd75yay364mt9ol6Elb/KHpRUMbYXj+Azc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743064668; c=relaxed/simple;
-	bh=fvNCk8mWPbYbqIm9YLpQcvKGz7nO0wU4sub/wgDHloM=;
+	s=arc-20240116; t=1743064738; c=relaxed/simple;
+	bh=pdRXr/GuYOG67qAaFReyMNE3zeQj+8amifkusK4chWE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ToGKK1oKCdmI7aE+YkcXK+kubni16LjTzFnbUJq+Q+4U0FyZMHmNArBrYT1sq1M4evMJQh3r8cbEvQOCsKIDewoOIRaspyFodh2yt6m1f5wos11SQ6TjSUk9hehmtba68L2Itjcy85CkTI5CuprOQZ1aKbmvjRO/mQM+PRdZaSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m3t/pveb; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wdqo1HYY+NCoYVWzY8e6sFopPaVspulBGRC8641DD0pkf/N4I9xHmLX0f86X224UVEwCs2j1GFVbqRPDOj4idYAZuNPg2szjJfmryjhRtWGM0EC/pCHDxKfdS0DmiTHPqXPHl40BBidV1+26LVJCO0CuniuaqyXkF3XBkzYSFvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lBInM3Ho; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m3t/pveb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743064667; x=1774600667;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fvNCk8mWPbYbqIm9YLpQcvKGz7nO0wU4sub/wgDHloM=;
-  b=m3t/pvebAR7wptMyScWtTmBKhRZYneucHvDtd2fcns/V3Z8F6fuRrMwu
-   Wz4qpyiLuFv9MhMCDuvtzoF9mIp0+9EdSg7OYmZY/H/HEb91QhiNCmxVa
-   1fVnFq9OyPpmfQ+cXxr9LU7BJeHKdBZ4lFowPDpkj80wmrVnOGmWrRthp
-   Hapq5i/wDjYkJ4DwsOpk/SrilKtSBy4xta5NGJ3R7cL5i60r3xwmLAQKW
-   7XIF+JVClyiF9SY87bGuV9EpF4XpUI913jP6AIdKdT/6ViafDqm24EPV9
-   goW+OCDJ+Uyq2tPnkbSCa7+XyYk1SHt5hfRUuu+XAmw7z3pNq2qi85iAE
-   w==;
-X-CSE-ConnectionGUID: icQfVMQPQs6JAn7o17gQYg==
-X-CSE-MsgGUID: A580wrFnQ3+j+70VIOavJw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="66852908"
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="66852908"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 01:37:46 -0700
-X-CSE-ConnectionGUID: imB5jEJOQ/Gcy44BQuru+w==
-X-CSE-MsgGUID: GhLbc/iSQhKIDv2K52yJdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="129918508"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 01:37:40 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1txik5-00000006KZB-0xsF;
-	Thu, 27 Mar 2025 10:37:37 +0200
-Date: Thu, 27 Mar 2025 10:37:36 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Remo Senekowitsch <remo@buenzli.dev>
-Cc: Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Rob Herring <robh@kernel.org>, Dirk Behme <dirk.behme@de.bosch.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 01/10] rust: Move property_present to property.rs
-Message-ID: <Z-UOUKq8GKZM1wuo@smile.fi.intel.com>
-References: <20250326171411.590681-1-remo@buenzli.dev>
- <20250326171411.590681-2-remo@buenzli.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lBInM3Ho"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4513C4CEDD;
+	Thu, 27 Mar 2025 08:38:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743064737;
+	bh=pdRXr/GuYOG67qAaFReyMNE3zeQj+8amifkusK4chWE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lBInM3Hoi+mbzMtF+9i6ej2WkXZU6y7HSd5LpruhlASVm+fnY0vq7wai+McrOkVq7
+	 eC6o4vlr5u5x7u628Wna6akW/1rF7lfLToofAuqBVRpAk+SGiPuJgzE/R4kuClbAEm
+	 P3nkeJP2umY7QfAdc5m7AGWtycXbYrZgeXVIUvPjv05jElzCHAqsxll9emYLff6Efd
+	 baqzPlVHy/tqKc23uTcA3pzhB95TnXv5JAhbtOs8g3/50+W8Chh54dcA++pD7xxBoW
+	 t1SZAxjd0fThfeBH5JaCP6fhgj/4Mp/pdXLd+y3gm0o1Byc8epZzU8aI+irFDbt8fN
+	 whvBeNJx2Ne3A==
+Date: Thu, 27 Mar 2025 09:38:54 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [COMBO PATCH 6/5] bugs/arch: Wire in the 'cond_str' string to
+ the WARN/BUG output machinery of PowerPC, LoongArch, S390, RISC-V, PA-RISC
+ and SH
+Message-ID: <Z-UOnlDWeII5IbI6@gmail.com>
+References: <20250326084751.2260634-1-mingo@kernel.org>
+ <20250326084751.2260634-5-mingo@kernel.org>
+ <20250326085343.GB25239@noisy.programming.kicks-ass.net>
+ <Z-UI6KGxZyw4hsej@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,36 +47,99 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250326171411.590681-2-remo@buenzli.dev>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <Z-UI6KGxZyw4hsej@gmail.com>
 
-On Wed, Mar 26, 2025 at 06:13:40PM +0100, Remo Senekowitsch wrote:
-> Not all property-related APIs can be exposed directly on a device.
-> For example, iterating over child nodes of a device will yield
-> fwnode_handle. Thus, in order to access properties on these child nodes,
-> the APIs has to be duplicated on a fwnode as they are in C.
+
+* Ingo Molnar <mingo@kernel.org> wrote:
+
+> ... some time later:
 > 
-> A related discussion can be found on the R4L Zulip[1].
-> 
-> [1] https://rust-for-linux.zulipchat.com/#narrow/channel/288089-General/topic/DS90UB954.20driver.20done.2C.20ready.20to.20upstream.3F/near/505415697
+>  b2becbe8b469 bugs/s390: Pass in 'cond_str' to __EMIT_BUG() and use it
 
-You can make the above to be a Link tag like
+> --- a/arch/s390/include/asm/bug.h
+> +++ b/arch/s390/include/asm/bug.h
+> @@ -8,7 +8,7 @@
+>  
+>  #ifdef CONFIG_DEBUG_BUGVERBOSE
+>  
+> -#define __EMIT_BUG(x) do {					\
+> +#define __EMIT_BUG(cond_str, x) do {				\
+>  	asm_inline volatile(					\
+>  		"0:	mc	0,0\n"				\
+>  		".section .rodata.str,\"aMS\",@progbits,1\n"	\
+> @@ -20,14 +20,14 @@
+>  		"	.short	%0,%1\n"			\
+>  		"	.org	2b+%2\n"			\
+>  		".previous\n"					\
+> -		: : "i" (__LINE__),				\
+> +		: : "i" (cond_str __LINE__),			\
+>  		    "i" (x),					\
+>  		    "i" (sizeof(struct bug_entry)));		\
+>  } while (0)
+>  
+>  #else /* CONFIG_DEBUG_BUGVERBOSE */
+>  
+> -#define __EMIT_BUG(x) do {					\
+> +#define __EMIT_BUG(cond_str, x) do {				\
+>  	asm_inline volatile(					\
+>  		"0:	mc	0,0\n"				\
+>  		".section __bug_table,\"aw\"\n"			\
+> @@ -42,12 +42,12 @@
+>  #endif /* CONFIG_DEBUG_BUGVERBOSE */
+>  
+>  #define BUG() do {					\
+> -	__EMIT_BUG(0);					\
+> +	__EMIT_BUG("", 0);				\
+>  	unreachable();					\
+>  } while (0)
+>  
+>  #define __WARN_FLAGS(cond_str, flags) do {		\
+> -	__EMIT_BUG(BUGFLAG_WARNING|(flags));		\
+> +	__EMIT_BUG(cond_str, BUGFLAG_WARNING|(flags));	\
+>  } while (0)
+>  
+>  #define WARN_ON(x) ({					\
 
-Link: ... [1]
+So the fix below makes it build on S390, but it won't link:
 
-> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+ kernel/exit.o:(__bug_table+0x8): relocation truncated to fit: R_390_16 against `.rodata.str1.2'
+ kernel/exit.o:(__bug_table+0x14): relocation truncated to fit: R_390_16 against `.rodata.str1.2'
+ kernel/exit.o:(__bug_table+0x20): relocation truncated to fit: R_390_16 against `.rodata.str1.2'
+ kernel/exit.o:(__bug_table+0x2c): relocation truncated to fit: R_390_16 against `.rodata.str1.2'
+ kernel/exit.o:(__bug_table+0x38): relocation truncated to fit: R_390_16 against `.rodata.str1.2'
+ kernel/exit.o:(__bug_table+0x44): relocation truncated to fit: R_390_16 against `.rodata.str1.2'
+ kernel/exit.o:(__bug_table+0x50): relocation truncated to fit: R_390_16 against `.rodata.str1.2'
+ init/main.o:(__bug_table+0x8): relocation truncated to fit: R_390_16 against `.rodata.str1.2'
+ init/main.o:(__bug_table+0x14): relocation truncated to fit: R_390_16 against `.rodata.str1.2'
+ init/main.o:(__bug_table+0x20): relocation truncated to fit: R_390_16 against `.rodata.str1.2'
+ init/main.o:(__bug_table+0x2c): additional relocation overflows omitted from the output
 
-...
+From the _16 name my rough guess is that the larger string table has 
+overflown 16 bits (64k)?
 
-> +struct fwnode_handle *rust_helper_dev_fwnode(struct device *dev)
-> +{
-> +	return dev_fwnode(dev);
-> +}
+At which point I'd much rather go back to plan-A: pass in cond_str to 
+__WARN_FLAGS(), and wash my hands and leave architectures to make use 
+of them as they wish to. :-)
 
-Why not const? For most of the property retrieval APIs the parameter is const.
+Thanks,
 
--- 
-With Best Regards,
-Andy Shevchenko
+	Ingo
 
+=====================>
 
+ arch/s390/include/asm/bug.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
+index e3d839517c17..7eb9b44f78cb 100644
+--- a/arch/s390/include/asm/bug.h
++++ b/arch/s390/include/asm/bug.h
+@@ -20,7 +20,7 @@
+ 		"	.short	%0,%1\n"			\
+ 		"	.org	2b+%2\n"			\
+ 		".previous\n"					\
+-		: : "i" (cond_str __LINE__),			\
++		: : "i" (__stringify(cond_str __LINE__)),	\
+ 		    "i" (x),					\
+ 		    "i" (sizeof(struct bug_entry)));		\
+ } while (0)
