@@ -1,72 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80514212B38;
-	Thu, 27 Mar 2025 11:50:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A8B207E19;
+	Thu, 27 Mar 2025 11:52:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743076233; cv=none; b=GbuswJpIeWkDQQkuDOBxMuOWSMn5E5vgJHpVUcM89mVh1pc/R/JDhHuJU2ESEoBM0ngxUj/VG+Asi4C3ft+O0V5SafwGfBYbcqdpgfsbQQAsBOTrhHiySWY1yELgNLhZ+9yg/HbQCeiQvG9gN+6D2Hza5FWtJe25Y3rKWAW+U6U=
+	t=1743076378; cv=none; b=qGngsgEM6wTR1jV6cqgInEHgexygvqjCZw1SXmAnBIKkMgB335Z+Gklv+a1t61Z2RRvhyXSH6YnR3PZRWmnlBIGcU7KzJhBJEzZ5I6JAfKCKh2OhG3UJEvmPn9abVNwaSWBRq2Xl1R1IkSZE4lF9K3iWa5NFu5qZppG5ZwMSvKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743076233; c=relaxed/simple;
-	bh=PeVyVMBC5eU+KwcsRny3CgOSWBNkaR0c3V+ay+UFp1U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JRNxT8jYJrWLUBUqhXUSFBg38T06bejqyFCKIQRBIwiZEQ5jzxFop1p0lpxQBUDRPvb0WDTvUAVCTLBa/WQmPCXcEfPXtRk6Lmhmh4w23x7mTbpk5d0sDTY/NvzqkwIwoojplI0/5+rUCLGEcgiH7gupANgAyHmk8jIyvBLrVQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=drtu6bwf; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="drtu6bwf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8C57C4CEDD;
-	Thu, 27 Mar 2025 11:50:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743076233;
-	bh=PeVyVMBC5eU+KwcsRny3CgOSWBNkaR0c3V+ay+UFp1U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=drtu6bwfPr0RhNHzF9uI8D3GxKtMKN1SaRKwTwifwjFgzi8xBDOKU43sEWqlo+JsI
-	 2HEC+adMvOaYzzsT28H6PB7Qmku7Bre21/W5ZwrnL+UMwTFhnof1z3nE0R6OaciUCz
-	 aCA0OAS/uy7QTPeDjRGNWiQdYj0HcyCPXzBbO8SXKB/RsunmRrnrUyd19ws5J9f0su
-	 tUoooPWvCMoqbhBzTY2ztci5XVR/k/Ea7i1x7ds6RhLGmZVmGEllqeUDN6R9oFOVdp
-	 rd3Dm8MELd5BppLtw17k5bZ4hhF+LDeTFgfZWT7GW4W9rlejnuyv8cbiB6Me94T4jV
-	 7unq8vgwCWRMA==
-Date: Thu, 27 Mar 2025 12:50:26 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Mark Brown <broonie@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH RESEND v2] rust: regulator: add a bare minimum regulator
- abstraction
-Message-ID: <Z-U7ggqQAVq1IIJi@pollux>
-References: <20250326-topics-tyr-regulator-v2-1-780b0362f70d@collabora.com>
- <a98eb789-4c49-4607-ad15-76e260888d64@sirena.org.uk>
- <0698A75E-D43C-4D02-B734-BFE1B3CC5D34@collabora.com>
- <f22cbd85-1896-4842-8746-d74ee160ab3c@sirena.org.uk>
- <D9ADCA08-C3B3-4964-BDB9-E62A2C7DE85F@collabora.com>
+	s=arc-20240116; t=1743076378; c=relaxed/simple;
+	bh=q/+eS0lV2+uoQw6R2o+PvLuP3Cd4G8Ov8M9fLC48ZGM=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=QymTzFM3JA9Qx9YB+9znqGnxXgtwW7mZHYRXTCHAwtFr59G/N4R7JALxzTH1ZS0QGfCgKSnpTwUeVXDkRx1lA5bwTilzSB+XkrcWWYVflg/AtCB7qgHUOu4tmElszZxVanZAb5YBVwpvdvvS5jWC7IfcYkJqz+rg96JKAB9AfnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FBF5C4CEDD;
+	Thu, 27 Mar 2025 11:52:56 +0000 (UTC)
+Message-ID: <85317154-c8a9-432d-b43c-34dc5e511890@linux-m68k.org>
+Date: Thu, 27 Mar 2025 21:52:53 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <D9ADCA08-C3B3-4964-BDB9-E62A2C7DE85F@collabora.com>
+User-Agent: Mozilla Thunderbird
+From: Greg Ungerer <gerg@linux-m68k.org>
+Subject: [git pull] m68knommu changes for v6.15
+To: torvalds@linux-foundation.org
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Linux/m68k <linux-m68k@vger.kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, gerg@kernel.org
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 27, 2025 at 08:46:29AM -0300, Daniel Almeida wrote:
-> Any function that takes 'self' by value (i.e.: “self" instead of “&self” )
-> effectively kills it.
+Hi Linus,
 
-I'm sure Daniel didn't mean it that way, but to avoid confusion, I want to
-clarify that a function that takes `self` as argument not necessarily results in
-`self` being destroyed. It could be moved into some other structure, directly
-returned by the same function etc.
+Please pull the m68knommu git tree changes for v6.15.
 
-It's just that if the functions lets `self` go out of scope, then it's
-destroyed.
+A couple of simple changes for v6.15. One removes unnecessary includes
+of linux/fb.h, and the other improves hardening by replacing use of
+strncpy() with strscpy().
+
+Regards
+Greg
+
+
+
+
+
+The following changes since commit 4701f33a10702d5fc577c32434eb62adde0a1ae1:
+   
+   Linux 6.14-rc7 (2025-03-16 12:55:17 -1000)
+
+are available in the Git repository at:
+   
+   git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu.git tags/m68knommu-for-v6.15
+
+for you to fetch changes up to a7130910b80753d52ff8a493cf787bd1c9473404:
+   
+   m68k: mm: Replace deprecated strncpy() with strscpy() (2025-03-17 09:27:59 +1000)
+
+----------------------------------------------------------------
+m68knommu: updates and fixes for v6.15
+
+Fixes include:
+. remove unused include of linux/fb.h
+. use strscpy() instead of strncpy()
+
+----------------------------------------------------------------
+Thomas Zimmermann (1):
+       m68k: Do not include <linux/fb.h>
+
+Thorsten Blum (1):
+       m68k: mm: Replace deprecated strncpy() with strscpy()
+  
+  arch/m68k/kernel/setup_mm.c | 3 +--
+  arch/m68k/kernel/setup_no.c | 1 -
+  arch/m68k/kernel/uboot.c    | 1 -
+  3 files changed, 1 insertion(+), 4 deletions(-)
