@@ -1,185 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FCB1CB51F;
-	Thu, 27 Mar 2025 16:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BA921771B
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743094332; cv=none; b=YWt3oekEt82eq5jk0EEfdsS0DdxwQhCW1jvB1pmLjYFHnAUvfUiHpNIARlIsy6U0oE2/ITfoqZ0y9jmZjM5XvJiN0Itnyqla/vvQQxzuFFCVQ7OtC0QwqpoP8HiFS44tPxBOcaA4h9nyBNiEz4Xw0dP0V0blWSaus+DanwhiYfc=
+	t=1743094355; cv=none; b=Y7B0aEl7pW8i4GRodRBg6H0F87kgpptrhp0sy08jythSwUq856Lg4Pmij/AnxnHYm12U7Ru1KMPYOnFcTw783SW2P5uk9DirPUF0u1tYkVcd6HFzNWMCVMomZNHMf54Sl2v/FgNORT70H2OClND8IoSUN75OZ+oplWHGN8d6auY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743094332; c=relaxed/simple;
-	bh=Q6l0WxcvGA33qOdr8wp9swxuv9Bj+Qu0ZUvn1W+I7YY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sXizhma1sPQF67vcAku/qkFLlM0XVSVLSOesEfkNf6u2JtuZaY3O0BohZp/tF/PkoecgFUSVbjuBiAL+UebVAOjc5kCA4e5uscXnahO20Fpr3t3NZrIcTFzwm8D+nPLRSj0tMv4Hx+qQAPS81w6sLh0hry2Huq6qnLONJw2lNWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uE1ia/7E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743094355; c=relaxed/simple;
+	bh=npltxgttpo1lkWP1P63iOA4NbK9EQqk6O1sMC4SUz9Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GNrRFaxDehiPZKyWj1y7kDoWtiQytGqIXevnFf/yra4hs8y8TDJFAI+MNHuSFqIouHg/RYqQanTovHMRr8IEQ+EH9qSlg7gRl0Mg1F83BIMrdX36MhicNnMH2yiOvQ94IIjaRNm8dGUJCmzH9QFPmGu6BWrPnWBEr4F1w71+e6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VCoPx+DN; arc=none smtp.client-ip=209.85.221.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uE1ia/7E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02E64C4CEE5;
-	Thu, 27 Mar 2025 16:52:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743094331;
-	bh=Q6l0WxcvGA33qOdr8wp9swxuv9Bj+Qu0ZUvn1W+I7YY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uE1ia/7EcYXSQKPYqeHjXJ92g8XJaSXmJKG7Nm5xJg7UTxZu/e1bohqfu/55LCnuN
-	 /N/9mSlT4h5YH748aokVV5f7NUQEhCPC3G8wJkIh/IwyoW4L+iZG1/2ivh6+KuQqO6
-	 Ows792/CLe26HSPWU1jIqtbMOFUqpFHciMtiwicDVIRrmAYcm8rsKIBNK+ibfnxK1V
-	 UeMGkeJa3C0ZhzDKdUH6kECN+KWfGOg1KDsbRjLCNx2RWLMl1x6SIadt/1DvVX2IYR
-	 d5YZjc+LYt3GT1scHaCn6HJATCC3B9ECch8wkbmlUv6CTq370urK3SRvKXaKreAzEZ
-	 fZuUwdSg0NcrQ==
-Date: Thu, 27 Mar 2025 16:52:06 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	James Cowgill <james.cowgill@blaize.com>,
-	Matt Redfearn <matthew.redfearn@blaize.com>,
-	Neil Jones <neil.jones@blaize.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: Document Blaize BLZP1600 GPIO driver
-Message-ID: <20250327-scribble-boogeyman-22788dda387f@spud>
-References: <20250327-kernel-upstreaming-add_gpio_support-v2-0-bbe51f8d66da@blaize.com>
- <20250327-kernel-upstreaming-add_gpio_support-v2-1-bbe51f8d66da@blaize.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCoPx+DN"
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-51eb18130f9so592920e0c.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:52:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743094352; x=1743699152; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0U9geEjGC1dSN0o/JPxh2M8Qsd9akqfHr698kSw5Itk=;
+        b=VCoPx+DNVKisYv4h3+qnBPumULYsBSOM7cTi/0Q614TOosdUhZRW7cZJzySk/MCeMS
+         FRf9D6SSRT6HR9BRBUQL2Zh/a99kZ9LZssT0Rn5Q/y1ZPN2FWRbUWD/0wliRzSqpY+Vs
+         btLEshpM+Q7+0MSeGE1d02ijCnctVCHL6oCgyiKJoK4ylLrTGENj7AutHScwTF2EaUP4
+         KYyfj76ExsY9dUeSaulmKw1H7hEwbd5PeAsSbn/9OkyxtBDqDSZPfXs8K6avh0KIrMcv
+         Kea5Ka49BBaIyqoeGynSKqbGs0SGnkUvXBiUrodJGFr1unqRwZbMEQ6SauafBlrwd3ty
+         pPaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743094352; x=1743699152;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0U9geEjGC1dSN0o/JPxh2M8Qsd9akqfHr698kSw5Itk=;
+        b=miH9vRvn8aBmUNr1gCwMcSgmvRVvZzoDxZaiZvRdjG6+dvXWcFEF+hv2ZVmkiykAuI
+         3Wpc4fnqu4rne/6XCopgTDtIbQ4MHYkWWxnHD1vLdQv8ntxZcXQO224BoLMjLfy7ZhAG
+         xq7Y3ftizvwHEFPCxAP1MXZmx6MehzQuWmZ456SPAxMGmY4OhRn/EzxDDrtr/omTxJ1a
+         Xmm4Hw9hmdeHjW9SzpZDWgm9zT5mVhqMy7iMQ9TiLofZrR4d/TMPLLgfV5JLXiuGX8jV
+         H3Wcg4lRNEPj0usC7evxQWNhFEeK+0Ua50e5qc7fUowA392Ju/tRcuwS7HXjUSEXPTkK
+         UlRg==
+X-Forwarded-Encrypted: i=1; AJvYcCXXEAZdXDLzRm9p5UgYGSRtANNjoYrCl3JXHgUPW24ZtZW/MwvR7pQchJFVNe97M5IjBPqLTv2qf4AsSpc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAdVohsFzHEfChVGbZklBn+EDd8N5gFQyyysy1SWwDpV6lhQ8D
+	+pVpZhkKGPwMxoX9bnURzGP4euey5MQwlD3mGaj0WBXKWn5EaPs8R0NbDmnUxAugwNPZZmYZfLd
+	W9IhOSU7BeBcAiVuQHOLWDPlBwfc=
+X-Gm-Gg: ASbGncvOMo9ITfoLFpwklIE2C/oOnl7sHTQG6cf34lxe0mh64GFsqkM9jGQRTNsLziA
+	dunMyAThJaTNmbDioEOZRfSSdoYXdVhrYqqumMhCcBvYCCOHtBuWHvfiHiYfgJ7kJGNm17WFrb8
+	JJZaRKnve1SANinVQK6fKnBo07tTbbA1DZIM3oVyjtBU1mdBNomkDo0PrX
+X-Google-Smtp-Source: AGHT+IGCz09iVTGSPqqF1CqBF3FJzQoNxDVcp1tO6jR5cZdlkxww/y+iDYhvmDIwk3NkuwM2baffknsAxRnZftPJMyQ=
+X-Received: by 2002:a05:6122:3907:b0:520:51a4:b84f with SMTP id
+ 71dfb90a1353d-52600920c2cmr3889239e0c.4.1743094352260; Thu, 27 Mar 2025
+ 09:52:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="KHT+zneIcFZM3R2g"
-Content-Disposition: inline
-In-Reply-To: <20250327-kernel-upstreaming-add_gpio_support-v2-1-bbe51f8d66da@blaize.com>
-
-
---KHT+zneIcFZM3R2g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250327055607.3829954-1-chao@kernel.org>
+In-Reply-To: <20250327055607.3829954-1-chao@kernel.org>
+From: Daeho Jeong <daeho43@gmail.com>
+Date: Thu, 27 Mar 2025 09:52:21 -0700
+X-Gm-Features: AQ5f1JpoKRV12elFxx8bZoDusEy8_a4__lIWxXI51QMV49qwD_J8Hp6i152yLOg
+Message-ID: <CACOAw_y1n9+_FmMZv20hNbP8pBWm4adC3qKQQom4_Wsx1qryrg@mail.gmail.com>
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to set atomic write status more clear
+To: Chao Yu <chao@kernel.org>
+Cc: jaegeuk@kernel.org, Zhiguo Niu <zhiguo.niu@unisoc.com>, 
+	Daeho Jeong <daehojeong@google.com>, linux-kernel@vger.kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 27, 2025 at 11:27:04AM +0000, Nikolaos Pasaloukos wrote:
-> This is a custom silicon GPIO driver provided by VeriSilicon
-> Microelectronics. It has 32 input/output ports which can be
-> configured as edge or level triggered interrupts. It also provides
-> a de-bounce feature.
-> This controller is used on the Blaize BLZP1600 SoC.
->=20
-> Signed-off-by: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
+On Wed, Mar 26, 2025 at 10:59=E2=80=AFPM Chao Yu via Linux-f2fs-devel
+<linux-f2fs-devel@lists.sourceforge.net> wrote:
+>
+> 1. After we start atomic write in a database file, before committing
+> all data, we'd better not set inode w/ vfs dirty status to avoid
+> redundant updates, instead, we only set inode w/ atomic dirty status.
+>
+> 2. After we commit all data, before committing metadata, we need to
+> clear atomic dirty status, and set vfs dirty status to allow vfs flush
+> dirty inode.
+>
+> Cc: Daeho Jeong <daehojeong@google.com>
+> Reported-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+> Signed-off-by: Chao Yu <chao@kernel.org>
 > ---
->  .../bindings/gpio/blaize,blzp1600-gpio.yaml        | 77 ++++++++++++++++=
-++++++
->  1 file changed, 77 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/gpio/blaize,blzp1600-gpio.=
-yaml b/Documentation/devicetree/bindings/gpio/blaize,blzp1600-gpio.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..8b7842331a22b7b9fbfa42b9c=
-711da99227de2e4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/blaize,blzp1600-gpio.yaml
-> @@ -0,0 +1,77 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/blaize,blzp1600-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  fs/f2fs/inode.c   | 4 +++-
+>  fs/f2fs/segment.c | 6 ++++++
+>  fs/f2fs/super.c   | 4 +++-
+>  3 files changed, 12 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+> index 5c8634eaef7b..f5991e8751b9 100644
+> --- a/fs/f2fs/inode.c
+> +++ b/fs/f2fs/inode.c
+> @@ -34,7 +34,9 @@ void f2fs_mark_inode_dirty_sync(struct inode *inode, bo=
+ol sync)
+>         if (f2fs_inode_dirtied(inode, sync))
+>                 return;
+>
+> -       if (f2fs_is_atomic_file(inode))
+> +       /* only atomic file w/ FI_ATOMIC_COMMITTED can be set vfs dirty *=
+/
+> +       if (f2fs_is_atomic_file(inode) &&
+> +                       !is_inode_flag_set(inode, FI_ATOMIC_COMMITTED))
+>                 return;
+>
+>         mark_inode_dirty_sync(inode);
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index dc360b4b0569..7c113b446f63 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -376,7 +376,13 @@ static int __f2fs_commit_atomic_write(struct inode *=
+inode)
+>         } else {
+>                 sbi->committed_atomic_block +=3D fi->atomic_write_cnt;
+>                 set_inode_flag(inode, FI_ATOMIC_COMMITTED);
 > +
-> +title: Blaize BLZP1600 GPIO controller
-> +
-> +description:
-> +  Blaize BLZP1600 GPIO controller is a design of VeriSilicon APB GPIO v0=
-=2E2
-> +  IP block. It has 32 ports each of which are intended to be represented
-> +  as child noeds with the generic GPIO-controller properties as described
-> +  in this binding's file.
-> +
-> +maintainers:
-> +  - Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
-> +  - James Cowgill <james.cowgill@blaize.com>
-> +  - Matt Redfearn <matt.redfearn@blaize.com>
-> +  - Neil Jones <neil.jones@blaize.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^gpio@[0-9a-f]+$"
-> +
-> +  compatible:
-> +    enum:
-> +      - blaize,blzp1600-gpio
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    const: 2
-> +
-> +  ngpios:
-> +    default: 32
-> +    minimum: 1
-> +    maximum: 32
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  gpio-line-names: true
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - gpio-controller
-> +  - '#gpio-cells'
-> +
-> +dependencies:
-> +  interrupt-controller: [ interrupts ]
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    gpio: gpio@4c0000 {
+> +               /*
+> +                * inode may has no FI_ATOMIC_DIRTIED flag due to no writ=
+e
+> +                * before commit.
+> +                */
+>                 if (is_inode_flag_set(inode, FI_ATOMIC_DIRTIED)) {
+> +                       /* clear atomic dirty status and set vfs dirty st=
+atus */
+>                         clear_inode_flag(inode, FI_ATOMIC_DIRTIED);
+>                         f2fs_mark_inode_dirty_sync(inode, true);
+>                 }
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index 9a42a1323f42..a5cc9f6ee16a 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -1532,7 +1532,9 @@ int f2fs_inode_dirtied(struct inode *inode, bool sy=
+nc)
+>         }
+>         spin_unlock(&sbi->inode_lock[DIRTY_META]);
+>
+> -       if (!ret && f2fs_is_atomic_file(inode))
+> +       /* if atomic write is not committed, set inode w/ atomic dirty */
+> +       if (!ret && f2fs_is_atomic_file(inode) &&
+> +                       !is_inode_flag_set(inode, FI_ATOMIC_COMMITTED))
+>                 set_inode_flag(inode, FI_ATOMIC_DIRTIED);
+>
+>         return ret;
+> --
+> 2.49.0
+>
 
-Label is unused, please drop it if you respin.
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: Daeho Jeong <daehojeong@google.com>
 
-> +      compatible =3D "blaize,blzp1600-gpio";
-> +      reg =3D <0x004c0000 0x1000>;
-> +      gpio-controller;
-> +      #gpio-cells =3D <2>;
-> +      ngpios =3D <32>;
-> +      interrupt-controller;
-> +      #interrupt-cells =3D <2>;
-> +      interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> +    };
-> +...
->=20
-> --=20
-> 2.43.0
->=20
+Thanks.
 
---KHT+zneIcFZM3R2g
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ+WCNgAKCRB4tDGHoIJi
-0l1GAP432iQj+leyJvycy9SxPrvJzxLLNYJJwPTn6loEoxhTKAD+Jwg9EBUrtu+9
-xCJkgglUDVinhTMxrhKB0CyuJghf0Qo=
-=QRox
------END PGP SIGNATURE-----
-
---KHT+zneIcFZM3R2g--
+>
+>
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
