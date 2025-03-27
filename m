@@ -1,286 +1,214 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3402218823
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562501E868;
+	Thu, 27 Mar 2025 16:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743094079; cv=none; b=ZQ+wEQ/hR/D/X/xHxCenRqiRnrzdqRThv+hmVrJrGSwMUvNhbksJBNw3bgslKvUgRhZvv6dh2G5ted4mR0x2ZO1nUUVVk5kwni23gYDS4jGLHO3Z94XbiNOqC1VUbbL0UVE/4oImwVNqLPATVv3dyIguq1Rpqq+POzkkNyGTi8g=
+	t=1743094101; cv=none; b=fp0LpdUNspC054Xp+Au2FWd8nHvkvvEgqMDCUaN1THaoyhvyJw30zjPxTU/ijZUgVZvvcQkOJab8vc15QB+XdeZ8ptevoGBVP9Yb8hX86SPizqvzRm5KrKYCF0W7OJ+Bdy9Yzv58yiBG+Ydj5UUWa7qAdg0+KClfQZla7YzVnIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743094079; c=relaxed/simple;
-	bh=aOfxn5mgE9VF/7lv2LBNAtzbuQYVXJk5r4Ndca/elB0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NAj0fyYCIZec+MvSN97q07EXGCtdvFQi6VkxCvyk438++A+zD3uJgniFn72MRbcQ2GpfgySYitgPirgLl2gu0IABkjZuTU9Bt9xLS27zIzRprDgSZs9l3LL9/83+oCa1lqQbkwDB+IkvgYTwrVZBiviDwC3Ou1xb395pmzAMx8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=HM/hzUZF; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1743094101; c=relaxed/simple;
+	bh=ozTsWxuVbaBY2ew+js0fYYaWIw6qw/smGBEe33X73DE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=aX362oFk3OvhGwQS474r3JXIttK0CqN6dMX3ZJZ+HqjNAHnRl7LgtIng/rToukwfFSlUv6PJO+ZRaLhJR2HCOmEs6oOF89HAgHpLwpjd3oPS3LNsSv0aRiBfVDSpA7hRtCFS05MUejr/d5+zzM96hTDwJitrZOl+uqukc2mr4bA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IaXfXoIA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="HM/hzUZF"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf05f0c3eso9347075e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:47:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1743094075; x=1743698875; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0r5iu1FJ68bGA/0f6QmBB5qaVR7pLp/IQdv0KKrJY70=;
-        b=HM/hzUZFRECqdW4TxTopHMTrG0Dsyj1uAJU7rSa9zfUidL/pjPFV/fxJkQrPmgDael
-         41fF/LSyxdTuu2znQBKUehtTfM2SfhigvYTN+nIiNREEbQpP2k/V2LxnHy7Adb+0Oz9s
-         PmgiWOfq9Y4s50ob/g7OVNox0BBS6/JyqfGxJka2xS9sZpbMz7Ome1ZmnKE0JHYKnYyA
-         ike7mAYkKPGKZO7ofrG6wNztW2u7RbXWptUfzQUiUgoqSy/UUmrEUF+LfK/Bep2aHOKX
-         6esfCHM/5LpuaqWkV7ur8qUfLnh+RLQDMmZtvHM5kjqFL9GZGNZIGarKORvdpWAcYvJD
-         uigw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743094075; x=1743698875;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0r5iu1FJ68bGA/0f6QmBB5qaVR7pLp/IQdv0KKrJY70=;
-        b=fudPo/ViN4X9JIsboHa+kXoXM3oSzx9U/nNXKqNEXdTSH0tuIgvCpePFwXDOOW3bhE
-         23IXAtIcfKryNspn2law2u+PHSF0X4fKDZkuj+TofdgrwIVTYTucsZXiCwqhRNkjtEhK
-         DJXePLDyXbAnlNv21Y9DTXB532IKlS4uSnwq0BBrcGTpT7N1lMFmVw5BnbJTq8x3mwy+
-         1VfD2/XhbqrXpUjszex/BnsLF5kvfXaVl1SHklggOTSSiifuO2VDI/AvBNfyfm8MBOwn
-         fmTJhUfDFK6sA5ZPYM1lWZqM8In10WTqtbbEyLDMTzeLt1F6K28G/jeqUuUtHZzv4A18
-         R/3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVkmWrSj405rcrYH/ex6WvwBaDt9AdrFPjTeMliDT3ywED6Da1scZTjBfOuAe/Yd672G2th5deG8xO/Mds=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUF8Z71ZWhkXvDqpEUPWx3/TFVLMFHiByTdA3YJq8e6CV6S7F3
-	JNeMaCg4ShPmA6ofDXzdrttMEfpUyeUiwUIdk0ylvjn+x7rnFY0oyPR/tXDJhDs=
-X-Gm-Gg: ASbGnctHAcVishRjAENyVs4AdutwdwXqgcMYIICasd9hKw2jSQTayZp1UFMfxGsDrHT
-	NNEFygqgkhlm6f0TnQcWdV6/I+BW86MbU1srdBJ+Cw/899OZBNOFQWPwuSFYDZ5oa6dXLsbTSnC
-	D9PWnvbVnZ/cab0o8wH5sytgVeFMnVteM64smFQsCHrpecDNC9WHUKkBrRzczcZzFN6TjgbZEVL
-	uCQSE5YRdgBM7FPW2hxelp8dBXDYASE1OwupxmVQadpzndnPS4+PFDGcgWAlmy5Qs3Ev6e6Csnk
-	9OTaIidHkZIhB2qeH7/RR1AODF3/WovH8bhxXI7au4USkGZYBlnsHA==
-X-Google-Smtp-Source: AGHT+IEa4CUHB1B0pJWkADFnSE+HCVcC5iAPyJjsFaHAQo/pLP32apYf9UUzNa7vuVzz77Lcimbpkg==
-X-Received: by 2002:a05:600c:1c9e:b0:43c:fc04:6d34 with SMTP id 5b1f17b1804b1-43d8ed9e52cmr4581185e9.20.1743094074830;
-        Thu, 27 Mar 2025 09:47:54 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.103])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b658b5dsm50200f8f.3.2025.03.27.09.47.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 09:47:54 -0700 (PDT)
-Message-ID: <f74085be-7b14-4551-a0a7-779318a5dc70@tuxon.dev>
-Date: Thu, 27 Mar 2025 18:47:53 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IaXfXoIA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3A12C4CEDD;
+	Thu, 27 Mar 2025 16:48:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743094100;
+	bh=ozTsWxuVbaBY2ew+js0fYYaWIw6qw/smGBEe33X73DE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=IaXfXoIApCuWdWzqRZE2dlvvk/kx0I9i++cln9b3PLhx6YMpzr0axalcMqbsMqwjX
+	 y7Xc1WWKDrE5aKemA2hSRIDaDtVo2CAXHdfHIo/Ni+oNhfr0+GJ4MMEN4QECBynvAa
+	 HK2PRgLlPbA+KW6/XPvj+/DmLW9K/GzvSb/sb2+8S1aJD2iCIJrQZ5YRAj2e79A7Kg
+	 7VQhx7MClzZlcPzw2a07Js4WE4XKhz/ve0f9Jge813JSTqxr7iF6F+Q4u4jgp3nGlM
+	 3LYb57nFNoLvg0/PKjYoj/OJJuywyIS8qs3z2kEEyac5W7o5ncVBYlpZtV/N2DS4HB
+	 OhO1zDL1D1/+w==
+Date: Thu, 27 Mar 2025 11:48:19 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+	rrichter@amd.com, nathan.fontenot@amd.com,
+	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
+Subject: Re: [PATCH v8 02/16] PCI/AER: Modify AER driver logging to report
+ CXL or PCIe bus error type
+Message-ID: <20250327164819.GA1435732@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] driver core: platform: Use devres group to free driver
- probe resources
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, dakr@kernel.org,
- ulf.hansson@linaro.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- geert@linux-m68k.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-iio@vger.kernel.org,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Jonathan Cameron <jic23@kernel.org>
-References: <20250215130849.227812-1-claudiu.beznea.uj@bp.renesas.com>
- <2025021539-untrained-prompter-a48f@gregkh>
- <4bf01946-90e3-4169-91fa-10d9f90310e9@tuxon.dev>
- <8d83ea72-bb81-4c63-bf69-28cf5848ae20@tuxon.dev>
- <20250305140309.744866b2@jic23-huawei> <Z8k8lDxA53gUJa0n@google.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <Z8k8lDxA53gUJa0n@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250327014717.2988633-3-terry.bowman@amd.com>
 
-Hi, Rafael,
-
-On 06.03.2025 08:11, Dmitry Torokhov wrote:
-> On Wed, Mar 05, 2025 at 02:03:09PM +0000, Jonathan Cameron wrote:
->> On Wed, 19 Feb 2025 14:45:07 +0200
->> Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
->>
->>> Hi, Daniel, Jonathan,
->>>
->>> On 15.02.2025 15:51, Claudiu Beznea wrote:
->>>> Hi, Greg,
->>>>
->>>> On 15.02.2025 15:25, Greg KH wrote:  
->>>>> On Sat, Feb 15, 2025 at 03:08:49PM +0200, Claudiu wrote:  
->>>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>>>>
->>>>>> On the Renesas RZ/G3S (and other Renesas SoCs, e.g., RZ/G2{L, LC, UL}),
->>>>>> clocks are managed through PM domains. These PM domains, registered on
->>>>>> behalf of the clock controller driver, are configured with
->>>>>> GENPD_FLAG_PM_CLK. In most of the Renesas drivers used by RZ SoCs, the
->>>>>> clocks are enabled/disabled using runtime PM APIs. The power domains may
->>>>>> also have power_on/power_off support implemented. After the device PM
->>>>>> domain is powered off any CPU accesses to these domains leads to system
->>>>>> aborts.
->>>>>>
->>>>>> During probe, devices are attached to the PM domain controlling their
->>>>>> clocks and power. Similarly, during removal, devices are detached from the
->>>>>> PM domain.
->>>>>>
->>>>>> The detachment call stack is as follows:
->>>>>>
->>>>>> device_driver_detach() ->
->>>>>>   device_release_driver_internal() ->
->>>>>>     __device_release_driver() ->
->>>>>>       device_remove() ->
->>>>>>         platform_remove() ->
->>>>>> 	  dev_pm_domain_detach()
->>>>>>
->>>>>> During driver unbind, after the device is detached from its PM domain,
->>>>>> the device_unbind_cleanup() function is called, which subsequently invokes
->>>>>> devres_release_all(). This function handles devres resource cleanup.
->>>>>>
->>>>>> If runtime PM is enabled in driver probe via devm_pm_runtime_enable(), the
->>>>>> cleanup process triggers the action or reset function for disabling runtime
->>>>>> PM. This function is pm_runtime_disable_action(), which leads to the
->>>>>> following call stack of interest when called:
->>>>>>
->>>>>> pm_runtime_disable_action() ->
->>>>>>   pm_runtime_dont_use_autosuspend() ->
->>>>>>     __pm_runtime_use_autosuspend() ->
->>>>>>       update_autosuspend() ->
->>>>>>         rpm_idle()
->>>>>>
->>>>>> The rpm_idle() function attempts to resume the device at runtime. However,
->>>>>> at the point it is called, the device is no longer part of a PM domain
->>>>>> (which manages clocks and power states). If the driver implements its own
->>>>>> runtime PM APIs for specific functionalities - such as the rzg2l_adc
->>>>>> driver - while also relying on the power domain subsystem for power
->>>>>> management, rpm_idle() will invoke the driver's runtime PM API. However,
->>>>>> since the device is no longer part of a PM domain at this point, the PM
->>>>>> domain's runtime PM APIs will not be called. This leads to system aborts on
->>>>>> Renesas SoCs.
->>>>>>
->>>>>> Another identified case is when a subsystem performs various cleanups
->>>>>> using device_unbind_cleanup(), calling driver-specific APIs in the process.
->>>>>> A known example is the thermal subsystem, which may call driver-specific
->>>>>> APIs to disable the thermal device. The relevant call stack in this case
->>>>>> is:
->>>>>>
->>>>>> device_driver_detach() ->
->>>>>>   device_release_driver_internal() ->
->>>>>>     device_unbind_cleanup() ->
->>>>>>       devres_release_all() ->
->>>>>>         devm_thermal_of_zone_release() ->
->>>>>> 	  thermal_zone_device_disable() ->
->>>>>> 	    thermal_zone_device_set_mode() ->
->>>>>> 	      struct thermal_zone_device_ops::change_mode()
->>>>>>
->>>>>> At the moment the driver-specific change_mode() API is called, the device
->>>>>> is no longer part of its PM domain. Accessing its registers without proper
->>>>>> power management leads to system aborts.
->>>>>>
->>>>>> Open a devres group before calling the driver probe, and close it
->>>>>> immediately after the driver remove function is called and before
->>>>>> dev_pm_domain_detach(). This ensures that driver-specific devm actions or
->>>>>> reset functions are executed immediately after the driver remove function
->>>>>> completes. Additionally, it prevents driver-specific runtime PM APIs from
->>>>>> being called when the device is no longer part of its power domain.
->>>>>>
->>>>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>>>> ---
->>>>>>
->>>>>> Hi,
->>
->> Hi Claudiu, Greg,
->>
->> Sorry, I missed this thread whilst travelling and only saw it because
->> of reference from the in driver solution.
->>
->>>>>>
->>>>>> Although Ulf gave its green light for the approaches on both IIO [1],
->>>>>> [2] and thermal subsystems [3], Jonathan considered unacceptable the
->>>>>> approaches in [1], [2] as he considered it may lead to dificult to
->>>>>> maintain code and code opened to subtle bugs (due to the potential of
->>>>>> mixing devres and non-devres calls). He pointed out a similar approach
->>>>>> that was done for the I2C bus [4], [5].
->>>>>>
->>>>>> As the discussions in [1], [2] stopped w/o a clear conclusion, this
->>>>>> patch tries to revive it by proposing a similar approach that was done
->>>>>> for the I2C bus.
->>>>>>
->>>>>> Please let me know you input.  
->>>>>
->>>>> I'm with Jonathan here, the devres stuff is getting crazy here and you
->>>>> have drivers mixing them and side affects happening and lots of
->>>>> confusion.  Your change here is only going to make it even more
->>>>> confusing, and shouldn't actually solve it for other busses (i.e. what
->>>>> about iio devices NOT on the platform bus?)  
->>
->> In some cases they are already carrying the support as per the link
->> above covering all i2c drivers.  I'd like to see a generic solution and
->> I suspect pushing it to the device drivers rather than the bus code
->> will explode badly and leave us with subtle bugs where people don't
->> realise it is necessary. 
->>
->> https://lore.kernel.org/all/20250224120608.1769039-1-claudiu.beznea.uj@bp.renesas.com/
->> is a lot nastier looking than what we have here. I'll review that in a minute
->> to show that it need not be that bad, but none the less not pleasant.
->>
->> +CC linux-iio to join up threads and Dmitry wrt to i2c case (and HID that does
->> similar)
+On Wed, Mar 26, 2025 at 08:47:03PM -0500, Terry Bowman wrote:
+> The AER service driver and aer_event tracing currently log 'PCIe Bus Type'
+> for all errors. Update the driver and aer_event tracing to log 'CXL Bus
+> Type' for CXL device errors.
 > 
-> We should not expect individual drivers handle this, because this is a
-> layering violation: they need to know implementation details of the bus
-> code to know if the bus is using non-devres managed resources, and
-> adjust their behavior. Moving this into driver core is also not
-> feasible, as not all buses need it. So IMO this should belong to
-> individual bus code.
+> This requires the AER can identify and distinguish between PCIe errors and
+> CXL errors.
 > 
-> Instead of using devres group a bus may opt to use
-> devm_add_action_or_reset() and other devm APIs to make sure bus'
-> resource unwinding is carried in the correct order relative to freeing
-> driver-owned resources.
-
-Can you please let us know your input on the approach proposed in this
-patch? Or if you would prefer devm_add_action_or_reset() as suggested by
-Dmitry? Or if you consider another approach would fit better?
-
-Currently there were issues identified with the rzg2l-adc driver (driver
-based solution proposed in [1]) and with the rzg3s thermal driver (solved
-by function rzg3s_thermal_probe() from [2]).
-
-As expressed previously by Jonathan and Dimitry this is a common problem
-and as the issue is due to a call in the bus driver, would be better and
-simpler to handle it in the bus driver. Otherwise, individual drivers would
-have to be adjusted in a similar way.
-
-Thank you,
-Claudiu
-
-[1]
-https://lore.kernel.org/all/20250324122627.32336-2-claudiu.beznea.uj@bp.renesas.com/
-[2]
-https://lore.kernel.org/all/20250324135701.179827-3-claudiu.beznea.uj@bp.renesas.com/
-
+> Introduce boolean 'is_cxl' to 'struct aer_err_info'. Add assignment in
+> aer_get_device_error_info() and pci_print_aer().
 > 
->>
->>>>
->>>> You're right, other busses will still have this problem.
->>>>   
->>>>>
->>>>> Why can't your individual driver handle this instead?  
->>
->> In my mind because it's the bus code that is doing the unexpected part by
->> making calls in the remove path that are effectively not in the same order
->> as probe because they occur between driver remove and related devres cleanup
->> for stuff registered in probe.
->>
->>>>
->>>> Initially I tried it at the driver level by using non-devres PM runtime
->>>> enable API but wasn't considered OK by all parties.
->>>>
->>>> I haven't thought about having devres_open_group()/devres_close_group() in
->>>> the driver itself but it should work.  
->>>
->>> Are you OK with having the devres_open_group()/devres_close_group() in the
->>> currently known affected drivers (drivers/iio/adc/rzg2l_adc.c and the
->>> proposed drivers/thermal/renesas/rzg3s_thermal.c [1]) ?
->>
->> I guess it may be the best of a bunch of not particularly nasty solutions...
-> 
-> We need to update _ALL_ platform drivers using devm then, and this is
-> clearly not scalable.
-> 
-> Thanks.
-> 
+> Update the aer_event trace routine to accept a bus type string parameter.
 
+> +++ b/drivers/pci/pci.h
+> @@ -533,6 +533,7 @@ static inline bool pci_dev_test_and_set_removed(struct pci_dev *dev)
+>  struct aer_err_info {
+>  	struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
+>  	int error_dev_num;
+> +	bool is_cxl;
+>  
+>  	unsigned int id:16;
+>  
+> @@ -549,6 +550,11 @@ struct aer_err_info {
+>  	struct pcie_tlp_log tlp;	/* TLP Header */
+>  };
+>  
+> +static inline const char *aer_err_bus(struct aer_err_info *info)
+> +{
+> +	return info->is_cxl ? "CXL" : "PCIe";
+
+I don't really see the point in adding struct aer_err_info.is_cxl.
+Every place where we call aer_err_bus() to look at it, we also have
+the struct pci_dev pointer, so we could just as easily use
+pcie_is_cxl() here.
+
+> +}
+> +
+>  int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
+>  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+>  
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 508474e17183..83f2069f111e 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -694,13 +694,14 @@ static void __aer_print_error(struct pci_dev *dev,
+>  
+>  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+> +	const char *bus_type = aer_err_bus(info);
+>  	int layer, agent;
+>  	int id = pci_dev_id(dev);
+>  	const char *level;
+>  
+>  	if (!info->status) {
+> -		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+> -			aer_error_severity_string[info->severity]);
+> +		pci_err(dev, "%s Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+> +			bus_type, aer_error_severity_string[info->severity]);
+>  		goto out;
+>  	}
+>  
+> @@ -709,8 +710,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  
+>  	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
+>  
+> -	pci_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
+> -		   aer_error_severity_string[info->severity],
+> +	pci_printk(level, dev, "%s Bus Error: severity=%s, type=%s, (%s)\n",
+> +		   bus_type, aer_error_severity_string[info->severity],
+>  		   aer_error_layer[layer], aer_agent_string[agent]);
+>  
+>  	pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
+> @@ -725,7 +726,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  	if (info->id && info->error_dev_num > 1 && info->id == id)
+>  		pci_err(dev, "  Error of this Agent is reported first\n");
+>  
+> -	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
+> +	trace_aer_event(dev_name(&dev->dev), bus_type, (info->status & ~info->mask),
+>  			info->severity, info->tlp_header_valid, &info->tlp);
+>  }
+>  
+> @@ -759,6 +760,7 @@ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
+>  void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>  		   struct aer_capability_regs *aer)
+>  {
+> +	const char *bus_type;
+>  	int layer, agent, tlp_header_valid = 0;
+>  	u32 status, mask;
+>  	struct aer_err_info info;
+> @@ -780,6 +782,9 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>  	info.status = status;
+>  	info.mask = mask;
+>  	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
+> +	info.is_cxl = pcie_is_cxl(dev);
+> +
+> +	bus_type = aer_err_bus(&info);
+>  
+>  	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
+>  	__aer_print_error(dev, &info);
+> @@ -793,7 +798,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>  	if (tlp_header_valid)
+>  		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+>  
+> -	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+> +	trace_aer_event(dev_name(&dev->dev), bus_type, (status & ~mask),
+>  			aer_severity, tlp_header_valid, &aer->header_log);
+>  }
+>  EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+> @@ -1211,6 +1216,7 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+>  	/* Must reset in this function */
+>  	info->status = 0;
+>  	info->tlp_header_valid = 0;
+> +	info->is_cxl = pcie_is_cxl(dev);
+>  
+>  	/* The device might not support AER */
+>  	if (!aer)
+> diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
+> index e5f7ee0864e7..1bf8e7050ba8 100644
+> --- a/include/ras/ras_event.h
+> +++ b/include/ras/ras_event.h
+> @@ -297,15 +297,17 @@ TRACE_EVENT(non_standard_event,
+>  
+>  TRACE_EVENT(aer_event,
+>  	TP_PROTO(const char *dev_name,
+> +		 const char *bus_type,
+>  		 const u32 status,
+>  		 const u8 severity,
+>  		 const u8 tlp_header_valid,
+>  		 struct pcie_tlp_log *tlp),
+>  
+> -	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp),
+> +	TP_ARGS(dev_name, bus_type, status, severity, tlp_header_valid, tlp),
+>  
+>  	TP_STRUCT__entry(
+>  		__string(	dev_name,	dev_name	)
+> +		__string(	bus_type,	bus_type	)
+>  		__field(	u32,		status		)
+>  		__field(	u8,		severity	)
+>  		__field(	u8, 		tlp_header_valid)
+> @@ -314,6 +316,7 @@ TRACE_EVENT(aer_event,
+>  
+>  	TP_fast_assign(
+>  		__assign_str(dev_name);
+> +		__assign_str(bus_type);
+>  		__entry->status		= status;
+>  		__entry->severity	= severity;
+>  		__entry->tlp_header_valid = tlp_header_valid;
+> @@ -325,8 +328,8 @@ TRACE_EVENT(aer_event,
+>  		}
+>  	),
+>  
+> -	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s\n",
+> -		__get_str(dev_name),
+> +	TP_printk("%s %s Bus Error: severity=%s, %s, TLP Header=%s\n",
+> +		__get_str(dev_name), __get_str(bus_type),
+>  		__entry->severity == AER_CORRECTABLE ? "Corrected" :
+>  			__entry->severity == AER_FATAL ?
+>  			"Fatal" : "Uncorrected, non-fatal",
+> -- 
+> 2.34.1
+> 
