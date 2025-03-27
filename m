@@ -1,280 +1,223 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF877224D6
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 00:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743037107; cv=none; b=e8BVNINdw423xt41cHSJQYBMwKRf8GxnWagJ4WlNwBJv4IhDfiJSxx6RS0qnkTN9sHGY66OeArePHSOAbvzI1OSYBrw4B1Llt8YiRfgSaRRuVmAtv1Bo/iOHs/SxGM4ZE8ed5ZkAjN51ZaDGpiRS3P5qtZEsXOe9BoiqZxfNRlM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743037107; c=relaxed/simple;
-	bh=IOquQNsqXikxEHdUYqv9PthDdLa5FbkQ8DChFyLvmug=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fNwXiC28nntqPsyBHlfM4SlpcrX0ADaIMrlg2rqpJj7IV9D7RmPJaKWPXBnOCKJCSDww5PSJ4BlQLYGyhw6/8o7AGjWwJdMBixNMRvW8X4fFwHEyV8EKElzhf+Cz/X7w6swYTejxvPBSnyaiVGB5OlwFS6DySnZgQDJlROQ73+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=lzHFnayC; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F6AC2E0;
+	Thu, 27 Mar 2025 00:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743037133; cv=fail; b=jpJ8gtoWGEB9XBxU/IvSKGN7686GUwT4iPuzmJYllmrEyn3zpezP9tKzawgI1lfScefmsbERECma8ls7ktATtFXGz4TgX09apf1a/oySija3SZUWJJkCqFwXbt3JDHUT3pzpbwya1pClQEqLthkJHWCYLuOiT3BDU/M3OWI/NwE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743037133; c=relaxed/simple;
+	bh=i7nh6kXRLFSIIAIU/Ehw6rHEwzIsIz5XSFDGSmOc0Ig=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=kM9Xf5jIR2ws0imHPW1y8AMd+e9VArkxF0KCpCV583FAsJ9Q9BPoJdqNAo5zTpFN0mwFyWtKOLh9GaD4lQ2ea8cbpSX584En1Vi7XaHEULME5ExE8XQ2N4677KXdwLQsNT8hrD4zonKcrh5s9r+NypeVdUBh68HK3vSQ44rFlIo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f1xa+ED4; arc=fail smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="lzHFnayC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1743037095; x=1743641895; i=spasswolf@web.de;
-	bh=Zk++DGlvsIMP57VTwMLNt1Uxow2p23z/s6nbuuf4t0U=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=lzHFnayCW/+dYmY3vozboRklybVPaKcSvNXyG4jCGqQU8iv5lV3GO+iLVSrxfJmh
-	 uVQmqUlmKVhX24QE/onZCTaPrs3tGPFYeBxp+H55Jnuw19i7woZDl9VeT164OUqYg
-	 aNjthklZBLDeKP0CERdMu4gQNmZxvXoXONbJe8hDP5leT+ua9K0eCstpBvnIBYJUa
-	 n3XHV8jfTqgHcFqkx98Fpq1QbPtW0/bkjKfOS7Mp39GToHwIKNeiPGXSDdZRPd6j6
-	 CbTARLBqW6rYQbe0+l/KXLt0M21hyu7cvNhEBF988ZmekBBMvYr2qgIaXmc4rcOWn
-	 u/rNdukMymXJ8Xc5nQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MxHYA-1tDMgJ2C76-00xvKo; Thu, 27
- Mar 2025 01:58:15 +0100
-Message-ID: <2d547eae6f031943101d7fb10b815bc128995125.camel@web.de>
-Subject: Re: commit 7ffb791423c7 breaks steam game
-From: Bert Karwatzki <spasswolf@web.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Balbir
- Singh <balbirs@nvidia.com>, Ingo Molnar <mingo@kernel.org>, Kees Cook
- <kees@kernel.org>,  Bjorn Helgaas <bhelgaas@google.com>, Peter Zijlstra
- <peterz@infradead.org>, Andy Lutomirski <luto@kernel.org>,  Alex Deucher
- <alexander.deucher@amd.com>, linux-kernel@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, 	spasswolf@web.de
-Date: Thu, 27 Mar 2025 01:58:14 +0100
-In-Reply-To: <CAHk-=wh5Suzp0z7AnK0NgSKfEAWQJw7Dgv5eku=rzBuM1ugQDg@mail.gmail.com>
-References: <20250325101424.4478-1-spasswolf@web.de>
-	 <64945196-f05f-478e-a2b5-f0bd58345136@amd.com>
-	 <c66e2c03648370d5e5c0745f32ebd58367bbe48b.camel@web.de>
-	 <CAHk-=wh5Suzp0z7AnK0NgSKfEAWQJw7Dgv5eku=rzBuM1ugQDg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.0-1 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f1xa+ED4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743037132; x=1774573132;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=i7nh6kXRLFSIIAIU/Ehw6rHEwzIsIz5XSFDGSmOc0Ig=;
+  b=f1xa+ED4Nz/BObcHCxmQ3c5Ukpg4cnhhitISGCKFkVcILXZt9gEjbyIk
+   35Qsg/ukHMcPzM4qy/X/WD3VI1EyfMtIBeurobPPeTDjfVE9CsihGJ2BQ
+   hHrcfGC5/ZXQ2knA06edeX87SmqK9vs/1ZO0b5XrdsD23aN4CQ5qfoDoC
+   jRERfXcr6Bfx4UZZHD+fqUygYtD9aLaPgipfQAZOjqvmwuDHmjhCbZ+hR
+   XaAiXDmHXsFnVrVAoLaS2z1AcAyxBlFrKFs8J/AhceLerpMAlRXpNxG5K
+   MN4SEdOWGqY0ZjPXXly+21y6fyOUVo3bByayr3w0cK2sgs6NZxKuCHOzb
+   A==;
+X-CSE-ConnectionGUID: UWg+jFVUSs2Xqo8caeA1ow==
+X-CSE-MsgGUID: KH/DlReISIGijKrF39AgQQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="55351392"
+X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
+   d="scan'208";a="55351392"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 17:58:33 -0700
+X-CSE-ConnectionGUID: ewCOOd8cRBGoPZNE5pw+EA==
+X-CSE-MsgGUID: 3rcB4zudRzCT0bVRY2+ldg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
+   d="scan'208";a="129662049"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Mar 2025 17:58:32 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Wed, 26 Mar 2025 17:58:31 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 26 Mar 2025 17:58:31 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.47) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 26 Mar 2025 17:58:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OwMisOnLMJVMxraE/+w4R+tly7yfH9++yOIkqkaCOKeEN2eblbUkQnMnaqm+e7K8+oaNpNT+/NX2y0PWIR/JkMaeXLtF3dqy9w2xb/Im1z9OiK3SdtUbil+kwfBwDRFX6xNmZjT9BXy+30luVZvU4+nzZANNwi3U6YVJwOidLPR870jLFG7bWEANKyaI6Cw+Zu9Rwj7fpu5CsEEIJwd5rt9BYTAKEm5fx9NLzr8bB0cHwNn9KXYxkZQmlxA68mQdKLQGb6Dd8ZPJt16tij6TVxN5Jrp9MbUdI8R0/fNnhHOrtWa+2mWDr1HRYsKdGn26s0wL2qY++761M4fwUkTLKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dOU9kZYfEMAhTy6N1izZ3CZ52sl7LmLv10ZiWEMcoQs=;
+ b=xfUDJx6opyOKTJ3EG7klcSVrdsvt8wPxTqCRbp/zJxXcni0zk/Eq459xMbM8EC9G3TwxQK7adX5oaVF52ZNHR4GGG/dAC6H25i6eTn5CLNmKanFhuuqXb1abK6mkXNHqioDj99C5cNr12YAEBPF7SQrzjKghL/6uDDDaGte91vW9JEDlgoUSEa8PE7jgA5qSfgWn2fbEl7qrBvE+Wjmdyj5RijwBq3jgy7TiVMxSB4sANclJ2sxMWAidVnh7D7O1ftSYy55n4qjjGbRDnl6OJDFSLnsm8Zy3X+ifuimQ6bjZs7iCuMlMHD+Io+sNNw7v5NywhP2QakVIq4fY3PG/+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from IA1PR11MB6098.namprd11.prod.outlook.com (2603:10b6:208:3d6::20)
+ by DS0PR11MB8184.namprd11.prod.outlook.com (2603:10b6:8:160::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
+ 2025 00:58:24 +0000
+Received: from IA1PR11MB6098.namprd11.prod.outlook.com
+ ([fe80::cbbd:ed55:576c:fd55]) by IA1PR11MB6098.namprd11.prod.outlook.com
+ ([fe80::cbbd:ed55:576c:fd55%3]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
+ 00:58:24 +0000
+From: "Xu, Even" <even.xu@intel.com>
+To: David Binderman <dcb314@hotmail.com>, "Sun, Xinpeng"
+	<xinpeng.sun@intel.com>, "jikos@kernel.org" <jikos@kernel.org>,
+	"bentiss@kernel.org" <bentiss@kernel.org>, "linux-input@vger.kernel.org"
+	<linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: linux-6.14/drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c
+ bug report
+Thread-Topic: linux-6.14/drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c
+ bug report
+Thread-Index: AQHbnoMyJSSxnBJen0yPctJzXXDeULOGJ/Tg
+Date: Thu, 27 Mar 2025 00:58:24 +0000
+Message-ID: <IA1PR11MB6098047C9EF4523F22119E45F4A12@IA1PR11MB6098.namprd11.prod.outlook.com>
+References: <AS8PR02MB10217E34D616B6F5213660E1E9CA62@AS8PR02MB10217.eurprd02.prod.outlook.com>
+In-Reply-To: <AS8PR02MB10217E34D616B6F5213660E1E9CA62@AS8PR02MB10217.eurprd02.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA1PR11MB6098:EE_|DS0PR11MB8184:EE_
+x-ms-office365-filtering-correlation-id: 3dd6b1a2-efa3-49ee-b55e-08dd6cca7a51
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?rVMMailvxezhd0uUmzobztcJCbUd3VtG9thtAgwJsbXoS76s3MhsxvA3Urqy?=
+ =?us-ascii?Q?UT9O/DFzH9MtVL9Goum9XjMvPoTwNg0wETP3yC5p//doTFvu+1cCtoxPjk2K?=
+ =?us-ascii?Q?bDuJ2CeN0jwfJL5Rowlt3YFrRX5PJACDJ3MPKsQib1nXdRt9R+gauGGeMhtt?=
+ =?us-ascii?Q?X15xCLaOpfCdJFld2xN25Pp6yeDeAvsU2S+HEAertqRuPtpbKeiX12tYr/Jj?=
+ =?us-ascii?Q?korsXFbnvjbXLRCx2nTwVSCPGZ5SRKKlJtM+1DZgdbwXHb35Dcdn7R2qqRgX?=
+ =?us-ascii?Q?w6wDICa4+4WSqhAoR4fn18d1S62n3ERDv/Ivq+RVGjMP+06coeDdUJ2tWvEo?=
+ =?us-ascii?Q?j0YmmLB1CIgpirFMC4E8dctG27W70sj5bK11ECVm7p7CgoRGLOqAhWukw6Ya?=
+ =?us-ascii?Q?EQFS5oU9K0Bc4f4Ypnl3mWmOfjV8oQ7FEdfqnUNJHZGbzSU0OYm+qaCzlXRt?=
+ =?us-ascii?Q?lYfE408X35Hk6yr/XOWrAQXzv0NlnNmjftIAk+dBdNZwS1T/W9PE4xAR/9Qt?=
+ =?us-ascii?Q?8AnEm2UJkDexRDWDxmK6dXsx0UtbOQz4WjKEjVW0gh01PVpob0a12ltHwBcz?=
+ =?us-ascii?Q?lFVdM5d70D1f5AY9IRCBetRsD+WyRuVA9b0glzgKiIOCYxudlAh5qBUhIJ0a?=
+ =?us-ascii?Q?K7zJxweJwZyTrEfTKcnZZ5HuvRNQKGegnIK4FzO0OOctQXATLxLmIN8j69VA?=
+ =?us-ascii?Q?cL2hgbPfADiKwR933VHQ2X8wFn0rvjGamMOWupYt9a8Fv4jpsZ7gQ3V9axur?=
+ =?us-ascii?Q?vdFaeqSrlmHOSWMPjzhg1Qa0NEGYJGYmYmc9ym/4Kx/UKc2oLYIbMBmC8mwA?=
+ =?us-ascii?Q?ypme9RZsmQ3qMkzalElE9ckBjiqPv2a2rsoDlDMufLfV3m2gfh/DSGsWCLxQ?=
+ =?us-ascii?Q?nUUJHFTuUyoVBfzGlHwyTO2BfTmH18mbZPP+aJOKUfIiD3lxLK+gAD3LCtfw?=
+ =?us-ascii?Q?QIhuPjA4S8i9prARALTQ0IicBzmTDfee0f8COeIwJFBXqXBu6qXTtXkDFu4W?=
+ =?us-ascii?Q?4wykcuFAWnK+Qbl0edo5T+mCrAn9vqvYNSrrJMmmsEiqwKHuyfYxziZAp6ci?=
+ =?us-ascii?Q?xYAzqm+Hkf64zJh7dfIGiBT6Md0zS4cdElkjQ6gI/oBS1FXBtUFPnM+Zzk4v?=
+ =?us-ascii?Q?aNDFAfumdfxzjdbSSRpSaftdxeE3lxzpJGtRpuKvq5+PfNJvmvItTJhF4ymj?=
+ =?us-ascii?Q?18O8TxnIwv2ZcygPCv1FQoPvUyTESSUU8Sr0pcQu9mAbfGNNhHcfovZPcity?=
+ =?us-ascii?Q?NlcjYtEaxXK3a9EIPFokqRLp5u0fHv63Lu7slFfFgs3A74k9H7iNrvw7BfEy?=
+ =?us-ascii?Q?RLn3+6kbVXZeKvMI/Gw6Hk0mTx1oqD63tHoY3Gp4Lhdw/TVPh3yqJO9gW57D?=
+ =?us-ascii?Q?l6C779nmSX537hpXYmST46yXy13OeN10FKyKmwN4MFa1MKNxyPanUFhH/c4n?=
+ =?us-ascii?Q?A2SgVDZbR1SIABSzC1m4sOewLWusPsPG?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB6098.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?0XumHNu7tUaVGlxwA7HQYYOdqCJYFoLpsUQjHG4GVCnAb2YoYhF5zmHTnRoq?=
+ =?us-ascii?Q?0BvBzUARUM+Sd+TjEHir6P2NDeb3A0d3fvAcE5hHJAdGpm6D7L+uS7bF7JnA?=
+ =?us-ascii?Q?Z7vioUEuSLW91GQhK1ZtLZflChdumtxLAXzKgn9DlLbdRG0mKZoEHaoA5EW3?=
+ =?us-ascii?Q?6fYOGzJnz0SVHiWtR5gUxXtVAiafx06WwCOsz0uhRdykk43DgUCNSs70WYnF?=
+ =?us-ascii?Q?BRItqkFAkWHK3uPZoMGKj+loQPxPcuiyZeind05uEmOJ5gd0Wb/WvrkHoUil?=
+ =?us-ascii?Q?Ofd4RTOmy23gVWrty+QvDBfcCyeTcl20vu/Tq0f6NQT4xQThPCmSvhdDvAHM?=
+ =?us-ascii?Q?hPW/UsX+8LmJlLqQqN8qybWconvuppnJFFQV2yzbo0a4IiO/K0wtlE6RwJuJ?=
+ =?us-ascii?Q?HvYmKqAL6i2zkg8rRcdw7zT2fbucWLV3flOLKwXhlbhQrv2mXpJ+WF0WLV6a?=
+ =?us-ascii?Q?EMfmBJC7ZcgLUYIGCOq00xFQ/gAlgWPhrlIcSEZfCaXd0N5+Zki+KHayv9gG?=
+ =?us-ascii?Q?yCC3hklSOZ+vBQWtPWFUeJjIpbDXxfaLrpErIQO6ID81t4pOvsnOwdnyRNHZ?=
+ =?us-ascii?Q?Kw6rz1bIPL9tP7Qg45dFNC64gk66Pmiy3oK7/c2mR8sKVAuJYMVpHDHyM4n4?=
+ =?us-ascii?Q?BfGu1ScnXPEXJykHai8rt3WdC8ol0qXZu0jecaiOCTMdY7Ie/I+ov6HvqAHA?=
+ =?us-ascii?Q?rbM3JpkG+O73lQvf8k0XCE0ekutck+MLppVlE3XB89xO3XW8q8MsBAy+TJgL?=
+ =?us-ascii?Q?pYbAlLaBvg9T/NpOhw61a8SMshvk74gCUDewZrjMzSU6P8E5/IeQ+63gOz4J?=
+ =?us-ascii?Q?fwtNFwm7LzgVWx4jjTdHeNSyNczKDkyK6Jw4D4UNDYNOrLlj2AqKbBqFwhOZ?=
+ =?us-ascii?Q?4zG2P2qiFxRByCmsBxvrwrQKRNkc0QB9G/lGlSZu1hzNKjhtpqJwEU15Ug1t?=
+ =?us-ascii?Q?agDiukNJdXlE7u1uzUeDxbmCJO3cChtSoEH8wtcDo8fb9UlXk5pT/rfuT/Eb?=
+ =?us-ascii?Q?xhiHuVJ5AKgL/zuPeU43NivhLn6elRSfqRQgge6UViqf4Rj4ZrupSYN8bRj3?=
+ =?us-ascii?Q?ajZkH5RLF4RTyTpvo3bKVDEwJAX2vzp+NkeId0+CFOIG7Y2KHmciB1tq0sGL?=
+ =?us-ascii?Q?1dIiEEZzAF0VOgQnu+4IN+rOazakJeyJyExfaJiBqRHpwcfEiBD8fHpOAeje?=
+ =?us-ascii?Q?KBBfMP8J1xL05ARTJceeEdcY4T3SgLJZeJNik8HUVg6Xy2WR43q24tdB/rzL?=
+ =?us-ascii?Q?tlsSmF40scn//0K04bj7oepkfHJd7Mc6kXv/ygY+WmzGktb36aSsbXPbSdjq?=
+ =?us-ascii?Q?102VlJeE+XBe5/YTiTccd465K75Qzh1OwHRIjnGcm42XbKSoigj3gEhzNgnB?=
+ =?us-ascii?Q?yrhUf9CKSmFLyA2vatLHSsdQSlZPfhOQ9DFFdXNtinEYf1oGzrmjJXYzwyvJ?=
+ =?us-ascii?Q?Eq4IyXZGNrQ8Xny2Mumtf8SHjo6sijVeHWdio1YMzflFUr9bUhVTd/9aVwIs?=
+ =?us-ascii?Q?ZAwqmMAbtCcLzic8cAB7GYC49tiVwW039bCRxg4gTe1AtiSfAQq9BbinIiEE?=
+ =?us-ascii?Q?NIIsJRs5hOSQfwRmb2o=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:IdsGvviBFPBn07EoxKeEUywDpVaJ7cSMqnaZ8GzaFg4zi0QMuU8
- 5mPvahTOZ3wg1T3nkaOg6CuCs69UynONt7SrTrpbdcfgNDfEuwRXuv3Scn/PneftOngU4Qe
- vgRMQKm/UiY68jmBsjD681lNj6juAauFPZ9MlkwQaQYddnhdIceu8LeiSG1ZzeHrL7OcQg2
- 846TN+TMpWlh6hhCMjNLQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:KvWPCauSh8o=;Itr7GtNJAEKoVrJaZb+GIEkBhpQ
- UoeIAI1RFsNO4A+IQ8KScpruBxDZ5piOvMbm7KrDgHR6ffInl8O9z4vsD2jdsJhl/+aSrJbeb
- dc8Mn/4QrKPluF0ukbJq3rQNnDGt84RBEMHioMtg2vFRST9giTbkU2iJE5MykudM5I4InO8zU
- 5nEqYi0EDDm1kuEm8ooqUI4LzdK8h3WN1o9gC6v7MdhwZHb2m20YDONi02Rd/uBjwLNkPY/B/
- xCbb2+qeiGE5zqOC0kzcPMA9nMWkId//minoLsVZrd9xTYTkqWxSeOmwJhgJyHiMYsWKk8Ohf
- TeTPgi8bhz5YehJNvAeVQK8NobTVdqG67IukZLso8qn4ddq0Iu751hqPkyQACidmhlwsdf0R9
- quiVZw31wNo8WhjIWqWcMtQNdggD4d5e3gtbhTAW5bLmDVgsJlPLanuuEEjBtWQKAodlirT+D
- seximDA2k/eVsq8hF8ZhErX0jdP3smXf/eJDglvF1RbD9BvPwF1gzuZKBxSvL3Cvj1XXn3WgU
- lsNOt+Xf37QA3R/cJ7zdwVQo8wJkqoVmklrjS8nsUDk4K2CmGBinPqnEnklVKMsluMTxRcbev
- 80QfNptXjBtJF6GJZdHh9N4V9t0h/avnemzRVRUYqGzDe2baz6uc9cmfOBXKxRj+xQ32UY0Z+
- qKN0CwazUjhTe90TNXF4+CsYSfoYo3K8J8hgrh68zjOAvIcjEQ+NS2m/FKdt60YCXsOSRiYww
- D8JbhWCT5smyn3N4w56EzJJWF6ll/xIVEbzcaS635GtCkiT5Mat/qQk29CYkN0Ve+6EVZb9Uu
- RIk4j/7F6p/yZwth6Pa3GNE9UXcx13SwBNvM98immzgNY0uQtbUkrZ9g9k4+d4zSGqUVKaMjy
- IEBTQmxNKyNV23l3FkAHbOi89sZ67N+xPOZjIrx224Ob0m502goIiVj3k/CuBrfGJatDsCHd7
- anKbSuNhdPqqQiU1Tde4cmrzBdHqVo3nR4PU04OQ/keBRTGNfkESlTbfPFxWiof0Zs8nanZD2
- Vzu+k27lsioMPGALthgrpgrsD4I6VVw4XX7eiYcksRrQoX95fhvpXyVeb0IumJPpIdU+mDr5O
- ef5VXx4FP2YgYL2s+PSp7ehXO5IQjKlk+kpejoWDWoVEbXrQss0+7nNZcqguzW5czoWjUrQyb
- PP5t/d6Rsb7jrvcXEyjE2wb6/BG3318KI7ORaYEjJq/XhSUXavzaN6EfOS7G5wtsL5V9mqdQJ
- /mHxcHjTbmR+BtQZOZVwGtecvy0SG5py1FEAjRsNfyYfdEixB593TKBWmgRiyMZsUz1zf+N9F
- JQ5KWQIJ0iOG1pa70TqZNgpGMKU4GMUFdaGmknVj9CvugnvX0IEMyJGg/LDvbMUSNuKKs9LdQ
- K5Dd0CisndkvJDrO/qQUHzZy6oqoYDbYLxuKu1Kkz6VvG2KGZn0KD8OyoL5pmjRuljnk3XzIs
- CUKV/eA==
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB6098.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3dd6b1a2-efa3-49ee-b55e-08dd6cca7a51
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2025 00:58:24.7821
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 78JZ8B9jaipILXKulOP88Gda7Aa7tlQtMtfebuKciAUVeO7KkznUqDT490V1IXNAgRtCkLpDmC6YebMC8Pmo+Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8184
+X-OriginatorOrg: intel.com
 
-Am Mittwoch, dem 26.03.2025 um 15:58 -0700 schrieb Linus Torvalds:
-> On Wed, 26 Mar 2025 at 15:00, Bert Karwatzki <spasswolf@web.de> wrote:
-> >
-> > As Balbir Singh found out this memory comes from amdkfd
-> > (kgd2kfd_init_zone_device()) with CONFIG_HSA_AMD_SVM=3Dy. The memory g=
-ets placed
-> > by devm_request_free_mem_region() which places the memory at the end o=
-f the
-> > physical address space (DIRECT_MAP_PHYSMEM_END). DIRECT_MAP_PHYSMEM_EN=
-D changes
-> > when using nokaslr and so the memory shifts.
->
-> So I just want to say that having followed the thread as a spectator,
-> big kudos to everybody involved in this thing. Particularly to you,
-> Bart, for all your debugging and testing, and to Balbir for following
-> up and figuring it out.
->
-> Because this was a strange one.
->
-> >  One can work around this by removing the GFR_DESCENDING flag from
-> > devm_request_free_mem_region() so the memory gets placed right after t=
-he other
-> > resources:
->
-> I worry that there might be other machines where that completely breaks =
-things.
->
-> There are various historical reasons why we look for addresses in high
-> regions, ie on machines where there are various hidden IO regions that
-> aren't enumerated by e280 and aren't found by our usual PCI BAR
-> discovery because they are special hidden ones.
->
-> So then users of [devm_]request_free_mem_region() might end up getting
-> allocated a region that has some magic system resource in it.
->
-> And no, this shouldn't happen on any normal machine, but it has
-> definitely been a thing in the past.
->
-> So I'm very happy that you guys figured out what ended up happening,
-> but I'm not convinced that the devm_request_free_mem_region()
-> workaround is tenable.
->
-> So I think it needs to be more targeted to the HSA_AMD_SVM case than
-> touch the devm_request_free_mem_region() logic for everybody.
->
->            Linus
+Hi, David,
 
-This patch adds another function devm_request_free_mem_region_from_end()
-with an additional argument which allows to choose the end address from
-which to place the resource.
-The problem here is this uses dma_get_mask(adev->dev) as end address which
-uses the dma mask for the discrete GPU while it should use the dma mask fo=
-r
-the built-in GPU (In my case both are equal (44bits), but I'm not sure if
-this is always the case)
+Thanks for reminder!
+This issue already had patch fix at 2/13:  https://lore.kernel.org/linux-in=
+put/20250213024021.2477473-1-even.xu@intel.com/
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
-b/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
-index d05d199b5e44..e1942fef3637 100644
-=2D-- a/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
-@@ -1042,7 +1042,8 @@ int kgd2kfd_init_zone_device(struct amdgpu_device *a=
-dev)
- 		pgmap->range.end =3D adev->gmc.aper_base + adev->gmc.aper_size -
-1;
- 		pgmap->type =3D MEMORY_DEVICE_COHERENT;
- 	} else {
--		res =3D devm_request_free_mem_region(adev->dev, &iomem_resource,
-size);
-+		res =3D devm_request_free_mem_region_from_end(adev->dev,
-+				&iomem_resource, size, dma_get_mask(adev-
->dev));
- 		if (IS_ERR(res))
- 			return PTR_ERR(res);
- 		pgmap->range.start =3D res->start;
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index 5385349f0b8a..a9a765721ab4 100644
-=2D-- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -407,6 +407,9 @@ walk_iomem_res_desc(unsigned long desc, unsigned long =
-flags,
-u64 start, u64 end,
+Hi, Jiri,
 
- struct resource *devm_request_free_mem_region(struct device *dev,
- 		struct resource *base, unsigned long size);
-+struct resource *devm_request_free_mem_region_from_end(struct device *dev=
-,
-+		struct resource *base, unsigned long size,
-+		resource_size_t seek_end);
- struct resource *request_free_mem_region(struct resource *base,
- 		unsigned long size, const char *name);
- struct resource *alloc_free_mem_region(struct resource *base,
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 12004452d999..82f40407c02d 100644
-=2D-- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -1875,12 +1875,14 @@ EXPORT_SYMBOL(resource_list_free);
- #endif
+I didn't find this patch in latest v6.14-rc7, would you mind help double ch=
+eck which branch this patch got applied?
+Thanks!
 
- static resource_size_t gfr_start(struct resource *base, resource_size_t s=
-ize,
--				 resource_size_t align, unsigned long flags)
-+				 resource_size_t align, resource_size_t
-seek_end,
-+				 unsigned long flags)
- {
- 	if (flags & GFR_DESCENDING) {
- 		resource_size_t end;
+Best Regards,
+Even Xu
 
- 		end =3D min_t(resource_size_t, base->end,
-DIRECT_MAP_PHYSMEM_END);
-+		end =3D min_t(resource_size_t, end, seek_end);
- 		return end - size + 1;
- 	}
+> -----Original Message-----
+> From: David Binderman <dcb314@hotmail.com>
+> Sent: Thursday, March 27, 2025 3:16 AM
+> To: Xu, Even <even.xu@intel.com>; Sun, Xinpeng <xinpeng.sun@intel.com>;
+> jikos@kernel.org; bentiss@kernel.org; linux-input@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Subject: linux-6.14/drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c b=
+ug report
+>=20
+> Hello there,
+>=20
+> Static analyser cppcheck says:
+>=20
+> linux-6.14/drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c:298:24: st=
+yle:
+> Boolean result is used in bitwise operation. Clarify expression with pare=
+ntheses.
+> [clarifyCondition]
+>=20
+> Source code is
+>=20
+>         if (!config->sgls[i] | !config->sgls_nent[i])
+>=20
+> Perhaps || was intended instead of | ?
+>=20
+> Regards
+>=20
+> David Binderman
+>=20
 
-@@ -1920,8 +1922,8 @@ static void remove_free_mem_region(void *_res)
- static struct resource *
- get_free_mem_region(struct device *dev, struct resource *base,
- 		    resource_size_t size, const unsigned long align,
--		    const char *name, const unsigned long desc,
--		    const unsigned long flags)
-+		    resource_size_t seek_end, const char *name,
-+		    const unsigned long desc, const unsigned long flags)
- {
- 	resource_size_t addr;
- 	struct resource *res;
-@@ -1946,7 +1948,7 @@ get_free_mem_region(struct device *dev, struct resou=
-rce
-*base,
- 	}
-
- 	write_lock(&resource_lock);
--	for (addr =3D gfr_start(base, size, align, flags);
-+	for (addr =3D gfr_start(base, size, align, seek_end, flags);
- 	     gfr_continue(base, addr, align, flags);
- 	     addr =3D gfr_next(addr, align, flags)) {
- 		if (__region_intersects(base, addr, size, 0, IORES_DESC_NONE)
-!=3D
-@@ -2021,17 +2023,30 @@ struct resource *devm_request_free_mem_region(stru=
-ct
-device *dev,
- 	unsigned long flags =3D GFR_DESCENDING | GFR_REQUEST_REGION;
-
- 	return get_free_mem_region(dev, base, size, GFR_DEFAULT_ALIGN,
--				   dev_name(dev),
-+				   DIRECT_MAP_PHYSMEM_END, dev_name(dev),
- 				   IORES_DESC_DEVICE_PRIVATE_MEMORY, flags);
- }
- EXPORT_SYMBOL_GPL(devm_request_free_mem_region);
-
-+struct resource *devm_request_free_mem_region_from_end(struct device *dev=
-,
-+		struct resource *base, unsigned long size,
-+		resource_size_t seek_end)
-+{
-+	unsigned long flags =3D GFR_DESCENDING | GFR_REQUEST_REGION;
-+
-+	return get_free_mem_region(dev, base, size, GFR_DEFAULT_ALIGN,
-+				   seek_end, dev_name(dev),
-+				   IORES_DESC_DEVICE_PRIVATE_MEMORY, flags);
-+}
-+EXPORT_SYMBOL_GPL(devm_request_free_mem_region_from_end);
-+
- struct resource *request_free_mem_region(struct resource *base,
- 		unsigned long size, const char *name)
- {
- 	unsigned long flags =3D GFR_DESCENDING | GFR_REQUEST_REGION;
-
--	return get_free_mem_region(NULL, base, size, GFR_DEFAULT_ALIGN, name,
-+	return get_free_mem_region(NULL, base, size, GFR_DEFAULT_ALIGN,
-+				   DIRECT_MAP_PHYSMEM_END, name,
- 				   IORES_DESC_DEVICE_PRIVATE_MEMORY, flags);
- }
- EXPORT_SYMBOL_GPL(request_free_mem_region);
-@@ -2055,8 +2070,8 @@ struct resource *alloc_free_mem_region(struct resour=
-ce
-*base,
- 	/* Default of ascending direction and insert resource */
- 	unsigned long flags =3D 0;
-
--	return get_free_mem_region(NULL, base, size, align, name,
--				   IORES_DESC_NONE, flags);
-+	return get_free_mem_region(NULL, base, size, align,
-DIRECT_MAP_PHYSMEM_END,
-+				   name, IORES_DESC_NONE, flags);
- }
- EXPORT_SYMBOL_GPL(alloc_free_mem_region);
- #endif /* CONFIG_GET_FREE_REGION */
-
-
-
-Bert Karwatzki
