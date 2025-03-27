@@ -1,33 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B88F1531E1;
-	Thu, 27 Mar 2025 15:07:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D12187858
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743088031; cv=none; b=ZijesDbApHxpvCVxR4ugOkPYEczyFDrdAVrtOsrpUSPTFKtWsSE8CpI6QVIqmrJ/p5g55DvdCtMKqgzbuZGnTALZ2qjO2gmmjuWy7GId+H/S1+qBsdpItx+fS9qmUfhAqv55DQrhBpHTPRvcnhFNtJyzDypfriGIBKhbI3rMIKc=
+	t=1743088034; cv=none; b=QXr9hUTk4yPGYw2i56LtPNNi+YCWhVZcOP+MswRXLF8nvo/27P21pKhPngnmxtb3MNnJ/UX9NwnJmB/A/ld0H/Z7nK/D3l1Hak6wRS++8fj5f/ACr3+JgwjL3aB5lL9F5gWsHtL2rMOKhkwNcvfA2vWe9BxDI9i4G9MAR92lNLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743088031; c=relaxed/simple;
-	bh=51uq9eze4L0yb3fWEg/O1lotH1bGxuQ1g1XhMDNXqSc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pxGJk3KKuvop/TzLQbXDDQAqFIYGzgwYyjsELuMaUgwZg68m/dGKGGZN1lXol0xtvo7WAreKoGqM3dNXUFH0LFfTJq7UbwyeBGQnyGqMr7+rgoCMQRx6es5T/c/cfJr6l0i7N1X2krpioYAKvAc/3wtUEpMs+URfte2dlFWbCLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iSXbMLBE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743088034; c=relaxed/simple;
+	bh=zoa2RpDaagu57Lnd7or/nYYPOHJtaZ/Umw0bS3l6BCk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=hCKNaRCKI9Mkz624T5b5BRri/9C9ZuKGQf2X+bvK8Y/iqPLWIoziPuj1r+rgv8GPnzTdVqj8xrhyvgxc8OhDeT+/FMfFcQ88Rn3wS4nfB76I2yx3SkQ2XeAcjeCFQaYA14tGwJOAFvy6qsfAiFu7v3mtCxG0LfnEAk6ASvtlRu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gzxjZOXz; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iSXbMLBE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF6A7C4CEDD;
-	Thu, 27 Mar 2025 15:07:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743088030;
-	bh=51uq9eze4L0yb3fWEg/O1lotH1bGxuQ1g1XhMDNXqSc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iSXbMLBEnWqyo1w44382sB69tdotdy4QPKzL8c7TL8er/utSyeNBKrHmd5bmRwZJH
-	 F2jKk2s16JcCQCnA/NS7G+E/8Y+HlcM4vUMdOIWemTmbYSaEYtK0IdYHrNayGR84EC
-	 Q9STaO5pERCBsvVy/4sxbnQDidBN0CIENtQVs/e69kZOSNjxYzAA26u41uRskmQ1b3
-	 /ZCy+oH6IXexwtGK0+VIDTtBigNaAyaCcwT9PWQJd4hr2nFZGpGK6nC1kw3MoYy08t
-	 LcXHwu+z6sCUAxp2KKxxjBDaI8hgFyD3dmfC/bzGnIyarg1k9NoeTgXjV08eOgUvXW
-	 rEVt3HMgy865A==
-Message-ID: <9ad5d838-19d5-4557-b028-0ad88be60b8b@kernel.org>
-Date: Thu, 27 Mar 2025 15:07:05 +0000
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gzxjZOXz"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52RDUDfZ030057;
+	Thu, 27 Mar 2025 15:07:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=5t2FuT
+	Ucf8lDWMstNFGFYUYddh7v205+ujjI5wCPz2U=; b=gzxjZOXzHjHbP5KEKbbBp/
+	7D/RUZAXYy1y+pgNcwpQI295nobvcx9aZ+rTmSdlJn97YAtFQearaBPdeUV+FqpP
+	1QmLWyLFafd8l6bPROKMnrSdhJopDh3hAGEuJzpUZFR16/ikPrzp8vIkkgSkGHRh
+	drUdijaJtzjaEZy6v7Ycz6WPLwvZhJpWbsUClW5rEXKtaorYa2Js/By7bxi1HJyb
+	CYZo9z7pAAQtaqQFGmBz+tzISIIM6ZxNe9eVwP4izmKXdWIeTyuylhTkOxwCWrlO
+	ChiSKNFYHmhI2LeFzDY2pfQJJHcojF7s3/Hw6gfZ0zHxBB8FBUaiFGa9pXFsVo6w
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45my29bc97-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Mar 2025 15:07:06 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52RDJFvn005801;
+	Thu, 27 Mar 2025 15:07:05 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 45ja82nkfg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Mar 2025 15:07:05 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52RF74f021168646
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Mar 2025 15:07:05 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A455E58059;
+	Thu, 27 Mar 2025 15:07:04 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 355215805C;
+	Thu, 27 Mar 2025 15:07:02 +0000 (GMT)
+Received: from [9.43.55.88] (unknown [9.43.55.88])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 27 Mar 2025 15:07:01 +0000 (GMT)
+Message-ID: <38653c58-a5c4-496f-9b52-e7bc3e447423@linux.ibm.com>
+Date: Thu, 27 Mar 2025 20:36:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,58 +62,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: dt-bindings: Add OmniVision OV02C10
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, robh@kernel.org,
- hdegoede@redhat.com, mchehab@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250324171508.GA668235-robh@kernel.org>
- <20250326150114.71401-1-bryan.odonoghue@linaro.org>
- <W8_0Ch2J0PWJ5pKHojZjFbM8huvxWlaWajtl_uhQF3UszGH_O8WTRZdQxh_eHs2JzLOx7CCxx01UZDHPQqAyCA==@protonmail.internalid>
- <1dd46a9e-e97d-415a-9e33-67ee234c4bac@kernel.org>
- <0de575dc-5afb-40fb-be30-99906d0e493b@linaro.org>
- <c1959f95-9ee1-4597-b6ec-fbedc8a872db@kernel.org>
- <afae182f-b264-4b57-acd7-2c2cf090e1ad@linaro.org>
- <JdPoQXJoHcHuLJ-32TBarKN302TbQtmjhY6VC-GEBWlERJj-eDKKj7QdAPl22deMA1SFCSnN-3AfPoLreqANFw==@protonmail.internalid>
- <da93bf6c-b4bc-4c4f-9373-583fbd0c031c@kernel.org>
+Subject: Re: [main-line]Build warnings on PowerPC system
+To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <61cf556c-4947-4bd6-af63-892fc0966dad@linux.ibm.com>
+ <8797a1c4-dc58-4a85-bc51-a3d4131e7930@linux.ibm.com>
+ <b5713b0b-a278-424c-8ba3-3aec01454e94@linux.ibm.com>
 Content-Language: en-US
-From: Bryan O'Donoghue <bod@kernel.org>
-In-Reply-To: <da93bf6c-b4bc-4c4f-9373-583fbd0c031c@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+In-Reply-To: <b5713b0b-a278-424c-8ba3-3aec01454e94@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: CRp_ufsxd0MvTwnIpfsd0DTLVNXI-OtO
+X-Proofpoint-ORIG-GUID: CRp_ufsxd0MvTwnIpfsd0DTLVNXI-OtO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-27_01,2025-03-26_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 clxscore=1015 phishscore=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 mlxlogscore=999 suspectscore=0 impostorscore=0
+ spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503270102
 
-On 27/03/2025 07:09, Krzysztof Kozlowski wrote:
-> On 26/03/2025 18:34, Bryan O'Donoghue wrote:
->>>
->>> I meant bindings are exactly the same, unless I missed something.
->>> Devices are similar enough as well.
->>>
->>>> Seems simpler to me to have two separate files ?
->>>
->>> Not really, more files to maintain, more trivialities to fix if we
->>> decide to change something in all bindings (e.g. style).
->>>
->>> Best regards,
->>> Krzysztof
->>
->> Hmm, so we have two in-flight series and one yaml file.
->>
->> OK, I'll drop this patch and add ov02c10 to the ov02e10 yaml as you suggest.
->>
->> So long as the yaml file goes in first, the order of application of the
->> ov02c10/ov02e10 drivers won't matter and can be fixed with a cherry-pick.
-> You can combine the series or add here a dependency.
+
+
+On 3/27/25 7:31 PM, Venkat Rao Bagalkote wrote:
 > 
-> Best regards,
-> Krzysztof
+> On 27/03/25 7:22 pm, Madhavan Srinivasan wrote:
+>>
+>> On 3/27/25 12:33 AM, Venkat Rao Bagalkote wrote:
+>>> Greetings!!!
+>>>
+>>> I see below build warnings while compiling mainline kernel on IBM Power9 system.
+>>>
+>>> Repo Link: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/
+>>>
+>>> Head Commit: f6e0150b2003fb2b9265028a618aa1732b3edc8f
+>>>
+>>> Attached is the .config.
+>>>
+>>> Machine: IBM Power9
+>>>
+>>> gcc version 11.5.0
+>> What is the ld version in your system.
+> 
+> Please find the ld version below.
+> 
+> GNU ld version 2.35.2-59.el9
 
-So just in terms of sequencing, are you happy for us to merge ovo2c10 
-and then do ov02e10 ?
 
-Since I have a bunch of driver work to do on ov02e10 I think this would 
-make sense.
+ah ok that explains. Kindly can you try with this patch and let us know whether 
+this fixes the warning in your setup
 
----
-bod
+
+diff --git a/arch/powerpc/boot/wrapper b/arch/powerpc/boot/wrapper
+index 1db60fe13802..09ceb5a42d81 100755
+--- a/arch/powerpc/boot/wrapper
++++ b/arch/powerpc/boot/wrapper
+@@ -235,7 +235,7 @@ fi
+ # suppress some warnings in recent ld versions
+ nowarn="-z noexecstack"
+ if ! ld_is_lld; then
+-       if [ "$LD_VERSION" -ge "$(echo 2.39 | ld_version)" ]; then
++       if [ "$LD_VERSION" -ge "$(echo 2.35 | ld_version)" ]; then
+                nowarn="$nowarn --no-warn-rwx-segments"
+        fi
+ fi
+
+
+> 
+> 
+> Regards,
+> 
+> Venkat.
+> 
+>>
+>> Reason for asking is that currently with
+>>
+>> commit  579aee9fc594a ("powerpc: suppress some linker warnings in recent linker versions")
+>>
+>> ld version greater than >2.39, this warning is being suppressed.
+>>
+>> Maddy
+>>
+>>>
+>>> Warnings:
+>>>
+>>> ld: warning: arch/powerpc/boot/zImage.epapr has a LOAD segment with RWX permissions
+>>> ld: warning: arch/powerpc/boot/zImage.pseries has a LOAD segment with RWX permissions
+>>>
+>>>
+>>> If you happen to fix this, please add below tag.
+>>>
+>>>
+>>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+>>>
+>>>
+>>> Regards,
+>>>
+>>> Venkat.
+
