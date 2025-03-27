@@ -1,101 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB5F535D8;
-	Thu, 27 Mar 2025 17:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5F22A1CA
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 17:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743094849; cv=none; b=s03jaaSP/1jefmRa1xHsBJ/avsDUOZrDC/XW+2iGvB4GMNGqnlHtAMRW+yJ+got8mbA9TZyKhvTfa56LxKz8EcGIb68OKtlcI0H4u9IKIeHdczH8d8DEJMgg4DWTDunD+baTXbnVuUcEijw0tBV6GFUmlSEHm6Sees3EnugFrXI=
+	t=1743094871; cv=none; b=X7xGfu6kcdP82GoQzNpty8wmH02Rz+6ZWZttC2GgRxWIwRPwl1arDYTxMdPPWkS4PG4efJVJXmF550GM1aRvX5z6cQZqjcl3rwRNYhK6TViRwxY8HDwo/GJnuWBKZW6XWPMzCrDVp4NjxPiadGRiuUMu/hliqkmc5UrIip5z5Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743094849; c=relaxed/simple;
-	bh=rnIm7xSXz/WBWTE43R0YHGZWzqA+dWsrh+VaEu1p+98=;
+	s=arc-20240116; t=1743094871; c=relaxed/simple;
+	bh=90Oqr8LPETJCgzlxDfWErsEUt1o4ENjdoCUxT37hAlM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k4b6H+IATZD0Wqecd8T5RnL0RLwjyFOX9HqGENKqO/VmDp+xgSM/t/a+uAE90DG61792s6t7JEmwewk0iIh719XEfgSfxm0zQeXWfuNOnJdMVlmZAVL9C31Fw6eN1Mv6kkRRywBcG7b1oakLzBGE1PM9hDSAb3tku/svISVd6oA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nXKDU4JI; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cq1khb8hBv896KhHO2UHti+lnCTPc6Hinpfhd3OL/tCyeMphV1e4TMn57i26IcMH80Q5ZENLg9Q+R4S8JnBr56jXmg2rybBwhEigsW3Bf6+yL+OehCzc5HDZWiQbHhCiCZ+eUXOup1fV0iUAHRRkHEjRNII1kiS3j+i3l2hsIIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bxSCHOto; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nXKDU4JI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 241E0C4CEE8;
-	Thu, 27 Mar 2025 17:00:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743094849;
-	bh=rnIm7xSXz/WBWTE43R0YHGZWzqA+dWsrh+VaEu1p+98=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nXKDU4JIvuO2ZvDBOkefSm6Z7L9RQE91yLLpOCEAJCGKMJogmPtLw9IFIsD7tTFtq
-	 zjUNKcXsC/LkYofecb32cRTHgomThPRQlkX+SIKe/oIbJ97EwmcXbVPEdUoCW1jsJp
-	 mqEwZOQqG80ZMlIJnXSkA00NMuDzu2Y89xU+mPOa3C/uvyuJfzaQ1fdnhXDCYap71/
-	 Tf9Bs0meqZ95wNcbF0jzRcWpedgLfUxd5LNOnt4JOuf0KSGDolSwA9KzqjMmLRgAIu
-	 Mu0aorlzUGqyMKkHtYa+4gdNFJpwIZ4vRFP7R4XbUIUXnmkJ9loB/9KtQScgLfIGwp
-	 Ci0XaT8pdR7DQ==
-Date: Thu, 27 Mar 2025 17:00:44 +0000
-From: Simon Horman <horms@kernel.org>
-To: Yu-Chun Lin <eleanor15x@gmail.com>
-Cc: isdn@linux-pingi.de, kuba@kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jserv@ccns.ncku.edu.tw,
-	visitorckw@gmail.com
-Subject: Re: [PATCH] mISDN: hfcsusb: Optimize performance by replacing
- rw_lock with spinlock
-Message-ID: <20250327170044.GA1883535@horms.kernel.org>
-References: <20250321172024.3372381-1-eleanor15x@gmail.com>
- <20250324142115.GF892515@horms.kernel.org>
- <Z-VumXiqJJkZKNZZ@eleanor-wkdl>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bxSCHOto"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-224100e9a5cso26657015ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:01:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743094869; x=1743699669; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=x9Om66rj99/DALJuBXsg77rBt0HogaVaFZqpEHuMUIc=;
+        b=bxSCHOtoHBzUH5YlBS97unjqFWt+ChcYbeDj87G1OqBZMnaLD1bUeMO9qhjm8ARm9s
+         TxzQVWRGkPQZUTBKJzRxcRumgloyYQu0HAaYlOTbsR2YqLcU5djHqSTu0VpiCKL1QQ0k
+         3OKlYjhroXAmxoh3OdjBmFCei8nJ6Ozf79/9cH5GfahnRBjGJvYkroWJWfOu2N/Vm+pr
+         sRTh5nz6KKWMyU/icRLG9xOj+hejCyJga9ZTAk8GnQNUU2KrmQdgvbt6Qq5M32/Rjbw9
+         8kl7eRMR1YmNRBABFJAVixoRR5sutBg/7A2E+d8nv2LV8QCVreqmwtgwSzmMt8MJNH8S
+         Zx4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743094869; x=1743699669;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x9Om66rj99/DALJuBXsg77rBt0HogaVaFZqpEHuMUIc=;
+        b=hFZLso+8aMrkUod+1KFyyWhhE/ZxhAYB2aNN55HTZXtlECn+bB1+T31ZCzzpNFWffl
+         OpD80gDv45tzpb1/cOYkflJzhDHR1MdqVl0seZTcNnbWd5YnRzl9dh5KOQph5Q4ygWAN
+         t9wcF5pkSj9BXA6hysQVTwTF3fAeDojDpDq7ck6CVVN0B1cdfialfIwPnkByMJfA3Yrm
+         cZy0yKh/7pCY++O2i6KrIs7gZ08iiPET7DKkD2CgwI6iMRy1dakuxji7RvsaaXYVCt1t
+         8mm/WPxUheo4zwiOqixw5/CVCUKhFDoOsLDEWkPWyMMeQuwGAdES/edOl3nlyOTL05aa
+         yrIw==
+X-Forwarded-Encrypted: i=1; AJvYcCX6gICfKQkJS3zzh3MkwKISUD0yRd4pMJEKAv59qfdaDKPcZJ7z9m1eeKck5ibi4KyatdcViT+cYI/LREk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuYnfhuPcKmVERvC+iTo8GAkRCfK5zwIkgpf6guJNUfc037BP5
+	OnvfoC93NoNjiSEQAKzZrL3bWudiGPVc9ECsNalvAt1TbrWEjvF6kX+HsW0Lww==
+X-Gm-Gg: ASbGncum54UshYz8qeIbvIu5Me6kGzSI/cZpOqe6cQhi3sX8wLn9HlbQsZWL49miLGz
+	cawE2NOG+F6uk3MOMY9UyaveMSJwJZnSWM9ev+KW2eS7r+7gvNIJh+5bldIuIqYlSSKDCxvHaAh
+	bYq/flazPkqbmfBepxRcr8d775KXeiZTMQkMZDS58A/BdS6/BUpvvdDRAYR5OkaXFb4Klgv8Zo+
+	KqEo9p0Ei3NfoXXRPNVeGK8DJ3KBMl59v0rJ77D+VzwMVCwAruXTwGTMfGcDRs3oJDRriEmdXa0
+	cI+aF+L4CbItEqQStY+7ogCXbEab2BAl8sdYqx127Zm0lMmOkkSaSVE=
+X-Google-Smtp-Source: AGHT+IEVdHVK7JF7u8j+EUGnNoxibuaKXvJexJszG0yV+dnakw5BqGXTpJg0+X0nED7L5VQvd0YN0g==
+X-Received: by 2002:a05:6a00:2382:b0:736:6151:c6ca with SMTP id d2e1a72fcca58-73960e0b5f1mr6804772b3a.4.1743094869370;
+        Thu, 27 Mar 2025 10:01:09 -0700 (PDT)
+Received: from thinkpad ([120.60.71.118])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7397109d241sm30123b3a.129.2025.03.27.10.01.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 10:01:08 -0700 (PDT)
+Date: Thu, 27 Mar 2025 22:31:05 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
+	bhelgaas@google.com, jingoohan1@gmail.com, thomas.richard@bootlin.com, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [v6 5/5] MAINTAINERS: Add entry for PCI host controller helpers
+Message-ID: <qbqkt53c27zwaetm7faqleqypy7yuxjfdcbukd3vd6t4p3tiwq@jtrk4524wsjr>
+References: <20250323164852.430546-1-18255117159@163.com>
+ <20250323164852.430546-6-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z-VumXiqJJkZKNZZ@eleanor-wkdl>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250323164852.430546-6-18255117159@163.com>
 
-On Thu, Mar 27, 2025 at 11:28:25PM +0800, Yu-Chun Lin wrote:
-> On Mon, Mar 24, 2025 at 02:21:15PM +0000, Simon Horman wrote:
-> > On Sat, Mar 22, 2025 at 01:20:24AM +0800, Yu-Chun Lin wrote:
-> > > The 'HFClock', an rwlock, is only used by writers, making it functionally
-> > > equivalent to a spinlock.
-> > > 
-> > > According to Documentation/locking/spinlocks.rst:
-> > > 
-> > > "Reader-writer locks require more atomic memory operations than simple
-> > > spinlocks. Unless the reader critical section is long, you are better
-> > > off just using spinlocks."
-> > > 
-> > > Since read_lock() is never called, switching to a spinlock reduces
-> > > overhead and improves efficiency.
-> > > 
-> > > Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
-> > > ---
-> > > Build tested only, as I don't have the hardware. 
-> > > Ensured all rw_lock -> spinlock conversions are complete, and replacing
-> > > rw_lock with spinlock should always be safe.
-> > > 
-> > >  drivers/isdn/hardware/mISDN/hfcsusb.c | 6 +++---
-> > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > Hi Yu-Chun Lin,
-> > 
-> > Thanks for your patch.
-> > 
-> > Unfortunately I think it would be best to leave this rather old
-> > and probably little used driver as-is in this regard unless there
-> > is a demonstrable improvement on real hardware.
-> > 
-> > Otherwise the small risk of regression and overhead of driver
-> > changes seems to outweigh the theoretical benefit.
+On Mon, Mar 24, 2025 at 12:48:52AM +0800, Hans Zhang wrote:
+> Add maintenance entry for the newly introduced PCI host controller helper
+> functions. These functions provide common infrastructure for capability
+> scanning and other shared operations across PCI host controller drivers.
 > 
-> Thank you for your feedback.
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+>  MAINTAINERS | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> I noticed that the MAINTAINERS file lists a maintainer for ISDN, so I
-> was wondering if he might have access to the necessary hardware for
-> quick testing.
-> 
-> Since I am new to the kernel, I would like to ask if there have been
-> any past cases or experiences where similar changes were considered
-> unsafe. Additionally, I have seen instances where the crypto maintainer
-> accepted similar patches even without hardware testing. [1]
-> 
-> [1]: https://lore.kernel.org/lkml/20240823183856.561166-1-visitorckw@gmail.com/
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 00e94bec401e..9b3236704b83 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -18119,6 +18119,12 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/pci/intel,ixp4xx-pci.yaml
+>  F:	drivers/pci/controller/pci-ixp4xx.c
+>  
+> +PCI DRIVER FOR HELPER FUNCTIONS
+> +M:	Hans Zhang <18255117159@163.com>
+> +L:	linux-pci@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/pci/controller/pci-host-helpers.c
 
-I think it is a judgement call, and certainly the crypto maintainer is
-free to make their own call. But in this case I do lean towards leaving
-the code unchanged in the absence of hardware testing.
+I don't see much value in maintaining this file separately as these helpers are
+not going to evolve much, thus not needing separate maintenance.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
