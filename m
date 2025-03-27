@@ -1,193 +1,157 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from whm50.louhi.net (whm50.louhi.net [77.240.19.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B56F13C8EA;
-	Thu, 27 Mar 2025 09:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA43420B1F5
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.240.19.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743067356; cv=none; b=YlrEqv1IgYlG+KJYHLAIfD7k4K9TkEv5jtLW+lVZDQbCruG90mEIjzqWReCtxSdRrefCr/uMLT5B05Fj9Q97CTxXrFukrZcxTQppPP82wrxO8X8Uj1r+lkEN5phuhZIpvF4aCyX7nAOOwMnUIylyOv739Jwl/o1D/ZAfhhVmp1o=
+	t=1743067435; cv=none; b=oQ1GBVGOq2ROKxMJDBMjI4gk/BwgrplD9QjSKN242orAaO5Y9299DyaQUI/Nl1C/cu/vmQEp72wlz2dWIKTnPEO+Xa3IuaaMWMWwgvXyuEPo0IVWRWGhZl9zFPbmvpG4dedntBs7o02+JW14rEjgxUoFBgws9hTCVRr+pkymsFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743067356; c=relaxed/simple;
-	bh=HSwpJCE+9S/QXXVLY2uZUXNQoobSi1kJ+BvYoaB+08M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=nPYw6he5Iu+sDUnYy0NTPbyBIHaLcmUO56wK2q8e5TzouqdfjfV+qcSuVI8e0Bge5qGulpJ1bG8WBT2J4+7i0gVzYZDkkW7e19Vw7rVM967slZoub2FI1ZWc9kjdcvga4nZ/k1tkJ/1RYrlY4KzeeWLCHMg+aIp6KO1y4suhF2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0SdLKf31; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q8RpvHH9; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743067435; c=relaxed/simple;
+	bh=zo6ThJN+ZYX4MnN/7YJPEyw0x/HgxHHY9PSqCRN7LBQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=j7F3HPCbmL/X25k0vGZw3COjmg64LIK++EY+LK0CfUwv5AOtnBbnmJDokDwjldIFqkU9zHTorWmIZ8nmGs05Ot/iN8+iJu0wm5aX2cjjLDTnTzxE/7qVPIdv+bqVkGp0CgcSgBgmGuTgrX6s/8j/j1zkCa1rOfqkuT7uv+d6Ko0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=haloniitty.fi; spf=pass smtp.mailfrom=haloniitty.fi; dkim=pass (2048-bit key) header.d=haloniitty.fi header.i=@haloniitty.fi header.b=ITYKxTqA; arc=none smtp.client-ip=77.240.19.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=haloniitty.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=haloniitty.fi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0SdLKf31";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q8RpvHH9"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743067351;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5KEK3jcEN8joqVyburAERGhmitjt7xYkxorlQv+/di0=;
-	b=0SdLKf31IP04gYTK/0I5duOypubjwAD39xHm4v2mX8VV7NiUObYTb/ELGQSJpas9qrZDUo
-	cUS/otPkFU77JiawClI/DTFgk2B46zIIdl/hn3QHnSd3Rdj7j379CrY+SOnPOWzNZ5rgNY
-	bP59TSwQskOO1H3i5JjpjjCSjr/rK801xEUX5BR0Th8AEe5Xw8DnP7ZQPydkmbGX/oe/NX
-	p3jpWt9Nf5hY9cG4h6k3iq5F4YNIYGJ9tDiVj+UmTMtX6jgVRocrOBGnBF5g+ZvhhYa2jz
-	G59cJpFW50VmfvS5kzNNCtB10WLrfPcnJSovoFNTMuh5Cd9bi4XqbtyWd3UOPQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743067351;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5KEK3jcEN8joqVyburAERGhmitjt7xYkxorlQv+/di0=;
-	b=Q8RpvHH9VIaiHWEi1g4fu6ZJz1LlSypxPm16LIvzE3X20/BK/Qed3y7SbJu+eQ/mHzelxh
-	ON6FGg328tWDSsCQ==
-To: Miroslav Lichvar <mlichvar@redhat.com>, John Stultz <jstultz@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
- <frederic@kernel.org>, Shuah Khan <shuah@kernel.org>,
- linux-kselftest@vger.kernel.org, kernel-team@android.com, Lei Chen
- <lei.chen@smartx.com>
-Subject: Re: [PATCH v2 1/2] time/timekeeping: Fix possible inconsistencies
- in _COARSE clockids
-In-Reply-To: <Z-KURRE_Gr72Xv_n@localhost>
-References: <20250320200306.1712599-1-jstultz@google.com>
- <Z-KURRE_Gr72Xv_n@localhost>
-Date: Thu, 27 Mar 2025 10:22:31 +0100
-Message-ID: <874izezv3c.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=haloniitty.fi header.i=@haloniitty.fi header.b="ITYKxTqA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=haloniitty.fi; s=default; h=Content-Type:MIME-Version:References:
+	In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=JU4/icC0hvYiBOpH3iwRYJX4sGi+rIAQ7BftR572tJA=; b=ITYKxTqAR40rqKTMwplWpDaXow
+	r3qHr4rD5Wj8fBNEPZco+Xl6vprGkB/hqIxEuA6kDhWULMGYI6VlnkGqkBdk5gsJ7KALvGfHu0MEb
+	uYbLGGPSlufuNyGWZe/0Pur5KEnjzGSSoKi6NiV9+oeGqDJW7juQCd4BlsU3ncJCtFziVKacBtNwm
+	95WAEnce6y1kExgkFy/gCniWe32METmUaI5hVjSP8QgtHJME7wZdLiMgmhjzcKbuPNj7hxeW+WuId
+	p6KIGoiOFnukfkQXKfDVXz4WE+MD14UE3aW00g8G1nVydeCg2yGft6K1dpOTm5Ad2R1D6edt4rxbs
+	LXxT7ITA==;
+Received: from [194.136.85.206] (port=56402 helo=eldfell)
+	by whm50.louhi.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.1)
+	(envelope-from <pekka.paalanen@haloniitty.fi>)
+	id 1txjPu-0000000030Z-0Ps2;
+	Thu, 27 Mar 2025 11:20:50 +0200
+Date: Thu, 27 Mar 2025 11:20:46 +0200
+From: Pekka Paalanen <pekka.paalanen@haloniitty.fi>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Vishal Sagar
+ <vishal.sagar@amd.com>, Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Laurent Pinchart
+ <laurent.pinchart@ideasonboard.com>, Michal Simek <michal.simek@amd.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Dmitry Baryshkov
+ <dmitry.baryshkov@oss.qualcomm.com>, Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
+Message-ID: <20250327112009.6b4dc430@eldfell>
+In-Reply-To: <b195971c-52e6-463e-a440-83dde4346e65@ideasonboard.com>
+References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
+	<20250326-xilinx-formats-v4-3-322a300c6d72@ideasonboard.com>
+	<CAMuHMdXM1B1c=62EpcuUdpdpaBRZSJLXb1GBB0egzp7Fyeo5-w@mail.gmail.com>
+	<b195971c-52e6-463e-a440-83dde4346e65@ideasonboard.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; boundary="Sig_/7H.ebBBVZVPLEOgRm0td_vf";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - whm50.louhi.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - haloniitty.fi
+X-Get-Message-Sender-Via: whm50.louhi.net: authenticated_id: pekka.paalanen@haloniitty.fi
+X-Authenticated-Sender: whm50.louhi.net: pekka.paalanen@haloniitty.fi
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Tue, Mar 25 2025 at 12:32, Miroslav Lichvar wrote:
-> On Thu, Mar 20, 2025 at 01:03:00PM -0700, John Stultz wrote:
->> +static u64 timekeeping_accumulate(struct timekeeper *tk, u64 offset,
->> +				  enum timekeeping_adv_mode mode,
->> +				  unsigned int *clock_set)
->
->> +	 * Also reset tk::ntp_error as it does not make sense to keep the
->> +	 * old accumulated error around in this case.
->> +	 */
->
-> I'm not sure if I still understand the timekeeping code correctly, but
-> that doesn't seem right to me. At least the comment should explain why
-> it does not make sense to keep the NTP error.
->
-> Resetting the NTP error causes a small time step. An NTP/PTP client
-> can be setting the frequency very frequently, e.g. up to 128 times per
-> second and the interval between updates can be random. If the timing
+--Sig_/7H.ebBBVZVPLEOgRm0td_vf
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I never observed that behaviour, but I'm not a NTP/PTP wizard/power user.
+On Wed, 26 Mar 2025 15:55:18 +0200
+Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:
 
-> was right, I suspect it could cause a measurable drift. The client
-> should be able to compensate for it, but why make its job harder by
-> making the clock less predictable. My expectation for the clock is
-> that its frequency will not change if the same (or only slightly
-> different) frequency is set repeatedly by adjtimex().
+> Hi,
+>=20
+> On 26/03/2025 15:52, Geert Uytterhoeven wrote:
+> > Hi Tomi,
+> >=20
+> > On Wed, 26 Mar 2025 at 14:23, Tomi Valkeinen
+> > <tomi.valkeinen@ideasonboard.com> wrote: =20
+> >> Add greyscale Y8 format.
+> >>
+> >> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> >> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> =20
+> >=20
+> > Thanks for your patch!
+> >  =20
+> >> --- a/include/uapi/drm/drm_fourcc.h
+> >> +++ b/include/uapi/drm/drm_fourcc.h
+> >> @@ -405,6 +405,9 @@ extern "C" {
+> >>   #define DRM_FORMAT_YUV444      fourcc_code('Y', 'U', '2', '4') /* no=
+n-subsampled Cb (1) and Cr (2) planes */
+> >>   #define DRM_FORMAT_YVU444      fourcc_code('Y', 'V', '2', '4') /* no=
+n-subsampled Cr (1) and Cb (2) planes */
+> >>
+> >> +/* Greyscale formats */
+> >> +
+> >> +#define DRM_FORMAT_Y8          fourcc_code('G', 'R', 'E', 'Y')  /* 8-=
+bit Y-only */ =20
+> >=20
+> > This format differs from e.g. DRM_FORMAT_R8, which encodes
+> > the number of bits in the FOURCC format. What do you envision
+> > for e.g. DRM_FORMAT_Y16? fourcc_code('G', 'R', '1', '6')? =20
+>=20
+> I wanted to use the same fourcc as on V4L2 side. Strictly speaking it's=20
+> not required, but different fourccs for the same formats do confuse.
+>=20
+> So, generally speaking, I'd pick an existing fourcc from v4l2 side if=20
+> possible, and if not, invent a new one.
 
-The point is that timekeeper::ntp_error accumulates the error between
-NTP and the clock interval. With John's change to forward the clock in
-case of adjtimex() setting the tick length or frequency, the previously
-accumulated information is out of sync because the forwarding resets the
-period asynchronously.
+Hi Tomi,
 
-The fundamental property of the timekeeper adjustment is that it
-advances everything in multiples of the clock interval. The clock
-interval is the number of hardware clock increments per tick, which has
-been determined from the initial multiplier/shift pair of the clock
-source at the point where the clock source is installed as the
-timekeeper source. It never changes throughout the life time of the
-clocksource.
+what's the actual difference between DRM_FORMAT_R8 and DRM_FORMAT_Y8?
 
-The original implementation respected this base period, but John's
-approach of forwarding, which cures the coarse time getter issue,
-violates it. As a consequence the previous error accumulation is not
-longer based on the base period because the period has been reset to the
-random point in time when adjtimex() was invoked, which makes the error
-accumulation a random number.
+Is the difference that when R8 gets expanded to RGB, it becomes (R, 0,
+0), but Y8 gets expanded to (c1 * Y, c2 * Y, c3 * Y) where c1..c3 are
+defined by MatrixCoefficients (H.273 terminology)?
 
-There are two ways to deal with that. Both require to revert this
-change completely.
+That would be my intuitive assumption following how YCbCr is handled.
+Is it obvious enough, or should there be a comment to that effect?
 
-   1) Handle the coarse time getter problem seperately and leave the
-      existing adjtimex logic alone. That was my initial suggestion:
-
-      https://lore.kernel.org/all/87cyej5rid.ffs@tglx
-
-   2) Handle adjtimex(ADJ_TICK/ADJ_FREQUENCY) at the next tick boundary
-      instead of doing it immediately at the random point in time when
-      adjtimex() is invoked.
-
-      That cures the coarse time getter problem as well, but obviously
-      delays the multiplier update to the next tick, which means that
-      only the last adjtimex(ADJ_TICK/ADJ_FREQUENCY) invocation between
-      two ticks becomes effective.
-
-      From a pure mathematical point of view, this is keeping everything
-      consistent. A quick test shows that it works. Though again, I'm
-      not the NTP wizard here and don't know which dragons are lurking
-      in the NTP/PTP clients.
-
-      Patch on top of the revert below. That requires some thought
-      vs. NOHZ delaying the next tick, but that's a solvable problem.
 
 Thanks,
+pq
 
-        tglx
----
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -34,14 +34,6 @@
- 
- #define TK_UPDATE_ALL		(TK_CLEAR_NTP | TK_CLOCK_WAS_SET)
- 
--enum timekeeping_adv_mode {
--	/* Update timekeeper when a tick has passed */
--	TK_ADV_TICK,
--
--	/* Update timekeeper on a direct frequency change */
--	TK_ADV_FREQ
--};
--
- /*
-  * The most important data for readout fits into a single 64 byte
-  * cache line.
-@@ -2155,7 +2147,7 @@ static u64 logarithmic_accumulation(stru
-  * timekeeping_advance - Updates the timekeeper to the current time and
-  * current NTP tick length
-  */
--static bool timekeeping_advance(enum timekeeping_adv_mode mode)
-+static bool timekeeping_advance(void)
- {
- 	struct timekeeper *tk = &tk_core.shadow_timekeeper;
- 	struct timekeeper *real_tk = &tk_core.timekeeper;
-@@ -2173,8 +2165,8 @@ static bool timekeeping_advance(enum tim
- 				   tk->tkr_mono.cycle_last, tk->tkr_mono.mask,
- 				   tk->tkr_mono.clock->max_raw_delta);
- 
--	/* Check if there's really nothing to do */
--	if (offset < real_tk->cycle_interval && mode == TK_ADV_TICK)
-+	/* Check if there's really something to do */
-+	if (offset < real_tk->cycle_interval)
- 		return false;
- 
- 	/*
-@@ -2216,7 +2208,7 @@ static bool timekeeping_advance(enum tim
-  */
- void update_wall_time(void)
- {
--	if (timekeeping_advance(TK_ADV_TICK))
-+	if (timekeeping_advance())
- 		clock_was_set_delayed();
- }
- 
-@@ -2548,10 +2540,6 @@ int do_adjtimex(struct __kernel_timex *t
- 
- 	audit_ntp_log(&ad);
- 
--	/* Update the multiplier immediately if frequency was set directly */
--	if (txc->modes & (ADJ_FREQUENCY | ADJ_TICK))
--		clock_set |= timekeeping_advance(TK_ADV_FREQ);
--
- 	if (clock_set)
- 		clock_was_set(CLOCK_SET_WALL);
- 
+--Sig_/7H.ebBBVZVPLEOgRm0td_vf
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAmflGG4ACgkQI1/ltBGq
+qqcO2g/9EZWxU+HEEjkcp6sBdtsEXoxxcQS7YSdte9kmkzftSWAmE5trU1Gzal7P
+V+xWdRTjV+Q/6mVxIIQNUxvqUc4cvBX2Y3M5AFnQWggknuJaWW/7rwNtbaiLqeQh
+3kEOB0u9mpso+ihKFiM706ToIUZ94KAaH7v3MFDwRTuYXezYleM3dkYD+qSTzaEr
+M+gxITFBD3xQRmHljO+HjFbuV0v0nKvJceuMOYuKJDcn+Y0OZ/E5t+vtZGVfaeex
+FEcbDMhsQ9lO0qtDIzHAd2Sh/h/BwWj8LbZt5MEwgqqlOV9wTRDd0fmHUGxzZIi7
+W137DaRmqhNmwXqRSdlDhswQeA5jS+RAP8E9H4EqETb1vKsV+hoADs55lT9dybCQ
+37AS29zJ1uSkLfwxLchtaQJatnmA947gPAHE3dAJMJjUkZgcJGfWqpV/uUFwf0zc
+KNqHzeoGC5nubuNTEBRtHSO6oT7+vlkjdmi+pRGScGtB/1r2Be02pwwUbJB8pNAw
+pKGXMKBVImOandJLIsS0Gg3bIxcuwEq3hAjQ2YN61t50Le4qomLejZUVB6UuLFGL
+jZNkJAGN8K2xdelcTgI5rCykFNVNLf1jaLKO+WzIykV1LP2tx1ns44eSjZJheVM4
+Y/F9qMUePotwSrpk4H/8rfKkEsBNrUWeQg6IW1qTZKuSyapzUaQ=
+=J7tR
+-----END PGP SIGNATURE-----
+
+--Sig_/7H.ebBBVZVPLEOgRm0td_vf--
