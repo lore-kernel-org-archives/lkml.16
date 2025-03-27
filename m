@@ -1,252 +1,120 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F4F190692
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A02140E30
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743090863; cv=none; b=PA9CB5uVEPiFquVF6e3wlsOSwbQZo4EZ1hmJxnKfnFR3j2OpQp3AHrgduDREUEyBMNYOzthrNSoWLZtPOZ5p3VYrPQ5iuRvY2MnCyvryFZRzi6NFclmkN9rQjHunwN1r9XU9SI53GjZDVNxH6o6xVCh3OkSCbuMGs7baxRkKqhc=
+	t=1743090899; cv=none; b=S2CumLME63ngDc75ZkPW6/t+1NRcrvADx9+GUFZrEmMhKStBsQvF3tZKRq9DWqmoahXkoEjddAgKdpxn1SlDFuYrfHfktOD59YkCDLEXD0PoJMqCObNNOfibR4kPOwV7jl/Bjr58w1M+cTuNteuQ4YP15ls2z0RtBetw1dq3VTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743090863; c=relaxed/simple;
-	bh=WzDnZoRL2GHoBw2iX6vBVgEqYQTZatoXKuplpOVra0s=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=al+LnNjNVYbKSNUUWfGJeWPnJ0wpIB4/H4DmTe+RQG4RFNxxUMWY4rzTW9HSPDOUOgrgbjK5vrMSPiJo3hlbNsD6Cy9vmoo1d7SVkqzujbiZEic/pJsNAEvTjfgQwdbuJPg6gqzV7Ntn8gohdgyO/60s6qRjKvte/+yh9M9gWmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DkQBM5JX; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DkQBM5JX"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff605a7a43so2848169a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:54:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743090861; x=1743695661; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JPOek5XIFaCLSO51WWUE4tWRga3usE6vEqnf0+ZqRAU=;
-        b=DkQBM5JXTd5yu8ZkXh6d2FGpusQo0aP40i0C3sVZpE90RA3fuvf+B8A4QtVqYPR6Pm
-         LfFXkoANQ7aZCUZ7qzdAXJFojm6Dl07n0rgHhe7x0nnJDlqPnyzFzEtXvUwlLYPWMu06
-         kzzL3J8yXoDsaxOnhTfrvbWpn54VjUkOztop4/jgZQfFDMozuB+Wni10LLbspBTdxC/f
-         qjfEQAVEqhUJcLAA/GdScPS0TLvN8wlzadVNyE7EawByoQMNWD69I7Bhuh/ln7bFOz2n
-         pOPpVq47rfCpLcTwMWQ54IF+9a+p7wDLcOxgk51U16/MWET5LTzcUH0+2ZaWZjy43gc0
-         samQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743090861; x=1743695661;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JPOek5XIFaCLSO51WWUE4tWRga3usE6vEqnf0+ZqRAU=;
-        b=riRwSTYyqFXslqSQ63Lo0nxE3ZiH2DNj8/RCU53lxt23h4EAya4Dbd+h9eAh+dSNvH
-         ee4KHuv+ReOHegc5kIvdd3Ux8fXygFqNzm+KEoY8dJ6V9BeYgjSFfaL4QtVUbneHffrz
-         sd4vFm9ZPoTPStC2ACR3ZKfZgusmH325yaxi8lSsVDkjvyXDa8D+0gGK2v0U0V/FszBH
-         RsnQYvlEeRzpvybZMArvJZDVf5fx16aAMSJxJMSadkDQRQ7YjOz+gbll2MIc5XcPYHGl
-         kopiKHP4oFWKDA8zSROPQJe5RZj3H7D2WFV7miaSsbnTPoOXJyvY2zrc7tMfiKlgjVQJ
-         Nrfg==
-X-Forwarded-Encrypted: i=1; AJvYcCVYjpUYB6ZM0lu70XahUF1m3FvloYQasu9K4CRoTLc5dBsIQOTACtBJyxSf/Yh3ZMQ/4rP664fn5iFwHXw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqacE6U5KqM4aI/dtLwBHytplWYTADaNg/drHv4dLcnqAX1fL8
-	DhL+4vo6kCnJSRDc4mo2QqXH0+Z/akqbHmRLchLA5TYHdREOt7HP9nNW2UT9i4GcKki3imHeJ2K
-	g/Q==
-X-Google-Smtp-Source: AGHT+IEpsv3H+6GDKLikeC+QMNXPJuol4rgiTqt3+uFNYZnj+ykaPsz001YnHBSz/X3FMFw68HdiYxMtMSU=
-X-Received: from pjbsv4.prod.google.com ([2002:a17:90b:5384:b0:2ff:6e58:8a03])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3147:b0:2fe:8c22:48b0
- with SMTP id 98e67ed59e1d1-303a7f653d4mr6822095a91.15.1743090861520; Thu, 27
- Mar 2025 08:54:21 -0700 (PDT)
-Date: Thu, 27 Mar 2025 08:54:19 -0700
-In-Reply-To: <20250313181629.17764-1-adrian.hunter@intel.com>
+	s=arc-20240116; t=1743090899; c=relaxed/simple;
+	bh=jCxI1gIofnyjTce6fFU98rQzwFpnsQNg1T38z8p0TZI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=k6UP6ldxiufwsUpNoJfkRES+j5hqNFswTRCpD9Z9mx3Lv/QPjQ3oKPDRbvIW+dmaowljHemp5Bm34YntV/c72jymqUwGKWii0wNHwsSeY4JfpvIkgJTJCKutjCgP1W4WLTRXblKhWMI21I8RcYFy0RxMlRGfyR7IoTi5QQpd+RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8E89C4CEDD;
+	Thu, 27 Mar 2025 15:54:57 +0000 (UTC)
+Date: Thu, 27 Mar 2025 11:55:46 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-next][PATCH] tracing: Use _text and the kernel offset in
+ last_boot_info
+Message-ID: <20250327115546.21b514b0@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250313181629.17764-1-adrian.hunter@intel.com>
-Message-ID: <Z-V0qyTn2bXdrPF7@google.com>
-Subject: Re: [PATCH RFC] KVM: TDX: Defer guest memory removal to decrease
- shutdown time
-From: Sean Christopherson <seanjc@google.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: pbonzini@redhat.com, kvm@vger.kernel.org, rick.p.edgecombe@intel.com, 
-	kirill.shutemov@linux.intel.com, kai.huang@intel.com, 
-	reinette.chatre@intel.com, xiaoyao.li@intel.com, 
-	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
-	isaku.yamahata@intel.com, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com, 
-	chao.gao@intel.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 13, 2025, Adrian Hunter wrote:
-> Improve TDX shutdown performance by adding a more efficient shutdown
-> operation at the cost of adding separate branches for the TDX MMU
-> operations for normal runtime and shutdown.  This more efficient method was
-> previously used in earlier versions of the TDX patches, but was removed to
-> simplify the initial upstreaming.  This is an RFC, and still needs a proper
-> upstream commit log. It is intended to be an eventual follow up to base
-> support.
 
-...
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+ring-buffer/for-next
 
-> == Options ==
-> 
->   1. Start TD teardown earlier so that when pages are removed,
->   they can be reclaimed faster.
->   2. Defer page removal until after TD teardown has started.
->   3. A combination of 1 and 2.
-> 
-> Option 1 is problematic because it means putting the TD into a non-runnable
-> state while it is potentially still active. Also, as mentioned above, Sean
-> effectively NAK'ed it.
+Head SHA1: f20423262b368ff860373d28050f0c4b65e82973
 
-Option 2 is just as gross, arguably even worse.  I NAK'd a flavor of option 1,
-not the base concept of initiating teardown before all references to the VM are
-put.
 
-AFAICT, nothing outright prevents adding a TDX sub-ioctl to terminate the VM.
-The locking is a bit heinous, but I would prefer heavy locking to deferring
-reclaim and pinning inodes.
+Steven Rostedt (1):
+      tracing: Use _text and the kernel offset in last_boot_info
 
-Oh FFS.  This is also an opportunity to cleanup RISC-V's insidious copy-paste of
-ARM.  Because extracting (un)lock_all_vcpus() to common code would have been sooo
-hard.  *sigh*
+----
+ kernel/trace/trace.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
+---------------------------
+commit f20423262b368ff860373d28050f0c4b65e82973
+Author: Steven Rostedt <rostedt@goodmis.org>
+Date:   Wed Mar 26 22:03:04 2025 -0400
 
-Very roughly, something like the below (*completely* untested).
+    tracing: Use _text and the kernel offset in last_boot_info
+    
+    Instead of using kaslr_offset() just record the location of "_text". This
+    makes it possible for user space to use either the System.map or
+    /proc/kallsyms as what to map all addresses to functions with.
+    
+    Cc: Masami Hiramatsu <mhiramat@kernel.org>
+    Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+    Link: https://lore.kernel.org/20250326220304.38dbedcd@gandalf.local.home
+    Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-An alternative to taking mmu_lock would be to lock all bound guest_memfds, but I
-think I prefer taking mmu_lock is it's easier to reason about the safety of freeing
-the HKID.  Note, the truncation phase of a PUNCH_HOLE could still run in parallel,
-but that's a-ok.  The only part of PUNCH_HOLE that needs to be blocked is the call
-to kvm_mmu_unmap_gfn_range().
-
----
- arch/x86/kvm/vmx/tdx.c | 61 ++++++++++++++++++++++++++++++------------
- 1 file changed, 44 insertions(+), 17 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 87f188021cbd..6fb595c272ab 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -472,7 +472,7 @@ static void smp_func_do_phymem_cache_wb(void *unused)
- 		pr_tdx_error(TDH_PHYMEM_CACHE_WB, err);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 7ca8a0dbd4fa..f14651ea32bd 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -51,7 +51,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/sort.h>
+ 
+-#include <asm/setup.h> /* COMMAND_LINE_SIZE and kaslr_offset() */
++#include <asm/setup.h> /* COMMAND_LINE_SIZE */
+ 
+ #include "trace.h"
+ #include "trace_output.h"
+@@ -5995,7 +5995,7 @@ struct trace_mod_entry {
+ };
+ 
+ struct trace_scratch {
+-	unsigned long		kaslr_addr;
++	unsigned long		text_addr;
+ 	unsigned long		nr_entries;
+ 	struct trace_mod_entry	entries[];
+ };
+@@ -6133,11 +6133,7 @@ static void update_last_data(struct trace_array *tr)
+ 	kfree_rcu(module_delta, rcu);
+ 
+ 	/* Set the persistent ring buffer meta data to this address */
+-#ifdef CONFIG_RANDOMIZE_BASE
+-	tscratch->kaslr_addr = kaslr_offset();
+-#else
+-	tscratch->kaslr_addr = 0;
+-#endif
++	tscratch->text_addr = (unsigned long)_text;
  }
  
--void tdx_mmu_release_hkid(struct kvm *kvm)
-+static void __tdx_release_hkid(struct kvm *kvm, bool terminate)
- {
- 	bool packages_allocated, targets_allocated;
- 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-@@ -485,10 +485,11 @@ void tdx_mmu_release_hkid(struct kvm *kvm)
- 	if (!is_hkid_assigned(kvm_tdx))
- 		return;
- 
-+	if (KVM_BUG_ON(refcount_read(&kvm->users_count) && !terminate))
-+		return;
-+
- 	packages_allocated = zalloc_cpumask_var(&packages, GFP_KERNEL);
- 	targets_allocated = zalloc_cpumask_var(&targets, GFP_KERNEL);
--	cpus_read_lock();
--
- 	kvm_for_each_vcpu(j, vcpu, kvm)
- 		tdx_flush_vp_on_cpu(vcpu);
- 
-@@ -500,12 +501,8 @@ void tdx_mmu_release_hkid(struct kvm *kvm)
+ /**
+@@ -6996,7 +6992,7 @@ static void show_last_boot_header(struct seq_file *m, struct trace_array *tr)
+ 	 * should not be the same as the current boot.
  	 */
- 	mutex_lock(&tdx_lock);
- 
--	/*
--	 * Releasing HKID is in vm_destroy().
--	 * After the above flushing vps, there should be no more vCPU
--	 * associations, as all vCPU fds have been released at this stage.
--	 */
- 	err = tdh_mng_vpflushdone(&kvm_tdx->td);
-+	/* Uh, what's going on here? */
- 	if (err == TDX_FLUSHVP_NOT_DONE)
- 		goto out;
- 	if (KVM_BUG_ON(err, kvm)) {
-@@ -515,6 +512,7 @@ void tdx_mmu_release_hkid(struct kvm *kvm)
- 		goto out;
- 	}
- 
-+	write_lock(&kvm->mmu_lock);
- 	for_each_online_cpu(i) {
- 		if (packages_allocated &&
- 		    cpumask_test_and_set_cpu(topology_physical_package_id(i),
-@@ -539,14 +537,21 @@ void tdx_mmu_release_hkid(struct kvm *kvm)
- 	} else {
- 		tdx_hkid_free(kvm_tdx);
- 	}
--
-+	write_unlock(&kvm->mmu_lock);
- out:
- 	mutex_unlock(&tdx_lock);
--	cpus_read_unlock();
- 	free_cpumask_var(targets);
- 	free_cpumask_var(packages);
+ 	if (tscratch && (tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
+-		seq_printf(m, "%lx\t[kernel]\n", tscratch->kaslr_addr);
++		seq_printf(m, "%lx\t[kernel]\n", tscratch->text_addr);
+ 	else
+ 		seq_puts(m, "# Current\n");
  }
+@@ -9461,10 +9457,8 @@ static void setup_trace_scratch(struct trace_array *tr,
+ 	tr->scratch = tscratch;
+ 	tr->scratch_size = size;
  
-+void tdx_mmu_release_hkid(struct kvm *kvm)
-+{
-+	cpus_read_lock();
-+	__tdx_release_hkid(kvm, false);
-+	cpus_read_unlock();
-+}
-+
-+
- static void tdx_reclaim_td_control_pages(struct kvm *kvm)
- {
- 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-@@ -1789,13 +1794,10 @@ int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
- 	struct page *page = pfn_to_page(pfn);
- 	int ret;
+-#ifdef CONFIG_RANDOMIZE_BASE
+-	if (tscratch->kaslr_addr)
+-		tr->text_delta = kaslr_offset() - tscratch->kaslr_addr;
+-#endif
++	if (tscratch->text_addr)
++		tr->text_delta = (unsigned long)_text - tscratch->text_addr;
  
--	/*
--	 * HKID is released after all private pages have been removed, and set
--	 * before any might be populated. Warn if zapping is attempted when
--	 * there can't be anything populated in the private EPT.
--	 */
--	if (KVM_BUG_ON(!is_hkid_assigned(to_kvm_tdx(kvm)), kvm))
--		return -EINVAL;
-+	if (!is_hkid_assigned(to_kvm_tdx(kvm)), kvm) {
-+		WARN_ON_ONCE(!kvm->vm_dead);
-+		return tdx_reclaim_page(pfn_to_page(pfn));
-+	}
- 
- 	ret = tdx_sept_zap_private_spte(kvm, gfn, level, page);
- 	if (ret <= 0)
-@@ -2790,6 +2792,28 @@ static int tdx_td_finalize(struct kvm *kvm, struct kvm_tdx_cmd *cmd)
- 	return 0;
- }
- 
-+static int tdx_td_terminate(struct kvm *kvm)
-+{
-+	struct kvm_memory_slot *slot;
-+	struct kvm_memslots *slots;
-+	int bkt;
-+
-+	cpus_read_lock();
-+	guard(mutex)(&kvm->lock);
-+
-+	r = kvm_lock_all_vcpus();
-+	if (r)
-+		goto out;
-+
-+	kvm_vm_dead(kvm);
-+	kvm_unlock_all_vcpus();
-+
-+	__tdx_release_hkid(kvm);
-+out:
-+	cpus_read_unlock();
-+	return r;
-+}
-+
- int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
- {
- 	struct kvm_tdx_cmd tdx_cmd;
-@@ -2805,6 +2829,9 @@ int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
- 	if (tdx_cmd.hw_error)
- 		return -EINVAL;
- 
-+	if (tdx_cmd.id == KVM_TDX_TERMINATE_VM)
-+		return tdx_td_terminate(kvm);
-+
- 	mutex_lock(&kvm->lock);
- 
- 	switch (tdx_cmd.id) {
-
-base-commit: 2156c3c7d60c5be9c0d9ab1fedccffe3c55a2ca0
--- 
+ 	if (struct_size(tscratch, entries, tscratch->nr_entries) > size)
+ 		goto reset;
