@@ -1,270 +1,235 @@
-Received: from mx0a-00190b01.pphosted.com (mx0a-00190b01.pphosted.com [67.231.149.131])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11012012.outbound.protection.outlook.com [52.101.66.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F7C157A67;
-	Thu, 27 Mar 2025 15:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743087736; cv=none; b=njv49HZq8LQFid444UC5a9V5VtPG6/kNV4c50O/Dw6b2Cjn5PHsmD+RguqJgoZ6WUS+ZLvMzGXHYpxN2BkfpaPQPLUBVje+4fnY3waZdKU0Lmy9+Be6IFzSkBkS28HNmUetwnaCg/4++0iupfENOfW7jPhMf8S1tywKGN+q1vWs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743087736; c=relaxed/simple;
-	bh=OE6oiY0nSPPuNUu7YpqG+RqZI7ITGNCaVXamDmTr+no=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LESqdexpGQZrfzHL+hPz+eKjfty3WE7Fqrp4nTzkC9hQUccnXJAeMaiaP1kgrq83huN7XtiT4+dknOFVVzliXf5CgSqlSJZzrVTu3dCHqqpRHXWi+o7IC02vIRaQXeg38P7gLldErEmOKKdxeyzDe09+o+sh7kiwN6TtrD+xgGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=akamai.com; spf=pass smtp.mailfrom=akamai.com; dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b=M0s7jEl9; arc=none smtp.client-ip=67.231.149.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=akamai.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=akamai.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BB1481C4;
+	Thu, 27 Mar 2025 15:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743087769; cv=fail; b=NnEw0WIXnjLiJ1lISb6hDTtFC21GBgLx+cmMpJiE0eREHwCctT7Bq8WOUG97wu+632d3uLazmuD9PemFp2Iu2RtrlgZf7yIrPjRajZ4TLVpqkhKtGGLU81wPm7cWjHkkE2DAC+9/PG3/IPdRfeBs+IrgAWzw6m0LgoZKicYEaGw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743087769; c=relaxed/simple;
+	bh=uk3YDZqn0bmN7yM3PycvKrASLJwz4NnHC4D+nWLbVsE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=UqzgisJEeM+fE+gAbl4WRTmksxDfi3Q0aPSZIOy7I0CpafyLNLrcxGWpZnsDIjEG7qO0jUXcN68kLngOZZB1sUbwWvgfUNcyU3pov/CBpZiykQRfueXSO7wwMCQ7d+SesC508WFm4e1r7zWONGEtMx/qvTuhNv4f82/B0M7NkH8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=iHoq+SIc; arc=fail smtp.client-ip=52.101.66.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="M0s7jEl9"
-Received: from pps.filterd (m0050095.ppops.net [127.0.0.1])
-	by m0050095.ppops.net-00190b01. (8.18.1.2/8.18.1.2) with ESMTP id 52R8iofe012268;
-	Thu, 27 Mar 2025 14:35:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=jan2016.eng;
-	 bh=vZfj3Afs41hYu1dHv9/e2igxXfM/rkKPJf0BWi3Cq7I=; b=M0s7jEl9aM/C
-	cBy5mOZ/WL2VrstsaYAuNCbSBlt1dkQmiuBZJv9fbRIOW9SC4/gOSZg/pQtc3cTD
-	hMqO40qCwjKV8zloozNYHizRsuXU89iBdH9SYqg1yM4Vcv/AAkQJRMTFZg0xLqsY
-	HPcT3UfwUG0P1U8EcpwwgH/VwrNblXanq2ZFV8zHhpun4BOzyB/SXfwFLeljtgFR
-	hWp6ZqX7/NQ2URyyLjV7wSNJJJbWaq123a0/es+RulpY5UoI2RRfU6lBwjcvpoub
-	T5y+fQouNW3ATj8smPOcRih+FYv4tvnBmZ+hr9CQWcUmPsePARTZtM2du/AZ3BpF
-	ImDfE2zsag==
-Received: from prod-mail-ppoint1 (prod-mail-ppoint1.akamai.com [184.51.33.18] (may be forged))
-	by m0050095.ppops.net-00190b01. (PPS) with ESMTPS id 45hnmmbd71-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 14:35:35 +0000 (GMT)
-Received: from pps.filterd (prod-mail-ppoint1.akamai.com [127.0.0.1])
-	by prod-mail-ppoint1.akamai.com (8.18.1.2/8.18.1.2) with ESMTP id 52RDuoCU006214;
-	Thu, 27 Mar 2025 10:35:34 -0400
-Received: from prod-mail-relay10.akamai.com ([172.27.118.251])
-	by prod-mail-ppoint1.akamai.com (PPS) with ESMTP id 45mvqa2qgf-1;
-	Thu, 27 Mar 2025 10:35:34 -0400
-Received: from [172.19.46.102] (bos-lpa4700a.bos01.corp.akamai.com [172.19.46.102])
-	by prod-mail-relay10.akamai.com (Postfix) with ESMTP id E29F365F2A;
-	Thu, 27 Mar 2025 14:35:33 +0000 (GMT)
-Message-ID: <4f258a96-42fe-4567-886b-e8e2b949ab1a@akamai.com>
-Date: Thu, 27 Mar 2025 10:35:33 -0400
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="iHoq+SIc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LZcryus+KfLefkprki9CGdn922SW7HSix9VXfdzSmzumpQ64gfVfZd2l2aWnHg+1VBloUonEWbHlAIN33vNU2BtU4cx5553nPx9elXc4DFJj3V/EaU97GWvzXcalLle/I/Hl3ISt6t8p0tDgibxOxMPml70Q2rU2YHGghITe/9iKQsPrBaSHgY2BNDm4r+qJ5+cQxAzVrEvEPLWuR4FXRNvFbZOVu7CM6PeQdnN1OMr9N0jGwzte7ZzRp0xbGIfhSuG3MNLmhCp9W7F4s57bLI/wcAC6hqQonauDI1/WghsECvLHuiFcv1qawKL4FCvn3Yp/Q4vlmoTMoO54niD2UQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4g3oe3yXXKzhICfOIMNmQuHz2bFDI2b/+aExE9/4v4A=;
+ b=GiJYO71Inhd2ZFsIDZIfmIPCFk6HVT3Zd0v4svgMMXUOi8H5n5YBQAYAu09WA628Axv1vZseWyvF6grsGfP98BniAcSKXiTdGWwkAZIB9csttZK3NVpmGLbEwlDVorjO9KWTqCiSJHXnaoRkame5pFjki3YNMPT3anFnlilrn/3aP0CJOUedMUECx7tU9I8HQ40p1xS+tmWsVMFYfwE5PREedjAmZbvaEJkh2GoSUNisoa9BHzOAdKmPxVS/bUNxSU9ZzmzYafUx50bQIFeaXaBmyoJJ9W75n11iDDYvOyjmpA56PzTqqvESH2iA7BYGlwTuFl8TUMehJhPpi9Gmxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4g3oe3yXXKzhICfOIMNmQuHz2bFDI2b/+aExE9/4v4A=;
+ b=iHoq+SIcypJRKyW+xba1+HTKv3/Yoq2LtQaXQWOP9mHauONFVdHEI6khosqWvU2Zj1cLP7qr9iys0bGBLjxdGXqYiOGaMFSShbNSxkHll2yWzOQUe6gfnfQVZ65NldVDZPQ8NkCj1gLigok4IKH+IEU3DDiuc8w5JRxEE5gfKYXG9rhSi7BLsCIxAHFiJT1K4b1bqQWly+zv+bY1AttvlWUOl08ugIN0eusekFz0nFFRGBLS22IdWMD8x4igaNIjgacYFPbLukH5V7+pJK73DMyfMCsQItGav969h+EhyH4sNtP0oaUlFqXPCKF3MMd+mJqiH6JD2WVRE+A3/eYGeA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AS1PR04MB9285.eurprd04.prod.outlook.com (2603:10a6:20b:4df::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
+ 2025 15:02:44 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%3]) with mapi id 15.20.8534.040; Thu, 27 Mar 2025
+ 15:02:44 +0000
+Date: Thu, 27 Mar 2025 11:02:37 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/7] ARM: dts: ls1021a-tqmals1021a: Add overlay for
+ CDTech FC21 RGB display
+Message-ID: <Z+VojbGBQ29j5H/o@lizhi-Precision-Tower-5810>
+References: <20250327144118.504260-1-alexander.stein@ew.tq-group.com>
+ <20250327144118.504260-6-alexander.stein@ew.tq-group.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250327144118.504260-6-alexander.stein@ew.tq-group.com>
+X-ClientProxiedBy: BYAPR07CA0025.namprd07.prod.outlook.com
+ (2603:10b6:a02:bc::38) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next regression: SNP Guest boot hangs with certain cpu/mem
- config combination
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Cc: "Aithal, Srikanth" <sraithal@amd.com>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "Roth, Michael" <Michael.Roth@amd.com>
-References: <363f8293-23e3-44d3-8005-b31eb5b7f975@amd.com>
- <rar5bkfy7iplfhitsbna3b2dmxbk7nunlaiclwars6kffdetl4@lzm7iualliua>
- <08981771-39ac-af66-e2ec-e8f9bf6aed0a@amd.com>
- <idlcitykk3hxg5by5sltuljyjf7uanmve5fspu6dectubhy5za@mjmv4i5vwyby>
- <ydvzjdcauzyvv7hxtra6l2gh4diz7zp4wx46eqculr7azynjke@z4x6eryq3rqd>
-Content-Language: en-US
-From: Jason Baron <jbaron@akamai.com>
-In-Reply-To: <ydvzjdcauzyvv7hxtra6l2gh4diz7zp4wx46eqculr7azynjke@z4x6eryq3rqd>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-27_01,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 suspectscore=0
- mlxscore=0 phishscore=0 adultscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2503270099
-X-Proofpoint-GUID: KubT_C3ekVS3SxSr3F5pJOdAO2O81AM6
-X-Proofpoint-ORIG-GUID: KubT_C3ekVS3SxSr3F5pJOdAO2O81AM6
-X-Authority-Analysis: v=2.4 cv=HYMUTjE8 c=1 sm=1 tr=0 ts=67e56237 cx=c_pps a=StLZT/nZ0R8Xs+spdojYmg==:117 a=StLZT/nZ0R8Xs+spdojYmg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=QyXUC8HyAAAA:8 a=1wTiysn-UDBPyNMy3dsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-27_01,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 bulkscore=0
- lowpriorityscore=0 adultscore=0 suspectscore=0 phishscore=0
- priorityscore=1501 mlxscore=0 clxscore=1011 spamscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503270099
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS1PR04MB9285:EE_
+X-MS-Office365-Filtering-Correlation-Id: 726c59eb-f760-4550-89a4-08dd6d406d9f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|366016|1800799024|7053199007|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ePEX06M70UUQ3q6sdbCCxcOHLmGupPTEhmoGS8YMyXqgTqMCNrLBNH2fbDD0?=
+ =?us-ascii?Q?bxd4JCV0iEripTG7VrB7IMHJFJsC1tPTOqwUCc1m29vHK79OcxQ/6F9yOpJ/?=
+ =?us-ascii?Q?8OmQtRP8MxHYXofqp3euooclYopT0dc4WJbL7NeD0oZu81Yd46Clc57Bxqcg?=
+ =?us-ascii?Q?Avz4Mf+ZYBht+b+cCRysJNyjK6KsZ7Mx809441B8+NqMQff1bOGXYx5ZjndF?=
+ =?us-ascii?Q?7liRtlA7KbZkSE2JqAogiqcTr4GkO+0We/Q+o9JP4JNhlQHpuYun3rAF85xn?=
+ =?us-ascii?Q?sHnUCD+996EXoQQfeaNvpUN2zcVQgETa1MeSHrIxPZjpNM0dbcwkvH2dBzwe?=
+ =?us-ascii?Q?NvglLvUuapL5ZKkhTL+ZMRhvmz7dI6CJ1uAEdD3p9ssw2D4hwBr245o/AIFy?=
+ =?us-ascii?Q?RMi3tr5n7AdhBrWIRqC2MOWR+msQO4C2tyfDE/l/rckr4r6kN/IGdM2nidY8?=
+ =?us-ascii?Q?k3f8GN/a6n5TcER15bJCPEJq81dqQGLIHkhcFOSyBrlzBngtCIFqWcob2Mvd?=
+ =?us-ascii?Q?EX/dBdprjJlx6RclMaI4AgE8R9p6d1hdmCLnXScubMoLhaLJ6Q3RtpCDvxCK?=
+ =?us-ascii?Q?JRh/GIwVsznDMuau3mWDr5V8i/x8icA3IG1Tx8ODgxHkBsrcwxRBiS+snGgJ?=
+ =?us-ascii?Q?uB41d3Ruwv850VrWLUfIY0364ntcpxqOLCzeS7ZpaTGgJgOANkaJkidqn5mi?=
+ =?us-ascii?Q?Bn0paijCj1w82P76Ck+Q2gMHpod+zawa5FqeXx2+DBaTkGORpCzDeQoTS99V?=
+ =?us-ascii?Q?D3YkBymekyReM6XilEKYwvXfJNPHE+61epVtF0kwZkVTMZCcVJ9RsfKlXE5v?=
+ =?us-ascii?Q?/LwI68UtRWHxvegS9nO5lICsPKZN37GyrGT8Kb0NbNUg0G0oYA//fuMBYXmU?=
+ =?us-ascii?Q?ZGkFQ2HRA8p8i3t/RxLLC06un1FAKwrF3D45iEH4S8sS5NPHTntdB3ZIwMfU?=
+ =?us-ascii?Q?qWaeXCg+kIMAI8yXWquYVzog70LZzhdLXLsWMq/pq33Ja9kC4tsjRGtB1/JL?=
+ =?us-ascii?Q?5jlZzWpiwdRyBGUAEjpHfLKl1teWvU1hDaeYLTpKuahrN0UECObS2cCM66sW?=
+ =?us-ascii?Q?MA10VnSYPxnaWiNs0/uEPpiJz1OYnFJ5LcWEs58bm7n+qsi6jTGEmwXly2Jj?=
+ =?us-ascii?Q?tB+3h4XNGQJY437xZgXkfYneodhc9lNfaRJJZCuIZZHsKndaU/LoLgVrm2X7?=
+ =?us-ascii?Q?Ae/Pz36gtwW16u2mzeqHfcvRPXmJlGBWUqeIMxOgFiPrbmDHYTaec+3Lgn8D?=
+ =?us-ascii?Q?ulP6KcqYDFFHP5eiLrT/nzjMVmVutEplSz/WtjVrOIbVKi6X7wHS1qsOM7Aw?=
+ =?us-ascii?Q?V3rcZuYxEm+HVsXkDXjnk7xWkL+WzwezyyygXO/BjmERBd9n9cOF9ASR+CA3?=
+ =?us-ascii?Q?1vn0O2p/bOCud7kk784FXxx8gpz6SAzoZTibgjsMkLHp9AAr30pKOPxmBSFx?=
+ =?us-ascii?Q?U54E+h8RTvCbp16bvaHHm4kuiMevYYOZ?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(366016)(1800799024)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?MZHVuk7yd+fAgcg76OSieBNTSZksNlOL61jRbxFguvGu8NhrHpNZGaMbVez1?=
+ =?us-ascii?Q?VepNCfaCneWUSvOpc8bgRaULzyW1cxROUvJIdrWznMjTG8SF8rd48ttJhg05?=
+ =?us-ascii?Q?OXtY3lWLgZbX9tt9JX8Y9aC6s6izPtDX8jcZFWx3fAqQce5XTIBhn7Uz5gSa?=
+ =?us-ascii?Q?KgaeFC77dSDclFhMbB9nfChT495FMdwgGoOHWk9SO5UVUgDd/jcF+fU2VIS7?=
+ =?us-ascii?Q?BUWXP6Qw3Z+r2wE2FsG5x26va+L83x0qoOq6knpgt8aaRted4/paCpmnjUpt?=
+ =?us-ascii?Q?fTTXa9GhvEDxJI564QQFf5ZiREhYdpZsQ9oUht77wnEYck4tkoPY7GbOjG9o?=
+ =?us-ascii?Q?vHNH1wi1agL7uQbgs66w9GzZEaDXoP9UnyJF3EzQ7kzsZOFB/ZGf7PBX2J+t?=
+ =?us-ascii?Q?ehDct5/GvCqRzLZN4qFpTFPQvc1b3qjgUUHIONyQYPy6PsrImsAmE3xUIeUU?=
+ =?us-ascii?Q?/AY0X0D+0jQLhNBHT/GNs1VDb7urhoUjkvgpi42HiEWfuPaJLFU5RYN5P6qV?=
+ =?us-ascii?Q?GXgCiC8H1JCja91Tp4n5KogRtIhgEQraQXJNy6gUM4BlZhSN0wSelM6IY+Ex?=
+ =?us-ascii?Q?4tRLC9tLQzeo/OfRrpKdBU+RzLESHWu0MXAL5mw/llRE1uXpsdgIllztyIH6?=
+ =?us-ascii?Q?ZGI6Sz5v/l9+ZwlIhRIWU+0PgbXTtdVc1VkuBlQ3zRUOjHthu/wHg8U0faaN?=
+ =?us-ascii?Q?yDLTz80YqfbvrzBvljVh79V267io0zIu6LFn2cEul1A4BXXEn5/Rm1zVb0BO?=
+ =?us-ascii?Q?VtRnXVHRBTF4TMHAkk73G6JaaD12gX1Xoi3Gzn+LrV6x2IX3XaFU3LS1lBfx?=
+ =?us-ascii?Q?A4Q4EP9LlXhO/Ajm1zdD9UJI79qpcxNUezBXrtAalf/rPr/xVvP0Cpbme6b6?=
+ =?us-ascii?Q?vEKqVaO0FkM1DpgTQ6ObcLDIFBV1WBTy/n44NcppLeTU0x6u2gbl2zKJPhrY?=
+ =?us-ascii?Q?VYKtRQs90oPX/TjJP4f0cgMuz3r1MFlu7iIp0+79xTCJLXNq8FHZ1FAUzRdY?=
+ =?us-ascii?Q?Kwvh5TPQ9RAtfw9gyGZQKU7FTwgbMQD0Ayk4JuB4VmWlGfkwuhrFvPuP2m1y?=
+ =?us-ascii?Q?XvDsrhVxq27eIfB4ovZkFIIfZHL1IZLs6xdUsnetRKhNGAoLWnGjB70Dyel/?=
+ =?us-ascii?Q?Hzo79CqXa1bNph22TpEr1wxgksZUXlVB1EznitrWKmeeagXIPOhorWfGLF/V?=
+ =?us-ascii?Q?TACuzaAAXQhtJxywboa00AdVq/+5T4mCjmA+4kpSyGuUrlxIbwhAVAE8JMwD?=
+ =?us-ascii?Q?LyqhuuOcjeC1eOz2RQO62Q3VHTayDeUeoUAEEPtZ/vAD1ZLZ6o8Jgvm9xOcl?=
+ =?us-ascii?Q?ql7u6QKex+qCks8vWbYnRzVm96igjwbh/lXcfZUliGM4sI7Muw/Z+yCj2jhQ?=
+ =?us-ascii?Q?+Nz8vpdYJR1OUud2UuQns0vpXyimX3V8pRpcJoLqs/YY6bCRpjm/mLVWl74k?=
+ =?us-ascii?Q?y6qBpNApNwCX8WKWv0MbncIER0auchn4TFYjzM5eFSs9hah8wnqDArZscOjQ?=
+ =?us-ascii?Q?L90EfjdwBumiNxmCASJ2d9UBFCexFGMmOJchnAs0hpqsaOOltkS7H4zTTzKD?=
+ =?us-ascii?Q?5HS7iHqtFfoeOV0v0+RG2G8gwtHcBP+xYE20sqza?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 726c59eb-f760-4550-89a4-08dd6d406d9f
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 15:02:44.2722
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: znPGijH1eczyyiIKNo81XPwLzS6UKR/Mlt83REgHf7M0FsCNDXt+P3sn+HJ7LvIqTyNJyZkAiu1VRazxMDU06Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9285
 
+On Thu, Mar 27, 2025 at 03:41:11PM +0100, Alexander Stein wrote:
+> This adds an overlay for the supported RGB display CDTech FC21.
+> DCU graphics chain is configured accordingly.
+>
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-On 3/27/25 10:25 AM, Kirill A. Shutemov wrote:
-> !-------------------------------------------------------------------|
->    This Message Is From an External Sender
->    This message came from outside your organization.
-> |-------------------------------------------------------------------!
-> 
-> On Thu, Mar 27, 2025 at 02:58:12PM +0200, Kirill A. Shutemov wrote:
->> On Wed, Mar 26, 2025 at 05:30:35PM -0500, Tom Lendacky wrote:
->>> On 3/25/25 08:33, Kirill A. Shutemov wrote:
->>>> On Tue, Mar 25, 2025 at 02:40:00PM +0530, Aithal, Srikanth wrote:
->>>>> Hello,
->>>>>
->>>>>
->>>>> Starting linux-next build next-20250312, including recent build 20250324, we
->>>>> are seeing an issue where the SNP guest boot hangs at the "boot smp config"
->>>>> step:
->>>>>
->>>>>
->>>>>   [ 2.294722] smp: Bringing up secondary CPUs ...
->>>>> [    2.295211] smpboot: Parallel CPU startup disabled by the platform
->>>>> [    2.309687] smpboot: x86: Booting SMP configuration:
->>>>> [    2.310214] .... node  #0, CPUs:          #1   #2   #3   #4 #5   #6
->>>>> #7   #8   #9  #10  #11  #12  #13  #14  #15  #16  #17 #18  #19  #20  #21
->>>>> #22  #23  #24  #25  #26  #27  #28  #29  #30 #31  #32  #33  #34  #35  #36
->>>>> #37  #38  #39  #40  #41  #42  #43 #44  #45  #46  #47  #48  #49  #50  #51
->>>>> #52  #53  #54  #55  #56 #57  #58  #59  #60  #61  #62  #63  #64  #65  #66
->>>>> #67  #68  #69 #70  #71  #72  #73  #74  #75  #76  #77  #78  #79  #80  #81
->>>>> #82 #83  #84  #85  #86  #87  #88  #89  #90  #91  #92  #93  #94  #95 #96
->>>>> #97  #98  #99 #100 #101 #102 #103 #104 #105 #106 #107 #108 #109 #110 #111
->>>>> #112 #113 #114 #115 #116 #117 #118 #119 #120 #121 #122 #123 #124 #125 #126
->>>>> #127 #128 #129 #130 #131 #132 #133 #134 #135 #136 #137 #138 #139 #140 #141
->>>>> #142 #143 #144 #145 #146 #147 #148 #149 #150 #151 #152 #153 #154 #155 #156
->>>>> #157 #158 #159 #160 #161 #162 #163 #164 #165 #166 #167 #168 #169 #170 #171
->>>>> #172 #173 #174 #175 #176 #177 #178 #179 #180 #181 #182 #183 #184 #185 #186
->>>>> #187 #188 #189 #190 #191 #192 #193 #194 #195 #196 #197 #198
->>>>> --> The guest hangs forever at this point.
->>>>>
->>>>>
->>>>> I have observed that certain vCPU and memory combinations work, while others
->>>>> do not. The VM configuration I am using does not have any NUMA nodes.
->>>>>
->>>>> vcpus             Mem        SNP guest boot
->>>>> <=240            19456M    Boots fine
->>>>>> =241,<255   19456M    Hangs
->>>>> 1-255              2048M    Boots fine
->>>>> 1-255              4096M    Boots fine
->>>>>> 71                 8192M    Hangs
->>>>>> 41                 6144M    Hangs
->>>>>
->>>>> When I bisected this issue, it pointed to the following commit :
->>>>>
->>>>>
->>>>> *commit 800f1059c99e2b39899bdc67a7593a7bea6375d8*
->>>>> Author: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->>>>> Date:   Mon Mar 10 10:28:55 2025 +0200
->>>>>
->>>>>      mm/page_alloc: fix memory accept before watermarks gets initialized
->>>>
->>>> Hm. It is puzzling for me. I don't see how this commit can cause the hang.
->>>>
->>>> Could you track down where hang happens?
->>>
->>> Let me say that the guest config is key for this. Using that config, I
->>> think you might be able to repro this on TDX. The config does turn off TDX
->>> support, so I'm hoping that turning it on doesn't change anything.
->>>
->>> I've been able to track it down slightly... It is happening during the CPU
->>> bringup trace points and it eventually gets to line 2273 in
->>> rb_allocate_cpu_buffer() and never comes back from an alloc_pages_node()
->>> call. That's as far as I've gotten so far. I'm not a mm expert so not sure
->>> if I'll be able to progress much further.
->>
->> Urgh... It is deadlock on cpu_hotplug_lock :/
->>
->> _cpu_up() takes the lock on write and starts CPU bring up under it.
->> If during CPU bringup we accept the last page in the zone, __accept_page()
->> calls static_branch_dec() which takes the lock again.
->>
->> Oopsie.
->>
->> So the patch itself doesn't introduce a regression, but uncovers
->> preexisting deadlock. With the patch we accept more pages during the boot
->> and it triggers the deadlock.
->>
->> Let me think about the fix.
-> 
-> + Static branch maintainers
-> 
-> The only option I see so far is to drop static branch from this path.
-> 
-> But I am not sure if it the only case were we use static branch from CPU
-> hotplug callbacks.
-> 
-> Any other ideas?
-
-
-Hmmm, didn't take too close a look here, but there is the 
-static_key_slow_dec_cpuslocked() variant, would that work here? Is the 
-issue the caller may or may not have the cpu_hotplug lock?
-
-Thanks,
-
--Jason
-
-
-
-> 
-> The deadlock I'm talking about:
-> 
-> ============================================
-> WARNING: possible recursive locking detected
-> 6.14.0-rc5+ #13 Tainted: G S
-> --------------------------------------------
-> swapper/0/1 is trying to acquire lock:
-> ffffffffbdc7e150 (cpu_hotplug_lock){++++}-{0:0}, at: static_key_slow_dec (kernel/jump_label.c:321 kernel/jump_label.c:336)
-> 
-> but task is already holding lock:
-> ffffffffbdc7e150 (cpu_hotplug_lock){++++}-{0:0}, at: _cpu_up (./arch/x86/include/asm/bitops.h:227 ./arch/x86/include/asm/bitops.h:239 ./include/asm-generic/bitops/instrumented-non-atomic.h:142 ./include/linux/cpumask.h:570 ./include/linux/cpumask.h:1131 kernel/cpu.c:1641)
-> 
-> other info that might help us debug this:
->   Possible unsafe locking scenario:
-> 
->         CPU0
->         ----
->    lock(cpu_hotplug_lock);
->    lock(cpu_hotplug_lock);
-> 
->   *** DEADLOCK ***
-> 
->   May be due to missing lock nesting notation
-> 
-> 2 locks held by swapper/0/1:
-> #0: ffffffffbdc7e058 (cpu_add_remove_lock){+.+.}-{4:4}, at: cpu_up (kernel/cpu.c:? kernel/cpu.c:1712)
-> #1: ffffffffbdc7e150 (cpu_hotplug_lock){++++}-{0:0}, at: _cpu_up (./arch/x86/include/asm/bitops.h:227 ./arch/x86/include/asm/bitops.h:239 ./include/asm-generic/bitops/instrumented-non-atomic.h:142 ./include/linux/cpumask.h:570 ./include/linux/cpumask.h:1131 kernel/cpu.c:1641)
-> 
-> stack backtrace:
-> CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Tainted: G S                 6.14.0-rc5+ #13
-> Tainted: [S]=CPU_OUT_OF_SPEC
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 02/02/2022
-> Call Trace:
->   <TASK>
-> dump_stack_lvl (lib/dump_stack.c:122)
-> print_deadlock_bug (kernel/locking/lockdep.c:3041)
-> __lock_acquire (kernel/locking/lockdep.c:? kernel/locking/lockdep.c:3893 kernel/locking/lockdep.c:5228)
-> ? asm_sysvec_apic_timer_interrupt (./arch/x86/include/asm/idtentry.h:702)
-> ? free_one_page (mm/page_alloc.c:?)
-> ? static_key_slow_dec (kernel/jump_label.c:321 kernel/jump_label.c:336)
-> lock_acquire (kernel/locking/lockdep.c:5851)
-> ? static_key_slow_dec (kernel/jump_label.c:321 kernel/jump_label.c:336)
-> cpus_read_lock (./include/linux/percpu-rwsem.h:51)
-> ? static_key_slow_dec (kernel/jump_label.c:321 kernel/jump_label.c:336)
-> static_key_slow_dec (kernel/jump_label.c:321 kernel/jump_label.c:336)
-> cond_accept_memory (mm/page_alloc.c:7024)
-> get_page_from_freelist (./arch/x86/include/asm/bitops.h:206 ./arch/x86/include/asm/bitops.h:238 ./include/asm-generic/bitops/instrumented-non-atomic.h:142 mm/page_alloc.c:3417)
-> ? lock_release (kernel/locking/lockdep.c:469)
-> __alloc_frozen_pages_noprof (mm/page_alloc.c:4740)
-> __alloc_pages_noprof (mm/page_alloc.c:4774)
-> rb_allocate_cpu_buffer (kernel/trace/ring_buffer.c:2235)
-> ? _raw_spin_unlock_irqrestore (./arch/x86/include/asm/irqflags.h:42 ./arch/x86/include/asm/irqflags.h:97 ./arch/x86/include/asm/irqflags.h:155 ./include/linux/spinlock_api_smp.h:151 kernel/locking/spinlock.c:194)
-> trace_rb_cpu_prepare (kernel/trace/ring_buffer.c:7322)
-> cpuhp_invoke_callback (kernel/cpu.c:216)
-> ? __pfx_trace_rb_cpu_prepare (kernel/trace/ring_buffer.c:7297 kernel/trace/ring_buffer.c:7304)
-> _cpu_up (kernel/cpu.c:967 kernel/cpu.c:990 kernel/cpu.c:1021 kernel/cpu.c:1691)
-> cpu_up (kernel/cpu.c:473 kernel/cpu.c:1725)
-> cpuhp_bringup_mask (kernel/cpu.c:1789)
-> ? kernel_init (init/main.c:1459)
-> smp_init (./include/linux/bitmap.h:445 ./include/linux/nodemask.h:241 ./include/linux/nodemask.h:438 kernel/smp.c:1012)
-> kernel_init_freeable (init/main.c:1561)
-> ? __pfx_kernel_init (init/main.c:1455)
-> kernel_init (init/main.c:1459)
-> ret_from_fork (arch/x86/kernel/process.c:148)
-> ? __pfx_kernel_init (init/main.c:1455)
-> ret_from_fork_asm (arch/x86/entry/entry_64.S:257)
->   </TASK>
+> ---
+>  arch/arm/boot/dts/nxp/ls/Makefile             |  2 +
+>  ...-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtso | 56 +++++++++++++++++++
+>  2 files changed, 58 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtso
+>
+> diff --git a/arch/arm/boot/dts/nxp/ls/Makefile b/arch/arm/boot/dts/nxp/ls/Makefile
+> index 7f96de6f80224..7b97b718ebc16 100644
+> --- a/arch/arm/boot/dts/nxp/ls/Makefile
+> +++ b/arch/arm/boot/dts/nxp/ls/Makefile
+> @@ -9,5 +9,7 @@ dtb-$(CONFIG_SOC_LS1021A) += \
+>
+>  ls1021a-tqmls1021a-mbls1021a-hdmi-dtbs += ls1021a-tqmls1021a-mbls1021a.dtb ls1021a-tqmls1021a-mbls1021a-hdmi.dtbo
+>  ls1021a-tqmls1021a-mbls1021a-lvds-tm070jvhg33-dtbs += ls1021a-tqmls1021a-mbls1021a.dtb ls1021a-tqmls1021a-mbls1021a-lvds-tm070jvhg33.dtbo
+> +ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21-dtbs += ls1021a-tqmls1021a-mbls1021a.dtb ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtbo
+>  dtb-$(CONFIG_SOC_LS1021A) += ls1021a-tqmls1021a-mbls1021a-hdmi.dtb
+>  dtb-$(CONFIG_SOC_LS1021A) += ls1021a-tqmls1021a-mbls1021a-lvds-tm070jvhg33.dtb
+> +dtb-$(CONFIG_SOC_LS1021A) += ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtb
+> diff --git a/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtso b/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtso
+> new file mode 100644
+> index 0000000000000..31494d9d09f8f
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtso
+> @@ -0,0 +1,56 @@
+> +// SPDX-License-Identifier: (GPL-2.0-or-later OR MIT)
+> +/*
+> + * Copyright 2013-2014 Freescale Semiconductor, Inc.
+> + * Copyright 2018-2025 TQ-Systems GmbH <linux@ew.tq-group.com>,
+> + * D-82229 Seefeld, Germany.
+> + * Author: Alexander Stein
+> + */
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +/dts-v1/;
+> +/plugin/;
+> +
+> +&backlight_dcu {
+> +	status = "okay";
+> +};
+> +
+> +&dcu {
+> +	status = "okay";
+> +
+> +	port {
+> +		dcu_out: endpoint {
+> +			remote-endpoint = <&panel_in>;
+> +		};
+> +	};
+> +};
+> +
+> +&display {
+> +	compatible = "cdtech,s070pws19hp-fc21";
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	polytouch: touchscreen@38 {
+> +		compatible = "edt,edt-ft5406", "edt,edt-ft5x06";
+> +		reg = <0x38>;
+> +		interrupt-parent = <&pca9554_0>;
+> +		interrupts = <6 IRQ_TYPE_EDGE_FALLING>;
+> +		/* LCD_PWR_EN -> TSC_WAKE */
+> +		wake-gpios = <&pca9554_1 4 GPIO_ACTIVE_HIGH>;
+> +		iovcc-supply = <&reg_3p3v>;
+> +		vcc-supply = <&reg_3p3v>;
+> +		gain = <20>;
+> +		touchscreen-size-x = <800>;
+> +		touchscreen-size-y = <480>;
+> +	};
+> +};
+> +
+> +&panel_in {
+> +	remote-endpoint = <&dcu_out>;
+> +};
+> +
+> --
+> 2.43.0
+>
