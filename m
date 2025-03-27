@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8097210F6A
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:30:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1862921129A
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:30:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743071405; cv=none; b=GD2efFSsrjhSFJEaV69xLPrJyrrZS6+tDyOl7GblClUznSev99fnnAXLxeTrSYleJuV2EDOpwHAyaTjodFRNUMNCZeQstOidaJfitpN33KD9kzh8ticMUUB1eixAvk7DokcjBDWgiSIRdxlxpOAajAk6DYx+WQdqYM+R/3yWQEA=
+	t=1743071407; cv=none; b=hdLPbS7vdHqzrFl9RwzfODFMR5TU0W5zSc89TL65OWBsxh55PPhfuwlAhJSB6m+hD3KWKnCI+iTyhkMK4X+KkTEYkBJAjs+zHqXoQ6LDc8i6ZQZ5zlnHvJ4q8k6+ha4k9Iupo/MWWNvp765jOOtjXvTbpSFOrVYOa+i5RkzO170=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743071405; c=relaxed/simple;
-	bh=tLoDff4noC9eDpa+e8BeKdNFYnRcpSD+Synn8gBfa78=;
+	s=arc-20240116; t=1743071407; c=relaxed/simple;
+	bh=v63/wEjVZ21rpDvd+eA4iuuSMVSV/g81NATswursLNI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=REcNfP1yMwJujfJgHcxSnwh34FCuextRFAYqAY9SHN0jVsR7wysWsDINPWXL9p6hraslkqHFlF12ipcfxOrEG9qpO6W+rOz0FmAz20SD6gXxcRC69uOXP5Ekj6YQjwVBwbeFacrV2XeAD398FG/dyiLYRw924SCnk+tAQEN5Y7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oOxdaWMZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VxEPVFYsltBjjvbffPxLlB7AnQnlxUDSYUGiIvHbcoq+RtTUh13XSSn7tHs9xzHlmXTh7MxpPeD4i/TLo8Ky8AOvYwu31Au5x6rBajVCY+lVGHdlXDNcT+QENEsZ1VfSB/cgk+WDsEC8IznrBGr/JsfRFCiwCLjvioJKIQE9C7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sRsrwCAy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oOxdaWMZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03286C4CEEB;
-	Thu, 27 Mar 2025 10:30:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sRsrwCAy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B54B5C4CEDD;
+	Thu, 27 Mar 2025 10:30:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743071405;
-	bh=tLoDff4noC9eDpa+e8BeKdNFYnRcpSD+Synn8gBfa78=;
+	s=k20201202; t=1743071407;
+	bh=v63/wEjVZ21rpDvd+eA4iuuSMVSV/g81NATswursLNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oOxdaWMZ+xxyG/nIb3n9dzfYhJC+cY6vH6WdqUc+dCBfDzeoKHXpzo5HjTef6Nqf3
-	 0AlPTeSIwmpljFw2sfUCIyqARRyyv3a8DvoLWdDlKK3c1Wp6f0QxoSmaDl4++OWehp
-	 nOvX9u7uI8L3SJGc/p41Ldm/niieTrTmNZN6w8oL2vjMUWT7XBmjTUS89ppTxeZjeU
-	 t/t5WOB6q9sWK1/WQFSqwYpYqj76fFnmVM6bEtO9XFvQDQWg26r4b0qVmZWktkoaa7
-	 eBOWaZ7BikTNP1XNKDXYO5klMSPFbG4UG0rXwgJvnrhrR0iznOKu0P/F5N6tXd99rI
-	 6KpgSGinfp04w==
+	b=sRsrwCAyCS4By0EDGYFw0TIzlBWWJatscWmWfWhvcJr85PxByorvPJ9f4ytOX0wGE
+	 eDKADyw+J1Fv0EIwaNRIhwDB3naVxpWAY0M1WgkzNGpzF6waZ9pZQm1ZcAjUH+tKkg
+	 s0VyV3ErhGZpa1UrdsaAW803kUdn6ZaF1LHZYlPTW9jwDVoQwPIA4dh865i3VD7y8P
+	 Z5NW3kwvPflHUf8WlqyuDQqxsAcVdukqIME8qPlUsvEXF4xCxCGnE7mPNC3dIg4noA
+	 m4CsaIPX+DCHEhogLLrPXLGWncYgrZf8SAbNSQqIsjP3DvKYSHIpRVl26cfnQCF0xX
+	 dlK1xr7GTYWeQ==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 02/14] bugs/core: Pass down the condition string of WARN_ON_ONCE(cond) warnings to __WARN_FLAGS()
-Date: Thu, 27 Mar 2025 11:29:41 +0100
-Message-ID: <20250327102953.813608-3-mingo@kernel.org>
+Subject: [PATCH 03/14] bugs/x86: Extend _BUG_FLAGS() with the 'cond_str' parameter
+Date: Thu, 27 Mar 2025 11:29:42 +0100
+Message-ID: <20250327102953.813608-4-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250327102953.813608-1-mingo@kernel.org>
 References: <20250327102953.813608-1-mingo@kernel.org>
@@ -44,35 +44,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Doing this will allow architecture code to store and print out
-this information as part of the WARN_ON and BUG_ON facilities.
-
-The format of the string is '[condition]', for example:
-
-  WARN_ON_ONCE(idx < 0 && ptr);
-
-Will get the '[idx < 0 && ptr]' string literal passed down as 'cond_str'
-in __WARN_FLAGS().
+Just pass down the parameter, don't do anything with it yet.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: <linux-arch@vger.kernel.org>
 ---
- include/asm-generic/bug.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/bug.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
-index af76e4a04b16..c8e7126bc26e 100644
---- a/include/asm-generic/bug.h
-+++ b/include/asm-generic/bug.h
-@@ -110,7 +110,7 @@ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
- #define WARN_ON_ONCE(condition) ({				\
- 	int __ret_warn_on = !!(condition);			\
- 	if (unlikely(__ret_warn_on))				\
--		__WARN_FLAGS("",				\
-+		__WARN_FLAGS("["#condition"] ",			\
- 			     BUGFLAG_ONCE |			\
- 			     BUGFLAG_TAINT(TAINT_WARN));	\
- 	unlikely(__ret_warn_on);				\
+diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+index 413b86b876d9..aff1c6b7a7f3 100644
+--- a/arch/x86/include/asm/bug.h
++++ b/arch/x86/include/asm/bug.h
+@@ -39,7 +39,7 @@
+ 
+ #ifdef CONFIG_DEBUG_BUGVERBOSE
+ 
+-#define _BUG_FLAGS(ins, flags, extra)					\
++#define _BUG_FLAGS(cond_str, ins, flags, extra)				\
+ do {									\
+ 	asm_inline volatile("1:\t" ins "\n"				\
+ 		     ".pushsection __bug_table,\"aw\"\n"		\
+@@ -57,7 +57,7 @@ do {									\
+ 
+ #else /* !CONFIG_DEBUG_BUGVERBOSE */
+ 
+-#define _BUG_FLAGS(ins, flags, extra)					\
++#define _BUG_FLAGS(cond_str, ins, flags, extra)				\
+ do {									\
+ 	asm_inline volatile("1:\t" ins "\n"				\
+ 		     ".pushsection __bug_table,\"aw\"\n"		\
+@@ -74,7 +74,7 @@ do {									\
+ 
+ #else
+ 
+-#define _BUG_FLAGS(ins, flags, extra)  asm volatile(ins)
++#define _BUG_FLAGS(cond_str, ins, flags, extra)  asm volatile(ins)
+ 
+ #endif /* CONFIG_GENERIC_BUG */
+ 
+@@ -82,7 +82,7 @@ do {									\
+ #define BUG()							\
+ do {								\
+ 	instrumentation_begin();				\
+-	_BUG_FLAGS(ASM_UD2, 0, "");				\
++	_BUG_FLAGS("", ASM_UD2, 0, "");				\
+ 	__builtin_unreachable();				\
+ } while (0)
+ 
+@@ -96,7 +96,7 @@ do {								\
+ do {								\
+ 	__auto_type __flags = BUGFLAG_WARNING|(flags);		\
+ 	instrumentation_begin();				\
+-	_BUG_FLAGS(ASM_UD2, __flags, ANNOTATE_REACHABLE(1b));	\
++	_BUG_FLAGS(cond_str, ASM_UD2, __flags, ANNOTATE_REACHABLE(1b)); \
+ 	instrumentation_end();					\
+ } while (0)
+ 
 -- 
 2.45.2
 
