@@ -1,225 +1,205 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B43420E6FA;
-	Thu, 27 Mar 2025 14:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7517121859A
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743086643; cv=none; b=R0bDkj5lQbMejacXhYJ6EtR9aGKBib4HuJHSjoXEYJmIokaIRldqWKRIINty9+A4D9TRlnByrGQPMZa1CZsBesnnlhNy/Ga4QJHWL6WqpXPJoUWLsSN6LAHKF/rHcwg1WTXecgvtisbZ3etiz9RqVuFhHWBXrQzSorg/Pjver2c=
+	t=1743086660; cv=none; b=i7iDGs62sXcuCoFSAgfARQQnMj1C8k3f3n9Ln7fUOwKVw0cYbVOgBaCErZHzqmeKtmTtfH44JLQYY4RphgUS+qlubZVkPX83NR73Wzx2cPwaijDaKIRYt/E8devcvq08B3nbc/OWgJlXryP1WUWPNSvY8vIS0Vi+YtYv7F48C2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743086643; c=relaxed/simple;
-	bh=B9EfhkVyuuhzJG8vr6Hv0OjLclH4WIdx982eAmbSoJw=;
+	s=arc-20240116; t=1743086660; c=relaxed/simple;
+	bh=d6Xu/BFgeGgDcdBzwEk9PB3O7pJ7ObaENjEtuHbA6+k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cmY5VtZ4xKNxofpCnJLDtkPDLhS+qdL55dHFiQVayPUsN0MXwp7sT6hvuMkRNJX4XlqqOR0ly/aFEb9er399KVUhxUN4GT2n4XcqW7z0Jm29tcl5L9jJ4/HS+UEk2ejkHZwJDTrHp0vy9EgtXI166kHOHBNvM4tT8YL72dmUyuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DEWyfIe0; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=OWcdrYV5mSDMn5cnaG/QF/sSJnBbVet8mjCkZ7bWRnNC5Iyfkakxh/qyDX0TMXhUMgVJKef51IryWnWuAnMyfgYbotSPZMjAcqcXH6n/Re18Xlwbk2Sqd3TXH1tFpLUL8wKfrfdMwrygIzW4JQU3nsIK9//vi9EeC48HVv1KKmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NaYAsbEG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DEWyfIe0"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22401f4d35aso25228985ad.2;
-        Thu, 27 Mar 2025 07:44:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743086641; x=1743691441; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JXBEGaNhAnMVoLLp6bXxpNMo07EzYM3gljdRNibEVfo=;
-        b=DEWyfIe0Ak79cWM4aP0Djm4RAYdPxY+ae6k97bc1m91z5gKrA++16alk0X141iV9gb
-         Ps+QFcUYzSe+becNy22a+8MVDHWRN8NayIshiSwvqJf0BEL211aU5AI18nomvwudJkVh
-         66HZpHyu5GbJGpjEBoFztKsdnRmuuOrBU7asgEDh69mqHYf78rUduZifDP/5DpNHGmeq
-         uceHHqF1a1XU71QozYHfkzCaaaZsH0EVr4v2shJTUnqsv2f/C1BLbmjUHF8keH67l4Wz
-         kCtMbPpPRB6Wa24YyIMiQNy1Dy6yz7k3KmlJnIUbluflzIF8md9JnP/pJr7vLsIeZG6h
-         8cLg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NaYAsbEG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743086656;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SBTG0JGuxf9FkDoZXb2Ow+D+IbpvxoiKR3EeWRclaFo=;
+	b=NaYAsbEGw5uhrc4AhCt/9PsV1+tMM6jeLIU3c4Gy1ckeXOM+3Gna2jqGu9tKZ8xR5vrhkX
+	nwOVA9wPWqo0gU5TPjmeBxK+WsZx15Fj57JREMcPFaXEYoNfgA8rxV6CJ32Vlvmbf2mBbw
+	HN5xjIi8MtIkOgVwhxfdi69V4vpcQv8=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-433-9xvRi57eNbqBidw6_v8xZA-1; Thu, 27 Mar 2025 10:44:09 -0400
+X-MC-Unique: 9xvRi57eNbqBidw6_v8xZA-1
+X-Mimecast-MFC-AGG-ID: 9xvRi57eNbqBidw6_v8xZA_1743086648
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43ce8f82e66so6913755e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 07:44:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743086641; x=1743691441;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JXBEGaNhAnMVoLLp6bXxpNMo07EzYM3gljdRNibEVfo=;
-        b=d711F+JTAFAMVfppCYYvwoX4DlBd3VPyzQ4SfuG6mqKtKbEH+BGJs/PzgtjDY7H0NT
-         fGEHB89Ao/btb5WrKgGBu7dyGChnXnTNQvySYuRQjnfU0tCJ7Qwd9GYMErA5P21q7r4D
-         GXX8KxeJ6YYOawWNNLuRSe8H3ZU4h2BUx9BDAYeNVNdadD1ymZZtfU8oiAKmQ3B98T6g
-         QLsCIdPWVQPwTgpq76z7Ci/EjnBl1ujhx85PsAOnulKNKUxUayK03mqZZECZscxdbzU6
-         Oquct9B1BXL3RnOX2riy45UIWCan5x6UDwZPqxoK6ufnKhJkQbU65/fICcwxfp3SQBtl
-         QzCg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHGHHKYZIKfB/jp8jN1CrSFerRmPZUBPEdmG90POl2yp1pUpEFyhMQ3qnO+CLpOM3Ub4Ad5WvRQGIXyvY=@vger.kernel.org, AJvYcCUjV1W5efGx/lldjI4jmq3N9xFcH4gLKSoMZcsGjI4S95MyzLCMJFfkFPV0RYPGCjh/EvpvLK1cSw9W@vger.kernel.org, AJvYcCWpodFwKQxZHbzoyp4DCxH5mlMLCcPtAbajvax8FzrBCgHMV2sbyJl10MplQaG1xon60vM0hmNr@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGPl9uAh4AzKaIj1cRh85zCs647alVz+lKE28yfinPAzPeVWqk
-	TMUM4zSQNpLol42sz7MMc6QG9tyOncENbayXjl8bA5IpBPTJIVo=
-X-Gm-Gg: ASbGncse/IdhFg2iMqLbXElkRBer9/OQyfrX21D0XSM68BLSam68SwchH1fMsNzXMPs
-	NAQIsBVkwWrXLyAtcrCCM8R0l6VhVApvXARD0std9LwKJn3JIXhOM7J/gON/XkRJFQ51rHF6Ho3
-	g+KElD072GWp7ocgiHiaxV+KtyThSkg811NdD7L3+JD2+ri/SWn5u2qM86nwhJxg3yq65aEjgnS
-	eq5+b2R5oYc3VHgKK1KBOoWhAh6QVUkNi+N9ZpTNa0SvAu63IWbAoE68d2YZsaDI1PMfzsO2pAu
-	xcV+B7VGGMXWPCrZz4hM/V+5EiBQEZ9PUqAfkX6cRTAh
-X-Google-Smtp-Source: AGHT+IFty5ftLoQeKJ3zDt++/AweACwxVUQVZELl54mdDGERjLtin8JDTCyynjVx3nZBTI6rwW6jAw==
-X-Received: by 2002:a05:6a21:62c4:b0:1f5:5aac:f345 with SMTP id adf61e73a8af0-1fea2fa5d39mr6477256637.36.1743086641157;
-        Thu, 27 Mar 2025 07:44:01 -0700 (PDT)
-Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-af8a27db649sm12814821a12.10.2025.03.27.07.44.00
+        d=1e100.net; s=20230601; t=1743086648; x=1743691448;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SBTG0JGuxf9FkDoZXb2Ow+D+IbpvxoiKR3EeWRclaFo=;
+        b=B78X5fEA2pS60QocpU3wX79ZMxVXmESTtmtf94wMUQuMeXOnexjxDWHvjU+YkagrBT
+         czODwnD5IdmpbDWi2YnAC0A1X+/gGe+/Jdf8O/R4uj22q6H66hSsP75HSvAT04JFmBhe
+         VQVlD7A9h9BMwBpPeMoGaeE2OjSUmesdGJ9yzzGM5FclL5NmT0iniRSnTnk1sgjMljnL
+         9rgoEjAv3pqc7mIaDC0LaK/ikzGpbE9+TIGWkPDTtpK9AP9C5lDfX239hyU8VjhE6qFF
+         2Jtx569EoW7+J67ibPY0RMHprF+9xXKTjAyRTdr7qI6jv7puAL3P/REt16gkK5rpwe48
+         tHkg==
+X-Forwarded-Encrypted: i=1; AJvYcCUfhff2XQoU/hnGNw0r0VJhvuY8lqviiobs8sB1LtUcUjL5gQBCVXUQTlJ+vZjlq3FHJfdN9RdP7ihJr3U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhXKFoM4ndi+nXP5j6AdW0//72/1doUC4gw0295Z1jL0gCH8MY
+	f/CpY+IzgH3eGMCDMzWUatI4ukmNI5AIlyUEk4Acu21iGgjOZ++XcrJS+Sa7xb/k825Hek0e8Mz
+	5u0DpOtiYruoa4nJKQmxpKUOhCknnW8EbQ4hcfVbv6psq0fGRbmW1WEv7lICMeQ==
+X-Gm-Gg: ASbGncuI8j9gwcKu0/yV/FvoMnbxMZQ2dNbDmZP6fPwKyVf249JSCPss+ByXE3uZWZQ
+	VeLwV6d8Kstqm43OETr+OR29B9mpJ75A5UXjdMIIcweVdnNAPsadcaDrpnRUBWzqnUbEIkbiOtO
+	FH6Zwu7IKMBB4rQ7Q4Tbu+kPlLG+i4o6SF4qbFomCud2OKStUsnOF8kCQFEeyMi3y2bOx0U7tsm
+	e8d3+5gbjTaOonhg9dUVW6XFm4rwyOi994Tjhi30jIjjhisDonbnwCYXW8+9WgsPUmgpWEMRynH
+	fCdwTwEhWH2grGg65h7InFr9zkmQoCELTdBjQyCdI0Bdt3Vgob2wxb7nCy7ctnix
+X-Received: by 2002:a05:600c:138a:b0:43d:300f:fa3d with SMTP id 5b1f17b1804b1-43d84f60ce1mr42280485e9.5.1743086648296;
+        Thu, 27 Mar 2025 07:44:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGfDYAxxsKTCw2DsFd7FNQsrLddXHo43pipbWePZvF/j/lq0gWQWkRDJ6Cjwx/DH6qCARj+Ug==
+X-Received: by 2002:a05:600c:138a:b0:43d:300f:fa3d with SMTP id 5b1f17b1804b1-43d84f60ce1mr42280195e9.5.1743086647808;
+        Thu, 27 Mar 2025 07:44:07 -0700 (PDT)
+Received: from sgarzare-redhat (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82f7b9f4sm41179575e9.34.2025.03.27.07.44.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 07:44:00 -0700 (PDT)
-Date: Thu, 27 Mar 2025 07:43:59 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Eric Dumazet <edumazet@google.com>
-Cc: syzbot <syzbot+377b71db585c9c705f8e@syzkaller.appspotmail.com>,
-	andrew+netdev@lunn.ch, andrew@lunn.ch, davem@davemloft.net,
-	eric.dumazet@gmail.com, horms@kernel.org, kuba@kernel.org,
-	linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org,
-	lkp@intel.com, llvm@lists.linux.dev, ms@dev.tdt.de,
-	netdev@vger.kernel.org, oe-kbuild-all@lists.linux.dev,
-	pabeni@redhat.com, sdf@fomichev.me, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [x25?] possible deadlock in lapbeth_device_event
-Message-ID: <Z-VkL0IeTLGlOJ9l@mini-arch>
-References: <67cd611c.050a0220.14db68.0073.GAE@google.com>
- <67e55c12.050a0220.2f068f.002c.GAE@google.com>
- <Z-ViZoezAdjY8TC-@mini-arch>
- <CANn89iKXRXXA392PY9uuL560JNW0ee_hGTu3xk=6X=6jRR2OkQ@mail.gmail.com>
+        Thu, 27 Mar 2025 07:44:07 -0700 (PDT)
+Date: Thu, 27 Mar 2025 15:44:00 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org, 
+	Peter Huewe <peterhuewe@gmx.de>, linux-integrity@vger.kernel.org, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, Jens Wiklander <jens.wiklander@linaro.org>, 
+	Sumit Garg <sumit.garg@kernel.org>
+Subject: Re: [PATCH 1/2] tpm: add send_recv() op in tpm_class_ops
+Message-ID: <wwf3brf4rtdh7ciejgbjesy32ywqxw5vrpuznyee2yp4arrtmw@gspriiauxvgt>
+References: <20250320152433.144083-1-sgarzare@redhat.com>
+ <20250320152433.144083-2-sgarzare@redhat.com>
+ <Z-QxH7aDjlixl2gp@kernel.org>
+ <eidmcwgppc4uobyupns4hzqz562wguapiocpyyqq67j5h26qbl@muhbnfxzqvqt>
+ <Z-VMWl9UDx5ZY1qK@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANn89iKXRXXA392PY9uuL560JNW0ee_hGTu3xk=6X=6jRR2OkQ@mail.gmail.com>
+In-Reply-To: <Z-VMWl9UDx5ZY1qK@kernel.org>
 
-On 03/27, Eric Dumazet wrote:
-> On Thu, Mar 27, 2025 at 3:36 PM Stanislav Fomichev <stfomichev@gmail.com> wrote:
-> >
-> > On 03/27, syzbot wrote:
-> > > syzbot has found a reproducer for the following issue on:
-> > >
-> > > HEAD commit:    1a9239bb4253 Merge tag 'net-next-6.15' of git://git.kernel..
-> > > git tree:       upstream
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=15503804580000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=95c3bbe7ce8436a7
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=377b71db585c9c705f8e
-> > > compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=139a6bb0580000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16974a4c580000
-> > >
-> > > Downloadable assets:
-> > > disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-1a9239bb.raw.xz
-> > > vmlinux: https://storage.googleapis.com/syzbot-assets/bd56e2f824c3/vmlinux-1a9239bb.xz
-> > > kernel image: https://storage.googleapis.com/syzbot-assets/19172b7f9497/bzImage-1a9239bb.xz
-> > >
-> > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > > Reported-by: syzbot+377b71db585c9c705f8e@syzkaller.appspotmail.com
-> > >
-> > > ============================================
-> > > WARNING: possible recursive locking detected
-> > > 6.14.0-syzkaller-05877-g1a9239bb4253 #0 Not tainted
-> > > --------------------------------------------
-> > > dhcpcd/5649 is trying to acquire lock:
-> > > ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
-> > > ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: netif_napi_add_weight include/linux/netdevice.h:2783 [inline]
-> > > ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: lapbeth_new_device drivers/net/wan/lapbether.c:415 [inline]
-> > > ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: lapbeth_device_event+0x586/0xbe0 drivers/net/wan/lapbether.c:460
-> > >
-> > > but task is already holding lock:
-> > > ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
-> > > ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
-> > > ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:39 [inline]
-> > > ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: dev_change_flags+0xa7/0x250 net/core/dev_api.c:67
-> > >
-> > > other info that might help us debug this:
-> > >  Possible unsafe locking scenario:
-> > >
-> > >        CPU0
-> > >        ----
-> > >   lock(&dev->lock);
-> > >   lock(&dev->lock);
-> > >
-> > >  *** DEADLOCK ***
-> > >
-> > >  May be due to missing lock nesting notation
-> > >
-> > > 2 locks held by dhcpcd/5649:
-> > >  #0: ffffffff900fb268 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_net_lock include/linux/rtnetlink.h:130 [inline]
-> > >  #0: ffffffff900fb268 (rtnl_mutex){+.+.}-{4:4}, at: devinet_ioctl+0x26d/0x1f50 net/ipv4/devinet.c:1121
-> > >  #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
-> > >  #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
-> > >  #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:39 [inline]
-> > >  #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: dev_change_flags+0xa7/0x250 net/core/dev_api.c:67
-> > >
-> > > stack backtrace:
-> > > CPU: 1 UID: 0 PID: 5649 Comm: dhcpcd Not tainted 6.14.0-syzkaller-05877-g1a9239bb4253 #0 PREEMPT(full)
-> > > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> > > Call Trace:
-> > >  <TASK>
-> > >  __dump_stack lib/dump_stack.c:94 [inline]
-> > >  dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
-> > >  print_deadlock_bug+0x1e9/0x240 kernel/locking/lockdep.c:3042
-> > >  check_deadlock kernel/locking/lockdep.c:3094 [inline]
-> > >  validate_chain kernel/locking/lockdep.c:3896 [inline]
-> > >  __lock_acquire+0xff7/0x1ba0 kernel/locking/lockdep.c:5235
-> > >  lock_acquire kernel/locking/lockdep.c:5866 [inline]
-> > >  lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
-> > >  __mutex_lock_common kernel/locking/mutex.c:587 [inline]
-> > >  __mutex_lock+0x19a/0xb00 kernel/locking/mutex.c:732
-> > >  netdev_lock include/linux/netdevice.h:2751 [inline]
-> > >  netif_napi_add_weight include/linux/netdevice.h:2783 [inline]
-> > >  lapbeth_new_device drivers/net/wan/lapbether.c:415 [inline]
-> > >  lapbeth_device_event+0x586/0xbe0 drivers/net/wan/lapbether.c:460
-> > >  notifier_call_chain+0xb9/0x410 kernel/notifier.c:85
-> > >  call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2180
-> > >  call_netdevice_notifiers_extack net/core/dev.c:2218 [inline]
-> > >  call_netdevice_notifiers net/core/dev.c:2232 [inline]
-> > >  __dev_notify_flags+0x12c/0x2e0 net/core/dev.c:9409
-> > >  netif_change_flags+0x108/0x160 net/core/dev.c:9438
-> > >  dev_change_flags+0xba/0x250 net/core/dev_api.c:68
-> > >  devinet_ioctl+0x11d5/0x1f50 net/ipv4/devinet.c:1200
-> > >  inet_ioctl+0x3a7/0x3f0 net/ipv4/af_inet.c:1001
-> > >  sock_do_ioctl+0x115/0x280 net/socket.c:1190
-> > >  sock_ioctl+0x227/0x6b0 net/socket.c:1311
-> > >  vfs_ioctl fs/ioctl.c:51 [inline]
-> > >  __do_sys_ioctl fs/ioctl.c:906 [inline]
-> > >  __se_sys_ioctl fs/ioctl.c:892 [inline]
-> > >  __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
-> > >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-> > >  do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
-> > >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> > > RIP: 0033:0x7effd384cd49
-> > > Code: 5c c3 48 8d 44 24 08 48 89 54 24 e0 48 89 44 24 c0 48 8d 44 24 d0 48 89 44 24 c8 b8 10 00 00 00 c7 44 24 b8 10 00 00 00 0f 05 <41> 89 c0 3d 00 f0 ff ff 76 10 48 8b 15 ae 60 0d 00 f7 d8 41 83 c8
-> > > RSP: 002b:00007ffedd440088 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> > > RAX: ffffffffffffffda RBX: 00007effd377e6c0 RCX: 00007effd384cd49
-> > > RDX: 00007ffedd450278 RSI: 0000000000008914 RDI: 000000000000001a
-> > > RBP: 00007ffedd460438 R08: 00007ffedd450238 R09: 00007ffedd4501e8
-> > > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> > > R13: 00007ffedd450278 R14: 0000000000000028 R15: 0000000000008914
-> > >  </TASK>
-> > >
-> > >
-> > > ---
-> > > If you want syzbot to run the reproducer, reply with:
-> > > #syz test: git://repo/address.git branch-or-commit-hash
-> > > If you attach or paste a git patch, syzbot will apply it before testing.
-> >
-> > #syz test
-> >
-> > diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
-> > index 56326f38fe8a..a022e930bd8e 100644
-> > --- a/drivers/net/wan/lapbether.c
-> > +++ b/drivers/net/wan/lapbether.c
-> > @@ -39,6 +39,7 @@
-> >  #include <linux/lapb.h>
-> >  #include <linux/init.h>
-> >
-> > +#include <net/netdev_lock.h>
-> >  #include <net/x25device.h>
-> >
-> >  static const u8 bcast_addr[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-> > @@ -372,6 +373,7 @@ static void lapbeth_setup(struct net_device *dev)
-> >         dev->hard_header_len = 0;
-> >         dev->mtu             = 1000;
-> >         dev->addr_len        = 0;
-> > +       netdev_lockdep_set_classes(netdev);
-> >  }
-> >
-> >  /*     Setup a new device.
-> >
-> 
-> I can resubmit https://lore.kernel.org/netdev/Z84MME6rwU6q9aJa@mini-arch/T/
+On Thu, Mar 27, 2025 at 03:02:32PM +0200, Jarkko Sakkinen wrote:
+>On Thu, Mar 27, 2025 at 10:48:17AM +0100, Stefano Garzarella wrote:
+>> On Wed, Mar 26, 2025 at 06:53:51PM +0200, Jarkko Sakkinen wrote:
+>> > On Thu, Mar 20, 2025 at 04:24:32PM +0100, Stefano Garzarella wrote:
+>> > > From: Stefano Garzarella <sgarzare@redhat.com>
+>> > >
+>> > > Some devices do not support interrupts and provide a single operation
+>> > > to send the command and receive the response on the same buffer.
+>> > >
+>> > > To support this scenario, a driver could set TPM_CHIP_FLAG_IRQ in the
+>> > > chip's flags to get recv() to be called immediately after send() in
+>> > > tpm_try_transmit(), or it needs to implement .status() to return 0,
+>> > > and set both .req_complete_mask and .req_complete_val to 0.
+>> > >
+>> > > In order to simplify these drivers and avoid temporary buffers to be
+>> >
+>> > Simplification can be addressed with no callback changes:
+>> >
+>> > https://lore.kernel.org/linux-integrity/20250326161838.123606-1-jarkko@kernel.org/T/#u
+>> >
+>> > I also noticed that tpm_ftpm_tee initalized req_complete_mask and
+>> > req_complete_val explictly while they would be already implicitly
+>> > zero.
+>> >
+>> > So it reduces this just a matter of getting rid off the extra
+>> > buffer.
+>>
+>> Yep, as mentioned I think your patch should go either way. So here I can
+>> rephrase and put the emphasis on the temporary buffer and the driver
+>> simplification.
+>
+>Yes. Removing extra copy is a goal that can only make sense!
+>
+>>
+>> >
+>> > > used between the .send() and .recv() callbacks, introduce a new callback
+>> > > send_recv(). If that callback is defined, it is called in
+>> > > tpm_try_transmit() to send the command and receive the response on
+>> > > the same buffer in a single call.
+>> >
+>> > I don't find anything in the commit message addressing buf_len an
+>> > cmd_len (vs "just len"). Why two lengths are required?
+>> >
+>> > Not completely rejecting but this explanation is incomplete.
+>>
+>> Right.
+>>
+>> The same buffer is used as input and output.
+>> For input, the buffer contains the command (cmd_len) but the driver can use
+>> the entire buffer for output (buf_len).
+>> It's basically the same as in tpm_try_transmit(), but we avoid having to
+>> parse the header in each driver since we already do that in
+>> tpm_try_transmit().
+>>
+>> In summary cmd_len = count = be32_to_cpu(header->length).
+>>
+>> I admit I'm not good with names, would you prefer a different name or is it
+>> okay to explain it better in the commit?
+>>
+>> My idea is to add this:
+>>
+>>     `buf` is used as input and output. It contains the command
+>>     (`cmd_len` bytes) as input. The driver will be able to use the
+>>     entire buffer (`buf_len` bytes) for the response as output.
+>>     Passing `cmd_len` is an optimization to avoid having to access the
+>>     command header again in each driver and check it.
+>
+>This makes more sense. Maybe we could name them as buf_size and
+>cmd_len to further make dead obvious the use and purpose.
 
-Ah, this was not pulled because of net vs net-next? Yes, please do!
+Yeah, I see. I'll do!
+
+>
+>>
+>> WDYT?
+>
+>I just want to get this done right if it is done at all, so here's
+>one more suggestion:
+>
+>1. Add TPM_CHIP_FLAG_SYNC
+>2. Update send() parameters.
+
+So, IIUC something like this:
+
+     int (*send) (struct tpm_chip *chip, u8 *buf, size_t cmd_len, size_t buf_size);
+
+Where `buf_size` is ignored if the driver doesn't set TPM_CHIP_FLAG_SYNC.
+
+Right?
+
+>
+>You don't have to do anything smart with the new parameter other than
+>add it to leaf drivers.
+
+Okay, this should answer my question :-) (I leave it just to be sure).
+
+>It makes the first patch bit more involved but
+>this way we end up keeping the callback interface as simple as it was.
+
+Yep, I see.
+And maybe I need to change something in tpm_try_transmit() because now
+send() returns 0 in case of success, but after the change it might
+return > 0 in case TPM_CHIP_FLAG_SYNC is set. But I will see how to
+handle this.
+
+>
+>I'm also thinking that for async case do we actually need all those
+>complicated masks etc. or could we simplify that side but it is
+>definitely out-of-scope for this patch set (no need to worry about
+>this).
+
+I see, I can take a look later in another series.
+
+Thanks,
+Stefano
+
