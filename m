@@ -1,130 +1,84 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB8AB1A8F60
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0E8120C46C;
+	Thu, 27 Mar 2025 09:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743068146; cv=none; b=K0+C2nvYZA3mKHVO0Cgc29tdDSgV1JHSpOw4EvrH/flK5Sl/h6AQiAp/aD+1XOhc0l78eycBnLz/1V+SF6IrMFUbLxm4CJvjA2INVvwnLcW3mglyb/c8pnpUI+PgPxHrSzJzHDPZzYSJkN33JXGRDaM3mRKLlpyBlSYFQW189mA=
+	t=1743068150; cv=none; b=e4enWTqwxMpsqPBxJa40jYd5Q7Fi44yN3gQwPr76JWpNIACPnRFT4BKxyqXwSr+zhQsWx/5dm7IajWQ9wPhqv5a0kYtr4JFuQwJgUAH1asagg6Fshb9zEkfVQeaUEyKHPor/uggDRgdno7iMRuhfrPSEvdDsQoXQilDghfTcYhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743068146; c=relaxed/simple;
-	bh=Yz/tUxwIyLQ7HNXu+dzXfyR3JnuM1gjbS67S+hWQWqw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OnXg0H7NV6rDi7HI4P09XhPCDwTx301/GeDr2NOAxxQNXmdwckDrUmNks6hADVX8Ev4YFjpRGedDTFRhTPBrJhNU7KeaiwF/8TkGt09cK2DRtBrpds8d+/ar33Fgxk9225/dhjbIxNylOzpxYvhxN7FCmHsR+ALuSpYT1yGqEiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23B4A106F;
-	Thu, 27 Mar 2025 02:35:48 -0700 (PDT)
-Received: from [10.34.129.27] (e126645.nice.arm.com [10.34.129.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5097C3F63F;
-	Thu, 27 Mar 2025 02:35:40 -0700 (PDT)
-Message-ID: <3c21871b-4936-4143-bc78-38495a7995a6@arm.com>
-Date: Thu, 27 Mar 2025 10:35:35 +0100
+	s=arc-20240116; t=1743068150; c=relaxed/simple;
+	bh=emluPB/+HEfLfthucSGOJgpzoeP68z4bxCiL6U9VHEc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aMycQxcbHTg/dkkzzNtDys90jfyMZu0RG3ORPXvDgWTAuPdmrdia5XAR110zT2SJQy2YlZvnfkmIDh89AUNWhFzP0IeLCZCN/UUVrz0ooVsYeQ1GAt+YRzUyV9TUC7vy3kd0ODIoCgSVqJ1WoViPz5NntfhRz6kDlrr6mZ/4YCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=162.243.164.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwAHDqbSG+VnAJebDg--.1646S2;
+	Thu, 27 Mar 2025 17:35:14 +0800 (CST)
+Received: from localhost (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwA3PorQG+VnhkxXAA--.797S2;
+	Thu, 27 Mar 2025 17:35:12 +0800 (CST)
+Date: Thu, 27 Mar 2025 17:34:54 +0800
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Gregory Price <gourry@gourry.net>, lsf-pc@lists.linux-foundation.org,
+	linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [LSF/MM] CXL Boot to Bash - Section 0: ACPI and Linux Resources
+Message-ID: <Z+Ubvvrj9DovVs71@phytium.com.cn>
+References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
+ <Z8jORKIWC3ZwtzI4@gourry-fedora-PF4VCD3F>
+ <20250313165539.000001f4@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched/fair: Allow decaying util_est when util_avg > CPU
- capa
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: linux-kernel@vger.kernel.org, Chritian Loehle <christian.loehle@arm.com>,
- Hongyan Xia <hongyan.xia2@arm.com>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>
-References: <20250325150542.1077344-1-pierre.gondois@arm.com>
- <CAKfTPtCfaH6SvBesbKBHRNfjZHJXXC1h4NF8GoFUczE5NiRunQ@mail.gmail.com>
-Content-Language: en-US
-From: Pierre Gondois <pierre.gondois@arm.com>
-In-Reply-To: <CAKfTPtCfaH6SvBesbKBHRNfjZHJXXC1h4NF8GoFUczE5NiRunQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313165539.000001f4@huawei.com>
+X-CM-TRANSID:AQAAfwA3PorQG+VnhkxXAA--.797S2
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQACAWfkXV4FHAAHsc
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvdXoWruFWDtrWfWF13GrW8uw4rKrg_yoWDtFc_ur
+	s5Cw1kG3ykWF1Igan7Krs7trWfCa48Cr4xuaySqFnIk345JrZ5GaykAr95Kw45GFsFyryD
+	Cr10qw1S9wnI9jkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrnU
+	Uv73VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRUUUUU
+	UUUU=
 
-
-
-On 3/26/25 18:25, Vincent Guittot wrote:
-> On Tue, 25 Mar 2025 at 16:06, Pierre Gondois <pierre.gondois@arm.com> wrote:
->>
->> commit 10a35e6812aa ("sched/pelt: Skip updating util_est when
->> utilization is higher than CPU's capacity")
->> prevents util_est from being updated if util_avg is higher than the
->> underlying CPU capacity to avoid overestimating the task when the CPU
->> is capped (due to thermal issue for instance). In this scenario, the
->> task will miss its deadlines and start overlapping its wake-up events
->> for instance. The task will appear as always running when the CPU is
->> just not powerful enough to allow having a good estimation of the
->> task.
->>
->> commit b8c96361402a ("sched/fair/util_est: Implement faster ramp-up
->> EWMA on utilization increases")
->> sets ewma to util_avg when ewma > util_avg, allowing ewma to quickly
->> grow instead of slowly converge to the new util_avg value when a task
->> profile changes from small to big.
->>
->> However, the 2 conditions:
->> - Check util_avg against max CPU capacity
->> - Check whether util_est > util_avg
->> are placed in an order such as it is possible to set util_est to a
->> value higher than the CPU capacity if util_est > util_avg, but
->> util_est is prevented to decay as long as:
->> CPU capacity < util_avg < util_est.
->>
->> Just remove the check as either:
->> 1.
->> There is idle time on the CPU. In that case the util_avg value of the
->> task is actually correct. It is possible that the task missed a
->> deadline and appears bigger, but this is also the case when the
->> util_avg of the task is lower than the maximum CPU capacity.
->> 2.
->> There is no idle time. In that case, the util_avg value might aswell
->> be an under estimation of the size of the task.
->> It is possible that undesired frequency spikes will appear when the
->> task is later enqueued with an inflated util_est value, but the
->> frequency spike might aswell be deserved. The absence of idle time
->> prevents from drawing any conclusion.
->>
->> Signed-off-by: Pierre Gondois <pierre.gondois@arm.com>
+On Thu, Mar 13, 2025 at 04:55:39PM +0000, Jonathan Cameron wrote:
+> > 
+> > Basically, the heuristic is as follows:
+> > 1) Add one NUMA node per Proximity Domain described in SRAT
 > 
-> This change looks reasonable to me. Did you face problems related to
-> this in a particular use case ?
+>     if it contains, memory, CPU or generic initiator. 
 
-I think it was more related to the fact util_est is not decayed when:
-(runnable - util_avg) > margin
+In the future, srat.c would add one seperate NUMA node for each
+Generic Port in SRAT.
 
-This patch slightly helps to decay, but not that much.
+System firmware should know the performance characteristics between
+CPU/GI to the GP, and the static HMAT should include this coordinate.
+
+Is my understanding right?
+
+Yuquan
 
 > 
-> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.rog>
+> > 2) If the SRAT describes all memory described by all CFMWS
+> >    - do not create nodes for CFMWS
+> > 3) If SRAT does not describe all memory described by CFMWS
+> >    - create a node for that CFMWS
+> > 
+> > Generally speaking, you will see one NUMA node per Host bridge, unless
+> > inter-host-bridge interleave is in use (see Section 4 - Interleave).
+> 
+> I just love corners: QoS concerns might mean multiple CFMWS and hence
+> multiple nodes per host bridge (feel free to ignore this one - has
+> anyone seen this in the wild yet?)  Similar mess for properties such
+> as persistence, sharing etc.
+> 
+> J
+> 
 
-Thanks!
-> 
-> 
->> ---
->>   kernel/sched/fair.c | 7 -------
->>   1 file changed, 7 deletions(-)
->>
->> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->> index c798d2795243..de7687e579c2 100644
->> --- a/kernel/sched/fair.c
->> +++ b/kernel/sched/fair.c
->> @@ -4918,13 +4918,6 @@ static inline void util_est_update(struct cfs_rq *cfs_rq,
->>          if (last_ewma_diff < UTIL_EST_MARGIN)
->>                  goto done;
->>
->> -       /*
->> -        * To avoid overestimation of actual task utilization, skip updates if
->> -        * we cannot grant there is idle time in this CPU.
->> -        */
->> -       if (dequeued > arch_scale_cpu_capacity(cpu_of(rq_of(cfs_rq))))
->> -               return;
->> -
->>          /*
->>           * To avoid underestimate of task utilization, skip updates of EWMA if
->>           * we cannot grant that thread got all CPU time it wanted.
->> --
->> 2.25.1
->>
