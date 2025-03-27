@@ -1,110 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667F517A31E;
-	Thu, 27 Mar 2025 19:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A09317A31E;
+	Thu, 27 Mar 2025 19:46:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743104806; cv=none; b=MfA7KTFV2qKF6nB5Qy/w+A+vJj3Syf1HiRS1/t5ElbFRQAxuk0i2X6WV0GtchkRpaa5169UemcWosPtxdC+6M+CvS4QHyA9eAHl8I8Dw8fhije9B+gt5mhNxbs1inM1/Y9Qhs56hHzy51VKTJfY4RDYPkCzH5vrd+/3uHxX5xnU=
+	t=1743104812; cv=none; b=GCYfgEOGp6ErVhnppGSvHf3XFam6onl78RNydR+ywDCxx6kGxLweBrK3Sh9j4DHjIg0zuRLbtt61ak0yREHjjp1lSSVuZW777I0D7PKXlx/fVzd2OeihNomCgg3TiLcua8FtW6gF71aEAzvHiHgSduI9582tiQk7BGopLibYeTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743104806; c=relaxed/simple;
-	bh=Y3DAXrhmJS11+/k3WUxtxug3NzcqkCqgUAGcywHAEbc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qurE7swgTX5W2U9/jSXp2NzyXOxukAWOS05jLpfdTIfe6Yg/1xM2K3MLdx0HQ2VNn0zn4JtCGo81UwM0c23CbuxsnmPAGR+9jPzz00OsnuPePfgMndPDHsWfBUWJzQtQQynNqxD5PLXVroPLUeuzuBiXx0ZXJG3Pgg+LG0UECrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lvOx7jta; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743104812; c=relaxed/simple;
+	bh=G+IvgSSxf03QxdrXqf4oA5QDm8+4pu6nUPAL6AFGWWA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ACjXDpSW9v7Svtqrxk0bd6oFM1btp5wTYRVKhF+wFpUTcQ1kZPK9gLH4HzTAYqwibfGFI0P1fluDIM9hv07lc7Sf0fXUtF4PSh5YC6PS5tORyzfuapf5hByR9CQKtsWDUN6USKoVDnc7jE4geTZIC0GtXELTMCMI9cy5HH2Rgy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q+wGHd0j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lvOx7jta"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743104805; x=1774640805;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Y3DAXrhmJS11+/k3WUxtxug3NzcqkCqgUAGcywHAEbc=;
-  b=lvOx7jtasAKd+kFONeEtsaVqZ8zT0MOOaBs+5PfMVO55C/JvKMtxF/Pa
-   mu9zVMt8DnpvPqKH3vHckIc7V8zFmTAXQhMtAP4YD+/PGJsJsgQaG3bYQ
-   LOeJfI/Fsg14734Ow1fLIGrSmJ8/N6BmANlENTs0dnVzm6Rev+yZnqUCw
-   /gEfYeu+k5cCFTDBMUKL4hcnW0Bw32SY2DjrKyCp4NJicZtmy+zfRtY6t
-   cBhfr23DorADNeR6UxpM2SV38O3IOg+wL0iv8eoNN63FyHEhfuPWQchbM
-   +LZvzi/hHcd/6ig1f3EuUBfDO11oBdohXm5BJflsLgVyhqz8dxjK7qEcv
-   w==;
-X-CSE-ConnectionGUID: ZC1UtURyQYyn9VaG59zI0A==
-X-CSE-MsgGUID: Xf+zV45GTQOmnhH/ROGRfQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="48332303"
-X-IronPort-AV: E=Sophos;i="6.14,281,1736841600"; 
-   d="scan'208";a="48332303"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 12:46:44 -0700
-X-CSE-ConnectionGUID: iqj17n/BTsiKpIQ0ERJWgg==
-X-CSE-MsgGUID: Mun+C5s7R3Wvr023f0NxkQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,281,1736841600"; 
-   d="scan'208";a="124998469"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 27 Mar 2025 12:46:38 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1txtBU-0006vT-0p;
-	Thu, 27 Mar 2025 19:46:36 +0000
-Date: Fri, 28 Mar 2025 03:46:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	nifan.cxl@gmail.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
-	oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
-	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com,
-	lukas@wunner.de, ming.li@zohomail.com,
-	PradeepVineshReddy.Kodamati@amd.com
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v8 13/16] cxl/pci: Assign CXL Endpoint protocol error
- handlers
-Message-ID: <202503280346.euKvcovE-lkp@intel.com>
-References: <20250327014717.2988633-14-terry.bowman@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q+wGHd0j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69C14C4CEEA;
+	Thu, 27 Mar 2025 19:46:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743104811;
+	bh=G+IvgSSxf03QxdrXqf4oA5QDm8+4pu6nUPAL6AFGWWA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=q+wGHd0jqt2Mox/v94TUPNV9dbIbflPQ0/fdHi6Zuxb0dHxSPAdEwt4tygBhB1vK5
+	 MIvRzbfS70oXrTrYZUCycdtlFaHC/lctUQTNDb+Y70HSSRhfSBIgi5yIjqJ08C0CxT
+	 r8papoUYf7gXxyigYb+slYZj6aJJhJpKw5EKbWIRHLmzvfHmthS0Uc7voh/LOhkVrF
+	 tNKkgWsjK7/+QK3PhbA8LYE3BgYK4+M+gwyVsHTNIhwAH04W7BxO1Xcw/kvBqvjX9P
+	 hkH8JabdfTK8sgaCZs0zNAqWFkQq9n/39O71qj7roZHYAagoqpb4Gpc51qddncw/e4
+	 fJo+hXn/3mGFQ==
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-6021e3daeabso685579eaf.3;
+        Thu, 27 Mar 2025 12:46:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUJaOECgYLkYoYH8ZwKKvEfpcV4oWnj8idYzD+Ypke4TP//w9gYNbeXp2yiYUKd5cY/usC34YbYcsQC@vger.kernel.org, AJvYcCWD6vXw5uBa2ogDbRwhml7wSeqN4vDrTxz0fie66oGDAqqLnTNX9Y7+l7VHf1GncQu6twVwzIN7VcOCDO8y@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZZ7PGRxbY3hRRssMC5ZnXSNXAc6MUGWpqOpEqKlVddMzio7iP
+	+FY8YjvWoCr0Iy3QqAJONmI3fnW9OkRbqYTRVG11ABpRQsJbYVDY6LkMTyJdJ+VEf/+5DiCkKOy
+	52OYjN+jOgW6oWK9UoGC6V+Q445U=
+X-Google-Smtp-Source: AGHT+IFMQyPwbcNKyMRZpCjpAs+Uf7Ikd/W8SMlkC2cuuDmkyjvM9a2S5KPWs53tkbS1aJHu2BNapSsJRNnDpfffeYE=
+X-Received: by 2002:a05:6870:1606:b0:2c2:5c2b:3ae5 with SMTP id
+ 586e51a60fabf-2c847efd6a2mr3009771fac.3.1743104810632; Thu, 27 Mar 2025
+ 12:46:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327014717.2988633-14-terry.bowman@amd.com>
+References: <20250325-pprof-opt-v2-1-736291e6e66b@gmail.com>
+In-Reply-To: <20250325-pprof-opt-v2-1-736291e6e66b@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 27 Mar 2025 20:46:38 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0iFMM5G48OfkZjnqkBK5rOLxKh=C-O5r3=WsWpTF8aXtA@mail.gmail.com>
+X-Gm-Features: AQ5f1Jpe9zjZoU3IUgo-B5zwgNJl1jDpqgt-p6SqwbR_gPDsTj5EHK-z5MZ_lBo
+Message-ID: <CAJZ5v0iFMM5G48OfkZjnqkBK5rOLxKh=C-O5r3=WsWpTF8aXtA@mail.gmail.com>
+Subject: Re: [PATCH v2] ACPI: platform_profile: Optimize _aggregate_choices()
+To: Kurt Borja <kuurtb@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, Mario Limonciello <mario.limonciello@amd.com>, 
+	Armin Wolf <W_Armin@gmx.de>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Terry,
+On Tue, Mar 25, 2025 at 9:40=E2=80=AFPM Kurt Borja <kuurtb@gmail.com> wrote=
+:
+>
+> Choices aggregates passed to _aggregate_choices() are already filled
+> with ones, therefore we can avoid copying a new bitmap on the first
+> iteration.
+>
+> This makes setting the PLATFORM_PROFILE_LAST bit on aggregates
+> unnecessary, so drop it as well.
+>
+> While at it, add a couple empty lines to improve style.
+>
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+> Changes in v2:
+> - Mention bitmap requirements in kernel-doc
+> - Link to v1: https://lore.kernel.org/r/20250322-pprof-opt-v1-1-105455879=
+a82@gmail.com
+> ---
+>  drivers/acpi/platform_profile.c | 13 +++++--------
+>  1 file changed, 5 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_prof=
+ile.c
+> index ef9444482db1982b19d2a17884e1c3ab0e5cb55c..26d7ba49e9dcff1fded246cb6=
+b5c836b180e07e8 100644
+> --- a/drivers/acpi/platform_profile.c
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -245,7 +245,8 @@ static const struct class platform_profile_class =3D =
+{
+>  /**
+>   * _aggregate_choices - Aggregate the available profile choices
+>   * @dev: The device
+> - * @arg: struct aggregate_choices_data
+> + * @arg: struct aggregate_choices_data, with it's aggregate member bitma=
+p
+> + *      initially filled with ones
+>   *
+>   * Return: 0 on success, -errno on failure
+>   */
+> @@ -256,12 +257,10 @@ static int _aggregate_choices(struct device *dev, v=
+oid *arg)
+>         struct platform_profile_handler *handler;
+>
+>         lockdep_assert_held(&profile_lock);
+> +
+>         handler =3D to_pprof_handler(dev);
+>         bitmap_or(tmp, handler->choices, handler->hidden_choices, PLATFOR=
+M_PROFILE_LAST);
+> -       if (test_bit(PLATFORM_PROFILE_LAST, data->aggregate))
+> -               bitmap_copy(data->aggregate, tmp, PLATFORM_PROFILE_LAST);
+> -       else
+> -               bitmap_and(data->aggregate, tmp, data->aggregate, PLATFOR=
+M_PROFILE_LAST);
+> +       bitmap_and(data->aggregate, tmp, data->aggregate, PLATFORM_PROFIL=
+E_LAST);
+>         data->count++;
+>
+>         return 0;
+> @@ -305,7 +304,6 @@ static ssize_t platform_profile_choices_show(struct d=
+evice *dev,
+>         };
+>         int err;
+>
+> -       set_bit(PLATFORM_PROFILE_LAST, data.aggregate);
+>         scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock)=
+ {
+>                 err =3D class_for_each_device(&platform_profile_class, NU=
+LL,
+>                                             &data, _aggregate_choices);
+> @@ -422,7 +420,7 @@ static ssize_t platform_profile_store(struct device *=
+dev,
+>         i =3D sysfs_match_string(profile_names, buf);
+>         if (i < 0 || i =3D=3D PLATFORM_PROFILE_CUSTOM)
+>                 return -EINVAL;
+> -       set_bit(PLATFORM_PROFILE_LAST, data.aggregate);
+> +
+>         scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock)=
+ {
+>                 ret =3D class_for_each_device(&platform_profile_class, NU=
+LL,
+>                                             &data, _aggregate_choices);
+> @@ -502,7 +500,6 @@ int platform_profile_cycle(void)
+>         enum platform_profile_option profile =3D PLATFORM_PROFILE_LAST;
+>         int err;
+>
+> -       set_bit(PLATFORM_PROFILE_LAST, data.aggregate);
+>         scoped_cond_guard(mutex_intr, return -ERESTARTSYS, &profile_lock)=
+ {
+>                 err =3D class_for_each_device(&platform_profile_class, NU=
+LL,
+>                                             &profile, _aggregate_profiles=
+);
+>
+> ---
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on aae0594a7053c60b82621136257c8b648c67b512]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Terry-Bowman/PCI-CXL-Introduce-PCIe-helper-function-pcie_is_cxl/20250327-095738
-base:   aae0594a7053c60b82621136257c8b648c67b512
-patch link:    https://lore.kernel.org/r/20250327014717.2988633-14-terry.bowman%40amd.com
-patch subject: [PATCH v8 13/16] cxl/pci: Assign CXL Endpoint protocol error handlers
-config: csky-randconfig-r122-20250327 (https://download.01.org/0day-ci/archive/20250328/202503280346.euKvcovE-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 12.4.0
-reproduce: (https://download.01.org/0day-ci/archive/20250328/202503280346.euKvcovE-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503280346.euKvcovE-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/cxl/port.c:68:33: sparse: sparse: symbol 'cxl_ep_error_handlers' was not declared. Should it be static?
-
-vim +/cxl_ep_error_handlers +68 drivers/cxl/port.c
-
-    67	
-  > 68	const struct cxl_error_handlers cxl_ep_error_handlers = {
-    69		.error_detected = cxl_error_detected,
-    70		.cor_error_detected = cxl_cor_error_detected,
-    71	};
-    72	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Applied as 6.15-rc material, thanks!
