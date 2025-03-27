@@ -1,151 +1,165 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF453212B00
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:09:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2610216399
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:09:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743084544; cv=none; b=rQ4cfqfRTIX7kwlGSjqnE7m4PNUQPOifWb8z8HSOO09pwVp+hkk9LpKvzBOuJRjMej+TsGnmhNAU7FXg8QrmjTlhoptyMuXR3J/QRMRpPiZmzA74d2gnc6VVWiyT00PNdXcHpd5pF/QNPmyESSBngx3ymRl2UY/D3ImN4E4daQo=
+	t=1743084565; cv=none; b=J3m7ZTEaiwfmH7BUNE/CdfhFAMlJrnWnWijfCUmA4jTkbT4rQbd1ZRvS89clESOsxoEPwBhFmGvr/Sc/XgO5vXL2wtNYpjyEeRyE/gaLsnjqAMoK+egxP+ce6ydbsv8ShFh/k0cmHSrO331Bg910f6dWk8ozJF5zYPQAMOuhazc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743084544; c=relaxed/simple;
-	bh=FtxSPPforRmWQYpjuu9KMelVmDIjL4fj+8RdRXDYzVM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NyuH9zFnMO00FbrOgkSmWySmK/P8/rBuoHJUGybR0ZdnIk0rgieuvnQQIDw21s2vKwWqUF3vUXWn+sMonODgme0UhBIUmRdf63Hlb4vzVcm++Gdpd8+CPmUIfO8hfgsgifBZ+ZJpMUlcnddeZTdsPc3K38tLpVM3bRVjlhwwECI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2336A1063;
-	Thu, 27 Mar 2025 07:09:07 -0700 (PDT)
-Received: from [10.57.86.146] (unknown [10.57.86.146])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC29F3F58B;
-	Thu, 27 Mar 2025 07:08:58 -0700 (PDT)
-Message-ID: <54886038-3707-4ea0-bd84-00a8f4a19a6a@arm.com>
-Date: Thu, 27 Mar 2025 10:08:56 -0400
+	s=arc-20240116; t=1743084565; c=relaxed/simple;
+	bh=RWuDuE5fgIAuTD9uggQMYp2kkWjsc7bWPvIMH0cW1/k=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=hcwcZGGYM2qDvsLWTdEN1Uc81Bze/R6xHJqU9ej61Rdkoo5exeYxmjV81lk6cKqyMUNga6xI6GwoZScwcG830WIagMyoWExSdVJ88khl0H6520Q73R3eQ6zz+zab9hYeIi9ZqCuobCoYu0ChXQS1IJVRSK2PHJoA64BnOtHqJJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d44ba1c2b5so11100315ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 07:09:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743084563; x=1743689363;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4LZ7mfR7Lc9EP1nYqKnYAem0aGcyUg3E8Ey9SapUJck=;
+        b=tIV2e9y75esBN31UdIZOsAHIFX+Qq/XjLn4P3HK0r4TwZjh4wAbE6iTFNNXlxscya+
+         bXCCfsFeln+e8RrWL72UuE570niwx6iyy1h+KHHNy6TXxevNFEM88/nMnE8HNMXy0vav
+         UPvMe+7V/RJ3ZlaZbyNpKMe3NuoRNgB/zjDmx1UQ4wJ7WlkkxtXwtqSktIn5BsTJw7Kp
+         BsmGqPRD2MNlXjDkoBHQjXRYf2bakbIqusALsstGGlPhzw++pG4aZxCPD01iOVM+/nGs
+         24OVycXBWLvwAHeRYYHJwX5F5LKcNAbuo8E/kYe1rXybTatGWvZyBZKwPv6H6sC7mWYH
+         XNbA==
+X-Forwarded-Encrypted: i=1; AJvYcCXpxtn7fzT2oYHwRWD1PK4OSn/k2tFWDzUX2VflB4v8iS+UZX3CNiJ7iilxNtg1z7NmXj1Xw/Q2ErCnRTI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+7BRUqx/dcc59fJ/Q2K0G/wvk1JxNzmldMnMS6v01HiU3NI+w
+	xvYdaiNSkB87Zs0wOxz0ek+FDhML0vbp2upgg34Vsi3/Q4tPVsHqyHIW7hPRO2JNfRl1I0MeubL
+	mUDkiajfax1CCX1uXRP5iHNq8FGg8Vbu6+ULhMcmFPBF9xiCvgvtHX0U=
+X-Google-Smtp-Source: AGHT+IHk7J352EBXlhx0rbPbcAamqA3iw7XusQRXczqxctlKg7CPQNrPQ3m6wWsEyeYOTpxlfwAuYIYSU7wU0NKSuIyavxDwU4Cs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] mm: mincore: use folio_pte_batch() to batch process
- large folios
-Content-Language: en-GB
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
- hughd@google.com
-Cc: willy@infradead.org, david@redhat.com, 21cnbao@gmail.com, ziy@nvidia.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1742960003.git.baolin.wang@linux.alibaba.com>
- <7ad05bc9299de5d954fb21a2da57f46dd6ec59d0.1742960003.git.baolin.wang@linux.alibaba.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <7ad05bc9299de5d954fb21a2da57f46dd6ec59d0.1742960003.git.baolin.wang@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:cd8e:0:b0:3d4:700f:67e2 with SMTP id
+ e9e14a558f8ab-3d5ccdc95camr40598995ab.10.1743084562801; Thu, 27 Mar 2025
+ 07:09:22 -0700 (PDT)
+Date: Thu, 27 Mar 2025 07:09:22 -0700
+In-Reply-To: <67cd611c.050a0220.14db68.0073.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67e55c12.050a0220.2f068f.002c.GAE@google.com>
+Subject: Re: [syzbot] [x25?] possible deadlock in lapbeth_device_event
+From: syzbot <syzbot+377b71db585c9c705f8e@syzkaller.appspotmail.com>
+To: andrew+netdev@lunn.ch, andrew@lunn.ch, davem@davemloft.net, 
+	edumazet@google.com, eric.dumazet@gmail.com, horms@kernel.org, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org, 
+	lkp@intel.com, llvm@lists.linux.dev, ms@dev.tdt.de, netdev@vger.kernel.org, 
+	oe-kbuild-all@lists.linux.dev, pabeni@redhat.com, sdf@fomichev.me, 
+	stfomichev@gmail.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 25/03/2025 23:38, Baolin Wang wrote:
-> When I tested the mincore() syscall, I observed that it takes longer with
-> 64K mTHP enabled on my Arm64 server. The reason is the mincore_pte_range()
-> still checks each PTE individually, even when the PTEs are contiguous,
-> which is not efficient.
-> 
-> Thus we can use folio_pte_batch() to get the batch number of the present
-> contiguous PTEs, which can improve the performance. I tested the mincore()
-> syscall with 1G anonymous memory populated with 64K mTHP, and observed an
-> obvious performance improvement:
-> 
-> w/o patch		w/ patch		changes
-> 6022us			1115us			+81%
-> 
-> Moreover, I also tested mincore() with disabling mTHP/THP, and did not
-> see any obvious regression.
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> ---
->  mm/mincore.c | 27 ++++++++++++++++++++++-----
->  1 file changed, 22 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/mincore.c b/mm/mincore.c
-> index 832f29f46767..88be180b5550 100644
-> --- a/mm/mincore.c
-> +++ b/mm/mincore.c
-> @@ -21,6 +21,7 @@
->  
->  #include <linux/uaccess.h>
->  #include "swap.h"
-> +#include "internal.h"
->  
->  static int mincore_hugetlb(pte_t *pte, unsigned long hmask, unsigned long addr,
->  			unsigned long end, struct mm_walk *walk)
-> @@ -105,6 +106,7 @@ static int mincore_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
->  	pte_t *ptep;
->  	unsigned char *vec = walk->private;
->  	int nr = (end - addr) >> PAGE_SHIFT;
-> +	int step, i;
->  
->  	ptl = pmd_trans_huge_lock(pmd, vma);
->  	if (ptl) {
-> @@ -118,16 +120,31 @@ static int mincore_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
->  		walk->action = ACTION_AGAIN;
->  		return 0;
->  	}
-> -	for (; addr != end; ptep++, addr += PAGE_SIZE) {
-> +	for (; addr != end; ptep += step, addr += step * PAGE_SIZE) {
->  		pte_t pte = ptep_get(ptep);
->  
-> +		step = 1;
->  		/* We need to do cache lookup too for pte markers */
->  		if (pte_none_mostly(pte))
->  			__mincore_unmapped_range(addr, addr + PAGE_SIZE,
->  						 vma, vec);
-> -		else if (pte_present(pte))
-> -			*vec = 1;
-> -		else { /* pte is a swap entry */
-> +		else if (pte_present(pte)) {
-> +			if (pte_batch_hint(ptep, pte) > 1) {
-> +				struct folio *folio = vm_normal_folio(vma, addr, pte);
-> +
-> +				if (folio && folio_test_large(folio)) {
-> +					const fpb_t fpb_flags = FPB_IGNORE_DIRTY |
-> +								FPB_IGNORE_SOFT_DIRTY;
-> +					int max_nr = (end - addr) / PAGE_SIZE;
-> +
-> +					step = folio_pte_batch(folio, addr, ptep, pte,
-> +							max_nr, fpb_flags, NULL, NULL, NULL);
-> +				}
-> +			}
+syzbot has found a reproducer for the following issue on:
 
-You could simplify to the following, I think, to avoid needing to grab the folio
-and call folio_pte_batch():
+HEAD commit:    1a9239bb4253 Merge tag 'net-next-6.15' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15503804580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=95c3bbe7ce8436a7
+dashboard link: https://syzkaller.appspot.com/bug?extid=377b71db585c9c705f8e
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=139a6bb0580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16974a4c580000
 
-			else if (pte_present(pte)) {
-				int max_nr = (end - addr) / PAGE_SIZE;
-				step = min(pte_batch_hint(ptep, pte), max_nr);
-			} ...
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-1a9239bb.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/bd56e2f824c3/vmlinux-1a9239bb.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/19172b7f9497/bzImage-1a9239bb.xz
 
-I expect the regression you are seeing here is all due to calling ptep_get() for
-every pte in the contpte batch, which will cause 16 memory reads per pte (to
-gather the access/dirty bits). For small folios its just 1 read per pte.
-pte_batch_hint() will skip forward in blocks of 16 so you now end up with the
-same number as for the small folio case. You don't need all the fancy extras
-that folio_pte_batch() gives you here.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+377b71db585c9c705f8e@syzkaller.appspotmail.com
 
-Thanks,
-Ryan
+============================================
+WARNING: possible recursive locking detected
+6.14.0-syzkaller-05877-g1a9239bb4253 #0 Not tainted
+--------------------------------------------
+dhcpcd/5649 is trying to acquire lock:
+ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
+ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: netif_napi_add_weight include/linux/netdevice.h:2783 [inline]
+ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: lapbeth_new_device drivers/net/wan/lapbether.c:415 [inline]
+ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: lapbeth_device_event+0x586/0xbe0 drivers/net/wan/lapbether.c:460
+
+but task is already holding lock:
+ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
+ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
+ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:39 [inline]
+ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: dev_change_flags+0xa7/0x250 net/core/dev_api.c:67
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(&dev->lock);
+  lock(&dev->lock);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+2 locks held by dhcpcd/5649:
+ #0: ffffffff900fb268 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_net_lock include/linux/rtnetlink.h:130 [inline]
+ #0: ffffffff900fb268 (rtnl_mutex){+.+.}-{4:4}, at: devinet_ioctl+0x26d/0x1f50 net/ipv4/devinet.c:1121
+ #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
+ #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
+ #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:39 [inline]
+ #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: dev_change_flags+0xa7/0x250 net/core/dev_api.c:67
+
+stack backtrace:
+CPU: 1 UID: 0 PID: 5649 Comm: dhcpcd Not tainted 6.14.0-syzkaller-05877-g1a9239bb4253 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_deadlock_bug+0x1e9/0x240 kernel/locking/lockdep.c:3042
+ check_deadlock kernel/locking/lockdep.c:3094 [inline]
+ validate_chain kernel/locking/lockdep.c:3896 [inline]
+ __lock_acquire+0xff7/0x1ba0 kernel/locking/lockdep.c:5235
+ lock_acquire kernel/locking/lockdep.c:5866 [inline]
+ lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
+ __mutex_lock_common kernel/locking/mutex.c:587 [inline]
+ __mutex_lock+0x19a/0xb00 kernel/locking/mutex.c:732
+ netdev_lock include/linux/netdevice.h:2751 [inline]
+ netif_napi_add_weight include/linux/netdevice.h:2783 [inline]
+ lapbeth_new_device drivers/net/wan/lapbether.c:415 [inline]
+ lapbeth_device_event+0x586/0xbe0 drivers/net/wan/lapbether.c:460
+ notifier_call_chain+0xb9/0x410 kernel/notifier.c:85
+ call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2180
+ call_netdevice_notifiers_extack net/core/dev.c:2218 [inline]
+ call_netdevice_notifiers net/core/dev.c:2232 [inline]
+ __dev_notify_flags+0x12c/0x2e0 net/core/dev.c:9409
+ netif_change_flags+0x108/0x160 net/core/dev.c:9438
+ dev_change_flags+0xba/0x250 net/core/dev_api.c:68
+ devinet_ioctl+0x11d5/0x1f50 net/ipv4/devinet.c:1200
+ inet_ioctl+0x3a7/0x3f0 net/ipv4/af_inet.c:1001
+ sock_do_ioctl+0x115/0x280 net/socket.c:1190
+ sock_ioctl+0x227/0x6b0 net/socket.c:1311
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:906 [inline]
+ __se_sys_ioctl fs/ioctl.c:892 [inline]
+ __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7effd384cd49
+Code: 5c c3 48 8d 44 24 08 48 89 54 24 e0 48 89 44 24 c0 48 8d 44 24 d0 48 89 44 24 c8 b8 10 00 00 00 c7 44 24 b8 10 00 00 00 0f 05 <41> 89 c0 3d 00 f0 ff ff 76 10 48 8b 15 ae 60 0d 00 f7 d8 41 83 c8
+RSP: 002b:00007ffedd440088 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007effd377e6c0 RCX: 00007effd384cd49
+RDX: 00007ffedd450278 RSI: 0000000000008914 RDI: 000000000000001a
+RBP: 00007ffedd460438 R08: 00007ffedd450238 R09: 00007ffedd4501e8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007ffedd450278 R14: 0000000000000028 R15: 0000000000008914
+ </TASK>
 
 
-> +
-> +			for (i = 0; i < step; i++)
-> +				vec[i] = 1;
-> +		} else { /* pte is a swap entry */
->  			swp_entry_t entry = pte_to_swp_entry(pte);
->  
->  			if (non_swap_entry(entry)) {
-> @@ -146,7 +163,7 @@ static int mincore_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
->  #endif
->  			}
->  		}
-> -		vec++;
-> +		vec += step;
->  	}
->  	pte_unmap_unlock(ptep - 1, ptl);
->  out:
-
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
