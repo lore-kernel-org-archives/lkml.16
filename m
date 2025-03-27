@@ -1,148 +1,159 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D83F19D07E
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC9D1A83FB
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:35:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743093352; cv=none; b=F42VJ250Wy1pmpJimFCHrFqH7tcWU+KwKa3UvhPB6DUmbuWoVRCIEkSL+c70L/LrvHXXP2NiMr5FkftJmJC0/YdsPWnFlok9DP5dUuVERPIQGgk5qf9OB99aVoj5LqoIFh0ZfIU3X4bO64gQ4TJifgHGF4o6LKauU3XG8Thv8rM=
+	t=1743093356; cv=none; b=TsFrlhpeGr0mT9TNFi+6wJO8z/XWF3fz/Zdu7C7pHpHTMQA7ybx9IZHCQgFBhghFmc+7QnEq+/pjvkDHyc0x0saqkNMm1aN38Cg0mxUxg8YbWUp5pZqhYCFECna49C2Np+GHX8roQlhEMCts4GAwFvHti+mn+OLUCb5pHgysYtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743093352; c=relaxed/simple;
-	bh=eX7fgUh0Or+r6nCoeg2ASG+YN/fSSE0v52AVH35g1rc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DTJhXLgobLgta2uiq93PjJz3MjA7dDAoliqAoMEA98R4I+/UTy3Sf+elu7Smuj53jFO1xNMw39oc2cf3z+l93voP4YmeFsieguKJBMucg1yy85K3iNUej111fn9o5XbAZECpBRk+tVcHmM+sg+9RyVI7hgLDjmMC2wKDspQ0oo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=FblBuMa7; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="FblBuMa7"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e5deb6482cso4427279a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:35:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1743093348; x=1743698148; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=w0w6uuCADAEtLYg3qcYN8l4lvMJUAkHjqpfFuC5QFZE=;
-        b=FblBuMa7VolDTLsDkBI50xhxyjoDbN5jUQXs9Yc65+g/5S4t/BVIBgxLsO7AhdPyaI
-         E4GgByhhujo5G2rSNZFH9dLYG7tVKOF3Bp8ahQLwNYkLPA3Z9NTOWDaynd+RBX/TUpd6
-         aK6Zzk90YWjwv9mMSySIqR4OxfWOzKDppHsSA=
+	s=arc-20240116; t=1743093356; c=relaxed/simple;
+	bh=w6fKN+ar7K8CvoopsWGztq3OYFTh8KIxp+iQRUs10/I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XuInc6Vn13vliHkkykWLvb7Cy0ZiB75cYJfw9zaB6ovhyww/tcugCUDOCNFUV4oG48+TdM2X2U6DXdDOIGsnc0hhsFzTchEcr4/uteAqECf9q5GXSnH5L5po3j7XxFWCRoy/D7nIeQoI7ETqRxiqPaWbXl8wLb6Tv9y/muxbnVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-86d69774081so589970241.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:35:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743093348; x=1743698148;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w0w6uuCADAEtLYg3qcYN8l4lvMJUAkHjqpfFuC5QFZE=;
-        b=Yc928ULD0YIK01aVQEAG6UvyyodQ5KJqoV0gmJ+G2b6KBjEwdWyR9EFMl6NsjsHaIw
-         AnCdC/+enHZ2rq3hkpeTc2Rf9NB52BZ6wAGBoMAB0j/11/cA4vStZ0vEKeoSuLi7M658
-         sCjL0LZ7NO8PquuN00a6PiYRUFnWmGzS37lxQE019R5p8FeyKJhSc+7F4L7b569zzlyU
-         UoS+yr1hQV1RIWSm3WXsQPFiWmJ3X6lrOgY6EvoXxjCAL0xtSTUxrEpJ1Q+poZjah+5j
-         SOq9gdyTMWtEXOAU/9oaNTfy276Kde415kX6i4/0tPxvP/D/npaYNKSAA3s1L4EGh5GG
-         v3CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVWXw1rGycXckVbW2i5UleoTVadNQQKVOd33lvOik/2A/R9toYwmkZUmvlXduJliPpr4eVg4Rk8P9pAx/A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXXY4jDMfRYvPcAYLSY1jmfA7bwZ7Fq6uPBs1dY07aX/lGk7Wl
-	s1nC7Gj7SST80LEXximd6Zyk373vV20LWJ8qgQphsPrASUfF01PYkrx6G7QhQBE=
-X-Gm-Gg: ASbGncshQVwZpFVkaUUbptAT0pSTBJptvms3kGSUgr1xDpR7siziSDdyg8ciE5CuYcK
-	e2OHEHvqhBvQOutPkQKp5aKBq3TWXS7/IaIyvfbVBFb5TpqMFY+0BmHXCb7SEVppCWoXTtURI/j
-	4DWzMCZLHN8wzk3DxNxI6EUGZOnLeBArjgX0suUNY365igwFPfA9X8nwB7JyJBDmjAnwdSuyake
-	mSWSNK4L1x4cVYTooNfvq3U2H95arh8UgtJMNSB+hG/T/cCkJM/wUKfSkChYWodPGh/Y3ApnXNn
-	Eay5+UXqPMxvejpByvCd8xsnXFQaWaO75LVNs+a3XK0sHXLuNA==
-X-Google-Smtp-Source: AGHT+IHEvJFXsIv1KX0tOnrc1aD6jz56SsUPbPYvgNk+VtOonHYfrD/l+1uybG5HnmfkDNHxapuKvg==
-X-Received: by 2002:a05:6402:90b:b0:5e5:9c04:777 with SMTP id 4fb4d7f45d1cf-5edbf31f039mr799501a12.6.1743093347754;
-        Thu, 27 Mar 2025 09:35:47 -0700 (PDT)
-Received: from localhost ([84.78.159.3])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5edc16aae16sm54762a12.13.2025.03.27.09.35.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 09:35:47 -0700 (PDT)
-Date: Thu, 27 Mar 2025 17:35:46 +0100
-From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: bhelgaas@google.com, tglx@linutronix.de, jgross@suse.com,
-	pstanner@redhat.com, andriy.shevchenko@linux.intel.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-coco@lists.linux.dev
-Subject: Re: [PATCH] PCI/MSI: Fix x86 VMs crash due to dereferencing NULL
-Message-ID: <Z-V-YkXwHQsqUBnm@macbook.local>
-References: <20250327162155.11133-1-Ashish.Kalra@amd.com>
+        d=1e100.net; s=20230601; t=1743093352; x=1743698152;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ibdtL0f3H8DnAPyEw/T+T3QYX14z3U6slG7wOxVtOcQ=;
+        b=YWKSy3R3NCRNp3cWX9yz8HsqlZd2Ofw2nezvI7WCn0iImLlQg8a0wHcQtUI/erAoCP
+         OdKxZZml9CnHdJWhA4l+zKs9EmPr8XIMiHDjNjaVccGKgAQail1osn4dUz6Qyyi+65/V
+         u+Dg0faLDYa3dhmg6jPoWpzO0ghv03vI92D+7mq/CPpFuKsjB1hRQGdv24FBgVZvfbbs
+         RxtyFsoDYsWHubzmGVAwMZNxs5GjJZR5nRF/8cyZAIFMwUdr7eMB6zkXBTk2QyJQ9F7f
+         3hCE0nuB6/tCUCnucPmpKm4NVVSXCDoAxhJwLPrkA90Fac+hClnjS6PHRQ90knvWjQLl
+         eA1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUVbcD6SgxfUz2JIpwkTTZmK8rJFfAoWbmCzhM6Hg8GU7b5mxzVH0bOb7F4BXpuH8fGI+ephL31OCI4T/U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmMdGZk5kh33qsbmf+5oc+Slqsa8L/MCWXm70bo++sl9ypwz0S
+	dLuzl8owO3rUbvJ+vltaLwZOIlpwLh26L27t5SjbAfLUG/SPaKG7MESnBL76HbM=
+X-Gm-Gg: ASbGncv4w6G+K4IY07spuNBCENGE6fP7r2Cl0H0tscBeIHc5atvhSMqw+gXDWYlhoyB
+	f/KvymwEOBUz5DkKqIOXPHusMZSv4fVXrOiXsmi4+8Hsht0ZtRYivFy/TFXySudVOSAlYd5zwfG
+	H6zVmRxJT3fAtLlyyhtxtkjQ6PK712BH43GwTNQgu/WfU5kUvmfOlsuSbW/wfLEfrkdRXsZhCdz
+	R+QMsLteADfZHEwyTKlNhjj+n/BlbmgXwqJMrAuf2uAYKUfyAzU8GwnQFmEnG3W/vUVr3SLqELL
+	58w9BGyy5mCKfr/VHsGqXDvK6V+o4VOlIizauHzN/DsNwIWEOgtHL4xitxfspi9lTveZj8l2HxB
+	2RvXpGr0=
+X-Google-Smtp-Source: AGHT+IE0iQAhqo7QIDfW20P0nxcWLW8HpMG0h6PIAInmRslCCodU9/zdPY9AGCozxxtEGrVvDg8JJA==
+X-Received: by 2002:a05:6122:c83:b0:520:60c2:3fd with SMTP id 71dfb90a1353d-52600920e5dmr3986964e0c.3.1743093352133;
+        Thu, 27 Mar 2025 09:35:52 -0700 (PDT)
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5260e7f09dasm29973e0c.19.2025.03.27.09.35.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 09:35:51 -0700 (PDT)
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-86d69774081so589939241.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:35:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU6kLHiiEDTSViV3Ggt8aPAxOPpsYNZbswoRDl9eZuumHve3HNmEbX1dHPhiZpJY0LdQh6VGshpOqH9/cI=@vger.kernel.org
+X-Received: by 2002:a05:6122:1d48:b0:520:5a87:6708 with SMTP id
+ 71dfb90a1353d-5260071fe18mr3630874e0c.0.1743093351421; Thu, 27 Mar 2025
+ 09:35:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250327162155.11133-1-Ashish.Kalra@amd.com>
+References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
+ <20250326-xilinx-formats-v4-3-322a300c6d72@ideasonboard.com>
+ <CAMuHMdXM1B1c=62EpcuUdpdpaBRZSJLXb1GBB0egzp7Fyeo5-w@mail.gmail.com>
+ <b195971c-52e6-463e-a440-83dde4346e65@ideasonboard.com> <20250327112009.6b4dc430@eldfell>
+ <b5cf15a4-7c65-4718-9c39-a4c86179ba4c@ideasonboard.com> <20250327175842.130c0386@eldfell>
+In-Reply-To: <20250327175842.130c0386@eldfell>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 27 Mar 2025 17:35:39 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
+X-Gm-Features: AQ5f1JpeqSn4PpS1s7kqwyEJE-2D6rFE_STOfuC_nMbBosIVwkbb55ssK1rcc48
+Message-ID: <CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
+Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
+To: Pekka Paalanen <pekka.paalanen@haloniitty.fi>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Vishal Sagar <vishal.sagar@amd.com>, 
+	Anatoliy Klymenko <anatoliy.klymenko@amd.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Michal Simek <michal.simek@amd.com>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Mar 27, 2025 at 04:21:55PM +0000, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
-> 
-> Moving pci_msi_ignore_mask to per MSI domain flag is causing a panic
-> with SEV-SNP VMs under KVM while booting and initializing virtio-scsi
-> driver as below :
-> 
-> ...
-> [    9.854554] virtio_scsi virtio1: 4/0/0 default/read/poll queues
-> [    9.855670] BUG: kernel NULL pointer dereference, address: 0000000000000000
-> [    9.856840] #PF: supervisor read access in kernel mode
-> [    9.857695] #PF: error_code(0x0000) - not-present page
-> [    9.858501] PGD 0 P4D 0
-> [    9.858501] Oops: Oops: 0000 [#1] SMP NOPTI
-> [    9.858501] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-next-20250326-snp-host-f2a41ff576cc #379 VOLUNTARY
-> [    9.858501] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 02/02/2022
-> [    9.858501] RIP: 0010:msix_prepare_msi_desc+0x3c/0x90
-> [    9.858501] Code: 89 f0 48 8b 52 20 66 81 4e 4c 01 01 c7 46 04 01 00 00 00 8b 8f b4 03 00 00 48 89 e5 89 4e 50 48 8b b7 b0 09 00 00 48 89 70 58 <8b> 0a 81 e1 00 00 40 00 75 25 0f b6 50 4d d0 ea 83 f2 01 83 e2 01
-> [    9.858501] RSP: 0018:ffffa37f4002b898 EFLAGS: 00010202
-> [    9.858501] RAX: ffffa37f4002b8c8 RBX: ffffa37f4002b8c8 RCX: 0000000000000017
-> [    9.858501] RDX: 0000000000000000 RSI: ffffa37f400b5000 RDI: ffff984802524000
-> [    9.858501] RBP: ffffa37f4002b898 R08: 0000000000000002 R09: ffffa37f4002b854
-> [    9.858501] R10: 0000000000000004 R11: 0000000000000018 R12: ffff984802924000
-> [    9.858501] R13: ffff984802524000 R14: ffff9848025240c8 R15: 0000000000000000
-> [    9.858501] FS:  0000000000000000(0000) GS:ffff984bae657000(0000) knlGS:0000000000000000
-> [    9.858501] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    9.858501] CR2: 0000000000000000 CR3: 000800003c260000 CR4: 00000000003506f0
-> [    9.858501] Call Trace:
-> [    9.858501]  <TASK>
-> [    9.858501]  msix_setup_interrupts+0x10e/0x290
-> [    9.858501]  __pci_enable_msix_range+0x2ce/0x470
-> [    9.858501]  pci_alloc_irq_vectors_affinity+0xb2/0x110
-> [    9.858501]  vp_find_vqs_msix+0x228/0x530
-> [    9.858501]  vp_find_vqs+0x41/0x290
-> [    9.858501]  ? srso_return_thunk+0x5/0x5f
-> [    9.858501]  ? __dev_printk+0x39/0x80
-> [    9.858501]  ? srso_return_thunk+0x5/0x5f
-> [    9.858501]  ? _dev_info+0x6f/0x90
-> [    9.858501]  vp_modern_find_vqs+0x1c/0x70
-> [    9.858501]  virtscsi_init+0x2d2/0x340
-> [    9.858501]  ? __pfx_default_calc_sets+0x10/0x10
-> [    9.858501]  virtscsi_probe+0x135/0x3c0
-> [    9.858501]  virtio_dev_probe+0x1b6/0x2a0
-> ...
-> ...
-> [    9.934826] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
-> 
-> This is happening as x86 VMs only have x86_vector_domain (irq_domain)
-> created by native_create_pci_msi_domain() and that does not have an
-> associated msi_domain_info. Thus accessing msi_domain_info causes a
-> kernel NULL pointer dereference during msix_setup_interrupts() and
-> breaks x86 VMs.
-> 
-> In comparison, for native x86, there is irq domain hierarchy created
-> by interrupt remapping logic either by AMD IOMMU (AMD-IR) or Intel
-> DMAR (DMAR-MSI) and they have an associated msi_domain_info, so
-> moving pci_msi_ignore_mask to a per MSI domain flag works for
-> native x86.
-> 
-> Also, Hyper-V and Xen x86 VMs create "virtual" irq domains
-> (XEN-MSI) or (HV-PCI-MSI) with their associated msi_domain_info,
-> and they can also access pci_msi_ignore_mask as per MSI domain flag.
-> 
-> Fixes: c3164d2e0d18 ("PCI/MSI: Convert pci_msi_ignore_mask to per MSI domain flag")
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+Hi Pekka,
 
-Sorry for the breakage.  Already fixed upstream by commit:
+On Thu, 27 Mar 2025 at 16:59, Pekka Paalanen
+<pekka.paalanen@haloniitty.fi> wrote:
+> On Thu, 27 Mar 2025 16:21:16 +0200
+> Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:
+> > On 27/03/2025 11:20, Pekka Paalanen wrote:
+> > > On Wed, 26 Mar 2025 15:55:18 +0200
+> > > Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:
+> > >> On 26/03/2025 15:52, Geert Uytterhoeven wrote:
+> > >>> On Wed, 26 Mar 2025 at 14:23, Tomi Valkeinen
+> > >>> <tomi.valkeinen@ideasonboard.com> wrote:
+> > >>>> Add greyscale Y8 format.
+> > >>>>
+> > >>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > >>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> > >>>
+> > >>> Thanks for your patch!
+> > >>>
+> > >>>> --- a/include/uapi/drm/drm_fourcc.h
+> > >>>> +++ b/include/uapi/drm/drm_fourcc.h
+> > >>>> @@ -405,6 +405,9 @@ extern "C" {
+> > >>>>    #define DRM_FORMAT_YUV444      fourcc_code('Y', 'U', '2', '4') /* non-subsampled Cb (1) and Cr (2) planes */
+> > >>>>    #define DRM_FORMAT_YVU444      fourcc_code('Y', 'V', '2', '4') /* non-subsampled Cr (1) and Cb (2) planes */
+> > >>>>
+> > >>>> +/* Greyscale formats */
+> > >>>> +
+> > >>>> +#define DRM_FORMAT_Y8          fourcc_code('G', 'R', 'E', 'Y')  /* 8-bit Y-only */
+> > >>>
+> > >>> This format differs from e.g. DRM_FORMAT_R8, which encodes
+> > >>> the number of bits in the FOURCC format. What do you envision
+> > >>> for e.g. DRM_FORMAT_Y16? fourcc_code('G', 'R', '1', '6')?
+> > >>
+> > >> I wanted to use the same fourcc as on V4L2 side. Strictly speaking it's
+> > >> not required, but different fourccs for the same formats do confuse.
+> > >>
+> > >> So, generally speaking, I'd pick an existing fourcc from v4l2 side if
+> > >> possible, and if not, invent a new one.
+> > >
+> > > what's the actual difference between DRM_FORMAT_R8 and DRM_FORMAT_Y8?
+> > >
+> > > Is the difference that when R8 gets expanded to RGB, it becomes (R, 0,
+> > > 0), but Y8 gets expanded to (c1 * Y, c2 * Y, c3 * Y) where c1..c3 are
+> > > defined by MatrixCoefficients (H.273 terminology)?
+> > >
+> > > That would be my intuitive assumption following how YCbCr is handled.
+> > > Is it obvious enough, or should there be a comment to that effect?
+> >
+> > You raise an interesting point. Is it defined how a display driver, that
+> > supports R8 as a format, shows R8 on screen? I came into this in the
+> > context of grayscale formats, so I thought R8 would be handled as (R, R,
+> > R) in RGB. But you say (R, 0, 0), which... also makes sense.
+>
+> That is a good question too. I based my assumption on OpenGL behavior
+> of R8.
+>
+> Single channel displays do exist I believe, but being single-channel,
+> expansion on the other channels is likely meaningless. Hm, but for the
+> KMS color pipeline, it would be meaningful, like with a CTM.
+> Interesting.
+>
+> I don't know. Maybe Geert does?
 
-3ece3e8e5976 ("PCI/MSI: Handle the NOMASK flag correctly for all PCI/MSI backends")
+I did some digging, and was a bit surprised that it was you who told
+me to use R8 instead of Y8?
+https://lore.kernel.org/all/20220202111954.6ee9a10c@eldfell
 
-From Thomas.
+Gr{oetje,eeting}s,
 
-Regards, Roger.
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
