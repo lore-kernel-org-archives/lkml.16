@@ -1,153 +1,118 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82821C6889
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 06:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+Received: from invmail.skhynix.com (exvmail.skhynix.com [166.125.252.79])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34E761C6889
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 06:58:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743058408; cv=none; b=mfdLMoHqp6/QLhFF+psVWMIHuPZmFW0pUl7Icy1pc+aqUNiKCubdM8bjrWwvAsCcGU6RJbQJQ4aRbAdmDHcnEe30ybj5DdMPDpkjOhkjckDjjzQ/wMBskCpU+TB/gEDd2wMRXuQ/jP8KiguNgZkQNyywBzVclKRJCEMQLEGuvyo=
+	t=1743058745; cv=none; b=RkbNS5MfO2O1O7P645hTD4PQPZZdbkxxDafy7YYMAHKhSJIJtndXtyrjISTvW65GOCQNgT2+YRvqyOLhF1z8h86l8vbZBPcSjUl55RXy+BrwPh0oMna6BUrlQbHVmmxki3WFILIR/C2n0PZ+gpzjNyMH5F/VLIt9Z5h1MMqjABk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743058408; c=relaxed/simple;
-	bh=gmjJJW9kLnwVf4ojgXk72+SIvB4JBqU2VPR6QGUBIts=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DMY9fX4vcYvdx242G23N0RJdHmRGIw0zQiYrrDnna/vt2w2KMuM9Wah/9mUz9AQXwyfZhy4MBr3IKToIIo0l8Hbv3PYaEvN52l3RG9ta+3dCqbvLKzX2+F8CMzAC7bklRue42PTiRKOj77zSjLFWeKaf4zfEwTpFK68GzhEhtBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MZB1yeTF; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="MZB1yeTF"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43938828d02so1329255e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 23:53:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743058404; x=1743663204; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=t1PDL49wsR8t3oK5tOwSBTXVuxib+JRofPTqoaO+MbY=;
-        b=MZB1yeTFQ8mRh0f5GXjlgMS+V+spjjP/SjhnbjzqHy6MA6QSjU6U5SRApZAajA1vtU
-         +wi050IkNGHrSHwng8FVrTrfpjGxGWu4UpL/xnGnsdtS/TWTFskxFHQ4m33dUKHh+Cz7
-         01RcmbIXS5pstDtVkENM2DJ7wUUTl/mG+JIptU07a/BducP3i5tyQDLBgV2bHY1G7IyW
-         VDVSm912HCmshkF/qx6xlyYy/d4qL2f2D5/zvxxMLzE4564KZVuqILXBSaCjJ1T84QYL
-         fX+Z4wW+oE6I9GpZAMfpGmNbfLyowAKloTD1BPGSfF48sDlGE1qnz9NbOLLfxBJ5/CmW
-         QpHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743058404; x=1743663204;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t1PDL49wsR8t3oK5tOwSBTXVuxib+JRofPTqoaO+MbY=;
-        b=IdUc42d9XmxTiFvLHD2GJ41+UK9CYBHt4hAmxKWsvTnf51v9FwsLV9+JBIkPshL4Jk
-         +x2zcr9T72XxxGS1cVMACc/f+bXTP7OMedtIPS0zefqC0t8h39sUUhk5n1044Qxmz6S9
-         wEbziDWQqySQwP6yj5DI2B8PLlr1xlnSh9dMXba50utGbcjEBO5HC21cxZeiej65cuWL
-         zMN+UC+22sGmoDryzIZE8aEhHlrqwdv3e1NOxCz5fYt6KrD5GGvKU1hRmFz+upe67lxA
-         qvXAlgf8HyS09l4MnhmbNNzKWVUShNRvO39NFMPCuLCD/IgWfU4z5CqiHz28VSltiew3
-         U3yQ==
-X-Gm-Message-State: AOJu0YwOABAPJisNMQQMHx1sygIo6UtkdzPgLZXa3mz02M3CDow4BqU1
-	ZmnRDF6msUR8g4T0VE7gfH4roPDYvGI1eGVZ1dYHsk6kf8ILfz2Y/sfYeNd9DSk=
-X-Gm-Gg: ASbGncun8Pa+NdqIwJiHZBoUANtD7bf36I8b5mdr8LFMuxVzMZJSnvhwmneauZepqNw
-	ogE7s+WVo6vC6ksZyggdPbg0yocFLkyW9mZQWmacj3AOSjgtlj8km4aze8pn17ao0sDJEGWGrmR
-	4vzl9R13+WOwBLS3yxtS6/hheEE9p4dK4QEeQ09ecyaGPWN7ifSvd/jbWJYK5VhAKOm6A+VDlhv
-	GbrKDQ+r6IyEV5KKx9vMXU46QEEPKHNVyEeHCU3U2y1WNxqdFXrDx9DLfIHZp7yD/CGofnnhHwE
-	A5AjDQfdEMNu2Ccrq7p94tc4knwlo8T8UiLDPGItlyNircxr7mI=
-X-Google-Smtp-Source: AGHT+IEdkz6q64rsYV3VZmc/ZfV6ChqPaq/S6W1mt38Hq+RVFgHVVbpHCU3NX5s/6fNrItFngbvoXQ==
-X-Received: by 2002:a5d:47c7:0:b0:38d:be5e:b2a7 with SMTP id ffacd0b85a97d-39ad2b19b7fmr398048f8f.10.1743058403991;
-        Wed, 26 Mar 2025 23:53:23 -0700 (PDT)
-Received: from [10.202.112.30] ([202.127.77.110])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22780f45e9esm121332185ad.88.2025.03.26.23.53.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Mar 2025 23:53:23 -0700 (PDT)
-Message-ID: <bcce4e5c-d739-4b1c-86bd-d165ec0780be@suse.com>
-Date: Thu, 27 Mar 2025 14:53:20 +0800
+	s=arc-20240116; t=1743058745; c=relaxed/simple;
+	bh=qilFpGbta7/gcGLItWMYaKO9y4dlnH2ag6LWOQTDfyM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=uk/VOibQTqINTTvXlsjGQR0+ko+hDf9FyM2qiJ5zSu8pw02kIsQ3wTT/qlfFZEXUe4U1Y+GBOxQvH1sgVhkNYrtVhjUjcUti/hyZrTCJZSmcctZXGbJNBKHR5C/raOVKWTmZtduvbeNl+QDEuvWMR4QjGtKfivqMmNpt5uEG824=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc4e-97bff70000022046-14-67e4f3a7d992
+Received: from hymail21.hynixad.com (10.156.135.51) by hymail23.hynixad.com
+ (10.156.135.53) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1544.14; Thu, 27 Mar
+ 2025 15:43:51 +0900
+Received: from hymail21.hynixad.com ([10.156.135.51]) by hymail21.hynixad.com
+ ([10.156.135.51]) with mapi id 15.02.1544.014; Thu, 27 Mar 2025 15:43:51
+ +0900
+From: =?utf-8?B?7KCV7JqU7ZWcKEpPVU5HIFlPSEFOKSBNb2JpbGUgQUU=?=
+	<yohan.joung@sk.com>
+To: Chao Yu <chao@kernel.org>, Yohan Joung <jyh429@gmail.com>,
+	"jaegeuk@kernel.org" <jaegeuk@kernel.org>, "daeho43@gmail.com"
+	<daeho43@gmail.com>
+CC: "linux-f2fs-devel@lists.sourceforge.net"
+	<linux-f2fs-devel@lists.sourceforge.net>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+	=?utf-8?B?6rmA7ZWE7ZiEKEtJTSBQSUxIWVVOKSBNb2JpbGUgQUU=?= <pilhyun.kim@sk.com>
+Subject: RE: [External Mail] Re: [PATCH] f2fs: prevent the current section
+ from being selected as a victim during garbage collection
+Thread-Topic: [External Mail] Re: [PATCH] f2fs: prevent the current section
+ from being selected as a victim during garbage collection
+Thread-Index: AQHbnt3fELlyoJQ1W0qLIYQiUdi4aLOGhdAQ
+Date: Thu, 27 Mar 2025 06:43:50 +0000
+Message-ID: <2d95428375bd4a5592516bb6cefe4592@sk.com>
+References: <20250326141428.280-1-yohan.joung@sk.com>
+ <bf3f571c-a6bf-4a17-8745-039b37ac4f48@kernel.org>
+In-Reply-To: <bf3f571c-a6bf-4a17-8745-039b37ac4f48@kernel.org>
+Accept-Language: ko-KR, en-US
+Content-Language: ko-KR
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 1/1] ocfs2: fix write IO performance improvement for
- high fragmentation
-To: Gautham Ananthakrishna <gautham.ananthakrishna@oracle.com>,
- "joseph.qi@linux.alibaba.com" <joseph.qi@linux.alibaba.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "ocfs2-devel@lists.linux.dev" <ocfs2-devel@lists.linux.dev>,
- Rajesh Sivaramasubramaniom <rajesh.sivaramasubramaniom@oracle.com>,
- Junxiao Bi <junxiao.bi@oracle.com>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-References: <20250324054851.2509325-1-gautham.ananthakrishna@oracle.com>
- <199205d8-20fb-463d-9065-8021b3cf7cb8@suse.com>
- <DS7PR10MB48784AA2A065605733B79499F7A12@DS7PR10MB4878.namprd10.prod.outlook.com>
-From: Heming Zhao <heming.zhao@suse.com>
-Content-Language: en-US
-In-Reply-To: <DS7PR10MB48784AA2A065605733B79499F7A12@DS7PR10MB4878.namprd10.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-CFilter-Loop: Reflected
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNLMWRmVeSWpSXmKPExsXC9ZZnke7yz0/SDVpa5C0u75rD5sDo8XmT
+	XABjFJdNSmpOZllqkb5dAlfGpKPb2AtmyFes+X2UuYFxg1wXIyeHhICJxKKpD9m6GLk4hATe
+	MErca1rLCOEsYJQ4c2AhUIaDg00gVGLrcnaQuIjAVEaJq/uPM4M4zAIvGSX2XX8D5ggLtDFK
+	vDl8iRGirJ1R4v7cB6wgS0QEjCRWrd7GDGKzCKhKnLyxhB3E5hUwlTi6ZjYTiC0kkCmx6+R+
+	sBpOATuJxh0rWUBWMwrISly9JgMSZhYQl1j89RozxN0CEkv2nIeyRSVePv7HClIuIaAocXer
+	FIjJLKApsX6XPkSnosSU7odQSwUlTs58wgLRKSlxcMUNlgmMYrOQLJiF0D0LSfcsJN0LGFlW
+	MQpn5pXlJmbm6BVnZ1TmZVboJefnbmIERsmy2j9+Oxi/XAg+xCjAwajEw5vA8SRdiDWxrLgy
+	9xCjBAezkgiv5BWgEG9KYmVValF+fFFpTmrxIUZpDhYlcV6jb+UpQgLpiSWp2ampBalFMFkm
+	Dk6pBkYh2b273nlfMV68tF99/Vpxox2OCstqpb5euHTkVlHldY7gbe/Xm/z5fNIk+N6/uS0h
+	G+UtpzzOXzvlp+oisZi61SxSvzknz+L8N7EjMtSQzX5O8O+Qu2xisUyTapikhKSf+s23bL6R
+	/GmO7xy+EI8AQyFGvpDQ03yqHs8XMyr6Z0pvL32ceECJpTgj0VCLuag4EQC1SHXAjgIAAA==
 
-On 3/27/25 14:21, Gautham Ananthakrishna wrote:
-> HI Heming,
-> 
-> Sharing the test suite may not be practical (it has shell scripts, python and C binaries). However, I can take a look into your patch and run a quick test.
-> 
-> Thanks,
-> Gautham.
-> 
-
-Thank you for your quick reply and willingness to help.
-
-- Heming
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-> *From:* Heming Zhao <heming.zhao@suse.com>
-> *Sent:* Thursday, March 27, 2025 11:39 AM
-> *To:* Gautham Ananthakrishna <gautham.ananthakrishna@oracle.com>; joseph.qi@linux.alibaba.com <joseph.qi@linux.alibaba.com>
-> *Cc:* linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>; ocfs2-devel@lists.linux.dev <ocfs2-devel@lists.linux.dev>; Rajesh Sivaramasubramaniom <rajesh.sivaramasubramaniom@oracle.com>; Junxiao Bi <junxiao.bi@oracle.com>; akpm@linux-foundation.org <akpm@linux-foundation.org>
-> *Subject:* Re: [PATCH RFC 1/1] ocfs2: fix write IO performance improvement for high fragmentation
-> Hello Gautham,
-> 
-> Thanks for locating the issue and submitting a patch.
-> Is it possible to share your test case for this bug?
-> 
-> The key of this bug is ocfs2_cluster_group_search() comparing with wrong
-> bits size. I have another fix for this bug and will send it to this mailing
-> list later.
-> 
-> Thanks,
-> Heming
-> 
-> On 3/24/25 13:48, Gautham Ananthakrishna wrote:
->> The commit 4eb7b93e03101fd3f35e69affe566e4b1e3e3dca caused a regression
->> in our test suite in discontig extent tests. Upon troubleshooting I found
->> The following issues.
->> 
->> 1. The function ocfs2_cluster_group_search() was called for discontig allocations
->> as well. But it checks only the contiguous bits 'bg_contig_free_bits'.
->> It hit the ENOSPC in the following case in one of the tests.
->> 
->> ocfs2_mkdir()
->>   ocfs2_reserve_new_inode()
->>    ocfs2_reserve_suballoc_bits()
->>     ocfs2_block_group_alloc()
->>      ocfs2_block_group_alloc_discontig()
->>       __ocfs2_claim_clusters()
->>        ocfs2_claim_suballoc_bits()
->>         ocfs2_search_chain()
->>          ocfs2_cluster_group_search()
->> 
->> Looked like the commit did not consider discontig searches. To fix this,
->> I have split ocfs2_cluster_group_search() into *_common(), *_contig() and
->> *_discontig()
->> 
->> 2. That commit enforced ocfs2_cluster_group_search() to search only the
->> 'bits_wanted' number of bits whereas ocfs2_block_group_find_clear_bits()
->> fills the best available size and the function ocfs2_cluster_group_search()
->> itself is supposed to search 'min_bits' at the minimum and need not be
->> 'bits_wanted' always.
->> 
->> Fixed the above issues in this patch.
->> This patch fixes 4eb7b93e03101fd3f35e69affe566e4b1e3e3dca
->> 
->> Signed-off-by: Gautham Ananthakrishna <gautham.ananthakrishna@oracle.com>
->> ---
->>   fs/ocfs2/suballoc.c | 146 ++++++++++++++++++++++++++++----------------
->>   1 file changed, 95 insertions(+), 51 deletions(-)
->> 
-
+PiBGcm9tOiBDaGFvIFl1IDxjaGFvQGtlcm5lbC5vcmc+DQo+IFNlbnQ6IFRodXJzZGF5LCBNYXJj
+aCAyNywgMjAyNSAzOjAyIFBNDQo+IFRvOiBZb2hhbiBKb3VuZyA8anloNDI5QGdtYWlsLmNvbT47
+IGphZWdldWtAa2VybmVsLm9yZzsgZGFlaG80M0BnbWFpbC5jb20NCj4gQ2M6IGNoYW9Aa2VybmVs
+Lm9yZzsgbGludXgtZjJmcy1kZXZlbEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQ7IGxpbnV4LQ0KPiBr
+ZXJuZWxAdmdlci5rZXJuZWwub3JnOyDsoJXsmpTtlZwoSk9VTkcgWU9IQU4pIE1vYmlsZSBBRSA8
+eW9oYW4uam91bmdAc2suY29tPg0KPiBTdWJqZWN0OiBbRXh0ZXJuYWwgTWFpbF0gUmU6IFtQQVRD
+SF0gZjJmczogcHJldmVudCB0aGUgY3VycmVudCBzZWN0aW9uDQo+IGZyb20gYmVpbmcgc2VsZWN0
+ZWQgYXMgYSB2aWN0aW0gZHVyaW5nIGdhcmJhZ2UgY29sbGVjdGlvbg0KPiANCj4gT24gMy8yNi8y
+NSAyMjoxNCwgWW9oYW4gSm91bmcgd3JvdGU6DQo+ID4gV2hlbiBzZWxlY3RpbmcgYSB2aWN0aW0g
+dXNpbmcgbmV4dF92aWN0aW1fc2VnIGluIGEgbGFyZ2Ugc2VjdGlvbiwgdGhlDQo+ID4gc2VsZWN0
+ZWQgc2VjdGlvbiBtaWdodCBhbHJlYWR5IGhhdmUgYmVlbiBjbGVhcmVkIGFuZCBkZXNpZ25hdGVk
+IGFzIHRoZQ0KPiA+IG5ldyBjdXJyZW50IHNlY3Rpb24sIG1ha2luZyBpdCBhY3RpdmVseSBpbiB1
+c2UuDQo+ID4gVGhpcyBiZWhhdmlvciBjYXVzZXMgaW5jb25zaXN0ZW5jeSBiZXR3ZWVuIHRoZSBT
+SVQgYW5kIFNTQS4NCj4gDQo+IEhpLCBkb2VzIHRoaXMgZml4IHlvdXIgaXNzdWU/DQoNClRoaXMg
+aXMgYW4gaXNzdWUgdGhhdCBhcmlzZXMgd2hlbiBkaXZpZGluZyANCmEgbGFyZ2Ugc2VjdGlvbiBp
+bnRvIHNlZ21lbnRzIGZvciBnYXJiYWdlIGNvbGxlY3Rpb24uDQpjYXVzZWQgYnkgdGhlIGJhY2tn
+cm91bmQgR0MgKGdhcmJhZ2UgY29sbGVjdGlvbikgdGhyZWFkIGluIGxhcmdlIHNlY3Rpb24NCmYy
+ZnNfZ2ModmljdGltX3NlY3Rpb24pIC0+IGYyZnNfY2xlYXJfcHJlZnJlZV9zZWdtZW50cyh2aWN0
+aW1fc2VjdGlvbiktPiANCmN1cnNlYyh2aWN0aW1fc2VjdGlvbikgLT4gZjJmc19nYyh2aWN0aW1f
+c2VjdGlvbiBieSBuZXh0X3ZpY3RpbV9zZWcpDQoNCkJlY2F1c2UgdGhlIGNhbGwgc3RhY2sgaXMg
+ZGlmZmVyZW50LCANCkkgdGhpbmsgdGhhdCBpbiBvcmRlciB0byBoYW5kbGUgZXZlcnl0aGluZyBh
+dCBvbmNlLCANCndlIG5lZWQgdG8gYWRkcmVzcyBpdCB3aXRoaW4gZG9fZ2FyYmFnZV9jb2xsZWN0
+LCANCm9yIG90aGVyd2lzZSBpbmNsdWRlIGl0IG9uIGJvdGggc2lkZXMuIFdoYXQgZG8geW91IHRo
+aW5rPw0KDQpbMzAxNDYuMzM3NDcxXVsgVDEzMDBdIEYyRlMtZnMgKGRtLTU0KTogSW5jb25zaXN0
+ZW50IHNlZ21lbnQgKDcwOTYxKSB0eXBlIFswLCAxXSBpbiBTU0EgYW5kIFNJVA0KWzMwMTQ2LjM0
+NjE1MV1bIFQxMzAwXSBDYWxsIHRyYWNlOg0KWzMwMTQ2LjM0NjE1Ml1bIFQxMzAwXSAgZHVtcF9i
+YWNrdHJhY2UrMHhlOC8weDEwYw0KWzMwMTQ2LjM0NjE1N11bIFQxMzAwXSAgc2hvd19zdGFjaysw
+eDE4LzB4MjgNClszMDE0Ni4zNDYxNThdWyBUMTMwMF0gIGR1bXBfc3RhY2tfbHZsKzB4NTAvMHg2
+Yw0KWzMwMTQ2LjM0NjE2MV1bIFQxMzAwXSAgZHVtcF9zdGFjaysweDE4LzB4MjgNClszMDE0Ni4z
+NDYxNjJdWyBUMTMwMF0gIGYyZnNfc3RvcF9jaGVja3BvaW50KzB4MWMvMHgzYw0KWzMwMTQ2LjM0
+NjE2NV1bIFQxMzAwXSAgZG9fZ2FyYmFnZV9jb2xsZWN0KzB4NDFjLzB4MjcxYw0KWzMwMTQ2LjM0
+NjE2N11bIFQxMzAwXSAgZjJmc19nYysweDI3Yy8weDgyOA0KWzMwMTQ2LjM0NjE2OF1bIFQxMzAw
+XSAgZ2NfdGhyZWFkX2Z1bmMrMHgyOTAvMHg4OGMNClszMDE0Ni4zNDYxNjldWyBUMTMwMF0gIGt0
+aHJlYWQrMHgxMWMvMHgxNjQNClszMDE0Ni4zNDYxNzJdWyBUMTMwMF0gIHJldF9mcm9tX2Zvcmsr
+MHgxMC8weDIwDQoNCnN0cnVjdCBjdXJzZWdfaW5mbyA6IDB4ZmZmZmZmODAzZjk1ZTgwMCB7DQoJ
+c2Vnbm8gICAgICAgIDogMHgxMTUzMSA6IDcwOTYxDQp9DQoNCnN0cnVjdCBmMmZzX3NiX2luZm8g
+OiAweGZmZmZmZjg4MTFkMTIwMDAgew0KCW5leHRfdmljdGltX3NlZ1swXSA6IDB4MTE1MzEgOiA3
+MDk2MQ0KfQ0KDQo+IA0KPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1mMmZzLWRldmVs
+LzIwMjUwMzI1MDgwNjQ2LjMyOTE5NDctMi0NCj4gY2hhb0BrZXJuZWwub3JnDQo+IA0KPiBUaGFu
+a3MsDQo+IA0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogWW9oYW4gSm91bmcgPHlvaGFuLmpvdW5n
+QHNrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZnMvZjJmcy9nYy5jIHwgNCArKysrDQo+ID4gIDEgZmls
+ZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9mcy9mMmZz
+L2djLmMgYi9mcy9mMmZzL2djLmMgaW5kZXgNCj4gPiAyYjhmOTIzOWJlZGUuLjRiNWQxOGUzOTVl
+YiAxMDA2NDQNCj4gPiAtLS0gYS9mcy9mMmZzL2djLmMNCj4gPiArKysgYi9mcy9mMmZzL2djLmMN
+Cj4gPiBAQCAtMTkyNiw2ICsxOTI2LDEwIEBAIGludCBmMmZzX2djKHN0cnVjdCBmMmZzX3NiX2lu
+Zm8gKnNiaSwgc3RydWN0DQo+IGYyZnNfZ2NfY29udHJvbCAqZ2NfY29udHJvbCkNCj4gPiAgCQln
+b3RvIHN0b3A7DQo+ID4gIAl9DQo+ID4NCj4gPiArCWlmIChfX2lzX2xhcmdlX3NlY3Rpb24oc2Jp
+KSAmJg0KPiA+ICsJCQlJU19DVVJTRUMoc2JpLCBHRVRfU0VDX0ZST01fU0VHKHNiaSwgc2Vnbm8p
+KSkNCj4gPiArCQlnb3RvIHN0b3A7DQo+ID4gKw0KPiA+ICAJc2VnX2ZyZWVkID0gZG9fZ2FyYmFn
+ZV9jb2xsZWN0KHNiaSwgc2Vnbm8sICZnY19saXN0LCBnY190eXBlLA0KPiA+ICAJCQkJZ2NfY29u
+dHJvbC0+c2hvdWxkX21pZ3JhdGVfYmxvY2tzLA0KPiA+ICAJCQkJZ2NfY29udHJvbC0+b25lX3Rp
+bWUpOw0KDQo=
