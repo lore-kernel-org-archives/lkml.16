@@ -1,171 +1,287 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166351624C2;
-	Thu, 27 Mar 2025 21:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3971D07BA
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 21:04:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743109492; cv=none; b=UAAtbkY3b6otSSiMPldtfHBMEL/zbFqDDlERyJUoIvQ1hwVWdkKhkyoThqB2WuIPQ3R4gGjXsI4WNUov7onsXybJ5GCxZAhXssKaAWvyl/KOKe/tXvekbom2So5afcWAHpE6lbtYiYMzRrdEmSNmRXWU23FsPwbwhR9pVWQRHXo=
+	t=1743109502; cv=none; b=ijVnGGWQhXFJfBmysSplh3oob0a6+1eTS+oE9bX8M+5zDchQ9+QVvkEvtZFzhl8FA02dd/FTjrmpth7wXrY9+PVVE+6LCkdsAiNMi+OxRF/BHweFOedV4Qw0xcJ08qCDu9I5EJPepiTUgeJX8MH1QrlXcH/9yxU0FRQb9MvM7Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743109492; c=relaxed/simple;
-	bh=+DfBO+DlwozTIflZlMwt7fPbk6Jer43rnAoX7Jzwlx4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TJXGOHc7KcpHhVZioQbk4R75vakywo0PU4Nalo8IcpbbT3dRqYjUl+3vF5FEYSLPyKsJ8KsW2zNDFbm1r5qz7OswlRLjlbUnl4aRLDnIhhfAzw2/klG3mmiBw3XCxAA97PZWHivdnIcjcu0deNs/94vJme3/z6bPKu9djFTjL34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b=NMy7Jins; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	s=arc-20240116; t=1743109502; c=relaxed/simple;
+	bh=uwR8/t7sIdsF18i2//AWQRg0Q/ROjnh01+8dTIOWgYE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bfW/U634Hhbl7jWOWBK+dnc9eM3XH+PVDwTidpHP5ydm2T0NFP5pmdxQx9ci3eFnhQ9kPaYyI0c9ekcz0Ri860Fr4b4Fdl90zRRPcpvArsrV1OgOjZKcDvQ5c+jsKC6ltvYPQKdBj5/tn7nUsWoQubGjVPl6+C7XuNWjCKJSdrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BPUW+Ocx; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="NMy7Jins"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
-	s=s31663417; t=1743109487; x=1743714287; i=quwenruo.btrfs@gmx.com;
-	bh=NfrI/BXuwiYzulKEjM2UaHTMLn4bAOCk0pAFwibUo+0=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=NMy7JinsSu75EBl/fWMIFRafnz8u8BPKwNsShtNEcQ4FcTHNE+7E9BLEee0G8AII
-	 8qFftFZxdkV2yXiJC7Cei3wYED0vubr0sRPueOa1PHTkmnEBV8/mm5QqMjIhhroT0
-	 GQKAC1DNeH4wtt8fpD9L27n57n32478CEvQNNRYExDDLLnM8eCIb8itx9cUNzk6rF
-	 Y3QdsWk32ZtlSUEXd82oKy8jVDJ2yMnc2lJ7EwP1EXN/0snvSFmddWhGNirv3xfR0
-	 nZky/TaXJ7atUexeTY5i+oTQ6cIpdScOwFFvP2kMzcNnTSN8j8HZNiIYmAev3UE2x
-	 yEAG4ZpGoqWuOjzIyg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [172.16.0.191] ([159.196.52.54]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1N5VD8-1t5Ks90Wd8-012ca3; Thu, 27
- Mar 2025 22:04:47 +0100
-Message-ID: <b3cf4210-273f-4967-b544-39c47cb0ec96@gmx.com>
-Date: Fri, 28 Mar 2025 07:34:42 +1030
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BPUW+Ocx"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54af09697f5so1385932e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:04:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1743109498; x=1743714298; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=v76bWlmH5fEA80rAfHXJpyek2P0fDmnWb9VSJAOO0oo=;
+        b=BPUW+OcxGP4tvfWVd0SOrueoF2Tf5m8rYJHj65ROMQ50hfDkOgzNKGp6Mp9X85EQBe
+         82wxEWrMB+tSlwmn0doySkxElvd/njra9P9Ux7ZR+nRQ8lDAGCWhMVjZlZOdaKNildPu
+         JGFdTV6YUtW/uZMUC3RTTA2rroK/WsmAYtFFQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743109498; x=1743714298;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=v76bWlmH5fEA80rAfHXJpyek2P0fDmnWb9VSJAOO0oo=;
+        b=MN0BvtSa+2kvkDici0yLj0ajrr4USYquzUHVTOcJDR40KvD1UdyVauI+8LsVp7i11E
+         ryp6p0KtOgtCX75Avy2pNJmCYQ6+3Vu3IjUgktwoSXu2S5gnq/kUY1YbAbSiYADRJUnG
+         JzghblBDBTEAoHbewOK9ZHa820yzBDIqDNLB8Vl+fLPu7+nzfKmAL477Y6M7eqEzAl77
+         9a7tECGWkoViSr0kPkaPMGA3GRR19ZsQgs0BROIiKIL1LGg+JC0xIq0APtIliuPKwyha
+         GQG+DJ4FTr6EFuc2/qB280ijAzJsX2uu7xBDQ0N0XJXi6mRtRw+9VNDiFkslxHKdMcR1
+         CB6w==
+X-Forwarded-Encrypted: i=1; AJvYcCWnUxamzobsjs/sQ1f55v1TXE/TBYXZDh2S4ohb4rae3uzuU5ScedY66b3AG+yfyemxNCUxkk3GkWSvCCk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNfXccRlIRO2rqJv80bhYZnF4snE2mXgqsqxVLaFTxDfGXPXyv
+	BaBtqNe9tmiPk2wKO01WN1xdMILN8qSbQuMyTnfXwLxQb99LbvT+Gn8rDwv7mQV9Mr9DO7yJkRY
+	=
+X-Gm-Gg: ASbGnctL0OJYr8Ts5jKw9c1oUqv4jZOGKSj4sYkEzwuFY4JziBD6J0VzbTryx2eKL34
+	T/jpxnZ7wj+G6gRDorXt6R/9qlECQVm/L231lUsks88Nm7LXayfKY44FtY2QPvfe+9OEADNkqL9
+	kdiV25a4mmv/+kDRSmP//OtrgPAQmS35YcrAeuyzkcgisy/yKIEiXJEfhAbv5Fg8yf6dt8VxHjn
+	Nf4IHs/QPgpgnhrmamCnKIFOp++BNbB+qH764KjzcgZ1ItZoDWVvdhKoteqWHqahacGkIdvh/5i
+	P7hc3EgekHYhpl9N/gb+MJ4sT+xVzhcT7vuxxlehSRwStow6P2BqgW/cDRYj4/0wJCTxWGSKyWZ
+	r5IsYB5Y=
+X-Google-Smtp-Source: AGHT+IE9ze3WQJyrPtR4I6ZaYeBbdoOGD1WRGnA8qYsXoEXc09fTk8MVOoh97l/lBSu4zImSRzvBLA==
+X-Received: by 2002:a05:6512:3e08:b0:549:5b54:2c68 with SMTP id 2adb3069b0e04-54b011d6355mr2122808e87.22.1743109497799;
+        Thu, 27 Mar 2025 14:04:57 -0700 (PDT)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b094c0c30sm81976e87.53.2025.03.27.14.04.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 14:04:57 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5495c1e1b63so1668994e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:04:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUuBVcjyjgGd7qJwPgn8qcCT/sJhLrfoHC3W4zn1czyEcqr39pkTCJZXSdMF8bdqjtQvJyKcggjePJ5zX0=@vger.kernel.org
+X-Received: by 2002:a05:6512:1115:b0:549:8cc9:67d1 with SMTP id
+ 2adb3069b0e04-54b01221f39mr1798987e87.38.1743109496515; Thu, 27 Mar 2025
+ 14:04:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [btrfs?] kernel BUG in write_all_supers
-To: dsterba@suse.cz,
- syzbot <syzbot+34122898a11ab689518a@syzkaller.appspotmail.com>
-Cc: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com,
- linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- syzkaller-bugs@googlegroups.com
-References: <67e5799e.050a0220.2f068f.0032.GAE@google.com>
- <20250327162525.GU32661@twin.jikos.cz>
-Content-Language: en-US
-From: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1YAUJEP5a
- sQAKCRDCPZHzoSX+qF+mB/9gXu9C3BV0omDZBDWevJHxpWpOwQ8DxZEbk9b9LcrQlWdhFhyn
- xi+l5lRziV9ZGyYXp7N35a9t7GQJndMCFUWYoEa+1NCuxDs6bslfrCaGEGG/+wd6oIPb85xo
- naxnQ+SQtYLUFbU77WkUPaaIU8hH2BAfn9ZSDX9lIxheQE8ZYGGmo4wYpnN7/hSXALD7+oun
- tZljjGNT1o+/B8WVZtw/YZuCuHgZeaFdhcV2jsz7+iGb+LsqzHuznrXqbyUQgQT9kn8ZYFNW
- 7tf+LNxXuwedzRag4fxtR+5GVvJ41Oh/eygp8VqiMAtnFYaSlb9sjia1Mh+m+OBFeuXjgGlG
- VvQFzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
- CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
- /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
- GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
- q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
- ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1gQUJEP5a0gAK
- CRDCPZHzoSX+qHGpB/kB8A7M7KGL5qzat+jBRoLwB0Y3Zax0QWuANVdZM3eJDlKJKJ4HKzjo
- B2Pcn4JXL2apSan2uJftaMbNQbwotvabLXkE7cPpnppnBq7iovmBw++/d8zQjLQLWInQ5kNq
- Vmi36kmq8o5c0f97QVjMryHlmSlEZ2Wwc1kURAe4lsRG2dNeAd4CAqmTw0cMIrR6R/Dpt3ma
- +8oGXJOmwWuDFKNV4G2XLKcghqrtcRf2zAGNogg3KulCykHHripG3kPKsb7fYVcSQtlt5R6v
- HZStaZBzw4PcDiaAF3pPDBd+0fIKS6BlpeNRSFG94RYrt84Qw77JWDOAZsyNfEIEE0J6LSR/
-In-Reply-To: <20250327162525.GU32661@twin.jikos.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:BfyImzBfWpTI0hKdexisgGy9Gggga+AuJxpIOwwCNnxUmHC32KN
- nXHrSceuP/6uK6EMz2bsO+5HKt5+MhwxI6RomXuEybVglrY9ZFa3KNpNsk8QbpebRr/5PLF
- 7lPC4Tkoi2cs2/rgEntyWjs/XpCcycNUoQxJQF2xoHiT528N4n+kNSkGDUHQ1l/nAinw1uJ
- orckCNIX4sg6W2jarp4kA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:op/kzATTi+0=;p+Oy6YnvArC/tnKPC0VVgmp6Y7G
- 8l+In+vm55/yFxzdX+mDVKls+mdaXKlFDFefbrTB9sCN4p80+GJkIqbs5PP5/CJNDI/jEOa7N
- NQb49JG7GH9O4J2ps8VMA0u4ochNRsycx1+UyJKuHpntl1j5YJ4/D9TukMnaQTLXzUajaDE7O
- GuaY4YtXZP10RXPWaIKDiaeZYFvoDDtWOC01ql3sJ8OGiv5xepCSbCw3TlMM53SZeYk4F36dv
- NIFU0uOgYiX+xELcFQbX3iNUsf4G8qjuL/v322+0wDIYP2rNw42qRVKWesmaWVSlw2nO6Ddx8
- H9s71rSM0FLXfANIm+LpOV5Yg5z4+tW4C7fnqOy1PFWsUH/tNsUESk3Lc3hbqhsknbX456LVJ
- NZ8RyV+DeSK0S8MIrOv1Pf3Q6ybJ3l+HX+0cbY1AgCTIZy2SRwrB0wRNqZVCSF4Ua+HzEWIef
- SFsUynXTAORfAx5ALhrHyZq0/yUn/PjZojvrtih9lJVllWpixdxvEmlQierb1R5D1NF75Zw6E
- a/goh8lM2g/LWIAnuCYfoXYAsZkiOyA/iWqPEq9Mx/yNOPvkXLqrI5I0R7QjEPcs8kvbLAEhM
- dcVGFhahalnAFB20S0w+Ahvi5IAZwHt8hpJ16nBRj7PAFzBHAR6oX0zdthJezPSId+tyftGX9
- MY2DeoYPzqwIFI6R8tH2WBnbzWU1lV0W6x3dkArvZfChDeEvn2HwDVaLT+0ZFsiL5R9hsaIBl
- kdwo/E7u6h2obWMAA9f3lPerxetzdrn1fUwpophCnstnv9X8PsCw9r+glYsdZPbiDAa8DWb9C
- +m1xv0FqT6mzHKucdzHEQ6GIIQ4t8ny/SJl0y3nQBu/0G00IQSfuktRv0EZT1iFIvuYLqk/Tn
- 4tTSJcKKYEQJKvdVrkdkOMF3tdhjvtI2KZh8FOaD1Z7ZSK2yjFPkkQHJFOU5SRE3MTMh9xBoy
- EFTj7AN5lyxFGW448EykJQ/G9iwhfx6KFOAL2XYubDtzrF3jQMUzpsscN4xZQ6iI0MaxmxneN
- teYFdrhDG0K9xtRVGncZ0gKHeEx8OaMglF2w5Gri31vzXzs0fMDDnv6eBJQXwx6BSqpHHLnZx
- akiI5RSUKpjEE8M5VU0JRwNsDKoBw71bkbzRlh/WKL9Iju0JlOJWKusaRmYpwEA82FZ2USS6w
- A9GvGuk//pU6pp2+mFKkuIXNxa7pJ6/asRNkCJlJbu3uhnR3lwBIDgI9al2YZfYhmfvy2muWp
- 3omSG2vFnSjhF1Jn0Q+s1IHT6SC2w3C/9C6JzVtz32zF2YC8JwU2xnK+GEP7oWE3uNSf2uikj
- fVNyhPKDLBwNIfGkNNry5l8vM+VEizkAFMWIGKJRYUuirbFWL+8Vhc6OPLiMNMAGElouBUE+K
- wMtySAImnHqdUeQADu++kAkk7ga5lBzT1U5QI6f0x96RoegKfoQrKjWWP3HhHiYF53PV8bioU
- lFWkTBkOylTP265brMl6juObBKg8=
+References: <20250303-uvc-granpower-ng-v5-0-a3dfbe29fe91@chromium.org>
+ <20250303-uvc-granpower-ng-v5-3-a3dfbe29fe91@chromium.org> <20250327175225.GA11416@pendragon.ideasonboard.com>
+In-Reply-To: <20250327175225.GA11416@pendragon.ideasonboard.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Thu, 27 Mar 2025 22:04:42 +0100
+X-Gmail-Original-Message-ID: <CANiDSCu4c6i+m7LJB5-_G2qc_XNguKb=JC1VKMmsRhkU9n7ipg@mail.gmail.com>
+X-Gm-Features: AQ5f1JpQcnZzo6ViJh74lTA76yE155gIqk6ykMd5DZAwsQBBs79yYqwkKnDOYhw
+Message-ID: <CANiDSCu4c6i+m7LJB5-_G2qc_XNguKb=JC1VKMmsRhkU9n7ipg@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] media: uvcvideo: Increase/decrease the PM counter
+ per IOCTL
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Laurent
 
-
-=E5=9C=A8 2025/3/28 02:55, David Sterba =E5=86=99=E9=81=93:
-> On Thu, Mar 27, 2025 at 09:15:26AM -0700, syzbot wrote:
->> Hello,
->>
->> syzbot found the following issue on:
->>
->> HEAD commit:    f6e0150b2003 Merge tag 'mtd/for-6.15' of git://git.kern=
-el...
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=3D1405d804580=
-000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D46a07195688=
-b794b
->> dashboard link: https://syzkaller.appspot.com/bug?extid=3D34122898a11ab=
-689518a
->> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for D=
-ebian) 2.40
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D10d7abb05=
-80000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D15d76198580=
-000
->>
->> Downloadable assets:
->> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets=
-/7feb34a89c2a/non_bootable_disk-f6e0150b.raw.xz
->> vmlinux: https://storage.googleapis.com/syzbot-assets/7ade4c34c9b1/vmli=
-nux-f6e0150b.xz
->> kernel image: https://storage.googleapis.com/syzbot-assets/1fe37b97ec9d=
-/bzImage-f6e0150b.xz
->> mounted in repro: https://storage.googleapis.com/syzbot-assets/1f4c759f=
-e772/mount_0.gz
->>    fsck result: OK (log: https://syzkaller.appspot.com/x/fsck.log?x=3D1=
-757abb0580000)
->>
->> IMPORTANT: if you fix the issue, please add the following tag to the co=
-mmit:
->> Reported-by: syzbot+34122898a11ab689518a@syzkaller.appspotmail.com
->>
->> BTRFS info (device loop0): using sha256 (sha256-avx2) checksum algorith=
-m
->> BTRFS info (device loop0): using free-space-tree
->> assertion failed: folio_order(folio) =3D=3D 0, in fs/btrfs/disk-io.c:38=
-58
+On Thu, 27 Mar 2025 at 18:52, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
 >
-> This is
+> Hi Ricardo,
 >
-> ASSERT(folio_order(folio) =3D=3D 0);
+> Thank you for the patch.
 >
-> and the folio is from device->bdev->bd_mapping.
+> On Mon, Mar 03, 2025 at 07:13:40PM +0000, Ricardo Ribalda wrote:
+> > Now we call uvc_pm_get/put from the device open/close. This low
+> > level of granularity might leave the camera powered on in situations
+> > where it is not needed.
+> >
+> > Increase the granularity by increasing and decreasing the Power
 >
+> You're decreasing the granularity, not increasing it.
 
-And the bdev folios are out of our control, so it's possible the bdev
-mapping is utilizing larger folios.
+I believe that this patch increases the level of detail. So it is
+increasing the granularity... But I might be wrong
 
-I'll give it a check on the involved function and if everything else
-supports large folios, just remove that ASSERT() line.
+>
+> > Management counter per ioctl. There are two special cases where the
+> > power management outlives the ioctl: async controls and streamon. Handle
+> > those cases as well.
+> >
+> > In a future patch, we will remove the uvc_pm_get/put from open/close.
+> >
+> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > ---
+> >  drivers/media/usb/uvc/uvc_ctrl.c | 13 +++++++++++--
+> >  drivers/media/usb/uvc/uvc_v4l2.c | 23 +++++++++++++++++++++--
+> >  drivers/media/usb/uvc/uvcvideo.h |  1 +
+> >  3 files changed, 33 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+> > index 4e58476d305e..47188c7f96c7 100644
+> > --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> > +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> > @@ -1594,12 +1594,15 @@ static void uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl,
+> >
+> >               if (ctrl->handle) {
+> >                       WARN_ON(!ctrl->handle->pending_async_ctrls);
+> > -                     if (ctrl->handle->pending_async_ctrls)
+> > +                     if (ctrl->handle->pending_async_ctrls) {
+> >                               ctrl->handle->pending_async_ctrls--;
+> > +                             uvc_pm_put(handle->chain->dev);
+>
+> Shouldn't this be
+>
+>                                 uvc_pm_put(ctrl->handle->chain->dev);
+>
+> ? In practice it won't make a difference as dev will be the same for
+> both, but it seems clearer.
 
-Thanks,
-Qu
+The last line of the function needs to be
+uvc_pm_put(handle->chain->dev);
+
+So I'd rather not mix handle-> and ctrl->handle. As you say, both
+should be identical.
+
+>
+> > +                     }
+> >               }
+> >
+> >               ctrl->handle = new_handle;
+> >               handle->pending_async_ctrls++;
+> > +             uvc_pm_get(handle->chain->dev);
+>
+> Similarly, we should use ctrl->handle here too (including for the
+> pending_async_ctrls++).
+>
+> >               return;
+> >       }
+> >
+> > @@ -1611,6 +1614,7 @@ static void uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl,
+> >       if (WARN_ON(!handle->pending_async_ctrls))
+> >               return;
+> >       handle->pending_async_ctrls--;
+> > +     uvc_pm_put(handle->chain->dev);
+> >  }
+> >
+> >  void uvc_ctrl_status_event(struct uvc_video_chain *chain,
+> > @@ -2815,6 +2819,7 @@ int uvc_ctrl_init_device(struct uvc_device *dev)
+> >  void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
+> >  {
+> >       struct uvc_entity *entity;
+> > +     int i;
+> >
+> >       guard(mutex)(&handle->chain->ctrl_mutex);
+> >
+> > @@ -2829,7 +2834,11 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
+> >               }
+> >       }
+> >
+> > -     WARN_ON(handle->pending_async_ctrls);
+> > +     if (!WARN_ON(handle->pending_async_ctrls))
+> > +             return;
+> > +
+> > +     for (i = 0; i < handle->pending_async_ctrls; i++)
+> > +             uvc_pm_put(handle->stream->dev);
+> >  }
+> >
+> >  /*
+> > diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> > index de1e105f7263..1c9ac72be58a 100644
+> > --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> > +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> > @@ -691,6 +691,9 @@ static int uvc_v4l2_release(struct file *file)
+> >       if (uvc_has_privileges(handle))
+> >               uvc_queue_release(&stream->queue);
+> >
+> > +     if (handle->is_streaming)
+> > +             uvc_pm_put(stream->dev);
+> > +
+> >       /* Release the file handle. */
+> >       uvc_dismiss_privileges(handle);
+> >       v4l2_fh_del(&handle->vfh);
+> > @@ -857,6 +860,7 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
+> >               return ret;
+> >
+> >       handle->is_streaming = true;
+> > +     uvc_pm_get(stream->dev);
+> >
+> >       return 0;
+> >  }
+> > @@ -873,7 +877,10 @@ static int uvc_ioctl_streamoff(struct file *file, void *fh,
+> >       guard(mutex)(&stream->mutex);
+> >
+> >       uvc_queue_streamoff(&stream->queue, type);
+> > -     handle->is_streaming = false;
+> > +     if (handle->is_streaming) {
+> > +             handle->is_streaming = false;
+> > +             uvc_pm_put(stream->dev);
+> > +     }
+> >
+> >       return 0;
+> >  }
+> > @@ -1410,6 +1417,8 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
+> >       void __user *up = compat_ptr(arg);
+> >       long ret;
+> >
+> > +     guard(uvc_pm)(handle->stream->dev);
+> > +
+> >       switch (cmd) {
+> >       case UVCIOC_CTRL_MAP32:
+> >               ret = uvc_v4l2_get_xu_mapping(&karg.xmap, up);
+> > @@ -1444,6 +1453,16 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
+> >  }
+> >  #endif
+> >
+> > +static long uvc_v4l2_video_ioctl2(struct file *file,
+> > +                               unsigned int cmd, unsigned long arg)
+> > +{
+> > +     struct uvc_fh *handle = file->private_data;
+> > +
+> > +     guard(uvc_pm)(handle->stream->dev);
+> > +
+> > +     return video_ioctl2(file, cmd, arg);
+> > +}
+> > +
+> >  static ssize_t uvc_v4l2_read(struct file *file, char __user *data,
+> >                   size_t count, loff_t *ppos)
+> >  {
+> > @@ -1529,7 +1548,7 @@ const struct v4l2_file_operations uvc_fops = {
+> >       .owner          = THIS_MODULE,
+> >       .open           = uvc_v4l2_open,
+> >       .release        = uvc_v4l2_release,
+> > -     .unlocked_ioctl = video_ioctl2,
+> > +     .unlocked_ioctl = uvc_v4l2_video_ioctl2,
+>
+> I'd have named this uvc_v4l2_unlocked_ioctl.
+Changed in the next version
+>
+> >  #ifdef CONFIG_COMPAT
+> >       .compat_ioctl32 = uvc_v4l2_compat_ioctl32,
+> >  #endif
+> > diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> > index fbe3649c7cd6..eb8e374fa4c5 100644
+> > --- a/drivers/media/usb/uvc/uvcvideo.h
+> > +++ b/drivers/media/usb/uvc/uvcvideo.h
+> > @@ -766,6 +766,7 @@ void uvc_status_put(struct uvc_device *dev);
+> >  /* PM */
+> >  int uvc_pm_get(struct uvc_device *dev);
+> >  void uvc_pm_put(struct uvc_device *dev);
+> > +DEFINE_GUARD(uvc_pm, struct uvc_device *, uvc_pm_get(_T), uvc_pm_put(_T))
+> >
+> >  /* Controls */
+> >  extern const struct v4l2_subscribed_event_ops uvc_ctrl_sub_ev_ops;
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+
+
+
+-- 
+Ricardo Ribalda
