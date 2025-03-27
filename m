@@ -1,114 +1,176 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F35320DD6D;
-	Thu, 27 Mar 2025 10:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D013E433C8;
+	Thu, 27 Mar 2025 10:09:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743070114; cv=none; b=m7lamWdrtX92skpJV0/lRUA0nl6ECuLvjffN685dJbSfBSqGLpTLaLKvAAqorBszi64G1WsVZJ5HrmEbLHZxqcNuVFWquSjXpR9GvCgXKUdIMH+mzY1fhSgZNpDYJkFnU+bHVZDSsUa/sf0h5PKfoHW1a8yb3BOS3ey+Q4TZ5uI=
+	t=1743070173; cv=none; b=sZBqfUedoiQtJ45V2xSN8bjX8hiQ3G3m0s9OnvSgKtIsOuvd1h+5T09LaktYbHtL1OVdD/4n6cm8Gukx0MQuL4dvch/L7EhDZ4oORj2nf3DkEbVaB6baAYP4xlRLK6J65Vph7Ca3EXVUZgNB1S7FCJpucI5gTdfc+xPGlCmbYko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743070114; c=relaxed/simple;
-	bh=kGOiF7Kdzqr09ZSlwoEaSoMgDnnbDbf/Sl9R/vGqW1k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KovtC6ugOBl8v72PT1V1oUiz9ZIL+TCT/FQUR8jBxtBdfj9qOO15a+/Mt5VOind7sd1JoAgIR8I8UooxQGum1uQDZUONOtVgZd0l5UOXond586YYxAXo9iPd3Jf7ym+HMt+CP2GeGKZ7CFI5Jj5LnDvRluKxB3ZBEpv6wxh+rQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JJSCEIfE; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743070173; c=relaxed/simple;
+	bh=d8XG/C09xjfs3CzpZIdecMSM3/jWhXt87UX1vhyMoaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GzrRj4RMLf4hgzf3kmshharbwOU39S2uKBvtSbzHcAU4r6AwvD3EkJ1ZHHeoX3FxK+417qpYlO7GATTC8g3LYKFIimHDvtr9csFPH6mjPc2mAf8CBHmx4j6su++ES5KaB90l/8s1XIMo9+Rw7777Bjxmg/G/ovs2QCDaoUePVmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UHy8kk/3; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJSCEIfE"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3912c09be7dso405516f8f.1;
-        Thu, 27 Mar 2025 03:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743070111; x=1743674911; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nM1sZ0NoIXmTU8K4jfk38nEGpUUVD3E4cfdS1FIxod0=;
-        b=JJSCEIfEcXG4IC9ZhbBy/CBfkidQQQD0t1GgnNXQRgnnAtk1KsKgrL0i1ATJeNlHOM
-         k5zj9Bs6qk0h98PSAY9zttGNR6Crs5sX8DekT0TfiHM5+sy6iaixjwgUz96Dnqd77M38
-         +bwn05X83bnKQrIQX2JKt7rIY11hLdHKoYcGkPxbXIALhCXJv9xcZ194vUq312UE74CV
-         djUVCf0bXsM3npD+ZePJjEmxAW0xLTViROz3FeFsplMhR7qDaKnVbSzBIVFEqSxOeoXw
-         ODykgmkqkqX3qA8Sf8iyig3a4/PNBAEx8Km1CUjNxOmheDWCn9rTTJZezd2d8bddcl0Q
-         tDPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743070111; x=1743674911;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nM1sZ0NoIXmTU8K4jfk38nEGpUUVD3E4cfdS1FIxod0=;
-        b=EwRc8fgsesz3SYzV+nADhULA2nuqba3OEB9tkRoDrSJ/JUtiA2o2CtmOxiQU1Uy3QN
-         cfnqBHHluCVjs+OfTRni1/uBLzYg5oI3EPyGB7p+s4oUgWKeiNSBXqx22qPGzxIxpj2V
-         RlDH6q3KqdnYTV7+6EdY6/vj8wVzrCBhbYdbgxQuSQCQxgaPjW3Uhu5KzemyCJgvg5Dc
-         D3wmA8tcfaosLHtNWvWG5bxRMvEZuaQffdVG4N/Pq9PiM2fQmu2mwFDGODANWGL756cb
-         dsj+dg/Ok+nC7DOY7EVGT+m086Nx9w0Ec480XC6+b+2RivXQArn3TXOOxHLo9jdH4vDb
-         OXQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVtWitYNV2e2QY9yAG38spoJjqfi552WTRw9lIAb0XpGKr8mYPXfdRQqG3XNKsGalxO0ww=@vger.kernel.org, AJvYcCWa3ygB/fydFlLpuWw2LWJsFTazfsrEl879lRghQDu2TQ/ccOHKjh2PF6Ad7GgcU/s+dLumjOORfOCRjcBD@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMU4wZV1JsfwKpCoovg3lzcJnPtzqWridMOsTbP+InAfLvEMs6
-	V1zHuGXDckrJ+zgw+nIeD1TgfyWpldynEQznJ25addy4LnFz9376jgA/1KvziOU=
-X-Gm-Gg: ASbGnctsxEQB7WBZvMxiFFTcDO5M+LA0lh9lrfPmqXVQAnqtCDqIjr89BfTCMIeuBmQ
-	bUHTxeeykq/FxrByasIGqr9qW9gqrOpXWbchWikSeaixWn7z2ZZ8t/2DcrvRq91xK2i/IgB0vpE
-	1GM4R2gaw45viD46P4dNuOvg2cgS0MkqXIdAApjKW1fgyhTd/okSzUHx86JYYKTM01EC8QgK4bR
-	vUxn5EEoCExa/3+/iLfR7VCrmECLCiik6YvZou6dtI2bhDJYNEdkkHfPqEcA3xpeyhGWRhqFiSp
-	4Hiase/Tpn1tRXbn4ewP9qVoBPbXRTOFDxgrpi23yOXwq4x2Ot/O6q8ZUb3UpuIZvZkvENTv294
-	=
-X-Google-Smtp-Source: AGHT+IFwkIcNiFv7KGqFfNNkvJNpxPHOHo5FlCVKImXKzz1I4N/bdJ/AV1z2pTR1Q2AMb4Vnm+ORCg==
-X-Received: by 2002:a05:6000:2a2:b0:390:d6b0:b89 with SMTP id ffacd0b85a97d-39ad1783fa5mr2336879f8f.50.1743070110646;
-        Thu, 27 Mar 2025 03:08:30 -0700 (PDT)
-Received: from localhost.localdomain ([2a00:f41:90e5:5f20:8d7c:3c00:5765:53ee])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a6326sm19000288f8f.29.2025.03.27.03.08.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 03:08:30 -0700 (PDT)
-From: Mateusz Bieganski <bieganski.gm@gmail.com>
-To: 
-Cc: bieganski.gm@gmail.com,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	bpf@vger.kernel.org (open list:BPF [LIBRARY] (libbpf)),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] libbpf: fix multi-uprobe attach not working with dynamic symbols
-Date: Thu, 27 Mar 2025 11:07:33 +0100
-Message-Id: <20250327100733.27881-1-bieganski.gm@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UHy8kk/3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743070172; x=1774606172;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=d8XG/C09xjfs3CzpZIdecMSM3/jWhXt87UX1vhyMoaU=;
+  b=UHy8kk/3AY8awiHiHtMQukm3zy72t70CYYNxS9pMzGPtAJZVUWHu02jD
+   bWqctvcKXEuWhUj6smvsLSpLBOfDPYr/XqoOy9MeHau7zEcx8GXG6/CxG
+   5uY3kk+DNj8kwlFqoXf3WzRIRnHmvgN4B4UFPLe3PAwcnxSY+3m+CXr+S
+   lmsKXlFCeKJ+vXrpndZOoH9ItWpQzEXt/GV17HEifZu3bYcAlSlVKND4N
+   nICtID8Usg+JkDHTKKSfQBScj8PMvhTjhfeN3KI8wsgbTdxskTVGxK+hE
+   Dt0qWjfmOCZAnFN2p/IC+Rh/cok1SFQNIKhG4/XIn1aEf+/P4IyHI22Rx
+   Q==;
+X-CSE-ConnectionGUID: c9Dc2yeVQuWKXMOj8ZxfHA==
+X-CSE-MsgGUID: xaauNgO5Tke7xnGVwjE9Pg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="55760011"
+X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
+   d="scan'208";a="55760011"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 03:09:31 -0700
+X-CSE-ConnectionGUID: AIRUMm0sQ2SXk8zCZXAaPw==
+X-CSE-MsgGUID: Lj332GGXTXenW6TOIDBV2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
+   d="scan'208";a="129775600"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 03:09:28 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 6D06A11F99F;
+	Thu, 27 Mar 2025 12:09:25 +0200 (EET)
+Date: Thu, 27 Mar 2025 10:09:25 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Tarang Raval <tarang.raval@siliconsignals.io>
+Cc: kieran.bingham@ideasonboard.com, Shravan.Chippa@microchip.com,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Umang Jain <umang.jain@ideasonboard.com>,
+	Zhi Mao <zhi.mao@mediatek.com>,
+	Julien Massot <julien.massot@collabora.com>,
+	Luis Garcia <git@luigi311.com>,
+	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] media: i2c: imx334: Support 4 or 8 lane operation
+ modes
+Message-ID: <Z-Uj1VnLKQH09__5@kekkonen.localdomain>
+References: <20250310071751.151382-1-tarang.raval@siliconsignals.io>
+ <20250310071751.151382-5-tarang.raval@siliconsignals.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250310071751.151382-5-tarang.raval@siliconsignals.io>
 
-ENOENT is incorrectly propagated to caller, if requested symbol is
-present in dynamic linker symbol table and not present in symbol table.
+Hi Tarang,
 
-Signed-off-by: Mateusz Bieganski <bieganski.gm@gmail.com>
----
- tools/lib/bpf/elf.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On Mon, Mar 10, 2025 at 12:47:46PM +0530, Tarang Raval wrote:
+> imx334 can support both 4 and 8 lane configurations.
+> Extend the driver to configure the lane mode accordingly.
+> 
+> Signed-off-by: Tarang Raval <tarang.raval@siliconsignals.io>
+> ---
+>  drivers/media/i2c/imx334.c | 22 +++++++++++++++++++---
+>  1 file changed, 19 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/imx334.c b/drivers/media/i2c/imx334.c
+> index 24ccfd1d0986..23bfc64969cc 100644
+> --- a/drivers/media/i2c/imx334.c
+> +++ b/drivers/media/i2c/imx334.c
+> @@ -47,6 +47,8 @@
+>  #define IMX334_EXPOSURE_DEFAULT	0x0648
+>  
+>  #define IMX334_REG_LANEMODE            CCI_REG8(0x3a01)
+> +#define IMX334_CSI_4_LANE_MODE         3
+> +#define IMX334_CSI_8_LANE_MODE         7
+>  
+>  /* Window cropping Settings */
+>  #define IMX334_REG_AREA3_ST_ADR_1      CCI_REG16_LE(0x3074)
+> @@ -107,7 +109,6 @@
+>  /* CSI2 HW configuration */
+>  #define IMX334_LINK_FREQ_891M	891000000
+>  #define IMX334_LINK_FREQ_445M	445500000
+> -#define IMX334_NUM_DATA_LANES	4
+>  
+>  #define IMX334_REG_MIN		0x00
+>  #define IMX334_REG_MAX		0xfffff
+> @@ -181,6 +182,7 @@ struct imx334_mode {
+>   * @exp_ctrl: Pointer to exposure control
+>   * @again_ctrl: Pointer to analog gain control
+>   * @vblank: Vertical blanking in lines
+> + * @lane_mode: Mode for number of connected data lanes
+>   * @cur_mode: Pointer to current selected sensor mode
+>   * @mutex: Mutex for serializing sensor controls
+>   * @link_freq_bitmap: Menu bitmap for link_freq_ctrl
+> @@ -204,6 +206,7 @@ struct imx334 {
+>  		struct v4l2_ctrl *again_ctrl;
+>  	};
+>  	u32 vblank;
+> +	u32 lane_mode;
+>  	const struct imx334_mode *cur_mode;
+>  	struct mutex mutex;
+>  	unsigned long link_freq_bitmap;
+> @@ -240,7 +243,6 @@ static const struct cci_reg_sequence common_mode_regs[] = {
+>  	{ IMX334_REG_HADD_VADD, 0x00},
+>  	{ IMX334_REG_VALID_EXPAND, 0x03},
+>  	{ IMX334_REG_TCYCLE, 0x00},
+> -	{ IMX334_REG_LANEMODE, 0x03},
 
-diff --git a/tools/lib/bpf/elf.c b/tools/lib/bpf/elf.c
-index 823f83ad819c..41839ef5bc97 100644
---- a/tools/lib/bpf/elf.c
-+++ b/tools/lib/bpf/elf.c
-@@ -439,8 +439,10 @@ int elf_resolve_syms_offsets(const char *binary_path, int cnt,
- 		struct elf_sym *sym;
- 
- 		err = elf_sym_iter_new(&iter, elf_fd.elf, binary_path, sh_types[i], st_type);
--		if (err == -ENOENT)
-+		if (err == -ENOENT) {
-+			err = 0;
- 			continue;
-+		}
- 		if (err)
- 			goto out;
- 
+Not a fault of this patch but also the closing brace should have a space
+before it. Could you address it in the earlier patches?
+
+>  	{ IMX334_REG_TCLKPOST, 0x007f},
+>  	{ IMX334_REG_TCLKPREPARE, 0x0037},
+>  	{ IMX334_REG_TCLKTRAIL, 0x0037},
+> @@ -876,6 +878,13 @@ static int imx334_start_streaming(struct imx334 *imx334)
+>  		return ret;
+>  	}
+>  
+> +	ret = cci_write(imx334->cci, IMX334_REG_LANEMODE,
+> +			imx334->lane_mode, NULL);
+> +	if (ret) {
+> +		dev_err(imx334->dev, "failed to configure lanes\n");
+> +		return ret;
+> +	}
+> +
+>  	ret = imx334_set_framefmt(imx334);
+>  	if (ret) {
+>  		dev_err(imx334->dev, "%s failed to set frame format: %d\n",
+> @@ -1022,7 +1031,14 @@ static int imx334_parse_hw_config(struct imx334 *imx334)
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (bus_cfg.bus.mipi_csi2.num_data_lanes != IMX334_NUM_DATA_LANES) {
+> +	switch (bus_cfg.bus.mipi_csi2.num_data_lanes) {
+> +	case 4:
+> +		imx334->lane_mode = IMX334_CSI_4_LANE_MODE;
+> +		break;
+> +	case 8:
+> +		imx334->lane_mode = IMX334_CSI_8_LANE_MODE;
+
+Doesn't this affect the PLL configuration? Presumably higher frame rates
+could be achieved at least.
+
+> +		break;
+> +	default:
+>  		dev_err(imx334->dev,
+>  			"number of CSI2 data lanes %d is not supported\n",
+>  			bus_cfg.bus.mipi_csi2.num_data_lanes);
+
 -- 
-2.39.5
+Regards,
 
+Sakari Ailus
