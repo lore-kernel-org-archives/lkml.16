@@ -1,118 +1,115 @@
-Received: from invmail.skhynix.com (exvmail.skhynix.com [166.125.252.79])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34E761C6889
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 06:58:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.79
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35C91C700B
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 06:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743058745; cv=none; b=RkbNS5MfO2O1O7P645hTD4PQPZZdbkxxDafy7YYMAHKhSJIJtndXtyrjISTvW65GOCQNgT2+YRvqyOLhF1z8h86l8vbZBPcSjUl55RXy+BrwPh0oMna6BUrlQbHVmmxki3WFILIR/C2n0PZ+gpzjNyMH5F/VLIt9Z5h1MMqjABk=
+	t=1743058796; cv=none; b=L2l5b/yoBTeQyIcccOb52xOX/Io+98Ds7AZFcKAiiLR4/iL4wo7LoFYxVlykr5zXULz2d7Y1iLiLwI3TF/25PQh0z3cOO6z1CjWnjOn4FyYHrrOK+AzASLt98CCJr4UbTrwSgS8zI5VB/X3XebjVWL2NK0IjojS4J29YDJNJspE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743058745; c=relaxed/simple;
-	bh=qilFpGbta7/gcGLItWMYaKO9y4dlnH2ag6LWOQTDfyM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=uk/VOibQTqINTTvXlsjGQR0+ko+hDf9FyM2qiJ5zSu8pw02kIsQ3wTT/qlfFZEXUe4U1Y+GBOxQvH1sgVhkNYrtVhjUjcUti/hyZrTCJZSmcctZXGbJNBKHR5C/raOVKWTmZtduvbeNl+QDEuvWMR4QjGtKfivqMmNpt5uEG824=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc4e-97bff70000022046-14-67e4f3a7d992
-Received: from hymail21.hynixad.com (10.156.135.51) by hymail23.hynixad.com
- (10.156.135.53) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1544.14; Thu, 27 Mar
- 2025 15:43:51 +0900
-Received: from hymail21.hynixad.com ([10.156.135.51]) by hymail21.hynixad.com
- ([10.156.135.51]) with mapi id 15.02.1544.014; Thu, 27 Mar 2025 15:43:51
- +0900
-From: =?utf-8?B?7KCV7JqU7ZWcKEpPVU5HIFlPSEFOKSBNb2JpbGUgQUU=?=
-	<yohan.joung@sk.com>
-To: Chao Yu <chao@kernel.org>, Yohan Joung <jyh429@gmail.com>,
-	"jaegeuk@kernel.org" <jaegeuk@kernel.org>, "daeho43@gmail.com"
-	<daeho43@gmail.com>
-CC: "linux-f2fs-devel@lists.sourceforge.net"
-	<linux-f2fs-devel@lists.sourceforge.net>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-	=?utf-8?B?6rmA7ZWE7ZiEKEtJTSBQSUxIWVVOKSBNb2JpbGUgQUU=?= <pilhyun.kim@sk.com>
-Subject: RE: [External Mail] Re: [PATCH] f2fs: prevent the current section
- from being selected as a victim during garbage collection
-Thread-Topic: [External Mail] Re: [PATCH] f2fs: prevent the current section
- from being selected as a victim during garbage collection
-Thread-Index: AQHbnt3fELlyoJQ1W0qLIYQiUdi4aLOGhdAQ
-Date: Thu, 27 Mar 2025 06:43:50 +0000
-Message-ID: <2d95428375bd4a5592516bb6cefe4592@sk.com>
-References: <20250326141428.280-1-yohan.joung@sk.com>
- <bf3f571c-a6bf-4a17-8745-039b37ac4f48@kernel.org>
-In-Reply-To: <bf3f571c-a6bf-4a17-8745-039b37ac4f48@kernel.org>
-Accept-Language: ko-KR, en-US
-Content-Language: ko-KR
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1743058796; c=relaxed/simple;
+	bh=mZk1/g6K9/xfZWWHQNM53p/aOxDqD8e73imdnMmnNKA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mYTur1qRIwKs/loSLx6sbd9aUIHIduL1PTNV3pciK7wprBlpaHMKhRc92yDarM6FvWG/vRgM35hNK9N4TfOF+9PmZ5nWX4EO9GZjURpWkSnJgF7NKQfSmq3+3IISlnmcorfsP852tiA8slGNcaHutS8SwKH2QFGWa5qjJnEZTkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=quanta.corp-partner.google.com; spf=pass smtp.mailfrom=quanta.corp-partner.google.com; dkim=pass (2048-bit key) header.d=quanta-corp-partner-google-com.20230601.gappssmtp.com header.i=@quanta-corp-partner-google-com.20230601.gappssmtp.com header.b=VnXUtEUl; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=quanta.corp-partner.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quanta.corp-partner.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quanta-corp-partner-google-com.20230601.gappssmtp.com header.i=@quanta-corp-partner-google-com.20230601.gappssmtp.com header.b="VnXUtEUl"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ff85fec403so3572045a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 23:59:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=quanta-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1743058793; x=1743663593; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=L4to77tfN2Uh/XXo3c+lIPR6s2qFb1tp5+3tSOChySQ=;
+        b=VnXUtEUlnYuZngItHJzLd29wQYqVA++VmxZQ9jp6kUwqM4aH5hOOuEUfBVpVgZLBXv
+         Vu9Coi2+QDT14EXvOJON6YozB6X+CX3/OQSiAQINcQP9FA/kuMmb6WbKTtDiwwWnKc5x
+         tL6YrVe6Zj9SPcDwDsxw6qPczRaOpHJrpjl9rrc5uYOSKDA5tedZDM3k3FErjvEJHrJ2
+         xVTlsfPJpAUuCrKH0+phS5oS0CLGJRnquUFB0bh472/VOhmCSQ6EGvEXvkrcSwXHwBty
+         gp8ECYpP7J/+5i16BRI4d5Dy5mo9Bato5TfVDp65nU4nXvRQNqN3jhZ8oLZvRsuRsZ5Y
+         ZllA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743058793; x=1743663593;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L4to77tfN2Uh/XXo3c+lIPR6s2qFb1tp5+3tSOChySQ=;
+        b=LPHWQrNAf6+uVpKbSBMs/73EsMbs0qEY94joAQ72Z9iO5opVH2DiVWrcuPUx6KLbNu
+         aEznZwW5rAPEFdCkY0RM+UUzupFKTxufdw+9rwdkN9GA9IoC8CkNzYwSBJQ65+zaeDnV
+         ZoGuzQBrOBWG1GCedWy5oS30IsxfijAXksSJsKYs6Pwbgb8T4ZyMJT6jxwUXwOlzv4Kv
+         0obccrAgCXaTtwFXh+Z8K4/zK0xP/hEDKkJ0aH47NcU8c8tMnWgEpCNa7qb6Xm6qE+CP
+         LkbKBno5/oDGucT5vf7L8e3e3ZE64t3vXVxfzcF4Iw3VlCge65YhKcOdKhgfH1ilw558
+         hn7A==
+X-Gm-Message-State: AOJu0Ywpv4wfV7hkGWlxW3w35ySgaPcxI+9eJPzbTeWVbYpWcs0aSUft
+	PSYQ8mQ9kz1CgkAFQSbaEBxG+Ddwq+W9flt7j/dwvFpBlOsJOS6ypRXgflhXnZv+2sUVcVYcA23
+	GHgE=
+X-Gm-Gg: ASbGnct9iOp8xbuRVJvHNp5N12XxnTx1MqobmY6bUfi3mRzG2djztBs3a2tuUDgmeVk
+	ms3vhS9gOacvBNIzITZX1cnoGae4rLPRAXxc4MWzQNbuuLzBI852IA4dU5BbUCQo9VpUm9SErQV
+	YIWSJSX/IwB2dRWJrtQX5JDqmpMcz0HXs0fiXM7ZgWJY2aNO001G6TvW0VlWsOAC1Chbq8tssqM
+	vl5pjHnqEzeX9uYHBfpxBdG/R7eGLUN95OX3OQfEiQnrO49RlfF5XPwPRD69Af8KlcIYylk7DNC
+	uoCHHfxsb2CQIn6LXd5XkeJfRSCpSnM4AaTmn2it8nHwtfA8xRvlPV4FcLzNF++ZMBgFf3Gcdlw
+	6laA9TY7ZosXzMAZwLkwVs5EmC9IZW7BtDNAn1D3NxxmBghw643a6ujo28mz99ugkFHaCohtp9s
+	OGehMBuC/xlKxqLQ==
+X-Google-Smtp-Source: AGHT+IHnETWyyanBiU2twDZ1VaieT35/Fur+NGUXFQac0h6cHFF/+Ft9G2H9gQIlqjGEPWZaiJQG1A==
+X-Received: by 2002:a05:6a00:35c3:b0:736:aea8:c9b7 with SMTP id d2e1a72fcca58-739514c4fc8mr11981390b3a.2.1743058793466;
+        Wed, 26 Mar 2025 23:59:53 -0700 (PDT)
+Received: from localhost.localdomain (2001-b400-e33a-bfe3-6468-2896-023a-3689.emome-ip6.hinet.net. [2001:b400:e33a:bfe3:6468:2896:23a:3689])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73905fe33d0sm13513053b3a.70.2025.03.26.23.59.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 23:59:53 -0700 (PDT)
+From: Ken Lin <kenlin5@quanta.corp-partner.google.com>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: groeck@chromium.org,
+	Benson Leung <bleung@chromium.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	chrome-platform@lists.linux.dev,
+	linux-media@vger.kernel.org
+Subject: [PATCH] [v2] media: platform: cros-ec: Add Moxie to the match table
+Date: Thu, 27 Mar 2025 14:59:00 +0800
+Message-Id: <20250327145729.1.I04b964661552ce532dbefd1ee5999fb0a0641a07@changeid>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNLMWRmVeSWpSXmKPExsXC9ZZnke7yz0/SDVpa5C0u75rD5sDo8XmT
-	XABjFJdNSmpOZllqkb5dAlfGpKPb2AtmyFes+X2UuYFxg1wXIyeHhICJxKKpD9m6GLk4hATe
-	MErca1rLCOEsYJQ4c2AhUIaDg00gVGLrcnaQuIjAVEaJq/uPM4M4zAIvGSX2XX8D5ggLtDFK
-	vDl8iRGirJ1R4v7cB6wgS0QEjCRWrd7GDGKzCKhKnLyxhB3E5hUwlTi6ZjYTiC0kkCmx6+R+
-	sBpOATuJxh0rWUBWMwrISly9JgMSZhYQl1j89RozxN0CEkv2nIeyRSVePv7HClIuIaAocXer
-	FIjJLKApsX6XPkSnosSU7odQSwUlTs58wgLRKSlxcMUNlgmMYrOQLJiF0D0LSfcsJN0LGFlW
-	MQpn5pXlJmbm6BVnZ1TmZVboJefnbmIERsmy2j9+Oxi/XAg+xCjAwajEw5vA8SRdiDWxrLgy
-	9xCjBAezkgiv5BWgEG9KYmVValF+fFFpTmrxIUZpDhYlcV6jb+UpQgLpiSWp2ampBalFMFkm
-	Dk6pBkYh2b273nlfMV68tF99/Vpxox2OCstqpb5euHTkVlHldY7gbe/Xm/z5fNIk+N6/uS0h
-	G+UtpzzOXzvlp+oisZi61SxSvzknz+L8N7EjMtSQzX5O8O+Qu2xisUyTapikhKSf+s23bL6R
-	/GmO7xy+EI8AQyFGvpDQ03yqHs8XMyr6Z0pvL32ceECJpTgj0VCLuag4EQC1SHXAjgIAAA==
+Content-Transfer-Encoding: 8bit
 
-PiBGcm9tOiBDaGFvIFl1IDxjaGFvQGtlcm5lbC5vcmc+DQo+IFNlbnQ6IFRodXJzZGF5LCBNYXJj
-aCAyNywgMjAyNSAzOjAyIFBNDQo+IFRvOiBZb2hhbiBKb3VuZyA8anloNDI5QGdtYWlsLmNvbT47
-IGphZWdldWtAa2VybmVsLm9yZzsgZGFlaG80M0BnbWFpbC5jb20NCj4gQ2M6IGNoYW9Aa2VybmVs
-Lm9yZzsgbGludXgtZjJmcy1kZXZlbEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQ7IGxpbnV4LQ0KPiBr
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOyDsoJXsmpTtlZwoSk9VTkcgWU9IQU4pIE1vYmlsZSBBRSA8
-eW9oYW4uam91bmdAc2suY29tPg0KPiBTdWJqZWN0OiBbRXh0ZXJuYWwgTWFpbF0gUmU6IFtQQVRD
-SF0gZjJmczogcHJldmVudCB0aGUgY3VycmVudCBzZWN0aW9uDQo+IGZyb20gYmVpbmcgc2VsZWN0
-ZWQgYXMgYSB2aWN0aW0gZHVyaW5nIGdhcmJhZ2UgY29sbGVjdGlvbg0KPiANCj4gT24gMy8yNi8y
-NSAyMjoxNCwgWW9oYW4gSm91bmcgd3JvdGU6DQo+ID4gV2hlbiBzZWxlY3RpbmcgYSB2aWN0aW0g
-dXNpbmcgbmV4dF92aWN0aW1fc2VnIGluIGEgbGFyZ2Ugc2VjdGlvbiwgdGhlDQo+ID4gc2VsZWN0
-ZWQgc2VjdGlvbiBtaWdodCBhbHJlYWR5IGhhdmUgYmVlbiBjbGVhcmVkIGFuZCBkZXNpZ25hdGVk
-IGFzIHRoZQ0KPiA+IG5ldyBjdXJyZW50IHNlY3Rpb24sIG1ha2luZyBpdCBhY3RpdmVseSBpbiB1
-c2UuDQo+ID4gVGhpcyBiZWhhdmlvciBjYXVzZXMgaW5jb25zaXN0ZW5jeSBiZXR3ZWVuIHRoZSBT
-SVQgYW5kIFNTQS4NCj4gDQo+IEhpLCBkb2VzIHRoaXMgZml4IHlvdXIgaXNzdWU/DQoNClRoaXMg
-aXMgYW4gaXNzdWUgdGhhdCBhcmlzZXMgd2hlbiBkaXZpZGluZyANCmEgbGFyZ2Ugc2VjdGlvbiBp
-bnRvIHNlZ21lbnRzIGZvciBnYXJiYWdlIGNvbGxlY3Rpb24uDQpjYXVzZWQgYnkgdGhlIGJhY2tn
-cm91bmQgR0MgKGdhcmJhZ2UgY29sbGVjdGlvbikgdGhyZWFkIGluIGxhcmdlIHNlY3Rpb24NCmYy
-ZnNfZ2ModmljdGltX3NlY3Rpb24pIC0+IGYyZnNfY2xlYXJfcHJlZnJlZV9zZWdtZW50cyh2aWN0
-aW1fc2VjdGlvbiktPiANCmN1cnNlYyh2aWN0aW1fc2VjdGlvbikgLT4gZjJmc19nYyh2aWN0aW1f
-c2VjdGlvbiBieSBuZXh0X3ZpY3RpbV9zZWcpDQoNCkJlY2F1c2UgdGhlIGNhbGwgc3RhY2sgaXMg
-ZGlmZmVyZW50LCANCkkgdGhpbmsgdGhhdCBpbiBvcmRlciB0byBoYW5kbGUgZXZlcnl0aGluZyBh
-dCBvbmNlLCANCndlIG5lZWQgdG8gYWRkcmVzcyBpdCB3aXRoaW4gZG9fZ2FyYmFnZV9jb2xsZWN0
-LCANCm9yIG90aGVyd2lzZSBpbmNsdWRlIGl0IG9uIGJvdGggc2lkZXMuIFdoYXQgZG8geW91IHRo
-aW5rPw0KDQpbMzAxNDYuMzM3NDcxXVsgVDEzMDBdIEYyRlMtZnMgKGRtLTU0KTogSW5jb25zaXN0
-ZW50IHNlZ21lbnQgKDcwOTYxKSB0eXBlIFswLCAxXSBpbiBTU0EgYW5kIFNJVA0KWzMwMTQ2LjM0
-NjE1MV1bIFQxMzAwXSBDYWxsIHRyYWNlOg0KWzMwMTQ2LjM0NjE1Ml1bIFQxMzAwXSAgZHVtcF9i
-YWNrdHJhY2UrMHhlOC8weDEwYw0KWzMwMTQ2LjM0NjE1N11bIFQxMzAwXSAgc2hvd19zdGFjaysw
-eDE4LzB4MjgNClszMDE0Ni4zNDYxNThdWyBUMTMwMF0gIGR1bXBfc3RhY2tfbHZsKzB4NTAvMHg2
-Yw0KWzMwMTQ2LjM0NjE2MV1bIFQxMzAwXSAgZHVtcF9zdGFjaysweDE4LzB4MjgNClszMDE0Ni4z
-NDYxNjJdWyBUMTMwMF0gIGYyZnNfc3RvcF9jaGVja3BvaW50KzB4MWMvMHgzYw0KWzMwMTQ2LjM0
-NjE2NV1bIFQxMzAwXSAgZG9fZ2FyYmFnZV9jb2xsZWN0KzB4NDFjLzB4MjcxYw0KWzMwMTQ2LjM0
-NjE2N11bIFQxMzAwXSAgZjJmc19nYysweDI3Yy8weDgyOA0KWzMwMTQ2LjM0NjE2OF1bIFQxMzAw
-XSAgZ2NfdGhyZWFkX2Z1bmMrMHgyOTAvMHg4OGMNClszMDE0Ni4zNDYxNjldWyBUMTMwMF0gIGt0
-aHJlYWQrMHgxMWMvMHgxNjQNClszMDE0Ni4zNDYxNzJdWyBUMTMwMF0gIHJldF9mcm9tX2Zvcmsr
-MHgxMC8weDIwDQoNCnN0cnVjdCBjdXJzZWdfaW5mbyA6IDB4ZmZmZmZmODAzZjk1ZTgwMCB7DQoJ
-c2Vnbm8gICAgICAgIDogMHgxMTUzMSA6IDcwOTYxDQp9DQoNCnN0cnVjdCBmMmZzX3NiX2luZm8g
-OiAweGZmZmZmZjg4MTFkMTIwMDAgew0KCW5leHRfdmljdGltX3NlZ1swXSA6IDB4MTE1MzEgOiA3
-MDk2MQ0KfQ0KDQo+IA0KPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1mMmZzLWRldmVs
-LzIwMjUwMzI1MDgwNjQ2LjMyOTE5NDctMi0NCj4gY2hhb0BrZXJuZWwub3JnDQo+IA0KPiBUaGFu
-a3MsDQo+IA0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogWW9oYW4gSm91bmcgPHlvaGFuLmpvdW5n
-QHNrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZnMvZjJmcy9nYy5jIHwgNCArKysrDQo+ID4gIDEgZmls
-ZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9mcy9mMmZz
-L2djLmMgYi9mcy9mMmZzL2djLmMgaW5kZXgNCj4gPiAyYjhmOTIzOWJlZGUuLjRiNWQxOGUzOTVl
-YiAxMDA2NDQNCj4gPiAtLS0gYS9mcy9mMmZzL2djLmMNCj4gPiArKysgYi9mcy9mMmZzL2djLmMN
-Cj4gPiBAQCAtMTkyNiw2ICsxOTI2LDEwIEBAIGludCBmMmZzX2djKHN0cnVjdCBmMmZzX3NiX2lu
-Zm8gKnNiaSwgc3RydWN0DQo+IGYyZnNfZ2NfY29udHJvbCAqZ2NfY29udHJvbCkNCj4gPiAgCQln
-b3RvIHN0b3A7DQo+ID4gIAl9DQo+ID4NCj4gPiArCWlmIChfX2lzX2xhcmdlX3NlY3Rpb24oc2Jp
-KSAmJg0KPiA+ICsJCQlJU19DVVJTRUMoc2JpLCBHRVRfU0VDX0ZST01fU0VHKHNiaSwgc2Vnbm8p
-KSkNCj4gPiArCQlnb3RvIHN0b3A7DQo+ID4gKw0KPiA+ICAJc2VnX2ZyZWVkID0gZG9fZ2FyYmFn
-ZV9jb2xsZWN0KHNiaSwgc2Vnbm8sICZnY19saXN0LCBnY190eXBlLA0KPiA+ICAJCQkJZ2NfY29u
-dHJvbC0+c2hvdWxkX21pZ3JhdGVfYmxvY2tzLA0KPiA+ICAJCQkJZ2NfY29udHJvbC0+b25lX3Rp
-bWUpOw0KDQo=
+The Google Moxie device uses the same approach as the Google Brask
+which enables the HDMI CEC via the cros-ec-cec driver.
+
+           Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+           Mauro Carvalho Chehab <mchehab@kernel.org>,
+           Reka Norman <rekanorman@chromium.org>,
+           Stefan Adolfsson <sadolfsson@chromium.org>,
+
+Signed-off-by: Ken Lin <kenlin5@quanta.corp-partner.google.com>
+---
+
+Change in v2:
+ - modify commit messages
+---
+ drivers/media/cec/platform/cros-ec/cros-ec-cec.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
+index 12b73ea0f31d..1de5799a0579 100644
+--- a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
++++ b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
+@@ -329,6 +329,8 @@ static const struct cec_dmi_match cec_dmi_match_table[] = {
+ 	{ "Google", "Dexi", "0000:00:02.0", port_db_conns },
+ 	/* Google Dita */
+ 	{ "Google", "Dita", "0000:00:02.0", port_db_conns },
++	/* Google Moxie */
++	{ "Google", "Moxie", "0000:00:02.0", port_b_conns },
+ };
+ 
+ static struct device *cros_ec_cec_find_hdmi_dev(struct device *dev,
+-- 
+2.25.1
+
