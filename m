@@ -1,342 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3414F3BBF2
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F1F53E23
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743063277; cv=none; b=ZZI4/6k/dkbLfdLkvvFApDsa6VDIaITjoUKEkbO3RQJYjzY4S3scUIhRZYOmx+CHIsPm+aDMYObyb5tzDZLd2yW57S3ZW1H4DUvp0EXfkp8zacuXZ9Ea5I2EoWMSJ33VhxCOgTmKQdbNF949RzuLQhWK4m1DdWlXolxjClefj+8=
+	t=1743063285; cv=none; b=VKmTDdXLV7qTx4mN0fNLA7RiKqh+x21H1q3tXiKR2PhOJqvjJ5go64RcxNiMddFvAcJR2Bp4PfZWUo9EUQz88Mdqh5QkFo1Pz5cRsxWtCSp83fZQjs+KlL9LofjRxm4r5JLnsZ+yztkcsYXFD4Zv5KzDQFDRgcD0U1sgi00Dv5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743063277; c=relaxed/simple;
-	bh=hrm1XoHYPmcIOxTaq5acqqaiDDgL93uNCIUXl5UuXww=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NObY8i0vv+4VdoAUEQCCQ5gVDD+aw0RCP6Vpqc9bMQs+KXGiH5O8IiwUNODo7awNNFVXW7NZXRe/X7yAeRP7ayEwK0JRRsWPGp7xGuOAvSgqEDLW7npoHmAFSmfA87RGOjsNcwLWWlJTMi4ReXWH43BCu4/g5vyzM5+gHZ1WZB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sk0o+7ea; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743063285; c=relaxed/simple;
+	bh=dqDAKLbnS5sjnD7NkwvXo/kZFn7+fO2d0R6Ff+ZBKJc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q3DqnPLzHe+L786wPjfluYOsnLAK1EV5KVTbwrQJzJci61Ha0PQ6lm7AQfdGWSAS3e76DYKm/8cfmHxYsTTsDs0sG/8lfB4FXQnLl6NLXneIIcPfd8AXAzUgIV4bID3ZQeasoVpjaUfOX79bUqwk94Uhbi9YEmekk3NghWBCo9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h1qX1ibi; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sk0o+7ea"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6F21C4CEDD;
-	Thu, 27 Mar 2025 08:14:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743063276;
-	bh=hrm1XoHYPmcIOxTaq5acqqaiDDgL93uNCIUXl5UuXww=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Sk0o+7ea3jwRyHYTj4gK7t7OK+K+9A1ZIgIMSg4kw2YoUQslE/7URc75N775R6qvg
-	 BxJV+l0HfDfOsJi9mL/mfdz/8mWymUcU2vAWELyF4hA3YJODClgkMXcUZtOsU/GSSs
-	 MpGuZlJVjsqJUuavNpFmxjK+xFI7WyMhAwgGyi1al/udpeGwYAxh4ZC+zl2WRw6fsP
-	 b2E5SMwq1udEhZnwLmboICYBO99DUe0+fHtKNdWcG6JmqwceeJ9HX5ezHMn5SPELpV
-	 BqJVBTANF0CXjAACis3CmFbn/0kCe8mupIBESuk9FjQ0we8MUKHcdyjNy+2X+ENNpR
-	 hS/7NCxvKLFUg==
-Date: Thu, 27 Mar 2025 09:14:32 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [COMBO PATCH 6/5] bugs/arch: Wire in the 'cond_str' string to the
- WARN/BUG output machinery of PowerPC, LoongArch, S390, RISC-V, PA-RISC and
- SH
-Message-ID: <Z-UI6KGxZyw4hsej@gmail.com>
-References: <20250326084751.2260634-1-mingo@kernel.org>
- <20250326084751.2260634-5-mingo@kernel.org>
- <20250326085343.GB25239@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h1qX1ibi"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2263428c8baso115185ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 01:14:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743063283; x=1743668083; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h9a5QRkmmOyJeIvB5Cn9PmXfV97y4kQAOBXvf9QzfDM=;
+        b=h1qX1ibi9fM1XUcL6NrpzaPOn028Ine3Rf2tl6ZF1NVV0eQRqIEx6VhdC3oSKoGpgg
+         THur3ZekWWo/5f0FUBO/ij9ah4vMBpjJ1Btliaj9X06+TGfUeMIwjyTDjHC1/UY4jrBX
+         6RPBF1oQS/fSpDzJa7T5j3gWDMFFVIySuDELVGmot50uzj0nlNq7zNBZN9vdyUjxFPcD
+         iI939mdFfF2h7k8wcYuulfLD50UH03ekSjFLpkxb7AJpANJzymGs3xzYPC8qdvAJu0QS
+         OOwgR+2ZGy1uemrZ3ioc2Mv5QH+PBJI0WbqWoDwlnjxnPObh1OuyKZ2qBvuiytfIcSQk
+         5ufA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743063283; x=1743668083;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h9a5QRkmmOyJeIvB5Cn9PmXfV97y4kQAOBXvf9QzfDM=;
+        b=GUiAAOk0xWeReu64FqUgtXsvMSiLPXSnQ8qArra6aaqzifmD9FXI2sfZbLffJqVd7R
+         OtF+TbpbXeZAqp2SmePR1y8rBH4Yfv8uhTHYMNierLdJWTB2OSidMr1XMG5FXWvPO3Dc
+         qh/yYs10RQkk4NRxtu3sStL1x708+CcQ42ec6IyXx3ehkPIXv/AbA/PDm7/AA1tAoENj
+         QIT86UL9TRHk6QBIjPZieUOEKo3X2To2flgNmZqHHumnBRTMaiQz9B4FJQQMOoBUVUt+
+         6xaXnYnqVTUBBHq+FVRBF1FOBKnZQCK9Y6IxDqw0+lfVRBZwCasbfZwc5y6DpqbPKeij
+         bH1g==
+X-Forwarded-Encrypted: i=1; AJvYcCXmBm3HSB0fnYKYse3Bte1Zcv7lXlcpL8xkU6AnYHQkxCU7EZU8UY0o48rDO7ipAajkNIQ+05UiTvn/oag=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyI0QiCBq5WcaIWUavSTpBIfOBux49FztMWUjQ6ytrUJU+NLgyk
+	sVji2pa7kVyOFagtlt7iwIBk/E/TD/H0N379zddOFucaioqOK71M1a/Kden7dSbOqMv9dYhJ+9p
+	zJHU2vojZx/hlXjV90bkW7UfpDYOwEc31eoBq
+X-Gm-Gg: ASbGncscSHYZY/m6JygDmPfglLTAiCXFluuEYDa7xnN1Sfg/yVqt54RQVkswfhb0asl
+	R3vj9nPpfQ8K1s4Sie1h11zr70QKOiNoQGFx+Ckeah8YEldbhNfND96eaDuYkRkuckcVlk28+T6
+	LSZUj6kUVU2FMNFlWFzePgDYl3wZahepzKsQNNgS/bdkD3nLQSvgs2+dn+zZnzEHJQkUlzAg==
+X-Google-Smtp-Source: AGHT+IHgfzrQlEamv4gYgjx/fwFVnfQvhKeODD0LFSb3f0rLf6g/j0CVYOoteVLkG0M+nr3xqexqfLuYGBQj9X7EB6c=
+X-Received: by 2002:a17:903:1a0b:b0:215:8723:42d1 with SMTP id
+ d9443c01a7336-22806bc133bmr1942515ad.10.1743063282486; Thu, 27 Mar 2025
+ 01:14:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250326085343.GB25239@noisy.programming.kicks-ass.net>
+References: <20250313181629.17764-1-adrian.hunter@intel.com>
+In-Reply-To: <20250313181629.17764-1-adrian.hunter@intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Thu, 27 Mar 2025 01:14:29 -0700
+X-Gm-Features: AQ5f1JpB0AViQmQuFfLvDkCuf5x_Lo9CiwkMjG3MaJ-5wwbn2bayOkBOcIzzqck
+Message-ID: <CAGtprH_o_Vbvk=jONSep64wRhAJ+Y51uZfX7-DDS28vh=ALQOA@mail.gmail.com>
+Subject: Re: [PATCH RFC] KVM: TDX: Defer guest memory removal to decrease
+ shutdown time
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, kvm@vger.kernel.org, 
+	rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com, 
+	kai.huang@intel.com, reinette.chatre@intel.com, xiaoyao.li@intel.com, 
+	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
+	isaku.yamahata@intel.com, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com, 
+	chao.gao@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Mar 13, 2025 at 11:17=E2=80=AFAM Adrian Hunter <adrian.hunter@intel=
+.com> wrote:
+> ...
+> =3D=3D Problem =3D=3D
+>
+> Currently, Dynamic Page Removal is being used when the TD is being
+> shutdown for the sake of having simpler initial code.
+>
+> This happens when guest_memfds are closed, refer kvm_gmem_release().
+> guest_memfds hold a reference to struct kvm, so that VM destruction canno=
+t
+> happen until after they are released, refer kvm_gmem_release().
+>
+> Reclaiming TD Pages in TD_TEARDOWN State was seen to decrease the total
+> reclaim time.  For example:
+>
+>         VCPUs   Size (GB)       Before (secs)   After (secs)
+>          4       18              72              24
+>         32      107             517             134
 
-* Peter Zijlstra <peterz@infradead.org> wrote:
+If the time for reclaim grows linearly with memory size, then this is
+a significantly high value for TD cleanup (~21 minutes for a 1TB VM).
 
-> On Wed, Mar 26, 2025 at 09:47:49AM +0100, Ingo Molnar wrote:
-> > This allows the reuse of the UD2 based 'struct bug_entry' low-overhead
-> > _BUG_FLAGS() implementation and string-printing backend, without
-> > having to add a new field.
-> > 
-> > An example:
-> > 
-> > If we have the following WARN_ON_ONCE() in kernel/sched/core.c:
-> > 
-> > 	WARN_ON_ONCE(idx < 0 && ptr);
-> > 
-> > Then previously _BUG_FLAGS() would store this string in bug_entry::file:
-> > 
-> > 	"kernel/sched/core.c"
-> > 
-> > After this patch, it would store and print:
-> > 
-> > 	"[idx < 0 && ptr] kernel/sched/core.c"
-> > 
-> > Which is an extended string that will be printed in warnings.
-> > 
-> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> > ---
-> >  arch/x86/include/asm/bug.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
-> > index aff1c6b7a7f3..e966199c8ef7 100644
-> > --- a/arch/x86/include/asm/bug.h
-> > +++ b/arch/x86/include/asm/bug.h
-> > @@ -50,7 +50,7 @@ do {									\
-> >  		     "\t.org 2b+%c3\n"					\
-> >  		     ".popsection\n"					\
-> >  		     extra						\
-> > -		     : : "i" (__FILE__), "i" (__LINE__),		\
-> > +		     : : "i" (cond_str __FILE__), "i" (__LINE__),		\
-> >  			 "i" (flags),					\
-> >  			 "i" (sizeof(struct bug_entry)));		\
-> >  } while (0)
-> 
-> Sneaky :-) Do we want to touch up all the other archs? I mean, you
-> already touched them anyway earlier in the series in order to push this
-> argument through.
+>
+> Note, the V19 patch set:
+>
+>         https://lore.kernel.org/all/cover.1708933498.git.isaku.yamahata@i=
+ntel.com/
+>
+> did not have this issue because the HKID was released early, something th=
+at
+> Sean effectively NAK'ed:
+>
+>         "No, the right answer is to not release the HKID until the VM is
+>         destroyed."
+>
+>         https://lore.kernel.org/all/ZN+1QHGa6ltpQxZn@google.com/
 
-Sneaky how you make it sound so simple ;-)
+IIUC, Sean is suggesting to treat S-EPT page removal and page reclaim
+separately. Through his proposal:
+1) If userspace drops last reference on gmem inode before/after
+dropping the VM reference
+    -> slow S-EPT removal and slow page reclaim
+2) If memslots are removed before closing the gmem and dropping the VM refe=
+rence
+    -> slow S-EPT page removal and no page reclaim until the gmem is around=
+.
 
-... some time later:
+Reclaim should ideally happen when the host wants to use that memory
+i.e. for following scenarios:
+1) Truncation of private guest_memfd ranges
+2) Conversion of private guest_memfd ranges to shared when supporting
+in-place conversion (Could be deferred to the faulting in as shared as
+well).
 
- c9bb718f4d8a bugs/sh: Use 'cond_str' in __WARN_FLAGS()
- 6fd6983325f7 bugs/parisc: Use 'cond_str' in __WARN_FLAGS()
- cc6f8cdc5438 bugs/riscv: Pass in 'cond_str' to __BUG_FLAGS() and use it
- b2becbe8b469 bugs/s390: Pass in 'cond_str' to __EMIT_BUG() and use it
- 8d1deb72c07f bugs/LoongArch: Pass in 'cond_str' to __BUG_ENTRY() and use it
- f4a1a3f7f1bb bugs/powerpc: Pass in 'cond_str' to BUG_ENTRY() and use it
+Would it be possible for you to provide the split of the time spent in
+slow S-EPT page removal vs page reclaim?
 
-There were like 5 separate variants of how architectures make use of 
-__WARN_FLAGS(), and the 6 patches above are totally untested. Combo 
-patch below.
-
-Thanks,
-
-	Ingo
-
-============================>
- arch/loongarch/include/asm/bug.h | 22 +++++++++++-----------
- arch/parisc/include/asm/bug.h    |  2 +-
- arch/powerpc/include/asm/bug.h   | 12 ++++++------
- arch/riscv/include/asm/bug.h     | 10 +++++-----
- arch/s390/include/asm/bug.h      | 10 +++++-----
- arch/sh/include/asm/bug.h        |  2 +-
- 6 files changed, 29 insertions(+), 29 deletions(-)
-
-diff --git a/arch/loongarch/include/asm/bug.h b/arch/loongarch/include/asm/bug.h
-index 51c2cb98d728..b8b4d9f569c1 100644
---- a/arch/loongarch/include/asm/bug.h
-+++ b/arch/loongarch/include/asm/bug.h
-@@ -20,39 +20,39 @@
- #endif
- 
- #ifndef CONFIG_GENERIC_BUG
--#define __BUG_ENTRY(flags)
-+#define __BUG_ENTRY(cond_str, flags)
- #else
--#define __BUG_ENTRY(flags) 					\
-+#define __BUG_ENTRY(cond_str, flags)				\
- 		.pushsection __bug_table, "aw";			\
- 		.align 2;					\
- 	10000:	.long 10001f - .;				\
--		_BUGVERBOSE_LOCATION(__FILE__, __LINE__)	\
--		.short flags; 					\
-+		_BUGVERBOSE_LOCATION(cond_str __FILE__, __LINE__) \
-+		.short flags;					\
- 		.popsection;					\
- 	10001:
- #endif
- 
--#define ASM_BUG_FLAGS(flags)					\
--	__BUG_ENTRY(flags)					\
-+#define ASM_BUG_FLAGS(cond_str, flags)				\
-+	__BUG_ENTRY(cond_str, flags)				\
- 	break		BRK_BUG;
- 
--#define ASM_BUG()	ASM_BUG_FLAGS(0)
-+#define ASM_BUG()	ASM_BUG_FLAGS("", 0)
- 
--#define __BUG_FLAGS(flags, extra)					\
--	asm_inline volatile (__stringify(ASM_BUG_FLAGS(flags))		\
-+#define __BUG_FLAGS(cond_str, flags, extra)					\
-+	asm_inline volatile (__stringify(ASM_BUG_FLAGS(cond_str, flags))	\
- 			     extra);
- 
- #define __WARN_FLAGS(cond_str, flags)				\
- do {								\
- 	instrumentation_begin();				\
--	__BUG_FLAGS(BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
-+	__BUG_FLAGS(cond_str, BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
- 	instrumentation_end();					\
- } while (0)
- 
- #define BUG()							\
- do {								\
- 	instrumentation_begin();				\
--	__BUG_FLAGS(0, "");					\
-+	__BUG_FLAGS("", 0, "");					\
- 	unreachable();						\
- } while (0)
- 
-diff --git a/arch/parisc/include/asm/bug.h b/arch/parisc/include/asm/bug.h
-index 1a87cf80ec3c..2d14d6cf21f3 100644
---- a/arch/parisc/include/asm/bug.h
-+++ b/arch/parisc/include/asm/bug.h
-@@ -61,7 +61,7 @@
- 			     "\t.short %1, %2\n"			\
- 			     "\t.blockz %3-2*4-2*2\n"			\
- 			     "\t.popsection"				\
--			     : : "i" (__FILE__), "i" (__LINE__),	\
-+			     : : "i" (cond_str __FILE__), "i" (__LINE__), \
- 			     "i" (BUGFLAG_WARNING|(flags)),		\
- 			     "i" (sizeof(struct bug_entry)) );		\
- 	} while(0)
-diff --git a/arch/powerpc/include/asm/bug.h b/arch/powerpc/include/asm/bug.h
-index 34d39ec79720..a2120fbedd09 100644
---- a/arch/powerpc/include/asm/bug.h
-+++ b/arch/powerpc/include/asm/bug.h
-@@ -51,11 +51,11 @@
- 	".previous\n"
- #endif
- 
--#define BUG_ENTRY(insn, flags, ...)			\
-+#define BUG_ENTRY(cond_str, insn, flags, ...)		\
- 	__asm__ __volatile__(				\
- 		"1:	" insn "\n"			\
- 		_EMIT_BUG_ENTRY				\
--		: : "i" (__FILE__), "i" (__LINE__),	\
-+		: : "i" (cond_str __FILE__), "i" (__LINE__),	\
- 		  "i" (flags),				\
- 		  "i" (sizeof(struct bug_entry)),	\
- 		  ##__VA_ARGS__)
-@@ -67,12 +67,12 @@
-  */
- 
- #define BUG() do {						\
--	BUG_ENTRY("twi 31, 0, 0", 0);				\
-+	BUG_ENTRY("", "twi 31, 0, 0", 0);			\
- 	unreachable();						\
- } while (0)
- #define HAVE_ARCH_BUG
- 
--#define __WARN_FLAGS(cond_str, flags) BUG_ENTRY("twi 31, 0, 0", BUGFLAG_WARNING | (flags))
-+#define __WARN_FLAGS(cond_str, flags) BUG_ENTRY(cond_str, "twi 31, 0, 0", BUGFLAG_WARNING | (flags))
- 
- #ifdef CONFIG_PPC64
- #define BUG_ON(x) do {						\
-@@ -80,7 +80,7 @@
- 		if (x)						\
- 			BUG();					\
- 	} else {						\
--		BUG_ENTRY(PPC_TLNEI " %4, 0", 0, "r" ((__force long)(x)));	\
-+		BUG_ENTRY(#x, PPC_TLNEI " %4, 0", 0, "r" ((__force long)(x)));	\
- 	}							\
- } while (0)
- 
-@@ -90,7 +90,7 @@
- 		if (__ret_warn_on)				\
- 			__WARN();				\
- 	} else {						\
--		BUG_ENTRY(PPC_TLNEI " %4, 0",			\
-+		BUG_ENTRY(#x, PPC_TLNEI " %4, 0",			\
- 			  BUGFLAG_WARNING | BUGFLAG_TAINT(TAINT_WARN),	\
- 			  "r" (__ret_warn_on));	\
- 	}							\
-diff --git a/arch/riscv/include/asm/bug.h b/arch/riscv/include/asm/bug.h
-index b22ee4d2c882..6278523dd2d1 100644
---- a/arch/riscv/include/asm/bug.h
-+++ b/arch/riscv/include/asm/bug.h
-@@ -50,7 +50,7 @@ typedef u32 bug_insn_t;
- #endif
- 
- #ifdef CONFIG_GENERIC_BUG
--#define __BUG_FLAGS(flags)					\
-+#define __BUG_FLAGS(cond_str, flags)				\
- do {								\
- 	__asm__ __volatile__ (					\
- 		"1:\n\t"					\
-@@ -61,22 +61,22 @@ do {								\
- 			".org 2b + %3\n\t"                      \
- 			".popsection"				\
- 		:						\
--		: "i" (__FILE__), "i" (__LINE__),		\
-+		: "i" (cond_str __FILE__), "i" (__LINE__),	\
- 		  "i" (flags),					\
- 		  "i" (sizeof(struct bug_entry)));              \
- } while (0)
- #else /* CONFIG_GENERIC_BUG */
--#define __BUG_FLAGS(flags) do {					\
-+#define __BUG_FLAGS(cond_str, flags) do {			\
- 	__asm__ __volatile__ ("ebreak\n");			\
- } while (0)
- #endif /* CONFIG_GENERIC_BUG */
- 
- #define BUG() do {						\
--	__BUG_FLAGS(0);						\
-+	__BUG_FLAGS("", 0);					\
- 	unreachable();						\
- } while (0)
- 
--#define __WARN_FLAGS(cond_str, flags) __BUG_FLAGS(BUGFLAG_WARNING|(flags))
-+#define __WARN_FLAGS(cond_str, flags) __BUG_FLAGS(cond_str, BUGFLAG_WARNING|(flags))
- 
- #define HAVE_ARCH_BUG
- 
-diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
-index ef3e495ec1e3..e3d839517c17 100644
---- a/arch/s390/include/asm/bug.h
-+++ b/arch/s390/include/asm/bug.h
-@@ -8,7 +8,7 @@
- 
- #ifdef CONFIG_DEBUG_BUGVERBOSE
- 
--#define __EMIT_BUG(x) do {					\
-+#define __EMIT_BUG(cond_str, x) do {				\
- 	asm_inline volatile(					\
- 		"0:	mc	0,0\n"				\
- 		".section .rodata.str,\"aMS\",@progbits,1\n"	\
-@@ -20,14 +20,14 @@
- 		"	.short	%0,%1\n"			\
- 		"	.org	2b+%2\n"			\
- 		".previous\n"					\
--		: : "i" (__LINE__),				\
-+		: : "i" (cond_str __LINE__),			\
- 		    "i" (x),					\
- 		    "i" (sizeof(struct bug_entry)));		\
- } while (0)
- 
- #else /* CONFIG_DEBUG_BUGVERBOSE */
- 
--#define __EMIT_BUG(x) do {					\
-+#define __EMIT_BUG(cond_str, x) do {				\
- 	asm_inline volatile(					\
- 		"0:	mc	0,0\n"				\
- 		".section __bug_table,\"aw\"\n"			\
-@@ -42,12 +42,12 @@
- #endif /* CONFIG_DEBUG_BUGVERBOSE */
- 
- #define BUG() do {					\
--	__EMIT_BUG(0);					\
-+	__EMIT_BUG("", 0);				\
- 	unreachable();					\
- } while (0)
- 
- #define __WARN_FLAGS(cond_str, flags) do {		\
--	__EMIT_BUG(BUGFLAG_WARNING|(flags));		\
-+	__EMIT_BUG(cond_str, BUGFLAG_WARNING|(flags));	\
- } while (0)
- 
- #define WARN_ON(x) ({					\
-diff --git a/arch/sh/include/asm/bug.h b/arch/sh/include/asm/bug.h
-index 834c621ab249..20d5220bf452 100644
---- a/arch/sh/include/asm/bug.h
-+++ b/arch/sh/include/asm/bug.h
-@@ -59,7 +59,7 @@ do {							\
- 		 _EMIT_BUG_ENTRY			\
- 		 :					\
- 		 : "n" (TRAPA_BUG_OPCODE),		\
--		   "i" (__FILE__),			\
-+		   "i" (cond_str __FILE__),		\
- 		   "i" (__LINE__),			\
- 		   "i" (BUGFLAG_WARNING|(flags)),	\
- 		   "i" (sizeof(struct bug_entry)));	\
+It might be worth exploring the possibility of parallelizing or giving
+userspace the flexibility to parallelize both these operations to
+bring the cleanup time down (to be comparable with non-confidential VM
+cleanup time for example).
