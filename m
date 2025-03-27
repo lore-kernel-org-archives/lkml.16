@@ -1,296 +1,146 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B828D2F3B
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 22:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A912F3B;
+	Thu, 27 Mar 2025 22:03:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743112973; cv=none; b=SGTF9B6BZajA0/S4GhWmLh0K2ly2c7rD1DpfFj3CeIGfy7h8fzkfk2D5mqm01UYHZYLhLEtsrCmo+2gP0KCWzIY9iopf6IkNSHQT3+6gM4xb2bXRMpXLP7nbIjN+/5Q6M6xK55v/czm+UvezgPi0IAqyGaeX+wE5mUQ+ozhbcGI=
+	t=1743112982; cv=none; b=KPoSy1tlH78cYKLV7s92HJO+Sm8MGKRNAakN6KvpEdjzp5mTlzHEJPEwnjEpfdc8OsbLdSgWRdbfnfBfyCPGsasu8L94zE8vR1ue5rNQV3WASFEFvFf4fYuV5wmjpSKnNwCjq/w3McOgGPM+QIuEgy7qC4uIwU0sOvmd1SCybDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743112973; c=relaxed/simple;
-	bh=XP8d3jitAaIxfszybMznmHGaA9ZV9mq6DvHKos+9DK4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=kknWvWabK9fjwv3AIPsIaOa4ApJyP8+uwSbBtUMXkb2IpMxmQP/wucdhX4FqEGEntfsdkw6iue/OtQv7HFbkN5QDlVxBpqhtmdV1Tqpj13gp2WDgQgxpRgWI3fyVPDWDmHF6Vy0XcHLzjJ+jKivBkwI341UtqUuD0J1xBzpyFOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oKIiD1QP; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com
+	s=arc-20240116; t=1743112982; c=relaxed/simple;
+	bh=8lsAjBox89CX18MNCS5cM07o3xZ4BteHev5PJjESD4I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XT5KWzy/1LJK69sBwHDsRp/AyC9oWCPv9AQJCQFRM2fx1isv7luAppjUEH7f87IyNsgN3AbwZwT6g6GExJSTYzBtfDyDmfDS+XLNpaqCbrEfd32kujPl+zEY8gxG0B0QSX2eBFlabOBGGZjcukURW/yfjScy/RKYmrUJryZdPcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=qsNR2WJX; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=N6f1yw83; arc=none smtp.client-ip=103.168.172.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oKIiD1QP"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff798e8c93so2568628a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:02:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743112971; x=1743717771; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Mamr4iYxmEo+4fGmBLp8TdURIY1JiN8KSVSPQ6CQm3o=;
-        b=oKIiD1QPvw2C1iyqpbFRpjlDz4aIaup6mumvB71eEsc+7OTH05buCs4t5n4qG7n6A6
-         La+89PmTKvMzyoq9qFbrLte6jP4svRcMfjJDS64JUfWHap0vAbHEKfoZTHG213pw7F+F
-         kUeigj2+57WvVaj2vmG2H1DJqfN13YMVkYLuHUrZB9AwRH3iBFm0pjCuA9a7+3ZJ0jVz
-         HnRTzDPOgFJ4ukk/7Eg0HC+qBqC347O4QSAgPAEZa11aU7K/2XcZcAnnyGPWFeJnLw/Z
-         vodbqQPYJMZZOLKdqK3SOZUQNVdO9Cxn06c5lOvKxMD94pNTgpEoXiUOeGswGZke8P03
-         QGig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743112971; x=1743717771;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Mamr4iYxmEo+4fGmBLp8TdURIY1JiN8KSVSPQ6CQm3o=;
-        b=klgS9kIPscNpHxpGSBIdbt2YD3BJ2Aasy1zJ6eQzki3Bo0Wvhj+42C/9EvruncTq7o
-         Wx5rVlpSOzW8QHwindxzlwj5roFJOtPnpoImShhsyt0hL/SYszwFpP9ZgOds74duYfXv
-         dLuSHZAqJYhVwoJjqX3BVIVHlyMIRAt8GSzQMvFZg0c1SYVtgMud33yiXffnAOCn2u0k
-         A40epUufWvAWWtuHUX7pRNFFu8b8WLUj06ze23XgY6GIIb3CuYYYjtOCdsv0eufhJOXV
-         /u/hUVM5OesmkCE17RpRXJvj4Xu12by2gLWCexCIe4+xVX4Fl7jpHWxjbggSboju00mV
-         brZw==
-X-Gm-Message-State: AOJu0YwbZPskp+9QHoLLJ7tIp65ZoEfIxho0ypkqPtGC4/LfZCuSpO6D
-	Tn2ZgEeOkJTOVNXeKoCXi+6F9n/iO8jwMDNH2kGMjt7bteIurTylWkmI0vj0yR45FKAhbBLOyzr
-	ff0XMBQ==
-X-Google-Smtp-Source: AGHT+IHeu59LQHJnx/XBNnvlxg/OOrrWbsWpv12kOOaM4YNrFsKr/NoTxx4nVLbi03PYxKgw3znWDtTruXlA
-X-Received: from pjg16.prod.google.com ([2002:a17:90b:3f50:b0:2fc:2f33:e07d])
- (user=ynaffit job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:544f:b0:2ff:692b:b15
- with SMTP id 98e67ed59e1d1-303a8e7a64amr8905331a91.33.1743112970952; Thu, 27
- Mar 2025 15:02:50 -0700 (PDT)
-Date: Thu, 27 Mar 2025 22:02:25 +0000
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="qsNR2WJX";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="N6f1yw83"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 973351383828;
+	Thu, 27 Mar 2025 18:02:59 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Thu, 27 Mar 2025 18:02:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1743112979;
+	 x=1743199379; bh=zf6tcG4o+mDyKdiFDoblfnPavaAiQxh5rvU4VR14S+8=; b=
+	qsNR2WJXh0ESyAevQdyM0s+kTsYJKnIQvdDm3r1+gxiDTpGnJ+5FQTQ/MgDH3NwJ
+	2hMHrzA4e0giqKUsGhBI0jwpIcFr5czvEs/F8QXJQ6Q8aTKM/ZelhgxT8bXqYo5x
+	Xl/5j0FVEakstUZ81rCPzZGfLNG72xxoSyVp55ZFBOVp443Mi2rOwGI536l++VVF
+	Llq/4HpgVx/77N/0ECiGVwJv++N9N1bvBHUt+LDMYTyTYg/HVw6wpKMVLn2ThkuX
+	G7LHXCft+8/OBAI+Z0pr2n0KqAv1Gam5cXVSVT0WjMKU3QZkemdww/RE7cJk2bPA
+	sdkZXdv6CYWoPaEspsPEZw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1743112979; x=1743199379; bh=zf6tcG4o+mDyKdiFDoblfnPavaAiQxh5rvU
+	4VR14S+8=; b=N6f1yw83MqtHv7p51hGZ4/SC9oMZL5ghc4xXWl/8/8u70ACDeqk
+	dNogg2QuxIKOIS6hmPk6uMIQWJD1/JWshj7CsubHhmHTPqzc6Jbl/+DlSYaWl3st
+	VqQ+hhyEbix1QoI3lQsS1mbVJcAEhFL1Gm/7SStAbcws498So/VsU7RNwDlalZol
+	X8XfMTi+8eu3UpoQSghWVpIPlewY3xIekZTRD49/XISNwCwGxlqW8LCdC5xo/m5O
+	HAxOrvQudpVsOiLNPHDhdJqMV3jVZrzGbqLxSJ3HM2jG2emubrrYvVPyqYY6yuXS
+	wK6zQOzMGscUDWrNDrtSV1qekKtdUD/w3OQ==
+X-ME-Sender: <xms:E8vlZ1z1CZECBG6_Mp88bOnx5cVJzJ7563QxTDbOEBT6m1Vg5bVMfA>
+    <xme:E8vlZ1Q8dPTy3XJ9psoljGwXy2NVVE9pGqXeydQ38V8IRZAzpKoS7j6YKriUamXzc
+    nkM62tbWETC0A>
+X-ME-Received: <xmr:E8vlZ_V_gfDRcqKSkoKoYjun8rxx3ZNQYmiEx2Mvfhzp70sF1PS9i3xXg91oD4s2u9F4chSXx9UvrPqXyDpXgLtN4QuCoC1lRg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieelheehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesghdtreertddt
+    jeenucfhrhhomhepofgrrhgvkhcuofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuc
+    eomhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecu
+    ggftrfgrthhtvghrnhepgfduleetfeevhfefheeiteeliefhjefhleduveetteekveettd
+    dvgeeuteefjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomhepmhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
+    dpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhgr
+    fhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjsggvuhhlihgthhesshhush
+    gvrdgtohhmpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrd
+    horhhgpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtohepgigvnhdquggvvhgvlheslhhishhtshdrgigvnhhprhhojhgvtg
+    htrdhorhhgpdhrtghpthhtohepjhhgrhhoshhssehsuhhsvgdrtghomhdprhgtphhtthho
+    pehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoh
+    epvhhirhgvshhhrdhkuhhmrghrsehlihhnrghrohdrohhrgh
+X-ME-Proxy: <xmx:E8vlZ3gF2XCjuE75JMfKey6xrB1KDGRQwSB_Zz6rqhIbDMaKJZLc_w>
+    <xmx:E8vlZ3DoNF4kDwtCT45CbwA5LkLTnRd0bcWStq-gcl9gnbU4gog0Ag>
+    <xmx:E8vlZwI0go199P1aByq75PTaH84a6wHiOqFoC7FoGejgKNr_2rX-VQ>
+    <xmx:E8vlZ2CCn1vcZv2vExq2Hk9im0zGshq2jPezirMyu7rIzarY0KBqVQ>
+    <xmx:E8vlZzt0mvB-6kPl_WJA76SfockTXV1N1Ln2adtM3Q1OSqVbbDFu_rtq>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 27 Mar 2025 18:02:57 -0400 (EDT)
+Date: Thu, 27 Mar 2025 23:02:55 +0100
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Jan Beulich <jbeulich@suse.com>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	xen-devel <xen-devel@lists.xenproject.org>,
+	Juergen Gross <jgross@suse.com>, regressions@lists.linux.dev,
+	Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: NULL pointer dereference in cpufreq_update_limits(?) under Xen
+ PV dom0 - regression in 6.13
+Message-ID: <Z-XLD9FVjqKPU3hO@mail-itl>
+References: <Z-ShAR59cTow0KcR@mail-itl>
+ <3796f2d9-738f-4cdf-a4a2-61c4aa99c310@suse.com>
+ <CAJZ5v0jn_gv92ywZiTZDdGN3Z+GNW0BJ5=kBD=8MpQ0Pt+y8TQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250327220225.3180998-3-ynaffit@google.com>
-Subject: [PATCH 1/2] binder: Refactor binder_node print synchronization
-From: "Tiffany Y. Yang" <ynaffit@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Christian Brauner <brauner@kernel.org>, 
-	Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>
-Cc: linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	"Tiffany Y. Yang" <ynaffit@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="n/zi9pJWB1Be1f5W"
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0jn_gv92ywZiTZDdGN3Z+GNW0BJ5=kBD=8MpQ0Pt+y8TQ@mail.gmail.com>
 
-The binder driver outputs information about each dead binder node by
-iterating over the dead nodes list, and it prints the state of each live
-node in the system by traversing each binder_proc's proc->nodes tree.
-Both cases require similar logic to maintain the global lock ordering
-while accessing each node.
 
-Create a helper function to synchronize around printing binder nodes in
-a list. Opportunistically make minor cosmetic changes to binder print
-functions.
+--n/zi9pJWB1Be1f5W
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 27 Mar 2025 23:02:55 +0100
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Jan Beulich <jbeulich@suse.com>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	xen-devel <xen-devel@lists.xenproject.org>,
+	Juergen Gross <jgross@suse.com>, regressions@lists.linux.dev,
+	Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: NULL pointer dereference in cpufreq_update_limits(?) under Xen
+ PV dom0 - regression in 6.13
 
-Signed-off-by: Tiffany Y. Yang <ynaffit@google.com>
----
- drivers/android/binder.c | 114 +++++++++++++++++++++------------------
- 1 file changed, 63 insertions(+), 51 deletions(-)
+On Thu, Mar 27, 2025 at 12:02:24PM +0100, Rafael J. Wysocki wrote:
+> cpufreq_update_limits() needs to ensure that the driver is there.
+>=20
+> The attached patch should address this issue, Marek please verify.
 
-diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index 76052006bd87..d963a7860aa3 100644
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -6377,10 +6377,10 @@ static void print_binder_transaction_ilocked(struct seq_file *m,
- }
- 
- static void print_binder_work_ilocked(struct seq_file *m,
--				     struct binder_proc *proc,
--				     const char *prefix,
--				     const char *transaction_prefix,
--				     struct binder_work *w)
-+				      struct binder_proc *proc,
-+				      const char *prefix,
-+				      const char *transaction_prefix,
-+				      struct binder_work *w)
- {
- 	struct binder_node *node;
- 	struct binder_transaction *t;
-@@ -6430,7 +6430,7 @@ static void print_binder_work_ilocked(struct seq_file *m,
- 
- static void print_binder_thread_ilocked(struct seq_file *m,
- 					struct binder_thread *thread,
--					int print_always)
-+					bool print_always)
- {
- 	struct binder_transaction *t;
- 	struct binder_work *w;
-@@ -6505,8 +6505,50 @@ static void print_binder_ref_olocked(struct seq_file *m,
- 	binder_node_unlock(ref->node);
- }
- 
--static void print_binder_proc(struct seq_file *m,
--			      struct binder_proc *proc, int print_all)
-+/**
-+ * print_next_binder_node_ilocked() - Print binder_node from a locked list
-+ * @m:          struct seq_file for output via seq_printf()
-+ * @node:       struct binder_node to print fields of
-+ * @prev_node:	struct binder_node we hold a temporary reference to (if any)
-+ *
-+ * Helper function to handle synchronization around printing a struct
-+ * binder_node while iterating through @node->proc->nodes or the dead nodes
-+ * list. Caller must hold either @node->proc->inner_lock (for live nodes) or
-+ * binder_dead_nodes_lock.
-+ *
-+ * Return:	pointer to the struct binder_node we hold a tmpref on
-+ */
-+static struct binder_node *
-+print_next_binder_node_ilocked(struct seq_file *m, struct binder_node *node,
-+			       struct binder_node *prev_node)
-+{
-+	/*
-+	 * Take a temporary reference on the node so that isn't removed from
-+	 * its proc's tree or the dead nodes list while we print it.
-+	 */
-+	binder_inc_node_tmpref_ilocked(node);
-+	/*
-+	 * Live nodes need to drop the inner proc lock and dead nodes need to
-+	 * drop the binder_dead_nodes_lock before trying to take the node lock.
-+	 */
-+	if (node->proc)
-+		binder_inner_proc_unlock(node->proc);
-+	else
-+		spin_unlock(&binder_dead_nodes_lock);
-+	if (prev_node)
-+		binder_put_node(prev_node);
-+	binder_node_inner_lock(node);
-+	print_binder_node_nilocked(m, node);
-+	binder_node_inner_unlock(node);
-+	if (node->proc)
-+		binder_inner_proc_lock(node->proc);
-+	else
-+		spin_lock(&binder_dead_nodes_lock);
-+	return node;
-+}
-+
-+static void print_binder_proc(struct seq_file *m, struct binder_proc *proc,
-+			      bool print_all)
- {
- 	struct binder_work *w;
- 	struct rb_node *n;
-@@ -6519,31 +6561,17 @@ static void print_binder_proc(struct seq_file *m,
- 	header_pos = m->count;
- 
- 	binder_inner_proc_lock(proc);
--	for (n = rb_first(&proc->threads); n != NULL; n = rb_next(n))
-+	for (n = rb_first(&proc->threads); n; n = rb_next(n))
- 		print_binder_thread_ilocked(m, rb_entry(n, struct binder_thread,
- 						rb_node), print_all);
- 
--	for (n = rb_first(&proc->nodes); n != NULL; n = rb_next(n)) {
-+	for (n = rb_first(&proc->nodes); n; n = rb_next(n)) {
- 		struct binder_node *node = rb_entry(n, struct binder_node,
- 						    rb_node);
- 		if (!print_all && !node->has_async_transaction)
- 			continue;
- 
--		/*
--		 * take a temporary reference on the node so it
--		 * survives and isn't removed from the tree
--		 * while we print it.
--		 */
--		binder_inc_node_tmpref_ilocked(node);
--		/* Need to drop inner lock to take node lock */
--		binder_inner_proc_unlock(proc);
--		if (last_node)
--			binder_put_node(last_node);
--		binder_node_inner_lock(node);
--		print_binder_node_nilocked(m, node);
--		binder_node_inner_unlock(node);
--		last_node = node;
--		binder_inner_proc_lock(proc);
-+		last_node = print_next_binder_node_ilocked(m, node, last_node);
- 	}
- 	binder_inner_proc_unlock(proc);
- 	if (last_node)
-@@ -6551,12 +6579,10 @@ static void print_binder_proc(struct seq_file *m,
- 
- 	if (print_all) {
- 		binder_proc_lock(proc);
--		for (n = rb_first(&proc->refs_by_desc);
--		     n != NULL;
--		     n = rb_next(n))
-+		for (n = rb_first(&proc->refs_by_desc); n; n = rb_next(n))
- 			print_binder_ref_olocked(m, rb_entry(n,
--							    struct binder_ref,
--							    rb_node_desc));
-+							     struct binder_ref,
-+							     rb_node_desc));
- 		binder_proc_unlock(proc);
- 	}
- 	binder_alloc_print_allocated(m, &proc->alloc);
-@@ -6696,7 +6722,7 @@ static void print_binder_proc_stats(struct seq_file *m,
- 	count = 0;
- 	ready_threads = 0;
- 	binder_inner_proc_lock(proc);
--	for (n = rb_first(&proc->threads); n != NULL; n = rb_next(n))
-+	for (n = rb_first(&proc->threads); n; n = rb_next(n))
- 		count++;
- 
- 	list_for_each_entry(thread, &proc->waiting_threads, waiting_thread_node)
-@@ -6710,7 +6736,7 @@ static void print_binder_proc_stats(struct seq_file *m,
- 			ready_threads,
- 			free_async_space);
- 	count = 0;
--	for (n = rb_first(&proc->nodes); n != NULL; n = rb_next(n))
-+	for (n = rb_first(&proc->nodes); n; n = rb_next(n))
- 		count++;
- 	binder_inner_proc_unlock(proc);
- 	seq_printf(m, "  nodes: %d\n", count);
-@@ -6718,7 +6744,7 @@ static void print_binder_proc_stats(struct seq_file *m,
- 	strong = 0;
- 	weak = 0;
- 	binder_proc_lock(proc);
--	for (n = rb_first(&proc->refs_by_desc); n != NULL; n = rb_next(n)) {
-+	for (n = rb_first(&proc->refs_by_desc); n; n = rb_next(n)) {
- 		struct binder_ref *ref = rb_entry(n, struct binder_ref,
- 						  rb_node_desc);
- 		count++;
-@@ -6756,29 +6782,15 @@ static int state_show(struct seq_file *m, void *unused)
- 	spin_lock(&binder_dead_nodes_lock);
- 	if (!hlist_empty(&binder_dead_nodes))
- 		seq_puts(m, "dead nodes:\n");
--	hlist_for_each_entry(node, &binder_dead_nodes, dead_node) {
--		/*
--		 * take a temporary reference on the node so it
--		 * survives and isn't removed from the list
--		 * while we print it.
--		 */
--		node->tmp_refs++;
--		spin_unlock(&binder_dead_nodes_lock);
--		if (last_node)
--			binder_put_node(last_node);
--		binder_node_lock(node);
--		print_binder_node_nilocked(m, node);
--		binder_node_unlock(node);
--		last_node = node;
--		spin_lock(&binder_dead_nodes_lock);
--	}
-+	hlist_for_each_entry(node, &binder_dead_nodes, dead_node)
-+		last_node = print_next_binder_node_ilocked(m, node, last_node);
- 	spin_unlock(&binder_dead_nodes_lock);
- 	if (last_node)
- 		binder_put_node(last_node);
- 
- 	mutex_lock(&binder_procs_lock);
- 	hlist_for_each_entry(proc, &binder_procs, proc_node)
--		print_binder_proc(m, proc, 1);
-+		print_binder_proc(m, proc, true);
- 	mutex_unlock(&binder_procs_lock);
- 
- 	return 0;
-@@ -6807,7 +6819,7 @@ static int transactions_show(struct seq_file *m, void *unused)
- 	seq_puts(m, "binder transactions:\n");
- 	mutex_lock(&binder_procs_lock);
- 	hlist_for_each_entry(proc, &binder_procs, proc_node)
--		print_binder_proc(m, proc, 0);
-+		print_binder_proc(m, proc, false);
- 	mutex_unlock(&binder_procs_lock);
- 
- 	return 0;
-@@ -6822,7 +6834,7 @@ static int proc_show(struct seq_file *m, void *unused)
- 	hlist_for_each_entry(itr, &binder_procs, proc_node) {
- 		if (itr->pid == pid) {
- 			seq_puts(m, "binder proc state:\n");
--			print_binder_proc(m, itr, 1);
-+			print_binder_proc(m, itr, true);
- 		}
- 	}
- 	mutex_unlock(&binder_procs_lock);
--- 
-2.49.0.395.g12beb8f557-goog
+Yes, it fixes the problem, thanks!
 
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+
+--n/zi9pJWB1Be1f5W
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmflyw8ACgkQ24/THMrX
+1yyKGAf/RTH6B+NEeQIKDnBlfNysIHdT/cbPalXVBjdTpKXKuIyi+gjpm4pFpLU0
+EVf8sCTXe2zXKAWmTJ+g1kwocHEAu94lm78QAn2Y1ZP98e7czfVy0zqpMfOVOfW4
+acaKrf6R30uzDAW6RNmFk4BwGS2wHhQ2qt+pn9Yz5OQd1mNaZFguHhqnPn6ceRnO
+zG2W8HJRoQjsqG5r/JQ/ouKhXVMU9HMq14OQLANb6Q+GOuWuZ3HmRL+ZtG7O9+H5
+AYbqeIoIH1XuNLkb69GdoJcyfV+LMKoagGYumGsfhR460h/O9LA8lpKher86U7ig
+XH40zoYMGASoWX7KueC+Bb7uKv4XkQ==
+=Zu1I
+-----END PGP SIGNATURE-----
+
+--n/zi9pJWB1Be1f5W--
