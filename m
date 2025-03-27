@@ -1,100 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B38EEA9
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 17:09:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65B9161302;
+	Thu, 27 Mar 2025 17:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743095367; cv=none; b=q2Z9zSVcXiOftNhyMi3NjjUPvOfH0Y/03+BD1nS4MWPfglkFTCuO/R0aGKxmlcrbzqbmsHpUwXj0kM5bmVzEwk3X0yCoXG/S90Z/Pzio1tqx+YR0sM3sA9zdzSuudYx+n1AOIPUdrj4fQe7MUPOWsEsDiLdMFK2FUvrAq0M2U0E=
+	t=1743095382; cv=none; b=WrLyf8J3Us3MSKVEc7tBYhT3c2bGFG/XS9f37Zg1qyU/JqUcLy5bnt4i65ZpXj0+Wua73OwCA+gy3RyDlnyKUuO17Li9KJFp9vIwOLVaCZ91wU8xSWZlVhFf+73+tJV0D0EM/frywF+wchUzKBtBOfcIq/OXJ4LpRouDDTxvwK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743095367; c=relaxed/simple;
-	bh=swxS27j2Fa45SOvPHd+RoddyF7ldkMEgTwYmbkFWlwk=;
+	s=arc-20240116; t=1743095382; c=relaxed/simple;
+	bh=yqwzn4P04RSmmtSIjqDgwq4V3jkgrE6TNUdhfEVwdNU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qQl7Xaspb0r6CVETJbDAcsKjLSOfv8FaDtKmAwgPg2Z3trQUrZveRA1bHDDglLwe+XMeDjEygi0/j/V8Rzi+ndme+eEN/7AXK+QZ2CBo/wEmDvVmPDeGM1EMhFdPb0YbI9pHOL3cMhNFlDPWsisDYfTmj+EAxwBCpLRWPgJa2lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKfcIwuY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=eK5o8BhHABB4Td4gDJt+RxxH2IRP14xq7UOnUSLsFjAnFXA+qfHHy+Oas6aDxh6bcWjOP2WNuPEG4StzpU1Idfg89fH7cclu4Pv1LhIQ8s/cobaverjwCwI+EGzERB4SIsvxbu/pJyCr854CMwgRRhz2rS6bSbLibBEaViIzgdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Y/0agaZd; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKfcIwuY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5127CC4CEE8;
-	Thu, 27 Mar 2025 17:09:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743095366;
-	bh=swxS27j2Fa45SOvPHd+RoddyF7ldkMEgTwYmbkFWlwk=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Y/0agaZd"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A59E640E020E;
+	Thu, 27 Mar 2025 17:09:37 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id mxc8vZqOWA5V; Thu, 27 Mar 2025 17:09:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1743095372; bh=qZUNinMbG6xFv949XeNqIHvfDyV9uAyDOlNCvnC1syY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PKfcIwuYLSWu6SIS+zAgq+j7q4AmeDas+TDkYLuddr/scs1SGy9m3fPrISmVYsI4Z
-	 +dXikxyLeAiuSZ0Gb0Vjdeb/KyU3Uatb3ahhMEG3cQjltcbWBKrjojSFglTF+ix5pt
-	 6Jg3UcF8Te9P1YcqaiUYtuAs8fmZkhNF0cimG6/CAzLhg0GERAhps8RwM3lYpvErJy
-	 78YPpWlQrqv4FM/I2gi9r3HXfMnV/50q8I+CUpWogZ0BlKFpVdFjopC1O2sLOw3n8B
-	 DOs6cjbs7ZanvyxkaNE9TibB9v+3h83hjzX48rVgx1wgx4pT9skTdbdOGNdP+H+13s
-	 ZyJV/Hyquy7fg==
-Date: Thu, 27 Mar 2025 07:09:25 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched_ext: Fix missing rq lock in scx_bpf_cpuperf_set()
-Message-ID: <Z-WGRetAL9tSPEkv@slm.duckdns.org>
-References: <20250325140021.73570-1-arighi@nvidia.com>
- <Z-SasIwx5hINm1sf@slm.duckdns.org>
- <Z-UEkJfkkBBKqCyU@gpd3>
- <Z-UgI3dSwcLa-CRC@gpd3>
+	b=Y/0agaZdSd33YCrsI69LFRQ9SzszRvmYA/kLx9tDenLQfOHbJuvabiEiVKNY0Whgn
+	 UiNR65iAva3VgnMtqRiOnLc9B5Hk7Env7HjwfIQOm1UOtC7XLHG325Cf2DBfntWMt/
+	 AI5HhE9RRmlnApfC2JLuz70KoDKYKr5I4qOpbRjM48OOjSkwXeE/nbIgLJUDbI1Nsb
+	 6jUORe5i8CCYeXe74Pd6hY615uiIHKXYZ9sE958ImtBiYlN+siCe5X4r91EgkGVdiz
+	 8zYgegaG9S91Nw3bUAKUx3APdL5wiykJLlqih+JdDDuGUEtgufhC0MPjaqERD/mJP9
+	 1gbCxgllugKSbCcDXbrF/DD7zC8acyhTX6gegvKjJv5iVb6Pqq1tctlvuZt7P22DVj
+	 xP9BNMOyqF/CDoe7NNBIplM2eqQuK1x6EZQH0DS/+V+qX7SM4gPpFMMYZQNt/oueCu
+	 id6Fq8IPffI+eeu3rVys240GOIXoeY4PlaRD63mNAuS1d79EM8AH86+AQlh+ig/zDu
+	 8h+AqfJY+SHOVbVSZ8OGRrA8YUDQLfa3yBET2Whvnd5r9pUcx1fk2xzzvq16Hx7TCu
+	 cuRCfAmyHBoZigThlyUYH6MRagX+2Lc+Pi1QLVFLmB0Xr2EwixoLGbSp9kBDtGlAMQ
+	 kX+3am8K14cpRr25XSwsW9i8=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1DC9A40E0169;
+	Thu, 27 Mar 2025 17:08:49 +0000 (UTC)
+Date: Thu, 27 Mar 2025 18:08:48 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: shiju.jose@huawei.com
+Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, david@redhat.com, Vilas.Sridharan@amd.com,
+	linux-edac@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	tony.luck@intel.com, rafael@kernel.org, lenb@kernel.org,
+	mchehab@kernel.org, leo.duran@amd.com, Yazen.Ghannam@amd.com,
+	rientjes@google.com, jiaqiyan@google.com, Jon.Grimm@amd.com,
+	dave.hansen@linux.intel.com, naoya.horiguchi@nec.com,
+	james.morse@arm.com, jthoughton@google.com, somasundaram.a@hpe.com,
+	erdemaktas@google.com, pgonda@google.com, duenwen@google.com,
+	gthelen@google.com, wschwartz@amperecomputing.com,
+	dferguson@amperecomputing.com, wbs@os.amperecomputing.com,
+	nifan.cxl@gmail.com, tanxiaofei@huawei.com,
+	prime.zeng@hisilicon.com, roberto.sassu@huawei.com,
+	kangkang.shen@futurewei.com, wanghuiqiang@huawei.com,
+	linuxarm@huawei.com
+Subject: Re: [PATCH v2 7/8] cxl/memfeature: Add CXL memory device soft PPR
+ control feature
+Message-ID: <20250327170848.GDZ-WGIM553HJ61xj6@fat_crate.local>
+References: <20250320180450.539-1-shiju.jose@huawei.com>
+ <20250320180450.539-8-shiju.jose@huawei.com>
+ <20250327170156.GCZ-WEhNREaxQaH_ya@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z-UgI3dSwcLa-CRC@gpd3>
+In-Reply-To: <20250327170156.GCZ-WEhNREaxQaH_ya@fat_crate.local>
 
-Hello,
+On Thu, Mar 27, 2025 at 06:01:56PM +0100, Borislav Petkov wrote:
+> On Thu, Mar 20, 2025 at 06:04:44PM +0000, shiju.jose@huawei.com wrote:
+> > diff --git a/drivers/edac/mem_repair.c b/drivers/edac/mem_repair.c
+> > index 3b1a845457b0..bf7e01a8b4dd 100755
+> > --- a/drivers/edac/mem_repair.c
+> > +++ b/drivers/edac/mem_repair.c
+> > @@ -45,6 +45,11 @@ struct edac_mem_repair_context {
+> >  	struct attribute_group group;
+> >  };
+> >  
+> > +const char * const edac_repair_type[] = {
+> > +	[EDAC_PPR] = "ppr",
+> > +};
+> > +EXPORT_SYMBOL_GPL(edac_repair_type);
+> 
+> Why is this thing exported instead of adding a getter function and having all
+> its users pass in proper defines as arguments?
+> 
+> And "EDAC_PPR" is not a proper define - it doesn't tell me what it is.
+> 
+> It should be more likely a
+> 
+> EDAC_REPAIR_PPR,
+> EDAC_REPAIR_ROW_SPARING,
+> EDAC_REPAIR_BANK_SPARING,
+> 
+> and so on.
 
-On Thu, Mar 27, 2025 at 10:53:39AM +0100, Andrea Righi wrote:
-...
-> > Hm... that's right, it looks like this requires a bit more work than
-> > expected, but saving the currently locked rq might be helpful also for
-> > other kfuncs, I'll take a look at this.
-> 
-> What if we lock the rq in the scx_kf_allowed_if_unlocked() case, and for
-> all the other cases we ignore locking if rq == this_rq(). If we need to
-> operate on a different rq than the current one we could either defer the
-> work or just trigger an ops error. Something like:
-> 
-> 	if (scx_kf_allowed_if_unlocked()) {
-> 		rq_lock_irqsave(rq, &rf);
-> 		update_rq_clock(rq);
-> 	} else if (rq != this_rq()) {
-> 		// defer work or ops error
-> 		return;
-> 	}
-> 
-> 	lockdep_assert_rq_held(rq);
-> 	rq->scx.cpuperf_target = perf;
-> 	cpufreq_update_util(rq, 0);
-> 
-> 	if (scx_kf_allowed_if_unlocked())
-> 		rq_unlock_irqrestore(rq, &rf);
-> 
-> AFAICS all the current scx schedulers call scx_bpf_cpuperf_set() from
-> ops.running(), ops.tick() or ops.init(), so even with the ops error we
-> should cover all the existent cases.
-> 
-> The only unsupported scenario is calling scx_bpf_cpuperf_set() from
-> ops.enqueue() / ops.select_cpu(), but maybe we could add the deferred work
-> later to handle that if needed.
+Looking at this more:
 
-balance_one() can be called from a sibling CPU when core sched is enabled,
-so ttwu isn't the only path where this_rq() test wouldn't work. Even if we
-plug all the existing holes and make it work, it feels a bit too fragile to
-me. It's something which can easily break inadvertently and cause subtle
-failures.
++static int cxl_ppr_get_repair_type(struct device *dev, void *drv_data,
++				   const char **repair_type)
++{
++	*repair_type = edac_repair_type[EDAC_PPR];
++
++	return 0;
++}
 
-If we don't want to do locked rq tracking, we can always use
-schedule_deferred() when any rq is locked too. That's a bit more expensive
-tho.
+Can this be any more silly?
 
-Thanks.
+An ops member which copies a string pointer into some argument. What for?
+
+If those strings are for userspace, why don't you simply return *numbers* and
+let userspace convert them into strings?
+
+Oh boy.
 
 -- 
-tejun
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
