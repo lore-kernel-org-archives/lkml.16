@@ -1,161 +1,96 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017622628D
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 13:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF76215771
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 13:43:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743082999; cv=none; b=n+pO21yd8BKaHZenHVG/4ygb9dVjEB+CWY2Hg0vfvkQLnuIK2p6GILL8rzXXrZMMkW08lG5xcHLG5IN25UDF04lntfo9ge0dhHgqvqRUvKcTM1f/ic3xr1P1oRfoEhJFYzMlr1nT+RZJBZI//q9prOGBMNnoP+YN6dalZXl33gA=
+	t=1743083028; cv=none; b=KKTDkZEJUv7eLK2ZL8sgRN5zVA2jgPdC+iOUBR5XUC8327BzAzToQNibZ6vHPfS2tJflkgA0LNfuX1V5gD0tF2FY9hJ1MbYpPLy2y8AclTAja0iweYBqChooNw657P/7lNFcxAhvPxYcxAcQYj1gabKpUEYsDgzEulq2i7EHjG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743082999; c=relaxed/simple;
-	bh=5ZCgFTgVJLK+smEQLwtOc1ImMIqPAG35ndYH+0G3vGY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fHW+kVo6H8BR3Nih59cwCSyA+3jyk623hfu0Cy33JGa2H7QJTAl3AF0djQM9hGh/3c2vwEbhZ35gCv60dM3XMWHdo6Xqqd+Hxq2/Ava6tr2wRc53KYExfgbj1R6LdAuUve/nhvL/62zZq7KTx2iUawGi2Jd4G7/UrdDosIDoeKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XvRiIuq9; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743083028; c=relaxed/simple;
+	bh=9AMtvw3nS69g7hxNbflJz2CtocyZRMh5pJ9kNRdrSj4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D/RN8w9bExPUsWPM8mk+uyN8v3Dd8aeqbBCP3lIHVjoeNH4SS+24zAaQhB3bHutAnSjr4Mh+jkPOwfg0fxQlnFrEeYSaRSB33DM00cUnlZTa1vdjS6zPy2Fmcaene4YKC3mUepeJmMl4LhAB5eQHlnEqGkle+mR50r9dHJhS2G0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HGN/jeKe; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XvRiIuq9"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e5e34f4e89so1880098a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 06:43:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743082996; x=1743687796; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cNnBnM8eO87L/e1cHxRaDu6Ifod398nlA+QM8LTKvTk=;
-        b=XvRiIuq9A2Iu40aEyutqRyMsQhzqu/OK7erakfC6sZncN5WdLsioE95c6/G9XZPBSW
-         fDbG9v23fH6rZwQRRAvE1QV8D+Fy/+bj6taeclweOSTf7Jig4GNJVozZcj46zx4/VTBy
-         y1KGgDr8R8TVzVO3nXlxvP0OOGNz3m7ezeEz4dXunwpa8xPRcHXTKiDXbWJkluSKn6r7
-         uNLnBz61Ee+1w2Wc/0uMAMcf/G2CnKZNIo/uIIt+fOIDGQrXIyUdI69J4U8cw9q0SfyC
-         sXQO49/CRWvsOQVi25JmerDRvhh2IFQW8lyMR8ctdEifBXDDUkT5jRecnErYUFIIr2cq
-         dH9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743082996; x=1743687796;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cNnBnM8eO87L/e1cHxRaDu6Ifod398nlA+QM8LTKvTk=;
-        b=GXMt8zb0pB+WSjz4OoH5fH2WbpgO8qplKBvuBbStXx9OIX5iMFUATI6YRiSAP/hJQx
-         xS2+g3LDrfk1nF3Vam9ZCqjgUTw8+3wf0f4pu83ImU3gQink9CjeWJA1uNWFV8zcyKeh
-         lmqjMNgSF92WY8WyRXC8EV3NZkWGFsVSqMlnSFIuxuGpGl6M5OXheH9Cx5d9ACiaF4VB
-         XSpvTxJ9YksHJ+2JxeaY8pfMl34/pedqW36uYgtBEof1i1SGI5Q9IuYtwmorhdmK/xzh
-         fUAQe/fMxHGFrXHiM+8qdjr6MB2Nm5IXwe9FwhmHHzrMQVmolEswpWMDDgJ6H4eR17cc
-         XW9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUkf7d/EfTpk29HqIvMRAGCq7MOyd6/nYE+E33ENjmtLxFm6Lyv6U3LFq/NOYQf7pBIY+a14xy+0Y0+mbA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHhWR2B1mO6N7pU4v79afJezEBKLNLCLyYHVfHEPPLxXboCQc3
-	VEQdepmLHX3g9pycZ5wxUXLnZJhZINIkVn63yMtHZbbZG0SosBQTphAdU4zpLkk9Bd2BajeN5Dc
-	mSUzaqiiDY6Aa+lkiqnl17KAuzRc=
-X-Gm-Gg: ASbGncunjkHQK7xI8JWfmbswV/ciMb9nnInKrx4Q9+yjTR2kPKT23gHZ0y9s74wGe/o
-	jc6TXJ/7yZOU9X0LfKNcMIz6GpWNXowW+xztiGwPdmJt7WgJzd50Be3SKdB/U0ICV7CZg0hrphI
-	46d2ZubOgsque509qngnKM8hf1
-X-Google-Smtp-Source: AGHT+IFhZyMfTTbLEHg4L/imLHqXDu7Y6uwFb7PeJ8rcHNStXOvjsChOebBMabFw9bm3yO7hNEMrfekk5RZ6omxcm/o=
-X-Received: by 2002:a05:6402:40d5:b0:5de:dfd0:9d20 with SMTP id
- 4fb4d7f45d1cf-5ed8f4fe787mr3804989a12.24.1743082995905; Thu, 27 Mar 2025
- 06:43:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HGN/jeKe"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1743083023;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=uOgBF8XHFaV92u3aPPoV9+GCkDsVe8HhK8jkJWca9bM=;
+	b=HGN/jeKeQv2DMu40CwU2DiYI8ELROdxkfr4p4tKRnXNL6yTJFrIOGXJ5H3enAYYHpCoe1K
+	J7EVo1CM3Sahr/d36OS2sd5zKT8mpGhgdxy7JehyZ3/qSGRG/beLxfFe6LmUq2dsBpmuId
+	+jPXjzAsIw36w3bryEmal+1KVymEr6c=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: netdev@vger.kernel.org
+Cc: willemdebruijn.kernel@gmail.com,
+	jasowang@redhat.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	hawk@kernel.org,
+	john.fastabend@gmail.com,
+	linux-kernel@vger.kernel.org,
+	Jiayuan Chen <jiayuan.chen@linux.dev>,
+	syzbot+0e6ddb1ef80986bdfe64@syzkaller.appspotmail.com
+Subject: [PATCH net v1] net: Fix tuntap uninitialized value
+Date: Thu, 27 Mar 2025 21:41:22 +0800
+Message-ID: <20250327134122.399874-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202503241406.5c9cb80a-lkp@intel.com> <87pli4z02w.ffs@tglx>
- <6sn76aya225pqikijue5uv5h3lyqk262hc6ru3vemn7xofdftd@sw7gith52xh7>
- <CANn89iKjCgmxtiLeVAiXODHbbR7=gYYi5cfAS1hS5qn+z=-o1Q@mail.gmail.com>
- <877c4azyez.ffs@tglx> <CANn89iKAkio9wm73RNi9+KngNaS+Au2oaf0Tz9xOd+QEhFSkyw@mail.gmail.com>
- <CANn89i+nAN+p-qRypKxB4ESohXkKVPmHuV_m86j3DPv6_+C=oQ@mail.gmail.com>
- <87v7ruycfz.ffs@tglx> <CANn89iJvxYsF0Y9jH+Oa2=akrydR8qbWAMbz_S6YZQMSe=2QWQ@mail.gmail.com>
- <87jz8ay5rh.ffs@tglx> <CANn89i+r-k-2UNtnyWC6PaJmO_R6Wc6UROgeoir5BmgVV8wDqQ@mail.gmail.com>
-In-Reply-To: <CANn89i+r-k-2UNtnyWC6PaJmO_R6Wc6UROgeoir5BmgVV8wDqQ@mail.gmail.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 27 Mar 2025 14:43:03 +0100
-X-Gm-Features: AQ5f1JqW5WtFubNuoRMeKkOS-xgt9PQkFTzZzMHbp6fD9sZ7G_CcCtlSvB5OySg
-Message-ID: <CAGudoHHVJWeRWPyArnYnJERPR2gyU0PzBTwx=wWKnCemry45Nw@mail.gmail.com>
-Subject: Re: [tip:timers/core] [posix] 1535cb8028: stress-ng.epoll.ops_per_sec
- 36.2% regression
-To: Eric Dumazet <edumazet@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, 
-	lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Benjamin Segall <bsegall@google.com>, Frederic Weisbecker <frederic@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Mar 27, 2025 at 2:17=E2=80=AFPM Eric Dumazet <edumazet@google.com> =
-wrote:
->
-> On Thu, Mar 27, 2025 at 2:14=E2=80=AFPM Thomas Gleixner <tglx@linutronix.=
-de> wrote:
-> >
-> > On Thu, Mar 27 2025 at 12:37, Eric Dumazet wrote:
-> > > On Thu, Mar 27, 2025 at 11:50=E2=80=AFAM Thomas Gleixner <tglx@linutr=
-onix.de> wrote:
-> > >> Cute. How much bloat does it cause?
-> > >
-> > > This would expand 'struct ucounts' by 192 bytes on x86, if the patch
-> > > was actually working :)
-> > >
-> > > Note sure if it is feasible without something more intrusive like
-> >
-> > I'm not sure about the actual benefit. The problem is that parallel
-> > invocations which access the same ucount still will run into contention
-> > of the cache line they are modifying.
-> >
-> > For the signal case, all invocations increment rlimit[SIGPENDING], so
-> > putting that into a different cache line does not buy a lot.
-> >
-> > False sharing is when you have a lot of hot path readers on some other
-> > member of the data structure, which happens to share the cache line wit=
-h
-> > the modified member. But that's not really the case here.
->
-> We applications stressing all the counters at the same time (from
-> different threads)
->
-> You seem to focus on posix timers only :)
+Then tun/tap allocates an skb, it additionally allocates a prepad size
+(usually equal to NET_SKB_PAD) but leaves it uninitialized.
 
-Well in that case:
-(gdb) ptype /o struct ucounts
-/* offset      |    size */  type =3D struct ucounts {
-/*      0      |      16 */    struct hlist_node {
-/*      0      |       8 */        struct hlist_node *next;
-/*      8      |       8 */        struct hlist_node **pprev;
+bpf_xdp_adjust_head() may move skb->data forward, which may lead to an
+issue.
 
-                                   /* total size (bytes):   16 */
-                               } node;
-/*     16      |       8 */    struct user_namespace *ns;
-/*     24      |       4 */    kuid_t uid;
-/*     28      |       4 */    atomic_t count;
-/*     32      |      96 */    atomic_long_t ucount[12];
-/*    128      |     256 */    struct {
-/*      0      |       8 */        atomic_long_t val;
-                               } rlimit[4];
+Since the linear address is likely to be allocated from kmem_cache, it's
+unlikely to trigger a KMSAN warning. We need some tricks, such as forcing
+kmem_cache_shrink in __do_kmalloc_node, to reproduce the issue and trigger
+a KMSAN warning.
 
-                               /* total size (bytes):  384 */
-                             }
+Reported-by: syzbot+0e6ddb1ef80986bdfe64@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/00000000000067f65105edbd295d@google.com/T/
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+---
+ drivers/net/tun.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-This comes from malloc. Given 384 bytes of size it is going to be
-backed by a 512-byte sized buffer -- that's a clear cut waste of 128
-bytes.
+diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+index f75f912a0225..111f83668b5e 100644
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -1463,6 +1463,7 @@ static struct sk_buff *tun_alloc_skb(struct tun_file *tfile,
+ 	if (!skb)
+ 		return ERR_PTR(err);
+ 
++	memset(skb->data, 0, prepad);
+ 	skb_reserve(skb, prepad);
+ 	skb_put(skb, linear);
+ 	skb->data_len = len - linear;
+@@ -1621,6 +1622,7 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	buf = (char *)page_address(alloc_frag->page) + alloc_frag->offset;
++	memset(buf, 0, pad);
+ 	copied = copy_page_from_iter(alloc_frag->page,
+ 				     alloc_frag->offset + pad,
+ 				     len, from);
+-- 
+2.47.1
 
-It is plausible creating a 384-byte sized slab for kmalloc would help
-save memory overall (not just for this specific struct), but that
-would require extensive testing in real workloads. I think Google is
-in position to do it on their fleet and android? fwiw Solaris and
-FreeBSD do have slabs of this size and it does save memory over there.
-I understand it is a tradeoff, hence I'm not claiming this needs to be
-added. I do claim it does warrant evaluation, but I wont blame anyone
-for not wanting to do dig into it.
-
-The other option is to lean into it. In this case I point out the
-refcount shares the cacheline with some of the limits and that it
-could be moved to a dedicated line while still keeping the struct <
-512 bytes, thus not spending more memory on allocation. the refcount
-changes less frequently than limits themselves so it's not a big deal,
-but it can be adjusted "for free" if you will.
-
-while here I would probably change the name of the field. A reference
-counter named "count" in a struct named "ucounts", followed by an
-"ucount" array is rather unpleasing. How about s/count/refcount?
-
---=20
-Mateusz Guzik <mjguzik gmail.com>
