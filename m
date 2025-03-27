@@ -1,531 +1,251 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C461FF7BC
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 11:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6200E211A3F;
+	Thu, 27 Mar 2025 11:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743074731; cv=none; b=XFcw8CQqvsk1tmHiOONu/hRG2EGmO+58OzO8i3InWQN3NeYmE4S7VwjudRwMNOIUtSK5A3kljDPXTpPgPcsAX6eOh8gxh5qeDocg6K8QPWJApgc1dwIEv/nBIFGPgwBsu4dovdpJN3vcogod3szb8xTu+s8YMCNRmC+VPXhrWME=
+	t=1743074797; cv=none; b=kMkrhipEgpQDWWe1NnSL3DrmH32jtEZTtyEUUNYWa/X+qEHTsJSW6hpj2WURYOFlk/fSs+/i7nNQLrnp5s/kkekBj4g/iCn/wmiYrbqZ0wNYzNqYDleQn10z4JkoYFIDUhYzh2/tbDNZIWDCzCW/L5Lamdk3XKMgvujq0iIS/2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743074731; c=relaxed/simple;
-	bh=j6WgPFmzS+DJvy5hZDMNvnCM+EO7f4jVp5BIXkPoFcw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=D4/s0sR/DVTrOaMroZVnkoe/iiCVgRBx1KzOCHzP37zOp5lzU1i4H2We5P56+ej7dmppB68g9vfGyrtfNQOuk4rFqLrf+Ed5d3c0fPfBkT37PzDLBKj9cfzVplQ9/24pPNiRiEmFcUd+Rnxbw/HS6/eHFpfedaqHdsuj1nuFnr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n1PQ4CES; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743074797; c=relaxed/simple;
+	bh=MJfswdiszz/jsfopd5O6MRPtbPlWT5LbW0ckpCP1U8U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VKjorTYnQmsMmWIpC28KUC8MyTMnL4XAx0GEQm3xl2ZO6xdfHtUWJx+54rsPUrztqF0xIJuugN/fvgR2G2xPEzP3dsZbIDv8+dll4SWHgY61qTyAAWyVvhV6Sfp4K+jbWOVJ0h+htvQ0lB829wnkpIcKZi1jto1ZnuXNYDhOlro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=qLBhByWi; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n1PQ4CES"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743074729; x=1774610729;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=j6WgPFmzS+DJvy5hZDMNvnCM+EO7f4jVp5BIXkPoFcw=;
-  b=n1PQ4CESjaZZqID3DD0aIeCzlYzj6hSk8JKL0XqsQL06fey6Vk02Hj27
-   GMEPUdOQdqkUYlzcEzEEhlQ2ZE8NBl6KXrhYunGGK0GaxZDC9VdwK3XaM
-   P564eOIHWBPSbDAYVTlalEvMDDD4pARTgs6EsQZ6QsVkVRcKBWyUZWRyC
-   zz7/+XXl2THPPZiQ8pNyHp0Ee8XFSyjVBT9LU/ye//olxN3w4ah+OmzTS
-   +UgbE05t/2kjb7U6k2RF+ewNiZ/JNcwAphb0iUyY2/PCH9mgVxX6e+ExU
-   8RM0Ioq+F9FViTV0cHIA0uaqJlQpk1ZbAARdbVh064qLF5zWMovLKbYVW
-   g==;
-X-CSE-ConnectionGUID: IsNDO+ZoQ3uw2e1yxCqK3w==
-X-CSE-MsgGUID: QGCNOaMZQxuMOn32yH4bDQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44319202"
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="44319202"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 04:25:27 -0700
-X-CSE-ConnectionGUID: 8ItsIo0IT36ycLRXzUDQlA==
-X-CSE-MsgGUID: 235PMXDjSCqDwU1Ja70ebA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="125326296"
-Received: from ncintean-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.17])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 04:25:22 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Dmitry Osipenko <dmitry.osipenko@collabora.com>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, Christian =?utf-8?Q?K=C3=B6nig?=
- <christian.koenig@amd.com>, Gerd Hoffmann <kraxel@redhat.com>, Qiang Yu
- <yuq825@gmail.com>, Steven Price <steven.price@arm.com>, Boris Brezillon
- <boris.brezillon@collabora.com>, Frank Binns <frank.binns@imgtec.com>,
- Matt Coster <matt.coster@imgtec.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com
-Subject: Re: [PATCH v20 05/10] drm/shmem-helper: Refactor locked/unlocked
- functions
-In-Reply-To: <20250322212608.40511-6-dmitry.osipenko@collabora.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
- <20250322212608.40511-6-dmitry.osipenko@collabora.com>
-Date: Thu, 27 Mar 2025 13:25:18 +0200
-Message-ID: <87iknu67hd.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="qLBhByWi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=6NtYN4mXRZiQeFSzRJfC4lHgxGcXmDM920RCDFEB12s=; b=qLBhByWi2m4ErsKnTpR5MzuTFD
+	IglG4piMJNUpQR2HOEjLhjMxDaxyajTeDq5HTnC7Bormvev49EFte2dw/GStuBZF19CbrZjD6WRyl
+	dO7jpfeNQYGGaR+yz4FiT5MVa0cfZWt+ADhu1U1duC3KcEBrLppMa9uZV4EW2M6tm3usdkmpHW4gM
+	yV0O+VpvxpEKj1O5WrZ6KYwLji5JcvrowZ6TM8t1XQtyyo5dF+EgYWY1mUV980qQmxmui1y8Xg7ER
+	T3F7wjmav9ziN7toqmNMuXfxVb18RbjUJIjuk4Tl5kPf5qTEz5uqrHQiCrU4aQlIWneyKPYOxXKzm
+	VW3KSDBQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47800)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1txlNR-0007Ay-0B;
+	Thu, 27 Mar 2025 11:26:25 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1txlNP-0005az-2Q;
+	Thu, 27 Mar 2025 11:26:23 +0000
+Date: Thu, 27 Mar 2025 11:26:23 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Eric Woudstra <ericwouds@gmail.com>,
+	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [net-next RFC PATCH v3 3/4] net: phy: Add support for Aeonsemi
+ AS21xxx PHYs
+Message-ID: <Z+U1368bId9jTUKr@shell.armlinux.org.uk>
+References: <20250326233512.17153-1-ansuelsmth@gmail.com>
+ <20250326233512.17153-4-ansuelsmth@gmail.com>
+ <Z-U1anj6IbSdPGoD@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-U1anj6IbSdPGoD@shell.armlinux.org.uk>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Sun, 23 Mar 2025, Dmitry Osipenko <dmitry.osipenko@collabora.com> wrote:
-> Add locked and remove unlocked postfixes from drm-shmem function names,
-> making names consistent with the drm/gem core code.
+On Thu, Mar 27, 2025 at 11:24:26AM +0000, Russell King (Oracle) wrote:
+> If I'm reading these driver entries correctly, the only reason for
+> having separate entries is to be able to have a unique name printed
+> for each - the methods themselves are all identical.
+> 
+> My feeling is that is not a sufficient reason to duplicate the driver
+> entries, which adds bloat (not only in terms of static data, but also
+> the data structures necessary to support each entry in sysfs.) However,
+> lets see what Andrew says.
 
-This breaks the build for drivers/accel/ivpu/ivpu_gem.c.
+I did have this patch from a previous discussion which adds support for
+a single phy_driver struct to have multiple matching IDs. I haven't
+rebased it on current net-next, so may no longer apply:
 
-Please enable CONFIG_DRM_ACCEL_IVPU=m and fix the fallout.
+ drivers/net/phy/phy_device.c | 64 +++++++++++++++++++++++++++++++++-----------
+ include/linux/phy.h          | 16 ++++++++++-
+ 2 files changed, 63 insertions(+), 17 deletions(-)
 
-BR,
-Jani.
-
-
->
-> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-> Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
-> Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-> ---
->  drivers/gpu/drm/drm_gem_shmem_helper.c        | 60 +++++++++----------
->  drivers/gpu/drm/imagination/pvr_gem.c         |  4 +-
->  drivers/gpu/drm/lima/lima_gem.c               |  2 +-
->  drivers/gpu/drm/panfrost/panfrost_drv.c       |  2 +-
->  .../gpu/drm/panfrost/panfrost_gem_shrinker.c  |  2 +-
->  drivers/gpu/drm/tests/drm_gem_shmem_test.c    | 14 ++---
->  include/drm/drm_gem_shmem_helper.h            | 28 ++++-----
->  7 files changed, 56 insertions(+), 56 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-> index 98c68999d61a..a9e35a46e72b 100644
-> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-> @@ -174,7 +174,7 @@ void drm_gem_shmem_free(struct drm_gem_shmem_object *shmem)
->  			kfree(shmem->sgt);
->  		}
->  		if (shmem->pages)
-> -			drm_gem_shmem_put_pages(shmem);
-> +			drm_gem_shmem_put_pages_locked(shmem);
->  
->  		drm_WARN_ON(obj->dev, shmem->pages_use_count);
->  
-> @@ -186,7 +186,7 @@ void drm_gem_shmem_free(struct drm_gem_shmem_object *shmem)
->  }
->  EXPORT_SYMBOL_GPL(drm_gem_shmem_free);
->  
-> -static int drm_gem_shmem_get_pages(struct drm_gem_shmem_object *shmem)
-> +static int drm_gem_shmem_get_pages_locked(struct drm_gem_shmem_object *shmem)
->  {
->  	struct drm_gem_object *obj = &shmem->base;
->  	struct page **pages;
-> @@ -220,12 +220,12 @@ static int drm_gem_shmem_get_pages(struct drm_gem_shmem_object *shmem)
->  }
->  
->  /*
-> - * drm_gem_shmem_put_pages - Decrease use count on the backing pages for a shmem GEM object
-> + * drm_gem_shmem_put_pages_locked - Decrease use count on the backing pages for a shmem GEM object
->   * @shmem: shmem GEM object
->   *
->   * This function decreases the use count and puts the backing pages when use drops to zero.
->   */
-> -void drm_gem_shmem_put_pages(struct drm_gem_shmem_object *shmem)
-> +void drm_gem_shmem_put_pages_locked(struct drm_gem_shmem_object *shmem)
->  {
->  	struct drm_gem_object *obj = &shmem->base;
->  
-> @@ -247,7 +247,7 @@ void drm_gem_shmem_put_pages(struct drm_gem_shmem_object *shmem)
->  			  shmem->pages_mark_accessed_on_put);
->  	shmem->pages = NULL;
->  }
-> -EXPORT_SYMBOL_GPL(drm_gem_shmem_put_pages);
-> +EXPORT_SYMBOL_GPL(drm_gem_shmem_put_pages_locked);
->  
->  int drm_gem_shmem_pin_locked(struct drm_gem_shmem_object *shmem)
->  {
-> @@ -257,7 +257,7 @@ int drm_gem_shmem_pin_locked(struct drm_gem_shmem_object *shmem)
->  
->  	drm_WARN_ON(shmem->base.dev, drm_gem_is_imported(&shmem->base));
->  
-> -	ret = drm_gem_shmem_get_pages(shmem);
-> +	ret = drm_gem_shmem_get_pages_locked(shmem);
->  
->  	return ret;
->  }
-> @@ -267,7 +267,7 @@ void drm_gem_shmem_unpin_locked(struct drm_gem_shmem_object *shmem)
->  {
->  	dma_resv_assert_held(shmem->base.resv);
->  
-> -	drm_gem_shmem_put_pages(shmem);
-> +	drm_gem_shmem_put_pages_locked(shmem);
->  }
->  EXPORT_SYMBOL(drm_gem_shmem_unpin_locked);
->  
-> @@ -318,7 +318,7 @@ void drm_gem_shmem_unpin(struct drm_gem_shmem_object *shmem)
->  EXPORT_SYMBOL_GPL(drm_gem_shmem_unpin);
->  
->  /*
-> - * drm_gem_shmem_vmap - Create a virtual mapping for a shmem GEM object
-> + * drm_gem_shmem_vmap_locked - Create a virtual mapping for a shmem GEM object
->   * @shmem: shmem GEM object
->   * @map: Returns the kernel virtual address of the SHMEM GEM object's backing
->   *       store.
-> @@ -327,13 +327,13 @@ EXPORT_SYMBOL_GPL(drm_gem_shmem_unpin);
->   * exists for the buffer backing the shmem GEM object. It hides the differences
->   * between dma-buf imported and natively allocated objects.
->   *
-> - * Acquired mappings should be cleaned up by calling drm_gem_shmem_vunmap().
-> + * Acquired mappings should be cleaned up by calling drm_gem_shmem_vunmap_locked().
->   *
->   * Returns:
->   * 0 on success or a negative error code on failure.
->   */
-> -int drm_gem_shmem_vmap(struct drm_gem_shmem_object *shmem,
-> -		       struct iosys_map *map)
-> +int drm_gem_shmem_vmap_locked(struct drm_gem_shmem_object *shmem,
-> +			      struct iosys_map *map)
->  {
->  	struct drm_gem_object *obj = &shmem->base;
->  	int ret = 0;
-> @@ -356,7 +356,7 @@ int drm_gem_shmem_vmap(struct drm_gem_shmem_object *shmem,
->  			return 0;
->  		}
->  
-> -		ret = drm_gem_shmem_get_pages(shmem);
-> +		ret = drm_gem_shmem_get_pages_locked(shmem);
->  		if (ret)
->  			goto err_zero_use;
->  
-> @@ -379,28 +379,28 @@ int drm_gem_shmem_vmap(struct drm_gem_shmem_object *shmem,
->  
->  err_put_pages:
->  	if (!drm_gem_is_imported(obj))
-> -		drm_gem_shmem_put_pages(shmem);
-> +		drm_gem_shmem_put_pages_locked(shmem);
->  err_zero_use:
->  	shmem->vmap_use_count = 0;
->  
->  	return ret;
->  }
-> -EXPORT_SYMBOL_GPL(drm_gem_shmem_vmap);
-> +EXPORT_SYMBOL_GPL(drm_gem_shmem_vmap_locked);
->  
->  /*
-> - * drm_gem_shmem_vunmap - Unmap a virtual mapping for a shmem GEM object
-> + * drm_gem_shmem_vunmap_locked - Unmap a virtual mapping for a shmem GEM object
->   * @shmem: shmem GEM object
->   * @map: Kernel virtual address where the SHMEM GEM object was mapped
->   *
->   * This function cleans up a kernel virtual address mapping acquired by
-> - * drm_gem_shmem_vmap(). The mapping is only removed when the use count drops to
-> - * zero.
-> + * drm_gem_shmem_vmap_locked(). The mapping is only removed when the use count
-> + * drops to zero.
->   *
->   * This function hides the differences between dma-buf imported and natively
->   * allocated objects.
->   */
-> -void drm_gem_shmem_vunmap(struct drm_gem_shmem_object *shmem,
-> -			  struct iosys_map *map)
-> +void drm_gem_shmem_vunmap_locked(struct drm_gem_shmem_object *shmem,
-> +				 struct iosys_map *map)
->  {
->  	struct drm_gem_object *obj = &shmem->base;
->  
-> @@ -416,12 +416,12 @@ void drm_gem_shmem_vunmap(struct drm_gem_shmem_object *shmem,
->  			return;
->  
->  		vunmap(shmem->vaddr);
-> -		drm_gem_shmem_put_pages(shmem);
-> +		drm_gem_shmem_put_pages_locked(shmem);
->  	}
->  
->  	shmem->vaddr = NULL;
->  }
-> -EXPORT_SYMBOL_GPL(drm_gem_shmem_vunmap);
-> +EXPORT_SYMBOL_GPL(drm_gem_shmem_vunmap_locked);
->  
->  static int
->  drm_gem_shmem_create_with_handle(struct drm_file *file_priv,
-> @@ -449,7 +449,7 @@ drm_gem_shmem_create_with_handle(struct drm_file *file_priv,
->  /* Update madvise status, returns true if not purged, else
->   * false or -errno.
->   */
-> -int drm_gem_shmem_madvise(struct drm_gem_shmem_object *shmem, int madv)
-> +int drm_gem_shmem_madvise_locked(struct drm_gem_shmem_object *shmem, int madv)
->  {
->  	dma_resv_assert_held(shmem->base.resv);
->  
-> @@ -460,9 +460,9 @@ int drm_gem_shmem_madvise(struct drm_gem_shmem_object *shmem, int madv)
->  
->  	return (madv >= 0);
->  }
-> -EXPORT_SYMBOL_GPL(drm_gem_shmem_madvise);
-> +EXPORT_SYMBOL_GPL(drm_gem_shmem_madvise_locked);
->  
-> -void drm_gem_shmem_purge(struct drm_gem_shmem_object *shmem)
-> +void drm_gem_shmem_purge_locked(struct drm_gem_shmem_object *shmem)
->  {
->  	struct drm_gem_object *obj = &shmem->base;
->  	struct drm_device *dev = obj->dev;
-> @@ -476,7 +476,7 @@ void drm_gem_shmem_purge(struct drm_gem_shmem_object *shmem)
->  	kfree(shmem->sgt);
->  	shmem->sgt = NULL;
->  
-> -	drm_gem_shmem_put_pages(shmem);
-> +	drm_gem_shmem_put_pages_locked(shmem);
->  
->  	shmem->madv = -1;
->  
-> @@ -492,7 +492,7 @@ void drm_gem_shmem_purge(struct drm_gem_shmem_object *shmem)
->  
->  	invalidate_mapping_pages(file_inode(obj->filp)->i_mapping, 0, (loff_t)-1);
->  }
-> -EXPORT_SYMBOL_GPL(drm_gem_shmem_purge);
-> +EXPORT_SYMBOL_GPL(drm_gem_shmem_purge_locked);
->  
->  /**
->   * drm_gem_shmem_dumb_create - Create a dumb shmem buffer object
-> @@ -589,7 +589,7 @@ static void drm_gem_shmem_vm_close(struct vm_area_struct *vma)
->  	struct drm_gem_shmem_object *shmem = to_drm_gem_shmem_obj(obj);
->  
->  	dma_resv_lock(shmem->base.resv, NULL);
-> -	drm_gem_shmem_put_pages(shmem);
-> +	drm_gem_shmem_put_pages_locked(shmem);
->  	dma_resv_unlock(shmem->base.resv);
->  
->  	drm_gem_vm_close(vma);
-> @@ -639,7 +639,7 @@ int drm_gem_shmem_mmap(struct drm_gem_shmem_object *shmem, struct vm_area_struct
->  		return -EINVAL;
->  
->  	dma_resv_lock(shmem->base.resv, NULL);
-> -	ret = drm_gem_shmem_get_pages(shmem);
-> +	ret = drm_gem_shmem_get_pages_locked(shmem);
->  	dma_resv_unlock(shmem->base.resv);
->  
->  	if (ret)
-> @@ -707,7 +707,7 @@ static struct sg_table *drm_gem_shmem_get_pages_sgt_locked(struct drm_gem_shmem_
->  
->  	drm_WARN_ON(obj->dev, drm_gem_is_imported(obj));
->  
-> -	ret = drm_gem_shmem_get_pages(shmem);
-> +	ret = drm_gem_shmem_get_pages_locked(shmem);
->  	if (ret)
->  		return ERR_PTR(ret);
->  
-> @@ -729,7 +729,7 @@ static struct sg_table *drm_gem_shmem_get_pages_sgt_locked(struct drm_gem_shmem_
->  	sg_free_table(sgt);
->  	kfree(sgt);
->  err_put_pages:
-> -	drm_gem_shmem_put_pages(shmem);
-> +	drm_gem_shmem_put_pages_locked(shmem);
->  	return ERR_PTR(ret);
->  }
->  
-> diff --git a/drivers/gpu/drm/imagination/pvr_gem.c b/drivers/gpu/drm/imagination/pvr_gem.c
-> index 6a8c81fe8c1e..d9d7c6d1a138 100644
-> --- a/drivers/gpu/drm/imagination/pvr_gem.c
-> +++ b/drivers/gpu/drm/imagination/pvr_gem.c
-> @@ -203,7 +203,7 @@ pvr_gem_object_vmap(struct pvr_gem_object *pvr_obj)
->  
->  	dma_resv_lock(obj->resv, NULL);
->  
-> -	err = drm_gem_shmem_vmap(shmem_obj, &map);
-> +	err = drm_gem_shmem_vmap_locked(shmem_obj, &map);
->  	if (err)
->  		goto err_unlock;
->  
-> @@ -257,7 +257,7 @@ pvr_gem_object_vunmap(struct pvr_gem_object *pvr_obj)
->  			dma_sync_sgtable_for_device(dev, shmem_obj->sgt, DMA_BIDIRECTIONAL);
->  	}
->  
-> -	drm_gem_shmem_vunmap(shmem_obj, &map);
-> +	drm_gem_shmem_vunmap_locked(shmem_obj, &map);
->  
->  	dma_resv_unlock(obj->resv);
->  }
-> diff --git a/drivers/gpu/drm/lima/lima_gem.c b/drivers/gpu/drm/lima/lima_gem.c
-> index 9bb997dbb4b9..609221351cde 100644
-> --- a/drivers/gpu/drm/lima/lima_gem.c
-> +++ b/drivers/gpu/drm/lima/lima_gem.c
-> @@ -195,7 +195,7 @@ static int lima_gem_vmap(struct drm_gem_object *obj, struct iosys_map *map)
->  	if (bo->heap_size)
->  		return -EINVAL;
->  
-> -	return drm_gem_shmem_vmap(&bo->base, map);
-> +	return drm_gem_shmem_vmap_locked(&bo->base, map);
->  }
->  
->  static int lima_gem_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma)
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> index 0f3935556ac7..a731f6b59a42 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> @@ -476,7 +476,7 @@ static int panfrost_ioctl_madvise(struct drm_device *dev, void *data,
->  		}
->  	}
->  
-> -	args->retained = drm_gem_shmem_madvise(&bo->base, args->madv);
-> +	args->retained = drm_gem_shmem_madvise_locked(&bo->base, args->madv);
->  
->  	if (args->retained) {
->  		if (args->madv == PANFROST_MADV_DONTNEED)
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c b/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c
-> index 3d9f51bd48b6..02b60ea1433a 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c
-> @@ -51,7 +51,7 @@ static bool panfrost_gem_purge(struct drm_gem_object *obj)
->  		goto unlock_mappings;
->  
->  	panfrost_gem_teardown_mappings_locked(bo);
-> -	drm_gem_shmem_purge(&bo->base);
-> +	drm_gem_shmem_purge_locked(&bo->base);
->  	ret = true;
->  
->  	dma_resv_unlock(shmem->base.resv);
-> diff --git a/drivers/gpu/drm/tests/drm_gem_shmem_test.c b/drivers/gpu/drm/tests/drm_gem_shmem_test.c
-> index fd4215e2f982..98884966bb92 100644
-> --- a/drivers/gpu/drm/tests/drm_gem_shmem_test.c
-> +++ b/drivers/gpu/drm/tests/drm_gem_shmem_test.c
-> @@ -173,7 +173,7 @@ static void drm_gem_shmem_test_vmap(struct kunit *test)
->  	ret = kunit_add_action_or_reset(test, drm_gem_shmem_free_wrapper, shmem);
->  	KUNIT_ASSERT_EQ(test, ret, 0);
->  
-> -	ret = drm_gem_shmem_vmap(shmem, &map);
-> +	ret = drm_gem_shmem_vmap_locked(shmem, &map);
->  	KUNIT_ASSERT_EQ(test, ret, 0);
->  	KUNIT_ASSERT_NOT_NULL(test, shmem->vaddr);
->  	KUNIT_ASSERT_FALSE(test, iosys_map_is_null(&map));
-> @@ -183,7 +183,7 @@ static void drm_gem_shmem_test_vmap(struct kunit *test)
->  	for (i = 0; i < TEST_SIZE; i++)
->  		KUNIT_EXPECT_EQ(test, iosys_map_rd(&map, i, u8), TEST_BYTE);
->  
-> -	drm_gem_shmem_vunmap(shmem, &map);
-> +	drm_gem_shmem_vunmap_locked(shmem, &map);
->  	KUNIT_EXPECT_NULL(test, shmem->vaddr);
->  	KUNIT_EXPECT_EQ(test, shmem->vmap_use_count, 0);
->  }
-> @@ -281,17 +281,17 @@ static void drm_gem_shmem_test_madvise(struct kunit *test)
->  	ret = kunit_add_action_or_reset(test, drm_gem_shmem_free_wrapper, shmem);
->  	KUNIT_ASSERT_EQ(test, ret, 0);
->  
-> -	ret = drm_gem_shmem_madvise(shmem, 1);
-> +	ret = drm_gem_shmem_madvise_locked(shmem, 1);
->  	KUNIT_EXPECT_TRUE(test, ret);
->  	KUNIT_ASSERT_EQ(test, shmem->madv, 1);
->  
->  	/* Set madv to a negative value */
-> -	ret = drm_gem_shmem_madvise(shmem, -1);
-> +	ret = drm_gem_shmem_madvise_locked(shmem, -1);
->  	KUNIT_EXPECT_FALSE(test, ret);
->  	KUNIT_ASSERT_EQ(test, shmem->madv, -1);
->  
->  	/* Check that madv cannot be set back to a positive value */
-> -	ret = drm_gem_shmem_madvise(shmem, 0);
-> +	ret = drm_gem_shmem_madvise_locked(shmem, 0);
->  	KUNIT_EXPECT_FALSE(test, ret);
->  	KUNIT_ASSERT_EQ(test, shmem->madv, -1);
->  }
-> @@ -319,7 +319,7 @@ static void drm_gem_shmem_test_purge(struct kunit *test)
->  	ret = drm_gem_shmem_is_purgeable(shmem);
->  	KUNIT_EXPECT_FALSE(test, ret);
->  
-> -	ret = drm_gem_shmem_madvise(shmem, 1);
-> +	ret = drm_gem_shmem_madvise_locked(shmem, 1);
->  	KUNIT_EXPECT_TRUE(test, ret);
->  
->  	/* The scatter/gather table will be freed by drm_gem_shmem_free */
-> @@ -329,7 +329,7 @@ static void drm_gem_shmem_test_purge(struct kunit *test)
->  	ret = drm_gem_shmem_is_purgeable(shmem);
->  	KUNIT_EXPECT_TRUE(test, ret);
->  
-> -	drm_gem_shmem_purge(shmem);
-> +	drm_gem_shmem_purge_locked(shmem);
->  	KUNIT_EXPECT_NULL(test, shmem->pages);
->  	KUNIT_EXPECT_NULL(test, shmem->sgt);
->  	KUNIT_EXPECT_EQ(test, shmem->madv, -1);
-> diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
-> index cef5a6b5a4d6..0609e336479d 100644
-> --- a/include/drm/drm_gem_shmem_helper.h
-> +++ b/include/drm/drm_gem_shmem_helper.h
-> @@ -102,19 +102,19 @@ struct drm_gem_shmem_object *drm_gem_shmem_create_with_mnt(struct drm_device *de
->  							   struct vfsmount *gemfs);
->  void drm_gem_shmem_free(struct drm_gem_shmem_object *shmem);
->  
-> -void drm_gem_shmem_put_pages(struct drm_gem_shmem_object *shmem);
-> +void drm_gem_shmem_put_pages_locked(struct drm_gem_shmem_object *shmem);
->  int drm_gem_shmem_pin(struct drm_gem_shmem_object *shmem);
->  void drm_gem_shmem_unpin(struct drm_gem_shmem_object *shmem);
-> -int drm_gem_shmem_vmap(struct drm_gem_shmem_object *shmem,
-> -		       struct iosys_map *map);
-> -void drm_gem_shmem_vunmap(struct drm_gem_shmem_object *shmem,
-> -			  struct iosys_map *map);
-> +int drm_gem_shmem_vmap_locked(struct drm_gem_shmem_object *shmem,
-> +			      struct iosys_map *map);
-> +void drm_gem_shmem_vunmap_locked(struct drm_gem_shmem_object *shmem,
-> +				 struct iosys_map *map);
->  int drm_gem_shmem_mmap(struct drm_gem_shmem_object *shmem, struct vm_area_struct *vma);
->  
->  int drm_gem_shmem_pin_locked(struct drm_gem_shmem_object *shmem);
->  void drm_gem_shmem_unpin_locked(struct drm_gem_shmem_object *shmem);
->  
-> -int drm_gem_shmem_madvise(struct drm_gem_shmem_object *shmem, int madv);
-> +int drm_gem_shmem_madvise_locked(struct drm_gem_shmem_object *shmem, int madv);
->  
->  static inline bool drm_gem_shmem_is_purgeable(struct drm_gem_shmem_object *shmem)
->  {
-> @@ -123,7 +123,7 @@ static inline bool drm_gem_shmem_is_purgeable(struct drm_gem_shmem_object *shmem
->  		!shmem->base.dma_buf && !drm_gem_is_imported(&shmem->base);
->  }
->  
-> -void drm_gem_shmem_purge(struct drm_gem_shmem_object *shmem);
-> +void drm_gem_shmem_purge_locked(struct drm_gem_shmem_object *shmem);
->  
->  struct sg_table *drm_gem_shmem_get_sg_table(struct drm_gem_shmem_object *shmem);
->  struct sg_table *drm_gem_shmem_get_pages_sgt(struct drm_gem_shmem_object *shmem);
-> @@ -214,12 +214,12 @@ static inline struct sg_table *drm_gem_shmem_object_get_sg_table(struct drm_gem_
->  }
->  
->  /*
-> - * drm_gem_shmem_object_vmap - GEM object function for drm_gem_shmem_vmap()
-> + * drm_gem_shmem_object_vmap - GEM object function for drm_gem_shmem_vmap_locked()
->   * @obj: GEM object
->   * @map: Returns the kernel virtual address of the SHMEM GEM object's backing store.
->   *
-> - * This function wraps drm_gem_shmem_vmap(). Drivers that employ the shmem helpers should
-> - * use it as their &drm_gem_object_funcs.vmap handler.
-> + * This function wraps drm_gem_shmem_vmap_locked(). Drivers that employ the shmem
-> + * helpers should use it as their &drm_gem_object_funcs.vmap handler.
->   *
->   * Returns:
->   * 0 on success or a negative error code on failure.
-> @@ -229,7 +229,7 @@ static inline int drm_gem_shmem_object_vmap(struct drm_gem_object *obj,
->  {
->  	struct drm_gem_shmem_object *shmem = to_drm_gem_shmem_obj(obj);
->  
-> -	return drm_gem_shmem_vmap(shmem, map);
-> +	return drm_gem_shmem_vmap_locked(shmem, map);
->  }
->  
->  /*
-> @@ -237,15 +237,15 @@ static inline int drm_gem_shmem_object_vmap(struct drm_gem_object *obj,
->   * @obj: GEM object
->   * @map: Kernel virtual address where the SHMEM GEM object was mapped
->   *
-> - * This function wraps drm_gem_shmem_vunmap(). Drivers that employ the shmem helpers should
-> - * use it as their &drm_gem_object_funcs.vunmap handler.
-> + * This function wraps drm_gem_shmem_vunmap_locked(). Drivers that employ the shmem
-> + * helpers should use it as their &drm_gem_object_funcs.vunmap handler.
->   */
->  static inline void drm_gem_shmem_object_vunmap(struct drm_gem_object *obj,
->  					       struct iosys_map *map)
->  {
->  	struct drm_gem_shmem_object *shmem = to_drm_gem_shmem_obj(obj);
->  
-> -	drm_gem_shmem_vunmap(shmem, map);
-> +	drm_gem_shmem_vunmap_locked(shmem, map);
->  }
->  
->  /**
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 2e7d5bfb338e..7e02bf51a2a5 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -522,12 +522,51 @@ static int phy_scan_fixups(struct phy_device *phydev)
+ 	return 0;
+ }
+ 
++static const struct mdio_device_id *
++phy_driver_match_id(struct phy_driver *phydrv, u32 id)
++{
++	const struct mdio_device_id *ids = phydrv->ids;
++
++	if (ids) {
++		while (ids->phy_id) {
++			if (phy_id_compare(id, ids->phy_id, ids->phy_id_mask))
++				return ids;
++			ids++;
++		}
++	}
++
++	if (phy_id_compare(id, phydrv->id.phy_id, phydrv->id.phy_id_mask))
++		return &phydrv->id;
++
++	return NULL;
++}
++
++static const struct mdio_device_id *
++phy_driver_match(struct phy_driver *phydrv, struct phy_device *phydev)
++{
++	const int num_ids = ARRAY_SIZE(phydev->c45_ids.device_ids);
++	const struct mdio_device_id *id;
++	int i;
++
++	if (!phydev->is_c45)
++		return phy_driver_match_id(phydrv, phydev->phy_id);
++
++	for (i = 1; i < num_ids; i++) {
++		if (phydev->c45_ids.device_ids[i] == 0xffffffff)
++			continue;
++
++		id = phy_driver_match_id(phydrv, phydev->c45_ids.device_ids[i]);
++		if (id)
++			return id;
++	}
++
++	return NULL;
++}
++
+ static int phy_bus_match(struct device *dev, struct device_driver *drv)
+ {
+ 	struct phy_device *phydev = to_phy_device(dev);
+ 	struct phy_driver *phydrv = to_phy_driver(drv);
+-	const int num_ids = ARRAY_SIZE(phydev->c45_ids.device_ids);
+-	int i;
+ 
+ 	if (!(phydrv->mdiodrv.flags & MDIO_DEVICE_IS_PHY))
+ 		return 0;
+@@ -535,20 +574,7 @@ static int phy_bus_match(struct device *dev, struct device_driver *drv)
+ 	if (phydrv->match_phy_device)
+ 		return phydrv->match_phy_device(phydev);
+ 
+-	if (phydev->is_c45) {
+-		for (i = 1; i < num_ids; i++) {
+-			if (phydev->c45_ids.device_ids[i] == 0xffffffff)
+-				continue;
+-
+-			if (phy_id_compare(phydev->c45_ids.device_ids[i],
+-					   phydrv->phy_id, phydrv->phy_id_mask))
+-				return 1;
+-		}
+-		return 0;
+-	} else {
+-		return phy_id_compare(phydev->phy_id, phydrv->phy_id,
+-				      phydrv->phy_id_mask);
+-	}
++	return !!phy_driver_match(phydrv, phydev);
+ }
+ 
+ static ssize_t
+@@ -3311,6 +3337,7 @@ static int phy_probe(struct device *dev)
+ 	int err = 0;
+ 
+ 	phydev->drv = phydrv;
++	phydev->drv_id = phy_driver_match(phydrv, phydev);
+ 
+ 	/* Disable the interrupt if the PHY doesn't support it
+ 	 * but the interrupt is still a valid one
+@@ -3485,6 +3512,11 @@ int phy_driver_register(struct phy_driver *new_driver, struct module *owner)
+ 	new_driver->mdiodrv.driver.owner = owner;
+ 	new_driver->mdiodrv.driver.probe_type = PROBE_FORCE_SYNCHRONOUS;
+ 
++	if (!new_driver->id.phy_id) {
++		new_driver->id.phy_id = new_driver->phy_id;
++		new_driver->id.phy_id_mask = new_driver->phy_id_mask;
++	}
++
+ 	retval = driver_register(&new_driver->mdiodrv.driver);
+ 	if (retval) {
+ 		pr_err("%s: Error %d in registering driver\n",
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index fd8dbea9b4d9..2f2ebbd41535 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -542,6 +542,7 @@ struct macsec_ops;
+  *
+  * @mdio: MDIO bus this PHY is on
+  * @drv: Pointer to the driver for this PHY instance
++ * @drv_id: The matched driver ID for this PHY instance
+  * @devlink: Create a link between phy dev and mac dev, if the external phy
+  *           used by current mac interface is managed by another mac interface.
+  * @phy_id: UID for this device found during discovery
+@@ -639,6 +640,7 @@ struct phy_device {
+ 	/* Information about the PHY type */
+ 	/* And management functions */
+ 	const struct phy_driver *drv;
++	const struct mdio_device_id *drv_id;
+ 
+ 	struct device_link *devlink;
+ 
+@@ -882,6 +884,9 @@ struct phy_led {
+  * struct phy_driver - Driver structure for a particular PHY type
+  *
+  * @mdiodrv: Data common to all MDIO devices
++ * @ids: array of mdio device IDs to match this driver (terminated with
++ *   zero phy_id)
++ * @id: mdio device ID to match
+  * @phy_id: The result of reading the UID registers of this PHY
+  *   type, and ANDing them with the phy_id_mask.  This driver
+  *   only works for PHYs with IDs which match this field
+@@ -903,6 +908,8 @@ struct phy_led {
+  */
+ struct phy_driver {
+ 	struct mdio_driver_common mdiodrv;
++	const struct mdio_device_id *ids;
++	struct mdio_device_id id;
+ 	u32 phy_id;
+ 	char *name;
+ 	u32 phy_id_mask;
+@@ -1203,7 +1210,14 @@ static inline bool phy_id_compare(u32 id1, u32 id2, u32 mask)
+  */
+ static inline bool phydev_id_compare(struct phy_device *phydev, u32 id)
+ {
+-	return phy_id_compare(id, phydev->phy_id, phydev->drv->phy_id_mask);
++	u32 mask;
++
++	if (phydev->drv_id)
++		mask = phydev->drv_id->phy_id_mask;
++	else
++		mask = phydev->drv->phy_id_mask;
++
++	return phy_id_compare(id, phydev->phy_id, mask);
+ }
+ 
+ /* A Structure for boards to register fixups with the PHY Lib */
 
 -- 
-Jani Nikula, Intel
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
