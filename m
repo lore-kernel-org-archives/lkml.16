@@ -1,176 +1,169 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E44211294
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFBCD20E033
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743070014; cv=none; b=Qq3bXAGba3j0kTKVgZCG4MfvUou1VsYneXp1xzKL7ac0Cpe73wjAxan0lfCsD1rEH5YhhIPSraV2jJfXzYIaCYxItEEUBTRJ40l6fBFxQRnSN1ioEkNv+6IJLdIEwzVFce+4CWuQJ7VRsMJlrgtpk+x79CXsCm6t4FUZFyMsgAc=
+	t=1743070077; cv=none; b=U5ktcwdqJAq2P+M10HiTKWBnR/qJtS7o8s8fEP/nwi869qR1YDoJEv3zLqYGT0mNcEUr4GNgq8DFV7L48YZ9WScDKa9ugesP7ldLyI3DV+op04w3O210R/ajTVEft8wjqHbByw2w8/DbklVyQfZbHuY/jp2maKGaUi92Fg6Np9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743070014; c=relaxed/simple;
-	bh=4hK5NwvGZj3PELV41E3//V4IRXz5oGNBj9IGYps+vOQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XaeGs//gojDrga4TK9jKcjNx+c/1y0pNF4E6gam8ppGbakUEiW3czwvVJaP83HvMitawodWeH427VDlMh6/NYM/QnQmPoJxRyY8Azu5xkfLsep7EHZilV6cw884D6P41q1od7Hu1hinkKhiUol6ycb1U0+4gjiqwunQWLt1PAzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iEVf4+1Z; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743070077; c=relaxed/simple;
+	bh=+VDQxqDVTwSC88WpzKDGggf7YvBj5O99RXKWmTw+D4g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rnBFMwkZwh+pIIsWFomfkN6XCDB3U2VoxnEuNSmpKuSSLwnByfeFBSCVDtYw2meAepcp5Gy4a1bmzEI45kLyrsHQ2BwmWKI/xIFbxjZDydBgTJRTmf7x27uw6BATNE8Pi9SCseCzMFUYwmjj67yVm5OiSU/8Mglg1Jvz8XNe81Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ojq5GRNT; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iEVf4+1Z"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso565935f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:06:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ojq5GRNT"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43690d4605dso5385535e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:07:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743070010; x=1743674810; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LHH3q92f3jVI2cl1PwT0LmA+qhtDvCooULm9gmNkwck=;
-        b=iEVf4+1Z2VQoEpbsRejOLlpWR5/4oHbTwAxdZR9VhPZFx3E9raWHIDxVXhaApuC8/W
-         L42GPG+WMryR5DP5TULzBtVtWakLInnFCa8GmFrD5nL+EFeAYXR2VBQvanwoz8DFfzpq
-         u9Ur40z32K8/6JGco30L0lkOC1IpwMg+lB9VaxMFjNkpfmNFopGrEGbAtBT6jAFyUc9a
-         AFdjP80yx0es6rUY5sWaavNXbs7mAh3xvIanz8LWMk5LOMz55Yv0n06aEni20LLqGpI/
-         r66OsXkS1zWM72v65/fd9t9GyzBSbUBidfi8XM2eeqeQunhMWLd0s+eYz12ortzjWT1K
-         dFHw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743070073; x=1743674873; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2DA/Y2SrhYvb8JIGN8I8VFPVZFKVt4XN6zoT9arPV9I=;
+        b=ojq5GRNTzTQkCtNXrfBd1LsWwvhDWcEy5kvETwH4omlxg8WNNlD9i3zvR63ii3jpYZ
+         My/o/RYz8Rr3aWv8n+TpHPVsLqABJlggHYPCbZJnZv06xJLUjgb9yknbkyfWCMA1EWf5
+         2vvSOiIqwdx6PnHjaA6cCD0vzlL/r6BPLp4FQPyrxD9cbX07tKC19LMKOBF0xo8G7NqV
+         NmtxeS0TSeIbox0MoVj+JlTgCGkJbaV4OsOMHPApMpODgbrVhCALAqVN35nZ0n8Js32M
+         efGMckIJf4AnhzGS9mRq7Z4UqIe5NKdNPpIQBapl9clb6ejUNi9qil6WtfNYrSbfVxDI
+         r/iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743070010; x=1743674810;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LHH3q92f3jVI2cl1PwT0LmA+qhtDvCooULm9gmNkwck=;
-        b=kaSAAnRutOCzmvJbz6X0S2jl+egIVuqG9KBGCqgHVTOP64ZyBEIlqK/SKv5qlppmok
-         ztYy/pTG5hVwn5zPOFpN71O14mwXIyHqEtsE+zV+cgXV8tm8eXf9OpUe9YbBnrEYzb7a
-         X/D2IUpRrNHnU4lQMKOKEVqGgy/w1pjPJ6eKpp3apfT+BHZNN7Pay9pSDd2a0pUjWYBZ
-         5pLgIT69AC/NYfch+0DlXOE2Kd06YPXdT8WZVjDzyhmAdlsbHhArOCZIHe5+HwLYjoZP
-         bI3ZesVMAlM40XlrGgSm8hKmTQsVwAF+5NEMz9VqiHvqYwcpshedpAn2izSDiHp1Y1IJ
-         K0Nw==
-X-Forwarded-Encrypted: i=1; AJvYcCUHgNKEt6K4jFNwvtKLoJEoWfY7reze978Muwsv0R3L/CHHbA2JbZsSZhNveSFyuU194QSiMP89sOn49gk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8qLMBDtkKEvAeM9IyQYKHqKy/pXmKgP+MRrR1zmPG9S1JvcGK
-	rkqof935K9j3xV0pw2iD3ktfYjaC4geikefNfdznMuh57wFiIjEGu6zsYRf8xRc=
-X-Gm-Gg: ASbGncsrODBF2yCsfypOVPP8FWDz/Ck1MxlfzBtAwSJjVC+GpUQKFnq2KA6cYjAjelH
-	WDDUv+ecmMwhISVZBV1sL7Y9SjgCUCV+xW/uScZqR9ON7Esww9RfCN4DWZzbX0LnyvVP4GcuALI
-	k5ZtLrjbgnhhsV2B7/r+LiaVgJh6AonKgKuV9ZTOdk8Kn01g0g2z+aDBBK6ppDrZoL8EBs1Mh3z
-	Z152uDFg7mZXwqM50CuZgx3+iVpx3TA2/ebsjdp4K/IkALmeyBr+DLR7GC9Z8A1MS9NJ6xKCKhd
-	fD9b9Tf4Ezv2G0Ov1esdKvbpOE/IbOYza7n3Mbjf3fQP+Rne4FcQeYajsFFYZSpebjLEJA==
-X-Google-Smtp-Source: AGHT+IGE/wvSmulXQdHaG0FP4h3r9RIUwRb2WD87idgq+VFnWxcnjSgEdf+KyFgQDYVFnJMa6Q5vdQ==
-X-Received: by 2002:a5d:5f85:0:b0:38d:d9bd:18a6 with SMTP id ffacd0b85a97d-39ad1782022mr2444990f8f.42.1743070010288;
-        Thu, 27 Mar 2025 03:06:50 -0700 (PDT)
-Received: from localhost.localdomain ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39ac3ce3dd1sm10843204f8f.88.2025.03.27.03.06.49
+        d=1e100.net; s=20230601; t=1743070073; x=1743674873;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2DA/Y2SrhYvb8JIGN8I8VFPVZFKVt4XN6zoT9arPV9I=;
+        b=A7SaPAwC9CD8THDXZVf0LOM4/KQsltXsxZ6YcHjazAZpYadW4hqjF4DdC2Fe+QxmJ7
+         QbkuKDx+J9Bs3sOp48PHWW/0Iols1EBcmm5CaxIhruecfms0tR+ZgNhV49CAfhJPdg+Y
+         sf7CYI/fZ0iECHPa8WJpzBCG84Y+lnCNR3n0ZBDoCUimnSHJ7HVwMI2GjS7QPpijz66e
+         07TzygAjJhUhvldThItTu/8VV1PDfsxwFfYI+8McuMGJotmgyql8UFC09n/4asV177Sa
+         vzxnfro6fek51sBwIxb6gdxWyV996z1D3YjYlNdnlrNteg3rE1Tnd/nF4LzPxMbcgbtF
+         7W2g==
+X-Forwarded-Encrypted: i=1; AJvYcCUmo2GKmKgKIgUPQVsYEfvNUM0dcieAX+GVvy6vcHoH1YvW9rjbBPcPRMqd/k12WqifpXAy9hIWeUY2sVk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTgutw6HpaTLvo3SIFoKs3KTF/T9V+Xihfq4TXdimfQFR0pmU6
+	p9nuHcaHqGMsQKLrVekPYEziWJUcoKpD9JwEXNwPSPeNU6Ruy7dByQp9WnJ8HmyIovXtQZbMB+L
+	5
+X-Gm-Gg: ASbGncuJ6IDB6xxvuuN1ZuyCisbQXHxPGQB3x9GgtfffYVnhf1WERtTScSJCQOqoIR4
+	syPQP1tzrbFZG0mUQ9woECYnuLajA5wdYBQU9/uSQcA/78WQvGLE0SSiWipi5ZI+HmH0kTJgMc4
+	T/uHCtnhMiVf6yuXARsau1z8RxtiYsjEPjXNxCUBBMrnzFfKhnb1OF1lMQAxwyeACn7eIuIAhKG
+	2ckQZ40FJi5DFbTrIv1N0rDWCDHkZGDW2cVwm49rQcG02NM5k/6E1b4K+OdTPhGLWLoe8XsbmaZ
+	iljjIufutOYn+cD4GYF8v7OyFG8imKf7JcwDur/Wr+XzUFevtU2bB3o=
+X-Google-Smtp-Source: AGHT+IFSA/Q3nPbkXJU+wAh3bQb1BmYag2bXoUf1GCR7HVRK1VC002s/eBPHjEc50vV5ysPbU7o5kA==
+X-Received: by 2002:a05:600c:198b:b0:43d:47e:3205 with SMTP id 5b1f17b1804b1-43d850a78d6mr28318015e9.11.1743070073134;
+        Thu, 27 Mar 2025 03:07:53 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:e348:e265:be1a:2d30])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43d830f5f56sm32976245e9.26.2025.03.27.03.07.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 03:06:49 -0700 (PDT)
-From: srinivas.kandagatla@linaro.org
-To: peda@axentia.se,
-	broonie@kernel.org,
-	andersson@kernel.org,
-	krzk+dt@kernel.org
-Cc: ivprusov@salutedevices.com,
-	luca.ceresoli@bootlin.com,
-	zhoubinbin@loongson.cn,
-	paulha@opensource.cirrus.com,
-	lgirdwood@gmail.com,
-	robh@kernel.org,
-	conor+dt@kernel.org,
-	konradybcio@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	dmitry.baryshkov@oss.qualcomm.com,
-	linux-sound@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	johan+linaro@kernel.org,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Christopher Obbard <christopher.obbard@linaro.org>
-Subject: [PATCH v6 6/6] arm64: dts: qcom: x1e78100-t14s: Enable audio headset support
-Date: Thu, 27 Mar 2025 10:06:33 +0000
-Message-Id: <20250327100633.11530-7-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250327100633.11530-1-srinivas.kandagatla@linaro.org>
-References: <20250327100633.11530-1-srinivas.kandagatla@linaro.org>
+        Thu, 27 Mar 2025 03:07:52 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Kevin Hilman <khilman@baylibre.com>,  Martin Blumenstingl
+ <martin.blumenstingl@googlemail.com>,  Michael Turquette
+ <mturquette@baylibre.com>,  Neil Armstrong <neil.armstrong@linaro.org>,
+  linux-clk@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-amlogic@lists.infradead.org,  linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/4] clk: add a clk_hw helpers to get the clock
+ device or device_node
+In-Reply-To: <4db0bf5937c6c2a480b89b11e841782c@kernel.org> (Stephen Boyd's
+	message of "Tue, 25 Mar 2025 14:57:01 -0700")
+References: <20250120-amlogic-clk-drop-clk-regmap-tables-v3-0-126244146947@baylibre.com>
+	<20250120-amlogic-clk-drop-clk-regmap-tables-v3-1-126244146947@baylibre.com>
+	<508a5ee6c6b365e8d9cdefd5a9eec769.sboyd@kernel.org>
+	<1jv7s21d8y.fsf@starbuckisacylon.baylibre.com>
+	<4db0bf5937c6c2a480b89b11e841782c@kernel.org>
+User-Agent: mu4e 1.12.8; emacs 29.4
+Date: Thu, 27 Mar 2025 11:07:51 +0100
+Message-ID: <1jpli223d4.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Tue 25 Mar 2025 at 14:57, Stephen Boyd <sboyd@kernel.org> wrote:
 
-On Lenovo ThinkPad T14s, the headset is connected via a HiFi mux to
-support CTIA and OMTP headsets. This switch is used to minimise pop and
-click during headset type switching.
+> Quoting Jerome Brunet (2025-03-21 10:53:49)
+>> On Wed 26 Feb 2025 at 17:01, Stephen Boyd <sboyd@kernel.org> wrote:
+>> 
+>> 
+>> >> +static void clk_hw_get_of_node_test(struct kunit *test)
+>> >> +{
+>> >> +       struct device_node *np;
+>> >> +       struct clk_hw *hw;
+>> >> +
+>> >> +       hw = kunit_kzalloc(test, sizeof(*hw), GFP_KERNEL);
+>> >> +       KUNIT_ASSERT_NOT_ERR_OR_NULL(test, hw);
+>> >> +
+>> >> +       np = of_find_compatible_node(NULL, NULL, "test,clk-dummy-device");
+>> >> +       hw->init = CLK_HW_INIT_NO_PARENT("test_get_of_node",
+>> >> +                                        &clk_dummy_rate_ops, 0);
+>> >> +       of_node_put_kunit(test, np);
+>> >> +
+>> >> +       KUNIT_ASSERT_EQ(test, 0, of_clk_hw_register_kunit(test, np, hw));
+>> >
+>> > The stuff before the expectation should likely go to the init function.
+>> > Or it can use the genparams stuff so we can set some struct members to
+>> > indicate if the pointer should be NULL or not and then twist through the
+>> > code a couple times.
+>> >
+>> 
+>> I'm trying to address all your comments but I'm starting to wonder if
+>> this isn't going a bit too far ? The functions tested are one line
+>> returns. Is it really worth all this ?
+>> 
+>> I do understand the idea for things that actually do something, such as
+>> reparenting, setting rates or what not ... But this ? It feels like a
+>> lot of test code for very little added value, don't you think ?
+>> 
+>
+> Just so I understand, you're saying that this is always going to be a
+> simple "getter" API that doesn't do much else? We're not _only_ testing
+> the getter API, we're also testing the registration path that actually
+> sets the device or of_node pointers for a clk. I'm not really thinking
+> about the one line return functions here.
 
-Enable the mux controls required to power this switch along with wiring up
-gpio that control the headset switching.
+Oh, that was not clear to me. I assumed the registration path was
+already tested to an appropriate level, so I did not consider this.
+Makes sense.
 
-Without this, headset audio will be very noisy and might see headset
-detection errors.
+>
+> Writing tests is definitely a balancing act.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Tested-by: Christopher Obbard <christopher.obbard@linaro.org>
----
- .../qcom/x1e78100-lenovo-thinkpad-t14s.dtsi   | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
+That's where my question came from actually. We are aligned on this :)
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
-index afea82616bc4..34d1d8927484 100644
---- a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
-@@ -41,6 +41,7 @@ wcd938x: audio-codec {
- 		qcom,tx-device = <&wcd_tx>;
- 
- 		reset-gpios = <&tlmm 191 GPIO_ACTIVE_LOW>;
-+		mux-controls = <&us_euro_mux_ctrl>;
- 
- 		vdd-buck-supply = <&vreg_l15b_1p8>;
- 		vdd-rxtx-supply = <&vreg_l15b_1p8>;
-@@ -149,6 +150,16 @@ pmic_glink_ss1_con_sbu_in: endpoint {
- 		};
- 	};
- 
-+	/* two muxes together support CTIA and OMTP switching */
-+	us_euro_mux_ctrl: mux-controller {
-+		compatible = "gpio-mux";
-+		pinctrl-0 = <&us_euro_hs_sel>;
-+		pinctrl-names = "default";
-+		mux-supply = <&vreg_l16b_2p5>;
-+		#mux-control-cells = <0>;
-+		mux-gpios = <&tlmm 68 GPIO_ACTIVE_HIGH>;
-+	};
-+
- 	reserved-memory {
- 		linux,cma {
- 			compatible = "shared-dma-pool";
-@@ -604,6 +615,13 @@ vreg_l15b_1p8: ldo15 {
- 			regulator-always-on;
- 		};
- 
-+		vreg_l16b_2p5: ldo16 {
-+			regulator-name = "vreg_l16b_2p5";
-+			regulator-min-microvolt = <2504000>;
-+			regulator-max-microvolt = <2504000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
- 		vreg_l17b_2p5: ldo17 {
- 			regulator-name = "vreg_l17b_2p5";
- 			regulator-min-microvolt = <2504000>;
-@@ -1461,6 +1479,13 @@ rtmr1_default: rtmr1-reset-n-active-state {
- 		bias-disable;
- 	};
- 
-+	us_euro_hs_sel: us-euro-hs-sel-state {
-+		pins = "gpio68";
-+		function = "gpio";
-+		bias-pull-down;
-+		drive-strength = <2>;
-+	};
-+
- 	usb1_pwr_1p15_reg_en: usb1-pwr-1p15-reg-en-state {
- 		pins = "gpio188";
- 		function = "gpio";
+> I'd say we want to test the
+> behavior of the API in relation to how a clk is registered and writing
+> tests to show the intended usage is helpful to understand if we've
+> thought of corner cases like the clk was registered with a device
+> pointer that also has an of_node associated with it. (Did we remember to
+> stash that of_node pointer too?) We have a bunch of clk registration
+> APIs, and we want to make sure this getter API works with all of them.
+> Note that we don't care about the clk flags or parent relation chains
+> here, just that the device or of_node passed in to registration comes
+> out the other side with the getter API.
+>
+> A little code duplication is OK, as long as the test is easy to
+> understand. Maybe genparams stuff is going too far, I don't know, but at
+> the least we want to make sure the clk registration APIs behave as
+> expected when the getter API is used to get the device or of_node
+> later.
+
+Now that the goal is more clear (to me), I'll try to find a good balance.
+I'll also split the helper from the tests, so I can progress on the driver
+front while we refine the tests, if that's OK with you ? It is not overly
+critical for both to land at the same time, is it ?
+
+>
+> I've found this google chapter[1] useful for unit testing best
+> practices. I recommend reading it if you haven't already.
+>
+> [1] https://abseil.io/resources/swe-book/html/ch12.html
+
+I will, thanks
+
 -- 
-2.39.5
-
+Jerome
