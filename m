@@ -1,118 +1,119 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2565A1F4C84;
-	Thu, 27 Mar 2025 07:29:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06ECE1F4C84
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 07:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743060580; cv=none; b=Z68eazVQj0pLYIO5u/s5mwJt2NC/q1vfNZAZq7UsSXiRGi7e9ard0XISPkWowJqXA2zi8NEhkU5RauktzaAIwAmB7kV7JAG3/dmMO8zBAmC8ncEjF0lsnfQ2tU9ETcNIg3yjRBjSjbjwQ0IAjUOBMgoR8SOy0nFjQjcHIoYLqx8=
+	t=1743060599; cv=none; b=OcfFKhzSNfsoo0M/SSt4OGREbz0nOzzQb/+qW6E/9YowJnPjfrAg2t/Pie6WBO/uPCfSoJcUxgYaUxTry/JaaxmF9BBkuTCZBVgqHaOCv5Hv41jJ/csP05/yNglUSGGdAQQDGQqZOZi7QqpTth9lX76CVPyB/OeYNlIHG+3eAd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743060580; c=relaxed/simple;
-	bh=3IxE9eOQMfi7kEhpK35vuO2kbQmb/e1Ie+KL3VDxl8c=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=oqRCC+CrdJpihufG0WN1AObrSjymnjnJjIWvFOvDOPU6XudjsHrXaMFcvyn4eTJloa5Qct8SUhVi7hcUK+m7Y+rayO1LCH4OgClLGlAM5/A2ILicxu0mpWuXpDJLhUFR2OegvW6sACpUTMdtHHPehOqJ5gwP1Hwl9Yo6hR72fwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XVH+7Azp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dCMw+44a; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743060599; c=relaxed/simple;
+	bh=UVSK2OcQIxu7GqCdEZXROoD138DGI826o2h6Os0Wvbs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g6k1PJdwUyDe6EgdR9OwfrIm6kR/sxquj+JUjcZ7bTlzhnLYsGID5hs1TLA2mYMNnMU+aGuNoIrmIjKnLIZZnUURy7DFgOLgPGWi0sdmatP92gBUAxuQQSVeUAsCYtYXiAavuW7K0s0KJjlTkAZS+G1HSlbsz/qAPApboWY0OT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OqQl2VaB; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XVH+7Azp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dCMw+44a"
-Date: Thu, 27 Mar 2025 07:29:31 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743060575;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VQ9s+vlxdp0zs18EJ6/ldypBQXUY54t96roc7c4NIOA=;
-	b=XVH+7AzpToqVeEhD5LA7DpK0KLNZp88y5k/2MJTFuJ6a5M5KR3lvtV0ZYsY5s7zvkZjcLA
-	T57M6q4MSQPPlFgAVCTG3f4x5ipwj2xF20DS1ADOveC472JYTxpPPcgcEYkc4OgI2nY14u
-	KufhKdelnnXX5mq6IXnuChEweFYttqe/aI7rfxVS2CBE8uroscBXlwlm6JmuD2T/sXRNAn
-	J0nYomDzu0pVqEId1fqkNyEKJxSVIjmlLLg2IqI2V0MhdJ1X6HKcnzWAP9DqtAuzXJKVVU
-	Wl6OikTn88ctUvcqT4H2k4u8URTo6CQnfFCLzIAf6+8NofAmXCPq651HzKJ7RA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743060575;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VQ9s+vlxdp0zs18EJ6/ldypBQXUY54t96roc7c4NIOA=;
-	b=dCMw+44ax/RBvMafWEcCGvj5a7AFaOrLxv/SqwDOz2suBWHToM63BCPvFN9muWJCNXccZk
-	03SqXo8SKgl2cyCQ==
-From: "tip-bot2 for Boqun Feng" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/urgent] locking/lockdep: Decrease nr_unused_locks if
- lock unused in zap_class()
-Cc: Boqun Feng <boqun.feng@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- Waiman Long <longman@redhat.com>, stable@vger.kernel.org, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250326180831.510348-1-boqun.feng@gmail.com>
-References: <20250326180831.510348-1-boqun.feng@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OqQl2VaB"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e8ffa00555so5392256d6.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 00:29:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743060596; x=1743665396; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UVSK2OcQIxu7GqCdEZXROoD138DGI826o2h6Os0Wvbs=;
+        b=OqQl2VaB1u39fB26cpU7mXCK7/DGUFa5TsIaFeksSNh8R58REJpWPK9pgdNLsXX9uf
+         Vse4HQS+nIbqwHM8XOm+/j4UNNxtN+Az8XLHdu78SuVTzsyIGfjrIP04B/p2CA2V4S2v
+         57i9RjtGAgJV0oVNIYqnOJkzzMeEmGAN/iY+ug9icD9dfBw0iVxeRargEONB2ASk63r2
+         sQz1/GJxM8xWlGYlrqvy9bVTgoOCyXSOEvwOJVpxZ/NLwD1qsuQYO5LyDtYtcjzHR8lU
+         kCh0Yf23HHDpavFIgJqRBP/8oqCqokTP5z3Jcb4MCTLKW+yx5inok59xdMv0eKjM+ibZ
+         eubQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743060596; x=1743665396;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UVSK2OcQIxu7GqCdEZXROoD138DGI826o2h6Os0Wvbs=;
+        b=bWTmle9O7cKKjnGdf+y5wRbaGor1wjvdGkvNvYxZTRYt4u2bqiEPWrZ9t89GsokcIk
+         pj1NrVTtMCQU+RFG/YzfVa1n852nazT3ar7CKom8TjnaRJZ92H52wvtFqE5qbehFg1nL
+         LuH/UTLjTdmfKQ1HHm+chRvw8NTgHtgotniRVBiC/bGCRbpxjTlje94TKjUnhKpwCI8t
+         4KaKZtRh8sMLzggmPbqRS/hACK0SuCJCm/FWpnevQmgN3RVHg/e8VNlGvGDf+xSfYK2O
+         z3dtiiw5NXkA581wdI/oH33p97wqhJqK4g1Jfsxel6GVwzoq0pq+oKjRI6CMgBkKiUNN
+         1rjw==
+X-Forwarded-Encrypted: i=1; AJvYcCWC58pLjK4yY5C5zQNc28Gd8LrFUIcd/lLMlHpVkzNeP4gaV5QBOMn2itMAMtMlLOFEYhc8tufTqLL2ktU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEGhh9N651hyRzsv5zi4D7JFaPCv4UltLTwPZJCeJ2Y8dVGBK4
+	SDnaL0BLnKJXCPKclFI8pM6LEqOzB4geyq6Hy6oos4bhfutxQs705rtd3Ir9a2znZu/k1qXKQVl
+	MC9sC6lCyceuWuT9EaI5bAhB/GfaGHjATYdIU
+X-Gm-Gg: ASbGncta6nBNXG0HYVT/B4fcztU7MtJYiYuRQzemyyoQMUuVuqyNf7hV+EfuWjlzpv0
+	LFBp2379wGuFcD9J4u+z1er8d7whWeXC0nbS5B4STE5m6oSkq6KAXY6DQQp5m7iD87rR0YOCejV
+	4vIeMzwO7nhgLE6GhebJaGyFrfI20KBUuriJKBKpiRqVijtqKtYf6E9mNC
+X-Google-Smtp-Source: AGHT+IFodbPmwJt4QLy+rox/4P7ba1LI/HNq1Ca31C0T5Xi4oS+Qr4SiPc6bWeImmNVunEMpHRieoFe8u16EuLCSZhM=
+X-Received: by 2002:a05:6214:1311:b0:6ed:1da2:afac with SMTP id
+ 6a1803df08f44-6ed2390449emr39214346d6.32.1743060595360; Thu, 27 Mar 2025
+ 00:29:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174306057203.14745.17035425599679029480.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <CAG48ez2jj8KxxYG8-chkkzxiw-CLLK6MoSR6ajfCE6PyYyEZ=A@mail.gmail.com>
+In-Reply-To: <CAG48ez2jj8KxxYG8-chkkzxiw-CLLK6MoSR6ajfCE6PyYyEZ=A@mail.gmail.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Thu, 27 Mar 2025 08:29:18 +0100
+X-Gm-Features: AQ5f1JpUvz_D0Czd4hU24LmSodys4uaFqOZY_Yq3Ndxmm6C9Z-cmzAlUlTUQiTA
+Message-ID: <CAG_fn=UF1JmwMmPJd_CJQSzQAfA_z5fQ1MKaKXDv3N5+s3f6qg@mail.gmail.com>
+Subject: Re: does software KASAN not instrument READ_ONCE() on arm64 with LTO?
+To: Jann Horn <jannh@google.com>
+Cc: Will Deacon <will@kernel.org>, kasan-dev <kasan-dev@googlegroups.com>, 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following commit has been merged into the locking/urgent branch of tip:
+On Thu, Mar 27, 2025 at 12:10=E2=80=AFAM Jann Horn <jannh@google.com> wrote=
+:
+>
+> Hi!
+>
+> I just realized - arm64 redefines __READ_ONCE() to use inline assembly
+> instead of a volatile load, and ASAN is designed to not instrument asm
+> statement operands (not even memory operands).
 
-Commit-ID:     495f53d5cca0f939eaed9dca90b67e7e6fb0e30c
-Gitweb:        https://git.kernel.org/tip/495f53d5cca0f939eaed9dca90b67e7e6fb0e30c
-Author:        Boqun Feng <boqun.feng@gmail.com>
-AuthorDate:    Wed, 26 Mar 2025 11:08:30 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 27 Mar 2025 08:23:17 +01:00
+Nice catch!
 
-locking/lockdep: Decrease nr_unused_locks if lock unused in zap_class()
+> (I think I may have a years-old LLVM patch somewhere that changes
+> that, but I vaguely recall being told once that that's an intentional
+> design decision. I might be misremembering that though...)
 
-Currently, when a lock class is allocated, nr_unused_locks will be
-increased by 1, until it gets used: nr_unused_locks will be decreased by
-1 in mark_lock(). However, one scenario is missed: a lock class may be
-zapped without even being used once. This could result into a situation
-that nr_unused_locks != 0 but no unused lock class is active in the
-system, and when `cat /proc/lockdep_stats`, a WARN_ON() will
-be triggered in a CONFIG_DEBUG_LOCKDEP=y kernel:
+We have some best-effort asm instrumentation in KMSAN (see
+https://llvm.org/doxygen/MemorySanitizer_8cpp_source.html#l04968) and
+could potentially do something similar for KASAN, but if I remember
+correctly there were some corner cases with unknown argument sizes and
+with percpu instrumentation (at least on x86 percpu accesses receive
+an offset of the variable in .data..percpu, not the actual address).
 
-  [...] DEBUG_LOCKS_WARN_ON(debug_atomic_read(nr_unused_locks) != nr_unused)
-  [...] WARNING: CPU: 41 PID: 1121 at kernel/locking/lockdep_proc.c:283 lockdep_stats_show+0xba9/0xbd0
+> So because __READ_ONCE() does not call anything like
+> instrument_read(), I think instrumentation-based KASAN in LTO arm64
+> builds probably doesn't cover READ_ONCE() accesses?
+>
+> A quick test seems to confirm this: https://godbolt.org/z/8oYfaExYf
 
-And as a result, lockdep will be disabled after this.
+So should it be enough to call instrument_read()?
 
-Therefore, nr_unused_locks needs to be accounted correctly at
-zap_class() time.
 
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Waiman Long <longman@redhat.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20250326180831.510348-1-boqun.feng@gmail.com
----
- kernel/locking/lockdep.c | 3 +++
- 1 file changed, 3 insertions(+)
+--=20
+Alexander Potapenko
+Software Engineer
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index b15757e..58d78a3 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -6264,6 +6264,9 @@ static void zap_class(struct pending_free *pf, struct lock_class *class)
- 		hlist_del_rcu(&class->hash_entry);
- 		WRITE_ONCE(class->key, NULL);
- 		WRITE_ONCE(class->name, NULL);
-+		/* Class allocated but not used, -1 in nr_unused_locks */
-+		if (class->usage_mask == 0)
-+			debug_atomic_dec(nr_unused_locks);
- 		nr_lock_classes--;
- 		__clear_bit(class - lock_classes, lock_classes_in_use);
- 		if (class - lock_classes == max_lock_class_idx)
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
+
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Liana Sebastian
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
