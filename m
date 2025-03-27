@@ -1,76 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1ADB12CDA5;
-	Thu, 27 Mar 2025 10:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743070978; cv=none; b=P/JLC/lAT0SvAzUmgAcP9eCXYaAxaGRUQoqrE7gFxCeU35eXg/s77E9L5pDJQO80LT9Cy4ppIgW7nI7dASLwofw+dN0IwCJvuOq7JBzrVAstfy9Cd7PC1Rj7MuO8SZZ2mn2LX49XPiWF5LfzKY4Fv9AwJwIFjd45BaKMc45L0t8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743070978; c=relaxed/simple;
-	bh=onC2cPkoWuivMWkwbIejecRWNWFMPpdPB4L097wT13E=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=UT5v7FOFctx3ASUGVLABYkOJfOt0MgCkAYGUouPFSuLd5KDy3E+RNi5XOO1DpO6isrNwQWPqmrr/SamTW7w5c+kY9Y4Qeu0zvLcFFK/YMDg1ivbJ4Y6Es8LjZe3IXB3hQ0rPgVbXuk5p9X++gjuirLymN62zC2BnGierEmKnRWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SWgaPvOS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SWgaPvOS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30405C4CEDD;
-	Thu, 27 Mar 2025 10:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743070978;
-	bh=onC2cPkoWuivMWkwbIejecRWNWFMPpdPB4L097wT13E=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=SWgaPvOSxlwbSGAUb8pz1AnUlfyX0Asp09RR4CK4p84O0IFk2U1SKz9B6su0/DTVb
-	 kO5sjUjXVDSyqkAymacDuuOBVVEoRX677/oWkUxnICnFt3OPRzfY/jBfTzNGyGRGsE
-	 lxvZ2JKpCDQpz7MqOYhfY3Kg79qzlwT7XojeCzAywzmh+yMMNcux3ZqDHSWDGXS4hI
-	 Dl8mBUcV6LA934wMqqHnoUdWZeiUjUjcQAgjGDQ22WchkT+bjc35TmUS98jmPXGekP
-	 HAG0q7NnrvdB6nKePeEFnNYOAisNL0BLdeIH+pTx8O3dULU+l/WggiwkAIqLzc/HC6
-	 2AIb6ag490XXQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE78D380AAFD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C958512CDA5;
 	Thu, 27 Mar 2025 10:23:35 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743071017; cv=none; b=c3zKOvPPf8x+AutV0h1TbaBzQxMZsKD4yFOmMIWtkUwnmvFEAeCCSMLxkutS8332Ino3fzwZl7NuBfh4bZ6kyiiekB/p4Pf6PkgJss2Ejabm6fs1T1T/ohAoTsP+MJRXz+HqajyibAibfbZaR5ZDb8QhT7dxOACzqPwjY1Q2PYM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743071017; c=relaxed/simple;
+	bh=2UndzPazQMam1TFU2Z662vdNPVB0UawlwBr1oa36seU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=B+DoyHGw9iGgHh6mnGI+K3CExIa6Flia2NWPxfzhOt0izMWCWXfgysM6ZAIb/2c9masMph1T3tnYSknJXX60eCtCVIt5/hxaGWdmWDSJct3RCfdE5YjUbr7J+Go3cPCaz2V6HsiifAM04A91ySfKtAyKFzr8TEXvRih1XnkBY7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gK1Mv0V0; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gK1Mv0V0"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R5jaAF022550;
+	Thu, 27 Mar 2025 10:23:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	bsTKJixskJXIih+9YG2BOGi/3JloTiztSwmkSNf1BgQ=; b=gK1Mv0V0e8Ordy3B
+	vQvtG46sYChLOgelNC6ohYOvTl8JrZZGvZQv2i1v41M6H4pwRI4kSAPXi1JFQh8M
+	Y4S3VZeBRUjpKC8n3cE+TGkcUgI9upZ/Il4TJhbo3Po1dukpAp/umCNFGemy0lDW
+	7EORcilLUDDi5dqGp2hV7NR99sOpD4xA+dJVGaDygBRnizW0QpBzHNBaZaSvUlRn
+	S9EDYl253eeqTGeZQDmPMUzCZAfhoCZTrnMmY9nvdFYTHH/zd+ZJhuUfjySu/hRG
+	iYz9WazvIaO80HFukHMeh+SLa/fho6JzCxkG5TKTqaYBKfKtyvjqTlJFXyDZYagm
+	5Uwolw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45kyr9ny4h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Mar 2025 10:23:16 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52RANFTj001048
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Mar 2025 10:23:15 GMT
+Received: from [10.216.8.158] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 27 Mar
+ 2025 03:23:09 -0700
+Message-ID: <5a1b52a3-962b-04f9-cdfc-4e38983610b5@quicinc.com>
+Date: Thu, 27 Mar 2025 15:53:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [GIT PULL] Networking for v6.15
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174307101429.1989557.18259424854785309630.git-patchwork-notify@kernel.org>
-Date: Thu, 27 Mar 2025 10:23:34 +0000
-References: <20250326163652.2730264-1-kuba@kernel.org>
-In-Reply-To: <20250326163652.2730264-1-kuba@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: torvalds@linux-foundation.org, davem@davemloft.net,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, pabeni@redhat.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 0/6] Enable QPIC BAM and QPIC NAND support for SDX75
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <vkoul@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <manivannan.sadhasivam@linaro.org>, <miquel.raynal@bootlin.com>,
+        <richard@nod.at>, <vigneshr@ti.com>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <agross@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>
+References: <20250313130918.4238-1-quic_kaushalk@quicinc.com>
+ <07957f72-ce7e-41f7-8ea8-5839a33f04a3@oss.qualcomm.com>
+Content-Language: en-US
+From: Kaushal Kumar <quic_kaushalk@quicinc.com>
+In-Reply-To: <07957f72-ce7e-41f7-8ea8-5839a33f04a3@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: AUlJKAFe8WUGVUucIJ9OGSKGYZ_s609B
+X-Authority-Analysis: v=2.4 cv=UblRSLSN c=1 sm=1 tr=0 ts=67e52714 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=MOhVsGqXc9mDfs5IvFQA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: AUlJKAFe8WUGVUucIJ9OGSKGYZ_s609B
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 priorityscore=1501 phishscore=0 mlxscore=0 impostorscore=0
+ adultscore=0 clxscore=1015 mlxlogscore=611 bulkscore=0 malwarescore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503270070
 
-Hello:
-
-This pull request was applied to netdev/net.git (main)
-by Linus Torvalds <torvalds@linux-foundation.org>:
-
-On Wed, 26 Mar 2025 09:36:51 -0700 you wrote:
-> Hi Linus!
-> 
-> A bit late this time, due to badly timed vacations and unmovable
-> "work work". You will see at least 3 conflicts pulling this:
-> 
-> fs/eventpoll.c
->  https://lore.kernel.org/all/20250228132953.78a2b788@canb.auug.org.au/
-> 
-> [...]
-
-Here is the summary with links:
-  - [GIT,PULL] Networking for v6.15
-    https://git.kernel.org/netdev/net/c/1a9239bb4253
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+On 3/13/2025 8:00 PM, Konrad Dybcio wrote:
+> On 3/13/25 2:09 PM, Kaushal Kumar wrote:
+>> Hello,
+>>
+>> This series adds and enables devicetree nodes for QPIC BAM
+>> and QPIC NAND for Qualcomm SDX75 platform.
+>>
+>> This patch series depends on the below patches:
+>> https://lore.kernel.org/linux-spi/20250310120906.1577292-5-quic_mdalam@quicinc.com/T/
+>>
+>> Kaushal Kumar (6):
+>>    dt-bindings: mtd: qcom,nandc: Document the SDX75 NAND
+>>    dt-bindings: dma: qcom,bam: Document dma-coherent property
+>>    ARM: dts: qcom: sdx75: Add QPIC BAM support
+>>    ARM: dts: qcom: sdx75: Add QPIC NAND support
+>>    ARM: dts: qcom: sdx75-idp: Enable QPIC BAM support
+>>    ARM: dts: qcom: sdx75-idp: Enable QPIC NAND support
+> subjects: sdx75 is arm64 and the prefix in that dir is:
+>
+> arm64: dts: qcom: <soc/board>: foo
+Agree, will update in v2.
+>
+> Konrad
 
