@@ -1,80 +1,102 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B024E322B
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E966214237
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743079305; cv=none; b=dBunhI5ADR6zYCK2tLOx8zDRSPUJ9pZFXdtr5Eh08Hiq/w7Ol/cR7fA9AqEAkJYRZzInaIWgalEgjBQw4kLrXP0kKULv8imk7y9JSqgBZT9GY0MrCOHnwhSlQfBKHujtEma9j9JAxu/OcyQsEH6SvtagQtIxMnYZHmugxNUb3dc=
+	t=1743079313; cv=none; b=FVyOE+Ol2wl8aWAx4NCB42TQGu7BKWF78+mu7Nmlr40fiIlGC559SrnAc2exLxixHQCt8qw+U/wYsZv9eGa6HY6Rvhg2IfA3UhNU7oO8xrp3jgcAFzkT/oi8/8jyFcOdxWAu2J/ZngfFM3g5cxcsRZ5zBgUwU8EAOMvzJ4LgAhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743079305; c=relaxed/simple;
-	bh=3ECEl/NX/Jn9j/dpT2zSyV4SoXO/iMCmymPyi1rFue8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PZoHsXCyfwEEhJR2EVSpX9BAXcaytovKV2nDDj3Kcjkcmsl1GF6dv6d7DYb7x5WgQDdzqUvDHUOIzBXmGuJimYjqsj7oxN+RxepSt0oBYC40yVbmjJPzwxjPSVe5wVd7HaeoOOprnD7a4iPMkxpRiL+izq3qhWBHaPaOV33oASw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=wAErWEWa; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1743079313; c=relaxed/simple;
+	bh=rTUk5WsXR6uaQmtmVpjNHsbtIr+WlFlJncQhJeTUUpU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=knoTWEDB4mz6q1xhALuDu+c2h2u5qKH1JOT9QGZv26F4BLM30UFjQOZs6mP42Az3o/F274JSh8Dqu6Kh0SEVDwsC2w/FK0fTKh+opsQDuwkKEPgmAiDL9NcmsJM8ef5naXTfCuXwflgSnYJ6brjtBuVjuc6qS/keLQjRCn8ZkiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NGP58XlI; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wAErWEWa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=O+A64R/LqWZmWuQwTs3JlV4X4sGVXRXZaReSlXcbmhY=; b=wAErWEWaSZUwSyIQYuDLx6mWHx
-	ClVrKbIpPnvmm9caHL85QTvQ+QdCTtnaEfctqfAcnxb23SBXiPV/lmo2BQ8B6M/EXGZtR01N1uak/
-	o+mIYSV/0riB9kWnxngrRgPGxccPNIcG017P9qTBv9qVHge4htmN8RnPZcpv7UCdYRyXrhiUDIKku
-	BuMlZ3M+N2B+0nfIiFJknGE1a0SZ/9KRze3k2qzmMbmb+NxHFcoY8FLiTx+QhwpA9ybJ9XgWYma+Q
-	xxNo2w2XHuz3HuF/p/8a8wbQ7x548DSMAk+BzS657XPOf9EF8kjUeqdNr1C5tGrXRjEVpp7m6c67U
-	fh/J6JBA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1txmYH-0000000BrS8-3chg;
-	Thu, 27 Mar 2025 12:41:41 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6F2FB3004AF; Thu, 27 Mar 2025 13:41:41 +0100 (CET)
-Date: Thu, 27 Mar 2025 13:41:41 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 4/5] bugs/x86: Augment warnings output by concatenating
- 'cond_str' with the regular __FILE__ string in _BUG_FLAGS()
-Message-ID: <20250327124141.GC31358@noisy.programming.kicks-ass.net>
-References: <20250326084751.2260634-1-mingo@kernel.org>
- <20250326084751.2260634-5-mingo@kernel.org>
- <20250326085343.GB25239@noisy.programming.kicks-ass.net>
- <Z-UcIJAQsNXoxMXG@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NGP58XlI"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cef035a3bso6802085e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 05:41:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743079309; x=1743684109; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rTUk5WsXR6uaQmtmVpjNHsbtIr+WlFlJncQhJeTUUpU=;
+        b=NGP58XlITYgewmnUz3C5CEsnJ90a7XtwoWFh2GZRC4H3o+r8nni8xsVysctoNM0pDx
+         eKLdB7bYq09MnHMo+018Ng6T6Bd+sYQMLEsYCNkGqxcwqWXLG32UscFqrWZnOocQMM1r
+         zIbBGUoWg/axjCUrNJqRKR86xNI/Er/23e1YAp5XgaPBlbtjpaFPorQdreacKWPf4wi9
+         4cfv+wBWSjPDXz9noy5kN/v6ujGHrxGqxvHAY9SNTkHwrtGeu4zLIRbEia+3sFN/Bwd5
+         Ar29oFRc/nqfYVT7ljk8skQU2EA2ovUAXXnZioCL50q85XYALdu7pXFpusK+B8Ywj87S
+         jRTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743079309; x=1743684109;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rTUk5WsXR6uaQmtmVpjNHsbtIr+WlFlJncQhJeTUUpU=;
+        b=FPvWa6ekFmBfTCENm+leGf8N7/+Zxl7pA44t2sOdTbyhxdQXvCnm2cQYvgVX3RBw37
+         B8Uvu2Jv9lkynPAZolYGlwX4P3YDTpRzIn2PRDFENX3ortP3CphYj1ilyQ0cqV6Pi7J4
+         ItSb7qI1ox7UMa8jOUNdHlegW7iRxQNyhJYBHGNXOvM6z9YcUzT9+hJ5nT6LuTGCfqpG
+         LfEfYB0Rp8Si+bxcCBzIoKfbb8Zdl2kHxpVxcAWgyQhBrE7g9bdUhkEy1DcelQfflB8I
+         UE+Lb+mijm4ydl05Arj85T6lUe2AbRUdNG07yhtzf7e44QsleIDgKfJTkRh4b8BAtU3D
+         5ayA==
+X-Forwarded-Encrypted: i=1; AJvYcCX02t0MPEUmgI6Ry9lyqXU7Gx7R+MuEefuVdnTcaEN8pTNvvJT4oEHY4M8gtHwsw3ApK95K0lWa2SNrlh8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe06JFyA2vbtU/SWYuIm3DFdDTn8uDXxIFT1hFD/skyiOnMiFE
+	thZ/YuL1rqmkuCJ3YSnm7XCSQqvARUzqxPf9yTG9nxLDi1OMedTGyTU/2OILVSo=
+X-Gm-Gg: ASbGncu4cjMDAjwxcEULG/RfbGbLs+UGG9g+eWFfyBWRj31fq3oK40QSwPwFvAqMbUB
+	5PromTwT3kVNyXT1iW5mdG96gCH7qciLdE0lKs39bNW+FgMfpkhb0NHka3vA1U14jKYIV2NXv/A
+	JYvj4kyvIQAqkE77ZnN+pgiFsb36reOwv0GbzxvKm7jlF0UpfV3IDfmLap513c4QWwqkyIbzxu3
+	DdwSwLoW5fr8U5i2vpEw1Jwb8c8FMZS20nQlpiXUDGY/sIFTwbdfimN+OIS4/9jlLiQwSQZsGIL
+	fxkMwM1l0DE76lULJ0wubgzAwd+G6heXbpJyFLdxcAVqHXlw+Q==
+X-Google-Smtp-Source: AGHT+IGWrkmnwwYBa5Bvx8VGNmhRtptYZl223u01AmKMJ5pNwx5tLvmrcvvV5SU1hmSMut9pH5TgMA==
+X-Received: by 2002:a05:600c:4f94:b0:43c:eea9:f45d with SMTP id 5b1f17b1804b1-43d850fd6aemr35034475e9.18.1743079309513;
+        Thu, 27 Mar 2025 05:41:49 -0700 (PDT)
+Received: from localhost ([2a00:2381:fd67:101:6c39:59e6:b76d:825])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82dedea3sm39373785e9.3.2025.03.27.05.41.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 05:41:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-UcIJAQsNXoxMXG@gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 27 Mar 2025 12:41:48 +0000
+Message-Id: <D8R21NO1IN43.1E4FD7KG9Z4KI@linaro.org>
+Cc: <srinivas.kandagatla@linaro.org>, <lgirdwood@gmail.com>,
+ <krzysztof.kozlowski@linaro.org>, <perex@perex.cz>, <tiwai@suse.com>,
+ <jdelvare@suse.com>, <linux@roeck-us.net>, <linux-sound@vger.kernel.org>,
+ <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-hwmon@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: codecs: wsa883x: Implement temperature reading
+ and hwmon
+From: "Alexey Klimov" <alexey.klimov@linaro.org>
+To: "Mark Brown" <broonie@kernel.org>
+X-Mailer: aerc 0.20.0
+References: <20250107114506.554589-1-alexey.klimov@linaro.org>
+ <3e08b501-f8d0-4e68-874e-b578e7c82c47@sirena.org.uk>
+In-Reply-To: <3e08b501-f8d0-4e68-874e-b578e7c82c47@sirena.org.uk>
 
-On Thu, Mar 27, 2025 at 10:36:32AM +0100, Ingo Molnar wrote:
+Hi Mark,
 
-> > > diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
-> > > index aff1c6b7a7f3..e966199c8ef7 100644
-> > > --- a/arch/x86/include/asm/bug.h
-> > > +++ b/arch/x86/include/asm/bug.h
-> > > @@ -50,7 +50,7 @@ do {									\
-> > >  		     "\t.org 2b+%c3\n"					\
-> > >  		     ".popsection\n"					\
-> > >  		     extra						\
-> > > -		     : : "i" (__FILE__), "i" (__LINE__),		\
-> > > +		     : : "i" (cond_str __FILE__), "i" (__LINE__),		\
-> > >  			 "i" (flags),					\
-> > >  			 "i" (sizeof(struct bug_entry)));		\
-> > >  } while (0)
-> > 
-> > Sneaky :-)
-> 
-> BTW., any reason why we go all the trouble with the bug_entry::line u16 
-> number, instead of storing it in the bug_entry::file string with a
-> :__LINE__ postfix or so?
+On Sun Mar 16, 2025 at 11:33 PM GMT, Mark Brown wrote:
+> On Tue, Jan 07, 2025 at 11:45:06AM +0000, Alexey Klimov wrote:
+>> Read temperature of the amplifier and expose it via hwmon interface, whi=
+ch
+>> will be later used during calibration of speaker protection algorithms.
+>> The method is the same as for wsa884x and therefore this is based on
+>> Krzysztof Kozlowski's approach implemented in commit 6b99dc62d940 ("ASoC=
+:
+>> codecs: wsa884x: Implement temperature reading and hwmon").
+>
+> This doesn't apply against current code, please check and resend.
 
-I have no clue; this is well before my time. But yes, that seems a
-viable option indeed.
+Just for reference and for future, what should be the base for patches?
+linux-next or specific repo/branch in audio asoc?
+
+Thanks,
+Alexey
