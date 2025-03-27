@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4ABD20FAA1
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:30:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0157A2139B2
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:30:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743071421; cv=none; b=C91Jx0me/hfKOW/vI5LL4lU3Ky9YonYgA6V5ndaowMUqGCnXjPGb+eoxpWI/bO98fRmq3knXo84xJgM6+Lexae7qi0+lJJnNMXCEmtypSqUWJF2AJrp40TBAkPiPEDf9Zz1D6PNzEinGf6TT6fv3ZQmxLB5e5/EgQJf4tdmPoas=
+	t=1743071423; cv=none; b=cl5BJHflEDAjpDlRux0sQcw+yQQlO6LXmBIffZuuWoU/EcgCFlxjHq8JSQC8Z9Hv8FYdjZTMH1Ex4cHU9ACoYnfMbRY0FRztX7u3bea2jDUooYJOgpEHUar4g2l+/BKBQRU5JoCPKy2+xmflG3n5nW9oSKCol4V7QlKzI73uaD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743071421; c=relaxed/simple;
-	bh=/BxY/YKk2UJG2lxI/lsTF++98Em3QYZhD/GUPXzzoTU=;
+	s=arc-20240116; t=1743071423; c=relaxed/simple;
+	bh=UI09yfLxFHOEwRrp5YVkeao7N1IMba4sGY241tm5ILE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FzwtzP7Fg7qnu0E2V3qUSU5j3P0tledlIpning6hT9sBGUDUSrQefvZlkNOeDSg9W8sNVBSG/zX0CLPGlyFjpVm2H/KZ4BIKNlUtx1keN3DqiolXQlcc+LuTk3D9c6oq11E0BCiRkh9eKcaeR4s4RTeKU+38LaRFG/1fYOWdGfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=abDo4WDm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cC4nHeggvaTHnM+jR3euM7UYsO1iC02kUWznYZ3l5yC/VE+d7LyrZAJ8Gljj464WeKUjAhg3HsCHxxCGW86dfnz5bcbP5t98V656MNFZsJVXGxvMvXG8G07/hpr5eBvJdqJyOf+c3vXn8zDEpoV8WDB/QmYj52mjZnsyHgI00y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QPeIb7XV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="abDo4WDm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87995C4CEEA;
-	Thu, 27 Mar 2025 10:30:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QPeIb7XV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 442E1C4CEDD;
+	Thu, 27 Mar 2025 10:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743071420;
-	bh=/BxY/YKk2UJG2lxI/lsTF++98Em3QYZhD/GUPXzzoTU=;
+	s=k20201202; t=1743071422;
+	bh=UI09yfLxFHOEwRrp5YVkeao7N1IMba4sGY241tm5ILE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=abDo4WDm+tn863zPF5fd5i5/oIqBOiwzHKnliAAp7veihfherq8+aXuQcKLPlJasV
-	 clPBh2H7EQAsZ+VNELPL4HTgz1wDPGq34bLuHqtYMFqrfnBbyJwGdUzEHP1pvSvXC/
-	 oOuDRUPs1rYUcyZrtF1HSAq4dKB/pcA5wCXsQuDCaQ/k4ZN+xS6HM77nVQW/l1Xivr
-	 4nfE+Y00q0TrQn9saZUnk8bQlyTfGd4zYQma+xN/UfwHyHU78A7041zWCn/4qYV7jL
-	 /+r+eO/QUxrFgx1ycpUmQ1/CbTOtx0y8BAV+byNp7LeM12t6vZl1uCwryC/71NMd1M
-	 W/cev/gTJOx1A==
+	b=QPeIb7XVX4hiSnMKTW3DiI+jVsm1eaGu4OAz3ZR+Z2YWY363TqTmH1+FZaf38eSGL
+	 RCPiq0ZFwdPwlZAUiYnYp3T9I8jT7KkLnCUtcsshb2xOv2yMCrfkai+j2QjmgfkPxR
+	 SiDekkafBN5DZt0oeuQRFCwrMCGeHK/A3HeAFJpccRTrk4rY/qNIQuhOMlcUgveZmO
+	 k+C0pVEHn5a9ac+Iw0b9AcaI7Zf6KbqsKjWqKdc931B6cC75KA6OAv0cvm0GS4M9Rb
+	 yXhe7Afy3Vl0fMk17ohQxb+c1cTTU+Zy3Ej/VG5RGu863UuClEteH5VPtp7V0Cr4rw
+	 6lAubRPA3ecmg==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
 	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 11/14] bugs/riscv: Concatenate 'cond_str' with '__FILE__' in __BUG_FLAGS(), to extend WARN_ON/BUG_ON output
-Date: Thu, 27 Mar 2025 11:29:50 +0100
-Message-ID: <20250327102953.813608-12-mingo@kernel.org>
+Subject: [PATCH 12/14] bugs/parisc: Concatenate 'cond_str' with '__FILE__' in __WARN_FLAGS(), to extend WARN_ON/BUG_ON output
+Date: Thu, 27 Mar 2025 11:29:51 +0100
+Message-ID: <20250327102953.813608-13-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250327102953.813608-1-mingo@kernel.org>
 References: <20250327102953.813608-1-mingo@kernel.org>
@@ -55,29 +55,27 @@ to:
 Note that the output will be further reorganized later in this series.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-riscv@lists.infradead.org
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Helge Deller <deller@gmx.de>
+Cc: linux-parisc@vger.kernel.org
 Cc: <linux-arch@vger.kernel.org>
 ---
- arch/riscv/include/asm/bug.h | 2 +-
+ arch/parisc/include/asm/bug.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/include/asm/bug.h b/arch/riscv/include/asm/bug.h
-index feaf456d465b..6278523dd2d1 100644
---- a/arch/riscv/include/asm/bug.h
-+++ b/arch/riscv/include/asm/bug.h
-@@ -61,7 +61,7 @@ do {								\
- 			".org 2b + %3\n\t"                      \
- 			".popsection"				\
- 		:						\
--		: "i" (__FILE__), "i" (__LINE__),		\
-+		: "i" (cond_str __FILE__), "i" (__LINE__),	\
- 		  "i" (flags),					\
- 		  "i" (sizeof(struct bug_entry)));              \
- } while (0)
+diff --git a/arch/parisc/include/asm/bug.h b/arch/parisc/include/asm/bug.h
+index 1a87cf80ec3c..2d14d6cf21f3 100644
+--- a/arch/parisc/include/asm/bug.h
++++ b/arch/parisc/include/asm/bug.h
+@@ -61,7 +61,7 @@
+ 			     "\t.short %1, %2\n"			\
+ 			     "\t.blockz %3-2*4-2*2\n"			\
+ 			     "\t.popsection"				\
+-			     : : "i" (__FILE__), "i" (__LINE__),	\
++			     : : "i" (cond_str __FILE__), "i" (__LINE__), \
+ 			     "i" (BUGFLAG_WARNING|(flags)),		\
+ 			     "i" (sizeof(struct bug_entry)) );		\
+ 	} while(0)
 -- 
 2.45.2
 
