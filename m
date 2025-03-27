@@ -1,65 +1,70 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2051.outbound.protection.outlook.com [40.107.243.51])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2068.outbound.protection.outlook.com [40.107.237.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5616B215057
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 17:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA14213E7E;
+	Thu, 27 Mar 2025 17:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.68
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743095719; cv=fail; b=o7nXEZnncNTy8gk8P5Yq1xrp1pw+gh9bBROIwtYVIwy46PQ8Tn4Sxgc1TMKk6qU+RDZ3e80VLTI9l1N5jRVlrhrHx57BUDm2IWWKSCB1r+89aXWD+kOHNX/kuyJ9TB/vP0IfAtXl+AwZ4rzF7VxuelhSyABgapKqGDc9D3keQcw=
+	t=1743095719; cv=fail; b=I+E/Lno4ibgwTH/KI1HxdQqFf2wwq2oeyeQDihXiikgMuUFJpnXVU7EAp1IhuK1EQyJ1BMNjhAYSYObaUFXUBao+5QQ3DhjHZIGGZTN5LP8OweBkyIkSoXKkKW9FtcV3wOWv40Msi5WANIHPtE1R75WH+MGPa6MJnPUMZHoqBL4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743095719; c=relaxed/simple;
-	bh=+uW1B9rH17e6D/elGScePo3dZCQ30wFcxBG4hMFUS9E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=PzBijnN8H0Co+ftyNzj3tjFW+qacbqYJR4A/qFcx0hz+thz8gJ8NdXSkyIvJq+I2C2HGJmaKb4esHMshzfv06NSRpDjHYhdIvQBGtIr8AUu4NsUec+5iMt8jQBxRvddV3mhYXofCl0mPWSsiuJeQpIyX97WPcxVh2aNh1gLYCjY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CNVa1wNz; arc=fail smtp.client-ip=40.107.243.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	bh=LTyy7S5Qq3O3qzaYAynwDaOElZsVhqtuNXxLafG4YRQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=lX4ZgivOfTjCX8jXpl/92MO3uEZyIdMNvLUMZpQzg4v/pfExJXVU6KR1+TihLeQVx4BkkBojI5JEf0TpR8A/0hVRBZycpL/9iJJRys8hXZelrmfUL+GWIK7hUORPJOO4Xx9nfz6bgZ9zJvFc6iu8NEhmdvTWLbh+d+Yi/8frrP8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qYUGOPpf; arc=fail smtp.client-ip=40.107.237.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CNVa1wNz"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qYUGOPpf"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CxpBru6kEpjpdpwilUc4/ZxSvl1OrRpmAIOA4B9FEuvByv/KOxiRFbhnZmDvIGFsrRn5FAIXXAh5IuiSqCSHbYSxL4rLgN1pOtHn5y2Qu03M4e7i6U7yi03wbQvXl9nQsGYvaOVCvPX7hX/tpufTQkmoovxzcIUuW07ykEyrgc+FvWgcB7xVY3bxMP5YUeP9GbmdgUC9qntGASoTNaZyCbBEBmQL/hFM5mt0ZVXljklwauyWqUlIQQuLcp+Q5YqXqQbBNTiCfM0Uqbo+X8T2V1nl0B0jEFJlNxYXTQydRFtDF56h5iSD7Zt+ONt/ePXiqAKjFH1Na0vflIRrAHuhVg==
+ b=oKXJaaBqkYW1CNGtM49jxH6lvx4KUvoowHfbaMZanNndGkVZ0nt6LZYv82E+jl91VmtAGOqbQyAxqhKhgW7Go9hllEO6olDwjoPox+Ar4JJ7oBOS0yu625d0rWqrEm7OGnwc+OgyOj23+kBaQH/3zMVQa/3YT+VWwcs4XdeHZG2TsEJp2N0gBETpXYzSoTzTJN3yhZZEvXEe3MmAJQtiCeGCLgGZMdwjAEDS12UTBe462JQlQs9Bk5soVICXGG74x3QwedAKrJBvL1TU2OMIkE4nrIDina19Ml+dkWZo2YDGgDsF3e70oG4m2ZBcTps2EYD4dAyj3HZPfrPktvY89g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=X/x9DkrIF6EluTF12rZksfbffhd05zBpbM1ThDNAdRQ=;
- b=Wl9hgJvg/UdXlAcyEJ67LL9K2R30OEP+aBsP/6dG5OXnE5uF9v87UF9lPu2h9Ly09bDDB0BY1nB8sEFybbfTPVw0iSXrqnTaGAxThxVIK/sdJW+dN9uIzEOPzU6fomW9WoKHiuwIDNwISmu3ZhW/6lzs6k27utsTIeoO3yAlmliRsSM8FTrsX1M7IpvaiPHKXz9NyxlJRTr8nq6I76RcCJN/Tb0vRg7ObqwJR7x/mlTSpivpB7z3UkJiR/f/pQNwf7JZ3mpjdJgOdDlT14jxaFx6en52Yr3hE4tg7oW0mNAnr3ZM9ckM85S/epZ6HJV/1HYh/uoJCaCbNorTybPpbA==
+ bh=yEXRUiub8zadt9D0ZTLte/wUNy0cupGlOpTXIOXqGDw=;
+ b=q8eaGW+NJ2cq0GuxK//DXSD2bIomyaaS9+iJbsskf39/l7f3ZxdzPZSC8aL47kJbHTIL7tOK6caMgFlSTnuWb9hhhD7dOW1FuaaT5uX6o9TeiD/pttO4XwIYtxaEQnH65VIN4Mstr0xRU6ADlhPX2yyJPWUkDd/fAoh9egLh8NUOPuqALbZ5um57m+bnla8XSnG6fYj9dC7kwXmWwb5T3fea8nV3EbM2AnS1UCDknfcQ0VnQBWkx/KJ0T03Rp4Eh4Y1ylL4kKHAzlwki1RqkLfu4elQKJJghRYPOwHQrljsD6FdRdMO4H2NtZrpOz4C08G9r8Q8lNuXE4/LbtKgs8Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X/x9DkrIF6EluTF12rZksfbffhd05zBpbM1ThDNAdRQ=;
- b=CNVa1wNzqg0jEhD3WjlRhj5VQVqkkqpmghsjAEENx8zCFDTty/bq1aycAF9CeefE+itL/Q7PD2O0YJczf3Gdiw4K8jDjGQROwaKu4ppSeRf/m5FWlEM38tUc7UGtRJdxyDAiBC8Y67EmDXLqZXUVS6sq9WKpKN8KzPADhAMXjWsPrPeOBM/u8o6gaBgyY4eoO3DPJlb5w+jb9rwV3JEeuolGT4FOshiJjsRznOgw4lCgYRFLHOstikXDoN2FfZBcLK5ZPp61eo626Tl1FUmd0FyXJxNLq5RBtm5CE9fFymyQ8QvKw6Xru1zi4I1jxMIGQgTeqwRMOF0l4FM27Lafdw==
+ bh=yEXRUiub8zadt9D0ZTLte/wUNy0cupGlOpTXIOXqGDw=;
+ b=qYUGOPpfmsVR01wTtdWc4GcOO/d9w/CJopqiGf8s3VKFgj4kmGVQsAUOr5kouZ8gkYFB2OoLnpDxV8BZKQUQ3TEXUMYm35KXiMMnm8WMz+kOUH3mheNlAWUBd7I1qbcnG1bLOIp+krcHUs1WdyVESP9e4ys6qhMqD1GV/uIj2DI=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM4PR12MB6424.namprd12.prod.outlook.com (2603:10b6:8:be::16) by
- IA1PR12MB7591.namprd12.prod.outlook.com (2603:10b6:208:429::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.44; Thu, 27 Mar 2025 17:15:15 +0000
-Received: from DM4PR12MB6424.namprd12.prod.outlook.com
- ([fe80::8133:5fd9:ff45:d793]) by DM4PR12MB6424.namprd12.prod.outlook.com
- ([fe80::8133:5fd9:ff45:d793%7]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
- 17:15:14 +0000
-Date: Thu, 27 Mar 2025 18:15:09 +0100
-From: Andrea Righi <arighi@nvidia.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched_ext: Fix missing rq lock in scx_bpf_cpuperf_set()
-Message-ID: <Z-WHnYrNHHYx3lpa@gpd3>
-References: <20250325140021.73570-1-arighi@nvidia.com>
- <Z-SasIwx5hINm1sf@slm.duckdns.org>
- <Z-UEkJfkkBBKqCyU@gpd3>
- <Z-UgI3dSwcLa-CRC@gpd3>
- <Z-WGRetAL9tSPEkv@slm.duckdns.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-WGRetAL9tSPEkv@slm.duckdns.org>
-X-ClientProxiedBy: MI2P293CA0015.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:45::9) To DM4PR12MB6424.namprd12.prod.outlook.com
- (2603:10b6:8:be::16)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ SA1PR12MB8162.namprd12.prod.outlook.com (2603:10b6:806:33a::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
+ 2025 17:15:14 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%5]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
+ 17:15:13 +0000
+Message-ID: <327b4da6-07d8-4f44-a3f0-32b4e5460719@amd.com>
+Date: Thu, 27 Mar 2025 12:15:10 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 02/16] PCI/AER: Modify AER driver logging to report CXL
+ or PCIe bus error type
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+ ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+ rrichter@amd.com, nathan.fontenot@amd.com,
+ Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+ ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
+References: <20250327164819.GA1435732@bhelgaas>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <20250327164819.GA1435732@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1P222CA0132.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:3c2::15) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,130 +72,271 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6424:EE_|IA1PR12MB7591:EE_
-X-MS-Office365-Filtering-Correlation-Id: 33d2ff0b-65f4-4a1e-4e46-08dd6d52f057
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|SA1PR12MB8162:EE_
+X-MS-Office365-Filtering-Correlation-Id: 61c73fc9-d2f9-4d68-0c87-08dd6d52efe1
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?NwqvLT/77SJnE8StjfiUOPGeICDId3DhhOXQ8DELoblsuRPdRRAw+anGItWw?=
- =?us-ascii?Q?nGZ1mMP7FuLTwGiss0Y+AqxOydIlR+VZWZdSIvo/AqEblu7OFK9XuqfufNV9?=
- =?us-ascii?Q?q9BxDSEKl3VMZKBubWZTFvUinr1BPmvZLpeO5NDUKM8vthPmfaPGty7koqmB?=
- =?us-ascii?Q?R7U1vZ8fYB57VTjTjKd4BeciaIiuPUpMwQpEOaMDHYcYERpbKGuU5491xnDo?=
- =?us-ascii?Q?weD6WsbqlrFCsi6aRsIf0vhjVJIT4NChNUSPkwIa6SpttR3ZEd8WMP2HKmay?=
- =?us-ascii?Q?ClVI5Nej4d+yrY5/V+GAultImeaP/iZuA75yCmucxv+pzruxepqs2h+8xToM?=
- =?us-ascii?Q?BD5dYUnH2Tg6YINGlNr1ydAXQFsf72aKbMWJ2P5rnCXrxKPNozWRV+Naxzo5?=
- =?us-ascii?Q?mtbqjc37E4NR0L4GHNqNrKXX9B+PJ0IMbhnYlBIAqV+//M6DnuP0xju0kHKY?=
- =?us-ascii?Q?Z+rBtnSUdurK4D0AAtpNviHqW0uUzRl+2RUNvrqBBV8P98FO0sT4MaH5YlSq?=
- =?us-ascii?Q?lV4Rx2mVv1Iptp9lLnfC1whU+13q2+bS6mywDa3vANpTDmNvlTv5y7fG8iC1?=
- =?us-ascii?Q?/nQUwQZAar+l48R1wBFjuBwWb7t+HYL9/5FpPr2BAjjGoCMd+ZAgGJ/xdH1a?=
- =?us-ascii?Q?Feje0b92Rfd1TXBGM/24HVi0NZHwKcXUzz/PP9FoWrNZIQKxb8IWGDZFVAri?=
- =?us-ascii?Q?GIbu1SYLzjlU9lp28YYj1H2BdWUdYPdVQJ3MNL5PrmuKJxwbIKOYj3cTEyBC?=
- =?us-ascii?Q?Ru2N2SZghXOfSsXbBXcOeamEAktWS+fhUCgNIYUnVzeeG6+Vz6ZFfvWrWWqS?=
- =?us-ascii?Q?dnkC96UB6h1gkQUGS3sVVE9X0jkAVyFbPx5zqjSKfx7+saCMvza7u61XAybd?=
- =?us-ascii?Q?SUa2rPLtzvDcW1W3Z88tGixDylyM6WfC6dQ6gK88LmnRxP/5YHRu6vPAql5g?=
- =?us-ascii?Q?yX2KqM+2Ygrau5c641vmwhVk5LoDUkJ3QSu7l2N3GFTzsAr5XkLMMHrBxrYZ?=
- =?us-ascii?Q?a5jBty5bRUTOGI53Hg/ySaL6uzRVZSpGZiOkutuXVjVq/x2RMkGp9aTy1KKQ?=
- =?us-ascii?Q?Xp7FqwT7lQ8LWq90rQUWK+DPND+hHtmzzjlpqboasA0i4oGrTqkqpS3RCTGI?=
- =?us-ascii?Q?YxnoRB8ZZ9cc+zk6ritE5OVs+ahu1DPzwcYCVCwkHba62mTjVDfsUe1RrYJB?=
- =?us-ascii?Q?cDO5eBP86Frk7Ahx6zA+JeHLySC3EsRyx+Kh+OCI3AM6GrPMU5hNofOUGnrx?=
- =?us-ascii?Q?P02ih+43yI7SZpWw+/a6E7J4AFab7uD6CpOhUzWKpy6B8dPhtvKuBzUmp1LP?=
- =?us-ascii?Q?gOxSFEAiIJbYk0aKx5OW1U9gfLGZvwdKkRb71JTnTldrId36SxQvhMcN7okU?=
- =?us-ascii?Q?hcsYK5GTGREX2lNg1hMpt35cLxZN?=
+	=?utf-8?B?Z0o4dGE2MzRCelF2QUtjcjQ1dmsvSlFoMEN4WGhFU0R1WTM0Rm5BN1FSeEp1?=
+ =?utf-8?B?SzRCbU9odEtxV1lqL2t5V25Rd2FYODBzbmpORVh3dERBMG52ZW9PTDdjUnhM?=
+ =?utf-8?B?WUtHSnZkakprUEhhWUx6S25yYThFL3ljNHRRVWhnMytPNlhGb0F0QmNXK2Qx?=
+ =?utf-8?B?WVYxR2t3bXQ5aDQ2eGNzS1psVXNycW9DKzUvUTZpSkdGWmxMaTZpbzVKWVVr?=
+ =?utf-8?B?bHBMSmZoeExveU9YYm1TTnVnaUpIR0UxemhnSFpZMlExZkt1OVQwcjBqUDFp?=
+ =?utf-8?B?MDFNQ29CeFN4VFc4U3AybTgrZDE5Ylh2eUdVME5uQzBuZGUrVmFZUVRHdjZQ?=
+ =?utf-8?B?cUF4YlpLMUg4SkpJYlgzeTJXUlVybWxzY0VCWGUzUUFHTWhEM3A2c3pDR0VY?=
+ =?utf-8?B?V1E3YXd4UytqYVFBM3NFTTBzSzhPKy9xZ3RWSUw4dWhYZjUvaENjVkVVUVZa?=
+ =?utf-8?B?WWZaNFdsQlMvSVFDa2J5Y0lSK3FDZFhqK0tkYTg1dGxpN2c3RWdjY3ZVaFdz?=
+ =?utf-8?B?ZjhJNy9RVTJ5TlVtK1JqaHlSdTV6aFU0cVVvaHVOZTk0YU1NYjQ3Q0w4WnZl?=
+ =?utf-8?B?ZnhXUHhpZkNHa3ZYSmRDOFF4a0wvQTlTeXlmUFkzem1Qd1ZoYnp2WmhnQ01i?=
+ =?utf-8?B?Z1hteU40RzJYamdlVlIwOUNVQ045S0t0UTBTVnA2K1hDNXBNL3NTTUlxdDIz?=
+ =?utf-8?B?YVB2bkJTMkhXU09VeTdpZjhXR1VxK09DcW80TDJPWkRNNUdGS21saTBaMUdq?=
+ =?utf-8?B?Sk53VHZRRGZKT1RHTTdaUkpEUW9QQWJMZ0E0TElQOFNUUVJuMEpLZVZOeDdX?=
+ =?utf-8?B?T2I0ektBVGoxV0Fmb3VSMXVjMmlCSnJ0ZUNWTzBaSU1QYmV3NVRLZVZHSWo0?=
+ =?utf-8?B?Zll5aW1uNk1Va0RJVERvRWtnT2x5aExLOXVtNFlQVHlrQTY2elNEdDZzcG10?=
+ =?utf-8?B?V3RiVGxqR0lTSk9QZjN4YlNNOGVFWlNUMkVacEorcGJVbTdHeFl2d281TW5k?=
+ =?utf-8?B?a3hUa1pUQTVMLzNqZ0o4N2hpekw2d2s3dVlkYlRNT1ZSMkxJV29ZZW9xTE9Q?=
+ =?utf-8?B?b2RPc2pnYU5OVkF0bmp1NDk3UnhJTGFpdTUvVlZJVnF6ZUNSR3FzY2JiRWhN?=
+ =?utf-8?B?dUlxWVJCUTlZcVNuYlZESmxWK3NqQUlPY3R2dEMwQUNDMjhYTTVnWXBuMHUr?=
+ =?utf-8?B?M3h4VW1OQng4Q09TejVvVllBVmNMa3hjZDF5SXpDVUFBWU5FQ3Y5NVY4N0Fw?=
+ =?utf-8?B?MjloNmVVR1ViNTk0amt4OVV4OTQrbHQya2dtdUZlcHJVSkcwTmRDWnMzOEZO?=
+ =?utf-8?B?SDZ0dlZVM05JT0VMQkRTMnVNSE01Sk1LdGt6QXhYeUtmS2JhbERTMWVaTlFR?=
+ =?utf-8?B?TFZ5Y1NZS3I1K0hINGpWcGorZXBhbXVrdE9nQkIxaXJydS9wdzFiK1ZwcmFl?=
+ =?utf-8?B?SExxcTExdm85THZaNTVGaVRaQ3lRbm01Y1NrbkdBVkU3WWVtWG1Wbnp1aUQ1?=
+ =?utf-8?B?QjJzdG9NL2RRdldqVmRiZ21xSnc4NVpJUElmYjJoQVphK3FNbGkzc3d2bU96?=
+ =?utf-8?B?V1JBanpMNGNUK1hwSGFJZVVoRmorSUh1WHYvTmNPS3ZQdGQ0amtxLzR3T3hY?=
+ =?utf-8?B?NHVTVStZQ2xPdGJtK0V4VEsvUGVhVkxGb1hCUlFJTHFkUllEVFRNd2djS0tD?=
+ =?utf-8?B?STVZYUNGMlJzSGxYMUhzbnplNFl4T0puSVJCWVlTbHYvL0pCK0psaEduWTZD?=
+ =?utf-8?B?U0orU1ZpSjdheGtobFJnbmhjdERHanE3K3B4VkhCK1dBT1ZtcXF6cndmNjhn?=
+ =?utf-8?B?bHQ3M2t6VHNaRFVERHlvOGZhL1h6L0E0ZmxsSHdYcmhUVTNHeit3NVVXTlZR?=
+ =?utf-8?B?MVc3RXdVVEExaVlUNER1MGd0T1FPU0F6anFuaVlBTGtvWVhOaHVmMjZ2YUdF?=
+ =?utf-8?Q?tmGswqPA/lg=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6424.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?eaJAfddBNRwzbhZlvg3jtQhf1uSeI8RKYFbwyFmlOEBicZhKP5pLT+tDrBw0?=
- =?us-ascii?Q?a73FWVM0hKcQSVGnqzrXoutQ4hXzV6Jnnsmtrrewo6rftF8NYULUQU4btrZJ?=
- =?us-ascii?Q?myoxr07ebp878kd6no+/TGXOkKoLmsRKjLIeMw2YO/1Rbr+csgh108WjSEzz?=
- =?us-ascii?Q?TzqQ3gsQw/YH+qHH6sDrnD3AsZ/GfCsqRfbJPZ9P87ifmROp8Y2/jjGU5kjz?=
- =?us-ascii?Q?dKD8y/sVAbnLxaemd4nR+wg6Czdm9L1haAlOwoQ0yvAtU92PQQhzRhm6OBwo?=
- =?us-ascii?Q?jvUKqBAV4SnnNeilOsWmdOdO2YJD3KA7PnUV1D4SaJ9q12YXha/vTb8mLKRa?=
- =?us-ascii?Q?OBboegMzizjQqd0zQRfNsg2d9Gs/H4SFIg0knLNddECCz/gC59ewrYqqI4Km?=
- =?us-ascii?Q?yaU8/Qqd1ETx1pYNSoQzss//b5QQZIpqOJakSbA30nSaoCwN/pHkcvKaUZXd?=
- =?us-ascii?Q?0thuQwM1bXqaG95hpTOxVYg78l8caX1F5tCc1UIJYgyGowys0H5crqAwiVQk?=
- =?us-ascii?Q?FLWoKmtBxe1gA/Bz1e2Tsgm5kRw7xT6W/JGbczsY2yIYFmXct8h0qX3uAIK+?=
- =?us-ascii?Q?9bug3K06KXM///OGiXpPOakMUoOywN/17jMO0tL2UBUxX13rZzl4WhFnUIuL?=
- =?us-ascii?Q?BA1qQJwUe9G0/KAQadNAazBPShg3ceF39iLjCfPSOr3qrP+oqhUbL45h15Yj?=
- =?us-ascii?Q?0c1hXrxz9FFz0Oqmgz+oy4TU5jFy98clKa6uxKrHWd8DQh3dsIsqjawoCbWs?=
- =?us-ascii?Q?IT2w4mm0ujRI4oeSPPB6kTv7lOK3Xhv9ijMnQrIxSr8eOY95XLeFk8sdNXUa?=
- =?us-ascii?Q?+DaPhU1to9Ioc0j1hX1lv/btluiCT9FJHO1Y/5YK+xx3lLpJam5s9tOiPm1S?=
- =?us-ascii?Q?+UW5hkDGw2GXMi1USyqV7y1Jx/5tSXEsnuApv6Ykv/2j2tVhS1yS9r+8SYIO?=
- =?us-ascii?Q?SYWoS1pLupImBOpcIWtkeRdTAs3C+IElVKEPWJteYN0GEIWpk1KhWzowPS5m?=
- =?us-ascii?Q?ACtX54+VtbcFbfMdAEwCvbq8ueAO4dDMvxMZfS88ziz4SyQvzLIs2MkT+eQD?=
- =?us-ascii?Q?kzD6/uP15+ZlKZ6qAS4NROM8LPLUSYVUPk2wADdVYPZrdcuaLmO/WSVmvd5v?=
- =?us-ascii?Q?JhWmMChDKP9X2rIf8Mi8Qr2XMEzHBri/XZvJF0rxmMpjf453G1sQdguvmgbf?=
- =?us-ascii?Q?gAizUj2RR7vvDkx1NcZtf3hHktxWgKBEiqwIHU6mTNku9urTsWexMrJulODW?=
- =?us-ascii?Q?YIQhT/y+42J1WQblJQy1UOzxuuXdGEpw/Uq+EBrTzkPMEmMdKT65mR22lh7s?=
- =?us-ascii?Q?DTQV0RsKbWvXtHze8X9gHpRIVR9VZxiP2ZeigU6ziihpM5/Dqem1VIX5XdQX?=
- =?us-ascii?Q?WXc8xkAWmkGV27GC7+R/uVrsj3a/8GMLcxne3E3woHhnOmVnAQRupR0cweBL?=
- =?us-ascii?Q?da30JPZDmSYqSMZEqkIHz3ZUjwTaQH9CFjDanRKxcXGA/VLw7UT3EeRHlr24?=
- =?us-ascii?Q?nhfkK3gLWa2C2fBqqtftXnboX6LJtCt2bit9V/cimcEEsr1MDCcDaED9pJWl?=
- =?us-ascii?Q?/6dR3erBmXsnUZj718i5UbVla3RiKG64gzq88hAF?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 33d2ff0b-65f4-4a1e-4e46-08dd6d52f057
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6424.namprd12.prod.outlook.com
+	=?utf-8?B?dm41NmVzaWlOUmJseURuQjlhVlJxNGtWMmFoWmVvZWZqZ1diZ2ZLVjhqRnlo?=
+ =?utf-8?B?dElWdU4yR3Q0SUZoSE9mUDlMZHhCRVJVYllmY29ZNXh4WDNCZlVWcmYxV3F6?=
+ =?utf-8?B?c3c1RjM0anlUZ3BKRkNQU2JvMStaSVJRN0orakRSaHA2MzkwZ1NjZ21QVEY5?=
+ =?utf-8?B?V0YrdlZxc3NmOG9lQ05uRU5QL0NIcEhkTVhyTTgxbVM2WXArU2dLdEt0UHRw?=
+ =?utf-8?B?UkRwVlJZbkJ5WXF2WWVONVA5Z0dzZXQ4d3BrYWRuUnVCbEpVNk5TZ3JzOHFp?=
+ =?utf-8?B?UmJhdU4wRjFmUEVpckJGM2ZjT3hGVlY3SzJoYlBpaWJ6bVpOcy9KeG9ZSUpm?=
+ =?utf-8?B?OXpUUWN3U0duSmEzLzJDRGIxMlZ5cGE5RFhpcGp3c3N1elFycGpvQTlQd254?=
+ =?utf-8?B?dVdPa25tanBDc05sRXJObUVWcHNtVC92b3k0T0MyTm9aMzZtNzl1OXdwVkhK?=
+ =?utf-8?B?alBBeldmWEtydy9kL0FQODJxa3lrdDVYMEtsQ1JETmdXeGQ2TWV3ZEFDdjBh?=
+ =?utf-8?B?cDdBVjZiN1RCR2Znckd5OGI3Zks5MEtTa2NHTUtWb1BkMXkvMnFsRmZvcG52?=
+ =?utf-8?B?WEdCeVhSN3NqeHo3Qm1XTWlYWWNOM3IzZDJXcnF6OG90MnZTTEdOTkJ2WGM0?=
+ =?utf-8?B?c1lsZStETzNadXZWdks4T1UzVEFyOS9ONFhtaG02NUIxT0VqUlpMb1NoOUU5?=
+ =?utf-8?B?K2xVVDBTSGMrL3lqQTc4a3R1bFdWNGwybE1LUUZYQlgyTHp5NEI4QkNUd29M?=
+ =?utf-8?B?M0ovakV1Sk93N3JOR0pxdWRVWEtqcFJON3hKSXBvSmRvQXJiT1dDM0x3Q09Y?=
+ =?utf-8?B?emxuK3d5V1gxU256R3M1N254TmhwZWRPQzJFVldsZ29wSUg4Q21ZSjhaQzcx?=
+ =?utf-8?B?dXMzYkl6MGFhQzFDQS9vaU9MOGhqS0hxQk5mdkZJbUJiSGlyTVo0T01UMDlX?=
+ =?utf-8?B?akozOGxZeUc0Ykp1cFVXZWR0eFJqSHA1U1JzdkwzM1h6VkthQi9HMlppN2E5?=
+ =?utf-8?B?WlkvR2t1cTM4ZS9lU0NVS0JScHU1alNNL0o3TFM3YklxeXhFS2czY2FUWDVi?=
+ =?utf-8?B?RmpnWGxTeXdpaHlsdzNJZUN4d2dObXlaSEkwZVFYdVNtQXlEYXc4citnbk5m?=
+ =?utf-8?B?QmJsV2NYRWMrYjJabjB0dVZuR0tNTW9SZEZ4cWFnV3ZKU1pvTnd3RUZ2bDVU?=
+ =?utf-8?B?U0N3YnNHbVZwT3FCUm9jUjVmb3pFa1hwbm0wQ21LY05KQVFGTURxMGx1a1pQ?=
+ =?utf-8?B?UnhlRzdxOVJKNVZMMXphcTFyeDBYT3FmcDcrNk5Qd1B3WWtKN0lWcmtYdWdH?=
+ =?utf-8?B?UVdUN1dyRm54YVpSY2s1L2NYOURyb3N3R2twNjIyWXlFS0VVZFcxaUloUFNJ?=
+ =?utf-8?B?SE5lcnk5Mm1KNFNLRTJKcklQNCthN1hET1F3SU9uZ2tPaWtTMEhDbUpYSFA4?=
+ =?utf-8?B?b0lVWmo4dWNMUFQ5MUlvalZ0aDNYSU5vMXpQZjRYYmFZeld1VHhNZnRJVi9R?=
+ =?utf-8?B?SFB2MllZZDJWRmdkenFUclZ4Qkwvbm13SGVMQVJackR3bmZEZzgydUU2WTB5?=
+ =?utf-8?B?VFdFd1hEWlo0WnlGWHBsbjZjMDBFUjdhdmJlQjViS1czYmxTdTN6VUdBRFZp?=
+ =?utf-8?B?MnZDQ2N2MHkzcW9CN0p6QS9QYVRoaVkxQ2NZOUlpTnp2VzdHdXgyMUZLOUp2?=
+ =?utf-8?B?aU80ajR2bFlaTFdtaE5FbkdTU20zVVh1cW5CaGtocEtzei91VDhURFQwSnda?=
+ =?utf-8?B?ejQxNnhScTRwbWhXTDZjZ3lldXR5VEJoMUJRMHp3S3FqZTlhOFkvVEpXUXVX?=
+ =?utf-8?B?V3pSM09sZ2twZVdONlprai8rMXNPN3JLQTJFWkpiMGJybVcwdDhXMGtaUDJN?=
+ =?utf-8?B?YzNhWm1weTZEb3QzdHZNMWovL2h3R3dPUzhzdkVJeDJWZnpTNWl0Smd5VUhB?=
+ =?utf-8?B?QWdoS3NSb2xnNklFV010VHJEdE1SYllzVTVHYXFqck9rNnE0czhpb2YyOG9S?=
+ =?utf-8?B?L3Y1Wjc1SXlQRzU4c0ZrTEluenV0RDdkaUhrOWRGMm9IdmtQV1VFUnpsMGU2?=
+ =?utf-8?B?OUFhZ2M3aUV3MFNwUGxBd295eStxS1QxUVdSRUN3V3ppbk16TzdtTStjZDdl?=
+ =?utf-8?Q?qJGDnufP/qL6ecdLOMj+SOokW?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 61c73fc9-d2f9-4d68-0c87-08dd6d52efe1
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 17:15:14.6528
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 17:15:13.7693
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: M4b0xCUOdIkBXhXsEMpykqpaOOLmKfWqORzhO1CKahpZGfR5O1ie/SiPcJ4q+VpBDcplbNpPZtULKXsFHNFN7w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7591
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2lU+Cz1jZODkc2PdOPKPX0K1rp4kh0Jf0DKkqeH36h9ogw7+TsRPCTkGgo4NiyLP4jKqEeeOx/PbT+VvPI4tmg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8162
 
-On Thu, Mar 27, 2025 at 07:09:25AM -1000, Tejun Heo wrote:
-> Hello,
-> 
-> On Thu, Mar 27, 2025 at 10:53:39AM +0100, Andrea Righi wrote:
-> ...
-> > > Hm... that's right, it looks like this requires a bit more work than
-> > > expected, but saving the currently locked rq might be helpful also for
-> > > other kfuncs, I'll take a look at this.
-> > 
-> > What if we lock the rq in the scx_kf_allowed_if_unlocked() case, and for
-> > all the other cases we ignore locking if rq == this_rq(). If we need to
-> > operate on a different rq than the current one we could either defer the
-> > work or just trigger an ops error. Something like:
-> > 
-> > 	if (scx_kf_allowed_if_unlocked()) {
-> > 		rq_lock_irqsave(rq, &rf);
-> > 		update_rq_clock(rq);
-> > 	} else if (rq != this_rq()) {
-> > 		// defer work or ops error
-> > 		return;
-> > 	}
-> > 
-> > 	lockdep_assert_rq_held(rq);
-> > 	rq->scx.cpuperf_target = perf;
-> > 	cpufreq_update_util(rq, 0);
-> > 
-> > 	if (scx_kf_allowed_if_unlocked())
-> > 		rq_unlock_irqrestore(rq, &rf);
-> > 
-> > AFAICS all the current scx schedulers call scx_bpf_cpuperf_set() from
-> > ops.running(), ops.tick() or ops.init(), so even with the ops error we
-> > should cover all the existent cases.
-> > 
-> > The only unsupported scenario is calling scx_bpf_cpuperf_set() from
-> > ops.enqueue() / ops.select_cpu(), but maybe we could add the deferred work
-> > later to handle that if needed.
-> 
-> balance_one() can be called from a sibling CPU when core sched is enabled,
-> so ttwu isn't the only path where this_rq() test wouldn't work. Even if we
-> plug all the existing holes and make it work, it feels a bit too fragile to
-> me. It's something which can easily break inadvertently and cause subtle
-> failures.
-> 
-> If we don't want to do locked rq tracking, we can always use
-> schedule_deferred() when any rq is locked too. That's a bit more expensive
-> tho.
 
-Yeah, I'm a bit worried that locked rq tracking might introduce overhead to
-all the scx callbacks, just to address this issue.
 
-Perhaps schedule_deferred() is a reasonable compromise and we can limit the
-overhead just to scx_bpf_cpuperf_set().
+On 3/27/2025 11:48 AM, Bjorn Helgaas wrote:
+> On Wed, Mar 26, 2025 at 08:47:03PM -0500, Terry Bowman wrote:
+>> The AER service driver and aer_event tracing currently log 'PCIe Bus Type'
+>> for all errors. Update the driver and aer_event tracing to log 'CXL Bus
+>> Type' for CXL device errors.
+>>
+>> This requires the AER can identify and distinguish between PCIe errors and
+>> CXL errors.
+>>
+>> Introduce boolean 'is_cxl' to 'struct aer_err_info'. Add assignment in
+>> aer_get_device_error_info() and pci_print_aer().
+>>
+>> Update the aer_event trace routine to accept a bus type string parameter.
+>> +++ b/drivers/pci/pci.h
+>> @@ -533,6 +533,7 @@ static inline bool pci_dev_test_and_set_removed(struct pci_dev *dev)
+>>  struct aer_err_info {
+>>  	struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
+>>  	int error_dev_num;
+>> +	bool is_cxl;
+>>  
+>>  	unsigned int id:16;
+>>  
+>> @@ -549,6 +550,11 @@ struct aer_err_info {
+>>  	struct pcie_tlp_log tlp;	/* TLP Header */
+>>  };
+>>  
+>> +static inline const char *aer_err_bus(struct aer_err_info *info)
+>> +{
+>> +	return info->is_cxl ? "CXL" : "PCIe";
+> I don't really see the point in adding struct aer_err_info.is_cxl.
+> Every place where we call aer_err_bus() to look at it, we also have
+> the struct pci_dev pointer, so we could just as easily use
+> pcie_is_cxl() here.
 
--Andrea
+Hi Bjorn,
+
+My understanding is Dan wanted the decorated aer_err_info::is_cxl to capture
+the type of error (CXL or PCIe) and cache it because it could change. That is,
+the CXL device's alternate protocol could transition down before handling but
+the CXL driver must keep knowledge of the original state for reporting. But, the
+alternate protocol transition is not currently detected and used to update
+pci_dev::is_cxl. pci_dev::is_cxl is currently only assigned during device creation
+at the moment.
+
+DanW, please add detail and/or correct me.
+
+Regards,
+Terry
+>> +}
+>> +
+>>  int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
+>>  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+>>  
+>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>> index 508474e17183..83f2069f111e 100644
+>> --- a/drivers/pci/pcie/aer.c
+>> +++ b/drivers/pci/pcie/aer.c
+>> @@ -694,13 +694,14 @@ static void __aer_print_error(struct pci_dev *dev,
+>>  
+>>  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>>  {
+>> +	const char *bus_type = aer_err_bus(info);
+>>  	int layer, agent;
+>>  	int id = pci_dev_id(dev);
+>>  	const char *level;
+>>  
+>>  	if (!info->status) {
+>> -		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+>> -			aer_error_severity_string[info->severity]);
+>> +		pci_err(dev, "%s Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+>> +			bus_type, aer_error_severity_string[info->severity]);
+>>  		goto out;
+>>  	}
+>>  
+>> @@ -709,8 +710,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>>  
+>>  	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
+>>  
+>> -	pci_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
+>> -		   aer_error_severity_string[info->severity],
+>> +	pci_printk(level, dev, "%s Bus Error: severity=%s, type=%s, (%s)\n",
+>> +		   bus_type, aer_error_severity_string[info->severity],
+>>  		   aer_error_layer[layer], aer_agent_string[agent]);
+>>  
+>>  	pci_printk(level, dev, "  device [%04x:%04x] error status/mask=%08x/%08x\n",
+>> @@ -725,7 +726,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>>  	if (info->id && info->error_dev_num > 1 && info->id == id)
+>>  		pci_err(dev, "  Error of this Agent is reported first\n");
+>>  
+>> -	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
+>> +	trace_aer_event(dev_name(&dev->dev), bus_type, (info->status & ~info->mask),
+>>  			info->severity, info->tlp_header_valid, &info->tlp);
+>>  }
+>>  
+>> @@ -759,6 +760,7 @@ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
+>>  void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>>  		   struct aer_capability_regs *aer)
+>>  {
+>> +	const char *bus_type;
+>>  	int layer, agent, tlp_header_valid = 0;
+>>  	u32 status, mask;
+>>  	struct aer_err_info info;
+>> @@ -780,6 +782,9 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>>  	info.status = status;
+>>  	info.mask = mask;
+>>  	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
+>> +	info.is_cxl = pcie_is_cxl(dev);
+>> +
+>> +	bus_type = aer_err_bus(&info);
+>>  
+>>  	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
+>>  	__aer_print_error(dev, &info);
+>> @@ -793,7 +798,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>>  	if (tlp_header_valid)
+>>  		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+>>  
+>> -	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+>> +	trace_aer_event(dev_name(&dev->dev), bus_type, (status & ~mask),
+>>  			aer_severity, tlp_header_valid, &aer->header_log);
+>>  }
+>>  EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+>> @@ -1211,6 +1216,7 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
+>>  	/* Must reset in this function */
+>>  	info->status = 0;
+>>  	info->tlp_header_valid = 0;
+>> +	info->is_cxl = pcie_is_cxl(dev);
+>>  
+>>  	/* The device might not support AER */
+>>  	if (!aer)
+>> diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
+>> index e5f7ee0864e7..1bf8e7050ba8 100644
+>> --- a/include/ras/ras_event.h
+>> +++ b/include/ras/ras_event.h
+>> @@ -297,15 +297,17 @@ TRACE_EVENT(non_standard_event,
+>>  
+>>  TRACE_EVENT(aer_event,
+>>  	TP_PROTO(const char *dev_name,
+>> +		 const char *bus_type,
+>>  		 const u32 status,
+>>  		 const u8 severity,
+>>  		 const u8 tlp_header_valid,
+>>  		 struct pcie_tlp_log *tlp),
+>>  
+>> -	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp),
+>> +	TP_ARGS(dev_name, bus_type, status, severity, tlp_header_valid, tlp),
+>>  
+>>  	TP_STRUCT__entry(
+>>  		__string(	dev_name,	dev_name	)
+>> +		__string(	bus_type,	bus_type	)
+>>  		__field(	u32,		status		)
+>>  		__field(	u8,		severity	)
+>>  		__field(	u8, 		tlp_header_valid)
+>> @@ -314,6 +316,7 @@ TRACE_EVENT(aer_event,
+>>  
+>>  	TP_fast_assign(
+>>  		__assign_str(dev_name);
+>> +		__assign_str(bus_type);
+>>  		__entry->status		= status;
+>>  		__entry->severity	= severity;
+>>  		__entry->tlp_header_valid = tlp_header_valid;
+>> @@ -325,8 +328,8 @@ TRACE_EVENT(aer_event,
+>>  		}
+>>  	),
+>>  
+>> -	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s\n",
+>> -		__get_str(dev_name),
+>> +	TP_printk("%s %s Bus Error: severity=%s, %s, TLP Header=%s\n",
+>> +		__get_str(dev_name), __get_str(bus_type),
+>>  		__entry->severity == AER_CORRECTABLE ? "Corrected" :
+>>  			__entry->severity == AER_FATAL ?
+>>  			"Fatal" : "Uncorrected, non-fatal",
+>> -- 
+>> 2.34.1
+>>
+
