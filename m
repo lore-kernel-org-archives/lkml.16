@@ -1,162 +1,101 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C6C218EB1;
-	Thu, 27 Mar 2025 16:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB5F535D8;
+	Thu, 27 Mar 2025 17:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743094762; cv=none; b=p4tS7+SHak4EzsbfbzbgrYLXHI+8fjhZeEy8EXw6Cw2U+Npn1MabG8oODqSwTobwiupc3seXjxKHJvlIChDxgAuu02+xQPaIt0uaROgChbIT4baDzE0scc6/E9e+3CmrNyJJqzggh8tk9oPopZwniQ22oGXqOZi/x+Vfi/5zUPA=
+	t=1743094849; cv=none; b=s03jaaSP/1jefmRa1xHsBJ/avsDUOZrDC/XW+2iGvB4GMNGqnlHtAMRW+yJ+got8mbA9TZyKhvTfa56LxKz8EcGIb68OKtlcI0H4u9IKIeHdczH8d8DEJMgg4DWTDunD+baTXbnVuUcEijw0tBV6GFUmlSEHm6Sees3EnugFrXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743094762; c=relaxed/simple;
-	bh=ZBWtgGydzDpTfxzGWzX9C6AwYBx8VOMDnHl+miUOL4E=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=g4PKwTLZLjPM0aFl23JVATrVf8dBDSZtPKkKA3ZMtLbP9DQV/xUYkPQwnUxfiNNRvlHcx9tSsk7hSefGk2Z+yYoMFidQCttYPvW6VRL0J2FPyYwQBvkpJ65XUiQnS/6BO5qIUviTiQr/2txuGkcige/tK8/irYVkAvag3+iyqt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZNqXr6JTqz6M4Ql;
-	Fri, 28 Mar 2025 00:55:40 +0800 (CST)
-Received: from frapeml100006.china.huawei.com (unknown [7.182.85.201])
-	by mail.maildlp.com (Postfix) with ESMTPS id 26E2A14051A;
-	Fri, 28 Mar 2025 00:59:11 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml100006.china.huawei.com (7.182.85.201) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 27 Mar 2025 17:59:10 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Thu, 27 Mar 2025 17:59:10 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Dan Williams <dan.j.williams@intel.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
-	<Vilas.Sridharan@amd.com>
-CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
-	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "leo.duran@amd.com"
-	<leo.duran@amd.com>, "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
-	"rientjes@google.com" <rientjes@google.com>, "jiaqiyan@google.com"
-	<jiaqiyan@google.com>, "Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>, "james.morse@arm.com"
-	<james.morse@arm.com>, "jthoughton@google.com" <jthoughton@google.com>,
-	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>, "erdemaktas@google.com"
-	<erdemaktas@google.com>, "pgonda@google.com" <pgonda@google.com>,
-	"duenwen@google.com" <duenwen@google.com>, "gthelen@google.com"
-	<gthelen@google.com>, "wschwartz@amperecomputing.com"
-	<wschwartz@amperecomputing.com>, "dferguson@amperecomputing.com"
-	<dferguson@amperecomputing.com>, "wbs@os.amperecomputing.com"
-	<wbs@os.amperecomputing.com>, "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
-	tanxiaofei <tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH v2 1/8] cxl: Add helper function to retrieve a feature
- entry
-Thread-Topic: [PATCH v2 1/8] cxl: Add helper function to retrieve a feature
- entry
-Thread-Index: AQHbmcKr5anTvL2xzU6u4SEaFigSYLOF6PqAgAFGedA=
-Date: Thu, 27 Mar 2025 16:59:10 +0000
-Message-ID: <610691bb7c6949b5a2137c568bc66fe2@huawei.com>
-References: <20250320180450.539-1-shiju.jose@huawei.com>
-	<20250320180450.539-2-shiju.jose@huawei.com>
- <67e47285c1974_152c29442@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-In-Reply-To: <67e47285c1974_152c29442@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1743094849; c=relaxed/simple;
+	bh=rnIm7xSXz/WBWTE43R0YHGZWzqA+dWsrh+VaEu1p+98=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k4b6H+IATZD0Wqecd8T5RnL0RLwjyFOX9HqGENKqO/VmDp+xgSM/t/a+uAE90DG61792s6t7JEmwewk0iIh719XEfgSfxm0zQeXWfuNOnJdMVlmZAVL9C31Fw6eN1Mv6kkRRywBcG7b1oakLzBGE1PM9hDSAb3tku/svISVd6oA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nXKDU4JI; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nXKDU4JI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 241E0C4CEE8;
+	Thu, 27 Mar 2025 17:00:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743094849;
+	bh=rnIm7xSXz/WBWTE43R0YHGZWzqA+dWsrh+VaEu1p+98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nXKDU4JIvuO2ZvDBOkefSm6Z7L9RQE91yLLpOCEAJCGKMJogmPtLw9IFIsD7tTFtq
+	 zjUNKcXsC/LkYofecb32cRTHgomThPRQlkX+SIKe/oIbJ97EwmcXbVPEdUoCW1jsJp
+	 mqEwZOQqG80ZMlIJnXSkA00NMuDzu2Y89xU+mPOa3C/uvyuJfzaQ1fdnhXDCYap71/
+	 Tf9Bs0meqZ95wNcbF0jzRcWpedgLfUxd5LNOnt4JOuf0KSGDolSwA9KzqjMmLRgAIu
+	 Mu0aorlzUGqyMKkHtYa+4gdNFJpwIZ4vRFP7R4XbUIUXnmkJ9loB/9KtQScgLfIGwp
+	 Ci0XaT8pdR7DQ==
+Date: Thu, 27 Mar 2025 17:00:44 +0000
+From: Simon Horman <horms@kernel.org>
+To: Yu-Chun Lin <eleanor15x@gmail.com>
+Cc: isdn@linux-pingi.de, kuba@kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jserv@ccns.ncku.edu.tw,
+	visitorckw@gmail.com
+Subject: Re: [PATCH] mISDN: hfcsusb: Optimize performance by replacing
+ rw_lock with spinlock
+Message-ID: <20250327170044.GA1883535@horms.kernel.org>
+References: <20250321172024.3372381-1-eleanor15x@gmail.com>
+ <20250324142115.GF892515@horms.kernel.org>
+ <Z-VumXiqJJkZKNZZ@eleanor-wkdl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-VumXiqJJkZKNZZ@eleanor-wkdl>
 
->-----Original Message-----
->From: Dan Williams <dan.j.williams@intel.com>
->Sent: 26 March 2025 21:33
->To: Shiju Jose <shiju.jose@huawei.com>; linux-cxl@vger.kernel.org;
->dan.j.williams@intel.com; dave@stgolabs.net; Jonathan Cameron
-><jonathan.cameron@huawei.com>; dave.jiang@intel.com;
->alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com;
->david@redhat.com; Vilas.Sridharan@amd.com
->Cc: linux-edac@vger.kernel.org; linux-acpi@vger.kernel.org; linux-
->mm@kvack.org; linux-kernel@vger.kernel.org; bp@alien8.de;
->tony.luck@intel.com; rafael@kernel.org; lenb@kernel.org;
->mchehab@kernel.org; leo.duran@amd.com; Yazen.Ghannam@amd.com;
->rientjes@google.com; jiaqiyan@google.com; Jon.Grimm@amd.com;
->dave.hansen@linux.intel.com; naoya.horiguchi@nec.com;
->james.morse@arm.com; jthoughton@google.com; somasundaram.a@hpe.com;
->erdemaktas@google.com; pgonda@google.com; duenwen@google.com;
->gthelen@google.com; wschwartz@amperecomputing.com;
->dferguson@amperecomputing.com; wbs@os.amperecomputing.com;
->nifan.cxl@gmail.com; tanxiaofei <tanxiaofei@huawei.com>; Zengtao (B)
-><prime.zeng@hisilicon.com>; Roberto Sassu <roberto.sassu@huawei.com>;
->kangkang.shen@futurewei.com; wanghuiqiang <wanghuiqiang@huawei.com>;
->Linuxarm <linuxarm@huawei.com>; Shiju Jose <shiju.jose@huawei.com>
->Subject: Re: [PATCH v2 1/8] cxl: Add helper function to retrieve a feature=
- entry
->
->shiju.jose@ wrote:
->> From: Shiju Jose <shiju.jose@huawei.com>
->>
->> Add helper function to retrieve a feature entry from the supported
->> features list, if supported.
->>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Reviewed-by: Fan Ni <fan.ni@samsung.com>
->> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->> ---
->>  drivers/cxl/core/core.h     |  2 ++
->>  drivers/cxl/core/features.c | 23 +++++++++++++++++++++++
->>  2 files changed, 25 insertions(+)
->>
->> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h index
->> 1803aedb25ca..16bc717376fc 100644
->> --- a/drivers/cxl/core/core.h
->> +++ b/drivers/cxl/core/core.h
->> @@ -123,6 +123,8 @@ int cxl_ras_init(void);  void cxl_ras_exit(void);
->>
->>  #ifdef CONFIG_CXL_FEATURES
->> +struct cxl_feat_entry *cxl_get_feature_entry(struct cxl_dev_state *cxld=
-s,
->> +					     const uuid_t *feat_uuid);
->
->It is unfortunate that this naming choice is too similar to cxl_get_featur=
-e().
->However, as I go to suggest a new name I find that this is a duplicate of
->get_support_feature_info() in Dave's fwctl series. Just drop this patch in=
- favor of
->that.
+On Thu, Mar 27, 2025 at 11:28:25PM +0800, Yu-Chun Lin wrote:
+> On Mon, Mar 24, 2025 at 02:21:15PM +0000, Simon Horman wrote:
+> > On Sat, Mar 22, 2025 at 01:20:24AM +0800, Yu-Chun Lin wrote:
+> > > The 'HFClock', an rwlock, is only used by writers, making it functionally
+> > > equivalent to a spinlock.
+> > > 
+> > > According to Documentation/locking/spinlocks.rst:
+> > > 
+> > > "Reader-writer locks require more atomic memory operations than simple
+> > > spinlocks. Unless the reader critical section is long, you are better
+> > > off just using spinlocks."
+> > > 
+> > > Since read_lock() is never called, switching to a spinlock reduces
+> > > overhead and improves efficiency.
+> > > 
+> > > Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+> > > ---
+> > > Build tested only, as I don't have the hardware. 
+> > > Ensured all rw_lock -> spinlock conversions are complete, and replacing
+> > > rw_lock with spinlock should always be safe.
+> > > 
+> > >  drivers/isdn/hardware/mISDN/hfcsusb.c | 6 +++---
+> > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > Hi Yu-Chun Lin,
+> > 
+> > Thanks for your patch.
+> > 
+> > Unfortunately I think it would be best to leave this rather old
+> > and probably little used driver as-is in this regard unless there
+> > is a demonstrable improvement on real hardware.
+> > 
+> > Otherwise the small risk of regression and overhead of driver
+> > changes seems to outweigh the theoretical benefit.
+> 
+> Thank you for your feedback.
+> 
+> I noticed that the MAINTAINERS file lists a maintainer for ISDN, so I
+> was wondering if he might have access to the necessary hardware for
+> quick testing.
+> 
+> Since I am new to the kernel, I would like to ask if there have been
+> any past cases or experiences where similar changes were considered
+> unsafe. Additionally, I have seen instances where the crypto maintainer
+> accepted similar patches even without hardware testing. [1]
+> 
+> [1]: https://lore.kernel.org/lkml/20240823183856.561166-1-visitorckw@gmail.com/
 
-Hi Dan,
-
-I am fine to use get_support_feature_info() for the EDAC features.=20
-However this function is defined as static in the fwctl series and=20
-takes struct fwctl_rpc_cxl * as input for RPC instead of  uuid_t *
-as in cxl_get_feature_entry().
-
-static struct cxl_feat_entry *
-get_support_feature_info(struct cxl_features_state *cxlfs,
-			 const struct fwctl_rpc_cxl *rpc_in)
-
-Can you suggest how to use get_support_feature_info() from within the CXL d=
-river=20
-to retrieve a supported feature entry (for e.g an EDAC feature)?
-
->
-
-Thanks,
-Shiju
+I think it is a judgement call, and certainly the crypto maintainer is
+free to make their own call. But in this case I do lean towards leaving
+the code unchanged in the absence of hardware testing.
