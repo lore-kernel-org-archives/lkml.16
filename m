@@ -1,132 +1,133 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75E9214235
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DFC11CAA73
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743079502; cv=none; b=dc2jlpIm1cAyQ3m62fsy5RWvh2C81allqGdCa/QnVg15Khp0FVHxO1D0XcRJa50g25b67J+EwkzOf8xXdrhmhaTDNn66+too80eX5MzA/pVrFgx9FjIcJnWTu2+042cca7YnveauQxWD3vFLPx92fOYUHXez4XfEoS2YhCtKklo=
+	t=1743079518; cv=none; b=eUKAVG1DuO4aCkARC6JrRoYHSY8KPKsX/IIpCFPqRimyLYgD2D0lg95NYHmNxtK/G8c0gCCbnv00G0+sZfeMXIhncdOUH2R8vuWf7okCbW1rv5WCYpDZEdf0I4hGYQrNjfZhAAXnlnjkaXcXGamjMxZD65BlL5Ag4/VwyoYdSVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743079502; c=relaxed/simple;
-	bh=/e3zytaAp4B3Bi5NEKovC7YiZIBoqxK6PObe0Ho2l+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uLp1nsTkjx6/pSZ+NHijC+DuimXQNsK9uXhZmRDEvcAxCE5d3zXuzuJuRnJIQrYv18bdfYb+XNf1UbJ8D4ry4utf3iqkcVo+lQSOaX/zcpNuf/qT/Vc/u39quLCMFka5L3iVe3VJfVmEr9Ej1MgkomOSOB2sjLPp0khtO/FBzMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jHGvL8m9; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743079518; c=relaxed/simple;
+	bh=cCH/5sxof+Jwrxn5q6j/c5RtIig5fu0OfDqoAuP9pS4=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=OPpriDa2FVkBcy+lg3MPQvjun/hIEFpvj61zIzhQiHDt4KRQQS/OIHU4ovFa8DR5frlFFeaeWBBDTH2z/pQi/I6B+L4xFbnl9nTEIPLl3Db6DM72c0Rp0JL+en2tF6hlvfBrStp9HCwJH8iGj52H16AKWB8RQheyJtJruxNJQjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HUEZS7yG; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jHGvL8m9"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R5jFSq025693
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:45:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=iTWYq5AdnAs47H3SzxP5M9xN
-	x8rCWKHzlbp9acZHpf4=; b=jHGvL8m91b3znyth69j7clRrt6YMeooGnHhHLxqr
-	108GLUUlBMBojdwxrZhN07PFJCF3ArWF+JVLPaDiyKBG9XCv9y7snRIdU5AJnIt7
-	/Rh5NKSZXXG+5tunxaXPM3Nc+r7z3W68D0nhp7fe2Ux4CQIk+3iI5QTGodTpK3RN
-	gaT8MyzwL4ol3uALBV7CbNBfzxBj49bMUQFRIl1IYH6GybqC6G291DxdLzxAmJxs
-	uwVHYEKwuHrLYOlpHkqL7pe/wOxLRxzZXEYHLYhWUXUf0OE6WcK2JZdbQiHumcOh
-	II36QarzOUSaUz59hlvTwFrKpZ/wS9zCrgEF1c8Sqa5quA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45n0nus4gf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:45:00 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c3c8f8ab79so141720285a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 05:44:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HUEZS7yG"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d0c18e84eso4159705e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 05:45:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743079513; x=1743684313; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ywAiSUZQUifgGtMlK3LsbrcuFMsJsdDYrlO3CXbZmvk=;
+        b=HUEZS7yGDGUsNhBY8r2u7KsvufBsHX1MLjVPQqKl+wguM8O90oKE/eM6zoqOcLEVN8
+         ET/Zt6/BSU+IYvdl7n3twgeu0sQdC9aWT88JUc4fSb5EUt0n0101FTsCZofk6U3wCNEN
+         SlseVAKlgjcqXy4cY7hSJUHgEwaBGGKWQk4izG6402d0ZTUzB2PntNhJV9htlej5xVqO
+         aRhVfcb4VC26DMWtTuzzWDf8l+YlF7NyZqVh/qodThDKDYegOXWKxRbe8f3+7UrW3IZX
+         NStAsNhyiu+HI6WRP/VoNKk/JXHxnJ6cLNV/Sm1DkiFkvffSe738Dq4N5VBX33kIwUQz
+         jHyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743079499; x=1743684299;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iTWYq5AdnAs47H3SzxP5M9xNx8rCWKHzlbp9acZHpf4=;
-        b=LLwJ0xt5WyvJvH1bccbOXVbOmGPSaDvM8AkzZD01HPltAfNjA3aga4wU6YWR1Yn5ZL
-         JpAf7032s3sXAEZ1RiB+/ITm45+8OYC1y+m1NVAd8VXPptP5vaZcgUt1dGIyybTUChC2
-         0TrEN/VFmHFQY5iACXyPN7gBnusBgPU1Jw1jXdDXLdseiEYsGd72AGX5gfN9UjrpZHR+
-         9evMya1bzI1Bp60zNu9fcFtBkgySqAzY/BOw5wPZshgCF1g3jPzQglOj2EoNK47ZbMAD
-         zOJDLwJmhKF+j1JNg36W7QqTd9fjTJUXmJRqZ48bEcSqmFnVZ4TSHogZRaO5RrVjm4hn
-         bH6A==
-X-Forwarded-Encrypted: i=1; AJvYcCXCBBmD9Z2Q68hixlnR5F/6G4xJFL4dsT376JGA+SaTat2k85NUgP05pZ+oNXJrc+iRSLGHR1sM2KnENwk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIuV3zuZnjyRkA8h6aZc2gcIpSM9qBCpC5gM/lH4ro14uNA3td
-	uyc/+t0A8S/Z9u0jG84O/35Ra1a40P1KmFb91KCEV1Uh8WVrSLOg7LrI9Zb37yRuovNQD+JnO5Q
-	49+0oSWcC3y5EhUwP6YCBcQwTHLwAELFVfVdJZXO4HKCGQuonGJT5B0Q8e/33iQw=
-X-Gm-Gg: ASbGncuuypB+AqTgHnSPXeNxK01TTyPMQg3C1IVTiZt1fv508/Hjyqm6P3ibHPJs2kd
-	OVu+NfgAVgwuvhE5D+Mou2K/pciMV0KiavO+pencrEgVWT3PRODcHtdruXGxgB0XbabhJEdCUAz
-	dAS0K7SVHoFgjHqRF+tVjLMI0qUCJmFKunGdfRWUUItwdYTxh+cYkBdOmtimxZOD6OFyCNwQUiq
-	sQNK+jtR6UnDkLedPQ1/uJ7wIVEP8fVJzN/q2qba2rLmBIkbu2AG9ZDH/M+zJCKrWQ9cvOEf/sl
-	nMGnHaYRIEsMhka/bKtsobKoBUKJ4ICp4hvbvovT7+gXgNHb40jz+FzuCz7Hd1y2xtENhNtLB/I
-	noac=
-X-Received: by 2002:a05:620a:471f:b0:7c5:5d13:f188 with SMTP id af79cd13be357-7c5eda0c5f9mr466683885a.26.1743079498568;
-        Thu, 27 Mar 2025 05:44:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE3dfY3x0bdj6tB5sjdegn50OeuwdU7NRXUEUCKAXCf4eOxYNQbMoUjzG7hB4EuvuWYiKzTEw==
-X-Received: by 2002:a05:620a:471f:b0:7c5:5d13:f188 with SMTP id af79cd13be357-7c5eda0c5f9mr466678385a.26.1743079498069;
-        Thu, 27 Mar 2025 05:44:58 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ad6509690sm2082148e87.201.2025.03.27.05.44.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 05:44:57 -0700 (PDT)
-Date: Thu, 27 Mar 2025 14:44:55 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Jagadeesh Kona <quic_jkona@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: Re: [PATCH v3 05/18] clk: qcom: common: Handle runtime power
- management in qcom_cc_really_probe
-Message-ID: <l5h2lsw6ujys5plfmsaw5yv7pupjnz6fcl5yehxucul2le24vs@qbxkdbmknyap>
-References: <20250327-videocc-pll-multi-pd-voting-v3-0-895fafd62627@quicinc.com>
- <20250327-videocc-pll-multi-pd-voting-v3-5-895fafd62627@quicinc.com>
+        d=1e100.net; s=20230601; t=1743079513; x=1743684313;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ywAiSUZQUifgGtMlK3LsbrcuFMsJsdDYrlO3CXbZmvk=;
+        b=JW92U+v5GcPcJzbqax8MlAxaPGFopSZU6YxC/c0SIIvxaIR5X74J39UV0wnDjLnjvI
+         r4jN/8JmBTXQYgwzvbCz+nAacyYENJ8wq6sG4HNMgb2/Y+9s/8C2IPrLSsMy7Uzp0gW0
+         T2/8xQKtbmdZe6bisIyXGoKlYV867FKCGMgBEnKc3BBlXPp/F7tn4msfkZ3lAWMX77wM
+         EbXfVIRC1Ft0sBVAyVjnyI1V2hcW8BfF7QGr4KYy/n4H3MutWmw6hvqqyaVNyNUSU9S/
+         As9+rDSoJi1htqufjxCsneImcjXkPbuRiRWMleBASPUM+d9UgcBZfbapbhfBH2GrWLmx
+         03dA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQnAMiJ/bo19nKyky7Qu8iecdxv/MZZB01FanhKPNj81Ql0/aRsXeemZeB/7bcPdT9xzFt9wtw0TOWJK4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5Y94geR4ny5gf1PE8o+Wbe08KTo5Sa6hFOXitX2X1wjNMiBjg
+	FwNQA9Cz3FfRVz3+UdMe75nwOzerfwZN4Cpfz4yRZwgMEAvvE2NoaGOBCP0o9aw6uNQc+XGjHMA
+	I
+X-Gm-Gg: ASbGnctDsvJ9KwSOaKgFzDLykYHU8DS13L3EpRYghZfCNueUzMiToCOyDg51noklFtu
+	7aqRIbVNiuq/6JLLyELdFLSxBnD5H1NdwLRXTRBhDoLm1t3MnFOakGZeaUWvI63di6625VmEm4U
+	wJntginYpni4SgjvCd8ayuVyFbX/jze50GWZoYbP/5sRPWSB2sBB21uGDsEX6t+yvpdxWsuUl3O
+	XiuFFbAQuF87zg2FcGjXMerqgnwBgSeIIx5XIpsEju8ft1CePLuZS4RTBh6x3zQS2/niE7rBBdk
+	mPoOZia1IR4f4QL+FjKYw0kTrBJBs0zn1tm8vZcO0jl/hkSkgVO1ZTV0+ul1Gj3hjFgwdz5ImHg
+	ZD+8YZczNbY6Tf/XhvDDt+A==
+X-Google-Smtp-Source: AGHT+IHdurar+Tu8wipmQyMmuoiO9flVMh0KrvWfca1Xs1qUXaSz9acwMVGXJo0NlFeWT+eD0GNBAA==
+X-Received: by 2002:a05:6000:4021:b0:391:3b70:2dab with SMTP id ffacd0b85a97d-39ad1746712mr2449821f8f.17.1743079513560;
+        Thu, 27 Mar 2025 05:45:13 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:f1b8:272a:1fa5:f554? ([2a01:e0a:3d9:2080:f1b8:272a:1fa5:f554])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9e6445sm19920328f8f.71.2025.03.27.05.45.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 05:45:13 -0700 (PDT)
+Message-ID: <fe202971-e2b5-4b0a-adb9-ed805076804e@linaro.org>
+Date: Thu, 27 Mar 2025 13:45:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327-videocc-pll-multi-pd-voting-v3-5-895fafd62627@quicinc.com>
-X-Proofpoint-GUID: vt4Gnp6MtPmJ1D2dzNWZNh1I21rXwToG
-X-Authority-Analysis: v=2.4 cv=AcaxH2XG c=1 sm=1 tr=0 ts=67e5484c cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=mx-Q9tutXSnSn-y_4VoA:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: vt4Gnp6MtPmJ1D2dzNWZNh1I21rXwToG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-27_01,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=795
- impostorscore=0 malwarescore=0 bulkscore=0 mlxscore=0 adultscore=0
- phishscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503270088
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH RFC v2 1/2] ufs: core: drop last_intr_status/ts stats
+To: Bart Van Assche <bvanassche@acm.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250326-topic-ufs-use-threaded-irq-v2-0-7b3e8a5037e6@linaro.org>
+ <20250326-topic-ufs-use-threaded-irq-v2-1-7b3e8a5037e6@linaro.org>
+ <8aff7086-5cf4-4212-b97f-cf0bffd79440@acm.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <8aff7086-5cf4-4212-b97f-cf0bffd79440@acm.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 27, 2025 at 03:22:25PM +0530, Jagadeesh Kona wrote:
-> Add support for runtime power management in qcom_cc_really_probe() to
-> commonize it across all the clock controllers. The runtime power management
-> is not required for all clock controllers, hence handle the rpm based on
-> use_rpm flag in clock controller descriptor.
+On 27/03/2025 12:40, Bart Van Assche wrote:
+> On 3/26/25 4:36 AM, Neil Armstrong wrote:
+>> Drop last_intr_status & last_intr_ts drop the ufs_stats struct,
+>> and the associated debug code.
 > 
-> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
-> ---
->  drivers/clk/qcom/common.c | 37 ++++++++++++++++++++++++++++---------
->  drivers/clk/qcom/common.h |  1 +
->  2 files changed, 29 insertions(+), 9 deletions(-)
+> Patch descriptions should not only explain what has been changed but
+> also why a change is being made. In this case, this change prepares for
+> making an interrupt handler threaded. If this patch series has to be resent, please add this information to the patch description. Anyway,
+> since the patch itself looks good to me:
+> 
+> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 > 
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Ack will update the commit msg
 
--- 
-With best wishes
-Dmitry
+Thanks,
+Neil
+
