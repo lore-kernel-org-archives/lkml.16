@@ -1,68 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-10629.protonmail.ch (mail-10629.protonmail.ch [79.135.106.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4401DF744
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 22:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE2A1531C5;
+	Thu, 27 Mar 2025 22:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743114430; cv=none; b=ZfRGTBbbrIessNfWTO4JOBPJJCBN9NzNmQa2BXcIX05rDyO7NpDpArWk3Mu+9HZeiv5MigvdrUtRm4wylsQYZYOko1/CxqUE0dQJfifudi0qLbivaabQh3qGkxv4tuiP5Zk5gIDHKR1+GcUHx9mG33LEoZajdJs6ZOeb61TaWww=
+	t=1743114670; cv=none; b=uWrn9riAJf1tq0szh++ESYVTu/KCu1vcuEzcpJLsUotTT7AoTUfGlz+TPrc+nJgKU1t84fibREvd/gV6RlAvqvfW3yif6hbOX3zHAxKd9LFrRRsO0F4TvZ6PjSjrM8RqEIbah5gAGWwkuIYoUCiz0OuR550bG2NtMcWGeNxoapc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743114430; c=relaxed/simple;
-	bh=zwboQbPzcGQb7MZnral1JgcBdeQHDsP/MVzRoHaqmPc=;
-	h=Message-ID:From:To:Cc:Subject:Date; b=WrgQwxnc5+KouwbBLWyiwj+opv7qtlm2AgG6ToaG4ITIe3aO7y0qNMH+/wWQ7gf/aPysVIUoiDdJNDNfW+c9vEYxJN09DByJOz68/Nxq5J9rLYY+t1Xsz0wcJbRjNz4hkQB3dKyW50C5G72qw8/xudPwZey/3k+5vlEGCs/xnE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=amB06PKt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743114670; c=relaxed/simple;
+	bh=2aHeBIPKxpMZEgjX1iWdfj20zYYepW1kIT/PFNeYnOw=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aBdkDYfX97cHG1NF3y4VxHwXvMs9MvUGbA5uX7wbfnOmDGEpbTst8sXKHqWj443uqymYXlblflfk8h1X0uomk//gbHYMTH9L9oeJ7jEEHaSbs5fKeNfM0z/SsNsG3TVreV0RddWxaP2gollMKpPAlG+Dyi5AjgPiSBSDRd6Moe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=LpN8H0WO; arc=none smtp.client-ip=79.135.106.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="amB06PKt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22FA5C4CEDD;
-	Thu, 27 Mar 2025 22:27:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743114428;
-	bh=zwboQbPzcGQb7MZnral1JgcBdeQHDsP/MVzRoHaqmPc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=amB06PKttAZYOVT7ilD+A8qqfYn8fPlCbHDB8VzdpdUJmhDtBzY+eyUq2sLz0wfmK
-	 2KDMrGM6iALEjJmrbBA4tBnEtzGSW+HXru1xQGpwyQMLOnHFToI/fTQf9wv0eBekeA
-	 sVXX1LiDjsS9jvcYiO5VhDisz+q4wGadqwgtkgEIQTYpuI8QCzS72LppKTBkuF3kwv
-	 I+Cu8Thq0VslKpvLWlSv+q0UNRV6ZePTNoQQfTc9VvZDtwGHyhFMzGNqU2saxvwOlP
-	 pfsmPapJROBj+eIObmXEb3HHKdnmnFLuWihfMK+stK+uFMrcHXiyXAhhxS8I8AGfXe
-	 yZEmz31nqmKag==
-Message-ID: <1873795367bda5d10ff64d1efa0625fa.broonie@kernel.org>
-From: Mark Brown <broonie@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [GIT PULL] regmap updates for v6.15
-Date: Thu, 27 Mar 2025 22:26:53 +0000
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="LpN8H0WO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1743114667; x=1743373867;
+	bh=d7MxYS+vRUZFKyaaYKSIuKEGdkGBo63TfmEbiGnp33E=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=LpN8H0WORY3223K3dGw4KTfAsg1UXFcDcvCVsQyRDPsTRqU/GLsjA+1xxDZf1D/Tq
+	 ANPEAEaiNc99Y9joglRccNv0QQS/GWtZCBW25ZwojYVCU2DH2FII+arXfC4K2jVO+6
+	 GOEqGgVNqclTmy5GS7hEwugzGz2ekw2EOIV6hrIDSl04MOLB4wZPGRn7e2TnQMjVx3
+	 6rM+rutQOUOJUA99BErhFawg9NvlQImRqnmk7PhE9EMw0l0jQrD8Z+Su+cRKqG8pv2
+	 b1t9YNoAUsCQ9gaXnovQcDMvBxsy4FBzluYBzbuBOzMwTBt18GOstFMFPNpsOhuxk9
+	 IcyXClQoRgq7Q==
+Date: Thu, 27 Mar 2025 22:31:02 +0000
+To: Abdiel Janulgue <abdiel.janulgue@gmail.com>, a.hindborg@kernel.org, ojeda@kernel.org
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Danilo Krummrich <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, "open list:DMA MAPPING HELPERS DEVICE DRIVER API [RUST]" <rust-for-linux@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] rust: dma: add as_slice/write functions for CoherentAllocation
+Message-ID: <D8REKSIL1W0E.6A40JD86RFPZ@proton.me>
+In-Reply-To: <20250326201230.3193329-4-abdiel.janulgue@gmail.com>
+References: <20250326201230.3193329-1-abdiel.janulgue@gmail.com> <20250326201230.3193329-4-abdiel.janulgue@gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 8dc58c6ccf0f878f43e983ad024beb70b1ba0049
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+On Wed Mar 26, 2025 at 9:11 PM CET, Abdiel Janulgue wrote:
+> +    /// Returns the data from the region starting from `offset` as a sli=
+ce.
+> +    /// `offset` and `count` are in units of `T`, not the number of byte=
+s.
+> +    ///
+> +    /// Due to the safety requirements of slice, the caller should consi=
+der that the region could
+> +    /// be modified by the device at anytime. For ringbuffer type of r/w=
+ access or use-cases where
+> +    /// the pointer to the live data is needed, `start_ptr()` or `start_=
+ptr_mut()` could be
+> +    /// used instead.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// * Callers must ensure that no hardware operations that involve t=
+he buffer are currently
+> +    ///   taking place while the returned slice is live.
+> +    /// * Callers must ensure that this call does not race with a write =
+to the same region while
+> +    ///   while the returned slice is live.
+> +    pub unsafe fn as_slice(&self, offset: usize, count: usize) -> Result=
+<&[T]> {
+> +        let end =3D offset.checked_add(count).ok_or(EOVERFLOW)?;
+> +        if end >=3D self.count {
+> +            return Err(EINVAL);
+> +        }
+> +        // SAFETY:
+> +        // - The pointer is valid due to type invariant on `CoherentAllo=
+cation`,
+> +        // we've just checked that the range and index is within bounds.=
+ The immutability of the
+> +        // of data is also guaranteed by the safety requirements of the =
+function.
+> +        // - `offset` can't overflow since it is smaller than `self.coun=
+t` and we've checked
+> +        // that `self.count` won't overflow early in the constructor.
+> +        Ok(unsafe { core::slice::from_raw_parts(self.cpu_addr.add(offset=
+), count) })
 
-  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+I vaguely recall that there was some discussion on why this is OK (ie
+the value behind the reference being modified by the device), but I
+haven't followed it. Can you add the reasoning for why that is fine to
+some comment here?
 
-are available in the Git repository at:
+I also am not really fond of the phrase "hardware operations that
+involve the buffer":
+* what do you mean with "buffer"? `self`?
+* what are "hardware operations"? (I no nothing about hardware, so that
+  might be a knowledge gap on my part)
+* what does "involve" mean?
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-v6.15
+---
+Cheers,
+Benno
 
-for you to fetch changes up to 153dbf4adad0082d030c30d20541df2b1af52db6:
+> +    }
 
-  regmap: irq: Use one way of setting all bits in the register (2025-02-06 20:46:09 +0000)
-
-----------------------------------------------------------------
-regmap: Updates for v6.15
-
-Only a couple of small patches this release, one refactoring struct
-regmap to pack it more efficiently and another which makes our way of
-setting all bits consistent in the regmap-irq code.
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      regmap: irq: Use one way of setting all bits in the register
-
-Christophe JAILLET (1):
-      regmap: Reorder 'struct regmap'
-
- drivers/base/regmap/internal.h   | 12 ++++++------
- drivers/base/regmap/regmap-irq.c |  2 +-
- 2 files changed, 7 insertions(+), 7 deletions(-)
