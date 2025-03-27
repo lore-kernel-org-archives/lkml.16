@@ -1,131 +1,202 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CCC1805B;
-	Thu, 27 Mar 2025 03:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B38FADDD3;
+	Thu, 27 Mar 2025 03:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743046659; cv=none; b=Is7V3wXNKJRroye/O389pLWF8l5NEVNivZfjL1z+jyk2inLWF7zrqJbiuAmaropfOVatPT3tlfS3LiW81oprG2h3wOb2v9NL8AlR909jXtVcm0cTb7Uzbrd3MgtXULvPJDupPbAUS0lrosOtVFwVbgY1fPjlokeCW+nYjrcvCbM=
+	t=1743047049; cv=none; b=Hv4x0+66g5QswRngY3tFMIcam3nfmw89Wk7+qDO6XVgOJoJZ3xydzLe8e0X+38qoMFGA9yyirONWQ1qlT/1BNg9+RXdi5COffzcL6thNfyMGy5IdJc/MtA5xK6D9/8qm4riXufYXYVoD1xfK2CTXP6UcRumNsh+fRIZ30qlVkG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743046659; c=relaxed/simple;
-	bh=Vw6zOwv3qna6HIP+dTQI8DuR1ynag+boat1TIK89lxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HG4soVkjuY9KaS5zjJc5rvUA1dKQ6xr97cvXQeGgzkTFCujmy3E1KDoZH9MD1m2t9IfgbZq82kZ7BSRfEBlfmqWGod1d10ajwDKzenqjViNI1Og5O7OjpCNuwcwgq/UFHbzWJFZ/jq12cxIO5SFPFm6iZH2DTO3+mggcOgOZL/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QGAHCUXU; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743047049; c=relaxed/simple;
+	bh=wwID+YnTjXD5IsTQaQ4B+T1wRedHMA+IaV2qrBB0KZw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iupdDYyrv5QDdWUZGRaMNnlPOcLzxEbi5xNNqJ7/VlFc7SFMyKwuAu3WBV0dPEI5XTkb5omXOheDO1SYDN4VfjNTftpqvq/J9YsLhIdyigRDo4PVjl9FuSKJMcC0Wer+6Ei/K4Hi1CKmasY23pakJ9oMKBoxU8GGwELeevyi36g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=a0g8BaYE; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QGAHCUXU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743046658; x=1774582658;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Vw6zOwv3qna6HIP+dTQI8DuR1ynag+boat1TIK89lxs=;
-  b=QGAHCUXUTgFYa6jPtI1WH4qK5WxXBaKrCxzQ7bRVK1VzfPQHU1GtIbvw
-   n4LnsEHrgkJkQFK3qV+iL7foAiGGovjYpr4sYgSIAkacn7IEvL4BasIbV
-   85nIFEmgzBROqlEn6zTbaPjg9AIrjlaKGiTTrpRVK6lfecp2AYMjimhj9
-   B467MP/i8n5yOU8Rdj7VMipQRQFfhyz2KdAAqsruht57gvANhcC/X9qF3
-   2o++bTPIzTnRjdYrUeFDsYD0YTqdHna4aLofnkcU+TLjb5e+E5tb8pdrh
-   1qUXMci5gUZVuoxpl/B9Oq5rdjM1C1vYLXZKfHn/H++RWoOd2U4rqZh7j
-   w==;
-X-CSE-ConnectionGUID: aPwio6xvRxSgnMajWu1PCQ==
-X-CSE-MsgGUID: 9El/IJzZSjSWL2TRXv7+CQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="66825340"
-X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
-   d="scan'208";a="66825340"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 20:37:37 -0700
-X-CSE-ConnectionGUID: lTfYX2DoQ2er7a1mTLFMNg==
-X-CSE-MsgGUID: GBwxuLjHSbSY0kAhcXWaUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
-   d="scan'208";a="124977854"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by fmviesa007.fm.intel.com with ESMTP; 26 Mar 2025 20:37:31 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1txe3d-0006KN-0y;
-	Thu, 27 Mar 2025 03:37:29 +0000
-Date: Thu, 27 Mar 2025 11:37:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	nifan.cxl@gmail.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
-	oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
-	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com,
-	lukas@wunner.de, ming.li@zohomail.com,
-	PradeepVineshReddy.Kodamati@amd.com
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v8 06/16] CXL/PCI: Introduce CXL uncorrectable protocol
- error 'recovery'
-Message-ID: <202503271130.BAWzwRWM-lkp@intel.com>
-References: <20250327014717.2988633-7-terry.bowman@amd.com>
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="a0g8BaYE"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 52R3hToqD3435327, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1743047009; bh=wwID+YnTjXD5IsTQaQ4B+T1wRedHMA+IaV2qrBB0KZw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type;
+	b=a0g8BaYEKdm4/tv6MhwiulRJ8ekyebtzVvm8u92aErB0ZvMeZJsHm5ln0BMNGIvhe
+	 J4CRIGlalJ/Ca+fwLj+Qp4Xe28iDJH4kROoIpUplqW27sCpu3anvDJFXd+D9QpGNWs
+	 O73f35JuumC1+v+yaj14La1kzmGiLirlMaCteNDR9t7qZCwtdlaz33g/vSBAk7Rw1k
+	 yvX7oTzusJr5EV0CzUY8GqVVQrzXH5vmm50Ri5hy9n2XV5NGPveaBTchpzhmxr10XT
+	 +J1CnpaKdbPCi5BEDfObvZOGqP9cnjadzxgl4Lg+U7+lDWETJzuQyBJGraYLRkr4Gy
+	 +tl0RVbBIQmvA==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 52R3hToqD3435327
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Mar 2025 11:43:29 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 27 Mar 2025 11:43:30 +0800
+Received: from RTDOMAIN (172.21.210.70) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 27 Mar
+ 2025 11:43:29 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <horms@kernel.org>, <pkshih@realtek.com>,
+        <larry.chiu@realtek.com>, Justin Lai <justinlai0215@realtek.com>
+Subject: [PATCH net-next v2] rtase: Add ndo_setup_tc support for CBS offload in traffic control setup
+Date: Thu, 27 Mar 2025 11:43:13 +0800
+Message-ID: <20250327034313.12510-1-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327014717.2988633-7-terry.bowman@amd.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-Hi Terry,
+Add support for ndo_setup_tc to enable CBS offload functionality as
+part of traffic control configuration for network devices.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+---
+v1 -> v2:
+- Add a check to ensure that qopt->queue is within the specified range.
+- Add a check for qopt->enable and handle it appropriately.
+---
+ drivers/net/ethernet/realtek/rtase/rtase.h    | 15 +++++
+ .../net/ethernet/realtek/rtase/rtase_main.c   | 60 +++++++++++++++++++
+ 2 files changed, 75 insertions(+)
 
-[auto build test WARNING on aae0594a7053c60b82621136257c8b648c67b512]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Terry-Bowman/PCI-CXL-Introduce-PCIe-helper-function-pcie_is_cxl/20250327-095738
-base:   aae0594a7053c60b82621136257c8b648c67b512
-patch link:    https://lore.kernel.org/r/20250327014717.2988633-7-terry.bowman%40amd.com
-patch subject: [PATCH v8 06/16] CXL/PCI: Introduce CXL uncorrectable protocol error 'recovery'
-config: x86_64-defconfig (https://download.01.org/0day-ci/archive/20250327/202503271130.BAWzwRWM-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250327/202503271130.BAWzwRWM-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503271130.BAWzwRWM-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from lib/iomap.c:7:
->> include/linux/pci.h:1873:6: warning: no previous prototype for 'pci_aer_clear_fatal_status' [-Wmissing-prototypes]
-    1873 | void pci_aer_clear_fatal_status(struct pci_dev *dev) { };
-         |      ^~~~~~~~~~~~~~~~~~~~~~~~~~
---
-   In file included from drivers/pci/probe.c:9:
->> include/linux/pci.h:1873:6: warning: no previous prototype for 'pci_aer_clear_fatal_status' [-Wmissing-prototypes]
-    1873 | void pci_aer_clear_fatal_status(struct pci_dev *dev) { };
-         |      ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   In file included from drivers/pci/probe.c:16:
-   include/linux/aer.h:76:20: error: redefinition of 'pci_aer_clear_fatal_status'
-      76 | static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
-         |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   In file included from drivers/pci/probe.c:9:
-   include/linux/pci.h:1873:6: note: previous definition of 'pci_aer_clear_fatal_status' with type 'void(struct pci_dev *)'
-    1873 | void pci_aer_clear_fatal_status(struct pci_dev *dev) { };
-         |      ^~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/pci_aer_clear_fatal_status +1873 include/linux/pci.h
-
-  1867	
-  1868	#ifdef CONFIG_PCIEAER
-  1869	bool pci_aer_available(void);
-  1870	void pci_aer_clear_fatal_status(struct pci_dev *dev);
-  1871	#else
-  1872	static inline bool pci_aer_available(void) { return false; }
-> 1873	void pci_aer_clear_fatal_status(struct pci_dev *dev) { };
-  1874	#endif
-  1875	
-
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase.h b/drivers/net/ethernet/realtek/rtase/rtase.h
+index 2bbfcad613ab..498cfe4d0cac 100644
+--- a/drivers/net/ethernet/realtek/rtase/rtase.h
++++ b/drivers/net/ethernet/realtek/rtase/rtase.h
+@@ -170,6 +170,7 @@ enum rtase_registers {
+ #define RTASE_TC_MODE_MASK GENMASK(11, 10)
+ 
+ 	RTASE_TOKSEL      = 0x2046,
++	RTASE_TXQCRDT_0   = 0x2500,
+ 	RTASE_RFIFONFULL  = 0x4406,
+ 	RTASE_INT_MITI_TX = 0x0A00,
+ 	RTASE_INT_MITI_RX = 0x0A80,
+@@ -259,6 +260,12 @@ union rtase_rx_desc {
+ #define RTASE_VLAN_TAG_MASK     GENMASK(15, 0)
+ #define RTASE_RX_PKT_SIZE_MASK  GENMASK(13, 0)
+ 
++/* txqos hardware definitions */
++#define RTASE_1T_CLOCK            64
++#define RTASE_1T_POWER            10000000
++#define RTASE_IDLESLOPE_INT_SHIFT 25
++#define RTASE_IDLESLOPE_INT_MASK  GENMASK(31, 25)
++
+ #define RTASE_IVEC_NAME_SIZE (IFNAMSIZ + 10)
+ 
+ struct rtase_int_vector {
+@@ -294,6 +301,13 @@ struct rtase_ring {
+ 	u64 alloc_fail;
+ };
+ 
++struct rtase_txqos {
++	int hicredit;
++	int locredit;
++	int idleslope;
++	int sendslope;
++};
++
+ struct rtase_stats {
+ 	u64 tx_dropped;
+ 	u64 rx_dropped;
+@@ -313,6 +327,7 @@ struct rtase_private {
+ 
+ 	struct page_pool *page_pool;
+ 	struct rtase_ring tx_ring[RTASE_NUM_TX_QUEUE];
++	struct rtase_txqos tx_qos[RTASE_NUM_TX_QUEUE];
+ 	struct rtase_ring rx_ring[RTASE_NUM_RX_QUEUE];
+ 	struct rtase_counters *tally_vaddr;
+ 	dma_addr_t tally_paddr;
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+index 2aacc1996796..6251548d50ff 100644
+--- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
++++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+@@ -1661,6 +1661,65 @@ static void rtase_get_stats64(struct net_device *dev,
+ 	stats->rx_length_errors = tp->stats.rx_length_errors;
+ }
+ 
++static void rtase_set_hw_cbs(const struct rtase_private *tp, u32 queue)
++{
++	u32 idle = tp->tx_qos[queue].idleslope * RTASE_1T_CLOCK;
++	u32 val, i;
++
++	val = u32_encode_bits(idle / RTASE_1T_POWER, RTASE_IDLESLOPE_INT_MASK);
++	idle %= RTASE_1T_POWER;
++
++	for (i = 1; i <= RTASE_IDLESLOPE_INT_SHIFT; i++) {
++		idle *= 2;
++		if ((idle / RTASE_1T_POWER) == 1)
++			val |= BIT(RTASE_IDLESLOPE_INT_SHIFT - i);
++
++		idle %= RTASE_1T_POWER;
++	}
++
++	rtase_w32(tp, RTASE_TXQCRDT_0 + queue * 4, val);
++}
++
++static int rtase_setup_tc_cbs(struct rtase_private *tp,
++			      const struct tc_cbs_qopt_offload *qopt)
++{
++	int queue = qopt->queue;
++
++	if (queue < 0 || queue >= tp->func_tx_queue_num)
++		return -EINVAL;
++
++	if (!qopt->enable) {
++		tp->tx_qos[queue].hicredit = 0;
++		tp->tx_qos[queue].locredit = 0;
++		tp->tx_qos[queue].idleslope = 0;
++		tp->tx_qos[queue].sendslope = 0;
++
++		rtase_w32(tp, RTASE_TXQCRDT_0 + queue * 4, 0);
++	} else {
++		tp->tx_qos[queue].hicredit = qopt->hicredit;
++		tp->tx_qos[queue].locredit = qopt->locredit;
++		tp->tx_qos[queue].idleslope = qopt->idleslope;
++		tp->tx_qos[queue].sendslope = qopt->sendslope;
++
++		rtase_set_hw_cbs(tp, queue);
++	}
++
++	return 0;
++}
++
++static int rtase_setup_tc(struct net_device *dev, enum tc_setup_type type,
++			  void *type_data)
++{
++	struct rtase_private *tp = netdev_priv(dev);
++
++	switch (type) {
++	case TC_SETUP_QDISC_CBS:
++		return rtase_setup_tc_cbs(tp, type_data);
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
+ static netdev_features_t rtase_fix_features(struct net_device *dev,
+ 					    netdev_features_t features)
+ {
+@@ -1696,6 +1755,7 @@ static const struct net_device_ops rtase_netdev_ops = {
+ 	.ndo_change_mtu = rtase_change_mtu,
+ 	.ndo_tx_timeout = rtase_tx_timeout,
+ 	.ndo_get_stats64 = rtase_get_stats64,
++	.ndo_setup_tc = rtase_setup_tc,
+ 	.ndo_fix_features = rtase_fix_features,
+ 	.ndo_set_features = rtase_set_features,
+ };
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
