@@ -1,128 +1,85 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF016133987;
-	Thu, 27 Mar 2025 19:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2A82914;
+	Thu, 27 Mar 2025 19:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743102063; cv=none; b=nsRGI0HWJPoNWoHDGFa0UiRcGbjxruidQl1RRDuFXirB2EVEKkwgHXpyb0VybIHXrHxCqzwa+ZbkbAFlgxnfvOc8j8nIeKlxdDzopWG/QDVPmx2ObBRWvJy87zcV9p9mn3k1b0QasKErQmsiRIc0P5C5RQKNPaYmj3opMTFjLj0=
+	t=1743102149; cv=none; b=ThKyXR2hBs1+U5QXLV5tCMbQLS4wcetYRqXoXzGmMBpCLkYdgbr32e8qaDD9ZUnzR2HxXkw8XKPTbPEQAglKYMhBFxVeJQ534LT/EVj/lMebzdO3iJh/x3ScXxZF/GHrhozmJYY8CZ5x5xwxXohXxeUuI68Ht/KONyVLREak1sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743102063; c=relaxed/simple;
-	bh=jHiI8/2owluTBB3WHQQN9xYP11FWsCemYmAsZhjPNCk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JTsXaMFbuDZbcCWQHcAPYz6bftZfaksiUec56uqFcgtCwBBTy8J3TJlCVil7k6YJ8FZR6Qinr7tqX/cYr3l84qd7hVPKo5qQfaf3eI6s+3lR6nvovQvJ18W7jnc9FYiTbmdEdOHj+TUU5+c62duKyACQUZe/kEW5BkJfRNO635k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Fs347zSJ; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1743102149; c=relaxed/simple;
+	bh=NcEipiXRDPNIQvSQYCxxP64XpMs62RHs2rr65kOqoro=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=I6XzrTvlaBkp3VzAAHOiia9pvX8mW4l7aKMXpk6MI4maXF6ZKIfINpcTa4IjvPhJlzPrKs+zCupTo3r75Y/1VVAP2wN6dGYhNpOqCm8wnzc3K4EGEP70j40Sa+xma1Hyv68jeIlKJ09zRXeoB81gF7yB4ywW6Ajm7iq4t37jYJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ads8pB1e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Fs347zSJ"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2F829F6;
-	Thu, 27 Mar 2025 19:59:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743101951;
-	bh=jHiI8/2owluTBB3WHQQN9xYP11FWsCemYmAsZhjPNCk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fs347zSJVHQzT8CTrlNNTSh/teH6wTkT6xwdknDyYuy5XZCaAJBKDNSvV+J+ezU3u
-	 7F5MZ3bII+Dde7y26fecQDxXrgWoYagTBqIpLU8RiUOqvJGaR2uixUbzi6pvfLq60Z
-	 6WxFtXQYvJO1eXmGyIB7xs8vBiTxwTTAv1lKs6AI=
-Date: Thu, 27 Mar 2025 21:00:37 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-	Robert Chiras <robert.chiras@nxp.com>,
-	"Guoniu.zhou" <guoniu.zhou@nxp.com>
-Subject: Re: [PATCH v3 11/12] arm64: dts: imx8q: add linux,cma node for
- imx8qm-mek and imx8qxp-mek
-Message-ID: <20250327190037.GB22659@pendragon.ideasonboard.com>
-References: <20250210-8qxp_camera-v3-0-324f5105accc@nxp.com>
- <20250210-8qxp_camera-v3-11-324f5105accc@nxp.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ads8pB1e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DCB0C4CEDD;
+	Thu, 27 Mar 2025 19:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743102148;
+	bh=NcEipiXRDPNIQvSQYCxxP64XpMs62RHs2rr65kOqoro=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ads8pB1eJeByNThL5P+xLR0hPgwdnmWxmo5EOyVP6BTo9EsaBZL5LfHbeWhuITbnw
+	 l6uD5x3z0KmQ3sKFOm7Odb3EQX+Ss6STAgoDOlFV95pL6e1PG5UFRw5eY+C1lMhtFH
+	 53zr9jgJUgFUvq9hdircKNmW1iddE9fplRCI8OHBDxUD8ZUPXRiCopO8f5FzpQUYKU
+	 ishY5+nqaGF/dk1Ae4g+r3NNZZhk2IM809N1ymclwudg1Vob+IXUSZfgKE+PSoDffM
+	 QT/bI9XU78KqJszXKPfFBtanW5+FtdzVC2kSxol/izfArXvE0KDEIj7kXiAJS8iyoQ
+	 c/F81Az6kEAlg==
+Date: Thu, 27 Mar 2025 13:02:26 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
+Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] IB/hfi1: Avoid -Wflex-array-member-not-at-end warning
+Message-ID: <Z-WgwsCYIXaBxnvs@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250210-8qxp_camera-v3-11-324f5105accc@nxp.com>
 
-Hi Frank,
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Thank you for the patch.
+Move the conflicting declaration to the end of the structure. Notice
+that `struct opa_mad_notice_attr` is a flexible structure --a structure
+that contains a flexible-array member.
 
-On Mon, Feb 10, 2025 at 03:59:30PM -0500, Frank Li wrote:
-> Add linux,cma node because some devices, such as camera, need big continue
-> physical memory.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> change from v1 to v3
-> - none
-> ---
->  arch/arm64/boot/dts/freescale/imx8qm-mek.dts  | 9 +++++++++
->  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts | 8 ++++++++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8qm-mek.dts b/arch/arm64/boot/dts/freescale/imx8qm-mek.dts
-> index 50fd3370f7dce..61ef00f4259e1 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8qm-mek.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8qm-mek.dts
-> @@ -113,6 +113,15 @@ dsp_vdev0buffer: memory@94300000 {
->  			reg = <0 0x94300000 0 0x100000>;
->  			no-map;
->  		};
-> +
-> +		/* global autoconfigured region for contiguous allocations */
-> +		linux,cma {
-> +			compatible = "shared-dma-pool";
-> +			alloc-ranges = <0 0xc0000000 0 0x3c000000>;
-> +			size = <0 0x3c000000>;
-> +			linux,cma-default;
-> +			reusable;
-> +		};
+Fix the following warning:
 
-This is system memory. Why is it reserved here, hardcoding a specific
-use case in a board DT, instead of specifying an overall CMA size in the
-kernel configuration or through the kernel command line ?
+drivers/infiniband/hw/hfi1/mad.c:23:36: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
->  	};
->  
->  	lvds_backlight0: backlight-lvds0 {
-> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> index be79c793213a5..89c6516c5ba90 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> @@ -56,6 +56,14 @@ dsp_vdev0buffer: memory@94300000 {
->  			reg = <0 0x94300000 0 0x100000>;
->  			no-map;
->  		};
-> +
-> +		linux,cma {
-> +			compatible = "shared-dma-pool";
-> +			alloc-ranges = <0 0xc0000000 0 0x3c000000>;
-> +			size = <0 0x3c000000>;
-> +			linux,cma-default;
-> +			reusable;
-> +		};
->  	};
->  
->  	reg_usdhc2_vmmc: usdhc2-vmmc {
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/infiniband/hw/hfi1/mad.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/infiniband/hw/hfi1/mad.c b/drivers/infiniband/hw/hfi1/mad.c
+index b39f63ce6dfc..3f11a90819d1 100644
+--- a/drivers/infiniband/hw/hfi1/mad.c
++++ b/drivers/infiniband/hw/hfi1/mad.c
+@@ -20,12 +20,14 @@
+ 
+ struct trap_node {
+ 	struct list_head list;
+-	struct opa_mad_notice_attr data;
+ 	__be64 tid;
+ 	int len;
+ 	u32 retry;
+ 	u8 in_use;
+ 	u8 repress;
++
++	/* Must be last --ends in a flexible-array member. */
++	struct opa_mad_notice_attr data;
+ };
+ 
+ static int smp_length_check(u32 data_size, u32 request_len)
 -- 
-Regards,
+2.43.0
 
-Laurent Pinchart
