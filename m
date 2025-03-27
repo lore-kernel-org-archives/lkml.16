@@ -1,267 +1,207 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E65BF9FE
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 18:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110B4F4F1;
+	Thu, 27 Mar 2025 18:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743099379; cv=none; b=nObvVzNwFNp1yRhsGT5eJjBvykClYMlrIJ0wxqeidyldNuSbij2cCF2Y9zY4q9ESdh7WZAqohtqbVueitnsT5mchssE9wsOrK1sPup5wbjgxLessik1qABoENRc6iJ76/EM6pL0ZhDaUTYtqv5eIrHgkcoHiZnSZX05Nfb2/hZI=
+	t=1743099495; cv=none; b=IwFD/nPVLUwycFK+4qdob5j1BDPZ2Bb/5myHCxei2ZLgBBaz/FB/tcKxBted4vtGGwOWEKe5dWsdmnFqjTCT3BrJeE9ziGOFSBFKDZhFvPclnMT9GhMzJKg5k7fKv8yqCvYXoqm8jVYqYuemocl/pa8EAW+hNyuL12OTRY0SdRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743099379; c=relaxed/simple;
-	bh=qMj55OgEXjwHputJ8S8fmURGCDSurMmVFEx6sQGoflw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VBk+QE6U2oQBLA7uPPibeqaVM0Q/OwLHoH1CKB3C6bz/rQ4ze2OF8H7lQNJJo3LOUQne7CeT5Ws/EY5D+0rkVg45xMV4taYJuAwS9JYVWRfum6Fv+4v7dwZUFLr834yDT7KJr/yCZLwa6dRJZjQSjtWSF8CWmNr74U+xdrbxFXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=PO5Hg71N; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743099495; c=relaxed/simple;
+	bh=8JxaSWuthSaViqbX0fDFNTw3ryDMiF9+V70gp0o3VSk=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bexGXtEFnvbMOc8ILmM6KOWPuzTq1KbupozrixQDftUvgfmDjT91lvSU1FJUokbqJGy5f0nRAPZ2quNf35wRgC76CueUJLz3OLRSSea2wEc0giWfoK5FRcQ5yIbm3yRxbf5LI4W8TZVMB3mOzYoto/JjJBEEcGFpJ7j3FR3an1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VPylJq5T; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="PO5Hg71N"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5dc89df7eccso2438709a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 11:16:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743099375; x=1743704175; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=YAD3FrghPaJkpW039wt/AHmDgQi7dvtgBZolcDWTamY=;
-        b=PO5Hg71NvGXUMUl3HpiBfXNwR7kg2FDF6kp9tta8OVQ+pzXoYtVGMXEp9avJbu9PFa
-         cS++mPajz7JN+joLwcah0nnEv64hAzQUF1sLhYykHz4qdYvoQY+MFwmNGSwcJTWuCtt0
-         A3s1oBquAssTUVOFAulNfr0CcdBfqRHb00opk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743099375; x=1743704175;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YAD3FrghPaJkpW039wt/AHmDgQi7dvtgBZolcDWTamY=;
-        b=DDkaHtLOH/uh8zINEv1rF15bpW0f836P3krkinNpC8DQoxSxe8yq7PcgxGwA3w7ilE
-         sPGooXPwPO1GIkiRBxj52QgzVt5+0KHl5jgiWToRXM+blhGvMS3CZEOed2rcnkSUYPtz
-         2pm3hXTDxsCPdaFgBCMB7nbeMIKEcIvOWGFg6TSjxA/ZPA5SvPSKkmZU4dSms6Upyi3c
-         PTUODrcrEn6hQR1gRmPNB/BoJHtkCIlCbAD7xhnb5O/ssoyCZMofi6sbCNrCgULgyXe7
-         5WcgnCSZLKHMl/zUe/Lwfd2wsdP+jPoXZ5+02p8uePzYRz23K9inFAQJsIK+fW9OD2/x
-         0Vtg==
-X-Forwarded-Encrypted: i=1; AJvYcCXM7DielttG7TII5loJn6etSlLBXSLQnh5nszUwHdNIOSOJL+FRVDJ+IoHl4CTT16WjHNBpl+kNHrKZ538=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybhpapG7odFNGeEVM1GhbUwqwNAH5b7X2x/mUNC9O4sLQ6rr2w
-	Ddf+sv9Qa72+6zudVOvMeX5IAjlqXc64z7jEN94uOF1ViRGWYuHVjzNbw0/gEsXyOPW1s95mktm
-	d7hE=
-X-Gm-Gg: ASbGncv0XzjeClEVlI1Kb4SBNZk4gB9Rno7X9BZFRq6PpF/HJ3VMQ31terNU4iNQ90k
-	3o8IZXsR42bJT0/0LroO0tBJMjCMXrB2BE1Nydc5dfTewcspUYw7f0JiuH+U0LIrJXlTlzWP5b8
-	JuKq3su3t4acFWf7FjyeODMvZc8Ae/wk87H5exgYDkkzqiqgVe69470VEfPlWQbd3OyDiuvQcSM
-	9j+nnGEDjEKoUMUggsUIOR5gjc94Z8GotNX1wZDsEQGq77L4DP9jU9jSCA0Wc0eq5aVvL+gB/Qc
-	hKYgFYGq4XCEmDShgH5IJgI/MfGq3QmP1M7WQ44X3R7+I89/JMP0oJJG1RfxlzG7aluMyn3DVpk
-	K2DIvOGjJGAu1QbC9tnM=
-X-Google-Smtp-Source: AGHT+IFOCoUD2sQVv+e49+aK1KWs1sRhMGudTS31AWOCs/Y2FiR+F/r+tXAR3DqYtZvP+NYu6RzFlw==
-X-Received: by 2002:a05:6402:5193:b0:5ed:13ba:6538 with SMTP id 4fb4d7f45d1cf-5ed8e064a80mr5510888a12.6.1743099375230;
-        Thu, 27 Mar 2025 11:16:15 -0700 (PDT)
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16aae62sm164220a12.12.2025.03.27.11.16.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 11:16:14 -0700 (PDT)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac3b12e8518so248327566b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 11:16:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW1Ri/6EqzLhN2MEaHNLHiYcKW2Z+z2lGclB9nwZohpU6l0PU2E3o354alqFFYXqMoIKtI0oNeosSeei3Q=@vger.kernel.org
-X-Received: by 2002:a17:907:8711:b0:ac7:1d9a:4db5 with SMTP id
- a640c23a62f3a-ac71d9a6707mr3076666b.0.1743099373902; Thu, 27 Mar 2025
- 11:16:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VPylJq5T"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52REvWfL013783;
+	Thu, 27 Mar 2025 18:18:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=Ba5a6yDtKCMqnVyaSqmH1R
+	WgQM/kBX+jQhoqYjWLYrA=; b=VPylJq5T4nG5SeQUmdEOYDI8Bt83GRbxHqS7zN
+	BIfDEsmmHMkWcfDLi0+fzLofRIA0vVvMj1wKDpiOIplC2YC49AsEeAsolKtd5ygh
+	cp8lGnYFRkpxprSLoh5SLHmUM8kOtlzyYElMIHdiegC/483nwm7cApD4j2DRH/FJ
+	9FCJ1t96w/lamWGkvmcZ5GChVqx37sW+fpMkSi9vnUqKB0hUebkqUDhER6QKnKc+
+	tUgAfDsVypwUHU29bzavXWhbLjKNJMII0sWMiWcQA+1WvfBKmveIVwTFUt+0jpWC
+	SiNnIGj1tX9nZmw/tGbefxOGMNsheXPLMV3db0lxI3BGFynQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45mffcmx39-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Mar 2025 18:18:08 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52RII7oU001723
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Mar 2025 18:18:07 GMT
+Received: from hu-srichara-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 27 Mar 2025 11:18:04 -0700
+From: Sricharan R <quic_srichara@quicinc.com>
+To: <jassisinghbrar@gmail.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <andersson@kernel.org>, <konradybcio@kernel.org>,
+        <manivannan.sadhasivam@linaro.org>, <dmitry.baryshkov@linaro.org>,
+        <quic_srichara@quicinc.com>
+Subject: [PATCH V4 0/2] mailbox: tmel-qmp: Introduce QCOM TMEL QMP mailbox driver
+Date: Thu, 27 Mar 2025 23:47:48 +0530
+Message-ID: <20250327181750.3733881-1-quic_srichara@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <d0ade43454dee9c00689f03e8d9bd32a@paul-moore.com>
- <CAHk-=wjbahY4JjLCXNT4o3xVq2cejqBG69z+MNfHsN9FQBnbOw@mail.gmail.com>
- <CAHC9VhRExVqdhHqs0njs7NY6bFg0BfcE-gMpS30HW9O7MSDfWQ@mail.gmail.com>
- <CAHk-=wi9m8-_3cywQCohJQEQtuQ+teS4gOtBkWZrhFWzNy-5_A@mail.gmail.com>
- <CAHC9VhT3D7X=4SpO5xbYm=JUwJqTa7tn=J6QMDBV96c7VBUw4g@mail.gmail.com>
- <CAHk-=wiH3hoPTxX3=xTRzRuCwktf3pNzFWP45-x6AwoVAjUsUQ@mail.gmail.com>
- <CAHC9VhT5G6W7g9pB3VM6W7wCEJjWfYSUWNgWF+rRiQ4ZQbGMEQ@mail.gmail.com>
- <CAHk-=whwQhJtafHN4B1w-z2Gno__xLHS4NouKKHrYNTYa8kz3g@mail.gmail.com>
- <CA+zpnLeK2Ecj1mBod2rFe4ymd9eXiJkbyYwFh4Yrmck3DVB2SA@mail.gmail.com>
- <CAHk-=wiBH8FBL+pnXui8O-FSdyoG-yX81mUF9bsZcC6rR5ZtgQ@mail.gmail.com>
- <CA+zpnLe_AOpS_F1UBNOvN3YRswUSy_3=0jjUAy4GPxEHYumD0g@mail.gmail.com>
- <CAHk-=wgJ0gzYJD+MghfVW-YeGLW6sLU5soFY13KWmPAxobk5Mw@mail.gmail.com>
- <CABXk95AqgpqGtjzK2o=mxWJg5RUZG80dAEaKF9JdUT6n5eFENQ@mail.gmail.com>
- <CAHk-=wh1refm6JkAB__TmC8OBJyNdH2DmNQAbvcL=tKepkHrYw@mail.gmail.com> <CAEjxPJ6XnBmbzH44YVQxxv8WOyPN7N81fpj7OYonEOTB=rn6wg@mail.gmail.com>
-In-Reply-To: <CAEjxPJ6XnBmbzH44YVQxxv8WOyPN7N81fpj7OYonEOTB=rn6wg@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 27 Mar 2025 11:15:57 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wguzgJu4p_khuEXKHmh-6abSN7xLJdCTuyVEfjsopY7iQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JomcXU8uedXsS_SUCgWLMCnhZ5GwaGBQB7qWRik00JwiQRThwSwSUer2Dw
-Message-ID: <CAHk-=wguzgJu4p_khuEXKHmh-6abSN7xLJdCTuyVEfjsopY7iQ@mail.gmail.com>
-Subject: Re: [GIT PULL] selinux/selinux-pr-20250323
-To: Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc: Jeffrey Vander Stoep <jeffv@google.com>, =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>, 
-	Paul Moore <paul@paul-moore.com>, "Cameron K. Williams" <ckwilliams.work@gmail.com>, 
-	"Kipp N. Davis" <kippndavis.work@gmx.com>, selinux@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Nick Kralevich <nnk@google.com>, Kees Cook <kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=CdgI5Krl c=1 sm=1 tr=0 ts=67e59660 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=5MEtDE70NAJr5NbrjzMA:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: iOoRtSf4JhTeQ1edWKCRafYxbePItd6H
+X-Proofpoint-ORIG-GUID: iOoRtSf4JhTeQ1edWKCRafYxbePItd6H
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-27_03,2025-03-26_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
+ spamscore=0 mlxlogscore=999 lowpriorityscore=0 suspectscore=0 phishscore=0
+ clxscore=1015 bulkscore=0 impostorscore=0 adultscore=0 priorityscore=1501
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503270125
 
-On Thu, 27 Mar 2025 at 09:55, Stephen Smalley
-<stephen.smalley.work@gmail.com> wrote:
->
-> If you have constructive suggestions (or patches!) to improve
-> performance of LSM and/or SELinux, we'd be glad to take them. Or even
-> helpful hints on how to best measure and see the same overheads you
-> are seeing and where.
+From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 
-So measuring it is fairly easy. I have various loads I care about, but
-the simplest one that I feel is actually a real load - rather than the
-more artificial bencmarks I then use for verification when I make any
-changes - is literally "do an allmodconfig kernel rebuild with no
-changes".
+The QMP mailbox is the primary means of communication between TMEL
+(Trust Management Engine Lite) SS and other subsystem on the SoC.
+A dedicated pair of inbound and outbound mailboxes is implemented for
+each subsystem/external execution environment which needs to communicate
+with TMEL for security services. The inbound mailboxes are used to send
+IPC requests to TME-L, which are then processed by TME-L firmware and
+accordingly the responses are sent to the requestor via outbound
+mailboxes.
 
-That empty kernel rebuild approximates what I actually do for most
-small pull requests when only a couple of files really get re-built. I
-don't want to actually try to profile user space and the actual
-compiler overhead.
+It is an IPC transport protocol which is light weight and supports
+a subset of API's. It handles link initialization, negotiation,
+establishment and communication across client(APPSS/BTSS/AUDIOSS)
+and server(TME-L SS).
 
-To see that load, first do this as root:
+   -----------------------------------------------       ---------------------------------------------------
+  |                                              |       |                                                 |
+  |                 SOC  CLIENT                  | SOC   |                TME-L  SS                        |
+  |                                              | AHB   |                                                 |
+  |     ----------    ---------   ---------      |       | ------    -------     --------    ------------  |
+  |     |        |    |       |   |       |      | WO    | |     | R |     |     |      |    |SERVICES   | |
+  |     | APPS   |<-->| TMEL  |<->|       |------------->| | IN  |-->|     |     | TMEL |    |--------   | |
+  |     |        |    | COM   |   | QMP   |      | RO    | |     | W | QMP |<--->| COM  |<-->| a) ATTEST | |
+  |     |        |    |       |   |       |<-------------| | OUT |<--|     |     |      |    | b) CRYPTO | |
+  |     |        |    |       |   |       |      |       | |     |   |     |     |      |    | .. more   | |
+  |     ---------     ---------   ---------      |       | ------    -------     -------     ------------  |
+  |                                              |       |                                                 |
+   -----------------------------------------------       --------------------------------------------------
 
-    echo -1 > /proc/sys/kernel/perf_event_paranoid
+TME-L SS provides different kinds of services like secureboot,
+remote image authentication, key management, crypto, OEM provisioning etc.
+This patch adds support for remote image authentication.
+Support for rest of the services can be added.
 
-so that you as a regular user can then do a kernel build and get good
-kernel-level profiles (there are other ways you can do this: you can
-obviously also do a full profile as root). Obviously you should *not*
-do this on a machine with other users, the above basically says "let
-anybody do profiling on kernel".
+Remote proc driver subscribes to this mailbox and uses the
+mbox_send_message to use TME-L to securely authenticate/teardown the
+images.
 
-Then I just do
+Since clients like same rproc driver use SCM/TMEL across socs, the goal
+here was to abstract the TMEL-QMP SS functionality, so that clients should
+be able to connect and send messages with a common API.
 
-   make allmodconfig
-   make -j64
+[V4]
 
-to prep the tree and causing everything to be built (well - normally I
-obviously don't do that, because my kernel tree is always built
-anyway, but I'm just trying to make it obvious how to reproduce it).
+        Fixed TME-L naming in all places and expanded it.
+        Folded tmel_work in tmel.
+        Added more kernel doc as relevant.
+        Removed __packed in all places, as not required.
+        Renamed all functions to have tmel_ prefixes.
+        Used readl/writel in all places.
+	Added Inline for all required functions.
+        Removed redundant type conversions.
+        Removed redundant 'goto's
+        Added __free macro
+        Fixed Linux std errno in tmel_sec_boot_auth/teardown
+        Added spinlock in qmp_startup
+        Used of_mbox_index_xlate and dropped the tmel_qmp_mbox_xlate
+        Updated header file to have only mbox consumer required and moved rest to .c file
+        Fixed the TMEL_MSG macros to use standard GENMASK
+        Moved the irq registration to end of probe
 
-And then I just do
+    Following tests were done and no issues.
 
-   perf record -e cycles:pp make -j64 > ../makes
-   perf report --sort=symbol,dso
+       *)  Checkpatch
+       *)  Codespell
+       *)  Sparse
+       *)  kerneldoc check
+       *)  Kernel lock debugging
+       *)  dt_binding_check and dtbs_check
 
-and press 'k' to just get the kernel side (again - there's little I
-can do, or care, about the user space profiles).
+[V3]
 
-The "--sort=symbol,dso" is because I don't care _which_ process it is
-that does what, so I just want the output binned by kernel function.
+        Fixed wrong code/comments wrappings.
+        Fixed Kconfig and Makefile entries to right place.
+        Removed unused headers inclusion.
+        Fixed locking, removed the mutexes and having only tx spinlock.
+        Removed the use of global ptr for tmel, made it as device specific.
+        Replaced pr_err/pr_debug with dev_err/dev_dbg in all places.
+        Fixed usage of dev_err_probe.
+        Fixed xlate callback as per comments.
+        Used devm equivalents and kcalloc version as per comments.
+        Removed all un-nessecary wrapper macros for register access, inlined it
+        as per comments.
+        Re-organised the function layout as per comments and make it more readable.
+        Removed the pictures in headers files as per comments.
+        Used Field_prep/get as per comments.
+        Fixed Kernel test reported issues.
+        Fixed all other comments as well.
 
-Just on a very high level, this is what I get with the v6.14 tree
-(cut-off at 0.25%, this is "out of total cost" for the load including
-user space, so these top functions account for just over 9% of the
-*total* cost of the benchmark):
+    Following tests were done and no issues.
 
-   1.26%  [k] clear_page_rep
-   0.82%  [k] avc_has_perm_noaudit
-   0.73%  [k] link_path_walk
-   0.73%  [k] terminate_walk
-   0.58%  [k] __d_lookup_rcu
-   0.56%  [k] step_into
-   0.52%  [k] selinux_inode_permission
-   0.50%  [k] memset_orig
-   0.49%  [k] vfs_statx_path
-   0.47%  [k] strncpy_from_user
-   0.47%  [k] rep_movs_alternative
-   0.37%  [k] vfs_statx
-   0.31%  [k] __rcu_read_unlock
-   0.30%  [k] btrfs_getattr
-   0.28%  [k] inode_permission
-   0.26%  [k] kmem_cache_free
-   0.26%  [k] generic_permission
-   [...]
+       *)  Checkpatch
+       *)  Codespell
+       *)  Sparse
+       *)  kerneldoc check
+       *)  Kernel lock debugging
+       *)  dt_binding_check and dtbs_check
 
-so the top thing is the page clearing (and you see other memcpy/memset
-variations there too), but the #2 hit for the kernel profile is
-selinux, which takes more time than the basic path walking.
+[v2]
+     Added HW description in the bindings patch.
+     Fixed review comments for bindings from Krzysztof and Dmitry
+     Changed patch#2 driver to add work for mailbox tx processing
+     Cleaned up patch#2 for some checkpatch warnings.
+     There are some checkpatch [CHECK] like below, which looks like false positive.
 
-And selinux_inode_permission() is rather high up there too, as you can
-see. Together, those two functions are about 1.3% of the whole load.
+	CHECK: Macro argument 'm' may be better as '(m)' to avoid precedence issues
+	#1072: FILE: include/linux/mailbox/tmelcom-qmp.h:40:
+	+#define TMEL_MSG_UID_CREATE(m, a)      ((u32)(((m & 0xff) << 8) | (a & 0xff)))
 
-Now, the above profile is just from *my* machine, and
-microarchitecture will matter a *LOT*. So the details will depend
-hugely on your hardware, but I've been doing kernel profiles for
-decades, and the basics haven't really changed. memory movement and
-clearing is universally the biggest thing, and that's fine. It's
-fundamental.
+[v1]
+      RFC Post
 
-Also, when I do profiles I turn off the CPU mitigations, because again
-depending on microarchitecture those can just swamp everything else,
-and while they are a real overhead, from a performance standpoint I'm
-hoping they are something that long-term is going to be mostly fixed
-in hardware (apart from the basic Spectre-v1 branch speculation, which
-is *not* turned off in my kerrels, and which we've actually worked
-fairly hard on making sure is handled efficiently).
+Sricharan Ramabadhran (2):
+  dt-bindings: mailbox: Document qcom,ipq5424-tmel
+  mailbox: tmelite-qmp: Introduce TMEL QMP mailbox driver
 
-Now, looking at instruction level profiles is kind of iffy, and you
-have to know your microarchitecture to really make sense of them. The
-"cycles:pp" helps make profiles more relevant (and requires PEBS/IBS
-or equivalent CPU support to work), but it won't replace "you have to
-understand hardware".
+ .../bindings/mailbox/qcom,ipq5424-tmel.yaml   |  60 ++
+ drivers/mailbox/Kconfig                       |  10 +
+ drivers/mailbox/Makefile                      |   2 +
+ drivers/mailbox/qcom-tmel-qmp.c               | 947 ++++++++++++++++++
+ include/linux/mailbox/tmelcom-qmp.h           |  65 ++
+ 5 files changed, 1084 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/qcom,ipq5424-tmel.yaml
+ create mode 100644 drivers/mailbox/qcom-tmel-qmp.c
+ create mode 100644 include/linux/mailbox/tmelcom-qmp.h
 
-You do want to look at instruction profiles at least a bit, partly
-because inlining makes _not_ looking at them often kind of misleading.
-The real cost may be in a function that was inlined.
+-- 
+2.34.1
 
-Typically, once you look at instruction-level profiles, and understand
-them, you'll see one of three issues:
-
- - cache misses. This is typically the big obvious one.
-
-   And you'll see them both for I$ and D$. People will tell you that
-I$ cache misses are in the noise, but people are wrong. It's simply
-not true for the kernel or many other real benchmarks, and you'll
-often see it as big hits at the beginnings of functions - or at the
-return points of calls - where the instructions otherwise look very
-benign.
-
- - serialization. This shows up hugely on modern CPUs, so any memory
-barriers etc (ie locked instructions on x86) will stand out.
-
- - branch misprediction. This will typically show up in the profiles
-not on the branch, but on the mispredicted _target_ of the branch, so
-it can end up being a bit confusing. The CPU speculation mitigations
-typically turn this issue up to 11 and add misprediction noise
-absolutely everywhere, which is why turning those off is such a big
-deal.
-
-but in an OoO CPU all of the above will basically result in various
-instruction profile "patterns", so you in general cannot really look
-at individual instructions, and should use the above patterns to try
-to figure out *why* the profile looks like it does.
-
-It's not obvious, and the patterns will be different for different
-microarchitectures. You can use fancier perf things to try to figure
-out exactly what is going on, but you should always _start_ from the
-"where are the costs" on a pure basic cycle basis. Only after that
-does it make sense to say something like "Oh, this is expensive and
-seems to be taking excessive cache misses, let's drill down into why".
-
-Also, typically, code that has already been tweaked to death tends to
-show fewer obvious peaks in the profile.
-
-Because the obvious peaks have often been getting some attention. So
-the profile ends up not showing a big read flag any more, because the
-big issue has been fixed and now it's mostly a "it's called too much"
-issue.
-
-For the security layer, at least historically the big cache miss (on
-this load) has been the inode->i_security access (not loading the
-pointer itself, but the accesses following it), and the hash tables
-for that AVC lookup.
-
-And both been improved upon, and I didn't do try to analyze the above
-profiles any closer when it comes to exactly what is going on, so take
-that with the grain of salt it deserves. The exact details may have
-changed, but as you can see, avc_has_perm_noaudit() really is very
-much a top offender today.
-
-And yes, the reason is that we have to call it a *lot* for any
-filename lookups. Some of those security hooks get called for every
-path component, others get called only for the final one.
-
-The best fix would be to be able to cache the "this doesn't have any
-extra security rules outside of the regular POSIX ones" and avoid
-calling the hook entirely. That's what we've done for the ACL path,
-and that has turned ACL costs into almost a non-issue.
-
-                  Linus
