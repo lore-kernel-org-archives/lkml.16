@@ -1,109 +1,137 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EC242069
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 07:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEA31FF7AA;
+	Thu, 27 Mar 2025 07:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743061398; cv=none; b=q/rGsjENve6o+sk5uzz9ABRHKUcausOKondkIbdRGw5YTsHAl94JY7axdec3XRZ91coBoq5FHm/aHNbPauGIpc4nLC8v2rWwx1eXjiGOOjRzSPWOkzwFV3tQ0rooellI6Pz+OOweerKPs5+mfUtfjN+vTw03JKRN3Mgs3IIi/1k=
+	t=1743061409; cv=none; b=ORNzLqzdTGRBLDgOPpTbPJTrqqd5vANysBxjNliDhlJoiV8nwgq4MoKrIuZTJTFa634iXLBvlBkbFpIXw4VrIRy5kwuQAMZ8+ZfC+3eYYvWDnT5fXVCepy/fV6zEHEo7iwpc7g6Grnc1Xap+M0NtCgM12pYBmoiw/OVmespYU4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743061398; c=relaxed/simple;
-	bh=1T2IztYjpYMrnXiEDA0e2WWRCyGEj74rYCuxS1PYVuE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Dm9lr6gIkbYxt8ybGTI+I0po2YRoi2Rl1ZpOXHJ14NcelSmEcysTF9eI6ECgDPyMd3zFDS+FY4EuoZh8lIY6W07g4f47EnrWYuGfZiEsAHTmk3MjR0XlQj9OPD1OUtXJ2zfxuIlX4ChWkQ3gAKhv8/61/CWuAiUG5X1Um7RhMO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lC+VDVIr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4A7q9m06; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743061409; c=relaxed/simple;
+	bh=fk7AOpk0VvMGYt6VzHrHLD09g5SsvkwwjT6ts+Df2TQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k+4LtuFbzd9TFZQtRlSCma2CsvSP1JDfbo1uhNMMfmgYSQKMr126vAR5ueiBrSyQxlCH4Sc2jliUrgaLk6p8CtPrwGMEfaujwgnr82/6LQ+jzbo7mL4gTHxdzDvstsea9rDVvzh/fqSNvRJVtYiS9Iiac5JJh2GdU5F4ajKuPyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UIU4Yw+0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lC+VDVIr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4A7q9m06"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743061393;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Yn42TF6bA4wOWEO008n291dLu9P1VXMHAyzVL6HRZK8=;
-	b=lC+VDVIrpS8LCOtGMk+6dh1IiVr3xsp0RfTpeDEwSFt5LKezslsoX+nvhEXoExWyUsAzaN
-	gcVv2l58vTIOcqn+NxBTegDDrNTXQ6buBp9TP453cS/F/LOLV/IzUpl3uH+fl4NARaI5sD
-	xLeAn0Fde0YIBCrPIJekcxtZ90MaUfzceG9F/IEZSEHROiaP18JjnNro7na2RM0GfwTsIN
-	gUwj3uH1C7D5PzLV9n2wkB6ujmPKWCoQsnHLy/tXX6AkKDhW9awV8TC9jcZrFDbNzcQSFg
-	W6lR2eQD/Kb48Cr5FU7K9edIvEJc10zE/egmlidcYPrbbOU+60gzgiMRJtsmgw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743061393;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Yn42TF6bA4wOWEO008n291dLu9P1VXMHAyzVL6HRZK8=;
-	b=4A7q9m06PDOswOkWDyx1B9uRGp8c1TIdCLlHPyAdVne5P9q6d6uKLkREON5CEVoDCMx5Ns
-	qFLuQP1nirR+WBCw==
-To: Sasha Levin <sashal@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [GIT pull] irq/urgent for v6.15-rc1
-In-Reply-To: <Z-Sk41xJ-JIkoZt8@lappy>
-References: <174301605628.1660948.615494869949872320.tglx@xen13.tec.linutronix.de>
- <Z-Sk41xJ-JIkoZt8@lappy>
-Date: Thu, 27 Mar 2025 08:43:13 +0100
-Message-ID: <87a596zzou.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UIU4Yw+0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3690FC4CEDD;
+	Thu, 27 Mar 2025 07:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743061409;
+	bh=fk7AOpk0VvMGYt6VzHrHLD09g5SsvkwwjT6ts+Df2TQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UIU4Yw+0rSVQZqN4kvxJRh/X+KE/mcmDKZIZX5VSRO+pNntIjW4eee3VTqXgC4Zz4
+	 6aPoCZhFNEKWfZQDJgLA1bVk8T8PRiViaKrhwPmff+MHzeRlu8uPTmZeKIdJTqCRyd
+	 uM6CNTz1dy68R+uhvqVIFq++b/6lwoHL7pBXU2Btfi4WU9L3nAtcJ2ewfmqUQPy1i0
+	 wy/vANge24lEAUw3nF5wG462r4QGd288nCfgXeDMv/XXF/9dbtEvULB9Y0Fnfa6wru
+	 UX6OY7ZpoWU2tdQmeTwn7pzAAIWllmdfByOeN8auTAFVqX3ykgPHD67hFNYtmUHJ1A
+	 KY0Wps3G7h7Rw==
+Message-ID: <41c6f512-47a5-4723-bbdc-64ed85ae8391@kernel.org>
+Date: Thu, 27 Mar 2025 08:43:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 15/15] arm64: defconfig: Enable Renesas RZ/V2N SoC
+To: Prabhakar <prabhakar.csengg@gmail.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Biju Das <biju.das.jz@bp.renesas.com>,
+ Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250326143945.82142-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250326143945.82142-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Sasha!
+On 26/03/2025 15:39, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> 
+> Enable support for the Renesas RZ/V2N (R9A09G056) SoC in the ARM64
+> defconfig.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 11e7d0ad8656..c7b41f86c128 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -1483,6 +1483,7 @@ CONFIG_ARCH_R9A07G054=y
+>  CONFIG_ARCH_R9A08G045=y
+>  CONFIG_ARCH_R9A09G011=y
+>  CONFIG_ARCH_R9A09G047=y
+> +CONFIG_ARCH_R9A09G056=y
 
-On Wed, Mar 26 2025 at 21:07, Sasha Levin wrote:
-> On Wed, Mar 26, 2025 at 08:08:16PM +0100, Thomas Gleixner wrote:
->>Thomas Gleixner (1):
->>      PCI/MSI: Handle the NOMASK flag correctly for all PCI/MSI backends
->
-> I haven't bisected this, but I suspect that this commit is causing
-> boot-time panics that are observed on LKFT. Note the line numbers are
-> off by a bit.
+So the pattern will keep growing and none of you will ever bother to fix
+it, because you have your patchset to throw over the wall.
 
-I'm not sure which commit you are referring to, but the one which causes
-this type of failure is:
+My previous comments stand.
 
-  c3164d2e0d18 ("PCI/MSI: Convert pci_msi_ignore_mask to per MSI domain flag")
+NAK
 
-which is fixed by
-
-  3ece3e8e5976 ("PCI/MSI: Handle the NOMASK flag correctly for all PCI/MSI backends")
-
-i.e. this pull request.
-
-> Full logs of the run are available at:
-> https://qa-reports.linaro.org/lkft/sashal-linus-next/build/v6.13-rc7-16083-gc13edfd29c29/testrun/27775255/suite/log-parser-test/test/bug-bug-kernel-null-pointer-dereference-address/details/
-
-TBH, and I know this is not your fault, this report page is a
-masterpiece of bad engineering. It contains tons of useless information,
-but fails to provide the most important basic data:
-
-  1) There is no date of the failure
-
-     Am I supposed to reverse engineer this out of this horrible user
-     interface?
-
-     I haven't even found a way to figure it out within a reasonable
-     time. I just gave up.
-
-  2) There is no useful reference to the actually used source tree and
-     commit
-
-     v6.13-rc7-16083-gc13edfd29c29 is _NOT_ a helpful reference as it
-     suggests that this is a 6.13-rc7 based tree, but the log file says:
-     Linux version 6.14.0
-
-     sasha-linus-next at least gives a hint where to rumage, and 100
-     clicks later I'm able to see what this is actually testing.
-
-Seriously?
-
-Thanks,
-
-        tglx
-
+Best regards,
+Krzysztof
