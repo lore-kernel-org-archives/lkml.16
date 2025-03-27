@@ -1,124 +1,126 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F2A18DB0D;
-	Thu, 27 Mar 2025 23:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2BEA18DB0D;
+	Thu, 27 Mar 2025 23:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743118685; cv=none; b=AY6SXeUJhaeQh3pOsNO6/17vxOuB/MkqE9O6o5T4hsUZpV5mYwDVsQZUyEt6F0bWOOocCZigXPm+BvANzXTiZq4mVxF8WaSPznbZfCXcx6xyojVBU8j3nr+TFAbdfQOAst35abfG/uVqUGy7ddrJUXaQ8EF+Sjk5ahKba6d0lio=
+	t=1743118752; cv=none; b=LjXik3uAEBYQuE4gXHkjRkn0nG6vfXHPfQtTrq3tFW13q6KYMTpYb2fVWHt2R0VdwzI2eeRBJtsSwXz70OKeeZe7WAFrU+JwMPof8iTQuuWlGtmmIwoLrLtiUQt8ufTsVGrxG9NV7OezwzMk7WWnBw1ACplGOM7NK+JZlVRhVfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743118685; c=relaxed/simple;
-	bh=ixzldZ6nSlBWZ7nF1bIkBZSVn2GvHpUgm4BGiu98QUQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rav90HZDRvgshNXBEcz3kE1dKYjLKLHq1GIKlKKDvA2I28PP05X7vE7GeIfJ6NN30FsHIOH5cUZ8YmXDWeHXoAnLvzrKsJS7CwUZslh4sVVU0697Nm9SVrsvdi8Pk9/keIUl7PmIP+4usHThBYdpVBO32OKxkGa/kDiwHwM2rUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=dVKhaxZ+; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1743118752; c=relaxed/simple;
+	bh=Iq8fkabNznaIKVeBv51mGPlNivd78e3y64yDdPnKcec=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Dtx7KrL7oZtlLoZbxaR/Ze01/JfjQcyEOdWKzk+EzOY+3qCG5q56KsAigYd4yU80qb5WFIT77suyi0itc+ZX4ktmOXOXLtLc9KdraLjkN2FJgIkRM2L/yAdcsudLuy4Tu0P+FIQ46HCoIZ4LaGKCMElPKTFb20uQzV36e4Y6FZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lBgeaoGV; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dVKhaxZ+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1743118673;
-	bh=G2bJnnCE/3+WjVRvXwOPIxpJSj3Sdd/OAjqtkEAvbpU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dVKhaxZ+oSSiofkU71tww+Xg373HTFRXathYciYg81UyjH9r/m7ob3WWTHH1rfMzh
-	 ZBh71qjjS8ylToy1Uh95HSaytHslIc7v5rviVgmWnSbc18Q4FX/MKYu1Ga3/AjGPW5
-	 Usf/nH1qFW2JGs3xcLSp2mxyoZTN3/0+QxjiNG+JcbNT7wGyBTzVEMUZasL7FQ2ykn
-	 vPQTOvKYGN7VOTe/BRSGM7V8Q5/ygmOV1PRfQmKExkNRP2do1kBU3KoZmn5tUSxN8v
-	 IiU4SlyQER/2z+u37qbnzC1zSfltuNu2Y/sRGd2wJquWdlmppu1vceiPzzQghswT9o
-	 o6m3GkOcIkcvw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZP0Sw6Rr9z4wyh;
-	Fri, 28 Mar 2025 10:37:52 +1100 (AEDT)
-Date: Fri, 28 Mar 2025 10:37:52 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <kees@kernel.org>, Joel
- Granados <joel.granados@kernel.org>, Kaixiong Yu <yukaixiong@huawei.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, "Mike Rapoport (Microsoft)"
- <rppt@kernel.org>
-Subject: Re: linux-next: manual merge of the sysctl tree with the mm tree
-Message-ID: <20250328103752.114dc1d8@canb.auug.org.au>
-In-Reply-To: <20250311202126.1150e018@canb.auug.org.au>
-References: <20250311202126.1150e018@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lBgeaoGV"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2ff62f9b6e4so328620a91.0;
+        Thu, 27 Mar 2025 16:39:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743118750; x=1743723550; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NnTm9UiQ7+ij4sa2YfjCODEx8vvL8uoupOxT8VaFfk0=;
+        b=lBgeaoGVIagyNZhm8476nJJfwQBTbN4dDLiqezeH/Eb9Bhzk7zL5KXPOA3mDAUWuMr
+         k/nUR3HN/tBxTsB+SOknFutIAd0RNDWU+xxjxbj4Gpw/cgS8GpncGhCRCcRZxpnpZs9K
+         G4dE7T65tqN3cBJDGXJurLiOWDOvD4xtr5J6BmbzxJ118a/XoG5Q9I7qf8ARwNzCou2U
+         SCBel1px6HIAB2TDU05FyochbMG1BDHM4NdXHRKahkvbjDVETrxHp9538WArjXpEP61z
+         lSfktR2reTbVBgGerY/JsD4MTTTwaVE6EqQ3JY0Qv6u1D1tXuR0AXF12VbjeL9syzgWp
+         dJdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743118750; x=1743723550;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NnTm9UiQ7+ij4sa2YfjCODEx8vvL8uoupOxT8VaFfk0=;
+        b=e5NHttQwi/qubGSizCvh60IVHGdQwEcwvKE3RHj+E6mpWKDtc5xXTtekaSrvtKxV2Q
+         SkO4DPnKMqlHwtXkUW6P9SetRcV5V81/AbPM+Xj2O4dbFnj1P+f6+o3RP4R7ClGSit6J
+         8QoYFODvkaFxTwhtznpes2KXX+Gxl+/dmz8Ew1PzEiaYHpz86kyocMEfDU9qNND5T6rd
+         IoGQO8pAJw+Qj5yU3NuDvh+E3ztMXofA8IONcSNKNzBFZGSriqPTGqVecGbhkLz59x7+
+         oPrl362vgm8yB0lk+sdR2K6kfHHfLzT77Ma00eCA3fvzGoN6/5DHhnTo1whEeOP7pM/W
+         C+ng==
+X-Forwarded-Encrypted: i=1; AJvYcCVlN5RamqStqKM/ftYst3R3Spy3q9XDW3T5i2FSPBSlcNGr5me/10299/bGABW9Yo/5ffda+XX0oIQq7Ss=@vger.kernel.org, AJvYcCWzhESshqMaTZ8G/fLq+rJoWfzMPae23Fo7y3oWGvmekztC234z3uHEV0bVtpGCvn4vDedbSPuQqFSUdtc3Asg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywz5tKVL8pb8uKCg+aDFcat6wQknoiAt06MWDVtUbqbJ9wAbSEx
+	jbznuI6yFL25swUHxo/8XySiotJhVbzs5aMryP7/2+3jilTnfNJwwimgJrCQrhNdhWac/77i33O
+	Kf/TKo7bGRG7nseDBz9w4faM9bvw=
+X-Gm-Gg: ASbGncvL0hKmU41icDwuB21L96ShZO7NU/EvBi6/DCubre2nFmLol2372wTi23pz/3l
+	LEbi5wG23MVZ5lX8Ur6NKqtwx9IZuVjAwYSJ7sBzo1Q6kzY7P/cU2FeWwU0vXN4r6H/LiJlk9kk
+	SrZiSU+7AzpGfo9n1QwLG4CxZDBQ==
+X-Google-Smtp-Source: AGHT+IFGPH7qzBCfMvdFKrwYS6D6EKhSTXgk16xQ3JW+Qt49nZJRd4wkAFQo3rIxPuebsYm8NveXG63pCmMfMmaKFjU=
+X-Received: by 2002:a17:90b:180d:b0:2ff:78dd:2875 with SMTP id
+ 98e67ed59e1d1-303b2754fddmr2818380a91.5.1743118749669; Thu, 27 Mar 2025
+ 16:39:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Mah8gxos1FA.4Nu4WnU51FV";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/Mah8gxos1FA.4Nu4WnU51FV
-Content-Type: text/plain; charset=US-ASCII
+References: <20250326201230.3193329-1-abdiel.janulgue@gmail.com> <20250326201230.3193329-4-abdiel.janulgue@gmail.com>
+In-Reply-To: <20250326201230.3193329-4-abdiel.janulgue@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 28 Mar 2025 00:38:57 +0100
+X-Gm-Features: AQ5f1JpO0ix6LGGpIw8NmovhhECl19xyvqN09h5Zqra_u1faeMtSnDMnIzxYki8
+Message-ID: <CANiq72mwp6=6PHzwaenovuJ+emW+A-wmun34oTUJQFd3vPV_zA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] rust: dma: add as_slice/write functions for CoherentAllocation
+To: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+Cc: a.hindborg@kernel.org, ojeda@kernel.org, 
+	Danilo Krummrich <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, 
+	"open list:DMA MAPPING HELPERS DEVICE DRIVER API [RUST]" <rust-for-linux@vger.kernel.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, 
+	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Few doc nits...
 
-On Tue, 11 Mar 2025 20:21:26 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On Wed, Mar 26, 2025 at 9:13=E2=80=AFPM Abdiel Janulgue
+<abdiel.janulgue@gmail.com> wrote:
 >
-> Today's linux-next merge of the sysctl tree got a conflict in:
->=20
->   include/linux/mm.h
->=20
-> between commit:
->=20
->   61316cdc1915 ("arch, mm: introduce arch_mm_preinit")
->=20
-> from the mm-unstable branch of the mm tree and commit:
->=20
->   73aa354af21d ("mm: filemap: move sysctl to mm/filemap.c")
->=20
-> from the sysctl tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
->=20
-> diff --cc include/linux/mm.h
-> index 4d32053c3d19,f5ba3ed8b44a..000000000000
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@@ -41,9 -40,6 +41,7 @@@ struct user_struct
->   struct pt_regs;
->   struct folio_batch;
->  =20
-> - extern int sysctl_page_lock_unfairness;
-> -=20
->  +void arch_mm_preinit(void);
->   void mm_core_init(void);
->   void init_mm_internals(void);
->  =20
+> +    /// Due to the safety requirements of slice, the caller should consi=
+der that the region could
 
-This is now a conflict between the mm-stable tree and Linus' tree.
+Which requirements in particular? Link?
 
---=20
+> +    /// be modified by the device at anytime. For ringbuffer type of r/w=
+ access or use-cases where
+
+at anytime -> "at any time" or "anytime"
+
+> +    /// the pointer to the live data is needed, `start_ptr()` or `start_=
+ptr_mut()` could be
+
+Intra-doc links where possible.
+
+> +    /// Writes data to the region starting from `offset`. `offset` is in=
+ units of `T`, not the
+> +    /// number of bytes.
+
+I would double-check how it looks in the rendered docs (same for the
+other method) -- the second sentence may be best in another paragraph,
+i.e. outside the title, since it is special in the rendered
+documentation ("short description"), unless you want to e.g.
+differentiate from another variant.
+
+> +        // SAFETY:
+> +        // - The pointer is valid due to type invariant on `CoherentAllo=
+cation`
+> +        // and we've just checked that the range and index is within bou=
+nds.
+
+Please indent the comments as you would the docs -- the docs ones are
+correct, and Clippy should check those, but it doesn't check normal
+comments, sadly.
+
+Thanks!
+
 Cheers,
-Stephen Rothwell
-
---Sig_/Mah8gxos1FA.4Nu4WnU51FV
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfl4VAACgkQAVBC80lX
-0GxEKwf/XTXEI9Xn/OpvfBLhRijQXT8uy02/Wb4MrVhYmiQbsGCs6J8fDUah1HQj
-0OYquEX1Sfxceis8oU3dytGkYQIBkC8TPbJCKWbSc+Kdo+eI2EUkoooqGmecQn4A
-/JoOAGc51aboWIzYnHSyOmv1+aym8r0YcOH6KgbjflXkytwqouCM8U3jqoOasp7c
-tMqccBpNPCwWi/YypRVs/31BhE5EKnmspkDDHJe1EfDx1x40xiXBDn8l8Wp+QIVa
-ZVzS9oHOKLgBm7HtsXEBYAA+vxMFI3pboT3VAuwd9mLPl/knT0NtSYQFjETk80Dc
-eojCRyWfq7EI2wXViyr2CYUGcR9yBg==
-=ytiv
------END PGP SIGNATURE-----
-
---Sig_/Mah8gxos1FA.4Nu4WnU51FV--
+Miguel
