@@ -1,214 +1,209 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2043.outbound.protection.outlook.com [40.107.243.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752B120FAAD;
-	Thu, 27 Mar 2025 14:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743086186; cv=none; b=Zccdl5t8IIGC1abcyRS9Q030/Vn8sdvnlFPC8X/I311HoOUNggj1Omya+lsEQR4vInk1H1Stt4kq9xcIzM8wUdgQswAhSa9aDCet4IDYy3ZjYwXPSqTsWJKbe4PYbHHPzwZ9SMzoaB1Z4jyA2fsR3UKyJ4ZQpVwhbQkJP9tER+Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743086186; c=relaxed/simple;
-	bh=aRSJEE4LF/DgyqNP78KuA37ILgQD4/DkDEBzOXdalYQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m3zHnfKVQ+8FUHNF8Pbw3yUGiALdn2nlXwTustj+9BfE1uzt+CHjSeJRn23sJNDPq8RqilZqkTbl5hvs2eapg61gLqgewvV1lDyXlBs26mCKEjtwAiXT/8XePtw0tWZueRbw9Uu2TdD2zG9zZ+aLpIY84HMKWURvBzLUplgBU9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B9imn3qo; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A251547C0
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743086212; cv=fail; b=myxJV3+FRPMR4fUCbkBVK+6cYXPl6eFGSx4ju6/PjiCw3MbFQ7ZSbilgy/lSh1Aiwkfgo+d3jIUuyikQjUjZWLSPx19gVyFU4il4GFANRCaBiQlAAnrSo2ndZidXUWEbNOuKaKV8CmVeQ1MevEiWsQMHuYjQBCTycw/82DEFUCY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743086212; c=relaxed/simple;
+	bh=OdyA1+LlYmC50etipbgysJPxpCH8iknaK1FPJGM733w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BRWdGssDBwbAO0OeXX01wsaMzZb196BS+jfk7wM9OHcXOKDyKvV4MHpiO7ln+V4dh8TmXvC29NthTdxd51hlTIBM/0Kk0XQ66+suM3moVEG6HUGDbyw1vXyMywhUD6pYddmBCsjEk4T8VpkDGc74oB9KjDNw1vYO14060Kd8v0M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OkJkk58G; arc=fail smtp.client-ip=40.107.243.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B9imn3qo"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-227d6b530d8so21023035ad.3;
-        Thu, 27 Mar 2025 07:36:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743086184; x=1743690984; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wCmk4hmuZJ512kbCxwIcYRx/KVLFgt2B/Rg6XnWmpH0=;
-        b=B9imn3qofIk5gUlIvys2NL9TmacUxLEPIbhqOKVo5PcvlaCefmGJEBu9fgAu4Sex5a
-         rbbpMpx49ZSxIl2ctFl5HRdRxfaTbGwnz00Z4JwpJY/Rz4nhmglwikFersrDeFt9YdsY
-         eSNlPDCzFxRw0O/Nn/ehvmRI03Y0MfL7BeTh+UhCCuQxW/B6EsyUmecSTYMerQM9ED6D
-         7QSPDdRGqsQn1n22c54ZVH3XdXI/uh2rs31bGOB6wQyNBq35udLvUuLTwgBD947Qd6ti
-         /0K+Ztea2zKom8dAubCbV7CDu55lV3Jhg8t+nlbExMXDZ/jQAV8JP27ayGru4jybwxth
-         UBWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743086184; x=1743690984;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wCmk4hmuZJ512kbCxwIcYRx/KVLFgt2B/Rg6XnWmpH0=;
-        b=YA86lzX3o8qpdDFAG4koexsBOVJrTpx4lLSs2CZMxC7DSejpnUag2/GswMyVRE3MHj
-         LXyKZFpBWfsAzf0lkMcXoJUzXlH5/NALj4ygJnvCx+bsscgm+pfT8vhhqEwXPNBd+Xg9
-         zvQHNYJkNGw+6uIccSPnW4c2TDkdAvrm+W+OVgCcndhxtI3An/PIQaoA81198TKgoSkJ
-         q+Sa8Bguedch39VD3uBIaQd0SOnfihZRed+gjD1WudAXlh42yN/YcugVz8iXSGRqRFF2
-         cw4BiHfPzhbwylk2xIb/BfoiXiBKfJIM9kssGycbcxqZjoh8lo6mBM4lgav5GZJxi0FG
-         09yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUbPi4XavMv1OMsr9qvIYAWd8qIZPOO2m7IwYirRuyQzTbZRodyXpAcDYb1FvCvJ2LfdDZ44X3h@vger.kernel.org, AJvYcCWx/inNPnxL06QeK/K/mXVLlo9Fn1Z/b/vNlyj0TkUcuqxDF8cFrck7VWzFTGc/TqmHgRv3RXSvg1IYapU=@vger.kernel.org, AJvYcCXEQjskpUB4/5wcONrkq6dt/enVWIwngUijT0FLq5dFQu+nMPZlpOplCuAXOBXKhPBfj0uF/+Ni3W8h@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBhubSu/iTZLCHa5t1jJ7AwPdJpa9jGo6RfomvYQUo1l9vppa6
-	p9Bdhn6nXZgSq7tR6rcO5v5F6BDPkHT/2jIUmRPZV8/3R4g3AJY=
-X-Gm-Gg: ASbGncsT00ArK39jCVnYlfsrPej23vh1Sh2iEUkP53EjEs45WAWGqmVU5H5Tu5wyDat
-	gvrnEVnjsFwPPo3+4vYqi5HYf0ks08IxMtjQssy6Eut9GFMSXxG5orjUhSlvgxkzs1aW4aLA4sv
-	lObgpq+F+JRsV3yTLDhFB1max/ZLxR7aagM3J7RgLKontZ3nGMeDls583qtmfvC5N58m/34ncGi
-	3scVPZtbB7jruQzSm0BPaPSK7vjRX8/2ycIplM9bHSmiQrKpdmfB7D7pE/ppB1ipaoisgSjpcTr
-	ecS5cCydLx/vvyxLe5Bltk0Bs5xH6fHPJvC0NvTuy8aX
-X-Google-Smtp-Source: AGHT+IGDGrmcXz0yo6x3fW0RJOxnKZihvpxzy9pmxAKnOwTngC++Wp2N8mMvV7YeUTAcRN/VCZxolA==
-X-Received: by 2002:a17:902:fc4f:b0:216:410d:4c53 with SMTP id d9443c01a7336-2280491aa7dmr60192305ad.41.1743086183439;
-        Thu, 27 Mar 2025 07:36:23 -0700 (PDT)
-Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2291eec73d6sm143915ad.42.2025.03.27.07.36.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 07:36:22 -0700 (PDT)
-Date: Thu, 27 Mar 2025 07:36:22 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: syzbot <syzbot+377b71db585c9c705f8e@syzkaller.appspotmail.com>
-Cc: andrew+netdev@lunn.ch, andrew@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, eric.dumazet@gmail.com, horms@kernel.org,
-	kuba@kernel.org, linux-kernel@vger.kernel.org,
-	linux-x25@vger.kernel.org, lkp@intel.com, llvm@lists.linux.dev,
-	ms@dev.tdt.de, netdev@vger.kernel.org,
-	oe-kbuild-all@lists.linux.dev, pabeni@redhat.com, sdf@fomichev.me,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [x25?] possible deadlock in lapbeth_device_event
-Message-ID: <Z-ViZoezAdjY8TC-@mini-arch>
-References: <67cd611c.050a0220.14db68.0073.GAE@google.com>
- <67e55c12.050a0220.2f068f.002c.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OkJkk58G"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XBprjzeHmCupmJxiEdbMwJJToI89MOh/edla+SM/1BCd8Nx45CVGPu3GCgDYiAQxXdX9FbgIomWcqGjfVv72BYi0uHsMoabFU3nlN/zlhinyH6JGuUhxgyOTzL97zGYeFvm4k5XdnAtoI5pPZVBcDZzu5sQZgsxIO/UULoto9qHO1W1xpWH8remyPk/V2WQz3y8fduxw8nvhJewzK9meWboOK4o/pO/6MXaEdTy5ZI71eg2s1qZ9MbfqNtU762xv4vXkD20aS4iCGwYJI5bxaN744JlGB1I7c2+p1WNtxT6TIXx7dJ/gl6Qch/IB4NaIshA+kQGZE+wAxR0Zy95IBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mupuOF0CANNaYyujE70xzF1B6P4UaGMJwSUCp6+ottc=;
+ b=h2ivHlx32n5KgSqpuO/wDBednVOMdHtMUQ+gyobMVURfLDXKirVMf2COMxn9joZx1evbo5OCT3X2KBI7ElDE4u5yDg0T70/20OmJl7o7SMwj2MuGn1ZFV0Jc1Xcf4o1fmKpBtafw17NShBfpKJfNU6OeLrKFjs0euCnsIlGmulDaJrhKmQwv27omkKmfEfiFY/9aH7Yy2GJ+CVCEfmsAFccBcbQ8Gj5YBHWOaFWLUoOBlkuy5d2WRgwiauHaP7808u64bd5e89HwWmdjLJw8aAJlydwFGhrvSwt1CL7EYSUHo5R1pZnY1rnGTRl6fNDELWURdmB9zTnWV0VUTanuvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mupuOF0CANNaYyujE70xzF1B6P4UaGMJwSUCp6+ottc=;
+ b=OkJkk58Gc4g5NiJoziTtvfPvbTGWChG5thOQ/JSo+tC5TLjBURn/PdFtQjqBhteIjUZCWtg1RHcTDHFnPTKLrh1EO262oKj3R6LI+hDT0TuCY3ZYqY9xjqnTxnMt5PBEEEPOT8ri0qQ1ufh18UxE6vpUBYIvckwiCpbZaUtqf0uXgMb48sNiGFzfyXIEomTQd4gQPVmeYvrXV9M2efzfmZ9t5ks3jFTGf7vgs54RTBLpoXrLrCXkcnEHydxNG+M//A9e6t7cEZy5qJqQD+NDoFxfBc+qeeuQGmclECYe+7uGdKmobnwaWwCMOVfxaJ/Jw1pO4hyu0FNqhvfwfEiBVw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ SA1PR12MB7246.namprd12.prod.outlook.com (2603:10b6:806:2bc::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Thu, 27 Mar
+ 2025 14:36:48 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%4]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
+ 14:36:46 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: akpm@linux-foundation.org, hughd@google.com, willy@infradead.org,
+ david@redhat.com, 21cnbao@gmail.com, ryan.roberts@arm.com,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] selftests: mincore: fix tmpfs mincore test failure
+Date: Thu, 27 Mar 2025 10:36:42 -0400
+X-Mailer: MailMate (2.0r6238)
+Message-ID: <992DD536-7047-4C2C-97EB-7F23100143E3@nvidia.com>
+In-Reply-To: <99a3e190d38b08a2b96ede952a29893bffdb3432.1742960003.git.baolin.wang@linux.alibaba.com>
+References: <cover.1742960003.git.baolin.wang@linux.alibaba.com>
+ <99a3e190d38b08a2b96ede952a29893bffdb3432.1742960003.git.baolin.wang@linux.alibaba.com>
+Content-Type: text/plain
+X-ClientProxiedBy: BN1PR12CA0030.namprd12.prod.outlook.com
+ (2603:10b6:408:e1::35) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <67e55c12.050a0220.2f068f.002c.GAE@google.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|SA1PR12MB7246:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4cddc7b3-58b9-49d9-8d4d-08dd6d3ccd1d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?w631EKXHLATU2+bk8qfTUnV77dJFxeAbk+Fi0SZapv5JJZu0dfd/7lfhp4bz?=
+ =?us-ascii?Q?jM5IXaca/wjfrl+36frh7M1ZWwhmbiqqHtB3BuX0+w9x5D9ieR++3g+4y0uf?=
+ =?us-ascii?Q?91u8zbU7y6Bg2gcxZxa38rTJUPnl0wvt97lQP37WE9u5qNPVubFJ+FHcI+eq?=
+ =?us-ascii?Q?ld3oYRTetleHPnTr2yfjY3I88wraNPd9qegC6WL5SgABKMmoUsN3SptQfY05?=
+ =?us-ascii?Q?93RMbBhOaw1B7vGCCl694p5MPFJIOSHUrC9rJ8CoPfZtY+aGDeGoyfIzlAlH?=
+ =?us-ascii?Q?W0jTseN9vU+Tx8BgD3UYYmXkWk9yvDL4R4EnbFH5UgCJFQootlxMShXQjCB6?=
+ =?us-ascii?Q?8GfRpt29X1s7wiy3cEap9MEzMBkMLMX3fzE8YcxoeX3wtG47K0iirFKsNAh5?=
+ =?us-ascii?Q?KMJh1LeinsD5sLhhWvgU0joALiiUWy2+NOcPhcxHa8GBRJGibUZQQv/DlF8R?=
+ =?us-ascii?Q?FNdJhMbGIvpxvTaW2HAEk1B8u1GUw3p7QwudGVVaWoEiZEA8Czs88xzEd01D?=
+ =?us-ascii?Q?rrhWkwc6NGBchonaa0uCCt3VGL1jfsxE/2TRn+OVuC0CpIhwlrmRWk/NRvHm?=
+ =?us-ascii?Q?p09fvXOqYNIYMdi8n5Mjd2cvlLxVRJMDkTd96CoJ2swqCn+cgaeRc5jjov3j?=
+ =?us-ascii?Q?DhdNMSvg79bKDjZES7C3so/k1oZ2GaJN6RKJQYshyW3EBF/joSV7E+RKQzh/?=
+ =?us-ascii?Q?YWpxT+IW/Tx8Xa9A4emYAzXHPKixyhOMnefgpyXe6CUXd6fIRIF4qdsNKP4F?=
+ =?us-ascii?Q?7tYPUgwfP6OMWsUDMPmXm4/bbr+HIV+DU+9ydJNnrSn/dxCK+zNg6uye5dGg?=
+ =?us-ascii?Q?Fw1HxV4yQBVHRRzKdUxL9jJyGg2FiMOFz0VDKrLrlkQhouxNLpT0pV0RdbDE?=
+ =?us-ascii?Q?sYQ7V3VaafRBdT20+CFEzRiR8MouKXWT08Qn9OdWzeVMz/w7euZ/3at4cwjr?=
+ =?us-ascii?Q?yIAWZ+0sSkDKC6S48gKxYThlmrkGVifmtOXcfalGn3N8aHV/4q9hV5Dyyl39?=
+ =?us-ascii?Q?nEgTD38UYY0WaSpNXHNi6XipXCy66oHSpxWT+jo5SwTeE4mrXs83Az+D1/+x?=
+ =?us-ascii?Q?li3FnQRCPwokzXm8jxnuAWbr9TyUFY7muqLUMtCdpclLEppRolFyUSodwnsI?=
+ =?us-ascii?Q?k1ScSqUtdfTk69Ef5FW7WlxEvIttbJZMsgkZjqAkSyLp//WrbCZqUiFRSn07?=
+ =?us-ascii?Q?ZGQU8vu81Kggukvi+og/CZ8U84Mi33Mml2z3eGySV//u+w2f4PkUIFow3sYs?=
+ =?us-ascii?Q?I0ICQy7gpwDZIpFdSOkaDc9+PHrAHBb/a0hZ4xz1IrYElE101LONdrSWxzG6?=
+ =?us-ascii?Q?v+um2CyzQSCU37vTEK+sKeNnEjD23iLqsInDyssSCcrcbs2p8ds73hrQ9J8J?=
+ =?us-ascii?Q?E91xT+DYqFYtnQRbn5fHwSvrxp2c?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?jN/XUDPF96Zcc4VvhtbQyaNZ/JTtZLlWedpxUsL/u+DqmeLFX9cU0LBz6qo1?=
+ =?us-ascii?Q?9uPhYAmswwWR6kXek23sQRByvGG//N5ePHzEwIxQgl7kxVufF3MSZLLyZipS?=
+ =?us-ascii?Q?1naIj3Ui9tSu+RsfTwAqCIZ4/6RIooSKpXnpLutS6lDPdi0Pngqwgl3chAh8?=
+ =?us-ascii?Q?uP/1JVs2SlUl7WsQj/9M/i5socTooWkFGlAlmTmrKpzGGiiYu+uFX/d2+GOb?=
+ =?us-ascii?Q?VdnDbdW8R7wHpoPYKF00C6NcambPF+JnkUQ4GlgncQUKJhmO2a/17WQSw4YV?=
+ =?us-ascii?Q?m20ddEzai46hmMYLui6bOioozMxorR2y0PSQNnJOwVIv2PiUZsQT91vkoo3u?=
+ =?us-ascii?Q?sdDwSwBhe/opWplW9BHQNoe2QqjorD6n3EkbqiUqxkKKEmghdPatdshaUE6o?=
+ =?us-ascii?Q?p+q9ptxHm4/cO7Bz58IOjT7bqYtykKmk5YH1OH3M4pI6q7GUs2Ca9ObFurzY?=
+ =?us-ascii?Q?djx3cfqxVSr1GLFQhPm9zFCiprf6aFWLAsBlcWYUlrpBy/RnWF2uR9ZOoNzE?=
+ =?us-ascii?Q?EH+vH1tX+JsCQy0w8duulItD0UqLKZFfL2RYadJ6MFBEyUFRGg0wUtO44OLx?=
+ =?us-ascii?Q?prjhF/MiVNtr+pS6D7QK1Wyzepu+emp2hghd+x2dV9PalZeZBca3ep9Mhh7c?=
+ =?us-ascii?Q?NPYNAPK6VTt9HXW5hn4mKRAiXkW77EqtmQK2liqtdQaozbPig2Zcb6iEXMFT?=
+ =?us-ascii?Q?4hikR0vOW6IJ1tcWQsGsDXkDOZiO9FUh8kfTOVRnIbOLEygogF52dlcHTMSK?=
+ =?us-ascii?Q?Cp3Sh+5nyUMSCPAEwE3gpMMQkvSoI1Cyoi5vIWkMUmV0G4TTnBGjob5PKWS7?=
+ =?us-ascii?Q?uLb6KNaUSY0fz0VjFw+9fLJDFS4p149+W4oBUgmZfOnTDpllUrMOXsaKfcVL?=
+ =?us-ascii?Q?jLjR4QYPWwdYiY0YafhJmcRMv/t6PWCU9oJRbijyJ93Q2BoiJeZPRiwBz23N?=
+ =?us-ascii?Q?x6uzJWYRF7K53SUwMo3PlbIhNA3xVEWY4l8xs5X+EywHkCTH/7iF6ikWP2PW?=
+ =?us-ascii?Q?ag7BobT155PMGXCfCxEvTWs/2im87UnXCfhLjnVz1Ag2L9iqz72qr2W6VDUE?=
+ =?us-ascii?Q?WR+7mBk1WucgmWWZNNTZY3OZbydAgHDr1lpTBmnDoZBexq3ymsGEGH4nS1tO?=
+ =?us-ascii?Q?cHD//sMk8YOaRTDJc7Hwdk3IK6f6C9S1PiSXh4o5FfM1hLI18lAzBLAlrX38?=
+ =?us-ascii?Q?bTBCcUTNoc4dehJZ5C+Qh+16BB0F7MFSyEHUQ7to56fhVxwBLcsrRSBpbhvR?=
+ =?us-ascii?Q?vWI5D49yD2yPQeJmk0uqkh+Oj6PuBwIUb/GIDtS0sgOghiLi5Svt/ByCxPme?=
+ =?us-ascii?Q?T4Fc61AJe0k+VqBFiULTJTRgn1REZVK+yqtOvpnMUknoJHbcAMqIYFufmBF1?=
+ =?us-ascii?Q?3FgvhYL1A5fF+Z+zCMR1oJMcJ31xu+emHAmgPjJrUR1tqkUKWi2eR6D3oops?=
+ =?us-ascii?Q?/ymzscfWyYvULTBwtNBJ0jTe7PUcspnDor3qIJS/n5GVxPzeWSxUxRm7YMx/?=
+ =?us-ascii?Q?IESLI6vHr06MKFWMmsACj4U0Bj+fVFyRahuPniM5ZU6G3F/84Ao0qQ/LUIQS?=
+ =?us-ascii?Q?twmN6/7k8GVxj6nbp+REMEWIBXsduqPb6rstTrdb?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4cddc7b3-58b9-49d9-8d4d-08dd6d3ccd1d
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 14:36:46.4438
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JhLFeov78JaM0VrLHSyLvXKJ11ueIT3XgqyvCUjJdSAINWC48I6l1FpIFH1hnDUt
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7246
 
-On 03/27, syzbot wrote:
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    1a9239bb4253 Merge tag 'net-next-6.15' of git://git.kernel..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15503804580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=95c3bbe7ce8436a7
-> dashboard link: https://syzkaller.appspot.com/bug?extid=377b71db585c9c705f8e
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=139a6bb0580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16974a4c580000
-> 
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-1a9239bb.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/bd56e2f824c3/vmlinux-1a9239bb.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/19172b7f9497/bzImage-1a9239bb.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+377b71db585c9c705f8e@syzkaller.appspotmail.com
-> 
-> ============================================
-> WARNING: possible recursive locking detected
-> 6.14.0-syzkaller-05877-g1a9239bb4253 #0 Not tainted
-> --------------------------------------------
-> dhcpcd/5649 is trying to acquire lock:
-> ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
-> ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: netif_napi_add_weight include/linux/netdevice.h:2783 [inline]
-> ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: lapbeth_new_device drivers/net/wan/lapbether.c:415 [inline]
-> ffff888023ad4d28 (&dev->lock){+.+.}-{4:4}, at: lapbeth_device_event+0x586/0xbe0 drivers/net/wan/lapbether.c:460
-> 
-> but task is already holding lock:
-> ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
-> ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
-> ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:39 [inline]
-> ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: dev_change_flags+0xa7/0x250 net/core/dev_api.c:67
-> 
-> other info that might help us debug this:
->  Possible unsafe locking scenario:
-> 
->        CPU0
->        ----
->   lock(&dev->lock);
->   lock(&dev->lock);
-> 
->  *** DEADLOCK ***
-> 
->  May be due to missing lock nesting notation
-> 
-> 2 locks held by dhcpcd/5649:
->  #0: ffffffff900fb268 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_net_lock include/linux/rtnetlink.h:130 [inline]
->  #0: ffffffff900fb268 (rtnl_mutex){+.+.}-{4:4}, at: devinet_ioctl+0x26d/0x1f50 net/ipv4/devinet.c:1121
->  #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
->  #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
->  #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:39 [inline]
->  #1: ffff888029940d28 (&dev->lock){+.+.}-{4:4}, at: dev_change_flags+0xa7/0x250 net/core/dev_api.c:67
-> 
-> stack backtrace:
-> CPU: 1 UID: 0 PID: 5649 Comm: dhcpcd Not tainted 6.14.0-syzkaller-05877-g1a9239bb4253 #0 PREEMPT(full) 
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> Call Trace:
->  <TASK>
->  __dump_stack lib/dump_stack.c:94 [inline]
->  dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
->  print_deadlock_bug+0x1e9/0x240 kernel/locking/lockdep.c:3042
->  check_deadlock kernel/locking/lockdep.c:3094 [inline]
->  validate_chain kernel/locking/lockdep.c:3896 [inline]
->  __lock_acquire+0xff7/0x1ba0 kernel/locking/lockdep.c:5235
->  lock_acquire kernel/locking/lockdep.c:5866 [inline]
->  lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
->  __mutex_lock_common kernel/locking/mutex.c:587 [inline]
->  __mutex_lock+0x19a/0xb00 kernel/locking/mutex.c:732
->  netdev_lock include/linux/netdevice.h:2751 [inline]
->  netif_napi_add_weight include/linux/netdevice.h:2783 [inline]
->  lapbeth_new_device drivers/net/wan/lapbether.c:415 [inline]
->  lapbeth_device_event+0x586/0xbe0 drivers/net/wan/lapbether.c:460
->  notifier_call_chain+0xb9/0x410 kernel/notifier.c:85
->  call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2180
->  call_netdevice_notifiers_extack net/core/dev.c:2218 [inline]
->  call_netdevice_notifiers net/core/dev.c:2232 [inline]
->  __dev_notify_flags+0x12c/0x2e0 net/core/dev.c:9409
->  netif_change_flags+0x108/0x160 net/core/dev.c:9438
->  dev_change_flags+0xba/0x250 net/core/dev_api.c:68
->  devinet_ioctl+0x11d5/0x1f50 net/ipv4/devinet.c:1200
->  inet_ioctl+0x3a7/0x3f0 net/ipv4/af_inet.c:1001
->  sock_do_ioctl+0x115/0x280 net/socket.c:1190
->  sock_ioctl+0x227/0x6b0 net/socket.c:1311
->  vfs_ioctl fs/ioctl.c:51 [inline]
->  __do_sys_ioctl fs/ioctl.c:906 [inline]
->  __se_sys_ioctl fs/ioctl.c:892 [inline]
->  __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7effd384cd49
-> Code: 5c c3 48 8d 44 24 08 48 89 54 24 e0 48 89 44 24 c0 48 8d 44 24 d0 48 89 44 24 c8 b8 10 00 00 00 c7 44 24 b8 10 00 00 00 0f 05 <41> 89 c0 3d 00 f0 ff ff 76 10 48 8b 15 ae 60 0d 00 f7 d8 41 83 c8
-> RSP: 002b:00007ffedd440088 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 00007effd377e6c0 RCX: 00007effd384cd49
-> RDX: 00007ffedd450278 RSI: 0000000000008914 RDI: 000000000000001a
-> RBP: 00007ffedd460438 R08: 00007ffedd450238 R09: 00007ffedd4501e8
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> R13: 00007ffedd450278 R14: 0000000000000028 R15: 0000000000008914
->  </TASK>
-> 
-> 
+On 25 Mar 2025, at 23:38, Baolin Wang wrote:
+
+> When running mincore test cases, I encountered the following failures:
+>
+> "
+> mincore_selftest.c:359:check_tmpfs_mmap:Expected ra_pages (511) == 0 (0)
+> mincore_selftest.c:360:check_tmpfs_mmap:Read-ahead pages found in memory
+> check_tmpfs_mmap: Test terminated by assertion
+>           FAIL  global.check_tmpfs_mmap
+> not ok 5 global.check_tmpfs_mmap
+> FAILED: 4 / 5 tests passed
+> "
+>
+> The reason for the test case failure is that my system automatically enabled
+> tmpfs large folio allocation by adding the 'transparent_hugepage_tmpfs=always'
+> cmdline. However, the test case still expects the tmpfs mounted on /dev/shm to
+> allocate small folios, which leads to assertion failures when verifying readahead
+> pages.
+>
+> To fix this issue, remount tmpfs to a new test directory and set the 'huge=never'
+> parameter to avoid allocating large folios, which can pass the test.
+>
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 > ---
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before testing.
+>  .../selftests/mincore/mincore_selftest.c      | 25 +++++++++++++++++--
+>  1 file changed, 23 insertions(+), 2 deletions(-)
+>
 
-#syz test
+<snip>
 
-diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
-index 56326f38fe8a..a022e930bd8e 100644
---- a/drivers/net/wan/lapbether.c
-+++ b/drivers/net/wan/lapbether.c
-@@ -39,6 +39,7 @@
- #include <linux/lapb.h>
- #include <linux/init.h>
- 
-+#include <net/netdev_lock.h>
- #include <net/x25device.h>
- 
- static const u8 bcast_addr[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-@@ -372,6 +373,7 @@ static void lapbeth_setup(struct net_device *dev)
- 	dev->hard_header_len = 0;
- 	dev->mtu             = 1000;
- 	dev->addr_len        = 0;
-+	netdev_lockdep_set_classes(netdev);
- }
- 
- /*	Setup a new device.
+>
+>  	errno = 0;
+> -	fd = open("/dev/shm", O_TMPFILE | O_RDWR, 0600);
+> +	/* Do not use large folios for tmpfs mincore testing */
+> +	retval = mount("tmpfs", tmpfs_loc, "tmpfs", 0, "huge=never,size=4M");
+> +	ASSERT_EQ(0, retval) {
+> +		TH_LOG("Unable to mount tmpfs for testing\n");
+> +	}
+> +
+> +	retval = snprintf(testfile, INPUT_MAX, "%s/test_file", tmpfs_loc);
+> +	ASSERT_GE(INPUT_MAX, retval) {
+> +		TH_LOG("Unable to create a tmpfs for testing\n");
+> +	}
+> +
+> +	fd = open(testfile, O_CREAT|O_RDWR, 0664);
 
+The fd permission is changed from 0600 to 0664, but it probably does not
+matter.
+
+>  	ASSERT_NE(-1, fd) {
+>  		TH_LOG("Can't create temporary file: %s",
+>  			strerror(errno));
+> @@ -363,6 +382,8 @@ TEST(check_tmpfs_mmap)
+>  	munmap(addr, FILE_SIZE);
+>  	close(fd);
+>  	free(vec);
+> +	umount(tmpfs_loc);
+> +	rmdir(tmpfs_loc);
+>  }
+>
+>  TEST_HARNESS_MAIN
+> -- 
+> 2.43.5
+
+Otherwise, LGTM. Reviewed-by: Zi Yan <ziy@nvidia.com>
+
+--
+Best Regards,
+Yan, Zi
