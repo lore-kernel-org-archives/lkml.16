@@ -1,96 +1,167 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B8B186A
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2C3186A;
+	Thu, 27 Mar 2025 10:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743072643; cv=none; b=BP0rltzE9Q7UnsgBPt1EIDDS7igIuVWIgMUShwJGxKOrPeFAyGg7OvsiN396empiNH3ybwSbzPl0AUrdJx1U7kN6BFbkqiLg37REZDtC8Wi11NM8KVjA4YQDCaqPbA+afAr/vwIKbfR7vjmlzsESLG16/p0lf1YeAjrFFW7kyfk=
+	t=1743072745; cv=none; b=dWrMEYpI8Hy3Q+EzyY1jEMvWexDIA9YVTVeNx+H5YdimM9mO72xCxdLWHzIgqs4b1tq8HQKIZznyjYaQvHQxjpVF5eH1JFGjfdC99igjSvj40fOxDOmePFhaweYMlbSKLgFS1cxz6uAQ1Wu8QrqcM/LIJGMWiT9nYl1gZ7VIJOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743072643; c=relaxed/simple;
-	bh=3Etc1v+1FBkcRxvZPkphDU3F4+CcdfbDM4ayDQNk2eo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Rvj//j1QrFM4OdMNkazf371B7CqTOu0aQ3m2GjlObzl8p7avLLSNnjnzlNZSNc2EoBmSTcgkQCUK2rzTDMBPWFFGYq1wqXNe08InEYiePlC416tc1n1m+CeqpEAFBMdOiY1FUw/0z1hTC2eQm8RIUCavB24ijtdgelmf6SyDa7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w5QiF+Ng; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9RvaO81X; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743072745; c=relaxed/simple;
+	bh=dy2B4+JhE3vXYtlwADZt2j6DltZypSdj/blYdPD9JkI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:Subject:Content-Type; b=ptYBaA1nkqTGGqhdfFHDGa6W3NGkifuJ+BMgNbBpI9HXcRnbYZuVteXBncQdiTcgdaKSpiNOdJ2usD552ScVOUDQG0EwwSNyoQDRXTqM6nmtWFTH3bZ+lOjeiPIiJ0MdOi0OQ7MfrAbi6sA8+RHBedTTKhUeUCj+rbUsA9P1U4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=d6Sb2vEq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SYIndZuo; arc=none smtp.client-ip=202.12.124.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w5QiF+Ng";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9RvaO81X"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743072640;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vxd4yTts96xS4GTnalhKXjJPbRhBVTSe9+YNtPsK7NE=;
-	b=w5QiF+Ngffpgf36o1pU6RNt8SH5GShe/6UvoslaoRqJ3YOiJgb3fzhGXaUZIOt21iZ/mUy
-	IwkLXhvtrt3eNirx779+wjfj1pQoy+aMjzYC01ZQLwLFgs7UA4WSUk3gX0I0S1a+putC19
-	oLq+ThDRxdtmi4JeBikSNNc4z+zSnfWsXeveDlvSDp4IYMM7X0MvOOlURwQr+oA3JuSQdL
-	32P5aXr+4NOhcUAT566ki7nNcsc84+gCeR7tCq3Q+iXuVvX2ONC81L19ZVVgHiWa0Ml2jp
-	9TRB/ini6yu5DGJ145H3IkIab2hnla8y139FNmi+/W1jxvWUfQZHxtKfJ19Www==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743072640;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vxd4yTts96xS4GTnalhKXjJPbRhBVTSe9+YNtPsK7NE=;
-	b=9RvaO81XiM7kp71d0A/ICh/OJWIY/ydsI5428sujXgQaIP5LZFXb6ZtchYZjhY1OfkRgHb
-	/PfqT0hN/+JlksBg==
-To: Eric Dumazet <edumazet@google.com>
-Cc: Mateusz Guzik <mjguzik@gmail.com>, kernel test robot
- <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com,
- linux-kernel@vger.kernel.org, x86@kernel.org, Benjamin Segall
- <bsegall@google.com>, Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: [tip:timers/core] [posix] 1535cb8028:
- stress-ng.epoll.ops_per_sec 36.2% regression
-In-Reply-To: <CANn89i+nAN+p-qRypKxB4ESohXkKVPmHuV_m86j3DPv6_+C=oQ@mail.gmail.com>
-References: <202503241406.5c9cb80a-lkp@intel.com> <87pli4z02w.ffs@tglx>
- <6sn76aya225pqikijue5uv5h3lyqk262hc6ru3vemn7xofdftd@sw7gith52xh7>
- <CANn89iKjCgmxtiLeVAiXODHbbR7=gYYi5cfAS1hS5qn+z=-o1Q@mail.gmail.com>
- <877c4azyez.ffs@tglx>
- <CANn89iKAkio9wm73RNi9+KngNaS+Au2oaf0Tz9xOd+QEhFSkyw@mail.gmail.com>
- <CANn89i+nAN+p-qRypKxB4ESohXkKVPmHuV_m86j3DPv6_+C=oQ@mail.gmail.com>
-Date: Thu, 27 Mar 2025 11:50:40 +0100
-Message-ID: <87v7ruycfz.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="d6Sb2vEq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SYIndZuo"
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 4188125400E3;
+	Thu, 27 Mar 2025 06:52:22 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-07.internal (MEProxy); Thu, 27 Mar 2025 06:52:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm1; t=1743072742; x=1743159142; bh=W0
+	c+nYkLl1hcTJJL97XkxUcZa1KgfoFSWcd5L5aQGZE=; b=d6Sb2vEq3EUBiUnRWX
+	Y9eScgQlbLei5oGd2N7L0108oGhId63hHviiqFz11t6Xr7aE6ObiVvElylh8cfiL
+	CEPz1fxEWkvmKLJR/2glwlXG3FmXXyTVYPfeutp9W/cK00wVEgBvs9Ji6i/GP8G3
+	sHZcGBzXsnmWhcMXEH3gxz9IZOrx6x9S0Ib3eYhigcwxJbMd++br/silXevsGAlI
+	fiUFHMnjmKtJa5bzaggH2ytE5+89cfl/6Fe1AcddF18JdgVQLZqsBSq5JCRPJOo0
+	AX5N4lSRwHUbnVH3R9kGiaNRSB6ZbtUXsPI539t2IupOAl5CB7/q6w07VgVrEz+t
+	uZFA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1743072742; x=1743159142; bh=W0c+nYkLl1hcTJJL97XkxUcZa1Kg
+	foFSWcd5L5aQGZE=; b=SYIndZuoeNngii5gcjx0ZYzvf1E1iLob8Q9qHdRqHW0B
+	pJg8n8Hv4od92m/qvHaW0UzUiG2YZAs7HaFKoi0ViBElZBEvFT9bfFHuQyPvMb0E
+	P8NWvM4oognd+ubV4MH+QP+pkWLVAxKXC/GNOF6XUpDyYwMzk5UUCf7SAn4dkHo4
+	nRZwkI67aTA5iJfrtJVFEHmf1+iYCRgejsaaCrJMJTN1fhixidCtvxlAEK+lDwug
+	5yDYKtG9cF2eSXejlB/Jl392TpjpVKMwBFn967sczdRW33+ekIEPz3Kyo43r6hlB
+	QfHSlLEnQRSkUysW29LRCnmz/0kUUv36SvgsG/eNiA==
+X-ME-Sender: <xms:5S3lZ1ImDKh0Kn2ld5HKXLjcOn5jmZEqGnpFV-5wxutjibBv5KcWFg>
+    <xme:5S3lZxIZKC8VBJTdm9OsG8G8faPRO0GWyFnyomi55hWNvifHic31PXtU4PkZaKDDR
+    qSf0KwXPk-_yrBTP8Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieekvddvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkffutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhepudelieegkeevueegtedtjedttdelgeehhfdvhfeu
+    heethfduleffuddvueelveetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghr
+    nhgusgdruggvpdhnsggprhgtphhtthhopeegpdhmohguvgepshhmthhpohhuthdprhgtph
+    htthhopehjrghnnhhhsehgohhoghhlvgdrtghomhdprhgtphhtthhopehtohhrvhgrlhgu
+    sheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugi
+    dqrghrtghhsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidq
+    khgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:5S3lZ9swkcpoHWcOPMSHKa_0ay3EToyvsdKVqza2WNqaFPESNAAWZQ>
+    <xmx:5S3lZ2b7fercgyBrMsqL4lhK1yyxAD6WNKICPZhXe5r2YfnOdQPjAg>
+    <xmx:5S3lZ8ZyzXnBvRDdH1-Gi8walzbFkp6_po7CxP5pWqyvcwbGsR-ACQ>
+    <xmx:5S3lZ6BeBnUpoPl89Z6Z_EsP5Bnb3ODEdM8KqIlFhPPvrX4VTzuPgA>
+    <xmx:5i3lZ0H4X_3wrDfcpxF-uNGqW7zopis_ACWLBCfnshDdlYTRG3-E3Xps>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id AC6CF2220072; Thu, 27 Mar 2025 06:52:21 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Date: Thu, 27 Mar 2025 11:51:51 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Linus Torvalds" <torvalds@linux-foundation.org>
+Cc: Linux-Arch <linux-arch@vger.kernel.org>, linux-kernel@vger.kernel.org,
+ "Jann Horn" <jannh@google.com>
+Message-Id: <d37aac3f-8220-49ba-ac01-88dfa13ef6b9@app.fastmail.com>
+Subject: [GIT PULL v2] asm-generic changes for 6.15
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 27 2025 at 10:11, Eric Dumazet wrote:
-> On Thu, Mar 27, 2025 at 9:26=E2=80=AFAM Eric Dumazet <edumazet@google.com=
-> wrote:
->
->> We could place all these atomic fields in separate cache lines,
->> to keep read-only fields shared as much as possible.
->>
->
-> Following one-liner seems good enough to separate the 4 atomics used
-> to control/limit
->
-> UCOUNT_RLIMIT_NPROC, UCOUNT_RLIMIT_MSGQUEUE, UCOUNT_RLIMIT_SIGPENDING,
-> UCOUNT_RLIMIT_MEMLOCK,
->
->
-> diff --git a/include/linux/user_namespace.h b/include/linux/user_namespac=
-e.h
-> index 7183e5aca282..6cc3fbec3632 100644
-> --- a/include/linux/user_namespace.h
-> +++ b/include/linux/user_namespace.h
-> @@ -120,7 +120,7 @@ struct ucounts {
->         kuid_t uid;
->         atomic_t count;
->         atomic_long_t ucount[UCOUNT_COUNTS];
-> -       atomic_long_t rlimit[UCOUNT_RLIMIT_COUNTS];
-> +       atomic_long_t ____cacheline_aligned_in_smp rlimit[UCOUNT_RLIMIT_C=
-OUNTS];
->  };
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
 
-Cute. How much bloat does it cause?
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git tags/asm-generic-6.15-2
+
+for you to fetch changes up to 47a60391ae0ed04ffbb9bd8dcd94ad9d08b41288:
+
+  rwonce: fix crash by removing READ_ONCE() for unaligned read (2025-03-26 22:16:50 +0100)
+
+----------------------------------------------------------------
+asm-generic changes for 6.15
+
+This is mainly set of cleanups of asm-generic/io.h, resolving problems
+with inconsistent semantics of ioread64/iowrite64 that were causing
+runtime and build issues.
+
+The "GENERIC_IOMAP" version that switches between inb()/outb() and
+readb()/writeb() style accessors is now only used on architectures that
+have PC-style ISA devices that are not memory mapped (x86, uml, m68k-q40
+and powerpc-powernv), while alpha and parisc use a more complicated
+variant and everything else just maps the ioread interfaces to plan MMIO
+(readb/writeb etc).
+
+In addition there are two small changes from Raag Jadav to simplify
+the asm-generic/io.h indirect inclusions and from Jann Horn to fix
+a corner case with read_word_at_a_time.
+
+[this is the same content as yesterday, but with the regression
+ fix from Jann added on top of his original patch]
+
+----------------------------------------------------------------
+Arnd Bergmann (10):
+      asm-generic/io.h: rework split ioread64/iowrite64 helpers
+      alpha: stop using asm-generic/iomap.h
+      sh: remove duplicate ioread/iowrite helpers
+      parisc: stop using asm-generic/iomap.h
+      powerpc: asm/io.h: remove split ioread64/iowrite64 helpers
+      mips: drop GENERIC_IOMAP wrapper
+      m68k/nommu: stop using GENERIC_IOMAP
+      mips: fix PCI_IOBASE definition
+      mips: export pci_iounmap()
+      m68k: coldfire: select PCI_IOMAP for PCI
+
+Jann Horn (2):
+      rwonce: handle KCSAN like KASAN in read_word_at_a_time()
+      rwonce: fix crash by removing READ_ONCE() for unaligned read
+
+Raag Jadav (2):
+      drm/draw: include missing headers
+      io.h: drop unused headers
+
+ arch/alpha/include/asm/io.h                    |  31 ++---
+ arch/m68k/Kconfig                              |   3 +-
+ arch/m68k/include/asm/io_no.h                  |   4 -
+ arch/mips/Kconfig                              |   2 +-
+ arch/mips/include/asm/io.h                     |  25 ++--
+ arch/mips/include/asm/mach-loongson64/spaces.h |   5 +-
+ arch/mips/include/asm/mach-ralink/spaces.h     |   2 +-
+ arch/mips/lib/iomap-pci.c                      |  10 ++
+ arch/mips/loongson64/init.c                    |   4 +-
+ arch/parisc/include/asm/io.h                   |  36 ++++--
+ arch/powerpc/include/asm/io.h                  |  48 --------
+ arch/sh/include/asm/io.h                       |  30 +----
+ arch/sh/kernel/Makefile                        |   3 -
+ arch/sh/kernel/iomap.c                         | 162 -------------------------
+ arch/sh/kernel/ioport.c                        |   5 -
+ arch/sh/lib/io.c                               |   4 +-
+ drivers/gpu/drm/drm_draw.c                     |   2 +
+ drivers/sh/clk/cpg.c                           |  25 ++--
+ include/asm-generic/iomap.h                    |  36 ++----
+ include/asm-generic/rwonce.h                   |  10 +-
+ include/linux/io-64-nonatomic-hi-lo.h          |  16 +++
+ include/linux/io-64-nonatomic-lo-hi.h          |  16 +++
+ include/linux/io.h                             |   3 -
+ lib/iomap.c                                    |  40 +++---
+ 24 files changed, 167 insertions(+), 355 deletions(-)
+ delete mode 100644 arch/sh/kernel/iomap.c
