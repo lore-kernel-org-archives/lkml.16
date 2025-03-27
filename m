@@ -1,78 +1,83 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16AA11A8F84
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24C11586C8;
+	Thu, 27 Mar 2025 16:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743093489; cv=none; b=P+XGqo4+aE7cvUrt5fzaARQGU2MflJGRcBOTxYG0/ilpSlw2jWiJumGxNBF0YiqPeVpCUB4DI3pvQ76FBeoOZEbEfhcRiNUbSj4DRD2cuZfU5YcvqUe+gd1jZmtvTAwqQaL9r40mihMxKKtnvA7eh01dX77h6bZR9tOwhFgN4HI=
+	t=1743093496; cv=none; b=B0U3pFaTMUZbcTtQuJqlvdvvtddR/ZxU1fWlf8ru+GbxgImEKrsa+UkJCkH5XpCh4uRlQMrx0eqatsMJ77bgoS6alxS47EgkjLOvDW/grntskReNcxOujBjJD15eO8N2eSp47VAi+MQR5cfKdx6Gip2wl/f+lAc9rYHjRKfp43M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743093489; c=relaxed/simple;
-	bh=ESzt2enLXYt23xY8ttSN/ZcELiO4gL9UAIgPB3r5q/c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K0BMQlyf1WkgfD3ulSKKU3NzkYyzEHYo/ElpfvzrZ6+1YKH+5Mt65KIV4k3s23UIcMlV8itxpWmYZLEh7TkR1BtE4PF0MZSH9EA0eC4N1+cLASMaRiOSYItxyOAiO83PrN/g9DNwa1Kfg076wYUc8s76C3z7J/SSfL9Jdd8bDtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gOi6g9wK; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743093496; c=relaxed/simple;
+	bh=NvC16u1aqR/2KG04a8f4N6Xoq/iI1HOtNPpUepOa0Ms=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y2AJ9EB+13Trywv+FbxUzuZQ14zAe1jmB+z6+F0eeHUCsRXHaKySKVH3yHQ6L7yCq8yjNv/W+NQm1tYpgLosrF9T+Y7TDzZ8Y0l2Q9PZ6u2lyn7os1N5hLlVaGOvcNc8haPis72fYz2LojKaboAnZ8Hlpnt4LZT4YKTTi7Dx/es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o3ztZUCE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gOi6g9wK"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743093482;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Z51hX2ubcFhMKJ5by2u7YjCKZ3Nzr1b3Lq1PylQ9GKA=;
-	b=gOi6g9wKrGSV5UH/x54wg6WFP3jRV9kCC53qdcKuyEwOYsTNbTvmY/kgEf70GSTgtes9jT
-	RMIMsSF91b+mRVbfbms+jIBn14Dhmv3Skw6Jkb1GSznvz7Zm9v/3dJkyHjEwThs4pylu3s
-	DUepdIINJzrmUGd3pr5cqru3B+DW/LM=
-From: Oliver Upton <oliver.upton@linux.dev>
-To: kvmarm@lists.linux.dev
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-Subject: [PATCH] smccc: kvm_guest: Align with DISCOVER_IMPL_CPUS ABI
-Date: Thu, 27 Mar 2025 09:36:15 -0700
-Message-Id: <20250327163613.2516073-1-oliver.upton@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o3ztZUCE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15777C4CEE8;
+	Thu, 27 Mar 2025 16:38:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743093496;
+	bh=NvC16u1aqR/2KG04a8f4N6Xoq/iI1HOtNPpUepOa0Ms=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o3ztZUCEsTgAufZFIr54bxgGmr3liOeSSxSNHer94WsXcmqD6VkiFMJpgxN4qBDpI
+	 BtOIwp8CLI6Ri4PDU0wPxHZv5eCUfsEgY7UXGM0/Ipj1Quhx6WA8bn+cnuw5/RSjpN
+	 bGulEuC72O8WOwISAx5IXkbmdCIw4BWmhGMyjjoQINgPphdojzU37IE9tM1hJf4cHc
+	 O4CLk/OaeYXzHinKCDM+z/NZ/ltVO6XamoCGyi9f6WXu+dYHBuxHbEWcS2uYtUzd9Q
+	 XeWV1DkJRBHxTNFVnGvmccUeI6FFgZYGXMTEfcfvg4P/nF4X5H6d7Hs+9tSjt4MFvc
+	 v8so7ojzrKQSA==
+Date: Thu, 27 Mar 2025 16:38:11 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: remoteproc: stm32-rproc: Add
+ firmware-name property
+Message-ID: <20250327-defiant-quicksand-83cfdd8cf8d8@spud>
+References: <20250327082721.641278-1-arnaud.pouliquen@foss.st.com>
+ <20250327082721.641278-2-arnaud.pouliquen@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ytieV3SLIaVgIcdG"
+Content-Disposition: inline
+In-Reply-To: <20250327082721.641278-2-arnaud.pouliquen@foss.st.com>
 
-The ABI of the hypercall requires that R2 and R3 are 0. Explicitly pass
-0 for these parameters.
 
-Cc: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-Fixes: 86edf6bdcf05 ("smccc/kvm_guest: Enable errata based on implementation CPUs")
-Signed-off-by: Oliver Upton <oliver.upton@linux.dev>
----
- drivers/firmware/smccc/kvm_guest.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--ytieV3SLIaVgIcdG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/firmware/smccc/kvm_guest.c b/drivers/firmware/smccc/kvm_guest.c
-index 5767aed25cdc..ac2d3cf8a776 100644
---- a/drivers/firmware/smccc/kvm_guest.c
-+++ b/drivers/firmware/smccc/kvm_guest.c
-@@ -95,7 +95,7 @@ void  __init kvm_arm_target_impl_cpu_init(void)
- 
- 	for (i = 0; i < max_cpus; i++) {
- 		arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_KVM_DISCOVER_IMPL_CPUS_FUNC_ID,
--				     i, &res);
-+				     i, 0, 0, &res);
- 		if (res.a0 != SMCCC_RET_SUCCESS) {
- 			pr_warn("Discovering target implementation CPUs failed\n");
- 			goto mem_free;
+On Thu, Mar 27, 2025 at 09:27:20AM +0100, Arnaud Pouliquen wrote:
+> Add the 'firmware-name' property to the remote processor binding
+> to allow specifying the default firmware name in the device tree.
+>=20
+> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
 
-base-commit: 369c0122682c4468a69f2454614eded71c5348f3
--- 
-2.39.5
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
+--ytieV3SLIaVgIcdG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ+V+8wAKCRB4tDGHoIJi
+0rA7AP9JyUbjLOakoM+hJBNcmQksv1MkDD5pE8noBMWu3qQ68AEAsjA4jPrHo7Co
+a14daJ3eTuSb4JbviHqOsCWo9L2j0As=
+=9SvW
+-----END PGP SIGNATURE-----
+
+--ytieV3SLIaVgIcdG--
