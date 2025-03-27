@@ -1,120 +1,138 @@
-Received: from mx1.riseup.net (mx1.riseup.net [198.252.153.129])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8193818AE2
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 19:54:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C1418AE2;
+	Thu, 27 Mar 2025 19:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743105260; cv=none; b=E6fUvX/A2sVUVhD7MThHRh9QgmGSl8drJ6S5p5+eCvOQzXE07M5+oyxmu0C6WFfShwOgTWvPNmgRePRZoctjmCw0+pr3M2aFVQrQaOrMnGABEhovnH7pMdxPB7akZd5NU3SeaoLUZRnCy7Jf8vgekrkZdZCbI7WHFkKVGgY37Pk=
+	t=1743105346; cv=none; b=Vm+N4DE3Y74HFmvHHuershawoqX/spLiNSIZce9hdu1nOQ4L5PXbSLv2KaaJ8PEFkROeJqcGqY2YA1/Wj+2BxXS6QWC+gp7R/0oubS5to75rvWYDOVgKrdHQWliaH1u1OqAqT7xEKxexDFk8N0jUhZJyncWe8BhcsitAoBHhTks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743105260; c=relaxed/simple;
-	bh=eBpNSGuVPssjgUGC8PA/BU88KH1iITq0UyJ33TKvc0c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=foZ0otJvR5Ui7rn5LoOj6piRmVxXMQVOBsgNDn7Hb8S6knKfjjd9wKv/yJXevTkETpLRqAN66Q6V+L6KieKfcyomr6/jEBiE7R1teJuDsLaXavP+bHNMtnc8eEMM+AKt+3hjfJZNWYIi3U0aIHMNwPea3KYsYDk+U0SOfnMor6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=EbJLz+SA; arc=none smtp.client-ip=198.252.153.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
+	s=arc-20240116; t=1743105346; c=relaxed/simple;
+	bh=2WNWM9kf9hPjB2M8fdeez0uvpVDEQQZTBElzx+pQr2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Aj1pH6YOYmKXYQofp4gGTja4GsOgzt2fa/Z/riISabjFzBtJlaBf2LPHuzhcdzLWrSba1kKhtBMV5XdUi4sN7Xd06cth8HE/H1hGpNgyuZfe/jI+PnRmMtwP6WElI1jWRRQPKlgUrknoTzjxuMEiELvUi7qaZib7kiD3w7EzeJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=btDuSomF; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="EbJLz+SA"
-Received: from fews01-sea.riseup.net (fews01-sea-pn.riseup.net [10.0.1.109])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx1.riseup.net (Postfix) with ESMTPS id 4ZNvVx3mThzDq8V;
-	Thu, 27 Mar 2025 19:54:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
-	t=1743105257; bh=eBpNSGuVPssjgUGC8PA/BU88KH1iITq0UyJ33TKvc0c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EbJLz+SA0FfkWIop7kVURaMRZNCJc2NjrFVITIUWgS0yXIEF9nBqkLK+d9ox3nrF5
-	 2lxp2sKf2biFpJfKwPUvv5WkzlLZB3ecL06OUTZkLUUvTokrnkAZLyhrGGxWuewAjI
-	 qCtamKqler0MtHsQ6nPY+eBl+FWjwwNQ1zWGDmTE=
-X-Riseup-User-ID: E65CD4A0DAD85FE86D5D9C399ED394A8AC308DAE58D0505E4337FA9118A3EDCA
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	 by fews01-sea.riseup.net (Postfix) with ESMTPSA id 4ZNvVv6lWtzJtXW;
-	Thu, 27 Mar 2025 19:54:15 +0000 (UTC)
-Message-ID: <1a89af34-8f7a-486b-a7f8-0a56d0447ce7@riseup.net>
-Date: Thu, 27 Mar 2025 20:54:13 +0100
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="btDuSomF"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 85C1F446;
+	Thu, 27 Mar 2025 20:53:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1743105234;
+	bh=2WNWM9kf9hPjB2M8fdeez0uvpVDEQQZTBElzx+pQr2E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=btDuSomFB2B+2MnMXMOVOR1LJ4pat4LuKmecXbaVDZxhFE3Zr5pFZYj0f/M21ze8P
+	 R3K7Z9ek9b7+qKS+V0iA4qz0LXIrSD96M/RISaKnyBPndmJedXF/DOXr6qj9q5lSOF
+	 tmG8NM80yzbsNJraioK9EE/NuUaEWaVZw/6Oe2Ys=
+Date: Thu, 27 Mar 2025 21:55:20 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Martin Kepplinger <martink@posteo.de>,
+	Purism Kernel Team <kernel@puri.sm>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+	Robert Chiras <robert.chiras@nxp.com>,
+	"Guoniu.zhou" <guoniu.zhou@nxp.com>
+Subject: Re: [PATCH v3 04/12] media: nxp: imx8-isi: Allow num_sources to be
+ greater than num_sink
+Message-ID: <20250327195520.GH4861@pendragon.ideasonboard.com>
+References: <20250210-8qxp_camera-v3-0-324f5105accc@nxp.com>
+ <20250210-8qxp_camera-v3-4-324f5105accc@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] x86/i8253: fix possible deadlock when turning off the
- PIT
-To: Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: dwmw@amazon.co.uk, mhkelley@outlook.com, mingo@kernel.org
-References: <20250327152258.3097-1-ffmancera@riseup.net> <87ecyixuna.ffs@tglx>
-Content-Language: en-US
-From: Fernando Fernandez Mancera <ffmancera@riseup.net>
-In-Reply-To: <87ecyixuna.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250210-8qxp_camera-v3-4-324f5105accc@nxp.com>
 
+Hi Frank,
 
+Thank you for the patch.
 
-On 3/27/25 6:15 PM, Thomas Gleixner wrote:
-> On Thu, Mar 27 2025 at 16:22, Fernando Fernandez Mancera wrote:
->> As the PIT could be disabled during the init, it can possibly cause a
->> deadlock. hpet_time_init()->pit_timer_init() is called without IRQ off.
->> It assumes that clockevent_i8253_disable() is IRQ-safe, which it isn't.
+On Mon, Feb 10, 2025 at 03:59:23PM -0500, Frank Li wrote:
+> Allow num_sources (drvdata: num_channels) to be greater than num_sink
+> (drvdata: num_ports + 1).
 > 
-> It assumes nothing and all the missing interrupt disable is causing is a
-> lockdep false positive.
+> ISI support stream multiplexing, such as differentiates multiple cameras
+> from a single 2-lane MIPI input, or duplicates input stream into multiple
+> outputs. So num_channels may be greater than num_ports at some platform.
 > 
-> Lockdep complains correctly due to the observed contexts, but in reality
-> there is no possible deadlock at all. Definitely not the one your
-> subject line is claiming to be possible.
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> change from v1 to v3
+> - none
+> ---
+>  drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> At the point where pit_timer_init() is invoked there is no other usage
-> of 8253_lock possible because the system is still in the very early boot
-> stage.
-> 
+> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
+> index 93a55c97cd173..ba5b2d3617a23 100644
+> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
+> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
+> @@ -188,11 +188,11 @@ static int mxc_isi_crossbar_init_state(struct v4l2_subdev *sd,
+>  	 * Create a 1:1 mapping between pixel link inputs and outputs to
+>  	 * pipelines by default.
+>  	 */
 
-Thanks for taking the time to review the patch.
+Move
 
-I was not aware of this. I took a look to other functions that used 
-i8253_lock like pcspkr_event() and thought it could be possible.
+	routing.num_routes = xbar->num_sinks - 1;
 
-> So disabling interrupt here just prevents lockdep triggering a false
-> positive and not more.
-> 
-> Please analyze problems properly instead of assuming that the lockdep
-> splat is the ultimate truth.
+here, and use routing.num_routes below to replace xbar->num_sinks - 1.
 
-I tried, but it seems I failed. I just found out this while working on 
-something else not related in a VM.
+This assumes that there will always be as many or more pipelines than
+pixel links. It's true for all the currently supported SoCs and the ones
+you add in this series, but maybe we could make it safer with
 
-> 
->>   bool __init pit_timer_init(void)
->>   {
->> +	unsigned long flags;
->> +
->>   	if (!use_pit()) {
->>   		/*
->>   		 * Don't just ignore the PIT. Ensure it's stopped, because
->>   		 * VMMs otherwise steal CPU time just to pointlessly waggle
->>   		 * the (masked) IRQ.
->>   		 */
->> +		local_irq_save(flags);
-> 
-> Why save()? You just established that interrupts are enabled here, so
-> this really wants to be:
-> 
+	routing.num_routes = min(xbar->num_sinks - 1, xbar->num_sources);
 
-I followed Ingo's suggestions on V1 [1]. It made sense to me, if the 
-problem was the one described on the commit message. So, is there 
-consensus about this being a false positive? If so, I will send a new 
-patch just suppressing the warning as suggested below.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-[1] https://lore.kernel.org/linux-kernel/Z-B6ob0zLZr81e8i@gmail.com/
+> -	routes = kcalloc(xbar->num_sources, sizeof(*routes), GFP_KERNEL);
+> +	routes = kcalloc(xbar->num_sinks - 1, sizeof(*routes), GFP_KERNEL);
+>  	if (!routes)
+>  		return -ENOMEM;
+>  
+> -	for (i = 0; i < xbar->num_sources; ++i) {
+> +	for (i = 0; i < xbar->num_sinks - 1; ++i) {
+>  		struct v4l2_subdev_route *route = &routes[i];
+>  
+>  		route->sink_pad = i;
+> @@ -200,7 +200,7 @@ static int mxc_isi_crossbar_init_state(struct v4l2_subdev *sd,
+>  		route->flags = V4L2_SUBDEV_ROUTE_FL_ACTIVE;
+>  	}
+>  
+> -	routing.num_routes = xbar->num_sources;
+> +	routing.num_routes = xbar->num_sinks - 1;
+>  	routing.routes = routes;
+>  
+>  	ret = __mxc_isi_crossbar_set_routing(sd, state, &routing);
+> @@ -453,7 +453,7 @@ int mxc_isi_crossbar_init(struct mxc_isi_dev *isi)
+>  	 * the memory input.
+>  	 */
+>  	xbar->num_sinks = isi->pdata->num_ports + 1;
+> -	xbar->num_sources = isi->pdata->num_ports;
+> +	xbar->num_sources = isi->pdata->num_channels;
+>  	num_pads = xbar->num_sinks + xbar->num_sources;
+>  
+>  	xbar->pads = kcalloc(num_pads, sizeof(*xbar->pads), GFP_KERNEL);
 
->                  scoped_guard(irq)()
-> 	              	clockevent_i8253_disable();
->    		return false;
-> 
-> Thanks,
-> 
->          tglx
+-- 
+Regards,
 
+Laurent Pinchart
