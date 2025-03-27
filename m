@@ -1,190 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5591820C033;
-	Thu, 27 Mar 2025 09:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171C520C01B
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743067598; cv=none; b=ELmIAZDM5fA3NsdIIc7XoObQ/c+ybATL8SjZpzEkwmCo++9o5c+iy37maW7HKhycZIwlzalOaq0dyVqSsbNOGahwk6YilRwyuBt3GpUqaeCUAQ7lr4B0hMMEPV+deD8jCLfegIqVrs8IpXEST0C+vSQx7Mo/qKLO2M1GWGHLrmc=
+	t=1743067678; cv=none; b=AVTTxmlYXfhRL/fJREg86hyntHlcfXzJt0bAiz97rodTV9JzzeJvhNwraG4QXxe5fAssL+Ifj6ntwxNXRTA2NjmnAm622OdGM6vMz868SnSDxT1HuQZ6TXj3dzzPCunrs520cOnvuXMBZqGzImi312aJaoGMJgLp+LNjKn2z6ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743067598; c=relaxed/simple;
-	bh=cYPE4hxj2E/+XBZrJpUbI6pIfd/alhO++G3MPN6trQY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BuwC4K58ngAG86LFPrmE5TRap+3R04htu90BccXjCS7LEyDQo2CcRzWk1phv2WVifeYmKL4ATcXa3nMz1Hyqdo3OJQDe3Ptw8Iv4/1mcCDF2+3N/HRsnTx7yw9AIn1EudSj6Os09FXkCJuw552SrkpOlzdN1D7JsRfWRCqWKLyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KIvaULif; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743067678; c=relaxed/simple;
+	bh=VYJm25E5SBfgKsJrKUJDhLPg0lXKBEdFQtY15OzbjLM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s55whalC5GKpXN25C0anCDJHIh1w48oEE3LDWh5TfIzG0UpLzoixwW+CcbWJ4jqHo9MzYzOfOjQ6LjFuis9o0p0Sr2pb36L4qsBkYb9o9tNPD3DOQVKI8nVZDGhuREADYfNxwEjVOfTYFXeSmUChmnJSjSHsKkK6+5iwEPqq4SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VkrssFUj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KIvaULif"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9FEE0C4CEE8;
-	Thu, 27 Mar 2025 09:26:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743067597;
-	bh=cYPE4hxj2E/+XBZrJpUbI6pIfd/alhO++G3MPN6trQY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=KIvaULifV+wNNdCEg0rADuuV03aLDbFJt2xFhV+hQy+PlpBujaLjMZEsQETNbgdrs
-	 vYN7V3YJgCb089cg76MTE+GAOcL/XS/fQfmWJZEmdLvtq8MB2F0eXOlezyb4lvn2o4
-	 u33iqe0WXMiYP6UF8iEQH7xlXe2TSv8db52uSsiL8ncISf78boipVxgZOjL5dsq4yR
-	 /vIqgPbDY15O7A6S0GZDNrRXCD2Q72IOumgHLvbzCu9ivgMZDuilihifOT/4K+5TVO
-	 pipwKiL2R9dukUop3CzcXUANyYAqlsqggPh1mfQ/BhubCnZGyXvHVxlDafC+dw7EM8
-	 DYxFMa+7tvomQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84491C36012;
-	Thu, 27 Mar 2025 09:26:37 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Thu, 27 Mar 2025 17:26:36 +0800
-Subject: [PATCH 2/2] dts: arm64: amlogic: add a5 pinctrl node
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VkrssFUj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743067676;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fb5rn7gLPo3ygp5MY8ecDAB9dNjS1ERzuhzJpEg3ERw=;
+	b=VkrssFUjGubQIVgNysowq4/Ka9loWVQz24WwvzzjvcK756GpJd+T1VT0FRfnTLvsuHZYXP
+	Bi+iSH7ummS0lTooCH1y5WbMgnzrDG53JuFzN2LK1Tysuqx8d07/EJCkEseUu21NAbC80r
+	5QFyjNqT5940mhWX6CrQ001gyuMO2NA=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-439-AO-ftOmDPym_xURK5nuEtw-1; Thu, 27 Mar 2025 05:27:54 -0400
+X-MC-Unique: AO-ftOmDPym_xURK5nuEtw-1
+X-Mimecast-MFC-AGG-ID: AO-ftOmDPym_xURK5nuEtw_1743067674
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5e67df8c373so848892a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 02:27:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743067673; x=1743672473;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fb5rn7gLPo3ygp5MY8ecDAB9dNjS1ERzuhzJpEg3ERw=;
+        b=aiPRsnfK0RaEx+wrUzvU+vJ1DMNNYTMNtScy8Xmw4l/XKNf/SYJOmoUW5CJNV38ntR
+         YrIx47oJPCurpN8KxEdXR6gumf5bIbRub6r/66eq2RPY2CDp+Ekw+FcPWW0PYZFdkpKS
+         NoV6dqSLvBlNmtKd/cQff07JUAhvDeyREQt9h5uW9JSdLGjhCB7W9/Z2UtRxWDuaPn5F
+         GHcWzWI3/izA0RjoUQ1VnhtPh8fyeRiX6oQXITGBO8YLUmTMe8J1v3mah0192YIYZtc1
+         BDk0PJrM927jTdYoxhk1NqgPd0MLm/UBKM9E3E3d5PnW0RbSILfiHJh6Q2Knof6wZFSk
+         YCwA==
+X-Forwarded-Encrypted: i=1; AJvYcCXyxxOdN6i2GdZQhjKP/tARWdHy/Kozz/HCtFkzTTBvRxBtv3SUSnHefbX4XpNnrV53VM6nKvVrjrCLHKU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxO7SIG99UXY7w0rCZNITwtGN4kKC/SowNW+prfiIwSBdhpAKSe
+	US3mRf6WId72Exyb9WxRWKii1p+Ot12lBhY5JxKDCWjxbUT/tosSH1vfPA8CSQkek67dYkzkB4C
+	GDY1fqDCB2G8wbeN00n2pcZcb7II6a1c2BJoy2yW+Ib4RaoT9iIxe3978z8000Jw8CgsGTfIu
+X-Gm-Gg: ASbGncuIypZBuBt7KZ3UMLyHTZ6MKJ4qv6B4PdhAilSV+kEIOPaQHOevRsIa72Y7fpB
+	HvFLoaTV46Kzn8wG4hiICADskeYtASQW73HsB148VNRRwQZ7smX/nVfZ7rwHVmKczYg9ht3tKUq
+	ziBolZJgEi09sh1Awie8Rp0CR2aASlh9JL7cNc8xdjv2ZRepIt4WQg+5ZLSbZbKwUzaH9A6hhpf
+	2GT8gbcq1dlQyvI/L+wctlftj0l680iLd9Gv6druAui0WirS8bYOCzIPhFi95xsK+2FyqEnK7E2
+	XYIwJzHMSlgv3rOJQNH3MSYQGcQdlOjAmJwaZu5z+0cWTI/knEi0R9PKn2yrzk/J
+X-Received: by 2002:a05:6402:354f:b0:5e5:bb58:d6bd with SMTP id 4fb4d7f45d1cf-5ed8e27e417mr2747653a12.10.1743067673031;
+        Thu, 27 Mar 2025 02:27:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHvTN/A/WKtnLN9cOk1VAV/IoHZ/Wxw0yKAUmRflhbh8sggckBhsPUWwhNfAktSzO/FSF0l+Q==
+X-Received: by 2002:a05:6402:354f:b0:5e5:bb58:d6bd with SMTP id 4fb4d7f45d1cf-5ed8e27e417mr2747630a12.10.1743067672368;
+        Thu, 27 Mar 2025 02:27:52 -0700 (PDT)
+Received: from sgarzare-redhat (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ebccf6797asm10811435a12.16.2025.03.27.02.27.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 02:27:51 -0700 (PDT)
+Date: Thu, 27 Mar 2025 10:27:48 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Sumit Garg <sumit.garg@kernel.org>, 
+	linux-kernel@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>, linux-integrity@vger.kernel.org, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, Jens Wiklander <jens.wiklander@linaro.org>
+Subject: Re: [PATCH 2/2] tpm/tpm_ftpm_tee: use send_recv() op
+Message-ID: <6mpece5tkoie6ngv3j3xzjkotn6x6wu2vjs7pc44ns76z6v3d2@c6jinanngw5o>
+References: <20250320152433.144083-1-sgarzare@redhat.com>
+ <20250320152433.144083-3-sgarzare@redhat.com>
+ <Z-I86tWMcD6b_YeM@sumit-X1>
+ <Z-Pu4FhcntnKii61@kernel.org>
+ <Z+QQWe/upJuVpU8r@ziepe.ca>
+ <Z-QV5y1JGBDpsPuH@kernel.org>
+ <Z-QkGUenPAMid63l@kernel.org>
+ <Z-RlbEN9BoKnTN2E@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250327-a5-pinctrl-v1-2-49320349c463@amlogic.com>
-References: <20250327-a5-pinctrl-v1-0-49320349c463@amlogic.com>
-In-Reply-To: <20250327-a5-pinctrl-v1-0-49320349c463@amlogic.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743067595; l=3211;
- i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=zTXCd3mjrQB2UAQ+DUxS9Et3VYgrEbPO04Lv0RVd3Dc=;
- b=uLPxQhdvFA9JdqryhrPPHciK/D+98xm4FI8UAUBwfEwXpyZasZzFKunrWC9/x5mVLhU/vxfP4
- NoPpdyD8GfNBHqqLHLl/1XB6tVlZwAIYxK++H6ID02hl+ZCBuq+e21R
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
- auth_id=107
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <Z-RlbEN9BoKnTN2E@kernel.org>
 
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+On Wed, Mar 26, 2025 at 10:37:09PM +0200, Jarkko Sakkinen wrote:
+>On Wed, Mar 26, 2025 at 05:58:33PM +0200, Jarkko Sakkinen wrote:
+>> On Wed, Mar 26, 2025 at 04:57:47PM +0200, Jarkko Sakkinen wrote:
+>> > On Wed, Mar 26, 2025 at 11:34:01AM -0300, Jason Gunthorpe wrote:
+>> > > On Wed, Mar 26, 2025 at 02:11:12PM +0200, Jarkko Sakkinen wrote:
+>> > >
+>> > > > Generally speaking I don't see enough value in complicating
+>> > > > callback interface. It's better to handle complications in
+>> > > > the leaves (i.e. dictatorship of majority ;-) ).
+>> > >
+>> > > That is very much not the way most driver subsystems view the
+>> > > world. We want to pull logical things into the core code and remove
+>> > > them from drivers to make the drivers simpler and more robust.
+>> > >
+>> > > The amount of really dumb driver boiler plate that this series
+>> > > obviously removes is exactly the sort of stuff we should be fixing by
+>> > > improving the core code.
+>> > >
+>> > > The callback interface was never really sanely designed, it was just
+>> > > built around the idea of pulling the timout processing into the core
+>> > > code for TIS hardware. It should be revised to properly match these
+>> > > new HW types that don't have this kind of timeout mechanism.
+>> >
+>> > Both TIS and CRB, which are TCG standards and they span to many
+>> > different types of drivers and busses. I don't have the figures but
+>> > probably they cover vast majority of the hardware.
+>> >
+>> > We are talking about 39 lines of reduced complexity at the cost
+>> > of complicating branching at the top level. I doubt that there
+>> > is either any throughput or latency issues.
+>> >
+>> > What is measurable benefit? The rationale is way way too abstract
+>> > for me to cope, sorry.
+>>
+>> E.g., here's how you can get rid of extra cruft in tpm_ftpm_tee w/o
+>> any new callbacks.
 
-Add pinctrl device to support Amlogic A5.
+Yeah, I agree that your patch should go in any case, with send_recv() or 
+not. It's a good cleanup.
 
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi | 90 +++++++++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
+>
+>Measurable benefit: no need to allocate memory buffer.
 
-diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-index 32ed1776891b..844302db2133 100644
---- a/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi
-@@ -4,6 +4,7 @@
-  */
- 
- #include "amlogic-a4-common.dtsi"
-+#include <dt-bindings/pinctrl/amlogic,pinctrl.h>
- #include <dt-bindings/power/amlogic,a5-pwrc.h>
- / {
- 	cpus {
-@@ -50,6 +51,95 @@ pwrc: power-controller {
- };
- 
- &apb {
-+	periphs_pinctrl: pinctrl@4000 {
-+		compatible = "amlogic,pinctrl-a5",
-+			     "amlogic,pinctrl-a4";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges = <0x0 0x0 0x0 0x4000 0x0 0x300>;
-+
-+		gpioz: gpio@c0 {
-+			reg = <0x0 0xc0 0x0 0x40>,
-+			      <0x0 0x18 0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_Z<<8) 16>;
-+		};
-+
-+		gpiox: gpio@100 {
-+			reg = <0x0 0x100 0x0 0x40>,
-+			      <0x0 0xc   0x0 0xc>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_X<<8) 20>;
-+		};
-+
-+		gpiot: gpio@140 {
-+			reg = <0x0 0x140 0x0 0x40>,
-+			      <0x0 0x2c  0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_T<<8) 14>;
-+		};
-+
-+		gpiod: gpio@180 {
-+			reg = <0x0 0x180 0x0 0x40>,
-+			      <0x0 0x40  0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_D<<8) 16>;
-+		};
-+
-+		gpioe: gpio@1c0 {
-+			reg = <0x0 0x1c0 0x0 0x40>,
-+			      <0x0 0x48  0x0 0x4>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_E<<8) 2>;
-+		};
-+
-+		gpioc: gpio@200 {
-+			reg = <0x0 0x200 0x0 0x40>,
-+			      <0x0 0x24  0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_C<<8) 11>;
-+		};
-+
-+		gpiob: gpio@240 {
-+			reg = <0x0 0x240 0x0 0x40>,
-+			      <0x0 0x0   0x0 0x8>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_B<<8) 14>;
-+		};
-+
-+		gpioh: gpio@280 {
-+			reg = <0x0 0x280 0x0 0x40>,
-+			      <0x0 0x4c  0x0 0x4>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_H<<8) 5>;
-+		};
-+
-+		gpio_test_n: gpio@2c0 {
-+			reg = <0x0 0x2c0 0x0 0x40>,
-+			      <0x0 0x3c  0x0 0x4>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_TEST_N<<8) 1>;
-+		};
-+	};
-+
- 	gpio_intc: interrupt-controller@4080 {
- 		compatible = "amlogic,a5-gpio-intc",
- 			     "amlogic,meson-gpio-intc";
+That's right, I read the whole thread before responding, but that's 
+exactly what I wanted to highlight. Implementing send_recv() we could 
+completely remove the buffer for the cache here in tpm_ftpm_tee, 
+simplifying it quite a bit.
 
--- 
-2.37.1
+In tpm_svsm instead we allocate it while probing anyway to avoid having 
+to allocate it every time, but we could potentially do the same (I don't 
+know if it makes sense honestly). We do this because for SVSM any buffer 
+is fine, as it can access all guest kernel memory, whereas IIUC for ftpm 
+it has to be taken from shared memory.
 
+>
+>Let's take that as a starting point ;-)
+
+Yeah!
+
+>
+>On that basis I can consider this (i.e. something to measure).
+
+Okay, I explain this better in the commit description for the next 
+version!
+
+Thanks,
+Stefano
 
