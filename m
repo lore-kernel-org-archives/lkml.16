@@ -1,78 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E582721B199;
-	Thu, 27 Mar 2025 18:49:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5921C5D44
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 18:50:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743101400; cv=none; b=TwP8HjRI9JwsUZF41jKT5jfBwwfFZEim34tK+xaFgDV174jEw3eBx8aQchBuDJTu0K9l5BhUDI+WHmIWPQ1tOzV4RcLJgT+/QahLrN9mpTAxJ7inu/8z+oOTYipDs7Je/An1lEcVMT1YDDF+ur9Btf5PCysG7Bjdi4yzk41yUts=
+	t=1743101445; cv=none; b=lzWSFVKkQ7V9DEGnpJGqX4aN+uu5J4iuWiGg0kbeKqm3pgxgYJQAV6M36lP4/2Bh/JOUPiZUkNtnt0O85vtFryirOluRiX1wMWqJwTkEHDUNg8WmdvyUyW5wyjQdprOGLSUhIgV8hrRg7rrrFhyfyYM0QxaA71vVE1gUfW5DXK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743101400; c=relaxed/simple;
-	bh=IG6oOqJqDXcFmfih0AvHQhvGZYx8gmu1iB3y7OXTB2k=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=FKQTaeIIuD2Rq8THsyruGdmx02h+3h5y+rNVPDnhpPrNofRXp1oMhYnE634QhnYYU5pgY4lANIHt+4FD9TIMiwRydkAFUyARWcOaRuy61twjzbznZN49EdF7Z4zGmwLG25ckm7ig77vSmnOIBiv2G+F/kRMQeOu6oKc17/Cqx7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fUhcLZy+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743101445; c=relaxed/simple;
+	bh=hVETiLE9zmo8JA2aFgbYABkBW11PW5ijv1TZHyWo/HI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=T11pgK7vSdABEkDrHgCafBLAtWSfh7HaCbh2Jpce+Xp2r6MQjJkIoQ6GvGzstibe8JKYZ733RGl5CMqAwXGg3sNmgnwKqeZk3UzhA5eXoYHU8ylnNpUuDXYFLGUbyR+rn4psGVQk1HkrZgH+g7FUAp/Aya7U6OHumMHx3c7btw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=xZFH1bod; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fUhcLZy+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60A82C4CEDD;
-	Thu, 27 Mar 2025 18:49:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743101399;
-	bh=IG6oOqJqDXcFmfih0AvHQhvGZYx8gmu1iB3y7OXTB2k=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=fUhcLZy+CdHRtHU+WqNJSuiA9DGAGWVjZ31PjNSdHMMH/gDykq91LUB/uie1ob9Ry
-	 y7C6weHVpg4B3+R6Uxq1FOAGM54Vh2o8ZeiflaO8SJaeHcf/aWCyhv4SUhZgtFXB9u
-	 friAZ3nHig+KO1/tQZV4iwozVydI04wzI6dLVkYEz+0Bquke+iL6e5XTSK8JE/sFhj
-	 2jT4GOQNUv6v+1QzTBsA/AIjS/oHd1hIQmIhzO8QVjKSOeUwaKnROoE1gSWqGCBft9
-	 DxshAGJmcdWIJpBqQBMvyeNlf1mPBDni8aGK2o19YGMMMvo+5bAJZEzsrhhrI+m1N1
-	 16Hfbls0Nzwhw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB2CC380AAFD;
-	Thu, 27 Mar 2025 18:50:36 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="xZFH1bod"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D137C4CEE5;
+	Thu, 27 Mar 2025 18:50:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1743101444;
+	bh=hVETiLE9zmo8JA2aFgbYABkBW11PW5ijv1TZHyWo/HI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=xZFH1bodakJ5hEOIGI7USLu9RBN11k/52lYlCC5lR7xpikwLBskDYPxiWQbDPkCnF
+	 FYlPeJ4QI46gGsZkl/wkqxGS/At/nJ5tFyCTHF9kf53nGrpZzFaq4YX+kDukZBU3BS
+	 wvFaxfQwqmqwRxnLY6shDHnDQRBTWJ5FImfjfO8I=
+Date: Thu, 27 Mar 2025 11:50:43 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: T Pratham <t-pratham@ti.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Robert Jarzmik <robert.jarzmik@free.fr>,
+ Kamlesh Gurudasani <kamlesh@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Praneeth Bajjuri <praneeth@ti.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] lib: scatterlist: Fix sg_split_phys to preserve
+ original scatterlist offsets
+Message-Id: <20250327115043.fb46442c7e7fafc12295a8fd@linux-foundation.org>
+In-Reply-To: <41fd2bb3-7115-42c3-8ee5-e8e9e54fa86b@ti.com>
+References: <20250319111437.1969903-1-t-pratham@ti.com>
+	<20250319184605.809fc9ce3b169478102b9313@linux-foundation.org>
+	<7647126a-5986-4a2c-9bb0-9efb0ff9c131@ti.com>
+	<41fd2bb3-7115-42c3-8ee5-e8e9e54fa86b@ti.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net: move replay logic to tc_modify_qdisc
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174310143550.2165614.306557250849673833.git-patchwork-notify@kernel.org>
-Date: Thu, 27 Mar 2025 18:50:35 +0000
-References: <20250325175427.3818808-1-sdf@fomichev.me>
-In-Reply-To: <20250325175427.3818808-1-sdf@fomichev.me>
-To: Stanislav Fomichev <sdf@fomichev.me>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org,
- jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
- horms@kernel.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
+On Wed, 26 Mar 2025 14:13:02 +0530 T Pratham <t-pratham@ti.com> wrote:
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue, 25 Mar 2025 10:54:27 -0700 you wrote:
-> Eric reports that by the time we call netdev_lock_ops after
-> rtnl_unlock/rtnl_lock, the dev might point to an invalid device.
-> As suggested by Jakub in [0], move rtnl lock/unlock and request_module
-> outside of qdisc_create. This removes extra complexity with relocking
-> the netdev.
+> >> Is this merely from code inspection, or is this issues known to have
+> >> observable runtime effects?
+> >>
+> >> If the latter, please provide a complete description.
+> > Hi,
+> >
+> > I am using this function in a crypto driver that I'm currently
+> > developing (not yet sent to mailing list). During testing, it was
+> > observed that the output scatterlists (except the first one) contained
+> > incorrect garbage data.
+> >
+> > I narrowed this issue down to the call of sg_split(). Upon debugging
+> > inside this function, I found that this resetting of offset is the cause
+> > of the problem, causing the subsequent scatterlists to point to
+> > incorrect memory locations in a page. By removing this code, I am
+> > obtaining expected data in all the split output scatterlists. Thus, this
+> > was indeed causing observable runtime effects!
+> >
+> > Regards
+> > T Pratham <t-pratham@ti.com>
 > 
-> 0: https://lore.kernel.org/netdev/20250325032803.1542c15e@kernel.org/
+> Hi Andrew,
 > 
-> [...]
+> Do you need the above details to be incorporated into the commit message
+> and be resent? Kindly let me know.
 
-Here is the summary with links:
-  - [net-next] net: move replay logic to tc_modify_qdisc
-    https://git.kernel.org/netdev/net/c/2eb6c6a34cb1
+I pasted it into the changelog.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+I also added cc:stable, as this might be affecting other drivers,
+whether in-tree or out-of-tree.
