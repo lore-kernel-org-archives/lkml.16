@@ -1,124 +1,92 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507B61547C9;
-	Thu, 27 Mar 2025 05:27:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C25235280;
+	Thu, 27 Mar 2025 05:28:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743053268; cv=none; b=NIwqh7yVvytNP0zoD9H38vd+7p21CzuEkE3FB6JAsjCCORUX7avQ7PCaglVGhh1cReaUPbo5q4ekKs0LLiVGJowL5X6O6YnjZH11lz6917SGamAT6lL3kmIHoFSP7KWN2/o9vxUHuWUcmelJ3Oho7mSEXDzCw8jwNUoMkQmCmRk=
+	t=1743053340; cv=none; b=e+61z+QU33W24Mzood6RWJVE+RDKE5VnV2JB9BkqKecpcGYssh3N5BWUxQyNwdYPFikiTrQxt+SypTmiy8sW9pcNW+sSdDT9dnecukFQSUvviZWqZLkq3Zw0S9Mfh3PYM9ub5ZPEaRC3dqC15pwC4Or2nWtq9SWrb2EoLV1Q/h0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743053268; c=relaxed/simple;
-	bh=tpgb5oyvr981xsJ6BClPWQTEC3M2egOGLynvUm6LgC8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UBsDqZ2vefPgeTP4sqPBGXdSeJmrjAsxXdAfBYfTOXpDXE0Cma2lNS6FxH4Q1fo8f0dhC2zI16BCVLdqPOppfX5PlAsjl3p4FpEStGyF2G7OaLimDDlfsJQPyta5hVvj59x5HMHmOdihjlvyt5Ach835OGBxzlpfN8eRpUYaOS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Xj4Py5i9; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743053340; c=relaxed/simple;
+	bh=JQkF6jA2QUs6Cz9bhUGfJtAYxGyaYqob+SEALNJvCrU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eYTMq8s4VS9e8Jig91C1DB+3qxi+g7fHq1LFRr9zstY+DfVc8tLqp1pg4c83X8+Gq73KSMUOyf+ABUUESTOcyv4CZppoOimMhbjs25iUUC7fV/abcSwyBXUulAMD/41cZ/pkVhviUGBVhNTX7uGaSCK1nQg7hgtWkKFjIAjjWH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sUpoxKLy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Xj4Py5i9"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R3mahx006138;
-	Thu, 27 Mar 2025 05:27:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	LnArCRvQP7qZOrcigjEhnlKt1WGcj0RSP3AVU9Xt1Rw=; b=Xj4Py5i9Q0TzIzzi
-	my+ADEun/Km1arM7a2uUxtPtAmNqAa61N4XTOgZ+w+xAP6yD4TDnez84m3xIbez1
-	VZvm9DabIgtgG5aDDfsksuPdnnNotSn0oxC2k/ittPjmsMJTXb53sRj9Jz77BwnX
-	N67MCTPS4G1EVycvyiLIk2mSf4knt2tBt9pLfoAJN5ZVWVrUGEu2PmOBcLO5+WU3
-	k6KvIK7eZDxuA4VcJ6G9Te7sMriX690Kk8xhszgICI7HL1N6n28mf4YySu44OX3I
-	8ROUO/tYmCNKX4I78KHBRv2xhDQEZ+utXIV9B3jSw44Yah/TA5yeKlqvtO3fcuDC
-	Fl1Okg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45manj3r71-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 05:27:35 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52R5RYMc020190
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 05:27:34 GMT
-Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 26 Mar
- 2025 22:27:31 -0700
-Message-ID: <208f3edd-2be0-4edd-be25-d874d00b770d@quicinc.com>
-Date: Thu, 27 Mar 2025 10:57:28 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sUpoxKLy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20EFFC4CEDD;
+	Thu, 27 Mar 2025 05:28:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743053339;
+	bh=JQkF6jA2QUs6Cz9bhUGfJtAYxGyaYqob+SEALNJvCrU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sUpoxKLy9tfZl8MfzcBnq6cJDmNzeQ2MU03W3wqq9A5kXil3+y1pAsUVX+wSgUQXu
+	 8uARaMjqPpCivavKgECofXUEz2upNK254ehtf7kaOnljTAVK+FOr4q1/2c8lEeklhO
+	 WB8onFw+2XSdUjSXBNVAttlqurvUG8T9rbnMir5npEqd+rcnTLNJs4SI4eNOQcno+X
+	 0XIdKxjxoJyif1gVRqA9Z8en5VtivcCcQ4AmB4TuEgLpEnbuVSKqJJIXtRIGN0oCT3
+	 mVan7oa1719i3HNcvYXlELMVs4iPRiXJxtSHwkBkc41/bbBwJgb/6B8KWR/g/G3prG
+	 59LKv+5DuIOsg==
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev,
+	Peter Zijlstra <peterz@infradead.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH] iommu: Convert unreachable() to BUG()
+Date: Wed, 26 Mar 2025 22:28:46 -0700
+Message-ID: <0c801ae017ec078cacd39f8f0898fc7780535f85.1743053325.git.jpoimboe@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] i2c: davinci: add I2C_FUNC_PROTOCOL_MANGLING to feature
- list
-To: Marcus Folkesson <marcus.folkesson@gmail.com>,
-        Bartosz Golaszewski
-	<brgl@bgdev.pl>,
-        Andi Shyti <andi.shyti@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250326-i2c-v1-1-82409ebe9f2b@gmail.com>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <20250326-i2c-v1-1-82409ebe9f2b@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 8NOGiPWwjg7VCHgxcPrPDn4WeJACh39q
-X-Proofpoint-ORIG-GUID: 8NOGiPWwjg7VCHgxcPrPDn4WeJACh39q
-X-Authority-Analysis: v=2.4 cv=KvJN2XWN c=1 sm=1 tr=0 ts=67e4e1c7 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=pGLkceISAAAA:8 a=COk6AnOGAAAA:8 a=kRCqjBm0PVXXUO08W4wA:9
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- malwarescore=0 priorityscore=1501 clxscore=1011 mlxscore=0 spamscore=0
- impostorscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503270033
+Content-Transfer-Encoding: 8bit
 
-Looks good to me.
+Bare unreachable() should be avoided as it generates undefined behavior,
+e.g. falling through to the next function.  Use BUG() instead so the
+error is defined.
 
-On 3/26/2025 8:09 PM, Marcus Folkesson wrote:
-> The driver do support I2C_M_IGNORE_NAK, so add
-> I2C_FUNC_PROTOCOL_MANGLING to the feature list.
-> 
-> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
-Acked-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-> ---
-> The driver do support I2C_M_IGNORE_NAK, so the
-> I2C_FUNC_PROTOCOL_MANGLING bit should be set.
-> 
-> I2C_M_IGNORE_NAK is the only supported "mangling-feature" though, but
-> other i2c bus drivers also seems to support only a subset of available
-> mangling-features, so I guess this is ok.
-> ---
->   drivers/i2c/busses/i2c-davinci.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-davinci.c b/drivers/i2c/busses/i2c-davinci.c
-> index 6a909d339681214ed4f382b62f8cd924f4295e69..6a3d4e9e07f45ecc228943e877cde1fd9d72e8cb 100644
-> --- a/drivers/i2c/busses/i2c-davinci.c
-> +++ b/drivers/i2c/busses/i2c-davinci.c
-> @@ -551,7 +551,8 @@ i2c_davinci_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
->   
->   static u32 i2c_davinci_func(struct i2c_adapter *adap)
->   {
-> -	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
-> +	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL |
-> +		I2C_FUNC_PROTOCOL_MANGLING;
->   }
->   
->   static void terminate_read(struct davinci_i2c_dev *dev)
-> 
-> ---
-> base-commit: 1e26c5e28ca5821a824e90dd359556f5e9e7b89f
-> change-id: 20250326-i2c-5561bf853f8d
-> 
-> Best regards,
+Fixes the following warnings:
+
+  drivers/iommu/dma-iommu.o: warning: objtool: iommu_dma_sw_msi+0x92: can't find jump dest instruction at .text+0x54d5
+  vmlinux.o: warning: objtool: iommu_dma_get_msi_page() falls through to next function __iommu_dma_unmap()
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Closes: https://lore.kernel.org/314f8809-cd59-479b-97d7-49356bf1c8d1@infradead.org
+Reported-by: Paul E. McKenney <paulmck@kernel.org>
+Closes: https://lore.kernel.org/5dd1f35e-8ece-43b7-ad6d-86d02d2718f6@paulmck-laptop
+Fixes: 6aa63a4ec947 ("iommu: Sort out domain user data")
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+---
+ drivers/iommu/dma-iommu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 7b2734de2ba9..6054d0ab8023 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -1753,7 +1753,7 @@ static size_t cookie_msi_granule(const struct iommu_domain *domain)
+ 	case IOMMU_COOKIE_DMA_MSI:
+ 		return PAGE_SIZE;
+ 	default:
+-		unreachable();
++		BUG();
+ 	};
+ }
+ 
+@@ -1765,7 +1765,7 @@ static struct list_head *cookie_msi_pages(const struct iommu_domain *domain)
+ 	case IOMMU_COOKIE_DMA_MSI:
+ 		return &domain->msi_cookie->msi_page_list;
+ 	default:
+-		unreachable();
++		BUG();
+ 	};
+ }
+ 
+-- 
+2.48.1
 
