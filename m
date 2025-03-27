@@ -1,98 +1,127 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6DF171658
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 19:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A50AF17A31E
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 19:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743104955; cv=none; b=dL4aJAWEdUy4fyxUYXudTAn30KIFZ6x/HdT9n6pJO/Ds8dflkrF6Lr1wPHVaBR79Lc2GUZfw71hbI6xLBYq9TZ0mlyyLOHXqsk9QU4hIGCzgzZgJIyUwDIbidqE/tKfraKLHpajhzR0Jz7JpcK3hn6L3vq/86tktrH2yoraRsWU=
+	t=1743105006; cv=none; b=lsKHBrouXFd3RtJGH6SEWClZPAcoMIrOJ8JKLD7nglvFpjTvRyBtlt4LpJmPYYrGnCL/uczWmKfRzd1Xsir5yvZJPO5qtzJeZHGHfGp6AdkLo0K/LeCxhF0w/hHrr1AP+85zafFSRdB+c7LnBvTwA2SYM9wW0N1YmoOir5YZ3qA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743104955; c=relaxed/simple;
-	bh=TmhrEyyzYHS+5GOcpxXhAFm8eLJRmXJBamh8xsmNaSI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LIW6QkwPvKdiCC5/cPa1WX/W1aBurzkXCcRvUvB0M8Tndj1w8u+Sn/X3f/lEGdlpLnlz39WF3EzJK2+BConTwEcT4mYps6AjqimQSj3Y22vkprG1enPsZPcxmNMbg/8RJNkJjmtqr/Ji60V9xk2x7qXLD6RPbKgoSeRvAhJxchc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Em9mcxso; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Em9mcxso"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e61375c108so1774281a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:49:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743104951; x=1743709751; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9ItE8oX0ILk3WjrUu6e7/GfRlQ0WuxC6tMvI04/KUJA=;
-        b=Em9mcxsofxkOn9pYWhQrCEUL1/t6yt3+Q0YHUxxGSYF4eY6++t9CWSSyXnqSpyq4D8
-         W+18/2maStRvKVSQJK/mMt4jUC5OsnUH84a6a6IybA31AlfqQJrKkm1uFO454l0y1yAd
-         KcwOlsuc5xeludgaqX0izfRzL70SbjTCzrhhs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743104951; x=1743709751;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9ItE8oX0ILk3WjrUu6e7/GfRlQ0WuxC6tMvI04/KUJA=;
-        b=dg/Fh+xj1vac3KBfXrl61kCKHgKXLsYMBIiRGTr1opg5NUQTuKON6nYcZbDjfwNMZ7
-         3AnuABqHxZiBQoLuhgbulZabkW9kHiMdfx+0v2Ozwu0CIMjYAyM4WZ8u5LQpm4vKCQPE
-         Ok9IhYDvxy5ffBkDSK4leRDxiT1dXwHMtvD203Fmq/Q8n3g4YVPLtyp6gK/2sP79wnNs
-         3JfQpnWG3rebD1dn7Uz9oiK4OzCLY0+DElhg2aEK1H0wKi9zBe6Ww8LIQeb5hYcgdf/D
-         yAokhWYTgFoNFOPVdjkB00XSqWpdN5dYIlXq0JndRLwsSJVIIGBLJP9DVEDYw+i5koG9
-         Fwcg==
-X-Gm-Message-State: AOJu0YwdsmYVLlczL9pdvFLWX292BLeuv5xu6ADPRkGh4ZKH7xUT5bZu
-	5w3OspqRGddGWX+7oWXO7BJ4NYtsd0TZ5epRchjN8ovH2xRygxpH7XO9pzxYrrjYzg4NdtO3Tdz
-	N86Q=
-X-Gm-Gg: ASbGncuWtimTD0UJzx05JBybMm3bugP2Urthy8pdQh1LI0fh/uWKDsT/E5blRVXuV4v
-	EXZv38ZwUfuPMueFJ2B8JVqLUM1/KYGLzvTVmFVMtSrYSFUSweS1BJZsh3AfnJtGCCq1WR6CqIV
-	O69OO6wFQs709/U6P+7w3Pr1Nhge549ouwd5LESLkG7iREWsJ7WI0snZj+evtIR8KXWy3S3QFmC
-	Glk8VlERD4JOh0n5dQjPCyXscJWp0iOIrSwlruPrvrXA6JYtDL3leJJhm9Ujk5b/onOFoSkEwZL
-	d5HZIrLmlO5ye286Ar3xx1mTcfOs3Bk4KPB82YAmv4+3oUnEmGLhpMPerJ2DGGd5yMLvezjScqB
-	LFWcxYo6dQLyjSH1k99I=
-X-Google-Smtp-Source: AGHT+IHv5Z7lSC8TsdVynOEG7/vuX+l4TUNnGuVH/578VK1MW//EeAAa0F00UgZ19Oon0NOIgT09fA==
-X-Received: by 2002:a05:6402:26cc:b0:5dc:c9ce:b01b with SMTP id 4fb4d7f45d1cf-5ed8e27b765mr5031209a12.8.1743104951142;
-        Thu, 27 Mar 2025 12:49:11 -0700 (PDT)
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc17e0042sm245518a12.80.2025.03.27.12.49.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 12:49:10 -0700 (PDT)
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e61375c108so1774249a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:49:10 -0700 (PDT)
-X-Received: by 2002:a17:907:3ea8:b0:ac3:45c6:a1ec with SMTP id
- a640c23a62f3a-ac6faeef8e8mr423348166b.25.1743104949094; Thu, 27 Mar 2025
- 12:49:09 -0700 (PDT)
+	s=arc-20240116; t=1743105006; c=relaxed/simple;
+	bh=XVScH/u/a6lwV3UqGyQ8+mJFwywZ6c2JYPY6otTdlbA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qQG7c3JYYzx9vkSe8hoI4fdSm1eoJ+um+/7MgjK7BJ7d9PZnrZO+kyPwgSzGPSsV1R2rCFlyPWn2x/stPuBDu9znOqTAtHnELBml9OSfeLiH5E/7U/J3xonym9uz8Uysbi0rSNgZjqchLSe+ww5sYxqvughkJhez/lyxnOUmwv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4ZNtCY6NVdz9v5M;
+	Thu, 27 Mar 2025 19:55:53 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id DjaaxL0rvOli; Thu, 27 Mar 2025 19:55:53 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4ZNtCY5gJSz9tC6;
+	Thu, 27 Mar 2025 19:55:53 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id C18358B76E;
+	Thu, 27 Mar 2025 19:55:53 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id MK2dalRyhSYe; Thu, 27 Mar 2025 19:55:53 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 47F8A8B763;
+	Thu, 27 Mar 2025 19:55:53 +0100 (CET)
+Message-ID: <b37c7a1a-9ec8-417e-9d9d-adeffe409df8@csgroup.eu>
+Date: Thu, 27 Mar 2025 19:55:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327102953.813608-1-mingo@kernel.org> <20250327102953.813608-14-mingo@kernel.org>
-In-Reply-To: <20250327102953.813608-14-mingo@kernel.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 27 Mar 2025 12:48:53 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wihuzRytaFKr6b_pbi209JW+GWiNMtb9x-XhQdstxPuMw@mail.gmail.com>
-X-Gm-Features: AQ5f1JozIZWS8j2lCU6cy3yQlYJmv-RuLU59ehvhVkiyHqS-QfeMDqKPFphPR_s
-Message-ID: <CAHk-=wihuzRytaFKr6b_pbi209JW+GWiNMtb9x-XhQdstxPuMw@mail.gmail.com>
-Subject: Re: [PATCH 13/14] bugs/sh: Concatenate 'cond_str' with '__FILE__' in
- __WARN_FLAGS(), to extend WARN_ON/BUG_ON output
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [main-line]Build warnings on PowerPC system
+To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <61cf556c-4947-4bd6-af63-892fc0966dad@linux.ibm.com>
+ <8797a1c4-dc58-4a85-bc51-a3d4131e7930@linux.ibm.com>
+ <b5713b0b-a278-424c-8ba3-3aec01454e94@linux.ibm.com>
+ <38653c58-a5c4-496f-9b52-e7bc3e447423@linux.ibm.com>
+ <516febac-b2ba-48a0-83a4-ab259e972541@linux.ibm.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <516febac-b2ba-48a0-83a4-ab259e972541@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 27 Mar 2025 at 03:30, Ingo Molnar <mingo@kernel.org> wrote:
->
-> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Cc: Rich Felker <dalias@libc.org>
-> Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-> Cc: linux-sh@vger.kernel.org
-> Cc: <linux-arch@vger.kernel.org>
 
-You say that, but I don't see that in the actual email, which only
-went to lkml...
 
-So the sh maintainers (and riscv and s390 etc: same issue with those
-emails) probably never saw this.
+Le 27/03/2025 à 17:24, Venkat Rao Bagalkote a écrit :
+> 
+> On 27/03/25 8:36 pm, Madhavan Srinivasan wrote:
+>>
+>> On 3/27/25 7:31 PM, Venkat Rao Bagalkote wrote:
+>>> On 27/03/25 7:22 pm, Madhavan Srinivasan wrote:
+>>>> On 3/27/25 12:33 AM, Venkat Rao Bagalkote wrote:
+>>>>> Greetings!!!
+>>>>>
+>>>>> I see below build warnings while compiling mainline kernel on IBM 
+>>>>> Power9 system.
+>>>>>
+>>>>> Repo Link: https://eur01.safelinks.protection.outlook.com/? 
+>>>>> url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ftorvalds%2Flinux.git%2F&data=05%7C02%7Cchristophe.leroy2%40cs-soprasteria.com%7Cd6121f3814a7497bc5e608dd6d4be6c8%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638786894952762400%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3el3Uw9JR2vxDzjOIvF%2BVnienBrwtOsA%2Ftg0kGBqziE%3D&reserved=0
+>>>>>
+>>>>> Head Commit: f6e0150b2003fb2b9265028a618aa1732b3edc8f
+>>>>>
+>>>>> Attached is the .config.
+>>>>>
+>>>>> Machine: IBM Power9
+>>>>>
+>>>>> gcc version 11.5.0
+>>>> What is the ld version in your system.
+>>> Please find the ld version below.
+>>>
+>>> GNU ld version 2.35.2-59.el9
+>>
+>> ah ok that explains. Kindly can you try with this patch and let us 
+>> know whether
+>> this fixes the warning in your setup
+>>
+>>
+>> diff --git a/arch/powerpc/boot/wrapper b/arch/powerpc/boot/wrapper
+>> index 1db60fe13802..09ceb5a42d81 100755
+>> --- a/arch/powerpc/boot/wrapper
+>> +++ b/arch/powerpc/boot/wrapper
+>> @@ -235,7 +235,7 @@ fi
+>>   # suppress some warnings in recent ld versions
+>>   nowarn="-z noexecstack"
+>>   if ! ld_is_lld; then
+>> -       if [ "$LD_VERSION" -ge "$(echo 2.39 | ld_version)" ]; then
+>> +       if [ "$LD_VERSION" -ge "$(echo 2.35 | ld_version)" ]; then
+>>                  nowarn="$nowarn --no-warn-rwx-segments"
+>>          fi
+>>   fi
+> Above change fixes the issue. No warnings observed. Thank you!!
 
-The patches look fine to me, fwiw.
+Take care, this must be a special version of binutils.
 
-           Linus
+With regular 2.36.1 I get following error:
+
+$ /opt/gcc/gcc-8.5.0-nolibc/powerpc64-linux/bin/powerpc64-linux-ld --version
+GNU ld (GNU Binutils) 2.36.1
+Copyright (C) 2021 Free Software Foundation, Inc.
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License version 3 or (at your option) a later 
+version.
+This program has absolutely no warranty.
+
+$ /opt/gcc/gcc-8.5.0-nolibc/powerpc64-linux/bin/powerpc64-linux-ld 
+--no-warn-rwx-segments test.o
+/opt/gcc/gcc-8.5.0-nolibc/powerpc64-linux/bin/powerpc64-linux-ld: 
+unrecognized option '--no-warn-rwx-segments'
+/opt/gcc/gcc-8.5.0-nolibc/powerpc64-linux/bin/powerpc64-linux-ld: use 
+the --help option for usage information
+
