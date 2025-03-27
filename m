@@ -1,211 +1,114 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951AB1A3159
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:40:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209F41A3159;
+	Thu, 27 Mar 2025 16:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743093644; cv=none; b=AsZEwMOWaA8kwfQvSe/y+ugldLBGmLv4dToTZ6Y6bFttF0zFdMgGe1rhtADr9ixcEFS5idfUEYS4oZTjNlpxJzSqcY+c0TSO2gwU8DgHeHpFxMnRNWj1moOOPHnnfmXtNh9Xv4et0ojeMDqxAMZsuYnN0mj3tR2818kiFSuL20Y=
+	t=1743093647; cv=none; b=sh3CK+T03RFFeepvR3rBOHpXVBOBRpRdBeHta0Va5z9RsY2whbCXR4ncSSC+JeR7PR0FjpTOypktyJq1CNe0xAkC27l4Y0FqWfVKRsz6hPMlITDTdOt9KiaFQHHdjbjXijKRqT1mSVdhTz2QFUpMrqOL8/GzdlIQ5clH6i9BU1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743093644; c=relaxed/simple;
-	bh=p0Vod0x1soEuBq1XMYiCO0+hHhpQoQCTRZ+kCxrh8So=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=RmeeFm4mR6fHVthWVKJOEHCtlLYVJFWQGNyAoY/YulkeEiMO2xjkzt5YczEs3u55OZuQVH0RGWFOnrXVsL0BX7b9DORlLmhPzMWpR4FwM+75L3NhE7q2W+MIHViqtIFvAY4aslG0mfUKBmoCZerVkmwJ1e2n3lg1ZcXuOhMLOJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from trampoline.thunk.org (pool-108-26-156-195.bstnma.fios.verizon.net [108.26.156.195])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 52RGeU9p019258
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 12:40:30 -0400
-Received: by trampoline.thunk.org (Postfix, from userid 15806)
-	id CFCA82E010B; Thu, 27 Mar 2025 12:40:29 -0400 (EDT)
-Date: Thu, 27 Mar 2025 12:40:29 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux Kernel Developers List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] ext4 updates for v6.15-rc1
-Message-ID: <20250327164029.GA1423119@mit.edu>
+	s=arc-20240116; t=1743093647; c=relaxed/simple;
+	bh=nw6QSPdQYYmQyRESFL7Fz5mINk4DCE5DFYZA3PpZUDw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q4yT8xdmOUevaz2JwgFb4h3VTLYZ3PDTmxPmWvn1F16xuFwIDqC7ffj1tKMeFzjgKbsiFnRc8k/29IIiohjnfyRO5JtBbkl7h/4vnMQNwmboEkdmVdOrTdsC9mo1k8JfCJ2pKKd3PEEUIg99T/m++d/OKLOZh+ZT6Wz2H0d2q/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JjNJmDSj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JjNJmDSj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 733A2C4CEDD;
+	Thu, 27 Mar 2025 16:40:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743093646;
+	bh=nw6QSPdQYYmQyRESFL7Fz5mINk4DCE5DFYZA3PpZUDw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JjNJmDSjniiHESAwwEREi4LiwbjB3qor5cylvoS18QWsR+Spef+njkGLG72eVnT7y
+	 o0iaHMB+d73aM7hBDVdH0f4LqWTrnhAAat++01K8k+za6IJaN0SxSIkJZxyiEg3UP8
+	 yIqgGQ6xvariEMMzu0YlTCyclpVmNMCi1/7a699YhXlNjfn4VObZn6FTT2FB0hF/2c
+	 MGSbokdLs0844btP/PGeq6aIefHkqSZGiIdrffl3HFxA0Nnf6/ja6NSyj6VE0ad3aO
+	 kh778KziwBFVv4XvJILvkZqGI2RGLHqsQBwvwZTEeqtTSFLl9cOWkI/BEeb/A+mn1A
+	 vk5rep2sL1xwQ==
+Date: Thu, 27 Mar 2025 16:40:42 +0000
+From: Conor Dooley <conor@kernel.org>
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Document RZ/V2H(P) USB2PHY
+ Control
+Message-ID: <20250327-comply-murky-cffc47465429@spud>
+References: <20250305123915.341589-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250305123915.341589-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250305-cesspool-headlock-4d28a2a1333e@spud>
+ <CA+V-a8uQTL+SHYqVU_J0th4PT6YPF7q6ypzDu33nS_6onWLoOQ@mail.gmail.com>
+ <20250306-slather-audition-a6b28ba1483e@spud>
+ <18780ad4be2c28999af314c97ae4104fb161a691.camel@pengutronix.de>
+ <CA+V-a8tYv_u4UM5XVysVMPbfJoVwKFHqucLdJOmDP-xrXZ0L5Q@mail.gmail.com>
+ <CA+V-a8sfx-QwzPz_zEEmGAyAoqha5cfMs9CvWDVJ_b0-D7QfpQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="t7DfaAM27KeM8t9g"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+V-a8sfx-QwzPz_zEEmGAyAoqha5cfMs9CvWDVJ_b0-D7QfpQ@mail.gmail.com>
 
-The following changes since commit a64dcfb451e254085a7daee5fe51bf22959d52d3:
 
-  Linux 6.14-rc2 (2025-02-09 12:45:03 -0800)
+--t7DfaAM27KeM8t9g
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-are available in the Git repository at:
+On Thu, Mar 27, 2025 at 11:06:33AM +0000, Lad, Prabhakar wrote:
+> Hi Philipp and Conor
+>=20
+> On Thu, Mar 13, 2025 at 1:17=E2=80=AFPM Lad, Prabhakar
+> <prabhakar.csengg@gmail.com> wrote:
+> >
+> > Hi Philipp,
+> >
+> > On Thu, Mar 13, 2025 at 1:09=E2=80=AFPM Philipp Zabel <p.zabel@pengutro=
+nix.de> wrote:
+> > >
+> > > On Do, 2025-03-06 at 16:26 +0000, Conor Dooley wrote:
+> > > [...]
+> > > > That sounds awfully like "it was wrong before, and I want to keep u=
+sing
+> > > > the wrong node name"... If you're claiming to be some other class of
+> > > > device, "ctrl" should really be "controller" like all the other sor=
+ts of
+> > > > controllers ;)
+> > >
+> > > There are "usb-phy-controller" nodes on the rcar-gen2 SoCs.
+> > >
+> > Ok, I will rename the node name to "usb-phy-controller".
+> >
+> Fyi to chime in with other reset drivers I'll rename this binding file
+> to `renesas,rzv2h-usb2phy-reset.yaml` and have the node named
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4-for_linus-6.15-rc1
+> `usb2phy-reset@15830000` in the example node.
 
-for you to fetch changes up to d5e206778e96e8667d3bde695ad372c296dc9353:
+At that point, isn't it then "just" a reset controller with only a
+single device that it resets, so "reset-controller" is the right class
+of device to label it as?
 
-  ext4: fix OOB read when checking dotdot dir (2025-03-21 01:33:11 -0400)
+--t7DfaAM27KeM8t9g
+Content-Type: application/pgp-signature; name="signature.asc"
 
-----------------------------------------------------------------
-Ext4 bug fixes and cleanups, including:
+-----BEGIN PGP SIGNATURE-----
 
-  * hardening against maliciously fuzzed file systems
-  * backwards compatibility for the brief period when we attempted to
-     ignore zero-width characters
-  * avoid potentially BUG'ing if there is a file system corruption found
-    during the file system unmount
-  * fix free space reporting by statfs when project quotas are enabled
-    and the free space is less than the remaining project quota
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ+V/igAKCRB4tDGHoIJi
+0nDwAP492sO8TrE28FCvFPFQPB+n3zVDKJ701XsdVAH4BZIC8gD/WPlRuig/cC4Z
+dsNjG53TeGJNVW1VNZGR4PzVV2wLlgQ=
+=rz9f
+-----END PGP SIGNATURE-----
 
-Also improve performance when replaying a journal with a very large
-number of revoke records (applicable for Lustre volumes).
-
-----------------------------------------------------------------
-Acs, Jakub (1):
-      ext4: fix OOB read when checking dotdot dir
-
-Baokun Li (18):
-      ext4: replace opencoded ext4_end_io_end() in ext4_put_io_end()
-      ext4: do not convert the unwritten extents if data writeback fails
-      ext4: reject the 'data_err=abort' option in nojournal mode
-      ext4: extract ext4_has_journal_option() from __ext4_fill_super()
-      ext4: abort journal on data writeback failure if in data_err=abort mode
-      jbd2: drop JBD2_ABORT_ON_SYNCDATA_ERR
-      ext4: update the descriptions of data_err=abort and data_err=ignore
-      ext4: remove unused member 'i_unwritten' from 'ext4_inode_info'
-      ext4: pack holes in ext4_inode_info
-      ext4: convert EXT4_FLAGS_* defines to enum
-      ext4: add EXT4_FLAGS_EMERGENCY_RO bit
-      ext4: add ext4_emergency_state() helper function
-      ext4: add more ext4_emergency_state() checks around sb_rdonly()
-      ext4: correct behavior under errors=remount-ro mode
-      ext4: show 'emergency_ro' when EXT4_FLAGS_EMERGENCY_RO is set
-      ext4: show 'shutdown' hint when ext4 is forced to shutdown
-      ext4: goto right label 'out_mmap_sem' in ext4_setattr()
-      jbd2: remove jbd2_journal_unfile_buffer()
-
-Bhupesh (1):
-      ext4: ignore xattrs past end
-
-Charles Han (1):
-      ext4: fix potential null dereference in ext4 kunit test
-
-Christian Göttsche (1):
-      ext4: reorder capability check last
-
-Diangang Li (1):
-      ext4: clear DISCARD flag if device does not support discard
-
-Eric Biggers (2):
-      ext4: remove redundant function ext4_has_metadata_csum
-      jbd2: remove redundant function jbd2_journal_has_csum_v2or3_feature
-
-Ethan Carter Edwards (1):
-      ext4: hash: simplify kzalloc(n * 1, ...) to kzalloc(n, ...)
-
-Jan Kara (4):
-      jbd2: Avoid long replay times due to high number or revoke blocks
-      ext4: verify fast symlink length
-      jbd2: remove wrong sb->s_sequence check
-      jbd2: do not try to recover wiped journal
-
-Julian Sun (5):
-      ext4: Remove a redundant return statement
-      ext4: Don't set EXT4_STATE_MAY_INLINE_DATA for ea inodes
-      ext4: Introduce a new helper function ext4_generic_write_inline_data()
-      ext4: Replace ext4_da_write_inline_data_begin() with ext4_generic_write_inline_data().
-      ext4: Refactor out ext4_try_to_write_inline_data()
-
-Kemeng Shi (12):
-      ext4: remove unused ext4 journal callback
-      jbd2: remove unused transaction->t_private_list
-      ext4: remove unneeded forward declaration
-      jbd2: remove unused h_jdata flag of handle
-      jbd2: remove unused return value of jbd2_journal_cancel_revoke
-      jbd2: remove unused return value of do_readahead
-      jbd2: remove stale comment of update_t_max_wait
-      jbd2: correct stale function name in comment
-      jbd2: Correct stale comment of release_buffer_page
-      ext4: add missing brelse() for bh2 in ext4_dx_add_entry()
-      ext4: remove unneeded forward declaration in namei.c
-      ext4: remove unused input "inode" in ext4_find_dest_de
-
-Matthew Wilcox (Oracle) (1):
-      ext4: remove references to bh->b_page
-
-Nicolas Bretz (1):
-      ext4: on a remount, only log the ro or r/w state when it has changed
-
-Ojaswin Mujoo (4):
-      ext4: protect ext4_release_dquot against freezing
-      ext4: define ext4_journal_destroy wrapper
-      ext4: avoid journaling sb update on error if journal is destroying
-      ext4: Make sb update interval tunable
-
-Theodore Ts'o (2):
-      ext4: introduce linear search for dentries
-      ext4: don't over-report free space or inodes in statvfs
-
-Ye Bin (2):
-      ext4: introduce ITAIL helper
-      ext4: fix out-of-bound read in ext4_xattr_inode_dec_ref_all()
-
-Zhang Yi (13):
-      ext4: remove writable userspace mappings before truncating page cache
-      ext4: don't explicit update times in ext4_fallocate()
-      ext4: don't write back data before punch hole in nojournal mode
-      ext4: refactor ext4_punch_hole()
-      ext4: refactor ext4_zero_range()
-      ext4: refactor ext4_collapse_range()
-      ext4: refactor ext4_insert_range()
-      ext4: factor out ext4_do_fallocate()
-      ext4: move out inode_lock into ext4_fallocate()
-      ext4: move out common parts into ext4_fallocate()
-      jbd2: fix off-by-one while erasing journal
-      jbd2: add a missing data flush during file and fs synchronization
-      ext4: correct the error handle in ext4_fallocate()
-
-Zizhi Wo (1):
-      ext4: update the comment about mb_optimize_scan
-
- Documentation/admin-guide/ext4.rst        |   7 +-
- Documentation/filesystems/journalling.rst |   4 +-
- fs/ext4/balloc.c                          |   4 +-
- fs/ext4/bitmap.c                          |   8 +-
- fs/ext4/dir.c                             |   7 +-
- fs/ext4/ext4.h                            |  94 ++++----
- fs/ext4/ext4_jbd2.c                       |  12 +-
- fs/ext4/ext4_jbd2.h                       | 113 +++------
- fs/ext4/extents.c                         | 531 ++++++++++++++++---------------------------
- fs/ext4/extents_status.c                  |   1 -
- fs/ext4/file.c                            |  27 ++-
- fs/ext4/fsync.c                           |  12 +-
- fs/ext4/hash.c                            |   2 +-
- fs/ext4/ialloc.c                          |   9 +-
- fs/ext4/inline.c                          | 205 ++++++-----------
- fs/ext4/inode.c                           | 288 +++++++++++++----------
- fs/ext4/ioctl.c                           |  13 +-
- fs/ext4/mballoc-test.c                    |   2 +
- fs/ext4/mballoc.c                         |   8 +-
- fs/ext4/mmp.c                             |   6 +-
- fs/ext4/namei.c                           | 117 +++++-----
- fs/ext4/orphan.c                          |   2 +-
- fs/ext4/page-io.c                         |  75 ++++--
- fs/ext4/resize.c                          |   4 +-
- fs/ext4/super.c                           | 267 ++++++++++++----------
- fs/ext4/sysfs.c                           |   4 +
- fs/ext4/xattr.c                           |  47 ++--
- fs/ext4/xattr.h                           |  10 +
- fs/jbd2/commit.c                          |  10 +-
- fs/jbd2/journal.c                         |  34 +--
- fs/jbd2/recovery.c                        |  80 +++++--
- fs/jbd2/revoke.c                          |  21 +-
- fs/jbd2/transaction.c                     |  21 +-
- include/linux/fs.h                        |  10 +-
- include/linux/jbd2.h                      |  24 +-
- 35 files changed, 967 insertions(+), 1112 deletions(-)
+--t7DfaAM27KeM8t9g--
