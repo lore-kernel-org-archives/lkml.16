@@ -1,126 +1,213 @@
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609681DFF8;
-	Thu, 27 Mar 2025 17:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0D617BB21
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 17:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743096300; cv=none; b=smSeCVaDp6TUgcHRgmXH+907TT3dux6sv7I5BseE3nZBTgPiAWyepXk8ueqOP+Q2LpNuDGm1X+vJdiamyiIdnf86Ibut7+IzIGckSHLjzDie8O0hXDv5Twjih2cM5mnakt1AShR3Bzun9D8B2FvN8ggV1U6fSUql0dgmkxfoKuY=
+	t=1743096322; cv=none; b=D7WU5oLAaZnCa0HqD7qkM3etRZg/wYFdSHEY0uoHUGewTdgE0es43otDEp8kZJAAJ2T88esKss+mTNGnFiGkhH/LYnJMjdzYndQo3dMa7UwViUf70iqvmdKGaCYrx6f0AgauMoYKLVN/RGZIZN72fFkSwb8D1bHl9narQPSi5EA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743096300; c=relaxed/simple;
-	bh=PanSUjI5ZwL5VGGgcOQ1nw+DYlqUsbtgRWhq40jlhO4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AyGnQ4a6NcI4vZLY0OkXhOforuDYu3hz/I4zyYKKgcd5A1M1Eb8EZ8OxRztWtOw3zm84Dqle2WKZXJYd2fTrQWKgjeiyLiHU+gSXEUpYZGwv8lLtUu9ogMb9xDcbRQ+sKCEkTsEvSWdwhaFA/zOgILCG+zuWv+kk2v0BNMlDdxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UxUQ8LQB; arc=none smtp.client-ip=209.85.222.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743096322; c=relaxed/simple;
+	bh=/2xRSARzKGQ4h11CgHv2bq7msP9g4VI83b030w4wYFo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=CHL1nHUUc6QmNzmIyi1gRwCU+OHbjkZWmClRrgrBbliGRHbINDLQ9fqmbDAzMgn6OnahzACappyYHpAAUhXk4y4tynDFzSLD1CBDva3JeXaefF1RjKQggH5OgXSgSPh/s3jJM/SNT9CtC7tYDit/6+I9n9fT/MAnZgLfr1HNNPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q1t7if+6; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UxUQ8LQB"
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-86d69774081so618846241.0;
-        Thu, 27 Mar 2025 10:24:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q1t7if+6"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so10019275e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:25:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743096297; x=1743701097; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PanSUjI5ZwL5VGGgcOQ1nw+DYlqUsbtgRWhq40jlhO4=;
-        b=UxUQ8LQBe0Rq8LDJYDyBtxullHQkdOQ9UVaxoF0/OQsDOGoSX5+MQGP0G2REjeyxql
-         DXaTRASB6BxVtSp3c6YJ3XTY1+O4JbTxppEHUVnTbH7hCvHeP4rVeMM28K7zpbrfNFUM
-         SjgoAAZdfQ+A+KLi4Nu/sWqDyH2aPjbJPcLstMAIyENoW+LWxs1b4vxXv4vIPchnj7cJ
-         tO0LSShhttkm58W66oJJkPoghCMnzQZNKg2sfosCar2G0QivjgZhh/7zkdCG8u4DJk9h
-         XYvpsOAaSK6wmWb9cXKXmAaKES3ekRe4/SmeKk+FFl/6PPaNBRVRdBze8G+q+h4FLZun
-         T7IA==
+        d=linaro.org; s=google; t=1743096319; x=1743701119; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uFNNjaE2jorSLUU/UXYsik7tXL37/Ckqc+9BheoGsBM=;
+        b=q1t7if+6O0akN1/Bfqd9MwLiDSyQCVf6q3HPWjm8oVwGIQhvSuA8E8ogkthscBjtSA
+         p1jQY3BPY2cjhUaGDNYsg8LzhrYkZCJP80SfjShR/skDnIrd1unT05U/Rt4061MFfs7L
+         BQQtTldVdl5Luoizibiz9MVjFLyHK4rsrysTaeGOobu1kwER7QcsuaUvpwf4tCyDZWXt
+         jiswbzvxGKncDNIiTwmCbYp0KDyFECLN17KeAG0LVyPzm0tlK77fXOSbtqTt9MBwqOlm
+         iFXOK8wFmtqqNIVIogcH1iYMlzOBnlOl6i9I9O9WZJu8gLMlvlQ70vigBoTjRcGPCWd/
+         Pjrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743096297; x=1743701097;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PanSUjI5ZwL5VGGgcOQ1nw+DYlqUsbtgRWhq40jlhO4=;
-        b=X1DUQNUjTPsqYpXNlf2Vv5WHmZYwUALzfLdXExbii6wXw7qL5QzZuxP9fM5Zf6aw0e
-         7m6nrUID4LU7xJaffF2A2EplZIwFzCIq7Gp/GDG+aA7mNMBKpIfEFaPx4Lbo4A5SVVU1
-         kgQs1swmbdC58Xe4NsRq7JtPpfkAHUHbMfMgjaIf52VRoik1atFKyGq7zU1tL3DDO7Db
-         0jkxbmyPkRmvneU1eKStoKD/P4dFA0UDSFMHcqVWScaurca2l3GihZi/ZP589f/UKHkz
-         O3mdXo/yndIWU0o1u/mlB9SRnEYABI8BX+9ueB+1gI0rtCe74bRxRk7zoA4QfbPaKvf4
-         wysw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/ORf5FFN+ZRcbpfzSewIf0PT2FDfO9RR3KcSGokdjFhj6Gfs8coI7nLIHzqACBvMhF3jm0+d3FP6jDKqn@vger.kernel.org, AJvYcCUUEJf47gTVl/OqHUKOMdDb941CKlr5PM8smtPMxobINnzQEq0pjy71DryLOslc2dxVtsE8YHetuesI@vger.kernel.org, AJvYcCVemkZ8DyfWS/ff28x6q6GolEToLRDO8/iWbugPmV442hvBN2qInYRpNHuY8FI3+h+vgTQKB3dl0/HGGsGKlszheZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyL3KWgCiA5d1NuL6L/QZ+FZKIsmidDpWfkVkq2nHxtRhaiT6fy
-	zcHGjofwmhh+y6nuLBqwejD/QW+kz+SyJBlnQsmUpfUXS/YBZXt983UXD/p3bmhFpSa9nonjaco
-	s7JzRKxXGmV7PTEkqN726x8R32KE=
-X-Gm-Gg: ASbGnct39IitLZIq6tCyKShwvVmls1hKm/snLqRwKUmQQcQe5sUkpirWA84vFhiWKDa
-	VrZ1Uh1LdjbL2+bkqsuSq7RcWU9BI8Q7WMveUvPwpJwirVgeK+AhbM8Frocex29+/yf8ll/+8JB
-	P/N6s+EHCUHNW7FlwEVnPxs2uznRihR7zExQPuEHNKo3ngeN0Bbcoq30DS4GNDOm46kp54Nw==
-X-Google-Smtp-Source: AGHT+IH7psqlWtperFanJw7HCkitwT0AoO2i8/+Zt2Fcb/0Tt691d7IAeHbzYWY0zgaUiDv83+szBL1e76peP52Plc4=
-X-Received: by 2002:a05:6102:291f:b0:4c3:6a7e:c9f3 with SMTP id
- ada2fe7eead31-4c586eed6bcmr5311811137.3.1743096296962; Thu, 27 Mar 2025
- 10:24:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743096319; x=1743701119;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uFNNjaE2jorSLUU/UXYsik7tXL37/Ckqc+9BheoGsBM=;
+        b=TEgeNF0sqS66mq6HV0qwF32yENy3pi9y9L7e1C+xHfZBGr0D0aGOf4FAoW3hWjobqP
+         etYywNfBTbitvRQDqGA53G7Ze0JzzDroSj0ti8yPZOWp6IOgZhToG8nmVgQJmUuT2FMl
+         9Hhnz9PPF6kr5+BLVkSIG0XLZtpsdlsWmcMDFQokV2QNAFE12nNhghJ6itZtGS0uKkjE
+         9jFEwh5CTxy+gbQTNHUomQY+bRLoxF5Du4ESz0kgjdLe829Ell/79qSGIx1nJAj9LvgV
+         qtKMUr9eUaefXrk74IIVoQpwr83moPQ2s/Z/ZZBXr5RIQjSx7TiYaaP6ZltlNEEqiPQJ
+         m+6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUlmSXfQg7+FeUFxmOAAzvn6YhuTDkpYkFQGp5TbNfPyjYq75mc3wVlEooMMaucjgBq6JHHoIKOLauREys=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNfC42pW8KIWX4MqVs4NmPXoJAavECRVSxTaDB4CJgTnJH6qg4
+	cQN1SpOrTO5BfTEMa3kfgJsZfWK95rWsmRRuPaLzRloA59BeKCRhjLA94De+UFU=
+X-Gm-Gg: ASbGncuvK+3UxzgZ+uh1kVbser21U/g7VVlZ+6wor8dSOA5TTt2P5JZwAoYCwe5zO8B
+	QqYuwXvJN7A/0y9FXZE5XWBQxMnJOgm5Qj4tTfxm1gaukivRluSnIdrxZJbHVsIqL5EUlvtbRup
+	zFC2l9lfw03Q6vR1DwSHln3bzKwVmzDWyzr9on2GEaxwqGGA95RgoPMjhYVr7VXa7M36NC9oYxj
+	LwHehlk6Qx0HmxjM8o65geWw8SdoG/Uugx4EU1WNd58vVlzRX43rCdSe3S3fRo+Tf11jQjGMW5r
+	CaYIa3gXKle4mo5i4Mtta214ZJRHFl4cf/TIOYg40Id2J2cFKV47cRw8
+X-Google-Smtp-Source: AGHT+IG6HZVRndm/SI4MfA5kUV10tRAvIz8zy6VUE73vnCcorqncpm2q15iOxitfjTm65+tpqf32cg==
+X-Received: by 2002:a05:600c:1604:b0:434:fa55:eb56 with SMTP id 5b1f17b1804b1-43d8522cca1mr36264425e9.7.1743096318599;
+        Thu, 27 Mar 2025 10:25:18 -0700 (PDT)
+Received: from localhost ([2a00:23c8:b70a:ae01:9cf7:b69:fc50:980f])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c0b79e304sm103142f8f.73.2025.03.27.10.25.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 10:25:18 -0700 (PDT)
+From: Christopher Obbard <christopher.obbard@linaro.org>
+Date: Thu, 27 Mar 2025 17:25:10 +0000
+Subject: [PATCH v2] drm/dp: fallback to minimum when PWM bit count is zero
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250305123915.341589-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250305123915.341589-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250305-cesspool-headlock-4d28a2a1333e@spud> <CA+V-a8uQTL+SHYqVU_J0th4PT6YPF7q6ypzDu33nS_6onWLoOQ@mail.gmail.com>
- <20250306-slather-audition-a6b28ba1483e@spud> <18780ad4be2c28999af314c97ae4104fb161a691.camel@pengutronix.de>
- <CA+V-a8tYv_u4UM5XVysVMPbfJoVwKFHqucLdJOmDP-xrXZ0L5Q@mail.gmail.com>
- <CA+V-a8sfx-QwzPz_zEEmGAyAoqha5cfMs9CvWDVJ_b0-D7QfpQ@mail.gmail.com> <20250327-comply-murky-cffc47465429@spud>
-In-Reply-To: <20250327-comply-murky-cffc47465429@spud>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Thu, 27 Mar 2025 17:24:31 +0000
-X-Gm-Features: AQ5f1JowAamdpvJJslPXiVbLTPPPaClo3d6CTBqNOXDrPfPhemkA4ErF8QJLmEM
-Message-ID: <CA+V-a8tQXOwdTqoncvWCL-br7R2yx1NwCisfZwwQz3nTmZ232Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Document RZ/V2H(P) USB2PHY Control
-To: Conor Dooley <conor@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250327-wip-obbardc-qcom-t14s-oled-panel-brightness-v2-1-16dc3ee00276@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAPWJ5WcC/x3NTQrCMBBA4auUWTsQx6YWryJd5GdsB2oSM0WF0
+ rsbXH6b93ZQrsIKt26Hym9RyamBTh2ExaWZUWIzkCFrLnTFjxTM3rsaA75CfuJ27hXzyhGLS7y
+ irzIvW2JV7A2ZcbB+sKOBViyVH/L93+7TcfwALVIRAH0AAAA=
+X-Change-ID: 20250327-wip-obbardc-qcom-t14s-oled-panel-brightness-4020865b6580
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Johan Hovold <johan@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, 
+ Abel Vesa <abel.vesa@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ Christopher Obbard <christopher.obbard@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4303;
+ i=christopher.obbard@linaro.org; h=from:subject:message-id;
+ bh=/2xRSARzKGQ4h11CgHv2bq7msP9g4VI83b030w4wYFo=;
+ b=owEBbQKS/ZANAwAKAWNNxPBocEb4AcsmYgBn5Yn64KspE82XCwduXNxq/mObSEjV0OktoKB7O
+ CS69xjfLtmJAjMEAAEKAB0WIQTxi9yLbCX5CqI9UXRjTcTwaHBG+AUCZ+WJ+gAKCRBjTcTwaHBG
+ +DvjEACDhVZKkIaryW8LiPt8FICYljuve62aItGb4wA7S4RMrXyj8uYCAg8zAUCD5tldojT7ApC
+ YUoYDHVt8t/4eYjcpr6RICIB5z2lYNgczioVM0SREcxzEjrlxWFdmC1EgtShvGfk0jI0YaRXmfE
+ 3KeSD0a7OqKOd4Vo9+74FYphr5TSs1qexIu5FjQniCUYCcMeZ+YHvFL/JtpMZTlcTkcSDbKrmnT
+ xysU/0e9Ter1sQCS2Qh9U9HSNvDwlHiAs+Cp9cF4GQktBCO6+GL1fSA0NzaS94WRbn+4BOvo4sW
+ J86LEB83x0IPfxi83q2bjJil7b2u3AJ7jBo98l1rbTemcDyPEd0tksOymypOwXrpebNC59SO9Su
+ 1X3HZUHNomwVvSGTKcxKLiLYVlxjMKuQDNBBuXVrBc2P2f8/ADUTP7OyQtI5F6R+hHD5PkcS6vF
+ rEb6PVeN59NXfGKGMNFe3I5XDZbq3lunUmB8doVTKQ+9EhYOmDdur4PS9feN+pEPCNFF1GM5AZk
+ sAmhA9AcSNAamVn5yvqQX9na09Vmy1BKI3bOsQXeZafbJjzUug3J/2QzAnBFm9RmqvLlU/xY0lX
+ aH9swSYFbn0wT6kZl+Lpxhr5/KKemIaa2dvd0Dwe0zqMfKYQo8H/yWraPZJOC9gFNFFONNYgIIC
+ 2bCk39V856Psrtg==
+X-Developer-Key: i=christopher.obbard@linaro.org; a=openpgp;
+ fpr=F18BDC8B6C25F90AA23D5174634DC4F0687046F8
 
-Hi Conor,
+According to the eDP specification (e.g., VESA eDP 1.4b, section 3.3.10.2),
+if DP_EDP_PWMGEN_BIT_COUNT is less than DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN,
+the sink is required to use the MIN value as the effective bit count.
 
-On Thu, Mar 27, 2025 at 4:40=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
-te:
->
-> On Thu, Mar 27, 2025 at 11:06:33AM +0000, Lad, Prabhakar wrote:
-> > Hi Philipp and Conor
-> >
-> > On Thu, Mar 13, 2025 at 1:17=E2=80=AFPM Lad, Prabhakar
-> > <prabhakar.csengg@gmail.com> wrote:
-> > >
-> > > Hi Philipp,
-> > >
-> > > On Thu, Mar 13, 2025 at 1:09=E2=80=AFPM Philipp Zabel <p.zabel@pengut=
-ronix.de> wrote:
-> > > >
-> > > > On Do, 2025-03-06 at 16:26 +0000, Conor Dooley wrote:
-> > > > [...]
-> > > > > That sounds awfully like "it was wrong before, and I want to keep=
- using
-> > > > > the wrong node name"... If you're claiming to be some other class=
- of
-> > > > > device, "ctrl" should really be "controller" like all the other s=
-orts of
-> > > > > controllers ;)
-> > > >
-> > > > There are "usb-phy-controller" nodes on the rcar-gen2 SoCs.
-> > > >
-> > > Ok, I will rename the node name to "usb-phy-controller".
-> > >
-> > Fyi to chime in with other reset drivers I'll rename this binding file
-> > to `renesas,rzv2h-usb2phy-reset.yaml` and have the node named
->
-> > `usb2phy-reset@15830000` in the example node.
->
-> At that point, isn't it then "just" a reset controller with only a
-> single device that it resets, so "reset-controller" is the right class
-> of device to label it as?
-I agree, I will label it as a "reset-controller".
+Some eDP panels report DP_EDP_PWMGEN_BIT_COUNT as 0 while still providing
+valid non-zero MIN and MAX capability values. This patch updates the logic
+to use the CAP_MIN value in such cases, ensuring correct scaling of AUX-set
+backlight brightness values.
 
-Cheers,
-Prabhakar
+This improves compatibility with panels like the Samsung ATNA40YK20 used
+on the Lenovo T14s Gen6 (Snapdragon variant with OLED) which report a
+bit count of 0 but declares an 11-bit PWM capability range.
+
+Co-developed-by: Rui Miguel Silva <rui.silva@linaro.org>
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Signed-off-by: Christopher Obbard <christopher.obbard@linaro.org>
+---
+Changes in v2:
+- Split backlight brightness patch from T14s OLED enablement series.
+- Use PWMGEN_CAP_MIN rather than MAX (Dmitry).
+- Rework commit message to reference eDP spec.
+- Rebase on drm-misc-next.
+- Link to v1: https://lore.kernel.org/all/20250325-wip-obbardc-qcom-t14s-oled-panel-v2-4-e9bc7c9d30cc@linaro.org/
+---
+ drivers/gpu/drm/display/drm_dp_helper.c | 50 ++++++++++++++++++++++-----------
+ 1 file changed, 33 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/gpu/drm/display/drm_dp_helper.c b/drivers/gpu/drm/display/drm_dp_helper.c
+index dbce1c3f49691fc687fee2404b723c73d533f23d..0b843d5b634f89f144b62b30311834d118b79ba9 100644
+--- a/drivers/gpu/drm/display/drm_dp_helper.c
++++ b/drivers/gpu/drm/display/drm_dp_helper.c
+@@ -4083,7 +4083,7 @@ drm_edp_backlight_probe_max(struct drm_dp_aux *aux, struct drm_edp_backlight_inf
+ {
+ 	int fxp, fxp_min, fxp_max, fxp_actual, f = 1;
+ 	int ret;
+-	u8 pn, pn_min, pn_max;
++	u8 pn, pn_min, pn_max, bl_caps;
+ 
+ 	if (!bl->aux_set)
+ 		return 0;
+@@ -4094,8 +4094,39 @@ drm_edp_backlight_probe_max(struct drm_dp_aux *aux, struct drm_edp_backlight_inf
+ 			    aux->name, ret);
+ 		return -ENODEV;
+ 	}
+-
+ 	pn &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
++
++	ret = drm_dp_dpcd_readb(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, &pn_min);
++	if (ret != 1) {
++		drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap min: %d\n",
++			    aux->name, ret);
++		return 0;
++	}
++	pn_min &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
++
++	ret = drm_dp_dpcd_readb(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MAX, &pn_max);
++	if (ret != 1) {
++		drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap max: %d\n",
++			    aux->name, ret);
++		return 0;
++	}
++	pn_max &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
++
++	ret = drm_dp_dpcd_readb(aux, DP_EDP_BACKLIGHT_ADJUSTMENT_CAP, &bl_caps);
++	if (ret != 1) {
++		bl_caps = 0;
++		drm_dbg_kms(aux->drm_dev, "%s: Failed to read backlight adjustment cap: %d\n",
++			aux->name, ret);
++	}
++
++	/*
++	 * Some eDP panels report brightness byte count support, but the byte count
++	 * reading is 0 (e.g. Samsung ATNA40YK20) so use pn_min instead.
++	 */
++	if (!pn && (bl_caps & DP_EDP_BACKLIGHT_BRIGHTNESS_BYTE_COUNT)
++	    && pn_min)
++		pn = pn_min;
++
+ 	bl->max = (1 << pn) - 1;
+ 	if (!driver_pwm_freq_hz)
+ 		return 0;
+@@ -4122,21 +4153,6 @@ drm_edp_backlight_probe_max(struct drm_dp_aux *aux, struct drm_edp_backlight_inf
+ 	 * - FxP is within 25% of desired value.
+ 	 *   Note: 25% is arbitrary value and may need some tweak.
+ 	 */
+-	ret = drm_dp_dpcd_readb(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MIN, &pn_min);
+-	if (ret != 1) {
+-		drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap min: %d\n",
+-			    aux->name, ret);
+-		return 0;
+-	}
+-	ret = drm_dp_dpcd_readb(aux, DP_EDP_PWMGEN_BIT_COUNT_CAP_MAX, &pn_max);
+-	if (ret != 1) {
+-		drm_dbg_kms(aux->drm_dev, "%s: Failed to read pwmgen bit count cap max: %d\n",
+-			    aux->name, ret);
+-		return 0;
+-	}
+-	pn_min &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+-	pn_max &= DP_EDP_PWMGEN_BIT_COUNT_MASK;
+-
+ 	/* Ensure frequency is within 25% of desired value */
+ 	fxp_min = DIV_ROUND_CLOSEST(fxp * 3, 4);
+ 	fxp_max = DIV_ROUND_CLOSEST(fxp * 5, 4);
+
+---
+base-commit: ee20c69c789b6cb2179a535cf440d72b98f4a134
+change-id: 20250327-wip-obbardc-qcom-t14s-oled-panel-brightness-4020865b6580
+
+Best regards,
+-- 
+Christopher Obbard <christopher.obbard@linaro.org>
+
