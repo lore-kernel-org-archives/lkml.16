@@ -1,228 +1,178 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791E91E4B2
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 19:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D443328EC
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 19:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743103799; cv=none; b=jCrV/n/45eYv87rSWpRYfrHDhO0gOjuqtdMfz4fdAzg1TX8WOyOoZ1o79JpEW6jpvZSsubV1tOcTMZ0NEQhh4GEOPDmJEuNNZjsWqiPPOHZXTcmgv7xzVwh8VOxrrVFl7RvfbfKqsmJOA4eKQLSLCPVs139K/LRL8oD5IgHqINc=
+	t=1743103881; cv=none; b=FxjwL7NY9Kkku+1OgRNYHP/lzfOjeGcV/PxiJmGSbXwMWu3lZBkwvXJlvK10cj46jhmXkD5WXZrLCvVnK8DPQeH/1ukDSyC8g4bCjew/QMgajjWbK5E2gHVv7foxUpgiaReNPUQ1O6PUqCaQreatv6LL293uv8LoBsiZveN8d+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743103799; c=relaxed/simple;
-	bh=QuuZoXkB6r7i/dyce7l2jp0tvZLOXuVenD4Wt6a3XBU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=brvrZtp/CqdcYLXqaY7KTEx4Pgj2sP3JiCFN4k4LyW+C8Yea1/a+Yt2RuwlHjeKuQH6FE8ySRzUnCLejastfx/rydoMfx7EX9Ykz0lQs7HFQ60yURT0asolOq0Hx4HcI3uhWIkuPSy6n0b9SoLAwo0+OX3vt86NB/XV5bHkxI1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=0wR1U5aj; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1743103881; c=relaxed/simple;
+	bh=Uo3Y4wwMyV3y+DSOMke8R1D7DBAWK/vp0DGAudzMYeg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q9divEyke2ticqfnNTUWRBth4ldbD4i7XX28ZgQJDsu0YWLoAIXlTQjS1evHCM7GwwltACXqze+qqLgufNSPOcnjNiOUhlwbSgXcdDmHcum3Zo+HmF62tueq3g1ObkcseFvVa1MFUuFdtfu11ogssbPDiJHLdirceFvfAcxJBdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=jwTKEtkW; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="0wR1U5aj"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4766cb762b6so14143851cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:29:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="jwTKEtkW"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-47692b9d059so19177921cf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:31:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1743103796; x=1743708596; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C4YRUd0dUXxsiI+NBlGETAhHA6/U48pzMrcLDXPVjVo=;
-        b=0wR1U5ajgZ00jps5YHrHjyHohGZ7ejiMG80NxcVsgcArgKxCn83gPnb05FzGP8UDeO
-         S7JsQw7hzhoQF13sjW15cP82CIhZSNwhL6LkgNZcv/iClBsS+h8xg2d34yqe6kL9t4W0
-         Z2TXN9NSsk4CSw6A9L7cDDkP+N69oUHI4WayEibsfYbZ+h7ya4P1KVC2unrk88Ep7T72
-         Bw/dNQE3d7JGgwRcy18euQ4eWXJ9ys+m3vUvsukzUOlrYc3eUJzmoGtqhacKivepOec4
-         OJBif69e5NHP4BeDGCl9cnNdGKbXNGhMb4StfuK+p/ggRV2HbtBbXt+FscpF/ASuG0pw
-         cDQg==
+        d=rowland.harvard.edu; s=google; t=1743103879; x=1743708679; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fOWvcEa0sbfZjABPw9Te+y/65mWJI8Lsb95Ek+V1dlo=;
+        b=jwTKEtkWQuP40eSVJnCqMGKUXDv7LRvL4ATsKdf26B6bkeYXlFq8KKuqmzIyt4knjZ
+         MVQoW1+bDJCD25GGSq9yonzk7H99jWi/UHjDSapc0O31BGxwDmJxW0sbvY5oh+k5aAlb
+         K/k2TDm3plK4XIzx9VetIdQc3jU/p8MHtFAfCz3DkSYuhpsZcwlA2Tzd2XVLBuwJrbPA
+         3JQMAHQ1KVQ2qsR+fwzxNMMxG8r+cmdliX3ofJZb8ijDXjehqMzT1E5bYv7bw8sx8tz6
+         x9hW4yp8f3PXcJkcSHCiUYbEdcNu22T07KtczXKlaS60xWmapq6OyM4hsTXpYoebOUEV
+         H3TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743103796; x=1743708596;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C4YRUd0dUXxsiI+NBlGETAhHA6/U48pzMrcLDXPVjVo=;
-        b=B+uHLC8HNogPTecLdnIzMtXeCWyLprARHHn4ru/7JJI3nS17Nb5ao88Ojg0o+sZoni
-         qZf5YWyFI3r4MX5b5ixkIdG3qyVDOB1wqMLTAA9mMXWmdNcUWYhU32IsfN7r6gw7bYuJ
-         zSxRYxZb4ofy7//UzCFfRkMDik8RoKAF2eD0LvgqXBA0sOKsk8Vlh1yUJcNhmu6SW+ez
-         vnggYxusHgId6YolacJ3C5MkO9xNppv4PD3GIOpWwUkHg9vydQK4xnpMUr+6bV+ajzSi
-         eF/E8ectZKzJRDJ5goi5AFBwZ85jg5qzwzzXPXkXitchDluWG+26aL0IXV5RBRnpzagE
-         lBHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPephlooKSx28smWZpX6hUrTRZzjcYOmuoWDCh98I9AUNWz1LPAfSVZlX6sX6Db17DUXhFOWBkvwQPKqQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbTgLyI9EfC4i0tPailiBgb+lBSS0PSAZ+Ddg0WNoweeF+DXSa
-	44EkmukBYuyQFPBz4d/p88+NO614SJvobfLlUtLjm6i8dkb4nGN9H8nhMku6fagqyJxI+TG2I1W
-	baZ4qD3/8w+QAdOZ/F6+XEP7yO/Nu+IxBZxH9Ug==
-X-Gm-Gg: ASbGnctLu0VnrF0/KdFlgnPkM48jCB05FZv3gfMxZ8Xib9yUHAcTGErpx4oMcHnhzUw
-	7ihngo/YN58yELVSXWmsUGQA1Dxf3JRbZ15glgnWrz30rk26xflzyyik2mevbaCsqW2USvfVdIy
-	htcV9dAbQ9kPEv1U3UdP+aL8Av/7exhsmkq8lnMa8=
-X-Google-Smtp-Source: AGHT+IHmKJiIAuGir5eLdnuzQYUg+lTpLRvScYqP43GjNb2vxGbldqJeyd7c81dwopkHCLQbzICpBpWIbb/q/WAmcLc=
-X-Received: by 2002:a05:622a:4018:b0:477:1126:5a33 with SMTP id
- d75a77b69052e-477843dee70mr963831cf.1.1743103796128; Thu, 27 Mar 2025
- 12:29:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743103879; x=1743708679;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fOWvcEa0sbfZjABPw9Te+y/65mWJI8Lsb95Ek+V1dlo=;
+        b=o4q1UHLSR48dOgYhiyKd6RqnVEWQYOkXO2Y5Qaur4Dua7XLY98RA7B0wZC/MlAvV4i
+         q3FIdQTTvXzEg5Z730ebUwoWlKpgmJ+M/DbyS8PTE8c/2RReEhx6dT2R8OErh7AD2ibm
+         jc2S8qfWVgjx6SCrHmJRBIKYXllbsma2sVQX+qGWV0SRnhfQlk0bb6DFmayCIwszksaT
+         OvHx7nlN9cEtWOag+QA0ffFdK1beV7yu7qof++NO7uDwdCBJB1ZTNepx+YIT8GI0+2Hb
+         tc0dzGWdlxV7SV87AICUdxuebsqZlIjJxKB9TBbfVMHkHJlV1zbAafge87dOuuxPpOBz
+         1ieg==
+X-Forwarded-Encrypted: i=1; AJvYcCVaNuAFCfigRCcGCKrPNvOAwNKCX43JiPOMKaCcgMCJ94gDUrA0mHq5TfynV8ReT/axlC0cdyKZ/XVtXpg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1UJB9KUyFJgOmW2rrbeieJkGZ8FsjZieYtb9yyyca+7gQCGOq
+	aR8hVJsN5G/TIHq5TNHVSMDt7bNLR0mcfyu1uaMjfrkeMMFxrlaEFSTne86krA==
+X-Gm-Gg: ASbGnctmuPZNevu+DM5OVdYdRWYhI+XEZ5OWgyy33LwXlM0o3EF1lJLtqMJWAf38OPD
+	q3lbT71tQQ43ns+ERQ4JwFrpjw4xxZYpPC/QTxI3yT6NaGFPlDzEUoT1OjE9/Z8+81z8b+NKvKw
+	1U1Ydo2rxne+7QM7wItecMhJ1ALP7PHWM0EozS0NBONdq08rpRJ8OIFbqrDg5PV2MwZQw1AT2oH
+	EXeGZVUUiBNPj2EovQNTNbH1xtVmLbFKAS+f1Gd9+o3XQQHfYNCQHzL6Fozz+zXnIR0CY48c+VC
+	mG0Xw7P/dty8U0VisvZ+RnqmN5Qdkft8moM00EewPwpXgc3ZOcwu2lyYLAp4kVPMUBubiFuQyuQ
+	c7hSWooNjs0gwwrpGjuPTZG9daFNGj5mihlJtvA==
+X-Google-Smtp-Source: AGHT+IHhYGeHC6Cc7v+fL0j0iHE1UuzcR8DR3uKdtY7qHAlgm3C/YNf4p1yl1SUxogG0H29UbqzJ+g==
+X-Received: by 2002:a05:622a:58c6:b0:477:4df:9a58 with SMTP id d75a77b69052e-4776e0d1714mr88924621cf.18.1743103878520;
+        Thu, 27 Mar 2025 12:31:18 -0700 (PDT)
+Received: from rowland.harvard.edu (nat-65-112-8-24.harvard-secure.wrls.harvard.edu. [65.112.8.24])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47782a1070csm1526041cf.9.2025.03.27.12.31.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 12:31:17 -0700 (PDT)
+Date: Thu, 27 Mar 2025 15:31:15 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] usb: ehci-fsl: Fix use of private data to avoid
+ -Wflex-array-member-not-at-end warning
+Message-ID: <8139e4cc-4e5c-40e2-9c4b-717ad3215868@rowland.harvard.edu>
+References: <Z-R9BcnSzrRv5FX_@kspp>
+ <1e82761e-8554-4168-8feb-561abbe49f7e@rowland.harvard.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320024011.2995837-1-pasha.tatashin@soleen.com>
- <20250320024011.2995837-2-pasha.tatashin@soleen.com> <20250320144338.GW9311@nvidia.com>
- <CA+CK2bBovJ68FPOqD5J-_xmzy_mm8gNhJW80EsWGLgq+NhuX5Q@mail.gmail.com> <20250320192601.GG206770@nvidia.com>
-In-Reply-To: <20250320192601.GG206770@nvidia.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 27 Mar 2025 15:29:18 -0400
-X-Gm-Features: AQ5f1JoqJbUNa31EKiHpHgysa1IL2SgJB7qz5YDT-dhXwuOYY82RJ56s9rbmlGw
-Message-ID: <CA+CK2bDNoOe06bWAnAkgX-AF5zf5+KasNMeJOt3YcnHh=0893Q@mail.gmail.com>
-Subject: Re: [RFC v1 1/3] luo: Live Update Orchestrator
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: changyuanl@google.com, graf@amazon.com, rppt@kernel.org, 
-	rientjes@google.com, corbet@lwn.net, rdunlap@infradead.org, 
-	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, ojeda@kernel.org, 
-	aliceryhl@google.com, masahiroy@kernel.org, akpm@linux-foundation.org, 
-	tj@kernel.org, yoann.congal@smile.fr, mmaurer@google.com, 
-	roman.gushchin@linux.dev, chenridong@huawei.com, axboe@kernel.dk, 
-	mark.rutland@arm.com, jannh@google.com, vincent.guittot@linaro.org, 
-	hannes@cmpxchg.org, dan.j.williams@intel.com, david@redhat.com, 
-	joel.granados@kernel.org, rostedt@goodmis.org, anna.schumaker@oracle.com, 
-	song@kernel.org, zhangguopeng@kylinos.cn, linux@weissschuh.net, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
-	gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org, 
-	cw00.choi@samsung.com, myungjoo.ham@samsung.com, yesanishhere@gmail.com, 
-	Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com, 
-	aleksander.lobakin@intel.com, ira.weiny@intel.com, 
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
-	stuart.w.hayes@gmail.com, jgowans@amazon.com, 
-	Pratyush Yadav <ptyadav@amazon.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1e82761e-8554-4168-8feb-561abbe49f7e@rowland.harvard.edu>
 
-On Thu, Mar 20, 2025 at 3:26=E2=80=AFPM Jason Gunthorpe <jgg@nvidia.com> wr=
-ote:
->
-> On Thu, Mar 20, 2025 at 03:00:31PM -0400, Pasha Tatashin wrote:
->
-> > > I also think we should give up on the sysfs. If fdbox is going forwar=
-d
-> > > in a char dev direction then I think we should have two char devs
-> > > /dev/kho/serialize and /dev/kho/deserialize and run the whole thing
-> >
-> > KHO is a mechanism to preserve kernel memory across reboots. It can be
-> > used independently of live update, for example, to preserve kexec
-> > reboot telemetry, traces, and for other purposes. The LUO utilizes KHO
-> > for memory preservation but also orchestrates specifically a live
-> > update process, provides a generic way for subsystems and devices to
-> > participate, handles error recovery, unclaimed devices, and other live
-> > update-specific steps.
-> >
-> > That said, I can transition the LUO interface from sysfs to a character=
- device.
->
-> Sure, I mean pick whatever name makes sense for this whole bundle..
->
-> > > through that. The concepts shown in the fdbox patches should be merge=
-d
-> > > into the kho/serialize char dev as just a general architecture of ope=
-n
-> > > the char dev, put stuff into it, then finalize and do the kexec.
-> >
-> > Some participating subsystems, such as interrupts, do not have a way
-> > to export a file descriptor.
->
-> Interrupts that need to be preserved are owned by VFIO. Why do we need
-> to preserve interrupts? I thought the model was to halt all interrupts
-> and then re-inject a spurious one?
->
-> > It is unclear why we would require this
-> > for kernel-internal state that needs to be preserved for live update,
-> > which should instead register with internally.
->
-> Because there is almost no kernel state which is machine global and
-> unconditionally should be included. eg Interrupts for devices that are
-> not doing preservation should not be serialized. Only userspace knows
-> what should be preserved so you must always need a mechanism to tell
-> the kernel.
->
-> > IMO, the current API and state machine are quite simple (I plan to
-> > present and go through them at one of the Hypervisor Live Update
-> > meetings). However, I am open to changing to a different API, and we
-> > can expose it through a character device.
->
-> Everything seems simple before you actually try to use it :)
->
-> > > Also agree with Greg, I think this needs more thoughtful patch stagin=
-g
-> > > with actual complete solutions. I think focusing on a progression of
-> > > demonstrable kexec preservation:
-> > >  - A simple KVM and the VM's backing memory in a memfd is perserved
-> > >  - A simple vfio-noiommu doing DMA to a preserved memfd, including no=
-t
-> > >    resetting the device (but with no iommu driver)
-> > >  - iommufd
-> >
-> > We are working on this. However, each component builds upon the
-> > previous one, so it makes sense to discuss the lower layers early to
-> > get early feedback.
->
+In the course of fixing up the usages of flexible arrays, Gustavo
+submitted a patch updating the ehci-fsl driver.  However, the patch
+was wrong because the driver was using the .priv member of the
+ehci_hcd structure incorrectly.  The private data is not supposed to
+be a wrapper containing the ehci_hcd structure; it is supposed to be a
+sub-structure stored in the .priv member.
 
-Hi Jason,
+Fix the problem by replacing the ehci_fsl structure with
+ehci_fsl_priv, containing only the private data, along with a suitable
+conversion macro for accessing it.  This removes the problem of having
+data follow a flexible array member.
 
-Thanks for your thoughts. I agree with your observation about
-components being worked on separately when they might be intrinsically
-linked. Especially, given that kvm/vfio/iommu all have FD counterparts
-to the global states, or device state.
+Reported-by: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/linux-usb/Z-R9BcnSzrRv5FX_@kspp/
 
-> I think part of the problem is there are lots of people working on
-> pieces as though they are seperate components, and I'm not sure this
-> is entirely wise, or the components are actually seperate.  I see
-> fdbox and this luo patch series as effectively being the same
-> component, just different aspects of it.
+---
 
-You've articulated precisely the point we discussed at LSF/MM. Based
-on that conversation, the next proposal will focus on unifying FDBox
-and the Live Update Orchestrator into a single, cohesive component.
+ drivers/usb/host/ehci-fsl.c |   25 ++++++++-----------------
+ 1 file changed, 8 insertions(+), 17 deletions(-)
 
-Here=E2=80=99s a summary of the planned approach:
-
-1. Unified Location: LUO will be moved under misc/liveupdate/ to house
-the consolidated functionality.
-2.  User Interfaces:  A primary character device (/dev/liveupdate)
-utilizing an ioctl interface for control operations. (An initial draft
-of this interface is available here:
-https://raw.githubusercontent.com/soleen/linux/refs/heads/luo/rfc-v2.1/incl=
-ude/uapi/linux/liveupdate.h)
-An optional sysfs interface will allow userspace applications to
-monitor the LUO's state and react appropriately. e.g. allows SystemD
-to load different services during different live update states.
-3. Dependency Management: The viability of preserving a specific
-resource (file, device) will be checked when it initially requests
-participation.
-However, the actual dependencies will only be pulled and the final
-ordered list assembled during the prepare phase. This avoids the churn
-of repeatedly adding/removing dependencies as individual components
-register.
-
-To manage the preservation logic, we'll use specific handles
-categorized into three types: fd, device, and global. Each handle type
-will define callbacks for the different phases of the live update
-process. For instance, a file-system-related handle might look
-something like this:
-
-struct liveupdate_fs_handle {
-    struct list_head liveupdate_entry;
-    int (*prepare)(struct file *filp, void *preserve_page, ...); //
-Callback during prepare phase
-    int (*reboot)(struct file *filp, void *preserve_page,...);  //
-Callback during reboot phase
-    void (*finish)(struct file *filp, void *preserve_page,...); //
-Callback after successful update to do state clean-up
-    void (*cancel)(struct file *filp, void *preserve_page,...); //
-Callback if prepare/reboot is cancelled
-};
-
-The overall preservation sequence involve processing these handles in
-a specific order:
-
-Preserved File Descriptors (e.g., memfd, kvmfd, iommufd, vfiofd)
-Preserved Devices (ordered appropriately, leaves-to-root)
-Global State Components
-
-Let me know if this direction aligns with your expectations.
-
-Pasha
+Index: usb-devel/drivers/usb/host/ehci-fsl.c
+===================================================================
+--- usb-devel.orig/drivers/usb/host/ehci-fsl.c
++++ usb-devel/drivers/usb/host/ehci-fsl.c
+@@ -410,15 +410,13 @@ static int ehci_fsl_setup(struct usb_hcd
+ 	return retval;
+ }
+ 
+-struct ehci_fsl {
+-	struct ehci_hcd	ehci;
+-
+-#ifdef CONFIG_PM
++struct ehci_fsl_priv {
+ 	/* Saved USB PHY settings, need to restore after deep sleep. */
+ 	u32 usb_ctrl;
+-#endif
+ };
+ 
++#define hcd_to_ehci_fsl_priv(h) ((struct ehci_fsl_priv *) hcd_to_ehci(h)->priv)
++
+ #ifdef CONFIG_PM
+ 
+ #ifdef CONFIG_PPC_MPC512x
+@@ -566,17 +564,10 @@ static inline int ehci_fsl_mpc512x_drv_r
+ }
+ #endif /* CONFIG_PPC_MPC512x */
+ 
+-static struct ehci_fsl *hcd_to_ehci_fsl(struct usb_hcd *hcd)
+-{
+-	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
+-
+-	return container_of(ehci, struct ehci_fsl, ehci);
+-}
+-
+ static int ehci_fsl_drv_suspend(struct device *dev)
+ {
+ 	struct usb_hcd *hcd = dev_get_drvdata(dev);
+-	struct ehci_fsl *ehci_fsl = hcd_to_ehci_fsl(hcd);
++	struct ehci_fsl_priv *priv = hcd_to_ehci_fsl_priv(hcd);
+ 	void __iomem *non_ehci = hcd->regs;
+ 
+ 	if (of_device_is_compatible(dev->parent->of_node,
+@@ -589,14 +580,14 @@ static int ehci_fsl_drv_suspend(struct d
+ 	if (!fsl_deep_sleep())
+ 		return 0;
+ 
+-	ehci_fsl->usb_ctrl = ioread32be(non_ehci + FSL_SOC_USB_CTRL);
++	priv->usb_ctrl = ioread32be(non_ehci + FSL_SOC_USB_CTRL);
+ 	return 0;
+ }
+ 
+ static int ehci_fsl_drv_resume(struct device *dev)
+ {
+ 	struct usb_hcd *hcd = dev_get_drvdata(dev);
+-	struct ehci_fsl *ehci_fsl = hcd_to_ehci_fsl(hcd);
++	struct ehci_fsl_priv *priv = hcd_to_ehci_fsl_priv(hcd);
+ 	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
+ 	void __iomem *non_ehci = hcd->regs;
+ 
+@@ -612,7 +603,7 @@ static int ehci_fsl_drv_resume(struct de
+ 	usb_root_hub_lost_power(hcd->self.root_hub);
+ 
+ 	/* Restore USB PHY settings and enable the controller. */
+-	iowrite32be(ehci_fsl->usb_ctrl, non_ehci + FSL_SOC_USB_CTRL);
++	iowrite32be(priv->usb_ctrl, non_ehci + FSL_SOC_USB_CTRL);
+ 
+ 	ehci_reset(ehci);
+ 	ehci_fsl_reinit(ehci);
+@@ -671,7 +662,7 @@ static int ehci_start_port_reset(struct
+ #endif /* CONFIG_USB_OTG */
+ 
+ static const struct ehci_driver_overrides ehci_fsl_overrides __initconst = {
+-	.extra_priv_size = sizeof(struct ehci_fsl),
++	.extra_priv_size = sizeof(struct ehci_fsl_priv),
+ 	.reset = ehci_fsl_setup,
+ };
+ 
