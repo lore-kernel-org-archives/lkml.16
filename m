@@ -1,156 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D58A1F4CBF
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 07:30:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FBB1FF5F3;
+	Thu, 27 Mar 2025 07:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743060601; cv=none; b=uVUX8GG0gqBM0p6dvS2FiGoLP7/OLpolm/8VTBo4gZ7tufOKUQyi5tLW+fYP8KFa5vF6UdM8j9MQJE+BhzP5gX6vCDFzdjwfEYovUt4GQx/2tuQMopnhjW+uD5a7OlXtzLHBLWcSDZLqnqD/fkS9zuox2RR0dk7e7Sjvigpdwsc=
+	t=1743060649; cv=none; b=EnXuhBzHJ9Qpl9sR4eO/R3IzsIqgM0lkl+Hh/CrC+Hs2HW5MLQ2HWyS3FT4R4HFNz1yTUBJOu1tWBqzsBPAWrR1qNDFTO+WPsWIhl97U6pMKgEB82eVCmUTsx6Hl/m+bA+FNGdPGZRlo7HhUL+IHh3Yb8AgYoOvO6SlEOVQPXyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743060601; c=relaxed/simple;
-	bh=ksooDKwMUuHkTaFWvqhnbrlEK7O5z3878QbVilW3idE=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=CV6sBy72kwEF0kg8/8tlqWpYvtec9cXR//0GxuhthtxeLMtB1tORIMKzLCwhlM22NqlrXL/xyNosM+NrkUegnXWsGSmi84OzRzPSWe4wIlWLLdpDxF71kODEdL/AzhKEopUmYkhzan6H47dImqjr3GqmPCUNFFqO01qy3cVbNjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TbZAiMcv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743060649; c=relaxed/simple;
+	bh=XkVDYKgfGHlmxiQCSeFDSgKyf0AXTvepXpEwbSTINpo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VzoMqbvEoMaK80NE+ubcoBm24t98E2rGnb7jBE72H/KNUkkpq2ifw6zH4UHh1xsr8QHVGVxsO2IqQguwxJcGVoCOJxuZ5cZupo5Zril6XkAOAOH+Ejm27YYCPjqVg0Rzwh43n7AcwvNYjNBhocbrBxwoE6LME/GHPl1y2nij9CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ffn8xklC; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TbZAiMcv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51429C4CEDD;
-	Thu, 27 Mar 2025 07:29:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743060600;
-	bh=ksooDKwMUuHkTaFWvqhnbrlEK7O5z3878QbVilW3idE=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=TbZAiMcvd2wbBHxnjiQsvrzz5OkyWyRHZYpacKEBBLv/MpCQt7jAWcRYcjyTUTRkh
-	 o3N029NmzTm84jm8m2l7vh79xaSLkO+H1S7ZjxTJZR/rjlSNyQk4LvVhRskRMPVysF
-	 NDfAGiJ/vGrwTYJqZI4GbFLuru9ZXW/SY475QpMUXNKe7GocguQzB3RUcCLWsETv3b
-	 tYjrjzzPRvndtRDRinyg9xFkgXST1Q4HqhuAB9YaIsgldMy+jX6I5mfN4AnyOdePrE
-	 sZQ456U8RwCbvA3a5jOrozx4sOwTHkKqJw0TQhxuSilJmwY8vaBJlyOIGgTo2Rpnto
-	 vL38ziYlcNRSg==
-Message-ID: <deb42999-df89-471b-a161-e33b97f96b74@kernel.org>
-Date: Thu, 27 Mar 2025 15:29:57 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffn8xklC"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-227aaa82fafso14406675ad.2;
+        Thu, 27 Mar 2025 00:30:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743060647; x=1743665447; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fIsgSqbVtMcV6WZx6Min9su3gUMVh1BkINqCEFQM9do=;
+        b=ffn8xklCRIaxMsPGF+dYLqdVgHt5qpP4hwbs2kxczanOake+KPSTZv9/ezTnESNNMY
+         1HIZbU7XhTM6hQpGCTjkFo3vzv3lexMdaWo7AFqBClnkoCaNhqwxgbMqoaJVAcHeh/Rk
+         c16NDBcR+5Yhv3FTV93Kz+OGCJBHeWvJbDUQnyqEDuZCXHcxpwSUgQQM3L6kighg9x/t
+         GioYLaqrHUG14fXP7MhcplzSS+fVv6cuBfZz/zPFfRHlpdBbTKdJR7zLreDsnwG+98z8
+         fv3MOE8KdZLCBPT3h+Zl2amF1/mXH5j8Kq2FwpV0xHLJARsqOCKdAKM46jo5rB1ZANxc
+         T+dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743060647; x=1743665447;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fIsgSqbVtMcV6WZx6Min9su3gUMVh1BkINqCEFQM9do=;
+        b=SfFOxc2vawJitc1MJ7O9xo5bEHkKNOcKfD167eRksud7WMPSLeLLIT2Ej0FMUhJCw2
+         Pgzev29XukU/epOwDzrJmx/dbqnj1XHmZq9UT+OodMGwsMbGaxwtn2ZewE2ZKFKlRxzN
+         KDc5PPESo0pF45vkJpUeVMiLxK78vwI0bp6auuE0+kKwmidpo/c9qZcEcetmQGHi6GU/
+         BHeTEEazf2BaUIDrRkEpJxFfyEHDH5uIB20pRYj+5mRIEis+1TH4tlTMoMDoxs2gAkT/
+         XO0rhDL8Pnqlh+nAWAF0ctw29FywvTR9ZpsjDZns4W+HCM0/Po+8eLA+XG4bB77IsKy7
+         RrsA==
+X-Forwarded-Encrypted: i=1; AJvYcCUWTpT/zwRnAZLUniDKjEyf55zJbNBAYHqwISMAa+HJOhxbLkHcqQkw+fceBXNXraO4M50m2fmXIQxg7CLvi5Actg==@vger.kernel.org, AJvYcCX+i+D57sBI92D2u4+ejYbda1eBDLLxvye4iQVfYrUGDu3sMI+R5CZ0qFBbaWYfdR9+8vf6DIIARHqrUQk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywb//5nTilfpfjAgXxy6ydpB2aWuKzSjwGW4788QLJn9rOaKwL2
+	uTa6NTqEAGG3w5cy/ImnDn9QNcJYcRDUnnTgSsPQWuFdzsV/alOi
+X-Gm-Gg: ASbGncv/FCEE/sq76SEuqxAB7TO3lDfno7oJuLZB5jDOjUYHWAdGeAIZRkp+fgNb7z7
+	Yfe0mFrqDMBBHMcu506H//z4xmRFHmno5B9+qJhYZybhHJP1yCGChMut/WpvXWNuHbEAKCNPkCB
+	CSX2618OBY8eM7NpNev3/vjg/gQVbfBVCsFECivr4FLrJO2p1NVmjR5nP4mOxswSDWBe7dKDTOC
+	VvQ/KfJvEcqAZ/RfmSRZObRH21U0KLYJnsDf+CXMNUVLuLq88KWjh9y4uuuKcLX14vDQIVTkBiz
+	fI9lbkSFvuOdYnh5BcS4K495oD6RYUpQeU+03VUWNPdrJ16nHdIPE7cttxQgbRdAu3XIJYumPsD
+	6yaql
+X-Google-Smtp-Source: AGHT+IH2tulkKqvsgpZFbmzM15tHs2kSCbVktLnnpu+HDYbSNnkz/J+5vAdGBs4rtida5ApGOBsEDQ==
+X-Received: by 2002:a05:6a00:2305:b0:736:9f20:a175 with SMTP id d2e1a72fcca58-73960e0fb52mr3707286b3a.2.1743060647183;
+        Thu, 27 Mar 2025 00:30:47 -0700 (PDT)
+Received: from howard.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7394abf74e0sm4303626b3a.24.2025.03.27.00.30.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 00:30:46 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: mingo@redhat.com,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	peterz@infradead.org,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v3] perf trace: Fix possible insufficient allocation of argument formats
+Date: Thu, 27 Mar 2025 00:30:41 -0700
+Message-ID: <20250327073041.1956482-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org,
- "linux-f2fs-devel@lists.sourceforge.net"
- <linux-f2fs-devel@lists.sourceforge.net>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "pilhyun.kim@sk.com" <pilhyun.kim@sk.com>
-Subject: Re: [External Mail] Re: [PATCH] f2fs: prevent the current section
- from being selected as a victim during garbage collection
-To: "yohan.joung@sk.com" <yohan.joung@sk.com>, Yohan Joung
- <jyh429@gmail.com>, "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
- "daeho43@gmail.com" <daeho43@gmail.com>
-References: <20250326141428.280-1-yohan.joung@sk.com>
- <bf3f571c-a6bf-4a17-8745-039b37ac4f48@kernel.org>
- <2d95428375bd4a5592516bb6cefe4592@sk.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <2d95428375bd4a5592516bb6cefe4592@sk.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 3/27/25 14:43, yohan.joung@sk.com wrote:
->> From: Chao Yu <chao@kernel.org>
->> Sent: Thursday, March 27, 2025 3:02 PM
->> To: Yohan Joung <jyh429@gmail.com>; jaegeuk@kernel.org; daeho43@gmail.com
->> Cc: chao@kernel.org; linux-f2fs-devel@lists.sourceforge.net; linux-
->> kernel@vger.kernel.org; 정요한(JOUNG YOHAN) Mobile AE <yohan.joung@sk.com>
->> Subject: [External Mail] Re: [PATCH] f2fs: prevent the current section
->> from being selected as a victim during garbage collection
->>
->> On 3/26/25 22:14, Yohan Joung wrote:
->>> When selecting a victim using next_victim_seg in a large section, the
->>> selected section might already have been cleared and designated as the
->>> new current section, making it actively in use.
->>> This behavior causes inconsistency between the SIT and SSA.
->>
->> Hi, does this fix your issue?
-> 
-> This is an issue that arises when dividing 
-> a large section into segments for garbage collection.
-> caused by the background GC (garbage collection) thread in large section
-> f2fs_gc(victim_section) -> f2fs_clear_prefree_segments(victim_section)-> 
-> cursec(victim_section) -> f2fs_gc(victim_section by next_victim_seg)
+Changes in v3:
+* Add Fixes: tag
 
-I didn't get it, why f2fs_get_victim() will return section which is used
-by curseg? It should be avoided by checking w/ sec_usage_check().
+Changes in v2:
+* Simplify the code (written by Namhyung)
 
-Or we missed to check gcing section which next_victim_seg points to
-during get_new_segment()?
+In my previous fix of runtime error(Link:
+https://lore.kernel.org/linux-perf-users/20250122025519.361873-1-howardchu95@gmail.com/),
+I made a mistake of decrementing one unconditionally, regardless of
+whether an extra 'syscall_nr' or 'nr' field was present in
+libtraceevent's tp_format. This may cause perf trace to allocate one
+fewer arg_fmt entry than needed for the accurate representation of syscall
+arguments.
 
-Can this happen?
+This patch corrects the mistake by checking the presence of'syscall_nr' or
+'nr', and adjusting the length of arg_fmt[] accordingly.
 
-e.g.
-- bggc selects sec #0
-- next_victim_seg: seg #0
-- migrate seg #0 and stop
-- next_victim_seg: seg #1
-- checkpoint, set sec #0 free if sec #0 has no valid blocks
-- allocate seg #0 in sec #0 for curseg
-- curseg moves to seg #1 after allocation
-- bggc tries to migrate seg #1
+Signed-off-by: Howard Chu <howardchu95@gmail.com>
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
+Fixes: c7b87ce0dd10 ("perf trace: Fix runtime error of index out of bounds")
+---
+ tools/perf/builtin-trace.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
-Thanks,
-
-> 
-> Because the call stack is different, 
-> I think that in order to handle everything at once, 
-> we need to address it within do_garbage_collect, 
-> or otherwise include it on both sides. What do you think?
-> 
-> [30146.337471][ T1300] F2FS-fs (dm-54): Inconsistent segment (70961) type [0, 1] in SSA and SIT
-> [30146.346151][ T1300] Call trace:
-> [30146.346152][ T1300]  dump_backtrace+0xe8/0x10c
-> [30146.346157][ T1300]  show_stack+0x18/0x28
-> [30146.346158][ T1300]  dump_stack_lvl+0x50/0x6c
-> [30146.346161][ T1300]  dump_stack+0x18/0x28
-> [30146.346162][ T1300]  f2fs_stop_checkpoint+0x1c/0x3c
-> [30146.346165][ T1300]  do_garbage_collect+0x41c/0x271c
-> [30146.346167][ T1300]  f2fs_gc+0x27c/0x828
-> [30146.346168][ T1300]  gc_thread_func+0x290/0x88c
-> [30146.346169][ T1300]  kthread+0x11c/0x164
-> [30146.346172][ T1300]  ret_from_fork+0x10/0x20
-> 
-> struct curseg_info : 0xffffff803f95e800 {
-> 	segno        : 0x11531 : 70961
-> }
-> 
-> struct f2fs_sb_info : 0xffffff8811d12000 {
-> 	next_victim_seg[0] : 0x11531 : 70961
-> }
-> 
->>
->> https://lore.kernel.org/linux-f2fs-devel/20250325080646.3291947-2-
->> chao@kernel.org
->>
->> Thanks,
->>
->>>
->>> Signed-off-by: Yohan Joung <yohan.joung@sk.com>
->>> ---
->>>  fs/f2fs/gc.c | 4 ++++
->>>  1 file changed, 4 insertions(+)
->>>
->>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c index
->>> 2b8f9239bede..4b5d18e395eb 100644
->>> --- a/fs/f2fs/gc.c
->>> +++ b/fs/f2fs/gc.c
->>> @@ -1926,6 +1926,10 @@ int f2fs_gc(struct f2fs_sb_info *sbi, struct
->> f2fs_gc_control *gc_control)
->>>  		goto stop;
->>>  	}
->>>
->>> +	if (__is_large_section(sbi) &&
->>> +			IS_CURSEC(sbi, GET_SEC_FROM_SEG(sbi, segno)))
->>> +		goto stop;
->>> +
->>>  	seg_freed = do_garbage_collect(sbi, segno, &gc_list, gc_type,
->>>  				gc_control->should_migrate_blocks,
->>>  				gc_control->one_time);
-> 
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index a102748bd0c9..439e152186da 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2022,9 +2022,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+ {
+ 	int idx;
+ 
+-	if (nr_args == RAW_SYSCALL_ARGS_NUM && sc->fmt && sc->fmt->nr_args != 0)
+-		nr_args = sc->fmt->nr_args;
+-
+ 	sc->arg_fmt = calloc(nr_args, sizeof(*sc->arg_fmt));
+ 	if (sc->arg_fmt == NULL)
+ 		return -1;
+@@ -2034,7 +2031,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+ 			sc->arg_fmt[idx] = sc->fmt->arg[idx];
+ 	}
+ 
+-	sc->nr_args = nr_args;
+ 	return 0;
+ }
+ 
+@@ -2176,14 +2172,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
+ 		return err;
+ 	}
+ 
+-	/*
+-	 * The tracepoint format contains __syscall_nr field, so it's one more
+-	 * than the actual number of syscall arguments.
+-	 */
+-	if (syscall__alloc_arg_fmts(sc, sc->tp_format->format.nr_fields - 1))
+-		return -ENOMEM;
+-
+ 	sc->args = sc->tp_format->format.fields;
++	sc->nr_args = sc->tp_format->format.nr_fields;
++
+ 	/*
+ 	 * We need to check and discard the first variable '__syscall_nr'
+ 	 * or 'nr' that mean the syscall number. It is needless here.
+@@ -2194,6 +2185,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
+ 		--sc->nr_args;
+ 	}
+ 
++	if (syscall__alloc_arg_fmts(sc, sc->nr_args))
++		return -ENOMEM;
++
+ 	sc->is_exit = !strcmp(name, "exit_group") || !strcmp(name, "exit");
+ 	sc->is_open = !strcmp(name, "open") || !strcmp(name, "openat");
+ 
+-- 
+2.45.2
 
