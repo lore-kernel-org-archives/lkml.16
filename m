@@ -1,119 +1,92 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BA1210190;
-	Thu, 27 Mar 2025 10:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D443520E708;
+	Thu, 27 Mar 2025 10:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743072531; cv=none; b=SSmZwbEw/ef/bcxlAGJA46APueRn6zw6AVdiv8eT24aFBJtsgPuD+7OD846Q4Z8vHbEKagpVBbhjwZIGd6E/a2qaInYWY8HeCiqL7uE4nSLjsVwsCbHpb4XlDKD0cX8HAtTTVuvvRvsXCJG0lRA5A+niC/TyPR71GPWcLjha7Go=
+	t=1743072552; cv=none; b=lq2T2ioHW2AXOgWzVqBXpVVjjAJHzSV5ntejYDx7kx6Pw7i4GPTZkITkGmgtmmlhkjXY0Jh2FpxExX7ZQPvdRTqpys0rJ5Kue/LdDdSFxzUS61YtgBZ943AZ8oNVNTBH6fnMrBr1q6Rn1gnHOM/NtSsqfYZFZ2wNL2trXSfMTR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743072531; c=relaxed/simple;
-	bh=pvwpsFV0jbmZ6Wyw700IK/2I5NnE3pctABB8Xb1TZCs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=QZAZD19ceO8U534qkgSwpvJKXT6fE8KW+iitCdKwOxo/knAb50zIEsHU5TLCUtFI9iKqIRwDk8BoyydJoihRqUHIT6dp/eXCW0dbZu3lZK6Vd+xTEf/7P2/mSnUk/zPtkEM5Tdu8Hs+M0X8hmqsCblzKtjJbRmAryi1jOJRsNUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FNnzccvK; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743072552; c=relaxed/simple;
+	bh=P3x1nC7kSQVvmwQm9Ec9eNMVj34oIiVnU6SzBUoQOaM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RoUt8iF/TJlB51HquPTaQPs8kUi6NzazhKa5xa7e0b5whCb0wtCTDdWkEn27ar0JL0z/h7R371F7vakMS0kJ/FzHxSEC9CPkrY11buknsCJ1l3O2HMz2nh9z+SbV7MnlFCWj9WNhOQNjI/YkVZ9tbOiewa8oiXzJ9i8R1+d0h+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RBkw9r1W; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FNnzccvK"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R5jDYV021236;
-	Thu, 27 Mar 2025 10:48:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	7Sa3Jp59j+nUS0BBJ7tDNKCvGHJtrIiMy92xIjdAp58=; b=FNnzccvKsjR/FWHM
-	oVNHkzsem5cY0+Bv10R04JCQi+vWBQZS9YwpHG4VtYJ1Y75ItDwe6ovzR4yz5lJH
-	1195XP95UVoe5qdKPIPhYn9wESDbkdwyRkShov6vKb2+gtvjNw/N7C1xMKTJ7XZK
-	uoZqPO9qXHErVsT9+IT9Q47N5WnoBsNWVXKf5WJcLWQCHqjZzCbSg+WMlNKDhlW8
-	oKpOSrQJu/7qGabcTWK13fnEtuNasHdqNzIFraaoU0+R20lkDvBTVGJI3FnNzrh/
-	UmVPbN71v4pSW15eZ0V5S1fCGHQyK8pEyBqm5pysPchLNMt7/7l7KUdk7C9GfVxs
-	lRZF6g==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45kyr9p1n7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 10:48:39 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52RAmc3g032487
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 10:48:38 GMT
-Received: from [10.216.8.158] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 27 Mar
- 2025 03:48:32 -0700
-Message-ID: <26463cdf-f041-0dc3-dae2-cf5a91a35373@quicinc.com>
-Date: Thu, 27 Mar 2025 16:18:29 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RBkw9r1W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743072551; x=1774608551;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=P3x1nC7kSQVvmwQm9Ec9eNMVj34oIiVnU6SzBUoQOaM=;
+  b=RBkw9r1W+hLGSvhZjwmHk4ALFh6Vyfllm4OfYjE72K2B2Pkk9Wv0KWN7
+   qXjl8eskl4EIkHR3i/hU3sVJGTKA6wgw//sQcP/VX5YRid2TAleMEyQYs
+   NQceqGDavyzL7cYDOW7hBObeA7DargmjLlohtzCQW6Q7h/qZJ/WxFhPg3
+   VRDdNK6DvJz5hIpoTvvbXZmu3CpICvsLfhFvNuAlhtw9n2gFq3gwnCfGg
+   /21juPh1ThcnTD3GU+t0+K4wmu+GPAZYg0ojktVZiyZEn8np45A6lbOsq
+   rcN+RaymDhHZ6ZMBpK9K5pzULzPHxkEyoiCYH0FI+xzFNpZEmVIHcfnXd
+   A==;
+X-CSE-ConnectionGUID: zfYcrfCYRzyNcqeTlttrMw==
+X-CSE-MsgGUID: FNO3cuOsQ4qXw7KNEQPnDw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44286117"
+X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
+   d="scan'208";a="44286117"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 03:49:10 -0700
+X-CSE-ConnectionGUID: tjidnPEJTvGDfz226/1LtQ==
+X-CSE-MsgGUID: 92b+NNZ4TeedXS7yQPAKgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
+   d="scan'208";a="125617787"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 03:49:07 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id F037C1201BC;
+	Thu, 27 Mar 2025 12:49:03 +0200 (EET)
+Date: Thu, 27 Mar 2025 10:49:03 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Ma Ke <make24@iscas.ac.cn>
+Cc: mchehab@kernel.org, hverkuil@xs4all.nl, sebastian.fricke@collabora.com,
+	ribalda@chromium.org, benjamin.gaignard@collabora.com,
+	viro@zeniv.linux.org.uk, bartosz.golaszewski@linaro.org,
+	hljunggr@cisco.com, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3] media: v4l2-dev: fix error handling in
+ __video_register_device()
+Message-ID: <Z-UtHzeewV-CvzfD@kekkonen.localdomain>
+References: <20250319080248.1746847-1-make24@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 4/6] ARM: dts: qcom: sdx75: Add QPIC NAND support
-Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <vkoul@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <manivannan.sadhasivam@linaro.org>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>, <vigneshr@ti.com>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <agross@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>
-References: <20250313130918.4238-1-quic_kaushalk@quicinc.com>
- <20250313130918.4238-5-quic_kaushalk@quicinc.com>
- <2fb1ddf6-0fca-4bf6-9970-728448f893d2@oss.qualcomm.com>
-From: Kaushal Kumar <quic_kaushalk@quicinc.com>
-In-Reply-To: <2fb1ddf6-0fca-4bf6-9970-728448f893d2@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: jTS8CBuhR1iTeoq5vhCh9qTtN6uYx0NY
-X-Authority-Analysis: v=2.4 cv=UblRSLSN c=1 sm=1 tr=0 ts=67e52d07 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=ZpSJlDRZEPRX5KPLjvEA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: jTS8CBuhR1iTeoq5vhCh9qTtN6uYx0NY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-27_01,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 priorityscore=1501 phishscore=0 mlxscore=0 impostorscore=0
- adultscore=0 clxscore=1015 mlxlogscore=726 bulkscore=0 malwarescore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503270073
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250319080248.1746847-1-make24@iscas.ac.cn>
 
+On Wed, Mar 19, 2025 at 04:02:48PM +0800, Ma Ke wrote:
+> Once device_register() failed, we should call put_device() to
+> decrement reference count for cleanup. Or it could cause memory leak.
+> And move callback function v4l2_device_release() and v4l2_device_get()
+> before put_device().
+> 
+> As comment of device_register() says, 'NOTE: _Never_ directly free
+> @dev after calling this function, even if it returned an error! Always
+> use put_device() to give up the reference initialized in this function
+> instead.'
+> 
+> Found by code review.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: dc93a70cc7f9 ("V4L/DVB (9973): v4l2-dev: use the release callback from device instead of cdev")
+> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
 
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-On 3/13/2025 8:06 PM, Konrad Dybcio wrote:
-> On 3/13/25 2:09 PM, Kaushal Kumar wrote:
->> Add devicetree node to enable support for QPIC
->> NAND controller on Qualcomm SDX75 platform.
->> Since there is no "aon" clock in SDX75, a dummy
->> clock is provided.
-> Alter the bindings not to require it then, instead
->
-> [...]
-Will update in v2.
->
->>   
->> +		qpic_nand: nand-controller@1cc8000 {
->> +			compatible = "qcom,sdx75-nand", "qcom,sdx55-nand";
->> +			reg = <0x0 0x01cc8000 0x0 0x10000>;
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			clocks = <&rpmhcc RPMH_QPIC_CLK>,
->> +				 <&nand_clk_dummy>;
->> +			clock-names = "core", "aon";
->> +
->> +			dmas = <&qpic_bam 0>,
->> +			       <&qpic_bam 1>,
->> +			       <&qpic_bam 2>;
->> +			dma-names = "tx", "rx", "cmd";
-> Please make dma-names a vertical list, just like dmas
-Sure, will update in v2.
->
-> Konrad
-
+-- 
+Sakari Ailus
