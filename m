@@ -1,156 +1,221 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D3054782
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 23:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1611C4A0A;
+	Thu, 27 Mar 2025 23:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743117459; cv=none; b=PEYglLl8JNxOqrXWZAodCLVyjZXYHiQuyB5SpF7Lh52nbLc4PSUiMEofbkNz50a46tf7hLBAXQCWJ9Qn9bmxRkYTjxrsr3mcMvoLoEfPqQYFBYrUCmmO3Z0pHJP99H9D+hrjfmUHGB3Jd+ovvVn6KKTT6uXjn+0hzvYTzWVMkN8=
+	t=1743117571; cv=none; b=GC/O2ul5W8vUbRYsWpmZSl6n/yy+CBaWJvE+z27iWtcS4k7MbmPaVwShW10S2gM5SGVfrCiwNTHIYuTmjstUnzsBMw2Am8Xcpmy++s1JxmGbPOJ8H6BYVrY0cI2qdZE/TXHWRjpyuxUMqrS1wxLM9dI/QJO6QNN6g6VcoMfFd+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743117459; c=relaxed/simple;
-	bh=6fpIqC+wJTmPu0qVKaCvz89Za+htRQAlZ9Mb5bskWzw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=mXkpoKjHEdxGNt0BLt4kudPGWEniD7DjxJtzwO3OGy1LrsHiO6RVI/8Qa6pTJBSSaJkVPUvGUSUUBqqP80m8YHKhplJO9qWUrraQAYXLJS33ItagklNZyQpPw9EEJ5vmFmj5sVW3jvtoi9lkHXH+D6idOJFOSaEwmUonNIhj2Vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L51zn0nJ; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ynaffit.bounces.google.com
+	s=arc-20240116; t=1743117571; c=relaxed/simple;
+	bh=JtHkof5Kn1s3OvzmD5FvCZbT7RpY4G+M3J77IZkSWJk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R0Hn85tbHVWx44h39JO4IOj17/jQbq5yo6LyhAscny6uIeTJ3dkXt3eIxrC7LqYfgXPldPHr5mSgQ13hw5tCucZ06b2Z6CptW0aaACflCjKATnU7mDjqY5+hNo4ItrZ680apEurB5Pl1BhuvDb2I6COiCBhwJ/UzOr0E9Ur+8XQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L4jZbGME; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L51zn0nJ"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-223f3357064so25355745ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:17:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4jZbGME"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e609cff9927so1178997276.3;
+        Thu, 27 Mar 2025 16:19:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743117457; x=1743722257; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=HFAuVNpglgdR3WlNclVPb9DHztwQePbBVl9n65mX/Bs=;
-        b=L51zn0nJkW30NVINEBDyVNVfOMgmn0DZ9Ix/t8cShFKD2qh37NDxNUIBDoyAHFkQ/C
-         1uuMeWeaI5n1f0pFOwFVz5Ewo07+Iq3Dk2MUEYhseeZfdydoOz5sLRqhku3ZqsLrlvWg
-         nZc64+fQkjYGRKRsh41a8sOwpV5213tu+GhCEboaszTWzHtRDXoWe09WZW6ZRLYZ91+l
-         GNfSj3sA/cKiTfc2cXImlADuRNQdVWNAvkyBf6qYHbEMwOFBpuP1UPdBp7Mjsqk1i3So
-         aaLXTkwGJw/fwp6jUQ6Ld3Wr2jjekV0MRj+/B41qURMjigklK94d5pfJBvReskLzTUKr
-         U2rA==
+        d=gmail.com; s=20230601; t=1743117569; x=1743722369; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aMnF9vs8JB47IN/cDkEjD5+fBKENuY4T9JJxCznicyY=;
+        b=L4jZbGMEITOymm16C+Z8c1uNRKNeJFqiRRwk2cP8sFnoz09h7D33CWSjEygrF+9z0h
+         2ZYQHBv9YV0H1OeP2VIRfKNHNEJul3559tEPDLPHjB/vZPXFP49MnxknicjxASYyD6Nn
+         gPedzanZsU94PQPswpdoqOLfqzAPY+E1d3MgJ7C94z6Of1ICGesAtE2XTuRaPTVlojwb
+         8HVjRRlazMeKjBUa35GeWKpEEh3qh7b+Y/Uw5P8MFzjoEoIkOoRGrJtcArDFytx4fA2W
+         ut85vjLZx/ldyz1HAM8Hxi6wtfoZm/n1Sx4jNniojDwoDaR8bhepar9nYKKtTNh/LpdF
+         tPDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743117457; x=1743722257;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HFAuVNpglgdR3WlNclVPb9DHztwQePbBVl9n65mX/Bs=;
-        b=M41X4AsT2wc43YISfp8GvHbzdT78Qoag35JNHiemNCkHNjtfjEA9DzIJwChHpF0bpt
-         +wwrl3Y/YDKiJ010gHiSKBAo/WQmASYnk+sHXCAELykn+wYoVx3w0aHlHrhA5f5M8Yj4
-         wBdd3vM/IMDfkaIrLIcSx4f3vJUmRmEniMP1Gfl5JMQ8W49SdNc64aPXkC1Z40sJDL8M
-         UjuMCSKOLVsnUjsGNZjFSw6as0UTJTdzUL7bQc0lx8Fgh5TWPtWXmZNsR1eGmpU5ih3t
-         4PPUUf+iv9vs4R0n4fq53cU9Pee7T2w459pvzh5+9G7gwsyUg+f4Wunj4eTWgF0hJ1mn
-         j/Jg==
-X-Gm-Message-State: AOJu0YyrjpatQA5+YpDUMW+rf1iN5zMeZeCv5/mUaucofnf8GI9KGVM/
-	bgkN7m7c/JuRiiQixHHGdZiI8uUkxhLqAwgyrVvSXJtXay/6ue2ndMqkpenEXhLEMA2mE5JAfwN
-	jklnZXg==
-X-Google-Smtp-Source: AGHT+IHvF8GmxmVaonYf041Tn0ZoKzMpMHG/SNrE5HBF+kt3m1DsLA1c/xcce2xvYeJ51D9hr9GE6BHeBvOJ
-X-Received: from plqt10.prod.google.com ([2002:a17:902:a5ca:b0:223:6458:d313])
- (user=ynaffit job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ce06:b0:223:54aa:6d15
- with SMTP id d9443c01a7336-22804850b72mr103348805ad.12.1743117457382; Thu, 27
- Mar 2025 16:17:37 -0700 (PDT)
-Date: Thu, 27 Mar 2025 23:17:09 +0000
+        d=1e100.net; s=20230601; t=1743117569; x=1743722369;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aMnF9vs8JB47IN/cDkEjD5+fBKENuY4T9JJxCznicyY=;
+        b=Tp0HkPERJ5uja6T2v+E/D2MssFHWZKCdagEEiZ2sgoRb5URpK1LcvGc7KHn3e9rFd1
+         kceTWQ9X6nT7058se/48lPWPcY2/ekSJY+4XeHDTwPh0TJz6wFUqnPTZgBCMqknW4MK/
+         HSqAUBhFrDVxsfAJKZl1CjKaaV+j2zYqAX95XmPlLtiLJjIexanw188E2dpZWq83iAc7
+         zgCSP65qpcuy0J5eunmOFZinRWPTMSzPlxgoYk+X4ejvGE/g6WKaSHhIpdUhbfbulVMf
+         tgccdSEe1EjEF1JyLc3m/Q+dZwQq4BcLoAzcSpWlRWUKWdoyL/Nky6/+/FZEk68In4KW
+         M5eg==
+X-Forwarded-Encrypted: i=1; AJvYcCUARRvJlVHUNIo9s7dQkD+1TFXAe4hzqU2/dUzxTHkfCD/fFfyp1uTy+WIWqu2499f+SQkVXWDvwoz6XCdh@vger.kernel.org, AJvYcCUeG6lEP7ZKYX6Yu35DI6+F6vXOmt1rXLqKNxb3EG/9oMLjD9kwcf4fcTM0GyPWCP471jvn7915V5EMCcsr@vger.kernel.org, AJvYcCXHr9C+ojLuthl2PwXgKPVJhJQm9PkV1ZCmeD2QdlRA565J5NWJXdgGY99z7AuyEY9PVk9stNeH@vger.kernel.org, AJvYcCXONnPjrl48rLVMA70nZ6uvTRCqaZCl6Y3xWzgoN14jp+SyRhl7nQQ+UDJTzcYMuWBOWCl7FjfCJktY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1HNlmxPDF+btycOuTO57XhibkKnsxz02nPtHQdtMLD98POAzF
+	D/aETSzoZvs6+4izgRTkNZ9I6ZeY7Oy8UfYKEEsaD128uDWKl7lz3luRMfYEhZCP5KCsLWbNRqu
+	chq/KKG8fOTVibMQZXvIq6oo6QW4I8O3J
+X-Gm-Gg: ASbGncvk1JnzuOu8Jn40n2r0v/Ni7WErpuv4w4Qc+nGLnudf+NDsksSqWhc2ixD1n/M
+	TGpjkAh2qyxx77fz/GbaQx+PkcoZbxoY4ID17XaMDGSlXTVkIdxC7gMgVC1ncZoO9iLtHpW5yWL
+	tBwGDjrf2qOBoeMKwp/ix9Hc/zuzASUVhPlNvA/EMTz/wXxx1QKLH+Rx0=
+X-Google-Smtp-Source: AGHT+IFFzruC25MmRQ8O0m11e88aqMai4IgHeja7o6hpsDHutAEbLnqb6CJ+2QXVsTRPqdu8ITPVSGFdMHLnDsZUS7Q=
+X-Received: by 2002:a05:6902:4a03:b0:e6b:769f:556b with SMTP id
+ 3f1490d57ef6-e6b769f5aa6mr107233276.35.1743117568538; Thu, 27 Mar 2025
+ 16:19:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.472.ge94155a9ec-goog
-Message-ID: <20250327231722.3204898-2-ynaffit@google.com>
-Subject: [PATCH v3] binder: use buffer offsets in debug logs
-From: "Tiffany Y. Yang" <ynaffit@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Christian Brauner <brauner@kernel.org>, 
-	Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>
-Cc: linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	"Tiffany Y. Yang" <ynaffit@google.com>
+MIME-Version: 1.0
+References: <20250326154349.272647840@linuxfoundation.org> <CA+G9fYsRQub2qq0ePDs6aBAc+0qHRGwH_WPsTfhcwkviD1eH1w@mail.gmail.com>
+ <CACzhbgQ=TU-C=MvU=fNRwZuFKBRgnrXzQZw15HVci_vT5w8O7Q@mail.gmail.com>
+In-Reply-To: <CACzhbgQ=TU-C=MvU=fNRwZuFKBRgnrXzQZw15HVci_vT5w8O7Q@mail.gmail.com>
+From: Leah Rumancik <leah.rumancik@gmail.com>
+Date: Thu, 27 Mar 2025 16:19:16 -0700
+X-Gm-Features: AQ5f1Jp8lXbaNFjXv08hBRv1tfhk1348_npPOImkZqUQgUwZQdNGnYymj_B4y2o
+Message-ID: <CACzhbgTQCuig6eqOJFshthQfT5-7cVkemY9VtO_vu4d+aTcU=Q@mail.gmail.com>
+Subject: Re: [PATCH 6.1 000/197] 6.1.132-rc2 review
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
+	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
+	pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, 
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org, 
+	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Dave Chinner <dchinner@redhat.com>, Christoph Hellwig <hch@lst.de>, 
+	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Identify buffer addresses using vma offsets instead of full user
-addresses in debug logs or drop them if they are not useful.
+sent to stable:
+https://lore.kernel.org/stable/20250327215925.3423507-1-leah.rumancik@gmail=
+.com/
 
-Signed-off-by: Tiffany Y. Yang <ynaffit@google.com>
----
-V2 -> V3: Drop transaction data addresses
-V1 -> V2: Resend to mailing lists
 
- drivers/android/binder.c | 27 +++++++++++----------------
- 1 file changed, 11 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index 744cd7aa79c3..603667ac5050 100644
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -3261,20 +3261,16 @@ static void binder_transaction(struct binder_proc *proc,
- 
- 	if (reply)
- 		binder_debug(BINDER_DEBUG_TRANSACTION,
--			     "%d:%d BC_REPLY %d -> %d:%d, data %016llx-%016llx size %lld-%lld-%lld\n",
-+			     "%d:%d BC_REPLY %d -> %d:%d, data size %lld-%lld-%lld\n",
- 			     proc->pid, thread->pid, t->debug_id,
- 			     target_proc->pid, target_thread->pid,
--			     (u64)tr->data.ptr.buffer,
--			     (u64)tr->data.ptr.offsets,
- 			     (u64)tr->data_size, (u64)tr->offsets_size,
- 			     (u64)extra_buffers_size);
- 	else
- 		binder_debug(BINDER_DEBUG_TRANSACTION,
--			     "%d:%d BC_TRANSACTION %d -> %d - node %d, data %016llx-%016llx size %lld-%lld-%lld\n",
-+			     "%d:%d BC_TRANSACTION %d -> %d - node %d, data size %lld-%lld-%lld\n",
- 			     proc->pid, thread->pid, t->debug_id,
- 			     target_proc->pid, target_node->debug_id,
--			     (u64)tr->data.ptr.buffer,
--			     (u64)tr->data.ptr.offsets,
- 			     (u64)tr->data_size, (u64)tr->offsets_size,
- 			     (u64)extra_buffers_size);
- 
-@@ -4223,20 +4219,21 @@ static int binder_thread_write(struct binder_proc *proc,
- 			if (IS_ERR_OR_NULL(buffer)) {
- 				if (PTR_ERR(buffer) == -EPERM) {
- 					binder_user_error(
--						"%d:%d BC_FREE_BUFFER u%016llx matched unreturned or currently freeing buffer\n",
-+						"%d:%d BC_FREE_BUFFER matched unreturned or currently freeing buffer at offset %lx\n",
- 						proc->pid, thread->pid,
--						(u64)data_ptr);
-+						(unsigned long)data_ptr - proc->alloc.buffer);
- 				} else {
- 					binder_user_error(
--						"%d:%d BC_FREE_BUFFER u%016llx no match\n",
-+						"%d:%d BC_FREE_BUFFER no match for buffer at offset %lx\n",
- 						proc->pid, thread->pid,
--						(u64)data_ptr);
-+						(unsigned long)data_ptr - proc->alloc.buffer);
- 				}
- 				break;
- 			}
- 			binder_debug(BINDER_DEBUG_FREE_BUFFER,
--				     "%d:%d BC_FREE_BUFFER u%016llx found buffer %d for %s transaction\n",
--				     proc->pid, thread->pid, (u64)data_ptr,
-+				     "%d:%d BC_FREE_BUFFER at offset %lx found buffer %d for %s transaction\n",
-+				     proc->pid, thread->pid,
-+				     (unsigned long)data_ptr - proc->alloc.buffer,
- 				     buffer->debug_id,
- 				     buffer->transaction ? "active" : "finished");
- 			binder_free_buf(proc, thread, buffer, false);
-@@ -5053,16 +5050,14 @@ static int binder_thread_read(struct binder_proc *proc,
- 		trace_binder_transaction_received(t);
- 		binder_stat_br(proc, thread, cmd);
- 		binder_debug(BINDER_DEBUG_TRANSACTION,
--			     "%d:%d %s %d %d:%d, cmd %u size %zd-%zd ptr %016llx-%016llx\n",
-+			     "%d:%d %s %d %d:%d, cmd %u size %zd-%zd\n",
- 			     proc->pid, thread->pid,
- 			     (cmd == BR_TRANSACTION) ? "BR_TRANSACTION" :
- 				(cmd == BR_TRANSACTION_SEC_CTX) ?
- 				     "BR_TRANSACTION_SEC_CTX" : "BR_REPLY",
- 			     t->debug_id, t_from ? t_from->proc->pid : 0,
- 			     t_from ? t_from->pid : 0, cmd,
--			     t->buffer->data_size, t->buffer->offsets_size,
--			     (u64)trd->data.ptr.buffer,
--			     (u64)trd->data.ptr.offsets);
-+			     t->buffer->data_size, t->buffer->offsets_size);
- 
- 		if (t_from)
- 			binder_thread_dec_tmpref(t_from);
--- 
-2.49.0.472.ge94155a9ec-goog
-
+On Thu, Mar 27, 2025 at 10:04=E2=80=AFAM Leah Rumancik <leah.rumancik@gmail=
+.com> wrote:
+>
+> This is fixed by
+>
+> https://lore.kernel.org/all/20250321010112.3386403-1-leah.rumancik@gmail.=
+com/T/
+>
+> but I'm waiting on an ACK. Let me do some nagging :)
+>
+> - leah
+>
+>
+>
+> On Thu, Mar 27, 2025 at 5:50=E2=80=AFAM Naresh Kamboju
+> <naresh.kamboju@linaro.org> wrote:
+> >
+> > On Wed, 26 Mar 2025 at 21:15, Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > This is the start of the stable review cycle for the 6.1.132 release.
+> > > There are 197 patches in this series, all will be posted as a respons=
+e
+> > > to this one.  If anyone has any issues with these being applied, plea=
+se
+> > > let me know.
+> > >
+> > > Responses should be made by Fri, 28 Mar 2025 15:43:27 +0000.
+> > > Anything received after that time might be too late.
+> > >
+> > > The whole patch series can be found in one patch at:
+> > >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/pa=
+tch-6.1.132-rc2.gz
+> > > or in the git tree and branch at:
+> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-st=
+able-rc.git linux-6.1.y
+> > > and the diffstat can be found below.
+> > >
+> > > thanks,
+> > >
+> > > greg k-h
+> >
+> > Regressions on arm, arm64, mips, powerpc builds failed with gcc-13 and
+> > clang the stable-rc 6.1.132-rc1 and 6.1.132-rc2.
+> >
+> > First seen on the 6.1.132-rc1
+> >  Good: v6.1.131
+> >  Bad: Linux 6.1.132-rc1 and Linux 6.1.132-rc2
+> >
+> > * arm, build
+> >   - clang-20-davinci_all_defconfig
+> >   - clang-nightly-davinci_all_defconfig
+> >   - gcc-13-davinci_all_defconfig
+> >   - gcc-8-davinci_all_defconfig
+> >
+> > * arm64, build
+> >   - gcc-12-lkftconfig-graviton4
+> >   - gcc-12-lkftconfig-graviton4-kselftest-frag
+> >   - gcc-12-lkftconfig-graviton4-no-kselftest-frag
+> >
+> > * mips, build
+> >   - gcc-12-malta_defconfig
+> >   - gcc-8-malta_defconfig
+> >
+> > * powerpc, build
+> >   - clang-20-defconfig
+> >   - clang-20-ppc64e_defconfig
+> >   - clang-nightly-defconfig
+> >   - clang-nightly-ppc64e_defconfig
+> >   - gcc-13-defconfig
+> >   - gcc-13-ppc64e_defconfig
+> >   - gcc-13-ppc6xx_defconfig
+> >   - gcc-8-defconfig
+> >   - gcc-8-ppc64e_defconfig
+> >   - gcc-8-ppc6xx_defconfig
+> >
+> > Regression Analysis:
+> >  - New regression? yes
+> >  - Reproducibility? Yes
+> >
+> > Build regression: arm arm64 mips powerpc xfs_alloc.c 'mp' undeclared
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > ## Build log
+> > fs/xfs/libxfs/xfs_alloc.c: In function '__xfs_free_extent_later':
+> > fs/xfs/libxfs/xfs_alloc.c:2551:51: error: 'mp' undeclared (first use
+> > in this function); did you mean 'tp'?
+> >  2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)=
+))
+> >       |                                                   ^~
+> >
+> >
+> > ## Source
+> > * Kernel version: 6.1.132-rc2
+> > * Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linu=
+x-stable-rc.git
+> > * Git sha: f5ad54ef021f6fb63ac97b3dec5efa9cc1a2eb51
+> > * Git describe: v6.1.131-198-gf5ad54ef021f
+> > * Project details:
+> > https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6=
+.1.131-198-gf5ad54ef021f/
+> >
+> > ## Build
+> > * Build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6=
+.1.y/build/v6.1.131-198-gf5ad54ef021f/testrun/27785617/suite/build/test/gcc=
+-12-lkftconfig-graviton4-kselftest-frag/log
+> > * Build history:
+> > https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6=
+.1.131-198-gf5ad54ef021f/testrun/27785617/suite/build/test/gcc-12-lkftconfi=
+g-graviton4-kselftest-frag/history/
+> > * Build details:
+> > https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6=
+.1.131-198-gf5ad54ef021f/testrun/27785617/suite/build/test/gcc-12-lkftconfi=
+g-graviton4-kselftest-frag/
+> > * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2u=
+rSwNctsyhQzf1j7dvt6nHemP5/
+> > * Kernel config:
+> > https://storage.tuxsuite.com/public/linaro/lkft/builds/2urSwNctsyhQzf1j=
+7dvt6nHemP5/config
+> >
+> > ## Steps to reproduce
+> >  - tuxmake --runtime podman --target-arch arm64 --toolchain gcc-12 \
+> >     --kconfig https://storage.tuxsuite.com/public/linaro/lkft/builds/2u=
+rSwNctsyhQzf1j7dvt6nHemP5/config
+> > debugkernel dtbs dtbs-legacy headers kernel kselftest modules
+> >  - tuxmake --runtime podman --target-arch arm --toolchain clang-20
+> > --kconfig davinci_all_defconfig LLVM=3D1 LLVM_IAS=3D1
+> >
+> >
+> > --
+> > Linaro LKFT
+> > https://lkft.linaro.org
