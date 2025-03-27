@@ -1,178 +1,298 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D443328EC
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 19:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E1E28EC
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 19:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743103881; cv=none; b=FxjwL7NY9Kkku+1OgRNYHP/lzfOjeGcV/PxiJmGSbXwMWu3lZBkwvXJlvK10cj46jhmXkD5WXZrLCvVnK8DPQeH/1ukDSyC8g4bCjew/QMgajjWbK5E2gHVv7foxUpgiaReNPUQ1O6PUqCaQreatv6LL293uv8LoBsiZveN8d+o=
+	t=1743104174; cv=none; b=hURM6NgR0bEOUG8dBv2fBmE5ojzUOKIvjI6laesqlGOyO9hPfo/zs4XJ3OUTP23oYkE/MzIDdKyUCEoWOcvuUG2PL1FSkavIYwuw+Qyvx58AXnuqBnBVE3JTqQIbV11iebe9b8CH26PKWEXbjfeWvYs81qhLJ2Wv2HbmW6qH9gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743103881; c=relaxed/simple;
-	bh=Uo3Y4wwMyV3y+DSOMke8R1D7DBAWK/vp0DGAudzMYeg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q9divEyke2ticqfnNTUWRBth4ldbD4i7XX28ZgQJDsu0YWLoAIXlTQjS1evHCM7GwwltACXqze+qqLgufNSPOcnjNiOUhlwbSgXcdDmHcum3Zo+HmF62tueq3g1ObkcseFvVa1MFUuFdtfu11ogssbPDiJHLdirceFvfAcxJBdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=jwTKEtkW; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	s=arc-20240116; t=1743104174; c=relaxed/simple;
+	bh=Bu9SBXLCsqxc/K2zhuGDke0dHkcDbp3VE+p2w+FdrN4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=c6Q3eS+CszlXaCpufW/572wrruqq6LxqepIFWqFferpyIceeJhmgtp4XXvbsx87gCcE9HUIE52mUzdv7Fvav9xgGG8f4CwZ4d0zks+MFWMUl8Ym0LWhtQsLKAsmcp5TMe8f1idGyDp9KophG/VDjYOONQ9c/IChOdMIGC4kv4zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ZIZ4kYhY; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="jwTKEtkW"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-47692b9d059so19177921cf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:31:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ZIZ4kYhY"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ff694d2d4dso2279827a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:36:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1743103879; x=1743708679; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fOWvcEa0sbfZjABPw9Te+y/65mWJI8Lsb95Ek+V1dlo=;
-        b=jwTKEtkWQuP40eSVJnCqMGKUXDv7LRvL4ATsKdf26B6bkeYXlFq8KKuqmzIyt4knjZ
-         MVQoW1+bDJCD25GGSq9yonzk7H99jWi/UHjDSapc0O31BGxwDmJxW0sbvY5oh+k5aAlb
-         K/k2TDm3plK4XIzx9VetIdQc3jU/p8MHtFAfCz3DkSYuhpsZcwlA2Tzd2XVLBuwJrbPA
-         3JQMAHQ1KVQ2qsR+fwzxNMMxG8r+cmdliX3ofJZb8ijDXjehqMzT1E5bYv7bw8sx8tz6
-         x9hW4yp8f3PXcJkcSHCiUYbEdcNu22T07KtczXKlaS60xWmapq6OyM4hsTXpYoebOUEV
-         H3TA==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1743104171; x=1743708971; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jAY+Cg5HQZMci06K15j1dCXU1uO31X3ZHDkdY1vsxDU=;
+        b=ZIZ4kYhYI4QcCSg+mLhGblZcnzlIsOr0ECh1RTLPVhuOD6LOu61dkphdl4i3py+AIO
+         hJssVpAFVWqWrpT4pfuPQElg0SwHq1WFWyOfTdqOLDCf8MXQnTBHVOuVBP68/NO5d8E7
+         RzENl40MST/c/PXuuh/XcvjcICaY0IB8vcczgvR2opKIjcPzovp8OV8kv2CfW+Qbkfn/
+         rZq1nIMat4fntbyBSFej6uRpSH8JXl43ZSnAppQqSPVSkg6rTcMIPS0NCkRsLy67hx9x
+         2TfbuNrUVHLwt+zxhrmGfD8LQ5lcSiS1MqabnyFD0pgNW27/KfqtThk5mLzRsxsrJypv
+         5axw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743103879; x=1743708679;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fOWvcEa0sbfZjABPw9Te+y/65mWJI8Lsb95Ek+V1dlo=;
-        b=o4q1UHLSR48dOgYhiyKd6RqnVEWQYOkXO2Y5Qaur4Dua7XLY98RA7B0wZC/MlAvV4i
-         q3FIdQTTvXzEg5Z730ebUwoWlKpgmJ+M/DbyS8PTE8c/2RReEhx6dT2R8OErh7AD2ibm
-         jc2S8qfWVgjx6SCrHmJRBIKYXllbsma2sVQX+qGWV0SRnhfQlk0bb6DFmayCIwszksaT
-         OvHx7nlN9cEtWOag+QA0ffFdK1beV7yu7qof++NO7uDwdCBJB1ZTNepx+YIT8GI0+2Hb
-         tc0dzGWdlxV7SV87AICUdxuebsqZlIjJxKB9TBbfVMHkHJlV1zbAafge87dOuuxPpOBz
-         1ieg==
-X-Forwarded-Encrypted: i=1; AJvYcCVaNuAFCfigRCcGCKrPNvOAwNKCX43JiPOMKaCcgMCJ94gDUrA0mHq5TfynV8ReT/axlC0cdyKZ/XVtXpg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1UJB9KUyFJgOmW2rrbeieJkGZ8FsjZieYtb9yyyca+7gQCGOq
-	aR8hVJsN5G/TIHq5TNHVSMDt7bNLR0mcfyu1uaMjfrkeMMFxrlaEFSTne86krA==
-X-Gm-Gg: ASbGnctmuPZNevu+DM5OVdYdRWYhI+XEZ5OWgyy33LwXlM0o3EF1lJLtqMJWAf38OPD
-	q3lbT71tQQ43ns+ERQ4JwFrpjw4xxZYpPC/QTxI3yT6NaGFPlDzEUoT1OjE9/Z8+81z8b+NKvKw
-	1U1Ydo2rxne+7QM7wItecMhJ1ALP7PHWM0EozS0NBONdq08rpRJ8OIFbqrDg5PV2MwZQw1AT2oH
-	EXeGZVUUiBNPj2EovQNTNbH1xtVmLbFKAS+f1Gd9+o3XQQHfYNCQHzL6Fozz+zXnIR0CY48c+VC
-	mG0Xw7P/dty8U0VisvZ+RnqmN5Qdkft8moM00EewPwpXgc3ZOcwu2lyYLAp4kVPMUBubiFuQyuQ
-	c7hSWooNjs0gwwrpGjuPTZG9daFNGj5mihlJtvA==
-X-Google-Smtp-Source: AGHT+IHhYGeHC6Cc7v+fL0j0iHE1UuzcR8DR3uKdtY7qHAlgm3C/YNf4p1yl1SUxogG0H29UbqzJ+g==
-X-Received: by 2002:a05:622a:58c6:b0:477:4df:9a58 with SMTP id d75a77b69052e-4776e0d1714mr88924621cf.18.1743103878520;
-        Thu, 27 Mar 2025 12:31:18 -0700 (PDT)
-Received: from rowland.harvard.edu (nat-65-112-8-24.harvard-secure.wrls.harvard.edu. [65.112.8.24])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47782a1070csm1526041cf.9.2025.03.27.12.31.17
+        d=1e100.net; s=20230601; t=1743104171; x=1743708971;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jAY+Cg5HQZMci06K15j1dCXU1uO31X3ZHDkdY1vsxDU=;
+        b=XhfL3+Gaa4hJNca4c4hHVPVTOiYHZDhhHhHFHv0rollekierWWYaF99yLW2OzRZyPb
+         jwhYi04lJfEYMXxlvh8tm8sypntEka2EmUDH5uMv/iUG8I+mTRD4kqYN/hclvLf1Av2Q
+         TnsfpDyVCz9U4KYLeXmKVNQ24u90Tu5FQb8KetE00OnStlPsLyKPWPl3W/GPvD6hVL+f
+         7HJd4liuU/bFpvHYAqvaa4FmXB80KL7cRRALZ65BU/ueQgg9ivsrXqOiBEl7Xn0pYPEj
+         Yr1VZu0Am/6w/qYSPaQRKqvRr4ZSUYySfXFjZg6cH9Qlnl7djK0gwwZJ3lfNgcH2DVrx
+         0tAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDDrpLbkoVrHm5qOeSm7z+0SRNJXfy/3L6ZIlN7+F/hMu19XdpBFvW6Tk1+6XYk9J1URLoavymeEUPD6I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzS3MkomROnNxCO9knFS5CsQRJTWp2RXluogdvbkcB+T3vgHhqT
+	7KRYvL0d7d4mDqaQExnuQWG77P0830NgnHOKswnTcOdTRyGa5OrYOB8Gr+8u3Y8=
+X-Gm-Gg: ASbGncsauiz655dLmFawjbX2WoOdRQVSIVyKCq9HDwyi31gV51TDaav1K+bZpLuZTIk
+	Tg2RaUFZMPq4/IDMtgiKHBb7EwCOKh2/E9d81vEzX13vMzayc4Gnk3QBcC6I/ry0aF7c0IqtqmW
+	Ckl3jOxOQRddr4R/xDbbe00YwIOdcxe+e4iyGPMZagZcnhknbGtutMrON5A1vVmd7kNeHi+zCR1
+	JR12p3NyUwSxiW2CqBtdxXX7Z9wEVPix+4HZDczTMIGEtmN4HVI+r7x5uuNAX0ic6EDuA8LBZKE
+	VqyIJKcqO/xl3tD7fbv7Iqa4E89Hp898nRl4rQfUGXnwlKRfEpq3CiUwkQ==
+X-Google-Smtp-Source: AGHT+IG3jSHF5jFLlVLycbj1Jf3RB9Ho77/qkuBJy49ZMZVDs34odX6i7mszuOua7lZd9PrWcxgbeQ==
+X-Received: by 2002:a17:90b:514b:b0:2ee:dd9b:e402 with SMTP id 98e67ed59e1d1-303a7d6a9a7mr8534491a91.12.1743104171302;
+        Thu, 27 Mar 2025 12:36:11 -0700 (PDT)
+Received: from atishp.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039f6b638csm2624220a91.44.2025.03.27.12.36.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 12:31:17 -0700 (PDT)
-Date: Thu, 27 Mar 2025 15:31:15 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] usb: ehci-fsl: Fix use of private data to avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <8139e4cc-4e5c-40e2-9c4b-717ad3215868@rowland.harvard.edu>
-References: <Z-R9BcnSzrRv5FX_@kspp>
- <1e82761e-8554-4168-8feb-561abbe49f7e@rowland.harvard.edu>
+        Thu, 27 Mar 2025 12:36:11 -0700 (PDT)
+From: Atish Patra <atishp@rivosinc.com>
+Subject: [PATCH v5 00/21] Add Counter delegation ISA extension support
+Date: Thu, 27 Mar 2025 12:35:41 -0700
+Message-Id: <20250327-counter_delegation-v5-0-1ee538468d1b@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1e82761e-8554-4168-8feb-561abbe49f7e@rowland.harvard.edu>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAI2o5WcC/23QwWoEIQwG4FdZPNfFRB3dPfU9SimOZnaEdlx0K
+ i3LvHudLaWlePxD8iXkxgrlSIWdDzeWqcYS09KCfjgwP7vlQjyGlhkKVMKA5j69Lyvll0CvdHF
+ ra+cDWidxsv7kPWuD10xT/LijT88tz7GsKX/ed1TYq98cghFCG2mP0igFCBx4E8t8fcyxphIXf
+ /Tpje1GxZ85LQBU74yKXHA7OqN8GK2GsaPIPwqariKbMih7UsEQDEF3FPWroOi+pKr9Fqn95Kw
+ lOcI/Zdu2LwUgSlt7AQAA
+X-Change-ID: 20240715-counter_delegation-628a32f8c9cc
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Anup Patel <anup@brainfault.org>, 
+ Atish Patra <atishp@atishpatra.org>, Will Deacon <will@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, weilin.wang@intel.com
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org, 
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ Atish Patra <atishp@rivosinc.com>, Kaiwen Xue <kaiwenx@rivosinc.com>, 
+ =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, 
+ Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.15-dev-42535
 
-In the course of fixing up the usages of flexible arrays, Gustavo
-submitted a patch updating the ehci-fsl driver.  However, the patch
-was wrong because the driver was using the .priv member of the
-ehci_hcd structure incorrectly.  The private data is not supposed to
-be a wrapper containing the ehci_hcd structure; it is supposed to be a
-sub-structure stored in the .priv member.
+This series adds the counter delegation extension support. It is based on
+very early PoC work done by Kevin Xue and mostly rewritten after that.
+The counter delegation ISA extension(Smcdeleg/Ssccfg) actually depends
+on multiple ISA extensions.
 
-Fix the problem by replacing the ehci_fsl structure with
-ehci_fsl_priv, containing only the private data, along with a suitable
-conversion macro for accessing it.  This removes the problem of having
-data follow a flexible array member.
+1. S[m|s]csrind : The indirect CSR extension[1] which defines additional
+   5 ([M|S|VS]IREG2-[M|S|VS]IREG6) register to address size limitation of
+   RISC-V CSR address space.
+2. Smstateen: The stateen bit[60] controls the access to the registers
+   indirectly via the above indirect registers.
+3. Smcdeleg/Ssccfg: The counter delegation extensions[2]
 
-Reported-by: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/linux-usb/Z-R9BcnSzrRv5FX_@kspp/
+The counter delegation extension allows Supervisor mode to program the
+hpmevent and hpmcounters directly without needing the assistance from the
+M-mode via SBI calls. This results in a faster perf profiling and very
+few traps. This extension also introduces a scountinhibit CSR which allows
+to stop/start any counter directly from the S-mode. As the counter
+delegation extension potentially can have more than 100 CSRs, the specification
+leverages the indirect CSR extension to save the precious CSR address range.
+
+Due to the dependency of these extensions, the following extensions must be
+enabled in qemu to use the counter delegation feature in S-mode.
+
+"smstateen=true,sscofpmf=true,ssccfg=true,smcdeleg=true,smcsrind=true,sscsrind=true"
+or Virt machine users can just "max" cpu instead.
+
+When we access the counters directly in S-mode, we also need to solve the
+following problems.
+
+1. Event to counter mapping
+2. Event encoding discovery
+
+The RISC-V ISA doesn't define any standard either for event encoding or the
+event to counter mapping rules. Until now, the SBI PMU implementation relies
+on device tree binding[3] to discover the event to counter mapping in RISC-V
+platform in the firmware. The SBI PMU specification[4] defines event encoding
+for standard perf events as well. Thus, the kernel can query the appropriate
+counter for an given event from the firmware.
+
+However, the kernel doesn't need any firmware interaction for hardware
+counters if counter delegation is available in the hardware. Thus, the driver
+needs to discover the above mappings/encodings by itself without any assistance
+from firmware.
+
+Solution to Problem #1:
+This patch series solves the above problem #1 by extending the perf tool in a
+way so that event json file can specify the counter constraints of each event
+and that can be passed to the driver to choose the best counter for a given
+event. The perf stat metric series[5] from Weilin already extend the perf tool
+to parse "Counter" property to specify the hardware counter restriction.
+As that series was not revised in a while, I have rebased it and included in
+this series. I can only include the necessary parts from that patch required
+for this series if required.
+
+This series extends that support by converting comma separated string to a
+bitmap. The counter constraint bitmap is passed to the perf driver via
+newly introduced "counterid_mask" property set in "config2".
+However, it results in the following event string which has repeated information
+about the counters both in list and bitmask format. I am not sure how I can pass
+the list information to the driver directly. That's why I added a
+counterid_mask property.
+
+Additionaly, the PATCH5 in [5] parses the bitmask information from the
+string and puts it into the metric group structure. We can just convert it in
+python easily and pass it to the metric group instead. The PATCH19 does exactly
+that and sets the counterid_mask property.
+
+@Weilin @Ian : Please let me know if there is a better way to solve the problem I
+described.
+
+Due to the new counterid_mask property, the layout in empty-pmu-events.c got
+changed which is patched in PATCH 21 based on existing script.
+
+Possible solutions to Problem #2:
+
+1. Extend the PMU DT parsing support to kernel as well. However, that requires
+additional support in ACPI based system. It also needs more infrastructure in
+the virtualization as well.
+
+2. Rename perf legacy events to riscv specific names. This will require users to
+use perf differently than other ISAs which is not ideal.
+
+3. Define a architecture specific override function for legacy events. Earlier
+RFC version did that but it is not preferred as arch specific behavior in perf
+tool has other ramifications on the tests.
+
+4. Ian graciously helped and sent a generic fix[6] for #3 that prefers json
+over legacy encoding. Unfortunately, it had some regressions and the discussions
+are ongoing if it is a viable solution.
+
+5. Specify the encodings in the driver. There were earlier concerns of managing
+these in the driver as these encodings are vendor specific in absence of an ISA
+guidelines. However, we also need to support counter virtualization and legacy
+event users (without perf tool) as described in [7]. That's why, this series
+adapts this solution similar to other ISAs. The vendors can define their pmu
+event encoding and event to counter mapping in the driver.
+
+Note: This solution is still compatible with solution #4 by Ian. It gives vendors
+flexibility to define legacy event encoding in either the driver or json file
+if Ian's series [6] is merged. If we can get rid of the legacy events in the
+future, we can just rely on the json encodings. I have not added a json file for
+qemu as I have not included Ian's patches in this series. But I have verified them
+with a virt machine specific json file.
+
+The Qemu patches are available in upstream now.
+
+The Linux kernel patches can be found here:
+https://github.com/atishp04/linux/tree/b4/counter_delegation_v4
+
+[1] https://github.com/riscv/riscv-indirect-csr-access
+[2] https://github.com/riscv/riscv-smcdeleg-ssccfg
+[3] https://www.kernel.org/doc/Documentation/devicetree/bindings/perf/riscv%2Cpmu.yaml
+[4] https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-pmu.adoc
+[5] https://lore.kernel.org/lkml/20240412210756.309828-1-weilin.wang@intel.com/
+[6] https://lore.kernel.org/lkml/20250109222109.567031-1-irogers@google.com/
+[7] https://lore.kernel.org/lkml/20241026121758.143259-1-irogers@google.com/T/#m653a6b98919a365a361a698032502bd26af9f6ba
+
+Signed-off-by: Atish Patra <atishp@rivosinc.com>
+---
+Changes in v5:
+- Fixed dt_binding_check errors.
+- Added the ISA extension dependancy for counter delegation extensions. 
+- Replaced the boolean variables with static key conditional check required at boot time.
+- Miscellaneous minor code restructuring. 
+- Link to v4: https://lore.kernel.org/r/20250205-counter_delegation-v4-0-835cfa88e3b1@rivosinc.com
+
+Changes in v4:
+- Added ISA dependencies as per dt schema instead of description.
+- Fixed few compilation issues due to patch reordering in v3.
+- Link to v3: https://lore.kernel.org/r/20250127-counter_delegation-v3-0-64894d7e16d5@rivosinc.com
+
+Changes in v3:
+- Fixed the dtb binding check failures.
+- Inlcuded the fix reported by Rajnesh Kanwal for guest counter overflow.
+- Rearranged the overflow handling more efficiently for better modularity.
+- Link to v2: https://lore.kernel.org/r/20250114-counter_delegation-v2-0-8ba74cdb851b@rivosinc.com
+
+Changes in v2:
+- Dropped architecture specific overrides for event encoding.
+- Dropped hwprobe bits.
+- Added a vendor specific event encoding table to support vendor specific event
+  encoding and counter mapping.
+- Fixed few bugs and cleanup.
+- Link to v1: https://lore.kernel.org/r/20240217005738.3744121-1-atishp@rivosinc.com
 
 ---
+Atish Patra (17):
+      RISC-V: Add Sxcsrind ISA extension definition and parsing
+      dt-bindings: riscv: add Sxcsrind ISA extension description
+      RISC-V: Define indirect CSR access helpers
+      RISC-V: Add Smcntrpmf extension parsing
+      dt-bindings: riscv: add Smcntrpmf ISA extension description
+      RISC-V: Add Ssccfg/Smcdeleg ISA extension definition and parsing
+      dt-bindings: riscv: add Counter delegation ISA extensions description
+      RISC-V: perf: Restructure the SBI PMU code
+      RISC-V: perf: Modify the counter discovery mechanism
+      RISC-V: perf: Add a mechanism to defined legacy event encoding
+      RISC-V: perf: Implement supervisor counter delegation support
+      RISC-V: perf: Use config2/vendor table for event to counter mapping
+      RISC-V: perf: Add legacy event encodings via sysfs
+      RISC-V: perf: Add Qemu virt machine events
+      tools/perf: Support event code for arch standard events
+      tools/perf: Pass the Counter constraint values in the pmu events
+      Sync empty-pmu-events.c with autogenerated one
 
- drivers/usb/host/ehci-fsl.c |   25 ++++++++-----------------
- 1 file changed, 8 insertions(+), 17 deletions(-)
+Charlie Jenkins (1):
+      RISC-V: perf: Skip PMU SBI extension when not implemented
 
-Index: usb-devel/drivers/usb/host/ehci-fsl.c
-===================================================================
---- usb-devel.orig/drivers/usb/host/ehci-fsl.c
-+++ usb-devel/drivers/usb/host/ehci-fsl.c
-@@ -410,15 +410,13 @@ static int ehci_fsl_setup(struct usb_hcd
- 	return retval;
- }
- 
--struct ehci_fsl {
--	struct ehci_hcd	ehci;
--
--#ifdef CONFIG_PM
-+struct ehci_fsl_priv {
- 	/* Saved USB PHY settings, need to restore after deep sleep. */
- 	u32 usb_ctrl;
--#endif
- };
- 
-+#define hcd_to_ehci_fsl_priv(h) ((struct ehci_fsl_priv *) hcd_to_ehci(h)->priv)
-+
- #ifdef CONFIG_PM
- 
- #ifdef CONFIG_PPC_MPC512x
-@@ -566,17 +564,10 @@ static inline int ehci_fsl_mpc512x_drv_r
- }
- #endif /* CONFIG_PPC_MPC512x */
- 
--static struct ehci_fsl *hcd_to_ehci_fsl(struct usb_hcd *hcd)
--{
--	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
--
--	return container_of(ehci, struct ehci_fsl, ehci);
--}
--
- static int ehci_fsl_drv_suspend(struct device *dev)
- {
- 	struct usb_hcd *hcd = dev_get_drvdata(dev);
--	struct ehci_fsl *ehci_fsl = hcd_to_ehci_fsl(hcd);
-+	struct ehci_fsl_priv *priv = hcd_to_ehci_fsl_priv(hcd);
- 	void __iomem *non_ehci = hcd->regs;
- 
- 	if (of_device_is_compatible(dev->parent->of_node,
-@@ -589,14 +580,14 @@ static int ehci_fsl_drv_suspend(struct d
- 	if (!fsl_deep_sleep())
- 		return 0;
- 
--	ehci_fsl->usb_ctrl = ioread32be(non_ehci + FSL_SOC_USB_CTRL);
-+	priv->usb_ctrl = ioread32be(non_ehci + FSL_SOC_USB_CTRL);
- 	return 0;
- }
- 
- static int ehci_fsl_drv_resume(struct device *dev)
- {
- 	struct usb_hcd *hcd = dev_get_drvdata(dev);
--	struct ehci_fsl *ehci_fsl = hcd_to_ehci_fsl(hcd);
-+	struct ehci_fsl_priv *priv = hcd_to_ehci_fsl_priv(hcd);
- 	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
- 	void __iomem *non_ehci = hcd->regs;
- 
-@@ -612,7 +603,7 @@ static int ehci_fsl_drv_resume(struct de
- 	usb_root_hub_lost_power(hcd->self.root_hub);
- 
- 	/* Restore USB PHY settings and enable the controller. */
--	iowrite32be(ehci_fsl->usb_ctrl, non_ehci + FSL_SOC_USB_CTRL);
-+	iowrite32be(priv->usb_ctrl, non_ehci + FSL_SOC_USB_CTRL);
- 
- 	ehci_reset(ehci);
- 	ehci_fsl_reinit(ehci);
-@@ -671,7 +662,7 @@ static int ehci_start_port_reset(struct
- #endif /* CONFIG_USB_OTG */
- 
- static const struct ehci_driver_overrides ehci_fsl_overrides __initconst = {
--	.extra_priv_size = sizeof(struct ehci_fsl),
-+	.extra_priv_size = sizeof(struct ehci_fsl_priv),
- 	.reset = ehci_fsl_setup,
- };
- 
+Kaiwen Xue (2):
+      RISC-V: Add Sxcsrind ISA extension CSR definitions
+      RISC-V: Add Sscfg extension CSR definition
+
+Weilin Wang (1):
+      perf pmu-events: Add functions in jevent.py to parse counter and event info for hardware aware grouping
+
+ .../devicetree/bindings/riscv/extensions.yaml      |  67 ++
+ MAINTAINERS                                        |   4 +-
+ arch/riscv/include/asm/csr.h                       |  57 ++
+ arch/riscv/include/asm/csr_ind.h                   |  42 +
+ arch/riscv/include/asm/hwcap.h                     |   8 +
+ arch/riscv/include/asm/kvm_vcpu_pmu.h              |   4 +-
+ arch/riscv/include/asm/kvm_vcpu_sbi.h              |   2 +-
+ arch/riscv/include/asm/vendorid_list.h             |   4 +
+ arch/riscv/kernel/cpufeature.c                     |  27 +
+ arch/riscv/kvm/Makefile                            |   4 +-
+ arch/riscv/kvm/vcpu_sbi.c                          |   2 +-
+ drivers/perf/Kconfig                               |  16 +-
+ drivers/perf/Makefile                              |   4 +-
+ drivers/perf/{riscv_pmu.c => riscv_pmu_common.c}   |   0
+ drivers/perf/{riscv_pmu_sbi.c => riscv_pmu_dev.c}  | 982 +++++++++++++++++----
+ include/linux/perf/riscv_pmu.h                     |  26 +-
+ .../perf/pmu-events/arch/riscv/arch-standard.json  |  10 +
+ tools/perf/pmu-events/empty-pmu-events.c           | 299 ++++---
+ tools/perf/pmu-events/jevents.py                   | 218 ++++-
+ tools/perf/pmu-events/pmu-events.h                 |  32 +-
+ 20 files changed, 1490 insertions(+), 318 deletions(-)
+---
+base-commit: 74e48c9286409128a3dccd0efd4b83b3f9ef95fd
+change-id: 20240715-counter_delegation-628a32f8c9cc
+--
+Regards,
+Atish patra
+
