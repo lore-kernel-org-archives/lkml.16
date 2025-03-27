@@ -1,41 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A110118027
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 05:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FEA818027;
+	Thu, 27 Mar 2025 05:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743054973; cv=none; b=PQu7o+GTp9mWks/DFYA5uViKWsnKt1/AMtB55KVZMQ9cZctKufpmleRXYRKCWpyBqs0subc7voZw7iBbNhyBMquybEMCfnuQ6Od1pzQUzr9tnk1CzTmxUAe7dy7/qLWgoD8tX6yPDdnYymJpnU9ZlE+pYoiDBr+XeIWnh6YyEtM=
+	t=1743055054; cv=none; b=fZnWKoFCLqEoa8SCwKOLzqMDDeqnptTIlCOzZ/+zW+oO1OhbWyz4IeVy7Ej93ld6BYtaS8jEvESA+1WkPXFeSw4OfJHxacNUXxIxDSfFIDdbU7zqrRGwJugLXMMyDK0CjW3Fu3+1fv3XmLv08N8fWkpPJ0kU94DtvSm045oAvOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743054973; c=relaxed/simple;
-	bh=kzVQuhM8HNq6HB+zH3zhK1FJCA9jLeLqGr1XbqTZzNY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YlgqN7rNk5yhT5nKafPQPQbQqTzEEIPdzqhbvwvfAEQZyyaZtVrIQqK7CB0w9UmgItStBbqQBEBp6Y59ZooLTY+99SwH3/rODMVU2/0eEv0px1pypRM2WAgWpvGWq83MyXjhNYmveMRt7Tudrz6K6mbDs4+qE/hyw8Hy9IvC02Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q9/Qhrtd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743055054; c=relaxed/simple;
+	bh=dfOJt4VZsxDjQHbdacmRXA60dH+jdi0InNRBXeq652k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cL033CZpumC0ykfgyXO90T7mlV4jhIFG0weAtFdyuu7barjVPd2IOn4ktaSE1Bfmp6pTYrEtRUOyixxQo6oolLL49Zs0kCmHybu83L+sEuZQF3uBz2nq0rLqilHILSwThocvR0oL1x608f6r6DxZbSvelyKRQFyNrawW93BJhww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=W/pZmpbK; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q9/Qhrtd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5E22C4CEDD;
-	Thu, 27 Mar 2025 05:56:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743054973;
-	bh=kzVQuhM8HNq6HB+zH3zhK1FJCA9jLeLqGr1XbqTZzNY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=q9/Qhrtd5LMnHY5gfIkFUKfLNOhMbXh0GQ4fIRWEhDExdG7ZKvbuLTTpjp8/4NVJ6
-	 r6KgNugT1d9vVnReIma6LDZ9htDkBbgCAckc2q6LeC9pdpyFwlKl8jGZXt+bJjYjUY
-	 ZKjZSGB3zGGGXKtzT5nTRkpuiBuSRJxwqJlYmBBYAFLtBLiPKvU16EAipHNo10dHYy
-	 Jx2UlusCYOGEneJApbRT8sh9kRtGuEG/ESR34fr796I/67b98DhbMkoJ8KPGE8KJTL
-	 ZRdANEKbpvp7sTBnV56xU+PEXI5YuYS/4b1N99m8Vp5pF4tRM2UPb9Vr0C+yJYGLKq
-	 2FyDaHQkv/I8w==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="W/pZmpbK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=asBGI
+	gUyw+T6cskUQZ6NxJZpB5WfhcDaPgKOiFRAeEE=; b=W/pZmpbKrq+mesyob0yVH
+	HOl4BbX+Y41XPNzxl65HfmYXMH+S7Mstssn0741O8vEap1+ITg8EpXtRim3KsMq9
+	2uiGeWTNWyVEfAlFQpSo3LdStaAKBF+U6PGKnwOklDrNixzRba94ASMfLR8FLThP
+	QYl3bAR6+ufMOqb9Yhfsos=
+Received: from chi-Redmi-Book.. (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wD34Z+16ORnmeqVCA--.5025S2;
+	Thu, 27 Mar 2025 13:57:10 +0800 (CST)
+From: Chi Zhiling <chizhiling@163.com>
+To: cem@kernel.org,
+	djwong@kernel.org,
+	brauner@kernel.org
+Cc: linux-xfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>,
-	Daeho Jeong <daehojeong@google.com>,
-	Zhiguo Niu <zhiguo.niu@unisoc.com>
-Subject: [PATCH] f2fs: fix to set atomic write status more clear
-Date: Thu, 27 Mar 2025 13:56:06 +0800
-Message-ID: <20250327055607.3829954-1-chao@kernel.org>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
+	linux-fsdevel@vger.kernel.org,
+	Chi Zhiling <chizhiling@kylinos.cn>
+Subject: [PATCH] iomap: Rename iomap_last_written_block to iomap_first_unchanged_block
+Date: Thu, 27 Mar 2025 13:57:06 +0800
+Message-ID: <20250327055706.3668207-1-chizhiling@163.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,72 +41,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD34Z+16ORnmeqVCA--.5025S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7KF4fCFW5AF4UCFW3Aw1DKFg_yoW8WrW3pr
+	WkK3WrGF4kW348u3WkGFW7Zw1av3Wvkr4UArWrKr13Z345XF1Iqw1vkF1Yk3W7Wws2ya17
+	WrnFg3yUCw45urJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UWv35UUUUU=
+X-CM-SenderInfo: hfkl6xxlol0wi6rwjhhfrp/xtbBgAsdnWfk5UUKaQABsK
 
-1. After we start atomic write in a database file, before committing
-all data, we'd better not set inode w/ vfs dirty status to avoid
-redundant updates, instead, we only set inode w/ atomic dirty status.
+From: Chi Zhiling <chizhiling@kylinos.cn>
 
-2. After we commit all data, before committing metadata, we need to
-clear atomic dirty status, and set vfs dirty status to allow vfs flush
-dirty inode.
+This renames iomap_last_written_block() to iomap_first_unchanged_block()
+to better reflect its actual behavior of finding the first unmodified
+block after partial writes, improving code readability.
 
-Cc: Daeho Jeong <daehojeong@google.com>
-Reported-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Signed-off-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Chi Zhiling <chizhiling@kylinos.cn>
 ---
- fs/f2fs/inode.c   | 4 +++-
- fs/f2fs/segment.c | 6 ++++++
- fs/f2fs/super.c   | 4 +++-
- 3 files changed, 12 insertions(+), 2 deletions(-)
+ fs/xfs/xfs_iomap.c    | 2 +-
+ include/linux/iomap.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 5c8634eaef7b..f5991e8751b9 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -34,7 +34,9 @@ void f2fs_mark_inode_dirty_sync(struct inode *inode, bool sync)
- 	if (f2fs_inode_dirtied(inode, sync))
- 		return;
+diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+index 5dd0922fe2d1..d4b0358015ab 100644
+--- a/fs/xfs/xfs_iomap.c
++++ b/fs/xfs/xfs_iomap.c
+@@ -1277,7 +1277,7 @@ xfs_buffered_write_iomap_end(
+ 		return 0;
  
--	if (f2fs_is_atomic_file(inode))
-+	/* only atomic file w/ FI_ATOMIC_COMMITTED can be set vfs dirty */
-+	if (f2fs_is_atomic_file(inode) &&
-+			!is_inode_flag_set(inode, FI_ATOMIC_COMMITTED))
- 		return;
- 
- 	mark_inode_dirty_sync(inode);
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index dc360b4b0569..7c113b446f63 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -376,7 +376,13 @@ static int __f2fs_commit_atomic_write(struct inode *inode)
- 	} else {
- 		sbi->committed_atomic_block += fi->atomic_write_cnt;
- 		set_inode_flag(inode, FI_ATOMIC_COMMITTED);
-+
-+		/*
-+		 * inode may has no FI_ATOMIC_DIRTIED flag due to no write
-+		 * before commit.
-+		 */
- 		if (is_inode_flag_set(inode, FI_ATOMIC_DIRTIED)) {
-+			/* clear atomic dirty status and set vfs dirty status */
- 			clear_inode_flag(inode, FI_ATOMIC_DIRTIED);
- 			f2fs_mark_inode_dirty_sync(inode, true);
- 		}
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 9a42a1323f42..a5cc9f6ee16a 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1532,7 +1532,9 @@ int f2fs_inode_dirtied(struct inode *inode, bool sync)
- 	}
- 	spin_unlock(&sbi->inode_lock[DIRTY_META]);
- 
--	if (!ret && f2fs_is_atomic_file(inode))
-+	/* if atomic write is not committed, set inode w/ atomic dirty */
-+	if (!ret && f2fs_is_atomic_file(inode) &&
-+			!is_inode_flag_set(inode, FI_ATOMIC_COMMITTED))
- 		set_inode_flag(inode, FI_ATOMIC_DIRTIED);
- 
- 	return ret;
+ 	/* Nothing to do if we've written the entire delalloc extent */
+-	start_byte = iomap_last_written_block(inode, offset, written);
++	start_byte = iomap_first_unchanged_block(inode, offset, written);
+ 	end_byte = round_up(offset + length, i_blocksize(inode));
+ 	if (start_byte >= end_byte)
+ 		return 0;
+diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+index 2de7a5e7d67d..88d0da23426c 100644
+--- a/include/linux/iomap.h
++++ b/include/linux/iomap.h
+@@ -308,7 +308,7 @@ static inline const struct iomap *iomap_iter_srcmap(const struct iomap_iter *i)
+  * If nothing was written, round @pos down to point at the first block in
+  * the range, else round up to include the partially written block.
+  */
+-static inline loff_t iomap_last_written_block(struct inode *inode, loff_t pos,
++static inline loff_t iomap_first_unchanged_block(struct inode *inode, loff_t pos,
+ 		ssize_t written)
+ {
+ 	if (unlikely(!written))
 -- 
-2.49.0
+2.43.0
 
