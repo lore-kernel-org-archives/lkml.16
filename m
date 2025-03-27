@@ -1,147 +1,185 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2600217670
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:50:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FCB1CB51F;
+	Thu, 27 Mar 2025 16:52:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743094206; cv=none; b=VEohh0vskCAZVdZ6oul8O5EK4wmzcWxLXLt6lT+wIrofpAoV7HLG78B68as/1kpr/PJxY5mfsP5/WGfplMUdRTEewSlKs4VNyPtQSmh3c/bjmbSJI5k6c0nfNgAd3luG+9FR09zTuaSxyQChbb2JOZWBgJbrReB7eZRnOQ6cTzM=
+	t=1743094332; cv=none; b=YWt3oekEt82eq5jk0EEfdsS0DdxwQhCW1jvB1pmLjYFHnAUvfUiHpNIARlIsy6U0oE2/ITfoqZ0y9jmZjM5XvJiN0Itnyqla/vvQQxzuFFCVQ7OtC0QwqpoP8HiFS44tPxBOcaA4h9nyBNiEz4Xw0dP0V0blWSaus+DanwhiYfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743094206; c=relaxed/simple;
-	bh=Lcqab7AGbjV8M8C6ucmsgqbNll4/31dx+hcXr+Eakr8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=fiiK7z6YoXdrpDmplwVV/SWbpSOqemOBglEd9s7M1KikzMtTxlU8L5753BFDiNMFzhCFwNpZ+dVza9thKYRPmZWPk+h1/igUZXKFqexKQCUJV6a/UcwdmiqhLtOOfu0sMpWD9Lw5p+NlZe0qwzaHrGHVy+4bD6i1tOpoBqjZw3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 942ABC4CEDD;
-	Thu, 27 Mar 2025 16:50:05 +0000 (UTC)
-Date: Thu, 27 Mar 2025 12:50:54 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Costa Shulyupin
- <costa.shul@redhat.com>, John Kacur <jkacur@redhat.com>, Tomas Glozar
- <tglozar@redhat.com>
-Subject: [GIT PULL] tracing/tools: Updates for 6.15
-Message-ID: <20250327125054.76093170@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743094332; c=relaxed/simple;
+	bh=Q6l0WxcvGA33qOdr8wp9swxuv9Bj+Qu0ZUvn1W+I7YY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sXizhma1sPQF67vcAku/qkFLlM0XVSVLSOesEfkNf6u2JtuZaY3O0BohZp/tF/PkoecgFUSVbjuBiAL+UebVAOjc5kCA4e5uscXnahO20Fpr3t3NZrIcTFzwm8D+nPLRSj0tMv4Hx+qQAPS81w6sLh0hry2Huq6qnLONJw2lNWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uE1ia/7E; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uE1ia/7E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02E64C4CEE5;
+	Thu, 27 Mar 2025 16:52:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743094331;
+	bh=Q6l0WxcvGA33qOdr8wp9swxuv9Bj+Qu0ZUvn1W+I7YY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uE1ia/7EcYXSQKPYqeHjXJ92g8XJaSXmJKG7Nm5xJg7UTxZu/e1bohqfu/55LCnuN
+	 /N/9mSlT4h5YH748aokVV5f7NUQEhCPC3G8wJkIh/IwyoW4L+iZG1/2ivh6+KuQqO6
+	 Ows792/CLe26HSPWU1jIqtbMOFUqpFHciMtiwicDVIRrmAYcm8rsKIBNK+ibfnxK1V
+	 UeMGkeJa3C0ZhzDKdUH6kECN+KWfGOg1KDsbRjLCNx2RWLMl1x6SIadt/1DvVX2IYR
+	 d5YZjc+LYt3GT1scHaCn6HJATCC3B9ECch8wkbmlUv6CTq370urK3SRvKXaKreAzEZ
+	 fZuUwdSg0NcrQ==
+Date: Thu, 27 Mar 2025 16:52:06 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	James Cowgill <james.cowgill@blaize.com>,
+	Matt Redfearn <matthew.redfearn@blaize.com>,
+	Neil Jones <neil.jones@blaize.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: Document Blaize BLZP1600 GPIO driver
+Message-ID: <20250327-scribble-boogeyman-22788dda387f@spud>
+References: <20250327-kernel-upstreaming-add_gpio_support-v2-0-bbe51f8d66da@blaize.com>
+ <20250327-kernel-upstreaming-add_gpio_support-v2-1-bbe51f8d66da@blaize.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-Costa Shulyupin <costa.shul@redhat.com>, John Kacur <jkacur@redhat.com>, Tomas Glozar <tglozar@redhat.com>
-
-Linus,
-
-tracing tooling updates for 6.15:
-
-- Allow RTLA to collect data via BPF
-
-  The current implementation of rtla uses libtracefs and libtraceevent to
-  pull sample events generated by the timerlat tracer from the trace
-  buffer. rtla then processes the sample by updating the histogram and
-  summary (current, maximum, minimum, and sum values) as well as checks
-  if tracing has been stopped due to threshold overflow.
-
-  In use cases where a large number of samples is being generated, that
-  is, with measurements running on many CPUs and with a low interval,
-  this sample processing design causes a significant CPU load on the rtla
-  side. Furthermore, with >100 CPUs and 100us interval, rtla was reported
-  as not being able to keep up with the samples and dropping most of them,
-  leading to it being unusable.
-
-  Change the way the timerlat trace processes samples by attaching
-  a BPF program to the trace event using the BPF skeleton feature of bpftool.
-  Unlike the current implementation, the BPF implementation does not check
-  whether tracing is stopped (in BPF mode, tracing is always off to improve
-  performance), but waits for a write to a BPF ringbuffer instead. This allows
-  rtla to exit immediately when a threshold is violated, without waiting
-  for the next iteration of the while loop.
-
-  If the requirements for the BPF implementation are not met, either at
-  build time or at run time, the current implementation is used as
-  fallback. Which implementation is being used can be seen when running
-  rtla timerlat with "-D" option. rtla can be forced to run in non-BPF
-  mode by setting the RTLA_NO_BPF option to 1, for debugging purposes.
-
-- Fix LD_FLAGS from being dropped in build
-
-- Refactor code to remove duplication of save_trace_to_file
-
-- Always set options and do not rely on default settings
-
-  Do not rely on the default kernel settings of the tracers when
-  starting. They could have been changed by the user which gives
-  inconsistent results. Always set the options that rtla expects.
-
-- Add creation of ctags and TAGS for traversing code
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="KHT+zneIcFZM3R2g"
+Content-Disposition: inline
+In-Reply-To: <20250327-kernel-upstreaming-add_gpio_support-v2-1-bbe51f8d66da@blaize.com>
 
 
-Please pull the latest trace-tools-v6.15 tree, which can be found at:
+--KHT+zneIcFZM3R2g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Mar 27, 2025 at 11:27:04AM +0000, Nikolaos Pasaloukos wrote:
+> This is a custom silicon GPIO driver provided by VeriSilicon
+> Microelectronics. It has 32 input/output ports which can be
+> configured as edge or level triggered interrupts. It also provides
+> a de-bounce feature.
+> This controller is used on the Blaize BLZP1600 SoC.
+>=20
+> Signed-off-by: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
+> ---
+>  .../bindings/gpio/blaize,blzp1600-gpio.yaml        | 77 ++++++++++++++++=
+++++++
+>  1 file changed, 77 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpio/blaize,blzp1600-gpio.=
+yaml b/Documentation/devicetree/bindings/gpio/blaize,blzp1600-gpio.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..8b7842331a22b7b9fbfa42b9c=
+711da99227de2e4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/blaize,blzp1600-gpio.yaml
+> @@ -0,0 +1,77 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/blaize,blzp1600-gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Blaize BLZP1600 GPIO controller
+> +
+> +description:
+> +  Blaize BLZP1600 GPIO controller is a design of VeriSilicon APB GPIO v0=
+=2E2
+> +  IP block. It has 32 ports each of which are intended to be represented
+> +  as child noeds with the generic GPIO-controller properties as described
+> +  in this binding's file.
+> +
+> +maintainers:
+> +  - Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
+> +  - James Cowgill <james.cowgill@blaize.com>
+> +  - Matt Redfearn <matt.redfearn@blaize.com>
+> +  - Neil Jones <neil.jones@blaize.com>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^gpio@[0-9a-f]+$"
+> +
+> +  compatible:
+> +    enum:
+> +      - blaize,blzp1600-gpio
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  ngpios:
+> +    default: 32
+> +    minimum: 1
+> +    maximum: 32
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  gpio-line-names: true
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +
+> +dependencies:
+> +  interrupt-controller: [ interrupts ]
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    gpio: gpio@4c0000 {
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-trace-tools-v6.15
+Label is unused, please drop it if you respin.
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
-Tag SHA1: cab13e49ba8fc5d0e9545cd41e34e59dabbd3954
-Head SHA1: 732032692f6ae311bc35159b18e5b7c5e64010fc
+> +      compatible =3D "blaize,blzp1600-gpio";
+> +      reg =3D <0x004c0000 0x1000>;
+> +      gpio-controller;
+> +      #gpio-cells =3D <2>;
+> +      ngpios =3D <32>;
+> +      interrupt-controller;
+> +      #interrupt-cells =3D <2>;
+> +      interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+> +    };
+> +...
+>=20
+> --=20
+> 2.43.0
+>=20
 
+--KHT+zneIcFZM3R2g
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Costa Shulyupin (1):
-      rtla: Refactor save_trace_to_file
+-----BEGIN PGP SIGNATURE-----
 
-John Kacur (1):
-      rtla: Add the ability to create ctags and etags
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ+WCNgAKCRB4tDGHoIJi
+0l1GAP432iQj+leyJvycy9SxPrvJzxLLNYJJwPTn6loEoxhTKAD+Jwg9EBUrtu+9
+xCJkgglUDVinhTMxrhKB0CyuJghf0Qo=
+=QRox
+-----END PGP SIGNATURE-----
 
-Tomas Glozar (17):
-      rtla/timerlat: Unify params struct
-      tools/build: Add bpftool-skeletons feature test
-      rtla: Add optional dependency on BPF tooling
-      rtla/timerlat: Add BPF skeleton to collect samples
-      rtla/timerlat_hist: Use BPF to collect samples
-      rtla/timerlat_top: Move divisor to update
-      rtla/timerlat_top: Use BPF to collect samples
-      rtla/timerlat: Test BPF mode
-      tools/rv: Keep user LDFLAGS in build
-      tools/build: Use SYSTEM_BPFTOOL for system bpftool
-      rtla: Fix segfault in save_trace_to_file call
-      rtla/osnoise: Unify params struct
-      rtla: Unify apply_config between top and hist
-      rtla/osnoise: Set OSNOISE_WORKLOAD to true
-      rtla: Always set all tracer options
-      rtla/tests: Reset osnoise options before check
-      rtla/tests: Test setting default options
-
-----
- tools/build/Makefile.feature           |   3 +-
- tools/build/feature/Makefile           |   3 +
- tools/scripts/Makefile.include         |   3 +
- tools/tracing/rtla/.gitignore          |   1 +
- tools/tracing/rtla/Makefile            |  20 +-
- tools/tracing/rtla/Makefile.config     |  42 +++
- tools/tracing/rtla/Makefile.rtla       |  17 +-
- tools/tracing/rtla/src/Build           |   1 +
- tools/tracing/rtla/src/osnoise.c       |  86 +++++-
- tools/tracing/rtla/src/osnoise.h       |  50 ++++
- tools/tracing/rtla/src/osnoise_hist.c  | 124 ++-------
- tools/tracing/rtla/src/osnoise_top.c   | 126 +--------
- tools/tracing/rtla/src/timerlat.bpf.c  | 149 ++++++++++
- tools/tracing/rtla/src/timerlat.c      | 106 ++++++++
- tools/tracing/rtla/src/timerlat.h      |  54 ++++
- tools/tracing/rtla/src/timerlat_aa.c   |   2 -
- tools/tracing/rtla/src/timerlat_bpf.c  | 166 ++++++++++++
- tools/tracing/rtla/src/timerlat_bpf.h  |  59 ++++
- tools/tracing/rtla/src/timerlat_hist.c | 354 ++++++++++++------------
- tools/tracing/rtla/src/timerlat_top.c  | 482 ++++++++++++++++++---------------
- tools/tracing/rtla/src/trace.c         |   4 +
- tools/tracing/rtla/tests/engine.sh     |  66 +++++
- tools/tracing/rtla/tests/osnoise.t     |   6 +
- tools/tracing/rtla/tests/timerlat.t    |  14 +
- tools/verification/rv/Makefile.rv      |   2 +-
- 25 files changed, 1315 insertions(+), 625 deletions(-)
- create mode 100644 tools/tracing/rtla/src/timerlat.bpf.c
- create mode 100644 tools/tracing/rtla/src/timerlat_bpf.c
- create mode 100644 tools/tracing/rtla/src/timerlat_bpf.h
----------------------------
+--KHT+zneIcFZM3R2g--
