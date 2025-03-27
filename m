@@ -1,151 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605E7205509
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807BF2054F5
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743063918; cv=none; b=H+ymWZV14Q4x33quyyxMEqR7y8iJuV9YlWMJOEIHsjbDTeHQgKyv9tffLbRMNVu9VbyGf11UapovZTCuWOHNhxaUQ3rCNZnrZxZjtAoav6YCmZaAMnWHmjz7KvWIs8Cn68kQ48lwjbZIObUWUEEUYDWXxztVWhvAoPBufjN5Puc=
+	t=1743063983; cv=none; b=EqHMr/nFGVaYzbXrWsaWQoPMEPwduyWJt4svgQGm6fxWueT5o0gXO+EqvA2OZ/bT4V5CP7jnTeaQzMJQzqtak1MNJ41Fg8YLtFHexlIOnzVWRWwlOhkbB6mfsymvK4nkT7jSrgSjZ0kmxCy53UdfHDvADHJSOedaStfu+u2SJFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743063918; c=relaxed/simple;
-	bh=E7zPgzfPfjWChkoZxx0xsF7whNgUH9/RUX/J5vZ4fls=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O9PB2fEINn75+qa5LDYc1nHs1dTTM+PKo2BRrXb0cpI4LVnNSWZUEGLnc0Sh1w8Yplf4cbiu8gaAv7/swginKFG187MOco04pbZKqXzdAm7/hf3ZgnCREivrwK1wNuaAmj6ahnC38XVkVhVeUeXZsd9wgEM1tETC9sy8v9Quuco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=puwLlFwB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743063983; c=relaxed/simple;
+	bh=oYoU6rrUgf5SUZ0R7XLmkS8IgbsCFKVKcKoSfyYUCv0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a6iCABjnoZashX9oKebE6zvGYld43gd3m8bO4Fha3EBcsacVbpO4D60R1ac1E6HFTMPMD9IObmNxxyExVHZqjthRcY61COcOOqzyxd71YpsikBfHqokPjjkw71gR4D6Wy5IFHElndYq1F2HYxoHTT+NIci+VrSca1hZtMNk+U7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cfwJoSyH; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="puwLlFwB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA68C4CEDD;
-	Thu, 27 Mar 2025 08:25:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743063917;
-	bh=E7zPgzfPfjWChkoZxx0xsF7whNgUH9/RUX/J5vZ4fls=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=puwLlFwBVOi6sLqNrSD827/Ir7tJsswtweFGXkgdN8in4W92OBkuvqNT2c9FyI0DL
-	 Ld1X0btkcwWR5zM6TvAeLMwhdMl2YloTw2OUzJYLOgWes+8GovnVY5+SLijsIqlSm8
-	 vvF4HJO8hgvxFUF8JpjKylQvKNFBKkXNSrSy2xVhDloMlC5XpojjmYUzlKRB+zD9Ii
-	 E0L4M4aeezLKj+zRFGGS3sgs9iXGtYWi11RImE71/nP7MAJ8t2H6C8H03+SWVhV++d
-	 9Nxpwu0ht1dM/JeMXUoUDEqlng7pNOsXcqohVKa/CqyevAyeaii3O4w5s+o9jB7aaP
-	 SvoWDYXk0Zc8g==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1txiY7-00HYK5-5k;
-	Thu, 27 Mar 2025 08:25:15 +0000
-Date: Thu, 27 Mar 2025 08:25:14 +0000
-Message-ID: <86v7rulw2d.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Youngmin Nam <youngmin.nam@samsung.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Saravana Kannan
-	<saravanak@google.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Vincent
-	Guittot <vincent.guittot@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kernel-team@android.com,
-	hajun.sung@samsung.com,
-	d7271.choe@samsung.com,
-	joonki.min@samsung.com
-Subject: Re: [GICv3 ITS]S2IDLE framework does not invoke syscore_ops in GICv3 ITS driver
-In-Reply-To: <Z+TEa8CVAYnbD/Tu@perf>
-References: <CGME20250326030527epcas2p33aa30e62cc8a00c9e151c35bee71dac5@epcas2p3.samsung.com>
-	<Z+Nv8U/4P3taDpUq@perf>
-	<8634f0mall.wl-maz@kernel.org>
-	<Z+TEa8CVAYnbD/Tu@perf>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cfwJoSyH"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4769b16d4fbso4330691cf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 01:26:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743063980; x=1743668780; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KmalLC5Na4GTkMmPNIYaOK7rSnGDkHzJa5etUB00I2A=;
+        b=cfwJoSyH/oFVlYPnJ9E6uRxzToHjU/Mg/+5++rUtISHcSuNPZ7T6YnNmS5oDNxPNgn
+         buxwq2n5iQWLGT1KkM2nX+Ur8HwP0neIqNkjpKKygtyIHOmz61/WymHtRTFsHX91LRU3
+         ai9RhF13G/ISvRwIWicVUctMpFSp6CCXx0bGJW4siPDetR8788zuLOhKIHP5yrTy5goB
+         Wpb0pLCZaWNLEerYl/MqZ+elaf/E37cA3Ih8M5FjUVl5RWEf3QmhSTXyFFKHgYhWk+SB
+         r5FJVZB9X57s1mCMS+L/g4mlKP6/ZlWCR9agBGuwn8a7FX2YNWLFfvDiKs6nnKgSilbo
+         ABpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743063980; x=1743668780;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KmalLC5Na4GTkMmPNIYaOK7rSnGDkHzJa5etUB00I2A=;
+        b=VTXMUbxpgKgYZndU4LpSQQ2UWptaRYHBMA68VGEiYqZYplDDJjJqe9oRx2fGuRiEXb
+         Sj+PAo79bnlTU1Hwh3Ow0ocwg4bm8w4mxRyaDJQNSutVf5JX12v0cxkkCmQEEuOMSXlr
+         P1dLqykk4C+x7xrI+7dxmSqVRVDyMFcYhHP19T0wGs1MnJ7vxLpeVVyQnimQzEvEQsJV
+         o59J0FSARRO9Val8qvjDjHy0VT2JNQDZcFVrPqdwb76lflrA5DybVf+F05EQK9/ZlWe/
+         5+MhiSNO60gUHu6L9gZw4KFe0FGV8bGI+WkP/bkALYAbrHBPuofrECgFGBGJYYYU8kvW
+         mTig==
+X-Forwarded-Encrypted: i=1; AJvYcCUEFXIkSnF9gKHdVPbietxvXBdkAPrG5ybHvwUnb5c2l4Zhf3/kuQrcmxjzGFfQ8Tvca1SaWI7t46pXlK0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFO3SvfwCo1Qee5KoahvNyActd3DAyUaA3MKCEtYtxrVlyIeeq
+	JwOL+acbv39OD1vIC4JCA9mF01cGVV4S1XwFXePl3FX6rfkAyYNYqT9jLNSt2kK/Ymgql/FKtnR
+	Xi5CaU0NZECmFvWot7+qqMB6E3re1cA2JMALr
+X-Gm-Gg: ASbGnctIwY1C35voR5oDlSBfG0H0kvYtnT/KcAj+IaepUPtp59asSyEX8GW6tQS5XQI
+	ysWCl8XF3M1wgvsJ3aFkBIYf/I6MCv3Lm8PZ2crJr+NDLliujVIHCT4LymALZwPgRTvFaxVhytE
+	0cjIkahPxkZvirFGiEHNzkpt1J6eQ=
+X-Google-Smtp-Source: AGHT+IGl6mZ0a7+3v7Ggn/OxSS/fAlKeakvrk8pfOEeBh/kXVj+anvy9K06ATqhG+V8GQZVxV7pACMkSJajK+KBGarc=
+X-Received: by 2002:ac8:4758:0:b0:477:7007:7055 with SMTP id
+ d75a77b69052e-47770077176mr24126621cf.12.1743063980031; Thu, 27 Mar 2025
+ 01:26:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+References: <202503241406.5c9cb80a-lkp@intel.com> <87pli4z02w.ffs@tglx>
+ <6sn76aya225pqikijue5uv5h3lyqk262hc6ru3vemn7xofdftd@sw7gith52xh7>
+ <CANn89iKjCgmxtiLeVAiXODHbbR7=gYYi5cfAS1hS5qn+z=-o1Q@mail.gmail.com> <877c4azyez.ffs@tglx>
+In-Reply-To: <877c4azyez.ffs@tglx>
+From: Eric Dumazet <edumazet@google.com>
+Date: Thu, 27 Mar 2025 09:26:09 +0100
+X-Gm-Features: AQ5f1JqrJlEHraIvtxnqqzfUm-aKvXZVfgCjo84W0r3w8se_wp2vuP4inJWs2UI
+Message-ID: <CANn89iKAkio9wm73RNi9+KngNaS+Au2oaf0Tz9xOd+QEhFSkyw@mail.gmail.com>
+Subject: Re: [tip:timers/core] [posix] 1535cb8028: stress-ng.epoll.ops_per_sec
+ 36.2% regression
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mateusz Guzik <mjguzik@gmail.com>, kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, 
+	lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Benjamin Segall <bsegall@google.com>, Frederic Weisbecker <frederic@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: youngmin.nam@samsung.com, tglx@linutronix.de, saravanak@google.com, ulf.hansson@linaro.org, vincent.guittot@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel-team@android.com, hajun.sung@samsung.com, d7271.choe@samsung.com, joonki.min@samsung.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Thu, 27 Mar 2025 03:22:19 +0000,
-Youngmin Nam <youngmin.nam@samsung.com> wrote:
->=20
-> [1  <text/plain; utf-8 (8bit)>]
-> On Wed, Mar 26, 2025 at 08:59:02AM +0000, Marc Zyngier wrote:
-> > On Wed, 26 Mar 2025 03:09:37 +0000,
-> > Youngmin Nam <youngmin.nam@samsung.com> wrote:
-> > >=20
-> > > Hi.
-> > >=20
-> > > On our SoC, we are using S2IDLE instead of S2R as a system suspend mo=
-de.
-> > > However, when I try to enable ARM GICv3 ITS driver (drivers/irqchip/i=
-rq-gic-v3-its.c),
-> > > I noticed that there is no proper way to invoke suspend/resume callba=
-ck,
-> > > because it only uses syscore_ops, which is not called in an s2idle sc=
-enario.
-> >=20
-> > This is *by design*.
+On Thu, Mar 27, 2025 at 9:10=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> On Thu, Mar 27 2025 at 07:21, Eric Dumazet wrote:
+> > On Wed, Mar 26, 2025 at 10:11=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.c=
+om> wrote:
+> >> On Wed, Mar 26, 2025 at 09:07:51AM +0100, Thomas Gleixner wrote:
+> >> > Unfortunately I can't reproduce any of it. I checked the epoll test
+> >> > source and it uses a posix timer, but that commit makes the hash les=
+s
+> >> > contended so there is zero explanation.
+> >> >
+> >>
+> >> The short summary is:
+> >> 1. your change is fine
+> >
+> > Let me rephrase this.
+> >
+> > Absolutely wonderful series, thanks a lot Thomas for doing it.
+>
+> Thank you!
+>
+> > Next bottlenecks are now these ones, but showing up in synthetic
+> > benchmarks only.
+>
+> Right. I saw them too when working on this.
+>
+> >     33.36%  timer_storm      [kernel.kallsyms]           [k]
+> > inc_rlimit_get_ucounts
+> >
+> >     32.85%  timer_storm      [kernel.kallsyms]           [k]
+> > dec_rlimit_put_ucounts
+>
+> These two are not really posix-timer specific. They are also the
+> standouts for any signal micro benchmark.
+>
+> I stared at the implementation a bit, but there is not much we can do
+> about that I fear.
 
-[...]
+We could place all these atomic fields in separate cache lines,
+to keep read-only fields shared as much as possible.
 
-> > > How should we handle this situation ?
-> >=20
-> > By implementing anything related to GIC power-management in your EL3
-> > firmware. Only your firmware knows whether you are going into a state
-> > where the GIC (and the ITS) is going to lose its state (because power
-> > is going to be removed) or if the sleep period is short enough that
-> > you can come back from idle without loss of context.
-> >=20
-> > Furthermore, there is a lot of things that non-secure cannot do when
-> > it comes to GIC power management (most the controls are secure only),
-> > so it is pretty clear that the kernel is the wrong place for this.
-> >=20
-> > I'd suggest you look at what TF-A provides, because this is not
-> > exactly a new problem (it has been solved several years ago).
-> >=20
-> > 	M.
-> >=20
-> > --=20
-> > Without deviation from the norm, progress is not possible.
-> >=20
->=20
-> Hi Marc,
->=20
-> First of all, I=E2=80=99d like to distinguish between the GICv3 driver (i=
-rq-gic-v3.c)
-> and the ITS driver (irq-gic-v3-its.c).
->=20
-> I now understand why the GICv3 driver doesn=E2=80=99t implement suspend a=
-nd resume functions.
-> However, unlike the GICv3 driver, the ITS driver currently provides
-> suspend and resume functions via syscore_ops in the kernel.
-
-For *suspend*. The real suspend. Not a glorified WFI. And that's only
-for situations where we know for sure that we are going to suspend.
-
-> And AFAIK, LPIs are always treated as non-secure. (Please correct me If I=
-'m wrong).
->=20
-> The problem is that syscore_ops is not invoked during the S2IDLE scenario,
-> so we cannot rely on it in that context.
-> We would like to use these suspend/resume functions during S2IDLE as well.
-
-Again, this is *by design*. There is no semantic difference between
-s2idle and normal idle. They are the same thing. Do you really want to
-save/restore the whole ITS state on each and every call into idle?
-Absolutely not.
-
-Only your firmware knows how deep you will be suspended, and how long
-you will be suspended for, and this is the right place for to perform
-save/restore of the ITS state. Not in generic code that runs on every
-arm64 platform on the planet.
-
-	M.
-
---=20
-Without deviation from the norm, progress is not possible.
+diff --git a/include/linux/user_namespace.h b/include/linux/user_namespace.=
+h
+index 7183e5aca282..6ddf667022d9 100644
+--- a/include/linux/user_namespace.h
++++ b/include/linux/user_namespace.h
+@@ -118,7 +118,10 @@ struct ucounts {
+        struct hlist_node node;
+        struct user_namespace *ns;
+        kuid_t uid;
+-       atomic_t count;
++       atomic_t count ____cacheline_aligned_in_smp;
++       /* Note : should probably put all the following atomic_long_t
++        * in separate cache lines (one atomic_long_t per cache line).
++        */
+        atomic_long_t ucount[UCOUNT_COUNTS];
+        atomic_long_t rlimit[UCOUNT_RLIMIT_COUNTS];
+ };
