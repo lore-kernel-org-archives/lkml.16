@@ -1,235 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4753626ACC
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 13:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACC41482E7
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 13:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743083250; cv=none; b=T2n0dhxBn9pTx0sVDTNxXDun6B2dC7G/AY/ktfZYWlbwn1JbJEfXEi/1PP7jCECIIOuc1Uqj4MHGZlS9tX+bYBN9QrFePqf9odo7UjHLZpG5wj7tS6hF/65ADLlixor8T0Bk6Bf5JPmpCr5iU1hw3SMzk7nsJgd2WHNejpVvkPA=
+	t=1743083335; cv=none; b=OQquShX8LeZqte8GNXJHqRX5+1FBIu53eRwuhK/rFXPUQK61OFN1A78zi1YlNxjaP9YngFbFM3UgQsFLZbdvBDYUoH8vJZ3UT9W8H2SdKJQju4Bvl94Bcg34M/kuziHxN5TuuR1aNls/kU4oT4jUpWMIY8NEtJ+HD0dMomGoW4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743083250; c=relaxed/simple;
-	bh=6QuAf9mZYKT0w3iBFYWyoO0jHuM/PJ89TbwzBkMY+qo=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=mzmBlTXa50KR4s7r14zCE3MQ6vpaGO/zV3fv/8XYW1uZmBr9g3y04tRycAFzby+0a4EoowT0wpoQ2EcD5ehaqlNXMTq+xvMOW6RXAfc4Xd5/wyz5Sh+s6dt32jTkq2xo5EbuNheqTYWqQbl94xuGeIvL1a2DkJD3HGonEJl/Cy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AP/tNg3X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743083335; c=relaxed/simple;
+	bh=BqIn0wrCuMc2UTLXaPpGz2GzyQ5thvKd6jrL79PHxhw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UvyZcnqkGYMMPobYqjyJy2Hh1PSHY07jF1a1angET4fakU9jsikOM2mIDSB2uBPxcVeaL1zqBCqHRFOHLJqtfR8R+J4SXYnG7BuqzHXZkTsfpPLfoVmO0WwGVikYBPkWLwcNK5ZrNOk8yv5rs6WFgE0+EFZiluEzpkoM4YBD25k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iCjxdSSk; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AP/tNg3X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46547C4CEDD;
-	Thu, 27 Mar 2025 13:47:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743083249;
-	bh=6QuAf9mZYKT0w3iBFYWyoO0jHuM/PJ89TbwzBkMY+qo=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=AP/tNg3X5zl4xTlp1ODKhTYOsCVRC4BNbutvj+lKdprbFo2n6FTCnCjST2OTR70/1
-	 PNEDq+csk5tBrSoiTJ8eBE4WBQb55NT5t1Wqu6fBwTKwgxnr7yUylaWezuaFwch7Cf
-	 fsQMsqFc6wNbHw+RT6jVKQb0M7fs+zZfcHqvU8j/zlyYuv2iBEFqJq1fj+zXoOAAv+
-	 whAOtCFcx1oALaXkFjQDAk0kCof/MjYvQulZMUbxNChXn32jUFJM2zaziopBFUkEdi
-	 Fm5OHUgqOQ86QleTPOe+w+VadgODOxzL8Uv73XBUvxaRS3PanbjDVuOSl9ZmZkLEPY
-	 UnahLRth10G9A==
-Message-ID: <60e763d5-dff4-44a1-9e80-48d384335027@kernel.org>
-Date: Thu, 27 Mar 2025 21:47:35 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iCjxdSSk"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso1585100a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 06:48:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743083331; x=1743688131; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1cShwsASNWb4Jp35AHxvP4AtgmKCcX2D/cSekQMeipE=;
+        b=iCjxdSSktNi92j53Ac6qIfvL7jclxo14Vo3V4dcz5dkpNtk1JoBY6s5xG5w+I3Q2Jw
+         HF3YESee+o4RHonkMbeHk+qCnnKkEVu1DxmsGft2R0BWlAMElXlWaoayIQrvogKylbdy
+         GB9N78hS+jSGnCJZIgYsezQ40ZAT5/E6Vv1PfrqL9E7t7LStJM4FuTorxSGUf/U6bcic
+         sgUFf4xAL27ZlGYoHimLodc68QKwEqsFjbdnGP/RJuc77agLqX0lZ2Wm8u6kGc81kzf1
+         RzyuhCeJhbCWr1k2+3Cba5KLdcW7FJrm7Opdcr+jRLjVEes4GMS7BFcHj7gItj5mx1nk
+         aW5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743083331; x=1743688131;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1cShwsASNWb4Jp35AHxvP4AtgmKCcX2D/cSekQMeipE=;
+        b=ED4nniqFU9ofnFAB4ax6n88gq/5dZ2L9PdJ5jLjDb9uZxljaoX3Y/POWbBjQ2O0K4k
+         ZjgLfnnl4SIiMsm9mza9c3jk978fcs5OHjhv9ovnofS6fl2B5+3LvUVQWJA6H0Rfk8tT
+         Wz9W0MwJlMYTLcN7FXOwYD0BF1X+Ay9GN9FvSoKfmULheO4FJN3gHaj5IPZBXHscgRHj
+         9WxGcg4Kp9cIR7fwiEWVZQLfyYUwiAlG0Cq4GzFR0oKKymmnGln2QqY8DSZ7Ap6hL632
+         XWt6daxBFX+CBRHiIU1WMiHwQS1X8NT+oEgH3Hsuk6jqbwALiCgTv86Ns0QEERHOshpW
+         R56w==
+X-Forwarded-Encrypted: i=1; AJvYcCWFmbTvK0fBpplrnR2uVFyRiWWkeJKk7RVvPd2cNQXGnWNEGN/Bb8B+o7LE03WnUuqgVjLZAtMRdYPFIDU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3JhzOO9f5tbfaYXb4IpOEVC0DNZPTcob/sEhW4GYEfNuq1+T+
+	7gQjIpfabs0sGY+rlV6L033f0uE4FDHyhp+bVTqUKvv832JGLXIgBgZ5bnv0nXxpqD23PeLgCu5
+	SmbNGifv41wutPigb95WdRnfHcIk=
+X-Gm-Gg: ASbGncs/HAdzB+IgDUpU2Ixs6HboDLQ7u1xd989vCP1eXZFJv0YKfDdfRSzmWXsZXgt
+	lxVhDAssayDiDk2S4oGODhtgQJbSrbulHkal/09k5YrfiojuAw2/0MkNre6bHF4n7EYrnnG4VAJ
+	11FmJOG3mmMwCiULlga8i+UJFq
+X-Google-Smtp-Source: AGHT+IG8tThHD6jWDTQjmnm+9IMPz27ZM/JzO/RcyOsJuWqSoOf5JkHpUl0R3AKSFEsEeRwFhBe+mP74VNwy9s7sHk4=
+X-Received: by 2002:a05:6402:5187:b0:5ec:922f:7a02 with SMTP id
+ 4fb4d7f45d1cf-5ed8e496a71mr3793788a12.10.1743083331045; Thu, 27 Mar 2025
+ 06:48:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org,
- "linux-f2fs-devel@lists.sourceforge.net"
- <linux-f2fs-devel@lists.sourceforge.net>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "pilhyun.kim@sk.com" <pilhyun.kim@sk.com>
-Subject: Re: [External Mail] Re: [External Mail] Re: [PATCH] f2fs: prevent the
- current section from being selected as a victim during garbage collection
-To: "yohan.joung@sk.com" <yohan.joung@sk.com>, Yohan Joung
- <jyh429@gmail.com>, "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
- "daeho43@gmail.com" <daeho43@gmail.com>
-References: <20250326141428.280-1-yohan.joung@sk.com>
- <bf3f571c-a6bf-4a17-8745-039b37ac4f48@kernel.org>
- <2d95428375bd4a5592516bb6cefe4592@sk.com>
- <deb42999-df89-471b-a161-e33b97f96b74@kernel.org>
- <8d1f6aa914f94f5da1ccd46c75e9031b@sk.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <8d1f6aa914f94f5da1ccd46c75e9031b@sk.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <202503241406.5c9cb80a-lkp@intel.com> <87pli4z02w.ffs@tglx>
+ <6sn76aya225pqikijue5uv5h3lyqk262hc6ru3vemn7xofdftd@sw7gith52xh7>
+ <CANn89iKjCgmxtiLeVAiXODHbbR7=gYYi5cfAS1hS5qn+z=-o1Q@mail.gmail.com>
+ <877c4azyez.ffs@tglx> <CANn89iKAkio9wm73RNi9+KngNaS+Au2oaf0Tz9xOd+QEhFSkyw@mail.gmail.com>
+ <CANn89i+nAN+p-qRypKxB4ESohXkKVPmHuV_m86j3DPv6_+C=oQ@mail.gmail.com>
+ <87v7ruycfz.ffs@tglx> <CANn89iJvxYsF0Y9jH+Oa2=akrydR8qbWAMbz_S6YZQMSe=2QWQ@mail.gmail.com>
+ <87jz8ay5rh.ffs@tglx> <CANn89i+r-k-2UNtnyWC6PaJmO_R6Wc6UROgeoir5BmgVV8wDqQ@mail.gmail.com>
+ <CAGudoHHVJWeRWPyArnYnJERPR2gyU0PzBTwx=wWKnCemry45Nw@mail.gmail.com> <CANn89iLGof+T6Ksp56vTXpwKdn60cJ7FWrm-Y-3TNmCNW+Hq_A@mail.gmail.com>
+In-Reply-To: <CANn89iLGof+T6Ksp56vTXpwKdn60cJ7FWrm-Y-3TNmCNW+Hq_A@mail.gmail.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Thu, 27 Mar 2025 14:48:37 +0100
+X-Gm-Features: AQ5f1JpKomRkGYmjsgSFzFHODlirXHVWlwC4ZRc4JNJcxh6kNbtiGglHymgUuI8
+Message-ID: <CAGudoHE_K4iBHSNjKEPuQxJJ-cNx_8f74dou7qdEb58Pc4eKBQ@mail.gmail.com>
+Subject: Re: [tip:timers/core] [posix] 1535cb8028: stress-ng.epoll.ops_per_sec
+ 36.2% regression
+To: Eric Dumazet <edumazet@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, 
+	lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Benjamin Segall <bsegall@google.com>, Frederic Weisbecker <frederic@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/3/27 16:00, yohan.joung@sk.com wrote:
->> From: Chao Yu <chao@kernel.org>
->> Sent: Thursday, March 27, 2025 4:30 PM
->> To: 정요한(JOUNG YOHAN) Mobile AE <yohan.joung@sk.com>; Yohan Joung
->> <jyh429@gmail.com>; jaegeuk@kernel.org; daeho43@gmail.com
->> Cc: chao@kernel.org; linux-f2fs-devel@lists.sourceforge.net; linux-
->> kernel@vger.kernel.org; 김필현(KIM PILHYUN) Mobile AE <pilhyun.kim@sk.com>
->> Subject: [External Mail] Re: [External Mail] Re: [PATCH] f2fs: prevent the
->> current section from being selected as a victim during garbage collection
->>
->> On 3/27/25 14:43, yohan.joung@sk.com wrote:
->>>> From: Chao Yu <chao@kernel.org>
->>>> Sent: Thursday, March 27, 2025 3:02 PM
->>>> To: Yohan Joung <jyh429@gmail.com>; jaegeuk@kernel.org;
->>>> daeho43@gmail.com
->>>> Cc: chao@kernel.org; linux-f2fs-devel@lists.sourceforge.net; linux-
->>>> kernel@vger.kernel.org; 정요한(JOUNG YOHAN) Mobile AE
->>>> <yohan.joung@sk.com>
->>>> Subject: [External Mail] Re: [PATCH] f2fs: prevent the current
->>>> section from being selected as a victim during garbage collection
->>>>
->>>> On 3/26/25 22:14, Yohan Joung wrote:
->>>>> When selecting a victim using next_victim_seg in a large section,
->>>>> the selected section might already have been cleared and designated
->>>>> as the new current section, making it actively in use.
->>>>> This behavior causes inconsistency between the SIT and SSA.
->>>>
->>>> Hi, does this fix your issue?
->>>
->>> This is an issue that arises when dividing a large section into
->>> segments for garbage collection.
->>> caused by the background GC (garbage collection) thread in large
->>> section
->>> f2fs_gc(victim_section) ->
->>> f2fs_clear_prefree_segments(victim_section)->
->>> cursec(victim_section) -> f2fs_gc(victim_section by next_victim_seg)
->>
->> I didn't get it, why f2fs_get_victim() will return section which is used
->> by curseg? It should be avoided by checking w/ sec_usage_check().
->>
->> Or we missed to check gcing section which next_victim_seg points to during
->> get_new_segment()?
->>
->> Can this happen?
->>
->> e.g.
->> - bggc selects sec #0
->> - next_victim_seg: seg #0
->> - migrate seg #0 and stop
->> - next_victim_seg: seg #1
->> - checkpoint, set sec #0 free if sec #0 has no valid blocks
->> - allocate seg #0 in sec #0 for curseg
->> - curseg moves to seg #1 after allocation
->> - bggc tries to migrate seg #1
->>
->> Thanks,
-> That's correct
-> In f2fs_get_victim, we use next_victim_seg to
-> directly jump to got_result, thereby bypassing sec_usage_check
-> What do you think about this change?
-> 
-> @@ -850,15 +850,20 @@ int f2fs_get_victim(struct f2fs_sb_info *sbi, unsigned int *result,
->                          p.min_segno = sbi->next_victim_seg[BG_GC];
->                          *result = p.min_segno;
->                          sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
-> -                       goto got_result;
->                  }
->                  if (gc_type == FG_GC &&
->                                  sbi->next_victim_seg[FG_GC] != NULL_SEGNO) {
->                          p.min_segno = sbi->next_victim_seg[FG_GC];
->                          *result = p.min_segno;
->                          sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
-> -                       goto got_result;
->                  }
-> +
-> +               secno = GET_SEC_FROM_SEG(sbi, segno);
-> +
-> +               if (sec_usage_check(sbi, secno))
-> +                       goto next;
-> +
-> +               goto got_result;
->          }
+On Thu, Mar 27, 2025 at 2:44=E2=80=AFPM Eric Dumazet <edumazet@google.com> =
+wrote:
+>
+> On Thu, Mar 27, 2025 at 2:43=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com>=
+ wrote:
+> >
+> > On Thu, Mar 27, 2025 at 2:17=E2=80=AFPM Eric Dumazet <edumazet@google.c=
+om> wrote:
+> > >
+> > > On Thu, Mar 27, 2025 at 2:14=E2=80=AFPM Thomas Gleixner <tglx@linutro=
+nix.de> wrote:
+> > > >
+> > > > On Thu, Mar 27 2025 at 12:37, Eric Dumazet wrote:
+> > > > > On Thu, Mar 27, 2025 at 11:50=E2=80=AFAM Thomas Gleixner <tglx@li=
+nutronix.de> wrote:
+> > > > >> Cute. How much bloat does it cause?
+> > > > >
+> > > > > This would expand 'struct ucounts' by 192 bytes on x86, if the pa=
+tch
+> > > > > was actually working :)
+> > > > >
+> > > > > Note sure if it is feasible without something more intrusive like
+> > > >
+> > > > I'm not sure about the actual benefit. The problem is that parallel
+> > > > invocations which access the same ucount still will run into conten=
+tion
+> > > > of the cache line they are modifying.
+> > > >
+> > > > For the signal case, all invocations increment rlimit[SIGPENDING], =
+so
+> > > > putting that into a different cache line does not buy a lot.
+> > > >
+> > > > False sharing is when you have a lot of hot path readers on some ot=
+her
+> > > > member of the data structure, which happens to share the cache line=
+ with
+> > > > the modified member. But that's not really the case here.
+> > >
+> > > We applications stressing all the counters at the same time (from
+> > > different threads)
+> > >
+> > > You seem to focus on posix timers only :)
+> >
+> > Well in that case:
+> > (gdb) ptype /o struct ucounts
+> > /* offset      |    size */  type =3D struct ucounts {
+> > /*      0      |      16 */    struct hlist_node {
+> > /*      0      |       8 */        struct hlist_node *next;
+> > /*      8      |       8 */        struct hlist_node **pprev;
+> >
+> >                                    /* total size (bytes):   16 */
+> >                                } node;
+> > /*     16      |       8 */    struct user_namespace *ns;
+> > /*     24      |       4 */    kuid_t uid;
+> > /*     28      |       4 */    atomic_t count;
+> > /*     32      |      96 */    atomic_long_t ucount[12];
+> > /*    128      |     256 */    struct {
+> > /*      0      |       8 */        atomic_long_t val;
+> >                                } rlimit[4];
+> >
+> >                                /* total size (bytes):  384 */
+> >                              }
+> >
+> > This comes from malloc. Given 384 bytes of size it is going to be
+> > backed by a 512-byte sized buffer -- that's a clear cut waste of 128
+> > bytes.
+> >
+> > It is plausible creating a 384-byte sized slab for kmalloc would help
+> > save memory overall (not just for this specific struct), but that
+> > would require extensive testing in real workloads. I think Google is
+> > in position to do it on their fleet and android? fwiw Solaris and
+> > FreeBSD do have slabs of this size and it does save memory over there.
+> > I understand it is a tradeoff, hence I'm not claiming this needs to be
+> > added. I do claim it does warrant evaluation, but I wont blame anyone
+> > for not wanting to do dig into it.
+> >
+> > The other option is to lean into it. In this case I point out the
+> > refcount shares the cacheline with some of the limits and that it
+> > could be moved to a dedicated line while still keeping the struct <
+> > 512 bytes, thus not spending more memory on allocation. the refcount
+> > changes less frequently than limits themselves so it's not a big deal,
+> > but it can be adjusted "for free" if you will.
+> >
+> > while here I would probably change the name of the field. A reference
+> > counter named "count" in a struct named "ucounts", followed by an
+> > "ucount" array is rather unpleasing. How about s/count/refcount?
+>
+>
+> How many 'struct ucounts' are in use in a typical host ?
+>
+> Compared to other costs, this seems pure noise to me.
 
-But still allocator can assign this segment after sec_usage_check() in
-race condition, right?
+I did not claim this is going to increase memory usage in a significant man=
+ner.
 
-IMO, we can clear next_victim_seg[] once section is free in
-__set_test_and_free()? something like this:
+I claim regardless of this change a 384-byte slab for kmalloc may be
+saving memory and this bit may be enough of an excuse to evaluate it,
+should someone be interested.
 
----
-  fs/f2fs/segment.h | 13 ++++++++++---
-  1 file changed, 10 insertions(+), 3 deletions(-)
+Apart from that I claim that if the 512-byte is going to be used to
+back the 384 bytes used by the struct, the patch can trivially move
+the refcount to a dedicated cacheline to avoid some of the bouncing
+and still fit in the 512-byte allocation. I see no reason to not do
+it.
 
-diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-index 0465dc00b349..826e37999085 100644
---- a/fs/f2fs/segment.h
-+++ b/fs/f2fs/segment.h
-@@ -473,9 +473,16 @@ static inline void __set_test_and_free(struct f2fs_sb_info *sbi,
-  			goto skip_free;
-  		next = find_next_bit(free_i->free_segmap,
-  				start_segno + SEGS_PER_SEC(sbi), start_segno);
--		if (next >= start_segno + usable_segs) {
--			if (test_and_clear_bit(secno, free_i->free_secmap))
--				free_i->free_sections++;
-+		if ((next >= start_segno + usable_segs) &&
-+			test_and_clear_bit(secno, free_i->free_secmap)) {
-+			free_i->free_sections++;
-+
-+			if (GET_SEC_FROM_SEG(sbi->next_victim_seg[BG_GC]) ==
-+									secno)
-+				sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
-+			if (GET_SEC_FROM_SEG(sbi->next_victim_seg[FG_GC]) ==
-+									secno)
-+				sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
-  		}
-  	}
-  skip_free:
--- 
-2.40.1
-
->>
->>>
->>> Because the call stack is different,
->>> I think that in order to handle everything at once, we need to address
->>> it within do_garbage_collect, or otherwise include it on both sides.
->>> What do you think?
->>>
->>> [30146.337471][ T1300] F2FS-fs (dm-54): Inconsistent segment (70961)
->>> type [0, 1] in SSA and SIT [30146.346151][ T1300] Call trace:
->>> [30146.346152][ T1300]  dump_backtrace+0xe8/0x10c [30146.346157][
->>> T1300]  show_stack+0x18/0x28 [30146.346158][ T1300]
->>> dump_stack_lvl+0x50/0x6c [30146.346161][ T1300]  dump_stack+0x18/0x28
->>> [30146.346162][ T1300]  f2fs_stop_checkpoint+0x1c/0x3c [30146.346165][
->>> T1300]  do_garbage_collect+0x41c/0x271c [30146.346167][ T1300]
->>> f2fs_gc+0x27c/0x828 [30146.346168][ T1300]  gc_thread_func+0x290/0x88c
->>> [30146.346169][ T1300]  kthread+0x11c/0x164 [30146.346172][ T1300]
->>> ret_from_fork+0x10/0x20
->>>
->>> struct curseg_info : 0xffffff803f95e800 {
->>> 	segno        : 0x11531 : 70961
->>> }
->>>
->>> struct f2fs_sb_info : 0xffffff8811d12000 {
->>> 	next_victim_seg[0] : 0x11531 : 70961
->>> }
->>>
->>>>
->>>> https://lore.kernel.org/linux-f2fs-devel/20250325080646.3291947-2-
->>>> chao@kernel.org
->>>>
->>>> Thanks,
->>>>
->>>>>
->>>>> Signed-off-by: Yohan Joung <yohan.joung@sk.com>
->>>>> ---
->>>>>   fs/f2fs/gc.c | 4 ++++
->>>>>   1 file changed, 4 insertions(+)
->>>>>
->>>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c index
->>>>> 2b8f9239bede..4b5d18e395eb 100644
->>>>> --- a/fs/f2fs/gc.c
->>>>> +++ b/fs/f2fs/gc.c
->>>>> @@ -1926,6 +1926,10 @@ int f2fs_gc(struct f2fs_sb_info *sbi, struct
->>>> f2fs_gc_control *gc_control)
->>>>>   		goto stop;
->>>>>   	}
->>>>>
->>>>> +	if (__is_large_section(sbi) &&
->>>>> +			IS_CURSEC(sbi, GET_SEC_FROM_SEG(sbi, segno)))
->>>>> +		goto stop;
->>>>> +
->>>>>   	seg_freed = do_garbage_collect(sbi, segno, &gc_list, gc_type,
->>>>>   				gc_control->should_migrate_blocks,
->>>>>   				gc_control->one_time);
->>>
-> 
-
+--=20
+Mateusz Guzik <mjguzik gmail.com>
