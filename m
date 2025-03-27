@@ -1,119 +1,156 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06ECE1F4C84
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 07:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D58A1F4CBF
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 07:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743060599; cv=none; b=OcfFKhzSNfsoo0M/SSt4OGREbz0nOzzQb/+qW6E/9YowJnPjfrAg2t/Pie6WBO/uPCfSoJcUxgYaUxTry/JaaxmF9BBkuTCZBVgqHaOCv5Hv41jJ/csP05/yNglUSGGdAQQDGQqZOZi7QqpTth9lX76CVPyB/OeYNlIHG+3eAd0=
+	t=1743060601; cv=none; b=uVUX8GG0gqBM0p6dvS2FiGoLP7/OLpolm/8VTBo4gZ7tufOKUQyi5tLW+fYP8KFa5vF6UdM8j9MQJE+BhzP5gX6vCDFzdjwfEYovUt4GQx/2tuQMopnhjW+uD5a7OlXtzLHBLWcSDZLqnqD/fkS9zuox2RR0dk7e7Sjvigpdwsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743060599; c=relaxed/simple;
-	bh=UVSK2OcQIxu7GqCdEZXROoD138DGI826o2h6Os0Wvbs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g6k1PJdwUyDe6EgdR9OwfrIm6kR/sxquj+JUjcZ7bTlzhnLYsGID5hs1TLA2mYMNnMU+aGuNoIrmIjKnLIZZnUURy7DFgOLgPGWi0sdmatP92gBUAxuQQSVeUAsCYtYXiAavuW7K0s0KJjlTkAZS+G1HSlbsz/qAPApboWY0OT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OqQl2VaB; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743060601; c=relaxed/simple;
+	bh=ksooDKwMUuHkTaFWvqhnbrlEK7O5z3878QbVilW3idE=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=CV6sBy72kwEF0kg8/8tlqWpYvtec9cXR//0GxuhthtxeLMtB1tORIMKzLCwhlM22NqlrXL/xyNosM+NrkUegnXWsGSmi84OzRzPSWe4wIlWLLdpDxF71kODEdL/AzhKEopUmYkhzan6H47dImqjr3GqmPCUNFFqO01qy3cVbNjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TbZAiMcv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OqQl2VaB"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e8ffa00555so5392256d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 00:29:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743060596; x=1743665396; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UVSK2OcQIxu7GqCdEZXROoD138DGI826o2h6Os0Wvbs=;
-        b=OqQl2VaB1u39fB26cpU7mXCK7/DGUFa5TsIaFeksSNh8R58REJpWPK9pgdNLsXX9uf
-         Vse4HQS+nIbqwHM8XOm+/j4UNNxtN+Az8XLHdu78SuVTzsyIGfjrIP04B/p2CA2V4S2v
-         57i9RjtGAgJV0oVNIYqnOJkzzMeEmGAN/iY+ug9icD9dfBw0iVxeRargEONB2ASk63r2
-         sQz1/GJxM8xWlGYlrqvy9bVTgoOCyXSOEvwOJVpxZ/NLwD1qsuQYO5LyDtYtcjzHR8lU
-         kCh0Yf23HHDpavFIgJqRBP/8oqCqokTP5z3Jcb4MCTLKW+yx5inok59xdMv0eKjM+ibZ
-         eubQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743060596; x=1743665396;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UVSK2OcQIxu7GqCdEZXROoD138DGI826o2h6Os0Wvbs=;
-        b=bWTmle9O7cKKjnGdf+y5wRbaGor1wjvdGkvNvYxZTRYt4u2bqiEPWrZ9t89GsokcIk
-         pj1NrVTtMCQU+RFG/YzfVa1n852nazT3ar7CKom8TjnaRJZ92H52wvtFqE5qbehFg1nL
-         LuH/UTLjTdmfKQ1HHm+chRvw8NTgHtgotniRVBiC/bGCRbpxjTlje94TKjUnhKpwCI8t
-         4KaKZtRh8sMLzggmPbqRS/hACK0SuCJCm/FWpnevQmgN3RVHg/e8VNlGvGDf+xSfYK2O
-         z3dtiiw5NXkA581wdI/oH33p97wqhJqK4g1Jfsxel6GVwzoq0pq+oKjRI6CMgBkKiUNN
-         1rjw==
-X-Forwarded-Encrypted: i=1; AJvYcCWC58pLjK4yY5C5zQNc28Gd8LrFUIcd/lLMlHpVkzNeP4gaV5QBOMn2itMAMtMlLOFEYhc8tufTqLL2ktU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEGhh9N651hyRzsv5zi4D7JFaPCv4UltLTwPZJCeJ2Y8dVGBK4
-	SDnaL0BLnKJXCPKclFI8pM6LEqOzB4geyq6Hy6oos4bhfutxQs705rtd3Ir9a2znZu/k1qXKQVl
-	MC9sC6lCyceuWuT9EaI5bAhB/GfaGHjATYdIU
-X-Gm-Gg: ASbGncta6nBNXG0HYVT/B4fcztU7MtJYiYuRQzemyyoQMUuVuqyNf7hV+EfuWjlzpv0
-	LFBp2379wGuFcD9J4u+z1er8d7whWeXC0nbS5B4STE5m6oSkq6KAXY6DQQp5m7iD87rR0YOCejV
-	4vIeMzwO7nhgLE6GhebJaGyFrfI20KBUuriJKBKpiRqVijtqKtYf6E9mNC
-X-Google-Smtp-Source: AGHT+IFodbPmwJt4QLy+rox/4P7ba1LI/HNq1Ca31C0T5Xi4oS+Qr4SiPc6bWeImmNVunEMpHRieoFe8u16EuLCSZhM=
-X-Received: by 2002:a05:6214:1311:b0:6ed:1da2:afac with SMTP id
- 6a1803df08f44-6ed2390449emr39214346d6.32.1743060595360; Thu, 27 Mar 2025
- 00:29:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TbZAiMcv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51429C4CEDD;
+	Thu, 27 Mar 2025 07:29:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743060600;
+	bh=ksooDKwMUuHkTaFWvqhnbrlEK7O5z3878QbVilW3idE=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=TbZAiMcvd2wbBHxnjiQsvrzz5OkyWyRHZYpacKEBBLv/MpCQt7jAWcRYcjyTUTRkh
+	 o3N029NmzTm84jm8m2l7vh79xaSLkO+H1S7ZjxTJZR/rjlSNyQk4LvVhRskRMPVysF
+	 NDfAGiJ/vGrwTYJqZI4GbFLuru9ZXW/SY475QpMUXNKe7GocguQzB3RUcCLWsETv3b
+	 tYjrjzzPRvndtRDRinyg9xFkgXST1Q4HqhuAB9YaIsgldMy+jX6I5mfN4AnyOdePrE
+	 sZQ456U8RwCbvA3a5jOrozx4sOwTHkKqJw0TQhxuSilJmwY8vaBJlyOIGgTo2Rpnto
+	 vL38ziYlcNRSg==
+Message-ID: <deb42999-df89-471b-a161-e33b97f96b74@kernel.org>
+Date: Thu, 27 Mar 2025 15:29:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAG48ez2jj8KxxYG8-chkkzxiw-CLLK6MoSR6ajfCE6PyYyEZ=A@mail.gmail.com>
-In-Reply-To: <CAG48ez2jj8KxxYG8-chkkzxiw-CLLK6MoSR6ajfCE6PyYyEZ=A@mail.gmail.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Thu, 27 Mar 2025 08:29:18 +0100
-X-Gm-Features: AQ5f1JpUvz_D0Czd4hU24LmSodys4uaFqOZY_Yq3Ndxmm6C9Z-cmzAlUlTUQiTA
-Message-ID: <CAG_fn=UF1JmwMmPJd_CJQSzQAfA_z5fQ1MKaKXDv3N5+s3f6qg@mail.gmail.com>
-Subject: Re: does software KASAN not instrument READ_ONCE() on arm64 with LTO?
-To: Jann Horn <jannh@google.com>
-Cc: Will Deacon <will@kernel.org>, kasan-dev <kasan-dev@googlegroups.com>, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, kernel list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org,
+ "linux-f2fs-devel@lists.sourceforge.net"
+ <linux-f2fs-devel@lists.sourceforge.net>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "pilhyun.kim@sk.com" <pilhyun.kim@sk.com>
+Subject: Re: [External Mail] Re: [PATCH] f2fs: prevent the current section
+ from being selected as a victim during garbage collection
+To: "yohan.joung@sk.com" <yohan.joung@sk.com>, Yohan Joung
+ <jyh429@gmail.com>, "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
+ "daeho43@gmail.com" <daeho43@gmail.com>
+References: <20250326141428.280-1-yohan.joung@sk.com>
+ <bf3f571c-a6bf-4a17-8745-039b37ac4f48@kernel.org>
+ <2d95428375bd4a5592516bb6cefe4592@sk.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <2d95428375bd4a5592516bb6cefe4592@sk.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 27, 2025 at 12:10=E2=80=AFAM Jann Horn <jannh@google.com> wrote=
-:
->
-> Hi!
->
-> I just realized - arm64 redefines __READ_ONCE() to use inline assembly
-> instead of a volatile load, and ASAN is designed to not instrument asm
-> statement operands (not even memory operands).
+On 3/27/25 14:43, yohan.joung@sk.com wrote:
+>> From: Chao Yu <chao@kernel.org>
+>> Sent: Thursday, March 27, 2025 3:02 PM
+>> To: Yohan Joung <jyh429@gmail.com>; jaegeuk@kernel.org; daeho43@gmail.com
+>> Cc: chao@kernel.org; linux-f2fs-devel@lists.sourceforge.net; linux-
+>> kernel@vger.kernel.org; 정요한(JOUNG YOHAN) Mobile AE <yohan.joung@sk.com>
+>> Subject: [External Mail] Re: [PATCH] f2fs: prevent the current section
+>> from being selected as a victim during garbage collection
+>>
+>> On 3/26/25 22:14, Yohan Joung wrote:
+>>> When selecting a victim using next_victim_seg in a large section, the
+>>> selected section might already have been cleared and designated as the
+>>> new current section, making it actively in use.
+>>> This behavior causes inconsistency between the SIT and SSA.
+>>
+>> Hi, does this fix your issue?
+> 
+> This is an issue that arises when dividing 
+> a large section into segments for garbage collection.
+> caused by the background GC (garbage collection) thread in large section
+> f2fs_gc(victim_section) -> f2fs_clear_prefree_segments(victim_section)-> 
+> cursec(victim_section) -> f2fs_gc(victim_section by next_victim_seg)
 
-Nice catch!
+I didn't get it, why f2fs_get_victim() will return section which is used
+by curseg? It should be avoided by checking w/ sec_usage_check().
 
-> (I think I may have a years-old LLVM patch somewhere that changes
-> that, but I vaguely recall being told once that that's an intentional
-> design decision. I might be misremembering that though...)
+Or we missed to check gcing section which next_victim_seg points to
+during get_new_segment()?
 
-We have some best-effort asm instrumentation in KMSAN (see
-https://llvm.org/doxygen/MemorySanitizer_8cpp_source.html#l04968) and
-could potentially do something similar for KASAN, but if I remember
-correctly there were some corner cases with unknown argument sizes and
-with percpu instrumentation (at least on x86 percpu accesses receive
-an offset of the variable in .data..percpu, not the actual address).
+Can this happen?
 
-> So because __READ_ONCE() does not call anything like
-> instrument_read(), I think instrumentation-based KASAN in LTO arm64
-> builds probably doesn't cover READ_ONCE() accesses?
->
-> A quick test seems to confirm this: https://godbolt.org/z/8oYfaExYf
+e.g.
+- bggc selects sec #0
+- next_victim_seg: seg #0
+- migrate seg #0 and stop
+- next_victim_seg: seg #1
+- checkpoint, set sec #0 free if sec #0 has no valid blocks
+- allocate seg #0 in sec #0 for curseg
+- curseg moves to seg #1 after allocation
+- bggc tries to migrate seg #1
 
-So should it be enough to call instrument_read()?
+Thanks,
 
+> 
+> Because the call stack is different, 
+> I think that in order to handle everything at once, 
+> we need to address it within do_garbage_collect, 
+> or otherwise include it on both sides. What do you think?
+> 
+> [30146.337471][ T1300] F2FS-fs (dm-54): Inconsistent segment (70961) type [0, 1] in SSA and SIT
+> [30146.346151][ T1300] Call trace:
+> [30146.346152][ T1300]  dump_backtrace+0xe8/0x10c
+> [30146.346157][ T1300]  show_stack+0x18/0x28
+> [30146.346158][ T1300]  dump_stack_lvl+0x50/0x6c
+> [30146.346161][ T1300]  dump_stack+0x18/0x28
+> [30146.346162][ T1300]  f2fs_stop_checkpoint+0x1c/0x3c
+> [30146.346165][ T1300]  do_garbage_collect+0x41c/0x271c
+> [30146.346167][ T1300]  f2fs_gc+0x27c/0x828
+> [30146.346168][ T1300]  gc_thread_func+0x290/0x88c
+> [30146.346169][ T1300]  kthread+0x11c/0x164
+> [30146.346172][ T1300]  ret_from_fork+0x10/0x20
+> 
+> struct curseg_info : 0xffffff803f95e800 {
+> 	segno        : 0x11531 : 70961
+> }
+> 
+> struct f2fs_sb_info : 0xffffff8811d12000 {
+> 	next_victim_seg[0] : 0x11531 : 70961
+> }
+> 
+>>
+>> https://lore.kernel.org/linux-f2fs-devel/20250325080646.3291947-2-
+>> chao@kernel.org
+>>
+>> Thanks,
+>>
+>>>
+>>> Signed-off-by: Yohan Joung <yohan.joung@sk.com>
+>>> ---
+>>>  fs/f2fs/gc.c | 4 ++++
+>>>  1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c index
+>>> 2b8f9239bede..4b5d18e395eb 100644
+>>> --- a/fs/f2fs/gc.c
+>>> +++ b/fs/f2fs/gc.c
+>>> @@ -1926,6 +1926,10 @@ int f2fs_gc(struct f2fs_sb_info *sbi, struct
+>> f2fs_gc_control *gc_control)
+>>>  		goto stop;
+>>>  	}
+>>>
+>>> +	if (__is_large_section(sbi) &&
+>>> +			IS_CURSEC(sbi, GET_SEC_FROM_SEG(sbi, segno)))
+>>> +		goto stop;
+>>> +
+>>>  	seg_freed = do_garbage_collect(sbi, segno, &gc_list, gc_type,
+>>>  				gc_control->should_migrate_blocks,
+>>>  				gc_control->one_time);
+> 
 
---=20
-Alexander Potapenko
-Software Engineer
-
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
-
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Liana Sebastian
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
