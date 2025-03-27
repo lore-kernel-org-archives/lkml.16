@@ -1,194 +1,342 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A1D1B4251
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3414F3BBF2
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743063226; cv=none; b=QfhUnciVaqg3FrYfdZ+LUPuGAmSN7uPkk4QlNthQLhc0TCjGCh23/f7luHi8j3stSETUwC++JAowi/fKyDYfapydEqqi/60fmGMyXwfGOHGeu1EbX3DxCQxpMSaE4784uYFg46f6AFIKrMxJvNq1g/GAKwhR8gQ1rvWQH+CaV/U=
+	t=1743063277; cv=none; b=ZZI4/6k/dkbLfdLkvvFApDsa6VDIaITjoUKEkbO3RQJYjzY4S3scUIhRZYOmx+CHIsPm+aDMYObyb5tzDZLd2yW57S3ZW1H4DUvp0EXfkp8zacuXZ9Ea5I2EoWMSJ33VhxCOgTmKQdbNF949RzuLQhWK4m1DdWlXolxjClefj+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743063226; c=relaxed/simple;
-	bh=bTCIQbZfb43JnsDod1rtfij5pP9d9sm1SFgzMjOAryU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lkl+pweqL91x5Zhv1sQKiGk9Fvebk/Sy/aWOJsRkFaq/W60yMkMQ95EdTlv603HJY/6uh53Tn9dQeC/VY8KjAOTcz+pQD37OVX0WK3+1/cJs3DuhWh2lQLMdOZ1GiBYdrWFhl69NVOm4FXOD5i7JVPExuhGoQ4BCNJDa6EBIDag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=eKkfVi6F; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1743063277; c=relaxed/simple;
+	bh=hrm1XoHYPmcIOxTaq5acqqaiDDgL93uNCIUXl5UuXww=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NObY8i0vv+4VdoAUEQCCQ5gVDD+aw0RCP6Vpqc9bMQs+KXGiH5O8IiwUNODo7awNNFVXW7NZXRe/X7yAeRP7ayEwK0JRRsWPGp7xGuOAvSgqEDLW7npoHmAFSmfA87RGOjsNcwLWWlJTMi4ReXWH43BCu4/g5vyzM5+gHZ1WZB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sk0o+7ea; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="eKkfVi6F"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3913d129c1aso445149f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 01:13:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1743063223; x=1743668023; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jz00sfAr3h8cNxbqkgl+Nkm67OZ8eaKlmd2X1ZA3QeM=;
-        b=eKkfVi6FIHybAbye3vivpv7F5qJh6/WlpVeI1g7ZQZMsHBfrTlrSKzEUSHO1+53gxi
-         5QakzQOla++hMT3utMCBUlBEqkld4DLKDw1/qmRN2/NDC2TxjA7eRx9yPhV1PmtYb+1S
-         +4UfmLSq1mSixxdmV2KVBVBZUaQ8WuP1OUUnftM/Cug/6eVLQveJXLIFLKjuFxUWji3R
-         oFeIftQO0WUB8RIrMQNbBR11TZ7kUzaOXjoMzi7C7XMl1zjazr7dUkYmF64Ibv/mtEJ+
-         Y+0+vCVFHFUxB4H8b/Xvm04q3OMP+cu70Bp7XTDejyVW/K0CYapDrqPmQ0uVS0B5Uw1t
-         p8Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743063223; x=1743668023;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jz00sfAr3h8cNxbqkgl+Nkm67OZ8eaKlmd2X1ZA3QeM=;
-        b=gJnyLyzqGFWy2sMzLS7OSOBiR7Hf/sdWzLHmR7ALWEHTHfBJUoHa1xX7ii+wwus5b+
-         VgSzENQ+UMzGAFCWau4f+ROG1bL/FF1GagaDAg+QZjOIzJcycAxsg7lTfY6Ckt5o2SvV
-         qmvNbBGNZcTjlFAJGR1A7bNQpvGi2SekvJER7HhHU9dv7o4eio9Xjp2S/GqGeHEcK0V3
-         bQcKMHg/o8S96O930efgOTqtB0tUnAQ/KyJ1X0FYT+szSHkli9EUsAuwQASGNk4hPHw4
-         UGurSs3WwqKkCQX8mQjflSFvY/s/BKKJUmJM92koPagpi7v1t3N2PWUFmRhuKDtnMTO5
-         dARA==
-X-Forwarded-Encrypted: i=1; AJvYcCXmlifAP+TXRRiYM7vbtMjc0vblCZ2h/sbJoaO6mytl8KLHq8pe9+CGuq29V7K3/sD2PiqDbsDv3X74oq4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywa6VsWaUIxG8UjD1qePiu5QuHyMGj40VBkeEzqveBbL/RkL+WF
-	XdtT7Uu4r0q3bWAeRNFwYs/CbPVrowShJNO6vyjz0prlc1hwayd+DnNE8U78yog=
-X-Gm-Gg: ASbGnctJh2p6H2CFXk8U83Ew/nUS/kYuGisv2SFkDDQLDpCz/dxTinHt7BQ+EVAYJgp
-	6Ml6prs3w+ile9p2/FCl5oqKFAWgZ5fDSzS6nLYNkV8V1fVCcsQrQHqBUc5GyTc6+vgMpG3C5WP
-	okGxl3G79VYk/tLyOoo723GFJ3f2DHwc73iuHKuF667A17KPU9MuzlvZtB70IhisO0I4Rm43dYz
-	aEkw052z/8DvXDNsUjDD/7h4CMK1LjY5AQAsDU4BV4WZti/qTt87TonwFZ9hZ19nXn1CumV+s1j
-	TkQldhl7vAyturqwrrZN9y5fCP4YIwGTn3k8L13cmOys7jKtdQQJ9w==
-X-Google-Smtp-Source: AGHT+IHaGU7k1A9qg1y23ZMz5cgJ0D4Cu+DVQXIKfTtvPKv7hvhNHKkbv6hFjGYgP2YHKA+NqagcPQ==
-X-Received: by 2002:a5d:64a9:0:b0:39a:c6d1:c343 with SMTP id ffacd0b85a97d-39acc44f0aemr5163077f8f.10.1743063223009;
-        Thu, 27 Mar 2025 01:13:43 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.103])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9e65besm19397452f8f.65.2025.03.27.01.13.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 01:13:42 -0700 (PDT)
-Message-ID: <d47e7da3-4b84-4688-a1f1-8019383a3e48@tuxon.dev>
-Date: Thu, 27 Mar 2025 10:13:39 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sk0o+7ea"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6F21C4CEDD;
+	Thu, 27 Mar 2025 08:14:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743063276;
+	bh=hrm1XoHYPmcIOxTaq5acqqaiDDgL93uNCIUXl5UuXww=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Sk0o+7ea3jwRyHYTj4gK7t7OK+K+9A1ZIgIMSg4kw2YoUQslE/7URc75N775R6qvg
+	 BxJV+l0HfDfOsJi9mL/mfdz/8mWymUcU2vAWELyF4hA3YJODClgkMXcUZtOsU/GSSs
+	 MpGuZlJVjsqJUuavNpFmxjK+xFI7WyMhAwgGyi1al/udpeGwYAxh4ZC+zl2WRw6fsP
+	 b2E5SMwq1udEhZnwLmboICYBO99DUe0+fHtKNdWcG6JmqwceeJ9HX5ezHMn5SPELpV
+	 BqJVBTANF0CXjAACis3CmFbn/0kCe8mupIBESuk9FjQ0we8MUKHcdyjNy+2X+ENNpR
+	 hS/7NCxvKLFUg==
+Date: Thu, 27 Mar 2025 09:14:32 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [COMBO PATCH 6/5] bugs/arch: Wire in the 'cond_str' string to the
+ WARN/BUG output machinery of PowerPC, LoongArch, S390, RISC-V, PA-RISC and
+ SH
+Message-ID: <Z-UI6KGxZyw4hsej@gmail.com>
+References: <20250326084751.2260634-1-mingo@kernel.org>
+ <20250326084751.2260634-5-mingo@kernel.org>
+ <20250326085343.GB25239@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 10/13] net: macb: Add "mobileye,eyeq5-gem"
- compatible
-To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Samuel Holland <samuel.holland@sifive.com>,
- Richard Cochran <richardcochran@gmail.com>,
- Russell King <linux@armlinux.org.uk>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
- Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-mips@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-References: <20250321-macb-v1-0-537b7e37971d@bootlin.com>
- <20250321-macb-v1-10-537b7e37971d@bootlin.com>
- <ea5de004-a26c-43a1-9408-0089fa18b44d@tuxon.dev>
- <D8PITUNTWTXA.366TNSXDUL48G@bootlin.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <D8PITUNTWTXA.366TNSXDUL48G@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250326085343.GB25239@noisy.programming.kicks-ass.net>
 
-Hi, Theo,
 
-On 25.03.2025 19:25, Théo Lebrun wrote:
->>> +	}
->>> +
->>> +	regmap_read(regmap, gp, &reg);
->>> +	reg &= ~EYEQ5_OLB_GP_RGMII_DRV;
->>> +	if (phy_interface_mode_is_rgmii(bp->phy_interface))
->>> +		reg |= FIELD_PREP(EYEQ5_OLB_GP_RGMII_DRV, 0x9);
->>> +	reg |= EYEQ5_OLB_GP_TX_SWRST_DIS | EYEQ5_OLB_GP_TX_M_CLKE;
->>> +	reg |= EYEQ5_OLB_GP_SYS_SWRST_DIS | EYEQ5_OLB_GP_SYS_M_CLKE;
->>> +	regmap_write(regmap, gp, reg);
->> To me it looks like this code could be abstracted as a phy driver. E.g.,
->> check the init_reset_optional() and its usage on "cdns,zynqmp-gem" (phy
->> driver here: drivers/phy/xilinx/phy-zynqmp.c).
-> I thought about that question. Options to implement that sequence are:
-> 
->  - (1) Implement a separate PHY driver, what you are proposing. I just
->    made a prototype branch to see what it'd look like. Nothing too
->    surprising; mostly the above sequence is copy-pasted inside
->    phy_init|power_on(). I see two issues:
-> 
->     - First, a practical one. This adds a lot of boilerplate for no
->       obvious benefit compared to a raw registers read/write sequence
->       inside macb_config->init().
+* Peter Zijlstra <peterz@infradead.org> wrote:
 
-The macb is used by various platforms. If the settings proposed in this
-patch (platform specific AFAICT) could be abstracted and used with generic
-APIs I think would be better this way.
+> On Wed, Mar 26, 2025 at 09:47:49AM +0100, Ingo Molnar wrote:
+> > This allows the reuse of the UD2 based 'struct bug_entry' low-overhead
+> > _BUG_FLAGS() implementation and string-printing backend, without
+> > having to add a new field.
+> > 
+> > An example:
+> > 
+> > If we have the following WARN_ON_ONCE() in kernel/sched/core.c:
+> > 
+> > 	WARN_ON_ONCE(idx < 0 && ptr);
+> > 
+> > Then previously _BUG_FLAGS() would store this string in bug_entry::file:
+> > 
+> > 	"kernel/sched/core.c"
+> > 
+> > After this patch, it would store and print:
+> > 
+> > 	"[idx < 0 && ptr] kernel/sched/core.c"
+> > 
+> > Which is an extended string that will be printed in warnings.
+> > 
+> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > ---
+> >  arch/x86/include/asm/bug.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+> > index aff1c6b7a7f3..e966199c8ef7 100644
+> > --- a/arch/x86/include/asm/bug.h
+> > +++ b/arch/x86/include/asm/bug.h
+> > @@ -50,7 +50,7 @@ do {									\
+> >  		     "\t.org 2b+%c3\n"					\
+> >  		     ".popsection\n"					\
+> >  		     extra						\
+> > -		     : : "i" (__FILE__), "i" (__LINE__),		\
+> > +		     : : "i" (cond_str __FILE__), "i" (__LINE__),		\
+> >  			 "i" (flags),					\
+> >  			 "i" (sizeof(struct bug_entry)));		\
+> >  } while (0)
+> 
+> Sneaky :-) Do we want to touch up all the other archs? I mean, you
+> already touched them anyway earlier in the series in order to push this
+> argument through.
 
-> 
->       The main reason for that boilerplate is to allow reuse of a PHY
->       across MACs;
+Sneaky how you make it sound so simple ;-)
 
-And/or avoid having platform specific code in the macb driver.
+... some time later:
 
-> here we already know that cannot be useful because
->       the EyeQ5 has two GEMs and nothing else. Those registers are
->       EyeQ5-specific.
-> 
->     - Second, a semantic one. The registers we are touching are *not*
->       the PHY's registers. They are configuring the PHY's integration:
->       its input PLL, resets, etc.
-> 
->  - (2) Second, taking into account that what we are configuring isn't
->    the PHY itself but its resources, we could try modeling each
->    individual register+field as a reset / clock / pin control (there is
->    some drive strength in here, *I think*). Issue: this would get
->    messy, fast.
->     - A single register would expose many resources.
->     - The sequence in macb_config->init() would need to be the exact
->       same order. IE we can't abstract much.
-> 
->    Something like this pseudocode (which is a bad idea, we'd all agree
->    here):
-> 
->       reset_deassert(bp->eq5_sgmii_reset);
->       reset_deassert(bp->eq5_sgmii_reset_pwr);
->       reset_deassert(bp->eq5_phy_reset_tx);
->       reset_deassert(bp->eq5_phy_reset_sys);
-> 
->       if (bp->phy_interface == PHY_INTERFACE_MODE_SGMII) {
->          pinctrl_select_state(bp->eq5_phy_input_pinctrl, bp->eq5_pins_sgmii);
-> 
->          reset_deassert(bp->eq5_sgmii_reset);
->          clk_prepare_enable(bp->eq5_sgmii_phy_input_pll);
-> 
->          reset_deassert(bp->eq5_sgmii_reset_pwr);
->       } else {
->          pinctrl_select_state(bp->eq5_pinctrl, bp->eq5_pins_rgmii);
->       }
-> 
->       reset_deassert(bp->eq5_phy_reset_tx);
->       reset_deassert(bp->eq5_phy_reset_sys);
->       clk_prepare_enable(bp->eq5_phy_mclk_tx);
->       clk_prepare_enable(bp->eq5_phy_mclk_sys);
+ c9bb718f4d8a bugs/sh: Use 'cond_str' in __WARN_FLAGS()
+ 6fd6983325f7 bugs/parisc: Use 'cond_str' in __WARN_FLAGS()
+ cc6f8cdc5438 bugs/riscv: Pass in 'cond_str' to __BUG_FLAGS() and use it
+ b2becbe8b469 bugs/s390: Pass in 'cond_str' to __EMIT_BUG() and use it
+ 8d1deb72c07f bugs/LoongArch: Pass in 'cond_str' to __BUG_ENTRY() and use it
+ f4a1a3f7f1bb bugs/powerpc: Pass in 'cond_str' to BUG_ENTRY() and use it
 
-This looks complicated to me.
+There were like 5 separate variants of how architectures make use of 
+__WARN_FLAGS(), and the 6 patches above are totally untested. Combo 
+patch below.
 
-> 
->  - (3) Keep the sequence in macb_config->init(). Plain and simple.
->     - Issue: it is somewhat unrelated platform-specific code that's
->       present inside macb_main.c.
+Thanks,
 
-For maintainability I would prefer to avoid this.
+	Ingo
 
-> 
-> The two serious options are (1) and (3).
-> (1) is what you proposed and (3) is what's in the series.
+============================>
+ arch/loongarch/include/asm/bug.h | 22 +++++++++++-----------
+ arch/parisc/include/asm/bug.h    |  2 +-
+ arch/powerpc/include/asm/bug.h   | 12 ++++++------
+ arch/riscv/include/asm/bug.h     | 10 +++++-----
+ arch/s390/include/asm/bug.h      | 10 +++++-----
+ arch/sh/include/asm/bug.h        |  2 +-
+ 6 files changed, 29 insertions(+), 29 deletions(-)
 
-I prefer (1) if it can be done.
-
-Thank you,
-Claudiu
-
+diff --git a/arch/loongarch/include/asm/bug.h b/arch/loongarch/include/asm/bug.h
+index 51c2cb98d728..b8b4d9f569c1 100644
+--- a/arch/loongarch/include/asm/bug.h
++++ b/arch/loongarch/include/asm/bug.h
+@@ -20,39 +20,39 @@
+ #endif
+ 
+ #ifndef CONFIG_GENERIC_BUG
+-#define __BUG_ENTRY(flags)
++#define __BUG_ENTRY(cond_str, flags)
+ #else
+-#define __BUG_ENTRY(flags) 					\
++#define __BUG_ENTRY(cond_str, flags)				\
+ 		.pushsection __bug_table, "aw";			\
+ 		.align 2;					\
+ 	10000:	.long 10001f - .;				\
+-		_BUGVERBOSE_LOCATION(__FILE__, __LINE__)	\
+-		.short flags; 					\
++		_BUGVERBOSE_LOCATION(cond_str __FILE__, __LINE__) \
++		.short flags;					\
+ 		.popsection;					\
+ 	10001:
+ #endif
+ 
+-#define ASM_BUG_FLAGS(flags)					\
+-	__BUG_ENTRY(flags)					\
++#define ASM_BUG_FLAGS(cond_str, flags)				\
++	__BUG_ENTRY(cond_str, flags)				\
+ 	break		BRK_BUG;
+ 
+-#define ASM_BUG()	ASM_BUG_FLAGS(0)
++#define ASM_BUG()	ASM_BUG_FLAGS("", 0)
+ 
+-#define __BUG_FLAGS(flags, extra)					\
+-	asm_inline volatile (__stringify(ASM_BUG_FLAGS(flags))		\
++#define __BUG_FLAGS(cond_str, flags, extra)					\
++	asm_inline volatile (__stringify(ASM_BUG_FLAGS(cond_str, flags))	\
+ 			     extra);
+ 
+ #define __WARN_FLAGS(cond_str, flags)				\
+ do {								\
+ 	instrumentation_begin();				\
+-	__BUG_FLAGS(BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
++	__BUG_FLAGS(cond_str, BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
+ 	instrumentation_end();					\
+ } while (0)
+ 
+ #define BUG()							\
+ do {								\
+ 	instrumentation_begin();				\
+-	__BUG_FLAGS(0, "");					\
++	__BUG_FLAGS("", 0, "");					\
+ 	unreachable();						\
+ } while (0)
+ 
+diff --git a/arch/parisc/include/asm/bug.h b/arch/parisc/include/asm/bug.h
+index 1a87cf80ec3c..2d14d6cf21f3 100644
+--- a/arch/parisc/include/asm/bug.h
++++ b/arch/parisc/include/asm/bug.h
+@@ -61,7 +61,7 @@
+ 			     "\t.short %1, %2\n"			\
+ 			     "\t.blockz %3-2*4-2*2\n"			\
+ 			     "\t.popsection"				\
+-			     : : "i" (__FILE__), "i" (__LINE__),	\
++			     : : "i" (cond_str __FILE__), "i" (__LINE__), \
+ 			     "i" (BUGFLAG_WARNING|(flags)),		\
+ 			     "i" (sizeof(struct bug_entry)) );		\
+ 	} while(0)
+diff --git a/arch/powerpc/include/asm/bug.h b/arch/powerpc/include/asm/bug.h
+index 34d39ec79720..a2120fbedd09 100644
+--- a/arch/powerpc/include/asm/bug.h
++++ b/arch/powerpc/include/asm/bug.h
+@@ -51,11 +51,11 @@
+ 	".previous\n"
+ #endif
+ 
+-#define BUG_ENTRY(insn, flags, ...)			\
++#define BUG_ENTRY(cond_str, insn, flags, ...)		\
+ 	__asm__ __volatile__(				\
+ 		"1:	" insn "\n"			\
+ 		_EMIT_BUG_ENTRY				\
+-		: : "i" (__FILE__), "i" (__LINE__),	\
++		: : "i" (cond_str __FILE__), "i" (__LINE__),	\
+ 		  "i" (flags),				\
+ 		  "i" (sizeof(struct bug_entry)),	\
+ 		  ##__VA_ARGS__)
+@@ -67,12 +67,12 @@
+  */
+ 
+ #define BUG() do {						\
+-	BUG_ENTRY("twi 31, 0, 0", 0);				\
++	BUG_ENTRY("", "twi 31, 0, 0", 0);			\
+ 	unreachable();						\
+ } while (0)
+ #define HAVE_ARCH_BUG
+ 
+-#define __WARN_FLAGS(cond_str, flags) BUG_ENTRY("twi 31, 0, 0", BUGFLAG_WARNING | (flags))
++#define __WARN_FLAGS(cond_str, flags) BUG_ENTRY(cond_str, "twi 31, 0, 0", BUGFLAG_WARNING | (flags))
+ 
+ #ifdef CONFIG_PPC64
+ #define BUG_ON(x) do {						\
+@@ -80,7 +80,7 @@
+ 		if (x)						\
+ 			BUG();					\
+ 	} else {						\
+-		BUG_ENTRY(PPC_TLNEI " %4, 0", 0, "r" ((__force long)(x)));	\
++		BUG_ENTRY(#x, PPC_TLNEI " %4, 0", 0, "r" ((__force long)(x)));	\
+ 	}							\
+ } while (0)
+ 
+@@ -90,7 +90,7 @@
+ 		if (__ret_warn_on)				\
+ 			__WARN();				\
+ 	} else {						\
+-		BUG_ENTRY(PPC_TLNEI " %4, 0",			\
++		BUG_ENTRY(#x, PPC_TLNEI " %4, 0",			\
+ 			  BUGFLAG_WARNING | BUGFLAG_TAINT(TAINT_WARN),	\
+ 			  "r" (__ret_warn_on));	\
+ 	}							\
+diff --git a/arch/riscv/include/asm/bug.h b/arch/riscv/include/asm/bug.h
+index b22ee4d2c882..6278523dd2d1 100644
+--- a/arch/riscv/include/asm/bug.h
++++ b/arch/riscv/include/asm/bug.h
+@@ -50,7 +50,7 @@ typedef u32 bug_insn_t;
+ #endif
+ 
+ #ifdef CONFIG_GENERIC_BUG
+-#define __BUG_FLAGS(flags)					\
++#define __BUG_FLAGS(cond_str, flags)				\
+ do {								\
+ 	__asm__ __volatile__ (					\
+ 		"1:\n\t"					\
+@@ -61,22 +61,22 @@ do {								\
+ 			".org 2b + %3\n\t"                      \
+ 			".popsection"				\
+ 		:						\
+-		: "i" (__FILE__), "i" (__LINE__),		\
++		: "i" (cond_str __FILE__), "i" (__LINE__),	\
+ 		  "i" (flags),					\
+ 		  "i" (sizeof(struct bug_entry)));              \
+ } while (0)
+ #else /* CONFIG_GENERIC_BUG */
+-#define __BUG_FLAGS(flags) do {					\
++#define __BUG_FLAGS(cond_str, flags) do {			\
+ 	__asm__ __volatile__ ("ebreak\n");			\
+ } while (0)
+ #endif /* CONFIG_GENERIC_BUG */
+ 
+ #define BUG() do {						\
+-	__BUG_FLAGS(0);						\
++	__BUG_FLAGS("", 0);					\
+ 	unreachable();						\
+ } while (0)
+ 
+-#define __WARN_FLAGS(cond_str, flags) __BUG_FLAGS(BUGFLAG_WARNING|(flags))
++#define __WARN_FLAGS(cond_str, flags) __BUG_FLAGS(cond_str, BUGFLAG_WARNING|(flags))
+ 
+ #define HAVE_ARCH_BUG
+ 
+diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
+index ef3e495ec1e3..e3d839517c17 100644
+--- a/arch/s390/include/asm/bug.h
++++ b/arch/s390/include/asm/bug.h
+@@ -8,7 +8,7 @@
+ 
+ #ifdef CONFIG_DEBUG_BUGVERBOSE
+ 
+-#define __EMIT_BUG(x) do {					\
++#define __EMIT_BUG(cond_str, x) do {				\
+ 	asm_inline volatile(					\
+ 		"0:	mc	0,0\n"				\
+ 		".section .rodata.str,\"aMS\",@progbits,1\n"	\
+@@ -20,14 +20,14 @@
+ 		"	.short	%0,%1\n"			\
+ 		"	.org	2b+%2\n"			\
+ 		".previous\n"					\
+-		: : "i" (__LINE__),				\
++		: : "i" (cond_str __LINE__),			\
+ 		    "i" (x),					\
+ 		    "i" (sizeof(struct bug_entry)));		\
+ } while (0)
+ 
+ #else /* CONFIG_DEBUG_BUGVERBOSE */
+ 
+-#define __EMIT_BUG(x) do {					\
++#define __EMIT_BUG(cond_str, x) do {				\
+ 	asm_inline volatile(					\
+ 		"0:	mc	0,0\n"				\
+ 		".section __bug_table,\"aw\"\n"			\
+@@ -42,12 +42,12 @@
+ #endif /* CONFIG_DEBUG_BUGVERBOSE */
+ 
+ #define BUG() do {					\
+-	__EMIT_BUG(0);					\
++	__EMIT_BUG("", 0);				\
+ 	unreachable();					\
+ } while (0)
+ 
+ #define __WARN_FLAGS(cond_str, flags) do {		\
+-	__EMIT_BUG(BUGFLAG_WARNING|(flags));		\
++	__EMIT_BUG(cond_str, BUGFLAG_WARNING|(flags));	\
+ } while (0)
+ 
+ #define WARN_ON(x) ({					\
+diff --git a/arch/sh/include/asm/bug.h b/arch/sh/include/asm/bug.h
+index 834c621ab249..20d5220bf452 100644
+--- a/arch/sh/include/asm/bug.h
++++ b/arch/sh/include/asm/bug.h
+@@ -59,7 +59,7 @@ do {							\
+ 		 _EMIT_BUG_ENTRY			\
+ 		 :					\
+ 		 : "n" (TRAPA_BUG_OPCODE),		\
+-		   "i" (__FILE__),			\
++		   "i" (cond_str __FILE__),		\
+ 		   "i" (__LINE__),			\
+ 		   "i" (BUGFLAG_WARNING|(flags)),	\
+ 		   "i" (sizeof(struct bug_entry)));	\
