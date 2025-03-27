@@ -1,181 +1,124 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9344213E6B;
-	Thu, 27 Mar 2025 11:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743076037; cv=none; b=ib1rF7DylRMjQ9iPsgsDB76zfUsB3f/AYKaluItmf9QMoqzoZbv8U2bi39APPZPB/4CJycy4sLjkQ2GNpUQOvgjEd4W5KSK/jSnJaazs/OPYT1PlySjHO91rfnHsCCAmWYxK8ktFu6s110Tl/8372OvUZHDdZyIDOJna9wldqeY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743076037; c=relaxed/simple;
-	bh=n1qijx/OKy6vODUrZhMc5X8x/a/woXnDRx8es3Z+U2Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k2z9w3NAPZQK9HgwB+BPQrMY+Zutn/FCgmWwWQbZrDd7N2Mr20t1SCiHmHcBnw0wOM9bDTCjuAlBBoGd2+derLakUqmTG4Ab7wWvQLSW8gr7SKHjkjrxKXZK3Yn69jx1XnNA/pYbxyGHK/r1vQCAnl4rwy5mbyji3pMpZGz1wxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OHWBdwZd; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CAD1F94A;
+	Thu, 27 Mar 2025 11:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743076040; cv=pass; b=SeqcAABftSAbl94jcaHm1eVuaLQMhKhJgI992RKQe1Q8/utJRQf4h2GcSwWkHuWDJTyn2jzdAojiR7BuhYfth1jIsukDk3ewRBL1LUj0WgHpgjOGrndjIXa5hXoC0m1YAEej7HMDIqHeQ7D84F/3ZyH+NnS8aozKgHl+q4EqX9E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743076040; c=relaxed/simple;
+	bh=B0F6xvi62XtdN3jBvAHF73z3nzzlNq+vFLwDxvr3n8E=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=GzZxD+lMfhfODMuV1MmLXzAksAAt5gEAhVWl5GxrRSAbt2mLufwb96v8i6hKoD1UyWVbG7YAJCX+fBrqDNktC7BY4qxr/AuGtODRXjdhlwOOuoUn7/VFiN/mbS1Uzm199X9i1Usft6CYVbUcdRfjhbKAcV0nbhT7fHsM9yG5ciE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=SskbvwwL; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OHWBdwZd"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso142165466b.3;
-        Thu, 27 Mar 2025 04:47:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743076034; x=1743680834; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=is9+y2X85jwUJpC2vpoBI5XsOCH7hq1X1nDpdTQ6gJo=;
-        b=OHWBdwZdGHxXuu64JeK3LatbgC/vLSSnwlW7ynWR8oJtMJAlOPLJy23623Lwc++xjU
-         0oKbDkimsU9WUTUv7Yg5c9ms5y0gCXr4900HHeUdyex9w9dYelAYPwHx+aE7uSAYlUDJ
-         pgfXp8wWrzO7UqbZuOlZQUaqy5KSWRDx5TTcG4rn3NAZ11ZRshUlsIvE3C33z0OuDWCo
-         DsBUCXzbqYRk6TAC+PbMSL15q0U9moWPmupH50K+XCP22aby0GLcJ9TYQ1AFL9Y0PTEp
-         5TonltQNY4d/FrW9juEBFavTGlBCdNg5CjfEK53EK4Qpt/NdVvXwnlTp+9nveK3Fmd5Q
-         UleA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743076034; x=1743680834;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=is9+y2X85jwUJpC2vpoBI5XsOCH7hq1X1nDpdTQ6gJo=;
-        b=etKGX0P0N2SdRxT3laCTJuUxy3C4UjRCv3zhGnWNMgc5woShSSe6Aw+gDdMi2mU1Tu
-         XyPVac5QSoxsxrMQfjMPozaO/RS/05tmYOWSItGKExym8oYVuCz428tFhzR0nARSc0eC
-         3nt1KnY4nbpC+yxmF+VfWdesjLXlugzPEGzlaDIfeynbCat9s4BaVqPYt484oljZoLOh
-         EffkQsJr4EfoPsVsdGYQGQVg3cIGLip93jmnGwi9jB777HNbmn+asMHRj4vuJWg8jtu3
-         bl06dwHh4FUHYaf4PbaCe6Iiam5KNyEMAWy/ziG/6nYEPFOdyYgBTAZcRIWU41LY915X
-         G2mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUhcpaPjt/WOsLNDlKo/sn87CvnYW1K75mUsN8fbi+v0+sW4M3bC1mjcBhddrCOF4RpHwkSzxT5eR9CFA==@vger.kernel.org, AJvYcCV8Ts24HwzGSZ8Smqj6pcWnwBbIZQV6xGJYRU8mpeLA4XSoDLVr4S/HQ0apVXiQGJ9byLNsHBT21cpak0gCGQ==@vger.kernel.org, AJvYcCVL0gMQumgGJbSYFoa72DHD2W2tm6gWTaNDCH+PNqxpIKtkI0denaPTdJTA3vvmtFsPD0Lbjb4dgdub6g==@vger.kernel.org, AJvYcCVXdJvqmAorpkhh3vZeY/xOYGBIWcrkM+N2wjN8/aJje0kfbs4696Mf4GY7aS30RwBaku0vn8ydmNjx@vger.kernel.org, AJvYcCW0T2mdqUwRg6+X4sXTJNjdbV4uhf79v2+wCo2BP1MN0s4ptDbT2lQRJgidU4fVWvy+F45lDWjO2lIUXg==@vger.kernel.org, AJvYcCW5ZGoDCaT8N/e9oL6QKcrdVdJnlp3cZmqqPFhz/ucYumTGX+/J5maUTdQ7DZ5RjduAbdg3jpzUhRV/jhrbWBH7lV5YLzAy@vger.kernel.org, AJvYcCWtqcCjsjMV1EPokgT/74IVjyS9t6aOkVgaQWbpvyqFj5SizKeSXNaGX8QkPxqz+WjOBqumtJ+34Ds=@vger.kernel.org, AJvYcCWw4e9jLog1rsquRE+l+d9YKl1cXQ0WvKJPqhUNqAlSmDlXO2qRNwJPhTSVHsFNun5E9ZX/oa20H7rRKR+V@vger.kernel.org, AJvYcCXDNi5mgCc4H/YiGGsdYRYPwAOuS8jqCCXUAAvoT3wRZ1snTc22JiCYHCzWI6tph389kP4go9S9nA==@vger.kernel.org, AJvYcCXF5DLFlOKck6HQkJbQRfJPMI2lq6yAC9i4E1g92mKm65F8piJmZ2VEo10TyJEhLVrcItub1mctUrAazQ==@vger.kernel.org, AJvYcCXFZpxIHLrAJhsFk/vy7s3Kujl7sEOvjlKV6XZf2o1t67S5/s1zvbX/uMw5ikPZqnKKOvG5TVavplqH@vger.kernel.org, AJvYcCXWd339mxkn33FRYdDQJwECgTt/FWq5NbwpHhJhmB1rFB4YP5WLCgszLRZ7FteJrtq5/tOZ2VCS+4PMzQ==@vger.kernel.org, AJvYcCXkO0+OFNNXlClftTez8QzsyVGudv8fE9+qW6G+ZcNeKEximzM2cf9bvaXenVo9ZzG5YBcZ0dT4x1CLdA0Q@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/08V4JT1k7O2KrOVLXpFV9SRPSxm+KWN52UbGkV2iufQuBMmR
-	aE+v+MGGa1nZmqof9SfE7eGrLNzN29LLYZ9ZP4O4Cv1/jvtLq3YSb3i7JXwdHwffs107iRVtIXL
-	9t8QaLzhM2agFZM04IzQVleStmM8=
-X-Gm-Gg: ASbGnctoQULFj7XmWF3qvuYdcZvaentGyogwYs1KSBURFr3CDPfS74vXXWw21BMQgR9
-	u2d0y7hIZ1bOv4UuvODKydJ8U85gwKR+9zw9IhKF9mhtsbqwWfPDJ0fb919tdtPlzgh5CCoW/Vr
-	+K445EEBqguFf+RyKVcr8WjvT3ng==
-X-Google-Smtp-Source: AGHT+IFDMEzXsY+VZjpd0kG58wjWGn9FeNWYrZGZgOC4akNvRiDgmmjaMJcSLaslSRq0Qq/XBA95rVTpeV7+0zkMjwY=
-X-Received: by 2002:a17:907:7292:b0:ac2:9683:ad25 with SMTP id
- a640c23a62f3a-ac6faf46d6dmr291188966b.34.1743076033463; Thu, 27 Mar 2025
- 04:47:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="SskbvwwL"
+ARC-Seal: i=1; a=rsa-sha256; t=1743076014; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=TWV2T4aqmLJ5IEWBHY4MzW82t7Ka7fPOFMqOx0NIfUeBUOs7dWiz03iYWU4dRRE5qY75XvxRM8ATxvIsfztXJw44Bx8EamfBgOIpZHfy8moTO4gjX2ZJCrS2HksTnOTJKpZ5prPTvGKOD9byHD0pI+PR1ivJxnMYYDl1UHCIPkI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743076014; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=lEHkj5Yx4zM0auDPQ9llr7Y10Y+yqKkLT+9PKE6Q5jY=; 
+	b=aOcZAmnTye+W/wF+AxWbjzCaza0bajpLQIrIFZWqWJ/Yll+pta/ut3mD9yLohZN3w2PKqE1bPoas3R7/eDp81XWxNc/XjNWzxCE+sVYxjbJNE39zbd7GAamiLF/fI7nZ6prQLpO+m/QdQDNV/vfXkur48jt3WXZMJNz7BQzyvM0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743076014;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=lEHkj5Yx4zM0auDPQ9llr7Y10Y+yqKkLT+9PKE6Q5jY=;
+	b=SskbvwwLDDSsfOmdShIC1FZ8qtVJ+DK/Mn1rO0yyZejsb8QPvvdkxISL99xNu5lY
+	ZOTE39UJDSc1b4TxRLAXqFGMH1xGJyXoNti2Ss7uPBNoJeUle8k/tNG9/GAYdwMi8OO
+	yzsCLOzJHkra8ZQP8sNCVXUunLiCkY7u/zgHv0ew=
+Received: by mx.zohomail.com with SMTPS id 1743076013029441.6226911590842;
+	Thu, 27 Mar 2025 04:46:53 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250321-xattrat-syscall-v4-0-3e82e6fb3264@kernel.org>
- <CAOQ4uxjQDUg8HFG+mSxMkR54zen7nC2jttzOKqh13Bx-uosh3Q@mail.gmail.com> <20250323103234.2mwhpsbigpwtiby4@pali>
-In-Reply-To: <20250323103234.2mwhpsbigpwtiby4@pali>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 27 Mar 2025 12:47:02 +0100
-X-Gm-Features: AQ5f1Jpi0M5N9RWSGdapIu4-VZrbOc2LlwCzBFz2QmmwPCZLH_QgJtaO5jSCIs8
-Message-ID: <CAOQ4uxiTKhGs1H-w1Hv-+MqY284m92Pvxfem0iWO+8THdzGvuA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] fs: introduce getfsxattrat and setfsxattrat syscalls
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc: Andrey Albershteyn <aalbersh@redhat.com>, Richard Henderson <richard.henderson@linaro.org>, 
-	Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, linux-alpha@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-arch@vger.kernel.org, selinux@vger.kernel.org, 
-	Andrey Albershteyn <aalbersh@kernel.org>, linux-xfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH RESEND v2] rust: regulator: add a bare minimum regulator
+ abstraction
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <f22cbd85-1896-4842-8746-d74ee160ab3c@sirena.org.uk>
+Date: Thu, 27 Mar 2025 08:46:29 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ lgirdwood@gmail.com,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <D9ADCA08-C3B3-4964-BDB9-E62A2C7DE85F@collabora.com>
+References: <20250326-topics-tyr-regulator-v2-1-780b0362f70d@collabora.com>
+ <a98eb789-4c49-4607-ad15-76e260888d64@sirena.org.uk>
+ <0698A75E-D43C-4D02-B734-BFE1B3CC5D34@collabora.com>
+ <f22cbd85-1896-4842-8746-d74ee160ab3c@sirena.org.uk>
+To: Mark Brown <broonie@kernel.org>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
+X-ZohoMailClient: External
 
-On Sun, Mar 23, 2025 at 11:32=E2=80=AFAM Pali Roh=C3=A1r <pali@kernel.org> =
-wrote:
->
-> On Sunday 23 March 2025 09:45:06 Amir Goldstein wrote:
-> > On Fri, Mar 21, 2025 at 8:50=E2=80=AFPM Andrey Albershteyn <aalbersh@re=
-dhat.com> wrote:
-> > >
-> > > This patchset introduced two new syscalls getfsxattrat() and
-> > > setfsxattrat(). These syscalls are similar to FS_IOC_FSSETXATTR ioctl=
-()
-> > > except they use *at() semantics. Therefore, there's no need to open t=
-he
-> > > file to get an fd.
-> > >
-> > > These syscalls allow userspace to set filesystem inode attributes on
-> > > special files. One of the usage examples is XFS quota projects.
-> > >
-> > > XFS has project quotas which could be attached to a directory. All
-> > > new inodes in these directories inherit project ID set on parent
-> > > directory.
-> > >
-> > > The project is created from userspace by opening and calling
-> > > FS_IOC_FSSETXATTR on each inode. This is not possible for special
-> > > files such as FIFO, SOCK, BLK etc. Therefore, some inodes are left
-> > > with empty project ID. Those inodes then are not shown in the quota
-> > > accounting but still exist in the directory. This is not critical but=
- in
-> > > the case when special files are created in the directory with already
-> > > existing project quota, these new inodes inherit extended attributes.
-> > > This creates a mix of special files with and without attributes.
-> > > Moreover, special files with attributes don't have a possibility to
-> > > become clear or change the attributes. This, in turn, prevents usersp=
-ace
-> > > from re-creating quota project on these existing files.
-> > >
-> > > Christian, if this get in some mergeable state, please don't merge it
-> > > yet. Amir suggested these syscalls better to use updated struct fsxat=
-tr
-> > > with masking from Pali Roh=C3=A1r patchset, so, let's see how it goes=
-.
-> >
-> > Andrey,
-> >
-> > To be honest I don't think it would be fair to delay your syscalls more
-> > than needed.
->
-> I agree.
->
-> > If Pali can follow through and post patches on top of your syscalls for
-> > next merge window that would be great, but otherwise, I think the
-> > minimum requirement is that the syscalls return EINVAL if fsx_pad
-> > is not zero. we can take it from there later.
->
-> IMHO SYS_getfsxattrat is fine in this form.
->
-> For SYS_setfsxattrat I think there are needed some modifications
-> otherwise we would have problem again with backward compatibility as
-> is with ioctl if the syscall wants to be extended in future.
->
-> I would suggest for following modifications for SYS_setfsxattrat:
->
-> - return EINVAL if fsx_xflags contains some reserved or unsupported flag
->
-> - add some flag to completely ignore fsx_extsize, fsx_projid, and
->   fsx_cowextsize fields, so SYS_setfsxattrat could be used just to
->   change fsx_xflags, and so could be used without the preceding
->   SYS_getfsxattrat call.
->
-> What do you think about it?
+Hi Mark,
 
-I think all Andrey needs to do now is return -EINVAL if fsx_pad is not zero=
-.
+> On 27 Mar 2025, at 08:32, Mark Brown <broonie@kernel.org> wrote:
+>=20
+> On Wed, Mar 26, 2025 at 04:49:26PM -0300, Daniel Almeida wrote:
+>>> On 26 Mar 2025, at 15:56, Mark Brown <broonie@kernel.org> wrote:
+>=20
+>>>> +    /// Disables the regulator.
+>>>> +    pub fn disable(self) -> Result<Regulator> {
+>>>> +        // Keep the count on `regulator_get()`.
+>>>> +        let regulator =3D ManuallyDrop::new(self);
+>=20
+>>> This looks like user code could manually call it which feels like =
+asking
+>>> for trouble?
+>=20
+>> Yes, user code can call this. My understanding is that drivers may =
+want to
+>> disable the regulator at runtime, possibly to save power when the =
+device is
+>> idle?
+>=20
+>> What trouble are you referring to?
+>=20
+> My understanding was that the enable was done by transforming a
+> Regulator into an EnabledRegulator but if you can explicitly call
+> disable() on an EnabledRegulator without destroying it then you've got
+> an EnabledRegulator which isn't actually enabled.  Perhaps it's not
+> clear to me how the API should work?
 
-You can use this later to extend for the semantics of flags/fields mask
-and we can have a long discussion later on what this semantics should be.
+No, you misunderstood a bit, but that=E2=80=99s on me, I should have =
+included examples.
 
-Right?
+> +impl EnabledRegulator {
 
-Amir.
+> +    /// Disables the regulator.
+> +    pub fn disable(self) -> Result<Regulator>=20
+
+disable() consumes EnabledRegulator to return Regulator.
+
+Any function that takes 'self' by value (i.e.: =E2=80=9Cself" instead of =
+=E2=80=9C&self=E2=80=9D )
+effectively kills it. So, in that sense, disable() performs a conversion
+between the two types after calling regulator_disable().
+
+=E2=80=94 Daniel
+
+
