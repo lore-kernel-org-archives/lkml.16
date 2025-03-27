@@ -1,155 +1,124 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BFF378F43
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 05:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507B61547C9;
+	Thu, 27 Mar 2025 05:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743053009; cv=none; b=Gri2FNVOYVVUnOvwIJwHPbWsxewy3bGfVIbHTEs+VtAYjWwYq97sUVhFEj3JAkI6LLZCd4erydXXcqGrY0CJiPuYyrs2QTVZyoEpkv1D9tT9biZR07otLMxLDX5x7xQXgWGRFL8Za/BdbwikvbHanvE2wVeI7Kj6O/hRLNxKMg8=
+	t=1743053268; cv=none; b=NIwqh7yVvytNP0zoD9H38vd+7p21CzuEkE3FB6JAsjCCORUX7avQ7PCaglVGhh1cReaUPbo5q4ekKs0LLiVGJowL5X6O6YnjZH11lz6917SGamAT6lL3kmIHoFSP7KWN2/o9vxUHuWUcmelJ3Oho7mSEXDzCw8jwNUoMkQmCmRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743053009; c=relaxed/simple;
-	bh=vciYr/bB2Z030OzCKKWlzUHRiut4nQ8Rn0W4u8S2Avg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=YhXwPKVEO8QTtSVGNi8olhLRYdUH9w8zYDYuPMJ3cS46xhiOVILbzCYt7t+bEQYB4aW+FXNL1ixFqd2CuO6QG5j3n+whOXbxFj1dfkdCD+Ufdno9N0EWIpRCKDOVlUhv4yCZ0+3wNCGhkplAfw+PzGV+U5vcGbk9LBHKj9dy9Tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MfXW1iYW; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743053268; c=relaxed/simple;
+	bh=tpgb5oyvr981xsJ6BClPWQTEC3M2egOGLynvUm6LgC8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UBsDqZ2vefPgeTP4sqPBGXdSeJmrjAsxXdAfBYfTOXpDXE0Cma2lNS6FxH4Q1fo8f0dhC2zI16BCVLdqPOppfX5PlAsjl3p4FpEStGyF2G7OaLimDDlfsJQPyta5hVvj59x5HMHmOdihjlvyt5Ach835OGBxzlpfN8eRpUYaOS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Xj4Py5i9; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MfXW1iYW"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43690d4605dso3673935e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 22:23:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743053004; x=1743657804; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Be3xrXZBKcyj7JgwFrFZrJzYdk2fkCS3DpDGsgYxVdg=;
-        b=MfXW1iYWhv3WO4S+Wz7O2GRItNaGxV5ym0+4cxmHc5IWGSTaVIiGGjKGQ6GIKev1hX
-         lsOJhdnrLuGGZE3d/0EG1MkK6WoM+fTfyuODOIWNyRT9xhmNqYtMZJ9fVEMj5AzRB8qh
-         5/aGFYOn8aDDLlHPiXda00Ju519x43YxZd5KS91Z86ntHcRTZJP2VEqp0VzPdk7hcZ1X
-         2ZPiLow0ABCz1aD2uHi2lqsYbyUbUC5E3zX5/SUXSZzmt/F8OCw9ouioyOjGt2mwN9+l
-         xDhbkmSXc3q+kKBmrbOhLmD9OK/cLrXG+GGbMbyySMTf3m6cqu7ZYgaIQTDrxm6jCh9h
-         h06g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743053004; x=1743657804;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Be3xrXZBKcyj7JgwFrFZrJzYdk2fkCS3DpDGsgYxVdg=;
-        b=sdeMzwfbUy0JlmJtwIYz1ZRaQ2bdwdI+sPeaAVg3dnfCubPGz7nu+qwAWQtnJnubqE
-         dBalVl+4bRvONSHdNwbstAUlbTi27k9N/OMjSjpc9HbHiqw8VE6d2g8jysc7/pBurpUi
-         safR8G+qjQ827uBFYKICt3FoiVLKjrW+yqpSu4DcmgzENa4/UXA7qrmtgJu4cO5bSHqQ
-         8oAHfwgG5pEAsKuNulCoRYLawrEhtnYXuoYgbuD5wDpVoObGaQRGesXJmih9KDyUsdRd
-         iUjrWQL0hCNfobUW+PgfiEpUqYG6/ns2j6PnAwzE7iRbOPihzXQaFEfXGiunUXUvkced
-         9uWw==
-X-Forwarded-Encrypted: i=1; AJvYcCXXYv0zkuFh6SzISh0dJCznQM8iw+qpri0Ko7PKqq4iGmwGRpzqK+A5lUezabwCfYQx3mIiUW6ecw4DpZg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4ax88SEmUCQtAih/ZyZ6+EtmpUoF7+enc5FSjCPTcUcEam0+k
-	u+cVVlxssmRd07fPIr6ALzEjyU7lhINTvc1CPT00v+7Lu3zool7m0UwK0yyeRRI=
-X-Gm-Gg: ASbGncs4UjqBIXfstpWq2HBcAmwAgkNk8G6osJfWkJ8sHly9Nz2Z+W7vN7kUUIZwriQ
-	aKS6XtAw9awx/1EYOr9s190QScLZgqt6N/eHgloBFo6Ifmm7EyFfEGxtMgDEF0H1SpMw3DiW7OG
-	AwAKYQiHmO9w+3R5T5C3EWk8uQF1TQEHfr/vjHBlJriDzM2HwK0oLU8xLvoDiL7HhFQgG23p9xf
-	9wc5IuL3c8unpX68WgNGrtYrDVETb8Gul8oLyUszmTS3bJLFZESMeQbBi/XmeFco8L4CBDZzAGK
-	jUHOLpU8gD8Qze3wG61feXdA03dyoPRALf+nXHAusbJ+XRX+
-X-Google-Smtp-Source: AGHT+IF9CBeiGU2yZrZ82k/O6kOKzwqAnDoVlC04vE5L4Mi7wpTwe8x99x+/dOX3Nu3l5H5388tZow==
-X-Received: by 2002:a05:600c:4e56:b0:43d:bb9:ad00 with SMTP id 5b1f17b1804b1-43d850fd05amr16409025e9.15.1743053004471;
-        Wed, 26 Mar 2025 22:23:24 -0700 (PDT)
-Received: from localhost ([41.210.155.240])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43d830f5708sm25814215e9.32.2025.03.26.22.23.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Mar 2025 22:23:23 -0700 (PDT)
-Date: Thu, 27 Mar 2025 08:23:20 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev, Tomasz Jeznach <tjeznach@rivosinc.com>
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
-	Nick Kossifidis <mick@ics.forth.gr>,
-	Sebastien Boeuf <seb@rivosinc.com>,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: drivers/iommu/riscv/iommu-platform.c:54 riscv_iommu_platform_probe()
- warn: 'iommu->irqs_count' unsigned <= 0
-Message-ID: <d1eaa67e-3766-46c6-95cb-69cb9e91fc29@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Xj4Py5i9"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R3mahx006138;
+	Thu, 27 Mar 2025 05:27:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	LnArCRvQP7qZOrcigjEhnlKt1WGcj0RSP3AVU9Xt1Rw=; b=Xj4Py5i9Q0TzIzzi
+	my+ADEun/Km1arM7a2uUxtPtAmNqAa61N4XTOgZ+w+xAP6yD4TDnez84m3xIbez1
+	VZvm9DabIgtgG5aDDfsksuPdnnNotSn0oxC2k/ittPjmsMJTXb53sRj9Jz77BwnX
+	N67MCTPS4G1EVycvyiLIk2mSf4knt2tBt9pLfoAJN5ZVWVrUGEu2PmOBcLO5+WU3
+	k6KvIK7eZDxuA4VcJ6G9Te7sMriX690Kk8xhszgICI7HL1N6n28mf4YySu44OX3I
+	8ROUO/tYmCNKX4I78KHBRv2xhDQEZ+utXIV9B3jSw44Yah/TA5yeKlqvtO3fcuDC
+	Fl1Okg==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45manj3r71-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Mar 2025 05:27:35 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52R5RYMc020190
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Mar 2025 05:27:34 GMT
+Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 26 Mar
+ 2025 22:27:31 -0700
+Message-ID: <208f3edd-2be0-4edd-be25-d874d00b770d@quicinc.com>
+Date: Thu, 27 Mar 2025 10:57:28 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] i2c: davinci: add I2C_FUNC_PROTOCOL_MANGLING to feature
+ list
+To: Marcus Folkesson <marcus.folkesson@gmail.com>,
+        Bartosz Golaszewski
+	<brgl@bgdev.pl>,
+        Andi Shyti <andi.shyti@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250326-i2c-v1-1-82409ebe9f2b@gmail.com>
+Content-Language: en-US
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <20250326-i2c-v1-1-82409ebe9f2b@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 8NOGiPWwjg7VCHgxcPrPDn4WeJACh39q
+X-Proofpoint-ORIG-GUID: 8NOGiPWwjg7VCHgxcPrPDn4WeJACh39q
+X-Authority-Analysis: v=2.4 cv=KvJN2XWN c=1 sm=1 tr=0 ts=67e4e1c7 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=pGLkceISAAAA:8 a=COk6AnOGAAAA:8 a=kRCqjBm0PVXXUO08W4wA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ malwarescore=0 priorityscore=1501 clxscore=1011 mlxscore=0 spamscore=0
+ impostorscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503270033
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   f6e0150b2003fb2b9265028a618aa1732b3edc8f
-commit: 5c0ebbd3c6c6e00af112fe053e81ac0c7cafe647 iommu/riscv: Add RISC-V IOMMU platform device driver
-date:   5 months ago
-config: riscv-randconfig-r072-20250327 (https://download.01.org/0day-ci/archive/20250327/202503270710.nzXdpHfG-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project c2692afc0a92cd5da140dfcdfff7818a5b8ce997)
+Looks good to me.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202503270710.nzXdpHfG-lkp@intel.com/
-
-smatch warnings:
-drivers/iommu/riscv/iommu-platform.c:54 riscv_iommu_platform_probe() warn: 'iommu->irqs_count' unsigned <= 0
-
-vim +54 drivers/iommu/riscv/iommu-platform.c
-
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  20  static int riscv_iommu_platform_probe(struct platform_device *pdev)
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  21  {
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  22  	struct device *dev = &pdev->dev;
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  23  	struct riscv_iommu_device *iommu = NULL;
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  24  	struct resource *res = NULL;
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  25  	int vec;
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  26  
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  27  	iommu = devm_kzalloc(dev, sizeof(*iommu), GFP_KERNEL);
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  28  	if (!iommu)
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  29  		return -ENOMEM;
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  30  
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  31  	iommu->dev = dev;
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  32  	iommu->reg = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  33  	if (IS_ERR(iommu->reg))
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  34  		return dev_err_probe(dev, PTR_ERR(iommu->reg),
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  35  				     "could not map register region\n");
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  36  
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  37  	dev_set_drvdata(dev, iommu);
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  38  
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  39  	/* Check device reported capabilities / features. */
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  40  	iommu->caps = riscv_iommu_readq(iommu, RISCV_IOMMU_REG_CAPABILITIES);
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  41  	iommu->fctl = riscv_iommu_readl(iommu, RISCV_IOMMU_REG_FCTL);
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  42  
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  43  	/* For now we only support WSI */
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  44  	switch (FIELD_GET(RISCV_IOMMU_CAPABILITIES_IGS, iommu->caps)) {
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  45  	case RISCV_IOMMU_CAPABILITIES_IGS_WSI:
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  46  	case RISCV_IOMMU_CAPABILITIES_IGS_BOTH:
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  47  		break;
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  48  	default:
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  49  		return dev_err_probe(dev, -ENODEV,
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  50  				     "unable to use wire-signaled interrupts\n");
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  51  	}
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  52  
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  53  	iommu->irqs_count = platform_irq_count(pdev);
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15 @54  	if (iommu->irqs_count <= 0)
-                                                    ^^^^^^^^^^^^^^^^^^^^^^
-Unsigned can't be less than zero.  platform_irq_count() returns
--EPROBE_DEFER on error.
-
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  55  		return dev_err_probe(dev, -ENODEV,
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  56  				     "no IRQ resources provided\n");
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  57  	if (iommu->irqs_count > RISCV_IOMMU_INTR_COUNT)
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  58  		iommu->irqs_count = RISCV_IOMMU_INTR_COUNT;
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  59  
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  60  	for (vec = 0; vec < iommu->irqs_count; vec++)
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  61  		iommu->irqs[vec] = platform_get_irq(pdev, vec);
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  62  
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  63  	/* Enable wire-signaled interrupts, fctl.WSI */
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  64  	if (!(iommu->fctl & RISCV_IOMMU_FCTL_WSI)) {
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  65  		iommu->fctl |= RISCV_IOMMU_FCTL_WSI;
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  66  		riscv_iommu_writel(iommu, RISCV_IOMMU_REG_FCTL, iommu->fctl);
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  67  	}
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  68  
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  69  	return riscv_iommu_init(iommu);
-5c0ebbd3c6c6e0 Tomasz Jeznach 2024-10-15  70  };
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On 3/26/2025 8:09 PM, Marcus Folkesson wrote:
+> The driver do support I2C_M_IGNORE_NAK, so add
+> I2C_FUNC_PROTOCOL_MANGLING to the feature list.
+> 
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+Acked-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+> ---
+> The driver do support I2C_M_IGNORE_NAK, so the
+> I2C_FUNC_PROTOCOL_MANGLING bit should be set.
+> 
+> I2C_M_IGNORE_NAK is the only supported "mangling-feature" though, but
+> other i2c bus drivers also seems to support only a subset of available
+> mangling-features, so I guess this is ok.
+> ---
+>   drivers/i2c/busses/i2c-davinci.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-davinci.c b/drivers/i2c/busses/i2c-davinci.c
+> index 6a909d339681214ed4f382b62f8cd924f4295e69..6a3d4e9e07f45ecc228943e877cde1fd9d72e8cb 100644
+> --- a/drivers/i2c/busses/i2c-davinci.c
+> +++ b/drivers/i2c/busses/i2c-davinci.c
+> @@ -551,7 +551,8 @@ i2c_davinci_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
+>   
+>   static u32 i2c_davinci_func(struct i2c_adapter *adap)
+>   {
+> -	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
+> +	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL |
+> +		I2C_FUNC_PROTOCOL_MANGLING;
+>   }
+>   
+>   static void terminate_read(struct davinci_i2c_dev *dev)
+> 
+> ---
+> base-commit: 1e26c5e28ca5821a824e90dd359556f5e9e7b89f
+> change-id: 20250326-i2c-5561bf853f8d
+> 
+> Best regards,
 
