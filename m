@@ -1,280 +1,236 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208FF12CDA5;
-	Thu, 27 Mar 2025 10:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06BCC12CDA5
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743069781; cv=none; b=rdzsUGO6RCHUufiEba0fJgyE4xrAdo54omq7K6ZRCst3/jx/t0BJoxjr4XS2LQjup4NRgyYXDI4ZuzV5RujLpY8d8kRV6FjWUJll5n6JangVwMOglTXHUQOnK9U2u467absWMa4RmqN2iSRfjlvpgJSzFzKUAxsprcTfka5fo0E=
+	t=1743069798; cv=none; b=CmWFGUAwiVQQ90VSmocpDJyzRtySNkOwXa83SzgN//QO6MBjSW+rV+a7nmeekxCBELY0TslicT+vxvKqtJguBKYmaZ7novvxEWfZXXdmvuQC1wRcbRLhpWWupK9yWgOX9D8NFAgPgAavwnBy6+KDqDn1Wtfu1zSa14q5yAjpmoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743069781; c=relaxed/simple;
-	bh=Gbc2oOpUSKnap5FWQr2QLytGLwySKwbBDX/9Os98M4A=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=WeKcfJEGyj0krF9uY6ISKgTtbUiseWFjkqhd/eSJxKGW4LygfmgMeme4giXD6sIXy8ma/a9ESho1kztZMvUfYsRGxz6XwsTfV+Ec6Z/eam2dccBRWonQee2c24aYy4+uU7XSH49f/Py6xcjE/XZ/snbK2fOhM1BKQRJ+ECyq6SE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bn9K0wAH; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743069798; c=relaxed/simple;
+	bh=CmAPsH19acTNxiJ34GcKSbeKXsn1qSM3hxBrxhPstDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WiciPO6jnAABLIBKhRi93cAoddAfatdFq3WTVHMwR+S4OnFYm1zSF19wcosaa+xgpspfGPOqLFaE7qCE3T0bm3Sd4CQ1vEtTv0Fwf3jGBxtrVJyh8GOQXq96u+ULf/6AaeardLbPO8jwkQctJhVbexapzXsIHf0ryazgYMeLKmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PZhTVkAx; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bn9K0wAH"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R5jFfq005967;
-	Thu, 27 Mar 2025 10:02:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=UO9wZaxTql4XgovHoi9zU4
-	y3avUC6S/+JVf0xjZbnuI=; b=bn9K0wAHoUF6ot0OVY559ZzH1lGUdTfxsDVGap
-	Ty+XMLjOkENNQYBO+nmmj7jdRmD2/V/ZW3GlHopDpcotfHf9FAc5SBmlj4XAsOzc
-	dpsDU3JTmvUfQJp9BGLHDiFwiDWv6xuKgjBPqPRbxrs20Is7NGZAlgDWDkq/AUdI
-	fdFN94V2Q5AWX9wRNQ0bRemD8zewpBfXVxfRoMbozR8I6syGYwlBGsdw3TsrCHgn
-	ZQ57XugViLOt+lttLvh1zr/9wj4nNaOw3Z8iEHYhMzWExXOHYC5FQw1+TdE3YAcy
-	Tn8/Hdvvu6IsMWZxL2goV+VyZzaz3fIBQ1D1KQFsPllNmwIQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45m7nf4ueg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 10:02:56 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52RA2t4k010011
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 10:02:55 GMT
-Received: from hu-imrashai-hyd.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 27 Mar 2025 03:02:52 -0700
-From: Imran Shaik <quic_imrashai@quicinc.com>
-Date: Thu, 27 Mar 2025 15:32:27 +0530
-Subject: [PATCH v6] clk: qcom: Add support for Camera Clock Controller on
- QCS8300
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PZhTVkAx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743069796;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wTTe6v1RbdaUcztapWTUL8QyTrGJ+1Apq/8VVkFKQn4=;
+	b=PZhTVkAxMP6KEUkrmtUPWq3Z/7Z0bYwWLe+ZYKw44hQPa1Rrx5NLv+hJgHzjdi73jU9yZQ
+	xpciZz8i/BnfRY8fahsGecdxdatwqaQyMJxVTuDVT5RrXh63kVGJDPQZczJCcCbhQF7vwv
+	TUQe6VvAPOtmy/u3FZs9rFzp6wAqCn8=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-182-Jpzrb5TlO06mstfEp5mdCg-1; Thu, 27 Mar 2025 06:03:14 -0400
+X-MC-Unique: Jpzrb5TlO06mstfEp5mdCg-1
+X-Mimecast-MFC-AGG-ID: Jpzrb5TlO06mstfEp5mdCg_1743069793
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac28a2c7c48so5423966b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:03:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743069793; x=1743674593;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wTTe6v1RbdaUcztapWTUL8QyTrGJ+1Apq/8VVkFKQn4=;
+        b=rzlW4Io9Q16ptqyIU3EKnIa3DjjAhW8bsmGro9IOd67W6RJSztp4GS3H1xmQhq1LKP
+         cACurndyXqqfjmaHmkomzTkgyAoiuT7ejFVChgTcx7LB7bhJUsKfMF4LtmZBCtCwhQQJ
+         Zq+9jeu47zVnTN2mgM/o5UUrSlNZ1pz4NZDFVGtjYWnuDWIG1MqODYMnLaj/jATuTiRu
+         b0XHQVxeqcoc06a57b4kYQq9lttnY2hAiLrSQzh5wUE4/bmCG89uQM2w7/cFZhZMpG97
+         0TLIC1JlJX3pOspXUMX0jVWFZIqx34QekD0po5HweN+Lg7DLtamdWqr59QGAH2Lhnxaq
+         Pmsg==
+X-Forwarded-Encrypted: i=1; AJvYcCUAhqlWOYHM1WMdDulLrI/YvYijWIgURGxx5YAB+TQczjadMs7AIj+1dzdazs2/qufnecuvI8sAJ2p/y1k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVlVM8gdrVd56e3Lu7CVL5SNXcBx7i0sX0Tt3aOI5TfQBH78Xm
+	XsvMlx5nYScgIhLRzIZjUCgtJNoar7bp4aehIGwr618CqNgveSPgianmc7GJWGNPWPL2IiqNizY
+	MhxyaOXNxGq6e20Fb3i4I7UEH3Q59sXakD+wlvj7Ua0Dl3NJQ4/VwrEzCh8e8YA==
+X-Gm-Gg: ASbGncsVg5l9Qto1D4MYABtCIsUZXaWZXMpBB5m3/z+GpduxZKBDV1uQPinn6jUhA6N
+	lYWyEfYi52Qper+RzfZGcFQT6x+ywyE0yh4IcRf36JLo/wu+h+UqQcJBD2uHV2t35ILRnW3XSJq
+	3Eoqv31QQC16qvLGj5tr3u9/tpxWJKm5OqkpLfwfin3B65YVQ16I4I1RneYfQfF9MOkbL9CoNU2
+	oIyj80mDUtmb6GlQJVhjXni8yAkVUl1mX28cJr5sCSMWHm953zY87Z0k73miWw+5aGPjKdbTx5u
+	A9JZhBbUaZ2kWaLyKIjma5ZOn7z4E6BiSdy0lmBpWhT/FlkpWfoT1K0hMnStcbKS
+X-Received: by 2002:a17:906:7952:b0:ac6:bca0:eb70 with SMTP id a640c23a62f3a-ac6fb1d6bd0mr212453466b.56.1743069793309;
+        Thu, 27 Mar 2025 03:03:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFm8OKWNs4u9ViT+uxyhYFue1UOIBeMnyQo1WzfHwB+8yebKYj7pxcxkRwJAxLbxHEcN8yozw==
+X-Received: by 2002:a17:906:7952:b0:ac6:bca0:eb70 with SMTP id a640c23a62f3a-ac6fb1d6bd0mr212447466b.56.1743069792573;
+        Thu, 27 Mar 2025 03:03:12 -0700 (PDT)
+Received: from sgarzare-redhat (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efd4800esm1191676166b.164.2025.03.27.03.03.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 03:03:12 -0700 (PDT)
+Date: Thu, 27 Mar 2025 11:03:07 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Joerg Roedel <jroedel@suse.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Peter Huewe <peterhuewe@gmx.de>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org, 
+	James Bottomley <James.Bottomley@hansenpartnership.com>, linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, "H. Peter Anvin" <hpa@zytor.com>, linux-coco@lists.linux.dev, 
+	Claudio Carvalho <cclaudio@linux.ibm.com>, Dov Murik <dovmurik@linux.ibm.com>, 
+	Dionna Glaze <dionnaglaze@google.com>, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v4 3/4] tpm: add SNP SVSM vTPM driver
+Message-ID: <x3nkctmpbwkldm5aawfpqrw3b5lej5kxuxam7gb2w6nhgzy7kr@gd3mfnigyg6q>
+References: <20250324104653.138663-1-sgarzare@redhat.com>
+ <20250324104653.138663-4-sgarzare@redhat.com>
+ <Z-RV7T7Bwt3Auopx@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250327-qcs8300-mm-patches-v6-1-b3fbde2820a6@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIADIi5WcC/22Nyw6CMBBFf4XM2jFtoSCu/A/DgkwHmQWvFhsN4
- d+tJO5cnpPcczcI7IUDXLMNPEcJMo0JylMG1Lfjg1FcYjDKWJUbhQuFS64UDgPO7Uo9B7SsOyL
- tyqouIA1nz528jui9SdxLWCf/Pj6i/dpfTv/LRYsaa1dZ7Souau5uy1NIRjrTNECz7/sHgix5I
- bYAAAA=
-To: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-CC: Ajit Pandey <quic_ajipan@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        Satya Priya Kakitapalli
-	<quic_skakitap@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Dmitry Baryshkov <lumag@kernel.org>
-X-Mailer: b4 0.14.1
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: R0B_0A8dURBrd0G1kltG9LHnn5_hrvFg
-X-Proofpoint-GUID: R0B_0A8dURBrd0G1kltG9LHnn5_hrvFg
-X-Authority-Analysis: v=2.4 cv=IMMCChvG c=1 sm=1 tr=0 ts=67e52250 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8
- a=GX2mzFjyc8Gkx4eyK_sA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 malwarescore=0 mlxscore=0 clxscore=1015 phishscore=0
- priorityscore=1501 mlxlogscore=999 adultscore=0 lowpriorityscore=0
- bulkscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503270068
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <Z-RV7T7Bwt3Auopx@kernel.org>
 
-The QCS8300 Camera clock controller is a derivative of SA8775P, but has
-few additional clocks and offset differences. Hence, add support for
-QCS8300 Camera clock controller by extending the SA8775P CamCC.
+On Wed, Mar 26, 2025 at 09:30:53PM +0200, Jarkko Sakkinen wrote:
+>On Mon, Mar 24, 2025 at 11:46:48AM +0100, Stefano Garzarella wrote:
+>> From: Stefano Garzarella <sgarzare@redhat.com>
+>>
+>> Add driver for the vTPM defined by the AMD SVSM spec [1].
+>>
+>> The specification defines a protocol that a SEV-SNP guest OS can use to
+>> discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
+>> in the guest context, but at a more privileged level (VMPL0).
+>>
+>> The new tpm-svsm platform driver uses two functions exposed by x86/sev
+>> to verify that the device is actually emulated by the platform and to
+>> send commands and receive responses.
+>>
+>> The device cannot be hot-plugged/unplugged as it is emulated by the
+>> platform, so we can use module_platform_driver_probe(). The probe
+>> function will only check whether in the current runtime configuration,
+>> SVSM is present and provides a vTPM.
+>>
+>> This device does not support interrupts and sends responses to commands
+>> synchronously. In order to have .recv() called just after .send() in
+>> tpm_try_transmit(), the .status() callback returns 0, and both
+>> .req_complete_mask and .req_complete_val are set to 0.
+>>
+>> [1] "Secure VM Service Module for SEV-SNP Guests"
+>>     Publication # 58019 Revision: 1.00
+>>
+>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+>> ---
+>> v4:
+>> - moved "asm" includes after the "linux" includes [Tom]
+>> - allocated buffer separately [Tom/Jarkko/Jason]
+>> v3:
+>> - removed send_recv() ops and followed the ftpm driver implementing .status,
+>>   .req_complete_mask, .req_complete_val, etc. [Jarkko]
+>> - removed link to the spec because those URLs are unstable [Borislav]
+>> ---
+>>  drivers/char/tpm/tpm_svsm.c | 155 ++++++++++++++++++++++++++++++++++++
+>>  drivers/char/tpm/Kconfig    |  10 +++
+>>  drivers/char/tpm/Makefile   |   1 +
+>>  3 files changed, 166 insertions(+)
+>>  create mode 100644 drivers/char/tpm/tpm_svsm.c
+>>
+>> diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
+>> new file mode 100644
+>> index 000000000000..1281ff265927
+>> --- /dev/null
+>> +++ b/drivers/char/tpm/tpm_svsm.c
+>> @@ -0,0 +1,155 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
+>> + *
+>> + * Driver for the vTPM defined by the AMD SVSM spec [1].
+>> + *
+>> + * The specification defines a protocol that a SEV-SNP guest OS can use to
+>> + * discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
+>> + * in the guest context, but at a more privileged level (usually VMPL0).
+>> + *
+>> + * [1] "Secure VM Service Module for SEV-SNP Guests"
+>> + *     Publication # 58019 Revision: 1.00
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/tpm_svsm.h>
+>> +
+>> +#include <asm/sev.h>
+>> +
+>> +#include "tpm.h"
+>> +
+>> +struct tpm_svsm_priv {
+>> +	void *buffer;
+>> +	u8 locality;
+>> +};
+>> +
+>> +static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t len)
+>> +{
+>> +	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
+>> +	int ret;
+>> +
+>> +	ret = svsm_vtpm_cmd_request_fill(priv->buffer, priv->locality, buf, len);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/*
+>> +	 * The SVSM call uses the same buffer for the command and for the
+>> +	 * response, so after this call, the buffer will contain the response
+>> +	 * that can be used by .recv() op.
+>> +	 */
+>> +	return snp_svsm_vtpm_send_command(priv->buffer);
+>> +}
+>> +
+>> +static int tpm_svsm_recv(struct tpm_chip *chip, u8 *buf, size_t len)
+>> +{
+>> +	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
+>> +
+>> +	/*
+>> +	 * The internal buffer contains the response after we send the command
+>> +	 * to SVSM.
+>> +	 */
+>> +	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, len);
+>> +}
+>> +
+>> +static void tpm_svsm_cancel(struct tpm_chip *chip)
+>> +{
+>> +	/* not supported */
+>> +}
+>> +
+>> +static u8 tpm_svsm_status(struct tpm_chip *chip)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>> +static bool tpm_svsm_req_canceled(struct tpm_chip *chip, u8 status)
+>> +{
+>> +	return false;
+>> +}
+>> +
+>> +static struct tpm_class_ops tpm_chip_ops = {
+>> +	.flags = TPM_OPS_AUTO_STARTUP,
+>> +	.recv = tpm_svsm_recv,
+>> +	.send = tpm_svsm_send,
+>> +	.cancel = tpm_svsm_cancel,
+>> +	.status = tpm_svsm_status,
+>> +	.req_complete_mask = 0,
+>> +	.req_complete_val = 0,
+>> +	.req_canceled = tpm_svsm_req_canceled,
+>
+>If this was bundled with the patch set, this would short a lot:
+>
+>https://lore.kernel.org/linux-integrity/20250326161838.123606-1-jarkko@kernel.org/T/#u
+>
+>So maybe for v5? Including this patch does not take send_recv()
+>out of consideration, it is just smart thing to do in all cases.
+>
+>It would be probably easiest to roll out my patch together with
+>rest of the patch set.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Imran Shaik <quic_imrashai@quicinc.com>
----
-This patch series add support for GPUCC, CAMCC and VIDEOCC on Qualcomm
-QCS8300 platform.
+Yeah, I agree. I'll include it in this series and adapt this patch on 
+top of it.
 
-Changes in v6:
-- Use device_is_compatible() as per Stephen's review comment.
-- Link to v5: https://lore.kernel.org/r/20250321-qcs8300-mm-patches-v5-1-9d751d7e49ef@quicinc.com
-
-Changes in v5:
-- Subset of this patch series is alreday applied, but CamCC driver patch
-is not picked yet. Hence resend the CamCC driver patch.
-- Link to v4: https://lore.kernel.org/all/20250109-qcs8300-mm-patches-new-v4-0-63e8ac268b02@quicinc.com/
-
-Changes in v4:
-- Updated the commit text as per the comment from Bjorn.
-- Fixed the CamCC QDSS clock offset.
-- Link to v3: https://lore.kernel.org/all/20241106-qcs8300-mm-patches-v3-0-f611a8f87f15@quicinc.com/
-
-Changes in v3:
-- Added new GPUCC and CAMCC binding headers for QCS8300 as per the review comments
-- Updated the new bindings header files for GPUCC and CAMCC drivers.
-- Added the R-By tags received in v2.
-- Link to v2: https://lore.kernel.org/r/20241024-qcs8300-mm-patches-v2-0-76c905060d0a@quicinc.com
-
-Changes in v2:
-- Updated commit text details in bindings patches as per the review comments.
-- Sorted the compatible order and updated comment in VideoCC driver patch as per the review comments.
-- Added the R-By tags received in V1.
-- Link to v1: https://lore.kernel.org/r/20241018-qcs8300-mm-patches-v1-0-859095e0776c@quicinc.com
----
- drivers/clk/qcom/camcc-sa8775p.c | 103 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 98 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/clk/qcom/camcc-sa8775p.c b/drivers/clk/qcom/camcc-sa8775p.c
-index 11bd2e234811..50e5a131261b 100644
---- a/drivers/clk/qcom/camcc-sa8775p.c
-+++ b/drivers/clk/qcom/camcc-sa8775p.c
-@@ -10,7 +10,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/regmap.h>
- 
--#include <dt-bindings/clock/qcom,sa8775p-camcc.h>
-+#include <dt-bindings/clock/qcom,qcs8300-camcc.h>
- 
- #include "clk-alpha-pll.h"
- #include "clk-branch.h"
-@@ -1681,6 +1681,24 @@ static struct clk_branch cam_cc_sm_obs_clk = {
- 	},
- };
- 
-+static struct clk_branch cam_cc_titan_top_accu_shift_clk = {
-+	.halt_reg = 0x131f0,
-+	.halt_check = BRANCH_HALT_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x131f0,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "cam_cc_titan_top_accu_shift_clk",
-+			.parent_hws = (const struct clk_hw*[]) {
-+				&cam_cc_xo_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct gdsc cam_cc_titan_top_gdsc = {
- 	.gdscr = 0x131bc,
- 	.en_rest_wait_val = 0x2,
-@@ -1775,6 +1793,7 @@ static struct clk_regmap *cam_cc_sa8775p_clocks[] = {
- 	[CAM_CC_SLEEP_CLK_SRC] = &cam_cc_sleep_clk_src.clkr,
- 	[CAM_CC_SLOW_AHB_CLK_SRC] = &cam_cc_slow_ahb_clk_src.clkr,
- 	[CAM_CC_SM_OBS_CLK] = &cam_cc_sm_obs_clk.clkr,
-+	[CAM_CC_TITAN_TOP_ACCU_SHIFT_CLK] = NULL,
- 	[CAM_CC_XO_CLK_SRC] = &cam_cc_xo_clk_src.clkr,
- 	[CAM_CC_QDSS_DEBUG_XO_CLK] = &cam_cc_qdss_debug_xo_clk.clkr,
- };
-@@ -1811,6 +1830,7 @@ static const struct qcom_cc_desc cam_cc_sa8775p_desc = {
- };
- 
- static const struct of_device_id cam_cc_sa8775p_match_table[] = {
-+	{ .compatible = "qcom,qcs8300-camcc" },
- 	{ .compatible = "qcom,sa8775p-camcc" },
- 	{ }
- };
-@@ -1841,10 +1861,83 @@ static int cam_cc_sa8775p_probe(struct platform_device *pdev)
- 	clk_lucid_evo_pll_configure(&cam_cc_pll4, regmap, &cam_cc_pll4_config);
- 	clk_lucid_evo_pll_configure(&cam_cc_pll5, regmap, &cam_cc_pll5_config);
- 
--	/* Keep some clocks always enabled */
--	qcom_branch_set_clk_en(regmap, 0x13194); /* CAM_CC_CAMNOC_XO_CLK */
--	qcom_branch_set_clk_en(regmap, 0x131ec); /* CAM_CC_GDSC_CLK */
--	qcom_branch_set_clk_en(regmap, 0x13208); /* CAM_CC_SLEEP_CLK */
-+	if (device_is_compatible(&pdev->dev, "qcom,qcs8300-camcc")) {
-+		cam_cc_camnoc_axi_clk_src.cmd_rcgr = 0x13154;
-+		cam_cc_camnoc_axi_clk.halt_reg = 0x1316c;
-+		cam_cc_camnoc_axi_clk.clkr.enable_reg = 0x1316c;
-+		cam_cc_camnoc_dcd_xo_clk.halt_reg = 0x13174;
-+		cam_cc_camnoc_dcd_xo_clk.clkr.enable_reg = 0x13174;
-+
-+		cam_cc_csi0phytimer_clk_src.cmd_rcgr = 0x15054;
-+		cam_cc_csi1phytimer_clk_src.cmd_rcgr = 0x15078;
-+		cam_cc_csi2phytimer_clk_src.cmd_rcgr = 0x15098;
-+		cam_cc_csid_clk_src.cmd_rcgr = 0x13134;
-+
-+		cam_cc_mclk0_clk_src.cmd_rcgr = 0x15000;
-+		cam_cc_mclk1_clk_src.cmd_rcgr = 0x1501c;
-+		cam_cc_mclk2_clk_src.cmd_rcgr = 0x15038;
-+
-+		cam_cc_fast_ahb_clk_src.cmd_rcgr = 0x13104;
-+		cam_cc_slow_ahb_clk_src.cmd_rcgr = 0x1311c;
-+		cam_cc_xo_clk_src.cmd_rcgr = 0x131b8;
-+		cam_cc_sleep_clk_src.cmd_rcgr = 0x131d4;
-+
-+		cam_cc_core_ahb_clk.halt_reg = 0x131b4;
-+		cam_cc_core_ahb_clk.clkr.enable_reg = 0x131b4;
-+
-+		cam_cc_cpas_ahb_clk.halt_reg = 0x130f4;
-+		cam_cc_cpas_ahb_clk.clkr.enable_reg = 0x130f4;
-+		cam_cc_cpas_fast_ahb_clk.halt_reg = 0x130fc;
-+		cam_cc_cpas_fast_ahb_clk.clkr.enable_reg = 0x130fc;
-+
-+		cam_cc_csi0phytimer_clk.halt_reg = 0x1506c;
-+		cam_cc_csi0phytimer_clk.clkr.enable_reg = 0x1506c;
-+		cam_cc_csi1phytimer_clk.halt_reg = 0x15090;
-+		cam_cc_csi1phytimer_clk.clkr.enable_reg = 0x15090;
-+		cam_cc_csi2phytimer_clk.halt_reg = 0x150b0;
-+		cam_cc_csi2phytimer_clk.clkr.enable_reg = 0x150b0;
-+		cam_cc_csid_clk.halt_reg = 0x1314c;
-+		cam_cc_csid_clk.clkr.enable_reg = 0x1314c;
-+		cam_cc_csid_csiphy_rx_clk.halt_reg = 0x15074;
-+		cam_cc_csid_csiphy_rx_clk.clkr.enable_reg = 0x15074;
-+		cam_cc_csiphy0_clk.halt_reg = 0x15070;
-+		cam_cc_csiphy0_clk.clkr.enable_reg = 0x15070;
-+		cam_cc_csiphy1_clk.halt_reg = 0x15094;
-+		cam_cc_csiphy1_clk.clkr.enable_reg = 0x15094;
-+		cam_cc_csiphy2_clk.halt_reg = 0x150b4;
-+		cam_cc_csiphy2_clk.clkr.enable_reg = 0x150b4;
-+
-+		cam_cc_mclk0_clk.halt_reg = 0x15018;
-+		cam_cc_mclk0_clk.clkr.enable_reg = 0x15018;
-+		cam_cc_mclk1_clk.halt_reg = 0x15034;
-+		cam_cc_mclk1_clk.clkr.enable_reg = 0x15034;
-+		cam_cc_mclk2_clk.halt_reg = 0x15050;
-+		cam_cc_mclk2_clk.clkr.enable_reg = 0x15050;
-+		cam_cc_qdss_debug_xo_clk.halt_reg = 0x1319c;
-+		cam_cc_qdss_debug_xo_clk.clkr.enable_reg = 0x1319c;
-+
-+		cam_cc_titan_top_gdsc.gdscr = 0x131a0;
-+
-+		cam_cc_sa8775p_clocks[CAM_CC_CCI_3_CLK] = NULL;
-+		cam_cc_sa8775p_clocks[CAM_CC_CCI_3_CLK_SRC] = NULL;
-+		cam_cc_sa8775p_clocks[CAM_CC_CSI3PHYTIMER_CLK] = NULL;
-+		cam_cc_sa8775p_clocks[CAM_CC_CSI3PHYTIMER_CLK_SRC] = NULL;
-+		cam_cc_sa8775p_clocks[CAM_CC_CSIPHY3_CLK] = NULL;
-+		cam_cc_sa8775p_clocks[CAM_CC_MCLK3_CLK] = NULL;
-+		cam_cc_sa8775p_clocks[CAM_CC_MCLK3_CLK_SRC] = NULL;
-+		cam_cc_sa8775p_clocks[CAM_CC_TITAN_TOP_ACCU_SHIFT_CLK] =
-+				&cam_cc_titan_top_accu_shift_clk.clkr;
-+
-+		/* Keep some clocks always enabled */
-+		qcom_branch_set_clk_en(regmap, 0x13178); /* CAM_CC_CAMNOC_XO_CLK */
-+		qcom_branch_set_clk_en(regmap, 0x131d0); /* CAM_CC_GDSC_CLK */
-+		qcom_branch_set_clk_en(regmap, 0x131ec); /* CAM_CC_SLEEP_CLK */
-+	} else {
-+		/* Keep some clocks always enabled */
-+		qcom_branch_set_clk_en(regmap, 0x13194); /* CAM_CC_CAMNOC_XO_CLK */
-+		qcom_branch_set_clk_en(regmap, 0x131ec); /* CAM_CC_GDSC_CLK */
-+		qcom_branch_set_clk_en(regmap, 0x13208); /* CAM_CC_SLEEP_CLK */
-+	}
- 
- 	ret = qcom_cc_really_probe(&pdev->dev, &cam_cc_sa8775p_desc, regmap);
- 
-
----
-base-commit: 73b8c1dbc2508188e383023080ce6a582ff5f279
-change-id: 20250320-qcs8300-mm-patches-5e1fcc1d6794
-
-Best regards,
--- 
-Imran Shaik <quic_imrashai@quicinc.com>
+Thanks,
+Stefano
 
