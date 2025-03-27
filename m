@@ -1,87 +1,84 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09A12135B1
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980BB4A21
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743077604; cv=none; b=KOHbVsRidD6cWsioD+Gb5zZiYb/GGFjc6xXDDqFph6M9BJKL+fdYS5q/YtbOWssbGpJDxIdncsoo2axP42Fq2nxaeunXfszUYHCQjBTrX70Puu7sqcB6qNmxoKyi+ZMfq24Peir6YPxLNNELMM5jnEx17Nkg9U6BUkLgKPkYrKw=
+	t=1743077769; cv=none; b=V/crPjNXYw6VBNdO2E8I/LKhe9oxlGLPeGV2k3vDJ1vu/nj37ntX4Mfo/TZJNGfjt1pFWZGlSZ9OyrLu7lVmm14ycl7oQd1YoSnUn6oZ5V1UFwQUiMWbfUmrekTLOjtYS+JgmXddgcksPgN19BcSqmtTmY7kS+Nx3fQkHE5EjEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743077604; c=relaxed/simple;
-	bh=LAglGtaGdv1Da+AjfgQ5kbIFyqZGUTUVbYDRQIrV9ug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qySN07y9ab2oElp34coKf9E/cMkwn2jE/FmpCx/IGkke4xImk4ZQQRzrvdmOwt5Ygv7C66CjoooNp+GdJMG75nC+cMXId2vTcOQd0qqJSlexqE5AT+qZRopndZ1qLL40VXcqpy9JkAbaYFQKHUAbcsBPPpT792e9McoW/jkFlnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kXM6KHRr; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1743077769; c=relaxed/simple;
+	bh=Ese7lpLsAbAKoeVLvFWvwJokH3y8UYfakGfsCmwdif8=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ihXGsBB6yp/Y3Vh+OZ3ErmR1SuShKwMtV9aUy8tx2Tbnu4BTO2Ah9nVGOp2SKhgX6Wk2FdgM99LtlMTnjMiTuEta69oKPupc6a1HraavUI1rCSFyVYVecTWeMkpAz4LGjZPCMSXCWhtHUrqOP5A944pY2cVHkf2WDylGc9TmGVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lRj7TwXp; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kXM6KHRr"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R5jOcH013891
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:13:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=7q1Wh9lhgxTjHAlCh3PBu5Ah
-	qwhELU5OX4K4QSMh7WQ=; b=kXM6KHRrF1GvNnSPyWktWuZHlwYgklIbzUEKQUKo
-	cIX+ahOikMmx/LzaM0jggMHXne2hzRCjmt1sK8tmKE0xdHIEN7LYRJPuVViVPK6s
-	IO4aKK8otjhmf5DlpVm8TlaEqiS+iw+BJIK8BaDiSh9TacA1fyPR0DJoB9hxUUi3
-	ikkk3YFTVTQplHTJ7n6NbBp3Q+C9clor4aftJ9vGdH8bgq8YGxRUuyI/JgtZUWBL
-	RL/BmLdPj2iO9tX2vLKKlikX6+3hb1aVp+T/MlIyx1onmSnReu+x/LqVKETtsNb/
-	7uAUrSZ0t6i3SoJfkjY1AskphZCreaj6oLkiM1uDhnQmSA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45mffckw6m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:13:21 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c54767e507so155554585a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 05:13:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743077601; x=1743682401;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRj7TwXp"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5499c8fa0f3so971788e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 05:16:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743077766; x=1743682566; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=riIyAnp1BqzCauiLRUDX9IVtOvAZ7JXvsQQRo+JNfy8=;
+        b=lRj7TwXpok5FK5/SSrt+w+9guPF+JiXzZ/+bxhR4LFlS+CvzNcMHuk4qLCTyomkds3
+         yvWl7DaTMzIWCDvBKKkvqpw6q8iINlR5KY/HjEy4BHkn+QKk14KVUJiKyqF/WEp3IaxT
+         Mf2AEvSUlokL67suPbOjusKlAlb2nM9hGkK094WWztRx3POSGHkQ1Pusg49Q0t7gyq6y
+         UAELWFsxsa6H8gjOestmwIAPGeHmTtqOEnDBjtHLVxMiIuicN/pouFd00/dLcYueXhkW
+         4CJyIZXC0TY4r7TbSonJOXO679SCMe/e8BV4mJ6ttzw9BC+QTMEsTGyUVfYouJwXBJ2d
+         Peaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743077766; x=1743682566;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7q1Wh9lhgxTjHAlCh3PBu5AhqwhELU5OX4K4QSMh7WQ=;
-        b=TZcewJ+63WoyH9CjwxGXfmimmcJTUU7tYXB6MSki3084Ctdk7irkk4itJMUZHQzW0t
-         Quv1FLFhfz8KOgXel09vka7H+RswbBjrZHlyT0M8NPuk5Wx5O/7CWM0SsnXm2vrSIR1W
-         NBDfXofa1FfAer5Yc/5TqBDTrc3avOBlIdZ5JjcXT4ReFrNQpLVSDOCBe96qv90omwwG
-         UhwLZTeSxfpeSk0qJKzFt//p51ObYAheG5bjZCTdQBpG3AaAIF2BJ4DTfsEZgOUgqASV
-         XywMzQCL26UjIar8ZFtNluUB6ohZjBytJgLNM+/apB6mRtwhtrKRgl6oIUHrc041XPlj
-         zeaw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6H0emmgaX2Dsf4T/Ib4gfN0jU8y/WE6Cn9RC61rlbrHphvRwvKvofY8fssd9E/3KtgpJLTTAbcN/bhvY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+OHgm12f5VFhu6crb6iP2gjTXucjwApY9RhpK0oe215P3d8z5
-	yjubOHe3bbv7vUiDuic1iCwmWXp0XIBsTZX8QhN5fMvZxJo7056rA+IIZNPD8d4WWUK41ccpFQD
-	3uwvRvhHbewOIS5FDEwqI69JvPLjrxyDJkOAoHtXP/ppf3ZII9ZkdsA61+uwbkfQ=
-X-Gm-Gg: ASbGncu+dJkPjGH7BpZ5ha9zaAsGtkd8OloYhrrNfjqxx99xOUEmUk0BOBPSQXeCFW/
-	sZho4ShR4mg29KFlMLoKEJ1BM95ElJfFQ0RQxx5bQ9cQGUCw1pwJVkdibcPePty3bVmJavWU9YT
-	m1S9j87Dp49XITZ4KiHYi37R+LeX9pZCwcGxIVpAy2bLf5rqj328+yEzXjfBgpZx9p+hqMZbHHu
-	MaDp+Du8j8Gq8sucV14ty0leOA5q6cnxvp2DnksnXihUD+rr6zVXtzGlpUpFoRVPLxW35qe3DjH
-	yHeYx/Fs2GCZxz2sCLUSaxJ9dgt7sRZlNd/7Pma4INUVdvp8+MrUPNM7YaUYQqHrIsALSuGsyMh
-	mGHs=
-X-Received: by 2002:a05:620a:2453:b0:7c5:49b7:237a with SMTP id af79cd13be357-7c5ed9f545cmr411694985a.19.1743077600847;
-        Thu, 27 Mar 2025 05:13:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG2G1otVcxZQgzWqoHR02ogEilR46Q9aHG0UlLtUkpR09V1VQnKzivVt0fvho1i2HW6arEnMA==
-X-Received: by 2002:a05:620a:2453:b0:7c5:49b7:237a with SMTP id af79cd13be357-7c5ed9f545cmr411690085a.19.1743077600384;
-        Thu, 27 Mar 2025 05:13:20 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ad6480ed6sm2060839e87.103.2025.03.27.05.13.19
+        bh=riIyAnp1BqzCauiLRUDX9IVtOvAZ7JXvsQQRo+JNfy8=;
+        b=wJ4HAqPYEjvzzCCrCpRA7WZEBjZN7Chptexzn4QEjlr74bG+te8GBl3SIfTgknI3k9
+         5F+D+wystj39BrhAoMUoOlPSHVVfohqFy32sVe2yiDEqSlPqEcEqF6DYQAGPOb0xylG7
+         qYfoZb5uP6WVUXpeNfXLMEprYdWhqQ4xVVMqOmTtOzjN6necD3WBUi8MfNE7KBqgQxw4
+         sWtqSU07+reOtUa158VnI3WfuVj7biwqiKXlFB2LLgmvFaYc2pQXskhR37SVNicLHUg7
+         LACqT3zTBgTzgMWG2JRhU0pL6JgqwXAafbn9DORVAf6hrjrnbWYDqVfza5aeXFFCh+ic
+         7WeA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFGcbHAP4Lwrn4rCalpV8YAPILW6jmpv0WU2lGTHp7KX38VB+e03V2Meugs3snV90HdODqnbXeVBHi5Y0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxpiLFZnkE1iGUsYmD50JvaG68bpTigj+b/X7pITKwFTbF0lRa
+	eXV5oCqBhjsfUTGnQH8355f6nQ3ZXDHyCBEs2kS4PggSJn1ie3ld
+X-Gm-Gg: ASbGncu/yXfQT37/I2Z6v9uZpG4sHb/x1dK2ipHWrhu3g8wQhr/fTmIifusqfqkViHG
+	FvkPc+Dv63QqZTrRiwalN9DNqrPMbSOkiL/d82KeA5mZoOipomdNZAZ6i+vvuwtKZPMakhetMoL
+	fubEKUWsuPAzBbcBf8EcD9oQR3O7mHIn/qYHovVD1lVnObcRPvanmhCrYfb6xnxAUUUhtyCGLUX
+	W6KmX50cgY+jEj4q87o5cS7T43LB+taKvzy4hxRwVi5DVylZHzEAFey/3RJcyP2UBSFMJzywTKk
+	hjSfmd5jlYDqtcFFJtB4XrvhF+WIi7NWM159kMgIvAfctEM6nZXTH/48lKabolR0Uq2Lhd48sq2
+	7HE2iKPrxYA==
+X-Google-Smtp-Source: AGHT+IF6Q/FlvS/W+sjXPXjml1B00qK8pAid4lpx6MIvDMx1ASAjlsu76O0mMJzHYcFbUWuElE70Eg==
+X-Received: by 2002:a05:6512:3b25:b0:549:89ec:f6a9 with SMTP id 2adb3069b0e04-54b011cd797mr1152580e87.9.1743077765307;
+        Thu, 27 Mar 2025 05:16:05 -0700 (PDT)
+Received: from pc636 (host-90-233-221-122.mobileonline.telia.com. [90.233.221.122])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ad6508142sm2049380e87.172.2025.03.27.05.16.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 05:13:19 -0700 (PDT)
-Date: Thu, 27 Mar 2025 14:13:17 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: srinivas.kandagatla@linaro.org
-Cc: peda@axentia.se, broonie@kernel.org, andersson@kernel.org,
-        krzk+dt@kernel.org, ivprusov@salutedevices.com,
-        luca.ceresoli@bootlin.com, zhoubinbin@loongson.cn,
-        paulha@opensource.cirrus.com, lgirdwood@gmail.com, robh@kernel.org,
-        conor+dt@kernel.org, konradybcio@kernel.org, perex@perex.cz,
-        tiwai@suse.com, linux-sound@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, johan+linaro@kernel.org,
-        Christopher Obbard <christopher.obbard@linaro.org>
-Subject: Re: [PATCH v6 5/6] ASoC: codecs: wcd938x: add mux control support
- for hp audio mux
-Message-ID: <f7tgzuapeb7pwg6ygp4kpxoziuwb5jjcix5o33aoehd3dixcog@4nzt3tgcfca2>
-References: <20250327100633.11530-1-srinivas.kandagatla@linaro.org>
- <20250327100633.11530-6-srinivas.kandagatla@linaro.org>
+        Thu, 27 Mar 2025 05:16:04 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Thu, 27 Mar 2025 13:16:01 +0100
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	David Hildenbrand <david@redhat.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/11] Perf improvements for hugetlb and vmalloc on
+ arm64
+Message-ID: <Z-VBgcl9LJGlEzy2@pc636>
+References: <20250304150444.3788920-1-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,42 +87,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250327100633.11530-6-srinivas.kandagatla@linaro.org>
-X-Authority-Analysis: v=2.4 cv=CdgI5Krl c=1 sm=1 tr=0 ts=67e540e1 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=HLzW6X_U63wjtiIj7HQA:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: fUg4PGaKWwVo2MUdGXyuFSwP9ce9K8ss
-X-Proofpoint-ORIG-GUID: fUg4PGaKWwVo2MUdGXyuFSwP9ce9K8ss
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-27_01,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- spamscore=0 mlxlogscore=712 lowpriorityscore=0 suspectscore=0 phishscore=0
- clxscore=1015 bulkscore=0 impostorscore=0 adultscore=0 priorityscore=1501
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503270084
+In-Reply-To: <20250304150444.3788920-1-ryan.roberts@arm.com>
 
-On Thu, Mar 27, 2025 at 10:06:32AM +0000, srinivas.kandagatla@linaro.org wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Tue, Mar 04, 2025 at 03:04:30PM +0000, Ryan Roberts wrote:
+> Hi All,
 > 
-> On some platforms to minimise pop and click during switching between
-> CTIA and OMTP headset an additional HiFi mux is used. Most common
-> case is that this switch is switched on by default, but on some
-> platforms this needs a regulator enable.
+> This is v3 of a series to improve performance for hugetlb and vmalloc on arm64.
+> Although some of these patches are core-mm, advice from Andrew was to go via the
+> arm64 tree. Hopefully I can get some ACKs from mm folks.
 > 
-> move to using mux control to enable both regulator and handle gpios,
-> deprecate the usage of gpio.
+> The 2 key performance improvements are 1) enabling the use of contpte-mapped
+> blocks in the vmalloc space when appropriate (which reduces TLB pressure). There
+> were already hooks for this (used by powerpc) but they required some tidying and
+> extending for arm64. And 2) batching up barriers when modifying the vmalloc
+> address space for upto 30% reduction in time taken in vmalloc().
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Tested-by: Christopher Obbard <christopher.obbard@linaro.org>
-> ---
->  sound/soc/codecs/Kconfig   |  1 +
->  sound/soc/codecs/wcd938x.c | 55 ++++++++++++++++++++++++++++++--------
->  2 files changed, 45 insertions(+), 11 deletions(-)
+> vmalloc() performance was measured using the test_vmalloc.ko module. Tested on
+> Apple M2 and Ampere Altra. Each test had loop count set to 500000 and the whole
+> test was repeated 10 times.
 > 
+I will have a look and review just give me some time :)
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-
--- 
-With best wishes
-Dmitry
+--
+Uladzislau Rezki
