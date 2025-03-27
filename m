@@ -1,137 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9EA189F20;
-	Thu, 27 Mar 2025 21:19:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6736913DBA0;
+	Thu, 27 Mar 2025 21:20:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743110359; cv=none; b=s7Snygb4RcImLc+NOdNe3598/PmJ+eD5eWzzlY3Lqjrfht1znHlYhWAKg2gJAkqI0dC69n8JBByLo/C9CrthzFMevKYaid2BTAAT/o9urNvdMgcDGzAj2xcp2J1Yzaw3KKiftH5ZyhPuHnAsh51iuIl9Yp04Oifio9Ru+UPJ+f8=
+	t=1743110402; cv=none; b=WO7XaHCYhpy82CjIIfu+vvrOSnr34h84Mt3hGcv3RUqhv39l9QTzISJQ0y8TfIPYimo6+ib+eIOI8VZhaxjDdQD5+C6gBDom8fHCzOYhABB7ejMU9YE19cIuIDsrcSJN+yDcVBH7ZJ6yBLjwHNDdyKjlFMOMS68CnIdYaUmopnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743110359; c=relaxed/simple;
-	bh=2mP76JkvssJxcOdXIJ22ei/P0IoIyBjMEWJKZRk/IOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SvNo1aCEfwszzZTVHYMNskdO7DgTlp9Qo5an4jAwf98VGYnjfNLuZbpT0N1QxumURGEdI/M23V7G/+c+3ViMJ/GC43dlDqMLXML28L3Vu5IzEJbbWi0dq74vt8ryq9rrLYRdal3JE3/8k11CGGNfwpK5mGUtmlQsZZManquhVcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gXfENONr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gXfENONr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8824EC4CEDD;
-	Thu, 27 Mar 2025 21:19:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743110359;
-	bh=2mP76JkvssJxcOdXIJ22ei/P0IoIyBjMEWJKZRk/IOc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gXfENONrRJObPzbG/pC9yMNgImfh+f98KdlzPFp/H+y2qQ17k2DoUf+/t9HXCme+7
-	 HyWKmZixoA/utwqIVD7YUJO14HxoeS8uQfgs2QdHzuts+j5lsBkdIlEHdMhIyIzcIb
-	 9kd95wjnih3NsubEQjI63YhWPSuScfK0JjxRuclLAkq6+FPJ6LMWXgb+/i84nNDBH1
-	 czxMuWKj5CC52HANzfMbpTzwiPJggMDUXXS3X15L7Ja2Aj5UGg3L32yATnWGZESZlf
-	 XJAmlnPOh78kQv3xEOzSYV0iRnBykagvyF30rR1uH4/0J99Lc04G/jk5LCbA8tybbZ
-	 fPlFLgzox0GXw==
-Date: Thu, 27 Mar 2025 23:19:14 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: "Reshetova, Elena" <elena.reshetova@intel.com>
-Cc: "Hansen, Dave" <dave.hansen@intel.com>,
-	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"Mallick, Asit K" <asit.k.mallick@intel.com>,
-	"Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
-	"Cai, Chong" <chongc@google.com>,
-	"Aktas, Erdem" <erdemaktas@google.com>,
-	"Annapurve, Vishal" <vannapurve@google.com>,
-	"dionnaglaze@google.com" <dionnaglaze@google.com>,
-	"bondarn@google.com" <bondarn@google.com>,
-	"Raynor, Scott" <scott.raynor@intel.com>,
-	"Zhang, Cathy" <cathy.zhang@intel.com>
-Subject: Re: [PATCH 4/4] x86/sgx: Implement ENCLS[EUPDATESVN] and
- opportunistically call it during first EPC page alloc
-Message-ID: <Z-XA0oy_r9VBJPHI@kernel.org>
-References: <20250321123938.802763-1-elena.reshetova@intel.com>
- <20250321123938.802763-5-elena.reshetova@intel.com>
- <Z983ZaTaWNqFUpYS@kernel.org>
- <DM8PR11MB575000AEB9CC3A318651AAABE7A42@DM8PR11MB5750.namprd11.prod.outlook.com>
- <Z-RfcpSBAybk-KjG@kernel.org>
- <DM8PR11MB5750FE25D4C8EC2297952845E7A12@DM8PR11MB5750.namprd11.prod.outlook.com>
+	s=arc-20240116; t=1743110402; c=relaxed/simple;
+	bh=y9C1eQrWoU8V+oa2czQCuEs64eG/zTKwQyj+/Ykm8YU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JDOiQJXdbzoZ5tMivGd9a6E3e9i4JAb5P4SjSqpG21oPCfRHkIeROv9cUfZf9r3g4AgiU88sfvmHEBZ1kAzvA/eE19ZsZ4fH9hkJgddGoI0z6IBd7iEcL2HXM1qC+PAiuUlBZ5xOxXfUl4y7pAuCz77Ql+he6/YCnLp/MvWrjj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35704C4CEDD;
+	Thu, 27 Mar 2025 21:20:01 +0000 (UTC)
+Date: Thu, 27 Mar 2025 17:20:50 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Libo Chen <libo.chen@oracle.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] tracing: Verify event formats that have "%*p.."
+Message-ID: <20250327172050.2be5b38a@gandalf.local.home>
+In-Reply-To: <d9707265-d6bd-40df-8e7f-4213851ea33f@oracle.com>
+References: <20250327114911.2c713511@gandalf.local.home>
+	<856e7f9f-2a7f-4b94-b6b9-c1f7151a1f7b@oracle.com>
+	<20250327143853.1cef38af@gandalf.local.home>
+	<d9707265-d6bd-40df-8e7f-4213851ea33f@oracle.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM8PR11MB5750FE25D4C8EC2297952845E7A12@DM8PR11MB5750.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 27, 2025 at 03:42:30PM +0000, Reshetova, Elena wrote:
-> > > > > +	case SGX_NO_UPDATE:
-> > > > > +		pr_debug("EUPDATESVN was successful, but CPUSVN was not
-> > > > updated, "
-> > > > > +			"because current SVN was not newer than
-> > > > CPUSVN.\n");
-> > > > > +		break;
-> > > > > +	case SGX_EPC_NOT_READY:
-> > > > > +		pr_debug("EPC is not ready for SVN update.");
-> > > > > +		break;
-> > > > > +	case SGX_INSUFFICIENT_ENTROPY:
-> > > > > +		pr_debug("CPUSVN update is failed due to Insufficient
-> > > > entropy in RNG, "
-> > > > > +			"please try it later.\n");
-> > > > > +		break;
-> > > > > +	case SGX_EPC_PAGE_CONFLICT:
-> > > > > +		pr_debug("CPUSVN update is failed due to concurrency
-> > > > violation, please "
-> > > > > +			"stop running any other ENCLS leaf and try it
-> > > > later.\n");
-> > > > > +		break;
-> > > > > +	default:
-> > > > > +		break;
-> > > >
-> > > > Remove pr_debug() statements.
-> > >
-> > > This I am not sure it is good idea. I think it would be useful for system
-> > > admins to have a way to see that update either happened or not.
-> > > It is true that you can find this out by requesting a new SGX attestation
-> > > quote (and see if newer SVN is used), but it is not the faster way.
-> > 
-> > Maybe pr_debug() is them wrong level if they are meant for sysadmins?
-> > 
-> > I mean these should not happen in normal behavior like ever? As
-> > pr_debug() I don't really grab this.
+On Thu, 27 Mar 2025 14:00:44 -0700
+Libo Chen <libo.chen@oracle.com> wrote:
+
+> > Ah yeah. I'll update. Note, this isn't going to go into the kernel until at
+> > least 6.16.
+> >   
 > 
-> SGX_NO_UPDATE will absolutely happen normally all the time. 
-> Since EUPDATESVN is executed every time EPC is empty, this is the
-> most common code you will get back (because microcode updates are rare). 
-> Others yes, that would indicate some error condition. 
-> So, what is the pr_level that you would suggest? 
+> Okay thanks for the note. I will stick to %lx for now and change it to %*pbl
+> once this gets in.
 
-Right, got it. That changes my conclusions:
+This shouldn't be a blocker for you. Do you get any errors?
 
-So I'd reformulate it like:
+Hmm, if this causes bugs (perhaps you have arguments after the %*pbl) then
+I can add this as a fix and not an enhancement.
 
-	switch (ret) {
-	case 0:
-		pr_info("EUPDATESVN: success\n);	
-		break;
-	case SGX_EPC_NOT_READY:
-	case SGX_INSUFFICIENT_ENTROPY:
-	case SGX_EPC_PAGE_CONFLICT:
-		pr_err("EUPDATESVN: error %d\n", ret);
-		/* TODO: block/teardown driver? */
-		break;
-	case SGX_NO_UPDATE:
-		break;
-	default:
-		pr_err("EUPDATESVN: unknown error %d\n", ret);
-		/* TODO: block/teardown driver? */
-		break;
-	}
-
-Since when this is executed EPC usage is zero error cases should block
-or teardown SGX driver, presuming that they are because of either
-incorrect driver state or spurious error code.
-
-If this happens, we definitely do not want service, right?
-
-I'm not sure of all error codes how serious they are, or are all of them
-consequence of incorrectly working driver.
-
-BR, Jarkko
+-- Steve
