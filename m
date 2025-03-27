@@ -1,90 +1,121 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799E218C03D
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 06:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9719827455
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 06:43:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743057613; cv=none; b=FTwCLZy2aUNAsvHxs748HL9lUDEAQrO1gR1Fh0rL1YWEuSYRbN19tLWWBJBgFtS3jFbCWUQ6ZJkaa+5pfOOnXLAhB9Vw8XQegmTMmUmowpNvH27loN3K6mS5nklquce/mghwj1qwyWjgnPnUhRrVZytqxbSbZNf1a6R+22N3COs=
+	t=1743057813; cv=none; b=QicAczCHWqGuYu2F7mit8Cchlcwb0RfmRfyd3lCmeb7aJM24CPnRZjMM2xf8K5S3rn3WyTNxaK89GqrVrGzy+nK+TgmlW9Z1k0ZCGYQXeKdQYefi4zpX6n7pyT682Sfpp3LlAIw/fjvg5ddxa0KwsBkfSO4sb/1LwKit7/DSNl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743057613; c=relaxed/simple;
-	bh=hVhB3pfbSavGJmn5ih9KdVU6u//4aoMC7TEHsPVQVmw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ijFyUT63sGObShgEnVbtVozOlK30YoFpfMPtVBXt47iPyuU7AJeUTsHvI8QLlA3Gu59UPO5VUvEiA/NcP+mhRsJg+cAajoIcjUDZRqjDysrf9wRl7xzetUGc5oKGBqQ5j8CXA+NN4IQMNXKsnu6KMGlvCZe7ZfYDbCtt8Cndvdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dk0yZ6Aa; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743057813; c=relaxed/simple;
+	bh=n66ybPgUp9VVv9SCPEE/AWLxGlIns+SPIQDz3xX2DrQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PCnG+iEOXRbrkUnymXFKdHYM4PlkR2XPcarUxGxT7KDHXGLRUS9PTzTIV4Wnm7mkLnKovIFzZpgUj3TFJq/5Z5VLa0sk7VjCXq9eHv4+ToY8P5ahFb0QIRRR8OtXNiMfUa2MZFfZvIz+CpYCHUBFW5+kUeYNQEyWtxU3NB4wV7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Fv0oQY6M; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dk0yZ6Aa"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47692b9d059so9336411cf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 23:40:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Fv0oQY6M"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4394944f161so842505e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 23:43:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743057609; x=1743662409; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hVhB3pfbSavGJmn5ih9KdVU6u//4aoMC7TEHsPVQVmw=;
-        b=dk0yZ6Aa82hg8NmF9O1fmtmCK2X6oC4v2KOK/2AVdwGNwKP8mM93iAPmD/gdWmj4UE
-         zmt5KPaqr58u3nPs9e9zZVVg8pxmoKjHcgXLhs0gbTlyOJ1RMdtZad3Fon9h27XPgfME
-         itrYlUpqC+ZH5uN2EtykDmhxCY+h72RuuRKaET/DfEI3BJvhI5bTlsgpnq4FIpRvAGoM
-         qk521t4It5l+kreUOV4S5B4boxJczjiOOVlzUdIADyLMAHd8vVNlZVpQz0VhVXUUBrII
-         ohZstWRc+iaxc9RirbL2vVhAV5V84EJY1IKi007cpk2Z5CLEvOovJi5DXz0wPRQJh4wX
-         YbrA==
+        d=suse.com; s=google; t=1743057810; x=1743662610; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OYQRSLDDu+9ncKrO0EiMnXhUcVzXwRWAsy/yjivhkeY=;
+        b=Fv0oQY6MfOYO0BM4jEWedguN1GIXw7kOXy/uUE+YULsGq4yUBRc1/RDWzXW+km8yGl
+         v1rA5kw8bz1euS75OoREt9N+LOMFZUJq4yld0CdBcySWwxfofyRbEM/oR4J1xsFsUc6M
+         3TCgJnrzImNkuy3ENBoMdiW5VU8h6hDGxcjUKdIZp0zYPNyK6e/P5AP5cJdURQfaF2KK
+         4/P68NnXdXZu7SMLNpTPVZfE7T1p4VJDLJqdY1S+fvkuUUA8zkAFvwQ4EU95XFZ8lXgV
+         SKmQengc5MvikqoAa7kwL/PGQ3LMMAfUhVTUDHMrdrrorlljSIai+q8cmAcUB6EQHsu2
+         pXcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743057609; x=1743662409;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hVhB3pfbSavGJmn5ih9KdVU6u//4aoMC7TEHsPVQVmw=;
-        b=TR6KJI9iwjvOusi2o1xVl2fUF5zJ1xJCS3fwyVBkqvHdpsuZSaoINAY9qKauRV3KNg
-         z+IqM6qXsQVqKcz67MlGhqvDKs4LiA65N6cu4l3O+hdBerA1dFT3yloVlJlzSwDhF/2j
-         OHEKtYrQmWVWyiBjSklqzK3qeclgcALcLOnIS9ngOP2CizMpW5o20fFpdxosfx6qcVyq
-         otOiUYi1X1bAyx/Rodokn8lCswSfBLu2fMfIc9GqlGKbuoMYV2TM4EOcKLfHPlmAeTdU
-         ++B2eydjdT6OszIv8uUqN8A278fxitavcAYaj6WbYP7tv4AVWlGEs74MUbBymP8hYci7
-         zcYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWKrIFoFfaVSK94wINLbp4cAHA5dEpDfLba6gXzYo82jtlTZxIQ5cYW/5ZIRj78QN5PnY5t1IUPTQ5qXec=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQiq4rgH34cHrcXTeDmFy8DJw062IS7St1LwSi8Ma6jfCnRgIB
-	vazSEjWUWDD5fX969ts2m2tkiO+VdeuJV1uXmfmDcx5vk88gxsV9tAJH2wqEy/JZh2eAre74q77
-	Jb0w9IgGm61aBoMoyHEy1JP/Cd8MZ0bwyqabr
-X-Gm-Gg: ASbGnctyzv81/yWI4IoJO1ssSfvuKpnRp+biw+4TWoWr8rs23GRjaXTXgbcxJgI2UHh
-	K/uosyOWQc6RrbMkpYYzxzWomIDXil4TlTB0MFC8hSMvYEcV2uyZByCq9mlDpp9gh2tDuRgqkyn
-	33k+5jSUHyNZ6LPyrb+DqEAM02NKM=
-X-Google-Smtp-Source: AGHT+IEM0+rxaQ5zCqmBUxN4zvMYmyJ5g+nu3EDBzsma/EgV6CrhhJPxV6MT8hz+Jt9uHg2FWusC7jJC8D1fgCu1IYM=
-X-Received: by 2002:a05:622a:5145:b0:476:a4eb:10a5 with SMTP id
- d75a77b69052e-4776e0abbbcmr42147561cf.12.1743057608966; Wed, 26 Mar 2025
- 23:40:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743057810; x=1743662610;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OYQRSLDDu+9ncKrO0EiMnXhUcVzXwRWAsy/yjivhkeY=;
+        b=ddEBNGjYecbmCCXueMDm4je4hVdEVvIQo0JxdPSDSpejidYiToHClh9KhXXsBUrKux
+         FpoTjCTJ62mH1NEwPpplf9HTHuPDA+6J1c22k+aiY2q/qpDZwah9dQ9nt/bC5xldQBoe
+         FdRixd2kjS+aUcWMf+DYi96YZldQIFW4q+VCih6lRW/93nuJQ9UZoF8HVG437Ga/Bp7u
+         E/eJsuUtUo6+np0nG8qzTnXq5TQAuF3F/bUK3lAirR73ITTY1UIoALQ6YHaCwOoc8MBh
+         0UotU40hOq/eBo7smnC0FUsjk67hQhzGDnhjqU/an8qPXSkmdMySPgPl6vbZHNHJ4gCd
+         SPzg==
+X-Forwarded-Encrypted: i=1; AJvYcCXL/WhWdkRSG07vnVwJV3EGrL8ftqqreo8b+AaV3ibTXptNHiOtaoecUMielLgIYk4+F5vDWvDUTro7H7M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzsc9GeXcvLCu5GtnTS2yN0qyiA+QJbKLdRhlHlrtkB0YpaT6Hf
+	fRNXX3sTR0lYB7Sj17dq7D8FDufwqKgGYnU7yyRW486/gCaZkO8fu++MiaM0k7o=
+X-Gm-Gg: ASbGncvNDaYwa1IjpS0Zezk1R9uaNoSoqymldN3V4rk3/ux/6r26k19g2XJTt1qHV1v
+	alxinmmKjOv+v8YMNtIKmtRNInt9JixRRfPF/pEKoUd9TtsRXQPXM7MJbZxcMuWsoI0qc8m6Kfx
+	EGU95mToHXxGL5Ccm3R8r0VBljgeKxgdrWALhzaipDL6nmOHXyu8hDwBy9r8XKSdQcjDXE9iKbz
+	beoJeYWkFKMvBOqIeYP3iDFYkyZ9VL7U1Znmp11HVyKDv76YA35tD0x1w8wKTuQQQI8npPCFx8t
+	j71bEwc8XSTEV16epacnoarng6QPkrjRVfziokBYVqWwIs4r5U52QcCLNGatdQ==
+X-Google-Smtp-Source: AGHT+IG7uoZZ4cy3JAa+yLXGMZkwdOi8KblqHkzfjjsnlqCUlO76I+Ifh2Yz3Zl2jw/WLzCs0lckWA==
+X-Received: by 2002:a5d:47c3:0:b0:382:4e71:1a12 with SMTP id ffacd0b85a97d-39ad2ada142mr343227f8f.1.1743057809776;
+        Wed, 26 Mar 2025 23:43:29 -0700 (PDT)
+Received: from [10.202.112.30] ([202.127.77.110])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22780f4d5f5sm121269285ad.79.2025.03.26.23.43.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Mar 2025 23:43:29 -0700 (PDT)
+Message-ID: <faef812f-0adc-4a46-951a-5453927c2819@suse.com>
+Date: Thu, 27 Mar 2025 14:43:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327015827.2729554-1-wangliang74@huawei.com>
- <CANn89iJn5gARyEPHeYxZxERpERdNKMngMcP1BbKrW9ebxB-tRw@mail.gmail.com> <df2d0ac0-c80e-4511-9303-3ee773c73a22@huawei.com>
-In-Reply-To: <df2d0ac0-c80e-4511-9303-3ee773c73a22@huawei.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Thu, 27 Mar 2025 07:39:58 +0100
-X-Gm-Features: AQ5f1JrtUReUuY-3assA0nRUX3KVWYXbt4WVNWESX6MNVW1HNkE5q-S8tpom3HE
-Message-ID: <CANn89iJdThGoaVc3LbucK_QGe1akNzmd5YOhMqmshwh_RfOn+A@mail.gmail.com>
-Subject: Re: [PATCH net] ipv6: sit: fix skb_under_panic with overflowed needed_headroom
-To: Wang Liang <wangliang74@huawei.com>
-Cc: davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org, 
-	pabeni@redhat.com, horms@kernel.org, kuniyu@amazon.com, yuehaibing@huawei.com, 
-	zhangchangzhong@huawei.com, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ocfs2: fixing global bitmap allocating failure for
+ discontig type
+To: joseph.qi@linux.alibaba.com
+Cc: ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
+ gautham.ananthakrishna@oracle.com
+References: <20250327062209.19201-1-heming.zhao@suse.com>
+From: Heming Zhao <heming.zhao@suse.com>
+Content-Language: en-US
+In-Reply-To: <20250327062209.19201-1-heming.zhao@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 27, 2025 at 7:33=E2=80=AFAM Wang Liang <wangliang74@huawei.com>=
- wrote:
->
->
->
-> You can get the report in
-> https://syzkaller.appspot.com/text?tag=3DCrashReport&x=3D106b6b34880000
+Hello list,
 
-Well, please provide the most accurate stack trace with symbols in
-your patch then ?
+I wrote this patch based on Gautham's patch code logic. Because I lack a
+test script to verify this patch, this patch only passes compilation.
 
-If you spent time reproducing the issue and providing your stack
-trace, please add the symbols.
+btw, another topic (unrelated to this bug) is that ocfs2-test fails to run
+on the latest Linux distributions (e.g., openSUSE Tumbleweed). I am focusing
+on fixing this problem, but it requires some time. I have created a personal
+repository [1]. Once I finish the verification process for ocfs2-test, I will
+submit a PR to the upstream GitHub repository [2] (the suse-py3 branch).
+
+[1]: https://build.opensuse.org/package/show/home:hmzhao:branches:network:ha-clustering:Factory/ocfs2-test
+[2]: https://github.com/markfasheh/ocfs2-test
+
+- Heming
+
+On 3/27/25 14:22, Heming Zhao wrote:
+> The commit 4eb7b93e0310 ("ocfs2: improve write IO performance when
+> fragmentation is high") introduced a regression. In the discontiguous
+> extent allocation case, ocfs2_cluster_group_search() is comparing with
+> the wrong target length, which causes allocation failure.
+> 
+> Call stack:
+> ocfs2_mkdir()
+>   ocfs2_reserve_new_inode()
+>    ocfs2_reserve_suballoc_bits()
+>     ocfs2_block_group_alloc()
+>      ocfs2_block_group_alloc_discontig()
+>       __ocfs2_claim_clusters()
+>        ocfs2_claim_suballoc_bits()
+>         ocfs2_search_chain()
+>          ocfs2_cluster_group_search()
+> 
+> Reported-by: Gautham Ananthakrishna <gautham.ananthakrishna@oracle.com>
+> Fixes: 4eb7b93e0310 ("ocfs2: improve write IO performance when fragmentation is high")
+> Signed-off-by: Heming Zhao <heming.zhao@suse.com>
+> ---
+>   fs/ocfs2/suballoc.c | 14 +++++++++++---
+>   fs/ocfs2/suballoc.h |  1 +
+>   2 files changed, 12 insertions(+), 3 deletions(-)
+>
