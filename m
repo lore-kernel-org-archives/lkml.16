@@ -1,221 +1,150 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11CC20C497;
-	Thu, 27 Mar 2025 10:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA4D20E03B;
+	Thu, 27 Mar 2025 10:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743071267; cv=none; b=rjRsAGKsCzSdas5UxBP+nPPswCZmj/4g9Nl+fZE/WaJvDUdbx+PcuZqALpT+HIuCTeWZwfHoafMoveeItUHS4Ep+7jYXf82TlAq2llqdw2zLdeBAA0xX3zPUfR7T4LigLj6HMoUX5tNHBr90uH/xwfIyv5fHzSWVmMi5zcUcSto=
+	t=1743071347; cv=none; b=oua51eIdpvOFD2PkUmowoF7M+fUeScNmdDSG+numlifuVXQtA/QukezR4O4G4v1BQEK1z9UcH9VngNYhnH1bVWS+5KaqSIHpafyF78ezM8NhiKnFOJrajIkweQ97mn0VVDLJGj/+V8Teg8qjh0zubHF22Gt/QrgAl/Qbb0TNWs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743071267; c=relaxed/simple;
-	bh=DjighT6KaNkerXFcx2sqy6Gx28dAGuH/PznLd/ld0Zo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=O4lRm7TzPt/1V8wQ7LX7Aup96uKXiEJ8meQW9dW7JXhRjC0Y6cDMLXkH/p/0KsR2UJUXlKrQrkyZyZWjfXUxE4OyNjj4vpgMFgZKMxkLUxNqx3D4aUdpfg/LUySWMXn2gmnp0O/P5832s5TGlx5kzhp7RsvF+3OOqpbzov+FggQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ysu+mUme; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZTe9E+Fe; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743071347; c=relaxed/simple;
+	bh=NAF2vsNFyg0cvCLYEPLLXD2j50hqtM/yWmWAgBOxym0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FoszEA713zDWpjOwrKRk/wG8WCMYyI/V9swAZs3mhfXb5BPgZxPxsF064qYHn1Ev04i+jX2+PQ6QKSgvTNtJFU5q9nf1v0mS1ibgB258IugqkrdDAQRf2wNoYiJTS/JQbTetHQp6lTY+bVvaX7LBJ3rC+n/YFTRX7O/GYywjzGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DMH8PRfU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ysu+mUme";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZTe9E+Fe"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743071263;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XJIKKbFoyEHcQK4utFLPZUfIHZoC09dJJcZQegR1TyU=;
-	b=ysu+mUmeYV7gknCnLdGpoOsjn6en58saEIsr6dHf60CXxJSH/ZG5I2CgYg30Juq8wtW83b
-	8BQUgGzPxz5PuPnbXlCaQKPc9Zk3Iaz+nTt7D2M6JXT6XjVnqyA8Mj9gyZ/S+64EZSso52
-	F0RsvjbYnQV/ZgPbvGWdWZwpYqcN7rQ10FcWz3w4ax3NN0pGtRao7JrJRT3CzaJFBbqUJv
-	rvwMQHe/WSWZI5YS1rb6l8gdDsajxvzqESf74/jsLGfoh8nahrY0/g2Adnrf+taqDv4BHO
-	438kJOpIcdB1mzx+EIt4I9XdF+NgK6e32LYTSKU5OB5PWaCLYp3UP3j/4GeM9A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743071263;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XJIKKbFoyEHcQK4utFLPZUfIHZoC09dJJcZQegR1TyU=;
-	b=ZTe9E+FeZ2VWC364LVwHqPmckhAl05CeUGgjUUsunGhELxPNnJOnVY2q7LBjwixrKh9QVa
-	x+FeUrnpmWuinJAQ==
-To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, linux-kernel@vger.kernel.org
-Cc: bp@alien8.de, mingo@redhat.com, dave.hansen@linux.intel.com,
- Thomas.Lendacky@amd.com, nikunj@amd.com, Santosh.Shukla@amd.com,
- Vasant.Hegde@amd.com, Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com,
- x86@kernel.org, hpa@zytor.com, peterz@infradead.org, seanjc@google.com,
- pbonzini@redhat.com, kvm@vger.kernel.org, kirill.shutemov@linux.intel.com,
- huibo.wang@amd.com, naveen.rao@amd.com
-Subject: Re: [RFC v2 05/17] x86/apic: Add update_vector callback for Secure
- AVIC
-In-Reply-To: <e86f71ec-94f7-46be-87fe-79ca26fa91d7@amd.com>
-References: <20250226090525.231882-1-Neeraj.Upadhyay@amd.com>
- <20250226090525.231882-6-Neeraj.Upadhyay@amd.com> <87jz8i31dv.ffs@tglx>
- <ecc20053-42ae-43ba-b1b3-748abe9d5b3b@amd.com>
- <e86f71ec-94f7-46be-87fe-79ca26fa91d7@amd.com>
-Date: Thu, 27 Mar 2025 11:27:42 +0100
-Message-ID: <871puizs2p.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DMH8PRfU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67623C4CEDD;
+	Thu, 27 Mar 2025 10:29:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743071345;
+	bh=NAF2vsNFyg0cvCLYEPLLXD2j50hqtM/yWmWAgBOxym0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DMH8PRfUym9SXob0XTs+3UqyBUmb0wdk3kel4QTR1FHOK/CSFqJglYwccJntcR2I0
+	 a8ZkatnvRf1aomVo7KCFGEIPlPnjiWu1k1oer4JodtZRoxO//tats2uIVg81q+iWyM
+	 w7LL52JmPiekFfB97DzbWAFxC4NZbPli/WwPHWhkEcVNaJN+yuQbWwunJSdR+n99mm
+	 XGUojGl81prawFjwcCDlR05ATFqWxWfB3/kx3nSEZwrNRCRs70uvPAcgQFiXBgBtRF
+	 qY+7ABnK/K8l068sLRNEV+osz/oc23mjop58pHbC8WCTTmqfYW0y2ANdr1+3uVHCMr
+	 V1XeTrKuxKRow==
+Date: Thu, 27 Mar 2025 11:28:58 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Rob Herring <robh@kernel.org>, Dirk Behme <dirk.behme@de.bosch.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 10/10] samples: rust: platform: Add property read examples
+Message-ID: <Z-UoapC4zkKFOD9-@pollux>
+References: <20250326171411.590681-1-remo@buenzli.dev>
+ <20250326171411.590681-11-remo@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250326171411.590681-11-remo@buenzli.dev>
 
-On Tue, Mar 25 2025 at 17:40, Neeraj Upadhyay wrote:
-> On 3/21/2025 9:05 PM, Neeraj Upadhyay wrote:
-> diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
-> index 736f62812f5c..fef6faffeed1 100644
-> --- a/arch/x86/kernel/apic/vector.c
-> +++ b/arch/x86/kernel/apic/vector.c
-> @@ -139,6 +139,46 @@ static void apic_update_irq_cfg(struct irq_data *irqd, unsigned int vector,
->                             apicd->hw_irq_cfg.dest_apicid);
->  }
->
-> +static inline void apic_drv_update_vector(unsigned int cpu, unsigned int vector, bool set)
-> +{
-> +       if (apic->update_vector)
-> +               apic->update_vector(cpu, vector, set);
-> +}
+On Wed, Mar 26, 2025 at 06:13:49PM +0100, Remo Senekowitsch wrote:
+> --- a/samples/rust/rust_driver_platform.rs
+> +++ b/samples/rust/rust_driver_platform.rs
+> @@ -2,7 +2,7 @@
+>  
+>  //! Rust Platform driver sample.
+>  
+> -use kernel::{c_str, of, platform, prelude::*};
+> +use kernel::{c_str, of, platform, prelude::*, str::CString};
+>  
+>  struct SampleDriver {
+>      pdev: platform::Device,
+> @@ -28,6 +28,60 @@ fn probe(pdev: &mut platform::Device, info: Option<&Self::IdInfo>) -> Result<Pin
+>              dev_info!(pdev.as_ref(), "Probed with info: '{}'.\n", info.0);
+>          }
+>  
+> +        let dev = pdev.as_ref();
+> +        if let Ok(idx) = dev.property_match_string(c_str!("compatible"), c_str!("test,rust-device"))
+> +        {
+> +            dev_info!(pdev.as_ref(), "matched compatible string idx = {}\n", idx);
+> +        }
 > +
-> +static int irq_alloc_vector(const struct cpumask *dest, bool resvd, unsigned int *cpu)
-> +{
-> +       int vector;
+> +        if let Ok(str) = dev
+> +            .property_read::<CString>(c_str!("compatible"))
+> +            .required()
+> +        {
+> +            dev_info!(pdev.as_ref(), "compatible string = {:?}\n", str);
+> +        }
 > +
-> +       vector = irq_matrix_alloc(vector_matrix, dest, resvd, cpu);
+> +        let prop = dev
+> +            .property_read::<bool>(c_str!("test,bool-prop"))
+> +            .required()?;
+> +        dev_info!(dev, "bool prop is {}\n", prop);
 > +
-> +       if (vector < 0)
-> +               return vector;
+> +        if dev.property_present(c_str!("test,u32-prop")) {
+> +            dev_info!(dev, "'test,u32-prop' is present\n");
+> +        }
 > +
-> +       apic_drv_update_vector(*cpu, vector, true);
+> +        let prop = dev
+> +            .property_read::<u32>(c_str!("test,u32-optional-prop"))
+> +            .or(0x12);
+> +        dev_info!(
+> +            dev,
+> +            "'test,u32-optional-prop' is {:#x} (default = {:#x})\n",
+> +            prop,
+> +            0x12
+> +        );
+
+Printing the default value looks more like a test, rather than a sample.
+
 > +
-> +       return vector;
-> +}
-
-static int irq_alloc_vector(const struct cpumask *dest, bool resvd, unsigned int *cpu)
-{
-	int vector = irq_matrix_alloc(vector_matrix, dest, resvd, cpu);
-
-	if (vector > 0)
-		apic_drv_update_vector(*cpu, vector, true);
-        return vector;
-}
-
-Perhaps?
-
-> After checking more on this, set_bit(vector, ) cannot be used directly  here, as
-> 32-bit registers are not consecutive. Each register is aligned at 16 byte
-> boundary.
-
-Fair enough.
-
-> So, I changed it to below:
->
-> --- a/arch/x86/kernel/apic/x2apic_savic.c
-> +++ b/arch/x86/kernel/apic/x2apic_savic.c
-> @@ -19,6 +19,26 @@
->
->  /* APIC_EILVTn(3) is the last defined APIC register. */
->  #define NR_APIC_REGS   (APIC_EILVTn(4) >> 2)
-> +/*
-> + * APIC registers such as APIC_IRR, APIC_ISR, ... are mapped as
-> + * 32-bit registers and are aligned at 16-byte boundary. For
-> + * example, APIC_IRR registers mapping looks like below:
-> + *
-> + * #Offset    #bits         Description
-> + *  0x200      31:0         vectors 0-31
-> + *  0x210      31:0         vectors 32-63
-> + *  ...
-> + *  0x270      31:0         vectors 224-255
-> + *
-> + * VEC_BIT_POS gives the bit position of a vector in the APIC
-> + * reg containing its state.
-> + */
-> +#define VEC_BIT_POS(v) ((v) & (32 - 1))
-> +/*
-> + * VEC_REG_OFF gives the relative (from the start offset of that APIC
-> + * register) offset of the APIC register containing state for a vector.
-> + */
-> +#define VEC_REG_OFF(v) (((v) >> 5) << 4)
->
->  struct apic_page {
->         union {
-> @@ -185,6 +205,35 @@ static void x2apic_savic_send_IPI_mask_allbutself(const struct cpumask *mask, in
->         __send_IPI_mask(mask, vector, APIC_DEST_ALLBUT);
->  }
->
-> +static void x2apic_savic_update_vector(unsigned int cpu, unsigned int vector, bool set)
-> +{
-> +       struct apic_page *ap = per_cpu_ptr(apic_backing_page, cpu);
-> +       unsigned long *sirr;
-> +       int vec_bit;
-> +       int reg_off;
+> +        // Missing property without a default will print an error
+> +        let _ = dev
+> +            .property_read::<u32>(c_str!("test,u32-required-prop"))
+> +            .required()?;
 > +
-> +       /*
-> +        * ALLOWED_IRR registers are mapped in the apic_page at below byte
-> +        * offsets. Each register is a 32-bit register aligned at 16-byte
-> +        * boundary.
-> +        *
-> +        * #Offset                    #bits     Description
-> +        * SAVIC_ALLOWED_IRR_OFFSET   31:0      Guest allowed vectors 0-31
-> +        * "" + 0x10                  31:0      Guest allowed vectors 32-63
-> +        * ...
-> +        * "" + 0x70                  31:0      Guest allowed vectors 224-255
-> +        *
-> +        */
-> +       reg_off = SAVIC_ALLOWED_IRR_OFFSET + VEC_REG_OFF(vector);
-> +       sirr = (unsigned long *) &ap->regs[reg_off >> 2];
-> +       vec_bit = VEC_BIT_POS(vector);
+> +        let prop: u32 = dev.property_read(c_str!("test,u32-prop")).required()?;
+> +        dev_info!(dev, "'test,u32-prop' is {:#x}\n", prop);
 > +
-> +       if (set)
-> +               set_bit(vec_bit, sirr);
-> +       else
-> +               clear_bit(vec_bit, sirr);
-> +}
+> +        let prop: [i16; 4] = dev.property_read(c_str!("test,i16-array")).required()?;
+> +        dev_info!(dev, "'test,i16-array' is {:?}\n", prop);
+> +        dev_info!(
+> +            dev,
+> +            "'test,i16-array' length is {}\n",
+> +            dev.property_count_elem::<u16>(c_str!("test,i16-array"))
+> +                .unwrap()
 
-If you need 20 lines of horrific comments to explain incomprehensible
-macros and code, then something is fundamentally wrong. Then you want to
-sit back and think about whether this can't be expressed in simple and
-obvious ways. Let's look at the math.
+Please no unwrap() in the kernel, it may panic.
 
-The relevant registers are starting at regs[SAVIC_ALLOWED_IRR]. Due to
-the 16-byte alignment the vector number obviously cannot be used for
-linear bitmap addressing.
+> +        );
+> +
+> +        let prop: KVec<i16> = dev
+> +            .property_read_array_vec(c_str!("test,i16-array"), 4)?
+> +            .required()?;
+> +        dev_info!(dev, "'test,i16-array' is KVec {:?}\n", prop);
+> +
 
-But the resulting bit number can be trivially calculated with:
+Please move this code to a new function, e.g.
 
-   bit = vector + 32 * (vector / 32);
+	impl SampleDriver {
+	   fn properties_parse(dev: &device::Device)) -> Result;
+	}
 
-which can be converted to:
+in order to keep probe() as clean as possible. If we put too much stuff in
+there, it might become too confusing to serve as a simple example showing how to
+implement a platform driver in Rust.
 
-   bit = vector + (vector & ~0x1f);
-
-That conversion should be done by any reasonable compiler.
-
-Ergo the whole thing can be condensed to:
-
-static void x2apic_savic_update_vector(unsigned int cpu, unsigned int vector, bool set)
-{
-	struct apic_page *ap = per_cpu_ptr(apic_backing_page, cpu);
-	unsigned long *sirr = (unsigned long *) &ap->regs[SAVIC_ALLOWED_IRR];
-
-        /*
-         * The registers are 32-bit wide and 16-byte aligned.
-         * Compensate for the resulting bit number spacing.
-         */
-        unsigned int bit = vector + 32 * (vector / 32);
-
-	if (set)
-		set_bit(vec_bit, sirr);
-	else
-		clear_bit(vec_bit, sirr);
-}
-
-Two comment lines plus one line of trivial math makes this
-comprehensible and obvious. No?
-
-If you need that adjustment for other places as well, then you can
-provide a trivial and documented inline function for it.
-
-Thanks,
-
-        tglx
+Besides that, are we sure we really want to print everything?
