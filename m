@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079BA1FC8;
-	Thu, 27 Mar 2025 05:16:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807187483
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 05:18:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743052594; cv=none; b=SqdQT97dDgy8sCSwASYtpHXeao1nYKTckc6x1hFyMSMc7ZADkuZ1lVID4wzBwo7kfjORVnB3qL9iqDEkNXrwVIZOtYdP7eRMctHzQzidxZhOGAnLv20cAHSCQHCiHb+UBSM3ELWoJgnGFqQRzpQNqgp66U6dYvBhlz0vlCX9er4=
+	t=1743052688; cv=none; b=s/QxUM41oiFVkVCO51k+bPl1O+GkUYapD3ei9M2Z5dUwwqyxB7fKoYIf+AbS+oD+LJExqDU8sib1QAEpI2oPUuATuAGPXkjTaVK8ulZe2vIWErHlsmvcR1dBLbjcQnX3j96yR4w2kLffWW6FeyDuoRPCVQvuGUqdYj/tZLaT9Sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743052594; c=relaxed/simple;
-	bh=p4E3NIWKHCQ7Kh8PS4wy9jAsJGGPr7MV2B4owvu0tVU=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=VMHA/Ob7Ex47dvrLXu/xc6y89bCo/8eSs42Ksuk6C4HuLnn1hwic4ck7Q/U31tq1EpxGAYRIQzjiSLAwPd0vP+esZ9ztFGpfs5ABdx6giaqjaOHCt/6jNSKqyTfpKntIrxXKcPv8aXPQJqV5sz1e6gdg2zsoqJypHZK0u4rSfkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zab0q4SG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743052688; c=relaxed/simple;
+	bh=MUEkhbrLah+qUnwXOqxIDqCRSSUCPTPdGTWUp273+Jw=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=d8abDbc3ouuSJyAPhvOS41GXAgr2MPaNqVS+VseZKNYjVtpZIIDPt4QWh6m5ZLfoRrYlSfxu0PXgwJVQFg0F3H95T1mYck7+hq8BYpl+SlY7XZ+OWRyH89ftn+vaVNu6gNJ/tCWJntnXaUaXg6tm22pmO6tSa16Iy+DTsq12cds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FtPkMfEZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zab0q4SG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8A58C4CEDD;
-	Thu, 27 Mar 2025 05:16:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtPkMfEZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F33EC4CEDD;
+	Thu, 27 Mar 2025 05:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743052593;
-	bh=p4E3NIWKHCQ7Kh8PS4wy9jAsJGGPr7MV2B4owvu0tVU=;
+	s=k20201202; t=1743052688;
+	bh=MUEkhbrLah+qUnwXOqxIDqCRSSUCPTPdGTWUp273+Jw=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=Zab0q4SGvrBMtgoXJ4fEsv82KssbMczUCWoAPxwGW5Pu+PvN4NGoIuNyb2qf/uaUB
-	 ELscolavqsjliNC54ttcIKnHXiyDA+3X8S1sYahvwbL4aKm6uSvr4tU5SAjRMhDYSs
-	 00fYmEM7ngcohE3ZVXJ1RV27jVQozC7RSznUxmCPgKNshh+ki5q5YYu8RoY0A6ttHF
-	 /qLYctsD78P1349/vAQo4t+ohEGSV+FfKN+lRZ/VX7BzT4x6IWQKDYkcAHNmKOSMax
-	 GZZU1RKuMRvL4mlpbwg+uyGhSPHU/qAnmmx4XSF7kffXkg5IGL4p8qHGipPrWJOk6K
-	 Vqc13YsS72ZVA==
+	b=FtPkMfEZGZqUNhAzNwkU/+TTIQhdAuCHozhh3aiilFP5tdF7eLKbL5XI9+96KePbF
+	 oIrEtLKWCIRWA8zA2URTqPpfTcHbImY7oQRkWWrWKftGqfhKZI/HWsCF5QJrSl3uVw
+	 Dv9fZYgjLi43RGScdiDL/BKFV7I2BDbvMfVlrp6G9Fd9d9Co9EvaF6Chce1WnYaWpV
+	 Ngf9NYU/Ic7w0Ky/kkYAlnxJiEOrcIT1g1FjxIUgYvQ60pZgtvDekj5MTx+XJx6CNc
+	 wonHlWFO1644YWQfygMjqZRO4OyqInb8F89pzrOZN43mxQEunLJ+WSOmOd2tPtBCLY
+	 XpHGHbbYFQMjA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7156F380AAFD;
-	Thu, 27 Mar 2025 05:17:11 +0000 (UTC)
-Subject: Re: [GIT PULL] Networking for v6.15
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAF5B380AAFD;
+	Thu, 27 Mar 2025 05:18:45 +0000 (UTC)
+Subject: Re: [GIT PULL] zstd changes for v6.15-rc1
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250326163652.2730264-1-kuba@kernel.org>
-References: <20250326163652.2730264-1-kuba@kernel.org>
-X-PR-Tracked-List-Id: <netdev.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250326163652.2730264-1-kuba@kernel.org>
-X-PR-Tracked-Remote: https://lore.kernel.org/all/20250228132953.78a2b788@canb.auug.org.au/ net/core/dev.c
-X-PR-Tracked-Commit-Id: 023b1e9d265ca0662111a9df23d22b4632717a8a
+In-Reply-To: <44A5CFC9-5B88-4910-9674-BAEDD9969165@meta.com>
+References: <44A5CFC9-5B88-4910-9674-BAEDD9969165@meta.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <44A5CFC9-5B88-4910-9674-BAEDD9969165@meta.com>
+X-PR-Tracked-Remote: https://github.com/terrelln/linux.git tags/zstd-linus-v6.15-rc1
+X-PR-Tracked-Commit-Id: 65d1f5507ed2c78c64fce40e44e5574a9419eb09
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
-Message-Id: <174305262992.1585001.7193079148343307430.pr-tracker-bot@kernel.org>
-Date: Thu, 27 Mar 2025 05:17:09 +0000
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: torvalds@linux-foundation.org, kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, pabeni@redhat.com
+X-PR-Merge-Commit-Id: e61f33273ca755b3e2ebee4520a76097199dc7a8
+Message-Id: <174305272453.1585001.8620274847370523188.pr-tracker-bot@kernel.org>
+Date: Thu, 27 Mar 2025 05:18:44 +0000
+To: Nick Terrell <terrelln@meta.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Nick Terrell <nickrterrell@gmail.com>, David Sterba <dsterba@suse.com>, Kernel Team <kernel-team@meta.com>, Ingo Molnar <mingo@redhat.com>, lkml <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Wed, 26 Mar 2025 09:36:51 -0700:
+The pull request you sent on Wed, 26 Mar 2025 02:20:52 +0000:
 
-> https://lore.kernel.org/all/20250228132953.78a2b788@canb.auug.org.au/ net/core/dev.c
+> https://github.com/terrelln/linux.git tags/zstd-linus-v6.15-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
+https://git.kernel.org/torvalds/c/e61f33273ca755b3e2ebee4520a76097199dc7a8
 
 Thank you!
 
