@@ -1,102 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D9C20F08F;
-	Thu, 27 Mar 2025 11:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B189211A39
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 11:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743075739; cv=none; b=ov5GFs2HIECDnlyaablL/jvfCtkG2F23oM3t5mzNbF8DO0u0YUzizfa1tTXzTXZ7QVt+arNBCsRQ1tnjz4+5a2ankMdWGKnKn5Pw8M8iVplICKJCIiiGhztYc/ViRvG5tJJllC8/BeoekdcVlIlDzm9nWCdaeu5sBiuryd4z7FQ=
+	t=1743075754; cv=none; b=tElf6NODkJP1lpfDivwNeKIUrgFjuUjAZDvczScaxewQJ7Ytc1fb47ShBeGJ5NCYX0c0KxqLlJKQBQQjTw2TYqOP5rgzEIun8boTm+Ser+rYwr175qEKyOKibH27yITeyp0sa4lIIKhhRai1FSNl8Ddo3QOTdALCTkFpzjNTEAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743075739; c=relaxed/simple;
-	bh=Pglc2XYPxGtlcT+pJGdGG59wtrPATxrsu95GS/aPjSk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gnjbMK8NBVkXFUqcX/lBk/FkYxBQS8Bd5tyh/VNZQV8DzBzxnQx4kLua3CWH6p5jSObtydIdAMvwb67B3f24zAW+HEfpAt8KtHHmWBH/j5lLs1cgQLx5TWoNc4Vr3tkFZKADAPPH7eObiD4MSAyWiKRiQixzu6wuGbaa3LmI9sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=calZW4y2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743075754; c=relaxed/simple;
+	bh=KALfclt2c3dAW1AKyOrZ1tv8gBSfmDEQVOWa5sKhm4s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I8OuaB+myuJ4vqrUb+yXSsowx8U5PNSafmIKGNPgsRJRueucG/Bcgwp+7JTCICG/Vs82uypgOpunS1bwrVdokz9btQQBEQqkXaHVlpfJAHWjhbGKfq5VpYelmDTDsCJnah2k/LdFJVwcPbnFhxZjan0WHaWdnd/yRTwq6bnAstY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dsQJtQf1; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="calZW4y2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B93FCC4CEDD;
-	Thu, 27 Mar 2025 11:42:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743075738;
-	bh=Pglc2XYPxGtlcT+pJGdGG59wtrPATxrsu95GS/aPjSk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=calZW4y2o5Z9zT6S/GJ0TJZ2tBx+84RsV+GaeagTGFAa0uDZItSk/DdmQNcJJydJS
-	 C+POGa/hU3sxWpR73Jz5tPLI7kKL/V+dUeeB0qaLLcYQVEwDmBVBubf6bbTPfqnxyJ
-	 PdDjiHWsg0ONcsyEzzuIxI8FGTJEt+VCapGTsUUmVLaH/vFq8+U9ani6S18BNdsiD/
-	 4vvqTzOTmpDbcpZbWmqde8txgRsIk4G5VeZuBsAceRslSSDTjw7/2n+ZRPVmkCOOcN
-	 bo1rik73jdXQqQAwLs8b1fdhUTcJFJ61MKpTmqQuADEdvzN1wTBhLih9SWku5JrKRz
-	 nnNaB1tiFPGIg==
-Date: Thu, 27 Mar 2025 11:42:11 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Maud Spierings <maud_spierings@hotmail.com>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH RESEND v2] rust: regulator: add a bare minimum regulator
- abstraction
-Message-ID: <197b2670-f628-4a1b-8034-89fb94ce38a6@sirena.org.uk>
-References: <20250326-topics-tyr-regulator-v2-1-780b0362f70d@collabora.com>
- <a98eb789-4c49-4607-ad15-76e260888d64@sirena.org.uk>
- <0698A75E-D43C-4D02-B734-BFE1B3CC5D34@collabora.com>
- <f22cbd85-1896-4842-8746-d74ee160ab3c@sirena.org.uk>
- <AM7P189MB1009748DBA1F99F2BBEC2292E3A12@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dsQJtQf1"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-224171d6826so22005405ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 04:42:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1743075752; x=1743680552; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lrPxuKonSwXBeNfuEkYWsadcWWgtM4GwjCPebsFmDtE=;
+        b=dsQJtQf1hRShhsTtF5ahf/rbHtupLeZoiU8HW7uQAx3UBr+gTg2LvQvdR+JAAJXstn
+         Nd9wb61XUaMqaJLXq20vGmmFSxSaGl8dsXuNp6hqheGEGdeiCNb+IOFUyeGdA129zpg3
+         kBjf2iB6HeIESdRZP30weDLvweilB/1Nmv6K8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743075752; x=1743680552;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lrPxuKonSwXBeNfuEkYWsadcWWgtM4GwjCPebsFmDtE=;
+        b=J7TX1EWqrC8pbV1bckiwkushNKdLECtZPwnSehl2mbGL/UWkqdXcEKWHwnQWCin/Bt
+         scq85WRXQaJ7d7TEXA0J5uPGcK7spLiLXMEJzVmY12LEBCMR5Mu2Bu1F97VPjAH/lhHo
+         akETveIk2vOZO/wJtsgq31Bd8cB4Yhn0WV2OIYZDgPqas134ua/fhFIrtbzcOLBmYTK+
+         lX+bZq8S1SkXzsHygoistW3Af6xF/7gc9rgYWnyCZ05tuXWL6FYyQFGZwNyCjrk3BwHs
+         7RxT6TXgig3nADD/zkenPD7/DjejKm+Wy4jjRre5z12TJOq9EeMls98az3Llmh3+gEq1
+         2QYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVz0r7Nqs362G+z+ELI3RvUDKi8UZH9qgj0PzprJRStIyOTQBqn7swyekfq3SVtVnwyQlpuuOQ33+6AVpo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxsr6cE6EfxqAdQAtY7wNB/1WGKlEvNFAr5MVO9Ciqtg/neL+XO
+	Fw2JZWR4yTenA14dHZ0G5hM4hx6fef/xKRCxzRhJjDy77h9gB6/Xz2tvvny5Og==
+X-Gm-Gg: ASbGncs6oh7X35hPPA0WRtM7TjhayfP+2JwY4IG0jFt5g24vXNrpY7eh8msO0/W5Knb
+	56d8ZnA0NuNLlY8DfL7bJRd0v1gNnHtmhtdyBwrPqdue1NZ7XZA8GSrcKbmnFeMfpTaXD2rS1Sb
+	UQcOpbzRVrCdQnt8VsY1Y2/+7Ga1gDmeveEBMD+fBcockRrxczcH0csfziAy9Gx1XBfp0YykBQ4
+	m/Nh53YBg8zFPecObDGOlQyDPdaxbTMPX4Pc2BFYk7GkZB8jXk11BfdyIAIjFQLvsbRYDjTCdor
+	tCJYHN7dHA0XI2nVdkJSeQkZ+vWnJksIafSlKvs2XAJzjesMh1efhokcw5XnLh5mmXNPUw==
+X-Google-Smtp-Source: AGHT+IHD4RukqotroNphP3/o3sXCpK8buz0Wp92d9oz/6cijSteH6HLjiZHwSaZwk29Uog5iWFoLHA==
+X-Received: by 2002:a05:6a21:168d:b0:1f5:a3e8:64c8 with SMTP id adf61e73a8af0-1fea2f8094bmr6354759637.36.1743075751546;
+        Thu, 27 Mar 2025 04:42:31 -0700 (PDT)
+Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:cd9c:961:27c5:9ceb])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af8a2a479c1sm12652606a12.70.2025.03.27.04.42.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 04:42:30 -0700 (PDT)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andreas Noever <andreas.noever@gmail.com>,
+	Michael Jamet <michael.jamet@intel.com>,
+	Mika Westerberg <westeri@kernel.org>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	stable@vger.kernel.org
+Subject: [PATCHv2] thunderbolt: do not double dequeue a request
+Date: Thu, 27 Mar 2025 20:41:21 +0900
+Message-ID: <20250327114222.100293-1-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Cc8Rh8ict0uNPh7O"
-Content-Disposition: inline
-In-Reply-To: <AM7P189MB1009748DBA1F99F2BBEC2292E3A12@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
-X-Cookie: Multics is security spelled sideways.
+Content-Transfer-Encoding: 8bit
 
+Some of our devices crash in tb_cfg_request_dequeue():
 
---Cc8Rh8ict0uNPh7O
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ general protection fault, probably for non-canonical address 0xdead000000000122
 
-On Thu, Mar 27, 2025 at 12:36:23PM +0100, Maud Spierings wrote:
-> On 3/27/25 12:32, Mark Brown wrote:
+ CPU: 6 PID: 91007 Comm: kworker/6:2 Tainted: G U W 6.6.65)
+ RIP: 0010:tb_cfg_request_dequeue+0x2d/0xa0
+ Call Trace:
+ <TASK>
+ ? tb_cfg_request_dequeue+0x2d/0xa0
+ tb_cfg_request_work+0x33/0x80
+ worker_thread+0x386/0x8f0
+ kthread+0xed/0x110
+ ret_from_fork+0x38/0x50
+ ret_from_fork_asm+0x1b/0x30
 
-> > My understanding was that the enable was done by transforming a
-> > Regulator into an EnabledRegulator but if you can explicitly call
-> > disable() on an EnabledRegulator without destroying it then you've got
-> > an EnabledRegulator which isn't actually enabled.  Perhaps it's not
-> > clear to me how the API should work?
+The circumstances are unclear, however, the theory is that
+tb_cfg_request_work() can be scheduled twice for a request:
+first time via frame.callback from ring_work() and second
+time from tb_cfg_request().  Both times kworkers will execute
+tb_cfg_request_dequeue(), which results in double list_del()
+from the ctl->request_queue (the list poison deference hints
+at it: 0xdead000000000122).
 
-> From my understanding, disable() takes ownership of self, it does not take a
-> reference, so the EnabledRegulator is consumed and the Regulator is returned
-> through the result. So EnabledRegulator will get dropped in this function
-> which owns it.
+Another possibility can be tb_cfg_request_sync():
 
-Ah, OK - if the disable() takes ownership of the passed object that's
-fine.
+tb_cfg_request_sync()
+ tb_cfg_request()
+  schedule_work(&req->work) -> tb_cfg_request_dequeue()
+ tb_cfg_request_cancel()
+  schedule_work(&req->work) -> tb_cfg_request_dequeue()
 
---Cc8Rh8ict0uNPh7O
-Content-Type: application/pgp-signature; name="signature.asc"
+To address the issue, do not dequeue requests that don't
+have TB_CFG_REQUEST_ACTIVE bit set.
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: stable@vger.kernel.org
+---
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmflOZIACgkQJNaLcl1U
-h9AhXQf/dNicQf9OMfu+K1+9BvgEoG+M7+CE1/yNPe0gt2K+GSsz/txmddjjEFm/
-GXxkbVFaS+KDY9Jcy9pHMc86ALUyEWMDf/TbpyE0/k0O7XG1hzd5BST9k51x0qbI
-VkI6rhZTHuHZdBtdLkTh/BQC1DN0CVflxaM3IYgQBkjOGKiNnaDGomInLu7fSBH3
-Lm5o2wgsEMt4SiMSd4QGuc08qh8RD6wXOK4AoJwodZXjQoYs3iB4/+hmOeXoqr4Z
-49CjLXjt7aZO/PxSkXibG/v2jMBy7Y1oVZ+w1QYtTj+bkYbwGexIsHqLQcTW2JcL
-HDZGytfBxCZZs2yt3YYAjkXe2fD/Qg==
-=zgaO
------END PGP SIGNATURE-----
+v2: updated commit message, kept list_del()
 
---Cc8Rh8ict0uNPh7O--
+ drivers/thunderbolt/ctl.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/thunderbolt/ctl.c b/drivers/thunderbolt/ctl.c
+index cd15e84c47f4..1db2e951b53f 100644
+--- a/drivers/thunderbolt/ctl.c
++++ b/drivers/thunderbolt/ctl.c
+@@ -151,6 +151,11 @@ static void tb_cfg_request_dequeue(struct tb_cfg_request *req)
+ 	struct tb_ctl *ctl = req->ctl;
+ 
+ 	mutex_lock(&ctl->request_queue_lock);
++	if (!test_bit(TB_CFG_REQUEST_ACTIVE, &req->flags)) {
++		mutex_unlock(&ctl->request_queue_lock);
++		return;
++	}
++
+ 	list_del(&req->list);
+ 	clear_bit(TB_CFG_REQUEST_ACTIVE, &req->flags);
+ 	if (test_bit(TB_CFG_REQUEST_CANCELED, &req->flags))
+-- 
+2.49.0.395.g12beb8f557-goog
+
