@@ -1,68 +1,235 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC8420CCEA;
-	Thu, 27 Mar 2025 13:47:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4753626ACC
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 13:47:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743083230; cv=none; b=ht2fKMrvBHL23zFPlrh6KBNWMYsGNfmB/KN84oOqYjMwTBpN27CzMp75iD7FXmn0rMbP8OfJV+wu4ND+imeYpw8LNU3RlKlBF4lEcI6PW4HEjj4Oh3sDEfa0e22lAj9ALrdJI9EEizEfU+cR5D+NHdA2WMZvi1kjU6b+6jGijEs=
+	t=1743083250; cv=none; b=T2n0dhxBn9pTx0sVDTNxXDun6B2dC7G/AY/ktfZYWlbwn1JbJEfXEi/1PP7jCECIIOuc1Uqj4MHGZlS9tX+bYBN9QrFePqf9odo7UjHLZpG5wj7tS6hF/65ADLlixor8T0Bk6Bf5JPmpCr5iU1hw3SMzk7nsJgd2WHNejpVvkPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743083230; c=relaxed/simple;
-	bh=RF3wdOFzL4vQqrB1B0vZ2iCYv5b2RA5x1OV5kLSU3FE=;
-	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=bRNrZpZ+2F8i8iDlA7ZwesLxYd/Ndo7gR5U328agm3BetwtRtm1R9RdqZIvV5fqjgrJf8KDPoYFlXDYEF7+Lca6Nv0obPQztkzmfQuHD7dnHkl/DtzaOhKhYksxpl6DRUgf+QFLNIz1G7ps/+e0Swj+Aitc+VsxOicm8uRZbt5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRYR+wJJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743083250; c=relaxed/simple;
+	bh=6QuAf9mZYKT0w3iBFYWyoO0jHuM/PJ89TbwzBkMY+qo=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=mzmBlTXa50KR4s7r14zCE3MQ6vpaGO/zV3fv/8XYW1uZmBr9g3y04tRycAFzby+0a4EoowT0wpoQ2EcD5ehaqlNXMTq+xvMOW6RXAfc4Xd5/wyz5Sh+s6dt32jTkq2xo5EbuNheqTYWqQbl94xuGeIvL1a2DkJD3HGonEJl/Cy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AP/tNg3X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRYR+wJJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91924C4CEDD;
-	Thu, 27 Mar 2025 13:47:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AP/tNg3X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46547C4CEDD;
+	Thu, 27 Mar 2025 13:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743083230;
-	bh=RF3wdOFzL4vQqrB1B0vZ2iCYv5b2RA5x1OV5kLSU3FE=;
-	h=Date:From:To:Subject:In-Reply-To:References:Cc:From;
-	b=TRYR+wJJTnUYnvc1ODN4B9vpFKwvFoCczHvPyqf3uyWcee9vc7G3HqduxGVF99hGj
-	 2Anar/GswBgL04kQZ9wHQpotK+vz0ZpPE6+J7Eb/VTi2PcOmI2BZq3zNIwPhwtQdXG
-	 QbWKDgA4NBm1Wl/MModaDXner0J3IDHY/sZSU8C+1n6tLKZCMO4ElsgXDUpeelYVmE
-	 cv8Vp7Iain2yESM5cV0XyZbYHErfh63L4j48/Ex3hgmA1YRD5vqNgxkueELk2ceCHU
-	 7vcG8O9KKTohmlyEUFTgtyiTklRJvINQ1fdoDiG+RpkeAFVVaw9+WescKG+IQ5mZKj
-	 gfYcPqQWUU29A==
-Message-ID: <83d859d94aeedacc2d5fb058a84bfdac@kernel.org>
-Date: Thu, 27 Mar 2025 13:47:07 +0000
-From: "Maxime Ripard" <mripard@kernel.org>
-To: "Luca Ceresoli" <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH v9 2/5] drm/bridge: add support for refcounting
-In-Reply-To: <20250326-drm-bridge-refcount-v9-2-5e0661fe1f84@bootlin.com>
-References: <20250326-drm-bridge-refcount-v9-2-5e0661fe1f84@bootlin.com>
-Cc: dri-devel@lists.freedesktop.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "Andrzej
- Hajda" <andrzej.hajda@intel.com>, "Anusha Srivatsa" <asrivats@redhat.com>, "David
- Airlie" <airlied@gmail.com>, "Dmitry Baryshkov" <lumag@kernel.org>, "Fabio
- Estevam" <festevam@gmail.com>, =?utf-8?b?SGVydsOpIENvZGluYQ==?= <herve.codina@bootlin.com>, "Hui
- Pu" <Hui.Pu@gehealthcare.com>, "Inki Dae" <inki.dae@samsung.com>, "Jagan
- Teki" <jagan@amarulasolutions.com>, "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Jonas
- Karlman" <jonas@kwiboo.se>, "Laurent Pinchart" <Laurent.pinchart@ideasonboard.com>, "Maarten
- Lankhorst" <maarten.lankhorst@linux.intel.com>, "Marek Szyprowski" <m.szyprowski@samsung.com>, "Marek
- Vasut" <marex@denx.de>, "Maxime Ripard" <mripard@kernel.org>, "Neil
- Armstrong" <neil.armstrong@linaro.org>, "Paul Kocialkowski" <paulk@sys-base.io>, "Pengutronix
- Kernel Team" <kernel@pengutronix.de>, "Robert Foss" <rfoss@kernel.org>, "Sascha
- Hauer" <s.hauer@pengutronix.de>, "Shawn Guo" <shawnguo@kernel.org>, "Simona
- Vetter" <simona@ffwll.ch>, "Stefan Agner" <stefan@agner.ch>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>, "Thomas Zimmermann" <tzimmermann@suse.de>
-Content-Transfer-Encoding: quoted-printable
+	s=k20201202; t=1743083249;
+	bh=6QuAf9mZYKT0w3iBFYWyoO0jHuM/PJ89TbwzBkMY+qo=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=AP/tNg3X5zl4xTlp1ODKhTYOsCVRC4BNbutvj+lKdprbFo2n6FTCnCjST2OTR70/1
+	 PNEDq+csk5tBrSoiTJ8eBE4WBQb55NT5t1Wqu6fBwTKwgxnr7yUylaWezuaFwch7Cf
+	 fsQMsqFc6wNbHw+RT6jVKQb0M7fs+zZfcHqvU8j/zlyYuv2iBEFqJq1fj+zXoOAAv+
+	 whAOtCFcx1oALaXkFjQDAk0kCof/MjYvQulZMUbxNChXn32jUFJM2zaziopBFUkEdi
+	 Fm5OHUgqOQ86QleTPOe+w+VadgODOxzL8Uv73XBUvxaRS3PanbjDVuOSl9ZmZkLEPY
+	 UnahLRth10G9A==
+Message-ID: <60e763d5-dff4-44a1-9e80-48d384335027@kernel.org>
+Date: Thu, 27 Mar 2025 21:47:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org,
+ "linux-f2fs-devel@lists.sourceforge.net"
+ <linux-f2fs-devel@lists.sourceforge.net>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "pilhyun.kim@sk.com" <pilhyun.kim@sk.com>
+Subject: Re: [External Mail] Re: [External Mail] Re: [PATCH] f2fs: prevent the
+ current section from being selected as a victim during garbage collection
+To: "yohan.joung@sk.com" <yohan.joung@sk.com>, Yohan Joung
+ <jyh429@gmail.com>, "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
+ "daeho43@gmail.com" <daeho43@gmail.com>
+References: <20250326141428.280-1-yohan.joung@sk.com>
+ <bf3f571c-a6bf-4a17-8745-039b37ac4f48@kernel.org>
+ <2d95428375bd4a5592516bb6cefe4592@sk.com>
+ <deb42999-df89-471b-a161-e33b97f96b74@kernel.org>
+ <8d1f6aa914f94f5da1ccd46c75e9031b@sk.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <8d1f6aa914f94f5da1ccd46c75e9031b@sk.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 26 Mar 2025 18:47:36 +0100, Luca Ceresoli wrote:
-> DRM bridges are currently considered as a fixed element of a DRM card, and
-> thus their lifetime is assumed to extend for as long as the card
-> exists. New use cases, such as hot-pluggable hardware with video bridges,
-> require DRM bridges to be added to and removed from a DRM card without
-> tearing the card down. This is possible for connectors already (used by DP
->=20
-> [ ... ]
+On 2025/3/27 16:00, yohan.joung@sk.com wrote:
+>> From: Chao Yu <chao@kernel.org>
+>> Sent: Thursday, March 27, 2025 4:30 PM
+>> To: 정요한(JOUNG YOHAN) Mobile AE <yohan.joung@sk.com>; Yohan Joung
+>> <jyh429@gmail.com>; jaegeuk@kernel.org; daeho43@gmail.com
+>> Cc: chao@kernel.org; linux-f2fs-devel@lists.sourceforge.net; linux-
+>> kernel@vger.kernel.org; 김필현(KIM PILHYUN) Mobile AE <pilhyun.kim@sk.com>
+>> Subject: [External Mail] Re: [External Mail] Re: [PATCH] f2fs: prevent the
+>> current section from being selected as a victim during garbage collection
+>>
+>> On 3/27/25 14:43, yohan.joung@sk.com wrote:
+>>>> From: Chao Yu <chao@kernel.org>
+>>>> Sent: Thursday, March 27, 2025 3:02 PM
+>>>> To: Yohan Joung <jyh429@gmail.com>; jaegeuk@kernel.org;
+>>>> daeho43@gmail.com
+>>>> Cc: chao@kernel.org; linux-f2fs-devel@lists.sourceforge.net; linux-
+>>>> kernel@vger.kernel.org; 정요한(JOUNG YOHAN) Mobile AE
+>>>> <yohan.joung@sk.com>
+>>>> Subject: [External Mail] Re: [PATCH] f2fs: prevent the current
+>>>> section from being selected as a victim during garbage collection
+>>>>
+>>>> On 3/26/25 22:14, Yohan Joung wrote:
+>>>>> When selecting a victim using next_victim_seg in a large section,
+>>>>> the selected section might already have been cleared and designated
+>>>>> as the new current section, making it actively in use.
+>>>>> This behavior causes inconsistency between the SIT and SSA.
+>>>>
+>>>> Hi, does this fix your issue?
+>>>
+>>> This is an issue that arises when dividing a large section into
+>>> segments for garbage collection.
+>>> caused by the background GC (garbage collection) thread in large
+>>> section
+>>> f2fs_gc(victim_section) ->
+>>> f2fs_clear_prefree_segments(victim_section)->
+>>> cursec(victim_section) -> f2fs_gc(victim_section by next_victim_seg)
+>>
+>> I didn't get it, why f2fs_get_victim() will return section which is used
+>> by curseg? It should be avoided by checking w/ sec_usage_check().
+>>
+>> Or we missed to check gcing section which next_victim_seg points to during
+>> get_new_segment()?
+>>
+>> Can this happen?
+>>
+>> e.g.
+>> - bggc selects sec #0
+>> - next_victim_seg: seg #0
+>> - migrate seg #0 and stop
+>> - next_victim_seg: seg #1
+>> - checkpoint, set sec #0 free if sec #0 has no valid blocks
+>> - allocate seg #0 in sec #0 for curseg
+>> - curseg moves to seg #1 after allocation
+>> - bggc tries to migrate seg #1
+>>
+>> Thanks,
+> That's correct
+> In f2fs_get_victim, we use next_victim_seg to
+> directly jump to got_result, thereby bypassing sec_usage_check
+> What do you think about this change?
+> 
+> @@ -850,15 +850,20 @@ int f2fs_get_victim(struct f2fs_sb_info *sbi, unsigned int *result,
+>                          p.min_segno = sbi->next_victim_seg[BG_GC];
+>                          *result = p.min_segno;
+>                          sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
+> -                       goto got_result;
+>                  }
+>                  if (gc_type == FG_GC &&
+>                                  sbi->next_victim_seg[FG_GC] != NULL_SEGNO) {
+>                          p.min_segno = sbi->next_victim_seg[FG_GC];
+>                          *result = p.min_segno;
+>                          sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
+> -                       goto got_result;
+>                  }
+> +
+> +               secno = GET_SEC_FROM_SEG(sbi, segno);
+> +
+> +               if (sec_usage_check(sbi, secno))
+> +                       goto next;
+> +
+> +               goto got_result;
+>          }
 
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
+But still allocator can assign this segment after sec_usage_check() in
+race condition, right?
 
-Thanks!
-Maxime
+IMO, we can clear next_victim_seg[] once section is free in
+__set_test_and_free()? something like this:
+
+---
+  fs/f2fs/segment.h | 13 ++++++++++---
+  1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+index 0465dc00b349..826e37999085 100644
+--- a/fs/f2fs/segment.h
++++ b/fs/f2fs/segment.h
+@@ -473,9 +473,16 @@ static inline void __set_test_and_free(struct f2fs_sb_info *sbi,
+  			goto skip_free;
+  		next = find_next_bit(free_i->free_segmap,
+  				start_segno + SEGS_PER_SEC(sbi), start_segno);
+-		if (next >= start_segno + usable_segs) {
+-			if (test_and_clear_bit(secno, free_i->free_secmap))
+-				free_i->free_sections++;
++		if ((next >= start_segno + usable_segs) &&
++			test_and_clear_bit(secno, free_i->free_secmap)) {
++			free_i->free_sections++;
++
++			if (GET_SEC_FROM_SEG(sbi->next_victim_seg[BG_GC]) ==
++									secno)
++				sbi->next_victim_seg[BG_GC] = NULL_SEGNO;
++			if (GET_SEC_FROM_SEG(sbi->next_victim_seg[FG_GC]) ==
++									secno)
++				sbi->next_victim_seg[FG_GC] = NULL_SEGNO;
+  		}
+  	}
+  skip_free:
+-- 
+2.40.1
+
+>>
+>>>
+>>> Because the call stack is different,
+>>> I think that in order to handle everything at once, we need to address
+>>> it within do_garbage_collect, or otherwise include it on both sides.
+>>> What do you think?
+>>>
+>>> [30146.337471][ T1300] F2FS-fs (dm-54): Inconsistent segment (70961)
+>>> type [0, 1] in SSA and SIT [30146.346151][ T1300] Call trace:
+>>> [30146.346152][ T1300]  dump_backtrace+0xe8/0x10c [30146.346157][
+>>> T1300]  show_stack+0x18/0x28 [30146.346158][ T1300]
+>>> dump_stack_lvl+0x50/0x6c [30146.346161][ T1300]  dump_stack+0x18/0x28
+>>> [30146.346162][ T1300]  f2fs_stop_checkpoint+0x1c/0x3c [30146.346165][
+>>> T1300]  do_garbage_collect+0x41c/0x271c [30146.346167][ T1300]
+>>> f2fs_gc+0x27c/0x828 [30146.346168][ T1300]  gc_thread_func+0x290/0x88c
+>>> [30146.346169][ T1300]  kthread+0x11c/0x164 [30146.346172][ T1300]
+>>> ret_from_fork+0x10/0x20
+>>>
+>>> struct curseg_info : 0xffffff803f95e800 {
+>>> 	segno        : 0x11531 : 70961
+>>> }
+>>>
+>>> struct f2fs_sb_info : 0xffffff8811d12000 {
+>>> 	next_victim_seg[0] : 0x11531 : 70961
+>>> }
+>>>
+>>>>
+>>>> https://lore.kernel.org/linux-f2fs-devel/20250325080646.3291947-2-
+>>>> chao@kernel.org
+>>>>
+>>>> Thanks,
+>>>>
+>>>>>
+>>>>> Signed-off-by: Yohan Joung <yohan.joung@sk.com>
+>>>>> ---
+>>>>>   fs/f2fs/gc.c | 4 ++++
+>>>>>   1 file changed, 4 insertions(+)
+>>>>>
+>>>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c index
+>>>>> 2b8f9239bede..4b5d18e395eb 100644
+>>>>> --- a/fs/f2fs/gc.c
+>>>>> +++ b/fs/f2fs/gc.c
+>>>>> @@ -1926,6 +1926,10 @@ int f2fs_gc(struct f2fs_sb_info *sbi, struct
+>>>> f2fs_gc_control *gc_control)
+>>>>>   		goto stop;
+>>>>>   	}
+>>>>>
+>>>>> +	if (__is_large_section(sbi) &&
+>>>>> +			IS_CURSEC(sbi, GET_SEC_FROM_SEG(sbi, segno)))
+>>>>> +		goto stop;
+>>>>> +
+>>>>>   	seg_freed = do_garbage_collect(sbi, segno, &gc_list, gc_type,
+>>>>>   				gc_control->should_migrate_blocks,
+>>>>>   				gc_control->one_time);
+>>>
+> 
+
