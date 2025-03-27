@@ -1,136 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A3D2BAF8;
-	Thu, 27 Mar 2025 07:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743061713; cv=none; b=KS67w2qSk3qgJMq6WupdiG+GyRc4ITgJsQUjxBTlrP4B7MUVsqMOAElwcZECfb8htriLFoJVLIkXAFZDEe4opFvpOdUWMVNJX8iuYkjsHnsO4MMqNAqulXhrRlKCxYDouHECZkXqM9Jeq7r6HpquE9Hxeo1BLW6m9S8BHq3K/hk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743061713; c=relaxed/simple;
-	bh=qqI5Zw8XhX5HfkSAsrvFKk8Fvy8YvdFkG6C2QodO7aQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pH0uKXkjDkpn/fXFY2orBLyfwVbs0bjXD6qPUtXw52XE0EdBxM3b21WiwFN8yQZrLP6J7tAmU8aTw6ZfAZfY4uzNyEGvUOcmSAyeD5VqFOHFXz2lZiKXfHDDbxdVf40o/afpPiVz5O49dWCM5MdIAY3eEh/4EI0LVSIpidU+IXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+RkPguD; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B02611CA0;
+	Thu, 27 Mar 2025 07:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743061758; cv=pass; b=Ex2OvBRL5/T/EnrP8rqN+ShLTfLHY8a1ydmKlpyqBN0iCK+dbrWySg+Qnz5oGGX+Gpi5jqifIYInh5iViDlM7wBfyHHUDmkeWIHNW+dDdJNWDmLKJ8I214X0ROYHODHIlTAifBZ4vdd0O2sUb8DiEGVKLEjt/Jb+JnAaAAlmyzk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743061758; c=relaxed/simple;
+	bh=eWf+lUzuxBC0lic2+0dFJxd6idcICS2Im6Lp/Kckwco=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d4tQ+TtGgh6/QEThYt04SLOyEa3r6DrN2SBKkba7dcTDJto5pFVVvzHnTlP45SV30xiXyV9WHVoDwNNjAqt6A1nA26FN4ryfAyqHNQclIh6blzgghM5dfO3+S0WfdWWXqN6PURTII6Z2wEGi3OAF+24gQ5HTNswIhpSRnjpXz5k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b=WBGOEDGg; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+RkPguD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2C99C4CEDD;
-	Thu, 27 Mar 2025 07:48:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743061713;
-	bh=qqI5Zw8XhX5HfkSAsrvFKk8Fvy8YvdFkG6C2QodO7aQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=C+RkPguDoj1M92d+kO+gfE5mwL+J7YatTlZQJlxkHk3GQbSrlnDOHIJBo6N/3CEQv
-	 lfPkZtCaY5rPsEOLLCgaerEyrWUHxZVVqU/yRkUfmpyoCEa95lD5881XqhC1ctt/Pd
-	 VtY+Xyb2TqHPKR0sw4HWRryfXj2Ji2d6gbDFm1cgVtIip1N+rV1EN7LfD/mV5LFGdc
-	 vfviqJDYFHg7v0O5bvHhxQjwOPe1vXTHo/zTS73UqeUPTkduknSCK/vP99XaIl0YeB
-	 /A9WCwhj+3r04cCi2MFuTGtHlcY1GXuWQVeejz6cs5aSMR9Juo56mwI+j1RYK1N3H5
-	 xcj4KpuNY+iLg==
-Message-ID: <3d88eee6-1401-4ffc-85bb-3ea91f28d186@kernel.org>
-Date: Thu, 27 Mar 2025 08:48:22 +0100
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b="WBGOEDGg"
+ARC-Seal: i=1; a=rsa-sha256; t=1743061725; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=PTK/VnBXW3FY5HLtjhSHlmaHpEQAoUlew0ZnngucI5PgkwQF4TlxD9C7su8vvzsj1Dko8Lf0ABsDQAUSsGZ/+v33wDhhyfscu7j7GcHRGiv5V12y4X0XsP1ZYrBVyPlrzloeL7i7bSzWnfZWNHocp7k2DBJCqbqYCOaTjJGVju0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743061725; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=kyCtzHoq8aUFZrJR5s643KhWlSqeHq7AVGaEl+qqeno=; 
+	b=hp6PTMhKpQyN4RQJbn3XDq/ci4oZ7oAOTLoaFGWtEg0kgB9yJsVbEqZn7qyRmsZv2QrM8AfdxWI+nK8mW802m1MXLi7s+bWS04gRe+AND7m/hmkgfV7VlfCmitE4ewYOgPbWnQAiCn62rcCtR7mGlNGo5kwx3OVu7QjGuAaphRE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.fricke@collabora.com;
+	dmarc=pass header.from=<sebastian.fricke@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743061725;
+	s=zohomail; d=collabora.com; i=sebastian.fricke@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=kyCtzHoq8aUFZrJR5s643KhWlSqeHq7AVGaEl+qqeno=;
+	b=WBGOEDGgkGWXrufxSI09IWNEwh3G8obvCm6o2LWWYTmrAI+EjFypnkKf1BAq54tg
+	IK+EqN/Fa6V9emxp/etHcQ1z+gRbhPwSybXFIonkraCXIa3XXuBwipjNMsbld6ObQHG
+	RD9c4tNCXLscaxLY9GCBBjifEjSRzEyUmsUGHSoc=
+Received: by mx.zohomail.com with SMTPS id 1743061723696163.541725841117;
+	Thu, 27 Mar 2025 00:48:43 -0700 (PDT)
+Date: Thu, 27 Mar 2025 08:48:35 +0100
+From: Sebastian Fricke <sebastian.fricke@collabora.com>
+To: ming.qian@oss.nxp.com
+Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl, nicolas@ndufresne.ca,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, linux-imx@nxp.com, xiahong.bao@nxp.com,
+	eagle.zhou@nxp.com, imx@lists.linux.dev,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 2/2] media: amphion: Add a frame flush mode for decoder
+Message-ID: <20250327074835.r47kaabtwu5jqvxf@basti-XPS-13-9310>
+References: <20250305062630.2329032-1-ming.qian@oss.nxp.com>
+ <20250305062630.2329032-2-ming.qian@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/15] dt-bindings: pinctrl: renesas: Document RZ/V2N SoC
-To: Prabhakar <prabhakar.csengg@gmail.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Biju Das <biju.das.jz@bp.renesas.com>,
- Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250326143945.82142-12-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250326143945.82142-12-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250305062630.2329032-2-ming.qian@oss.nxp.com>
+X-ZohoMailClient: External
 
-On 26/03/2025 15:39, Prabhakar wrote:
-> +#define RZV2N_P3	3
-> +#define RZV2N_P4	4
-> +#define RZV2N_P5	5
-> +#define RZV2N_P6	6
-> +#define RZV2N_P7	7
-> +#define RZV2N_P8	8
-> +#define RZV2N_P9	9
-> +#define RZV2N_PA	10
-> +#define RZV2N_PB	11
+Hey Ming,
 
-Same comments as before - not useful to repeat the name.
+On 05.03.2025 14:26, ming.qian@oss.nxp.com wrote:
+>From: Ming Qian <ming.qian@oss.nxp.com>
+>
+>By default the amphion decoder will pre-parse 3 frames before starting
+>to decode the first frame. Alternatively, a block of flush padding data
+>can be appended to the frame, which will ensure that the decoder can
+>start decoding immediately after parsing the flush padding data, thus
+>potentially reducing decoding latency.
+>
+>This mode was previously only enabled, when the display delay was set to
+>0. Allow the user to manually toggle the use of that mode via a module
+>parameter called frame_flush_mode, which enables the mode without
+>changing the display order.
+>
+>Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
+>---
+>v3
+>- Improve commit message as recommended
+>- Add some comments to avoid code looks cryptic
+>
+> drivers/media/platform/amphion/vpu_malone.c | 14 +++++++++++++-
+> 1 file changed, 13 insertions(+), 1 deletion(-)
+>
+>diff --git a/drivers/media/platform/amphion/vpu_malone.c b/drivers/media/platform/amphion/vpu_malone.c
+>index 1d9e10d9bec1..4ef9810d8142 100644
+>--- a/drivers/media/platform/amphion/vpu_malone.c
+>+++ b/drivers/media/platform/amphion/vpu_malone.c
+>@@ -25,6 +25,10 @@
+> #include "vpu_imx8q.h"
+> #include "vpu_malone.h"
+>
+>+static bool frame_flush_mode;
+>+module_param(frame_flush_mode, bool, 0644);
+>+MODULE_PARM_DESC(frame_flush_mode, "Set low latency flush mode: 0 (disable) or 1 (enable)");
+>+
+> #define CMD_SIZE			25600
+> #define MSG_SIZE			25600
+> #define CODEC_SIZE			0x1000
+>@@ -1579,7 +1583,15 @@ static int vpu_malone_input_frame_data(struct vpu_malone_str_buffer __iomem *str
+>
+> 	vpu_malone_update_wptr(str_buf, wptr);
+>
+>-	if (disp_imm && !vpu_vb_is_codecconfig(vbuf)) {
+>+	/*
+>+	 * Enable the low latency flush mode if display delay is set to 0
+>+	 * or parameter frame_flush_mode is set to 1.
 
-It is the third patch in this patchset, which receives exactly the same
-comments as given before.
+s/or parameter frame_flush_mode is set to 1./
+   or the frame flush mode if it is set to 1./
 
-I expect that given feedback somehow stays within group of contributions
-or company in form of internal knowledge. Or just read other people's
-patchset to learn from them and do not make the same mistakes.
+>+	 * The low latency flush mode requires some padding data to be appended after each frame,
 
-> +
-> +#define RZV2N_PORT_PINMUX(b, p, f)	RZG2L_PORT_PINMUX(RZV2N_P##b, p, f)
-> +#define RZV2N_GPIO(port, pin)		RZG2L_GPIO(RZV2N_P##port, pin)
+s/appended after each/appended to each/
+(the word append implies that something is added after something else)
 
-Not a binding. If you claim otherwise, point me to the line of driver
-code using this binding.
+>+	 * but don't put it in between the sequence header and frame.
 
-Best regards,
-Krzysztof
+s/but don't put it in between the sequence header and frame./
+   but there must not be any padding data between the sequence header and the frame./
+
+(As this is not a suggestion for the developer but a description of what
+the code does)
+
+>+	 * Only H264 and HEVC decoder support this module yet,
+
+s/decoder/formats/
+
+I'd rewrite this part:
+This module is currently only supported for the H264 and HEVC formats,
+
+but that is only because this sounds more natural to me.
+
+>+	 * for other formats, vpu_malone_add_scode() will return 0.
+>+	 */
+>+	if ((disp_imm || frame_flush_mode) && !vpu_vb_is_codecconfig(vbuf)) {
+> 		ret = vpu_malone_add_scode(inst->core->iface,
+> 					   inst->id,
+> 					   &inst->stream_buffer,
+>-- 
+>2.43.0-rc1
+>
+>
+
+Thank you!
+
+Regards,
+Sebastian Fricke
