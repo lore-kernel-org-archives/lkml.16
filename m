@@ -1,74 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B76383
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 00:07:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 007734C79;
+	Thu, 27 Mar 2025 00:17:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743034060; cv=none; b=cjuT8Z3wkQ3rr7t7//PHJd6iNLG1a4kNVlMF31pC6+UdmtRAAbuuwUC99KOYNT+WgT290itTVDdX25qhoExd1/PXQJa6EZ+6fk66jjT+E1nLCZvRmLgSdTVQB0xdCX+lO3Ql2PGjUcQaiUY9dPKJmawoPtXFLW9Ys0RbwpBVRP4=
+	t=1743034668; cv=none; b=TPcyy0fnvL4otJbet7bkB5Lz89OhnDiJYD91p97XMmd3HBU8EFn5MuFkY4UIA8NlnM009GNQqrLIbotvhLZCgbR/ZnbNe2B2bR9myOld7egG1eBPSxOYTAzmkaekxHti6EC4tAaWy6w2IBcy24PgIihFsSfjYBOxvMfGTVW8y2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743034060; c=relaxed/simple;
-	bh=8Q9f9qqW4PgE8fV9DUYaT9qf7eH8WzntnWhy53wu+/0=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=pfYiJNUF0kpQMWrtnQQZrrT6cF/0xKl3NueBhsqpLfNm85ud+p1vuzEp4Oo8usCW1etUri6RDBidCZPgkCZishk0V7eZKEPFz0S9n42R1n9A8rdjth9jS9CkxU2WcBUQrI3LMT3PX+CSWosPmR5MP5PtW2XDlrt4281c8SvIlLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81E5AC4CEEB;
-	Thu, 27 Mar 2025 00:07:40 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1txanM-00000002uzO-1E73;
-	Wed, 26 Mar 2025 20:08:28 -0400
-Message-ID: <20250327000828.145418880@goodmis.org>
-User-Agent: quilt/0.68
-Date: Wed, 26 Mar 2025 20:08:13 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Siddarth G <siddarthsgml@gmail.com>
-Subject: [for-next][PATCH 2/2] tracing: Replace strncpy with memcpy for fixed-length substring copy
-References: <20250327000811.879041980@goodmis.org>
+	s=arc-20240116; t=1743034668; c=relaxed/simple;
+	bh=zmEcurLR8RG57jqW4yrKKO7IDGUqhy+UXNtnWYipBiA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=T43XtPe6s7in6nddDWcUxoaPhNDGCMKpHjw8udSBM5f3+dhw+QSbL1VSs13BWb9CBb6xeE4jHfRACW/DlSYrc3MfMmNDTxGWiYOh/Kx/CqaWVD244qL2RMFp/OifU50LfvLRCEggYXM9GZ0DrUPUDq4aWeIUkHvEjyPMQSLlT6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vNf2FvR4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vNf2FvR4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA321C4CEE2;
+	Thu, 27 Mar 2025 00:17:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743034667;
+	bh=zmEcurLR8RG57jqW4yrKKO7IDGUqhy+UXNtnWYipBiA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=vNf2FvR4gBG7ehl5RqBNUsjFpBiE8bR/FLodS46xDhUtJUq7iyaz0OPFMQFgKN5Aj
+	 FyxhAGGohixSg+FwhUGohr3ej3lVj/5DV7ilREtHFkUAQMhgzbxvalr5AAmKiw/1vY
+	 rAfgeOt3PjQMGZwyjxqmLRbfVIz1TVeEfuBP6cCPM5aCwYRSBGuJPzsgyV9JLxkPMQ
+	 kA3qlsgUYApesOIV6TLVCWEqHYcviae3xjbNgl2q1N+47jyHd3z+fIxFi2ITsAw7Be
+	 a35/uVd9BHNms6FPWtU/jpGW/sPdXt4+9tZKxW5mlSVSO5ZAKdhnWRubV1judbOVxl
+	 4B79mo27so19g==
+Date: Wed, 26 Mar 2025 18:17:44 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] fs: namespace: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <Z-SZKNdCiAkVJvqm@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Siddarth G <siddarthsgml@gmail.com>
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-checkpatch.pl reports the following warning:
-WARNING: Prefer strscpy, strscpy_pad, or __nonstring over strncpy
-(see: https://github.com/KSPP/linux/issues/90)
+Move the conflicting declaration to the end of the structure. Notice
+that `struct statmount` is a flexible structure --a structure that
+contains a flexible-array member.
 
-In synth_field_string_size(), replace strncpy() with memcpy() to copy 'len'
-characters from 'start' to 'buf'. The code manually adds a NUL terminator
-after the copy, making memcpy safe here.
+Fix the following warning:
 
-Link: https://lore.kernel.org/20250325181232.38284-1-siddarthsgml@gmail.com
-Signed-off-by: Siddarth G <siddarthsgml@gmail.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+fs/namespace.c:5329:26: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- kernel/trace/trace_events_synth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/namespace.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-index 6d592cbc38e4..969f48742d72 100644
---- a/kernel/trace/trace_events_synth.c
-+++ b/kernel/trace/trace_events_synth.c
-@@ -207,7 +207,7 @@ static int synth_field_string_size(char *type)
- 	if (len == 0)
- 		return 0; /* variable-length string */
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 6100e5b962a6..16292ff760c9 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -5326,8 +5326,10 @@ struct kstatmount {
+ 	struct mnt_idmap *idmap;
+ 	u64 mask;
+ 	struct path root;
+-	struct statmount sm;
+ 	struct seq_file seq;
++
++	/* Must be last --ends in a flexible-array member. */
++	struct statmount sm;
+ };
  
--	strncpy(buf, start, len);
-+	memcpy(buf, start, len);
- 	buf[len] = '\0';
- 
- 	err = kstrtouint(buf, 0, &size);
+ static u64 mnt_to_attr_flags(struct vfsmount *mnt)
 -- 
-2.47.2
-
+2.43.0
 
