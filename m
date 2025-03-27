@@ -1,215 +1,120 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1E019D88F;
-	Thu, 27 Mar 2025 11:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D730F19D88F;
+	Thu, 27 Mar 2025 11:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743074690; cv=none; b=nZa+1E4TjQWi9WFwwmEnHfTGxHZqL+hDzEkr0bI5jVmmqPeUz886wLLuOIr78EIUAGagAADRF3PO1jLNRreJtjSY5Og/Q9rkeGm04D3ASe9FfOgZMGFiqosc9/fZc1tGk7MKVetSKlst/pFJ9hu2jdtvKModvWJIaVY1kLlGMN4=
+	t=1743074704; cv=none; b=cfVlDd8nCLA4iWd3wZIFrxqfWn8hpXQEoUWPX8fNMQio8CiT4ZpRGKnaGtxChDIybyUfZyOxO5kUK0WoXrndhiR25OkN+mvZBik0HTrklfAcDDfSj7tHnQugvgHA9tQ17XarG142RkXNIahMPJpsQ7t/+jdMA2p/xoolsOaVx/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743074690; c=relaxed/simple;
-	bh=9vHCXQb60UYSWMuIwkUwNBBk1SD10XtmRQu83JxRez0=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YRdKpFgXT9MzuJUH1Qva3GL/ud0HIjMGkccG5+dQ+spj6aWksI+0DPjYhEPIKO8n4z0M1Q3V0vensWFuE5s3cP6s/XF9FRNKeQcA2DrAXjxICYA48ehl6QGNzGAfCb1P48rqftaDyaLqJRL+WDgJJ+Uh2k284nPLx97XXuBHWHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YUMsxmSw; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YUMsxmSw"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso1278621f8f.1;
-        Thu, 27 Mar 2025 04:24:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743074687; x=1743679487; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=r9uAUUnPvZxGPnm1O0BCAGuy1dtOvt8b3tdG1/p4Uso=;
-        b=YUMsxmSwsXM2BrzDlXtsujaVs8/Ky4VjKAwSwjmXtgYHZBBbVbbmgK9+X9aV74Y1X/
-         AlIeLyePBDSuRieVVqQFJJlXtcejhvctdVH4bE4HC7ysMZv4zqABNBkhaeFPVXmIrg1+
-         RAnCXHkHYYzPsgmdE62mVBoQs+cW+ZMaQ9pA6l28LfVa8+5R+Y9RmyqJqfdYsQdmb7tv
-         uOhTKHiPGYG3H5LNPWgI4ZaVSxLOiblGvdMupZCwQgF37ZSdEmdR6JPXdyCXAC5af6zN
-         ePg5Rn4xtlXovyWGaLa7QYt7WlJ3URv5QPvOYIwZ6kn7p0rdQkpGW516nXZufZo8/2Q+
-         VEMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743074687; x=1743679487;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r9uAUUnPvZxGPnm1O0BCAGuy1dtOvt8b3tdG1/p4Uso=;
-        b=fipF+RgSBSX2Kl8nvfFIjC7kNBq/7fjbFjyP3cMNHjQRa2soY9AjeJU9RFgj65/Xzd
-         J1/Ey9zc7CzqmDu85TasfecFT1wHHjq5Ia6knipWKy1tVPpGF9fu6xaHB+HzisYrx0/U
-         46XGdMc4ugImVBBpJHXieFi7cDtZBJ/KhNvoLDqfeAI096dLKyCt9Su/cD/yIfrjqWO/
-         2lX1g9st8+KWGhLFdTrktD6UWLDK8H2murWWLmpRnP8UA9QuwtHNVmaWfPq6Jm3u0Rs0
-         pmFKXH7o9BdrDG31D9w2rKr3qRpdUD5LLAt0vwtYlhSBjsYOtMpHDW/8MVVMpn20H8Wx
-         WlfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNEbT3uNjpFUAiVHyaOyeVXMCelAmKLd7CguOCuAaxGPveoJz0wQb65qjYO4z2woOTG8Gu3Hy7VO3AQKoa@vger.kernel.org, AJvYcCUyIJoa7Vkjwdv4GRbuzfx47/1VZAiiQNBN+Dq3yhARHu/7JrDBypdxA7sRkgsWie5f9v2jC2pxoHWr@vger.kernel.org, AJvYcCV0k5V51gYYsRZ9lljltpHiR7xHwXptANVniGPf3ja/AZp/PevNp6k2dCAcQTgbL+LfOox8m8FS@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxfWDBL3dkBHJ1CdjJOFtxGBtQLA5yM5LG61gQoN0YtLKQG6L2
-	+9nIWpvfdIj1LEoFbf3Is+SqbTufFkq9vBFMpr9XEQWoih9wEliq
-X-Gm-Gg: ASbGncu7XLID4Usay+oEoJoYR3iQ2AVSE/O2JN5R4N5oAFOSPh7SuvU0udlO0I9iCHM
-	+HIoLM74SJ8W1KWZbg5h70pDSEkECDsjL/VClT0Y6Ry54+I7U/0agC4nq5sq5WnwLHXyr94eWfD
-	c1/BfHWMgLGvgDoDbeZYUja4xzUGzMWyNhdr5sh0AnvBg4wx+jgxHNQm77Vled4HvQyJJuMUpKz
-	o5+MUkFi+Sy0QhIzCx4IU6bvTQp3Q098OaRIvZMDwncEnFj9S+6H9xaaahYgMQR/iTVZd/eTtZP
-	lW3xF5kLe4ugzzqeWuoFdRJbSjE7m4fmTYroiKv+/TNw1MtArD3/V0xdua//Qpv6yw7cVVWqozQ
-	N
-X-Google-Smtp-Source: AGHT+IFLCphW5U7zd6c6SZfMhpK/aclXKGbAvS2gd0lfAQCxn3O3FLYOmoElgv4cGprAKQTjQsCX6w==
-X-Received: by 2002:a5d:64eb:0:b0:390:e9ee:f27a with SMTP id ffacd0b85a97d-39ad15234edmr3000901f8f.28.1743074686734;
-        Thu, 27 Mar 2025 04:24:46 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39ac8745d9csm7858640f8f.95.2025.03.27.04.24.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 04:24:46 -0700 (PDT)
-Message-ID: <67e5357e.df0a0220.14c972.64ad@mx.google.com>
-X-Google-Original-Message-ID: <Z-UuvuUlCmPvvpKf@Ansuel-XPS.>
-Date: Thu, 27 Mar 2025 12:24:44 +0100
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Eric Woudstra <ericwouds@gmail.com>,
-	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [net-next RFC PATCH v3 3/4] net: phy: Add support for Aeonsemi
- AS21xxx PHYs
-References: <20250326233512.17153-1-ansuelsmth@gmail.com>
- <20250326233512.17153-4-ansuelsmth@gmail.com>
- <20250327092418.78f55466@fedora-2.home>
+	s=arc-20240116; t=1743074704; c=relaxed/simple;
+	bh=xNEJGvolYtK1Skck/AARiHgntbdJWOBW+iw/bO4sqow=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gd3l383dSgPiAogcNjW5dKube0p7mX3+DT+xOQn95oxbIATasnC1Em0N0eL5OpCDDFLlszpA2sAKrbwCBQtNTcyk8oMJ+onHZ0bYvdFA7GDacH7kLbMawX7l+akKwPFZv72BiU17vDxbyJRx3DXTE37inxVjtogbnChRZx/91uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
+X-QQ-mid: bizesmtp83t1743074667ta4suz20
+X-QQ-Originating-IP: C9bYwwGjtIIR1ZI4wF0sfJ4mGucg6QVP1LES2zf8J90=
+Received: from localhost ( [103.233.162.252])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 27 Mar 2025 19:24:26 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 8515293745481605160
+Date: Thu, 27 Mar 2025 19:24:26 +0800
+From: Yibo Dong <dong100@mucse.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add MUCSE vendor ID to pci_ids.h
+Message-ID: <1835B10BD36E99AC+20250327112426.GB468890@nic-Precision-5820-Tower>
+References: <20250325065718.333301-1-dong100@mucse.com>
+ <20250326165728.GA1339144@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250327092418.78f55466@fedora-2.home>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250326165728.GA1339144@bhelgaas>
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MUtpDbzatTjwKerDep8phZQLNLW17fdSbInUx9hTVMNnphu8ifUPLZoM
+	vTeE45DnNoJgh4XOoSlCpjdohuUFzfDZKYzgwsqPDYVmCe6VyXLL/CivLpSi4o+OigxK7Cu
+	WuViwH0WX5VTp/PWrP8uFKcbrlR9BtvI3S5PfTVVM46AkbqZ7XbVMzSBjQk4qm1Zi9wSk8x
+	j9Knt2VVrO1navhUpQsfKsoqRI15teiNPXKQs8BcIyGw8XM4+6z7dL/OKoLd6e7I/RypN1J
+	Mz1wCklCcCOPUq/WrgqB61KTntQO/VSoj0QNZgdNpaXJM7V1oFWA+TnAoT9b/OaM1vfV1pl
+	Nwbl2ZN7tS+V+vG1APu6ZT+IYno4nrGZXcPeg2E0hHvjBnEdxQrmJu2EQ7Mte30GMJEjydk
+	IkDyQfG0wvzd+yzMSd8ponWi15PVXjMWF2+hq8279p0Tu5FkY8SWrdyWLOe2JSKN+is+mua
+	VGw/NYyqHKDO9Rr33QzfEeNLCa3DJYAyvM5XREW/6iGEXb3K2cZ5TKdCbFQ2S92fgQRwH56
+	yMnFPOlqcTCsDs3mW/iOzX5gJWcGRagbH1CQkmoxnx7jHcsCwlqjej8TfuaQy69L3fury2I
+	rRIYRf0QgvNCtSyj1tctN0F4zkWgl0d95Y1vLquKIk3+q2EhPMzvYv/jO0nYUJdoB2Z4qvG
+	4dC57v1aZpXvvzGdoNjnK+pPy6W+AlD8pT6hFZtbIxNh4ZVQ0+M0ks/+RLDy8upWH8OglbJ
+	ltVDnnoC9aCKXwtPZ/+eeS8+5H7MMTt9fkYI/MUjZcqATBSKQ/SPanDzuPjm7i/vHjZQT80
+	lk5MG0XftBkqlhDutXrnxBKjB60UaeUEtP2gLYYjp9/3E5fOdJC2K49WimsP18QELBG579F
+	fLKocc06PS6rsTFWr78IrsgWHgWqPRgG0+xTyT89/XdyBvMivGPh6ntW8hF9TI6RTA1Eplg
+	bDfoGHt8x1cf12l0oFAu6Rdsup1iKwT56IT3FaSSU7nPCZFfwFa5mkz5ZYNSdkegoaMt3x9
+	SgF/fl2wwcspYnl23JXve6YAHXJmJEGuDf9murvQ==
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-RECHKSPAM: 0
 
-On Thu, Mar 27, 2025 at 09:24:18AM +0100, Maxime Chevallier wrote:
-> Hi Christian,
+On Wed, Mar 26, 2025 at 11:57:28AM -0500, Bjorn Helgaas wrote:
+> On Tue, Mar 25, 2025 at 02:57:18PM +0800, Yibo Dong wrote:
+> > Add MUCSE as a vendor ID (0x8848) for PCI devices so we can use
+> > the macro for future drivers.
+> > 
+> > Signed-off-by: Yibo Dong <dong100@mucse.com>
 > 
-> On Thu, 27 Mar 2025 00:35:03 +0100
-> Christian Marangi <ansuelsmth@gmail.com> wrote:
+> Please post this in the series where you add the future drivers.
 > 
-> > Add support for Aeonsemi AS21xxx 10G C45 PHYs. These PHYs integrate
-> > an IPC to setup some configuration and require special handling to
-> > sync with the parity bit. The parity bit is a way the IPC use to
-> > follow correct order of command sent.
-> > 
-> > Supported PHYs AS21011JB1, AS21011PB1, AS21010JB1, AS21010PB1,
-> > AS21511JB1, AS21511PB1, AS21510JB1, AS21510PB1, AS21210JB1,
-> > AS21210PB1 that all register with the PHY ID 0x7500 0x7510
-> > before the firmware is loaded.
-> > 
-> > They all support up to 5 LEDs with various HW mode supported.
-> > 
-> > While implementing it was found some strange coincidence with using the
-> > same logic for implementing C22 in MMD regs in Broadcom PHYs.
-> > 
-> > For reference here the AS21xxx PHY name logic:
-> > 
-> > AS21x1xxB1
-> >     ^ ^^
-> >     | |J: Supports SyncE/PTP
-> >     | |P: No SyncE/PTP support
-> >     | 1: Supports 2nd Serdes
-> >     | 2: Not 2nd Serdes support
-> >     0: 10G, 5G, 2.5G
-> >     5: 5G, 2.5G
-> >     2: 2.5G
-> > 
-> > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> 	
->  [...]
+> We don't add new things to pci_ids.h unless they are actually used by
+> more than one driver because it complicates life for people who
+> backport things (there's a note at the top of the file about this).
 > 
-> I know this is only RFC, but I have some questions
+
+Thanks for the reminder; the drivers maybe use 'the define' are netdev drivers,
+so, I should first send patches to netdev subsystem, and re-send this patch
+to pci subsystem after my patches is applied by netdev subsytem? or I should send 
+this to netdev subsystem along with the drivers?
+
+> > ---
+> >  include/linux/pci_ids.h | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > index de5deb1a0118..f1b4c61c6d3c 100644
+> > --- a/include/linux/pci_ids.h
+> > +++ b/include/linux/pci_ids.h
+> > @@ -3143,6 +3143,8 @@
+> >  #define PCI_VENDOR_ID_SCALEMP		0x8686
+> >  #define PCI_DEVICE_ID_SCALEMP_VSMP_CTL	0x1010
+> >  
+> > +#define PCI_VENDOR_ID_MUCSE		0x8848
 > 
-> > +static int as21xxx_match_phy_device(struct phy_device *phydev,
-> > +				    const struct phy_driver *phydrv)
-> > +{
-> > +	struct as21xxx_priv *priv;
-> > +	u32 phy_id;
-> > +	int ret;
-> > +
-> > +	/* Skip PHY that are not AS21xxx or already have firmware loaded */
-> > +	if (phydev->c45_ids.device_ids[MDIO_MMD_PCS] != PHY_ID_AS21XXX)
-> > +		return phydev->phy_id == phydrv->phy_id;
-> > +
-> > +	/* Read PHY ID to handle firmware just loaded */
-> > +	ret = phy_read_mmd(phydev, MDIO_MMD_PCS, MII_PHYSID1);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +	phy_id = ret << 16;
-> > +
-> > +	ret = phy_read_mmd(phydev, MDIO_MMD_PCS, MII_PHYSID2);
-> > +	if (ret < 0)
-> > +		return ret;	
-> > +	phy_id |= ret;
-> > +
-> > +	/* With PHY ID not the generic AS21xxx one assume
-> > +	 * the firmware just loaded
-> > +	 */
-> > +	if (phy_id != PHY_ID_AS21XXX)
-> > +		return phy_id == phydrv->phy_id;
-> > +
-> > +	/* Allocate temp priv and load the firmware */
-> > +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv)
-> > +		return -ENOMEM;
-> > +
-> > +	mutex_init(&priv->ipc_lock);
-> > +
-> > +	ret = aeon_firmware_load(phydev);
-> > +	if (ret)
-> > +		return ret;
+> https://pcisig.com/membership/member-companies?combine=8848 says this
+> Vendor ID belongs to:
 > 
-> Here, and below, you leak priv by returning early.
+>   Wuxi Micro Innovation Integrated Circuit Design Co.,Ltd
+> 
+> I suppose "MUCSE" connects with that somehow.
+> 
+> It's nice if people can connect PCI_VENDOR_ID_MUCSE with a name used
+> in marketing the product.  Maybe "MUCSE" is the name under which
+> Wuxi Micro Innovation Integrated Circuit Design Co.,Ltd markets
+> products?
 >
 
-Yes copy paste error with migrating from devm to non-devmem.
+Yes, MUCSE is just abbreviation for “Wuxi Micro Innovation Integrated Circuit
+Design Co.,Ltd”
 
-> > +
-> > +	ret = aeon_ipc_sync_parity(phydev, priv);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/* Enable PTP clk if not already Enabled */
-> > +	ret = phy_set_bits_mmd(phydev, MDIO_MMD_VEND1, VEND1_PTP_CLK,
-> > +			       VEND1_PTP_CLK_EN);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = aeon_dpc_ra_enable(phydev, priv);
-> > +	if (ret)
-> > +		return ret;
+> >  #define PCI_VENDOR_ID_COMPUTONE		0x8e0e
+> >  #define PCI_DEVICE_ID_COMPUTONE_PG	0x0302
+> >  #define PCI_SUBVENDOR_ID_COMPUTONE	0x8e0e
+> > -- 
+> > 2.25.1
+> > 
 > 
-> Does all of the above with sync_parity, PTP clock cfg and so on needs
-> to be done in this first pass of the matching process for this PHY ?
-> 
-> From what I got from the discussions, the only important bit is to load
-> the FW to get the correct PHY id ?
-> 
-
-I will do further check on this. Waiting for the sync parity have the
-side effect of waiting for the firmware to finish loading.
-
-> > +	mutex_destroy(&priv->ipc_lock);
-> > +	kfree(priv);
-> > +
-> > +	/* Return not maching anyway as PHY ID will change after
-> > +	 * firmware is loaded.
-> > +	 */
-> > +	return 0;
-> > +}
-> 
-> Maxime
-
--- 
-	Ansuel
