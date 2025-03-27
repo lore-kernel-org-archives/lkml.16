@@ -1,245 +1,253 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0922816EB7C;
-	Thu, 27 Mar 2025 20:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743109069; cv=none; b=T/7wd7wTZbadBGGuHc/QgdpBs2OTyfqpWWYHA3Uqm8wDRSF3D3vHpberSWcfhz+kCGa1CiJ18KNtR2vHSaPPsv01Kn2StGhR3VeA362hDJiTE+quiXljxP9cUnuo68rqgyASUcqdJFJjk0iFJK/EM2gxM2NkICKQexVqZOnRe7E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743109069; c=relaxed/simple;
-	bh=U8ACEjPhWjyeheO55YZkIdTijNWUWhAGycuMJrtPNTs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZLSP1uKpFiEM4MMevhT8LaaqvbpMctSIv3y6+j5o6eNGXsTUEeU7pwkHvW1HZQBgm3z3Giywu99UzNmuR8nD/u6EFmOscEDQi2qx+sIYJVwnUb97jXr8DQlVNT70FPgC94zt5fA2t790XbiayaJCS8FIP8quL1UHu3grni7413U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I5LxuiwP; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430FE1DE883;
+	Thu, 27 Mar 2025 21:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743109270; cv=fail; b=UQtQfnMWUfQppvPtKrYiqYBQqUNj6j7itscJYKXQf6GR6mYh7DPiJSYn5n02JVAM/RlAq9gKb+NKIwhFTxpd6ZeU914lTUg7SImluF2CYDfuNNnSS4GBYtHP5qXaLqi+9sQr654Q4e9+CsBDpsXs+WB0XVd7879es5bA4c2qJn8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743109270; c=relaxed/simple;
+	bh=NmC94mS9vE3IFz+OTZ/3uwn8yZjuWT/lRJU0f3aSop8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=DsYvT1JxXrrvA3BkP1GAw8PLBROFog1i+cZ9M45enhOMqJk5KN4lS/+ReCaMgJxszSo0H9R6lQIMfcHtiY1q/UCwB/iN1aQjVfDBVWu8cu0sQOFkJCCKcY8+Gbfj98Ls+HOoff6qz/55GlYd/MuJiw2qTU9Fj8XWZQjyPIlLR0o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=jK/cmVfP; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Jw7QX6WW; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I5LxuiwP"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5eb92df4fcbso2566995a12.0;
-        Thu, 27 Mar 2025 13:57:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jK/cmVfP";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Jw7QX6WW"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52RJtv9g027994;
+	Thu, 27 Mar 2025 21:00:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=RerMWp1eb/K603d9p1Euhjj2cXYFx3rRoR6kxWzXOTs=; b=
+	jK/cmVfPJFRLnCp4DduKeYhgfuSkiPg1H/l9+dhbiknbtiMR1129aag4+Svf9Fhy
+	cW21dZ/NXih2NoQLLdXMydDqoWRLAEKn5aNfuU3B5A0r3Z9b2tsLBkY1geas2/Xs
+	zwCujN0VhJJfr5mjndqa+CjojvLXarZNog7KryX6b6aOGBUxOCt+jh4SYCognWFH
+	wXS6M98CgQW7l43oh3QyQRzlplyMKSltoLgXnPB1diOmjSCaOepovoWtUIRClhGj
+	XnXGSdRLq5GxWc7IwjCUeFx2wRjvCyRk0qgo81uGRgRao9BV5NE1HZ9GemonbLsh
+	szVVFN0JIuWN1qcg77tAFw==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45hncrwngs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Mar 2025 21:00:55 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52RJmdbq028689;
+	Thu, 27 Mar 2025 21:00:53 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2172.outbound.protection.outlook.com [104.47.57.172])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45jj6vx5t2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Mar 2025 21:00:53 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mzDil2HcQkg3UuMz8/rVQ+fTEfaHSCOUgYNzRK5tX7ZluGw9LniVvyBgpQn9Fw56Q96L5TDisf3l+HpbH34m34KlA6UGq3IBjbitqVIoubhKJGQ70JNLSSlwOpWYTTBfMeMAvrQukprIv+CXKDaicBOMpIrueavcjhkhQ4vo1YO2FXDx2QGDtotEedoOisW48fUeZ5UL9nUeJDlLPqy2fNUe9USzTuRMuMrwHZg+GZ9A7lge9/jkdfvuygMYJ5MqNw0K7icka7Yfpa5CvPeqzyQh0+Bu8JUq0mRB6N0mFEzgaKqLnOza1OOwWN/uCC9YOGcsfyS5YWCzBuwjyDkO/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RerMWp1eb/K603d9p1Euhjj2cXYFx3rRoR6kxWzXOTs=;
+ b=vHUVwGWLz0H+nrB3Zi5QHBzBLUg90SJbIsbdAjyOciw/7Sl55N04PeQMInHtOmb5jVwOswSCdGypblbmfBg65J52q1GJleMuGCxvSBZB0dKDqnSBbxEWTvY9mKb6SYo/yV47UmtJDLA37pnBxL07n6NdklAFA15OA5hIpvfk1btTFGojAankd8O22J1T1qIVFUFKRwWADs2IiF+2tz40Y5GsSzqUjLeB0e9b3Ao1MIkHkySfgGcZ9haZfhdicp9VQMVc7akrROEea+ubfF0EBepWShBUBbYk9myOM6y9+fOVnbyOESREJxL8h7hoqE7pqU4KXn1hEu2LeoW936tbOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743109066; x=1743713866; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VR7DEyijnU2Btuzsq24JxQagRdb3glRQ+pQ9YwQUpTo=;
-        b=I5LxuiwPXwh8KHngjSLkCaAxERKQ5T7eSxwFgSPsPyOXXloSgjKRY3qkoQeggeEGHj
-         93m5VWwnt/yoF4y41AXrP0zRvy+YduUHWy2jTJu4DUoHJFrttirwvb4z6BE+k6lAOaVj
-         G1Epltp5nr/g7CyqnEFMBmLFHM2ssOvYbhr8T+ux4igJSr/PXtFoHIMkqCIW8nWi/BOl
-         502rc0jVl12dWnioAFhEUfnjCPO0YG7wrU3l0RmcxvVgHBTlZUPv9p4Vh34lYEmgu1L/
-         4z+RwP3KIYHxvkSe7InxhQIbCXiWV5TqhiPxPe/uEnI2ySZT978pRP4Eq3TUk04EM7cn
-         FruQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743109066; x=1743713866;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VR7DEyijnU2Btuzsq24JxQagRdb3glRQ+pQ9YwQUpTo=;
-        b=OITeAxKpG+PTlkMEEZNbZaD3bsYaagsrL/qGRqROy6fpTG9mfwU9If6RAB8CBM7lQu
-         7bkf17roJjnPx2Nlre8y+7YzrJUGOhKM2U8sFJz44pvXQrAaO2WhJpgIPyUApJm/SDV4
-         OB1KTB5a6N477gy0+JeA/vYM7BOK9wkJvGzr9sLlxFbl63eUGjli0IdrpnKu6EHXFjyL
-         sraM//OgdigFEGhAYNQ49ayjNF2UKd3PGz1AfkdLoyr/s3Q0+U4yZRqDT3n0TwmQN82s
-         RSo+4UeYd9BR2dsdqLj9mdhsIhpiceMMfpk9uy5S4YRewFwlfPGQdz/SWMX7FTW4gRRq
-         pkhw==
-X-Forwarded-Encrypted: i=1; AJvYcCUMelncLNt5YNWJBvzeF6tBPoB0R5QhWpfNEZiE0U6YCjpgcRVIP9UKjjJWSDLf6Y9mIlSzQDyoYIAcwg==@vger.kernel.org, AJvYcCUW8mNGGSimsyrKfUe/H5TpmY2B8yRjZVumcEg07I4d8pCyHuY8qor2G71ZoerpxbQKRuNbb5GjGnAoXQ==@vger.kernel.org, AJvYcCUtfd6b+FsHb+quMY0AF7Zn2DGxK15l3n0pavt2kgMcWMvSvB854fRqWtR+lVvU2uv+mpX5hr6l3nCDYA==@vger.kernel.org, AJvYcCV+0q2qNB8439owZTLBP64iyJCPIvraOOJhUStlvelWvO8HDHhbbdor2jAQ+tyKtew924XAvWz5FQwE3xlh@vger.kernel.org, AJvYcCVoUlOfnDmlt0XxmIg+KGIJWxvkk++Zx9U2hbd8a2kCDa5pa2ousf5JFaSiP5arkHbQJgQNpgf4AJqVFe2p4A==@vger.kernel.org, AJvYcCW2XwZa20ZpIWgjHx1fTA+HEZL8DJ6FHZUDSOZ2z67aE/42tlAkMhj6d/bXQTeGsCf53F142Pt6DiSJ@vger.kernel.org, AJvYcCWcCx7hzNEFMwmuDUXo0fkDVR6yfkXU+Qo4zsjmyFbJZ9uuRpU9lay1WvFA2/ye2JXimZMzbOEk1LU=@vger.kernel.org, AJvYcCX0OqA0H1QyE4gw2fOYlrNa7nRK0xqn+V663LqkXWfvKKwmXepV9nHLdz+psNc9pacsOGMmyMBF+g==@vger.kernel.org, AJvYcCXLIzCeGbL9GX51Kn9rrLQY24fs7c5c3yOPqeDkmuH93zYd4H24xofDaBBLNqjsr+Xo8ElO7tFlHovesA==@vger.kernel.org, AJvYcCXapDtz23xgFTYR5GQSj7S4MsaVP1jUv3Ym79MB59Xdps7zJhTRI7Hndzb3rE9nJvQhYphKPvasvaA9DQ==@vger.kernel.org, AJvYcCXj0E5E2R31SbN2JOWEd+hZ9T22rTOieTkPGMuzz5jh3WYqBRQrI9DaEEpgiP1CngQkpiTv1qp3JCHo@vger.kernel.org, AJvYcCXsQRf7SYp4BJ9CmpAYLvUq+x05r3sPxIKnqOg8CGowWGH2vHYcv34HGqhxa2hZCozVf2JrF2XyVLysNg0p@vger.kernel.org, AJvYcCXwjFMDkQiTrxwnvapfCq+M8ybx1ky2VAfF97HYnwCzfJRJQo3k7gkUVqvwtGwYOYrCgxW8bVIWnjG3GQFwdgiB7XU3ur0j@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDXjaKPy0SIpCGMmlrZVoOI9BQf6z8qYrtfNZCDYyVZ3kEhGXw
-	tzefrTbuzXYc7DMIM1gKVRnkoSZv7WOagqsbz3/FHw3y7NUqaAEvbopCp99gcWehd7nlOIa/HEL
-	GKCPImbLqtcmx5U6CL5Uok1hhRwQ=
-X-Gm-Gg: ASbGncv+B9rcSwfPBDU9D9CUkq0gFAOLyp54EzncsOuRhzk2pAnwDGhvrGSqw1Im9g+
-	LTjASbndZff3ZKMajPvgWN0JoIHoLCtB6UoGD13+FON5+wGle+JfHfZaNgGrKLyuqp8475AMvzD
-	wOJHVFn3aCdQSln07ZATQlQ0YRZg==
-X-Google-Smtp-Source: AGHT+IGQy/9DoQYCCr9US5q6EnypmXetXiJBY3dnHtL1iSSGFXJt9gHT/MXORtXg0qR63MnGE5R7UOJG3H1b0VV82NI=
-X-Received: by 2002:a05:6402:26d0:b0:5e6:23c:a242 with SMTP id
- 4fb4d7f45d1cf-5ed8e59f048mr6048289a12.18.1743109065684; Thu, 27 Mar 2025
- 13:57:45 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RerMWp1eb/K603d9p1Euhjj2cXYFx3rRoR6kxWzXOTs=;
+ b=Jw7QX6WWlG5ZyiOLUrCsPalbbKjwofTBUuzc3YODFGveYiZ5vMNg/iy0eaUFq5EuJVMfeq9jaEyXygqeJf323Vk/XWgI1ZBz1irbFQAzrffI2NZtb1PVCuX/Y7Og/tIrlcKl3z0T1iaxHlpeppq23/KRX+kVkrnV0rGEpSYYdRE=
+Received: from MW4PR10MB5749.namprd10.prod.outlook.com (2603:10b6:303:184::12)
+ by SJ5PPFDEBD75B51.namprd10.prod.outlook.com (2603:10b6:a0f:fc02::7d7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
+ 2025 21:00:46 +0000
+Received: from MW4PR10MB5749.namprd10.prod.outlook.com
+ ([fe80::9a04:a919:657a:7454]) by MW4PR10MB5749.namprd10.prod.outlook.com
+ ([fe80::9a04:a919:657a:7454%3]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
+ 21:00:46 +0000
+Message-ID: <d9707265-d6bd-40df-8e7f-4213851ea33f@oracle.com>
+Date: Thu, 27 Mar 2025 14:00:44 -0700
+User-Agent: Betterbird (macOS/Intel)
+Subject: Re: [PATCH] tracing: Verify event formats that have "%*p.."
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+References: <20250327114911.2c713511@gandalf.local.home>
+ <856e7f9f-2a7f-4b94-b6b9-c1f7151a1f7b@oracle.com>
+ <20250327143853.1cef38af@gandalf.local.home>
+Content-Language: en-US
+From: Libo Chen <libo.chen@oracle.com>
+In-Reply-To: <20250327143853.1cef38af@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PH7P220CA0121.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:327::10) To MW4PR10MB5749.namprd10.prod.outlook.com
+ (2603:10b6:303:184::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250321-xattrat-syscall-v4-0-3e82e6fb3264@kernel.org>
- <CAOQ4uxjQDUg8HFG+mSxMkR54zen7nC2jttzOKqh13Bx-uosh3Q@mail.gmail.com>
- <20250323103234.2mwhpsbigpwtiby4@pali> <CAOQ4uxiTKhGs1H-w1Hv-+MqY284m92Pvxfem0iWO+8THdzGvuA@mail.gmail.com>
- <20250327192629.ivnarhlkfbhbzjcl@pali>
-In-Reply-To: <20250327192629.ivnarhlkfbhbzjcl@pali>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 27 Mar 2025 21:57:34 +0100
-X-Gm-Features: AQ5f1JpYIOUBRGbLo4K_0o1yQv002a0U-X2PtgEoVHqkLx0cP_6nsQWGxHLw9Sg
-Message-ID: <CAOQ4uxhJ53h+1AjtF4B64onqvRfZsJ3n1OFikyJpXAPTyX45iQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] fs: introduce getfsxattrat and setfsxattrat syscalls
-To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc: Andrey Albershteyn <aalbersh@redhat.com>, Richard Henderson <richard.henderson@linaro.org>, 
-	Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, linux-alpha@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-arch@vger.kernel.org, selinux@vger.kernel.org, 
-	Andrey Albershteyn <aalbersh@kernel.org>, linux-xfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR10MB5749:EE_|SJ5PPFDEBD75B51:EE_
+X-MS-Office365-Filtering-Correlation-Id: 229de2bd-69c2-41d5-4ae8-08dd6d727215
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?N2FXNk5YN2VmQXM5ZGR1c25lMG9XSUplUWk4ZGVZb1pVeW4vRnZ4dmxwUFlP?=
+ =?utf-8?B?RjFONjg2MTgxeXRxTEJuTEhlcXYxNERuSmgvZnVQWmtkRGdNYWx6NGx1Tzll?=
+ =?utf-8?B?S3lHTkFtbnpXY3labnlhZ3RlR0cvV1hjL1ZSSGNkNDlGRTl6MTlqd1ZmSXI4?=
+ =?utf-8?B?TFBJaW9WVDI0WUF3WFN5Nlo5a0lmNEczcTFTWWF0RkZhbkk1eG1EamtGMVNG?=
+ =?utf-8?B?R3R3MEQyNHhiaGh1U2cyRldERW1LRGxoRFBwdnhqSkNGNHFQNHUrY0dUekZ5?=
+ =?utf-8?B?UmZtdk9LNlR5NkptZm5aNFZwSlFpZzBPVEIrYmpDYUpRWHhjQVplYWJEbVIx?=
+ =?utf-8?B?MWRUbEdGNkQ3RFpiVWUxV0xaYWk4M2owS3NFZ0JzMldFZzQ2L2xrZjJiYTRC?=
+ =?utf-8?B?dktGNmd4clRCMGd3T2NGRDF3KzZlNzFLd1l6bTFqOHY4VE85Y2N4WlBEWThh?=
+ =?utf-8?B?WUlPTHh3NnErWWpKcUoya0VabUhFSGtaSVZoZlZaNGp0U3l3ZjBFNzBqUmxU?=
+ =?utf-8?B?NGl3czJhanJYVFdEZXRuR1poaThQbG50Zk93U2daYlplaDA2NFBBaGpqeEJ5?=
+ =?utf-8?B?dDFHWHNKYzZZSjVDUm9zdHJpeHp3WE9vT0ZqalI4TjRkSkV6ZEovYkFYdHpK?=
+ =?utf-8?B?YmE1dGVuK1F3WUt2b1Zvam4rY2U4c3BPbjRadmJ2YjRJelBHbmd5S0E2NjBV?=
+ =?utf-8?B?bUVPYi92UmZhRzZrcmFVWlAwenN1a2ZDem03dEcxNEtWZHQzWFFIT3QyZVZG?=
+ =?utf-8?B?RWRyYXRSSHhIWnhLSDNGODd2SUdOeTZKNzVKYTNJNEV4bTBadURobDZMRnFK?=
+ =?utf-8?B?YzFwM0tRQzBrckJNdlFIY1lzTFpBSDlFaFlWNmJ6d3dQRkpKakRUODdhZ2ZT?=
+ =?utf-8?B?OUc5RVZKRWQxV0pBdWo2SWlUM20xT2VQb01CeVk2WTZkSmNWSEh4ZWFVcnd5?=
+ =?utf-8?B?RkhsMDc3cUlBMU1iZ0Vsa0RQOHJ1NjhXNkF4Q0h3RzNKZFZ3ZVlaZ1RRdUtZ?=
+ =?utf-8?B?MGFQT05uOVRNdk5pUWxTSXYrblArd3JTbmlyK281QWt4OWpEQitsOFlXZGp1?=
+ =?utf-8?B?bUd0bk5LSUwrYldDSFVpMnpUVWU5U2hmYStSZmpCeDNQRGtYdHFhcElnUmN4?=
+ =?utf-8?B?cExoTzNNd1RRRU1HQTZ1NWRzSDlUVDV5RW4zUC9FaVF1djBOS2U4emlPRU8v?=
+ =?utf-8?B?STBHaFZqOVBGNXR2M2Q5eFl4OU1wTG5GUW52U3lWcjRKNlRaNFJEQnRkVHBW?=
+ =?utf-8?B?VDNoR1pMUk80cXFoVmNlTEMxZzhtNTB3Mml4cG9ZK0lxanRuWDJwU0ZTTHI5?=
+ =?utf-8?B?bDE4QkRxWUNoSTdZelpOalgrNjUzR25tNzA1aGVXZjhhN0VMOVFhWjNXRkVZ?=
+ =?utf-8?B?OUI2NXA5NUsxSlNhRzRmc0paUSs1S3F2dlJIZ3pXWEZnay9BOE82WXBVYmpB?=
+ =?utf-8?B?VE5EYVRGVEM0MW52cVM1ZUJLdURSYVlRcDRUOXZMODlCT3dUbnhqTnE1NG9m?=
+ =?utf-8?B?c3FSWE1DREttOTFPSW1ETStwRXBpa3FXdHFyZGpjWFRuYlRHTWd0clBRNWIx?=
+ =?utf-8?B?U2xTQ3hyV3dRei9SaGtjWS9kWjE3MC8ra05sOW84a2YvRytHbWdydDFpbW0y?=
+ =?utf-8?B?cTY0VHR2QjRWc205R1ByOFlNblJwcFhNUER6YXpRNE94cGtxeXlWaWxmdkZK?=
+ =?utf-8?B?SFZRWklLNWZhZit6SlU3TC8zUldicmtSaTlUdXpKY2M2czd4cm1HdHR5M3VE?=
+ =?utf-8?B?cmpyVnF4N0FPWUJoVm9TMXV5S2loa1QxRS9XMlJZV0VESCtZNXY2ZVdlVUQz?=
+ =?utf-8?B?bEFLQnJocm9YUGI3N3BHVWJYRmEzbHcvajAxWmFWYUkxb1BLcEVKdHhKNFNw?=
+ =?utf-8?Q?/aHtB9uDCvifq?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR10MB5749.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cnY2R2J0OWtNUkhhbmJEQWN5UExSc215NzVCdjlxQnhERE9oOUZlaWYwUGYr?=
+ =?utf-8?B?OTJ6MUtsTzFiVFV0N0dKSkI1bXg5NEhoSlkrMElZV3dBdnZ2c3JERE1URlE2?=
+ =?utf-8?B?TU1SY1NYb0h4ODYrR0RxRDdBZ2tHODcrMm9QNloyOXZtdDVGRGRKVDJHc0kz?=
+ =?utf-8?B?eHhiWThUQjFvQjVlNkl5bXBkaiswYjBkbE5HeVFsRDZSMkY2OUhWeVhJRXg4?=
+ =?utf-8?B?U1p2WFZWc1VQQUV0ZWdiMGNSRE4rMThzUnR6YjFQVG81VzMzVitkSnFZcGhr?=
+ =?utf-8?B?QWoxUmFxZzJnalJSaTlwWGsrV29JU0FNNVpOS0pyemZqVDl3UW9pZUVYbllG?=
+ =?utf-8?B?SFNWVDFWd1BldjliY1gzOVdDcGxkaWh1UDJ1bXZkdFNiVmlnTXpJbEJIdXB6?=
+ =?utf-8?B?UnZWNXJsa2d6bFZUMllBOXR5dXVQcGFMb0JCbVVYTWdZKzN0ZEZtdlJqaTR5?=
+ =?utf-8?B?YUsxc01uL1FUVzdNWi9PaHkyUmwyZE1nSHNCWGIvcWNxZ2JXU1pHZWNOa3ds?=
+ =?utf-8?B?Q01YSkNhZlRaL09UMjFibGFScTJtRFhQeTlHVTdpNU1pcVhqSVBuQkVnaUpo?=
+ =?utf-8?B?MDN4aEpRTmdlMVRwVmJDUEdkamdRTjNZY1laQTFjSERUcTc2Y3dZcjFuMGtB?=
+ =?utf-8?B?eDlCNmdTVHNOck5Sb2FFOWN1Vitka0M1NGdHT21NOW5rNVpGYkJIZE9CZjhH?=
+ =?utf-8?B?TlJ2RHdkallYNlpEbmRTMDU5YkZhT3B4YnpHMkhPY1dCRkUxbE1kdXFnbVVk?=
+ =?utf-8?B?eVhXZHpNdlZaU1hhUGEyNEF3cDZteGF0SnQ0N0VBZWNMajRuNVJnajE3Z1ZT?=
+ =?utf-8?B?dWYyNWNjWVh5MERCbzBzWlZPY0ZQQXNMU1hDRnBvYWtWQUNJcUpZYncwM1cv?=
+ =?utf-8?B?UmlWOVBRTmk0SlVsdVNkbjBNdWhrWEVXSG5KZXN1dzB2bEhNUno1eHl1b240?=
+ =?utf-8?B?ZDV0U3lTaTAzdVdVdGJOY0E0WE9kR0dmZnFLckJCUXVJbzAwNmE4UXczaVMy?=
+ =?utf-8?B?WjhDdG94OEwwNW1UQkl1dXF4aEFSTk03SmJlMklYR0hDMVJuUjhNUE9mY091?=
+ =?utf-8?B?VHRHU0VzcVZjUTN1SGZRTWswZ2NzRVNFSFpnTzdDZWdBa0k4WTZhaGdqbnN6?=
+ =?utf-8?B?bFpyNVdBZUFhb3k3NWc2VnVNN0svRU1mU3dkdGxCZkVjK1podmgvR0RnUXEz?=
+ =?utf-8?B?VUI4MEFnQTFTN0lndTgxQlF4S0NSQVRWU2QrM2hlN2Vwb2dvQ3FJWTExTWJQ?=
+ =?utf-8?B?U1RoQXBYK0FBazMzWnR1d29yWDYvRnN6RmV5TDdNV0Frd2JDeTlOb3dYVldp?=
+ =?utf-8?B?NEl4NlJOMThpVXlyZGp1Z1dMcFh3aDYwVTNhRVNON0ZLbjU1Z2p6UjM1eDJz?=
+ =?utf-8?B?ZFRGb2Z5UmxnQytOTVZERWNGL1FReTVlZnBldTJaUzV2Y2QrUDJqQnlJUHVW?=
+ =?utf-8?B?TlVxYzlzUDBCOXY1WE1Vd2x0TlFrV1JhM3o0MlllTVliaTdjQmtJWFBNaldw?=
+ =?utf-8?B?ZkhYb2JCYTA1Y2RhSndLMGtyN2d3MGpqTGFEbWxibHk5cmhUYlBCU2twdHpa?=
+ =?utf-8?B?TFVXS3lPbkVWRC9PNzR1Z3I3VU9vc3I4aXk0N0NndjZGYVZIempoWFZSZ1N4?=
+ =?utf-8?B?dTdNYUFLa2J2d0dJc2h0TWU3d2JYbmg4cG8yYVl5b09rRnBRTDVNUXpJaEQz?=
+ =?utf-8?B?QmViZ0ZrNFNwMkhMQ1VOdzhvNkp4djZSQ2h6empmaXRFQU5TSFZ5Y1Q4VUVo?=
+ =?utf-8?B?WjgzcGcyTkh6N3JOV2RsU2ZmRXZsS2FGcEZZb081UWFndnA5b1lyRGpOZTB1?=
+ =?utf-8?B?TTJ6aFpIN1VCTkxDNnRUVUhpaWpBK05CRVhtTG10TWRJSHp4aDRBak04Vmgz?=
+ =?utf-8?B?d2NvbkMxWHJ3M2FSMHg3WHpablR1OTJWL294TWdjVzNmMFJoVVRKa3k2R3l3?=
+ =?utf-8?B?V3lxUFR2eitJNEVuL3NmY3dnZlM3Y0FIV2F4R3Ura2xMYWdzZjA4R1MrOU1t?=
+ =?utf-8?B?S0ZzTFJCU1gyd05tLzFGem1aazhWMnlCVjRpZ2FkcXpORldnZzhZUUsydENj?=
+ =?utf-8?B?QkhyV3FlVXFsQ3Z5SXZyNG5Ud0dxVURVejNtWW5jcGVBNkJXUnNoVzNnTm10?=
+ =?utf-8?Q?CFJXv9OqD9oFMNP/S8Gtu1WXC?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	zcq/2F+B7voLQ8ybGZSo48fRPygido2HAP+B+Jl1r6TMdq9QV1hmjDc4sy++cQh0BiUElm+/+eiGzfTQ8dzpBmCGjKhVHKSKxG14Y0HOiev/S3ErLeDyVBBICxnvcUrOvGh2hy10QUPAO6HhIvJDtl/ugvo3s4nKtPrXurvoyOAQ2e+72aYld+ni63BK5RjLli+gAjbVUNc7C/ookUq2VhUoqIWKKSQgPGJauakUIDCnD6wX3oPyU+lVOSfbTiFphGK6d1Q6u35Iae74Cf0fL+TAmDx7QvLSmcI8EsPs3+iqAI/5KuQUU+RvtnoFZYkrEeh4WzlY9FXXbWaRxecHm2v/EI9CY1X9336HMaybY7ZKLzuM5O07biyvavoDSYj3TcrrgQyCpviftfM6CugWKlJhatkHSo2FsmSrr7LvbzX5kU0FodLFR5nXUUOG5xhJybHjieYCIxXdJeGAWKK3Gp+33+f22XHnMHl6ByCphCrc3LIJuawFXXtjV4PqAu791tzbM+jvwScs2j6ey1CMa8KCht3hFMj1nyNMaWWFJFi4w8m2Z/o6s/CQEtF9JekYfYImmG2gsSCa5ZcWdL4Z0FQtf93pN+zYMDaeBsTJo2U=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 229de2bd-69c2-41d5-4ae8-08dd6d727215
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR10MB5749.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 21:00:46.6161
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vlEngHWWivFKJ3H/2k5CU2f4c9D0N7PO8um4ycT/l5edcaKD2MmcrW0x2sfquFFFI30CUOT8Zf6t4VnvRIIP5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPFDEBD75B51
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-27_04,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 suspectscore=0
+ adultscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
+ definitions=main-2503270141
+X-Proofpoint-GUID: N4ZdIDzYppbWL61kLzGBQYCkYhiJk3sL
+X-Proofpoint-ORIG-GUID: N4ZdIDzYppbWL61kLzGBQYCkYhiJk3sL
 
-On Thu, Mar 27, 2025 at 8:26=E2=80=AFPM Pali Roh=C3=A1r <pali@kernel.org> w=
-rote:
->
-> On Thursday 27 March 2025 12:47:02 Amir Goldstein wrote:
-> > On Sun, Mar 23, 2025 at 11:32=E2=80=AFAM Pali Roh=C3=A1r <pali@kernel.o=
-rg> wrote:
-> > >
-> > > On Sunday 23 March 2025 09:45:06 Amir Goldstein wrote:
-> > > > On Fri, Mar 21, 2025 at 8:50=E2=80=AFPM Andrey Albershteyn <aalbers=
-h@redhat.com> wrote:
-> > > > >
-> > > > > This patchset introduced two new syscalls getfsxattrat() and
-> > > > > setfsxattrat(). These syscalls are similar to FS_IOC_FSSETXATTR i=
-octl()
-> > > > > except they use *at() semantics. Therefore, there's no need to op=
-en the
-> > > > > file to get an fd.
-> > > > >
-> > > > > These syscalls allow userspace to set filesystem inode attributes=
- on
-> > > > > special files. One of the usage examples is XFS quota projects.
-> > > > >
-> > > > > XFS has project quotas which could be attached to a directory. Al=
-l
-> > > > > new inodes in these directories inherit project ID set on parent
-> > > > > directory.
-> > > > >
-> > > > > The project is created from userspace by opening and calling
-> > > > > FS_IOC_FSSETXATTR on each inode. This is not possible for special
-> > > > > files such as FIFO, SOCK, BLK etc. Therefore, some inodes are lef=
-t
-> > > > > with empty project ID. Those inodes then are not shown in the quo=
-ta
-> > > > > accounting but still exist in the directory. This is not critical=
- but in
-> > > > > the case when special files are created in the directory with alr=
-eady
-> > > > > existing project quota, these new inodes inherit extended attribu=
-tes.
-> > > > > This creates a mix of special files with and without attributes.
-> > > > > Moreover, special files with attributes don't have a possibility =
-to
-> > > > > become clear or change the attributes. This, in turn, prevents us=
-erspace
-> > > > > from re-creating quota project on these existing files.
-> > > > >
-> > > > > Christian, if this get in some mergeable state, please don't merg=
-e it
-> > > > > yet. Amir suggested these syscalls better to use updated struct f=
-sxattr
-> > > > > with masking from Pali Roh=C3=A1r patchset, so, let's see how it =
-goes.
-> > > >
-> > > > Andrey,
-> > > >
-> > > > To be honest I don't think it would be fair to delay your syscalls =
-more
-> > > > than needed.
-> > >
-> > > I agree.
-> > >
-> > > > If Pali can follow through and post patches on top of your syscalls=
- for
-> > > > next merge window that would be great, but otherwise, I think the
-> > > > minimum requirement is that the syscalls return EINVAL if fsx_pad
-> > > > is not zero. we can take it from there later.
-> > >
-> > > IMHO SYS_getfsxattrat is fine in this form.
-> > >
-> > > For SYS_setfsxattrat I think there are needed some modifications
-> > > otherwise we would have problem again with backward compatibility as
-> > > is with ioctl if the syscall wants to be extended in future.
-> > >
-> > > I would suggest for following modifications for SYS_setfsxattrat:
-> > >
-> > > - return EINVAL if fsx_xflags contains some reserved or unsupported f=
-lag
-> > >
-> > > - add some flag to completely ignore fsx_extsize, fsx_projid, and
-> > >   fsx_cowextsize fields, so SYS_setfsxattrat could be used just to
-> > >   change fsx_xflags, and so could be used without the preceding
-> > >   SYS_getfsxattrat call.
-> > >
-> > > What do you think about it?
-> >
-> > I think all Andrey needs to do now is return -EINVAL if fsx_pad is not =
-zero.
-> >
-> > You can use this later to extend for the semantics of flags/fields mask
-> > and we can have a long discussion later on what this semantics should b=
-e.
-> >
-> > Right?
-> >
-> > Amir.
->
-> It is really enough?
 
-I don't know. Let's see...
 
-> All new extensions later would have to be added
-> into fsx_pad fields, and currently unused bits in fsx_xflags would be
-> unusable for extensions.
+On 3/27/25 11:38, Steven Rostedt wrote:
+> On Thu, 27 Mar 2025 11:32:23 -0700
+> Libo Chen <libo.chen@oracle.com> wrote:
+> 
+>> On 3/27/25 08:49, Steven Rostedt wrote:
+>>> From: Steven Rostedt <rostedt@goodmis.org>
+>>>
+>>> The trace event verifier checks the formats of trace events to make sure
+>>> that they do not point at memory that is not in the trace event itself or
+>>> in data that will never be freed. If an event references data that was
+>>> allocated when the event triggered and that same data is freed before the
+>>> event is read, then the kernel can crash by reading freed memory.
+>>>
+>>> The verifier runs at boot up (or module load) and scans the print formats
+>>> of the events and checks their arguments to make sure that dereferenced
+>>> pointers are safe. If the format uses "%*p.." the verifier will ignore it,
+>>> and that could be dangerous. Cover this case as well.
+>>>
+>>> Also add to the sample code a use case of "%*pbl".
+>>>
+>>> Link: https://urldefense.com/v3/__https://lore.kernel.org/all/bcba4d76-2c3f-4d11-baf0-02905db953dd@oracle.com/__;!!ACWV5N9M2RV99hQ!LTIVO1_O9wY2hBAnpNF5zcB1EFlC77zOnu4oVcM4DoD77p5ZO_m1LFZdPVJPj4spzye4JntXHOqOVxirPQ$ 
+>>>   
+>> Thanks Steve, a minor style issue below, otherwise LGTM. I have tested it, it works. 
+>>
+>> Reviewed-by: Libo Chen <libo.chen@oracle.com>
+>> Tested-by: Libo Chen <libo.chen@oracle.com>
+> 
+> Thanks for testing.
+> 
+>>>  /*
+>>>   * Notice here the use of some helper functions. This includes:
+>>> @@ -370,7 +371,10 @@ TRACE_EVENT(foo_bar,
+>>>  
+>>>  		  __get_str(str), __get_str(lstr),
+>>>  		  __get_bitmask(cpus), __get_cpumask(cpum),
+>>> -		  __get_str(vstr))
+>>> +		  __get_str(vstr),
+>>> +	         __get_dynamic_array_len(cpus),
+>>> +	         __get_dynamic_array_len(cpus),
+>>> +	         __get_dynamic_array(cpus))  
+>>
+>> __get_dynamic_array_len() calls don't seem to be aligned with the ones above
+>>
+> 
+> Ah yeah. I'll update. Note, this isn't going to go into the kernel until at
+> least 6.16.
+> 
 
-I am working under the assumption that the first extension would be
-to support fsx_xflags_mask and from there, you could add filesystem
-flags support checks and then new flags. Am I wrong?
+Okay thanks for the note. I will stick to %lx for now and change it to %*pbl
+once this gets in.
 
-Obviously, fsx_xflags_mask would be taken from fsx_pad space.
-After that extension is implemented, calling SYS_setfsxattrat() with
-a zero fsx_xflags_mask would be silly for programs that do not do
-the legacy get+set.
+Libo 
 
-So when we introduce  fsx_xflags_mask, we could say that a value
-of zero means that the mask is not being checked at all and unknown
-flags in set syscall are ignored (a.k.a legacy ioctl behavior).
+> -- Steve
 
-Programs that actually want to try and set without get will have to set
-a non zero fsx_xflags_mask to do something useful.
-
-I don't think this is great.
-I would rather that the first version of syscalls will require the mask
-and will always enforce filesystems supported flags.
-
-If you can get those patches (on top of current series) posted and
-reviewed in time for the next merge window, including consensus
-on the actual semantics, that would be the best IMO.
-
-But I am just preparing a plan B in case you do not have time to
-work on the patches or if consensus on the API extensions is not
-reached on time.
-
-I think that for plan B, the minimum is to verify zero pad field and
-that is something that this syscall has to do anyway, because this
-is the way that backward compact APIs work.
-
-If you want the syscall to always return -EINVAL for setting xflags
-that are currently undefined I agree that would be nice as well.
-
-Thanks,
-Amir.
