@@ -1,64 +1,67 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF3E1DE88C
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 22:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B4D1E1DF2;
+	Thu, 27 Mar 2025 22:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743115985; cv=none; b=IHiH6Mbw3pJs/cuVyM2o8JA1EXAwrNr+bzwbxkq94AiJ6L0B5tOvAUtkeYvZP3j3fg8LNf2o7TFGUmPIuhcxN/pviRsJQtZ13RXrkvuwbPa13tgvGq09keQ/e8joOR82egyzCVUD2Aebii/LwvFYcaWuRq+pe+jAY7n+WvUycL4=
+	t=1743115988; cv=none; b=SNtTGgRF4VNrOMjod/sTd/2/7e2zBu472OySwJtgNpUPKao6Uc5AhlH9BfgzObe8JendCUxw4bvt0CR9MblUBwBHga8GNayxlF+/7vy8lVkK3RJtqlKl53Qlh4zQ2f/38nRyBLju77xCyQxjAqHglIMOtQQ4mGOIs+bwxFG3sKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743115985; c=relaxed/simple;
-	bh=pKpgtM4kB/4K64gSh6vdxNp84Cah8MzlKXkdIhPEZ84=;
+	s=arc-20240116; t=1743115988; c=relaxed/simple;
+	bh=MjMFqqUF8Sk25abtgLHH9c5rnnjpuReSHwuy0I2B57U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LQBvOBGA2yx/7U9k57fQXT69z9Py07jqTz31B4LYjAVNexgdRE7Nwm+IdlGeF89cJq/+sXMdfKixbIRYFLGZLiit+mCjyIRrbmZuC5+1uaJ2pL9QoKqpRucydWQznCVA6krc6g4ioFEL3tvjUMSytTFm665P18NLcTfB+y4/gFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=AQQFg9Nu; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+	 In-Reply-To:Content-Type; b=D8C11Vq4YcYSqiU0K9pEOIsrz2sQoqDIqBJjJE35S7LePtW/FrsQCUKxogUPHV6FTHnM/nUlF1w4yPuZrSQGZFwa0NlUlJhZV5arJqgwOBQCGF7FnmY4O2x653lZkp8hqUILyjbzi2BPwxDCRQWQrEM7I2N8C9GypniPIeVn8wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FLwfvewg; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="AQQFg9Nu"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso235592566b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:53:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FLwfvewg"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2264aefc45dso43019535ad.0;
+        Thu, 27 Mar 2025 15:53:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1743115982; x=1743720782; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=k12Y8dWe84nCJDuQsvD5DEjenxTgzdu2WJ45ZyGKWY8=;
-        b=AQQFg9Nu4aN8lHCdb/84wZfBMNSyJu14daXnGHBjd4gsAbCAUobS40yhZ9gf4bMv8Q
-         gXYCn/ESPMF41TNcb8vruTcV617corHL9H5WkmOp75DXUGUFgaWGjGSkh36PDewGAhlx
-         OjCqDEMLyPoMEJV1XX8WKNv4Qgtd+iZ7X3SraHETASDbyFLY1uHQ6ZZI0f18GULgEKRb
-         LlGyb5fiDbekP2fEvumsVCRwu6uZQvycZ+8eVTIoyl4PEJw5EE5xw5vcu0a6ifTaWXZj
-         YuOJe2dCz4WHLFxz35mFp98Q5Z1dCwr3WfQRPz+/I1aMcPDItJUj96i0AWYyrMXkGQRO
-         Mq+A==
+        d=gmail.com; s=20230601; t=1743115985; x=1743720785; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=+HmM1LlyTcG4dXbOEe8qSUpj5+YXdikXd/DNYgDcwLM=;
+        b=FLwfvewgocXcIstrE2uw860wMG9mU2Wr0xBIGlldz59FBvK+irjpWCQ0ASIvmaBLW3
+         x6GIRJGEefJ1aTaJ6jOw8ayKtyaTg6h0+LjWMlMJ07rkP5BB6O8hUIccXFB7vgUFVubQ
+         Uza8I223icpiLERjSFgA91OLZWA3Ne6wITGRN36kJtkO4xJce+QmoPOG8wPb8eeC6Cnk
+         5a1VoL8iS4eiK49rXZDebAcIA5RIWUvd6AY2+furnMr7cMA9hIvWuHx+2fQZz+JLbwmu
+         w3mDDPrZSqLCnDSuzY+uBn5GduDJ03/QZ/do7KzCurJL9ta+9ORtnc84jWbavNwCzeOY
+         Kd1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743115982; x=1743720782;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k12Y8dWe84nCJDuQsvD5DEjenxTgzdu2WJ45ZyGKWY8=;
-        b=XZNLWphX4SLWagu90h7HUcMZzXq+1UnbP3uvzwZZCDH1os6P+qAFUvI1uILNTNs0FA
-         8qm/fuXORYWNjVSDdJcnE4ikTV9rxcrzJxJEWC9Dvs2fFNGEgXd3t2XVJHmQkJ9ErQWV
-         RotUv8xVUtsochspGE50TonBJ5EcNn5sU+l4qwMQ6vX6Hzz/Hmzij3ldMp0i+c78wDyP
-         A2wottjyf/crTIqVl8CHN/YtAaZPvxnvqt5ilM+hymH5RXck3DhEvlJwC8LxE6F2Ntxj
-         ULW9el8u8v1ETEMMvmQOF5F0xFZFhsNBm+g7JEScXMCpNIoHPbS9sVBUiXq+iYIGsxs0
-         Q5ng==
-X-Forwarded-Encrypted: i=1; AJvYcCVeQqcuzTkXKazJ/O3/mRsYCbDSmZq4BDYQTSkgnFoc4sLiUFrha6vChTUY7JhXAVVeL2h6DGZE8KX7ZB4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxakkJD9DP3lerXa369INsgAPxWyKriyZr2BOOnitwD1nnLRKnk
-	BZwg3Ew0KAYOyyOqkFSyIWXY3RpitAmI943kilbvC17qxwT6R4GIiy8cBhAuSdg=
-X-Gm-Gg: ASbGnctaGxRpGdjomD/P7I9kjMetyHib3f7DUAD/QnZLJV/oQwchi3GW0KTt1ZRlikp
-	hJ/4VTDdTi7EP5FR4v2ANN+tYCvo/h6kckvzOS4zTifd3/zu0a7FKQ0rhcEe0Oe2rPBTydoj73l
-	KFa4Yr/GK1Vrj6ajaxq426d7pRkWWh5jnirPClP9tDNLTOPI14RH+depXYCwIcbgaieOELuKnBl
-	a3Fckg4uHHcjh1/xoxtfO98yyerxX+ftNyDF76R7pU6o0HfhR2ZvsaP3pD5RlMmrw21ZRnVYsMt
-	ySfI8K7jh8UipdcsYQHGfxYc923SAINDJysmqPdkPwMUsKYC4b8=
-X-Google-Smtp-Source: AGHT+IEQKYdXU4YRdq7AjkHureyIrp+bm+P0LupbshznRTrIcsjVjBe9WN63ZaIpC1RkUq+pZC7I3g==
-X-Received: by 2002:a17:906:c153:b0:ac3:bd68:24eb with SMTP id a640c23a62f3a-ac6fae46de8mr605017166b.1.1743115982075;
-        Thu, 27 Mar 2025 15:53:02 -0700 (PDT)
-Received: from [100.115.92.205] ([109.160.74.194])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71922b965sm63206566b.20.2025.03.27.15.53.00
+        d=1e100.net; s=20230601; t=1743115985; x=1743720785;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+HmM1LlyTcG4dXbOEe8qSUpj5+YXdikXd/DNYgDcwLM=;
+        b=FCO8c/TkzfXrKIdYY1oiEsWMgs0/W9nZlM6Dg9aMVMNgIfX50tYusbE5TuL5yrGemG
+         tpfLG7EgN5jAdiBdX858ENS98wNS3B3NnVKmjT/wQzOrawNyzE1VctbAK9kxiezvc35U
+         D6R97l/jSLouItQgu/tVUBegCBv4Pm/MbyS+l8QfrYFKCWl5mp8M9ySe/dhDXyLp9dNF
+         q1f9r6Ez6qLse9hs3XYKGyg9Kj53jyIOv0p7l6BydK9uI9mJV7Qbn3opfLxAsEGuAKVV
+         aEuI5CeZt9B18AzPlJlK1SeH3+kVpvg0Cc6bR5RkLnbD7Bz+dq51gK8nkN6Yhrd9SfzL
+         bqSA==
+X-Forwarded-Encrypted: i=1; AJvYcCVV2hkofNFqwFqCs8b7z3+1voN9MAgRiTKpfpe+XDc1BQx+Zq8T9JW3jJ+aaeImpJozUdmq+2DbmvHYLDB6@vger.kernel.org, AJvYcCXfL0XiJheqFpIejVurcfcHliDEHyFbSKsotGzaeMKi0V/wY/Tz+tvcA6PVLP2pxS8Jgxr1FGg+E8k1@vger.kernel.org, AJvYcCXhASpxG6zZqhVFdEsoR8GabeG1ahYwiX3p672YlMzP9LivlpAFm48t6pMafGWgwwU/7KxCtEeUA8G9114=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy57XHFW54V2cFqI6w4LXhL9nhPKDdcOVcUipoh6MQ9KbYSgIUk
+	Rzk+g5gRE5ye43aUMNd3tEkvPh/JPOBSn38tqihoge7+vsrWsQLV
+X-Gm-Gg: ASbGncviM2Lb97Za8jpGlNl5p6mLvsul4APBCRazA5Avku490k+mRgvHIUn0VRUupGk
+	Mn3I628E9PUjRvyUqECzwaQBup1SbWgXXbsOhG4TtEdfXzcmX9IzYtJP6AAvW9AacCWInxCC7+p
+	fYuYmtj2B6d1R+QvNPZDBhzzobsu6oFfisq6Fw9/OhUebxtVZxc1kgslxvR87ICe4AeuFJXMcf4
+	KzTXAsBuMcbGK5YLArumFHtrWaNfK8Ldc5tAe4CEq1AQyQweN2muPVHxDCkeZJWTjUau58b7nH7
+	wzIdnxX/OhPVpz3ie5tDT5PV2E0z5EUApJOQFC6BrRwcvUVflmnb+/IIPzqqNw7GxQg02KmAcUZ
+	0bXSqTQXOiPqdW2+gaw==
+X-Google-Smtp-Source: AGHT+IE/eeQSC6WT/sCntwOSqiCInLUz+ljJ+Gmpf3nC4JGzjGpVdKxmmohmeBSIwjlCEWUb2Q0VAg==
+X-Received: by 2002:a17:902:cec3:b0:224:26f5:9c1e with SMTP id d9443c01a7336-228047fbbaemr84744135ad.2.1743115984592;
+        Thu, 27 Mar 2025 15:53:04 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eec6949sm5419515ad.13.2025.03.27.15.53.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 15:53:01 -0700 (PDT)
-Message-ID: <ffe6f6cc-7157-48ad-9cde-dc38d8427849@blackwall.org>
-Date: Fri, 28 Mar 2025 00:52:57 +0200
+        Thu, 27 Mar 2025 15:53:04 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <b93159ed-247e-4cdf-81c0-f32b85d4fbbf@roeck-us.net>
+Date: Thu, 27 Mar 2025 15:53:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,70 +69,109 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch net-next 1/3] net: bridge: mcast: Add offload failed mdb
- flag
-To: Joseph Huang <joseph.huang.2024@gmail.com>,
- Joseph Huang <Joseph.Huang@garmin.com>, netdev@vger.kernel.org
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Roopa Prabhu <roopa@nvidia.com>, Simon Horman <horms@kernel.org>,
- linux-kernel@vger.kernel.org, bridge@lists.linux.dev
-References: <20250318224255.143683-1-Joseph.Huang@garmin.com>
- <20250318224255.143683-2-Joseph.Huang@garmin.com>
- <c90151bc-a529-4f4e-a0b9-5831a6b803f7@blackwall.org>
- <85a52bd9-8107-4cb8-b967-2646d0e74ab4@gmail.com>
+Subject: Re: [PATCH v6 4/4] dt-bindings:Add SQ52206 to ina2xx devicetree
+ bindings
+To: Wenliang Yan <wenliang202407@163.com>, Jean Delvare <jdelvare@suse.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, linux-hwmon@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ christophe.jaillet@wanadoo.fr
+References: <20250327131841.15013-1-wenliang202407@163.com>
+ <20250327131841.15013-5-wenliang202407@163.com>
 Content-Language: en-US
-From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <85a52bd9-8107-4cb8-b967-2646d0e74ab4@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20250327131841.15013-5-wenliang202407@163.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 3/27/25 00:38, Joseph Huang wrote:
-> On 3/21/2025 4:19 AM, Nikolay Aleksandrov wrote:
->>> @@ -516,11 +513,14 @@ static void br_switchdev_mdb_complete(struct 
->>> net_device *dev, int err, void *pri
->>>            pp = &p->next) {
->>>           if (p->key.port != port)
->>>               continue;
->>> -        p->flags |= MDB_PG_FLAGS_OFFLOAD;
->>> +
->>> +        if (err)
->>> +            p->flags |= MDB_PG_FLAGS_OFFLOAD_FAILED;
->>> +        else
->>> +            p->flags |= MDB_PG_FLAGS_OFFLOAD;
->>
->> These two should be mutually exclusive, either it's offloaded or it 
->> failed an offload,
->> shouldn't be possible to have both set. I'd recommend adding some 
->> helper that takes
->> care of that.
+On 3/27/25 06:18, Wenliang Yan wrote:
+> Add the sq52206 compatible to the ina2xx.yaml
 > 
-> It is true that these two are mutually exclusive, but strictly speaking 
-> there are four types of entries:
+> Signed-off-by: Wenliang Yan <wenliang202407@163.com>
+> ---
 > 
-> 1. Entries which are not offload-able (i.e., the ports are not backed by 
-> switchdev)
-> 2. Entries which are being offloaded, but results yet unknown
-> 3. Entries which are successfully offloaded, and
-> 4. Entries which failed to be offloaded
+> Add the meaning of 'shunt-gain' in SQ52206.
 > 
-> Even if we ignore the ones which are being offloaded (type 2 is 
-> transient), we still need two flags, otherwise we won't be able to tell 
-> type 1 from type 4 entries.
+> v5->v6:add content to meet the update requirements of the ina2xx.yaml
 > 
-> If we need two flags anyway, having separate flags for type 3 and type 4 
-> simplifies the logic.
+>   Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml | 5 +++++
+>   1 file changed, 5 insertions(+)
 > 
-> Or did I misunderstood your comments?
-> 
-> Thanks,
-> Joseph
+> diff --git a/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml b/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
+> index bc03781342c0..8cd672e6bf62 100644
+> --- a/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
+> +++ b/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
+> @@ -19,6 +19,7 @@ description: |
+>   properties:
+>     compatible:
+>       enum:
+> +      - silergy,sq52206
+>         - silergy,sy24655
+>         - ti,ina209
+>         - ti,ina219
+> @@ -58,6 +59,9 @@ properties:
+>         shunt voltage, and a value of 4 maps to ADCRANGE=0 such that a wider
+>         voltage range is used.
+>   
+> +      For SQ52206,the shunt-gain value 1 mapps to ADCRANGE=10/11, the value 2
+> +      mapps to ADCRANGE=01, and the value 4 mapps to ADCRANGE=00.
+> +
+>         The default value is device dependent, and is defined by the reset value
+>         of PGA/ADCRANGE in the respective configuration registers.
+>       $ref: /schemas/types.yaml#/definitions/uint32
+> @@ -97,6 +101,7 @@ allOf:
+>           compatible:
+>             contains:
+>               enum:
+> +              - silergy,sy24655
 
-I think you misunderstood me, I don't mind having the two flags. :)
-My point is that they must be managed correctly and shouldn't be allowed
-to be set simultaneously.
+silergy,sq52206 ?
 
-Cheers,
-  Nik
+>                 - silergy,sy24655
+>                 - ti,ina209
+>                 - ti,ina219
 
