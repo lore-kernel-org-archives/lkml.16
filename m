@@ -1,174 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73ED018A6DB;
-	Thu, 27 Mar 2025 19:26:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791E91E4B2
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 19:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743103605; cv=none; b=OeaKf2eAmQaF/ijWQdMpzg7bpgJyeTMaRwCZg6yCO8pZZtH86a3PYscI3LKZuWwsviLltzlJUODzjjKD4C7KByD+I5lbGjAOOIqv9pPkyWpcFsjWkPtxeBJ72Y3E10H8yF4jTMLntohKSYNL3urA/xpNskpTmJeciVikG0YvgRU=
+	t=1743103799; cv=none; b=jCrV/n/45eYv87rSWpRYfrHDhO0gOjuqtdMfz4fdAzg1TX8WOyOoZ1o79JpEW6jpvZSsubV1tOcTMZ0NEQhh4GEOPDmJEuNNZjsWqiPPOHZXTcmgv7xzVwh8VOxrrVFl7RvfbfKqsmJOA4eKQLSLCPVs139K/LRL8oD5IgHqINc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743103605; c=relaxed/simple;
-	bh=g1CYlQqdxlwZLruKDHJtfRscrIkZVdAluXQtGU8MRKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TemvPxwLw9ysPgvdH9e3SvnkoYicb4zmcrTMgTARNamEMksG8vzirWKXXyt/UNV1TXo8OFLfhdLakRodlCEaBRVOwcCu3Bd8Y7A2YtnFInMv6Hgo/MTFle7NOwreV8k67KdOSJmgBIaY3blyPNC+uOWiRhlgoL42AlfEH/8ijY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AhoI7WNe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743103799; c=relaxed/simple;
+	bh=QuuZoXkB6r7i/dyce7l2jp0tvZLOXuVenD4Wt6a3XBU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=brvrZtp/CqdcYLXqaY7KTEx4Pgj2sP3JiCFN4k4LyW+C8Yea1/a+Yt2RuwlHjeKuQH6FE8ySRzUnCLejastfx/rydoMfx7EX9Ykz0lQs7HFQ60yURT0asolOq0Hx4HcI3uhWIkuPSy6n0b9SoLAwo0+OX3vt86NB/XV5bHkxI1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=0wR1U5aj; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AhoI7WNe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98751C4CEE5;
-	Thu, 27 Mar 2025 19:26:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743103604;
-	bh=g1CYlQqdxlwZLruKDHJtfRscrIkZVdAluXQtGU8MRKc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AhoI7WNeMPZ29oSLwAkdjh1+hmd1H0PFd78VKrYEq7ZvOtJyRn/kZVpJ7ov1pCCkt
-	 FFtBsyvNXkgsCOuqL30XwUuAqDQSOw70VXwuTA0GlahX+tgi0vjgOM4rALe3DWcHDQ
-	 jjdr86gecU+SCmXIyBRIrTstnwwhhOU6G2P4SE+bQ56P43gtHv0GdjAy87Fkl3/6cO
-	 KzWNTAKllZg27AeU0seeKYl9Wju3Yt8606yfQiT/HEaHSmUmIR/ZYy8Aof73NN9rkC
-	 QlhDI25yR0zXN+3W0AsjfYwqvdqIfS5VNKvL2/jazZPFvmtHh/DNyEYhO04ZgZcO2W
-	 aITrHM+dyWvfA==
-Received: by pali.im (Postfix)
-	id 490BC81B; Thu, 27 Mar 2025 20:26:29 +0100 (CET)
-Date: Thu, 27 Mar 2025 20:26:29 +0100
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Andrey Albershteyn <aalbersh@redhat.com>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Michal Simek <monstr@monstr.eu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>,
-	Arnd Bergmann <arnd@arndb.de>, Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>, linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
-	linux-arch@vger.kernel.org, selinux@vger.kernel.org,
-	Andrey Albershteyn <aalbersh@kernel.org>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v4 0/3] fs: introduce getfsxattrat and setfsxattrat
- syscalls
-Message-ID: <20250327192629.ivnarhlkfbhbzjcl@pali>
-References: <20250321-xattrat-syscall-v4-0-3e82e6fb3264@kernel.org>
- <CAOQ4uxjQDUg8HFG+mSxMkR54zen7nC2jttzOKqh13Bx-uosh3Q@mail.gmail.com>
- <20250323103234.2mwhpsbigpwtiby4@pali>
- <CAOQ4uxiTKhGs1H-w1Hv-+MqY284m92Pvxfem0iWO+8THdzGvuA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="0wR1U5aj"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4766cb762b6so14143851cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:29:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1743103796; x=1743708596; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C4YRUd0dUXxsiI+NBlGETAhHA6/U48pzMrcLDXPVjVo=;
+        b=0wR1U5ajgZ00jps5YHrHjyHohGZ7ejiMG80NxcVsgcArgKxCn83gPnb05FzGP8UDeO
+         S7JsQw7hzhoQF13sjW15cP82CIhZSNwhL6LkgNZcv/iClBsS+h8xg2d34yqe6kL9t4W0
+         Z2TXN9NSsk4CSw6A9L7cDDkP+N69oUHI4WayEibsfYbZ+h7ya4P1KVC2unrk88Ep7T72
+         Bw/dNQE3d7JGgwRcy18euQ4eWXJ9ys+m3vUvsukzUOlrYc3eUJzmoGtqhacKivepOec4
+         OJBif69e5NHP4BeDGCl9cnNdGKbXNGhMb4StfuK+p/ggRV2HbtBbXt+FscpF/ASuG0pw
+         cDQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743103796; x=1743708596;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C4YRUd0dUXxsiI+NBlGETAhHA6/U48pzMrcLDXPVjVo=;
+        b=B+uHLC8HNogPTecLdnIzMtXeCWyLprARHHn4ru/7JJI3nS17Nb5ao88Ojg0o+sZoni
+         qZf5YWyFI3r4MX5b5ixkIdG3qyVDOB1wqMLTAA9mMXWmdNcUWYhU32IsfN7r6gw7bYuJ
+         zSxRYxZb4ofy7//UzCFfRkMDik8RoKAF2eD0LvgqXBA0sOKsk8Vlh1yUJcNhmu6SW+ez
+         vnggYxusHgId6YolacJ3C5MkO9xNppv4PD3GIOpWwUkHg9vydQK4xnpMUr+6bV+ajzSi
+         eF/E8ectZKzJRDJ5goi5AFBwZ85jg5qzwzzXPXkXitchDluWG+26aL0IXV5RBRnpzagE
+         lBHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPephlooKSx28smWZpX6hUrTRZzjcYOmuoWDCh98I9AUNWz1LPAfSVZlX6sX6Db17DUXhFOWBkvwQPKqQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbTgLyI9EfC4i0tPailiBgb+lBSS0PSAZ+Ddg0WNoweeF+DXSa
+	44EkmukBYuyQFPBz4d/p88+NO614SJvobfLlUtLjm6i8dkb4nGN9H8nhMku6fagqyJxI+TG2I1W
+	baZ4qD3/8w+QAdOZ/F6+XEP7yO/Nu+IxBZxH9Ug==
+X-Gm-Gg: ASbGnctLu0VnrF0/KdFlgnPkM48jCB05FZv3gfMxZ8Xib9yUHAcTGErpx4oMcHnhzUw
+	7ihngo/YN58yELVSXWmsUGQA1Dxf3JRbZ15glgnWrz30rk26xflzyyik2mevbaCsqW2USvfVdIy
+	htcV9dAbQ9kPEv1U3UdP+aL8Av/7exhsmkq8lnMa8=
+X-Google-Smtp-Source: AGHT+IHmKJiIAuGir5eLdnuzQYUg+lTpLRvScYqP43GjNb2vxGbldqJeyd7c81dwopkHCLQbzICpBpWIbb/q/WAmcLc=
+X-Received: by 2002:a05:622a:4018:b0:477:1126:5a33 with SMTP id
+ d75a77b69052e-477843dee70mr963831cf.1.1743103796128; Thu, 27 Mar 2025
+ 12:29:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxiTKhGs1H-w1Hv-+MqY284m92Pvxfem0iWO+8THdzGvuA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20250320024011.2995837-1-pasha.tatashin@soleen.com>
+ <20250320024011.2995837-2-pasha.tatashin@soleen.com> <20250320144338.GW9311@nvidia.com>
+ <CA+CK2bBovJ68FPOqD5J-_xmzy_mm8gNhJW80EsWGLgq+NhuX5Q@mail.gmail.com> <20250320192601.GG206770@nvidia.com>
+In-Reply-To: <20250320192601.GG206770@nvidia.com>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Thu, 27 Mar 2025 15:29:18 -0400
+X-Gm-Features: AQ5f1JoqJbUNa31EKiHpHgysa1IL2SgJB7qz5YDT-dhXwuOYY82RJ56s9rbmlGw
+Message-ID: <CA+CK2bDNoOe06bWAnAkgX-AF5zf5+KasNMeJOt3YcnHh=0893Q@mail.gmail.com>
+Subject: Re: [RFC v1 1/3] luo: Live Update Orchestrator
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: changyuanl@google.com, graf@amazon.com, rppt@kernel.org, 
+	rientjes@google.com, corbet@lwn.net, rdunlap@infradead.org, 
+	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, ojeda@kernel.org, 
+	aliceryhl@google.com, masahiroy@kernel.org, akpm@linux-foundation.org, 
+	tj@kernel.org, yoann.congal@smile.fr, mmaurer@google.com, 
+	roman.gushchin@linux.dev, chenridong@huawei.com, axboe@kernel.dk, 
+	mark.rutland@arm.com, jannh@google.com, vincent.guittot@linaro.org, 
+	hannes@cmpxchg.org, dan.j.williams@intel.com, david@redhat.com, 
+	joel.granados@kernel.org, rostedt@goodmis.org, anna.schumaker@oracle.com, 
+	song@kernel.org, zhangguopeng@kylinos.cn, linux@weissschuh.net, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
+	gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org, 
+	cw00.choi@samsung.com, myungjoo.ham@samsung.com, yesanishhere@gmail.com, 
+	Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com, 
+	aleksander.lobakin@intel.com, ira.weiny@intel.com, 
+	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
+	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
+	stuart.w.hayes@gmail.com, jgowans@amazon.com, 
+	Pratyush Yadav <ptyadav@amazon.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thursday 27 March 2025 12:47:02 Amir Goldstein wrote:
-> On Sun, Mar 23, 2025 at 11:32 AM Pali Rohár <pali@kernel.org> wrote:
+On Thu, Mar 20, 2025 at 3:26=E2=80=AFPM Jason Gunthorpe <jgg@nvidia.com> wr=
+ote:
+>
+> On Thu, Mar 20, 2025 at 03:00:31PM -0400, Pasha Tatashin wrote:
+>
+> > > I also think we should give up on the sysfs. If fdbox is going forwar=
+d
+> > > in a char dev direction then I think we should have two char devs
+> > > /dev/kho/serialize and /dev/kho/deserialize and run the whole thing
 > >
-> > On Sunday 23 March 2025 09:45:06 Amir Goldstein wrote:
-> > > On Fri, Mar 21, 2025 at 8:50 PM Andrey Albershteyn <aalbersh@redhat.com> wrote:
-> > > >
-> > > > This patchset introduced two new syscalls getfsxattrat() and
-> > > > setfsxattrat(). These syscalls are similar to FS_IOC_FSSETXATTR ioctl()
-> > > > except they use *at() semantics. Therefore, there's no need to open the
-> > > > file to get an fd.
-> > > >
-> > > > These syscalls allow userspace to set filesystem inode attributes on
-> > > > special files. One of the usage examples is XFS quota projects.
-> > > >
-> > > > XFS has project quotas which could be attached to a directory. All
-> > > > new inodes in these directories inherit project ID set on parent
-> > > > directory.
-> > > >
-> > > > The project is created from userspace by opening and calling
-> > > > FS_IOC_FSSETXATTR on each inode. This is not possible for special
-> > > > files such as FIFO, SOCK, BLK etc. Therefore, some inodes are left
-> > > > with empty project ID. Those inodes then are not shown in the quota
-> > > > accounting but still exist in the directory. This is not critical but in
-> > > > the case when special files are created in the directory with already
-> > > > existing project quota, these new inodes inherit extended attributes.
-> > > > This creates a mix of special files with and without attributes.
-> > > > Moreover, special files with attributes don't have a possibility to
-> > > > become clear or change the attributes. This, in turn, prevents userspace
-> > > > from re-creating quota project on these existing files.
-> > > >
-> > > > Christian, if this get in some mergeable state, please don't merge it
-> > > > yet. Amir suggested these syscalls better to use updated struct fsxattr
-> > > > with masking from Pali Rohár patchset, so, let's see how it goes.
-> > >
-> > > Andrey,
-> > >
-> > > To be honest I don't think it would be fair to delay your syscalls more
-> > > than needed.
+> > KHO is a mechanism to preserve kernel memory across reboots. It can be
+> > used independently of live update, for example, to preserve kexec
+> > reboot telemetry, traces, and for other purposes. The LUO utilizes KHO
+> > for memory preservation but also orchestrates specifically a live
+> > update process, provides a generic way for subsystems and devices to
+> > participate, handles error recovery, unclaimed devices, and other live
+> > update-specific steps.
 > >
-> > I agree.
+> > That said, I can transition the LUO interface from sysfs to a character=
+ device.
+>
+> Sure, I mean pick whatever name makes sense for this whole bundle..
+>
+> > > through that. The concepts shown in the fdbox patches should be merge=
+d
+> > > into the kho/serialize char dev as just a general architecture of ope=
+n
+> > > the char dev, put stuff into it, then finalize and do the kexec.
 > >
-> > > If Pali can follow through and post patches on top of your syscalls for
-> > > next merge window that would be great, but otherwise, I think the
-> > > minimum requirement is that the syscalls return EINVAL if fsx_pad
-> > > is not zero. we can take it from there later.
+> > Some participating subsystems, such as interrupts, do not have a way
+> > to export a file descriptor.
+>
+> Interrupts that need to be preserved are owned by VFIO. Why do we need
+> to preserve interrupts? I thought the model was to halt all interrupts
+> and then re-inject a spurious one?
+>
+> > It is unclear why we would require this
+> > for kernel-internal state that needs to be preserved for live update,
+> > which should instead register with internally.
+>
+> Because there is almost no kernel state which is machine global and
+> unconditionally should be included. eg Interrupts for devices that are
+> not doing preservation should not be serialized. Only userspace knows
+> what should be preserved so you must always need a mechanism to tell
+> the kernel.
+>
+> > IMO, the current API and state machine are quite simple (I plan to
+> > present and go through them at one of the Hypervisor Live Update
+> > meetings). However, I am open to changing to a different API, and we
+> > can expose it through a character device.
+>
+> Everything seems simple before you actually try to use it :)
+>
+> > > Also agree with Greg, I think this needs more thoughtful patch stagin=
+g
+> > > with actual complete solutions. I think focusing on a progression of
+> > > demonstrable kexec preservation:
+> > >  - A simple KVM and the VM's backing memory in a memfd is perserved
+> > >  - A simple vfio-noiommu doing DMA to a preserved memfd, including no=
+t
+> > >    resetting the device (but with no iommu driver)
+> > >  - iommufd
 > >
-> > IMHO SYS_getfsxattrat is fine in this form.
-> >
-> > For SYS_setfsxattrat I think there are needed some modifications
-> > otherwise we would have problem again with backward compatibility as
-> > is with ioctl if the syscall wants to be extended in future.
-> >
-> > I would suggest for following modifications for SYS_setfsxattrat:
-> >
-> > - return EINVAL if fsx_xflags contains some reserved or unsupported flag
-> >
-> > - add some flag to completely ignore fsx_extsize, fsx_projid, and
-> >   fsx_cowextsize fields, so SYS_setfsxattrat could be used just to
-> >   change fsx_xflags, and so could be used without the preceding
-> >   SYS_getfsxattrat call.
-> >
-> > What do you think about it?
-> 
-> I think all Andrey needs to do now is return -EINVAL if fsx_pad is not zero.
-> 
-> You can use this later to extend for the semantics of flags/fields mask
-> and we can have a long discussion later on what this semantics should be.
-> 
-> Right?
-> 
-> Amir.
+> > We are working on this. However, each component builds upon the
+> > previous one, so it makes sense to discuss the lower layers early to
+> > get early feedback.
+>
 
-It is really enough? All new extensions later would have to be added
-into fsx_pad fields, and currently unused bits in fsx_xflags would be
-unusable for extensions.
+Hi Jason,
+
+Thanks for your thoughts. I agree with your observation about
+components being worked on separately when they might be intrinsically
+linked. Especially, given that kvm/vfio/iommu all have FD counterparts
+to the global states, or device state.
+
+> I think part of the problem is there are lots of people working on
+> pieces as though they are seperate components, and I'm not sure this
+> is entirely wise, or the components are actually seperate.  I see
+> fdbox and this luo patch series as effectively being the same
+> component, just different aspects of it.
+
+You've articulated precisely the point we discussed at LSF/MM. Based
+on that conversation, the next proposal will focus on unifying FDBox
+and the Live Update Orchestrator into a single, cohesive component.
+
+Here=E2=80=99s a summary of the planned approach:
+
+1. Unified Location: LUO will be moved under misc/liveupdate/ to house
+the consolidated functionality.
+2.  User Interfaces:  A primary character device (/dev/liveupdate)
+utilizing an ioctl interface for control operations. (An initial draft
+of this interface is available here:
+https://raw.githubusercontent.com/soleen/linux/refs/heads/luo/rfc-v2.1/incl=
+ude/uapi/linux/liveupdate.h)
+An optional sysfs interface will allow userspace applications to
+monitor the LUO's state and react appropriately. e.g. allows SystemD
+to load different services during different live update states.
+3. Dependency Management: The viability of preserving a specific
+resource (file, device) will be checked when it initially requests
+participation.
+However, the actual dependencies will only be pulled and the final
+ordered list assembled during the prepare phase. This avoids the churn
+of repeatedly adding/removing dependencies as individual components
+register.
+
+To manage the preservation logic, we'll use specific handles
+categorized into three types: fd, device, and global. Each handle type
+will define callbacks for the different phases of the live update
+process. For instance, a file-system-related handle might look
+something like this:
+
+struct liveupdate_fs_handle {
+    struct list_head liveupdate_entry;
+    int (*prepare)(struct file *filp, void *preserve_page, ...); //
+Callback during prepare phase
+    int (*reboot)(struct file *filp, void *preserve_page,...);  //
+Callback during reboot phase
+    void (*finish)(struct file *filp, void *preserve_page,...); //
+Callback after successful update to do state clean-up
+    void (*cancel)(struct file *filp, void *preserve_page,...); //
+Callback if prepare/reboot is cancelled
+};
+
+The overall preservation sequence involve processing these handles in
+a specific order:
+
+Preserved File Descriptors (e.g., memfd, kvmfd, iommufd, vfiofd)
+Preserved Devices (ordered appropriately, leaves-to-root)
+Global State Components
+
+Let me know if this direction aligns with your expectations.
+
+Pasha
