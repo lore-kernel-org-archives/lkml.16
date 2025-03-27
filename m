@@ -1,43 +1,50 @@
-Received: from mail-10629.protonmail.ch (mail-10629.protonmail.ch [79.135.106.29])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE2A1531C5;
-	Thu, 27 Mar 2025 22:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8D61C5F28
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 22:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743114670; cv=none; b=uWrn9riAJf1tq0szh++ESYVTu/KCu1vcuEzcpJLsUotTT7AoTUfGlz+TPrc+nJgKU1t84fibREvd/gV6RlAvqvfW3yif6hbOX3zHAxKd9LFrRRsO0F4TvZ6PjSjrM8RqEIbah5gAGWwkuIYoUCiz0OuR550bG2NtMcWGeNxoapc=
+	t=1743114920; cv=none; b=Lf336j24v65QngfPzuQZl4OxgINY9tCJZlQUsn7pXwvH7mZZ19lGlrERVArlG4YNkwBFyQXVMJkZErsu9kGJD09OG6aF2bmGvW2Vs0q5MZlYNsr3eQaLVkFKmReyNEmweSNAWXY0SXl+wpBcvH/uBjRVtQnDMut93pxonrlhfEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743114670; c=relaxed/simple;
-	bh=2aHeBIPKxpMZEgjX1iWdfj20zYYepW1kIT/PFNeYnOw=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aBdkDYfX97cHG1NF3y4VxHwXvMs9MvUGbA5uX7wbfnOmDGEpbTst8sXKHqWj443uqymYXlblflfk8h1X0uomk//gbHYMTH9L9oeJ7jEEHaSbs5fKeNfM0z/SsNsG3TVreV0RddWxaP2gollMKpPAlG+Dyi5AjgPiSBSDRd6Moe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=LpN8H0WO; arc=none smtp.client-ip=79.135.106.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1743114920; c=relaxed/simple;
+	bh=SaJOk6M4y4yQuYGOGvlYpvYsC/4YT1F7z+qnV1nCrQs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LErtiMcJeyr5c5qIxcj3Om3ipws1nY+98uziXNQNb4Yto3DSHc59AuCIKYHJ6RJMkpCB2COB1TXvb6DNfXOz9+aQetFA03qE1nxrrOnaX/DDKvpLb3ssff9fsQM4vAlimWLwik9T5sCfgbr928LRDSE5Le7sWpjHrDO/w3kZwIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=RSByoPiO; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="LpN8H0WO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1743114667; x=1743373867;
-	bh=d7MxYS+vRUZFKyaaYKSIuKEGdkGBo63TfmEbiGnp33E=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=LpN8H0WORY3223K3dGw4KTfAsg1UXFcDcvCVsQyRDPsTRqU/GLsjA+1xxDZf1D/Tq
-	 ANPEAEaiNc99Y9joglRccNv0QQS/GWtZCBW25ZwojYVCU2DH2FII+arXfC4K2jVO+6
-	 GOEqGgVNqclTmy5GS7hEwugzGz2ekw2EOIV6hrIDSl04MOLB4wZPGRn7e2TnQMjVx3
-	 6rM+rutQOUOJUA99BErhFawg9NvlQImRqnmk7PhE9EMw0l0jQrD8Z+Su+cRKqG8pv2
-	 b1t9YNoAUsCQ9gaXnovQcDMvBxsy4FBzluYBzbuBOzMwTBt18GOstFMFPNpsOhuxk9
-	 IcyXClQoRgq7Q==
-Date: Thu, 27 Mar 2025 22:31:02 +0000
-To: Abdiel Janulgue <abdiel.janulgue@gmail.com>, a.hindborg@kernel.org, ojeda@kernel.org
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Danilo Krummrich <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, "open list:DMA MAPPING HELPERS DEVICE DRIVER API [RUST]" <rust-for-linux@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] rust: dma: add as_slice/write functions for CoherentAllocation
-Message-ID: <D8REKSIL1W0E.6A40JD86RFPZ@proton.me>
-In-Reply-To: <20250326201230.3193329-4-abdiel.janulgue@gmail.com>
-References: <20250326201230.3193329-1-abdiel.janulgue@gmail.com> <20250326201230.3193329-4-abdiel.janulgue@gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 8dc58c6ccf0f878f43e983ad024beb70b1ba0049
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="RSByoPiO"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 77CF9446;
+	Thu, 27 Mar 2025 23:33:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1743114803;
+	bh=SaJOk6M4y4yQuYGOGvlYpvYsC/4YT1F7z+qnV1nCrQs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RSByoPiOsIOgZeWaXOPH8jRhYyw712i8uC2SHV03xtZefNxXYg9irW9s70kPYDDbl
+	 RV3qkz2EECH8+QysvoGNn6LovnTOZNzwtdlJ4qdgd/2368kb2WJKFjwz7YsYOF1p2e
+	 iOe/FUKru50IZUoECNnLSyKXDyDmczuME5UX8YW0=
+Date: Fri, 28 Mar 2025 00:34:49 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Vishal Sagar <vishal.sagar@amd.com>,
+	Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Michal Simek <michal.simek@amd.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v4 02/11] drm/fourcc: Add DRM_FORMAT_XV15/XV20
+Message-ID: <20250327223449.GA16629@pendragon.ideasonboard.com>
+References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
+ <20250326-xilinx-formats-v4-2-322a300c6d72@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,64 +52,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+In-Reply-To: <20250326-xilinx-formats-v4-2-322a300c6d72@ideasonboard.com>
 
-On Wed Mar 26, 2025 at 9:11 PM CET, Abdiel Janulgue wrote:
-> +    /// Returns the data from the region starting from `offset` as a sli=
-ce.
-> +    /// `offset` and `count` are in units of `T`, not the number of byte=
-s.
-> +    ///
-> +    /// Due to the safety requirements of slice, the caller should consi=
-der that the region could
-> +    /// be modified by the device at anytime. For ringbuffer type of r/w=
- access or use-cases where
-> +    /// the pointer to the live data is needed, `start_ptr()` or `start_=
-ptr_mut()` could be
-> +    /// used instead.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// * Callers must ensure that no hardware operations that involve t=
-he buffer are currently
-> +    ///   taking place while the returned slice is live.
-> +    /// * Callers must ensure that this call does not race with a write =
-to the same region while
-> +    ///   while the returned slice is live.
-> +    pub unsafe fn as_slice(&self, offset: usize, count: usize) -> Result=
-<&[T]> {
-> +        let end =3D offset.checked_add(count).ok_or(EOVERFLOW)?;
-> +        if end >=3D self.count {
-> +            return Err(EINVAL);
-> +        }
-> +        // SAFETY:
-> +        // - The pointer is valid due to type invariant on `CoherentAllo=
-cation`,
-> +        // we've just checked that the range and index is within bounds.=
- The immutability of the
-> +        // of data is also guaranteed by the safety requirements of the =
-function.
-> +        // - `offset` can't overflow since it is smaller than `self.coun=
-t` and we've checked
-> +        // that `self.count` won't overflow early in the constructor.
-> +        Ok(unsafe { core::slice::from_raw_parts(self.cpu_addr.add(offset=
-), count) })
+Hi Tomi,
 
-I vaguely recall that there was some discussion on why this is OK (ie
-the value behind the reference being modified by the device), but I
-haven't followed it. Can you add the reasoning for why that is fine to
-some comment here?
+Thank you for the patch.
 
-I also am not really fond of the phrase "hardware operations that
-involve the buffer":
-* what do you mean with "buffer"? `self`?
-* what are "hardware operations"? (I no nothing about hardware, so that
-  might be a knowledge gap on my part)
-* what does "involve" mean?
+On Wed, Mar 26, 2025 at 03:22:45PM +0200, Tomi Valkeinen wrote:
+> Add two new pixel formats:
+> 
+> DRM_FORMAT_XV15 ("XV15")
+> DRM_FORMAT_XV20 ("XV20")
+> 
+> The formats are 2 plane 10 bit per component YCbCr, with the XV15 2x2
+> subsampled whereas XV20 is 2x1 subsampled.
+> 
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> ---
+>  drivers/gpu/drm/drm_fourcc.c  | 6 ++++++
+>  include/uapi/drm/drm_fourcc.h | 8 ++++++++
+>  2 files changed, 14 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
+> index 2f5781f5dcda..e101d1b99aeb 100644
+> --- a/drivers/gpu/drm/drm_fourcc.c
+> +++ b/drivers/gpu/drm/drm_fourcc.c
+> @@ -346,6 +346,12 @@ const struct drm_format_info *__drm_format_info(u32 format)
+>  		{ .format = DRM_FORMAT_P030,            .depth = 0,  .num_planes = 2,
+>  		  .char_per_block = { 4, 8, 0 }, .block_w = { 3, 3, 0 }, .block_h = { 1, 1, 0 },
+>  		  .hsub = 2, .vsub = 2, .is_yuv = true},
+> +		{ .format = DRM_FORMAT_XV15,		.depth = 0,  .num_planes = 2,
+> +		  .char_per_block = { 4, 8, 0 }, .block_w = { 3, 3, 0 }, .block_h = { 1, 1, 0 },
+> +		  .hsub = 2, .vsub = 2, .is_yuv = true },
+> +		{ .format = DRM_FORMAT_XV20,		.depth = 0,  .num_planes = 2,
+> +		  .char_per_block = { 4, 8, 0 }, .block_w = { 3, 3, 0 }, .block_h = { 1, 1, 0 },
+> +		  .hsub = 2, .vsub = 1, .is_yuv = true },
 
----
-Cheers,
-Benno
+It appears we can never have too much (or enough) documentation, as
+reading the format info documentation leaves me with unanswered
+questions.
 
-> +    }
+Looking at drm_format_info_min_pitch():
 
+uint64_t drm_format_info_min_pitch(const struct drm_format_info *info,
+				   int plane, unsigned int buffer_width)
+{
+	if (!info || plane < 0 || plane >= info->num_planes)
+		return 0;
+
+	return DIV_ROUND_UP_ULL((u64)buffer_width * info->char_per_block[plane],
+			    drm_format_info_block_width(info, plane) *
+			    drm_format_info_block_height(info, plane));
+}
+
+For the first plane, the function will return `buffer_width * 4 / 3`
+(rouding up), which I think is right. For the second plane, it will
+return `buffer_width * 8 / 3`, which I believe is wrong as the format is
+subsampled by a factor 2 horizontally. It seems that either
+char_per_block and block_w need to take horizontal subsampling into
+account (and therefore be 8 and 6 for the second plane), or
+drm_format_info_min_pitch() should consider .hsub. Or there's something
+else I'm missing :-)
+
+>  	};
+>  
+>  	unsigned int i;
+> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+> index 81202a50dc9e..1247b814bd66 100644
+> --- a/include/uapi/drm/drm_fourcc.h
+> +++ b/include/uapi/drm/drm_fourcc.h
+> @@ -304,6 +304,14 @@ extern "C" {
+>  #define DRM_FORMAT_RGB565_A8	fourcc_code('R', '5', 'A', '8')
+>  #define DRM_FORMAT_BGR565_A8	fourcc_code('B', '5', 'A', '8')
+>  
+> +/*
+> + * 2 plane 10 bit per component YCrCb
+> + * index 0 = Y plane, [31:0] x:Y2:Y1:Y0 2:10:10:10 little endian
+> + * index 1 = Cb:Cr plane, [63:0] x:Cr2:Cb2:Cr1:x:Cb1:Cr0:Cb0 2:10:10:10:2:10:10:10 little endian
+
+I believe this is right, but I have a hard time validating it, as I
+think the corresponding figures in UG1085 are incorrect (they show a
+8bpp format as far as I can tell). Do I assume correctly that you've
+tested the formats ?
+
+> + */
+> +#define DRM_FORMAT_XV15		fourcc_code('X', 'V', '1', '5') /* 2x2 subsampled Cr:Cb plane 2:10:10:10 */
+> +#define DRM_FORMAT_XV20		fourcc_code('X', 'V', '2', '0') /* 2x1 subsampled Cr:Cb plane 2:10:10:10 */
+> +
+>  /*
+>   * 2 plane YCbCr
+>   * index 0 = Y plane, [7:0] Y
+
+-- 
+Regards,
+
+Laurent Pinchart
