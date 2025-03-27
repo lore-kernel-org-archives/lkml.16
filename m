@@ -1,128 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D4E1E868;
-	Thu, 27 Mar 2025 16:48:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2600217670
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:50:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743094112; cv=none; b=hzqzKq8nOml2NLh11KzyU4avE1QaizJBF++MJiKXPmRqE3olF4zb8wJlnZ7QjxN0xHumKRXXjhEXG2fvDkuknj5HzDt1BLO6zsIQn/gHb0XGpI7x1LRMXahimGGn0T2TfcHyarHKY+genVZgVqXvY2uUNHGuACLZsSRQqtjBH+M=
+	t=1743094206; cv=none; b=VEohh0vskCAZVdZ6oul8O5EK4wmzcWxLXLt6lT+wIrofpAoV7HLG78B68as/1kpr/PJxY5mfsP5/WGfplMUdRTEewSlKs4VNyPtQSmh3c/bjmbSJI5k6c0nfNgAd3luG+9FR09zTuaSxyQChbb2JOZWBgJbrReB7eZRnOQ6cTzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743094112; c=relaxed/simple;
-	bh=Q1VClPiEhm2KERhaBBnNpJyjepNFFGsY6HXvriZmw+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eQ0oh3fB9VV2MbpsVcAXL6AdrFglHxif5CjQcr/j6dFzudUDlTegHtIKFpoy7BtYRFkpaHemzoLQXgTUwZJap5QjT1G/EXV5Hc5Jps9V9iWfYkcKSpL1kiCqBcwgTPTrUyA3TanrH37RIZKX3ZeNBGCCzNjMfqWHupFhqAc94gE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rkup6TJ+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rkup6TJ+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A03EC4CEE5;
-	Thu, 27 Mar 2025 16:48:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743094112;
-	bh=Q1VClPiEhm2KERhaBBnNpJyjepNFFGsY6HXvriZmw+M=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=Rkup6TJ+T3kGnflvR8jZcaTC+JvVSUk+XD1mdy4+N+HB9EAr0ANsiPQDUAiB/P6im
-	 ZBKHL7ALYSiPZ6NqE+bg14Ow3a3PV/W+M8GFXAHguoAC+sI3ulXNp40yrrNmnaGryq
-	 vbPrcOTaZmQgkWVrXJUztAnM/IDrcYb0pOS/SEHex9YyhQ7lCwlGKMdYoXJIZW6tm1
-	 NFN28E7QI8Olbc4KwOBgKgohcI6CCWBFGke7sXyMa/q/EtqRaEog9jEiFFByceUEHk
-	 voIwTLsJCLJX2olCD9KSBJx3cpJg4P8OPArlA4Vo3jyIK09d1qyqeol9w2vMw05S/6
-	 BaY64CgjNHgVg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id E3460CE0843; Thu, 27 Mar 2025 09:48:31 -0700 (PDT)
-Date: Thu, 27 Mar 2025 09:48:31 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: Z qiang <qiang.zhang1211@gmail.com>, rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	rostedt@goodmis.org
-Subject: Re: [PATCH 5/9] rcutorture: Add tests for SRCU up/down reader
- primitives
-Message-ID: <f7349c37-1496-4d23-8863-3cb75b538a23@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <4bf081c8-9299-4ee3-b337-d5b751cef6be@paulmck-laptop>
- <20250310183809.3576320-5-paulmck@kernel.org>
- <CALm+0cWn_wh_QnR0k-QDVTwgdBdXTEd1Xtk5SM+T27ejCchPJw@mail.gmail.com>
- <762ee713-a38f-49e5-aa4a-57e4a4da687c@paulmck-laptop>
- <9ac94cda-3962-44d4-80e7-94555b104cf2@nvidia.com>
+	s=arc-20240116; t=1743094206; c=relaxed/simple;
+	bh=Lcqab7AGbjV8M8C6ucmsgqbNll4/31dx+hcXr+Eakr8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=fiiK7z6YoXdrpDmplwVV/SWbpSOqemOBglEd9s7M1KikzMtTxlU8L5753BFDiNMFzhCFwNpZ+dVza9thKYRPmZWPk+h1/igUZXKFqexKQCUJV6a/UcwdmiqhLtOOfu0sMpWD9Lw5p+NlZe0qwzaHrGHVy+4bD6i1tOpoBqjZw3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 942ABC4CEDD;
+	Thu, 27 Mar 2025 16:50:05 +0000 (UTC)
+Date: Thu, 27 Mar 2025 12:50:54 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Costa Shulyupin
+ <costa.shul@redhat.com>, John Kacur <jkacur@redhat.com>, Tomas Glozar
+ <tglozar@redhat.com>
+Subject: [GIT PULL] tracing/tools: Updates for 6.15
+Message-ID: <20250327125054.76093170@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9ac94cda-3962-44d4-80e7-94555b104cf2@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 27, 2025 at 12:22:12PM -0400, Joel Fernandes wrote:
-> Paul,
-> 
-> >> If rtorsu_hrt timer is still in timer_queue, invoke hrtimer_cancel() will
-> >> remove it from timerqueue and directly return, so the rcu_torture_updown_hrt()
-> >> will not be executed and the rtorsup->rtorsu_inuse cannot be set false.
-> >>
-> >> How about modifying it as follows:
-> >>
-> >> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> >> index 04d7a2173b95..ecf3d3797f7e 100644
-> >> --- a/kernel/rcu/rcutorture.c
-> >> +++ b/kernel/rcu/rcutorture.c
-> >> @@ -2502,8 +2502,7 @@ static void rcu_torture_updown_cleanup(void)
-> >>         for (rtorsup = updownreaders; rtorsup <
-> >> &updownreaders[n_up_down]; rtorsup++) {
-> >>                 if (!smp_load_acquire(&rtorsup->rtorsu_inuse))
-> >>                         continue;
-> >> -               (void)hrtimer_cancel(&rtorsup->rtorsu_hrt);
-> >> -               if (WARN_ON_ONCE(rtorsup->rtorsu_inuse)) {
-> >> +               if (hrtimer_cancel(&rtorsup->rtorsu_hrt) ||
-> >> WARN_ON_ONCE(rtorsup->rtorsu_inuse)) {
-> >>
-> >> rcu_torture_one_read_end(&rtorsup->rtorsu_rtors, &rtorsup->rtorsu_trs,
-> >> -1);
-> >>                         WARN_ONCE(rtorsup->rtorsu_nups >=
-> >> rtorsup->rtorsu_ndowns, "%s: Up without matching down #%zu.\n",
-> >> __func__, rtorsup - updownreaders);
-> >>                         rtorsup->rtorsu_nups++;
-> > 
-> > Good eyes, thank you!  I have applied this fix with attribution.
-> 
-> Could you re-send the series, or should I apply the fix the patch myself? Or
-> provide the new patch inline here.
+Costa Shulyupin <costa.shul@redhat.com>, John Kacur <jkacur@redhat.com>, Tomas Glozar <tglozar@redhat.com>
 
-Your choice, just let me know.  If you have modified any of the other
-patches in that series, it will probably be easier for you if I either
-resend just that one patch or if you apply the changes.  If you haven't
-done any modifications, it might be easier for you if I re-sent the
-series.
+Linus,
 
-I have the delta patch below, which I have pushed out for kernel test
-robot ministrations and which I expect to merge into the original
-later today.
+tracing tooling updates for 6.15:
 
-							Thanx, Paul
+- Allow RTLA to collect data via BPF
 
-------------------------------------------------------------------------
+  The current implementation of rtla uses libtracefs and libtraceevent to
+  pull sample events generated by the timerlat tracer from the trace
+  buffer. rtla then processes the sample by updating the histogram and
+  summary (current, maximum, minimum, and sum values) as well as checks
+  if tracing has been stopped due to threshold overflow.
 
-commit 55fcac5cb3fc96479d935db648c98503cb0a944b
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Thu Mar 27 07:29:48 2025 -0700
+  In use cases where a large number of samples is being generated, that
+  is, with measurements running on many CPUs and with a low interval,
+  this sample processing design causes a significant CPU load on the rtla
+  side. Furthermore, with >100 CPUs and 100us interval, rtla was reported
+  as not being able to keep up with the samples and dropping most of them,
+  leading to it being unusable.
 
-    squash! rcutorture: Add tests for SRCU up/down reader primitives
-    
-    [ paulmck: Apply Z qiang feedback. ]
-    
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+  Change the way the timerlat trace processes samples by attaching
+  a BPF program to the trace event using the BPF skeleton feature of bpftool.
+  Unlike the current implementation, the BPF implementation does not check
+  whether tracing is stopped (in BPF mode, tracing is always off to improve
+  performance), but waits for a write to a BPF ringbuffer instead. This allows
+  rtla to exit immediately when a threshold is violated, without waiting
+  for the next iteration of the while loop.
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 04d7a2173b95d..ecf3d3797f7e1 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -2502,8 +2502,7 @@ static void rcu_torture_updown_cleanup(void)
- 	for (rtorsup = updownreaders; rtorsup < &updownreaders[n_up_down]; rtorsup++) {
- 		if (!smp_load_acquire(&rtorsup->rtorsu_inuse))
- 			continue;
--		(void)hrtimer_cancel(&rtorsup->rtorsu_hrt);
--		if (WARN_ON_ONCE(rtorsup->rtorsu_inuse)) {
-+		if (hrtimer_cancel(&rtorsup->rtorsu_hrt) || WARN_ON_ONCE(rtorsup->rtorsu_inuse)) {
- 			rcu_torture_one_read_end(&rtorsup->rtorsu_rtors, &rtorsup->rtorsu_trs, -1);
- 			WARN_ONCE(rtorsup->rtorsu_nups >= rtorsup->rtorsu_ndowns, "%s: Up without matching down #%zu.\n", __func__, rtorsup - updownreaders);
- 			rtorsup->rtorsu_nups++;
+  If the requirements for the BPF implementation are not met, either at
+  build time or at run time, the current implementation is used as
+  fallback. Which implementation is being used can be seen when running
+  rtla timerlat with "-D" option. rtla can be forced to run in non-BPF
+  mode by setting the RTLA_NO_BPF option to 1, for debugging purposes.
+
+- Fix LD_FLAGS from being dropped in build
+
+- Refactor code to remove duplication of save_trace_to_file
+
+- Always set options and do not rely on default settings
+
+  Do not rely on the default kernel settings of the tracers when
+  starting. They could have been changed by the user which gives
+  inconsistent results. Always set the options that rtla expects.
+
+- Add creation of ctags and TAGS for traversing code
+
+
+Please pull the latest trace-tools-v6.15 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace-tools-v6.15
+
+Tag SHA1: cab13e49ba8fc5d0e9545cd41e34e59dabbd3954
+Head SHA1: 732032692f6ae311bc35159b18e5b7c5e64010fc
+
+
+Costa Shulyupin (1):
+      rtla: Refactor save_trace_to_file
+
+John Kacur (1):
+      rtla: Add the ability to create ctags and etags
+
+Tomas Glozar (17):
+      rtla/timerlat: Unify params struct
+      tools/build: Add bpftool-skeletons feature test
+      rtla: Add optional dependency on BPF tooling
+      rtla/timerlat: Add BPF skeleton to collect samples
+      rtla/timerlat_hist: Use BPF to collect samples
+      rtla/timerlat_top: Move divisor to update
+      rtla/timerlat_top: Use BPF to collect samples
+      rtla/timerlat: Test BPF mode
+      tools/rv: Keep user LDFLAGS in build
+      tools/build: Use SYSTEM_BPFTOOL for system bpftool
+      rtla: Fix segfault in save_trace_to_file call
+      rtla/osnoise: Unify params struct
+      rtla: Unify apply_config between top and hist
+      rtla/osnoise: Set OSNOISE_WORKLOAD to true
+      rtla: Always set all tracer options
+      rtla/tests: Reset osnoise options before check
+      rtla/tests: Test setting default options
+
+----
+ tools/build/Makefile.feature           |   3 +-
+ tools/build/feature/Makefile           |   3 +
+ tools/scripts/Makefile.include         |   3 +
+ tools/tracing/rtla/.gitignore          |   1 +
+ tools/tracing/rtla/Makefile            |  20 +-
+ tools/tracing/rtla/Makefile.config     |  42 +++
+ tools/tracing/rtla/Makefile.rtla       |  17 +-
+ tools/tracing/rtla/src/Build           |   1 +
+ tools/tracing/rtla/src/osnoise.c       |  86 +++++-
+ tools/tracing/rtla/src/osnoise.h       |  50 ++++
+ tools/tracing/rtla/src/osnoise_hist.c  | 124 ++-------
+ tools/tracing/rtla/src/osnoise_top.c   | 126 +--------
+ tools/tracing/rtla/src/timerlat.bpf.c  | 149 ++++++++++
+ tools/tracing/rtla/src/timerlat.c      | 106 ++++++++
+ tools/tracing/rtla/src/timerlat.h      |  54 ++++
+ tools/tracing/rtla/src/timerlat_aa.c   |   2 -
+ tools/tracing/rtla/src/timerlat_bpf.c  | 166 ++++++++++++
+ tools/tracing/rtla/src/timerlat_bpf.h  |  59 ++++
+ tools/tracing/rtla/src/timerlat_hist.c | 354 ++++++++++++------------
+ tools/tracing/rtla/src/timerlat_top.c  | 482 ++++++++++++++++++---------------
+ tools/tracing/rtla/src/trace.c         |   4 +
+ tools/tracing/rtla/tests/engine.sh     |  66 +++++
+ tools/tracing/rtla/tests/osnoise.t     |   6 +
+ tools/tracing/rtla/tests/timerlat.t    |  14 +
+ tools/verification/rv/Makefile.rv      |   2 +-
+ 25 files changed, 1315 insertions(+), 625 deletions(-)
+ create mode 100644 tools/tracing/rtla/src/timerlat.bpf.c
+ create mode 100644 tools/tracing/rtla/src/timerlat_bpf.c
+ create mode 100644 tools/tracing/rtla/src/timerlat_bpf.h
+---------------------------
