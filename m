@@ -1,206 +1,266 @@
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010064.outbound.protection.outlook.com [52.101.228.64])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3201B960;
-	Thu, 27 Mar 2025 12:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743076982; cv=fail; b=BV+Mr2aqZ3W9OBa9TOPu/W6hHDD5HflijpSDblvKo7K3dsUsvS5VKf3fB+ZvGRO1M0Vb/AhtvK3plkyIVFAEEHATOD5ZTUH0qWRpbSnYtHCA31mw9IeVezIDJDw1IAYPYFifq/k2JJyZQq2aRFAe9iRlOXamfmtPpYotjx4BM6Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743076982; c=relaxed/simple;
-	bh=S6IC1RVqNB8+JYRk6UfbWtQD4TW7iVwdtlUp82I6fQM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ShHRNL6X7FXxC12c5nyMXjnRAlrgMnRySvMeB+LLFk92ZoLloPRKTeNCqU/b1yf+X7XUKpK4GvbdtsYtLHmGa0PpiwFzHQvengswBpt0wtrciWwPXTfWg6urtd7qJA2F7OC5zutJMRv1QrkGQfT4qEXmQZwqgll43wPgHX7GEOs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=WTUYiAle; arc=fail smtp.client-ip=52.101.228.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9401B960
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743076994; cv=none; b=e3bc5GymMmqJKaPicUIb7zTxrJjqvM8VbEHA5sd8SWqzXgSwTnmkZjNjJ7DpcVXlcqQT1tjsLqJ13jFqnAEtVvtByZV9mWUmmjwvtUbnB9GXcV2YX5fz/rCmdG31CjwuapCYEH65YD0jTjoR4gfJPSxWbfWz+DRFMHLRpsszeCI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743076994; c=relaxed/simple;
+	bh=UJkKSf7fQMEVOKFZamgTNbbKX0+pYHquQYAtDvyOvnE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ICnnHeIJZXE0s2DslAYVL+j1RsNXfDNIbaJO3JJMHNmfe5tlOyNaEWS28Zh4YRoGTVg0nblo3xYJ4Xq2wSJmSAb2pCAjylCbeybcYBQlPwZRboHT6EdXBtdMG3Zpq8FXIXMZy+PuXc6xjYy/hPiilqrBDNpqBdWWBDxTNtOcgqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=ghDmfPG2; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="WTUYiAle"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yWve8/w7YCsOUsM/cjYqf5Ev7Cw8o5yEwSWSci4qqDkh6J+KwoIgoczIFFu0zmL4sUDch1CNnRmBCppIaCQy7M1ULXOGEpXldSblV0Nm4ukHR0OY1w0tvDp65h1yhdhI6+5AEYmEhsZpGQS9tYl7Pr2oj/JO4bc9WCtzQYfPnWsWnMaFd3gmtHgQwuEsrW0Dieb0swIXL4NBifTPedPweXV359iaoUujL0cDRZg5mRZEUWjtNpflnMPuk7ym0os+W9QLyGFNjpdljFKozdMoamsioAv7C/xUlMIStgLELMiIUZV0E9sw5V3aHKFv2/MLv5VONUu7fvQ4lgBtQX0CvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S6IC1RVqNB8+JYRk6UfbWtQD4TW7iVwdtlUp82I6fQM=;
- b=doluisz8TOj8U/0q2GpoRdsJUp1AofR2xC6zaAYvYO+2Ww3PouYNTdAQ+BaFiy5BPbfZRgqH9xjIbN5sO1zIgLnpcY7zN4o3Ba+60y7XzZyaryJt9I24ksILXKlZv4LPTIBJ3U+nfBKxLtiWwYQsxLsPM6uxvwG4ZeWRCVNXE4crId6pQhkJVZ09QS9DlvZL0JfOUzcXgzHuQpuOpqEDM/gHtmVT6YKghomZn5GC/vv5PyBEXOpQ0fRNI/upViYMlQKEddu8Evg8OXFhElCXPP8EiJIR9o3Eu3haJgzvi2psFxOOjxxDshm7sICbMADsn9jVFvtGyylHgqLCOiiDKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S6IC1RVqNB8+JYRk6UfbWtQD4TW7iVwdtlUp82I6fQM=;
- b=WTUYiAlezYODYqNHFMYrNqDuMXFzr7AkUuv3cXp8hnnaYyHMYwp4yKVp9drbNF0Gl59ruST5fWLSY5cPtElxroZdiJsr4BSMuF88bdzPYKtL31BXIBv311L+uqFu2DlqOyW04i8dSn1OnjKhQ1Q4aZXDFdB0cQzlwKOsjzsVSYU=
-Received: from OSAPR01MB2772.jpnprd01.prod.outlook.com (2603:1096:604:4::9) by
- OSYPR01MB5464.jpnprd01.prod.outlook.com (2603:1096:604:83::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8583.27; Thu, 27 Mar 2025 12:02:56 +0000
-Received: from OSAPR01MB2772.jpnprd01.prod.outlook.com
- ([fe80::7280:12fa:872f:e753]) by OSAPR01MB2772.jpnprd01.prod.outlook.com
- ([fe80::7280:12fa:872f:e753%5]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
- 12:02:56 +0000
-From: John Madieu <john.madieu.xa@bp.renesas.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-CC: "conor+dt@kernel.org" <conor+dt@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
-	"rafael@kernel.org" <rafael@kernel.org>, "daniel.lezcano@linaro.org"
-	<daniel.lezcano@linaro.org>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"john.madieu@gmail.com" <john.madieu@gmail.com>, "rui.zhang@intel.com"
-	<rui.zhang@intel.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
-	<linux-renesas-soc@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>,
-	Biju Das <biju.das.jz@bp.renesas.com>, "linux-pm@vger.kernel.org"
-	<linux-pm@vger.kernel.org>, "lukasz.luba@arm.com" <lukasz.luba@arm.com>
-Subject: RE: [PATCH v3 1/6] soc: renesas: rz-sysc: add syscon/regmap support
-Thread-Topic: [PATCH v3 1/6] soc: renesas: rz-sysc: add syscon/regmap support
-Thread-Index: AQHblYIGivVFYFKgUECiS3DWld6hrrN3cxkAgA9/YWA=
-Date: Thu, 27 Mar 2025 12:02:56 +0000
-Message-ID:
- <OSAPR01MB2772364A3736EC6C737634F2FFA12@OSAPR01MB2772.jpnprd01.prod.outlook.com>
-References: <20250315081225.92118-1-john.madieu.xa@bp.renesas.com>
- <20250315081225.92118-2-john.madieu.xa@bp.renesas.com>
- <CAMuHMdXWGLUzJFKdDR3hLf0iOoKzb15fNQmvzZZQq-a8e6cxfQ@mail.gmail.com>
-In-Reply-To:
- <CAMuHMdXWGLUzJFKdDR3hLf0iOoKzb15fNQmvzZZQq-a8e6cxfQ@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OSAPR01MB2772:EE_|OSYPR01MB5464:EE_
-x-ms-office365-filtering-correlation-id: 2660a8c8-842f-46d2-30ef-08dd6d274f98
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?V0xUemtkRmQvUFIrYTF0WFlaWUVZOTUwVXNab0l0WEZKT1o4c2tpR2x1UitI?=
- =?utf-8?B?VTVYVmNUcEpiOXdMc0RRSERSZmQ2UitEaUFyQzVOLzdFSHpMOWpuMkJ0SkU4?=
- =?utf-8?B?TVZibENkRWtXL0VzekV3YXJWc3ZqcXJVak9VY1hPOEpYQ1VLSGl4U0YyR0k4?=
- =?utf-8?B?Y2xtcC9jdEpSQys1MGxBQXYxMWVEdXhIVElzNExyWnR5SGRzd29JblJ5amNz?=
- =?utf-8?B?Uk5JWTRRRVZnV3MwTGZTMERWVXVsL29KYmRGMFQzYnBTbjdzSnRWVEZEZ1lJ?=
- =?utf-8?B?eHpoNklWQWxvbFdmeVNIbko4MGJSU0tUdnB3NTdkODI5Njg2Z2dEekRodk1t?=
- =?utf-8?B?UHdMRmNObXNIZVVaVWxXUkhGWlVyQmgxeldXaGRlNUphajBDd2NFQlJLaFFp?=
- =?utf-8?B?cDZ6dC9YbmRsTFlBdGR0NTJ5VktMbE5zOU5ac2swU2s0RCtwNktmU3RRYSts?=
- =?utf-8?B?SmgzNjdEa0R5bUNGKzJhRFRMeHFoU3BlV3doMFRNamljVUxyNGpqRDFSSHoy?=
- =?utf-8?B?VVhRZmNCRDFmYUZoS256K3BFbWdueUNpZ2pETXFaS053ekx0V01vWG1sOGV0?=
- =?utf-8?B?Zlo1Qlp3U3NaSmxKU1dzejlOVFRxWnlhRzZ2ejNXN2krS2VEYmZnbXhTazNj?=
- =?utf-8?B?czZUdDRrUVBNR0tpNGkwYUloYU1ESmI5SlVBUklqR3hCOHk2WUt0R0lOTmhu?=
- =?utf-8?B?RHEwWlRjOHdOSmNucHJNakpSc0ZGUGg3eGJJazQ5MFpZTHRyYTYvN1gyRitE?=
- =?utf-8?B?R2NvYW5WSm1TZ3hEWEtkck1HcnR3SWJ1Y0swdlN3WExwOTNhMDJGSFZWaXlQ?=
- =?utf-8?B?bFZqMlNvVEdTa085RTNZK0J3ZVdnQXdxRFR1NzB6NTlvMVRmT3kwY09jeHB3?=
- =?utf-8?B?cUptaEcwMFJoRnVQZm9ZWWlwb3NKZ2lhRlZleHNkRURsUFJJMC9nS0kzdUR0?=
- =?utf-8?B?OUJoK1VPUklZMXBaYi9XUDRSMGE1NHk5cUQ3RStTaGdsZno0QW1rNDh1WTdQ?=
- =?utf-8?B?d2tRYUVjUjJDNlVtc29hVFlzUlFld3NodkU5cjR0M2R0S01adkR2Y2V5OFZs?=
- =?utf-8?B?OVkxQUhQYzd5MGt2UnRvZ0VrSlBiYklkaXc0dys1NjRJbGRpMEtRZDZuTkV1?=
- =?utf-8?B?Yk1wUHFGeGdPV1lSY0F5cERRZjg5c2xaQjFhK2JjcVlmY3hSM1pRaW8yRjZR?=
- =?utf-8?B?QXBkZW0rT1FKQ3JvNHdpMG5PVlRENDFTL2FGYWFyK2lmU3JGQ1Vqc1NEcjlh?=
- =?utf-8?B?RmQ1NjFsUWxPcXU2TGpwejZPY2RyUHkrQzhGalFka2UydHZEVDVZNjU1c2JR?=
- =?utf-8?B?aHpFeDh0UmthTlZqMThmaVhmcFZEYjRjZHFOTTJ0cEcyalVkWHFOcGZjSzdE?=
- =?utf-8?B?ak5hL0EyaElQVjVmT2lJTkVHTkloSzVySWtNOHpzZVJMMFhDWHJ2SkhQU2J0?=
- =?utf-8?B?cEJ1Y2YyQkNtQkRETDJ4UEJZcTd4WU15djI5NXQ1b3FNeHpmaVpnUGEyMTBQ?=
- =?utf-8?B?K1VZTFp0cXllNDdGOCtUc2tHSlZhWjFKSUcrdGxRQ3dGNUtCVEJuR1dsajNm?=
- =?utf-8?B?WWFONUJQdkVmMk9PSzBSajdQSHlSWm5DNTJnb2h6YXpITFNTdXFEV1E2eVV3?=
- =?utf-8?B?cnF6djRLZUJscjUyZHh3WWkzUGFaLzBHdjJBdGN3Qy9jQk5PM3lIT2lVMVB5?=
- =?utf-8?B?VCsyY0c2emowZWJva2tSMWJiMGRHT2s2VUVUSzhnUzZLZ0JEcFdEbkRuS084?=
- =?utf-8?B?YURnc1d6L2dsZ28vbDY0L1FNb25LZUc4a2tpWnJPR1FEdk5PVmxhSGdFSnI4?=
- =?utf-8?B?eEpkMW5ma3Byd2xtQTZPbmJTMlZWY0lVVjJOck1FakwzQm1LU3BDcFJVZ3Fn?=
- =?utf-8?B?VVFjWUNHZ3hmd1FxZEZXM3NpT2ExaVQ2RnNXVEpWSXVJYTlGWUM5c0t6elRB?=
- =?utf-8?Q?7VT8YWKKXYKpmCK0lPynP1TlGENT4Oox?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB2772.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?WHpwL0s0UXhUQWlGRTZZWXA4cDRLWUdRdno4dnhXL3hMbU5uK1lLMWc2K2V1?=
- =?utf-8?B?Z0JiRlllMzlpd1R0dUR2Rlp4QlhrY3o0TmYyeHgwTzBGUXB3OXp0MTlrYzdI?=
- =?utf-8?B?WklxTytsSkdtcmNVYTQwZnI5ZnYxUUZDU21KNGY4dDVuU3VvSkU3RzN6bThU?=
- =?utf-8?B?RzFDaWo0Z3RiTThJS2lqM3ZtWmdIMWtDNzZ3OFkrcTl1RUEvZU4vT2NmQUVo?=
- =?utf-8?B?bEc4Z2RmMk91RGJzeG1wSk5EMG1KdmViZVU4c0pEQjRGM2ZSNndCMUpnWTNZ?=
- =?utf-8?B?MVYzQjFpS2s5TTNhTklkVTB1ZURpK2hnT0xnT0dmMDhnWm5MMk9oU1QzTFky?=
- =?utf-8?B?aUxrbnJlZEhVT2hXZWVwWCtKL0E4Y0RkaG81eldrV1o4SlRWMXA0WVdKTkJm?=
- =?utf-8?B?SFQ0VjR6U0ltMmxQY24zT1prZGkzdERTcWprSEJnaWVIWTRQMkZvazY0cWQ4?=
- =?utf-8?B?NGM3Y29JenNrdkZadDlzanVlNzJ2cGcwNHZjVmsyZmh3Yk5YcXFhUGFtaWRZ?=
- =?utf-8?B?RTd5YkEvMnhQSXEvOURTU3lidHhoTXF6QjVQbWVLNENuSG1WRmhIYXR0NmJV?=
- =?utf-8?B?RUpZVWxGSU5kOHRUQmoxTzJwT1NnWG5xVzNYWFpKTW5sYkVLQ2FGRmYxcWVk?=
- =?utf-8?B?MVFuUVFvcGJRRXhDM2o4cWdDWDJybWZvZlNCR05sTWZuTFRvSlNoWEl1L2tj?=
- =?utf-8?B?NTVnNFZXSWFTbitnQnpiWEFlU053OHQ3dkpXblZ0dnNjNk01YnVIcHhKRVRh?=
- =?utf-8?B?RFNkd0xkYkkzZDNjUE1zK1NkT0M5WTNCN0JCUndmZlpzMm9CZUJ1UElkRzZn?=
- =?utf-8?B?K2RBVXI4N1BadUZSMzBUVE5TVkl6NEhPL2d2b0dIQnN6d29oT3o4SkEweWsw?=
- =?utf-8?B?cXpzNXp5ak84djZISmlUYXFacTltdG9CTWxOVzduQkt0SFlGTjJ1dDlndHY1?=
- =?utf-8?B?NmlWUXlhdWVOUmN3aStzKzljcDVZQ2VraFlrZ1hydStDNVc0UXRpU09KMFQr?=
- =?utf-8?B?NFFwYU9kSk1JM09oWHVEczhTVXlReXZuR3ZsWTRuRXozdDkweVlXS3kwaHJz?=
- =?utf-8?B?OHJWSTBNMjZoSUtuTU4vVk1zNmc1UERtekYwQ3RTSDNRbmpFVmtNSzBpM0Qz?=
- =?utf-8?B?ZXdHdFRuWjhBSnFNblNiQUxMazUwcHowS25HbmlzMHM1N29pallaNldadXNP?=
- =?utf-8?B?R1hjeFgwMHlMSXRoRVZyWkdwcjhMTzRDakFZYzVQdUlZK1FHL1ErRFE5MjJ0?=
- =?utf-8?B?VlhSMUxmOTNkejJBZE8xMWZTWWd4TUFlOVpWdENkd0lBN200d3g3aWJjdTY2?=
- =?utf-8?B?aUpKaitVU1JVOHVwZVptQTYwakQ3SEVsTjR1WkI0eElMMVpiZ29UK01ZVDlp?=
- =?utf-8?B?SXF5aW1YVHdYMHE0bXhuQ2syVHpKR09acTQvMG4zb2FhVG1KcWVnQTdrcis4?=
- =?utf-8?B?cnFFazRoUzB3T3M1NW82R2JzMkQ5UGVLQmJhSmRMeGg5UGV4WU5XRnE1ZWZo?=
- =?utf-8?B?LzhJbVJlOG1OczV3TG1HZ1BTZEZrYzAxbjdiZFp4RUgzblR0MEZMVS9VUkdU?=
- =?utf-8?B?YTBqMFNnWkFjOTRkYyt0Vm5CL3BPcUw4YTdiVmZmdjNsTzJBNVd3QmlzZFk5?=
- =?utf-8?B?cXdnakE5NW9NakwrL3dNYTdicDM0dmYwTWdhTjdQZDRSVlpBSE13alJ0bmFx?=
- =?utf-8?B?U0lnVGM1S1kzeXE5RHBSL1BPeU9UOTlmNFplTEQxZjNXNFlzY0dmU0RiMENN?=
- =?utf-8?B?V1krREFHaGFQZWpqVGVvWVN3d3huMGZQTWF2SGxqdkVmSEFJeWNkclYzSFor?=
- =?utf-8?B?OElTQnRBSTB5UlBXclZybUhMa3k3OTlwc0tOSGlZTGI3SzNDaGFFQXpSM1hP?=
- =?utf-8?B?bmJ0Y0dEYVAyNTNYdFQyVjM0Nll1a0grOVJldHVhVEZ6Rmh0ejZXRXVicisr?=
- =?utf-8?B?QlY2Z0g3dS9rWnRUMG9Td3E2MkkzcXFPZ3VTblpOdkpIdVF6cEtvU2lYei9N?=
- =?utf-8?B?WU8yYjhIZE81V0Q1Vit4V1kxOXR4NlBtQ3liWXEzcHQ3cGdoT1praEs3Tmx3?=
- =?utf-8?B?ZXZoRlpQakJBWW9JS3I4YlZ1cEZ0MWNnd1N6TUFFU1ova0EwZENWMEZnWGQw?=
- =?utf-8?B?Nk1qeXY1U3h0WEp0NGdGWEdDQmZ0RVg4SW1GbkZCZS8vYWpkVnQ2KzlqSTdM?=
- =?utf-8?B?QUE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="ghDmfPG2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1743076939; x=1743681739; i=spasswolf@web.de;
+	bh=SM1POh9VV3k0zWrqccD5VWDOjF1RncipJvSoxJViC/g=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=ghDmfPG2X/yTzwS3cAxo1t9omIZslCGC6qRb9iOd/Na9V2c6etxsU46/anZL54rM
+	 fFYPqT+7kgnRo4g5YOpD2brWvtwwYQaZMyCVlSOWh9dhcPh04MAoiQ83DNZPIyG+7
+	 gNnf19MEvZbdqe/5/VgHnwsszuglGkSa6tCdg7Vo1BrM/Z+X/Oi6VYGaHjmI4/6u3
+	 Q3K0RDUD5/n5tlEmp/pB63XJ7Ih+VFyz4hYtz241kgXA36BodEJXvAF8IvzAunt+W
+	 PmQJLZjFv1YPz+sd+R3Mzn5+XyP9ZENFemLV0BPna670NPI6CYh4fLwwCAuJLpGSr
+	 ifZhUdH3FE7BohYBvQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from localhost.localdomain ([95.223.134.88]) by smtp.web.de
+ (mrweb106 [213.165.67.124]) with ESMTPSA (Nemesis) id
+ 1MSZHv-1tZKEt3IHR-00ShLe; Thu, 27 Mar 2025 13:02:18 +0100
+From: Bert Karwatzki <spasswolf@web.de>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Bert Karwatzki <spasswolf@web.de>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Balbir Singh <balbirs@nvidia.com>,
+	Kees Cook <kees@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org
+Subject: [PATCH v0] kernel: resource: add devm_request_free_mem_region_from_end()
+Date: Thu, 27 Mar 2025 13:02:15 +0100
+Message-ID: <20250327120216.14083-1-spasswolf@web.de>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: Z-UuHkUPy60e1GWM@gmail.com
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSAPR01MB2772.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2660a8c8-842f-46d2-30ef-08dd6d274f98
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2025 12:02:56.2730
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9BYA4sXVeRf+sc1WInpPMVfvi02WUvJJ/V1Id9DxkwrJY/4XZKv3kDyqubUUoiKN+M+6F20Ww8ybBdHiDoZW4g7IPZ263skOC95zcfDGOC0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSYPR01MB5464
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:zUDI+gfzkTnaGlpjaw/Mi3OTj7Gliv+9usoAh1T1d3UUIYx0K53
+ NxOTzwzE6QDKdfMpytVP+TqEqPFrU0n8kwx88EwhECN0A3vPCmsknvyDmUUU7zuHpJ/yk+j
+ s5aP+CF1KAob+Q2mi2hvn7aOCpML5V6d9It/ItXJ9Os8GrDj40Ayt4JaMd8gPQDglaqzDpN
+ eNPNYcupJ9auwgAjbhkPQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:U12YhXUhwvM=;GefW0zbxDptGhDwtcP8xpktjuKv
+ /If+yDumaiZS5a1SiLZ103nNh9Fmde7WSW2XFr5/0ju/3iGCc0Lt0OmrRPpso2S3X04sz8gtz
+ Yv7tBV/OYb+GShCCu0+LyeRLculBS+evmO2QXs7WKvz+Y6WEyUob2IX3SqPUdsexiiO2XhBWV
+ CUENkTdx8bU7PU/B0cFewQMaEgbwf5EXS3tFcmEN65AMB1W1qmt0BYcOZ3ioqUW5pPPZMG/Au
+ Ar8OXa7pDkm2xfPlKQBjfV6tGytEllKbqCd9lNtD0+U8AQkD/+oIzkfMo7izNq2AGyoqL7EWi
+ +waQPelDKsW2wTrxu8dCyYY8alf/SisJEzyRdiqenBKhDo98LH4ZNTDAKzqHQ+qTS7KhfGhRA
+ d2XgI/MR97AL0InkRGrfADNaz9JS0S5bZgFDmcYIqCoOW4bZ+vh9Tlz8V09+V4gtuVICkOgqb
+ /iLULL5VzyTlz0y54onV8au5i198M7MGCfWRdyhc/K1rpWVmIpnD9c9bYFUCw31SuCOcloXA+
+ o2qUmCMKJgcGLoqjSMg8lk4C7DQG1ZOuwt2uZogm8ExehqeWbJwFhuErZH0H1Jfup47VV5YQ0
+ NuRD2a/5uEPVAFwaKrs7OClxKNv1tWPu5O4mNawcJJEgHIuMzb3U8IivcsoqkwQ7L+ryU7zKK
+ pvPUTwyoqyZbTp6SzRrZf3OyI8WpXnC3Nwqn8iXLjqqTM7YACEGucjV3Hj1OrGdLT/ee8/dID
+ GdzMI4AA80mzfZRGWvcmhrrvg+I3LCuC7HgEWAC/2LScEmav05xq2deWl6h0d85hxxDVxT/oc
+ 47el1CxY1pkMKm1Who2LwAjTnMmFAive1jPMSkNPZBFE1rhauAYW0lM2F78khefz49jcjlsKS
+ Nzyzs77CZi8kzRGjB97GcmuPO3Hnubz5cfsp0E7+/dxjXQCtZAFZ/M3TebtT6dUIOIN/MTruZ
+ /eeCeA9g3ztcjevUk2nrk7etriUUHuTV0TDXwPhPof8fHvhYscTZGd8h74ObmcPzdBqCGormB
+ XoiHYvpPWP7VFLW5LJfyFaVYfEFFKwXsB5iEGi7ZzdY336NfoZKNKwYcf0bROZBYHdszH23E3
+ OPvydcWP0C+6oOhE/nds6FxCoyfysXBFLQkyMSu4C3A1Tj8iaCxUyvhoqunNnToHJCIUnnOj1
+ I33MOCEoJwtr0dA814oym+8l7eOQLvdHss8LJQR1uqHEFICjyN2k7XnngBdgTXf6Jt5bB8FGy
+ WMX4cgbRS31vcOuVKel4EJn6aao6tMiCviLkeBiIJRRwOQOCQOZ+1fzOHaIMcN8zJCvTk23/f
+ eJ45Kgz7s9l3LNfZXEbmBmYfUq3J7Gckc0r2b44YUcAXFbGV97cTk4XQ/Uuht+6AFzmT8zFYU
+ wmbC9IYVE2JGzgAgRrUrJiZIQkA9abBfQ8jbNbVCeIdSlz72PJwzMp0AM8m/ll549FDZfrMdK
+ 28IESxEqkvfILUvW6LPUX7bKCI5s=
 
-SGkgR2VlcnQsDQoNClRoYW5rcyBvbmNlIG1vcmUgZm9yIHRoZSBmZWVkYmFjay4NCg0KPiAtLS0t
-LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0
-QGxpbnV4LW02OGsub3JnPg0KPiBTZW50OiBNb25kYXksIE1hcmNoIDE3LCAyMDI1IDQ6MTMgUE0N
-Cj4gVG86IEpvaG4gTWFkaWV1IDxqb2huLm1hZGlldS54YUBicC5yZW5lc2FzLmNvbT4NCj4gU3Vi
-amVjdDogUmU6IFtQQVRDSCB2MyAxLzZdIHNvYzogcmVuZXNhczogcnotc3lzYzogYWRkIHN5c2Nv
-bi9yZWdtYXANCj4gc3VwcG9ydA0KPiANCj4gT24gU2F0LCAxNSBNYXIgMjAyNSBhdCAwOToxMiwg
-Sm9obiBNYWRpZXUgPGpvaG4ubWFkaWV1LnhhQGJwLnJlbmVzYXMuY29tPg0KPiB3cm90ZToNCj4g
-PiBUaGUgUlovRzNFIHN5c3RlbSBjb250cm9sbGVyIGhhcyB2YXJpb3VzIHJlZ2lzdGVycyB0aGF0
-IGNvbnRyb2wgb3INCj4gPiByZXBvcnQgc29tZSBwcm9wZXJ0aWVzIHNwZWNpZmljIHRvIGluZGl2
-aWR1YWwgSVBzLiBUaGUgcmVnbWFwIGlzDQo+ID4gcmVnaXN0ZXJlZCBhcyBhIHN5c2NvbiBkZXZp
-Y2UgdG8gYWxsb3cgdGhlc2UgSVAgZHJpdmVycyB0byBhY2Nlc3MgdGhlDQo+ID4gcmVnaXN0ZXJz
-IHRocm91Z2ggdGhlIHJlZ21hcCBBUEkuDQo+ID4NCj4gPiBBcyBvdGhlciBSWiBTb0NzIG1pZ2h0
-IGhhdmUgY3VzdG9tIHJlYWQvd3JpdGUgY2FsbGJhY2tzIG9yDQo+ID4gbWF4LW9mZnNldHMsIGxl
-dCdzIHJlZ2lzdGVyIGEgY3VzdG9tIHJlZ21hcCBjb25maWd1cmF0aW9uLg0KPiA+DQo+ID4gU2ln
-bmVkLW9mZi1ieTogSm9obiBNYWRpZXUgPGpvaG4ubWFkaWV1LnhhQGJwLnJlbmVzYXMuY29tPg0K
-PiANCj4gPiAtLS0gYS9kcml2ZXJzL3NvYy9yZW5lc2FzL3J6LXN5c2MuYw0KPiA+ICsrKyBiL2Ry
-aXZlcnMvc29jL3JlbmVzYXMvcnotc3lzYy5jDQo+ID4gQEAgLTYsOCArNiwxMCBAQA0KPiA+ICAg
-Ki8NCj4gPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvaW8uaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4
-L21mZC9zeXNjb24uaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L29mLmg+DQo+ID4gICNpbmNsdWRl
-IDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3JlZ21hcC5o
-Pg0KPiA+ICAjaW5jbHVkZSA8bGludXgvc3lzX3NvYy5oPg0KPiA+DQo+ID4gICNpbmNsdWRlICJy
-ei1zeXNjLmgiDQo+ID4gQEAgLTgxLDYgKzgzLDE0IEBAIHN0YXRpYyBpbnQgcnpfc3lzY19zb2Nf
-aW5pdChzdHJ1Y3Qgcnpfc3lzYyAqc3lzYywNCj4gY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAq
-bWF0DQo+ID4gICAgICAgICByZXR1cm4gMDsNCj4gPiAgfQ0KPiA+DQo+ID4gK3N0YXRpYyBzdHJ1
-Y3QgcmVnbWFwX2NvbmZpZyByel9zeXNjX3JlZ21hcCA9IHsNCj4gDQo+IFdBUk5JTkc6IHN0cnVj
-dCByZWdtYXBfY29uZmlnIHNob3VsZCBub3JtYWxseSBiZSBjb25zdA0KPiANCj4gQWJvcnRpbmcg
-cmV2aWV3LCBuZXcgdmVyc2lvbiBoYXMgYmVlbiBwb3N0ZWQuLi4NCg0KU2luY2UgSSBzZW50IGEg
-djQgd2hpbGUgeW91IHdlcmUgcmV2aWV3aW5nIHRoaXMgdjMsIEkndmUgcmVjZWl2ZWQNClJiIHRh
-Z3Mgb24gdHdvIHBhdGNoZXMgZnJvbSBLcnp5c3p0b2Ygb24gdGhlIHY0Lg0KDQpJJ2xsIHRoZW4g
-c2VuZCBhIHY1IHdoaWNoIHdvdWxkIGluY2x1ZGUgdGhpcyB3YXJuaW5nIGZpeCBhcyB3ZWxsIGFz
-DQp0aGUgUmIgdGFncyBJJ3ZlIHJlY2VpdmVkLiBJIGhvcGUgdGhpcyBpcyBPayBmb3IgeW91Lg0K
-DQo+IA0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAgICAgICAgICAgICAgICAgICAgICAg
-IEdlZXJ0DQo+IA0KDQpSZWdhcmRzLA0KSm9obg0K
+devm_request_free_mem_region() places resources at the end of the
+physical address space, DIRECT_MAP_PHYSMEM_END. If the the dma mask
+of a pci device is smaller than DIRECT_MAP_PHSYMEM_END then this
+resource is not dma accessible by the device which can cause the
+device to fallback to using 32bit dma which can lead to severe
+performance impacts.
+
+This adds the devm_request_free_mem_region_from_end() function which
+allows to select the endpoint from which to place the resource
+independently from DIRECT_MAP_PHYSMEM_END.
+
+Link: https://lore.kernel.org/all/20250322122351.3268-1-spasswolf@web.de/
+
+Signed-off-by: Bert Karwatzki <spasswolf@web.de>
+=2D--
+ drivers/gpu/drm/amd/amdkfd/kfd_migrate.c |  3 ++-
+ include/linux/ioport.h                   |  3 +++
+ kernel/resource.c                        | 31 ++++++++++++++++++------
+ 3 files changed, 28 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c b/drivers/gpu/drm/am=
+d/amdkfd/kfd_migrate.c
+index d05d199b5e44..e1942fef3637 100644
+=2D-- a/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
+@@ -1042,7 +1042,8 @@ int kgd2kfd_init_zone_device(struct amdgpu_device *a=
+dev)
+ 		pgmap->range.end =3D adev->gmc.aper_base + adev->gmc.aper_size - 1;
+ 		pgmap->type =3D MEMORY_DEVICE_COHERENT;
+ 	} else {
+-		res =3D devm_request_free_mem_region(adev->dev, &iomem_resource, size);
++		res =3D devm_request_free_mem_region_from_end(adev->dev,
++				&iomem_resource, size, dma_get_mask(adev->dev));
+ 		if (IS_ERR(res))
+ 			return PTR_ERR(res);
+ 		pgmap->range.start =3D res->start;
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index 5385349f0b8a..a9a765721ab4 100644
+=2D-- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -407,6 +407,9 @@ walk_iomem_res_desc(unsigned long desc, unsigned long =
+flags, u64 start, u64 end,
+
+ struct resource *devm_request_free_mem_region(struct device *dev,
+ 		struct resource *base, unsigned long size);
++struct resource *devm_request_free_mem_region_from_end(struct device *dev=
+,
++		struct resource *base, unsigned long size,
++		resource_size_t seek_end);
+ struct resource *request_free_mem_region(struct resource *base,
+ 		unsigned long size, const char *name);
+ struct resource *alloc_free_mem_region(struct resource *base,
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 12004452d999..82f40407c02d 100644
+=2D-- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -1875,12 +1875,14 @@ EXPORT_SYMBOL(resource_list_free);
+ #endif
+
+ static resource_size_t gfr_start(struct resource *base, resource_size_t s=
+ize,
+-				 resource_size_t align, unsigned long flags)
++				 resource_size_t align, resource_size_t seek_end,
++				 unsigned long flags)
+ {
+ 	if (flags & GFR_DESCENDING) {
+ 		resource_size_t end;
+
+ 		end =3D min_t(resource_size_t, base->end, DIRECT_MAP_PHYSMEM_END);
++		end =3D min_t(resource_size_t, end, seek_end);
+ 		return end - size + 1;
+ 	}
+
+@@ -1920,8 +1922,8 @@ static void remove_free_mem_region(void *_res)
+ static struct resource *
+ get_free_mem_region(struct device *dev, struct resource *base,
+ 		    resource_size_t size, const unsigned long align,
+-		    const char *name, const unsigned long desc,
+-		    const unsigned long flags)
++		    resource_size_t seek_end, const char *name,
++		    const unsigned long desc, const unsigned long flags)
+ {
+ 	resource_size_t addr;
+ 	struct resource *res;
+@@ -1946,7 +1948,7 @@ get_free_mem_region(struct device *dev, struct resou=
+rce *base,
+ 	}
+
+ 	write_lock(&resource_lock);
+-	for (addr =3D gfr_start(base, size, align, flags);
++	for (addr =3D gfr_start(base, size, align, seek_end, flags);
+ 	     gfr_continue(base, addr, align, flags);
+ 	     addr =3D gfr_next(addr, align, flags)) {
+ 		if (__region_intersects(base, addr, size, 0, IORES_DESC_NONE) !=3D
+@@ -2021,17 +2023,30 @@ struct resource *devm_request_free_mem_region(stru=
+ct device *dev,
+ 	unsigned long flags =3D GFR_DESCENDING | GFR_REQUEST_REGION;
+
+ 	return get_free_mem_region(dev, base, size, GFR_DEFAULT_ALIGN,
+-				   dev_name(dev),
++				   DIRECT_MAP_PHYSMEM_END, dev_name(dev),
+ 				   IORES_DESC_DEVICE_PRIVATE_MEMORY, flags);
+ }
+ EXPORT_SYMBOL_GPL(devm_request_free_mem_region);
+
++struct resource *devm_request_free_mem_region_from_end(struct device *dev=
+,
++		struct resource *base, unsigned long size,
++		resource_size_t seek_end)
++{
++	unsigned long flags =3D GFR_DESCENDING | GFR_REQUEST_REGION;
++
++	return get_free_mem_region(dev, base, size, GFR_DEFAULT_ALIGN,
++				   seek_end, dev_name(dev),
++				   IORES_DESC_DEVICE_PRIVATE_MEMORY, flags);
++}
++EXPORT_SYMBOL_GPL(devm_request_free_mem_region_from_end);
++
+ struct resource *request_free_mem_region(struct resource *base,
+ 		unsigned long size, const char *name)
+ {
+ 	unsigned long flags =3D GFR_DESCENDING | GFR_REQUEST_REGION;
+
+-	return get_free_mem_region(NULL, base, size, GFR_DEFAULT_ALIGN, name,
++	return get_free_mem_region(NULL, base, size, GFR_DEFAULT_ALIGN,
++				   DIRECT_MAP_PHYSMEM_END, name,
+ 				   IORES_DESC_DEVICE_PRIVATE_MEMORY, flags);
+ }
+ EXPORT_SYMBOL_GPL(request_free_mem_region);
+@@ -2055,8 +2070,8 @@ struct resource *alloc_free_mem_region(struct resour=
+ce *base,
+ 	/* Default of ascending direction and insert resource */
+ 	unsigned long flags =3D 0;
+
+-	return get_free_mem_region(NULL, base, size, align, name,
+-				   IORES_DESC_NONE, flags);
++	return get_free_mem_region(NULL, base, size, align, DIRECT_MAP_PHYSMEM_E=
+ND,
++				   name, IORES_DESC_NONE, flags);
+ }
+ EXPORT_SYMBOL_GPL(alloc_free_mem_region);
+ #endif /* CONFIG_GET_FREE_REGION */
+=2D-
+2.49.0
+
+One of the problems (I'm sure there are more ...) with this patch is that
+it uses dma_get_mask(adev->dev) as the endpoint from which to place the
+memory, but dma_get_mask(adev->dev) returns the dma mask of the discrete
+GPU, but what actually is needed to avoid the bug would be the dma mask
+of the built-in GPU. In my case both are equal (44bits), but I'm not
+sure if they are equal in all cases.
+
+> So this patch does the trick for Bert, and I'm wondering what the best
+> fix here would be overall, because it's a tricky situation.
+>
+> Am I correct in assuming that with enough physical memory this bug
+> would trigger, with and without nokaslr?
+
+I think the bug triggers as soon as DIRECT_MAP_PHYSMEM_END is bigger
+then the dma mask of the integrated GPU.
+
+> I *think* the best approach going forward would be to add the above
+> quirk the the x86 memory setup code, but also issue a kernel warning at
+> that point with all the relevant information included, so that the
+> driver's use_dma32 bug can at least be indicated?
+>
+> That might also trigger for other systems, because if this scenario is
+> so spurious, I doubt it's the only affected driver ...
+>
+> Thanks,
+>
+>	Ingo
+
+Or one could make the endpoint from which the memory resource will be
+placed selectable.
+
+Bert Karwatzki
