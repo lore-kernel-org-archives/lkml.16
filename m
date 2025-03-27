@@ -1,146 +1,232 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB0A19C56C
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0FB155312
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743090606; cv=none; b=LyRm+JbOqZnBmlAKCGeAgaJC6WYbHWdeYUiLKMQQuo6GpTQJq2XFuyr4zjhEHfkbKkCc/OLRe2MctyQCCjX47zKv1yGUNk4DTRJ5Q/xu0+uN2PF1DO+k6BTgvvH4LQeKCxLo9iu+3jDViymKSVW2xgHNvaXUtJawIHJQJb/Q8So=
+	t=1743090698; cv=none; b=kLdyCO3+15l0rB5tGzfGG+Luk8zvrJVnBxHU46CoCytPkz7a3p+89KZj+bHEYe0zIq87vlDjDGXxha9/oB5C4Fcc9ZJUMSXtmJLX4aSJr5zMq7mv28I/pHcEmcAN//QSzIlOulDCDbIfABzyyfkfP0R7T05ZfJ0hzUiwhS6POHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743090606; c=relaxed/simple;
-	bh=qeSfzsuQ+OnvzOB9ynW6I4+8VDYguG/d7VHfeNiTSM8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YMKWx3sEnPrHPX+WwGPmbZ6SmYqZMUF2Dpa7qbrK0/1gHgJoufvqLo2i6DIZJD8Eb/HE47dQKO6o7Jklyw72VOFcydURLMfbYjP89FmRxQFUJrhaUcHh47nq8jVN9vLLZWhtqaPRub1Ws/4Ts5QR6yYqlS9OyfKXeb9SmVcrQqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=I9ElDiR7; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1743090698; c=relaxed/simple;
+	bh=vAe2BAzY2N92NxfakxIQcqxIPERdP0ngW1a3+ysyFHM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cvbRFSmiZm3MyEoNniskQKDGuvFTxD3nQBvtb2Q0cPMuV8Hps+vXhhDz1Edtqe5RUyl499BlCIZqmIJELA7k1SXc5nP/ecbrYKvkXlaOOMEgJ3Ar1mz8ltNoncAPcvNi8Dw6Qi1s+XbZP56MMUz6IjtDbrw3M1SphKBV0Xvl2+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XMJqGF0X; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="I9ElDiR7"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac34257295dso216124066b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:50:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XMJqGF0X"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so6991985e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:51:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743090602; x=1743695402; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=giFLnP1jrB3bJbmUGr3lK+uOvsNT5VzaCpu7lPsk4hs=;
-        b=I9ElDiR7Auzmmft+zhRPmZfF606U+J7YWQJYm6Q0XXUezrjFV/GyngHxRvxcdO1bED
-         hEqhR392JAwduhNsvJ1JpfYdrjc8ca5NE+gqlFdCB3qgcUGCgXyAXOMmr54BZq3fUCEK
-         Wwfuwxo81WWOWWfFd+cZtNIaCqettsdZeTUt0=
+        d=linaro.org; s=google; t=1743090695; x=1743695495; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kvLQrI2Qd2ZzqbCiSE0lDUusdYHeIhg6Scc6MGNUp1U=;
+        b=XMJqGF0X9ra/xTBrzOGtSLuJm+2hemfK5eZr+B8fyPlGyrzEwONnwP4LJ/fJnTFgJY
+         8/pGEutXpZtf2PUVlzSPeUj1wBh3p1eFYnoLeUwp+Zg8lfnUdjevztx6G2Lf3Sd8wvRo
+         INRq0n1UOeYMfTd3BxA+6C2uQfIyCbhKNGjZ+/XNvjnYe6KQOZrPsBdHpzhD7cmblQjW
+         8Eo1GIowjsgluks5XtB2ox+GAqsWMVl8FH3vQkmqmQ8ZdSWaauFPM7GCzLdADR4X9dFa
+         J4okn7qkDMjpWb4D19wye058vyC97j5GWZ1mlg4mkhCNvws6APHl2VPDwWx0g72wpT4R
+         o2ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743090602; x=1743695402;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=giFLnP1jrB3bJbmUGr3lK+uOvsNT5VzaCpu7lPsk4hs=;
-        b=CWl19uSzRTu9CKlpFrjKzKhZQZuXWYYs4sZkVwFhbQy3Wu+0A6BGmrx5RGQsvRA9ty
-         P2UJcQZStD+BC+4N8sVwoBYYLO4Dnj39vuXwC601CofuYwcXEFmFKInjm9zFCyxD1Alh
-         pyMZJoRavr+q6QDA7Q3jd7k08dbujPtee/BVpMsaLvW3Cap/8FwKmQD8tHwHurzl2YM4
-         k9FbQNnTTdH04LkeTAgc/M2ccL9PkNagmO6aNwOyZNe4mG2OJLKkhEckQUr8+sBeqPFD
-         SIDV1YicrLOLcgE6whq2ra3izHceoVv6BjRNenCREMQGeCn4L34/Lg15+pfY+hYzFIqf
-         TWUg==
-X-Forwarded-Encrypted: i=1; AJvYcCWtuz4WbbcD8s4EInZA6CzqVY5RuyJNEn+q2jRlBzvmuqBKuM12LvCmnTrpgtHMdOLRwxW3K3CkOCaxfNk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1K1hT3X/pCwjREqngf6zrkxI0ppHN0VQrUZS4gqxS5TIERuhV
-	/VZA6EwfbSEuxMc308yYIK1FqG6BTSK/RTB6gPbbrK4f6BwIjDjGgPbOK8fpDuaMzHrhNhxZ1Dv
-	fhNg=
-X-Gm-Gg: ASbGncuWhSWfu5dpwbx3hit9diCKEekc9DV6wfar0/UU2C8bOOWdmosN76Jj47A7nIB
-	JFF4z2t8SZRfPVWZyaUGE+zIbDLpcurjmDZmb0SS9Le93FSAZIfQt8t9aDMQqkksXqqh8vo4Ees
-	X5s0VJf0Jt9xIj3P+gjqybsVDAYHitxayhM4viWenhlxNh3apdXKgM+rTaij+TOh7o1aA15K9vt
-	MHsuuHTwvdTISF+0bbRrx9Lx1WL2bzHQKBPl/Z8l7lTmIbXyp6Y6kenT7DpUftLrjQdcwRH3qJn
-	aGdF2Qgu/Z3mGb8ul1rWRI2+1uvys0VL1l8Gj8Bx6X1ZXkdMPOg6pVpt58dNCezS2TooJZD9ae6
-	EqkTsP5Q6z0ER0rk+BZuB+UGTF4Isrw==
-X-Google-Smtp-Source: AGHT+IHM/J5pvWDFoEZ8K23QiUndUUbsLR+zDwjLKV1JZU66OjzTVX1xfXU8ZcvghBxAAmQqq/wzAw==
-X-Received: by 2002:a17:906:c153:b0:ac3:4227:139c with SMTP id a640c23a62f3a-ac6faf2eefemr455132866b.24.1743090602038;
-        Thu, 27 Mar 2025 08:50:02 -0700 (PDT)
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7196dc4adsm10925266b.157.2025.03.27.08.50.00
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1743090695; x=1743695495;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kvLQrI2Qd2ZzqbCiSE0lDUusdYHeIhg6Scc6MGNUp1U=;
+        b=V55DkLHSLVCqFsVMvMm5Bow+BVWwQvu/v1g89kFa6k3TsYG6zPYlObSPDxhVZUWR3i
+         WCTTpdEOfCo5nFGd3udl42fCgw2k2PgEh9zSpYAORNboSBMKCSMBYWQ0R8e6mS+2+MRF
+         9/u/rLHrWdKpNQVI6G3h7wsHgb4soQn7dazgnj8clsHCFpKz+eZXhxxgnK/l6lRfRwiB
+         4vsjJ0ds2gVq7/IpNsbLCUXtZ3WaD5JNs2fDD5vvQq13nOiDhrrYZ2c0AcmsnintEX0I
+         oJa/Ae9I/hjyNYIN43ADIQkgrLBeW/iqWDdUGVmvf71/hMY3wHBACEwVQVJvtv3a0LUt
+         WEwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWGrU8tKqoN2fbkV4xAsms5Rgop3d3tQcdV5oBoczb8aM9XDkY0/sCVb0IX9/rKh14IuBOlIHomLkY4FsU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx63qhuhieHxJMouyfBPeEuQ2WMaWM6fOndksrU5bNfD/uUul5Y
+	333eVyEbNeX+cZLD4TMLEW9ccwSmJ59fuyyM9h0kPhKwZ5G4Iw8F4xwRCLJUzJZbg90im/oXF9Y
+	7kdY=
+X-Gm-Gg: ASbGncufMjjXkv1VMFiMnMvCrmx8DBAxA0RHVDy0aSxP+iohv0ymscEt2J6r6SD+EGr
+	CLAXdJO7/drXXUzrX1vK8LSk+Dg+cdssxrrRQFVr5NdRVhvINqsKyD3wThOaG3ywCcXLticQw+S
+	R8cChWrd5XbOW1skPzFAQ2busmPB5S23ENvTvqkkdTUjKCgemwOCOFqNERsCShP4ABkWxEEfqTK
+	bkQCppQ8xKrWhF+RKefRBzbAcctWd9fjFELE6o85u7vNH6YW8HpfrJFa8mbX1YsuTEXdNtH50J/
+	+0wSdRoR3Ky7ZaSq+5pPft1KGjaLWUja7yXKoaGvsGMmLs1TVpkDbclhFPtnejILhKYVsf/3XuB
+	s8wMUUMPNcA==
+X-Google-Smtp-Source: AGHT+IGEOPuBwOnlQZwn7egIILmy4OvFd8oBZAN1W6IrnJklr7xjZZaKwIAxHQnmoX4bC4rGyQDzNQ==
+X-Received: by 2002:a05:6000:2a7:b0:391:bed:ec9e with SMTP id ffacd0b85a97d-39ad1718621mr3637240f8f.0.1743090695191;
+        Thu, 27 Mar 2025 08:51:35 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39ad0c6bae8sm4191678f8f.68.2025.03.27.08.51.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 08:50:00 -0700 (PDT)
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so2192421a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:50:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW5ifjO46+0gMJEo9CmVDL0fSCmaRHuILRKkqF5ZhlgI8tkiSK/5oaXwbQtRLeKGj88Jm1t/yC4GvV/zXs=@vger.kernel.org
-X-Received: by 2002:a17:907:969e:b0:ac3:3f13:4b98 with SMTP id
- a640c23a62f3a-ac6fb14a9eemr321047366b.39.1743090599993; Thu, 27 Mar 2025
- 08:49:59 -0700 (PDT)
+        Thu, 27 Mar 2025 08:51:34 -0700 (PDT)
+Message-ID: <ddcaa5e5-b5c5-4d78-b44a-4cea75ec6a77@linaro.org>
+Date: Thu, 27 Mar 2025 15:51:33 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <d0ade43454dee9c00689f03e8d9bd32a@paul-moore.com>
- <CAHk-=wjbahY4JjLCXNT4o3xVq2cejqBG69z+MNfHsN9FQBnbOw@mail.gmail.com>
- <CAHC9VhRExVqdhHqs0njs7NY6bFg0BfcE-gMpS30HW9O7MSDfWQ@mail.gmail.com>
- <CAHk-=wi9m8-_3cywQCohJQEQtuQ+teS4gOtBkWZrhFWzNy-5_A@mail.gmail.com>
- <CAHC9VhT3D7X=4SpO5xbYm=JUwJqTa7tn=J6QMDBV96c7VBUw4g@mail.gmail.com>
- <CAHk-=wiH3hoPTxX3=xTRzRuCwktf3pNzFWP45-x6AwoVAjUsUQ@mail.gmail.com>
- <CAHC9VhT5G6W7g9pB3VM6W7wCEJjWfYSUWNgWF+rRiQ4ZQbGMEQ@mail.gmail.com>
- <CAHk-=whwQhJtafHN4B1w-z2Gno__xLHS4NouKKHrYNTYa8kz3g@mail.gmail.com>
- <CA+zpnLeK2Ecj1mBod2rFe4ymd9eXiJkbyYwFh4Yrmck3DVB2SA@mail.gmail.com>
- <CAHk-=wiBH8FBL+pnXui8O-FSdyoG-yX81mUF9bsZcC6rR5ZtgQ@mail.gmail.com>
- <CA+zpnLe_AOpS_F1UBNOvN3YRswUSy_3=0jjUAy4GPxEHYumD0g@mail.gmail.com>
- <CAHk-=wgJ0gzYJD+MghfVW-YeGLW6sLU5soFY13KWmPAxobk5Mw@mail.gmail.com> <CABXk95AqgpqGtjzK2o=mxWJg5RUZG80dAEaKF9JdUT6n5eFENQ@mail.gmail.com>
-In-Reply-To: <CABXk95AqgpqGtjzK2o=mxWJg5RUZG80dAEaKF9JdUT6n5eFENQ@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 27 Mar 2025 08:49:43 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh1refm6JkAB__TmC8OBJyNdH2DmNQAbvcL=tKepkHrYw@mail.gmail.com>
-X-Gm-Features: AQ5f1JpfPxIDPXqHseSeuENAM4paunItAZJKgsQVaCtDcDayjV2pwNNW6TWk5bQ
-Message-ID: <CAHk-=wh1refm6JkAB__TmC8OBJyNdH2DmNQAbvcL=tKepkHrYw@mail.gmail.com>
-Subject: Re: [GIT PULL] selinux/selinux-pr-20250323
-To: Jeffrey Vander Stoep <jeffv@google.com>
-Cc: =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>, 
-	Paul Moore <paul@paul-moore.com>, "Cameron K. Williams" <ckwilliams.work@gmail.com>, 
-	"Kipp N. Davis" <kippndavis.work@gmx.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	selinux@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Nick Kralevich <nnk@google.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 04/18] clk: qcom: clk-alpha-pll: Add support for common
+ PLL configuration function
+To: Jagadeesh Kona <quic_jkona@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+ Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+ Dmitry Baryshkov <lumag@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+ Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
+ Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250327-videocc-pll-multi-pd-voting-v3-0-895fafd62627@quicinc.com>
+ <20250327-videocc-pll-multi-pd-voting-v3-4-895fafd62627@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250327-videocc-pll-multi-pd-voting-v3-4-895fafd62627@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 27 Mar 2025 at 01:59, Jeffrey Vander Stoep <jeffv@google.com> wrote:
->
-> The value here isn't so much about checking the source context
-> "kernel", but rather about checking the target context and enforcing
-> that firmware can only come from trusted filesystems. So even a
-> compromised privileged process that sets firmware_class.path cannot
-> cause the kernel to load firmware from an arbitrary source.
+On 27/03/2025 09:52, Jagadeesh Kona wrote:
+> From: Taniya Das <quic_tdas@quicinc.com>
+> 
+> To properly configure the PLLs on recent chipsets, it often requires more
+> than one power domain to be kept ON. The support to enable multiple power
+> domains is being added in qcom_cc_really_probe() and PLLs should be
+> configured post all the required power domains are enabled.
+> 
+> Hence integrate PLL configuration into clk_alpha_pll structure and add
+> support for qcom_clk_alpha_pll_configure() function which can be called
+> from qcom_cc_really_probe() to configure the clock controller PLLs after
+> all required power domains are enabled.
+> 
+> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
+> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
+> ---
+>   drivers/clk/qcom/clk-alpha-pll.c | 63 ++++++++++++++++++++++++++++++++++++++++
+>   drivers/clk/qcom/clk-alpha-pll.h |  3 ++
+>   2 files changed, 66 insertions(+)
+> 
+> diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
+> index cec0afea8e446010f0d4140d4ef63121706dde47..8ee842254e6690e24469053cdbd99a9953987e40 100644
+> --- a/drivers/clk/qcom/clk-alpha-pll.c
+> +++ b/drivers/clk/qcom/clk-alpha-pll.c
+> @@ -63,6 +63,8 @@
+>   #define PLL_OPMODE(p)		((p)->offset + (p)->regs[PLL_OFF_OPMODE])
+>   #define PLL_FRAC(p)		((p)->offset + (p)->regs[PLL_OFF_FRAC])
+>   
+> +#define GET_PLL_TYPE(pll)	(((pll)->regs - clk_alpha_pll_regs[0]) / PLL_OFF_MAX_REGS)
+> +
+>   const u8 clk_alpha_pll_regs[][PLL_OFF_MAX_REGS] = {
+>   	[CLK_ALPHA_PLL_TYPE_DEFAULT] =  {
+>   		[PLL_OFF_L_VAL] = 0x04,
+> @@ -2960,3 +2962,64 @@ const struct clk_ops clk_alpha_pll_regera_ops = {
+>   	.set_rate = clk_zonda_pll_set_rate,
+>   };
+>   EXPORT_SYMBOL_GPL(clk_alpha_pll_regera_ops);
+> +
+> +void qcom_clk_alpha_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap)
+> +{
+> +	const struct clk_init_data *init = pll->clkr.hw.init;
+> +	const char *name = init->name;
+> +
+> +	if (!pll->config || !pll->regs) {
+> +		pr_err("%s: missing pll config or regs\n", name);
+> +		return;
+> +	}
 
-Yes, and that's literally why I earlier in the thread pointed out the
-new code in selinux_kernel_load_data()
+Seems like a strange check - you are calling this function in a loop 
+which looks like
 
-  "I'm looking at selinux_kernel_load_data() in particular, where you
-   don't even pass it a file at all, so it's not like it could check for
-   "is this file integrity-protected" or anything like that"
+for (i = 0; i < desc->num_alpha_plls; i++)
+	qcom_clk_alpha_pll_configure(desc->alpha_plls[i], regmap);
 
-because I understand that you might want to verify the *file* the
-firmware comes from, but I think verifying the context in which the
-firmware is loaded is absolutely insane and incorrect.
+Can num_alpha_plls be true but alpha_plls be NULL and why is regmap 
+considered valid ?
 
-And that is literally *all* that the new case in
-selinux_kernel_load_data() does. There is no excuse for that craziness
-that I can come up with.
+I think you can drop this check.
 
-And yes, I'm harping on this, because I really *hate* how the security
-layer comes up in my performance profiles so much. It's truly
-disgusting. So when I see new hooks that don't make sense to me, I
-react *very* strongly.
-
-Do I believe this insanity matters for performance? No.
-
-But do I believe that the security code needs to *think* about the
-random hooks it adds more? Yes. YES!
-
-Which is why I really hate seeing new random hooks where I then go
-"that is complete and utter nonsense".
-
-[ This whole patch triggered me for another reason too - firmware
-loading in particular has a history of user space actively and
-maliciously screwing the kernel up.
-
-  The reason we load firmware directly from the kernel is because user
-space "policy" decisions actively broke our original "let user space
-do it" model.
-
-  So if somebody thinks I'm overreacting, they are probably right, but
-dammit, this triggers two of my big red flags for "this is horribly
-wrong" ]
-
-                Linus
+> +
+> +	switch (GET_PLL_TYPE(pll)) {
+> +	case CLK_ALPHA_PLL_TYPE_LUCID_OLE:
+> +		clk_lucid_ole_pll_configure(pll, regmap, pll->config);
+> +		break;
+> +	case CLK_ALPHA_PLL_TYPE_LUCID_EVO:
+> +		clk_lucid_evo_pll_configure(pll, regmap, pll->config);
+> +		break;
+> +	case CLK_ALPHA_PLL_TYPE_TAYCAN_ELU:
+> +		clk_taycan_elu_pll_configure(pll, regmap, pll->config);
+> +		break;
+> +	case CLK_ALPHA_PLL_TYPE_RIVIAN_EVO:
+> +		clk_rivian_evo_pll_configure(pll, regmap, pll->config);
+> +		break;
+> +	case CLK_ALPHA_PLL_TYPE_TRION:
+> +		clk_trion_pll_configure(pll, regmap, pll->config);
+> +		break;
+> +	case CLK_ALPHA_PLL_TYPE_HUAYRA_2290:
+> +		clk_huayra_2290_pll_configure(pll, regmap, pll->config);
+> +		break;
+> +	case CLK_ALPHA_PLL_TYPE_FABIA:
+> +		clk_fabia_pll_configure(pll, regmap, pll->config);
+> +		break;
+> +	case CLK_ALPHA_PLL_TYPE_AGERA:
+> +		clk_agera_pll_configure(pll, regmap, pll->config);
+> +		break;
+> +	case CLK_ALPHA_PLL_TYPE_PONGO_ELU:
+> +		clk_pongo_elu_pll_configure(pll, regmap, pll->config);
+> +		break;
+> +	case CLK_ALPHA_PLL_TYPE_ZONDA:
+> +	case CLK_ALPHA_PLL_TYPE_ZONDA_OLE:
+> +		clk_zonda_pll_configure(pll, regmap, pll->config);
+> +		break;
+> +	case CLK_ALPHA_PLL_TYPE_STROMER:
+> +	case CLK_ALPHA_PLL_TYPE_STROMER_PLUS:
+> +		clk_stromer_pll_configure(pll, regmap, pll->config);
+> +		break;
+> +	case CLK_ALPHA_PLL_TYPE_DEFAULT:
+> +	case CLK_ALPHA_PLL_TYPE_DEFAULT_EVO:
+> +	case CLK_ALPHA_PLL_TYPE_HUAYRA:
+> +	case CLK_ALPHA_PLL_TYPE_HUAYRA_APSS:
+> +	case CLK_ALPHA_PLL_TYPE_BRAMMO:
+> +	case CLK_ALPHA_PLL_TYPE_BRAMMO_EVO:
+> +		clk_alpha_pll_configure(pll, regmap, pll->config);
+> +		break;
+> +	default:
+> +		WARN(1, "%s: invalid pll type\n", name);
+> +		break;
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_clk_alpha_pll_configure);
+> diff --git a/drivers/clk/qcom/clk-alpha-pll.h b/drivers/clk/qcom/clk-alpha-pll.h
+> index 79aca8525262211ae5295245427d4540abf1e09a..7f35aaa7a35d88411beb11fd2be5d5dd5bfbe066 100644
+> --- a/drivers/clk/qcom/clk-alpha-pll.h
+> +++ b/drivers/clk/qcom/clk-alpha-pll.h
+> @@ -81,6 +81,7 @@ struct pll_vco {
+>    * struct clk_alpha_pll - phase locked loop (PLL)
+>    * @offset: base address of registers
+>    * @regs: alpha pll register map (see @clk_alpha_pll_regs)
+> + * @config: array of pll settings
+>    * @vco_table: array of VCO settings
+>    * @num_vco: number of VCO settings in @vco_table
+>    * @flags: bitmask to indicate features supported by the hardware
+> @@ -90,6 +91,7 @@ struct clk_alpha_pll {
+>   	u32 offset;
+>   	const u8 *regs;
+>   
+> +	const struct alpha_pll_config *config;
+>   	const struct pll_vco *vco_table;
+>   	size_t num_vco;
+>   #define SUPPORTS_OFFLINE_REQ		BIT(0)
+> @@ -237,5 +239,6 @@ void clk_stromer_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
+>   			       const struct alpha_pll_config *config);
+>   void clk_regera_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
+>   			     const struct alpha_pll_config *config);
+> +void qcom_clk_alpha_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap);
+>   
+>   #endif
+> 
