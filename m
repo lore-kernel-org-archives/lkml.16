@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB291C2C8;
-	Thu, 27 Mar 2025 07:08:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0315C2C8;
+	Thu, 27 Mar 2025 07:09:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743059300; cv=none; b=KPsgnoKBe42/B7wUqt4P8jZEMYFDzlh9cHfmuiFnvxYbQruJPowp0P7/VR2OB3Z+Eqs3RWaNHCXHs9t4m+cPyy3n9WG/kRRrn5hSTEZJCwI9oANEUSz+LP+W0AjZ116xE815QLG1KBOqPnbM5zUxnR8kUGbfa08vIapZM5WcREQ=
+	t=1743059347; cv=none; b=EV11jt5TvoyKAFRxtHSvDyOlafbZ92bBc3XjQQGm8Jx14hUK9VOug0kjJ0M0Uv5BmtA+UcbqED5RGDUVLC4P25BTJfKveJfRw5MCs5ml4ecNok9VAZFYN3eQ9Z4kb8ZjQ3VN8BYDirS1NH8rM3UL7JC5sHunzv1Su1WNrgvkqnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743059300; c=relaxed/simple;
-	bh=8LM2VLYDIcl7t+HUtlJBVtXIl56Fx/CcZ0AjFE+jJ6Y=;
+	s=arc-20240116; t=1743059347; c=relaxed/simple;
+	bh=RTO5t/LI0jIMfKv+KM5XxXFziRhRYwgdAn1ECXSY6XM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MB82bWCb5T3ZvVMUWR2MnVn2arKP7y8JV3QtMkbEyLIPOajYBw24D6sxGNmNReFiHI8ClMOe+HIMOwXpPKRXvoc0BYL+PBqvQAfW7EYwOM3VyI3Lhq2wsp8MqyV49iXN9hDlIacPcRrsOIuJNNgqSNy6Naidy4073kVJJdxJTAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CSWThTiY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=FVh+hT0uPTsNbLpcGXo2ycwyVgv19dXcdQ5jeWMzF1Gx3pJM68RLh7KW2xp1KyLsNR/RUIGg8M3kVhL+2qznuWwPPgiX8jGaPlR9dB2ZIzWb4dNXD95VeH8Egap6nwsZQXidYt8UqBPUVu2zn/R7pFBNS7lcoBGDUdsCwIh0lmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U04CPQDc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CSWThTiY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4234C4CEEA;
-	Thu, 27 Mar 2025 07:08:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U04CPQDc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B918C4CEDD;
+	Thu, 27 Mar 2025 07:09:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743059296;
-	bh=8LM2VLYDIcl7t+HUtlJBVtXIl56Fx/CcZ0AjFE+jJ6Y=;
+	s=k20201202; t=1743059347;
+	bh=RTO5t/LI0jIMfKv+KM5XxXFziRhRYwgdAn1ECXSY6XM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CSWThTiYuEdOMYivq9Ukm43bnQ9XzdZAD1hjKo+0gbDSMqMb3E7PSjb9s7Wq1HUlG
-	 1fOIAW89Z9HTm31tVvz6AnZWLbsGbA9DJBkbEor9qVTeWtTaP7uyq6P/7Mym6Uofgs
-	 J9VXT1HgfITfT9S9JdRCk7NlWQlYzjnyGZRmKEMbcq803tXOaErFapihA/yQ0WKin+
-	 e6xxqc0D+L/WEpPAkAGoHJMUk2r6U+uUkKyT4fR1DUMT5L8WgW4x4u0wfAyhSKg0kX
-	 pr60vqIiMOYStrGkW3RqGiA9OHh1UFmpyZtN4gNMdQIOpUGa9aOAcawN81R1xLUXWQ
-	 yPjln4+D88pxw==
-Message-ID: <73ed6108-27ab-43ac-abd3-82656693404d@kernel.org>
-Date: Thu, 27 Mar 2025 08:08:10 +0100
+	b=U04CPQDcY3gzL8RpY9KoV0VVAL012KmNh2pSctz+IrjUMuuJUf2dQuWF/K3llVV8B
+	 cCEyG5XPLhQlOi25ILmRnCqjbpTB7u7TLyfBKIttZ9tLc+aTrDowJ9A9jLlgsQRuQO
+	 eYS/C+V7hIuUuiV/mz+Rr9WzaoE920ea4rCT/lbSjrAFDeCc4YTJzPBJ3SY+4wcQAt
+	 8OSk+wTKvxSL/qVWW/WSp48rewfqL9vpx7qQCeNXS92ic4wSrcCmTXV5aToVDRPrdE
+	 UK7Ok39Y0XVdmv4kGEgW9+PoGlxx6f7KaOyDQRvQrF2xUfEBufH55tyWCHx2NFcu+o
+	 nA0Dx3TMKlCEQ==
+Message-ID: <da93bf6c-b4bc-4c4f-9373-583fbd0c031c@kernel.org>
+Date: Thu, 27 Mar 2025 08:09:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,16 +35,19 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] arm64: dts: qcom: sa8775p: add QCrypto node
-To: Yuvaraj Ranganathan <quic_yrangana@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250227180817.3386795-1-quic_yrangana@quicinc.com>
- <ea79cee4-8c47-4054-bd17-2097ada4e583@kernel.org>
- <b57fa204-d3d2-4b74-8834-3f2d93726a99@quicinc.com>
+Subject: Re: [PATCH] media: dt-bindings: Add OmniVision OV02C10
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, robh@kernel.org,
+ hdegoede@redhat.com, mchehab@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bod@kernel.org
+References: <20250324171508.GA668235-robh@kernel.org>
+ <20250326150114.71401-1-bryan.odonoghue@linaro.org>
+ <W8_0Ch2J0PWJ5pKHojZjFbM8huvxWlaWajtl_uhQF3UszGH_O8WTRZdQxh_eHs2JzLOx7CCxx01UZDHPQqAyCA==@protonmail.internalid>
+ <1dd46a9e-e97d-415a-9e33-67ee234c4bac@kernel.org>
+ <0de575dc-5afb-40fb-be30-99906d0e493b@linaro.org>
+ <c1959f95-9ee1-4597-b6ec-fbedc8a872db@kernel.org>
+ <afae182f-b264-4b57-acd7-2c2cf090e1ad@linaro.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -90,33 +93,30 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <b57fa204-d3d2-4b74-8834-3f2d93726a99@quicinc.com>
+In-Reply-To: <afae182f-b264-4b57-acd7-2c2cf090e1ad@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 26/03/2025 18:40, Yuvaraj Ranganathan wrote:
-> On 3/25/2025 1:00 PM, Krzysztof Kozlowski wrote:
->> On 27/02/2025 19:08, Yuvaraj Ranganathan wrote:
->>> The initial QCE node change is reverted by the following patch 
->>> https://lore.kernel.org/all/20250128115333.95021-1-krzysztof.kozlowski@linaro.org/
+On 26/03/2025 18:34, Bryan O'Donoghue wrote:
 >>
->> Use commit SHA syntax (see submitting patches, checkpatch).
+>> I meant bindings are exactly the same, unless I missed something.
+>> Devices are similar enough as well.
 >>
->>> because of the build warning,
->>>
->>>   sa8775p-ride.dtb: crypto@1dfa000: compatible: 'oneOf' conditional failed, one must be fixed:
->>>     ...
->>>     'qcom,sa8775p-qce' is not one of ['qcom,ipq4019-qce', 'qcom,sm8150-qce']
+>>> Seems simpler to me to have two separate files ?
 >>
->> Not relevant warning.
->>
->>
+>> Not really, more files to maintain, more trivialities to fix if we
+>> decide to change something in all bindings (e.g. style).
 >>
 >> Best regards,
 >> Krzysztof
 > 
-> Are you saying this is not the warning seen at merging?
-Tell me how it is relevant? Tell me how can I reproduce it.
+> Hmm, so we have two in-flight series and one yaml file.
+> 
+> OK, I'll drop this patch and add ov02c10 to the ov02e10 yaml as you suggest.
+> 
+> So long as the yaml file goes in first, the order of application of the 
+> ov02c10/ov02e10 drivers won't matter and can be fixed with a cherry-pick.
+You can combine the series or add here a dependency.
 
 Best regards,
 Krzysztof
