@@ -1,151 +1,105 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B02611CA0;
-	Thu, 27 Mar 2025 07:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743061758; cv=pass; b=Ex2OvBRL5/T/EnrP8rqN+ShLTfLHY8a1ydmKlpyqBN0iCK+dbrWySg+Qnz5oGGX+Gpi5jqifIYInh5iViDlM7wBfyHHUDmkeWIHNW+dDdJNWDmLKJ8I214X0ROYHODHIlTAifBZ4vdd0O2sUb8DiEGVKLEjt/Jb+JnAaAAlmyzk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743061758; c=relaxed/simple;
-	bh=eWf+lUzuxBC0lic2+0dFJxd6idcICS2Im6Lp/Kckwco=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837781FF61E
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 07:51:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743061917; cv=none; b=Z2TXTxb8rjpglNFzS4Bm98QDsLMfjbyzIcMU1skKZrWJumuenPtdAInu4HkAVW6eNnNV3xieDAAYkfbWjY7/0EB48ZO3H++9jq79DW3JF31F/pnDc7RHdVRVYrrvJdYQ16BWqN7nL3pe4OitGecNVycf1Ll0N0k3aPlRI1BQfOE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743061917; c=relaxed/simple;
+	bh=lj+SRBXnGsvFf1NOFHTmthPnLRUd7U7gHWbfI3QLXWM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d4tQ+TtGgh6/QEThYt04SLOyEa3r6DrN2SBKkba7dcTDJto5pFVVvzHnTlP45SV30xiXyV9WHVoDwNNjAqt6A1nA26FN4ryfAyqHNQclIh6blzgghM5dfO3+S0WfdWWXqN6PURTII6Z2wEGi3OAF+24gQ5HTNswIhpSRnjpXz5k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b=WBGOEDGg; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=bkocXhl4FCAJKbZVy7tG8pdOnqRHQgT9KjT8tkOyPFHRdlOYVFaMFNUdxeXvocu9x7IrtUL6L9K0MPE1fzftu6xOWKNNjqdEO3iGZz0iNaZoKYi8DUCLBZoHQfc9spNFZvxjiWVghLSHD43JH8SO3SdX4iz0pnZ9DtLx3UWmeF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HMJ0RddH; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b="WBGOEDGg"
-ARC-Seal: i=1; a=rsa-sha256; t=1743061725; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=PTK/VnBXW3FY5HLtjhSHlmaHpEQAoUlew0ZnngucI5PgkwQF4TlxD9C7su8vvzsj1Dko8Lf0ABsDQAUSsGZ/+v33wDhhyfscu7j7GcHRGiv5V12y4X0XsP1ZYrBVyPlrzloeL7i7bSzWnfZWNHocp7k2DBJCqbqYCOaTjJGVju0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743061725; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=kyCtzHoq8aUFZrJR5s643KhWlSqeHq7AVGaEl+qqeno=; 
-	b=hp6PTMhKpQyN4RQJbn3XDq/ci4oZ7oAOTLoaFGWtEg0kgB9yJsVbEqZn7qyRmsZv2QrM8AfdxWI+nK8mW802m1MXLi7s+bWS04gRe+AND7m/hmkgfV7VlfCmitE4ewYOgPbWnQAiCn62rcCtR7mGlNGo5kwx3OVu7QjGuAaphRE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.fricke@collabora.com;
-	dmarc=pass header.from=<sebastian.fricke@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743061725;
-	s=zohomail; d=collabora.com; i=sebastian.fricke@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=kyCtzHoq8aUFZrJR5s643KhWlSqeHq7AVGaEl+qqeno=;
-	b=WBGOEDGgkGWXrufxSI09IWNEwh3G8obvCm6o2LWWYTmrAI+EjFypnkKf1BAq54tg
-	IK+EqN/Fa6V9emxp/etHcQ1z+gRbhPwSybXFIonkraCXIa3XXuBwipjNMsbld6ObQHG
-	RD9c4tNCXLscaxLY9GCBBjifEjSRzEyUmsUGHSoc=
-Received: by mx.zohomail.com with SMTPS id 1743061723696163.541725841117;
-	Thu, 27 Mar 2025 00:48:43 -0700 (PDT)
-Date: Thu, 27 Mar 2025 08:48:35 +0100
-From: Sebastian Fricke <sebastian.fricke@collabora.com>
-To: ming.qian@oss.nxp.com
-Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl, nicolas@ndufresne.ca,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, linux-imx@nxp.com, xiahong.bao@nxp.com,
-	eagle.zhou@nxp.com, imx@lists.linux.dev,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 2/2] media: amphion: Add a frame flush mode for decoder
-Message-ID: <20250327074835.r47kaabtwu5jqvxf@basti-XPS-13-9310>
-References: <20250305062630.2329032-1-ming.qian@oss.nxp.com>
- <20250305062630.2329032-2-ming.qian@oss.nxp.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HMJ0RddH"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-abbd96bef64so100925166b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 00:51:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743061913; x=1743666713; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bkkkpsCZMXpOpBqlhNefevBtrymahUPNIaJzLNjWAFU=;
+        b=HMJ0RddH+/NpIkJ12mchDhveiC+QwEQgU+h4kStEpod5PM3WKeCZ9tYfs+018fzovD
+         kcDNNo6S8h8yT9wbkt5SI5u6N7bEkyG9Qi3alGB1J0cSjZZNdNOCciO3r2db5t1O8zWU
+         6wZYCq2rU1GgWyChIvv1ytrCA7rclRgL6FwIV65gk6rHTTMjxwtkrAvI+wxflDAQgxe8
+         w0ruP6ddAlghULef73Y2zHlTPyS0GtEf8ItiXzye8FmFEaUYK/Ah7LcY70ZHn5AGaEiq
+         8j8R8oAP0qPRNk5rbNAqvEoOKgaZzKrAmghgkAaOVnvOLWHxVWa/raVrRlgVAVb0Hqcs
+         Z01g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743061913; x=1743666713;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bkkkpsCZMXpOpBqlhNefevBtrymahUPNIaJzLNjWAFU=;
+        b=wNl0pQubsffy8U6o83xS5K5BH26HoEwuOxpGJdExlMG0uVMuYy5FzRH67zu+XNYcHS
+         YRNayyNE3rrmCVTkU1Ka5ysuma3mnW/veVSUhs/5kCahU94ky86f3dNphihQvUrPyMo9
+         OfbTAuSgnYf8ExVn27bxKdD+FqvqqEPFGBDFH9vVk7uLuBj2Fhuue+qTPa7/MwpdnmYO
+         YeCkdlzdtTLiMj1nxixYn3xHh2i2vCVQr29h53g8bQW6CyYg7HyQOTlOyaMyflJNIRR0
+         c26krLabMsb3b7V9PmoE+ZMliYVnEi7/JyogsrWvJIPT5rF9RqNP177mBqoKpnmePOZ6
+         pPlw==
+X-Forwarded-Encrypted: i=1; AJvYcCU9edq6AaoFlDJqa2gVMy/Cuk7YGzRz9Iw8aSIUg0jlqvv/2OygsVlDfZqTMzVRQ1ANp79NUD3FwnTKzA0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoAA+s1U7TKz/CD327udcLf+QzUXKgLhdhPdhRQA5YGzreNZOF
+	N3oslVlN6ubZ3UAb25P006fDIgI2rkwpqv8viGVCDcUD1/gsn0+k8oHCQEI4uEU=
+X-Gm-Gg: ASbGncv0deaLPdkkcJprqFmSJIYrMptmLs6bu2N9lG1dOi+9ojG70jMf4lGpuNHfkKp
+	VXq0D78/O5Xm93/50EFbyw9qFgQbuwFDcZo91siBTa3Iw0wQf/bZpD9OizDBe2tyYEWxuQxMljk
+	ezubnuVF8eSr5e+JUBEYJVsnYq0NmewhQcgCtYow5rJW1titqZHLOjQpkLBUm5kT7BwevB9NgWM
+	RdyHgkD3E0cWLug5CMw6qN5zOxztoMXtBjTXC55WcleIdQ9KCuInbqTBQOT6tZrV60NPkxJMK4j
+	mhMI4Iay8b5/hiWA/NZ0WuChbhMQ7YZ+cm7cbYX0/g==
+X-Google-Smtp-Source: AGHT+IFV1UJVhREk9/GsUuOGS9IHZ/MvkBCpSqwJ+EdM05OmvKh/YSMogqljBF93/hELR+0ofu4aZA==
+X-Received: by 2002:a17:907:7b8c:b0:ac2:9683:ad2c with SMTP id a640c23a62f3a-ac6fb1d6bdbmr197580166b.57.1743061912747;
+        Thu, 27 Mar 2025 00:51:52 -0700 (PDT)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef8d3d38sm1166893266b.39.2025.03.27.00.51.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 00:51:51 -0700 (PDT)
+Date: Thu, 27 Mar 2025 09:51:49 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Christopher Obbard <christopher.obbard@linaro.org>
+Cc: Douglas Anderson <dianders@chromium.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+	Rui Miguel Silva <rui.silva@linaro.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] arm64: dts: qcom: x1e78100-t14s: add hpd gpio to
+ LCD panel
+Message-ID: <Z+UDlXFKbmxCECp9@linaro.org>
+References: <20250325-wip-obbardc-qcom-t14s-oled-panel-v2-0-e9bc7c9d30cc@linaro.org>
+ <20250325-wip-obbardc-qcom-t14s-oled-panel-v2-2-e9bc7c9d30cc@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250305062630.2329032-2-ming.qian@oss.nxp.com>
-X-ZohoMailClient: External
+In-Reply-To: <20250325-wip-obbardc-qcom-t14s-oled-panel-v2-2-e9bc7c9d30cc@linaro.org>
 
-Hey Ming,
+On 25-03-25 19:21:27, Christopher Obbard wrote:
+> The eDP panel has an HPD GPIO. Describe it in the devicetree.
+> 
+> Unfortunately I cannot test this on the non-OLED model since I
+> only have access to the model with OLED (which also uses the
+> HPD GPIO).
+> 
+> I believe this could be split into two patches; one adding the
+> pinctrl node and one adding the hpd gpio to the T14s devicetree.
+> But I will wait for your comments on this ;-).
 
-On 05.03.2025 14:26, ming.qian@oss.nxp.com wrote:
->From: Ming Qian <ming.qian@oss.nxp.com>
->
->By default the amphion decoder will pre-parse 3 frames before starting
->to decode the first frame. Alternatively, a block of flush padding data
->can be appended to the frame, which will ensure that the decoder can
->start decoding immediately after parsing the flush padding data, thus
->potentially reducing decoding latency.
->
->This mode was previously only enabled, when the display delay was set to
->0. Allow the user to manually toggle the use of that mode via a module
->parameter called frame_flush_mode, which enables the mode without
->changing the display order.
->
->Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
->---
->v3
->- Improve commit message as recommended
->- Add some comments to avoid code looks cryptic
->
-> drivers/media/platform/amphion/vpu_malone.c | 14 +++++++++++++-
-> 1 file changed, 13 insertions(+), 1 deletion(-)
->
->diff --git a/drivers/media/platform/amphion/vpu_malone.c b/drivers/media/platform/amphion/vpu_malone.c
->index 1d9e10d9bec1..4ef9810d8142 100644
->--- a/drivers/media/platform/amphion/vpu_malone.c
->+++ b/drivers/media/platform/amphion/vpu_malone.c
->@@ -25,6 +25,10 @@
-> #include "vpu_imx8q.h"
-> #include "vpu_malone.h"
->
->+static bool frame_flush_mode;
->+module_param(frame_flush_mode, bool, 0644);
->+MODULE_PARM_DESC(frame_flush_mode, "Set low latency flush mode: 0 (disable) or 1 (enable)");
->+
-> #define CMD_SIZE			25600
-> #define MSG_SIZE			25600
-> #define CODEC_SIZE			0x1000
->@@ -1579,7 +1583,15 @@ static int vpu_malone_input_frame_data(struct vpu_malone_str_buffer __iomem *str
->
-> 	vpu_malone_update_wptr(str_buf, wptr);
->
->-	if (disp_imm && !vpu_vb_is_codecconfig(vbuf)) {
->+	/*
->+	 * Enable the low latency flush mode if display delay is set to 0
->+	 * or parameter frame_flush_mode is set to 1.
-
-s/or parameter frame_flush_mode is set to 1./
-   or the frame flush mode if it is set to 1./
-
->+	 * The low latency flush mode requires some padding data to be appended after each frame,
-
-s/appended after each/appended to each/
-(the word append implies that something is added after something else)
-
->+	 * but don't put it in between the sequence header and frame.
-
-s/but don't put it in between the sequence header and frame./
-   but there must not be any padding data between the sequence header and the frame./
-
-(As this is not a suggestion for the developer but a description of what
-the code does)
-
->+	 * Only H264 and HEVC decoder support this module yet,
-
-s/decoder/formats/
-
-I'd rewrite this part:
-This module is currently only supported for the H264 and HEVC formats,
-
-but that is only because this sounds more natural to me.
-
->+	 * for other formats, vpu_malone_add_scode() will return 0.
->+	 */
->+	if ((disp_imm || frame_flush_mode) && !vpu_vb_is_codecconfig(vbuf)) {
-> 		ret = vpu_malone_add_scode(inst->core->iface,
-> 					   inst->id,
-> 					   &inst->stream_buffer,
->-- 
->2.43.0-rc1
->
->
-
-Thank you!
-
-Regards,
-Sebastian Fricke
+You should definitely drop these two paragraphs entirely from the commit
+message. Maybe add them to the cover letter.
