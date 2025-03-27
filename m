@@ -1,87 +1,169 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5184CDDD3;
-	Thu, 27 Mar 2025 17:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB388192B8C
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 17:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743096753; cv=none; b=KILB/b6WTaOHhK9REXT/Eo044NwJAr/FIxwRppPwL5mhebtxuZKo+/upCtshS69Jod+eI3Jdr4iv0slo/5Zxkna2ze3Yh2LwcygqLtWTnkT3jmlE+npXCnl56Uf7GHcKXIcEgA69wonaDsf2T8oB6hV6vNXQ9zEQ4fNrdklMCUE=
+	t=1743097021; cv=none; b=Na4eFcZaKREkOQLf1aXHJkTSNaktMy+2uIocOlM90EcnFr0Bn1WgC/LA4mc9NaEcdRpXnq8nJvT1IYbjejQeJ2J20asrPCLwd/xTnbzS3r3MxKF6OEqzhriick0LkDbkXzoiX0W8ttPjFGE2Uf4Ht67cWZcCELuNOle5204l7V4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743096753; c=relaxed/simple;
-	bh=bruqDQ91bY1u8bLhPN8dGiaW/bKoNawVJ7r8njBA4og=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=LMDgj1eJa7XjCsFR+5LeO11WQ4rBp0+xTiV9JwtVeUzdhSK0sW1SKf+7YLqxixZwDXZFL/UxNpAsh4CFh7QXIGrB+F3kyFap4pMHDH+vsZR9vEcRm0Mkjzy+INSNbTtNKIvJo2Mzdfgs4ZtDgvmtc9g90Q5RQ3kafUH4pH+6lsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nxD4MqK2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wAe4owd+; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1743097021; c=relaxed/simple;
+	bh=wqok2mwu39XIR2tx0Czjn0j8wFvDi4FUWHbQvtR8wzs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BnxWlWPaxyucTylKwHLBhFKfF3Q24OUiEAMrAgKKuRw/Q2qPy3/n2uUUb8kfkqYAluGGJnLu8UNtRgLvdmaXl87YMOZepj/7V0lSdXgB0UepY5eLxsDzwOaCpf4ujtir1iPNou5Gy4Mqf095WSenDcaO+yRXYmJcCoM7Wb6LwEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LFzXTpru; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=PGyXI5XE; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LFzXTpru; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=PGyXI5XE; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nxD4MqK2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wAe4owd+"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743096750;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LFzXTpru";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="PGyXI5XE";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LFzXTpru";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="PGyXI5XE"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id ADE57211A8;
+	Thu, 27 Mar 2025 17:36:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743097017; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aCF9YAPPTg0G/VZvO7ssO5AXFYNHvZkHK2oCBQEtTkM=;
-	b=nxD4MqK2VDREo0N1JVC753CtIZgVemErx9ye5ZEyWDo1uV3/Tk9tgAs+nYO4Bx6xzlJJtQ
-	15hCVyBPCibfJmNzFzn8NKgp1qn8gYnBN7zNcDbfQbU2TTPacjyA2JUHa4QOBDd6ytivoq
-	Dzl8lvu806v/VVv55c/BKgizp7I9XjtGfEhUhUlwflnP1KCmn1GhR5gvzcX0tRgwQkaNsO
-	u9A0xpYODd3MzlQWZYm5NgCL1DAIn5ukhx1UanJE3gxZ6oJ/Qv6h6DFbfRO97dXVUAMlxO
-	CCU/G0uMkGwWAvAX9HjCdK/5mwIpq2TfPV7Fj4Rp9Oj8b3C0p74OqJNlCCbYCQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743096750;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	bh=oSbgfzUhBm/LMOi9frHrBZWTwUZbCrtDB24utmUTl4c=;
+	b=LFzXTpruC5oQJ56IvjZx/lQ6zBOrPDWS67KQkm21dVPtkgQ4oDSJGpqOQmwzHaRt/bVD76
+	8AOl06sUFp4EZJvumBBdvSGBc53uwfLzfDOKC/SoDv2KPpzHtN1yWcwlx3qrxYwHlEiXuV
+	mMZiGzSFMI7+xhe1Uw5ESu4VkBuStOo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743097017;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aCF9YAPPTg0G/VZvO7ssO5AXFYNHvZkHK2oCBQEtTkM=;
-	b=wAe4owd+VWF/06neZgD1upVu7sJIWSdeh3kry8gAqWupOkT7Uu8qaDVw/Ttj2CfeNte2Qa
-	x1NWhxoCUVpHQyBw==
-To: Miroslav Lichvar <mlichvar@redhat.com>
-Cc: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>,
- Stephen Boyd <sboyd@kernel.org>, Anna-Maria Behnsen
- <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>,
- Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
- kernel-team@android.com, Lei Chen <lei.chen@smartx.com>
-Subject: Re: [PATCH v2 1/2] time/timekeeping: Fix possible inconsistencies
- in _COARSE clockids
-In-Reply-To: <Z-Vx8kV4M3khPknC@localhost>
-References: <20250320200306.1712599-1-jstultz@google.com>
- <Z-KURRE_Gr72Xv_n@localhost> <874izezv3c.ffs@tglx>
- <Z-Vx8kV4M3khPknC@localhost>
-Date: Thu, 27 Mar 2025 18:32:27 +0100
-Message-ID: <87bjtmxtuc.ffs@tglx>
+	bh=oSbgfzUhBm/LMOi9frHrBZWTwUZbCrtDB24utmUTl4c=;
+	b=PGyXI5XEjUBSDSFm29UO03CcuvmielEaYpSozcrDIjrcWArsujD7GzNsTol9ZFN5IKwP0m
+	h3oUeuYBJRHc4wCQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=LFzXTpru;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=PGyXI5XE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1743097017; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oSbgfzUhBm/LMOi9frHrBZWTwUZbCrtDB24utmUTl4c=;
+	b=LFzXTpruC5oQJ56IvjZx/lQ6zBOrPDWS67KQkm21dVPtkgQ4oDSJGpqOQmwzHaRt/bVD76
+	8AOl06sUFp4EZJvumBBdvSGBc53uwfLzfDOKC/SoDv2KPpzHtN1yWcwlx3qrxYwHlEiXuV
+	mMZiGzSFMI7+xhe1Uw5ESu4VkBuStOo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1743097017;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oSbgfzUhBm/LMOi9frHrBZWTwUZbCrtDB24utmUTl4c=;
+	b=PGyXI5XEjUBSDSFm29UO03CcuvmielEaYpSozcrDIjrcWArsujD7GzNsTol9ZFN5IKwP0m
+	h3oUeuYBJRHc4wCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9C5FC1376E;
+	Thu, 27 Mar 2025 17:36:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id nTLiJbmM5WcBHgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 27 Mar 2025 17:36:57 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 4DB69A082A; Thu, 27 Mar 2025 18:36:57 +0100 (CET)
+Date: Thu, 27 Mar 2025 18:36:57 +0100
+From: Jan Kara <jack@suse.cz>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	mcgrof@kernel.org, jack@suse.cz, hch@infradead.org, david@fromorbit.com, 
+	rafael@kernel.org, djwong@kernel.org, pavel@kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, will@kernel.org, boqun.feng@gmail.com
+Subject: Re: [RFC PATCH 2/4] vfs: make sb_start_write freezable
+Message-ID: <slyrgedp776oi4zhzqf4i4re5dwu2v4ubclh7rlopq6mfffve4@lpkqxjz36jcj>
+References: <20250327140613.25178-1-James.Bottomley@HansenPartnership.com>
+ <20250327140613.25178-3-James.Bottomley@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250327140613.25178-3-James.Bottomley@HansenPartnership.com>
+X-Rspamd-Queue-Id: ADE57211A8
+X-Spam-Score: -2.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,suse.cz,infradead.org,fromorbit.com,redhat.com,gmail.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:email]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Thu, Mar 27 2025 at 16:42, Miroslav Lichvar wrote:
-> On Thu, Mar 27, 2025 at 10:22:31AM +0100, Thomas Gleixner wrote:
->> The original implementation respected this base period, but John's
->> approach of forwarding, which cures the coarse time getter issue,
->> violates it. As a consequence the previous error accumulation is not
->> longer based on the base period because the period has been reset to the
->> random point in time when adjtimex() was invoked, which makes the error
->> accumulation a random number.
->
-> I see, so that value of the NTP error is already wrong at that point
-> where it's reset to 0.
->
-> To clearly see the difference with the new code, I made an attempt
-> to update the old linux-tktest simulation that was used back when the
-> multiplier adjustment was reworked, but there are too many missing
-> things now and I gave up.
+On Thu 27-03-25 10:06:11, James Bottomley wrote:
+> If a write happens on a frozen filesystem, the s_writers.rw_sem gets
+> stuck in TASK_UNINTERRUPTIBLE and inhibits suspending or hibernating
+> the system.  Since we want to freeze filesystems first then tasks, we
+> need this condition not to inhibit suspend/hibernate, which means the
+> wait has to have the TASK_FREEZABLE flag as well.  Use the freezable
+> version of percpu-rwsem to ensure this.
+> 
+> Signed-off-by: James Bottomley <James.Bottomley@HansenPartnership.com>
 
-Can you point me to that code?
+Looks good. Feel free to add:
 
-It would be probably useful to create a test mechanism which allows to
-exercise all of this in a simulated way so we actually don't have to
-wonder every time we change a bit what the consequences are.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Thanks,
+								Honza
 
-        tglx
+> ---
+>  include/linux/fs.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index dd84d1c3b8af..cbbb704eff74 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -1782,7 +1782,8 @@ static inline void __sb_end_write(struct super_block *sb, int level)
+>  
+>  static inline void __sb_start_write(struct super_block *sb, int level)
+>  {
+> -	percpu_down_read(sb->s_writers.rw_sem + level - 1);
+> +	percpu_down_read_freezable(sb->s_writers.rw_sem + level - 1,
+> +				   level == SB_FREEZE_WRITE);
+>  }
+>  
+>  static inline bool __sb_start_write_trylock(struct super_block *sb, int level)
+> -- 
+> 2.43.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
