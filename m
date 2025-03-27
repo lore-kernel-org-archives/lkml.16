@@ -1,202 +1,182 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0877C1A705C
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 19:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F88A55;
+	Thu, 27 Mar 2025 19:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743102839; cv=none; b=KoOmV6lAu7XqaOqcbABuj6P9rmrjZgCAS3Cuvwd3+7ncwGB8KHzGXNPo2Msz7p8WvqTEZtjVsNS6+IPAjpBo/XN4/LGQPJuDOU7AleTEs3Y9mucX7c2Ca7YqY0t7/TUcxjjRYhOkqjlQprzNU/Yij0ZdCmYaYygolo4y3kU4J2c=
+	t=1743102943; cv=none; b=nRdRlTkYqXX9Z3dJL522Q84QHqPPkQadfjMbvb325rhaSwx4rEN0IXaX9LB9BqTUv2+dhK7otv3puZf5VQOCGBjzLTPAavGJunQZzufQ+rt94tCk6pzpuCjc/UGCNGm8YceHnzyN+FaIGpQsSf00++WWP2Lu264KtFAe8IsWheE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743102839; c=relaxed/simple;
-	bh=hh/VQK/Xetz3rf5KW/ZpVNh5HJlX1LtlVn5UOEhuUgU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=tKKkqKIe2VGZyEJjg30rt8/0b33ecrawrswEstIqGEiT3aM+6bFN51qxtqh0qob5FGsg0duHDPAchNQc/nevIreUg9DpH58Vflyr1F7y6Uek7UdDdKuzy7xgk+NoTPrr+umZnM8+RZYSlkxMTCpdqtXaVYnXL3ysO2nq22tnqd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j64nZna3; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1743102943; c=relaxed/simple;
+	bh=Rw5YIuasHI4FgVTE4nUpNhBDzZD/qo8wURofcGnCHPA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=HrursWj+QuPTB6DkxwmbM1YSo9NKeMhu1EVWHgmypl+dU54WQ9hiC/TbA0B1SCebHOd/+Tm6QJ0Vd9J667YH/jZpR8NHPXaPaNk3x5PYTxsCka+SMZ/Fvw9193ZHVrYoOgFfQv0g9KLjkb6Yb9EgGm2mCWv4EF2P1ADg6q7umXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fh2GXN8j; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j64nZna3"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2263428c8baso30435ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:13:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fh2GXN8j"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4394036c0efso9598185e9.2;
+        Thu, 27 Mar 2025 12:15:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743102837; x=1743707637; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UnOFmUEgN1tAjvwdzmU7V69QQB8mSVp/gwZR2GHxM7Y=;
-        b=j64nZna3W/CU8+ELupqIVuDyeMl8AdZowZwwcJy7qLzKQnaSZ1aZraR7iMhD2P8EjU
-         WaQOtyaNRlpvQ9AvVSVfZZahl5YCxvcjhnUM1e+OWbBCmCZDi/Zkfyjd4+AgDLTOjRI9
-         IU/7nS9Hec/gZlsywDhlURaeeA88ag33gCBssHwAt/rlsDl7DfA4AGoZNK1dI5WNqb8d
-         woZFiahiBNRES/icDNKAikd7hniNTlXkiMJwaODayr9AA8+md/ZHnTibeLzlhCh4WghC
-         TUStaZaOODb+E7wOizp4hoI4xRX7jA1sZw4F4ovac8YMwbz0C6kjb4PLzLdvDNw82Htw
-         ENaQ==
+        d=gmail.com; s=20230601; t=1743102940; x=1743707740; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=zfwfv1QkpZUVspd7kmNSz+5Pyv+VFy0ns7dOJv/HVl4=;
+        b=Fh2GXN8jSFKLObAex6klCqe1FmDDjFjcR6CXTILaxhNf3Y8hR483QoPxp1O1jenUeH
+         NAhCfls2T5cZCbwuNE32CI9K9IcSc6DSEuUe+WIGP7iqPHpSaKcvop88S4M0cQ5xv32H
+         uoeB21ddooGtV7suz/5yzKN/Zs1dhMHacmu4qzRQJ6/AduAtb2o+SF73GOEgpMUUA+Oy
+         igORk4AWQye2CgM9rlWWN5xm70NSobXKl1HE98UUcakVaEW8d2aL8OIy+EFz8SGvJ9ZV
+         GpqBI426e4fHzWwoSmlgQcRLjhdkP99gtG6MiS1u48ou7iKmKLckREmUylMvuK2Sr1Kx
+         0e6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743102837; x=1743707637;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UnOFmUEgN1tAjvwdzmU7V69QQB8mSVp/gwZR2GHxM7Y=;
-        b=AAxQva8tWOnNqDoWPj7uTuZQovGQCEEn+KuxcDMyt84yBoapJJRQhqvKgUI0hWmqUZ
-         39VZCWv44UPlhMMtS0WYxQhUO8j+IN4iPFPHpTeSou5JgydGiVHVWwVeRB64ZdS0NzlA
-         tpYqW0XUcf9pc858PllpmjTnZ/bZJ2nGSfOgLOo4yc3JY4tmZTdDGo1ZCOxXOnVdfQK+
-         rvrZttnLgPqZvYE4HKWLrlqv2iKZpbAn1u1sdcVqNSkdr7pKYxjomLf4RUqgAP6vltq6
-         bs6RmfjygyP22G0DnhbTFW+XghMoL8+rDrGc7qqFqafeQnWBbuLP+cPkoMVUXQPLNSui
-         f9oA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVmGwRxfxvvWoOvRUHcU/DJXXyX7RltkoFVPScdLAuYuT7FXvfxIudNXRUfjDdP6PjBGH4CSfgjW8X/9k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTBmVabx+78nn9Q0dG73MRDi1K3iHlqfLiHizmonPXEn3BStK6
-	zoDm+aj/7APv9gHQbbmnZbTXFlP5U0m+VwFh+Pbw80Exawbdyf+Pa58uhntgCzjiKp7huQXuABL
-	gtoZyrOwaVQ2OxdzOWmfjLMHU+a4mDmB6wUUDq0sFsfGEKuK0NeMCX7E=
-X-Gm-Gg: ASbGnctNkf/nj0cIVhyDPRgy9qxl/5E9MzR+KY+/wQyliZhPE7IrIjewLUx8vXvwnG6
-	TE+o0R5ozLeV0FDX+C+yjF5C7rSVw7H/IR5unFKmXgvBTNYzhE1m8HrL5oHYnYtBhiISuxn/UAE
-	8POqUEm43/3slJ2k20SF3pAPfRkNGUYR1DDmiPQKRnIthjEFvmFbqo+ZA=
-X-Google-Smtp-Source: AGHT+IGBRbFyYUB2Vr/yTuISyABvJclwetdAehk9rr0dNRdaF2BlgmVj4U4jVsqQ/N/bApYGl6IcTDFbuP4adTp3aSI=
-X-Received: by 2002:a17:903:c08:b0:220:c905:689f with SMTP id
- d9443c01a7336-22920f444f1mr349155ad.25.1743102836749; Thu, 27 Mar 2025
- 12:13:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743102940; x=1743707740;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zfwfv1QkpZUVspd7kmNSz+5Pyv+VFy0ns7dOJv/HVl4=;
+        b=Dssw4gv4a7A/G26ptVef010ugNvSw9o6xNh7G1bt9iNfGP8Bd+sdaWb0tKYlZGqHb1
+         ZGUaviOGO2lak4KEm4x1Yl+lQGcz6HOdFZi7A/fLQEUTo1Hy4TSGZG3MMSq+CDCPaJGe
+         CuoFhx6D9wpHJCkmCz/+LkwlyfCJXuCCFu8TplZe5bsr2/eCrRtyHufTuSuc5JLn+ysS
+         j/8BRr/zP5vIyrfH2YQGPaU9270F4VA+YwElAbHVCqd71Qx2MrGRGAJZdH2AU3BH7JK0
+         /k+4eM1WOnV7NqnzNq1/CyoyogSJjmC6m5PaKuIyizha3A7JJXNN4vjRDidThgA3uhmF
+         Z9PA==
+X-Forwarded-Encrypted: i=1; AJvYcCWXDd1kiV4B0etWxVrFXxcuGcuE+Kkt+ZP9wfSdcltWJeLzcSgF9tRfKVLHujftTDqV7O2BqOOx@vger.kernel.org, AJvYcCWm33hqdNTVUq+3XStstDhY+Rpq08JVWGliAaInQpPDn6/5wXouktN1k8UsgX22tdVvGaYzggARGDJVQ/W+@vger.kernel.org, AJvYcCXApjFDVsdo6T5CFahldbrAnCK2cQHr+pEr1Zij50vPe3pI4zkWnlOWieZ5E1ZXDnw93Ot721OlwkQ3QRoB@vger.kernel.org
+X-Gm-Message-State: AOJu0YxL9wZbPWTs14q36ymyRYP1eMh65IF1KoR7AsvPewAXzVRGHZPw
+	rO/Sz3vTw2BDvLGOAv2PbImam2gEz8Tx+0whEigMvMzyrPh6bGl2
+X-Gm-Gg: ASbGncs82fum2XvsvF+vE1Xjo5/xZDeSnwbEiruihtD1EAUFMH7NSnS11H/608aPW57
+	bRcJQLGCVhQy41zMfqnrr/dMVXwxtvez06Lmus81D/lI0p6SyzsT+El7qqJyNjrA/qXL4HPSyqU
+	0jcWk1CpaMOnMgd2KOyrxPZ4pKyDNlLuUOPi5SpU+pV3zWWkP9kR9Ubi0jtVdNRg+CQgtTKsGxV
+	viG9HZTMZP44+surchnlfnzjD1SQjH0ryhDg5l3Xc5jdIZeYkqqD0ZRWXSQLvb/leUMrRciO9F8
+	kyi9v5Km8cDQwF/+FsjrXU+gS5s0wW1WQi0Ta1vCSfSgaLd45KITCA==
+X-Google-Smtp-Source: AGHT+IF6wQGZ2i0qPbjE48g6AoqxPSkbrIx5QXDhbvYGV8JqzaVvMSMYLsYltI99DKGgpV1fk5VzWQ==
+X-Received: by 2002:a05:600c:5103:b0:43d:683:8caa with SMTP id 5b1f17b1804b1-43d84fbea4bmr40267415e9.15.1743102939774;
+        Thu, 27 Mar 2025 12:15:39 -0700 (PDT)
+Received: from [192.168.3.5] ([212.115.166.76])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d830f5f22sm46351685e9.30.2025.03.27.12.15.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 12:15:38 -0700 (PDT)
+Message-ID: <3b1f2031-9f91-48d8-8c79-65d470142f26@gmail.com>
+Date: Thu, 27 Mar 2025 20:15:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324164543.62574-1-irogers@google.com>
-In-Reply-To: <20250324164543.62574-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 27 Mar 2025 12:13:45 -0700
-X-Gm-Features: AQ5f1JqARfOJjp7cH3_mePJVpMcG2u9oleFxHG7NMH3xqmsS7lzAQhyNRkCtfIQ
-Message-ID: <CAP-5=fWr8EUyro8ckxfMYWR3BhiXgzkjejTjmTb=8PR1p+wvWA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] Prefer sysfs/JSON events also when no PMU is provided
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Attila Szasz <szasza.contact@gmail.com>
+Subject: Re: [PATCH] hfs/hfsplus: fix slab-out-of-bounds in hfs_bnode_read_key
+To: Greg KH <gregkh@linuxfoundation.org>,
+ Cengiz Can <cengiz.can@canonical.com>
+Cc: Salvatore Bonaccorso <carnil@debian.org>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lvc-patches@linuxtesting.org,
+ dutyrok@altlinux.org, syzbot+5f3a973ed3dfb85a6683@syzkaller.appspotmail.com,
+ stable@vger.kernel.org
+References: <20241019191303.24048-1-kovalev@altlinux.org>
+ <Z9xsx-w4YCBuYjx5@eldamar.lan>
+ <d4mpuomgxqi7xppaewlpey6thec7h2fk4sm2iktqsx6bhwu5ph@ctkjksxmkgne>
+ <2025032402-jam-immovable-2d57@gregkh>
+Content-Language: en-US
+In-Reply-To: <2025032402-jam-immovable-2d57@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 24, 2025 at 9:46=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> At the RISC-V summit the topic of avoiding event data being in the
-> RISC-V PMU kernel driver came up. There is a preference for sysfs/JSON
-> events being the priority when no PMU is provided so that legacy
-> events maybe supported via json. Originally Mark Rutland also
-> expressed at LPC 2023 that doing this would resolve bugs on ARM Apple
-> M? processors, but James Clark more recently tested this and believes
-> the driver issues there may not have existed or have been resolved. In
-> any case, it is inconsistent that with a PMU event names avoid legacy
-> encodings, but when wildcarding PMUs (ie without a PMU with the event
-> name) the legacy encodings have priority.
->
-> The patch doing this work was reverted in a v6.10 release candidate
-> as, even though the patch was posted for weeks and had been on
-> linux-next for weeks without issue, Linus was in the habit of using
-> explicit legacy events with unsupported precision options on his
-> Neoverse-N1. This machine has SLC PMU events for bus and CPU cycles
-> where ARM decided to call the events bus_cycles and cycles, the latter
-> being also a legacy event name. ARM haven't renamed the cycles event
-> to a more consistent cpu_cycles and avoided the problem. With these
-> changes the problematic event will now be skipped, a large warning
-> produced, and perf record will continue for the other PMU events. This
-> solution was proposed by Arnaldo.
->
-> v6: Rebase of v5 (dropping already merged patches):
->     https://lore.kernel.org/lkml/20250109222109.567031-1-irogers@google.c=
-om/
->     that unusually had an RFC posted for it:
->     https://lore.kernel.org/lkml/Z7Z5kv75BMML2A1q@google.com/
->     Note, this patch conflicts/contradicts:
->     https://lore.kernel.org/lkml/20250312211623.2495798-1-irogers@google.=
-com/
->     that I posted so that we could either consistently prioritize
->     sysfs/json (these patches) or legacy events (the other
->     patches). That lack of event printing and encoding inconsistency
->     is most prominent in the encoding of events like "instructions"
->     which on hybrid are reported as "cpu_core/instructions/" but
->     "instructions" before these patches gets a legacy encoding while
->     "cpu_core/instructions/" gets a sysfs/json encoding. These patches
->     make "instructions" always get a sysfs/json encoding while the
->     alternate patches make it always get a legacy encoding.
+hi, Attila here—the one who wrote the article and the PoC.
 
-So another fun finding. Sysfs and json events are case insensitive:
-```
-$ perf stat -e 'inst_retired.any,INST_RETIRED.ANY' true
+just for the record: this was a mistake then, and if one happens to 
+discover another impactful bug in a potentially orphaned filesystem or 
+another subsystem, it might EVEN get prioritized by upstream and stable 
+over /panic_on_warn/ stuff next time, right? or am I missing something?
 
-Performance counter stats for 'true':
-
-          129,134      cpu_atom/inst_retired.any:u/
-    <not counted>      cpu_core/inst_retired.any:u/
-                        (0.00%)
-          129,134      cpu_atom/INST_RETIRED.ANY:u/
-    <not counted>      cpu_core/INST_RETIRED.ANY:u/
-                        (0.00%)
-
-      0.002193191 seconds time elapsed
-
-      0.002354000 seconds user
-      0.000000000 seconds sys
-```
-But legacy events match in lex code that is case sensitive. This means
-(on x86) the event 'instructions' is currently legacy, but the event
-'INSTRUCTIONS' is a sysfs event. The event CYCLES is a parse error as
-there is no sysfs/json version. Given legacy events don't follow the
-case insensitivity norm this is more evidence we need to reduce their
-priority by merging these patches.
-
-Thanks,
-Ian
-
-
-
-> v5: Follow Namhyung's suggestion and ignore the case where command
->     line dummy events fail to open alongside other events that all
->     fail to open. Note, the Tested-by tags are left on the series as
->     v4 and v5 were changing an error case that doesn't occur in
->     testing but was manually tested by myself.
+On 3/24/25 17:17, Greg KH wrote:
+> On Mon, Mar 24, 2025 at 07:14:07PM +0300, Cengiz Can wrote:
+>> On 20-03-25 20:30:15, Salvatore Bonaccorso wrote:
+>>> Hi
+>>>
+>> Hello Salvatore,
+>>
+>>> On Sat, Oct 19, 2024 at 10:13:03PM +0300, Vasiliy Kovalev wrote:
+>>>> Syzbot reported an issue in hfs subsystem:
+>>>>
+>>>> BUG: KASAN: slab-out-of-bounds in memcpy_from_page include/linux/highmem.h:423 [inline]
+>>>> BUG: KASAN: slab-out-of-bounds in hfs_bnode_read fs/hfs/bnode.c:35 [inline]
+>>>> BUG: KASAN: slab-out-of-bounds in hfs_bnode_read_key+0x314/0x450 fs/hfs/bnode.c:70
+>>>> Write of size 94 at addr ffff8880123cd100 by task syz-executor237/5102
+>>>>
+>>>> Call Trace:
+>>>>   <TASK>
+>>>>   __dump_stack lib/dump_stack.c:94 [inline]
+>>>>   dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+>>>>   print_address_description mm/kasan/report.c:377 [inline]
+>>>>   print_report+0x169/0x550 mm/kasan/report.c:488
+>>>>   kasan_report+0x143/0x180 mm/kasan/report.c:601
+>>>>   kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
+>>>>   __asan_memcpy+0x40/0x70 mm/kasan/shadow.c:106
+>>>>   memcpy_from_page include/linux/highmem.h:423 [inline]
+>>>>   hfs_bnode_read fs/hfs/bnode.c:35 [inline]
+>>>>   hfs_bnode_read_key+0x314/0x450 fs/hfs/bnode.c:70
+>>>>   hfs_brec_insert+0x7f3/0xbd0 fs/hfs/brec.c:159
+>>>>   hfs_cat_create+0x41d/0xa50 fs/hfs/catalog.c:118
+>>>>   hfs_mkdir+0x6c/0xe0 fs/hfs/dir.c:232
+>>>>   vfs_mkdir+0x2f9/0x4f0 fs/namei.c:4257
+>>>>   do_mkdirat+0x264/0x3a0 fs/namei.c:4280
+>>>>   __do_sys_mkdir fs/namei.c:4300 [inline]
+>>>>   __se_sys_mkdir fs/namei.c:4298 [inline]
+>>>>   __x64_sys_mkdir+0x6c/0x80 fs/namei.c:4298
+>>>>   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>>>>   do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+>>>>   entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>>>> RIP: 0033:0x7fbdd6057a99
+>>>>
+>>>> Add a check for key length in hfs_bnode_read_key to prevent
+>>>> out-of-bounds memory access. If the key length is invalid, the
+>>>> key buffer is cleared, improving stability and reliability.
+>>>>
+>>>> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+>>>> Reported-by:syzbot+5f3a973ed3dfb85a6683@syzkaller.appspotmail.com
+>>>> Closes:https://syzkaller.appspot.com/bug?extid=5f3a973ed3dfb85a6683
+>>>> Cc:stable@vger.kernel.org
+>>>> Signed-off-by: Vasiliy Kovalev<kovalev@altlinux.org>
+>>>> ---
+>>>>   fs/hfs/bnode.c     | 6 ++++++
+>>>>   fs/hfsplus/bnode.c | 6 ++++++
+>>>>   2 files changed, 12 insertions(+)
+>>>>
+>>>> diff --git a/fs/hfs/bnode.c b/fs/hfs/bnode.c
+>>>> index 6add6ebfef8967..cb823a8a6ba960 100644
+>>>> --- a/fs/hfs/bnode.c
+>>>> +++ b/fs/hfs/bnode.c
+>>>> @@ -67,6 +67,12 @@ void hfs_bnode_read_key(struct hfs_bnode *node, void *key, int off)
+>>>>   	else
+>>>>   		key_len = tree->max_key_len + 1;
+>>>>   
+>>>> +	if (key_len > sizeof(hfs_btree_key) || key_len < 1) {
+>>>> +		memset(key, 0, sizeof(hfs_btree_key));
+>>>> +		pr_err("hfs: Invalid key length: %d\n", key_len);
+>>>> +		return;
+>>>> +	}
+>>>> +
+>>>>   	hfs_bnode_read(node, key, off, key_len);
+>>>>   }
+>> Simpler the better.
+>>
+>> Our fix was released back in February. (There are other issues in our attempt I
+>> admit).
+>>
+>> https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/jammy/commit/?id=2e8d8dffa2e0b5291522548309ec70428be7cf5a
+>>
+>> If someone can pick this submission, I will be happy to replace our version.
+> any specific reason why you didn't submit this upstream?  Or did that
+> happen and it somehow not get picked up?
 >
-> v4: Rework the no events opening change from v3 to make it handle
->     multiple dummy events. Sadly an evlist isn't empty if it just
->     contains dummy events as the dummy event may be used with "perf
->     record -e dummy .." as a way to determine whether permission
->     issues exist. Other software events like cpu-clock would suffice
->     for this, but the using dummy genie has left the bottle.
+> And why assign a CVE for an issue that is in the mainline kernel, last I
+> checked, Canonical was NOT allowed to do that.
 >
->     Another problem is that we appear to have an excessive number of
->     dummy events added, for example, we can likely avoid a dummy event
->     and add sideband data to the original event. For auxtrace more
->     dummy events may be opened too. Anyway, this has led to the
->     approach taken in patch 3 where the number of dummy parsed events
->     is computed. If the number of removed/failing-to-open non-dummy
->     events matches the number of non-dummy events then we want to
->     fail, but only if there are no parsed dummy events or if there was
->     one then it must have opened. The math here is hard to read, but
->     passes my manual testing.
+> Please work to revoke that CVE and ask for one properly.
 >
-> v3: Make no events opening for perf record a failure as suggested by
->     James Clark and Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>. Also,
->     rebase.
+> thanks,
 >
-> v2: Rebase and add tested-by tags from James Clark, Leo Yan and Atish
->     Patra who have tested on RISC-V and ARM CPUs, including the
->     problem case from before.
->
-> Ian Rogers (2):
->   perf record: Skip don't fail for events that don't open
->   perf parse-events: Reapply "Prefer sysfs/JSON hardware events over
->     legacy"
->
->  tools/perf/builtin-record.c    | 47 ++++++++++++++++++---
->  tools/perf/util/parse-events.c | 26 +++++++++---
->  tools/perf/util/parse-events.l | 76 +++++++++++++++++-----------------
->  tools/perf/util/parse-events.y | 60 ++++++++++++++++++---------
->  4 files changed, 139 insertions(+), 70 deletions(-)
->
-> --
-> 2.49.0.395.g12beb8f557-goog
+> greg k-h
 >
