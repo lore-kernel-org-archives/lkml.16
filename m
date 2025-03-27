@@ -1,34 +1,42 @@
-Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0E8120C46C;
-	Thu, 27 Mar 2025 09:35:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E6B20C025
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743068150; cv=none; b=e4enWTqwxMpsqPBxJa40jYd5Q7Fi44yN3gQwPr76JWpNIACPnRFT4BKxyqXwSr+zhQsWx/5dm7IajWQ9wPhqv5a0kYtr4JFuQwJgUAH1asagg6Fshb9zEkfVQeaUEyKHPor/uggDRgdno7iMRuhfrPSEvdDsQoXQilDghfTcYhc=
+	t=1743068197; cv=none; b=ERVy8+PmZL018b/X0DfPPH86doztpndFndaRczyEpbn7/57j0CXz7Hxiun+WnsitKTH/4+byJwn0TKpjkkFUbwSPkA8K/nE33KKBxFmod1fYEPHxpXeNS7anJmaNn4IrgR3eGCf36AMyF+bbIt51OkpTN+u7FFh5Q3RETcJP8HM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743068150; c=relaxed/simple;
-	bh=emluPB/+HEfLfthucSGOJgpzoeP68z4bxCiL6U9VHEc=;
+	s=arc-20240116; t=1743068197; c=relaxed/simple;
+	bh=bZhE3bjLYhBkFnRZcm1kLv51TZMsYQg3FaSHG239LRI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aMycQxcbHTg/dkkzzNtDys90jfyMZu0RG3ORPXvDgWTAuPdmrdia5XAR110zT2SJQy2YlZvnfkmIDh89AUNWhFzP0IeLCZCN/UUVrz0ooVsYeQ1GAt+YRzUyV9TUC7vy3kd0ODIoCgSVqJ1WoViPz5NntfhRz6kDlrr6mZ/4YCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=162.243.164.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwAHDqbSG+VnAJebDg--.1646S2;
-	Thu, 27 Mar 2025 17:35:14 +0800 (CST)
-Received: from localhost (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwA3PorQG+VnhkxXAA--.797S2;
-	Thu, 27 Mar 2025 17:35:12 +0800 (CST)
-Date: Thu, 27 Mar 2025 17:34:54 +0800
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Gregory Price <gourry@gourry.net>, lsf-pc@lists.linux-foundation.org,
-	linux-mm@kvack.org, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [LSF/MM] CXL Boot to Bash - Section 0: ACPI and Linux Resources
-Message-ID: <Z+Ubvvrj9DovVs71@phytium.com.cn>
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
- <Z8jORKIWC3ZwtzI4@gourry-fedora-PF4VCD3F>
- <20250313165539.000001f4@huawei.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=iuWMxwI7pp1ZjczG36g6CF8e+lVsSB871wLBrbSKjql+HPhjatnNgPHQKUxxSHCUWNeq8W92ELqVNqVFiVuq7n4dhxgqt/YQH7U+GsD6n3qo+AOHVZJn9kbWb8+RTs0CoQ9pEcpguN1Ak8d6fj+0UYkAbR/kFcGBQ8Yw9Iwh4Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=geg2uA8t; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="geg2uA8t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F372AC4CEEA;
+	Thu, 27 Mar 2025 09:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743068197;
+	bh=bZhE3bjLYhBkFnRZcm1kLv51TZMsYQg3FaSHG239LRI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=geg2uA8tbxXWb8pT4jufA8lnH/AnEHbUUZ7Dzobj3zppV66qR5AOqLGdBShF8sk9n
+	 6V063O3WYmxmnHG+gkqHDB+F35bE8HcAnJ2rw8h3pceLwbT2iPiq5oqHRMjJvM4evx
+	 udGFVX8Hgf9xf0mk85WTgtiTD//8vwDZu5SewxSUlbcHzC6P5OhGBhQFr1yDRBYdGa
+	 2HPKCUCjYUFKWv19GCWLmCvipQhwD4xhP8eMGROWDMh3PBVntIdKCiSn66Y4vxeVxB
+	 E9SCkRrdGD8wxx1zYpOhTwnhrx3rF7MpcsIoXcZy4J5uyQMyzINraVdxW5cVLPy2z/
+	 oXamAzbdB8u6Q==
+Date: Thu, 27 Mar 2025 10:36:32 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 4/5] bugs/x86: Augment warnings output by concatenating
+ 'cond_str' with the regular __FILE__ string in _BUG_FLAGS()
+Message-ID: <Z-UcIJAQsNXoxMXG@gmail.com>
+References: <20250326084751.2260634-1-mingo@kernel.org>
+ <20250326084751.2260634-5-mingo@kernel.org>
+ <20250326085343.GB25239@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,48 +45,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250313165539.000001f4@huawei.com>
-X-CM-TRANSID:AQAAfwA3PorQG+VnhkxXAA--.797S2
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQACAWfkXV4FHAAHsc
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvdXoWruFWDtrWfWF13GrW8uw4rKrg_yoWDtFc_ur
-	s5Cw1kG3ykWF1Igan7Krs7trWfCa48Cr4xuaySqFnIk345JrZ5GaykAr95Kw45GFsFyryD
-	Cr10qw1S9wnI9jkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrnU
-	Uv73VFW2AGmfu7jjvjm3AaLaJ3UjIYCTnIWjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRUUUUU
-	UUUU=
+In-Reply-To: <20250326085343.GB25239@noisy.programming.kicks-ass.net>
 
-On Thu, Mar 13, 2025 at 04:55:39PM +0000, Jonathan Cameron wrote:
+
+* Peter Zijlstra <peterz@infradead.org> wrote:
+
+> On Wed, Mar 26, 2025 at 09:47:49AM +0100, Ingo Molnar wrote:
+> > This allows the reuse of the UD2 based 'struct bug_entry' low-overhead
+> > _BUG_FLAGS() implementation and string-printing backend, without
+> > having to add a new field.
 > > 
-> > Basically, the heuristic is as follows:
-> > 1) Add one NUMA node per Proximity Domain described in SRAT
-> 
->     if it contains, memory, CPU or generic initiator. 
-
-In the future, srat.c would add one seperate NUMA node for each
-Generic Port in SRAT.
-
-System firmware should know the performance characteristics between
-CPU/GI to the GP, and the static HMAT should include this coordinate.
-
-Is my understanding right?
-
-Yuquan
-
-> 
-> > 2) If the SRAT describes all memory described by all CFMWS
-> >    - do not create nodes for CFMWS
-> > 3) If SRAT does not describe all memory described by CFMWS
-> >    - create a node for that CFMWS
+> > An example:
 > > 
-> > Generally speaking, you will see one NUMA node per Host bridge, unless
-> > inter-host-bridge interleave is in use (see Section 4 - Interleave).
+> > If we have the following WARN_ON_ONCE() in kernel/sched/core.c:
+> > 
+> > 	WARN_ON_ONCE(idx < 0 && ptr);
+> > 
+> > Then previously _BUG_FLAGS() would store this string in bug_entry::file:
+> > 
+> > 	"kernel/sched/core.c"
+> > 
+> > After this patch, it would store and print:
+> > 
+> > 	"[idx < 0 && ptr] kernel/sched/core.c"
+> > 
+> > Which is an extended string that will be printed in warnings.
+> > 
+> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > ---
+> >  arch/x86/include/asm/bug.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+> > index aff1c6b7a7f3..e966199c8ef7 100644
+> > --- a/arch/x86/include/asm/bug.h
+> > +++ b/arch/x86/include/asm/bug.h
+> > @@ -50,7 +50,7 @@ do {									\
+> >  		     "\t.org 2b+%c3\n"					\
+> >  		     ".popsection\n"					\
+> >  		     extra						\
+> > -		     : : "i" (__FILE__), "i" (__LINE__),		\
+> > +		     : : "i" (cond_str __FILE__), "i" (__LINE__),		\
+> >  			 "i" (flags),					\
+> >  			 "i" (sizeof(struct bug_entry)));		\
+> >  } while (0)
 > 
-> I just love corners: QoS concerns might mean multiple CFMWS and hence
-> multiple nodes per host bridge (feel free to ignore this one - has
-> anyone seen this in the wild yet?)  Similar mess for properties such
-> as persistence, sharing etc.
-> 
-> J
-> 
+> Sneaky :-)
 
+BTW., any reason why we go all the trouble with the bug_entry::line u16 
+number, instead of storing it in the bug_entry::file string with a
+:__LINE__ postfix or so?
+
+Using 4 bytes doesn't even save any RAM, given that the average line 
+position number within the kernel is around 3 bytes:
+
+ $ for N in $(git grep -lE 'WARN_ON|BUG_ON|WARN\(|BUG\(' -- '*.[ch]'); do echo -n $(($(cat $N | wc -l)/2)) | wc -c; done | sort -n | uniq -c
+
+     10 1
+   1209 2
+   6645 3
+   1582 4
+     10 5
+
+( This is the histogram of the length of average line numbers within 
+  the kernel's ~9,400 .[ch] source code files that are using these 
+  facilities. )
+
+So concatenation would save on complexity, IMHO, and it would give us 
+flexibility as well, if we passed in the string from higher layers. We 
+wouldn't have to change architecture level code at all for this series 
+for example.
+
+Not to mention that some files within the kernel are beyond the 16-bit 
+limit already, 38K to 222K lines of code:
+
+  starship:~/tip> wc -l drivers/gpu/drm/amd/include/asic_reg/dcn/dcn_3_2_0_sh_mask.h
+  222,948 drivers/gpu/drm/amd/include/asic_reg/dcn/dcn_3_2_0_sh_mask.h
+
+  starship:~/tip> wc -l crypto/testmgr.h
+  38,897 crypto/testmgr.h
+
+So u16 line numbers are also a (minor) breakage waiting to happen.
+
+Thanks,
+
+	Ingo
