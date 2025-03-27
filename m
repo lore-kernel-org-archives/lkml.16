@@ -1,141 +1,135 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA98D1E1DF0
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 22:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF3E1DE88C
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 22:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743115958; cv=none; b=Zna9cMAg93hssQol8K6KYakO2l0jWyTfxy5OWRVnrljCfC1ZgPTUtG65JVRxErEN+BKvG7AdmDiTJpZVfVJM51mJj2AGy4I5PoCdRgy6SlJvna75Wlz7MHK3pFW6Ap4mi2xtbbIoftRcH5gZZjSZs9f3oq5mOUwPrnDg1ZVOUrQ=
+	t=1743115985; cv=none; b=IHiH6Mbw3pJs/cuVyM2o8JA1EXAwrNr+bzwbxkq94AiJ6L0B5tOvAUtkeYvZP3j3fg8LNf2o7TFGUmPIuhcxN/pviRsJQtZ13RXrkvuwbPa13tgvGq09keQ/e8joOR82egyzCVUD2Aebii/LwvFYcaWuRq+pe+jAY7n+WvUycL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743115958; c=relaxed/simple;
-	bh=04MuPzuXvPrWYZpyfrG/qxOsUxH6sKfHzhd+lnURa04=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WB8MIugBeIQaU1snVOjBLg4lvYt3Iy0NvlUF+KM8X3u7I/nwSV+WEV6owcdxNvqJaVovKQmRn0R7PzYQi7lYB9oPh5Nvv4n7xtMcgoBdj/skTxNRAYj92CAK7xUYOJstGvKVSTkdS7V7WublZSYyLawgEv+4xLUGnbs+W8I4JdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=N8Qs+4qJ; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1743115985; c=relaxed/simple;
+	bh=pKpgtM4kB/4K64gSh6vdxNp84Cah8MzlKXkdIhPEZ84=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LQBvOBGA2yx/7U9k57fQXT69z9Py07jqTz31B4LYjAVNexgdRE7Nwm+IdlGeF89cJq/+sXMdfKixbIRYFLGZLiit+mCjyIRrbmZuC5+1uaJ2pL9QoKqpRucydWQznCVA6krc6g4ioFEL3tvjUMSytTFm665P18NLcTfB+y4/gFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=AQQFg9Nu; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="N8Qs+4qJ"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id BC509446;
-	Thu, 27 Mar 2025 23:50:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743115845;
-	bh=04MuPzuXvPrWYZpyfrG/qxOsUxH6sKfHzhd+lnURa04=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N8Qs+4qJ/w31JqrublP+vX9igLskTPOvYYYH0hRLBZiGDKCJFOScz1C6gSOSiEaeQ
-	 JOb9I7pHgSh1vhwWW+WQnWmJceRYCLwc3QPg+Fz9PYQs+SRrQ+E2PE9Kx5OqAM+U/3
-	 kdeWvISioZ3MswcRgNteAYnwdB50LOgAJD3v5rCs=
-Date: Fri, 28 Mar 2025 00:52:09 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Vishal Sagar <vishal.sagar@amd.com>,
-	Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Michal Simek <michal.simek@amd.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: Re: [PATCH v4 09/11] drm: xlnx: zynqmp: Add support for Y8 and
- Y10_P32
-Message-ID: <20250327225209.GB16629@pendragon.ideasonboard.com>
-References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
- <20250326-xilinx-formats-v4-9-322a300c6d72@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="AQQFg9Nu"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso235592566b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:53:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1743115982; x=1743720782; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=k12Y8dWe84nCJDuQsvD5DEjenxTgzdu2WJ45ZyGKWY8=;
+        b=AQQFg9Nu4aN8lHCdb/84wZfBMNSyJu14daXnGHBjd4gsAbCAUobS40yhZ9gf4bMv8Q
+         gXYCn/ESPMF41TNcb8vruTcV617corHL9H5WkmOp75DXUGUFgaWGjGSkh36PDewGAhlx
+         OjCqDEMLyPoMEJV1XX8WKNv4Qgtd+iZ7X3SraHETASDbyFLY1uHQ6ZZI0f18GULgEKRb
+         LlGyb5fiDbekP2fEvumsVCRwu6uZQvycZ+8eVTIoyl4PEJw5EE5xw5vcu0a6ifTaWXZj
+         YuOJe2dCz4WHLFxz35mFp98Q5Z1dCwr3WfQRPz+/I1aMcPDItJUj96i0AWYyrMXkGQRO
+         Mq+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743115982; x=1743720782;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k12Y8dWe84nCJDuQsvD5DEjenxTgzdu2WJ45ZyGKWY8=;
+        b=XZNLWphX4SLWagu90h7HUcMZzXq+1UnbP3uvzwZZCDH1os6P+qAFUvI1uILNTNs0FA
+         8qm/fuXORYWNjVSDdJcnE4ikTV9rxcrzJxJEWC9Dvs2fFNGEgXd3t2XVJHmQkJ9ErQWV
+         RotUv8xVUtsochspGE50TonBJ5EcNn5sU+l4qwMQ6vX6Hzz/Hmzij3ldMp0i+c78wDyP
+         A2wottjyf/crTIqVl8CHN/YtAaZPvxnvqt5ilM+hymH5RXck3DhEvlJwC8LxE6F2Ntxj
+         ULW9el8u8v1ETEMMvmQOF5F0xFZFhsNBm+g7JEScXMCpNIoHPbS9sVBUiXq+iYIGsxs0
+         Q5ng==
+X-Forwarded-Encrypted: i=1; AJvYcCVeQqcuzTkXKazJ/O3/mRsYCbDSmZq4BDYQTSkgnFoc4sLiUFrha6vChTUY7JhXAVVeL2h6DGZE8KX7ZB4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxakkJD9DP3lerXa369INsgAPxWyKriyZr2BOOnitwD1nnLRKnk
+	BZwg3Ew0KAYOyyOqkFSyIWXY3RpitAmI943kilbvC17qxwT6R4GIiy8cBhAuSdg=
+X-Gm-Gg: ASbGnctaGxRpGdjomD/P7I9kjMetyHib3f7DUAD/QnZLJV/oQwchi3GW0KTt1ZRlikp
+	hJ/4VTDdTi7EP5FR4v2ANN+tYCvo/h6kckvzOS4zTifd3/zu0a7FKQ0rhcEe0Oe2rPBTydoj73l
+	KFa4Yr/GK1Vrj6ajaxq426d7pRkWWh5jnirPClP9tDNLTOPI14RH+depXYCwIcbgaieOELuKnBl
+	a3Fckg4uHHcjh1/xoxtfO98yyerxX+ftNyDF76R7pU6o0HfhR2ZvsaP3pD5RlMmrw21ZRnVYsMt
+	ySfI8K7jh8UipdcsYQHGfxYc923SAINDJysmqPdkPwMUsKYC4b8=
+X-Google-Smtp-Source: AGHT+IEQKYdXU4YRdq7AjkHureyIrp+bm+P0LupbshznRTrIcsjVjBe9WN63ZaIpC1RkUq+pZC7I3g==
+X-Received: by 2002:a17:906:c153:b0:ac3:bd68:24eb with SMTP id a640c23a62f3a-ac6fae46de8mr605017166b.1.1743115982075;
+        Thu, 27 Mar 2025 15:53:02 -0700 (PDT)
+Received: from [100.115.92.205] ([109.160.74.194])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71922b965sm63206566b.20.2025.03.27.15.53.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 15:53:01 -0700 (PDT)
+Message-ID: <ffe6f6cc-7157-48ad-9cde-dc38d8427849@blackwall.org>
+Date: Fri, 28 Mar 2025 00:52:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250326-xilinx-formats-v4-9-322a300c6d72@ideasonboard.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch net-next 1/3] net: bridge: mcast: Add offload failed mdb
+ flag
+To: Joseph Huang <joseph.huang.2024@gmail.com>,
+ Joseph Huang <Joseph.Huang@garmin.com>, netdev@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Roopa Prabhu <roopa@nvidia.com>, Simon Horman <horms@kernel.org>,
+ linux-kernel@vger.kernel.org, bridge@lists.linux.dev
+References: <20250318224255.143683-1-Joseph.Huang@garmin.com>
+ <20250318224255.143683-2-Joseph.Huang@garmin.com>
+ <c90151bc-a529-4f4e-a0b9-5831a6b803f7@blackwall.org>
+ <85a52bd9-8107-4cb8-b967-2646d0e74ab4@gmail.com>
+Content-Language: en-US
+From: Nikolay Aleksandrov <razor@blackwall.org>
+In-Reply-To: <85a52bd9-8107-4cb8-b967-2646d0e74ab4@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Tomi,
-
-Thank you for the patch.
-
-On Wed, Mar 26, 2025 at 03:22:52PM +0200, Tomi Valkeinen wrote:
-> Add support for Y8 and Y10_P32 formats. We also need to add new csc
-> matrices for the y-only formats.
+On 3/27/25 00:38, Joseph Huang wrote:
+> On 3/21/2025 4:19 AM, Nikolay Aleksandrov wrote:
+>>> @@ -516,11 +513,14 @@ static void br_switchdev_mdb_complete(struct 
+>>> net_device *dev, int err, void *pri
+>>>            pp = &p->next) {
+>>>           if (p->key.port != port)
+>>>               continue;
+>>> -        p->flags |= MDB_PG_FLAGS_OFFLOAD;
+>>> +
+>>> +        if (err)
+>>> +            p->flags |= MDB_PG_FLAGS_OFFLOAD_FAILED;
+>>> +        else
+>>> +            p->flags |= MDB_PG_FLAGS_OFFLOAD;
+>>
+>> These two should be mutually exclusive, either it's offloaded or it 
+>> failed an offload,
+>> shouldn't be possible to have both set. I'd recommend adding some 
+>> helper that takes
+>> care of that.
 > 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> ---
->  drivers/gpu/drm/xlnx/zynqmp_disp.c | 26 +++++++++++++++++++++++++-
->  1 file changed, 25 insertions(+), 1 deletion(-)
+> It is true that these two are mutually exclusive, but strictly speaking 
+> there are four types of entries:
 > 
-> diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> index 1dc77f2e4262..ae8b4073edf6 100644
-> --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> @@ -307,6 +307,16 @@ static const struct zynqmp_disp_format avbuf_vid_fmts[] = {
->  		.buf_fmt	= ZYNQMP_DISP_AV_BUF_FMT_NL_VID_YV16CI_10,
->  		.swap		= false,
->  		.sf		= scaling_factors_101010,
-> +	}, {
-> +		.drm_fmt	= DRM_FORMAT_Y8,
-> +		.buf_fmt	= ZYNQMP_DISP_AV_BUF_FMT_NL_VID_MONO,
-> +		.swap		= false,
-> +		.sf		= scaling_factors_888,
-> +	}, {
-> +		.drm_fmt	= DRM_FORMAT_Y10_P32,
-> +		.buf_fmt	= ZYNQMP_DISP_AV_BUF_FMT_NL_VID_YONLY_10,
-> +		.swap		= false,
-> +		.sf		= scaling_factors_101010,
+> 1. Entries which are not offload-able (i.e., the ports are not backed by 
+> switchdev)
+> 2. Entries which are being offloaded, but results yet unknown
+> 3. Entries which are successfully offloaded, and
+> 4. Entries which failed to be offloaded
+> 
+> Even if we ignore the ones which are being offloaded (type 2 is 
+> transient), we still need two flags, otherwise we won't be able to tell 
+> type 1 from type 4 entries.
+> 
+> If we need two flags anyway, having separate flags for type 3 and type 4 
+> simplifies the logic.
+> 
+> Or did I misunderstood your comments?
+> 
+> Thanks,
+> Joseph
 
-Assuming the DRM format definitions get approved, this looks good to me.
+I think you misunderstood me, I don't mind having the two flags. :)
+My point is that they must be managed correctly and shouldn't be allowed
+to be set simultaneously.
 
->  	},
->  };
->  
-> @@ -697,6 +707,16 @@ static const u32 csc_sdtv_to_rgb_offsets[] = {
->  	0x0, 0x1800, 0x1800
->  };
->  
-> +static const u16 csc_sdtv_to_rgb_yonly_matrix[] = {
+Cheers,
+  Nik
 
-TODO: Add support for colorspaces to the driver.
-
-> +	0x0, 0x0, 0x1000,
-> +	0x0, 0x0, 0x1000,
-> +	0x0, 0x0, 0x1000,
-
-This surprises me a bit, I was expecting 0x1000 to be in the first
-column. What am I missing ?
-
-> +};
-> +
-> +static const u32 csc_sdtv_to_rgb_yonly_offsets[] = {
-> +	0x1800, 0x1800, 0x0
-
-Why do you need offsets ? Those values correspond to -128 in a 8-bit
-range, and that's what would need to be applied to the chroma values.
-There's no chroma here. I think you could use csc_zero_offsets.
-
-> +};
-> +
->  /**
->   * zynqmp_disp_blend_set_output_format - Set the output format of the blender
->   * @disp: Display controller
-> @@ -846,7 +866,11 @@ static void zynqmp_disp_blend_layer_enable(struct zynqmp_disp *disp,
->  				ZYNQMP_DISP_V_BLEND_LAYER_CONTROL(layer->id),
->  				val);
->  
-> -	if (layer->drm_fmt->is_yuv) {
-> +	if (layer->drm_fmt->format == DRM_FORMAT_Y8 ||
-> +	    layer->drm_fmt->format == DRM_FORMAT_Y10_P32) {
-> +		coeffs = csc_sdtv_to_rgb_yonly_matrix;
-> +		offsets = csc_sdtv_to_rgb_yonly_offsets;
-> +	} else if (layer->drm_fmt->is_yuv) {
->  		coeffs = csc_sdtv_to_rgb_matrix;
->  		offsets = csc_sdtv_to_rgb_offsets;
->  	} else {
-
--- 
-Regards,
-
-Laurent Pinchart
