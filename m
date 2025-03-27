@@ -1,129 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic307-15.consmr.mail.ne1.yahoo.com (sonic307-15.consmr.mail.ne1.yahoo.com [66.163.190.38])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC41B1A3159
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:41:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A551A00D1
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.190.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743093682; cv=none; b=Uheisyug8FiwcS/j7n91V9xwHb79S1z5IgNYLUBnk666MrCeajlbul8OWEbmPqtHU4SzyABeX+IjL7zYzHQJfLCqrA025+lAYhTiz3kcJXeV1PVUaoOB4/OxoBKY9WE8DYUhDqcIebM7Ylb/MyLnLh2OP0oeq1uXIzd2k0u4lqA=
+	t=1743093693; cv=none; b=em+2EkPN1qCAtJxvquoA0u8VP5bFTQlkcWQUNjjc3L+cav1/Fde5HshIuzzRrklmteIP6t1oWmk70+zIKbiGsoeSxh/wY+iDM0PrA4EaezL6ufAMGYLqwuWVaqTlHkv+HcWStgzR/u7oBKlOv39eUztPrADXoXLv781018wS39Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743093682; c=relaxed/simple;
-	bh=ORG5UvjXYfUOUCsaQ+0jPx6weTNrHk6CP4aKziL+CRU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BHa4YdgtT/EbxsBSSGNp22BFtYSf7AMMLUAsgSaFiczzqsCvNRrO0A4S0/rppBBBzWhFBXCJDGHCDCNgPlKmqNGfVMOvajuYY02eXqIH1U5KvLNXjxHbxDOCee98zfIu1OTwVfCbRQxY05H817nXnKzOF0qZCFtvjP+BeGm8TSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lcb/8WCv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743093693; c=relaxed/simple;
+	bh=ERe0YYQQppbhCRnZs4v51rqVSyPLNE3D2fW1lrVn1Uo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tOu4lKMCQwCzdPDomTU7Dn7c0CKYfsdPiMvw8B0ZKb+FmJY+5q9/AZZukBCde843VSjvxKaAKKEgJ5lQXvbOcMFl1mFIKQdVWHX3d5myQ6tGOoJcmTyy6B+xkww3bbDlG1zeV+VsjCZpcJyymByvAS42RjNv6GgUQ/ubq6rBasw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=HSEJln9l; arc=none smtp.client-ip=66.163.190.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lcb/8WCv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24421C4CEDD;
-	Thu, 27 Mar 2025 16:41:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743093682;
-	bh=ORG5UvjXYfUOUCsaQ+0jPx6weTNrHk6CP4aKziL+CRU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Lcb/8WCvwDR5ArG/aVRh3vT7RUg5GYhxuvKSL6Ix+bGr+MXzz5QB5jEctjZZ7uGlw
-	 78c6/PFPvr+ekycrz5lKHxvbzJZ5fzWjsE8yQwrWFsCbLRGqA+LjLmVYlaBNzVN0hl
-	 ZJYGRfSQ0hDALKW6uOS6Ien5h5nk4AnFLDVrkAPQMAh7VaWcesstJHPHcRn3BYxIxH
-	 dpd6p2Oxgma5Tg/fUh5cTaq2z8dgGBw63UMRsYe7+P59tfFPUX4TjNflzMg2G3KX2n
-	 gSexzuIkDCkx9YSYLiMU+5dD/fZ6cN+IPnDaH2BOsdV1/HkqLhWSoD1xaxFv1KIQa6
-	 ZV4hlDoY6T/jw==
-Date: Thu, 27 Mar 2025 17:41:18 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>, Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-Subject: Re: objtool crash processing drivers/gpu/drm/vmwgfx/vmwgfx_msg.o
-Message-ID: <Z-V_rruKY0-36pqA@gmail.com>
-References: <d86b4cc6-0b97-4095-8793-a7384410b8ab@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="HSEJln9l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1743093685; bh=ERe0YYQQppbhCRnZs4v51rqVSyPLNE3D2fW1lrVn1Uo=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=HSEJln9llrJi2viwDhjhtqGgabGFgDMkvZqH6UFUVPHqV6AEzLZnvGaykPDvYMTf4z68og77Te1sQ8ZMknCQCsQ9oj07JAOFedEw7BkszpxPvEHXxBKHg0fjyDbNz2ELJssNCmg8DrmCyrMmHOr5Bdu7cMT5Fm/yY/7amSTks+3xcshYKABB5pN+KPNrvfLB8kUodmUFIhYJBNCmioI8u6ckTcVTCxw1Etn19Da37xUUoKmx9UaMV+6J89BbkqM60ukS5/96C+UR5RTEgUIC25Ie8nqKSUPkjPr8Wv6FHy54OpK5lvJfE/YMSZaRrsR0qyawZDfBpV6z2WWDF4PuzQ==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1743093685; bh=/ks5cXxo1HWmhjKyu5wVa/iIPNyqYhrcNYj8pb85pgZ=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=e7VWfH4L29IRrQ+i3r8Hejrz1oN2IME420D2X3XOEICyDTIryC+P5LV3l0wKKnu5vu363OiBT7bCWjq0B9BYx8Us1SDjq3PUrbmYd/vdlPLi7T32d0yP+F+7Nz4gMa0HYBbaGk5Z/wWoYl4n9a5HS0WBuLVLdWh4qLmOfQwjr/Cz+XawTHN5xoZSum5wcfZh1kO+/gxvTDTStabmQXFij9ImROuTm44wTRbdQ+dyaEEF2vOXluwhf7/mI5Ota2pubT6xXzFneaaTxVUUvyCr/7dEmjnjpMiy9PmLOueQJ0hMOuItXDqOe3vBS1DAYclnjztr2WLzUGJ+yK8LR4/qyw==
+X-YMail-OSG: 55S29aYVM1mFzO6bwYKyspS3pl70O7aif7Og4n.Bb9Hjij_C44am73pMPqb.1yJ
+ uT5vD34NAR7OiPJu.bubSBIA6YhZvUW_dnzdMW_yn2CNKOcopp0n_j_ahhek4XG48MsvIKWVcahO
+ t2NAE2ONaQYpefCo7zVg_X9JJJTL6Z8UcVzpFlP8plG7DhQspaFgKxLkaf.NbbPgGaaKuUyeFA1e
+ QLRABI_h0F_kcEhsU4oscrW9lI7RKEw_qttHtHugPXTuNugdwiGJPl8SCY.ma_aq_ERUcujm6qJN
+ elem3HD14t7Q26N4jlZ0jD.AzZylIcBr.P9LfDXEXhanAD4sIaNVqaxU1sfeXujb5m61fLGtJFNU
+ C0tmx78YSON.iDCpGu6QwhVKnq9bBaObbWSHNbOIDA.HA_s8eW29hwjqfqSiNtcPWQoy8Uljuu9k
+ mvjukC7pXTSSIc118K8piJF57gnDMstIwhZFrn5wmfu0ceVbXS4vHHHgQRiygAq0qgdcBcljY6Gw
+ sIiM.WKtUOGSfDmeQdlemyUKtPU5a7CUAaSUtG.Wq3jk7A5XtW3pWfEpwMtDU2Tw0ei8wn5c0H2i
+ 4Rbjo8.4wsxkzeh2bEsL_VttutIC1KxafwbxrSc1At0ZxAl0mhPHddhkobvRJMP4.0U21yQ3KImX
+ OKK0QfbSa1BNsSYivWDyWCf3pXfckkyohCRX.DHnWBdA2tpk1aE7mjTEPBuCjGJWaNn176R.p1QJ
+ hmriwy103GwMC3FuMbxlo1SREWMkw8QWUuY1uCXua_h5.SZu4rbsDSqTepnXI1YDSrBhGolqzo2K
+ gl60rOzpa1THqSc4bDcua_6QrGC8kFwVmTikr80PvgwrZks5G0R2P_WhlffRgv.M7WsJB4hlnnvn
+ K_bgh8EeRrreZmraGaynAz02MqMGNsUUqipjkIBCVLZw20H07Jzw7Lzt3j8Zd6sp1z.dH8T9qStY
+ E7Pvy1ltc.uKjJTisUoGICqosMnzoB5MXYOEAOkmPFj_yoi2nuh00vUm_j0eVYjRn40mY101AMMp
+ A94jDSGKgqW.dvL3ddX1ms490764ANugsrikT4TAFpRMAKMQNxhuCcPehFZ_jneZpdpHpMO.heTe
+ XNmn5UMMWGN8ewJnplU6gx2_pmyv2eehEOppoj7A1OEfAQfwizo8C3pAv0_vGV8OVrE5dJC5PHXc
+ L8navpn93LmYRVGoFyGVUtiCN_kDNBzA6K2W.P1_0XJff5DVKn9MnjJ29v1Wp3fUG8OWwc3iTggg
+ 1uqz8cm92mXNb_4Bh2ec996Gm8n46Fdtiiw3tkpfgYQNuEx9EUECISiDV5QDkAk29WbQTmA8nsv5
+ JQiosfWiUHi7tbdLCHoeGnubpybCtZxfn8GZyeD4L5_CozQpCGJXlfTeypbS3CnewkKmydgyCN6C
+ bYTaHUHz8VmbR9KerbX7sz70hg9yWlwbhZfTLinnJjw5TXLez4gS2mV8SOhNNtZengnZwoeClZZi
+ lyQdjqDRm.zbuNQyC__PQ4xq_LZE_CEaR67qrZu50a4pMg9HkRhCHbkznGqU7gK43YsDwWwNX9my
+ 3_hprhweBqqQDvzgNkc2HhIQKU3_ysHh9Uz3NGBisyV_6sY1o3aM3855EIvIMx8.YeEPDk4Mmyv7
+ 7Kba49c88eOfhxo7lJV.NzA4YXONyH9svwl7o2rj59Q5aIloMmGQTrTE8j.ylVSAqONji0GV.v2O
+ Se9s9WKVEGRxUtJD1Gjw5gwJVgEwBIw73cEUhsqFwwT4.5SDw.ouRgFyjm1tpeQfi2qZnfhN_ef.
+ koakCum34NqEfl77nuy_9vYfq2CXkBMvsU.qljr7GGQyIrdg6GZAKwjCSzvvW3fDBD98OgN8jIyW
+ 3Vp9ZOrCHel1WS8nem88N2mbzZzIoUDBhdPS4w7BEHHR7RCcDde2JeV35_YEGnMbCRYUTaF18I_y
+ uiAbubgOCbzOLvlFfoKtQu88M6aXiw6ukJcW.GNy.ID3nGFdJEwkSCe7sg1KIQOwx3.a.r7JJ34R
+ HayBWml_krPaSCsTBPrACxuV1UyyK2_arykStHbTV8zEY39X59ExOBzMCHwCOsKsmFoJU4Mk7cle
+ 6DPsIyZbko5IjMIcwu0QS50uYu1VQ4VH7lhzZOK3jfpNV1QTrwlpSw0TTVr3rBZIfugl0uy45mSl
+ JZF31BKzEeThSdSRsozS3OemqToW5Ybpwi.UKez.jFSfUmBB5AtxR.4O2P1fk__2r62yfZTVeqwo
+ X4gOfKrZTCO6MlLnUbyyoyuTNzW9fX4rmjTcJnweFIhas3Z2lAUU727SdWTRiT8uGal9alkMdrSK
+ jylv3EHIpcigwOkGUYbfye8OGvA--
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: 48194f79-7568-4829-816f-26b8d6c6d76d
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.ne1.yahoo.com with HTTP; Thu, 27 Mar 2025 16:41:25 +0000
+Received: by hermes--production-gq1-5c477bf655-5s42x (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID f11c2ac843a44436a94966781ae7c982;
+          Thu, 27 Mar 2025 16:41:21 +0000 (UTC)
+Message-ID: <cfece0a5-fd0a-41d7-939d-5a2f524c9ced@schaufler-ca.com>
+Date: Thu, 27 Mar 2025 09:41:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d86b4cc6-0b97-4095-8793-a7384410b8ab@app.fastmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [GIT PULL] selinux/selinux-pr-20250323
+To: Jeffrey Vander Stoep <jeffv@google.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>,
+ Paul Moore <paul@paul-moore.com>,
+ "Cameron K. Williams" <ckwilliams.work@gmail.com>,
+ "Kipp N. Davis" <kippndavis.work@gmx.com>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>, selinux@vger.kernel.org,
+ linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Nick Kralevich <nnk@google.com>, Casey Schaufler <casey@schaufler-ca.com>
+References: <d0ade43454dee9c00689f03e8d9bd32a@paul-moore.com>
+ <CAHk-=wjbahY4JjLCXNT4o3xVq2cejqBG69z+MNfHsN9FQBnbOw@mail.gmail.com>
+ <CAHC9VhRExVqdhHqs0njs7NY6bFg0BfcE-gMpS30HW9O7MSDfWQ@mail.gmail.com>
+ <CAHk-=wi9m8-_3cywQCohJQEQtuQ+teS4gOtBkWZrhFWzNy-5_A@mail.gmail.com>
+ <CAHC9VhT3D7X=4SpO5xbYm=JUwJqTa7tn=J6QMDBV96c7VBUw4g@mail.gmail.com>
+ <CAHk-=wiH3hoPTxX3=xTRzRuCwktf3pNzFWP45-x6AwoVAjUsUQ@mail.gmail.com>
+ <CAHC9VhT5G6W7g9pB3VM6W7wCEJjWfYSUWNgWF+rRiQ4ZQbGMEQ@mail.gmail.com>
+ <CAHk-=whwQhJtafHN4B1w-z2Gno__xLHS4NouKKHrYNTYa8kz3g@mail.gmail.com>
+ <CA+zpnLeK2Ecj1mBod2rFe4ymd9eXiJkbyYwFh4Yrmck3DVB2SA@mail.gmail.com>
+ <CAHk-=wiBH8FBL+pnXui8O-FSdyoG-yX81mUF9bsZcC6rR5ZtgQ@mail.gmail.com>
+ <CA+zpnLe_AOpS_F1UBNOvN3YRswUSy_3=0jjUAy4GPxEHYumD0g@mail.gmail.com>
+ <CAHk-=wgJ0gzYJD+MghfVW-YeGLW6sLU5soFY13KWmPAxobk5Mw@mail.gmail.com>
+ <CABXk95AqgpqGtjzK2o=mxWJg5RUZG80dAEaKF9JdUT6n5eFENQ@mail.gmail.com>
+Content-Language: en-US
+From: Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <CABXk95AqgpqGtjzK2o=mxWJg5RUZG80dAEaKF9JdUT6n5eFENQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Mailer: WebService/1.1.23533 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
+On 3/27/2025 1:59 AM, Jeffrey Vander Stoep wrote:
+> On Thu, Mar 27, 2025 at 5:10 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>> On Wed, 26 Mar 2025 at 20:28, Thiébaud Weksteen <tweek@google.com> wrote:
+>>> That is not quite right. If you look at commit 581dd6983034 [1], when
+>>> a firmware is about to be loaded, the kernel credentials are used.
+>> Ahh, that's good, at least there's no "random state" to check.
+>>
+>> But it does still mean that the security check is pointless - there
+>> aren't any other credentials that would validly be used for firmware
+>> loading, so what was the point of checking them again?
+> The value here isn't so much about checking the source context
+> "kernel", but rather about checking the target context and enforcing
+> that firmware can only come from trusted filesystems. So even a
+> compromised privileged process that sets firmware_class.path cannot
+> cause the kernel to load firmware from an arbitrary source.
+>
+> These restrictions reduce our reliance on (1) individual component
+> manufacturers (e.g. NFC chips) implementing signature verification
+> correctly in their firmware loading procedure, or (2) the fallout for
+> the Android ecosystem if a component manufacturer's private key leaks
+> because even firmware signed with the leaked key will not be trusted
+> if it doesn't come from the trusted filesystem signed by the Android
+> device manufacturer. Leaked keys is a very real problem. Restrictions
+> like those added here can significantly reduce the severity of such
+> incidences.
+>
+> With this, we can write policies for Android devices that enforce that
+> firmware only comes from trusted filesystems. For example:
+>
+> allow kernel vendor_file:system firmware_load;
 
-* Arnd Bergmann <arnd@arndb.de> wrote:
+Am I missing something, or isn't that what loadpin is for?
 
-> I saw this on one randconfig build failing today with yesterday's
-> next-20250326 (with a couple of patches on top), using gcc-14.2
-> and the attached config I assume this is a rare configuration:
-> 
-> ./tools/objtool/objtool --hacks=jump_label --hacks=noinstr --sls --stackval --static-call --uaccess   --module drivers/gpu/drm/vmwgfx/vmwgfx_msg.o
-> Segmentation fault
-> 
-> I have not tried to analyze it any further, but I would guess that
-> this is a rare configuration, not a recent regression.
-
-I can reproduce this now too, not with a randconfig but with a distro 
-DEB package build:
-
-starship:~/tip.localinstall> tools/objtool/objtool --hacks=jump_label --hacks=noinstr --hacks=skylake --retpoline --rethunk --stackval --static-call --uaccess --prefix=16   --module drivers/gpu/drm/vmwgfx/vmwgfx_msg.o
-Segmentation fault (core dumped)
-
-Program received signal SIGSEGV, Segmentation fault.
-check (file=file@entry=0x555555589b40 <file>) at check.c:4655
-4655				w += validate_reachable_instructions(file);
-(gdb) bt
-#0  check (file=file@entry=0x555555589b40 <file>) at check.c:4655
-#1  0x0000555555569fb2 in objtool_run (argc=<optimized out>, argv=0x7fffffffe1d8) at builtin-check.c:326
-#2  0x00007ffff7c2a3b8 in __libc_start_call_main (main=main@entry=0x555555559d30 <main>, argc=argc@entry=12, argv=argv@entry=0x7fffffffe1d8) at ../sysdeps/nptl/libc_start_call_main.h:58
-#3  0x00007ffff7c2a47b in __libc_start_main_impl (main=0x555555559d30 <main>, argc=12, argv=0x7fffffffe1d8, init=<optimized out>, fini=<optimized out>, rtld_fini=<optimized out>, stack_end=0x7fffffffe1c8) at ../csu/libc-start.c:360
-
-(gdb) i r
-rax            0x0                 0
-rbx            0x555555d8ed70      93825000861040
-rcx            0x61                97
-rdx            0xff9bb000          4288393216
-rsi            0x55555557e0f0      93824992403696
-rdi            0x555555d918ad      93825000872109
-rbp            0x0                 0x0
-rsp            0x7fffffffe020      0x7fffffffe020
-r8             0xfffffe90          4294966928
-r9             0xff9c155c          4288419164
-r10            0x63e934            6547764
-r11            0x555555589b40      93824992451392
-r12            0x555555dfa640      93825001301568
-r13            0x11                17
-r14            0x555555d988e0      93825000900832
-r15            0x555555d8ed70      93825000861040
-rip            0x555555559d14      0x555555559d14 <check[cold]>
-eflags         0x10246             [ PF ZF IF RF ]
-cs             0x33                51
-ss             0x2b                43
-ds             0x0                 0
-es             0x0                 0
-fs             0x0                 0
-gs             0x0                 0
-k0             0x400000            4194304
-k1             0x80480001          2152202241
-k2             0xdfffbfff          3758079999
-k3             0x0                 0
-k4             0x0                 0
-k5             0x0                 0
-k6             0x0                 0
-k7             0x0                 0
-fs_base        0x7ffff7e99ec0      140737352670912
-gs_base        0x0                 0
-
-The 'file' pointer got corrupted it appears:
-
-(gdb) print file
-$1 = (struct objtool_file *) 0x555555589b40 <file>
-(gdb) print *file
-value of type `objtool_file' requires 8388768 bytes, which is more than max-value-size
-(gdb) 
-
-(gdb) print opts
-$3 = {dump_orc = false, hack_jump_label = true, hack_noinstr = true, hack_skylake = true, ibt = false, mcount = false, noinstr = false, orc = false, retpoline = true, rethunk = true, unret = false, sls = false, stackval = true, static_call = true, 
-  uaccess = true, prefix = 16, cfi = false, backtrace = false, dryrun = false, link = false, mnop = false, module = true, no_unreachable = false, output = 0x0, sec_address = false, stats = false, verbose = false, werror = false}
-
-It's fairly reproducible here. Sending object file separately.
-
-Based on latest -tip.
-
-Thanks,
-
-	Ingo
