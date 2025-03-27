@@ -1,94 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E987F29D05;
-	Thu, 27 Mar 2025 11:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D491FF7C5;
+	Thu, 27 Mar 2025 11:37:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743075444; cv=none; b=AvpyUMHMJRNQK8nGyuqgmEgY5BDllkRv/9ZCaqwSrF4mA7mrmgz/r40Uqqz4dYASFq7k6Doc7P4RU4xt+THtGKi4O+wBEJQ8Et1OwzhlbRdMKU3Daib4tI8lo0H6EvOjtTAkY93NPmWoiU7MhgUVIKH4M/Iq+spHRTAa/PPv7/Y=
+	t=1743075457; cv=none; b=MyeTnjiBLpJXaegRkRYFbPKAVZNAwI9iqPlKBOEmjkBVVqgVPRuMp/Va/7K+JklR5PLjY8XBZzvfRffEIUQYlbWUyrD3uGZ1WmwJyD/VGj+ZoR2eYGxrZDLI1hluzkQY9NBfneldV88i87ClR7/fonxT080tPNeEImolxoTzefM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743075444; c=relaxed/simple;
-	bh=MfNXBis9/wnf5w4MMG/EnNPLVzJjdRrhYhZVj4270NU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jMWdeJUA441QzhoirUGZ9u7/aiKgprvwFj1KlSwnDi/p77CCZS7gSOtShII1YDbIuPwSauKmcR3K+gjFOLzd198Xn6Wxuhtplh4fbg/oxmi0mLjVE7YG7v8TycNp86l7rmr1ZHpExM7/Ve96U3IH0RFtp/FzRFhAlLonqw/Pu04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UiVmGCvC; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743075457; c=relaxed/simple;
+	bh=SiDyYekmZNMSivdab4Zrek7jwPATeBFWbRgjeMVU2kg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kSxIPnEyksFc6tmlmK8BOxlqEU/XakhO0ixrcvFmtzOPJf4uyUaUNXciZvKPaLUksLcTREu4vYJqPYrKvmd7BpX59DTIpWpj0iMUVaCgjzJc5cOnKAzmFYf1k2aNFJIZgCUFItmqc3FipFRIct1uIBzVOFJHKY/GUqVA2D39P20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=HIN67Twm; arc=none smtp.client-ip=199.89.3.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UiVmGCvC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743075444; x=1774611444;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MfNXBis9/wnf5w4MMG/EnNPLVzJjdRrhYhZVj4270NU=;
-  b=UiVmGCvCNLW3BnoJxMnbMP3Ezd3+z7n7B5606eDSmVKWpqcgmaQKfl1c
-   mq+mb1nMrWFYheuAMnaJMR3heez5rQ5UVgu54hYxZhlgRAlDqrLq0gYot
-   BFHLmzvzLjxxGUz2xmljU1YW5t3jPs8YwpAQ+XSF42qqdKhgMc/ahBWty
-   qaux6h1v63i+C4lSfDy0BG+ZFQbHYi1Lu4nIABwzXqGpqzivOqMwRUwk+
-   htheHGcbJKSrPVX4ToB17Rzs18mUAnlWuBIhf5YFQVIAQaEjMncxQS2ki
-   X5oC+ah5L/zfl9J1qceAi+JnIFev/R/CFEiUVHJDuvRBzxRD11rdZ2xMp
-   Q==;
-X-CSE-ConnectionGUID: sNXL1/c4SvaHO6fFvwHWig==
-X-CSE-MsgGUID: Gxlvzel4RpagHEzspKrI3w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44559373"
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="44559373"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 04:37:23 -0700
-X-CSE-ConnectionGUID: rVqOZ5o+RkKLqN2e1zBF/w==
-X-CSE-MsgGUID: S7E5ImbxR5GzUQ5kSHiJ8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="129799606"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 04:37:20 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1txlXx-00000006QIe-09ie;
-	Thu, 27 Mar 2025 13:37:17 +0200
-Date: Thu, 27 Mar 2025 13:37:16 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, krzk@kernel.org,
-	lgirdwood@gmail.com, broonie@kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH V2 2/2] regulator: s5m8767: Convert to GPIO descriptors
-Message-ID: <Z-U4bAMt82SipwuY@smile.fi.intel.com>
-References: <20250327004945.563765-1-peng.fan@oss.nxp.com>
- <20250327004945.563765-2-peng.fan@oss.nxp.com>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="HIN67Twm"
+Received: from localhost (localhost [127.0.0.1])
+	by 003.mia.mailroute.net (Postfix) with ESMTP id 4ZNhTp2gcgzm0GTW;
+	Thu, 27 Mar 2025 11:37:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1743075451; x=1745667452; bh=SiDyYekmZNMSivdab4Zrek7j
+	wPATeBFWbRgjeMVU2kg=; b=HIN67TwmZCtgN/QnU4Iglp3zfThOppqJZmwn9gxR
+	tjyKuoN7ymVRADOc+jgcxtdb+k9S5Gz6jWy3NQG/2kVJe6Dspu0XBZqFKfuV0E6O
+	4rfMfs5zueHztCNMi6RWR/Ru18OgpnqfcyFE1ScSyij2OTMsOw1SIbFi7vo3hqim
+	RdHjQ5CNWn282Zxly66VXILMTjSS2Z2tL4LNrRk0PBaX+P9XT61vutbANkWuZNF9
+	lsMs4WlWUcYZLagbwJzjFp8bfx2ZA1dbiGSXpbM8Gki9nuIcGRUJyqO+0V8vu0a/
+	xQRQD6+jhWx/Vz4ZGizHcYY+MdLA7eTP1iwlEbm/h73IaA==
+X-Virus-Scanned: by MailRoute
+Received: from 003.mia.mailroute.net ([127.0.0.1])
+ by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id WXirvB8zVYkM; Thu, 27 Mar 2025 11:37:31 +0000 (UTC)
+Received: from [10.47.187.167] (unknown [91.223.100.87])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4ZNhTD50Rxzlmm8q;
+	Thu, 27 Mar 2025 11:37:03 +0000 (UTC)
+Message-ID: <3d7b543c-1165-42e0-8471-25b04c7572ac@acm.org>
+Date: Thu, 27 Mar 2025 07:36:56 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327004945.563765-2-peng.fan@oss.nxp.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/1] scsi: ufs: core: add device level exception
+ support
+To: "Bao D. Nguyen" <quic_nguyenb@quicinc.com>,
+ Arthur Simchaev <Arthur.Simchaev@sandisk.com>,
+ "quic_cang@quicinc.com" <quic_cang@quicinc.com>,
+ "quic_nitirawa@quicinc.com" <quic_nitirawa@quicinc.com>,
+ "avri.altman@wdc.com" <avri.altman@wdc.com>,
+ "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "minwoo.im@samsung.com" <minwoo.im@samsung.com>,
+ "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+ "martin.petersen@oracle.com" <martin.petersen@oracle.com>
+Cc: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Bean Huo <beanhuo@micron.com>, Keoseong Park <keosung.park@samsung.com>,
+ Ziqi Chen <quic_ziqichen@quicinc.com>, Al Viro <viro@zeniv.linux.org.uk>,
+ Gwendal Grignou <gwendal@chromium.org>, Eric Biggers <ebiggers@google.com>,
+ open list <linux-kernel@vger.kernel.org>,
+ "moderated list:ARM/Mediatek SoC support:Keyword:mediatek"
+ <linux-arm-kernel@lists.infradead.org>,
+ "moderated list:ARM/Mediatek SoC support:Keyword:mediatek"
+ <linux-mediatek@lists.infradead.org>
+References: <4370b3a3b5a5675bb3e75aaa48a273674c159339.1742526978.git.quic_nguyenb@quicinc.com>
+ <SA2PR16MB4251229744D717821D3D8353F4A72@SA2PR16MB4251.namprd16.prod.outlook.com>
+ <c5ab13ec-f650-ea10-5cb8-d6a2ddf1e825@quicinc.com>
+ <0a68d437-5d6a-42aa-ae4e-6f5d89cfcaf3@acm.org>
+ <ad246ef4-7429-63bb-0279-90738736f6e3@quicinc.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <ad246ef4-7429-63bb-0279-90738736f6e3@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 27, 2025 at 08:49:45AM +0800, Peng Fan (OSS) wrote:
+On 3/26/25 7:47 PM, Bao D. Nguyen wrote:
+> On 3/26/2025 3:49 AM, Bart Van Assche wrote:
+>> On 3/25/25 6:15 PM, Bao D. Nguyen wrote:
+>>> The existing "struct utp_upiu_query_v4_0" probably has a bug in it.=20
+>>> It does not use the=C2=A0 __attribute__((__packed__)) attribute. The=20
+>>> compiler is free to add padding in this structure, resulting in the=20
+>>> read attribute value being incorrect. I plan to provide a separate=20
+>>> patch to fix this issue.
+>>
+>> Adding __attribute__((__packed__)) or __packed to data structures that
+>> don't need it is not an improvement but is a change that makes
+>> processing slower on architectures that do not support unaligned
+>> accesses. Instead of adding __packed to data structures in their
+>> entirety, only add it to those members that need it and check the
+>> structure size as follows:
+>>
+>> static_assert(sizeof(...) =3D=3D ...);
+>>
+> Thank you for the info on this, Bart.
+> IMO, this response upiu data should be __packed because the data coming=
+=20
+> from the hardware follows a strict format as defined by the spec. If we=
+=20
+> support __pack each individual field which data may be read by the=20
+> driver (the attribute read commands) and check the validity of their=20
+> sizes, it may add some complexity?
 
-> Update the driver to fetch buck_gpio and buck_ds as GPIO descriptors.
-> Then drop the usage of 'of_gpio.h' which should be deprecated.
-> Based on commit 84618d5e31cf ("regulator: max8997:
-> Convert to GPIO descriptors") as a reference to make the changes.
-> 
-> With the quirk fix for s5m8767 in of_gpio_try_fixup_polarity,
-> the polarity will be active-high, even if exynos5250 spring DTS
-> wrongly use active-low polarity. So using GPIO descriptors,
-> it should work as before.
+Hi Bao,
 
-I was a bit trapped by the set_low and set_high callback implementation,
-but I think I understood the idea behind and this code does not change
-the original logic.
+As explained in my previous email, adding __packed to data structures in
+their entirety is a bad practice. Please don't do this.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Regarding your question: I have not yet seen any data structure that
+represents an on-the-wire data format where every single data member
+has to be annotated with __packed. Only data members that are not
+aligned to a natural boundary need this annotation. Examples are
+available in this header file: include/scsi/srp.h.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
 
-
+Bart.
