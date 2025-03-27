@@ -1,66 +1,65 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130FF21B1BC
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 19:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F86621C194
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 19:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743104180; cv=none; b=W8dCgp9siwM/6M6gj11fa4KDJ0N0bSLjMSSuxw/E40kVW5pNf2X6BR2X/Vr9hTMD4gjls6lREiY6cHt8aeIflE5d1nivf0waRtgEyjtzZgQRL9mqK0/EvpR90OOPWklqryDa1l6f876c7kqISyXXRr3bWQhyGIfHnj0Xxl9KI1M=
+	t=1743104182; cv=none; b=L9cV+2T45xWSZxgDNVfeTYR9P0nBfVSIRFBJd/oj82f5suxY8u3i6QlF3ctTGB1JoaXXGiNNjBQ1hULSGaG6ORv4l0/ykEOY5SlA+OW7ro5gq+vi2MWEbvdlQoyChV/kqWsvEMqBI88TRQYwhLbxS0dUOrn+qutSPT7LYXzZa3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743104180; c=relaxed/simple;
-	bh=xjlrrmRpuMjoXE1KshRtMZxjuBhYnjW8AtjVKdZkUuw=;
+	s=arc-20240116; t=1743104182; c=relaxed/simple;
+	bh=w+WG3/hTVbYWnKFaU0I9UFeLZ3mNLhg68etVPwj0GZk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=l4y50w8QEy8/IWXTNeXILqCfFTzLYKQQCeVMA1+7wtZYGwd4iNpesUO1uUkEzzeTTyEnulRt9nvf/OUUk0/4vZcDCAVHufXwCYI8d3ZbLwbnjTRCb8em/hUrwDlKk6TcLMkUVrjLpsvQArdEeS4Kpa8Dybik0RGNgxs8L+TS83c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=IarHJmdW; arc=none smtp.client-ip=209.85.214.178
+	 In-Reply-To:To:Cc; b=nqpnkKgvQULVnwYYy8MHkOz55ZwZT9NWhP2EkP3McuLFz6xBsAVcFFVmJ+G6NHbEouoSbGP1GE3fjLFAqDYmEIFcYLKrlhK+zLK/BOTB6l6fVn5tJF3y0zIMxt1vbVZLaDlp424SFhuk139oIK8FZ+3lUZ4/f9nIjXAaavhM5GI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=c4IpcaFB; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="IarHJmdW"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2260c91576aso25380225ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:36:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="c4IpcaFB"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-223fb0f619dso31071765ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 12:36:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1743104178; x=1743708978; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1743104180; x=1743708980; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=v6J8uS8Dr+ClMIERwU7Q7iLa9i915e3rRw4ioKbElXo=;
-        b=IarHJmdWaMKaVpExaLxjvT5CC85g/Jt3QiNUMgiOTz0hi3YaEpOJNZFi+C3rTQaLt6
-         J+ea8yKN4qAX6WrQ6pLYyBSGYP4DIHdYbI/bM2L7t0/gJbHc+/A20WQRmrJNV+mgBTbX
-         LldfiOBmWmlTAT9swm/Bj1uPu/JwCjlLJTLkNrfpfgIFRyCpHiP+ALlyuBaCAyFZqqo/
-         wkyrOA4V6cpjqgIjrN/zHss7xxcU9pgVrpyOaZsG+qlT9Lgn3D6CcL/riSaQwGu1/cTJ
-         E6fnkq7gD9IJSSfHNptqqOW1qLRdhuEt34KkKGm+UTCcXpAdbjUECFp0DwMR7L2zOYHl
-         XZlw==
+        bh=zw3zbGTAqHMsJs8YvOYpRy60tVdSbXNH77zwDO4GVCI=;
+        b=c4IpcaFBL76BLHBVNgKS1L1650FF/45ql8tkIYu9zfIr2Anf7xsj3B3Yn/j7cL6Toe
+         5Wu7KgxfJF3PNDYSckTjGAATSdtcHhL9auMyXxR4l8ZsWivDGEpEPtk8/44vk+fCSiTz
+         OTtDgMwhfMwcV29vbP/Q1d4bpPM3M4npr5tux8CbB5l3w1Qp20Y8TuJprVQKipsPHIHH
+         Ev84V0PwtoU2OYn44JoiRpohwtLW4aEZ8c4OyH7/eBYemKePQyxkmhQDC+mhwx55cw4D
+         UB7VQitGDrGkNetkqCV2yWblMmNGpnyDb0xud7f9x6w8Vaeu75bPAQs7/ns90nMhSw/G
+         Vw8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743104178; x=1743708978;
+        d=1e100.net; s=20230601; t=1743104180; x=1743708980;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=v6J8uS8Dr+ClMIERwU7Q7iLa9i915e3rRw4ioKbElXo=;
-        b=ugp6mZq+ut+yDIHGxDSkJmkl/W4wDp5eYyGid/22s0nghzgnX0Twxb3t4UY1HEF9OM
-         ffH8QoqB8Yrmzp/jJoNSWW9UiyKioitHXcMLoZpg7Bk7I7pGrofPB21mAhQ98ndh3yl2
-         79Zxa3eUelaJmHCIfQ0r3lq6MYsX0XxWbGGrTztod9qAHW2R/7IQk/S07IHW1/fFmJ+I
-         EPewwTM836gZWItVSLGxtqZg2MGuQxF/yJh8/HTq6V6qGZBH7EJmbRkKWVI51g2FizOJ
-         DRNR3OL6DjmWXUtZe9eiRsy5KVpjgOQ5d9OfkoryOqjbyMsZK/ooz+u4q8v9rAdosXTY
-         wGmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVs3K9C79/mDVQrCMnA0yln1kSOAksupm/8q2HylZ5Ru5d0+2ds8a9Y/asI/EHV5Cfx7rEHvQdmn89+oQc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJ3DkfkmOG+8c1/iYfbCvsXhqn/gjd/RSVuwinKKzZAPB7vgeR
-	K42UKdzbMMxD+EGOPZbaN1mDV8QrFvP/CIsJfhdAv02jj04Vww08lAJoBeZzWAo=
-X-Gm-Gg: ASbGncthfvXTRXS0ZSjxMamEtZChkZzDmysd9C2IBZxMq91RF0qoTXSdR7HAbaQ/UUB
-	Ae6BU+AejaMH1p3YVw87BskEpM+QCPD6Lh7vMgVYgAx4U0QZhAbRxOJMvo+nHjdJAs84v3NFyPt
-	oVaWaPn4fmvSC3rzuodTsL4fLmiLBGnBFH6csV9OF1ICyQJj4GZXTnzGCeFNWN3XPN/sZuW/YNb
-	IpP4+RYnJW0QSWBGJ6uqULCpmKQdTVDGdwWZz5J0Fpwy2u/LHKJBgs+qf7R8cZ8TBiuqfD2+LqC
-	FUpPtF9YgRVptPKLf8t/8D/bLCTLUYNWMRNEXtN4U0Jo4NfjbysGNFcU/nYGLrIAeX9B
-X-Google-Smtp-Source: AGHT+IFOxM4SmbXuuTZ7zfbjNBSt3NF5qSX8XxUdDdxMSJ9Gbp2tgCBb+BZDCQPwqEBKt7x+Gq+pcQ==
-X-Received: by 2002:a17:90b:2801:b0:301:98fc:9b51 with SMTP id 98e67ed59e1d1-303a7d5b724mr6622802a91.5.1743104178125;
-        Thu, 27 Mar 2025 12:36:18 -0700 (PDT)
+        bh=zw3zbGTAqHMsJs8YvOYpRy60tVdSbXNH77zwDO4GVCI=;
+        b=CqNZtD9cFVyJRekIXqY79n5C57yy3g6taAnziq3O+gVbT/zEUt86ZSm2gx7bY4QySD
+         YCsKMD/X2yyPRrmEnV33qR9zmRMBWEl3WKh2jH7hKLxILTCkIKv3khXvjl0qR3TP4/S/
+         KNyxBb3X9F10UOWRSXtf7+o+pmsAPLptiFrVBdbhngzn+q2ZjdzExmNNW8cxWsG4xiwz
+         iAObM27m5FyQ4oU08NS1/VGWKGOmrv1e4TlUN2WaNc6VxodYD9C8sRc0s+xC/jOVFzdw
+         HCfFBccizTMA/qv/am5iEzSi2X39t8N57N68MRg2QWScUonGY1VqecPrie/wBi/F+z/u
+         Gk+A==
+X-Forwarded-Encrypted: i=1; AJvYcCVW31arfwQGCxRBUK/GhZGZCiynBjsT8ExbTBKReTZVVC3AwJSZsbGXvwaRSkFbmgpkjL1f65MKLQ/t+zU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwURsXsgfhgAozs9GVGCcLV/Epc7M+7181tSm41ik/uF0gl6uj2
+	2iJyRJB/T2DMHos1bsEBhjbgAT9n++xXjEq1hX9OodwZPjcAOZPzRFeUW7wU3Lo=
+X-Gm-Gg: ASbGncvLkfBtQzU1RZQgbDuhJEcHQkr1GkgvkxbY4kDI/r8l2nn1jUTyHySvMJItbFg
+	kHIh+0I9J0z6qBD24yglerXsNIb0aD77V9Wf6q41pEbyiRBQOXYpvIX4DAcmH84m5USyGM9imtR
+	LTrp33howChZMt9wooa3/zMmS0QUqvDNt4U/CunvP55NrA0/TMx5IifvIno1zHKjT6BexxWaGU9
+	lMKK8Ht7VPUJS2lCuy2Qu9uRK3+XT1Osy9628vrrrMFEg1eC/z+jZQXyFZCN2cvJSCRJ+1evOTq
+	hQhQ8caSauRfBLvuEFQhdUasri5Et0ZqB8ptKi1YqT6IlBWkT/iC23d20w==
+X-Google-Smtp-Source: AGHT+IHpWwO+ALT63AnEQfROc0MsU9HJIU94/2wnOwykaqK6qJLji7kuLw7H0FVEp+QuB62Asb9xXA==
+X-Received: by 2002:a17:90b:5827:b0:2fe:a336:fe65 with SMTP id 98e67ed59e1d1-303a7d64066mr7195102a91.10.1743104179797;
+        Thu, 27 Mar 2025 12:36:19 -0700 (PDT)
 Received: from atishp.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039f6b638csm2624220a91.44.2025.03.27.12.36.16
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039f6b638csm2624220a91.44.2025.03.27.12.36.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 12:36:17 -0700 (PDT)
+        Thu, 27 Mar 2025 12:36:19 -0700 (PDT)
 From: Atish Patra <atishp@rivosinc.com>
-Date: Thu, 27 Mar 2025 12:35:45 -0700
-Subject: [PATCH v5 04/21] dt-bindings: riscv: add Sxcsrind ISA extension
- description
+Date: Thu, 27 Mar 2025 12:35:46 -0700
+Subject: [PATCH v5 05/21] RISC-V: Define indirect CSR access helpers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250327-counter_delegation-v5-4-1ee538468d1b@rivosinc.com>
+Message-Id: <20250327-counter_delegation-v5-5-1ee538468d1b@rivosinc.com>
 References: <20250327-counter_delegation-v5-0-1ee538468d1b@rivosinc.com>
 In-Reply-To: <20250327-counter_delegation-v5-0-1ee538468d1b@rivosinc.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
@@ -90,48 +89,62 @@ Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  Atish Patra <atishp@rivosinc.com>
 X-Mailer: b4 0.15-dev-42535
 
-Add the S[m|s]csrind ISA extension description.
+The indriect CSR requires multiple instructions to read/write CSR.
+Add a few helper functions for ease of usage.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Atish Patra <atishp@rivosinc.com>
 ---
- Documentation/devicetree/bindings/riscv/extensions.yaml | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/riscv/include/asm/csr_ind.h | 42 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index a63b994e0763..0520a9d8b1cd 100644
---- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-+++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-@@ -128,6 +128,14 @@ properties:
-             changes to interrupts as frozen at commit ccbddab ("Merge pull
-             request #42 from riscv/jhauser-2023-RC4") of riscv-aia.
- 
-+        - const: smcsrind
-+          description: |
-+            The standard Smcsrind supervisor-level extension extends the
-+            indirect CSR access mechanism defined by the Smaia extension. This
-+            extension allows other ISA extension to use indirect CSR access
-+            mechanism in M-mode as ratified in the 20240326 version of the
-+            privileged ISA specification.
+diff --git a/arch/riscv/include/asm/csr_ind.h b/arch/riscv/include/asm/csr_ind.h
+new file mode 100644
+index 000000000000..d36e1e06ed2b
+--- /dev/null
++++ b/arch/riscv/include/asm/csr_ind.h
+@@ -0,0 +1,42 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2024 Rivos Inc.
++ */
 +
-         - const: smmpm
-           description: |
-             The standard Smmpm extension for M-mode pointer masking as
-@@ -146,6 +154,14 @@ properties:
-             added by other RISC-V extensions in H/S/VS/U/VU modes and as
-             ratified at commit a28bfae (Ratified (#7)) of riscv-state-enable.
- 
-+        - const: sscsrind
-+          description: |
-+            The standard Sscsrind supervisor-level extension extends the
-+            indirect CSR access mechanism defined by the Ssaia extension. This
-+            extension allows other ISA extension to use indirect CSR access
-+            mechanism in S-mode as ratified in the 20240326 version of the
-+            privileged ISA specification.
++#ifndef _ASM_RISCV_CSR_IND_H
++#define _ASM_RISCV_CSR_IND_H
 +
-         - const: ssaia
-           description: |
-             The standard Ssaia supervisor-level extension for the advanced
++#include <asm/csr.h>
++
++#define csr_ind_read(iregcsr, iselbase, iseloff) ({	\
++	unsigned long value = 0;			\
++	unsigned long flags;				\
++	local_irq_save(flags);				\
++	csr_write(CSR_ISELECT, iselbase + iseloff);	\
++	value = csr_read(iregcsr);			\
++	local_irq_restore(flags);			\
++	value;						\
++})
++
++#define csr_ind_write(iregcsr, iselbase, iseloff, value) ({	\
++	unsigned long flags;					\
++	local_irq_save(flags);					\
++	csr_write(CSR_ISELECT, iselbase + iseloff);		\
++	csr_write(iregcsr, value);				\
++	local_irq_restore(flags);				\
++})
++
++#define csr_ind_warl(iregcsr, iselbase, iseloff, warl_val) ({	\
++	unsigned long old_val = 0, value = 0;			\
++	unsigned long flags;					\
++	local_irq_save(flags);					\
++	csr_write(CSR_ISELECT, iselbase + iseloff);		\
++	old_val = csr_read(iregcsr);				\
++	csr_write(iregcsr, warl_val);				\
++	value = csr_read(iregcsr);				\
++	csr_write(iregcsr, old_val);				\
++	local_irq_restore(flags);				\
++	value;							\
++})
++
++#endif
 
 -- 
 2.43.0
