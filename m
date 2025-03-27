@@ -1,94 +1,155 @@
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4898B2185BE;
-	Thu, 27 Mar 2025 14:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4057B217673
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743084761; cv=none; b=My54yANl8W215HlkqP0y+MqU3nxx52XsNoGB3eC3RNTzRRYXFaWRFUV54GeHLY3NZof8Md6aOVe8KxJTRkKCxe0v8nqvK5RxwxX6x7aeEQgiFOTAeUFVT+xQC05N8/dvtK0HNiWOKgb8gD7Vks+BqQtwieKVL2G/1iWPsVglT4c=
+	t=1743084795; cv=none; b=Ddbjorw9ZE4vkyNnUTGGiY0n+0A7UaoQx9IEvn/24PhP6wVtwo4zueaAULZk2o+C6mEK4kly1jidADKKjwOld2rphU3NmteIYAkMKXQ+ULGIA4YKxWc6K+PxGteP5kYhlxL/SAdfMGMLc6kYnBKrnqgjFBWuqnKwVHwT6+dADYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743084761; c=relaxed/simple;
-	bh=u8VeCwHqpB4Bp8z7dy9L1FANIaPA44ss9LpdMJ/IiSk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HoLud5oZ6X2tczJritTZYVDarZlYbP2C5cIta454sBvEVjHHcxH1pyeQBMme97KcsEjXdohYNGBFSwT/HFh6uhb4sVFreMA8Gg70Rcm8I4GooHq4tQ/wNh75EuCp2uOGVUP7ym3ozqY/OZgAUAF0VYFNcqjTf+yyzkJh3CMSnnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=NBlcw2qN; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	s=arc-20240116; t=1743084795; c=relaxed/simple;
+	bh=pV5/syCA5fBvtlnUDTP4Viuzn5QJd9O/C8y0VGyIafo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dg2t3Q9vwhRIHTZWxHzocF2kLJfa3tzzWgDF/YdZVwVBJH/UU53NPrYN5M2ThxozKc/6kMRnqoN1PAPlollWvVdqehh1dvYly7aShV5hp1n9yPOF40Fod201HeG4n7RN5htySeC2fZA3iScytB31oq2ZEDbsX0UseWvlrgjGjpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=AWMhMaax; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="NBlcw2qN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1743084758;
-	bh=u8VeCwHqpB4Bp8z7dy9L1FANIaPA44ss9LpdMJ/IiSk=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=NBlcw2qNTIcfGCNmVXq9ItENwCNUDhJ/W3HyECbUz00480zB9wNiHxNrkREnvOA4v
-	 vWkqO3jKuDElxcgfIshORZ0FKxQHIl6ldNZssZTxVL0n/Mf3kinIdEAq1623j+X9RK
-	 K9Yeoa/fPwhADpR2L+/SD9LwVolDwE48N0mw29+o=
-Received: from [172.20.0.78] (unknown [99.209.85.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 8C6341C0015;
-	Thu, 27 Mar 2025 10:12:37 -0400 (EDT)
-Message-ID: <56428ff1ac4355482df881e6226518c2a62beb6d.camel@HansenPartnership.com>
-Subject: Re: [PATCH] tpm: Make chip->{status,cancel,req_canceled} opt
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>, Stefano Garzarella
-	 <sgarzare@redhat.com>
-Cc: linux-integrity@vger.kernel.org, Sumit Garg <sumit.garg@kernel.org>, 
- Jens Wiklander <jens.wiklander@linaro.org>, Jarkko Sakkinen
- <jarkko.sakkinen@opinsys.com>, Peter Huewe <peterhuewe@gmx.de>, Jason
- Gunthorpe <jgg@ziepe.ca>,  linux-kernel@vger.kernel.org
-Date: Thu, 27 Mar 2025 10:12:36 -0400
-In-Reply-To: <Z-VRWy8jLkA0cpow@kernel.org>
-References: <20250326161838.123606-1-jarkko@kernel.org>
-	 <exzxzomw7wcobjuoje37x6i2ta54xzx5ho74t3atd7g74xltlb@ymw2pn3yo27b>
-	 <Z-VRWy8jLkA0cpow@kernel.org>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="AWMhMaax"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c0e135e953so119273185a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 07:13:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rowland.harvard.edu; s=google; t=1743084791; x=1743689591; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0znUA5ytfnQNvKB7ZGRjnFezjykFr7P6h5TA5X7hXVk=;
+        b=AWMhMaaxufJ1bciMie0MwTIsc2006DOJQ6OmD/6XcWhgyHItILd4LP8aSxhuI/B/MV
+         qnZa/ICfbqDTdm6S6bUzpyyP8CWVy09bRC3x8MwDFU3v8ENa34o33Rv3vJIFcPXc/gx0
+         pPNwQ+G6SJMonRsC70FqeiFqeHPgwdY4oI/SsewhSMblc6Tep73ez18KBs9S8UNY1SQ7
+         bUDTmlAPyNhe8xKkyfgSHIz19q72owUOIoBZpu1mmVfepfaOHCpG7hblNBHsJU2Tryys
+         JOJCkmIB4PwstK88E67oCtuOfbY+3ygk4+F/HsAkZUdYawGgYfTGs8n3Sk/VF933nV3j
+         1viQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743084791; x=1743689591;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0znUA5ytfnQNvKB7ZGRjnFezjykFr7P6h5TA5X7hXVk=;
+        b=jUTyo+GW3a0LVaP1+9egpqEBxcUR1jUN9/Qe58mHhHVvraYShebJPf6/PaOoJONc/+
+         gRGZSp+2haOYgDW8jC5IDG5U8JA3AjyDLqa6LbmS6e6VSctkE6+yzkqucMk5spS2YPqn
+         geRRAkIywVTGAYjfC+yrL4YGCfifYCBuVbV5dZOyA0FUPeY4l1f10B6+imAuRHY2cVDj
+         m0Frd54JOL8qT+jUgIYotBl4PFvBuniqFRWksXZzFWCsayaCERxBU0J8UZ1SloMw3H5f
+         m5d+zjgBhuLjbsEOMwd8gR0t2Wwl2Fiqw5KgZZ+Pvn1fWDKnrEU5TWP9yyaxvYa4s+0/
+         pmhw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+CkfR0fMJFH4+AtJAW2C9dX8kJDNXnUv5JOjM1pEnMBEwDOs3EPOSgzx3Dhp+bMyr7ZejwgrRRqu+egg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKGMweL5Hs9yVV6AtUsv5vYxh/1uL1bn0Ml2BwwiyImk16OeGJ
+	qGt4PAEBSDHVkdh3kBuR51ZJbFCCeiWCaiGgvxcqA/b1pfqJECvY5oR9WRHgrw==
+X-Gm-Gg: ASbGncvKmd1SDbbPjp93XtIUizgMxE8QDVJ46Hupdv0IKYqlA8nc7aWNziUqn9wkM8z
+	0DOBBlRtWIZKn7EsQ3JoBDyEXsY6jJZVz9FiVk27LT+3ZUSRsCbkYaXjdm4MW7DLjezsyrrAcu5
+	zubA/CRVu5+4X9Rx4qtKidzeb9fbdg/5mgS5w55nlNwJbthOw0+n7XpLa0TdVb+vhBN4tihnxP1
+	Mt7OUHNy3In9EBuGVWojm96UTHiW44z9OP5MYfTRrW776ij8QHUDgqyGfl0nwaf9wlVDN7EKtVY
+	VrmSZrO69zuoY85kiJ8YJbXy0DkuZonJ8mrnYjEMk8Y52qpUZvz8/Iv8S5p50SQU49c9JPAKxw=
+	=
+X-Google-Smtp-Source: AGHT+IE2SBIHjHAYNsZGyQDUcKNFrgHSGj/BZ68tmr1ayCQI4h3zXjcJLQD3CNZrmBSAW0mD66CY/A==
+X-Received: by 2002:a05:620a:40c6:b0:7c5:5768:40ac with SMTP id af79cd13be357-7c5eda0e738mr563024585a.30.1743084790825;
+        Thu, 27 Mar 2025 07:13:10 -0700 (PDT)
+Received: from rowland.harvard.edu ([140.247.181.15])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b92ea919sm902764385a.51.2025.03.27.07.13.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 07:13:10 -0700 (PDT)
+Date: Thu, 27 Mar 2025 10:13:07 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Mingcong Bai <baimingcong@loongson.cn>
+Subject: Re: [PATCH V2] USB: OHCI: Add quirk for LS7A OHCI controller (rev
+ 0x02)
+Message-ID: <208f5310-5932-402b-9980-0225e67f2d66@rowland.harvard.edu>
+References: <20250327044840.3179796-1-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250327044840.3179796-1-chenhuacai@loongson.cn>
 
-On Thu, 2025-03-27 at 15:23 +0200, Jarkko Sakkinen wrote:
-> On Thu, Mar 27, 2025 at 10:58:00AM +0100, Stefano Garzarella wrote:
-[...]
-> > > @@ -65,6 +89,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip
-> > > *chip, void *buf, size_t bufsiz)
-> > > 	ssize_t len =3D 0;
-> > > 	u32 count, ordinal;
-> > > 	unsigned long stop;
-> > > +	u8 status;
-> >=20
-> > Why move `status` out of the do/while block?
->=20
-> I'm not a huge fan of stack allocations inside blocks, unless there
-> is a particular reason to do so.
+On Thu, Mar 27, 2025 at 12:48:40PM +0800, Huacai Chen wrote:
+> The OHCI controller (rev 0x02) under LS7A PCI host has a hardware flaw.
+> MMIO register with offset 0x60/0x64 is treated as legacy PS2-compatible
+> keyboard/mouse interface, which confuse the OHCI controller. Since OHCI
+> only use a 4KB BAR resource indeed, the LS7A OHCI controller's 32KB BAR
+> is wrapped around (the second 4KB BAR space is the same as the first 4KB
+> internally). So we can add an 4KB offset (0x1000) to the OHCI registers
+> (from the PCI BAR resource) as a quirk.
+> 
+> Cc: stable@vger.kernel.org
+> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+> Tested-by: Mingcong Bai <baimingcong@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+> V2: add a comment explaining why the quirk is needed and how it fixes.
+> 
+>  drivers/usb/host/ohci-pci.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/usb/host/ohci-pci.c b/drivers/usb/host/ohci-pci.c
+> index 900ea0d368e0..bd90b2fed51b 100644
+> --- a/drivers/usb/host/ohci-pci.c
+> +++ b/drivers/usb/host/ohci-pci.c
+> @@ -165,6 +165,24 @@ static int ohci_quirk_amd700(struct usb_hcd *hcd)
+>  	return 0;
+>  }
+>  
+> +static int ohci_quirk_loongson(struct usb_hcd *hcd)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(hcd->self.controller);
+> +
+> +	/*
+> +	 * Loongson's LS7A OHCI controller (rev 0x02) has a
+> +	 * flaw. MMIO register with offset 0x60/64 is treated
+> +	 * as legacy PS2-compatible keyboard/mouse interface.
+> +	 * Since OHCI only use 4KB BAR resource, LS7A OHCI's
+> +	 * 32KB BAR is wrapped around (the 2nd 4KB BAR space
+> +	 * is the same as the 1st 4KB internally). So add 4KB
+> +	 * offset (0x1000) to the OHCI registers as a quirk.
+> +	 */
+> +	hcd->regs += (pdev->revision == 0x2) ? 0x1000 : 0x0;
 
-The move to scope based locking and freeing in cleanup.h necessitates
-using scope based variables as well, so they're something we all have
-to embrace.  They're also useful to tell the compiler when it can
-reclaim the variable and they often create an extra stack frame that
-allows the reclaim to be effective (even if the compiler can work out
-where a variable is no longer reference, the space can't be reclaimed
-if it's in the middle of an in-use stack frame).  I'd say the rule of
-thumb should be only do something like this if it improves readability
-or allows you to remove an additional block from the code.
+I'm sorry, I should have mentioned this previously but I only noticed it 
+now.  This would be a lot easier for people to read if you wrote it as a 
+simple "if" statement:
 
-Regards,
+	if (pdev->revision == 0x02)
+		hcd->regs += 0x1000;
 
-James
+Otherwise the patch looks fine.  If you make this change, you can 
+resubmit it with:
 
+Reviewed-by: Alan Stern <stern@rowland.harvard.edu>
+
+Alan Stern
+
+> +
+> +	return 0;
+> +}
+> +
+>  static int ohci_quirk_qemu(struct usb_hcd *hcd)
+>  {
+>  	struct ohci_hcd *ohci = hcd_to_ohci(hcd);
+> @@ -224,6 +242,10 @@ static const struct pci_device_id ohci_pci_quirks[] = {
+>  		PCI_DEVICE(PCI_VENDOR_ID_ATI, 0x4399),
+>  		.driver_data = (unsigned long)ohci_quirk_amd700,
+>  	},
+> +	{
+> +		PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, 0x7a24),
+> +		.driver_data = (unsigned long)ohci_quirk_loongson,
+> +	},
+>  	{
+>  		.vendor		= PCI_VENDOR_ID_APPLE,
+>  		.device		= 0x003f,
