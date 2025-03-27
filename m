@@ -1,185 +1,111 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F25190692
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C497A155C83;
+	Thu, 27 Mar 2025 15:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743090416; cv=none; b=IfXowbPpy3lhfE8D2vprI4DzFGfMWlpo96rFRDcjELjVmec4+L1lzZEIhrwIDdvqlMhk4YbL0g2Jky+Cvx+XY7KNoIizwChXzzp9RxdTdCP/ttcFt9XcZhJ14aWF8RYlV7DzpoePFlVt1tXdR+tsZM+qwlvqfNqgWfgQHsBGTXs=
+	t=1743090503; cv=none; b=E3Lxf02vTVn6NxgShzG2YzfxDgVLxHZ4vWmvuxOskRU1incdG6XV5E/MQqjYc7jK88kTP15I995ca+gH2CVxOL1XsQH9kKOfq7KacQO3+O5Yu0JEAGIK2Z2tP2j7iw2zZR1+iW5tR/UrWUUXy5BB11NPEU6p7PsqJhG2YyxULr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743090416; c=relaxed/simple;
-	bh=LPH7fmB2piYJTlMhDGZnc6I3l1pOMgZFoEBi543qq+s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HzjiFAg/Totdb48nuu1tNSFhMurqVsIBpjTeT1pwlaub0pGY1UlWC9+WBB80FS9VMKhD+KIdM0Vh/V4RqqezAAb977M19IbV9FYbgzpecNl2UZO5UvlBo3qHnGvqgO6yaD5aba4IOQ42QV6kL7iwsYcf9laGOmwLS6trmEDLGb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XO6E1K9K; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XO6E1K9K"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so8950665e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:46:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743090411; x=1743695211; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tA2zJWv1o+75nzP8/krgasVJF7/Bs9xLeh0TRybxqLI=;
-        b=XO6E1K9KBKFAlkpvoa6b0HjQWU6bAXd8PE2o4jWs5h21l+Ayfus4yWTQYC0Tf23w/3
-         oZdXcrQBVP2Gznv5foI/iIsk0dvsWLRJk7k4ouCuVy7/MxLuOvjnEtcpUHx8t47JJgSE
-         iKdMXxQKJuXD/wul5EuiFJxBiqb0/KvDF0xN5wU1v3S0MKxjLlOz5gHcUDQYP5YqX6Ic
-         Q3O6ZsFT3e9lEI/KbdfDEEhDT+lE3ui27Q+VGwr+epSUva1m87kWp8QGqrH0tx3wpL8w
-         hTep97GrN9dw79lU/XvF0mlw4ffv/TBS9UTYAPKOFbXQrJ8GmXYHWfT7bPLyOZ3vJgLB
-         uquQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743090411; x=1743695211;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tA2zJWv1o+75nzP8/krgasVJF7/Bs9xLeh0TRybxqLI=;
-        b=HCyYC/qaKvHREMipNa7imfGUdpTrCTDCTwNwQswzYIe7ikRRGELngvOkHyvIy7UIJy
-         M05mxf6f3CC8TaEYqv6+ErEt5XdeyFShhfyf7A9PW/BlSFs7gmUBKXfq8yEkW0zOfFhe
-         m/WQK5QIcWSwL4lYVZ0wbt5KktMfCAu/danWgXegCSwvnAl8pgz4CVV3QnV0xxsiDi+l
-         TUchmGwxPWE76nIclzmxwRG/iYy4j2QNdfP8+UBkDowwh5MSCAet4RXwAuP8ue5WHJqu
-         7F4vs6jbxSZqomg7Xwjvb2l8shFOEvEpC9OAfTU32hA8ZP7e/7L4z0202ASjgZ8jMSdj
-         Duzg==
-X-Forwarded-Encrypted: i=1; AJvYcCVJzYLdgZIRGSa/U9jmjYsWY4kzW36Ez0kBIkfToVXU8rMlHa+H1VcFPxPsPVp72n16WQGXMwZHneIbW44=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxt7gnYxp8iqoWFtnxCJFGUQxQmJ5fBW2Gdh6qAIZOcBUlaFhSv
-	3QtHFbtkKWbjDq2DsBgG8PX/kiXluaaFfoEi7zaIXp3ib4CYKwhY6bblDkZBsfo=
-X-Gm-Gg: ASbGncsUnhtZOFI6BhNeQ4T0zihJjUGtXW9bY6MVE51JQotbdF7a6XhpQy17slrWSW1
-	qMXQhue2wcmCbOAzeSO9/gYGfAVcKmk7/itwOMoF/ZODuDq81lQPjOxGPhRlO+lanmpYYB8mzlp
-	iBSRZQ4AOCe1Iw1yWxozfeQJtgZNboolqGQaly5b8eKMVxpHzVUmY5cnviwri6nFzgBrJWGcBqa
-	F/pqHfYKHhMkR0NCVnKekNmyJZSifdweuEnk5aj9oEyZ77r3Zyw1xuesuRYO8f5AscZ+Xmuf52A
-	RkXUp0gd37zg9g3Hpbq8yBP6I52PVeiATokhdWl2s/cenESzTgx9Ma1m/E9hTaYeH9c=
-X-Google-Smtp-Source: AGHT+IEQdOD49ykeAMjyB/w/AZwjJja6wbJrFyDzakLR4KdkXKrN6xLOpUaq5nSdkDLMVtpBUCPPHg==
-X-Received: by 2002:a05:600c:458e:b0:43c:e9d0:9ee5 with SMTP id 5b1f17b1804b1-43d84fc181emr43722905e9.18.1743090411433;
-        Thu, 27 Mar 2025 08:46:51 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:c7c:7213:c700:e992:6869:474c:a63f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82dedde6sm41768545e9.5.2025.03.27.08.46.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 08:46:51 -0700 (PDT)
-From: Alexey Klimov <alexey.klimov@linaro.org>
-To: broonie@kernel.org,
-	srinivas.kandagatla@linaro.org,
-	linux-sound@vger.kernel.org
-Cc: lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	krzysztof.kozlowski@linaro.org,
-	pierre-louis.bossart@linux.dev,
-	vkoul@kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	dmitry.baryshkov@oss.qualcomm.com
-Subject: [PATCH] ASoC: qdsp6: q6asm-dai: fix q6asm_dai_compr_set_params error path
-Date: Thu, 27 Mar 2025 15:46:50 +0000
-Message-ID: <20250327154650.337404-1-alexey.klimov@linaro.org>
-X-Mailer: git-send-email 2.47.2
+	s=arc-20240116; t=1743090503; c=relaxed/simple;
+	bh=47j3I74ks2/O4s0BYb1TImz8jQ4IkN1cpagyuQxWYLA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=s+VxkusMMxTsRRQngh2kPZTjqLvOCexUwsNx3IE+fIR7f1Nd/uPvZUOY3T3HeoNMdedn72bTGKIE7H+8QukRIT10FJEv6AakzSugxE9ezyOM/MT8V8xnTPLKAGPU9R0nF7K6cTCE/v60Ws1sP74uyP/MDI5azycv1qwtvFMuzhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98E94C4CEDD;
+	Thu, 27 Mar 2025 15:48:22 +0000 (UTC)
+Date: Thu, 27 Mar 2025 11:49:11 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Libo Chen <libo.chen@oracle.com>
+Subject: [PATCH] tracing: Verify event formats that have "%*p.."
+Message-ID: <20250327114911.2c713511@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-In case of attempts to compress playback something, for instance,
-when audio routing is not set up correctly, the audio DSP is left in
-inconsistent state because we are not doing the correct things in
-the error path of q6asm_dai_compr_set_params().
+From: Steven Rostedt <rostedt@goodmis.org>
 
-So, when routing is not set up and compress playback is attempted
-the following errors are present (simplified log):
+The trace event verifier checks the formats of trace events to make sure
+that they do not point at memory that is not in the trace event itself or
+in data that will never be freed. If an event references data that was
+allocated when the event triggered and that same data is freed before the
+event is read, then the kernel can crash by reading freed memory.
 
-q6routing routing: Routing not setup for MultiMedia-1 Session
-q6asm-dai dais: Stream reg failed ret:-22
-q6asm-dai dais: ASoC error (-22): at snd_soc_component_compr_set_params()
-on 17300000.remoteproc:glink-edge:apr:service@7:dais
+The verifier runs at boot up (or module load) and scans the print formats
+of the events and checks their arguments to make sure that dereferenced
+pointers are safe. If the format uses "%*p.." the verifier will ignore it,
+and that could be dangerous. Cover this case as well.
 
-After setting the correct routing the compress playback will always fail:
+Also add to the sample code a use case of "%*pbl".
 
-q6asm-dai dais: cmd = 0x10db3 returned error = 0x9
-q6asm-dai dais: DSP returned error[9]
-q6asm-dai dais: q6asm_open_write failed
-q6asm-dai dais: ASoC error (-22): at snd_soc_component_compr_set_params()
-on 17300000.remoteproc:glink-edge:apr:service@7:dais
+Link: https://lore.kernel.org/all/bcba4d76-2c3f-4d11-baf0-02905db953dd@oracle.com/
 
-0x9 here means "Operation is already processed". The CMD_OPEN here was
-sent the second time hence DSP responds that it was already done.
-
-Turns out the CMD_CLOSE should be sent after the q6asm_open_write()
-succeeded but something failed after that, for instance, routing
-setup.
-
-Fix this by slightly reworking the error path in
-q6asm_dai_compr_set_params().
-
-Tested on QRB5165 RB5 and SDM845 RB3 boards.
-
-Cc: stable@vger.kernel.org
-Fixes: 5b39363e54cc ("ASoC: q6asm-dai: prepare set params to accept profile change")
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+Reported-by: Libo Chen <libo.chen@oracle.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- sound/soc/qcom/qdsp6/q6asm-dai.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ kernel/trace/trace_events.c                | 7 +++++++
+ samples/trace_events/trace-events-sample.h | 8 ++++++--
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
-index 045100c94352..a400c9a31fea 100644
---- a/sound/soc/qcom/qdsp6/q6asm-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
-@@ -892,9 +892,7 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 7b3ef1d26167..34e7b4af9f88 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -470,6 +470,7 @@ static void test_event_printk(struct trace_event_call *call)
+ 			case '%':
+ 				continue;
+ 			case 'p':
++ do_pointer:
+ 				/* Find dereferencing fields */
+ 				switch (fmt[i + 1]) {
+ 				case 'B': case 'R': case 'r':
+@@ -498,6 +499,12 @@ static void test_event_printk(struct trace_event_call *call)
+ 						continue;
+ 					if (fmt[i + j] == '*') {
+ 						star = true;
++						/* Handle %*pbl case */
++						if (!j && fmt[i + 1] == 'p') {
++							arg++;
++							i++;
++							goto do_pointer;
++						}
+ 						continue;
+ 					}
+ 					if ((fmt[i + j] == 's')) {
+diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
+index 999f78d380ae..0622c9e3f2be 100644
+--- a/samples/trace_events/trace-events-sample.h
++++ b/samples/trace_events/trace-events-sample.h
+@@ -319,7 +319,8 @@ TRACE_EVENT(foo_bar,
+ 		__assign_cpumask(cpum, cpumask_bits(mask));
+ 	),
  
- 		if (ret < 0) {
- 			dev_err(dev, "q6asm_open_write failed\n");
--			q6asm_audio_client_free(prtd->audio_client);
--			prtd->audio_client = NULL;
--			return ret;
-+			goto open_err;
- 		}
- 	}
+-	TP_printk("foo %s %d %s %s %s %s %s %s (%s) (%s) %s", __entry->foo, __entry->bar,
++	TP_printk("foo %s %d %s %s %s %s %s %s (%s) (%s) %s [%d] %*pbl",
++		  __entry->foo, __entry->bar,
  
-@@ -903,7 +901,7 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
- 			      prtd->session_id, dir);
- 	if (ret) {
- 		dev_err(dev, "Stream reg failed ret:%d\n", ret);
--		return ret;
-+		goto q6_err;
- 	}
+ /*
+  * Notice here the use of some helper functions. This includes:
+@@ -370,7 +371,10 @@ TRACE_EVENT(foo_bar,
  
- 	ret = __q6asm_dai_compr_set_codec_params(component, stream,
-@@ -911,7 +909,7 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
- 						 prtd->stream_id);
- 	if (ret) {
- 		dev_err(dev, "codec param setup failed ret:%d\n", ret);
--		return ret;
-+		goto q6_err;
- 	}
+ 		  __get_str(str), __get_str(lstr),
+ 		  __get_bitmask(cpus), __get_cpumask(cpum),
+-		  __get_str(vstr))
++		  __get_str(vstr),
++	         __get_dynamic_array_len(cpus),
++	         __get_dynamic_array_len(cpus),
++	         __get_dynamic_array(cpus))
+ );
  
- 	ret = q6asm_map_memory_regions(dir, prtd->audio_client, prtd->phys,
-@@ -920,12 +918,21 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
- 
- 	if (ret < 0) {
- 		dev_err(dev, "Buffer Mapping failed ret:%d\n", ret);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto q6_err;
- 	}
- 
- 	prtd->state = Q6ASM_STREAM_RUNNING;
- 
- 	return 0;
-+
-+q6_err:
-+	q6asm_cmd(prtd->audio_client, prtd->stream_id, CMD_CLOSE);
-+
-+open_err:
-+	q6asm_audio_client_free(prtd->audio_client);
-+	prtd->audio_client = NULL;
-+	return ret;
- }
- 
- static int q6asm_dai_compr_set_metadata(struct snd_soc_component *component,
+ /*
 -- 
 2.47.2
 
