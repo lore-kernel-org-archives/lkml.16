@@ -1,171 +1,112 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6737A35964
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 18:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A698D13D52F
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 18:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743100015; cv=none; b=rg29H7n6zUAC6GWTzpCOVSPasorErSCXZDCJUozsr4RqDbLECQ5QFGJYCCvsCN49xwu/qxnNgJ65XRAqCeWzvOxnWGexOu++6fJO6UDLLzpwODuUutGO1hGEFBH5cJ5b6vPJiHjkx+TZ6sj+Og9JtzQoh43ZTYLWh2QK7kJ91kU=
+	t=1743100057; cv=none; b=eSrkV2Sn6rGe7dPeLxk4QmOKCG9Jvh+TG77RT0ZZGP3u/6LQIKwexrEeny2GsSVt3WojYzemmLKU7bDJrgFLk9Y7PVl2A0ULJn0vgAIBUP+PAwatdR8Mgm6nr+rUGw/lGPJjlfNHFmHJqAfizumyhO+rGErddTFFjHBbw8BFi7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743100015; c=relaxed/simple;
-	bh=Wye4ZZIRenMNg0rzd6fYOpl1wP1Ygp5UfmQvcZqn7V8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JYwxN77Frq7lA4rOzEkgNfaxJUMNrMm/MWjcB9hKHt1l+SW4Qir3th0z7wi/C26NE6dK7/UlfSNeJQluU2yxzxguPwR2YRmVnRT7b2jRNegutoBwg4g4dERehwMrM4WpjU5Sgxl6goQscqcj8+P2lTmnXLADVbzGz/XhN8UBdUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=lKvbpbLK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=sXUm9fwZ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=lKvbpbLK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=sXUm9fwZ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1743100057; c=relaxed/simple;
+	bh=H4SQq9c3BG+BGZJq2PWQ9+OGqdEw1bMbKxYbAWHmA4k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PSTL+tu8g/Mo9j5oPplbe81IGvjJJREiN61aWvyhB6zrVxwTZt0aIg9MVdeYPJXVEeAzDC0cJNu/iUECD7LIweLaHBI+90bYLknUjWv85HIkhK/kRGICo9lIWiiai0QVfuMCIFtn7IpiphoeuRSavcCJ3miqSW0lj87jUrAI8Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ygaDaSyp; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="lKvbpbLK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="sXUm9fwZ";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="lKvbpbLK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="sXUm9fwZ"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CEB401F388;
-	Thu, 27 Mar 2025 18:26:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743100011;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=REq7mGtPR43VXqkRphIgh4y/ph6O+Z7qjoRcgE8oyPg=;
-	b=lKvbpbLKqUBc0REkBS6de+LEkwZgf77xiqGu4shF7oj1kl2WxnCAurlbjevyw8k0JQ3sa6
-	eW0PDFaW5UrnhfbhLTV2Vv0U3l7dYQYfA3WpKS/0J9cidorKpWiWQFtTUYakZ++zTrfHKe
-	hz0FCJebwAP8Dx7tmntKq+3VuQ8XpOU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743100011;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=REq7mGtPR43VXqkRphIgh4y/ph6O+Z7qjoRcgE8oyPg=;
-	b=sXUm9fwZDeKEnlhehWr3NbcsjEffIsU20DLIh3GXCjynnE+UJOP8FRCFzkkW8Kjx/vjzk/
-	hT5DDVuEGZ/Av/AQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1743100011;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=REq7mGtPR43VXqkRphIgh4y/ph6O+Z7qjoRcgE8oyPg=;
-	b=lKvbpbLKqUBc0REkBS6de+LEkwZgf77xiqGu4shF7oj1kl2WxnCAurlbjevyw8k0JQ3sa6
-	eW0PDFaW5UrnhfbhLTV2Vv0U3l7dYQYfA3WpKS/0J9cidorKpWiWQFtTUYakZ++zTrfHKe
-	hz0FCJebwAP8Dx7tmntKq+3VuQ8XpOU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1743100011;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=REq7mGtPR43VXqkRphIgh4y/ph6O+Z7qjoRcgE8oyPg=;
-	b=sXUm9fwZDeKEnlhehWr3NbcsjEffIsU20DLIh3GXCjynnE+UJOP8FRCFzkkW8Kjx/vjzk/
-	hT5DDVuEGZ/Av/AQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B20DB139D4;
-	Thu, 27 Mar 2025 18:26:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id KEobK2uY5Wc7LAAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Thu, 27 Mar 2025 18:26:51 +0000
-Date: Thu, 27 Mar 2025 19:26:50 +0100
-From: David Sterba <dsterba@suse.cz>
-To: syzbot <syzbot+1de7265d1e4c0c19dd35@syzkaller.appspotmail.com>
-Cc: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [btrfs?] kernel BUG in btrfs_backref_release_cache
-Message-ID: <20250327182650.GD32661@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <67b8c338.050a0220.14d86d.0594.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ygaDaSyp"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6fead317874so11417727b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 11:27:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743100053; x=1743704853; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T1T0t+yj48XDj+5N7Hw5aN1g6zWRep2KUB4u7M34BaQ=;
+        b=ygaDaSyphWrgV9ZgaBaidTyOsALtv0f19PaseZzJpqNOhTNCae0WMunumzlZLFNN+4
+         agvcaf4ECu7QYgIVcow3d4t3+mbe7KfdEG0cm64qJuXmHmxzbE0yM1uodNa26UEMukN6
+         d57UPCcWAmUg8uO1wxpqOWP/XT3K9Bb4qj1OcGV7C4l/bSET9G6MX7nX9G8HFraubn4m
+         g2TL9jCYWyh3IA+8TJcw3iIsdWvTIHtq/vAM8OsFU4LMCpqSPnUZpe7EC2pQpRV/MjZj
+         ZGh08tdAR6OwSuQH3WU/N5UhRfb767liMWztu/cCX63rCoAxGS6NTxZ3WJ+tPTrSUhaT
+         Fayg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743100053; x=1743704853;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T1T0t+yj48XDj+5N7Hw5aN1g6zWRep2KUB4u7M34BaQ=;
+        b=IQBaLr+IpSHIXWz9zqjVUZ7JRTO1ddTAAUKa9NtkF13KEJj0/LYZl0TVYdJ6nR8+jQ
+         TRcd1x1ZtedXeuheAImFdBc1TQQvOsx0QGPxkcYgWAd5LqN/3P7YKCeuzGhwvR3NmCGW
+         0NB769YQxuuvmSxkVeidZ0hr3DPLfTF2TCQe+47m0EzX/J5djfVviWUzFFw/bN3l5+T+
+         +6yjXtZBSI4TLofUCdt4FAlyWmdkB1QacjFWBJh/yhE9M2x42qr0yeAMtC7c6vWN+cH/
+         H/qILok56idYqN2rHyUFavsanGpH48S4+Zh+EeiBK3eYGp5z/Z+6mwu2vRtsuiHxvUzy
+         8veg==
+X-Forwarded-Encrypted: i=1; AJvYcCVGxg3OnFaKTrYwQLDYIhWwwMwmFATH7KzTuT4++FVJoGTmIkRoHjXWUylfkpUWY+KPIu6zqF2c17aG33A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxw4zBC4ZvVYsZGBykDm799Met9U5WkAIFGalMp6xS7iFykUb57
+	lu9QUesdNxQta5DHlQL+5OYFlji3Yst234uLMIf9I9Zi1kwoEEO56KpZMNpJUmx8dXY9kxsaxbo
+	2gnTOYCTx/TOTqRXOlRV64FWN52vrAd8sO4wV
+X-Gm-Gg: ASbGncuu6caLfx232hrOhp+nPT44S0nRP4ke6eKdddgAhPqO+h0xQRsUhObDVCGEx47
+	lARtDlh8P1Wgc8hGuXP9/DtFLQ5NqJDX/w6JOtdove+tFD57kTjZtEOfubxbgIv3UcnCvhjGg6p
+	NgJ59VyRAeYPaMTqr8FysKhlynyQ4r4+Pgfvo05RAfywoniHse+PvMmjsu
+X-Google-Smtp-Source: AGHT+IF9r5WJAzdfDcQntbLZwhD5EGz+o+pnNk64HYaUbkhC9xRE3GDrX1KAucYtv+JfqlvbFLsjF4WRjfPT9DtRnoM=
+X-Received: by 2002:a05:690c:6f92:b0:6f7:55a2:4cf5 with SMTP id
+ 00721157ae682-70224efddf4mr69462527b3.2.1743100053279; Thu, 27 Mar 2025
+ 11:27:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67b8c338.050a0220.14d86d.0594.GAE@google.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=b7bde34acd8f53b1];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[1de7265d1e4c0c19dd35];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:replyto];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	SUBJECT_HAS_QUESTION(0.00)[]
-X-Spam-Score: -1.50
-X-Spam-Flag: NO
+References: <20250327012350.1135621-1-jthoughton@google.com> <20250327012350.1135621-6-jthoughton@google.com>
+In-Reply-To: <20250327012350.1135621-6-jthoughton@google.com>
+From: James Houghton <jthoughton@google.com>
+Date: Thu, 27 Mar 2025 11:26:57 -0700
+X-Gm-Features: AQ5f1Jqui55DD7gnN51tyeqg8zK6HJAcKnkL3KKDypvtSprHeM9DbaOlKdOqBZo
+Message-ID: <CADrL8HXEb0r8sRie_q48ry8r30LpBZqAs4a1iN8N9BZ09FZzUw@mail.gmail.com>
+Subject: Re: [PATCH 5/5] KVM: selftests: access_tracking_perf_test: Use MGLRU
+ for access tracking
+To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org
+Cc: Maxim Levitsky <mlevitsk@redhat.com>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, mkoutny@suse.com, 
+	Yu Zhao <yuzhao@google.com>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 21, 2025 at 10:17:28AM -0800, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    0ad2507d5d93 Linux 6.14-rc3
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14b775a4580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=b7bde34acd8f53b1
-> dashboard link: https://syzkaller.appspot.com/bug?extid=1de7265d1e4c0c19dd35
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> 
-> Unfortunately, I don't have any reproducer for this issue yet.
-> 
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-0ad2507d.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/dfb4fc7c042e/vmlinux-0ad2507d.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/1682113b81f5/bzImage-0ad2507d.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+1de7265d1e4c0c19dd35@syzkaller.appspotmail.com
-> 
-> loop0: detected capacity change from 0 to 32768
-> BTRFS: device fsid ed167579-eb65-4e76-9a50-61ac97e9b59d devid 1 transid 8 /dev/loop0 (7:0) scanned by syz.0.0 (5320)
-> BTRFS info (device loop0): first mount of filesystem ed167579-eb65-4e76-9a50-61ac97e9b59d
-> BTRFS info (device loop0): using sha256 (sha256-avx2) checksum algorithm
-> BTRFS info (device loop0): rebuilding free space tree
-> BTRFS info (device loop0): disabling free space tree
-> BTRFS info (device loop0): clearing compat-ro feature flag for FREE_SPACE_TREE (0x1)
-> BTRFS info (device loop0): clearing compat-ro feature flag for FREE_SPACE_TREE_VALID (0x2)
-> BTRFS info (device loop0): balance: start -d -m
-> BTRFS info (device loop0): relocating block group 6881280 flags data|metadata
-> BTRFS info (device loop0): relocating block group 5242880 flags data|metadata
-> BTRFS info (device loop0): found 139 extents, stage: move data extents
-> assertion failed: !cache->nr_nodes, in fs/btrfs/backref.c:3160
-> ------------[ cut here ]------------
-> kernel BUG at fs/btrfs/backref.c:3160!
+On Wed, Mar 26, 2025 at 6:25=E2=80=AFPM James Houghton <jthoughton@google.c=
+om> wrote:
+> diff --git a/tools/testing/selftests/kvm/access_tracking_perf_test.c b/to=
+ols/testing/selftests/kvm/access_tracking_perf_test.c
+> index 0e594883ec13e..1c8e43e18e4c6 100644
+> --- a/tools/testing/selftests/kvm/access_tracking_perf_test.c
+> +++ b/tools/testing/selftests/kvm/access_tracking_perf_test.c
+> @@ -318,6 +415,15 @@ static void run_test(enum vm_guest_mode mode, void *=
+arg)
+>         pr_info("\n");
+>         access_memory(vm, nr_vcpus, ACCESS_WRITE, "Populating memory");
+>
+> +       if (use_lru_gen) {
+> +               struct memcg_stats stats;
+> +
+> +               /* Do an initial page table scan */
 
-void btrfs_backref_release_cache(struct btrfs_backref_cache *cache)
-{
-        struct btrfs_backref_node *node;
+This comment is wrong, sorry. I'll just drop it.
 
-        while ((node = rb_entry_safe(rb_first(&cache->rb_root),
-                                     struct btrfs_backref_node, rb_node)))
-                btrfs_backref_cleanup_node(cache, node);
+I initially had a lru_gen_do_aging() here to verify that everything
+was tracked in the lru_gen debugfs, but everything is already tracked
+anyway. Doing an aging pass here means that the "control" write after
+this is writing to idle memory, so it ceases to be a control.
 
-        ASSERT(list_empty(&cache->pending_edge));
-        ASSERT(list_empty(&cache->useless_node));
-        ASSERT(!cache->nr_nodes);
+> +               lru_gen_read_memcg_stats(&stats, TEST_MEMCG_NAME);
+> +               TEST_ASSERT(lru_gen_sum_memcg_stats(&stats) >=3D total_pa=
+ges,
+> +                           "Not all pages accounted for. Was the memcg s=
+et up correctly?");
+> +       }
+> +
+>         /* As a control, read and write to the populated memory first. */
+>         access_memory(vm, nr_vcpus, ACCESS_WRITE, "Writing to populated m=
+emory");
+>         access_memory(vm, nr_vcpus, ACCESS_READ, "Reading from populated =
+memory");
