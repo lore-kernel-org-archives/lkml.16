@@ -1,840 +1,362 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD30418C345
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 02:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743043426; cv=none; b=Q7ubjmj4hmRTXhgNVPzrRzLwZQWu8+m4CPqvh1StDl44kFTFRQvP6M3MOpEHIcYkwgb7MUYQEFHAfpzBvO5u6yd4ionrLTKPidxQ6Vf1vqxXA3G5PxdKWE/16d+f8ftTHxoGixWTTVBwBrvSXMsgSvEJFWokpneANYF19EikuCY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743043426; c=relaxed/simple;
-	bh=7NU2BvhzpdSUdvmsG096jZHXMlMO/ixHEFWhmBO1o/s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=djmX9suAlARAJ2Muajr6WoW8LsHhLvtK0BDHfAd9NJTej7ZErajlFVLeAzRQbbJobVu5mRGdeC57WJRR0iiQP9BKYMZiDWGy4d1pLqBbWg7ZDRnfWi0Al94frBNm/Z0LdJuV8fpcUwLZ9xmKmDhZwN7gQAXsALFlUbVLkJCqOjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RRSusEWc; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C851E8479;
+	Thu, 27 Mar 2025 02:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=210.61.82.184
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743043733; cv=fail; b=UvjpYB8uAYHSqtwziDagQKCcgi0UywJroN1YCLtXafJY7oeA+Ut5C+7+uguSs9qB1InbYlTr4ZfutGTYnXubabhsnssZ5OgXEUzmgpygQqGWOZ6+0ki8faCxHZS917AqZ6U8EUrjG3XpyYL0rzWhdDn7BUCvkQ2R+tiFRZdZ69c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743043733; c=relaxed/simple;
+	bh=DSLujPpgOT8sbLbNFZ3TazctLQ4Y3FyeSuavrDxsupQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=hvQzM/7+YPqAowmMl7gAs9oUPgCKcSJLCpPuSK7l3yjinjl8JKn5xR6Gr0bxNrMPoY/EQdwtQbt10zmwT/Dw2M4843Ivc2OH3W3Bi1pQ/k0tmT/HLSO0XRt0zn5Dkc13rBo0O/EJ4qN7iMsLE64SyhcyET3insUHvTjUrNaJn1U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=PkR1+40V; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=m+1sVQKP; arc=fail smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RRSusEWc"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52QKZnpW009100;
-	Thu, 27 Mar 2025 02:43:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:to; s=pp1;
-	 bh=8CNpP9caDTg1SSkehBuR9W2UgT4xvWhvlQHBVz4eSw0=; b=RRSusEWcu85v
-	Bl4jnlwCybSUx8nyEbEyegPMNXr5BuOeexAzacPPaBZHC2wPtnSnqAbbPEnd2hjW
-	oHRQT5wvmlYmCq9jGrJzBkSQlRybBX2x/UXZZbqKYlOtcBwe579tRc+od7uasjCV
-	r1r3P1yjVvYJD5ylrpug29+K3K1fgpDZ+xnQBmcfT+UhI/c6iejVs2lkSQqvXtlg
-	WK1n48vgLU/Pzbi7tswFB1/jl+xJ62n4avqeKgpLMKhyIjki3zl8nXQE1FlmelJI
-	2ir+NUdypUogSQHR4VX2qkQyYcvNFI8nwpGj8jDcfXQJNAahvMoe83r/Dc6mgedT
-	yJMBM+uu3g==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45mrrq17y4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 02:43:20 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52R2f4I4004547;
-	Thu, 27 Mar 2025 02:43:19 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45mrrq17y2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 02:43:19 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52QM1bj7012262;
-	Thu, 27 Mar 2025 02:43:18 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45j91mbaxd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 02:43:18 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52R2hGqc27984582
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Mar 2025 02:43:16 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0E8D158043;
-	Thu, 27 Mar 2025 02:43:18 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8907058055;
-	Thu, 27 Mar 2025 02:43:09 +0000 (GMT)
-Received: from [9.43.42.95] (unknown [9.43.42.95])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 27 Mar 2025 02:43:09 +0000 (GMT)
-Message-ID: <8f5f01cc-c88d-40e6-bc64-74d0e2093bf3@linux.ibm.com>
-Date: Thu, 27 Mar 2025 08:13:07 +0530
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PkR1+40V";
+	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="m+1sVQKP"
+X-UUID: fede00ac0ab511f08eb9c36241bbb6fb-20250327
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=DSLujPpgOT8sbLbNFZ3TazctLQ4Y3FyeSuavrDxsupQ=;
+	b=PkR1+40VLPsBejOX30yZQJPTjjBUZVjPSkFbb9BNA92Mzg+ZlbhFglAbazljfY8ah6YNJkuUmTQ95L+5w+Gtqhp2lGoXev12O2ijDZr8qad34YssXo90gub87RUmF9+UXPoMBo6DLkfM0aYn2xVX6+JGtbHKNllG6e8STT/uZH8=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:2a372d84-14eb-4e3b-8ad9-28b67131a8e8,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:b1edd8c6-16da-468a-87f7-8ca8d6b3b9f7,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|110|111,TC:nil,Conte
+	nt:0|50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,
+	OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: fede00ac0ab511f08eb9c36241bbb6fb-20250327
+Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw02.mediatek.com
+	(envelope-from <axe.yang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 467516313; Thu, 27 Mar 2025 10:48:42 +0800
+Received: from mtkmbs10n2.mediatek.inc (172.21.101.183) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Thu, 27 Mar 2025 10:48:41 +0800
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (172.21.101.237)
+ by mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Thu, 27 Mar 2025 10:48:41 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=okszRz21/59Be3Sj8mkxT2tjcLrQq6pfJeKhN3smRd51VO5SVnE7hpYw/LqE3r4nAUvKvCcEPTb1KhkCqWDEhX7j3BWG1hLWpnEmTzJEvOnBH7qjLRcMb/5OnKKdcil9Spzqc4pZNrntr5VCIwiRtW7cOkVxIMkojPCfAH+LPmUgz+zrBDZa7DzmhNfezg7nLgmnJauwFqHUEQD51jKEcMPcF+iszggidZweSpoJPwAact3i+Gn3KnBbzXL4jiA/BumKRA1ORfnDdv7FoRuGI5cEybjJcyfBZ2CsEYDHw6poWAjEp67AXvZzdkAcA8U8N3U7AakMVkcAggOYkd72Iw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DSLujPpgOT8sbLbNFZ3TazctLQ4Y3FyeSuavrDxsupQ=;
+ b=n+Jfksp6SWW414SDENhk3rebJlGfbX5jjC8btLiMnetSai+j8CdERrkqt84o8O/0ZdtlIV6qAePpI0H/aog185Xm4fXka6zxlmN2xG+5b23GyipC1P7eyXEyqBG3HCowyZW63vfIduhoVemFakjBnDzmaqFMolBXlAle+v9r9oY1sh5PToSRaN/4Hd+6cLwCWjbTic+qegPN8+yRtSxdV8FvUUs6aBaEvPdxZ8waIfW13XR7sodtPSDHdn9/xWde550DhQMD3B6uF0TVrtSooFHrL5s5ah31jSpQVsFfKBc7aw+eNNbq2sfCJKQ1dfJrldUHm7bLqM2X/QWlyMSIUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
+ dkim=pass header.d=mediatek.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DSLujPpgOT8sbLbNFZ3TazctLQ4Y3FyeSuavrDxsupQ=;
+ b=m+1sVQKP7smq38HEDuIx42cazTitis6TFTPYE5SMkI1RaY43HU67YDsn31owCnHDrEytkF8Fs4ZKFNXjj3ujy6xYyv7zQsrI4ijWqDosY8b2N9Ooh8Gv35X40MBzaqkpBAgmRQMxpj/19h2gcLxwTAfTdFXkbwVoWSQ2VgbmmvQ=
+Received: from KL1PR03MB8416.apcprd03.prod.outlook.com (2603:1096:820:12c::7)
+ by TYZPR03MB6576.apcprd03.prod.outlook.com (2603:1096:400:1fd::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.27; Thu, 27 Mar
+ 2025 02:48:38 +0000
+Received: from KL1PR03MB8416.apcprd03.prod.outlook.com
+ ([fe80::1816:49d1:d866:bb7a]) by KL1PR03MB8416.apcprd03.prod.outlook.com
+ ([fe80::1816:49d1:d866:bb7a%5]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
+ 02:48:37 +0000
+From: =?utf-8?B?QXhlIFlhbmcgKOadqOejiik=?= <Axe.Yang@mediatek.com>
+To: =?utf-8?B?V2VuYmluIE1laSAo5qKF5paH5b2sKQ==?= <Wenbin.Mei@mediatek.com>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	=?utf-8?B?Q2hhb3RpYW4gSmluZyAo5LqV5pyd5aSpKQ==?=
+	<Chaotian.Jing@mediatek.com>, "robh@kernel.org" <robh@kernel.org>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "ulf.hansson@linaro.org"
+	<ulf.hansson@linaro.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+	=?utf-8?B?QW5keS1sZCBMdSAo5Y2i5LicKQ==?= <Andy-ld.Lu@mediatek.com>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	=?utf-8?B?WW9uZyBNYW8gKOavm+WLhyk=?= <yong.mao@mediatek.com>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>,
+	=?utf-8?B?UWluZ2xpYW5nIExpICjpu47mmbTkuq4p?= <Qingliang.Li@mediatek.com>
+Subject: Re: [PATCH 1/2] dt-bindings: mmc: mtk-sd: add single burst switch
+Thread-Topic: [PATCH 1/2] dt-bindings: mmc: mtk-sd: add single burst switch
+Thread-Index: AQHbjnTYCsmvU5APUkGIYiImQzZRM7Nl1OqAgAFq/QCABnhcgIABW0IAgBQuXoCAAIBaAIACplIA
+Date: Thu, 27 Mar 2025 02:48:37 +0000
+Message-ID: <8958413b4138d815d582927f7702b35ffc20f122.camel@mediatek.com>
+References: <20250306085028.5024-1-axe.yang@mediatek.com>
+	 <20250306085028.5024-2-axe.yang@mediatek.com>
+	 <3e84fda8-2566-4f18-8ef9-850c84789c34@collabora.com>
+	 <f84800fac589429157cd84034ef2f4541d3486a7.camel@mediatek.com>
+	 <b09f618a-eaf9-4258-ae2d-67eff1cb249f@collabora.com>
+	 <f8ce830d831aaba0d2748d31f8ba4a9915b7a14e.camel@mediatek.com>
+	 <52d2f247a3058b96625bcdf5ab370282dfc9fb0e.camel@mediatek.com>
+	 <3572d6e2-8950-4937-bed5-624bf5bde7f3@collabora.com>
+In-Reply-To: <3572d6e2-8950-4937-bed5-624bf5bde7f3@collabora.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mediatek.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: KL1PR03MB8416:EE_|TYZPR03MB6576:EE_
+x-ms-office365-filtering-correlation-id: fd143b10-5084-4a87-a39e-08dd6cd9dfec
+x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?OEFMdnJvM0VLckk4eHBzcmxXQ21wNElCeW9vUVl1ZU9uYXN2eEcwM1hTMjQ4?=
+ =?utf-8?B?VVNaMVFoZUgzSVNwdTdFOXd0UDRZQk5vVjBGTmc2UjkyU2hSVWJyalR3ZXZ1?=
+ =?utf-8?B?RDQveTlNQ003YUI3WisrdURxYkI2a0Q2OVpkdE44aCs2bnZIZWE1cWFLekt6?=
+ =?utf-8?B?QnVQMzlTWitoV2djejhoajIxcHYxZ05CNm1BQk5vWTgxMUZYZFhTMHFadjVR?=
+ =?utf-8?B?Rkl2am1ubk9tcXdEL2RyZ045WGM0anpvTDhIRHFlamtSMWRtTTE1SjExMU5u?=
+ =?utf-8?B?WXQ2d1RNWktCRVUwVTE1dk1LaWR2SldlSnlLVU9vR1FLTUZYN0RtaFNPRkl4?=
+ =?utf-8?B?amYzSE9wYW9ESVEyeFZCZU9LMHZNOXpYWm03RE4rbGkyQ2hCZkpQcTVjOVRr?=
+ =?utf-8?B?OWdjSDRvWi9DK2tvL0UvazV3STkwMzF2SEp2MnZSMU5PMkxSenNrUWw2ZndZ?=
+ =?utf-8?B?SG9EU0JmUStGTGxrdUhLSG1UbE5mL3BIVjJYTlpXdU1SSnk0QmtkZ2IvVmZz?=
+ =?utf-8?B?ZXRoQVplM1BUS3dkMm9CVDFrN3RWdk1BaUEyRVZVNHk0ZHJnS0p0M3RQUERu?=
+ =?utf-8?B?czl0WmFXR2JxbG56SjNTTnU4cU1LWDk2ekxxdDhHdEYzOEpHZjRWWGI2N2tm?=
+ =?utf-8?B?M002U0JVbjFzK2l6ajJ6MjEzeVgrMTJIdm1xanIvcVJadFhUWDkvVFJUd2tI?=
+ =?utf-8?B?WXJSVmtuazJMU1hOYWR4bWZHb25tdHUrTnloNnQxNnpzcStpelpOMWpqYms3?=
+ =?utf-8?B?RjRLbFFYeWRiUmpOelA0Z0ZkOExtaEJBTE1GK1pFTWYzNW0zODI5TWFCNVBB?=
+ =?utf-8?B?MTd2R0phSy96cSs3NXFJMHBML3pvZDVvdUh6bzU1aGhYUDJZZkVvUkxUVjJ6?=
+ =?utf-8?B?MS9nWHdSN3BLbGlsTld6QlJHZTlzZVdLckU4cXZmWXl5K0phZ3hlaEhWL1Ex?=
+ =?utf-8?B?akp4d3M5N0FuVVg5ZFJDTmNkWnpGa2hBZUJnZktCZnowR3dZZ1BMd1FHeitS?=
+ =?utf-8?B?V3lSeVIyU1VPU3pwd3Z6NVJkUDloTDlzZnNPY2x5U2grWkI4WWk0d1kvZXZy?=
+ =?utf-8?B?Q2dGNmt2a25IeTdza2o0K1hOTHIwZGRWMXh5SGIxRmhwL0tvV2c0YUV3R2Yx?=
+ =?utf-8?B?ekVpek9ZWTE4UHVtM0dISHNxS2JTdUptZmdQNVpnTnd4L09ZT2lmWnpuNVdF?=
+ =?utf-8?B?cnp3TXhRM3dtN1hSS2w4cGl5dm9wSWlncTd0aDQ4OWNHMDJYazdZN20vUStw?=
+ =?utf-8?B?SGgvNUk5d3l6cW9lSnR4ZHJtOUdkbG5BUjVkR3YyeVpyem1qQ25ZbE1lcm5W?=
+ =?utf-8?B?SThYdVg3UTNFRzNaK05rL0JZUzMxeDNPcTQ2Z2E4L3ZjQSsvVjJlcXRJQ2lG?=
+ =?utf-8?B?aFFmNDhDRS9pbDExMDVJcVhyU2grVTZmN3BNNjMxbEFYUXVMdTlNUUtlL0lw?=
+ =?utf-8?B?Z1BKYVRaeHI1eElFb1FHY2xsejNJZVVtRGZTRnUyM3RUd2tSWGlaTGVESEkx?=
+ =?utf-8?B?YmpYUlpRZTBMWmNVRmpBekVaeEhqakE5ZURoYnNtZ3Uybk14NTgwWHgrbjh3?=
+ =?utf-8?B?UGdzcVB4VU56VitEYXhqamlYa3M0Sm1pOHlxRXJVcitlV2lpY1JpcFU2Ym42?=
+ =?utf-8?B?UVEzbFRIYjdxa3lkS2t1VWpsd1Q3eklaSzg0bkZheEFBVW9oQnVRd2EyYWN2?=
+ =?utf-8?B?d0dEUnBrcXM4MEZaRTRvMlpPVVZrajJlUGIzSnN3NEZYdXljVk0vQ2ljTGxH?=
+ =?utf-8?B?elBla2g5WklsNHFpL3M1a0hZU2VFa2o3Vi9pTTJ4V1pwZ3Bxb2hHN3lqQ0dv?=
+ =?utf-8?B?TmtkZU9HUDNON2hONVIxTDFoRWthOHRpTzBqeGFKSENVaTlWSjRya2xoK1Qy?=
+ =?utf-8?B?NWFHR1hjRllJN1NReXV4MklxcmJKYjRkb3hjSHpaYkJ4MGhKVGJQUTJ5K0d4?=
+ =?utf-8?B?b1g2aVpnK3ZSTGQ3aEFObXE3Ym5wVndoTm9LVzU3ZDZ3QjRVZUhQT0JmT2VT?=
+ =?utf-8?B?MG5zeWo3MStnPT0=?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR03MB8416.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?OGRyU1hpZGZrTWs5QnczYTREU0NMYUsvUzZxTnhxcG83Q0JaSGg1Z3VXYUVJ?=
+ =?utf-8?B?eVRobjc4WU1zbmFza3M1bkFXa2tRcFIzUk9JRmVBNTFxcUZoNjVpd2Z4cTdu?=
+ =?utf-8?B?S1dDeGR5SUxmNkVHeHEvNFE3SWhNOFJpcDhFYUNMQjJrME1hMU5rU2tSQmVN?=
+ =?utf-8?B?bWhhVXJRTitVdlJyMU1pVFovcmQ1R3FMRE9ydE5sb01KR3VPQTBMUm1DZEsz?=
+ =?utf-8?B?eVJYWENWaThrK0lOQWZXQk81K2pUQ1RRZFZ1Q09ITmNaYWpYUVFLR3FtUmc3?=
+ =?utf-8?B?U0NyUm5GalpaRnVYR2VlZXlaTzlSb1RyNUs1enBCM1FUbHVtQmRiS3MzZUpo?=
+ =?utf-8?B?akpvR2ZFS0RRbE9HNHlmQUhBSG13NU5rWVRGTERjSk5yakpONGtPbCtzUGNL?=
+ =?utf-8?B?MFRjdE9oVWk5RmtoVlBxVS9sSzc0T24wV2xHSDMvQUJrQW9FblN1SUtMcHZx?=
+ =?utf-8?B?cEovTEFEUlBtaE04bWZSdFhEY0R6NjlkWnlBMklhRlM2V1dPYzNMeXFlNENx?=
+ =?utf-8?B?ajFRNzJNMCtVQ1dEUlg1QVpDREVrWmxnTXFXN3preWk0ZDcyb2VUKytuUlJL?=
+ =?utf-8?B?UDJuV3VBbm1mTDc2VWs1RGE1Z0tOYnVIbHMyVFQ0RFBDZkd4UVVGRFA2S0Jl?=
+ =?utf-8?B?TXRCQzdFNUhqaUR1b3NDVzQxS3dhVkdSa0ZPMHdBYjMrTUxyeWV3TmJNbEhm?=
+ =?utf-8?B?a2wvQmJjdDVwN0Z2NVRvZXhzcFhOOVZ3MGdIUFhYTlhyM3k5NVkwZkJQaHE3?=
+ =?utf-8?B?WUJyRjAzSURrcmU2VmhRNlorTTY4dFE2RkJ0WTIvN0YxNHlGUmRVREdLblhv?=
+ =?utf-8?B?Rm5vb0lxSExWTnRNOXc3TnlpUG1tWE9sSzE0ZjE4QzU2QjRaQ2wwZWYyODNV?=
+ =?utf-8?B?ZW1scmxRcUx1L1hzLzZUNlo1MTk4U2M0WjNJenJhbHJHTHFqWENOUXUrYkty?=
+ =?utf-8?B?Nzd5Z2JLekdETDdDazYra2J5WGNsZjFrdng4K0RRSDErNGZIc1FVTFRZaGht?=
+ =?utf-8?B?WFlGa01wUkVkd1ErNk1GOGFzUlhrU2hRbTFJWnFOcFdUQWxTMkxpQWxHb0Vp?=
+ =?utf-8?B?U3VabUFDRmpzTWxPRjFWRnEwdmNXclJwZXVMMG02TzQvSnkvZlVRYk1ybkh1?=
+ =?utf-8?B?Y3RKMVZOOTVLaFdGK0hodXJHWndWaGpyNmE0UWlVZjc5T1VzS2dLVHVqTlNr?=
+ =?utf-8?B?YmU4YVJSRnZjTEZWUkxyN2lIcm52WTArMDlDNVdrNzN0YjI0dllJeTd3b2FK?=
+ =?utf-8?B?V1YycDZ4YjA1NXc1azFERmYvRUhPYng4Sm44SEtRdDI3SFR0Sm41T1lkeHBP?=
+ =?utf-8?B?YzJ3NmZZSFljNGNNclllakJ5Q3N0b0k4RWE3TytxNy9tUm1RZWIrSldEb0li?=
+ =?utf-8?B?VFYxSjk4M2RuU1drOVcrekQ3ZWZ1akpFbUpZdFRNb0txQldPR0RnMXFVTWIx?=
+ =?utf-8?B?K0lvV1ZnVXE1SHZ1aUQ0M00wTGFubkNqLzFYUENjVU8vVFVkc3ZPR3N0K3R3?=
+ =?utf-8?B?bUloSjhNMVlCYTZUYVNlNEpiRUd6aHpRWUxoOUhYTXBGbDNwOUpEUjc1bmlZ?=
+ =?utf-8?B?YW54UDJ1NUhPYlBITTl0RHRHanBaWmlpZGNOVUZUZ2gyZ3ZsN2ppaW9QNE9C?=
+ =?utf-8?B?WlR1S0pSR1VsTzkxNGQ1QUZTNXU0ZXA2MU9UYTFwMkdWUnV5WnFkS0xSMk50?=
+ =?utf-8?B?aWlOT0xIZ2xlSkU2dmxqNmlTeU5tK0lkZTNsR1FWOFVZWDBUSTkxUHY5RkpB?=
+ =?utf-8?B?czBkR1dUaVJlNCtEbVZrelZkREtpRXhWNGRER2F2Q0dnNlY1d3BtUGZ3WUNM?=
+ =?utf-8?B?eFJxc3BodjRldklMc0VYQ0JrMjN5cDMrNmxKNXRIUXFNNWNKRlIzaEpxQU5G?=
+ =?utf-8?B?Q0JCL3F3aVZYVXUvYlJOajdKTGVwQVphYk1CaDBpYVllS0xTZ3FuRjdKK2dZ?=
+ =?utf-8?B?SS9KZjZ1aWx6L1cyaFAwK1IvWjRtU2Z0OUlBUnU1N0ZydERYQmlPK2R5bm9C?=
+ =?utf-8?B?TVZKMTZ3UnVjY0ZpNE1mVGgyK0NZYk1OaU1iZnhrWkFpVjV1WjUwd1FxcEox?=
+ =?utf-8?B?OElqU3lPbUt5T0FWSDE5L1lWWFk2OHo0U0o2b1pXc2h2ZFc0NlpEZGpNTjgw?=
+ =?utf-8?Q?2tNSU6+mReBGvJZIi/dt8Whl7?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CB2ED44AF0F7A44FA52EE899BE45D486@apcprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC][PATCH] sched: Cache aware load-balancing
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@kernel.org, gautham.shenoy@amd.com, kprateek.nayak@amd.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org,
-        yu.c.chen@intel.com, tim.c.chen@linux.intel.com, tglx@linutronix.de,
-        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-References: <20250325120952.GJ36322@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-Reply-To: 20250325120952.GJ36322@noisy.programming.kicks-ass.net
-From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-In-Reply-To: <20250325120952.GJ36322@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: YuJO8dv7xPmEbYImUT6De63nzBKbSRB_
-X-Proofpoint-GUID: MdgYW42U8cwQdNfm1RcfdvLyUejoGekw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 mlxscore=0 malwarescore=0 phishscore=0 spamscore=0
- impostorscore=0 priorityscore=1501 bulkscore=0 clxscore=1011
- lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502280000 definitions=main-2503270015
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: KL1PR03MB8416.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd143b10-5084-4a87-a39e-08dd6cd9dfec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2025 02:48:37.6951
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +fjdnTq59tO+lsflRFCZnAZIzwjI4kUXy8Lx4fck5aOfbB+aLVaWGeIaWJSGALVQgo1ZfLQq13zH9/PFvgu5/Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB6576
+X-MTK: N
 
-Hi Peter,
-
-On 25/03/25 17:39, Peter Zijlstra wrote:
-> Hi all,
-> 
-> One of the many things on the eternal todo list has been finishing the
-> below hackery.
-> 
-> It is an attempt at modelling cache affinity -- and while the patch
-> really only targets LLC, it could very well be extended to also apply to
-> clusters (L2). Specifically any case of multiple cache domains inside a
-> node.
-> 
-> Anyway, I wrote this about a year ago, and I mentioned this at the
-> recent OSPM conf where Gautham and Prateek expressed interest in playing
-> with this code.
-> 
-> So here goes, very rough and largely unproven code ahead :-)
-> 
-> It applies to current tip/master, but I know it will fail the __percpu
-> validation that sits in -next, although that shouldn't be terribly hard
-> to fix up.
-> 
-> As is, it only computes a CPU inside the LLC that has the highest recent
-> runtime, this CPU is then used in the wake-up path to steer towards this
-> LLC and in task_hot() to limit migrations away from it.
-> 
-> More elaborate things could be done, notably there is an XXX in there
-> somewhere about finding the best LLC inside a NODE (interaction with
-> NUMA_BALANCING).
-
-Tested the patch on a 12-core, 96-thread Power10 system using a real-life
-workload, DayTrader.
-
-Here is a summary of the runs:
-
-Users | Instances | Throughput vs Base | Avg Resp. Time vs Base
---------------------------------------------------------------
-30    | 1        | -25.3%              | +50%
-60    | 1        | -25.1%              | +50%
-30    | 3        | -22.8%              | +33%
-
-As of now, the patch negatively impacts performance both in terms of
-throughput and latency.
-
-I will conduct more extensive testing with both microbenchmarks and
-real-life workloads.
-
-Thanks,
-Madadi Vineeth Reddy
-
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  include/linux/mm_types.h |  44 +++++++
->  include/linux/sched.h    |   4 +
->  init/Kconfig             |   4 +
->  kernel/fork.c            |   5 +
->  kernel/sched/core.c      |  13 +-
->  kernel/sched/fair.c      | 330 ++++++++++++++++++++++++++++++++++++++++++++---
->  kernel/sched/sched.h     |   8 ++
->  7 files changed, 388 insertions(+), 20 deletions(-)
-> 
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 0234f14f2aa6..3ed8dd225eb9 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -800,6 +800,12 @@ struct mm_cid {
->  };
->  #endif
->  
-> +struct mm_sched {
-> +	u64 runtime;
-> +	unsigned long epoch;
-> +	unsigned long occ;
-> +};
-> +
->  struct kioctx_table;
->  struct iommu_mm_data;
->  struct mm_struct {
-> @@ -890,6 +896,17 @@ struct mm_struct {
->  		 */
->  		raw_spinlock_t cpus_allowed_lock;
->  #endif
-> +#ifdef CONFIG_SCHED_CACHE
-> +		/*
-> +		 * Track per-cpu-per-process occupancy as a proxy for cache residency.
-> +		 * See account_mm_sched() and ...
-> +		 */
-> +		struct mm_sched __percpu *pcpu_sched;
-> +		raw_spinlock_t mm_sched_lock;
-> +		unsigned long mm_sched_epoch;
-> +		int mm_sched_cpu;
-> +#endif
-> +
->  #ifdef CONFIG_MMU
->  		atomic_long_t pgtables_bytes;	/* size of all page tables */
->  #endif
-> @@ -1296,6 +1313,33 @@ static inline unsigned int mm_cid_size(void)
->  static inline void mm_set_cpus_allowed(struct mm_struct *mm, const struct cpumask *cpumask) { }
->  #endif /* CONFIG_SCHED_MM_CID */
->  
-> +#ifdef CONFIG_SCHED_CACHE
-> +extern void mm_init_sched(struct mm_struct *mm, struct mm_sched *pcpu_sched);
-> +
-> +static inline int mm_alloc_sched_noprof(struct mm_struct *mm)
-> +{
-> +	struct mm_sched *pcpu_sched = alloc_percpu_noprof(struct mm_sched);
-> +	if (!pcpu_sched)
-> +		return -ENOMEM;
-> +
-> +	mm_init_sched(mm, pcpu_sched);
-> +	return 0;
-> +}
-> +
-> +#define mm_alloc_sched(...)	alloc_hooks(mm_alloc_sched_noprof(__VA_ARGS__))
-> +
-> +static inline void mm_destroy_sched(struct mm_struct *mm)
-> +{
-> +	free_percpu(mm->pcpu_sched);
-> +	mm->pcpu_sched = NULL;
-> +}
-> +#else /* !CONFIG_SCHED_CACHE */
-> +
-> +static inline int mm_alloc_sched(struct mm_struct *mm) { return 0; }
-> +static inline void mm_destroy_sched(struct mm_struct *mm) { }
-> +
-> +#endif /* CONFIG_SCHED_CACHE */
-> +
->  struct mmu_gather;
->  extern void tlb_gather_mmu(struct mmu_gather *tlb, struct mm_struct *mm);
->  extern void tlb_gather_mmu_fullmm(struct mmu_gather *tlb, struct mm_struct *mm);
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 6e5c38718ff5..f8eafe440369 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1379,6 +1379,10 @@ struct task_struct {
->  	unsigned long			numa_pages_migrated;
->  #endif /* CONFIG_NUMA_BALANCING */
->  
-> +#ifdef CONFIG_SCHED_CACHE
-> +	struct callback_head		cache_work;
-> +#endif
-> +
->  #ifdef CONFIG_RSEQ
->  	struct rseq __user *rseq;
->  	u32 rseq_len;
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 681f38ee68db..14b15215318f 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -950,6 +950,10 @@ config NUMA_BALANCING
->  
->  	  This system will be inactive on UMA systems.
->  
-> +config SCHED_CACHE
-> +	bool "Cache aware scheduler"
-> +	default y
-> +
->  config NUMA_BALANCING_DEFAULT_ENABLED
->  	bool "Automatically enable NUMA aware memory/task placement"
->  	default y
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 1b659b07ecd5..bc9d7dbfd980 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1314,6 +1314,9 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
->  	if (mm_alloc_cid(mm, p))
->  		goto fail_cid;
->  
-> +	if (mm_alloc_sched(mm))
-> +		goto fail_sched;
-> +
->  	if (percpu_counter_init_many(mm->rss_stat, 0, GFP_KERNEL_ACCOUNT,
->  				     NR_MM_COUNTERS))
->  		goto fail_pcpu;
-> @@ -1323,6 +1326,8 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
->  	return mm;
->  
->  fail_pcpu:
-> +	mm_destroy_sched(mm);
-> +fail_sched:
->  	mm_destroy_cid(mm);
->  fail_cid:
->  	destroy_context(mm);
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 87540217fc09..649db6ea41ea 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -4514,6 +4514,7 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
->  	p->migration_pending = NULL;
->  #endif
->  	init_sched_mm_cid(p);
-> +	init_sched_mm(p);
->  }
->  
->  DEFINE_STATIC_KEY_FALSE(sched_numa_balancing);
-> @@ -8505,6 +8506,7 @@ static struct kmem_cache *task_group_cache __ro_after_init;
->  
->  void __init sched_init(void)
->  {
-> +	unsigned long now = jiffies;
->  	unsigned long ptr = 0;
->  	int i;
->  
-> @@ -8579,7 +8581,7 @@ void __init sched_init(void)
->  		raw_spin_lock_init(&rq->__lock);
->  		rq->nr_running = 0;
->  		rq->calc_load_active = 0;
-> -		rq->calc_load_update = jiffies + LOAD_FREQ;
-> +		rq->calc_load_update = now + LOAD_FREQ;
->  		init_cfs_rq(&rq->cfs);
->  		init_rt_rq(&rq->rt);
->  		init_dl_rq(&rq->dl);
-> @@ -8623,7 +8625,7 @@ void __init sched_init(void)
->  		rq->cpu_capacity = SCHED_CAPACITY_SCALE;
->  		rq->balance_callback = &balance_push_callback;
->  		rq->active_balance = 0;
-> -		rq->next_balance = jiffies;
-> +		rq->next_balance = now;
->  		rq->push_cpu = 0;
->  		rq->cpu = i;
->  		rq->online = 0;
-> @@ -8635,7 +8637,7 @@ void __init sched_init(void)
->  
->  		rq_attach_root(rq, &def_root_domain);
->  #ifdef CONFIG_NO_HZ_COMMON
-> -		rq->last_blocked_load_update_tick = jiffies;
-> +		rq->last_blocked_load_update_tick = now;
->  		atomic_set(&rq->nohz_flags, 0);
->  
->  		INIT_CSD(&rq->nohz_csd, nohz_csd_func, rq);
-> @@ -8660,6 +8662,11 @@ void __init sched_init(void)
->  
->  		rq->core_cookie = 0UL;
->  #endif
-> +#ifdef CONFIG_SCHED_CACHE
-> +		raw_spin_lock_init(&rq->cpu_epoch_lock);
-> +		rq->cpu_epoch_next = now;
-> +#endif
-> +
->  		zalloc_cpumask_var_node(&rq->scratch_mask, GFP_KERNEL, cpu_to_node(i));
->  	}
->  
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index e43993a4e580..943af076e09c 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -1166,10 +1166,229 @@ static s64 update_curr_se(struct rq *rq, struct sched_entity *curr)
->  	return delta_exec;
->  }
->  
-> -static inline void update_curr_task(struct task_struct *p, s64 delta_exec)
-> +#ifdef CONFIG_SCHED_CACHE
-> +
-> +/*
-> + * XXX numbers come from a place the sun don't shine -- probably wants to be SD
-> + * tunable or so.
-> + */
-> +#define EPOCH_PERIOD	(HZ/100)	/* 10 ms */
-> +#define EPOCH_OLD	5		/* 50 ms */
-> +
-> +void mm_init_sched(struct mm_struct *mm, struct mm_sched *_pcpu_sched)
-> +{
-> +	unsigned long epoch;
-> +	int i;
-> +
-> +	for_each_possible_cpu(i) {
-> +		struct mm_sched *pcpu_sched = per_cpu_ptr(_pcpu_sched, i);
-> +		struct rq *rq = cpu_rq(i);
-> +
-> +		pcpu_sched->runtime = 0;
-> +		pcpu_sched->epoch = epoch = rq->cpu_epoch;
-> +		pcpu_sched->occ = -1;
-> +	}
-> +
-> +	raw_spin_lock_init(&mm->mm_sched_lock);
-> +	mm->mm_sched_epoch = epoch;
-> +	mm->mm_sched_cpu = -1;
-> +
-> +	smp_store_release(&mm->pcpu_sched, _pcpu_sched);
-> +}
-> +
-> +/* because why would C be fully specified */
-> +static __always_inline void __shr_u64(u64 *val, unsigned int n)
-> +{
-> +	if (n >= 64) {
-> +		*val = 0;
-> +		return;
-> +	}
-> +	*val >>= n;
-> +}
-> +
-> +static inline void __update_mm_sched(struct rq *rq, struct mm_sched *pcpu_sched)
-> +{
-> +	lockdep_assert_held(&rq->cpu_epoch_lock);
-> +
-> +	unsigned long n, now = jiffies;
-> +	long delta = now - rq->cpu_epoch_next;
-> +
-> +	if (delta > 0) {
-> +		n = (delta + EPOCH_PERIOD - 1) / EPOCH_PERIOD;
-> +		rq->cpu_epoch += n;
-> +		rq->cpu_epoch_next += n * EPOCH_PERIOD;
-> +		__shr_u64(&rq->cpu_runtime, n);
-> +	}
-> +
-> +	n = rq->cpu_epoch - pcpu_sched->epoch;
-> +	if (n) {
-> +		pcpu_sched->epoch += n;
-> +		__shr_u64(&pcpu_sched->runtime, n);
-> +	}
-> +}
-> +
-> +static unsigned long fraction_mm_sched(struct rq *rq, struct mm_sched *pcpu_sched)
-> +{
-> +	guard(raw_spinlock_irqsave)(&rq->cpu_epoch_lock);
-> +
-> +	__update_mm_sched(rq, pcpu_sched);
-> +
-> +	/*
-> +	 * Runtime is a geometric series (r=0.5) and as such will sum to twice
-> +	 * the accumulation period, this means the multiplcation here should
-> +	 * not overflow.
-> +	 */
-> +	return div64_u64(NICE_0_LOAD * pcpu_sched->runtime, rq->cpu_runtime + 1);
-> +}
-> +
-> +static inline
-> +void account_mm_sched(struct rq *rq, struct task_struct *p, s64 delta_exec)
-> +{
-> +	struct mm_struct *mm = p->mm;
-> +	struct mm_sched *pcpu_sched;
-> +	unsigned long epoch;
-> +
-> +	/*
-> +	 * init_task and kthreads don't be having no mm
-> +	 */
-> +	if (!mm || !mm->pcpu_sched)
-> +		return;
-> +
-> +	pcpu_sched = this_cpu_ptr(p->mm->pcpu_sched);
-> +
-> +	scoped_guard (raw_spinlock, &rq->cpu_epoch_lock) {
-> +		__update_mm_sched(rq, pcpu_sched);
-> +		pcpu_sched->runtime += delta_exec;
-> +		rq->cpu_runtime += delta_exec;
-> +		epoch = rq->cpu_epoch;
-> +	}
-> +
-> +	/*
-> +	 * If this task hasn't hit task_cache_work() for a while, invalidate
-> +	 * it's preferred state.
-> +	 */
-> +	if (epoch - READ_ONCE(mm->mm_sched_epoch) > EPOCH_OLD) {
-> +		mm->mm_sched_cpu = -1;
-> +		pcpu_sched->occ = -1;
-> +	}
-> +}
-> +
-> +static void task_tick_cache(struct rq *rq, struct task_struct *p)
-> +{
-> +	struct callback_head *work = &p->cache_work;
-> +	struct mm_struct *mm = p->mm;
-> +
-> +	if (!mm || !mm->pcpu_sched)
-> +		return;
-> +
-> +	if (mm->mm_sched_epoch == rq->cpu_epoch)
-> +		return;
-> +
-> +	guard(raw_spinlock)(&mm->mm_sched_lock);
-> +
-> +	if (mm->mm_sched_epoch == rq->cpu_epoch)
-> +		return;
-> +
-> +	if (work->next == work) {
-> +		task_work_add(p, work, TWA_RESUME);
-> +		WRITE_ONCE(mm->mm_sched_epoch, rq->cpu_epoch);
-> +	}
-> +}
-> +
-> +static void task_cache_work(struct callback_head *work)
-> +{
-> +	struct task_struct *p = current;
-> +	struct mm_struct *mm = p->mm;
-> +	unsigned long m_a_occ = 0;
-> +	int cpu, m_a_cpu = -1;
-> +	cpumask_var_t cpus;
-> +
-> +	WARN_ON_ONCE(work != &p->cache_work);
-> +
-> +	work->next = work;
-> +
-> +	if (p->flags & PF_EXITING)
-> +		return;
-> +
-> +	if (!alloc_cpumask_var(&cpus, GFP_KERNEL))
-> +		return;
-> +
-> +	scoped_guard (cpus_read_lock) {
-> +		cpumask_copy(cpus, cpu_online_mask);
-> +
-> +		for_each_cpu(cpu, cpus) {
-> +			/* XXX sched_cluster_active */
-> +			struct sched_domain *sd = per_cpu(sd_llc, cpu);
-> +			unsigned long occ, m_occ = 0, a_occ = 0;
-> +			int m_cpu = -1, nr = 0, i;
-> +
-> +			for_each_cpu(i, sched_domain_span(sd)) {
-> +				occ = fraction_mm_sched(cpu_rq(i),
-> +							per_cpu_ptr(mm->pcpu_sched, i));
-> +				a_occ += occ;
-> +				if (occ > m_occ) {
-> +					m_occ = occ;
-> +					m_cpu = i;
-> +				}
-> +				nr++;
-> +				trace_printk("(%d) occ: %ld m_occ: %ld m_cpu: %d nr: %d\n",
-> +					     per_cpu(sd_llc_id, i), occ, m_occ, m_cpu, nr);
-> +			}
-> +
-> +			a_occ /= nr;
-> +			if (a_occ > m_a_occ) {
-> +				m_a_occ = a_occ;
-> +				m_a_cpu = m_cpu;
-> +			}
-> +
-> +			trace_printk("(%d) a_occ: %ld m_a_occ: %ld\n",
-> +				     per_cpu(sd_llc_id, cpu), a_occ, m_a_occ);
-> +
-> +			for_each_cpu(i, sched_domain_span(sd)) {
-> +				/* XXX threshold ? */
-> +				per_cpu_ptr(mm->pcpu_sched, i)->occ = a_occ;
-> +			}
-> +
-> +			cpumask_andnot(cpus, cpus, sched_domain_span(sd));
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * If the max average cache occupancy is 'small' we don't care.
-> +	 */
-> +	if (m_a_occ < (NICE_0_LOAD >> EPOCH_OLD))
-> +		m_a_cpu = -1;
-> +
-> +	mm->mm_sched_cpu = m_a_cpu;
-> +
-> +	free_cpumask_var(cpus);
-> +}
-> +
-> +void init_sched_mm(struct task_struct *p)
-> +{
-> +	struct callback_head *work = &p->cache_work;
-> +	init_task_work(work, task_cache_work);
-> +	work->next = work;
-> +}
-> +
-> +#else
-> +
-> +static inline void account_mm_sched(struct rq *rq, struct task_struct *p,
-> +				    s64 delta_exec) { }
-> +
-> +
-> +void init_sched_mm(struct task_struct *p) { }
-> +
-> +static void task_tick_cache(struct rq *rq, struct task_struct *p) { }
-> +
-> +#endif
-> +
-> +static inline
-> +void update_curr_task(struct rq *rq, struct task_struct *p, s64 delta_exec)
->  {
->  	trace_sched_stat_runtime(p, delta_exec);
->  	account_group_exec_runtime(p, delta_exec);
-> +	account_mm_sched(rq, p, delta_exec);
->  	cgroup_account_cputime(p, delta_exec);
->  }
->  
-> @@ -1215,7 +1434,7 @@ s64 update_curr_common(struct rq *rq)
->  
->  	delta_exec = update_curr_se(rq, &donor->se);
->  	if (likely(delta_exec > 0))
-> -		update_curr_task(donor, delta_exec);
-> +		update_curr_task(rq, donor, delta_exec);
->  
->  	return delta_exec;
->  }
-> @@ -1244,7 +1463,7 @@ static void update_curr(struct cfs_rq *cfs_rq)
->  	if (entity_is_task(curr)) {
->  		struct task_struct *p = task_of(curr);
->  
-> -		update_curr_task(p, delta_exec);
-> +		update_curr_task(rq, p, delta_exec);
->  
->  		/*
->  		 * If the fair_server is active, we need to account for the
-> @@ -7850,7 +8069,7 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
->  	 * per-cpu select_rq_mask usage
->  	 */
->  	lockdep_assert_irqs_disabled();
-> -
-> +again:
->  	if ((available_idle_cpu(target) || sched_idle_cpu(target)) &&
->  	    asym_fits_cpu(task_util, util_min, util_max, target))
->  		return target;
-> @@ -7888,7 +8107,8 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
->  	/* Check a recently used CPU as a potential idle candidate: */
->  	recent_used_cpu = p->recent_used_cpu;
->  	p->recent_used_cpu = prev;
-> -	if (recent_used_cpu != prev &&
-> +	if (prev == p->wake_cpu &&
-> +	    recent_used_cpu != prev &&
->  	    recent_used_cpu != target &&
->  	    cpus_share_cache(recent_used_cpu, target) &&
->  	    (available_idle_cpu(recent_used_cpu) || sched_idle_cpu(recent_used_cpu)) &&
-> @@ -7941,6 +8161,18 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
->  	if ((unsigned)i < nr_cpumask_bits)
->  		return i;
->  
-> +	if (prev != p->wake_cpu && !cpus_share_cache(prev, p->wake_cpu)) {
-> +		/*
-> +		 * Most likely select_cache_cpu() will have re-directed
-> +		 * the wakeup, but getting here means the preferred cache is
-> +		 * too busy, so re-try with the actual previous.
-> +		 *
-> +		 * XXX wake_affine is lost for this pass.
-> +		 */
-> +		prev = target = p->wake_cpu;
-> +		goto again;
-> +	}
-> +
->  	/*
->  	 * For cluster machines which have lower sharing cache like L2 or
->  	 * LLC Tag, we tend to find an idle CPU in the target's cluster
-> @@ -8563,6 +8795,40 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
->  	return target;
->  }
->  
-> +#ifdef CONFIG_SCHED_CACHE
-> +static long __migrate_degrades_locality(struct task_struct *p, int src_cpu, int dst_cpu, bool idle);
-> +
-> +static int select_cache_cpu(struct task_struct *p, int prev_cpu)
-> +{
-> +	struct mm_struct *mm = p->mm;
-> +	int cpu;
-> +
-> +	if (!mm || p->nr_cpus_allowed == 1)
-> +		return prev_cpu;
-> +
-> +	cpu = mm->mm_sched_cpu;
-> +	if (cpu < 0)
-> +		return prev_cpu;
-> +
-> +
-> +	if (static_branch_likely(&sched_numa_balancing) &&
-> +	    __migrate_degrades_locality(p, prev_cpu, cpu, false) > 0) {
-> +		/*
-> +		 * XXX look for max occupancy inside prev_cpu's node
-> +		 */
-> +		return prev_cpu;
-> +	}
-> +
-> +	return cpu;
-> +}
-> +#else
-> +static int select_cache_cpu(struct task_struct *p, int prev_cpu)
-> +{
-> +	return prev_cpu;
-> +}
-> +#endif
-> +
-> +
->  /*
->   * select_task_rq_fair: Select target runqueue for the waking task in domains
->   * that have the relevant SD flag set. In practice, this is SD_BALANCE_WAKE,
-> @@ -8588,6 +8854,8 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
->  	 * required for stable ->cpus_allowed
->  	 */
->  	lockdep_assert_held(&p->pi_lock);
-> +	guard(rcu)();
-> +
->  	if (wake_flags & WF_TTWU) {
->  		record_wakee(p);
->  
-> @@ -8595,6 +8863,8 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
->  		    cpumask_test_cpu(cpu, p->cpus_ptr))
->  			return cpu;
->  
-> +		new_cpu = prev_cpu = select_cache_cpu(p, prev_cpu);
-> +
->  		if (!is_rd_overutilized(this_rq()->rd)) {
->  			new_cpu = find_energy_efficient_cpu(p, prev_cpu);
->  			if (new_cpu >= 0)
-> @@ -8605,7 +8875,6 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
->  		want_affine = !wake_wide(p) && cpumask_test_cpu(cpu, p->cpus_ptr);
->  	}
->  
-> -	rcu_read_lock();
->  	for_each_domain(cpu, tmp) {
->  		/*
->  		 * If both 'cpu' and 'prev_cpu' are part of this domain,
-> @@ -8638,7 +8907,6 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
->  		/* Fast path */
->  		new_cpu = select_idle_sibling(p, prev_cpu, new_cpu);
->  	}
-> -	rcu_read_unlock();
->  
->  	return new_cpu;
->  }
-> @@ -9288,6 +9556,17 @@ static int task_hot(struct task_struct *p, struct lb_env *env)
->  	if (sysctl_sched_migration_cost == 0)
->  		return 0;
->  
-> +#ifdef CONFIG_SCHED_CACHE
-> +	if (p->mm && p->mm->pcpu_sched) {
-> +		/*
-> +		 * XXX things like Skylake have non-inclusive L3 and might not
-> +		 * like this L3 centric view. What to do about L2 stickyness ?
-> +		 */
-> +		return per_cpu_ptr(p->mm->pcpu_sched, env->src_cpu)->occ >
-> +		       per_cpu_ptr(p->mm->pcpu_sched, env->dst_cpu)->occ;
-> +	}
-> +#endif
-> +
->  	delta = rq_clock_task(env->src_rq) - p->se.exec_start;
->  
->  	return delta < (s64)sysctl_sched_migration_cost;
-> @@ -9299,27 +9578,25 @@ static int task_hot(struct task_struct *p, struct lb_env *env)
->   * Returns 0, if task migration is not affected by locality.
->   * Returns a negative value, if task migration improves locality i.e migration preferred.
->   */
-> -static long migrate_degrades_locality(struct task_struct *p, struct lb_env *env)
-> +static long __migrate_degrades_locality(struct task_struct *p, int src_cpu, int dst_cpu, bool idle)
->  {
->  	struct numa_group *numa_group = rcu_dereference(p->numa_group);
->  	unsigned long src_weight, dst_weight;
->  	int src_nid, dst_nid, dist;
->  
-> -	if (!static_branch_likely(&sched_numa_balancing))
-> -		return 0;
-> -
-> -	if (!p->numa_faults || !(env->sd->flags & SD_NUMA))
-> +	if (!p->numa_faults)
->  		return 0;
->  
-> -	src_nid = cpu_to_node(env->src_cpu);
-> -	dst_nid = cpu_to_node(env->dst_cpu);
-> +	src_nid = cpu_to_node(src_cpu);
-> +	dst_nid = cpu_to_node(dst_cpu);
->  
->  	if (src_nid == dst_nid)
->  		return 0;
->  
->  	/* Migrating away from the preferred node is always bad. */
->  	if (src_nid == p->numa_preferred_nid) {
-> -		if (env->src_rq->nr_running > env->src_rq->nr_preferred_running)
-> +		struct rq *src_rq = cpu_rq(src_cpu);
-> +		if (src_rq->nr_running > src_rq->nr_preferred_running)
->  			return 1;
->  		else
->  			return 0;
-> @@ -9330,7 +9607,7 @@ static long migrate_degrades_locality(struct task_struct *p, struct lb_env *env)
->  		return -1;
->  
->  	/* Leaving a core idle is often worse than degrading locality. */
-> -	if (env->idle == CPU_IDLE)
-> +	if (idle)
->  		return 0;
->  
->  	dist = node_distance(src_nid, dst_nid);
-> @@ -9345,7 +9622,24 @@ static long migrate_degrades_locality(struct task_struct *p, struct lb_env *env)
->  	return src_weight - dst_weight;
->  }
->  
-> +static long migrate_degrades_locality(struct task_struct *p, struct lb_env *env)
-> +{
-> +	if (!static_branch_likely(&sched_numa_balancing))
-> +		return 0;
-> +
-> +	if (!(env->sd->flags & SD_NUMA))
-> +		return 0;
-> +
-> +	return __migrate_degrades_locality(p, env->src_cpu, env->dst_cpu,
-> +					   env->idle == CPU_IDLE);
-> +}
-> +
->  #else
-> +static long __migrate_degrades_locality(struct task_struct *p, int src_cpu, int dst_cpu, bool idle)
-> +{
-> +	return 0;
-> +}
-> +
->  static inline long migrate_degrades_locality(struct task_struct *p,
->  					     struct lb_env *env)
->  {
-> @@ -13104,8 +13398,8 @@ static inline void task_tick_core(struct rq *rq, struct task_struct *curr) {}
->   */
->  static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
->  {
-> -	struct cfs_rq *cfs_rq;
->  	struct sched_entity *se = &curr->se;
-> +	struct cfs_rq *cfs_rq;
->  
->  	for_each_sched_entity(se) {
->  		cfs_rq = cfs_rq_of(se);
-> @@ -13115,6 +13409,8 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
->  	if (static_branch_unlikely(&sched_numa_balancing))
->  		task_tick_numa(rq, curr);
->  
-> +	task_tick_cache(rq, curr);
-> +
->  	update_misfit_status(curr, rq);
->  	check_update_overutilized_status(task_rq(curr));
->  
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 47972f34ea70..d16ccd66ca07 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -1171,6 +1171,12 @@ struct rq {
->  	u64			clock_pelt_idle_copy;
->  	u64			clock_idle_copy;
->  #endif
-> +#ifdef CONFIG_SCHED_CACHE
-> +	raw_spinlock_t		cpu_epoch_lock;
-> +	u64			cpu_runtime;
-> +	unsigned long		cpu_epoch;
-> +	unsigned long		cpu_epoch_next;
-> +#endif
->  
->  	atomic_t		nr_iowait;
->  
-> @@ -3861,6 +3867,8 @@ static inline void task_tick_mm_cid(struct rq *rq, struct task_struct *curr) { }
->  static inline void init_sched_mm_cid(struct task_struct *t) { }
->  #endif /* !CONFIG_SCHED_MM_CID */
->  
-> +extern void init_sched_mm(struct task_struct *p);
-> +
->  extern u64 avg_vruntime(struct cfs_rq *cfs_rq);
->  extern int entity_eligible(struct cfs_rq *cfs_rq, struct sched_entity *se);
->  #ifdef CONFIG_SMP
-
+T24gVHVlLCAyMDI1LTAzLTI1IGF0IDExOjIwICswMTAwLCBBbmdlbG9HaW9hY2NoaW5vIERlbCBS
+ZWdubyB3cm90ZToNCj4gRXh0ZXJuYWwgZW1haWwgOiBQbGVhc2UgZG8gbm90IGNsaWNrIGxpbmtz
+IG9yIG9wZW4gYXR0YWNobWVudHMgdW50aWwNCj4geW91IGhhdmUgdmVyaWZpZWQgdGhlIHNlbmRl
+ciBvciB0aGUgY29udGVudC4NCj4gDQo+IA0KPiBJbCAyNS8wMy8yNSAwMzo0MSwgQXhlIFlhbmcg
+KOadqOejiikgaGEgc2NyaXR0bzoNCj4gPiBIaSBBbmdlbG8sDQo+ID4gDQo+ID4gQW55IGNvbW1l
+bnQgb24gdGhpcyA6RA0KPiA+IA0KPiANCj4gQ2hlY2sgaW5saW5lIHJlcGx5IGJlbG93Li4uLg0K
+PiANCj4gPiBSZWdhcmRzLA0KPiA+IEF4ZQ0KPiA+IA0KPiA+IE9uIFdlZCwgMjAyNS0wMy0xMiBh
+dCAxNDozMCArMDgwMCwgYXhlLnlhbmcgd3JvdGU6DQo+ID4gPiBPbiBUdWUsIDIwMjUtMDMtMTEg
+YXQgMTA6NDcgKzAxMDAsIEFuZ2Vsb0dpb2FjY2hpbm8gRGVsIFJlZ25vDQo+ID4gPiB3cm90ZToN
+Cj4gPiA+ID4gRXh0ZXJuYWwgZW1haWwgOiBQbGVhc2UgZG8gbm90IGNsaWNrIGxpbmtzIG9yIG9w
+ZW4gYXR0YWNobWVudHMNCj4gPiA+ID4gdW50aWwNCj4gPiA+ID4geW91IGhhdmUgdmVyaWZpZWQg
+dGhlIHNlbmRlciBvciB0aGUgY29udGVudC4NCj4gPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiBJ
+bCAwNy8wMy8yNSAwNzo1OSwgQXhlIFlhbmcgKOadqOejiikgaGEgc2NyaXR0bzoNCj4gPiA+ID4g
+PiBPbiBUaHUsIDIwMjUtMDMtMDYgYXQgMTA6MTkgKzAxMDAsIEFuZ2Vsb0dpb2FjY2hpbm8gRGVs
+IFJlZ25vDQo+ID4gPiA+ID4gd3JvdGU6DQo+ID4gPiA+ID4gPiBFeHRlcm5hbCBlbWFpbCA6IFBs
+ZWFzZSBkbyBub3QgY2xpY2sgbGlua3Mgb3Igb3Blbg0KPiA+ID4gPiA+ID4gYXR0YWNobWVudHMN
+Cj4gPiA+ID4gPiA+IHVudGlsDQo+ID4gPiA+ID4gPiB5b3UgaGF2ZSB2ZXJpZmllZCB0aGUgc2Vu
+ZGVyIG9yIHRoZSBjb250ZW50Lg0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4g
+PiA+IElsIDA2LzAzLzI1IDA5OjQ4LCBBeGUgWWFuZyBoYSBzY3JpdHRvOg0KPiA+ID4gPiA+ID4g
+PiBBZGQgJ21lZGlhdGVrLGRpc2FibGUtc2luZ2xlLWJ1cnN0JyBzZXR0aW5nLiBUaGlzDQo+ID4g
+PiA+ID4gPiA+IHByb3BlcnR5DQo+ID4gPiA+ID4gPiA+IGNhbg0KPiA+ID4gPiA+ID4gPiBiZQ0K
+PiA+ID4gPiA+ID4gPiB1c2VkIHRvIHN3aXRjaCBidXMgYnVyc3QgdHlwZSwgZnJvbSBzaW5nbGUg
+YnVyc3QgdG8gSU5DUiwNCj4gPiA+ID4gPiA+ID4gd2hpY2gNCj4gPiA+ID4gPiA+ID4gaXMNCj4g
+PiA+ID4gPiA+ID4gZGV0ZXJtaW5lZCBieSB0aGUgYnVzIHR5cGUgd2l0aGluIHRoZSBJUC4gU29t
+ZSB2ZXJzaW9ucw0KPiA+ID4gPiA+ID4gPiBvZg0KPiA+ID4gPiA+ID4gPiB0aGUNCj4gPiA+ID4g
+PiA+ID4gSVANCj4gPiA+ID4gPiA+ID4gYXJlIHVzaW5nIEFYSSBidXMsIHRodXMgdGhpcyBzd2l0
+Y2ggaXMgbmVjZXNzYXJ5IGFzDQo+ID4gPiA+ID4gPiA+ICdzaW5nbGUnDQo+ID4gPiA+ID4gPiA+
+IGlzDQo+ID4gPiA+ID4gPiA+IG5vdA0KPiA+ID4gPiA+ID4gPiB0aGUgYnVyc3QgdHlwZSBzdXBw
+b3J0ZWQgYnkgdGhlIGJ1cy4NCj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+IFNpZ25lZC1v
+ZmYtYnk6IEF4ZSBZYW5nIDxheGUueWFuZ0BtZWRpYXRlay5jb20+DQo+ID4gPiA+ID4gPiANCj4g
+PiA+ID4gPiA+IEkgYW0gbW9zdGx5IHN1cmUgdGhhdCB0aGlzIGlzIG5vdCBzb21ldGhpbmcgdG8g
+cHV0IGluDQo+ID4gPiA+ID4gPiBkZXZpY2V0cmVlLA0KPiA+ID4gPiA+ID4gYnV0DQo+ID4gPiA+
+ID4gPiBhcw0KPiA+ID4gPiA+ID4gcGxhdGZvcm0gZGF0YSBmb3Igc3BlY2lmaWMgU29DKHMpLCBh
+cyBtdWNoIGFzIEknbSBtb3N0bHkNCj4gPiA+ID4gPiA+IHN1cmUNCj4gPiA+ID4gPiA+IHRoYXQN
+Cj4gPiA+ID4gPiA+IGFsbCBvZg0KPiA+ID4gPiA+ID4gdGhlIGluc3RhbmNlcyBvZiB0aGUgTVNE
+QyBJUCBpbiBvbmUgU29DIHdpbGwgYmUgKmFsbCogdXNpbmcNCj4gPiA+ID4gPiA+IGVpdGhlcg0K
+PiA+ID4gPiA+ID4gc2luZ2xlDQo+ID4gPiA+ID4gPiBvciBJTkNSLg0KPiA+ID4gPiA+IA0KPiA+
+ID4gPiA+IE5vLCBhY3R1YWxseSBNU0RDIElQcyBpbiBvbmUgU29DIGFyZSB1c2luZyBkaWZmZXJl
+bnQNCj4gPiA+ID4gPiB2ZXJzaW9ucy4NCj4gPiA+ID4gPiBVc3VhbGx5IE1TREMxIChpbmRleCBm
+cm9tIDEpIGlzIHVzZWQgYXMgZU1NQyBob3N0LCB0aGUgbGVmdA0KPiA+ID4gPiA+IGhvc3RzDQo+
+ID4gPiA+ID4gYXJlDQo+ID4gPiA+ID4gdXNlZCBhcyBTRC9TRElPIGhvc3RzLiBUaGV5IGhhdmUg
+c2ltaWxhciBkZXNpZ25zLCBidXQgdGhlcmUNCj4gPiA+ID4gPiBhcmUNCj4gPiA+ID4gPiBzdGls
+bA0KPiA+ID4gPiA+IGRpZmZlcmVuY2UuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiANCj4gPiA+
+ID4gPiA+IFNvLCBJIHRoaW5rIEkga25vdyB0aGUgYW5zd2VyIGJ1dCBJJ2xsIHN0aWxsIGFzayBq
+dXN0IHRvIGJlDQo+ID4gPiA+ID4gPiBleHRyZW1lbHkNCj4gPiA+ID4gPiA+IHN1cmU6DQo+ID4g
+PiA+ID4gPiANCj4gPiA+ID4gPiA+IGlzIHRoZXJlIGFueSBNZWRpYVRlayBTb0MgdGhhdCBoYXMg
+ZGlmZmVyZW50IElQIHZlcnNpb25zDQo+ID4gPiA+ID4gPiBmb3INCj4gPiA+ID4gPiA+IGRpZmZl
+cmVudCBNU0RDDQo+ID4gPiA+ID4gPiBpbnN0YW5jZXMsIGFuZCB0aGF0IGhlbmNlIHJlcXVpcmUg
+c2luZ2xlIGJ1cnN0IG9uIG9uZQ0KPiA+ID4gPiA+ID4gaW5zdGFuY2UNCj4gPiA+ID4gPiA+IGFu
+ZA0KPiA+ID4gPiA+ID4gSU5DUiBvbg0KPiA+ID4gPiA+ID4gYW5vdGhlciBpbnN0YW5jZT8NCj4g
+PiA+ID4gPiANCj4gPiA+ID4gPiBZZXMuIEFjdHVhbGx5IGV2ZXJ5IFNvQyBoYXMgZGlmZmVyZW50
+IElQIHZlcnNpb25zIGZvciBlTU1DDQo+ID4gPiA+ID4gYW5kDQo+ID4gPiA+ID4gU0QvU0RJTw0K
+PiA+ID4gPiA+IGhvc3QgYXMgSSBzYWlkLg0KPiA+ID4gPiA+IGUuZy4gRm9yIE1UODE2OCwgc2ln
+bmVsIGJ1cnN0IGJpdCBzaG91bGQgYmUgc2V0IHRvIDEgZm9yIGVNTUMNCj4gPiA+ID4gPiBIb3N0
+LA0KPiA+ID4gPiA+IGJ1dA0KPiA+ID4gPiA+IDAgZm9yIFNEL1NESU8gSG9zdC4NCj4gPiA+ID4g
+PiANCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gQW5kIGlmIHRoZXJlIGlzIC0gaXMgdGhlcmUg
+YSBwYXR0ZXJuPyBJcyBpdCBhbHdheXMgU0RJTw0KPiA+ID4gPiA+ID4gcmVxdWlyaW5nDQo+ID4g
+PiA+ID4gPiBJTkNSIG9yDQo+ID4gPiA+ID4gPiBhbHdheXMgZU1NQy9TRCByZXF1aXJpbmcgaXQ/
+DQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IE5vLCB0
+aGVyZSBpcyBubyBwYXR0ZXJuLiBCb3RoIGVNTUMgYW5kIFNEL1NESU8gaG9zdHMgbmVlZCB0bw0K
+PiA+ID4gPiA+IGJlDQo+ID4gPiA+ID4gY29uZmlndXJlZCBiYXNlIG9uIElQIHZlcnNpb24uIFRo
+ZXJlIGlzIG5vIGJpbmRpbmcNCj4gPiA+ID4gPiByZWxhdGlvbnNoaXANCj4gPiA+ID4gPiBiZXR3
+ZWVuDQo+ID4gPiA+ID4gZU1NQy9TRC9TRElPIGFuZCB0aGUgYnVyc3QgdHlwZS4gZU1NQyBidXJz
+dCB0eXBlIG1pZ2h0IGJlDQo+ID4gPiA+ID4gSU5DUiBvcg0KPiA+ID4gPiA+IHNpbmdsZSwgc2Ft
+ZSBhcyBTRC9TRElPLg0KPiA+ID4gPiA+IA0KPiA+ID4gPiANCj4gPiA+ID4gT2theSBidXQgaWYg
+dGhlcmUgYXJlIGRpZmZlcmVudCBJUCB2ZXJzaW9ucywgYW5kIEFYSS9BSEIgaXMNCj4gPiA+ID4g
+ZGV0ZXJtaW5lZA0KPiA+ID4gPiBieSB0aGUgSVAgdmVyc2lvbiwgd2h5IGFyZW4ndCB5b3UgcGFy
+c2luZyB0aGUgTUFJTl9WRVIvRUNPX1ZFUg0KPiA+ID4gPiByZWdpc3RlcnMgb2YNCj4gPiA+ID4g
+dGhlIE1TREMgSVAgdG8gY2hlY2sgd2hldGhlciB0byB1c2UgSU5DUiBvciBTSU5HTEU/DQo+ID4g
+PiANCj4gPiA+IA0KPiA+ID4gVG8gYWRkcmVzcyB5b3VyIGNvbmNlcm5zLCBJIGhhZCBmdXJ0aGVy
+IGRpc2N1c3Npb25zIHdpdGggdGhlDQo+ID4gPiBkZXNpZ25lci4NCj4gPiA+IFRoZWlyIHJlc3Bv
+bnNlIHdhcyB0aGF0IHRoZSBidXMgdHlwZSBhbmQgSVAgdmVyc2lvbiBhcmUgbm90IGJvdW5kDQo+
+ID4gPiB0b2dldGhlci4gVGhpcyBjb250cmFkaWN0cyBteSBwcmV2aW91cyBzdGF0ZW1lbnRzLCBh
+bmQgSQ0KPiA+ID4gYXBvbG9naXplDQo+ID4gPiBmb3INCj4gPiA+IHRoYXQuDQo+ID4gPiBBY2Nv
+cmRpbmcgdG8gdGhlIGRlc2lnbmVyJ3MgZmVlZGJhY2ssIEkgbXVzdCBzYXkgdGhhdCB0aGUgc2lu
+Z2xlDQo+ID4gPiBidXJzdA0KPiA+ID4gc2V0dGluZyBpcyBpbmRlZWQgdGllZCB0byB0aGUgSUMs
+IGJ1dCB0aGUgZ3JhbnVsYXJpdHkgaXMgc3VjaA0KPiA+ID4gdGhhdCBpdA0KPiA+ID4gbmVlZHMg
+dG8gYmUgc2V0IGluZGl2aWR1YWxseSBmb3IgZWFjaCBob3N0Lg0KPiA+ID4gR2l2ZW4gdGhlIGxh
+cmdlIG51bWJlciBvZiBJQ3MgTWVkaWF0ZWsgY3VycmVudGx5IGhhcywgYWRkaW5nDQo+ID4gPiBi
+dXJzdA0KPiA+ID4gdHlwZQ0KPiA+ID4gaW5mb3JtYXRpb24gZm9yIGVhY2ggaG9zdCB0byB0aGUg
+ZHJpdmVyJ3MgY29tcGF0aWJsZSBzdHJ1Y3R1cmUNCj4gPiA+IHdvdWxkDQo+ID4gPiBtZWFuIGFk
+ZGluZyBodW5kcmVkcyhtYXliZSB0aG91c2FuZHMgOigpIG9mIGxpbmVzIHRvIHRoZSBkcml2ZXIN
+Cj4gPiA+IGZvcg0KPiA+ID4gdGhlDQo+ID4gPiBjb21wYXRpYmxlIHN0cnVjdHVyZXMgZm9yICph
+bGwgcHJldmlvdXMgU29DcyogKGN1cnJlbnRseSB0aGVyZQ0KPiA+ID4gYXJlDQo+ID4gPiBvbmx5
+DQo+ID4gPiAxMyBjb21wYXRpYmxlIHN0cnVjdHVyZXMsIGFuZCB0aGV5IGNhbiBiZSByZXVzZSBi
+eSBuZXcgU29DKS4gVGhpcw0KPiA+ID4gYXBwcm9hY2ggc2VlbXMgdmVyeSBjdW1iZXJzb21lLg0K
+PiA+ID4gDQo+ID4gPiBTbyBJIHN0aWxsIGJlbGlldmUgdGhhdCBwbGFjaW5nIHRoaXMgc2V0dGlu
+ZyBpbiB0aGUgRFRTIGlzIGEgbW9yZQ0KPiA+ID4gYXBwcm9wcmlhdGUgYXBwcm9hY2guDQo+ID4g
+PiANCj4gDQo+IEhlbGxvIEF4ZSwNCj4gDQo+IHNvcnJ5IGZvciB0aGUgd2FpdCAtIHRoaXMgZW1h
+aWwgZmVsbCB0aHJvdWdoIHRoZSBjcmFja3MgYW5kIEkgZGlkbid0DQo+IHNlZQ0KPiBpdCBhdCBh
+bGwsIHNvIHRoYW5rIHlvdSBmb3IgdGhlIHBpbmcuDQo+IA0KPiBVbmZvcnR1bmF0ZWx5LCBJIGRv
+bid0IHRoaW5rIHRoYXQgdGhpcyB3b3VsZCBiZSBhY2NlcHRhYmxlIGZyb20gYQ0KPiBkZXZpY2V0
+cmVlIGFuZC9vcg0KPiBiaW5kaW5ncyBzdGFuZHBvaW50LCBidXQgdGhlbiB5b3UgZG9uJ3QgcmVh
+bGx5IG5lZWQgdG8gbW9kaWZ5IHRoZQ0KPiBwZGF0YSBmb3IgYWxsIG9mDQo+IHRoZSBjdXJyZW50
+bHkgc3VwcG9ydGVkIFNvQ3MgdG8gZGVjbGFyZSBmYWxzZSwgYXMgZmFsc2U9PTAsIHdoaWNoIGlz
+DQo+IHRoZSBkZWZhdWx0Lg0KPiANCj4gQnV0IG1heWJlIHRoZXJlJ3MgYW5vdGhlciB3YXkgb3V0
+IG9mIHRoaXMuDQo+IA0KPiBZb3Ugc2FpZCB0aGF0IHRoaXMgbW9kaWZpY2F0aW9uIGlzIGRvbmUg
+YmVjYXVzZSBzb21lIGNvbnRyb2xsZXJzIGFyZQ0KPiB1bmRlciBBWEkgYW5kDQo+IHNvbWUgb3Ro
+ZXJzIGFyZSB1bmRlciBBSEIuLi4gSSB3YXMgZG9pbmcgc29tZSBjbGVhbnVwcyB0byB0aGlzIGRy
+aXZlcg0KPiBhbmQgZG9pbmcgc28NCj4gbWFkZSBtZSBjaGVjayBhIGNvdXBsZSBvZiB0aGluZ3Mu
+Li4uDQo+IA0KPiBXaGVuIGEgTVNEQyBjb250cm9sbGVyIGlzIHVuZGVyIEFYSSwgdGhlcmUgd2ls
+bCBiZSBjb25maWd1cmF0aW9uIGZvcg0KPiB0aGF0IGluIG90aGVyDQo+IHJlZ2lzdGVycyAtIHNw
+ZWNpZmljYWxseSwgSSdtIHdvbmRlcmluZyBpZiB0aGUgRU1NQzUwX0NGRzIgcmVnaXN0ZXINCj4g
+Y2FuIGJlIHVzZWQgdG8NCj4gY2hlY2sgaWYgd2UgYXJlIHVuZGVyIGFuIEFIQiB0byBBWEkgd3Jh
+cHBlciBvciBub3QuDQo+IA0KPiBUaGUgaWRlYSBpcyB0byByZWFkIHRoaXMgcmVnaXN0ZXIgKG9m
+ZnNldCAweDIxYyksIFsyNzoyNF0gQVhJX1NFVF9MRU4NCj4gY29udGFpbnMgdGhlDQo+IG51bWJl
+ciBvZiBiZWF0cyBwZXIgYnVyc3QgKGZyb20gMSB0byAxNiksIGFuZCBhbHNvIFsyMzoxOV0NCj4g
+QVhJX1JYX09VVFNUQU5ESU5HX05VTQ0KPiBjb250YWlucyB0aGUgbnVtYmVyIG9mIG91dHN0YW5k
+aW5nIHRyYW5zZmVycyAoMSB0byAxMykuDQo+IA0KPiBJZiBhIGNvbnRyb2xsZXIgZG9lcyBub3Qg
+aGF2ZSBhbiBBWEkyQUhCIFdyYXBwZXIsIG9yIGlmIGl0IGRvZXMgbm90DQo+IHVzZSB0aGUgQVhJ
+IGJ1cw0KPiB0aGlzIHJlZ2lzdGVyIHNob3VsZCByZWFkIHplcm8gSSB0aGluaz8NCj4gDQo+IEVz
+cGVjaWFsbHkgdGhlIHR3byBmaWVsZHMgdGhhdCBJIG1lbnRpb25lZCBiZWZvcmUsIHRob3NlIHNo
+b3VsZCByZWFkDQo+IHplcm8uDQo+IA0KPiBUaGF0LCBlc3BlY2lhbGx5IGJlY2F1c2UgdGhlIGh3
+YWRkciBmb3IgdGhlIGNvbnRyb2xsZXJzIGlzIGFueXdheSBhbmQNCj4gYWx3YXlzIGxvbmcNCj4g
+MHgxMDAwIC0gYW5kIEkgdGhpbmsgdGhhdCB0aGUgZXh0cmEgcmVnaXN0ZXJzIHNwYWNlLCBvbiBj
+b250cm9sbGVycw0KPiB0aGF0IGRvbid0IGhhdmUNCj4gdGhlIEVNTUM1MCByZWdpc3RlcnMgKG1z
+ZGMxIGFuZCBtc2RjMikgc2hvdWxkIGJlIHN0aWxsIHJlc2VydmVkIHRvDQo+IHRob3NlIGFuZCBu
+ZXZlcg0KPiB1c2VkIGZvciBhbnl0aGluZyBlbHNlLg0KPiANCj4gV291bGQgdGhhdCBkZXRlY3Rp
+b24gd2F5IHdvcms/DQoNCkNvbmZpcm1lZCB0aGF0IHRoaXMgYXBwcm9hY2ggd2lsbCB3b3JrIGZv
+ciBhbGwgU29jIGFuZCBJUCB2ZXJzaW9uLiBUaHguDQoNCldpbGwgc2VuZCB2MiBhZnRlciB5b3Vy
+IHJlZ2lzdGVyIGNsZWFudXAgc2VyaWVzIGFjY2VwdGVkLg0KDQpSZWdhcmRzLA0KQXhlDQoNCj4g
+DQo+IElmIGl0IHdvdWxkLCB3ZSdkIGJlIGFnYWluIGF1dG9kZXRlY3Rpbmcgd2hldGhlciB0byBz
+ZXQgb3Igbm90IHRoZQ0KPiBBWEkgc2luZ2xlIGJ1cnN0DQo+IG9wdGlvbiBpbiB0aGUgcGF0Y2gg
+Yml0cy4uLndpdGhvdXQgcmVseWluZyBvbiBzcGVjaWZ5aW5nIGFueXRoaW5nDQo+IG1hbnVhbGx5
+LCBub3QgaW4NCj4gdGhlIGRldmljZXRyZWUsIGFuZCBub3QgaW4gdGhlIHBsYXRmb3JtIGRhdGEg
+Oi0pDQo+IA0KPiBDaGVlcnMsDQo+IEFuZ2Vsbw0KPiANCj4gPiA+IFJlZ2FyZHMsDQo+ID4gPiBB
+eGUNCj4gPiA+IA0KPiA+ID4gPiANCj4gPiA+ID4gQ2hlZXJzLA0KPiA+ID4gPiBBbmdlbG8NCj4g
+PiA+ID4gDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gUmVnYXJkcywNCj4gPiA+ID4gPiBBeGUNCj4g
+PiA+ID4gPiANCj4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiAtLS0NCj4g
+PiA+ID4gPiA+ID4gICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvbXRr
+LXNkLnlhbWwgfCA4DQo+ID4gPiA+ID4gPiA+ICsrKysrKysrDQo+ID4gPiA+ID4gPiA+ICAgICAx
+IGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspDQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+
+ID4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21tYy9t
+dGstDQo+ID4gPiA+ID4gPiA+IHNkLnlhbWwNCj4gPiA+ID4gPiA+ID4gYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbW1jL210ay1zZC55YW1sDQo+ID4gPiA+ID4gPiA+IGluZGV4
+IDBkZWJjY2JkNjUxOS4uNjA3NmFmZjBhNjg5IDEwMDY0NA0KPiA+ID4gPiA+ID4gPiAtLS0gYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbW1jL210ay1zZC55YW1sDQo+ID4gPiA+
+ID4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvbXRrLXNk
+LnlhbWwNCj4gPiA+ID4gPiA+ID4gQEAgLTEwMCw2ICsxMDAsMTQgQEAgcHJvcGVydGllczoNCj4g
+PiA+ID4gPiA+ID4gICAgICAgICBtaW5pbXVtOiAwDQo+ID4gPiA+ID4gPiA+ICAgICAgICAgbWF4
+aW11bTogMHhmZmZmZmZmZg0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gKyAgbWVkaWF0
+ZWssZGlzYWJsZS1zaW5nbGUtYnVyc3Q6DQo+ID4gPiA+ID4gPiA+ICsgICAgJHJlZjogL3NjaGVt
+YXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvZmxhZw0KPiA+ID4gPiA+ID4gPiArICAgIGRlc2Ny
+aXB0aW9uOg0KPiA+ID4gPiA+ID4gPiArICAgICAgQnVyc3QgdHlwZSBzZXR0aW5nLiBGb3Igc29t
+ZSB2ZXJzaW9ucyBvZiB0aGUgSVANCj4gPiA+ID4gPiA+ID4gdGhhdA0KPiA+ID4gPiA+ID4gPiBk
+bw0KPiA+ID4gPiA+ID4gPiBub3QNCj4gPiA+ID4gPiA+ID4gdXNlDQo+ID4gPiA+ID4gPiA+ICsg
+ICAgICBBSEIgYnVzLCB0aGUgYnVyc3QgdHlwZSBuZWVkIHRvIGJlIHN3aXRjaGVkIHRvDQo+ID4g
+PiA+ID4gPiA+IElOQ1IuDQo+ID4gPiA+ID4gPiA+ICsgICAgICBJZiBwcmVzZW50LCB1c2UgSU5D
+UiBidXJzdCB0eXBlLg0KPiA+ID4gPiA+ID4gPiArICAgICAgSWYgbm90IHByZXNlbnQsIHVzZSBz
+aW5nbGUgYnVyc3QgdHlwZS4NCj4gPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gPiAgICAgICBt
+ZWRpYXRlayxoczIwMC1jbWQtaW50LWRlbGF5Og0KPiA+ID4gPiA+ID4gPiAgICAgICAgICRyZWY6
+IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMg0KPiA+ID4gPiA+ID4gPiAg
+ICAgICAgIGRlc2NyaXB0aW9uOg0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4g
+PiA+IA0KPiA+ID4gPiANCj4gPiA+ID4gDQo+IA0KPiANCg==
