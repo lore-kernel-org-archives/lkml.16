@@ -1,186 +1,138 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05309215040;
-	Thu, 27 Mar 2025 12:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.152.168
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743079975; cv=fail; b=VobvNwSHnI5Tp/LhPu7cTFefDAiyad8WEc0oIxvM0EuNduwEh/P0EJPKCzILoo3r2ybUg2JBOehPJU+t5fpYBPsWQabK+ZW2CdUpMkr6Rv0cwJ3DrG2+ty13wFVFAXrY56x8OQ1hYRr/2Sw44RlaT8lQolME/FPtF8KaIx3vomQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743079975; c=relaxed/simple;
-	bh=7A3/59rbNrFqmoTf1/63lzhBji0iptwKOVE9vFWF44w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DvbVyMaSFxPOQMlnFj1G9qD+9uReSvKF5Sd5iOG5qTPWXi9d9PaFVmEWWEJ+PJ60n8T+ePQxpuwhWzhqLT3Mv0kkTF0PlIxmKO5zP2b9pCeeWvO9dy3sG+3V0oeyLqtVFi94hjacLcwgh2Qj1ILiS4DpdXzaQ9rfGJ1rdaHCaxQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=SDJ8hkzC; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=JXzAsqgl; arc=fail smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cirrus.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F822F2A;
+	Thu, 27 Mar 2025 12:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743080037; cv=none; b=SNAdRAJfL/+e1WF4dSR3auc6OCRruOUCMauJCYBhU/rU3Dnj75EARqtA/J6yyZ+tAsncN07V70txvAPAEZ/B4Wg0/9QgqQCCNxkNxpudYuvbBt4PXZ+wVDnqlQMvnxN+l9MF4iiNLIR9iTSovEwtM3dCfaVv3JLH/yCtXwAtrew=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743080037; c=relaxed/simple;
+	bh=OyRxuRbuBHV8b3o0/C8mCF4e1TUCtATMDlYeAK82uTY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S2xLBEMNGgf6mqfcABQfZn5GajgbocuwHQ/5Wt1EtgNgS2xTAEr0UFEUTkS/PQCD+WnhDB6zU43RT4vfc2VvfZXgD52Wlt+DGmBKZ4Vu6buOtdiUZdZxNC+6hrNg41OiCjFj670cemn37XsuTmMmhAsS0Smy0Yu+3sDoDF6qoiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JpAdgq0l; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="SDJ8hkzC";
-	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="JXzAsqgl"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R4tfTP019524;
-	Thu, 27 Mar 2025 07:52:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=PODMain02222019; bh=81403euldJNslPof
-	GPhbAwIeU1fCqXpuP0L47elURmQ=; b=SDJ8hkzCyqGiHs75HJOvDk4p60umhBOf
-	kS+u2CHKthp/xS0WFaOExKSUA1lQhCwhLuALAkS+kCxLwjH0t6Y2aGNyVpBP5uNC
-	7M9ASz8og7berVClSvwl+SVAZF94scTz9aSlIvzU3y+BID81sqxPGpKaaXEhbtq5
-	DnNsdkOyYGQHskYhdnwbp2B8bBbpjYHD9uF9S2G9kmTHdamsNRrYSVsanMXpxPNQ
-	DTYY/Hv0eoljleRRgkXkrpI//Aa9W0Vi4bCO4amFrrG2is57Q5PaNmnOPVObI5Zh
-	lWbGAVyPidoX8jIEwj7aQXK9tU1Pytcnpzq94cZEu4kgv+K3Z/svbA==
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2040.outbound.protection.outlook.com [104.47.70.40])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 45jntbye5n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 07:52:29 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vf3pC3oRm87sQQ1tfjgti27dFYnh6XgMI2kXxhbdMxStDSdI6bDffOKLyEcEfj03Ogqqlt0uDDwot2xMXJSC2o/x/vnF1Z7E7VDxKv0ZLaZr306wZfJKpkikoFnD3p8Go4t8nQm0akDyojgJo6Z409PW9vaDIMq/NU7j7bzNk8SL6gUfEb9+YFu23rs3a+/oLDuD6jX8R2QfHi+uI2vD2en/6SZEZmTctTqOofwDzwa7aR1U6OsaiEzbBJHg/+ezoBo8bs4dYqFfpjy6UKSPpeuO2Rtbdgy4G/TreN0xe3HOTcI8XpPK3Y4jANgtNwPLgJUHbeEw4anPheXdQ8/Keg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=81403euldJNslPofGPhbAwIeU1fCqXpuP0L47elURmQ=;
- b=PMd98YXtUNDST7NUftDh/Pi+UtexE6bqZsQNaYUuJ6iKO11I+yjD77ZXkUcGAg5DcbV0JXf0J5OYvcYEJf0XcBMSrZRDoBsFBORyVoQCUsh1ysy1JGFyMdPsmjbExtBpsBIyxYvgZHrprq4TIzp/U3OMnPBOtCeN4HKzCsdsILjsLzBOMUbfLSa5qYeac+qs4ak3rpGIy7ZqwYB5ajuRdcNlqnrvsx4HJfaXNNXnR9GAh4eUgNea3bSk69LnYldygdZHRFcPkAgLuTM6g29LhiXyWLXZjkVgY/OK8a/5J9bc2di1lZ2nISu40jwx9WVKF2DFtMf7USOtSyDwYMl5WQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 84.19.233.75) smtp.rcpttodomain=cirrus.com smtp.mailfrom=cirrus.com;
- dmarc=fail (p=reject sp=reject pct=100) action=oreject
- header.from=opensource.cirrus.com; dkim=none (message not signed); arc=none
- (0)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JpAdgq0l"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ff85fec403so4081997a91.1;
+        Thu, 27 Mar 2025 05:53:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=81403euldJNslPofGPhbAwIeU1fCqXpuP0L47elURmQ=;
- b=JXzAsqglS/nbvWRhDakzDMYAN4oahx86GGxXj6cGvDkJY5SI1A6TEUNSupk8sixnXCp9kQ6EPvuXe19mUIyvRT8+kMDc3IAOjKiGXj9nXA0SGySsz0m1vBaoigycgdLa0tDpqbpoI0a9IgQnw8frwT6US+EsjA9XV3NvdPX53tc=
-Received: from MW4PR03CA0013.namprd03.prod.outlook.com (2603:10b6:303:8f::18)
- by DM4PR19MB7286.namprd19.prod.outlook.com (2603:10b6:8:109::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.47; Thu, 27 Mar
- 2025 12:52:25 +0000
-Received: from CO1PEPF000044F2.namprd05.prod.outlook.com
- (2603:10b6:303:8f:cafe::a4) by MW4PR03CA0013.outlook.office365.com
- (2603:10b6:303:8f::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.42 via Frontend Transport; Thu,
- 27 Mar 2025 12:52:24 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
- smtp.mailfrom=cirrus.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
-Received-SPF: Fail (protection.outlook.com: domain of cirrus.com does not
- designate 84.19.233.75 as permitted sender) receiver=protection.outlook.com;
- client-ip=84.19.233.75; helo=edirelay1.ad.cirrus.com;
-Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- CO1PEPF000044F2.mail.protection.outlook.com (10.167.241.72) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.20
- via Frontend Transport; Thu, 27 Mar 2025 12:52:23 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 95DA0406541;
-	Thu, 27 Mar 2025 12:52:18 +0000 (UTC)
-Received: from EDIN4L06LR3.ad.cirrus.com (EDIN4L06LR3.ad.cirrus.com [198.61.68.186])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 9FAB1820244;
-	Thu, 27 Mar 2025 12:52:17 +0000 (UTC)
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-To: brendan.higgins@linux.dev, davidgow@google.com, rmoar@google.com,
-        sboyd@kernel.org
-Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, patches@opensource.cirrus.com,
-        linux-clk@vger.kernel.org,
-        Richard Fitzgerald <rf@opensource.cirrus.com>
-Subject: [PATCH] clk: test: Forward-declare struct of_phandle_args in kunit/clk.h
-Date: Thu, 27 Mar 2025 12:52:14 +0000
-Message-ID: <20250327125214.82598-1-rf@opensource.cirrus.com>
-X-Mailer: git-send-email 2.43.0
+        d=gmail.com; s=20230601; t=1743080035; x=1743684835; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=A5ANoobHoDZEVP9qldav0lDqDxXbZjBZcAW871XBMXM=;
+        b=JpAdgq0lCl6vKVnfyScWNoH53efLiWj97Gt5pmoSLnunAtYKax0sprZOC/wJytJ01O
+         hSZ6OwptyhnfLafbREyaddkUEqCdTaByN8ASQCGdQc2bt3VwKl1eGHt5WrVkhVRfwKdv
+         SybvQ9woyZoUPDEV1UM6/5x51fu0uwRDCVgfTriUf/QQDak2OBCyLzotcDsji27t1Szv
+         qnmX+uJ4rM268bAJjsVzuEJIh7/T8WyDVF1DKvKuv5i+1gMbZgGQFJyu+kn+LE/80pCw
+         opp3C+gzm61O8QxflsYoS3dltmEFqPnf/2xSdx/DOjXaHkjnYge8Rt6M3+AEAhiR6I31
+         0eIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743080035; x=1743684835;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A5ANoobHoDZEVP9qldav0lDqDxXbZjBZcAW871XBMXM=;
+        b=ZufRPs4s5HVbStuXA16Ct+EOKR9WJi5z7xLPysLzlvpNIGG7y9gFKo57kFHgqbJbWm
+         HArn4PziKMpKdJyMZ3M8GBwc6TEgXj1YsHPdlX1QTc3BE5S9u7SiZh+flg0zjihvcjSA
+         cEFyKhs6jNg63e3AjVhTIsK7m5lPUnoAWqkzCbYOCyC/zQg+7o3IMv+T8wTMgzTzhERL
+         uomWNx5wzwOpsyLZW6E8hE6r6NGQKH9OMo6P9WJY1NN5KV/efdiwaD9X+iXi8rCx8tfn
+         BPbvWkPDHF0kohNtaITabmvk5VHjSTGfGmeYt1p5TfPPGjzyskR/j4CDIUhAx7z2UfLp
+         Ajnw==
+X-Forwarded-Encrypted: i=1; AJvYcCVXxRKf8L0XbfwYBCxRV8+Nwe7G2UHDe0IqNT4swl6kSP/qQARiKx6f0WaMucbargWiTzmkLvNDprPYehmm@vger.kernel.org, AJvYcCW6pBNIR3EvvcRcq3X/MCfOtyJH4prSHhZVa4nZQHYUnKYJbc3vPF3v2zanboycapJEEhzaJr8h6mM=@vger.kernel.org, AJvYcCXr9Db1d169zmRULq16bTvdQP5EYV+eFnBQhhlh0FFd/VgNfMO1wYgJA0/go/EZ2RQC9uUfvXbD9K+D@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSC7Siw4SSm5aeapC9B9DOux8dykSKME2MRAb0xH3pa0bIHTcX
+	c9FYOaDkmvVNrOi5p99+t2Fx5bbpu31llCOn9Qb4nwlgdqxKL617Y95wHPO+Wfc=
+X-Gm-Gg: ASbGncskA2Og6NrrgR/8EnJbgQK5DZ14y7QYR6se/oBjVht1tcmBMjdyKR3jlOm2dYS
+	0VuUg8TmDZuEproF0nVKtWAfToIE9Fa446sbychTHQJpPc8870TOxsCQFaujLCcrlwQ8oo+qfT9
+	pAHOoqY9Mz+g/UAG/C+rHzeKzfCkqHi8ZjLcibc19W4Q98neCTQ4mvlP0Wjk2aUhPEnBvlwDl5T
+	1U4BUeQ3kKJL9li3NgGUdGX18zffkfN57d/R2bddnoRLQvy+a47CnoaEB9x6P90dMTTpclzGN0Z
+	pvm+jDFV2nX8Kw4CWnuGOYBPVQK/6ubI482KK094EcVodQvbHN2hUg==
+X-Google-Smtp-Source: AGHT+IGjhVr6O2SlTvqKgsVrxF/ajlGqycQ2y9uDLDOtgp3ufhWNbAK1/lC/V40ITVpV2fLLH8Pqdg==
+X-Received: by 2002:a17:90b:3cd0:b0:2ff:5267:e7da with SMTP id 98e67ed59e1d1-3050bcf1544mr59423a91.3.1743080035191;
+        Thu, 27 Mar 2025 05:53:55 -0700 (PDT)
+Received: from localhost ([2804:30c:b03:ee00:e0b8:a8b8:44aa:8d0b])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3039e10b0d1sm2301777a91.22.2025.03.27.05.53.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 05:53:54 -0700 (PDT)
+Date: Thu, 27 Mar 2025 09:54:56 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Angelo Dureghello <adureghello@baylibre.com>
+Cc: Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	linux-iio@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] docs: iio: add documentation for ad3552r driver
+Message-ID: <Z-VKoNjmdQ5kdREF@debian-BULLSEYE-live-builder-AMD64>
+References: <20250321-wip-bl-ad3552r-fixes-v1-0-3c1aa249d163@baylibre.com>
+ <20250321-wip-bl-ad3552r-fixes-v1-1-3c1aa249d163@baylibre.com>
+ <Z-R_fiDpOqV6yXcd@debian-BULLSEYE-live-builder-AMD64>
+ <uvpbdx7nzydkzigvtkx2loz2swkdrikgcbhgnlnwa3umk6ejk6@miwwdfqy3leu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F2:EE_|DM4PR19MB7286:EE_
-X-MS-Office365-Filtering-Correlation-Id: 09e118ee-11af-43ca-fb8a-08dd6d2e3876
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|61400799027|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cE5uSlhOY1BMVE14UC9jU0xFeVZ0Z1dSVWpNQnpiYXZzR2NkbkxQWXFhMUhB?=
- =?utf-8?B?aERvQmozKzJGTWh4NlUzT1Z6b0YxSDlqVWF1aHdkU3VVZ2hIakk5YzJYam5T?=
- =?utf-8?B?dEtnS0phMmJmcmhpcllUdWNhZ3lBVDRKMEp5UUV4aUpxeXpDR3lrYzVpdkZr?=
- =?utf-8?B?QVhPRGE2ZjBTVUMrZFNZU1dTRGRaTkYvMG9LSnRaNWR5eDlDemhtbWk3ZzZi?=
- =?utf-8?B?cUNWU3NYWnJFQWQ0QWRRQ3pkeFJIQ1NOUHJTQm5Zb1dUK01KZlZYN3RYOUF5?=
- =?utf-8?B?L3Q0Mzc4Y2E0ZWtyMk9MeUg4RnlUb1dUVk5qOFlXaXNKejhickllYzUzTGRB?=
- =?utf-8?B?Z1FjWmIxWmM5NEJNaGdJcnhVczgvYXNiVnN3OUlDaTNXeTRpbFlFY2drUnlE?=
- =?utf-8?B?S1VmM2laK2toUFVvWGtrVWhzWnZHa1Z6VkhydTc5eHdGWnVvTXlXZnVpY3hO?=
- =?utf-8?B?amQ4MGpQcExra1ArREswQlk1eEdvbGlzNnA4eFUwWkNBMmI0SXNHRlZqNGtv?=
- =?utf-8?B?ejRiVkJvVGFuMEtvanhaVWt5R3lDc1NqRk43SDdtZkgwWHZOT3F3NUwwRndQ?=
- =?utf-8?B?UUJNa2FzbnRaMWxva1RzS2crdGtWR0ZwYTJGa3lQY01YdEVuemtwMWI0RGM5?=
- =?utf-8?B?RDQvZ3lNNFVpcDNTaUFEcm0vbkxBT2lib3p0bUw2aVB1OEloZmlTZHk3S1RU?=
- =?utf-8?B?dlFRQlFVS0YweDFlUHJNMU1QMXorMG01OGhDUGVFL0N1SjJxU3hUUVNCS1la?=
- =?utf-8?B?N1R3dXJuTDJEVUlJVk1DN1BJZGNQc0dCYktzbVNtQzRodlRJVVVpOWhRaWhI?=
- =?utf-8?B?bDZ5NW5mNGV6dERGTFJxblVOYVAxbVFmUlh3TzdMOVUvUUdXTjFRT0dwcmZX?=
- =?utf-8?B?TkVyb0VzUnBtNFdyVFJweXAwQ3FZbWZYaWxuN3lKSXBwUWl5QjZ5WmZQZWpD?=
- =?utf-8?B?MzFUeEpuMWxvKzF3Ly9TbXpXT3dieTFTL20xNWJLUVBNR1NkOE5RNTUzYXZL?=
- =?utf-8?B?NVlZaVY0L0xsVGdMbHdhMzNNZlpJODR4MU5GZWkvTkg1a0pPeDdNVVo2SmRC?=
- =?utf-8?B?ZWRxd2Vpc1VVZTRyblRLY1RyYk5kbmxTNVdtTVBkUDZ3RDNMN3dVd3NzTUxj?=
- =?utf-8?B?aEdVd3FCeWZkL2RPVE9vM0RTTnYvU2dtSWh3UjY0a2QzR213WnBVWERreXZl?=
- =?utf-8?B?WXU1WXlwRkQ4RHNsQ0FmTExNR3k4WkdnTjRWV3RQMXJSM0grd0NDaHNLWnJx?=
- =?utf-8?B?VGNaSkdjVHZCMUJubUN1dW16bUUrOTJWMzh4OThyZ29zcE1tcnBnRXhheEp6?=
- =?utf-8?B?UDh5OHhxTXN3bXZoNWxtLy9QYlRqeXM5TlQ4SW5oNlIrTUJ3ZlNJQ0pQbVk3?=
- =?utf-8?B?YmtmNit1N1VkcituYUtxY3l4UE5ZSGFydUl2V0Y2Y3JxN3NLcFh3VTdzMWpw?=
- =?utf-8?B?MlRjV3ZTbG9WeEJ4cnhLWllSczNWd1BtdHpUVVVieTlKRzNPRFV6VlhIQ1g3?=
- =?utf-8?B?SHZBaGgwaUVSOW5kUmpLZXo5REtKdTFCRVRCYjA4M3Jjb0liWDJXWER2UW1W?=
- =?utf-8?B?d1poNm4vRmp2NVBQdWlNd1lBODZGNSt3WWp3VEQwalJadE1QUndtWFJxakdM?=
- =?utf-8?B?Y28vTDdjY0dBTWpONG0wT0Z0ajZiMDRoWXlseG5PcVUyQ1JjdGpDSGRuZGI5?=
- =?utf-8?B?RFM3YXY5dEZXOE1yTEtkVTVQTkNHZUh2YURvdXZxdGVXMUVvbmlhMmMxVUhL?=
- =?utf-8?B?VEhGbCtrMkcrcVlYRER2NlhqRHVZK0t2SWtLK082c21vSUk3R0hrajBVZDBz?=
- =?utf-8?B?ZDFjYThaSm8xeGZyUVI4SEYwMWIvVlZ4S0lReWYyaWppRVZxbngvQ1BrWFZv?=
- =?utf-8?B?N0hFVmR1bUdjQkNXQ29mWm9pUTVaZytkYXBuWnBFZC9XR0RBRmdSSlgrTDNI?=
- =?utf-8?B?ZGYvTE5JOXRtZzZTSEpwQnJSdnZIZTFiWXU0K0VlM2lqa00rbkRyTjF0QkdB?=
- =?utf-8?Q?JyqHxUfkreHyMF58ltsOuthMjUsdmA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(61400799027)(82310400026);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 12:52:23.6442
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09e118ee-11af-43ca-fb8a-08dd6d2e3876
-X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044F2.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR19MB7286
-X-Authority-Analysis: v=2.4 cv=JJM7s9Kb c=1 sm=1 tr=0 ts=67e54a0d cx=c_pps a=bqH6H/OQt14Rv/FmpY1ebg==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10
- a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10 a=w1d2syhTAAAA:8 a=gJEpmvavZCLp9qHwePEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=BGLuxUZjE2igh1l4FkT-:22
-X-Proofpoint-ORIG-GUID: D5adHYrLq3rTt9nn9p9_G65fiK1touf_
-X-Proofpoint-GUID: D5adHYrLq3rTt9nn9p9_G65fiK1touf_
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <uvpbdx7nzydkzigvtkx2loz2swkdrikgcbhgnlnwa3umk6ejk6@miwwdfqy3leu>
 
-Add a forward-declare of struct of_phandle_args to prevent the compiler
-warning:
+Hi Angelo,
 
-../include/kunit/clk.h:29:63: warning: ‘struct of_phandle_args’ declared
-inside parameter list will not be visible outside of this definition or
-declaration
-   struct clk_hw *(*get)(struct of_phandle_args *clkspec, void *data),
+On 03/27, Angelo Dureghello wrote:
+> Hi Marcelo,
+> 
+> On 26.03.2025 19:28, Marcelo Schmitt wrote:
+> > The doc seems to be all about the high-speed setup despite classical SPI support
+> > being mentioned. It would be interesting to see how the regular SPI and hs
+> > ad3552r IIO devices differ from each other (wiring connections, IIO device
+> > interfaces (attributes, debug files, ...), any other relevant peculiarities).
+> > Some comments about that inline.
+> > 
+> 
+> had to add this file mainly to describe ramp generator usage.
+> 
+> The ad3552r (classic SPI) is quite old stuff, may work with whatever
+> controller with classic simple SPI (SDI/SDO/S_CLK/CS) so no particular
+> wiring diagram or explainations should be needed. 
+> 
+Okay, then maybe say so in the doc too. Otherwise this looks like a doc about
+ad3552r driver that is said to support both SPI and hs SPI setups, but only
+info about hs SPI is provided.
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
----
- include/kunit/clk.h | 1 +
- 1 file changed, 1 insertion(+)
+> > On 03/21, Angelo Dureghello wrote:
+> > > From: Angelo Dureghello <adureghello@baylibre.com>
+> > > 
+> > > Add documentation for ad3552r driver, needed to describe the high-speed
+> > > driver debugfs attributes and shows how the user may use them.
+> > > 
+> > > Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> > > ---
+...
+> > > +High speed features
+> > > +===================
+> > > +
+> > > +Device attributes
+> > > +-----------------
+> > This is only describing the debugfs file. What about also listing the usual
+> > IIO device channels and attributes (out_voltageX_raw, out_voltageX_en, ...)?
+> > 
+> 
+> they are already documented, since part of the iio stuff.
+> Please see Documentation/ABI/testing/sysfs-bus-iio.
 
-diff --git a/include/kunit/clk.h b/include/kunit/clk.h
-index 0afae7688157..f226044cc78d 100644
---- a/include/kunit/clk.h
-+++ b/include/kunit/clk.h
-@@ -6,6 +6,7 @@ struct clk;
- struct clk_hw;
- struct device;
- struct device_node;
-+struct of_phandle_args;
- struct kunit;
- 
- struct clk *
--- 
-2.43.0
+Agree, the sysfs interface we often refer to as device attributes is documented
+in sysfs-bus-iio. Though, some of the docs for other IIO drivers complement the
+ABI doc by elaborating on the regular sysfs interface they provide. If there
+would be anything else to say about AD3552R interface, it could be added here.
+Anyway, I think it's also fine to only have the debugfs if there is nothing
+special about the other sysfs files.
 
+Regards,
+Marcelo
