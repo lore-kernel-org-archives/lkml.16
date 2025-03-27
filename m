@@ -1,184 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D941119A
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 01:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1C229B0
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 01:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743037671; cv=none; b=SlxjiOkUcClJ1Q3DLtJMsoItk+L+lO64b8T5basX55FuiANLTdpj93mxA8E3qJaUlifPnu1h26XYKd7Bt8C2r/5AVpfBhh3LykwWZ1MLTWS03moASfWu/nxPYRE+0pTViq/QmA5+/g8TdrcJ9g4dFxciepsTc9HTvLSk/PpxmU0=
+	t=1743037999; cv=none; b=ToekqaxbNqvQIr0LI7eDwvax+Ytt5C9aL3udqq6AS/dp3c5Jz2tI44U1EznsgIC/fLhSktM+ST+7tUG8uSdC9IXn+Yl9dCDrYcBKE6rwBN1UkciHqG5sUCWNpDwB99PJVQsoS+b3yVMOpWdfVtCKknt0entH1wTgnYdBDXGkmkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743037671; c=relaxed/simple;
-	bh=pb0p0tI/0z3tkEyMAueafoBWWLa1UUcL60UfClUhbPY=;
+	s=arc-20240116; t=1743037999; c=relaxed/simple;
+	bh=m530oQpdK+bDzh/ln85B/YYzFNCIGLD/ipYtrFtyaAU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J0lY3xiE+iMQIY0LF6I4sLaPxtY1UrCLwJVc/UWzOOF2vPs/cyHBB51L8Mg3MiOwO/WBetVp+1bNn0bk5u3P1hVw/OiW7AuVyM5p/JHLsGB99aIcsOmORzyyKo3tVuwzKb+rNOrfi4+XP3rmnMwymFrTPaJI5c08mMIyw+ROTKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g9oYUkft; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=a7esJJR5bJ+26yVOtHKzRgfztaD2ch/MY1/7I6lmoZpL5lJtayhew35U2XrpLu3b44s/+gfdm4MRvYoN9gvPA7UGztJX7MVqHx+UKDm7YVFDY+znGlVRVum77qobCQTausd+WZJnQ245OIT0TDkzUEEL4B4O4NoSjvqc+ePIuBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fy7T0rW2; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g9oYUkft"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9659C4CEE2;
-	Thu, 27 Mar 2025 01:07:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743037671;
-	bh=pb0p0tI/0z3tkEyMAueafoBWWLa1UUcL60UfClUhbPY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g9oYUkftrjLq+E4Sf0YVUz0VCoPDG0umb+rMhsdLAl0lyDRRgCrrYeJWb8Lwao4sF
-	 oytKFzGN8AJFsws2ut8/3WWtfH9xTJN3eYzgGrcybES61u0T4+gw4T/9JZW+CAHS3X
-	 KX6q/iZD2YBHlS+EwZa1MmcfiVmTbNNciw7uhTR3PEo6GNm9XB6GLuZRWjR97LZLFB
-	 3zFhrbtlCn31otBUEOTeVF1e402l3wQnPhPpArv8l750c3JstJOKVjHdJ3TyJLRXfu
-	 9QQyRcxByTlFtOcU0mdu/kRFvZloJrmyeJTnmpPQhjQ5T99W4N7bkBVnoyYWCmOgYp
-	 60sgjWoqGvZ3A==
-Date: Wed, 26 Mar 2025 21:07:47 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [GIT pull] irq/urgent for v6.15-rc1
-Message-ID: <Z-Sk41xJ-JIkoZt8@lappy>
-References: <174301605628.1660948.615494869949872320.tglx@xen13.tec.linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fy7T0rW2"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e6c18e2c7dso752958a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 18:13:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743037994; x=1743642794; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7hoHDC3JtUoSlWeOOdPxQY/Nm0XTielw+uZpYtN2LZI=;
+        b=fy7T0rW2kDRVjvN/WY0StIV8WXpJz+o91ptIxPCcTM2YnFgyj2YlopsZ7qmJp7SgS1
+         mHyKHqv2pBHCgEefsbYUJGqV+M4PLzluwLk+Pnmz8yZQTTNNFCwyBUC4IX7aZtNZJwSY
+         +xH9GolFZVnEKmYTIxRZX6gLMN8Sc4u4LpK6kDFTnyXgJgboDOAOEYbyGqVno0l3WBBD
+         oEI/BC2Swb6Qrl4nvvkB1n8PxwSo6H6FdKp6GyF4B4GH4Fl6ozbJgOK1Q3rLATrgCxRI
+         OBbF1SyHSvhAx293QX8zt2vax7geCQIUD6tB8VYSqYFK9B4fshU7cmCRdb3gGfatcIaP
+         9vPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743037994; x=1743642794;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=7hoHDC3JtUoSlWeOOdPxQY/Nm0XTielw+uZpYtN2LZI=;
+        b=nEwQDOoESDfasvZbKjtld6F3qtWDcr2GvXf1/U+PMY8MLzQGrUv6FuLjGj6xmvpzGF
+         LrZPl0De7J4LGOC078ZaS9QYuDXuc0dUs93mWDgFxceksQYzIlNwqsJhzT+XvqQyCjTU
+         jo6LR+Ri6ETkGQFf8nFlkIy6/EzJ0/LrUyNCgfZ84YGHIL7WB1r6rtu8x0nvUD0hMFFw
+         TYCQFo+g5mDWlxsrP0q8G1BoP8tGw1137pUYm7EX+SMvHYwlQS3wFpyiAXBeaRNgahdJ
+         1HC/M+d80xZSw3VwJWnoTyVo0/0kNIVO6jsyycgztaFuMITjJ4sIeYV4Dy9TfskFoeYf
+         GZRA==
+X-Forwarded-Encrypted: i=1; AJvYcCU5K0ltJ37gEB+mF9oWeeRtSiy7VZB/aP8chatAJcYIPUs9DObiDveJd9pA5Peg8+o+ioOJp2ASm8oic90=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVF9RdfK2/h1e+9PkR64iR9T28IfZ0CzTbJnSenaOeLyyqJHI5
+	mYfuL9g1PTwkHDpn/yLTwroUWYWmylYEg9QWBdaq54Mr9mh6510i
+X-Gm-Gg: ASbGncspnE7IX7Y7LVFIIlr5OP9eseIfQlxug780BdyWbEvonkvSN0A2IsuBSLJPYHd
+	6v4bC+ft6LdaAJj5piHOGdKjV5GacNTc8/EZqzCO5cX+vly5igOc6TKRRPiWOF6iUP7D2EEx/Kq
+	Y4EfGrGuCd4T9jHlW/HfrmrXCvGwkeqAuKQI+nJZpBxIffRa2CXkW9El78bS0Kxrj3XhRKX4vpo
+	Na51qfJUSIK3ZjH+BRA+0zlH7Es0e/fcEgS6K3L/8Ntp5cy2CajuPR9NqP2/WYjb47oKUAleSdo
+	Q8vnisryzV7v4pc7PW5B/uxOdwOsSE1KvPF9MdwgBlhp
+X-Google-Smtp-Source: AGHT+IHhYdoOv0p7TAjQ0P+GnyHxjE4+7fAF+A6cPdm2gu2day/h3UwvP9oAultJ7bFRvfWvrlTDEg==
+X-Received: by 2002:a17:907:9446:b0:ab7:9df1:e562 with SMTP id a640c23a62f3a-ac6fb1444e7mr120774466b.48.1743037993691;
+        Wed, 26 Mar 2025 18:13:13 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efd78e0csm1133142966b.175.2025.03.26.18.13.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Mar 2025 18:13:13 -0700 (PDT)
+Date: Thu, 27 Mar 2025 01:13:12 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: kernel test robot <lkp@intel.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: WARNING: modpost: vmlinux: section mismatch in reference:
+ mm_cmdline_setup+0x94 (section: .text.unlikely) -> memblock (section:
+ .init.data)
+Message-ID: <20250327011312.mj55byrfatiprddh@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <202503241259.kJV3U7Xj-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <174301605628.1660948.615494869949872320.tglx@xen13.tec.linutronix.de>
+In-Reply-To: <202503241259.kJV3U7Xj-lkp@intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
-On Wed, Mar 26, 2025 at 08:08:16PM +0100, Thomas Gleixner wrote:
->Thomas Gleixner (1):
->      PCI/MSI: Handle the NOMASK flag correctly for all PCI/MSI backends
+On Mon, Mar 24, 2025 at 12:59:00PM +0800, kernel test robot wrote:
+>tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+>head:   586de92313fcab8ed84ac5f78f4d2aae2db92c59
+>commit: 73db3abdca58c8a014ec4c88cf5ef925cbf63669 init/modpost: conditionally check section mismatch to __meminit*
 
-Hi Thomas,
+Looks this is not the cause, after reverting this commit it still report
+mismatch.
 
-I haven't bisected this, but I suspect that this commit is causing
-boot-time panics that are observed on LKFT. Note the line numbers are
-off by a bit.
+>date:   8 months ago
+>config: microblaze-randconfig-r061-20250323 (https://download.01.org/0day-ci/archive/20250324/202503241259.kJV3U7Xj-lkp@intel.com/config)
+>compiler: microblaze-linux-gcc (GCC) 10.5.0
+>reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250324/202503241259.kJV3U7Xj-lkp@intel.com/reproduce)
+>
+>If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>the same patch/commit), kindly add following tags
+>| Reported-by: kernel test robot <lkp@intel.com>
+>| Closes: https://lore.kernel.org/oe-kbuild-all/202503241259.kJV3U7Xj-lkp@intel.com/
+>
+>All warnings (new ones prefixed by >>, old ones prefixed by <<):
+>
+>>> WARNING: modpost: vmlinux: section mismatch in reference: mm_cmdline_setup+0x94 (section: .text.unlikely) -> memblock (section: .init.data)
 
-Full logs of the run are available at:
-https://qa-reports.linaro.org/lkft/sashal-linus-next/build/v6.13-rc7-16083-gc13edfd29c29/testrun/27775255/suite/log-parser-test/test/bug-bug-kernel-null-pointer-dereference-address/details/
+The reason for this is gcc put mm_cmdline_setup into .text.unlikely section.
+Since it is only used by mmu_init() which is annotated by __init, I think the
+proper way is to add __init to mm_cmdline_setup.
 
-<1>[    1.540630] BUG: kernel NULL pointer dereference, address: 0000000000000002
-<1>[    1.540630] #PF: supervisor read access in kernel mode
-<1>[    1.540630] #PF: error_code(0x0000) - not-present page
-<6>[    1.540630] PGD 0 P4D 0
-<4>[    1.540630] Oops: Oops: 0000 [#1] SMP PTI
-<4>[    1.540630] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0 #1 PREEMPT(voluntary)
-<4>[    1.540630] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-<4>[ 1.540630] RIP: 0010:__pci_enable_msi_range (drivers/pci/msi/msi.c:300 drivers/pci/msi/msi.c:342 drivers/pci/msi/msi.c:412 drivers/pci/msi/msi.c:463)
-<4>[ 1.540630] Code: ff ff ff e8 4e 18 fe ff f6 83 9f 06 00 00 10 0f b7 85 66 ff ff ff 74 0c 0d 00 01 00 00 66 89 85 66 ff ff ff 8b 8d 60 ff ff ff <41> f6 47 02 40 74 0c 25 ff fe 00 00 66 89 85 66 ff ff ff 89 8d 6c
-All code
-========
-    0:	ff                   	(bad)
-    1:	ff                   	(bad)
-    2:	ff                   	(bad)
-    3:	e8 4e 18 fe ff       	call   0xfffffffffffe1856
-    8:	f6 83 9f 06 00 00 10 	testb  $0x10,0x69f(%rbx)
-    f:	0f b7 85 66 ff ff ff 	movzwl -0x9a(%rbp),%eax
-   16:	74 0c                	je     0x24
-   18:	0d 00 01 00 00       	or     $0x100,%eax
-   1d:	66 89 85 66 ff ff ff 	mov    %ax,-0x9a(%rbp)
-   24:	8b 8d 60 ff ff ff    	mov    -0xa0(%rbp),%ecx
-   2a:*	41 f6 47 02 40       	testb  $0x40,0x2(%r15)		<-- trapping instruction
-   2f:	74 0c                	je     0x3d
-   31:	25 ff fe 00 00       	and    $0xfeff,%eax
-   36:	66 89 85 66 ff ff ff 	mov    %ax,-0x9a(%rbp)
-   3d:	89                   	.byte 0x89
-   3e:	8d                   	.byte 0x8d
-   3f:	6c                   	insb   (%dx),%es:(%rdi)
 
-Code starting with the faulting instruction
-===========================================
-    0:	41 f6 47 02 40       	testb  $0x40,0x2(%r15)
-    5:	74 0c                	je     0x13
-    7:	25 ff fe 00 00       	and    $0xfeff,%eax
-    c:	66 89 85 66 ff ff ff 	mov    %ax,-0x9a(%rbp)
-   13:	89                   	.byte 0x89
-   14:	8d                   	.byte 0x8d
-   15:	6c                   	insb   (%dx),%es:(%rdi)
-<4>[    1.540630] RSP: 0000:ffffa0df00013748 EFLAGS: 00010246
-<4>[    1.540630] RAX: 0000000000000080 RBX: ffff932e00981000 RCX: 0000000000000001
-<4>[    1.540630] RDX: 0000000000000000 RSI: 0000000000000286 RDI: ffffffff85e6e74c
-<4>[    1.540630] RBP: ffffa0df00013820 R08: 0000000000000002 R09: ffffa0df00013714
-<4>[    1.540630] R10: 0000000000000001 R11: ffffffff84ef46c0 R12: ffff932e009810c0
-<4>[    1.540630] R13: 0000000000000001 R14: ffff932e00981000 R15: 0000000000000000
-<4>[    1.540630] FS:  0000000000000000(0000) GS:ffff932ef5f71000(0000) knlGS:0000000000000000
-<4>[    1.540630] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4>[    1.540630] CR2: 0000000000000002 CR3: 0000000020a2e000 CR4: 00000000000006f0
-<4>[    1.540630] Call Trace:
-<4>[    1.540630]  <TASK>
-<4>[ 1.540630] pci_alloc_irq_vectors_affinity (drivers/pci/msi/api.c:?)
-<4>[ 1.540630] pci_alloc_irq_vectors (drivers/pci/msi/api.c:235)
-<4>[ 1.540630] ahci_init_irq (drivers/ata/ahci.c:1720)
-<4>[ 1.540630] ahci_init_one (drivers/ata/ahci.c:2004)
-<4>[ 1.540630] pci_device_probe (drivers/pci/pci-driver.c:325 drivers/pci/pci-driver.c:392 drivers/pci/pci-driver.c:417 drivers/pci/pci-driver.c:451)
-<4>[ 1.540630] really_probe (drivers/base/dd.c:?)
-<4>[ 1.540630] __driver_probe_device (drivers/base/dd.c:?)
-<4>[ 1.540630] driver_probe_device (drivers/base/dd.c:830)
-<4>[ 1.540630] __driver_attach (drivers/base/dd.c:1217)
-<4>[ 1.540630] bus_for_each_dev (drivers/base/bus.c:369)
-<4>[ 1.540630] driver_attach (drivers/base/dd.c:1234)
-<4>[ 1.540630] bus_add_driver (drivers/base/bus.c:678)
-<4>[ 1.540630] driver_register (drivers/base/driver.c:250)
-<4>[ 1.540630] __pci_register_driver (drivers/pci/pci-driver.c:1448)
-<4>[ 1.540630] ahci_pci_driver_init (drivers/ata/ahci.c:2090)
-<4>[ 1.540630] do_one_initcall (init/main.c:1257)
-<4>[ 1.540630] do_initcall_level (init/main.c:1318)
-<4>[ 1.540630] do_initcalls (init/main.c:1332)
-<4>[ 1.540630] do_basic_setup (init/main.c:1355)
-<4>[ 1.540630] kernel_init_freeable (init/main.c:1571)
-<4>[ 1.540630] kernel_init (init/main.c:1459)
-<4>[ 1.540630] ret_from_fork (arch/x86/kernel/process.c:159)
-<4>[ 1.540630] ret_from_fork_asm (arch/x86/entry/entry_64.S:258)
-<4>[    1.540630]  </TASK>
-<4>[    1.540630] Modules linked in:
-<4>[    1.540630] CR2: 0000000000000002
-<4>[    1.540630] ---[ end trace 0000000000000000 ]---
-<4>[ 1.540630] RIP: 0010:__pci_enable_msi_range (drivers/pci/msi/msi.c:300 drivers/pci/msi/msi.c:342 drivers/pci/msi/msi.c:412 drivers/pci/msi/msi.c:463)
-<4>[ 1.540630] Code: ff ff ff e8 4e 18 fe ff f6 83 9f 06 00 00 10 0f b7 85 66 ff ff ff 74 0c 0d 00 01 00 00 66 89 85 66 ff ff ff 8b 8d 60 ff ff ff <41> f6 47 02 40 74 0c 25 ff fe 00 00 66 89 85 66 ff ff ff 89 8d 6c
-All code
-========
-    0:	ff                   	(bad)
-    1:	ff                   	(bad)
-    2:	ff                   	(bad)
-    3:	e8 4e 18 fe ff       	call   0xfffffffffffe1856
-    8:	f6 83 9f 06 00 00 10 	testb  $0x10,0x69f(%rbx)
-    f:	0f b7 85 66 ff ff ff 	movzwl -0x9a(%rbp),%eax
-   16:	74 0c                	je     0x24
-   18:	0d 00 01 00 00       	or     $0x100,%eax
-   1d:	66 89 85 66 ff ff ff 	mov    %ax,-0x9a(%rbp)
-   24:	8b 8d 60 ff ff ff    	mov    -0xa0(%rbp),%ecx
-   2a:*	41 f6 47 02 40       	testb  $0x40,0x2(%r15)		<-- trapping instruction
-   2f:	74 0c                	je     0x3d
-   31:	25 ff fe 00 00       	and    $0xfeff,%eax
-   36:	66 89 85 66 ff ff ff 	mov    %ax,-0x9a(%rbp)
-   3d:	89                   	.byte 0x89
-   3e:	8d                   	.byte 0x8d
-   3f:	6c                   	insb   (%dx),%es:(%rdi)
-
-Code starting with the faulting instruction
-===========================================
-    0:	41 f6 47 02 40       	testb  $0x40,0x2(%r15)
-    5:	74 0c                	je     0x13
-    7:	25 ff fe 00 00       	and    $0xfeff,%eax
-    c:	66 89 85 66 ff ff ff 	mov    %ax,-0x9a(%rbp)
-   13:	89                   	.byte 0x89
-   14:	8d                   	.byte 0x8d
-   15:	6c                   	insb   (%dx),%es:(%rdi)
-<4>[    1.540630] RSP: 0000:ffffa0df00013748 EFLAGS: 00010246
-<4>[    1.540630] RAX: 0000000000000080 RBX: ffff932e00981000 RCX: 0000000000000001
-<4>[    1.540630] RDX: 0000000000000000 RSI: 0000000000000286 RDI: ffffffff85e6e74c
-<4>[    1.540630] RBP: ffffa0df00013820 R08: 0000000000000002 R09: ffffa0df00013714
-<4>[    1.540630] R10: 0000000000000001 R11: ffffffff84ef46c0 R12: ffff932e009810c0
-<4>[    1.540630] R13: 0000000000000001 R14: ffff932e00981000 R15: 0000000000000000
-<4>[    1.540630] FS:  0000000000000000(0000) GS:ffff932ef5f71000(0000) knlGS:0000000000000000
-<4>[    1.540630] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-<4>[    1.540630] CR2: 0000000000000002 CR3: 0000000020a2e000 CR4: 00000000000006f0
-<6>[    1.540630] note: swapper/0[1] exited with irqs disabled
-<0>[    1.574039] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
-<0>[    1.574664] Kernel Offset: 0x2c00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-<0>[    1.574664] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009 ]---
+diff --git a/arch/microblaze/mm/init.c b/arch/microblaze/mm/init.c
+index 4520c5741579..e98cfaf1c62b 100644
+--- a/arch/microblaze/mm/init.c
++++ b/arch/microblaze/mm/init.c
+@@ -143,7 +143,7 @@ int page_is_ram(unsigned long pfn)
+ /*
+  * Check for command-line options that affect what MMU_init will do.
+  */
+-static void mm_cmdline_setup(void)
++static void __init mm_cmdline_setup(void)
+ {
+ 	unsigned long maxmem = 0;
+ 	char *p = cmd_line;
 
 
 -- 
-Thanks,
-Sasha
+Wei Yang
+Help you, Help me
