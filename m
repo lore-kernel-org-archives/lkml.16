@@ -1,209 +1,176 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2057.outbound.protection.outlook.com [40.107.244.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D549D1392;
-	Thu, 27 Mar 2025 14:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743086910; cv=none; b=g8IvPhvPjbkZBr/HzF0zP84SJaf9qeLBGNvwP2fk5mESZpeV/+ds9saDH7YJeuSCDd1Lj1iYv0o2hM+D8HikwZfCvL6kT3rGddLW0Gp/xxK9QjwtEREPhhbM07TTJJm6Z9pBAL9WOXlhEF97oEtOwG7KnJCnXpqIsUzbQ7j9XPE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743086910; c=relaxed/simple;
-	bh=srbg5hU/kX9GEqR+4GxYh6W7OhpBwZ2zLL+OHMRWn/w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ad92Wq5+A2SX4alaC1tZgGKpAFL4GRUqODraVWIRojPkV43/4ZcbUeOoTf8q8XS+E4Zc2IuEE6RvhbNTjVzortPRQ0xSpc6KJHFEkNaNwuzhLDaVx1soOLhImn+h3xcEzqHNdmNk/FHjRZzANtyWwk2+A+fWYPA263qZbjuzj/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ELSsyA9U; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A57979E1;
+	Thu, 27 Mar 2025 14:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743087000; cv=fail; b=eC/25Eqa3KcG4WJGcvWFNzyWLmPTvzaEnsmI6dKDauntiL/NUGS7tEu6RfhBsOzEMUz2QTFAYeeFDncFJ3UmUcqXR+qe9un7nsPugKiemBPLhWrhXlCMbauwELiMRwc+INo/BeknGc+QpvsSnwvdjasbQGSPvmCCDeSIDOhjbDQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743087000; c=relaxed/simple;
+	bh=v+Qa0m5NUBPi7wqpulo5Ff8E3dAHXm4yuandj29rR4Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=u+5gLxb2S9ilRLyBoR1WZCDG3FOlpex6jnthLXcs06kaSykRHvAzuaaSrUnaix6t+WlVncGcIH9BPyl3OcpBllCgL5lKFrn6Svh9eJMUZDvA1bO/AuUspBBz7YPGBNvV9PMtHuskmrxolO+E+brT8R4kkQ2ezePogb0cEZoO0iM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=bX2V9li8; arc=fail smtp.client-ip=40.107.244.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ELSsyA9U"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6e17d3e92d9so7791386d6.1;
-        Thu, 27 Mar 2025 07:48:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743086908; x=1743691708; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9og7QHW7yZ4FvbucctyT5rc0uqSsMWzyqs7LNH+w4zk=;
-        b=ELSsyA9UCL4z+6lZDleZRpgubDb8T6/n51moSdSNd7kKwee/6h8IGhaiGN32Zz1cOV
-         apluqLdgW3OcDGGqRKxiuKBRDnwdotVZq6R/sU+yBSEJiSec3feCV/E2TBp0Ng+8rPGC
-         a8p0zfqRRPVCE+ye2jzS+D+ntQF1rC1W6qcrtPl7blT7+L3EfTfhudai6yPJH9i3tkUp
-         9ufTzs9qOWjScongbSfBo92M3wDe9A41+DjGJ8n7McoDW4Oo5vNevwBl3KAwB1sJpR/p
-         r3GzqMOWM7lQE7t+epiuG7qxgtMmPgYsRA2kpEveZKGcJuvzQZChEarlSItmfSAi+5ix
-         3WDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743086908; x=1743691708;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9og7QHW7yZ4FvbucctyT5rc0uqSsMWzyqs7LNH+w4zk=;
-        b=YXk/ymb6oJjyOlFRyHgLXmICr2M7OJQOi/Zb4D0BGdE6iVLzP3dZ1r6+1uUL8oPO3Z
-         m/roOcZY02dCTLVrJvYXiiartv1j+jsbPrkHU3mIhELVOSFJYrkE405WBJaIMDKOc9hH
-         6ZqJGdROxSvNJs2dNQG+nIU/42SaGMw3xH9GqASfTm5tsXF5xxFh7wD1QCDtGG12ULRi
-         aKqGQdi6pBmdlV6vqBh+BYcuyc9doy7lACsq/Tqvf+FEMAH2KjN2b8G7Jl9zRqRoHrC7
-         FUduAhp8ncnS2dTkFr+zrYBoXBye8qItggg3+K70bchSLcLKv4uujiCA95gL2rAE63Qy
-         hoGw==
-X-Forwarded-Encrypted: i=1; AJvYcCXlb5yK+x/uyDjA4zepNCdAps7OLb8XfCm/qfJcrYQci9mLy7JEGbv4oShUPpF8Oo90v1zSznrg3xH1BR4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztvX2fonxhl0S0wMNDaNFUkAJ1dEqRne4+dVVBklnJzB0RQpiT
-	VgUpo43h1irmTi6DnzjuZ9n0OxOkpaynzafYw48d4JthdgD9JQZ/
-X-Gm-Gg: ASbGnctIEY4vx4oKBMiJ2AC5I9RS7CqvJcjG73k5UGWLcuaxPR4ab4uvyBVyySpmHDO
-	3VMLMByJLUyr4krcVx2gBHWHF7DX4lXDa9pRCE1xrzYIH3ORHN7jrq3XwaWCjUIENsbMrnImeYt
-	tOSslgrUD5v799fz3fIquEYgs2201JMzjDodH/TtrWvpqkjayoSn83ZCSCtYrpF20b8pHFr1YQk
-	c1j1Aq6uFFDvTAUrJX08PaZsqc8LS0ZeUNzTlCg9kq1rYZX2KD4+tPJpE4iClYlRKVDZwVtjSO6
-	9J6GZuBi74NIWXHgfcr6BuB40joPIIfyDcNcX6NGZktF+RBBSOtIqUnSpw6/7pd8J238ieuoVuF
-	SYjAIWpJg65w80FMvYRXQlcm/yGhzloE7vYQHY4tzTsgq0w==
-X-Google-Smtp-Source: AGHT+IFZ0iTeup043Uaqa4k8vNniJp3yD6375e4R3nCqSubhPSwoSDkhZWAnx74Ht6mOe6vI5TarXg==
-X-Received: by 2002:a05:6214:2483:b0:6d8:b3a7:75a5 with SMTP id 6a1803df08f44-6ed2399af9emr61996706d6.42.1743086907453;
-        Thu, 27 Mar 2025 07:48:27 -0700 (PDT)
-Received: from localhost.localdomain (219.sub-174-198-10.myvzw.com. [174.198.10.219])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eec9645d1esm115796d6.35.2025.03.27.07.48.25
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 27 Mar 2025 07:48:26 -0700 (PDT)
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To: torvalds@linux-foundation.org
-Cc: bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@kernel.org,
-	peterz@infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] BPF resilient spin_lock for 6.15
-Date: Thu, 27 Mar 2025 10:48:23 -0400
-Message-Id: <20250327144823.99186-1-alexei.starovoitov@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="bX2V9li8"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WOYB61+Jil1tvwtNiN89Ijhg5L322c7DDUi3aj0C7oe2m5fJyczZ4E3ess8PIKAvcrQCU2N5dJaqmUvoDqWUYzd/SQXFJGKETk4/bCunjkRAm/PehBOTfYTZa35zeGV5F6UEzOEP5z7MPVjNneMcV7nZ1aquB2wG+GS52I+nJuIccBgFYzsNLOOUvhm5h0cvhqBg5U7+R+tLk32lEO2mbMO0BLZCLQx8foDeFi5N4W84e0DM7ilwWTjkotzXVF2WhWwaN9AYbrswOGWvv0ANMAwi+PJpY5SKoSDXB6WC7kkUv3skOVrJ2tnjCmHB3Z+uAUR8N31odPndQOmDA7/WuA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=taK75GSgOINkRwYN91eeHKeOiAD7kVmtQe5VcG7uzc4=;
+ b=FGy8WbjxBaqes4CoJyRGpTcdOaSsPE6R4unP8X1NPvDvgHUSPFxpbhC9yy7JBMl0ae/EmnA2FdU8Mm4HWmOj1CU/uIQKAhvERwktpnWJ1sZddqT9NzeB/ZZlBT0HOTZUkqfQLKCBPq31mA+B75qKd8W9MEWl+imWRNqQQGHl97I7I3A2t3RSuoWux//phllGJCJta/xvYqcggHlkLk8PT/iPDByCIcYxDsLpWc0DBeGYE136t6kAvLodQ5O3NA3hebUNWBODhPts1C9BSzoaZdnehJqO16Sb8jYqF6fPKlyExLp1DqACNB7lbL56rWKB5gu0KPD14LE0aAn0BdMjDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=taK75GSgOINkRwYN91eeHKeOiAD7kVmtQe5VcG7uzc4=;
+ b=bX2V9li80K7fLyJw93gHjFBUIJ8FG7bYuPUofRHtDmq4SJTdmmSod2bYtgnMkdk54z9ZHdD3cKacKjQboykre3BJQVTsDM8GUk3iAZN5dqWC5wi4rQHxexrl8JT1TUkEgup66kOrARKRfkJFkUVZRd5S1zASl3fZNWhsYYLH+pVf94x1Pkyn1lrZiYhvdHjwF2GAdcHr7RaV4ffc5gbtB5+NK/V31EdwPL9yOxb0wj6fpBdNL1K0fbpnf25xWFBKBtNGQW63dtNuNS52Z7yqPpGJUB6+mmkBikgVLyiE9qEyzmUoKIM4GQM2ZVur0s8C2v1CPb/KNEsCi2M6KVGmYw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ SA3PR12MB7880.namprd12.prod.outlook.com (2603:10b6:806:305::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
+ 2025 14:49:55 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe%7]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
+ 14:49:55 +0000
+Date: Thu, 27 Mar 2025 07:49:47 -0700
+From: Alistair Popple <apopple@nvidia.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Christoph Hellwig <hch@infradead.org>, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 0/6] Allow file-backed or shared device private pages
+Message-ID: <jcrkl6my4u3tyjmaoibor4lwe2diox4moo4ap52eu4v3yxhnn3@mmahcrjxeiba>
+References: <cover.24b48fced909fe1414e83b58aa468d4393dd06de.1742099301.git-series.apopple@nvidia.com>
+ <Z9e7Vye7OHSbEEx_@infradead.org>
+ <Z-NjI8DO6bvWphO3@casper.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-NjI8DO6bvWphO3@casper.infradead.org>
+X-ClientProxiedBy: SY5PR01CA0033.ausprd01.prod.outlook.com
+ (2603:10c6:10:1f8::10) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|SA3PR12MB7880:EE_
+X-MS-Office365-Filtering-Correlation-Id: ac99069f-9c21-400f-294c-08dd6d3ea36f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|27256017;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?E3F/Uj4lBraIFT7QtmiF2SYEuKeDGAUddXLC1cAd7KcpIy6LH4SbUQcoFDTs?=
+ =?us-ascii?Q?bbfOXZd/s+ekj+L3N5xC9CJYsSRyCgQF3atYI5N1VdOG9F85mJ4UkMBB+8pT?=
+ =?us-ascii?Q?67qXyPCgVhDRWAT6uQY0eiz8oaJ30KLbdNCDXXHjOa5W+sudl2qzLcuvT4+6?=
+ =?us-ascii?Q?bTIkBQUoyxKPXCpe7WTro2tWJPgHqKa1l33IVJWZfTbUcwxprtdf6kvPaJRe?=
+ =?us-ascii?Q?73FrgUEC7ZouUBXCfPaOmgeWHQsxGiwLWogCD6cxq7J9omtFpcrECgx4xxBq?=
+ =?us-ascii?Q?VIJblLnolJFWfyt96ohGbFnrbNKY10nREQZvNH+uFmpIjVEqtyQF/11ns4+g?=
+ =?us-ascii?Q?4WWUTXGOR38jeYeYtiv8XZD8dBaGBbvb0UG055Ag4M3zIPlf/A2gBVOgfMtI?=
+ =?us-ascii?Q?etYgDhLJNiyb/rmvb4adamdxnXxUERTRgN42pVIPtq1CCNjcVZZeeTV6YYPw?=
+ =?us-ascii?Q?CSq8nEH8o4G/QmKewrLm2TaFgnfrMra/PvwOwb5RTd2F7t32V0wkauXZlYxJ?=
+ =?us-ascii?Q?+PkrucvC/BwoFO5Z5HSftSqwtla3XnOFUbeG5ZHBe3nsc4TGypoMJqCpXe/o?=
+ =?us-ascii?Q?yX/2MaDpd3pdoPLMmErjKfypMSr6G8O5vNq3eIlmPUus14QKeOK0oW7sbqsT?=
+ =?us-ascii?Q?LZFi7rMcy6eEL2Mv++/Kx/SepVnMyqQhJXOhHXCjgudHynI90/6pCVuCYgi0?=
+ =?us-ascii?Q?hqnahJoI9EPbP9eVGbaFfptZIVkKkP1go8E2HK6mwdY61lp660VZQmMC7J3Y?=
+ =?us-ascii?Q?8XgTsdY5YN5i2HIZGXmKgDo5sj4IaudDCGtRdlhndFpDbJaavo8aMq2Sgs/P?=
+ =?us-ascii?Q?6ZmCWPLTFIRea5YJj7se4Z0GEl6tnz/MRbazaIwa4J+oy3h27PCH+z5FPaez?=
+ =?us-ascii?Q?/kAX6Y7DgMlxbA7uVtOlyKlrBKW7zxdcvC+1HnlQPSEfsFZbW+hO/JyKllNY?=
+ =?us-ascii?Q?SJ0TMR6d87QiLd6g+Wr1hrkXMKcrF4/Djd9h4bcMTJzs/SIj1Mta+5E6lRH+?=
+ =?us-ascii?Q?2glBxSRERKf5SO1IsbdH+c/A3akRyLIKh9NIYJLJyKXkSy3gh6Ye3n0Hl5aE?=
+ =?us-ascii?Q?QsLslDSN6UOCXbLvUG+4Egqrn1RSnjr/472uxUVWfdrCPBnqLZdqRVGSE92p?=
+ =?us-ascii?Q?wJbd6KqWMP/xBb/2JW0xhMixn+VlHgFOoNxFFRW5HIacb5RA8iZNeo2/QQZY?=
+ =?us-ascii?Q?z8tN6ixadE6VgPmMy9um0gmFHT3QFfFYKmbJEfBg3E8eKcX5KkCofFHst1ai?=
+ =?us-ascii?Q?QLwc1e9wzV23qC3lqkWhfam9M6uj7ov/6/NknCDIOZ60l68gpOH2SwzR6y1B?=
+ =?us-ascii?Q?v22GilgeKBkiN+zJ9h5JATTF0edJL1bqcvuk7s+YO6nLQNpxszxBtpnFvSnD?=
+ =?us-ascii?Q?dsnbePpCfcoiFWYDG6dNpm+f/ogrM4Nw+yc6TNYAgI7i5F/GyToll2ufpyBe?=
+ =?us-ascii?Q?kGu4eMJIe+++frqTGpAnKmhD7S7r7XBw6xKsPLlCq9E1a7JUEnpKrw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(27256017);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?3n6BDz46x5fmSWQqi7T/dpPgISZutz5MWzeycv2AoFDejS9XGkeHhiiJNyRR?=
+ =?us-ascii?Q?qg/YZzqpp//i3STmVSu6wkJHjBehfZrAIlnOyX4YUizZo1Rly2Rc2JrGup6X?=
+ =?us-ascii?Q?7cdRFe/18BkBseCx/7x/K2hzyb1brv1RtEQhjk3ecyqMByfzomNfFPYw79mz?=
+ =?us-ascii?Q?TSicS9I5EmV7s7Etfgh+nRXXyPHInc7oh6xmlWm6f5hJdg6K0z01llAxDMeJ?=
+ =?us-ascii?Q?BbUs8/KXGA0fTQlGNhGbNDyPQR4zrCQ2rT/V/ap2p/BYYfHeWz2P4awdpqpF?=
+ =?us-ascii?Q?N2BYH9X5x+3C7RbV7RzHqllBk/ULzp8iQP6WmkUpmeIaQ63ut5Fwb8rLeEvh?=
+ =?us-ascii?Q?L8xdM/fjSwo8stgVw/3PrWlzYVOpffpjIAYPc5KE+iBeQYWRkUBpnGXM69C+?=
+ =?us-ascii?Q?M3H1IpZrix6h36l399+Tyz3isGgcgwo+lNDrDHjnPMRdo+rPhfwiRsz78JgZ?=
+ =?us-ascii?Q?9d0hcKo7LEa+wOsRFPMNd3Nplb+8wyKPDsQuW75ulwSiYJ875OcLX1UkphJf?=
+ =?us-ascii?Q?nN25VHQl0pUdkNNJsHxNUzOjEQMlp6xIf/0gGn17T0As46V6geQOz25RHe5V?=
+ =?us-ascii?Q?WadbDk4wYmhXDeShSqL830EzVpu6nZnqO+2uj3ZnBdIe+6b5mVmENCpdT7NB?=
+ =?us-ascii?Q?IpZAAyOoZqU4xGLXPyobc7QtnhTcqPnIpdwfOH9DyCmX93gEQTpLSbevcdVQ?=
+ =?us-ascii?Q?DG01ASokjriq79bFo+a58KbOd3POe/HQBaTG2+bxeDgD17MlJrfBktPm+kn2?=
+ =?us-ascii?Q?3j7As0YIgdXt3iAkyq/n/wFONw8qyhMiZCHGa+ZC38S5LemPsZgq5f1Zo4Tg?=
+ =?us-ascii?Q?GdlGVrvx4fcYFA9cmBfoQNXVuyHwjrK5kqLEZtbPkw5e516HqEpWd/FSpM3v?=
+ =?us-ascii?Q?ZcziaurF6TewGkL0eG2WnJ8omsVxZdfUG0tQxeBt+8rl056T3NkDwZU/Z0v5?=
+ =?us-ascii?Q?kOa5z1Gq6agpwDmdMrSkPUQyESsS1A4VFwLU9aHYurzunysl7CDOPmBxovx6?=
+ =?us-ascii?Q?/1PgDumS6KKHqedcyOFU9o2EbZT9sZgiQmNGlBNkF4opj758p6/aLm+mqA2/?=
+ =?us-ascii?Q?WfdYCDv7eYVggxQ8whsOmh0rePMv9RgGBzxFz7Ruvppl9db6/1WNaQYaeFsx?=
+ =?us-ascii?Q?twRKB7lSg6aa8pWN8MUvXc9qI5RMo9zs4I0uGuSZPY5hck9zaP3itYAtLIAv?=
+ =?us-ascii?Q?jTI68NDl3pVMRBgyxGlqtwecCR1zkR6eC0BpD6CC3t3kJT/ECMbsVr9iBDxj?=
+ =?us-ascii?Q?xBlw1N77XHdmA7eRd3y01rZaTMIxiY8lf5XaUkyFm5cD7yAJAtWpqFz6rTOU?=
+ =?us-ascii?Q?t+yNkzWPOHVXnP8PwZo4bYvwJVT6fNBYmzDCAWSZCPEIFUF9lDRfI7aU5ILu?=
+ =?us-ascii?Q?991yccWCDBHl1Fn9o48bPa5dOVWEGUf8cq7m8M2vPGxqdV7Gw3Dc/JgE0aIM?=
+ =?us-ascii?Q?MAqL7Q1lqQo0GuFAZ+GsQFSPFauxYF28nkWxty7csKGlH2qEmxl6v5W0+O1Y?=
+ =?us-ascii?Q?6OFAj0xaRd+OHZ5CPqF+lpBIFHW11u69tDoqB38GYmiKWXpQqy+KkFA84yap?=
+ =?us-ascii?Q?x3Cx53tcUBAo+pSjMVPzHsULcFQO+tJEscAPDk4g?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac99069f-9c21-400f-294c-08dd6d3ea36f
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 14:49:55.5741
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xPsvmwSFcm308oX3qA8e0L1rfdA5zmz4oJwvQAsRtOLKa0A0QmdXVgtIRDrRkflF06j9h0cITaUfn6Fes2baxw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7880
 
-Hi Linus,
+On Wed, Mar 26, 2025 at 02:14:59AM +0000, Matthew Wilcox wrote:
+> On Sun, Mar 16, 2025 at 11:04:07PM -0700, Christoph Hellwig wrote:
+> > On Sun, Mar 16, 2025 at 03:29:23PM +1100, Alistair Popple wrote:
+> > > This series lifts that restriction by allowing ZONE_DEVICE private pages to
+> > > exist in the pagecache.
+> > 
+> > You'd better provide a really good argument for why we'd even want
+> > to do that.  So far this cover letter fails to do that.
+> 
+> Alistair and I discussed this during his session at LSFMM today.
+> Here's what I think we agreed to.
 
-The following changes since commit ae0a457f5d33c336f3c4259a258f8b537531a04b:
+Thanks for writing up this summary.
 
-  bpf: Make perf_event_read_output accessible in all program types. (2025-03-18 10:21:59 -0700)
+> 
+> The use case is a file containing a potentially very large data set.
+> Some phases of processing that data set are best done on the GPU, other
+> phases on the CPU.  We agreed that shared writable mmap was not actually
+> needed (it might need to be supported for correctness, but it's not a
+> performance requirement).
 
-are available in the Git repository at:
+Right. I agree we don't currently have a good usecase for writeback so the next
+revision will definitely only support read-only access.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git tags/bpf_res_spin_lock
+> So, there's no need to put DEVICE_PRIVATE pages in the page cache.
+> Instead the GPU will take a copy of the page(s).  We agreed that there
+> will have to be some indication (probably a folio flag?) that the GPU has
+> or may have a copy of (some of) the folio so that it can be invalidated
+> if the page is removed due to truncation / eviction.
+>
+> Alistair, let me know if that's not what you think we agreed to ;-)
 
-for you to fetch changes up to 6ffb9017e9329168b3b4216d15def8e78e1b1fac:
-
-  Merge branch 'resilient-queued-spin-lock' (2025-03-19 08:03:06 -0700)
-
-----------------------------------------------------------------
-Please merge this pull request after main BPF changes.
-
-This patch set introduces Resilient Queued Spin Lock (or rqspinlock with
-res_spin_lock() and res_spin_unlock() APIs).
-
-This is a qspinlock variant which recovers the kernel from a stalled
-state when the lock acquisition path cannot make forward progress. This
-can occur when a lock acquisition attempt enters a deadlock situation
-(e.g. AA, or ABBA), or more generally, when the owner of the lock (which
-we’re trying to acquire) isn’t making forward progress.
-Deadlock detection is the main mechanism used to provide instant recovery,
-with the timeout mechanism acting as a final line of defense. Detection is
-triggered immediately when beginning the waiting loop of a lock slow path.
-
-Additionally, BPF programs attached to different parts of the kernel
-can introduce new control flow into the kernel, which increases the
-likelihood of deadlocks in code not written to handle reentrancy. There
-have been multiple syzbot reports surfacing deadlocks in internal kernel
-code due to the diverse ways in which BPF programs can be attached to
-different parts of the kernel.  By switching the BPF subsystem’s lock
-usage to rqspinlock, all of these issues are mitigated at runtime.
-
-This spin lock implementation allows BPF maps to become safer and remove
-mechanisms that have fallen short in assuring safety when nesting
-programs in arbitrary ways in the same context or across different
-contexts.
-
-We run benchmarks that stress locking scalability and perform comparison
-against the baseline (qspinlock). For the rqspinlock case, we replace
-the default qspinlock with it in the kernel, such that all spin locks in
-the kernel use the rqspinlock slow path. As such, benchmarks that stress
-kernel spin locks end up exercising rqspinlock.
-
-More details in the merge commit cover letter.
-
-In this patchset we convert BPF hashtab, LPM, and percpu_freelist
-to res_spin_lock:
-  kernel/bpf/hashtab.c         | 102 ++++++++++++++++++++++++-----------
-  kernel/bpf/lpm_trie.c        |  25 ++++++++++-----------
-  kernel/bpf/percpu_freelist.c | 113 +++++++++++++++++------------------
-  kernel/bpf/percpu_freelist.h |   4 ++--
-  4 files changed, 73 insertions(+), 171 deletions(-)
-
-Other BPF mechansims: queue_stack, local storage, ringbuf
-will be converted in the follow-ups.
-
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-----------------------------------------------------------------
-Alexei Starovoitov (1):
-      Merge branch 'resilient-queued-spin-lock'
-
-Kumar Kartikeya Dwivedi (24):
-      locking: Move MCS struct definition to public header
-      locking: Move common qspinlock helpers to a private header
-      locking: Allow obtaining result of arch_mcs_spin_lock_contended
-      locking: Copy out qspinlock.c to kernel/bpf/rqspinlock.c
-      rqspinlock: Add rqspinlock.h header
-      rqspinlock: Drop PV and virtualization support
-      rqspinlock: Add support for timeouts
-      rqspinlock: Hardcode cond_acquire loops for arm64
-      rqspinlock: Protect pending bit owners from stalls
-      rqspinlock: Protect waiters in queue from stalls
-      rqspinlock: Protect waiters in trylock fallback from stalls
-      rqspinlock: Add deadlock detection and recovery
-      rqspinlock: Add a test-and-set fallback
-      rqspinlock: Add basic support for CONFIG_PARAVIRT
-      rqspinlock: Add macros for rqspinlock usage
-      rqspinlock: Add entry to Makefile, MAINTAINERS
-      rqspinlock: Add locktorture support
-      bpf: Convert hashtab.c to rqspinlock
-      bpf: Convert percpu_freelist.c to rqspinlock
-      bpf: Convert lpm_trie.c to rqspinlock
-      bpf: Introduce rqspinlock kfuncs
-      bpf: Implement verifier support for rqspinlock
-      bpf: Maintain FIFO property for rqspinlock unlock
-      selftests/bpf: Add tests for rqspinlock
-
- MAINTAINERS                                        |   2 +
- arch/arm64/include/asm/rqspinlock.h                |  93 +++
- arch/x86/include/asm/rqspinlock.h                  |  33 +
- include/asm-generic/Kbuild                         |   1 +
- include/asm-generic/mcs_spinlock.h                 |   6 +
- include/asm-generic/rqspinlock.h                   | 250 +++++++
- include/linux/bpf.h                                |  10 +
- include/linux/bpf_verifier.h                       |  19 +-
- kernel/bpf/Makefile                                |   2 +-
- kernel/bpf/btf.c                                   |  26 +-
- kernel/bpf/hashtab.c                               | 102 +--
- kernel/bpf/lpm_trie.c                              |  25 +-
- kernel/bpf/percpu_freelist.c                       | 113 +---
- kernel/bpf/percpu_freelist.h                       |   4 +-
- kernel/bpf/rqspinlock.c                            | 737 +++++++++++++++++++++
- kernel/bpf/rqspinlock.h                            |  48 ++
- kernel/bpf/syscall.c                               |   6 +-
- kernel/bpf/verifier.c                              | 248 +++++--
- kernel/locking/lock_events_list.h                  |   5 +
- kernel/locking/locktorture.c                       |  57 ++
- kernel/locking/mcs_spinlock.h                      |  10 +-
- kernel/locking/qspinlock.c                         | 193 +-----
- kernel/locking/qspinlock.h                         | 201 ++++++
- .../selftests/bpf/prog_tests/res_spin_lock.c       |  98 +++
- tools/testing/selftests/bpf/progs/irq.c            |  53 ++
- tools/testing/selftests/bpf/progs/res_spin_lock.c  | 143 ++++
- .../selftests/bpf/progs/res_spin_lock_fail.c       | 244 +++++++
- 27 files changed, 2312 insertions(+), 417 deletions(-)
- create mode 100644 arch/arm64/include/asm/rqspinlock.h
- create mode 100644 arch/x86/include/asm/rqspinlock.h
- create mode 100644 include/asm-generic/rqspinlock.h
- create mode 100644 kernel/bpf/rqspinlock.c
- create mode 100644 kernel/bpf/rqspinlock.h
- create mode 100644 kernel/locking/qspinlock.h
- create mode 100644 tools/testing/selftests/bpf/prog_tests/res_spin_lock.c
- create mode 100644 tools/testing/selftests/bpf/progs/res_spin_lock.c
- create mode 100644 tools/testing/selftests/bpf/progs/res_spin_lock_fail.c
+That all looks about right. I think the flag/indication is a good idea and is
+probably the best solution, but I will need to write the code to truely convince
+myself of that :-)
