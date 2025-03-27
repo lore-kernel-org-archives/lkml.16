@@ -1,128 +1,110 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645C318A92D;
-	Thu, 27 Mar 2025 15:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F77198E9B
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743089311; cv=none; b=bSc3VeUNsvFSVayQvpkNmgn4Q0IiS7PwZeG3NJi1BtukFbEGqm+NKs04VT6C0bkvum8n9z38h6n0ThJe6sY9gtm2rRiLb/pvPYOwIh8HkQr/a9elpcm1iz264O9DHwKYJ3lzHUduKaHyVEw5f9Gv2c+IFGygsQ0RMXCG4W4cIpU=
+	t=1743089320; cv=none; b=Ro6xgUVbRP8TtBwmRKou+sqU+OOF2b4l3Y3HwrdFhEpGcqxmkqmFe7ZAOJcLjhwrTp9EB4yZ6J5YtMktYjqwK1QNf3o/CzrfN5GL4QFZ0mVk5ZFoYCYqlArlQFuQHb4E+aD8SfsaGVez1CiPIHuIb89EzTG8WRps67sWAJydN0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743089311; c=relaxed/simple;
-	bh=pwcalWL+tv3tIR/6p/tg0ukx76u/ZEj9jnPrIlgh3sU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YFoemA7pMpvw7b/C1s9HQr2rybGNSKv/+MrOc2fiJWFuJzpDLdaA1V+Hzjl4dvBD20I7vlrgyyY4pH0jaaSsP04qSdU3LlrwV/rVs1J2+6hm3lYuF0MR7oacz30y91AxWZcJP/Ge0HXH/tYq3dNvmQjhXgLCYvvAkxgeKSz+AWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eKWM14mb; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743089320; c=relaxed/simple;
+	bh=1/Xh1YTj3T8SDNh7s5nflXDE32vsD7ydzcDzfXrzX/A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m02JKniwZUzTAEyG00x9iXvRFfJmDs1R2ETyCPXjm4xcq4o9V1A1PMAeXjAGgglBOOuWbeXClppPpXBvGAqNR5RPhdry/XfU3fXyst58cbHnu9XS8QBSakVlQK+uotyKkX9lB1ibVT/PXUKPkQqX+ZkuwIgGaIoW9AstSOEcuWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sb0Urkyr; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKWM14mb"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-30384072398so1498519a91.0;
-        Thu, 27 Mar 2025 08:28:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sb0Urkyr"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43d0c18e84eso5397725e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:28:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743089309; x=1743694109; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RApsfE2Mk8xKmp10Ee1OdgidthdVR9yq6wKOoA6mDUI=;
-        b=eKWM14mbX07ClP8n3Fx3qJZCUN5AcGNTK4qc4lXx0zt2mpFiU6Q7ErS1A4drJPFN9X
-         IfhmmydqRDWjTSa6tWxU/sEXjutrACaxg0cfddnAxW3OzxFg1i+Iea+Wj+NDZnulUKVD
-         eQVs6FmeyH3rNmghrOgVfTenTznamWlhzFg24Yk0On/Ok/wMUcV4wj0XWtyB46StkO3w
-         FjPdFJW3Bq6lYo7C2idUNmDP/Ju8y9ksWbqIuQuGQ1e/syY9KmLlZi2VRGIVqwDyUNts
-         ManPbdBoU0gYRMn0MKIehYqxtIpsogWHWC28NX4goDsoXFlGGRv+fTCjmqxBe+rcETNF
-         5zig==
+        d=linaro.org; s=google; t=1743089315; x=1743694115; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DE06nIo71/Mq528QWhpVuT3dqschnPU18VT092l6miM=;
+        b=sb0Urkyrcr2wBewLD7s+rGL3gBBfpOjilCMkQG+PGENV4qpH2iSTIZKkp6BGxIQKuS
+         GhG7JORwl1NZHTe2QTWc2CT8NVAODcIj4v1FKUYWjgmTI+FeXiBlfnSV5HlKEEA8I3VF
+         PoHJWy3qPxnneigS66CwpfMemvlVg/kc4giMH0wzVG0NRPonqycLq2uUsgseFpIjZRGz
+         0eMgriHzuUWhGMBkMVYvQ0jA62ZdQVpuqrigrIBa/EU8S1ToAgcO+m5Dv5Kj29uQ+VYV
+         BUpz/w7MeLZYYfP+m9mVuQvSn72g2UrQIagXr0bRgwDSA6J+hdvyC0k10WCSmKTXuYCG
+         EUXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743089309; x=1743694109;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RApsfE2Mk8xKmp10Ee1OdgidthdVR9yq6wKOoA6mDUI=;
-        b=miJomiRDZTMQWWSFDZ1+70KCOOZ1sWGYTjQUxUsyo64R9XYx5qxG87beBOFmO64OfZ
-         lPKQgBLGUqE8VxGg7tD2Nf+qJsxSlSKoMGghfbtfzWGmXCPQRx0OIjKNH+RLRxyUWXKY
-         7w0aprNHgW4snfBomWS14dPBOq6h1/5neroMdqJJthmo/fxUQ92piwl+oalM3lEtvLfX
-         bqd6rZIXVIHB1u9nHkJQAacalfy6zVOn4koFWfhGKiPJ/YyG/NoifzBKvZ9HQ9D+KM0t
-         n+cFZvqLaE4YEtb2bkO13vLDtXJ4Fw1LdqRmfBAdnMu1D9FfLY+TaCe2mgBQlECJ262n
-         SBlA==
-X-Forwarded-Encrypted: i=1; AJvYcCWuIYG4p61fKETRiPbP30CAXZUE9hhnWCrRXx63AJ+MxM5qNmW+gDAc74VX8onc1NvqH09npiFY@vger.kernel.org, AJvYcCXJNFJxyeqejW53GU1QGFPeAFDP75ULzsC7M+LU060i50ST3/UjaWVun+X+xkJlEDG/B2R7iKE0xKdR13o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGFjGfI7oDGSZS9wpektmXKCE9fDecewTCWBnUQmXrcl9ScqFM
-	3dkz+NjuDUzn9wZKoJYpOzTyHm3CUZVvlfrPlPY31daJxGpJnn2m3K+Ukw==
-X-Gm-Gg: ASbGncsnhOtLjqRr/swZKRw2O0qh3QewC7yQbJzPHgkG+gUsVAW69zMewuqSVGEJF7L
-	/yabNJzLsOeN7V2rvoWPcbDii2rZDdUCOG51HrLphE0pJbtdMxxyUtGSPZH+cQpSpIllaVnRado
-	BRdZU/GXsRpJg/mX8hIn3OEkacvsWB3jH0bp3LwoMfZ8BSVUYihyT4ha4XJUObtDM2YW4cQhm++
-	LE6xlUVc6FOm/VvYhKIJhepg2VS2XluHDRnohLVdQiFg46+/Tj+TdklWrJaGAqaF9721ORp2/kL
-	OM8oSbXnVbYnGNFmcTB+otNlOeTmoCRDV7JBNOphKlUnEB8=
-X-Google-Smtp-Source: AGHT+IFKe4SnRU7PQNPjFKnvpnqknx+ZVQ8R+bntltjtUdj5i2np/fCn6XDl4F6x1Uj5AEPpg3bUQA==
-X-Received: by 2002:a17:90b:3d0a:b0:2ff:53ad:a0f4 with SMTP id 98e67ed59e1d1-303a7d6a99cmr7351484a91.12.1743089309356;
-        Thu, 27 Mar 2025 08:28:29 -0700 (PDT)
-Received: from eleanor-wkdl ([140.116.96.205])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039dff0c76sm2360160a91.20.2025.03.27.08.28.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 08:28:28 -0700 (PDT)
-Date: Thu, 27 Mar 2025 23:28:25 +0800
-From: Yu-Chun Lin <eleanor15x@gmail.com>
-To: Simon Horman <horms@kernel.org>
-Cc: isdn@linux-pingi.de, kuba@kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jserv@ccns.ncku.edu.tw,
-	visitorckw@gmail.com
-Subject: Re: [PATCH] mISDN: hfcsusb: Optimize performance by replacing
- rw_lock with spinlock
-Message-ID: <Z-VumXiqJJkZKNZZ@eleanor-wkdl>
-References: <20250321172024.3372381-1-eleanor15x@gmail.com>
- <20250324142115.GF892515@horms.kernel.org>
+        d=1e100.net; s=20230601; t=1743089315; x=1743694115;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DE06nIo71/Mq528QWhpVuT3dqschnPU18VT092l6miM=;
+        b=OO3GLqY2XrLmdlJ0TmQLJGC0ddHtNyERDBTBZ9zjVISyxx1EIJTYFOqf75/wpNAAZt
+         hFAE1HGs8tDskZUuNmyxROE9Tpg9sQyi4ZD5dxPYkcxQrXxvGUZHo8XZ4AZY3sf02rzS
+         l+Iry8XiNFIiX1EyUP0doT9AO/MzYO4tiWBTOCRexdXIMseK6NTgV/AfNJYyNaTRJZfJ
+         EYlaGOOeNM/dSBFOmaIJ6b17Q09761tVGyMXhv81JMJGGnjX6vDdcO726ErfyUxIGkFg
+         /jZTVgMXVYuGqvleef5VG/2z2XXbfPQHLA8IV7aHPV2FlV4dGCe5Xh/kFMWpFxyMj7ZG
+         pNuA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVbLenRXgmmouZWScfZB6nEqJxtgSEqilGWiLSWOTZK5BeT/ThrYq3TPkDx6ZH2ztH+mPlszmOGhPwXno=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpaKovO4nJeB/jZZb/FJE5TxIqRN0jIZH0faR1nE2FonVvMak7
+	uDTWi+ib/4sA7wai+IlOK9LmDin1wyk9zIkhpaQsZeyviFZk1BlJ4xj4OyrYKxs=
+X-Gm-Gg: ASbGncuZOF7I+/oTegBmgvZfzxfXomXTQ3BWY2CUyRCbkcgWAeA9qYbJRHsKomXa/oP
+	zKHDQooJ+k6h5dCMaHoL6Se+vqDpHFYanjt4OvH9D0gtQL7Nty7uaeZfgf6s/JsJ/P496g9X0hN
+	Ko8LbIp7kwUAQtmnuVE2JLwwOFCfIX7nxkhMnxLlmKIaw41PjRd+prAwBxkRYLgFj/B08U9tlZc
+	TuNI2ihIjZd6ChKjdnyP1tGM+qXAygQa1HzbvrpelapaMcYfN6nrihqwrerwg0SBzt7jH4MlKkD
+	c6Ein54IMKEcaCAwlEAOPKfmr/LtGn5DoY+Y14olF+5fqbLabtE7CplI+++ROIKvLMitTXTybj1
+	h7PEeQy4klQ==
+X-Google-Smtp-Source: AGHT+IFNIkqkO/Sz8Zoq2RlgMDHLZQ4+HD+omJCdCjySdmnror3V45qCoIHUI3fPbTVEMJl1bOlNow==
+X-Received: by 2002:a5d:64a9:0:b0:390:db07:87ea with SMTP id ffacd0b85a97d-39ad17704c4mr3242572f8f.34.1743089315216;
+        Thu, 27 Mar 2025 08:28:35 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39ac67970a2sm10007035f8f.16.2025.03.27.08.28.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 08:28:34 -0700 (PDT)
+Message-ID: <c58b129c-1c83-44f3-bd52-13cc24e50cbb@linaro.org>
+Date: Thu, 27 Mar 2025 15:28:33 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324142115.GF892515@horms.kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 03/18] dt-bindings: clock: qcom: sm8450-camcc: Allow to
+ specify two power domains
+To: Jagadeesh Kona <quic_jkona@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+ Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+ Dmitry Baryshkov <lumag@kernel.org>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+ Imran Shaik <quic_imrashai@quicinc.com>, Taniya Das <quic_tdas@quicinc.com>,
+ Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250327-videocc-pll-multi-pd-voting-v3-0-895fafd62627@quicinc.com>
+ <20250327-videocc-pll-multi-pd-voting-v3-3-895fafd62627@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250327-videocc-pll-multi-pd-voting-v3-3-895fafd62627@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 24, 2025 at 02:21:15PM +0000, Simon Horman wrote:
-> On Sat, Mar 22, 2025 at 01:20:24AM +0800, Yu-Chun Lin wrote:
-> > The 'HFClock', an rwlock, is only used by writers, making it functionally
-> > equivalent to a spinlock.
-> > 
-> > According to Documentation/locking/spinlocks.rst:
-> > 
-> > "Reader-writer locks require more atomic memory operations than simple
-> > spinlocks. Unless the reader critical section is long, you are better
-> > off just using spinlocks."
-> > 
-> > Since read_lock() is never called, switching to a spinlock reduces
-> > overhead and improves efficiency.
-> > 
-> > Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
-> > ---
-> > Build tested only, as I don't have the hardware. 
-> > Ensured all rw_lock -> spinlock conversions are complete, and replacing
-> > rw_lock with spinlock should always be safe.
-> > 
-> >  drivers/isdn/hardware/mISDN/hfcsusb.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> Hi Yu-Chun Lin,
-> 
-> Thanks for your patch.
-> 
-> Unfortunately I think it would be best to leave this rather old
-> and probably little used driver as-is in this regard unless there
-> is a demonstrable improvement on real hardware.
-> 
-> Otherwise the small risk of regression and overhead of driver
-> changes seems to outweigh the theoretical benefit.
+On 27/03/2025 09:52, Jagadeesh Kona wrote:
+> -      A phandle to an OPP node describing required MMCX performance point.
+> +      Phandles to OPP nodes that describe required performance point on power domains
 
-Thank you for your feedback.
+I believe we are dropping "Phandle to" generally as this is a redundant 
+statement.
 
-I noticed that the MAINTAINERS file lists a maintainer for ISDN, so I
-was wondering if he might have access to the necessary hardware for
-quick testing.
+You should also pluralise performance-points.
 
-Since I am new to the kernel, I would like to ask if there have been
-any past cases or experiences where similar changes were considered
-unsafe. Additionally, I have seen instances where the crypto maintainer
-accepted similar patches even without hardware testing. [1]
+.. required performance-points on power-domains
 
-[1]: https://lore.kernel.org/lkml/20240823183856.561166-1-visitorckw@gmail.com/
+Other than that
 
-Regards,
-Yu-Chun
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+
+---
+bod
