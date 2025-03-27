@@ -1,95 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1CE1FF613;
-	Thu, 27 Mar 2025 17:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA59B1FF613;
+	Thu, 27 Mar 2025 17:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743098159; cv=none; b=cVT1hFK74kM/+VUW2qvbgasQy8wLmdoYbSJUhPD6jzQkw/0CKXh1+EIMcNvAW3z7xf7tQKn43dOlMst4BVoNleEFTnxGLGSYBmpkfGwy+rwH/Y9Smca5phYRIqW/cfvWJJafdyotatfxZjKRl+Hf8WE+UFaDW2dDEsq9utGamXE=
+	t=1743098164; cv=none; b=YHgpVkVxiAQlLA3cbZ3x8rzeZ+fhtbcJNr8+0INWHRxm5s7K6KFCNew98QTQuL2/x8q1lXh2YA7dDHnJljqxeD9urlTNB1A0gWbHkvSdRrBlT39mXASwBJzPtvA6D0E0dZMpTIfxysObIE5915oKz5A+Hxn3iPODuCAp7jkGit0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743098159; c=relaxed/simple;
-	bh=GXiwOvkxWgxlNaGSsb7P/U6b2eY25FmZ/yfDozVoIIQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=IMs0FQKpYDiUn4EEnLhKOptY97hVUD/qbKUzDyKr8vxpGEMdYBjnJ2v1lQDcCCUvtn/z8tTTDFoWKbCFywCWAhlBE9eEiIwDusORBW0aXBaJkoMuQ5xT55EKQAtcgA4MjsEJVHNS23rPh2L3HqmxcJ+td+edd+gUSSBQI4qiMk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ouVL5tJa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743098164; c=relaxed/simple;
+	bh=KDebul7qD0PvlRzgHb72NktYh4aDUx/qmtucxysgutI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oNAetCB06EWOBBxdVSKsRbUWHda7S3vIf4RPCkKnlZoLLwLkCK/1eYMp8Z421OOTxcZSfjQ/UDL1nvR13Llil6vmJNn/5Jf4qkOdOuP4gfZi0Uw2wI3x0tjebilUaJifgLpsIRpGL69gHbJPV0kP73Id/m+nwAV9G1ys+e6Slxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=fYrIEQoD; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ouVL5tJa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0F6BC4CEDD;
-	Thu, 27 Mar 2025 17:55:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743098158;
-	bh=GXiwOvkxWgxlNaGSsb7P/U6b2eY25FmZ/yfDozVoIIQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ouVL5tJarY8YUiK5ZdcNuYb1n/t3XjTmwrsrohRgkOojKv4FLDMGX30b0a986oSm6
-	 tQV62HBbPP1+VsCNYv5VzYnNcVRG4UozDObVGccy3ATAi+GufHStnOVubImiDN3PdE
-	 C3ob4DbxBCI5gAlo0FCSZFD8OoEC3lPiXJR5k8bU88bJQORhf6/aECWdjRZOjtzrPK
-	 9UQfQ3n0zfm+XlKnwaQjlxlgsWsnOmtrdtRWQkcPaRgRse96/7Hpd1MykC1p6BmyyK
-	 VdoOPlwBc6owJUbpZYPf3wggQDB65TGXNRiGJm83d3AFjCpXqFn1KtlXp19XguUhGe
-	 iAWhz9xIaTdmw==
-Date: Thu, 27 Mar 2025 12:55:57 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ioana Ciornei <ioana.ciornei@nxp.com>
-Cc: Roy Zang <roy.zang@nxp.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Frank Li <Frank.Li@nxp.com>, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: layerscape: fix index passed to
- syscon_regmap_lookup_by_phandle_args
-Message-ID: <20250327175557.GA1438048@bhelgaas>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="fYrIEQoD"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 496BA446;
+	Thu, 27 Mar 2025 18:54:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1743098052;
+	bh=KDebul7qD0PvlRzgHb72NktYh4aDUx/qmtucxysgutI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fYrIEQoDsiaApEGaLVPiqrJ0/dGQOPElJebVUV2w3ssBKW5AHnypia6FpnYNwnkoJ
+	 +XE2q5ARHjnBMmMs+EWdKiN5SRhW/Aih7LndgX7PbiiKD0+Bv94h0WKD6LssV86PBK
+	 GnfSn7B3kLVJfOivJgFMyahzTe7WKkB8z2Sw5e9U=
+Date: Thu, 27 Mar 2025 19:55:38 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Re: [PATCH v5 4/5] media: uvcvideo: Make power management granular
+Message-ID: <20250327175538.GB11416@pendragon.ideasonboard.com>
+References: <20250303-uvc-granpower-ng-v5-0-a3dfbe29fe91@chromium.org>
+ <20250303-uvc-granpower-ng-v5-4-a3dfbe29fe91@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250327151949.2765193-1-ioana.ciornei@nxp.com>
+In-Reply-To: <20250303-uvc-granpower-ng-v5-4-a3dfbe29fe91@chromium.org>
 
-On Thu, Mar 27, 2025 at 05:19:49PM +0200, Ioana Ciornei wrote:
-> The arg_count variable passed to the
-> syscon_regmap_lookup_by_phandle_args() function represents the number of
-> argument cells following the phandle. In this case, the number of
-> arguments should be 1 instead of 2 since the dt property looks like
-> below.
-> 	fsl,pcie-scfg = <&scfg 0>;
-> 
-> Without this fix, layerscape-pcie fails with the following message on
-> LS1043A:
-> 
-> [    0.157041] OF: /soc/pcie@3500000: phandle scfg@1570000 needs 2, found 1
-> [    0.157050] layerscape-pcie 3500000.pcie: No syscfg phandle specified
-> [    0.157053] layerscape-pcie 3500000.pcie: probe with driver layerscape-pcie failed with error -22
-> 
-> Fixes: 149fc35734e5 ("PCI: layerscape: Use syscon_regmap_lookup_by_phandle_args")
-> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+Hi Ricardo,
 
-Thanks, applied to pci/controller/layerscape for v6.15.  Hopefully the
-last change for this cycle :)
+Thank you for the patch.
 
-Thanks for the message sample.  I dropped the timestamps because
-they're not really relevant here.
+On Mon, Mar 03, 2025 at 07:13:41PM +0000, Ricardo Ribalda wrote:
+> Now that every ioctl takes care of their power management we can remove
+> the "global" power management.
+> 
+> Despite its size, this is a relatively big change. We hope that there
+> are no size effects of it. If there are some specific devices that
+> miss-behave, we can add a small quirk for them.
+> 
+> This patch introduces a behavioral change for the uvc "trigger" button.
+> Before the "trigger" button would work as long as userspace has opened
+> /dev/videoX. Now it only works when the camera is actually streaming. We
+> consider that this the most common (if not the only) usecase and
+> therefore we do not think of this as a regression.
+
+We'll see :-)
+
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
 > ---
->  drivers/pci/controller/dwc/pci-layerscape.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/media/usb/uvc/uvc_v4l2.c | 8 --------
+>  1 file changed, 8 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-> index 239a05b36e8e..a44b5c256d6e 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
-> @@ -356,7 +356,7 @@ static int ls_pcie_probe(struct platform_device *pdev)
->  	if (pcie->drvdata->scfg_support) {
->  		pcie->scfg =
->  			syscon_regmap_lookup_by_phandle_args(dev->of_node,
-> -							     "fsl,pcie-scfg", 2,
-> +							     "fsl,pcie-scfg", 1,
->  							     index);
->  		if (IS_ERR(pcie->scfg)) {
->  			dev_err(dev, "No syscfg phandle specified\n");
-> -- 
-> 2.34.1
-> 
+> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> index 1c9ac72be58a..6af93e00b304 100644
+> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> @@ -652,7 +652,6 @@ static int uvc_v4l2_open(struct file *file)
+>  {
+>  	struct uvc_streaming *stream;
+>  	struct uvc_fh *handle;
+> -	int ret = 0;
+>  
+>  	stream = video_drvdata(file);
+>  	uvc_dbg(stream->dev, CALLS, "%s\n", __func__);
+> @@ -662,12 +661,6 @@ static int uvc_v4l2_open(struct file *file)
+>  	if (!handle)
+>  		return -ENOMEM;
+>  
+> -	ret = uvc_pm_get(stream->dev);
+> -	if (ret) {
+> -		kfree(handle);
+> -		return ret;
+> -	}
+> -
+>  	v4l2_fh_init(&handle->vfh, &stream->vdev);
+>  	v4l2_fh_add(&handle->vfh);
+>  	handle->chain = stream->chain;
+> @@ -701,7 +694,6 @@ static int uvc_v4l2_release(struct file *file)
+>  	kfree(handle);
+>  	file->private_data = NULL;
+>  
+> -	uvc_pm_put(stream->dev);
+>  	return 0;
+>  }
+>  
+
+-- 
+Regards,
+
+Laurent Pinchart
