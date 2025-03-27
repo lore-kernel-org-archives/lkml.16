@@ -1,128 +1,268 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2068.outbound.protection.outlook.com [40.107.94.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224C41CCB21;
-	Thu, 27 Mar 2025 21:06:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743109595; cv=none; b=fARKbSeTJ8/45Ai7mR25GFooVQztkSWusmdY4kCBtWskO60FJ+Ag227n2gd3KtLW32JBOiOBCvDFym/liGH/Gk2Q7vqc/hklLiU1I4DCcjSKb+KiyZIVSSJKaxwNx5JxfcL3xf7IiuPPdutzBgFRoYKBkfX5JCoRuefiDRV8aYo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743109595; c=relaxed/simple;
-	bh=GLqglL9v23gJuG69hfxF1A3fwXDbnmKCTJK5LlaQ9fc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QEiXXZssRmxGpTgF3jRiQtt6VK6g4Cl8DgLRZ3Dnwn8lq7aNQ5gVlcH9GwTGOK1dam5RSgrNlKtZrUy4xAyParb77+8+sfTgBoXbDclRffJsWr92BYXAeAKli0/IFHqmCXmWL8T6B2uenJ5vcE7MJx3DtbnFQfSKDNJKYey4Tmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kkm2litp; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F396E2BB15;
+	Thu, 27 Mar 2025 21:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743109651; cv=fail; b=Vk71zy/UwIdLuhKCmx5efUYNWuRfOMgmsrWdWO1uC5kFA63Kt5lw4SwvDSsMv8F4aAxexUJDjLmdQW4ASLi0i9VIxHa+D84oGH5wyoigPbGQXn9RRdLsihhxMLrmSUAFPdNF1KOFQuLFpafD9eOISPlCddqdOR80L7+uSHIct8Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743109651; c=relaxed/simple;
+	bh=LpAc9/CTQcTKNgLJogxC6llg2vWmIG0XiFCW+ah3oNY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nV+lNpQypQ5sqBUtijS5HnGGbJFfeuhSt1HbIaNGXDvalOSMdO/KN1oq9WCkPiZorFLKpcAthmqs1Acreeg5n3C+LF+xTlw0roA6onRPoZC0O0PyDNq+7RMSUyKEVBfn4zm5DEacEp13Tgle/NaGJH0FhudyHH30NdsMolIRh7U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MP1Js1NS; arc=fail smtp.client-ip=40.107.94.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kkm2litp"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso11174885e9.0;
-        Thu, 27 Mar 2025 14:06:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743109592; x=1743714392; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JFrrEKOtsin+8uVvD5v18PtpdZsRPpaDruCArBuJl1k=;
-        b=Kkm2litpaQ0gLSLmjnPKXuOxEHmTgt7X+ucU14TgE+Aw/CmeiSK1s9jAKuDfv3kKBy
-         +gHUaOA5l1MtjuzLB3Lat+OaTOj1p2jWLe0WbWOCPF3up6tb2a6N0bn9hmk93nBy0as5
-         zC+3pWlFwXiS9VxewszNANbqzfCF/Nlnz/Wq50xo0xJQdaNJ16pYsX6Vk8+81l2S+Hrg
-         Y5ejOGGq91ElguZc3MNBuQJEj3qIRmOPnY6o/GBwaAykpi67SeuQrmqlFrqGdyWNtpOz
-         VkUQ9eFajvm5b2GKlbSH+WlZAEQRcAAQiiOFjuH3Z2oqlRr9O86ntGL24G1YCouwM4g4
-         wM+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743109592; x=1743714392;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JFrrEKOtsin+8uVvD5v18PtpdZsRPpaDruCArBuJl1k=;
-        b=dlfpE8CFrAyNmY0xWUZYPgfrlccYh04z7JNTh9Uz4UuNL8JyeXH/qH0AiowhC1xONI
-         6EHbKuA/Q25unW3stsV7Zwaj5pDGxkRBdk9oMwZyRGerHCWzwrbDU2oOxo7O0lHOS32Q
-         VMHkEAYzqi1Jgj9Flp64CxmFv8LzM4Y0p+a3yOqCKYB4yU/oZudQ+52FYe1PxfPa8Zr/
-         MQczIm9DUOSpCYVw+e9tcu/qp1RZSx8UYbzEKqxDRpVDlBNQXqQQ3KrO6ueBg0SnuDqE
-         pCrigiP+6CIFNhxKJUSV5K8H/UocWDRskRpgk1ANg20Z7gAopBt7VTfSMu6aPqkQi5SR
-         fMOA==
-X-Forwarded-Encrypted: i=1; AJvYcCU03O20HeGKVC1/LSTPYV8yjwTjim//txTmSJWlruYwi9K33/fb5F5/F9tV6E+ZnJugywfrQCBoUiqS4TzjwDUF@vger.kernel.org, AJvYcCU8nmgKiFW0WywIIZdXePrafSwJ8rtX6CwOOYkGHAAjAqIPR19LnrEzWf9WZ64E0GiiBurSqto5pVXLVQo=@vger.kernel.org, AJvYcCUAnWhglOdTHw6g0tNmrthtL6Hcqi/u/o/iPiQyRXo2B0Z8oovXGzTi2u++YjnYujcZZWHJZQEOA8TLiBs8@vger.kernel.org, AJvYcCUUxxURu1mJm6KA0o2acp9uVMOg8f1c5qU9mQT83d982Rjf0rC4Rc2a7LnsTS7Wwyl8NUGLXsl7gt0tGw==@vger.kernel.org, AJvYcCUhGUEt0rvairnw0z5niNDLn5Z5SbM4xnr5Z+x4t1UBVNaF2TjmJAE7Rgi9oEM39CwKELRoZFYWRFIoY42Y7QQEmqW2@vger.kernel.org, AJvYcCUp88RW1e3Xfwjp4kRfV7di1O/MnE0yESPwf9M0ZorBHd33ng+qvcdZMCjmYJOvNIn/1ses2dZK1opznE95@vger.kernel.org, AJvYcCV5IgPu43ZaC8mjK5NLpsSuJqfJDnFTBo/Sl/9x+HzTeB5S/aA86u0r6rA6nFByZnGVXSSl/VnTJXMxRw==@vger.kernel.org, AJvYcCVCxjhH5xAGiYUUXrMnUHlZRqQHEZyJ/RDZrSr+Uh+yawD8i5Aua4I0BqqTRtX7r0W2Cqwz/26Xtt+wL3vRog==@vger.kernel.org, AJvYcCVqd5XuAEcnnZgaDhXhCW9P6hpB1mfJoWosJfQHbPuryMzY5z5BDnnSmGrV7QWnqBkhfr1ZQf0c+RBC@vger.kernel.org, AJvYcCWSfOWumUpZu2absMG0N6+iQriIERlSoa3vRvUBZOiF3BlWIsyxuZhmAKc7KoqN0JDn5b4=@vger.kernel.org, AJvYcCWnXMjYcYFiXz/Fqshp0EnTFzS/EW33ey+YRXP2xhlSp2HVGrg/XEjyxFU4/5drvgqHviBE@vger.kernel.org, AJvYcCX1wOPJ68qoOL5Ka/LuBbbx5PfJU+1dpMR6uFXsMXbV2xZ1MeIWcfo0Zfz+akrAY6y98X+fmLCY@vger.kernel.org, AJvYcCX35mqW0E735dB7FMYMXjK7nCwXHSJcJm/gf5q2kjDtzkT+3FN+A9Rqq96U0DUH8YE6BdGdQwySXXAz@vger.kernel.org, AJvYcCXFXnwlHh0EcaT8A/cCSIgKg+zpCwTnCb4XpRaWUMbi4XqE/tfkDq6aIS+Roz+oWMHUK09Tny2cQZUna0c=@vger.kernel.org, AJvYcCXMkD5aWcsyREYDPWOxMweObii9/uOsDsi/laVUJzeU0v/iGTAcBf4F/C3q7Fh9dAYtJATe+fzpRl80VTQ=@vger.kernel.org, AJvYcCXgO4iUj6g68aVSmHi+0JU2B4zVRo7os36L4eRs//ciGd1Om5toAsxqIaYO85qpyf/NcLsisgUuRQ9vRdpO@vger.kernel.org, AJvYcCXwesdZbEqz2OBK0NvLd31E2XWE6Xrb7mqlk0+0YUURxxgXfxlJLajXfM8V5oe530nCgKU2NKYOozmtOAlSBdCbZg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiSJvo39Wz7u6Ea1UTi+5uZ3ewG2dKwgA1ggl19j4WgW5ECz4J
-	Ea5VEEM0rxLtvW1bAgxcgEGvU7cAUPH/wDrI7meAoYGnm2QEKT+j
-X-Gm-Gg: ASbGncujgRpcj4OijFlrTCTg7ebhGT1gcQz5C4MlqpvYZa3jaabiRrDOpDJfKm3R+61
-	bEbMepDF+m4cwX3NkysWmqCDFpDiEbtzmlpS0deJlhTrPB+a+xunk1XrCBU9ieAVl3WrUYrl8SW
-	pHrz3iPeuLpYicZgKFjV1l3aVvLr9bOgBPd/i/vXxdTout04d2GGJsEKyG4v9e6EYd5WdXUrZrB
-	DV9TZc84aqlWSr5+T6CDdOTOpZ131yM1M4WB+bKNw3gMnRWPDqSz5jlD+2gPG51UJn4Ny0jstLU
-	roHGEk2GWz2nUCq+TwITjTEogSmXbCtWmbL5f2Hq0WyVdSNAhMlSrQsKO1G3zs5akgsZXRINA9s
-	ApFIpuJ4=
-X-Google-Smtp-Source: AGHT+IF3JVFu2jCYFxmmspP8DgX1SusdSEIsW7Os+9zvssuS6MfQig2v8nl6xgtDIG4B7nUqszDWww==
-X-Received: by 2002:a05:600c:4e05:b0:43d:26e3:f2f6 with SMTP id 5b1f17b1804b1-43d84f5e5bcmr60988395e9.5.1743109592161;
-        Thu, 27 Mar 2025 14:06:32 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82dedc2dsm49307315e9.2.2025.03.27.14.06.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 14:06:31 -0700 (PDT)
-Date: Thu, 27 Mar 2025 21:06:25 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: guoren@kernel.org
-Cc: arnd@arndb.de, gregkh@linuxfoundation.org,
- torvalds@linux-foundation.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, anup@brainfault.org, atishp@atishpatra.org,
- oleg@redhat.com, kees@kernel.org, tglx@linutronix.de, will@kernel.org,
- mark.rutland@arm.com, brauner@kernel.org, akpm@linux-foundation.org,
- rostedt@goodmis.org, edumazet@google.com, unicorn_wang@outlook.com,
- inochiama@outlook.com, gaohan@iscas.ac.cn, shihua@iscas.ac.cn,
- jiawei@iscas.ac.cn, wuwei2016@iscas.ac.cn, drew@pdp7.com,
- prabhakar.mahadev-lad.rj@bp.renesas.com, ctsai390@andestech.com,
- wefu@redhat.com, kuba@kernel.org, pabeni@redhat.com, josef@toxicpanda.com,
- dsterba@suse.com, mingo@redhat.com, peterz@infradead.org,
- boqun.feng@gmail.com, xiao.w.wang@intel.com, qingfang.deng@siflower.com.cn,
- leobras@redhat.com, jszhang@kernel.org, conor.dooley@microchip.com,
- samuel.holland@sifive.com, yongxuan.wang@sifive.com,
- luxu.kernel@bytedance.com, david@redhat.com, ruanjinjie@huawei.com,
- cuiyunhui@bytedance.com, wangkefeng.wang@huawei.com, qiaozhe@iscas.ac.cn,
- ardb@kernel.org, ast@kernel.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, kvm@vger.kernel.org,
- kvm-riscv@lists.infradead.org, linux-mm@kvack.org,
- linux-crypto@vger.kernel.org, bpf@vger.kernel.org,
- linux-input@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-serial@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, maple-tree@lists.infradead.org,
- linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-atm-general@lists.sourceforge.net, linux-btrfs@vger.kernel.org,
- netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
- linux-nfs@vger.kernel.org, linux-sctp@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: [RFC PATCH V3 00/43] rv64ilp32_abi: Build CONFIG_64BIT
- kernel-self with ILP32 ABI
-Message-ID: <20250327210625.7a3021d0@pumpkin>
-In-Reply-To: <20250325121624.523258-1-guoren@kernel.org>
-References: <20250325121624.523258-1-guoren@kernel.org>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MP1Js1NS"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=f/0jLyoLE9eyA2AOyrusbpNnI2ETotK+YQdfzEMQaMM4nl9C8ZGjo8xbtmvJDbNssfaVdVr5h2za17zRelWyHSl+RhBdpLKKdn0YZRP/+yCq94W5oDM2HqLtqpSDq71Uumi+k3lRwkDOuxsggWiD5cY7LeX61S/1zQ0geuuU6QsmSz8ViZ9cPyHFjFPZdPpKqssW7vjBDhXb2czThAipS3B8glXsNF/AKfgZjVe/yUr5dubQHOe95aBN6qPS/CYiPe15CuBcgNQo01FkAag5mx7EvR8mmRCMimbEQggAG1Tkcgw47UA3TTehGZwGbImjGs/WjptVWVn2SPi/kGqfGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fHQgfZSQMg3h5wysYq8h0AlDO1NWYiOUGIqMVD14QRY=;
+ b=N1p9TRy56RC039mnv/cWiA0Rkk88XI6pVXe0BXw93LXzkP4iFkur4Mv+sI3RCYjqYnsDrkVkcbExsgZcwe4il4sswwu/Bl565rILbH/BehfQAh1nWW12XdVZquPFO8C2ZdgG2QRZ3kxAgE2i+wf22wEoRS7wh3vtrz/O01Fmd4dbe9OnNAyJWyb5qk0nFCiSWQ4mJ8uy5zarspo1GlLd2908GkBcv5O3t0tqqbEcA/gzSWlcSzB7YSbvVZVXRMJP0u08knYvBsYJtU5QafBkn3IoxZNOE7aF7cG+jdR+tyoENw8meWm6xjr3yRH5C1j54boHhVkJH/cV0IKJYcrfIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fHQgfZSQMg3h5wysYq8h0AlDO1NWYiOUGIqMVD14QRY=;
+ b=MP1Js1NSWnUyct4AAwlpWwtn1T1uHOZPUYk1OQMe8HMnlgMBB3Q8ZhHIfM6QbcsZyzgsWvYh99P1vpKR7lB4d2i5VlS3f5bns1PZNR6kdKn0XvnCry/ClEd418EeFbkDS6VCmQABYPjP23U0xSzOl4dp1h+n5ZFdK6rC+0MUE/w=
+Received: from BLAPR03CA0068.namprd03.prod.outlook.com (2603:10b6:208:329::13)
+ by DS7PR12MB5719.namprd12.prod.outlook.com (2603:10b6:8:72::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.47; Thu, 27 Mar
+ 2025 21:07:25 +0000
+Received: from BN2PEPF000044AC.namprd04.prod.outlook.com
+ (2603:10b6:208:329:cafe::6f) by BLAPR03CA0068.outlook.office365.com
+ (2603:10b6:208:329::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.43 via Frontend Transport; Thu,
+ 27 Mar 2025 21:07:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN2PEPF000044AC.mail.protection.outlook.com (10.167.243.107) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8534.20 via Frontend Transport; Thu, 27 Mar 2025 21:07:24 +0000
+Received: from titanite-d354host.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 27 Mar 2025 16:07:23 -0500
+From: Avadhut Naik <avadhut.naik@amd.com>
+To: <linux-edac@vger.kernel.org>
+CC: <bp@alien8.de>, <yazen.ghannam@amd.com>, <linux-kernel@vger.kernel.org>,
+	<avadhut.naik@amd.com>, <stable@vger.kernel.org>
+Subject: [PATCH] EDAC/amd64: Fix size calculation for Non-Power-of-Two DIMMs
+Date: Thu, 27 Mar 2025 21:03:50 +0000
+Message-ID: <20250327210718.1640762-1-avadhut.naik@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044AC:EE_|DS7PR12MB5719:EE_
+X-MS-Office365-Filtering-Correlation-Id: 560e4380-f6f6-4d2d-19a8-08dd6d735fa6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|36860700013|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?rEI4ykI4USi54aBqpv6oI5D16sAIbSgcP6fYFuiReVYzdW/gRtCssFn7Umz+?=
+ =?us-ascii?Q?ES7eGx6i8CreU7sj2iKQvzjjPvLW0JoSnNKJP87iWSOBuqJ/96I/yk/oPNyr?=
+ =?us-ascii?Q?mDTq2rHlsgeOKyvxOR1RzJroPcwYnKZ/1uo0l0B7xPkTYWWkO50wnQKtLlzn?=
+ =?us-ascii?Q?UkIv39JqEC5HFJJoU8UBPqRz/HRYgBy+owKischLpQ2eGp1I4ITw3NOZVt+V?=
+ =?us-ascii?Q?X+K8yxASJ+iWEEA08XBlAWn8A4rhSH6085gzZ6uvNSgrqwSQmjo1r49vRhmV?=
+ =?us-ascii?Q?aDNprz4Vz0gZjB6J8jXw40/5gna/Z9Qr5ru5v0PhMJBexxk9XmEz6vfGvmtR?=
+ =?us-ascii?Q?jswx3mnHVzr44tZDOrYsxdBh1lgCyznYx6yQirpVHBncRXSNYtnc1XBcPGz8?=
+ =?us-ascii?Q?7qys3M0LrkEy1iNfLM4h+nrhnNBqWBtl9vBkDUSUr7/je4zTYwcml9pzzyKA?=
+ =?us-ascii?Q?wleAKyk2b+GXKvH4n5rA9lfb02vR84Fsp7Jkim8ixeI8RrO2C2a+Ax3QE9ap?=
+ =?us-ascii?Q?qkKVK2rzmoxTzmoj3LPCKgJtXlwSza0P4wuMaEdDCddWIPptpOucICRdpgJX?=
+ =?us-ascii?Q?gZAyR3ZIO2qbGGedULWX8XTcxaQ0GqYAtwggMwahOd01DpjkSZMbhCEGXgse?=
+ =?us-ascii?Q?Mth1lRq0sKuEpdclyCw9NhFo630RhdA2l1ULzbgt/rBgNKGDd51LPO6KMb7M?=
+ =?us-ascii?Q?Dd+tqgUHG1GS51MpUjCXeczJ3cE8qR/oV+JNB6+Ny589FEjMjqwl03P9+dKB?=
+ =?us-ascii?Q?QMdf54iPYN5sKInZaTQ/86vugJhbFZF8BAE9K0i2WSy4NxUpvJJ789Ca7bbF?=
+ =?us-ascii?Q?UBHEzWiFVbM4hsUxOjKmxHJgSSc8L+hh3Dz1qMpK4MmNbDUx1E7maOso81Ld?=
+ =?us-ascii?Q?x4cwhbDMEj0iE+ldbts6/LZsoH4H3tZx9O+BTL6jT8DIb9koQP+TyKaWOXP1?=
+ =?us-ascii?Q?hQmzhB7U+zGZWS5i61wAOLhstiwjcxxZIkFx2tTzf/SoPetjxvsbe3R3m4Vv?=
+ =?us-ascii?Q?5MNLAEywaqN2Ou0dBZz1DXWvl+uMlnTnbtT6m4fTdgNVAZcp42zXSEOA+FJ0?=
+ =?us-ascii?Q?tB0+nrefIC5Eoc3ZK9Hl9UvspZtLfBk3QqVLsIeZHrF/O7Dv7sNNXBbUC/Rk?=
+ =?us-ascii?Q?7pdqkWAEfADGcO5mNMSu/aFw1+YylVK+6ijQSNPM2hVFCkp86qDqhUJ2Zp35?=
+ =?us-ascii?Q?IkWGivFrx/VmOmbCdWkbMuo7RbvT2X+7bnYP1a4HcQzN1yfyUkSAuBb53vFg?=
+ =?us-ascii?Q?YDWlQetQodLndcgoX0pTGd/imWeHzXU6uPvpG/t06JGTNcUKc4WiYy/Gz6m3?=
+ =?us-ascii?Q?s7IZ52vqx0ddJ4AdhAruvTmVcgZFOVda0nnM2Yc4ydB5s1HDDB1zMQauZGH/?=
+ =?us-ascii?Q?xWHEjVkToZy27J6KJmY6ZBzJ81TK7aBvf5XBABZulcq5+IIrL4NFXuJX/oK/?=
+ =?us-ascii?Q?n2hCpqh21TOtxEdMHP0K8jEmrVzfrawrAckWJbRrpMEF77rhJj6Ltaki3w9n?=
+ =?us-ascii?Q?ywkGDyRYe48bUUE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 21:07:24.9553
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 560e4380-f6f6-4d2d-19a8-08dd6d735fa6
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044AC.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5719
 
-On Tue, 25 Mar 2025 08:15:41 -0400
-guoren@kernel.org wrote:
+Each Chip-Select (CS) of a Unified Memory Controller (UMC) on AMD EPYC
+SOCs has an Address Mask and a Secondary Address Mask register associated
+with it. The amd64_edac module logs DIMM sizes on a per-UMC per-CS
+granularity during init using these two registers.
 
-> From: "Guo Ren (Alibaba DAMO Academy)" <guoren@kernel.org>
-> 
-> Since 2001, the CONFIG_64BIT kernel has been built with the LP64 ABI,
-> but this patchset allows the CONFIG_64BIT kernel to use an ILP32 ABI
-> for construction to reduce cache & memory footprint (Compared to
-> kernel-lp64-abi, kernel-rv64ilp32-abi decreased the used memory by
-> about 20%, as shown in "free -h" in the following demo.)
-...
+Currently, the module primarily considers only the Address Mask register
+for computing DIMM sizes. The Secondary Address Mask register is only
+considered for odd CS. Additionally, if it has been considered, the
+Address Mask register is ignored altogether for that CS. For
+power-of-two DIMMs, this is not an issue since only the Address Mask
+register is used.
 
-Why on earth would you want to run a 64bit application on a 32bit kernel.
-IIRC the main justification for 64bit was to get a larger address space.
+For non-power-of-two DIMMs, however, the Secondary Address Mask register
+is used in conjunction with the Address Mask register. However, since the
+module only considers either of the two registers for a CS, the size
+computed by the module is incorrect. The Secondary Address Mask register
+is not considered for even CS, and the Address Mask register is not
+considered for odd CS.
 
-Now you might want to compile a 32bit (ILP32) system that actually
-runs in 64bit mode (c/f x32) so that 64bit maths (long long) is
-more efficient - but that is a different issue.
-(I suspect you'd need to change the process switch code to save
-all 64bits of the registers - but maybe not much else??)
+Furthermore, also rename some variables for greater clarity.
 
-	David
+Fixes: 81f5090db843 ("EDAC/amd64: Support asymmetric dual-rank DIMMs")
+Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
+Cc: stable@vger.kernel.org
+---
+ drivers/edac/amd64_edac.c | 56 ++++++++++++++++++++++++---------------
+ 1 file changed, 35 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index 90f0eb7cc5b9..16117fda727f 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -1209,7 +1209,9 @@ static int umc_get_cs_mode(int dimm, u8 ctrl, struct amd64_pvt *pvt)
+ 	if (csrow_enabled(2 * dimm + 1, ctrl, pvt))
+ 		cs_mode |= CS_ODD_PRIMARY;
+ 
+-	/* Asymmetric dual-rank DIMM support. */
++	if (csrow_sec_enabled(2 * dimm, ctrl, pvt))
++		cs_mode |= CS_EVEN_SECONDARY;
++
+ 	if (csrow_sec_enabled(2 * dimm + 1, ctrl, pvt))
+ 		cs_mode |= CS_ODD_SECONDARY;
+ 
+@@ -1230,12 +1232,10 @@ static int umc_get_cs_mode(int dimm, u8 ctrl, struct amd64_pvt *pvt)
+ 	return cs_mode;
+ }
+ 
+-static int __addr_mask_to_cs_size(u32 addr_mask_orig, unsigned int cs_mode,
+-				  int csrow_nr, int dimm)
++static int calculate_cs_size(u32 mask, unsigned int cs_mode)
+ {
+-	u32 msb, weight, num_zero_bits;
+-	u32 addr_mask_deinterleaved;
+-	int size = 0;
++	int msb, weight, num_zero_bits;
++	u32 deinterleaved_mask = 0;
+ 
+ 	/*
+ 	 * The number of zero bits in the mask is equal to the number of bits
+@@ -1248,19 +1248,32 @@ static int __addr_mask_to_cs_size(u32 addr_mask_orig, unsigned int cs_mode,
+ 	 * without swapping with the most significant bit. This can be handled
+ 	 * by keeping the MSB where it is and ignoring the single zero bit.
+ 	 */
+-	msb = fls(addr_mask_orig) - 1;
+-	weight = hweight_long(addr_mask_orig);
++	msb = fls(mask) - 1;
++	weight = hweight_long(mask);
+ 	num_zero_bits = msb - weight - !!(cs_mode & CS_3R_INTERLEAVE);
+ 
+ 	/* Take the number of zero bits off from the top of the mask. */
+-	addr_mask_deinterleaved = GENMASK_ULL(msb - num_zero_bits, 1);
++	deinterleaved_mask = GENMASK(msb - num_zero_bits, 1);
++	edac_dbg(1, "  Deinterleaved AddrMask: 0x%x\n", deinterleaved_mask);
++
++	return (deinterleaved_mask >> 2) + 1;
++}
++
++static int __addr_mask_to_cs_size(u32 addr_mask, u32 addr_mask_sec,
++				  unsigned int cs_mode, int csrow_nr, int dimm)
++{
++	int size = 0;
+ 
+ 	edac_dbg(1, "CS%d DIMM%d AddrMasks:\n", csrow_nr, dimm);
+-	edac_dbg(1, "  Original AddrMask: 0x%x\n", addr_mask_orig);
+-	edac_dbg(1, "  Deinterleaved AddrMask: 0x%x\n", addr_mask_deinterleaved);
++	edac_dbg(1, "  Primary AddrMask: 0x%x\n", addr_mask);
+ 
+ 	/* Register [31:1] = Address [39:9]. Size is in kBs here. */
+-	size = (addr_mask_deinterleaved >> 2) + 1;
++	size = calculate_cs_size(addr_mask, cs_mode);
++
++	if (addr_mask_sec) {
++		edac_dbg(1, "  Secondary AddrMask: 0x%x\n", addr_mask);
++		size += calculate_cs_size(addr_mask_sec, cs_mode);
++	}
+ 
+ 	/* Return size in MBs. */
+ 	return size >> 10;
+@@ -1270,7 +1283,7 @@ static int umc_addr_mask_to_cs_size(struct amd64_pvt *pvt, u8 umc,
+ 				    unsigned int cs_mode, int csrow_nr)
+ {
+ 	int cs_mask_nr = csrow_nr;
+-	u32 addr_mask_orig;
++	u32 addr_mask = 0, addr_mask_sec = 0;
+ 	int dimm, size = 0;
+ 
+ 	/* No Chip Selects are enabled. */
+@@ -1308,13 +1321,13 @@ static int umc_addr_mask_to_cs_size(struct amd64_pvt *pvt, u8 umc,
+ 	if (!pvt->flags.zn_regs_v2)
+ 		cs_mask_nr >>= 1;
+ 
+-	/* Asymmetric dual-rank DIMM support. */
+-	if ((csrow_nr & 1) && (cs_mode & CS_ODD_SECONDARY))
+-		addr_mask_orig = pvt->csels[umc].csmasks_sec[cs_mask_nr];
+-	else
+-		addr_mask_orig = pvt->csels[umc].csmasks[cs_mask_nr];
++	if (cs_mode & CS_EVEN_PRIMARY || cs_mode & CS_ODD_PRIMARY)
++		addr_mask = pvt->csels[umc].csmasks[cs_mask_nr];
++
++	if (cs_mode & CS_EVEN_SECONDARY || cs_mode & CS_ODD_SECONDARY)
++		addr_mask_sec = pvt->csels[umc].csmasks_sec[cs_mask_nr];
+ 
+-	return __addr_mask_to_cs_size(addr_mask_orig, cs_mode, csrow_nr, dimm);
++	return __addr_mask_to_cs_size(addr_mask, addr_mask_sec, cs_mode, csrow_nr, dimm);
+ }
+ 
+ static void umc_debug_display_dimm_sizes(struct amd64_pvt *pvt, u8 ctrl)
+@@ -3512,9 +3525,10 @@ static void gpu_get_err_info(struct mce *m, struct err_info *err)
+ static int gpu_addr_mask_to_cs_size(struct amd64_pvt *pvt, u8 umc,
+ 				    unsigned int cs_mode, int csrow_nr)
+ {
+-	u32 addr_mask_orig = pvt->csels[umc].csmasks[csrow_nr];
++	u32 addr_mask = pvt->csels[umc].csmasks[csrow_nr];
++	u32 addr_mask_sec = pvt->csels[umc].csmasks_sec[csrow_nr];
+ 
+-	return __addr_mask_to_cs_size(addr_mask_orig, cs_mode, csrow_nr, csrow_nr >> 1);
++	return __addr_mask_to_cs_size(addr_mask, addr_mask_sec, cs_mode, csrow_nr, csrow_nr >> 1);
+ }
+ 
+ static void gpu_debug_display_dimm_sizes(struct amd64_pvt *pvt, u8 ctrl)
+
+base-commit: f1861fb575b028e35e6233295441d535f2e3f240
+-- 
+2.43.0
+
