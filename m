@@ -1,35 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B953C1F582C
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC6E1F8729;
+	Thu, 27 Mar 2025 03:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743045876; cv=none; b=IY+GSyVf2/6tb6kITXWBFO5F2+zrjpP2if7IwHY+jkkZbwo2REriBmhpwecm/prin9w2R2ipO3eUIIe6nZKPoBip/+iBXfJIqBr3M3pB3nmfwGhkLYIumdKK80tLkEaMH26sLlSBa1miZfd354lTNe1I7Wv78sEzgnXwTg7BCFc=
+	t=1743045882; cv=none; b=QoS6MWgJEwFUIwOPY0pOpzjxUY08lYg/EcIC04sniC01aq+gUY9bfrmK6nf82JnSz6JcnfkckQadAqrZi8yd53btfMErHRtQ32JtjLwaGRw4LWQHVnPkmJRbNSsyZ5bNJ93sxbhpJ8tMz5QgGHnL9i13xeEExAw34qSEmIQtCZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743045876; c=relaxed/simple;
-	bh=Bn/Uw0tcOtu+ptdfREC8J1+mUrr776utjD3xLOZbgEY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=GltcC15BRTPCK67jO5KIF73ExyxFLgSKxbkGvlFmJqOeYvH+K+0SD8TWagEHFwj6Qv/Afie/BhIQieQ1jHA+NflXXaS+XY0sgHRb16Jc6m3Egg9W1cKQLcYtTxnZPImHXCMlk4DVXbuoDypsBMevdys84QZ+U8Ij48pKtSLHuPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rs6vK0Mc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743045882; c=relaxed/simple;
+	bh=D1y5O7GHFPafWCaRwvfdCQY7Fye/a1hcOZ95f7+lWic=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iPrQXqRzSIo2EpOBcnc3UobqoU3fPNGCMvdxxFt+lQxI3AFePgQuI/2vI+GKQeEwEQ69TCCUcrLoaNvG6a6JXe0JOncSUv87TEGYMDxmRYtLPvy09g0VAABVtslWP949d/It0LhfPAg06r7/p8o5mcnC58dbYz8CpnfKi+CZAEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZPmU6itZ; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rs6vK0Mc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9811EC4CEDD;
-	Thu, 27 Mar 2025 03:24:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743045876;
-	bh=Bn/Uw0tcOtu+ptdfREC8J1+mUrr776utjD3xLOZbgEY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Rs6vK0Mc05loEiunJGgz7boRG9ds5YasZMOJzdSzQk320i6w+OqwsozSan9FA5j2L
-	 HtgH9/J/F6tUCohLlKoZWpGeNYvX7RKXbPweexeJ8567SD840tbPyBBZM4j0UFKX16
-	 gcG7tgpQwWbgUE0keg7aZyuVk9074/8cch0CTHJikwnfaEtWxu/he48HrYeFBiVkNO
-	 SlpHjp3/5BBMeUdRJbNHeLatctOyR/i5mPJBIvSPgbs0Vb0a3A05V84TK2l8wTb+Xg
-	 cr6lzQ72rndBVEyYj5Y6v5mwH3Rse92qBiXbL46syDeYlOKwrli1DQi/mtt9AwyWRx
-	 ej7/3MYoeC9Og==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33ADF380AAFD;
-	Thu, 27 Mar 2025 03:25:14 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZPmU6itZ"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2264aefc45dso15029655ad.0;
+        Wed, 26 Mar 2025 20:24:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743045880; x=1743650680; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BvDZBbhZMPX6erlds9jOpeJO2KealfqA0C2o57c54Qg=;
+        b=ZPmU6itZvQPhTatzP1N0banKJX7D5xkspNtg0Mit1knMqgfKbeKvPijgAEajvW+33A
+         tzzBOMlq2jq3SBpZN/CbAQmSFSj4/c4sdBa04c4CNIr9qu6BPlBIGPkvrgte6YW96NYb
+         bqwqJezXEkCfOMGaPD9pT+rnBr+uKa4KvnBMwEF0hR7FUXl+b8xrriMHMmYHNIEYXbLs
+         L8zFHcaWKLsWakNgd7sysN2OKVmngLWbrE7KdkgGwcqSLyDanVv1jtg2+LHFJEmOANhm
+         X/5RP7xSH9Ql7Ghs4K9YljgININI7LYPPX5ajXh2wYjRbmXsx28HLKkTVNUyfZj4diFp
+         bzlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743045880; x=1743650680;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BvDZBbhZMPX6erlds9jOpeJO2KealfqA0C2o57c54Qg=;
+        b=HGY4qQDFfg+PsZBhxo+1KhyR7+vDZIh5bEofYyEHKk6sPgeD4U+3vJKWFEXCqZoQgM
+         /uVIZ/OE/Qd9V2Omu/+eS1t9PWhNW9BdLHZ6jPDWRriOrtJoZDJcODhDdvZAvRIrx355
+         vadN248f1ocUhfCYMJLY2QxTk+sHOT+Hmkt3RszbDWarjYLIirrK6IbuCjCs9FBg14HA
+         oF2nstA/1Mq/GVCw9veFoIghZjbzy3dLxJGSVMB6HF+ZHBMw5Cjre10OK/W0r1WvjDZW
+         eA/GiitkyU0ZU2SoU+YOQn2qJFn2kj98RgXD+SYHjjPlKMNExz+Yaq4yQSogTsVVQZZu
+         T7Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwa6OgL2V2yH4LChMfq8Q7R5NBuh8lqtC1ILdWfQ+IOivixIgJkKdclll/RRgj6LdALuQC4PkX@vger.kernel.org, AJvYcCWTq5H5sDWYAqXqxstWjH4T4DO4qZ82y8XvfnQ7uVNrAFytny9m9732fUafmRa2YfuHq+lqD0MHgd0gqvk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZat4c4Tup/yy/hTiWCthC0KLBM+Kw8E+IahMkD8zCk05T3noY
+	6yymq+iZchq9lnuSp4vMoPBs1s0/ibl4BdAfQXuPvKNxRkmi1nDS
+X-Gm-Gg: ASbGncuH4683+z7VajeBt9wYTZYqgxwLsMXcSb8zvVKS9tUSY2RyE58gZO3Ko2fP0WY
+	5OWwlE1499MEGDnTR0U95mSAoJAzfU/L8A5FaknzUCwtcLk6yCX4rSnk+xkjSGu2fzMLbwCPL0L
+	eSaQzxIVuYp0g3b46qPUPA/yXtPiBlM82dfYhXxXlFxIy9gmBn3LE1rOxi0UAn0LOsTNaxPp+xZ
+	mJZAjh898P1WyBmKdQHg1JWD8kIs52VjZyyo/XG/AvtgPC5CUtzN68mjXWPH+RpT6bi8hDb3wFS
+	QSyX/FalXemMO/SmBhYkP95AKSJ2mzi2TdV7
+X-Google-Smtp-Source: AGHT+IHd6OOeyDgumFlrKIkvH53qKhq7ryWom5Dv+FjCyOIRYvw1a98qVpzr0bR6HZjcMQv3+tTIlQ==
+X-Received: by 2002:a05:6a21:58b:b0:1f5:86f2:ba57 with SMTP id adf61e73a8af0-1fea2ef626cmr4947090637.30.1743045879679;
+        Wed, 26 Mar 2025 20:24:39 -0700 (PDT)
+Received: from apollo.localdomain ([2601:646:8201:fd20::f147])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af8a27dec60sm11911927a12.4.2025.03.26.20.24.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Mar 2025 20:24:39 -0700 (PDT)
+From: Khem Raj <raj.khem@gmail.com>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Kees Cook <kees@kernel.org>
+Cc: linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Khem Raj <raj.khem@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] mips: Add '-std=gnu11' to vdso CFLAGS
+Date: Wed, 26 Mar 2025 20:24:36 -0700
+Message-ID: <20250327032436.3600578-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,39 +75,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: Fix a comment typo in set_mm_asid()
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <174304591275.1549280.4529135035725430300.git-patchwork-notify@kernel.org>
-Date: Thu, 27 Mar 2025 03:25:12 +0000
-References: <20241114212725.4172401-1-yikming2222@gmail.com>
-In-Reply-To: <20241114212725.4172401-1-yikming2222@gmail.com>
-To: Chin Yik Ming <yikming2222@gmail.com>
-Cc: linux-riscv@lists.infradead.org, palmer@dabbelt.com,
- paul.walmsley@sifive.com, aou@eecs.berkeley.edu, alexghiti@rivosinc.com,
- samuel.holland@sifive.com, parri.andrea@gmail.com, atishp@rivosinc.com,
- charlie@rivosinc.com, linux-kernel@vger.kernel.org
 
-Hello:
+GCC 15 changed the default C standard dialect from gnu17 to gnu23,
+which should not have impacted the kernel because it explicitly requests
+the gnu11 standard in the main Makefile. However, mips/vdso code uses
+its own CFLAGS without a '-std=' value, which break with this dialect
+change because of the kernel's own definitions of bool, false, and true
+conflicting with the C23 reserved keywords.
 
-This patch was applied to riscv/linux.git (for-next)
-by Alexandre Ghiti <alexghiti@rivosinc.com>:
+  include/linux/stddef.h:11:9: error: cannot use keyword 'false' as enumeration constant
+     11 |         false   = 0,
+        |         ^~~~~
+  include/linux/stddef.h:11:9: note: 'false' is a keyword with '-std=c23' onwards
+  include/linux/types.h:35:33: error: 'bool' cannot be defined via 'typedef'
+     35 | typedef _Bool                   bool;
+        |                                 ^~~~
+  include/linux/types.h:35:33: note: 'bool' is a keyword with '-std=c23' onwards
 
-On Fri, 15 Nov 2024 05:27:25 +0800 you wrote:
-> s/verion/version
-> 
-> Signed-off-by: Chin Yik Ming <yikming2222@gmail.com>
-> ---
->  arch/riscv/mm/context.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Add '-std=gnu11' to the decompressor and purgatory CFLAGS to eliminate
+these errors and make the C standard version of these areas match the
+rest of the kernel.
 
-Here is the summary with links:
-  - riscv: Fix a comment typo in set_mm_asid()
-    https://git.kernel.org/riscv/c/418af0eafb48
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Cc: stable@vger.kernel.org
+---
+v2: Filter the -std flag from KBUILD_CFLAGS instead of hardcoding
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+ arch/mips/vdso/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-
+diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
+index fb4c493aaffa..69d4593f64fe 100644
+--- a/arch/mips/vdso/Makefile
++++ b/arch/mips/vdso/Makefile
+@@ -27,6 +27,7 @@ endif
+ # offsets.
+ cflags-vdso := $(ccflags-vdso) \
+ 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
++	$(filter -std=%,$(KBUILD_CFLAGS)) \
+ 	-O3 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
+ 	-mrelax-pic-calls $(call cc-option, -mexplicit-relocs) \
+ 	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
