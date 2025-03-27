@@ -1,239 +1,188 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEABF1DC9AB;
-	Thu, 27 Mar 2025 21:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D6326289;
+	Thu, 27 Mar 2025 21:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743110870; cv=none; b=X+GLgAiR6IngU/41E68SaVCbk+UgZv7LWGBv48LGfPaRCXY6mLByy9KmVc/+mtdKMep9YrMwMJvvbxZRhHyxkDL2a/QjPfD3uT1vrRzIDVXX5Wo3zXJPpoTZhC6uEWlREytRaWMUbX5daRl3d/HryWafUq1sMmiDO2l9hk4uon4=
+	t=1743110939; cv=none; b=kp71Rk5rrEgOkbPIsgW0pi31adt+k7prQnv33SVeSA02ApjTsKYzzo8cNpwM/FMw4wcY7UjhFjahfXj9bY8Tr4DCI4fTuujn5+lWYIl0xRPzrOSpVOC1lY+zud7hKF/kHIA1wmRatOcdA8kkBmL4grrvPtDkgPpqJf3qSl0CZLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743110870; c=relaxed/simple;
-	bh=7RXkqp81KBdIAicdr75oBK9qT7u/v0v2sn0hGhtTWpA=;
+	s=arc-20240116; t=1743110939; c=relaxed/simple;
+	bh=WiLrfU+LP++scAnoWFMiY79wCpV1nlGlwqnHdfpKrlU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LoGvRWztg4HYo/tpka7/7r3Ro+MGm3R5ZmtmAVlFvHyb+9XypZa6ZYGx/WA3Kt/r39YLV3dalHG4NX8Ew3bHBkXLcufx3a8dnbAYZIxPzvk49TwjTe2GtnrAoBmx9hy21JlMBo2M3nur0DISrUVoPMNI8cbr+Qrs97vSYagG9OA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=mvbobJ0O; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=NVR5vl0Y3jy5b7r1OI6n0IAxPHGrkSyjrlBKI+MyVgcRUMdZzkEN3TMk8OCF+kwtiP/MgGJyt1TACXoxU2AJDtcagYWt7JyBYgeA+VHdQ8FvkvbdAaSw7DDP8GcrY11mG7ZJF4A6z0kYew9vjhuoFiryAEEJct8NBUWV04vhHGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EWBWR4/W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mvbobJ0O"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0958EF6;
-	Thu, 27 Mar 2025 22:25:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1743110758;
-	bh=7RXkqp81KBdIAicdr75oBK9qT7u/v0v2sn0hGhtTWpA=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EWBWR4/W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F32FC4CEDD;
+	Thu, 27 Mar 2025 21:28:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743110937;
+	bh=WiLrfU+LP++scAnoWFMiY79wCpV1nlGlwqnHdfpKrlU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mvbobJ0OT5rI3eWPuEFyXAHhFbjjOKeiXEN+6/+Ijt5G9MDPisWIQ6s85xIFndWGB
-	 iwAEl1Awq7IRNZwCXOBOCdhNBKRTk0qg8zHPFjGGJEoCC/zmES2I26zOB8+ZpcoONA
-	 sJzcsp1BdN+5Tq/lf+52wgRPAENtAkAo8pFQ+LhQ=
-Date: Thu, 27 Mar 2025 23:27:23 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: Re: [PATCH v5 3/5] media: uvcvideo: Increase/decrease the PM counter
- per IOCTL
-Message-ID: <20250327212723.GK4861@pendragon.ideasonboard.com>
-References: <20250303-uvc-granpower-ng-v5-0-a3dfbe29fe91@chromium.org>
- <20250303-uvc-granpower-ng-v5-3-a3dfbe29fe91@chromium.org>
- <20250327175225.GA11416@pendragon.ideasonboard.com>
- <20250327175706.GC11416@pendragon.ideasonboard.com>
- <CANiDSCvCDxqUCzeOOtneesGiBpXeyqHffT0pHrO4_FwBvkn0dA@mail.gmail.com>
+	b=EWBWR4/WC5scIx0dbtVikkG4lPVWw0w81dPIq5c65WAGDJogDVXW7YPtAdkxLpmBg
+	 vfpXq3zRVwtfKc5s5wnqyFBHMyKhSdJBuVhiuVmEgNmqtaFycKnj1KgVu7yT3iX5XO
+	 Ft7gyHqTBdBClAzoQ2PjCpMWmjQzwGfd5Lu4fYDghZ5P7nV+ovNaHx2fpgr8gIfpxk
+	 c1KNG74cp3Haa/5KvgdUWSa592RM45phSgkUDm52gazl075BZyMHDmwpDjsyHsGaRN
+	 Nodk/8p9cKGB76RkVoyYrOUB+ItUijjn51AVjRBseXFNZmAOZb1tc+EbRaIpA1fxZy
+	 UMxLzlKjNHOlQ==
+Date: Thu, 27 Mar 2025 23:28:52 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc: "Hansen, Dave" <dave.hansen@intel.com>,
+	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"Mallick, Asit K" <asit.k.mallick@intel.com>,
+	"Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
+	"Cai, Chong" <chongc@google.com>,
+	"Aktas, Erdem" <erdemaktas@google.com>,
+	"Annapurve, Vishal" <vannapurve@google.com>,
+	"dionnaglaze@google.com" <dionnaglaze@google.com>,
+	"bondarn@google.com" <bondarn@google.com>,
+	"Raynor, Scott" <scott.raynor@intel.com>,
+	"Shutemov, Kirill" <kirill.shutemov@intel.com>
+Subject: Re: [PATCH 1/4] x86/sgx: Add total number of EPC pages
+Message-ID: <Z-XDFDj8Tc5i-GBg@kernel.org>
+References: <20250321123938.802763-1-elena.reshetova@intel.com>
+ <20250321123938.802763-2-elena.reshetova@intel.com>
+ <Z98yki-gH4ewlpbP@kernel.org>
+ <DM8PR11MB57508A3681C614C9B185B04EE7A42@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <Z-RY8-bL2snpRKTB@kernel.org>
+ <DM8PR11MB575029FAC2C833553CE422CFE7A12@DM8PR11MB5750.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANiDSCvCDxqUCzeOOtneesGiBpXeyqHffT0pHrO4_FwBvkn0dA@mail.gmail.com>
+In-Reply-To: <DM8PR11MB575029FAC2C833553CE422CFE7A12@DM8PR11MB5750.namprd11.prod.outlook.com>
 
-On Thu, Mar 27, 2025 at 10:05:19PM +0100, Ricardo Ribalda wrote:
-> On Thu, 27 Mar 2025 at 18:57, Laurent Pinchart wrote:
-> > On Thu, Mar 27, 2025 at 07:52:27PM +0200, Laurent Pinchart wrote:
-> > > On Mon, Mar 03, 2025 at 07:13:40PM +0000, Ricardo Ribalda wrote:
-> > > > Now we call uvc_pm_get/put from the device open/close. This low
-> > > > level of granularity might leave the camera powered on in situations
-> > > > where it is not needed.
-> > > >
-> > > > Increase the granularity by increasing and decreasing the Power
-> > >
-> > > You're decreasing the granularity, not increasing it.
-> > >
-> > > > Management counter per ioctl. There are two special cases where the
-> > > > power management outlives the ioctl: async controls and streamon. Handle
-> > > > those cases as well.
-> > > >
-> > > > In a future patch, we will remove the uvc_pm_get/put from open/close.
-> > > >
-> > > > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> > > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > > > ---
-> > > >  drivers/media/usb/uvc/uvc_ctrl.c | 13 +++++++++++--
-> > > >  drivers/media/usb/uvc/uvc_v4l2.c | 23 +++++++++++++++++++++--
-> > > >  drivers/media/usb/uvc/uvcvideo.h |  1 +
-> > > >  3 files changed, 33 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-> > > > index 4e58476d305e..47188c7f96c7 100644
-> > > > --- a/drivers/media/usb/uvc/uvc_ctrl.c
-> > > > +++ b/drivers/media/usb/uvc/uvc_ctrl.c
-> > > > @@ -1594,12 +1594,15 @@ static void uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl,
-> > > >
-> > > >             if (ctrl->handle) {
-> > > >                     WARN_ON(!ctrl->handle->pending_async_ctrls);
-> > > > -                   if (ctrl->handle->pending_async_ctrls)
-> > > > +                   if (ctrl->handle->pending_async_ctrls) {
-> > > >                             ctrl->handle->pending_async_ctrls--;
-> > > > +                           uvc_pm_put(handle->chain->dev);
-> > >
-> > > Shouldn't this be
-> > >
-> > >                               uvc_pm_put(ctrl->handle->chain->dev);
-> > >
-> > > ? In practice it won't make a difference as dev will be the same for
-> > > both, but it seems clearer.
-> > >
-> > > > +                   }
-> > > >             }
-> > > >
-> > > >             ctrl->handle = new_handle;
-> > > >             handle->pending_async_ctrls++;
-> > > > +           uvc_pm_get(handle->chain->dev);
-> > >
-> > > Similarly, we should use ctrl->handle here too (including for the
-> > > pending_async_ctrls++).
-> > >
-> > > >             return;
-> > > >     }
-> > > >
-> > > > @@ -1611,6 +1614,7 @@ static void uvc_ctrl_set_handle(struct uvc_fh *handle, struct uvc_control *ctrl,
-> > > >     if (WARN_ON(!handle->pending_async_ctrls))
-> > > >             return;
-> > > >     handle->pending_async_ctrls--;
-> > > > +   uvc_pm_put(handle->chain->dev);
-> > > >  }
-> > > >
-> > > >  void uvc_ctrl_status_event(struct uvc_video_chain *chain,
-> > > > @@ -2815,6 +2819,7 @@ int uvc_ctrl_init_device(struct uvc_device *dev)
-> > > >  void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
-> > > >  {
-> > > >     struct uvc_entity *entity;
-> > > > +   int i;
-> > > >
-> > > >     guard(mutex)(&handle->chain->ctrl_mutex);
-> > > >
-> > > > @@ -2829,7 +2834,11 @@ void uvc_ctrl_cleanup_fh(struct uvc_fh *handle)
-> > > >             }
-> > > >     }
-> > > >
-> > > > -   WARN_ON(handle->pending_async_ctrls);
-> > > > +   if (!WARN_ON(handle->pending_async_ctrls))
-> > > > +           return;
-> > > > +
-> > > > +   for (i = 0; i < handle->pending_async_ctrls; i++)
-> > > > +           uvc_pm_put(handle->stream->dev);
-> > > >  }
-> > > >
-> > > >  /*
-> > > > diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> > > > index de1e105f7263..1c9ac72be58a 100644
-> > > > --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> > > > +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> > > > @@ -691,6 +691,9 @@ static int uvc_v4l2_release(struct file *file)
-> > > >     if (uvc_has_privileges(handle))
-> > > >             uvc_queue_release(&stream->queue);
-> > > >
-> > > > +   if (handle->is_streaming)
-> > > > +           uvc_pm_put(stream->dev);
-> > > > +
-> > > >     /* Release the file handle. */
-> > > >     uvc_dismiss_privileges(handle);
-> > > >     v4l2_fh_del(&handle->vfh);
-> > > > @@ -857,6 +860,7 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
-> > > >             return ret;
-> > > >
-> > > >     handle->is_streaming = true;
-> > > > +   uvc_pm_get(stream->dev);
-> >
-> > Another comment: shouldn't you handle the return value (here and
-> > elsewhere, including where you use guards) ?
+oN Thu, Mar 27, 2025 at 03:29:53PM +0000, Reshetova, Elena wrote:
 > 
-> Good point... I guess I got excited trying to use the guards :)
-
-I like them too :-)
-
+> > On Mon, Mar 24, 2025 at 12:12:41PM +0000, Reshetova, Elena wrote:
+> > > > On Fri, Mar 21, 2025 at 02:34:40PM +0200, Elena Reshetova wrote:
+> > > > > In order to successfully execute ENCLS[EUPDATESVN], EPC must be
+> > empty.
+> > > > > SGX already has a variable sgx_nr_free_pages that tracks free
+> > > > > EPC pages. Add a new variable, sgx_nr_total_pages, that will keep
+> > > > > track of total number of EPC pages. It will be used in subsequent
+> > > > > patch to change the sgx_nr_free_pages into sgx_nr_used_pages and
+> > > > > allow an easy check for an empty EPC.
 > > > >
-> > > >     return 0;
-> > > >  }
-> > > > @@ -873,7 +877,10 @@ static int uvc_ioctl_streamoff(struct file *file, void *fh,
-> > > >     guard(mutex)(&stream->mutex);
-> > > >
-> > > >     uvc_queue_streamoff(&stream->queue, type);
-> > > > -   handle->is_streaming = false;
-> > > > +   if (handle->is_streaming) {
-> > > > +           handle->is_streaming = false;
-> > > > +           uvc_pm_put(stream->dev);
-> > > > +   }
-> > > >
-> > > >     return 0;
-> > > >  }
-> > > > @@ -1410,6 +1417,8 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
-> > > >     void __user *up = compat_ptr(arg);
-> > > >     long ret;
-> > > >
-> > > > +   guard(uvc_pm)(handle->stream->dev);
-> > > > +
-> > > >     switch (cmd) {
-> > > >     case UVCIOC_CTRL_MAP32:
-> > > >             ret = uvc_v4l2_get_xu_mapping(&karg.xmap, up);
-> > > > @@ -1444,6 +1453,16 @@ static long uvc_v4l2_compat_ioctl32(struct file *file,
-> > > >  }
-> > > >  #endif
-> > > >
-> > > > +static long uvc_v4l2_video_ioctl2(struct file *file,
-> > > > +                             unsigned int cmd, unsigned long arg)
-> > > > +{
-> > > > +   struct uvc_fh *handle = file->private_data;
-> > > > +
-> > > > +   guard(uvc_pm)(handle->stream->dev);
-> > > > +
-> > > > +   return video_ioctl2(file, cmd, arg);
-> > > > +}
-> > > > +
-> > > >  static ssize_t uvc_v4l2_read(struct file *file, char __user *data,
-> > > >                 size_t count, loff_t *ppos)
-> > > >  {
-> > > > @@ -1529,7 +1548,7 @@ const struct v4l2_file_operations uvc_fops = {
-> > > >     .owner          = THIS_MODULE,
-> > > >     .open           = uvc_v4l2_open,
-> > > >     .release        = uvc_v4l2_release,
-> > > > -   .unlocked_ioctl = video_ioctl2,
-> > > > +   .unlocked_ioctl = uvc_v4l2_video_ioctl2,
+> > > > First off, remove "in subsequent patch".
 > > >
-> > > I'd have named this uvc_v4l2_unlocked_ioctl.
+> > > Ok
 > > >
-> > > >  #ifdef CONFIG_COMPAT
-> > > >     .compat_ioctl32 = uvc_v4l2_compat_ioctl32,
-> > > >  #endif
-> > > > diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> > > > index fbe3649c7cd6..eb8e374fa4c5 100644
-> > > > --- a/drivers/media/usb/uvc/uvcvideo.h
-> > > > +++ b/drivers/media/usb/uvc/uvcvideo.h
-> > > > @@ -766,6 +766,7 @@ void uvc_status_put(struct uvc_device *dev);
-> > > >  /* PM */
-> > > >  int uvc_pm_get(struct uvc_device *dev);
-> > > >  void uvc_pm_put(struct uvc_device *dev);
-> > > > +DEFINE_GUARD(uvc_pm, struct uvc_device *, uvc_pm_get(_T), uvc_pm_put(_T))
 > > > >
-> > > >  /* Controls */
-> > > >  extern const struct v4l2_subscribed_event_ops uvc_ctrl_sub_ev_ops;
+> > > > What does "change sgx_nr_free_pages into sgx_nr_used_pages" mean?
+> > >
+> > > As you can see from patch 2/4, I had to turn around the meaning of the
+> > > existing sgx_nr_free_pages atomic counter not to count the # of free pages
+> > > in EPC, but to count the # of used EPC pages (hence the change of name
+> > > to sgx_nr_used_pages). The reason for doing this is only apparent in patch
+> > 
+> > Why you *absolutely* need to invert the meaning and cannot make
+> > this work by any means otherwise?
+> > 
+> > I doubt highly doubt this could not be done other way around.
+> 
+> I can make it work. The point that this way is much better and no damage to
+> existing logic is done. The sgx_nr_free_pages counter that is used only for page reclaiming
+> and checked in a single piece of code.
+> To give you an idea the previous iteration of the code looked like below.
+> First, I had to define a new unconditional spinlock to protect the EPC page allocation:
+> 
+> diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
+> index c8a2542140a1..4f445c28929b 100644
+> --- a/arch/x86/kernel/cpu/sgx/main.c
+> +++ b/arch/x86/kernel/cpu/sgx/main.c
+> @@ -31,6 +31,7 @@ static DEFINE_XARRAY(sgx_epc_address_space);
+>   */
+>  static LIST_HEAD(sgx_active_page_list);
+>  static DEFINE_SPINLOCK(sgx_reclaimer_lock);
+> +static DEFINE_SPINLOCK(sgx_allocate_epc_page_lock);
 
--- 
-Regards,
 
-Laurent Pinchart
+
+>  
+>  static atomic_long_t sgx_nr_free_pages = ATOMIC_LONG_INIT(0);
+>  static unsigned long sgx_nr_total_pages;
+> @@ -457,7 +458,10 @@ static struct sgx_epc_page *__sgx_alloc_epc_page_from_node(int nid)
+>   page->flags = 0;
+>  
+>   spin_unlock(&node->lock);
+> +
+> + spin_lock(&sgx_allocate_epc_page_lock);
+>   atomic_long_dec(&sgx_nr_free_pages);
+> + spin_unlock(&sgx_allocate_epc_page_lock);
+>  
+>   return page;
+>  }
+> 
+> And then also take spinlock every time eupdatesvn attempts to run:
+> 
+> int sgx_updatesvn(void)
+> +{
+> + int ret;
+> + int retry = 10;
+
+Reverse xmas tree order.
+
+> +
+> + spin_lock(&sgx_allocate_epc_page_lock);
+
+You could use guard for this.
+
+https://elixir.bootlin.com/linux/v6.13.7/source/include/linux/cleanup.h
+
+> +
+> + if (atomic_long_read(&sgx_nr_free_pages) != sgx_nr_total_pages) {
+> + spin_unlock(&sgx_allocate_epc_page_lock);
+> + return SGX_EPC_NOT_READY;
+
+Don't use uarch error codes. 
+
+> + }
+> +
+> + do {
+> + ret = __eupdatesvn();
+> + if (ret != SGX_INSUFFICIENT_ENTROPY)
+> + break;
+> +
+> + } while (--retry);
+> +
+> + spin_unlock(&sgx_allocate_epc_page_lock);
+> 
+> Which was called from each enclave create ioctl:
+> 
+> @@ -163,6 +163,11 @@ static long sgx_ioc_enclave_create(struct sgx_encl *encl, void __user *arg)
+>   if (copy_from_user(&create_arg, arg, sizeof(create_arg)))
+>   return -EFAULT;
+>  
+> + /* Unless running in a VM, execute EUPDATESVN if instruction is avalible */
+> + if ((cpuid_eax(SGX_CPUID) & SGX_CPUID_EUPDATESVN) &&
+> +    !boot_cpu_has(X86_FEATURE_HYPERVISOR))
+> + sgx_updatesvn();
+> +
+>   secs = kmalloc(PAGE_SIZE, GFP_KERNEL);
+>   if (!secs)
+>   return -ENOMEM;
+> 
+> Would you agree that this way it is much worse even code/logic-wise even without benchmarks? 
+
+Yes but obviously I cannot promise that I'll accept this as it is
+until I see the final version
+
+Also you probably should use mutex given the loop where we cannot
+temporarily exit the lock (like e.g. in keyrings gc we can).
+
+> 
+> Best Regards,
+> Elena. 
+
+BR, Jarkko
+
+
