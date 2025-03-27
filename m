@@ -1,97 +1,76 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BDA2F3B;
-	Thu, 27 Mar 2025 21:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72518EEA9
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 21:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743112382; cv=none; b=ef8bjoUF+PYOAuGAgzywooalHCzET780Fdk1DzRgV7GHCbBORW5cEgZSFT+/Y89IBVifX395wXreh8CgTQi6O5PTO3hmD4EpjxlfpoUsbLJ+7zjb1+hKR3MaUqBwS1lSYsOIcDWouBEcAXdpPrMbxGljvsabM49GWQeMRfnxA9k=
+	t=1743112668; cv=none; b=XlNzccJ/hlOhOM0EkbWPPeFZCtIiBttu8VSv1g2yO8QYwvQyn6Or9a1cxhxSyFyKBzf/44oA/WFWdrk9AIKu4c1TEulPRLjmFgwoqQy8LndPkvpWdhK8yPVj6QcyEJthZugH7TeGELeSe/dne7dNwItt7wfGxmrQa+s7FkUUThA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743112382; c=relaxed/simple;
-	bh=KBnop0w+7+a9jo39keEqcTQiAqz01WBb3d4caXU8iQE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lv8KAWdXxgVPKlhx5uXjKb5fQ09dkDrrpSFMK9l68+jijyhlNk8d2LCG6UQ8QJeUvQzvf0NyuHA0a4ve7a2kaurCPJ94DU8Kci5cMH77gz9wZxo8WjRAyKrxqcfkU5GYsJwXbLJ86TwkLZpqkHmY5u5KgJGRKy4VQyRc812buic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af2c5.dynamic.kabel-deutschland.de [95.90.242.197])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 8C63E61CCD89C;
-	Thu, 27 Mar 2025 22:52:43 +0100 (CET)
-Message-ID: <87092878-9296-4609-b744-a6e914316e52@molgen.mpg.de>
-Date: Thu, 27 Mar 2025 22:52:42 +0100
+	s=arc-20240116; t=1743112668; c=relaxed/simple;
+	bh=vEC3nYe4sWrHn3kHC+aFv+04EDeh1WBI0+LQ94j77lg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=QIC1ycovWnjoZPJpvXIOxMl6wtrFmLswVGxRQoME6ZvteF2/YGEjXl17oTvVUIyd13SNWp4terSL0UZQ9pMTaRHpoBS3rDDpkRLfheBm5/WOMGNh5RKniVfqCPthqsLMP/W93HsklIeyFNf9TpgGYuKOBNt0b79/HKotQ/oI5Gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DB2RCX2c; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DB2RCX2c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6409C4CEE4;
+	Thu, 27 Mar 2025 21:57:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743112667;
+	bh=vEC3nYe4sWrHn3kHC+aFv+04EDeh1WBI0+LQ94j77lg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=DB2RCX2cWhuHNyqWI6njfIZ13qrH8OLPGMhIK9YTjurF/mCuPF1AtrG/pZY5THO+0
+	 z+wy1grw7twTWqrvbmm5DixOeJm4of8v3oDe4IhaXAyBqCbt14nO14hV1QxNnxNX63
+	 6d9YHweyIAwUgo9AtKoCKVbFIUt2A5Jg7buhePHGtUNYEKWIAMOCCpDKGpSTzMXUX1
+	 r1nLWWUypagCcXAyRPvqiUVffDyw+4BXO30SxOowEAMie1OlQadFodsFb3ABj9SOfY
+	 uYgYCLQ48HTyK/iqeET2zZ5VrKqIsFL7JRXXoYUxQzRW5BjH+8INY3B66/GLqqTt1c
+	 tJ0hgNJdd9Lpg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C9C380AAFD;
+	Thu, 27 Mar 2025 21:58:25 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] Bluetooth: btnxpuart: Add msleep() after changing
- the baudrate
-To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-Cc: marcel@holtmann.org, luiz.dentz@gmail.com,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- amitkumar.karwar@nxp.com, sherry.sun@nxp.com
-References: <20250327182523.524534-1-neeraj.sanjaykale@nxp.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20250327182523.524534-1-neeraj.sanjaykale@nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [f2fs-dev] [GIT PULL] f2fs update for 6.15-rc1
+From: patchwork-bot+f2fs@kernel.org
+Message-Id: 
+ <174311270426.2230226.11533981024198489963.git-patchwork-notify@kernel.org>
+Date: Thu, 27 Mar 2025 21:58:24 +0000
+References: <Z-GPopTYCOl0hjp3@google.com>
+In-Reply-To: <Z-GPopTYCOl0hjp3@google.com>
+To: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net
 
-Dear Neeraj,
+Hello:
 
+This pull request was applied to jaegeuk/f2fs.git (dev)
+by Linus Torvalds <torvalds@linux-foundation.org>:
 
-Thank you for your patch. For the summary/title, I suggest:
-
-Sleep 100 ms after baud rate change
-
-Am 27.03.25 um 19:25 schrieb Neeraj Sanjay Kale:
-> This adds a 100 millisec sleep after change baudrate vendor command.
+On Mon, 24 Mar 2025 17:00:18 +0000 you wrote:
+> Hi Linus,
 > 
-> It is observed that when the baudrate change command changes the
-> baudrate from 3000000 to 115200, any immediate HCI command returns an
-> error -22 (Device Busy).
-
-Really 3 million?
-
-Is this happening with every change, or only decreasing the baud rate 
-with the values you listed?
-
-> Adding a small delay after the change baudrate command complete event is
-> received helps fix the issue.
-
-100 ms is not small to me. Is this issue documented in the hardware 
-documentation? Are there other ways like polling, if the command succeeded?
-
-> Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-> ---
->   drivers/bluetooth/btnxpuart.c | 2 ++
->   1 file changed, 2 insertions(+)
+> Could you please consider this pull request?
 > 
-> diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
-> index 5091dea762a0..e26fabe8fb3d 100644
-> --- a/drivers/bluetooth/btnxpuart.c
-> +++ b/drivers/bluetooth/btnxpuart.c
-> @@ -1238,6 +1238,8 @@ static int nxp_set_baudrate_cmd(struct hci_dev *hdev, void *data)
->   		if (*status == 0) {
->   			serdev_device_set_baudrate(nxpdev->serdev, nxpdev->new_baudrate);
->   			nxpdev->current_baudrate = nxpdev->new_baudrate;
-> +			/* Allow sufficiant time for chip to switch to new baudrate */
+> Thanks,
+> 
+> The following changes since commit f286757b644c226b6b31779da95a4fa7ab245ef5:
+> 
+> [...]
 
-Please add the datasheet section.
-sufficient
+Here is the summary with links:
+  - [f2fs-dev,GIT,PULL] f2fs update for 6.15-rc1
+    https://git.kernel.org/jaegeuk/f2fs/c/81d8e5e21322
 
-> +			sleep(100);
->   		}
->   		bt_dev_dbg(hdev, "Set baudrate response: status=%d, baudrate=%d",
->   			   *status, nxpdev->new_baudrate);
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Kind regards,
-
-Paul
