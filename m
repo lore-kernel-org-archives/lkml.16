@@ -1,121 +1,92 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9719827455
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 06:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E407E1B4223;
+	Thu, 27 Mar 2025 06:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743057813; cv=none; b=QicAczCHWqGuYu2F7mit8Cchlcwb0RfmRfyd3lCmeb7aJM24CPnRZjMM2xf8K5S3rn3WyTNxaK89GqrVrGzy+nK+TgmlW9Z1k0ZCGYQXeKdQYefi4zpX6n7pyT682Sfpp3LlAIw/fjvg5ddxa0KwsBkfSO4sb/1LwKit7/DSNl0=
+	t=1743057817; cv=none; b=Xg7oVMkh6OwMELO0ABMohgCPSHv20gJGxnZgH7au5sMnpdjbaZKkde1BCd4dvaMq+aMveQYc81XJCwhjB/KWW4PJZanhFXmGXseU+OMPzIwQCnyT0gOaoqAav67OYhWJBSh5mCQoGZ5+0kP17w4Z0IAQBf75KcCfbGg/jD3juUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743057813; c=relaxed/simple;
-	bh=n66ybPgUp9VVv9SCPEE/AWLxGlIns+SPIQDz3xX2DrQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PCnG+iEOXRbrkUnymXFKdHYM4PlkR2XPcarUxGxT7KDHXGLRUS9PTzTIV4Wnm7mkLnKovIFzZpgUj3TFJq/5Z5VLa0sk7VjCXq9eHv4+ToY8P5ahFb0QIRRR8OtXNiMfUa2MZFfZvIz+CpYCHUBFW5+kUeYNQEyWtxU3NB4wV7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Fv0oQY6M; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Fv0oQY6M"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4394944f161so842505e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 23:43:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1743057810; x=1743662610; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OYQRSLDDu+9ncKrO0EiMnXhUcVzXwRWAsy/yjivhkeY=;
-        b=Fv0oQY6MfOYO0BM4jEWedguN1GIXw7kOXy/uUE+YULsGq4yUBRc1/RDWzXW+km8yGl
-         v1rA5kw8bz1euS75OoREt9N+LOMFZUJq4yld0CdBcySWwxfofyRbEM/oR4J1xsFsUc6M
-         3TCgJnrzImNkuy3ENBoMdiW5VU8h6hDGxcjUKdIZp0zYPNyK6e/P5AP5cJdURQfaF2KK
-         4/P68NnXdXZu7SMLNpTPVZfE7T1p4VJDLJqdY1S+fvkuUUA8zkAFvwQ4EU95XFZ8lXgV
-         SKmQengc5MvikqoAa7kwL/PGQ3LMMAfUhVTUDHMrdrrorlljSIai+q8cmAcUB6EQHsu2
-         pXcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743057810; x=1743662610;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OYQRSLDDu+9ncKrO0EiMnXhUcVzXwRWAsy/yjivhkeY=;
-        b=ddEBNGjYecbmCCXueMDm4je4hVdEVvIQo0JxdPSDSpejidYiToHClh9KhXXsBUrKux
-         FpoTjCTJ62mH1NEwPpplf9HTHuPDA+6J1c22k+aiY2q/qpDZwah9dQ9nt/bC5xldQBoe
-         FdRixd2kjS+aUcWMf+DYi96YZldQIFW4q+VCih6lRW/93nuJQ9UZoF8HVG437Ga/Bp7u
-         E/eJsuUtUo6+np0nG8qzTnXq5TQAuF3F/bUK3lAirR73ITTY1UIoALQ6YHaCwOoc8MBh
-         0UotU40hOq/eBo7smnC0FUsjk67hQhzGDnhjqU/an8qPXSkmdMySPgPl6vbZHNHJ4gCd
-         SPzg==
-X-Forwarded-Encrypted: i=1; AJvYcCXL/WhWdkRSG07vnVwJV3EGrL8ftqqreo8b+AaV3ibTXptNHiOtaoecUMielLgIYk4+F5vDWvDUTro7H7M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzsc9GeXcvLCu5GtnTS2yN0qyiA+QJbKLdRhlHlrtkB0YpaT6Hf
-	fRNXX3sTR0lYB7Sj17dq7D8FDufwqKgGYnU7yyRW486/gCaZkO8fu++MiaM0k7o=
-X-Gm-Gg: ASbGncvNDaYwa1IjpS0Zezk1R9uaNoSoqymldN3V4rk3/ux/6r26k19g2XJTt1qHV1v
-	alxinmmKjOv+v8YMNtIKmtRNInt9JixRRfPF/pEKoUd9TtsRXQPXM7MJbZxcMuWsoI0qc8m6Kfx
-	EGU95mToHXxGL5Ccm3R8r0VBljgeKxgdrWALhzaipDL6nmOHXyu8hDwBy9r8XKSdQcjDXE9iKbz
-	beoJeYWkFKMvBOqIeYP3iDFYkyZ9VL7U1Znmp11HVyKDv76YA35tD0x1w8wKTuQQQI8npPCFx8t
-	j71bEwc8XSTEV16epacnoarng6QPkrjRVfziokBYVqWwIs4r5U52QcCLNGatdQ==
-X-Google-Smtp-Source: AGHT+IG7uoZZ4cy3JAa+yLXGMZkwdOi8KblqHkzfjjsnlqCUlO76I+Ifh2Yz3Zl2jw/WLzCs0lckWA==
-X-Received: by 2002:a5d:47c3:0:b0:382:4e71:1a12 with SMTP id ffacd0b85a97d-39ad2ada142mr343227f8f.1.1743057809776;
-        Wed, 26 Mar 2025 23:43:29 -0700 (PDT)
-Received: from [10.202.112.30] ([202.127.77.110])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22780f4d5f5sm121269285ad.79.2025.03.26.23.43.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Mar 2025 23:43:29 -0700 (PDT)
-Message-ID: <faef812f-0adc-4a46-951a-5453927c2819@suse.com>
-Date: Thu, 27 Mar 2025 14:43:26 +0800
+	s=arc-20240116; t=1743057817; c=relaxed/simple;
+	bh=f4b9jYPlNOcvvmoM1IsldN4W9AdyvTeOpguC+L375SQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b+3Q6lU5043qH8GsN0NtBejDKZzd1uQjtzeJvm6AX+bzJqvnwpOPnWqOlMpr/PcdMqaq13aiZDPGmY8V27Ka1EIpGMBGPQuBVW02BVlyzJ3WpF17uYspgj6m1xB20loAL3ADYnm3Dt2+0bWQ882jPFz/R2MUpfg1lQ62ykal+uU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R4xmtH029344;
+	Thu, 27 Mar 2025 06:43:22 GMT
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45hm68nkjw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Thu, 27 Mar 2025 06:43:22 +0000 (GMT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Wed, 26 Mar 2025 23:43:21 -0700
+Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Wed, 26 Mar 2025 23:43:19 -0700
+From: Lizhi Xu <lizhi.xu@windriver.com>
+To: <syzbot+79340d79a8ed013a2313@syzkaller.appspotmail.com>
+CC: <linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <mailhol.vincent@wanadoo.fr>,
+        <mkl@pengutronix.de>, <syzkaller-bugs@googlegroups.com>
+Subject: [PATCH] can: ucan: the memory allocated to ctl_msg_buffer is one byte less
+Date: Thu, 27 Mar 2025 14:43:18 +0800
+Message-ID: <20250327064319.3001956-1-lizhi.xu@windriver.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <67e46af0.050a0220.2f068f.000e.GAE@google.com>
+References: <67e46af0.050a0220.2f068f.000e.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ocfs2: fixing global bitmap allocating failure for
- discontig type
-To: joseph.qi@linux.alibaba.com
-Cc: ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
- gautham.ananthakrishna@oracle.com
-References: <20250327062209.19201-1-heming.zhao@suse.com>
-From: Heming Zhao <heming.zhao@suse.com>
-Content-Language: en-US
-In-Reply-To: <20250327062209.19201-1-heming.zhao@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: bd_2SMv_7sAArr9UeUPQ6R24tB7yRjyZ
+X-Authority-Analysis: v=2.4 cv=etjfzppX c=1 sm=1 tr=0 ts=67e4f38a cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=Vs1iUdzkB0EA:10 a=edf1wS77AAAA:8 a=hSkVLCK3AAAA:8 a=t7CeM3EgAAAA:8 a=wvkD4opxYNpvLhmYr9gA:9 a=DcSpbTIhAlouE1Uv7lRv:22
+ a=cQPPKAXgyycSBL8etih5:22 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: bd_2SMv_7sAArr9UeUPQ6R24tB7yRjyZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ malwarescore=0 lowpriorityscore=0 mlxscore=0 adultscore=0 suspectscore=0
+ impostorscore=0 mlxlogscore=842 priorityscore=1501 spamscore=0
+ clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2503270042
 
-Hello list,
+When executing strscpy to copy data from ctl_msg_buffer->raw to firmware_str,
+the length of the raw is sizeof(union ucan_ctl_payload) + 1, which is larger
+than the one byte allocated to ctl_msg_buffer.
 
-I wrote this patch based on Gautham's patch code logic. Because I lack a
-test script to verify this patch, this patch only passes compilation.
+Fixes: 7fdaf8966aae ("can: ucan: use strscpy() to instead of strncpy()")
+Reported-by: syzbot+79340d79a8ed013a2313@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=79340d79a8ed013a2313
+Tested-by: syzbot+79340d79a8ed013a2313@syzkaller.appspotmail.com
+Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
+---
+ drivers/net/can/usb/ucan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-btw, another topic (unrelated to this bug) is that ocfs2-test fails to run
-on the latest Linux distributions (e.g., openSUSE Tumbleweed). I am focusing
-on fixing this problem, but it requires some time. I have created a personal
-repository [1]. Once I finish the verification process for ocfs2-test, I will
-submit a PR to the upstream GitHub repository [2] (the suse-py3 branch).
+diff --git a/drivers/net/can/usb/ucan.c b/drivers/net/can/usb/ucan.c
+index 39a63b7313a4..97c6cfa2d011 100644
+--- a/drivers/net/can/usb/ucan.c
++++ b/drivers/net/can/usb/ucan.c
+@@ -1399,7 +1399,7 @@ static int ucan_probe(struct usb_interface *intf,
+ 
+ 	/* Prepare Memory for control transfers */
+ 	ctl_msg_buffer = devm_kzalloc(&udev->dev,
+-				      sizeof(union ucan_ctl_payload),
++				      sizeof(union ucan_ctl_payload) + 1,
+ 				      GFP_KERNEL);
+ 	if (!ctl_msg_buffer) {
+ 		dev_err(&udev->dev,
+-- 
+2.43.0
 
-[1]: https://build.opensuse.org/package/show/home:hmzhao:branches:network:ha-clustering:Factory/ocfs2-test
-[2]: https://github.com/markfasheh/ocfs2-test
-
-- Heming
-
-On 3/27/25 14:22, Heming Zhao wrote:
-> The commit 4eb7b93e0310 ("ocfs2: improve write IO performance when
-> fragmentation is high") introduced a regression. In the discontiguous
-> extent allocation case, ocfs2_cluster_group_search() is comparing with
-> the wrong target length, which causes allocation failure.
-> 
-> Call stack:
-> ocfs2_mkdir()
->   ocfs2_reserve_new_inode()
->    ocfs2_reserve_suballoc_bits()
->     ocfs2_block_group_alloc()
->      ocfs2_block_group_alloc_discontig()
->       __ocfs2_claim_clusters()
->        ocfs2_claim_suballoc_bits()
->         ocfs2_search_chain()
->          ocfs2_cluster_group_search()
-> 
-> Reported-by: Gautham Ananthakrishna <gautham.ananthakrishna@oracle.com>
-> Fixes: 4eb7b93e0310 ("ocfs2: improve write IO performance when fragmentation is high")
-> Signed-off-by: Heming Zhao <heming.zhao@suse.com>
-> ---
->   fs/ocfs2/suballoc.c | 14 +++++++++++---
->   fs/ocfs2/suballoc.h |  1 +
->   2 files changed, 12 insertions(+), 3 deletions(-)
->
