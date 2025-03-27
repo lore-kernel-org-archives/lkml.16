@@ -1,129 +1,112 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E565120E006;
-	Thu, 27 Mar 2025 09:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7C820DD4D
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743069315; cv=none; b=Y4edi/upP4aGmI56lAOH1f1Mx4Idm1AXM7LJijcZnLtZunx3ZXWOdwCizCDrGaPaL7RlAwuYj6wzhwJFHHVCylwZ6GNq+aJvqclVqMgAqrTkG3Dzm6xyCy1/Nz1dFHwd4jms7PXXrABRdOHkdD5A1c5btKcKky3s6N88/Vx1xgU=
+	t=1743069408; cv=none; b=no/kYYovvQIASLU/F3SnfPIKB5QIaSkHUfQg1tQLUiFglDOS8OgVBkU1Y3DiWCnxKTCaCO0YiORuFycsuoB8Hia+QhaQGBKCvi5udfJJvDIipNHGPCUooghNGxZr83yv5i+RnzA8uBpEP/mp1D3H1eIS+QiNVsUDAfLkyg4gBwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743069315; c=relaxed/simple;
-	bh=BT3NCtbcH+DNx9VlTYZWAQBtjjpTkxFr6knyLcidH+g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=lb2Px4KdGPRLu7VEk98ypUuXfZaHZv3A5xaNiGwYBCb8lz+EpFoA6gUBN5vSMngSQ85sT1+xMh1c6g3A0c9IXiecCqcHFSydA35mrXhOIhCKwwOtr4pLT+btd+Hrtgh9PrN46xTPMKNogPA0plWjbS421yeVGwtPff9ozifICZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=g7A+uPg9; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743069408; c=relaxed/simple;
+	bh=hKz2mu+pHNVmR0ycddqUf0gXQfCUTQmlkkrCoqxO3sA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R/v6VC54fwucS0awtUdzjK6BOl73z2b7J38T+8Fr3lYjR+uLHYm9FoIw3GUml6mHPAYLav4BkStALmrSxc3NszFdRAvEjOoMHQ6RArqWVMxf4/VYoBRI7xUw7l2aka+Jbslw22TzMZ53h/EmaA4iTZhS81n5bhLHGtDRqd2SS+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b40PARtO; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="g7A+uPg9"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R5jFVP011771;
-	Thu, 27 Mar 2025 09:55:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	HlzFtof8G2cHiags6EP7UdEahAC7U8a89vFvaJXI2wk=; b=g7A+uPg9p8fDiebD
-	Rl36E1xd+hRkLhlbdqvCSmSSIjH5X/IWldS5NgYiDy30ugnx78NrnDAwZTphP2fk
-	MDygw3KYKsWM33yCRYG0dGsVc2wR+QrzWE86nM25FvpJ4qZTeDycrYss3Kfe5VIl
-	xHvtjM1dCNqx/O/I4lcY+rf3CqOjW5zpi3qdOStga8beZEnLMxVB39Kze+shRCW3
-	C568c5bhu02xeOn7O3hN3IuMbKxuzUTgzd5ozKA6MwE6FSjPV/vIfoGQimO0kizl
-	SAUlrQY8ViVJ4pYGgINMyF6gcbDukQPL+DaAeDouqq18zHL8zzMM5tX89WYwsTjl
-	Zuy5mQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45manj4ec9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 09:55:09 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52R9t8pN006204
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 09:55:08 GMT
-Received: from [10.213.98.28] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 27 Mar
- 2025 02:55:03 -0700
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-Date: Thu, 27 Mar 2025 15:22:38 +0530
-Subject: [PATCH v3 18/18] arm64: dts: qcom: Add MXC power domain to camcc
- node on SM8650
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b40PARtO"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso1245397a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 02:56:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743069405; x=1743674205; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KQKK9jdW2vZQ1nSZsyOiIsmUPjwxSakOTrL/QeXtDc0=;
+        b=b40PARtOJesHJIfZkV3EWkttM+rcr6W1E7+QYeIl/xNlpZEERiLdGVPIHPic3ICGGG
+         800D6hZFooohWk9HDtHiIy+8yFg0x6zSEPHq12LSKY9f+d1IeKD0YNp8le99n0Qi1wkS
+         9UVz+MY0lO/SwoipPa2qO86OtQHVmq1wc27NScTqHtwB0QhbpFH/ZaoltiGYLquPiOBC
+         7/urv2olmjTYIIG3z5KTqqLSiVwEVO94N0BwvLEDGesLqu4F8RhpInEOGbWUTjLSlmQX
+         KFe5a5BAlYWJEs8cIA8KjyjPEiahf5BVv85fNTGuAsiV98GZWScuYD6dtwDwyROSgT99
+         iOyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743069405; x=1743674205;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KQKK9jdW2vZQ1nSZsyOiIsmUPjwxSakOTrL/QeXtDc0=;
+        b=PrlSptzY30Kk8k1nKNUJd53ULyrGYyNcOuXGLNewXfNzHelrNyN0th8RyfWV4r1J9e
+         jm+iyhK0/UtmGr+JsDONI4abv+v1UE6zqsv4MlMpKk1CHEy8e0wTF6WKrKGbP3J/jug/
+         E9mthDLYvwAzMaD1Jlg/S3YyJLraQOeYwQTmqSdvoppUesCt6EGojOy050L5SOiVkKCM
+         OVBnQ1tNw2JBLuCNkP+cm0O647P82BmIGNaebgp4QRfBmCzuUGeVf33ZNULBr/F5AZD8
+         BnteYuxGGvf+r2xdnLsXZg+ylSVRIdbOE8LQl1LCQnQryoMbF/4IjGuv0Pvhy+gPNlFT
+         ivxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXv7FXJf/Oe78fzlFBUasXiLmLclL8nS2r5ukpSRKZlJcEJN03Zz+thVJ7KJJ2VFdAqJdzAn+b5uS7tOfo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3RnYjconJldQNRAYdTe85+eceaphV7wTpnBA20hRdOUzaOXrM
+	BjuS9Myuot+4y0LUNqxRGA3/iBQZQnEDxRiCtl06XKqDmKV0Lr9g
+X-Gm-Gg: ASbGncumcda9Y3m9STD68K9KegvQYn41fxyrvQFXgPZrJJlwRVqs5cdMwEIh9Du+qWr
+	uVD0PIlajXQFjDSxpRqQ3jsWlbqsJb0tjP4LH5BAAQxZbm21EvayK22g0OukUkIvVK7VAo7Bu0M
+	B2LwBvkO3U42Sww4h/bMnqd73tgAYiF8Efh+gyBCGWKWYeRinoHke8e+5+6JcmoLqk7YhkU0Zs5
+	9q7rmymrO/h+TOwDCLcFhe5e4IfUIdUNJwQr98wCSyqoE+kDY/RUaQsrzWR+fsQTKBVHfialr47
+	Uv+O5fSQZ8uXhntXQPbxwoTfDZk0IKJEInaG
+X-Google-Smtp-Source: AGHT+IFnLNNFDrtpMTpkEwig1nGVkfEVzqIzt8YKV2wz7tPtPs4O8HKQRnARyFT2s/kPMOWHAB3f/A==
+X-Received: by 2002:a17:906:7310:b0:ac2:510c:a3cc with SMTP id a640c23a62f3a-ac6fae494f8mr255847766b.1.1743069404399;
+        Thu, 27 Mar 2025 02:56:44 -0700 (PDT)
+Received: from fedora.. ([193.77.86.199])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efb51cebsm1202845666b.107.2025.03.27.02.56.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 02:56:44 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH] x86/bitops: Implement variable_ffz() as variable__ffs(~word)
+Date: Thu, 27 Mar 2025 10:56:28 +0100
+Message-ID: <20250327095641.131483-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250327-videocc-pll-multi-pd-voting-v3-18-895fafd62627@quicinc.com>
-References: <20250327-videocc-pll-multi-pd-voting-v3-0-895fafd62627@quicinc.com>
-In-Reply-To: <20250327-videocc-pll-multi-pd-voting-v3-0-895fafd62627@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        "Vladimir
- Zapolskiy" <vladimir.zapolskiy@linaro.org>,
-        Dmitry Baryshkov
-	<lumag@kernel.org>
-CC: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        "Satya Priya
- Kakitapalli" <quic_skakitap@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 65LZ0rDRb0tG8uzg8rtTNX3jyTeB5ykD
-X-Proofpoint-ORIG-GUID: 65LZ0rDRb0tG8uzg8rtTNX3jyTeB5ykD
-X-Authority-Analysis: v=2.4 cv=KvJN2XWN c=1 sm=1 tr=0 ts=67e5207d cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=hliRFiSf_nhEcBnGcKYA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=730
- malwarescore=0 priorityscore=1501 clxscore=1015 mlxscore=0 spamscore=0
- impostorscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503270066
+Content-Transfer-Encoding: 8bit
 
-Camcc requires both MMCX and MXC rails to be powered ON to configure
-the camera PLLs on SM8650 platform. Hence add MXC power domain to
-camcc node on SM8650.
+Find first zero (FFZ) can be implemented by negating the
+input and using find first set (FFS).
 
-Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
+No functional changes intended.
+
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
 ---
- arch/arm64/boot/dts/qcom/sm8650.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/bitops.h | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-index ad60596b71d25bb0198b26660dc41195a1210a23..a2b3d97abc7f799810e20131d7231608c8757859 100644
---- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-@@ -5072,7 +5072,8 @@ camcc: clock-controller@ade0000 {
- 				 <&bi_tcxo_div2>,
- 				 <&bi_tcxo_ao_div2>,
- 				 <&sleep_clk>;
--			power-domains = <&rpmhpd RPMHPD_MMCX>;
-+			power-domains = <&rpmhpd RPMHPD_MMCX>,
-+					<&rpmhpd RPMHPD_MXC>;
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
-
+diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+index bbaf75ea6703..eebbc8889e70 100644
+--- a/arch/x86/include/asm/bitops.h
++++ b/arch/x86/include/asm/bitops.h
+@@ -267,10 +267,7 @@ static __always_inline unsigned long variable__ffs(unsigned long word)
+ 
+ static __always_inline unsigned long variable_ffz(unsigned long word)
+ {
+-	asm("tzcnt %1,%0"
+-		: "=r" (word)
+-		: "r" (~word));
+-	return word;
++	return variable__ffs(~word);
+ }
+ 
+ /**
 -- 
-2.34.1
+2.49.0
 
