@@ -1,51 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7EB440C;
-	Thu, 27 Mar 2025 11:32:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334C8440C;
+	Thu, 27 Mar 2025 11:33:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743075129; cv=none; b=AlGwAJRnstwOl2PD1TIIda1Q/jtv5x4bi9aogDCOPHj3LHlLyig0LJO2Yqhr3OoOC5UYvF+6XF/B5IjvAqstb4MA063vbhFZO3w5LQPdYoUEPguzPH6MaI9iOL4Z91xstrhrd5N1MuDHDcYXb+xHm+b0JPj3/4YWlWXp5XLE2P4=
+	t=1743075215; cv=none; b=ObocryrmJa3qf9UpgIkNf08bD6HDvFDKVPTtoRmdj+uPbQ0FOvlAxSGDWxdGfVjGsP+BaPmRwXh1iNOs97YfC07GWZq/CMhDsZHkzZTTPtL2h0zI446PXrPEkJeIVgLsMcwirsVJ5pOOjN2GFI64VdVQW1RslNS1E23d0OOHyhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743075129; c=relaxed/simple;
-	bh=XAQmSGPGcH9aB1wqp617XxDqcfh5oqFVkf0PMvmTdXU=;
+	s=arc-20240116; t=1743075215; c=relaxed/simple;
+	bh=LlM1BSHZ9HGeLI6TzmIaSytFaCV3jPNneKD8n0ivMNs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gORYOQWMGfGLv9iiO1l4L8hrHI6jfA7F8/IXnUzPXYDTfHVT0G7VtkeyX0A225zsYvLcra84C3QZOxajaFrE/23oj7vK0olv227HO+6Vscj40H9oRN4FzdwxZIRWXdGfJfP+7Rfw541ANzzdEPTAODOp3D7e8jbLIeMOE7mWrac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uh1O7qM1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=H8y+FqQxiQUdOK7HeQ8oSDOvMlZDwylC/YktY/yZTdrJ1CiyH64Ed/kUFtW7BUuTfe0q7/wdjHyJRvHVCt9KJkRmH/Pj/thqxrwh3q7A0KLl4hobMAA2eKzX47cRnEwhj5GazmA2qd94fdLKrmwe5YTFcJOEZrntQUEC3HRkrbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fE+X4b1w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uh1O7qM1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BC80C4CEDD;
-	Thu, 27 Mar 2025 11:32:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fE+X4b1w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30F27C4CEDD;
+	Thu, 27 Mar 2025 11:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743075129;
-	bh=XAQmSGPGcH9aB1wqp617XxDqcfh5oqFVkf0PMvmTdXU=;
+	s=k20201202; t=1743075214;
+	bh=LlM1BSHZ9HGeLI6TzmIaSytFaCV3jPNneKD8n0ivMNs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Uh1O7qM1Cv5KnelWc1Nsc47+nL6BNQOA+Mr6fhQMm234hBvR75gZDaZMgpwUO+wxy
-	 fyLN1msb2wHDp78AztEbJH454/MHrgx+hseEgdq8/J4xEhpkmx6xBYxxtfbLAKRP7b
-	 4sJPzcfcFNYCmc8H3nMMPl1juKf0gGP8ybYbUecyeFQndOIg74ZtyU2jTji2JprvK+
-	 Pw6P2g28uCA+lWis/epQW/wTgN9/O0SS7JZwy6sZGmMCMj80PWCFvMUepj3pGvtpir
-	 CqzoobQEjkMFv9bd9PQ15PwJToLTt/GgJvR762OckiNbEqvldHdlJFgkreBgRIHzIx
-	 fuZuCLcxy1/uA==
-Date: Thu, 27 Mar 2025 11:32:03 +0000
+	b=fE+X4b1wxvUFV8s34bIDCxIofDhuiGuBNvwU43r4Y+oFDV0oTUOkBoL9gyETF/oHv
+	 tcg1O8ZPfUAufSQ1vejt6O4DP3d808t9DBOluT/NwtEOKGuDiNnX1B5Mr6vd/NkMOj
+	 mUGRPLi+AQoyVlpFxHLQRHrxP9m/MBoT8CbCqXw+bvoLfCcz9hxoYVpbYdlS7aFjxW
+	 vWQbmhfTCEP8NcMXc3RkDxLAXR7Sk+mICLkQ2W/uUh0T1XD6lKJYQ0pWLbP70v1ov5
+	 274x6ofyLLF0Oo0ZS47RFp2B+GVcPlix5Zyqd4IQmNMyXKSLL5de4p/iqEhVY2Ho9/
+	 IJfgscVPyvtkQ==
+Date: Thu, 27 Mar 2025 11:33:28 +0000
 From: Mark Brown <broonie@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH RESEND v2] rust: regulator: add a bare minimum regulator
- abstraction
-Message-ID: <f22cbd85-1896-4842-8746-d74ee160ab3c@sirena.org.uk>
-References: <20250326-topics-tyr-regulator-v2-1-780b0362f70d@collabora.com>
- <a98eb789-4c49-4607-ad15-76e260888d64@sirena.org.uk>
- <0698A75E-D43C-4D02-B734-BFE1B3CC5D34@collabora.com>
+To: Philipp Stanner <phasta@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	David Lechner <dlechner@baylibre.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Yang Yingliang <yangyingliang@huawei.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>, Hannes Reinecke <hare@suse.de>,
+	Al Viro <viro@zeniv.linux.org.uk>, Li Zetao <lizetao1@huawei.com>,
+	Anuj Gupta <anuj20.g@samsung.com>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/2] mtip32xx: Remove unnecessary PCI function calls
+Message-ID: <b1aa0663-afe4-4fe2-b311-e1e0c9930314@sirena.org.uk>
+References: <20250327110707.20025-2-phasta@kernel.org>
+ <20250327110707.20025-3-phasta@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,52 +52,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="FKjPZJMp6SZBcqWd"
+	protocol="application/pgp-signature"; boundary="Pd8goGw0e2pe9hhP"
 Content-Disposition: inline
-In-Reply-To: <0698A75E-D43C-4D02-B734-BFE1B3CC5D34@collabora.com>
+In-Reply-To: <20250327110707.20025-3-phasta@kernel.org>
 X-Cookie: Multics is security spelled sideways.
 
 
---FKjPZJMp6SZBcqWd
+--Pd8goGw0e2pe9hhP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Mar 26, 2025 at 04:49:26PM -0300, Daniel Almeida wrote:
-> > On 26 Mar 2025, at 15:56, Mark Brown <broonie@kernel.org> wrote:
+On Thu, Mar 27, 2025 at 12:07:07PM +0100, Philipp Stanner wrote:
+> pcim_iounmap_regions() is deprecated. Moreover, it is not necessary to
+> call it in the driver's remove() function or if probe() fails, since it
+> does cleanup automatically on driver detach.
 
-> >> +    /// Disables the regulator.
-> >> +    pub fn disable(self) -> Result<Regulator> {
-> >> +        // Keep the count on `regulator_get()`.
-> >> +        let regulator = ManuallyDrop::new(self);
+Acked-by: Mark Brown <broonie@kernel.org>
 
-> > This looks like user code could manually call it which feels like asking
-> > for trouble?
-
-> Yes, user code can call this. My understanding is that drivers may want to
-> disable the regulator at runtime, possibly to save power when the device is
-> idle?
-
-> What trouble are you referring to?
-
-My understanding was that the enable was done by transforming a
-Regulator into an EnabledRegulator but if you can explicitly call
-disable() on an EnabledRegulator without destroying it then you've got
-an EnabledRegulator which isn't actually enabled.  Perhaps it's not
-clear to me how the API should work?
-
---FKjPZJMp6SZBcqWd
+--Pd8goGw0e2pe9hhP
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmflNzIACgkQJNaLcl1U
-h9DMggf/b4lbWi031tbHHABWyBD5XIojue2XPe9oALWUHqXLWbUApO8S1OZa8hLF
-JkbE33EdHqiiFtad//64e72p72zezakjJBV46I9pZl5V6Crgd2T6wd4n61YDQ0ye
-aYXPcDZyCC5W5d9GPcfhiRfgrw5zZ70FPoVZEPViIAZQdDK7M9kJh7BT4sayQvPv
-N+DHwTovsyv2c5I9YHfKkGgXE7pqQw477J+25zdjFc4NqF269b69xz8APiA5YxZJ
-7VJ2dSSN7RRkCmFo4TcfSosIBfFinBDPybU/71P+hzYGTzb5/aNmRyxKDctAfTEy
-COJ6nJ+EUdZ5aFPrbNRmDVcJL789KA==
-=mC8Y
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmflN4cACgkQJNaLcl1U
+h9Bg0gf/SdUIZuMAvDjjum537HCUp/d3IiAWo2tPl9cBi5na/HGuYCxifauxJyQC
+MB+yL+xZXivD3XYRlfBLU/nwFA+zxjbXUvzbdeg5vvcz92AVqHmiB35mh2U6q60j
+Z4iR2BBaWGx5JCmzq0+830sSIu0ukch8nDslMHHUQAIjGnufhsK8RiB3U22qdSKI
+JoMMBwZEDFz742aA0CxOluoSa5nnLP3naxjmJEz0mtbE4N1OohttGAOoQsIuYO3T
+jShNX4fsykw0rZmFyGYdrPpdVp+307X+Fing342Vu4P6jnzP8lrVNyLx7XiXWPWa
+VHW3QIIhEYJhLe1BAAER1rwk7Di6mQ==
+=YeSr
 -----END PGP SIGNATURE-----
 
---FKjPZJMp6SZBcqWd--
+--Pd8goGw0e2pe9hhP--
