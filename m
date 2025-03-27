@@ -1,129 +1,209 @@
-Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D491FF7C5;
-	Thu, 27 Mar 2025 11:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3103212B38
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 11:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743075457; cv=none; b=MyeTnjiBLpJXaegRkRYFbPKAVZNAwI9iqPlKBOEmjkBVVqgVPRuMp/Va/7K+JklR5PLjY8XBZzvfRffEIUQYlbWUyrD3uGZ1WmwJyD/VGj+ZoR2eYGxrZDLI1hluzkQY9NBfneldV88i87ClR7/fonxT080tPNeEImolxoTzefM=
+	t=1743075482; cv=none; b=pm7IRgXylV56HmOuP62di3Sc2qdub7CVuJEK299VfLUxpBKCSPsN2xUo2Kub5sdYZ7cuF1Gzmrt6eymaElwTYWjo+WQv9gWiqrMUiK/s/gDmqPw0wR+phlBBY5lalcn/Sxy2jYDgzsI0XwgYhEbxEmI5V/UN0Q3u+ViwuPTprL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743075457; c=relaxed/simple;
-	bh=SiDyYekmZNMSivdab4Zrek7jwPATeBFWbRgjeMVU2kg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kSxIPnEyksFc6tmlmK8BOxlqEU/XakhO0ixrcvFmtzOPJf4uyUaUNXciZvKPaLUksLcTREu4vYJqPYrKvmd7BpX59DTIpWpj0iMUVaCgjzJc5cOnKAzmFYf1k2aNFJIZgCUFItmqc3FipFRIct1uIBzVOFJHKY/GUqVA2D39P20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=HIN67Twm; arc=none smtp.client-ip=199.89.3.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1743075482; c=relaxed/simple;
+	bh=jJgFpwlIGzvdgTu5NIuLqljmZcu4Bj1hntEIypGP3WA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N6V7rCVP6AcsPI31g6xNSFkEP/bAGUO1MOJ6NVsLjAhiKpmcV2ngOUZNpZtmCs43e1fGuqN9/OkybRNfNU6R0CGhCh3sj583LYF6JtALVPgTZLwY3/VpwNc1dMsOYtC1opsIRYtkb1AyG0tI1jcb3Vngk7BFdOZ2aKKHv8z5iKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RzaL8SBK; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="HIN67Twm"
-Received: from localhost (localhost [127.0.0.1])
-	by 003.mia.mailroute.net (Postfix) with ESMTP id 4ZNhTp2gcgzm0GTW;
-	Thu, 27 Mar 2025 11:37:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1743075451; x=1745667452; bh=SiDyYekmZNMSivdab4Zrek7j
-	wPATeBFWbRgjeMVU2kg=; b=HIN67TwmZCtgN/QnU4Iglp3zfThOppqJZmwn9gxR
-	tjyKuoN7ymVRADOc+jgcxtdb+k9S5Gz6jWy3NQG/2kVJe6Dspu0XBZqFKfuV0E6O
-	4rfMfs5zueHztCNMi6RWR/Ru18OgpnqfcyFE1ScSyij2OTMsOw1SIbFi7vo3hqim
-	RdHjQ5CNWn282Zxly66VXILMTjSS2Z2tL4LNrRk0PBaX+P9XT61vutbANkWuZNF9
-	lsMs4WlWUcYZLagbwJzjFp8bfx2ZA1dbiGSXpbM8Gki9nuIcGRUJyqO+0V8vu0a/
-	xQRQD6+jhWx/Vz4ZGizHcYY+MdLA7eTP1iwlEbm/h73IaA==
-X-Virus-Scanned: by MailRoute
-Received: from 003.mia.mailroute.net ([127.0.0.1])
- by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id WXirvB8zVYkM; Thu, 27 Mar 2025 11:37:31 +0000 (UTC)
-Received: from [10.47.187.167] (unknown [91.223.100.87])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4ZNhTD50Rxzlmm8q;
-	Thu, 27 Mar 2025 11:37:03 +0000 (UTC)
-Message-ID: <3d7b543c-1165-42e0-8471-25b04c7572ac@acm.org>
-Date: Thu, 27 Mar 2025 07:36:56 -0400
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RzaL8SBK"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-47688ae873fso9372601cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 04:38:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743075480; x=1743680280; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J1q7MD5L4p1QWH6dvXV/jdGu9zU55RX2uZ00Mq2fH7Y=;
+        b=RzaL8SBK8f3yGpTGwR7iRgCcidIi0dwKtyQl3C2mPxV+6up9nVkZ7wm3iBwZIDCy4a
+         beKg7oXznQt888uQbk7NZvQR/evleeUiCv4PxDSCf0p7cPA+5JWnLwu7adzqR1SOqh1y
+         C0D7/5YvA/vT8W4QKsZy8h/i0p2+XU7TswxWm3ItzKXwLKOEfUOKcUUqaOpA6MiuJp4i
+         alUVfqIKHVZppXV2Abh9JRgwR+aNWsSJyemsYqtT+oMUthQt2/hmRkYa0wReMmUXjtOR
+         mMV9XVZPOG4vT2UeWXVnL8/bKAqMZS8ZqMaNyLPGT1oZRN8y2t7XdjbjZd+Bv0WvW8bA
+         RA9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743075480; x=1743680280;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J1q7MD5L4p1QWH6dvXV/jdGu9zU55RX2uZ00Mq2fH7Y=;
+        b=gkO2vW93DLl51DXP/oKlcgB61aKjt4RNl/9zp+eQ0oLOaofvMcoUXJlNUB6UMCDiKb
+         5KQrbs7szXzBoEpqU9qxEZ5Vti3JgVQOU9qdU+7Vq10UfYq3MnQJgSEYrVMS4zOnERgD
+         QHZqDivoGGjCvkiZ+IWVMeRuH61qe+639t2Mp/kk+rhVBFTGWHVxTYPVGV2t38dEpDuR
+         qQhAiiHyjtcKTLTQHgEJ372uSk4/zma9qJsqYyohOJgRVj8WvBc52+qrt1L2cgBxSX6G
+         TR8DKXHp5PXmXAiFFpZVabzEIFulfMztv3IjE/x9SMj8F08U55Kw0pHK6esetjwybLuG
+         Jvsg==
+X-Forwarded-Encrypted: i=1; AJvYcCVanhh6jQGn8f1UAc/vkxZq/cLp4osVazQ2WRt5j0SFXD/oFq7K0rFIzY1w9J6q4xcjdyembYcsSkvjZIc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAKoHdcFAnAZw8Kwlht27WDGTxnTwS8m4bnZ4lVk4R9nMw7rGy
+	8QlZIXGeAiKcd0etMuk34+ihGBGw2FxorVq06qOOIVlNY7VhWHUNm0Npy4qJ/f2M83K+UczfTJ/
+	G4p+cUDn+e3++28ONNzI7+AFvwFxR+JG5k21a
+X-Gm-Gg: ASbGncsSydMvef4inPXJiC1e93cKYQKtQUKY5T/X+As/GlaOVRSlRNolJMX11JjGc2r
+	iGO9TTjcSpbwVBjtsbYIAcEtAOarTF9b795+Kg9DjqJFeP8O5y2wzuILQr7h//PE2jPTbOq5TJD
+	gO4UvpX8BrYP3ts/jayOaDWdhrotE=
+X-Google-Smtp-Source: AGHT+IFMK1+BRWSCgAgLNRsQgWuq7hn+JjgvqMr67X53YHJ6vdJkGkcfutooQweF9AELFGacZ4T19Jmld+d58szJUpM=
+X-Received: by 2002:a05:622a:a12:b0:476:9b40:c2cf with SMTP id
+ d75a77b69052e-4776e21f0aemr64540851cf.50.1743075479560; Thu, 27 Mar 2025
+ 04:37:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/1] scsi: ufs: core: add device level exception
- support
-To: "Bao D. Nguyen" <quic_nguyenb@quicinc.com>,
- Arthur Simchaev <Arthur.Simchaev@sandisk.com>,
- "quic_cang@quicinc.com" <quic_cang@quicinc.com>,
- "quic_nitirawa@quicinc.com" <quic_nitirawa@quicinc.com>,
- "avri.altman@wdc.com" <avri.altman@wdc.com>,
- "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "minwoo.im@samsung.com" <minwoo.im@samsung.com>,
- "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
- "martin.petersen@oracle.com" <martin.petersen@oracle.com>
-Cc: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
- Alim Akhtar <alim.akhtar@samsung.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Bean Huo <beanhuo@micron.com>, Keoseong Park <keosung.park@samsung.com>,
- Ziqi Chen <quic_ziqichen@quicinc.com>, Al Viro <viro@zeniv.linux.org.uk>,
- Gwendal Grignou <gwendal@chromium.org>, Eric Biggers <ebiggers@google.com>,
- open list <linux-kernel@vger.kernel.org>,
- "moderated list:ARM/Mediatek SoC support:Keyword:mediatek"
- <linux-arm-kernel@lists.infradead.org>,
- "moderated list:ARM/Mediatek SoC support:Keyword:mediatek"
- <linux-mediatek@lists.infradead.org>
-References: <4370b3a3b5a5675bb3e75aaa48a273674c159339.1742526978.git.quic_nguyenb@quicinc.com>
- <SA2PR16MB4251229744D717821D3D8353F4A72@SA2PR16MB4251.namprd16.prod.outlook.com>
- <c5ab13ec-f650-ea10-5cb8-d6a2ddf1e825@quicinc.com>
- <0a68d437-5d6a-42aa-ae4e-6f5d89cfcaf3@acm.org>
- <ad246ef4-7429-63bb-0279-90738736f6e3@quicinc.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <ad246ef4-7429-63bb-0279-90738736f6e3@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <202503241406.5c9cb80a-lkp@intel.com> <87pli4z02w.ffs@tglx>
+ <6sn76aya225pqikijue5uv5h3lyqk262hc6ru3vemn7xofdftd@sw7gith52xh7>
+ <CANn89iKjCgmxtiLeVAiXODHbbR7=gYYi5cfAS1hS5qn+z=-o1Q@mail.gmail.com>
+ <877c4azyez.ffs@tglx> <CANn89iKAkio9wm73RNi9+KngNaS+Au2oaf0Tz9xOd+QEhFSkyw@mail.gmail.com>
+ <CANn89i+nAN+p-qRypKxB4ESohXkKVPmHuV_m86j3DPv6_+C=oQ@mail.gmail.com> <87v7ruycfz.ffs@tglx>
+In-Reply-To: <87v7ruycfz.ffs@tglx>
+From: Eric Dumazet <edumazet@google.com>
+Date: Thu, 27 Mar 2025 12:37:48 +0100
+X-Gm-Features: AQ5f1JpaXRqbndei8EK3d-QrLVd1cHoGleu01HKLXFr1d0BmULk0gBaqe9nHrLk
+Message-ID: <CANn89iJvxYsF0Y9jH+Oa2=akrydR8qbWAMbz_S6YZQMSe=2QWQ@mail.gmail.com>
+Subject: Re: [tip:timers/core] [posix] 1535cb8028: stress-ng.epoll.ops_per_sec
+ 36.2% regression
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mateusz Guzik <mjguzik@gmail.com>, kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, 
+	lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Benjamin Segall <bsegall@google.com>, Frederic Weisbecker <frederic@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On 3/26/25 7:47 PM, Bao D. Nguyen wrote:
-> On 3/26/2025 3:49 AM, Bart Van Assche wrote:
->> On 3/25/25 6:15 PM, Bao D. Nguyen wrote:
->>> The existing "struct utp_upiu_query_v4_0" probably has a bug in it.=20
->>> It does not use the=C2=A0 __attribute__((__packed__)) attribute. The=20
->>> compiler is free to add padding in this structure, resulting in the=20
->>> read attribute value being incorrect. I plan to provide a separate=20
->>> patch to fix this issue.
->>
->> Adding __attribute__((__packed__)) or __packed to data structures that
->> don't need it is not an improvement but is a change that makes
->> processing slower on architectures that do not support unaligned
->> accesses. Instead of adding __packed to data structures in their
->> entirety, only add it to those members that need it and check the
->> structure size as follows:
->>
->> static_assert(sizeof(...) =3D=3D ...);
->>
-> Thank you for the info on this, Bart.
-> IMO, this response upiu data should be __packed because the data coming=
-=20
-> from the hardware follows a strict format as defined by the spec. If we=
-=20
-> support __pack each individual field which data may be read by the=20
-> driver (the attribute read commands) and check the validity of their=20
-> sizes, it may add some complexity?
+On Thu, Mar 27, 2025 at 11:50=E2=80=AFAM Thomas Gleixner <tglx@linutronix.d=
+e> wrote:
+>
+> On Thu, Mar 27 2025 at 10:11, Eric Dumazet wrote:
+> > On Thu, Mar 27, 2025 at 9:26=E2=80=AFAM Eric Dumazet <edumazet@google.c=
+om> wrote:
+> >
+> >> We could place all these atomic fields in separate cache lines,
+> >> to keep read-only fields shared as much as possible.
+> >>
+> >
+> > Following one-liner seems good enough to separate the 4 atomics used
+> > to control/limit
+> >
+> > UCOUNT_RLIMIT_NPROC, UCOUNT_RLIMIT_MSGQUEUE, UCOUNT_RLIMIT_SIGPENDING,
+> > UCOUNT_RLIMIT_MEMLOCK,
+> >
+> >
+> > diff --git a/include/linux/user_namespace.h b/include/linux/user_namesp=
+ace.h
+> > index 7183e5aca282..6cc3fbec3632 100644
+> > --- a/include/linux/user_namespace.h
+> > +++ b/include/linux/user_namespace.h
+> > @@ -120,7 +120,7 @@ struct ucounts {
+> >         kuid_t uid;
+> >         atomic_t count;
+> >         atomic_long_t ucount[UCOUNT_COUNTS];
+> > -       atomic_long_t rlimit[UCOUNT_RLIMIT_COUNTS];
+> > +       atomic_long_t ____cacheline_aligned_in_smp rlimit[UCOUNT_RLIMIT=
+_COUNTS];
+> >  };
+>
+> Cute. How much bloat does it cause?
 
-Hi Bao,
+This would expand 'struct ucounts' by 192 bytes on x86, if the patch
+was actually working :)
 
-As explained in my previous email, adding __packed to data structures in
-their entirety is a bad practice. Please don't do this.
+Note sure if it is feasible without something more intrusive like
 
-Regarding your question: I have not yet seen any data structure that
-represents an on-the-wire data format where every single data member
-has to be annotated with __packed. Only data members that are not
-aligned to a natural boundary need this annotation. Examples are
-available in this header file: include/scsi/srp.h.
+diff --git a/include/linux/user_namespace.h b/include/linux/user_namespace.=
+h
+index 7183e5aca282..3513df720430 100644
+--- a/include/linux/user_namespace.h
++++ b/include/linux/user_namespace.h
+@@ -120,7 +120,10 @@ struct ucounts {
+        kuid_t uid;
+        atomic_t count;
+        atomic_long_t ucount[UCOUNT_COUNTS];
+-       atomic_long_t rlimit[UCOUNT_RLIMIT_COUNTS];
++
++       struct {
++               atomic_long_t ____cacheline_aligned_in_smp val;
++       } rlimit[UCOUNT_RLIMIT_COUNTS];
+ };
 
-Thanks,
+ extern struct user_namespace init_user_ns;
+@@ -136,7 +139,7 @@ void put_ucounts(struct ucounts *ucounts);
 
-Bart.
+ static inline long get_rlimit_value(struct ucounts *ucounts, enum
+rlimit_type type)
+ {
+-       return atomic_long_read(&ucounts->rlimit[type]);
++       return atomic_long_read(&ucounts->rlimit[type].val);
+ }
+
+ long inc_rlimit_ucounts(struct ucounts *ucounts, enum rlimit_type
+type, long v);
+diff --git a/kernel/ucount.c b/kernel/ucount.c
+index 86c5f1c0bad9..0cd5498890f8 100644
+--- a/kernel/ucount.c
++++ b/kernel/ucount.c
+@@ -266,7 +266,7 @@ long inc_rlimit_ucounts(struct ucounts *ucounts,
+enum rlimit_type type, long v)
+        long ret =3D 0;
+
+        for (iter =3D ucounts; iter; iter =3D iter->ns->ucounts) {
+-               long new =3D atomic_long_add_return(v, &iter->rlimit[type])=
+;
++               long new =3D atomic_long_add_return(v, &iter->rlimit[type].=
+val);
+                if (new < 0 || new > max)
+                        ret =3D LONG_MAX;
+                else if (iter =3D=3D ucounts)
+@@ -281,7 +281,7 @@ bool dec_rlimit_ucounts(struct ucounts *ucounts,
+enum rlimit_type type, long v)
+        struct ucounts *iter;
+        long new =3D -1; /* Silence compiler warning */
+        for (iter =3D ucounts; iter; iter =3D iter->ns->ucounts) {
+-               long dec =3D atomic_long_sub_return(v, &iter->rlimit[type])=
+;
++               long dec =3D atomic_long_sub_return(v, &iter->rlimit[type].=
+val);
+                WARN_ON_ONCE(dec < 0);
+                if (iter =3D=3D ucounts)
+                        new =3D dec;
+@@ -294,7 +294,7 @@ static void do_dec_rlimit_put_ucounts(struct
+ucounts *ucounts,
+ {
+        struct ucounts *iter, *next;
+        for (iter =3D ucounts; iter !=3D last; iter =3D next) {
+-               long dec =3D atomic_long_sub_return(1, &iter->rlimit[type])=
+;
++               long dec =3D atomic_long_sub_return(1, &iter->rlimit[type].=
+val);
+                WARN_ON_ONCE(dec < 0);
+                next =3D iter->ns->ucounts;
+                if (dec =3D=3D 0)
+@@ -316,7 +316,7 @@ long inc_rlimit_get_ucounts(struct ucounts
+*ucounts, enum rlimit_type type,
+        long dec, ret =3D 0;
+
+        for (iter =3D ucounts; iter; iter =3D iter->ns->ucounts) {
+-               long new =3D atomic_long_add_return(1, &iter->rlimit[type])=
+;
++               long new =3D atomic_long_add_return(1, &iter->rlimit[type].=
+val);
+                if (new < 0 || new > max)
+                        goto dec_unwind;
+                if (iter =3D=3D ucounts)
+@@ -334,7 +334,7 @@ long inc_rlimit_get_ucounts(struct ucounts
+*ucounts, enum rlimit_type type,
+        }
+        return ret;
+ dec_unwind:
+-       dec =3D atomic_long_sub_return(1, &iter->rlimit[type]);
++       dec =3D atomic_long_sub_return(1, &iter->rlimit[type].val);
+        WARN_ON_ONCE(dec < 0);
+        do_dec_rlimit_put_ucounts(ucounts, iter, type);
+        return 0;
