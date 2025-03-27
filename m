@@ -1,154 +1,150 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140051BC41
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C479F1FF7D1
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743068913; cv=none; b=L976+65AS9kyJk1mnxudlbCXxPuQyHElLbHtaYZ22krMN+3tM+aeRbR+17oDxpWjv2+QXnA4ePXmeSZPc44Ttf8+dS6ViAjmZmcBEGFcpZyW9E2bv1w3x97g1ZU9YcRrgYnsZgO7d+oKTQNLy11nwjo3aatzbJ011yUM3x+eikU=
+	t=1743068935; cv=none; b=aBmI52c2ZITAgcbRv5X39HYHEvadOHwtyjgZj85VZbiZ5PnN3pxi1z5UdWEyFvu3+42i23QnvPqjDCB+FBcQNw6EzBGTJekdn+NsnXwMfi02PNELjctkyadOSLuEQ8Hu34yBrNIygv4BuvDyTzk2xecefbF3O0l1FeS0NJ6Z0eU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743068913; c=relaxed/simple;
-	bh=V7nXQu1ECzd1snnn8NgRK9qAIOJWvh1THW88GlNDZo4=;
+	s=arc-20240116; t=1743068935; c=relaxed/simple;
+	bh=uSZ3ssY/xlzW1nr2WrEshK+RgrR9LQhRC0rad3D6Jzk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=omduNyAsvk3aOuMnndFg1sNt11I4UjmAIFC/lhXU87iBGcqBQTCSmI0bDxSfyqYVTvq9szk6uP61DffEpH7XwJZBZGu4eFgyUFfew01XKn5s8NoO0FlzUGtORQnNXpj2U2BCLTVFT+eg4GDwual6kC1ioPoFTxaUcHg7uqrn93I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KNKJUiS5; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KNKJUiS5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743068911;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PkXA0CSGaLLhec1NiuD/8heU6GNQwO9LkiS1P4clsaU=;
-	b=KNKJUiS5l+tg1alfVjPTgGUIP2NpuG+UbnIrZUjPjBispAEUV5CTQBjuSkEqFh6amTTE0U
-	Fal1/nqs1A/1VAnaoxu0M6Zii2xUlmcLtj9c/j4Oz+35ixclDgsNyYVibwWhHIhfYf2s1U
-	km9ABxRadcajLA1E5x1AlCOV4f9dxHo=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-543-DkYQCauDMuWe7M_xR_eJLw-1; Thu, 27 Mar 2025 05:48:24 -0400
-X-MC-Unique: DkYQCauDMuWe7M_xR_eJLw-1
-X-Mimecast-MFC-AGG-ID: DkYQCauDMuWe7M_xR_eJLw_1743068903
-Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-5e5dd82d541so789008a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 02:48:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743068903; x=1743673703;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PkXA0CSGaLLhec1NiuD/8heU6GNQwO9LkiS1P4clsaU=;
-        b=NBIpIjB27hix/QepANk2NPXiRBu1QIhX37jaQWV3ac6V+95qlu7b85H+nf6o8GXKce
-         ZQBYpboSE4XnLI5e37BMGxyJTmTTrcdupx7/szveP8q01k1rT5R52uuNVnb804Fbu8O3
-         FdwjrnUyw9yXxa992sEsqo5iejuaAngMw6CfmCGlMiNAhngTKF2Uazp2bNEb9Gxfq3BM
-         5iO4xBBDo2stmov6Q5tGfvOY9O2RvSWLrqvd8P40Yj4A+SBA8b656Yp72S9BK+fXvqoH
-         3Dp7dpoNulvp85pvFPaob6R279ZROL7GRVU5DQpWjSITyiVwzPHF6SfD1dVPXfDubY1e
-         CsZg==
-X-Forwarded-Encrypted: i=1; AJvYcCXxqtUaLQtFQnNF+Z4EV0iun6MCtdNNkZVWfHzEtSLh8THew4HrJVGJ+p26el10iy0mWWZjZE8X9IO8DVM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxALcg10eSwT1/OkAHyOWhj6gAqTs2NuqN3oaoHybnIdySuGPUt
-	qhLPv3EOpqbUbOSUo151hLuEAQf4RLRpqIPV144HsCFHWE2kk/KiPawNohCrxw6b2TUJgiYGFXp
-	RYUW/Q5EDQ8ViRlEbYz18gbEXzbo9/EAzDc6rfsDTWkl72f/UkoK+l/672qXlFpCOOxhKTqXa
-X-Gm-Gg: ASbGncsNAAK/+xP9Jr/1LAtEBc/btk0TKNRd16AmeITSm2DtpaaVYnwxrY0KzPDycFF
-	EBojLYZxOCHMfCXH0R/Tj4jUbmG6bfKpu2Ei/+gWWJ1zMe/km2A1WUMYjEWJomyJJhYnIxREoaY
-	FMJ7fa3Gvwp4dCXY6xPsIYkzWKwQ6AYrqLzbD5UTVW5E8ggGymSTvHB62PlRJ+9rHbYeNT2lLm2
-	kxEhQuW76K+j7fxqrQ6WbG3XQiD3R0sA1nj0WUnadI/cXCxSdIEKsnc+eAhhpU+h6xTWM5vuGCe
-	v5H9662v8w9W0uBaAkNQKp4UFqCGgRbC6pdCln4MssdZ/Ldqv0N06Kapd/6UQ81i
-X-Received: by 2002:a05:6402:35c4:b0:5e0:4276:c39e with SMTP id 4fb4d7f45d1cf-5ed8f5f6b76mr2945701a12.30.1743068903054;
-        Thu, 27 Mar 2025 02:48:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IECYBEVoCF81aAT+yw30nu+qGDuMQaL77qfuPpJGrMzLEon8pvfMD/dETVYWcOlt5YmfSMM3w==
-X-Received: by 2002:a05:6402:35c4:b0:5e0:4276:c39e with SMTP id 4fb4d7f45d1cf-5ed8f5f6b76mr2945665a12.30.1743068902509;
-        Thu, 27 Mar 2025 02:48:22 -0700 (PDT)
-Received: from sgarzare-redhat (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ebccf67e70sm10747368a12.6.2025.03.27.02.48.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 02:48:21 -0700 (PDT)
-Date: Thu, 27 Mar 2025 10:48:17 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org, 
-	Peter Huewe <peterhuewe@gmx.de>, linux-integrity@vger.kernel.org, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, Jens Wiklander <jens.wiklander@linaro.org>, 
-	Sumit Garg <sumit.garg@kernel.org>
-Subject: Re: [PATCH 1/2] tpm: add send_recv() op in tpm_class_ops
-Message-ID: <eidmcwgppc4uobyupns4hzqz562wguapiocpyyqq67j5h26qbl@muhbnfxzqvqt>
-References: <20250320152433.144083-1-sgarzare@redhat.com>
- <20250320152433.144083-2-sgarzare@redhat.com>
- <Z-QxH7aDjlixl2gp@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UcY7ZlKX/W/CC+w+sgTKsFyV8awd4zaoPaRMqb9LbUc+p6n29NP/NayoT3E5/5lHiOAA3+1ZVHVJd+EbeGBDMIHmstFE4YRwGfjJddhIK7LVCgHl/0GD+AGGApiy+WVRnloIXGrDp3VDoHOKoFT/IXY+zMCkyUBaEXCo2/t1uqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65F99106F;
+	Thu, 27 Mar 2025 02:48:58 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5DE9A3F63F;
+	Thu, 27 Mar 2025 02:48:50 -0700 (PDT)
+Date: Thu, 27 Mar 2025 09:48:47 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Sebastian Ene <sebastianene@google.com>
+Cc: Quentin Perret <qperret@google.com>, catalin.marinas@arm.com,
+	Sudeep Holla <sudeep.holla@arm.com>, joey.gouly@arm.com,
+	maz@kernel.org, oliver.upton@linux.dev, snehalreddy@google.com,
+	suzuki.poulose@arm.com, vdonnefort@google.com, will@kernel.org,
+	yuzenghui@huawei.com, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel-team@android.com, Andrei Homescu <ahomescu@google.com>
+Subject: Re: [PATCH v4 3/3] KVM: arm64: Release the ownership of the hyp rx
+ buffer to Trustzone
+Message-ID: <20250327-greedy-hopeful-rook-56c6a1@sudeepholla>
+References: <20250326113901.3308804-1-sebastianene@google.com>
+ <20250326113901.3308804-4-sebastianene@google.com>
+ <Z-Qv4b0vgVql2yOb@google.com>
+ <Z-UcW32Hk6f_cuxc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z-QxH7aDjlixl2gp@kernel.org>
+In-Reply-To: <Z-UcW32Hk6f_cuxc@google.com>
 
-On Wed, Mar 26, 2025 at 06:53:51PM +0200, Jarkko Sakkinen wrote:
->On Thu, Mar 20, 2025 at 04:24:32PM +0100, Stefano Garzarella wrote:
->> From: Stefano Garzarella <sgarzare@redhat.com>
->>
->> Some devices do not support interrupts and provide a single operation
->> to send the command and receive the response on the same buffer.
->>
->> To support this scenario, a driver could set TPM_CHIP_FLAG_IRQ in the
->> chip's flags to get recv() to be called immediately after send() in
->> tpm_try_transmit(), or it needs to implement .status() to return 0,
->> and set both .req_complete_mask and .req_complete_val to 0.
->>
->> In order to simplify these drivers and avoid temporary buffers to be
+On Thu, Mar 27, 2025 at 09:37:31AM +0000, Sebastian Ene wrote:
+> On Wed, Mar 26, 2025 at 04:48:33PM +0000, Quentin Perret wrote:
+> > On Wednesday 26 Mar 2025 at 11:39:01 (+0000), Sebastian Ene wrote:
+> > > Introduce the release FF-A call to notify Trustzone that the hypervisor
+> > > has finished copying the data from the buffer shared with Trustzone to
+> > > the non-secure partition.
+> > >
+> > > Reported-by: Andrei Homescu <ahomescu@google.com>
+> > > Signed-off-by: Sebastian Ene <sebastianene@google.com>
+> > > ---
+> > >  arch/arm64/kvm/hyp/nvhe/ffa.c | 9 ++++++---
+> > >  1 file changed, 6 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> > > index 6df6131f1107..ac898ea6274a 100644
+> > > --- a/arch/arm64/kvm/hyp/nvhe/ffa.c
+> > > +++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> > > @@ -749,6 +749,7 @@ static void do_ffa_part_get(struct arm_smccc_res *res,
+> > >  	DECLARE_REG(u32, uuid3, ctxt, 4);
+> > >  	DECLARE_REG(u32, flags, ctxt, 5);
+> > >  	u32 count, partition_sz, copy_sz;
+> > > +	struct arm_smccc_res _res;
+> > >  
+> > >  	hyp_spin_lock(&host_buffers.lock);
+> > >  	if (!host_buffers.rx) {
+> > > @@ -765,11 +766,11 @@ static void do_ffa_part_get(struct arm_smccc_res *res,
+> > >  
+> > >  	count = res->a2;
+> > >  	if (!count)
+> > > -		goto out_unlock;
+> > > +		goto release_rx;
+> > >  
+> > >  	if (hyp_ffa_version > FFA_VERSION_1_0) {
+> > >  		/* Get the number of partitions deployed in the system */
+> > > -		if (flags & 0x1)
+> > > +		if (flags & PARTITION_INFO_GET_RETURN_COUNT_ONLY)
+> > >  			goto out_unlock;
+> > >  
+> > >  		partition_sz  = res->a3;
+> > > @@ -781,10 +782,12 @@ static void do_ffa_part_get(struct arm_smccc_res *res,
+> > >  	copy_sz = partition_sz * count;
+> > >  	if (copy_sz > KVM_FFA_MBOX_NR_PAGES * PAGE_SIZE) {
+> > >  		ffa_to_smccc_res(res, FFA_RET_ABORTED);
+> > > -		goto out_unlock;
+> > > +		goto release_rx;
+> > >  	}
+> > >  
+> > >  	memcpy(host_buffers.rx, hyp_buffers.rx, copy_sz);
+> > > +release_rx:
+> > > +	ffa_rx_release(&_res);
+> 
+> Hi,
+> 
+> > 
+> > I'm a bit confused about this release call here. In the pKVM FF-A proxy
+> > model, the hypervisor is essentially 'transparent', so do we not expect
+> > EL1 to issue that instead?
+> 
+> I think the EL1 should also issue this call irrespective of what the
+> hypervisor is doing. Sudeep can correct me here if I am wrong, but this
+> is my take on this.
 >
->Simplification can be addressed with no callback changes:
+
+Indeed, the driver will not know if it is running in EL1 with or without
+FF-A proxy or even at EL2.
+
+> I am looking at this as a way of signaling the availability of the rx
+> buffer across partitions. There are some calls that when invoked, they
+> place the buffer in a 'locked state'.
+> 
+> 
+> > How is EL1 supposed to know that the
+> > hypervisor has already sent the release call?
+> 
+> It doesn't need to know, it issues the call as there is no hypervisor
+> in-between, why would it need to know ?
+> 
+
+Exactly.
+
+> > And isn't EL1 going to be
+> > confused if the content of the buffer is overridden before is has issued
+> > the release call itself?
+> 
+
+Yes good point. I need to recall the details, but I am assuming FF-A proxy
+in pKVM maps the Tx/Rx buffers with the host in EL2 and maintains another
+Tx/Rx pair with SPMC on the secure side right ?
+
+> The hypervisor should prevent changes to the buffer mapped between the
+> host and itself until the release_rx call is issued from the host.
+
+OK, this sounds like my understand above is indeed correct ?
+
+> If another call that wants to make use of the rx buffer sneaks in, we
+> would have to revoke it with BUSY until rx_release is sent.
 >
->https://lore.kernel.org/linux-integrity/20250326161838.123606-1-jarkko@kernel.org/T/#u
->
->I also noticed that tpm_ftpm_tee initalized req_complete_mask and
->req_complete_val explictly while they would be already implicitly
->zero.
->
->So it reduces this just a matter of getting rid off the extra
->buffer.
 
-Yep, as mentioned I think your patch should go either way. So here I can 
-rephrase and put the emphasis on the temporary buffer and the driver 
-simplification.
+Sounds good to me.
 
->
->> used between the .send() and .recv() callbacks, introduce a new callback
->> send_recv(). If that callback is defined, it is called in
->> tpm_try_transmit() to send the command and receive the response on
->> the same buffer in a single call.
->
->I don't find anything in the commit message addressing buf_len an
->cmd_len (vs "just len"). Why two lengths are required?
->
->Not completely rejecting but this explanation is incomplete.
-
-Right.
-
-The same buffer is used as input and output.
-For input, the buffer contains the command (cmd_len) but the driver can 
-use the entire buffer for output (buf_len).
-It's basically the same as in tpm_try_transmit(), but we avoid having to 
-parse the header in each driver since we already do that in 
-tpm_try_transmit().
-
-In summary cmd_len = count = be32_to_cpu(header->length).
-
-I admit I'm not good with names, would you prefer a different name or is 
-it okay to explain it better in the commit?
-
-My idea is to add this:
-
-     `buf` is used as input and output. It contains the command
-     (`cmd_len` bytes) as input. The driver will be able to use the
-     entire buffer (`buf_len` bytes) for the response as output.
-     Passing `cmd_len` is an optimization to avoid having to access the
-     command header again in each driver and check it.
-
-WDYT?
-
-Thanks,
-Stefano
-
+-- 
+Regards,
+Sudeep
