@@ -1,38 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF8319F43A
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:01:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6382A1A2622
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:01:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743091303; cv=none; b=sw56wR8a/bP9lgpLjYVEYQR+Dw3cpmUOT9wyVx3XkwOC1z6XwRF25RCo1T/ykiCnT9Zmz4ZGSXr86ErVKeNlUlmo0RWuWPuRva5cEVc7OD2a8Iq2QBZISl70PXl+m9vtoSEJY+CBVeeZySIgKgB+9cIHnHtkKa9yp0bmIfrMvyA=
+	t=1743091307; cv=none; b=QcYFFzuH7JZWJB9hyzaAFdrfb3iyhzCikNNZx8sgaymMQvmVLGIXoj+YwV8/7V9D/A9UG63p4UZbcUAPnLL7gDsyU8EMvyq19gboUeQFHlhKooVSMcrjXLQ27kYUzW0OFSGJ3rXHNELhpRQA4wOxRcsw+mSyFVMcyFraCqdzI7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743091303; c=relaxed/simple;
-	bh=opg5Ltx/REdrSDtxS6oOkjSizqw/KOz8jqku8DiOxDY=;
+	s=arc-20240116; t=1743091307; c=relaxed/simple;
+	bh=7Qk2WD3HGqrUJbtVGplfJG8We98IqG6UMJa28Cvw1Zw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fS6MytgS/aYZ+tOw7uaJ6uIClHD9I+ThMDZUCKfRG7tWxG/84Hd5/Ya9N2OW2s7pcqpHtwnh/Th3o4zpmvI46BMBC+3t9/OiEQO0aQRxTCWOFX6C0qFqaxjq8+ke6bfM4Aivke+8DrYL3YfiXqEYxEipZwJw39tQd/8nG7+5HD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Bts6Xpb7; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=PhYJsHzNCrS2gmauRSmoCEmkB49xzsqedslH2GxB57Ei3NKq/CCjoO3i0oAPMIsjgo1QCvcnFdcivFShvWXUlGnMFx+vEa3RCQX1JiJkjFEMW+KfZULiKqe+XOlQktg6m2D6AYXUYH1l1MDGxTN/BxYOZtjfgTOku0+Cu9UQ0ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=CFmtlTR3; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Bts6Xpb7"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="CFmtlTR3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1743091299;
-	bh=opg5Ltx/REdrSDtxS6oOkjSizqw/KOz8jqku8DiOxDY=;
+	s=mail; t=1743091304;
+	bh=7Qk2WD3HGqrUJbtVGplfJG8We98IqG6UMJa28Cvw1Zw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Bts6Xpb75whfdW9hrRzdrKfUOACPAijJGP1lpsga3viaLMA1hWMhwl/R6A4JVGd9s
-	 +AMpwTwtZ5Itipst0IScRsGVD/1PDW2Lhj/QABXJW+dGZ34f5erBQr1HoBWiKl5kpS
-	 KkZTLvEEFVcY8UoVyekwYUCb22wdHseolS7qBhQuVNJaORxhhRLlTa8Tn5N3zwhe7Y
-	 1MDzIOfEErD7fD/375rnWSZNTCw8HmeoCvyTe+gW/NrwefjfYiZsX7KXnY10jfMvih
-	 RcfyQP0rtQIHy48UELVbJ1JTyByFX5WmEWbajFNlsfQX5mcY9HHzjBxHlCTFjH1aKJ
-	 BNPIN8b6B0L4A==
+	b=CFmtlTR3gtVI+lTDEOGcw60CY0xcsn6/CczUPBjEFGKdJICLVZ2qj1hc5bgy59W9d
+	 CGtked7fQCGfwaVzTWhGc//zJz1Tj2SQjV8WAUNKVjUfl9VcsXbPLax7kqnDAKX7Qm
+	 SJA2Gdal7EnowXxmviBnVNbSgpxlM1kJ6lbIfGKUBzuHRHKmr+GNuqtvkKT1rCvBw1
+	 MHe3k9jfh4cxVUscrdwZMze/YSQbDqS/HfbID3x4t2OlvUN7aY2LLDvmqIqM+qyCtl
+	 dTc3O5CMKisQwuXcRtvSkmB3FS1v/TbroJ8I5cjwjT+FBZta9j2C2A2Q6jU/eNGkKf
+	 yn4ZJQ2jIb+3Q==
 Received: from debian.. (unknown [171.76.87.92])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: vignesh)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 5205E17E09D6;
-	Thu, 27 Mar 2025 17:01:36 +0100 (CET)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 697FA17E0FDB;
+	Thu, 27 Mar 2025 17:01:40 +0100 (CET)
 From: Vignesh Raman <vignesh.raman@collabora.com>
 To: dri-devel@lists.freedesktop.org
 Cc: daniels@collabora.com,
@@ -49,9 +49,9 @@ Cc: daniels@collabora.com,
 	maarten.lankhorst@linux.intel.com,
 	tzimmermann@suse.de,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/3] drm/ci: force use of BFD linker
-Date: Thu, 27 Mar 2025 21:31:10 +0530
-Message-ID: <20250327160117.945165-2-vignesh.raman@collabora.com>
+Subject: [PATCH v1 2/3] drm/ci: Add jobs to validate devicetrees
+Date: Thu, 27 Mar 2025 21:31:11 +0530
+Message-ID: <20250327160117.945165-3-vignesh.raman@collabora.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250327160117.945165-1-vignesh.raman@collabora.com>
 References: <20250327160117.945165-1-vignesh.raman@collabora.com>
@@ -63,77 +63,148 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When using a toolchain with gold as the default linker in Debian, the
-kernel build fails:
-
-x86_64-linux-gnu-ld: unknown linker
-scripts/Kconfig.include:56: Sorry, this linker is not supported.
-
-So force the use of the BFD linker. This was already part of the build
-script but has now been moved to a separate script so that other jobs
-(dtbs check, kunit) can use it.
+Add jobs to run dt_binding_check and dtbs_check. If warnings are seen,
+exit with a non-zero error code while configuring them as warning in
+the GitLab CI pipeline.
 
 Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
 ---
- drivers/gpu/drm/ci/build.sh                | 14 ++------------
- drivers/gpu/drm/ci/override-ld-with-bfd.sh | 16 ++++++++++++++++
- 2 files changed, 18 insertions(+), 12 deletions(-)
- create mode 100755 drivers/gpu/drm/ci/override-ld-with-bfd.sh
+ drivers/gpu/drm/ci/check-devicetrees.yml | 38 ++++++++++++++++++++++
+ drivers/gpu/drm/ci/dt-binding-check.sh   | 18 +++++++++++
+ drivers/gpu/drm/ci/dtbs-check.sh         | 41 ++++++++++++++++++++++++
+ drivers/gpu/drm/ci/gitlab-ci.yml         |  1 +
+ 4 files changed, 98 insertions(+)
+ create mode 100644 drivers/gpu/drm/ci/check-devicetrees.yml
+ create mode 100755 drivers/gpu/drm/ci/dt-binding-check.sh
+ create mode 100755 drivers/gpu/drm/ci/dtbs-check.sh
 
-diff --git a/drivers/gpu/drm/ci/build.sh b/drivers/gpu/drm/ci/build.sh
-index 284873e94d8d..3857b732cf16 100644
---- a/drivers/gpu/drm/ci/build.sh
-+++ b/drivers/gpu/drm/ci/build.sh
-@@ -8,6 +8,8 @@ rm -rf .git/rebase-apply
- 
- . .gitlab-ci/container/container_pre_build.sh
- 
-+. drivers/gpu/drm/ci/override-ld-with-bfd.sh
-+
- # libssl-dev was uninstalled because it was considered an ephemeral package
- apt-get update
- apt-get install -y libssl-dev
-@@ -47,18 +49,6 @@ fi
- export ARCH=${KERNEL_ARCH}
- export CROSS_COMPILE="${GCC_ARCH}-"
- 
--# The kernel doesn't like the gold linker (or the old lld in our debians).
--# Sneak in some override symlinks during kernel build until we can update
--# debian.
--mkdir -p ld-links
--for i in /usr/bin/*-ld /usr/bin/ld; do
--    i=$(basename $i)
--    ln -sf /usr/bin/$i.bfd ld-links/$i
--done
--
--NEWPATH=$(pwd)/ld-links
--export PATH=$NEWPATH:$PATH
--
- git config --global user.email "fdo@example.com"
- git config --global user.name "freedesktop.org CI"
- git config --global pull.rebase true
-diff --git a/drivers/gpu/drm/ci/override-ld-with-bfd.sh b/drivers/gpu/drm/ci/override-ld-with-bfd.sh
-new file mode 100755
-index 000000000000..9728dc39cb19
+diff --git a/drivers/gpu/drm/ci/check-devicetrees.yml b/drivers/gpu/drm/ci/check-devicetrees.yml
+new file mode 100644
+index 000000000000..5f0c477f7578
 --- /dev/null
-+++ b/drivers/gpu/drm/ci/override-ld-with-bfd.sh
-@@ -0,0 +1,16 @@
++++ b/drivers/gpu/drm/ci/check-devicetrees.yml
+@@ -0,0 +1,38 @@
++.dt-check-base:
++  timeout: "1h"
++  variables:
++    FF_USE_NEW_BASH_EVAL_STRATEGY: 'true'
++  script:
++    - drivers/gpu/drm/ci/${SCRIPT_NAME}
++  artifacts:
++    when: on_failure
++    paths:
++      - ${ARTIFACT_FILE}
++  allow_failure:
++    exit_codes:
++      - 102
++
++dtbs-check:arm32:
++  extends:
++    - .build:arm32
++    - .dt-check-base
++  variables:
++    SCRIPT_NAME: "dtbs-check.sh"
++    ARTIFACT_FILE: "dtbs-check.log"
++
++dtbs-check:arm64:
++  extends:
++    - .build:arm64
++    - .dt-check-base
++  variables:
++    SCRIPT_NAME: "dtbs-check.sh"
++    ARTIFACT_FILE: "dtbs-check.log"
++
++dt-binding-check:
++  extends:
++    - .build
++    - .use-debian/x86_64_build
++    - .dt-check-base
++  variables:
++    SCRIPT_NAME: "dt-binding-check.sh"
++    ARTIFACT_FILE: "dt-binding-check.log"
+diff --git a/drivers/gpu/drm/ci/dt-binding-check.sh b/drivers/gpu/drm/ci/dt-binding-check.sh
+new file mode 100755
+index 000000000000..2a72bb89c013
+--- /dev/null
++++ b/drivers/gpu/drm/ci/dt-binding-check.sh
+@@ -0,0 +1,18 @@
 +#!/bin/bash
 +# SPDX-License-Identifier: MIT
 +
-+set -ex
++set -euxo pipefail
 +
-+# The kernel doesn't like the gold linker (or the old lld in our debians).
-+# Sneak in some override symlinks during kernel build until we can update
-+# debian.
-+mkdir -p ld-links
-+for i in /usr/bin/*-ld /usr/bin/ld; do
-+    i=$(basename $i)
-+    ln -sf /usr/bin/$i.bfd ld-links/$i
-+done
++apt-get update -qq
++apt install -y --no-install-recommends yamllint
++pip3 install dtschema
 +
-+NEWPATH=$(pwd)/ld-links
-+export PATH=$NEWPATH:$PATH
++if ! make -j${FDO_CI_CONCURRENT:-4} dt_binding_check >/dev/null 2>dt-binding-check.log; then
++    echo "ERROR: 'make dt_binding_check' failed. Please check dt-binding-check.log for details."
++    exit 1
++fi
++
++if [[ -s dt-binding-check.log ]]; then
++    echo "WARNING: dt_binding_check reported warnings. Please check dt-binding-check.log for details."
++    exit 102
++fi
+diff --git a/drivers/gpu/drm/ci/dtbs-check.sh b/drivers/gpu/drm/ci/dtbs-check.sh
+new file mode 100755
+index 000000000000..a0129d5a53b0
+--- /dev/null
++++ b/drivers/gpu/drm/ci/dtbs-check.sh
+@@ -0,0 +1,41 @@
++#!/bin/bash
++# SPDX-License-Identifier: MIT
++
++set -euxo pipefail
++
++. drivers/gpu/drm/ci/override-ld-with-bfd.sh
++
++apt-get update -qq
++pip3 install dtschema
++
++case "${KERNEL_ARCH}" in
++    "arm")
++        GCC_ARCH="arm-linux-gnueabihf"
++        ;;
++    "arm64")
++        GCC_ARCH="aarch64-linux-gnu"
++        ;;
++    "x86_64")
++        GCC_ARCH="x86_64-linux-gnu"
++        ;;
++    *)
++        echo "Unsupported architecture: ${KERNEL_ARCH}"
++        exit 1
++        ;;
++esac
++
++export ARCH="${KERNEL_ARCH}"
++export CROSS_COMPILE="${GCC_ARCH}-"
++
++make `basename ${DEFCONFIG}`
++make -j${FDO_CI_CONCURRENT:-4} dtbs
++
++if ! make -j${FDO_CI_CONCURRENT:-4} dtbs_check >/dev/null 2>dtbs-check.log; then
++    echo "ERROR: 'make dtbs_check' failed. Please check dtbs-check.log for details."
++    exit 1
++fi
++
++if [[ -s dtbs-check.log ]]; then
++    echo "WARNING: dtbs_check reported warnings. Please check dtbs-check.log for details."
++    exit 102
++fi
+diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/gitlab-ci.yml
+index 65adcd97e06b..9e61b49e9960 100644
+--- a/drivers/gpu/drm/ci/gitlab-ci.yml
++++ b/drivers/gpu/drm/ci/gitlab-ci.yml
+@@ -108,6 +108,7 @@ include:
+   - drivers/gpu/drm/ci/static-checks.yml
+   - drivers/gpu/drm/ci/build.yml
+   - drivers/gpu/drm/ci/test.yml
++  - drivers/gpu/drm/ci/check-devicetrees.yml
+   - 'https://gitlab.freedesktop.org/gfx-ci/lab-status/-/raw/main/lab-status.yml'
+ 
+ 
 -- 
 2.47.2
 
