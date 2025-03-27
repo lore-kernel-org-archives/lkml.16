@@ -1,78 +1,78 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173E61758B
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F25190692
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743090392; cv=none; b=ib768PAuo2DQO4WENJxOlHHtFgIwNqq5GtvcxY45I4gB1wHpogW5jmGIEztkQxIOBfJJ9G0p8Vs4u1RTmhFj4FEJDZ7zZAulgfkE8sexu77IBNbO3pfnbLtAqm0/po3EawQISGpz2hVoF9DcGt4K4KdZ/PAoT/LmNc3ZFmLdyO8=
+	t=1743090416; cv=none; b=IfXowbPpy3lhfE8D2vprI4DzFGfMWlpo96rFRDcjELjVmec4+L1lzZEIhrwIDdvqlMhk4YbL0g2Jky+Cvx+XY7KNoIizwChXzzp9RxdTdCP/ttcFt9XcZhJ14aWF8RYlV7DzpoePFlVt1tXdR+tsZM+qwlvqfNqgWfgQHsBGTXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743090392; c=relaxed/simple;
-	bh=NkuZ4mKdbiKcyZcEMcWy/TSQWHHc4kDRwBx+d0ME7XE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=debLQX+/l0OIb7tO9AFGV4ah+Q30hXEOg6xPwRflTgE10o4Pe+FDR4o2pXQhMHR2q2LDZg/6mExza1chjB4H6enfLBUEtgV7JGhWNkPH2P9ZaG/1pwB2l62+x6krtJ7iMQyryM7RLqikKe6jeRMx8KR/dT4MfahdCwxI1OhISBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VIqPoD0B; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743090416; c=relaxed/simple;
+	bh=LPH7fmB2piYJTlMhDGZnc6I3l1pOMgZFoEBi543qq+s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HzjiFAg/Totdb48nuu1tNSFhMurqVsIBpjTeT1pwlaub0pGY1UlWC9+WBB80FS9VMKhD+KIdM0Vh/V4RqqezAAb977M19IbV9FYbgzpecNl2UZO5UvlBo3qHnGvqgO6yaD5aba4IOQ42QV6kL7iwsYcf9laGOmwLS6trmEDLGb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XO6E1K9K; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIqPoD0B"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6f768e9be1aso21595227b3.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:46:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XO6E1K9K"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so8950665e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:46:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743090390; x=1743695190; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PQQUW8bK5R9MlNgxtL0YKOqY3x02XHrnTXiLJ6eKG7k=;
-        b=VIqPoD0BbuTYlMzP0XpEph70/sEI7WohXaQ3QBVcx+l4TM+iBstvBhz8bo9BecBJiq
-         JVEMF5FrN6uIICvlotwzAYTclqhFs5ZzcKASlXZ+MTc7qaKbBROF/WLMEHuRl9LpK5Hg
-         vDhajGddTWbmpIBbetrtVBbwVYeazSicgsqU2OBPkFSJshDyb628LUo5mmnLoxIKMEYV
-         nU4FqFkGvHLZ3YaqaZCMLW31t5AYlN4Cju7+LyFy0175StN3qavvF9Lw3zNQ3iOLIekJ
-         Zjpbf3Y8hn0GGH/ynC3SymRMTX5wwvo0q8kq6mb/fXqFaJZaQJee8qtClcEPPrBK07uB
-         5rbA==
+        d=linaro.org; s=google; t=1743090411; x=1743695211; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tA2zJWv1o+75nzP8/krgasVJF7/Bs9xLeh0TRybxqLI=;
+        b=XO6E1K9KBKFAlkpvoa6b0HjQWU6bAXd8PE2o4jWs5h21l+Ayfus4yWTQYC0Tf23w/3
+         oZdXcrQBVP2Gznv5foI/iIsk0dvsWLRJk7k4ouCuVy7/MxLuOvjnEtcpUHx8t47JJgSE
+         iKdMXxQKJuXD/wul5EuiFJxBiqb0/KvDF0xN5wU1v3S0MKxjLlOz5gHcUDQYP5YqX6Ic
+         Q3O6ZsFT3e9lEI/KbdfDEEhDT+lE3ui27Q+VGwr+epSUva1m87kWp8QGqrH0tx3wpL8w
+         hTep97GrN9dw79lU/XvF0mlw4ffv/TBS9UTYAPKOFbXQrJ8GmXYHWfT7bPLyOZ3vJgLB
+         uquQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743090390; x=1743695190;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PQQUW8bK5R9MlNgxtL0YKOqY3x02XHrnTXiLJ6eKG7k=;
-        b=kbVVnZVrczXo41zPM3/s1jDEQL6gIjOebYwePwclufHAz7gfshkmip90oXUKqaOzxt
-         LtfT3x2OgAVMN/94a7ALwmgmC0esBU+ORaF+cTo9w/CGAUeJaLSflyvlHCc9K91xQWVK
-         odVHhLHcvt855S4iwQkYfiT7k3R8EavtceTrUWb++vmWNQq9VfD+toB4OBYYlrvfs6sm
-         K73wVVLUZsW42ICK36M90S6w/FP/BfOK5fC6VpSP0uSfH/hOnH1YYvBebrHYeIaLK1Xq
-         ntGSucoyHeVPsRqXT4zaqWx/EvlFxZ33Sbia6cGGMTp2hkpvWh8/ku2zIvWHf9LRYh8J
-         CuqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXJv+00EmubMB4oVA6e2o/bnsw+2ld6/U0xIwde6AqtLVEsHw+0UssbcARpVkNLyjF0lk+zSunsTsbkJ+k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxS+7QPzDbeA1OcVY7T2gMbKR+UXlaMnXT50N5NAugQWuAcdq0t
-	hCcUA4GV7aRr83ZQ04ciReVZmBdQ5uCYGH/rDH8x1uQbJuXs5TN5
-X-Gm-Gg: ASbGncuxBOtPHUhe8bj81OJsWcuoL6IlbVbMEoTfk47XLmUsP7lGYERpDJmJ4F96RKS
-	iptUNm84CQhIV6MQy+JK3Z7OvdBCCMXBBxG2rINuiV88aELraqA/r+3UhaXiBEwXFa4XsdpejQP
-	nR6QXjz5A/OU2ps3KZBbecKlcjyl5heCfQY11X0yKn/XY5a5R0+SR1IB726dtQp+R5QePdKiWb/
-	iORlu/l5Y3vlzQnqUz0kToKDY8MUpHHTUNZCGEIRFTc39qxlO94RNoSu8hdiO8EAhSBd5eNJGcW
-	4LGMc36PS5JgRCANMOi3o0PodODdV7Y3hjcR68GHKZg=
-X-Google-Smtp-Source: AGHT+IHaO9xmRxopCRW889cpe0jJDTdUuJh0juHndEGnPqSIhDKlZ2fOFs4qqYCG1EKaJY1JqKQK+Q==
-X-Received: by 2002:a05:690c:338a:b0:6fd:3153:2010 with SMTP id 00721157ae682-702374a9069mr10508677b3.7.1743090389603;
-        Thu, 27 Mar 2025 08:46:29 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:4::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7023a98a230sm355527b3.73.2025.03.27.08.46.28
+        d=1e100.net; s=20230601; t=1743090411; x=1743695211;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tA2zJWv1o+75nzP8/krgasVJF7/Bs9xLeh0TRybxqLI=;
+        b=HCyYC/qaKvHREMipNa7imfGUdpTrCTDCTwNwQswzYIe7ikRRGELngvOkHyvIy7UIJy
+         M05mxf6f3CC8TaEYqv6+ErEt5XdeyFShhfyf7A9PW/BlSFs7gmUBKXfq8yEkW0zOfFhe
+         m/WQK5QIcWSwL4lYVZ0wbt5KktMfCAu/danWgXegCSwvnAl8pgz4CVV3QnV0xxsiDi+l
+         TUchmGwxPWE76nIclzmxwRG/iYy4j2QNdfP8+UBkDowwh5MSCAet4RXwAuP8ue5WHJqu
+         7F4vs6jbxSZqomg7Xwjvb2l8shFOEvEpC9OAfTU32hA8ZP7e/7L4z0202ASjgZ8jMSdj
+         Duzg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJzYLdgZIRGSa/U9jmjYsWY4kzW36Ez0kBIkfToVXU8rMlHa+H1VcFPxPsPVp72n16WQGXMwZHneIbW44=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxt7gnYxp8iqoWFtnxCJFGUQxQmJ5fBW2Gdh6qAIZOcBUlaFhSv
+	3QtHFbtkKWbjDq2DsBgG8PX/kiXluaaFfoEi7zaIXp3ib4CYKwhY6bblDkZBsfo=
+X-Gm-Gg: ASbGncsUnhtZOFI6BhNeQ4T0zihJjUGtXW9bY6MVE51JQotbdF7a6XhpQy17slrWSW1
+	qMXQhue2wcmCbOAzeSO9/gYGfAVcKmk7/itwOMoF/ZODuDq81lQPjOxGPhRlO+lanmpYYB8mzlp
+	iBSRZQ4AOCe1Iw1yWxozfeQJtgZNboolqGQaly5b8eKMVxpHzVUmY5cnviwri6nFzgBrJWGcBqa
+	F/pqHfYKHhMkR0NCVnKekNmyJZSifdweuEnk5aj9oEyZ77r3Zyw1xuesuRYO8f5AscZ+Xmuf52A
+	RkXUp0gd37zg9g3Hpbq8yBP6I52PVeiATokhdWl2s/cenESzTgx9Ma1m/E9hTaYeH9c=
+X-Google-Smtp-Source: AGHT+IEQdOD49ykeAMjyB/w/AZwjJja6wbJrFyDzakLR4KdkXKrN6xLOpUaq5nSdkDLMVtpBUCPPHg==
+X-Received: by 2002:a05:600c:458e:b0:43c:e9d0:9ee5 with SMTP id 5b1f17b1804b1-43d84fc181emr43722905e9.18.1743090411433;
+        Thu, 27 Mar 2025 08:46:51 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:c7c:7213:c700:e992:6869:474c:a63f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82dedde6sm41768545e9.5.2025.03.27.08.46.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 08:46:29 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Oscar Salvador <osalvador@suse.de>
-Cc: lsf-pc@lists.linux-foundation.org,
-	linux-mm@kvack.org,
+        Thu, 27 Mar 2025 08:46:51 -0700 (PDT)
+From: Alexey Klimov <alexey.klimov@linaro.org>
+To: broonie@kernel.org,
+	srinivas.kandagatla@linaro.org,
+	linux-sound@vger.kernel.org
+Cc: lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	krzysztof.kozlowski@linaro.org,
+	pierre-louis.bossart@linux.dev,
+	vkoul@kernel.org,
+	linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	gourry@gourry.net,
-	ying.huang@linux.alibaba.com,
-	hyeonggon.yoo@sk.com,
-	honggyu.kim@sk.com,
-	kernel-team@meta.com
-Subject: Re: [LSF/MM/BPF TOPIC] Weighted interleave auto-tuning
-Date: Thu, 27 Mar 2025 08:46:26 -0700
-Message-ID: <20250327154627.3195329-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <Z-Uye2V-6Urz2IIA@localhost.localdomain>
-References: 
+	stable@vger.kernel.org,
+	dmitry.baryshkov@oss.qualcomm.com
+Subject: [PATCH] ASoC: qdsp6: q6asm-dai: fix q6asm_dai_compr_set_params error path
+Date: Thu, 27 Mar 2025 15:46:50 +0000
+Message-ID: <20250327154650.337404-1-alexey.klimov@linaro.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,44 +81,105 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Thu, 27 Mar 2025 12:11:55 +0100 Oscar Salvador <osalvador@suse.de> wrote:
+In case of attempts to compress playback something, for instance,
+when audio routing is not set up correctly, the audio DSP is left in
+inconsistent state because we are not doing the correct things in
+the error path of q6asm_dai_compr_set_params().
 
-> On Thu, Jan 09, 2025 at 01:50:48PM -0500, Joshua Hahn wrote:
-> > Hello everyone, I hope everyone has had a great start to 2025!
-> 
-> Hi Joshua,
-> 
-> as discussed in the LSFMM about how you can react to nodes becoming
-> memory{aware,less}, you can register a hotplug memory notifier, as
-> memory-tiering currently does.
-> 
-> The current use of the hotplug memory notifier by some consumers (e.g:
-> memory-tiering, slub, etc) is a bit suboptimal, as they only care about
-> nodes changing its memory state, yet they get notified for every
-> {online,offline}_pages operation.
-> 
-> I came up with [1]
-> 
-> I did not publish it yet upstream because I wanted to discuss it a bit
-> with David, but you can give it a try to see if it works for you.
-> But till it is upstream, you will have to use the hotplug memory
-> notifier.
+So, when routing is not set up and compress playback is attempted
+the following errors are present (simplified log):
 
-Hi Oscar,
+q6routing routing: Routing not setup for MultiMedia-1 Session
+q6asm-dai dais: Stream reg failed ret:-22
+q6asm-dai dais: ASoC error (-22): at snd_soc_component_compr_set_params()
+on 17300000.remoteproc:glink-edge:apr:service@7:dais
 
-This is great, thank you for taking a look at this. I'll also do some
-experimenting on my end and let you know with any results that I see from
-my end, using weighted interleave.
+After setting the correct routing the compress playback will always fail:
 
-In the meantime yes -- I think the hotplug memory notifier should do the
-trick. Thank you again, have a great day!
-Joshua
+q6asm-dai dais: cmd = 0x10db3 returned error = 0x9
+q6asm-dai dais: DSP returned error[9]
+q6asm-dai dais: q6asm_open_write failed
+q6asm-dai dais: ASoC error (-22): at snd_soc_component_compr_set_params()
+on 17300000.remoteproc:glink-edge:apr:service@7:dais
+
+0x9 here means "Operation is already processed". The CMD_OPEN here was
+sent the second time hence DSP responds that it was already done.
+
+Turns out the CMD_CLOSE should be sent after the q6asm_open_write()
+succeeded but something failed after that, for instance, routing
+setup.
+
+Fix this by slightly reworking the error path in
+q6asm_dai_compr_set_params().
+
+Tested on QRB5165 RB5 and SDM845 RB3 boards.
+
+Cc: stable@vger.kernel.org
+Fixes: 5b39363e54cc ("ASoC: q6asm-dai: prepare set params to accept profile change")
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+---
+ sound/soc/qcom/qdsp6/q6asm-dai.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
+
+diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
+index 045100c94352..a400c9a31fea 100644
+--- a/sound/soc/qcom/qdsp6/q6asm-dai.c
++++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
+@@ -892,9 +892,7 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
  
-> [1] https://github.com/leberus/linux.git numa-node-notifier 
-> 
-> -- 
-> Oscar Salvador
-> SUSE Labs
-
-Sent using hkml (https://github.com/sjp38/hackermail)
+ 		if (ret < 0) {
+ 			dev_err(dev, "q6asm_open_write failed\n");
+-			q6asm_audio_client_free(prtd->audio_client);
+-			prtd->audio_client = NULL;
+-			return ret;
++			goto open_err;
+ 		}
+ 	}
+ 
+@@ -903,7 +901,7 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
+ 			      prtd->session_id, dir);
+ 	if (ret) {
+ 		dev_err(dev, "Stream reg failed ret:%d\n", ret);
+-		return ret;
++		goto q6_err;
+ 	}
+ 
+ 	ret = __q6asm_dai_compr_set_codec_params(component, stream,
+@@ -911,7 +909,7 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
+ 						 prtd->stream_id);
+ 	if (ret) {
+ 		dev_err(dev, "codec param setup failed ret:%d\n", ret);
+-		return ret;
++		goto q6_err;
+ 	}
+ 
+ 	ret = q6asm_map_memory_regions(dir, prtd->audio_client, prtd->phys,
+@@ -920,12 +918,21 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
+ 
+ 	if (ret < 0) {
+ 		dev_err(dev, "Buffer Mapping failed ret:%d\n", ret);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto q6_err;
+ 	}
+ 
+ 	prtd->state = Q6ASM_STREAM_RUNNING;
+ 
+ 	return 0;
++
++q6_err:
++	q6asm_cmd(prtd->audio_client, prtd->stream_id, CMD_CLOSE);
++
++open_err:
++	q6asm_audio_client_free(prtd->audio_client);
++	prtd->audio_client = NULL;
++	return ret;
+ }
+ 
+ static int q6asm_dai_compr_set_metadata(struct snd_soc_component *component,
+-- 
+2.47.2
 
