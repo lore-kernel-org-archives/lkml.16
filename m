@@ -1,101 +1,196 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2051.outbound.protection.outlook.com [40.107.243.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423571C6BE
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 17:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743095716; cv=none; b=ghw9uRWydiasUBhd00Xl+b5+he3xb8qMFkv5yBUrB/5Apjk9WFJUcm0JkT4X5p9+fxM25rFiQlgQbwc5YHo2QTbv32CdGpE59tPclTozDNihCBNhzjdqZcKEjDPN1azLs2cO6i1ESPVb6NFkN7J3kZePkxGQHNUIyLGX4i+1rMQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743095716; c=relaxed/simple;
-	bh=XaxcQXpPxWph3tPLDdKeyJZT3+t/ezOqoO9iEb5MYJQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=V5Dt7zzmItkRGXc18vlNzqb59EEUxkqGAaDY4IsibCPTuQoMU5mXT7FjgOtc07G808Dg0hae/qDkWblQrnhC8GCek8PCKGC2nnlCVxLBUuMnIJ/ttYO9YWCdMF//bNvp2/W9tkO/2iWw3yvU7XoIEpdFFRwDqnVVTB89gKyabII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4cNmFeCk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w3QRts2A; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5616B215057
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 17:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743095719; cv=fail; b=o7nXEZnncNTy8gk8P5Yq1xrp1pw+gh9bBROIwtYVIwy46PQ8Tn4Sxgc1TMKk6qU+RDZ3e80VLTI9l1N5jRVlrhrHx57BUDm2IWWKSCB1r+89aXWD+kOHNX/kuyJ9TB/vP0IfAtXl+AwZ4rzF7VxuelhSyABgapKqGDc9D3keQcw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743095719; c=relaxed/simple;
+	bh=+uW1B9rH17e6D/elGScePo3dZCQ30wFcxBG4hMFUS9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=PzBijnN8H0Co+ftyNzj3tjFW+qacbqYJR4A/qFcx0hz+thz8gJ8NdXSkyIvJq+I2C2HGJmaKb4esHMshzfv06NSRpDjHYhdIvQBGtIr8AUu4NsUec+5iMt8jQBxRvddV3mhYXofCl0mPWSsiuJeQpIyX97WPcxVh2aNh1gLYCjY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CNVa1wNz; arc=fail smtp.client-ip=40.107.243.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4cNmFeCk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w3QRts2A"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1743095707;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DJDk75Im6ervBBRjq6fKnSLFVU+dlDo/KKEKEkr7Auk=;
-	b=4cNmFeCkW2iZ8ZUEGQivwsJp+uCH9mMA0h4rC/EuafqSzgZ8gzhMm8jbLncWzaQWq1d02u
-	SC1wZsp5muYbgjWtyHKvVsRzCdKv2qs3pAzyzWiTeMjRLRjzRI/lvM3oEt9SCnx8NztgHX
-	/iXUrK6Zif/RHo7GZyMyjFEoHDotTl26zPcd0YEUeSYDl5IqD7MtoQG8v3tpzZm8+Ma78Z
-	jfhwF29LIHnaYVT+yd0jZHa0KIdQQ6EnixIbmoHzKVTpVqQboimheYKNAAQSE5ougFq0s9
-	ElqN2WDA5y7+4zFNOV8zWPjzJRAxajmtNk7jxSGNMCY0zYWfglxE2FoHO6fuGg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1743095707;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DJDk75Im6ervBBRjq6fKnSLFVU+dlDo/KKEKEkr7Auk=;
-	b=w3QRts2ASOC8iwk9se3XLKqDsMDTioEv833GA9oFFKlGqZOsFzbBs6gnRzVJoTOrDV9Xwc
-	7WrduEYRd817nbAQ==
-To: Fernando Fernandez Mancera <ffmancera@riseup.net>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: dwmw@amazon.co.uk, mhkelley@outlook.com, mingo@kernel.org, Fernando
- Fernandez Mancera <ffmancera@riseup.net>
-Subject: Re: [PATCH v2] x86/i8253: fix possible deadlock when turning off
- the PIT
-In-Reply-To: <20250327152258.3097-1-ffmancera@riseup.net>
-References: <20250327152258.3097-1-ffmancera@riseup.net>
-Date: Thu, 27 Mar 2025 18:15:05 +0100
-Message-ID: <87ecyixuna.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CNVa1wNz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CxpBru6kEpjpdpwilUc4/ZxSvl1OrRpmAIOA4B9FEuvByv/KOxiRFbhnZmDvIGFsrRn5FAIXXAh5IuiSqCSHbYSxL4rLgN1pOtHn5y2Qu03M4e7i6U7yi03wbQvXl9nQsGYvaOVCvPX7hX/tpufTQkmoovxzcIUuW07ykEyrgc+FvWgcB7xVY3bxMP5YUeP9GbmdgUC9qntGASoTNaZyCbBEBmQL/hFM5mt0ZVXljklwauyWqUlIQQuLcp+Q5YqXqQbBNTiCfM0Uqbo+X8T2V1nl0B0jEFJlNxYXTQydRFtDF56h5iSD7Zt+ONt/ePXiqAKjFH1Na0vflIRrAHuhVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=X/x9DkrIF6EluTF12rZksfbffhd05zBpbM1ThDNAdRQ=;
+ b=Wl9hgJvg/UdXlAcyEJ67LL9K2R30OEP+aBsP/6dG5OXnE5uF9v87UF9lPu2h9Ly09bDDB0BY1nB8sEFybbfTPVw0iSXrqnTaGAxThxVIK/sdJW+dN9uIzEOPzU6fomW9WoKHiuwIDNwISmu3ZhW/6lzs6k27utsTIeoO3yAlmliRsSM8FTrsX1M7IpvaiPHKXz9NyxlJRTr8nq6I76RcCJN/Tb0vRg7ObqwJR7x/mlTSpivpB7z3UkJiR/f/pQNwf7JZ3mpjdJgOdDlT14jxaFx6en52Yr3hE4tg7oW0mNAnr3ZM9ckM85S/epZ6HJV/1HYh/uoJCaCbNorTybPpbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X/x9DkrIF6EluTF12rZksfbffhd05zBpbM1ThDNAdRQ=;
+ b=CNVa1wNzqg0jEhD3WjlRhj5VQVqkkqpmghsjAEENx8zCFDTty/bq1aycAF9CeefE+itL/Q7PD2O0YJczf3Gdiw4K8jDjGQROwaKu4ppSeRf/m5FWlEM38tUc7UGtRJdxyDAiBC8Y67EmDXLqZXUVS6sq9WKpKN8KzPADhAMXjWsPrPeOBM/u8o6gaBgyY4eoO3DPJlb5w+jb9rwV3JEeuolGT4FOshiJjsRznOgw4lCgYRFLHOstikXDoN2FfZBcLK5ZPp61eo626Tl1FUmd0FyXJxNLq5RBtm5CE9fFymyQ8QvKw6Xru1zi4I1jxMIGQgTeqwRMOF0l4FM27Lafdw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM4PR12MB6424.namprd12.prod.outlook.com (2603:10b6:8:be::16) by
+ IA1PR12MB7591.namprd12.prod.outlook.com (2603:10b6:208:429::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.44; Thu, 27 Mar 2025 17:15:15 +0000
+Received: from DM4PR12MB6424.namprd12.prod.outlook.com
+ ([fe80::8133:5fd9:ff45:d793]) by DM4PR12MB6424.namprd12.prod.outlook.com
+ ([fe80::8133:5fd9:ff45:d793%7]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
+ 17:15:14 +0000
+Date: Thu, 27 Mar 2025 18:15:09 +0100
+From: Andrea Righi <arighi@nvidia.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched_ext: Fix missing rq lock in scx_bpf_cpuperf_set()
+Message-ID: <Z-WHnYrNHHYx3lpa@gpd3>
+References: <20250325140021.73570-1-arighi@nvidia.com>
+ <Z-SasIwx5hINm1sf@slm.duckdns.org>
+ <Z-UEkJfkkBBKqCyU@gpd3>
+ <Z-UgI3dSwcLa-CRC@gpd3>
+ <Z-WGRetAL9tSPEkv@slm.duckdns.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-WGRetAL9tSPEkv@slm.duckdns.org>
+X-ClientProxiedBy: MI2P293CA0015.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:45::9) To DM4PR12MB6424.namprd12.prod.outlook.com
+ (2603:10b6:8:be::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6424:EE_|IA1PR12MB7591:EE_
+X-MS-Office365-Filtering-Correlation-Id: 33d2ff0b-65f4-4a1e-4e46-08dd6d52f057
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?NwqvLT/77SJnE8StjfiUOPGeICDId3DhhOXQ8DELoblsuRPdRRAw+anGItWw?=
+ =?us-ascii?Q?nGZ1mMP7FuLTwGiss0Y+AqxOydIlR+VZWZdSIvo/AqEblu7OFK9XuqfufNV9?=
+ =?us-ascii?Q?q9BxDSEKl3VMZKBubWZTFvUinr1BPmvZLpeO5NDUKM8vthPmfaPGty7koqmB?=
+ =?us-ascii?Q?R7U1vZ8fYB57VTjTjKd4BeciaIiuPUpMwQpEOaMDHYcYERpbKGuU5491xnDo?=
+ =?us-ascii?Q?weD6WsbqlrFCsi6aRsIf0vhjVJIT4NChNUSPkwIa6SpttR3ZEd8WMP2HKmay?=
+ =?us-ascii?Q?ClVI5Nej4d+yrY5/V+GAultImeaP/iZuA75yCmucxv+pzruxepqs2h+8xToM?=
+ =?us-ascii?Q?BD5dYUnH2Tg6YINGlNr1ydAXQFsf72aKbMWJ2P5rnCXrxKPNozWRV+Naxzo5?=
+ =?us-ascii?Q?mtbqjc37E4NR0L4GHNqNrKXX9B+PJ0IMbhnYlBIAqV+//M6DnuP0xju0kHKY?=
+ =?us-ascii?Q?Z+rBtnSUdurK4D0AAtpNviHqW0uUzRl+2RUNvrqBBV8P98FO0sT4MaH5YlSq?=
+ =?us-ascii?Q?lV4Rx2mVv1Iptp9lLnfC1whU+13q2+bS6mywDa3vANpTDmNvlTv5y7fG8iC1?=
+ =?us-ascii?Q?/nQUwQZAar+l48R1wBFjuBwWb7t+HYL9/5FpPr2BAjjGoCMd+ZAgGJ/xdH1a?=
+ =?us-ascii?Q?Feje0b92Rfd1TXBGM/24HVi0NZHwKcXUzz/PP9FoWrNZIQKxb8IWGDZFVAri?=
+ =?us-ascii?Q?GIbu1SYLzjlU9lp28YYj1H2BdWUdYPdVQJ3MNL5PrmuKJxwbIKOYj3cTEyBC?=
+ =?us-ascii?Q?Ru2N2SZghXOfSsXbBXcOeamEAktWS+fhUCgNIYUnVzeeG6+Vz6ZFfvWrWWqS?=
+ =?us-ascii?Q?dnkC96UB6h1gkQUGS3sVVE9X0jkAVyFbPx5zqjSKfx7+saCMvza7u61XAybd?=
+ =?us-ascii?Q?SUa2rPLtzvDcW1W3Z88tGixDylyM6WfC6dQ6gK88LmnRxP/5YHRu6vPAql5g?=
+ =?us-ascii?Q?yX2KqM+2Ygrau5c641vmwhVk5LoDUkJ3QSu7l2N3GFTzsAr5XkLMMHrBxrYZ?=
+ =?us-ascii?Q?a5jBty5bRUTOGI53Hg/ySaL6uzRVZSpGZiOkutuXVjVq/x2RMkGp9aTy1KKQ?=
+ =?us-ascii?Q?Xp7FqwT7lQ8LWq90rQUWK+DPND+hHtmzzjlpqboasA0i4oGrTqkqpS3RCTGI?=
+ =?us-ascii?Q?YxnoRB8ZZ9cc+zk6ritE5OVs+ahu1DPzwcYCVCwkHba62mTjVDfsUe1RrYJB?=
+ =?us-ascii?Q?cDO5eBP86Frk7Ahx6zA+JeHLySC3EsRyx+Kh+OCI3AM6GrPMU5hNofOUGnrx?=
+ =?us-ascii?Q?P02ih+43yI7SZpWw+/a6E7J4AFab7uD6CpOhUzWKpy6B8dPhtvKuBzUmp1LP?=
+ =?us-ascii?Q?gOxSFEAiIJbYk0aKx5OW1U9gfLGZvwdKkRb71JTnTldrId36SxQvhMcN7okU?=
+ =?us-ascii?Q?hcsYK5GTGREX2lNg1hMpt35cLxZN?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6424.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?eaJAfddBNRwzbhZlvg3jtQhf1uSeI8RKYFbwyFmlOEBicZhKP5pLT+tDrBw0?=
+ =?us-ascii?Q?a73FWVM0hKcQSVGnqzrXoutQ4hXzV6Jnnsmtrrewo6rftF8NYULUQU4btrZJ?=
+ =?us-ascii?Q?myoxr07ebp878kd6no+/TGXOkKoLmsRKjLIeMw2YO/1Rbr+csgh108WjSEzz?=
+ =?us-ascii?Q?TzqQ3gsQw/YH+qHH6sDrnD3AsZ/GfCsqRfbJPZ9P87ifmROp8Y2/jjGU5kjz?=
+ =?us-ascii?Q?dKD8y/sVAbnLxaemd4nR+wg6Czdm9L1haAlOwoQ0yvAtU92PQQhzRhm6OBwo?=
+ =?us-ascii?Q?jvUKqBAV4SnnNeilOsWmdOdO2YJD3KA7PnUV1D4SaJ9q12YXha/vTb8mLKRa?=
+ =?us-ascii?Q?OBboegMzizjQqd0zQRfNsg2d9Gs/H4SFIg0knLNddECCz/gC59ewrYqqI4Km?=
+ =?us-ascii?Q?yaU8/Qqd1ETx1pYNSoQzss//b5QQZIpqOJakSbA30nSaoCwN/pHkcvKaUZXd?=
+ =?us-ascii?Q?0thuQwM1bXqaG95hpTOxVYg78l8caX1F5tCc1UIJYgyGowys0H5crqAwiVQk?=
+ =?us-ascii?Q?FLWoKmtBxe1gA/Bz1e2Tsgm5kRw7xT6W/JGbczsY2yIYFmXct8h0qX3uAIK+?=
+ =?us-ascii?Q?9bug3K06KXM///OGiXpPOakMUoOywN/17jMO0tL2UBUxX13rZzl4WhFnUIuL?=
+ =?us-ascii?Q?BA1qQJwUe9G0/KAQadNAazBPShg3ceF39iLjCfPSOr3qrP+oqhUbL45h15Yj?=
+ =?us-ascii?Q?0c1hXrxz9FFz0Oqmgz+oy4TU5jFy98clKa6uxKrHWd8DQh3dsIsqjawoCbWs?=
+ =?us-ascii?Q?IT2w4mm0ujRI4oeSPPB6kTv7lOK3Xhv9ijMnQrIxSr8eOY95XLeFk8sdNXUa?=
+ =?us-ascii?Q?+DaPhU1to9Ioc0j1hX1lv/btluiCT9FJHO1Y/5YK+xx3lLpJam5s9tOiPm1S?=
+ =?us-ascii?Q?+UW5hkDGw2GXMi1USyqV7y1Jx/5tSXEsnuApv6Ykv/2j2tVhS1yS9r+8SYIO?=
+ =?us-ascii?Q?SYWoS1pLupImBOpcIWtkeRdTAs3C+IElVKEPWJteYN0GEIWpk1KhWzowPS5m?=
+ =?us-ascii?Q?ACtX54+VtbcFbfMdAEwCvbq8ueAO4dDMvxMZfS88ziz4SyQvzLIs2MkT+eQD?=
+ =?us-ascii?Q?kzD6/uP15+ZlKZ6qAS4NROM8LPLUSYVUPk2wADdVYPZrdcuaLmO/WSVmvd5v?=
+ =?us-ascii?Q?JhWmMChDKP9X2rIf8Mi8Qr2XMEzHBri/XZvJF0rxmMpjf453G1sQdguvmgbf?=
+ =?us-ascii?Q?gAizUj2RR7vvDkx1NcZtf3hHktxWgKBEiqwIHU6mTNku9urTsWexMrJulODW?=
+ =?us-ascii?Q?YIQhT/y+42J1WQblJQy1UOzxuuXdGEpw/Uq+EBrTzkPMEmMdKT65mR22lh7s?=
+ =?us-ascii?Q?DTQV0RsKbWvXtHze8X9gHpRIVR9VZxiP2ZeigU6ziihpM5/Dqem1VIX5XdQX?=
+ =?us-ascii?Q?WXc8xkAWmkGV27GC7+R/uVrsj3a/8GMLcxne3E3woHhnOmVnAQRupR0cweBL?=
+ =?us-ascii?Q?da30JPZDmSYqSMZEqkIHz3ZUjwTaQH9CFjDanRKxcXGA/VLw7UT3EeRHlr24?=
+ =?us-ascii?Q?nhfkK3gLWa2C2fBqqtftXnboX6LJtCt2bit9V/cimcEEsr1MDCcDaED9pJWl?=
+ =?us-ascii?Q?/6dR3erBmXsnUZj718i5UbVla3RiKG64gzq88hAF?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33d2ff0b-65f4-4a1e-4e46-08dd6d52f057
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6424.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 17:15:14.6528
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: M4b0xCUOdIkBXhXsEMpykqpaOOLmKfWqORzhO1CKahpZGfR5O1ie/SiPcJ4q+VpBDcplbNpPZtULKXsFHNFN7w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7591
 
-On Thu, Mar 27 2025 at 16:22, Fernando Fernandez Mancera wrote:
-> As the PIT could be disabled during the init, it can possibly cause a
-> deadlock. hpet_time_init()->pit_timer_init() is called without IRQ off.
-> It assumes that clockevent_i8253_disable() is IRQ-safe, which it isn't.
+On Thu, Mar 27, 2025 at 07:09:25AM -1000, Tejun Heo wrote:
+> Hello,
+> 
+> On Thu, Mar 27, 2025 at 10:53:39AM +0100, Andrea Righi wrote:
+> ...
+> > > Hm... that's right, it looks like this requires a bit more work than
+> > > expected, but saving the currently locked rq might be helpful also for
+> > > other kfuncs, I'll take a look at this.
+> > 
+> > What if we lock the rq in the scx_kf_allowed_if_unlocked() case, and for
+> > all the other cases we ignore locking if rq == this_rq(). If we need to
+> > operate on a different rq than the current one we could either defer the
+> > work or just trigger an ops error. Something like:
+> > 
+> > 	if (scx_kf_allowed_if_unlocked()) {
+> > 		rq_lock_irqsave(rq, &rf);
+> > 		update_rq_clock(rq);
+> > 	} else if (rq != this_rq()) {
+> > 		// defer work or ops error
+> > 		return;
+> > 	}
+> > 
+> > 	lockdep_assert_rq_held(rq);
+> > 	rq->scx.cpuperf_target = perf;
+> > 	cpufreq_update_util(rq, 0);
+> > 
+> > 	if (scx_kf_allowed_if_unlocked())
+> > 		rq_unlock_irqrestore(rq, &rf);
+> > 
+> > AFAICS all the current scx schedulers call scx_bpf_cpuperf_set() from
+> > ops.running(), ops.tick() or ops.init(), so even with the ops error we
+> > should cover all the existent cases.
+> > 
+> > The only unsupported scenario is calling scx_bpf_cpuperf_set() from
+> > ops.enqueue() / ops.select_cpu(), but maybe we could add the deferred work
+> > later to handle that if needed.
+> 
+> balance_one() can be called from a sibling CPU when core sched is enabled,
+> so ttwu isn't the only path where this_rq() test wouldn't work. Even if we
+> plug all the existing holes and make it work, it feels a bit too fragile to
+> me. It's something which can easily break inadvertently and cause subtle
+> failures.
+> 
+> If we don't want to do locked rq tracking, we can always use
+> schedule_deferred() when any rq is locked too. That's a bit more expensive
+> tho.
 
-It assumes nothing and all the missing interrupt disable is causing is a
-lockdep false positive.
+Yeah, I'm a bit worried that locked rq tracking might introduce overhead to
+all the scx callbacks, just to address this issue.
 
-Lockdep complains correctly due to the observed contexts, but in reality
-there is no possible deadlock at all. Definitely not the one your
-subject line is claiming to be possible.
+Perhaps schedule_deferred() is a reasonable compromise and we can limit the
+overhead just to scx_bpf_cpuperf_set().
 
-At the point where pit_timer_init() is invoked there is no other usage
-of 8253_lock possible because the system is still in the very early boot
-stage.
-
-So disabling interrupt here just prevents lockdep triggering a false
-positive and not more.
-
-Please analyze problems properly instead of assuming that the lockdep
-splat is the ultimate truth.
-
->  bool __init pit_timer_init(void)
->  {
-> +	unsigned long flags;
-> +
->  	if (!use_pit()) {
->  		/*
->  		 * Don't just ignore the PIT. Ensure it's stopped, because
->  		 * VMMs otherwise steal CPU time just to pointlessly waggle
->  		 * the (masked) IRQ.
->  		 */
-> +		local_irq_save(flags);
-
-Why save()? You just established that interrupts are enabled here, so
-this really wants to be:
-
-                scoped_guard(irq)()
-	              	clockevent_i8253_disable();
-  		return false;
-
-Thanks,
-
-        tglx
+-Andrea
