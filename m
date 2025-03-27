@@ -1,86 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A961C28E;
-	Thu, 27 Mar 2025 06:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A141A9B4F
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 06:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743056833; cv=none; b=EGz0slOwrwEZGj61/4PGvPpo7C8OYc/eqfR9Pk0wov9qyEoyAP+tlYKgZVRH9aZiQIhagfZ6bnxqKnSYvcy6jJzySB96tjVbn2cISzQq0vAM/JdhOGLYC73Ds3hrUdu7AFX3ZaKswvkJsEbnLmu7on6LKdtrwo3pktWD2mvMyos=
+	t=1743056861; cv=none; b=EnIqCU+y4wYc5C/Mg+hRciMYco5Kit0vpDqjLzGVVk+Af3LwPc8qtd2a8Q+BTNY80Raxm5QPU2el7IuQOtAas4AqrjbY2ybNz6vOzocmNKFjRKU9IawhMt2tQrIUmshRSFIGZjiYH11b/80FRoORTyo+jlLCOUgnbcIBAiOQD+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743056833; c=relaxed/simple;
-	bh=4iPqEownfZun9ocmKKi7zJNNMBSkFzM3sXB70zz1tZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J7JNKh2a63k1l5e36qki0B7FB0x/9JIad8MFDo3nfzyCzX5McAwcYLagwX54VE9oe0tB3RaYIlAJ90KlgR6XtIS1Tp34/LBcQXlr8kS84PTzpSW+WuCmQVlEgWDGMUQv1jkKIeBfmcLAvcm3/JLY8bSGosYnCQaA3pz5AmqBRKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=URV7Mfnn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743056861; c=relaxed/simple;
+	bh=vNB55LLHsIzewlg4O3Bpq6Hpru+HJpGh5yavNpxEX24=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V2+5kSGg3IumoQ36mXX3wCaQa3YJKZ+pv02Bd9tA9Xq6+09LXpoS1YX0NwkqOH3Hhy7AR+p/b8d0O5wDp9H2MH0aayh25jXqw9KkeJaMsd//lwZZe9xtnoHxXglhHpYxnW8WvpHrQgveuWTC6M+bDgw3YFGTYcvNl3gcgkyOHZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Slx1x+X7; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="URV7Mfnn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 692B5C4CEDD;
-	Thu, 27 Mar 2025 06:27:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743056832;
-	bh=4iPqEownfZun9ocmKKi7zJNNMBSkFzM3sXB70zz1tZI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=URV7MfnnZzVHzSrp0kSrrCX6GPwXwD0EWstUg5P6qBX6z1XMJaP6lPkc9AWGqlvdp
-	 yOAASaFJGs3LRFmMaXCKfr+81CQ3lmMBwW2TBHoRIG0+jotmQdRzSiVCA58JiXEsuQ
-	 opGVa2V6euM0QxifGfbPVU7VZK7atR01mQ3xoZvNfhZvqoBYcewTF4NIGKTE4Cnu+P
-	 4Mt59FbxeKy3PAUS1eRuNx5Orgj7jzqXkrkEOoOztljzfV0r6xoWowhNKaPViMCifT
-	 YzL89HG4cOJMmkUKca5ZXTOkX4MrCtZ+pPtz6Sb7C5ruYd+swgLAGmCP08FV5U3u89
-	 kYBq0g8iH2VkQ==
-Date: Thu, 27 Mar 2025 06:27:09 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Lukasz Majczak <lma@chromium.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Benson Leung <bleung@chromium.org>, chrome-platform@lists.linux.dev,
-	linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] watchdog: cros-ec: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <Z-TvvUsB0eK2p8YJ@google.com>
-References: <Z-SBITmMfwjocYwL@kspp>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Slx1x+X7"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3011737dda0so726416a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Mar 2025 23:27:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743056859; x=1743661659; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=vNB55LLHsIzewlg4O3Bpq6Hpru+HJpGh5yavNpxEX24=;
+        b=Slx1x+X77vv+lBm/QSo/JzDCg5zL3cE+6cCBpC5Bc8vE4vLaS8UZxH/mGc5tkh7PHD
+         u8OaFfYX9eRqGiffN9GCxXgfXv3AUdb6YhuceWvYWMWAfUt6nKLoOAiAHzF5ZlxT845B
+         qwnwdrqf8oL+k+bliBKFqj3oxl2rynksEqTdl6Px2APq5Et5xjnLFHHFO4XU1QnJRXQ2
+         Y5GJie3APj8wN8RVlAeO4TRALaqhGjrUS1LA8UknXJ9RnOlTexp+YPIuOHpXEiqCyJlV
+         7yubMZZX1d24EaVRZlQ+ZKl+7EVD3maOJobMB+YDq7kRunvauKf8rfQxALyKVJul8zsf
+         z2vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743056859; x=1743661659;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vNB55LLHsIzewlg4O3Bpq6Hpru+HJpGh5yavNpxEX24=;
+        b=T2v7M+m96qcnxhQiTMoyqQJvIyxehFwKE53nQz9ShADJYwpV4zIVTWPdVj4TyaxkUW
+         EsTvhH0A14cKCVJE353whnsHROWUQkTPwxE9iOeYykmJYzrXGiRmnpUnnE1BWKGx6HNz
+         TYpVwG1dhvK7cI5jQS14J5QaxkLThFv4YnWH1pv7iOF5oKVtOIcbnA0xL0WPC2frTErv
+         Q7fvzZ5sdP9e7SL9qH6owL4GCa9CBDz4oXYXCSxF5p0ajYGQ9Wpvbaudyy6LPc5L5ttA
+         3KstBXrgcwjnqnw4PeA4+QdhHfBKcm3xGYyCLyKIPyydpl5ggBEBsYQLuqqelgyCMBHQ
+         W5Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCX/puN+OceMXsjXdfCuUZZ4Wt9bptXyyZ55YXyAmE6D7OXPuV2NSReHrXwJaxYdIoPMCUb58n9/p6gKVD0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbFm5fIfUnHcgSAz2bdUidJrNEV4p0V8TwFq0GqVnPIDOyiDc3
+	27LP7KfMj3v999BzB6HAvf78H7zfmYnFCWdEGA9NwrLOQdohVLbTQ0wfvv/rB9T8Ixqju7zEbOk
+	NbsyuSq+HBg5X/NcUFSZu+0mCleT1bipcAIKg
+X-Gm-Gg: ASbGncuiFgH/J9yf9nC5r5Q+2FCr2TAqt+vbpyI7Remtf7GyMsgkBoSw/eIjXbJDSoe
+	wVT9tl1RvyXmJ4hdJOTQaDMid6dXYDeXnCkOJ2AT2ZcwIHANobc+gHUw43cdCkWVmlvLi9kRZal
+	k6ZIXB9UEXBO3STk4Qyu1Ag+M63AqSZjpElrCcvWzogrdYxx0XgwWPs17Y
+X-Google-Smtp-Source: AGHT+IFt7Uet3UwCNOAH8meYB2W9ViJLDi7wcmCNPw9mSbfJ0sSbyamjROCSnSFkmO0FUw183zFiWc7Rnl9Qc4okr5s=
+X-Received: by 2002:a17:90b:354e:b0:304:ec28:4437 with SMTP id
+ 98e67ed59e1d1-304ec284935mr218399a91.22.1743056858259; Wed, 26 Mar 2025
+ 23:27:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-SBITmMfwjocYwL@kspp>
+References: <20250319005141.312805-1-quic_wcheng@quicinc.com> <20250319005141.312805-2-quic_wcheng@quicinc.com>
+In-Reply-To: <20250319005141.312805-2-quic_wcheng@quicinc.com>
+From: Puma Hsu <pumahsu@google.com>
+Date: Thu, 27 Mar 2025 14:27:00 +0800
+X-Gm-Features: AQ5f1JoUEAB76GccOuQU5OR51PoZ29U3C8QHFwNl_oTL2dvwjiuuxHuLDi3FutQ
+Message-ID: <CAGCq0LZoi0MOJLJYUeQJW6EfOU_Ch=v1Sg8L4_B-KhdDCx1fCw@mail.gmail.com>
+Subject: Re: [PATCH v36 01/31] xhci: sideband: add initial api to register a
+ secondary interrupter entity
+To: Wesley Cheng <quic_wcheng@quicinc.com>
+Cc: srinivas.kandagatla@linaro.org, mathias.nyman@intel.com, perex@perex.cz, 
+	conor+dt@kernel.org, dmitry.torokhov@gmail.com, corbet@lwn.net, 
+	broonie@kernel.org, lgirdwood@gmail.com, krzk+dt@kernel.org, 
+	pierre-louis.bossart@linux.intel.com, Thinh.Nguyen@synopsys.com, 
+	tiwai@suse.com, robh@kernel.org, gregkh@linuxfoundation.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-sound@vger.kernel.org, linux-input@vger.kernel.org, 
+	linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, Mathias Nyman <mathias.nyman@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 26, 2025 at 04:35:13PM -0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
-> 
-> So, with these changes, fix the following warning:
-> 
-> rivers/watchdog/cros_ec_wdt.c:29:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
- ^
- d truncated.
+Hi,
 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-With minor comments,
-Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
-
-> +	DEFINE_RAW_FLEX(struct cros_ec_command, buf, data,
-> +			sizeof(union cros_ec_wdt_data));
-
-s/buf/msg/g makes much sense.
-
-> +	((union cros_ec_wdt_data *)buf->data)->req = arg->req;
-
-Or,
-*(struct ec_params_hang_detect *)buf->data = arg->req;
-
-> -	arg->resp = buf.data.resp;
-> +	arg->resp = ((union cros_ec_wdt_data *)buf->data)->resp;
-
-Or,
-arg->resp = *(struct ec_response_hang_detect *)buf->data;
+We have implemented and verified the USB audio offloading feature with
+the xhci sideband driver on our Google Pixel products. We would
+appreciate it if this solution can be accepted. Thank you all for the
+work!
