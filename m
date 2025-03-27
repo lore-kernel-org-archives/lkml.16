@@ -1,197 +1,252 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6D41C8634
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 17:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0250219A75
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 17:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743096582; cv=none; b=LF0+b7/9gzMXLhELkolSwxuwEZ8uF6Xe6sfZGW6enV+lj/1nJqC15HGhj+EfgelQbsgbvOQiDsTH8jwFRPqyR3iCWEPc+/qOpCAR8gHz/zwZe+lS6i4y3p8nW7RYOdUjTi3BUbW0LDmLClE9N/mQFBUSM6R7FRmgFB+WlMpd+9s=
+	t=1743096608; cv=none; b=rbLkBRPly3n874fRiL0yl7+t/7wSBgziwGU5d3zf5NFdeRb0EEVh7zmHgp2EpVAcSkeiT7kC8RAWjHL5Uzozo/Hwezgx2S6yVbO2Isnx5TACQrWEBlXfFR/7LTHCRUlGY7603TATsLH0K//TGZS+weXBbGEbRFR4GsQwKUz4x7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743096582; c=relaxed/simple;
-	bh=OZOUMn7eWVEe+quoJzHzusizR9zi54OhgtUY1wqnIkE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dGLlgbY3JS48iS2VvUC4wWnR29ruBWGJpGmXrQcX2Qq798J+xdhRUiaFLe3jZHPag9K6OlwkifibkYSfZp0X4JIvt0PBThNejSq1DfZxmZrUDCR3P/gKrcCLmw3haB5dsuAWI3PH++5ErB0MsLeqaHSqPtIffcrhGetmgTOtesU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zGykoCHF; arc=none smtp.client-ip=209.85.214.170
+	s=arc-20240116; t=1743096608; c=relaxed/simple;
+	bh=K66Q38Lz90Nt3j6FO+oeTnlxzaJOsNINcLtmcpY+h10=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b8n9EBCveZNrsBGdLJS8lcCiqyQ5fxdcfUR8i9skFM4+0VO0VMDXNMjhFA5AZdtTNXf/ezKGM91UAZviL/cyIc9+yLidN7MtFs7VBmqFXd0FuCagU2xYyVk6c89MqwRBWxNZnBMDpNCVHcp//wr6+HjJv9Rdg0H9Sxz1vVtS59E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mowR3tC+; arc=none smtp.client-ip=209.85.221.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zGykoCHF"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-224341bbc1dso27427555ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:29:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mowR3tC+"
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5259327a93bso553156e0c.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:30:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743096579; x=1743701379; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xUAnTAtDNuNnJIdSSQ+Rk9ZfVSwofE0KN7R4UOP1qhM=;
-        b=zGykoCHFQPArIFXkw7/cqDhWopIJKCzoJDZQo8VeFRWwdgralGhrO85LVSys/keiwA
-         C2pCPo5TcsVuql02vgUuuERcoXCBYfA1wXcXI5JaixleBVOVH2mj3JnLPuKouQbSCUfG
-         hO+5wZxLaphMo8FOpeELjXzJmBYiwmHa6k2Yzv3xXN4Fv4noUvLoMuT44P6EqAipg5/0
-         krsmPUBQXngU4UY4F7MkxjNmc4s7tBuMMheSjOJ5/grgCjiRG3fiLWuFSpKqHwC9QjzX
-         1WL3O3f0b4IJfCE1cIK/wyv/kkztjPpByYkRKd2nhLeIkz+UvrPwx5xEJKUnKzRU5bKB
-         7KiQ==
+        d=linaro.org; s=google; t=1743096605; x=1743701405; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=WDN1VKUJwLebN0ryWgo3KULQHNLf140Ja4ddZir7PXQ=;
+        b=mowR3tC+i89SVe67Bn9EEpuFB/6p6jtXjHvF9Qn83wGSWMaVU4M+Zsqfxink9X70RF
+         Vw5i2l4/RdN2slrJH5vN5l+CXg4yaM8/XS5X+PnUncDQYBmqUNdadII1TWzaYyIQa9du
+         38Gm8NuBYdoOXf/xDNAhbcU9gtU8MrGjwe8ulMDc3JJxkUlOhvd0SZxT3nTOCvjYBBNf
+         z+061zaF5L5/2xBaxo/mmp8brUsMtIP066F9YCgzxB9seYhptfqHtp98JorTWylVDzJw
+         fzlXdaoF2QkuCy+uj5q5XFQOji6nlzxH6vk3b3s38C4niCelEcDxb3ZQWfd2iQjuUMSb
+         /LCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743096579; x=1743701379;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xUAnTAtDNuNnJIdSSQ+Rk9ZfVSwofE0KN7R4UOP1qhM=;
-        b=c3e4n9tpZLhLMi3Xr2iJWGnGHzyEUor6okmW2IbqC1ay7vM9ZUdR5DBa/rpRp7rfFo
-         DPj9GhTG5S8A6pk5x8k4Y7FD+wbWulj9RV9aZZOiIP2dnSfjDCteZXu/NIEd8RnNxs3R
-         AR+6AQt1YEQ1wRdoP8LoEtNzADbFnfoCfYOknu4DwwfU/e3APETPixdq9RVvkIctWYJa
-         LT3KXPXMgHD/r7IIl1q8LRH6fjWkHnkVpFUdGl85b2J3yuZYZaAo2AeJwy94w+Fi3hOF
-         eByOlmk7hcaB6C9TEGF7FyPumyaoOl6MXoZ3shCMbQFfBthj7tpAbxkN/ohz05T/iZe8
-         nCNw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhWWytvVej22RsohK9NrvwW7hCdvE71AL06EYRk/6wbScUnbHGHz29oBccztjQfpWE03DghinLgPMMsOo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6cyyMZdNMFKy6XVIhXOrQ/fNxlHGLIuba6H1Y/JaZS+2Qrds8
-	vlWiy2aDP7uaGGVE0O0JcHou1Uhb/Dqwe4vSgIlemwgbJgCt//2jJl1M5zyZ4A==
-X-Gm-Gg: ASbGncv+YeMXzRHaQov9OOf8kx+KzLCwCD6L0JD3qonhxq5FhVqZ0awxBFYf1m6Icmh
-	FMpIg+RJvPF8IzNlVmBmrc1SoJFjGzy9/J+u74/58gAmxBkEhgM2TVUzv1FZNl0072v6y1LRryk
-	Qyf9d2W06dc8imZmuRhJyPbCjzi8EKW4iVam/U2mgPJwbaY2XX51IZWxvjUW+JFZhpl3IoVmOZl
-	cS5gwR5MoE+TPomV7v/nkH5sQELMZwEDR7pBqunrmaJ25oJpjFY3Wm08vD2dVcCarQVcJaT3jz+
-	jkmbYID1erWZaRgsH/8yFNEMzAZIsu/rYprVyiBoJUB8UcUmyB4sn2w=
-X-Google-Smtp-Source: AGHT+IGq9WA9Mg+aD9Pf6gxE2w7nofLRKq3e9u+4e1o+z4k8xCGL05Lgi/yGgHNUkZz6Z+X/JLWE9w==
-X-Received: by 2002:a05:6a20:2589:b0:1fd:e9c8:cf3b with SMTP id adf61e73a8af0-1fea2f4c4e7mr10560727637.30.1743096579450;
-        Thu, 27 Mar 2025 10:29:39 -0700 (PDT)
-Received: from thinkpad ([120.60.71.118])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970deeea2sm81237b3a.21.2025.03.27.10.29.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 10:29:39 -0700 (PDT)
-Date: Thu, 27 Mar 2025 22:59:30 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: george.moussalem@outlook.com
-Cc: Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Nitheesh Sekar <quic_nsekar@quicinc.com>, Varadarajan Narayanan <quic_varada@quicinc.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Praveenkumar I <quic_ipkumar@quicinc.com>, 
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	20250317100029.881286-1-quic_varada@quicinc.com, 20250317100029.881286-2-quic_varada@quicinc.com, 
-	Sricharan R <quic_srichara@quicinc.com>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: Re: [PATCH v7 5/6] arm64: dts: qcom: ipq5018: Add PCIe related nodes
-Message-ID: <vmka3ediym33gjwy6vztxn25j2gwfeeht3s3nbx3ozinuz2k7n@7nho6bfvsuo5>
-References: <20250326-ipq5018-pcie-v7-0-e1828fef06c9@outlook.com>
- <20250326-ipq5018-pcie-v7-5-e1828fef06c9@outlook.com>
+        d=1e100.net; s=20230601; t=1743096605; x=1743701405;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WDN1VKUJwLebN0ryWgo3KULQHNLf140Ja4ddZir7PXQ=;
+        b=jUA3aGJ+hgiXhd1AcDYLihH7Sl/4Ttx36kMe/Kg5df5j5DzI9hytxljvoHq5Y2Gyxs
+         jk0/pQ4Rs+mfQurS+CethD9WSIx14uknUAKQV822aS8srtocpiv3QMwLMQoq0ILmd2ZN
+         0WZAtoRYqYZhjdtVMsZ2apRmFvRiGDeDy5unKJN5FBIhoHZYPKwExJtzh5ewYwAxIFGX
+         wO9quI5m1Wr0d0QeaetveBheMhuoXrWbNgL+W8QVXL7FXchSCfx/7SMwANS7VwIxii+L
+         iVfeH45o0/U5o2TCFnhPM2nhGDIWynM7iqrUixlbU3Xd5LtxCXuvz7A2ZIfg3ZUnfkz6
+         2rBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVx/+SI1PHzbkZ+VdM00wfqEnL8WPWIUBu0Jr9w3R3jETD3xMbhVmfmXYCmIgVnbPC2S/28ux8C+70wYrU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIjfRDDGS8ToZWemAdP1apngIFuCVi2qtoHCa6Q0O/XSdnN8+T
+	O20bxqHkFy5eEoxQS7SRGWfDKoXBUcsovvYNOwqxJUnGMDgxRi0q6maUWH/1jSk1REvFjZx7sW4
+	2hccKB1d4Pp0HHXybWfpST/0T9FHkhw6BFGH57w==
+X-Gm-Gg: ASbGncsHH8Cg1mrDAEtYFMlaXFoZDdFGMDoeUiCZYEl58MVScvSj1P1Sk9geM6FjRNo
+	r9EZo1kuP5uAo5HZUf2Mj1o1dXayrzUgWkCdtsMnXcpY8Jsh0arDksWlsGZaVJnPABxHKp9LCqF
+	NQAbKRVXl+URbfX92Lq6CKji59Yc1Sdf0fv7kdvsGiTImgst6zREPscUaMBF+B7FFXXbHmTw==
+X-Google-Smtp-Source: AGHT+IEztlgWSCIn71l6XVgidilEQsC+WgA0rVBDr66THcB1Yab03MEJKS8U8SF8aZ91Fp8ddjC6/zH3JJFfZRywj4k=
+X-Received: by 2002:a05:6122:887:b0:520:652b:ce18 with SMTP id
+ 71dfb90a1353d-5260071ccf2mr3310045e0c.0.1743096605264; Thu, 27 Mar 2025
+ 10:30:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250326-ipq5018-pcie-v7-5-e1828fef06c9@outlook.com>
+References: <20250326154349.272647840@linuxfoundation.org>
+In-Reply-To: <20250326154349.272647840@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 27 Mar 2025 22:59:52 +0530
+X-Gm-Features: AQ5f1JqUE3wEB4mA5ovU8cCdeyrT-Beu7WuvHFYj9Q6LMIcb26hTI9Y51kQelGw
+Message-ID: <CA+G9fYtHXcRhFd9BH3sDYBNBT2XcP42amy5QqpLhNKesLUb8WA@mail.gmail.com>
+Subject: Re: [PATCH 6.1 000/197] 6.1.132-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Shakeel Butt <shakeelb@google.com>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org, Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Cgroups <cgroups@vger.kernel.org>, 
+	linux-mm <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 26, 2025 at 12:10:59PM +0400, George Moussalem via B4 Relay wrote:
-> From: Nitheesh Sekar <quic_nsekar@quicinc.com>
-> 
-> Add phy and controller nodes for a 2-lane Gen2 and
-> a 1-lane Gen2 PCIe bus. IPQ5018 has 8 MSI SPI interrupts and
-> one global interrupt.
-> 
-> NOTE: the PCIe controller supports gen3, yet the phy is limited to gen2.
-> 
-> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
-> Signed-off-by: Sricharan R <quic_srichara@quicinc.com>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
-> ---
->  arch/arm64/boot/dts/qcom/ipq5018.dtsi | 246 +++++++++++++++++++++++++++++++++-
->  1 file changed, 244 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-> index 8914f2ef0bc47fda243b19174f77ce73fc10757d..9f695f0d9c6b7f29c4564977cadd6a78b55a044f 100644
-> --- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-> @@ -147,6 +147,40 @@ usbphy0: phy@5b000 {
->  			status = "disabled";
->  		};
->  
-> +		pcie1_phy: phy@7e000{
-> +			compatible = "qcom,ipq5018-uniphy-pcie-phy";
-> +			reg = <0x0007e000 0x800>;
-> +
-> +			clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
-> +
-> +			resets = <&gcc GCC_PCIE1_PHY_BCR>,
-> +				 <&gcc GCC_PCIE1PHY_PHY_BCR>;
-> +
-> +			#clock-cells = <0>;
-> +			#phy-cells = <0>;
-> +
-> +			num-lanes = <1>;
-> +
-> +			status = "disabled";
-> +		};
-> +
-> +		pcie0_phy: phy@86000{
-> +			compatible = "qcom,ipq5018-uniphy-pcie-phy";
-> +			reg = <0x00086000 0x800>;
-> +
-> +			clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
-> +
-> +			resets = <&gcc GCC_PCIE0_PHY_BCR>,
-> +				 <&gcc GCC_PCIE0PHY_PHY_BCR>;
-> +
-> +			#clock-cells = <0>;
-> +			#phy-cells = <0>;
-> +
-> +			num-lanes = <2>;
-> +
-> +			status = "disabled";
-> +		};
-> +
->  		tlmm: pinctrl@1000000 {
->  			compatible = "qcom,ipq5018-tlmm";
->  			reg = <0x01000000 0x300000>;
-> @@ -170,8 +204,8 @@ gcc: clock-controller@1800000 {
->  			reg = <0x01800000 0x80000>;
->  			clocks = <&xo_board_clk>,
->  				 <&sleep_clk>,
-> -				 <0>,
-> -				 <0>,
-> +				 <&pcie0_phy>,
-> +				 <&pcie1_phy>,
->  				 <0>,
->  				 <0>,
->  				 <0>,
-> @@ -387,6 +421,214 @@ frame@b128000 {
->  				status = "disabled";
->  			};
->  		};
-> +
-> +		pcie1: pcie@80000000 {
-> +			compatible = "qcom,pcie-ipq5018";
-> +			reg = <0x80000000 0xf1d>,
-> +			      <0x80000f20 0xa8>,
-> +			      <0x80001000 0x1000>,
-> +			      <0x00078000 0x3000>,
-> +			      <0x80100000 0x1000>,
-> +			      <0x0007b000 0x1000>;
-> +			reg-names = "dbi",
-> +				    "elbi",
-> +				    "atu",
-> +				    "parf",
-> +				    "config",
-> +				    "mhi";
-> +			device_type = "pci";
-> +			linux,pci-domain = <0>;
-> +			bus-range = <0x00 0xff>;
-> +			num-lanes = <1>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +
-> +			/*
-> +			 * In IPQ5018, the PCIe controller supports gen3,
+On Wed, 26 Mar 2025 at 21:15, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.1.132 release.
+> There are 197 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 28 Mar 2025 15:43:27 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.132-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-nit: no need to mention IPQ5018.
+In Addition to previous build regressions,
 
-- Mani
+Regressions on arm and arm64 devices cpu hotplug tests failed and
+kernel oops triggered
+with gcc-13 and clang-20 the stable-rc 6.1.132-rc2.
 
--- 
-மணிவண்ணன் சதாசிவம்
+First seen on the 6.1.132-rc1
+Good: v6.1.131
+Bad: Linux 6.1.132-rc1 and Linux 6.1.132-rc2
+
+* Juno-r2, rockpi-4, dragonboard 845c, e850-96,
+  - selftests: cpu-hotplug: cpu-on-off-test.sh
+  - ltp-controllers: cpuset_hotplug_test.sh
+  - selftests: rseq: basic_percpu_ops_test
+
+Regression Analysis:
+- New regression? yes
+- Reproducibility? Yes
+
+Test regression: arm64 arm cpuhotplug kernel NULL pointer dereference
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Test log
+command: cpuset_hotplug_test.sh
+[ 1912.782804] /usr/local/bin/kirk[465]: starting test cpuset_hotplug
+(cpuset_hotplug_test.sh)
+cpuset_hotplug 1 TINFO: CPUs are numbered continuously starting at 0 (0-5)
+cpuset_hotplug 1 TINFO: Nodes are numbered continuously starting at 0 (0)
+[ 1917.567011] psci: CPU1 killed (polled 0 ms)
+cpuset_hotplug 1 TPASS: Cpuset vs CPU hotplug test succeeded.
+[ 1918.804896] Detected VIPT I-cache on CPU1
+[ 1918.805388] cacheinfo: Unable to detect cache hierarchy for CPU 1
+[ 1918.805957] GICv3: CPU1: found redistributor 1 region 0:0x00000000fef20000
+[ 1918.806683] CPU1: Booted secondary processor 0x0000000001 [0x410fd034]
+[ 1919.086059] psci: CPU1 killed (polled 0 ms)
+[ 1919.120969] Unable to handle kernel NULL pointer dereference at
+virtual address 0000000000000000
+[ 1919.121807] Mem abort info:
+[ 1919.122086]   ESR = 0x0000000096000004
+[ 1919.122451]   EC = 0x25: DABT (current EL), IL = 32 bits
+[ 1919.122956]   SET = 0, FnV = 0
+[ 1919.123262]   EA = 0, S1PTW = 0
+[ 1919.123574]   FSC = 0x04: level 0 translation fault
+[ 1919.124038] Data abort info:
+[ 1919.124380]   ISV = 0, ISS = 0x00000004
+[ 1919.124754]   CM = 0, WnR = 0
+[ 1919.125051] user pgtable: 4k pages, 48-bit VAs, pgdp=000000000a2b8000
+[ 1919.125655] [0000000000000000] pgd=0000000000000000, p4d=0000000000000000
+[ 1919.126341] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+[ 1919.126912] Modules linked in: snd_soc_hdmi_codec dw_hdmi_cec
+dw_hdmi_i2s_audio brcmfmac rockchipdrm hantro_vpu hci_uart brcmutil
+dw_mipi_dsi analogix_dp btqca v4l2_h264 btbcm v4l2_vp9 dw_hdmi
+panfrost v4l2_mem2mem cfg80211 cec bluetooth snd_soc_audio_graph_card
+videobuf2_v4l2 drm_display_helper gpu_sched snd_soc_simple_card
+videobuf2_dma_contig crct10dif_ce snd_soc_spdif_tx
+snd_soc_rockchip_i2s snd_soc_simple_card_utils videobuf2_memops
+phy_rockchip_pcie rockchip_saradc rtc_rk808 drm_shmem_helper
+drm_dma_helper videobuf2_common rfkill industrialio_triggered_buffer
+drm_kms_helper pcie_rockchip_host rockchip_thermal coresight_cpu_debug
+kfifo_buf fuse drm ip_tables x_tables
+[ 1919.132505] CPU: 0 PID: 67249 Comm: kworker/0:0 Not tainted 6.1.132-rc2 #1
+[ 1919.133132] Hardware name: Radxa ROCK Pi 4B (DT)
+[ 1919.133555] Workqueue: events work_for_cpu_fn
+[ 1919.133983] pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[ 1919.134617] pc : memcg_hotplug_cpu_dead
+(include/linux/percpu-refcount.h:174
+include/linux/percpu-refcount.h:332
+include/linux/percpu-refcount.h:351 include/linux/memcontrol.h:795
+mm/memcontrol.c:2382)
+[ 1919.135076] lr : memcg_hotplug_cpu_dead
+(include/linux/percpu-refcount.h:174
+include/linux/percpu-refcount.h:332
+include/linux/percpu-refcount.h:351 include/linux/memcontrol.h:795
+mm/memcontrol.c:2382)
+[ 1919.135528] sp : ffff80000e78bc60
+[ 1919.135835] x29: ffff80000e78bc60 x28: 0000000000000000 x27: ffff80000a1c81f8
+[ 1919.136501] x26: 0000000000000028 x25: ffff0000f7534778 x24: ffff80000a1aeb08
+[ 1919.137166] x23: 0000000000000000 x22: ffff80000a16e240 x21: 0000000000000000
+[ 1919.137830] x20: ffff8000ed3d5000 x19: 0000000000000000 x18: 00000000a2704302
+[ 1919.138495] x17: 0000000000000000 x16: 0000000000000312 x15: 0000040000000000
+[ 1919.139159] x14: 0000000000000000 x13: ffff80000e788000 x12: ffff80000e78c000
+[ 1919.139823] x11: 0bb2d4910b917800 x10: 0000000000000000 x9 : 0000000000000001
+[ 1919.140487] x8 : ffff000013406300 x7 : 00000072b5503510 x6 : 0000000000300000
+[ 1919.141151] x5 : 00000000801c0011 x4 : 0000000000000000 x3 : ffff80000e78bca0
+[ 1919.141815] x2 : ffff80000e78bbf8 x1 : ffff8000080a11e4 x0 : ffff0000f7543240
+[ 1919.142480] Call trace:
+[ 1919.142709] memcg_hotplug_cpu_dead
+(include/linux/percpu-refcount.h:174
+include/linux/percpu-refcount.h:332
+include/linux/percpu-refcount.h:351 include/linux/memcontrol.h:795
+mm/memcontrol.c:2382)
+[ 1919.143133] cpuhp_invoke_callback (kernel/cpu.c:193)
+[ 1919.143554] _cpu_down (kernel/cpu.c:0 kernel/cpu.c:724
+kernel/cpu.c:1157 kernel/cpu.c:1218)
+[ 1919.143882] __cpu_down_maps_locked (kernel/cpu.c:1249)
+[ 1919.144291] work_for_cpu_fn (kernel/workqueue.c:5184)
+[ 1919.144647] process_one_work (kernel/workqueue.c:2297)
+[ 1919.145028] worker_thread (include/linux/list.h:292
+kernel/workqueue.c:2352 kernel/workqueue.c:2444)
+[ 1919.145386] kthread (kernel/kthread.c:378)
+[ 1919.145687] ret_from_fork (arch/arm64/kernel/entry.S:865)
+[ 1919.146041] Code: d51b4235 8b160280 97ffec72 97f73691 (f9400269)
+All code
+========
+
+Code starting with the faulting instruction
+===========================================
+[ 1919.146592] ---[ end trace 0000000000000000 ]---
+
+
+## Test log 2
+kselftest: Running tests in rseq
+TAP version 13
+1..9
+timeout set to 0
+selftests: rseq: basic_test
+testing current cpu
+basic_test: basic_test.c:30: void test_cpu_pointer(void): Assertion
+`sched_getcpu() == i' failed.
+Aborted
+not ok 1 selftests: rseq: basic_test # exit=134
+timeout set to 0
+selftests: rseq: basic_percpu_ops_test
+Segmentation fault
+not ok 2 selftests: rseq: basic_percpu_ops_test # exit=139
+
+The bisection pointing to,
+ memcg: drain obj stock on cpu hotplug teardown
+  upsteam commit 9f01b4954490d4ccdbcc2b9be34a9921ceee9cbb upstream.
+
+## Source
+* Kernel version: 6.1.132-rc2
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+* Git sha: f5ad54ef021f6fb63ac97b3dec5efa9cc1a2eb51
+* Git describe: v6.1.131-198-gf5ad54ef021f
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/Test/v6.1.131-198-gf5ad54ef021f/
+
+## Test
+* Test log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.131-198-gf5ad54ef021f/testrun/27793089/suite/log-parser-test/test/internal-error-oops-oops-preempt-smp/log
+* Test history:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.131-198-gf5ad54ef021f/testrun/27793089/suite/log-parser-test/test/internal-error-oops-oops-preempt-smp-01e5a0f146f52056a08c01ad73b44c893f7748e5cd1533e30c989289a90e821b/history/
+* Test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.131-198-gf5ad54ef021f/testrun/27793089/suite/log-parser-test/test/internal-error-oops-oops-preempt-smp/
+* Test link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2urSwSZQOGBhePbuN1hwUGDHIT8/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2urSwSZQOGBhePbuN1hwUGDHIT8/config
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
