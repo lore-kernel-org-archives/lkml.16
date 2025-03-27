@@ -1,131 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1696B217659;
-	Thu, 27 Mar 2025 14:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE2821422C
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743085333; cv=none; b=FVtUsOc7m/S4QFIS2mnTNi6phZ9boBBOTSDDLF5quN0fftps3G4Z4/0gupOcg7nh3CB3CbtcQD1b8JtzJL5Erwtn3GytpTBJmVT90j2Y7bc1T3zivqEws9HpnXE+rpR8zfkLAYoVGk4leeRTGDBAFXL6sN5xmy8cXzysPm5UZe0=
+	t=1743085375; cv=none; b=owG5r2BoTiZ1NFPF0souM2cEpJVzZvdPtj0FeHjM+vJB7kZRteMl2nydeuvh4RcgQGYTOfWORXftrp+lbyF3qz9PxK6gmycLVBk9PUyxoiPPctvroSJQYloJguA2TnOfxtZVNC9pQaxTqTwvWeYRJ/qy7MQW+NsFymU950MNI9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743085333; c=relaxed/simple;
-	bh=LEj52uowgJsKujWeqH5GpaYqptWRzUuqaXmevxVGRzA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=mR612YIJBjM/CEXgz0v/W+aXTCYd0zllJx/nRD+8JOk5gLzqiDE+7pRpa7VCSXD0RFLaIlNVhjHK4WmWKTbKNJKtFseuO8xDgPUBOtR4Hss3lRYdMNlTrSA7F1LnUUDCnBKhVaATRQpiJid6vxZs9FBcsvTvWBpjiSiO4XAIf90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PkV2x2n+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743085375; c=relaxed/simple;
+	bh=fjzgEC9sE1O7WE9Cc67Qkqp6QucKVRp1A2FAVFdolFk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N1K6bCgQ6GFevw+2Fq/rJw+vb4qjlssZR4BYv4WpHIdyHoQHdt0zaE0yebOtZJOYVdfC6cE2vLaL1yEtDKh53HIhvTP/Xrw/4+klokOpt3/tmEjeHzuO+xKX/VjtqkLOMoxvROGqlq9VfjYcDAU6qobV7WpulVI660dK6uZgU1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JuUOGvgg; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PkV2x2n+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86C34C4CEDD;
-	Thu, 27 Mar 2025 14:22:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743085332;
-	bh=LEj52uowgJsKujWeqH5GpaYqptWRzUuqaXmevxVGRzA=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=PkV2x2n+G6Jef8KX+kINXWadaPiWj0VzjRVVEAd5kKaLmtQSzrSScrYRkCfUGb1RV
-	 faZkdsCr7vnBFOuj/eDljg02ixf/SHaQV0QyjKIHH+s+RwYE+1GzKp4OTsvsywpYl5
-	 sE89fLlId5VgT3IFCVbXnnmDUBvVWEeoMX14AB6/naz5DyvuD3rJ9R1z1hZEd1cNgc
-	 CFJojTp18IsEHkU28jvjFvibAv44i0F7AaSEGTnpwRhKqYD/gHyUbA6nOtfMrLaOvc
-	 UuMXe3skIueo4URNj+7AMW8Uv7+cwJaF2MGGywq+3niezFTUx3RLcr0fIppTTPXx5S
-	 yYtixBelfyeWg==
-Message-ID: <6fa375d2-5ba8-4b2b-8a54-f28b3cbedcfb@kernel.org>
-Date: Thu, 27 Mar 2025 15:22:03 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JuUOGvgg"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6eeb7589db4so4638856d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 07:22:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743085373; x=1743690173; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hX4sahM5YSPdcjm7sUg4I+6OXP63Z2ITLCKrFRCwRg8=;
+        b=JuUOGvggDnP9HM/z4ru5E9w1ZwnsykeyHhKlw7O76mMebhm+QzrkNwvbyLL+ZF72N1
+         /g8nlFK3pgeZKerKtZFKSMFPltdJFe3F34szAbZl7Djdqp9n0RCj03G1IpsiSxhUHUcL
+         K0vo9ZxQgZ7h1kDhpYSLKqJfQwbxfuSjuffeiTioYEihl7NUxnV8qldOIyi/JDrgO5G+
+         +8e8hT+G1IFvT8ktHUBNWffHJPQyLF1Z9PVrq7tx29/ivnmoC4o0pZPEdgfTtsk524D2
+         jxEcVbwtVHMXBGpnWpzix66vZoD+22hZrtW03T5B1G337S9V5j4eL7Qk8TZ7K8EhxClF
+         +k4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743085373; x=1743690173;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hX4sahM5YSPdcjm7sUg4I+6OXP63Z2ITLCKrFRCwRg8=;
+        b=VkxfNgU45ZMhEZVu0Gr4B7ABgCzUpd6pprm2hI3XAFh1nQ0Uh2CdXrPPwS0kbiMCO2
+         XTauLZa9YMn433SqsRa/LiAMz8Pp3Ij0QdokWCWzGMBSVlf+1ZY4ic5+NWjn0flXUmKX
+         KA3j+uwFE0GlVUoSYcBuFoq5sGUaAuf0zGe1CfZxBUygFINw9PDubm/PKWkAYiP+2UX6
+         IxjUpA4QbNiu/KNs3nEjdU0occUnQZJSPh6PrZXcBIs+Dp2bXPcZunorsBxucGv+nJY9
+         E9dCdZGW8LDux/RgwZP28x7XxBZZyRyPcC0mGgMA3/62ceH8zv+1rTR/tcQmMEpbsa2g
+         G/WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKowoOZt/IXT7M7D0LZxzlyoCcyrhtEDHm9LamVolMooG12ULubTYZdduCNiqCyA3U8sbT7FLWiFgHP0I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0Fb19jFkvqSG2CNUMZ9S9L1cxvHWZpx/08F2rvHCvsT4y/qqm
+	mjzFbXezfHf2oty7qrZhFcI+ZjfuZYC8qM2ueag0shu0i/CcTaDlKuDw+kFRzFnxQH/TypITdgu
+	V83KyzhZt61a54yDbvA2oOMDi33g=
+X-Gm-Gg: ASbGncs9YX1zyF/k/qfaX+xsvnq2cfl8RAqn4Tyw7cSk6nKdpI2nk6Jbf/nVI8wVHc5
+	SAVLIiCZPML530Hmbj2Emloakbr8nYpakpSDjOHctjgNt/DLl1M2d6BjW93EL0/UwsilwZlfPDV
+	nIk7muE8QGzhHj5JYEaGQ0xmGh
+X-Google-Smtp-Source: AGHT+IFmVUdRMPT0jOoO+WnV3SCwL4L2KHCpdirUKfb/Y+CP0Y7a7L4QWgyfiMBN9yXO+A9DvjPj409roZoHIlgYGYI=
+X-Received: by 2002:a05:6214:410f:b0:6e8:9e9c:d20f with SMTP id
+ 6a1803df08f44-6ed23897d79mr63094496d6.21.1743085372831; Thu, 27 Mar 2025
+ 07:22:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 15/15] arm64: defconfig: Enable Renesas RZ/V2N SoC
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Prabhakar <prabhakar.csengg@gmail.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Biju Das <biju.das.jz@bp.renesas.com>,
- Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250326143945.82142-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <41c6f512-47a5-4723-bbdc-64ed85ae8391@kernel.org> <Z-VETFWFT5NksD7J@ninjato>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <Z-VETFWFT5NksD7J@ninjato>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <tencent_2C3830CD73C3B917ECA59895C90CB43BF009@qq.com>
+ <CAKEwX=N98tC5Tq+XYLgAP4MDUBAO01ceE4e+mrk9i3YniL2Vkw@mail.gmail.com>
+ <CAKEwX=NbpaQcq_awoPKmAuPWL=D4C2W7o_9D3J_SuDFvtbo9Ag@mail.gmail.com> <Z-Rmo_xx_btMKO99@casper.infradead.org>
+In-Reply-To: <Z-Rmo_xx_btMKO99@casper.infradead.org>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Thu, 27 Mar 2025 10:22:41 -0400
+X-Gm-Features: AQ5f1Jpcqo2aPvJKeqa0SWvW6GV0i6-uOAUDw9ucZg5DBq1PSgU1PPwluoGO3Qw
+Message-ID: <CAKEwX=NqqsO6ajKffUFE1Y4B-YUhABudPbgAKy=16nN_k_-+fQ@mail.gmail.com>
+Subject: Re: Linux6.14-rc5 BUG: spinlock bad magic in z3fold_zpool_free
+To: Matthew Wilcox <willy@infradead.org>
+Cc: ffhgfv <xnxc22xnxc22@qq.com>, "vitaly.wool" <vitaly.wool@konsulko.com>, 
+	linmiaohe <linmiaohe@huawei.com>, akpm <akpm@linux-foundation.org>, 
+	linux-mm <linux-mm@kvack.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 27/03/2025 13:27, Wolfram Sang wrote:
-> 
->> So the pattern will keep growing and none of you will ever bother to fix
->> it, because you have your patchset to throw over the wall.
-> 
-> I dare to say us Renesas people are not too bad at fixing stuff. In this
-> particular case, I don't see a wide consensus that the above stuff is
-> considered broken? Please point me to it if there is such. We are happy
-> to discuss.
-> 
+On Wed, Mar 26, 2025 at 4:42=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
+> wrote:
+>
+> On Wed, Mar 26, 2025 at 03:43:28PM -0400, Nhat Pham wrote:
+> > On Wed, Mar 26, 2025 at 10:32=E2=80=AFAM Nhat Pham <nphamcs@gmail.com> =
+wrote:
+> > > On Wed, Mar 26, 2025 at 10:11=E2=80=AFAM ffhgfv <xnxc22xnxc22@qq.com>=
+ wrote:
+> > > >
+> > > > Hello, I found a bug titled " BUG: spinlock bad magic in z3fold_zpo=
+ol_free   " with modified syzkaller in the Linux6.14-rc5.
+> > > > If you fix this issue, please add the following tag to the commit: =
+ Reported-by: Jianzhou Zhao <xnxc22xnxc22@qq.com>,    xingwei lee <xrivende=
+ll7@gmail.com>, Zhizhuo Tang <strforexctzzchange@foxmail.com>
+> > >
+> > > Please stop using z3fold :) We already removed it upstream.
+> >
+> > To clarify a little bit - we've found that z3fold is buggy (for a very
+> > long time), and does not outperform zsmalloc in many of the workloads
+> > we test on (both microbenchmark and real production workloads). We've
+> > deprecated it since 6.12:
+> >
+> > https://github.com/torvalds/linux/commit/7a2369b74abf76cd3e54c45b30f6ad=
+db497f831b
+> >
+> > and will remove it altogether:
+> >
+> > https://lore.kernel.org/all/20250129180633.3501650-1-yosry.ahmed@linux.=
+dev/
+> >
+> > Perhaps Vitaly can fix the issue for stability's sake (or in case
+> > there is a reason why you MUST use z3fold)? But I strongly recommend
+> > you experiment with zsmalloc :)
+>
+> This group are syzkaller kiddies.  They have no understanding of what
+> they're testing; they're just running their fuzzer and sending emails.
+> They don't care what's useful, so there's a lot of noise from unmaintaine=
+d
+> filesystems and so on.
 
-You did not object to last discussion about this (a month ago) - neither
-to my comments nor to resolution - so this patchset repeating the same
-pattern from the same folks while ignoring previous talk is
-contradicting "not too bad at fixing stuff".
+You're right - I just realized they did it once already for zswap:
 
-Although of course no particular bug is here to fix - I should have used
-"change". Anyway, it was long time ago consensus that arm64 does not
-receive top-level ARCH_XXX per each SoC. And this is what is being added
-here in this patchset.
+https://lore.kernel.org/all/tencent_49DA3E780998A9B96ADC9FF658CC84641808@qq=
+.com/
 
-Best regards,
-Krzysztof
+It was also due to the (soon-to-be-removed) z3fold backend. To save
+time, I'll stop engaging from now on, unless it's a proper issue.
