@@ -1,174 +1,68 @@
-Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9881E5210
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 22:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4401DF744
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 22:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743114399; cv=none; b=l5zk5jpOXAG2ym0aj3Oxk53H37Yoepx4vQUFZfz4fh6umg/rXRZWEn+ZP9vvIphipnljWqIZQLeE4zKWYMHosysG5XrJHIkULIIQEqrT5wfFTwLPDGhmVPoJ0cVShg3ifVeWXgE5l7wiNS+2DTdh9yIcEGqCEAR5+YNJ7J8kw7g=
+	t=1743114430; cv=none; b=ZfRGTBbbrIessNfWTO4JOBPJJCBN9NzNmQa2BXcIX05rDyO7NpDpArWk3Mu+9HZeiv5MigvdrUtRm4wylsQYZYOko1/CxqUE0dQJfifudi0qLbivaabQh3qGkxv4tuiP5Zk5gIDHKR1+GcUHx9mG33LEoZajdJs6ZOeb61TaWww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743114399; c=relaxed/simple;
-	bh=BRnlcNfWQbFo7F9dtGvjQD0vy1X2b35kekENnJxalfI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vFba5gnQLsV8qkItCYs+u8qgELTiptt/Y5+DUNtErrSjtMbhlADYvjv6FAakKYFBjNlNWfW7lFFoajEhdA40rvPOqPbA8fDEXOV9htP6vbDtdNqtPuJ8lY/4qDWUE/5GJm0bJIooVWH6cYNI1irINba+8hEi4qwLaneRVCfmV3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=R03Q07x+; arc=none smtp.client-ip=109.224.244.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1743114430; c=relaxed/simple;
+	bh=zwboQbPzcGQb7MZnral1JgcBdeQHDsP/MVzRoHaqmPc=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=WrgQwxnc5+KouwbBLWyiwj+opv7qtlm2AgG6ToaG4ITIe3aO7y0qNMH+/wWQ7gf/aPysVIUoiDdJNDNfW+c9vEYxJN09DByJOz68/Nxq5J9rLYY+t1Xsz0wcJbRjNz4hkQB3dKyW50C5G72qw8/xudPwZey/3k+5vlEGCs/xnE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=amB06PKt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="R03Q07x+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1743114389; x=1743373589;
-	bh=oWvixeUAvhF2kqEr6ADx5r++iXHceMBawi9sqId8wXM=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=R03Q07x+4fJbXxxkFsTBoAbeHPMo8RDuNnMvlIlMRDkutsDsBwf91Btt2uTpgLUWr
-	 10RA/dmGj3ZM7E08ReXRTvI0Md2kf+1cUW/rGT9m++kNPOtx4A1wrPqpkmKTvD/Tbw
-	 UX/PrR/hcYvaEKcyaUbxp+zzUlUWwUDDWEvZKurHnV+lKQA+LBNmv5EOJ7z9rzw2xW
-	 aExRV1NGGMiLkWRaNWIbKse/6SatOeXSs467vMw+eqPKEy3pUdb6j8JepeWRigeCHV
-	 WYosTH+2W17I5bU61zaeBFyhzM41c854voqgGh60ZB4erBHHA/26CkqfNvoXtGFj4T
-	 iIe5cFMuc67ZA==
-Date: Thu, 27 Mar 2025 22:26:23 +0000
-To: Abdiel Janulgue <abdiel.janulgue@gmail.com>, a.hindborg@kernel.org, ojeda@kernel.org
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Danilo Krummrich <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, "open list:DMA MAPPING HELPERS DEVICE DRIVER API [RUST]" <rust-for-linux@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] rust: dma: convert the read/write macros to return Result
-Message-ID: <D8REH728BFP1.2BGE9DTRP2IPU@proton.me>
-In-Reply-To: <20250326201230.3193329-3-abdiel.janulgue@gmail.com>
-References: <20250326201230.3193329-1-abdiel.janulgue@gmail.com> <20250326201230.3193329-3-abdiel.janulgue@gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 14740b0a863e8eb4e2bb6a1950d342e4a2b68679
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="amB06PKt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22FA5C4CEDD;
+	Thu, 27 Mar 2025 22:27:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743114428;
+	bh=zwboQbPzcGQb7MZnral1JgcBdeQHDsP/MVzRoHaqmPc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=amB06PKttAZYOVT7ilD+A8qqfYn8fPlCbHDB8VzdpdUJmhDtBzY+eyUq2sLz0wfmK
+	 2KDMrGM6iALEjJmrbBA4tBnEtzGSW+HXru1xQGpwyQMLOnHFToI/fTQf9wv0eBekeA
+	 sVXX1LiDjsS9jvcYiO5VhDisz+q4wGadqwgtkgEIQTYpuI8QCzS72LppKTBkuF3kwv
+	 I+Cu8Thq0VslKpvLWlSv+q0UNRV6ZePTNoQQfTc9VvZDtwGHyhFMzGNqU2saxvwOlP
+	 pfsmPapJROBj+eIObmXEb3HHKdnmnFLuWihfMK+stK+uFMrcHXiyXAhhxS8I8AGfXe
+	 yZEmz31nqmKag==
+Message-ID: <1873795367bda5d10ff64d1efa0625fa.broonie@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL] regmap updates for v6.15
+Date: Thu, 27 Mar 2025 22:26:53 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-On Wed Mar 26, 2025 at 9:11 PM CET, Abdiel Janulgue wrote:
-> As suggested by Andreas Hindborg, we could do better here by
-> having the macros return `Result`, so that we don't have to wrap
-> these calls in a closure for validation which is confusing.
->
-> Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-> ---
->  rust/kernel/dma.rs       | 54 +++++++++++++++++++++++-----------------
->  samples/rust/rust_dma.rs | 21 ++++++----------
->  2 files changed, 38 insertions(+), 37 deletions(-)
->
-> diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
-> index d3f448868457..24a6f10370c4 100644
-> --- a/rust/kernel/dma.rs
-> +++ b/rust/kernel/dma.rs
-> @@ -328,20 +328,22 @@ unsafe impl<T: AsBytes + FromBytes + Send> Send for=
- CoherentAllocation<T> {}
->  #[macro_export]
->  macro_rules! dma_read {
->      ($dma:expr, $idx: expr, $($field:tt)*) =3D> {{
-> -        let item =3D $crate::dma::CoherentAllocation::item_from_index(&$=
-dma, $idx)?;
-> -        // SAFETY: `item_from_index` ensures that `item` is always a val=
-id pointer and can be
-> -        // dereferenced. The compiler also further validates the express=
-ion on whether `field`
-> -        // is a member of `item` when expanded by the macro.
-> -        unsafe {
-> -            let ptr_field =3D ::core::ptr::addr_of!((*item) $($field)*);
-> -            $crate::dma::CoherentAllocation::field_read(&$dma, ptr_field=
-)
-> -        }
-> +        (|| -> Result<_> {
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
 
-Please use `::core::result::Result<_, _>` instead. If someone uses this
-macro in a place with a different `Result` than the one from the kernel
-crate, then this will result in a compile error. (also in the instances
-below)
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
 
-You might want to use `::core::result::Result<_, $crate::error::Error>`
-instead though if the type inference can't figure out the error type.
+are available in the Git repository at:
 
-> +            let item =3D $crate::dma::CoherentAllocation::item_from_inde=
-x(&$dma, $idx)?;
-> +            // SAFETY: `item_from_index` ensures that `item` is always a=
- valid pointer and can be
-> +            // dereferenced. The compiler also further validates the exp=
-ression on whether `field`
-> +            // is a member of `item` when expanded by the macro.
-> +            unsafe {
-> +                let ptr_field =3D ::core::ptr::addr_of!((*item) $($field=
-)*);
-> +                ::core::result::Result::Ok($crate::dma::CoherentAllocati=
-on::field_read(&$dma, ptr_field))
-> +            }
-> +        })()
->      }};
->      ($dma:ident [ $idx:expr ] $($field:tt)* ) =3D> {
-> -        $crate::dma_read!($dma, $idx, $($field)*);
-> +        $crate::dma_read!($dma, $idx, $($field)*)
->      };
->      ($($dma:ident).* [ $idx:expr ] $($field:tt)* ) =3D> {
-> -        $crate::dma_read!($($dma).*, $idx, $($field)*);
-> +        $crate::dma_read!($($dma).*, $idx, $($field)*)
->      };
->  }
-> =20
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-v6.15
 
-> diff --git a/samples/rust/rust_dma.rs b/samples/rust/rust_dma.rs
-> index 908acd34b8db..cc09d49f2056 100644
-> --- a/samples/rust/rust_dma.rs
-> +++ b/samples/rust/rust_dma.rs
-> @@ -54,13 +54,9 @@ fn probe(pdev: &mut pci::Device, _info: &Self::IdInfo)=
- -> Result<Pin<KBox<Self>>
->          let ca: CoherentAllocation<MyStruct> =3D
->              CoherentAllocation::alloc_coherent(pdev.as_ref(), TEST_VALUE=
-S.len(), GFP_KERNEL)?;
-> =20
-> -        || -> Result {
-> -            for (i, value) in TEST_VALUES.into_iter().enumerate() {
-> -                kernel::dma_write!(ca[i] =3D MyStruct::new(value.0, valu=
-e.1));
-> -            }
-> -
-> -            Ok(())
-> -        }()?;
-> +        for (i, value) in TEST_VALUES.into_iter().enumerate() {
-> +            kernel::dma_write!(ca[i] =3D MyStruct::new(value.0, value.1)=
-)?;
-> +        }
-> =20
->          let drvdata =3D KBox::new(
->              Self {
-> @@ -78,13 +74,10 @@ impl Drop for DmaSampleDriver {
->      fn drop(&mut self) {
->          dev_info!(self.pdev.as_ref(), "Unload DMA test driver.\n");
-> =20
-> -        let _ =3D || -> Result {
-> -            for (i, value) in TEST_VALUES.into_iter().enumerate() {
-> -                assert_eq!(kernel::dma_read!(self.ca[i].h), value.0);
-> -                assert_eq!(kernel::dma_read!(self.ca[i].b), value.1);
-> -            }
-> -            Ok(())
-> -        }();
-> +        for (i, value) in TEST_VALUES.into_iter().enumerate() {
-> +            assert_eq!(kernel::dma_read!(self.ca[i].h).unwrap(), value.0=
-);
-> +            assert_eq!(kernel::dma_read!(self.ca[i].b).unwrap(), value.1=
-);
-> +        }
+for you to fetch changes up to 153dbf4adad0082d030c30d20541df2b1af52db6:
 
-This changes the behavior from before: now an error will result in a
-panic where before it was just ignored. Not sure what to do here since
-it's a sample, but if you intend the functional change, I would mention
-it in the commit message.
+  regmap: irq: Use one way of setting all bits in the register (2025-02-06 20:46:09 +0000)
 
----
-Cheers,
-Benno
+----------------------------------------------------------------
+regmap: Updates for v6.15
 
->      }
->  }
-> =20
+Only a couple of small patches this release, one refactoring struct
+regmap to pack it more efficiently and another which makes our way of
+setting all bits consistent in the regmap-irq code.
 
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      regmap: irq: Use one way of setting all bits in the register
 
+Christophe JAILLET (1):
+      regmap: Reorder 'struct regmap'
+
+ drivers/base/regmap/internal.h   | 12 ++++++------
+ drivers/base/regmap/regmap-irq.c |  2 +-
+ 2 files changed, 7 insertions(+), 7 deletions(-)
