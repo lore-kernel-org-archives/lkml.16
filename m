@@ -1,213 +1,182 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2046.outbound.protection.outlook.com [40.107.236.46])
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6D21DE4DC;
-	Thu, 27 Mar 2025 22:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743113078; cv=fail; b=MykHxzgA9vdTwTRYiEu3QT69pLB60ye8fMDZNrwjuj/njfmtT3RGW7oSuqrlaTw4My7SfYlZcVIKlFbcAPs6glty206eWvVonWRZqj8jtm8AHCgORUpysU9OHf1KRf980D0vf4NUSP88/VfY1KqawgJ//oy6GLSM/cydPqpA5RY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743113078; c=relaxed/simple;
-	bh=IcDWmOQF1IIBtuIqQLHVnug7eHK4HCCU9tyZ+ZTV6Z4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=s+PuvCRX57G4lXKoQEtbWlmA4q4O5F2AbA/X1poGcw9uXZG26HJKpkhVJFVNTT0N0g+8BVW+YBKNSx1bhKU9eVgCSgqgcDqCW6Jh5+63IyVEPIIm+Oat+uXWB8YJBugOLt3O0H6zTpyox7IySam3YqQDGQ6V7z5rL5Njoo396V8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=KtgvPmo6; arc=fail smtp.client-ip=40.107.236.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B861B1D5ADA
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 22:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743113614; cv=none; b=hKnSvTOOK1iFPq2V8bF8/Xexi78EnOmW/r2DJ7VENfdaQ68JRJWl6ly4gKav7D7HKrit5I2zRSFO+Pf+zU/JGrcuS0KLbi2s+CGOZ873SumWHE9VuO5NkyUXFNJGRYX1IaJz3mZL69EjUeokP5ZPlIncxFA6Kl2ShsOGCe5YEw4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743113614; c=relaxed/simple;
+	bh=TYGJ8FnfsKT1SKjoZWBosa8mBZ3KjzthRNE8P8nvecE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bIAah5K23301+d+d087IX0jf8Aiv8RZT41PyVh8I8os6E13zRcGTZ2TB4WwqZDp1AQEgn0ppAKnoxy1Fur2rDLDkdUCUBkAVveYVtHzlTNUM53J5Ocr57mL+jrTNyAveKDyo8GxCx09l6o4uG5zofcjgDDlRQx1cWpTnltb9hu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=RfneHWSi; arc=none smtp.client-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="KtgvPmo6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IvoXnrwX1LmVwO8rmLoe8T4TnOAgjLxRu8GDDpslWBMngNEOo1lRa19c8Supol/o/f/B++NDYH38cT3X1/VjxqYaGdzWWtyurrJrGpLytew1SeR0oPqjSZzDlw9wW4zz7tXeuYYTn/xnEi/iy3qncXgml/iTa8LdyJxJ7VhMhtUFHHmuG5WjFsjpBgmodsm5GyxnUpLq7DJmMQ3JKedX0o47e0cYNUCPKMhzZDclPFTVF5LQ/1ENV6ny9IvJuJ+HWFaFkKzCLFyVBAUiPlkfVWqNMVPFHsvSTsByVWCiY5mAutOvO9g69LyT1JHggtCw87MTV2cLzzpfldqLmgP30g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VCS2HIZ1YbAAlf5jyezsSXmN6e57ta3fnu6OJyz/jFU=;
- b=Fe/Q4XteE42o1ZzjCbd5UFVCpHtkkHyY1upQeDheEO6URjPT94n/7Kdh4NWHWBNN9N26sarDeyEMskteYOAbHOmxPcZW9udZ+Bv5YmbauAI/Z8+ImsQwZIpr7Ea0SVAiEqX076MZh6MAuElEZi4K3ohIoKGM3EF/l9dn8QxRNchPJMCbJ5xNkUmC/L/LzwzrDUtjZ6CQxOw02w6AjDuJbnwoOQWg6zLzFSi03yiHM01b9SrykDiNmQR4BIkeZJbCbzlP10icRjRYBVAYaYLCNMyyFadv2pJWJt611kXUJETRhi03NcyzaUOSZl6x5ZvOLp5Z6zxJJgBpOch8Uk0Cdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VCS2HIZ1YbAAlf5jyezsSXmN6e57ta3fnu6OJyz/jFU=;
- b=KtgvPmo6wz4Jx2tnsyMbCGVsmVrKA6+j9KZPNLC7gn9FmcITaxHBPTPjF7QFMOAgMtd30q0+6+xnCZHQJMwOS3e80vZ1Y1Ui4LAZOhUWYbRB++44zVP07Okp+XvK1eEps4cZUvl8KIPPyn0fa3WopH6jTKs7QTPrIJ6YrxVZp/k=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- IA0PPF316EEACD8.namprd12.prod.outlook.com (2603:10b6:20f:fc04::bcb) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
- 2025 22:04:33 +0000
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f%5]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
- 22:04:33 +0000
-Message-ID: <fa7f62f6-9072-48e9-98bf-d004b6828f3e@amd.com>
-Date: Thu, 27 Mar 2025 17:04:29 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 00/16] Enable CXL PCIe port protocol error handling and
- logging
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
- jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
- ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
- rrichter@amd.com, nathan.fontenot@amd.com,
- Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
- ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
-References: <20250327171607.GA1434835@bhelgaas>
-Content-Language: en-US
-From: "Bowman, Terry" <terry.bowman@amd.com>
-In-Reply-To: <20250327171607.GA1434835@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR11CA0121.namprd11.prod.outlook.com
- (2603:10b6:806:131::6) To DS0PR12MB6390.namprd12.prod.outlook.com
- (2603:10b6:8:ce::7)
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="RfneHWSi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=rq2gsk3pfvay7fg5nyq3ghjsg4.protonmail; t=1743113609; x=1743372809;
+	bh=Vrk6CcpdVcblD8Yoi4uM8XudDIG9EgjbDWgg5W2/PO0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=RfneHWSiAyNxultd7Fssx0bbLRtJdVbBqsZJz5oD6qD2GsbQ4/36TWrpLy7lg+DmF
+	 vnlER0HAcssPgET0HTb9yNDxki7tEztPSH0C8H67N0XPwy+gZ5WPbq2qCtQ1eENQPU
+	 kOnGYplP6tb3H4rtk29pwmRMCS+7s+FUcGx5PhMAr0lDOuWfLKDneKOrlEvWAFlLOD
+	 ZKXQkFuKl2U1Wg5B2xRsUOnmUFtHUGK38R/UbIZATR7RBxqKrAlbLOCJHbYXGQN5dv
+	 GPE9uqewuMZymcnHSm0Xzu1EsICI8eYZMERYJRwmRIsRkK/LbcTptqGpefovzTB26o
+	 BEe/cCRP+vMxA==
+Date: Thu, 27 Mar 2025 22:13:22 +0000
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH] rust: clarify the language unstable features in use
+Message-ID: <D8RE79BLHK7K.1ZM2N5RBYGUY8@proton.me>
+In-Reply-To: <20250327211302.286313-1-ojeda@kernel.org>
+References: <20250327211302.286313-1-ojeda@kernel.org>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 57039260adb80c49be970e0c87108b8ac94d43c1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|IA0PPF316EEACD8:EE_
-X-MS-Office365-Filtering-Correlation-Id: 66083987-23a8-4533-df5d-08dd6d7b5adc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ak9rYk50MEtlUk1LY0l2K2dGTHEvMEZLYVVUdTNJd2ZCME5WYlBiRlQ0eDhE?=
- =?utf-8?B?cm9KUUxEaHlacERHOXZMc1FQUlBRVkJkcnlPUzlOejZ0SGVzSVNPcFhXZDNB?=
- =?utf-8?B?UEo5YlR3cU54cFNFQmVsV01jeTJnRFpZdmZYY1F1ZjIzSityQVhVWjU0bWJv?=
- =?utf-8?B?ZERhdlVRSlptMmI0T2t4bWIvNmVCdFV5dDlnckpYOWZ2bURHZUtSeFUzaWhj?=
- =?utf-8?B?UnluWVdJSEYzQnJ6R3FjK2ZkV1FrOThlKzV6dTEwQ2FvdDJSL1NsSU40Sjkw?=
- =?utf-8?B?SEhrSW1nL3MveXNlTFpFelR2cWRXT1lYOHQ4aEp0dnZTWk9DRUh3Q2dBaWM0?=
- =?utf-8?B?Ky96V1ZjOEVISVlST1h1bWJMeUdQSEZEcXhjdllSTE84WTdQbUFlWkhIb1Nx?=
- =?utf-8?B?eWJuNzhLL1I0NGpyZlJrZXdMOC92QUpDVEZwbmJaenBuTGIxYzVLbXFjQVNH?=
- =?utf-8?B?SFRSYjV5VzNmT0I4RHdTai9OanVYUUk1eHlqRVJyMksvbWNWdEMwckd1UENQ?=
- =?utf-8?B?Y3NqeityWFByQkpOUnJ6a3I1bllFb1p6U3NuWkN4c01Yclo4RjlPdndQYTN4?=
- =?utf-8?B?cVQrSmZIR0x1dGw3Z0NKVkdBSkRlUXZGOFIzNGxXVG1XbksxeWpJcVNLQ1Nv?=
- =?utf-8?B?T0pNdnhyNzF2WTVKSUxhL1lDYlBpM3FMeTFhQ0xTNDBVZU1nQ3ZVRkpZRUh2?=
- =?utf-8?B?M3F4SzVDaENReWovSkJPOTgxQlF6NTR0a3JKeW53WmNpNjIxVVZLYkFpWmRQ?=
- =?utf-8?B?OFgxTzBlbVdKbFJvZGEyemNuZzg3SHJNRGM2RktlM0orTlE1cGY4SHR3bHFP?=
- =?utf-8?B?TnJoOEJvU2VDMHBYYXFxd0hNK3MwNmFIczJYanJhN3NFWG85NmFSUVRLblRR?=
- =?utf-8?B?aE9vM2M2Q095REFxcnZFUnNpMGtnQjFEWE93OGtXUlFDd25NOFBqTm5DYkk0?=
- =?utf-8?B?NVA2OStkMWNvNmNGYkZEb0dFUUtRQVB6eXJyajV3dURjZmJwSVlvSjRvU2Z1?=
- =?utf-8?B?SFZRZDFtejllbjJEcGpoVW5Fb1ZUTXhoaEh3NmhZQXRNTDVJc2xlelZZL1pr?=
- =?utf-8?B?eTRKOHVoY3YyTmxTK0JFYUpsdUtnREgrQkVnWEFQVXRacUJHejJCSlpzKzdM?=
- =?utf-8?B?SlpraC9ST0pRbE8rU2pROHRobkRtZFZ2ZHdKUTZndUsrR1BoUGdsZU41aER0?=
- =?utf-8?B?dVZ4VkZFZEhNOHVhM3NVL0RnRnUvMnFQMTBkYkJOblk2RE9RMkJUTmdDSC9N?=
- =?utf-8?B?aHhXeXBLNjlHUWpWQW9FZm9kM1dKaU83U1Y2cnhmOThSVFhsWHE1bEU2S0JD?=
- =?utf-8?B?UWlkTUtYZk02VjBSUkt1a0xCc1JLQU1oT3ZPQjJha1FXUkVCRDYrMGhlNURs?=
- =?utf-8?B?L2FMenA1T1JPSUJmOSt0SDlDMTFXeWgrTDRjV2FCOXNGTmwxdWxyQmh0SVdo?=
- =?utf-8?B?ZldmdDIwYVE1M3RJUjl3dDB5Umk5aDlZVW93UGRRSS9yTWFqQ2pBM0E1cnlB?=
- =?utf-8?B?Q2ZMRnRab1RMWU13U1JHNzQ5bW9EaUpNZ2xudFMzb0c5Q0E3K1hrQU5QaHpz?=
- =?utf-8?B?ekk2dGhmR1RqZ29rQ2pLbysyeDVwVWNYeWpsOCtDWDg2d0M5VHhQUldIaUov?=
- =?utf-8?B?SmVkOGVmRHpITi9IWlpvNzVPR2l3YXE5bW9RU0dBKzZZNWlOUzBpcnZTR1RO?=
- =?utf-8?B?c3g2THA0cU9uR0JZMDdwbjRIM0RxWVNMZ0twQ1Vrb1hFSUUyQUIvS01teTMw?=
- =?utf-8?B?N0x6elZ0dUZvaUlvRE5Kckp0YlU3V2R6dFk0MHdHcDAvcXZKeDZoZEdOOTgv?=
- =?utf-8?B?YWpFQ2tkdzRXTnJhNkwxWFdVVnNhcU9SOTVRSDVhaTEvYk9pdkx5NTUvNUE0?=
- =?utf-8?Q?i/tqUeYI2rt9R?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cW1DY3lPbU5PcGdMS0RHTk9HU05sWS9TbVIxTVNnUmJFdGRHUEVwMnBheUt0?=
- =?utf-8?B?VGdCK1h1RWlnc3UzQVpkUWUwa3lJYjhURmU5c3h4dTE0bTlxVDg5UFZOUklL?=
- =?utf-8?B?Z2VIWS81amdOLzRQMjhGeXltNVFWak1kZHVKL3dTenc3bUlyS3E5anhmNnVG?=
- =?utf-8?B?MjBVUzhoZlA3OFR0ZkM1UHdTK1JrdWJQNHp0RWxYZENGWnVIb0toNTk4S0tD?=
- =?utf-8?B?U1VMK2UxQzV0ZExQSE1QOXFnYTRmd1dXc3BpMmt0TDNzT21KcWZmTy9BNFB6?=
- =?utf-8?B?MDI0ZmkrNDI1N0Q4b0s5NmRxMnVNWVlYY3BwVW1FdVRKQy85UVgrMmFyQmw4?=
- =?utf-8?B?Vm9nWkRKYW0xWFZ5MlpRMDR0bzdBa1E1R0FDZUtCQW9xV0ZRQW5GRDl5TXB3?=
- =?utf-8?B?c3p0RHBrTzJWV29FdXFHNThWdGhaUmhJcVZKMGtVYmZ1eVJHbW9QL2RRU25u?=
- =?utf-8?B?ZnFFeWhCdWFFUFdqMzFNZTkwdTdNS0xSekNOZXZTek5MQ09OKzkrM3NUaW9P?=
- =?utf-8?B?WFAwbWZFRGw1YnY2MjJqbU5rUEV5Wnh2WkdOQlBjS1EyQWpFMnpLWWVpTTla?=
- =?utf-8?B?MmdpMUMzS3hiQVV3WjA4UUMzZVg5dVFYRGgzVnJ3OHJlU0VyalhiOER3d0lM?=
- =?utf-8?B?ZndUcmRyQVN2dkdXYXYwNVpnRW1WWFkwK0g3bXNZSGlOQTBuSk91SzV4WkY5?=
- =?utf-8?B?N3VzL29udURtaUZ5OFRlVjE2cFJqY0tBaEZ1MVJJUm9CeThEK3crbTFHdXha?=
- =?utf-8?B?dGVORUNFdGh4K0tHdmx0eWhCOE1FNGFzRXV4aGFZN3lvRC9BdzdTckNRZEF0?=
- =?utf-8?B?aVZNb1J2WG85UkVKRUhsRm5wL0dKcWdwSXZCb3AyUlZMeklUSnlDQitXTUNF?=
- =?utf-8?B?UGY2dEJzSUZ5QWN1MFo2S1FnaFhYdHpXemI2N3ZnT2xwM0ZtQ0pUek10NzZw?=
- =?utf-8?B?bHhoTW15ZDVtQXprVEMvU1lSU0ErMzRFeUVldjQ3VmdNMkxSalVocU9zczAr?=
- =?utf-8?B?OVYrNm0vSE9OWVlKMHpBUE1BWlRRUldQTTRFcHdaaGdod3hQUmJPMXplaGlR?=
- =?utf-8?B?WUZ3ZFp3RXRjREtqNDlzTVdycGUvZXZVN2F1WHVrRzB2UWh6YlhtdXg2eS8y?=
- =?utf-8?B?a1N3dnZOQXRxdGZlckduRG14MDB4dVluVW15Ym1CUVUxTmc3cG9SUjBnSmI2?=
- =?utf-8?B?V3JoanZvU29zREVqZWYyM2hoUnBYQTVlUnExK3JwSjN0QmN3WEFBeU5KZlFi?=
- =?utf-8?B?a1pqTUdSTzB0QVM5V2hYRC83eTZTZnZ6ZlNuTkwyNzVQS2FDOHkzSzM5ckFp?=
- =?utf-8?B?blJTaW8yYmFraVByUFNDZlJiSnc1YVB0Z1hkZytBSGpBcjJTL0tQT1o1ZHl2?=
- =?utf-8?B?QUtwdFk3YVBWT3dvS0NyMEc0cDRoVThJZjRvS003RUhENG9mZ0ptS0NnVFdR?=
- =?utf-8?B?VEoxT3FkekNOd1pzcXJENGVXNytwdWdKOFZPNTRMcWphT0dKVGNJNTg3a1JE?=
- =?utf-8?B?SklGSW10ekluSWo0cm1qZWwyYkthV0JoQ24ySlVDdnlmTzVCSXUvTlh5L0l1?=
- =?utf-8?B?U3p2VTUvbXhmdWlUK2tWRk1ENlBzLzlBc3YrT1BwbmtvcFkyZFdidndPVnRo?=
- =?utf-8?B?LzhjbS84K1FlTllwRzErSDhabEIycjY5RVNEaVFjaUxkcHVSVyt0c01lRm9I?=
- =?utf-8?B?cllLOG9NUkJZSEt4TGxma1MvYXdVVTBoMThNNHNkQ0xnbWVFQ1dTTGhjMFo1?=
- =?utf-8?B?VUNIa0ZvTHRkdE53K05SSktGblhBU0Erd3h0bVRhZWhiNGJGd1VJR1NHRVl6?=
- =?utf-8?B?dkRtZDVWZVpxeVhMaVJ6dWdPS25XaEhiRkYxZlkzcWJBd1N4YXJVSWpuT044?=
- =?utf-8?B?dkZ3OG1SRmlwdE9yVXJQb2tZV2VSOVlmMnE3aTdvU0hVSFZjZUxZajNET1J4?=
- =?utf-8?B?S1FTWHoxbGZMdWpyS3RlTk55NnBYYWFDSWxjNzQ1d0ZnQSt2TTdqemg4aVZk?=
- =?utf-8?B?NFFZSWxFYzFIMmZETmxOT2RtV1FNMWdvOStBSmgzbXdEUkw2V3I3VjBCeVRM?=
- =?utf-8?B?MHpjcFdZK1ZQSlVFRG53WkxOMVZzVWc1MG8vUnpmZktnS2RJVUdKYlk4N2d0?=
- =?utf-8?Q?jt5Nkw7ZZHIInTBvV8/Ms4ChY?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66083987-23a8-4533-df5d-08dd6d7b5adc
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 22:04:33.1435
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YZvnH9cFlZ4bvUfm0K7KnLU/Hp6SP0Zc8pJEojt51wZJTGk3oo7AAVN6zeReOE/cFvSyx5oM3rO6rrTA8Ai+ZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF316EEACD8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+On Thu Mar 27, 2025 at 10:13 PM CET, Miguel Ojeda wrote:
+> We track the details of which Rust features we use at our usual "live
+> list" [1] (and its sub-lists), but in light of a discussion in the LWN
+> article [2], it would help to clarify it in the source code.
+>
+> In particular, we are very close to rely only on stable Rust language-wis=
+e
+> -- essentially only two language features remain (including the `kernel`
+> crate).
+>
+> Thus add some details in both the feature list of the `kernel` crate as
+> well as the list of allowed features.
+>
+> This does not over every single feature, and there are quite a few
+> non-language features that we use too. To have the full picture, please
+> refer to [1].
+>
+> Link: https://github.com/Rust-for-Linux/linux/issues/2 [1]
+> Link: https://lwn.net/Articles/1015409/ [2]
+> Suggested-by: Andreas Hindborg <a.hindborg@kernel.org>
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+
+LGTM, so:
+
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+
+And left two suggestions below.
+
+> ---
+>  rust/kernel/lib.rs     | 27 ++++++++++++++++++++-------
+>  scripts/Makefile.build |  8 ++++++++
+>  2 files changed, 28 insertions(+), 7 deletions(-)
+>
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index ba0f3b0297b2..660a3ab6f9d4 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -12,21 +12,34 @@
+>  //! do so first instead of bypassing this crate.
+> =20
+>  #![no_std]
+> -#![feature(arbitrary_self_types)]
+> -#![cfg_attr(CONFIG_RUSTC_HAS_COERCE_POINTEE, feature(derive_coerce_point=
+ee))]
+> -#![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(coerce_unsized=
+))]
+> -#![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(dispatch_from_=
+dyn))]
+> -#![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(unsize))]
+> +
+> +// Please see https://github.com/Rust-for-Linux/linux/issues/2 for detai=
+ls on
+> +// the unstable features in use.
+> +
+> +// Stable since Rust 1.79.0.
+>  #![feature(inline_const)]
+> +
+> +// Stable since Rust 1.81.0.
+>  #![feature(lint_reasons)]
+> -// Stable in Rust 1.82
+> +
+> +// Stable since Rust 1.82.0.
+>  #![feature(raw_ref_op)]
+> -// Stable in Rust 1.83
+> +
+> +// Stable since Rust 1.83.0.
+>  #![feature(const_maybe_uninit_as_mut_ptr)]
+>  #![feature(const_mut_refs)]
+>  #![feature(const_ptr_write)]
+>  #![feature(const_refs_to_cell)]
+> =20
+> +// Expected to become stable.
+> +#![feature(arbitrary_self_types)]
+> +
+> +// `feature(derive_coerce_pointee)` is the one expected to become stable=
+.
+> +#![cfg_attr(CONFIG_RUSTC_HAS_COERCE_POINTEE, feature(derive_coerce_point=
+ee))]
+> +#![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(coerce_unsized=
+))]
+> +#![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(dispatch_from_=
+dyn))]
+> +#![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(unsize))]
+
+Does it make sense to add another comment in front of these three along
+the lines of:
+
+    // Before Rust 1.82.0 `feature(derive_coerce_pointee)` doesn't exist, s=
+o enable the predecessor
+    // features.
+
+> +
+>  // Ensure conditional compilation based on the kernel configuration work=
+s;
+>  // otherwise we may silently break things like initcall handling.
+>  #[cfg(not(CONFIG_RUST))]
+> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> index 56be83024851..41a640990cfa 100644
+> --- a/scripts/Makefile.build
+> +++ b/scripts/Makefile.build
+> @@ -226,6 +226,14 @@ $(obj)/%.lst: $(obj)/%.c FORCE
+>  # Compile Rust sources (.rs)
+>  # ----------------------------------------------------------------------=
+-----
+> =20
+> +# The features in this list are the ones allowed for non-`rust/` code.
+> +#
+> +#   - Stable since Rust 1.81.0: `feature(lint_reasons)`.
+> +#   - Stable since Rust 1.82.0: `feature(asm_const)`, `feature(raw_ref_o=
+p)`.
+> +#   - Stable since Rust 1.87.0: `feature(asm_goto)`.
+
+Probably a good idea to add:
+
+    #   - Expected to become stable: `arbitrary_self_types`.
+
+---
+Cheers,
+Benno
+
+> +#
+> +# Please see https://github.com/Rust-for-Linux/linux/issues/2 for detail=
+s on
+> +# the unstable features in use.
+>  rust_allowed_features :=3D asm_const,asm_goto,arbitrary_self_types,lint_=
+reasons,raw_ref_op
+> =20
+>  # `--out-dir` is required to avoid temporaries being created by `rustc` =
+in the
+>
+> base-commit: e6ea10d5dbe082c54add289b44f08c9fcfe658af
 
 
-
-On 3/27/2025 12:16 PM, Bjorn Helgaas wrote:
-> On Wed, Mar 26, 2025 at 08:47:01PM -0500, Terry Bowman wrote:
->> ...
->> Terry Bowman (16):
->>   PCI/CXL: Introduce PCIe helper function pcie_is_cxl()
-> Something like "Add pcie_is_cxl()" is probably enough.
->
->>   PCI/AER: Modify AER driver logging to report CXL or PCIe bus error
->>     type
-> No need to repeat "AER" in the subject.  Could start with "Report" or
-> "Distinguish" since "modify AER driver logging" is kind of low-value
-> information.
->
->>   CXL/AER: Introduce Kfifo for forwarding CXL errors
->>   cxl/aer: AER service driver forwards CXL error to CXL driver
->>   PCI/AER: CXL driver dequeues CXL error forwarded from AER service
->>     driver
-> Both should say what the patch changes.  "AER service driver forwards"
-> and "CXL driver dequeues" could be descriptions of existing behavior
-> or something else.  Starting with a verb will help make this clearer.
->
-> Maybe don't need to repeat "AER" in "CXL/AER: AER ..."
->
->>   CXL/PCI: Introduce CXL uncorrectable protocol error 'recovery'
->>   cxl/pci: Move existing CXL RAS initialization to CXL's cxl_port driver
-> Drop "existing" and at least one "CXL" to increase information density
-> in subject.
->
->>   cxl/pci: Map CXL Endpoint Port and CXL Switch Port RAS registers
->>   cxl/pci: Update RAS handler interfaces to also support CXL PCIe Ports
->>   cxl/pci: Add log message if RAS registers are not mapped
->>   cxl/pci: Unifi CXL trace logging for CXL Endpoints and CXL Ports
-> s/Unifi/Unify/
->
->>   cxl/pci: Assign CXL Port protocol error handlers
->>   cxl/pci: Assign CXL Endpoint protocol error handlers
->>   cxl/pci: Remove unnecessary CXL Endpoint handling helper functions
->>   CXL/PCI: Enable CXL protocol errors during CXL Port probe
->>   CXL/PCI: Disable CXL protocol errors during CXL Port cleanup
-> Don't repost just for any of this, but it looks like there are some
-> kernel test robot warnings that need to be addressed.  When you do,
-> tidy up these subject lines so they are capitalized consistently.
-Hi Bjorn,
-
-I added all the changes. The commit titles read much better.
-
-Terry
