@@ -1,148 +1,92 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE2D79E1
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 679D51FFC41;
+	Thu, 27 Mar 2025 16:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743093874; cv=none; b=qXTbeZq7uLGebcVS/5Xq6Zwt/lKn+rOe8AgVeIXfTxGfpWn39VVkaAm93L9Hol/h1zKr7fnJJLcH9YnRPXidl6aro0cZe0DxNifp0AIClAbuNg6VIA9cHO5QJiv4RGWGdSXfM7oVXF2PNW3xUEqQSc4W0X+MumJZjzQa4VrG+nc=
+	t=1743093876; cv=none; b=sK0ITZZ7L5JQcyFQV75q/+g6t9/pm17eK3iBhWSF5gZkSzPB5Jpiu1qYDbdHYu667H55SYsqNdIH8Ae7kFpMHztA+n96bPA2aDb6ucBP93bVoYb39FrrfdobqRCA2hm95LhetIKr5XqPREioIMB49z24TfCU2NH6XYJwIkWBSfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743093874; c=relaxed/simple;
-	bh=zvcbSyO9PwWfz46UMsJf4c401+BJRbxXhYnxCIV0uZY=;
+	s=arc-20240116; t=1743093876; c=relaxed/simple;
+	bh=FYGZZN5Z6khOmuwpDcsQ3OWEngqKDEy0XbKFM3ueaLs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ui1A72y+E+WnuJsdczmPeQw0WSBUJZQHzSpphOFu6SI+ZtK6O+/kcKgbz9E32eIu+8GLF79FuKtoZiOCLigx9R/OHaJnopNtTLKM1DN4K1mqjqaP/Y7IOPVKPJmBDq/zbvWFoc7tMEpku7QwtoRF16A6qSqz/hP17UFEGPGgYrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=PibiQl0U; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=bMJq/IE92DABcehW9ZXgTaGbunePB1uzHSqo/mBBiDFcuDHhS1Y458rHGo2feYrY+XuwXAYKpciqM7M0N/mnWFa0RiJX1nlue/E04pLyVkVJvOEfWA+Yu2hZBeKEmcBmz6l+vaAiI5qEHQFYQ7uk5Lq9R6IcxtcDclfT0TT+TUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tX86Jgoq; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="PibiQl0U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=hbwx
-	FimHjuyQqZmQbnUDmSjTT9QuBUrE9kGrrCegsl8=; b=PibiQl0UGvs02bQfzYYI
-	pkF7He1ovGQgWonPfhrXuPMoW8iOuyZLOUpnHNzzREGLMqHvW9XP70wFtIvAEX5e
-	cFMngdPs6iBpu2m3iNe0EQf14Dm/7XsPgTFm/9PzHVh0zJukwfDvxasKDPupxuS7
-	OshgLMyM9K0/YzNRomYpV2u/njpqUVhCNLZLcW048GCFkMNU9gMgxytwmKBfQP3u
-	f11qEJsnNOOOEEJI/HwrQrzrM57urM8B6hdwZbHXWxcmbpiLJzpKkSMkGJPonHLd
-	p8GwEP7/Wg1nVPgGGjJWuwq7xGWLheHbOmzrTo6QTZO17nrAkPe8w1Grbzwf1Vab
-	YA==
-Received: (qmail 4083466 invoked from network); 27 Mar 2025 17:44:24 +0100
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 27 Mar 2025 17:44:24 +0100
-X-UD-Smtp-Session: l3s3148p1@gtWOqlUxgJEujnsv
-Date: Thu, 27 Mar 2025 17:44:23 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Prabhakar <prabhakar.csengg@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tX86Jgoq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=MoCqLC0IyhHguklsqlEzr9OrpUUFrOWDPdsoNryKYDU=; b=tX86Jgoq24bhniWrtEPXpkd536
+	cUmSpefVNuw5pC1Od8arup43Wnt7+0HRYOZoanyEQdX0oJU2QGL5xfloxkFz8kRQrsp5qXMswzpcm
+	6N4x9LAKCqKwO8lowZUyg7JMY6pDkmDBvJoHIbH+vZK5Eftv03kMbr4oEon5AzyL5LhEdcON3/zXA
+	ORGXhYuo5+I7eAubmfHcetoSzGNeQPVaTZQ2nCwjJ+3LPw9wiJeF3PnIZvz1oAInLzJaTKHfCth7z
+	BLYHE3Kib6e5E7PS7n7ICBAU0KNrjkVE3ee8WJjXwWefDYjcgEz9JHDntUS/0mP8NIoRsj+4aMDGm
+	vac/ZHUQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1txqLG-0000000DMCf-0N50;
+	Thu, 27 Mar 2025 16:44:30 +0000
+Date: Thu, 27 Mar 2025 16:44:29 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Dave Chinner <david@fromorbit.com>,
 	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 15/15] arm64: defconfig: Enable Renesas RZ/V2N SoC
-Message-ID: <Z-WAZ_IlMBB3XbTN@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250326143945.82142-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <41c6f512-47a5-4723-bbdc-64ed85ae8391@kernel.org>
- <Z-VETFWFT5NksD7J@ninjato>
- <6fa375d2-5ba8-4b2b-8a54-f28b3cbedcfb@kernel.org>
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v3] mm/filemap: Allow arch to request folio size for exec
+ memory
+Message-ID: <Z-WAbWfZzG1GA-4n@casper.infradead.org>
+References: <20250327160700.1147155-1-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="c/EJiR+H9xTHY3mL"
-Content-Disposition: inline
-In-Reply-To: <6fa375d2-5ba8-4b2b-8a54-f28b3cbedcfb@kernel.org>
-
-
---c/EJiR+H9xTHY3mL
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250327160700.1147155-1-ryan.roberts@arm.com>
 
+On Thu, Mar 27, 2025 at 04:06:58PM +0000, Ryan Roberts wrote:
+> So let's special-case the read(ahead) logic for executable mappings. The
+> trade-off is performance improvement (due to more efficient storage of
+> the translations in iTLB) vs potential read amplification (due to
+> reading too much data around the fault which won't be used), and the
+> latter is independent of base page size. I've chosen 64K folio size for
+> arm64 which benefits both the 4K and 16K base page size configs and
+> shouldn't lead to any read amplification in practice since the old
+> read-around path was (usually) reading blocks of 128K. I don't
+> anticipate any write amplification because text is always RO.
 
-> You did not object to last discussion about this (a month ago) - neither
-> to my comments nor to resolution - so this patchset repeating the same
+Is there not also the potential for wasted memory due to ELF alignment?
+Kalesh talked about it in the MM BOF at the same time that Ted and I
+were discussing it in the FS BOF.  Some coordination required (like
+maybe Kalesh could have mentioned it to me rathere than assuming I'd be
+there?)
 
-Because I cannot follow every Renesas patch series there is. You are
-long enough around to know that large companies have different entities,
-groups whatsoever. It is quite a challenge to streamline this via one
-group, we need to share work. We do try hard, though, and have a
-ARM/RISC-V/RENESAS ARCHITECTURE maintainer. Geert does a *hell of a job*
-getting all these submission into shape, and he surely does not accept
-code thrown over the wall. And geez, the patch series was just sent
-yesterday, you didn't give us even time to raise the issue internally.
+> +#define arch_exec_folio_order() ilog2(SZ_64K >> PAGE_SHIFT)
 
-> pattern from the same folks while ignoring previous talk is
-> contradicting "not too bad at fixing stuff".
+I don't think the "arch" really adds much value here.
 
-First, being a maintainer myself, I do understand the frustration of
-patch review not being honored. I can also agree that this series did
-not work out perfectly. But that does not mean that we don't care, in
-general.  Despite all imperfection and possibly different opinions, we
-try hard to be a good citizen and spend considerable time on doing
-things right. Accusing us of throwing just "code over the wall" because
-there is an issue somewhere which hasn't been worked on in one month is
-plain unfair.
+#define exec_folio_order()	get_order(SZ_64K)
 
-That all being said, we will fix it eventually.
+> +#ifndef arch_exec_folio_order
+> +/*
+> + * Returns preferred minimum folio order for executable file-backed memory. Must
+> + * be in range [0, PMD_ORDER]. Negative value implies that the HW has no
+> + * preference and mm will not special-case executable memory in the pagecache.
+> + */
+> +static inline int arch_exec_folio_order(void)
+> +{
+> +	return -1;
+> +}
 
+This feels a bit fragile.  I often expect to be able to store an order
+in an unsigned int.  Why not return 0 instead?
 
---c/EJiR+H9xTHY3mL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmflgGMACgkQFA3kzBSg
-KbZxSA/9Gqszzc/JQdPg5lFILYUjNMR2rLsA7Uc53vk3WyEcVSWmUaBjeGLU+ZkO
-2OkaPe6x+ULk1vXzpJYmHK8J93cMHK7/tXR8YBFXno9cL1s+/XdwWuLWq0xlMfc5
-weFwNN/e3mz8emxJWhi8AJ0sMhC6OTBL4qghprYH6ElZfxgpliuGWw59ei1gKnsX
-/p5mOmGEETy4DIbiJEYth/Jypl4NrhfZdMmTUWBTqAj7/HuaBvY1psifuwDtAe5F
-mY3FY3ES+6Hfzl76tsBQ6JEmRW9E+rZFR4Dv3M8XXaEYsZZ8fR1cwgQ1WXNbdmz/
-1QOmex7GF5ceEJWdhEqAVJhz+aN6+Ot0Zxv0BCpxJzEoIGg7SXYpfkVBrTSL66a5
-1trcWPmelNgqCRc65t+mvUmAfsELLXUE7h96hKtqDCQ0GNokdbqS0PuRCief56/b
-VwXftmqvTstdTB7zMf9qfg9uTCeQycuzAsZQOdNynvDKML9olp6di/+curLvv5BW
-M45znbdpzss7Ilwj3qbgIkFT2O0v8PGdqsn+1gQ8mgahnCe9OAtZl1hd8o0WDmnJ
-2sbZcCcYMLgZVa+bI8/20Vba8uOnMMLVWZ/jk8c8LiRu8mqtYNAFGM8ClHFfh31u
-hLSV0vYp+GarLkjMqXezTYhnugy344QNVLOm2atmMGI69u8dtWA=
-=0lVg
------END PGP SIGNATURE-----
-
---c/EJiR+H9xTHY3mL--
