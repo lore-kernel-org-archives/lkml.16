@@ -1,114 +1,134 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5162F36
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 00:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F54AD528
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 00:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743035311; cv=none; b=UV4EPariq7yG6+qfaNEZZxjxOHbJUq4GXJmeGvq8DBbDO5Jv73ZZqEqosMXRVYCdnK4heik9JrI91IlpPFQ13XYSriIEytt7co2eE4EdsoG59riKeFdR9it41HxUaKY70D2W59wB9IGSLZa+rPgCL1aNOb3RbJXWc644VN1uX6g=
+	t=1743035842; cv=none; b=P02wkGC9b6h1nq34s05FkiJv9j4Hos6WvG29oB3Zt+FiXI2JLcrnAIW5D92jX17omwoTj2WmWmx/vwiHezLcdzTVH0wkTmP8GbWuFuBjrLxzO0fA20oIKK69PGf/swmg5mljChMkARE9avsp9X/6niGPbHqJK89k5AE3JoXWA/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743035311; c=relaxed/simple;
-	bh=FEo9uNCOISvLzSWcfNhXKZwqkTDWiC51P+5nYFqDl/8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q6+2nkV1f/79D+r8C7PrpFLWYXEwdJd5RNB2o2Q1ubcNUKaT86nq3glbB0gzSa3u7fzOQMH0RU/611NoeqG0JrIQ6dECnpOr0q+Kw7ANqlA4qQZnrrjR5luELjreW2wDLLkW7RrV/YlgursxiU/rlTvgHOk5C6HowURFbfJdeFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=ga6AEzF0; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1743035842; c=relaxed/simple;
+	bh=t9CPf5M6ZkPLWCDPkDoefSVWJEylpY9RWrgUWpf38ho=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=s5QFSMnbvOj8zNARN+/raEcSsffUSNS0THLDXSW+CPShmc2lnJ3ujM77LgvYs7kQsNVcdDQZpOvLjo2+w+XV9Xsl2K9mwIg7Ipp6uL1oUkrgYavhE90BR4r1CMUExsVy6vUrvbMgKnfWduRVFbFF5apkavRaIJLnQPgyCpbVHeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c0kYe8Ct; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="ga6AEzF0"
-Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
-	by cmsmtp with ESMTPS
-	id xWAbtNMYviuzSxb6itsjSx; Thu, 27 Mar 2025 00:28:28 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id xb6gtpnNH35Dwxb6ht3U81; Thu, 27 Mar 2025 00:28:27 +0000
-X-Authority-Analysis: v=2.4 cv=IeWBW3qa c=1 sm=1 tr=0 ts=67e49bab
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=DsNoo6ZTJa67tcyd3ErtPwNez84rUD/blpngmSY8kjo=; b=ga6AEzF0d5vBSGez0CYHwg6+1Z
-	pr7c/PC7Hr61rEexi/U4CqgAm6OEgak2Py8yNnwVoyKkmp3Y+xEHPxr8h2V9hQJo3wdkmRuQOsyad
-	6wmyE7DrflfJc7LnrwJKu181zkr5buxpl99xv34jyKDzUy7Tfv1PUYHQhznbJFIembjWDouV9fVNP
-	bTC1a71XQ9QNXq1XSD5MVZkiDQIlrzP5+V2DZTNTZYH9bHb14UY9NMRGnxP5CWhRQ5dIS9y7spC8p
-	d3TVgN64DI7UD8QjO9zbBWGJY+3/7O2d20mAjnDg/OcoReYEhwtRj28r24YrgQe0pYGawsf33VJp2
-	R6w7Ik/w==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:39466 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1txb6f-000000013mc-095p;
-	Wed, 26 Mar 2025 18:28:25 -0600
-Message-ID: <0ede30b8-68a0-4e8f-af42-c402e90399bf@w6rz.net>
-Date: Wed, 26 Mar 2025 17:28:21 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c0kYe8Ct"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743035840; x=1774571840;
+  h=date:from:to:cc:subject:message-id;
+  bh=t9CPf5M6ZkPLWCDPkDoefSVWJEylpY9RWrgUWpf38ho=;
+  b=c0kYe8Ct/8no5f+gEWk2BHALYghtczU81BnQku111Q88jECbeOsn87Q4
+   vwkkhHGHObGMpPmbA8E/JzYWJAUkc5S9C6S9H15J0NvCLFWlxxwXTz19U
+   1Klf7so55FZoaPHuzYV5brvu84BADfW+8eVdql0QavwXWPgCeW6Q9dcpx
+   xoAv8hpZWpkdJeBSk5vB3ueNv/Pw8AgFncE3XZmXIzPvhMKEnus/r6k9b
+   rPO7ackK+o9RBzj/vspsD8L9dkcV9VpR9ObkFkYaP6dd+cNoMTYzxvfeV
+   3p4aW3z/1BxEFnqKhImp7lLESBoj+EkkVBUIVnL0XRL04FuroFKfwomUz
+   A==;
+X-CSE-ConnectionGUID: Qq2rfmjlQqqoI2lFfsUePw==
+X-CSE-MsgGUID: Gl8qu8vcTJG5kZiJXcHonA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="48138351"
+X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
+   d="scan'208";a="48138351"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 17:37:20 -0700
+X-CSE-ConnectionGUID: KLrMuUEMRsygf2XQygSctQ==
+X-CSE-MsgGUID: Z8C4MReOTsK8HXk/0M+n9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
+   d="scan'208";a="124758517"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by fmviesa006.fm.intel.com with ESMTP; 26 Mar 2025 17:37:18 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1txbFE-0006Ep-1w;
+	Thu, 27 Mar 2025 00:37:16 +0000
+Date: Thu, 27 Mar 2025 08:36:21 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [paulmck-rcu:dev] BUILD SUCCESS
+ d991a1c5b192146237df66348e6e225f12b829dd
+Message-ID: <202503270813.w31tSh3N-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/115] 6.12.21-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250326154546.724728617@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250326154546.724728617@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1txb6f-000000013mc-095p
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:39466
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 36
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfFpqPxE41hnZxANBAmtS3O5n4KdqvTSR/tgY2i7V66ZFFJYhu1kXx2KmVZ0ePUEX6w38leOacdRjqAuuYxfTtj6c8dM3HpYHbHk2XVsNDCCQ3Mk82Aib
- jD2+rZBypGuWOJev0SDpPsCrK8ZLSqzxmFbY64SsYEhit0HLL8o34m3STVeZ822ykDcgMGmijlQ/RmlMa0JhR8Zlp8OGKkgkt28=
 
-On 3/26/25 08:46, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.21 release.
-> There are 115 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 28 Mar 2025 15:45:30 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.21-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
+branch HEAD: d991a1c5b192146237df66348e6e225f12b829dd  srcu: Make FORCE_NEED_SRCU_NMI_SAFE depend on RCU_EXPERT
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+elapsed time: 1442m
 
-Tested-by: Ron Economos <re@w6rz.net>
+configs tested: 57
+configs skipped: 0
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+arc                  randconfig-001-20250326    gcc-14.2.0
+arc                  randconfig-002-20250326    gcc-8.5.0
+arm                  randconfig-001-20250326    gcc-7.5.0
+arm                  randconfig-002-20250326    clang-21
+arm                  randconfig-003-20250326    gcc-8.5.0
+arm                  randconfig-004-20250326    clang-21
+arm64                randconfig-001-20250326    clang-21
+arm64                randconfig-002-20250326    clang-21
+arm64                randconfig-003-20250326    gcc-8.5.0
+arm64                randconfig-004-20250326    gcc-6.5.0
+csky                 randconfig-001-20250326    gcc-14.2.0
+csky                 randconfig-002-20250326    gcc-14.2.0
+hexagon              randconfig-001-20250326    clang-21
+hexagon              randconfig-002-20250326    clang-21
+i386       buildonly-randconfig-001-20250326    gcc-12
+i386       buildonly-randconfig-002-20250326    clang-20
+i386       buildonly-randconfig-003-20250326    clang-20
+i386       buildonly-randconfig-004-20250326    clang-20
+i386       buildonly-randconfig-005-20250326    gcc-12
+i386       buildonly-randconfig-006-20250326    clang-20
+loongarch            randconfig-001-20250326    gcc-14.2.0
+loongarch            randconfig-002-20250326    gcc-12.4.0
+nios2                randconfig-001-20250326    gcc-12.4.0
+nios2                randconfig-002-20250326    gcc-10.5.0
+parisc               randconfig-001-20250326    gcc-13.3.0
+parisc               randconfig-002-20250326    gcc-7.5.0
+powerpc              randconfig-001-20250326    clang-21
+powerpc              randconfig-002-20250326    gcc-6.5.0
+powerpc              randconfig-003-20250326    clang-19
+powerpc64            randconfig-001-20250326    clang-21
+powerpc64            randconfig-002-20250326    gcc-8.5.0
+powerpc64            randconfig-003-20250326    clang-21
+riscv                randconfig-001-20250326    clang-21
+riscv                randconfig-002-20250326    gcc-8.5.0
+s390                            allmodconfig    clang-18
+s390                            allyesconfig    gcc-14.2.0
+s390                 randconfig-001-20250326    clang-15
+s390                 randconfig-002-20250326    clang-15
+sh                              allmodconfig    gcc-14.2.0
+sh                              allyesconfig    gcc-14.2.0
+sh                   randconfig-001-20250326    gcc-6.5.0
+sh                   randconfig-002-20250326    gcc-6.5.0
+sparc                           allmodconfig    gcc-14.2.0
+sparc                randconfig-001-20250326    gcc-11.5.0
+sparc                randconfig-002-20250326    gcc-5.5.0
+sparc64              randconfig-001-20250326    gcc-5.5.0
+sparc64              randconfig-002-20250326    gcc-11.5.0
+um                   randconfig-001-20250326    clang-15
+um                   randconfig-002-20250326    gcc-11
+x86_64     buildonly-randconfig-001-20250326    clang-20
+x86_64     buildonly-randconfig-002-20250326    gcc-11
+x86_64     buildonly-randconfig-003-20250326    clang-20
+x86_64     buildonly-randconfig-004-20250326    clang-20
+x86_64     buildonly-randconfig-005-20250326    clang-20
+x86_64     buildonly-randconfig-006-20250326    clang-20
+xtensa               randconfig-001-20250326    gcc-7.5.0
+xtensa               randconfig-002-20250326    gcc-13.3.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
