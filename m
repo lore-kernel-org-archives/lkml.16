@@ -1,117 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49086182;
-	Thu, 27 Mar 2025 00:04:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC362366
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 00:07:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743033845; cv=none; b=l02pbzvfxEJrVGph9vbPGCQjXuKpH1+r7WKe3UFaAIjJukl5uKtnHMB1Z1GEK9j1vxime1HgH+gHQd+y+MO6Jv4gWG3oKyY69JFAEomcY0QDnZtAvEz5LiB9mWo0FzlSD8QgGaHQZ5/xgymW6vcQys2TdkQ5zVafcvRMaq9f/pY=
+	t=1743034060; cv=none; b=RmyiTYmpYuaykdDkACnWFS3/G2ksxcOhnZ7dcGRTbvWI3m5/R2rhGyGPTuw/VsHg8mqesUzPf1GgBB5kmiZydHJTM00HVQ+cmpFDQiWuubTfSaadjw3EXipa4JgD4vOrpwhAW4wA1xu+Y/d54jyvQ/ZZ8EyBYSJ/gnsM6Xq3vCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743033845; c=relaxed/simple;
-	bh=vK0aPQQu7t8WWcg47RuiGPjQTiNHQdOEcdVdPR0YyKA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=PEusYnOUNYdmdrTP/1t1RMgkG74I9QqAT6RHjNHn3w+WGumruQ5rhcgPvt/axLTzgXZLibvmK1q4JLNRItNs2ZJJS7dXJ89JIUCqAXfuGZjoGVrJJKZS6FWL3oGHG+EyDM8okjSZD1wQnYZh91ZG3rv//QccQgoNhsB4JPV9j5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h9GO/qTB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h9GO/qTB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22B02C4CEE2;
-	Thu, 27 Mar 2025 00:04:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743033844;
-	bh=vK0aPQQu7t8WWcg47RuiGPjQTiNHQdOEcdVdPR0YyKA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=h9GO/qTBYVjiZara2QwSntQo/6uSzCCMUNsvUgS9FqUiBmCbolrjAZkPMPCBiREeL
-	 DHWSiC5MvlUJzj26om+jinzzG3lqIv5H2z4jIO5XfZ5hqI0UHBcq/mZ5x/a5uo2KO5
-	 9F4QIo0zNS0jL6qWBS8tyMlll2tvARx6LT+6IKbJRN/okYMjQq7WhhFmKcNp6vpuOX
-	 g4Z3eGgsjx6QRCYoERLj+iR8DKacZ15NR+2Duddtblb/GH7Q0QhFcTYLBTUQCi15qV
-	 +Rch8ozFRX4+kc20WabVcBGE3MNhcE3R+De//npbsbfQ3eMiDfFvNxbTas3UnG1bmk
-	 jfe1/O2C5Bg1A==
-Date: Wed, 26 Mar 2025 18:04:02 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Miri Korenblit <miriam.rachel.korenblit@intel.com>,
-	Johannes Berg <johannes@sipsolutions.net>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] wifi: iwlwifi: mvm: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <Z-SV8gb6MuZJmmhe@kspp>
+	s=arc-20240116; t=1743034060; c=relaxed/simple;
+	bh=wQtDwIBGOYasGvUXkTYZrq0SlPNPYBmbxqf+7/6FKlg=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=D8shOMX0CltTPTV24CkX32RdrgGZv4iZE0kaeQfgUdEtczp9g+DKuBKP2qkvYnN9Nin4h+1K2WhzT5NJb0+RGKewUIHxKo0XcFxkG/JHpVjBv31cU17vN/xfh/ztjKu0zxorYJj/HStMytKNRFtIIdzbOV8GWH6H+A93GcBd9JE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 574C2C4CEE2;
+	Thu, 27 Mar 2025 00:07:40 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1txanL-00000002uyO-3zRt;
+	Wed, 26 Mar 2025 20:08:27 -0400
+Message-ID: <20250327000811.879041980@goodmis.org>
+User-Agent: quilt/0.68
+Date: Wed, 26 Mar 2025 20:08:11 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-next][PATCH 0/2] tracing: Updates for 6.15
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace/for-next
 
-Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+Head SHA1: e0344f9564f5847dc20e245fbea67a4b262ee659
 
-So, with these changes, fix the following warning:
 
-drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c:6430:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+Douglas Raillard (1):
+      tracing: Fix synth event printk format for str fields
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- .../net/wireless/intel/iwlwifi/mvm/mac80211.c | 25 +++++++++----------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+Siddarth G (1):
+      tracing: Replace strncpy with memcpy for fixed-length substring copy
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-index 1e916a0ce082..5d8f50a455d7 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
-@@ -6426,17 +6426,10 @@ void iwl_mvm_sync_rx_queues_internal(struct iwl_mvm *mvm,
- 				     bool sync,
- 				     const void *data, u32 size)
- {
--	struct {
--		struct iwl_rxq_sync_cmd cmd;
--		struct iwl_mvm_internal_rxq_notif notif;
--	} __packed cmd = {
--		.cmd.rxq_mask = cpu_to_le32(BIT(mvm->trans->num_rx_queues) - 1),
--		.cmd.count =
--			cpu_to_le32(sizeof(struct iwl_mvm_internal_rxq_notif) +
--				    size),
--		.notif.type = type,
--		.notif.sync = sync,
--	};
-+	DEFINE_RAW_FLEX(struct iwl_rxq_sync_cmd, cmd, payload,
-+			sizeof(struct iwl_mvm_internal_rxq_notif));
-+	struct iwl_mvm_internal_rxq_notif *notif =
-+			(struct iwl_mvm_internal_rxq_notif *)cmd->payload;
- 	struct iwl_host_cmd hcmd = {
- 		.id = WIDE_ID(DATA_PATH_GROUP, TRIGGER_RX_QUEUES_NOTIF_CMD),
- 		.data[0] = &cmd,
-@@ -6447,15 +6440,21 @@ void iwl_mvm_sync_rx_queues_internal(struct iwl_mvm *mvm,
- 	};
- 	int ret;
- 
-+	cmd->rxq_mask = cpu_to_le32(BIT(mvm->trans->num_rx_queues) - 1);
-+	cmd->count = cpu_to_le32(sizeof(struct iwl_mvm_internal_rxq_notif) +
-+				 size);
-+	notif->type = type;
-+	notif->sync = sync;
-+
- 	/* size must be a multiple of DWORD */
--	if (WARN_ON(cmd.cmd.count & cpu_to_le32(3)))
-+	if (WARN_ON(cmd->count & cpu_to_le32(3)))
- 		return;
- 
- 	if (!iwl_mvm_has_new_rx_api(mvm))
- 		return;
- 
- 	if (sync) {
--		cmd.notif.cookie = mvm->queue_sync_cookie;
-+		notif->cookie = mvm->queue_sync_cookie;
- 		mvm->queue_sync_state = (1 << mvm->trans->num_rx_queues) - 1;
- 	}
- 
--- 
-2.43.0
-
+----
+ kernel/trace/trace_events_synth.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
