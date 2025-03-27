@@ -1,169 +1,673 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2314518FC84;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEDE1C8FD6;
 	Thu, 27 Mar 2025 19:44:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743104691; cv=none; b=RM9gTZLThpNsFye4hWbe0OIqdrrALqocx5hAMfYXr+B+SoPT5KpiyEUYVGMxEls/SIbwLWM25xEi+y6abAOrCcK+LgwZjKWOkQVvGqH1kLHDTiStGxRpYkIRhAbpkiQuvbZw1JrUv/xwG7dS5N6JPA1mWrI+NfsElGqSsDP+xOk=
+	t=1743104690; cv=none; b=cwfzlcl5Jg6mGUEF6+7IEaTR8oFJr0yL7sBhhsRoB7kYGxOsc7bYmGaVBBVZL0KCgB8gUF8s0vJYDbbcyAAdlnKfNNDP/u+kLfuO8U9YLnkjPUUL0LvmI1/w3JZ6m3xdqtT1BahhPbat9igdEuCGq4umNfQTEITNy4UfDyJTWqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743104691; c=relaxed/simple;
-	bh=9Mh6b4oCJpQSlZk5cgr4GaAks7FOVq/dlbEme+EYRvs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HE1RPoGv7wQziyxVRT3vLqyFI6id0R3AmCixw9VRRKTk14ju1N/y5SlNIvDKAgtvQFh4W5JbMGGJnA+U9F0aIc6WWd3uXBnp/j7FeLzdwYZr4Odn4oZYuHQjNwfzbiOqxFvA9l49gh21/DZYbMs2QVBm6tA1j84GNpvWC7E/4RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IsmdXRm2; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743104690; c=relaxed/simple;
+	bh=o/Ud70/jGYnoLBYaLmKgyUw/wgULXmoWMI0NlezkTU4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ew8y84cmP8lg56hBiqqePqIe2RUqlIfk3DdCDD0BDyz4q1ARTtgDQZmC3GGysMkgeGgPAVFWRGJ25yuKGt0nmAik/d2VVbEjQDmFFm+HqPbbKNzdkPd/devMLfd0DbUozScwjQDAryv6GkMU22cWAKCjj3rf/F43uvI5ITJiu2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ti8m+p3a; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsmdXRm2"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30db2c2c609so16057911fa.3;
-        Thu, 27 Mar 2025 12:44:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743104687; x=1743709487; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zJrB+25qfJY+3ZkUCcZjNy69G3uZBa+b+woWWSnmCkY=;
-        b=IsmdXRm23/Fm9qltyt5/JnGBuuY5HnYS/qrrOQII/YAGpAWTq57SnJuXEehsaa/PDp
-         7mZy9pZN3I5jobE9Eq8UPKJsNtFhifjhFlBxeo8HKSsGaf/wWLQQ+ogwEDI2q7G+/qE5
-         jTzfSTvfGgqhnj8bw+uTDmwiX3i5wI8k2PAyVJ5Zfjanr6ATtzxAdwak7+SKWmnE7vWy
-         oRliUyyJngEa5uo4eB8JH8qOYaBxw0UWMN+9TcvnjQl+bbrP2RE+RWUgyg1n0fZ2FC4Q
-         Ij0dGiFsy4eMcj/BTbCgYhDwXOB0YPv5idfzP1M6au6fx0QRxUp+YDucFQ9YDm5x/hUI
-         VAog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743104687; x=1743709487;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zJrB+25qfJY+3ZkUCcZjNy69G3uZBa+b+woWWSnmCkY=;
-        b=Iqms9mhU+CnOX4YtzUa4iuZhpmUCeN6gbI9h30HCIdXWcwK8J7DhxdHWL2mg++eIsT
-         MMGJ57Lame7RVITWNkWoJHFiR7ADzClwBS30rIU4oIbTWjRNPHMz+v6cD/qNyxMwImf8
-         4sRsJJDXsJCDpiAsZ8JqtKH3SJlCotxZ28cH/HpOyKfLYX/odrFtj5vPlQQXdCFpgGKj
-         gySn7oriT9u0ZgbmQ6fmosbyq9d6qb/G3sIjzpbAA3PpGfg+L9L4InxM4Yx5VIpCql4p
-         y8MNruHZtj7B1Ill33SAqKP8bFccrYE92N853RgENQnANXuB7QKJXL3WDaMeRQ2h/1mO
-         bWSw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3m8X1wsG3flm5ngLIVI9cT2kfGquo1R/faoM8nYu4Dro6fT+Ee97K334gVPcaTmdjQAVA5EKm@vger.kernel.org, AJvYcCURc2lTdHZs6s5adC2p1OnYxOdropwzFO0Mkq8dL0qDkk7rL/wTUglIRq3m734qtED59lJTgIemuUsIZmA=@vger.kernel.org, AJvYcCVqY3kTZHRd8Pzt7ZrR0XRrfc5Ok2FcqiAGQCXbomK6LcfS4m1//uJfXt5vAFKttBAQpWB28WHN8BI0GiqaNBM=@vger.kernel.org, AJvYcCWJRErpN9XhzW5Ci2JAq591q9naGjpv/CdmUfJnTQHZvYsJ5tRkp440GaW68p4K55nza4hjY/bMNqsa@vger.kernel.org, AJvYcCWYFvXMnaVcxaGraMoFvCcJcfXVHORcnaepAgOqKpc3yB/zuWdQn1KBUw0AzSCC7u8vJjRX0/P9Eu6tg/N6@vger.kernel.org, AJvYcCWhhu9cYoJ7tChJSEVAugPaNBuzgIKu6RCnm6IH3hSVP7o79HvoB8woHs+vTtFoSRMpZi0jVyxoMt43@vger.kernel.org, AJvYcCXACS2pyvZA43LmcpPhRAOooai3fK1dTUdkFnP9oNQN2azz/sYU0aEPp8F+B+Q7HE8OOVx9c08GFLJCipQjjPXJ@vger.kernel.org, AJvYcCXoQZSUWiSb1HmrTRy8xxJWOFOASw1dUQDlMPPeIfIJuxass0Z1dh2QcJYxei1T74X8XOGkX8rMsiq7+eHi@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxSCiBRCnrcnxVzIPN0NSQv7z87APFUbavQwX1F4KfS2lP0qmV
-	ZsRhuPpTU44HTTZEsQFSEE9H4ztwzNtYyI20LrYxoB0QaiOEm7q0J4nNx/l9YeMKpRYE9nd7ZpL
-	ihNQX6PPRi0E1Z73pZ/pb9Kb3zhg=
-X-Gm-Gg: ASbGnctltDuWzWGDQ2lrkzW9hJYBCRt7lEdevxZQWN7HVKMG6V+jH/ov8k7MY1SSyMP
-	eXJ7kZ2pDOy8x+gDpWKH6QDSc0O9J4rJRFSxrQPcu/VFSzvLv3zAJC5J3aES88XsQ4uqnRb3AOT
-	zFzv43S9zGqyFOfbpUML5rIZUvgckOMfPklR9p5oZZlWlBhFiXAJvg
-X-Google-Smtp-Source: AGHT+IFyLKYlIEvGpAd9CCRPDur7dyQO/OEa86nU/lx3w5Jjq2h0PxLW9TMc3L3t1yE/rhj6ZShnSCOlezEb1R9xtqM=
-X-Received: by 2002:a05:651c:1a0b:b0:30b:b7c3:ea71 with SMTP id
- 38308e7fff4ca-30dc5e31b95mr23059291fa.15.1743104686814; Thu, 27 Mar 2025
- 12:44:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ti8m+p3a"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A0F6E446;
+	Thu, 27 Mar 2025 20:42:57 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1743104577;
+	bh=o/Ud70/jGYnoLBYaLmKgyUw/wgULXmoWMI0NlezkTU4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ti8m+p3ahmD/4Deajp3qK/FeVnnixaGEglEDgjHS9K1WQ4LKHNC74VqQq/6wwy6Ib
+	 3RGEFe/6E8AdExoliyF8yF8AAP0KsHKgMn52hN4ENXV+fTPo8Nnzahmx//048n9w4w
+	 TxWd2lafMb1p8M6IPnalWxmm6hn91qvTplbCaGhI=
+Date: Thu, 27 Mar 2025 21:44:23 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Martin Kepplinger <martink@posteo.de>,
+	Purism Kernel Team <kernel@puri.sm>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+	Robert Chiras <robert.chiras@nxp.com>,
+	"Guoniu.zhou" <guoniu.zhou@nxp.com>
+Subject: Re: [PATCH v3 09/12] arm64: dts: imx8: add capture controller for
+ i.MX8's img subsystem
+Message-ID: <20250327194423.GG4861@pendragon.ideasonboard.com>
+References: <20250210-8qxp_camera-v3-0-324f5105accc@nxp.com>
+ <20250210-8qxp_camera-v3-9-324f5105accc@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325-ptr-as-ptr-v7-0-87ab452147b9@gmail.com>
- <D8Q4MSXXZ7OI.1NC226MO02VSN@proton.me> <CAJ-ks9nHKpQPuSBypXTSATYhbAFkQTJzUq8jN0nu4t=Kw+0xxg@mail.gmail.com>
- <D8QCK3CQES3Y.3LTZ4MVO5B3KT@proton.me> <CAJ-ks9nKT2PUDm6=b4AB1QUWwwvcqPn7Vz60=c0B+uFMZrqPew@mail.gmail.com>
- <D8QDOBUM6NF0.CGJY7ZA5KD9S@proton.me> <CAJ-ks9ntTxBM=c5nUZWGv3MoRt-LveBchn-c1Xy-DGap7fLVRA@mail.gmail.com>
- <D8QI804Q3DAS.2BV4WSL81H52Z@proton.me> <CAJ-ks9mA5QDeZ3EvOD3THayFt4TtDysgm0jp2aiSF2mQCrhWiQ@mail.gmail.com>
- <D8QJMH5UR6VG.2OT5MXJJQU5QT@proton.me> <CAJ-ks9m96vf_HxttuopuC_UfNGJbHHNdEGS2er6nZZG38pe3HQ@mail.gmail.com>
-In-Reply-To: <CAJ-ks9m96vf_HxttuopuC_UfNGJbHHNdEGS2er6nZZG38pe3HQ@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 27 Mar 2025 15:44:09 -0400
-X-Gm-Features: AQ5f1Jr0ooXTkF4heGS1OXy1iD2yeKYqVr9uVRi6oc_-HuImKMszqPEfh2j-Kuc
-Message-ID: <CAJ-ks9n3BdKkfCpMXhE8M8Sx4B5rASoNvbmA4zPU3rmPQwZCiQ@mail.gmail.com>
-Subject: Re: [PATCH v7 7/7] rust: enable `clippy::ref_as_ptr` lint
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250210-8qxp_camera-v3-9-324f5105accc@nxp.com>
 
-On Thu, Mar 27, 2025 at 10:15=E2=80=AFAM Tamir Duberstein <tamird@gmail.com=
-> wrote:
->
-> On Wed, Mar 26, 2025 at 6:15=E2=80=AFPM Benno Lossin <benno.lossin@proton=
-.me> wrote:
-> >
-> > On Wed Mar 26, 2025 at 11:09 PM CET, Tamir Duberstein wrote:
-> > > On Wed, Mar 26, 2025 at 5:09=E2=80=AFPM Benno Lossin <benno.lossin@pr=
-oton.me> wrote:
-> > >> On Wed Mar 26, 2025 at 8:06 PM CET, Tamir Duberstein wrote:
-> > >> > On Wed, Mar 26, 2025 at 1:36=E2=80=AFPM Benno Lossin <benno.lossin=
-@proton.me> wrote:
-> > >> >> On Wed Mar 26, 2025 at 5:57 PM CET, Tamir Duberstein wrote:
-> > >> >> >
-> > >> >> > Yeah, we should do this - but again: not relevant in this discu=
-ssion.
-> > >> >>
-> > >> >> I think it's pretty relevant.
-> > >> >
-> > >> > It's not relevant because we're no longer talking about transmutin=
-g
-> > >> > pointer to pointer. The two options are:
-> > >> > 1. transmute reference to reference.
-> > >> > 2. coerce reference to pointer, `as` cast pointer to pointer (trig=
-gers
-> > >> > `ptr_as_ptr`), reborrow pointer to reference.
-> > >> >
-> > >> > If anyone can help me understand why (2) is better than (1), I'd
-> > >> > certainly appreciate it.
-> > >>
-> > >> I am very confident that (2) is correct. With (1) I'm not sure (see
-> > >> above), so that's why I mentioned it.
-> > >
-> > > Can you help me understand why you're confident about (2) but not (1)=
-?
-> >
-> > My explanation from above explains why I'm not confident about (1):
-> >
-> >     For ptr-to-int transmutes, I know that they will probably remove
-> >     provenance, hence I am a bit cautious about using them for ptr-to-p=
-tr or
-> >     ref-to-ref.
-> >
-> > The reason I'm confident about (2) is that that is the canonical way to
-> > cast the type of a reference pointing to an `!Sized` value.
->
-> Do you have a citation, other than the transmute doc?
+Hi Frank,
 
-Turns out this appeases clippy:
+Thank you for the patch.
 
-diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-index 80a9782b1c6e..7a6fc78fc314 100644
---- a/rust/kernel/uaccess.rs
-+++ b/rust/kernel/uaccess.rs
-@@ -240,9 +240,10 @@ pub fn read_raw(&mut self, out: &mut
-[MaybeUninit<u8>]) -> Result {
-     /// Fails with [`EFAULT`] if the read happens on a bad address,
-or if the read goes out of
-     /// bounds of this [`UserSliceReader`]. This call may modify
-`out` even if it returns an error.
-     pub fn read_slice(&mut self, out: &mut [u8]) -> Result {
-+        let out: *mut [u8] =3D out;
-         // SAFETY: The types are compatible and `read_raw` doesn't
-write uninitialized bytes to
-         // `out`.
--        let out =3D unsafe { &mut *(out as *mut [u8] as *mut
-[MaybeUninit<u8>]) };
-+        let out =3D unsafe { &mut *(out as *mut [MaybeUninit<u8>]) };
-         self.read_raw(out)
-     }
+On Mon, Feb 10, 2025 at 03:59:28PM -0500, Frank Li wrote:
+> Add CSI related nodes (i2c, irqsteer, csi, lpcg) for i.MX8 img subsystem.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> Change from v2 to v3
+> - remove phy and put csr register space under mipi csi2
+> 
+> change from v1 to v2
+> - move scu reset under scu node
+> - add 8qm comaptible string for mipi csi2 and mipi csi phys.
+> ---
+>  arch/arm64/boot/dts/freescale/imx8-ss-img.dtsi    | 376 ++++++++++++++++++++++
+>  arch/arm64/boot/dts/freescale/imx8qm-ss-img.dtsi  |  45 +++
+>  arch/arm64/boot/dts/freescale/imx8qm.dtsi         |   5 +
+>  arch/arm64/boot/dts/freescale/imx8qxp-ss-img.dtsi |  60 ++++
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi        |   5 +
+>  5 files changed, 491 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-img.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-img.dtsi
+> index d39242c1b9f79..eb41a6fcaf5b8 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8-ss-img.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8-ss-img.dtsi
+> @@ -3,6 +3,14 @@
+>   * Copyright 2019-2021 NXP
+>   * Zhou Guoniu <guoniu.zhou@nxp.com>
+>   */
+> +
+> +img_axi_clk: clock-img-axi {
+> +	compatible = "fixed-clock";
+> +	#clock-cells = <0>;
+> +	clock-frequency = <400000000>;
+> +	clock-output-names = "img_axi_clk";
+> +};
+> +
 
-Benno, would that work for you? Same in str.rs, of course.
+This doesn't seem to be used.
+
+>  img_ipg_clk: clock-img-ipg {
+>  	compatible = "fixed-clock";
+>  	#clock-cells = <0>;
+> @@ -10,12 +18,270 @@ img_ipg_clk: clock-img-ipg {
+>  	clock-output-names = "img_ipg_clk";
+>  };
+>  
+> +img_pxl_clk: clock-img-pxl {
+> +	compatible = "fixed-clock";
+> +	#clock-cells = <0>;
+> +	clock-frequency = <600000000>;
+> +	clock-output-names = "img_pxl_clk";
+> +};
+> +
+>  img_subsys: bus@58000000 {
+>  	compatible = "simple-bus";
+>  	#address-cells = <1>;
+>  	#size-cells = <1>;
+>  	ranges = <0x58000000 0x0 0x58000000 0x1000000>;
+>  
+> +	isi: isi@58100000 {
+> +		reg = <0x58100000 0x90000>;
+> +		interrupts = <GIC_SPI 297 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 298 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 299 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 301 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 302 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 303 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&pdma0_lpcg IMX_LPCG_CLK_0>,
+> +			 <&pdma1_lpcg IMX_LPCG_CLK_0>,
+> +			 <&pdma2_lpcg IMX_LPCG_CLK_0>,
+> +			 <&pdma3_lpcg IMX_LPCG_CLK_0>,
+> +			 <&pdma4_lpcg IMX_LPCG_CLK_0>,
+> +			 <&pdma5_lpcg IMX_LPCG_CLK_0>,
+> +			 <&pdma6_lpcg IMX_LPCG_CLK_0>,
+> +			 <&pdma7_lpcg IMX_LPCG_CLK_0>;
+> +		clock-names = "per0",
+> +			      "per1",
+> +			      "per2",
+> +			      "per3",
+> +			      "per4",
+> +			      "per5",
+> +			      "per6",
+> +			      "per7";
+> +		interrupt-parent = <&gic>;
+> +		power-domains = <&pd IMX_SC_R_ISI_CH0>,
+> +				<&pd IMX_SC_R_ISI_CH1>,
+> +				<&pd IMX_SC_R_ISI_CH2>,
+> +				<&pd IMX_SC_R_ISI_CH3>,
+> +				<&pd IMX_SC_R_ISI_CH4>,
+> +				<&pd IMX_SC_R_ISI_CH5>,
+> +				<&pd IMX_SC_R_ISI_CH6>,
+> +				<&pd IMX_SC_R_ISI_CH7>;
+> +		status = "disabled";
+> +	};
+> +
+> +	irqsteer_csi0: irqsteer@58220000 {
+> +		compatible = "fsl,imx8qm-irqsteer", "fsl,imx-irqsteer";
+> +		reg = <0x58220000 0x1000>;
+> +		#interrupt-cells = <1>;
+> +		interrupt-controller;
+> +		interrupts = <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&img_ipg_clk>;
+> +		clock-names = "ipg";
+> +		interrupt-parent = <&gic>;
+> +		power-domains = <&pd IMX_SC_R_CSI_0>;
+> +		fsl,channel = <0>;
+> +		fsl,num-irqs = <32>;
+> +		status = "disabled";
+> +	};
+> +
+> +	gpio0_mipi_csi0: gpio@58222000 {
+> +		compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
+> +		reg = <0x58222000 0x1000>;
+> +		#interrupt-cells = <2>;
+> +		interrupt-controller;
+> +		interrupts = <0>;
+> +		#gpio-cells = <2>;
+> +		gpio-controller;
+> +		interrupt-parent = <&irqsteer_csi0>;
+> +		power-domains = <&pd IMX_SC_R_CSI_0>;
+> +	};
+> +
+> +	csi0_core_lpcg: clock-controller@58223018 {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x58223018 0x4>;
+> +		clocks = <&clk IMX_SC_R_CSI_0 IMX_SC_PM_CLK_PER>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_4>;
+> +		clock-output-names = "csi0_lpcg_core_clk";
+> +		power-domains = <&pd IMX_SC_R_ISI_CH0>;
+> +	};
+> +
+> +	csi0_esc_lpcg: clock-controller@5822301c {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x5822301c 0x4>;
+> +		clocks = <&clk IMX_SC_R_CSI_0 IMX_SC_PM_CLK_MISC>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_4>;
+> +		clock-output-names = "csi0_lpcg_esc_clk";
+> +		power-domains = <&pd IMX_SC_R_ISI_CH0>;
+> +	};
+> +
+> +	i2c_mipi_csi0: i2c@58226000 {
+> +		compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+> +		reg = <0x58226000 0x1000>;
+> +		interrupts = <8>;
+> +		clocks = <&clk IMX_SC_R_CSI_0_I2C_0 IMX_SC_PM_CLK_PER>,
+> +			 <&img_ipg_clk>;
+> +		clock-names = "per", "ipg";
+> +		assigned-clocks = <&clk IMX_SC_R_CSI_0_I2C_0 IMX_SC_PM_CLK_PER>;
+> +		assigned-clock-rates = <24000000>;
+> +		interrupt-parent = <&irqsteer_csi0>;
+> +		power-domains = <&pd IMX_SC_R_CSI_0_I2C_0>;
+> +		status = "disabled";
+> +	};
+> +
+> +	mipi_csi_0: csi@58227000 {
+> +		compatible = "fsl,imx8qxp-mipi-csi2";
+> +		reg = <0x58227000 0x1000>,
+> +		      <0x58221000 0x1000>;
+> +		clocks = <&csi0_core_lpcg IMX_LPCG_CLK_4>,
+> +			 <&csi0_esc_lpcg IMX_LPCG_CLK_4>,
+> +			 <&csi0_pxl_lpcg IMX_LPCG_CLK_0>;
+> +		clock-names = "core", "esc", "ui";
+> +		assigned-clocks = <&csi0_core_lpcg IMX_LPCG_CLK_4>,
+> +				  <&csi0_esc_lpcg IMX_LPCG_CLK_4>;
+> +		assigned-clock-rates = <360000000>, <72000000>;
+> +		power-domains = <&pd IMX_SC_R_ISI_CH0>;
+> +		resets = <&scu_reset IMX_SC_R_CSI_0>;
+> +		status = "disabled";
+> +	};
+> +
+> +	irqsteer_csi1: irqsteer@58240000 {
+> +		compatible = "fsl,imx8qm-irqsteer", "fsl,imx-irqsteer";
+> +		reg = <0x58240000 0x1000>;
+> +		#interrupt-cells = <1>;
+> +		interrupt-controller;
+> +		interrupts = <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&img_ipg_clk>;
+> +		clock-names = "ipg";
+> +		interrupt-parent = <&gic>;
+> +		power-domains = <&pd IMX_SC_R_CSI_1>;
+> +		fsl,channel = <0>;
+> +		fsl,num-irqs = <32>;
+> +		status = "disabled";
+> +	};
+> +
+> +	gpio0_mipi_csi1: gpio@58242000 {
+> +		compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
+> +		reg = <0x58242000 0x1000>;
+> +		#interrupt-cells = <2>;
+> +		interrupt-controller;
+> +		interrupts = <0>;
+> +		#gpio-cells = <2>;
+> +		gpio-controller;
+> +		interrupt-parent = <&irqsteer_csi1>;
+> +		power-domains = <&pd IMX_SC_R_CSI_1>;
+> +	};
+> +
+> +	csi1_core_lpcg: clock-controller@58243018 {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x58243018 0x4>;
+> +		clocks = <&clk IMX_SC_R_CSI_1 IMX_SC_PM_CLK_PER>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_4>;
+> +		clock-output-names = "csi1_lpcg_core_clk";
+> +		power-domains = <&pd IMX_SC_R_ISI_CH0>;
+> +	};
+> +
+> +	csi1_esc_lpcg: clock-controller@5824301c {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x5824301c 0x4>;
+> +		clocks = <&clk IMX_SC_R_CSI_1 IMX_SC_PM_CLK_MISC>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_4>;
+> +		clock-output-names = "csi1_lpcg_esc_clk";
+> +		power-domains = <&pd IMX_SC_R_ISI_CH0>;
+> +	};
+> +
+> +	i2c_mipi_csi1: i2c@58246000 {
+> +		compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+> +		reg = <0x58246000 0x1000>;
+> +		interrupts = <8>;
+> +		clocks = <&clk IMX_SC_R_CSI_1_I2C_0 IMX_SC_PM_CLK_PER>,
+> +			 <&img_ipg_clk>;
+> +		clock-names = "per", "ipg";
+> +		assigned-clocks = <&clk IMX_SC_R_CSI_1_I2C_0 IMX_SC_PM_CLK_PER>;
+> +		assigned-clock-rates = <24000000>;
+> +		interrupt-parent = <&irqsteer_csi1>;
+> +		power-domains = <&pd IMX_SC_R_CSI_1_I2C_0>;
+> +		status = "disabled";
+> +	};
+> +
+> +	mipi_csi_1: csi@58247000 {
+> +		compatible = "fsl,imx8qxp-mipi-csi2";
+> +		reg = <0x58247000 0x1000>,
+> +		      <0x58241000 0x1000>;
+> +		clocks = <&csi1_core_lpcg IMX_LPCG_CLK_4>,
+> +			 <&csi1_esc_lpcg IMX_LPCG_CLK_4>,
+> +			 <&csi1_pxl_lpcg IMX_LPCG_CLK_0>;
+> +		clock-names = "core", "esc", "ui";
+> +		assigned-clocks = <&csi1_core_lpcg IMX_LPCG_CLK_4>,
+> +				  <&csi1_esc_lpcg IMX_LPCG_CLK_4>;
+> +		assigned-clock-rates = <360000000>, <72000000>;
+> +		power-domains = <&pd IMX_SC_R_ISI_CH0>;
+> +		resets = <&scu_reset IMX_SC_R_CSI_1>;
+> +		status = "disabled";
+> +	};
+> +
+> +	irqsteer_parallel: irqsteer@58260000 {
+> +		compatible = "fsl,imx8qm-irqsteer", "fsl,imx-irqsteer";
+> +		reg = <0x58260000 0x1000>;
+> +		#interrupt-cells = <1>;
+> +		interrupt-controller;
+> +		interrupts = <GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&clk_dummy>;
+> +		clock-names = "ipg";
+> +		interrupt-parent = <&gic>;
+> +		power-domains = <&pd IMX_SC_R_PI_0>;
+> +		fsl,channel = <0>;
+> +		fsl,num-irqs = <32>;
+> +		status = "disabled";
+> +	};
+> +
+> +	pi0_ipg_lpcg: clock-controller@58263004 {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x58263004 0x4>;
+> +		clocks = <&clk IMX_SC_R_PI_0 IMX_SC_PM_CLK_PER>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_4>;
+> +		clock-output-names = "pi0_lpcg_ipg_clk";
+> +		power-domains = <&pd IMX_SC_R_ISI_CH0>;
+> +	};
+> +
+> +	pi0_pxl_lpcg: clock-controller@58263018 {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x58263018 0x4>;
+> +		clocks = <&clk IMX_SC_R_PI_0 IMX_SC_PM_CLK_PER>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_0>;
+> +		clock-output-names = "pi0_lpcg_pxl_clk";
+> +		power-domains = <&pd IMX_SC_R_ISI_CH0>;
+> +	};
+> +
+> +	pi0_misc_lpcg: clock-controller@5826301c {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x5826301c 0x4>;
+> +		clocks = <&clk IMX_SC_R_PI_0 IMX_SC_PM_CLK_MISC0>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_0>;
+> +		clock-output-names = "pi0_lpcg_misc_clk";
+> +		power-domains = <&pd IMX_SC_R_ISI_CH0>;
+> +	};
+> +
+> +	i2c0_parallel: i2c@58266000 {
+> +		compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+> +		reg = <0x58266000 0x1000>;
+> +		interrupts = <8>;
+> +		clocks = <&clk IMX_SC_R_PI_0_I2C_0 IMX_SC_PM_CLK_PER>,
+> +			 <&img_ipg_clk>;
+> +		clock-names = "per", "ipg";
+> +		assigned-clocks = <&clk IMX_SC_R_PI_0_I2C_0 IMX_SC_PM_CLK_PER>;
+> +		assigned-clock-rates = <24000000>;
+> +		interrupt-parent = <&irqsteer_parallel>;
+> +		power-domains = <&pd IMX_SC_R_PI_0_I2C_0>;
+> +		status = "disabled";
+> +	};
+> +
+>  	jpegdec: jpegdec@58400000 {
+>  		reg = <0x58400000 0x00050000>;
+>  		interrupts = <GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -40,6 +306,116 @@ jpegenc: jpegenc@58450000 {
+>  				<&pd IMX_SC_R_MJPEG_ENC_S0>;
+>  	};
+>  
+> +	pdma0_lpcg: clock-controller@58500000 {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x58500000 0x10000>;
+> +		clocks = <&img_pxl_clk>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_0>;
+> +		clock-output-names = "pdma0_lpcg_clk";
+> +		power-domains = <&pd IMX_SC_R_ISI_CH0>;
+> +	};
+> +
+> +	pdma1_lpcg: clock-controller@58510000 {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x58510000 0x10000>;
+> +		clocks = <&img_pxl_clk>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_0>;
+> +		clock-output-names = "pdma1_lpcg_clk";
+> +		power-domains = <&pd IMX_SC_R_ISI_CH1>;
+> +	};
+> +
+> +	pdma2_lpcg: clock-controller@58520000 {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x58520000 0x10000>;
+> +		clocks = <&img_pxl_clk>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_0>;
+> +		clock-output-names = "pdma2_lpcg_clk";
+> +		power-domains = <&pd IMX_SC_R_ISI_CH2>;
+> +	};
+> +
+> +	pdma3_lpcg: clock-controller@58530000 {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x58530000 0x10000>;
+> +		clocks = <&img_pxl_clk>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_0>;
+> +		clock-output-names = "pdma3_lpcg_clk";
+> +		power-domains = <&pd IMX_SC_R_ISI_CH3>;
+> +	};
+> +
+> +	pdma4_lpcg: clock-controller@58540000 {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x58540000 0x10000>;
+> +		clocks = <&img_pxl_clk>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_0>;
+> +		clock-output-names = "pdma4_lpcg_clk";
+> +		power-domains = <&pd IMX_SC_R_ISI_CH4>;
+> +	};
+> +
+> +	pdma5_lpcg: clock-controller@58550000 {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x58550000 0x10000>;
+> +		clocks = <&img_pxl_clk>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_0>;
+> +		clock-output-names = "pdma5_lpcg_clk";
+> +		power-domains = <&pd IMX_SC_R_ISI_CH5>;
+> +	};
+> +
+> +	pdma6_lpcg: clock-controller@58560000 {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x58560000 0x10000>;
+> +		clocks = <&img_pxl_clk>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_0>;
+> +		clock-output-names = "pdma6_lpcg_clk";
+> +		power-domains = <&pd IMX_SC_R_ISI_CH6>;
+> +	};
+> +
+> +	pdma7_lpcg: clock-controller@58570000 {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x58570000 0x10000>;
+> +		clocks = <&img_pxl_clk>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_0>;
+> +		clock-output-names = "pdma7_lpcg_clk";
+> +		power-domains = <&pd IMX_SC_R_ISI_CH7>;
+> +	};
+> +
+> +	csi0_pxl_lpcg: clock-controller@58580000 {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x58580000 0x10000>;
+> +		clocks = <&img_pxl_clk>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_0>;
+> +		clock-output-names = "csi0_lpcg_pxl_clk";
+> +		power-domains = <&pd IMX_SC_R_CSI_0>;
+> +	};
+> +
+> +	csi1_pxl_lpcg: clock-controller@58590000 {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x58590000 0x10000>;
+> +		clocks = <&img_pxl_clk>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_0>;
+> +		clock-output-names = "csi1_lpcg_pxl_clk";
+> +		power-domains = <&pd IMX_SC_R_CSI_1>;
+> +	};
+> +
+> +	hdmi_rx_pxl_link_lpcg: clock-controller@585a0000 {
+> +		compatible = "fsl,imx8qxp-lpcg";
+> +		reg = <0x585a0000 0x10000>;
+> +		clocks = <&img_pxl_clk>;
+> +		#clock-cells = <1>;
+> +		clock-indices = <IMX_LPCG_CLK_0>;
+> +		clock-output-names = "hdmi_rx_lpcg_pxl_link_clk";
+> +		power-domains = <&pd IMX_SC_R_HDMI_RX>;
+> +	};
+> +
+>  	img_jpeg_dec_lpcg: clock-controller@585d0000 {
+>  		compatible = "fsl,imx8qxp-lpcg";
+>  		reg = <0x585d0000 0x10000>;
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qm-ss-img.dtsi b/arch/arm64/boot/dts/freescale/imx8qm-ss-img.dtsi
+> index 2bbdacb1313f9..efca0baec4b47 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qm-ss-img.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qm-ss-img.dtsi
+> @@ -3,6 +3,31 @@
+>   * Copyright 2021 NXP
+>   */
+>  
+> +&isi {
+> +	compatible = "fsl,imx8qm-isi";
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +		};
+> +
+> +		port@2 {
+> +			reg = <2>;
+> +		};
+> +
+> +		port@3 {
+> +			reg = <3>;
+> +		};
+
+This doesn't match the ports listed in the bindings.
+
+I think you should connect ports to the CSI-2 RX controllers in this
+file. Same for imx8qxp-ss-img.dtsi.
+
+> +	};
+> +};
+> +
+>  &jpegdec {
+>  	compatible = "nxp,imx8qm-jpgdec", "nxp,imx8qxp-jpgdec";
+>  };
+> @@ -10,3 +35,23 @@ &jpegdec {
+>  &jpegenc {
+>  	compatible = "nxp,imx8qm-jpgenc", "nxp,imx8qxp-jpgenc";
+>  };
+> +
+> +&mipi_csi_0 {
+> +	compatible = "fsl,imx8qm-mipi-csi2", "fsl,imx8qxp-mipi-csi2";
+> +};
+> +
+> +&mipi_csi_1 {
+> +	compatible = "fsl,imx8qm-mipi-csi2", "fsl,imx8qxp-mipi-csi2";
+> +};
+> +
+> +&pi0_ipg_lpcg {
+> +	status = "disabled";
+> +};
+> +
+> +&pi0_misc_lpcg {
+> +	status = "disabled";
+> +};
+> +
+> +&pi0_pxl_lpcg {
+> +	status = "disabled";
+> +};
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qm.dtsi b/arch/arm64/boot/dts/freescale/imx8qm.dtsi
+> index 6fa31bc9ece8f..c6a17a0d739c5 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qm.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qm.dtsi
+> @@ -333,6 +333,11 @@ iomuxc: pinctrl {
+>  			compatible = "fsl,imx8qm-iomuxc";
+>  		};
+>  
+> +		scu_reset: reset-controller {
+> +			compatible = "fsl,imx-scu-reset";
+> +			#reset-cells = <1>;
+> +		};
+> +
+>  		rtc: rtc {
+>  			compatible = "fsl,imx8qxp-sc-rtc";
+>  		};
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ss-img.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp-ss-img.dtsi
+> index 3a087317591d8..4c15e4569a51a 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp-ss-img.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-ss-img.dtsi
+> @@ -4,6 +4,62 @@
+>   *	Dong Aisheng <aisheng.dong@nxp.com>
+>   */
+>  
+> +&csi1_pxl_lpcg {
+> +	status = "disabled";
+> +};
+> +
+> +&csi1_core_lpcg {
+> +	status = "disabled";
+> +};
+> +
+> +&csi1_esc_lpcg {
+> +	status = "disabled";
+> +};
+> +
+> +&gpio0_mipi_csi1 {
+> +	status = "disabled";
+> +};
+> +
+> +&i2c_mipi_csi1 {
+> +	status = "disabled";
+> +};
+> +
+> +&irqsteer_csi1 {
+> +	status = "disabled";
+> +};
+> +
+> +&isi {
+> +	compatible = "fsl,imx8qxp-isi";
+> +	interrupts = <GIC_SPI 297 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 301 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 302 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 303 IRQ_TYPE_LEVEL_HIGH>,
+> +		     <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>;
+> +	clocks = <&pdma0_lpcg IMX_LPCG_CLK_0>, <&pdma4_lpcg IMX_LPCG_CLK_0>,
+> +		 <&pdma5_lpcg IMX_LPCG_CLK_0>, <&pdma6_lpcg IMX_LPCG_CLK_0>,
+> +		 <&pdma7_lpcg IMX_LPCG_CLK_0>;
+> +	clock-names = "per0", "per4", "per5", "per6", "per7";
+> +	power-domains = <&pd IMX_SC_R_ISI_CH0>, <&pd IMX_SC_R_ISI_CH4>, <&pd IMX_SC_R_ISI_CH5>,
+> +			<&pd IMX_SC_R_ISI_CH6>, <&pd IMX_SC_R_ISI_CH7>;
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +		};
+> +
+> +		port@2 {
+> +			reg = <2>;
+> +		};
+> +	};
+> +};
+> +
+>  &jpegdec {
+>  	compatible = "nxp,imx8qxp-jpgdec";
+>  };
+> @@ -11,3 +67,7 @@ &jpegdec {
+>  &jpegenc {
+>  	compatible = "nxp,imx8qxp-jpgenc";
+>  };
+> +
+> +&mipi_csi_1 {
+> +	status = "disabled";
+> +};
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> index 05138326f0a57..c078d92f76c0e 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> @@ -241,6 +241,11 @@ scu_key: keys {
+>  			status = "disabled";
+>  		};
+>  
+> +		scu_reset: reset-controller {
+> +			compatible = "fsl,imx-scu-reset";
+> +			#reset-cells = <1>;
+> +		};
+> +
+>  		rtc: rtc {
+>  			compatible = "fsl,imx8qxp-sc-rtc";
+>  		};
+
+-- 
+Regards,
+
+Laurent Pinchart
