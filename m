@@ -1,210 +1,104 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4584C2C8;
-	Thu, 27 Mar 2025 07:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD93C2C8
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 07:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743059553; cv=none; b=ES5ToIbOX1ealENG9RXklmdgvdz20Ddn6ru5F4PNkG0x2cc1G+0tmPTwfnIpCKbzxUHSIHKvCUFmCP2b6pe+G6M4v0lCBTRkXGCzvB5eZAFnsuKtS7UvBGYg0a51cejNk1XNJpkc8BVleJdsATAP+VJwnyRYFLcV76z9btU/eVA=
+	t=1743059562; cv=none; b=HmyEWDliT5xNEUSDE8guXwX1q7qMmeXh0sRCiftVlHHwxsiuX19AiPGoJcOtw0PfJTNXjDCOR8JhKDXOa1h4IP+jT29wB8DQNwcE5eLrRX1ZUnRetJnVH01qs55kUqUr4dTh+ScxSQiMzggrgVkOTLMT9Ihpec4NXVvJcjrcGoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743059553; c=relaxed/simple;
-	bh=MtNZYmslm4s9b3wy2xk86i+aukr4L60ftaFGQXqHruw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lpMvGTG6WwKEI/rWBED1wFNtde+5ioj5l/OB5dckqtyj1Xp2FgocYv3DaWYSDXoUIUox2ilAQTOlsfXB+vZLrBGuiMz+bftCWaMMi5rlgLMEpW2ZnS8svYXltgBmFILMft04TLtbtpWnHSLiSLZiyi92SftVgc78oxz3W7YvR9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Ql9RDdqb; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1743059562; c=relaxed/simple;
+	bh=kWnkqGmb4g6Askmybg+1eKZXKnBANORnQqKnQWrsO64=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IAFtLdbpZmQ48oAMHAO+RJUtXuDshJb3MUZjZuAq8lQjoIWnL58/XB+383sKG8ReqAtc06JUXQqOUNX5M+8XpbegO2TM0e2yZGR4X9tGOESzjKeCv7Jte2ujSuPJOonx/bCrV7hIkwNN1GnHkcrU3jB6qz7SWdYmz2Xn8rSx3Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cu4Lslcz; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ql9RDdqb"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R5jHms005989;
-	Thu, 27 Mar 2025 07:12:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	lISXSmZA+01YLNL+u5HNNSrDAXoQZHFb4qgnczcQBdc=; b=Ql9RDdqb7FKuK3/b
-	tvZ0pQh8Wn51w8n0mpfXxXR4RfyYjChkSakFdFGQ0V2UfFuOpbJEZ0JjzaA0VNqt
-	iTh9CvxsewAEBkxxJsEP8nC6lsoo4GrY6YdMQdIG8D0ENFlD1idpXkQp54tfkcoV
-	sH7mILvJTbOC+A7aJr62qQY7tjKAEVjev26T/iGu2SDAJGbQrHu5wcFcuEKrMFsI
-	/348pe2wTZ0Rht/i33kA7yw7XG3OUGYiGeANdb9IkJwQQCPlU/7hRhYwazhj+8DC
-	wp/PD4JLrxoDfhV1DmXVZ+GHxUcXr3nnNAF/IReLXKF8ppp5i+YHujI7uKBg1lLi
-	83uDpA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45m7nf4c3y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 07:12:26 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52R7CQOm011424
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 07:12:26 GMT
-Received: from [10.216.20.56] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 27 Mar
- 2025 00:12:22 -0700
-Message-ID: <75ebb440-f5b7-4035-a6a2-ce1280246fb4@quicinc.com>
-Date: Thu, 27 Mar 2025 12:42:19 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cu4Lslcz"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-227aaa82fafso14168975ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 00:12:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743059560; x=1743664360; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/xbdb3Q23KDbzMapeISquzFQrHEt5ZEKz4vyQX8oNvk=;
+        b=cu4LslczJbA6SmpMkbdu/SaMdoBdg5ScIzcYHZiaCQwxd2TbYUxsjFi0Dz8MiDGA6D
+         xUjZkLqfBxaBfN7Gc3n4hEkoBF7kvpAuxRxBOz0Uf9t3zgNWsHfTyvA1FZ2O/l91K16c
+         T2XtU7eFoIl15kSnJpXuC+vgrhAhFg5UqKynncub1GGqnfc4tedefbauttwqPsDFfcHR
+         jSdFTC4Hyvf0Qq3f4S0WldD6fq7WzKhLoBccD0pR7hlefGooo+KuQBqqcLos0PQTRTXT
+         dZu2MNT7dOnRPg6a5dpW54cdxu8vHxdLohwAiyNG3wUgUzzalXE4IWPzHfYaCUgwP25u
+         QCxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743059560; x=1743664360;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/xbdb3Q23KDbzMapeISquzFQrHEt5ZEKz4vyQX8oNvk=;
+        b=tirlwebUsi5YhxRndTv8ENSXTxjkgL1hx1U2xzmnicDIMHcL4A8HUEFIPJoRMOnXlF
+         TZWO7866G0Yf/0E0mMT1icHR5bBKC0JNvG/KQ7tGgTSSlbAg4NU4tlcn1HYEWAPbg0QZ
+         CIXFUVMutQ0vePp0t4CpuEJtCyJwvOVU6euh1T5DEUAqRhmHM9Rq7wrJNa5d52UwQmRk
+         KxjherTl39dADVRI8o+2sFJPV7QHM+B4Zn/O4P9+MnbymOZWiWNNbzmfcmCnnJItuVwG
+         bbsy5udqINJEz+m1nCCL40Eza4fJ6/7cDra2wL+8H6jIOK+CRC5S2BMrhgzn+4b0I/Oq
+         nCUQ==
+X-Gm-Message-State: AOJu0YznzXvVo8BHcrhU3Osf07VirIpVe7e4Xw14d2opDKV063mRv7fL
+	KWpR+mS6UrHCJDLQYD3pStU78LdPCiNAf+yHIEZul/GQd61BghBU
+X-Gm-Gg: ASbGncu+3pgbvF89tyaIQzL801k/9gSQktavV+7BDnTxHg6R4hVwaJqOHcPhvXOsVRX
+	b+s0H6nmXd/ZLKw/edCmZAh+Mzeu/h1fSV6g6+rson49HwWL0KnCsLWTYn+A725UFKgp23e50+I
+	leSLcFWcWk9zwpgk6Vf87k+J1w+kayp1Pfnkz3vvXpW0FnhEW+hqCezej8LZCBa29BglWVT4PfE
+	P4y4KFuNeyHrs5u38vl+Zy1PmeII/DAMU8bClCyK/q8LHptH9TBt7dIPUKv8F3zjL3LY66FIL/X
+	2GjG+a+7Q7uwOUDZdbrDjto+W2m0YFE388sBzj7gYKjQKZQRnuhzbzPvHuJjY9XEO4VmW9fNAcH
+	jk90ZmOiPXfB3HOHzw78TjixrJsDDYM5ovBrSNbhtAt/Wtg==
+X-Google-Smtp-Source: AGHT+IFDp8VpQjWHlX3gp+6smleu2nKPG7xnbgHcyHRmfYtPjB7KEC9FFa7q7HitUa+EWY/gaVymHg==
+X-Received: by 2002:a17:903:230c:b0:224:1eab:97b2 with SMTP id d9443c01a7336-22804950c59mr35976535ad.53.1743059559993;
+        Thu, 27 Mar 2025 00:12:39 -0700 (PDT)
+Received: from codespaces-3dd663.dxrpqgqhlb3ehogrxrezr215ye.rx.internal.cloudapp.net ([20.192.21.56])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811b7fdesm121580375ad.143.2025.03.27.00.12.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 00:12:39 -0700 (PDT)
+From: adityagarg1208@gmail.com
+X-Google-Original-From: gargaditya08@live.com
+To: jikos@kernel.org,
+	torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	Aditya Garg <gargaditya08@live.com>
+Subject: [PATCH] HID: hid-appletb-kbd: Fix wrong date and kernel version in sysfs interface docs
+Date: Thu, 27 Mar 2025 07:12:08 +0000
+Message-ID: <20250327071233.12237-1-gargaditya08@live.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] serial: qcom-geni: Remove alias dependency from qcom
- serial driver
-To: Bjorn Andersson <andersson@kernel.org>
-CC: <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>,
-        <johan+linaro@kernel.org>, <dianders@chromium.org>,
-        <konradybcio@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-        <quic_msavaliy@quicinc.com>, <quic_anupkulk@quicinc.com>
-References: <20250304071423.4033565-1-quic_vdadhani@quicinc.com>
- <tn6czifetdf2mg5gl3mhfpwcb6q7dkn5r4kgqln6evm4qdsjvi@ehpl3qj3axvw>
-Content-Language: en-US
-From: Viken Dadhaniya <quic_vdadhani@quicinc.com>
-In-Reply-To: <tn6czifetdf2mg5gl3mhfpwcb6q7dkn5r4kgqln6evm4qdsjvi@ehpl3qj3axvw>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: iQIGAuaCZlLziICXa6KM2MphIt0i_Buc
-X-Proofpoint-GUID: iQIGAuaCZlLziICXa6KM2MphIt0i_Buc
-X-Authority-Analysis: v=2.4 cv=IMMCChvG c=1 sm=1 tr=0 ts=67e4fa5a cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=fdVWx5XDXsnaa6-e9zgA:9
- a=QEXdDO2ut3YA:10 a=-_B0kFfA75AA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-26_09,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 malwarescore=0 mlxscore=0 clxscore=1015 phishscore=0
- priorityscore=1501 mlxlogscore=999 adultscore=0 lowpriorityscore=0
- bulkscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503270046
+Content-Transfer-Encoding: 8bit
 
+From: Aditya Garg <gargaditya08@live.com>
 
+The driver hid-appletb-kbd was upstreamed in kernel 6.15. But, due to an
+oversight on my part, I didn't change the kernel version and expected
+date while upstreaming the driver, thus it remained as 6.5, the original
+kernel version when the driver was developed for downstream. This commit
+should fix this.
 
-On 3/4/2025 11:15 PM, Bjorn Andersson wrote:
-> On Tue, Mar 04, 2025 at 12:44:23PM +0530, Viken Dadhaniya wrote:
->> Remove the dependency on aliases in the device tree configuration for the
->> qcom serial driver. Currently, the absence of an alias results in an
->> invalid line number, causing the driver probe to fail for geni serial.
->>
->> To prevent probe failures, implement logic to dynamically assign line
->> numbers if an alias is not present in the device tree for non-console
->> ports.
->>
-> 
-> Please read and follow https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
-> 
-> Start with your problem description, then a description of your proposed
-> solution.
+Signed-off-by: Aditya Garg <gargaditya08@live.com>
+---
+ Documentation/ABI/testing/sysfs-driver-hid-appletb-kbd | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Sure, Updated in v2.
+diff --git a/Documentation/ABI/testing/sysfs-driver-hid-appletb-kbd b/Documentation/ABI/testing/sysfs-driver-hid-appletb-kbd
+index 2a19584d0..8c9718d83 100644
+--- a/Documentation/ABI/testing/sysfs-driver-hid-appletb-kbd
++++ b/Documentation/ABI/testing/sysfs-driver-hid-appletb-kbd
+@@ -1,6 +1,6 @@
+ What:		/sys/bus/hid/drivers/hid-appletb-kbd/<dev>/mode
+-Date:		September, 2023
+-KernelVersion:	6.5
++Date:		March, 2025
++KernelVersion:	6.15
+ Contact:	linux-input@vger.kernel.org
+ Description:
+ 		The set of keys displayed on the Touch Bar.
+-- 
+2.49.0
 
-> 
->> Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
->> ---
->>   drivers/tty/serial/qcom_geni_serial.c | 26 +++++++++++++++++++++++---
->>   1 file changed, 23 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
->> index a80ce7aaf309..2457f39dfc84 100644
->> --- a/drivers/tty/serial/qcom_geni_serial.c
->> +++ b/drivers/tty/serial/qcom_geni_serial.c
->> @@ -98,6 +98,8 @@
->>   
->>   #define DMA_RX_BUF_SIZE		2048
->>   
->> +static DEFINE_IDR(port_idr);
-> 
-> You're just looking for a index allocator, so DEFINE_IDA() is probably
-> what you want to use.
-> 
-> 
-> That said, theoretically I think we could get 24 GENI serial instances
-> in a system. Making this a huge waste of memory and CPU cycles.
-> 
-> An empty idr takes 88 bytes, if you then allocate 1 entry it grows with
-> at least one xa_array node which is 576 bytes.
-
-Use IDA in v2.
-
-> 
->> +
->>   struct qcom_geni_device_data {
->>   	bool console;
->>   	enum geni_se_xfer_mode mode;
->> @@ -253,10 +255,25 @@ static struct qcom_geni_serial_port *get_port_from_line(int line, bool console)
->>   	struct qcom_geni_serial_port *port;
->>   	int nr_ports = console ? GENI_UART_CONS_PORTS : GENI_UART_PORTS;
->>   
->> -	if (line < 0 || line >= nr_ports)
->> -		return ERR_PTR(-ENXIO);
->> +	if (console) {
->> +		if (line < 0 || line >= nr_ports)
->> +			return ERR_PTR(-ENXIO);
->> +
->> +		port = &qcom_geni_console_port;
->> +	} else {
->> +		int max_alias_num = of_alias_get_highest_id("serial");
->> +
->> +		if (line < 0 || line >= nr_ports)
->> +			line = idr_alloc(&port_idr, (void *)port, max_alias_num + 1, nr_ports,
->> +					 GFP_KERNEL);
->> +		else
->> +			line = idr_alloc(&port_idr, (void *)port, line, nr_ports, GFP_KERNEL);
->> +
->> +		if (line < 0)
->> +			return ERR_PTR(-ENXIO);
->>   
->> -	port = console ? &qcom_geni_console_port : &qcom_geni_uart_ports[line];
->> +		port = &qcom_geni_uart_ports[line];
-> 
-> Plus qcom_geni_uart_ports[] is GENI_UART_PORTS long. So you will
-> actually only have a maximum of 3 ports.
-> 
-
-Yes, that's correct. We are also working on increasing the number of 
-serial ports to support more ports on GENI hardware.
-
-> 
-> I like the change, but please replace port_idr with a u32 and use
-> linux/bitmap.h to implement the port allocation scheme.
-
-As per Greg's comment, used ida in v2.
-
-> 
-> Regards,
-> Bjorn
-> 
->> +	}
->>   	return port;
->>   }
->>   
->> @@ -1761,6 +1778,7 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->>   						port->wakeup_irq);
->>   		if (ret) {
->>   			device_init_wakeup(&pdev->dev, false);
->> +			idr_remove(&port_idr, uport->line);
->>   			uart_remove_one_port(drv, uport);
->>   			return ret;
->>   		}
->> @@ -1772,10 +1790,12 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->>   static void qcom_geni_serial_remove(struct platform_device *pdev)
->>   {
->>   	struct qcom_geni_serial_port *port = platform_get_drvdata(pdev);
->> +	struct uart_port *uport = &port->uport;
->>   	struct uart_driver *drv = port->private_data.drv;
->>   
->>   	dev_pm_clear_wake_irq(&pdev->dev);
->>   	device_init_wakeup(&pdev->dev, false);
->> +	idr_remove(&port_idr, uport->line);
->>   	uart_remove_one_port(drv, &port->uport);
->>   }
->>   
->> -- 
->> 2.34.1
->>
->>
