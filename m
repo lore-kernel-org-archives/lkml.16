@@ -1,125 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBCA7381C4;
-	Thu, 27 Mar 2025 18:14:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF31F4F1;
+	Thu, 27 Mar 2025 18:15:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743099263; cv=none; b=Fbe5yPujPJB5febbRSmN6cPFZ0iPwPQLDnmuGjmBBrkXQ9Qf8OuF1RdtsANc+/arTx0usFK0qFqgrBqBKxJjGrlRb/V5JVN7j2KXCTVhD2o5V+7ZdVSMuPPtgbxanzuxoC3PiRy4jj/FufeBmczv6v8TorJ9ARrcovw0CsZAVZo=
+	t=1743099328; cv=none; b=X7E6NO1dQKXPO3CUYkfX7KYfzZ51yiaNWJmuW6F+Sqjwkqlx3uHk+VahZx0N1fNmnEHBxFO66bOad+aBTPoDyiIqJESNxXsjJk3On1WHm+KIa3pWK4RRd5HuWhvXm8PqYGXj1r9q4xmPo//shmhzOMW2J2MpZxDacm0e6br8F1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743099263; c=relaxed/simple;
-	bh=4Ft9xIPZQUU9uYzVlf33IIEpUMKVpUOzBBAyceCSDZg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T+y9aVZMUM8qdJ7ALc2uZvYS9Ze2c7ndrYaI7qM8zsO3zU+WFs62FjNWtpXWVgPnQt4ZckLkoPeV7OJLt7JATPqD9xPhOUvtXgWMYgx4MjGzPLqJP8Mq2x93kXsyYM/kClG1Qrt8g6vSJ4PJpv7eLKuv+RpDgN1jFKa8ceBTd1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JGVy+AEU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743099328; c=relaxed/simple;
+	bh=ZEeQ/S/6JeftSF4kJP065O+i5F6+rxtbBgbhnxYIVWY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=rBvYP2h3xASQuip8zsvNlpUloEYTj/XoHfkqv5KxxI6ifD2z+Rk8ZqtVwCKyxbMlvUztQ41vpiaj7/yksDTaa2/rlLU65LYl3npjnQIwAv1CAVaYBrd0LEHtFwx/+LvXaa9cqKNuvCWmGk90JNdfd7YbhJXccUNWfxtNiGa/w4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JFWTkZHB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JGVy+AEU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 823A6C4CEDD;
-	Thu, 27 Mar 2025 18:14:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JFWTkZHB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E3E8C4CEDD;
+	Thu, 27 Mar 2025 18:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743099262;
-	bh=4Ft9xIPZQUU9uYzVlf33IIEpUMKVpUOzBBAyceCSDZg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JGVy+AEUA02Dz2ivMK5nygcB3xIec6vKm9osG5+Na5XOIBKYLKg+vq7QxogGf8aLF
-	 mzFzL35fVkbO8xq1L+KkR+9vav+RVoWzb1jJqvDSWb92LXPnSTSeV27U01rdWZ+Ti6
-	 2/1l8CS8cgBwYOUnaPQ8bgjiaiOeToiMD7+9dsfigyo0DVbxpxLYaGwRsonRt+HDr8
-	 /KS/HnRfKTXiKDoQP+G7ZCdKLAgVQSxD//yCes7eCmpVoriYgGwR4uevzfDJpN03or
-	 xgeO66GPnu5QETjb1uEThp/zwgjYcUk8oEpN6UbbfgL7Bu7F0Z4+M5NX8TQe0hku0I
-	 ylOMpqf5UJO8g==
-Date: Thu, 27 Mar 2025 19:14:18 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, 
-	linux-tip-commits@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
-Subject: Re: [tip: objtool/urgent] objtool, pwm: mediatek: Prevent
- theoretical divide-by-zero in pwm_mediatek_config()
-Message-ID: <nzk5uzpwqqkflmdgfe7kwsnsecqnsn6vsyo4ycoaueasnud6ot@pg6cazrf6zuf>
-References: <fb56444939325cc173e752ba199abd7aeae3bf12.1742852847.git.jpoimboe@kernel.org>
- <174289169184.14745.2432058307739232322.tip-bot2@tip-bot2>
- <m7pgkp3ueo7iqgqf74upjrihr3mpmb3sqhwegnjxxwsrgx2jsw@dnec5iqiyobh>
- <Z-Uv60sD_S2xYVB1@gmail.com>
+	s=k20201202; t=1743099327;
+	bh=ZEeQ/S/6JeftSF4kJP065O+i5F6+rxtbBgbhnxYIVWY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=JFWTkZHB7/ndBiO06/3QxNGLnicTD4KEgTecERc8mrFHQiA9Erkq9fYO0XkmBagc0
+	 A6UsyyPTh2Bbea2UBvZ4XCjELyUEY+HxSpBDtB9/eKl/IQWUaHJsyzIP756MW55LkX
+	 BEbqyaI/iU+j9rIHE1QRX7hx963LBiN6bAAlExoJQqtG/OfU8kmyMrK2L6hNCuCZ42
+	 6UhIY4bnmt32kHIf7mSGF9bTn0JbqODFiYX1BWxluoI4L4hcB+1pphuq1mv9RAi85u
+	 ZNkaLNZ7IFQDPuKV2e0k3nRow+SSPf3Rxb+DTWboRVh6hOmBREzyvQLva3uxI/YsZl
+	 GVyAKOEpYH1Rg==
+Date: Thu, 27 Mar 2025 13:15:26 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ioana Ciornei <ioana.ciornei@nxp.com>
+Cc: Roy Zang <roy.zang@nxp.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Frank Li <Frank.Li@nxp.com>, linux-pci@vger.kernel.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: layerscape: fix index passed to
+ syscon_regmap_lookup_by_phandle_args
+Message-ID: <20250327181526.GA1470997@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gqyx7bjsgd2nmhyo"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z-Uv60sD_S2xYVB1@gmail.com>
+In-Reply-To: <20250327175557.GA1438048@bhelgaas>
 
+On Thu, Mar 27, 2025 at 12:55:57PM -0500, Bjorn Helgaas wrote:
+> On Thu, Mar 27, 2025 at 05:19:49PM +0200, Ioana Ciornei wrote:
+> > The arg_count variable passed to the
+> > syscon_regmap_lookup_by_phandle_args() function represents the number of
+> > argument cells following the phandle. In this case, the number of
+> > arguments should be 1 instead of 2 since the dt property looks like
+> > below.
+> > 	fsl,pcie-scfg = <&scfg 0>;
+> > 
+> > Without this fix, layerscape-pcie fails with the following message on
+> > LS1043A:
+> > 
+> > [    0.157041] OF: /soc/pcie@3500000: phandle scfg@1570000 needs 2, found 1
+> > [    0.157050] layerscape-pcie 3500000.pcie: No syscfg phandle specified
+> > [    0.157053] layerscape-pcie 3500000.pcie: probe with driver layerscape-pcie failed with error -22
+> > 
+> > Fixes: 149fc35734e5 ("PCI: layerscape: Use syscon_regmap_lookup_by_phandle_args")
+> > Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+> 
+> Thanks, applied to pci/controller/layerscape for v6.15.  Hopefully the
+> last change for this cycle :)
+> 
+> Thanks for the message sample.  I dropped the timestamps because
+> they're not really relevant here.
 
---gqyx7bjsgd2nmhyo
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [tip: objtool/urgent] objtool, pwm: mediatek: Prevent
- theoretical divide-by-zero in pwm_mediatek_config()
-MIME-Version: 1.0
+I guess this should have a stable tag since 149fc35734e5 appeared in
+v6.14.  I added one.
 
-Hello Ingo,
-
-On Thu, Mar 27, 2025 at 12:00:59PM +0100, Ingo Molnar wrote:
-> * Uwe Kleine-K=F6nig <ukleinek@kernel.org> wrote:
->=20
-> > I wonder a bit about procedures here. While I like that warnings that=
-=20
-> > pop up in drivers/pwm (and elsewhere) are cared for, I think that the=
-=20
-> > sensible way to change warning related settings is to make it hard to=
-=20
-> > enable them first (harder than "depends on !COMPILE_TEST" "To avoid=20
-> > breaking bots too badly") and then work on the identified problems=20
-> > before warning broadly. The way chosen here instead seems to be=20
-> > enabling the warning immediately and then post fixes to the warnings=20
-> > and merge them without respective maintainer feedback in less than 12=
-=20
-> > hours.
->=20
-> As I indicated elsewhere in this thread, it's a WIP branch, so we'll=20
-
-That sounds as if I should know that. But it's neither in the part of
-the thread that I was Cc:d, nor in the cover letter.
-
-> rebase it if/as we get feedback from maintainers: fix or skip the patch=
-=20
-> on negative feedback, adding in tags on positive feedback.
->=20
-> Does this particular patch look good to you?
-
-I fail to see an urgency and so think this patch should better go via
-the pwm tree. Do you consider it urgent (as the branch name suggests)?
-Or is this v6.16 material?
-
-> > > Cc: "Uwe Kleine-K=F6nig" <ukleinek@kernel.org> (maintainer:PWM SUBSYS=
-TEM)
-> > > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > > Link: https://lore.kernel.org/r/fb56444939325cc173e752ba199abd7aeae3b=
-f12.1742852847.git.jpoimboe@kernel.org
->=20
-> I've also tentatively added your Acked-by, if that's OK with you.
-
-The patch is OK. Iff you can convince me that it should go via tip, it's
-fine for me.
-
-Best regards
-Uwe
-
---gqyx7bjsgd2nmhyo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfllXgACgkQj4D7WH0S
-/k4EiAf/evcJ6ao4tZDmEX3hn4JjXwAyqpF+dLGrNTXZm5pT6bGxE8Dqg7ES3y4c
-MpyNiStcHajzSdV3nq/Rd9C+9X29KrP3mmwLuG8pl1GzAp723fsib2U9i21fZiwN
-t8MPS3l6YhWIaYixqkRsaNjnKLGRz2m2+ZYe4Pjnr5eDIrOHp7sfjpkE+b481K5B
-DZ4ljzMKH46IHzJvOFsBUX8I39lijYDoiNavCTIeqxZ1lxrCRewMYtL4n38UI3ws
-bKWUcYySqf5aNuq4mqKXuOaK7kVDuson8HDMaH4jM09j02ybn7VSjDj2FoqxPOGo
-nAssvhkLaABByY6PVAbyObkCCVK9fw==
-=N7Za
------END PGP SIGNATURE-----
-
---gqyx7bjsgd2nmhyo--
+> > ---
+> >  drivers/pci/controller/dwc/pci-layerscape.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+> > index 239a05b36e8e..a44b5c256d6e 100644
+> > --- a/drivers/pci/controller/dwc/pci-layerscape.c
+> > +++ b/drivers/pci/controller/dwc/pci-layerscape.c
+> > @@ -356,7 +356,7 @@ static int ls_pcie_probe(struct platform_device *pdev)
+> >  	if (pcie->drvdata->scfg_support) {
+> >  		pcie->scfg =
+> >  			syscon_regmap_lookup_by_phandle_args(dev->of_node,
+> > -							     "fsl,pcie-scfg", 2,
+> > +							     "fsl,pcie-scfg", 1,
+> >  							     index);
+> >  		if (IS_ERR(pcie->scfg)) {
+> >  			dev_err(dev, "No syscfg phandle specified\n");
+> > -- 
+> > 2.34.1
+> > 
