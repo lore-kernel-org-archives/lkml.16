@@ -1,154 +1,147 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52789165F16
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AED219ADBA
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743093305; cv=none; b=VaL1xfg7+T+yymVZZr15PZYwe37nkfepsDHmVVIZ1fbnHDiklRfEztH6iHFytBIgazWaVMphcB/ZeQ+DkRDtoxeK5yxaG9PRB7QL895wBDYhObOP9ok1T0CsIgU7MYYI1J22nkcuTTWvs8vpPVtT7uAxi8sGUMx0E48iiiH91bI=
+	t=1743093340; cv=none; b=l/jQ+mSKP8tBf1SscaQyNxytfsDv3mAi6lbM9LThvgZfl2a+NLW4IlVrZz2tqhdO9C1OxDGv6YoJJmiu18S2ytKEfQ4yWd/Z3pLrDXQUcjxIetr/97/Is5K5G9tJ2Lt10KpyktJ7fbjiTpRjbQjmM3yCxVUoptgKGEsvUYDyON0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743093305; c=relaxed/simple;
-	bh=yrLrJ07jSyEkRNOIGSnIx6UIH6SW0uwq2gx5Xt6MpTw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eH2b6Thk4kMQhtFlHLAaZLdO8De/2wglV7pjQ+qWs9yF/NbGqUXuhd4stT9V9pHyqaEq9wEdMwEq6zTXmqEtezaKvXSadbPQ59Cu1JfGypD1LODVOIuK6uNJATF+NRgxO/yu80E0uvjMZeYqyiBVptpwTRjwfBFIiLZB9dybpjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=Es4wJgpW; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Es4wJgpW"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso11763695e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:35:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1743093301; x=1743698101; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GGjDGhXvhOctDrW1nI1udXGMONQSxA0lH5by2Ntn0tg=;
-        b=Es4wJgpWTP8jzV/2d74v1syhkB6P/YbPKpMSQpi+7LHCy3AmT1Hdh+jh8vz4xdzbUp
-         2TLKwxYc81UpK8LTlzqTw5tLbjKtsxOrkbAXhZB5v31/tl+UH60puHzPQJ9SMSvpRHLG
-         TgbP+GOmJCIPLWmiPdTNy2PJnCEhAYJB3Ss+eM7HNNNePe1AzN+O6VFGCaL1wmyrPsEG
-         Ged4/X6chrEGM9B8V9FLwpuNzpyoeYwVMmJb1HLh5ahDDeR4o4ouM/6T/+xDKj4JR00r
-         Zhd7HBSIFYaNzZ5xB7DbfadSmxhwgTkKjRLE+cquz6cvQs8jsZIIESTMYDDYfFhsnyBr
-         PVqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743093301; x=1743698101;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GGjDGhXvhOctDrW1nI1udXGMONQSxA0lH5by2Ntn0tg=;
-        b=mGLfI7G9FBDG40Ymspn6P8fXRW1pRCGqKm7PGOXYkOBGDCv6ts0gV14apHWzhdM+VY
-         lMj1j//MZsxQV81jgVRTaPHP0Ce/qeOyCPIa0WOGTocFU582FTYLJYJQQkivAgtWg39Y
-         oZT6ff1tLA0wBKtFfaDB4yPt3ixgRo/1vX1XYjLWPbKxsGWC2DF55ECroavdvKgX/eDa
-         4xA96v2wtVRpcoM2XfYT69yOL7hy2sMO4yDtY3GM246TKs+nM7wUjAAu/bCTJq2zxtwc
-         SJY5cUY0Qqi+YZ80cNpi03qTREOhfhGtjsSFhljYse6db1nVPERqdrdbPLr4yft51BAb
-         dQ5A==
-X-Forwarded-Encrypted: i=1; AJvYcCVUZpggXEvQ2aqZI537Ek1UNTf1jreaBGM5sxPjgeVVtmmqwWNvaE7GhdZRNh38aXYFAEm7rQJSAKfm5Qg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCqKFDZlBuGRHmuvgHrXq72hZPiiwXHgdUKvj5N2HgA/W9okT2
-	VD1eQJwmoGC19dvROmzz7kMTC76XRrSD5YFPrQrUzUskqKM5+Z3yClQuj9ygq1M=
-X-Gm-Gg: ASbGncusvaxKD0MQ949IWssddMBWZHjZ2jFFlGHuWc+HA8PxtkgwXnol6U4scd4B/tG
-	cnCJgE8bJTu/db1cG1ucEi059Z7U5+/42MyHI189gfzd1OXZmudtKpqBXVtQV7W4/b29KyEkKNA
-	txYIF4Ri1L81ajCcXQRcIoXSklK+dSmGlqcvlKFboFtmhzipxdk+tYgkRMOiZb2J3IZnDsl3hVw
-	WUQOmkWnPNMIGbI35ZhhxNOQ4aSDG11m2EYw687ArpPIu+9ZfuknQ/RpLV5V2Q6AsYhyLG+PkOj
-	O+f42QpxMtATRFDRMZUeoFVpZt/OomKtFBVSE+c44WwaSZFsPP3evhUBr8IGoIsh
-X-Google-Smtp-Source: AGHT+IGawtvFBb4fS5ToIj7CyXU2x5hbH3B/DoIrPXE5LcvhbfIugmJW/IZ0c8unwGyuVy6PG4hKmQ==
-X-Received: by 2002:a05:600c:3ba1:b0:43c:ef55:f1e8 with SMTP id 5b1f17b1804b1-43d84fb5ffdmr36069095e9.13.1743093301462;
-        Thu, 27 Mar 2025 09:35:01 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d7ae6a206sm39611675e9.0.2025.03.27.09.35.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 09:35:00 -0700 (PDT)
-Message-ID: <a66f3c88-0fe7-4e9c-83cd-1fe4bca8b14e@tuxon.dev>
-Date: Thu, 27 Mar 2025 18:34:59 +0200
+	s=arc-20240116; t=1743093340; c=relaxed/simple;
+	bh=iTp4tbpI8UCm5iTaOGfyS1gbiah4e8hQmVgQc4UYKGU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=bI1EKnJEY01o5NzoIxj8/eSJeB+ukK8kauw+db5vU+dSjFEEF8xDzId0+1ReNW2cz+hNTI8LqMOEnz0GnKuxYxz8Oa/qyyI6Ty/s5Y/vbHtUx/GhjMNhkJQBzDxzogWGk49HXiXH8NmCMoKl+p8AFdDmTXo0C3J2c9MS1iXkjsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9D34C4CEDD;
+	Thu, 27 Mar 2025 16:35:37 +0000 (UTC)
+Date: Thu, 27 Mar 2025 12:36:26 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Christophe JAILLET
+ <christophe.jaillet@wanadoo.fr>, Douglas Raillard
+ <douglas.raillard@arm.com>, Gabriele Paoloni <gpaoloni@redhat.com>, Hengqi
+ Chen <hengqi.chen@gmail.com>, Huang Shijie <shijie@os.amperecomputing.com>,
+ Petr Mladek <pmladek@suse.com>, Ran Xiaokai <ran.xiaokai@zte.com.cn>,
+ Siddarth G <siddarthsgml@gmail.com>, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
+ <thomas.weissschuh@linutronix.de>, Zhouyi Zhou <zhouzhouyi@gmail.com>
+Subject: [GIT PULL] tracing: Updates for v6.15
+Message-ID: <20250327123626.4ecb15ab@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] iio: rzg2l_adc: Cleanups for rzg2l_adc driver
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: prabhakar.mahadev-lad.rj@bp.renesas.com, lars@metafoo.de,
- linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, gregkh@linuxfoundation.org
-References: <20250324122627.32336-1-claudiu.beznea.uj@bp.renesas.com>
- <20250327153845.6ab73574@jic23-huawei>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <20250327153845.6ab73574@jic23-huawei>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-Hi, Jonathan,
 
-On 27.03.2025 17:38, Jonathan Cameron wrote:
-> On Mon, 24 Mar 2025 14:26:25 +0200
-> Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> 
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> Hi,
->>
->> Series adds some cleanups for the RZ/G2L ADC driver after the support
->> for the RZ/G3S SoC.
-> 
-> This doesn't address Dmitry's comment or highlight the outstanding
-> question he had to Greg KH on v3.  
-> I appreciate you want to get this fixed but I'd rather we got
-> it 'right' first time!
+Linus,
 
-My bad. As there was no input on platform bus patch I though this is not
-the desired way of going forward. Sorry for that.
+tracing updates for v6.15:
 
-> 
-> Also, please make sure to +CC anyone who engaged with an earlier version.
+- Add option traceoff_after_boot
 
-Ok, will do it.
+  In order to debug kernel boot, it sometimes is helpful to enable tracing
+  via the kernel command line. Unfortunately, by the time the login prompt
+  appears, the trace is overwritten by the init process and other user space
+  start up applications. Adding a "traceoff_after_boot" will disable tracing
+  when the kernel passes control to init which will allow developers to be
+  able to see the traces that occurred during boot.
 
-> 
-> For reference of Greg if he sees this, Dmitry was expressing view that
-> the fix belongs in the bus layer not the individual drivers.
-> FWIW that feels like the right layer to me as well.
+- Clean up the mmflags macros that display the GFP flags in trace events
 
-To me, too.
+  The macros to print the GFP flags for trace events had a bit of
+  duplication. The code was restructured to remove duplication and in the
+  process it also adds some flags that were missed before.
 
-Thank you,
-Claudiu
+- Removed some dead code and scripts/draw_functrace.py
 
-> 
-> https://lore.kernel.org/all/Z8k8lDxA53gUJa0n@google.com/#t
-> 
-> Jonathan
-> 
-> 
-> 
->>
->> Thank you,
->> Claudiu Beznea
->>
->> Changes in v4:
->> - open the devres group in its own function and rename the
->>   rzg2l_adc_probe() to rzg2l_adc_probe_helper() to have simpler code
->> - collected tags
->>
->> Changes in v3:
->> - in patch 2/2 use a devres group for all the devm resources
->>   acquired in the driver's probe
->>
->> Changes in v2:
->> - updated cover letter
->> - collected tags
->> - updated patch 1/2 to drop devres APIs from the point the
->>   runtime PM is enabled
->>
->> Claudiu Beznea (2):
->>   iio: adc: rzg2l_adc: Open a devres group
->>   iio: adc: rzg2l: Cleanup suspend/resume path
->>
->>  drivers/iio/adc/rzg2l_adc.c | 67 +++++++++++++++++++++++++------------
->>  1 file changed, 45 insertions(+), 22 deletions(-)
->>
-> 
+  draw_functrace.py hasn't worked in years and as nobody complained
+  about it, remove it.
 
+- Constify struct event_trigger_ops
+
+  The event_trigger_ops is just a structure that has function pointers that
+  are assigned when the variables are created. These variables should all be
+  constants.
+
+- Other minor clean ups and fixes
+
+
+Please pull the latest trace-v6.15 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace-v6.15
+
+Tag SHA1: 4c87918f84af7697d58a1f243ebe96de405791d9
+Head SHA1: e0344f9564f5847dc20e245fbea67a4b262ee659
+
+
+Christophe JAILLET (2):
+      tracing/user_events: Slightly simplify user_seq_show()
+      tracing: Constify struct event_trigger_ops
+
+Douglas Raillard (3):
+      tracing: Align synth event print fmt
+      tracing: Ensure module defining synth event cannot be unloaded while =
+tracing
+      tracing: Fix synth event printk format for str fields
+
+Gabriele Paoloni (1):
+      tracing: fix return value in __ftrace_event_enable_disable for TRACE_=
+REG_UNREGISTER
+
+Hengqi Chen (1):
+      tracing: Remove orphaned event_trace_printk
+
+Huang Shijie (1):
+      tracepoint: Print the function symbol when tracepoint_debug is set
+
+Petr Mladek (1):
+      tracing: gfp: vsprintf: Do not print "none" when using %pGg printf fo=
+rmat
+
+Ran Xiaokai (1):
+      tracing/osnoise: Fix possible recursive locking for cpus_read_lock()
+
+Siddarth G (1):
+      tracing: Replace strncpy with memcpy for fixed-length substring copy
+
+Steven Rostedt (5):
+      tracing: Add traceoff_after_boot option
+      tracing: gfp: Remove duplication of recording GFP flags
+      tracing: Update MAINTAINERS file to include tracepoint.c
+      scripts/tracing: Remove scripts/tracing/draw_functrace.py
+      tracing: Do not use PERF enums when perf is not defined
+
+Thomas Wei=C3=9Fschuh (1):
+      tracing/user_events: Don't use %pK through printk
+
+Zhouyi Zhou (1):
+      ring-buffer: Fix typo in comment about header page pointer
+
+----
+ Documentation/admin-guide/kernel-parameters.txt |   9 ++
+ MAINTAINERS                                     |   1 +
+ include/linux/trace_events.h                    |  18 ----
+ include/trace/events/mmflags.h                  |  41 ++------
+ kernel/trace/ring_buffer.c                      |   2 +-
+ kernel/trace/trace.c                            |  11 ++
+ kernel/trace/trace.h                            |   4 +-
+ kernel/trace/trace_eprobe.c                     |   6 +-
+ kernel/trace/trace_events.c                     |   4 +-
+ kernel/trace/trace_events_hist.c                |  20 ++--
+ kernel/trace/trace_events_synth.c               |  40 +++++++-
+ kernel/trace/trace_events_trigger.c             |  38 +++----
+ kernel/trace/trace_events_user.c                |   7 +-
+ kernel/trace/trace_osnoise.c                    |   1 -
+ kernel/tracepoint.c                             |   2 +-
+ scripts/tracing/draw_functrace.py               | 129 --------------------=
+----
+ 16 files changed, 108 insertions(+), 225 deletions(-)
+ delete mode 100755 scripts/tracing/draw_functrace.py
+---------------------------
