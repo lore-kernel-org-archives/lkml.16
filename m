@@ -1,161 +1,115 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F58E18FC67
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7029F7E9;
+	Thu, 27 Mar 2025 16:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743091814; cv=none; b=q3Ei4HJZ3hq8hHm5T2hbKdmsCQYedwGFozlhlNcZ8nKaq9cgJ1gPpy5uhpuxEEfLHTRrI2Y+4hnxO66wi5iBuT4bOpvaQbE4vdEKigaNhVQdlS1vY1owNOXdNXFsTCJiDifSlI4ox9mixTA+bC8qBMNZwoDmYmUvq97WgmoWaQ4=
+	t=1743091899; cv=none; b=gJbeL/3alAVE3M4afOsOkTXJN/IgrzXrPzU9EX95sWdXKHvVE0VZQvQWipjyBnGVvJI+bgLJKJfRGoEqg4Tff8nLF9I1lIxtn/I27zgKKrtIuqiN4m3jMYLNGrsHGd0adRIgI/btQNs8C4z2sFweRLYeRossZq8tdf9pY584C3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743091814; c=relaxed/simple;
-	bh=yRfsWSmO+wFLjQqhVPDHhzJGHPLVualTW3MOKQsQiAg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lb+9Co3TlruhGjRVQLdFIawoNSwf4WCmVOjCiFjg5pxXO/X7xLGehy2zVhjeCcfmdExGUJJ28rCR44oXmykk3GlSl5PuXcLGh/A+ztAWNJvSrxrfCd00kZDTh699iKTsP3JCEGyq/yA4wwA01Jd/r1kBj/2QiR794WczpoUKIe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=T8U1s6Uj; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	s=arc-20240116; t=1743091899; c=relaxed/simple;
+	bh=BzzrJ79e4VaP/rWh74LJKOWYu9gwJBEyiYSvS2rW33s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ifKkzrdXfKKrl2QN29u4HIMWOioJ6mk4RhV3c4J6BX47uuY/C3S6TQGKmuClVYTZiqI6dTSrToF/6IFKJf3QJnzfrj9DQqf4YcNw/oKWy/LpfwyEEzRtRU1Mj84F0U9FSwNcaEIRAuVq7MQrgy1J5jtOkeV87RQUacP69skl8fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=gF+WV++Z; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="T8U1s6Uj"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-476b4c9faa2so16173651cf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:10:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1743091811; x=1743696611; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=n4aGtm3x4RnQEni/5CdY3X2v/FvubHlUYBJ6LerS9tM=;
-        b=T8U1s6Ujtr9zTAwLS5tBTAuFJAyK+XjK+4j9NaXJxDQw8R0uPo4ebOtbOTzHbxR8Nr
-         MDv8ZvPD9ApYenTASg4Z1tULbH/yz9Qal4DB7XUPdx1TIVXeR/OKEiIisgP2FDvTHovS
-         b1BKUmza3sqqWpR0SnjfZvJljYGz2y8/5w7QPUieIdijZGLLTv7y190bKA0grPquPfI5
-         22ayKJj+iXd+g/XAcx1j1ow5dQLKJiKpmDbZd7tG+5y9rYAcE3vg6NDnPEzDzAAOUYdu
-         hTKHEP+NoeU9WqJ1Jr8jgZLWZAUsc7EhzlERNQ8dAIR4Avla5rUnKYCbW5VBU4rqKcvH
-         6/SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743091811; x=1743696611;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n4aGtm3x4RnQEni/5CdY3X2v/FvubHlUYBJ6LerS9tM=;
-        b=D4YaXHiXYqdHHIW0eux4eC0nyUHlEMPJNiAoFSYzoyG9qV5oZX/fTAorh1dUlwOnh4
-         wpGFo//PxXXbCa7HDM1U3EqsbX5eaqRH+/S5vBHg1G2LYKQ6ANaDvAPVyX68twZcxA86
-         JpNCFwjxKPwc9WlSVEGn1E/4H6Ynqx1ah4n5vuFy60UCx8/jbzclPkJYyWC4+qh0sXLT
-         wFnkPUAnjtjaDvJ5MATtxN9rzu3k9N3Hmt9Lpv4wZXBkfNiAM4kxoI2kY8XWox4bCvto
-         3tH2dexVjkvkKQAsrLmHQE6q3up5FdPt5pMm1fQfCQTZ4E9RR3luW6chFKVwnlflfWwO
-         48qQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVEl0Uojw27Aj3cyPiggTjQNNxTv0fpTweGMg0DgyvYOOla+TP0rSczb7bMCPmZkkvO9fIuFdXcAQRR0Eo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlW5zsD6wuX1JJ//fQ2Kfm9Pgyn/d5WajOuHbvtj4vJC/2DG5s
-	Y+d5JC7W3mYi4N9vrTqhigILzvpaKi3zRiIUIfBrykTvLTdxIKtBUmRELxx9ew==
-X-Gm-Gg: ASbGncv6xfjzy1QmjAF+rZywMvBSrdhjqGEEMr9O9ex4OU4ePHJyYsxTHq7djJLWL2i
-	IMuBc49OM1sIT4pjjs0KzJiZV4E63KmOkG5PYAO0KE3QhYER6u2EbjE/cFwzFKh0l206Yv3l3N0
-	dsP6BsALqOGRqXDHdsA2H3y9YZET53r29UBFOulJcNf1p15M/0tcFeUqRtJNxGImpcKkbbBwFYR
-	zzHAqPaRgUmv/jNeWXQyW238hLgZeznfXs2TkqY4FFsi2TasV8F2sM3qxKwYuVQvWoKWpISKDV6
-	/cKf7FyH1uXGSfOgCFEFKYRYLiO0TRBq2hADK9c6CiKecq6zKArjxx36V0TOnGan+gvwIaZpagL
-	WDhfLE4/xdZKVtGdrBhWZp4Y8fxdoTgzeP4ZxxQ==
-X-Google-Smtp-Source: AGHT+IHrXdhBKku0JlAnw5aFNc3noz3BV8vld9892T4Ikm1iTuBSdMQGuKLfD+Saf5C2J0tikiUE8A==
-X-Received: by 2002:a05:622a:2596:b0:476:9001:7898 with SMTP id d75a77b69052e-4776e116edcmr67799011cf.25.1743091810281;
-        Thu, 27 Mar 2025 09:10:10 -0700 (PDT)
-Received: from rowland.harvard.edu (nat-65-112-8-24.harvard-secure.wrls.harvard.edu. [65.112.8.24])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4771d52010fsm85628191cf.61.2025.03.27.09.10.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 09:10:09 -0700 (PDT)
-Date: Thu, 27 Mar 2025 12:10:07 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	syzbot <syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com>,
-	gregkh@linuxfoundation.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH v2 resend] media: dvb: usb: Fix WARNING in
- dib0700_i2c_xfer/usb_submit_urb
-Message-ID: <c7f67d3b-f1e6-4d68-99aa-e462fdcb315f@rowland.harvard.edu>
-References: <6bb3b80b-a808-4992-8666-535ed9a5c980@rowland.harvard.edu>
- <67e2fed5.050a0220.a7ebc.0053.GAE@google.com>
- <29db5fdc-13c9-45f0-9183-c80d637725c6@rowland.harvard.edu>
- <Z-MKiV0Ei5lmWik6@shikoro>
- <d0fd60d7-5660-42ed-b1c7-4dfd6b8e74b0@rowland.harvard.edu>
- <Z-MrfICsY06DZV-2@shikoro>
- <f8e975a0-87d2-4f83-b580-6858050a252d@rowland.harvard.edu>
- <Z-QjIRoOWpoWaL6l@shikoro>
- <c6bed13c-38df-43a6-ba5f-0da03b91f3df@rowland.harvard.edu>
- <Z-RyiI1X9BN43feQ@shikoro>
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="gF+WV++Z"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 364C4A0BF9;
+	Thu, 27 Mar 2025 17:11:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=mail; bh=Cfcxu0sFDt25T4HE+Z+C
+	QUKV/MoRpGB/hgvYzRHCAGI=; b=gF+WV++Z6x+CTx8iHxNPG6AW8cN06hUy3NXR
+	A5rWWYT1XYCcytzTkQvRJLRAs9AoiFvMROELzM7ICCBy7Ep+GvIE/TpO3mIsdYlR
+	WDWT9Bdewa7JwON1oT34SkEaiU5Pc08DIxMtrfPzDO/HI7ZhRcggRbOw0sh19Q33
+	KEtIZEPYEJlNCb3BYYBaSVrD3+FvOhqfmDRWdVrbLT0oes5a7nLyUM++Amnewh5y
+	6iDiP7uhhF0EEZpqLhN1kyzX99LIOMbJV33D4GeT+MR0QHFo4fDsHixRZLwpsLNh
+	gw459/KQV+V8l/Rq+yfaUFF4RMmnXGY6bf7TUWmDkn6kpWxwE/BLlesksxh8fxEr
+	tOnF2EX+oirKYTfHure+/+quqUP9GmTVDBh5Pp0s76jr8y0oC16G7menfczU8kvA
+	YZ26mnlkle4XkE3TbiCrHiq+sQJMtqc4YAKjnRI0JdLqnZG0yBirktXNy2phjt4Y
+	Ak/OtR1AudC1GHpuvQMWyc+apm2F6HXjHA3z+rSB7RBK8N+3t7ysFuNYyFVnzR1/
+	eOjGxWrf8qnBojyZA6DBcwA/n+RDN5lOV+Mi3rpDGb+IEuD6DZsAZk+XhD3HyjWM
+	GCBrcwFhh0PJWFFjxsY5W0WPQ9DAsOC9ep1CFjSEeaZG6Xg/RuZOItOLpD6Hrio6
+	kO8psU4=
+Message-ID: <bcf363db-8fff-4fb1-b29e-300f7b8bc090@prolan.hu>
+Date: Thu, 27 Mar 2025 17:11:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-RyiI1X9BN43feQ@shikoro>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/2] pm: runtime: Add new devm functions
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Varshini
+ Rajendran" <varshini.rajendran@microchip.com>, Tudor Ambarus
+	<tudor.ambarus@linaro.org>, Mark Brown <broonie@kernel.org>,
+	<linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>, "Len
+ Brown" <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, "Alexander
+ Dahl" <ada@thorsis.com>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
+	<claudiu.beznea@tuxon.dev>, Pavel Machek <pavel@kernel.org>
+References: <20250317093445.361821-1-csokas.bence@prolan.hu>
+ <20250317093445.361821-2-csokas.bence@prolan.hu>
+ <CAJZ5v0hJZBxU6SSq9C8gp2peETFWu0jbhrM82B5GvQkVXPR+9Q@mail.gmail.com>
+ <3e6d7071-1ba9-484c-9dcb-c5da6ad1ffe3@prolan.hu>
+ <CAJZ5v0jka2r9PaKsF0FE2qJaFfnVNGd8sZRE6Aay-Ugpzot44w@mail.gmail.com>
+ <d926d2c2-8cc9-4a71-b8ca-b5f03ac9afb8@prolan.hu>
+ <CAJZ5v0iS20uPhqNOnkj36rTBGQF3fecF6Hq4JU4=wz4pSzrFyg@mail.gmail.com>
+Content-Language: en-US, hu-HU
+From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
+In-Reply-To: <CAJZ5v0iS20uPhqNOnkj36rTBGQF3fecF6Hq4JU4=wz4pSzrFyg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
+ ATLAS.intranet.prolan.hu (10.254.0.229)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D948526C7764
 
-The syzbot fuzzer reported a WARNING related to the dib0700 dvb-usb
-driver:
+Hi,
 
-usb 1-1: BOGUS control dir, pipe 80000f80 doesn't match bRequestType c0
-WARNING: CPU: 1 PID: 5901 at drivers/usb/core/urb.c:413 usb_submit_urb+0x11d9/0x18c0 drivers/usb/core/urb.c:411
-...
-Call Trace:
- <TASK>
- usb_start_wait_urb+0x113/0x520 drivers/usb/core/message.c:59
- usb_internal_control_msg drivers/usb/core/message.c:103 [inline]
- usb_control_msg+0x2b1/0x4c0 drivers/usb/core/message.c:154
- dib0700_ctrl_rd drivers/media/usb/dvb-usb/dib0700_core.c:95 [inline]
- dib0700_i2c_xfer_legacy drivers/media/usb/dvb-usb/dib0700_core.c:315 [inline]
- dib0700_i2c_xfer+0xc53/0x1060 drivers/media/usb/dvb-usb/dib0700_core.c:361
- __i2c_transfer+0x866/0x2220
- i2c_transfer+0x271/0x3b0 drivers/i2c/i2c-core-base.c:2315
- i2cdev_ioctl_rdwr+0x452/0x710 drivers/i2c/i2c-dev.c:306
- i2cdev_ioctl+0x759/0x9f0 drivers/i2c/i2c-dev.c:467
- vfs_ioctl fs/ioctl.c:51 [inline]
+On 2025. 03. 27. 15:14, Rafael J. Wysocki wrote:
+> /-- devm_pm_runtime_get_noresume()
+> |   /-- devm_{pm_runtime_set_active() + pm_runtime_enable() (in this order)}
+> |   |   pm_runtime_use_autosuspend()
+> |   |
+> |   |   Note that the device cannot be suspended here unless its
+> runtime PM usage
+> |   |   counter is dropped, in which it would need to be bumped up
+> again later to
+> |   |   retain the balance.
+> |   |
+> |   \-> pm_runtime_disable() + pm_runtime_set_suspended() (in this order)
+> \-> pm_runtime_put_noidle()
 
-Evidently the fuzzer submitted an I2C transfer containing a length-0
-read message.  The dib0700 driver translated this more or less
-literally into a length-0 USB read request.  But the USB protocol does
-not allow reads to have length 0; all length-0 transfers are
-considered to be writes.  Hence the WARNING above.
+Ah, so basically what I've done originally, just calling 
+`devm_pm_runtime_get_noresume()` _first_ instead of _last_, right?
 
-Fix the problem by adding the I2C_AQ_NO_ZERO_LEN_READ adapter quirk
-flag to all the USB I2C adapter devices managed by dvb-usb-i2c.c,
-following Wolfram Sang's suggestion.  This tells the I2C core not to
-allow length-0 read messages.
+> And pm_runtime_dont_use_autosuspend() is not really necessary after
+> disabling runtime PM.
 
-Reported-by: syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com
-Tested-by: syzbot+c38e5e60d0041a99dbf5@syzkaller.appspotmail.com
-Suggested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Link: https://lore.kernel.org/linux-usb/67e1a1f5.050a0220.a7ebc.0029.GAE@google.com/
+It was done this way in devm_pm_runtime_enable() already, see commit 
+b4060db9251f ("PM: runtime: Have devm_pm_runtime_enable() handle 
+pm_runtime_dont_use_autosuspend()"). I didn't change anything 
+behaviourally there.
 
----
+> Also, I think that the driver could be fixed without introducing the
+> new devm_ stuff which would be way simpler, so why don't you do that
+> and then think about devm_?
 
-Resend to the media maintainer.
+Sure, I could quick-fix this, go through all the possible error paths 
+and whatnot and ref-count in my head, but it doesn't fix the underlying 
+problem: in order to properly use PM, you have to do a bunch of calls in 
+some set order, then undo them in reverse order on error and remove -- 
+exactly the thing devm was designed for, and exactly the thing where 
+it's easy for a human to forget one case by accident. Thus I prefer to 
+use the *real* solution, devm.
 
-v2: Move the static definition of the i2c_usb_quirks structure outside
-the dvb_usb_i2c_init() function.
+Bence
 
- drivers/media/usb/dvb-usb/dvb-usb-i2c.c |    5 +++++
- 1 file changed, 5 insertions(+)
-
-Index: usb-devel/drivers/media/usb/dvb-usb/dvb-usb-i2c.c
-===================================================================
---- usb-devel.orig/drivers/media/usb/dvb-usb/dvb-usb-i2c.c
-+++ usb-devel/drivers/media/usb/dvb-usb/dvb-usb-i2c.c
-@@ -8,6 +8,10 @@
-  */
- #include "dvb-usb-common.h"
- 
-+static const struct i2c_adapter_quirks i2c_usb_quirks = {
-+	.flags = I2C_AQ_NO_ZERO_LEN_READ,
-+};
-+
- int dvb_usb_i2c_init(struct dvb_usb_device *d)
- {
- 	int ret = 0;
-@@ -24,6 +28,7 @@ int dvb_usb_i2c_init(struct dvb_usb_devi
- 	strscpy(d->i2c_adap.name, d->desc->name, sizeof(d->i2c_adap.name));
- 	d->i2c_adap.algo      = d->props.i2c_algo;
- 	d->i2c_adap.algo_data = NULL;
-+	d->i2c_adap.quirks    = &i2c_usb_quirks;
- 	d->i2c_adap.dev.parent = &d->udev->dev;
- 
- 	i2c_set_adapdata(&d->i2c_adap, d);
