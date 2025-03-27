@@ -1,82 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDAB1F8736;
-	Thu, 27 Mar 2025 11:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A26211261;
+	Thu, 27 Mar 2025 11:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743073656; cv=none; b=DmCLyY/0c47G97evmCqcJlg+nPNWxJO4qXhL6Cew6Zm0mFSc9QAsjpNzXSx/8MUe5jmou4zHTMMtUghl7JPoTjupbDxfx1LcahL6EyoF4sFLYiZ6wY+Dguzt3jBWwTvQz5oHEWRa6rovxjQqX2ovHmnkP7gaPfp7f0tsDgEXh1g=
+	t=1743073659; cv=none; b=KbwbV+dbO3kJAuAQQd5RFoNEmqPfoiI08t9HvHj8YMsbe1QFV+ZrZNdbLTysikTz0kjb8uvfEvIBplfVY9qsV9ZNBpJdGu/QsgO+5qjActVUAB2wx8Rf322PlcyJMEO4v5QCYxmPBoSpPU3REamfSvRpvERj/oO0FDG+eDzKk40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743073656; c=relaxed/simple;
-	bh=DEt7nEClwnJ4SBU8HeiPuDhg2XrpLQRF46+7OEBIvUo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CGO4dfla07CZGi910wW41/DArF6lFEsHuYMRlZl24+5Y0Cu/jR+Y7E9JX6wmNVQwqnPY8TRBHElHA+Fy3K4Vk/r2e0XU2zt+XsoXIAf2mYa81fXKOSNoYmXZl2m/rl4A+NzgHvnSYBasCjEmyHAiy6aonBhf7ofSI6UNcLWx2hM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WV3vcoqO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743073659; c=relaxed/simple;
+	bh=iUwlzKQcSJXS8+bcSJdrfEtFRAl1OnhjN9CsrsWizcU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LlsZJCOS6KgpudfWyvTgYgoDjjDk7mUP+QIhdFvf8PjA92dA5SHgHq2BeBmKcJUgBA9agfuKbl1JymO+o/der0Ka1YlnCuvZBqnw3HTFwc9hgYiVKd3A4RIyNmbYxDk0U/8eFyb//6OxVTak4Gq582eq+3jnBU065sBPO3NAHcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=WqKOpCJw; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WV3vcoqO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9761C4CEE8;
-	Thu, 27 Mar 2025 11:07:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743073655;
-	bh=DEt7nEClwnJ4SBU8HeiPuDhg2XrpLQRF46+7OEBIvUo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=WV3vcoqOor6w4RBDwBdmtn/+XUVjsZFnb2AjHUKslkFDLTBowmFaLOPlJ0OImErLq
-	 lzgnqxURTqjH6453AwLTHF2QM7BSTalTWA87xFSoW5d9Ki/oNyRPIr+tJWdDAdmlIW
-	 RBgTe3jnjvpi/Y9r3xlmHF6tPeqcn+qP+fdA/J11uvaBTnw89Isp4L50wszSl7A58t
-	 zT2elvq+1631IeGKGFgDM0UZXhRClrQdYHNDTuCnRYDDU3mN9YpDWWQNmVWXEz4Pss
-	 P3NLpjxtWtElGhNyVuSfcJ0Gqg3r0q2MAP5bgQTDzTXlUKdg6dpHg3Wj9uZHbUQuHS
-	 vL8vvT2B2XYaA==
-From: Philipp Stanner <phasta@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Jens Axboe <axboe@kernel.dk>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Philipp Stanner <pstanner@redhat.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Hannes Reinecke <hare@suse.de>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Li Zetao <lizetao1@huawei.com>,
-	Anuj Gupta <anuj20.g@samsung.com>
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Philipp Stanner <phasta@kernel.org>
-Subject: [PATCH 0/2] PCI: Remove pcim_iounmap_regions()
-Date: Thu, 27 Mar 2025 12:07:06 +0100
-Message-ID: <20250327110707.20025-2-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="WqKOpCJw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=WZqb+6ZduzORjFqfT2budPi5gkMW/3J6mbS3Z4qhKJI=; b=WqKOpCJwUCCRxAWTzc+Zhf8/ag
+	qvEPB2pNoyfOnLwCRl4aTnPj2AnLckChSlAsqqOusG7XqUB4i2FOMVXO9hYO7+LfHb0bPjJWiYMyh
+	1na9SHYDsUrGTjkVw1T0I3DEwos1Lj8CNB18qpWAh+qIPMr88+5U9/BegR90MxQ/bkhrfhidZ4sKH
+	rBQarEIl0lC3f19L9k9nhMnqp6p4GzcZ3TphTWrZbe/nLacCEl98CftWI5Wj6c3THpTiRLuF3whi4
+	Tg+U2zaSuNflYbDsSf1pREbhXcVs/Whw4In2gRlw+7/uuAPxT087Lzab9gai4/weVc0boQ0B2bWxV
+	3XzYlkvg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40456)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1txl4z-00078z-0Z;
+	Thu, 27 Mar 2025 11:07:22 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1txl4u-0005Zf-2Q;
+	Thu, 27 Mar 2025 11:07:16 +0000
+Date: Thu, 27 Mar 2025 11:07:16 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Eric Woudstra <ericwouds@gmail.com>,
+	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [net-next RFC PATCH v3 1/4] net: phy: pass PHY driver to
+ .match_phy_device OP
+Message-ID: <Z-UxZMJR7-Hp_7d0@shell.armlinux.org.uk>
+References: <20250326233512.17153-1-ansuelsmth@gmail.com>
+ <20250326233512.17153-2-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250326233512.17153-2-ansuelsmth@gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-The last remaining user of pcim_iounmap_regions() is mtip32 (in Linus's
-current master)
+On Thu, Mar 27, 2025 at 12:35:01AM +0100, Christian Marangi wrote:
+> Pass PHY driver pointer to .match_phy_device OP in addition to phydev.
+> Having access to the PHY driver struct might be useful to check the
+> PHY ID of the driver is being matched for in case the PHY ID scanned in
+> the phydev is not consistent.
+> 
+> A scenario for this is a PHY that change PHY ID after a firmware is
+> loaded, in such case, the PHY ID stored in PHY device struct is not
+> valid anymore and PHY will manually scan the ID in the match_phy_device
+> function.
+> 
+> Having the PHY driver info is also useful for those PHY driver that
+> implement multiple simple .match_phy_device OP to match specific MMD PHY
+> ID. With this extra info if the parsing logic is the same, the matching
+> function can be generalized by using the phy_id in the PHY driver
+> instead of hardcoding.
+> 
+> Suggested-by: Russell King (Oracle) <linux@armlinux.org.uk>
 
-So we could finally remove this deprecated API. I suggest that this gets
-merged through the PCI tree. (I also suggest we watch with an eagle's
-eyes for folks who want to re-add calls to that function before the next
-merge window opens).
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 
-P.
+Please also update the email address in the suggested-by to match the
+one in my reviewed-by for the next resend.
 
-Philipp Stanner (2):
-  mtip32xx: Remove unnecessary PCI function calls
-  PCI: Remove pcim_iounmap_regions()
-
- .../driver-api/driver-model/devres.rst        |  1 -
- drivers/block/mtip32xx/mtip32xx.c             |  7 ++----
- drivers/pci/devres.c                          | 24 -------------------
- include/linux/pci.h                           |  1 -
- 4 files changed, 2 insertions(+), 31 deletions(-)
+Thanks!
 
 -- 
-2.48.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
