@@ -1,132 +1,124 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3243020DD47
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFB920E00F;
+	Thu, 27 Mar 2025 10:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743070005; cv=none; b=Ejth6ssF5fLfDPWB+TNKHGoRgieRJ9EK2eH6j/8NrU8rtcNamk3zbU94DNQPCbB5LO3fl6HVcZpdWys2c0PMQNZkjxhg44bStM4X2Cty/7Nz8w629JFJZllhgicBQkSxrrsmEUHBonaLKbp78HVWA8uuAyD+20RXzRMFuSoQgQA=
+	t=1743070005; cv=none; b=II+RWmcHhwgfDrhIwRA8Q6ddQRH2v/MZg+SGRwUEJR5WRzfA775Ptjq8CJkn/O38YZZaUcbByVgqIUi04p/9Iz/a2y3HvGlih4Eg4JV7jgkSlExMP9S/R0zBejCxOcO1NI9gxVS5l+i88lQ+CgeZqCcqGBdiXbDsatVktNlmgug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743070005; c=relaxed/simple;
-	bh=nzVmJfufed+ekMZEjdRDlysNfkHvhI2RIGmGqRITGrI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EMInsRxXghJhrMl6AFTan/aIktnM2N+ruIlK/R39UDUZjB+pPL6/MwkaYWM7V6paevT5nxsqiGXaWHMgYjLNttd5xtGXCgXX6kVNf/lyzXR5GWP9K7xeR0NrnM56Qnij9avXi1cnqmQPGyMlfwTzHWWYRFLTC1RWPc5nHtjrfPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hIVhyRMl; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	bh=WF3Fld+lGvupAXqi63L7DLt2+LWPf+rJb6n8QFnRLrc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ASku/cZGXDUW0iQ79/abLOtPmZys49VljAjhIw8CDZEET1oW84Gva5dGyWy3PDzZ5V/YGm5FvStT/I2UxJTtbZ8tbzsSE/t1LPSRDZk4SVdfQn0ExjIxJSi1Egehg8GnqmOplTJ5c5+Ucg/RPgrVbWcrXu2AQHRr9k8AAYuloZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZXa4fS2M; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hIVhyRMl"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4394a823036so7951415e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:06:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743070001; x=1743674801; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fGhDhYESbCVLGZrKJ7EvUOhY/AIfq8zAGCvPtzsm0PA=;
-        b=hIVhyRMlKMflEvXMQV5ueApdn2nsXlgpeaCM9JWCGQkxyJulKbXdd45LpKvySlItim
-         k65fJ47tK3jbdraszg9XVWmZzLlIt1dyxTxNhiTACiQPr/ulfYCogspa21ZyyzsQHayL
-         S5tPVKrTIMI4uF2GR3eHR9BFADKcW9g18hnDMaBejnTc1T3HqTahJXS/meA20lFGWhy/
-         igohQcXtGV1cziaT3TWlYj9PlGJZIFNEI2cHDDGxpRk9mDNwe1PdrAs1a1dS+7TnBjY4
-         47GjbWeIac9/B4oR9dq0Lsa/Wix39xD2UfoGVfsNkTLSECZ9WQxh1QxtlnpBRMS+5hgM
-         a/9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743070001; x=1743674801;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fGhDhYESbCVLGZrKJ7EvUOhY/AIfq8zAGCvPtzsm0PA=;
-        b=w9C2oqKptijeQBNSSMumACoNnVu+26ZKKJGi856Wx5YQbkgTdeodFSu3RQ7lOdaN7B
-         clWu60DsDgT/8yd2WGdhRdUVecnSlzJwK4M08B0NWxsO1Hv+uG2g/2dsJ3cpurKwO7sO
-         cbeJcMDVMJFU6tc2fcmFwIU/P5L2k6cCMJWR2pffgJ6nXblY6+wbjq4U3zMMJtDAOqR6
-         3FVrYRMvLPuxaFb79bMzfprISwxPXIKsu5BSp+sTXGWiFflPfZaYXmQw9oqRaCO8SRyN
-         JcyrREzJZfi7we5B2cBP9yQwS9Hm0D6K7WC7Wvs6vg3xT428ZALAelk4BXZmutiTjQwB
-         KJEA==
-X-Forwarded-Encrypted: i=1; AJvYcCXcOgtfwBZdbhJasCruaH9d542Sq3QlIDBLIwZVSvepdG/HbP/sjbK3duO+muaH360TXYEeamocdD9ly28=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKc7cqpNoqzHm3YLQydCyOBJa3biRpz1bS9hw/+KsKBEkwBWqR
-	oGLG60zv0GLiHkRUk2BWeGS120l58/90u9gGtgrInVoWjQg2Znlpt4JT75WFnVw=
-X-Gm-Gg: ASbGncunQ8Zji5WOBP5+Qo1lraHNrMP2tOWWk9Q16H8/MRTi74O8y2CyP0U9gXCEpji
-	Bp+dVute3vSB3VFDCagj+kCWGX0G0aMjFpEJ009KIJi0pUqFj0ccbKiJcj6boxhy5Yol9ZE5F/y
-	0Yku4qw9nfjMfsPDfvX+TEpr7+3ysvdPr/5gLY4rKimr15e831Knxm1xUKlZlYT+imxeJcbuMUQ
-	4q1kMEKzsGUOO2xZpmbzhLzzyUmvg/QM0kk49hFubIs3lMAJxwQ7r08cT5Uy1DvI++BZKb00ImD
-	O3JOpirhvmfaj5IDOtcLwmVPDM8Tbl9aLdxyR13jyKVm9EqeoN9Q6YUnoufzURUGsamLo2L7teV
-	Ohi+O
-X-Google-Smtp-Source: AGHT+IHbYEkEV56STjfU0lTRDtdedS8WvMVSd1pZC2L1XQBbBW4aRCx0Kn4wXUGWvcbo2+wiKfBSJQ==
-X-Received: by 2002:a5d:5f42:0:b0:399:6ad6:34 with SMTP id ffacd0b85a97d-39ad1760701mr2932999f8f.35.1743070001456;
-        Thu, 27 Mar 2025 03:06:41 -0700 (PDT)
-Received: from localhost.localdomain ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39ac3ce3dd1sm10843204f8f.88.2025.03.27.03.06.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 03:06:40 -0700 (PDT)
-From: srinivas.kandagatla@linaro.org
-To: peda@axentia.se,
-	broonie@kernel.org,
-	andersson@kernel.org,
-	krzk+dt@kernel.org
-Cc: ivprusov@salutedevices.com,
-	luca.ceresoli@bootlin.com,
-	zhoubinbin@loongson.cn,
-	paulha@opensource.cirrus.com,
-	lgirdwood@gmail.com,
-	robh@kernel.org,
-	conor+dt@kernel.org,
-	konradybcio@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	dmitry.baryshkov@oss.qualcomm.com,
-	linux-sound@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	johan+linaro@kernel.org,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v6 1/6] dt-bindings: mux: add optional regulator binding to gpio mux
-Date: Thu, 27 Mar 2025 10:06:28 +0000
-Message-Id: <20250327100633.11530-2-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250327100633.11530-1-srinivas.kandagatla@linaro.org>
-References: <20250327100633.11530-1-srinivas.kandagatla@linaro.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZXa4fS2M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743070004; x=1774606004;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WF3Fld+lGvupAXqi63L7DLt2+LWPf+rJb6n8QFnRLrc=;
+  b=ZXa4fS2M+Wa2UrklzNSSHgMVkLQYAr/ruZpPPhrw+OQR45uIE6voxDMk
+   9Uqfw+vp5I6rXh64Qc9za4sAs727oLSeKJEAkYtvBvMS4BU1DD/vO16AO
+   +BkuEt4wQ7JDO0R6Dlw6D2ZjadxYarlly97sw0aqC2K+GIHiDZlcL2VrG
+   dtI8GcdBKES78gHIeP7uE3fMDWOkWVCacDPEOL5dwKPvBWPw9yISxVq8f
+   YzHasVKUBokb3OSX4Zdmnul7UIuYvGaD69DALsif5UvW51b2EpUG4jQNS
+   n32T5M0m+IrWLUX0ErQD2v7H/Hn8fe54tvR8/qx5MEkPdBeaPuQ/9QHA7
+   A==;
+X-CSE-ConnectionGUID: AqEIzt1ETya9qY5kh3vg+g==
+X-CSE-MsgGUID: vLKKLZ84T42LkyTqco8Cuw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="61786916"
+X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
+   d="scan'208";a="61786916"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 03:06:43 -0700
+X-CSE-ConnectionGUID: F/y7YVltS62i2PrHscdY8A==
+X-CSE-MsgGUID: 47YQatJ4R1uk9aZMo2zfMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
+   d="scan'208";a="125609989"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 03:06:40 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 142A711F99F;
+	Thu, 27 Mar 2025 12:06:37 +0200 (EET)
+Date: Thu, 27 Mar 2025 10:06:37 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Tarang Raval <tarang.raval@siliconsignals.io>
+Cc: kieran.bingham@ideasonboard.com, Shravan.Chippa@microchip.com,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Julien Massot <julien.massot@collabora.com>,
+	Zhi Mao <zhi.mao@mediatek.com>,
+	Mikhail Rudenko <mike.rudenko@gmail.com>,
+	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+	Luis Garcia <git@luigi311.com>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] media: i2c: imx334: Enable runtime PM before
+ sub-device registration
+Message-ID: <Z-UjLSsATevtLT2k@kekkonen.localdomain>
+References: <20250310071751.151382-1-tarang.raval@siliconsignals.io>
+ <20250310071751.151382-7-tarang.raval@siliconsignals.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250310071751.151382-7-tarang.raval@siliconsignals.io>
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Hi Tarang,
 
-On some platforms to minimise pop and click during switching between
-CTIA and OMTP headset an additional HiFi Mux Switch is used. Most common
-case is that this switch is switched on by default, but on some
-platforms this needs a regulator enable. One such platform is Lenovo
-T14s.
+On Mon, Mar 10, 2025 at 12:47:48PM +0530, Tarang Raval wrote:
+> Runtime PM is fully initialized before calling
+> v4l2_async_register_subdev_sensor(). Moving the runtime PM initialization
+> earlier prevents potential access to an uninitialized or powered-down device.
+> 
+> Signed-off-by: Tarang Raval <tarang.raval@siliconsignals.io>
+> ---
+>  drivers/media/i2c/imx334.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/imx334.c b/drivers/media/i2c/imx334.c
+> index ffa39bb317f7..8964d60324e2 100644
+> --- a/drivers/media/i2c/imx334.c
+> +++ b/drivers/media/i2c/imx334.c
+> @@ -1295,6 +1295,9 @@ static int imx334_probe(struct i2c_client *client)
+>  		goto error_handler_free;
+>  	}
+>  
+> +	pm_runtime_set_active(imx334->dev);
+> +	pm_runtime_enable(imx334->dev);
+> +
+>  	ret = v4l2_async_register_subdev_sensor(&imx334->sd);
+>  	if (ret < 0) {
+>  		dev_err(imx334->dev,
+> @@ -1302,8 +1305,6 @@ static int imx334_probe(struct i2c_client *client)
+>  		goto error_media_entity;
+>  	}
+>  
+> -	pm_runtime_set_active(imx334->dev);
+> -	pm_runtime_enable(imx334->dev);
 
-This patch adds required bindings in gpio-mux to add such optional regulator.
+Please also change error handling accordingly.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
----
- Documentation/devicetree/bindings/mux/gpio-mux.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+Btw. the remove function calls pm_runtime_suspended() that does nothing
+(use pm_runtime_set_suspended() instead). Could you add a patch to fix it?
 
-diff --git a/Documentation/devicetree/bindings/mux/gpio-mux.yaml b/Documentation/devicetree/bindings/mux/gpio-mux.yaml
-index b597c1f2c577..ef7e33ec85d4 100644
---- a/Documentation/devicetree/bindings/mux/gpio-mux.yaml
-+++ b/Documentation/devicetree/bindings/mux/gpio-mux.yaml
-@@ -25,6 +25,10 @@ properties:
-     description:
-       List of gpios used to control the multiplexer, least significant bit first.
- 
-+  mux-supply:
-+    description:
-+      Regulator to power on the multiplexer.
-+
-   '#mux-control-cells':
-     enum: [ 0, 1 ]
- 
+>  	pm_runtime_idle(imx334->dev);
+>  
+>  	return 0;
+
 -- 
-2.39.5
+Regards,
 
+Sakari Ailus
