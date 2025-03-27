@@ -1,199 +1,219 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2076.outbound.protection.outlook.com [40.107.94.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C401FFC45;
-	Thu, 27 Mar 2025 11:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743073332; cv=fail; b=WTTdZ3btF6GAsPw81J6NgUodd+wFV2J2+7PjZMzNOFZe28I/HK+yhV4D+SipbE/m6v7OtNneYkjvuZtlg4IvunwDUYhHKnMFVlwaLlfZa9i64I4dv8uoKMd+HF4quRsSGyU1nyfJ4PPfhjDQP/5XLMM7sRoQ05v6TS75pRGIDDY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743073332; c=relaxed/simple;
-	bh=W1Fj59zmgcnnJK6MAP0qgRyaMFlF6ycB+SLFZq6DVmU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=uIF+3Ylsls6aWUalDjs2BK8uLLX7S+91dCAK9jg5/8kPAEGF+KBwAZIxiu4d0DvbtwxQsOmkceQ8BhFvEVe4xHQfbb0b1LQiKeND8bLBp1AImwIlDgSYcuTDrnRmmP9vRgGUZhjjD3Z2XVb/czeZNYjzmHCAW6tn09C0qthpxDA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=L7j9SBn+; arc=fail smtp.client-ip=40.107.94.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DA63C463;
+	Thu, 27 Mar 2025 11:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743073356; cv=none; b=kZyB+KJRfMXbq3Yy9hdiTbJ8u9zkXDZvYiA6xix4Hc0k7s3sMWZ0tMk4Ze3diSOdgXg1nL3yz8eZbsCLsnTio2fERRxhdHjTDXNs69asGcM8cEYxM8XP/nrs0+gWVQ/cuTu3OoRPPZ/IS7RoTGWr1RLt/vOcq7aS2InBK7rGMIw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743073356; c=relaxed/simple;
+	bh=KycBfGkDC/ffdrmTGu72+/Q3uISnruqLt7VmIcVAtfc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qTSaciUFzqbATZ/SL5cZhanPXvmIi510pzu5+kxc20/yWSqqO/aHtzUJYAlv1raPnZa37wmNg1B/ZqlvwUO+YzxwZKxhAh9/9FGKfVd5w6ByEaftd+I/5xsRGIF+R27OJsllLXNVgOxD+OtnbJZWzoLh6PVl/l4xaWu3Sa5llfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZxwZiJAn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="L7j9SBn+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=r9jNpic62HXV/bAHLSemBsEdaLNocviOUpidYn7JzahXD/HwuRUJIOStZLmueXbed3ag28msbd5msr9ImrHp/FMV2t9BsVuTXURnJAPs+My2PE0NJwD1IkBZ96gsJJPdYplLUW3UtZ1ovZPuHQoQ2o8RKZJYLwN8D8YPS7E5t25SefW2bLDLB2xu/pHVu9pyzZ8QF6bHBW53fmWKBhv7e6ns/DedB0t8dyHxgUS3IEO3dDD/ZGbGAcvFDGVibI10Vt3PrE9S2A7WJMuqT6al+haVZbTNnFt98BUxyHJSGsSU/F31vL5h3sAHBzZ8zkG/fdi1s/4rQ6HYB9GpT+p+ng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UfE7+cotwIBvjIPQrKriVAGFcSRR3TIE5FlNScAaZz8=;
- b=W4MmMvVNmUwEUhtP2JZym3MfamU9dLV//27YiHRtu+OGYGBRuq88RQZkNnETMwJwtTFj27OiFvjAHE9Tb6bdNsQpaW23gSsFJ/xDWynZfxmxgjUxw9wP+RPh24e9eeeV1LHcCWw51625w4WMh5sNkEpX3WMPozgv6wW4DHIAB8FcPJWY0J6OEwPz95HobjAU5c/728Q+9xz1S0uevN1Red7J0b34VeMH1pGgZindsCQtKH6OsaqmUfVbGe5DcSHPz3mzkn5GXuff/QkFb76l14gHzwVg+yyWPGz4RQqwTkwsURJqz48uEBvBdO5uFWqZgvU7ETF6Irmtv420IrRAxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UfE7+cotwIBvjIPQrKriVAGFcSRR3TIE5FlNScAaZz8=;
- b=L7j9SBn++kNWpOUW24ZMPCVplMrfTCUiWK9S+0nasiqxv4yoRSVBtKADoqCujkj48VBd58V7faOHYYwgWB9WugHu+pAur88uZ0j/Qkf+8+fe6KHNUcnKPB+kqi0TvR0WTQ5rLTpDadPzjLMlatNdBKHEjwXszQUCxivQTmZoT6A=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6395.namprd12.prod.outlook.com (2603:10b6:510:1fd::14)
- by CH1PPF189669351.namprd12.prod.outlook.com (2603:10b6:61f:fc00::608) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
- 2025 11:02:09 +0000
-Received: from PH7PR12MB6395.namprd12.prod.outlook.com
- ([fe80::5a9e:cee7:496:6421]) by PH7PR12MB6395.namprd12.prod.outlook.com
- ([fe80::5a9e:cee7:496:6421%6]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
- 11:02:08 +0000
-Message-ID: <d06367d4-9bbd-4a8f-a6cf-e95576aa974a@amd.com>
-Date: Thu, 27 Mar 2025 16:32:01 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] usb: xhci: quirk for data loss in ISOC transfers
-To: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org, mathias.nyman@intel.com,
- mathias.nyman@linux.intel.com, stable@vger.kernel.org
-References: <20250326074736.1a852cbc@foxbook>
- <bb78e164-f24f-49d2-b560-24d097cb2827@amd.com>
- <20250327103443.682f4cd1@foxbook>
-Content-Language: en-US
-From: "Rangoju, Raju" <raju.rangoju@amd.com>
-In-Reply-To: <20250327103443.682f4cd1@foxbook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0133.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:6::18) To PH7PR12MB6395.namprd12.prod.outlook.com
- (2603:10b6:510:1fd::14)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZxwZiJAn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47AF3C4CEEA;
+	Thu, 27 Mar 2025 11:02:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743073356;
+	bh=KycBfGkDC/ffdrmTGu72+/Q3uISnruqLt7VmIcVAtfc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZxwZiJAndOQzuhMcOTxzCVMUjBOiVwIHGk99CbSalXhzvGrJuH2RZDG0DxXhazyMx
+	 cRimSXk6TGJrLWxLqm3lopy/8erGiflrxxsvrAlv9HTBe5p/UY1FClc1HPGzIffBSf
+	 cPt7h90iOSumRCuB6RVCyVpqQu/XCSBaeT1y5ZDU2flDaFb8bxwipqwYc69hNWC5wK
+	 T5LKCYXM3tBp/TWA5E76gTTcldPPB8NT/mpK/5ZgQ6IikUVhc5yDaVw6MBr2fqj6kj
+	 YekOfDn2R9ADtqUpadiCl60XOXVNqyATL5/SOlMkwCZVur056RSmueUjUEyy10i1ml
+	 DQ6a7GGRjT2aw==
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3feaedb39e9so197664b6e.1;
+        Thu, 27 Mar 2025 04:02:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUECKoYiNPq2J1XCS+dj9DYu7jcF6FRHbFjwUxO483TZCXE3bpEQuLs9pkrPwY/VUXiFikK7M/LJxBy@vger.kernel.org, AJvYcCVipcfW+V6hqKWvHYhaPW+WlXvK21hXFuNevON9X/dgSCLHFYPOHSXx6utEOIcG5N68Tg8soquMC6yafjcE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc7j3yyhPTRjM6vQLLbzn9ZRL4IGjbhX8n4II0vAFkZIjFXpeJ
+	eetiNHKEqCBw/d0glgQv3kpoLwcTVDaVmatiVm4QpdN9CtO3pRax3YoRwcfru3XuQrnlRf/w2vb
+	+76F+Y5ZL9JN/phi+GWovHE/hZcU=
+X-Google-Smtp-Source: AGHT+IHe8auTSWvnicaZa+CBt1EQ35ftbxVUkmn26GHSu5ft6JmVevRgocMBJwcwwlMJ8HrY4FOwUzBfnAIOpQw1jRA=
+X-Received: by 2002:a05:6870:2012:b0:29f:97af:a1a0 with SMTP id
+ 586e51a60fabf-2c8481b2dfamr1388442fac.24.1743073355458; Thu, 27 Mar 2025
+ 04:02:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6395:EE_|CH1PPF189669351:EE_
-X-MS-Office365-Filtering-Correlation-Id: 05a4a164-3a9a-42eb-16ce-08dd6d1ed148
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WHZiNEQvMVlpNHpXSTBUa3dDVGVsUTRMdDJjOGlzVHcycXNUc2hhZktFNklM?=
- =?utf-8?B?STFRdk8yLzBoTFhyRHFvaWtOSDJrRDAxZjV4TVdOOFR5TFZlOU5WRFRZSzN5?=
- =?utf-8?B?VTFLbG1pS2IrZllEVkR6dVh4VEFwMWdETXQyQ1hrZndvaGdNaGZkMFBGMWdZ?=
- =?utf-8?B?RS93TVJJeUFldHRSTDdkNkM1UmpmRzdzV016ZkJ6MTE0QWR0aHhJU2Nkc2Y2?=
- =?utf-8?B?QTFRa0NCN1gvK3dOZkFxYjJPZkl4MktnaWFOWFdtbjlDOGF6Zk5jVFBxejNU?=
- =?utf-8?B?a2grL2tqTGhzTWw0VkJGb1c2S2prelBnaHJEK1d0eUc2SWY4VWphY3NSeDRy?=
- =?utf-8?B?NXU3anRqdUs0VXI0Q0VxSzdHeURmRkJDL1c1c0xOYkt0U082S2xZUTdRRTls?=
- =?utf-8?B?aGJmNkhzdmc2UUhxUlYrZ0J5N2tYMEdxenE0WVhvWGxBdkdWSk83aGlGQitu?=
- =?utf-8?B?dTY5TU9wdkRzRUNxSVlDV0orRmh4TWQrUmJQK0V3T1lJYkhPTU9jTEZwVXV3?=
- =?utf-8?B?V0pUbEpFOFB6WmRUcHIxNDIxOVZvVHh5ckF5Q0UwWHRXUW90dndEcDBSQjNO?=
- =?utf-8?B?eFlzZTB6UkRYSHdJTUxIa3RvMEtiS3ZYb0kzK2tXY05jY2Z2NGJVRGZ0bzJp?=
- =?utf-8?B?YWtqSVpRbTNFenZUdDNIaklrK2FTVU5xdzJZU296UkQ1MEM3K2xkdklKTjlT?=
- =?utf-8?B?RHFMNnI1WHF2SkZiWTc5RTM0OGdqOHliVmorQ3RRVlRRaEZRWTJGbUNtU2h5?=
- =?utf-8?B?YmxRMkJTNWdxNGhnQ1o0MGhuam1HNjZ1ZERSeXFoK1RDSUhwcnBEd0JvZkcx?=
- =?utf-8?B?cmVhMWRYVysyZ0wxOXdCeXc0YXRPSkh4WnpnM21rTzNST3RaK21hOUZiWDQv?=
- =?utf-8?B?dzRna1FIQjhEbnYyc0E1dHBGVytRNzFyMUFOd0NhS2NrOUdFMmczbndRY3h5?=
- =?utf-8?B?ZStaZmM2UUs0VTZHMzZrZmJrc3VxOVpSNGRKam5xRFBnMVZJSUNHM0xlcG1I?=
- =?utf-8?B?MzJ5eXZPNGZpdjJxMitZdEZDS2h1YVd4YytBWU5CdElsNzNreDcrZjlJZjE0?=
- =?utf-8?B?bkQ3SkpXK29hMUdwYm40UDBzWUoxVU9KMXpXdlBHem9Ic3RrdGpUa0FtcCtP?=
- =?utf-8?B?MEN5cndSSmxoc2dYdGxDVEs4OXYrdUwxZy84bCtkbkxmYTdFVnNVOUFyVEtG?=
- =?utf-8?B?S2owajY1Q1Y0bzJqRFluWkYzU01XTDJyWC8vQ1dCTFR1VE5lNFNQdHFPcEJh?=
- =?utf-8?B?Tk0rcnFzL0Z3VVRJRlBNU20wTkVzdnhSME4yck5ET1RaTG96bzRCUGNmMmtC?=
- =?utf-8?B?UXFiS041RXdkeVo5bHIwVmVMTCtUSUxacmFDcVNvYXR6ZnB0d29SMFRKZnB0?=
- =?utf-8?B?WjRsZGhhOUxXS1BoUFVZcTNhenkyOGx0dXA4aEtNMFRESXRueVQvUkd3cTV2?=
- =?utf-8?B?NW5tcVNqSENxa0dnRkd1aWtoaFFhbzJJc2RRUUhDRmY1ZU40MUdZN0V0TllV?=
- =?utf-8?B?eXNsRkd4ZDRVNkZiMGw3L3dFelhFZVpXMGJJQlZnRWFvdFNpbFkvQVAvMjYz?=
- =?utf-8?B?UkhWY2ljQjBEZWxTcm1UY2FBdGxsa3hlYU5zU1Z4bkNYQll2bVhaT3hYWFc4?=
- =?utf-8?B?ZUU0R3QzUVB2RVd5QjR4Q1lHNHh0VTF4bC8wRmR6dlcvSmVqVk13ZFZ6REwz?=
- =?utf-8?B?S2EyTFRIdEhVUzRJZG5XR3ZwTDdqV3lRMlNWUmRrUnZVMWtKUUN6MUJHZUQ2?=
- =?utf-8?B?d25ZZm12NFloZVJKWVJVeUJFYUZnY0hkOU1VbGplMXhxblB4MHQ5Y2dBVVdo?=
- =?utf-8?B?V1BzeFJIT2FZVWtkYUQ5a3ROaVM2MTJQNG1BbWZvK1pEUHlRK0VFUkYwTnhH?=
- =?utf-8?Q?HWtWpxet2NasP?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6395.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NXZiZTZaRnNIbHB3YmNHNi8ybGhIOERkbkhlZnlnWExNb3lUNHprZnlIY21r?=
- =?utf-8?B?dmxlekJYVmkyeHhmR0d1Y2QrSmlyd0t2NzNXM0NBQm43SGtiSUJCVXdIZnEy?=
- =?utf-8?B?SUFWTGhlNVpsMzU4Nm54Y1pWR0JDYXp5RUNWekgrRVNrZ2RpRlZ3Y0RZSXYz?=
- =?utf-8?B?T0VOOURFZUhNcW9IUEhzVUdmcjRkSEhBd1dlT01aZ0hSTHMxTUh3VTJNM2xW?=
- =?utf-8?B?Qk9BWXZXeDB5UkIzOTNBUkVhNFZXaGs2UTRhUTBsTi9ZdGNxRklpTHRRRVVj?=
- =?utf-8?B?WXphMnBUVmk3SHJKMVR5MEliRGF3TWUxd1MzTFlwaUtkUjVRSWkzUFcxUThH?=
- =?utf-8?B?dEh6VzBDZE1qa0xvK3lYbUd6YXRJRko1ZjBqc3ZBN3ZHcDhIVFZBdnNweE1V?=
- =?utf-8?B?NDM3S1MwbkpQS01tcVFLVEFNY3BNVzRmeVJaWnVRc3pDOFVpUzN6ejdVVEpL?=
- =?utf-8?B?czJzcmlWOVorZ1pxakZmSEdMbE5hdHRlSEVwR29wdTVzWHh0QVNMMldicmdn?=
- =?utf-8?B?ZG5oc3ZrUXg0NnRKK1REcFpCcTNCNlMyZkdBQVFTTEEydE5rMHZ4Tit1djY0?=
- =?utf-8?B?NytOMnArY090a0dkWGRhbS8zOXVpTmJZR1Fud0VYVmlwVGJsWDJnTS9IYjJm?=
- =?utf-8?B?NVhNWVlJaHd5a2FtemFLTitvSjBTNEkrR0FDVCttdU90UW9mK05DOFlYNWpT?=
- =?utf-8?B?bW1FL0FCTGZ2ZjUwaXRiZEsydUJtOGs4Y0l5dkdyUkZzYjdabnkvWXlqZDVZ?=
- =?utf-8?B?WVdPTlVOWENWL0E0d0pNclJ3ZHlhOW45YWNrMFFnUGtXZC9Ka0ZlQnhnbkhQ?=
- =?utf-8?B?dDBZbnhlYU1hbnFmMWlleW8wcVl0dHdGeUhjbmpSdnkxYXpkWWVLdnlhUTJq?=
- =?utf-8?B?RFh1SUk3ZUdCT2dQM3VIZDBNbjQrZEUvR24xYnRNVVZ4R0hSK1crR3IrazR3?=
- =?utf-8?B?VTBaZWFhbXhaNktjc3BJUmhIVlF4SnFFM2l0SWhaNlBmMGlDSTE2SDBDSGht?=
- =?utf-8?B?OGpyY2kvaEFZUDRqbWZsczdMNDdUNC9CWG10RkYyNnRucHBxT0c5Q1hha3l5?=
- =?utf-8?B?aVJQbUgxRlBHcVZQR0JSL2xBQWRxVFZaNkJJcVhiUFFwaXFHcEE2eE5qWUpB?=
- =?utf-8?B?RW9aSTQwZnloUHd1cHUzelJQMkp0TnJLS0cwLzFYcFBzRnhYSzJ3ajYxOWg2?=
- =?utf-8?B?NXgvOHFYMjJRMzRsdVpqR1hmZnc5dG8vWkVuQ0FmRXpzdHZlM1BaRWNlOFVK?=
- =?utf-8?B?UVIzZGJNNFU4dlI1dWh3QnE1MzQ0TThzdWQ3U1hNTmY1dmkxRnZhVVhvTlVx?=
- =?utf-8?B?c0FkM2h4Y2R3cjFVVUI3dWNqV1BZWTN6anpSMk5aK3hCWmdvTEc1Rjg3dWNR?=
- =?utf-8?B?MEpmTUIxYkpoWm1oaWtvZ1IvOWVSQ3lIMkJDY09lK2RkZURzOW9NYnhQRzdR?=
- =?utf-8?B?Y0hmTHdPdWdkRXVnaXExMnlpcUR0SDJWR1JHVjA4WmVLYks4MXNmekhOL2Yv?=
- =?utf-8?B?WGJtRVlHcHhjeW8raU5JQ0huaDZxdTBuRzJ3a0pieEhZbnU4czlYNlYxdDNr?=
- =?utf-8?B?Y2Y3bUxFWVMrbWcwczk2MkNzQm9YSDF1V3JicTBFT3dJSVNYRTVobFh0NnY5?=
- =?utf-8?B?d05TbmdiWFNtSXBmRHYyc3NtYVNnVUZFcWc2U09FSStoTUV6OUs5RWRmRzA4?=
- =?utf-8?B?NGdzSnhMRVpFYUpHRDMvWXR2SUFjVXRuVzBOb3Uwb080N2ZrN2FYUWZsUkFG?=
- =?utf-8?B?SDU3QlJ0eFIveVgvWTFIZTdZb1oyT3Y0Q29mRHJzUWFIWkpwUzE0ZnVoT1VE?=
- =?utf-8?B?d3hjYStIQjVhYzFvVmhxVGQrMWp2M05mWjhlMWl0YjJkZjlYT2VOdEh3Q1l5?=
- =?utf-8?B?c1N3U3RFMTA4Qys1NDhBTzBnYXY1Q2RnQ0k4cXlVTXR3bm5lYWhKbUlzUEp0?=
- =?utf-8?B?bW5GdlBYZGh5bmFnNkJucklVQ0ZwVHdZMGhwR3Y5aFN5dG8rRm80a3JOamdm?=
- =?utf-8?B?amNvcjhqM3FSOEFRR05JcFVHKzN6c2J1aXhuVHc0WHJxYTdHL1BlME9LK2V5?=
- =?utf-8?B?R2F4cFl3UjZuQWp4NVFlaW50K2tndmhXeG0vdHppVjloRXJ3NEtKSERpOUpI?=
- =?utf-8?Q?iWTFEHmCXQ2Fsouen5NWmNtgP?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05a4a164-3a9a-42eb-16ce-08dd6d1ed148
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6395.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 11:02:08.7727
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ce0/BrIPYdtnivOD4ZqP+axpW6c62mVjRhJCuxZgEOZe7gp34CjpB9ElfuHo+/XbDL97dvC9C7xLAQEJiwGzMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPF189669351
+References: <Z-ShAR59cTow0KcR@mail-itl> <3796f2d9-738f-4cdf-a4a2-61c4aa99c310@suse.com>
+In-Reply-To: <3796f2d9-738f-4cdf-a4a2-61c4aa99c310@suse.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 27 Mar 2025 12:02:24 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0jn_gv92ywZiTZDdGN3Z+GNW0BJ5=kBD=8MpQ0Pt+y8TQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JrRebIXAiv4lIfOtz-NN0gA4kEIc0Bg2UKWbFdxXV2wbKoCesQt-GE76b0
+Message-ID: <CAJZ5v0jn_gv92ywZiTZDdGN3Z+GNW0BJ5=kBD=8MpQ0Pt+y8TQ@mail.gmail.com>
+Subject: Re: NULL pointer dereference in cpufreq_update_limits(?) under Xen PV
+ dom0 - regression in 6.13
+To: Jan Beulich <jbeulich@suse.com>, 
+	=?UTF-8?Q?Marek_Marczykowski=2DG=C3=B3recki?= <marmarek@invisiblethingslab.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, xen-devel <xen-devel@lists.xenproject.org>, 
+	Juergen Gross <jgross@suse.com>, regressions@lists.linux.dev, 
+	Viresh Kumar <viresh.kumar@linaro.org>
+Content-Type: multipart/mixed; boundary="0000000000002b914c063150e400"
 
+--0000000000002b914c063150e400
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 3/27/2025 3:04 PM, Michał Pecio wrote:
-> On Thu, 27 Mar 2025 12:08:53 +0530, Rangoju, Raju wrote:
->>> What if there is an ISOC IN endpoint with 64ms ESIT? I haven't yet
->>> seen such a slow isoc endpoint, but I think they are allowed by the
->>> spec. Your changelog suggests any periodic IN endpoint can trigger
->>> this bug.
->>
->> If such an endpoint is implemented, it could theoretically contribute
->> to scheduling conflicts similar to those caused by INT endpoints in
->> this context. However, our observations and testing on affected
->> platforms primarily involved periodic IN endpoints with service
->> intervals greater than 32ms interfering with ISOC OUT endpoints.
-> 
-> In such case it would make sense to drop the check for
-> usb_endpoint_xfer_int(&ep->desc)
-> and rely on existing (xfer_int || xfer_isoc) in the outer 'if'.
+On Thu, Mar 27, 2025 at 11:14=E2=80=AFAM Jan Beulich <jbeulich@suse.com> wr=
+ote:
 >
+> On 27.03.2025 01:51, Marek Marczykowski-G=C3=B3recki wrote:
+> > Hi,
+> >
+> > I've got a report[1] that 6.13.6 crashes as listed below. It worked fin=
+e in
+> > 6.12.11. We've tried few simple things to narrow the problem down, but
+> > without much success.
+> >
+> > This is running in Xen 4.17.5, PV dom0, which probably is relevant here=
+.
+> > This is running on AMD Ryzen 9 7950X3D, with ASRock X670E Taichi
+> > motherboard.
+> > There are few more details in the original report (link below).
+> >
+> > The kernel package (including its config saved into /boot) is here:
+> > https://yum.qubes-os.org/r4.2/current/host/fc37/rpm/kernel-latest-6.13.=
+6-1.qubes.fc37.x86_64.rpm
+> > https://yum.qubes-os.org/r4.2/current/host/fc37/rpm/kernel-latest-modul=
+es-6.13.6-1.qubes.fc37.x86_64.rpm
+> >
+> > The crash message:
+> > [    9.367048] BUG: kernel NULL pointer dereference, address: 000000000=
+0000070
+> > [    9.368251] #PF: supervisor read access in kernel mode
+> > [    9.369273] #PF: error_code(0x0000) - not-present page
+> > [    9.370346] PGD 0 P4D 0
+> > [    9.371222] Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
+> > [    9.372114] CPU: 0 UID: 0 PID: 128 Comm: kworker/0:2 Not tainted 6.1=
+3.6-1.qubes.fc37.x86_64 #1
+> > [    9.373184] Hardware name: ASRock X670E Taichi/X670E Taichi, BIOS 3.=
+20 02/21/2025
+> > [    9.374183] Workqueue: kacpi_notify acpi_os_execute_deferred
+> > [    9.375124] RIP: e030:cpufreq_update_limits+0x10/0x30
+> > [    9.375840] Code: 84 00 00 00 00 00 0f 1f 40 00 90 90 90 90 90 90 90=
+ 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b 05 98 e4 21 02=
+ <48> 8b 40 70 48 85 c0 74 06 e9 a2 36 38 00 cc e9 ec fe ff ff 66 66
+> > [    9.377009] RSP: e02b:ffffc9004058be28 EFLAGS: 00010246
+> > [    9.377667] RAX: 0000000000000000 RBX: ffff888005bf4800 RCX: ffff888=
+05d635fa8
+> > [    9.378415] RDX: ffff888005bf4800 RSI: 0000000000000085 RDI: 0000000=
+000000000
+> > [    9.379127] RBP: ffff888005cd7800 R08: 0000000000000000 R09: 8080808=
+080808080
+> > [    9.379887] R10: ffff88800391abc0 R11: fefefefefefefeff R12: ffff888=
+004e8aa00
+> > [    9.380669] R13: ffff88805d635f80 R14: ffff888004e8aa15 R15: ffff888=
+0059baf00
+> > [    9.381514] FS:  0000000000000000(0000) GS:ffff88805d600000(0000) kn=
+lGS:0000000000000000
+> > [    9.382345] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [    9.383045] CR2: 0000000000000070 CR3: 000000000202c000 CR4: 0000000=
+000050660
+> > [    9.383786] Call Trace:
+> > [    9.384335]  <TASK>
+> > [    9.384886]  ? __die+0x23/0x70
+> > [    9.385456]  ? page_fault_oops+0x95/0x190
+> > [    9.386036]  ? exc_page_fault+0x76/0x190
+> > [    9.386636]  ? asm_exc_page_fault+0x26/0x30
+> > [    9.387215]  ? cpufreq_update_limits+0x10/0x30
+> > [    9.387805]  acpi_processor_notify.part.0+0x79/0x150
+> > [    9.388402]  acpi_ev_notify_dispatch+0x4b/0x80
+> > [    9.389013]  acpi_os_execute_deferred+0x1a/0x30
+> > [    9.389610]  process_one_work+0x186/0x3b0
+> > [    9.390205]  worker_thread+0x251/0x360
+> > [    9.390765]  ? srso_alias_return_thunk+0x5/0xfbef5
+> > [    9.391376]  ? __pfx_worker_thread+0x10/0x10
+> > [    9.391957]  kthread+0xd2/0x100
+> > [    9.392493]  ? __pfx_kthread+0x10/0x10
+> > [    9.393043]  ret_from_fork+0x34/0x50
+> > [    9.393575]  ? __pfx_kthread+0x10/0x10
+> > [    9.394090]  ret_from_fork_asm+0x1a/0x30
+> > [    9.394621]  </TASK>
+> > [    9.395106] Modules linked in: gpio_generic amd_3d_vcache acpi_pad(-=
+) loop fuse xenfs dm_thin_pool dm_persistent_data dm_bio_prison amdgpu amdx=
+cp i2c_algo_bit drm_ttm_helper ttm crct10dif_pclmul drm_exec crc32_pclmul g=
+pu_sched
+> > crc32c_intel drm_suballoc_helper polyval_clmulni drm_panel_backlight_qu=
+irks polyval_generic drm_buddy ghash_clmulni_intel sha512_ssse3 drm_display=
+_helper sha256_ssse3 sha1_ssse3 xhci_pci cec nvme sp5100_tco xhci_hcd nvme_=
+core nvme_auth
+> > video wmi xen_acpi_processor xen_privcmd xen_pciback xen_blkback xen_gn=
+talloc xen_gntdev xen_evtchn scsi_dh_rdac scsi_dh_emc scsi_dh_alua uinput d=
+m_multipath
+> > [    9.398698] CR2: 0000000000000070
+> > [    9.399266] ---[ end trace 0000000000000000 ]---
+> > [    9.399880] RIP: e030:cpufreq_update_limits+0x10/0x30
+> > [    9.400528] Code: 84 00 00 00 00 00 0f 1f 40 00 90 90 90 90 90 90 90=
+ 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b 05 98 e4 21 02=
+ <48> 8b 40 70 48 85 c0 74 06 e9 a2 36 38 00 cc e9 ec fe ff ff 66 66
+> > [    9.401673] RSP: e02b:ffffc9004058be28 EFLAGS: 00010246
+> > [    9.402316] RAX: 0000000000000000 RBX: ffff888005bf4800 RCX: ffff888=
+05d635fa8
+> > [    9.403060] RDX: ffff888005bf4800 RSI: 0000000000000085 RDI: 0000000=
+000000000
+> > [    9.403819] RBP: ffff888005cd7800 R08: 0000000000000000 R09: 8080808=
+080808080
+> > [    9.404581] R10: ffff88800391abc0 R11: fefefefefefefeff R12: ffff888=
+004e8aa00
+> > [    9.405332] R13: ffff88805d635f80 R14: ffff888004e8aa15 R15: ffff888=
+0059baf00
+> > [    9.406063] FS:  0000000000000000(0000) GS:ffff88805d600000(0000) kn=
+lGS:0000000000000000
+> > [    9.406830] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [    9.407561] CR2: 0000000000000070 CR3: 000000000202c000 CR4: 0000000=
+000050660
+> > [    9.408318] Kernel panic - not syncing: Fatal exception
+> > [    9.409022] Kernel Offset: disabled
+> > (XEN) Hardware Dom0 crashed: 'noreboot' set - not rebooting.
+> >
+> > Looking at the call trace, it's likely related to ACPI, and Xen too, so
+> > I'm adding relevant lists too.
+> >
+> > Any ideas?
+> >
+> > #regzbot introduced: v6.12.11..v6.13.6
+>
+> That code looks to have been introduced for 6.9, so I wonder if so far yo=
+u merely
+> were lucky not to have observed any "highest perf changed" notification. =
+See
+> 9c4a13a08a9b ("ACPI: cpufreq: Add highest perf change notification"), whi=
+ch imo
+> merely adds a 2nd path to a pre-existing problem: cpufreq_update_limits()=
+ assumes
+> that cpufreq_driver is non-NULL, and only checks cpufreq_driver->update_l=
+imits.
+> But of course the assumption there may be legitimate, and it's logic else=
+where
+> which is or has become flawed.
 
-Got it. I'll address this in subsequent patch.
+cpufreq_update_limits() needs to ensure that the driver is there.
 
->> I'm not completely sure about this corner case if HS OUT endpoints
->> can inadvertently get affected when co-existing with long-interval
->> LS/FS IN endpoints. Our IP vendor confirmed that LS/FS devices are
->> not affected.
-> 
-> There is also a third case of a FS device behind an external HS hub.
-> The device will look like FS to this code here, but the xHC will need
-> to schedule HS transactions to service it.
+The attached patch should address this issue, Marek please verify.
 
-In that case, the original code I provided in this patch doesn't include 
-a check for 'udev->speed' and is applicable to FS devices as well. I 
-think this code should remain unchanged to properly address the third 
-scenario you mentioned.
+--0000000000002b914c063150e400
+Content-Type: text/x-patch; charset="US-ASCII"; name="cpufreq-update-limits-fix.patch"
+Content-Disposition: attachment; filename="cpufreq-update-limits-fix.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_m8r8tx2z0>
+X-Attachment-Id: f_m8r8tx2z0
 
-> 
-> Regards,
-> Michal
-
+LS0tCiBkcml2ZXJzL2NwdWZyZXEvY3B1ZnJlcS5jIHwgICAgOCArKysrKysrKwogMSBmaWxlIGNo
+YW5nZWQsIDggaW5zZXJ0aW9ucygrKQoKLS0tIGEvZHJpdmVycy9jcHVmcmVxL2NwdWZyZXEuYwor
+KysgYi9kcml2ZXJzL2NwdWZyZXEvY3B1ZnJlcS5jCkBAIC0yNzgxLDEwICsyNzgxLDE4IEBACiAg
+Ki8KIHZvaWQgY3B1ZnJlcV91cGRhdGVfbGltaXRzKHVuc2lnbmVkIGludCBjcHUpCiB7CisJc3Ry
+dWN0IGNwdWZyZXFfcG9saWN5ICpwb2xpY3k7CisKKwlwb2xpY3kgPSBjcHVmcmVxX2NwdV9nZXQo
+Y3B1KTsKKwlpZiAoIXBvbGljeSkKKwkJcmV0dXJuOworCiAJaWYgKGNwdWZyZXFfZHJpdmVyLT51
+cGRhdGVfbGltaXRzKQogCQljcHVmcmVxX2RyaXZlci0+dXBkYXRlX2xpbWl0cyhjcHUpOwogCWVs
+c2UKIAkJY3B1ZnJlcV91cGRhdGVfcG9saWN5KGNwdSk7CisKKwljcHVmcmVxX2NwdV9wdXQocG9s
+aWN5KTsKIH0KIEVYUE9SVF9TWU1CT0xfR1BMKGNwdWZyZXFfdXBkYXRlX2xpbWl0cyk7CiAK
+--0000000000002b914c063150e400--
