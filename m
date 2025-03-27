@@ -1,161 +1,98 @@
-Received: from mta-64-136.flowmailer.net (mta-64-136.flowmailer.net [185.136.64.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DEE216399
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 14:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06667212B00;
+	Thu, 27 Mar 2025 14:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743084401; cv=none; b=uMLvjEk8beBmq9PHx1ISvCjbd1c1PqBGkUfzadOefZfHJgOH4vhF/nRmQXGha27ghLJUkQGMEBwllMYUIGZe32LErnoGLT5dA2PqcOszT3r3RGPfgDPm7kuHOs/IwhDg1GK/x+Hf0iaYslwkA7iUl8eTmZjUCr9cS98R5ae0KQk=
+	t=1743084429; cv=none; b=X1wfx+Mya4jtSuy3mbRYGjWqapbIimyyV8d9GRk+eZn1Ww406CHyXOOAOieL8xPFVSRlCFvtAjRYQtZZsbpIon2aKcD/e06zENFehxmN3NZumQg6GQ/14zYA/5e9XIZiSeJSS7xk/WItNgogO3BjPo6rdmfS71dhw/oO3gxOTpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743084401; c=relaxed/simple;
-	bh=QiQM3Ke3a5HaM7yD69OcmUzwddZc0OwQ/SAP3KnNP00=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=iKLXu/gZ0/09hhUrOWw8Q8+Hm6fX9s58zT3npv8Mjv1MfQZ12WyCuHypgt+oc4Y/pTrwtFI4FJPltahNsxFMzpl/pjgXvCLRjyfjFp3Ffk2a2Tcb9oKhLTqG8fj2LjgnQblgOZbcuO82PxGKOZELF9PmkZ9bucfSKKIeeNDTtS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens-energy.com; spf=pass smtp.mailfrom=errorhandling.siemens-energy.com; dkim=pass (1024-bit key) header.d=flowmailer.net header.i=@flowmailer.net header.b=Kl1Vb3SG; dkim=pass (2048-bit key) header.d=siemens-energy.com header.i=schuster.simon@siemens-energy.com header.b=PbU/WywD; arc=none smtp.client-ip=185.136.64.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens-energy.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=errorhandling.siemens-energy.com
+	s=arc-20240116; t=1743084429; c=relaxed/simple;
+	bh=ylAWPbcULtSaZe34dKWVThPXcBtGPQIYkRD3zXK0jv0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZtfpTP5Rj0VuFUppJ19K81u+GBLwPYglV11pi8wp42Xwn7etmrOMeSNKg+FCM4ptTBbuyHm0SQ13BC03iaYRUT+KIP0G64p7JifEwQpC5aWamcVU9e5Z4GUyz8qrFyx2MBX5Kv/WMkBYs0ICtK1xtN1ahKveHsYXF7LXVEpZiYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JlNePcCL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flowmailer.net header.i=@flowmailer.net header.b="Kl1Vb3SG";
-	dkim=pass (2048-bit key) header.d=siemens-energy.com header.i=schuster.simon@siemens-energy.com header.b="PbU/WywD"
-Received: by mta-64-136.flowmailer.net with ESMTPSA id 20250327135626e1f5d2a07a0019fdb6
-        for <linux-kernel@vger.kernel.org>;
-        Thu, 27 Mar 2025 14:56:26 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=s1;
- d=flowmailer.net;
- h=from:from:sender:to:to:cc:cc:subject:subject:content-type:content-type:content-transfer-encoding:In-Reply-To:Date:Message-ID:MIME-Version;
- bh=0y+vCEXObwRf14H2gu9bmDNRRkYqorvPJYhQByXDzmE=;
- b=Kl1Vb3SGk4HuJnqz7QVwtBtblzSkN/9AaGNm9BMdCc2gDdntAbobvqe9fN8ugL88cusQp7
- DYxNkUjCyQi4pjaNTqXi/w+WmWXxhvSFWv8QrMNpRfLeyqPvoIcbak0sb0UoO+gJl4nrGzS0
- lT3MG20Mxqzwag9/XArzkiovxqdn8=;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm3;
- d=siemens-energy.com; i=schuster.simon@siemens-energy.com;
- h=from:from:sender:to:to:cc:cc:subject:subject:content-type:content-type:content-transfer-encoding:In-Reply-To:Date:Message-ID:MIME-Version;
- bh=0y+vCEXObwRf14H2gu9bmDNRRkYqorvPJYhQByXDzmE=;
- b=PbU/WywDkwNtybokyqGnE9Hpc6WMX+XlKY3Wo2mrsLWYUI+RyP7wd/ETPCn9WxoGp7UNUu
- VFtXxHy67Dm7fj1sAY1BUA6mAlfDZRCOymsoCiGGfF7vOxuXtgqQ/jhA7TFgGtmZrLszv3Pf
- KO8KA73TsMLRUhVfqqu1hcT8sVgxqJ1hmGQZJF6HYZmRjtcDsSn6oTC6/50CV/quyGtmDu4v
- 2+lAKYJn7XtNrJXiy9NzBMFoC4y2WVLVjrQNXVWz2PL3rF2OX56JV8nW0IhsGYr8/mwhk+dR
- sZN6j0Pn1Z0K38nzggOItTntirkObVo/yoD4hZ/om+JNb+PgSNQ2UQ8w==;
-Date: Thu, 27 Mar 2025 14:56:24 +0100
-From: Simon Schuster <schuster.simon@siemens-energy.com>
-To: Dinh Nguyen <dinguyen@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Andreas Oetken <andreas.oetken@siemens-energy.com>,
-	Mike Rapoport <rppt@kernel.org>, Song Liu <song@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Simon Schuster <schuster.simon@siemens-energy.com>
-Subject: [PATCH 2/2] nios2: do not introduce conflicting mappings when
- flushing tlb entries
-Message-ID: 
- <fm-32642-20250327135626e1f5d2a07a0019fdb6-JTnh8c@errorhandling.siemens-energy.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JlNePcCL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44E0CC4CEEA;
+	Thu, 27 Mar 2025 14:07:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743084428;
+	bh=ylAWPbcULtSaZe34dKWVThPXcBtGPQIYkRD3zXK0jv0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JlNePcCLfToBC2V80buwbF7hDm4cODW591JUZKXC7jYOsbBYiLE3imKkGNI8oMDuv
+	 aMcE1Pg4wpXRcR/WL/KlNcz4cVY7kyahY/rNM976Ke/WDaIlCCu1mzsa4jlJoUEw2r
+	 D06695KHjfWkSZSZis1fG20XslUzL2qo+FzqN9DVsZkm3q8e9sK+qfLdFkhTxTVWAU
+	 gs1Apq/l6ay9uP/nMwuPDhtS6lkzNDrVIZN8Z4kZ+nito8NSZ/+9JNEkgXumk27O1/
+	 45lahgHvDPnm4IsxX4eQW2oRWEtZSo/w7Q+m9b6xHrvUcZyhImnR9hsU6g7RXdYgWS
+	 xQbvUdMWftaCQ==
+Date: Thu, 27 Mar 2025 14:07:04 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	andersson@kernel.org, konradybcio@kernel.org
+Subject: Re: [PATCH V1] spi: Add support for Double Transfer Rate (DTR) mode
+Message-ID: <f3115251-8fa9-4019-8fb0-145daf32cfa2@sirena.org.uk>
+References: <20250326083954.3338597-1-quic_msavaliy@quicinc.com>
+ <40db39ef-7ef3-4720-9c85-ccfe1c11c299@sirena.org.uk>
+ <c89603b7-b70c-4b55-ac87-f84ce5be2c6c@quicinc.com>
+ <3aa2c190-ce4d-4805-943b-f65e98ce762c@sirena.org.uk>
+ <8435b037-8b54-401a-b4f6-b4b497c4c3eb@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="UgfMhIpRC9osdcao"
+Content-Disposition: inline
+In-Reply-To: <8435b037-8b54-401a-b4f6-b4b497c4c3eb@quicinc.com>
+X-Cookie: Multics is security spelled sideways.
+
+
+--UgfMhIpRC9osdcao
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fm-32642-2025032713472354f98643960019fd6d-cXH63M@errorhandling.siemens-energy.com>
 
-The NIOS2 hardware does not support conflicting mappings for the same
-virtual address (see Nios II Processor Reference Guide from 2023.08.28):
+On Thu, Mar 27, 2025 at 03:33:15PM +0530, Mukesh Kumar Savaliya wrote:
 
- "The operating system software is responsible for guaranteeing that
-  multiple TLB entries do not map the same virtual address. The hardware
-  behavior is undefined when multiple entries map the same virtual
-  address."
+> IIUC, It comes to the point of first identifying if it's in context of QSPI
+> controller or SPI controller right ?
 
-When flushing tlb-entries, the kernel may violate this invariant for
-virtual addresses related to PID 0 as flushing is currently implemented
-by assigning physical address, pid and flags to 0.
+> Identify if SPI/QSPI controller has this capability using dtr_caps =
+> true/false. Then check if it's supporting SDR/DDR mode. Can we then
+> introduce below struct to first mark capability as true/false and then
+> process dtr_mode ?
 
-A small example:
+> if not supported (dtr_caps = false), then don't care dtr_mode.
 
-Before flushing TLB mappings for pid:0x42:
-  dump tlb-entries for line=0xd (addr 000d0000):
-  -- way:09 vpn:0x0006d000 phys:0x01145000 pid:0x00 flags:rw--c
-  ...
-  -- way:0d vpn:0x0006d000 phys:0x02020000 pid:0x42 flags:rw--c
+We should complain if the device requsted anything the controller can't
+support.
 
-After flushing TLB mappings for pid:0x42:
-  dump tlb-entries for line=0xd (addr 000d0000):
-  -- way:09 vpn:0x0006d000 phys:0x01145000 pid:0x00 flags:rw--c
-  ...
-  -- way:0d vpn:0x0006d000 phys:0x00000000 pid:0x00 flags:-----
+> struct spi_caps {
+> 	bool dtr_mode;
+> 	bool dtr_caps;
+> };
 
-As functions such as replace_tlb_one_pid operate on the assumption of
-unique mappings, this can cause repeated pagefaults for a single
-address that are not covered by the existing spurious pagefault handling.
+The controller capabilities are currently mainly advertised via the
+SPI_CONTROLLER_ flags but adding some bools also works, some things
+already do use that.  I'm not sure we need to wrap things in a further
+struct though.
 
-This commit fixes this issue by keeping the pid field of the entries
-when flushing. That way, no conflicting mappings are introduced as the
-pair of <address,pid> is now kept unique:
+--UgfMhIpRC9osdcao
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Fixed example after flushing TLB mappings for pid:0x42:
-  dump tlb-entries for line=0xd (addr 000d0000):
-  -- way:09 vpn:0x0006d000 phys:0x01145000 pid:0x00 flags:rw--c
-  ...
-  -- way:0d vpn:0x0006d000 phys:0x00000000 pid:0x42 flags:-----
+-----BEGIN PGP SIGNATURE-----
 
-When flushing the complete tlb/initialising all entries, the way is
-used as a substitute mmu pid value for the "invalid" entries.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmflW4cACgkQJNaLcl1U
+h9DO7gf9GK9kaZ7F5byJPJNQeOitCwqJBmRUPfkO3oVkQLL0DGjU/ckyHfNcq/27
+Iv3KniQ2oZAEqO9UpGcOY7fjEl+e1eb+aDyEBGHBZnrJbqVbaAmB4dBH4PYu/zRm
+F/u8ibgorqythriUu1YW8nTxg81x5sHZhNvLR9geyXyKrMrIXYoZJ/T8bAfnDpKo
+EdBKdh3Skcj830O+HytvyPNcZDBKZQc2kMGPMh1qnGNKQc0GIa/oGOQ7g6vXcRjz
+i+e8CScGMdLsDc0yp9t46TA/NF0TMNVo2N6bPrPSe9425vmOBz8fiN7kqnpxP/5g
+1cdoovWzMFF/PNqGxnOkRHJDMbXTdg==
+=rjSg
+-----END PGP SIGNATURE-----
 
-Signed-off-by: Simon Schuster <schuster.simon@siemens-energy.com>
-Signed-off-by: Andreas Oetken <andreas.oetken@siemens-energy.com>
----
- arch/nios2/mm/tlb.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
-
-diff --git a/arch/nios2/mm/tlb.c b/arch/nios2/mm/tlb.c
-index f90ac35f05f3..a9cbe20f9e79 100644
---- a/arch/nios2/mm/tlb.c
-+++ b/arch/nios2/mm/tlb.c
-@@ -144,10 +144,11 @@ static void flush_tlb_one(unsigned long addr)
- 		if (((pteaddr >> 2) & 0xfffff) != (addr >> PAGE_SHIFT))
- 			continue;
- 
-+		tlbmisc = RDCTL(CTL_TLBMISC);
- 		pr_debug("Flush entry by writing way=%dl pid=%ld\n",
--			 way, (pid_misc >> TLBMISC_PID_SHIFT));
-+			 way, ((tlbmisc >> TLBMISC_PID_SHIFT) & TLBMISC_PID_MASK));
- 
--		tlbmisc = TLBMISC_WE | (way << TLBMISC_WAY_SHIFT);
-+		tlbmisc = TLBMISC_WE | (way << TLBMISC_WAY_SHIFT) | (tlbmisc & TLBMISC_PID);
- 		WRCTL(CTL_TLBMISC, tlbmisc);
- 		WRCTL(CTL_PTEADDR, pteaddr_invalid(addr));
- 		WRCTL(CTL_TLBACC, 0);
-@@ -237,7 +238,8 @@ void flush_tlb_pid(unsigned long mmu_pid)
- 			if (pid != mmu_pid)
- 				continue;
- 
--			tlbmisc = TLBMISC_WE | (way << TLBMISC_WAY_SHIFT);
-+			tlbmisc = TLBMISC_WE | (way << TLBMISC_WAY_SHIFT) |
-+				  (pid << TLBMISC_PID_SHIFT);
- 			WRCTL(CTL_TLBMISC, tlbmisc);
- 			WRCTL(CTL_TLBACC, 0);
- 		}
-@@ -272,15 +274,17 @@ void flush_tlb_all(void)
- 	/* remember pid/way until we return */
- 	get_misc_and_pid(&org_misc, &pid_misc);
- 
--	/* Start at way 0, way is auto-incremented after each TLBACC write */
--	WRCTL(CTL_TLBMISC, TLBMISC_WE);
--
- 	/* Map each TLB entry to physcal address 0 with no-access and a
- 	   bad ptbase */
- 	for (line = 0; line < cpuinfo.tlb_num_lines; line++) {
- 		WRCTL(CTL_PTEADDR, pteaddr_invalid(addr));
--		for (way = 0; way < cpuinfo.tlb_num_ways; way++)
-+		for (way = 0; way < cpuinfo.tlb_num_ways; way++) {
-+			// Code such as replace_tlb_one_pid assumes that no duplicate entries exist
-+			// for a single address across ways, so also use way as a dummy PID
-+			WRCTL(CTL_TLBMISC, TLBMISC_WE | (way << TLBMISC_WAY_SHIFT) |
-+					   (way << TLBMISC_PID_SHIFT));
- 			WRCTL(CTL_TLBACC, 0);
-+		}
- 
- 		addr += PAGE_SIZE;
- 	}
--- 
-2.39.5
-
+--UgfMhIpRC9osdcao--
