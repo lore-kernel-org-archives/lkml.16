@@ -1,70 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA4A1FF61D;
-	Thu, 27 Mar 2025 07:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F0C4430;
+	Thu, 27 Mar 2025 07:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743062202; cv=none; b=H1IWboFgCBDh0GdcaMq62xmZlLnxZ7fg28YpzSY9KfdYEhjI5jjRtbGIzJmdf2fA/zXDqUaMDDyFNAlnd/PVzo2UPzcK24xYksvsN1hwzBOPYDYClllt8dzE5AVf20HQvcxq7/qwOQqqBGZiFA3SGyQ8JtkVkTq8Ovb9qHoq/Ls=
+	t=1743062277; cv=none; b=HUlGVc2GSh7974DXTzBggOSbmiJ+ETrdvmXJwp3DIVFf3kyUYIxXvBqceLFD9axrPY7PvcHl7RQtV6SidsfbSuD1AMhkXGmoFeB3N4uLj4yMKj9Bu2Q9uKDsAfTz/3kIk8I6Hy+WudcIGtaRNzYL0yh7y92s52Qvuggev9CX7W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743062202; c=relaxed/simple;
-	bh=9MOdzY1W+VK84uZ8tY1V+cmmJLQHaZQN4UG+HUI98rQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mze686rHB/Bd1FZagCAE0N7JbSQFr7WQtaeucJy2d7OV6Oj29J/mG+iieL9J+iFpf7lFSpAci3+wbbuxJgNJ50kG2PWJsEg4d/+f7UB2S7h1qpBkPwe+sqro7Zxzjuz6h3noOf3o7ZiMfk1LaY9P/fRNZLwxWSSchnvtIfFG0v8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=erB0l3R7; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="erB0l3R7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AAEEC4CEDD;
-	Thu, 27 Mar 2025 07:56:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743062199;
-	bh=9MOdzY1W+VK84uZ8tY1V+cmmJLQHaZQN4UG+HUI98rQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=erB0l3R7EZDRT5tgRtDDgHuHvjoMgzFzVBPut/hNLKYULis63NkBUwQ8amwI1nSGY
-	 H+IAjZDBV2smrpYpmatjq595O6QZIhurrBae0x9QY/tSlZr09+uipP32v+6rcJpBnx
-	 uDqxnJkDADTBj+t0srgIwZQFsY/RD6LNfaACBx8+UXOrkbZ3I9RuzbYBr5gTWhWd3H
-	 ZZyb+TYdSqBaryp4F7vmgk65ssy/xGwpZ6de7mO+AN3QRyizHBhAg+mEpGJBB8Ht7Z
-	 NDrScMHw/vxq+NwIT2Ag9iiePE0AdMOiK3uZ4dkw/Ryz4U2EPxi9zRyaCEnIw3l73F
-	 3ADvX2kN/vvLg==
-Date: Thu, 27 Mar 2025 08:56:36 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Matt Coster <matt.coster@imgtec.com>
-Cc: Frank Binns <frank.binns@imgtec.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, Randolph Sapp <rs@ti.com>, Darren Etheridge <detheridge@ti.com>, 
-	Michal Wilczynski <m.wilczynski@samsung.com>, Alessio Belle <alessio.belle@imgtec.com>, 
-	Alexandru Dadu <alexandru.dadu@imgtec.com>
-Subject: Re: [PATCH v5 02/18] dt-bindings: gpu: img: Add BXS-4-64 devicetree
- bindings
-Message-ID: <20250327-beneficial-crouching-rottweiler-90d0e7@krzk-bin>
-References: <20250326-sets-bxs-4-64-patch-v1-v5-0-e4c46e8280a9@imgtec.com>
- <20250326-sets-bxs-4-64-patch-v1-v5-2-e4c46e8280a9@imgtec.com>
+	s=arc-20240116; t=1743062277; c=relaxed/simple;
+	bh=7RZ0/mTAFVUmIMZPmxrGrC0fuvfZpu20UylBzZj5jqI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y8F4yc6F/ZQA3j2oaxJHyYVzUfMPk+Qldnf84yOKXlMEJswYJei+0ck1GHt++kPprSycuU3TCCHNrPpvD67hpza3QvH1akuovJeEbMEVO+8dhRAiCnLxvGtTs8QFm7KPWTGqPZmogqBGZODlVFPkg4QCVJOW2Pb3JE/3iLKU5Mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86d42f08219so302230241.0;
+        Thu, 27 Mar 2025 00:57:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743062273; x=1743667073;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RvqKbrtjHiG+l3MSzijKqe8Siipsrja9Kds+eq2Ce3E=;
+        b=oNQ+5O/9xaxZjLgCPtKeAbvtToRiedd0ItEDcn8tg8ssoTCAzhk/e5Uj7rOJqFBrg+
+         dkBNKEeR62dvaIES0Rx/ulNzabm1VMT6eeOlCpYR0hfsPrvi+ITu+a+0CgVSCXzkabAA
+         qLxnsZXkNPd4U2019br+LGtJCUZBWLqHsWJ75jiKreEl2hOj7UttlD0qGUlNPczO2BgP
+         fWd5H0NjdnM3Q3DLPGLib2RGs+1+duJitP1FIVgLt45OWKJuf/uWvAt3QElB0oJGLBDi
+         ///imOZ6B9KBAMEhQNFG/x6Np0lg1VQwth3wglGKYdDZ4kDCut4Mq0Ohx2salEn6ebA7
+         rYpA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFuN/jdIQPtuu4eCETo3TQ2Si726d7daYpeInZ0OeV0oUcONvzXeLIHC9bdOEla+aYYqZSj4KwoFed@vger.kernel.org, AJvYcCW2wZNRxkuWPukNlqawzqw3SyHnKHCgNkZWJnhXtpV+BAvRdWDeT0C36HeJpesOMBIWZq+OHhb+UBTlc9OnYph+Md4=@vger.kernel.org, AJvYcCWG9OvTsnZ5Hhk2oYSrlYWlgO3+zaN8SdLvKn3v3xB3DGTzpWGKdj3Ydry23WopcFTiW6U7ogQBONRIFPc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2165pAQwQFu6CKyR4tFFNOyf/52LHQGtP4wQNbH1xwGOumvSA
+	f5tPvieFpPnKWW9MIjEXqemvP6WC6p4E3SLyUwN8L21ZwpVARJNTEy33/DTAuEA=
+X-Gm-Gg: ASbGncs+ZQ38Nwdmf6A2sSMPQKzpWD1ZvJxHgzdNaCVzWi0Sd4RKEFi8/71jBnGW/bM
+	ytlIshMYlsj2HLMGL8XOMPenRvVng2sB8tH7f+dD6HtwS+9lOMfg5gFrc7hoN5Vsl6y149nafeo
+	7sij4Y4TmYm0qo9aQ0Y3jfWJXWifko7NJ/1JM5tFJ76WeEM0T8d0HkSXlyvoirxYnInBYZvTtgB
+	uZ8eRya0HqoT5uAhMlWnndPDH6rvHz7J1WXu8Ijj0aio3fpslk3wmJeUpRXg+wRDxBZMvf+eWM6
+	8NfZnm/0lTCzV+0BOzWJ1cC2VaRsePDrTG1KUp7rvAkq2LWffE7flYTcdXytIG6MbQlYPTfdXsp
+	LCyD4ltk=
+X-Google-Smtp-Source: AGHT+IH2eCDIKgCSmqf8xH+TgrAKFt2JiJAJYxyOg0wnbNHiPkIiWIC0q6+kNsLeh3w7ES7cP6SM8Q==
+X-Received: by 2002:a05:6102:c4d:b0:4c1:924e:1a2a with SMTP id ada2fe7eead31-4c5870bbb9cmr2258856137.25.1743062272573;
+        Thu, 27 Mar 2025 00:57:52 -0700 (PDT)
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c50bbb2afcsm2750368137.5.2025.03.27.00.57.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 00:57:52 -0700 (PDT)
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-86d42f08219so302212241.0;
+        Thu, 27 Mar 2025 00:57:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWsAT4mUD7kfMqMp9rkK+puuLSYsnS8ssr0JJSI7ACnG/P9VglrZTdn5dO+HvIQPIGuuw+m5qFsYvIo@vger.kernel.org, AJvYcCWvDj2uUBO1w5eGkm1B2niYBxt2/VlxOwP9ns7VN1JY2rTjhmAycBNNIgK5GeLCXGptG8bfML9RksRf+5M=@vger.kernel.org, AJvYcCX/sOx+p0Mx4DjtF+Jvli0s8mIW7RS9/GNJxgVAf1vU6kgyQBip3KeV5enpitgLQIrlLp2WfhX+8iBodnK5GXxem9s=@vger.kernel.org
+X-Received: by 2002:a05:6102:3e8a:b0:4bb:cf25:c5a7 with SMTP id
+ ada2fe7eead31-4c586f78607mr2099965137.7.1743062271515; Thu, 27 Mar 2025
+ 00:57:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250326-sets-bxs-4-64-patch-v1-v5-2-e4c46e8280a9@imgtec.com>
+References: <20250326220638.460083-1-ruslan.piasetskyi@gmail.com>
+In-Reply-To: <20250326220638.460083-1-ruslan.piasetskyi@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 27 Mar 2025 08:57:39 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVJqz1MJYTAVx4=4RB7XMJp0_3_GDSrhrfF9ouq98Zp3w@mail.gmail.com>
+X-Gm-Features: AQ5f1Jqw7JDJOaREf8xC7ma_ST4IA8O3_gLDa5tGFMTw_ljh6znaLkr8BAw4tfI
+Message-ID: <CAMuHMdVJqz1MJYTAVx4=4RB7XMJp0_3_GDSrhrfF9ouq98Zp3w@mail.gmail.com>
+Subject: Re: [PATCH] mmc: renesas_sdhi: Fix error handling in renesas_sdhi_probe
+To: Ruslan Piasetskyi <ruslan.piasetskyi@gmail.com>
+Cc: wsa+renesas@sang-engineering.com, ulf.hansson@linaro.org, 
+	salauyou.ihar@gmail.com, linux-mmc@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 26, 2025 at 04:48:22PM +0000, Matt Coster wrote:
-> Unlike AXE-1-16M, BXS-4-64 uses two power domains.
-> 
-> Like the existing AXE-1-16M integration, BXS-4-64 uses the single clock
-> integration in the TI k3-j721s2.
-> 
-> Signed-off-by: Matt Coster <matt.coster@imgtec.com>
-> ---
+Hi Ruslan,
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+On Wed, 26 Mar 2025 at 23:08, Ruslan Piasetskyi
+<ruslan.piasetskyi@gmail.com> wrote:
+> After moving tmio_mmc_host_probe down, error handling has to be
+> adjusted.
+>
+> Fixes: 74f45de394d9 ("mmc: renesas_sdhi: register irqs before registering controller")
+> Reviewed-by: Ihar Salauyou <salauyou.ihar@gmail.com>
+> Signed-off-by: Ruslan Piasetskyi <ruslan.piasetskyi@gmail.com>
 
-Best regards,
-Krzysztof
+Thanks for your patch!
 
+Doh, how did I miss that the gotos weren't adjusted?!?...
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
