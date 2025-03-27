@@ -1,307 +1,336 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942EF1B0437;
-	Thu, 27 Mar 2025 17:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985D3161302;
+	Thu, 27 Mar 2025 17:08:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743095249; cv=none; b=LMxZEqSG8yvHe4iFZO8cBPc5p8OasA8k/GARZiprt8tBVAhwxU9fgvVw2xU78ymCnQV0ALf5jhcf48+U6Be0pvKk9evZuL7BM3Zkb8MnzoyvjbefuaeLOK/7pbxBOWnub3VrTHTWtLJIL93E6dn6G1+g3eiAjRU6iJasUUjsv4w=
+	t=1743095284; cv=none; b=kUSQ8K2MfSF+A/FbU7LcQ3r9uhLkl7wIZJu/BsDyQFCNq1x83DRzkHMgfGyJB+Qx7LqCUE6qSlUrhmMQqajiPkcEAcVr8FALgxcyF+wl012hMcMgEBqob4iEeVjUzjc1VR8WgSJnMco9uZFe66xwVWQNrNsu59YHPxTXogrtYyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743095249; c=relaxed/simple;
-	bh=eIXFtol+0vZBbIYFckLTPfC2WG9dNrHXYKkM9EBg79A=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=b52IFeDjfE7TBjDsrsr30ccnunHwPuDudveZVoiBTuL9dkRcZK4mLDz2tan0W4Bo+XL6EKs6v67QeA1RA/zNv+zlFOff+x7OdopsZO5wpsxji/PcbYDXUFCYNwbfUfydIRJ1BIQZQVH3j4E7356r8vrOjJp5UR1/szx2QgmXPcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pquV8/Lv; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1743095284; c=relaxed/simple;
+	bh=TF0IXwuKo6252D3KFgSv9anh+pSOkAocOgawPYSgWLY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=imimT2ShJwHiIpPXiESvEzCGIysbUK684tIiUGYeyPauOH8Vbz0oJP6aqsS5SDm66JHp8j67bSlq/a4qzjK3QILj0aZ9yZgZMPTjt4HP8M/QNeVsmizUz5953j9GkMAlanpXbulSzxo/WLocwa6C8dtYONoCLRWyFi5eLS1aihk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DggovowI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pquV8/Lv"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6E20B4424E;
-	Thu, 27 Mar 2025 17:07:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1743095239;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UdhTLdNrpirrNqXWYpfQ6mk/u/0zez3SEY7a+4LtZhQ=;
-	b=pquV8/LvdCRSxF1toX4HU3e4N4ii7PO8LWLGS+EgcwbdcmadVNBPmg5Nf/azep1I0TZUIE
-	m/nnZlbO7I1ftRSXTmW+JI+AwbHWQiMBEWgYlUip+F7xF5XXhHqIW5FRGxkD8EmvG49Y1s
-	ednGhlGdPjkrxnYTdXROvmp6wLAAPv+yRAyZx4oR6biquHn4qRlp7V/QdsI6Fdz/JHqRhx
-	Czhn71bpeZpnq4UBjrkXkMtrAQmgqUJ3tUWvZ2lGJE2Je1WGMP2WvyHVKPYPhUyLI5scod
-	OjFzxi+gCgnjgZksfgD+049BKcvlUgDPOXp5WlXi0MSBZMUAf9p7asMmoLDI5A==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DggovowI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9C4FC4CEDD;
+	Thu, 27 Mar 2025 17:08:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743095284;
+	bh=TF0IXwuKo6252D3KFgSv9anh+pSOkAocOgawPYSgWLY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=DggovowIE/Kq4oZSqwCqMOGHPS6UTDfuFZ+zOw/4xNvrfUyOHVC+thEVZnQwxqA4q
+	 mD5Z6Vgr7y29XAYfpHqHNcBCHAJVEVF2T3cyxdhxleDBy62JxZG7QmvgMzNRf7fIee
+	 PwFIf2tNOTvv+0INeJ8ZbDccyn2v2Vx3eMMh3jAIQ44NzOpOAmChztj899E/cBN99M
+	 7yZtIhY6g6VwfIOMdhZ/1TWDOByeWeaF6kHZWkI5Ire67D3bBBanx3hzQf18TdVJch
+	 rlHbYYX5tRSVKHLKjSqXdb3gpavn+z2OC7w8vPVSXDVw1DENFM7e2pBqnZBIHb6jhx
+	 wGFi6Z5qYMl9g==
+Date: Thu, 27 Mar 2025 12:08:02 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+	rrichter@amd.com, nathan.fontenot@amd.com,
+	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
+Subject: Re: [PATCH v8 03/16] CXL/AER: Introduce Kfifo for forwarding CXL
+ errors
+Message-ID: <20250327170802.GA1435872@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 27 Mar 2025 18:07:13 +0100
-Message-Id: <D8R7OVRDZF3J.3FH8JD5J0AWWF@bootlin.com>
-Cc: "Andrew Lunn" <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Rob
- Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>, "Nicolas Ferre"
- <nicolas.ferre@microchip.com>, "Claudiu Beznea" <claudiu.beznea@tuxon.dev>,
- "Paul Walmsley" <paul.walmsley@sifive.com>, "Palmer Dabbelt"
- <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre
- Ghiti" <alex@ghiti.fr>, "Samuel Holland" <samuel.holland@sifive.com>,
- "Richard Cochran" <richardcochran@gmail.com>, "Russell King"
- <linux@armlinux.org.uk>, "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
- <gregory.clement@bootlin.com>, "netdev@vger.kernel.org"
- <netdev@vger.kernel.org>, "devicetree@vger.kernel.org"
- <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org"
- <linux-riscv@lists.infradead.org>, "linux-mips@vger.kernel.org"
- <linux-mips@vger.kernel.org>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>
-To: "Katakam, Harini" <harini.katakam@amd.com>, "Andrew Lunn"
- <andrew@lunn.ch>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH net-next 07/13] net: macb: move HW IP alignment value to
- macb_config
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250321-macb-v1-0-537b7e37971d@bootlin.com>
- <20250321-macb-v1-7-537b7e37971d@bootlin.com>
- <45b3e613-90c6-4499-b50b-383106172184@lunn.ch>
- <D8OOPAXK16CI.3TE75O760JRSL@bootlin.com>
- <967fcb66-6a64-4e97-8293-a38b0ef1bc01@lunn.ch>
- <SJ2PR12MB8739A1E03E116F9D6A312EB99EA62@SJ2PR12MB8739.namprd12.prod.outlook.com>
-In-Reply-To: <SJ2PR12MB8739A1E03E116F9D6A312EB99EA62@SJ2PR12MB8739.namprd12.prod.outlook.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieekleeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefvhffuofhfjgesthhqredtredtjeenucfhrhhomhepvfhhrohoucfnvggsrhhunhcuoehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeigfelffeuffetteetuddufffghefhudeuteeigeekteevgeeileejgfdvffelheenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeiieegsgemfhdtfhhfmehfvgdutdemlegvfhgunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeiieegsgemfhdtfhhfmehfvgdutdemlegvfhgupdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvledprhgtphhtthhopehhrghrihhnihdrkhgrthgrkhgrmhesrghmugdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpt
- hhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: theo.lebrun@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250327014717.2988633-4-terry.bowman@amd.com>
 
-Hello Harini, Andrew,
+On Wed, Mar 26, 2025 at 08:47:04PM -0500, Terry Bowman wrote:
+> CXL error handling will soon be moved from the AER driver into the CXL
+> driver. This requires a notification mechanism for the AER driver to share
+> the AER interrupt details with CXL driver. The notification is required for
+> the CXL drivers to then handle CXL RAS errors.
+> 
+> Add a kfifo work queue to be used by the AER driver and CXL driver. The AER
+> driver will be the sole kfifo producer adding work. The cxl_core will be
+> the sole kfifo consumer removing work. Add the boilerplate kfifo support.
+> 
+> Add CXL work queue handler registration functions in the AER driver. Export
+> the functions allowing CXL driver to access. Implement the registration
+> functions for the CXL driver to assign or clear the work handler function.
+> 
+> Create a work queue handler function, cxl_prot_err_work_fn(), as a stub for
+> now. The CXL specific handling will be added in future patch.
+> 
+> Introduce 'struct cxl_prot_err_info'. This structure caches CXL error
+> details used in completing error handling. This avoid duplicating some
+> function calls and allows the error to be treated generically when
+> possible.
+> ...
 
-On Wed Mar 26, 2025 at 6:01 AM CET, Katakam, Harini wrote:
-> [AMD Official Use Only - AMD Internal Distribution Only]
->
-> Hi Theo,
->
->> -----Original Message-----
->> From: Andrew Lunn <andrew@lunn.ch>
->> Sent: Tuesday, March 25, 2025 12:06 AM
->> To: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
->> Cc: Andrew Lunn <andrew+netdev@lunn.ch>; David S. Miller
->> <davem@davemloft.net>; Eric Dumazet <edumazet@google.com>; Jakub Kicinsk=
-i
->> <kuba@kernel.org>; Paolo Abeni <pabeni@redhat.com>; Rob Herring
->> <robh@kernel.org>; Krzysztof Kozlowski <krzk+dt@kernel.org>; Conor Doole=
-y
->> <conor+dt@kernel.org>; Nicolas Ferre <nicolas.ferre@microchip.com>; Clau=
-diu
->> Beznea <claudiu.beznea@tuxon.dev>; Paul Walmsley
->> <paul.walmsley@sifive.com>; Palmer Dabbelt <palmer@dabbelt.com>; Albert =
-Ou
->> <aou@eecs.berkeley.edu>; Alexandre Ghiti <alex@ghiti.fr>; Samuel Holland
->> <samuel.holland@sifive.com>; Richard Cochran <richardcochran@gmail.com>;
->> Russell King <linux@armlinux.org.uk>; Thomas Bogendoerfer
->> <tsbogend@alpha.franken.de>; Vladimir Kondratiev
->> <vladimir.kondratiev@mobileye.com>; Gregory CLEMENT
->> <gregory.clement@bootlin.com>; netdev@vger.kernel.org;
->> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
->> riscv@lists.infradead.org; linux-mips@vger.kernel.org; Thomas Petazzoni
->> <thomas.petazzoni@bootlin.com>; Tawfik Bayouk <tawfik.bayouk@mobileye.co=
-m>
->> Subject: Re: [PATCH net-next 07/13] net: macb: move HW IP alignment valu=
-e to
->> macb_config
->>
->> On Mon, Mar 24, 2025 at 06:49:05PM +0100, Th=C3=A9o Lebrun wrote:
->> > Hello Andrew,
->> >
->> > On Fri Mar 21, 2025 at 10:06 PM CET, Andrew Lunn wrote:
->> > > On Fri, Mar 21, 2025 at 08:09:38PM +0100, Th=C3=A9o Lebrun wrote:
->> > >> The controller does IP alignment (two bytes).
->> > >
->> > > I'm a bit confused here. Is this hard coded, baked into the silicon?
->> > > It will always do IP alignment? It cannot be turned off?
->> >
->> > Yes, the alignment is baked inside the silicon.
->> > I looked but haven't seen any register to configure the alignment.
->> >
->> > Sorry the commit message isn't clear, it needs improvements.
->> >
->> > >>  skb_reserve(skb, NET_IP_ALIGN);
->> > >
->> > > Why not just replace this with
->> > >
->> > >         skb_reserve(skb, 2);
->> >
->> > On arm64, NET_IP_ALIGN=3D0. I don't have HW to test, but the current
->> > code is telling us that the silicon doesn't do alignment on those:
->>
->> This is part of the confusion. You say the hardware does alignment, and =
-then say it
->> does not....
->>
->> >    skb =3D netdev_alloc_skb(...);
->> >    paddr =3D dma_map_single(..., skb->data, ...);
->> >    macb_set_addr(..., paddr);
->> >
->> >    // arm   =3D> NET_IP_ALIGN=3D2 =3D> silicon does alignment
->> >    // arm64 =3D> NET_IP_ALIGN=3D0 =3D> silicon doesn't do alignment
->> >    skb_reserve(skb, NET_IP_ALIGN);
->> >
->> > The platform we introduce is the first one where the silicon alignment
->> > (0 bytes) is different from the NET_IP_ALIGN value (MIPS, 2 bytes).
->>
->> This is starting to make it clearer. So the first statement that the con=
-troller does IP
->> alignment (two bytes) is not the full story. I would start there, explai=
-n the full story,
->> otherwise readers get the wrong idea.
->>
->> > >>     Compatible             |  DTS folders              |  hw_ip_ali=
-gn
->> > >>    ------------------------|---------------------------|-----------=
------
->> > >>    cdns,at91sam9260-macb   | arch/arm/                 | 2
->> > >>    cdns,macb               | arch/{arm,riscv}/         | NET_IP_ALI=
-GN
->> > >>    cdns,np4-macb           | NULL                      | NET_IP_ALI=
-GN
->> > >>    cdns,pc302-gem          | NULL                      | NET_IP_ALI=
-GN
->> > >>    cdns,gem                | arch/{arm,arm64}/         | NET_IP_ALI=
-GN
->> > >>    cdns,sam9x60-macb       | arch/arm/                 | 2
->> > >>    atmel,sama5d2-gem       | arch/arm/                 | 2
->> > >>    atmel,sama5d29-gem      | arch/arm/                 | 2
->> > >>    atmel,sama5d3-gem       | arch/arm/                 | 2
->> > >>    atmel,sama5d3-macb      | arch/arm/                 | 2
->> > >>    atmel,sama5d4-gem       | arch/arm/                 | 2
->> > >>    cdns,at91rm9200-emac    | arch/arm/                 | 2
->> > >>    cdns,emac               | arch/arm/                 | 2
->> > >>    cdns,zynqmp-gem         | *same as xlnx,zynqmp-gem* | 0
->> > >>    cdns,zynq-gem           | *same as xlnx,zynq-gem*   | 2
->> > >>    sifive,fu540-c000-gem   | arch/riscv/               | 2
->> > >>    microchip,mpfs-macb     | arch/riscv/               | 2
->> > >>    microchip,sama7g5-gem   | arch/arm/                 | 2
->> > >>    microchip,sama7g5-emac  | arch/arm/                 | 2
->> > >>    xlnx,zynqmp-gem         | arch/arm64/               | 0
->> > >>    xlnx,zynq-gem           | arch/arm/                 | 2
->> > >>    xlnx,versal-gem         | NULL                      | NET_IP_ALI=
-GN
->
-> Thanks for the patch. xlnx,versal-gem is arm64 and NET_IP_ALIGN is 0.
->
-> AFAIK, IP alignment is controlled by the register field " receive buffer =
-offset "
-> in the NW config register. The only exception is when " gem_pbuf_rsc " i.=
-e.
-> receive coalescing is enabled in the RTL in the IP. In that case, the Cad=
-enc
-> specification states that these bits are ignored.
-> So to summarize, if RSC is not enabled (see bit 26 of designcfg_debug6),
-> then the current implementation works for all architectures i.e. these tw=
-o
-> statements are in sync:
-> config |=3D MACB_BF(RBOF, NET_IP_ALIGN);  /* Make eth data aligned */
-> skb_reserve(skb, NET_IP_ALIGN);
->
-> Hope this helps simplify the patch (and also fill up the table that Andre=
-w suggested)
+> +++ b/drivers/cxl/core/ras.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/aer.h>
+>  #include <cxl/event.h>
+>  #include <cxlmem.h>
+> +#include <cxlpci.h>
+>  #include "trace.h"
+>  
+>  static void cxl_cper_trace_corr_port_prot_err(struct pci_dev *pdev,
+> @@ -107,13 +108,64 @@ static void cxl_cper_prot_err_work_fn(struct work_struct *work)
+>  }
+>  static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
+>  
+> +int cxl_create_prot_err_info(struct pci_dev *_pdev, int severity,
+> +			     struct cxl_prot_error_info *err_info)
+> +{
+> +	struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(_pdev);
+> +	struct cxl_dev_state *cxlds;
+> +
+> +	if (!pdev || !err_info) {
+> +		pr_warn_once("Error: parameter is NULL");
+> +		return -ENODEV;
 
-Well, big thanks! That'll make the patch much simpler. Either EyeQ5
-is the first compatible with RSC enabled, or others with RSC enabled
-have NET_IP_ALIGN=3D0.
+This is CXL code, so your call, but I'm always skeptical about testing
+for NULL and basically ignoring a code defect that got us here with a
+NULL pointer.  I would rather take the NULL pointer dereference fault
+and force a fix in the caller.
 
-Below is what the patch could look like for V2.
- - We detect at probe if the HW is RSC-capable.
- - If it isn't, we keep the code the same.
- - If it is, that means the alignment feature isn't available.
-   We can't respect our arch alignment request.
+> +	}
+> +
+> +	if ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT) &&
+> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END)) {
+> +		pci_warn_once(pdev, "Error: Unsupported device type (%X)", pci_pcie_type(pdev));
+> +		return -ENODEV;
 
-That removes all the macb_config->hw_ip_align mess. Much better.
+Similar.  A pci_warn_once() here seems like a debugging aid during
+development, not necessarily a production kind of thing.
 
-Note: I tried checking if the RBOF field is read-only when the "receive
-buffer offset" isn't available but it isn't.
+Thanks for printing the type.  I would use "%#x" to make it clear that
+it's hex.  There are about 1900 %X uses compared with 33K
+%x uses, but maybe you have a reason to capitalize it?
 
--
+> +	}
+> +
+> +	cxlds = pci_get_drvdata(pdev);
+> +	struct device *dev __free(put_device) = get_device(&cxlds->cxlmd->dev);
+> +
+> +	if (!dev)
+> +		return -ENODEV;
+> +
+> +	*err_info = (struct cxl_prot_error_info){ 0 };
 
-diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cad=
-ence/macb.h
-index d8ee7878e144..478152f70563 100644
---- a/drivers/net/ethernet/cadence/macb.h
-+++ b/drivers/net/ethernet/cadence/macb.h
-@@ -525,6 +525,8 @@
- /* Bitfields in DCFG6. */
- #define GEM_PBUF_LSO_OFFSET        27
- #define GEM_PBUF_LSO_SIZE       1
-+#define GEM_PBUF_RSC_OFFSET        26
-+#define GEM_PBUF_RSC_SIZE       1
- #define GEM_PBUF_CUTTHRU_OFFSET       25
- #define GEM_PBUF_CUTTHRU_SIZE         1
- #define GEM_DAW64_OFFSET        23
-@@ -736,6 +738,7 @@
- #define MACB_CAPS_NEED_TSUCLK         BIT(10)
- #define MACB_CAPS_QUEUE_DISABLE       BIT(11)
- #define MACB_CAPS_NO_LSO        BIT(12)
-+#define MACB_CAPS_RSC_CAPABLE         BIT(13)
- #define MACB_CAPS_PCS           BIT(24)
- #define MACB_CAPS_HIGH_SPEED       BIT(25)
- #define MACB_CAPS_CLK_HW_CHG       BIT(26)
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/etherne=
-t/cadence/macb_main.c
-index db8da8590fe0..51e82d66403b 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -1329,8 +1329,19 @@ static void gem_rx_refill(struct macb_queue *queue)
-         dma_wmb();
-         macb_set_addr(bp, desc, paddr);
+Neat, I hadn't seen this idiom.
 
--        /* Properly align Ethernet header. */
--        skb_reserve(skb, NET_IP_ALIGN);
-+        /* Properly align Ethernet header.
-+         *
-+         * Hardware can add dummy bytes if asked using the RBOF
-+         * field inside the NCFGR register. That feature isn't
-+         * available if hardware is RSC capable.
-+         *
-+         * We cannot fallback to doing the 2-byte shift before
-+         * DMA mapping because the address field does not allow
-+         * setting the low 2/3 bits.
-+         * It is 3 bits if HW_DMA_CAP_PTP.
-+         */
-+        if (!(bp->caps & MACB_CAPS_RSC_CAPABLE))
-+           skb_reserve(skb, NET_IP_ALIGN);
-      } else {
-         desc->ctrl =3D 0;
-         dma_wmb();
-@@ -2788,7 +2799,9 @@ static void macb_init_hw(struct macb *bp)
-   macb_set_hwaddr(bp);
+> +	err_info->ras_base = cxlds->regs.ras;
+> +	err_info->severity = severity;
+> +	err_info->pdev = pdev;
+> +	err_info->dev = dev;
+> +
+> +	return 0;
+> +}
+> +
+> +struct work_struct cxl_prot_err_work;
+> +
+>  int cxl_ras_init(void)
+>  {
+> -	return cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+> +	int rc;
+> +
+> +	rc = cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+> +	if (rc) {
+> +		pr_err("Failed to register CPER kfifo with AER driver");
+> +		return rc;
+> +	}
+> +
+> +	rc = cxl_register_prot_err_work(&cxl_prot_err_work, cxl_create_prot_err_info);
+> +	if (rc) {
+> +		pr_err("Failed to register kfifo with AER driver");
+> +		return rc;
+> +	}
+> +
+> +	return rc;
+>  }
+>  
+>  void cxl_ras_exit(void)
+>  {
+>  	cxl_cper_unregister_prot_err_work(&cxl_cper_prot_err_work);
+>  	cancel_work_sync(&cxl_cper_prot_err_work);
+> +
+> +	cxl_unregister_prot_err_work();
+> +	cancel_work_sync(&cxl_prot_err_work);
+>  }
+> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+> index 54e219b0049e..92d72c0423ab 100644
+> --- a/drivers/cxl/cxlpci.h
+> +++ b/drivers/cxl/cxlpci.h
+> @@ -4,6 +4,7 @@
+>  #define __CXL_PCI_H__
+>  #include <linux/pci.h>
+>  #include "cxl.h"
+> +#include "linux/aer.h"
+>  
+>  #define CXL_MEMORY_PROGIF	0x10
+>  
+> @@ -135,4 +136,6 @@ void read_cdat_data(struct cxl_port *port);
+>  void cxl_cor_error_detected(struct pci_dev *pdev);
+>  pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+>  				    pci_channel_state_t state);
+> +int cxl_create_prot_err_info(struct pci_dev *_pdev, int severity,
+> +			     struct cxl_prot_error_info *err_info);
 
-   config =3D macb_mdc_clk_div(bp);
--  config |=3D MACB_BF(RBOF, NET_IP_ALIGN); /* Make eth data aligned */
-+  /* Make eth data aligned. If RSC capable, that offset is ignored. */
-+  if (!(bp->caps & MACB_CAPS_RSC_CAPABLE))
-+     config |=3D MACB_BF(RBOF, NET_IP_ALIGN);
-   config |=3D MACB_BIT(DRFCS);    /* Discard Rx FCS */
-   if (bp->caps & MACB_CAPS_JUMBO)
-      config |=3D MACB_BIT(JFRAME);   /* Enable jumbo frames */
-@@ -4109,6 +4122,8 @@ static void macb_configure_caps(struct macb *bp,
-      dcfg =3D gem_readl(bp, DCFG2);
-      if ((dcfg & (GEM_BIT(RX_PKT_BUFF) | GEM_BIT(TX_PKT_BUFF))) =3D=3D 0)
-         bp->caps |=3D MACB_CAPS_FIFO_MODE;
-+     if (GEM_BFEXT(PBUF_RSC, gem_readl(bp, DCFG6)))
-+        bp->caps |=3D MACB_CAPS_RSC_CAPABLE;
-      if (gem_has_ptp(bp)) {
-         if (!GEM_BFEXT(TSU, gem_readl(bp, DCFG5)))
-            dev_err(&bp->pdev->dev,
+What does the "_" in "_pdev" signify?  Looks unnecessarily different
+than the decls above.
 
-Thanks Andrew & Harini,
+>  #endif /* __CXL_PCI_H__ */
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 83f2069f111e..46123b70f496 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -110,6 +110,16 @@ struct aer_stats {
+>  static int pcie_aer_disable;
+>  static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
+>  
+> +#if defined(CONFIG_PCIEAER_CXL)
+> +#define CXL_ERROR_SOURCES_MAX          128
+> +static DEFINE_KFIFO(cxl_prot_err_fifo, struct cxl_prot_err_work_data,
+> +		    CXL_ERROR_SOURCES_MAX);
+> +static DEFINE_SPINLOCK(cxl_prot_err_fifo_lock);
+> +struct work_struct *cxl_prot_err_work;
+> +static int (*cxl_create_prot_err_info)(struct pci_dev*, int severity,
+> +				       struct cxl_prot_error_info*);
 
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Space before "*" in the parameters.
 
+> +#endif
+> +
+>  void pci_no_aer(void)
+>  {
+>  	pcie_aer_disable = 1;
+> @@ -1577,6 +1587,35 @@ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
+>  	return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
+>  }
+>  
+> +
+> +#if defined(CONFIG_PCIEAER_CXL)
+> +int cxl_register_prot_err_work(struct work_struct *work,
+> +			       int (*_cxl_create_prot_err_info)(struct pci_dev*, int,
+> +								struct cxl_prot_error_info*))
+
+Ditto.  Rewrap to fit in 80 columns, unindent this function pointer
+decl to make it fit.  Same below in aer.h.
+
+> +{
+> +	guard(spinlock)(&cxl_prot_err_fifo_lock);
+> +	cxl_prot_err_work = work;
+> +	cxl_create_prot_err_info = _cxl_create_prot_err_info;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_register_prot_err_work, "CXL");
+> +
+> +int cxl_unregister_prot_err_work(void)
+> +{
+> +	guard(spinlock)(&cxl_prot_err_fifo_lock);
+> +	cxl_prot_err_work = NULL;
+> +	cxl_create_prot_err_info = NULL;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_unregister_prot_err_work, "CXL");
+> +
+> +int cxl_prot_err_kfifo_get(struct cxl_prot_err_work_data *wd)
+> +{
+> +	return kfifo_get(&cxl_prot_err_fifo, wd);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_prot_err_kfifo_get, "CXL");
+> +#endif
+> +
+>  static struct pcie_port_service_driver aerdriver = {
+>  	.name		= "aer",
+>  	.port_type	= PCIE_ANY_PORT,
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index 947b63091902..761d6f5cd792 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -10,6 +10,7 @@
+>  
+>  #include <linux/errno.h>
+>  #include <linux/types.h>
+> +#include <linux/workqueue_types.h>
+>  
+>  #define AER_NONFATAL			0
+>  #define AER_FATAL			1
+> @@ -45,6 +46,24 @@ struct aer_capability_regs {
+>  	u16 uncor_err_source;
+>  };
+>  
+> +/**
+> + * struct cxl_prot_err_info - Error information used in CXL error handling
+> + * @pdev: PCI device with CXL error
+> + * @dev: CXL device with error. From CXL topology using ACPI/platform discovery
+> + * @ras_base: Mapped address of CXL RAS registers
+> + * @severity: CXL AER/RAS severity: AER_CORRECTABLE, AER_FATAL, AER_NONFATAL
+> + */
+> +struct cxl_prot_error_info {
+> +	struct pci_dev *pdev;
+> +	struct device *dev;
+> +	void __iomem *ras_base;
+> +	int severity;
+
+What does the "prot" in "cxl_prot_error_info" refer to?
+
+There's basically no error info here other than "severity".
+
+I guess "dev" and "pdev" are separate devices (otherwise you would
+just use "&pdev->dev"), but I don't have any intuition about how they
+might be related, which is a little disconcerting.
+
+I would have thought that "ras_base" would be a property of "dev" (the
+CXL device) and wouldn't need to be separate.
+
+From above, I guess "ras_base" is a property of cxlds, not
+cxlds->cxlmd->dev.  Maybe we should be keeping &cxlds here instead and
+letting the consumer look up cxlds->cxlmd->dev?
+
+> +};
+> +
+> +struct cxl_prot_err_work_data {
+> +	struct cxl_prot_error_info err_info;
+> +};
+> +
+>  #if defined(CONFIG_PCIEAER)
+>  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+>  int pcie_aer_is_native(struct pci_dev *dev);
+> @@ -56,6 +75,24 @@ static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+>  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+>  #endif
+>  
+> +#if defined(CONFIG_PCIEAER_CXL)
+> +int cxl_register_prot_err_work(struct work_struct *work,
+> +			       int (*_cxl_create_proto_err_info)(struct pci_dev*, int,
+> +								 struct cxl_prot_error_info*));
+> +int cxl_unregister_prot_err_work(void);
+> +int cxl_prot_err_kfifo_get(struct cxl_prot_err_work_data *wd);
+> +#else
+> +static inline int
+> +cxl_register_prot_err_work(struct work_struct *work,
+> +			   int (*_cxl_create_proto_err_info)(struct pci_dev*, int,
+> +							     struct cxl_prot_error_info*))
+> +{
+> +	return 0;
+> +}
+> +static inline int cxl_unregister_prot_err_work(void) { return 0; }
+> +static inline int cxl_prot_err_kfifo_get(struct cxl_prot_err_work_data *wd) { return 0; }
+> +#endif
+> +
+>  void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>  		    struct aer_capability_regs *aer);
+>  int cper_severity_to_aer(int cper_severity);
+> -- 
+> 2.34.1
+> 
