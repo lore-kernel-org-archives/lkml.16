@@ -1,224 +1,500 @@
-Received: from mx07-0063e101.pphosted.com (mx07-0063e101.pphosted.com [205.220.184.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D45B2139B1;
-	Thu, 27 Mar 2025 11:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.184.123
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743075523; cv=fail; b=VoXyO48RLTHrnWI9aegDvZLQKiFZItt3AYHdPLqmMd4/3NinGdmjaeOaEOnDSmWButVDwe/MSqdoQkPiK93V5NENHInBOoG2iKQ2geTZmnssDT5L0B8ofTon4eOcDAOC9YDRMAbODQMWLbEzvzzp2KiwVM2lU7QNKj/spM9nVBM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743075523; c=relaxed/simple;
-	bh=5X08nBsRMYIb0Bj9JFt4qF9FtAnmWjIc5EVKmDvKT6s=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=gPBWTJZ0ZTGxXysit+jOI5bJzUCMNNt2GvpFbaj/8zFUxulTZNUCNqkyIeXA5Jge+i1zN0GtkTqCT8P2zN8sd4KNo+5IvpY0gVCf0PkiuGR3U04S2qxiUaUHsuWBBjfTgbWhJtFaMm5Cm3haqJuLiUcGLQ/bK1I7+FzweCImJ+I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=blaize.com; spf=pass smtp.mailfrom=blaize.com; dkim=pass (1024-bit key) header.d=BLAIZE.COM header.i=@BLAIZE.COM header.b=N0mFlSHf; arc=fail smtp.client-ip=205.220.184.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=blaize.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=blaize.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=BLAIZE.COM header.i=@BLAIZE.COM header.b="N0mFlSHf"
-Received: from pps.filterd (m0247495.ppops.net [127.0.0.1])
-	by mx08-0063e101.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52RB3Ix4019756;
-	Thu, 27 Mar 2025 11:27:23 GMT
-Received: from pnypr01cu001.outbound.protection.outlook.com (mail-centralindiaazlp17010007.outbound.protection.outlook.com [40.93.132.7])
-	by mx08-0063e101.pphosted.com (PPS) with ESMTPS id 45hkb2thc2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 11:27:22 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BAqg7yJJ5+P3BiH70WeFqSfDkOWdCWLD04uNXRqE7/VlDkfqHb3IItm7EzpcFd6YhB4ISCOlnfegOEtsX6E8sQ9gUs3ZuXsL9ujeswaCtXqYim1ptl79sjUOd8dwSCcK4NRfr22MbGF17H0UBblwem8rOwgWLmTxJfvvX5rJBtZOip2wJNOXgrcbol9I01uxcVYxowQ2Mz1mNcmMS5YI0n9o+wMvKVGD4jmEATn2pEbqS15V/hWwNQUKJHx2FzKkePebF0sEX1lqmY24Bdu2KLFKLmS3kuJYHqnrq8bO/QYCS6rtuTiGgtxoWxotoyTNIRSinjSI3RjwEn+EWV2qJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5X08nBsRMYIb0Bj9JFt4qF9FtAnmWjIc5EVKmDvKT6s=;
- b=TgijDDRm88mgSmoUqKZ+32pnQ9FafjHl159Mw5FAbVx5hK7Q3pskT75M6NnNRzDsqTGOGS/83G8jpVYktmoEGIq7zrxgd/5R1G0JPZERpRUJUSE/TzdDcWdJnOXLS8/RM/Onduk7b+rYI1YOj7iLB8JRljNKQ7gDs+i1yZ0vW902F24lMHNGYDPhhPgBBsJcV2vnJvdhhJqKrc4ACn50ppNlDzTo9PN5U6h0zbpCS1MChPz2YAscrqczGEqSDovMWfyx2L32bqhG35fCA54VAEMBJ989VKG7u/WtD1IjHtSR8q5vh2Dut3Oz7vDWUBzkjzwz+qGi/AzqD0wHfUiJ8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=blaize.com; dmarc=pass action=none header.from=blaize.com;
- dkim=pass header.d=blaize.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=BLAIZE.COM;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5X08nBsRMYIb0Bj9JFt4qF9FtAnmWjIc5EVKmDvKT6s=;
- b=N0mFlSHfYiMegIQJiY7LlvL/auR9lCRRS6VKZYIgtd74cOS4JXcYJw7lROytE1tYMJGpkUHdZ9vPQbBzMjEh2HsNRXCuSBuwG8fGIZZI1g2SFcEPyF36p477idsm+OaYwNsahDVfDTOERV5y+hH35A55V2JzwH3Wm9muDvE7hVc=
-Received: from MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:12a::5)
- by MAZPR01MB8910.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:cd::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
- 2025 11:27:04 +0000
-Received: from MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::309a:12cf:74a4:5655]) by MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::309a:12cf:74a4:5655%4]) with mapi id 15.20.8583.026; Thu, 27 Mar 2025
- 11:27:03 +0000
-From: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        James Cowgill <james.cowgill@blaize.com>,
-        Matt Redfearn <matthew.redfearn@blaize.com>,
-        Neil Jones
-	<neil.jones@blaize.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz
- Golaszewski <brgl@bgdev.pl>,
-        Matt Redfearn <matthew.redfearn@blaize.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-        Nikolaos Pasaloukos
-	<nikolaos.pasaloukos@blaize.com>
-Subject: [PATCH v2 0/3] Add support for Blaize BLZP1600 GPIO driver
-Thread-Topic: [PATCH v2 0/3] Add support for Blaize BLZP1600 GPIO driver
-Thread-Index: AQHbnwsqtVjDC9q7okOSvaMO525NaQ==
-Date: Thu, 27 Mar 2025 11:27:03 +0000
-Message-ID:
- <20250327-kernel-upstreaming-add_gpio_support-v2-0-bbe51f8d66da@blaize.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MA0PR01MB10184:EE_|MAZPR01MB8910:EE_
-x-ms-office365-filtering-correlation-id: 222d5605-d61c-48fc-0c43-08dd6d224c8b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018|921020;
-x-microsoft-antispam-message-info:
- =?utf-8?B?K1ZqZzNCdGQ4Q0U0Wi9tai9VcHdNTC9USlNtalRUdjBPSUJ1OWNGVkxGVytF?=
- =?utf-8?B?VE1XK3o3ZVVZQU5tQVVUNS8veUcrSnZ3UWsyUkRhNVlxV0hyWGVKNFl1NGho?=
- =?utf-8?B?U3d1S0pOVW8xNU1mYXVERjVVSVVTQ3EzK0hkNzlxMFpab1NJS2JyZjdMUTEw?=
- =?utf-8?B?MnJaUXpsRXMvRC94aUkyQmptTk1DV1NOLzFMR2ZGdC84d0pEelQ1QytnY1V4?=
- =?utf-8?B?UmRCQU01bVZ0L1F5RXk2UGp4dHZ2U3ZHbWlpM1dkek5JZ3RpanpDbUJtK0FN?=
- =?utf-8?B?cWlIbnlmdkR4SFlvaUw4QU11dVVWYXZweWIzZHNUcmlMNStBYlk3TUxJOXFO?=
- =?utf-8?B?bFg0dlBYSjA5NHlRdXIvZFZ2cllKaE9VUmxGdERqS25OdDVHeXppS1BIYUs0?=
- =?utf-8?B?RHZZSGovV1laRGxKY1R2Q1RBVDAzZTMzaXZDOFAwM1Bwby9BditXaFJ4UFB6?=
- =?utf-8?B?Y3dRWGNoWU9kQzZNVGdVSTZEdlVaUU43YUFGeXgyNlNpc2xyQ3pUVjdUd1ZH?=
- =?utf-8?B?YStta1U0UjIzT3ZWbTJhYW02S0NGZDlTVlZPQ0ZZdVoyTjRrRmpmYnZRV3Jo?=
- =?utf-8?B?QkRKc1VlSTBUeE15a2toMGZjZzRPRmVCSmZvNVFudy8yZmZxTHVocTdDMGNt?=
- =?utf-8?B?VUZwRkxweXFVYUh6bno0OWlMRlJIcVM0QUVSa1d3Z05tS3ArKzE3ZTMwYWpz?=
- =?utf-8?B?eEpoc0tPTVRLNFM0cXBWeXozS0VnbjQ0MWpLbVlGbEhkYkNOcStPRXFZcUoy?=
- =?utf-8?B?RXZvSjlQdWd6L21aZXlzYlNIVmFsWjZUSkJKOVI4T2JCZHFBdkZRb0FUTWZm?=
- =?utf-8?B?MGhHK255UUpoWTZGVUNLbmE5QXdvV29kanpFMk10aVljbVJRM2ZqeFB5TGJt?=
- =?utf-8?B?djAvRjkwMG1oc1NySGQrQWJVWHNydTJLbTJEUW55MElZQ3JaMm1tTk9JYkRo?=
- =?utf-8?B?UmVJSS9lcU9BMUdvUHRBN0lwc25pT2p2c2VsN0NYcnRpWFBKaHRWWEliZm5H?=
- =?utf-8?B?VlozeldHenJGTnVIK0F2SHA1NFFZS0FiKzRrcEFpZlI3UmJxeWtha3pORDlZ?=
- =?utf-8?B?bTk5WGUxRHhVeCtrS3gyckhWMmo3KzB6RUpmalFCb0dLaGVFbXVRZHNsS2xN?=
- =?utf-8?B?UnpEZmxoSW9HWnM0ZzVBWFlacFErOTZYdWF1MnEyYlZxeXoxdmQ2MGY5VUlM?=
- =?utf-8?B?N1NPMkRtbTkxMlhHbEhxWFVHOUJQYkgvNmpYanRHemIybHlmR281RGN1aEJl?=
- =?utf-8?B?SVVtYnJsRDJBNE4yc3ZMaFdRYUZNdGw4dDBkMm9SNmtTbHl2UFZuaThOTVRC?=
- =?utf-8?B?OWNPeGl3VGx4elI3NnBJam05ejJDcmpqOTFsUmxtSXNWRkZaRVB1Q0hZVFp5?=
- =?utf-8?B?QkJHSlBOVWRyOTkxaXREb3l3RnlXd01CdDlKMW1YSUdWWmlBb2VzK0ZMRmhx?=
- =?utf-8?B?K1hzME9PQnc0NEVGZlNKNER0blhaYTM1dm96N09QcmZpamxXemdYa2xmblp2?=
- =?utf-8?B?R0J0NnNicHFiLzg3ZlpKTVhXMVI1OVRqSjFUZlNvOHFsdjNGR3ByL281VVlE?=
- =?utf-8?B?Y2NBTlg4ZVFnYlRFVTJacENPQ1orNnYxQldXNDZMd3hva000djZqR1NWV1kz?=
- =?utf-8?B?d1RqLysyRWhkd3cwaHAwS0Rpa0xCc0pKb2pURDNBT2VabnhSV1pLMlJrbFRH?=
- =?utf-8?B?MzJ5UEpOanBMdmxJMUhUQ2ZsV0loSXVjL3dHMVFPZDFMZW5BRFJTL2VqNERh?=
- =?utf-8?B?eWZQbjFYVk8yMEsxM0FodkJsQmxCMVYxWXYrNlpVNkdzcGVuSGJ6S2hBMWdH?=
- =?utf-8?B?a1dnWkhlWlo4akg1WmlnZUl2eGZraExmdGVqd3djQlpTU1FvZlBtRlIyNjRD?=
- =?utf-8?B?RHRhY3UzMDF3dFlvWTJHeDJtRHpxOVd2NFJ1dGEzYWN0QlVDYUU5bmhILy9L?=
- =?utf-8?B?QTJrUGhmZW8xRXg1N0FxU0laS3kxUmxtNCtxTGZ5a2xVUjRtQkZ3WXpRSEIy?=
- =?utf-8?B?RHhtMVJkd2J3PT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018)(921020);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?NGFhaXd1ZU1YZDJ1c1dsRXFXUlFrVHZyRjdsSFdpcEpqRW1vNVhUQ0gyTFBC?=
- =?utf-8?B?S1ZzWHE2QVpWa0kzVWFiVWJncWZ6cG9ZWGRFdU50ZmExSlRXT0FHaG9QYkx1?=
- =?utf-8?B?UFI3STNCaVZaYmV6RjBMWGhqODNvSVNpN1MzNFZvL25DdlZLSkVuQk1GY1g3?=
- =?utf-8?B?c2JoQ1BXL3ZnNWVLZjVOWWRtOHBOU0t3V1BxYTlkRUpOWVIzcWdjaDZmKzh3?=
- =?utf-8?B?R0ZxRGxTMHVkdFNDTWpXMG5VNFVjeDRmbm53ck1aVENRQWZSMXF0Nm9nVW1Y?=
- =?utf-8?B?bXZLWk0rUk45VGNYZWc4Y2gwMG1Zc2RvS2NIdFNyYmFYcjRTOEJyOUsvanlP?=
- =?utf-8?B?R3ZSUEVMaEVxZUxPMUFZeksrd1VMVUhwb1pDUHB4R1FiZlQrR0greTRwTVR1?=
- =?utf-8?B?UkROWTBicVkzd2kzazBPZ21hRG5MVDFJRHhuZm02NDdzZXQ0aGxUTXZMMjNj?=
- =?utf-8?B?bnBGWHFVVURFNkJOWWhhTlB4ZHU2a1o4ZzA0c3g2TVpRNzRtYzVzWWVuRGh1?=
- =?utf-8?B?Vmo4WXhjMDJJUXdONkgyNGo4c01ZcTI5cHAvbmpKRis1UHBwdjc4eHN0VWZ6?=
- =?utf-8?B?RzhFbnViUGpYUGVzanJQN2Y5RVd3TExpV1hGeVNpbEZMSWRiQVJ5ckRRdXht?=
- =?utf-8?B?Z1VlYjI3MDdpYVZQTGRLcnVueEFONitRaXV2N21WZG9rS2ZNOEdKcmpVQUpr?=
- =?utf-8?B?U2R6ZnBqb2dDblNuUHdsRGFHc1pHc0R6bEFCYmE0d0cwNi82UTF1VXRLcDJD?=
- =?utf-8?B?T2ozdVBYaUdmZ2VoUzhKL1IvV1p0L1cxYTdNK2d1UVNqMVhNRmVzcHRiRHI5?=
- =?utf-8?B?OEdYclNVNzRRNFFqZXU2dkRjbFZsditrVzk0MUVHRGRyNW9WMUZ5a2FLRzYw?=
- =?utf-8?B?U3c5UjJkeU02M1MvN3ZwZ3BRMGJzMlNiSk5Bc2NKdmJORkdrYUQvLy9FU0pi?=
- =?utf-8?B?WmNNeW1MbkpuSFdoN0hvTk5IYW56WmMyeTF5ZC9TNTB1WUd5RWlSM2RNcmpp?=
- =?utf-8?B?ZUZjdXpTOXNZWVNuNElubXVKckQva3YwSUIvTW42dGRhdkNUMlZjVFVqRU9s?=
- =?utf-8?B?Y0RVY0U5TDgwdUlDWk9IeUt4dE5ia2ZiaHppQTgyb2lXKzBEYXFrUWJzSXYz?=
- =?utf-8?B?SjRtZHVMUEhPVUZDNkZxVjNTVW95WlhyY2RSaHUzM1dIaHRsRG1YQWs3Ylpj?=
- =?utf-8?B?N092YVpGUUNTbk1uT0FSd2FodmczVjdnYUR2UE5SSXF2T1VNZ3MxMG5yd3BS?=
- =?utf-8?B?NU84a3Vac0dhTGJDcWEybjhkTnNWTGx6ZEpCRjRZZHJCdDI0MWVTcC8reFpn?=
- =?utf-8?B?TEUyamgvcVBTNWRQQnVUQTc3ZjNlNUlLd1ZLN2hUVXltNTNra2NqT0E5bUlP?=
- =?utf-8?B?a3R5UCtmNysrQnhYZ1BpSm1XdjgwMjhuWXc1L1BIWi9kUkhrQ0xBTUk5S2NF?=
- =?utf-8?B?d2NpbVNTNGVlZ2p3dXFaN01mRTQvaGVtdzVHVHZZejhobjFtM3hENGNWcFVx?=
- =?utf-8?B?ZUNURU1sZTd6MnAydmJZTHl3MUc4ek1ac3VmVUVjT0NMR1h0V2JQQWlVSmY1?=
- =?utf-8?B?ZWNCVnAvSmJ1MWJrYjhWK3FpV1BOcFFBOHhaQSt0UDFDZVlvS09HOU1RMXcz?=
- =?utf-8?B?dVRiSGVqSGJtbkNEcDRudkwvdnFaNG9kOEh5VnVUeFpMVXppd0l0d3dzQTNU?=
- =?utf-8?B?bWtiakhoRmdFZ2dXYWs2WDNCZklBS0g3R0g3QzFRc0hJUVRCQmduZE5ic2FQ?=
- =?utf-8?B?VmU5dnRRbnZVc1ZPMFBhM0RHOURDaWhzSzhWRkhlQnNkcDN1MnJyNFgyOXdH?=
- =?utf-8?B?MDV3aXM1VnlMTEx0ejFRcHYyWCszWis0WXBaK0FGcnNITFp4Z0p6WVQyak9m?=
- =?utf-8?B?U0llNFZXM0VvYUR4M0hsOElDdHUxY1NFNmFGa1psZUlzK3FMOGlSNSt2VG1H?=
- =?utf-8?B?d0dmeW5lemxick9nUDA0RkdyMkZHd01qSUpQQjMwUEltU3VBSWpzdVBmVEVn?=
- =?utf-8?B?QlJQdmZXMWl6eCtGWUdEcTFVZkh0dzlwREQwRXc0N1U3OHk3UTFyZTA3dHJk?=
- =?utf-8?B?c21hbXBxdVdOT3VqMmhUUHhUd0dFelcwSG52b3VudGdoTS9mS1hJbUdzYVox?=
- =?utf-8?B?TEF2L3FqaHRDRGVwSDcxWVBscDBrcjZWNE1uSm0zcjVBdS82N205WjJteS9i?=
- =?utf-8?B?L0E9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A30A95FC05193041891336B915AE2307@INDPRD01.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C307F21516B
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 11:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743075524; cv=none; b=Ej3WL8lqNNIvAP9Nol0sckfmpOXzzq1hPJAUGZb3zI2TPmHFx1OofPvm710u5r6ubL6cvt0HkFLs0wgcb+m6BSwfvx/E0tYFDZb0fMd+FAGgL0fIBbTvJYbq4C18yVCbvO4ugLufnW7EspswJ9nxk7cyiRSzCRr5XFxT3qgykZE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743075524; c=relaxed/simple;
+	bh=ni4JHCeXBFYBOcpuB1OOkPGPrJG/LY5yQLxtefvJjTw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=pC7rrjCQkXNgeEtyrzchy6OxThFkTO5RajTx4K39wFM1jlezN6DCKCK3PYl2+JLbDG8PQAtegUR6Xrf72V2FtL9fEbvJMmWtwHepFLCw3drXxoVOsunQNwcaGe8shWIW7VVFPXOPTpo7MK0EWfAo78Ww93KsekRz+QHAZqO/u3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 615CF1762;
+	Thu, 27 Mar 2025 04:38:46 -0700 (PDT)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 45C4A3F58B;
+	Thu, 27 Mar 2025 04:38:39 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v1 9/9] coresight: Consolidate clock enabling
+Date: Thu, 27 Mar 2025 11:38:03 +0000
+Message-Id: <20250327113803.1452108-10-leo.yan@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250327113803.1452108-1-leo.yan@arm.com>
+References: <20250327113803.1452108-1-leo.yan@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: blaize.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 222d5605-d61c-48fc-0c43-08dd6d224c8b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2025 11:27:03.6747
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 9d1c3c89-8615-4064-88a7-bb1a8537c779
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0xycFSBWPzqLczZI5Nncm0g0rHkOwhX4/78qUGOG2x6dcXYF8JX4LOFwb/lPJhPJR9670vg9xpNTQ6g2EPpbCAHxsOzjOQU/1c0rLLvuXlc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAZPR01MB8910
-X-Proofpoint-GUID: 1DjZlkO5FIGVGRES6xneFKFrFVhxsxw0
-X-Proofpoint-ORIG-GUID: 1DjZlkO5FIGVGRES6xneFKFrFVhxsxw0
-X-Authority-Analysis: v=2.4 cv=JvjxrN4C c=1 sm=1 tr=0 ts=67e5361a cx=c_pps a=5CkbgoO2JNAQOP1ij0Zt3g==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=Vs1iUdzkB0EA:10 a=H5OGdu5hBBwA:10 a=-5LYVjoNHPMA:10 a=VwQbUJbxAAAA:8 a=SrsycIMJAAAA:8 a=4BuQaiKR39yFMr42yb8A:9 a=QEXdDO2ut3YA:10 a=zapPnUM7SFj2ezx6rUw-:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-27_01,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Reason: orgsafe
+Content-Transfer-Encoding: 8bit
 
-VGhpcyBwYXRjaHNldCBhZGRzIGEgR1BJTyBkcml2ZXIgZm9yIHRoZSBWZXJpU2lsaWNvbiBBUEIg
-djAuMg0KaGFyZHdhcmUuIFRoaXMgY29udHJvbGxlciBpcyB1c2VkIGluIHRoZSBCbGFpemUgQkxa
-UDE2MDANClNvQyBmb3IgaXRzIEdQSU8gaW50ZXJmYWNlLiBJdCBpcyBlc3NlbnRpYWwgZm9yIHVw
-c3RyZWFtDQpzdXBwb3J0IHNpbmNlIGl0IGlzIHVzZWQgdG8gcHJvdmlkZSBzaWduYWxzIGZvciB0
-aGUNCkV0aGVybmV0LCBVU0IsIFNEIGFuZCBtYW55IG90aGVyIGludGVyZmFjZXMuDQoNCkFkZHMg
-dGhlIEdQSU8gaW50ZXJmYWNlIHRvIHRoZSBCbGFpemUgQkxaUDE2MDAgU29DIGRldmljZXRyZWUu
-DQoNClRoZSBoYXJkd2FyZSBpdHNlbGYgY29uc2lzdHMgb2YgMzIgSS9PIHBpbnMuIEl0IGhhcw0K
-cHJvZ3JhbW1hYmxlIGludGVycnVwdCBnZW5lcmF0aW9uIGNhcGFiaWxpdHkgb24gdGhlIHBpbnMu
-DQpUaGUgaW50ZXJydXB0cyBjYW4gYmUgZWRnZSBvciBsZXZlbCB0cmlnZ2VyZWQgYW5kIGl0DQpp
-bmNsdWRlcyBhIGRlLWJvdW5jZSBjaXJjdWl0Lg0KDQpTaWduZWQtb2ZmLWJ5OiBOaWtvbGFvcyBQ
-YXNhbG91a29zIDxuaWtvbGFvcy5wYXNhbG91a29zQGJsYWl6ZS5jb20+DQotLS0NCkNoYW5nZXMg
-aW4gdjI6DQotIE5vIGxvbmdlciBhZGRzIFZlcmlTaWxpY29uIGFzIGEgdmVuZG9yLg0KLSBSZW5h
-bWVkIHRoZSBkcml2ZXIgZnJvbSB2c2ksYXBiLWdwaW8gdG8gYmxhaXplLGJsenAxNjAwLWdwaW8N
-CiAgQ2hhbmdlZCB0aGUgZHJpdmVyIGZ1bmN0aW9uIHByZWZpeCB0byBhZGRyZXNzIHRoZSBuZXcg
-bmFtZQ0KICBSZW1vdmVkIElSUV9ET01BSU5fSElFUkFSQ0hZIGZyb20gS2NvbmZpZw0KLSBCdWls
-ZHMgdGhlIGRyaXZlciBhcyBhIG1vZHVsZSBieSBkZWZhdWx0DQotIExpbmsgdG8gdjE6IGh0dHBz
-Oi8vbG9yZS5rZXJuZWwub3JnL3IvMjAyNTAyMTIta2VybmVsLXVwc3RyZWFtaW5nLWFkZF9ncGlv
-X3N1cHBvcnQtdjEtMC0wODBlNzI0YTIxZjNAYmxhaXplLmNvbQ0KDQotLS0NCk5pa29sYW9zIFBh
-c2Fsb3Vrb3MgKDMpOg0KICAgICAgZHQtYmluZGluZ3M6IERvY3VtZW50IEJsYWl6ZSBCTFpQMTYw
-MCBHUElPIGRyaXZlcg0KICAgICAgZ3BpbzogRW5hYmxlIEJsYWl6ZSBCTFpQMTYwMCBHUElPIHN1
-cHBvcnQNCiAgICAgIGFybTY0OiBkdHM6IGJsYWl6ZS1ibHpwMTYwMDogRW5hYmxlIEdQSU8gc3Vw
-cG9ydA0KDQogLi4uL2JpbmRpbmdzL2dwaW8vYmxhaXplLGJsenAxNjAwLWdwaW8ueWFtbCAgICAg
-ICAgfCAgNzcgKysrKysrDQogTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfCAgMTAgKw0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvYmxhaXplL2JsYWl6ZS1i
-bHpwMTYwMC1jYjIuZHRzIHwgIDM2ICsrKw0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvYmxhaXplL2Js
-YWl6ZS1ibHpwMTYwMC5kdHNpICAgIHwgIDEyICsNCiBkcml2ZXJzL2dwaW8vS2NvbmZpZyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxMSArDQogZHJpdmVycy9ncGlvL01ha2VmaWxl
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KIGRyaXZlcnMvZ3Bpby9ncGlv
-LWJsenAxNjAwLmMgICAgICAgICAgICAgICAgICAgICAgIHwgMjgzICsrKysrKysrKysrKysrKysr
-KysrKw0KIDcgZmlsZXMgY2hhbmdlZCwgNDMwIGluc2VydGlvbnMoKykNCi0tLQ0KYmFzZS1jb21t
-aXQ6IGZlMjI4MGQwOTRmOTUxMDVhMzYxZGM4OGUwN2IxMDA5ZDRjZmVjYTYNCmNoYW5nZS1pZDog
-MjAyNTAxMTcta2VybmVsLXVwc3RyZWFtaW5nLWFkZF9ncGlvX3N1cHBvcnQtYjRjZTA1ZWZmN2E1
-DQoNCkJlc3QgcmVnYXJkcywNCi0tIA0KTmlrb2xhb3MgUGFzYWxvdWtvcyA8bmlrb2xhb3MucGFz
-YWxvdWtvc0BibGFpemUuY29tPg0KDQo=
+CoreSight drivers enable pclk and atclk conditionally.  For example,
+pclk is only enabled in the static probe, while atclk is an optional
+clock that it is enabled for both dynamic and static probes, if it is
+present.  In the current CoreSight drivers, these two clocks are
+initialized separately.  This causes complex and duplicate codes.
+
+This patch consolidates clock enabling into a central place.  It renames
+coresight_get_enable_apb_pclk() to coresight_get_enable_clocks() and
+encapsulates clock initialization logic:
+
+ - If a clock is initialized successfully, its clock pointer is assigned
+   to the double pointer passed as an argument.
+ - If pclk is skipped for an AMBA device, or if atclk is not found, the
+   corresponding double pointer is set to NULL.  The function returns
+   Success (0) to guide callers can proceed with no error.
+ - Otherwise, an error number is returned for failures.
+
+CoreSight drivers are refined so that clocks are initialized in one go.
+As a result, driver data no longer needs to be allocated separately in
+the static and dynamic probes.  Moved the allocation into a low-level
+function to avoid code duplication.
+
+Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+ drivers/hwtracing/coresight/coresight-catu.c       | 30 ++++++++++--------------------
+ drivers/hwtracing/coresight/coresight-cpu-debug.c  | 29 +++++++++++------------------
+ drivers/hwtracing/coresight/coresight-ctcu-core.c  |  8 ++++----
+ drivers/hwtracing/coresight/coresight-etm4x-core.c | 11 ++++-------
+ drivers/hwtracing/coresight/coresight-funnel.c     | 11 ++++-------
+ drivers/hwtracing/coresight/coresight-replicator.c | 11 ++++-------
+ drivers/hwtracing/coresight/coresight-stm.c        |  9 +++------
+ drivers/hwtracing/coresight/coresight-tmc-core.c   | 30 ++++++++++--------------------
+ drivers/hwtracing/coresight/coresight-tpiu.c       | 10 ++++------
+ include/linux/coresight.h                          | 38 +++++++++++++++++++++++++++-----------
+ 10 files changed, 81 insertions(+), 106 deletions(-)
+
+diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
+index c0a51ab0312c..c63dee1ac997 100644
+--- a/drivers/hwtracing/coresight/coresight-catu.c
++++ b/drivers/hwtracing/coresight/coresight-catu.c
+@@ -508,14 +508,20 @@ static int __catu_probe(struct device *dev, struct resource *res)
+ {
+ 	int ret = 0;
+ 	u32 dma_mask;
+-	struct catu_drvdata *drvdata = dev_get_drvdata(dev);
++	struct catu_drvdata *drvdata;
+ 	struct coresight_desc catu_desc;
+ 	struct coresight_platform_data *pdata = NULL;
+ 	void __iomem *base;
+ 
+-	drvdata->atclk = devm_clk_get_optional_enabled(dev, "atclk");
+-	if (IS_ERR(drvdata->atclk))
+-		return PTR_ERR(drvdata->atclk);
++	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
++	if (!drvdata)
++		return -ENOMEM;
++
++	dev_set_drvdata(dev, drvdata);
++
++	ret = coresight_get_enable_clocks(dev, &drvdata->pclk, &drvdata->atclk);
++	if (ret)
++		return ret;
+ 
+ 	catu_desc.name = coresight_alloc_device_name(&catu_devs, dev);
+ 	if (!catu_desc.name)
+@@ -571,14 +577,8 @@ static int __catu_probe(struct device *dev, struct resource *res)
+ 
+ static int catu_probe(struct amba_device *adev, const struct amba_id *id)
+ {
+-	struct catu_drvdata *drvdata;
+ 	int ret;
+ 
+-	drvdata = devm_kzalloc(&adev->dev, sizeof(*drvdata), GFP_KERNEL);
+-	if (!drvdata)
+-		return -ENOMEM;
+-
+-	amba_set_drvdata(adev, drvdata);
+ 	ret = __catu_probe(&adev->dev, &adev->res);
+ 	if (!ret)
+ 		pm_runtime_put(&adev->dev);
+@@ -618,22 +618,12 @@ static struct amba_driver catu_driver = {
+ static int catu_platform_probe(struct platform_device *pdev)
+ {
+ 	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	struct catu_drvdata *drvdata;
+ 	int ret = 0;
+ 
+-	drvdata = devm_kzalloc(&pdev->dev, sizeof(*drvdata), GFP_KERNEL);
+-	if (!drvdata)
+-		return -ENOMEM;
+-
+-	drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev);
+-	if (IS_ERR(drvdata->pclk))
+-		return PTR_ERR(drvdata->pclk);
+-
+ 	pm_runtime_get_noresume(&pdev->dev);
+ 	pm_runtime_set_active(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+ 
+-	dev_set_drvdata(&pdev->dev, drvdata);
+ 	ret = __catu_probe(&pdev->dev, res);
+ 	pm_runtime_put(&pdev->dev);
+ 	if (ret)
+diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+index 5f90351778ee..dff663ac7805 100644
+--- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
++++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+@@ -562,10 +562,20 @@ static void debug_func_exit(void)
+ 
+ static int __debug_probe(struct device *dev, struct resource *res)
+ {
+-	struct debug_drvdata *drvdata = dev_get_drvdata(dev);
++	struct debug_drvdata *drvdata;
+ 	void __iomem *base;
+ 	int ret;
+ 
++	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
++	if (!drvdata)
++		return -ENOMEM;
++
++	dev_set_drvdata(dev, drvdata);
++
++	ret = coresight_get_enable_clocks(dev, &drvdata->pclk, NULL);
++	if (ret)
++		return ret;
++
+ 	drvdata->cpu = coresight_get_cpu(dev);
+ 	if (drvdata->cpu < 0)
+ 		return drvdata->cpu;
+@@ -625,13 +635,6 @@ static int __debug_probe(struct device *dev, struct resource *res)
+ 
+ static int debug_probe(struct amba_device *adev, const struct amba_id *id)
+ {
+-	struct debug_drvdata *drvdata;
+-
+-	drvdata = devm_kzalloc(&adev->dev, sizeof(*drvdata), GFP_KERNEL);
+-	if (!drvdata)
+-		return -ENOMEM;
+-
+-	amba_set_drvdata(adev, drvdata);
+ 	return __debug_probe(&adev->dev, &adev->res);
+ }
+ 
+@@ -690,18 +693,8 @@ static struct amba_driver debug_driver = {
+ static int debug_platform_probe(struct platform_device *pdev)
+ {
+ 	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	struct debug_drvdata *drvdata;
+ 	int ret = 0;
+ 
+-	drvdata = devm_kzalloc(&pdev->dev, sizeof(*drvdata), GFP_KERNEL);
+-	if (!drvdata)
+-		return -ENOMEM;
+-
+-	drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev);
+-	if (IS_ERR(drvdata->pclk))
+-		return PTR_ERR(drvdata->pclk);
+-
+-	dev_set_drvdata(&pdev->dev, drvdata);
+ 	pm_runtime_get_noresume(&pdev->dev);
+ 	pm_runtime_set_active(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+diff --git a/drivers/hwtracing/coresight/coresight-ctcu-core.c b/drivers/hwtracing/coresight/coresight-ctcu-core.c
+index edd93ff2d3c5..c586495e9a08 100644
+--- a/drivers/hwtracing/coresight/coresight-ctcu-core.c
++++ b/drivers/hwtracing/coresight/coresight-ctcu-core.c
+@@ -188,7 +188,7 @@ static int ctcu_probe(struct platform_device *pdev)
+ 	const struct ctcu_config *cfgs;
+ 	struct ctcu_drvdata *drvdata;
+ 	void __iomem *base;
+-	int i;
++	int i, ret;
+ 
+ 	desc.name = coresight_alloc_device_name(&ctcu_devs, dev);
+ 	if (!desc.name)
+@@ -207,9 +207,9 @@ static int ctcu_probe(struct platform_device *pdev)
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
+-	drvdata->apb_clk = coresight_get_enable_apb_pclk(dev);
+-	if (IS_ERR(drvdata->apb_clk))
+-		return PTR_ERR(drvdata->apb_clk);
++	ret = coresight_get_enable_clocks(dev, &drvdata->apb_clk, NULL);
++	if (ret)
++		return ret;
+ 
+ 	cfgs = of_device_get_match_data(dev);
+ 	if (cfgs) {
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+index ff4ac4b686c4..ba5d1a015140 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+@@ -2145,13 +2145,14 @@ static int etm4_probe(struct device *dev)
+ 	struct csdev_access access = { 0 };
+ 	struct etm4_init_arg init_arg = { 0 };
+ 	struct etm4_init_arg *delayed;
++	int ret;
+ 
+ 	if (WARN_ON(!drvdata))
+ 		return -ENOMEM;
+ 
+-	drvdata->atclk = devm_clk_get_optional_enabled(dev, "atclk");
+-	if (IS_ERR(drvdata->atclk))
+-		return PTR_ERR(drvdata->atclk);
++	ret = coresight_get_enable_clocks(dev, &drvdata->pclk, &drvdata->atclk);
++	if (ret)
++		return ret;
+ 
+ 	if (pm_save_enable == PARAM_PM_SAVE_FIRMWARE)
+ 		pm_save_enable = coresight_loses_context_with_cpu(dev) ?
+@@ -2235,10 +2236,6 @@ static int etm4_probe_platform_dev(struct platform_device *pdev)
+ 	if (!drvdata)
+ 		return -ENOMEM;
+ 
+-	drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev);
+-	if (IS_ERR(drvdata->pclk))
+-		return PTR_ERR(drvdata->pclk);
+-
+ 	if (res) {
+ 		drvdata->base = devm_ioremap_resource(&pdev->dev, res);
+ 		if (IS_ERR(drvdata->base))
+diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
+index fd60491c9a19..6494a3b5d18e 100644
+--- a/drivers/hwtracing/coresight/coresight-funnel.c
++++ b/drivers/hwtracing/coresight/coresight-funnel.c
+@@ -217,6 +217,7 @@ static int funnel_probe(struct device *dev, struct resource *res)
+ 	struct coresight_platform_data *pdata = NULL;
+ 	struct funnel_drvdata *drvdata;
+ 	struct coresight_desc desc = { 0 };
++	int ret;
+ 
+ 	if (is_of_node(dev_fwnode(dev)) &&
+ 	    of_device_is_compatible(dev->of_node, "arm,coresight-funnel"))
+@@ -230,13 +231,9 @@ static int funnel_probe(struct device *dev, struct resource *res)
+ 	if (!drvdata)
+ 		return -ENOMEM;
+ 
+-	drvdata->atclk = devm_clk_get_optional_enabled(dev, "atclk");
+-	if (IS_ERR(drvdata->atclk))
+-		return PTR_ERR(drvdata->atclk);
+-
+-	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
+-	if (IS_ERR(drvdata->pclk))
+-		return PTR_ERR(drvdata->pclk);
++	ret = coresight_get_enable_clocks(dev, &drvdata->pclk, &drvdata->atclk);
++	if (ret)
++		return ret;
+ 
+ 	/*
+ 	 * Map the device base for dynamic-funnel, which has been
+diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+index aeb2b3d8e210..8595dc104795 100644
+--- a/drivers/hwtracing/coresight/coresight-replicator.c
++++ b/drivers/hwtracing/coresight/coresight-replicator.c
+@@ -223,6 +223,7 @@ static int replicator_probe(struct device *dev, struct resource *res)
+ 	struct replicator_drvdata *drvdata;
+ 	struct coresight_desc desc = { 0 };
+ 	void __iomem *base;
++	int ret;
+ 
+ 	if (is_of_node(dev_fwnode(dev)) &&
+ 	    of_device_is_compatible(dev->of_node, "arm,coresight-replicator"))
+@@ -237,13 +238,9 @@ static int replicator_probe(struct device *dev, struct resource *res)
+ 	if (!drvdata)
+ 		return -ENOMEM;
+ 
+-	drvdata->atclk = devm_clk_get_optional_enabled(dev, "atclk");
+-	if (IS_ERR(drvdata->atclk))
+-		return PTR_ERR(drvdata->atclk);
+-
+-	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
+-	if (IS_ERR(drvdata->pclk))
+-		return PTR_ERR(drvdata->pclk);
++	ret = coresight_get_enable_clocks(dev, &drvdata->pclk, &drvdata->atclk);
++	if (ret)
++		return ret;
+ 
+ 	/*
+ 	 * Map the device base for dynamic-replicator, which has been
+diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
+index d589fc61a00e..f859ab932d22 100644
+--- a/drivers/hwtracing/coresight/coresight-stm.c
++++ b/drivers/hwtracing/coresight/coresight-stm.c
+@@ -842,13 +842,10 @@ static int __stm_probe(struct device *dev, struct resource *res)
+ 	if (!drvdata)
+ 		return -ENOMEM;
+ 
+-	drvdata->atclk = devm_clk_get_optional_enabled(dev, "atclk");
+-	if (IS_ERR(drvdata->atclk))
+-		return PTR_ERR(drvdata->atclk);
++	ret = coresight_get_enable_clocks(dev, &drvdata->pclk, &drvdata->atclk);
++	if (ret)
++		return ret;
+ 
+-	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
+-	if (IS_ERR(drvdata->pclk))
+-		return PTR_ERR(drvdata->pclk);
+ 	dev_set_drvdata(dev, drvdata);
+ 
+ 	base = devm_ioremap_resource(dev, res);
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-core.c b/drivers/hwtracing/coresight/coresight-tmc-core.c
+index 86ea3fea7abb..745d33d0646f 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-core.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-core.c
+@@ -785,13 +785,19 @@ static int __tmc_probe(struct device *dev, struct resource *res)
+ 	u32 devid;
+ 	void __iomem *base;
+ 	struct coresight_platform_data *pdata = NULL;
+-	struct tmc_drvdata *drvdata = dev_get_drvdata(dev);
++	struct tmc_drvdata *drvdata;
+ 	struct coresight_desc desc = { 0 };
+ 	struct coresight_dev_list *dev_list = NULL;
+ 
+-	drvdata->atclk = devm_clk_get_optional_enabled(dev, "atclk");
+-	if (IS_ERR(drvdata->atclk))
+-		return PTR_ERR(drvdata->atclk);
++	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
++	if (!drvdata)
++		return -ENOMEM;
++
++	dev_set_drvdata(dev, drvdata);
++
++	ret = coresight_get_enable_clocks(dev, &drvdata->pclk, &drvdata->atclk);
++	if (ret)
++		return ret;
+ 
+ 	ret = -ENOMEM;
+ 
+@@ -897,14 +903,8 @@ static int __tmc_probe(struct device *dev, struct resource *res)
+ 
+ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
+ {
+-	struct tmc_drvdata *drvdata;
+ 	int ret;
+ 
+-	drvdata = devm_kzalloc(&adev->dev, sizeof(*drvdata), GFP_KERNEL);
+-	if (!drvdata)
+-		return -ENOMEM;
+-
+-	amba_set_drvdata(adev, drvdata);
+ 	ret = __tmc_probe(&adev->dev, &adev->res);
+ 	if (!ret)
+ 		pm_runtime_put(&adev->dev);
+@@ -981,18 +981,8 @@ static struct amba_driver tmc_driver = {
+ static int tmc_platform_probe(struct platform_device *pdev)
+ {
+ 	struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	struct tmc_drvdata *drvdata;
+ 	int ret = 0;
+ 
+-	drvdata = devm_kzalloc(&pdev->dev, sizeof(*drvdata), GFP_KERNEL);
+-	if (!drvdata)
+-		return -ENOMEM;
+-
+-	drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev);
+-	if (IS_ERR(drvdata->pclk))
+-		return PTR_ERR(drvdata->pclk);
+-
+-	dev_set_drvdata(&pdev->dev, drvdata);
+ 	pm_runtime_get_noresume(&pdev->dev);
+ 	pm_runtime_set_active(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+diff --git a/drivers/hwtracing/coresight/coresight-tpiu.c b/drivers/hwtracing/coresight/coresight-tpiu.c
+index 5821ae73a34a..a68ed6b97bf7 100644
+--- a/drivers/hwtracing/coresight/coresight-tpiu.c
++++ b/drivers/hwtracing/coresight/coresight-tpiu.c
+@@ -132,6 +132,7 @@ static int __tpiu_probe(struct device *dev, struct resource *res)
+ 	struct coresight_platform_data *pdata = NULL;
+ 	struct tpiu_drvdata *drvdata;
+ 	struct coresight_desc desc = { 0 };
++	int ret;
+ 
+ 	desc.name = coresight_alloc_device_name(&tpiu_devs, dev);
+ 	if (!desc.name)
+@@ -143,13 +144,10 @@ static int __tpiu_probe(struct device *dev, struct resource *res)
+ 
+ 	spin_lock_init(&drvdata->spinlock);
+ 
+-	drvdata->atclk = devm_clk_get_optional_enabled(dev, "atclk");
+-	if (IS_ERR(drvdata->atclk))
+-		return PTR_ERR(drvdata->atclk);
++	ret = coresight_get_enable_clocks(dev, &drvdata->pclk, &drvdata->atclk);
++	if (ret)
++		return ret;
+ 
+-	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
+-	if (IS_ERR(drvdata->pclk))
+-		return PTR_ERR(drvdata->pclk);
+ 	dev_set_drvdata(dev, drvdata);
+ 
+ 	/* Validity for the resource is already checked by the AMBA core */
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index 26eb4a61b992..cf3fbbc0076a 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -471,25 +471,41 @@ static inline bool is_coresight_device(void __iomem *base)
+ }
+ 
+ /*
+- * Attempt to find and enable "APB clock" for the given device
++ * Attempt to find and enable programming clock (pclk) and trace clock (atclk)
++ * for the given device.
+  *
+- * Returns:
++ * The AMBA bus driver will cover the pclk, to avoid duplicate operations,
++ * skip to get and enable the pclk for an AMBA device.
+  *
+- * clk   - Clock is found and enabled
+- * NULL  - Clock is not needed as it is managed by the AMBA bus driver
+- * ERROR - Clock is found but failed to enable
++ * atclk is an optional clock, it will be only enabled when it is existed.
++ * Otherwise, a NULL pointer will be returned to caller.
++ *
++ * Returns: '0' on Success; Error code otherwise.
+  */
+-static inline struct clk *coresight_get_enable_apb_pclk(struct device *dev)
++static inline int coresight_get_enable_clocks(struct device *dev,
++					      struct clk **pclk,
++					      struct clk **atclk)
+ {
+-	struct clk *pclk = NULL;
++	WARN_ON(!pclk);
+ 
+ 	if (!dev_is_amba(dev)) {
+-		pclk = devm_clk_get_enabled(dev, "apb_pclk");
+-		if (IS_ERR(pclk))
+-			pclk = devm_clk_get_enabled(dev, "apb");
++		*pclk = devm_clk_get_enabled(dev, "apb_pclk");
++		if (IS_ERR(*pclk))
++			*pclk = devm_clk_get_enabled(dev, "apb");
++		if (IS_ERR(*pclk))
++			return PTR_ERR(*pclk);
++	} else {
++		/* Don't enable pclk for an AMBA device */
++		*pclk = NULL;
+ 	}
+ 
+-	return pclk;
++	if (atclk) {
++		*atclk = devm_clk_get_optional_enabled(dev, "atclk");
++		if (IS_ERR(*atclk))
++			return PTR_ERR(*atclk);
++	}
++
++	return 0;
+ }
+ 
+ #define CORESIGHT_PIDRn(i)	(0xFE0 + ((i) * 4))
+-- 
+2.34.1
+
