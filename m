@@ -1,131 +1,310 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3778F20CCEA
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 13:52:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5EF20CCEA;
+	Thu, 27 Mar 2025 13:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743083573; cv=none; b=TFoleB6qYoCllGOhJcjlqAj5R9GICO/5kplnb4X0+EmM6ItngSYr4a6vwXL/N9HfnEUYMor/63uO0tLLpcr62qvhuf0HRiBwSllEZcNKT8diFF0BNPxW09Y0ltzt3GifrPub96BrGg4LbjAnVOpNhIZ+yIEMKkfdYEbkn34IUds=
+	t=1743083692; cv=none; b=FW7rWicCocFJNch8gY1793XtixMeO0SfvUrzEiZhe6ZfQ6xEal1LMY4VgYOOgl3YanRlSN0LRxhLnZ6FctPvgKyI8bBbTo0y+EBFa+UXs48ws2YgYUX0E6hIFUHF0bSbiFllGTBivEG0qnTl00sl0TSjoThkovCQfgdgSqimF7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743083573; c=relaxed/simple;
-	bh=zn5LTfzAWNmz5PDwGhphG9HekSubgQERBKmb6YTyFzU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=a+nRtLV4RZm0HE66J5lEaon2m4lTKvJ8b2FkqWf4xJ2z9lXr0X2VAQt3njtc73p0mJdQ9jd7QeKdTGVBxqixnT/sWFKdHQHrwVMGd3nG/dW2gLu8K29BFIaRbKx7pw/PZEE+cMGhYt91nDK5uNcQ8CKR+TzUXCBJVEMv087ZJvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ge6RIF8q; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ge6RIF8q"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52R94WTa011353;
-	Thu, 27 Mar 2025 13:52:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=lR72a4
-	GHZEB0fbhC/I4BrNu9OfR1V/1lS9yZ3KHUcrk=; b=Ge6RIF8qmYeUQYK8ghFBp/
-	gNPMHqpMtuAgKm0ELozTKdhr85Uxa8Cy/9Ije6w3phbecwICxgqXxNMvPNmZcbNi
-	fyV3Uj+4n2RtVYA1y44YOZj3+Woh33ttV+xjGwazq3sg2GWnAV0FZZwKGsFI/xAp
-	JgWtIXNak+3yY1nixpYYMj0y9jmij6HVHTeomLpCvvxop1We5i2Ngv94eUP0j8E1
-	S4jylpOW8hgSCDdcg/0GaRH4rpmZj1//P0dOY9L10nW0L+LGU7BeJXsOhqcwAuXQ
-	McxAZftOO6XxXZpWyXwFkXeVxOgKS0VsJ08V/wsh49KyfuSaY8IPW/NMlku64iQQ
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45mrrq45ne-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 13:52:46 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52RCe9eU005791;
-	Thu, 27 Mar 2025 13:52:45 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 45ja82na2d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 13:52:45 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52RDqi5v27853382
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Mar 2025 13:52:44 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B280E58057;
-	Thu, 27 Mar 2025 13:52:44 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AB9105805D;
-	Thu, 27 Mar 2025 13:52:42 +0000 (GMT)
-Received: from [9.43.10.101] (unknown [9.43.10.101])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 27 Mar 2025 13:52:42 +0000 (GMT)
-Message-ID: <8797a1c4-dc58-4a85-bc51-a3d4131e7930@linux.ibm.com>
-Date: Thu, 27 Mar 2025 19:22:40 +0530
+	s=arc-20240116; t=1743083692; c=relaxed/simple;
+	bh=BxqCn8pY2A7yg8NNsx1eEw/G6X+czZQ/r8E3bVMCuow=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mlxylrV8GMSmPxEnOyp8Iwem7nJ4EaYUUpae9mK7vDILoVkUXcIjeeOk+jBJdFAbSP43bqdQAFZutw6zh5ifoCpqQdQMnoDe3dcRHOPhgpN87IWuPW8+/hQ09vPvZsaqxaaUhRcPBUTw8fcl0bQSgxVOJ6WGvGhj4eyNSl62Uvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZNlWZ4qxkz4f3kFW;
+	Thu, 27 Mar 2025 21:54:18 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id A0A861A0E9A;
+	Thu, 27 Mar 2025 21:54:41 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgCnCl+fWOVnR7LpHg--.9389S4;
+	Thu, 27 Mar 2025 21:54:41 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: mtkaczyk@kernel.org,
+	linux-raid@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH RFC v2] mdadm: add support for new lockless bitmap
+Date: Thu, 27 Mar 2025 21:48:53 +0800
+Message-Id: <20250327134853.1069356-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [main-line]Build warnings on PowerPC system
-To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <61cf556c-4947-4bd6-af63-892fc0966dad@linux.ibm.com>
-Content-Language: en-US
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-In-Reply-To: <61cf556c-4947-4bd6-af63-892fc0966dad@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 80tlj-huWZxxHwB2nd5OSMmCBDts4fjr
-X-Proofpoint-GUID: 80tlj-huWZxxHwB2nd5OSMmCBDts4fjr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-27_01,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 mlxscore=0 malwarescore=0 phishscore=0 spamscore=0
- impostorscore=0 priorityscore=1501 bulkscore=0 clxscore=1015
- lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502280000 definitions=main-2503270093
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCnCl+fWOVnR7LpHg--.9389S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxtFWfZFykGFyxZF1kZr15CFg_yoW3XF1DpF
+	42vr95Cr1rGrs3Wwnrt34kuFWrtw1vyFnFkrZ7Zw4akF1FqrnIvF1rGF1UA3s3Wrs5Ja42
+	9Fn8Kw18u3y7XrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUBVbkUUU
+	UU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
+From: Yu Kuai <yukuai3@huawei.com>
 
+A new major number 6 is used for the new bitmap.
 
-On 3/27/25 12:33 AM, Venkat Rao Bagalkote wrote:
-> Greetings!!!
-> 
-> I see below build warnings while compiling mainline kernel on IBM Power9 system.
-> 
-> Repo Link: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/
-> 
-> Head Commit: f6e0150b2003fb2b9265028a618aa1732b3edc8f
-> 
-> Attached is the .config.
-> 
-> Machine: IBM Power9
-> 
-> gcc version 11.5.0
+Noted that for the kernel that doesn't support lockless bitmap, create
+such array will fail:
 
-What is the ld version in your system.
+md0: invalid bitmap file superblock: unrecognized superblock version.
 
-Reason for asking is that currently with 
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+---
+Changes in v2:
+ - add support for Incremental mode;
+ - use sysfs API bitmap_version to notify kernel to use llbitmap;
 
-commit  579aee9fc594a ("powerpc: suppress some linker warnings in recent linker versions")
+ Assemble.c    |  5 +++++
+ Create.c      |  8 +++++++-
+ Grow.c        |  3 ++-
+ Incremental.c | 34 ++++++++++++++++++++++++++++++++++
+ bitmap.h      |  8 ++++++--
+ mdadm.c       |  9 ++++++++-
+ mdadm.h       |  2 ++
+ super1.c      | 14 ++++++++++++++
+ 8 files changed, 78 insertions(+), 5 deletions(-)
 
-ld version greater than >2.39, this warning is being suppressed.
-
-Maddy
-
-> 
-> 
-> Warnings:
-> 
-> ld: warning: arch/powerpc/boot/zImage.epapr has a LOAD segment with RWX permissions
-> ld: warning: arch/powerpc/boot/zImage.pseries has a LOAD segment with RWX permissions
-> 
-> 
-> If you happen to fix this, please add below tag.
-> 
-> 
-> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-> 
-> 
-> Regards,
-> 
-> Venkat.
+diff --git a/Assemble.c b/Assemble.c
+index f8099cd3..5d46379d 100644
+--- a/Assemble.c
++++ b/Assemble.c
+@@ -1029,6 +1029,11 @@ static int start_array(int mdfd,
+ 	int i;
+ 	unsigned int req_cnt;
+ 
++	if (st->ss->get_bitmap_version &&
++	    st->ss->get_bitmap_version(st) == BITMAP_MAJOR_LOCKLESS &&
++	    sysfs_set_str(content, NULL, "bitmap_version", "llbitmap"))
++		    return 1;
++
+ 	if (content->journal_device_required && (content->journal_clean == 0)) {
+ 		if (!c->force) {
+ 			pr_err("Not safe to assemble with missing or stale journal device, consider --force.\n");
+diff --git a/Create.c b/Create.c
+index fd6c9215..a85c0419 100644
+--- a/Create.c
++++ b/Create.c
+@@ -541,6 +541,8 @@ int Create(struct supertype *st, struct mddev_ident *ident, int subdevs,
+ 			pr_err("At least 2 nodes are needed for cluster-md\n");
+ 			return 1;
+ 		}
++	} else if (s->btype == BitmapLockless) {
++		major_num = BITMAP_MAJOR_LOCKLESS;
+ 	}
+ 
+ 	memset(&info, 0, sizeof(info));
+@@ -1182,7 +1184,8 @@ int Create(struct supertype *st, struct mddev_ident *ident, int subdevs,
+ 	 * to stop another mdadm from finding and using those devices.
+ 	 */
+ 
+-	if (s->btype == BitmapInternal || s->btype == BitmapCluster) {
++	if (s->btype == BitmapInternal || s->btype == BitmapCluster ||
++	    s->btype == BitmapLockless) {
+ 		if (!st->ss->add_internal_bitmap) {
+ 			pr_err("internal bitmaps not supported with %s metadata\n",
+ 				st->ss->name);
+@@ -1194,6 +1197,9 @@ int Create(struct supertype *st, struct mddev_ident *ident, int subdevs,
+ 			pr_err("Given bitmap chunk size not supported.\n");
+ 			goto abort_locked;
+ 		}
++		if (s->btype == BitmapLockless &&
++		    sysfs_set_str(&info, NULL, "bitmap_version", "llbitmap") < 0)
++			goto abort_locked;
+ 	}
+ 
+ 	if (sysfs_init(&info, mdfd, NULL)) {
+diff --git a/Grow.c b/Grow.c
+index cc1be6cc..3905f64c 100644
+--- a/Grow.c
++++ b/Grow.c
+@@ -383,7 +383,8 @@ int Grow_addbitmap(char *devname, int fd, struct context *c, struct shape *s)
+ 		free(mdi);
+ 	}
+ 
+-	if (s->btype == BitmapInternal || s->btype == BitmapCluster) {
++	if (s->btype == BitmapInternal || s->btype == BitmapCluster ||
++	    s->btype == BitmapLockless) {
+ 		int rv;
+ 		int d;
+ 		int offset_setable = 0;
+diff --git a/Incremental.c b/Incremental.c
+index 228d2bdd..de2edecb 100644
+--- a/Incremental.c
++++ b/Incremental.c
+@@ -552,6 +552,40 @@ int Incremental(struct mddev_dev *devlist, struct context *c,
+ 			if (d->disk.state & (1<<MD_DISK_REMOVED))
+ 				remove_disk(mdfd, st, sra, d);
+ 
++		if (st->ss->get_bitmap_version) {
++			if (st->sb == NULL) {
++				dfd = dev_open(devname, O_RDONLY);
++				if (dfd < 0) {
++					rv = 1;
++					goto out;
++				}
++
++				rv = st->ss->load_super(st, dfd, NULL);
++				close(dfd);
++				dfd = -1;
++				if (rv) {
++					pr_err("load super failed %d\n", rv);
++					goto out;
++				}
++			}
++
++			if (st->ss->get_bitmap_version(st) == BITMAP_MAJOR_LOCKLESS) {
++				if (sra == NULL) {
++					sra = sysfs_read(mdfd, NULL, (GET_DEVS | GET_STATE |
++								    GET_OFFSET | GET_SIZE));
++					if (!sra) {
++						pr_err("can't read mdinfo\n");
++						rv = 1;
++						goto out;
++					}
++				}
++
++				rv = sysfs_set_str(sra, NULL, "bitmap_version", "llbitmap");
++				if (rv)
++					goto out;
++			}
++		}
++
+ 		if ((sra == NULL || active_disks >= info.array.working_disks) &&
+ 		    trustworthy != FOREIGN)
+ 			rv = ioctl(mdfd, RUN_ARRAY, NULL);
+diff --git a/bitmap.h b/bitmap.h
+index 7b1f80f2..3a08cf60 100644
+--- a/bitmap.h
++++ b/bitmap.h
+@@ -13,6 +13,7 @@
+ #define BITMAP_MAJOR_HI 4
+ #define	BITMAP_MAJOR_HOSTENDIAN 3
+ #define	BITMAP_MAJOR_CLUSTERED 5
++#define	BITMAP_MAJOR_LOCKLESS 6
+ 
+ #define BITMAP_MINOR 39
+ 
+@@ -139,8 +140,11 @@ typedef __u16 bitmap_counter_t;
+ 
+ /* use these for bitmap->flags and bitmap->sb->state bit-fields */
+ enum bitmap_state {
+-	BITMAP_ACTIVE = 0x001, /* the bitmap is in use */
+-	BITMAP_STALE  = 0x002  /* the bitmap file is out of date or had -EIO */
++        BITMAP_STALE       = 1,  /* the bitmap file is out of date or had -EIO */
++        BITMAP_WRITE_ERROR = 2, /* A write error has occurred */
++        BITMAP_FIRST_USE   = 3,
++        BITMAP_DAEMON_BUSY = 4,
++        BITMAP_HOSTENDIAN  =15,
+ };
+ 
+ /* the superblock at the front of the bitmap file -- little endian */
+diff --git a/mdadm.c b/mdadm.c
+index 1fd4dcba..7a64fba2 100644
+--- a/mdadm.c
++++ b/mdadm.c
+@@ -56,6 +56,12 @@ static mdadm_status_t set_bitmap_value(struct shape *s, struct context *c, char
+ 		return MDADM_STATUS_SUCCESS;
+ 	}
+ 
++	if (strcmp(val, "lockless") == 0) {
++		s->btype = BitmapLockless;
++		pr_info("Experimental lockless bitmap, use at your own disk!\n");
++		return MDADM_STATUS_SUCCESS;
++	}
++
+ 	if (strcmp(val, "clustered") == 0) {
+ 		s->btype = BitmapCluster;
+ 		/* Set the default number of cluster nodes
+@@ -1251,7 +1257,8 @@ int main(int argc, char *argv[])
+ 			pr_err("--bitmap is required for consistency policy: %s\n",
+ 			       map_num_s(consistency_policies, s.consistency_policy));
+ 			exit(2);
+-		} else if ((s.btype == BitmapInternal || s.btype == BitmapCluster) &&
++		} else if ((s.btype == BitmapInternal || s.btype == BitmapCluster ||
++			    s.btype == BitmapLockless) &&
+ 			   s.consistency_policy != CONSISTENCY_POLICY_BITMAP &&
+ 			   s.consistency_policy != CONSISTENCY_POLICY_JOURNAL) {
+ 			pr_err("--bitmap is not compatible with consistency policy: %s\n",
+diff --git a/mdadm.h b/mdadm.h
+index 77705b11..cc21e0d3 100644
+--- a/mdadm.h
++++ b/mdadm.h
+@@ -607,6 +607,7 @@ enum bitmap_type {
+ 	BitmapNone,
+ 	BitmapInternal,
+ 	BitmapCluster,
++	BitmapLockless,
+ 	BitmapUnknown,
+ };
+ 
+@@ -1202,6 +1203,7 @@ extern struct superswitch {
+ 	int (*add_internal_bitmap)(struct supertype *st, int *chunkp,
+ 				   int delay, int write_behind,
+ 				   unsigned long long size, int may_change, int major);
++	int (*get_bitmap_version)(struct supertype *st);
+ 	/* Perform additional setup required to activate a bitmap.
+ 	 */
+ 	int (*set_bitmap)(struct supertype *st, struct mdinfo *info);
+diff --git a/super1.c b/super1.c
+index fe3c4c64..caa2569d 100644
+--- a/super1.c
++++ b/super1.c
+@@ -2487,6 +2487,14 @@ static __u64 avail_size1(struct supertype *st, __u64 devsize,
+ 	return 0;
+ }
+ 
++static int get_bitmap_version1(struct supertype *st)
++{
++	struct mdp_superblock_1 *sb = st->sb;
++	bitmap_super_t *bms = (bitmap_super_t *)(((char *)sb) + MAX_SB_SIZE);
++
++	return __le32_to_cpu(bms->version);
++}
++
+ static int
+ add_internal_bitmap1(struct supertype *st,
+ 		     int *chunkp, int delay, int write_behind,
+@@ -2650,6 +2658,11 @@ add_internal_bitmap1(struct supertype *st,
+ 		bms->cluster_name[len - 1] = '\0';
+ 	}
+ 
++	/* kernel will initialize bitmap */
++	if (major == BITMAP_MAJOR_LOCKLESS) {
++		bms->state = __cpu_to_le32(1 << BITMAP_FIRST_USE);
++		bms->sectors_reserved = __le32_to_cpu(room);
++	}
+ 	*chunkp = chunk;
+ 	return 0;
+ }
+@@ -3025,6 +3038,7 @@ struct superswitch super1 = {
+ 	.avail_size = avail_size1,
+ 	.add_internal_bitmap = add_internal_bitmap1,
+ 	.locate_bitmap = locate_bitmap1,
++	.get_bitmap_version = get_bitmap_version1,
+ 	.write_bitmap = write_bitmap1,
+ 	.free_super = free_super1,
+ #if __BYTE_ORDER == BIG_ENDIAN
+-- 
+2.39.2
 
