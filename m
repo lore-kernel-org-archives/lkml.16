@@ -1,77 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2553D13DBA0;
-	Thu, 27 Mar 2025 21:21:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58E31DDA3E;
+	Thu, 27 Mar 2025 21:21:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743110516; cv=none; b=SzOtHNA9U7T4TcjFk9PLgaQEjS7bHFtURtMN8dm70kOhbFbn7IogrwvXPGl0xWHMviNKXUX+c+ODVSEsTvTvndKXgw9++Ym6NKdvSl2mtWZQFIF63HrHoX0ojwclsMPEm8t9sYsByuU5Npfc7Hmc5x64tBAS5tPLdgrVpoyUnNE=
+	t=1743110517; cv=none; b=myt47fwdlyszYd4J2jZk9aAMMuyZAV/NpvSIc6JKUvjVo0ktF2zhpugtLd4R032DBG364NLixz6Q638pUxUc/kf9T1OLw0IZIb6g+2JCl3fO80Nem+Mw1NyF6RAdiDMkVOw/t1CbedAywLHpfS2bisKDRx69Jf4vajh6OSGRB98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743110516; c=relaxed/simple;
-	bh=QQHFriYXKJo+p6mTq2x5pe8wMRPOd+HpVPpdKJJfJQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qnJBIXCiR/X1n6BafSMYmV49cwY5hK8kstHpTlYMGnfhlAqO9lY2m2PnbSn7jJfusWEdt99YuooH8/P4z7zUblvHFltP5gRALs2vI/nH6j9keSZGJUrVo+S7lVpwITz8Dqq2kJDxIHlTISpl84Kj9zez2n+WFmHFcJ5CqMgXLTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FIHMwYiI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743110517; c=relaxed/simple;
+	bh=u8ZF0qF61gU2yr4l1GcEiez+8svfoYCvfCPaIe/1iVQ=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=myhqIj4HvsYkCQJDCAoRw1WMXJOEOgWvxysQ+Q+fJdSMIVDAfb7q9XVZCLSnvocuz7CWmJv62Ttn/NJ6OT+ScaUS+aVrKANo+FZKJ8Azc0O9/IoL8xA8/0urU6vapjUNWwZA+H07OM2qof1HIGbjJUvgyyhhhcw4+tNBCXwQX/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ai4ncbLP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FIHMwYiI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26711C4CEDD;
-	Thu, 27 Mar 2025 21:21:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ai4ncbLP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65FFBC4CEE8;
+	Thu, 27 Mar 2025 21:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743110515;
-	bh=QQHFriYXKJo+p6mTq2x5pe8wMRPOd+HpVPpdKJJfJQE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FIHMwYiI4KQfQ7DPAVlXGTWVRs55Ml09/yhleFNR5Dgg92bpDVo4ncNQZEbiZgG+T
-	 AakosSxDSWtTmcbDzGIl8dZfAPJZluaWtvCfe7xQ6KmVxDbGbEOEJDoUuvcGocXpvw
-	 NbeQyEdF3SXdNgvAHQZOL93hryJGfCzHI/RxHYdrzBma5K+ALTk3T3XZ7tBxjsbeHk
-	 mAS4yNGye/uv0WB3dhoVGBb02fd7F3WG3Xnk1kzJnMmpey61vjLNsA//TXLsJVLWOp
-	 UPirkArcvLI3UW1Y4a0a3IggW9XCS3qvtscNd3krQ5Ri9l2vXPnO+srtgbR47mxSk+
-	 N/EPZ4n7AXQwQ==
-Date: Thu, 27 Mar 2025 22:21:51 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, linux-tip-commits@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
-Subject: Re: [tip: objtool/urgent] objtool, pwm: mediatek: Prevent
- theoretical divide-by-zero in pwm_mediatek_config()
-Message-ID: <Z-XBb_8f6cItnlZN@gmail.com>
-References: <fb56444939325cc173e752ba199abd7aeae3bf12.1742852847.git.jpoimboe@kernel.org>
- <174289169184.14745.2432058307739232322.tip-bot2@tip-bot2>
- <m7pgkp3ueo7iqgqf74upjrihr3mpmb3sqhwegnjxxwsrgx2jsw@dnec5iqiyobh>
- <Z-Uv60sD_S2xYVB1@gmail.com>
- <nzk5uzpwqqkflmdgfe7kwsnsecqnsn6vsyo4ycoaueasnud6ot@pg6cazrf6zuf>
+	s=k20201202; t=1743110517;
+	bh=u8ZF0qF61gU2yr4l1GcEiez+8svfoYCvfCPaIe/1iVQ=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=Ai4ncbLPtDD/mCmM5268US4xjHplHR96SY+BXC6Akgvs4jQtv5d+ZUoiW0czlXnn0
+	 +pegTUWvsKLkeKLENJo17xxR+eGn5a6VDUGPOaNJBeOb0DEUQJ0eGy5VRcSUZRcQ8s
+	 Fzrj9aTER0weJGwnoxrdN/+5n06t6txAGRPUWi1bAFSmghjDZiDDuvAv0NvhK3gFfd
+	 ywqmAerv0ZEn5/20FBItOwE51ahI3+5d8sC9YuvG4vYYRoxnqvdH6Wrl16vIiH2N9j
+	 2l3yQBn2YcfnOVTW/MbClamU5oxeL90GiA7naF94gymnMfHTUnbdNv0S6PzWRwXuPP
+	 cGVIrf3FNfdWA==
+Message-ID: <a9626bfa7a481cee3178f3aa80721520@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <nzk5uzpwqqkflmdgfe7kwsnsecqnsn6vsyo4ycoaueasnud6ot@pg6cazrf6zuf>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <txuujicelz5kbcnn3qyihwaspqrdc42z4kmijpwftkxlbofg2w@jsqmwj4lz662>
+References: <20250226232320.93791-1-inochiama@gmail.com> <20250226232320.93791-2-inochiama@gmail.com> <2c00c1fba1cd8115205efe265b7f1926.sboyd@kernel.org> <epnv7fp3s3osyxbqa6tpgbuxdcowahda6wwvflnip65tjysjig@3at3yqp2o3vp> <f1d5dc9b8f59b00fa21e8f9f2ac3794b.sboyd@kernel.org> <x43v3wn5rp2mkhmmmyjvdo7aov4l7hnus34wjw7snd2zbtzrbh@r5wrvn3kxxwv> <b816b3d1f11b4cc2ac3fa563fe5f4784.sboyd@kernel.org> <nxvuxo7lsljsir24brvghblk2xlssxkb3mfgx6lbjahmgr4kep@fvpmciimfikg> <f5228d559599f0670e6cbf26352bd1f1.sboyd@kernel.org> <txuujicelz5kbcnn3qyihwaspqrdc42z4kmijpwftkxlbofg2w@jsqmwj4lz662>
+Subject: Re: [PATCH v3 1/2] dt-bindings: clock: sophgo: add clock controller for SG2044
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Chen Wang <unicorn_wang@outlook.com>, Conor Dooley <conor+dt@kernel.org>, Inochi Amaoto <inochiama@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh@kernel.org>
+Date: Thu, 27 Mar 2025 14:21:55 -0700
+User-Agent: alot/0.12.dev8+g17a99a841c4b
 
+Quoting Inochi Amaoto (2025-03-13 15:46:22)
+> On Thu, Mar 13, 2025 at 01:22:28PM -0700, Stephen Boyd wrote:
+> > Quoting Inochi Amaoto (2025-03-12 18:08:11)
+> > > On Wed, Mar 12, 2025 at 04:43:51PM -0700, Stephen Boyd wrote:
+> > > > Quoting Inochi Amaoto (2025-03-12 16:29:43)
+> > > > > On Wed, Mar 12, 2025 at 04:14:37PM -0700, Stephen Boyd wrote:
+> > > > > > Quoting Inochi Amaoto (2025-03-11 16:31:29)
+> > > > > > >=20
+> > > > > > > > or if that syscon node should just have the #clock-cells pr=
+operty as
+> > > > > > > > part of the node instead.
+> > > > > > >=20
+> > > > > > > This is not match the hardware I think. The pll area is on th=
+e middle
+> > > > > > > of the syscon and is hard to be separated as a subdevice of t=
+he syscon
+> > > > > > > or just add  "#clock-cells" to the syscon device. It is bette=
+r to handle
+> > > > > > > them in one device/driver. So let the clock device reference =
+it.
+> > > > > >=20
+> > > > > > This happens all the time. We don't need a syscon for that unle=
+ss the
+> > > > > > registers for the pll are both inside the syscon and in the reg=
+ister
+> > > > > > space 0x50002000. Is that the case?=20
+> > > > >=20
+> > > > > Yes, the clock has two areas, one in the clk controller and one in
+> > > > > the syscon, the vendor said this design is a heritage from other =
+SoC.
+> > > >=20
+> > > > My question is more if the PLL clk_ops need to access both the sysc=
+on
+> > > > register range and the clk controller register range. What part of =
+the
+> > > > PLL clk_ops needs to access the clk controller at 0x50002000?
+> > > >=20
+> > >=20
+> > > The PLL clk_ops does nothing, but there is an implicit dependency:
+> > > When the PLL change rate, the mux attached to it must switch to=20
+> > > another source to keep the output clock stable. This is the only
+> > > thing it needed.
+> >=20
+> > I haven't looked at the clk_ops in detail (surprise! :) but that sounds
+> > a lot like the parent of the mux is the PLL and there's some "safe"
+> > source that is needed temporarily while the PLL is reprogrammed for a
+> > new rate. Is that right? I recall the notifier is in the driver so this
+> > sounds like that sort of design.
+>=20
+> You are right, this design is like what you say. And this design is=20
+> the reason that I prefer to just reference the syscon node but not
+> setting the syscon with "#clock-cell".
+>=20
 
-* Uwe Kleine-König <ukleinek@kernel.org> wrote:
-
-> > > > Cc: "Uwe Kleine-König" <ukleinek@kernel.org> (maintainer:PWM SUBSYSTEM)
-> > > > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > > > Link: https://lore.kernel.org/r/fb56444939325cc173e752ba199abd7aeae3bf12.1742852847.git.jpoimboe@kernel.org
-> > 
-> > I've also tentatively added your Acked-by, if that's OK with you.
-> 
-> The patch is OK.
-
-Thanks!
-
-> [...] Iff you can convince me that it should go via tip, it's fine 
-> for me.
-
-I wanted to collect all the objtool fixes for CONFIG_OBJTOOL_WERROR=y 
-failures in a single place to not inconvenience randconfig CI testing 
-efforts, so in that sense it would be nice to send this via the 
-objtool/urgent tree, but I'll remove it if you insist.
-
-Thanks,
-
-	Ingo
+I don't see why a syscon phandle is preferred over #clock-cells. This
+temporary parent is still a clk, right? In my opinion syscon should
+never be used. It signals that we lack a proper framework in the kernel
+to handle something. Even in the "miscellaneous" register range sort of
+design, we can say that this grab bag of registers is exposing resources
+like clks or gpios, etc. as a one off sort of thing because it was too
+late to change other hardware blocks.
