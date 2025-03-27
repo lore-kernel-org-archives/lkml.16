@@ -1,337 +1,213 @@
-Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazon11021078.outbound.protection.outlook.com [40.107.51.78])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2C8198E91;
-	Thu, 27 Mar 2025 15:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.51.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C542D19D08F;
+	Thu, 27 Mar 2025 15:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743089911; cv=fail; b=VkepNWYh9pvredsHU/C+n6NJPb/l2xAAruWHHeZw7AbUiJLi33otGXO8tvtpsGLld4sy8AJADMcpQiQjwykWVYEKyh+SNxMKJZobCMhu8RGC37y/p2OgxrOUeBR5E8DItpCxq0BLKRPtZ/YL0J2lQURjjCca6Hr2JvN14/o6+pY=
+	t=1743089915; cv=fail; b=NeUvbUkLpQWZvYFTSOOgmCxDOjiL85pQ+oVUfwvv0Uh7N5ZOdLaszVMgTj0j+NSkGhj1dPMWOXz2SD0AtUhfjhOxGNFpJxc3XGo19nOdVJp/USY3x+c5lDp6/wq6htMblmcBlfp2ejNy5fsKtH2pXOZbEGq+Fu8P7pGRyZROP6Y=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743089911; c=relaxed/simple;
-	bh=0kKwcGSzGvwu+eEqnUMz4kVJrn5issQY0RwdOXUMMyo=;
+	s=arc-20240116; t=1743089915; c=relaxed/simple;
+	bh=yjoXs0bmTOxbvzGvMlOlnK2tppIwiBqL1uscBsAACHQ=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=cQd1d9mLHlm87l29OON/yYWtGjp8+Dfng5yI0NctYCyUHdM8DA5lUFf0PPEqvb7EPUSAZRqI7y8wcgWb9GmWnHLAgraYuORTBoOV4XeLnpsQOFVtBByYECLIOSLgoLQLGKfFuk4c8WHKvQ4SqKAvdtfn+gFC85+xZKOBjsX2Y2I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io; spf=pass smtp.mailfrom=siliconsignals.io; arc=fail smtp.client-ip=40.107.51.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siliconsignals.io
+	 Content-Type:MIME-Version; b=g6GazrINy5bZlqlPXbVKa4GAE2Ra97r61IZJLh/+kiX39Og3ugzUcWFoBjTn3F6BKNCRf6ExmbIBCpL1e2PZIn9kEeWoF6a48zTJOyh8W//S2NJPNK9ch9hhllbUSDbVW4QPY5yMB7W+pwkJpF6SXbcLL51cWgZdYYBkrff3M8s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TRXrgaw+; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TRXrgaw+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743089914; x=1774625914;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=yjoXs0bmTOxbvzGvMlOlnK2tppIwiBqL1uscBsAACHQ=;
+  b=TRXrgaw+ud+G1KzHYXnemDB4ddqhp48ngbIEa3YWDuRM/mAnGFYgQ8Ml
+   DaYlfNt3u17rVuvYUylJFVU2YSgVLa9TazigZnq68o4kcIpt//G0zP3jH
+   5c3KRk/eVsRD+5H4kZouhuQUE9NcoM/1gJZjeNjH4GnwGYmg8ILpEIVFf
+   BvgOGXAt7aZZmD/uJuiwAcawCFCElRTbgOIas7GoE0Rg+Gyep7LZpFOKc
+   r6jlW0iEhN2hYS7fGEhc8t4f5gcg4/n2VwysMNPI8Y4IOsItPIXl1FGNj
+   t6j6XaKdK2CUaDOWyw0VxFEZ54PwBqwAemE2dBrzXGP40gNmVhNF0w78w
+   Q==;
+X-CSE-ConnectionGUID: P/2trgFzSzGpmp7vMeZ/wg==
+X-CSE-MsgGUID: UYqEouQdRgOv/k3SMX3ehw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="32033893"
+X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
+   d="scan'208";a="32033893"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 08:38:33 -0700
+X-CSE-ConnectionGUID: eEexnez/TM2Fx9c36XDrXA==
+X-CSE-MsgGUID: NeqpIRMrTkep5KZr2bJ7zA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
+   d="scan'208";a="125090196"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 08:38:32 -0700
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.14; Thu, 27 Mar 2025 08:38:32 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Thu, 27 Mar 2025 08:38:32 -0700
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.170)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 27 Mar 2025 08:38:32 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hJ+Pcv8cxLONJTrcM7JhHK1dazGcv9CIUGxBEmII3GyGcJC9KirUNm1PXdjLtki8Y7Ab6s5J0GFlE4Jr6q0g6L0RlFXF8HXueKDl3yH1JM/rpNFlEjic5ckQFU8OX4YNvvfE1HgpYKFRmnlY3PSIU/rTm2iWEUZxW5B+KetbrZ0AKKnZNS7fYVAM64KjdpiPjvSQXkUFqvt+EPNWLfrLH+DAURzYDVEnaD7/zgbrtQ1Cgwio/9SvGQcNuIVt3DdQA82BRZfi7RKoRdnxDceSxRgx3jMFr9Nhh4sdCEyAN74k39CIMoc3wCRbVc5i0CkvZt8G+eohzHPpwQnlhORCHg==
+ b=BXv+ofhfC0jWJJWQvGfLRZL/JeMFO2B7/N3satnYpX2Y+sbFbbWWVqboPzdzI3qSKuLRh5P6snGfR0yeLl8wVR+I0kpepDC6f4pFRkk0AgJTT3okU6jtPYe6lCx7kUccen2sZsSRbwq7U2fnmvYVSiTtcL///PpJuEhKxozcmtQNEn1t1aIeA8V84TrA4voiLF65VoJVntNXCNuItLXPT5sAHzgVx/EtRYyr79AKBN4rgi++EUgHd/O5Bzl2NSvsq6odQBqeaqbYvMA3y0wfqON2LPQ7mh6v2R8nDaylHP5QucC+9yF0myIqhEqT+mwBB56wFmr18fbWrPxOv+JRHw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LNDOE/d3L9/yV9xjfIJc3qA6qRuFhFdTLABvOWH82oA=;
- b=UAo2rx0+4lfYM39sFivSr7nE/9LSDKIG2ExEY1f1YX8ip7XlY2IoQdkmuOlBPJvyj7xwXdn5GBZ7Qcaw+cdQF9xAhdBGug2xN7/aHSnRcPhmryOeDdvAB1MSAZrPk8SXtFGP8dy9VbnHSTGVq94+XglLET60g6SXttpEHPLD1Yq+Xvg6AnpzJqQfI+aoZVaoRGW/mFVmKMecAhs44xrS6ML8/JnfvKvIJfVmoDmLcvQCXZzGKPDYz8pugP/Ni4bk+EvGOBDYuE6tpjfKEKNVITQjUg9BJSS8ylDdyTrcUwKpr0AsR7T6F+5vuF12CMFjOkfs1qWk0NeSE2d396KKIA==
+ bh=yjoXs0bmTOxbvzGvMlOlnK2tppIwiBqL1uscBsAACHQ=;
+ b=Ans+VDyBw7QfV18K/I38gv/6nZ6XtV/Z53Xuskwni0nEi3RhP+fydKzWkQwKNOtS4bRqRrBqW3o+WmgQB9InzXnGvjcQTz26c1qz3zPe36BtB0mZmbkl/D0gqX0uHKK9kfvsc+AkDdcaPOrcXkRRAEZ22a7H+MLqV5BU4bcrTkkGxZEZlGCeWSEyTYvhhS9W8pNEtYuzD/0Aj144z37LIWfGNN9V0nNX9L1+kAgXGXPsafxhm0QDw9oW+a2dIlMSelDHewXKr/UtPW0bvTHpyZwNwlZngI5sh/rxxLKLIKghG84kFpofcpFgbyFevAJfItboq0HNU2zkx2u1v6oHKg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siliconsignals.io; dmarc=pass action=none
- header.from=siliconsignals.io; dkim=pass header.d=siliconsignals.io; arc=none
-Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:199::7)
- by PN2P287MB2061.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:1c6::9) with
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DM8PR11MB5750.namprd11.prod.outlook.com (2603:10b6:8:11::17) by
+ PH0PR11MB7523.namprd11.prod.outlook.com (2603:10b6:510:280::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
- 2025 15:38:24 +0000
-Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
- ([fe80::58ec:81a0:9454:689f]) by PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
- ([fe80::58ec:81a0:9454:689f%4]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
- 15:38:24 +0000
-From: Tarang Raval <tarang.raval@siliconsignals.io>
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>
-CC: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	"kieran.bingham@ideasonboard.com" <kieran.bingham@ideasonboard.com>,
-	"Shravan.Chippa@microchip.com" <Shravan.Chippa@microchip.com>, Mauro Carvalho
- Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Laurent
- Pinchart <laurent.pinchart@ideasonboard.com>, Umang Jain
-	<umang.jain@ideasonboard.com>, Zhi Mao <zhi.mao@mediatek.com>, Julien Massot
-	<julien.massot@collabora.com>, Luis Garcia <git@luigi311.com>, Benjamin
- Mugnier <benjamin.mugnier@foss.st.com>, "linux-media@vger.kernel.org"
-	<linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/6] media: i2c: imx334: Support 4 or 8 lane operation
- modes
-Thread-Topic: [PATCH 4/6] media: i2c: imx334: Support 4 or 8 lane operation
- modes
-Thread-Index: AQHbkYze21WXVq2lI0WizvQdhNA/mLOG3YiAgAAHtdWAAEG/gIAAD4LC
-Date: Thu, 27 Mar 2025 15:38:24 +0000
-Message-ID:
- <PN3P287MB18294408F7BFA1B93162FF9E8BA12@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
-References: <20250310071751.151382-1-tarang.raval@siliconsignals.io>
- <20250310071751.151382-5-tarang.raval@siliconsignals.io>
- <Z-Uj1VnLKQH09__5@kekkonen.localdomain>
- <PN3P287MB18292A67AC52F0D877D480AF8BA12@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
- <CAPY8ntDAkA9Srmru3WZO1HibGDZM+PMiRyWcikh3BcLmezb+ag@mail.gmail.com>
-In-Reply-To:
- <CAPY8ntDAkA9Srmru3WZO1HibGDZM+PMiRyWcikh3BcLmezb+ag@mail.gmail.com>
+ 2025 15:38:29 +0000
+Received: from DM8PR11MB5750.namprd11.prod.outlook.com
+ ([fe80::4df9:c236:8b64:403a]) by DM8PR11MB5750.namprd11.prod.outlook.com
+ ([fe80::4df9:c236:8b64:403a%4]) with mapi id 15.20.8534.040; Thu, 27 Mar 2025
+ 15:38:29 +0000
+From: "Reshetova, Elena" <elena.reshetova@intel.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+CC: "Hansen, Dave" <dave.hansen@intel.com>, "linux-sgx@vger.kernel.org"
+	<linux-sgx@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "Mallick,
+ Asit K" <asit.k.mallick@intel.com>, "Scarlata, Vincent R"
+	<vincent.r.scarlata@intel.com>, "Cai, Chong" <chongc@google.com>, "Aktas,
+ Erdem" <erdemaktas@google.com>, "Annapurve, Vishal" <vannapurve@google.com>,
+	"dionnaglaze@google.com" <dionnaglaze@google.com>, "bondarn@google.com"
+	<bondarn@google.com>, "Raynor, Scott" <scott.raynor@intel.com>, "Zhang,
+ Cathy" <cathy.zhang@intel.com>
+Subject: RE: [PATCH 3/4] x86/sgx: Define error codes for ENCLS[EUPDATESVN]
+Thread-Topic: [PATCH 3/4] x86/sgx: Define error codes for ENCLS[EUPDATESVN]
+Thread-Index: AQHbml5snyYEa5bXK0yUxAJfnWP9TrN/s2iAgAKF9jCAA6e/AIABRMzA
+Date: Thu, 27 Mar 2025 15:38:29 +0000
+Message-ID: <DM8PR11MB57502DD4D3E50D200D922C16E7A12@DM8PR11MB5750.namprd11.prod.outlook.com>
+References: <20250321123938.802763-1-elena.reshetova@intel.com>
+ <20250321123938.802763-4-elena.reshetova@intel.com>
+ <Z98wDd_eMCFE40Z7@kernel.org>
+ <DM8PR11MB575028B19C9C23E6EF31357FE7A42@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <Z-Re4gqcCh0GSvKC@kernel.org>
+In-Reply-To: <Z-Re4gqcCh0GSvKC@kernel.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
-msip_labels:
 authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siliconsignals.io;
+ header.d=none;dmarc=none action=none header.from=intel.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PN3P287MB1829:EE_|PN2P287MB2061:EE_
-x-ms-office365-filtering-correlation-id: 8a8626cf-80fb-4ca3-810d-08dd6d45693d
+x-ms-traffictypediagnostic: DM8PR11MB5750:EE_|PH0PR11MB7523:EE_
+x-ms-office365-filtering-correlation-id: f6eb6dce-c674-4282-5653-08dd6d456c4a
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?Windows-1252?Q?oBqcBnADBmI5yjwyIMEp6YMpxM7aRECM7IUnqHNe/tZvY97NDPZsrfbL?=
- =?Windows-1252?Q?15rCtkLgM3l4Zvg3wYTWFG6fgB4zX+fiHvHsUf+KK+6UVvW1sVjq5GJZ?=
- =?Windows-1252?Q?Uwu2DUExt/+Qyf2NBvqv/erEd3Fb+H3emJzdkGZHmzkOaYOSJYNDdn6P?=
- =?Windows-1252?Q?av6wA8V6xApjwFL1hThjK+OgOmZSD1UX+H11LpX5aaEa90qX4xaqYXN5?=
- =?Windows-1252?Q?ZhijViiIK1QQ1gqw3lX2oCWs+MXO2QAXDm+WVGbCM0qZjqxYDfVhjQJx?=
- =?Windows-1252?Q?f8699upRdpAgORoTL+W6W1b6l8gJjn/xXEQO2Lrz/YRcU7Ss2DIc1wdT?=
- =?Windows-1252?Q?AGpEzqb7onkMGfUP+kdjesnzCBfO7d92gDuqb/uo1OQFvVXm+3O8oQJj?=
- =?Windows-1252?Q?GWVNewgvzj70ZY/5SHTO/FTa6yLIGiYXgu66aVcIFFyc0ruXNv2tlyHZ?=
- =?Windows-1252?Q?LdDcJ2bGymRyWJkapFnmnthiboFA1lSdWvECLa6UK5FNF/jgsFCY/uLx?=
- =?Windows-1252?Q?YLlTGWyJH50bHizIkWDZKFXX40Pf9PCuHV/yND542zCfg8IE4aef2c8B?=
- =?Windows-1252?Q?EbMWi1Je2Cdo8Vgq3yPBioaKvYZn7LFUIx3AXSQjG3DIN/O/c8diUVhO?=
- =?Windows-1252?Q?+QtGwn2AAgxZ7RQH0uQDWrt9QfNQv/JuIML4xLpukNmKI3th/BKyaEjZ?=
- =?Windows-1252?Q?e4AxHqwSFdrs81gkNDitsvmnzCCTV8O9H3L5/Gz0koarE572X0BwBebM?=
- =?Windows-1252?Q?Nrbx2fyWh7r6BloIumF1p+sL5TjvOJMKEWEtccuYvd0fGaeuX05yzTFe?=
- =?Windows-1252?Q?LH5vrK0aJyYGJzAMwTHDGdLJwzvsoJxuYKoksE+c6MpDOgox5y6mEIgs?=
- =?Windows-1252?Q?9xaZgQUjZe/0bB6WCOQBNi13bM1sI3zhS6BUY+QBDgmbF2v7HbdczhGh?=
- =?Windows-1252?Q?4doMWy15W0YdTjpz8Jwn9VR1NslDwITz5hr9QPVRxB0KuG+4JR7t0Vqt?=
- =?Windows-1252?Q?iMHm027hTAunnBPpPe1A/CEybtfc7GSRNpL8PCCD3q2rSjX9wxj39vJI?=
- =?Windows-1252?Q?dB+Igwftn5pN5eJokL7z2rZjj3hILZOMU0B6KFRjcNByTK5vDs4zJvtq?=
- =?Windows-1252?Q?s2ugjHEzU2BbK60E6P7hqylxyu3998CAGw/kfGa6Beqopp+gbMI970dJ?=
- =?Windows-1252?Q?x6TQH/3BJPD2LJlR3RnkFzFYTtNqzR8KvdwBmLznQoGhNcE2UIjB07A0?=
- =?Windows-1252?Q?dDNDwKsIZNkyIPoGyqXIrj0Av3OUEnpB19PF2hM362F2VpBTf0wVe3ra?=
- =?Windows-1252?Q?Mbn3BPtFYQgYAO9PMtjTL7lHMsITGy3eMQ0KuFhvlhZkfOBgElJNGf23?=
- =?Windows-1252?Q?zORr3eLFNCODIaZk45xUjUhrhNysvr9f4O1BnuB/hg39PPslryDtWQbG?=
- =?Windows-1252?Q?OUcL8EPYJAJOyMvafr6rrWgabEgwx6xQUgivv01yowhiTbg19WeRoZbG?=
- =?Windows-1252?Q?mLeUvOqm3yfKPvAnri5fjF27HFD0qA=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN3P287MB1829.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?ZWdUa2lzSk92ckl4Rkh2MjQ3emdBc1ZuT3U3OGtwajNhYzdxOUJCQndqK3dQ?=
+ =?utf-8?B?d1lQRnYrZmFKbGxkbENkenZ1UDAxcWw2OHlid2ZvSHRZZTBzQzg2ei9LaGVp?=
+ =?utf-8?B?RndkdjE5MGRIM0tsbFZHN01iOU1Uc3Q3WWdGcC9FK0VQaGlWS2ttYUxUNitk?=
+ =?utf-8?B?S3NwMEYwejNwT08xYzNKK2xQVE5iVU1EdnFVcDN0Lzh2TVdvcE5waHQ3OFU0?=
+ =?utf-8?B?QUpRcEtRU3RzZWcvNXJzNjVlWFpyS2xkOUYrcldRTkpra0tBS1hmMWdiZGht?=
+ =?utf-8?B?cGZzaUpicW1CT0RGZE5KMENUYW5iVWE0QlpiL0FFaGUySmhVaXBWb0pIdlho?=
+ =?utf-8?B?elFaZGo3MTdHMEpUYzFRRVZFOVNGY1BMaVVtU3MySEpQRmUvRWR1bTZwekNB?=
+ =?utf-8?B?RU85UVE2K2dsSUZtbllESFBjdzQwZk5nWnBEUXhJdHRGL1VxS3dHV2Ezejk3?=
+ =?utf-8?B?REtzeEhyeGV6Ni9ybHBTSFRidzA5WmF4T3BzZ3dBYjNqL3hwTVdVcDQzTWFH?=
+ =?utf-8?B?TVVld0dPVVU0a09UdGpmK2hBV3dMa0E3UjRpSktnbWVNNzZIcnI2MWFTa2dr?=
+ =?utf-8?B?R1BjNE1oWlNlMzhlVUsxU0ZRbDRjTWtrbjY0cUxsUkh6VmxFcjRzQVVVSmZk?=
+ =?utf-8?B?YmRQdUwvaHlBMnVnUEluS29DU3gwY2ZuU2orYTlvY1pHdk1XUDlkRjQwODRh?=
+ =?utf-8?B?YTcrQ0NFc0ZnaDZZSGtJOWZIVUYzeTNKTUdXeG54eFRaT1RIYURaWkNuMm1j?=
+ =?utf-8?B?Tk5vell2cEtTSUlXRFlEbU1rdlVwd2RVUUdENjkycmRhWCtMWlJJQ0d0Uk9w?=
+ =?utf-8?B?dkMyNVJKaTN6NWszZmZTYXZyWW1HR2FVaW5SanhyMjI0LzY5eWtQdm9HV01w?=
+ =?utf-8?B?U3lLc1RDMWFZNUhScXRLTVFaK0tSRTd1TDdFUDhseVg5WDlWamJocGl6ZlM1?=
+ =?utf-8?B?d01oRzJremc2U1ljb1ppUGxmNmgwalV2aFpCck5rdGtKTjFHRTVvY1U5TEJV?=
+ =?utf-8?B?dVFNU1VSQWRqaUdpWHZnNGdyZjVBcWgreUw2NzFjQU1oc28xWWxkY1hTRjda?=
+ =?utf-8?B?NFI5dUxuZkxBUWxLWFVXb3kwWEg5WmhXNkNqejQ3aEJlc1YxZXVpcFJZWEsy?=
+ =?utf-8?B?YWltd1RBUzF5akxqdCtNdGdPWVhrd2ZrbndsT1dFK2RYckJVRTd1K2NwbTA5?=
+ =?utf-8?B?NTAxNzkzcFdTNXdKRGY0c2tZWm9FdGtwTC81REFQNnZMR3gzZkNPaTRFTTgr?=
+ =?utf-8?B?UEJneEdYYXZlc0hIZC85eSs0aE5zTEpaQmRuZ0p4SUxSY3ROSEUvZ0FFT2Ja?=
+ =?utf-8?B?aEV4eFV1czE2YUM5R1pBSGc1Unh4d25FaWNLbnBSazl4b3ZTU2hrNTA5NG5z?=
+ =?utf-8?B?aWM1ZGNLL1NNWGh5anp5NG1ubWxUdWdEWGtEcEU1RVdlKy9lQ0NNamxiNWNq?=
+ =?utf-8?B?QWJpMVl1WkdxVVBsM2ZaYmhIYkNJcU11dkZ3MmdGR043RjQ3RENTK0VzdnRr?=
+ =?utf-8?B?V3hza3BMM2hjNm5RNm03RVYrS003dnJwMFRmRkx5d3FnY1g4bXdOdW5TalU1?=
+ =?utf-8?B?VzNiaXVlOFRwTndrWnh6VlcrOU52dm02dms0QU5ZKzNoZnpoS2RkUGV4TVZ5?=
+ =?utf-8?B?WTUyY2NESlVTVmpYeGdHMnZOQnBteWZvcVVMYXB3TmU2TDFTd0lycmVjVEZR?=
+ =?utf-8?B?VXhyM1RpSjhCSTY0K2JJOWNodDdjUWdzY2Flbk1SQnNwdGFqWWQxY2pMTzk2?=
+ =?utf-8?B?L3FSQXY1ZEpycndiRktMT3NlZ3VsT3FEaEN2WTM4UXZLL3VNSEJmcXQ4ZGtD?=
+ =?utf-8?B?cnZwTm1WOG9iNitxZ01BVVdMek82cGZEeHorL3IvRmhtSFk0TVZjL3cxem1q?=
+ =?utf-8?B?MjBOeU9jV24rZHpRdW96WEd0b2g4Nzlocmp3ayt2S29RNW05VjhpOE5SSjhJ?=
+ =?utf-8?Q?w0OeBX/mFb0xMzXSI5RU/SlY5gWeHagz?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR11MB5750.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?Windows-1252?Q?NyFpkncXJucGCo6sXAlXg0HhzRBgD7U/WSK0KuBQ9QuEwktN1Kud1ah3?=
- =?Windows-1252?Q?zBgSkWgTGdW5sLn05kAXgrNW5nn5V1t2dgbovvKxmDY1Zx27agSfuEUr?=
- =?Windows-1252?Q?QU0tf9tSVJqk/muau8Gn+qFC4arM26hPFS4KhS6qdi1BdYO53pxtio4p?=
- =?Windows-1252?Q?3abIbn24g3hH4suowaeZJyuOUmuoG5XFIWmQg+DWCsRwKQ1NPurbnaS4?=
- =?Windows-1252?Q?96cE/WFxnM66uIXtcaRTZUdey7Fi2AESJikpTQTFylHaH+nxvFer78B5?=
- =?Windows-1252?Q?x0M+JCTbamDwSQWu9l5DAaHJGOCEb9oNgLD6/XoxCXpvCw6hjYD6+uPk?=
- =?Windows-1252?Q?+O/4G9V5dXSwOu1R6M49JQDQK62eyeg6BGPpA/X/O58QiavelOuyVWcp?=
- =?Windows-1252?Q?VppgpDfAnDoUPnHHHGx2CE5VxFg/KZrCW0i9pzIf1AB27Ylb3/dKLYr5?=
- =?Windows-1252?Q?UNs8Jsn6J0QV3BL17mgOptAnSxnQ+QSEYIdt31MWz8e7WCx0FnoccJD2?=
- =?Windows-1252?Q?LpvuBvhgM6h2sq1FXP6xq7RFsXp+OwOkW11pxGj9jb78K7srmhIpCiO8?=
- =?Windows-1252?Q?31AkpIEMioKPZN8QlxYZ9kBM+YIH2e+ddW3B41/BZUauzWQabuxGHjJV?=
- =?Windows-1252?Q?bkVkgjXptavBiZMsvP4UFM14h+wKqgh1NrdDvM1nCrAwjdnGO1PEIcCC?=
- =?Windows-1252?Q?mjPG5gtBN1H7VMX3QbRQkJa3vo//ZiGtmqUgpsEwX7HB8nfwBuLShYsi?=
- =?Windows-1252?Q?3RPw6K47AiceCmUi4HSPRCtOdynQksNdb4Prtj/XPUDjkOEh6cJ14xUo?=
- =?Windows-1252?Q?XaPgeWPusLDoj7K6Pukrz4+R+/8LKh5GKk7flgOjnJsFdClhl8VhuG1V?=
- =?Windows-1252?Q?VFz0lc9nf18WLFpJI+WjrctzZrI7LO2aWL+q4w8ddVnpyvNHT1xR94Ti?=
- =?Windows-1252?Q?tHjrogNBAaW9G2W3Wc3ZCgbgD0VrAAxfH0uyOoP9A1oBHkUjfo06hUFY?=
- =?Windows-1252?Q?v5u+ECb/FZsE7+dMan5Ufbb5YVwA7e7pA+z/pC6MvCA99jlkIGYrNrEe?=
- =?Windows-1252?Q?rGZ5B8JfmgRCFnQ/T2joJGMkDtCwnJ3l60cHcsBX14fzXw/YNUXXlNVg?=
- =?Windows-1252?Q?fOkz4WZqO30SJXc8nw/qWJTLCR+Y2e0KxDd4r6XqLAtaR5ShFPNviErx?=
- =?Windows-1252?Q?4mN6JRL+/pXA+vCBEECinXMTRmsQYKje3MOG3h08TnazlXfoWKqp5/LX?=
- =?Windows-1252?Q?KNUaPBd0b/gfVaQm1S4u62/M2vC1O6Co+0dCoX8GlWz0Y1T96783lg6r?=
- =?Windows-1252?Q?f3Gx/GNVNCMqIvhQ3KaoXUdnl5083a3NRefBkOG+j2agA+FKzlez3RIT?=
- =?Windows-1252?Q?OZVWMgOO+XE6zciUBj5ECxwXkg4vTTrzXnp0DtYRl9tMQQoTc6bfp7q3?=
- =?Windows-1252?Q?LufeiVqnXNbdcpkjy/DgHQPe58JCqnTNcmaC2glV4UnIh6RVGE/0lQ4m?=
- =?Windows-1252?Q?lM5SZkwJe5C376XBFMh7kj8w2Z1kCtwAfXokqmNQgZZC4stvnpyUo9ds?=
- =?Windows-1252?Q?jE2a6kJxq2DFSI4iqeCB8DuyPeUv5cN064GvQB76QB+48J7g5FzqS9kR?=
- =?Windows-1252?Q?y8qs4aR3wD2DKv+ne2LH24VwwntScpQNBSPCgU5ucOJUPjJtWANnX1Q3?=
- =?Windows-1252?Q?9HSq26f+3uAwOWVKg0n828WzJj+rc2WlpY46u6FVButKk7Hk73AXaQ?=
- =?Windows-1252?Q?=3D=3D?=
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VzBUMzd3VDhKK1V3SzYydTVFSDhqNlVxT0Flck9BOCtnZnFpdzZzSXVYdm56?=
+ =?utf-8?B?YkZrYk5kNHJxdzNTTXFCYU9HQUQ4U0lnVHR6dVBKN1F1YjEvdnZUckhFcDMz?=
+ =?utf-8?B?aVJzK3ZxUlUzWVQyN2NVOC9ERTNOYjJxL3dFelhpa0E3MjJBTlpnNnEvMWh2?=
+ =?utf-8?B?RHdZMjFhdy8wcERCMEs1YnJYbWtqckVjUHo2MnMrMEpuTFlDYTBqVUNDRkgv?=
+ =?utf-8?B?S2FnZlFYRERUKzRKSkZ2dDFYT05NeStxZkNXM0pZRk1wRW10SHRZUWpFQ0dn?=
+ =?utf-8?B?WlRLNmRHYWd0VUVDQXhGMmFLeUR1VXhRZlhaM0hBWndHdEV1UkpkZkM4NzJ4?=
+ =?utf-8?B?Unh4VnM4WlhERnFuVDVXTkxLQzFxN1I1eWhFUTFDbHh5Y0tOazdKUzlwMWxr?=
+ =?utf-8?B?MWhEQkhQc2ZDK0t2OHNabmdqcWczdWE4Qktkelc4MVRhQ2tUdFVjcU4yS1hR?=
+ =?utf-8?B?VjM0aElaRTZpQ2MrL0F1WUFFQ0R0VEtVZDdUSk04MlRqY2NkYmR0S1Aveloy?=
+ =?utf-8?B?YTBBTTVUQng5OWZBTEJycUh2YVJtRXRDZTZodmY5NXFqZ3R5dmYxQWdNaWFv?=
+ =?utf-8?B?a0Zoc3pLUnhYTEhoZnZ2bnRzZGxuL0RXZVIzM210Z3lrSzBWZm1aUzBUVkxm?=
+ =?utf-8?B?a0tIeHF5SUV3cXRVTG5MUStwZm5NV2psNnVDTHc4RUNCd0hTSmNpaTNYZ3RP?=
+ =?utf-8?B?cGNMR0xUMTBZaDF5aVVaaEtRejVwSERtL09hTVp1RW1Ca05GUElvR0VaNzNm?=
+ =?utf-8?B?UmRYZVBjVE1SMEtaVTFYVGZMWHVlV0xUQ0dkWkJyakl4c253bm1OQ1pBRzlt?=
+ =?utf-8?B?eUY2STQ1L0JUbzRiQzZ4Y3BjWWxWSlhhMGYyVlIxbmVIWEdIOHllamZsMEsy?=
+ =?utf-8?B?cllBcmlXZjRSeEpaaHpzUURlbUlINkNRekdFdXNCSVdCK1c2UUxyUGhUSmJy?=
+ =?utf-8?B?NmFwaGJYUnRUYXd1ZlVQazMySVZpQUxzU0VnMzViZlVPcVp0aGZpd2lCT0lS?=
+ =?utf-8?B?Wm8ycExMZDdlZDNRSVp1YTduTVpHdDZCdGt2ajBkc0pham1KQU1JNmtjNlVX?=
+ =?utf-8?B?L3U5dU45a3lyUHVwUzlCUER1MENrbzdNU3VFeVJZdDhUamJ5VnFmRGpEYkNv?=
+ =?utf-8?B?UDFpQnpCMVZvdWpGWlJKYjhwdlZnVlFFUmFHUEREdi9zYThuSE03bkNRUGJT?=
+ =?utf-8?B?bStHY09rRUhyVWZwSW5kWXhhZGlUTStZVGJrNlI1NjNXVExaT3hiTk1aKzJW?=
+ =?utf-8?B?V1BtKzZ6M2MyUENlTnRXdzVrTXRGbmRaQVVuQjl0ZTVXd09TZjV4a1Ruekor?=
+ =?utf-8?B?MTFYODBSSUFMUGVBS3VXY0tIOTJHNmVyTE5yUHBoRTdFUE02S1JDLy80NG1S?=
+ =?utf-8?B?NzRlejhORXFTaWwzbzZMMGszTFdTaUVvODErQVdRV010TFdtNFdsY2Z0UmJk?=
+ =?utf-8?B?UHFUL2lOa0pyMXdvdlh1TDVFRm5rRVBTeEJacEt0UnBCcFV3WmN3RUMrTUNr?=
+ =?utf-8?B?OGc3dC9WQ0JrZTAvNU1Da2RNUmVJenlzcU5Qak1aZXIwellvT3B2ODF4WFFu?=
+ =?utf-8?B?ZlZMZ3lMSWlSZDRqL1dDc2IxWlQ3eEFaVW5PZVovd0VTOGxrdDJSWEszcC85?=
+ =?utf-8?B?WjlqOEEwY0V5bzRwN0E2V1FxNzU0OUFpVTRaNk5ZSngzbzUrNzFwRmF1TjVr?=
+ =?utf-8?B?MFF3UDUxL3RmNURvWGR3VXZldWJnSmdETzlsWDRQczI3dDdmaXI1K2pHTWNr?=
+ =?utf-8?B?aTBSMGxCWHowU3FJS2ZnZDVaV3F1NldOZHp2a1VpRGxiRFJ0aUpsS1pONDFo?=
+ =?utf-8?B?MDlmT1JFczAyRW80OHovSlcyRzU3YVZxMURJN2k5enNBY1NMQkxBeUphVmxl?=
+ =?utf-8?B?bXlFaVhJT0hrMU9TVmZFQ0t0Z0ZoemRSZ0p0aTZjTklQWUlxZkRTdEFYL3VQ?=
+ =?utf-8?B?NjhHVXRKUXliOXBMT2FLRDlBUVBTUExIR25QZjRtMmZ6dHJZUDR5WlR1emtq?=
+ =?utf-8?B?a0RNajdnNm9Ca3hNMHR3S1dKaG9RR1dQTWM3YmZOUUp1ZTRTdEs1Nmg5Wi9D?=
+ =?utf-8?B?VXUzSEtLWGZPclc2SmU5a0EwUjVTb2tLY3V3RlRmK1ZOc28xM1l2WUdYaVU5?=
+ =?utf-8?Q?8SwgxAHfxnT3OTje648drbALj?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: siliconsignals.io
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a8626cf-80fb-4ca3-810d-08dd6d45693d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2025 15:38:24.2094
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR11MB5750.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6eb6dce-c674-4282-5653-08dd6d456c4a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2025 15:38:29.3371
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 7ec5089e-a433-4bd1-a638-82ee62e21d37
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: clzwGkQVVGXvkaxYJ693j5+2kwL1rTmOjQozggv6MOFkza4IBDl1+NCk571PsYGrZDhaj/l5XQtf3fB2irN6bzEMSFgmEVWz5reEWMpvATE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN2P287MB2061
+X-MS-Exchange-CrossTenant-userprincipalname: 6NUPh6NXTi0tOPCWcEW8Vfy9ToJbsNCMWgaAUpfU0xsIAJOSMP0/s8CUYBUfO0Fvuaayl1+Ld518VWadGEj4qW3hydZe0pQIzzdqTW8YjFs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7523
+X-OriginatorOrg: intel.com
 
-Hi Dave,=0A=
-=0A=
-Thank you for your detailed feedback.=0A=
-=0A=
-> On Thu, 27 Mar 2025 at 10:55, Tarang Raval=0A=
-> <tarang.raval@siliconsignals.io> wrote:=0A=
-> >=0A=
-> > Hi Sakari,=0A=
-> >=0A=
-> > Thanks for the review.=0A=
-> >=0A=
-> > > On Mon, Mar 10, 2025 at 12:47:46PM +0530, Tarang Raval wrote:=0A=
-> > > > imx334 can support both 4 and 8 lane configurations.=0A=
-> > > > Extend the driver to configure the lane mode accordingly.=0A=
-> > > >=0A=
-> > > > Signed-off-by: Tarang Raval <tarang.raval@siliconsignals.io>=0A=
-> > > > ---=0A=
-> > > >  drivers/media/i2c/imx334.c | 22 +++++++++++++++++++---=0A=
-> > > >  1 file changed, 19 insertions(+), 3 deletions(-)=0A=
-> > > >=0A=
-> > > > diff --git a/drivers/media/i2c/imx334.c b/drivers/media/i2c/imx334.=
-c=0A=
-> > > > index 24ccfd1d0986..23bfc64969cc 100644=0A=
-> > > > --- a/drivers/media/i2c/imx334.c=0A=
-> > > > +++ b/drivers/media/i2c/imx334.c=0A=
-> > > > @@ -47,6 +47,8 @@=0A=
-> > > >  #define IMX334_EXPOSURE_DEFAULT      0x0648=0A=
-> > > >=0A=
-> > > >  #define IMX334_REG_LANEMODE            CCI_REG8(0x3a01)=0A=
-> > > > +#define IMX334_CSI_4_LANE_MODE         3=0A=
-> > > > +#define IMX334_CSI_8_LANE_MODE         7=0A=
-> > > >=0A=
-> > > >  /* Window cropping Settings */=0A=
-> > > >  #define IMX334_REG_AREA3_ST_ADR_1      CCI_REG16_LE(0x3074)=0A=
-> > > > @@ -107,7 +109,6 @@=0A=
-> > > >  /* CSI2 HW configuration */=0A=
-> > > >  #define IMX334_LINK_FREQ_891M        891000000=0A=
-> > > >  #define IMX334_LINK_FREQ_445M        445500000=0A=
-> > > > -#define IMX334_NUM_DATA_LANES        4=0A=
-> > > >=0A=
-> > > >  #define IMX334_REG_MIN               0x00=0A=
-> > > >  #define IMX334_REG_MAX               0xfffff=0A=
-> > > > @@ -181,6 +182,7 @@ struct imx334_mode {=0A=
-> > > >   * @exp_ctrl: Pointer to exposure control=0A=
-> > > >   * @again_ctrl: Pointer to analog gain control=0A=
-> > > >   * @vblank: Vertical blanking in lines=0A=
-> > > > + * @lane_mode: Mode for number of connected data lanes=0A=
-> > > >   * @cur_mode: Pointer to current selected sensor mode=0A=
-> > > >   * @mutex: Mutex for serializing sensor controls=0A=
-> > > >   * @link_freq_bitmap: Menu bitmap for link_freq_ctrl=0A=
-> > > > @@ -204,6 +206,7 @@ struct imx334 {=0A=
-> > > >               struct v4l2_ctrl *again_ctrl;=0A=
-> > > >       };=0A=
-> > > >       u32 vblank;=0A=
-> > > > +     u32 lane_mode;=0A=
-> > > >       const struct imx334_mode *cur_mode;=0A=
-> > > >       struct mutex mutex;=0A=
-> > > >       unsigned long link_freq_bitmap;=0A=
-> > > > @@ -240,7 +243,6 @@ static const struct cci_reg_sequence common_mod=
-e_regs[] =3D {=0A=
-> > > >       { IMX334_REG_HADD_VADD, 0x00},=0A=
-> > > >       { IMX334_REG_VALID_EXPAND, 0x03},=0A=
-> > > >       { IMX334_REG_TCYCLE, 0x00},=0A=
-> > > > -     { IMX334_REG_LANEMODE, 0x03},=0A=
-> > >=0A=
-> > > Not a fault of this patch but also the closing brace should have a sp=
-ace=0A=
-> > > before it. Could you address it in the earlier patches?=0A=
-> >=0A=
-> > Okay, I will correct it.=0A=
-> >=0A=
-> > > >       { IMX334_REG_TCLKPOST, 0x007f},=0A=
-> > > >       { IMX334_REG_TCLKPREPARE, 0x0037},=0A=
-> > > >       { IMX334_REG_TCLKTRAIL, 0x0037},=0A=
-> > > > @@ -876,6 +878,13 @@ static int imx334_start_streaming(struct imx33=
-4 *imx334)=0A=
-> > > >               return ret;=0A=
-> > > >       }=0A=
-> > > >=0A=
-> > > > +     ret =3D cci_write(imx334->cci, IMX334_REG_LANEMODE,=0A=
-> > > > +                     imx334->lane_mode, NULL);=0A=
-> > > > +     if (ret) {=0A=
-> > > > +             dev_err(imx334->dev, "failed to configure lanes\n");=
-=0A=
-> > > > +             return ret;=0A=
-> > > > +     }=0A=
-> > > > +=0A=
-> > > >       ret =3D imx334_set_framefmt(imx334);=0A=
-> > > >       if (ret) {=0A=
-> > > >               dev_err(imx334->dev, "%s failed to set frame format: =
-%d\n",=0A=
-> > > > @@ -1022,7 +1031,14 @@ static int imx334_parse_hw_config(struct imx=
-334 *imx334)=0A=
-> > > >       if (ret)=0A=
-> > > >               return ret;=0A=
-> > > >=0A=
-> > > > -     if (bus_cfg.bus.mipi_csi2.num_data_lanes !=3D IMX334_NUM_DATA=
-_LANES) {=0A=
-> > > > +     switch (bus_cfg.bus.mipi_csi2.num_data_lanes) {=0A=
-> > > > +     case 4:=0A=
-> > > > +             imx334->lane_mode =3D IMX334_CSI_4_LANE_MODE;=0A=
-> > > > +             break;=0A=
-> > > > +     case 8:=0A=
-> > > > +             imx334->lane_mode =3D IMX334_CSI_8_LANE_MODE;=0A=
-> > >=0A=
-> > > Doesn't this affect the PLL configuration? Presumably higher frame ra=
-tes=0A=
-> > > could be achieved at least.=0A=
-> >=0A=
-> > Sorry, my commit message is misleading. The intention of this patch is =
-to=0A=
-> > configure the lane mode dynamically from the streaming function instead=
-=0A=
-> > of using a hardcoded value.=0A=
-> >=0A=
-> > You are correct that supporting an 8-lane mode requires changes to the =
-PLL=0A=
-> > configuration. This patch does not address that aspect yet.=0A=
-> =0A=
-> Is it actually required, or just a nicety?=0A=
-> The datasheet [1] says:=0A=
-> "Maximum frame rate in All-pixel scan mode 3840(H)=D72160(V) AD12bit: 60=
-=0A=
-> frame / s"=0A=
-> The current driver configuration for the 3840x2160 mode is a pixel=0A=
-> clock 594MHz with total timings of (3840+560) x (2160+90), which gives=0A=
-> a framerate of 60fps. So you already have the maximum capabilities of=0A=
-> the sensor exposed.=0A=
-> =0A=
-> Adding the 8 lane mode gives you the option to run at half the link=0A=
-> frequency of the 4 lane, but Sony Starvis sensors have a FIFO between=0A=
-> pixel array and MIPI block. All the other Starvis sensors I've=0A=
-> encountered are quite happy at any of the link frequencies as long as=0A=
-> the horizontal blanking makes the line period sufficient to send each=0A=
-> line.=0A=
-> =0A=
-> The datasheet does say "The bit rate maximum value are 1782 Mbps /=0A=
-> Lane in 4 Lane mode and 1188 Mbps / Lane in 8 Lane mode. " (page 78=0A=
-> "CSI-2 output"), but then also "The maximum bit rate of each Lane are=0A=
-> 1782 Mbps / Lane." (page 81 "MIPI transmitter"). Surely all lanes can=0A=
-> either do 1782Mbps, or they can't. They won't have downrated just=0A=
-> lanes 5-8.=0A=
-> Presumably it works at 1782Mbps/lane in 8 lane mode or you wouldn't=0A=
-> have submitted the patch,=0A=
-=0A=
-My patch aimed to make lane mode dynamic (4 or 8 lanes) based on hardware. =
-=0A=
-not to add 8-lane support my commit message was off, and I haven=92t tested=
- =0A=
-8 lanes. =0A=
-=0A=
-Thanks for pointing out the PLL and datasheet inconsistencies. I=92ll fix t=
-he message =0A=
-and leave 8-lane support for a well-tested implementation in the future.=0A=
-=0A=
-Best Regards,=0A=
-Tarang=0A=
- =0A=
-> We've been here before with the imx290 and imx415 drivers and what can=0A=
-> be supported with each combination of lanes and link frequency.=0A=
-> =0A=
-> Cheers=0A=
->   Dave=0A=
-> =0A=
-> [1] https://en.sunnywale.com/uploadfile/2022/1205/IMX334LQR-C%20full%20da=
-tasheet_Awin.pdf=0A=
-> =0A=
-> > Best Regards,=0A=
-> > Tarang=0A=
-> > > > +             break;=0A=
-> > > > +     default:=0A=
-> > > >               dev_err(imx334->dev,=0A=
-> > > >                       "number of CSI2 data lanes %d is not supporte=
-d\n",=0A=
-> > > >                       bus_cfg.bus.mipi_csi2.num_data_lanes);=0A=
-> > >=0A=
-> > > --=0A=
-> > > Regards,=0A=
-> > >=0A=
-> > > Sakari Ailus=0A=
+IA0KPiBPbiBNb24sIE1hciAyNCwgMjAyNSBhdCAxMjoyMToxNFBNICswMDAwLCBSZXNoZXRvdmEs
+IEVsZW5hIHdyb3RlOg0KPiA+DQo+ID4NCj4gPiA+IE9uIEZyaSwgTWFyIDIxLCAyMDI1IGF0IDAy
+OjM0OjQyUE0gKzAyMDAsIEVsZW5hIFJlc2hldG92YSB3cm90ZToNCj4gPiA+ID4gQWRkIGVycm9y
+IGNvZGVzIGZvciBFTkNMU1tFVVBEQVRFU1ZOXSwgdGhlbiBTR1ggQ1BVU1ZOIHVwZGF0ZQ0KPiA+
+ID4gPiBwcm9jZXNzIGNhbiBrbm93IHRoZSBleGVjdXRpb24gc3RhdGUgb2YgRVVQREFURVNWTi4N
+Cj4gPiA+ID4NCj4gPiA+DQo+ID4gPiBFbnVtZXJhdGUgdGhlIGVycm9yIGNvZGVzLg0KPiA+DQo+
+ID4gWW91IG1lYW4gaW4gdGhlIGNvbW1pdCBtZXNzYWdlIG9yPw0KPiANCj4gSSdtIG5vdCByZWFs
+bHkgc3VyZSBob3cga2VybmVsIHVzZXMgdGhlbS4NCg0KVGhlIFNHWF9JTlNVRkZJQ0lFTlRfRU5U
+Uk9QWSBpcyB1c2VkIHRvIG1ha2UgcmV0aWVzIGJ5IGtlcm5lbC4gDQpUaGUgb3RoZXIgdHdvIGFy
+ZSBvbmx5IHVzZWQgdG8gcHJpbnQgdGhlIGluZm9ybWF0aW9uYWwgbWVzc2FnZS4gDQoNCkJlc3Qg
+UmVnYXJkcywNCkVsZW5hLg0K
