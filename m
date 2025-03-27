@@ -1,106 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F62207E1A;
-	Thu, 27 Mar 2025 08:42:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEB32080CB;
+	Thu, 27 Mar 2025 08:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743064955; cv=none; b=g4Cdisp+yo6vTh/jUDSKtt1tnEdBUCgCyaw81Aoc9icD7XSsz43J8bpm81u3EIMbB8WPlUu8QD6ckVn1xC6mDdhj2B3tsQqrlxQPNB4YC+j3TyvP0oPNAOFsi8g/cppSUEIwybCVsLhbz9rrMN7pL5OotBL97SfcrQ9V1OViMb8=
+	t=1743064973; cv=none; b=BU7UAyVZnC3WWMUUCE+rj4yNTSnpKIXJJZ6df197aAL3fEc1RuiG15htEuygdsalRL0/xeiHV2zU+1dEsfvxbQsypWRAGENckIq7WwKBJy+JvEH8qOG/qVJYRsmPqzI1/g5eQQPUn0uKduZxcqA7FZcDijXbZb4Xrze3TIgXhso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743064955; c=relaxed/simple;
-	bh=5tSCaAz2NsJi6ahE7aTkD3g57B970/0hHF2vx/pkedg=;
+	s=arc-20240116; t=1743064973; c=relaxed/simple;
+	bh=YD48CO4FsnwCglT67h5qBvSC1Oj4vkTc/ynkSqfBkbU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bh+2xTcs/WhItN93b5w1J4bsZVBRDFsjbUtrruQQYVa6556NqMYB2/Hm5Rw8X9OCrr7j6q9RgkvHY5UxV9O9ywvcI4qiC/MPzPIA0af74XILmrilB4HX+x8INluDXJdmU+/9b8AsF/GdYsLulEnIOIe2yknBOT0G69Oc5oO3U/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g4khsnWq; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=kIDc5Zk+16CmWU+AGyW7MBuzy9TjpBB71iSM2KsLpV6+6zb1TTBEixvlHGH7zInhg/P2FQmPIpVPkoCgXfgchw3mvZNIuNFAZKJJggSPAKN3miFmoBkkrxn99HYpXEqnaEOKbWyNQ8LXfBjMbzszEE3yORtRpsJjFFse912Bk/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nOnUw5Ci; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g4khsnWq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743064954; x=1774600954;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5tSCaAz2NsJi6ahE7aTkD3g57B970/0hHF2vx/pkedg=;
-  b=g4khsnWqleLFCjFTanTsrf/aNl1XC9Xpm7L46f7h9mtyCBeUGEjrvCPd
-   734OzS3OecmaAFCHeAmclZCVlMoGTDHPuwpxuMLEfTVZv5v/FPnHdRzBB
-   e6EzpA0usNALHYNqsE0QMvCGRipJdHMZkxEzL7CwNvbW0CvLxAO7914Q/
-   /n4ZKxCRfByojmwqKw2Tg0Ew2sxZZYgb68DuL+Ko+E0MHJOENDWFsnWUF
-   0zXZMlaGWP/34BG/I03bTIa0NOyWZHb5HptkHQEA5hLdRKdews7iMjKxq
-   9tIBvZXZ4vMkLoK5Gy3Z6tCNYBAviQXhZiCOga57O2f9J6u/3MHh1PKNq
-   A==;
-X-CSE-ConnectionGUID: DiqsYHLfRROv3sMHJSXw/g==
-X-CSE-MsgGUID: js+ctgFETca6el5/RNVdyw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44400683"
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="44400683"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 01:42:34 -0700
-X-CSE-ConnectionGUID: Ya0FaBlRQZOrqf4c4pQvaQ==
-X-CSE-MsgGUID: rvLpX4iAR1G4OXYfWZCaCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="125003028"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 01:42:28 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1txioi-00000006KcK-2t3D;
-	Thu, 27 Mar 2025 10:42:24 +0200
-Date: Thu, 27 Mar 2025 10:42:24 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andrew Ballance <andrewjballance@gmail.com>
-Cc: remo@buenzli.dev, a.hindborg@kernel.org, alex.gaynor@gmail.com,
-	aliceryhl@google.com, benno.lossin@proton.me,
-	bjorn3_gh@protonmail.com, boqun.feng@gmail.com, dakr@kernel.org,
-	devicetree@vger.kernel.org, dirk.behme@de.bosch.com,
-	djrscally@gmail.com, gary@garyguo.net, gregkh@linuxfoundation.org,
-	heikki.krogerus@linux.intel.com, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ojeda@kernel.org, rafael@kernel.org,
-	robh@kernel.org, rust-for-linux@vger.kernel.org,
-	sakari.ailus@linux.intel.com, saravanak@google.com,
-	tmgross@umich.edu
-Subject: Re: [PATCH 0/10] More Rust bindings for device property reads
-Message-ID: <Z-UPcB6vnwBUs3FP@smile.fi.intel.com>
-References: <20250326171411.590681-1-remo@buenzli.dev>
- <20250326205409.694744-1-andrewjballance@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nOnUw5Ci"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10F1FC4CEDD;
+	Thu, 27 Mar 2025 08:42:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743064972;
+	bh=YD48CO4FsnwCglT67h5qBvSC1Oj4vkTc/ynkSqfBkbU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nOnUw5CiiGx9MW6mTLS3QpYBwCi1ecL7NIZ54rPiNogF5wqbYofbS7ZsUmJuRxOEK
+	 VmjINAOiHZG5fr2UqaSFPFa0RR7aoWNBY3rd6ldXeDEwC+r6h8zCfOBjuI1A7p8E1q
+	 HFPn5tXVTytEjQ+XcTNZ8fxwCSkLnnVis6YszVKWXfuNWunvmnzxF5pnASBCr3NHIR
+	 Z6JeGIbiyq05a9lLiEV9gTwA7OszwjPB4CXTD/6QsVB674OCI73mGO/M00/RC9/vhi
+	 CfJuG9imQVqlDaHgG9M8gB/2mzm1d9SekbfhqlLWkHgNnzAWHhs9VecB0F5JLILSNV
+	 U5ExS4PeES/YQ==
+Date: Thu, 27 Mar 2025 09:42:49 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Aleksandr Shubin <privatesub2@gmail.com>
+Cc: linux-kernel@vger.kernel.org, 
+	Conor Dooley <conor.dooley@microchip.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Cheo Fusi <fusibrandon13@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v11 1/3] dt-bindings: pwm: Add binding for Allwinner
+ D1/T113-S3/R329 PWM controller
+Message-ID: <t3zbutuclculgqchj2byhjqbebdyrs3sslt65faph5tljppljk@lr5pbdovyuxv>
+References: <20250213094018.134081-1-privatesub2@gmail.com>
+ <20250213094018.134081-2-privatesub2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="chw7rzoep466ms63"
 Content-Disposition: inline
-In-Reply-To: <20250326205409.694744-1-andrewjballance@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-
-On Wed, Mar 26, 2025 at 03:54:09PM -0500, Andrew Ballance wrote:
-> Hi thanks for sending these in.
-> 
-> On Wed, Mar 26, 2025 at 12:13 PM Remo Senekowitsch Wrote: 
-> > This is my first time posting to the mailing list, please let me know if
-> > I did anything wrong.
-> 
-> you probably will have to resubmit in the patch canonical format[1]
-> 
-> I would recomend reading the docs but in summary:
->  - all of your patches should have the subsystem in the subject line.
->  - patch 6 is missing a commit message
->  - commit messages should be written in the imperitive tone
->  - a couple of your commit messages give a reason for the changes but
->    do not have a summary of the changes
-
->  - for your v2 you should add a diffstat to your cover letter running
->    `git format-patch --base=auto --cover-letter` does this automatically
->    for you
-
-Also -v<X> gives the proper versioning.
-
-> [1] https://www.kernel.org/doc/html/latest/process/submitting-patches.html#the-canonical-patch-format
-
--- 
-With Best Regards,
-Andy Shevchenko
+In-Reply-To: <20250213094018.134081-2-privatesub2@gmail.com>
 
 
+--chw7rzoep466ms63
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v11 1/3] dt-bindings: pwm: Add binding for Allwinner
+ D1/T113-S3/R329 PWM controller
+MIME-Version: 1.0
+
+Hello,
+
+On Thu, Feb 13, 2025 at 12:40:12PM +0300, Aleksandr Shubin wrote:
+> Allwinner's D1, T113-S3 and R329 SoCs have a new pwm
+> controller witch is different from the previous pwm-sun4i.
+>=20
+> The D1 and T113 are identical in terms of peripherals,
+> they differ only in the architecture of the CPU core, and
+> even share the majority of their DT. Because of that,
+> using the same compatible makes sense.
+> The R329 is a different SoC though, and should have
+> a different compatible string added, especially as there
+> is a difference in the number of channels.
+>=20
+> D1 and T113s SoCs have one PWM controller with 8 channels.
+> R329 SoC has two PWM controllers in both power domains, one of
+> them has 9 channels (CPUX one) and the other has 6 (CPUS one).
+>=20
+> Add a device tree binding for them.
+>=20
+> Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+
+nitpick: Put your S-o-b last.
+
+> +  allwinner,npwms:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: The number of PWM channels configured for this instance
+> +    enum: [6, 9]
+
+Maybe mention the default that is assumed if this property isn't
+provided? Reading the commit log makes me wonder if the default is 8. If
+so I suggest to also allow that value explicitly.
+
+Best regards
+Uwe
+
+--chw7rzoep466ms63
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmflD4YACgkQj4D7WH0S
+/k4zPwf/YgFEiTFLIAzGN93hGhAtrlBkY9Wk7sGF/1me7yiQulyYfZVNVE6VYT+d
+ePJ4J6WFE+mBBUN7AUaq2L3TqRbq0Fe5fRURdVxpk+RHdtcMhn5FKUTpUWSfB9eM
+v1qDWxVJfZEFhhs5w6pdVeOP3EUjqNxD6oKqTXROCLJQIe4WA/TtPOMK3oJccVCv
+nSnAtTGktNW1RdDOZH6iltBKmY01oZJO1AkRjE7sOcWkjDVk6f68cgig337GWs7p
+b/2z0uKOyAlDQZFi8TaMA323lLDgPyoKAbNx+xdcLdlCKNMXUADk+3vF5caqPwQL
+9InY8wuNgSZh208F1a8d2YBqGxJlhA==
+=gz3O
+-----END PGP SIGNATURE-----
+
+--chw7rzoep466ms63--
