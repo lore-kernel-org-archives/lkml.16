@@ -1,215 +1,105 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E24D215782;
-	Thu, 27 Mar 2025 13:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B506215186
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 13:20:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743081637; cv=none; b=Ze0ESCaXYJvqZtvvnci2ryYPt9RfCz+QVA3o+ZHzSE16of8Wr0qWs5wXww7MpEEVQg/r4epBGBeBJkSWruos+CBGsDDzMVUK03/0iKLWuAifoD3OuU0FLQ8BiYxxcyL8LBPJrPS6oFeHQVGxg+SCvl7QbgNuMzee3iTiCGOvl58=
+	t=1743081643; cv=none; b=CeQjmNGc2VHzZAH23ttF0dsIIiBw+DHLfEbQh0Na8YY7i2XqOeV/KQPNUlKWsearRrnMnRy3rHtiCA00VmEX/zgXPYrWKd48B6ICgwUaPSSAbsepKvlWF70b7yj36SHWZsY0Zrhkw48k/2MawW2u2yHZnPjJDF2IQDR88hp/3hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743081637; c=relaxed/simple;
-	bh=wlj26vdCFJW6SSyEiwr/A888h+vTeqcZLsamfLhqP/I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=pFoB7ECzaJUIKb5UNchExrla5SxPtMRK0EPasBl+iWQsLnDvObT17X3pRAjnBMHlEQjcIP/Lhs5MwsETY6wHycZ4p5t/ud/t1KuGMm5oX/4l/YPsS7dqLsDcw7fVKdGerJYeZeZPMPS7av591k96IfZNsthtWHYXh+Mb1ICPSnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UbJeYpJo; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1743081643; c=relaxed/simple;
+	bh=VAC3jQYsjcnCVrZPAH4JIcMHqf1bqzRC+I0sVF5JOrQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LfbTVAtuKsotXsAXETcnT9Lf0aOVdGoK2tOZhu/zRCaLjEsAHfLjtdaDWI9Ft4s8fvQAZNtDhICeQZtyLunfzx1NmcK1X717F3nkoIZyIID1F31PMiec5DoihiR8ZDugnE/4NdESvxdORFqhornK5M7UF2ZxyNbXCldXSvu78hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ETwnPzJe; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UbJeYpJo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=f9qeqcDtLM620bE3Ca
-	/AcO/hR5gMSWl/zpqwr6lqtRs=; b=UbJeYpJo/U8obNN2veBIhkJx0xo+fWYoRe
-	XVzBxKUgI8e1nHzfqQIgJguIa1nikqL1ma8ilqoJXMlHKluenKywY+bxnu5Wzj2F
-	LcQ6oSADIFoLpSbuCJwqlNRZHnC09uMSM/cPmyANpmlsXR0Om0Sq1fnLCZnuvoNY
-	4ot5avctM=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wD3f7xtUOVn1ekMCQ--.39600S5;
-	Thu, 27 Mar 2025 21:19:49 +0800 (CST)
-From: Wenliang Yan <wenliang202407@163.com>
-To: linux@roeck-us.net,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Jean Delvare <jdelvare@suse.com>
-Cc: Wenliang Yan <wenliang202407@163.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 3/4] hwmon:(ina238)Modify the calculation formula to adapt to different chips
-Date: Thu, 27 Mar 2025 09:18:40 -0400
-Message-Id: <20250327131841.15013-4-wenliang202407@163.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250327131841.15013-1-wenliang202407@163.com>
-References: <20250327131841.15013-1-wenliang202407@163.com>
-X-CM-TRANSID:_____wD3f7xtUOVn1ekMCQ--.39600S5
-X-Coremail-Antispam: 1Uf129KBjvJXoWxKrWfJrWfuw45Cry5uF45Jrb_yoWxZry8pF
-	y5Can8Gr18tw17WrnFkr4xuF15Xwn7GwnxAr97KwnavFn0k34v9rW5tFWrZrW3Jws8Xa18
-	t34UtrWYkwsFyaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRFksgUUUUU=
-X-CM-SenderInfo: xzhqzxhdqjjiisuqlqqrwthudrp/1tbibhkd02flSlJ99AAEsu
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ETwnPzJe"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so9405835e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 06:20:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743081640; x=1743686440; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=VAC3jQYsjcnCVrZPAH4JIcMHqf1bqzRC+I0sVF5JOrQ=;
+        b=ETwnPzJebUhQSnpmL8nYgyp+8ZngjFOqQN61z7BX5cBWAsA4+a8CevIS4++y95u391
+         RSnp4i56dPfb7m0euFbFTJUiYMGuVGs3Lp0OgQkQzIF/z5wvdHbm60x9VMJQ4S33oOVA
+         WoSkCKkB68Y203K5dN28Ep8Icz6vKj+5HmenxUuVM68W2Zf4C6ztkw1VL4q3ovItUHqk
+         4yYGSKrfwQ4OmK/1qpKYd6iS71/GJaGikvITVv//62zg5Gvl5grACwk6rmXYieGgXSbg
+         wg42ROMLWszGM9gK6Wyv06s1m6yQBIGvQ/NWB4kHC0VCVTk053k7wrAzZQxVi96NmXj8
+         JofA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743081640; x=1743686440;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VAC3jQYsjcnCVrZPAH4JIcMHqf1bqzRC+I0sVF5JOrQ=;
+        b=E+A552tTyZSHuh5fWsG528J9ajgLNh1fN7BipbwxxUNp3nTluiUyTBTT/eHWHtroat
+         P2E4Mum8bCtdi97plpeWpCKSyXMaSiojosASsSlUzy6xAFf1wiHyRC8VIYjSxucbu3Gz
+         wkdl5ErgShPz/IMJwhA4AouUOuI1wnC59ZWTUm4jr+ocbpC7MXKNhyTPLODVCJNoieRe
+         v1E3415dXSMMR9Rv80rTKldgVDjruauPpYZcgPUtQzEmVx2H77h5n6jU/42tQXuAJ+U3
+         O6BxCodS9tD8r9jeJA3x/TYsuUkIzo9WHmjWrEZN1EZ/QCMkXlqZc7HnZmEeaoWHGrlB
+         dlIg==
+X-Forwarded-Encrypted: i=1; AJvYcCWemHr99kNtWee5xgdljyJlUVBfiW3SbzFNcAvZ3LCXcUihC1WOLf2xw3QuYmqbWRGBg/yO8BRNR7DuNzI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRAmQVLZOgd12Eva8KWZFyFuqPSCxngKv/ZCLBgMfQmp61n8W4
+	hpan+cKiG+ucQYxAhEneZ7NuovKZpwP80UHJBNsl2kf7D6J+yI/2QyMVuc5sCoWzN/cdGxpf7E8
+	pHUtz3sEctIj12Xoi2uxYLdisSMgItZEYoEvqKw==
+X-Gm-Gg: ASbGncvH5FFmYX2BUcFortlb1gg2eaUNKz/mtlt8uBqg3WAX9295l+Yzfi3YG4LRHg/
+	f1CBltNns6bEHr5Mm4jqVn9OF7mDffR67yANZFC+dU/5FTAOPl8XV4UUg7XrDdaenh57oWBXP6w
+	qPIAJ7uk4n+9NzuuNXda39qMGh8GJtjOsFq163Qw+6k78jD96C/29JGGw0Hb1Wt6BRjIvImA==
+X-Google-Smtp-Source: AGHT+IG3iVxfp4ue+UFXysXvz6DKi4QxLJqDrwxZD58TmfbCfjnNN1Hj7KqR62wJRNud2cz8gFthkm8XWf3losuWT5Q=
+X-Received: by 2002:a05:600c:4e12:b0:43c:e8a5:87a with SMTP id
+ 5b1f17b1804b1-43d84fba8afmr37682355e9.16.1743081640372; Thu, 27 Mar 2025
+ 06:20:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250325-wip-obbardc-qcom-t14s-oled-panel-v2-0-e9bc7c9d30cc@linaro.org>
+ <20250325-wip-obbardc-qcom-t14s-oled-panel-v2-2-e9bc7c9d30cc@linaro.org> <Z+UDlXFKbmxCECp9@linaro.org>
+In-Reply-To: <Z+UDlXFKbmxCECp9@linaro.org>
+From: Christopher Obbard <christopher.obbard@linaro.org>
+Date: Thu, 27 Mar 2025 13:20:29 +0000
+X-Gm-Features: AQ5f1Jrcx5M9VC1f4LvGyufiYg8Yl8JGFp1ql4ekPmK5Li1CNGcCqmgS2hBtMTc
+Message-ID: <CACr-zFBRC1ZGTqX_RDERk3k52hJ=kunN6Lw6Qs-5djttfTJ3ZA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] arm64: dts: qcom: x1e78100-t14s: add hpd gpio to
+ LCD panel
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Douglas Anderson <dianders@chromium.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	Johan Hovold <johan@kernel.org>, Rui Miguel Silva <rui.silva@linaro.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Modify the calculation formula to adapt to different chips.
+Hi Abel,
 
-Signed-off-by: Wenliang Yan <wenliang202407@163.com>
----
+On Thu, 27 Mar 2025 at 07:51, Abel Vesa <abel.vesa@linaro.org> wrote:
+>
+> On 25-03-25 19:21:27, Christopher Obbard wrote:
+> > The eDP panel has an HPD GPIO. Describe it in the devicetree.
+> >
+> > Unfortunately I cannot test this on the non-OLED model since I
+> > only have access to the model with OLED (which also uses the
+> > HPD GPIO).
+> >
+> > I believe this could be split into two patches; one adding the
+> > pinctrl node and one adding the hpd gpio to the T14s devicetree.
+> > But I will wait for your comments on this ;-).
+>
+> You should definitely drop these two paragraphs entirely from the commit
+> message. Maybe add them to the cover letter.
 
-v5->v6:Split the patch, this patch introduce the principle of the formula:
-1.shunt voltage reading and writing calculate
-*val = (regval * INA238_SHUNT_VOLTAGE_LSB) * data->gain / (1000 * 4);
-regval = (regval * 1000 * 4) / (INA238_SHUNT_VOLTAGE_LSB * data->gain);
-Solves the situation where gain=2 exists
+Of course; I will do so in v3.
+But hey, it made you both reply, so in a way my comment did work ;-).
 
-2.power reading and writing calculate
-power = div_u64(regval * 1000ULL * INA238_FIXED_SHUNT * data->gain *
-data->config->power_calculate_factor, 4 * 100 * data->rshunt);
+Cheers!
 
-Since the 'data->config->power_calculate_factor' parameter values of different
-chips are different, the formula is modified.
-
-Current_LSB is 1mA/lsb, so the SQ52206's Energy calculation formula is
-Power (uW) = 0.24(0.2) * register value * 1000 * 20000 / rshunt / 4 * gain,
-where 20000 is the default resistance value. 4 is the default gain of 4,
-20000*gain/ (rshunt*4) indicates the conversion ratio based on the actual
-resistance value and the gain ratio. 0.24(0.2) is fixed parameters.
-'data->config->power_calculate_factor/100 == 0.24(0.2)'.
-
-3.read temp calculate
-*val = div_s64(((s64)((s16)regval) >> data->config->temp_shift) *
-(s64)data->config->temp_lsb, 10000);
-Since the 'data->config->temp_shift' parameter values of different
-chips are different, the formula is modified.
-Cast the parameter regval type s64 to avoid overflows resulting in calculation errors.
-
-4.writr temp calculate
-regval = clamp_val(val, -40000, 125000);
-Limiting the size of written data prevents overflows that can cause calculation error
-
- drivers/hwmon/ina238.c | 47 +++++++++++++++++++++---------------------
- 1 file changed, 24 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/hwmon/ina238.c b/drivers/hwmon/ina238.c
-index 1bf4c850b04d..7a96b68d4d20 100644
---- a/drivers/hwmon/ina238.c
-+++ b/drivers/hwmon/ina238.c
-@@ -270,10 +270,10 @@ static int ina238_read_in(struct device *dev, u32 attr, int channel,
- 		regval = (s16)regval;
- 		if (channel == 0)
- 			/* gain of 1 -> LSB / 4 */
--			*val = (regval * INA238_SHUNT_VOLTAGE_LSB) /
--			       (1000 * (4 - data->gain + 1));
-+			*val = (regval * INA238_SHUNT_VOLTAGE_LSB) *
-+					data->gain / (1000 * 4);
- 		else
--			*val = (regval * INA238_BUS_VOLTAGE_LSB) / 1000;
-+			*val = (regval * data->config->bus_voltage_lsb) / 1000;
- 		break;
- 	case hwmon_in_max_alarm:
- 	case hwmon_in_min_alarm:
-@@ -298,8 +298,8 @@ static int ina238_write_in(struct device *dev, u32 attr, int channel,
- 	case 0:
- 		/* signed value, clamp to max range +/-163 mV */
- 		regval = clamp_val(val, -163, 163);
--		regval = (regval * 1000 * (4 - data->gain + 1)) /
--			 INA238_SHUNT_VOLTAGE_LSB;
-+		regval = (regval * 1000 * 4) /
-+			 (INA238_SHUNT_VOLTAGE_LSB * data->gain);
- 		regval = clamp_val(regval, S16_MIN, S16_MAX);
- 
- 		switch (attr) {
-@@ -315,7 +315,7 @@ static int ina238_write_in(struct device *dev, u32 attr, int channel,
- 	case 1:
- 		/* signed value, positive values only. Clamp to max 102.396 V */
- 		regval = clamp_val(val, 0, 102396);
--		regval = (regval * 1000) / INA238_BUS_VOLTAGE_LSB;
-+		regval = (regval * 1000) / data->config->bus_voltage_lsb;
- 		regval = clamp_val(regval, 0, S16_MAX);
- 
- 		switch (attr) {
-@@ -370,8 +370,8 @@ static int ina238_read_power(struct device *dev, u32 attr, long *val)
- 			return err;
- 
- 		/* Fixed 1mA lsb, scaled by 1000000 to have result in uW */
--		power = div_u64(regval * 1000ULL * INA238_FIXED_SHUNT *
--				data->gain, 20 * data->rshunt);
-+		power = div_u64(regval * 1000ULL * INA238_FIXED_SHUNT *	data->gain *
-+				data->config->power_calculate_factor, 4 * 100 * data->rshunt);
- 		/* Clamp value to maximum value of long */
- 		*val = clamp_val(power, 0, LONG_MAX);
- 		break;
-@@ -381,8 +381,8 @@ static int ina238_read_power(struct device *dev, u32 attr, long *val)
- 			return err;
- 
- 		/* Fixed 1mA lsb, scaled by 1000000 to have result in uW */
--		power = div_u64(regval * 1000ULL * INA238_FIXED_SHUNT *
--				data->gain, 20 * data->rshunt);
-+		power = div_u64(regval * 1000ULL * INA238_FIXED_SHUNT *	data->gain *
-+				data->config->power_calculate_factor, 4 * 100 * data->rshunt);
- 		/* Clamp value to maximum value of long */
- 		*val = clamp_val(power, 0, LONG_MAX);
- 		break;
-@@ -395,8 +395,8 @@ static int ina238_read_power(struct device *dev, u32 attr, long *val)
- 		 * Truncated 24-bit compare register, lower 8-bits are
- 		 * truncated. Same conversion to/from uW as POWER register.
- 		 */
--		power = div_u64((regval << 8) * 1000ULL * INA238_FIXED_SHUNT *
--			       data->gain, 20 * data->rshunt);
-+		power = div_u64((regval << 8) * 1000ULL * INA238_FIXED_SHUNT *	data->gain *
-+				data->config->power_calculate_factor, 4 * 100 * data->rshunt);
- 		/* Clamp value to maximum value of long */
- 		*val = clamp_val(power, 0, LONG_MAX);
- 		break;
-@@ -428,8 +428,8 @@ static int ina238_write_power(struct device *dev, u32 attr, long val)
- 	 * register.
- 	 */
- 	regval = clamp_val(val, 0, LONG_MAX);
--	regval = div_u64(val * 20ULL * data->rshunt,
--			 1000ULL * INA238_FIXED_SHUNT * data->gain);
-+	regval = div_u64(val * 4 * 100 * data->rshunt, data->config->power_calculate_factor *
-+			1000ULL * INA238_FIXED_SHUNT * data->gain);
- 	regval = clamp_val(regval >> 8, 0, U16_MAX);
- 
- 	return regmap_write(data->regmap, INA238_POWER_LIMIT, regval);
-@@ -446,17 +446,17 @@ static int ina238_read_temp(struct device *dev, u32 attr, long *val)
- 		err = regmap_read(data->regmap, INA238_DIE_TEMP, &regval);
- 		if (err)
- 			return err;
--
--		/* Signed, bits 15-4 of register, result in mC */
--		*val = ((s16)regval >> 4) * INA238_DIE_TEMP_LSB;
-+		/* Signed, result in mC */
-+		*val = div_s64(((s64)((s16)regval) >> data->config->temp_shift) *
-+						(s64)data->config->temp_lsb, 10000);
- 		break;
- 	case hwmon_temp_max:
- 		err = regmap_read(data->regmap, INA238_TEMP_LIMIT, &regval);
- 		if (err)
- 			return err;
--
--		/* Signed, bits 15-4 of register, result in mC */
--		*val = ((s16)regval >> 4) * INA238_DIE_TEMP_LSB;
-+		/* Signed, result in mC */
-+		*val = div_s64(((s64)((s16)regval) >> data->config->temp_shift) *
-+						(s64)data->config->temp_lsb, 10000);
- 		break;
- 	case hwmon_temp_max_alarm:
- 		err = regmap_read(data->regmap, INA238_DIAG_ALERT, &regval);
-@@ -480,9 +480,10 @@ static int ina238_write_temp(struct device *dev, u32 attr, long val)
- 	if (attr != hwmon_temp_max)
- 		return -EOPNOTSUPP;
- 
--	/* Signed, bits 15-4 of register */
--	regval = (val / INA238_DIE_TEMP_LSB) << 4;
--	regval = clamp_val(regval, S16_MIN, S16_MAX) & 0xfff0;
-+	/* Signed */
-+	regval = clamp_val(val, -40000, 125000);
-+	regval = div_s64(val*10000, data->config->temp_lsb) << data->config->temp_shift;
-+	regval = clamp_val(regval, S16_MIN, S16_MAX) & (0xffff << data->config->temp_shift);
- 
- 	return regmap_write(data->regmap, INA238_TEMP_LIMIT, regval);
- }
--- 
-2.17.1
-
+Chris
