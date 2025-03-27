@@ -1,164 +1,217 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2084.outbound.protection.outlook.com [40.107.93.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6829F1DFF8
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 17:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743096468; cv=fail; b=L2xSjvaNMWNUSLKAy+QCA4cNZMq1+/vi7PzWQ5Qp6QjiJx3vhRBoJXu8jq8PK223761OY2JvH5gNczAuilHBhoF+TBuP+Z5gTBUVVVvtwmwhyD7znB70Zr9SzVzodW/yIEU0ISd/rIpj25NOo+UXGJkSANpxevKSlqo3H0vaeuU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743096468; c=relaxed/simple;
-	bh=xCS6S9aJcUf+shh8mGA4A4bdnkggIwq0EhASF0oJaQo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=SskF3kjVYCYzAZ+1SvxBQKt2sV5gg0hU32jufyYpjjJCuqyduQBsrXN1icqkoLKmF9cl8F5M7XcGL1fml7LrthudQ1+zGJAQwoBJlPfmgjjvffGf2CMxKsvpbICv5AwSJI0ib6AAj3f/HN9cy/FmHEc6h4B/6Cq27iXDB3vCLXo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=EcyHaMSJ; arc=fail smtp.client-ip=40.107.93.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825C51AE01C
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 17:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743096504; cv=none; b=t7Xe77Hj16xCrYPRw92mA61JOhUzYZlA1IwsZG7/QZHpkYSP3zu2VlATGP18QAvwm1aj1wEJAaVRzFlz4IiHkp8SUyjl+G8yW0rkF1uWec+zYwG4ViFwEuM+yasJt7s+7feJdlTfhZbUlxcsf1ZK6E/qH5Q3ZNC3LSsy45naeug=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743096504; c=relaxed/simple;
+	bh=Qu9BXW/WwRM5yK5XxhdUNBkjNGAO4qF8Uc7STA72aI4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ntZ/m1uitLNciprmr+OIF3kIovjWXvooQmoxTzPOWBqYOorkjieuP4z9BLXJVVR6DTgCFrSAsVaBtegKTDiamT2i/eKyxhGYhfsLXiBJUUKQ+6TB+Oa8EzBvx19ZrJK0HZkxSfHpKYl0nXOyNCdjHQaR0K9iQ38El0mNiQC0qTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UlOy3VtR; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="EcyHaMSJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uIvOJXKdDINmBpg2ZZYWxjxf6eXxnkc9DIMp+F79Wm1HX/1o4Kq4m2SCjQhMH/SXKsYptpTyDrs/1pU85U9TPq+UejQnimzvuN2Bgp8ZDV89iH2T4CF7jhWLBOIsdJU93+VysxUi+h4/ySf49KKRbWEuDgUfIJN1UdfzQ1PoRJetXd0sCghRy8G5Mk03psticNjn4kpo17P3wiL+ZVe24UYWt2FIwoalG4lDOo4vlUskCk78XmTZ+lU9ilCgdLZXn2J/kA+DoVxX/9Fnj3YQ108FwrwBvF8NJCiIfVrqDHdzZ5G5J7deH5coPDaKqMQIw140ixRVa+K429r1wadQFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wTjpKB+trqq3USz5TubdsArA0IO+CGOAljGDdxUIjV8=;
- b=VdFljysZKK0pocJMEDtyWn4JAW+QqSLxG+ZJgm4biZyQMW5Ck88XFwMVFDtfyToYswG9s4PPDLw6YAIShX/nAkJAzOXIfE3tBAvsfefn8fRDvwrfLJ8u/AQJQzjX03///1tldzIxjWmZvXvTbee5Emh9sdTTwipOYh8TcbxchayE1Ijq64vMjNUJjxSqCdwJpmwgiIcd0wFI+SmtYdG1Fb0oQ+WwEu5B+jgRRlTHZorOLrr2LJUMiYbvYsjbKzdL6DbJpv/E5hnh3Orhl+X1qkOpTVVjAETPVnwnKWHzZ0RJUTIKEwe80ARqSjM/VpYTRFw1pg2j/VAfaCR/Hg8/sg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wTjpKB+trqq3USz5TubdsArA0IO+CGOAljGDdxUIjV8=;
- b=EcyHaMSJ8+GT0dvn14YZ/6fnXuPHWUP/9NqbqbLg6RKeLbScjhNRNn9kRcQicyoo8LqNdUsfwsdBIbwHNtOj5LM2zm//tp0fuad31JJWrjPNPalGQtc/T2FwOdce8iPM4xzvoW6on51KvIxk/NlcM4sAUE1+OPYRwAQb6sprKvQkWGEv5xIPoqiz50EnSa1pvFb/GCiJN7kYaUg3ggUpGwrYr/FSAnL/Ij2NTksBMNV2e3HdTtQagweQKF4exWa6QgyyhgR9GaKaSG24PlNrqBjMOJzoDPbob3tiPvDkdaQQZAbSjIuTasMOzfNz0ixCfLZTHWqYtw79tcQvhhGveQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM4PR12MB6424.namprd12.prod.outlook.com (2603:10b6:8:be::16) by
- PH7PR12MB7843.namprd12.prod.outlook.com (2603:10b6:510:27e::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
- 2025 17:27:42 +0000
-Received: from DM4PR12MB6424.namprd12.prod.outlook.com
- ([fe80::8133:5fd9:ff45:d793]) by DM4PR12MB6424.namprd12.prod.outlook.com
- ([fe80::8133:5fd9:ff45:d793%7]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
- 17:27:42 +0000
-Date: Thu, 27 Mar 2025 18:27:39 +0100
-From: Andrea Righi <arighi@nvidia.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched_ext: Fix missing rq lock in scx_bpf_cpuperf_set()
-Message-ID: <Z-WKi_aKOMgbzU1M@gpd3>
-References: <20250325140021.73570-1-arighi@nvidia.com>
- <Z-SasIwx5hINm1sf@slm.duckdns.org>
- <Z-UEkJfkkBBKqCyU@gpd3>
- <Z-UgI3dSwcLa-CRC@gpd3>
- <Z-WGRetAL9tSPEkv@slm.duckdns.org>
- <Z-WHnYrNHHYx3lpa@gpd3>
- <Z-WIh6obKP-ygcsP@slm.duckdns.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-WIh6obKP-ygcsP@slm.duckdns.org>
-X-ClientProxiedBy: MI1P293CA0008.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:2::11) To DM4PR12MB6424.namprd12.prod.outlook.com
- (2603:10b6:8:be::16)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UlOy3VtR"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-30155bbbed9so1653110a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:28:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743096502; x=1743701302; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=QHz+SaPSWGp6wDaJlC8xVhuyDfBVETPMBB/j6NeLduE=;
+        b=UlOy3VtRdiJBYBJLZfrqQIq+QLBvKwwUyappCBIhqq0SCzawfKZOPMLuHRZ/tTKEdW
+         G452LwrWyLe9/QQM9tyFXoSh1JRAeIuwF8PKiaLmP1pJj5bi3jh1Fa+XKnS8gqlFKWEN
+         Bu+n5KtTehKfrj1ShpgvOzB4mWrzGcexUNphZ09how6igLeXnJp6ZvR/eUCeJcH84xUu
+         HPT0FMHxe9rT7SpHYXZFCoyYF80UNrusu9aWJN7m5xC8ZG5xkj2KTIaTI4dynZNhULk8
+         LRwXgH+cfLupw0+TIZ+UcwDY9jgbnrmpySX+2y0+7fYggUN0FfhGRVfmoc5qrvNOcipW
+         RAZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743096502; x=1743701302;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QHz+SaPSWGp6wDaJlC8xVhuyDfBVETPMBB/j6NeLduE=;
+        b=oiQHwcOqUPuvjU15gE+m+BtNBPRddVZbZFHYdeirhZ1xH2Ru2gFn4U84NDxSUFhZVN
+         /glXlAURf/CtO9dzDIaGozP2dmJMigHf6FjsSs/Xfem4JYv4CGr7zVG3ohACshd9enAs
+         Ajow4CmgNrSkO1ROJ8QDjEec6xoKXRvAwzIjnAcviHa1tPqBjlktlynuAKgrrEzBOS3l
+         ixw9pxws+CDU1D4KiKst7uLmPGFP5m07MyKgHjBLP1bQkpI8RlHtcLruUC931F02gjCa
+         D3FLqSUiOIQGUDm6AsBK3hUXbk88PbmO8lN/ByIns3d+IMgNmozqP5ei+DjEkvzl5nLb
+         Yp9w==
+X-Forwarded-Encrypted: i=1; AJvYcCXIEe+20ZJ5KklJ86dT595VAVARDZWzcQBXWdGhGeEbsG6m/nqlLImkNe+vtcjlrbEdEjFncMUhrumR868=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxn1qQ5hilRR7U1PRqAwF+88sCaSRgjs/0RJzqi+uO9Jgnh7Fzf
+	FCz9TXkamyk/r+8AfKNrhPpfFcqRY7DbmcimfI+ZdZc+994dDbuL56tGPlG2bw==
+X-Gm-Gg: ASbGnctnOZq3ERUSHjU5Zpz0YVg/vkNIdqquVLuFFX7bnd0H5mP5KhVt/KDBMVS0GQc
+	OezUiv5wWbRjT+4Y5iUk2R+ARdEGlY8T4IYb4d5SUAY+BYd7hP5q95rc055nxTvlcpd9kwO/MmK
+	za4lPJBuXkC9yvwR4ugEwa1pCYyx525GbibeqCJGWR1Df9Z7+KYZmjz0nX5j2DaMtPozl6UPk2N
+	zduFdSgtJlFmB1ubIXkDzGH+9Jl/zqMMvG8+/YxcAVFYf1ncKK+6GbJwe4DGJCM3FFdTqXxXdnX
+	0f24hyQP5hw0iipufG7DB+liJQtN6XTX04ZBrT5Jt3i09G3TMF3PWw0=
+X-Google-Smtp-Source: AGHT+IGqtCOWQs3SNQd1ccGYnNeLv3HOIj7c/1mVjG4p0xNEN7WwDgh3wSqvsol2pDFN1HxLXEZyGA==
+X-Received: by 2002:a17:90b:520a:b0:2fe:b470:dde4 with SMTP id 98e67ed59e1d1-303a7d6629emr8930210a91.12.1743096501527;
+        Thu, 27 Mar 2025 10:28:21 -0700 (PDT)
+Received: from thinkpad ([120.60.71.118])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30516d3e132sm172524a91.4.2025.03.27.10.28.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 10:28:21 -0700 (PDT)
+Date: Thu, 27 Mar 2025 22:58:14 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Praveenkumar I <quic_ipkumar@quicinc.com>
+Cc: george.moussalem@outlook.com, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Nitheesh Sekar <quic_nsekar@quicinc.com>, Varadarajan Narayanan <quic_varada@quicinc.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	20250317100029.881286-2-quic_varada@quicinc.com, Sricharan R <quic_srichara@quicinc.com>
+Subject: Re: [PATCH v6 5/6] arm64: dts: qcom: ipq5018: Add PCIe related nodes
+Message-ID: <vgohpbmbhghooeb6byur2wx535sa7tdmtsu5orgzr26hnaw2yg@aibeo3gqiztn>
+References: <20250321-ipq5018-pcie-v6-0-b7d659a76205@outlook.com>
+ <20250321-ipq5018-pcie-v6-5-b7d659a76205@outlook.com>
+ <a4n3w62bg6x2iux4z7enu3po56hr5pcavjfmvtzdcwv2w4ptrr@ssvfdrltfg5y>
+ <6fa2bd30-762b-4a3a-b94f-8798c027764a@quicinc.com>
+ <ycv74l5nop5mptj6uobuacffnwho2gvznh4dhxagupt5gh6x4k@vgik7ouydy6f>
+ <988510be-ee5f-49c9-a5a4-074c51245f95@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6424:EE_|PH7PR12MB7843:EE_
-X-MS-Office365-Filtering-Correlation-Id: afe6fa91-7d16-4050-dad0-08dd6d54ae3d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?6u2Pk20iuHQp3Yq9kLOEJZo6Teewmtw9CUZok4Tc+z6Jf2BbWvVbXKtlxKuz?=
- =?us-ascii?Q?6WEfZ+r62KsqL+0FotLqMVGWCTAfkZry4SL8RGsWY+haO9kCFo+2tMVGs74P?=
- =?us-ascii?Q?zP6l8o/ZmvbPak/P3VIrs5fFKUCSDAqqPzoPCf7EfkZigMt9Uq0pjo1riyr+?=
- =?us-ascii?Q?8K9kOORoxn8mErOLNkIB9JOzHHX6gkdaTGtDmJljpk3gh6xcw86KW+pUyPVQ?=
- =?us-ascii?Q?vomHW21NGIwu/6pi9P++1pBWioDqoH5G5pCyGG0L4so7cp/kNwstXQcxpXNl?=
- =?us-ascii?Q?qHdezIDa+JlQkHy7Arm5Z11jKh3LTbGQzorsdqJN/dlM36siJNE7MzGdb181?=
- =?us-ascii?Q?Ak1hFOVq994JCerP8u0NH5qR1BqMv4DmbAiibARC2JpknHYhzCeQ9WlR99Zy?=
- =?us-ascii?Q?BE6lPmuPt+Bjqhs9uEMS0ljl1itZudzCBlmFz5h82LZjOF7EEPjdsLFe/4WO?=
- =?us-ascii?Q?Szf1BCsDRUHPTapxYLe3Z5WVtZaRkqhWZqafdxrxD1ElXnYfkOe0dC5d/pg/?=
- =?us-ascii?Q?UxZTbrVA62RVXZtlx2n18w/pKkSFGpi6894t8GYwDDozkFlemPPOBRGqyKMl?=
- =?us-ascii?Q?PZtHv2cKogdd8818r72Dq/UwaTb96T6tEg5U2OwouclgYszyToT4A3zv60at?=
- =?us-ascii?Q?hvvLkX8+Oe3Xjh3S/CoLWjWABbzIAG9p98YEdQ9k/kdqm/iE2f6EpDKf9p/h?=
- =?us-ascii?Q?dNoxIXFxEN8JgRc+3tODkDGuYwTDlGm/n9kOame8Yy3PPhH+JPjlSWJqRHZt?=
- =?us-ascii?Q?hRr1iP5ti6DcdhhCJ3cV+AuTIbeLo13ykrMhd3Jt0mpboUTsx74TtY+ApPP5?=
- =?us-ascii?Q?O9j2d71C/OIOWx+O+rpRYLyEkRol8mVYxqLnH3F6d07IBf3RdxDMyMCeLRpg?=
- =?us-ascii?Q?KfNtCoC2jtaMq9Ig/i5VnEqM5T+F3NsO0dfrAKRT5x7Udfg/+0al0nzCRCMM?=
- =?us-ascii?Q?6/UBIlu5cKthoG5UYBJX0GHPTeytFpq+BT+ElJC/5vjurxB8JFlgE2PObi1M?=
- =?us-ascii?Q?8nYLmICFuJyhKfLK99lOihc3/7a5sDH0y105gXan7y36d6whm+Oc3BV1UQ1j?=
- =?us-ascii?Q?seqUYJFpklq8HQAo293OB0MFchHHk1JG3gD0qzZLRZsbu+k1uBZP45+wk5TS?=
- =?us-ascii?Q?4t1p8Qvh5D2CaNJkDVjOylAXmwUAdhP+JtS26ypjFjflmJEPpa6KbTZBRdny?=
- =?us-ascii?Q?UGyai49WmQHLtpdosTM5mAg1nIfFkVgL2UKuCz0KLsiTyt2cGXFchVgBYDEN?=
- =?us-ascii?Q?NEcrQav6tyvFWa7YRv201lx9arZabKRTyM7QmMkNX7bKB5IPpdGraz7cWnth?=
- =?us-ascii?Q?fFTNrBjbA0jd78Me94/iO8WHk/N6GuYBQW5oudFlk7wQq8YCQTPwh01TZHoh?=
- =?us-ascii?Q?xjY+FSdM+DuwsV8eRRRMmnABD8e6?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6424.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/Txku507ekkmOfNBX7JAwhvZ5tts/lR9DqIu/D0qtB5ir5NgqitkT6khjX8e?=
- =?us-ascii?Q?ATrMQh5PJk29jgSUdNIXlx5oUf3M3FyyjFnwWP6W16n7fBF0FqY0QRWmxaDJ?=
- =?us-ascii?Q?be24uvEvJXbftWdqWkdjtU0s8RMW4GEAjaMZiB5eeWNmBfixzzWdDJDZvQ2K?=
- =?us-ascii?Q?s1mmpgYgehVfQSCUgREuaScQxClpoSYZo5rmshiXp+DcPdCj2AWl9GbId5EA?=
- =?us-ascii?Q?SkALjxctcrobkvpZs0RSKFR3lZiQsCDRLB4KhOZ0B7MignvnS/dKisECDrmB?=
- =?us-ascii?Q?kmMO+4RVsSD+CYKfJB4u3XDrfsfxGtLv5Nvg3wytUFuc/8gpS8lJaQnA6J0/?=
- =?us-ascii?Q?1py9WLqHLpDue5yTd1+4HLKdSgCuaEeq3DvLMjEKe9aHRzx5M8IX//vx0j8Z?=
- =?us-ascii?Q?9d+iwjGGONQyKOTEE5zfZo4kVaLKggXgIpzpyafr1nBFGK1isWbtsMOEk0To?=
- =?us-ascii?Q?zZF5aYHeF6NjyjrEAVozWFGUoawNiJeVlKL+LTbOy5I7wf3z4ErJvgTQgsIG?=
- =?us-ascii?Q?qiYT3Imd7JOnBzglI5JhZC5KaJCIqeHY8zPWFuXCV9ebX1WYh40037gl+2ZM?=
- =?us-ascii?Q?VVjD0vimFtC9BhHAVeP55qk6q2UbJeffk6v5S0BfsKSsqAAUaPoQxg69I/zR?=
- =?us-ascii?Q?Ts1Z45GubhLKS0PI/Ysd3b2mjRIyyIB0S6XgF57sJDRcbC2oie6U7QlMP4xa?=
- =?us-ascii?Q?7EupCmLOLEd1MwPI06S+hOfURb859sPwGaxxwmh7N+IZVfuRbqi/POgzpvos?=
- =?us-ascii?Q?nuNFtqV30DZDVJQiR3WjLJJn/CzIEl8MPWoP59yzc1GLcqJ7G/87KNjZLjlU?=
- =?us-ascii?Q?t0pPuexUSC0KIPCCHx2wcgkOWhtze0U6lEM2CKt7eITY6TOUesOsqziYDi6K?=
- =?us-ascii?Q?yaEse1GXWp2R/FG1/zZFNbpdi0m2QhUdwxdFkgcscaN1n7sWyyxYkThm5Fms?=
- =?us-ascii?Q?QVthoYUf+unRrZ/reQZc2ItkrNYvwFxCtk/a6hAlBZ7A3m3ppQdEuzR53/aE?=
- =?us-ascii?Q?FTojZsr5QT1AGT65RMaDgBQEHy//sGjxCpRwq/dd9HQftthCKGdUoFD4Gm+F?=
- =?us-ascii?Q?NKwKEvkNTfGhDHTCWefQcgJSPuXsSGkU4A7j01uYu4dw+HUd7Enwft3DZFwE?=
- =?us-ascii?Q?gUhVGuQyC0utCLxhwoldLbTx6n8xKJKSqBnJ3b/hoxdu1OaS3AlOaW4ZNcq+?=
- =?us-ascii?Q?ZmusdsEU8rGE/EkfOJTyCroK610+1b+yL2dowQWdIt+saOoKnuR1Av5JMRr4?=
- =?us-ascii?Q?8mtgwsY+SfECyd1CvlE4xncebXOd26uPOPdEBP1XQa26gswejqgh2TE5edEN?=
- =?us-ascii?Q?8p86XMSG+23wnNIDud+4Gg9j6WHlZsNVSiZSPkr1fJVFSukKl+Il1D7sra8j?=
- =?us-ascii?Q?69dV4GTpV2wOEohdRO8ivZZnlx8Q5dM+7/eELQ97G2mo7Mdd05dJGgmyzdwR?=
- =?us-ascii?Q?xZ257LAHEuvfySzQfvKuB7mJ1XycuQwrUwZ7VPWUNDmPBn29R2kDwrY/gVaK?=
- =?us-ascii?Q?HODQwaYU7LDMQ9O5UBoVB2P9AMK1Ev0NZhbRVPhN/LJ7RyzVRy7Myk/Ki/oD?=
- =?us-ascii?Q?eqvQzhVzDqLuDkRvFpH+9MTk1ZK+GcU5YIRIH3od?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: afe6fa91-7d16-4050-dad0-08dd6d54ae3d
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6424.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 17:27:42.6420
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JbyuFE2zxf+OVJOWntd2ErIwR2Pc5MvPJDfaBEG6ABV47wfF5N27mZEKvzST2ikrhEI6jVnOXPnlKU4CYLaBIw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7843
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <988510be-ee5f-49c9-a5a4-074c51245f95@quicinc.com>
 
-On Thu, Mar 27, 2025 at 07:19:03AM -1000, Tejun Heo wrote:
-> Hello,
+On Wed, Mar 26, 2025 at 01:11:35PM +0530, Praveenkumar I wrote:
 > 
-> On Thu, Mar 27, 2025 at 06:15:09PM +0100, Andrea Righi wrote:
-> > > If we don't want to do locked rq tracking, we can always use
-> > > schedule_deferred() when any rq is locked too. That's a bit more expensive
-> > > tho.
-> > 
-> > Yeah, I'm a bit worried that locked rq tracking might introduce overhead to
-> > all the scx callbacks, just to address this issue.
 > 
-> All operaitons are already wrapped with SCX_CALL_OP() and updating per-cpu
-> state (kf flags). It's unlikely that another percpu variable update is going
-> to be noticeable.
+> On 3/25/2025 10:23 PM, Manivannan Sadhasivam wrote:
+> > On Mon, Mar 24, 2025 at 04:48:34PM +0530, Praveenkumar I wrote:
+> > > 
+> > > On 3/24/2025 1:26 PM, Manivannan Sadhasivam wrote:
+> > > > On Fri, Mar 21, 2025 at 04:14:43PM +0400, George Moussalem via B4 Relay wrote:
+> > > > > From: Nitheesh Sekar<quic_nsekar@quicinc.com>
+> > > > > 
+> > > > > Add phy and controller nodes for a 2-lane Gen2 and
+> > > > Controller is Gen 3 capable but you are limiting it to Gen 2.
+> > > > 
+> > > > > a 1-lane Gen2 PCIe bus. IPQ5018 has 8 MSI SPI interrupts and
+> > > > > one global interrupt.
+> > > > > 
+> > > > > Signed-off-by: Nitheesh Sekar<quic_nsekar@quicinc.com>
+> > > > > Signed-off-by: Sricharan R<quic_srichara@quicinc.com>
+> > > > > Signed-off-by: George Moussalem<george.moussalem@outlook.com>
+> > > > One comment below. With that addressed,
+> > > > 
+> > > > Reviewed-by: Manivannan Sadhasivam<manivannan.sadhasivam@linaro.org>
+> > > > 
+> > > > > ---
+> > > > >    arch/arm64/boot/dts/qcom/ipq5018.dtsi | 234 +++++++++++++++++++++++++++++++++-
+> > > > >    1 file changed, 232 insertions(+), 2 deletions(-)
+> > > > > 
+> > > > > diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+> > > > > index 8914f2ef0bc4..d08034b57e80 100644
+> > > > > --- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+> > > > > @@ -147,6 +147,40 @@ usbphy0: phy@5b000 {
+> > > > >    			status = "disabled";
+> > > > >    		};
+> > > > > +		pcie1_phy: phy@7e000{
+> > > > > +			compatible = "qcom,ipq5018-uniphy-pcie-phy";
+> > > > > +			reg = <0x0007e000 0x800>;
+> > > > > +
+> > > > > +			clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
+> > > > > +
+> > > > > +			resets = <&gcc GCC_PCIE1_PHY_BCR>,
+> > > > > +				 <&gcc GCC_PCIE1PHY_PHY_BCR>;
+> > > > > +
+> > > > > +			#clock-cells = <0>;
+> > > > > +			#phy-cells = <0>;
+> > > > > +
+> > > > > +			num-lanes = <1>;
+> > > > > +
+> > > > > +			status = "disabled";
+> > > > > +		};
+> > > > > +
+> > > > > +		pcie0_phy: phy@86000{
+> > > > > +			compatible = "qcom,ipq5018-uniphy-pcie-phy";
+> > > > > +			reg = <0x00086000 0x800>;
+> > > > > +
+> > > > > +			clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
+> > > > > +
+> > > > > +			resets = <&gcc GCC_PCIE0_PHY_BCR>,
+> > > > > +				 <&gcc GCC_PCIE0PHY_PHY_BCR>;
+> > > > > +
+> > > > > +			#clock-cells = <0>;
+> > > > > +			#phy-cells = <0>;
+> > > > > +
+> > > > > +			num-lanes = <2>;
+> > > > > +
+> > > > > +			status = "disabled";
+> > > > > +		};
+> > > > > +
+> > > > >    		tlmm: pinctrl@1000000 {
+> > > > >    			compatible = "qcom,ipq5018-tlmm";
+> > > > >    			reg = <0x01000000 0x300000>;
+> > > > > @@ -170,8 +204,8 @@ gcc: clock-controller@1800000 {
+> > > > >    			reg = <0x01800000 0x80000>;
+> > > > >    			clocks = <&xo_board_clk>,
+> > > > >    				 <&sleep_clk>,
+> > > > > -				 <0>,
+> > > > > -				 <0>,
+> > > > > +				 <&pcie0_phy>,
+> > > > > +				 <&pcie1_phy>,
+> > > > >    				 <0>,
+> > > > >    				 <0>,
+> > > > >    				 <0>,
+> > > > > @@ -387,6 +421,202 @@ frame@b128000 {
+> > > > >    				status = "disabled";
+> > > > >    			};
+> > > > >    		};
+> > > > > +
+> > > > > +		pcie1: pcie@80000000 {
+> > > > > +			compatible = "qcom,pcie-ipq5018";
+> > > > > +			reg = <0x80000000 0xf1d>,
+> > > > > +			      <0x80000f20 0xa8>,
+> > > > > +			      <0x80001000 0x1000>,
+> > > > > +			      <0x00078000 0x3000>,
+> > > > > +			      <0x80100000 0x1000>,
+> > > > > +			      <0x0007b000 0x1000>;
+> > > > > +			reg-names = "dbi",
+> > > > > +				    "elbi",
+> > > > > +				    "atu",
+> > > > > +				    "parf",
+> > > > > +				    "config",
+> > > > > +				    "mhi";
+> > > > > +			device_type = "pci";
+> > > > > +			linux,pci-domain = <0>;
+> > > > > +			bus-range = <0x00 0xff>;
+> > > > > +			num-lanes = <1>;
+> > > > > +			max-link-speed = <2>;
+> > > > This still needs some justification. If Qcom folks didn't reply, atleast move
+> > > > this to board dts with a comment saying that the link is not coming up with
+> > > > Gen3.
+> > > > 
+> > > > - Mani
+> > > The IPQ5018 PCIe controller can support Gen3, but the PCIe phy is limited
+> > > Gen2 and does not supported Gen3.
+> > Hmm, so if a Gen 3 capable device is connected, the link will not work at Gen 2?
+> > It seems so from the error that George shared previously.
+> No, that is not the case. The link will work with a Gen3 capable device at
+> Gen2 speed. The failure log shared by George indicates a PHY failure, which
+> is due to IPQ5018 PHY's hardware limitation.
 
-Ack, I'll explore the locked rq tracking way then.
+It doesn't matter. If a Gen 3 device is not going to work with the controller +
+phy combo, then it is a host hardware limitation. But I'm OK with adding a
+comment and limiting the controller link speed.
 
-Thanks,
--Andrea
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
