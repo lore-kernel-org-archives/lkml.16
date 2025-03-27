@@ -1,124 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFB920E00F;
-	Thu, 27 Mar 2025 10:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A23820E315
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743070005; cv=none; b=II+RWmcHhwgfDrhIwRA8Q6ddQRH2v/MZg+SGRwUEJR5WRzfA775Ptjq8CJkn/O38YZZaUcbByVgqIUi04p/9Iz/a2y3HvGlih4Eg4JV7jgkSlExMP9S/R0zBejCxOcO1NI9gxVS5l+i88lQ+CgeZqCcqGBdiXbDsatVktNlmgug=
+	t=1743070007; cv=none; b=ZTRbEHy8tNJSp2Ci1j+sSWC/D+TrTgEKTk+ytqYxtVyxIMo6KIXpVxf1gukTjwxx0HiqekfCrnYPo/h+hB3Urt599xLgOsY/kOANrn9HUIUJV5GQ8hikHufl+sPxBopKW1urpjCYZF0giD2oFk6AP2Ho+ECT24IF7qKVrv8sj30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743070005; c=relaxed/simple;
-	bh=WF3Fld+lGvupAXqi63L7DLt2+LWPf+rJb6n8QFnRLrc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ASku/cZGXDUW0iQ79/abLOtPmZys49VljAjhIw8CDZEET1oW84Gva5dGyWy3PDzZ5V/YGm5FvStT/I2UxJTtbZ8tbzsSE/t1LPSRDZk4SVdfQn0ExjIxJSi1Egehg8GnqmOplTJ5c5+Ucg/RPgrVbWcrXu2AQHRr9k8AAYuloZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZXa4fS2M; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743070007; c=relaxed/simple;
+	bh=5X1aPO2z0jUPOmAmxxbRnG88+AZ4I5yT718/OM1HQtE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cyx3LJovjZLoaHaXdzcuhbBPRKS5ZvBkdvfcV0VlcIs9YTu+Az30oeiXVwnwXPtrWzPw0DxexdEuLGmk4EhjYepULnoNYbFDUPOc+M+ouPNe0vwRgsUyEV+h5J5mcew2XRuodsaoyYTqsEKs42e7XK8WI7z5aFCo30ejrVqfM0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ERcgIXfu; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZXa4fS2M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743070004; x=1774606004;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WF3Fld+lGvupAXqi63L7DLt2+LWPf+rJb6n8QFnRLrc=;
-  b=ZXa4fS2M+Wa2UrklzNSSHgMVkLQYAr/ruZpPPhrw+OQR45uIE6voxDMk
-   9Uqfw+vp5I6rXh64Qc9za4sAs727oLSeKJEAkYtvBvMS4BU1DD/vO16AO
-   +BkuEt4wQ7JDO0R6Dlw6D2ZjadxYarlly97sw0aqC2K+GIHiDZlcL2VrG
-   dtI8GcdBKES78gHIeP7uE3fMDWOkWVCacDPEOL5dwKPvBWPw9yISxVq8f
-   YzHasVKUBokb3OSX4Zdmnul7UIuYvGaD69DALsif5UvW51b2EpUG4jQNS
-   n32T5M0m+IrWLUX0ErQD2v7H/Hn8fe54tvR8/qx5MEkPdBeaPuQ/9QHA7
-   A==;
-X-CSE-ConnectionGUID: AqEIzt1ETya9qY5kh3vg+g==
-X-CSE-MsgGUID: vLKKLZ84T42LkyTqco8Cuw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="61786916"
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="61786916"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 03:06:43 -0700
-X-CSE-ConnectionGUID: F/y7YVltS62i2PrHscdY8A==
-X-CSE-MsgGUID: 47YQatJ4R1uk9aZMo2zfMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="125609989"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 03:06:40 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 142A711F99F;
-	Thu, 27 Mar 2025 12:06:37 +0200 (EET)
-Date: Thu, 27 Mar 2025 10:06:37 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Tarang Raval <tarang.raval@siliconsignals.io>
-Cc: kieran.bingham@ideasonboard.com, Shravan.Chippa@microchip.com,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Julien Massot <julien.massot@collabora.com>,
-	Zhi Mao <zhi.mao@mediatek.com>,
-	Mikhail Rudenko <mike.rudenko@gmail.com>,
-	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
-	Luis Garcia <git@luigi311.com>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] media: i2c: imx334: Enable runtime PM before
- sub-device registration
-Message-ID: <Z-UjLSsATevtLT2k@kekkonen.localdomain>
-References: <20250310071751.151382-1-tarang.raval@siliconsignals.io>
- <20250310071751.151382-7-tarang.raval@siliconsignals.io>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ERcgIXfu"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso5765265e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:06:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743070003; x=1743674803; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QPfdok1uXbCV3fbB68Oh0kuMKD9EmCqvBmSN9d5b64A=;
+        b=ERcgIXfuYJBP+Fu00nEvbZ/9/C/qhLfcTVYbc9VFyt8flpltttQDuDMYksDAIfcphF
+         ZDh2VrKzgSwXwcfJ96c17J6ThD7iED7TwG+SBLU4C0khefx3uXuZbqtx0N8OFjBzG2HL
+         HTI4yoGcbNCU2IkX3QqfII9sGyj/iXr14uQm0fBOKw4UNhj9Q8NQNZRNkpdcOUNuGnWQ
+         2+eTC/vuv9yg6Xr9z6oRX/ECdaYX8Y19a8Ha4I/clSUDiuPqrqmsAcdPKo8Ey0cGr7qe
+         543kR2A+Ou9ziVMC3wZfYK2g3wnZ3iQ5XmPKhN2/1mjJCk8P6nQ+5VHsWni9VkdiBNBl
+         9OHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743070003; x=1743674803;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QPfdok1uXbCV3fbB68Oh0kuMKD9EmCqvBmSN9d5b64A=;
+        b=KoXYYHLP+7wj6GMVHUUwxQNjtx/BSC0A9OaU+YHzSP8JNUaTXRFTGEv8PhQegDFtY8
+         reLd8TsY78o/5MGSo+aKnjEr0kMyKmTDhvh94vKmY+1sjq9eAB94ANXaE+lxYYUKLbcy
+         0VY0/t0Ku43nz7exfuWnx9c7AuOEPTHj9lhFBNSXKDvtQ1VjnGCHX4MN4ck+vwY45cXE
+         G1FtPUy44vy1GhDHPbs9oIyu3Quds4c9rIrnjw9B3j/yDmgQ515+zoT76IX8m9c8IP3Z
+         EevO9oqOuq/LWdvdgHsmMwhlo9vRQNrzB5ysO+EK0uNi29GXtXst0pQcJZbPhRNT8YO8
+         Yudg==
+X-Forwarded-Encrypted: i=1; AJvYcCWIrim2IP+8doygZmGRwP5ibjL9C3DCK7Eyw4MV4D0U2Dcv3R+74CtBvYsKnuDAVkfw9CDQzX1muV5VsmY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrLAl668OHnNASZWzixXO4Qu/rQzJy2DTUK24NCEnEwK6eZMRL
+	yPVcXwIjueq9GgrrU0r5P4v+UU0d2UgCVW/Tj0GhE8wtW2Ef7Kyxk8Y158HuA7Y=
+X-Gm-Gg: ASbGncvjqaaS8qye06HxNH1VxWJM7g6wGnsmECiC80r83pFtYoO1Fis7ouzCjwRB3VD
+	MzPWIaYtML7wxU+6GVZzyAGPQVCEc1HvXs+B0BRqXcZeHFWsyXzDygqEo1QFvqvQS9u0khasVb6
+	VEgyIuBdPuW+n51G/ksjboOcR6IEdNAiVdBQ7z+Pc6V4U4SzFoBeQxtpGDFjfn964ppE6Xhfyll
+	6f6TP7q98cd0rlLCxeSACzeXkpC8fKhOBYPiNaq7Y32iJObrukGLzgu81rtoAZjmx/MfmgX7JPh
+	HMIm6z6neL4XwPt0/NiI4UfIPCkm64ceJB3iv9od5sfkxoW1PkCs2rnC3kRljh30sQre3ObQucX
+	mdtT+
+X-Google-Smtp-Source: AGHT+IGvhejD0NIOJT8VU6o6/lTjL7NGCr3dmcDkjmpV3rceQSS3SZ9h5CMW7LsJMAed7F1uaAVW1w==
+X-Received: by 2002:a05:6000:40e0:b0:39a:c9c1:5453 with SMTP id ffacd0b85a97d-39ad1785e98mr2439933f8f.49.1743070003510;
+        Thu, 27 Mar 2025 03:06:43 -0700 (PDT)
+Received: from localhost.localdomain ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39ac3ce3dd1sm10843204f8f.88.2025.03.27.03.06.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 03:06:42 -0700 (PDT)
+From: srinivas.kandagatla@linaro.org
+To: peda@axentia.se,
+	broonie@kernel.org,
+	andersson@kernel.org,
+	krzk+dt@kernel.org
+Cc: ivprusov@salutedevices.com,
+	luca.ceresoli@bootlin.com,
+	zhoubinbin@loongson.cn,
+	paulha@opensource.cirrus.com,
+	lgirdwood@gmail.com,
+	robh@kernel.org,
+	conor+dt@kernel.org,
+	konradybcio@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	dmitry.baryshkov@oss.qualcomm.com,
+	linux-sound@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	johan+linaro@kernel.org,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Christopher Obbard <christopher.obbard@linaro.org>
+Subject: [PATCH v6 2/6] mux: gpio: add optional regulator support
+Date: Thu, 27 Mar 2025 10:06:29 +0000
+Message-Id: <20250327100633.11530-3-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250327100633.11530-1-srinivas.kandagatla@linaro.org>
+References: <20250327100633.11530-1-srinivas.kandagatla@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250310071751.151382-7-tarang.raval@siliconsignals.io>
+Content-Transfer-Encoding: 8bit
 
-Hi Tarang,
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-On Mon, Mar 10, 2025 at 12:47:48PM +0530, Tarang Raval wrote:
-> Runtime PM is fully initialized before calling
-> v4l2_async_register_subdev_sensor(). Moving the runtime PM initialization
-> earlier prevents potential access to an uninitialized or powered-down device.
-> 
-> Signed-off-by: Tarang Raval <tarang.raval@siliconsignals.io>
-> ---
->  drivers/media/i2c/imx334.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/imx334.c b/drivers/media/i2c/imx334.c
-> index ffa39bb317f7..8964d60324e2 100644
-> --- a/drivers/media/i2c/imx334.c
-> +++ b/drivers/media/i2c/imx334.c
-> @@ -1295,6 +1295,9 @@ static int imx334_probe(struct i2c_client *client)
->  		goto error_handler_free;
->  	}
->  
-> +	pm_runtime_set_active(imx334->dev);
-> +	pm_runtime_enable(imx334->dev);
-> +
->  	ret = v4l2_async_register_subdev_sensor(&imx334->sd);
->  	if (ret < 0) {
->  		dev_err(imx334->dev,
-> @@ -1302,8 +1305,6 @@ static int imx334_probe(struct i2c_client *client)
->  		goto error_media_entity;
->  	}
->  
-> -	pm_runtime_set_active(imx334->dev);
-> -	pm_runtime_enable(imx334->dev);
+Some of the external muxes needs powering up using a regulator.
+This is the case with Lenovo T14s laptop which has a external audio mux
+to handle US/EURO headsets.
 
-Please also change error handling accordingly.
+Add support to the driver to handle this optional regulator.
 
-Btw. the remove function calls pm_runtime_suspended() that does nothing
-(use pm_runtime_set_suspended() instead). Could you add a patch to fix it?
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Tested-by: Christopher Obbard <christopher.obbard@linaro.org>
+---
+ drivers/mux/gpio.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
->  	pm_runtime_idle(imx334->dev);
->  
->  	return 0;
-
+diff --git a/drivers/mux/gpio.c b/drivers/mux/gpio.c
+index cc5f2c1861d4..d1607f287755 100644
+--- a/drivers/mux/gpio.c
++++ b/drivers/mux/gpio.c
+@@ -15,6 +15,7 @@
+ #include <linux/mux/driver.h>
+ #include <linux/platform_device.h>
+ #include <linux/property.h>
++#include <linux/regulator/consumer.h>
+ 
+ struct mux_gpio {
+ 	struct gpio_descs *gpios;
+@@ -82,6 +83,10 @@ static int mux_gpio_probe(struct platform_device *pdev)
+ 		mux_chip->mux->idle_state = idle_state;
+ 	}
+ 
++	ret = devm_regulator_get_enable_optional(dev, "mux");
++	if (ret && ret != -ENODEV)
++		return dev_err_probe(dev, ret, "Couldn't retrieve/enable gpio mux supply\n");
++
+ 	ret = devm_mux_chip_register(dev, mux_chip);
+ 	if (ret < 0)
+ 		return ret;
 -- 
-Regards,
+2.39.5
 
-Sakari Ailus
