@@ -1,305 +1,116 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2073.outbound.protection.outlook.com [40.107.236.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526A14C62;
-	Thu, 27 Mar 2025 08:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743065774; cv=fail; b=U8tYJsVs1gZwGAlAPvAd2TyZtXKa9qpxZ76OwuijJxlToFePChIt5SDIK01MLLw68sdDfbHovGZhYHfOl+1TxHDENZrwgIJYj3TrCPyjJ5kVdTwdUrAkn/LrpOa3P0yraGFXVHwRUle96YvjcO35sxppuJIuVJMHiVOSEPX6Sb4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743065774; c=relaxed/simple;
-	bh=8D3DoXG62/sw72eNISD75hpDQydlUYi+H13nefVbhAQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Ax/suXH2xeJsdDb88eB3wLjY9gkAsxDold0llJ+asmcX/xESJGkGC4tY2KAAbLiAXwZ7EaerVbProDW93pHmdQynW1lktsNCXKTEcKjjSTPVzYMUsLOF8BhuIwhyt/E7E1Pd6ZtJVbTok7ygBruJTupCEd9nKNrL1WZ2W3xPVHw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cq2y4FaN; arc=fail smtp.client-ip=40.107.236.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B014220B1F5
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743065807; cv=none; b=r78IJrB7GNjf27ezgDdCk1nyiwf6fQY5PD7rhLNr2XyqlIv2TbLbAYPtgWK//LzXfFE1NgcfJYHNl4BzA4Kc+11X0x9EJ67gGRLXHDmHDTnO07tJtC3TXS5jRyA/XuwD3yoih56fUwIOKQqI5kUrOn9kmv7rs7TKKJlITbLXATY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743065807; c=relaxed/simple;
+	bh=FIYwhtEw1euleTwTcbZCNX9K84qUUjXQZZcm3DuTqE0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CCTO9zG0hsNPtEMd/g5N38yys/oNMMvvZcvszCnoNqwrhtiEMGFlHth7Qf6aAk2EtpyOa17OWjKzjz+wK8ZrUpUvzMEam7y3EeohZEXp3j0JtfX1TmhKqC+t4VsFuBm/zuNGDXP0oI9v33q0S+LJtjZy18e+/1CarT7m/lohajE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f9EIa3z+; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cq2y4FaN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pES5J9ToW2UT8zodK47tD+4ni1Sdsa4COhcta0FnHTjEBBiAGBQiDZ8++gZwkaNO3dnLAkAuOSwseNC6JIFK7vS0/EZQhlX04vL9ctyHqlNSHXQH9p5qPIRvctCoRMWlCTYXLOAiOVCu753Tam9YQmfF+a2uAp2C5VplIJkmXcseqXtZPLRD8Ax4n5F43HtjfyI8NburCUH7dXpVgl7xvg5xu+BoOz+6WR0XOGRa992e0f5FtA0IReOuVnDa0/ujM2l8UcSr83SnrK7IWCCg4adDySbT6WDcFOOBpYudGOajoTebKoJsVfnGUDDaSXFLo1RylUcfF3fzM03uvwqufQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LxAZ6nkntAI9GwHeZD6WujSX8sxIvrzs3rA0jrMVyCU=;
- b=iXXfs8CorGn2J1NGSvtsqYWuwoVJhcUNyKg1R+KjqfsjG5ot+CbUM7SAu9RGm0oMuOP47rQBFmc3BWctAYktWDMQW2XiQqw/mlc6yyWmP8zJeLyFUVZLA/b41QwwL5m3i0md4i9s7wZCO1MTJq6N1FnKLO4nCHrgSRX3DZNP+hkGoZj7zo2D6C+tyK9zC7TKKkeHJM3gqiMHFFHeMTwbWl1P3fc1AArP+jW8gZzKeKo6nbL3RCrsJOtar9p3g9iQnZmC/mUSCppXCAN+Urj3lfRCwe6nqdTihOAv79ealrvdquv++yIp7n2dSFfAUxFTb9rj14L4tTjQHJg0uA9V5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LxAZ6nkntAI9GwHeZD6WujSX8sxIvrzs3rA0jrMVyCU=;
- b=cq2y4FaNUAr5A5ZjyQe47RNxVRfgWjSHA72yxn4Nzfu9jWxyEUnE+irTpXT4ZGT7pIMtyfKdQTd1LSb6EhlN3urKHGonGYPnI4FK1x1J0vf5KD3rdQf1K3wxK3hUVbS1D+uloOFcMyD2tOiUMRAztVNj0UzCCHmh6da813jXWHU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by DS7PR12MB8251.namprd12.prod.outlook.com (2603:10b6:8:e3::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.44; Thu, 27 Mar 2025 08:56:08 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%5]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
- 08:56:07 +0000
-Message-ID: <8882f3d5-6e00-4aae-af3f-7df447158fda@amd.com>
-Date: Thu, 27 Mar 2025 09:56:01 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/nouveau: Prevent signalled fences in pending list
-To: Philipp Stanner <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org, stable@vger.kernel.org
-References: <20250327084256.11201-2-phasta@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20250327084256.11201-2-phasta@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR0P281CA0055.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:49::15) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f9EIa3z+"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39141ffa9fcso537431f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 01:56:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743065804; x=1743670604; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FIYwhtEw1euleTwTcbZCNX9K84qUUjXQZZcm3DuTqE0=;
+        b=f9EIa3z+WG3ihErGNo5scvrjbc3TWVbr1yXum03sHB5O1vlZwZJ2LWsWhi9c/Erpyz
+         pDHBJrhhg/kl1JYkoUW2DvVwv5zXmNrBIpnoGDK7t3r0LErmLGK4mt+b9oDq6dR/ACbT
+         h3yO8ewgkhjzo0ULTYzEeX8AMKfEHWN7uiMOQO2OBcBuoNEPW537c7kP9L0EFehXJC+w
+         W6mFwVOxXIgUVd8FY1GafWAdg+kfCix8vS7Uk9nkAh/cjjiBIfLxT1r/4JL0eE02Uf9R
+         pWb9MJag9OwNf9ymAFuL7xvWnOhlwPATHgmw4mihphDFXarzPumdjSnZ4nnOVPSwxr1s
+         xpTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743065804; x=1743670604;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FIYwhtEw1euleTwTcbZCNX9K84qUUjXQZZcm3DuTqE0=;
+        b=WVyBoPEinpgJ1Zzp01d9jAkXTZQJc5xnGAKXID1lv/bSKS2LRUpcesq5Ft1KS54Pp8
+         FqWEsG5G5xQGckV3r6t/prZx6hFA0pnsReCeiUiCsMZKBhRf4Ndk1XUpbMJ6EkOk8SLn
+         1cMpK0LQjiqXL5UVtnvl9lBM1pov3+v9/gmjeGGqT9IbDg3/qcfV6S0GcFsjmIeWeXFD
+         +P+gA01Ioo3jpUgjwA4wzequbbtUztpGfE/eun6VsZhANEfk8yZE1bSP6qh+kFM4/032
+         h/TReIB5pD04N63/lFQTf5ggs3yL39vWtprb/AmJfDbXyd/KjJPnaUCj7jzkg305cqYT
+         aDcw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXCyi4DfWzbxD0VwDPG7CJI/k62GTW4rqBYMbP8fp9RDjWHOtg9hYmSjcXGyGrTHeWckvRThI/KwuU7vQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEqcqWFf52OPocRQ6tGqKzk/83yi8fG0dQP4tDBfw1EnhIQTgs
+	RLBVXTz4IZtD0MchEDRzL0OQEpo9sCl/3knKNd0U5ONdkyJ/AghHVNfe+PdqbVM=
+X-Gm-Gg: ASbGncs/5gplJrOKo7LUa0WDATXLvNhsZqEOQPdsTMjvzT0iHhlzdj97qTsrdDp4nPY
+	g2W8gX+O8omfyLXYRz/O1NaYG28N5fTwNkK4vH3uKlliWvC6IWI/6E7zDNJxOqzZudSvOxBQ9DM
+	X+5yHX5TcT+tKGkEEgxQp7VJqTGoYqC4iC5Dj7luiEcvdif8ied4+dUWM1lcl1oKQjPKYWLyvEg
+	0VaL4bonuQonVFoU3d7spFaDHyMVzH84dqdmAkA4NaOgZLGCJjYUR9tzna1HZAgtSxbQw+P/AgO
+	OOsWR6ufFPWi6EuvzlFOmKENaZhV0H4xL8Av3MRu1Lq/vsjXzw==
+X-Google-Smtp-Source: AGHT+IFYnqDl6ib4NKqjPWss5rPeynt8Vendp/W2yLiXx4uK7gmEAWHDdxKjvkNq1tkjNGSpWl64yQ==
+X-Received: by 2002:a5d:59a7:0:b0:38d:eb33:79c2 with SMTP id ffacd0b85a97d-39ad174e4famr1984580f8f.32.1743065803956;
+        Thu, 27 Mar 2025 01:56:43 -0700 (PDT)
+Received: from [10.1.1.109] ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82f1bb80sm30629875e9.28.2025.03.27.01.56.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 01:56:43 -0700 (PDT)
+Message-ID: <62bf00c37566964d6be794ed12a34cd057d9bb1d.camel@linaro.org>
+Subject: Re: [PATCH 11/34] defconfigs: rename CONFIG_MFD_SEC_CORE to
+ CONFIG_MFD_SEC_I2C
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, Rob
+ Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Sylwester
+ Nawrocki	 <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>,
+ Alim Akhtar	 <alim.akhtar@samsung.com>, Michael Turquette
+ <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas	 <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Alexandre Belloni	 <alexandre.belloni@bootlin.com>
+Cc: Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus
+	 <tudor.ambarus@linaro.org>, Will McVicker <willmcvicker@google.com>, 
+	kernel-team@android.com, linux-kernel@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rtc@vger.kernel.org
+Date: Thu, 27 Mar 2025 08:56:41 +0000
+In-Reply-To: <b733eff2-171e-4ab6-8546-565d87d5ba84@kernel.org>
+References: <20250323-s2mpg10-v1-0-d08943702707@linaro.org>
+	 <20250323-s2mpg10-v1-11-d08943702707@linaro.org>
+	 <b733eff2-171e-4ab6-8546-565d87d5ba84@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.2-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|DS7PR12MB8251:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8e0a659f-266b-4281-2b8b-08dd6d0d3696
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NjBpalZiQytLRTNuQ05NSy9Ub05nbmtnY3JtTk9pOWZBOFA1YzN1ZmFuSGs5?=
- =?utf-8?B?djFPS01tT0wxM2VBWWFFT0FOaG9CakR0N2ozMHVKZTVmNzRXNEdZSnNhMnRm?=
- =?utf-8?B?eTZBN0pzUGVhSmR2OTlYeXJZUE9YakFkTDZqMmlHU1NYZjNhNkFBa1RkaXZI?=
- =?utf-8?B?RCtQcDZ1R2FWQ0FENldaNG5ObjBHUjFydm5iODlJTTFGb0Rhd1B6Uk9pRzBw?=
- =?utf-8?B?QkNNTnR2NE9ySW5abHQ0QUpsU2xBT2Q0c0tFdmhqTHBZMkIvZHRmbUp1ZW1J?=
- =?utf-8?B?QTNsVDgySXA2eFdKS0laTVVKUVZNME13Z3pKVGY3QkdBZ1ZId1RNOTdZSzJi?=
- =?utf-8?B?VXNPMXV1V2tZUm9TbjBOVlp6Y2dZelUrRGtJZzg0QW9IeTJxVzBsVzhuQjJS?=
- =?utf-8?B?VVIwM3NvNXNhc2ZPNlZzZThBTDVXSnNqb2xVTmt3V3FvbzhNK3p0dGxJUU95?=
- =?utf-8?B?OC9pS3BzM25RSEtUeThZWVVFVmFMQWl5M3h0UW00TlB0UnpOalhMTVpBVURK?=
- =?utf-8?B?bis3czFoZSttOEl1d1YySG5nWXNmWTlkVG55V0NReHRzNFV3WDZ2T3RnMks0?=
- =?utf-8?B?OVZZZGJ6bmdDT2YzTTZzaEtWVVl6Zit3V0VkWnd3R1BlS01hanpmaUUvTUlW?=
- =?utf-8?B?cktnbWJETGdzbm05SHNvVTJEbFlvQ1JzSzhleWZNSk0wcDdnR0IzZmQxbkFl?=
- =?utf-8?B?RENsNmN2djVpSlV1MDVTWDlLTnF2amcramV2ZU1ZV2ZMTWpDZ3hobkZZQWx1?=
- =?utf-8?B?Q2YvZ01XZkZMVlBlVlZIYTJiNnE1OEJNN1ZYd3RnZnBBS2RFMGlKbmZrdDFK?=
- =?utf-8?B?ZzZmVk9IVmVVaGNMMkhPUGgxbDdOQzViWXVtTVRMVGt4YllURnRKd1RFUUF3?=
- =?utf-8?B?eVZtazZFVG5ZZzVZZlBKZUVuaFJOZnRtNUNsQklzVmh1blhuVVQ2dFZYVFRv?=
- =?utf-8?B?RHRFOFR1SGlYdEZoNWFqeFhEdkpwcnpXYzNMZHFES0dNU1NXaVJrc09yMlI3?=
- =?utf-8?B?Q0tYc04xUjU3T3ltbnJ3Qjk1N0tqMHFXeE9nYjFFeTBHbG05TjlrSnhkWU5j?=
- =?utf-8?B?SFlIeDNxbGx4dGg4VFRDd0pQL3I3VEVuYW5xMXZrMDFhWDQwWjlhY3Yxb29p?=
- =?utf-8?B?UFdQbTlKNi9ZdGNaZ0kwZnF1aXlYSnpQajRmd3FUMkdjUWpTMDZqcEdFd3Uz?=
- =?utf-8?B?RWFCT1dUL1JVeDgvQUVGK1RsdkdJbGVXem5GQkdxMFdlc2JiV0gxbVhzTHpj?=
- =?utf-8?B?ZXVPN0ZaSTFNam9SUXJ5bWFkZWpKbXUzamtTbHpqdFZtVWVjdFlSOEpXOFhy?=
- =?utf-8?B?M05rV0pGb01IY1Qva0xzV2N2cEptRSsrSFRPM20vNW1ONnEwTk9Tand5Yzha?=
- =?utf-8?B?eU9rS2NaR2xFdk5kNGFvbUZXeDJ0RUF3S0V6dnhSVFZ0Wm82WU02dGFsTmta?=
- =?utf-8?B?MlB0Z3c4ekNmdS82NDc0Q1k3UEV2WVE0QmREZlo4alpMQUxISW90ZndTcFR3?=
- =?utf-8?B?OVlNdFk0amhreW1sQ2xHYjNKYTFuazk0TE1PS1JEVVlkQmZmZVBJc1ZIZ3Zj?=
- =?utf-8?B?amlkNlNnN29veWFZY1V5NGNaMERQeU0vQUpSQ0ZEZFNvYWIwMktBNng2SWxY?=
- =?utf-8?B?RVBWOXdDbHRjR0JjejJSMjJMNVBlbHFNMnVmaWZBMldUb25QMkdTNmdxMUs5?=
- =?utf-8?B?TElxN2ZmaWRac3gvbnR0MldrRWkyMDI2WHhPbUxxN25sNW9yVC9mZ1N0Rkpa?=
- =?utf-8?B?Mk96bm15Rm80UnkvSGlIYlVYSkYxZXlDUkdSWUlVUjk3cno1cUVYeVZUNlcv?=
- =?utf-8?B?cThtUzk2SEU3c1k0QThzT0MvejdVUTNaRmllTTVLZi9kOWZkSzRoMWxoU1NU?=
- =?utf-8?Q?q95deNIqweUxx?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Z3AxTmtPclFBOGpXc3BSVUhLTGwzR3VsR1hjdHVXVTBIdlhNL2xaY25TTmw2?=
- =?utf-8?B?ekdmYXQxaDRjWjk3a3JOL2ljU24xWHhEZE9pNXRyd25MQVB4VXpDMFNBNWM0?=
- =?utf-8?B?a1drMjM3T2Zpc3pCNHFrUXR2SEVxaEExbDVMaHp6L0UxdVlxNUFEU3crbFhC?=
- =?utf-8?B?NEs4OHZDWnBTdndRN3h2ck1OTlhjRzE0eWNxWGhUMEFLVW9RWlhrY0RHU2NE?=
- =?utf-8?B?aDlRZmpaTzdIZEwva0VjbjN6bzc2aVpGMUlNU0o0NkNDNldMOVhkZGg2WXJL?=
- =?utf-8?B?MFVyR0ZQQlhyd1ZkcVNBcFpXSGJvU1pVWHlqUnVEVzBKMnVPbjBNUkdhbVBN?=
- =?utf-8?B?VHdhVXp1TWN4Vy9WWnlwZ0FjYVNZTFRmNW5BcTRxNWpMQnZERExobEtqVGsw?=
- =?utf-8?B?Rkp5akhnSmkySFY5cGNvcXlYN1FpcHdzVmJMeXA0TUozbW9DYjc3djRHQkll?=
- =?utf-8?B?Z1c5ekJNOWNIY25DOHZpckF4NDc0MjJWckNmaFdxVDIwMnB6bXhvdWJGTWFJ?=
- =?utf-8?B?a0V4Qy9EK3JVZ2FtRys3VEdMVHB3a0dlckJUTlFGNWpMS3lNUzNsdmpybVJq?=
- =?utf-8?B?OTF6RzlHWHl0NStFOEVvUHYxRHBpZXRhSFdTVE1XZkpORyszbWFiQmFJUE8z?=
- =?utf-8?B?TWt3VUNwNTNIY1loTVM4UitCaCtTeHlFOERGUmhBYTlFLzVsQktWLzluVmhl?=
- =?utf-8?B?L2FHbWtFWXByWExyQ1dMMUJxQ3dzM1pxeWFMUFc4VGhZaG5DSU44YjkwcHl5?=
- =?utf-8?B?TG1WZFlhTHBMOEw4MFl5c082eUN4eUJOQVNTR0hiV2VPNFVoTXpFZ2pxWkhU?=
- =?utf-8?B?VitVVUVhdHllU0JDQzAvZXBxa1dPVFRpeU8xUURteGpHVDE5c2w0bVgzS1FB?=
- =?utf-8?B?WG1LZDRGd2p6TGk1aVo4S1lhclRwY0o3WFNweVNRdmNBREttVUNHOEd6TGNn?=
- =?utf-8?B?L1VUeDZadlFhMVdnYXBWQm5DSTVEQmlWQ2oyZGhUTTNYcDdJZEVTWnVEZTZF?=
- =?utf-8?B?K014M3gxTzZnc0FaNW9hdE5OMEVOV09PTVp0Zm50eHQxWVVxRnB3WWk4elc0?=
- =?utf-8?B?blgyTm8rZFZDZmh5NkZVd2x3dSthZ056S2hXTVhER2NPS0VDM1VudUtiTGFI?=
- =?utf-8?B?V3FyYkRuUFVuQ2FlQ2ZXSmsrdVdsdmszd1ZPSGs2eW9QQXVnS1dtOWlRcXgz?=
- =?utf-8?B?UThWblJ6YUFQdlRsbnRHRGt2T0tTUEZXalJNZkF4R2FCN2d4enVuV0hOQUs3?=
- =?utf-8?B?ZzM3anVHdVBOWVNJS2tsNEsxZHRhNzhPeVpwZWZ0QlNqZVhWNnQ3d2hsR0lB?=
- =?utf-8?B?d1YyNm43ODVnZ0hqUlp0WHkrdHZYd0V3eEtFak9XZTZKL1BjRjNFd3MzVnJF?=
- =?utf-8?B?emlxMGM5QWZSVjY0NXBrVjV4TFhMbmxRdi9CU1ZQNEZaYmdhMjhmU0R4RndF?=
- =?utf-8?B?dllqK29FV2IwRngrRFhWSjA1S1VkYXM0L240WDR0TUtaS3l6L1FEdVEvSmNE?=
- =?utf-8?B?disrSWRwakhuSVE4ejVlMGZZR1QrYzlTWnJLWTNRLzUrd2krL0syVFJpbUpu?=
- =?utf-8?B?TUpjYm5IcTlGNkFHQ3VxYWxwN0ZWdXh1cXY1STV0WnZpZEVremJBNzR1QVgr?=
- =?utf-8?B?UWtQNHN3R1lpc005bmpEcmVyU1pXWm1iUkdLWmEzbVN5dGJkK2NXTk1yQnph?=
- =?utf-8?B?cUttZnFvbTd1Wm5WbGJhTFl0dzJ1cWo2aFBML012cnFwUHZmUUlEcHdBdnMz?=
- =?utf-8?B?aFRuSXlHOFQ1MHhkWWdqbEZ5S0swb00xOTBlMTE1dm4zVC9kNGozY2ZwQ3Qr?=
- =?utf-8?B?WWNHNHY3bmoxbmhleWNqc2NQZUdNMll2U0l4TlA0NW1OM0p4K0x3L3dnSHpM?=
- =?utf-8?B?MDJzM0N2TkY2bXVERmpLblkvZ2JvTHFDMW1ZRG9VL1orOXJKYlpEWlcwcm1G?=
- =?utf-8?B?bnlRd1hhd0ZITmZCWk8wSkxZcVZMbC9GTzRKRkZBU0s0V0E1MDgwSWRpZzA5?=
- =?utf-8?B?YzBXeWhsYlAzUkd0Mitxbm9GY1UyaU9zeWJ2SWxNeGd2RkVIb0lFYUJUa1h4?=
- =?utf-8?B?NG5qa2VDd0d3UHVsd0VSUjJRajJCeFdDVXgvNjE0RTBSWGQ4dE1MbW5ldmxN?=
- =?utf-8?Q?gDWzwiYwHTh+xjHqquOWZgy3R?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e0a659f-266b-4281-2b8b-08dd6d0d3696
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 08:56:07.7668
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vGWIQv6N8dyNttFYaHW8xiwsIUobDAHHgSbMgUs6tui8w8TL18Tz21Qs0KJQPg+p
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8251
 
-Am 27.03.25 um 09:42 schrieb Philipp Stanner:
-> Nouveau currently relies on the assumption that dma_fences will only
-> ever get signalled through nouveau_fence_signal(), which takes care of
-> removing a signalled fence from the list nouveau_fence_chan.pending.
->
-> This self-imposed rule is violated in nouveau_fence_done(), where
-> dma_fence_is_signaled() can signal the fence without removing it from
-> the list. This enables accesses to already signalled fences through the
-> list, which is a bug.
->
-> Furthermore, it must always be possible to use standard dma_fence
-> methods an a dma_fence and observe valid behavior. The canonical way of
-> ensuring that signalling a fence has additional effects is to add those
-> effects to a callback and register it on the fence.
+On Wed, 2025-03-26 at 08:16 +0100, Krzysztof Kozlowski wrote:
+> On 23/03/2025 23:39, Andr=C3=A9 Draszik wrote:
+> > We are adding support for Samsung PMICs that aren't using I2C and
+> > therefore had to rename the Kconfig symbol.
+> >=20
+> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> > ---
+> > =C2=A0arch/arm/configs/exynos_defconfig=C2=A0=C2=A0 | 2 +-
+> > =C2=A0arch/arm/configs/multi_v7_defconfig | 2 +-
+> > =C2=A0arch/arm/configs/pxa_defconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 2 =
++-
+> > =C2=A0arch/arm64/configs/defconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 | 2 +-
+> > =C2=A04 files changed, 4 insertions(+), 4 deletions(-)
+> defconfigs go separate tree, so this must not be in the middle of the
+> patchset. Bisectability, as for defconfig, is anyway broken in previous
+> change, so no benefit of putting this in the middle anyway.
 
-Good catch.
+OK. Should it still be part of this series, e.g. at the start, after
+the binding changes, or a completely separate stand-alone patch with
+a reference to this series?
 
->
-> Move the code from nouveau_fence_signal() into a dma_fence callback.
-> Register that callback when creating the fence.
-
-But that's a really ugly approach.
-
-Either nouveau shouldn't implement the signaled callback or make sure that when returning true from the signaled callback the fence is also removed from the pending list.
-
->
-> Cc: <stable@vger.kernel.org> # 4.10+
-> Fixes: f54d1867005c ("dma-buf: Rename struct fence to dma_fence")
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> ---
-> I'm not entirely sure what Fixes-Tag is appropriate. The last time the
-> line causing the signalled fence in the list was touched is the commit
-> listed above.
-
-Yeah, that's most likely not correct. My educated guess is that the bug was always there just never discovered.
-
-Regards,
-Christian.
-
-> ---
->  drivers/gpu/drm/nouveau/nouveau_fence.c | 41 ++++++++++++++++---------
->  drivers/gpu/drm/nouveau/nouveau_fence.h |  1 +
->  2 files changed, 27 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
-> index 7cc84472cece..b2c2241a8803 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_fence.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
-> @@ -50,24 +50,22 @@ nouveau_fctx(struct nouveau_fence *fence)
->  	return container_of(fence->base.lock, struct nouveau_fence_chan, lock);
->  }
->  
-> -static int
-> -nouveau_fence_signal(struct nouveau_fence *fence)
-> +static void
-> +nouveau_fence_cleanup_cb(struct dma_fence *dfence, struct dma_fence_cb *cb)
->  {
-> -	int drop = 0;
-> +	struct nouveau_fence_chan *fctx;
-> +	struct nouveau_fence *fence;
-> +
-> +	fence = container_of(dfence, struct nouveau_fence, base);
-> +	fctx = nouveau_fctx(fence);
->  
-> -	dma_fence_signal_locked(&fence->base);
->  	list_del(&fence->head);
->  	rcu_assign_pointer(fence->channel, NULL);
->  
-> -	if (test_bit(DMA_FENCE_FLAG_USER_BITS, &fence->base.flags)) {
-> -		struct nouveau_fence_chan *fctx = nouveau_fctx(fence);
-> -
-> -		if (!--fctx->notify_ref)
-> -			drop = 1;
-> -	}
-> +	if (test_bit(DMA_FENCE_FLAG_USER_BITS, &fence->base.flags))
-> +		--fctx->notify_ref;
->  
->  	dma_fence_put(&fence->base);
-> -	return drop;
->  }
->  
->  static struct nouveau_fence *
-> @@ -93,7 +91,8 @@ nouveau_fence_context_kill(struct nouveau_fence_chan *fctx, int error)
->  		if (error)
->  			dma_fence_set_error(&fence->base, error);
->  
-> -		if (nouveau_fence_signal(fence))
-> +		dma_fence_signal_locked(&fence->base);
-> +		if (fctx->notify_ref == 0)
->  			nvif_event_block(&fctx->event);
->  	}
->  	fctx->killed = 1;
-> @@ -131,7 +130,6 @@ static int
->  nouveau_fence_update(struct nouveau_channel *chan, struct nouveau_fence_chan *fctx)
->  {
->  	struct nouveau_fence *fence;
-> -	int drop = 0;
->  	u32 seq = fctx->read(chan);
->  
->  	while (!list_empty(&fctx->pending)) {
-> @@ -140,10 +138,10 @@ nouveau_fence_update(struct nouveau_channel *chan, struct nouveau_fence_chan *fc
->  		if ((int)(seq - fence->base.seqno) < 0)
->  			break;
->  
-> -		drop |= nouveau_fence_signal(fence);
-> +		dma_fence_signal_locked(&fence->base);
->  	}
->  
-> -	return drop;
-> +	return fctx->notify_ref == 0 ? 1 : 0;
->  }
->  
->  static void
-> @@ -235,6 +233,19 @@ nouveau_fence_emit(struct nouveau_fence *fence)
->  			       &fctx->lock, fctx->context, ++fctx->sequence);
->  	kref_get(&fctx->fence_ref);
->  
-> +	fence->cb.func = nouveau_fence_cleanup_cb;
-> +	/* Adding a callback runs into __dma_fence_enable_signaling(), which will
-> +	 * ultimately run into nouveau_fence_no_signaling(), where a WARN_ON
-> +	 * would fire because the refcount can be dropped there.
-> +	 *
-> +	 * Increment the refcount here temporarily to work around that.
-> +	 */
-> +	dma_fence_get(&fence->base);
-> +	ret = dma_fence_add_callback(&fence->base, &fence->cb, nouveau_fence_cleanup_cb);
-> +	dma_fence_put(&fence->base);
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = fctx->emit(fence);
->  	if (!ret) {
->  		dma_fence_get(&fence->base);
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.h b/drivers/gpu/drm/nouveau/nouveau_fence.h
-> index 8bc065acfe35..e6b2df7fdc42 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_fence.h
-> +++ b/drivers/gpu/drm/nouveau/nouveau_fence.h
-> @@ -10,6 +10,7 @@ struct nouveau_bo;
->  
->  struct nouveau_fence {
->  	struct dma_fence base;
-> +	struct dma_fence_cb cb;
->  
->  	struct list_head head;
->  
+Cheers,
+Andre'
 
