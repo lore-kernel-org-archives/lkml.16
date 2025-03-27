@@ -1,221 +1,198 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from HK2PR02CU002.outbound.protection.outlook.com (mail-eastasiaazon11020092.outbound.protection.outlook.com [52.101.128.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFB920CCC8;
-	Thu, 27 Mar 2025 09:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743067867; cv=none; b=YFUsoVv/q58y7DpCqLXwsa30kxpTCaRyIblbQv6n25yM0MGYpAcN3O5X3YRNjWmssTFgBuJFWtjsEL20PgNFD5/QZev7HK3W6s5Arspo5nQJEV+yk5I2aW3I6rTojeaguFIyExrTFdPXeeV1wGUgTc/N1BNEaw89aIjLoZGZIfQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743067867; c=relaxed/simple;
-	bh=w+BMijukpB/O0GOdtIB+1reFKhvkbTf4TM5DXbHnt7s=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAAE20C00C;
+	Thu, 27 Mar 2025 09:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.128.92
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743067894; cv=fail; b=kUGtw53D8uqtkHon4NPmz0ksGhqDNxA4Web4/db/IYjkCu1PDve2XPD6/owywCGH7FtAhQ53HRsWLr/LgHmNEm6Hlvh2Heg0/klS83EVqW1gNzXgLkPoPpCPn4RbXTz/P+lzCT1Igl0md24SLjiY/B0iAsZIMFH30jzqqipXgSM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743067894; c=relaxed/simple;
+	bh=zGEE6EINUBCs6cuL6udZH98jAdWYSvhk12hQgiyMa3E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gGqrqAQ4PadxXpmHJ81FrlKD6h4mMNM6YSfkLvG5v2UPBnHAEm+H23tdVEMelhQqN+HzwAjaDkqkt6ou5E+HkCYmRXinblrY3Zhcl42tXc8eK5RsxuDJp8c3sV1xeGomVCSO8nJ+LgGM/Y9KRG+2i5xlTjMpldC1Uk6vTkOw7S0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L8bNwlQ8; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L8bNwlQ8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743067865; x=1774603865;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=w+BMijukpB/O0GOdtIB+1reFKhvkbTf4TM5DXbHnt7s=;
-  b=L8bNwlQ8akLPiMCPV9O45CUCsjSZVeablxs8kk7CcIPNygjoToQeBGHw
-   K491Ow17e0cH953TqHFThqscHwT1yNZtGAi6qwG/i+biE0BWYAH/NdYdy
-   R+9STvnI4kVQs5m25LmrG5oKPHu4wtUUK/W7AbXtpqVVNMjv9a9CcPvrZ
-   6AnVFlbI0ZDRTgZ6QxAc9W4kA7wt6K0PoVvY5qq4V0gyUkhxVB/VfcLgq
-   s14xSDDtH4ZRcNZP+Rr9jE2eDDBsrzKhs5POFtFNOT69/zLIRShAMXNjh
-   deFcXLb4Mqp8tzwLThDariUo53UUWODxWR/j2iz0H3t4iRClZNsVcxWK5
-   w==;
-X-CSE-ConnectionGUID: L7QrxDHiTc2pyCd6JW/1XA==
-X-CSE-MsgGUID: hLFavyLwRFCJzbW3lNAA8w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="55390666"
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="55390666"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 02:31:04 -0700
-X-CSE-ConnectionGUID: phccHWzfRbOow7iFdRYJyg==
-X-CSE-MsgGUID: FN8WInPYTKizyJtu/QBexw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="148279106"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 02:31:00 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1txjZg-00000006LJT-3b0n;
-	Thu, 27 Mar 2025 11:30:56 +0200
-Date: Thu, 27 Mar 2025 11:30:56 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
-Cc: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
-	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
-Message-ID: <Z-Ua0Id99m5c1-up@smile.fi.intel.com>
-References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
- <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
- <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
- <hinocg3itjqizbmzgaxv6cfnhtus6wbykouiy6pa27cxnjjuuk@l5ppwh7md6ul>
- <Z9vydaUguJiVaHtU@smile.fi.intel.com>
- <D8PF958QL5AK.2JIE4F1N1NI0F@bootlin.com>
- <Z-LSHoYA1enEOeHC@smile.fi.intel.com>
- <D8QA116WPNUE.11VKIHSG9N0OZ@bootlin.com>
- <Z-Qh8yBMaCMhv_Ny@smile.fi.intel.com>
- <b5los4qt7atc75phmurtswymgyeh4tojpu4nctmq6tcd45an6n@rjm3n53z3imx>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z1SH+gx5TKsMkqmqaXdm56EY4HpogjuoirEjDqYXhUErgGFsr26dI+UTRSUroKKIaSuurIwVc2t5lmstjQiNDVovJObhCik75MAvb1XGH8NiWxX+N0Q5S4gb9bQ+6HRNa7F9lXG8ZeHNuPmsXxKIUPIZs0JO52u1YKaaCiinSX0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.128.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qpEYhQQ4JGgIyyHP6oleno36rnGq0LNT0VZ24jB23msj1zs0L4SEyJeUzpCok1zTTb/tXsqcgKjtB1/g1VgB7Pe96fkvAeWGDEB81FGQ9mrxWAkaeeDWW4tkYbDwWBqm+STegh2k3v0THsRGPwQ672Bd61GrUgyMCyywCS4lpdTTuDZRJilKwTYxeltm624BAJSnMfV2LNrKEalvPWk9KUgaqz0kqveMpUSNIol3gCjb5nWDruRl5MLVz6C/8MzFPqxxE5THfaL7/zDdMT07JFtUXh/4h0tkJ/clgaRUX59WsVrXkbdoZJJGft80n5HqCOr3VjaO/REqCzFx+mxZPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SV9LP68hf6K2CE8y+aCr/2IhFIriqYosoWyBNsTOUYM=;
+ b=gjxyGcadIDsPrYJ9egJQF6ZDQHPpvXPh9EY8ro7AyBD/oliFttNvPaa/Zgy8lcl99h5PsjxfCzxQXnf4ApWvOi5q4bMG+KHkKMt18zA9w3pyeTSdr4vhmXExdTCEeMA34MxBmHj7tUcJtSDTuLEXUFmlmDegYqg7i1g1wKLj8i7YinbMs/xnfu/DaC5e70vT9xMEfyJch+uVsJ+mIW5zm7exeCj1p7Q9Tn6nXyHaDWEFrgXofpzu9xzdYr0P5wxAeASF/qoCr2UJQq5pYl2qYIYlnAMYdHf1YBUw60y1eeQWzLtL8VGomwKJK4Ca2AyP5L7r0H2lt8ofyS2dgTiyKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from TYCPR01CA0181.jpnprd01.prod.outlook.com (2603:1096:400:2b0::10)
+ by SEYPR06MB5986.apcprd06.prod.outlook.com (2603:1096:101:df::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
+ 2025 09:31:27 +0000
+Received: from TY2PEPF0000AB83.apcprd03.prod.outlook.com
+ (2603:1096:400:2b0:cafe::1b) by TYCPR01CA0181.outlook.office365.com
+ (2603:1096:400:2b0::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.43 via Frontend Transport; Thu,
+ 27 Mar 2025 09:31:27 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ TY2PEPF0000AB83.mail.protection.outlook.com (10.167.253.4) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.20 via Frontend Transport; Thu, 27 Mar 2025 09:31:26 +0000
+Received: from nchen-desktop (unknown [172.16.64.25])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 22C5841604EB;
+	Thu, 27 Mar 2025 17:31:25 +0800 (CST)
+Date: Thu, 27 Mar 2025 17:31:24 +0800
+From: Peter Chen <peter.chen@cixtech.com>
+To: "Arnd Bergmann" <arnd@arndb.de>
+Cc: "Krzysztof Kozlowski" <krzk@kernel.org>,
+	"Marc Zyngier" <maz@kernel.org>, soc@kernel.org,
+	"Rob Herring" <robh@kernel.org>, krzk+dt@kernel.org,
+	"Conor Dooley" <conor+dt@kernel.org>,
+	"Catalin Marinas" <catalin.marinas@arm.com>,
+	"Will Deacon" <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
+	marcin@juszkiewicz.com.pl, kajetan.puchalski@arm.com,
+	"Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
+	"Fugang . duan" <fugang.duan@cixtech.com>
+Subject: Re: [PATCH v5 5/6] arm64: dts: cix: add initial CIX P1(SKY1) dts
+ support
+Message-ID: <Z-Ua7MK-Kv033uDu@nchen-desktop>
+References: <20250324062420.360289-1-peter.chen@cixtech.com>
+ <20250324062420.360289-6-peter.chen@cixtech.com>
+ <865xjxmlgl.wl-maz@kernel.org>
+ <Z-Nz0DU441Wwj1i4@nchen-desktop>
+ <861pukm9yd.wl-maz@kernel.org>
+ <Z-Tz1moMNozx23k6@nchen-desktop>
+ <e43b1a00-b221-413b-a36a-3a65e17f800f@kernel.org>
+ <422deb4d-db29-48c1-b0c9-7915951df500@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b5los4qt7atc75phmurtswymgyeh4tojpu4nctmq6tcd45an6n@rjm3n53z3imx>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <422deb4d-db29-48c1-b0c9-7915951df500@app.fastmail.com>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB83:EE_|SEYPR06MB5986:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4ac0e4e0-db5d-40c4-1faf-08dd6d122589
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?xghCp3v/qoHCy1aiDnm2ZwVF6gh8+5W1MwQeaQSbGhu67R4LuJ2qmJRSXthe?=
+ =?us-ascii?Q?+QhiLM76wLhcLVKQdw7oY3UyZUl6qbu5vWmO8qgZ0T5354hKrtlNVoD4/ZTJ?=
+ =?us-ascii?Q?xA2JAEUxwKna6V1jsfPuAk0MYUQmj+k0kitrlt54zsgp3PyAuy3Z64uPOD/N?=
+ =?us-ascii?Q?MUyicJFXnGMDd+8iGb4bZZ7zoJrYh0GISu+weCcZw+tpSspzj3ZLfzbC/zrx?=
+ =?us-ascii?Q?+RD0ttgruohh05gntpyrpRCuhjEX4qXDUuimNb4J/zNFpQTxm5dy2pJiB7RB?=
+ =?us-ascii?Q?wjlqgmAfBzarSk5LMgq6yXVNVe8MYRwtPgwALsSu1BHA0GysygO9bQXFMymD?=
+ =?us-ascii?Q?6o420o/PE8kE50EGXDj26mVyS8FrsRSl39WlCav2jtUNHY+D4rqAdG8+e60j?=
+ =?us-ascii?Q?B71vpWCYsRn3lEvk1lpwvSJ1SQAJmyH0EvnM798GnP4UMev5Q7tdSc+CnWgx?=
+ =?us-ascii?Q?rkSoW1NmudRDnMwlZNKb2pJhXEUQ4xfM9M2g67Bz/+KF2/lkphboYYkb+wK2?=
+ =?us-ascii?Q?phtvkf4bfZuh7qq6k0IJ0ybScLp7z11YX/isFGt4Ng5Vpt3f8pbGqaiL1O8C?=
+ =?us-ascii?Q?uTzvVtF9hFjUawdBf4DkQxUxqDYOUTlhpNMeN7KUiCkqrcGil1mq7ygy63Nb?=
+ =?us-ascii?Q?Tic1iKgcuUZjGhx1R4QcZGprVzlTjybkXkrkIlcCvp6QA7GMQFw7Jnk652cy?=
+ =?us-ascii?Q?W9+fCHg3v94wIn7MsgLrE7HGxWTZhuGe8V37PPpCwh8NsC+DcUsbJTfW0q4+?=
+ =?us-ascii?Q?yEr+ig48jcqPK+XH5qvp486fWnuW8NEOE2XTFeyUJqFpG+RF5g7RU7RjDwNU?=
+ =?us-ascii?Q?yxnAfx3UHy/uCU3FPXQlcvO7vmRZwZKN2CIYt/x3tQJqnQKJgv39Mg9pxef4?=
+ =?us-ascii?Q?OyogI/00Ips1gyYhByDbIuKgtoHXfk+M60IkOV37DpVWlstNRz9CrSs4WmVv?=
+ =?us-ascii?Q?ZQVpzekjaIWM9m0qn9nyYVkBWuSLed6vojxlrMxJ4SaNtxWP2u2Z09OeP4W+?=
+ =?us-ascii?Q?xQj376VYP8f3kozZYfnDYMAYPD0aXxO/psMyKQoxsMkq687NkeWWedzzxiTC?=
+ =?us-ascii?Q?YjIyT9opAoYWsyjH0UnwMJxEap8Ls2Tfh8dqYud/iKaIJYWtXOFmeIpkDL/l?=
+ =?us-ascii?Q?tE/GoGwKBA5+0wHTAw4BA8/HXox9iJUsbqsAL3QipqpY6ymJBmxs932H7GZW?=
+ =?us-ascii?Q?8y+hE7FTsx7mrAJLk6nA/WfMYEfrxcQ4uq8EGdRfse2DUAvG1A59HIElGhRV?=
+ =?us-ascii?Q?sSF3/dk0K57qaLGwj2zM8vETXZJ74Ro10vM7Yb6Os6uc4zNLjNNqbwnU6h57?=
+ =?us-ascii?Q?auoQT+JHLdmtPehsyZWzBLhNYcWVNZlPGEKu3q3E4DcI38ZYTrdqeRIvABeT?=
+ =?us-ascii?Q?6vY2xVW7FXtdue2XnqjQM45Is+UjpMOAqGQING/cTQ31q8778mZ3eoTl77De?=
+ =?us-ascii?Q?95YLv+B31Vqiu2NEKBGe8HNRqJKK/NgnAgJ1An80EjPSQBo1d92uJ2peam5D?=
+ =?us-ascii?Q?z6CFH6uQFzLbvF8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014)(7416014);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 09:31:26.0716
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ac0e4e0-db5d-40c4-1faf-08dd6d122589
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: TY2PEPF0000AB83.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB5986
 
-On Wed, Mar 26, 2025 at 06:46:41PM +0100, Uwe Kleine-König wrote:
-> On Wed, Mar 26, 2025 at 05:49:07PM +0200, Andy Shevchenko wrote:
-> > On Wed, Mar 26, 2025 at 03:44:28PM +0100, Mathieu Dubois-Briand wrote:
-> > > On Tue Mar 25, 2025 at 4:56 PM CET, Andy Shevchenko wrote:
-> > > > On Tue, Mar 25, 2025 at 03:37:29PM +0100, Mathieu Dubois-Briand wrote:
-> > > > > On Thu Mar 20, 2025 at 11:48 AM CET, Andy Shevchenko wrote:
-> > > > > > On Thu, Mar 20, 2025 at 08:50:00AM +0100, Uwe Kleine-König wrote:
-> > > > > > > On Wed, Mar 19, 2025 at 01:18:50PM +0200, Andy Shevchenko wrote:
-> > > > > > > > On Tue, Mar 18, 2025 at 05:26:20PM +0100, mathieu.dubois-briand@bootlin.com wrote:
-
-...
-
-> > > > > > > > > +	chip = devm_pwmchip_alloc(dev->parent, MAX7360_NUM_PWMS, 0);
-> > > > > > > > 
-> > > > > > > > This is quite worrying. The devm_ to parent makes a lot of assumptions that may
-> > > > > > > > not be realised. If you really need this, it has to have a very good comment
-> > > > > > > > explaining why and object lifetimes.
-> > > > > > > 
-> > > > > > > Pretty sure this is broken. This results for example in the device link
-> > > > > > > being created on the parent. So if the pwm devices goes away a consumer
-> > > > > > > might not notice (at least in the usual way). I guess this was done to
-> > > > > > > ensure that #pwm-cells is parsed from the right dt node? If so, that
-> > > > > > > needs a different adaption. That will probably involve calling
-> > > > > > > device_set_of_node_from_dev().
-> > > > > >
-> > > > > > It's an MFD based driver, and MFD core cares about propagating fwnode by
-> > > > > > default. I believe it should just work if we drop that '->parent' part.
-> > > > > 
-> > > > > Are you sure about that?
-> > > >
-> > > > Yes and no. If your DT looks like (pseudo code as I don't know
-> > > > DTS syntax by heart):
-> > > >
-> > > > 	device: {
-> > > > 		parent-property = value;
-> > > > 		child0:
-> > > > 			...
-> > > > 		child1:
-> > > > 			...
-> > > > 	}
-> > > >
-> > > > the parent-property value is automatically accessible via fwnode API,
-> > > > but I don't know what will happen to the cases when each of the children
-> > > > has its own compatible string. This might be your case, but again,
-> > > > I'm not an expert in DT.
-> > > >
-> > > 
-> > > On my side:
-> > > - Some MFD child do have a child node in the device tree, with an
-> > >   associated compatible value. No problem for these, they do get correct
-> > >   of_node/fwnode values pointing on the child device tree node.
-> > > - Some MFD child do not have any node in the device tree, and for these,
-> > >   they have to use properties from the parent (MFD) device tree node.
-> > >   And here we do have some problems.
-> > > 
-> > > > > On my side it does not work if I just drop the '->parent', this is why I
-> > > > > ended whit this (bad) pattern.
-> > > >
-> > > > > Now it does work if I do call device_set_of_node_from_dev() manually,
-> > > >
-> > > > AFAICT, this is wrong API to be called in the children. Are you talking about
-> > > > parent code?
-> > > >
-> > > 
-> > > I believe I cannot do it in the parent code, as I would need to do it
-> > > after the call to devm_mfd_add_devices(), and so it might happen after
-> > > the probe. I still tried to see how it behaved, and it looks like PWM
-> > > core really did not expect to get an of_node assigned to the device
-> > > after adding the PWM device.
-> > > 
-> > > So either I can do something in MFD core or in sub devices probe(), or I
-> > > need to come with a different way to do things.
-> > > 
-> > > > > so it's definitely better. But I believe the MFD core is not propagating
-> > > > > OF data, and I did not find where it would do that in the code. Yet it
-> > > > > does something like this for ACPI in mfd_acpi_add_device(). Or maybe we
-> > > > > do something bad in our MFD driver?
-> > > >
-> > > > ...or MFD needs something to have... Dunno.
-> > > 
-> > > I have something working with a very simple change in mfd-core.c, but
-> > > I'm really not confident it won't break anything else. I wish I could
-> > > get some insights from an MFD expert.
-> > > 
-> > > @@ -210,6 +210,8 @@ static int mfd_add_device(struct device *parent, int id,
-> > >                 if (!pdev->dev.of_node)
-> > >                         pr_warn("%s: Failed to locate of_node [id: %d]\n",
-> > >                                 cell->name, platform_id);
-> > > +       } else if (IS_ENABLED(CONFIG_OF) && parent->of_node) {
-> > > +               device_set_of_node_from_dev(&pdev->dev, parent);
-> > 
-> > The use of this API is inappropriate here AFAICT. It drops the parent refcount
-> > and on the second call to it you will have a warning from refcount library.
+On 25-03-27 09:18:42, Arnd Bergmann wrote:
 > 
-> device_set_of_node_from_dev() does:
+> On Thu, Mar 27, 2025, at 08:16, Krzysztof Kozlowski wrote:
+> > On 27/03/2025 07:44, Peter Chen wrote:
+> >>>> On 25-03-25 10:52:10, Marc Zyngier wrote:
+> >>
+> >> Thanks for your interesting of our platform, and your comments
+> >> help us a lot. But I don't think it wastes reviewers and maintainers
+> >> time, a clean patch set saves everyone's time during upstream process.
+> >>
+> >> For how to organize the patch set for SoC, Krzysztof gave good summary
+> >> at [1]. We are going on upstream [2], this patch set is just a start
+> >> and base but not like you said for marketing purpose.
+> >
+> >
+> > I do not think I suggested in [1] to ever send new SoC containing only
+> > CPUs and interrupt controller, without even serial. My instruction [1]
+> > was how to organize it. The DTS can be even fully complete, see the
+> > upstreaming example I have been using all the time - Qualcomm SM8650:
+> >
+> > https://lore.kernel.org/all/20231124-topic-sm8650-upstream-dt-v4-0-e402e73cc5f0@linaro.org/
 > 
-> 	of_node_put(pdev->dev->of_node);
-> 	pdev->dev->of_node = of_node_get(parent->of_node);
-> 	pdev->dev->of_node_reused = true;
+> It is easier if there are other SoCs in the same family that are
+> already supported than an entire new platform, but we have certainly
+> done it for new SoC families as well.
 > 
-> Note that pdev isn't the platform device associated with the parent
-> device but the just allocated one representing the subdevice so
-> pdev->dev->of_node is NULL and the parent refcount isn't dropped.
+> > Entire SoC sent to mailing list on the day one of public release of that
+> > flagship Qualcomm SoC. The SoC DTSI and board DTS have almost complete
+> > picture, except few trickier pieces... but it even has full display and
+> > GPU! Plus, as I explained on my email on samsung-soc, that DTS/DTSI
+> > patchset references all other bindings with their state, so SoC
+> > maintainers can understand what is the overall progress and what will be
+> > the result in DT schema checks, if they apply the patchset.
+> >
+> > The minimum, absolute minimum submission is with the serial nodes. I
+> > would prefer to have some storage or any other interface as well, but
+> > that's fine.
+> 
+> Agreed. The usual arrangement for a new SoC family is to have
+> the minimum set of drivers (uart, clk, pinctrl, regulator,
+> iommu, irqchip) along with the DT bindings and the dts files
+> in one branch and have that go through the SoC tree as part of
+> the soc/newsoc branch. It sounds like in this case we only need
+> uart and a mailbox since the rest are shared with existing
+> firmware based drivers, so this isn't even the worst case
+> but still requires some coordination between subsystem maintainers
+> to ensure that all patches have been properly reviewed before
+> I merge them.
 
-Ah, I stand corrected, thanks! Okay, so what it does basically, it drops
-a reference for the child, and propagates the parent's node at the same time
-bumping its reference count. Sounds legit, but this should be done equally for
-DT, ACPI and software node cases.
+So, in this case, we should add mailbox driver support in this
+series, and once the mailbox maintainer has reviewed mailbox
+driver, all the patches could go your tree?
 
-> But I'm unsure if this is the right place to call it or if
-> device_set_node() is indeed enough
+> 
+> Any peripheral drivers that are not essential for booting
+> (typically mmc, ufs, spi, i2c, gpu, sound, pci) can get
+> submitted at the same time, as there is no dependency on
+> the platform being merged first.
+> 
 
-This all about node reference counting. Whatever the correct choice for DT.
-Anyway this sounds right to do for any of the system, but also note, that
-this API is good when device node is not backed by the struct device,
-otherwise, the struct device reference count covers the device node AFAIU.
-
-TL;DR: What are the object lifetimes for struct device and struct device_node
-(struct fwnode_handle)?
-
-> (also I wonder if
-> device_set_of_node_from_dev() should care for fwnode).
-> I'll keep that question for someone else.
+Thanks for telling us this.
 
 -- 
-With Best Regards,
-Andy Shevchenko
 
-
+Best regards,
+Peter
