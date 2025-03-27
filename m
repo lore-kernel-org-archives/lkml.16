@@ -1,94 +1,181 @@
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0351547C0;
-	Thu, 27 Mar 2025 14:10:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1231547C0;
+	Thu, 27 Mar 2025 14:10:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743084636; cv=pass; b=mxjpZFovS+ju1tg+JUh3TQcw3sxBaM6/ZLpNERI4HnZZPemVFu/FoFf1d6HG/PjZ61O3DBf4x8LM9CwCv1rwO62OlmozDvUCZAyvCYY5iwtQIF+E+YelBwS4L0o2p4nyThn6xsJr2hR7cjhI4VF8S1yJRb0hmxpZMwIqPryHQms=
+	t=1743084641; cv=pass; b=i4U2fo2iAUqBjWtZZfVWh4BWcEIaoAgt1yMgjohYlepoQ648mBg9/MJ2nNUIkIBq9UwNZWKhMWyYuYWVIK73n1393cnRzqTegnqOY5XCt6HtpaMI0jIp9SmdyRfIV9gSc1cSuNwjqUR5sRbgQsAPGlkpbfdWr2UlbcYE+7/jiqs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743084636; c=relaxed/simple;
-	bh=xuXc7MvjBMPG9ZEhDFgqZF0gyD5LGfdEXc+1TSAKemo=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=POWLU0oSVd6tm97eD6zWFduHvjlDpUOKkcPT4txq3QxETT46oh/J6H+BB5mKGO4BhtUYgn0O5+D25hroKL37Dr3kF50xhDlj9yeUb+QwDXjU0vtSysyRSzwce7XBlJyxMjMPpE9L5xKWmVNW8bTriLSkFUvAYAChWJ6YYpPDeJQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=martyn.welch@collabora.com header.b=Tsu6CDEl; arc=pass smtp.client-ip=136.143.188.112
+	s=arc-20240116; t=1743084641; c=relaxed/simple;
+	bh=KFOX7j6dcsCjMm3XpoQ4xj9VhLpO5r0rtI8u4eTP0eU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VbP9TMPj7r8kjL6THoH6OiXsLNboCPlX4csMWGpgdWh+3yeUU1FewDJWdplxpY2sU3v0Wc/3wEzbcbi1SBkWdaac3x5vP8Vl7uc4PwjnCTOkSqDeyXWvU4ll0305Hd8K6zlYX3CX3pWAKje1yBNiQ/Y0k9T+B/Sks0Eyqv8aJsA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=hjsiGm6X; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=martyn.welch@collabora.com header.b="Tsu6CDEl"
-ARC-Seal: i=1; a=rsa-sha256; t=1743084617; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="hjsiGm6X"
+ARC-Seal: i=1; a=rsa-sha256; t=1743084609; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=BR0UwQ2FzQkfwb4yaquRNiD4Ly9Wpgqdwcde1mPx31XkjX5dfmmI+mfUyfLZQhPzpwkuY3NyrfYMGID/M+/MLQEBYLLAuk6b5jHDno5BD21kKbuFzkvQWW/yRrDoxBlucUghHXNx9O2dfnUkSj/INu8kmgx5PZZbKSXYiBUiyfU=
+	b=VedyCbIdt4I86rjHMEhtvpNXAiFwv2UiduZ/rKWu6+orLgJ2H1hs4pci5uEODZ5GoeyPT8s9rSKJpJ0Sf+IaaQ6fsjO85MsdSpVG4gi+FFyqiT8pYjhZcIq1WMxgv2kzyvu7lU/OMpcoLuXzF3M4gFHnE9FLFlRcJvPw780I4dg=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743084617; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Rd72ZSp0c1wqOF9wFxJf6YkyT5PHaJKvyyrLNbHW2eo=; 
-	b=IlCsronZ4F0f4/mnflStJNBut+OjUwriYtWSm7W0brKX7VvYYPbsQN3EQ+vM6fHBHGXqfpsMZLERR2vhegw31eNoTR1RZqbdB5rQzDBwZ7HzwEr0DuCvZF1AaPKmvb9gR4sF/Za3+E579otkt3ZfAhAVS27vvNdjhIA3gWLQdtg=
+	t=1743084609; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=4UyPlXIDXdLEvKXdapaXy/kcMLyCFQnzUHF9J9uf/ds=; 
+	b=RMq3HnE0/m/6dcP6XbF/Mw8WAIyNPve/eQ67udLGmu8HyKrLqZ5geVc3Lu3wXWthm+TWkzcoO/E4Hd/StSqU43uewGlFIsS199Ugoma8mSwPhQfn58dvivufMtn57j2nWNj6pa097EURdb5diBzbLJO5wqyYzBxSSrKe6bn01xc=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=martyn.welch@collabora.com;
-	dmarc=pass header.from=<martyn.welch@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743084617;
-	s=zohomail; d=collabora.com; i=martyn.welch@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=Rd72ZSp0c1wqOF9wFxJf6YkyT5PHaJKvyyrLNbHW2eo=;
-	b=Tsu6CDElz48AMNVpLSkoZmt26tnQtpjXQaE6gooPaxh7Vcqf2jEUnb50av4gcg6a
-	fHBLHCsFAd0m31nHbykcWeNujd66UNEexuIuEzvvaz8Q0W/q3jr/eO8z33YfBZ5FoXx
-	ckcTNDmAsv5irQwLB/1G6bhD2ZetYIJgop6t2MTE=
-Received: from mail.zoho.com by mx.zohomail.com
-	with SMTP id 1743084616848372.7384738795423; Thu, 27 Mar 2025 07:10:16 -0700 (PDT)
-Date: Thu, 27 Mar 2025 14:10:16 +0000
-From: Martyn Welch <martyn.welch@collabora.com>
-To: "Daniel Baluta" <daniel.baluta@gmail.com>
-Cc: "Shawn Guo" <shawnguo@kernel.org>,
-	"Sascha Hauer" <s.hauer@pengutronix.de>,
-	"Pengutronix Kernel Team" <kernel@pengutronix.de>,
-	"Fabio Estevam" <festevam@gmail.com>,
-	"Rob Herring" <robh@kernel.org>,
-	"Krzysztof Kozlowski" <krzk+dt@kernel.org>,
-	"Conor Dooley" <conor+dt@kernel.org>,
-	"kernel" <kernel@collabora.com>, "imx" <imx@lists.linux.dev>,
-	"linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>,
-	"devicetree" <devicetree@vger.kernel.org>,
-	"linux-kernel" <linux-kernel@vger.kernel.org>
-Message-ID: <195d7f07c75.da78a5cf8278.1708647163991154090@collabora.com>
-In-Reply-To: <CAEnQRZD15J9GOHFL6MfaLtSkgaN6ksT_YL7GvG2U_St8q2+KgA@mail.gmail.com>
-References: <20250327120857.539155-1-martyn.welch@collabora.com> <CAEnQRZD15J9GOHFL6MfaLtSkgaN6ksT_YL7GvG2U_St8q2+KgA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: imx8mp: Add device tree for Nitrogen8M Plus
- ENC Carrier Board
+	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
+	dmarc=pass header.from=<adrian.larumbe@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743084609;
+	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=4UyPlXIDXdLEvKXdapaXy/kcMLyCFQnzUHF9J9uf/ds=;
+	b=hjsiGm6XaxN8tvqZvruS+L+OYby5zW0dFLlk/zsIuigWiT1bcZMvu9teQSN66bR2
+	rTqqe5mgPVSaJ3CcnlC3ZkGqA6P9vgNAhi3g0pMP4vvoqMje9O+Uz/iLTUh5M7fswNF
+	3iL78U4iX7JSNXo0LPcvz8qqx3MhpTEEX73+A0Hw=
+Received: by mx.zohomail.com with SMTPS id 1743084608283448.1115696600874;
+	Thu, 27 Mar 2025 07:10:08 -0700 (PDT)
+From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
+To: ?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: kernel@collabora.com,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org
+Subject: [PATCH v3 1/4] drm/panthor: Introduce BO labeling
+Date: Thu, 27 Mar 2025 14:08:34 +0000
+Message-ID: <20250327140845.105962-2-adrian.larumbe@collabora.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250327140845.105962-1-adrian.larumbe@collabora.com>
+References: <20250327140845.105962-1-adrian.larumbe@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Importance: Medium
-User-Agent: Zoho Mail
-X-Mailer: Zoho Mail
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Add a new character string Panthor BO field, and a function that allows
+setting it from within the driver.
 
- ---- On Thu, 27 Mar 2025 13:00:13 +0000  Daniel Baluta <daniel.baluta@gmail.com> wrote --- 
- > > +       mdio {
- > > +               compatible = "snps,dwmac-mdio";
- > > +               #address-cells = <1>;
- > > +               #size-cells = <0>;
- > > +
- > > +               ethphy0: ethernet-phy@4 {
- > > +                       compatible = "ethernet-phy-ieee802.3-c22";
- > > +                       reg = <4>;
- > > +                       eee-broken-1000t;
- > > +#if 0
- > > +                       interrupts-extended = <&gpio3 2 IRQ_TYPE_LEVEL_LOW>;
- > > +                       reset-gpios = <&gpio3 16 GPIO_ACTIVE_LOW>;
- > > +#endif
- > 
- > You should not have dead code in the final submission. If it is not
- > used just remove it.
- > 
+Driver takes care of freeing the string when it's replaced or no longer
+needed at object destruction time, but allocating it is the responsibility
+of callers.
 
-Agh! Scanned though it a few times, somehow missed the ifdefs. Yup. wIll remove.
+Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+---
+ drivers/gpu/drm/panthor/panthor_gem.c | 38 +++++++++++++++++++++++++++
+ drivers/gpu/drm/panthor/panthor_gem.h | 17 ++++++++++++
+ 2 files changed, 55 insertions(+)
 
-Thanks,
+diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/panthor/panthor_gem.c
+index 8244a4e6c2a2..7d017f9d1d52 100644
+--- a/drivers/gpu/drm/panthor/panthor_gem.c
++++ b/drivers/gpu/drm/panthor/panthor_gem.c
+@@ -18,6 +18,14 @@ static void panthor_gem_free_object(struct drm_gem_object *obj)
+ 	struct panthor_gem_object *bo = to_panthor_bo(obj);
+ 	struct drm_gem_object *vm_root_gem = bo->exclusive_vm_root_gem;
+ 
++	/*
++	 * Label might have been allocated with kstrdup_const(),
++	 * we need to take that into account when freeing the memory
++	 */
++	kfree_const(bo->label.str);
++
++	mutex_destroy(&bo->label.lock);
++
+ 	drm_gem_free_mmap_offset(&bo->base.base);
+ 	mutex_destroy(&bo->gpuva_list_lock);
+ 	drm_gem_shmem_free(&bo->base);
+@@ -196,6 +204,7 @@ struct drm_gem_object *panthor_gem_create_object(struct drm_device *ddev, size_t
+ 	obj->base.map_wc = !ptdev->coherent;
+ 	mutex_init(&obj->gpuva_list_lock);
+ 	drm_gem_gpuva_set_lock(&obj->base.base, &obj->gpuva_list_lock);
++	mutex_init(&obj->label.lock);
+ 
+ 	return &obj->base.base;
+ }
+@@ -247,3 +256,32 @@ panthor_gem_create_with_handle(struct drm_file *file,
+ 
+ 	return ret;
+ }
++
++void
++panthor_gem_bo_set_label(struct drm_gem_object *obj, const char *label)
++{
++	struct panthor_gem_object *bo = to_panthor_bo(obj);
++	const char *old_label;
++
++	mutex_lock(&bo->label.lock);
++	old_label = bo->label.str;
++	bo->label.str = label;
++	mutex_unlock(&bo->label.lock);
++
++	kfree(old_label);
++}
++
++void
++panthor_gem_kernel_bo_set_label(struct panthor_kernel_bo *bo, const char *label)
++{
++	const char *str;
++
++	str = kstrdup_const(label, GFP_KERNEL);
++	if (!str) {
++		/* Failing to allocate memory for a label isn't a fatal condition */
++		drm_warn(bo->obj->dev, "Not enough memory to allocate BO label");
++		return;
++	}
++
++	panthor_gem_bo_set_label(bo->obj, kstrdup_const(str, GFP_KERNEL));
++}
+diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/panthor/panthor_gem.h
+index 5749ef2ebe03..0582826b341a 100644
+--- a/drivers/gpu/drm/panthor/panthor_gem.h
++++ b/drivers/gpu/drm/panthor/panthor_gem.h
+@@ -46,6 +46,20 @@ struct panthor_gem_object {
+ 
+ 	/** @flags: Combination of drm_panthor_bo_flags flags. */
+ 	u32 flags;
++
++	/**
++	 * @label: BO tagging fields. The label can be assigned within the
++	 * driver itself or through a specific IOCTL.
++	 */
++	struct {
++		/**
++		 * @label.str: Pointer to NULL-terminated string,
++		 */
++		const char *str;
++
++		/** @lock.str: Protects access to the @label.str field. */
++		struct mutex lock;
++	} label;
+ };
+ 
+ /**
+@@ -91,6 +105,9 @@ panthor_gem_create_with_handle(struct drm_file *file,
+ 			       struct panthor_vm *exclusive_vm,
+ 			       u64 *size, u32 flags, uint32_t *handle);
+ 
++void panthor_gem_bo_set_label(struct drm_gem_object *obj, const char *label);
++void panthor_gem_kernel_bo_set_label(struct panthor_kernel_bo *bo, const char *label);
++
+ static inline u64
+ panthor_kernel_bo_gpuva(struct panthor_kernel_bo *bo)
+ {
+-- 
+2.48.1
 
-Martyn
