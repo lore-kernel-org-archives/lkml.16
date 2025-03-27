@@ -1,625 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mx1.riseup.net (mx1.riseup.net [198.252.153.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2CB61C8627
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 19:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8193818AE2
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 19:54:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743105144; cv=none; b=uEPi7ev/IMWPb5PZNvCibsjclX7vK9QZYBEcXXtaiLKtIwogVtqvc6f4POQ0+27QnWcxdA+0OUWdNMF4ouCBy+XXY27pK5NDS+0z9YpRYC8dBNIRJEUgEFQli0bxC9PRzDi9CtZN8d7Ief9x0/kSUF7PDv5yJbSfiETj4IXZRLs=
+	t=1743105260; cv=none; b=E6fUvX/A2sVUVhD7MThHRh9QgmGSl8drJ6S5p5+eCvOQzXE07M5+oyxmu0C6WFfShwOgTWvPNmgRePRZoctjmCw0+pr3M2aFVQrQaOrMnGABEhovnH7pMdxPB7akZd5NU3SeaoLUZRnCy7Jf8vgekrkZdZCbI7WHFkKVGgY37Pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743105144; c=relaxed/simple;
-	bh=wKeHCSiLIgoQZ/CisaeYgPUv5aX6MRDs4W+DuL2UYk8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=shG63yTU8ArJ1+nMTEmClriIEUQjKO+r5rALLjJp5jUQeUXryFAioz4+nFirUKF1DMzqihGC+Oe3tf3/mXvWCMogagCVq2Wv0WnjnbAYqfqktQKnH5r6nDgC5qShyYTWz+0a/C2P9YMKaITf2PjOwpybvVF4RmyNpaRcfbLUA08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IImpkpJ9; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743105260; c=relaxed/simple;
+	bh=eBpNSGuVPssjgUGC8PA/BU88KH1iITq0UyJ33TKvc0c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=foZ0otJvR5Ui7rn5LoOj6piRmVxXMQVOBsgNDn7Hb8S6knKfjjd9wKv/yJXevTkETpLRqAN66Q6V+L6KieKfcyomr6/jEBiE7R1teJuDsLaXavP+bHNMtnc8eEMM+AKt+3hjfJZNWYIi3U0aIHMNwPea3KYsYDk+U0SOfnMor6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=EbJLz+SA; arc=none smtp.client-ip=198.252.153.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IImpkpJ9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743105142; x=1774641142;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=wKeHCSiLIgoQZ/CisaeYgPUv5aX6MRDs4W+DuL2UYk8=;
-  b=IImpkpJ9lW6Dem9emyh7CnqaBzi7UJtFfEk0IPKWyM/rUPo9z4pwv/Y4
-   WmXyyRDRmFq1DgIF8bYuwfD8BTNBpv5dRoVCDsQmVoJNSr/eGdot4UPgU
-   jnb2XmHNwRWkGBLK9Vzy/ORNesq9gnAzv69DoDKJaX8nLnII37ym47+CP
-   E5ISubQrZWXh7iLNZLYO3GlmgVLMJp2c1gOdH9CWWkfaenYlqzwljcl6l
-   OhtodG2khU5EsXieIk9+5ogjYJ1rcOd3a4BajBncvkJEtOpwRR4T4OxXQ
-   Z4BnXCRmzye71iYAqc5mFKvhofh+Y4A4XzBHk0htP5HOfixkxIqPNFCWI
-   w==;
-X-CSE-ConnectionGUID: Y6kfQeZGQASMLoHUBRPsag==
-X-CSE-MsgGUID: aK6d9wbeRQmWLN1q7w/T8g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="48115684"
-X-IronPort-AV: E=Sophos;i="6.14,281,1736841600"; 
-   d="scan'208";a="48115684"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 12:52:19 -0700
-X-CSE-ConnectionGUID: aQ4kwjP2SbaYP2gnbTwq8A==
-X-CSE-MsgGUID: DMM5sqMiRr2Q24Jub9BoMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,281,1736841600"; 
-   d="scan'208";a="125207699"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa007.fm.intel.com with ESMTP; 27 Mar 2025 12:52:18 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	ak@linux.intel.com,
-	linux-kernel@vger.kernel.org
-Cc: eranian@google.com,
-	thomas.falcon@intel.com,
-	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V4 5/5] perf/x86/intel: Support auto counter reload
-Date: Thu, 27 Mar 2025 12:52:17 -0700
-Message-Id: <20250327195217.2683619-6-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250327195217.2683619-1-kan.liang@linux.intel.com>
-References: <20250327195217.2683619-1-kan.liang@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="EbJLz+SA"
+Received: from fews01-sea.riseup.net (fews01-sea-pn.riseup.net [10.0.1.109])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx1.riseup.net (Postfix) with ESMTPS id 4ZNvVx3mThzDq8V;
+	Thu, 27 Mar 2025 19:54:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+	t=1743105257; bh=eBpNSGuVPssjgUGC8PA/BU88KH1iITq0UyJ33TKvc0c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EbJLz+SA0FfkWIop7kVURaMRZNCJc2NjrFVITIUWgS0yXIEF9nBqkLK+d9ox3nrF5
+	 2lxp2sKf2biFpJfKwPUvv5WkzlLZB3ecL06OUTZkLUUvTokrnkAZLyhrGGxWuewAjI
+	 qCtamKqler0MtHsQ6nPY+eBl+FWjwwNQ1zWGDmTE=
+X-Riseup-User-ID: E65CD4A0DAD85FE86D5D9C399ED394A8AC308DAE58D0505E4337FA9118A3EDCA
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	 by fews01-sea.riseup.net (Postfix) with ESMTPSA id 4ZNvVv6lWtzJtXW;
+	Thu, 27 Mar 2025 19:54:15 +0000 (UTC)
+Message-ID: <1a89af34-8f7a-486b-a7f8-0a56d0447ce7@riseup.net>
+Date: Thu, 27 Mar 2025 20:54:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2] x86/i8253: fix possible deadlock when turning off the
+ PIT
+To: Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: dwmw@amazon.co.uk, mhkelley@outlook.com, mingo@kernel.org
+References: <20250327152258.3097-1-ffmancera@riseup.net> <87ecyixuna.ffs@tglx>
+Content-Language: en-US
+From: Fernando Fernandez Mancera <ffmancera@riseup.net>
+In-Reply-To: <87ecyixuna.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Kan Liang <kan.liang@linux.intel.com>
 
-The relative rates among two or more events are useful for performance
-analysis, e.g., a high branch miss rate may indicate a performance
-issue. Usually, the samples with a relative rate that exceeds some
-threshold are more useful. However, the traditional sampling takes
-samples of events separately. To get the relative rates among two or
-more events, a high sample rate is required, which can bring high
-overhead. Many samples taken in the non-hotspot area are also dropped
-(useless) in the post-process.
 
-The auto counter reload (ACR) feature takes samples when the relative
-rate of two or more events exceeds some threshold, which provides the
-fine-grained information at a low cost.
-To support the feature, two sets of MSRs are introduced. For a given
-counter IA32_PMC_GPn_CTR/IA32_PMC_FXm_CTR, bit fields in the
-IA32_PMC_GPn_CFG_B/IA32_PMC_FXm_CFG_B MSR indicate which counter(s)
-can cause a reload of that counter. The reload value is stored in the
-IA32_PMC_GPn_CFG_C/IA32_PMC_FXm_CFG_C.
-The details can be found at Intel SDM (085), Volume 3, 21.9.11 Auto
-Counter Reload.
+On 3/27/25 6:15 PM, Thomas Gleixner wrote:
+> On Thu, Mar 27 2025 at 16:22, Fernando Fernandez Mancera wrote:
+>> As the PIT could be disabled during the init, it can possibly cause a
+>> deadlock. hpet_time_init()->pit_timer_init() is called without IRQ off.
+>> It assumes that clockevent_i8253_disable() is IRQ-safe, which it isn't.
+> 
+> It assumes nothing and all the missing interrupt disable is causing is a
+> lockdep false positive.
+> 
+> Lockdep complains correctly due to the observed contexts, but in reality
+> there is no possible deadlock at all. Definitely not the one your
+> subject line is claiming to be possible.
+> 
+> At the point where pit_timer_init() is invoked there is no other usage
+> of 8253_lock possible because the system is still in the very early boot
+> stage.
+> 
 
-In the hw_config(), an ACR event is specially configured, because the
-cause/reloadable counter mask has to be applied to the dyn_constraint.
-Besides the HW limit, e.g., not support perf metrics, PDist and etc, a
-SW limit is applied as well. ACR events in a group must be contiguous.
-It facilitates the later conversion from the event idx to the counter
-idx. Otherwise, the intel_pmu_acr_late_setup() has to traverse the whole
-event list again to find the "cause" event.
-Also, add a new flag PERF_X86_EVENT_ACR to indicate an ACR group, which
-is set to the group leader.
+Thanks for taking the time to review the patch.
 
-The late setup() is also required for an ACR group. It's to convert the
-event idx to the counter idx, and saved it in hw.config1.
+I was not aware of this. I took a look to other functions that used 
+i8253_lock like pcspkr_event() and thought it could be possible.
 
-The ACR configuration MSRs are only updated in the enable_event().
-The disable_event() doesn't clear the ACR CFG register.
-Add acr_cfg_b/acr_cfg_c in the struct cpu_hw_events to cache the MSR
-values. It can avoid a MSR write if the value is not changed.
+> So disabling interrupt here just prevents lockdep triggering a false
+> positive and not more.
+> 
+> Please analyze problems properly instead of assuming that the lockdep
+> splat is the ultimate truth.
 
-Expose an acr_mask to the sysfs. The perf tool can utilize the new
-format to configure the relation of events in the group. The bit
-sequence of the acr_mask follows the events enabled order of the group.
+I tried, but it seems I failed. I just found out this while working on 
+something else not related in a VM.
 
-Example:
+> 
+>>   bool __init pit_timer_init(void)
+>>   {
+>> +	unsigned long flags;
+>> +
+>>   	if (!use_pit()) {
+>>   		/*
+>>   		 * Don't just ignore the PIT. Ensure it's stopped, because
+>>   		 * VMMs otherwise steal CPU time just to pointlessly waggle
+>>   		 * the (masked) IRQ.
+>>   		 */
+>> +		local_irq_save(flags);
+> 
+> Why save()? You just established that interrupts are enabled here, so
+> this really wants to be:
+> 
 
-Here is the snippet of the mispredict.c. Since the array has a random
-numbers, jumps are random and often mispredicted.
-The mispredicted rate depends on the compared value.
+I followed Ingo's suggestions on V1 [1]. It made sense to me, if the 
+problem was the one described on the commit message. So, is there 
+consensus about this being a false positive? If so, I will send a new 
+patch just suppressing the warning as suggested below.
 
-For the Loop1, ~11% of all branches are mispredicted.
-For the Loop2, ~21% of all branches are mispredicted.
+[1] https://lore.kernel.org/linux-kernel/Z-B6ob0zLZr81e8i@gmail.com/
 
-main()
-{
-...
-        for (i = 0; i < N; i++)
-                data[i] = rand() % 256;
-...
-        /* Loop 1 */
-        for (k = 0; k < 50; k++)
-                for (i = 0; i < N; i++)
-                        if (data[i] >= 64)
-                                sum += data[i];
-...
-
-...
-        /* Loop 2 */
-        for (k = 0; k < 50; k++)
-                for (i = 0; i < N; i++)
-                        if (data[i] >= 128)
-                                sum += data[i];
-...
-}
-
-Usually, a code with a high branch miss rate means a bad performance.
-To understand the branch miss rate of the codes, the traditional method
-usually samples both branches and branch-misses events. E.g.,
-perf record -e "{cpu_atom/branch-misses/ppu, cpu_atom/branch-instructions/u}"
-               -c 1000000 -- ./mispredict
-
-[ perf record: Woken up 4 times to write data ]
-[ perf record: Captured and wrote 0.925 MB perf.data (5106 samples) ]
-The 5106 samples are from both events and spread in both Loops.
-In the post-process stage, a user can know that the Loop 2 has a 21%
-branch miss rate. Then they can focus on the samples of branch-misses
-events for the Loop 2.
-
-With this patch, the user can generate the samples only when the branch
-miss rate > 20%. For example,
-perf record -e "{cpu_atom/branch-misses,period=200000,acr_mask=0x2/ppu,
-                 cpu_atom/branch-instructions,period=1000000,acr_mask=0x3/u}"
-                -- ./mispredict
-
-(Two different periods are applied to branch-misses and
-branch-instructions. The ratio is set to 20%.
-If the branch-instructions is overflowed first, the branch-miss
-rate < 20%. No samples should be generated. All counters should be
-automatically reloaded.
-If the branch-misses is overflowed first, the branch-miss rate > 20%.
-A sample triggered by the branch-misses event should be
-generated. Just the counter of the branch-instructions should be
-automatically reloaded.
-
-The branch-misses event should only be automatically reloaded when
-the branch-instructions is overflowed. So the "cause" event is the
-branch-instructions event. The acr_mask is set to 0x2, since the
-event index in the group of branch-instructions is 1.
-
-The branch-instructions event is automatically reloaded no matter which
-events are overflowed. So the "cause" events are the branch-misses
-and the branch-instructions event. The acr_mask should be set to 0x3.)
-
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.098 MB perf.data (2498 samples) ]
-
- $perf report
-
-Percent       │154:   movl    $0x0,-0x14(%rbp)
-              │     ↓ jmp     1af
-              │     for (i = j; i < N; i++)
-              │15d:   mov     -0x10(%rbp),%eax
-              │       mov     %eax,-0x18(%rbp)
-              │     ↓ jmp     1a2
-              │     if (data[i] >= 128)
-              │165:   mov     -0x18(%rbp),%eax
-              │       cltq
-              │       lea     0x0(,%rax,4),%rdx
-              │       mov     -0x8(%rbp),%rax
-              │       add     %rdx,%rax
-              │       mov     (%rax),%eax
-              │    ┌──cmp     $0x7f,%eax
-100.00   0.00 │    ├──jle     19e
-              │    │sum += data[i];
-
-The 2498 samples are all from the branch-misses events for the Loop 2.
-
-The number of samples and overhead is significantly reduced without
-losing any information.
-
-Tested-by: Thomas Falcon <thomas.falcon@intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- arch/x86/events/core.c           |   2 +-
- arch/x86/events/intel/core.c     | 226 ++++++++++++++++++++++++++++++-
- arch/x86/events/perf_event.h     |  10 ++
- arch/x86/include/asm/msr-index.h |   4 +
- include/linux/perf_event.h       |   1 +
- 5 files changed, 240 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index e30a7d8a3929..b0ef07d14c83 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -755,7 +755,7 @@ void x86_pmu_enable_all(int added)
- 	}
- }
- 
--static inline int is_x86_event(struct perf_event *event)
-+int is_x86_event(struct perf_event *event)
- {
- 	int i;
- 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 42cf474ee520..16f8aea33243 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2603,7 +2603,8 @@ static void intel_pmu_del_event(struct perf_event *event)
- 		intel_pmu_lbr_del(event);
- 	if (event->attr.precise_ip)
- 		intel_pmu_pebs_del(event);
--	if (is_pebs_counter_event_group(event))
-+	if (is_pebs_counter_event_group(event) ||
-+	    is_acr_event_group(event))
- 		this_cpu_ptr(&cpu_hw_events)->n_late_setup--;
- }
- 
-@@ -2882,6 +2883,52 @@ static void intel_pmu_enable_fixed(struct perf_event *event)
- 	cpuc->fixed_ctrl_val |= bits;
- }
- 
-+static void intel_pmu_config_acr(int idx, u64 mask, u32 reload)
-+{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	int msr_b, msr_c;
-+
-+	if (!mask && !cpuc->acr_cfg_b[idx])
-+		return;
-+
-+	if (idx < INTEL_PMC_IDX_FIXED) {
-+		msr_b = MSR_IA32_PMC_V6_GP0_CFG_B;
-+		msr_c = MSR_IA32_PMC_V6_GP0_CFG_C;
-+	} else {
-+		msr_b = MSR_IA32_PMC_V6_FX0_CFG_B;
-+		msr_c = MSR_IA32_PMC_V6_FX0_CFG_C;
-+		idx -= INTEL_PMC_IDX_FIXED;
-+	}
-+
-+	if (cpuc->acr_cfg_b[idx] != mask) {
-+		wrmsrl(msr_b + x86_pmu.addr_offset(idx, false), mask);
-+		cpuc->acr_cfg_b[idx] = mask;
-+	}
-+	/* Only need to update the reload value when there is a valid config value. */
-+	if (mask && cpuc->acr_cfg_c[idx] != reload) {
-+		wrmsrl(msr_c + x86_pmu.addr_offset(idx, false), reload);
-+		cpuc->acr_cfg_c[idx] = reload;
-+	}
-+}
-+
-+static void intel_pmu_enable_acr(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	if (!is_acr_event_group(event) || !event->attr.config2) {
-+		/*
-+		 * The disable doesn't clear the ACR CFG register.
-+		 * Check and clear the ACR CFG register.
-+		 */
-+		intel_pmu_config_acr(hwc->idx, 0, 0);
-+		return;
-+	}
-+
-+	intel_pmu_config_acr(hwc->idx, hwc->config1, -hwc->sample_period);
-+}
-+
-+DEFINE_STATIC_CALL_NULL(intel_pmu_enable_acr_event, intel_pmu_enable_acr);
-+
- static void intel_pmu_enable_event(struct perf_event *event)
- {
- 	u64 enable_mask = ARCH_PERFMON_EVENTSEL_ENABLE;
-@@ -2896,9 +2943,12 @@ static void intel_pmu_enable_event(struct perf_event *event)
- 		if (branch_sample_counters(event))
- 			enable_mask |= ARCH_PERFMON_EVENTSEL_BR_CNTR;
- 		intel_set_masks(event, idx);
-+		static_call_cond(intel_pmu_enable_acr_event)(event);
- 		__x86_pmu_enable_event(hwc, enable_mask);
- 		break;
- 	case INTEL_PMC_IDX_FIXED ... INTEL_PMC_IDX_FIXED_BTS - 1:
-+		static_call_cond(intel_pmu_enable_acr_event)(event);
-+		fallthrough;
- 	case INTEL_PMC_IDX_METRIC_BASE ... INTEL_PMC_IDX_METRIC_END:
- 		intel_pmu_enable_fixed(event);
- 		break;
-@@ -2916,6 +2966,31 @@ static void intel_pmu_enable_event(struct perf_event *event)
- 	}
- }
- 
-+static void intel_pmu_acr_late_setup(struct cpu_hw_events *cpuc)
-+{
-+	struct perf_event *event, *leader;
-+	int i, j, idx;
-+
-+	for (i = 0; i < cpuc->n_events; i++) {
-+		leader = cpuc->event_list[i];
-+		if (!is_acr_event_group(leader))
-+			continue;
-+
-+		/* The ACR events must be contiguous. */
-+		for (j = i; j < cpuc->n_events; j++) {
-+			event = cpuc->event_list[j];
-+			if (event->group_leader != leader->group_leader)
-+				break;
-+			for_each_set_bit(idx, (unsigned long *)&event->attr.config2, X86_PMC_IDX_MAX) {
-+				if (WARN_ON_ONCE(i + idx > cpuc->n_events))
-+					return;
-+				__set_bit(cpuc->assign[i + idx], (unsigned long *)&event->hw.config1);
-+			}
-+		}
-+		i = j - 1;
-+	}
-+}
-+
- void intel_pmu_late_setup(void)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-@@ -2924,6 +2999,7 @@ void intel_pmu_late_setup(void)
- 		return;
- 
- 	intel_pmu_pebs_late_setup(cpuc);
-+	intel_pmu_acr_late_setup(cpuc);
- }
- 
- static void intel_pmu_add_event(struct perf_event *event)
-@@ -2932,7 +3008,8 @@ static void intel_pmu_add_event(struct perf_event *event)
- 		intel_pmu_pebs_add(event);
- 	if (intel_pmu_needs_branch_stack(event))
- 		intel_pmu_lbr_add(event);
--	if (is_pebs_counter_event_group(event))
-+	if (is_pebs_counter_event_group(event) ||
-+	    is_acr_event_group(event))
- 		this_cpu_ptr(&cpu_hw_events)->n_late_setup++;
- }
- 
-@@ -4087,6 +4164,39 @@ static u64 intel_pmu_freq_start_period(struct perf_event *event)
- 	return start;
- }
- 
-+static inline bool intel_pmu_has_acr(struct pmu *pmu)
-+{
-+	return !!hybrid(pmu, acr_cause_mask64);
-+}
-+
-+static bool intel_pmu_is_acr_group(struct perf_event *event)
-+{
-+	/* The group leader has the ACR flag set */
-+	if (is_acr_event_group(event))
-+		return true;
-+
-+	/* The acr_mask is set */
-+	if (event->attr.config2)
-+		return true;
-+
-+	return false;
-+}
-+
-+static inline void intel_pmu_set_acr_cntr_constr(struct perf_event *event,
-+						 u64 *cause_mask, int *num)
-+{
-+	event->hw.dyn_constraint &= hybrid(event->pmu, acr_cntr_mask64);
-+	*cause_mask |= event->attr.config2;
-+	*num += 1;
-+}
-+
-+static inline void intel_pmu_set_acr_caused_constr(struct perf_event *event,
-+						   int idx, u64 cause_mask)
-+{
-+	if (test_bit(idx, (unsigned long *)&cause_mask))
-+		event->hw.dyn_constraint &= hybrid(event->pmu, acr_cause_mask64);
-+}
-+
- static int intel_pmu_hw_config(struct perf_event *event)
- {
- 	int ret = x86_pmu_hw_config(event);
-@@ -4215,6 +4325,94 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 	    event->attr.precise_ip)
- 		event->group_leader->hw.flags |= PERF_X86_EVENT_PEBS_CNTR;
- 
-+	if (intel_pmu_has_acr(event->pmu) && intel_pmu_is_acr_group(event)) {
-+		struct perf_event *sibling, *leader = event->group_leader;
-+		struct pmu *pmu = event->pmu;
-+		bool has_sw_event = false;
-+		int num = 0, idx = 0;
-+		u64 cause_mask = 0;
-+
-+		/* Not support perf metrics */
-+		if (is_metric_event(event))
-+			return -EINVAL;
-+
-+		/* Not support freq mode */
-+		if (event->attr.freq)
-+			return -EINVAL;
-+
-+		/* PDist is not supported */
-+		if (event->attr.config2 && event->attr.precise_ip > 2)
-+			return -EINVAL;
-+
-+		/* The reload value cannot exceeds the max period */
-+		if (event->attr.sample_period > x86_pmu.max_period)
-+			return -EINVAL;
-+		/*
-+		 * The counter-constraints of each event cannot be finalized
-+		 * unless the whole group is scanned. However, it's hard
-+		 * to know whether the event is the last one of the group.
-+		 * Recalculate the counter-constraints for each event when
-+		 * adding a new event.
-+		 *
-+		 * The group is traversed twice, which may be optimized later.
-+		 * In the first round,
-+		 * - Find all events which do reload when other events
-+		 *   overflow and set the corresponding counter-constraints
-+		 * - Add all events, which can cause other events reload,
-+		 *   in the cause_mask
-+		 * - Error out if the number of events exceeds the HW limit
-+		 * - The ACR events must be contiguous.
-+		 *   Error out if there are non-X86 events between ACR events.
-+		 *   This is not a HW limit, but a SW limit.
-+		 *   With the assumption, the intel_pmu_acr_late_setup() can
-+		 *   easily convert the event idx to counter idx without
-+		 *   traversing the whole event list.
-+		 */
-+		if (!is_x86_event(leader))
-+			return -EINVAL;
-+
-+		if (leader->attr.config2)
-+			intel_pmu_set_acr_cntr_constr(leader, &cause_mask, &num);
-+
-+		if (leader->nr_siblings) {
-+			for_each_sibling_event(sibling, leader) {
-+				if (!is_x86_event(sibling)) {
-+					has_sw_event = true;
-+					continue;
-+				}
-+				if (!sibling->attr.config2)
-+					continue;
-+				if (has_sw_event)
-+					return -EINVAL;
-+				intel_pmu_set_acr_cntr_constr(sibling, &cause_mask, &num);
-+			}
-+		}
-+		if (leader != event && event->attr.config2) {
-+			if (has_sw_event)
-+				return -EINVAL;
-+			intel_pmu_set_acr_cntr_constr(event, &cause_mask, &num);
-+		}
-+
-+		if (hweight64(cause_mask) > hweight64(hybrid(pmu, acr_cause_mask64)) ||
-+		    num > hweight64(hybrid(event->pmu, acr_cntr_mask64)))
-+			return -EINVAL;
-+		/*
-+		 * In the second round, apply the counter-constraints for
-+		 * the events which can cause other events reload.
-+		 */
-+		intel_pmu_set_acr_caused_constr(leader, idx++, cause_mask);
-+
-+		if (leader->nr_siblings) {
-+			for_each_sibling_event(sibling, leader)
-+				intel_pmu_set_acr_caused_constr(sibling, idx++, cause_mask);
-+		}
-+
-+		if (leader != event)
-+			intel_pmu_set_acr_caused_constr(event, idx, cause_mask);
-+
-+		leader->hw.flags |= PERF_X86_EVENT_ACR;
-+	}
-+
- 	if ((event->attr.type == PERF_TYPE_HARDWARE) ||
- 	    (event->attr.type == PERF_TYPE_HW_CACHE))
- 		return 0;
-@@ -6060,6 +6258,21 @@ td_is_visible(struct kobject *kobj, struct attribute *attr, int i)
- 	return attr->mode;
- }
- 
-+PMU_FORMAT_ATTR(acr_mask,	"config2:0-63");
-+
-+static struct attribute *format_acr_attrs[] = {
-+	&format_attr_acr_mask.attr,
-+	NULL
-+};
-+
-+static umode_t
-+acr_is_visible(struct kobject *kobj, struct attribute *attr, int i)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+
-+	return intel_pmu_has_acr(dev_get_drvdata(dev)) ? attr->mode : 0;
-+}
-+
- static struct attribute_group group_events_td  = {
- 	.name = "events",
- 	.is_visible = td_is_visible,
-@@ -6102,6 +6315,12 @@ static struct attribute_group group_format_evtsel_ext = {
- 	.is_visible = evtsel_ext_is_visible,
- };
- 
-+static struct attribute_group group_format_acr = {
-+	.name       = "format",
-+	.attrs      = format_acr_attrs,
-+	.is_visible = acr_is_visible,
-+};
-+
- static struct attribute_group group_default = {
- 	.attrs      = intel_pmu_attrs,
- 	.is_visible = default_is_visible,
-@@ -6116,6 +6335,7 @@ static const struct attribute_group *attr_update[] = {
- 	&group_format_extra,
- 	&group_format_extra_skl,
- 	&group_format_evtsel_ext,
-+	&group_format_acr,
- 	&group_default,
- 	NULL,
- };
-@@ -6400,6 +6620,7 @@ static const struct attribute_group *hybrid_attr_update[] = {
- 	&group_caps_lbr,
- 	&hybrid_group_format_extra,
- 	&group_format_evtsel_ext,
-+	&group_format_acr,
- 	&group_default,
- 	&hybrid_group_cpus,
- 	NULL,
-@@ -6592,6 +6813,7 @@ static __always_inline void intel_pmu_init_skt(struct pmu *pmu)
- 	intel_pmu_init_grt(pmu);
- 	hybrid(pmu, event_constraints) = intel_skt_event_constraints;
- 	hybrid(pmu, extra_regs) = intel_cmt_extra_regs;
-+	static_call_update(intel_pmu_enable_acr_event, intel_pmu_enable_acr);
- }
- 
- __init int intel_pmu_init(void)
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index b68b653d3a01..902bc42a6cfe 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -120,6 +120,11 @@ static inline bool is_pebs_counter_event_group(struct perf_event *event)
- 	return event->group_leader->hw.flags & PERF_X86_EVENT_PEBS_CNTR;
- }
- 
-+static inline bool is_acr_event_group(struct perf_event *event)
-+{
-+	return event->group_leader->hw.flags & PERF_X86_EVENT_ACR;
-+}
-+
- struct amd_nb {
- 	int nb_id;  /* NorthBridge id */
- 	int refcnt; /* reference count */
-@@ -287,6 +292,10 @@ struct cpu_hw_events {
- 	u64			fixed_ctrl_val;
- 	u64			active_fixed_ctrl_val;
- 
-+	/* Intel ACR configuration */
-+	u64			acr_cfg_b[X86_PMC_IDX_MAX];
-+	u64			acr_cfg_c[X86_PMC_IDX_MAX];
-+
- 	/*
- 	 * Intel LBR bits
- 	 */
-@@ -1120,6 +1129,7 @@ static struct perf_pmu_format_hybrid_attr format_attr_hybrid_##_name = {\
- 	.pmu_type	= _pmu,						\
- }
- 
-+int is_x86_event(struct perf_event *event);
- struct pmu *x86_get_pmu(unsigned int cpu);
- extern struct x86_pmu x86_pmu __read_mostly;
- 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 72765b2fe0d8..55774dd73c6a 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -592,7 +592,11 @@
- /* V6 PMON MSR range */
- #define MSR_IA32_PMC_V6_GP0_CTR		0x1900
- #define MSR_IA32_PMC_V6_GP0_CFG_A	0x1901
-+#define MSR_IA32_PMC_V6_GP0_CFG_B	0x1902
-+#define MSR_IA32_PMC_V6_GP0_CFG_C	0x1903
- #define MSR_IA32_PMC_V6_FX0_CTR		0x1980
-+#define MSR_IA32_PMC_V6_FX0_CFG_B	0x1982
-+#define MSR_IA32_PMC_V6_FX0_CFG_C	0x1983
- #define MSR_IA32_PMC_V6_STEP		4
- 
- /* KeyID partitioning between MKTME and TDX */
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index aaffe31b78da..8f9ac5047972 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -157,6 +157,7 @@ struct hw_perf_event {
- 	union {
- 		struct { /* hardware */
- 			u64		config;
-+			u64		config1;
- 			u64		last_tag;
- 			u64		dyn_constraint;
- 			unsigned long	config_base;
--- 
-2.38.1
+>                  scoped_guard(irq)()
+> 	              	clockevent_i8253_disable();
+>    		return false;
+> 
+> Thanks,
+> 
+>          tglx
 
