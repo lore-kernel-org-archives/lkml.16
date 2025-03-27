@@ -1,91 +1,83 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FEA818027;
-	Thu, 27 Mar 2025 05:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B94A48
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 06:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743055054; cv=none; b=fZnWKoFCLqEoa8SCwKOLzqMDDeqnptTIlCOzZ/+zW+oO1OhbWyz4IeVy7Ej93ld6BYtaS8jEvESA+1WkPXFeSw4OfJHxacNUXxIxDSfFIDdbU7zqrRGwJugLXMMyDK0CjW3Fu3+1fv3XmLv08N8fWkpPJ0kU94DtvSm045oAvOk=
+	t=1743055327; cv=none; b=uSQ/MgsnCMaPHfJbjktSmLX5Ppmt3CSMEg0vm1umAcW2wvHTalfC3wKFrdHUsCO3svwMi+1Q+eg5by1ZjUI3yh1+UsRWRFuUuxileYLRH7Dw9Mbaju/HmmDzlVRIz5dD+iZV1NvycU4Z+UVENh8qoHsMn/Xpk/eSJnYrzQxtETg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743055054; c=relaxed/simple;
-	bh=dfOJt4VZsxDjQHbdacmRXA60dH+jdi0InNRBXeq652k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cL033CZpumC0ykfgyXO90T7mlV4jhIFG0weAtFdyuu7barjVPd2IOn4ktaSE1Bfmp6pTYrEtRUOyixxQo6oolLL49Zs0kCmHybu83L+sEuZQF3uBz2nq0rLqilHILSwThocvR0oL1x608f6r6DxZbSvelyKRQFyNrawW93BJhww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=W/pZmpbK; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1743055327; c=relaxed/simple;
+	bh=cOARddFxtT4x6J653OMfN+s3lEmPCGmX0P+GzDTJSZg=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=nKi503XsbDD6ltDl4xho+wvQqMDAxPE5K7TMLcw/cw/u9H4pnSPuZV0siKXv65SU4FtrwGYimwFRwBPMkg4XeYKn6YMhdZcYc0+ioheJie8UcLa4fvKZPMYP0+owM1uqNgLQ+QX7fRJiTtSnSJsgIDpfPHY7igCr3OX7hJ2qc8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QUBt3OTT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="W/pZmpbK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=asBGI
-	gUyw+T6cskUQZ6NxJZpB5WfhcDaPgKOiFRAeEE=; b=W/pZmpbKrq+mesyob0yVH
-	HOl4BbX+Y41XPNzxl65HfmYXMH+S7Mstssn0741O8vEap1+ITg8EpXtRim3KsMq9
-	2uiGeWTNWyVEfAlFQpSo3LdStaAKBF+U6PGKnwOklDrNixzRba94ASMfLR8FLThP
-	QYl3bAR6+ufMOqb9Yhfsos=
-Received: from chi-Redmi-Book.. (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wD34Z+16ORnmeqVCA--.5025S2;
-	Thu, 27 Mar 2025 13:57:10 +0800 (CST)
-From: Chi Zhiling <chizhiling@163.com>
-To: cem@kernel.org,
-	djwong@kernel.org,
-	brauner@kernel.org
-Cc: linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Chi Zhiling <chizhiling@kylinos.cn>
-Subject: [PATCH] iomap: Rename iomap_last_written_block to iomap_first_unchanged_block
-Date: Thu, 27 Mar 2025 13:57:06 +0800
-Message-ID: <20250327055706.3668207-1-chizhiling@163.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QUBt3OTT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DA18C4CEDD;
+	Thu, 27 Mar 2025 06:02:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743055326;
+	bh=cOARddFxtT4x6J653OMfN+s3lEmPCGmX0P+GzDTJSZg=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=QUBt3OTTRe3hCvzR5e2P+5+9zIq+D4SJaNWRR2gcrUokGy0d0AgEchHFfzB7cY9x2
+	 q1H1km3xKPRs2La7nOcyQbBSlJnmBtFs+KT0xwADcUtD+5W3HEOn12YXayAC/rZaFS
+	 7RvcOVp22fOyEwUPfUiv0/OOS90kqFum7E67KBBbyK0VqkKrsgoZbaXwuEd7UtnlHD
+	 Q6K4DvbfpHzFvlqyXhgJvaxWlMgPwtNGGTNAgU7W3gNWc7QbnpEt6LQIJniqPOJtdq
+	 /cEmjWjQIDPqdZ7z70rk/iH5G7T6wjP4ikWm95rxePhFuwCdGHTPL1JB1Bs68yPU0w
+	 mlT9C8ptvLUMw==
+Message-ID: <bf3f571c-a6bf-4a17-8745-039b37ac4f48@kernel.org>
+Date: Thu, 27 Mar 2025 14:02:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD34Z+16ORnmeqVCA--.5025S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7KF4fCFW5AF4UCFW3Aw1DKFg_yoW8WrW3pr
-	WkK3WrGF4kW348u3WkGFW7Zw1av3Wvkr4UArWrKr13Z345XF1Iqw1vkF1Yk3W7Wws2ya17
-	WrnFg3yUCw45urJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UWv35UUUUU=
-X-CM-SenderInfo: hfkl6xxlol0wi6rwjhhfrp/xtbBgAsdnWfk5UUKaQABsK
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org, Yohan Joung <yohan.joung@sk.com>
+Subject: Re: [PATCH] f2fs: prevent the current section from being selected as
+ a victim during garbage collection
+To: Yohan Joung <jyh429@gmail.com>, jaegeuk@kernel.org, daeho43@gmail.com
+References: <20250326141428.280-1-yohan.joung@sk.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20250326141428.280-1-yohan.joung@sk.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Chi Zhiling <chizhiling@kylinos.cn>
+On 3/26/25 22:14, Yohan Joung wrote:
+> When selecting a victim using next_victim_seg in a large section, the
+> selected section might already have been cleared and designated as the
+> new current section, making it actively in use.
+> This behavior causes inconsistency between the SIT and SSA.
 
-This renames iomap_last_written_block() to iomap_first_unchanged_block()
-to better reflect its actual behavior of finding the first unmodified
-block after partial writes, improving code readability.
+Hi, does this fix your issue?
 
-Signed-off-by: Chi Zhiling <chizhiling@kylinos.cn>
----
- fs/xfs/xfs_iomap.c    | 2 +-
- include/linux/iomap.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+https://lore.kernel.org/linux-f2fs-devel/20250325080646.3291947-2-chao@kernel.org
 
-diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index 5dd0922fe2d1..d4b0358015ab 100644
---- a/fs/xfs/xfs_iomap.c
-+++ b/fs/xfs/xfs_iomap.c
-@@ -1277,7 +1277,7 @@ xfs_buffered_write_iomap_end(
- 		return 0;
- 
- 	/* Nothing to do if we've written the entire delalloc extent */
--	start_byte = iomap_last_written_block(inode, offset, written);
-+	start_byte = iomap_first_unchanged_block(inode, offset, written);
- 	end_byte = round_up(offset + length, i_blocksize(inode));
- 	if (start_byte >= end_byte)
- 		return 0;
-diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-index 2de7a5e7d67d..88d0da23426c 100644
---- a/include/linux/iomap.h
-+++ b/include/linux/iomap.h
-@@ -308,7 +308,7 @@ static inline const struct iomap *iomap_iter_srcmap(const struct iomap_iter *i)
-  * If nothing was written, round @pos down to point at the first block in
-  * the range, else round up to include the partially written block.
-  */
--static inline loff_t iomap_last_written_block(struct inode *inode, loff_t pos,
-+static inline loff_t iomap_first_unchanged_block(struct inode *inode, loff_t pos,
- 		ssize_t written)
- {
- 	if (unlikely(!written))
--- 
-2.43.0
+Thanks,
+
+> 
+> Signed-off-by: Yohan Joung <yohan.joung@sk.com>
+> ---
+>  fs/f2fs/gc.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> index 2b8f9239bede..4b5d18e395eb 100644
+> --- a/fs/f2fs/gc.c
+> +++ b/fs/f2fs/gc.c
+> @@ -1926,6 +1926,10 @@ int f2fs_gc(struct f2fs_sb_info *sbi, struct f2fs_gc_control *gc_control)
+>  		goto stop;
+>  	}
+>  
+> +	if (__is_large_section(sbi) &&
+> +			IS_CURSEC(sbi, GET_SEC_FROM_SEG(sbi, segno)))
+> +		goto stop;
+> +
+>  	seg_freed = do_garbage_collect(sbi, segno, &gc_list, gc_type,
+>  				gc_control->should_migrate_blocks,
+>  				gc_control->one_time);
 
