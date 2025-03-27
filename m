@@ -1,223 +1,348 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F6AC2E0;
-	Thu, 27 Mar 2025 00:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743037133; cv=fail; b=jpJ8gtoWGEB9XBxU/IvSKGN7686GUwT4iPuzmJYllmrEyn3zpezP9tKzawgI1lfScefmsbERECma8ls7ktATtFXGz4TgX09apf1a/oySija3SZUWJJkCqFwXbt3JDHUT3pzpbwya1pClQEqLthkJHWCYLuOiT3BDU/M3OWI/NwE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743037133; c=relaxed/simple;
-	bh=i7nh6kXRLFSIIAIU/Ehw6rHEwzIsIz5XSFDGSmOc0Ig=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=kM9Xf5jIR2ws0imHPW1y8AMd+e9VArkxF0KCpCV583FAsJ9Q9BPoJdqNAo5zTpFN0mwFyWtKOLh9GaD4lQ2ea8cbpSX584En1Vi7XaHEULME5ExE8XQ2N4677KXdwLQsNT8hrD4zonKcrh5s9r+NypeVdUBh68HK3vSQ44rFlIo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f1xa+ED4; arc=fail smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC11812E5B;
+	Thu, 27 Mar 2025 01:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743037443; cv=none; b=XDcXMO5+V1AI83Jm2jn45O6CX91PejWImYfDr6ckAj4ZZvaJEfnY2guBENsYt9DBzizvMh6DV79ecrqD5PMGmaTq1t4CcyhMd1FtpP8r2mg/JMF6uLjv8u8deiMv9yETmZ93iexdM/uzWwN66J6iKTcZmLq3REOZ/x8jlF7cc7A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743037443; c=relaxed/simple;
+	bh=PLB0c6EJQTg+fnqSJCfAE/vpnJq8T/eX+sJGgyAmlOU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hmkm2u0ljWoDKGqMSpo4SqsiundKrVvZ8pY1K6+QUTHMZDyX17cBPueFyouA3g1da06ZNmQ9BdaCfplPSgtAQ+m2U316Iqj7OKd3IckUKbpMub5xWV0rNBwBY9/66es34nVyHlr+p0fGwa/bqwy+X5FKuLp2WELM7CuSdRYb/oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=YKUcrK3Q; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f1xa+ED4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743037132; x=1774573132;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=i7nh6kXRLFSIIAIU/Ehw6rHEwzIsIz5XSFDGSmOc0Ig=;
-  b=f1xa+ED4Nz/BObcHCxmQ3c5Ukpg4cnhhitISGCKFkVcILXZt9gEjbyIk
-   35Qsg/ukHMcPzM4qy/X/WD3VI1EyfMtIBeurobPPeTDjfVE9CsihGJ2BQ
-   hHrcfGC5/ZXQ2knA06edeX87SmqK9vs/1ZO0b5XrdsD23aN4CQ5qfoDoC
-   jRERfXcr6Bfx4UZZHD+fqUygYtD9aLaPgipfQAZOjqvmwuDHmjhCbZ+hR
-   XaAiXDmHXsFnVrVAoLaS2z1AcAyxBlFrKFs8J/AhceLerpMAlRXpNxG5K
-   MN4SEdOWGqY0ZjPXXly+21y6fyOUVo3bByayr3w0cK2sgs6NZxKuCHOzb
-   A==;
-X-CSE-ConnectionGUID: UWg+jFVUSs2Xqo8caeA1ow==
-X-CSE-MsgGUID: KH/DlReISIGijKrF39AgQQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="55351392"
-X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
-   d="scan'208";a="55351392"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 17:58:33 -0700
-X-CSE-ConnectionGUID: ewCOOd8cRBGoPZNE5pw+EA==
-X-CSE-MsgGUID: 3rcB4zudRzCT0bVRY2+ldg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,279,1736841600"; 
-   d="scan'208";a="129662049"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Mar 2025 17:58:32 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 26 Mar 2025 17:58:31 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 26 Mar 2025 17:58:31 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.47) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 26 Mar 2025 17:58:31 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OwMisOnLMJVMxraE/+w4R+tly7yfH9++yOIkqkaCOKeEN2eblbUkQnMnaqm+e7K8+oaNpNT+/NX2y0PWIR/JkMaeXLtF3dqy9w2xb/Im1z9OiK3SdtUbil+kwfBwDRFX6xNmZjT9BXy+30luVZvU4+nzZANNwi3U6YVJwOidLPR870jLFG7bWEANKyaI6Cw+Zu9Rwj7fpu5CsEEIJwd5rt9BYTAKEm5fx9NLzr8bB0cHwNn9KXYxkZQmlxA68mQdKLQGb6Dd8ZPJt16tij6TVxN5Jrp9MbUdI8R0/fNnhHOrtWa+2mWDr1HRYsKdGn26s0wL2qY++761M4fwUkTLKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dOU9kZYfEMAhTy6N1izZ3CZ52sl7LmLv10ZiWEMcoQs=;
- b=xfUDJx6opyOKTJ3EG7klcSVrdsvt8wPxTqCRbp/zJxXcni0zk/Eq459xMbM8EC9G3TwxQK7adX5oaVF52ZNHR4GGG/dAC6H25i6eTn5CLNmKanFhuuqXb1abK6mkXNHqioDj99C5cNr12YAEBPF7SQrzjKghL/6uDDDaGte91vW9JEDlgoUSEa8PE7jgA5qSfgWn2fbEl7qrBvE+Wjmdyj5RijwBq3jgy7TiVMxSB4sANclJ2sxMWAidVnh7D7O1ftSYy55n4qjjGbRDnl6OJDFSLnsm8Zy3X+ifuimQ6bjZs7iCuMlMHD+Io+sNNw7v5NywhP2QakVIq4fY3PG/+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from IA1PR11MB6098.namprd11.prod.outlook.com (2603:10b6:208:3d6::20)
- by DS0PR11MB8184.namprd11.prod.outlook.com (2603:10b6:8:160::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
- 2025 00:58:24 +0000
-Received: from IA1PR11MB6098.namprd11.prod.outlook.com
- ([fe80::cbbd:ed55:576c:fd55]) by IA1PR11MB6098.namprd11.prod.outlook.com
- ([fe80::cbbd:ed55:576c:fd55%3]) with mapi id 15.20.8534.043; Thu, 27 Mar 2025
- 00:58:24 +0000
-From: "Xu, Even" <even.xu@intel.com>
-To: David Binderman <dcb314@hotmail.com>, "Sun, Xinpeng"
-	<xinpeng.sun@intel.com>, "jikos@kernel.org" <jikos@kernel.org>,
-	"bentiss@kernel.org" <bentiss@kernel.org>, "linux-input@vger.kernel.org"
-	<linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: linux-6.14/drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c
- bug report
-Thread-Topic: linux-6.14/drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c
- bug report
-Thread-Index: AQHbnoMyJSSxnBJen0yPctJzXXDeULOGJ/Tg
-Date: Thu, 27 Mar 2025 00:58:24 +0000
-Message-ID: <IA1PR11MB6098047C9EF4523F22119E45F4A12@IA1PR11MB6098.namprd11.prod.outlook.com>
-References: <AS8PR02MB10217E34D616B6F5213660E1E9CA62@AS8PR02MB10217.eurprd02.prod.outlook.com>
-In-Reply-To: <AS8PR02MB10217E34D616B6F5213660E1E9CA62@AS8PR02MB10217.eurprd02.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: IA1PR11MB6098:EE_|DS0PR11MB8184:EE_
-x-ms-office365-filtering-correlation-id: 3dd6b1a2-efa3-49ee-b55e-08dd6cca7a51
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?rVMMailvxezhd0uUmzobztcJCbUd3VtG9thtAgwJsbXoS76s3MhsxvA3Urqy?=
- =?us-ascii?Q?UT9O/DFzH9MtVL9Goum9XjMvPoTwNg0wETP3yC5p//doTFvu+1cCtoxPjk2K?=
- =?us-ascii?Q?bDuJ2CeN0jwfJL5Rowlt3YFrRX5PJACDJ3MPKsQib1nXdRt9R+gauGGeMhtt?=
- =?us-ascii?Q?X15xCLaOpfCdJFld2xN25Pp6yeDeAvsU2S+HEAertqRuPtpbKeiX12tYr/Jj?=
- =?us-ascii?Q?korsXFbnvjbXLRCx2nTwVSCPGZ5SRKKlJtM+1DZgdbwXHb35Dcdn7R2qqRgX?=
- =?us-ascii?Q?w6wDICa4+4WSqhAoR4fn18d1S62n3ERDv/Ivq+RVGjMP+06coeDdUJ2tWvEo?=
- =?us-ascii?Q?j0YmmLB1CIgpirFMC4E8dctG27W70sj5bK11ECVm7p7CgoRGLOqAhWukw6Ya?=
- =?us-ascii?Q?EQFS5oU9K0Bc4f4Ypnl3mWmOfjV8oQ7FEdfqnUNJHZGbzSU0OYm+qaCzlXRt?=
- =?us-ascii?Q?lYfE408X35Hk6yr/XOWrAQXzv0NlnNmjftIAk+dBdNZwS1T/W9PE4xAR/9Qt?=
- =?us-ascii?Q?8AnEm2UJkDexRDWDxmK6dXsx0UtbOQz4WjKEjVW0gh01PVpob0a12ltHwBcz?=
- =?us-ascii?Q?lFVdM5d70D1f5AY9IRCBetRsD+WyRuVA9b0glzgKiIOCYxudlAh5qBUhIJ0a?=
- =?us-ascii?Q?K7zJxweJwZyTrEfTKcnZZ5HuvRNQKGegnIK4FzO0OOctQXATLxLmIN8j69VA?=
- =?us-ascii?Q?cL2hgbPfADiKwR933VHQ2X8wFn0rvjGamMOWupYt9a8Fv4jpsZ7gQ3V9axur?=
- =?us-ascii?Q?vdFaeqSrlmHOSWMPjzhg1Qa0NEGYJGYmYmc9ym/4Kx/UKc2oLYIbMBmC8mwA?=
- =?us-ascii?Q?ypme9RZsmQ3qMkzalElE9ckBjiqPv2a2rsoDlDMufLfV3m2gfh/DSGsWCLxQ?=
- =?us-ascii?Q?nUUJHFTuUyoVBfzGlHwyTO2BfTmH18mbZPP+aJOKUfIiD3lxLK+gAD3LCtfw?=
- =?us-ascii?Q?QIhuPjA4S8i9prARALTQ0IicBzmTDfee0f8COeIwJFBXqXBu6qXTtXkDFu4W?=
- =?us-ascii?Q?4wykcuFAWnK+Qbl0edo5T+mCrAn9vqvYNSrrJMmmsEiqwKHuyfYxziZAp6ci?=
- =?us-ascii?Q?xYAzqm+Hkf64zJh7dfIGiBT6Md0zS4cdElkjQ6gI/oBS1FXBtUFPnM+Zzk4v?=
- =?us-ascii?Q?aNDFAfumdfxzjdbSSRpSaftdxeE3lxzpJGtRpuKvq5+PfNJvmvItTJhF4ymj?=
- =?us-ascii?Q?18O8TxnIwv2ZcygPCv1FQoPvUyTESSUU8Sr0pcQu9mAbfGNNhHcfovZPcity?=
- =?us-ascii?Q?NlcjYtEaxXK3a9EIPFokqRLp5u0fHv63Lu7slFfFgs3A74k9H7iNrvw7BfEy?=
- =?us-ascii?Q?RLn3+6kbVXZeKvMI/Gw6Hk0mTx1oqD63tHoY3Gp4Lhdw/TVPh3yqJO9gW57D?=
- =?us-ascii?Q?l6C779nmSX537hpXYmST46yXy13OeN10FKyKmwN4MFa1MKNxyPanUFhH/c4n?=
- =?us-ascii?Q?A2SgVDZbR1SIABSzC1m4sOewLWusPsPG?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB6098.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?0XumHNu7tUaVGlxwA7HQYYOdqCJYFoLpsUQjHG4GVCnAb2YoYhF5zmHTnRoq?=
- =?us-ascii?Q?0BvBzUARUM+Sd+TjEHir6P2NDeb3A0d3fvAcE5hHJAdGpm6D7L+uS7bF7JnA?=
- =?us-ascii?Q?Z7vioUEuSLW91GQhK1ZtLZflChdumtxLAXzKgn9DlLbdRG0mKZoEHaoA5EW3?=
- =?us-ascii?Q?6fYOGzJnz0SVHiWtR5gUxXtVAiafx06WwCOsz0uhRdykk43DgUCNSs70WYnF?=
- =?us-ascii?Q?BRItqkFAkWHK3uPZoMGKj+loQPxPcuiyZeind05uEmOJ5gd0Wb/WvrkHoUil?=
- =?us-ascii?Q?Ofd4RTOmy23gVWrty+QvDBfcCyeTcl20vu/Tq0f6NQT4xQThPCmSvhdDvAHM?=
- =?us-ascii?Q?hPW/UsX+8LmJlLqQqN8qybWconvuppnJFFQV2yzbo0a4IiO/K0wtlE6RwJuJ?=
- =?us-ascii?Q?HvYmKqAL6i2zkg8rRcdw7zT2fbucWLV3flOLKwXhlbhQrv2mXpJ+WF0WLV6a?=
- =?us-ascii?Q?EMfmBJC7ZcgLUYIGCOq00xFQ/gAlgWPhrlIcSEZfCaXd0N5+Zki+KHayv9gG?=
- =?us-ascii?Q?yCC3hklSOZ+vBQWtPWFUeJjIpbDXxfaLrpErIQO6ID81t4pOvsnOwdnyRNHZ?=
- =?us-ascii?Q?Kw6rz1bIPL9tP7Qg45dFNC64gk66Pmiy3oK7/c2mR8sKVAuJYMVpHDHyM4n4?=
- =?us-ascii?Q?BfGu1ScnXPEXJykHai8rt3WdC8ol0qXZu0jecaiOCTMdY7Ie/I+ov6HvqAHA?=
- =?us-ascii?Q?rbM3JpkG+O73lQvf8k0XCE0ekutck+MLppVlE3XB89xO3XW8q8MsBAy+TJgL?=
- =?us-ascii?Q?pYbAlLaBvg9T/NpOhw61a8SMshvk74gCUDewZrjMzSU6P8E5/IeQ+63gOz4J?=
- =?us-ascii?Q?fwtNFwm7LzgVWx4jjTdHeNSyNczKDkyK6Jw4D4UNDYNOrLlj2AqKbBqFwhOZ?=
- =?us-ascii?Q?4zG2P2qiFxRByCmsBxvrwrQKRNkc0QB9G/lGlSZu1hzNKjhtpqJwEU15Ug1t?=
- =?us-ascii?Q?agDiukNJdXlE7u1uzUeDxbmCJO3cChtSoEH8wtcDo8fb9UlXk5pT/rfuT/Eb?=
- =?us-ascii?Q?xhiHuVJ5AKgL/zuPeU43NivhLn6elRSfqRQgge6UViqf4Rj4ZrupSYN8bRj3?=
- =?us-ascii?Q?ajZkH5RLF4RTyTpvo3bKVDEwJAX2vzp+NkeId0+CFOIG7Y2KHmciB1tq0sGL?=
- =?us-ascii?Q?1dIiEEZzAF0VOgQnu+4IN+rOazakJeyJyExfaJiBqRHpwcfEiBD8fHpOAeje?=
- =?us-ascii?Q?KBBfMP8J1xL05ARTJceeEdcY4T3SgLJZeJNik8HUVg6Xy2WR43q24tdB/rzL?=
- =?us-ascii?Q?tlsSmF40scn//0K04bj7oepkfHJd7Mc6kXv/ygY+WmzGktb36aSsbXPbSdjq?=
- =?us-ascii?Q?102VlJeE+XBe5/YTiTccd465K75Qzh1OwHRIjnGcm42XbKSoigj3gEhzNgnB?=
- =?us-ascii?Q?yrhUf9CKSmFLyA2vatLHSsdQSlZPfhOQ9DFFdXNtinEYf1oGzrmjJXYzwyvJ?=
- =?us-ascii?Q?Eq4IyXZGNrQ8Xny2Mumtf8SHjo6sijVeHWdio1YMzflFUr9bUhVTd/9aVwIs?=
- =?us-ascii?Q?ZAwqmMAbtCcLzic8cAB7GYC49tiVwW039bCRxg4gTe1AtiSfAQq9BbinIiEE?=
- =?us-ascii?Q?NIIsJRs5hOSQfwRmb2o=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="YKUcrK3Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1743037423; x=1743642223; i=w_armin@gmx.de;
+	bh=q2m3aSc2OrJA/5cgniVycmxbmUOUmwnokNZ4ZsQo1s8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=YKUcrK3Q4OUjU+m23LtBlx7Lcu5PN6/zcRN+T6UoC0g9TS/obgzFdd30Eoyas01q
+	 pbWpQTghFqk1bHXs7XJ/vQmIROyhUjaJRWzLKguitw9X5lKKvyQ4BWlZhQ+pqwX23
+	 DadRfRGubLRT3KyeY7Km2tZiNOAD6kypRfp1ABtT7cIz38S8JFnWNshX9nSE6ILGT
+	 MtuUntUL5FRR8K50G9cMpdNfN6UuCecFX96IcTISFqIo7BT4fIEIKUsBJlChq5NbW
+	 anKahqsfDiZ5RYOPp6yEaxhDeFisLWN8/WyW/lEG69s45r086smcpOJoPH5JQxp3b
+	 uZ3UeUZKL0U2IxRkcg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MN5if-1tfFpD3qy5-00NHyG; Thu, 27
+ Mar 2025 02:03:43 +0100
+Message-ID: <cf6be9ba-03e4-4d9d-9f62-91cd11e6ee30@gmx.de>
+Date: Thu, 27 Mar 2025 02:03:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB6098.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3dd6b1a2-efa3-49ee-b55e-08dd6cca7a51
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2025 00:58:24.7821
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 78JZ8B9jaipILXKulOP88Gda7Aa7tlQtMtfebuKciAUVeO7KkznUqDT490V1IXNAgRtCkLpDmC6YebMC8Pmo+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8184
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/6 RESEND] platform/x86: Add Lenovo WMI Events Driver
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>,
+ Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
+ Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+ "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
+ platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250317144326.5850-1-derekjohn.clark@gmail.com>
+ <20250317144326.5850-4-derekjohn.clark@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20250317144326.5850-4-derekjohn.clark@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:7h8yO+WRsiuNEs+JRWEOr3YdNx90kJJ1tvQBReKEnfZecWrSer1
+ 6TAfViehuOfHw1BvPJXYha/j/cf1PzzsdrOtIaMv3Vmm6eiJ39jN1mfA+FIflW3z9pGsja0
+ fXofTPFBJKZydGjzSozIj24fdLsdcjznM7L9YfJRjAaNDYDmreXxkFmmhuvlPaljF9VTUx9
+ HJSMUFPu7oHakF1XSDC8g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:j+SFepbjCvY=;qlK7prp7ub0/i6J2tOZOKv4iwxp
+ eO3uA0utpvxr2gBgyvHjttuqz9ASKLWzHKQCmbErd4a7y6ksx2FH6CygvGFGmC3xRpBBViQjg
+ ki4Z0JfJWq1SCyMz8C1/ugqJj7M0IKoUl8oCaeXfcfGewMhkQ9QS/F8bfdCuXlizxZo5dldbg
+ iSKw0l5fKTsKH6wDSKTPEzbHF24HD8n7jIm2xBs+nDjZORNLC6vTITPKQ9+CMl0MhmcPAcdAF
+ 6azBQyPW11nfn0JZx8H1NSYSnweoJBmwbdVDa5gtOkHf5gqnLBR6dXOWfY85b7mLV1Fy6YKoS
+ gnCP7Dhsh2nl5PdzcIQ3G6pQKS6+UkZNiIyhvolGXdcDlILVWTGiDf17vYZ/F1dHxuIppeAQ4
+ fRMxcAp4EWx75QQe40Ei6mVcKi7lpnqZ3qi+K7Cvqq2ZqzaQNWeo+DUfzVijC5DyU0hLwdG92
+ DmqRsw8DU/+F8DAFgAyo9hZpG7Uyrxo266aQljCsnGkSSchLxczcGvLgeonaLt9pzSC0AOfYF
+ DfVmaX+WmSu3QZoUW9GG2jasWHApNL91jX+5+n7pWp8z32Ti/rJdn0iPqVPD0CoSKFpbfYZ1+
+ wZfLth3RdU9Ct9UWAsuhIsCF142OB2EqZj82m0ck6EPdDpdXc2zMtYfN4kK55w5nMRYRLz1V1
+ yn0FuMI2PJE/gvIqP/bsLpBb9/t9uE7lUTSeSZIcht3hFMGdS+gqBu5UQktqfxcCeLn0EhMkz
+ a98+8pe8HMFLuCEFR020mWT8ub2NTy95PKoF0U55kOqlRrc3Xvu23kgbMJn2Rmkp/uq/7Nfe3
+ W8ZrclMdAKRBguaLxtdeFMqRA8N9rlafniHVMIr5wXO03jiigcbieoK9gRf4fSeiDba5zpCwi
+ Si/vVyNfa1MGfWeRCHO2Az/0/LTDh0P0ZZ4nkQ851VEw68d/EoWOwVlLi9ctG4Ahk5VGAXNLm
+ 3Zcr6B/EQrbjAlGPSIuEXhwkFXvSikNs4iGSpLdhMfQBpffnPNT3TvGODW0iR239s+lTKNlmT
+ xAW26VcPKrV077HTogwoh3UM31Z22tz7nW5GyH8+31TdozysB2v5hjgNSCeEfpjqNe0u/mK7W
+ tWEqQaRvp1ltems18wzluiwt7RY1OHL2Y5jiJet6CVhYEziCh4blm/3ImNL/qAd0eDSA4zznW
+ Oe2pXL6+cocsN7kxDbcYZFqrPg8ACBQOWAfoTMB1+N15aa/0jthI9hSBLroYUDx0E48HYITQO
+ E3XDF1qjZ0Boo1zAEkvz1mIBtyGMDSLq2+GcpS/fU9hr//Y8MGbkLKYNXUUDhwXrIaXPgV4r4
+ 4p8AGpyGzMzibNtvrp0OmUSjz9BTwgGOrbAyzk5mr145NsJSk5CoKhAKWSXxWVSk6B3/I8doB
+ c6j99CDedbIWKtldEjYttib7GnhuQnOI248zW8vLOYmG045BxMCfoHoSxK1booSAt7zxO/3t1
+ bheFJx25/C0delEimuwkW7haAT/Q=
 
-Hi, David,
+Am 17.03.25 um 15:43 schrieb Derek J. Clark:
 
-Thanks for reminder!
-This issue already had patch fix at 2/13:  https://lore.kernel.org/linux-in=
-put/20250213024021.2477473-1-even.xu@intel.com/
+> Adds lenovo-wmi-events driver. The events driver is designed as a
+> general entrypoint for all Lenovo WMI Events. It acts as a notification
+> chain head that will process event data and pass it on to registered
+> drivers so they can react to the events.
+>
+> Currently only the Gamezone interface Thermal Mode Event GUID is
+> implemented in this driver. It is documented in the Gamezone
+> documentation.
+>
+> Suggested-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> ---
+> v4:
+>   - Remove the Thermal Mode Event GUID from Gamezone and add this driver=
+.
+> ---
+>   MAINTAINERS                              |   2 +
+>   drivers/platform/x86/Kconfig             |   4 +
+>   drivers/platform/x86/Makefile            |   1 +
+>   drivers/platform/x86/lenovo-wmi-events.c | 132 +++++++++++++++++++++++
+>   drivers/platform/x86/lenovo-wmi-events.h |  21 ++++
+>   5 files changed, 160 insertions(+)
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-events.c
+>   create mode 100644 drivers/platform/x86/lenovo-wmi-events.h
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3a370a18b806..6dde75922aaf 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13164,6 +13164,8 @@ L:	platform-driver-x86@vger.kernel.org
+>   S:	Maintained
+>   F:	Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+>   F:	Documentation/wmi/devices/lenovo-wmi-other.rst
+> +F:	drivers/platform/x86/lenovo-wmi-events.c
+> +F:	drivers/platform/x86/lenovo-wmi-events.h
+>   F:	drivers/platform/x86/lenovo-wmi-helpers.c
+>   F:	drivers/platform/x86/lenovo-wmi-helpers.h
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index bece1ba61417..13b8f4ac5dc5 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -459,6 +459,10 @@ config IBM_RTL
+>   	 state =3D 0 (BIOS SMIs on)
+>   	 state =3D 1 (BIOS SMIs off)
+>
+> +config LENOVO_WMI_EVENTS
+> +	tristate
+> +	depends on ACPI_WMI
+> +
+>   config LENOVO_WMI_HELPERS
+>   	tristate
+>   	depends on ACPI_WMI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefi=
+le
+> index 5a9f4e94f78b..fc039839286a 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -69,6 +69,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+=3D think-lmi.o
+>   obj-$(CONFIG_YOGABOOK)		+=3D lenovo-yogabook.o
+>   obj-$(CONFIG_YT2_1380)		+=3D lenovo-yoga-tab2-pro-1380-fastcharger.o
+>   obj-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D lenovo-wmi-camera.o
+> +obj-$(CONFIG_LENOVO_WMI_EVENTS)	+=3D lenovo-wmi-events.o
+>   obj-$(CONFIG_LENOVO_WMI_HELPERS)	+=3D lenovo-wmi-helpers.o
+>
+>   # Intel
+> diff --git a/drivers/platform/x86/lenovo-wmi-events.c b/drivers/platform=
+/x86/lenovo-wmi-events.c
+> new file mode 100644
+> index 000000000000..3ea0face3c0d
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo-wmi-events.c
+> @@ -0,0 +1,132 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Lenovo WMI Events driver. Lenovo WMI interfaces provide various
+> + * hardware triggered events that many drivers need to have propagated.
+> + * This driver provides a uniform entrypoint for these events so that
+> + * any driver that needs to respond to these events can subscribe to a
+> + * notifier chain.
+> + *
+> + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
+> + */
+> +
+> +#include <linux/list.h>
+> +#include <linux/notifier.h>
+> +#include <linux/types.h>
+> +#include <linux/wmi.h>
+> +#include "lenovo-wmi-events.h"
 
-Hi, Jiri,
+Hi,
 
-I didn't find this patch in latest v6.14-rc7, would you mind help double ch=
-eck which branch this patch got applied?
-Thanks!
+please also include linux/acpi.h, linux/export.h and linux/module.h. Also =
+why do you import
+linux/list.h?
 
-Best Regards,
-Even Xu
+> +
+> +/* Interface GUIDs */
+> +#define THERMAL_MODE_EVENT_GUID "D320289E-8FEA-41E0-86F9-911D83151B5F"
+> +
+> +#define LENOVO_WMI_EVENT_DEVICE(guid, type)                        \
+> +	.guid_string =3D (guid), .context =3D &(enum lwmi_events_type) \
+> +	{                                                          \
+> +		type                                               \
+> +	}
+> +
+> +static BLOCKING_NOTIFIER_HEAD(events_chain_head);
+> +
+> +struct lwmi_events_priv {
+> +	struct wmi_device *wdev;
+> +	enum lwmi_events_type type;
+> +};
+> +
+> +/* Notifier Methods */
+> +int lwmi_events_register_notifier(struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_register(&events_chain_head, nb);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(lwmi_events_register_notifier, "LENOVO_WMI_EVENTS"=
+);
+> +
+> +int lwmi_events_unregister_notifier(struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_unregister(&events_chain_head, nb);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(lwmi_events_unregister_notifier, "LENOVO_WMI_EVENT=
+S");
+> +
+> +static void devm_lwmi_events_unregister_notifier(void *data)
+> +{
+> +	struct notifier_block *nb =3D data;
+> +
+> +	lwmi_events_unregister_notifier(nb);
+> +}
+> +
+> +int devm_lwmi_events_register_notifier(struct device *dev,
+> +				       struct notifier_block *nb)
+> +{
+> +	int ret;
+> +
+> +	ret =3D lwmi_events_register_notifier(nb);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return devm_add_action_or_reset(dev,
+> +				devm_lwmi_events_unregister_notifier, nb);
 
-> -----Original Message-----
-> From: David Binderman <dcb314@hotmail.com>
-> Sent: Thursday, March 27, 2025 3:16 AM
-> To: Xu, Even <even.xu@intel.com>; Sun, Xinpeng <xinpeng.sun@intel.com>;
-> jikos@kernel.org; bentiss@kernel.org; linux-input@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Subject: linux-6.14/drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c b=
-ug report
->=20
-> Hello there,
->=20
-> Static analyser cppcheck says:
->=20
-> linux-6.14/drivers/hid/intel-thc-hid/intel-thc/intel-thc-dma.c:298:24: st=
-yle:
-> Boolean result is used in bitwise operation. Clarify expression with pare=
-ntheses.
-> [clarifyCondition]
->=20
-> Source code is
->=20
->         if (!config->sgls[i] | !config->sgls_nent[i])
->=20
-> Perhaps || was intended instead of | ?
->=20
-> Regards
->=20
-> David Binderman
->=20
+Please remove this line break here.
 
+> +}
+> +EXPORT_SYMBOL_NS_GPL(devm_lwmi_events_register_notifier, "LENOVO_WMI_EV=
+ENTS");
+> +
+> +/* Driver Methods */
+> +static void lwmi_events_notify(struct wmi_device *wdev, union acpi_obje=
+ct *obj)
+> +{
+> +	struct lwmi_events_priv *priv =3D dev_get_drvdata(&wdev->dev);
+> +	int sel_prof;
+> +	int ret;
+> +
+> +	switch (priv->type) {
+> +	case THERMAL_MODE_EVENT:
+> +		if (obj->type !=3D ACPI_TYPE_INTEGER)
+> +			return;
+> +
+> +		sel_prof =3D obj->integer.value;
+> +		ret =3D blocking_notifier_call_chain(&events_chain_head,
+> +						   THERMAL_MODE_EVENT, &sel_prof);
+> +		if (ret =3D=3D NOTIFY_BAD)
+> +			dev_err(&wdev->dev,
+> +				"Failed to send notification to call chain for WMI Events\n");
+> +		break;
+> +	default:
+> +		return;
+> +	}
+> +}
+> +
+> +static int lwmi_events_probe(struct wmi_device *wdev, const void *conte=
+xt)
+> +{
+> +	struct lwmi_events_priv *priv;
+> +
+> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	if (!context)
+> +		return -EINVAL;
+> +
+> +	priv->wdev =3D wdev;
+> +	priv->type =3D *(enum lwmi_events_type *)context;
+> +
+> +	dev_set_drvdata(&wdev->dev, priv);
+> +	return 0;
+> +}
+> +
+> +static const struct wmi_device_id lwmi_events_id_table[] =3D {
+> +	{ LENOVO_WMI_EVENT_DEVICE(THERMAL_MODE_EVENT_GUID,
+> +				  THERMAL_MODE_EVENT) },
+> +	{}
+> +};
+> +
+> +static struct wmi_driver lwmi_events_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "lenovo_wmi_events",
+> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.id_table =3D lwmi_events_id_table,
+> +	.probe =3D lwmi_events_probe,
+> +	.notify =3D lwmi_events_notify,
+> +	.no_singleton =3D true,
+> +};
+> +
+> +module_wmi_driver(lwmi_events_driver);
+> +
+> +MODULE_DEVICE_TABLE(wmi, lwmi_events_id_table);
+> +MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
+> +MODULE_DESCRIPTION("Lenovo WMI Events Driver");
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/platform/x86/lenovo-wmi-events.h b/drivers/platform=
+/x86/lenovo-wmi-events.h
+> new file mode 100644
+> index 000000000000..a3fa934eaa10
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo-wmi-events.h
+> @@ -0,0 +1,21 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later
+
+The SPDX license identifier needs to be a separate comment.
+
+With those minor issues being fixed:
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+
+> + *
+> + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
+> + */
+> +
+> +#include <linux/notifier.h>
+> +#include <linux/types.h>
+> +
+> +#ifndef _LENOVO_WMI_EVENTS_H_
+> +#define _LENOVO_WMI_EVENTS_H_
+> +
+> +enum lwmi_events_type {
+> +	THERMAL_MODE_EVENT =3D 1,
+> +};
+> +
+> +int lwmi_events_register_notifier(struct notifier_block *nb);
+> +int lwmi_events_unregister_notifier(struct notifier_block *nb);
+> +int devm_lwmi_events_register_notifier(struct device *dev,
+> +				       struct notifier_block *nb);
+> +
+> +#endif /* !_LENOVO_WMI_EVENTS_H_ */
