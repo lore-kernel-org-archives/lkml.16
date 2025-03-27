@@ -1,166 +1,163 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D12187858
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92AB155C83;
+	Thu, 27 Mar 2025 15:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743088034; cv=none; b=QXr9hUTk4yPGYw2i56LtPNNi+YCWhVZcOP+MswRXLF8nvo/27P21pKhPngnmxtb3MNnJ/UX9NwnJmB/A/ld0H/Z7nK/D3l1Hak6wRS++8fj5f/ACr3+JgwjL3aB5lL9F5gWsHtL2rMOKhkwNcvfA2vWe9BxDI9i4G9MAR92lNLw=
+	t=1743088040; cv=none; b=c4HUW9VbOT5aJ0LacaoT2KICSCtiw7OH3jZcX9uaqvYbE/cxzaKCpDKRBSkYzqu6H+4hquxSYtv6InPlgCVH5WfyqnsWSco+apVTRoBsH5k7J+Z6BisYrSN30FXfkW0HZZQTWy8ziVTll0GCavjVz2/n7tJwrwo7JGK865y9Hk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743088034; c=relaxed/simple;
-	bh=zoa2RpDaagu57Lnd7or/nYYPOHJtaZ/Umw0bS3l6BCk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=hCKNaRCKI9Mkz624T5b5BRri/9C9ZuKGQf2X+bvK8Y/iqPLWIoziPuj1r+rgv8GPnzTdVqj8xrhyvgxc8OhDeT+/FMfFcQ88Rn3wS4nfB76I2yx3SkQ2XeAcjeCFQaYA14tGwJOAFvy6qsfAiFu7v3mtCxG0LfnEAk6ASvtlRu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gzxjZOXz; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1743088040; c=relaxed/simple;
+	bh=IGOlgbMnyFjkmCr7mrACZlNpeHBjA6HM1S444NLVEa0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FUxsTIWgHcA+97W/msfKRGAHdHs9qrinLt9qI+BWDdAsp7M42c90aw6TK62DILjnmTiBD4uGrR+Hv9Cx4v5IIbHDWDqBg2M5idcqiXb3+ld2d97La6OS+QVUjfgMn2OPXwL7Ae/67A81qbTZ+sQ481PiDKT1WffSy58eiFlktGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ntCX2k47; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gzxjZOXz"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52RDUDfZ030057;
-	Thu, 27 Mar 2025 15:07:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=5t2FuT
-	Ucf8lDWMstNFGFYUYddh7v205+ujjI5wCPz2U=; b=gzxjZOXzHjHbP5KEKbbBp/
-	7D/RUZAXYy1y+pgNcwpQI295nobvcx9aZ+rTmSdlJn97YAtFQearaBPdeUV+FqpP
-	1QmLWyLFafd8l6bPROKMnrSdhJopDh3hAGEuJzpUZFR16/ikPrzp8vIkkgSkGHRh
-	drUdijaJtzjaEZy6v7Ycz6WPLwvZhJpWbsUClW5rEXKtaorYa2Js/By7bxi1HJyb
-	CYZo9z7pAAQtaqQFGmBz+tzISIIM6ZxNe9eVwP4izmKXdWIeTyuylhTkOxwCWrlO
-	ChiSKNFYHmhI2LeFzDY2pfQJJHcojF7s3/Hw6gfZ0zHxBB8FBUaiFGa9pXFsVo6w
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45my29bc97-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 15:07:06 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52RDJFvn005801;
-	Thu, 27 Mar 2025 15:07:05 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 45ja82nkfg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Mar 2025 15:07:05 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52RF74f021168646
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Mar 2025 15:07:05 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A455E58059;
-	Thu, 27 Mar 2025 15:07:04 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 355215805C;
-	Thu, 27 Mar 2025 15:07:02 +0000 (GMT)
-Received: from [9.43.55.88] (unknown [9.43.55.88])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 27 Mar 2025 15:07:01 +0000 (GMT)
-Message-ID: <38653c58-a5c4-496f-9b52-e7bc3e447423@linux.ibm.com>
-Date: Thu, 27 Mar 2025 20:36:55 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntCX2k47"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22401f4d35aso26633015ad.2;
+        Thu, 27 Mar 2025 08:07:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743088038; x=1743692838; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QSnBFPCz6EJRCbgAs1hUwvMtKdYF2dHvHQTAU0FhBus=;
+        b=ntCX2k476oVP0dkVEFl6ftmw6mEnHZudai6WekoJOUtZvNRLVUUHXwEApHKiyIwMLi
+         OAmHjRvJA07jHpQdoxWq0ApOex1+QM2JT0Rd4Y2hMpz338hVPeGr2dLG5qRBGK1b0RQ7
+         8Hgi/cZl3/DKUaI/ToAGBZ7g79wLO3y7U+svgH9tHFXGHF0phfOALdetaMXeNhix7J5z
+         Jti4gAaIu92GkQy0xH4H64xa4KazgbNCP+p1Y+dKMiCETMHLBR1GXEWv0LCgEvXnzSnJ
+         w+5INFCKLYSAeZ7a7UvlHMZF947vUtSKYcD8InZdYhdLfYhGErqOjJGIZVz1ZKM/pb1s
+         hS+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743088038; x=1743692838;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QSnBFPCz6EJRCbgAs1hUwvMtKdYF2dHvHQTAU0FhBus=;
+        b=JWnQXcUvSgPHKQdXyg68NGGRNEgeOPBRJAVTJFluQn5ahLuc/DsMVIyMFvUKtdif0d
+         LmOyLXCuJWCvpHc/v+i5uPD6kAL+xC+NZkHJ4Q0jw2EfizcRQumtWzOD0j3OJYB/slq3
+         hh8S2JpGBI1gu2HQ0zYIYLVJpZvQ1fsaOjxrYe3f/oGVS+3w6MVU+OAUltEEUQiI6Ghf
+         yh6HFzL3kgsosC2J6PV+4RSvsYoHl02h+TL6hb4/JU+spd9HhdSVkfz8Pj/Rs/5iQ1Rr
+         eRNIN7PQ7qkKl8szbPl1zfDOanTRHv/x1dDmTZqR2tF/ov8Cd5nfzDPap/opqGLc+Gl9
+         MWSA==
+X-Forwarded-Encrypted: i=1; AJvYcCX41kzbJQ1uDwOK2wS1dvTFERn/KCxi/QKOShWHXhJA3lBfxlfj1gFY0FnCpDzSf2Ekl87O7UyWT1eWuCYChYeyXQ==@vger.kernel.org, AJvYcCXoc3z3kzcPQkqI+Jr/qVrQYTtztZMlc1dTBHXrQDlcJstjma8j+vFCQJZtoObTRFg9ijjKwUaqOqFUeOg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRV+GrghVGZxuytiXOyBrlmXm20+1dJAdRPfAdwPTtabfKjwEJ
+	bgm2m+tQItiCqGYS0E79nuTQS5zHrt7GWR3Q8rUvQUs0kBt8FxGp
+X-Gm-Gg: ASbGncuppzc5in7hY/FKr3ZAh1kZ461Cy2X/I1ai9CKlufSQWLa5wFPON4AjvaTcBDh
+	mMoLP0xc0/HLK6NN6ptVASXWosnBnbGJ8EpyRKJkf6f36cy9qbfVJ2W60+ZROTbQlSVM1Ulyhfl
+	+KEy7zQLk6Ry7p2O6TZpFGJFsOPFo6eRRPfOk3n8bH65qdjgjmeTYL/TR/tpMV5X54Ir+EBx5B4
+	pgwRHUQIgyXD4Vk6ntDxCM0FJZrGQC4UCcUAIIQELOhcLIBgNP34ShfBfdwoN2ZAZfSmAXMHsSz
+	E8buL1/TD+YZNKb+Vqv9yqf30bEpruFgSYyWWMKy1Gv19nf8P7RLOV5VV/P+37/WHkVzXuKICyf
+	K/JLF
+X-Google-Smtp-Source: AGHT+IHQoplcEatDuFtcOhE2bWxxvWKhWtII0JknPc4UIIl7hdymWZ+PnM1/9vGYGnqb7EbmmsAikg==
+X-Received: by 2002:a17:903:1988:b0:223:325c:89f6 with SMTP id d9443c01a7336-2280488be77mr58686565ad.10.1743088037862;
+        Thu, 27 Mar 2025 08:07:17 -0700 (PDT)
+Received: from howard.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eedea0asm670635ad.73.2025.03.27.08.07.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 08:07:17 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: mingo@redhat.com,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	peterz@infradead.org,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v4] perf trace: Fix possible insufficient allocation of argument formats
+Date: Thu, 27 Mar 2025 08:07:12 -0700
+Message-ID: <20250327150712.1966188-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [main-line]Build warnings on PowerPC system
-To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <61cf556c-4947-4bd6-af63-892fc0966dad@linux.ibm.com>
- <8797a1c4-dc58-4a85-bc51-a3d4131e7930@linux.ibm.com>
- <b5713b0b-a278-424c-8ba3-3aec01454e94@linux.ibm.com>
-Content-Language: en-US
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-In-Reply-To: <b5713b0b-a278-424c-8ba3-3aec01454e94@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: CRp_ufsxd0MvTwnIpfsd0DTLVNXI-OtO
-X-Proofpoint-ORIG-GUID: CRp_ufsxd0MvTwnIpfsd0DTLVNXI-OtO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-27_01,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 clxscore=1015 phishscore=0 bulkscore=0 malwarescore=0
- lowpriorityscore=0 mlxlogscore=999 suspectscore=0 impostorscore=0
- spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503270102
 
+In my previous fix of runtime error(Link:
+https://lore.kernel.org/linux-perf-users/20250122025519.361873-1-howardchu95@gmail.com/),
+I made a mistake of decrementing one unconditionally, regardless of
+whether an extra 'syscall_nr' or 'nr' field was present in
+libtraceevent's tp_format. This may cause perf trace to allocate one
+fewer arg_fmt entry than needed for the accurate representation of syscall
+arguments.
 
+This patch corrects the mistake by checking the presence of'syscall_nr' or
+'nr', and adjusting the length of arg_fmt[] accordingly.
 
-On 3/27/25 7:31 PM, Venkat Rao Bagalkote wrote:
-> 
-> On 27/03/25 7:22 pm, Madhavan Srinivasan wrote:
->>
->> On 3/27/25 12:33 AM, Venkat Rao Bagalkote wrote:
->>> Greetings!!!
->>>
->>> I see below build warnings while compiling mainline kernel on IBM Power9 system.
->>>
->>> Repo Link: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/
->>>
->>> Head Commit: f6e0150b2003fb2b9265028a618aa1732b3edc8f
->>>
->>> Attached is the .config.
->>>
->>> Machine: IBM Power9
->>>
->>> gcc version 11.5.0
->> What is the ld version in your system.
-> 
-> Please find the ld version below.
-> 
-> GNU ld version 2.35.2-59.el9
+Signed-off-by: Howard Chu <howardchu95@gmail.com>
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
+Fixes: c7b87ce0dd10 ("perf trace: Fix runtime error of index out of bounds")
 
+Changes in v4:
+- Make the patch apply
 
-ah ok that explains. Kindly can you try with this patch and let us know whether 
-this fixes the warning in your setup
+Changes in v3:
+- Add 'Fixes:' tag
 
+Changes in v2:
+- Simplify the code (written by Namhyung)
 
-diff --git a/arch/powerpc/boot/wrapper b/arch/powerpc/boot/wrapper
-index 1db60fe13802..09ceb5a42d81 100755
---- a/arch/powerpc/boot/wrapper
-+++ b/arch/powerpc/boot/wrapper
-@@ -235,7 +235,7 @@ fi
- # suppress some warnings in recent ld versions
- nowarn="-z noexecstack"
- if ! ld_is_lld; then
--       if [ "$LD_VERSION" -ge "$(echo 2.39 | ld_version)" ]; then
-+       if [ "$LD_VERSION" -ge "$(echo 2.35 | ld_version)" ]; then
-                nowarn="$nowarn --no-warn-rwx-segments"
-        fi
- fi
+ tools/perf/builtin-trace.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
-
-> 
-> 
-> Regards,
-> 
-> Venkat.
-> 
->>
->> Reason for asking is that currently with
->>
->> commit  579aee9fc594a ("powerpc: suppress some linker warnings in recent linker versions")
->>
->> ld version greater than >2.39, this warning is being suppressed.
->>
->> Maddy
->>
->>>
->>> Warnings:
->>>
->>> ld: warning: arch/powerpc/boot/zImage.epapr has a LOAD segment with RWX permissions
->>> ld: warning: arch/powerpc/boot/zImage.pseries has a LOAD segment with RWX permissions
->>>
->>>
->>> If you happen to fix this, please add below tag.
->>>
->>>
->>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
->>>
->>>
->>> Regards,
->>>
->>> Venkat.
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index a102748bd0c9..439e152186da 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2022,9 +2022,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+ {
+ 	int idx;
+ 
+-	if (nr_args == RAW_SYSCALL_ARGS_NUM && sc->fmt && sc->fmt->nr_args != 0)
+-		nr_args = sc->fmt->nr_args;
+-
+ 	sc->arg_fmt = calloc(nr_args, sizeof(*sc->arg_fmt));
+ 	if (sc->arg_fmt == NULL)
+ 		return -1;
+@@ -2034,7 +2031,6 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+ 			sc->arg_fmt[idx] = sc->fmt->arg[idx];
+ 	}
+ 
+-	sc->nr_args = nr_args;
+ 	return 0;
+ }
+ 
+@@ -2176,14 +2172,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
+ 		return err;
+ 	}
+ 
+-	/*
+-	 * The tracepoint format contains __syscall_nr field, so it's one more
+-	 * than the actual number of syscall arguments.
+-	 */
+-	if (syscall__alloc_arg_fmts(sc, sc->tp_format->format.nr_fields - 1))
+-		return -ENOMEM;
+-
+ 	sc->args = sc->tp_format->format.fields;
++	sc->nr_args = sc->tp_format->format.nr_fields;
++
+ 	/*
+ 	 * We need to check and discard the first variable '__syscall_nr'
+ 	 * or 'nr' that mean the syscall number. It is needless here.
+@@ -2194,6 +2185,9 @@ static int syscall__read_info(struct syscall *sc, struct trace *trace)
+ 		--sc->nr_args;
+ 	}
+ 
++	if (syscall__alloc_arg_fmts(sc, sc->nr_args))
++		return -ENOMEM;
++
+ 	sc->is_exit = !strcmp(name, "exit_group") || !strcmp(name, "exit");
+ 	sc->is_open = !strcmp(name, "open") || !strcmp(name, "openat");
+ 
+-- 
+2.45.2
 
