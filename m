@@ -1,125 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B75186E20;
-	Thu, 27 Mar 2025 15:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EEC188CCA
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743088957; cv=none; b=rk1JChx9liMDIBI13qqoSED089eOBApdM6q/Vu0L+v9J979AszoIZMgAclkA2MPHFjWrHEnSTxYfS3fNNDwYPu2sIlNi/mn682wyqaiYyuz0N5dAokxw2MvmFn5xXqQLcjGJxgQKc3b9DA9LxkPODoIFUS9NDevRFD2zGOQo3ks=
+	t=1743088973; cv=none; b=Oo4wUiDmyDlZuaVWIfX/POESkwq+nvd8qqNuGjt78JYA1lyRtnX9KWdItp3Bw7a7XEmqEHgpSt+w/lAZdJGYSYHOb3MaGhZM34hLajB1eVSqOFuG5IpbCcfLD/vG9/9u2mRIyb9eVfshiSlM7hM5vyKGeSrK82U2Qdq3z7MkOlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743088957; c=relaxed/simple;
-	bh=HKenljGoNABRACaUJ8GgUQs621BY3q54uwgxYhOahWI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bfwNcIUB1sPR1fr/VKj1SHh/oG3VIpqyVUZ1fvnz+Fms/X8Nu8sU9NwbE8eXZHMHWjKgYUBCDjsJSRzeh8MSGJjlYCzxEV4s0sfD7GwZ5rYumyuvr6EfX/4f28V4DxWivFn3xa312IuTr7lBcYnssjhZNnh2kB8sFyamd+StUKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TQSjQgV0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743088973; c=relaxed/simple;
+	bh=1nGruMCbppY7qn4neYE0wvu8NfeEHt8bZVd8Orps9qk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=czrGeVVw0tWKCg0NF2PLZ1EwnprEjK79agLv3jMuxMhV0F3v7Fnhz49xcseVv+KviGNCTuOQVlaE1uOfmOnvFIcBFxOaoHGP62rIJ56Qa4Inn6425lzC0Qz20nB7sVgAG4eKgEKKJlvEUIFaOstYKuwJY7i6h23lesSqr0v30oA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aoJjBXvT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TQSjQgV0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7B61C4CEE5;
-	Thu, 27 Mar 2025 15:22:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743088956;
-	bh=HKenljGoNABRACaUJ8GgUQs621BY3q54uwgxYhOahWI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TQSjQgV0LedYqyAOCqrmYeYh8mOXpOsJLSkFF6cXqk1VDPCIMH4X7RHY3gEMmwGw8
-	 6HbSTgbUW4EQGisH9ITvQJVnvbLqbh60wMNHa2nNFB/G48+0kKzajeLf0F+j/BA+wl
-	 QLI4fmppzjhD9crffyfjyPmsL3TgJAkkslsEe8a0R46s4Oxlz/XLVZbem0mGsC5yPa
-	 Rj3nxkFzc2W67tsOlfJVPyVWtSNGWMvrLtuyt6qOtDDZIUz3SD58xbkNVFyBNNrd3L
-	 MRjumaulys6H9KBV1gdFHJob64JPG8K9nkwzXcU5U1a7Gm3euC6CFWzivXT0n193aE
-	 aC/u++ImYGdVQ==
-Date: Thu, 27 Mar 2025 15:22:24 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Siddharth Menon <simeddon@gmail.com>
-Cc: linux-iio@vger.kernel.org, lars@metafoo.de,
- Michael.Hennerich@analog.com, gregkh@linuxfoundation.org,
- linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
- marcelo.schmitt1@gmail.com
-Subject: Re: [PATCH v2] iio: frequency: ad9832: Update bit manipulation
- macros to use FIELD_PREP and GENMASK
-Message-ID: <20250327152224.61248837@jic23-huawei>
-In-Reply-To: <20250326204901.44337-1-simeddon@gmail.com>
-References: <20250326204901.44337-1-simeddon@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aoJjBXvT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743088969;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KyIB6mZ7OHIQ8TN1E0AWKE682onUFLQ3XEbxIz51DMc=;
+	b=aoJjBXvTG6ZabkrU6jjp2FKkMwfICmt9aNTrfHqMv7BVc/7Z6s6PX+nf1KYQSNT7w6gAYr
+	3yyfrr6M24D2/YWWX+B4Y2yAAmNVvt7U9Q7Q6VEZ4KLmiSPZqZQ4JWNZAYWZlibccnB2nd
+	RPyfNc5JXN94i09798iZYfOaOhlN8GA=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-303-9xYZuFDVNQu7vuSr1o1viQ-1; Thu, 27 Mar 2025 11:22:48 -0400
+X-MC-Unique: 9xYZuFDVNQu7vuSr1o1viQ-1
+X-Mimecast-MFC-AGG-ID: 9xYZuFDVNQu7vuSr1o1viQ_1743088967
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39abdadb0f0so630360f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:22:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743088967; x=1743693767;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KyIB6mZ7OHIQ8TN1E0AWKE682onUFLQ3XEbxIz51DMc=;
+        b=ept4trt/cW3rZ+rBl+cXFqsgaJwbfM0T5QWPwlwHJ2cwPAQzZ4zCBIvWeMl1l5hTkx
+         F9pdwg1yO6TmprWePeaCfhHq1IOw9Od+1XTBCI8YkZxFTYDMMe76O3gZY8avMwqh8N4a
+         jkPmSuVUCW5JGexAkftxnYiJb5e/wDPwTEPNUFnT/P1L33G7F/P5PDUX6dQeRgDkeMJW
+         okHxAdHKt9fyfC9CywNnfRM45uHE56qVe3DTaxsGdtMX7ndfzjWG7rJ/bEtDO0A+Kp8H
+         klGpNJsKO1krXJw5c3hN/ogolfgApxfUDWMEBB6HWgjPQAkrZ8/SOfU0fnmq9G/CWiyz
+         T0og==
+X-Forwarded-Encrypted: i=1; AJvYcCVUq53MzuwOp25fUx1al3OXFEyrscS5XSMVG0+k+AYTO7gTHqHmNBnYZ1MoXbIWP/e0dJxYif0yNEYa7ec=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvaN/hdLKNIJu5L42HuQdtYJrL+22WZdELXJK3osCris8xgyyl
+	FE7s14I0GyaGML0fQTk9vQypvhk+5AhWAZ3SRC5ejTipkcZser486qzwb0HG2yOa/pLz1ua9IB0
+	MHTfwZ199IcznPBEgTgudA+Cc9HItXMUw7i/3SRD/eysaw2TA1x6OwwwVksEgDA==
+X-Gm-Gg: ASbGncuu4DW/25JTu2SmmixAUHkkpTd5kPlG3MA1CggJokuuJ2/yCmJGGF+1lvNZfF1
+	zFMi1EbZDqyKelX3Bby6OP6BBm9lgQlebRtPl8K6k4DZpPIFzdFx/0IzhTHtXUD3Kv9GaLeexKg
+	SMxq3OUyVsc+SPuQLQutArO/0nx0L6QIBCkv1GcRH5c9wRVryvhj1XZykYovyuZL7tp71XkTxaq
+	QMoUQqXsRgRhfnZH0gAewkPmFSjArlGXdMm4JLUJJtstG5l3UpgO9ZPBpnqelC62zJIPYRETnJy
+	h7u7+9ynnfKoVH3AwAgcsBYdqn/tws0IoFle0PN9YWKmkRrG4mu3fE0=
+X-Received: by 2002:a05:6000:1f88:b0:38f:6697:af93 with SMTP id ffacd0b85a97d-39ad1740e6amr3598497f8f.9.1743088967247;
+        Thu, 27 Mar 2025 08:22:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF9Nh306S6nC8D3y6/2MymAxytzfH2EE+T7OhkoPuApxgDdG2zQZrGWFxbxp5lSU2j1CNBGxg==
+X-Received: by 2002:a05:6000:1f88:b0:38f:6697:af93 with SMTP id ffacd0b85a97d-39ad1740e6amr3598456f8f.9.1743088966782;
+        Thu, 27 Mar 2025 08:22:46 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:c:37e0:ced3:55bd:f454:e722? ([2a01:e0a:c:37e0:ced3:55bd:f454:e722])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82dede98sm41019095e9.6.2025.03.27.08.22.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 08:22:46 -0700 (PDT)
+Message-ID: <a495133b-7fae-4b88-8254-78d65677990f@redhat.com>
+Date: Thu, 27 Mar 2025 16:22:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/10] drm/panic: add missing Markdown code span
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ patches@lists.linux.dev,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ dri-devel@lists.freedesktop.org
+References: <20250324210359.1199574-1-ojeda@kernel.org>
+ <20250324210359.1199574-3-ojeda@kernel.org>
+ <dd1616d5-4808-46be-9167-6fbfe76e0c73@redhat.com>
+ <CANiq72kz9SW8Rexj7feZRvTAhgF+cBwarpFnqu0TSk6C2r9SRQ@mail.gmail.com>
+Content-Language: en-US, fr
+From: Jocelyn Falempe <jfalempe@redhat.com>
+In-Reply-To: <CANiq72kz9SW8Rexj7feZRvTAhgF+cBwarpFnqu0TSk6C2r9SRQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 27 Mar 2025 01:50:07 +0530
-Siddharth Menon <simeddon@gmail.com> wrote:
-
-> Update AD9832_PHASE and RES_MASK to use FIELD_PREP and GENMASK for
-> clean bitmask generation and improved maintainability.
+On 25/03/2025 20:04, Miguel Ojeda wrote:
+> On Tue, Mar 25, 2025 at 10:05 AM Jocelyn Falempe <jfalempe@redhat.com> wrote:
+>>
+>> Thanks, it looks good to me.
+>>
+>> Reviewed-by: Jocelyn Falempe <jfalempe@redhat.com>
+>>
+>> You want to take the whole series in the rust tree?
+>>
+>> Otherwise I can push the patch 1-2 to drm-misc-next if needed.
 > 
-> Suggested-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> Signed-off-by: Siddharth Menon <simeddon@gmail.com>
+> Please take them if possible, since others may want to take them
+> through their tree anyway, plus it should have less conflicts if you
+> change other bits, plus these are independent fixes anyway that can go
+> in on their own whether or not the lint gets eventually enabled.
 
-Hi Siddharth,
-> ---
->  The previous patch would not apply cleanly as I was not working on a
->  clean branch
->  v1->v2:
->  Resolve previous patch application issues
->  
->  drivers/staging/iio/frequency/ad9832.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+I just pushed 1-2 to drm-misc-next
+
+Thanks,
+
+-- 
+
+Jocelyn
 > 
-> diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
-> index 140ee4f9c137..6e463488462a 100644
-> --- a/drivers/staging/iio/frequency/ad9832.c
-> +++ b/drivers/staging/iio/frequency/ad9832.c
-> @@ -59,7 +59,7 @@
->  #define AD9832_CMD_SLEEPRESCLR	0xC
->  
->  #define AD9832_FREQ		BIT(11)
-> -#define AD9832_PHASE(x)		(((x) & 3) << 9)
-> +#define AD9832_PHASE(x)	FIELD_PREP(GENMASK(10, 9), x)
-This code is mixing two styles, the sort of 'function' to set
-case here and the providing of direct masks that
-are suitable for inline FIELD_PREP / FIELD_GET.
-
-I'd prefer this was changed to the second style
-#define AD9832_PHASE_MASK	GENMASK(10, 9)
-
-Then where it used inline you can use the mask directly to clear
-the bits + an inline FIELD_PREP() to set them to the desired
-value.  That's cleaner than current situation where the value 3 is
-passed to this macro to generate the mask.
-
-There are other cases in the code where we have the pattern:
-		if (val)
-			st->ctrl_ss &= ~AD9832_SELSRC;
-		else
-			st->ctrl_ss |= AD9832_SELSRC;
-which could be rewritten as:
-
-
-		st->ctrl_ss &= ~AD932_SELSRC;
-		st->ctrl_ss |= FIELD_PREP(AD932_SELSRC, !!val);
-
-the !! is needed to ensure we get 0, 1.  Could also do
-val ? 1 : 0 if you prefer.
-
-So overall a good cleanup would be to move to consistent use
-of masks (including single bit ones) and FIELD_PREP to write
-the values.
-
-Jonathan
-
-
->  #define AD9832_SYNC		BIT(13)
->  #define AD9832_SELSRC		BIT(12)
->  #define AD9832_SLEEP		BIT(13)
-> @@ -69,7 +69,7 @@
->  #define ADD_SHIFT		8
->  #define AD9832_FREQ_BITS	32
->  #define AD9832_PHASE_BITS	12
-> -#define RES_MASK(bits)		((1 << (bits)) - 1)
-> +#define RES_MASK(bits)	GENMASK((bits) - 1, 0)
->  
->  /**
->   * struct ad9832_state - driver instance specific data
+> Thanks!
+> 
+> Cheers,
+> Miguel
+> 
 
