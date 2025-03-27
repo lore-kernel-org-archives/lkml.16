@@ -1,252 +1,87 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0250219A75
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 17:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5184CDDD3;
+	Thu, 27 Mar 2025 17:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743096608; cv=none; b=rbLkBRPly3n874fRiL0yl7+t/7wSBgziwGU5d3zf5NFdeRb0EEVh7zmHgp2EpVAcSkeiT7kC8RAWjHL5Uzozo/Hwezgx2S6yVbO2Isnx5TACQrWEBlXfFR/7LTHCRUlGY7603TATsLH0K//TGZS+weXBbGEbRFR4GsQwKUz4x7M=
+	t=1743096753; cv=none; b=KILB/b6WTaOHhK9REXT/Eo044NwJAr/FIxwRppPwL5mhebtxuZKo+/upCtshS69Jod+eI3Jdr4iv0slo/5Zxkna2ze3Yh2LwcygqLtWTnkT3jmlE+npXCnl56Uf7GHcKXIcEgA69wonaDsf2T8oB6hV6vNXQ9zEQ4fNrdklMCUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743096608; c=relaxed/simple;
-	bh=K66Q38Lz90Nt3j6FO+oeTnlxzaJOsNINcLtmcpY+h10=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b8n9EBCveZNrsBGdLJS8lcCiqyQ5fxdcfUR8i9skFM4+0VO0VMDXNMjhFA5AZdtTNXf/ezKGM91UAZviL/cyIc9+yLidN7MtFs7VBmqFXd0FuCagU2xYyVk6c89MqwRBWxNZnBMDpNCVHcp//wr6+HjJv9Rdg0H9Sxz1vVtS59E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mowR3tC+; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743096753; c=relaxed/simple;
+	bh=bruqDQ91bY1u8bLhPN8dGiaW/bKoNawVJ7r8njBA4og=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=LMDgj1eJa7XjCsFR+5LeO11WQ4rBp0+xTiV9JwtVeUzdhSK0sW1SKf+7YLqxixZwDXZFL/UxNpAsh4CFh7QXIGrB+F3kyFap4pMHDH+vsZR9vEcRm0Mkjzy+INSNbTtNKIvJo2Mzdfgs4ZtDgvmtc9g90Q5RQ3kafUH4pH+6lsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nxD4MqK2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wAe4owd+; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mowR3tC+"
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5259327a93bso553156e0c.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 10:30:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743096605; x=1743701405; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WDN1VKUJwLebN0ryWgo3KULQHNLf140Ja4ddZir7PXQ=;
-        b=mowR3tC+i89SVe67Bn9EEpuFB/6p6jtXjHvF9Qn83wGSWMaVU4M+Zsqfxink9X70RF
-         Vw5i2l4/RdN2slrJH5vN5l+CXg4yaM8/XS5X+PnUncDQYBmqUNdadII1TWzaYyIQa9du
-         38Gm8NuBYdoOXf/xDNAhbcU9gtU8MrGjwe8ulMDc3JJxkUlOhvd0SZxT3nTOCvjYBBNf
-         z+061zaF5L5/2xBaxo/mmp8brUsMtIP066F9YCgzxB9seYhptfqHtp98JorTWylVDzJw
-         fzlXdaoF2QkuCy+uj5q5XFQOji6nlzxH6vk3b3s38C4niCelEcDxb3ZQWfd2iQjuUMSb
-         /LCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743096605; x=1743701405;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WDN1VKUJwLebN0ryWgo3KULQHNLf140Ja4ddZir7PXQ=;
-        b=jUA3aGJ+hgiXhd1AcDYLihH7Sl/4Ttx36kMe/Kg5df5j5DzI9hytxljvoHq5Y2Gyxs
-         jk0/pQ4Rs+mfQurS+CethD9WSIx14uknUAKQV822aS8srtocpiv3QMwLMQoq0ILmd2ZN
-         0WZAtoRYqYZhjdtVMsZ2apRmFvRiGDeDy5unKJN5FBIhoHZYPKwExJtzh5ewYwAxIFGX
-         wO9quI5m1Wr0d0QeaetveBheMhuoXrWbNgL+W8QVXL7FXchSCfx/7SMwANS7VwIxii+L
-         iVfeH45o0/U5o2TCFnhPM2nhGDIWynM7iqrUixlbU3Xd5LtxCXuvz7A2ZIfg3ZUnfkz6
-         2rBg==
-X-Forwarded-Encrypted: i=1; AJvYcCVx/+SI1PHzbkZ+VdM00wfqEnL8WPWIUBu0Jr9w3R3jETD3xMbhVmfmXYCmIgVnbPC2S/28ux8C+70wYrU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIjfRDDGS8ToZWemAdP1apngIFuCVi2qtoHCa6Q0O/XSdnN8+T
-	O20bxqHkFy5eEoxQS7SRGWfDKoXBUcsovvYNOwqxJUnGMDgxRi0q6maUWH/1jSk1REvFjZx7sW4
-	2hccKB1d4Pp0HHXybWfpST/0T9FHkhw6BFGH57w==
-X-Gm-Gg: ASbGncsHH8Cg1mrDAEtYFMlaXFoZDdFGMDoeUiCZYEl58MVScvSj1P1Sk9geM6FjRNo
-	r9EZo1kuP5uAo5HZUf2Mj1o1dXayrzUgWkCdtsMnXcpY8Jsh0arDksWlsGZaVJnPABxHKp9LCqF
-	NQAbKRVXl+URbfX92Lq6CKji59Yc1Sdf0fv7kdvsGiTImgst6zREPscUaMBF+B7FFXXbHmTw==
-X-Google-Smtp-Source: AGHT+IEztlgWSCIn71l6XVgidilEQsC+WgA0rVBDr66THcB1Yab03MEJKS8U8SF8aZ91Fp8ddjC6/zH3JJFfZRywj4k=
-X-Received: by 2002:a05:6122:887:b0:520:652b:ce18 with SMTP id
- 71dfb90a1353d-5260071ccf2mr3310045e0c.0.1743096605264; Thu, 27 Mar 2025
- 10:30:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nxD4MqK2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wAe4owd+"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743096750;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aCF9YAPPTg0G/VZvO7ssO5AXFYNHvZkHK2oCBQEtTkM=;
+	b=nxD4MqK2VDREo0N1JVC753CtIZgVemErx9ye5ZEyWDo1uV3/Tk9tgAs+nYO4Bx6xzlJJtQ
+	15hCVyBPCibfJmNzFzn8NKgp1qn8gYnBN7zNcDbfQbU2TTPacjyA2JUHa4QOBDd6ytivoq
+	Dzl8lvu806v/VVv55c/BKgizp7I9XjtGfEhUhUlwflnP1KCmn1GhR5gvzcX0tRgwQkaNsO
+	u9A0xpYODd3MzlQWZYm5NgCL1DAIn5ukhx1UanJE3gxZ6oJ/Qv6h6DFbfRO97dXVUAMlxO
+	CCU/G0uMkGwWAvAX9HjCdK/5mwIpq2TfPV7Fj4Rp9Oj8b3C0p74OqJNlCCbYCQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743096750;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aCF9YAPPTg0G/VZvO7ssO5AXFYNHvZkHK2oCBQEtTkM=;
+	b=wAe4owd+VWF/06neZgD1upVu7sJIWSdeh3kry8gAqWupOkT7Uu8qaDVw/Ttj2CfeNte2Qa
+	x1NWhxoCUVpHQyBw==
+To: Miroslav Lichvar <mlichvar@redhat.com>
+Cc: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>,
+ Stephen Boyd <sboyd@kernel.org>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+ kernel-team@android.com, Lei Chen <lei.chen@smartx.com>
+Subject: Re: [PATCH v2 1/2] time/timekeeping: Fix possible inconsistencies
+ in _COARSE clockids
+In-Reply-To: <Z-Vx8kV4M3khPknC@localhost>
+References: <20250320200306.1712599-1-jstultz@google.com>
+ <Z-KURRE_Gr72Xv_n@localhost> <874izezv3c.ffs@tglx>
+ <Z-Vx8kV4M3khPknC@localhost>
+Date: Thu, 27 Mar 2025 18:32:27 +0100
+Message-ID: <87bjtmxtuc.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326154349.272647840@linuxfoundation.org>
-In-Reply-To: <20250326154349.272647840@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 27 Mar 2025 22:59:52 +0530
-X-Gm-Features: AQ5f1JqUE3wEB4mA5ovU8cCdeyrT-Beu7WuvHFYj9Q6LMIcb26hTI9Y51kQelGw
-Message-ID: <CA+G9fYtHXcRhFd9BH3sDYBNBT2XcP42amy5QqpLhNKesLUb8WA@mail.gmail.com>
-Subject: Re: [PATCH 6.1 000/197] 6.1.132-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Shakeel Butt <shakeelb@google.com>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org, Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Cgroups <cgroups@vger.kernel.org>, 
-	linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-On Wed, 26 Mar 2025 at 21:15, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Thu, Mar 27 2025 at 16:42, Miroslav Lichvar wrote:
+> On Thu, Mar 27, 2025 at 10:22:31AM +0100, Thomas Gleixner wrote:
+>> The original implementation respected this base period, but John's
+>> approach of forwarding, which cures the coarse time getter issue,
+>> violates it. As a consequence the previous error accumulation is not
+>> longer based on the base period because the period has been reset to the
+>> random point in time when adjtimex() was invoked, which makes the error
+>> accumulation a random number.
 >
-> This is the start of the stable review cycle for the 6.1.132 release.
-> There are 197 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> I see, so that value of the NTP error is already wrong at that point
+> where it's reset to 0.
 >
-> Responses should be made by Fri, 28 Mar 2025 15:43:27 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.132-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+> To clearly see the difference with the new code, I made an attempt
+> to update the old linux-tktest simulation that was used back when the
+> multiplier adjustment was reworked, but there are too many missing
+> things now and I gave up.
 
-In Addition to previous build regressions,
+Can you point me to that code?
 
-Regressions on arm and arm64 devices cpu hotplug tests failed and
-kernel oops triggered
-with gcc-13 and clang-20 the stable-rc 6.1.132-rc2.
+It would be probably useful to create a test mechanism which allows to
+exercise all of this in a simulated way so we actually don't have to
+wonder every time we change a bit what the consequences are.
 
-First seen on the 6.1.132-rc1
-Good: v6.1.131
-Bad: Linux 6.1.132-rc1 and Linux 6.1.132-rc2
+Thanks,
 
-* Juno-r2, rockpi-4, dragonboard 845c, e850-96,
-  - selftests: cpu-hotplug: cpu-on-off-test.sh
-  - ltp-controllers: cpuset_hotplug_test.sh
-  - selftests: rseq: basic_percpu_ops_test
-
-Regression Analysis:
-- New regression? yes
-- Reproducibility? Yes
-
-Test regression: arm64 arm cpuhotplug kernel NULL pointer dereference
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Test log
-command: cpuset_hotplug_test.sh
-[ 1912.782804] /usr/local/bin/kirk[465]: starting test cpuset_hotplug
-(cpuset_hotplug_test.sh)
-cpuset_hotplug 1 TINFO: CPUs are numbered continuously starting at 0 (0-5)
-cpuset_hotplug 1 TINFO: Nodes are numbered continuously starting at 0 (0)
-[ 1917.567011] psci: CPU1 killed (polled 0 ms)
-cpuset_hotplug 1 TPASS: Cpuset vs CPU hotplug test succeeded.
-[ 1918.804896] Detected VIPT I-cache on CPU1
-[ 1918.805388] cacheinfo: Unable to detect cache hierarchy for CPU 1
-[ 1918.805957] GICv3: CPU1: found redistributor 1 region 0:0x00000000fef20000
-[ 1918.806683] CPU1: Booted secondary processor 0x0000000001 [0x410fd034]
-[ 1919.086059] psci: CPU1 killed (polled 0 ms)
-[ 1919.120969] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000000
-[ 1919.121807] Mem abort info:
-[ 1919.122086]   ESR = 0x0000000096000004
-[ 1919.122451]   EC = 0x25: DABT (current EL), IL = 32 bits
-[ 1919.122956]   SET = 0, FnV = 0
-[ 1919.123262]   EA = 0, S1PTW = 0
-[ 1919.123574]   FSC = 0x04: level 0 translation fault
-[ 1919.124038] Data abort info:
-[ 1919.124380]   ISV = 0, ISS = 0x00000004
-[ 1919.124754]   CM = 0, WnR = 0
-[ 1919.125051] user pgtable: 4k pages, 48-bit VAs, pgdp=000000000a2b8000
-[ 1919.125655] [0000000000000000] pgd=0000000000000000, p4d=0000000000000000
-[ 1919.126341] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-[ 1919.126912] Modules linked in: snd_soc_hdmi_codec dw_hdmi_cec
-dw_hdmi_i2s_audio brcmfmac rockchipdrm hantro_vpu hci_uart brcmutil
-dw_mipi_dsi analogix_dp btqca v4l2_h264 btbcm v4l2_vp9 dw_hdmi
-panfrost v4l2_mem2mem cfg80211 cec bluetooth snd_soc_audio_graph_card
-videobuf2_v4l2 drm_display_helper gpu_sched snd_soc_simple_card
-videobuf2_dma_contig crct10dif_ce snd_soc_spdif_tx
-snd_soc_rockchip_i2s snd_soc_simple_card_utils videobuf2_memops
-phy_rockchip_pcie rockchip_saradc rtc_rk808 drm_shmem_helper
-drm_dma_helper videobuf2_common rfkill industrialio_triggered_buffer
-drm_kms_helper pcie_rockchip_host rockchip_thermal coresight_cpu_debug
-kfifo_buf fuse drm ip_tables x_tables
-[ 1919.132505] CPU: 0 PID: 67249 Comm: kworker/0:0 Not tainted 6.1.132-rc2 #1
-[ 1919.133132] Hardware name: Radxa ROCK Pi 4B (DT)
-[ 1919.133555] Workqueue: events work_for_cpu_fn
-[ 1919.133983] pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[ 1919.134617] pc : memcg_hotplug_cpu_dead
-(include/linux/percpu-refcount.h:174
-include/linux/percpu-refcount.h:332
-include/linux/percpu-refcount.h:351 include/linux/memcontrol.h:795
-mm/memcontrol.c:2382)
-[ 1919.135076] lr : memcg_hotplug_cpu_dead
-(include/linux/percpu-refcount.h:174
-include/linux/percpu-refcount.h:332
-include/linux/percpu-refcount.h:351 include/linux/memcontrol.h:795
-mm/memcontrol.c:2382)
-[ 1919.135528] sp : ffff80000e78bc60
-[ 1919.135835] x29: ffff80000e78bc60 x28: 0000000000000000 x27: ffff80000a1c81f8
-[ 1919.136501] x26: 0000000000000028 x25: ffff0000f7534778 x24: ffff80000a1aeb08
-[ 1919.137166] x23: 0000000000000000 x22: ffff80000a16e240 x21: 0000000000000000
-[ 1919.137830] x20: ffff8000ed3d5000 x19: 0000000000000000 x18: 00000000a2704302
-[ 1919.138495] x17: 0000000000000000 x16: 0000000000000312 x15: 0000040000000000
-[ 1919.139159] x14: 0000000000000000 x13: ffff80000e788000 x12: ffff80000e78c000
-[ 1919.139823] x11: 0bb2d4910b917800 x10: 0000000000000000 x9 : 0000000000000001
-[ 1919.140487] x8 : ffff000013406300 x7 : 00000072b5503510 x6 : 0000000000300000
-[ 1919.141151] x5 : 00000000801c0011 x4 : 0000000000000000 x3 : ffff80000e78bca0
-[ 1919.141815] x2 : ffff80000e78bbf8 x1 : ffff8000080a11e4 x0 : ffff0000f7543240
-[ 1919.142480] Call trace:
-[ 1919.142709] memcg_hotplug_cpu_dead
-(include/linux/percpu-refcount.h:174
-include/linux/percpu-refcount.h:332
-include/linux/percpu-refcount.h:351 include/linux/memcontrol.h:795
-mm/memcontrol.c:2382)
-[ 1919.143133] cpuhp_invoke_callback (kernel/cpu.c:193)
-[ 1919.143554] _cpu_down (kernel/cpu.c:0 kernel/cpu.c:724
-kernel/cpu.c:1157 kernel/cpu.c:1218)
-[ 1919.143882] __cpu_down_maps_locked (kernel/cpu.c:1249)
-[ 1919.144291] work_for_cpu_fn (kernel/workqueue.c:5184)
-[ 1919.144647] process_one_work (kernel/workqueue.c:2297)
-[ 1919.145028] worker_thread (include/linux/list.h:292
-kernel/workqueue.c:2352 kernel/workqueue.c:2444)
-[ 1919.145386] kthread (kernel/kthread.c:378)
-[ 1919.145687] ret_from_fork (arch/arm64/kernel/entry.S:865)
-[ 1919.146041] Code: d51b4235 8b160280 97ffec72 97f73691 (f9400269)
-All code
-========
-
-Code starting with the faulting instruction
-===========================================
-[ 1919.146592] ---[ end trace 0000000000000000 ]---
-
-
-## Test log 2
-kselftest: Running tests in rseq
-TAP version 13
-1..9
-timeout set to 0
-selftests: rseq: basic_test
-testing current cpu
-basic_test: basic_test.c:30: void test_cpu_pointer(void): Assertion
-`sched_getcpu() == i' failed.
-Aborted
-not ok 1 selftests: rseq: basic_test # exit=134
-timeout set to 0
-selftests: rseq: basic_percpu_ops_test
-Segmentation fault
-not ok 2 selftests: rseq: basic_percpu_ops_test # exit=139
-
-The bisection pointing to,
- memcg: drain obj stock on cpu hotplug teardown
-  upsteam commit 9f01b4954490d4ccdbcc2b9be34a9921ceee9cbb upstream.
-
-## Source
-* Kernel version: 6.1.132-rc2
-* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-* Git sha: f5ad54ef021f6fb63ac97b3dec5efa9cc1a2eb51
-* Git describe: v6.1.131-198-gf5ad54ef021f
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/Test/v6.1.131-198-gf5ad54ef021f/
-
-## Test
-* Test log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.131-198-gf5ad54ef021f/testrun/27793089/suite/log-parser-test/test/internal-error-oops-oops-preempt-smp/log
-* Test history:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.131-198-gf5ad54ef021f/testrun/27793089/suite/log-parser-test/test/internal-error-oops-oops-preempt-smp-01e5a0f146f52056a08c01ad73b44c893f7748e5cd1533e30c989289a90e821b/history/
-* Test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.131-198-gf5ad54ef021f/testrun/27793089/suite/log-parser-test/test/internal-error-oops-oops-preempt-smp/
-* Test link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2urSwSZQOGBhePbuN1hwUGDHIT8/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2urSwSZQOGBhePbuN1hwUGDHIT8/config
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+        tglx
