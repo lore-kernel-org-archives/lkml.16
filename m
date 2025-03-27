@@ -1,264 +1,131 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810CD218838;
-	Thu, 27 Mar 2025 14:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77331217F36;
+	Thu, 27 Mar 2025 14:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743086347; cv=none; b=p/BF2KtZaXGaPHh9NJkN/AB9jvi8MOJPtf+Cgq1feLW3fKk6jKzAzxZZ/kPLT+2TPXEiKXysQGCde6SRnofoKgeeVMGWHg6tDbmVkXRUsVXx31n47EGg20wbzeX5TXpI+vBTONVbhFT7vYfLoA4rw8ljE1HUPYl0IwtZSlECC7U=
+	t=1743086414; cv=none; b=SNSO0f5OVW5IyVACjsNo9bFcReVTnMLvNOClpV1G3rf7g1LvgoxBZcdCk6cH83KaKl1d1jVsSeEj4RSUrAT6/BELZ+WgYjGRD07HinLFQCNFVyySsVQTBnF7+C2Z0qc3m+oX6Pn24YlGr4+35d8zTXdBAvr3CzYSkiI5E1nNDbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743086347; c=relaxed/simple;
-	bh=BGzyf6owM85krelMUgDqZF06wL1TDDO4HodtxJapS7Q=;
+	s=arc-20240116; t=1743086414; c=relaxed/simple;
+	bh=xLojPGVZuKTt2T24et9s0pONVfQDrJThoOxlvufCtd4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dzvLNxdJX1Mx5V8WoFYfBmt17RAHpiTT+TytuPnnd9tU71SAp5jNp2HkBLs8K+iDE8P5Z+q12OTj2xVflnJwWPjoPrcuv08jYm8IWAQ/95zzavJEaUfOtXbpENt+e0WuNexntsNZo9pB3uyy0ukL5ni7VgfSYEuLtAxPfIjvHzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FPEbSQ4q; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=MUqDu6L+9/7JTkXC/gZwg/Mybj5OL0IvF5nGpeddZpZ/gIeU33ofhVM46M1gIuYtLkf8x17oTT9AHXcGrTXFNYswFJCtCwclot6IiIdp5uIWrd9zDEbol0Nm2WrwYjOsP7/aWmByAZLpx2yEneV9jr5yTMJ9ErAwbn0OdIvriaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WBV24t6e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FPEbSQ4q"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39143200ddaso671957f8f.1;
-        Thu, 27 Mar 2025 07:39:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743086344; x=1743691144; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=u82ONPXPU91yIttrfyA9Tihmj4fGNtFwpkyHVRCFmYA=;
-        b=FPEbSQ4qVWVgSnYAXASZ1oWErBdCjC3K2o+qojKwairpnkD3efXPaNtljRaAxLuNPX
-         mxHrNWE8VpNOewsQzcZ3L45rWfHMxkTP/dzWyRTWt+TZOOwPzK22dVE23uPWRHKOJc38
-         UcNbDB5ip+RMYzpOOS0lMEp+AbIZbcKraFnQbFdtVJtFSQ9o363asJC1NTbR+hV/Mdyf
-         3xsCg3RiHl9woJEyCZAAf2bMVRoVH+lfTK+tQ76kHr+z793Dtq2C3/da3vCKEbdWVitN
-         aBjV5hsdAYEMDspICRIGBKFA0l2L2YTrAuFoEV3K4vWyMCYE/0CCGrBeU8lL8qGjNXiW
-         08Mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743086344; x=1743691144;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u82ONPXPU91yIttrfyA9Tihmj4fGNtFwpkyHVRCFmYA=;
-        b=F3Iu6i5Bh1rIPeGeyeaYXle+tBj235ucm6igTL7MRwv6r6hZqQ8oS6JEsSA0yEE1M6
-         mSXANiHz0zovSJCaCSFBd8PkNTPwfNe1BGRH9tQcqZ+SFBkzeO/3n7thcMrACzhGDu/Z
-         slBO/aGZYoILniLFBXY/uNW8ek2dVRn4yCqXAlyTnCIrz8v7ypv371KtcHTsgPH/cvzX
-         IF0YoaU3XWcU5IBw+2TOhmPEU+DrWmBur/P4ErDVvE8Wi7I4ycYf9NSPzRuTaFi0uPsa
-         e6Q0VuYdAISs4KSa/qvXdHPshGxevb1+f/FFGpOINqbEAv7HQwX9xsJA5/0TIaV+3ygs
-         Jznw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1mkMcccBwiT69PdxTJ3a7EoelRsUZ2ZxSnJo9Y1cHNReEI4Gzr97nYG4keetb5kaS3187/GJ+@vger.kernel.org, AJvYcCVHeTg6dsoR8xgGe7IPH5Hen4JeoRPNCMz0eT+ulO0VSK2Pz8zm2vfB+6bwhWzQhEpZHkULdFMb/s61cbGF@vger.kernel.org
-X-Gm-Message-State: AOJu0YygoCBJ/C4PywCm0ntVv5PicqTkJH/tzeOtAFDV3nSpAqZhJ8LD
-	8UWu+cojONEFcdtYyi98HBNcnakugNQf1RWUaucrsI0bHnPewzBH
-X-Gm-Gg: ASbGncs9hOVZUG6PGpqh78Mzf6aa+7n5D5tSlUKPt+uHbeK2jjr+hQHbGaTQ6OWlJbo
-	F2FbRrj0Ol4I3HV9mPDQrrsYb9IAGSenOWNLCyt0SnWTV6dSuzz4noc6RI+47vlBPcdubOx2EX7
-	VWZ+/JIJqnMMk/oZNMYFN8WwaUYUjVH6T3eiovvvupDnghF00UqWuHSWOEQWQtscYkJer3neYD1
-	1A21whjGIUA9WQLLAj/dFMk9gUAWA5qlRiKSHYFE1CrgvtpjLatIYfKlEsP8S+fR4LipEBMMksK
-	1i4tYaODYzY+E4t57fHUEYFrheP86bijd6AludPwlcChd66sVJvPgHI/kg==
-X-Google-Smtp-Source: AGHT+IHIYyxBLsfyfwB72W3HrvPr9/6S85TLty5UHu4H+YbkreFKm3JMZPvoIHJpmVfVuy6D/+deUQ==
-X-Received: by 2002:a05:6000:1889:b0:391:48d4:bcf2 with SMTP id ffacd0b85a97d-39ad1749a44mr3201709f8f.12.1743086343393;
-        Thu, 27 Mar 2025 07:39:03 -0700 (PDT)
-Received: from f (cst-prg-15-56.cust.vodafone.cz. [46.135.15.56])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9e6539sm20191479f8f.77.2025.03.27.07.38.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 07:39:02 -0700 (PDT)
-Date: Thu, 27 Mar 2025 15:38:50 +0100
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Greg Thelen <gthelen@google.com>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Eric Dumazet <edumzaet@google.com>, cgroups@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>
-Subject: Re: [PATCH] cgroup/rstat: avoid disabling irqs for O(num_cpu)
-Message-ID: <2vznaaotzkgkrfoi2qitiwdjinpl7ozhpz7w6n7577kaa2hpki@okh2mkqqhbkq>
-References: <20250319071330.898763-1-gthelen@google.com>
- <u5kcjffhyrjsxagpdzas7q463ldgqtptaafozea3bv64odn2xt@agx42ih5m76l>
- <Z9r8TX0WiPWVffI0@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WBV24t6e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC9E4C4CEDD;
+	Thu, 27 Mar 2025 14:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743086414;
+	bh=xLojPGVZuKTt2T24et9s0pONVfQDrJThoOxlvufCtd4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WBV24t6e4qika/ZQS+tyW6B3U/U0XkMB/HQ+aVjR8QunDh47/Arl+KSULt3Egbd0e
+	 auAPkY54FvT+5SV8s6UQs0FlWTLAZVfMcSNHC5SPzCJ3ZwWKoThP0XGpeSBtCZ7z25
+	 46tFOmjujK43S/2vTsduvvtxgmvLukWYX+KMepOvQw4Z+rGDIm8++oWLfNzvSvbFF8
+	 ENYMV1+QPBaNO8N24KBY9T62kSshmYVlcCwVRSd6V1nYQrPOVPp2MOqixmtR/1Q7I0
+	 kDiWHt5Vxw3vsJKsgidrT+vL7GTpoqx45/i5V/ZMCwwDgFebEnToo53FsHB6RjwbNU
+	 kEZih7H4TxZqw==
+Date: Thu, 27 Mar 2025 15:40:06 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Rob Herring <robh@kernel.org>, Dirk Behme <dirk.behme@de.bosch.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 07/10] rust: Add arrayvec
+Message-ID: <Z-VjRmiWDj6teoFL@cassiopeiae>
+References: <20250326171411.590681-1-remo@buenzli.dev>
+ <20250326171411.590681-8-remo@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="fqcrruvxc7rr34k3"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z9r8TX0WiPWVffI0@google.com>
+In-Reply-To: <20250326171411.590681-8-remo@buenzli.dev>
 
+On Wed, Mar 26, 2025 at 06:13:46PM +0100, Remo Senekowitsch wrote:
+> This patch is basically a proof of concept intendend to gather feedback
+> about how to do this properly. Normally I would want to use the crate
+> from crates.io[1], but that's not an option in the kernel. We could also
+> vendor the entire source code of arrayvec. I'm not sure if people will
+> be happy with that.
 
---fqcrruvxc7rr34k3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Do we really need this? The only user in this series I could spot was
+property_get_reference_args(). And I think that with a proper abstraction of
+struct fwnode_reference_args we could avoid to copy memory at all.
 
-On Wed, Mar 19, 2025 at 05:18:05PM +0000, Yosry Ahmed wrote:
-> On Wed, Mar 19, 2025 at 11:47:32AM +0100, Mateusz Guzik wrote:
-> > Is not this going a little too far?
-> > 
-> > the lock + irq trip is quite expensive in its own right and now is
-> > going to be paid for each cpu, as in the total time spent executing
-> > cgroup_rstat_flush_locked is going to go up.
-> > 
-> > Would your problem go away toggling this every -- say -- 8 cpus?
+If it turns out we actually need something like this, I'd prefer to move it to
+rust/kernel/alloc/ and see if it's worth to derive a common trait that maybe can
+share a few things between ArrayVec and Vec.
+
 > 
-> I was concerned about this too, and about more lock bouncing, but the
-> testing suggests that this actually overall improves the latency of
-> cgroup_rstat_flush_locked() (at least on tested HW).
+> [1] https://crates.io/crates/arrayvec
 > 
-> So I don't think we need to do something like this unless a regression
-> is observed.
+> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+> ---
+>  rust/kernel/arrayvec.rs | 81 +++++++++++++++++++++++++++++++++++++++++
+>  rust/kernel/lib.rs      |  1 +
+>  2 files changed, 82 insertions(+)
+>  create mode 100644 rust/kernel/arrayvec.rs
 > 
+> diff --git a/rust/kernel/arrayvec.rs b/rust/kernel/arrayvec.rs
+> new file mode 100644
+> index 000000000..041e7dcce
+> --- /dev/null
+> +++ b/rust/kernel/arrayvec.rs
+> @@ -0,0 +1,81 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Provides [ArrayVec], a stack-allocated vector with static capacity.
+> +
+> +use core::mem::MaybeUninit;
+> +
+> +/// A stack-allocated vector with statically fixed capacity.
+> +///
+> +/// This can be useful to avoid heap allocation and still ensure safety where a
+> +/// small but dynamic number of elements is needed.
+> +///
+> +/// For example, consider a function that returns a variable number of values,
+> +/// but no more than 8. In C, one might achieve this by passing a pointer to
+> +/// a stack-allocated array as an out-parameter and making the function return
+> +/// the actual number of elements. This is not safe, because nothing prevents
+> +/// the caller from reading elements from the array that weren't actually
+> +/// initialized by the function. `ArrayVec` solves this problem, users are
+> +/// prevented from accessing uninitialized elements.
+> +///
+> +/// This basically exists already (in a much more mature form) on crates.io:
+> +/// <https://crates.io/crates/arrayvec>
+> +#[derive(Debug)]
+> +pub struct ArrayVec<const N: usize, T> {
+> +    array: [core::mem::MaybeUninit<T>; N],
+> +    len: usize,
+> +}
+> +
+> +impl<const N: usize, T> ArrayVec<N, T> {
+> +    /// Adds a new element to the end of the vector.
+> +    ///
+> +    /// # Panics
+> +    ///
+> +    /// Panics if the vector is already full.
+> +    pub fn push(&mut self, elem: T) {
+> +        if self.len == N {
+> +            panic!("OOM")
 
-To my reading it reduces max time spent with irq disabled, which of
-course it does -- after all it toggles it for every CPU.
-
-Per my other e-mail in the thread the irq + lock trips remain not cheap
-at least on Sapphire Rapids.
-
-In my testing outlined below I see 11% increase in total execution time
-with the irq + lock trip for every CPU in a 24-way vm.
-
-So I stand by instead doing this every n CPUs, call it 8 or whatever.
-
-How to repro:
-
-I employed a poor-man's profiler like so:
-
-bpftrace -e 'kprobe:cgroup_rstat_flush_locked { @start[tid] = nsecs; } kretprobe:cgroup_rstat_flush_locked /@start[tid]/ { print(nsecs - @start[tid]); delete(@start[tid]); } interval:s:60 { exit(); }'
-
-This patch or not, execution time varies wildly even while the box is idle.
-
-The above runs for a minute, collecting 23 samples (you may get
-"lucky" and get one extra, in that case remove it for comparison).
-
-A sysctl was added to toggle the new behavior vs old one. Patch at the
-end.
-
-"enabled"(1) means new behavior, "disabled"(0) means the old one.
-
-Sum of nsecs (results piped to: awk '{ sum += $1 } END { print sum }'):
-disabled:	903610
-enabled:	1006833 (+11.4%)
-
-Toggle at runtime with:
-sysctl fs.magic_tunable=0 # disabled, no mandatory relocks
-sysctl fs.magic_tunable=1 # enabled, relock for every CPU
-
-I attached the stats I got for reference.
-
-I patched v6.14 with the following:
-diff --git a/fs/file_table.c b/fs/file_table.c
-index c04ed94cdc4b..441f89421413 100644
---- a/fs/file_table.c
-+++ b/fs/file_table.c
-@@ -106,6 +106,8 @@ static int proc_nr_files(const struct ctl_table *table, int write, void *buffer,
- 	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
- }
- 
-+unsigned long magic_tunable;
-+
- static const struct ctl_table fs_stat_sysctls[] = {
- 	{
- 		.procname	= "file-nr",
-@@ -123,6 +125,16 @@ static const struct ctl_table fs_stat_sysctls[] = {
- 		.extra1		= SYSCTL_LONG_ZERO,
- 		.extra2		= SYSCTL_LONG_MAX,
- 	},
-+	{
-+		.procname	= "magic_tunable",
-+		.data		= &magic_tunable,
-+		.maxlen		= sizeof(magic_tunable),
-+		.mode		= 0644,
-+		.proc_handler	= proc_doulongvec_minmax,
-+		.extra1		= SYSCTL_LONG_ZERO,
-+		.extra2		= SYSCTL_LONG_MAX,
-+	},
-+
- 	{
- 		.procname	= "nr_open",
- 		.data		= &sysctl_nr_open,
-diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-index 3e01781aeb7b..f6444bf25b2f 100644
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -299,6 +299,8 @@ static inline void __cgroup_rstat_unlock(struct cgroup *cgrp, int cpu_in_loop)
- 	spin_unlock_irq(&cgroup_rstat_lock);
- }
- 
-+extern unsigned long magic_tunable;
-+
- /* see cgroup_rstat_flush() */
- static void cgroup_rstat_flush_locked(struct cgroup *cgrp)
- 	__releases(&cgroup_rstat_lock) __acquires(&cgroup_rstat_lock)
-@@ -323,12 +325,18 @@ static void cgroup_rstat_flush_locked(struct cgroup *cgrp)
- 			rcu_read_unlock();
- 		}
- 
--		/* play nice and yield if necessary */
--		if (need_resched() || spin_needbreak(&cgroup_rstat_lock)) {
-+		if (READ_ONCE(magic_tunable)) {
- 			__cgroup_rstat_unlock(cgrp, cpu);
- 			if (!cond_resched())
- 				cpu_relax();
- 			__cgroup_rstat_lock(cgrp, cpu);
-+		} else {
-+			if (need_resched() || spin_needbreak(&cgroup_rstat_lock)) {
-+				__cgroup_rstat_unlock(cgrp, cpu);
-+				if (!cond_resched())
-+					cpu_relax();
-+				__cgroup_rstat_lock(cgrp, cpu);
-+			}
- 		}
- 	}
- }
-
-
---fqcrruvxc7rr34k3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: attachment; filename=disabled
-
-69869
-30473
-64670
-30544
-30950
-36445
-36235
-29920
-51179
-35760
-33424
-42426
-30177
-31211
-44974
-34450
-37871
-72642
-33016
-29518
-31800
-35730
-30326
-
---fqcrruvxc7rr34k3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: attachment; filename=enabled
-
-63507
-50113
-36280
-35148
-63329
-41232
-51265
-41341
-41418
-42824
-35200
-35550
-54684
-41597
-55325
-36120
-48675
-41179
-39339
-35794
-38826
-37411
-40676
-
---fqcrruvxc7rr34k3--
+Please do not panic, this should return a Result instead.
