@@ -1,72 +1,104 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from mail-gw01.astralinux.ru (mail-gw01.astralinux.ru [37.230.196.243])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E842D14B086
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 15:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C42154423;
+	Thu, 27 Mar 2025 15:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.230.196.243
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743088708; cv=none; b=ZL2nCE1vMOOK85LX1qsotY3Rf9dBLrXeuJCTQwJ9UYb25MHI1IVRDtAV3VWwBR8Ppjgma7k5D0s5IiPJquhQawofC8mG90Shr8Dhka9Dd0BFa6J067oxaGf0wwGaqygPh9V0cainhLO40/+jUIyHKuE67EKkUsUzs6iKl9hAY6s=
+	t=1743088789; cv=none; b=gx+JNs++r2G7nU4THI7KH5bXLm52blEQivWe8x0GYCrfN52NufoFVxZJjz0148A7H+9YB5dMfXuHgg3bqkJ1l8OHHSXqadMqlLc52vgbE61VASKQWASeLM5TY4LKNYO7IjWopUrFIz+q0TNvSltArlZMi2AvBhRlcuC+gOwG4uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743088708; c=relaxed/simple;
-	bh=cuXhFi0Q684q6VshDzUdKpFdR+RV+8fRiFoEpDex4D0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HflxmNcsPa3iQ9f1S+fVwqSrHsspiK0EKlvJoWVSNzJ7AZ4K8uqzIwJwaSWfBYlt3P7Q59QhxELj0yKEe716m9pI6Dwx3nkyB/V6YTIBSA3z01mlvDYlI0aH9Y1+VV5RfpUmno5fdRNA1bt0Gj3hr6jZ0sYZEkVwh/6Pjjc6hME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PmuwjzXX; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PmuwjzXX"
-Date: Thu, 27 Mar 2025 11:18:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743088694;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H4r0xKcuNd6rmrfcOvXl1NVqKbWkKKqNx07ftAXypj8=;
-	b=PmuwjzXXeowyZ4w6q1ob01dqRx4cc6mms8NBU1RkOHa5u+e//eyGxVeR78Y/y1Zew0iHiw
-	mVi4Sgxz8Bi/Pet8lvfD3fQSOrk+E+18iox0CD/bA4KRb2TyoVw19QQ7qD6Sz4tG2XXhND
-	VH9CJi4vxi97c9UWjNSzzAOPrRD8jJU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Roxana Nicolescu <nicolescu.roxana@protonmail.com>
-Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	mmpgouride@gmail.com, skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH v2 0/2] Use memcpy_and_pad for jset_entry_log->d init
-Message-ID: <vcyvvmuykkf2jylq7rlqzprmtoz3i5rc4cdro7zohg5n42toz4@3mmabyzvfkge>
-References: <20250327144956.1974622-1-nicolescu.roxana@protonmail.com>
+	s=arc-20240116; t=1743088789; c=relaxed/simple;
+	bh=3rM1KS2GRjTxilLprollGDmQ/AJkW8LBlNp4xdN0E6M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a1l4ZrdBY1sDN/atLlCpnBfNoHjvjtMd6TUjz8eHjSnnubBxLhOCvEep0X5NparaZweUj4CuHDSJpe4newBwXlYNWhFr0lsESzkrj7H5iT2kfTazWEGDln/OC0GVouWhmgO3Pb+A9Vfd4rCRZ4nSYCXRK9vqNnb6/Y3ChlxgTAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=37.230.196.243
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+Received: from gca-sc-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
+	by mail-gw01.astralinux.ru (Postfix) with ESMTP id 20F3A24C9C;
+	Thu, 27 Mar 2025 18:13:23 +0300 (MSK)
+Received: from new-mail.astralinux.ru (gca-yc-ruca-srv-mail03.astralinux.ru [10.177.185.108])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-gw01.astralinux.ru (Postfix) with ESMTPS;
+	Thu, 27 Mar 2025 18:13:21 +0300 (MSK)
+Received: from localhost.localdomain (unknown [10.198.57.252])
+	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4ZNnGk69ZYz1h0PW;
+	Thu, 27 Mar 2025 18:13:18 +0300 (MSK)
+From: Tigran Sogomonian <tsogomonian@astralinux.ru>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Tigran Sogomonian <tsogomonian@astralinux.ru>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH RFC] renesas: add zero check for prate variable
+Date: Thu, 27 Mar 2025 18:10:44 +0300
+Message-ID: <20250327151109.9648-1-tsogomonian@astralinux.ru>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327144956.1974622-1-nicolescu.roxana@protonmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Envelope-From: tsogomonian@astralinux.ru
+X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;astralinux.ru:7.1.1;new-mail.astralinux.ru:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 192165 [Mar 27 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/03/27 06:17:00 #27830093
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 1
 
-On Thu, Mar 27, 2025 at 02:49:58PM +0000, Roxana Nicolescu wrote:
-> This replaces the depracated usage of strncpy with memcpy_and_pad when
-> used for initializing the d buffer of the struct jset_entry_log.
-> 
-> The other 2 usage of memcpy were also replaced by memcpy_and_pad.
-> 
-> Changes since v1:
-> - since the dest buffer is not required to be NULL-terminated,
->   memcpy_and_pad is used instead of strscpy. This adds zeros at the end
->   of the buffer if there's extra room.
-> - the same mechanism was done before in both __bch2_fs_log_msg() and
-> bch2_trans_log_msg by zero-ing out the src buffer. The second patch
-> replaces that logic with memcpy_and_pad to provide uniformity.
-> 
-> Roxana Nicolescu (2):
->   bcachefs: replace strncpy() with memcpy_and_pad in
->     journal_transaction_name
->   bcachefs: replace memcpy with memcpy_and_pad for jset_entry_log->d
->     buff
-> 
->  fs/bcachefs/btree_trans_commit.c | 3 ++-
->  fs/bcachefs/btree_update.c       | 8 +++-----
->  2 files changed, 5 insertions(+), 6 deletions(-)
+To avoid division by zero, a check was added to the prate
+variable, since no guarantees were found that it could not
+be equal to zero.
 
-Thanks, series is applied.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Signed-off-by: Tigran Sogomonian <tsogomonian@astralinux.ru>
+---
+ drivers/clk/renesas/rcar-gen3-cpg.c | 2 ++
+ drivers/clk/renesas/rcar-gen4-cpg.c | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/drivers/clk/renesas/rcar-gen3-cpg.c b/drivers/clk/renesas/rcar-gen3-cpg.c
+index 027100e84ee4..66da3b4398cd 100644
+--- a/drivers/clk/renesas/rcar-gen3-cpg.c
++++ b/drivers/clk/renesas/rcar-gen3-cpg.c
+@@ -205,6 +205,8 @@ static int cpg_z_clk_determine_rate(struct clk_hw *hw,
+ 						  prate * zclk->fixed_div);
+ 
+ 	prate = req->best_parent_rate / zclk->fixed_div;
++	if (prate == 0)
++		return -EINVAL;
+ 	min_mult = max(div64_ul(req->min_rate * 32ULL, prate), 1ULL);
+ 	max_mult = min(div64_ul(req->max_rate * 32ULL, prate), 32ULL);
+ 	if (max_mult < min_mult)
+diff --git a/drivers/clk/renesas/rcar-gen4-cpg.c b/drivers/clk/renesas/rcar-gen4-cpg.c
+index 31aa790fd003..4c9a7d699290 100644
+--- a/drivers/clk/renesas/rcar-gen4-cpg.c
++++ b/drivers/clk/renesas/rcar-gen4-cpg.c
+@@ -308,6 +308,8 @@ static int cpg_z_clk_determine_rate(struct clk_hw *hw,
+ 						  prate * zclk->fixed_div);
+ 
+ 	prate = req->best_parent_rate / zclk->fixed_div;
++	if (prate == 0)
++		return -EINVAL;
+ 	min_mult = max(div64_ul(req->min_rate * 32ULL, prate), 1ULL);
+ 	max_mult = min(div64_ul(req->max_rate * 32ULL, prate), 32ULL);
+ 	if (max_mult < min_mult)
+-- 
+2.47.1
+
