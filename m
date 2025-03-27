@@ -1,159 +1,92 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66561E98EC;
-	Thu, 27 Mar 2025 13:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98BA42147F1
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 13:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743081273; cv=none; b=lxJ/IsJCjxmFdAe+ZBXHUtu+DWrTL8fkOkGxudaoNa3WWmqgEEQrdYYSgwjaXfgF3/QJmYZkNw/4oOc8d4NQP+twsY3qfNRhtCD6OZDbQgUvOp9tbm09C0fsBoRjDvwVFScaOBGzFxr0pYgQLVLI2YtUtflfJcNUQ/ThDp0oIXM=
+	t=1743081302; cv=none; b=bwRoSAzMCirLNOjK3rMgSyVkpaBN9HYzOkvh50y+tDdtynRBPZZT+V3Ity1aUjVpNCinok3fuv2l+86QJRA1hZMsMVU1OaZSj/7/eKwKnNXogLiPztWExpAnvwkogZDdBRFJy0+NWCeFeclMnUgg+3LsO12EfMTXPmjBhyQr2Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743081273; c=relaxed/simple;
-	bh=BPY/l5DCooBOnd2duEJQni/suWmytJExjLNYTcbLjdI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KU4S5To/8GLzsoATQLBQ/kWKlB/maQIsZDUPigAkG7Ftvc+VbifYeOZvF7YQSiPA1f7fuRmpWOK5yUFBiHZflCqZcKRnwU7GxBk0wtLhZuUjUuz5qu9Tst3Mo1KV+KGqbyzlfetEYWkwI0S5PKMpiwtUVOveD8U1MCYxiacG6lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Pl2+sj8+; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1743081302; c=relaxed/simple;
+	bh=1yFaZYqvcYDNJh0PGTwxZFRauzLSSfkjQfMqN8JuhOw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=g5JHXNycX8u5cAHthp5pFcP7v8RMIhMOVIGFLLQ25CbmsjlpmcceiOP7GVyZxT5iZrev53vVPrkJkyEbnO6m0LIu2UxX3nv19VkHappMu5dSjfx50H8e3rMZ5cHM/8xKLOADXZMJCQPvxCUUqaEX25ndgdZZWYiLfy1ElQbyYpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vBnWkEx2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Jl6Rl6FI; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Pl2+sj8+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=xd0Le9uNqc8iLeDsVGU9xvTYo37Co9fJowBFqoxOwKg=; b=Pl2+sj8+HxF9sbnbAkv6TbuvR3
-	j2kjve1wh1KP7gKNFrylM0AFjGDDcuwIJH7+T0KGeL1inglPb60L7FLqWkKS1tPYnbU51PPJdsk0J
-	Ocab63LddNV6acIOvYEC+0Ds5A4r7kaVcMO0n+dnLJOZ/Fmw65QLPXtffNgVvGyht578=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1txn3s-007Hlc-IF; Thu, 27 Mar 2025 14:14:20 +0100
-Date: Thu, 27 Mar 2025 14:14:20 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Manikandan.M@microchip.com
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev, tudor.ambarus@linaro.org,
-	pratyush@kernel.org, mwalle@kernel.org, miquel.raynal@bootlin.com,
-	richard@nod.at, vigneshr@ti.com, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v2 3/3] ARM: dts: microchip: sama5d29_curiosity: Add
- nvmem-layout in QSPI for EUI48 MAC Address
-Message-ID: <807f29fe-2fe1-455b-8357-4caafc45090e@lunn.ch>
-References: <20250326072140.172244-1-manikandan.m@microchip.com>
- <20250326072140.172244-4-manikandan.m@microchip.com>
- <eed1531a-353a-4244-a10a-95e67c8416ae@lunn.ch>
- <906d596b-391b-43ec-8654-38de64f043f1@microchip.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vBnWkEx2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jl6Rl6FI"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743081298;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JUx68NoJVcmegmS//LLZAzu2/GU40CRk3xOu5dI0Fug=;
+	b=vBnWkEx2G0gw/bZeWZBxLwL7e3dlti7KImGKbpbD8b0Z8yqPE9GRmw0PKF1uNG6SxffFHz
+	OaIBrcEa0Bo+ks140cPOAu0jsS6jEqx1Rq8jqrDa8+lfenCBAtj9P/EQkeCmaMvg1Z/Y+n
+	MhLt4ZCdbyQN+lxG425OsR2XFt7H6vPYk5MFdzh7v3R425MYy3Peq6bvQyn87mUh0yRZGB
+	iFKFnFno17C1QhBaQsYqAtCPnBTcJXEivW40f4n3je7oalld+EMpyt5ogBffXKMY0CPTnr
+	24Ax3LdUKObrPNB1G0pglcc55xgaogYHhbZsTPZ7i2YcJBj370D/AnuCTWwbjw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743081298;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JUx68NoJVcmegmS//LLZAzu2/GU40CRk3xOu5dI0Fug=;
+	b=Jl6Rl6FIa4GjE4ERVTvXTc5M6kNny5VamJxlrDGqWQnoQvzPWSRn4LUhdCScALiGUH0K8d
+	qVYMIn6KlFuZM7DQ==
+To: Eric Dumazet <edumazet@google.com>
+Cc: Mateusz Guzik <mjguzik@gmail.com>, kernel test robot
+ <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com,
+ linux-kernel@vger.kernel.org, x86@kernel.org, Benjamin Segall
+ <bsegall@google.com>, Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [tip:timers/core] [posix] 1535cb8028:
+ stress-ng.epoll.ops_per_sec 36.2% regression
+In-Reply-To: <CANn89iJvxYsF0Y9jH+Oa2=akrydR8qbWAMbz_S6YZQMSe=2QWQ@mail.gmail.com>
+References: <202503241406.5c9cb80a-lkp@intel.com> <87pli4z02w.ffs@tglx>
+ <6sn76aya225pqikijue5uv5h3lyqk262hc6ru3vemn7xofdftd@sw7gith52xh7>
+ <CANn89iKjCgmxtiLeVAiXODHbbR7=gYYi5cfAS1hS5qn+z=-o1Q@mail.gmail.com>
+ <877c4azyez.ffs@tglx>
+ <CANn89iKAkio9wm73RNi9+KngNaS+Au2oaf0Tz9xOd+QEhFSkyw@mail.gmail.com>
+ <CANn89i+nAN+p-qRypKxB4ESohXkKVPmHuV_m86j3DPv6_+C=oQ@mail.gmail.com>
+ <87v7ruycfz.ffs@tglx>
+ <CANn89iJvxYsF0Y9jH+Oa2=akrydR8qbWAMbz_S6YZQMSe=2QWQ@mail.gmail.com>
+Date: Thu, 27 Mar 2025 14:14:58 +0100
+Message-ID: <87jz8ay5rh.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <906d596b-391b-43ec-8654-38de64f043f1@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 27, 2025 at 06:03:05AM +0000, Manikandan.M@microchip.com wrote:
-> Hi Andrew Lunn,
-> 
-> On 26/03/25 6:48 pm, Andrew Lunn wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> > 
-> > On Wed, Mar 26, 2025 at 12:51:40PM +0530, Manikandan Muralidharan wrote:
-> >> Add nvmem-layout in QSPI to read the EUI48 Mac address by the
-> >> net drivers using the nvmem property.The offset is set to 0x0
-> >> since the factory programmed address is available in the
-> >> resource managed space and the size determine if the requested
-> >> address is of EUI48 (0x6) or EUI-64 (0x8) type.
-> >> This is useful for cases where U-Boot is skipped and the Ethernet
-> >> MAC address is needed to be configured by the kernel
-> >>
-> >> Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
-> >> ---
-> >>   .../arm/boot/dts/microchip/at91-sama5d29_curiosity.dts | 10 ++++++++++
-> >>   1 file changed, 10 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/microchip/at91-sama5d29_curiosity.dts b/arch/arm/boot/dts/microchip/at91-sama5d29_curiosity.dts
-> >> index 35756cc01e68..6c5ff08f0b3f 100644
-> >> --- a/arch/arm/boot/dts/microchip/at91-sama5d29_curiosity.dts
-> >> +++ b/arch/arm/boot/dts/microchip/at91-sama5d29_curiosity.dts
-> >> @@ -478,6 +478,16 @@ flash@0 {
-> >>                label = "atmel_qspi1";
-> >>                status = "okay";
-> >>
-> >> +             nvmem-layout {
-> >> +                     compatible = "fixed-layout";
-> >> +                     #address-cells = <1>;
-> >> +                     #size-cells = <1>;
-> >> +
-> >> +                     mac_address_eui48: mac-address@0 {
-> >> +                             reg = <0x0 0x6>;
-> >> +                     };
-> >> +             };
-> >> +
-> > 
-> > I've not looked too deeply how this all works. Don't you need a
-> > reference in the ethernet node pointing to this?
-> Yes we need a reference to 'mac_address_eui48' using nvmem-cells in the 
-> Ethernet node, since the sama5d29_curiosity uses a daughter card for PHY 
-> [1], the DTS properties are defined in overlay files. Here is the quick 
-> usage of the nvmem ref in the ethernet node:
-> 	macb0 {
-> 		nvmem-cells = <&mac_address_eui48>;
-> 		nvmem-cell-names = "mac-address";
-> 		
-> 		phy {
-> 
-> 		};
-> 	};
+On Thu, Mar 27 2025 at 12:37, Eric Dumazet wrote:
+> On Thu, Mar 27, 2025 at 11:50=E2=80=AFAM Thomas Gleixner <tglx@linutronix=
+.de> wrote:
+>> Cute. How much bloat does it cause?
+>
+> This would expand 'struct ucounts' by 192 bytes on x86, if the patch
+> was actually working :)
+>
+> Note sure if it is feasible without something more intrusive like
 
-So why are you not adding this as part of this patch?
+I'm not sure about the actual benefit. The problem is that parallel
+invocations which access the same ucount still will run into contention
+of the cache line they are modifying.
 
-> > And are there ordering issues? Boards used to use the MAC address from
-> > somewhere else now start using this address, causing a change in
-> > behaviour. I would expect somewhere a comment that this MAC address
-> > will be used last, after all other options have been tried, in order
-> > to avoid regressions.
-> > 
-> The order of search is documented in of_get_mac_address() in 
-> net/core/of_net.c file
-> 
-> The driver attempts to retrieve the MAC address through a hierarchical 
-> approach: first checking device tree properties, then exploring NVMEM 
-> cells, followed by the U-Boot 'ethaddr' environment variable. If no 
-> valid MAC address is found through these methods, the driver will 
-> generate a random but valid MAC address as a final fallback mechanism.
+For the signal case, all invocations increment rlimit[SIGPENDING], so
+putting that into a different cache line does not buy a lot.
 
-This is not quite correct. macb first uses
-of_get_ethdev_address()->of_get_mac_address() which looks for DT
-properties:
+False sharing is when you have a lot of hot path readers on some other
+member of the data structure, which happens to share the cache line with
+the modified member. But that's not really the case here.
 
-	ret = of_get_mac_addr(np, "mac-address", addr);
-	if (!ret)
-		return 0;
+Thanks,
 
-	ret = of_get_mac_addr(np, "local-mac-address", addr);
-	if (!ret)
-		return 0;
-
-	ret = of_get_mac_addr(np, "address", addr);
-	if (!ret)
-		return 0;
-
-And then it looks in nvram.
-
-	return of_get_mac_address_nvmem(np, addr);
-
-If they all fail, it uses macb_get_hwaddr() which looks in 4 different
-locations within the macb register set.
-
-Then lastly it uses a random MAC address.
-
-So with your proposed change, anybody using the curiosity board and
-this last mechanism to set the MAC address sees a change in behaviour,
-it will start using nvram instead. You should at least document this,
-and if possible, argue that nobody is using this last mechanism
-because ....
-
-	Andrew
+        tglx
