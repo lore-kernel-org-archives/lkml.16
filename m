@@ -1,114 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D191A3150;
-	Thu, 27 Mar 2025 17:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6CE1A3150;
+	Thu, 27 Mar 2025 17:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743097756; cv=none; b=itsp95FSskg1a1IH/30eO4GiWVdgHni2fe2yPwl+/EiihRfaYmM139J+SW2VoZ+9tkNm00lzKs02QHUjwWvtMOEgWCs71wCLZseCm0NHLz6mr1dES0bLRDd1ZPpPF6OuRTiX5kYjg1XWoMnscdQib7ArotJ0CRcefUAVNMtQjdU=
+	t=1743097761; cv=none; b=pBiyFYdrMo//g1LvPjMBhpo825EFc8ImBkf+m6oNjg/M47+TPEv0+QM1si5mH+aaZnQsi9dPOuayd1bWWpM/U8c3PBKJz/rcJCxIWvyVXcR0JR8ppYiy+UVXf7JsncPVkLn3sWJIbF9V6KpDDpwG9nZqndLZFB48y6JNOwxYcQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743097756; c=relaxed/simple;
-	bh=HQ/FzZVtjQERReDmzXONMLGbORUdtOvwHc5UTpdvpxc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MlVIMWg1ii3JGEEhNV4kOCHG/g0YYe9mKad7vNa+bF3sbllc+LpZ8w8osrqt3x/iPqO1cA8bu98wBKBQOPvuZKG8WnbG8FwAAbgTMvqXpz3GJThxtziDUFjSiaz2pu7gfnqDT/zCrvJ20ydKqPgytnj0moG48BY4tpbzwFQw2LU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D840APvf; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743097761; c=relaxed/simple;
+	bh=O8pI+MMS3knvZUJCiDN0yAntRL5g+pLumMSu3lVOfDg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=uA0gUlP2LbjKrvN2Ct4dXvjFIpNyUYiZJZoV4I4C47qgQWDCwHDN/ORNqUqDgXCtg5cZD0ZTQDXEVTFpetK7ZhsETRF59N8BYfHqekaXiYFyXVeebDjfKNtYfFfQjE1ZWfXcgnotXuT7MYfIrk6C5cSAF6JatA0j3Ov7kxUmFoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BPr/f8sE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D840APvf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743097754; x=1774633754;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=HQ/FzZVtjQERReDmzXONMLGbORUdtOvwHc5UTpdvpxc=;
-  b=D840APvfNVSXm4ML9mH/yW2c/f8mfBO4jJ+RMy88vTOtwiV4JMO9hmzB
-   1Pa0P9S6CD4IhoLF4KP9YcqCk3IgTLQZZvJ75XjZieVUyUoeJhlx5QVmO
-   EAG80NO6NJXbWWbuTfK35EGfiZ0dJiSufItcpmhj8mUSeWbl3GDLpYFYn
-   Aw1Tk56Fi/2pqMv1Y/n1g2fapGeUqPN5EWLJABADshAPrNK67okmd/P2N
-   oUZiLcLfptRBK7oAqtkZYweSlvyYLMBa7i8G8ifN06gOoAyJ2dpwvpPEU
-   y+COob7U82PZMEw+1E+lWgtZsN9Op/7gdCzfpiiVQB63tECXli+gSbUrV
-   A==;
-X-CSE-ConnectionGUID: qHBuWnODSMGnhEV96QDATg==
-X-CSE-MsgGUID: FaI1B/9ySC6cEah4FN1X5A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="66917216"
-X-IronPort-AV: E=Sophos;i="6.14,281,1736841600"; 
-   d="scan'208";a="66917216"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 10:49:14 -0700
-X-CSE-ConnectionGUID: ysmv07ksQC2FCgRw2Cr6Cw==
-X-CSE-MsgGUID: YS9fTSY5RcyHPGEzYIJgpw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,281,1736841600"; 
-   d="scan'208";a="148393660"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 10:49:09 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1txrLl-00000006VGp-16M8;
-	Thu, 27 Mar 2025 19:49:05 +0200
-Date: Thu, 27 Mar 2025 19:49:05 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Remo Senekowitsch <remo@buenzli.dev>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Dirk Behme <dirk.behme@de.bosch.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 01/10] rust: Move property_present to property.rs
-Message-ID: <Z-WPkSJRO6_SrOz-@smile.fi.intel.com>
-References: <20250326171411.590681-1-remo@buenzli.dev>
- <20250326171411.590681-2-remo@buenzli.dev>
- <Z-UOUKq8GKZM1wuo@smile.fi.intel.com>
- <CAL_JsqKY17zfLo5rUd9zvO46M1_dR0-V1X-d-NmsO+exDbGY5A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BPr/f8sE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A148C4CEDD;
+	Thu, 27 Mar 2025 17:49:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743097760;
+	bh=O8pI+MMS3knvZUJCiDN0yAntRL5g+pLumMSu3lVOfDg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=BPr/f8sECzBu3UVIwKgdpiczyIr0nbgShfIBE2wbEf4Npe6Xx22SX51L1sCP5xMwX
+	 hAzdzd/44SjLW2D7wz2JzpH5fqcuCw7gx+XU7AdtolWuXHbbQcLu48CFDVcFei3KiK
+	 kNAZVUYq1d6U9r49W++HIhG6ymjB9BEfkAVOh9AInV71z/V4+rCPcnZa9mDJ/DgS+N
+	 8i0tPXZJ7oBi5AE0CMNJKkj29LILlntvCZtyPVGpiBeta6PFq1rYZxNGkafeyarXYn
+	 Ne8SLeXvFk+yH6aRZJto75sSEC+tqcon/gmjuT9P3A9fL79PqgEGESwUm3RZ/hC/oQ
+	 trm4sVdwWiUtQ==
+Date: Thu, 27 Mar 2025 12:49:19 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Bowman, Terry" <terry.bowman@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+	rrichter@amd.com, nathan.fontenot@amd.com,
+	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
+Subject: Re: [PATCH v8 02/16] PCI/AER: Modify AER driver logging to report
+ CXL or PCIe bus error type
+Message-ID: <20250327174919.GA1437572@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqKY17zfLo5rUd9zvO46M1_dR0-V1X-d-NmsO+exDbGY5A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <327b4da6-07d8-4f44-a3f0-32b4e5460719@amd.com>
 
-On Thu, Mar 27, 2025 at 08:55:42AM -0500, Rob Herring wrote:
-> On Thu, Mar 27, 2025 at 3:37 AM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Wed, Mar 26, 2025 at 06:13:40PM +0100, Remo Senekowitsch wrote:
-
-...
-
-> > > +struct fwnode_handle *rust_helper_dev_fwnode(struct device *dev)
-> > > +{
-> > > +     return dev_fwnode(dev);
-> > > +}
+On Thu, Mar 27, 2025 at 12:15:10PM -0500, Bowman, Terry wrote:
+> On 3/27/2025 11:48 AM, Bjorn Helgaas wrote:
+> > On Wed, Mar 26, 2025 at 08:47:03PM -0500, Terry Bowman wrote:
+> >> The AER service driver and aer_event tracing currently log 'PCIe Bus Type'
+> >> for all errors. Update the driver and aer_event tracing to log 'CXL Bus
+> >> Type' for CXL device errors.
+> >>
+> >> This requires the AER can identify and distinguish between PCIe errors and
+> >> CXL errors.
+> >>
+> >> Introduce boolean 'is_cxl' to 'struct aer_err_info'. Add assignment in
+> >> aer_get_device_error_info() and pci_print_aer().
+> >>
+> >> Update the aer_event trace routine to accept a bus type string parameter.
+> >> +++ b/drivers/pci/pci.h
+> >> @@ -533,6 +533,7 @@ static inline bool pci_dev_test_and_set_removed(struct pci_dev *dev)
+> >>  struct aer_err_info {
+> >>  	struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
+> >>  	int error_dev_num;
+> >> +	bool is_cxl;
+> >>  
+> >>  	unsigned int id:16;
+> >>  
+> >> @@ -549,6 +550,11 @@ struct aer_err_info {
+> >>  	struct pcie_tlp_log tlp;	/* TLP Header */
+> >>  };
+> >>  
+> >> +static inline const char *aer_err_bus(struct aer_err_info *info)
+> >> +{
+> >> +	return info->is_cxl ? "CXL" : "PCIe";
 > >
-> > Why not const? For most of the property retrieval APIs the parameter is const.
+> > I don't really see the point in adding struct aer_err_info.is_cxl.
+> > Every place where we call aer_err_bus() to look at it, we also have
+> > the struct pci_dev pointer, so we could just as easily use
+> > pcie_is_cxl() here.
 > 
-> Because you might need to modify the refcount.
-> 
-> Though the rust code should probably use __dev_fwnode() and/or
-> __dev_fwnode_const() directly and avoid the need for the helper here.
+> My understanding is Dan wanted the decorated aer_err_info::is_cxl to
+> capture the type of error (CXL or PCIe) and cache it because it
+> could change. That is, the CXL device's alternate protocol could
+> transition down before handling but the CXL driver must keep
+> knowledge of the original state for reporting. But, the alternate
+> protocol transition is not currently detected and used to update
+> pci_dev::is_cxl. pci_dev::is_cxl is currently only assigned during
+> device creation at the moment.
 
-Indeed, that would help at least to understand the intention.
+Sounds like there's always a race here if the CXL/PCIe type isn't
+captured as part of a hardware error log register.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bjorn
