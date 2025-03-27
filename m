@@ -1,100 +1,101 @@
 Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156681ACEBE
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 22:39:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E07125B2;
+	Thu, 27 Mar 2025 22:43:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743115144; cv=none; b=Rz/C9UAwFATSasy63WznLFnB/CvVqeO/WjJGUmuJdRADyTUhS2xYlDHv9tfmrnNs6qCwdLUYy7rkJhXI2G8g4xx7zSZGzxPwSZE4QC0x8KGF6OGdsRhUHT+bqIDnWplvPL0xgVQter22IFDA1NMtdY3ml93+8XNcW4+Q8Nvyffo=
+	t=1743115433; cv=none; b=PscQhSeICctr3LawXSLWHq2MJQdN5W31gTJ5I87pZH1kx/JFPyrX2yPdBYt0YxKqJVfePYDS6QaBf0dQ+nwx/QYTPbV1dYioRAnVSh6D+y6j6fdwiTOA2NJuH1oi5mAlUC2seipktMZg7Rik+xGPXZDGBr06zm+GKhPDaYwXQaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743115144; c=relaxed/simple;
-	bh=7mCtYt5PwkW6wan3Dj5V1pnjA26KG8rl6zyRMkZ2pjw=;
-	h=To:Cc:Message-ID:From:Subject:Date; b=Pg0NVqyn70GTmxVPHmPI+jOaPRdqrTXU4RFV3kqgNUZhBaCXq0nuOWMr8WCpY7v3tirimyy5LjVU78YulQW+5uDni1MfjmKakKOBoGvhoXyCSgwdK2wJe77NPGMFVLSBe96YsIR4fZCWrG/kIEOp5kbMxddJ+o8/FOdOaxrxZ2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LaRu65/k; arc=none smtp.client-ip=202.12.124.147
+	s=arc-20240116; t=1743115433; c=relaxed/simple;
+	bh=FckN3QymhbhxJN9d9tbdEVXZu8tXYQOqhTy7OnTj3Ao=;
+	h=Message-ID:From:Subject:Date:To:Cc; b=qWa5WbgYjB1EP2UYZ3rSeOV/r5C+N1nnKBmbh20cLRTdakIPD8CA5OwzYl/JdEjLPBeUTOwTeFgPACgEd+Z4GxVIAVznLUK3+OuXaNnPHxe36FE+gvkg+PIO+UbjX+8Ubgz1lBg9Nnu57EeWOzeyGX6LKoNRcwsosfEARJOJCH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RBG0ChBg; arc=none smtp.client-ip=202.12.124.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LaRu65/k"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfout.stl.internal (Postfix) with ESMTP id BEE70114016C;
-	Thu, 27 Mar 2025 18:38:59 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RBG0ChBg"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfout.stl.internal (Postfix) with ESMTP id 33E491140092;
+	Thu, 27 Mar 2025 18:43:51 -0400 (EDT)
 Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-12.internal (MEProxy); Thu, 27 Mar 2025 18:38:59 -0400
+  by phl-compute-10.internal (MEProxy); Thu, 27 Mar 2025 18:43:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
 	:feedback-id:from:from:in-reply-to:message-id:reply-to:subject
 	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1743115139; x=1743201539; bh=JiMEP2AO36eHBlp6X5ZxLmtvskSS
-	I47S1BFITURAF9M=; b=LaRu65/k+kouEgc/eTHWZWzHZOntua11rj8MV2lwsv1B
-	i3PiJQwbGAsWwixPnO4WIkbcWJToTjbnhZ6MWMKiNOMJqx7qkgtvTTmW28MB1mbq
-	q1LSvwHkHj+DzhQJlJVuEY9oh/dlI6VFELPnS32c00i9LFr4UBEffqk9/S8Q5vNM
-	5URx2/eZEhRZQB0AYrJ5Col83ydkiiKltG1AAouVDdyBDZ5sov6SCM4hgt/Uh3aW
-	r2NceL6QCSfDLLq6IKZtMSWx5UY10kxRw96AUtKJSF82NgS6bKWcbcz8jRbUrB/5
-	RfAs7hjEJVBJP6F9dpF5mWWgV7PLo+JWO3EM1P63xA==
-X-ME-Sender: <xms:gtPlZ9gM--sS_oD6dX_mz_c0SOih5aKCXD0TLzyqYkirj0iSez8WEA>
-    <xme:gtPlZyCkhHbC9qMFxoCXanL4w_KwZv4WNYywcPCNh4h1aQE11KD2FHjjzklZL7DYf
-    KJzdJMnmRaXdf6kWmc>
-X-ME-Received: <xmr:gtPlZ9H5zqa0oP4v4vtbiAXyzKeXyWH3JT4H7fRwY2QxJzdHR_TTbYXF7LL_ZnfGlz8pTvqNX9QrfFqO8QFM-E8ekpqFbWXQnQg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieelieefucetufdoteggodetrf
+	fm2; t=1743115431; x=1743201831; bh=pdFss1M2T3cKLSiYMFrAjNaqs540
+	4L0Oi9UHUbecIW4=; b=RBG0ChBgJs52L9KTzKT/ltezVkYuUk14bdlyjnnQl3a2
+	WEDHP71mYH6NdllpSE0q9gRA68jyA3fkpw+yFBu2g3MV4gCXPAcchovvvpFjvfsn
+	V3jsYaM0IUGwtEVPlfYBcf2GuxMxt4uImI6B/fpbVTY8mKGO4lniMyOMOG62tYVd
+	RxGGaXR3i9tLQ5QTMPFI3HwytCh0DX3XdT4WvyTMUnIj4VEq1HOQqxgLqutJbhbi
+	NP8k/hVQd8B/pjAXkOH+KgA/gkDcY2J0I9d5YlGqDlh1Xp1KX5KJrhjucVS9YyIY
+	BvoDBSTevVeUuLEDdSNIyJjc4jVIzHOIrKt5VyP07A==
+X-ME-Sender: <xms:ptTlZz8q4U5nL_ovIeU6M91b6Rzh1W92zhWXgzYFuDeVLDxDVXwaWw>
+    <xme:ptTlZ_uy3b2h5Fa05qfoPIDuzwwckW2YD_vxDoCcrt5l1fni371hngucVdmI7DKUa
+    c66oGzfN-W613bX32c>
+X-ME-Received: <xmr:ptTlZxAP96blRc4V83netzAJCekTi30u9wcuzhFd8xna7KZUzO9J1ctnEGjEEBDDHq9oXiljyaW6rmvrsCmZt-63Lnlbg5kbdxI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduieelieegucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
     pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepvfevkffhufffsedttdertddttddtnecuhfhr
+    gvnhhtshculddquddttddmnecujfgurhepkffhufffvfevsedttdertddttddtnecuhfhr
     ohhmpefhihhnnhcuvfhhrghinhcuoehfthhhrghinheslhhinhhugidqmheikehkrdhorh
-    hgqeenucggtffrrghtthgvrhhnpeehfffggeefveegvedtiefffeevuedtgefhueehieet
-    ffejfefggeevfeeuvdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    hgqeenucggtffrrghtthgvrhhnpeehffdukeetffdutedvffffheegtdetkeekfeevgfei
+    tefhvedvtdelhfduudettdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
     grihhlfhhrohhmpehfthhhrghinheslhhinhhugidqmheikehkrdhorhhgpdhnsggprhgt
     phhtthhopeegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehgvggvrhhtsehlih
-    hnuhigqdhmieekkhdrohhrghdprhgtphhtthhopegurghnihgvlhestdigtdhfrdgtohhm
-    pdhrtghpthhtoheplhhinhhugidqmheikehksehlihhsthhsrdhlihhnuhigqdhmieekkh
-    drohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgv
-    lhdrohhrgh
-X-ME-Proxy: <xmx:gtPlZySQIcoigHupBPQwsu-i9-kZzYTCZ44DBw-LnBu_aNj3REM-CA>
-    <xmx:gtPlZ6x7Po0IDmzpsl7DZJ82SGC-ZhDVkflZwTfoptDcNOPLjPWh8g>
-    <xmx:gtPlZ47MLfLtIS3DJgVPIWwS84GcTctfMHcdH_nf_TlzpLlLi9IDHQ>
-    <xmx:gtPlZ_w9zWxb1trZ7ACV4Nz9-G8-6z28OYqUyYq7bWgtjGxwyqTpQQ>
-    <xmx:g9PlZ-_1IVKWcWwaXdc-IYEKUHfItVEvIeEwOhHpyYAuLBXIBxq5dIHh>
+    hnuhigqdhmieekkhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhg
+    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhmieekkheslhhish
+    htshdrlhhinhhugidqmheikehkrdhorhhgpdhrtghpthhtohepshhtrggslhgvsehvghgv
+    rhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:ptTlZ_c1XRbMwjUWicpwc1pe4VCku-FLRVc83esq7K71ZrY8Lh7LGg>
+    <xmx:ptTlZ4OoI3Jk8DuFs8GPJC0M8wj7rBkUir7kryToW6R6pu7t1-0J0A>
+    <xmx:ptTlZxkOPxb6pl3Tjl0Fxc80AX_TxJbhpbEIXn0Fq7VkUDSmiUG-_g>
+    <xmx:ptTlZysILT_ChyovtghwGUst5r1g3SRM0hjs-50qGVyAazUZ54PvQQ>
+    <xmx:p9TlZ9q9J366utRD4lXA8Mjuijqj6QHrdiIYg6TzjesKgJuSuXj0DmxD>
 Feedback-ID: i58a146ae:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 27 Mar 2025 18:38:56 -0400 (EDT)
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "Daniel Palmer" <daniel@0x0f.com>,
-    linux-m68k@lists.linux-m68k.org,
-    linux-kernel@vger.kernel.org
-Message-ID: <54c8046f6ffcb16b3e4e7aa1a6fedbc4e576f16a.1743114940.git.fthain@linux-m68k.org>
+ 27 Mar 2025 18:43:49 -0400 (EDT)
+Message-ID: <cover.1743115195.git.fthain@linux-m68k.org>
 From: Finn Thain <fthain@linux-m68k.org>
-Subject: [PATCH] m68k/mvme147: Don't unregister boot console needlessly
-Date: Fri, 28 Mar 2025 09:35:40 +1100
+Subject: [PATCH v3 0/3] m68k: Bug fix and cleanup for framebuffer debug console
+Date: Fri, 28 Mar 2025 09:39:55 +1100
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-kernel@vger.kernel.org,
+    linux-m68k@lists.linux-m68k.org,
+    stable@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-When MACH_IS_MVME147, the boot console calls mvme147_scc_write() to
-generate console output. That will continue to work even after
-debug_cons_nputs() becomes unavailable so there's no need to
-unregister the boot console.
+This series has a bug fix for the early bootconsole as well as some
+related efficiency improvements and cleanup.
 
-Cc: Daniel Palmer <daniel@0x0f.com>
-Fixes: 077b33b9e283 ("m68k: mvme147: Reinstate early console")
-Signed-off-by: Finn Thain <fthain@linux-m68k.org>
+The relevant code is subject to CONSOLE_DEBUG, which is presently only
+used with CONFIG_MAC. To test this series (in qemu-system-m68k, for example)
+it's helpful to enable CONFIG_EARLY_PRINTK and
+CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER and boot with
+kernel parameters 'console=ttyS0 earlyprintk keep_bootcon'.
+
 ---
- arch/m68k/kernel/early_printk.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changed since v1: 
+ - Solved problem with line wrap while scrolling.
+ - Added two additional patches.
 
-diff --git a/arch/m68k/kernel/early_printk.c b/arch/m68k/kernel/early_printk.c
-index f11ef9f1f56f..2fb22d8395b5 100644
---- a/arch/m68k/kernel/early_printk.c
-+++ b/arch/m68k/kernel/early_printk.c
-@@ -60,7 +60,7 @@ early_param("earlyprintk", setup_early_printk);
- 
- static int __init unregister_early_console(void)
- {
--	if (!early_console || MACH_IS_MVME16x)
-+	if (!early_console || MACH_IS_MVME147 || MACH_IS_MVME16x)
- 		return 0;
- 
- 	return unregister_console(early_console);
+Changed since v2:
+ - Adopted addq and subq as suggested by Andreas.
+
+
+Finn Thain (3):
+  m68k: Fix lost column on framebuffer debug console
+  m68k: Avoid pointless recursion in debug console rendering
+  m68k: Remove unused "cursor home" code from debug console
+
+ arch/m68k/kernel/head.S | 73 +++++++++++++++++++++--------------------
+ 1 file changed, 37 insertions(+), 36 deletions(-)
+
 -- 
 2.45.3
 
