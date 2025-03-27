@@ -1,96 +1,131 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8EF1482E7;
-	Thu, 27 Mar 2025 09:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959C91482E7
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743068560; cv=none; b=garC+I179itrLiqk8LC/H0X5tSdY3H/U1/BiHA/DNukZY0UNkz4WiDRXBeAkbVgTo2ZubTU6MCd5jTkYhs0h+Cdp7UKuJqEyh0GcExHkRixY/pc4eKf9zPdv3PWAxi9BwIgE+tgKz2O3c/Y7culFSHIoT69GxnUd8tfkAsMtua4=
+	t=1743068606; cv=none; b=IL/3+5h8GuvjV2Vfxf4I/S/eR24RZ+APdl0f3cTU64ImyjprbhysasiU++riNtg8OUe9BDlvwkNe8uHhJ9nAgx8dqNG8RsCLuoSxDecnmkt+iAQ90ow1R0Fga8NMt4pCcCW9tS+1gnknPwbZ2I4IbhXiqVkk7FUFSQd+3Su2hK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743068560; c=relaxed/simple;
-	bh=KUvjtgFESozOCVhk6gc946bOYRryku7PZ7BF3vqTv3Q=;
+	s=arc-20240116; t=1743068606; c=relaxed/simple;
+	bh=RQI/b+5b2edO2Zw7Frn6Ca5fIDxB6ZihWM6BQJgkAiw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mv7MXABoJzZkVbTOMmwQIekgcQOjnMdl8q/fZwQ09iCJ6MUs18Ne3RhUl24kepScAE7JHiilUodVB5dyf0M071IPJ0/Ot7VoqwXnX9cIzv3Ot62xFhcsAFfHu/QirNe84H/MC3pCt1hkXj7iXED16nusfeSB1qzxJGi7ht7tJSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=DuwZxVMe; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=bRmMeHgor0n16BeYr2HYPnwHq8rJeO27CIOBjZbhoHPddiypVEma+qTcStd9tfzwS8h4aisFrHLkrzFnLkOBjaer/gHCG/4tF+9JafuAj4jy8w2mQWYcQWBFDx3EBBEKOXsDCio7hNPqFL05dlgxTKkTm+JaUwnIJlRdsB0a9YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=AohM6zpU; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="DuwZxVMe"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 652F41C00EF; Thu, 27 Mar 2025 10:42:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1743068548;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TgWAlIrkZR4hJ4WarQEwsPmAzFkrsZtxh5149Xr1POc=;
-	b=DuwZxVMe0RF6jW91bf43uKoDiO4x4mK1xiEUGi7xFG3tzRfjBCfzTZnHwD8nJyTK9ofh+w
-	jIoiH9kwmP5Ak1B1Lx8GqCvKFEBsRztZ4VluDXUiE4cLWzAr5XPo5YVOy3QulagcSmbs7n
-	vNNTwtkBiTm5/C/QYZz4UnoGBGYxX6k=
-Date: Thu, 27 Mar 2025 10:42:27 +0100
-From: Pavel Machek <pavel@ucw.cz>
-To: Clark Williams <williams@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	linux-rt-users <linux-rt-users@vger.kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Carsten Emde <C.Emde@osadl.org>, John Kacur <jkacur@redhat.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Daniel Wagner <daniel.wagner@suse.com>,
-	Tom Zanussi <tom.zanussi@linux.intel.com>,
-	Joseph Salisbury <joseph.salisbury@oracle.com>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-Subject: Re: [ANNOUNCE] 6.1.128-rt49
-Message-ID: <Z+Udg9qlQL2Z/aZX@duo.ucw.cz>
-References: <173930775249.796803.15441220010102177762@demetrius>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="AohM6zpU"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3912baafc58so535768f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 02:43:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743068602; x=1743673402; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MH3oLkZ3QoHPrfnbUPiT0wxSJtA1cLOkJbbbBEVhhYs=;
+        b=AohM6zpU1vVZv+6TDKEGGgKFhtXqvoFpYBiE+bM3QOGQF8+YP8pydG5UMdnvE1Odnn
+         rQ1Ykh+PA0bM4uFTgpdR+0dwVcsbz5yEpB7BxC470vTsgMjMrwMcvU+5kAS8Gn/qzTtD
+         HscYRmgzMqSXZKW2ZIM/CBRI4bIVIK/1hCGkwsURXMkwedHiWXCGJMTX44Bl0nAcwz9w
+         oE1N7nhVUqRYoAGm0pv9bRsJ8Faopme4pHLwEvn7HUf6BLOpCJ2ebwf1vpeOR3NButi+
+         YyQjlmaL8mu+6I92atd5/SCFpaOlS2A1h/JtBlIH5jFQTeVxE2Us0njKcV1kL89Q/86D
+         SSJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743068602; x=1743673402;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MH3oLkZ3QoHPrfnbUPiT0wxSJtA1cLOkJbbbBEVhhYs=;
+        b=jwEAa4LsS40NAnI8IQZY4v8cmZax19vYNdFZdB5Mop7kA3A+pa3sHLurqZw9P8YWZ7
+         dXbTU6Q+321hTt/fKXcSrhV7ePq7PWUdbiD5bcr5z198dS6F5gZN/wbIQviIo27GOI9j
+         nt3h/EV0YhUj4IT7irqhTGYGd7tAs0bwpDYterO58Cx5DWiA1kHTXe+r+LUBSR959oV4
+         ae83nODf5gXzhsrLYTN0klH/5jFp79zAZJG4P2Xzdgwxkap7Av4Y8DIVNb3WHacndD/8
+         i8NR58ouVUzx+LvJuvzSHyd7pKsHgEr9h2BScs51WVH2zxg42s1tHxcLr3MPVtH68czD
+         Eaug==
+X-Forwarded-Encrypted: i=1; AJvYcCUktv2XuFr/4AUhdbgi3ohKaf6Fj1uuRK4qjuH28T3Bs4xqgv6YQrkpMnRxH/deTtVsJwtIASkUNjj+ThI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOvW9/MSXD5OVbLB6seyZ5HC/Md2ibHckPPzSqld2wmbqgZzYD
+	UFMVjc0OUSkyPY5IPjF6kddPsQgZTg+Njtf0avxZONq04tthxnPxgzq0UraO07M=
+X-Gm-Gg: ASbGncuysj8fo/YmHQbIP43MM4YvvToi4PspwqJhuLcOvFnp9Uw/4nQiSpttWO+ktBk
+	tlC3fuc8+LnMmq0ECqah5f1D9f8RHi0BgmH06Cw/h+biRJgBaT+0Y0mUnxLIBHGcCvqxel42vQx
+	wi5jeY61DX8gp/wrs5z7nZ7jj4Pcz295fNZ6rPYrvZkPWRYVpBVnqxd2hxEDhucr8lH6Y/KSCt0
+	wk4acRzVd264gY1F9EeVuhEIsK9OVMlbmLDu2L+GOa3dhMHhaSKPIxG+9yLHHIJVw3Sl0HNmrqg
+	jCq301NxHS3GUnTAY8KqwxpE20fhktbjGdftmWscpU1gfp4=
+X-Google-Smtp-Source: AGHT+IH1WiFsXOivY3uNtWR03fqybSpj7EH4HsxNZKa+E51aIf//dEXmU1/S3e5uU474CO7buz/DFw==
+X-Received: by 2002:a05:6000:2cb:b0:39a:c8a8:4fdc with SMTP id ffacd0b85a97d-39ad175c052mr2145200f8f.16.1743068601849;
+        Thu, 27 Mar 2025 02:43:21 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d82e6ab48sm32678605e9.10.2025.03.27.02.43.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 02:43:21 -0700 (PDT)
+Date: Thu, 27 Mar 2025 10:43:19 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: James Houghton <jthoughton@google.com>
+Cc: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Axel Rasmussen <axelrasmussen@google.com>, 
+	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Yu Zhao <yuzhao@google.com>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>, Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH 3/5] cgroup: selftests: Move cgroup_util into its own
+ library
+Message-ID: <fg5owc6cvx7mkdq64ljc4byc5xmepddgthanynyvfsqhww7wx2@q5op3ltl2nip>
+References: <20250327012350.1135621-1-jthoughton@google.com>
+ <20250327012350.1135621-4-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gWEQOM0S4GcZQLoH"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="emghnkmnkyymych3"
 Content-Disposition: inline
-In-Reply-To: <173930775249.796803.15441220010102177762@demetrius>
+In-Reply-To: <20250327012350.1135621-4-jthoughton@google.com>
 
 
---gWEQOM0S4GcZQLoH
-Content-Type: text/plain; charset=us-ascii
+--emghnkmnkyymych3
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 3/5] cgroup: selftests: Move cgroup_util into its own
+ library
+MIME-Version: 1.0
 
-Hi!
+Hello James.
 
-> I'm pleased to announce the 6.1.128-rt49 stable release.
->=20
-> You can get this release via the git tree at:
->=20
->   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
->=20
->   branch: v6.1-rt
->   Head SHA1: 7faf422b9217de411f016245ab3f2f5e03c9899c
+On Thu, Mar 27, 2025 at 01:23:48AM +0000, James Houghton <jthoughton@google=
+=2Ecom> wrote:
+> KVM selftests will soon need to use some of the cgroup creation and
+> deletion functionality from cgroup_util.
 
-CIP project would like to do 6.1-cip-rt release approximately once a
-month. Is there chance to get 6.1-rt "soon"?
+Thanks, I think cross-selftest sharing is better than duplicating
+similar code.=20
 
-Is there some kind of schedule for 6.1-rt? IOW should I try to adjust
-6.1-cip-rt releases to once a two months?
++Cc: Yafang as it may worth porting/unifying with
+tools/testing/selftests/bpf/cgroup_helpers.h too
 
-Best regards,
-								Pavel
---=20
-I don't work for Nazis and criminals, and neither should you.
-Boycott Putin, Trump, and Musk!
+> --- a/tools/testing/selftests/cgroup/cgroup_util.c
+> +++ b/tools/testing/selftests/cgroup/lib/cgroup_util.c
+> @@ -16,8 +16,7 @@
+>  #include <sys/wait.h>
+>  #include <unistd.h>
+> =20
+> -#include "cgroup_util.h"
+> -#include "../clone3/clone3_selftests.h"
+> +#include <cgroup_util.h>
 
---gWEQOM0S4GcZQLoH
+The clone3_selftests.h header is not needed anymore?
+
+
+Michal
+
+--emghnkmnkyymych3
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZ+UdgwAKCRAw5/Bqldv6
-8t/PAKCgiJV/mcCCdzZubU54sYe3SDTcsQCeKx94B7ikV5/1PjC0+nSwSux9wNs=
-=Cw2g
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ+UdtQAKCRAt3Wney77B
+SdMdAQCSfMUeyxs7jRY1DgHYPciU4P2a7+sr132y+/5NX5fJ/wD8Dp4tx7S5u978
+BgGpkmbqxF6HcGVx9Y4bacdDAkqBbwc=
+=kBp5
 -----END PGP SIGNATURE-----
 
---gWEQOM0S4GcZQLoH--
+--emghnkmnkyymych3--
