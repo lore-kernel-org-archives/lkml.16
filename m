@@ -1,101 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EFF2135B3;
-	Thu, 27 Mar 2025 11:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1ED42135DF
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 11:43:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743075782; cv=none; b=J1QX+LuVs0GOD0fWLwTgMXlBzWwoA9KuXKj1745pwoQZCmnUTjqEWbKLALdNakyvLhgmvOZXQGPvDAVa5wvG3+0w9bPtK9nExcB4drpHw2VA+E1ooLtQcSaOw51SMJETliw6Pal02ImBclW8KjK29mOe6ZS5+s5iYVT/PRlWrL4=
+	t=1743075784; cv=none; b=kIwD4vmhnbS8HPPk5k1le/XHYko6LJfypdFBQJfJVCiWSxtBaBJflLDehnpiuZ6Dgc2PwOaPbvDqRLLtOGibVgDG4bi3YhOutzsds9FVJG/bG8xg0NxzYwJCyXqfHEWtYRw5QvdgAc5xgRpCLPDPoMn1T7JepN75oHwdGzIphP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743075782; c=relaxed/simple;
-	bh=VCLUDpdbtwekbJxTmpwBa3iXtRAsiaJOSlL8AoOO+oM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KpW+R+6gfgKUWG4pUo8x+q5zod4+K33RycrmedeJ5ZXqYLzRYfQlPEzk1rA7PZRPYtvzP8nWtQSZHccecK0U5rvFsEXlgJAK0Zi4bLRoGkMb6a3U6KCreNcf9p95dFODaiFE/p9yOJWKM7DIRpJKNKNrQ6gVNOouVBWBFX33r1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oE4vReb+; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1743075784; c=relaxed/simple;
+	bh=bEp6xigsLHHyRGydgFG6cY5JkgkV+AnE2CCNkdUAcfU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KMiFjS3/YK63PqsIli7L6H4tCTvJ288dIncTht7Sf/sbDMidgi/gbPme5R8DuBBKDFaXMjcIMHgfr8f855n9EXy1MML83fpRfuZmNmvv5AZ4B3bSTHy0chq6YvA1XgCyXZ0bJ03dexvkRdO0IwromcCjXLzWN1wu+alI5pDiMx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GVJ4hpuI; arc=none smtp.client-ip=209.85.167.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oE4vReb+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743075781; x=1774611781;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VCLUDpdbtwekbJxTmpwBa3iXtRAsiaJOSlL8AoOO+oM=;
-  b=oE4vReb+CCgPTXNWE49HLqYyzodPN0pVhxfrcuvdvfGH55yul2zQ63+P
-   YALQYK4Whz4nZeMxq48IUEsQ8LB1lF7IkvcadV8/ZfOtc29PrhPwvt8V1
-   mbn3ya+uOwN1BwOzPRzgk0txN7bGJefr6TC/RJbENBPwthqG+v1xlClBT
-   SFqJnCv+WjNU7g1IYjsdsiW5H612aUlFUvunWqAmi3STido/wwvCIkcb/
-   VR03HgndI882a4oV0MDyTXbuebf34IcebVwTtmHLnja7F12+JcYFyH8vP
-   Tm+J7BtJTBEzSumHS8o8z01zWQWrNUcDa24ffmkgT+007WZkBToll7U5o
-   w==;
-X-CSE-ConnectionGUID: gDJWJ1YJSIiTsrSzoGsh3w==
-X-CSE-MsgGUID: NiO5vfizT8mxarYxKEdy/g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="69765449"
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="69765449"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 04:43:00 -0700
-X-CSE-ConnectionGUID: 4b7knrmyQRCxDSae82fy4g==
-X-CSE-MsgGUID: MbSA80+HTk6llZlVf7p1bg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,280,1736841600"; 
-   d="scan'208";a="126048114"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 04:42:55 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1txldM-00000006QO5-1Mcw;
-	Thu, 27 Mar 2025 13:42:52 +0200
-Date: Thu, 27 Mar 2025 13:42:52 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Philipp Stanner <phasta@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Philipp Stanner <pstanner@redhat.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	Zijun Hu <quic_zijuhu@quicinc.com>, Hannes Reinecke <hare@suse.de>,
-	Al Viro <viro@zeniv.linux.org.uk>, Li Zetao <lizetao1@huawei.com>,
-	Anuj Gupta <anuj20.g@samsung.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/2] PCI: Remove pcim_iounmap_regions()
-Message-ID: <Z-U5vIbVDZLe9QnM@smile.fi.intel.com>
-References: <20250327110707.20025-2-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GVJ4hpuI"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3f6ab1b8fc1so573621b6e.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 04:43:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743075782; x=1743680582; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=098/WJlPRFtgRjWciBzH25sdsG+k8IR2+Xx5OaMFgJQ=;
+        b=GVJ4hpuIO15f01GJzFASI174Nium1ihRU5q+BT6SL4t071ihAZr/HHQzMo1N1oa7zR
+         NRx6G8fzqLBEMnCgHNyK9fv94jil89q1krZxmDCxLwASfiMC9U/eUA99G+PFz2+HiziG
+         Tf2bZ3f1aGtoR/nXywSoyTgGEE51liM4YAt+eowcdC3FT1+9rv7JH6RqRTdK+WPptl1+
+         hjEuVhxBjsrzdZdPjz1sYNhoL2qHzUkMDP5757EJ6s089Hl4cS5B36X30aB+iNsEqbpY
+         NoWTOx71/s2AoGwaIflyMXem6uCJmy0FkcEzB31RbEfkZYbr2aUbp0mt8S8tlesDHnnE
+         FEkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743075782; x=1743680582;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=098/WJlPRFtgRjWciBzH25sdsG+k8IR2+Xx5OaMFgJQ=;
+        b=tkHaN9HqnMaKBci/1e3GOMcN+mqkhZZk7mHw5OHDBE/WrJ2TIl9Zc/fHWk4TXJYk2t
+         LUcM9QWxSSb3a6jIob9U3HyYzD3K6Uv/xUXIZdiGa8WLJZFBJ8rsHsHBd4zLhkaTOTiw
+         MsKz8sPvbobS9s6+d/Ch632/EVxP4wFVPkBavQ8609AXdb4tMDIjd2B5lQcLvZm7Fm0R
+         klIzd20FLI6jv7B7eMtYlzkogD3uQLI7iE6fpnJKP8m+zvPbhzQXf0Ei7KsD1uKT4gga
+         vzbNtKGrCRaxjHqX+xgsZ/y4nx1nxEUSvJUrApwrxQRTdf7CgCHYO/XZ4tln4vkbLiRI
+         PBFw==
+X-Forwarded-Encrypted: i=1; AJvYcCXTTDH2ziYab6kxhfD774JJgO+GyEx5//RsI80GrXBdDYrf4pUmkkAJPIopXIt3PChmzHYZc+3LzdoTrgs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTHTtMWYx/jrJ/bhPSrrzp3Bctuf/9u8G9unZupkGd7eRleFfI
+	Mnxioj4Ju3tfTnl2ct2dYxy0xPBUXT4J0gi+jca4i/FdR308E0eWxXCt1QnTeHZj5a99PbaZjrH
+	As9xoHY5duHtg/GkfQxMawxJ7Uh7nv4idsRfI
+X-Gm-Gg: ASbGncvBZgdI2XfefKyWVGiuvBedQU0dqNqIL6TZE9SAQE8cGhqju2rP+pQF0/ujQiY
+	YVTF0omAJg72yvy1ei2ntJxAxsQs1ZF/k4guJPV8YizHFy7VmeqMRa+TV0Ku4slwQhMsWeSHccL
+	O9/Ew18Nia/92F8QbRisZ4BZtnU/yOF2NaUzK3TCIgPBAT7mlBdStGxpW2
+X-Google-Smtp-Source: AGHT+IHrE4C+ttk8AOVzYXJZpyZmoKHktd4gYEnnr3J+sxJW7Zapo3xVbvsYHA1pnlz/dYwvWEo5DwFoTPjiAUN91gY=
+X-Received: by 2002:a05:6808:1456:b0:3fa:c549:cff6 with SMTP id
+ 5614622812f47-3fefa6055c7mr1749381b6e.36.1743075781556; Thu, 27 Mar 2025
+ 04:43:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250327110707.20025-2-phasta@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250321111535.3740332-1-bqe@google.com> <Z914T_oYHvV_Zk74@thinkpad>
+In-Reply-To: <Z914T_oYHvV_Zk74@thinkpad>
+From: Burak Emir <bqe@google.com>
+Date: Thu, 27 Mar 2025 12:42:49 +0100
+X-Gm-Features: AQ5f1Jq9HEDp_I46TikkToJM7nDxnpvmpKqtRZdrU7TGIlcs4amJcteaeH1O1l0
+Message-ID: <CACQBu=Xp7TfVHyVq8Ew+vOvEO-kWg=9b6bhdzhNDVqYE5yUSjw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/4] rust: adds Bitmap API, ID pool and bindings
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 27, 2025 at 12:07:06PM +0100, Philipp Stanner wrote:
-> The last remaining user of pcim_iounmap_regions() is mtip32 (in Linus's
-> current master)
-> 
-> So we could finally remove this deprecated API. I suggest that this gets
-> merged through the PCI tree.
+On Fri, Mar 21, 2025 at 3:31=E2=80=AFPM Yury Norov <yury.norov@gmail.com> w=
+rote:
+>
+> On Fri, Mar 21, 2025 at 11:15:28AM +0000, Burak Emir wrote:
+> > This series adds a Rust bitmap API for porting the approach from
+> > commit 15d9da3f818c ("binder: use bitmap for faster descriptor lookup")
+> > to Rust. The functionality in dbitmap.h makes use of bitmap and bitops.
+> >
+> > The Rust bitmap API provides a safe abstraction to underlying bitmap
+> > and bitops operations. For now, only includes method necessary for
+> > dbitmap.h, more can be added later. We perform bounds checks for
+> > hardening, violations are programmer errors that result in panics.
+> >
+> > This version includes an optimization to represent the bitmap inline,
+> > as suggested by Yury.
+>
+> We have a tag for it:
+>
+> Suggested-by: Yury Norov <yury.norov@gmail.com>
 
-Good god! One API less, +1 to support this move.
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Will add.
 
-> (I also suggest we watch with an eagle's
-> eyes for folks who want to re-add calls to that function before the next
-> merge window opens).
+>
+> > The Rust equivalent of dbitmap.h is included as id_pool.rs, which is
+> > tightly coupled to the bitmap API. Includes an example of usage
+> > that requires releasing a spinlock, as expected in Binder driver.
+>
+> I don't think it's worth to refer the existing dbitmap.h, because:
+>
+> 1. It's buggy;
+> 2. You limit yourself with committing to provide an 'equivalent' API.
+> 3. If you want to bring the existing dbitmaps.h, you'd just bring
+>    bindings for them, not a re-implementation.
+>
+> Can you just say that you're adding dynamic bit arrays in rust?
+>
 
-Instead of this I suggest that PCI can take this before merge window finishes
-and cooks the (second) PR with it. In such a case we wouldn't need to care,
-the developers will got broken builds.
+True, "equivalent" is maybe too strong.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I considered "DybamicBitmap" but dbitmap is only providing a
+dynamically sized bitmap under the hood (and with a specific API).
+It does not expose `set_bit`, `clear_bit` methods as one would expect
+from a Bitmap API.
+
+That is why I found IdPool a better name. I am not attached to the
+name, just dynamic bitmap seems misleading.
+It is essentially a dynamically sized thing that happens to be
+implemented efficiently using a bitmap.
+I will leave it to Alice to explain why Binder needs it.
 
 
+> > This is v5 of a patch introducing Rust bitmap API [v4]. Thanks
+> > for all the helpful comments, this series has improved significantly
+> > as a result of your work.
+> >
+> > Changes v4 --> v5: (suggested by Yury and Alice)
+> > - rebased on next-20250318
+> > - split MAINTAINERS changes
+> > - no dependencies on [1] and [2] anymore - Viresh,
+> >   please do add a separate section if you want to maintain cpumask.rs
+> >   separately.
+> > - imports atomic and non-atomic variants, introduces a naming conventio=
+n
+> >   set_bit and set_bit_atomic on the Rust side.
+> > - changed naming and comments. Keeping `new`.
+> > - change dynamic_id_pool to id_pool
+> > - represent bitmap inline when possible
+> > - add some more tests
+> > - add bqe@google.com as M: for the Rust abstractions
+>
+> Instead of 'bqe@google.com' just say: myself.
+
+Sure thing : )
+
+Thanks,
+Burak
