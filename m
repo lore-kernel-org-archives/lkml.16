@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65BEF1E5210;
-	Thu, 27 Mar 2025 03:24:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B0B1E1E0A
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 03:24:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743045865; cv=none; b=WeTkpn2hiUc+Us3O+5Wd0EyxLCjzfmnbzH3Xd7FwIkMqgszRYczfWk99X9msetkojEcLP48unKSxcY2OzSi91k7QEJMf7cynlqDghcg/hDTV9Zi0B81YO8YRErgshJRQ4xaD+1e475n/z92EoLihTlHGNJmd1QFizRN3rBi7NUA=
+	t=1743045866; cv=none; b=dffjX2bDEwiVANq52RtvocM57PP5s1xoqBMJR/LOmlKWNiAFfq+HpbZMsDto+4+fVQ05qI3TybaBL5CrHy7huKx6yyhSzeHkZFL9iFWvrBTawPbs+lGdqhx35agBCcMOqlclenGmDsRAVSJ/Z4+8SLI/fTChaJVUqitiU9iyRUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743045865; c=relaxed/simple;
-	bh=KuzdeSU+gWliFwXow9YM1xmKtoV0AKeSOb/fjjNgCw8=;
+	s=arc-20240116; t=1743045866; c=relaxed/simple;
+	bh=rRGPHntCI5ufL3M7BTsFQsuw1E2nMHQrK6+g6kmHRAk=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=rtCBFXIHElupORwej5Ft+McVLFpZt/t4XOL83DyM/4VT3t8hmA/PyrZ2BqEWnvgOAkIm7V4dFhfiuu6KHvcoh/HZe5BciRfGrZ0xtfQlb/Ch5cHEXeECCiC0KvWzgChULIYy43QwGcgNeyV46/Wa7zdBkSmul06Myw/UVR+LNU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KA/4aDyc; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Y7VyHx0eNJwQraAPt9kxScZXrjYe99Ds3JkYPg5D6nRwx+RSwnNzp78UzFixyqb3/n0YTtoPrZtQzV0F6dJ1Zfae17cT0y6gRpTRslGvrGlLyjEgZKVfzxcDIXfg3YlAaEEkDXxez+CAop75Z/V6MaLXTZYmJ+hfsxYPjBVQnTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=os8dXTtg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KA/4aDyc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAE63C4CEDD;
-	Thu, 27 Mar 2025 03:24:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="os8dXTtg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2840AC4CEEA;
+	Thu, 27 Mar 2025 03:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743045864;
-	bh=KuzdeSU+gWliFwXow9YM1xmKtoV0AKeSOb/fjjNgCw8=;
+	s=k20201202; t=1743045866;
+	bh=rRGPHntCI5ufL3M7BTsFQsuw1E2nMHQrK6+g6kmHRAk=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=KA/4aDycKbZD2jNKPjQ7oXD30BCvby0/dSDk/wFadtlFNakcp9s9PszHCctdNrDkK
-	 q0vWWVYVOipIkVUdQ5y6mePwkbQWL1m2jaArlJeelCOy06NPehhK3dOdc4adVFiDWH
-	 Ng6mpFg7+AOXWROiYnedkJJmkGCtdpJUcPZsJ7yoQPx7G9RtDzIwWLE8KA5gXvloxr
-	 m5PErBMmm2u6KBce2WPRW1DITJti4PaQBUyW3QsyrmkQGTZFPyKnNMAyIjeD81ZwqI
-	 WK+FFJLB16AJPxd68Yh6GZaGD6V83FIBSfvCe63CtJpYiZiwdqy4Nn7QqyDQRn+Q1r
-	 VX+gc/nE1er4A==
+	b=os8dXTtgsvcqwphdWQLnPJ0nOTYsYaLGUaKhcwbDo6TcgWHMpAD+wtDsTbaKt+rql
+	 BrTaaiCG73kRb4GAe0iQvoUMpKdC3NJ4v1tV6eBAHzLQmVwb+7WMAVdNCgtZQ1gG2I
+	 coeLuGwlKd3CbcPwTc5tDX1upHt7xKtAlxnERDMb4cX36ux80SouTZHjJMea/9oCZP
+	 UfxA/3XOLV9V98jBe7OycMErxG+FtlZDLtHchcOj7Lbxl23mLO5r+Dgi+QBTcY5VCC
+	 YrgSld1g05BwWrCP4Q7OuLCqyMxBdpXmbHNTJeYHAD9VyLAO1OKoEvR4HTGNKSoPmD
+	 7/GD3ernvoRRA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71121380AAFD;
-	Thu, 27 Mar 2025 03:25:02 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE322380AAFD;
+	Thu, 27 Mar 2025 03:25:03 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,38 +37,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: tracing: Fix __write_overflow_field in
- ftrace_partial_regs()
+Subject: Re: [PATCH v4 0/2]  RISC-V: clarify what some RISCV_ISA* config options
+ do & redo Zbb toolchain dependency
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <174304590100.1549280.14019445612094934083.git-patchwork-notify@kernel.org>
-Date: Thu, 27 Mar 2025 03:25:01 +0000
-References: <20250224-fix_ftrace_partial_regs-v1-1-54b906417e86@rivosinc.com>
-In-Reply-To: <20250224-fix_ftrace_partial_regs-v1-1-54b906417e86@rivosinc.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, rostedt@goodmis.org, mhiramat@kernel.org,
- mark.rutland@arm.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, oleg@redhat.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
+ <174304590249.1549280.530219919332605945.git-patchwork-notify@kernel.org>
+Date: Thu, 27 Mar 2025 03:25:02 +0000
+References: <20241024-aspire-rectify-9982da6943e5@spud>
+In-Reply-To: <20241024-aspire-rectify-9982da6943e5@spud>
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-riscv@lists.infradead.org, conor.dooley@microchip.com,
+ xiao.w.wang@intel.com, ajones@ventanamicro.com, pulehui@huawei.com,
+ charlie@rivosinc.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ linux-kernel@vger.kernel.org, samuel.holland@sifive.com,
+ pulehui@huaweicloud.com, bjorn@kernel.org
 
 Hello:
 
-This patch was applied to riscv/linux.git (for-next)
+This series was applied to riscv/linux.git (for-next)
 by Alexandre Ghiti <alexghiti@rivosinc.com>:
 
-On Mon, 24 Feb 2025 18:42:21 -0800 you wrote:
-> The size of &regs->a0 is unknown, causing the error:
+On Thu, 24 Oct 2024 11:19:39 +0100 you wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
 > 
-> ../include/linux/fortify-string.h:571:25: warning: call to
-> '__write_overflow_field' declared with attribute warning: detected write
-> beyond size of field (1st parameter); maybe use struct_group()?
-> [-Wattribute-warning]
+> Since one depends on the other, albeit trivially, here's a v4 of the Zbb
+> toolchain dep removal alongside the rewording of Kconfig options I'd
+> sent out before the merge window. I think I like this implementation
+> better than v1, but I couldn't think of a good name for a "public"
+> version of __ALTERNATIVE(), so I used it here directly.
+> Unfortunately "ALTERNATIVE_2_CFG" already exists and I couldn't think of
+> a good way to name an alternative macro that allows for several config
+> options that didn't make the distinction sufficiently clear.. Yell
+> if you have better suggestions than I did.
 > 
 > [...]
 
 Here is the summary with links:
-  - riscv: tracing: Fix __write_overflow_field in ftrace_partial_regs()
-    https://git.kernel.org/riscv/c/bba547810c66
+  - [v4,1/2] RISC-V: clarify what some RISCV_ISA* config options do
+    https://git.kernel.org/riscv/c/6216182fb776
+  - [v4,2/2] RISC-V: separate Zbb optimisations requiring and not requiring toolchain support
+    https://git.kernel.org/riscv/c/9343aaba1f25
 
 You are awesome, thank you!
 -- 
