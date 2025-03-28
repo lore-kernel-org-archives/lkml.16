@@ -1,47 +1,47 @@
-Received: from out203-205-221-202.mail.qq.com (out203-205-221-202.mail.qq.com [203.205.221.202])
+Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A98B1F5E6
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 01:45:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A361189B91
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 01:46:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743126341; cv=none; b=jCO7pmm/AQR6kYyBlEtIIJbtO1662uEdUn9Ulem7i5WPig2xd+WaAl6MNLuY+9dUUDBP6+f4CRA8zW4wzlnLZgEFFIRFHxWyjyONJeDYjyE+cMQI0c6LoWzK7iGv+5Gpx7OPIvKo3tNIhQ3XcBJXdWnGaR0TYqMQFCZWLUKGYz0=
+	t=1743126420; cv=none; b=BPc2vBZXbNL1mQfuE1h2eFW9N7nGVGk95VZRI9oBqb0hOEp1TZ0i42C3uM10CtAFVZZ4iswnIYslbHSMgmTDhCggc3kc0Jnwrgvr7qau/mzUnu6JyNwU15/lSVkf66Hj5t10lisI/OZzDzDILx1rPfEgvkMDkce4CGbV3LKKuGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743126341; c=relaxed/simple;
-	bh=5rlMF3EdTMplo4ZiNP8oicxDIGNVDLr4l1WVenFeBDc=;
+	s=arc-20240116; t=1743126420; c=relaxed/simple;
+	bh=FNFJ4M34L5/lBW3NlP8+HVmOe1SwyG60irx9+x57OqU=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=gtDykUAEb6TD3f2hleCZRg5kd4bw9n9Q0Fgtu7rQ2i0y14Ap4uptALlj16ADfnBsrHRV4BAOLhoq1A5SJEFxFpbSeg/D/XP/3YEUuv8ee0ctGkOmngKHnMwnAgZwrw3XKGSgBtJhzRGRkxHS58PB5d/7emQd4PpyS36viTy3y6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=cYnZdELW; arc=none smtp.client-ip=203.205.221.202
+	 MIME-Version; b=E+8SqirBuafgbLaKvsJIOwD7AZoQNrFeYgR/bSlst95p/jhoiHsgXZco3NZuF1OSNoE0kvpPAYjxrbQN7rEvEO9mlXIBdd1UgzPO9x6egID3A34Lw7JMw9IK49BCSsWwSooigdd7ODj8J9Um1V7OjiirBFnb8zMtqIjD/+ky3F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=ycKfQt5K; arc=none smtp.client-ip=162.62.57.137
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="cYnZdELW"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ycKfQt5K"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1743126034; bh=aExX0kC5Xf+cB41U+J27cfH1AIdrlolDMYa3emTpxnE=;
+	t=1743126412; bh=Mq5fPyYKCLwHLmmMwMzVJgV2ir8ne/Qe4zI+PeMQpDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=cYnZdELWFGqey8+Y+dIV911egyIbXWDvTq1RajNK4xB93EcuympUu+WpNbSX5pZjZ
-	 U5kSGW9/z1VD9lFibn8q3oJONEck3KRUBJ8hSMRNhgYjaD0h3dSWSuRZDUm3/Q4IZK
-	 pFY/7tnfrVm11ivKs8y+qvb7G5IGEVn8XZG39EtI=
+	b=ycKfQt5KgSbwJ9jkomY/W9lI/gEpnuwxKIhhRD9Yre9eBNi8iAGPPNTrTJxjI+E7P
+	 GaLCHU9eWPZxHEx+H2nFDtIpFuzGW2LnT82wKtTqTZMpCGN/ejP+tYHu8HCL2yOJyN
+	 CBbGtKR4WYJCEFUhTYu3IscoOPfFe7onrSRi92nU=
 Received: from localhost.localdomain ([116.128.244.169])
-	by newxmesmtplogicsvrszb20-0.qq.com (NewEsmtp) with SMTP
-	id A20B4A85; Fri, 28 Mar 2025 09:40:32 +0800
-X-QQ-mid: xmsmtpt1743126032tok9f6m5q
-Message-ID: <tencent_29C768845246A8732C6D233A857EC74B6809@qq.com>
-X-QQ-XMAILINFO: OcN56dxiYj5T37Veb2R6Gdm+66ORTSOhPQYHL55Adm1fBVLY0+VtJA5/hPDHYX
-	 AdGk9n/rqz5fwOomSbagstJaOJ93dH4C+JN0HtN5/djMqiearbN4PZ83gp3eMdSC8W2aAhxop0YB
-	 noxV1Z2XtpVWxP5ysxmh9GLgBPpL7AVf7F4RLh1Ple53gVILzncKWDiSfJhS58JvL8rrsydf2hpK
-	 +JlZJSpWpViktMwmEp2FAX/2uwEO9OucbsJTbeiBNkW7MZr7NlLehG76TKrDkzZSUOiujxyuj9e5
-	 +p+1NdIdXc6UyVjE9+gqpq9ht0PVLb9IwmC8nUsN+U+yTOcfd1OgL/Z2uDDP0ZdK6i+JZfqMJ+CG
-	 K6QEqDoduJJKGyRWDsSxvijBk+tBmKve8rI4hmO2ReHkqK37LYTYAZubJv4/9z7hM6AVIsapoIru
-	 wrl+WytjY0RfQEWxkUA6UkUY463K3q41W4fCbA2ctJFBMtEpYufFj8o40Jjay0qtRZFbZQo6t4XB
-	 XNastaNWjNiVAJrskTtmUbkB51KU0QXFwYPc3GFWKKnrvYyYYWLkvOJpTiaktIrNM+8H552PsdLB
-	 oGnwkLgN8RYpFWP1u9zUw3HGzlQRIkoZRkwxpnZdeks1+QS3D1VjNA/QPH70R8kwo+Bl7qdnJw/5
-	 IeqVUoJwDZ74cJ8wJrsydw/JrgYqipj6j6H5KM9NctJG/VvQ6a3/oQQ7SgNcndmX1d+Rd358Wmwr
-	 Y/rndW2WcdyUro+iJQz7ArxaRExHk9mr+MwL0ud+JiQY38m4ZJSAHD2MUPOIYdHYf+OjdRV0qhaA
-	 H7td1McW+FVYQSU+PPvBVA31suj0ylPwzVJ2CKUwZzpedc2j92Fs9j7+BCeRr3jQ/hNoholKXPPZ
-	 vC7zL72CMBkw13bFu+wEEGee3a+3S8WIEHa3UPJLYV7dR4oJZ6uqXn4TcOhdFVzYSeuVqV8n0WTR
-	 2RsJSZ8BbnDkWbkEjyD1ykfT+ziQRti3rZ8of/p/yz2ceM6mFSopVee00JlfL0
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+	by newxmesmtplogicsvrszgpua8-1.qq.com (NewEsmtp) with SMTP
+	id A292C6EE; Fri, 28 Mar 2025 09:40:41 +0800
+X-QQ-mid: xmsmtpt1743126041trxb4xuyd
+Message-ID: <tencent_584C480878642207D716B173FEF7ADA47C05@qq.com>
+X-QQ-XMAILINFO: MmPNY57tR1XnaKfaRS3pLhf4rBECaEUd3RUQoWFvwk6NMO2Jp496MnGguhKu+P
+	 E797zxl2PL9Epkc5lejxsCoDcxZQRYtOf8nLJtVkJvN2oD3zCM1HVtlCxBcfTscnP1sM6VGzT4b1
+	 s6addm7dcSEVn2JHd1FH/muzJKvgqXoEyenlijXqg0VzgwjXTst4j2BHLDLEbI62Ay7HK+64akFV
+	 nlq2FSfnpUZUqycHbIJFsro17vACZhvGrMBvGbQVTYOxYDdNTNBfyrgFCxQOivvv9vXVRyu84+xj
+	 d6GighHy2z9pQjNeiha4n1dFO100AzK0X5IJpYyWFxUY0DFuOzPD0peVREfz+F4x1pjDt0wlExlP
+	 2q96YefKdzS1FANIWoK5FD3WoTfGnwbNXIhBfCQOB5GRdR1vnAWXEwTUQa6z3EfY9pM5epdeQby/
+	 dDHN8ADo3YR+Hk/h9l5dsXUEQ0wSCJlsXxpMQ7wOo9P/qXmzSCKDbT/50ic/a3vsY94jeDz67ZXi
+	 Uk9YV1+jbjP6BmbzpyzakCOnMUnA3aPt4PQm9Joh49AwjLOS5UrXiTAWUohaIbcwag/bWKQD2XAQ
+	 L2UAGQ3Kak3uAYtUxQoR/CADZmZ4dy9tzORAqJIOy2q7Q849J8NmqslaiTZPAa/BzlzRPpKHhgxi
+	 DAWWQumfvVCHjAksl2ztvL0tdsVsKwbfZbbrv/RYhlSvZnpgDqo/k6Jhfwdfr7k78pR4L65GgCPK
+	 5t3l3AW/ja1wI76umlo/0Q6WVVmnRU1QLXtxmsDmwvNK5Dt4y8fsEZCe63PLQeUJxVuf26G+oKOy
+	 dW6UnfAmzepwpa35sv16w4F3HpTNTGGaCAMC8JP/sOtiW3VCjGrJwx596T8bsKzk8oYb7IQcdtMJ
+	 S8YK5+PF4RgrHBZ9Is9ply6zvZEpgsicQt8Dp5PcW+5Gte1xCTy8UZVAFcGUVobbXH1qn/Jg4xo7
+	 ZcpdhEJ38vkZYhrJPS7Q==
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
 From: Yaxiong Tian <iambestgod@qq.com>
 To: kbusch@kernel.org,
 	axboe@kernel.dk,
@@ -50,9 +50,9 @@ To: kbusch@kernel.org,
 Cc: linux-nvme@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Yaxiong Tian <tianyaxiong@kylinos.cn>
-Subject: [PATCH v2 2/3] nvme: add sysfs interface for APST table updates
-Date: Fri, 28 Mar 2025 09:40:31 +0800
-X-OQ-MSGID: <20250328014031.94959-1-iambestgod@qq.com>
+Subject: [PATCH v2 3/3] nvme: add per-controller sysfs interface for APST configuration
+Date: Fri, 28 Mar 2025 09:40:40 +0800
+X-OQ-MSGID: <20250328014040.95401-1-iambestgod@qq.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <tencent_4A5421BA11BD9C5B5BF3CEA95FD212AB3107@qq.com>
 References: <tencent_4A5421BA11BD9C5B5BF3CEA95FD212AB3107@qq.com>
@@ -66,124 +66,151 @@ Content-Transfer-Encoding: 8bit
 
 From: Yaxiong Tian <tianyaxiong@kylinos.cn>
 
-Currently, the APST (Autonomous Power State Transition) table can only be
-updated during module initialization via module parameters or indirectly
-by setting QoS latency requirements. This patch adds a direct sysfs
-interface to allow dynamic updates to the APST table at runtime.
+Currently, APST (Autonomous Power State Transition) parameters are
+configured as module parameters affecting all controllers uniformly,
+ This lacks flexibility for heterogeneous systems.
 
-The new sysfs entry is created at:
-/sys/class/nvme/<controller>/apst_update
+This patch introduces per-controller sysfs attributes under each NVMe
+controller's sysfs directory:
+- apst_primary_timeout_ms
+- apst_secondary_timeout_ms
+- apst_primary_latency_tol_us
+- apst_secondary_latency_tol_us
 
-This provides more flexibility in power management tuning without
-requiring module reload or QoS latency changes.
+The attributes allow runtime configuration of: Timeout values for
+primary/secondary states.
 
-Example usage:
-update nvme module parameters.
-echo 1  > /sys/class/nvme/nvme0/apst_update
+The existing module parameters are retained for backward compatibility
+but now only serve as default values for new controllers.
 
-Signed-off-by: Yaxiong Tian  <tianyaxiong@kylinos.cn>
+Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
 ---
- drivers/nvme/host/core.c  |  9 +++++++--
- drivers/nvme/host/nvme.h  |  2 ++
- drivers/nvme/host/sysfs.c | 23 +++++++++++++++++++++++
- 3 files changed, 32 insertions(+), 2 deletions(-)
+ drivers/nvme/host/core.c  | 16 ++++++++++------
+ drivers/nvme/host/nvme.h  |  4 ++++
+ drivers/nvme/host/sysfs.c | 36 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 50 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index fb0404fee551..9dea1046b8b4 100644
+index 9dea1046b8b4..c999bd905d10 100644
 --- a/drivers/nvme/host/core.c
 +++ b/drivers/nvme/host/core.c
-@@ -2654,7 +2654,7 @@ static bool nvme_apst_get_transition_time(u64 total_latency,
-  *
-  * Users can set ps_max_latency_us to zero to turn off APST.
+@@ -2608,22 +2608,22 @@ static int nvme_configure_host_options(struct nvme_ctrl *ctrl)
+  * timeout value is returned and the matching tolerance index (1 or 2) is
+  * reported.
   */
--static int nvme_configure_apst(struct nvme_ctrl *ctrl)
-+int nvme_configure_apst(struct nvme_ctrl *ctrl)
+-static bool nvme_apst_get_transition_time(u64 total_latency,
++static bool nvme_apst_get_transition_time(struct nvme_ctrl *ctrl, u64 total_latency,
+ 		u64 *transition_time, unsigned *last_index)
  {
- 	struct nvme_feat_auto_pst *table;
- 	unsigned apste = 0;
-@@ -2778,8 +2778,11 @@ static void nvme_set_latency_tolerance(struct device *dev, s32 val)
- 
- 	if (ctrl->ps_max_latency_us != latency) {
- 		ctrl->ps_max_latency_us = latency;
--		if (nvme_ctrl_state(ctrl) == NVME_CTRL_LIVE)
-+		if (nvme_ctrl_state(ctrl) == NVME_CTRL_LIVE) {
-+			mutex_lock(&ctrl->apst_lock);
- 			nvme_configure_apst(ctrl);
-+			mutex_unlock(&ctrl->apst_lock);
-+		}
+-	if (total_latency <= apst_primary_latency_tol_us) {
++	if (total_latency <= ctrl->apst_primary_latency_tol_us) {
+ 		if (*last_index == 1)
+ 			return false;
+ 		*last_index = 1;
+-		*transition_time = apst_primary_timeout_ms;
++		*transition_time = ctrl->apst_primary_timeout_ms;
+ 		return true;
  	}
- }
- 
-@@ -4852,6 +4855,8 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
- 	ctrl->ka_cmd.common.opcode = nvme_admin_keep_alive;
+ 	if (apst_secondary_timeout_ms &&
+-		total_latency <= apst_secondary_latency_tol_us) {
++		total_latency <= ctrl->apst_secondary_latency_tol_us) {
+ 		if (*last_index <= 2)
+ 			return false;
+ 		*last_index = 2;
+-		*transition_time = apst_secondary_timeout_ms;
++		*transition_time = ctrl->apst_secondary_timeout_ms;
+ 		return true;
+ 	}
+ 	return false;
+@@ -2728,7 +2728,7 @@ int nvme_configure_apst(struct nvme_ctrl *ctrl)
+ 		 * for higher power states.
+ 		 */
+ 		if (apst_primary_timeout_ms && apst_primary_latency_tol_us) {
+-			if (!nvme_apst_get_transition_time(total_latency_us,
++			if (!nvme_apst_get_transition_time(ctrl, total_latency_us,
+ 					&transition_ms, &last_lt_index))
+ 				continue;
+ 		} else {
+@@ -4856,6 +4856,10 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
  	ctrl->ka_last_check_time = jiffies;
  
-+	mutex_init(&ctrl->apst_lock);
-+
+ 	mutex_init(&ctrl->apst_lock);
++	ctrl->apst_primary_timeout_ms = apst_primary_timeout_ms;
++	ctrl->apst_secondary_timeout_ms = apst_secondary_timeout_ms;
++	ctrl->apst_primary_latency_tol_us = apst_primary_latency_tol_us;
++	ctrl->apst_secondary_latency_tol_us = apst_secondary_latency_tol_us;
+ 
  	BUILD_BUG_ON(NVME_DSM_MAX_RANGES * sizeof(struct nvme_dsm_range) >
  			PAGE_SIZE);
- 	ctrl->discard_page = alloc_page(GFP_KERNEL);
 diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 51e078642127..7f8e10f5bf7a 100644
+index 7f8e10f5bf7a..ed9afc3c6781 100644
 --- a/drivers/nvme/host/nvme.h
 +++ b/drivers/nvme/host/nvme.h
-@@ -385,6 +385,7 @@ struct nvme_ctrl {
- 	key_serial_t tls_pskid;
- 
+@@ -387,6 +387,10 @@ struct nvme_ctrl {
  	/* Power saving configuration */
-+	struct mutex apst_lock;
+ 	struct mutex apst_lock;
  	u64 ps_max_latency_us;
++	u64 apst_primary_timeout_ms;
++	u64 apst_secondary_timeout_ms;
++	u64 apst_primary_latency_tol_us;
++	u64 apst_secondary_latency_tol_us;
  	bool apst_enabled;
  
-@@ -828,6 +829,7 @@ void nvme_unfreeze(struct nvme_ctrl *ctrl);
- void nvme_wait_freeze(struct nvme_ctrl *ctrl);
- int nvme_wait_freeze_timeout(struct nvme_ctrl *ctrl, long timeout);
- void nvme_start_freeze(struct nvme_ctrl *ctrl);
-+int nvme_configure_apst(struct nvme_ctrl *ctrl);
- 
- static inline enum req_op nvme_req_op(struct nvme_command *cmd)
- {
+ 	/* PCIe only: */
 diff --git a/drivers/nvme/host/sysfs.c b/drivers/nvme/host/sysfs.c
-index 6d31226f7a4f..5003cb294d65 100644
+index 5003cb294d65..afa61e9c1366 100644
 --- a/drivers/nvme/host/sysfs.c
 +++ b/drivers/nvme/host/sysfs.c
-@@ -684,6 +684,28 @@ static DEVICE_ATTR(dhchap_ctrl_secret, S_IRUGO | S_IWUSR,
+@@ -684,6 +684,37 @@ static DEVICE_ATTR(dhchap_ctrl_secret, S_IRUGO | S_IWUSR,
  	nvme_ctrl_dhchap_ctrl_secret_show, nvme_ctrl_dhchap_ctrl_secret_store);
  #endif
  
-+static ssize_t apst_update_store(struct device *dev,
-+					      struct device_attribute *attr,
-+					      const char *buf, size_t size)
-+{
-+	int err;
-+	bool bool_data = false;
-+	struct nvme_ctrl *ctrl = dev_get_drvdata(dev);
-+	err = kstrtobool(buf, &bool_data);
++#define nvme_apst_show_and_store_function(field)				\
++static ssize_t field##_show(struct device *dev,		\
++			    struct device_attribute *attr, char *buf)	\
++{									\
++	struct nvme_ctrl *ctrl = dev_get_drvdata(dev);			\
++	return sysfs_emit(buf, "%llu\n", ctrl->field);	\
++}									\
++									\
++static ssize_t field##_store(struct device *dev,		\
++			     struct device_attribute *attr,		\
++			     const char *buf, size_t size)		\
++{									\
++	int err;						\
++	u64 data = 0;					\
++	struct nvme_ctrl *ctrl = dev_get_drvdata(dev);			\
++	err = kstrtou64(buf, 0, &data);		\
++	if (err < 0)						\
++		return err;						\
++							\
++	mutex_lock(&ctrl->apst_lock);		\
++	ctrl->field = data; 	\
++	mutex_unlock(&ctrl->apst_lock);		\
++	return size;			\
++}									\
++static DEVICE_ATTR_RW(field);
 +
-+	if (err)
-+		return err;
++nvme_apst_show_and_store_function(apst_primary_timeout_ms);
++nvme_apst_show_and_store_function(apst_secondary_timeout_ms);
++nvme_apst_show_and_store_function(apst_primary_latency_tol_us);
++nvme_apst_show_and_store_function(apst_secondary_latency_tol_us);
 +
-+	if (bool_data && nvme_ctrl_state(ctrl) == NVME_CTRL_LIVE) {
-+		mutex_lock(&ctrl->apst_lock);
-+		nvme_configure_apst(ctrl);
-+		mutex_unlock(&ctrl->apst_lock);
-+	}
-+
-+	return size;
-+}
-+static DEVICE_ATTR_WO(apst_update);
-+
- static struct attribute *nvme_dev_attrs[] = {
- 	&dev_attr_reset_controller.attr,
- 	&dev_attr_rescan_controller.attr,
-@@ -712,6 +734,7 @@ static struct attribute *nvme_dev_attrs[] = {
+ static ssize_t apst_update_store(struct device *dev,
+ 					      struct device_attribute *attr,
+ 					      const char *buf, size_t size)
+@@ -734,6 +765,11 @@ static struct attribute *nvme_dev_attrs[] = {
  	&dev_attr_dhchap_ctrl_secret.attr,
  #endif
  	&dev_attr_adm_passthru_err_log_enabled.attr,
-+	&dev_attr_apst_update.attr,
++
++	&dev_attr_apst_primary_timeout_ms.attr,
++	&dev_attr_apst_secondary_timeout_ms.attr,
++	&dev_attr_apst_primary_latency_tol_us.attr,
++	&dev_attr_apst_secondary_latency_tol_us.attr,
+ 	&dev_attr_apst_update.attr,
  	NULL
  };
- 
 -- 
 2.25.1
 
