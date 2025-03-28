@@ -1,115 +1,87 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874F44B5AE;
-	Fri, 28 Mar 2025 14:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230681BEF71
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743173305; cv=none; b=ZFW5c6kxPsbof/mEA/9An6/0hD6PCCOtPimdtbyxZJpSWOZSRbH0TA1Zs0Xy3u0Yz8zq0sFb9rqlfU25JS/QWEKUgy65mbvCwUGGb2u+vy9BxvfzOOHp559TGtBoYo9s0lR1H7U6xGLJITQXOfOyqBYUw/2lpdFrVYXZiNPw3Wg=
+	t=1743173379; cv=none; b=T3q2+0Xgz5upChSVKKI9fXjbIWF9+FnqXdNOWfF8ejDhQTPFKpNdPIThtLflWbip0IMFolLtSRJrXYCH5E3GkwU7KQJFKzj4oOAlzqoOdMWzLPGj/j4dC4dffCyVc8LVZhtudm9NeNQqGhQi3DgdfvfXI2Btku+4mc3eETFwMSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743173305; c=relaxed/simple;
-	bh=W7R2gZBzWBuPUH9E8mLgn5iH+bIAruEwVlJhbgs2hj4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PEXWsR7BsE5eXukrP97vKjW5qOSkyTCQ9GwxpjeBYxgnpmxVOt6/UTECxkOspsKvdEhZkVtkSlNLbr6uLPUYTQzHa5/NuSU+kkSvMI1UyIyhIJamOtt//WkaMEikbQq79wqtulWduS8+M4PEedgJ9T7Gl+AApItvBNYNBiZ6DHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fEaxdXBM; arc=none smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743173379; c=relaxed/simple;
+	bh=sLIPyy98uoLJ4WtcHzmV+5vbfuO7ODilL+6FT6xYmxM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=rX1BdQezvzj8v7Gts7y3mNixO64B+zKq7I6WXyGuWuvSeo5POkgknJyJHQ2uP2PU7VXb7A3izyAtfDDScl3RAPnLUhybjQLdDOxxawMSArz6/YVHmKJqww1fwPOxT7g1XrAva9qJ3w0c4wQ6va49XgMPzQ7VA9MQsPls1oyUPes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jgCXfDBa; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEaxdXBM"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-523d8c024dfso923280e0c.3;
-        Fri, 28 Mar 2025 07:48:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743173302; x=1743778102; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W7R2gZBzWBuPUH9E8mLgn5iH+bIAruEwVlJhbgs2hj4=;
-        b=fEaxdXBMHI6Tya/9qDx2dRPCnIa6J43/9+EYLLDgHFQl4qMspEClgm4llYgrSYCLGJ
-         W5045Coc+Nxj4u9xoaibYQRHpCS5yOlCRT5D0a+zy0H93V98FxNYgRnjrCoqKfQIaW7F
-         UW8kQ8fWSilj9tlU4iOGEWwsnhch+Ed7PAqMv6CTAheKiwgLGG9cmK3fQJmnPNvCnT5I
-         zaaa+Nb9ow3J1qBeTvMX5FWsDYJHr+YgTv8MfGakmV9NFadm4gI7RFtnS1BC+GReRniV
-         fvKzq+OTRnSG7NDFN9YmAKnQMaDOBCaDfahw6FKeWFwozTwm+AqvK2ALzydRByLw6+oI
-         dfXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743173302; x=1743778102;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W7R2gZBzWBuPUH9E8mLgn5iH+bIAruEwVlJhbgs2hj4=;
-        b=WCeAk4xT11R77IAEwAQSa6BXY//9OBH226NmljWzizNxOiU+ve3TrfaGDZt5uWngiD
-         bGCaNXQ9KEF1wSD2JU8OpTiFysB4eY1qBhc7KcgYUDuGVuqObTihuldaeRoM7mAP7nSa
-         zRe/CRUKVFhj0X3+g8P3n6+K/iSmTKVvX0tR1bTNjv7tl8jMecF6xYYheaHCt+GXDLE+
-         Y6Kuaj6jKVhyHaVtmQEroU7MJC5vVXQ1Hd8k4Yv/RCLKmizn00Dk7Vi35eYoGTSbYGTn
-         r5Q5ZhfqcYEW6DyF66Lof28d5TpmoKYd1lAdm5Que1qwQb3A0KUWClgV/g8tSLLm/iKm
-         Geqg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/MxYVvYwHHH7ylatz19DBBUk/LOI7UwgG/VnvXDsgCQH20lD09MAA1jTAGQEYtj09M6qVkkwEGNTrxv56FhdlME8=@vger.kernel.org, AJvYcCVCMSYro1jl0cubRDemWmCCmHqmOUb0Fiaarz4b7bFBFrgX/TC+dkuP2x7XD88mQEA8maoUyUxHT07JJUM0@vger.kernel.org, AJvYcCVqa8pHK5yAP/RQIEkWwx4W5IHN7h1ILf+ZY8ju41XJVBhu/mEyyUYrO+uZC7jq0oedttB63JLBxJCf@vger.kernel.org, AJvYcCWUcwOp3V2FoHnL3uCkJs84sLYS3AIh0oia/CBiCX24cXVW0uwcs/5sp0x9OSlN0Qoc5SgcqXTUQLm7@vger.kernel.org, AJvYcCWblTKUnNgDNy1B7wPhGYP1y7tU9vDv9KMK/ivAtR51cHZBcy+xrbrypmN5B8VbqKbttf44mIiElYr6pC40@vger.kernel.org, AJvYcCX1c5iRtkyqo5+J735TLwPWpnmMl9/iqSGyle9+yWkMjX7wuCUm24R/To6JAPMzi2uhgHFHOpKQ3obJdw==@vger.kernel.org, AJvYcCXK1vO69tmDot6oBABiI9wnTuRtpyo+h9aB0GAN2D7hve63lAN5i8WndUwqcWJosOdLpOJ7AMi/luAR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxexab2UG7SJk8fSFORMVFHcMuiSBZa3FHctQU8vGx8ollPlEHj
-	SkoQdnQu6Nj/Drkbaqe+viWB0BtKleHh9zfABZTDdsD7DGuOFJGZNgnoO2KP/hn5BNi1OkbOAXY
-	giEjPO+PTbMGzqWkyzprnIB6smus=
-X-Gm-Gg: ASbGncvRWMIWeYlOrH6aozR509CIv2fZtbrGmAQY/8kxQEy8n0c6HBiAYgHqTyWa7qE
-	oeE4PjyGGdaRsQfMIWf8kXH7LVqqAdrmskPSUefkqEjA4o1oPDYL5dh1bMYRBBsz5Q08rXhPJow
-	zx1zDHtje2on759CpWaBcDYWUyII+9560F1Nwz/mIXmZDV5MoF3+mZ37hp
-X-Google-Smtp-Source: AGHT+IHouldgTyP6Q/w4w6vBsXV6nSeyEMfHGqZjhRlDBBXFbUfgEyb6My2WMEzsfSI0GSy57EiD1BG9iD1i8bsYjz8=
-X-Received: by 2002:a05:6122:3d0a:b0:525:a70d:3110 with SMTP id
- 71dfb90a1353d-52600a8712bmr6248996e0c.8.1743173302143; Fri, 28 Mar 2025
- 07:48:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jgCXfDBa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743173378; x=1774709378;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=sLIPyy98uoLJ4WtcHzmV+5vbfuO7ODilL+6FT6xYmxM=;
+  b=jgCXfDBa9sAM0qJ/h33wITlGnt7jhCR5N0VWuPkdfiLJg4GH3ZWoEzUd
+   zk4GQwDoDxqJf4/TWK4/EemKbSxLxYUPEG0QqQ6CYlYYP2vRc9KLISCdk
+   UJu2JXY/wsQ9rG8RyFv6LBiU9P6Px2l6gNXzbQuHFNmgrAnHslYnIxU4P
+   kG/5jR+5qn1sKHV+W2QSXiuV1lxdpuGnME3TPhVHB/EHKaBLA8NZ8uFB2
+   XBB9eCOVFf52s5Fb20H0z2b6vn0GgxK7O9aBRgUKS4AE8tPKstpwxXYiE
+   YVtJc6VgdQ0PjGLVvl/ZBc3INwoa2uzWEzd/pDE3XQm/a4VguoO8Dn/tG
+   g==;
+X-CSE-ConnectionGUID: zEXVdXBaTcO1/HPBnVRQGw==
+X-CSE-MsgGUID: I+wtvtp0SG6HYtfjOZRUQg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="44257208"
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="44257208"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 07:49:37 -0700
+X-CSE-ConnectionGUID: KRv1b+fPQ4yf6rUkGR6qjg==
+X-CSE-MsgGUID: X6b86eSNSb+Od6Ldg22EGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="130676604"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by orviesa005.jf.intel.com with ESMTP; 28 Mar 2025 07:49:37 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tyB1Z-0007VM-2V;
+	Fri, 28 Mar 2025 14:49:33 +0000
+Date: Fri, 28 Mar 2025 22:49:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Ingo Molnar <mingo@kernel.org>
+Subject: [tip:objtool/urgent 9/23] vmlinux.o: warning: objtool:
+ cdns_mrvl_xspi_setup_clock: unexpected end of section
+ .text.cdns_mrvl_xspi_setup_clock
+Message-ID: <202503282236.UhfRsF3B-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250326143945.82142-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <f03c3a6a-aa6c-47be-8a03-7486131f6d32@kernel.org>
-In-Reply-To: <f03c3a6a-aa6c-47be-8a03-7486131f6d32@kernel.org>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Fri, 28 Mar 2025 14:47:56 +0000
-X-Gm-Features: AQ5f1Jr8bCu5jfB7gzVdmCLWSNd82UxgDWDDpWjIQfNCBC-6gPx3a_B0ei82wkA
-Message-ID: <CA+V-a8vx2VKoADpw5rG0jH6773=QiHB=reNYBr4ncYZGS-H+XQ@mail.gmail.com>
-Subject: Re: [PATCH 02/15] dt-bindings: soc: renesas: Document RZ/V2N EVK board
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Krzysztof,
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool/urgent
+head:   1c9d28fdf70d4ae3e8dfeadee982461403c6bb50
+commit: c5995abe15476798b2e2f0163a33404c41aafc8f [9/23] objtool: Improve error handling
+config: x86_64-randconfig-161-20250327 (https://download.01.org/0day-ci/archive/20250328/202503282236.UhfRsF3B-lkp@intel.com/config)
+compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250328/202503282236.UhfRsF3B-lkp@intel.com/reproduce)
 
-Thank you for the review.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503282236.UhfRsF3B-lkp@intel.com/
 
-On Thu, Mar 27, 2025 at 7:41=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
->
-> On 26/03/2025 15:39, Prabhakar wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Add "renesas,rzv2n-evk" which targets the Renesas RZ/V2N ("R9A09G056")
-> > EVK board.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> Squash, previous patch makes no sense on its own.
->
-Agreed, I will squash this as patch patch 1/15.
+All warnings (new ones prefixed by >>):
 
-> You, Renesas, already received exactly that feedback!
->
-I truly apologize for the oversight and appreciate your patience. I=E2=80=
-=99ll
-make sure this doesn=E2=80=99t happen again. Thank you for your understandi=
-ng.
+>> vmlinux.o: warning: objtool: cdns_mrvl_xspi_setup_clock: unexpected end of section .text.cdns_mrvl_xspi_setup_clock
+>> vmlinux.o: warning: objtool: synaptics_report_mt_data: unexpected end of section .text.synaptics_report_mt_data
 
-Cheers,
-Prabhakar
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
