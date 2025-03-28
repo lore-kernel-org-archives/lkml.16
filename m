@@ -1,111 +1,95 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91E1224CC
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 01:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743125541; cv=none; b=TFD28k8EJJhKeTbI14+59iatvd8Xq8evMN9EvriBMwvNGDVnqskilaSlp3xITcv+e8ThzaaYi4QHTWEY0QRBalt/bNH/xCCSsk+wSONMYt2XOPCYxfohiq1jDU5EtdZ8KvfY8pborPlVNueXs/UYyAJVSuflhVC+GUzKwSCEsE8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743125541; c=relaxed/simple;
-	bh=Az9d7ZNIWC8NtvhwKFq+k930wrJytpLyAq0Iwc+QHS4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lGeXXHF1me4KxzQwsmxqsoKHAl0NZUP2+rJjcOK3pOHWbnJssXU5j9d9tHR8JHFh2yigldPRPWhDp2RgWDyvtIxg6y+UAVOaaePSpLzxh37TMyGwkn7SH9O3MSnYUK8ZhW4jk3cu67zg53fzbrPz9ZqrZ4lWIRQg7oywy10oq9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=f6gqixMT; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4A2224CC
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 01:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743125792; cv=pass; b=qP5F5C/fQLcmT658n/hcATzfsUmVr3bYBRA018B2OHj6j2JyRx/BKjUMAlz62lW18a1eFuj75rBccWHX8GfhaCwRw0S8Gt1ussgz/Ea5vpgv3DQlqqI0KoMr49lZEKzUgy9nBT8i1IiPygNpUe6rEX8j/rhjnj5houafQw1DEhk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743125792; c=relaxed/simple;
+	bh=8JArjRxnFIEWAa8Z3EZ6r/0xEXjHpy2xMRzcmhybK8E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nEcMvtrD5r2U/C3y9fun2dlTBH4JD4617sPw4zBKW1GP/F10dAc2FU5OQJ8Yx83i18xX61qvLB92gz7+13EvVQZKUROuLxthT3F5Ej/UWCOk1FF5zBAxLjOV7SAAxdXAH2/DUcjcinN69kJnAlJyM26OsDCIyxUb93Jbx+yGNxQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=Mh1OCcnG; arc=pass smtp.client-ip=136.143.184.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="f6gqixMT"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aaecf50578eso278091166b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 18:32:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743125534; x=1743730334; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EwXAznYKMKf9Xjvy7VQePCArGbmup4GqAOYD4PRfII8=;
-        b=f6gqixMTQ7QqxwhAA0KIS1n/BLhkFjqJ6LPouDMgqM+fH6XEyp56uixeeB8apOAK9x
-         8dwUQstLrSAUd5dhELFx/xL8XI5hJz8lYxU0PYMI0EkNBWydr7osBHzi+Ovli785tuqX
-         PKZ+HTCoKUq3scOnO9NcZQdEmU48ULlulzt3M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743125534; x=1743730334;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EwXAznYKMKf9Xjvy7VQePCArGbmup4GqAOYD4PRfII8=;
-        b=Cy/EbIYmWXqVt9OxlI5u+vBAWMJuOFCSecp7NEtzLfPl0AlN0lZvWMle+13mAUFQbk
-         HwAVHzyB4TAzNR+WBOHE2soFi2SG8Yl5LGUHOpjD7NXfhnNRtGAiloQEONsgfoWo71hg
-         zF6CxST0Mn7dZBd2Ov3ehYkL8k+L/6IHdpBpiS+VcPdL2pFr/vNgdpKIfMGdbgzM5OO3
-         FytLVkGV2TZNKgHA9nrQuKH2IfNi3xioNBrxaarOMlf0CiNATZucL5tnmIaQqy4BWi1e
-         kwFdPcFUD9tlnX90YIt6kgxb2LIh9LKQqVS8ENU8lIpLhQasywsUUKLixet3PyIh8Lzs
-         1UXg==
-X-Gm-Message-State: AOJu0YxjeRbIc7KNDtbnjlZCMfDCotCa/DS6+tkS5a0A1LYMYgFzmOeU
-	c8/enIZNKUAL9MIhJfd5ifs8v29G88IvQ1xf9wnO65LegmQsHMZT8/Oc3B1ubfk8VVfyvaGAO5u
-	h5Tg=
-X-Gm-Gg: ASbGnctNo2D2HLXZF8X9T2kW0gJ8OgedIz2ZxdJJo05m+HnzMS9242epNb8WlTLmCEk
-	AoyASO/A6JspD/q0zwyMhdraSCgMtRNDX8iAnyJCBel0u80ZCdWUzgflVZNH+iHIySdPE1PR1yB
-	6IRAucMR3sSf/PmaLDib5vJmQ3Jsp4ErWrPMDw2xh+Wcms3tU2vlA84vdS8ntLsRIIPmkYq/05h
-	Ri1vJBejK0zVy4oozO8d/A4M5wX7BRG8R89UozA+hBIxUx0vnWQKWGuyBGyaOricWRM7CJ0IB0Y
-	thF4Jw3ygB1ZPuXHAEf84U2S/IUkO2lcaS6wbx+C58PFfH+r5Vsvb3Z4p8eG29UjfNUYjgIaFbn
-	c3GfSXVArhITYzx7598g=
-X-Google-Smtp-Source: AGHT+IGRZbhcmzBNmlnoevUl0lz9pFUg2HiMGjHCQqKOu7vsqHOSNb9b6ZD9/UatrSO27CnvQQ1LPQ==
-X-Received: by 2002:a17:907:74c:b0:ac3:8895:8e99 with SMTP id a640c23a62f3a-ac6fae4899cmr480060766b.3.1743125533697;
-        Thu, 27 Mar 2025 18:32:13 -0700 (PDT)
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71961f8acsm76800566b.98.2025.03.27.18.32.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Mar 2025 18:32:12 -0700 (PDT)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so322083466b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 18:32:12 -0700 (PDT)
-X-Received: by 2002:a17:907:3f93:b0:abf:6ec7:65e9 with SMTP id
- a640c23a62f3a-ac6fb0fa6damr561148366b.43.1743125532138; Thu, 27 Mar 2025
- 18:32:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="Mh1OCcnG"
+ARC-Seal: i=1; a=rsa-sha256; t=1743125763; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=RQRS6F8pY0ZJ6se+EmJajCBo02km4vAJbM5kE5YWpB6mEu9dP2AFkvHzPsLxuRrVkCon4JJ+RO93K/qCNl9vdJ27SE0fyLYdTyCqcJL7ST9Utn241Fj2F1xV223GNmIjolbJw2LXwVNPUb1xsR3JQeDw2C29dANeJ/SxYxzMB6k=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1743125763; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=v+83m7PeA/Hi77apWlhVpRurgQRvbvqEjxvPe005cPI=; 
+	b=B/TYuOLC2uHclrYTLu8tlqPEdkpFZ6lhKw30t1o6MoAznSLgDsIbXKKVAmOdFmUuMLVjsYZ3rkVyFOTRMlV9Z1NLeEOk65yeXuZ/POngx+IvQuWZ/+8kiTXmEZWB8PS4wlSOUJSuFWpqINNSaSd0YLZIg4U6BwfGw8xLFzKqsXk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743125763;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=v+83m7PeA/Hi77apWlhVpRurgQRvbvqEjxvPe005cPI=;
+	b=Mh1OCcnGh9vuwx9w+gZUo9FrVDe0z8qpcBA28Qb3BdVsMNBjaq3kkXVvITmKiMLq
+	clbYuOQudpjzyV2Jv+Qf1Yy/FTrzgxkQAqVIBQei5HZnVdSSKpT5EOdP5cw7Mdn3Wtl
+	IY1bPuiCIrYKDUvEOjiw09QoMdqU2Jaw/IXE/anI=
+Received: by mx.zohomail.com with SMTPS id 1743125760960269.99873457084107;
+	Thu, 27 Mar 2025 18:36:00 -0700 (PDT)
+Message-ID: <ce386264-db89-4e96-865b-59f1fe39858c@collabora.com>
+Date: Fri, 28 Mar 2025 04:35:57 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327171037.032bf7e7@gandalf.local.home> <CAHk-=wgD9MQOoMAGtT=fXZsWY39exRVyZgxuBXix4u=1bdHA=g@mail.gmail.com>
- <20250327212447.24e05e7e@batman.local.home>
-In-Reply-To: <20250327212447.24e05e7e@batman.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 27 Mar 2025 18:31:55 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgW4QfXuR0StSz15jqCs-suuPhfDajKr1bH2qS73cT4dA@mail.gmail.com>
-X-Gm-Features: AQ5f1JqFc_Cw4aru5t8bfVwMsXfGUD4cilU5e8HOqCLAoB0TmmIrJMjfunmRAGs
-Message-ID: <CAHk-=wgW4QfXuR0StSz15jqCs-suuPhfDajKr1bH2qS73cT4dA@mail.gmail.com>
-Subject: Re: [GIT PULL] ring-buffer: Updates for v6.15
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Feng Yang <yangfeng@kylinos.cn>, 
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] drm/virtio: Fix missed dmabuf unpinning in error
+ path of prepare_fb()
+To: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>,
+ David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>,
+ Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "kernel@collabora.com" <kernel@collabora.com>
+References: <20250326014902.379339-1-dmitry.osipenko@collabora.com>
+ <20250326014902.379339-2-dmitry.osipenko@collabora.com>
+ <IA0PR11MB7185345D3DFA8C7900059144F8A62@IA0PR11MB7185.namprd11.prod.outlook.com>
+ <16a30d03-9c98-47a4-959f-8671f7cb7fab@collabora.com>
+ <IA0PR11MB71851C0607629875CC458A90F8A12@IA0PR11MB7185.namprd11.prod.outlook.com>
+Content-Language: en-US
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+In-Reply-To: <IA0PR11MB71851C0607629875CC458A90F8A12@IA0PR11MB7185.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On Thu, 27 Mar 2025 at 18:24, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> The pages are never vmalloc'd, it's only ever vmap()'d on top of
-> contiguous physical memory or allocated via alloc_page() in the order
-> given. Thus, we do not support non consecutive physical memory.
+On 3/27/25 10:14, Kasireddy, Vivek wrote:
+>> Another question, why do we need this fencing for imported dmabuf?
+>> Fencing isn't done host/guest blobs in this code, while dmabuf is
+>> essentially a guest blob. Could you please clarify why this fence is
+>> needed? Maybe we shouldn't allocate fence in the first place for the dmabuf.
+> At-least for the non-virgl use-cases (where the rendering is done in the Guest such
+> as in passthrough), this Guest/Host synchronization fence serves two purposes:
+> - It prevents the Guest from reusing/destroying the submitted buffer (Guest compositor
+>   FB) until the Host is done using it. Otherwise, the Guest compositor might render
+>   into this buffer at the same time while the Host is consuming it, leading to issues
+>   such as tearing/flickering. This problem is more noticeable in cases where the
+>   Guest compositor has only one backbuffer such as Xorg + dirtfyFb.
+> 
+> - It also prevents the Guest compositor from rendering faster than the Host refresh
+>   rate. In other words, it just sets the upper bound in terms of the buffer submission
+>   rate as there is no point in going over the Host refresh rate, which would likely
+>   lead to wastage of GPU cycles and dropped frames.
+> 
+> Therefore, this fence is really needed for Guest blobs including imported dmabufs.
 
-Christ, that just makes it EVEN WORSE.
+Thanks a lot
 
-Just keep track of the actual original physical allocation, then!
-
-By all means vmap it too for whoever wants the virtual allocation, but
-remember the *real* allocation, and keep it as a 'struct page'
-together with the order that you already have.
-
-And then you never use vmalloc_to_page() - or even virt_to_page() - at
-all, because you actually know your base allocation, and keep it in
-that form that so much of this code wants in the first place.
-
-Having a a nice reliable 'struct page *' (together with that size
-order) and keeping it in that form would be *so* much cleaner.
-
-Instead of randomly translating it to (two different!) kinds of
-virtual kernel addresses and then translating it back when you wanted
-the original proper format.
-
-The random crazy hackery needs to stop. Really.
-
-               Linus
+-- 
+Best regards,
+Dmitry
