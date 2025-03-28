@@ -1,30 +1,27 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B2454A35;
-	Fri, 28 Mar 2025 10:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from ida.uls.co.za (ida.uls.co.za [154.73.32.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA171C174E;
+	Fri, 28 Mar 2025 10:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.73.32.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743158263; cv=none; b=ZDNnaVxQpgrHipsvyAe+8F3cyytrmDKXm/oYUNJvnpyaeNqrtkAwhgFteT160KY2SH1AXLtuUwq8QG2XaOU4ockLt50j1VHJ/37TwNTOhKRNZofHA70IrL3FO2Y9gsYVGG3vVajqWFMxEWnf2hguOLRjYF6qcGBMJrD7li4zWEs=
+	t=1743158342; cv=none; b=dJhtWKEBfXT+Hw6gmlwbmet6k3aYexf4afnzRuhyS5IUITM1Cpgypesf5Y9P16Uy25pklAr7kJMlkrwARZQtq6ckGz5/aOfh8aJZdX3U+l6H64YNSRdZzWJHNbGeMwkwFglUC5nPuxIrYswdOVYpDX7RMhygfT/InXnW9MLYZUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743158263; c=relaxed/simple;
-	bh=RQ87awM6i41scoynOvduNSQIKE3lzz/f6tmL1gIJyVM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NIGzQk1JTZLEBgd6I0yA6rv+36NyGkg3OULjeQIoBpjfvxw2vNQKg19WjWgGHIco6DU+i8l8TyVsQikggvw3A8gC5HYDJtA8nwJMuwwHgBqcSu9IFEH95rWNUeyTcwLDWOC0Vy2iUcQJWSL4a9RmiurHfkXXa8JH9yK1sVfJSJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=JJaZ6yyd; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="JJaZ6yyd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=qfYs8RPda9ZUYc5Un8iQbHHWtbo82BVkP1+oi5eU9m0=;
-	b=JJaZ6yyd5ZxBkVYjsSg5Nc4aXEDGJYe733qi2XuzrlwDyixD7T787pHAWzmKuL
-	mMyn3N2gK7c4AgqG1fTBAPvqHmlrn69p+I3woXZhBF0vxTeiv17efZpBpeab4nIJ
-	UZOyaHBBy343e3uQ+OgtaQO5XURUWUo7Pof+yb/VEjpN4=
-Received: from [192.168.60.52] (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wC3j3yte+Znmt0YCg--.34641S2;
-	Fri, 28 Mar 2025 18:36:30 +0800 (CST)
-Message-ID: <fc7b4f0a-91bf-4680-be75-47df8c87e5a0@163.com>
-Date: Fri, 28 Mar 2025 18:36:28 +0800
+	s=arc-20240116; t=1743158342; c=relaxed/simple;
+	bh=6zs68KjFBc2NWuANq0MsVCZr21SX+bieOksWA+N9xu8=;
+	h=Message-ID:Date:MIME-Version:Subject:Cc:References:To:From:
+	 In-Reply-To:Content-Type; b=LdIk21iHe6yD+DBsj6Bgi0LK9QD3syn5wTkUibJuvSa12+N+iAuEksOFzoUPZsYvrCcnydNNR80hU37HS7IKvmw2NeAOX5HGzet27eUTaOMO1LGuO3tshXAXm/GO2ogDEJ5GKA+a45dfpUaR/zRp+EKfMFaqcOdfIXAo4r0oLP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za; spf=pass smtp.mailfrom=uls.co.za; arc=none smtp.client-ip=154.73.32.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uls.co.za
+Received: from [192.168.241.128]
+	by ida.uls.co.za with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.97.1)
+	(envelope-from <jaco@uls.co.za>)
+	id 1ty6kg-000000004ga-0JvK;
+	Fri, 28 Mar 2025 12:15:50 +0200
+Message-ID: <05b36be3-f43f-4a49-9724-1a0d8d3a8ce4@uls.co.za>
+Date: Fri, 28 Mar 2025 12:15:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,61 +29,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [v6 5/5] MAINTAINERS: Add entry for PCI host controller helpers
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
- bhelgaas@google.com, jingoohan1@gmail.com, thomas.richard@bootlin.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250323164852.430546-1-18255117159@163.com>
- <20250323164852.430546-6-18255117159@163.com>
- <qbqkt53c27zwaetm7faqleqypy7yuxjfdcbukd3vd6t4p3tiwq@jtrk4524wsjr>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <qbqkt53c27zwaetm7faqleqypy7yuxjfdcbukd3vd6t4p3tiwq@jtrk4524wsjr>
+Subject: Re: fuse: increase readdir() buffer size
+Cc: bernd.schubert@fastmail.fm, miklos@szeredi.hu, rdunlap@infradead.org,
+ trapexit@spawn.link
+References: <20230727081237.18217-1-jaco@uls.co.za>
+ <20250314221701.12509-1-jaco@uls.co.za>
+Content-Language: en-GB
+To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Jaco Kroon <jaco@uls.co.za>
+Autocrypt: addr=jaco@uls.co.za; keydata=
+ xsBNBFXtplYBCADM6RTLCOSPiclevkn/gdf8h9l+kKA6N+WGIIFuUtoc9Gaf8QhXWW/fvUq2
+ a3eo4ULVFT1jJ56Vfm4MssGA97NZtlOe3cg8QJMZZhsoN5wetG9SrJvT9Rlltwo5nFmXY3ZY
+ gXsdwkpDr9Y5TqBizx7DGxMd/mrOfXeql57FWFeOc2GuJBnHPZQMJsQ66l2obPn36hWEtHYN
+ gcUSPH3OOusSEGZg/oX/8WSDQ/b8xz1JKTEgcnu/JR0FxzjY19zSHmbnyVU+/gF3oeJFcEUk
+ HvZu776LRVdcZ0lb1bHQB2K9rTZBVeZLitgAefPVH2uERVSO8EZO1I5M7afV0Kd/Vyn9ABEB
+ AAHNG0phY28gS3Jvb24gPGphY29AdWxzLmNvLnphPsLAdwQTAQgAIQUCVe2mVgIbAwULCQgH
+ AgYVCAkKCwIEFgIDAQIeAQIXgAAKCRAILcSxr/fungCPB/sHrfufpRbrVTtHUjpbY4bTQLQE
+ bVrh4/yMiKprALRYy0nsMivl16Q/3rNWXJuQ0gR/faC3yNlDgtEoXx8noXOhva9GGHPGTaPT
+ hhpcp/1E4C9Ghcaxw3MRapVnSKnSYL+zOOpkGwye2+fbqwCkCYCM7Vu6ws3+pMzJNFK/UOgW
+ Tj8O5eBa3DiU4U26/jUHEIg74U+ypYPcj5qXG0xNXmmoDpZweW41Cfo6FMmgjQBTEGzo9e5R
+ kjc7MH3+IyJvP4bzE5Paq0q0b5zZ8DUJFtT7pVb3FQTz1v3CutLlF1elFZzd9sZrg+mLA5PM
+ o8PG9FLw9ZtTE314vgMWJ+TTYX0kzsBNBFXtplYBCADedX9HSSJozh4YIBT+PuLWCTJRLTLu
+ jXU7HobdK1EljPAi1ahCUXJR+NHvpJLSq/N5rtL12ejJJ4EMMp2UUK0IHz4kx26FeAJuOQMe
+ GEzoEkiiR15ufkApBCRssIj5B8OA/351Y9PFore5KJzQf1psrCnMSZoJ89KLfU7C5S+ooX9e
+ re2aWgu5jqKgKDLa07/UVHyxDTtQKRZSFibFCHbMELYKDr3tUdUfCDqVjipCzHmLZ+xMisfn
+ yX9aTVI3FUIs8UiqM5xlxqfuCnDrKBJjQs3uvmd6cyhPRmnsjase48RoO84Ckjbp/HVu0+1+
+ 6vgiPjbe4xk7Ehkw1mfSxb79ABEBAAHCwF8EGAEIAAkFAlXtplYCGwwACgkQCC3Esa/37p7u
+ XwgAjpFzUj+GMmo8ZeYwHH6YfNZQV+hfesr7tqlZn5DhQXJgT2NF6qh5Vn8TcFPR4JZiVIkF
+ o0je7c8FJe34Aqex/H9R8LxvhENX/YOtq5+PqZj59y9G9+0FFZ1CyguTDC845zuJnnR5A0lw
+ FARZaL8T7e6UGphtiT0NdR7EXnJ/alvtsnsNudtvFnKtigYvtw2wthW6CLvwrFjsuiXPjVUX
+ 825zQUnBHnrED6vG67UG4z5cQ4uY/LcSNsqBsoj6/wsT0pnqdibhCWmgFimOsSRgaF7qsVtg
+ TWyQDTjH643+qYbJJdH91LASRLrenRCgpCXgzNWAMX6PJlqLrNX1Ye4CQw==
+Organization: Ultimate Linux Solutions (Pty) Ltd
+In-Reply-To: <20250314221701.12509-1-jaco@uls.co.za>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wC3j3yte+Znmt0YCg--.34641S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7JF1kJFyrWFW3Ww4rWF18AFb_yoWkuwc_ur
-	4UCFWxArWUKFyIkanYkFZFyryYyw47tF1Fga4ktwnrAayrJFZ8trn3J3sa9w1UGrs3Grsx
-	ZF90yF4Ikry3ujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUUQJ55UUUUU==
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxoeo2fmdBbYUAAAsD
+X-Spam-report: Relay access (ida.uls.co.za).
 
+Hi All,
 
+I've not seen feedback on this, please may I get some direction on this?
 
-On 2025/3/28 01:01, Manivannan Sadhasivam wrote:
-> On Mon, Mar 24, 2025 at 12:48:52AM +0800, Hans Zhang wrote:
->> Add maintenance entry for the newly introduced PCI host controller helper
->> functions. These functions provide common infrastructure for capability
->> scanning and other shared operations across PCI host controller drivers.
->>
->> Signed-off-by: Hans Zhang <18255117159@163.com>
->> ---
->>   MAINTAINERS | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 00e94bec401e..9b3236704b83 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -18119,6 +18119,12 @@ S:	Maintained
->>   F:	Documentation/devicetree/bindings/pci/intel,ixp4xx-pci.yaml
->>   F:	drivers/pci/controller/pci-ixp4xx.c
->>   
->> +PCI DRIVER FOR HELPER FUNCTIONS
->> +M:	Hans Zhang <18255117159@163.com>
->> +L:	linux-pci@vger.kernel.org
->> +S:	Maintained
->> +F:	drivers/pci/controller/pci-host-helpers.c
-> 
-> I don't see much value in maintaining this file separately as these helpers are
-> not going to evolve much, thus not needing separate maintenance.
-> 
+Kind regards,
+Jaco
 
-Hi Mani,
-
-Thanks your for reply. Will delete.
-
-Best regards,
-Hans
-
+On 2025/03/15 00:16, Jaco Kroon wrote:
+> This is a follow up to the attempt made a while ago.
+>
+> Whist the patch worked, newer kernels have moved from pages to folios,
+> which gave me the motivation to implement the mechanism based on the
+> userspace buffer size patch that Miklos supplied.
+>
+> That patch works as is, but I note there are changes to components
+> (overlayfs and exportfs) that I've got very little experience with, and
+> have not tested specifically here.  They do look logical.  I've marked
+> Miklos as the Author: here, and added my own Signed-off-by - I hope this
+> is correct.
+>
+> The second patch in the series implements the changes to fuse's readdir
+> in order to utilize the first to enable reading more than one page of
+> dent structures at a time from userspace, I've included a strace from
+> before and after this patch in the commit to illustrate the difference.
+>
+> To get the relevant performance on glusterfs improved (which was
+> mentioned elsewhere in the thread) changes to glusterfs to increase the
+> number of cached dentries is also required (these are pushed to github
+> but not yet merged, because similar to this patch, got stalled before
+> getting to the "ready for merge" phase even though it's operational).
+>
+> Please advise if these two patches looks good (I've only done relatively
+> basic testing now, and it's not running on production systems yet)
+>
+> Kind regards,
+> Jaco
+>
