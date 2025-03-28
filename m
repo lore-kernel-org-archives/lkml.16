@@ -1,158 +1,64 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB6821A94D
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 11:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2690219E93;
+	Fri, 28 Mar 2025 11:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743161811; cv=none; b=oLRY2Z7IUOC12vmYCnDwbWqRmmL1eIXUkAUKB8Q7XrdGR5cYaVyIvIA63T4CfOzt8wIGrknBcfLJ6VXnim+8xnYLxo4O0s1vWn/GsqXVyPUEsZmIeJiEUlhSkUaMfoReNAA8GWZciNalKQKqEXEsK5aTMfGgvqqULQD/UgB+/tc=
+	t=1743161984; cv=none; b=PieYllGKkFx7diuKS020o5hkJPnIK5jtvdIfCQXhgzgV/Hnq65aWUfOAbNVWerdl/FQkx2ZPrajw6cEH5supv58EuPJDbPLApEztUtErq4Eso2hY9FgbiGKyOizQQmJ84NsfxcbyDHLh9ZToAnaL/ewXndzt3cXYpqoO2ufp5+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743161811; c=relaxed/simple;
-	bh=7CdE6abmdcbIw4a9HvwViWR/CuAR0UsUHY0bcNpvB9E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=co4QrCqBagaqr8ECvF2Fbgiuq7I9f+7Y8qT5lJQh7nyw7PtUJMydT92VQkccEocGmYFvlIKvkm8Tr+0N6I4Is5OvOP7sfv8zU106QnsZATVEBqm5N8J1lK47QrXhyZcLgv/ZnxQcXRZEhIX+XF/36ylSIR+3r7GAXEiSvGuf548=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=BMvwXtjr; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1743161984; c=relaxed/simple;
+	bh=VpclY77LC2UScTUAvSmsEmH/yJZOtBuiJg7uhPWchSA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rZjWwktc2eQZ/DrODTQ2Xf3e588mRWBh2Mgw75TibV66GDQfKoYlja8/zFH7bb98o3MZR5cz4/ImU3w+F8xu7QYwmIDVY9NGdmOkgIcoL8aKjyVUL2Bu0Vz+tNz855BXsr9Kt4IIUL0tiym1BD6ieAVlmGfCvwECvuyAkGt01x8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=od0lmCZE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="BMvwXtjr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=QO5L
-	8F6Tv6G7jsBGSkmzV4B+MnJEKpypQ7BBXhNe5uo=; b=BMvwXtjrsCO2KFxfDJQj
-	RssVT0PKDnfrEWRxUThKN2A5e9tmgp14gHgIbXgzLpQa4sLafXKdFWGT3OgWNwAd
-	YoCaa5HUgn4TrQ81GK96sGwiia2TCba53RH8wYqXhkr4A5HMjTlAm+DN87GW4ZKG
-	P9Uye3Qd6jJTTfS0qnIlMO3cKq9qe/81rz/X8TjNP8uxRL5ox7HyLl3w46oCIyR9
-	tIgss4JKiwHLUoxVe0Rh6Dh1qWLNWYNOgq8arHYHtT6qJxPuftkftONH1Xy4XUdZ
-	mYIjCFKzz7iC2STfyvVvDYIdO4Yf4awtdQV93K5p9dqx77oraWQvbZlRuHZUoJtm
-	Vw==
-Received: (qmail 226379 invoked from network); 28 Mar 2025 12:36:44 +0100
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 28 Mar 2025 12:36:44 +0100
-X-UD-Smtp-Session: l3s3148p1@vogefGUx3T1tKjIj
-Date: Fri, 28 Mar 2025 12:36:43 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Prabhakar <prabhakar.csengg@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 15/15] arm64: defconfig: Enable Renesas RZ/V2N SoC
-Message-ID: <Z-aJy23ZyXq9lTrV@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250326143945.82142-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250326143945.82142-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <41c6f512-47a5-4723-bbdc-64ed85ae8391@kernel.org>
- <Z-VETFWFT5NksD7J@ninjato>
- <6fa375d2-5ba8-4b2b-8a54-f28b3cbedcfb@kernel.org>
- <Z-WAZ_IlMBB3XbTN@ninjato>
- <de0f7848-1fe7-451f-b48b-e20fbf3d0c2b@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="od0lmCZE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9EBBC4CEE4;
+	Fri, 28 Mar 2025 11:39:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743161983;
+	bh=VpclY77LC2UScTUAvSmsEmH/yJZOtBuiJg7uhPWchSA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=od0lmCZEqeq2uaZAtSxzMBD16GJUjxtNFigaGLkpuhGZQTG59fUuRB4e/5iW2AZc8
+	 wXxjNMcbgGI7rQYdQ+nYl9Agi8fUTJVnfTdkXhlBq/rB2qZwX322gvoyWgWW7wXErh
+	 uNU8WaDEgpDId/Aste1gXn7/8+NZsQDGWHgOymIqn4SH1e5YMDziquqUWlDJll3bpF
+	 wv4vyKKPWNmiTkhCrYEnVR7qjG8p+eebGSo44+xPUSsnhH7p/WLseo30U1f6G9GORI
+	 WMFDlJhYsdX1C0b83xju02cA9nI2ZP63VBJKELG4Nql2MRrTuCWddHpVgsWCBA9RlX
+	 XLkv9kMyffk3A==
+Date: Fri, 28 Mar 2025 04:39:41 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: "Jiayuan Chen" <jiayuan.chen@linux.dev>
+Cc: "Willem de Bruijn" <willemdebruijn.kernel@gmail.com>,
+ netdev@vger.kernel.org, jasowang@redhat.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
+ john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
+ syzbot+0e6ddb1ef80986bdfe64@syzkaller.appspotmail.com, bpf@vger.kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ kpsingh@kernel.org, jolsa@kernel.org
+Subject: Re: [PATCH net v1] net: Fix tuntap uninitialized value
+Message-ID: <20250328043941.085de23b@kernel.org>
+In-Reply-To: <17a3bc7273fac6a2e647a6864212510b37b96ab2@linux.dev>
+References: <20250327134122.399874-1-jiayuan.chen@linux.dev>
+	<67e5be3c65de3_10636329488@willemb.c.googlers.com.notmuch>
+	<17a3bc7273fac6a2e647a6864212510b37b96ab2@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rbVViYxK8BFEIzsn"
-Content-Disposition: inline
-In-Reply-To: <de0f7848-1fe7-451f-b48b-e20fbf3d0c2b@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Fri, 28 Mar 2025 09:15:53 +0000 Jiayuan Chen wrote:
+> I'm wondering if we can directly perform a memset in bpf_xdp_adjust_head
+> when users execute an expand header (offset < 0).
 
---rbVViYxK8BFEIzsn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Krzysztof,
-
-> We do not speak about same things. I speak of review being ignored for
-> multiple revisions in one patchset and then another patchset sending
-> exactly the same pattern.
-
-True, we are talking about two different things...
-
-> Each of these contributors were not changing here anything, it's like
-> not their job. It looks like this will never get fixed, because each
-> person wants to just get their stuff merged, so let's ignore the
-> reviewers comments.
-
-... this is the technical part where you are correct. I am not arguing
-against it and the issue is currently being worked on as I write this
-mail.
-
-Then, there is the communicative part which got me. A response like
-"NAK, I am not applying this until you finally fix the issue. And I am
-getting angry for being ignored the n-th time" is totally fine and clear
-enough. We can escalate that internally. But generalizing Renesas and
-ignoring that there are individual people there, trying to fix way more
-issues than this particular one, is what I percieved from your responses
-and what I considered above the line. And yes, I am aware that you are
-also doing a hell of a job going through all these DT and binding
-patches which I think are difficult to review.
-
-For me, we are entering the space where we can leave it like this and
-maybe discuss details over a drink at the next conference. You are
-invited then!
-
-Happy hacking,
-
-   Wolfram
-
-
---rbVViYxK8BFEIzsn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIyBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfmiccACgkQFA3kzBSg
-KbZDvQ/3XUkMk0S3lualMv9+xB2AAfnJrhcA40zPXXl0VsEhKi2c8C+VsIllpelq
-mKMzoYZIki4mrXjJNSrEyQ/DqMTYeTlW2khVn+2qhGFZlAfbQh4zenvd+XkSGF/u
-JuKaG+IO0lj/rxnodhEPpjgOVODZXj2UhAOWTAGvGLozTkxoOLhCEYbGfhjEwL4N
-6f/G59wpFBYYhTUnYMMNqXZwZC71HZohhoY3hV8EBTKaZCcHV20S3DjEKxhJv0bu
-APNVjQLYlUg2LP+fyzhGqx9cAy6f5cRz4929/assP5Ga819bVxyxt/LOS7H2nn3v
-ma61v1RwaHwCjLx5xPvy+ZQS5FrtaljioWowZ7XNCytGvOtAxsRLQbcOZSc9kkqb
-LNlPqsy8aqdIBoVzwflVAESfYEMyC9Rn2BlJM0hKp1JS6nHqxkwUjanBzRHrXgDw
-Ya+b9vFJs0nImFcwYO3BbZwghcC4s0bs6ATdoUW7qfaeIWrwMb6JpZ05MejO6jIf
-h3xaaDzsw3OeiEYvxV8K4b+Ogor2dKIisgga4jY4D9hR8c10tr5K+khz9DfvXXKg
-zHD/o+2qIk4JRGwYUL/ZG94Et7tGbBn8OMEeTvvgKm2q8idTHkI3e1rowq2tkC9F
-6bJ/F2IIBC7AJy+Gw2WVFwnlD2BLE/HtfixdAHvi9rE5Thnj5A==
-=7p2i
------END PGP SIGNATURE-----
-
---rbVViYxK8BFEIzsn--
+Same situation happens in bpf_xdp_adjust_meta(), but I'm pretty
+sure this was discussed and considered too high cost for XDP.
+Could you find the old discussions and double check the arguments
+made back then? Opinions may have changed but let's make sure we're
+not missing anything. And performance numbers would be good to have
+since the main reason this isn't done today was perf.
