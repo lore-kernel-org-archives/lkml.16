@@ -1,87 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6881F1BF58;
-	Fri, 28 Mar 2025 13:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9CA14AD29;
+	Fri, 28 Mar 2025 13:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743168294; cv=none; b=YuXQFKXoikpr6F3zGdO1rJVLhazmmx4tgwvlRAmZQAPmrdkq3E8ZczHuzurii26OjXnGFYwVtF1hlp5jO8KJtOpY55IYRzNOC2G+qSXtHVhZNxUmvAlx5briI7ZejvFD1iX7tLbary2jAvAkpUh4zhHbBSHAq1juEjOFAS/RF0M=
+	t=1743168317; cv=none; b=cFNYKebmC6uH1OI3fq68PYwMPXThyIWgAhjKklsBi3YMOdTZ2+1GxkOl0Z8tAOxqJiIs6kmhSMIwTVwTkPIowHhPEuz/eWjPOKpd8Om/qvm/Q9tOj/AaZFw1EU5iQ+kBgoFLJYyJy7STWF6x+W/GB4snadMUxSgAd9QWIj/IIzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743168294; c=relaxed/simple;
-	bh=WSObgTkF+E2dr2L1mXFz2WApNz64YdSf+ZrEObN7xJk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hO/nvDSlIjON2/o1WMdMidxhqB4YJyzBI4UCrK5V5RkJ3Fhxt+pCCGXkbY6/erdxcpy06cdADZ3ek9FqfnprVdUEQ1VK/Q9uz8DzSqRTFcgcfrbZb20L1h4Ak93veIEZQ4THgB6UkpWBnl1RO8fSYmw+5PpS8oetTsB+2SeMPHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i05zYq6y; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i05zYq6y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E88E5C4CEE4;
-	Fri, 28 Mar 2025 13:24:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743168291;
-	bh=WSObgTkF+E2dr2L1mXFz2WApNz64YdSf+ZrEObN7xJk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=i05zYq6yqyePiUY5WxQZCMWJaQQMpsb9CXWH3Ul6Wbep2TNQol4+OdGpOMewUi1Uf
-	 t9g+zvejxy01ONnAAYBo9ZAIJfjzKqThbqRMgJFa7YAeP3XruAfXPhI2kNbYQbbCtD
-	 WucbNrewBZ7RqbJgMXElb5ny3u4WaGmwsj4+vZlBowJll49in/HPstD+99hEI7jGPG
-	 eEwUErZZcqftlrwsbgYEeuc+oGfMvcFN7k2v8aRlKdZA+fOU02UYiDQkVekMXE5kXV
-	 REmRxiklrgm07gvrZHJVW/JIONW8PafIarLZZr8/7OotFx0pm1ugR4+4qfA/z+wuse
-	 huEULPIK/ToHw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Vinod Koul <vkoul@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	sound-open-firmware@alsa-project.org,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: SOF: Intel: hda-sdw-bpt: select CONFIG_SND_SOF_SOF_HDA_SDW_BPT
-Date: Fri, 28 Mar 2025 14:24:32 +0100
-Message-Id: <20250328132438.1024742-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1743168317; c=relaxed/simple;
+	bh=QEU3qP7xBFmNSOwZI8ArIPeXl8beJzBZsv3FjIIhwXI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gRmDjoNYvb8Zan41QCmvJncg9/kSjvMwiXLzZv6pxq3MzvpYY3rvm0cWFaZ4Dnq8NhCXr8U8oY5kQLpySeSACtw/KzxlIgOVcZ95syTX2v3Sjc3lue5E/Fq/OBk127bIuCSOcaUMjgpOs+5O0DWXE4XFN8u68SEh+GP5sl735oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso325664666b.1;
+        Fri, 28 Mar 2025 06:25:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743168314; x=1743773114;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2jE6wfGvalw6lmInB5D0RDV8sjg9mzE1CqGAw4Fmt5c=;
+        b=jwDlq5m69DmpbDZcVe6AHGNh/+q0hDBVAQHUNHhWLcJws72PiIuPdhOPJH5MeNta1z
+         N3XfqjYdzIyD+lYU0bOOolZUqZ73PzOnV/qhJxtwsFz5qeytiWVCSMC+fS+EI/X+O8dc
+         gdHdogXK/QtgHzkxZ29kddKam0V0q7XjqhOUTXAnoWMzKHjOlpXMi+RCafJtvDzy8fM+
+         Y+LzMtLSNx7o4MK/E35Yxg36t7FgFco3oVdzeclkAHUxj1n1Af7FcVWRWO9K65ohpkDs
+         BRlrC4mmbxeR35EC6MsHIZhajPNO3QrQS/S2qx4u7EfOv/J+bganFHgUqVpJc4hyqcjz
+         aeog==
+X-Forwarded-Encrypted: i=1; AJvYcCUjBfIi7HZwZgm5/fnavajJ0xnbDSykJLFN7t4YJJonineY1n6S/diNJnEdi9oRFdN2b7c9OmCL@vger.kernel.org, AJvYcCXZPOZcxGVU4M5YY+ZN9VBb1XD9Nb0Fbzf589GTYN61ZoDtfq7I82FVYPNRHlYVa+Eyd81n84Xy7w25Hog=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+HxNe/1swDRHPKPvDVh3Gr9H8IsKWTbbacI3PExLsxottbAa1
+	4YYuXsq1pm0qcO5FG89lh4ILoHB3FXl2HCiP8qsXPe7DBqtaUnkP
+X-Gm-Gg: ASbGncsFYwqmVLh0nmndCVXiuJRkPxBLLEKkO2bSRtziEwBlDvWdNLoHmSbcploexL6
+	6pVtNgGR7OIIsNvZNGLAYimwsF7xweqd0tvDayEAsSmboWhBEyKDh8lTXIPdwjdECDfU3PFMHt0
+	LskIHEDjazhL8nGdfEsg2oZskhhOhD8gtID2PeJkfzqxVYW8B5t9ANRE4LIFDU92dy/8SNiCW84
+	7RRzeKHmszyEm1Pr/SL5GEInveob9Kf0/OmvhA1t1zzDq/s/ckQEbBMnZ8jP5pBykDntqcYfR/1
+	KHlQwvW8kLnFPWm9qMFS6+ctCGVFg9mwPOc=
+X-Google-Smtp-Source: AGHT+IFXGwAU9n1xb603UH5lCv05YvwrWsrQGLx1xmvw8N9JhQ8l280OHFMZl9TiNuWEQKARzpgZFA==
+X-Received: by 2002:a17:906:eb4e:b0:ac7:30a2:696c with SMTP id a640c23a62f3a-ac730a26a0bmr44412366b.16.1743168313556;
+        Fri, 28 Mar 2025 06:25:13 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:1::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71961fd76sm156872066b.110.2025.03.28.06.25.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 06:25:13 -0700 (PDT)
+Date: Fri, 28 Mar 2025 06:25:10 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Ivan Abramov <i.abramov@mt-integration.ru>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Joe Damato <jdamato@fastly.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	"Eric W. Biederman" <ebiederm@xmission.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
+Subject: Re: [PATCH] net: Avoid calling WARN_ON() on -ENOMEM in
+ __dev_change_net_namespace()
+Message-ID: <20250328-electric-buzzard-of-completion-bedfc5@leitao>
+References: <20250328011302.743860-1-i.abramov@mt-integration.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250328011302.743860-1-i.abramov@mt-integration.ru>
 
-From: Arnd Bergmann <arnd@arndb.de>
+Hello Ivan,
 
-The newly added driver fails to link without this:
+On Fri, Mar 28, 2025 at 04:12:57AM +0300, Ivan Abramov wrote:
+> It's pointless to call WARN_ON() in case of an allocation failure in
+> device_rename(), since it only leads to useless splats caused by deliberate
+> fault injections, so avoid it.
+> 
+> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+> 
+> Fixes: 8b41d1887db7 ("[NET]: Fix running without sysfs")
+> Signed-off-by: Ivan Abramov <i.abramov@mt-integration.ru>
+> ---
+>  net/core/dev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index 2f7f5fd9ffec..14726cc8796b 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -12102,7 +12102,7 @@ int __dev_change_net_namespace(struct net_device *dev, struct net *net,
+>  	dev_set_uevent_suppress(&dev->dev, 1);
+>  	err = device_rename(&dev->dev, dev->name);
+>  	dev_set_uevent_suppress(&dev->dev, 0);
+> -	WARN_ON(err);
+> +	WARN_ON(err && err != -ENOMEM);
 
-ERROR: modpost: "snd_hdac_ext_stream_start" [sound/soc/sof/intel/snd-sof-intel-hda-sdw-bpt.ko] undefined!
-ERROR: modpost: "snd_hdac_ext_stream_clear" [sound/soc/sof/intel/snd-sof-intel-hda-sdw-bpt.ko] undefined!
-ERROR: modpost: "snd_hdac_ext_stream_setup" [sound/soc/sof/intel/snd-sof-intel-hda-sdw-bpt.ko] undefined!
-ERROR: modpost: "snd_hdac_ext_bus_link_set_stream_id" [sound/soc/sof/intel/snd-sof-intel-hda-sdw-bpt.ko] undefined!
-ERROR: modpost: "snd_hdac_ext_stream_reset" [sound/soc/sof/intel/snd-sof-intel-hda-sdw-bpt.ko] undefined!
-ERROR: modpost: "snd_hdac_ext_bus_link_clear_stream_id" [sound/soc/sof/intel/snd-sof-intel-hda-sdw-bpt.ko] undefined!
 
-Fixes: 5d5cb86fb46e ("ASoC: SOF: Intel: hda-sdw-bpt: add helpers for SoundWire BPT DMA")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- sound/soc/sof/intel/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+I am curious if we shouldn't skip the rest of that function if
+device_rename failed. Something as:
 
-diff --git a/sound/soc/sof/intel/Kconfig b/sound/soc/sof/intel/Kconfig
-index 41cb33fe98fb..7e92aa2f7e39 100644
---- a/sound/soc/sof/intel/Kconfig
-+++ b/sound/soc/sof/intel/Kconfig
-@@ -351,6 +351,7 @@ endif ## SND_SOC_SOF_HDA_GENERIC
- 
- config SND_SOF_SOF_HDA_SDW_BPT
- 	tristate
-+	select SND_HDA_EXT_CORE
- 	help
- 	  This option is not user-selectable but automagically handled by
- 	  'select' statements at a higher level.
--- 
-2.39.5
-
+	if (WARN_ON(err && err != -ENOMEM))
+		goto out;
