@@ -1,747 +1,223 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2047.outbound.protection.outlook.com [40.107.93.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B4121C175
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743169365; cv=none; b=RaAQM4807RrbFngcAU/f+Ovd65y8Fu/otKf+fuI7/pW0xJ4XADUHq3cJK7DyhzPXJ1Nm0EdNCgPwD9BPJwbP70kR5yg8hBKzZaV55aV1kWO1TpKwaQWmiErTWoU7PMrACwwbitMjVFLmVHeRAreEcCBstcnNpqNXttso3aTrZ+Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743169365; c=relaxed/simple;
-	bh=EdRyHU9WLRCW/jcvSMscn5otd8pqzQlbHTPuaMWCExQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qlb/oWj+PllPmuFpVL+GwAXOU8BAfjE6X7JEwW8CguX07RqUn4RJc8955rcJ/t9pRi3IR82QjgmDXMoOKxlC6QVw7tGSFY8JHx/wj6hV8geuXPCsdwPtXwObBS0CoKAbttao69oAnn9xkdajt9qJE5jFl5cNoDT38i//KRzJXx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vtbTaePi; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C7B223710;
+	Fri, 28 Mar 2025 13:42:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743169373; cv=fail; b=CLJsx4ZdnAWBvRucaIPqeD/UluSTv28F21TDD7hL/vRlv+ZuudFQsx7/ip8cXuj3kygiIZrEKOP/qhIVtwwolg/7oiddmPZP+nbZd60z3WRjsQkPc0cK0x1Xlbo+8Hoe4z7qbP3dj6HCB+jPZNzIB1NdJMLrlEh8LqPOeMtOW7o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743169373; c=relaxed/simple;
+	bh=Es1+rtvp/0/LzDSQaF04D1GuS9UAkySmIgl3uEAZ26U=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=CwZvL0MR/onvoHJMDdqu8W5jQcRN2F+5ehCdprS9+G7tUYLAYzbEC5mU4TtV/QECE5g6HPJ7ZCVEFG4EDj9bt5185byhWif1Tr2rfzqMDXr/RZD/F6PcJBquLYBnScqfJ/6PZoeECiXLdZhZfoPlQAx9kZ9cJHrCpnsN4Lsn56M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JZhife2Q; arc=fail smtp.client-ip=40.107.93.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vtbTaePi"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so21372745e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 06:42:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743169362; x=1743774162; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gkabenep1zUXpoNmG8Ukky5GYljP1cMUllO44DSLlAU=;
-        b=vtbTaePip03xLmSuRkj5Cq0sLTC+/7ao/9w/sDwqnhmbJfGmPhm3v5BdcEUICJ5OGP
-         SnxV1x8NNllPx8QiZeGsfthRtHEv5ktB6Ohckx8Y9dkqhCoiOCJ7T6J0rnUnz1kmAiu6
-         6oYevrUqN2OsI+GrpMXUE5NB2x9CT+PyiQCwOQRm3yB89oYNBjtuR8cuGuV6qoqtZ2vx
-         qiZArbG44rSp+gR9Ej72WzkGCfj/fqkGN1G07hkJw2ZFg8Vt5bm/qkzjDoGHrxGRFgqu
-         kBG1KfoHklp+fnrVwFjCf1r/lzDkpIULpNTvt1/m49mkS3ZPTd00TZWCz+nJJXjMsr3H
-         IMtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743169362; x=1743774162;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gkabenep1zUXpoNmG8Ukky5GYljP1cMUllO44DSLlAU=;
-        b=cUcndv32FC+vNoSXbr6b3NU5SjC/4aimGcXl2GXZkilnHbvRjuoc2C1VoG8pP1kJM/
-         ksV/ls0CrGNAG1MIwFz6U4k+1y3kMPnRZRWqmEyhAGllwVw9p61vDpT/HOyQ4I3TjDeo
-         HvLA7QX723dNT9pSDc9VS+cZoq4ac7AvNs/VI9zmJNXznMn7OtXvj7gqq2JXLvsUBpcV
-         okeMRSr0kREbBDkBWqc7ccIxeaoH6QEYQyzHYFzHAn19w9cMqZU9WqolFOZjrjKTzaSH
-         SWFKBlTnXam5QgdIln7FlHxOx/HWMovyg8334O5QkqSJlJE8CQEPLl3p0epWj550rSx1
-         0HeA==
-X-Gm-Message-State: AOJu0YzpFuDdYZClURvwaGFxvNDERWSGJMHkmlhKP7KShqBUPgLPo1YC
-	E7e36hfxcQaPX9osrk1WoWyPVsQKWCbZaeq9EeGr6sQ+GmVPr1pyJBv1yvMK1qa6FNNkHys8SJe
-	d
-X-Gm-Gg: ASbGnct4eRmPl10oXOYYgE9/AKhJfgTAgVLHZ84Lqrx1XHi0qLUMNm8FDhThsIcvpkE
-	PhKrHjS2RdFUWA4Js8QrPaVBEz8zS/3aADEHoa/B0k9k+vLGogzKFuqjz7Wyinf9SCC5t1Abt/4
-	jLlBUTJLZXDj50R5KeozoMpnbIsYb3n7/2T14k2lcbPRK/g645vywDPH96bhx6pQN0z7zPI3Jr/
-	6s05BTnSMW/ajEg/4d+iPI/l4ogvdrsghKX1QrvNQx2t18Oa7WQfrnuUysnlknT6DTShBQ1JMqt
-	7pNRK4BmDvo92uL8xc0RPrRxtLUIkfUr7nC8vCUc0lD6jNvD/j3UjeR3BN3fn4ORaaOT9IU=
-X-Google-Smtp-Source: AGHT+IFtlECplpWB0bq+AOAdscPSlGVkbttpCocRuUyBHE1s6+J9QTfsyZny8R6cs53FR+rXI00TEQ==
-X-Received: by 2002:a05:6000:400c:b0:391:ccf:2d17 with SMTP id ffacd0b85a97d-39ad17136e2mr7770316f8f.0.1743169361539;
-        Fri, 28 Mar 2025 06:42:41 -0700 (PDT)
-Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c0b79e097sm2595454f8f.80.2025.03.28.06.42.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 06:42:41 -0700 (PDT)
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: daniel.lezcano@linaro.org,
-	tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org,
-	thomas.fossati@linaro.org,
-	Larisa.Grigore@nxp.com,
-	ghennadi.procopciuc@nxp.com,
-	krzk@kernel.org,
-	S32@nxp.com,
-	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-stm32@st-md-mailman.stormreply.com (moderated list:ARM/STM32 ARCHITECTURE),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/STM32 ARCHITECTURE)
-Subject: [PATCH v2 2/2] clocksource/drivers/nxp-timer: Add the System Timer Module for the s32g platform
-Date: Fri, 28 Mar 2025 14:42:06 +0100
-Message-ID: <20250328134208.2183653-3-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250328134208.2183653-1-daniel.lezcano@linaro.org>
-References: <20250328134208.2183653-1-daniel.lezcano@linaro.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JZhife2Q"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nY6FqMYAqx45l6WBqnkC1pGsomjcDQ6CVN9ozipncAB679w3KUhijH01Uy2jWbzRa///gWOldU3ZOGriUc76pWWt0lwM3l7ljNdTBWFBUdWE5mEZz8bF+TcSV2yH8aiLytwj/7r3URnN0YyQ2EPPMJl3MEnDndOdnZtMeIvTbA2Zbu2sd82PEblb2nFkn5sObVv+Mw7bzERYIDZtNolV4t6funRjb3Q/giwaqb6bbZZNbTLz4vfhz5HmaaQ/bG7cp5DlZkvGp1o1FqfWLBhv5jHPZOy6oqSJJa3hgHXnXeQIa8El4e2XI+H4FMe3QTX0MClO4x/YYZsuABiwbnVwvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Es1+rtvp/0/LzDSQaF04D1GuS9UAkySmIgl3uEAZ26U=;
+ b=QobddT6Tbfcgxcw0YX0l197EZbLP4BOsyImHsolu1FmkZ4ksNI0Azp3MEv2nRW4CBFpUmd7RB1Qdsh/eqoUcDiedjJsZony08h74r3aNqZq9vUNwjIM0UlI8g2/coXz77yaRpAgdidIWN7tm/bzRiTzsa6yiltd7K5qSIKxLVlMLiyNw3vWT2qRAkyJImOKs2LVBXXvzrDoKJOzStiTOIUEkP+RbsAfeibKF6hIyYoP+OK+8UqLvw5rYY/jhbbNqXYfodN+TCRB/ERK/QL01HmrV2kEjR4ZrRG5ljQ3b93YWvoiUQSwNYyX8/wzts6Kdx1rXENEG937g3DMNZI621w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Es1+rtvp/0/LzDSQaF04D1GuS9UAkySmIgl3uEAZ26U=;
+ b=JZhife2QsW6lavEo+4XGzyqVBdbRJ4GuZwJzWH02Zm2U3Ma/XaPCM3e1AiFDgxXt0w93JN35/ZVk76MHj2yrzc4GuZYrK9gpE7Cy5kp3QXfgwRjFTYt/2VGV9A7skBUCnQIGbzazvlKCXrb41yjf+rSSCXK5nGxMfD2nxklc0x8=
+Received: from IA0PR12MB7699.namprd12.prod.outlook.com (2603:10b6:208:431::7)
+ by PH7PR12MB8016.namprd12.prod.outlook.com (2603:10b6:510:26b::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 28 Mar
+ 2025 13:42:47 +0000
+Received: from IA0PR12MB7699.namprd12.prod.outlook.com
+ ([fe80::7ed1:80d:75c:f1aa]) by IA0PR12MB7699.namprd12.prod.outlook.com
+ ([fe80::7ed1:80d:75c:f1aa%5]) with mapi id 15.20.8534.048; Fri, 28 Mar 2025
+ 13:42:47 +0000
+From: "Mahapatra, Amit Kumar" <amit.kumar-mahapatra@amd.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, "broonie@kernel.org"
+	<broonie@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>
+CC: "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "git
+ (AMD-Xilinx)" <git@amd.com>, "amitrkcian2002@gmail.com"
+	<amitrkcian2002@gmail.com>
+Subject: RE: [PATCH] spi: dt-bindings: cdns,qspi-nor: Update minItems/maxItems
+ of resets for Cadence OSPI controller
+Thread-Topic: [PATCH] spi: dt-bindings: cdns,qspi-nor: Update
+ minItems/maxItems of resets for Cadence OSPI controller
+Thread-Index: AQHbnkOCAhX7r4YmwUqmS8feK3qVpbOFVp6AgAMdRDA=
+Date: Fri, 28 Mar 2025 13:42:47 +0000
+Message-ID:
+ <IA0PR12MB7699ABC4D20D02AED632C012DCA02@IA0PR12MB7699.namprd12.prod.outlook.com>
+References: <20250326113731.1657593-1-amit.kumar-mahapatra@amd.com>
+ <8936844a-c6a0-4107-bb6d-f67a32b13eff@kernel.org>
+In-Reply-To: <8936844a-c6a0-4107-bb6d-f67a32b13eff@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ActionId=61078141-a418-42fd-8691-aabd1f35a917;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=0;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=true;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-03-28T11:54:48Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA0PR12MB7699:EE_|PH7PR12MB8016:EE_
+x-ms-office365-filtering-correlation-id: 0eea1121-d9f6-4ef4-8d8a-08dd6dfe6cf5
+x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?aE5VVmwwYUkyQlRyMURDNGxXWk9UTEF2QldFS0pHUnJaY3E2TGlnK1V0ZjJy?=
+ =?utf-8?B?K2lYeGhZMDlFMjdIYld3Y3NpQ3Zkdk5sOVZTUENQaE1KTnFRdTRkS3ZtK2xV?=
+ =?utf-8?B?cFVCOWpXaFUwdkVaZUdISXlGWDBnVjJQLzM4MTlwbStEemRoL203M1ZIaVlv?=
+ =?utf-8?B?OFNad28xV0xRQ1dLRXFpTnU4NGlIRDB4OXdMdStIbHAybkdhcEJtWE1YSDAw?=
+ =?utf-8?B?WFdGdkNjQ2svR05xSkp1dzRtQi9mbEZORnIyUU4zQTc2RmFTZzRUUmwwYlda?=
+ =?utf-8?B?ZFFjKzJvZ2RqUERGbXFQSVVKV1VobjBrN3ZxQUZyQzUwK3gvYUlGWUpyaSs4?=
+ =?utf-8?B?eEZ6V2c5Tm0rSW05TTN2SENYbG1SOFVOMkt0YjQvb2FNTm5QUE5UUm9aU05C?=
+ =?utf-8?B?Q1Z2dnRxNmxIeG11dG5YVWJNVkhQb2JOeUJMZWk1YVpSM0MwVTd4TndTWjhh?=
+ =?utf-8?B?REtBOUd1N0xBckExNnFHR3poYUtxK0xiYjNaYWI5ZytWQ1VrQ1ppUTNqejlL?=
+ =?utf-8?B?K2lqTkR3RUg1eHRKellERmlNK25uWEQ3eFNWdWptNTNabGVYcTRRMW5WaXd5?=
+ =?utf-8?B?RXV2TlgvcVlhUzlwN0ZsaUJFeW5EaDRTVjhaRmNYajVWRklHMlVXaDNEblFk?=
+ =?utf-8?B?ZzQrcExIMjF1SkUzV1dVeGxXeXlTcWVqSE9lSkRmUTRWdzIxR20zb2RrYkR2?=
+ =?utf-8?B?eHVYZXFRK05RWmlDeUdCQ2pJQllna0kwQ3hDK2dtK0VJT3VLZUhkNHVzMThP?=
+ =?utf-8?B?cXFWcnpKamV2UzRPb21XUXpLdXdMenoxMk05K3daZHRGS1N1aXFhTVd5RkhN?=
+ =?utf-8?B?M1puUjV1WlRaMTltaVlodFNQUDF2UC9RNW1UOGR2SEYvbDJmb0pTcDR5Y1p1?=
+ =?utf-8?B?ZjJoL0dXSG9YRFMzSnpVT2d6dmlkMkFSN0grNk5qNEllRzh3WGJvejN6Y0h0?=
+ =?utf-8?B?TDI3cGl2aEpSMU9RS1BMQ0JPeEl6cDNyd2pOS1NacUd2bHExbEgwYmU0OWhu?=
+ =?utf-8?B?K3dueXVQZG1TU081ZG02YTBIYVF4WHBuN3RxZkJFNEdxVTBnSGMzSzJtbWRJ?=
+ =?utf-8?B?L0pteStQeFZvODZmR3FSd1N2REhYSkcrWVY2WEY3bndtYUpWaFFuWU1YNWht?=
+ =?utf-8?B?TUsvc3VlbjBMb2oyK1VMUzJHVUl4dHF0a3hhRjB1SU5rMmhWaTJyY3lHT04w?=
+ =?utf-8?B?OVByUzhlYUVya3pVZmxrVmlsUnF3VHBibVd1dGZHNGNmS0dsMkF3WmRMTVF5?=
+ =?utf-8?B?aTNRMVZ6UnNMVGtPa3BNVi82MU80c0VhR3Iwd04vTyt6aTh3YTBEbGlyS3Bx?=
+ =?utf-8?B?OGNjK2RSblgvUXlxczBTeGF4Z3Vra09YckxwTjkxYktxNlU4dWE0NmJGOGpr?=
+ =?utf-8?B?azJFc3JTeWR4NUtwa0Mrb1NkSjFkc2k3OThLY2tzU3J0NjdhSndNa1VsTFMw?=
+ =?utf-8?B?dnhmMmlqYmdWdzNyOGNUMXZDb0luMnJMM1lLcWpmQ0FNUjdJckkvOHl5OGYy?=
+ =?utf-8?B?b3BqbEZVTFZNT1JaK1VKdGxWSENHWUNubnhPYW9YT2tHU0xIeHhLV0ZNY1pH?=
+ =?utf-8?B?ME0zQnRkajhNNjJ5WmM0b3B2OWZoVC9ncWV5NUx5eGlKaXNIVVRXbzlLbFhQ?=
+ =?utf-8?B?bnBvY21obHRhd0JBZGJPT25SUU45aGlmVEMxUXBwOWlvbFltYXNHcFEwRHZL?=
+ =?utf-8?B?U1JOSzNxYUEyQ2VnV1VJMWFYRkpaeTlRU1ZSQk5qZGVrSjRxRXNmUGZqU1Y3?=
+ =?utf-8?B?TFlnOC9LUS9jTVFsUDZoZlo2NEI3MFdQVEZQUHlOTXRVc0tnaFVSWGlQMnlE?=
+ =?utf-8?B?a3FwdmdNQjM1L1dFeXVHL244MDdvYm11V2hrbjNZRTFpeFZ4WU13ZXdzNWYw?=
+ =?utf-8?B?ZUQ4MHlMbkZ4YnZRUStKZFlCUUxCRXFqam5kMVJIOXRKWWwzbU0vZHVieFE0?=
+ =?utf-8?Q?nVeNK/UQCgan4WJiEY1rkN3h0TW2xuzy?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB7699.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?bVZEdVVvdTVGTUpZVXpwa3RjU2JOMDlSZ2NjOU5ROFRVdmgrNVpuMEg3cThH?=
+ =?utf-8?B?eVpWTFM1TmgyZDRnbzRVdFk2Y1VKRkNEMUVQK0lBOG9LcWdNbFRmTVVBSWdV?=
+ =?utf-8?B?QVZ5d28xZXdTRUs3U0xXNUV6NktUSlhSNzBMSG5sRXdnWHRZTmlERUEraVZP?=
+ =?utf-8?B?dTUyMEZDSDVBdFpFZ1lHREdKMVpHS2VMdG1sTHJGOXpaV1JTaERqWldzRUow?=
+ =?utf-8?B?cmlXa2RQdGlFL1JhK3RyYldLdkRhV0w4eVV1M0lOcFNVbTdFZlhNTmlCeTFM?=
+ =?utf-8?B?R0xRdTdGUHQ1Zm5vL2dESlhCMGR5K2pMVXFqVThObjVpMTJhNjJSY3J6WTVi?=
+ =?utf-8?B?QWw3WDA4VWQydVlRY0ZXV1dTODdneG1SZUMwUzBKdGMvS1BtNWZqVDdLamVy?=
+ =?utf-8?B?UFFHTkxoRVovNDlMeWREbndqTHRxbS83dVE3VW5lSU5VTTMwMENOdkFEYk8y?=
+ =?utf-8?B?UndRd2EyVThvbFNWN1BKQU5MY016STFkaHlNdzExbUlQMnBhMjUxSUk4YjBw?=
+ =?utf-8?B?dlNGcUQ4b0VIeTdUcjltdzhpWS9lRmJ2TUJ6Q0pmOVRXUURFYmpiNm1qTmdI?=
+ =?utf-8?B?NXVDSFZZbWhTcUwvOUQ0NGF2VnJ2SW1QWlJKSEZrOTFxY1NkTmI1TVVsbEZM?=
+ =?utf-8?B?MkcxNmlIb1ovU2svdGJBcE9rUjBkbEh2UFlIVDBZczhpdEd2blQ0R29yUThp?=
+ =?utf-8?B?b2xrc1l4Qlgzb3FYalowMTNLNEhoK3hUakdqbmxxVVEwNkF6enl4cWJIVmdG?=
+ =?utf-8?B?ZzAxSHpTUVpFWFcyU21melp4R0k3Y3NUOXR2ZGZMaEM1N3RaNm5TOE55QVJZ?=
+ =?utf-8?B?NnNrZVNCdkJPZGs3bVhpSEI1aE83QmQ1eW5CdnM5WWMrMWg0aEpsTmpJZzdJ?=
+ =?utf-8?B?c3pSb3dLcytVTTlSK2ZXQjBLZVB1dC9JNytWeGNmMmNCMWs1QTFEbkpuYVZa?=
+ =?utf-8?B?cDlTVjBCUEpmNUw3c204RFZaZkUvOEVtQUpEMDFSbEx6blNwaFZuSWF6Q0lZ?=
+ =?utf-8?B?WVV4bXdMbFo3MVA3OTNGZEdjdXdKQlhUWFhMSG0vVkxYc1RUb0tpUSs0Mk1D?=
+ =?utf-8?B?amNkaFFjM1l4WGh4dWZuSys4S1BJNHpYVktjMkR2VlM0NS9PQitwcEZneDJH?=
+ =?utf-8?B?TStSdms1OEhSVGlRNkNnRXdSQ0pqL29lRWdzcHBzWG4xcnlyTm5BMWNMSjJ1?=
+ =?utf-8?B?OTRxbzR1Mm9jZy8xNkdVTXlnc3hyRGxNNk5aMlM1SHQvRTZxdmtHWUlGWHIx?=
+ =?utf-8?B?Q2lUOTlXQlp4Ly84KzRHNmhKSk9TUEhMdWh0VEVTa3hKRkVEaHZZUE5rdzQ2?=
+ =?utf-8?B?V3VQNnkwS0R6SGNOeVIzTE5JZGg0Tis0N09rQjFRemFraEx0YUxzTHAwa1dD?=
+ =?utf-8?B?VFJmbWxCd01nNWJpUmNoMzBKNUNXaXp0bVZCYkx4aFYrY1IwZklRMitBVkpW?=
+ =?utf-8?B?MEE4RExUSk4wR09GK1U0NTBKSUF1by9ENzR6QzdaUFhNWW9sOHR4QklKVUp2?=
+ =?utf-8?B?WkJEeWVObldER01HVFpHdDFqTVJhQmpIU2dnT3hnY1NnWStxaHQ5dEVaQm4r?=
+ =?utf-8?B?UlFRN29aazhVOHpKalRGck1pWnNNUE9mNDdBT2tFQXdyckxZNFBjZUQvS2Yr?=
+ =?utf-8?B?R3RGQjlaeVpoUFd3RldqdEhFcVI0TCsrQXRuYTFWMVdVS2MwQmFmaGNQTFJW?=
+ =?utf-8?B?MmE5Mnc3dTZLSWI2ZEV0SHBmQ285dmpsVSt3WVNWVzJZZHA2K05wRTBnRkM2?=
+ =?utf-8?B?MXVTTElVSG9yWEZqQ1hxRmIzdjRJbG0zb05VMmppOCtZNVRwOTZneS9qQXVD?=
+ =?utf-8?B?L2hNOHNZSGZWcU9VdDhVeWVGSjlnTTFWaGEyQmovbE81WmNHNHZWUzNDQTAx?=
+ =?utf-8?B?ekcxL01KLzltQ2NsTExlQUpmR2V3dW16R1cxdnYzcDlKOXl6U1NMYkFYZCts?=
+ =?utf-8?B?blMxdkZZQmkzcld0ZDExdktYWElya1pyL2ROWENRdGtQVnc1c1BqcEtraFd5?=
+ =?utf-8?B?UytaczdZY2FOcjlBVk8xUHBkWGdSSVNxM3h4Nkdnbm9qTmNUeWo0cjZodHdi?=
+ =?utf-8?B?NkZmSTNzUHlPelJ2VWJmaGZPaXFDRHM0QjZhbXJaTUhaTStZSnB5cE9yTVdx?=
+ =?utf-8?Q?dr+M=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB7699.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0eea1121-d9f6-4ef4-8d8a-08dd6dfe6cf5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2025 13:42:47.3000
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZdlE8s5UZLZ9bLx96ksXWHVact7G+VsTNhBQ0rE+F4FsaOMeIn5IdX8eT5wB8Q2w8E7/wf7hKBg79w3mEqBE5Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8016
 
-STM supports commonly required system and application software timing
-functions. STM includes a 32-bit count-up timer and four 32-bit
-compare channels with a separate interrupt source for each
-channel. The timer is driven by the STM module clock divided by an
-8-bit prescale value (1 to 256).
-
-STM has the following features:
-    • One 32-bit count-up timer with an 8-bit prescaler
-    • Four 32-bit compare channels
-    • An independent interrupt source for each channel
-    • Ability to stop the timer in Debug mode
-
-The s32g platform is declined into two versions, the s32g2 and the
-s32g3. The former has a STM block with 8 timers and the latter has 12
-timers.
-
-The platform is designed to have one usable STM instance per core on
-the system which is composed of 3 x Cortex-M3 + 4 Cortex-A53 for the
-s32g2 and 3 x Cortex-M3 + 8 Cortex-A53.
-
-There is a special STM instance called STM_TS which is dedicated to
-the timestamp. The 7th STM instance STM_07 is directly tied to the
-STM_TS which means it is not usable as a clockevent.
-
-The driver instanciate each STM instance described in the device tree
-as a clocksource and a clockevent conforming to the reference manual
-even if the Linux system does not use all of the clocksource. Each
-clockevent will have a cpumask set for a specific CPU.
-
-Given the counter is shared between the clocksource and the
-clockevent, the STM module can not be disabled by one or another so
-the refcounting mechanism is used to stop the counter when it reaches
-zero and to start it when it is one. The suspend and resume relies on
-the refcount to stop the module.
-
-As the device tree will have multiple STM entries, the driver can be
-probed in parallel with the async option but it is not enabled
-yet. However, the driver code takes care of preventing a race by
-putting a lock to protect the number of STM instances global variable
-which means it is ready to support the option when enough testing will
-be done with the underlying time framework.
-
-In order to improve the driver quality for debug purpose, the debugfs
-entry is set to show the registers and the refcount of an STM
-instance.
-
-Cc: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Thomas Fossati <thomas.fossati@linaro.org>
-Suggested-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- drivers/clocksource/Kconfig         |   9 +
- drivers/clocksource/Makefile        |   2 +
- drivers/clocksource/timer-nxp-stm.c | 563 ++++++++++++++++++++++++++++
- 3 files changed, 574 insertions(+)
- create mode 100644 drivers/clocksource/timer-nxp-stm.c
-
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 487c85259967..e86e327392af 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -763,4 +763,13 @@ config RALINK_TIMER
- 	  Enables support for system tick counter present on
- 	  Ralink SoCs RT3352 and MT7620.
- 
-+config NXP_STM_TIMER
-+	bool "NXP System Timer Module driver"
-+	depends on ARCH_S32 || COMPILE_TEST
-+	select CLKSRC_MMIO
-+	help
-+	  Support for NXP System Timer Module. It will create, in this
-+	  order, a clocksource, a broadcast clockevent and a per cpu
-+	  clockevent.
-+
- endmenu
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 43ef16a4efa6..c3a92e6b9f94 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -92,3 +92,5 @@ obj-$(CONFIG_GXP_TIMER)			+= timer-gxp.o
- obj-$(CONFIG_CLKSRC_LOONGSON1_PWM)	+= timer-loongson1-pwm.o
- obj-$(CONFIG_EP93XX_TIMER)		+= timer-ep93xx.o
- obj-$(CONFIG_RALINK_TIMER)		+= timer-ralink.o
-+obj-$(CONFIG_NXP_STM_TIMER)		+= timer-nxp-stm.o
-+
-diff --git a/drivers/clocksource/timer-nxp-stm.c b/drivers/clocksource/timer-nxp-stm.c
-new file mode 100644
-index 000000000000..5fd9e2507e77
---- /dev/null
-+++ b/drivers/clocksource/timer-nxp-stm.c
-@@ -0,0 +1,563 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2018,2021-2025 NXP
-+ *
-+ * NXP System Timer Module:
-+ *
-+ *  STM supports commonly required system and application software
-+ *  timing functions. STM includes a 32-bit count-up timer and four
-+ *  32-bit compare channels with a separate interrupt source for each
-+ *  channel. The timer is driven by the STM module clock divided by an
-+ *  8-bit prescale value (1 to 256). It has ability to stop the timer
-+ *  in Debug mode
-+ */
-+#include <linux/clk.h>
-+#include <linux/clockchips.h>
-+#include <linux/cpuhotplug.h>
-+#include <linux/debugfs.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
-+#include <linux/sched_clock.h>
-+#include <linux/units.h>
-+
-+#define STM_CR(__base)		(__base)
-+
-+#define STM_CR_TEN		BIT(0)
-+#define STM_CR_FRZ		BIT(1)
-+#define STM_CR_CPS_OFFSET	8u
-+#define STM_CR_CPS_MASK		GENMASK(15, STM_CR_CPS_OFFSET)
-+
-+#define STM_CNT(__base)		(__base + 0x04)
-+
-+#define STM_CCR0(__base)	(__base + 0x10)
-+#define STM_CCR1(__base)	(__base + 0x20)
-+#define STM_CCR2(__base)	(__base + 0x30)
-+#define STM_CCR3(__base)	(__base + 0x40)
-+
-+#define STM_CCR_CEN		BIT(0)
-+
-+#define STM_CIR0(__base)	(__base + 0x14)
-+#define STM_CIR1(__base)	(__base + 0x24)
-+#define STM_CIR2(__base)	(__base + 0x34)
-+#define STM_CIR3(__base)	(__base + 0x44)
-+
-+#define STM_CIR_CIF		BIT(0)
-+
-+#define STM_CMP0(__base)	(__base + 0x18)
-+#define STM_CMP1(__base)	(__base + 0x28)
-+#define STM_CMP2(__base)	(__base + 0x38)
-+#define STM_CMP3(__base)	(__base + 0x48)
-+
-+#define STM_ENABLE_MASK	(STM_CR_FRZ | STM_CR_TEN)
-+
-+struct stm_timer {
-+	void __iomem *base;
-+	unsigned long rate;
-+	unsigned long delta;
-+	unsigned long counter;
-+	struct clock_event_device ced;
-+	struct clocksource cs;
-+	atomic_t refcnt;
-+};
-+
-+static DEFINE_PER_CPU(struct stm_timer *, stm_timers);
-+
-+static struct stm_timer *stm_sched_clock;
-+
-+/*
-+ * Global structure for multiple STMs initialization
-+ */
-+static int stm_instances;
-+
-+/*
-+ * This global lock is used to prevent race conditions with the
-+ * stm_instances in case the driver is using the ASYNC option
-+ */
-+static DEFINE_MUTEX(stm_instances_lock);
-+
-+DEFINE_GUARD(stm_instances, struct mutex *, mutex_lock(_T), mutex_unlock(_T))
-+
-+#ifdef CONFIG_DEBUG_FS
-+#define STM_DEBUG_FS_REGS(__reg)		\
-+	{					\
-+		.name = __stringify(__reg),	\
-+			.offset = __reg(0),	\
-+	}
-+
-+static const struct debugfs_reg32 stm_regs[] = {
-+	STM_DEBUG_FS_REGS(STM_CR),
-+	STM_DEBUG_FS_REGS(STM_CNT),
-+	STM_DEBUG_FS_REGS(STM_CCR0),
-+	STM_DEBUG_FS_REGS(STM_CIR0),
-+	STM_DEBUG_FS_REGS(STM_CMP0),
-+	STM_DEBUG_FS_REGS(STM_CCR1),
-+	STM_DEBUG_FS_REGS(STM_CIR1),
-+	STM_DEBUG_FS_REGS(STM_CMP1),
-+	STM_DEBUG_FS_REGS(STM_CCR2),
-+	STM_DEBUG_FS_REGS(STM_CIR2),
-+	STM_DEBUG_FS_REGS(STM_CMP2),
-+	STM_DEBUG_FS_REGS(STM_CCR3),
-+	STM_DEBUG_FS_REGS(STM_CIR3),
-+	STM_DEBUG_FS_REGS(STM_CMP3),
-+};
-+
-+static void nxp_stm_module_debugfs_init(struct device *dev, struct stm_timer *stm_timer)
-+{
-+	struct debugfs_regset32 *regset;
-+	struct dentry *dentry;
-+	static struct dentry *topdir = NULL;
-+
-+	if (!topdir)
-+		topdir = debugfs_create_dir("timers", NULL);
-+
-+	dentry = debugfs_create_dir(dev_name(dev), topdir);
-+
-+	regset = devm_kzalloc(dev, sizeof(*regset), GFP_KERNEL);
-+	if (!regset)
-+		return;
-+
-+	regset->base = stm_timer->base;
-+	regset->regs = stm_regs;
-+	regset->nregs = ARRAY_SIZE(stm_regs);
-+
-+	debugfs_create_regset32("registers", 0400, dentry, regset);
-+
-+	debugfs_create_atomic_t("refcount", 0400, dentry, &stm_timer->refcnt);
-+}
-+#else
-+static inline void nxp_stm_module_debugfs_init(struct device *dev, struct stm_timer *stm_timer)
-+{
-+}
-+#endif
-+
-+static struct stm_timer *cs_to_stm(struct clocksource *cs)
-+{
-+	return container_of(cs, struct stm_timer, cs);
-+}
-+
-+static struct stm_timer *ced_to_stm(struct clock_event_device *ced)
-+{
-+        return container_of(ced, struct stm_timer, ced);
-+}
-+
-+static u64 notrace nxp_stm_read_sched_clock(void)
-+{
-+	return readl(STM_CNT(stm_sched_clock->base));
-+}
-+
-+static u32 nxp_stm_clocksource_getcnt(struct stm_timer *stm_timer)
-+{
-+	return readl(STM_CNT(stm_timer->base));
-+}
-+
-+static void nxp_stm_clocksource_setcnt(struct stm_timer *stm_timer, u32 cnt)
-+{
-+	writel(cnt, STM_CNT(stm_timer->base));
-+}
-+
-+static u64 nxp_stm_clocksource_read(struct clocksource *cs)
-+{
-+	struct stm_timer *stm_timer = cs_to_stm(cs);
-+
-+	return (u64)nxp_stm_clocksource_getcnt(stm_timer);
-+}
-+
-+static void nxp_stm_module_enable(struct stm_timer *stm_timer)
-+{
-+	u32 reg;
-+
-+	reg = readl(STM_CR(stm_timer->base));
-+
-+	reg |= STM_ENABLE_MASK;
-+
-+	writel(reg, STM_CR(stm_timer->base));
-+}
-+
-+static void nxp_stm_module_disable(struct stm_timer *stm_timer)
-+{
-+	u32 reg;
-+
-+	reg = readl(STM_CR(stm_timer->base));
-+
-+	reg &= ~STM_ENABLE_MASK;
-+
-+	writel(reg, STM_CR(stm_timer->base));
-+}
-+
-+static void nxp_stm_module_put(struct stm_timer *stm_timer)
-+{
-+	if (atomic_dec_and_test(&stm_timer->refcnt))
-+		nxp_stm_module_disable(stm_timer);
-+}
-+
-+static void nxp_stm_module_get(struct stm_timer *stm_timer)
-+{
-+	if (atomic_inc_return(&stm_timer->refcnt) == 1)
-+		nxp_stm_module_enable(stm_timer);
-+}
-+
-+static int nxp_stm_clocksource_enable(struct clocksource *cs)
-+{
-+	struct stm_timer *stm_timer = cs_to_stm(cs);
-+
-+	nxp_stm_module_get(stm_timer);
-+
-+	return 0;
-+}
-+
-+static void nxp_stm_clocksource_disable(struct clocksource *cs)
-+{
-+	struct stm_timer *stm_timer = cs_to_stm(cs);
-+
-+	nxp_stm_module_put(stm_timer);
-+}
-+
-+static void nxp_stm_clocksource_suspend(struct clocksource *cs)
-+{
-+	struct stm_timer *stm_timer = cs_to_stm(cs);
-+
-+	nxp_stm_clocksource_disable(cs);
-+	stm_timer->counter = nxp_stm_clocksource_getcnt(stm_timer);
-+}
-+
-+static void nxp_stm_clocksource_resume(struct clocksource *cs)
-+{
-+	struct stm_timer *stm_timer = cs_to_stm(cs);
-+
-+	nxp_stm_clocksource_setcnt(stm_timer, stm_timer->counter);
-+	nxp_stm_clocksource_enable(cs);
-+}
-+
-+static void __init devm_clocksource_unregister(void *data)
-+{
-+	struct stm_timer *stm_timer = data;
-+
-+	clocksource_unregister(&stm_timer->cs);
-+}
-+
-+static int __init nxp_stm_clocksource_init(struct device *dev, struct stm_timer *stm_timer, const char *name,
-+					   void __iomem *base, struct clk *clk)
-+{
-+	int ret;
-+
-+	stm_timer->base = base;
-+	stm_timer->rate = clk_get_rate(clk);
-+
-+	stm_timer->cs.name = name;
-+	stm_timer->cs.rating = 460;
-+	stm_timer->cs.read = nxp_stm_clocksource_read;
-+	stm_timer->cs.enable = nxp_stm_clocksource_enable;
-+	stm_timer->cs.disable = nxp_stm_clocksource_disable;
-+	stm_timer->cs.suspend = nxp_stm_clocksource_suspend;
-+	stm_timer->cs.resume = nxp_stm_clocksource_resume;
-+	stm_timer->cs.mask = CLOCKSOURCE_MASK(32);
-+	stm_timer->cs.flags = CLOCK_SOURCE_IS_CONTINUOUS;
-+
-+	ret = clocksource_register_hz(&stm_timer->cs, stm_timer->rate);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(dev, devm_clocksource_unregister, stm_timer);
-+	if (ret) {
-+		clocksource_unregister(&stm_timer->cs);
-+		return ret;
-+	}
-+
-+	stm_sched_clock = stm_timer;
-+
-+	sched_clock_register(nxp_stm_read_sched_clock, 32, stm_timer->rate);
-+
-+	dev_dbg(dev, "Registered clocksource %s\n", name);
-+
-+	return 0;
-+}
-+
-+static int nxp_stm_clockevent_read_counter(struct stm_timer *stm_timer)
-+{
-+	return readl(STM_CNT(stm_timer->base));
-+}
-+
-+static void nxp_stm_clockevent_disable(struct stm_timer *stm_timer)
-+{
-+	writel(0, STM_CCR0(stm_timer->base));
-+}
-+
-+static void nxp_stm_clockevent_enable(struct stm_timer *stm_timer)
-+{
-+	writel(STM_CCR_CEN, STM_CCR0(stm_timer->base));
-+}
-+
-+static int nxp_stm_clockevent_shutdown(struct clock_event_device *ced)
-+{
-+	struct stm_timer *stm_timer = ced_to_stm(ced);
-+
-+	nxp_stm_clockevent_disable(stm_timer);
-+
-+	return 0;
-+}
-+
-+static int nxp_stm_clockevent_set_next_event(unsigned long delta, struct clock_event_device *ced)
-+{
-+	struct stm_timer *stm_timer = ced_to_stm(ced);
-+	u32 val;
-+
-+	nxp_stm_clockevent_disable(stm_timer);
-+
-+	stm_timer->delta = delta;
-+
-+	val = nxp_stm_clockevent_read_counter(stm_timer) + delta;
-+
-+	writel(val, STM_CMP0(stm_timer->base));
-+
-+	/*
-+	 * The counter is shared across the channels and can not be
-+	 * stopped while we are setting the next event. If the delta
-+	 * is very small it is possible the counter increases above
-+	 * the computed 'val'. The min_delta value specified when
-+	 * registering the clockevent will prevent that. The second
-+	 * case is if the counter wraps while we compute the 'val' and
-+	 * before writing the comparator register. We read the counter,
-+	 * check if we are back in time and abort the timer with -ETIME.
-+	 */
-+	if (val > nxp_stm_clockevent_read_counter(stm_timer) + delta)
-+		return -ETIME;
-+
-+	nxp_stm_clockevent_enable(stm_timer);
-+
-+	return 0;
-+}
-+
-+static int nxp_stm_clockevent_set_periodic(struct clock_event_device *ced)
-+{
-+	struct stm_timer *stm_timer = ced_to_stm(ced);
-+
-+        return nxp_stm_clockevent_set_next_event(stm_timer->rate, ced);
-+}
-+
-+static void nxp_stm_clockevent_suspend(struct clock_event_device *ced)
-+{
-+	struct stm_timer *stm_timer = ced_to_stm(ced);
-+
-+	nxp_stm_module_put(stm_timer);
-+}
-+
-+static void nxp_stm_clockevent_resume(struct clock_event_device *ced)
-+{
-+	struct stm_timer *stm_timer = ced_to_stm(ced);
-+
-+	nxp_stm_module_get(stm_timer);
-+}
-+
-+static int __init nxp_stm_clockevent_per_cpu_init(struct device *dev, struct stm_timer *stm_timer, const char *name,
-+						  void __iomem *base, int irq, struct clk *clk, int cpu)
-+{
-+	stm_timer->base = base;
-+	stm_timer->rate = clk_get_rate(clk);
-+
-+	stm_timer->ced.name = name;
-+	stm_timer->ced.features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
-+	stm_timer->ced.set_state_shutdown = nxp_stm_clockevent_shutdown;
-+	stm_timer->ced.set_state_periodic = nxp_stm_clockevent_set_periodic;
-+	stm_timer->ced.set_next_event = nxp_stm_clockevent_set_next_event;
-+	stm_timer->ced.suspend = nxp_stm_clockevent_suspend;
-+	stm_timer->ced.resume = nxp_stm_clockevent_resume;
-+	stm_timer->ced.cpumask = cpumask_of(cpu);
-+	stm_timer->ced.rating = 460;
-+	stm_timer->ced.irq = irq;
-+
-+	per_cpu(stm_timers, cpu) = stm_timer;
-+
-+	nxp_stm_module_get(stm_timer);
-+
-+	dev_dbg(dev, "Initialized per cpu clockevent name=%s, irq=%d, cpu=%d\n", name, irq, cpu);
-+
-+	return 0;
-+}
-+
-+static int nxp_stm_clockevent_starting_cpu(unsigned int cpu)
-+{
-+	struct stm_timer *stm_timer = per_cpu(stm_timers, cpu);
-+	int ret;
-+
-+	if (WARN_ON(!stm_timer))
-+		return -EFAULT;
-+
-+	ret = irq_force_affinity(stm_timer->ced.irq, cpumask_of(cpu));
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * The timings measurement show reading the counter register
-+	 * and writing to the comparator register takes as a maximum
-+	 * value 1100 ns at 133MHz rate frequency. The timer must be
-+	 * set above this value and to be secure we set the minimum
-+	 * value equal to 2000ns, so 2us.
-+	 *
-+	 * minimum ticks = (rate / MICRO) * 2
-+	 */
-+	clockevents_config_and_register(&stm_timer->ced, stm_timer->rate,
-+					(stm_timer->rate / MICRO) * 2, 0xffffffff);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t nxp_stm_module_interrupt(int irq, void *dev_id)
-+{
-+	struct stm_timer *stm_timer = dev_id;
-+	struct clock_event_device *ced = &stm_timer->ced;
-+	u32 val;
-+
-+	/*
-+	 * The interrupt is shared across the channels in the
-+	 * module. But this one is configured to run only one channel,
-+	 * consequently it is pointless to test the interrupt flags
-+	 * before and we can directly reset the channel 0 irq flag
-+	 * register.
-+	 */
-+	writel(STM_CIR_CIF, STM_CIR0(stm_timer->base));
-+
-+	/*
-+	 * Update STM_CMP value using the counter value
-+	 */
-+	val = nxp_stm_clockevent_read_counter(stm_timer) + stm_timer->delta;
-+
-+	writel(val, STM_CMP0(stm_timer->base));
-+
-+	/*
-+	 * stm hardware doesn't support oneshot, it will generate an
-+	 * interrupt and start the counter again so software need to
-+	 * disable the timer to stop the counter loop in ONESHOT mode.
-+	 */
-+	if (likely(clockevent_state_oneshot(ced)))
-+		nxp_stm_clockevent_disable(stm_timer);
-+
-+	ced->event_handler(ced);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void __init devm_irq_dispose_mapping(void *data)
-+{
-+	int *irq = data;
-+
-+	irq_dispose_mapping(*irq);
-+}
-+
-+static int __init nxp_stm_timer_probe(struct platform_device *pdev)
-+{
-+	struct stm_timer *stm_timer;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	const char *name = of_node_full_name(np);
-+	struct clk *clk;
-+	void __iomem *base;
-+	int irq, ret;
-+
-+	/*
-+	 * The device tree can have multiple STM nodes described, so
-+	 * it makes this driver a good candidate for the async probe.
-+	 * It is still unclear if the time framework does correctly
-+	 * handle a parallel loading of the timers but at least this
-+	 * driver is ready to support the option.
-+	 */
-+	guard(stm_instances)(&stm_instances_lock);
-+
-+	/*
-+	 * The S32Gx are SoCs featuring a diverse set of cores. Linux
-+	 * is expected to run on Cortex-A53 cores, while other
-+	 * software stacks will operate on Cortex-M cores. The number
-+	 * of STM instances has been sized to include at most one
-+	 * instance per core.
-+	 *
-+	 * As we need a clocksource and a clockevent per cpu, we
-+	 * simply initialize a clocksource per cpu along with the
-+	 * clockevent which makes the resulting code simpler.
-+	 *
-+	 * However if the device tree is describing more STM instances
-+	 * than the number of cores, then we ignore them.
-+	 */
-+	if (stm_instances >= num_possible_cpus())
-+		return 0;
-+
-+	base = devm_of_iomap(dev, np, 0, NULL);
-+	if (IS_ERR(base))
-+		return dev_err_probe(dev, PTR_ERR(base), "Failed to iomap %pOFn\n", np);
-+
-+	irq = irq_of_parse_and_map(np, 0);
-+	if (irq <= 0)
-+		return dev_err_probe(dev, irq, "Failed to parse and map IRQ\n");
-+
-+	ret = devm_add_action_or_reset(dev, devm_irq_dispose_mapping, &irq);
-+	if (ret) {
-+		irq_dispose_mapping(irq);
-+		return dev_err_probe(dev, ret, "Failed to add devm action\n");
-+	}
-+
-+	clk = devm_clk_get_enabled(dev, NULL);
-+	if (IS_ERR(clk))
-+		return dev_err_probe(dev, PTR_ERR(clk), "Clock not found\n");
-+
-+	stm_timer = devm_kzalloc(dev, sizeof(*stm_timer), GFP_KERNEL);
-+	if (!stm_timer)
-+		return -ENOMEM;
-+
-+	ret = devm_request_irq(dev, irq, nxp_stm_module_interrupt,
-+			       IRQF_TIMER | IRQF_NOBALANCING, name, stm_timer);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Unable to allocate interrupt line\n");
-+
-+	ret = nxp_stm_clocksource_init(dev, stm_timer, name, base, clk);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Next probed STM will be a per CPU clockevent, until
-+	 * we probe as much as we have CPUs available on the
-+	 * system, we do a partial initialization
-+	 */
-+	ret = nxp_stm_clockevent_per_cpu_init(dev, stm_timer, name,
-+					      base, irq, clk,
-+					      stm_instances);
-+	if (ret)
-+		return ret;
-+
-+	stm_instances++;
-+
-+	/*
-+	 * The number of probed STM for per CPU clockevent is
-+	 * equal to the number of available CPUs on the
-+	 * system. We install the cpu hotplug to finish the
-+	 * initialization by registering the clockevents
-+	 */
-+	if (stm_instances == num_possible_cpus()) {
-+		ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "STM timer:starting",
-+					nxp_stm_clockevent_starting_cpu, NULL);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	nxp_stm_module_debugfs_init(dev, stm_timer);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id nxp_stm_of_match[] = {
-+	{ .compatible = "nxp,s32g-stm" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, nxp_stm_of_match);
-+
-+static struct platform_driver nxp_stm_probe = {
-+	.probe	= nxp_stm_timer_probe,
-+	.driver	= {
-+		.name		= "nxp-stm",
-+		.of_match_table	= of_match_ptr(nxp_stm_of_match),
-+	},
-+};
-+module_platform_driver(nxp_stm_probe);
-+
-+MODULE_DESCRIPTION("NXP System Timer Module driver");
-+MODULE_LICENSE("GPL");
--- 
-2.43.0
-
+W0FNRCBPZmZpY2lhbCBVc2UgT25seSAtIEFNRCBJbnRlcm5hbCBEaXN0cmlidXRpb24gT25seV0N
+Cg0KSGVsbG8gS3J6eXN6dG9mLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZy
+b206IEtyenlzenRvZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4NCj4gU2VudDogV2VkbmVz
+ZGF5LCBNYXJjaCAyNiwgMjAyNSA1OjUxIFBNDQo+IFRvOiBNYWhhcGF0cmEsIEFtaXQgS3VtYXIg
+PGFtaXQua3VtYXItbWFoYXBhdHJhQGFtZC5jb20+Ow0KPiBicm9vbmllQGtlcm5lbC5vcmc7IHJv
+YmhAa2VybmVsLm9yZzsga3J6aytkdEBrZXJuZWwub3JnOyBjb25vcitkdEBrZXJuZWwub3JnDQo+
+IENjOiBsaW51eC1zcGlAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+ZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGdpdCAoQU1ELVhpbGlueCkgPGdp
+dEBhbWQuY29tPjsNCj4gYW1pdHJrY2lhbjIwMDJAZ21haWwuY29tDQo+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0hdIHNwaTogZHQtYmluZGluZ3M6IGNkbnMscXNwaS1ub3I6IFVwZGF0ZSBtaW5JdGVtcy9t
+YXhJdGVtcyBvZg0KPiByZXNldHMgZm9yIENhZGVuY2UgT1NQSSBjb250cm9sbGVyDQo+DQo+IE9u
+IDI2LzAzLzIwMjUgMTI6MzcsIEFtaXQgS3VtYXIgTWFoYXBhdHJhIHdyb3RlOg0KPiA+IFRoZSBD
+YWRlbmNlIE9jdGFsIFNQSSAoT1NQSSkgY29udHJvbGxlciBvbiBBTUQgVmVyc2FsIFNvQ3MgcmVx
+dWlyZXMNCj4gPiBvbmx5IG9uZSByZXNldCBlbnRyeS4gVG8gcmVmbGVjdCB0aGlzLCB0aGUgbWF4
+SXRlbXMgZm9yICJyZXNldHMiIGFuZA0KPiA+ICJyZXNldC1uYW1lcyIgaGFzIGJlZW4gc2V0IHRv
+IDEgZm9yIEFNRCBWZXJzYWwgU29DcywgYW5kIHRoZSBtaW5JdGVtcw0KPiA+IGZvciB0aGVzZSBw
+cm9wZXJ0aWVzIGhhcyBhbHNvIGJlZW4gdXBkYXRlZCB0byAxLiBBZGRpdGlvbmFsbHksIHRoZXNl
+DQo+ID4gcHJvcGVydGllcyBoYXZlIGJlZW4gYWRkZWQgdG8gdGhlIHJlcXVpcmVkIHByb3BlcnR5
+IGxpc3QgZm9yIFZlcnNhbCBTb0NzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW1pdCBLdW1h
+ciBNYWhhcGF0cmEgPGFtaXQua3VtYXItbWFoYXBhdHJhQGFtZC5jb20+DQo+ID4gLS0tDQo+ID4g
+QlJBTkNIOiBtdGQvbmV4dA0KPiA+IC0tLQ0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9z
+cGkvY2Rucyxxc3BpLW5vci55YW1sICAgICB8IDE0ICsrKysrKysrKysrKy0tDQo+ID4gIDEgZmls
+ZSBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlm
+ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvY2Rucyxxc3Bp
+LW5vci55YW1sDQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL2Nk
+bnMscXNwaS1ub3IueWFtbA0KPiA+IGluZGV4IGQ0OGVjZDZjZDVhZC4uY2M5NGM1OTI4MGExIDEw
+MDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvY2Ru
+cyxxc3BpLW5vci55YW1sDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3NwaS9jZG5zLHFzcGktbm9yLnlhbWwNCj4gPiBAQCAtMTcsOCArMTcsMTggQEAgYWxsT2Y6
+DQo+ID4gICAgICAgICAgICBjb250YWluczoNCj4gPiAgICAgICAgICAgICAgY29uc3Q6IHhsbngs
+dmVyc2FsLW9zcGktMS4wDQo+ID4gICAgICB0aGVuOg0KPiA+ICsgICAgICBwcm9wZXJ0aWVzOg0K
+PiA+ICsgICAgICAgIHJlc2V0czoNCj4gPiArICAgICAgICAgIG1heEl0ZW1zOiAxDQo+ID4gKw0K
+PiA+ICsgICAgICAgIHJlc2V0LW5hbWVzOg0KPiA+ICsgICAgICAgICAgbWF4SXRlbXM6IDENCj4g
+PiArICAgICAgICAgIGl0ZW1zOg0KPiA+ICsgICAgICAgICAgICBlbnVtOiBbIHFzcGkgXQ0KPg0K
+PiBKdXN0IGxpc3QgdGhlIGl0ZW1zIGluc3RlYWQgb2YgdGhlc2UgdGhyZWUgbGluZXMuDQoNCkRv
+IHlvdSBtZWFuIHNvbWV0aGluZyBsaWtlIHRoaXM/DQogICAgICAgIHJlc2V0LW5hbWVzOg0KICAg
+ICAgICAgIGl0ZW1zOg0KICAgICAgICAgICAgLSBjb25zdDogWyBxc3BpIF0NCj4NCj4gPiAgICAg
+ICAgcmVxdWlyZWQ6DQo+ID4gICAgICAgICAgLSBwb3dlci1kb21haW5zDQo+ID4gKyAgICAgICAg
+LSByZXNldHMNCj4gPiArICAgICAgICAtIHJlc2V0LW5hbWVzDQo+DQo+IFdoeT8gVGhhdCdzIGFu
+IEFCSSBicmVhay4NCg0KV2VudCB0aHJvdWdoIHRoZSBkcml2ZXIsIGFuZCBiZWxpZXZlIHRoZXNl
+IHByb3BlcnRpZXMgZG8gbm90IG5lZWQgdG8gYmUgaW4NCnRoZSByZXF1aXJlZCBsaXN0LiBJIHdp
+bGwgcmV2ZXJ0IHRoaXMgY2hhbmdlIGluIG15IG5leHQgc2VyaWVzLg0KPg0KPg0KPiA+ICAgIC0g
+aWY6DQo+ID4gICAgICAgIHByb3BlcnRpZXM6DQo+ID4gICAgICAgICAgY29tcGF0aWJsZToNCj4g
+PiBAQCAtMTMyLDExICsxNDIsMTEgQEAgcHJvcGVydGllczoNCj4gPiAgICAgIG1heEl0ZW1zOiAx
+DQo+ID4NCj4gPiAgICByZXNldHM6DQo+ID4gLSAgICBtaW5JdGVtczogMg0KPiA+ICsgICAgbWlu
+SXRlbXM6IDENCj4NCj4gWW91IG5lZWQgdG8gdXBkYXRlIG90aGVyIHZhcmlhbnRzIG5vdy4NCg0K
+QXJlIHlvdSByZWZlcnJpbmcgdG8gb3RoZXIgU29DcyB3aGVuIHlvdSBtZW50aW9uIG90aGVyIHZh
+cmlhbnRzPw0KDQpSZWdhcmRzLA0KQW1pdA0KPg0KPiBCZXN0IHJlZ2FyZHMsDQo+IEtyenlzenRv
+Zg0K
