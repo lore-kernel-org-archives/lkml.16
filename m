@@ -1,162 +1,124 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D01F39ACC;
-	Fri, 28 Mar 2025 20:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBAB81531C5;
+	Fri, 28 Mar 2025 20:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743193341; cv=none; b=U1AvU7TbHIiLndlUxF53M3CurXrlhHo0EyQz6XbAS87UTOcJiOGhJMXKo0mzwFad9vFKiQ/ZnCD+aPr8zFvB6LUwq1YOE3f03Ne+nyxkmfmBjqmzQ7ETBC3lkktWgwGrnyKupul9cUCLWrQDd7UTAoBs3xrPvjewoaPu9TFxNIg=
+	t=1743193608; cv=none; b=Hve/TkW7XHtUeE0Klh34BTMNNViUy7Ifg5WO1x7L5NkEE3i8xTdGWkEYyRRLUXBUCysS3tf1iyZ9QllvSoL2hFUoW4+zzvJcBvFCxOlu/XUt86LcffoPNadZCR3FfRhG08p1kfZ/ruZiWjSQw3/1NR28a6JOm3NhBURyUx3tc3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743193341; c=relaxed/simple;
-	bh=/etE71/id3ceolRXKlzmXm3tnfpln2efZFUL8YBPH0I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XGVZVE/doBxZoNjTj7DDm/0ZS/8MH0WFOD4qFIGvHnKb1nbOBIiMgzTl4h0fNLtVsiKGGzIjDBXKNPcYi68lPobIdrKWtWAeH65gINR/BuGIVrBdZEZ3Lbs34nyZhoUScwTT6Y26JBF8ccY3oS9vft2k0yO4ZfRZO+qx05xKYhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W5XrPi+X; arc=none smtp.client-ip=209.85.167.52
+	s=arc-20240116; t=1743193608; c=relaxed/simple;
+	bh=FPs8gZwoE+X2cYpEh3+/cNSxQGnBqdQHiDqfIAFYu+o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DIt1gDYWYdIlqnpTZN5l3QpCM2olr8d6HsOo+sTNa2Vz6HOVVWH/imEtEtJ2VXfJSOLKwBKXQUpfdOE/dP1OWyR3ZYiHwOb9EehAHJqjmjY+sWiicjn4jnOKa1j+sz4WYrpMvGoVVbRJ71OCNKQjAGN36R9taIztaGzSJ6HZA1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MXLxkjc0; arc=none smtp.client-ip=209.85.216.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W5XrPi+X"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5499659e669so2597212e87.3;
-        Fri, 28 Mar 2025 13:22:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXLxkjc0"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ff69365e1dso3454992a91.3;
+        Fri, 28 Mar 2025 13:26:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743193337; x=1743798137; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0wj+8bmV44ertfc1KXsCnlrp/qCwTX9DeMuvBdHVn6I=;
-        b=W5XrPi+XbsrsiUV/5LKz8+p7UywMNbE0PpE/GJeHtAOTY2bButPkdqGgvB+ayvIQDU
-         4jcJT7M93ljdRGFkaC0EKrNh7clA0Nq/q3ZhLIY7iPykdqPP4sjvzpnQrYRJ4eeDcID9
-         z5V10ARbLfDVzu9o4HC/q7yse1TBF/Jucquztuk2CyeEhuGC4zxKEfRjjGI5zkOkKasG
-         6R0u5HmjiDoq1EaDZzPgl8U1Rdm8Tc9f07JFvCU/FEK5GfzsLtejXyjshrVh7oPkDLQ1
-         x/98CC1t5Q7IGu0VNI6i7hz67vAAiAcpNGBL+rmcpobolrGsO6ysJG1ft88Ho3ee5eBr
-         c/Yw==
+        d=gmail.com; s=20230601; t=1743193606; x=1743798406; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vu0m5qILV0MBBFjaYAFvxbD27OR1ndhcOefOD27j3Ss=;
+        b=MXLxkjc08hke6Gce4zwD7tRlt1bgKzoutoG+roak5pJ+iFYFop7U03SMs1JD/mp559
+         HpRNVLzh4INaewLKM60XQqex53LcJl/+TuArg0+WqFkjJbzCM6xhGV+KfA6CnHA6qU2N
+         G8mZFkyZt7ikIDc4AcGTA1YnIkI3DVCnD784uFMi4Mwy8wdGFsm/vxW3TPGwx//ZouG9
+         VbsXyq1z4vaK1cjRBvUBf7MlNBzCvBEi56o+SJ2jGkqx9xUBnHTG7vXsaYvUwuzSpgIj
+         UTzL1FvB7DxMR/6wVZKyFYsQ3zoB7jHysrqH2cA+NQLOBH7ds27RDBbUjCYzClQSEFuO
+         MqDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743193337; x=1743798137;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0wj+8bmV44ertfc1KXsCnlrp/qCwTX9DeMuvBdHVn6I=;
-        b=eAFafWxEZCUMtNYtUMK23tmy6tLSb2C8vMxlOIZXW1lJjEDy/+poaHGAPIOYYBfd4r
-         rYyWTzRVKahFHPZjFeD+288D4LxqIiGXqfTCeeS0+aEzGBER96ewXjxXVspdPpkLFLMn
-         hk91yJsN4ZPH5w06fkjaGamp9NReLnbgIkiScDvkKuw/VFfavwmRg5pD5dh7IzzmmwCQ
-         FHnepCjwq290EeSz6iGyuM6JzXpqb7NHA8sS4iy0TzPd4BFig3h2dw4IIj2O3ASM0pMp
-         osadqSlvhBIZMB4Kge2vxU3zxSDrIUFwL9G6UV9rwohWUtwn5nSiNjELDYof8nembvM+
-         CsSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqK1mkWnl0XoMiA2jxSkcNwDcwSwqL2OBEK3U9MbtuHhEs535EPdun1PzHKvWan2eYy+av+IMBBtplLrKe9R7KO9gL@vger.kernel.org, AJvYcCXTOGvG/cNgGTiOhIVvd9AFJIHt/RgHhUEjRjyEEyld755Y3xONFIXLjfIpc6Eo0vo2ICd1e+ZIR0T9yL0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxPLjYgTRdKmFJjw8UByXjOEPit5Dm3BBfJW3pYu2eKZ9ms5kb
-	bmNDcW2TQamWn0HGarsjApwh2WDnZCHcylZXAJ3P8kGMcIlKgkf+
-X-Gm-Gg: ASbGncs0GnGeWrrwBACABqemXBNfBHo4q8IIzN/opCltSbh8Se75A96X6qIz4BbKnzp
-	3M9sNMHijKOA2VfKL/l07BQoXhV/ZqUVy55i5q91sP1pTR9rKcbQkMmY8M8UibiM8y5xoBVOyJy
-	1PtU0Z1LulR6PPaN5lWTKSVOVcXkH95TcT9TombHOf/XefuLR3DXtfZUceZBcY5i0dW6LWwVAnp
-	Vm3H0Bxp8okGvICLfYtpPK3EFb2P1Ik5fJZ2ynQDMqWYrE4MzCCzw56I/RAmq62WXLQONXsWLHu
-	MV4Y20EVL63kYdDZ5mOdwEU0Hhf8pIt+97LU+bdg5R78bVbCmFK1ORXmb4bCocNaohAPbFC+c7U
-	qKvtuLCLFo7HvPz4BT0xJ3bMA+4rRIQ==
-X-Google-Smtp-Source: AGHT+IE4u4FzN8OB5WtN6BsBdAIoYyWb07aOVKhGmzjbmccuBZV4PXNpyJk39F0lyANDcUCWp1u0sg==
-X-Received: by 2002:a05:6512:a8c:b0:549:91db:c14b with SMTP id 2adb3069b0e04-54b10dbcc7cmr211591e87.8.1743193336898;
-        Fri, 28 Mar 2025 13:22:16 -0700 (PDT)
-Received: from ?IPV6:2001:678:a5c:1202:4fb5:f16a:579c:6dcb? (soda.int.kasm.eu. [2001:678:a5c:1202:4fb5:f16a:579c:6dcb])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b0957fa73sm411017e87.140.2025.03.28.13.22.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Mar 2025 13:22:16 -0700 (PDT)
-Message-ID: <dfc8ee31-2f81-4895-a11d-413641daf8c0@gmail.com>
-Date: Fri, 28 Mar 2025 21:22:15 +0100
+        d=1e100.net; s=20230601; t=1743193606; x=1743798406;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vu0m5qILV0MBBFjaYAFvxbD27OR1ndhcOefOD27j3Ss=;
+        b=RWwQoujy/JjfGFmHnRzp573ORES5bXXH706kg+gnx31WyL3BEv8AH0GHIDYshxRaaW
+         XwfMPt62o7W1p9hzfVih0cgaGRYacejhSx4DGejlPjuZsuoq9rsMvhWh8gPGllRRTl06
+         dogemCfBommDdbGpzLegg71dYB5ISYKYZDzRiNihn750A1BbLeJTAScEKAOENZbk09ui
+         siHBmo29IseQls5L1WkTTLeJx2nW5q/PiXsa9LSb81JV2gxx6z7Oq+pXztx6yy73YeWf
+         yCh0ZiCOFx8Vo0K3SEtk9aYkxBpUYmVfSY4Vw4QPntWRVN8u3ui2pQWeVZt6NDfBgsjf
+         TSrg==
+X-Forwarded-Encrypted: i=1; AJvYcCVzE0CUjixhmxttTVccveJU7GyfhfSrwdsuPHkWf9NnGnTIUWZqfqfJ2q4cGRVIKStWkUB8WrteMP0ug9A=@vger.kernel.org, AJvYcCXyF3gnC19TWF8nAB/sCIvstpNrKK2aq27OSOCnSsjcE91iJpgbcDqtkPbmziJMcKGrqewOC8pF3eofcKxQFIQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKBlr3tBkdRL4U8MkCX9IFoMv3o6k+fcBjW9o8j5hpZC6vOQeg
+	2OC/QzyciYQnkKZlyuNzgiBMdM+1KRh/2vkRcohFQOHZlhkHTRph
+X-Gm-Gg: ASbGncs14XJK/tabLmb2lzXldvekcCx14QDlqRfVVSTzlolBETaRJ9WAa+brcYsWa9Q
+	qwZyRf1YDmVxFpai+YSgYcXkn3rfJGXT6O1j6boeG/SKwATX1hdjQUNeqDAbWD2MPCtXMrABUvI
+	B50VUaU/y+j/bo4VNsyxd+SwNHUn0fMLmNQIcJfzvl/X4ICfAAxQZYufQbPxiUyLD0By/YxEbp1
+	aJpqTlri/bFb1oYY2RKJx4/lLOnWLaFRgntXVbxfdDk03ypnsWWT11HiXLLeSDcK4rki2PIfzj1
+	R1h8Z92fu5lwuDuELvlVap7fZob15vX6tWOZWKQ=
+X-Google-Smtp-Source: AGHT+IGDnJAqO2rmyDdZtvD6K93mzUOLV/R0IUPTqKjW1dt3vpiQd1sutEld6RzW3ozIeYicwSQ6NA==
+X-Received: by 2002:a17:90b:1dd0:b0:2ff:7b28:a51a with SMTP id 98e67ed59e1d1-305320b171cmr1129480a91.17.1743193600986;
+        Fri, 28 Mar 2025 13:26:40 -0700 (PDT)
+Received: from valdaarhun.. ([2401:4900:1c7e:7fd6:5c7b:30a9:c6b6:f81d])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30516d62c57sm2358889a91.28.2025.03.28.13.26.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 13:26:40 -0700 (PDT)
+From: Sahil Siddiq <icegambit91@gmail.com>
+X-Google-Original-From: Sahil Siddiq <sahilcdq@proton.me>
+To: jonas@southpole.se,
+	stefan.kristiansson@saunalahti.fi,
+	shorne@gmail.com
+Cc: sahilcdq@proton.me,
+	linux-openrisc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/3] openrisc: Add cacheinfo support and introduce new utility functions
+Date: Sat, 29 Mar 2025 01:56:29 +0530
+Message-ID: <20250328202632.72809-1-sahilcdq@proton.me>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 2/2] riscv: Add runtime constant support
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Ard Biesheuvel <ardb@kernel.org>,
- Ben Dooks <ben.dooks@codethink.co.uk>,
- Pasha Bouzarjomehri <pasha@rivosinc.com>,
- Emil Renner Berthing <emil.renner.berthing@canonical.com>,
- Alexandre Ghiti <alexghiti@rivosinc.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Peter Zijlstra <peterz@infradead.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>,
- Andrew Jones <ajones@ventanamicro.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20250319-runtime_const_riscv-v10-0-745b31a11d65@rivosinc.com>
- <20250319-runtime_const_riscv-v10-2-745b31a11d65@rivosinc.com>
- <cc8f3525-20b7-445b-877b-2add28a160a2@gmail.com> <Z-b9xGX7SaPgQq15@ghost>
-Content-Language: en-US, sv-SE
-From: Klara Modin <klarasmodin@gmail.com>
-In-Reply-To: <Z-b9xGX7SaPgQq15@ghost>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 3/28/25 20:51, Charlie Jenkins wrote:
-> On Fri, Mar 28, 2025 at 04:42:42PM +0100, Klara Modin wrote:
->> Hi,
->>
->> On 3/19/25 19:35, Charlie Jenkins wrote:
->>> Implement the runtime constant infrastructure for riscv. Use this
->>> infrastructure to generate constants to be used by the d_hash()
->>> function.
->>>
->>> This is the riscv variant of commit 94a2bc0f611c ("arm64: add 'runtime
->>> constant' support") and commit e3c92e81711d ("runtime constants: add
->>> x86 architecture support").
->>
->> This patch causes the following build failure for me:
->>
->> fs/dcache.c: Assembler messages:
->> fs/dcache.c:157: Error: attempt to move .org backwards
->> fs/dcache.c:157: Error: attempt to move .org backwards
->> fs/dcache.c:157: Error: attempt to move .org backwards
->> fs/dcache.c:157: Error: attempt to move .org backwards
->> fs/dcache.c:157: Error: attempt to move .org backwards
->> make[3]: *** [scripts/Makefile.build:203: fs/dcache.o] Error 1
-> 
-> Thank you for the report, this seems like a binutils issue potentially.
-> I will look into it. Here is a minimally reproducible example:
-> 
-> 886 :
-> .option push
-> .option norvc
-> 	nop
-> 	nop
-> .option pop
-> 887 :
-> 888 :
-> .option push
-> .option norvc
-> .option arch,+zba
-> 	nop
-> 	nop
-> .option pop
-> 889 :
-> .org	. - (887b - 886b) + (889b - 888b)
-> .org	. - (889b - 888b) + (887b - 886b)
-> 
-> Removing the ".option arch,+zba" fixes the issue but that shouldn't
-> matter...
+Hi,
 
-I tried again with GCC 14.2 and 12.4 (with the same binutils version) 
-after Alex's answer and couldn't see the issue with these. I got the 
-same result with your example. If I invoke `as` directly it doesn't 
-happen either.
+The main purpose of this series is to expose CPU cache attributes for
+OpenRISC in sysfs using the cacheinfo API. The core implementation
+to achieve this is in patch #3. Patch #1 and #2 add certain enhancements
+to simplify the implementation of cacheinfo support.
 
-The issue might be with GCC 15 then?
+Patch #1 removes duplication of cache-related data members in struct
+cpuinfo_or1k.
 
-Regards,
-Klara Modin
+Patch #2 introduces several utility functions. One set of functions is
+used to check if the cache components and SPRs exist before attempting
+to use them. The other set provides a convenient interface to flush or
+invalidate a range of cache blocks.
 
-> 
-> - Charlie
-> 
->>
->> The value of CONFIG_RISCV_ISA_ZBKB doesn't seem to have an impact. Reverting
->> the patch on top of next-20250328 resolved the issue for me. I attached the
->> generated fs/dcache.s.
->>
->> Please let me know if there's anything else you need.
->>
->> Regards,
->> Klara Modin
->>
+This version addresses review comments posted in response to v3. In
+commit #2, I chose not to make "cache_loop_page()" inline after reading
+point 15 in the coding style doc [1]. Let me know if it should be made
+inline.
+
+Thanks,
+Sahil
+
+[1] https://www.kernel.org/doc/html/latest/process/coding-style.html
+
+Sahil Siddiq (3):
+  openrisc: Refactor struct cpuinfo_or1k to reduce duplication
+  openrisc: Introduce new utility functions to flush and invalidate
+    caches
+  openrisc: Add cacheinfo support
+
+ arch/openrisc/include/asm/cacheflush.h |  17 ++++
+ arch/openrisc/include/asm/cpuinfo.h    |  31 ++++++--
+ arch/openrisc/kernel/Makefile          |   2 +-
+ arch/openrisc/kernel/cacheinfo.c       | 104 +++++++++++++++++++++++++
+ arch/openrisc/kernel/dma.c             |  18 +----
+ arch/openrisc/kernel/setup.c           |  45 +----------
+ arch/openrisc/mm/cache.c               |  87 +++++++++++++++++++--
+ arch/openrisc/mm/init.c                |   5 +-
+ 8 files changed, 235 insertions(+), 74 deletions(-)
+ create mode 100644 arch/openrisc/kernel/cacheinfo.c
+
+
+base-commit: ea1413e5b53a8dd4fa7675edb23cdf828bbdce1e
+-- 
+2.48.1
+
