@@ -1,177 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340932F30;
-	Fri, 28 Mar 2025 08:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8E62F30;
+	Fri, 28 Mar 2025 08:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743150505; cv=none; b=slf5nHqIh+XnL5AO4t5xAFkTa4Ktzq3Tbhn5M0exr1cMSqZIzrUrb4fgtB6ECqa2mIkl+BupuxahoggWK1Q5juEqujn6/Uyv8yWg9h+pLYDP4Ys6cYuC46kAUxhRpQLWWBHY4v2duTyzxGXMjuARHNrO2nJEVFR7608kY8rUxfc=
+	t=1743150521; cv=none; b=dgVSVxE3BoNsjNTTWPrRaqwMtScw5w2kOSG0Zg2w5bVo496wtUeuuAlhSdyuSXUtOE2o57JQJx+XGUq6QUaCp/V9pajOMgr9rwhe5m/+c3baA1SDUUieHBcy685+oops+lswZGfeLws3L0D8iPmzrftXbgmZlG+ELHSxmjBE3m8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743150505; c=relaxed/simple;
-	bh=JitqRG1z7M7azSM989SFOhNL1lni7Z9hKtFv2RxHV0o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TyKtXw/+x4fGfpm02C6IphPF4eXY3NEGcZVaVg2h52syTwLc9t35vLwwAsxsLsxJg2QmZeqFYuEB8j4cqMALyBYqO3RByuu1EXCX5fklV9pa9XLOA+zQCZlJyz+8jZ6+yeXpmkmGNSXj1yF7lU8C5caSr52VgcHBr3CJYqDS+nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BXLKnBg6; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BXLKnBg6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743150505; x=1774686505;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JitqRG1z7M7azSM989SFOhNL1lni7Z9hKtFv2RxHV0o=;
-  b=BXLKnBg6r3AWNEz8qQ2PQ0B8p/3cbvF/oy9hi1x/XIL5bljnxWdAaVfv
-   07mSCFmrXVM0NkSd+w8+du5T5hcWxNDLex0PSoKcgtsgILQyeLCihF0Wr
-   YANkzk19gn4NDVU7lRSXRyC3F7dts11nMAXp5R8HQTdoNRMRwo9tgFImg
-   rlntFuav76UfSnvCoLW2+n63TQXGgmKuDzz/9jJ/FAnue+9s5Yt29iAk/
-   f5wjjdVSE/oDOHOa4Sxi13I+eJUsYdjlf+UvL/YbkQlDXD9XooTnzmciI
-   MoGVjfGEViBN4+LsIW77WjafHpSXhUyomrOrHXGdz4ndt2OmbvHN+I8eT
-   Q==;
-X-CSE-ConnectionGUID: zjAt7vv/QvW9hN++WuIIog==
-X-CSE-MsgGUID: gbZ9jAgwRTS3VIWGA1guug==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44667953"
-X-IronPort-AV: E=Sophos;i="6.14,282,1736841600"; 
-   d="scan'208";a="44667953"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 01:28:24 -0700
-X-CSE-ConnectionGUID: Ot5s3BV2QhWEomPRkL8UfQ==
-X-CSE-MsgGUID: 7hvcnsceQGmYnwZxHEB8nA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,282,1736841600"; 
-   d="scan'208";a="125188253"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa006.fm.intel.com with ESMTP; 28 Mar 2025 01:28:21 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 10B421CA; Fri, 28 Mar 2025 10:28:19 +0200 (EET)
-Date: Fri, 28 Mar 2025 10:28:19 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Tom Lendacky <thomas.lendacky@amd.com>, 
-	"Aithal, Srikanth" <sraithal@amd.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Jason Baron <jbaron@akamai.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Linux-Next Mailing List <linux-next@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, "Roth, Michael" <Michael.Roth@amd.com>
-Subject: Re: linux-next regression: SNP Guest boot hangs with certain cpu/mem
- config combination
-Message-ID: <vhwle6fj3ifmcouppec5adegqludggsxcsxxveqa43hugtsdgy@pb7vd5cqjmx3>
-References: <363f8293-23e3-44d3-8005-b31eb5b7f975@amd.com>
- <rar5bkfy7iplfhitsbna3b2dmxbk7nunlaiclwars6kffdetl4@lzm7iualliua>
- <08981771-39ac-af66-e2ec-e8f9bf6aed0a@amd.com>
- <idlcitykk3hxg5by5sltuljyjf7uanmve5fspu6dectubhy5za@mjmv4i5vwyby>
- <ydvzjdcauzyvv7hxtra6l2gh4diz7zp4wx46eqculr7azynjke@z4x6eryq3rqd>
- <4f258a96-42fe-4567-886b-e8e2b949ab1a@akamai.com>
- <xcxcte6tzti7e6gcucf2ylfptie6kkvs2q5edup6mtzo5tenft@d2rm3p2yjoue>
- <20250327110224.68c69c78@gandalf.local.home>
- <2kwzi2qxqualhskbgckk6m7oc6vsgupquceqgfx2gnz5xbkier@rwdrhym7yxhr>
+	s=arc-20240116; t=1743150521; c=relaxed/simple;
+	bh=+7f36zh2YmV73APuA9i2NpMvoGc/2rspVzmVxr+RyqY=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=U2usz4mfdMqdkGXWwSRQ0lv9Yk3/PECNds6zvJmv/J/iVGUcE6Ol/GrjDhaRIlUMojgFuPTUM9Ic8j6T7YhN7q4WdUwNLRbLBY2ZGo4OnahSJRyu/MPtaXHA+YG8jvupI7tV+XTeFkYkUy+ERmyDzxKOXnH2zev1XxBGyFQFGGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4ZPDG10YpBz27hVk;
+	Fri, 28 Mar 2025 16:29:13 +0800 (CST)
+Received: from kwepemg500006.china.huawei.com (unknown [7.202.181.43])
+	by mail.maildlp.com (Postfix) with ESMTPS id F118F1400F4;
+	Fri, 28 Mar 2025 16:28:34 +0800 (CST)
+Received: from [10.67.121.110] (10.67.121.110) by
+ kwepemg500006.china.huawei.com (7.202.181.43) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 28 Mar 2025 16:28:34 +0800
+Subject: Re: [PATCH v6 5/5] hisi_acc_vfio_pci: bugfix live migration function
+ without VF device driver
+To: Alex Williamson <alex.williamson@redhat.com>
+CC: <jgg@nvidia.com>, <shameerali.kolothum.thodi@huawei.com>,
+	<jonathan.cameron@huawei.com>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linuxarm@openeuler.org>
+References: <20250318064548.59043-1-liulongfang@huawei.com>
+ <20250318064548.59043-6-liulongfang@huawei.com>
+ <20250321095240.40bf55ec.alex.williamson@redhat.com>
+From: liulongfang <liulongfang@huawei.com>
+Message-ID: <96c36c66-37a6-7bdb-75b8-dd7d6f63bb35@huawei.com>
+Date: Fri, 28 Mar 2025 16:28:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2kwzi2qxqualhskbgckk6m7oc6vsgupquceqgfx2gnz5xbkier@rwdrhym7yxhr>
+In-Reply-To: <20250321095240.40bf55ec.alex.williamson@redhat.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemg500006.china.huawei.com (7.202.181.43)
 
-On Thu, Mar 27, 2025 at 07:39:22PM +0200, Kirill A. Shutemov wrote:
-> On Thu, Mar 27, 2025 at 11:02:24AM -0400, Steven Rostedt wrote:
-> > On Thu, 27 Mar 2025 16:43:43 +0200
-> > "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com> wrote:
-> > 
-> > > > > The only option I see so far is to drop static branch from this path.
-> > > > > 
-> > > > > But I am not sure if it the only case were we use static branch from CPU
-> > > > > hotplug callbacks.
-> > > > > 
-> > > > > Any other ideas?  
-> > > > 
-> > > > 
-> > > > Hmmm, didn't take too close a look here, but there is the
-> > > > static_key_slow_dec_cpuslocked() variant, would that work here? Is the issue
-> > > > the caller may or may not have the cpu_hotplug lock?  
-> > > 
-> > > Yes. This is generic page alloc path and it can be called with and without
-> > > the lock.
-> > 
-> > Note, it's not the static_branch that is an issue, it's enabling/disabling
-> > the static branch that is. Changing a static branch takes a bit of work as
-> > it does modify the kernel text.
-> > 
-> > Is it possible to delay the update via a workqueue?
+On 2025/3/21 23:52, Alex Williamson wrote:
+> On Tue, 18 Mar 2025 14:45:48 +0800
+> Longfang Liu <liulongfang@huawei.com> wrote:
 > 
-> Ah. Good point. Should work. I'll give it try.
+>> If the VF device driver is not loaded in the Guest OS and we attempt to
+>> perform device data migration, the address of the migrated data will
+>> be NULL.
+>> The live migration recovery operation on the destination side will
+>> access a null address value, which will cause access errors.
+>>
+>> Therefore, live migration of VMs without added VF device drivers
+>> does not require device data migration.
+>> In addition, when the queue address data obtained by the destination
+>> is empty, device queue recovery processing will not be performed.
+>>
+>> Fixes: b0eed085903e ("hisi_acc_vfio_pci: Add support for VFIO live migration")
+>> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+>> Reviewed-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+>> ---
+>>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 21 ++++++++++++-------
+>>  1 file changed, 14 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>> index cadc82419dca..68b1c7204cad 100644
+>> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>> @@ -426,13 +426,6 @@ static int vf_qm_check_match(struct hisi_acc_vf_core_device *hisi_acc_vdev,
+>>  		return -EINVAL;
+>>  	}
+>>  
+>> -	ret = qm_write_regs(vf_qm, QM_VF_STATE, &vf_data->vf_qm_state, 1);
+>> -	if (ret) {
+>> -		dev_err(dev, "failed to write QM_VF_STATE\n");
+>> -		return ret;
+>> -	}
+>> -
+>> -	hisi_acc_vdev->vf_qm_state = vf_data->vf_qm_state;
+>>  	hisi_acc_vdev->match_done = true;
+>>  	return 0;
+>>  }
+>> @@ -498,6 +491,13 @@ static int vf_qm_load_data(struct hisi_acc_vf_core_device *hisi_acc_vdev,
+>>  	if (migf->total_length < sizeof(struct acc_vf_data))
+>>  		return -EINVAL;
+>>  
+>> +	ret = qm_write_regs(qm, QM_VF_STATE, &vf_data->vf_qm_state, 1);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to write QM_VF_STATE\n");
+>> +		return -EINVAL;
+>> +	}
+>> +	hisi_acc_vdev->vf_qm_state = vf_data->vf_qm_state;
+>> +
+>>  	qm->eqe_dma = vf_data->eqe_dma;
+>>  	qm->aeqe_dma = vf_data->aeqe_dma;
+>>  	qm->sqc_dma = vf_data->sqc_dma;
+>> @@ -506,6 +506,12 @@ static int vf_qm_load_data(struct hisi_acc_vf_core_device *hisi_acc_vdev,
+>>  	qm->qp_base = vf_data->qp_base;
+>>  	qm->qp_num = vf_data->qp_num;
+>>  
+>> +	if (!vf_data->eqe_dma || !vf_data->aeqe_dma ||
+>> +	    !vf_data->sqc_dma || !vf_data->cqc_dma) {
+>> +		dev_err(dev, "resume dma addr is NULL!\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+> 
+> I'm not sure how this fits in based on the commit log.  IIUC, we're
+> actually rejecting the migration data here, which will cause a
+> migration failure.  We're also testing the validity of the data *after*
+> we've actually applied it to the hisi_qm object, which seems backwards.
+> 
+> Are we just not processing the migration data because there's no driver
+> or are we failing the migration?  There shouldn't be a requirement on
+> the state of the guest driver for a successful migration.  Thanks,
+>
 
-The patch below fixes problem for me.
+Therefore, this shouldn't be about exiting the migration operation,
+but rather continuing the migration process while skipping these empty
+address write operations.
+Consequently, this shouldn't return an error,
+it should simply return 0.
 
-It is silly to add work_struct to zone for one-time cleanup, but I guess
-not a big deal.
+Thanks.
+Longfang.
 
-Tom, Srikanth, could you please test it?
-
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 9540b41894da..ea5f7e0b675d 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -964,6 +964,9 @@ struct zone {
- #ifdef CONFIG_UNACCEPTED_MEMORY
- 	/* Pages to be accepted. All pages on the list are MAX_PAGE_ORDER */
- 	struct list_head	unaccepted_pages;
-+
-+	/* To be called once last page in the zone is accepted */
-+	struct work_struct	unaccepted_cleanup;
- #endif
- 
- 	/* zone flags, see below */
-diff --git a/mm/internal.h b/mm/internal.h
-index 109ef30fee11..f2e6d42af6eb 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1516,6 +1516,7 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
- 
- #ifdef CONFIG_UNACCEPTED_MEMORY
- void accept_page(struct page *page);
-+void unaccepted_cleanup_work(struct work_struct *work);
- #else /* CONFIG_UNACCEPTED_MEMORY */
- static inline void accept_page(struct page *page)
- {
-diff --git a/mm/mm_init.c b/mm/mm_init.c
-index 2630cc30147e..d5a51f65dc4d 100644
---- a/mm/mm_init.c
-+++ b/mm/mm_init.c
-@@ -1404,6 +1404,7 @@ static void __meminit zone_init_free_lists(struct zone *zone)
- 
- #ifdef CONFIG_UNACCEPTED_MEMORY
- 	INIT_LIST_HEAD(&zone->unaccepted_pages);
-+	INIT_WORK(&zone->unaccepted_cleanup, unaccepted_cleanup_work);
- #endif
- }
- 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 4fe93029bcb6..e5f16fdb7eeb 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -6921,6 +6921,11 @@ static DEFINE_STATIC_KEY_FALSE(zones_with_unaccepted_pages);
- 
- static bool lazy_accept = true;
- 
-+void unaccepted_cleanup_work(struct work_struct *work)
-+{
-+	static_branch_dec(&zones_with_unaccepted_pages);
-+}
-+
- static int __init accept_memory_parse(char *p)
- {
- 	if (!strcmp(p, "lazy")) {
-@@ -6960,7 +6965,7 @@ static void __accept_page(struct zone *zone, unsigned long *flags,
- 	__free_pages_ok(page, MAX_PAGE_ORDER, FPI_TO_TAIL);
- 
- 	if (last)
--		static_branch_dec(&zones_with_unaccepted_pages);
-+		schedule_work(&zone->unaccepted_cleanup);
- }
- 
- void accept_page(struct page *page)
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+> Alex
+> 
+>>  	ret = qm_set_regs(qm, vf_data);
+>>  	if (ret) {
+>>  		dev_err(dev, "set VF regs failed\n");
+>> @@ -1531,6 +1537,7 @@ static int hisi_acc_vfio_pci_migrn_init_dev(struct vfio_device *core_vdev)
+>>  	hisi_acc_vdev->vf_id = pci_iov_vf_id(pdev) + 1;
+>>  	hisi_acc_vdev->pf_qm = pf_qm;
+>>  	hisi_acc_vdev->vf_dev = pdev;
+>> +	hisi_acc_vdev->vf_qm_state = QM_NOT_READY;
+>>  	mutex_init(&hisi_acc_vdev->state_mutex);
+>>  	mutex_init(&hisi_acc_vdev->open_mutex);
+>>  
+> 
+> 
+> 
+> .
+> 
