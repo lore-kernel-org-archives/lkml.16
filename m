@@ -1,64 +1,102 @@
-Received: from mail.hows.id.au (125-63-26-112.ip4.superloop.au [125.63.26.112])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E3BA17BCE;
-	Fri, 28 Mar 2025 00:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=125.63.26.112
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD2114D2BB;
+	Fri, 28 Mar 2025 00:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743122291; cv=none; b=ImMQ43/y3Q6OsTE2kWDlXVLyqceX/GcCK7a7UqQAOOhhKyHg30MxL2rJkeAzrIgxAuYIsdPW4Hy14KlwgKpgG+n6ID+1pHXq1SytPNqgOpbe5Br/VK/BrRno+OT1wtCSp9+URGkeqyyhVj1VfIpxKJAwEnwdixRBI2nkHbflazg=
+	t=1743122324; cv=none; b=MUr+Wp27lgSNFovI97wRP41OK5IfY/stgEPdiNWDqm4NMIc2Z6XO/KFn06Oyc9eABQdOhAT84Wbl3KA9mnlw33pn4Ww0LyeEGXDcaSM2zHCjD6mAzydXzQaKf6PIp/FDBPugkzLW7/WXikqFn7GKrUQCybnM1W/M/LvnOBFxR9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743122291; c=relaxed/simple;
-	bh=wtBvftpEg26IjFYgtQd0GAUwiZoqlDE7NzpImEwU1lU=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=WD42qNQVv5GdTK/c8dh6yi1Ho0tcGE+cJF8VvMQqqjSer/PpfpXUo47Zl6jtO7T2wAqjRJNpf0K+wQ/wQWRz4V97Y4DNSJLkmehP9KbAj5XyJel5yzy3lcZi4kHqYL6MLx06C9b1JQ6texDJzCn4nB6rWg1gJv+NYiy+t0dJRv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hows.id.au; spf=pass smtp.mailfrom=hows.id.au; arc=none smtp.client-ip=125.63.26.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hows.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hows.id.au
-Received: by mail.hows.id.au (Postfix, from userid 113)
-	id 7B07522F18; Fri, 28 Mar 2025 11:38:05 +1100 (AEDT)
-X-Spam-Level: 
-Received: from archibald.hows.id.au (unknown [192.168.0.157])
-	by mail.hows.id.au (Postfix) with ESMTPSA id 861CC229C3;
-	Fri, 28 Mar 2025 11:37:58 +1100 (AEDT)
-Date: Fri, 28 Mar 2025 11:37:57 +1100
-From: David Hows <david@hows.id.au>
-To: Clemens Ladisch <clemens@ladisch.de>, Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH]hwmon: (k10temp) Add support for Zen5 Ryzen Desktop
-Message-ID: <Z-XvZRmVXMNHgi3e@archibald.hows.id.au>
+	s=arc-20240116; t=1743122324; c=relaxed/simple;
+	bh=D+7ReCJLn6d03f6xTdJS0+RJKNpRezru3XPiEXsYjJU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ujl0Oi3IKAKr2wYmfuMvqSupna110PzCmJ3jnFcr2no32Kld/Khw2VWhkBlet18ppSwgegi1QRUHJb7sDUsNlVji/dfcOMICznBYbN1X5DKoP4EBjNIw+92iprXAalcA+lHJ+lj8+uVx2fZ/HoF55r0IJ5wYKBaf6DirTLtmE40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52S0030p020373;
+	Fri, 28 Mar 2025 00:38:23 GMT
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45hm68pmcd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 28 Mar 2025 00:38:22 +0000 (GMT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Thu, 27 Mar 2025 17:38:21 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Thu, 27 Mar 2025 17:38:18 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <stable@vger.kernel.org>
+CC: <patches@lists.linux.dev>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <jianqi.ren.cn@windriver.com>,
+        <changhuang.liang@starfivetech.com>, <kernel@esmil.dk>,
+        <hal.feng@starfivetech.com>, <p.zabel@pengutronix.de>,
+        <conor.dooley@microchip.com>
+Subject: [PATCH 6.6.y] reset: starfive: jh71x0: Fix accessing the empty member on JH7110 SoC
+Date: Fri, 28 Mar 2025 08:38:18 +0800
+Message-ID: <20250328003818.1525870-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: bNReoe5PplN0fEFNLHCP06ZmD2_bmp0g
+X-Authority-Analysis: v=2.4 cv=etjfzppX c=1 sm=1 tr=0 ts=67e5ef7e cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=Bq6zwJu1AAAA:8 a=t7CeM3EgAAAA:8 a=ywNUzwTxH0ZiiNjt-R4A:9 a=KQ6X2bKhxX7Fj2iT9C4S:22
+ a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: bNReoe5PplN0fEFNLHCP06ZmD2_bmp0g
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-27_05,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ malwarescore=0 lowpriorityscore=0 mlxscore=0 adultscore=0 suspectscore=0
+ impostorscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0
+ clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2503280002
 
-Add support for retrieving CCD temperatures on Granite Ridge Ryzen Desktop CPUs
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
 
-Tested locally against my 9950X3D CPU.
+[ Upstream commit 2cf59663660799ce16f4dfbed97cdceac7a7fa11 ]
+
+data->asserted will be NULL on JH7110 SoC since commit 82327b127d41
+("reset: starfive: Add StarFive JH7110 reset driver") was added. Add
+the judgment condition to avoid errors when calling reset_control_status
+on JH7110 SoC.
+
+Fixes: 82327b127d41 ("reset: starfive: Add StarFive JH7110 reset driver")
+Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+Acked-by: Hal Feng <hal.feng@starfivetech.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Link: https://lore.kernel.org/r/20240925112442.1732416-1-changhuang.liang@starfivetech.com
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
 ---
- drivers/hwmon/k10temp.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Verified the build test
+---
+ drivers/reset/starfive/reset-starfive-jh71x0.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
-index d0b4cc9a5011..cc2ad7a324f9 100644
---- a/drivers/hwmon/k10temp.c
-+++ b/drivers/hwmon/k10temp.c
-@@ -502,6 +502,13 @@ static int k10temp_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 			k10temp_get_ccd_support(data, 12);
- 			break;
- 		}
-+	} else if (boot_cpu_data.x86 == 0x1a) {
-+		switch (boot_cpu_data.x86_model) {
-+		case 0x40 ... 0x4f:	/* Zen5 Ryzen Desktop*/
-+			data->ccd_offset = 0x308;
-+			k10temp_get_ccd_support(data, 8);
-+			break;
-+		}
- 	}
+diff --git a/drivers/reset/starfive/reset-starfive-jh71x0.c b/drivers/reset/starfive/reset-starfive-jh71x0.c
+index 55bbbd2de52c..29ce3486752f 100644
+--- a/drivers/reset/starfive/reset-starfive-jh71x0.c
++++ b/drivers/reset/starfive/reset-starfive-jh71x0.c
+@@ -94,6 +94,9 @@ static int jh71x0_reset_status(struct reset_controller_dev *rcdev,
+ 	void __iomem *reg_status = data->status + offset * sizeof(u32);
+ 	u32 value = readl(reg_status);
  
- 	for (i = 0; i < ARRAY_SIZE(tctl_offset_table); i++) {
++	if (!data->asserted)
++		return !(value & mask);
++
+ 	return !((value ^ data->asserted[offset]) & mask);
+ }
+ 
 -- 
-2.49.0
+2.25.1
 
