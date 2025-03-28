@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E841EF375;
-	Fri, 28 Mar 2025 21:21:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817041F099A;
+	Fri, 28 Mar 2025 21:21:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743196873; cv=none; b=uTodP9QsPs9jMhwBrQMRxPtuoqwQXr5liD2R68iLiHT6zEnTjrE+Ay8dbhgo+pXMSW2ULZJzGZdSDnucsJLSKAlo70MuRkg29FxJE9EygyH3S/TpK2Ta/3R6tsNVvfGCPxsrq+93ZfW4VMWvuah1Ly1PN2xkBVQ7yXTlboDnIzk=
+	t=1743196881; cv=none; b=UuLve2bQ4lnBnMkf5bX9f/qQEqyTvcpnImLF79QMok7iyIuqFA1EzoGP+7jmYnl8hDpUxuYygeN9mVF4/gylY8HT+i0xpPtiU//Q1zNNJp1LT1iMXD1Ge5DKBpucaqjcQgoLpA088qd7iFQ6j3Ucb5RejiDOy4mLhV8WJm6aZsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743196873; c=relaxed/simple;
-	bh=JuNFlBY4EoNgdUTrxdxi0qbOIhDBulAK5HJ5EgUOCF0=;
+	s=arc-20240116; t=1743196881; c=relaxed/simple;
+	bh=S9WgQqkzphnzOjo/kXBBYH7wppgoV5iu/ZkP3cSm+QE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HuIoJh9uDt0b0ITH/xwUdI571YusVgWbj2EkeFxEExlBYQrNdz6slHmvlZLuHNAxY/z0l5OCxJnBphqul5ANhJQwKdPKgVpuLHKYsZqPbT3TmVWBMm1P43FezJAAxC+5UsRuTTLgBhmI2PHdpt7ImujqQMRLmgJVdLODdSfW7Tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BkPFvBt4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kjQ9VmkE+m87+HVPPm8UH/NrFgE0nRIuwfmAZMDFQuIMltgNW5N4n9zfd6yAhBiey8tci0/+4ZU94GPwXe84bfglOfirsWwye7BAnfusObobMmKdUBCDsqos2kKKVj4fdYfTehNDNoM5yeBgx0OjNPECfrhy82AabobC0sgam+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tUxrWmtv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BkPFvBt4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B8CDC4CEE9;
-	Fri, 28 Mar 2025 21:21:12 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tUxrWmtv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EE5BC4CEE4;
+	Fri, 28 Mar 2025 21:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1743196873;
-	bh=JuNFlBY4EoNgdUTrxdxi0qbOIhDBulAK5HJ5EgUOCF0=;
+	s=korg; t=1743196881;
+	bh=S9WgQqkzphnzOjo/kXBBYH7wppgoV5iu/ZkP3cSm+QE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BkPFvBt4fdUCOZ3xr0Y3BNC+5Ja1IvY0wqZl8rqT9aaMs+Tw3RlXfpmy2iEUHYK/s
-	 oOnJxWffFWz6i9fxc0qig3JKR3uZWfIV7QPO/OgPe8aKIIgJ6VHMAk1DT17bjQzTbZ
-	 3307xv/dFA85tUIdXv7Ec9z7n25zXUM0A1RrzEKY=
+	b=tUxrWmtvJIs/40A1zLSmjL6x4HhyF+4LTMDVFcxFUyEmJibrQ+FX3/CHcj/SLHAD0
+	 gZRxjsuROK2IS4Wi55VtdtSUjJqkEIWRHsGOLj+7LBHuunFHmhbKzJ4mr8Nyq/KKlk
+	 XYmMxyCimzg+qzIS+zpWfebd+ATGMadt1oxMLlCE=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org,
 	akpm@linux-foundation.org,
@@ -31,12 +31,12 @@ To: linux-kernel@vger.kernel.org,
 Cc: lwn@lwn.net,
 	jslaby@suse.cz,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Linux 6.12.21
-Date: Fri, 28 Mar 2025 22:19:39 +0100
-Message-ID: <2025032839-crestless-annually-f251@gregkh>
+Subject: Re: Linux 6.13.9
+Date: Fri, 28 Mar 2025 22:19:47 +0100
+Message-ID: <2025032847-unknown-pacifist-bd72@gregkh>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <2025032838-studio-keg-302e@gregkh>
-References: <2025032838-studio-keg-302e@gregkh>
+In-Reply-To: <2025032847-legged-dividers-794e@gregkh>
+References: <2025032847-legged-dividers-794e@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,15 +59,15 @@ index 7c5ac5d2e880..f6884f6e59e7 100644
        if:
          not:
 diff --git a/Makefile b/Makefile
-index ca000bd227be..a646151342b8 100644
+index 44d99cd682ba..21a34e8991ac 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1,7 +1,7 @@
  # SPDX-License-Identifier: GPL-2.0
  VERSION = 6
- PATCHLEVEL = 12
--SUBLEVEL = 20
-+SUBLEVEL = 21
+ PATCHLEVEL = 13
+-SUBLEVEL = 8
++SUBLEVEL = 9
  EXTRAVERSION =
  NAME = Baby Opossum Posse
  
@@ -217,7 +217,7 @@ index 6c666dc7ad23..01ec8c03686a 100644
  	};
  };
 diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi
-index edf55760a5c1..1a63a6add439 100644
+index 1c72da417011..614b65821995 100644
 --- a/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi
 +++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi
 @@ -108,6 +108,11 @@ lvds_panel_in: endpoint {
@@ -376,8 +376,20 @@ index da8902c5f7e5..1493319aa748 100644
  			"Headphone", "Headphone Jack",
  			"Line", "Line In Jack";
  
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index cb9fae39334c..5eb076a109f4 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -5159,7 +5159,6 @@ apps_smmu: iommu@15000000 {
+ 				     <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>;
+-			dma-coherent;
+ 		};
+ 
+ 		anoc_1_tbu: tbu@150c5000 {
 diff --git a/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts b/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts
-index 0905668cbe1f..3d5e81a0afdc 100644
+index eb9470a00e54..1a59e8b1dc46 100644
 --- a/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts
 +++ b/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts
 @@ -194,6 +194,13 @@ sd_card_led_pin: sd-card-led-pin {
@@ -410,11 +422,11 @@ index 0905668cbe1f..3d5e81a0afdc 100644
  	rts-gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
  	status = "okay";
  };
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dts
-index fe5b52610010..6a6b36c36ce2 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dts
-@@ -117,7 +117,7 @@ &u2phy0_host {
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dtsi
+index b1c9bd0e63ef..8d94d9f91a5c 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dtsi
+@@ -115,7 +115,7 @@ &u2phy0_host {
  };
  
  &u2phy1_host {
@@ -423,8 +435,38 @@ index fe5b52610010..6a6b36c36ce2 100644
  };
  
  &uart0 {
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
+index 69a9d6170649..47dc198706c8 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
+@@ -227,6 +227,16 @@ vcc5v0_usb: regulator-vcc5v0-usb {
+ 		vin-supply = <&vcc12v_dcin>;
+ 	};
+ 
++	vcca_0v9: regulator-vcca-0v9 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcca_0v9";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <900000>;
++		regulator-max-microvolt = <900000>;
++		vin-supply = <&vcc3v3_sys>;
++	};
++
+ 	vdd_log: regulator-vdd-log {
+ 		compatible = "pwm-regulator";
+ 		pwms = <&pwm2 0 25000 1>;
+@@ -312,6 +322,8 @@ &gmac {
+ };
+ 
+ &hdmi {
++	avdd-0v9-supply = <&vcca_0v9>;
++	avdd-1v8-supply = <&vcc1v8_dvp>;
+ 	ddc-i2c-bus = <&i2c3>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&hdmi_cec>;
 diff --git a/arch/arm64/boot/dts/rockchip/rk3566-lubancat-1.dts b/arch/arm64/boot/dts/rockchip/rk3566-lubancat-1.dts
-index 9a2f59a351de..48ccdd6b4711 100644
+index 61dd71c259aa..ddf84c2a19cf 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3566-lubancat-1.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3566-lubancat-1.dts
 @@ -512,7 +512,6 @@ &sdhci {
@@ -436,10 +478,10 @@ index 9a2f59a351de..48ccdd6b4711 100644
  	cap-mmc-highspeed;
  	cap-sd-highspeed;
 diff --git a/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts b/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
-index 31d2f8994f85..e61c5731fb99 100644
+index 90f823b2c219..7f457ab78015 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
-@@ -455,7 +455,6 @@ &sdhci {
+@@ -503,7 +503,6 @@ &sdhci {
  	non-removable;
  	pinctrl-names = "default";
  	pinctrl-0 = <&emmc_bus8 &emmc_cmd &emmc_clk &emmc_data_strobe>;
@@ -448,10 +490,10 @@ index 31d2f8994f85..e61c5731fb99 100644
  	vqmmc-supply = <&vcc_1v8_s3>;
  	status = "okay";
 diff --git a/arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi
-index 615094bb8ba3..a82fe75bda55 100644
+index 81a6a05ce13b..e8fa449517c2 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi
-@@ -367,7 +367,6 @@ &sdhci {
+@@ -386,7 +386,6 @@ &sdhci {
  	non-removable;
  	pinctrl-names = "default";
  	pinctrl-0 = <&emmc_bus8 &emmc_cmd &emmc_clk &emmc_data_strobe>;
@@ -460,10 +502,10 @@ index 615094bb8ba3..a82fe75bda55 100644
  	vqmmc-supply = <&vcc_1v8_s3>;
  	status = "okay";
 diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 1bf70fa1045d..122a1e12582c 100644
+index c85aa4f1def8..06e3cfc9a73b 100644
 --- a/arch/arm64/include/asm/kvm_host.h
 +++ b/arch/arm64/include/asm/kvm_host.h
-@@ -602,23 +602,13 @@ struct kvm_host_data {
+@@ -613,23 +613,13 @@ struct kvm_host_data {
  	struct kvm_cpu_context host_ctxt;
  
  	/*
@@ -492,7 +534,7 @@ index 1bf70fa1045d..122a1e12582c 100644
  
  	/* Ownership of the FP regs */
  	enum {
-@@ -697,7 +687,6 @@ struct kvm_vcpu_arch {
+@@ -708,7 +698,6 @@ struct kvm_vcpu_arch {
  	u64 hcr_el2;
  	u64 hcrx_el2;
  	u64 mdcr_el2;
@@ -500,7 +542,7 @@ index 1bf70fa1045d..122a1e12582c 100644
  
  	/* Exception Information */
  	struct kvm_vcpu_fault_info fault;
-@@ -902,10 +891,6 @@ struct kvm_vcpu_arch {
+@@ -913,10 +902,6 @@ struct kvm_vcpu_arch {
  /* Save TRBE context if active  */
  #define DEBUG_STATE_SAVE_TRBE	__vcpu_single_flag(iflags, BIT(6))
  
@@ -512,7 +554,7 @@ index 1bf70fa1045d..122a1e12582c 100644
  #define ON_UNSUPPORTED_CPU	__vcpu_single_flag(sflags, BIT(2))
  /* WFIT instruction trapped */
 diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-index 6d21971ae559..f38d22dac140 100644
+index 8c4c1a2186cc..ec68d520b7ca 100644
 --- a/arch/arm64/kernel/fpsimd.c
 +++ b/arch/arm64/kernel/fpsimd.c
 @@ -1694,31 +1694,6 @@ void fpsimd_signal_preserve_current_state(void)
@@ -548,10 +590,10 @@ index 6d21971ae559..f38d22dac140 100644
   * Associate current's FPSIMD context with this cpu
   * The caller must have ownership of the cpu FPSIMD context before calling
 diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index 3cf65daa75a5..634d3f624818 100644
+index 3b3ecfed294f..78acbd589968 100644
 --- a/arch/arm64/kvm/arm.c
 +++ b/arch/arm64/kvm/arm.c
-@@ -1577,7 +1577,6 @@ static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
+@@ -1569,7 +1569,6 @@ static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
  	}
  
  	vcpu_reset_hcr(vcpu);
@@ -559,7 +601,7 @@ index 3cf65daa75a5..634d3f624818 100644
  
  	/*
  	 * Handle the "start in power-off" case.
-@@ -2477,14 +2476,6 @@ static void finalize_init_hyp_mode(void)
+@@ -2469,14 +2468,6 @@ static void finalize_init_hyp_mode(void)
  			per_cpu_ptr_nvhe_sym(kvm_host_data, cpu)->sve_state =
  				kern_hyp_va(sve_state);
  		}
@@ -719,10 +761,10 @@ index 4433a234aa9b..9f4e8d68ab50 100644
  	ret
  
 diff --git a/arch/arm64/kvm/hyp/include/hyp/switch.h b/arch/arm64/kvm/hyp/include/hyp/switch.h
-index 5310fe1da616..cc9cb6395946 100644
+index 34f53707892d..bcf3a537aac3 100644
 --- a/arch/arm64/kvm/hyp/include/hyp/switch.h
 +++ b/arch/arm64/kvm/hyp/include/hyp/switch.h
-@@ -295,7 +295,7 @@ static inline bool __populate_fault_info(struct kvm_vcpu *vcpu)
+@@ -326,7 +326,7 @@ static inline bool __populate_fault_info(struct kvm_vcpu *vcpu)
  	return __get_fault_info(vcpu->arch.fault.esr_el2, &vcpu->arch.fault);
  }
  
@@ -731,7 +773,7 @@ index 5310fe1da616..cc9cb6395946 100644
  {
  	*vcpu_pc(vcpu) = read_sysreg_el2(SYS_ELR);
  	arm64_mops_reset_regs(vcpu_gp_regs(vcpu), vcpu->arch.fault.esr_el2);
-@@ -344,7 +344,87 @@ static inline void __hyp_sve_save_host(void)
+@@ -375,7 +375,87 @@ static inline void __hyp_sve_save_host(void)
  			 true);
  }
  
@@ -820,7 +862,7 @@ index 5310fe1da616..cc9cb6395946 100644
  
  /*
   * We trap the first access to the FP/SIMD to save the host context and
-@@ -352,7 +432,7 @@ static void kvm_hyp_save_fpsimd_host(struct kvm_vcpu *vcpu);
+@@ -383,7 +463,7 @@ static void kvm_hyp_save_fpsimd_host(struct kvm_vcpu *vcpu);
   * If FP/SIMD is not implemented, handle the trap and inject an undefined
   * instruction exception to the guest. Similarly for trapped SVE accesses.
   */
@@ -829,7 +871,7 @@ index 5310fe1da616..cc9cb6395946 100644
  {
  	bool sve_guest;
  	u8 esr_ec;
-@@ -394,7 +474,7 @@ static bool kvm_hyp_handle_fpsimd(struct kvm_vcpu *vcpu, u64 *exit_code)
+@@ -425,7 +505,7 @@ static bool kvm_hyp_handle_fpsimd(struct kvm_vcpu *vcpu, u64 *exit_code)
  	isb();
  
  	/* Write out the host state if it's in the registers */
@@ -838,7 +880,7 @@ index 5310fe1da616..cc9cb6395946 100644
  		kvm_hyp_save_fpsimd_host(vcpu);
  
  	/* Restore the guest state */
-@@ -543,7 +623,7 @@ static bool handle_ampere1_tcr(struct kvm_vcpu *vcpu)
+@@ -574,7 +654,7 @@ static bool handle_ampere1_tcr(struct kvm_vcpu *vcpu)
  	return true;
  }
  
@@ -847,7 +889,7 @@ index 5310fe1da616..cc9cb6395946 100644
  {
  	if (cpus_have_final_cap(ARM64_WORKAROUND_CAVIUM_TX2_219_TVM) &&
  	    handle_tx2_tvm(vcpu))
-@@ -563,7 +643,7 @@ static bool kvm_hyp_handle_sysreg(struct kvm_vcpu *vcpu, u64 *exit_code)
+@@ -594,7 +674,7 @@ static bool kvm_hyp_handle_sysreg(struct kvm_vcpu *vcpu, u64 *exit_code)
  	return false;
  }
  
@@ -856,7 +898,7 @@ index 5310fe1da616..cc9cb6395946 100644
  {
  	if (static_branch_unlikely(&vgic_v3_cpuif_trap) &&
  	    __vgic_v3_perform_cpuif_access(vcpu) == 1)
-@@ -572,19 +652,18 @@ static bool kvm_hyp_handle_cp15_32(struct kvm_vcpu *vcpu, u64 *exit_code)
+@@ -603,19 +683,18 @@ static bool kvm_hyp_handle_cp15_32(struct kvm_vcpu *vcpu, u64 *exit_code)
  	return false;
  }
  
@@ -881,7 +923,7 @@ index 5310fe1da616..cc9cb6395946 100644
  {
  	if (kvm_hyp_handle_memory_fault(vcpu, exit_code))
  		return true;
-@@ -614,23 +693,16 @@ static bool kvm_hyp_handle_dabt_low(struct kvm_vcpu *vcpu, u64 *exit_code)
+@@ -645,23 +724,16 @@ static bool kvm_hyp_handle_dabt_low(struct kvm_vcpu *vcpu, u64 *exit_code)
  
  typedef bool (*exit_handler_fn)(struct kvm_vcpu *, u64 *);
  
@@ -908,7 +950,7 @@ index 5310fe1da616..cc9cb6395946 100644
  	if (fn)
  		return fn(vcpu, exit_code);
  
-@@ -660,20 +732,9 @@ static inline void synchronize_vcpu_pstate(struct kvm_vcpu *vcpu, u64 *exit_code
+@@ -691,20 +763,9 @@ static inline void synchronize_vcpu_pstate(struct kvm_vcpu *vcpu, u64 *exit_code
   * the guest, false when we should restore the host state and return to the
   * main run loop.
   */
@@ -931,7 +973,7 @@ index 5310fe1da616..cc9cb6395946 100644
  	if (ARM_EXCEPTION_CODE(*exit_code) != ARM_EXCEPTION_IRQ)
  		vcpu->arch.fault.esr_el2 = read_sysreg_el2(SYS_ESR);
  
-@@ -703,7 +764,7 @@ static inline bool fixup_guest_exit(struct kvm_vcpu *vcpu, u64 *exit_code)
+@@ -734,7 +795,7 @@ static inline bool fixup_guest_exit(struct kvm_vcpu *vcpu, u64 *exit_code)
  		goto exit;
  
  	/* Check if there's an exit handler and allow it to handle the exit. */
@@ -941,7 +983,7 @@ index 5310fe1da616..cc9cb6395946 100644
  exit:
  	/* Return to the host kernel and handle the exit */
 diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-index fefc89209f9e..75f7e386de75 100644
+index 6aa0b13d86e5..d78a89c9a4ae 100644
 --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
 +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
 @@ -5,6 +5,7 @@
@@ -961,7 +1003,7 @@ index fefc89209f9e..75f7e386de75 100644
  
  	if (has_fpmr)
  		write_sysreg_s(*host_data_ptr(fpmr), SYS_FPMR);
-@@ -177,7 +178,9 @@ static void handle___kvm_vcpu_run(struct kvm_cpu_context *host_ctxt)
+@@ -179,7 +180,9 @@ static void handle___kvm_vcpu_run(struct kvm_cpu_context *host_ctxt)
  		pkvm_put_hyp_vcpu(hyp_vcpu);
  	} else {
  		/* The host is fully trusted, run its vCPU directly. */
@@ -971,7 +1013,7 @@ index fefc89209f9e..75f7e386de75 100644
  	}
  
  out:
-@@ -486,12 +489,6 @@ void handle_trap(struct kvm_cpu_context *host_ctxt)
+@@ -480,12 +483,6 @@ void handle_trap(struct kvm_cpu_context *host_ctxt)
  	case ESR_ELx_EC_SMC64:
  		handle_host_smc(host_ctxt);
  		break;
@@ -985,10 +1027,10 @@ index fefc89209f9e..75f7e386de75 100644
  	case ESR_ELx_EC_DABT_LOW:
  		handle_host_mem_abort(host_ctxt);
 diff --git a/arch/arm64/kvm/hyp/nvhe/pkvm.c b/arch/arm64/kvm/hyp/nvhe/pkvm.c
-index 077d4098548d..7c464340bcd0 100644
+index 071993c16de8..6405fa30f961 100644
 --- a/arch/arm64/kvm/hyp/nvhe/pkvm.c
 +++ b/arch/arm64/kvm/hyp/nvhe/pkvm.c
-@@ -28,8 +28,6 @@ static void pvm_init_traps_aa64pfr0(struct kvm_vcpu *vcpu)
+@@ -31,8 +31,6 @@ static void pvm_init_traps_aa64pfr0(struct kvm_vcpu *vcpu)
  	const u64 feature_ids = pvm_read_id_reg(vcpu, SYS_ID_AA64PFR0_EL1);
  	u64 hcr_set = HCR_RW;
  	u64 hcr_clear = 0;
@@ -997,7 +1039,7 @@ index 077d4098548d..7c464340bcd0 100644
  
  	/* Protected KVM does not support AArch32 guests. */
  	BUILD_BUG_ON(FIELD_GET(ARM64_FEATURE_MASK(ID_AA64PFR0_EL1_EL0),
-@@ -59,21 +57,10 @@ static void pvm_init_traps_aa64pfr0(struct kvm_vcpu *vcpu)
+@@ -62,21 +60,10 @@ static void pvm_init_traps_aa64pfr0(struct kvm_vcpu *vcpu)
  	/* Trap AMU */
  	if (!FIELD_GET(ARM64_FEATURE_MASK(ID_AA64PFR0_EL1_AMU), feature_ids)) {
  		hcr_clear |= HCR_AMVOFFEN;
@@ -1019,7 +1061,7 @@ index 077d4098548d..7c464340bcd0 100644
  }
  
  /*
-@@ -103,7 +90,6 @@ static void pvm_init_traps_aa64dfr0(struct kvm_vcpu *vcpu)
+@@ -106,7 +93,6 @@ static void pvm_init_traps_aa64dfr0(struct kvm_vcpu *vcpu)
  	const u64 feature_ids = pvm_read_id_reg(vcpu, SYS_ID_AA64DFR0_EL1);
  	u64 mdcr_set = 0;
  	u64 mdcr_clear = 0;
@@ -1027,7 +1069,7 @@ index 077d4098548d..7c464340bcd0 100644
  
  	/* Trap/constrain PMU */
  	if (!FIELD_GET(ARM64_FEATURE_MASK(ID_AA64DFR0_EL1_PMUVer), feature_ids)) {
-@@ -130,21 +116,12 @@ static void pvm_init_traps_aa64dfr0(struct kvm_vcpu *vcpu)
+@@ -133,21 +119,12 @@ static void pvm_init_traps_aa64dfr0(struct kvm_vcpu *vcpu)
  	if (!FIELD_GET(ARM64_FEATURE_MASK(ID_AA64DFR0_EL1_TraceFilt), feature_ids))
  		mdcr_set |= MDCR_EL2_TTRF;
  
@@ -1041,7 +1083,7 @@ index 077d4098548d..7c464340bcd0 100644
 -
  	/* Trap External Trace */
  	if (!FIELD_GET(ARM64_FEATURE_MASK(ID_AA64DFR0_EL1_ExtTrcBuff), feature_ids))
- 		mdcr_clear |= MDCR_EL2_E2TB_MASK << MDCR_EL2_E2TB_SHIFT;
+ 		mdcr_clear |= MDCR_EL2_E2TB_MASK;
  
  	vcpu->arch.mdcr_el2 |= mdcr_set;
  	vcpu->arch.mdcr_el2 &= ~mdcr_clear;
@@ -1049,7 +1091,7 @@ index 077d4098548d..7c464340bcd0 100644
  }
  
  /*
-@@ -195,10 +172,6 @@ static void pvm_init_trap_regs(struct kvm_vcpu *vcpu)
+@@ -198,10 +175,6 @@ static void pvm_init_trap_regs(struct kvm_vcpu *vcpu)
  	/* Clear res0 and set res1 bits to trap potential new features. */
  	vcpu->arch.hcr_el2 &= ~(HCR_RES0);
  	vcpu->arch.mdcr_el2 &= ~(MDCR_EL2_RES0);
@@ -1059,8 +1101,16 @@ index 077d4098548d..7c464340bcd0 100644
 -	}
  }
  
- /*
-@@ -579,8 +552,6 @@ int __pkvm_init_vcpu(pkvm_handle_t handle, struct kvm_vcpu *host_vcpu,
+ static void pkvm_vcpu_reset_hcr(struct kvm_vcpu *vcpu)
+@@ -236,7 +209,6 @@ static void pkvm_vcpu_reset_hcr(struct kvm_vcpu *vcpu)
+  */
+ static void pkvm_vcpu_init_traps(struct kvm_vcpu *vcpu)
+ {
+-	vcpu->arch.cptr_el2 = kvm_get_reset_cptr_el2(vcpu);
+ 	vcpu->arch.mdcr_el2 = 0;
+ 
+ 	pkvm_vcpu_reset_hcr(vcpu);
+@@ -693,8 +665,6 @@ int __pkvm_init_vcpu(pkvm_handle_t handle, struct kvm_vcpu *host_vcpu,
  		return ret;
  	}
  
@@ -1489,10 +1539,10 @@ index 447246bd04be..98a463e9774b 100644
  }
  
 diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
-index 2e093c39b610..23aefbf6fca5 100644
+index 959bc156f35f..44e6885cdae8 100644
 --- a/drivers/firmware/qcom/qcom_scm.c
 +++ b/drivers/firmware/qcom/qcom_scm.c
-@@ -2054,8 +2054,8 @@ static int qcom_scm_probe(struct platform_device *pdev)
+@@ -2082,8 +2082,8 @@ static int qcom_scm_probe(struct platform_device *pdev)
  
  	__scm->mempool = devm_qcom_tzmem_pool_new(__scm->dev, &pool_config);
  	if (IS_ERR(__scm->mempool)) {
@@ -1504,10 +1554,10 @@ index 2e093c39b610..23aefbf6fca5 100644
  	}
  
 diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c
-index ca130880edfd..d3798a333d1f 100644
+index 5b50e07ba4c7..d4218e9e43b5 100644
 --- a/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c
 +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v12_0.c
-@@ -2395,7 +2395,7 @@ static int gfx_v12_0_cp_gfx_load_me_microcode_rs64(struct amdgpu_device *adev)
+@@ -2413,7 +2413,7 @@ static int gfx_v12_0_cp_gfx_load_me_microcode_rs64(struct amdgpu_device *adev)
  				      (void **)&adev->gfx.me.me_fw_data_ptr);
  	if (r) {
  		dev_err(adev->dev, "(%d) failed to create me data bo\n", r);
@@ -1517,10 +1567,10 @@ index ca130880edfd..d3798a333d1f 100644
  	}
  
 diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c
-index 9c6824e1c156..60acf676000b 100644
+index 69f1aaeac99d..c75b2cf06c7f 100644
 --- a/drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c
 +++ b/drivers/gpu/drm/amd/amdgpu/gmc_v12_0.c
-@@ -498,9 +498,6 @@ static void gmc_v12_0_get_vm_pte(struct amdgpu_device *adev,
+@@ -501,9 +501,6 @@ static void gmc_v12_0_get_vm_pte(struct amdgpu_device *adev,
  				 uint64_t *flags)
  {
  	struct amdgpu_bo *bo = mapping->bo_va->base.bo;
@@ -1530,7 +1580,7 @@ index 9c6824e1c156..60acf676000b 100644
  
  	*flags &= ~AMDGPU_PTE_EXECUTABLE;
  	*flags |= mapping->flags & AMDGPU_PTE_EXECUTABLE;
-@@ -516,26 +513,11 @@ static void gmc_v12_0_get_vm_pte(struct amdgpu_device *adev,
+@@ -519,26 +516,11 @@ static void gmc_v12_0_get_vm_pte(struct amdgpu_device *adev,
  		*flags &= ~AMDGPU_PTE_VALID;
  	}
  
@@ -1560,7 +1610,7 @@ index 9c6824e1c156..60acf676000b 100644
  
  static unsigned gmc_v12_0_get_vbios_fb_size(struct amdgpu_device *adev)
 diff --git a/drivers/gpu/drm/amd/amdgpu/nv.c b/drivers/gpu/drm/amd/amdgpu/nv.c
-index 73065a85e0d2..4f94a119d627 100644
+index 3bad565ded73..2a49650292a1 100644
 --- a/drivers/gpu/drm/amd/amdgpu/nv.c
 +++ b/drivers/gpu/drm/amd/amdgpu/nv.c
 @@ -78,12 +78,12 @@ static const struct amdgpu_video_codecs nv_video_codecs_encode = {
@@ -1609,7 +1659,7 @@ index 73065a85e0d2..4f94a119d627 100644
  	{codec_info_build(AMDGPU_INFO_VIDEO_CAPS_CODEC_IDX_JPEG, 16384, 16384, 0)},
  	{codec_info_build(AMDGPU_INFO_VIDEO_CAPS_CODEC_IDX_VP9, 8192, 4352, 0)},
 diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
-index 307185c0e1b8..4cbe0da100d8 100644
+index ede072758dab..7e35cd766f0f 100644
 --- a/drivers/gpu/drm/amd/amdgpu/soc15.c
 +++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
 @@ -103,12 +103,11 @@ static const struct amdgpu_video_codecs vega_video_codecs_encode =
@@ -1660,7 +1710,7 @@ index 307185c0e1b8..4cbe0da100d8 100644
  	{codec_info_build(AMDGPU_INFO_VIDEO_CAPS_CODEC_IDX_JPEG, 16384, 16384, 0)},
  	{codec_info_build(AMDGPU_INFO_VIDEO_CAPS_CODEC_IDX_VP9, 8192, 4352, 0)},
 diff --git a/drivers/gpu/drm/amd/amdgpu/vi.c b/drivers/gpu/drm/amd/amdgpu/vi.c
-index 792b2eb6bbac..48ab93e715c8 100644
+index a83505815d39..24095fdbfaf0 100644
 --- a/drivers/gpu/drm/amd/amdgpu/vi.c
 +++ b/drivers/gpu/drm/amd/amdgpu/vi.c
 @@ -167,16 +167,16 @@ static const struct amdgpu_video_codec_info tonga_video_codecs_decode_array[] =
@@ -1749,6 +1799,909 @@ index 792b2eb6bbac..48ab93e715c8 100644
  };
  
  static const struct amdgpu_video_codecs cz_video_codecs_decode =
+diff --git a/drivers/gpu/drm/amd/amdkfd/cwsr_trap_handler.h b/drivers/gpu/drm/amd/amdkfd/cwsr_trap_handler.h
+index 7062f12b5b75..6c8c9935a0f2 100644
+--- a/drivers/gpu/drm/amd/amdkfd/cwsr_trap_handler.h
++++ b/drivers/gpu/drm/amd/amdkfd/cwsr_trap_handler.h
+@@ -3640,7 +3640,7 @@ static const uint32_t cwsr_trap_gfx9_4_3_hex[] = {
+ };
+ 
+ static const uint32_t cwsr_trap_gfx12_hex[] = {
+-	0xbfa00001, 0xbfa0024b,
++	0xbfa00001, 0xbfa002a2,
+ 	0xb0804009, 0xb8f8f804,
+ 	0x9178ff78, 0x00008c00,
+ 	0xb8fbf811, 0x8b6eff78,
+@@ -3714,7 +3714,15 @@ static const uint32_t cwsr_trap_gfx12_hex[] = {
+ 	0x00011677, 0xd7610000,
+ 	0x00011a79, 0xd7610000,
+ 	0x00011c7e, 0xd7610000,
+-	0x00011e7f, 0xbefe00ff,
++	0x00011e7f, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xbefe00ff,
+ 	0x00003fff, 0xbeff0080,
+ 	0xee0a407a, 0x000c0000,
+ 	0x00004000, 0xd760007a,
+@@ -3751,38 +3759,46 @@ static const uint32_t cwsr_trap_gfx12_hex[] = {
+ 	0x00000200, 0xbef600ff,
+ 	0x01000000, 0x7e000280,
+ 	0x7e020280, 0x7e040280,
+-	0xbefd0080, 0xbe804ec2,
+-	0xbf94fffe, 0xb8faf804,
+-	0x8b7a847a, 0x91788478,
+-	0x8c787a78, 0xd7610002,
+-	0x0000fa71, 0x807d817d,
+-	0xd7610002, 0x0000fa6c,
+-	0x807d817d, 0x917aff6d,
+-	0x80000000, 0xd7610002,
+-	0x0000fa7a, 0x807d817d,
+-	0xd7610002, 0x0000fa6e,
+-	0x807d817d, 0xd7610002,
+-	0x0000fa6f, 0x807d817d,
+-	0xd7610002, 0x0000fa78,
+-	0x807d817d, 0xb8faf811,
+-	0xd7610002, 0x0000fa7a,
+-	0x807d817d, 0xd7610002,
+-	0x0000fa7b, 0x807d817d,
+-	0xb8f1f801, 0xd7610002,
+-	0x0000fa71, 0x807d817d,
+-	0xb8f1f814, 0xd7610002,
+-	0x0000fa71, 0x807d817d,
+-	0xb8f1f815, 0xd7610002,
+-	0x0000fa71, 0x807d817d,
+-	0xb8f1f812, 0xd7610002,
+-	0x0000fa71, 0x807d817d,
+-	0xb8f1f813, 0xd7610002,
+-	0x0000fa71, 0x807d817d,
++	0xbe804ec2, 0xbf94fffe,
++	0xb8faf804, 0x8b7a847a,
++	0x91788478, 0x8c787a78,
++	0x917aff6d, 0x80000000,
++	0xd7610002, 0x00010071,
++	0xd7610002, 0x0001026c,
++	0xd7610002, 0x0001047a,
++	0xd7610002, 0x0001066e,
++	0xd7610002, 0x0001086f,
++	0xd7610002, 0x00010a78,
++	0xd7610002, 0x00010e7b,
++	0xd8500000, 0x00000000,
++	0xd8500000, 0x00000000,
++	0xd8500000, 0x00000000,
++	0xd8500000, 0x00000000,
++	0xd8500000, 0x00000000,
++	0xd8500000, 0x00000000,
++	0xd8500000, 0x00000000,
++	0xd8500000, 0x00000000,
++	0xb8faf811, 0xd7610002,
++	0x00010c7a, 0xb8faf801,
++	0xd7610002, 0x0001107a,
++	0xb8faf814, 0xd7610002,
++	0x0001127a, 0xb8faf815,
++	0xd7610002, 0x0001147a,
++	0xb8faf812, 0xd7610002,
++	0x0001167a, 0xb8faf813,
++	0xd7610002, 0x0001187a,
+ 	0xb8faf802, 0xd7610002,
+-	0x0000fa7a, 0x807d817d,
+-	0xbefa50c1, 0xbfc70000,
+-	0xd7610002, 0x0000fa7a,
+-	0x807d817d, 0xbefe00ff,
++	0x00011a7a, 0xbefa50c1,
++	0xbfc70000, 0xd7610002,
++	0x00011c7a, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xbefe00ff,
+ 	0x0000ffff, 0xbeff0080,
+ 	0xc4068070, 0x008ce802,
+ 	0x00000000, 0xbefe00c1,
+@@ -3797,329 +3813,356 @@ static const uint32_t cwsr_trap_gfx12_hex[] = {
+ 	0xbe824102, 0xbe844104,
+ 	0xbe864106, 0xbe884108,
+ 	0xbe8a410a, 0xbe8c410c,
+-	0xbe8e410e, 0xd7610002,
+-	0x0000f200, 0x80798179,
+-	0xd7610002, 0x0000f201,
+-	0x80798179, 0xd7610002,
+-	0x0000f202, 0x80798179,
+-	0xd7610002, 0x0000f203,
+-	0x80798179, 0xd7610002,
+-	0x0000f204, 0x80798179,
+-	0xd7610002, 0x0000f205,
+-	0x80798179, 0xd7610002,
+-	0x0000f206, 0x80798179,
+-	0xd7610002, 0x0000f207,
+-	0x80798179, 0xd7610002,
+-	0x0000f208, 0x80798179,
+-	0xd7610002, 0x0000f209,
+-	0x80798179, 0xd7610002,
+-	0x0000f20a, 0x80798179,
+-	0xd7610002, 0x0000f20b,
+-	0x80798179, 0xd7610002,
+-	0x0000f20c, 0x80798179,
+-	0xd7610002, 0x0000f20d,
+-	0x80798179, 0xd7610002,
+-	0x0000f20e, 0x80798179,
+-	0xd7610002, 0x0000f20f,
+-	0x80798179, 0xbf06a079,
+-	0xbfa10007, 0xc4068070,
++	0xbe8e410e, 0xbf068079,
++	0xbfa10032, 0xd7610002,
++	0x00010000, 0xd7610002,
++	0x00010201, 0xd7610002,
++	0x00010402, 0xd7610002,
++	0x00010603, 0xd7610002,
++	0x00010804, 0xd7610002,
++	0x00010a05, 0xd7610002,
++	0x00010c06, 0xd7610002,
++	0x00010e07, 0xd7610002,
++	0x00011008, 0xd7610002,
++	0x00011209, 0xd7610002,
++	0x0001140a, 0xd7610002,
++	0x0001160b, 0xd7610002,
++	0x0001180c, 0xd7610002,
++	0x00011a0d, 0xd7610002,
++	0x00011c0e, 0xd7610002,
++	0x00011e0f, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0x80799079,
++	0xbfa00038, 0xd7610002,
++	0x00012000, 0xd7610002,
++	0x00012201, 0xd7610002,
++	0x00012402, 0xd7610002,
++	0x00012603, 0xd7610002,
++	0x00012804, 0xd7610002,
++	0x00012a05, 0xd7610002,
++	0x00012c06, 0xd7610002,
++	0x00012e07, 0xd7610002,
++	0x00013008, 0xd7610002,
++	0x00013209, 0xd7610002,
++	0x0001340a, 0xd7610002,
++	0x0001360b, 0xd7610002,
++	0x0001380c, 0xd7610002,
++	0x00013a0d, 0xd7610002,
++	0x00013c0e, 0xd7610002,
++	0x00013e0f, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0x80799079,
++	0xc4068070, 0x008ce802,
++	0x00000000, 0x8070ff70,
++	0x00000080, 0xbef90080,
++	0x7e040280, 0x807d907d,
++	0xbf0aff7d, 0x00000060,
++	0xbfa2ff88, 0xbe804100,
++	0xbe824102, 0xbe844104,
++	0xbe864106, 0xbe884108,
++	0xbe8a410a, 0xd7610002,
++	0x00010000, 0xd7610002,
++	0x00010201, 0xd7610002,
++	0x00010402, 0xd7610002,
++	0x00010603, 0xd7610002,
++	0x00010804, 0xd7610002,
++	0x00010a05, 0xd7610002,
++	0x00010c06, 0xd7610002,
++	0x00010e07, 0xd7610002,
++	0x00011008, 0xd7610002,
++	0x00011209, 0xd7610002,
++	0x0001140a, 0xd7610002,
++	0x0001160b, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xd8500000,
++	0x00000000, 0xc4068070,
+ 	0x008ce802, 0x00000000,
++	0xbefe00c1, 0x857d9973,
++	0x8b7d817d, 0xbf06817d,
++	0xbfa20002, 0xbeff0080,
++	0xbfa00001, 0xbeff00c1,
++	0xb8fb4306, 0x8b7bc17b,
++	0xbfa10044, 0x8b7aff6d,
++	0x80000000, 0xbfa10041,
++	0x847b897b, 0xbef6007b,
++	0xb8f03b05, 0x80708170,
++	0xbf0d9973, 0xbfa20002,
++	0x84708970, 0xbfa00001,
++	0x84708a70, 0xb8fa1e06,
++	0x847a8a7a, 0x80707a70,
++	0x8070ff70, 0x00000200,
+ 	0x8070ff70, 0x00000080,
+-	0xbef90080, 0x7e040280,
+-	0x807d907d, 0xbf0aff7d,
+-	0x00000060, 0xbfa2ffbb,
+-	0xbe804100, 0xbe824102,
+-	0xbe844104, 0xbe864106,
+-	0xbe884108, 0xbe8a410a,
+-	0xd7610002, 0x0000f200,
+-	0x80798179, 0xd7610002,
+-	0x0000f201, 0x80798179,
+-	0xd7610002, 0x0000f202,
+-	0x80798179, 0xd7610002,
+-	0x0000f203, 0x80798179,
+-	0xd7610002, 0x0000f204,
+-	0x80798179, 0xd7610002,
+-	0x0000f205, 0x80798179,
+-	0xd7610002, 0x0000f206,
+-	0x80798179, 0xd7610002,
+-	0x0000f207, 0x80798179,
+-	0xd7610002, 0x0000f208,
+-	0x80798179, 0xd7610002,
+-	0x0000f209, 0x80798179,
+-	0xd7610002, 0x0000f20a,
+-	0x80798179, 0xd7610002,
+-	0x0000f20b, 0x80798179,
+-	0xc4068070, 0x008ce802,
+-	0x00000000, 0xbefe00c1,
+-	0x857d9973, 0x8b7d817d,
+-	0xbf06817d, 0xbfa20002,
+-	0xbeff0080, 0xbfa00001,
+-	0xbeff00c1, 0xb8fb4306,
+-	0x8b7bc17b, 0xbfa10044,
+-	0x8b7aff6d, 0x80000000,
+-	0xbfa10041, 0x847b897b,
+-	0xbef6007b, 0xb8f03b05,
+-	0x80708170, 0xbf0d9973,
+-	0xbfa20002, 0x84708970,
+-	0xbfa00001, 0x84708a70,
+-	0xb8fa1e06, 0x847a8a7a,
+-	0x80707a70, 0x8070ff70,
+-	0x00000200, 0x8070ff70,
+-	0x00000080, 0xbef600ff,
+-	0x01000000, 0xd71f0000,
+-	0x000100c1, 0xd7200000,
+-	0x000200c1, 0x16000084,
+-	0x857d9973, 0x8b7d817d,
+-	0xbf06817d, 0xbefd0080,
+-	0xbfa20013, 0xbe8300ff,
+-	0x00000080, 0xbf800000,
+-	0xbf800000, 0xbf800000,
+-	0xd8d80000, 0x01000000,
+-	0xbf8a0000, 0xc4068070,
+-	0x008ce801, 0x00000000,
+-	0x807d037d, 0x80700370,
+-	0xd5250000, 0x0001ff00,
+-	0x00000080, 0xbf0a7b7d,
+-	0xbfa2fff3, 0xbfa00012,
+-	0xbe8300ff, 0x00000100,
++	0xbef600ff, 0x01000000,
++	0xd71f0000, 0x000100c1,
++	0xd7200000, 0x000200c1,
++	0x16000084, 0x857d9973,
++	0x8b7d817d, 0xbf06817d,
++	0xbefd0080, 0xbfa20013,
++	0xbe8300ff, 0x00000080,
+ 	0xbf800000, 0xbf800000,
+ 	0xbf800000, 0xd8d80000,
+ 	0x01000000, 0xbf8a0000,
+ 	0xc4068070, 0x008ce801,
+ 	0x00000000, 0x807d037d,
+ 	0x80700370, 0xd5250000,
+-	0x0001ff00, 0x00000100,
++	0x0001ff00, 0x00000080,
+ 	0xbf0a7b7d, 0xbfa2fff3,
+-	0xbefe00c1, 0x857d9973,
+-	0x8b7d817d, 0xbf06817d,
+-	0xbfa20004, 0xbef000ff,
+-	0x00000200, 0xbeff0080,
+-	0xbfa00003, 0xbef000ff,
+-	0x00000400, 0xbeff00c1,
+-	0xb8fb3b05, 0x807b817b,
+-	0x847b827b, 0x857d9973,
+-	0x8b7d817d, 0xbf06817d,
+-	0xbfa2001b, 0xbef600ff,
+-	0x01000000, 0xbefd0084,
+-	0xbf0a7b7d, 0xbfa10040,
+-	0x7e008700, 0x7e028701,
+-	0x7e048702, 0x7e068703,
+-	0xc4068070, 0x008ce800,
+-	0x00000000, 0xc4068070,
+-	0x008ce801, 0x00008000,
+-	0xc4068070, 0x008ce802,
+-	0x00010000, 0xc4068070,
+-	0x008ce803, 0x00018000,
+-	0x807d847d, 0x8070ff70,
+-	0x00000200, 0xbf0a7b7d,
+-	0xbfa2ffeb, 0xbfa0002a,
++	0xbfa00012, 0xbe8300ff,
++	0x00000100, 0xbf800000,
++	0xbf800000, 0xbf800000,
++	0xd8d80000, 0x01000000,
++	0xbf8a0000, 0xc4068070,
++	0x008ce801, 0x00000000,
++	0x807d037d, 0x80700370,
++	0xd5250000, 0x0001ff00,
++	0x00000100, 0xbf0a7b7d,
++	0xbfa2fff3, 0xbefe00c1,
++	0x857d9973, 0x8b7d817d,
++	0xbf06817d, 0xbfa20004,
++	0xbef000ff, 0x00000200,
++	0xbeff0080, 0xbfa00003,
++	0xbef000ff, 0x00000400,
++	0xbeff00c1, 0xb8fb3b05,
++	0x807b817b, 0x847b827b,
++	0x857d9973, 0x8b7d817d,
++	0xbf06817d, 0xbfa2001b,
+ 	0xbef600ff, 0x01000000,
+ 	0xbefd0084, 0xbf0a7b7d,
+-	0xbfa10015, 0x7e008700,
++	0xbfa10040, 0x7e008700,
+ 	0x7e028701, 0x7e048702,
+ 	0x7e068703, 0xc4068070,
+ 	0x008ce800, 0x00000000,
+ 	0xc4068070, 0x008ce801,
+-	0x00010000, 0xc4068070,
+-	0x008ce802, 0x00020000,
++	0x00008000, 0xc4068070,
++	0x008ce802, 0x00010000,
+ 	0xc4068070, 0x008ce803,
+-	0x00030000, 0x807d847d,
+-	0x8070ff70, 0x00000400,
++	0x00018000, 0x807d847d,
++	0x8070ff70, 0x00000200,
+ 	0xbf0a7b7d, 0xbfa2ffeb,
+-	0xb8fb1e06, 0x8b7bc17b,
+-	0xbfa1000d, 0x847b837b,
+-	0x807b7d7b, 0xbefe00c1,
+-	0xbeff0080, 0x7e008700,
++	0xbfa0002a, 0xbef600ff,
++	0x01000000, 0xbefd0084,
++	0xbf0a7b7d, 0xbfa10015,
++	0x7e008700, 0x7e028701,
++	0x7e048702, 0x7e068703,
+ 	0xc4068070, 0x008ce800,
+-	0x00000000, 0x807d817d,
+-	0x8070ff70, 0x00000080,
+-	0xbf0a7b7d, 0xbfa2fff7,
+-	0xbfa0016e, 0xbef4007e,
+-	0x8b75ff7f, 0x0000ffff,
+-	0x8c75ff75, 0x00040000,
+-	0xbef60080, 0xbef700ff,
+-	0x10807fac, 0xbef1007f,
+-	0xb8f20742, 0x84729972,
+-	0x8b6eff7f, 0x04000000,
+-	0xbfa1003b, 0xbefe00c1,
+-	0x857d9972, 0x8b7d817d,
+-	0xbf06817d, 0xbfa20002,
+-	0xbeff0080, 0xbfa00001,
+-	0xbeff00c1, 0xb8ef4306,
+-	0x8b6fc16f, 0xbfa10030,
+-	0x846f896f, 0xbef6006f,
++	0x00000000, 0xc4068070,
++	0x008ce801, 0x00010000,
++	0xc4068070, 0x008ce802,
++	0x00020000, 0xc4068070,
++	0x008ce803, 0x00030000,
++	0x807d847d, 0x8070ff70,
++	0x00000400, 0xbf0a7b7d,
++	0xbfa2ffeb, 0xb8fb1e06,
++	0x8b7bc17b, 0xbfa1000d,
++	0x847b837b, 0x807b7d7b,
++	0xbefe00c1, 0xbeff0080,
++	0x7e008700, 0xc4068070,
++	0x008ce800, 0x00000000,
++	0x807d817d, 0x8070ff70,
++	0x00000080, 0xbf0a7b7d,
++	0xbfa2fff7, 0xbfa0016e,
++	0xbef4007e, 0x8b75ff7f,
++	0x0000ffff, 0x8c75ff75,
++	0x00040000, 0xbef60080,
++	0xbef700ff, 0x10807fac,
++	0xbef1007f, 0xb8f20742,
++	0x84729972, 0x8b6eff7f,
++	0x04000000, 0xbfa1003b,
++	0xbefe00c1, 0x857d9972,
++	0x8b7d817d, 0xbf06817d,
++	0xbfa20002, 0xbeff0080,
++	0xbfa00001, 0xbeff00c1,
++	0xb8ef4306, 0x8b6fc16f,
++	0xbfa10030, 0x846f896f,
++	0xbef6006f, 0xb8f83b05,
++	0x80788178, 0xbf0d9972,
++	0xbfa20002, 0x84788978,
++	0xbfa00001, 0x84788a78,
++	0xb8ee1e06, 0x846e8a6e,
++	0x80786e78, 0x8078ff78,
++	0x00000200, 0x8078ff78,
++	0x00000080, 0xbef600ff,
++	0x01000000, 0x857d9972,
++	0x8b7d817d, 0xbf06817d,
++	0xbefd0080, 0xbfa2000d,
++	0xc4050078, 0x0080e800,
++	0x00000000, 0xbf8a0000,
++	0xdac00000, 0x00000000,
++	0x807dff7d, 0x00000080,
++	0x8078ff78, 0x00000080,
++	0xbf0a6f7d, 0xbfa2fff4,
++	0xbfa0000c, 0xc4050078,
++	0x0080e800, 0x00000000,
++	0xbf8a0000, 0xdac00000,
++	0x00000000, 0x807dff7d,
++	0x00000100, 0x8078ff78,
++	0x00000100, 0xbf0a6f7d,
++	0xbfa2fff4, 0xbef80080,
++	0xbefe00c1, 0x857d9972,
++	0x8b7d817d, 0xbf06817d,
++	0xbfa20002, 0xbeff0080,
++	0xbfa00001, 0xbeff00c1,
++	0xb8ef3b05, 0x806f816f,
++	0x846f826f, 0x857d9972,
++	0x8b7d817d, 0xbf06817d,
++	0xbfa2002c, 0xbef600ff,
++	0x01000000, 0xbeee0078,
++	0x8078ff78, 0x00000200,
++	0xbefd0084, 0xbf0a6f7d,
++	0xbfa10061, 0xc4050078,
++	0x008ce800, 0x00000000,
++	0xc4050078, 0x008ce801,
++	0x00008000, 0xc4050078,
++	0x008ce802, 0x00010000,
++	0xc4050078, 0x008ce803,
++	0x00018000, 0xbf8a0000,
++	0x7e008500, 0x7e028501,
++	0x7e048502, 0x7e068503,
++	0x807d847d, 0x8078ff78,
++	0x00000200, 0xbf0a6f7d,
++	0xbfa2ffea, 0xc405006e,
++	0x008ce800, 0x00000000,
++	0xc405006e, 0x008ce801,
++	0x00008000, 0xc405006e,
++	0x008ce802, 0x00010000,
++	0xc405006e, 0x008ce803,
++	0x00018000, 0xbf8a0000,
++	0xbfa0003d, 0xbef600ff,
++	0x01000000, 0xbeee0078,
++	0x8078ff78, 0x00000400,
++	0xbefd0084, 0xbf0a6f7d,
++	0xbfa10016, 0xc4050078,
++	0x008ce800, 0x00000000,
++	0xc4050078, 0x008ce801,
++	0x00010000, 0xc4050078,
++	0x008ce802, 0x00020000,
++	0xc4050078, 0x008ce803,
++	0x00030000, 0xbf8a0000,
++	0x7e008500, 0x7e028501,
++	0x7e048502, 0x7e068503,
++	0x807d847d, 0x8078ff78,
++	0x00000400, 0xbf0a6f7d,
++	0xbfa2ffea, 0xb8ef1e06,
++	0x8b6fc16f, 0xbfa1000f,
++	0x846f836f, 0x806f7d6f,
++	0xbefe00c1, 0xbeff0080,
++	0xc4050078, 0x008ce800,
++	0x00000000, 0xbf8a0000,
++	0x7e008500, 0x807d817d,
++	0x8078ff78, 0x00000080,
++	0xbf0a6f7d, 0xbfa2fff6,
++	0xbeff00c1, 0xc405006e,
++	0x008ce800, 0x00000000,
++	0xc405006e, 0x008ce801,
++	0x00010000, 0xc405006e,
++	0x008ce802, 0x00020000,
++	0xc405006e, 0x008ce803,
++	0x00030000, 0xbf8a0000,
+ 	0xb8f83b05, 0x80788178,
+ 	0xbf0d9972, 0xbfa20002,
+ 	0x84788978, 0xbfa00001,
+ 	0x84788a78, 0xb8ee1e06,
+ 	0x846e8a6e, 0x80786e78,
+ 	0x8078ff78, 0x00000200,
+-	0x8078ff78, 0x00000080,
+-	0xbef600ff, 0x01000000,
+-	0x857d9972, 0x8b7d817d,
+-	0xbf06817d, 0xbefd0080,
+-	0xbfa2000d, 0xc4050078,
+-	0x0080e800, 0x00000000,
+-	0xbf8a0000, 0xdac00000,
+-	0x00000000, 0x807dff7d,
+-	0x00000080, 0x8078ff78,
+-	0x00000080, 0xbf0a6f7d,
+-	0xbfa2fff4, 0xbfa0000c,
+-	0xc4050078, 0x0080e800,
+-	0x00000000, 0xbf8a0000,
+-	0xdac00000, 0x00000000,
+-	0x807dff7d, 0x00000100,
+-	0x8078ff78, 0x00000100,
+-	0xbf0a6f7d, 0xbfa2fff4,
+-	0xbef80080, 0xbefe00c1,
+-	0x857d9972, 0x8b7d817d,
+-	0xbf06817d, 0xbfa20002,
+-	0xbeff0080, 0xbfa00001,
+-	0xbeff00c1, 0xb8ef3b05,
+-	0x806f816f, 0x846f826f,
+-	0x857d9972, 0x8b7d817d,
+-	0xbf06817d, 0xbfa2002c,
++	0x80f8ff78, 0x00000050,
+ 	0xbef600ff, 0x01000000,
+-	0xbeee0078, 0x8078ff78,
+-	0x00000200, 0xbefd0084,
+-	0xbf0a6f7d, 0xbfa10061,
+-	0xc4050078, 0x008ce800,
+-	0x00000000, 0xc4050078,
+-	0x008ce801, 0x00008000,
+-	0xc4050078, 0x008ce802,
+-	0x00010000, 0xc4050078,
+-	0x008ce803, 0x00018000,
+-	0xbf8a0000, 0x7e008500,
+-	0x7e028501, 0x7e048502,
+-	0x7e068503, 0x807d847d,
++	0xbefd00ff, 0x0000006c,
++	0x80f89078, 0xf462403a,
++	0xf0000000, 0xbf8a0000,
++	0x80fd847d, 0xbf800000,
++	0xbe804300, 0xbe824302,
++	0x80f8a078, 0xf462603a,
++	0xf0000000, 0xbf8a0000,
++	0x80fd887d, 0xbf800000,
++	0xbe804300, 0xbe824302,
++	0xbe844304, 0xbe864306,
++	0x80f8c078, 0xf462803a,
++	0xf0000000, 0xbf8a0000,
++	0x80fd907d, 0xbf800000,
++	0xbe804300, 0xbe824302,
++	0xbe844304, 0xbe864306,
++	0xbe884308, 0xbe8a430a,
++	0xbe8c430c, 0xbe8e430e,
++	0xbf06807d, 0xbfa1fff0,
++	0xb980f801, 0x00000000,
++	0xb8f83b05, 0x80788178,
++	0xbf0d9972, 0xbfa20002,
++	0x84788978, 0xbfa00001,
++	0x84788a78, 0xb8ee1e06,
++	0x846e8a6e, 0x80786e78,
+ 	0x8078ff78, 0x00000200,
+-	0xbf0a6f7d, 0xbfa2ffea,
+-	0xc405006e, 0x008ce800,
+-	0x00000000, 0xc405006e,
+-	0x008ce801, 0x00008000,
+-	0xc405006e, 0x008ce802,
+-	0x00010000, 0xc405006e,
+-	0x008ce803, 0x00018000,
+-	0xbf8a0000, 0xbfa0003d,
+ 	0xbef600ff, 0x01000000,
+-	0xbeee0078, 0x8078ff78,
+-	0x00000400, 0xbefd0084,
+-	0xbf0a6f7d, 0xbfa10016,
+-	0xc4050078, 0x008ce800,
+-	0x00000000, 0xc4050078,
+-	0x008ce801, 0x00010000,
+-	0xc4050078, 0x008ce802,
+-	0x00020000, 0xc4050078,
+-	0x008ce803, 0x00030000,
+-	0xbf8a0000, 0x7e008500,
+-	0x7e028501, 0x7e048502,
+-	0x7e068503, 0x807d847d,
+-	0x8078ff78, 0x00000400,
+-	0xbf0a6f7d, 0xbfa2ffea,
+-	0xb8ef1e06, 0x8b6fc16f,
+-	0xbfa1000f, 0x846f836f,
+-	0x806f7d6f, 0xbefe00c1,
+-	0xbeff0080, 0xc4050078,
+-	0x008ce800, 0x00000000,
+-	0xbf8a0000, 0x7e008500,
+-	0x807d817d, 0x8078ff78,
+-	0x00000080, 0xbf0a6f7d,
+-	0xbfa2fff6, 0xbeff00c1,
+-	0xc405006e, 0x008ce800,
+-	0x00000000, 0xc405006e,
+-	0x008ce801, 0x00010000,
+-	0xc405006e, 0x008ce802,
+-	0x00020000, 0xc405006e,
+-	0x008ce803, 0x00030000,
+-	0xbf8a0000, 0xb8f83b05,
+-	0x80788178, 0xbf0d9972,
+-	0xbfa20002, 0x84788978,
+-	0xbfa00001, 0x84788a78,
+-	0xb8ee1e06, 0x846e8a6e,
+-	0x80786e78, 0x8078ff78,
+-	0x00000200, 0x80f8ff78,
+-	0x00000050, 0xbef600ff,
+-	0x01000000, 0xbefd00ff,
+-	0x0000006c, 0x80f89078,
+-	0xf462403a, 0xf0000000,
+-	0xbf8a0000, 0x80fd847d,
+-	0xbf800000, 0xbe804300,
+-	0xbe824302, 0x80f8a078,
+-	0xf462603a, 0xf0000000,
+-	0xbf8a0000, 0x80fd887d,
+-	0xbf800000, 0xbe804300,
+-	0xbe824302, 0xbe844304,
+-	0xbe864306, 0x80f8c078,
+-	0xf462803a, 0xf0000000,
+-	0xbf8a0000, 0x80fd907d,
+-	0xbf800000, 0xbe804300,
+-	0xbe824302, 0xbe844304,
+-	0xbe864306, 0xbe884308,
+-	0xbe8a430a, 0xbe8c430c,
+-	0xbe8e430e, 0xbf06807d,
+-	0xbfa1fff0, 0xb980f801,
+-	0x00000000, 0xb8f83b05,
+-	0x80788178, 0xbf0d9972,
+-	0xbfa20002, 0x84788978,
+-	0xbfa00001, 0x84788a78,
+-	0xb8ee1e06, 0x846e8a6e,
+-	0x80786e78, 0x8078ff78,
+-	0x00000200, 0xbef600ff,
+-	0x01000000, 0xbeff0071,
+-	0xf4621bfa, 0xf0000000,
+-	0x80788478, 0xf4621b3a,
++	0xbeff0071, 0xf4621bfa,
+ 	0xf0000000, 0x80788478,
+-	0xf4621b7a, 0xf0000000,
+-	0x80788478, 0xf4621c3a,
++	0xf4621b3a, 0xf0000000,
++	0x80788478, 0xf4621b7a,
+ 	0xf0000000, 0x80788478,
+-	0xf4621c7a, 0xf0000000,
+-	0x80788478, 0xf4621eba,
++	0xf4621c3a, 0xf0000000,
++	0x80788478, 0xf4621c7a,
+ 	0xf0000000, 0x80788478,
+-	0xf4621efa, 0xf0000000,
+-	0x80788478, 0xf4621e7a,
++	0xf4621eba, 0xf0000000,
++	0x80788478, 0xf4621efa,
+ 	0xf0000000, 0x80788478,
+-	0xf4621cfa, 0xf0000000,
+-	0x80788478, 0xf4621bba,
++	0xf4621e7a, 0xf0000000,
++	0x80788478, 0xf4621cfa,
+ 	0xf0000000, 0x80788478,
+-	0xbf8a0000, 0xb96ef814,
+ 	0xf4621bba, 0xf0000000,
+ 	0x80788478, 0xbf8a0000,
+-	0xb96ef815, 0xf4621bba,
++	0xb96ef814, 0xf4621bba,
+ 	0xf0000000, 0x80788478,
+-	0xbf8a0000, 0xb96ef812,
++	0xbf8a0000, 0xb96ef815,
+ 	0xf4621bba, 0xf0000000,
+ 	0x80788478, 0xbf8a0000,
+-	0xb96ef813, 0x8b6eff7f,
+-	0x04000000, 0xbfa1000d,
+-	0x80788478, 0xf4621bba,
++	0xb96ef812, 0xf4621bba,
+ 	0xf0000000, 0x80788478,
+-	0xbf8a0000, 0xbf0d806e,
+-	0xbfa10006, 0x856e906e,
+-	0x8b6e6e6e, 0xbfa10003,
+-	0xbe804ec1, 0x816ec16e,
+-	0xbfa0fffb, 0xbefd006f,
+-	0xbefe0070, 0xbeff0071,
+-	0xb97b2011, 0x857b867b,
+-	0xb97b0191, 0x857b827b,
+-	0xb97bba11, 0xb973f801,
+-	0xb8ee3b05, 0x806e816e,
+-	0xbf0d9972, 0xbfa20002,
+-	0x846e896e, 0xbfa00001,
+-	0x846e8a6e, 0xb8ef1e06,
+-	0x846f8a6f, 0x806e6f6e,
+-	0x806eff6e, 0x00000200,
+-	0x806e746e, 0x826f8075,
+-	0x8b6fff6f, 0x0000ffff,
+-	0xf4605c37, 0xf8000050,
+-	0xf4605d37, 0xf8000060,
+-	0xf4601e77, 0xf8000074,
+-	0xbf8a0000, 0x8b6dff6d,
+-	0x0000ffff, 0x8bfe7e7e,
+-	0x8bea6a6a, 0xb97af804,
++	0xbf8a0000, 0xb96ef813,
++	0x8b6eff7f, 0x04000000,
++	0xbfa1000d, 0x80788478,
++	0xf4621bba, 0xf0000000,
++	0x80788478, 0xbf8a0000,
++	0xbf0d806e, 0xbfa10006,
++	0x856e906e, 0x8b6e6e6e,
++	0xbfa10003, 0xbe804ec1,
++	0x816ec16e, 0xbfa0fffb,
++	0xbefd006f, 0xbefe0070,
++	0xbeff0071, 0xb97b2011,
++	0x857b867b, 0xb97b0191,
++	0x857b827b, 0xb97bba11,
++	0xb973f801, 0xb8ee3b05,
++	0x806e816e, 0xbf0d9972,
++	0xbfa20002, 0x846e896e,
++	0xbfa00001, 0x846e8a6e,
++	0xb8ef1e06, 0x846f8a6f,
++	0x806e6f6e, 0x806eff6e,
++	0x00000200, 0x806e746e,
++	0x826f8075, 0x8b6fff6f,
++	0x0000ffff, 0xf4605c37,
++	0xf8000050, 0xf4605d37,
++	0xf8000060, 0xf4601e77,
++	0xf8000074, 0xbf8a0000,
++	0x8b6dff6d, 0x0000ffff,
++	0x8bfe7e7e, 0x8bea6a6a,
++	0xb97af804, 0xbe804ec2,
++	0xbf94fffe, 0xbe804a6c,
+ 	0xbe804ec2, 0xbf94fffe,
+-	0xbe804a6c, 0xbe804ec2,
+-	0xbf94fffe, 0xbfb10000,
++	0xbfb10000, 0xbf9f0000,
+ 	0xbf9f0000, 0xbf9f0000,
+ 	0xbf9f0000, 0xbf9f0000,
+-	0xbf9f0000, 0x00000000,
+ };
+diff --git a/drivers/gpu/drm/amd/amdkfd/cwsr_trap_handler_gfx12.asm b/drivers/gpu/drm/amd/amdkfd/cwsr_trap_handler_gfx12.asm
+index 7b9d36e5fa43..5a1a1b1f897f 100644
+--- a/drivers/gpu/drm/amd/amdkfd/cwsr_trap_handler_gfx12.asm
++++ b/drivers/gpu/drm/amd/amdkfd/cwsr_trap_handler_gfx12.asm
+@@ -30,6 +30,7 @@
+ #define CHIP_GFX12 37
+ 
+ #define SINGLE_STEP_MISSED_WORKAROUND 1	//workaround for lost TRAP_AFTER_INST exception when SAVECTX raised
++#define HAVE_VALU_SGPR_HAZARD (ASIC_FAMILY == CHIP_GFX12)
+ 
+ var SQ_WAVE_STATE_PRIV_BARRIER_COMPLETE_MASK	= 0x4
+ var SQ_WAVE_STATE_PRIV_SCC_SHIFT		= 9
+@@ -351,6 +352,7 @@ L_HAVE_VGPRS:
+ 	v_writelane_b32	v0, ttmp13, 0xD
+ 	v_writelane_b32	v0, exec_lo, 0xE
+ 	v_writelane_b32	v0, exec_hi, 0xF
++	valu_sgpr_hazard()
+ 
+ 	s_mov_b32	exec_lo, 0x3FFF
+ 	s_mov_b32	exec_hi, 0x0
+@@ -417,7 +419,6 @@ L_SAVE_HWREG:
+ 	v_mov_b32	v0, 0x0							//Offset[31:0] from buffer resource
+ 	v_mov_b32	v1, 0x0							//Offset[63:32] from buffer resource
+ 	v_mov_b32	v2, 0x0							//Set of SGPRs for TCP store
+-	s_mov_b32	m0, 0x0							//Next lane of v2 to write to
+ 
+ 	// Ensure no further changes to barrier or LDS state.
+ 	// STATE_PRIV.BARRIER_COMPLETE may change up to this point.
+@@ -430,40 +431,41 @@ L_SAVE_HWREG:
+ 	s_andn2_b32	s_save_state_priv, s_save_state_priv, SQ_WAVE_STATE_PRIV_BARRIER_COMPLETE_MASK
+ 	s_or_b32	s_save_state_priv, s_save_state_priv, s_save_tmp
+ 
+-	write_hwreg_to_v2(s_save_m0)
+-	write_hwreg_to_v2(s_save_pc_lo)
+ 	s_andn2_b32	s_save_tmp, s_save_pc_hi, S_SAVE_PC_HI_FIRST_WAVE_MASK
+-	write_hwreg_to_v2(s_save_tmp)
+-	write_hwreg_to_v2(s_save_exec_lo)
+-	write_hwreg_to_v2(s_save_exec_hi)
+-	write_hwreg_to_v2(s_save_state_priv)
++	v_writelane_b32	v2, s_save_m0, 0x0
++	v_writelane_b32	v2, s_save_pc_lo, 0x1
++	v_writelane_b32	v2, s_save_tmp, 0x2
++	v_writelane_b32	v2, s_save_exec_lo, 0x3
++	v_writelane_b32	v2, s_save_exec_hi, 0x4
++	v_writelane_b32	v2, s_save_state_priv, 0x5
++	v_writelane_b32	v2, s_save_xnack_mask, 0x7
++	valu_sgpr_hazard()
+ 
+ 	s_getreg_b32	s_save_tmp, hwreg(HW_REG_WAVE_EXCP_FLAG_PRIV)
+-	write_hwreg_to_v2(s_save_tmp)
++	v_writelane_b32	v2, s_save_tmp, 0x6
+ 
+-	write_hwreg_to_v2(s_save_xnack_mask)
++	s_getreg_b32	s_save_tmp, hwreg(HW_REG_WAVE_MODE)
++	v_writelane_b32	v2, s_save_tmp, 0x8
+ 
+-	s_getreg_b32	s_save_m0, hwreg(HW_REG_WAVE_MODE)
+-	write_hwreg_to_v2(s_save_m0)
++	s_getreg_b32	s_save_tmp, hwreg(HW_REG_WAVE_SCRATCH_BASE_LO)
++	v_writelane_b32	v2, s_save_tmp, 0x9
+ 
+-	s_getreg_b32	s_save_m0, hwreg(HW_REG_WAVE_SCRATCH_BASE_LO)
+-	write_hwreg_to_v2(s_save_m0)
++	s_getreg_b32	s_save_tmp, hwreg(HW_REG_WAVE_SCRATCH_BASE_HI)
++	v_writelane_b32	v2, s_save_tmp, 0xA
+ 
+-	s_getreg_b32	s_save_m0, hwreg(HW_REG_WAVE_SCRATCH_BASE_HI)
+-	write_hwreg_to_v2(s_save_m0)
++	s_getreg_b32	s_save_tmp, hwreg(HW_REG_WAVE_EXCP_FLAG_USER)
++	v_writelane_b32	v2, s_save_tmp, 0xB
+ 
+-	s_getreg_b32	s_save_m0, hwreg(HW_REG_WAVE_EXCP_FLAG_USER)
+-	write_hwreg_to_v2(s_save_m0)
+-
+-	s_getreg_b32	s_save_m0, hwreg(HW_REG_WAVE_TRAP_CTRL)
+-	write_hwreg_to_v2(s_save_m0)
++	s_getreg_b32	s_save_tmp, hwreg(HW_REG_WAVE_TRAP_CTRL)
++	v_writelane_b32	v2, s_save_tmp, 0xC
+ 
+ 	s_getreg_b32	s_save_tmp, hwreg(HW_REG_WAVE_STATUS)
+-	write_hwreg_to_v2(s_save_tmp)
++	v_writelane_b32	v2, s_save_tmp, 0xD
+ 
+ 	s_get_barrier_state s_save_tmp, -1
+ 	s_wait_kmcnt (0)
+-	write_hwreg_to_v2(s_save_tmp)
++	v_writelane_b32	v2, s_save_tmp, 0xE
++	valu_sgpr_hazard()
+ 
+ 	// Write HWREGs with 16 VGPR lanes. TTMPs occupy space after this.
+ 	s_mov_b32       exec_lo, 0xFFFF
+@@ -497,10 +499,12 @@ L_SAVE_SGPR_LOOP:
+ 	s_movrels_b64	s12, s12						//s12 = s[12+m0], s13 = s[13+m0]
+ 	s_movrels_b64	s14, s14						//s14 = s[14+m0], s15 = s[15+m0]
+ 
+-	write_16sgpr_to_v2(s0)
+-
+-	s_cmp_eq_u32	ttmp13, 0x20						//have 32 VGPR lanes filled?
+-	s_cbranch_scc0	L_SAVE_SGPR_SKIP_TCP_STORE
++	s_cmp_eq_u32	ttmp13, 0x0
++	s_cbranch_scc0	L_WRITE_V2_SECOND_HALF
++	write_16sgpr_to_v2(s0, 0x0)
++	s_branch	L_SAVE_SGPR_SKIP_TCP_STORE
++L_WRITE_V2_SECOND_HALF:
++	write_16sgpr_to_v2(s0, 0x10)
+ 
+ 	buffer_store_dword	v2, v0, s_save_buf_rsrc0, s_save_mem_offset scope:SCOPE_SYS
+ 	s_add_u32	s_save_mem_offset, s_save_mem_offset, 0x80
+@@ -1056,27 +1060,21 @@ L_END_PGM:
+ 	s_endpgm_saved
+ end
+ 
+-function write_hwreg_to_v2(s)
+-	// Copy into VGPR for later TCP store.
+-	v_writelane_b32	v2, s, m0
+-	s_add_u32	m0, m0, 0x1
+-end
+-
+-
+-function write_16sgpr_to_v2(s)
++function write_16sgpr_to_v2(s, lane_offset)
+ 	// Copy into VGPR for later TCP store.
+ 	for var sgpr_idx = 0; sgpr_idx < 16; sgpr_idx ++
+-		v_writelane_b32	v2, s[sgpr_idx], ttmp13
+-		s_add_u32	ttmp13, ttmp13, 0x1
++		v_writelane_b32	v2, s[sgpr_idx], sgpr_idx + lane_offset
+ 	end
++	valu_sgpr_hazard()
++	s_add_u32	ttmp13, ttmp13, 0x10
+ end
+ 
+ function write_12sgpr_to_v2(s)
+ 	// Copy into VGPR for later TCP store.
+ 	for var sgpr_idx = 0; sgpr_idx < 12; sgpr_idx ++
+-		v_writelane_b32	v2, s[sgpr_idx], ttmp13
+-		s_add_u32	ttmp13, ttmp13, 0x1
++		v_writelane_b32	v2, s[sgpr_idx], sgpr_idx
+ 	end
++	valu_sgpr_hazard()
+ end
+ 
+ function read_hwreg_from_mem(s, s_rsrc, s_mem_offset)
+@@ -1128,3 +1126,11 @@ function get_wave_size2(s_reg)
+ 	s_getreg_b32	s_reg, hwreg(HW_REG_WAVE_STATUS,SQ_WAVE_STATUS_WAVE64_SHIFT,SQ_WAVE_STATUS_WAVE64_SIZE)
+ 	s_lshl_b32	s_reg, s_reg, S_WAVE_SIZE
+ end
++
++function valu_sgpr_hazard
++#if HAVE_VALU_SGPR_HAZARD
++	for var rep = 0; rep < 8; rep ++
++		ds_nop
++	end
++#endif
++end
 diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_queue.c b/drivers/gpu/drm/amd/amdkfd/kfd_queue.c
 index 80c85b6cc478..29d7cb4cfe69 100644
 --- a/drivers/gpu/drm/amd/amdkfd/kfd_queue.c
@@ -1787,7 +2740,7 @@ index 80c85b6cc478..29d7cb4cfe69 100644
  		goto out_err_unreserve;
  
 diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_svm.c b/drivers/gpu/drm/amd/amdkfd/kfd_svm.c
-index 1893c27746a5..8c61dee5ca0d 100644
+index 3e2911895c74..1b04d54f9a69 100644
 --- a/drivers/gpu/drm/amd/amdkfd/kfd_svm.c
 +++ b/drivers/gpu/drm/amd/amdkfd/kfd_svm.c
 @@ -1276,13 +1276,7 @@ svm_range_get_pte_flags(struct kfd_node *node,
@@ -1806,10 +2759,10 @@ index 1893c27746a5..8c61dee5ca0d 100644
  	default:
  		mapping_flags |= coherent ?
 diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 0688a428ee4f..d9a3917d207e 100644
+index 56a30c2d0abe..62a684323ffc 100644
 --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
 +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -1720,7 +1720,7 @@ static void retrieve_dmi_info(struct amdgpu_display_manager *dm, struct dc_init_
+@@ -1744,7 +1744,7 @@ static void retrieve_dmi_info(struct amdgpu_display_manager *dm, struct dc_init_
  	}
  	if (quirk_entries.support_edp0_on_dp1) {
  		init_data->flags.support_edp0_on_dp1 = true;
@@ -1840,10 +2793,10 @@ index bf636b28e3e1..6e2fce329d73 100644
  	return false;
  }
 diff --git a/drivers/gpu/drm/amd/pm/amdgpu_pm.c b/drivers/gpu/drm/amd/pm/amdgpu_pm.c
-index 0fa6fbee1978..bfdfba676025 100644
+index e8ae7681bf0a..77b1f061bbf0 100644
 --- a/drivers/gpu/drm/amd/pm/amdgpu_pm.c
 +++ b/drivers/gpu/drm/amd/pm/amdgpu_pm.c
-@@ -2493,6 +2493,8 @@ static int default_attr_update(struct amdgpu_device *adev, struct amdgpu_device_
+@@ -2421,6 +2421,8 @@ static int default_attr_update(struct amdgpu_device *adev, struct amdgpu_device_
  		case IP_VERSION(11, 0, 1):
  		case IP_VERSION(11, 0, 2):
  		case IP_VERSION(11, 0, 3):
@@ -1853,10 +2806,10 @@ index 0fa6fbee1978..bfdfba676025 100644
  			break;
  		default:
 diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu14/smu_v14_0_2_ppt.c b/drivers/gpu/drm/amd/pm/swsmu/smu14/smu_v14_0_2_ppt.c
-index 9ec53431f2c3..e98a6a2f3e6a 100644
+index 5cad09c5f2ff..3f1fcf8c4ee8 100644
 --- a/drivers/gpu/drm/amd/pm/swsmu/smu14/smu_v14_0_2_ppt.c
 +++ b/drivers/gpu/drm/amd/pm/swsmu/smu14/smu_v14_0_2_ppt.c
-@@ -1206,16 +1206,9 @@ static int smu_v14_0_2_print_clk_levels(struct smu_context *smu,
+@@ -1193,16 +1193,9 @@ static int smu_v14_0_2_print_clk_levels(struct smu_context *smu,
  							 PP_OD_FEATURE_GFXCLK_BIT))
  			break;
  
@@ -1875,7 +2828,7 @@ index 9ec53431f2c3..e98a6a2f3e6a 100644
  		break;
  
  	case SMU_OD_MCLK:
-@@ -1349,13 +1342,9 @@ static int smu_v14_0_2_print_clk_levels(struct smu_context *smu,
+@@ -1336,13 +1329,9 @@ static int smu_v14_0_2_print_clk_levels(struct smu_context *smu,
  		size += sysfs_emit_at(buf, size, "%s:\n", "OD_RANGE");
  
  		if (smu_v14_0_2_is_od_feature_supported(smu, PP_OD_FEATURE_GFXCLK_BIT)) {
@@ -1890,7 +2843,7 @@ index 9ec53431f2c3..e98a6a2f3e6a 100644
  							  &max_value);
  			size += sysfs_emit_at(buf, size, "SCLK_OFFSET: %7dMhz %10uMhz\n",
  					      min_value, max_value);
-@@ -1639,6 +1628,39 @@ static void smu_v14_0_2_get_unique_id(struct smu_context *smu)
+@@ -1627,6 +1616,39 @@ static void smu_v14_0_2_get_unique_id(struct smu_context *smu)
  	adev->unique_id = ((uint64_t)upper32 << 32) | lower32;
  }
  
@@ -1930,7 +2883,7 @@ index 9ec53431f2c3..e98a6a2f3e6a 100644
  static int smu_v14_0_2_get_power_limit(struct smu_context *smu,
  				       uint32_t *current_power_limit,
  				       uint32_t *default_power_limit,
-@@ -2429,36 +2451,24 @@ static int smu_v14_0_2_od_edit_dpm_table(struct smu_context *smu,
+@@ -2417,36 +2439,24 @@ static int smu_v14_0_2_od_edit_dpm_table(struct smu_context *smu,
  			return -ENOTSUPP;
  		}
  
@@ -1982,7 +2935,7 @@ index 9ec53431f2c3..e98a6a2f3e6a 100644
  		break;
  
  	case PP_OD_EDIT_MCLK_VDDC_TABLE:
-@@ -2817,6 +2827,8 @@ static const struct pptable_funcs smu_v14_0_2_ppt_funcs = {
+@@ -2804,6 +2814,8 @@ static const struct pptable_funcs smu_v14_0_2_ppt_funcs = {
  	.set_performance_level = smu_v14_0_set_performance_level,
  	.gfx_off_control = smu_v14_0_gfx_off_control,
  	.get_unique_id = smu_v14_0_2_get_unique_id,
@@ -2005,7 +2958,7 @@ index d1871af967d4..2355a78e1b69 100644
  	int i, r = 0;
  
 diff --git a/drivers/gpu/drm/scheduler/sched_entity.c b/drivers/gpu/drm/scheduler/sched_entity.c
-index a75eede8bf8d..002057be0d84 100644
+index 69bcf0e99d57..da00572d7d42 100644
 --- a/drivers/gpu/drm/scheduler/sched_entity.c
 +++ b/drivers/gpu/drm/scheduler/sched_entity.c
 @@ -259,9 +259,16 @@ static void drm_sched_entity_kill(struct drm_sched_entity *entity)
@@ -2028,7 +2981,7 @@ index a75eede8bf8d..002057be0d84 100644
  		prev = &s_fence->finished;
  	}
 diff --git a/drivers/gpu/drm/v3d/v3d_sched.c b/drivers/gpu/drm/v3d/v3d_sched.c
-index 4f935f1d50a9..3066cfdb054c 100644
+index 99ac4995b5a1..d18f17670db7 100644
 --- a/drivers/gpu/drm/v3d/v3d_sched.c
 +++ b/drivers/gpu/drm/v3d/v3d_sched.c
 @@ -319,11 +319,15 @@ v3d_tfu_job_run(struct drm_sched_job *sched_job)
@@ -2059,24 +3012,24 @@ index 4f935f1d50a9..3066cfdb054c 100644
  
  	v3d_invalidate_caches(v3d);
 diff --git a/drivers/gpu/drm/xe/xe_bo.h b/drivers/gpu/drm/xe/xe_bo.h
-index 6e4be52306df..d22269a230aa 100644
+index 7fa44a0138b0..936cb420bc43 100644
 --- a/drivers/gpu/drm/xe/xe_bo.h
 +++ b/drivers/gpu/drm/xe/xe_bo.h
-@@ -314,7 +314,6 @@ static inline unsigned int xe_sg_segment_size(struct device *dev)
- 
- #define i915_gem_object_flush_if_display(obj)		((void)(obj))
+@@ -318,7 +318,6 @@ static inline unsigned int xe_sg_segment_size(struct device *dev)
+ 	return round_down(max / 2, PAGE_SIZE);
+ }
  
 -#if IS_ENABLED(CONFIG_DRM_XE_KUNIT_TEST)
  /**
   * xe_bo_is_mem_type - Whether the bo currently resides in the given
   * TTM memory type
-@@ -329,4 +328,3 @@ static inline bool xe_bo_is_mem_type(struct xe_bo *bo, u32 mem_type)
+@@ -333,4 +332,3 @@ static inline bool xe_bo_is_mem_type(struct xe_bo *bo, u32 mem_type)
  	return bo->ttm.resource->mem_type == mem_type;
  }
  #endif
 -#endif
 diff --git a/drivers/gpu/drm/xe/xe_dma_buf.c b/drivers/gpu/drm/xe/xe_dma_buf.c
-index 68f309f5e981..f3bf7d3157b4 100644
+index c5b95470fa32..f67803e15a0e 100644
 --- a/drivers/gpu/drm/xe/xe_dma_buf.c
 +++ b/drivers/gpu/drm/xe/xe_dma_buf.c
 @@ -58,7 +58,7 @@ static int xe_dma_buf_pin(struct dma_buf_attachment *attach)
@@ -2089,10 +3042,10 @@ index 68f309f5e981..f3bf7d3157b4 100644
  		return -EINVAL;
  	}
 diff --git a/drivers/gpu/host1x/dev.c b/drivers/gpu/host1x/dev.c
-index 710674ef40a9..3f23a7d91519 100644
+index 46cae925b095..1f93e5e276c0 100644
 --- a/drivers/gpu/host1x/dev.c
 +++ b/drivers/gpu/host1x/dev.c
-@@ -367,6 +367,10 @@ static bool host1x_wants_iommu(struct host1x *host1x)
+@@ -361,6 +361,10 @@ static bool host1x_wants_iommu(struct host1x *host1x)
  	return true;
  }
  
@@ -2103,7 +3056,7 @@ index 710674ef40a9..3f23a7d91519 100644
  static struct iommu_domain *host1x_iommu_attach(struct host1x *host)
  {
  	struct iommu_domain *domain = iommu_get_domain_for_dev(host->dev);
-@@ -391,6 +395,8 @@ static struct iommu_domain *host1x_iommu_attach(struct host1x *host)
+@@ -385,6 +389,8 @@ static struct iommu_domain *host1x_iommu_attach(struct host1x *host)
  	 * Similarly, if host1x is already attached to an IOMMU (via the DMA
  	 * API), don't try to attach again.
  	 */
@@ -2113,7 +3066,7 @@ index 710674ef40a9..3f23a7d91519 100644
  		return domain;
  
 diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
-index 1d9ad25c89ae..8c9cf08ad45e 100644
+index 92faf03d64cf..f18c3e74b076 100644
 --- a/drivers/i2c/busses/i2c-omap.c
 +++ b/drivers/i2c/busses/i2c-omap.c
 @@ -1048,23 +1048,6 @@ static int omap_i2c_transmit_data(struct omap_i2c_dev *omap, u8 num_bytes,
@@ -2165,10 +3118,10 @@ index 1d9ad25c89ae..8c9cf08ad45e 100644
  				pdev->name, omap);
  
 diff --git a/drivers/infiniband/hw/bnxt_re/qplib_fp.c b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-index 613b5fc70e13..7436ce551579 100644
+index 5336f74297f8..457eecb99f96 100644
 --- a/drivers/infiniband/hw/bnxt_re/qplib_fp.c
 +++ b/drivers/infiniband/hw/bnxt_re/qplib_fp.c
-@@ -1216,8 +1216,6 @@ static void __modify_flags_from_init_state(struct bnxt_qplib_qp *qp)
+@@ -1217,8 +1217,6 @@ static void __modify_flags_from_init_state(struct bnxt_qplib_qp *qp)
  			qp->path_mtu =
  				CMDQ_MODIFY_QP_PATH_MTU_MTU_2048;
  		}
@@ -2178,10 +3131,10 @@ index 613b5fc70e13..7436ce551579 100644
  		if (qp->max_dest_rd_atomic < 1)
  			qp->max_dest_rd_atomic = 1;
 diff --git a/drivers/infiniband/hw/bnxt_re/qplib_rcfw.h b/drivers/infiniband/hw/bnxt_re/qplib_rcfw.h
-index 07779aeb7575..a4deb45ec849 100644
+index 88814cb3aa74..5e649371e1b6 100644
 --- a/drivers/infiniband/hw/bnxt_re/qplib_rcfw.h
 +++ b/drivers/infiniband/hw/bnxt_re/qplib_rcfw.h
-@@ -283,9 +283,10 @@ int bnxt_qplib_deinit_rcfw(struct bnxt_qplib_rcfw *rcfw);
+@@ -285,9 +285,10 @@ int bnxt_qplib_deinit_rcfw(struct bnxt_qplib_rcfw *rcfw);
  int bnxt_qplib_init_rcfw(struct bnxt_qplib_rcfw *rcfw,
  			 struct bnxt_qplib_ctx *ctx, int is_virtfn);
  void bnxt_qplib_mark_qp_error(void *qp_handle);
@@ -2495,8 +3448,28 @@ index 1ba4a0c8726a..e27478fe9456 100644
  	rxe_set_mtu(rxe, mtu);
  
  	return rxe_register_device(rxe, ibdev_name, ndev);
+diff --git a/drivers/media/dvb-frontends/rtl2832_sdr.c b/drivers/media/dvb-frontends/rtl2832_sdr.c
+index 05254d8717db..0357624968f1 100644
+--- a/drivers/media/dvb-frontends/rtl2832_sdr.c
++++ b/drivers/media/dvb-frontends/rtl2832_sdr.c
+@@ -1363,6 +1363,7 @@ static int rtl2832_sdr_probe(struct platform_device *pdev)
+ 	dev->vb_queue.ops = &rtl2832_sdr_vb2_ops;
+ 	dev->vb_queue.mem_ops = &vb2_vmalloc_memops;
+ 	dev->vb_queue.timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
++	dev->vb_queue.lock = &dev->vb_queue_lock;
+ 	ret = vb2_queue_init(&dev->vb_queue);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Could not initialize vb2 queue\n");
+@@ -1421,7 +1422,6 @@ static int rtl2832_sdr_probe(struct platform_device *pdev)
+ 	/* Init video_device structure */
+ 	dev->vdev = rtl2832_sdr_template;
+ 	dev->vdev.queue = &dev->vb_queue;
+-	dev->vdev.queue->lock = &dev->vb_queue_lock;
+ 	video_set_drvdata(&dev->vdev, dev);
+ 
+ 	/* Register the v4l2_device structure */
 diff --git a/drivers/mmc/host/atmel-mci.c b/drivers/mmc/host/atmel-mci.c
-index cdbd2edf4b2e..8c0853dca8b9 100644
+index fc360902729d..24fffc702a94 100644
 --- a/drivers/mmc/host/atmel-mci.c
 +++ b/drivers/mmc/host/atmel-mci.c
 @@ -2499,8 +2499,10 @@ static int atmci_probe(struct platform_device *pdev)
@@ -2512,7 +3485,7 @@ index cdbd2edf4b2e..8c0853dca8b9 100644
  		host->prepare_data = &atmci_prepare_data_dma;
  		host->submit_data = &atmci_submit_data_dma;
 diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
-index 031a4b514d16..9d9ddc2f6f70 100644
+index 0ef4d578ade8..48cdcba0f39c 100644
 --- a/drivers/mmc/host/sdhci-brcmstb.c
 +++ b/drivers/mmc/host/sdhci-brcmstb.c
 @@ -503,8 +503,15 @@ static int sdhci_brcmstb_suspend(struct device *dev)
@@ -2747,10 +3720,10 @@ index 39a63b7313a4..07406daf7c88 100644
  	/* success */
  	return 0;
 diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 0c2ba2fa88c4..36802e0a8b57 100644
+index 11457b6296cc..638ef64d639f 100644
 --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
 +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -131,9 +131,10 @@ static int mana_gd_detect_devices(struct pci_dev *pdev)
+@@ -134,9 +134,10 @@ static int mana_gd_detect_devices(struct pci_dev *pdev)
  	struct gdma_list_devices_resp resp = {};
  	struct gdma_general_req req = {};
  	struct gdma_dev_id dev;
@@ -2762,7 +3735,7 @@ index 0c2ba2fa88c4..36802e0a8b57 100644
  
  	mana_gd_init_req_hdr(&req.hdr, GDMA_LIST_DEVICES, sizeof(req),
  			     sizeof(resp));
-@@ -145,12 +146,17 @@ static int mana_gd_detect_devices(struct pci_dev *pdev)
+@@ -148,12 +149,17 @@ static int mana_gd_detect_devices(struct pci_dev *pdev)
  		return err ? err : -EPROTO;
  	}
  
@@ -2784,10 +3757,10 @@ index 0c2ba2fa88c4..36802e0a8b57 100644
  		if (dev_type == GDMA_DEVICE_HWC)
  			continue;
 diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index 3e090f87f97e..308a2b72a65d 100644
+index f4ddacff0846..b4d3deb80952 100644
 --- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
 +++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -2225,14 +2225,18 @@ static void am65_cpsw_nuss_remove_tx_chns(struct am65_cpsw_common *common)
+@@ -2270,14 +2270,18 @@ static void am65_cpsw_nuss_remove_tx_chns(struct am65_cpsw_common *common)
  static int am65_cpsw_nuss_ndev_add_tx_napi(struct am65_cpsw_common *common)
  {
  	struct device *dev = common->dev;
@@ -2807,7 +3780,7 @@ index 3e090f87f97e..308a2b72a65d 100644
  		ret = devm_request_irq(dev, tx_chn->irq,
  				       am65_cpsw_nuss_tx_irq,
  				       IRQF_TRIGGER_HIGH,
-@@ -2242,19 +2246,16 @@ static int am65_cpsw_nuss_ndev_add_tx_napi(struct am65_cpsw_common *common)
+@@ -2287,19 +2291,16 @@ static int am65_cpsw_nuss_ndev_add_tx_napi(struct am65_cpsw_common *common)
  				tx_chn->id, tx_chn->irq, ret);
  			goto err;
  		}
@@ -2831,7 +3804,7 @@ index 3e090f87f97e..308a2b72a65d 100644
  	}
  
  	return ret;
-@@ -2488,6 +2489,9 @@ static int am65_cpsw_nuss_init_rx_chns(struct am65_cpsw_common *common)
+@@ -2533,6 +2534,9 @@ static int am65_cpsw_nuss_init_rx_chns(struct am65_cpsw_common *common)
  			     HRTIMER_MODE_REL_PINNED);
  		flow->rx_hrtimer.function = &am65_cpsw_nuss_rx_timer_callback;
  
@@ -2841,7 +3814,7 @@ index 3e090f87f97e..308a2b72a65d 100644
  		ret = devm_request_irq(dev, flow->irq,
  				       am65_cpsw_nuss_rx_irq,
  				       IRQF_TRIGGER_HIGH,
-@@ -2496,11 +2500,8 @@ static int am65_cpsw_nuss_init_rx_chns(struct am65_cpsw_common *common)
+@@ -2541,11 +2545,8 @@ static int am65_cpsw_nuss_init_rx_chns(struct am65_cpsw_common *common)
  			dev_err(dev, "failure requesting rx %d irq %u, %d\n",
  				i, flow->irq, ret);
  			flow->irq = -EINVAL;
@@ -2854,7 +3827,7 @@ index 3e090f87f97e..308a2b72a65d 100644
  	}
  
  	/* setup classifier to route priorities to flows */
-@@ -2508,11 +2509,14 @@ static int am65_cpsw_nuss_init_rx_chns(struct am65_cpsw_common *common)
+@@ -2553,11 +2554,14 @@ static int am65_cpsw_nuss_init_rx_chns(struct am65_cpsw_common *common)
  
  	return 0;
  
@@ -2872,10 +3845,10 @@ index 3e090f87f97e..308a2b72a65d 100644
  
  err:
 diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.c b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-index cb11635a8d12..6f0700d156e7 100644
+index d76fe6d05e10..74a044dc1b00 100644
 --- a/drivers/net/ethernet/ti/icssg/icssg_prueth.c
 +++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-@@ -1555,6 +1555,7 @@ static int prueth_probe(struct platform_device *pdev)
+@@ -1598,6 +1598,7 @@ static int prueth_probe(struct platform_device *pdev)
  	}
  
  	spin_lock_init(&prueth->vtbl_lock);
@@ -2945,10 +3918,10 @@ index 42ce41a2fe3a..ff76ea36835e 100644
  	TOP_PD(T7_GDC,		0, PWRC_T7_NIC3_ID),
  	TOP_PD(T7_DEWARP,	0, PWRC_T7_NIC3_ID),
 diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 4bb2652740d0..1f4698d724bb 100644
+index 8524018e8991..da71847290ae 100644
 --- a/drivers/regulator/core.c
 +++ b/drivers/regulator/core.c
-@@ -2024,6 +2024,10 @@ static int regulator_resolve_supply(struct regulator_dev *rdev)
+@@ -2025,6 +2025,10 @@ static int regulator_resolve_supply(struct regulator_dev *rdev)
  
  		if (have_full_constraints()) {
  			r = dummy_regulator_rdev;
@@ -2959,7 +3932,7 @@ index 4bb2652740d0..1f4698d724bb 100644
  			get_device(&r->dev);
  		} else {
  			dev_err(dev, "Failed to resolve %s-supply for %s\n",
-@@ -2041,6 +2045,10 @@ static int regulator_resolve_supply(struct regulator_dev *rdev)
+@@ -2042,6 +2046,10 @@ static int regulator_resolve_supply(struct regulator_dev *rdev)
  			goto out;
  		}
  		r = dummy_regulator_rdev;
@@ -2970,7 +3943,7 @@ index 4bb2652740d0..1f4698d724bb 100644
  		get_device(&r->dev);
  	}
  
-@@ -2166,8 +2174,10 @@ struct regulator *_regulator_get_common(struct regulator_dev *rdev, struct devic
+@@ -2167,8 +2175,10 @@ struct regulator *_regulator_get_common(struct regulator_dev *rdev, struct devic
  			 * enabled, even if it isn't hooked up, and just
  			 * provide a dummy.
  			 */
@@ -2995,173 +3968,67 @@ index 5b9b9e4e762d..9f59889129ab 100644
  	},
  };
  
+diff --git a/drivers/reset/reset-microchip-sparx5.c b/drivers/reset/reset-microchip-sparx5.c
+index aa5464be7053..6d3e75b33260 100644
+--- a/drivers/reset/reset-microchip-sparx5.c
++++ b/drivers/reset/reset-microchip-sparx5.c
+@@ -8,6 +8,7 @@
+  */
+ #include <linux/mfd/syscon.h>
+ #include <linux/of.h>
++#include <linux/of_address.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/property.h>
+@@ -72,14 +73,22 @@ static struct regmap *mchp_lan966x_syscon_to_regmap(struct device *dev,
+ 						    struct device_node *syscon_np)
+ {
+ 	struct regmap_config regmap_config = mchp_lan966x_syscon_regmap_config;
+-	resource_size_t size;
++	struct resource res;
+ 	void __iomem *base;
++	int err;
++
++	err = of_address_to_resource(syscon_np, 0, &res);
++	if (err)
++		return ERR_PTR(err);
+ 
+-	base = devm_of_iomap(dev, syscon_np, 0, &size);
+-	if (IS_ERR(base))
+-		return ERR_CAST(base);
++	/* It is not possible to use devm_of_iomap because this resource is
++	 * shared with other drivers.
++	 */
++	base = devm_ioremap(dev, res.start, resource_size(&res));
++	if (!base)
++		return ERR_PTR(-ENOMEM);
+ 
+-	regmap_config.max_register = size - 4;
++	regmap_config.max_register =  resource_size(&res) - 4;
+ 
+ 	return devm_regmap_init_mmio(dev, base, &regmap_config);
+ }
+diff --git a/drivers/soc/hisilicon/kunpeng_hccs.c b/drivers/soc/hisilicon/kunpeng_hccs.c
+index 8aa8dec14911..444a8f59b7da 100644
+--- a/drivers/soc/hisilicon/kunpeng_hccs.c
++++ b/drivers/soc/hisilicon/kunpeng_hccs.c
+@@ -1539,8 +1539,8 @@ static ssize_t used_types_show(struct kobject *kobj,
+ 	u16 i;
+ 
+ 	for (i = 0; i < hdev->used_type_num - 1; i++)
+-		len += sysfs_emit(&buf[len], "%s ", hdev->type_name_maps[i].name);
+-	len += sysfs_emit(&buf[len], "%s\n", hdev->type_name_maps[i].name);
++		len += sysfs_emit_at(buf, len, "%s ", hdev->type_name_maps[i].name);
++	len += sysfs_emit_at(buf, len, "%s\n", hdev->type_name_maps[i].name);
+ 
+ 	return len;
+ }
 diff --git a/drivers/soc/imx/soc-imx8m.c b/drivers/soc/imx/soc-imx8m.c
-index 5ea8887828c0..3ed8161d7d28 100644
+index 8ac7658e3d52..3ed8161d7d28 100644
 --- a/drivers/soc/imx/soc-imx8m.c
 +++ b/drivers/soc/imx/soc-imx8m.c
-@@ -30,11 +30,9 @@
- 
- struct imx8_soc_data {
- 	char *name;
--	int (*soc_revision)(u32 *socrev);
-+	int (*soc_revision)(u32 *socrev, u64 *socuid);
- };
- 
--static u64 soc_uid;
--
- #ifdef CONFIG_HAVE_ARM_SMCCC
- static u32 imx8mq_soc_revision_from_atf(void)
- {
-@@ -51,24 +49,22 @@ static u32 imx8mq_soc_revision_from_atf(void)
- static inline u32 imx8mq_soc_revision_from_atf(void) { return 0; };
- #endif
- 
--static int imx8mq_soc_revision(u32 *socrev)
-+static int imx8mq_soc_revision(u32 *socrev, u64 *socuid)
- {
--	struct device_node *np;
-+	struct device_node *np __free(device_node) =
-+		of_find_compatible_node(NULL, NULL, "fsl,imx8mq-ocotp");
- 	void __iomem *ocotp_base;
- 	u32 magic;
- 	u32 rev;
- 	struct clk *clk;
- 	int ret;
- 
--	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mq-ocotp");
- 	if (!np)
- 		return -EINVAL;
- 
- 	ocotp_base = of_iomap(np, 0);
--	if (!ocotp_base) {
--		ret = -EINVAL;
--		goto err_iomap;
--	}
-+	if (!ocotp_base)
-+		return -EINVAL;
- 
- 	clk = of_clk_get_by_name(np, NULL);
- 	if (IS_ERR(clk)) {
-@@ -89,44 +85,39 @@ static int imx8mq_soc_revision(u32 *socrev)
- 			rev = REV_B1;
- 	}
- 
--	soc_uid = readl_relaxed(ocotp_base + OCOTP_UID_HIGH);
--	soc_uid <<= 32;
--	soc_uid |= readl_relaxed(ocotp_base + OCOTP_UID_LOW);
-+	*socuid = readl_relaxed(ocotp_base + OCOTP_UID_HIGH);
-+	*socuid <<= 32;
-+	*socuid |= readl_relaxed(ocotp_base + OCOTP_UID_LOW);
- 
- 	*socrev = rev;
- 
- 	clk_disable_unprepare(clk);
- 	clk_put(clk);
- 	iounmap(ocotp_base);
--	of_node_put(np);
- 
- 	return 0;
- 
- err_clk:
- 	iounmap(ocotp_base);
--err_iomap:
--	of_node_put(np);
- 	return ret;
- }
- 
--static int imx8mm_soc_uid(void)
-+static int imx8mm_soc_uid(u64 *socuid)
- {
-+	struct device_node *np __free(device_node) =
-+		of_find_compatible_node(NULL, NULL, "fsl,imx8mm-ocotp");
- 	void __iomem *ocotp_base;
--	struct device_node *np;
- 	struct clk *clk;
- 	int ret = 0;
- 	u32 offset = of_machine_is_compatible("fsl,imx8mp") ?
- 		     IMX8MP_OCOTP_UID_OFFSET : 0;
- 
--	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mm-ocotp");
- 	if (!np)
- 		return -EINVAL;
- 
- 	ocotp_base = of_iomap(np, 0);
--	if (!ocotp_base) {
--		ret = -EINVAL;
--		goto err_iomap;
--	}
-+	if (!ocotp_base)
-+		return -EINVAL;
- 
- 	clk = of_clk_get_by_name(np, NULL);
- 	if (IS_ERR(clk)) {
-@@ -136,47 +127,36 @@ static int imx8mm_soc_uid(void)
- 
- 	clk_prepare_enable(clk);
- 
--	soc_uid = readl_relaxed(ocotp_base + OCOTP_UID_HIGH + offset);
--	soc_uid <<= 32;
--	soc_uid |= readl_relaxed(ocotp_base + OCOTP_UID_LOW + offset);
-+	*socuid = readl_relaxed(ocotp_base + OCOTP_UID_HIGH + offset);
-+	*socuid <<= 32;
-+	*socuid |= readl_relaxed(ocotp_base + OCOTP_UID_LOW + offset);
- 
- 	clk_disable_unprepare(clk);
- 	clk_put(clk);
- 
- err_clk:
- 	iounmap(ocotp_base);
--err_iomap:
--	of_node_put(np);
--
- 	return ret;
- }
- 
--static int imx8mm_soc_revision(u32 *socrev)
-+static int imx8mm_soc_revision(u32 *socrev, u64 *socuid)
- {
--	struct device_node *np;
-+	struct device_node *np __free(device_node) =
-+		of_find_compatible_node(NULL, NULL, "fsl,imx8mm-anatop");
- 	void __iomem *anatop_base;
--	int ret;
- 
--	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mm-anatop");
- 	if (!np)
- 		return -EINVAL;
- 
- 	anatop_base = of_iomap(np, 0);
--	if (!anatop_base) {
--		ret = -EINVAL;
--		goto err_iomap;
--	}
-+	if (!anatop_base)
-+		return -EINVAL;
- 
- 	*socrev = readl_relaxed(anatop_base + ANADIG_DIGPROG_IMX8MM);
- 
- 	iounmap(anatop_base);
--	of_node_put(np);
- 
--	return imx8mm_soc_uid();
--
--err_iomap:
--	of_node_put(np);
--	return ret;
-+	return imx8mm_soc_uid(socuid);
- }
- 
- static const struct imx8_soc_data imx8mq_soc_data = {
-@@ -207,21 +187,34 @@ static __maybe_unused const struct of_device_id imx8_soc_match[] = {
- 	{ }
- };
- 
--#define imx8_revision(soc_rev) \
--	soc_rev ? \
--	kasprintf(GFP_KERNEL, "%d.%d", (soc_rev >> 4) & 0xf,  soc_rev & 0xf) : \
-+#define imx8_revision(dev, soc_rev) \
-+	(soc_rev) ? \
-+	devm_kasprintf((dev), GFP_KERNEL, "%d.%d", ((soc_rev) >> 4) & 0xf, (soc_rev) & 0xf) : \
+@@ -192,9 +192,20 @@ static __maybe_unused const struct of_device_id imx8_soc_match[] = {
+ 	devm_kasprintf((dev), GFP_KERNEL, "%d.%d", ((soc_rev) >> 4) & 0xf, (soc_rev) & 0xf) : \
  	"unknown"
  
 +static void imx8m_unregister_soc(void *data)
@@ -3177,79 +4044,18 @@ index 5ea8887828c0..3ed8161d7d28 100644
  static int imx8m_soc_probe(struct platform_device *pdev)
  {
  	struct soc_device_attribute *soc_dev_attr;
--	struct soc_device *soc_dev;
 +	struct platform_device *cpufreq_dev;
-+	const struct imx8_soc_data *data;
-+	struct device *dev = &pdev->dev;
+ 	const struct imx8_soc_data *data;
+ 	struct device *dev = &pdev->dev;
  	const struct of_device_id *id;
-+	struct soc_device *soc_dev;
- 	u32 soc_rev = 0;
--	const struct imx8_soc_data *data;
-+	u64 soc_uid = 0;
- 	int ret;
+@@ -239,11 +250,22 @@ static int imx8m_soc_probe(struct platform_device *pdev)
+ 	if (IS_ERR(soc_dev))
+ 		return PTR_ERR(soc_dev);
  
--	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
-+	soc_dev_attr = devm_kzalloc(dev, sizeof(*soc_dev_attr), GFP_KERNEL);
- 	if (!soc_dev_attr)
- 		return -ENOMEM;
- 
-@@ -229,58 +222,52 @@ static int imx8m_soc_probe(struct platform_device *pdev)
- 
- 	ret = of_property_read_string(of_root, "model", &soc_dev_attr->machine);
- 	if (ret)
--		goto free_soc;
-+		return ret;
- 
- 	id = of_match_node(imx8_soc_match, of_root);
--	if (!id) {
--		ret = -ENODEV;
--		goto free_soc;
--	}
-+	if (!id)
-+		return -ENODEV;
- 
- 	data = id->data;
- 	if (data) {
- 		soc_dev_attr->soc_id = data->name;
- 		if (data->soc_revision) {
--			ret = data->soc_revision(&soc_rev);
-+			ret = data->soc_revision(&soc_rev, &soc_uid);
- 			if (ret)
--				goto free_soc;
-+				return ret;
- 		}
- 	}
- 
--	soc_dev_attr->revision = imx8_revision(soc_rev);
--	if (!soc_dev_attr->revision) {
--		ret = -ENOMEM;
--		goto free_soc;
--	}
-+	soc_dev_attr->revision = imx8_revision(dev, soc_rev);
-+	if (!soc_dev_attr->revision)
-+		return -ENOMEM;
- 
--	soc_dev_attr->serial_number = kasprintf(GFP_KERNEL, "%016llX", soc_uid);
--	if (!soc_dev_attr->serial_number) {
--		ret = -ENOMEM;
--		goto free_rev;
--	}
-+	soc_dev_attr->serial_number = devm_kasprintf(dev, GFP_KERNEL, "%016llX", soc_uid);
-+	if (!soc_dev_attr->serial_number)
-+		return -ENOMEM;
- 
- 	soc_dev = soc_device_register(soc_dev_attr);
--	if (IS_ERR(soc_dev)) {
--		ret = PTR_ERR(soc_dev);
--		goto free_serial_number;
--	}
-+	if (IS_ERR(soc_dev))
-+		return PTR_ERR(soc_dev);
-+
 +	ret = devm_add_action(dev, imx8m_unregister_soc, soc_dev);
 +	if (ret)
 +		return ret;
- 
++
  	pr_info("SoC: %s revision %s\n", soc_dev_attr->soc_id,
  		soc_dev_attr->revision);
  
@@ -3266,18 +4072,7 @@ index 5ea8887828c0..3ed8161d7d28 100644
 +	}
  
  	return 0;
--
--free_serial_number:
--	kfree(soc_dev_attr->serial_number);
--free_rev:
--	if (strcmp(soc_dev_attr->revision, "unknown"))
--		kfree(soc_dev_attr->revision);
--free_soc:
--	kfree(soc_dev_attr);
--	return ret;
  }
- 
- static struct platform_driver imx8m_soc_driver = {
 diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
 index 328b6153b2be..71be378d2e43 100644
 --- a/drivers/soc/qcom/pdr_interface.c
@@ -3305,10 +4100,10 @@ index 328b6153b2be..71be378d2e43 100644
  	return 0;
  }
 diff --git a/fs/libfs.c b/fs/libfs.c
-index b0f262223b53..3cb49463a849 100644
+index 279442b1fe96..54822b559827 100644
 --- a/fs/libfs.c
 +++ b/fs/libfs.c
-@@ -492,7 +492,7 @@ offset_dir_lookup(struct dentry *parent, loff_t offset)
+@@ -496,7 +496,7 @@ offset_dir_lookup(struct dentry *parent, loff_t offset)
  		found = find_positive_dentry(parent, NULL, false);
  	else {
  		rcu_read_lock();
@@ -3318,10 +4113,10 @@ index b0f262223b53..3cb49463a849 100644
  		rcu_read_unlock();
  	}
 diff --git a/fs/netfs/write_collect.c b/fs/netfs/write_collect.c
-index 82290c92ba7a..412d4da74227 100644
+index ca3a11ed9b54..b2e39fcf638d 100644
 --- a/fs/netfs/write_collect.c
 +++ b/fs/netfs/write_collect.c
-@@ -576,7 +576,8 @@ void netfs_write_collection_worker(struct work_struct *work)
+@@ -575,7 +575,8 @@ void netfs_write_collection_worker(struct work_struct *work)
  	trace_netfs_rreq(wreq, netfs_rreq_trace_write_done);
  
  	if (wreq->io_streams[1].active &&
@@ -3391,7 +4186,7 @@ index 626ad7bd94f2..a3eb3b740f76 100644
  			else
  				inode->i_fop = &proc_reg_file_ops_compat;
 diff --git a/fs/proc/internal.h b/fs/proc/internal.h
-index 87e4d6282025..4e0c5b57ffdb 100644
+index 1695509370b8..77a517f91821 100644
 --- a/fs/proc/internal.h
 +++ b/fs/proc/internal.h
 @@ -85,6 +85,20 @@ static inline void pde_make_permanent(struct proc_dir_entry *pde)
@@ -3416,7 +4211,7 @@ index 87e4d6282025..4e0c5b57ffdb 100644
  void pde_free(struct proc_dir_entry *pde);
  
 diff --git a/fs/smb/server/smbacl.c b/fs/smb/server/smbacl.c
-index da8ed72f335d..109036e2227c 100644
+index 89415b02dd64..bced4ca12250 100644
 --- a/fs/smb/server/smbacl.c
 +++ b/fs/smb/server/smbacl.c
 @@ -398,7 +398,9 @@ static void parse_dacl(struct mnt_idmap *idmap,
@@ -3451,7 +4246,7 @@ index 074dca3222b9..ba05de8579ec 100644
  	/* the key type and key description string
  	 * - the desc is used to match a key against search criteria
 diff --git a/include/linux/libata.h b/include/linux/libata.h
-index 9b4a6ff03235..79974a99265f 100644
+index c1a85d46eba6..4f62c43059c2 100644
 --- a/include/linux/libata.h
 +++ b/include/linux/libata.h
 @@ -88,6 +88,7 @@ enum ata_quirks {
@@ -3462,7 +4257,7 @@ index 9b4a6ff03235..79974a99265f 100644
  	__ATA_QUIRK_NO_ID_DEV_LOG,	/* Identify device log missing */
  	__ATA_QUIRK_NO_LOG_DIR,		/* Do not read log directory */
  	__ATA_QUIRK_NO_FUA,		/* Do not use FUA */
-@@ -434,6 +435,7 @@ enum {
+@@ -432,6 +433,7 @@ enum {
  	ATA_QUIRK_MAX_SEC_1024		= (1U << __ATA_QUIRK_MAX_SEC_1024),
  	ATA_QUIRK_MAX_TRIM_128M		= (1U << __ATA_QUIRK_MAX_TRIM_128M),
  	ATA_QUIRK_NO_NCQ_ON_ATI		= (1U << __ATA_QUIRK_NO_NCQ_ON_ATI),
@@ -3491,10 +4286,10 @@ index 0b2a89854440..ea62201c74c4 100644
  
  struct proc_ops {
 diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index 5bb4eaa52e14..dd10e02bfc74 100644
+index 6203bd8663b7..f2f69eb4295e 100644
 --- a/include/net/bluetooth/hci.h
 +++ b/include/net/bluetooth/hci.h
-@@ -683,7 +683,7 @@ enum {
+@@ -684,7 +684,7 @@ enum {
  #define HCI_ERROR_REMOTE_POWER_OFF	0x15
  #define HCI_ERROR_LOCAL_HOST_TERM	0x16
  #define HCI_ERROR_PAIRING_NOT_ALLOWED	0x18
@@ -3504,10 +4299,10 @@ index 5bb4eaa52e14..dd10e02bfc74 100644
  #define HCI_ERROR_UNSPECIFIED		0x1f
  #define HCI_ERROR_ADVERTISING_TIMEOUT	0x3c
 diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index de47fa533b15..6a0e83ac0fdb 100644
+index 90f56656b572..62e9d7673862 100644
 --- a/include/net/mana/gdma.h
 +++ b/include/net/mana/gdma.h
-@@ -406,8 +406,6 @@ struct gdma_context {
+@@ -408,8 +408,6 @@ struct gdma_context {
  	struct gdma_dev		mana_ib;
  };
  
@@ -3516,7 +4311,7 @@ index de47fa533b15..6a0e83ac0fdb 100644
  static inline bool mana_gd_is_mana(struct gdma_dev *gd)
  {
  	return gd->dev_id.type == GDMA_DEVICE_MANA;
-@@ -554,11 +552,15 @@ enum {
+@@ -556,11 +554,15 @@ enum {
  #define GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG BIT(3)
  #define GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT BIT(5)
  
@@ -3533,7 +4328,7 @@ index de47fa533b15..6a0e83ac0fdb 100644
  
  #define GDMA_DRV_CAP_FLAGS2 0
  
-@@ -619,11 +621,12 @@ struct gdma_query_max_resources_resp {
+@@ -621,11 +623,12 @@ struct gdma_query_max_resources_resp {
  }; /* HW DATA */
  
  /* GDMA_LIST_DEVICES */
@@ -3548,10 +4343,10 @@ index de47fa533b15..6a0e83ac0fdb 100644
  
  /* GDMA_REGISTER_DEVICE */
 diff --git a/io_uring/net.c b/io_uring/net.c
-index f32311f64113..7ea99e082e97 100644
+index 96af3408792b..f4c626029ba7 100644
 --- a/io_uring/net.c
 +++ b/io_uring/net.c
-@@ -152,7 +152,7 @@ static void io_netmsg_recycle(struct io_kiocb *req, unsigned int issue_flags)
+@@ -151,7 +151,7 @@ static void io_netmsg_recycle(struct io_kiocb *req, unsigned int issue_flags)
  		if (iov)
  			kasan_mempool_poison_object(iov);
  		req->async_data = NULL;
@@ -3560,7 +4355,7 @@ index f32311f64113..7ea99e082e97 100644
  	}
  }
  
-@@ -447,7 +447,6 @@ int io_sendmsg_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+@@ -453,7 +453,6 @@ int io_sendmsg_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
  static void io_req_msg_cleanup(struct io_kiocb *req,
  			       unsigned int issue_flags)
  {
@@ -3568,7 +4363,7 @@ index f32311f64113..7ea99e082e97 100644
  	io_netmsg_recycle(req, issue_flags);
  }
  
-@@ -1428,6 +1427,7 @@ int io_send_zc(struct io_kiocb *req, unsigned int issue_flags)
+@@ -1440,6 +1439,7 @@ int io_send_zc(struct io_kiocb *req, unsigned int issue_flags)
  	 */
  	if (!(issue_flags & IO_URING_F_UNLOCKED)) {
  		io_notif_flush(zc->notif);
@@ -3576,7 +4371,7 @@ index f32311f64113..7ea99e082e97 100644
  		io_req_msg_cleanup(req, 0);
  	}
  	io_req_set_res(req, ret, IORING_CQE_F_MORE);
-@@ -1488,6 +1488,7 @@ int io_sendmsg_zc(struct io_kiocb *req, unsigned int issue_flags)
+@@ -1500,6 +1500,7 @@ int io_sendmsg_zc(struct io_kiocb *req, unsigned int issue_flags)
  	 */
  	if (!(issue_flags & IO_URING_F_UNLOCKED)) {
  		io_notif_flush(sr->notif);
@@ -3635,10 +4430,10 @@ index 5b4e6d3bf7bc..b8fe0b3d0ffb 100644
  			return 1;
  
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 1f817d0c5d2d..e9bb1b4c5842 100644
+index 4b5878b2fdd0..0465be998fba 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -8919,7 +8919,7 @@ void sched_release_group(struct task_group *tg)
+@@ -9010,7 +9010,7 @@ void sched_release_group(struct task_group *tg)
  	spin_unlock_irqrestore(&task_group_lock, flags);
  }
  
@@ -3647,7 +4442,7 @@ index 1f817d0c5d2d..e9bb1b4c5842 100644
  {
  	struct task_group *tg;
  
-@@ -8931,13 +8931,7 @@ static struct task_group *sched_get_task_group(struct task_struct *tsk)
+@@ -9022,13 +9022,7 @@ static struct task_group *sched_get_task_group(struct task_struct *tsk)
  	tg = container_of(task_css_check(tsk, cpu_cgrp_id, true),
  			  struct task_group, css);
  	tg = autogroup_task_group(tsk, tg);
@@ -3662,7 +4457,7 @@ index 1f817d0c5d2d..e9bb1b4c5842 100644
  
  #ifdef CONFIG_FAIR_GROUP_SCHED
  	if (tsk->sched_class->task_change_group)
-@@ -8958,20 +8952,11 @@ void sched_move_task(struct task_struct *tsk, bool for_autogroup)
+@@ -9049,20 +9043,11 @@ void sched_move_task(struct task_struct *tsk, bool for_autogroup)
  {
  	int queued, running, queue_flags =
  		DEQUEUE_SAVE | DEQUEUE_MOVE | DEQUEUE_NOCLOCK;
@@ -3682,8 +4477,8 @@ index 1f817d0c5d2d..e9bb1b4c5842 100644
 -
  	update_rq_clock(rq);
  
- 	running = task_current(rq, tsk);
-@@ -8982,7 +8967,7 @@ void sched_move_task(struct task_struct *tsk, bool for_autogroup)
+ 	running = task_current_donor(rq, tsk);
+@@ -9073,7 +9058,7 @@ void sched_move_task(struct task_struct *tsk, bool for_autogroup)
  	if (running)
  		put_prev_task(rq, tsk);
  
@@ -3764,10 +4559,10 @@ index 99048c330382..4acdab165793 100644
  			ctx.funcname = kallsyms_lookup(
  				(unsigned long)tpoint->probestub,
 diff --git a/mm/filemap.c b/mm/filemap.c
-index 05adf0392625..3c37ad6c598b 100644
+index 440922a7d8f1..0163aed8f984 100644
 --- a/mm/filemap.c
 +++ b/mm/filemap.c
-@@ -1966,8 +1966,19 @@ struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
+@@ -1956,8 +1956,19 @@ struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
  
  		if (err == -EEXIST)
  			goto repeat;
@@ -3789,23 +4584,23 @@ index 05adf0392625..3c37ad6c598b 100644
  		 * filemap_add_folio locks the page, and for mmap
  		 * we expect an unlocked page.
 diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index f127b61f04a8..40ac11e29423 100644
+index db64116a4f84..cfb55b87a487 100644
 --- a/mm/huge_memory.c
 +++ b/mm/huge_memory.c
-@@ -3224,7 +3224,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+@@ -3298,7 +3298,7 @@ static void __split_huge_page(struct page *page, struct list_head *list,
  				folio_account_cleaned(tail,
  					inode_to_wb(folio->mapping->host));
  			__filemap_remove_folio(tail, NULL);
 -			folio_put(tail);
 +			folio_put_refs(tail, folio_nr_pages(tail));
- 		} else if (!PageAnon(page)) {
- 			__xa_store(&folio->mapping->i_pages, head[i].index,
- 					head + i, 0);
+ 		} else if (!folio_test_anon(folio)) {
+ 			__xa_store(&folio->mapping->i_pages, tail->index,
+ 					tail, 0);
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index ae1d184d035a..2d1e402f06f2 100644
+index f7c1d9f4f58d..4c23b6a435e1 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -1882,9 +1882,18 @@ void drain_all_stock(struct mem_cgroup *root_memcg)
+@@ -1909,9 +1909,18 @@ void drain_all_stock(struct mem_cgroup *root_memcg)
  static int memcg_hotplug_cpu_dead(unsigned int cpu)
  {
  	struct memcg_stock_pcp *stock;
@@ -3825,7 +4620,7 @@ index ae1d184d035a..2d1e402f06f2 100644
  	return 0;
  }
 diff --git a/mm/migrate.c b/mm/migrate.c
-index dfa24e41e8f9..25e7438af968 100644
+index cc68583c86f9..cc1cb6281e92 100644
 --- a/mm/migrate.c
 +++ b/mm/migrate.c
 @@ -526,15 +526,13 @@ static int __folio_migrate_mapping(struct address_space *mapping,
@@ -3849,10 +4644,10 @@ index dfa24e41e8f9..25e7438af968 100644
  	}
  
 diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index e0a77fe1b630..fd4e0e1cd65e 100644
+index 0f9b359d67bb..db697d27a716 100644
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
-@@ -7094,7 +7094,7 @@ static inline bool has_unaccepted_memory(void)
+@@ -6961,7 +6961,7 @@ static inline bool has_unaccepted_memory(void)
  
  static bool cond_accept_memory(struct zone *zone, unsigned int order)
  {
@@ -3861,7 +4656,7 @@ index e0a77fe1b630..fd4e0e1cd65e 100644
  	bool ret = false;
  
  	if (!has_unaccepted_memory())
-@@ -7103,8 +7103,18 @@ static bool cond_accept_memory(struct zone *zone, unsigned int order)
+@@ -6970,8 +6970,18 @@ static bool cond_accept_memory(struct zone *zone, unsigned int order)
  	if (list_empty(&zone->unaccepted_pages))
  		return false;
  
@@ -3903,10 +4698,10 @@ index ffef658862db..a948dd47c3f3 100644
  
  static void lec_tx_timeout(struct net_device *dev, unsigned int txqueue)
 diff --git a/net/batman-adv/bat_iv_ogm.c b/net/batman-adv/bat_iv_ogm.c
-index 74b49c35ddc1..209180b4c268 100644
+index 07ae5dd1f150..b12645949ae5 100644
 --- a/net/batman-adv/bat_iv_ogm.c
 +++ b/net/batman-adv/bat_iv_ogm.c
-@@ -324,8 +324,7 @@ batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
+@@ -325,8 +325,7 @@ batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
  	/* check if there is enough space for the optional TVLV */
  	next_buff_pos += ntohs(ogm_packet->tvlv_len);
  
@@ -4086,10 +4881,10 @@ index 711cd3b4347a..4417a18b3e95 100644
  
  	if (ret == -EOPNOTSUPP)
 diff --git a/net/core/neighbour.c b/net/core/neighbour.c
-index c7f7ea61b524..8082cc6be4fc 100644
+index bd0251bd74a1..1a620f903c56 100644
 --- a/net/core/neighbour.c
 +++ b/net/core/neighbour.c
-@@ -2301,6 +2301,7 @@ static const struct nla_policy nl_neightbl_policy[NDTA_MAX+1] = {
+@@ -2250,6 +2250,7 @@ static const struct nla_policy nl_neightbl_policy[NDTA_MAX+1] = {
  static const struct nla_policy nl_ntbl_parm_policy[NDTPA_MAX+1] = {
  	[NDTPA_IFINDEX]			= { .type = NLA_U32 },
  	[NDTPA_QUEUE_LEN]		= { .type = NLA_U32 },
@@ -4111,7 +4906,7 @@ index f49cd83f1955..7203c39532fc 100644
  		return ERR_PTR(err);
  	}
 diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
-index 26cdb6657475..f7c17388ff6a 100644
+index bdf39388e514..0e765466d7f7 100644
 --- a/net/ipv6/addrconf.c
 +++ b/net/ipv6/addrconf.c
 @@ -3237,13 +3237,16 @@ static void add_v4_addrs(struct inet6_dev *idev)
@@ -4149,10 +4944,10 @@ index 26cdb6657475..f7c17388ff6a 100644
  		return;
  	}
 diff --git a/net/ipv6/ioam6_iptunnel.c b/net/ipv6/ioam6_iptunnel.c
-index 4215cebe7d85..647dd8417c6c 100644
+index 2c383c12a431..09065187378e 100644
 --- a/net/ipv6/ioam6_iptunnel.c
 +++ b/net/ipv6/ioam6_iptunnel.c
-@@ -339,7 +339,6 @@ static int ioam6_do_encap(struct net *net, struct sk_buff *skb,
+@@ -337,7 +337,6 @@ static int ioam6_do_encap(struct net *net, struct sk_buff *skb,
  static int ioam6_output(struct net *net, struct sock *sk, struct sk_buff *skb)
  {
  	struct dst_entry *dst = skb_dst(skb), *cache_dst = NULL;
@@ -4160,7 +4955,7 @@ index 4215cebe7d85..647dd8417c6c 100644
  	struct ioam6_lwt *ilwt;
  	int err = -EINVAL;
  	u32 pkt_cnt;
-@@ -354,8 +353,6 @@ static int ioam6_output(struct net *net, struct sock *sk, struct sk_buff *skb)
+@@ -352,8 +351,6 @@ static int ioam6_output(struct net *net, struct sock *sk, struct sk_buff *skb)
  	if (pkt_cnt % ilwt->freq.n >= ilwt->freq.k)
  		goto out;
  
@@ -4169,7 +4964,7 @@ index 4215cebe7d85..647dd8417c6c 100644
  	local_bh_disable();
  	cache_dst = dst_cache_get(&ilwt->cache);
  	local_bh_enable();
-@@ -424,7 +421,10 @@ static int ioam6_output(struct net *net, struct sock *sk, struct sk_buff *skb)
+@@ -422,7 +419,10 @@ static int ioam6_output(struct net *net, struct sock *sk, struct sk_buff *skb)
  			goto drop;
  	}
  
@@ -4182,7 +4977,7 @@ index 4215cebe7d85..647dd8417c6c 100644
  		skb_dst_set(skb, cache_dst);
  		return dst_output(net, sk, skb);
 diff --git a/net/ipv6/route.c b/net/ipv6/route.c
-index 2736dea77575..b393c37d2424 100644
+index 997e2e4f441d..6233aa848174 100644
 --- a/net/ipv6/route.c
 +++ b/net/ipv6/route.c
 @@ -3644,7 +3644,8 @@ int fib6_nh_init(struct net *net, struct fib6_nh *fib6_nh,
@@ -4292,10 +5087,10 @@ index fd2de185bc93..23949ae2a3a8 100644
  	if (!echo) {
  		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ADDADDRTX);
 diff --git a/net/xdp/xsk_buff_pool.c b/net/xdp/xsk_buff_pool.c
-index 0662d34b09ee..87e865b9b83a 100644
+index 1f7975b49657..d158cb6dd391 100644
 --- a/net/xdp/xsk_buff_pool.c
 +++ b/net/xdp/xsk_buff_pool.c
-@@ -106,7 +106,7 @@ struct xsk_buff_pool *xp_create_and_assign_umem(struct xdp_sock *xs,
+@@ -105,7 +105,7 @@ struct xsk_buff_pool *xp_create_and_assign_umem(struct xdp_sock *xs,
  		if (pool->unaligned)
  			pool->free_heads[i] = xskb;
  		else
@@ -4401,24 +5196,11 @@ index 3d7d185019d3..7198cd2ac3a3 100644
  			schedule_work(&key_gc_work);
  		}
  	}
-diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
-index eb896d30545b..555d617c1f50 100644
---- a/tools/lib/subcmd/parse-options.c
-+++ b/tools/lib/subcmd/parse-options.c
-@@ -807,7 +807,7 @@ static int option__cmp(const void *va, const void *vb)
- static struct option *options__order(const struct option *opts)
- {
- 	int nr_opts = 0, nr_group = 0, nr_parent = 0, len;
--	const struct option *o, *p = opts;
-+	const struct option *o = NULL, *p = opts;
- 	struct option *opt, *ordered = NULL, *group;
- 
- 	/* flatten the options that have parents */
 diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
-index c5797ad1d37b..d86ca1554d6d 100755
+index 2fc290d9430c..6ac8ba7e2447 100755
 --- a/tools/testing/selftests/mm/run_vmtests.sh
 +++ b/tools/testing/selftests/mm/run_vmtests.sh
-@@ -300,7 +300,9 @@ uffd_stress_bin=./uffd-stress
+@@ -302,7 +302,9 @@ uffd_stress_bin=./uffd-stress
  CATEGORY="userfaultfd" run_test ${uffd_stress_bin} anon 20 16
  # Hugetlb tests require source and destination huge pages. Pass in half
  # the size of the free pages we have, which is used for *each*.
