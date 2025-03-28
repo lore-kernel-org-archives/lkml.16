@@ -1,123 +1,189 @@
-Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
+Received: from out203-205-221-202.mail.qq.com (out203-205-221-202.mail.qq.com [203.205.221.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA20C224CC
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 01:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743126004; cv=pass; b=tm8rbjZWV+Tp6UXYpztu4/eVwQi/Ak0aKK29vQ8pSYRIxQEnCoyQcMgfqc1kqFSGAlxp9mLLj1LAa4wIbIeCuUoyxjGmSbxIwqTqWJjvNHp4hDxGT7jSrzsH6r1MojqHbL7M+ZOpZ2rMiLy7GrynE6hTfsfxD6vtLMhBE6GQ4es=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743126004; c=relaxed/simple;
-	bh=JkBhY9pOgIClwKBni1BBTOZ5kTvHJY9rbnRef3t0GMo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gJGaHSKaAroF1k1KlweJfgWsmW+WO/gjV65orBQaWQiWGHFJKhOKJ/44iRPrvPYijYdzqQJG0POT3pfJ/WtmEGxHjycLvsMsKG0WpMtYYEfHteFFkoOwG7KO9C3+dr3w7LOG3M9Ho3nn7iAFBflXufSMp7UJtmzMeF6fJIYGG10=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=Nd9OZvfP; arc=pass smtp.client-ip=136.143.184.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A98B1F5E6
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 01:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743126341; cv=none; b=jCO7pmm/AQR6kYyBlEtIIJbtO1662uEdUn9Ulem7i5WPig2xd+WaAl6MNLuY+9dUUDBP6+f4CRA8zW4wzlnLZgEFFIRFHxWyjyONJeDYjyE+cMQI0c6LoWzK7iGv+5Gpx7OPIvKo3tNIhQ3XcBJXdWnGaR0TYqMQFCZWLUKGYz0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743126341; c=relaxed/simple;
+	bh=5rlMF3EdTMplo4ZiNP8oicxDIGNVDLr4l1WVenFeBDc=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=gtDykUAEb6TD3f2hleCZRg5kd4bw9n9Q0Fgtu7rQ2i0y14Ap4uptALlj16ADfnBsrHRV4BAOLhoq1A5SJEFxFpbSeg/D/XP/3YEUuv8ee0ctGkOmngKHnMwnAgZwrw3XKGSgBtJhzRGRkxHS58PB5d/7emQd4PpyS36viTy3y6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=cYnZdELW; arc=none smtp.client-ip=203.205.221.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="Nd9OZvfP"
-ARC-Seal: i=1; a=rsa-sha256; t=1743125981; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Mhn/ZCxU8t9otcHXbh/Fb/XObMRcFW3Rrqq71NbRA2QDbD6oWYkRfbk6y76apzqVmWm0FpoVht8UesUlBDMPtM0nams9t1CYA6axvIcaxbcT9gzhB0/XLlnocbNplsdz97+WFB5IexRSf77u58Pu3Av3R31z6dey7Y0WNtshRPg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1743125981; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=bLlskPcsFqLG0KS6/xzkgCRavgzWpJNLaxnhVXBKMzM=; 
-	b=RlamE35L/9NgA8dX9DBNKSc9LZG3VlJCSlqOfd4Y3oxtnm2b4huo8j294YKtEa6x2KtoLwuZd0RsxO8k9DcNRzHZVhwWIz7Ctt8XxLUyly/uNEIJRYLZJBQ3xFGhd/WlFEQhgNABLpVhJhbA8YpWl1VNvlX9vZyMSiXqr8Ch0Ww=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1743125981;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=bLlskPcsFqLG0KS6/xzkgCRavgzWpJNLaxnhVXBKMzM=;
-	b=Nd9OZvfPZzsgevFY98n4hPoKGcrGoZdtXxSFbGVca/AtDCiPpJAYs23K3PEo/u6c
-	gr9ycLvS2syOCuGCk8kNIW2+1VvGQ7sfcj3BY9LcH649pYiOH02GWW+G3ibrD3xf/dh
-	GEe5YDGxShS6nWYDxaNDBa2aUklOC32+6O/fSFt4=
-Received: by mx.zohomail.com with SMTPS id 1743125979819361.1158011960416;
-	Thu, 27 Mar 2025 18:39:39 -0700 (PDT)
-Message-ID: <e9122ec3-3d85-40ac-983a-553a498e5203@collabora.com>
-Date: Fri, 28 Mar 2025 04:39:32 +0300
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="cYnZdELW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1743126034; bh=aExX0kC5Xf+cB41U+J27cfH1AIdrlolDMYa3emTpxnE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=cYnZdELWFGqey8+Y+dIV911egyIbXWDvTq1RajNK4xB93EcuympUu+WpNbSX5pZjZ
+	 U5kSGW9/z1VD9lFibn8q3oJONEck3KRUBJ8hSMRNhgYjaD0h3dSWSuRZDUm3/Q4IZK
+	 pFY/7tnfrVm11ivKs8y+qvb7G5IGEVn8XZG39EtI=
+Received: from localhost.localdomain ([116.128.244.169])
+	by newxmesmtplogicsvrszb20-0.qq.com (NewEsmtp) with SMTP
+	id A20B4A85; Fri, 28 Mar 2025 09:40:32 +0800
+X-QQ-mid: xmsmtpt1743126032tok9f6m5q
+Message-ID: <tencent_29C768845246A8732C6D233A857EC74B6809@qq.com>
+X-QQ-XMAILINFO: OcN56dxiYj5T37Veb2R6Gdm+66ORTSOhPQYHL55Adm1fBVLY0+VtJA5/hPDHYX
+	 AdGk9n/rqz5fwOomSbagstJaOJ93dH4C+JN0HtN5/djMqiearbN4PZ83gp3eMdSC8W2aAhxop0YB
+	 noxV1Z2XtpVWxP5ysxmh9GLgBPpL7AVf7F4RLh1Ple53gVILzncKWDiSfJhS58JvL8rrsydf2hpK
+	 +JlZJSpWpViktMwmEp2FAX/2uwEO9OucbsJTbeiBNkW7MZr7NlLehG76TKrDkzZSUOiujxyuj9e5
+	 +p+1NdIdXc6UyVjE9+gqpq9ht0PVLb9IwmC8nUsN+U+yTOcfd1OgL/Z2uDDP0ZdK6i+JZfqMJ+CG
+	 K6QEqDoduJJKGyRWDsSxvijBk+tBmKve8rI4hmO2ReHkqK37LYTYAZubJv4/9z7hM6AVIsapoIru
+	 wrl+WytjY0RfQEWxkUA6UkUY463K3q41W4fCbA2ctJFBMtEpYufFj8o40Jjay0qtRZFbZQo6t4XB
+	 XNastaNWjNiVAJrskTtmUbkB51KU0QXFwYPc3GFWKKnrvYyYYWLkvOJpTiaktIrNM+8H552PsdLB
+	 oGnwkLgN8RYpFWP1u9zUw3HGzlQRIkoZRkwxpnZdeks1+QS3D1VjNA/QPH70R8kwo+Bl7qdnJw/5
+	 IeqVUoJwDZ74cJ8wJrsydw/JrgYqipj6j6H5KM9NctJG/VvQ6a3/oQQ7SgNcndmX1d+Rd358Wmwr
+	 Y/rndW2WcdyUro+iJQz7ArxaRExHk9mr+MwL0ud+JiQY38m4ZJSAHD2MUPOIYdHYf+OjdRV0qhaA
+	 H7td1McW+FVYQSU+PPvBVA31suj0ylPwzVJ2CKUwZzpedc2j92Fs9j7+BCeRr3jQ/hNoholKXPPZ
+	 vC7zL72CMBkw13bFu+wEEGee3a+3S8WIEHa3UPJLYV7dR4oJZ6uqXn4TcOhdFVzYSeuVqV8n0WTR
+	 2RsJSZ8BbnDkWbkEjyD1ykfT+ziQRti3rZ8of/p/yz2ceM6mFSopVee00JlfL0
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: Yaxiong Tian <iambestgod@qq.com>
+To: kbusch@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	sagi@grimberg.me
+Cc: linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Yaxiong Tian <tianyaxiong@kylinos.cn>
+Subject: [PATCH v2 2/3] nvme: add sysfs interface for APST table updates
+Date: Fri, 28 Mar 2025 09:40:31 +0800
+X-OQ-MSGID: <20250328014031.94959-1-iambestgod@qq.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <tencent_4A5421BA11BD9C5B5BF3CEA95FD212AB3107@qq.com>
+References: <tencent_4A5421BA11BD9C5B5BF3CEA95FD212AB3107@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/7] virtio-gpu api: add blob userptr resource
-To: "Huang, Honglei1" <Honglei1.Huang@amd.com>,
- Demi Marie Obenour <demiobenour@gmail.com>, David Airlie
- <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>,
- Huang Rui <ray.huang@amd.com>
-Cc: dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250228053650.393646-1-honglei1.huang@amd.com>
- <20250228053650.393646-2-honglei1.huang@amd.com>
- <cd9f85a5-0d99-4007-bba2-d792ac9d84da@gmail.com>
- <c2d1334f-6f5a-493f-bbf0-3e92789f128a@amd.com>
- <85470439-3c03-4787-be91-b6b680a5aca5@collabora.com>
- <79d642cc-fe61-48c3-bda1-aafeeb07fe2a@amd.com>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <79d642cc-fe61-48c3-bda1-aafeeb07fe2a@amd.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
 
-On 3/27/25 06:00, Huang, Honglei1 wrote:
-> 
-> 
-> On 2025/3/26 22:46, Dmitry Osipenko wrote:
->> On 3/6/25 13:51, Huang, Honglei1 wrote:
->>>
->>> On 2025/3/1 5:21, Demi Marie Obenour wrote:
->>>> On 2/28/25 12:36 AM, Honglei Huang wrote:
->>>>> From: Honglei Huang <Honglei1.Huang@amd.com>
->>>>>
->>>>> Add a new resource for blob resource, called userptr, used for let
->>>>> host access guest user space memory, to acquire buffer based userptr
->>>>> feature in virtio GPU.
->>>>>
->>>>> - The capset VIRTIO_GPU_CAPSET_HSAKMT used for context init,
->>>>> in this series patches only HSAKMT context can use the userptr
->>>>> feature. HSAKMT is a GPU compute library in HSA stack, like
->>>>> the role libdrm in mesa stack.
->>>>
->>>> Userptr should not be limited to HSMKMT contexts.  Userptr can
->>>> accelerate shm buffers by avoiding a copy from guest to host, and
->>>> it can be implemented using grant tables on Xen.
->>>
->>> Yes, I totally agree userptr can accelerate shm buffers, but I currently
->>> don't know if there are any other projects working on similar features,
->>> or if maintainers have any opinions or better ways to implement them, so
->>> I temporarily limit this feature to HSAKMT context only.
->>>
->>> I am waiting for everyone's opinions, please provide your thoughts.
->>
->> USERPTR should be relevant for anything Vulkan-related, like Venus and
->> native contexts. I expect that this new feature will work universally
->> good for all context types.
->>
->> In order to merge USERPTR support upstream, we at least will need to
->> prototype the guest USERPTR in one of native context driver to know that
->> it works. You'll need to post the whole set of host/guest USERPTR
->> patches including QEMU and etc, not just the kernel patches.
-> 
-> Ok totally understood, I will upload other components as soon as
-> possiable, cause we only have limited resource for this matter, please
-> understand the speed is relatively slow.
-> And for Vulkan use case, yes it is very important, I will make some
-> prototype implementation for it, and will test it locally. The
-> implementation for USERPTR must comply with Vulakan's standard.
-> Really thanks for your comments.
+From: Yaxiong Tian <tianyaxiong@kylinos.cn>
 
-We aren't in rush, thanks for working on this feature.
+Currently, the APST (Autonomous Power State Transition) table can only be
+updated during module initialization via module parameters or indirectly
+by setting QoS latency requirements. This patch adds a direct sysfs
+interface to allow dynamic updates to the APST table at runtime.
 
+The new sysfs entry is created at:
+/sys/class/nvme/<controller>/apst_update
+
+This provides more flexibility in power management tuning without
+requiring module reload or QoS latency changes.
+
+Example usage:
+update nvme module parameters.
+echo 1  > /sys/class/nvme/nvme0/apst_update
+
+Signed-off-by: Yaxiong Tian  <tianyaxiong@kylinos.cn>
+---
+ drivers/nvme/host/core.c  |  9 +++++++--
+ drivers/nvme/host/nvme.h  |  2 ++
+ drivers/nvme/host/sysfs.c | 23 +++++++++++++++++++++++
+ 3 files changed, 32 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index fb0404fee551..9dea1046b8b4 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2654,7 +2654,7 @@ static bool nvme_apst_get_transition_time(u64 total_latency,
+  *
+  * Users can set ps_max_latency_us to zero to turn off APST.
+  */
+-static int nvme_configure_apst(struct nvme_ctrl *ctrl)
++int nvme_configure_apst(struct nvme_ctrl *ctrl)
+ {
+ 	struct nvme_feat_auto_pst *table;
+ 	unsigned apste = 0;
+@@ -2778,8 +2778,11 @@ static void nvme_set_latency_tolerance(struct device *dev, s32 val)
+ 
+ 	if (ctrl->ps_max_latency_us != latency) {
+ 		ctrl->ps_max_latency_us = latency;
+-		if (nvme_ctrl_state(ctrl) == NVME_CTRL_LIVE)
++		if (nvme_ctrl_state(ctrl) == NVME_CTRL_LIVE) {
++			mutex_lock(&ctrl->apst_lock);
+ 			nvme_configure_apst(ctrl);
++			mutex_unlock(&ctrl->apst_lock);
++		}
+ 	}
+ }
+ 
+@@ -4852,6 +4855,8 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
+ 	ctrl->ka_cmd.common.opcode = nvme_admin_keep_alive;
+ 	ctrl->ka_last_check_time = jiffies;
+ 
++	mutex_init(&ctrl->apst_lock);
++
+ 	BUILD_BUG_ON(NVME_DSM_MAX_RANGES * sizeof(struct nvme_dsm_range) >
+ 			PAGE_SIZE);
+ 	ctrl->discard_page = alloc_page(GFP_KERNEL);
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 51e078642127..7f8e10f5bf7a 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -385,6 +385,7 @@ struct nvme_ctrl {
+ 	key_serial_t tls_pskid;
+ 
+ 	/* Power saving configuration */
++	struct mutex apst_lock;
+ 	u64 ps_max_latency_us;
+ 	bool apst_enabled;
+ 
+@@ -828,6 +829,7 @@ void nvme_unfreeze(struct nvme_ctrl *ctrl);
+ void nvme_wait_freeze(struct nvme_ctrl *ctrl);
+ int nvme_wait_freeze_timeout(struct nvme_ctrl *ctrl, long timeout);
+ void nvme_start_freeze(struct nvme_ctrl *ctrl);
++int nvme_configure_apst(struct nvme_ctrl *ctrl);
+ 
+ static inline enum req_op nvme_req_op(struct nvme_command *cmd)
+ {
+diff --git a/drivers/nvme/host/sysfs.c b/drivers/nvme/host/sysfs.c
+index 6d31226f7a4f..5003cb294d65 100644
+--- a/drivers/nvme/host/sysfs.c
++++ b/drivers/nvme/host/sysfs.c
+@@ -684,6 +684,28 @@ static DEVICE_ATTR(dhchap_ctrl_secret, S_IRUGO | S_IWUSR,
+ 	nvme_ctrl_dhchap_ctrl_secret_show, nvme_ctrl_dhchap_ctrl_secret_store);
+ #endif
+ 
++static ssize_t apst_update_store(struct device *dev,
++					      struct device_attribute *attr,
++					      const char *buf, size_t size)
++{
++	int err;
++	bool bool_data = false;
++	struct nvme_ctrl *ctrl = dev_get_drvdata(dev);
++	err = kstrtobool(buf, &bool_data);
++
++	if (err)
++		return err;
++
++	if (bool_data && nvme_ctrl_state(ctrl) == NVME_CTRL_LIVE) {
++		mutex_lock(&ctrl->apst_lock);
++		nvme_configure_apst(ctrl);
++		mutex_unlock(&ctrl->apst_lock);
++	}
++
++	return size;
++}
++static DEVICE_ATTR_WO(apst_update);
++
+ static struct attribute *nvme_dev_attrs[] = {
+ 	&dev_attr_reset_controller.attr,
+ 	&dev_attr_rescan_controller.attr,
+@@ -712,6 +734,7 @@ static struct attribute *nvme_dev_attrs[] = {
+ 	&dev_attr_dhchap_ctrl_secret.attr,
+ #endif
+ 	&dev_attr_adm_passthru_err_log_enabled.attr,
++	&dev_attr_apst_update.attr,
+ 	NULL
+ };
+ 
 -- 
-Best regards,
-Dmitry
+2.25.1
+
