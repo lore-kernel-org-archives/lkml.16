@@ -1,157 +1,147 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852CD188734
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 04:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B81714F11E;
+	Fri, 28 Mar 2025 04:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743136839; cv=none; b=X7KgEma8o/SGtgOQ3UxPYYg3W/KryluxLn6ccEqi7bw+TakbWlkR9CcVBsjCUEJnh+xvNqvSbpp15G2D+lpvTZNoydBfPBwecQHyO0PZV90wDGtZFZdXoePMG0Wbx2dbpXxcM+a7+kD65RcIpzX7EvFnmiti7anCtU/EozfnxjE=
+	t=1743136915; cv=none; b=AsID6vemuEL03BufhiNIa1ND8gynqJ/zxuVIWzK9NJIICF6E1XSjRfrDfIon+RzbPAa56aTLNoqe0bO1UgciO+2dZ8g4ma0/5XCvg671v9wTl/r6+enpK32n5TplEsOyqsLWjq/Eqw4/32EeJUkEl39+NjmCqs4PQ3gW1eHxkfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743136839; c=relaxed/simple;
-	bh=p5fy0e8UnKj/6EOZNFdLxiQh/zOADi2Pftr3/8rO8do=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L5yaeDcigx+GJWWTtSKjSixx+2HWk2vEaW+kU8gnbzzpHwohr3gWmdw97eqfgsmCfaatrlEg5V/iMUkW4PRxVsp9Y108cWTN2XENmzHkNgX7G+pH5Y5hADTuh3H1UQmtqgMSil3cK0Y+gmxAsb4MLYn79ybXv7EXpEV7jclzc1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xpDijQ49; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1743136915; c=relaxed/simple;
+	bh=lgjNZxcRDwmASamYFFnxAYYwYKIpdKj9jeglt+wPP8U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=POoq4MpXnseaKuBSaRrtnyoegrsIb4fzLIXLRnfaZAtouyned9CVVmUHgqUE9Z4uQ5wBZ9HsFF/29pwmRAXRjHzwAf/0dSVAoVTo8FbnAWCKA5mH7m0m/j16s08pmV4xa8TqGp61rJxGysMSYKHsE+7rZzpk0ErrVF3IaOP66aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fZoRYMww; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xpDijQ49"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ff784dc055so2761955a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 21:40:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fZoRYMww"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30332dfc820so2888114a91.2;
+        Thu, 27 Mar 2025 21:41:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743136836; x=1743741636; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BwyCKs3ffYhEw8XJUYb5si/FG4nJvu4s2NWwvaiC0iI=;
-        b=xpDijQ49eIsd6ToQG3nn6SLh3lVrPhCdroAqm8nyp81x99oK79KCJhj49rAcb1khaF
-         45OYAGTAXQnJ31FDJIIhqSfkDDSt3Peyf1AVVfP59pNNZxAS7HyelOzWZZoYDWltryYl
-         EoWqk7DpRr2vrIuvE5m/nla2KQ4EmPwANGo4Fdmjta0p9Y4Tjid2Gdl0cpgE3wjS5bo7
-         tvAi3GhsR2YYfu2eisB7pP7KWgHQy/uM2dy1g9DUEMRSK5xJbZeN5QjVhvO2TvUqlXqw
-         cq5kzoPTxnqT7nUN2iWzhJlT+hrOsC3f5K+iWWpUmDZsU39+60rcIAMIjapx/Ai8Z9Nt
-         2Sww==
+        d=gmail.com; s=20230601; t=1743136913; x=1743741713; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=8cDzefW9v/a2UVbOEaMdH7r/je/KKOPgsOOsMN3Zz58=;
+        b=fZoRYMwwIybkoqJGvfnEMH+aNuclQPnynq09lEY5O5EcDt2Vz1fqk7ZXWIUVzn7aVf
+         Tqi5sCGy1LBP9vl1cyoA/brZfwJkYisx965nytYj7/tz1ZlWTzsLezAb+jiDEqiJb0vm
+         9ScZFGMtzgLKqIxrcph4Ycl0Y3XHli3LBP5aRmuXQ7AYyzWA5SAH6RwY78vErh9Sr4GU
+         zXn29+y6kjqEEg0c9FauefFF3YzzEdn8u1wtYdTjxpX6tsjZmXRk/ZpaULC4VKmx5nF1
+         YG2Aum1bEXocggzmmitzQQAhW8mRYswmESy9xFgD9WW8mNTdP/2HyGebxoXSftVcYcqo
+         0N0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743136836; x=1743741636;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BwyCKs3ffYhEw8XJUYb5si/FG4nJvu4s2NWwvaiC0iI=;
-        b=NyiHknETl9yqiCFPXIEVXf8js39fEdNw4GZS2i7UCTgm0V4H0AfcPKYKXDXidPQ6NT
-         0q4y+VCNrXhKBQT14QZlgqYKxJgs7rEwoU0zfkGdFd69zGjNK8zPacRtXgVE7OON6RfS
-         NOoHxBQG0Z9B/1XwNacuLCea9+RPQjjfYMCPP8AjmSCvA4XzUaAuzKJjVdfjrpRTq5Wq
-         BpP0hua1C8D/xzfXcrBs1sYsc3nJzsDKRknKHkqEpKGoYyEUJ+U3yN4NptG/+GxqDXYi
-         6NY4Rh+SEthC867u8KZAWeuSL5yxz+D7vrto2TWF8iMFcT5b96+xRhZSkFbmxn1DEHwT
-         sSSg==
-X-Forwarded-Encrypted: i=1; AJvYcCVYkuWQgK3G4k5e7US6GQXq+5UGFewrTAOh6BKvMGwKYe7FAFp4bfgHy7anINLFCF4A/lcBlmXDGgTalf8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJt0uO+6N7bHzvyPyuvfhpo1yiXglOkNhzwf/7sVaXpwyA1Y8e
-	kQGcrnsURL4Md4bhYjz3Uhd8AlAt9xcA5OdSV806nSed9bbW6nsMOk3BzVNNUA==
-X-Gm-Gg: ASbGncui/4o4V0IRi0zJ6o1X/ggn3yrtZFB+NZVQ2j/6k4ZaLfgutyb6OsNeBYfNyaq
-	94GWsg/0FuGS42sQXKuWhVBPX+N+C24dcSBy2VUDcIMfp+Gb234ZOT0a8UAKqhefVhiuNhOwoYC
-	fHrwcYtOvmOGtTYC+CRWUs66dD82qMVB6Mr5Dekv9u0RxjPgBgeWFhO4UPF1+XCfbVq1J8TivIw
-	tAPzsQgWXW9XYDs+A5szOLNoDNpw84LSOc/v3s5MkSIvswLcH0FuU14OLuzGaJ1dPy6SgYsOrcf
-	LrCwEuRtluM6mWb3bzvj4mjuEKBq074XKo2pcl2fpZwxY5vslDDE1AE=
-X-Google-Smtp-Source: AGHT+IHLrH4hU9KBbLe34G/CtIab3OeOyeA8IEERFB9C2/MoUYF2i6YlkrlpKLD9/6Z8JDvvgK8ZSA==
-X-Received: by 2002:a05:6a21:158f:b0:1f5:6c94:2cd7 with SMTP id adf61e73a8af0-1fea300d25bmr10714712637.42.1743136836491;
-        Thu, 27 Mar 2025 21:40:36 -0700 (PDT)
-Received: from thinkpad ([120.60.68.219])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93b69b127sm736704a12.17.2025.03.27.21.40.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Mar 2025 21:40:36 -0700 (PDT)
-Date: Fri, 28 Mar 2025 10:10:29 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v8 3/4] PCI: dwc: Update pci->num_lanes to maximum
- supported link width
-Message-ID: <meczqjvdwfietottcw756lhk2cg4f6szqppknnkbdtqd3hmafp@7cgg7kjnnw76>
-References: <20250316-preset_v6-v8-0-0703a78cb355@oss.qualcomm.com>
- <20250316-preset_v6-v8-3-0703a78cb355@oss.qualcomm.com>
+        d=1e100.net; s=20230601; t=1743136913; x=1743741713;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8cDzefW9v/a2UVbOEaMdH7r/je/KKOPgsOOsMN3Zz58=;
+        b=rCpMP+Rl9zGxSoKbcWLPBEeXFAB03qwcOWXNQjD3jxl7FGOhEMuwmXC7QU9fsYvFle
+         FnzCdLCTl1fID1zH+YRoJKMpKJ1RKODw8ssqf1DaEsfRFZEHqomwOg1hEAgAxsvVSs1H
+         DzUYaGv2BAPWrM+uO4lPz7vgNVRGk4VaubybvMRgY6+EX5UCgwJRSZWrLwvy9CFPcOcj
+         oWB0xmK3iT+WPREv5Mq3nR2OJzF0fJk0q8DqeFAhv0NNoVAspxHeWivSCJb70dWgJdRO
+         Wt3C88e8fctZpN+HJN1hZDAIGYFJ0dnji7H0n/JyzA/SKOZjsDkQ2GpVMyW+cP+NyQ17
+         1dwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVcDRzW+pe/cBRKUEU2WYQSJTyISNL0BsAugGzPEa4JixPd3YjNZMCEkSwGIPS6VSCb9yTV22WS4aWa67Wo3SE=@vger.kernel.org, AJvYcCVujB63vSDH0qRdPFs3NnSDuciiV3q9rlb/YMMVt+8mAfMDblap0Iuvd46ykOMyAqkYt8diIDB87Q92GY4f@vger.kernel.org, AJvYcCXU3OMjLXqu89tNk31aHJ/Fu4V2UfGrkGRdlk5Tb1YM8E+mdO4T/HWXWM74XZZLIsPUDZvl5yxEbWyJ+hBsCm8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzo+dnoaLSTskr0IiAvk6wyhnHiFs54dLH6ofaAaqTny/YHFNHk
+	uiNIfuyuSTQRzFJQKYu0vsRylJiffdr8W+IJZ+ruAGQSB8hM/Y8B
+X-Gm-Gg: ASbGncvAo+u6p4iJ2YC6FUXniJ7RqwevX3jQWJCdAmsdHdHPN6yImydNTQljDXxbqjj
+	blE+H17a/leHXfVR+kYGFT+ZM2C1fGFyu0uLEHxpDZwLxW9V5ULGgoJ/8w+q9JhUxc1mh6jLxmP
+	x8oJ+t6Po+V194WEyCMtmWm/G8xIYlFBp5+SqqMCXG82avBLpnUyQ1W0dwkHKBvzwKqhFX2YJSq
+	ETcJTybFXVnrMllSqFMBnoGNNnT1vrJtJx4xcVcFfnSvb5ZCZdQ7zepQbWkC6SD/vKGLWVXu5rr
+	i4eHW9INtDTTyzV/lRd74U7rq9irU9X9uTm1EKlmgsgYkgmgkWFKyvlcnGOpPvusaW/0aDI19Im
+	tVbs6lxdTdKI1/4+6/pAGnqL1KDxA
+X-Google-Smtp-Source: AGHT+IFUr871gBbcE/ITOJcpUtX31Ab3GbZp4AbSiOfXeGRHHqZwTYc3dshdaDL7cQBzEkE3cXj8kw==
+X-Received: by 2002:a05:6a20:430e:b0:1ee:e24d:8fe3 with SMTP id adf61e73a8af0-1fea2d90449mr9947884637.10.1743136913094;
+        Thu, 27 Mar 2025 21:41:53 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af93b69b127sm738649a12.17.2025.03.27.21.41.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 21:41:52 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <3f9fcc7d-931b-446a-b36a-1745f650c6cd@roeck-us.net>
+Date: Thu, 27 Mar 2025 21:41:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250316-preset_v6-v8-3-0703a78cb355@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2][next] watchdog: cros-ec: Avoid
+ -Wflex-array-member-not-at-end warning
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Lukasz Majczak <lma@chromium.org>, Wim Van Sebroeck
+ <wim@linux-watchdog.org>, Benson Leung <bleung@chromium.org>,
+ Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: chrome-platform@lists.linux.dev, linux-watchdog@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <Z-WG6_uhWsy_FCq3@kspp>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <Z-WG6_uhWsy_FCq3@kspp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Mar 16, 2025 at 09:39:03AM +0530, Krishna Chaitanya Chundru wrote:
-> If the num-lanes property is not present in the devicetree update the
-> pci->num_lanes with the hardware supported maximum link width using
-> the newly introduced dw_pcie_link_get_max_link_width() API.
+On 3/27/25 10:12, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> Introduce dw_pcie_link_get_max_link_width() to get the maximum lane
-> width the hardware supports.
+> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
 > 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> So, with these changes, fix the following warning:
+> 
+> drivers/watchdog/cros_ec_wdt.c:29:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-- Mani
-
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 3 +++
->  drivers/pci/controller/dwc/pcie-designware.c      | 8 ++++++++
->  drivers/pci/controller/dwc/pcie-designware.h      | 1 +
->  3 files changed, 12 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index ffaded8f2df7..dd56cc02f4ef 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -504,6 +504,9 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
->  
->  	dw_pcie_iatu_detect(pci);
->  
-> +	if (pci->num_lanes < 1)
-> +		pci->num_lanes = dw_pcie_link_get_max_link_width(pci);
-> +
->  	/*
->  	 * Allocate the resource for MSG TLP before programming the iATU
->  	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 145e7f579072..f39e6f5732a9 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -737,6 +737,14 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci)
->  
->  }
->  
-> +int dw_pcie_link_get_max_link_width(struct dw_pcie *pci)
-> +{
-> +	u8 cap = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +	u32 lnkcap = dw_pcie_readl_dbi(pci, cap + PCI_EXP_LNKCAP);
-> +
-> +	return FIELD_GET(PCI_EXP_LNKCAP_MLW, lnkcap);
-> +}
-> +
->  static void dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
->  {
->  	u32 lnkcap, lwsc, plc;
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 501d9ddfea16..61d1fb6b437b 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -488,6 +488,7 @@ void dw_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
->  int dw_pcie_link_up(struct dw_pcie *pci);
->  void dw_pcie_upconfig_setup(struct dw_pcie *pci);
->  int dw_pcie_wait_for_link(struct dw_pcie *pci);
-> +int dw_pcie_link_get_max_link_width(struct dw_pcie *pci);
->  int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
->  			      const struct dw_pcie_ob_atu_cfg *atu);
->  int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
-> 
-> -- 
-> 2.34.1
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
