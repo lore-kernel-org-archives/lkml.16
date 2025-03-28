@@ -1,149 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1D2221569;
-	Fri, 28 Mar 2025 13:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77947221555;
+	Fri, 28 Mar 2025 13:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743169815; cv=none; b=F5TMBksl5Zj8fd6f2IC/2VWDw2a8Hx4dKdCJM9J04LZbrv/q4SBMlIdbhM+5jXxhVfc1beyNguc3Tfwok5ibD65d1CHEY/i1lcAFKIAvBgF6t+d8Vm+mkWnbRqT1w5bv7K2drT8Y8LMPWXGp5okrTqgD8NS2iifgIS283dRaibk=
+	t=1743169858; cv=none; b=XpwSljEvdmB01nPsorg8yQT909+vq9ltPM/AoYoV0y5UyifGuOnA7u+Vs61Q7/oNzObRD10UtXesD8tiqSIfHQivwRQ33Wxhg/ribD68EZ04oPjSgauwYKZPDca8i0nIDsdjOJZSkqgjG4oOPNgwJ2nipU31zhZRtHv0TOItsRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743169815; c=relaxed/simple;
-	bh=wovA4Aud7DhDJdEaIv13byMvexafADunHResb3o9c/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=p5D8QXpXhT9cYW7OAHVJKQe6ggsn3Nn7NoF/7TPqjtiwtVIvJ0NCUYr4DmPl5Ces0Wxt35sDeSXxkyoC1c4XpSoaEgy0I/7LggmqLMgTado+UcUKb0S3nY16BHmLK0egL+xBxivwRnff/RVYPxTdaLuHQmVKkvIp9HHNglEsGSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQkOikoo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQkOikoo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D95DC4CEE4;
-	Fri, 28 Mar 2025 13:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743169814;
-	bh=wovA4Aud7DhDJdEaIv13byMvexafADunHResb3o9c/I=;
-	h=Date:From:To:Cc:Subject:From;
-	b=SQkOikoocc5ajqf+GsC/NyT9N/He3BHYNnePbD4I3saofoYa6vu+uRMrEOknILRXE
-	 CDKnDJJOeV60xZYg+YFGNItagokMk8Wub8p7DdmQoXtkYOqkfa+f/b/dr5yD5FaTYG
-	 yDTLsSbcAz0CXAW/OOHs7EC1G0oKR1UMe2hxtaFfYBm9n21KHuOXgs0KA2fVdKzrxD
-	 8TRaXn00sRjHNnIYzSDaH3PD4SYwKAaaiA1AJJ1pAOdn3OiSCXwtTvA7LmShxWwLGt
-	 wh3zsMeSMgVkREcLDO/GWa9rU30fpppwXD2RQQTEJV4xyZfxI5HyKLbKPLJrEY1VMK
-	 6+AfTIG5GBlvg==
-Date: Fri, 28 Mar 2025 07:50:11 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
-	Guenter Roeck <groeck@chromium.org>
-Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] platform/chrome: cros_ec: Avoid
- -Wflex-array-member-not-at-end warning
-Message-ID: <Z-apE0ZmckBjRDyx@kspp>
+	s=arc-20240116; t=1743169858; c=relaxed/simple;
+	bh=kB0O55JTvtBtlL5U/x7kW4cl6qxP+ll8Aivlmj9ntwg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y6w5zxyX+T+cIEFzfnCoxIWtC9FNm1BaxcqrYhJqAGlCFPf3OiQGCf3FmT0dw+x5jcCzTBH7fQnCNlPTEyFSCIOcLRhptnAwdLpwcZ9hpjxb3TLLUdYmot2C6aTYeKvGRBf636+ytCLBHzb7Yq+41rZU0PT3ckJwg5n5OLFlqKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98F041691;
+	Fri, 28 Mar 2025 06:50:59 -0700 (PDT)
+Received: from [10.57.87.112] (unknown [10.57.87.112])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1646F3F63F;
+	Fri, 28 Mar 2025 06:50:52 -0700 (PDT)
+Message-ID: <ef307875-1fa1-45f4-8e42-ab78d87b3582@arm.com>
+Date: Fri, 28 Mar 2025 13:50:51 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mm/filemap: Allow arch to request folio size for exec
+ memory
+Content-Language: en-GB
+To: Zi Yan <ziy@nvidia.com>
+Cc: Matthew Wilcox <willy@infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, Dave Chinner <david@fromorbit.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+References: <20250327160700.1147155-1-ryan.roberts@arm.com>
+ <Z-WAbWfZzG1GA-4n@casper.infradead.org>
+ <731D8D6E-52A0-4144-A2BB-7243BFACC92D@nvidia.com>
+ <dfc06a39-3d92-4995-ab06-c552e351f7c8@arm.com>
+ <8DEB30F0-52D0-4857-9BAC-CDAC045A396E@nvidia.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <8DEB30F0-52D0-4857-9BAC-CDAC045A396E@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On 28/03/2025 09:32, Zi Yan wrote:
+> On 28 Mar 2025, at 9:09, Ryan Roberts wrote:
+> 
+>> On 27/03/2025 20:07, Zi Yan wrote:
+>>> On 27 Mar 2025, at 12:44, Matthew Wilcox wrote:
+>>>
+>>>> On Thu, Mar 27, 2025 at 04:06:58PM +0000, Ryan Roberts wrote:
+>>>>> So let's special-case the read(ahead) logic for executable mappings. The
+>>>>> trade-off is performance improvement (due to more efficient storage of
+>>>>> the translations in iTLB) vs potential read amplification (due to
+>>>>> reading too much data around the fault which won't be used), and the
+>>>>> latter is independent of base page size. I've chosen 64K folio size for
+>>>>> arm64 which benefits both the 4K and 16K base page size configs and
+>>>>> shouldn't lead to any read amplification in practice since the old
+>>>>> read-around path was (usually) reading blocks of 128K. I don't
+>>>>> anticipate any write amplification because text is always RO.
+>>>>
+>>>> Is there not also the potential for wasted memory due to ELF alignment?
+>>>> Kalesh talked about it in the MM BOF at the same time that Ted and I
+>>>> were discussing it in the FS BOF.  Some coordination required (like
+>>>> maybe Kalesh could have mentioned it to me rathere than assuming I'd be
+>>>> there?)
+>>>>
+>>>>> +#define arch_exec_folio_order() ilog2(SZ_64K >> PAGE_SHIFT)
+>>>>
+>>>> I don't think the "arch" really adds much value here.
+>>>>
+>>>> #define exec_folio_order()	get_order(SZ_64K)
+>>>
+>>> How about AMD’s PTE coalescing, which does PTE compression at
+>>> 16KB or 32KB level? It covers 4 16KB and 2 32KB, at least it will
+>>> not hurt AMD PTE coalescing. Starting with 64KB across all arch
+>>> might be simpler to see the performance impact. Just a comment,
+>>> no objection. :)
+>>
+>> exec_folio_order() is defined per-architecture and SZ_64K is the arm64 preferred
+>> size. At the moment x86 is not opted in, but they could choose to opt in with
+>> 32K (or whatever else makese sense) if the HW supports coalescing.
+> 
+> Oh, I missed that part. I thought, since arch_ is not there, it was the same
+> for all arch.
+> >>
+>> I'm not sure if you thought this was global and are arguing against that, or if
+>> you are arguing for it to be global because it will more easily show us
+>> performance regressions earlier if x86 is doing this too?
+> 
+> I thought it was global. It might be OK to set it global and let different arch
+> to optimize it as it rolls out. Opt-in might be "never" until someone looks
+> into it, but if it is global and it changes performance, people will notice
+> and look into it.
 
-Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+Ahh now that we are both clear, I'd prefer to stick with the policy as
+implemented; exec_folio_order() defaults to "use the existing readahead method"
+but can be overridden by arches (arm64) that want specific behaviour (64K folios).
 
-So, with these changes, fix the following warning:
-
-drivers/platform/chrome/cros_ec.c:106:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/platform/chrome/cros_ec.c | 47 +++++++++++++++++--------------
- 1 file changed, 26 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
-index 110771a8645e..cd15aa0cb082 100644
---- a/drivers/platform/chrome/cros_ec.c
-+++ b/drivers/platform/chrome/cros_ec.c
-@@ -99,51 +99,56 @@ irqreturn_t cros_ec_irq_thread(int irq, void *data)
- }
- EXPORT_SYMBOL(cros_ec_irq_thread);
- 
-+union cros_ec_sleep_data {
-+	struct ec_params_host_sleep_event req0;
-+	struct ec_params_host_sleep_event_v1 req1;
-+	struct ec_response_host_sleep_event_v1 resp1;
-+} __packed;
-+
- static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
- {
- 	int ret;
--	struct {
--		struct cros_ec_command msg;
--		union {
--			struct ec_params_host_sleep_event req0;
--			struct ec_params_host_sleep_event_v1 req1;
--			struct ec_response_host_sleep_event_v1 resp1;
--		} u;
--	} __packed buf;
-+	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-+			sizeof(union cros_ec_sleep_data));
-+	struct ec_params_host_sleep_event *req0 =
-+			(struct ec_params_host_sleep_event *)msg->data;
-+	struct ec_params_host_sleep_event_v1 *req1 =
-+			(struct ec_params_host_sleep_event_v1 *)msg->data;
-+	struct ec_response_host_sleep_event_v1 *resp1 =
-+			(struct ec_response_host_sleep_event_v1 *)msg->data;
- 
--	memset(&buf, 0, sizeof(buf));
- 
- 	if (ec_dev->host_sleep_v1) {
--		buf.u.req1.sleep_event = sleep_event;
--		buf.u.req1.suspend_params.sleep_timeout_ms =
-+		req1->sleep_event = sleep_event;
-+		req1->suspend_params.sleep_timeout_ms =
- 				ec_dev->suspend_timeout_ms;
- 
--		buf.msg.outsize = sizeof(buf.u.req1);
-+		msg->outsize = sizeof(*req1);
- 		if ((sleep_event == HOST_SLEEP_EVENT_S3_RESUME) ||
- 		    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
--			buf.msg.insize = sizeof(buf.u.resp1);
-+			msg->insize = sizeof(*resp1);
- 
--		buf.msg.version = 1;
-+		msg->version = 1;
- 
- 	} else {
--		buf.u.req0.sleep_event = sleep_event;
--		buf.msg.outsize = sizeof(buf.u.req0);
-+		req0->sleep_event = sleep_event;
-+		msg->outsize = sizeof(*req0);
- 	}
- 
--	buf.msg.command = EC_CMD_HOST_SLEEP_EVENT;
-+	msg->command = EC_CMD_HOST_SLEEP_EVENT;
- 
--	ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
-+	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
- 	/* Report failure to transition to system wide suspend with a warning. */
- 	if (ret >= 0 && ec_dev->host_sleep_v1 &&
- 	    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME ||
- 	     sleep_event == HOST_SLEEP_EVENT_S3_RESUME)) {
- 		ec_dev->last_resume_result =
--			buf.u.resp1.resume_response.sleep_transitions;
-+			resp1->resume_response.sleep_transitions;
- 
--		WARN_ONCE(buf.u.resp1.resume_response.sleep_transitions &
-+		WARN_ONCE(resp1->resume_response.sleep_transitions &
- 			  EC_HOST_RESUME_SLEEP_TIMEOUT,
- 			  "EC detected sleep transition timeout. Total sleep transitions: %d",
--			  buf.u.resp1.resume_response.sleep_transitions &
-+			  resp1->resume_response.sleep_transitions &
- 			  EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK);
- 	}
- 
--- 
-2.43.0
+> 
+> --
+> Best Regards,
+> Yan, Zi
 
