@@ -1,413 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541251F098C;
-	Fri, 28 Mar 2025 23:26:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743204404; cv=fail; b=nhcD37iKkc1M4K5IJR18zkpGFYZZXChY4FbUmff4gHDaYRIB0nbmVIc8v1IUFHXTF4X7RKKdLY1auIVZOaHB2qLEKEmQ2En5SZVorVkE6L6X2t1NiCNJ8/FoAnk9Rd9pCHumeDP8aFmok4uFPJVbLF86UxBVO2qyzKH+3JJhKKA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743204404; c=relaxed/simple;
-	bh=tET8QikcmHsmoq0kf8E1+0um0HFFD9bq8R0apxwYgGw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=DbxB2GK47Bq4rFWC32PXJvzfP3dZp9gnws/+SC2ib7V12Nn02r2w7VcCI5Q0R1L1BnQlbJ2VRqwnUbwNIAwXj99gobH9/zfVvVETg/OE3mOC/apoN6CmYPE7tz4ehNl6gHyYCpT0dSwbhWnEOEACxrzUqNHe5G/lBAFsbfz11xw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BewvnLTq; arc=fail smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8FB1EF37E;
+	Fri, 28 Mar 2025 23:26:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743204414; cv=none; b=kYlY1kxs+T+PiWFx2uiVeOp9J/IjGpgsXXS21FqVIbR5ehUarhfBrZUP0jcaFPffE16169uL5RMT4cXuXECLN/folzOFuvTNTbdOEzerl7BvB7iIOik5Ok379fs2PTT6djycfHDDz7W85/7mRBVix9vElySxFvP4Bih1Xov2w9A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743204414; c=relaxed/simple;
+	bh=UpbGqH8VnuEqztXT7Wqaj0S0+Ybf4L7KVUBUnd5oI7g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NeGdQE657MoNqZSQ5k8tByGzYdLoMF0IAMmmlKH2WHdiBEIQDwuBlkmfjGbqQqGNXvR0m92N3bJUFtPvUAzjJ4qlPfiKZm1Wz+LnbbWGNRbKsZN/TITTAx/6brZuJrtawEv9v1pLUYYnLIJ3wdXHeCYRxq+Wf11kxhISycnIGBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kSZXgSYV; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BewvnLTq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743204403; x=1774740403;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=tET8QikcmHsmoq0kf8E1+0um0HFFD9bq8R0apxwYgGw=;
-  b=BewvnLTqvjAWf+QAgIvTiAzda81ycTvx25rFHUW1uxdZjdHPsl0gYHgr
-   Kk5jFJdhBFW+s6Db6ZZezV3wFu+/zcN6iWsoNJr5IYu71jt0Xcy8avS+3
-   hwhzJCcTSRH7pI+98ylvT9s/vrDsca9n8vxCaZSSg29qnd/9uJAsYomul
-   cJ1iqALO0zcP2f+RJf6FOGYFAgVla+2sWyuDhcI3CWb30h3FMiNjp43c/
-   E/2oXyiWrLUXRaUvhMFjPQ3oRoT/t0vAN3eZqNmDpXr7yRhZuC7MX/Kzq
-   b/t4BXxuoSiV+uh8ldty8a6/0PXE4/dyQKmq1bNTYmn0kAFjGQbUaAx3O
-   w==;
-X-CSE-ConnectionGUID: VBFreQIeTQyKiUGY80Lppw==
-X-CSE-MsgGUID: xeESzvrLT1GPvCKHv9eT1w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="44489949"
-X-IronPort-AV: E=Sophos;i="6.14,284,1736841600"; 
-   d="scan'208";a="44489949"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 16:26:42 -0700
-X-CSE-ConnectionGUID: w1bW9qsfSyWqGz2z0gValQ==
-X-CSE-MsgGUID: fzRsloItR7SA/qHGrpPxZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,284,1736841600"; 
-   d="scan'208";a="125572998"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 28 Mar 2025 16:26:41 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Fri, 28 Mar 2025 16:26:40 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 28 Mar 2025 16:26:40 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.170)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 28 Mar 2025 16:26:40 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MxQRA3I5TfTZU8JAiLE3TPPdSk5gUtyjkSq0PkEc0kJPqkC/Amm6gda8bSXNKOHR2m0mZEwt4PA7KSuUcQR19j6AJ/WCLIWwTCDc+SeMbim0Wi9kFXhWw+FV0q017mEU8iAOCx/sQgA+6aCCxa+qz0aYtYQ1VxQAG/pWsMp1Tfe6+FJhjOuOYkWmAbYLaEiaLFMqHzVwhLLsuOmyTldScQlSPgFRw7KvuGH8nv7A+Pu4eLxHzeix2LcFDWj1880kbqFSq6ssSxjHbO+fdRhAODx/WTRd0qzeNtJ0fmUHylB52u4JZq/zgl11GDPcUJLzCwTokHDGpUMJr/fHDPxplw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OmRDgsjsRQxMyieh+vYhh50F5J9OarVKcXLlxJsLj+M=;
- b=Lt98wDebAAasad8JrsWroh0koDrkTDyNL3AFADtm/h+VZkSbg+JPTKB3z94Eus1kwIg+TOdaHjZd7R5Kw/WlfvAi8m//ZQDsu1eIijeeLbiBxz5JzL3jWJ03GqzzNKFtjfQtOZQHiSZCyeVaszP5BpcGfvXR7THbsi9eLeEcHiy2FbwT7NEAbsPiw8cQwpMqBbm7kdb9/ZyUBymamYqgcnNgTVcx1mP6nBBUMOhD3L4IMMsD/H6g1sbgYGjssxCf4opVTzjzFHVUyO1GAEcuwQuXqUw92hj1bjlqM0u0EfDCPtfalp83s5olLozpGq4b9ElDUFx9TKhE/UV3aoS7uw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH0PR11MB4776.namprd11.prod.outlook.com (2603:10b6:510:30::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 28 Mar
- 2025 23:26:24 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
- 23:26:24 +0000
-Date: Fri, 28 Mar 2025 16:26:21 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>, Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <dave@stgolabs.net>,
-	<jonathan.cameron@huawei.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <gourry@gourry.net>,
-	<linux-kernel@vger.kernel.org>, <linux-next@vger.kernel.org>,
-	<sfr@canb.auug.org.au>
-Subject: Re: [BUG -next] ./usr/include/cxl/features.h:11:10: fatal error:
- uuid/uuid.h: No such file or directory
-Message-ID: <67e7301dc8ad7_201f0294a5@dwillia2-xfh.jf.intel.com.notmuch>
-References: <f6489337-67c7-48c8-b48a-58603ec15328@paulmck-laptop>
- <14bfcfa0-5999-49e4-854e-ff8810d6df3c@intel.com>
- <52a34c97-88d2-415e-a899-6583ae3ba620@paulmck-laptop>
- <30a7f782-4388-45b6-bb3c-a0faf85b7445@intel.com>
- <51e9823c-784c-4b91-99d4-0500aaf5cec0@paulmck-laptop>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <51e9823c-784c-4b91-99d4-0500aaf5cec0@paulmck-laptop>
-X-ClientProxiedBy: MW2PR16CA0027.namprd16.prod.outlook.com (2603:10b6:907::40)
- To PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSZXgSYV"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22580c9ee0aso59554375ad.2;
+        Fri, 28 Mar 2025 16:26:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743204412; x=1743809212; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gFVxM5/AFD8071zR9wcbweFP3U/YhpdYqA1RhXQbuGA=;
+        b=kSZXgSYVeoCRDOFeoDsrebEf8lSyOBvmZ4IDQhY7WzhZirMPillS3ufSyLpnnjz4ls
+         QhrYQNJz/iZ7r6ky11qP1CbSvjJIANkRagXpXngmxd5/SHFxfYlTg01FhXk/Cu2JSx/E
+         9w2DyR7GBn49jZereHEAF7mCtEA37Q+ERLP0ufT4TjZHZ5hOrz3o7lQRD5KaGouapnNl
+         3c7Y4XjU1mefab/SR9ePLUtZ8Dn8eEZyYS3NjwXWy9TPg3b6K9RqnY5kWrPROUlX/8Eq
+         BDMGuM2uL4iV7yk/kr/zuk6SCQuSZn1CyUmUsJpxR0sWENFv5XWGkVmyQjPVEatEgZ3M
+         s9Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743204412; x=1743809212;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gFVxM5/AFD8071zR9wcbweFP3U/YhpdYqA1RhXQbuGA=;
+        b=neLZcTujoGzdw5dH6/nFz7iA30YyuDuFLMt7dKlLEeLspsTMPBTaQdXZndLPbeYi8l
+         ZmP50m560yPSKsZ29sccYi4nA9Y9t5y/kCHI1ffVL+fCW26YTVn7FDqYO6+Q+kdkeBgf
+         bA8yyKbhdNUbimHAY7x9A7iPe8N+wn6lncTpfwgHarNBsD0jpNvmhrUFBASFCmehMZ7e
+         TTjmq6eNlKcjFDtqthAsBwXD4sGGdfbAjKgM+l8eASP4Yy3ePa+rBSZS0w55WnvP+a5L
+         b+b7dRhEvS1eNES+DmmuCvEhub73KdR7sFlFznwrTIO1kRqwj5PK5ZAzc8Mo5wngMu7M
+         2L8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWc1IeS4w4ydaMRzVBckC5Hp4K4EiD7B17aPXHwLXY4rw5bRewL95HUM8tLImWsEVgQ/K6Uq0QAyd/Phwnl@vger.kernel.org, AJvYcCXYUSFz3UVmFq8RVCN6L6L61aa8BsK+2+rmBlBf3I3R0KxMcjXmEknkJGcKrgMt+Ru8M7920N4p@vger.kernel.org, AJvYcCXb5eY+IjSOx/knzeXk7Odv+cmY62tDV5cu7icz7wggnxee+bW3UeqnSn9fMhsj5I5/gW8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyg2qONmWggOe/GPpQWsw6Wj3B8TFUJFB3lQ7ri7qDjVXceMeiT
+	y57cmZHw9KryHPJL4SFFYIA1QZRrKyzbUVNyIr5UuKEFsVlL0zw=
+X-Gm-Gg: ASbGncvGpvsbqlWKp26/hYAoR2Gbh+bVWsrrzcg1Gg8201Icc23XQpdxBeaOWw1+iup
+	eQzlGMDmtqyWMdt4RYYSJ+sqhbaETfgh43iNdIcgpS3tQyG6flQ3128xNm46WBj6Uyn6QF5lvD2
+	KLNpW6O1rA3htMvVmyI4THwBJF0ihX4DexnozpVb+4SeU6Js6a41hLZkOlL9xrtbhFNKaHHq3fA
+	eQDgIwtoh2TcIFWQjRB95fP/AScEw7PXau0Gsam/9YKPOFDjXptK2yV+i9yqa6I/OdLLx4XVqlF
+	Fn+gbUx//8dPEv4EMuITSJl2WvdIcUw/zyTqymhAexeL
+X-Google-Smtp-Source: AGHT+IFoiqjkZBuLt3a/3dPYy+hCYTG4B/7HbPK6GoIi9TFX6gkfFt6D8S3aMJOFg0zxKzzM1P3+6w==
+X-Received: by 2002:a17:903:1106:b0:215:b75f:a1cb with SMTP id d9443c01a7336-2292f9448a5mr15531045ad.9.1743204411609;
+        Fri, 28 Mar 2025 16:26:51 -0700 (PDT)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2291f1f69desm24290395ad.253.2025.03.28.16.26.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 16:26:51 -0700 (PDT)
+Date: Fri, 28 Mar 2025 16:26:50 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: syzbot <syzbot+08936936fe8132f91f1a@syzkaller.appspotmail.com>
+Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+	netdev@vger.kernel.org, kuba@kernel.org, daniel@iogearbox.net,
+	eddyz87@gmail.com, haoluo@google.com, john.fastabend@gmail.com,
+	jolsa@kernel.org, kpsingh@kernel.org, linux-kernel@vger.kernel.org,
+	martin.lau@linux.dev, sdf@fomichev.me, song@kernel.org,
+	syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
+Subject: Re: [syzbot] [bpf?] WARNING in dev_xdp_install
+Message-ID: <Z-cwOkotpxeSxirT@mini-arch>
+References: <67e6b3e8.050a0220.2f068f.0079.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH0PR11MB4776:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1e53bed2-c9bb-4831-dce2-08dd6e4ff4b3
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?eFhNZThLd2w4eGlFOG1FMjJvNXBZQUI5R0o1RGNEOTJnampnOEYyV21PWVJk?=
- =?utf-8?B?OUpwTmlkbCtDQTg5UmQzZ3Zra3lhWGNCekhBSE5jSXV5bHRpZW1ESTdCQTBp?=
- =?utf-8?B?ckRGSnZEL1VKTG1pcklEUWYyVThKcTVYalJ0Q0t1SzVBMll4Z3RDSnM1RzRE?=
- =?utf-8?B?aElQTEVaQmlSYkUza2JyaG93dWhEMkI4V1o0WkF5RFVhalMvTU4yVXFkdFFk?=
- =?utf-8?B?R25WMHZPTzJLeTdHRXBaekZPNE1Nc3dYY3o5TXk2UUNYSEhXdXhMeGcvMUIy?=
- =?utf-8?B?dnhxN29RbXZEZ1RPaG5uNHp3bzJWRlFOK0hlVEwwZ2ZITkllMExSNUd4WDZj?=
- =?utf-8?B?Ukk0M3JpYy96QWp5UEJCcHRhZm5Wb3N6VS96NlBCZS9VN204eGdBK281NTBr?=
- =?utf-8?B?eS8vR0lITzhBQjJkQWkrNTRsREcxVWIxeXErY05sYnZPekROVDhrbkszdytU?=
- =?utf-8?B?V3h2MmRwdW5PTFkwOWdndHdQTWIvMEJHYVVzQkVFaEdVdFhOM3pKOVROeG1U?=
- =?utf-8?B?V0tOQ3RsbjFDWUJwbHJZUVBTRHJjMEE1amNWMTF1dlRLWEkxcXFqcnovVmJ4?=
- =?utf-8?B?enBiTnp4TEkyb1hMLzBic2ppMzhhZGJGOEtLU2ZGV0ZQYno5enEzR0J3c2cv?=
- =?utf-8?B?VWJ5MTBlUDV1RFRnWFJydzR3cVNMZjVDdVlCNnpRYXhQRjlrb3BKVW5JQSty?=
- =?utf-8?B?QTFHc3M2Z3dUUW90S05lOWxmVDEvU29EYUZ1clF3YUQrenI2MHcybi9yL0xz?=
- =?utf-8?B?eGFYb0dkQXk2cnQzWGVQNGV2VUlNTXhHNGpGQXBueWpROWhvZmxSZUhjVjRZ?=
- =?utf-8?B?ZFl3VlFDS1VyOTRheGJGaGxIYkNKbWVEbEZGRGtpa0krWUM1STEwcXJDM0FI?=
- =?utf-8?B?d2psaDN5N3JkUDVrZENDa3dVaVRMeVFqdUVwKzVHOTdLeDBDOCt3SEh6QVNm?=
- =?utf-8?B?T2ZycEt4VHNpdTFnUk5mSnFjdjZYTjZoZ0FHbTNJKzF4b09TRXU4d1hnK2Qw?=
- =?utf-8?B?K2Q2a2VXbFg2QWRabnNOOWsrcmNXQ25UQkFiTTBGZnFmeEFTd3dtNWRsM29P?=
- =?utf-8?B?NVVXcUtsN2ZBdFFoYUFZbXJNYWhMdWV6MXhZMVNTZnhOb1R4NHlNbkkyaDUx?=
- =?utf-8?B?S1I2d3o0eFcxN3k0S2xVcmk3M0g0T3RhL205RnRTZUJ4bWhhbzgxZzBuOGQ3?=
- =?utf-8?B?cGJocGxLaTNYWnVuaFdkTUxvZjZCL1RJYUpFQnc2L3dVVW9ZM2FBM25xblNi?=
- =?utf-8?B?VlNySHJXZDNqTk1KRlY4aWJkUmpzWWNiS2p0TGJYMWpoMnhUQ2xpVGU0VHZt?=
- =?utf-8?B?bk1XSkpDVERNR04wQndOY2JKd2JCaFF4cmVrQlEzSFczeVdxWFk1VVlmSG1T?=
- =?utf-8?B?R0FKYktZNGg1MUJjWFYvZXdhSHg0c0E4QmdSemRhRmZzcmJWVGtiMEhsSFZI?=
- =?utf-8?B?RnVwOTVuM3IyU2hpTCtnTGFBVTNlSGVxZDRoR3A5K1FBcEYycjFyTTlmTDIr?=
- =?utf-8?B?YTlqMCtvYjJla0liV0czTEgxUUp5TFczVlUvNE1PNWZnTHhUNTJpS29QWC9q?=
- =?utf-8?B?MndEZDQ2WlVDYnRPUk4wWkhwYmszaUpOdy9MQzk1OWVZamh2Y2ZyTjk0UFdU?=
- =?utf-8?B?cldDcW9QcktUcmRBUWNMT3F0S2tYV2JNVE83dVpsQlpSWUxUSnpXbHFGa1g2?=
- =?utf-8?B?ZTh3NXJOTzFIalVkTWJvVEJCNk0rbVlHV04yNWFENUhJQmR4cTZiY24rZmJ3?=
- =?utf-8?B?WTU1TS9KdFZmSG5jcUp6N05EekN0aUhJNG9CNnlOWVdFUUhST29mVUZqdHFV?=
- =?utf-8?B?VG9aMVc5cmQ4TWRacS8reHpKOUpwNFNxRjg5cnAvZ0VLOEU2K05xalJzd1p0?=
- =?utf-8?Q?iV6e5Q0FTK/vi?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YUVVQ1ZTMlVFd0hTUGxFVWZZbjF1NW9OYlNnbWlhT2M5cTZnTjFpbXdiY3RQ?=
- =?utf-8?B?aXR2dXNmbU1ya2cwd1VnUFJZcWVkcGZ0S2J0UjJPblN1ZC9JMzdCK2pWWS9V?=
- =?utf-8?B?VWsrSEsvZThPNzd1WGhJb0p2REEyd2FCWld5UWx6eU94ZTZUSEtxQmJ6OHI1?=
- =?utf-8?B?c2ZCZmxZdzRmd2gxUWkxY2hFTGxWNW5WOENKNzhDbGlIRW1aWGVYSUtqV29z?=
- =?utf-8?B?djYxSEd1WjVyYzRwN1Z1dDUrWUF1ZEtoV05vcXF4UGZZVnN6Z1U2bEcwaEFq?=
- =?utf-8?B?L3ZzSnBPVXJieWQ5UElaN0JCVmh0Z3pSQXg5NVZsVEVvMVAwR0pmUXBVamNC?=
- =?utf-8?B?cnQ5Tm9YbitUbm1TV2UyOEJLcWxZTitDR0xhVXBCN1JvUUtJdXhSWkJiN3hH?=
- =?utf-8?B?S0l5MmhaMzRzeVM5NUFxQi9HcXduTTRabVVsZXRoekNEcG9zOTNmYStoZ0Vq?=
- =?utf-8?B?dFltU0xEN3V6R0xuSDFYZnVkbFBUYjVWUkNGdmJaZVUzemJQVjgvSW9lQW1r?=
- =?utf-8?B?QU1DV1lOZndRTklocmUwOXlqT1p5QXFDMUdQM3ZzN3diT25HNiszVXplY09Y?=
- =?utf-8?B?bzFHVDZ4bnVoQWxrRWFVNFpzczdrUUw3WDlmNzNuNjVBcjUrNkN6eERSRGoy?=
- =?utf-8?B?RWpidXl0OUtsTTBGOTBmblhodzZqOWRENm1aRTJGZTQyTytRL2syZ29iNTFh?=
- =?utf-8?B?QWZQM3oweGdZRXo0eE1xcDYzenhjRDg2ZHpqMUUvdlJ6V2FpRSs1bFkxM0p2?=
- =?utf-8?B?T2Y5YkR6TC9yWHlCZ2o4MWw0TTQwNi9Oc2dCZ3phcXJWV2l5dmJkaFc5cGpO?=
- =?utf-8?B?dXlld2Z4L2kxaXBva3Z1Nk5nbTlPYVFvRDZPY3VPeE5wY3h4MDdyV09uMFVm?=
- =?utf-8?B?Q3M0S1FWRmxxOVZmOWdabGJ2a3I4TldoWXRaYlIzK2d1RVhPWUJkYTdSdVlu?=
- =?utf-8?B?WkgreTVMMGMyTmJoTFgwUnpsaG4vYTU4eUlJMzZ5MWxWajViV2d1NHU4bkJt?=
- =?utf-8?B?WFpPYWhCZUJhRXhOY3NxdHhXNnNIUjcrdjFVd25DWExmcXpOd21VS2ttQTht?=
- =?utf-8?B?RWttNkJCRmV3ZDBiTGdVSjE0YTdXMTNPNTlDRVlCdTZkeFU2enpjYkRTa2VX?=
- =?utf-8?B?blFYeXhlem9XNjducUc0MEg4VFFwWnIrZlNMOVpWdHQwZjdPS29odHZhUzE4?=
- =?utf-8?B?NGYvbDhrUExZblhHcUs0Rmo1YXVxYWtZVUhJUlQ1TVl6Sk1nRnBqK3Zqbm5u?=
- =?utf-8?B?cHpTYkxWVmNoTHF5eHcrWktZb3dBWDg3eTkvWm9PMjhwUEJKM3FEZUNZb3g2?=
- =?utf-8?B?N3BZSW9pYTJ6cHJLUzlBZlJjUWcxSk5pT3A1d3dlY2ZuS3YydW1QQUVoOHR1?=
- =?utf-8?B?ZzR4Nlg2bzBaeDF0TlFLWlpUaEVVVU1UQlJWdVRpRUMwSm5aVy9yVUpZaWFu?=
- =?utf-8?B?U0dBWEE4VEVrU001SzhLYkk4QmxTcWVFQjFCRUFoeXBDVHVPSzhReERIWGxL?=
- =?utf-8?B?eW9WWCtGTGlXWjNKbkFHUXVKZDdCRjZQQTcvL0FRbUxFQjlSTEtGYzJVTHZ1?=
- =?utf-8?B?OWt3SkxtTnUvVk4xVmRUNUwzbERibmJ2Qmk2dis1ajk3YUdMdnNKaXBrbkxB?=
- =?utf-8?B?ejNQT0RqREVDNzhpSUhoT2pWWnpJZVZRazZ4QTM3TkJVa0ZOL3BnQzBhcG9v?=
- =?utf-8?B?emk2TjZRdUdCSG1MVUN6aHh3NzhLS2ZrTUJWNmhIT1FDTy85emZhd3AvZDlt?=
- =?utf-8?B?L0VteWt5bUpCZ0d4RWtwWStrMlpwaUg3V0FWRXoxUWEvZi9lbkZMRXlmdGFD?=
- =?utf-8?B?MjEzdFJjVHMrZ0ZGaytnYTdkbGQyb3lZNldNcWtjNlJ0MHhxWDgxRW9Tb2RD?=
- =?utf-8?B?OUg4M3BxZXE0MjZTdmhlYThxTlAveG9CaE92TUd1a01NanBoQWZwMHQxZVJo?=
- =?utf-8?B?WllIRDFVaU9XYkxHbUNvUTVFRTA3WXJ1K3lKekE1R0g3ZjdXU0NSbEZRK2hi?=
- =?utf-8?B?bFViMVdzZmpWSWdRdHMyR1Q3R0tXWHF3SnF4c2JIQnIrWEZDQTZmL3hjRDdz?=
- =?utf-8?B?Q2VURmxLNzhUMUVXbEU0THdPQkdFcnp6U1M0bVcwV285YnJLRWFOcHZZU1Zz?=
- =?utf-8?B?Yys0TEw4clFaaWIxUEdsdWJiUk56L0FmTEpyZCtKaG43SHlVa28zdUcraXgz?=
- =?utf-8?B?QXc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e53bed2-c9bb-4831-dce2-08dd6e4ff4b3
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2025 23:26:24.4812
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zanTg5yYMTLfQkzG09Eex5bqd5TgT0+VkZdbbSOOVQu7xN7D/Pi3v6GFQaIPydEz7nTj0pv7P3ckrbiCwk3UMxpH//vhd7IXq1BTG5citf8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4776
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <67e6b3e8.050a0220.2f068f.0079.GAE@google.com>
 
-Paul E. McKenney wrote:
-[..]
-> > > Making the above change got me this:
-> > > 
-> > > usr/include/cxl/features.h:59:9: error: unknown type name ‘uuid_t’
-> > I wasn't able to hit that with allmodconfig on x86 with a Fedora 41 build setup. What is the specific command lines you are using?
+On 03/28, syzbot wrote:
+> Hello,
 > 
-> make clean
-> make allmodconfig
-> make -j$N
+> syzbot found the following issue on:
 > 
-> Though encapsulated as follows:
+> HEAD commit:    1a9239bb4253 Merge tag 'net-next-6.15' of git://git.kernel..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17989bb0580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d48017cf0c2458bf
+> dashboard link: https://syzkaller.appspot.com/bug?extid=08936936fe8132f91f1a
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 > 
-> tools/testing/selftests/rcutorture/bin/torture.sh --do-none --do-allmodconfig
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/0795c9a2c8ce/disk-1a9239bb.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/dfe4e652ed32/vmlinux-1a9239bb.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/34deb7756b26/bzImage-1a9239bb.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+08936936fe8132f91f1a@syzkaller.appspotmail.com
+> 
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 8456 at ./include/net/netdev_lock.h:54 netdev_ops_assert_locked include/net/netdev_lock.h:54 [inline]
+> WARNING: CPU: 1 PID: 8456 at ./include/net/netdev_lock.h:54 dev_xdp_install+0x610/0x9b0 net/core/dev.c:9911
+> Modules linked in:
+> CPU: 1 UID: 0 PID: 8456 Comm: syz.5.847 Not tainted 6.14.0-syzkaller-05877-g1a9239bb4253 #0 PREEMPT(full) 
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+> RIP: 0010:netdev_ops_assert_locked include/net/netdev_lock.h:54 [inline]
+> RIP: 0010:dev_xdp_install+0x610/0x9b0 net/core/dev.c:9911
+> Code: 8d bc 24 28 0d 00 00 be ff ff ff ff e8 69 c5 26 02 31 ff 89 c5 89 c6 e8 0e af 81 f8 85 ed 0f 85 59 fb ff ff e8 d1 b3 81 f8 90 <0f> 0b 90 e9 4b fb ff ff e8 c3 b3 81 f8 49 8d bc 24 28 0d 00 00 be
+> RSP: 0018:ffffc9001f13f950 EFLAGS: 00010287
+> RAX: 000000000000023c RBX: ffff888059e8ccbd RCX: ffffc9000da1b000
+> RDX: 0000000000080000 RSI: ffffffff89395ebf RDI: 0000000000000005
+> RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: ffff888059e8c000
+> R13: ffffffff870484d0 R14: ffffc9000ec3f000 R15: 0000000000000001
+> FS:  00007f6e99bf66c0(0000) GS:ffff888124b41000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 000000110c2f3eb0 CR3: 000000007f4ec000 CR4: 0000000000350ef0
+> Call Trace:
+>  <TASK>
+>  dev_xdp_attach+0x6d1/0x16a0 net/core/dev.c:10094
+>  dev_xdp_attach_link net/core/dev.c:10113 [inline]
+>  bpf_xdp_link_attach+0x2c5/0x680 net/core/dev.c:10287
+>  link_create kernel/bpf/syscall.c:5379 [inline]
+>  __sys_bpf+0x1bc7/0x4c80 kernel/bpf/syscall.c:5865
+>  __do_sys_bpf kernel/bpf/syscall.c:5902 [inline]
+>  __se_sys_bpf kernel/bpf/syscall.c:5900 [inline]
+>  __x64_sys_bpf+0x78/0xc0 kernel/bpf/syscall.c:5900
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7f6e9bd8d169
 
-The problem is that uuid_t is not defined for uapi headers to reuse.
-Perhaps checkpatch should be checking for uuid_t in uapi headers going
-forward.
+#syz test
 
-For now the following builds for me, but it is a quite a mess to undo
-the assumption that that the hardware object definitions can not use
-uuid_t:
-
--- 8< --
-diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-index f4daefe3180e..d626dd7c5fbf 100644
---- a/drivers/cxl/core/features.c
-+++ b/drivers/cxl/core/features.c
-@@ -33,7 +33,11 @@ static bool is_cxl_feature_exclusive_by_uuid(const uuid_t *uuid)
- 
- static bool is_cxl_feature_exclusive(struct cxl_feat_entry *entry)
- {
--	return is_cxl_feature_exclusive_by_uuid(&entry->uuid);
-+	uuid_t uuid;
-+
-+	import_uuid(&uuid, entry->uuid);
-+
-+	return is_cxl_feature_exclusive_by_uuid(&uuid);
- }
- 
- inline struct cxl_features_state *to_cxlfs(struct cxl_dev_state *cxlds)
-@@ -228,7 +232,7 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
- 		return 0;
- 
- 	size_out = min(feat_out_size, cxl_mbox->payload_size);
--	uuid_copy(&pi.uuid, feat_uuid);
-+	export_uuid(pi.uuid, feat_uuid);
- 	pi.selection = selection;
- 	do {
- 		data_to_rd_size = min(feat_out_size - data_rcvd_size,
-@@ -282,7 +286,7 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
- 	if (!pi)
- 		return -ENOMEM;
- 
--	uuid_copy(&pi->uuid, feat_uuid);
-+	export_uuid(pi->uuid, feat_uuid);
- 	pi->version = feat_version;
- 	feat_flag &= ~CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK;
- 	feat_flag |= CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET;
-@@ -360,16 +364,19 @@ get_support_feature_info(struct cxl_features_state *cxlfs,
- 			 const struct fwctl_rpc_cxl *rpc_in)
- {
- 	struct cxl_feat_entry *feat;
--	const uuid_t *uuid;
-+	uuid_t in_uuid;
- 
--	if (rpc_in->op_size < sizeof(uuid))
-+	if (rpc_in->op_size < sizeof(in_uuid))
- 		return ERR_PTR(-EINVAL);
- 
--	uuid = &rpc_in->set_feat_in.uuid;
-+	import_uuid(&in_uuid, rpc_in->set_feat_in.uuid);
- 
- 	for (int i = 0; i < cxlfs->entries->num_features; i++) {
-+		uuid_t feat_uuid;
-+
- 		feat = &cxlfs->entries->ent[i];
--		if (uuid_equal(uuid, &feat->uuid))
-+		import_uuid(&feat_uuid, feat->uuid);
-+		if (uuid_equal(&in_uuid, &feat_uuid))
- 			return feat;
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 87cba93fa59f..534eda336f8d 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -10336,7 +10336,9 @@ int bpf_xdp_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+ 		goto unlock;
  	}
  
-@@ -461,6 +468,7 @@ static void *cxlctl_get_feature(struct cxl_features_state *cxlfs,
- 	const struct cxl_mbox_get_feat_in *feat_in;
- 	u16 offset, count, return_code;
- 	size_t out_size = *out_len;
-+	uuid_t uuid;
++	netdev_lock_ops(dev);
+ 	err = dev_xdp_attach_link(dev, &extack, link);
++	netdev_unlock_ops(dev);
+ 	rtnl_unlock();
  
- 	if (rpc_in->op_size != sizeof(*feat_in))
- 		return ERR_PTR(-EINVAL);
-@@ -477,9 +485,10 @@ static void *cxlctl_get_feature(struct cxl_features_state *cxlfs,
- 	if (!rpc_out)
- 		return ERR_PTR(-ENOMEM);
- 
--	out_size = cxl_get_feature(cxl_mbox, &feat_in->uuid,
--				   feat_in->selection, rpc_out->payload,
--				   count, offset, &return_code);
-+	import_uuid(&uuid, feat_in->uuid);
-+	out_size = cxl_get_feature(cxl_mbox, &uuid, feat_in->selection,
-+				   rpc_out->payload, count, offset,
-+				   &return_code);
- 	*out_len = sizeof(struct fwctl_rpc_cxl_out);
- 	if (!out_size) {
- 		rpc_out->size = 0;
-@@ -502,6 +511,7 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
- 	const struct cxl_mbox_set_feat_in *feat_in;
- 	size_t out_size, data_size;
- 	u16 offset, return_code;
-+	uuid_t uuid;
- 	u32 flags;
- 	int rc;
- 
-@@ -510,7 +520,8 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
- 
- 	feat_in = &rpc_in->set_feat_in;
- 
--	if (is_cxl_feature_exclusive_by_uuid(&feat_in->uuid))
-+	import_uuid(&uuid, feat_in->uuid);
-+	if (is_cxl_feature_exclusive_by_uuid(&uuid))
- 		return ERR_PTR(-EPERM);
- 
- 	offset = le16_to_cpu(feat_in->offset);
-@@ -525,9 +536,9 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
- 	rpc_out->size = 0;
- 
- 	data_size = rpc_in->op_size - sizeof(feat_in->hdr);
--	rc = cxl_set_feature(cxl_mbox, &feat_in->uuid,
--			     feat_in->version, feat_in->feat_data,
--			     data_size, flags, offset, &return_code);
-+	rc = cxl_set_feature(cxl_mbox, &uuid, feat_in->version,
-+			     feat_in->feat_data, data_size, flags, offset,
-+			     &return_code);
- 	if (rc) {
- 		rpc_out->retval = return_code;
- 		return no_free_ptr(rpc_out);
-diff --git a/include/uapi/cxl/features.h b/include/uapi/cxl/features.h
-index d6db8984889f..1e3323854994 100644
---- a/include/uapi/cxl/features.h
-+++ b/include/uapi/cxl/features.h
-@@ -8,11 +8,6 @@
- #define _UAPI_CXL_FEATURES_H_
- 
- #include <linux/types.h>
--#ifndef __KERNEL__
--#include <uuid/uuid.h>
--#else
--#include <linux/uuid.h>
--#endif
- 
- /*
-  * struct cxl_mbox_get_sup_feats_in - Get Supported Features input
-@@ -60,7 +55,7 @@ struct cxl_mbox_get_sup_feats_in {
-  * Get Supported Features Supported Feature Entry
-  */
- struct cxl_feat_entry {
--	uuid_t uuid;
-+	__u8 uuid[16];
- 	__le16 id;
- 	__le16 get_feat_size;
- 	__le16 set_feat_size;
-@@ -110,7 +105,7 @@ struct cxl_mbox_get_sup_feats_out {
-  * CXL spec r3.2 section 8.2.9.6.2 Table 8-99
-  */
- struct cxl_mbox_get_feat_in {
--	uuid_t uuid;
-+	__u8 uuid[16];
- 	__le16 offset;
- 	__le16 count;
- 	__u8 selection;
-@@ -143,7 +138,7 @@ enum cxl_get_feat_selection {
-  */
- struct cxl_mbox_set_feat_in {
- 	__struct_group(cxl_mbox_set_feat_hdr, hdr, /* no attrs */,
--		uuid_t uuid;
-+		__u8 uuid[16];
- 		__le32 flags;
- 		__le16 offset;
- 		__u8 version;
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index f2957a3e36fe..d0276ab3a92f 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -1397,7 +1397,7 @@ static int mock_activate_fw(struct cxl_mockmem_data *mdata,
- 
- static void fill_feature_vendor_test(struct cxl_feat_entry *feat)
- {
--	feat->uuid = CXL_VENDOR_FEATURE_TEST;
-+	export_uuid(feat->uuid, &CXL_VENDOR_FEATURE_TEST);
- 	feat->id = 0;
- 	feat->get_feat_size = cpu_to_le16(0x4);
- 	feat->set_feat_size = cpu_to_le16(0x4);
-@@ -1441,8 +1441,10 @@ static int mock_get_feature(struct cxl_mockmem_data *mdata,
- 			    struct cxl_mbox_cmd *cmd)
- {
- 	struct cxl_mbox_get_feat_in *input = cmd->payload_in;
-+	uuid_t in_uuid;
- 
--	if (uuid_equal(&input->uuid, &CXL_VENDOR_FEATURE_TEST))
-+	import_uuid(&in_uuid, input->uuid);
-+	if (uuid_equal(&in_uuid, &CXL_VENDOR_FEATURE_TEST))
- 		return mock_get_test_feature(mdata, cmd);
- 
- 	cmd->return_code = CXL_MBOX_CMD_RC_UNSUPPORTED;
-@@ -1485,8 +1487,10 @@ static int mock_set_feature(struct cxl_mockmem_data *mdata,
- 			    struct cxl_mbox_cmd *cmd)
- {
- 	struct cxl_mbox_set_feat_in *input = cmd->payload_in;
-+	uuid_t in_uuid;
- 
--	if (uuid_equal(&input->hdr.uuid, &CXL_VENDOR_FEATURE_TEST))
-+	import_uuid(&in_uuid, input->hdr.uuid);
-+	if (uuid_equal(&in_uuid, &CXL_VENDOR_FEATURE_TEST))
- 		return mock_set_test_feature(mdata, cmd);
- 
- 	cmd->return_code = CXL_MBOX_CMD_RC_UNSUPPORTED;
+ 	if (err) {
