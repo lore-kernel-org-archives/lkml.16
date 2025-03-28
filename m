@@ -1,297 +1,282 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A375A1537C6;
-	Fri, 28 Mar 2025 12:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB1A1537C6
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 12:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743164527; cv=none; b=qbFN0BHSxA/Cy6eXXuRXrVUpXY4rht5UW1bvgzeJYbYjQCVAYP3Yyx+2FL+pfjw7vr7Mwt7RgEpZIaQPGlrTBNAf3PAxCkqpJ95cJYIsT+w9ajmC9EZ/WvWOeScRSQXMlpAc2VYV67sam79XJTSpMLCWsGSCMg4VNuCXY3+83tI=
+	t=1743164587; cv=none; b=JgS2nOLgvqIkJUwcLsS+F0wHqSkmndzhCBTS7tDKKh5L4sJ+0EBOxNkt/+GMmRGvFaSEW9jlKYo/QH9Q3Q+YtMfUy29Y73jOhKKn2dq2sdRSEicQssyWv09NLhDzZnrQxBfpdyfBKG/wrQNINaMuSmj/4WVI5tzGP2V0kUM9fZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743164527; c=relaxed/simple;
-	bh=pmhdXCc9ppKE21BTXPTPut1h94F66CU0TnLRVbgPQDI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tkc9zMHuEzSKhu2g8rLdOuMAldWFJgZlwV4Y7ccUk3BjdiqmJ2IVWqoekE1xycajN+V8BlwynZGGL9nQqDBxg5F3ootMIJ8oBKkqshMdgcx45MkWzxL9HeE0TRHDrn/8/FNBjKrhwDp7gu2k4TDdVW8+QSjQfILUFVknyZwVNy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bPThmLCK; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743164587; c=relaxed/simple;
+	bh=9t3YWOs28KPRVvSy9A3UtMro4rOCLu5sLn1qBxDe9ts=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=YytFK6BpLlc5I6I9Vsy5ZkLaW2jKyj1o49IVxwprF+mzn4zJpKU1zzqVlTjaxLkuXTHgwey6mo18oSy0e57pjWsEsuYXYVQ4iIPfzd+n9y2rOvycWD75lRTqG8C9293uA0SRLBU94SjRby2wQmf4CyH5soZhKk/p45wFRyPkVB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UzkNeOBA; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bPThmLCK"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2bfcd2a70so271488166b.0;
-        Fri, 28 Mar 2025 05:22:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743164524; x=1743769324; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Oc49DJIwJicv0xAMtGUpshz9Iya5BjyoHaAoKmn9GSM=;
-        b=bPThmLCK4k6w9gBSfwvEYo3QCgoqdIVccKoeLiEJIsomeyYTaK+f6QgZ2vNKKCcRN1
-         JYgexZlLQn3zGfAgKKieaVVqk6RpNusPzMyAC6+TiQR5MOE83AnwQMU1i17wu2h1czji
-         qSHaJlLt7fyKj75LHHROIcbWBF4GQgespQVnMCCeo9UxYUKZ/QbcZQZW5FLmGEllppd8
-         thJsrOIdjQAc/els02/9V9PPXi+KVxx+CMbV6vb3LijPnRmRQ+4FOIEgQej4qW/i3cmV
-         J3zauOtki4gUGtffNmLeV/h6JZDsGxEnOVWXZvmLFa26r3C9ZTXhRdl8tN9H0gUQA07U
-         EvBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743164524; x=1743769324;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Oc49DJIwJicv0xAMtGUpshz9Iya5BjyoHaAoKmn9GSM=;
-        b=DMmWR3VO7KHwipueB97YXTGlGYc35Pi9CPiS3yCUPm9f7fQAzE7SUwr/TRDmkGML0j
-         0XQjw3XBo3K4NVw/7G6igAu1z12nlKMSyTp8p2nI/Hg/4wTm/1i0HfJiSE2ZHCPujE57
-         jOOw3W/Bflly2mkzPmYnRzowMYD82DkaaMI//IMA+wPrhqxVDsE0fiB9sbm5fq/EIqFG
-         Pc9EMV5l86dbJ26tFu89MtZmLqaP9iiYUJXuo8seb1gJaWNbmjElKgsqMskqBlHhYhG7
-         M1CJCXFIhkq709p94EDlpO1clM2LL/LBy5m0P8FfMc7pvhLBWTx6nGOED4j2tQ6Kg2W4
-         tiTg==
-X-Forwarded-Encrypted: i=1; AJvYcCWwXBHUQyGA3zzvXu3r/aCqwBAVtYDxppcbhWpmdQD5d/NXioYR+NDGux0GnVlSZDr6qA9wtaIVVO4pzQkg@vger.kernel.org, AJvYcCX0EbOQWk1/60jd2crasJ7EIG3ZRvLm5/RQ+fVT48j/2wHZ7mObnv52xiPKthpwppY2P9ZNmqiUcDdR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSYaNd2gmCX0CYh0qT3vV5v1fXSeKt7w88jA6dKaVIc/O/OYVe
-	UlCfqKRMCwgTyWR4wHAlYSQ9OU6JGUo/qQLPM5EXIkx/UldXgPQN
-X-Gm-Gg: ASbGncu5Jj0TmoES8O74b3mIJopvU6sHZkSb8A7GpAj6z9ZOK4Y0zNgTD4jeMbrn8SP
-	Kvj4FhNaz0ocELI7Sz7RfvT6o/AGHd/JR0tVJi0zINxRcsdIAS98qPKu4shZ7ZxER8sbf0JefzQ
-	uRpKEbJZLjTPW2HCQJv7PvPDFSGoTH1EfH+2fgNBvVZqhfs+REY4t2ku5Flq/0yz/1/qQJ+abTl
-	+wuaD8XoXzCNqJ/BI5hcVF6qTENoVhVpHaNtDh6fPozpiavOjdl9hZ9hAxZNz85v9L8IuEAW7Ul
-	iZarj5cISZYJOhOPX7q1xWJje1b+EfjFRtphmkuRCwrdZQm6/VMA9zm9ld+ylZlSwsS0
-X-Google-Smtp-Source: AGHT+IGJV2RjrsEGH4G9E7FfOU9np25O3dZ+J8l0SIo7Gdk10tVsJ6ybpUSbflQFjN7lriWVMh6dCQ==
-X-Received: by 2002:a17:907:7ea4:b0:ac3:2368:9a12 with SMTP id a640c23a62f3a-ac6faf024a2mr719727266b.27.1743164523493;
-        Fri, 28 Mar 2025 05:22:03 -0700 (PDT)
-Received: from [192.168.7.2] ([92.120.5.13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71927b184sm159831966b.51.2025.03.28.05.22.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Mar 2025 05:22:03 -0700 (PDT)
-Message-ID: <2301b0f7-1a76-4823-8d3f-d346f8f8e865@gmail.com>
-Date: Fri, 28 Mar 2025 14:34:11 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UzkNeOBA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743164585; x=1774700585;
+  h=date:from:to:cc:subject:message-id;
+  bh=9t3YWOs28KPRVvSy9A3UtMro4rOCLu5sLn1qBxDe9ts=;
+  b=UzkNeOBA+HentU3T+jxxIHrN9bgGISahLKgJD3Avqk0AS2PU7PctKIVA
+   CSRAwPZ+IWJywo1u+1+ILSTqUkw13fXI7OezxJJBY8ZcooZmz8T8C3atL
+   lP5lhGQrkdtj1CUfFHrjRPj7Ao1rpcxk3OxLO6pYwK+xZKfUiRtXJG2t/
+   NGB1SHLDQeZbwz44B4fBHkcTlPN5Y6vYD7iV4kTIYGsQoFyOZMRA7ET7O
+   2DJTgThEQRRJ5zGu/OFuquYgsO/MaLskbyt62ytBraB+L9jbWkYxvm015
+   GjKyJ4c9UnSqGtHeauwBzI56SEzP7QCrjSsVQ/msaqt2zaGE9xsRrnrFd
+   g==;
+X-CSE-ConnectionGUID: xPADJ68hQyuT5geM7vHxLw==
+X-CSE-MsgGUID: VzUEjGyCTLS88pFzNTlY/Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="55524650"
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="55524650"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 05:23:05 -0700
+X-CSE-ConnectionGUID: rhlv9obgTxuQWNT6TVNHfg==
+X-CSE-MsgGUID: 9gX0aio5Thuzloa0FF6KTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="156368628"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by orviesa002.jf.intel.com with ESMTP; 28 Mar 2025 05:23:04 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ty8jl-0007R4-1s;
+	Fri, 28 Mar 2025 12:23:01 +0000
+Date: Fri, 28 Mar 2025 20:22:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:tip/urgent] BUILD SUCCESS
+ 9438b89257aa8835c93c3fe5daaaecaec2fe5865
+Message-ID: <202503282044.bQUJ1YNH-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] dt-bindings: bus: add documentation for the IMX
- AIPSTZ bridge
-Content-Language: en-GB
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Daniel Baluta <daniel.baluta@nxp.com>, Shengjiu Wang
- <shengjiu.wang@nxp.com>, Frank Li <Frank.li@nxp.com>,
- Marco Felsch <m.felsch@pengutronix.de>,
- Marc Kleine-Budde <mkl@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250324162556.30972-1-laurentiumihalcea111@gmail.com>
- <20250324162556.30972-2-laurentiumihalcea111@gmail.com>
- <20250325032303.GA1624882-robh@kernel.org>
-From: Mihalcea Laurentiu <laurentiumihalcea111@gmail.com>
-In-Reply-To: <20250325032303.GA1624882-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tip/urgent
+branch HEAD: 9438b89257aa8835c93c3fe5daaaecaec2fe5865  Merge branch into tip/master: 'x86/urgent'
 
-On 25.03.2025 05:23, Rob Herring wrote:
-> On Mon, Mar 24, 2025 at 12:25:52PM -0400, Laurentiu Mihalcea wrote:
->> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
->>
->> Add documentation for IMX AIPSTZ bridge.
->>
->> Co-developed-by: Daniel Baluta <daniel.baluta@nxp.com>
->> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
->> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
->> ---
->>  .../bindings/bus/fsl,imx8mp-aipstz.yaml       | 107 ++++++++++++++++++
->>  1 file changed, 107 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/bus/fsl,imx8mp-aipstz.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/bus/fsl,imx8mp-aipstz.yaml b/Documentation/devicetree/bindings/bus/fsl,imx8mp-aipstz.yaml
->> new file mode 100644
->> index 000000000000..c0427dfcdaca
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/bus/fsl,imx8mp-aipstz.yaml
->> @@ -0,0 +1,107 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/bus/fsl,imx8mp-aipstz.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Secure AHB to IP Slave bus (AIPSTZ) bridge
->> +
->> +description:
->> +  The secure AIPS bridge (AIPSTZ) acts as a bridge for AHB masters
->> +  issuing transactions to IP Slave peripherals. Additionally, this module
->> +  offers access control configurations meant to restrict which peripherals
->> +  a master can access.
-> Wrap at 80 chars.
+elapsed time: 1451m
 
+configs tested: 205
+configs skipped: 5
 
-fix in v4, thx
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    clang-19
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    clang-19
+arc                              allyesconfig    gcc-14.2.0
+arc                                 defconfig    gcc-14.2.0
+arc                            hsdk_defconfig    gcc-14.2.0
+arc                   randconfig-001-20250327    gcc-14.2.0
+arc                   randconfig-002-20250327    gcc-14.2.0
+arc                           tb10x_defconfig    clang-21
+arm                              alldefconfig    gcc-14.2.0
+arm                              allmodconfig    clang-19
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    clang-19
+arm                              allyesconfig    gcc-14.2.0
+arm                                 defconfig    gcc-14.2.0
+arm                           h3600_defconfig    gcc-14.2.0
+arm                      integrator_defconfig    clang-21
+arm                            mps2_defconfig    clang-21
+arm                          pxa168_defconfig    clang-19
+arm                   randconfig-001-20250327    clang-21
+arm                   randconfig-002-20250327    gcc-5.5.0
+arm                   randconfig-003-20250327    clang-21
+arm                   randconfig-004-20250327    clang-16
+arm                         s5pv210_defconfig    gcc-14.2.0
+arm                       spear13xx_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                               defconfig    gcc-14.2.0
+arm64                 randconfig-001-20250327    gcc-5.5.0
+arm64                 randconfig-002-20250327    clang-21
+arm64                 randconfig-003-20250327    clang-21
+arm64                 randconfig-004-20250327    clang-21
+csky                              allnoconfig    gcc-14.2.0
+csky                                defconfig    gcc-14.2.0
+csky                  randconfig-001-20250327    gcc-9.3.0
+csky                  randconfig-002-20250327    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    gcc-14.2.0
+hexagon               randconfig-001-20250327    clang-21
+hexagon               randconfig-002-20250327    clang-21
+i386                             allmodconfig    clang-20
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    clang-20
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-20
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250327    clang-20
+i386        buildonly-randconfig-002-20250327    gcc-12
+i386        buildonly-randconfig-003-20250327    clang-20
+i386        buildonly-randconfig-004-20250327    clang-20
+i386        buildonly-randconfig-005-20250327    clang-20
+i386        buildonly-randconfig-006-20250327    gcc-12
+i386                                defconfig    clang-20
+i386                  randconfig-001-20250328    gcc-12
+i386                  randconfig-002-20250328    gcc-12
+i386                  randconfig-003-20250328    gcc-12
+i386                  randconfig-004-20250328    gcc-12
+i386                  randconfig-005-20250328    gcc-12
+i386                  randconfig-006-20250328    gcc-12
+i386                  randconfig-007-20250328    gcc-12
+i386                  randconfig-011-20250328    clang-20
+i386                  randconfig-012-20250328    clang-20
+i386                  randconfig-013-20250328    clang-20
+i386                  randconfig-014-20250328    clang-20
+i386                  randconfig-015-20250328    clang-20
+i386                  randconfig-016-20250328    clang-20
+i386                  randconfig-017-20250328    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch                           defconfig    gcc-14.2.0
+loongarch             randconfig-001-20250327    gcc-14.2.0
+loongarch             randconfig-002-20250327    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                                defconfig    gcc-14.2.0
+m68k                       m5208evb_defconfig    gcc-14.2.0
+m68k                        stmark2_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+microblaze                          defconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                         bigsur_defconfig    clang-21
+mips                         db1xxx_defconfig    clang-15
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250327    gcc-11.5.0
+nios2                 randconfig-002-20250327    gcc-13.3.0
+openrisc                          allnoconfig    clang-15
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    clang-15
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250327    gcc-14.2.0
+parisc                randconfig-002-20250327    gcc-14.2.0
+parisc64                            defconfig    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    clang-15
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                          allyesconfig    gcc-14.2.0
+powerpc                       holly_defconfig    clang-21
+powerpc                     ksi8560_defconfig    gcc-14.2.0
+powerpc                      mgcoge_defconfig    gcc-14.2.0
+powerpc                 mpc8315_rdb_defconfig    clang-21
+powerpc               randconfig-001-20250327    gcc-7.5.0
+powerpc               randconfig-002-20250327    gcc-9.3.0
+powerpc               randconfig-003-20250327    gcc-5.5.0
+powerpc                     taishan_defconfig    clang-17
+powerpc                     tqm8560_defconfig    gcc-14.2.0
+powerpc                      tqm8xx_defconfig    clang-19
+powerpc                         wii_defconfig    clang-21
+powerpc                         wii_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250327    gcc-9.3.0
+powerpc64             randconfig-002-20250327    clang-21
+powerpc64             randconfig-003-20250327    clang-16
+riscv                            allmodconfig    clang-21
+riscv                            allmodconfig    gcc-14.2.0
+riscv                             allnoconfig    clang-15
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                            allyesconfig    gcc-14.2.0
+riscv                               defconfig    clang-21
+riscv                    nommu_virt_defconfig    clang-21
+riscv                 randconfig-001-20250327    clang-21
+riscv                 randconfig-002-20250327    clang-21
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    gcc-14.2.0
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-15
+s390                  randconfig-001-20250327    gcc-6.5.0
+s390                  randconfig-002-20250327    clang-16
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                          lboxre2_defconfig    gcc-14.2.0
+sh                          polaris_defconfig    gcc-14.2.0
+sh                          r7785rp_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250327    gcc-5.5.0
+sh                    randconfig-002-20250327    gcc-9.3.0
+sh                          rsk7203_defconfig    clang-21
+sh                   rts7751r2dplus_defconfig    gcc-14.2.0
+sh                           se7780_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250327    gcc-12.4.0
+sparc                 randconfig-002-20250327    gcc-10.3.0
+sparc                       sparc64_defconfig    clang-21
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250327    gcc-6.5.0
+sparc64               randconfig-002-20250327    gcc-6.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-15
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250327    clang-19
+um                    randconfig-002-20250327    gcc-12
+um                           x86_64_defconfig    clang-15
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250327    gcc-12
+x86_64      buildonly-randconfig-002-20250327    gcc-12
+x86_64      buildonly-randconfig-003-20250327    clang-20
+x86_64      buildonly-randconfig-004-20250327    clang-20
+x86_64      buildonly-randconfig-005-20250327    gcc-12
+x86_64      buildonly-randconfig-006-20250327    gcc-12
+x86_64                              defconfig    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20250328    gcc-12
+x86_64                randconfig-002-20250328    gcc-12
+x86_64                randconfig-003-20250328    gcc-12
+x86_64                randconfig-004-20250328    gcc-12
+x86_64                randconfig-005-20250328    gcc-12
+x86_64                randconfig-006-20250328    gcc-12
+x86_64                randconfig-007-20250328    gcc-12
+x86_64                randconfig-008-20250328    gcc-12
+x86_64                randconfig-071-20250328    clang-20
+x86_64                randconfig-072-20250328    clang-20
+x86_64                randconfig-073-20250328    clang-20
+x86_64                randconfig-074-20250328    clang-20
+x86_64                randconfig-075-20250328    clang-20
+x86_64                randconfig-076-20250328    clang-20
+x86_64                randconfig-077-20250328    clang-20
+x86_64                randconfig-078-20250328    clang-20
+x86_64                               rhel-9.4    clang-20
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250327    gcc-14.2.0
+xtensa                randconfig-002-20250327    gcc-6.5.0
 
->
->> +
->> +maintainers:
->> +  - Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
->> +
->> +properties:
->> +  compatible:
->> +    const: fsl,imx8mp-aipstz
->> +
->> +  reg:
->> +    maxItems: 2
->> +
->> +  reg-names:
->> +    items:
->> +      - const: bus
->> +      - const: ac
->> +
->> +  power-domains:
->> +    maxItems: 1
->> +
->> +  "#address-cells":
->> +    const: 1
->> +
->> +  "#size-cells":
->> +    const: 1
->> +
->> +  "#access-controller-cells":
->> +    const: 0
-> With 0 cells, how do you identify which device it is?
-
-
-we don't atm. We're relying on the default configuration.
-
-
-we don't have any APIs for AC configuration so I left the
-
-cell number to 0 thinking that the cell number might depend
-
-on the API.
-
-
-if need be, I can set it to the value I was initially thinking of in v4.
-
-
->
->> +
->> +  ranges: true
->> +
->> +# borrowed from simple-bus.yaml, no additional requirements for children
->> +patternProperties:
->> +  "@(0|[1-9a-f][0-9a-f]*)$":
->> +    type: object
->> +    additionalProperties: true
->> +    properties:
->> +      reg:
->> +        items:
->> +          minItems: 2
->> +          maxItems: 4
->> +        minItems: 1
->> +        maxItems: 1024
->> +      ranges:
->> +        oneOf:
->> +          - items:
->> +              minItems: 3
->> +              maxItems: 7
->> +            minItems: 1
->> +            maxItems: 1024
->> +          - $ref: /schemas/types.yaml#/definitions/flag
->> +    anyOf:
->> +      - required:
->> +          - reg
->> +      - required:
->> +          - ranges
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - reg-names
->> +  - power-domains
->> +  - "#address-cells"
->> +  - "#size-cells"
->> +  - "#access-controller-cells"
->> +  - ranges
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/imx8mp-clock.h>
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +
->> +    bus@30c00000 {
->> +        compatible = "fsl,imx8mp-aipstz";
->> +        reg = <0x30c00000 0x400000>, <0x30df0000 0x10000>;
-> It doesn't look like you have any registers in the 1st entry, but they 
-> are child devices? Then you should use ranges and drop it here:
->
-> ranges = <0x0 0x30c00000 0x400000>;
-
-
-I guess this would mean switching from global addresses (current way) to
-
-bus-relative addresses for the child devices. This wasn't my intent.
-
-
-I wonder if we could just switch to V2 in which we just use the bridge's AC
-
-configuration space and an empty 'ranges':
-
-
-aips5: bus@30df0000 {
-
-    compatible = "fsl,imx8mp-aipstz";
-
-    reg = <0x30df0000 0x10000>;
-
-    /* some more properties here */
-
-    ranges;
-
-};
-
-
-or as Marco just suggested use
-
-
-ranges = <0x30c00000 0x30c00000 0x400000>;
-
-
-instead of an empty 'ranges' to restrict the bus size.
-
-
-Personally, I'm fine with both approaches but what's your opinion on this?
-
-
->
->
->> +        reg-names = "bus", "ac";
->> +        power-domains = <&pgc_audio>;
->> +        #address-cells = <1>;
->> +        #size-cells = <1>;
->> +        #access-controller-cells = <0>;
->> +        ranges;
->> +
->> +        dma-controller@30e00000 {
->> +            compatible = "fsl,imx8mp-sdma", "fsl,imx8mq-sdma";
->> +            reg = <0x30e00000 0x10000>;
->> +            #dma-cells = <3>;
->> +            clocks = <&audio_blk_ctrl IMX8MP_CLK_AUDIOMIX_SDMA3_ROOT>,
->> +                     <&clk IMX8MP_CLK_AUDIO_ROOT>;
->> +            clock-names = "ipg", "ahb";
->> +            interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
->> +            fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
-> No 'access-controllers' here?
-
-
-no need for that unless the child wants to request a specific AC
-
-configuration for itself.
-
-
->
->> +        };
->> +    };
->> -- 
->> 2.34.1
->>
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
