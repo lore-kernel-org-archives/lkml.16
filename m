@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371B579CF;
-	Fri, 28 Mar 2025 07:31:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF1D4C6E;
+	Fri, 28 Mar 2025 07:35:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743147086; cv=none; b=baPMoD88mvfjJRetlDVciuoyVZGy97imHGI6nC3QCS3Vaqe/89Sunk9PSC2e4TV+B+f0qGTYBUNeWe6lIrNuJUeN8v7bBFkchWKw001L0BMOFo0d/iBUNuMPJYBZ0lvYRarVvxA3m7fheVsE83AehVLtIBbFmxxI/cKNem3yNeY=
+	t=1743147311; cv=none; b=W4971xwm9HsZBYuSQNvLMyjpjME45dqcJ+Jm2/dO2VhGmlZSPBeKNLUbRcvSCy40klJ2YRakrbiuDSMoOk+LcJs9bfR8QlXydkX5oD1F4do+4gOwrthivfz9bIj7R7NHb+Sbb3O55ycvu8yoNs4KAmXOHAU4UMaTqvJJA5i/Lek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743147086; c=relaxed/simple;
-	bh=X385fMj17leBB04sD/T6QrP7VnyZAU3eu/xkGSimC8Q=;
+	s=arc-20240116; t=1743147311; c=relaxed/simple;
+	bh=2nGY6VpTnccaSHFXyO/+bd9BLgSqnKh65lb9Acu5gQI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jbfr2IO/GHNBc6v1y2GsK1bYcCUH7xi43plISvDs+yu2UtLCoeyAnkJLqv1S1+6E1CfghWXS+owq0GxL+k6yuK1/0ry/aOpO9N7cum8z3RVVecMtZoxgCWXLgbvPYuKN7UtfpOz+tgrUPZ1rZaoOPPRgr2I+RR7n5lMjuMMOZYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l2YaOSpN; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=vASjRwHq8yt7ipcI+4XCHvf0inHNkDo+cq5tnSooH/lkyBQjhLigZrY8kEAhYbEZIfZD3AVxZnrkVQAzfBdMx/q32sOFe7VMFrC9XsAx+ANKZJqrQMtPDf2YYHLjcxf8BFw1X5GU6BxuUaW55F1wbV+wOGTEHrMst4lic1SGPVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zmw4xKGu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l2YaOSpN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20E64C4CEE4;
-	Fri, 28 Mar 2025 07:31:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zmw4xKGu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E6E8C4CEE4;
+	Fri, 28 Mar 2025 07:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743147085;
-	bh=X385fMj17leBB04sD/T6QrP7VnyZAU3eu/xkGSimC8Q=;
+	s=k20201202; t=1743147310;
+	bh=2nGY6VpTnccaSHFXyO/+bd9BLgSqnKh65lb9Acu5gQI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=l2YaOSpNeVJk9GfLyIfbGP9VpC/ZYppwpfUVnOGCmsXyq7/3NWJpIcBClr8/vjcNF
-	 rsp9BQW6l86KevHIp179YB6zSFVulmpO76Fz714vQxtW/2fahd4TRBp2JXUZObQyL9
-	 zKnYSAK96nzQOC1IxaK+qiYQnrtZXPcEZB7xYj3uZIiZglGQeEpXVPTvrBz98AXQZO
-	 m2VVi5V3SdbVMDA0bD9sbqQDc49LroZ3woiEXzNz0BfuewGaGd39hzK1wSEVAgVInx
-	 rIEH8SSvhHBAvQFg23Ja/biqWAC2mJ7IHT0fLdUBO/ds6uN7LYVES8AjOGT5CUj8EK
-	 gprMnk31Gq+BQ==
-Message-ID: <e7f51014-10b2-4f9c-9929-f2a4f32b023c@kernel.org>
-Date: Fri, 28 Mar 2025 08:31:19 +0100
+	b=Zmw4xKGuWDCQirrNEolXXnj2GZwOhtVLy3aKHL8d48fzaElk3aBjqsRNPAFt7XHfi
+	 HkYAYQopThOjaZ7Bq9eY4xHKkFFp0YpDEoSSn3lRvShX7ImmoCWieyHkc43t4yWRMY
+	 jRFBbuFTbKHL4DTTsZT9MwYLJY6df0dk0pRpdjSQtjJid50Hic69gTZMA3NDnpIWWS
+	 T9OPjtFeLILrJpLyCgJYvzIbQyEvP0BekdRgDnOLY2MpKa/AtOufSEegGzeq77ECnG
+	 PfTeb3yXAUm+cMr6my6cnXi4MRyJm7TSdXnMJmS+t1m3rY96PLtYeHc6UVwWsof4sJ
+	 ck9cu9kM6bdmQ==
+Message-ID: <464ac98d-115b-45c1-9a42-d05a104105c4@kernel.org>
+Date: Fri, 28 Mar 2025 08:35:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,15 +35,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dt-bindings: mailbox: Add devicetree binding for
- bcm74110 mbox
+Subject: Re: [PATCH 1/2] mailbox: Add support for bcm74110 mailbox
 To: justin.chen@broadcom.com, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
 Cc: florian.fainelli@broadcom.com, conor+dt@kernel.org, krzk+dt@kernel.org,
  robh@kernel.org, jassisinghbrar@gmail.com,
  bcm-kernel-feedback-list@broadcom.com
 References: <20250327221628.651042-1-justin.chen@broadcom.com>
- <20250327221628.651042-3-justin.chen@broadcom.com>
+ <20250327221628.651042-2-justin.chen@broadcom.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -89,113 +88,135 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250327221628.651042-3-justin.chen@broadcom.com>
+In-Reply-To: <20250327221628.651042-2-justin.chen@broadcom.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 27/03/2025 23:16, justin.chen@broadcom.com wrote:
-> From: Justin Chen <justin.chen@broadcom.com>
-> 
-> Add devicetree YAML binding for brcmstb bcm74110 mailbox used
-> for communicating with a co-processor.
-> 
-> Signed-off-by: Justin Chen <justin.chen@broadcom.com>
-
-Bindings are before users, see DT submitting patches.
-
-> ---
->  .../bindings/mailbox/brcm,bcm74110-mbox.yaml  | 68 +++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm74110-mbox.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/brcm,bcm74110-mbox.yaml b/Documentation/devicetree/bindings/mailbox/brcm,bcm74110-mbox.yaml
-> new file mode 100644
-> index 000000000000..139728a35303
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/brcm,bcm74110-mbox.yaml
-> @@ -0,0 +1,68 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mailbox/brcm,bcm74110-mbox.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +static int bcm74110_mbox_init(struct bcm74110_mbox *mbox)
+> +{
+> +	int ret = 0;
 > +
-> +title: Broadcom BCM74110 Mailbox Driver
+> +	/* Disable queues tx/rx */
+> +	writel_relaxed(0x0, mbox->base_tx + BCM_MBOX_CTRL);
+> +
+> +	/* Clear status & restart tx/rx*/
+> +	writel_relaxed(BCM_MBOX_CTRL_EN | BCM_MBOX_CTRL_CLR,
+> +		       mbox->base_tx + BCM_MBOX_CTRL);
+> +
+> +	/* Unmask irq */
+> +	writel_relaxed(BCM_MBOX_IRQ_NOT_EMPTY, mbox->base_rx_irq +
+> +		       BCM_MBOX_IRQ_MASK_CLEAR);
+> +
+> +	ret = bcm74110_mbox_link_training(mbox);
+> +	if (ret) {
+> +		dev_err(&mbox->pdev->dev, "Training failed\n");
+> +		return ret;
+> +	}
+> +
+> +	return bcm74110_mbox_shmem_init(mbox);
+> +}
+> +
+> +
+> +
 
-Driver as Linux driver? Drop, bindings describe hardware.
+Just one blank line
+
+
+
+
+> +static int bcm74110_mbox_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct bcm74110_mbox *mbox;
+> +	int i, ret;
+> +
+> +	mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
+> +	if (!mbox)
+> +		return -ENOMEM;
+> +
+> +	mbox->pdev = pdev;
+> +	platform_set_drvdata(pdev, mbox);
+> +
+> +	mbox->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(mbox->base))
+> +		return dev_err_probe(dev, PTR_ERR(mbox->base), "Failed to iomap\n");
+> +
+> +	ret = of_property_read_u32(dev->of_node, "brcm,tx", &mbox->tx_chan);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to find tx channel\n");
+> +
+> +	ret = of_property_read_u32(dev->of_node, "brcm,rx", &mbox->rx_chan);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to find rx channel\n");
+> +
+> +	ret = of_property_read_u32_index(dev->of_node, "brcm,shmem", 0,
+> +					 &mbox->shmem_offset);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to get shmem offset\n");
+> +
+> +	ret = of_property_read_u32_index(dev->of_node, "brcm,shmem", 1,
+> +					 &mbox->shmem_size);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to get shmem size\n");
+> +
+> +	mbox->rx_irq = platform_get_irq(pdev, 0);
+> +	if (mbox->rx_irq <= 0)
+
+
+That's not correct check: look at help for this function.
+
+> +		return dev_err_probe(dev, -EINVAL, "Failed to get irq\n");
+> +
+> +	mbox->base_tx = mbox->base + BCM_MBOX_BASE(mbox->tx_chan);
+> +	mbox->base_rx = mbox->base + BCM_MBOX_BASE(mbox->rx_chan);
+> +	mbox->base_rx_irq = mbox->base + BCM_MBOX_IRQ_BASE(mbox->rx_chan);
+
+And all this suggests DT properties are not correct. Why would you
+offset base? What is the memory layout of all your mbox controllers?
 
 > +
-> +maintainers:
-> +  - Justin Chen <justin.chen@broadcom.com>
-> +  - Florian Fainelli <florian.fainelli@broadcom.com>
+> +	INIT_LIST_HEAD(&mbox->rx_svc_init_list);
+> +	spin_lock_init(&mbox->rx_svc_list_lock);
+> +	bcm74110_mbox_mask_and_clear(mbox);
 > +
-> +description: Broadcom mailbox driver first introduced with 74110
+> +	ret = devm_request_irq(dev, mbox->rx_irq, bcm74110_mbox_isr,
+> +			       IRQF_NO_SUSPEND, pdev->name, mbox);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to request irq\n");
+> +
+> +	mbox->controller.ops = &bcm74110_mbox_chan_ops;
+> +	mbox->controller.dev = dev;
+> +	mbox->controller.num_chans = BCM_MSG_SVC_MAX;
+> +	mbox->controller.of_xlate = &bcm74110_mbox_of_xlate;
+> +	mbox->controller.chans = devm_kcalloc(dev, BCM_MSG_SVC_MAX,
+> +					      sizeof(*mbox->controller.chans),
+> +					      GFP_KERNEL);
+> +	if (!mbox->controller.chans)
+> +		return -ENOMEM;
+> +
+> +	mbox->mbox_chan = devm_kcalloc(dev, BCM_MSG_SVC_MAX,
+> +				       sizeof(*mbox->mbox_chan),
+> +				       GFP_KERNEL);
+> +	if (!mbox->mbox_chan)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < BCM_MSG_SVC_MAX; i++) {
+> +		mbox->mbox_chan[i].mbox = mbox;
+> +		mbox->controller.chans[i].con_priv = &mbox->mbox_chan[i];
+> +	}
+> +
+> +	ret = devm_mbox_controller_register(dev, &mbox->controller);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = bcm74110_mbox_init(mbox);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_info(dev, "Mailbox inited with %d channels\n", BCM_MSG_SVC_MAX);
 
-Same comments.
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - brcm,bcm74110-mbox
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  "#mbox-cells":
-> +    const: 2
-> +    description:
-> +      The first cell is channel type and second cell is shared memory slot
-> +
-> +  brcm,mbox_tx:
-
-No underscores. See DTS coding style.
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Mailbox transmit doorbell
-
-Why is this needed in DT? How many instances do you have in one SoC?
-Where is the SoC DTS?
-
-> +
-> +  brcm,mbox_rx:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Mailbox receive doorbell
-> +
-> +  brcm,mbox_shmem:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    maxItems: 2
-> +    description: Mailbox shared memory region and size
-
-No, use existing properties, e.g. memory region.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - "#mbox-cells"
-> +  - brcm,mbox_tx
-> +  - brcm,mbox_rx
-> +  - brcm,mbox_shmem
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +        brcm_pmc_mailbox: brcm_pmc_mailbox@a552000 {
-
-Use indentation we expect. See writing schema, example-schema.
-
-> +                #mbox-cells = <2>;
-> +                compatible = "brcm,bcm74110-mbox";
-
-Fix order, see DTS coding style.
+Drop, drivers are supposed to be silent on success.
 
 
 
