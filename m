@@ -1,58 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D1A1C5D44
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:15:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E0620DF4;
+	Fri, 28 Mar 2025 14:16:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743171348; cv=none; b=pd/6crC9dPvmEdnG8lPzWGSVsXfa3pzhBUgHAPYF7zq97oqU4+SvPHtMoc0tff/zJLBeB894+5uMPA4wQUPRlt33GNTXvhPSzPMVkZsjgW12w6nLNqlPeCzZQPHa+XJpPJzyV7PxbCUPlTpSgi/SnqioulUnRD4pAMWTFHBfCd8=
+	t=1743171419; cv=none; b=fevd75+JH0W6opEgpS4pzN8bNwYsKxmjroqcszPlCFLjnvKenC5hAQm0NxIvPkXPvvuWeQm8Vn3CgoVKMfzsHdF4NBzBQrHSkqSmUydKSsavXrzfY/Vzqzk4jtPx0ZExjX/FgmTi0FHoObmO86bfVtIR8JsamZvASdIAMu0RUvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743171348; c=relaxed/simple;
-	bh=pXfI8v0neVovdgH7g2pz1hEWDgarsRQ6GMXto38uxUA=;
-	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=kpgo4pmRSCJlah/l5onc1eScDIlyWZA51WEApvDDqCe0EqNWRYph7x7qxdGWSGrOBtLybX3eoI0Xo17IQiXPUK1Fspxwrpdga8dkbHpJls7SIeFutsspQ3a0DkL5joFN6lZzltATEa5IMYzcmBIuY2WnitdvzM+1LWHaNabOkcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OSPG60e+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743171419; c=relaxed/simple;
+	bh=Cvq+aP8CrYzZIA8tAfX7n75QN/jF4x2zO2RFtICsCi4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B5Em9YCvRSBec5jBftRCdnToMLddFhEuSs5ZF18P8DuTwqBFUnf3dM9UnGidNyFKJygXbYu0V7Z5fliE643y+3tU+9hQfmXDWDoNSMaNbblN7n1+fkd3LGUxsioY0l4T6zrliEkDuw8dHKgU1C2Bz7NQewe6uiCW3XE5qDe46g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SX/izVvf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OSPG60e+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EDD4C4CEE4;
-	Fri, 28 Mar 2025 14:15:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SX/izVvf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21B46C4CEE4;
+	Fri, 28 Mar 2025 14:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743171347;
-	bh=pXfI8v0neVovdgH7g2pz1hEWDgarsRQ6GMXto38uxUA=;
-	h=Date:From:To:Subject:In-Reply-To:References:Cc:From;
-	b=OSPG60e+ka7zEkpeCaQ+X3HP/LmC89ffbxDX4y2TuXz3Gr1FuUa2gNJeXXBGDtD92
-	 Khb14GsTM5RQrRrcLi8ALgBfUc/CegU3x5ybHMoONCGqHIyWtFFMom0Bb2ApzllXAE
-	 0RRUfPApQxGc0AnCZ+kUJ/LUuiI+foRYS3YHmCerdtslWgqkMrT/vKY520FK1aNfNs
-	 LUdysLbOYxihdCnE+ZxBuXeZD3ZxrwwjRic1zXEREw0wIeXqKTdqSerwZXf5LIN5cV
-	 PwGJUwAIvXEF7jKqL//SCbbGFK4SDT1HKerX38R6yJ0JY/2a+73FZ5AO7c0G8IQV6m
-	 G+C4cE/ZGMQ5A==
-Message-ID: <81402cf28073bd01aebc58a6cad1b656@kernel.org>
-Date: Fri, 28 Mar 2025 14:15:44 +0000
-From: "Maxime Ripard" <mripard@kernel.org>
-To: "Raphael Gallais-Pou" <rgallaispou@gmail.com>
-Subject: Re: [PATCH] drm: of: fix documentation reference
-In-Reply-To: <20250328114148.260322-1-rgallaispou@gmail.com>
-References: <20250328114148.260322-1-rgallaispou@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, "David
- Airlie" <airlied@gmail.com>, "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime
- Ripard" <mripard@kernel.org>, "Simona Vetter" <simona@ffwll.ch>, "Thomas
- Zimmermann" <tzimmermann@suse.de>
-Content-Transfer-Encoding: 7bit
+	s=k20201202; t=1743171418;
+	bh=Cvq+aP8CrYzZIA8tAfX7n75QN/jF4x2zO2RFtICsCi4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SX/izVvfQniT9WQGaYVM21JfTy06DcSj86eckxScDfPCjNxrIdZgu/eQUSMkKDcOf
+	 nycCyRQqfTQhnTXAM/vbmxQn6n6YJYbj1F8W8hBZNp+Turzm9izUqOPc875vGPBykx
+	 HnVeY7ctzJbdOlI2Y+EeCfC0Dj+a4zySdmsiHIgqJpcho2HunILqAmBSW6cu6ez6L+
+	 u9JK7os3hh7+LzkHR0dnmK18BwrysT4R6k6j1VZfkP0d/2/5mMDetKS1bSzP/dfA+9
+	 p9nmYInyZtxE5VX13/uCemo9Z//xrgPba/nf4nCSNmHxV5MXCrnsrUNl8k46SqM4f+
+	 OV+fJ+0oR0Wug==
+Date: Fri, 28 Mar 2025 15:16:52 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the tip tree with the s390 tree
+Message-ID: <iphp537xgykfuzwwf2faatglwjh4eejanaucle4f4ew3kmfp2i@23qaverl34ak>
+References: <20250319155410.3cdf01cb@canb.auug.org.au>
+ <Z9sgFGya_MDbfSQ6@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9sgFGya_MDbfSQ6@gmail.com>
 
-On Fri, 28 Mar 2025 12:41:48 +0100, Raphael Gallais-Pou wrote:
-> Documentation/devicetree/bindings/graph.txt content has move directly to
-> the dt-schema repo.
+On Wed, Mar 19, 2025 at 08:50:44PM +0100, Ingo Molnar wrote:
 > 
-> Point to the YAML of the official repo instead of the old file.
+> * Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 > 
+> > Hi all,
+> > 
+> > Today's linux-next merge of the tip tree got a conflict in:
+> > 
+> >   kernel/sysctl.c
+> > 
+> > between commit:
+> > 
+> >   20de8f8d3178 ("s390: Move s390 sysctls into their own file under arch/s390")
+> > 
+> > from the s390 tree and commit:
+> > 
+> >   c305a4e98378 ("x86: Move sysctls into arch/x86")
+> > 
+> > from the tip tree.
+> > 
+> > I fixed it up (see below) and can carry the fix as necessary. This
+> > is now fixed as far as linux-next is concerned, but any non trivial
+> > conflicts should be mentioned to your upstream maintainer when your tree
+> > is submitted for merging.  You may also want to consider cooperating
+> > with the maintainer of the conflicting tree to minimise any particularly
+> > complex conflicts.
 > 
-> [ ... ]
+> Thank you Stephen!
+Indeed. Thanks!!!
 
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
+Just a quick comment on this conflict:
+1. The conflict is caused because "acpi_video_flags" is after
+   "spin_retry" in the kern_table array. The solution (Which I see in
+   next-20250328) is to remove them both from kernel/sysctl.c
 
-Thanks!
-Maxime
+2. This is the exact reason why we are moving these out of
+   kernel/sysctl.c. It is too easy to touch the same region even if they
+   are from different architectures.
+
+Best
+
+-- 
+
+Joel Granados
