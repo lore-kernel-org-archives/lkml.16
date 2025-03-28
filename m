@@ -1,41 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796EF2F37;
-	Fri, 28 Mar 2025 13:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A9723CB
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:01:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743166819; cv=none; b=nqKdQimGIHSv1i+EPkiDXggC3OU03n7yKkvffptj8h0ZTbdjsdqKV4I4bD4aSsdF4z8UGiLwDZE0iteSHsEvNTaDlzj/4/mHPwuc2t6bwlUNhpDHwyIdObborGPkdoqMNwNQJ0SKiqrRPJ+tlLux4H0U8JHLR0VtlA+6kzGiSc8=
+	t=1743166909; cv=none; b=ptQAAmoCAG//0BVn8eKFoowPpHZqmpfE3YjSg0Nbz78sZ1c6+z9NCOj85G3phWmxXLAvTYlfrYEFW2g6GlwfFLXLZlqotPzszDpBdikPdFu/Dw8ggho3tiF7BPgW9FcenUs+dbIjmEwKq8k4bBmmcjDxPcjkaY/4/Kd0SjlOFa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743166819; c=relaxed/simple;
-	bh=+Wp2n86SjMypBd/q2Xpm8OByrsTcdjUxmeMbmDjejKA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=jRrvMw4WPUujy17xJcPzfhwitNrk3ixM1BU1JoLsa66+aGJljxrEkhfpT0KzTsBdGupWn0pupP4kud6ttt5Fr2u8prp9QgpbE6/ESfAeLbTYvjQ0RvEnwMQ7IHWQJ2ITJ64zJXhJByhO2KulcGmX3nnHoGdtv+jt7PV3PY3h3S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVmaWdNG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743166909; c=relaxed/simple;
+	bh=ljJoz9CLywU3mGuMPCN6Ow2Zt9UtUfgYzHW2ucm5TT0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lBSKmq1jkwm1yyHQ+2iJUrqb7l3MckJjDZuZxG/6tDFuH/nVgtBdzy28CmlEKEihGwvGwDR1+DoEZb8r7Fh8sIStFpNNemmE2kv+iiwX3nYx8FuOAwfQoufSoqWzdBYClH/0jq8ZEZdEdXKjxOnxH0ef+v10GIYN8A9u6LdwFYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=I3n6QBD9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=C5gx73tZ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=I3n6QBD9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=C5gx73tZ; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVmaWdNG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57F02C4CEE5;
-	Fri, 28 Mar 2025 13:00:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743166817;
-	bh=+Wp2n86SjMypBd/q2Xpm8OByrsTcdjUxmeMbmDjejKA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=cVmaWdNGzBt+DHsJ12cynn4l63wP9k9bT99CeUjiv+/qsOqu9fpwsa4OCI7TvmdyX
-	 GcfP8V3HTqdD1eRWs1iBTOQP8NahsC8ibHW+LzGFERhPpXpw/MiY0whtCWzd69r5ry
-	 6NPZMI66/nP730Oqve6TsCl3Yr+xeGt8eGlEpy5iwD2Zc9nikycUs+RRxo7ABZlwIB
-	 7BRJS2ZQ7COrU2u+DuETf6r8gNpoZPzaKO7FuHkftgn3ummCPD6pE6zfs8DSDJZOqH
-	 xfghiqbA3J5Ubl/cw6iUZ293EpQDpeOz1ZtTNwNQA8nKfyKSY+MddZqfGqNekA9PtX
-	 IlAf/NYkU3JgA==
-Date: Fri, 28 Mar 2025 07:00:15 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
-	Guenter Roeck <groeck@chromium.org>
-Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] platform/chrome: cros_ec_proto: Avoid
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Z-adX1BB30dcSJ7x@kspp>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="I3n6QBD9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="C5gx73tZ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="I3n6QBD9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="C5gx73tZ"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2803D21196;
+	Fri, 28 Mar 2025 13:01:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743166906; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TdoruYBkPmSm5fkDSyVCXd87I6vfPQDdFJMTR4FsLDU=;
+	b=I3n6QBD9t9QWsXYQzr8wlpW+Aun9y+3rw9E83BZVdytS762G7cJjjzGvI2D1bDNPGmM5+V
+	DXWufhSy40N6ECwLJiaMeKrIf81Nok4umDMH4VpwNz22fmDlS89wJI9OYy++dpYQ4Goyjz
+	J1L7ci1xtfnWx1xT9TnjqQhtznO4Sas=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743166906;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TdoruYBkPmSm5fkDSyVCXd87I6vfPQDdFJMTR4FsLDU=;
+	b=C5gx73tZJMAvGz57KaQBjGOt58hdake/02dcB3GCm/VJvCjWHy+i9z11BRjc1Cp3GNSqN2
+	ItvrAr8MBAhW17AA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1743166906; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TdoruYBkPmSm5fkDSyVCXd87I6vfPQDdFJMTR4FsLDU=;
+	b=I3n6QBD9t9QWsXYQzr8wlpW+Aun9y+3rw9E83BZVdytS762G7cJjjzGvI2D1bDNPGmM5+V
+	DXWufhSy40N6ECwLJiaMeKrIf81Nok4umDMH4VpwNz22fmDlS89wJI9OYy++dpYQ4Goyjz
+	J1L7ci1xtfnWx1xT9TnjqQhtznO4Sas=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1743166906;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TdoruYBkPmSm5fkDSyVCXd87I6vfPQDdFJMTR4FsLDU=;
+	b=C5gx73tZJMAvGz57KaQBjGOt58hdake/02dcB3GCm/VJvCjWHy+i9z11BRjc1Cp3GNSqN2
+	ItvrAr8MBAhW17AA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AE98013927;
+	Fri, 28 Mar 2025 13:01:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id M2y7J7md5meDWgAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Fri, 28 Mar 2025 13:01:45 +0000
+Date: Fri, 28 Mar 2025 14:01:44 +0100
+From: Oscar Salvador <osalvador@suse.de>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Michal Hocko <mhocko@kernel.org>, Peter Xu <peterx@redhat.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] MAINTAINERS: add my isub-entries to MM part.
+Message-ID: <Z-aduGY4Nno2BwH7@localhost.localdomain>
+References: <20250326215541.1809379-1-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,67 +87,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250326215541.1809379-1-rppt@kernel.org>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Wed, Mar 26, 2025 at 11:55:37PM +0200, Mike Rapoport wrote:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> 
+> Hi,
+> 
+> Following discussion at LSF/MM/BPF I'm adding execmem, secretmem and
+> numa memblocks sub-entries for MEMORY MANAGEMENT in MAINTAINERS.
+> 
+> The changes for USERFAULTFD entry are fixups that can be folded into the
+> original patch if Peter does not mind.
+> 
+> Mike Rapoport (Microsoft) (4):
+>   MAINTAINERS: fixup USERFAULTFD entry
+>   MAINTAINERS: mm: add entry for execmem
+>   MAINTAINERS: mm: add entry for numa memblocks and numa emulation
+>   MAINTAINERS: mm: add entry for secretmem
 
-Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
-a flexible structure where the size of the flexible-array member
-is known at compile-time, and refactor the rest of the code,
-accordingly.
+Acked-by: Oscar Salvador <osalvador@suse.de>
 
-So, with these changes, fix the following warnings:
+Thanks!
 
-drivers/platform/chrome/cros_ec_proto.c:143:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-drivers/platform/chrome/cros_ec_proto.c:761:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/platform/chrome/cros_ec_proto.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-index 877b107fee4b..586358fbf981 100644
---- a/drivers/platform/chrome/cros_ec_proto.c
-+++ b/drivers/platform/chrome/cros_ec_proto.c
-@@ -139,12 +139,10 @@ static int cros_ec_xfer_command(struct cros_ec_device *ec_dev, struct cros_ec_co
- 
- static int cros_ec_wait_until_complete(struct cros_ec_device *ec_dev, uint32_t *result)
- {
--	struct {
--		struct cros_ec_command msg;
--		struct ec_response_get_comms_status status;
--	} __packed buf;
--	struct cros_ec_command *msg = &buf.msg;
--	struct ec_response_get_comms_status *status = &buf.status;
-+	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-+			sizeof(struct ec_response_get_comms_status));
-+	struct ec_response_get_comms_status *status =
-+			(struct ec_response_get_comms_status *)msg->data;
- 	int ret = 0, i;
- 
- 	msg->version = 0;
-@@ -757,16 +755,13 @@ static int get_next_event_xfer(struct cros_ec_device *ec_dev,
- 
- static int get_next_event(struct cros_ec_device *ec_dev)
- {
--	struct {
--		struct cros_ec_command msg;
--		struct ec_response_get_next_event_v3 event;
--	} __packed buf;
--	struct cros_ec_command *msg = &buf.msg;
--	struct ec_response_get_next_event_v3 *event = &buf.event;
-+	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-+			sizeof(struct ec_response_get_next_event_v3));
-+	struct ec_response_get_next_event_v3 *event =
-+			(struct ec_response_get_next_event_v3 *)msg->data;
- 	int cmd_version = ec_dev->mkbp_event_supported - 1;
- 	u32 size;
- 
--	memset(msg, 0, sizeof(*msg));
- 	if (ec_dev->suspended) {
- 		dev_dbg(ec_dev->dev, "Device suspended.\n");
- 		return -EHOSTDOWN;
 -- 
-2.43.0
-
+Oscar Salvador
+SUSE Labs
