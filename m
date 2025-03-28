@@ -1,178 +1,141 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943012F37
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 13:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1F92F37;
+	Fri, 28 Mar 2025 13:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743166938; cv=none; b=epqn24Qdn2Orf21bopbUDW/0lXItLEuHhXUx7SwS9e9ib6hcmnWCv3S1G2Vpdqlh26X6nmY5rWidBanlGMTX9KhTkaWoH4tws39ur1lH1I7xH90Ue0CYPuxoQN4Xd9nzT016y+EbzhO9fed7vDIMn3wchmRnS8q2rIg4ji8n2bA=
+	t=1743167127; cv=none; b=BNVVhonGVrdypxjwetRGUsGf05LRqZM9MLCiZDoxgistuI4vtuwBBNuPQ6/O69Dok9EHbjTdLKCl/e1tpXMxJgaBDcC1AbMFHkUJmkVQcJ/1NqPoBFLxvK4+LrSHkK50yDx2FeglamtQNYrfTMz3OILMsVyUvLkLhRifvzumzII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743166938; c=relaxed/simple;
-	bh=zw7McFQdkB/LT8MMnEaqgE3uejx+nD/2Y0VWVhpfulM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sZdmJaU+2MOeY4kPgNwRW5hwUGBUCOy6wogJyUI1sBgQfFrazMk5o3uPaipY4gPEN+wlBy7bH+wd+wl+RL97s6RuwIvIn6yEQRzhD+J20z/FY33ebOmn6koY00UvtruaVliGf0QM0VzYgcOtfu9G8NBZkexaHGhJA7fhqIg29Uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=vJb28hfE; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="vJb28hfE"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2240b4de12bso1892405ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 06:02:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1743166936; x=1743771736; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TW7rcmweIlsrSC+6IbMmik/ob6BAUTJ219vwGjKT9mM=;
-        b=vJb28hfEbbve2bwxdQHKZ1nr5CvquKVEL3f+xY4Lvf+MNDxgHBy4PptO1IgvkfzNAU
-         DU2T/ZmDQ7nYeFU210Fwn74IHjqKHrbiNXL5ltbnAQG4RAbne/4W+v5nt4Ecq/Y442ff
-         2nEuD5E3i/4rOpq9AivLPA33wRUTn7QoBbmXd3EGEoBAcOm5k3cSrm4Zn2vWcAJNiAWz
-         6jI9n1sHiMC5mclL2Uuubn1xcKaEVB6RyxhCpOwYEuHsh9dTQQO4ksx8qZEPZ90IgzCs
-         SnG6JjBbYWqWgsEFRAUfOjuOeMbmTwSpAZsvUvaHG7yItXAHx9NuT8+ZfSUE9qzrkV4N
-         90vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743166936; x=1743771736;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TW7rcmweIlsrSC+6IbMmik/ob6BAUTJ219vwGjKT9mM=;
-        b=nFhF5hbQZ+6+G8sdrnvvvtKlePaRMhYsnLkiC9fM65yNCHdYiQugibka5AP9qVp/NX
-         Xj2Q0swKv1WLjCf7GikRxhusZrnoUWFf3YSOhg5dUYrZKxZNoT1HCoOQsJgMcxlz+80q
-         PxFnsuh4BDc4PeZW/PhVktDsh9ObS/nL0980ZaQU+SNT2lgnw/f7MLCwBSz6C1T3dBHd
-         ta9z45mIa3czoKlL+w5a+eKK2xaLJmWKs1YC8TN1kkSaTPIvfwz88s2fsmfCKbqkLZF6
-         u0qUpNarUafAlUPXQhKs95S5eu6TRzYkq+run1MCCAHQZbSqtg/eXyeDNEFh/BqCFvz4
-         nYMg==
-X-Forwarded-Encrypted: i=1; AJvYcCW6OsFLw9xO1/ia5aSVR2smatNtJvY2wVEKHMuMvKEwqaWsmxjVNFQVLySEKDjqw6xb9L9zPFkbvE6YARA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQN60HHr/ENBQCxM88D7bZjthgnC7W8+WBNeFm6OyhUG88dWFe
-	PeIVq/iS8P5B+jNUadSkt732nU0Yf7aSZEADYPoTt9YYFHAoOhazfHXzFZkIKAc=
-X-Gm-Gg: ASbGncsTd+LsE7ZqBXLGLBFUY1GNhMBRpvAFaiZOHEdATcYPrKL3srWI4IqEgnN2HQe
-	NPl+/vOXc0HqMIdU5wBDefNlmpQHHq1SvvQj5J088/x+mFH9AwTlXIV7D5xVSrcoXttqyQv4Igv
-	lBhjCqDGXJvrWoY9pUkrrXZH5WLOHO0dB2p0fALM6zcMIpWE/RwwCBAwIzYMWVBM7piyD2fb1Yl
-	LkYiBGcGl3SeOIYKWzJi5/DGCtGAY0IorZs19OEh9Wc6YIkypq5iutSVZDpEGwS9zLhXlITZR9c
-	5DVVf+iT8ikYL6YvjXkVIK9JbBKPJNK19XI2KUAjllYRNpwhfH/dnKcnPcrsPJIp65z3UhmVnd2
-	MsLX16LrIU+3FQg==
-X-Google-Smtp-Source: AGHT+IH1GOqGgr7ayswYiJhPbU/AHZRTKtdQ78gPezC52OtNfXU679qlT5nrGGQooRauw8nPfoeTGQ==
-X-Received: by 2002:a05:6a00:852:b0:736:46b4:bef2 with SMTP id d2e1a72fcca58-73960e2cfe9mr11451684b3a.6.1743166935461;
-        Fri, 28 Mar 2025 06:02:15 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970deef04sm1642170b3a.1.2025.03.28.06.02.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Mar 2025 06:02:14 -0700 (PDT)
-Message-ID: <c0f425ec-6c76-45b2-b1bc-8d9be028a878@rivosinc.com>
-Date: Fri, 28 Mar 2025 14:02:08 +0100
+	s=arc-20240116; t=1743167127; c=relaxed/simple;
+	bh=ShT2PenzU5S5NzCDUYFCGLCJD2T3cC+Uz/7PyWeV60k=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=dbQgrjHfXz9iSf7jqCHvixtI2PShqM19HNmOv1O9dOdn4J5tJv64voNDim+lxfFG2i7EQE/YIzR4kxIfJnCurZozhNZT/sLAFlfrwNRHPUB/b6oNsXHoxnvJ3uxAbshtICgs9NG0OQj/sT3R5BJkwjyR7T9vVLTLJv/VxWe9hsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZPLND6rMQz689QQ;
+	Fri, 28 Mar 2025 21:05:00 +0800 (CST)
+Received: from frapeml100007.china.huawei.com (unknown [7.182.85.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 076131404F5;
+	Fri, 28 Mar 2025 21:05:21 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (7.182.85.172) by
+ frapeml100007.china.huawei.com (7.182.85.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 28 Mar 2025 14:05:20 +0100
+Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
+ frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
+ Fri, 28 Mar 2025 14:05:20 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Borislav Petkov <bp@alien8.de>
+CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dave@stgolabs.net"
+	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "linux-edac@vger.kernel.org"
+	<linux-edac@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
+	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"mchehab@kernel.org" <mchehab@kernel.org>, "leo.duran@amd.com"
+	<leo.duran@amd.com>, "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
+	"rientjes@google.com" <rientjes@google.com>, "jiaqiyan@google.com"
+	<jiaqiyan@google.com>, "Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>, "james.morse@arm.com"
+	<james.morse@arm.com>, "jthoughton@google.com" <jthoughton@google.com>,
+	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>, "erdemaktas@google.com"
+	<erdemaktas@google.com>, "pgonda@google.com" <pgonda@google.com>,
+	"duenwen@google.com" <duenwen@google.com>, "gthelen@google.com"
+	<gthelen@google.com>, "wschwartz@amperecomputing.com"
+	<wschwartz@amperecomputing.com>, "dferguson@amperecomputing.com"
+	<dferguson@amperecomputing.com>, "wbs@os.amperecomputing.com"
+	<wbs@os.amperecomputing.com>, "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
+	tanxiaofei <tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
+	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH v2 7/8] cxl/memfeature: Add CXL memory device soft PPR
+ control feature
+Thread-Topic: [PATCH v2 7/8] cxl/memfeature: Add CXL memory device soft PPR
+ control feature
+Thread-Index: AQHbmcK1iSI3dcXpwk+yz+WC3qTrybOHL5sAgAAB6wCAAVqhsA==
+Date: Fri, 28 Mar 2025 13:05:20 +0000
+Message-ID: <481fb71e2867469d963e74d89a0228be@huawei.com>
+References: <20250320180450.539-1-shiju.jose@huawei.com>
+ <20250320180450.539-8-shiju.jose@huawei.com>
+ <20250327170156.GCZ-WEhNREaxQaH_ya@fat_crate.local>
+ <20250327170848.GDZ-WGIM553HJ61xj6@fat_crate.local>
+In-Reply-To: <20250327170848.GDZ-WGIM553HJ61xj6@fat_crate.local>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: Make sure toolchain supports zba before using zba
- instructions
-To: Alexandre Ghiti <alex@ghiti.fr>, Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: kernel test robot <lkp@intel.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>
-References: <20250328115422.253670-1-alexghiti@rivosinc.com>
- <7352dfbf-51e0-47b0-81e2-264f30989bf1@rivosinc.com>
- <26afad1a-bee0-498b-8213-aea87167dedd@ghiti.fr>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <26afad1a-bee0-498b-8213-aea87167dedd@ghiti.fr>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-
-
-On 28/03/2025 14:00, Alexandre Ghiti wrote:
-> On 28/03/2025 13:51, Clément Léger wrote:
->>
->> On 28/03/2025 12:54, Alexandre Ghiti wrote:
->>> Old toolchain like gcc 8.5.0 does not support zba, so we must check that
->>> the toolchain supports this extension before using it in the kernel.
->>>
->>> Reported-by: kernel test robot <lkp@intel.com>
->>> Closes: https://lore.kernel.org/oe-kbuild-all/202503281836.8pntHm6I-
->>> lkp@intel.com/
->>> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->>> ---
->>>   arch/riscv/Kconfig                     | 8 ++++++++
->>>   arch/riscv/include/asm/runtime-const.h | 5 +++--
->>>   2 files changed, 11 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
->>> index 0d8def968a7e..ae6303f15b28 100644
->>> --- a/arch/riscv/Kconfig
->>> +++ b/arch/riscv/Kconfig
->>> @@ -735,6 +735,14 @@ config TOOLCHAIN_HAS_VECTOR_CRYPTO
->>>       def_bool $(as-instr, .option arch$(comma) +v$(comma) +zvkb)
->>>       depends on AS_HAS_OPTION_ARCH
->>>   +config TOOLCHAIN_HAS_ZBA
->>> +    bool
->>> +    default y
->>> +    depends on !64BIT || $(cc-option,-mabi=lp64 -march=rv64ima_zba)
->>> +    depends on !32BIT || $(cc-option,-mabi=ilp32 -march=rv32ima_zba)
->>> +    depends on LLD_VERSION >= 150000 || LD_VERSION >= 23900
->>> +    depends on AS_HAS_OPTION_ARCH
->>> +
->>>   config RISCV_ISA_ZBA
->> Hi Alex,
->>
->> Why not add a "depends on TOOLCHAIN_HAS_ZBA" here so you don't have to
->> check for that config option when using CONFIG_RISCV_ISA_ZBA ? This is
->> done like that for ZBB and ZBC.
-> 
-> 
-> Actually Conor changed that for Zbb in https://lore.kernel.org/
-> lkml/20241024-aspire-rectify-9982da6943e5@spud/T/
-> #m89d45ba3cbc6c2f953516c0e9977fecf397809b0 which is queued for 6.15.
-> 
-> Zba is also used in BPF, so we should not require that the toolchain
-> supports zba but instead just that the platform supports it.
-
-Indeed, makes sense !
-
-Thanks,
-
-Clément
-
-> 
-> Thanks,
-> 
-> Alex
-> 
-> 
->>
->> Thanks,
->>
->> Clément
->>
->>>       bool "Zba extension support for bit manipulation instructions"
->>>       default y
->>> diff --git a/arch/riscv/include/asm/runtime-const.h b/arch/riscv/
->>> include/asm/runtime-const.h
->>> index ea2e49c7149c..c07d049fdd5d 100644
->>> --- a/arch/riscv/include/asm/runtime-const.h
->>> +++ b/arch/riscv/include/asm/runtime-const.h
->>> @@ -77,7 +77,8 @@
->>>       ".long 1b - .\n\t"                    \
->>>       ".popsection"                        \
->>>   -#if defined(CONFIG_RISCV_ISA_ZBA) && defined(CONFIG_RISCV_ISA_ZBKB)
->>> +#if defined(CONFIG_RISCV_ISA_ZBA) &&
->>> defined(CONFIG_TOOLCHAIN_HAS_ZBA)    \
->>> +    && defined(CONFIG_RISCV_ISA_ZBKB)
->>
->>>   #define runtime_const_ptr(sym)                        \
->>>   ({                                    \
->>>       typeof(sym) __ret, __tmp;                    \
->>> @@ -93,7 +94,7 @@
->>>           : [__ret] "=r" (__ret), [__tmp] "=r" (__tmp));        \
->>>       __ret;                                \
->>>   })
->>> -#elif defined(CONFIG_RISCV_ISA_ZBA)
->>> +#elif defined(CONFIG_RISCV_ISA_ZBA) &&
->>> defined(CONFIG_TOOLCHAIN_HAS_ZBA)
->>>   #define runtime_const_ptr(sym)                        \
->>>   ({                                    \
->>>       typeof(sym) __ret, __tmp;                    \
-
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQm9yaXNsYXYgUGV0a292IDxicEBh
+bGllbjguZGU+DQo+U2VudDogMjcgTWFyY2ggMjAyNSAxNzowOQ0KPlRvOiBTaGlqdSBKb3NlIDxz
+aGlqdS5qb3NlQGh1YXdlaS5jb20+DQo+Q2M6IGxpbnV4LWN4bEB2Z2VyLmtlcm5lbC5vcmc7IGRh
+bi5qLndpbGxpYW1zQGludGVsLmNvbTsgZGF2ZUBzdGdvbGFicy5uZXQ7DQo+Sm9uYXRoYW4gQ2Ft
+ZXJvbiA8am9uYXRoYW4uY2FtZXJvbkBodWF3ZWkuY29tPjsgZGF2ZS5qaWFuZ0BpbnRlbC5jb207
+DQo+YWxpc29uLnNjaG9maWVsZEBpbnRlbC5jb207IHZpc2hhbC5sLnZlcm1hQGludGVsLmNvbTsg
+aXJhLndlaW55QGludGVsLmNvbTsNCj5kYXZpZEByZWRoYXQuY29tOyBWaWxhcy5TcmlkaGFyYW5A
+YW1kLmNvbTsgbGludXgtZWRhY0B2Z2VyLmtlcm5lbC5vcmc7DQo+bGludXgtYWNwaUB2Z2VyLmtl
+cm5lbC5vcmc7IGxpbnV4LW1tQGt2YWNrLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
+ZzsNCj50b255Lmx1Y2tAaW50ZWwuY29tOyByYWZhZWxAa2VybmVsLm9yZzsgbGVuYkBrZXJuZWwu
+b3JnOw0KPm1jaGVoYWJAa2VybmVsLm9yZzsgbGVvLmR1cmFuQGFtZC5jb207IFlhemVuLkdoYW5u
+YW1AYW1kLmNvbTsNCj5yaWVudGplc0Bnb29nbGUuY29tOyBqaWFxaXlhbkBnb29nbGUuY29tOyBK
+b24uR3JpbW1AYW1kLmNvbTsNCj5kYXZlLmhhbnNlbkBsaW51eC5pbnRlbC5jb207IG5hb3lhLmhv
+cmlndWNoaUBuZWMuY29tOw0KPmphbWVzLm1vcnNlQGFybS5jb207IGp0aG91Z2h0b25AZ29vZ2xl
+LmNvbTsgc29tYXN1bmRhcmFtLmFAaHBlLmNvbTsNCj5lcmRlbWFrdGFzQGdvb2dsZS5jb207IHBn
+b25kYUBnb29nbGUuY29tOyBkdWVud2VuQGdvb2dsZS5jb207DQo+Z3RoZWxlbkBnb29nbGUuY29t
+OyB3c2Nod2FydHpAYW1wZXJlY29tcHV0aW5nLmNvbTsNCj5kZmVyZ3Vzb25AYW1wZXJlY29tcHV0
+aW5nLmNvbTsgd2JzQG9zLmFtcGVyZWNvbXB1dGluZy5jb207DQo+bmlmYW4uY3hsQGdtYWlsLmNv
+bTsgdGFueGlhb2ZlaSA8dGFueGlhb2ZlaUBodWF3ZWkuY29tPjsgWmVuZ3RhbyAoQikNCj48cHJp
+bWUuemVuZ0BoaXNpbGljb24uY29tPjsgUm9iZXJ0byBTYXNzdSA8cm9iZXJ0by5zYXNzdUBodWF3
+ZWkuY29tPjsNCj5rYW5na2FuZy5zaGVuQGZ1dHVyZXdlaS5jb207IHdhbmdodWlxaWFuZyA8d2Fu
+Z2h1aXFpYW5nQGh1YXdlaS5jb20+Ow0KPkxpbnV4YXJtIDxsaW51eGFybUBodWF3ZWkuY29tPg0K
+PlN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgNy84XSBjeGwvbWVtZmVhdHVyZTogQWRkIENYTCBtZW1v
+cnkgZGV2aWNlIHNvZnQgUFBSDQo+Y29udHJvbCBmZWF0dXJlDQo+DQo+T24gVGh1LCBNYXIgMjcs
+IDIwMjUgYXQgMDY6MDE6NTZQTSArMDEwMCwgQm9yaXNsYXYgUGV0a292IHdyb3RlOg0KPj4gT24g
+VGh1LCBNYXIgMjAsIDIwMjUgYXQgMDY6MDQ6NDRQTSArMDAwMCwgc2hpanUuam9zZUBodWF3ZWku
+Y29tIHdyb3RlOg0KPj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9lZGFjL21lbV9yZXBhaXIuYyBi
+L2RyaXZlcnMvZWRhYy9tZW1fcmVwYWlyLmMNCj4+ID4gaW5kZXggM2IxYTg0NTQ1N2IwLi5iZjdl
+MDFhOGI0ZGQgMTAwNzU1DQo+PiA+IC0tLSBhL2RyaXZlcnMvZWRhYy9tZW1fcmVwYWlyLmMNCj4+
+ID4gKysrIGIvZHJpdmVycy9lZGFjL21lbV9yZXBhaXIuYw0KPj4gPiBAQCAtNDUsNiArNDUsMTEg
+QEAgc3RydWN0IGVkYWNfbWVtX3JlcGFpcl9jb250ZXh0IHsNCj4+ID4gIAlzdHJ1Y3QgYXR0cmli
+dXRlX2dyb3VwIGdyb3VwOw0KPj4gPiAgfTsNCj4+ID4NCj4+ID4gK2NvbnN0IGNoYXIgKiBjb25z
+dCBlZGFjX3JlcGFpcl90eXBlW10gPSB7DQo+PiA+ICsJW0VEQUNfUFBSXSA9ICJwcHIiLA0KPj4g
+PiArfTsNCj4+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKGVkYWNfcmVwYWlyX3R5cGUpOw0KPj4NCj4+
+IFdoeSBpcyB0aGlzIHRoaW5nIGV4cG9ydGVkIGluc3RlYWQgb2YgYWRkaW5nIGEgZ2V0dGVyIGZ1
+bmN0aW9uIGFuZA0KPj4gaGF2aW5nIGFsbCBpdHMgdXNlcnMgcGFzcyBpbiBwcm9wZXIgZGVmaW5l
+cyBhcyBhcmd1bWVudHM/DQo+Pg0KPj4gQW5kICJFREFDX1BQUiIgaXMgbm90IGEgcHJvcGVyIGRl
+ZmluZSAtIGl0IGRvZXNuJ3QgdGVsbCBtZSB3aGF0IGl0IGlzLg0KPj4NCj4+IEl0IHNob3VsZCBi
+ZSBtb3JlIGxpa2VseSBhDQo+Pg0KPj4gRURBQ19SRVBBSVJfUFBSLA0KPj4gRURBQ19SRVBBSVJf
+Uk9XX1NQQVJJTkcsDQo+PiBFREFDX1JFUEFJUl9CQU5LX1NQQVJJTkcsDQo+Pg0KPj4gYW5kIHNv
+IG9uLg0KDQpIaSBCb3Jpc2xhdiwNCg0KV2lsbCBjaGFuZ2UuDQoNCj4NCj5Mb29raW5nIGF0IHRo
+aXMgbW9yZToNCj4NCj4rc3RhdGljIGludCBjeGxfcHByX2dldF9yZXBhaXJfdHlwZShzdHJ1Y3Qg
+ZGV2aWNlICpkZXYsIHZvaWQgKmRydl9kYXRhLA0KPisJCQkJICAgY29uc3QgY2hhciAqKnJlcGFp
+cl90eXBlKQ0KPit7DQo+KwkqcmVwYWlyX3R5cGUgPSBlZGFjX3JlcGFpcl90eXBlW0VEQUNfUFBS
+XTsNCj4rDQo+KwlyZXR1cm4gMDsNCj4rfQ0KPg0KPkNhbiB0aGlzIGJlIGFueSBtb3JlIHNpbGx5
+Pw0KPg0KPkFuIG9wcyBtZW1iZXIgd2hpY2ggY29waWVzIGEgc3RyaW5nIHBvaW50ZXIgaW50byBz
+b21lIGFyZ3VtZW50LiBXaGF0IGZvcj8NCj4NCj5JZiB0aG9zZSBzdHJpbmdzIGFyZSBmb3IgdXNl
+cnNwYWNlLCB3aHkgZG9uJ3QgeW91IHNpbXBseSByZXR1cm4gKm51bWJlcnMqIGFuZA0KPmxldCB1
+c2Vyc3BhY2UgY29udmVydCB0aGVtIGludG8gc3RyaW5ncz8NClllcy4gVGhlIEVEQUMgbWVtb3J5
+IHJlcGFpciBpbnRlcmZhY2UgZGVmaW5lZCBhcyByZXR1cm4gJ251bWJlcnMnIGZvciB1c2Vyc3Bh
+Y2UgdW50aWwgDQp2MTggb2YgdGhlIEVEQUMgc2VyaWVzLiAgQ2hhbmdlZCB0byByZXR1cm4gJ3N0
+cmluZycgYXMgTWF1cm8gd2FudGVkLg0KUGxlYXNlIHNlZSBkaXNjdXNzaW9uIGhlcmUuDQpodHRw
+czovL2xvcmUua2VybmVsLm9yZy9hbGwvMjAyNTAxMTQxNTI2MTcuMTRlYjQxYjVAZm96Lmxhbi8N
+Cg0KPg0KVGhhbmtzLA0KU2hpanUNCg==
