@@ -1,138 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C3E1DEFCD
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 21:19:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A9C1A0BF1
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 21:19:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743196743; cv=none; b=Vpj4torbSjfN45EqcRkRp7OxiSonxI855SzJmuJVPeOi2tmoWvkwtWHZdW5nvAq3EMXYrf/njNQ5cJb5qHArpoXPEzMFAWmm+JPd2QZ5WK5afJ/u+1e7m4HQDusFO+0/e7F4ETph2akRCvU7XU6wVUf0p6mpuqDZ/45tLdGw5Es=
+	t=1743196780; cv=none; b=l1BkdRyH08hG2HZseps0B+saQMmY3653UTgshFJH3PQvpHm3BCXyE3eTn48XPO/FqB3/3hC7Fb5fZrWsD97U3YpWuwYNbkr0IxmZ6l74Flg+viAv8wnPIbcfUJL5hwwzDEoXzVwh74xfRQ5MNnaZw21k37gTdc30Qmy4SzXjYgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743196743; c=relaxed/simple;
-	bh=MaBqe6eVVmdbDZdiR1OmmkRoYtCYSihblDwYVJtzer8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=eeKWXEB65U+480ujTdfh0n5EQswBazf/E3X/6ROxvvinkYDuaBEB/WHlTfwPy3ylehdml6rzBeqvGndsHqAMhR+2Fu8XSbMUqNPRX/t9JNNwyq5FbupAld/CTRHiuAuLG5TLhh2hc5cLEsv9YAKODV9ArH54d3pIMQe7p56ssXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nuGuFzMo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nuGuFzMo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADF64C4CEE4;
-	Fri, 28 Mar 2025 21:19:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743196742;
-	bh=MaBqe6eVVmdbDZdiR1OmmkRoYtCYSihblDwYVJtzer8=;
-	h=Date:From:To:Cc:Subject:From;
-	b=nuGuFzModhAXQz+MwR+PIJ4dQHfUKWYNvrJGpRSfeM5u9HVzjsNTh/gBqnGXJXFeP
-	 LabDgJXQFU4XQWqG4BjRuk6uJ+cRuTi0uVNH31pAn/6wi9q1c/Ph2rxIqYrxMfQTvk
-	 7THMQuKjTiJvOaLW/vLvARtJCF4i964oSO+Qp0ydjaGu+b3zcZT2IeSbTC4Ee+TXXP
-	 QJ4BJIU6Me/XMr7L5OnrSoGPnj0OwBuTku++gMItWKU5BJPF2wGqzRDl3IUmZQgcVa
-	 7Wm1/hAjd/TOplhQmLth8VAhgxcX3G0ei+RfESTwuH8OWQHzJ7m3t6HcCyrsifKUMl
-	 0bSp/AQuZMghA==
-Date: Fri, 28 Mar 2025 22:18:57 +0100
-From: Ingo Molnar <mingo@kernel.org>
+	s=arc-20240116; t=1743196780; c=relaxed/simple;
+	bh=s5btmg4so1djPIgLxWaq+A1cA7iuSJ3YgSJla80Zv8A=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=CZyYJmfRH2onUTC8mtGz5nKb9URpRzHTTXk/bDcg/Y0wjCgY8DQGh3sS7APaiChg6pwSLNlGfHxm6xZDY4gGTMZlKsTFUyxdYCjzO9Oz3AdGDO2mP41CVjV4zVyPn8mlsuHcIqyQsuIL2PuZEtZR/EqUCgsMM4W4rKQLOkqy0n8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 618D9C4CEE4;
+	Fri, 28 Mar 2025 21:19:39 +0000 (UTC)
+Date: Fri, 28 Mar 2025 17:20:30 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <a.p.zijlstra@chello.nl>,
-	Josh Poimboeuf <jpoimboe@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] objtool fixes and updates
-Message-ID: <Z-cSQXJKMyBSfAAc@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Gabriele Monaco
+ <gmonaco@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Stephen Rothwell
+ <sfr@canb.auug.org.au>
+Subject: [GIT PULL v3] latency tracing: Documentation fix for previous pull
+ request
+Message-ID: <20250328172030.286d5a47@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
 
 Linus,
 
-Please pull the latest objtool/urgent Git tree from:
+It was reported that there was a documentation issue with the latency tree
+just after I sent the pull request. It was fixed and I replied that there
+was an update, but the original one was pulled instead. I probably should
+have deleted the older tag, which would have made it obvious that there was
+a never version.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool-urgent-2025-03-28
+Anyway, this is the commit that was suppose to be added, with a new change
+log:
 
-   # HEAD: ae958b12940bcd4ffa32c44684e4f2878bc5e140 objtool, drm/vmwgfx: Don't ignore vmw_send_msg() for ORC
+Documentation fix for runtime verifier
 
-[ Merge note: not all driver fixes below have maintainer acks. ]
-
-These are objtool fixes and updates centered around the fallout
-from the new CONFIG_OBJTOOL_WERROR=y feature, which, despite its
-default-off nature, increased the profile/impact of objtool warnings:
-
- - Improve error handling and the presentation of warnings/errors.
-
- - In particular reduce the verbosity of objtool warnings if a
-   function triggers a check already - it's unlikely that followup
-   warnings are useful after the first warning is triggered.
-
- - Fix a number of objtool warnings in various drivers, core kernel
-   code and architecture code. About half of them are potential
-   problems related to out-of-bounds accesses or potential undefined
-   behavior, the other half are additional objtool annotations.
-
- - Update objtool to latest (known) compiler quirks and
-   objtool bugs triggered by compiler code generation
-
- Thanks,
-
-	Ingo
-
------------------->
-Josh Poimboeuf (25):
-      objtool: Fix detection of consecutive jump tables on Clang 20
-      objtool: Warn when disabling unreachable warnings
-      objtool: Ignore entire functions rather than instructions
-      objtool: Fix X86_FEATURE_SMAP alternative handling
-      objtool: Fix CONFIG_OBJTOOL_WERROR for vmlinux.o
-      objtool: Fix init_module() handling
-      objtool: Silence more KCOV warnings
-      objtool: Properly disable uaccess validation
-      objtool: Improve error handling
-      objtool: Reduce CONFIG_OBJTOOL_WERROR verbosity
-      objtool: Fix up some outdated references to ENTRY/ENDPROC
-      objtool: Remove --no-unreachable for noinstr-only vmlinux.o runs
-      objtool: Remove redundant opts.noinstr dependency
-      objtool, spi: amd: Fix out-of-bounds stack access in amd_set_spi_freq()
-      objtool, nvmet: Fix out-of-bounds stack access in nvmet_ctrl_state_show()
-      objtool, media: dib8000: Prevent divide-by-zero in dib8000_set_dds()
-      objtool, panic: Disable SMAP in __stack_chk_fail()
-      objtool, Input: cyapa - Remove undefined behavior in cyapa_update_fw_store()
-      objtool, ASoC: codecs: wcd934x: Remove potential undefined behavior in wcd934x_slim_irq_handler()
-      objtool, regulator: rk808: Remove potential undefined behavior in rk806_set_mode_dcdc()
-      objtool, lkdtm: Obfuscate the do_nothing() pointer
-      objtool: Fix NULL printf() '%s' argument in builtin-check.c:save_argv()
-      objtool: Fix segfault in ignore_unreachable_insn()
-      objtool: Fix STACK_FRAME_NON_STANDARD for cold subfunctions
-      objtool, drm/vmwgfx: Don't ignore vmw_send_msg() for ORC
+The runtime verifier documents that were created were not referenced
+in the indices, which caused warning when building the documentation
+tree. Those documents are now added to the rv indices.
 
 
- arch/x86/include/asm/arch_hweight.h     |   6 +-
- arch/x86/include/asm/smap.h             |  23 +-
- arch/x86/include/asm/xen/hypercall.h    |   6 +-
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c     |   2 +-
- drivers/input/mouse/cyapa.c             |   4 +-
- drivers/media/dvb-frontends/dib8000.c   |   5 +-
- drivers/misc/lkdtm/perms.c              |  14 +-
- drivers/nvme/target/debugfs.c           |   2 +-
- drivers/regulator/rk808-regulator.c     |   4 +-
- drivers/spi/spi-amd.c                   |   2 +-
- include/linux/linkage.h                 |   4 -
- include/linux/objtool.h                 |   2 +-
- kernel/panic.c                          |   6 +
- scripts/Makefile.lib                    |   2 +-
- scripts/Makefile.vmlinux_o              |  15 +-
- sound/soc/codecs/wcd934x.c              |   2 +-
- tools/objtool/Documentation/objtool.txt |  10 +-
- tools/objtool/arch/x86/special.c        |  38 +--
- tools/objtool/builtin-check.c           | 146 +++++----
- tools/objtool/check.c                   | 527 ++++++++++++++++----------------
- tools/objtool/elf.c                     |  28 +-
- tools/objtool/include/objtool/builtin.h |   6 +-
- tools/objtool/include/objtool/check.h   |   3 +-
- tools/objtool/include/objtool/elf.h     |  28 +-
- tools/objtool/include/objtool/objtool.h |   2 +-
- tools/objtool/include/objtool/special.h |   4 +-
- tools/objtool/include/objtool/warn.h    |  13 +-
- tools/objtool/objtool.c                 |  11 +-
- tools/objtool/special.c                 |  12 +-
- 29 files changed, 472 insertions(+), 455 deletions(-)
+Please pull the latest trace-latency-v6.15-3 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace-latency-v6.15-3
+
+Tag SHA1: cc878e7c98d50f2525ae669e1e5bad70478532ae
+Head SHA1: 4bb5d82b66002b770f8917d68ab4fbefcb7f5f9b
+
+
+Gabriele Monaco (1):
+      Documentation/rv: Add sched pages to the indices
+
+----
+ Documentation/tools/rv/index.rst | 1 +
+ Documentation/trace/rv/index.rst | 1 +
+ 2 files changed, 2 insertions(+)
+---------------------------
+commit 4bb5d82b66002b770f8917d68ab4fbefcb7f5f9b
+Author: Gabriele Monaco <gmonaco@redhat.com>
+Date:   Thu Mar 27 09:12:40 2025 +0100
+
+    Documentation/rv: Add sched pages to the indices
+    
+    The pages Documentation/tools/rv/rv-mon-sched.rst and
+    Documentation/trace/rv/monitor_sched.rst were introduced but not
+    included in any index.
+    
+    Add them to the respective indices.
+    
+    Cc: Jonathan Corbet <corbet@lwn.net>
+    Link: https://lore.kernel.org/20250327081240.46422-1-gmonaco@redhat.com
+    Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+    Fixes: 03abeaa63c08 ("Documentation/rv: Add docs for the sched monitors")
+    Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+    Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+diff --git a/Documentation/tools/rv/index.rst b/Documentation/tools/rv/index.rst
+index 8fd16d91d639..64ba2efe2e85 100644
+--- a/Documentation/tools/rv/index.rst
++++ b/Documentation/tools/rv/index.rst
+@@ -15,6 +15,7 @@ Runtime verification (rv) tool
+    rv-mon
+    rv-mon-wip
+    rv-mon-wwnr
++   rv-mon-sched
+ 
+ .. only::  subproject and html
+ 
+diff --git a/Documentation/trace/rv/index.rst b/Documentation/trace/rv/index.rst
+index 15fa966102c0..e80e0057feb4 100644
+--- a/Documentation/trace/rv/index.rst
++++ b/Documentation/trace/rv/index.rst
+@@ -12,3 +12,4 @@ Runtime Verification
+    da_monitor_instrumentation.rst
+    monitor_wip.rst
+    monitor_wwnr.rst
++   monitor_sched.rst
