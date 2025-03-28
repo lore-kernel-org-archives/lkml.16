@@ -1,121 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52AC20E003;
-	Fri, 28 Mar 2025 09:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from smtp.cecloud.com (unknown [1.203.97.240])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4411A12C7FD;
+	Fri, 28 Mar 2025 09:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.203.97.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743153801; cv=none; b=g3yskJ4U1W/bD9OtXUy9pxhv7AWdQmqPTsP55ntntV7a5hjy52rRrLJy3mAiGQdDl8BVNxcnx1VHwCsBicrb/OyQu41zt6y5gS06xcDgI79maSi8g84xN6soQCtBE4fvEhr+FLsBumVss8aHD/m+OQe0yaQYZs/bP/8sWVUuFEs=
+	t=1743153874; cv=none; b=N0ONlGj0jwXZVliYgJF6O/LsWMK5CupXBtqPdOiTflVAFk6lhobVH47X8BJOVjzNOWVganXmAMcdLo4DsEXLoRBRwu+LUDWsWqLolw4MYjt956MAFnABoWiOX2xoNs8zyapztWwBRjUuU4iMZt5Ocp9ersRY1rteiWNI2t/E+g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743153801; c=relaxed/simple;
-	bh=QZkdGMqYSeofD4QkFEFcC2WLZK8qw7M5AVsVnjP/Va4=;
-	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:References:
-	 In-Reply-To; b=a72YevJufLSU97NvbdINFdlpFPA7yXKNCSjicKT7mkafDKXLDNBxF7OgHr+/WD9qXr37T4np8y5fiurWgSLzaBwxrCQiIcrRNeqDF1Xb7d2ZaDFp/pJ92mgIGgfdlYBFPDrHWL05wInFvwTD6jJMD/S+/TPCayO1Yd3NddzPnLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l0eUeWyp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l0eUeWyp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA0ACC4CEE4;
-	Fri, 28 Mar 2025 09:23:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743153798;
-	bh=QZkdGMqYSeofD4QkFEFcC2WLZK8qw7M5AVsVnjP/Va4=;
-	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
-	b=l0eUeWypphwWBqdLB+n30N1Zqu/dkhLFSj4ZZ3RqQIFRDHTks2Ka8nUyfVUH4ObjB
-	 2SIcO208qB+psmgrkBPMNYxPDESLTjqzHlwy4DzGuvPdH2tStJJKDNGfF+GY9vKpO3
-	 E/ipFaLEH9xj0Gfe0fAmn6arY4z4ygFcrqTEuMpLZbKdlrykK+5C/qUqfAoqGTo17k
-	 M6PKkGskM4BFAZGELiKJXuXl9OYiR3SME0zLUASWMqotX0nhpwb6YA6vBP8FhttXSW
-	 pkCdD+g6O2rgFq6NcA2vwhYoHcumMCSkpeqUKgBGWNKAh+pmugc0q9EDzzZ5DNiOJz
-	 5TwdrfbPuFdzQ==
-Content-Type: multipart/signed;
- boundary=1e29379ea3eb5baf229b0e769d5ff67e0454bea00ddd123a52e73aaabf27;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Fri, 28 Mar 2025 10:23:14 +0100
-Message-Id: <D8RSG5W6EBLG.2JU3UDS8X8IDY@kernel.org>
-Subject: Re: [PATCH v5 06/11] gpio: regmap: Allow to allocate regmap-irq
- device
-Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>, "Lee Jones"
- <lee@kernel.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
- <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>
-X-Mailer: aerc 0.16.0
-References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
- <20250318-mdb-max7360-support-v5-6-fb20baf97da0@bootlin.com>
- <D8K23TCWC5TO.3T1YPKL3G0OY5@kernel.org>
- <D8KYF2DZOBT4.1337YU51E0ZKH@bootlin.com>
- <D8P6L65D69PS.1VQKHJJA8TNL4@kernel.org>
- <D8Q59RC90U0H.SCFK1LVIKPGN@bootlin.com>
-In-Reply-To: <D8Q59RC90U0H.SCFK1LVIKPGN@bootlin.com>
+	s=arc-20240116; t=1743153874; c=relaxed/simple;
+	bh=vbOcQua1kJoV003LNZEFGlJzdO/VYTvOPAg2h3oTidQ=;
+	h=Date:From:To:Cc:Subject:References:Mime-Version:Message-ID:
+	 Content-Type; b=I5lUcfc/PMnYUeeLx5IuK/2moz4TwIwFHRYqVLeYqkfc3MLM6FPvtSF2X65YiMLGHPBURZXcdU96GWolHzBFFCq5Yc5asgR8z9cpVeyrJE02lDa9fRq+U9G7ccvw78r3KRf0JIQNfeyCjuN5uz0d6O4FKD25tdKcVJrOXZeYDv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn; spf=pass smtp.mailfrom=cestc.cn; arc=none smtp.client-ip=1.203.97.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cestc.cn
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.cecloud.com (Postfix) with ESMTP id 7EEF8900144;
+	Fri, 28 Mar 2025 17:24:21 +0800 (CST)
+X-MAIL-GRAY:0
+X-MAIL-DELIVERY:1
+X-SKE-CHECKED:1
+X-ABS-CHECKED:1
+X-ANTISPAM-LEVEL:2
+Received: from desktop-n31qu50 (unknown [39.156.73.12])
+	by smtp.cecloud.com (postfix) whith ESMTP id P3907749T281458215874928S1743153860161413_;
+	Fri, 28 Mar 2025 17:24:20 +0800 (CST)
+X-IP-DOMAINF:1
+X-RL-SENDER:zhang.guanghui@cestc.cn
+X-SENDER:zhang.guanghui@cestc.cn
+X-LOGIN-NAME:zhang.guanghui@cestc.cn
+X-FST-TO:mlombard@bsdbackstore.eu
+X-RCPT-COUNT:9
+X-LOCAL-RCPT-COUNT:0
+X-MUTI-DOMAIN-COUNT:0
+X-SENDER-IP:39.156.73.12
+X-ATTACHMENT-NUM:0
+X-UNIQUE-TAG:<d482b18df017b0e78a61940e0cc6a21d>
+X-System-Flag:0
+Date: Fri, 28 Mar 2025 17:24:19 +0800
+From: "zhang.guanghui@cestc.cn" <zhang.guanghui@cestc.cn>
+To: "Maurizio Lombardi" <mlombard@bsdbackstore.eu>, 
+	sagi <sagi@grimberg.me>, 
+	mgurtovoy <mgurtovoy@nvidia.com>, 
+	kbusch <kbusch@kernel.org>, 
+	sashal <sashal@kernel.org>, 
+	chunguang.xu <chunguang.xu@shopee.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-nvme <linux-nvme@lists.infradead.org>, 
+	linux-block <linux-block@vger.kernel.org>
+Subject: Re: Re: nvme-tcp: fix a possible UAF when failing to send request
+References: <2025021015413817916143@cestc.cn>, 
+	<aed9dde7-3271-4b97-9632-8380d37505d9@grimberg.me>, 
+	<202503071810452687957@cestc.cn>, 
+	<D8DDP6LIPOKB.2ACTHLE9FPI2A@bsdbackstore.eu>
+X-Priority: 3
+X-GUID: B902EF6A-813E-44A3-BD2F-D196D9A9356B
+X-Has-Attach: no
+X-Mailer: Foxmail 7.2.25.374[cn]
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-
---1e29379ea3eb5baf229b0e769d5ff67e0454bea00ddd123a52e73aaabf27
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+Message-ID: <2025032817241899538928@cestc.cn>
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-On Wed Mar 26, 2025 at 12:00 PM CET, Mathieu Dubois-Briand wrote:
-> On Tue Mar 25, 2025 at 8:50 AM CET, Michael Walle wrote:
-> > > > > +#ifdef CONFIG_GPIOLIB_IRQCHIP
-> > > >
-> > > > Why do we need this ifdef?
-> > > >
-> > >
-> > > Hum yes, on second thought we probably need to depend on
-> > > CONFIG_REGMAP_IRQ here.
-> >
-> > But then, you'd also require the regmap_irq support for chips that
-> > don't support IRQs at all. devm_regmap_add_irq_fwnode() seems to be
-> > missing a stub version.
-> >
->
-> Sorry, maybe my previous message was not clear, when I said "depend",
-> what I meant is having an "#ifdef CONFIG_REGMAP_IRQ" here in place of
-> "#ifdef CONFIG_GPIOLIB_IRQCHIP"
->
-> If CONFIG_REGMAP_IRQ is enabled, drivers/base/regmap/regmap-irq.c is
-> built, so we do have both devm_regmap_add_irq_chip_fwnode() and
-> regmap_irq_get_domain(). So this code block should compile and link
-> correctly.
+SGksIAoKICAgICAgU28gZmFyLCAgdGhlIFVBRiBpc3N1ZSBoYXZlIG5vdCBiZWVuIG9jY2N1cnJl
+ZCBkdXJpbmcgdGVzdGluZyB0aGlzIHBhdGNoIGluIHRoZSBzYW1lIHNpdHVhdGlvbi4gCkFkZGl0
+aW9uYWxseSwgdGhlIHBhdGNoIHRyaWdnZXJzIGEgY29tcGlsYXRpb24gd2FybmluZywgIG52bWVf
+dGNwX2ZhaWxfcmVxdWVzdCBpcyBkZWNsYXJlZCBidXQgbm90IGRlZmluZWQsIHBsZWFzZSBhbHNv
+IHJldmlldy4gIAoKVGhhbmtzIAoKCgoKemhhbmcuZ3VhbmdodWlAY2VzdGMuY24KCgoKwqAKCgoK
+5Y+R5Lu25Lq677yawqBNYXVyaXppbyBMb21iYXJkaQoKCgrlj5HpgIHml7bpl7TvvJrCoDIwMjUt
+MDMtMTHCoDE4OjUyCgoKCuaUtuS7tuS6uu+8msKgemhhbmcuZ3VhbmdodWlAY2VzdGMuY247IHNh
+Z2k7IG1ndXJ0b3ZveTsga2J1c2NoOyBzYXNoYWw7IGNodW5ndWFuZy54dQoKCgrmioTpgIHvvJrC
+oGxpbnV4LWtlcm5lbDsgbGludXgtbnZtZTsgbGludXgtYmxvY2sKCgoK5Li76aKY77yawqBSZTog
+bnZtZS10Y3A6IGZpeCBhIHBvc3NpYmxlIFVBRiB3aGVuIGZhaWxpbmcgdG8gc2VuZCByZXF1ZXN0
+44CQ6K+35rOo5oSP77yM6YKu5Lu255Sxc2FnaWdyaW1AZ21haWwuY29t5Luj5Y+R44CRCgoKCk9u
+IEZyaSBNYXIgNywgMjAyNSBhdCAxMToxMCBBTSBDRVQsIHpoYW5nLmd1YW5naHVpQGNlc3RjLmNu
+IHdyb3RlOgoKCgo+CgoKCj4gSGkKCgoKPgoKCgo+wqDCoMKgwqDCoMKgwqDCoCBBZnRlciB0ZXN0
+aW5nIHRoaXMgcGF0Y2gswqDCoCBzZW5kaW5nIHJlcXVlc3QgZmFpbHVyZSBvY2N1cnJlZCzCoMKg
+IHVuZm9ydHVuYXRlbHksIHRoZSBpc3N1ZSBzdGlsbCBwZXJzaXN0cy4KCgoKwqAKCgoKTWF5YmUg
+SSBhbSBjb21wbGV0ZWx5IHdyb25nIGJ1dCBJIGFtIHN0aWxsIHF1aXRlIGNvbnZpbmNlZCB0aGF0
+IHRoZSBwcm9ibGVtIGhlcmUKCgoKaXMgdGhhdCwgZGVzcGl0ZSB0aGUgbnZtZV90Y3BfdHJ5X3Nl
+bmQoKSBmYWlsdXJlLCB0aGUgdGFyZ2V0IHNlbmRzIGEgcmVzcG9uc2UgY2Fwc3VsZQoKCgpmb3Ig
+dGhlIGNvbW1hbmQsIGxlYWRpbmcgdG8gYSBkb3VibGUtY29tcGxldGlvbiBpbiB0aGUgaG9zdC4K
+CgoKwqAKCgoKU2FnaSwgd2hhdCBhYm91dCB0YWtpbmcgdGhpcyBwYXRjaDogaHR0cHM6Ly9sb3Jl
+Lmtlcm5lbC5vcmcvbGludXgtbnZtZS8yMDI1MDMwNjE2MDMyMi4xMzcwMzAwLTItbWxvbWJhcmRA
+cmVkaGF0LmNvbS9ULyN1CgoKCmFuZCBkbyBhIHN0ZXAgZnVydGhlciBieSBub3QgY29tcGxldGlu
+ZyB0aGUgcmVxdWVzdCwgbGVhdmluZyB0aGUgZXJyb3IKCgoKcmVjb3ZlcnkgaGFuZGxlciB0aGUg
+dGFzayBvZiBjbGVhbmluZyBldmVyeXRoaW5nIHVwPwoKCgrCoAoKCgrCoAoKCgpkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9udm1lL2hvc3QvdGNwLmMgYi9kcml2ZXJzL252bWUvaG9zdC90Y3AuYwoKCgpp
+bmRleCAzMjdmM2YyZjUzOTkuLjcyYzFkNzk0ODM4NiAxMDA2NDQKCgoKLS0tIGEvZHJpdmVycy9u
+dm1lL2hvc3QvdGNwLmMKCgoKKysrIGIvZHJpdmVycy9udm1lL2hvc3QvdGNwLmMKCgoKQEAgLTEz
+MjgsOCArMTMyOCw4IEBAIHN0YXRpYyBpbnQgbnZtZV90Y3BfdHJ5X3NlbmQoc3RydWN0IG52bWVf
+dGNwX3F1ZXVlICpxdWV1ZSkKCgoKfSBlbHNlIGlmIChyZXQgPCAwKSB7CgoKCmRldl9lcnIocXVl
+dWUtPmN0cmwtPmN0cmwuZGV2aWNlLAoKCgoiZmFpbGVkIHRvIHNlbmQgcmVxdWVzdCAlZFxuIiwg
+cmV0KTsKCgoKLSBudm1lX3RjcF9mYWlsX3JlcXVlc3QocXVldWUtPnJlcXVlc3QpOwoKCgpudm1l
+X3RjcF9kb25lX3NlbmRfcmVxKHF1ZXVlKTsKCgoKKyBudm1lX3RjcF9lcnJvcl9yZWNvdmVyeSgm
+cXVldWUtPmN0cmwtPmN0cmwpOwoKCgp9CgoKCm91dDoKCgoKbWVtYWxsb2Nfbm9yZWNsYWltX3Jl
+c3RvcmUobm9yZWNsYWltX2ZsYWcpOwoKCgrCoAoKCgrCoAoKCgpNYXVyaXppbwoKCgrCoAoKCgrC
+oAoKCg==
 
-Yes.
 
-> I did some build tests with and without CONFIG_GPIOLIB_IRQCHIP and I
-> believe this is fine.
->
-> Or am I missing something?
 
-I'd like to avoid the ifdef macros if possible. Thus you'd need
-stubs for devm_regmap_add_irq_chip_fwnode() and
-regmap_irq_get_domain() if CONFIG_REGMAP_IRQ is not defined.
-
-Not sure if broonie agrees though (?).
-
--michael
-
---1e29379ea3eb5baf229b0e769d5ff67e0454bea00ddd123a52e73aaabf27
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZ+ZqghIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/heGQF7BeTdmhRXVFQ5Z4GZ3zaTwdoUiPIpKiEq
-HyJmjsr7sZq+jERRAijg+dS9tGmCMAUyAXwNlu/mxFtlV62wOCXhcU1NeoLXv+7Y
-95EnF3cGtA51xh3LDWdd5OT5CkdkYlZ6cpI=
-=Q1Lp
------END PGP SIGNATURE-----
-
---1e29379ea3eb5baf229b0e769d5ff67e0454bea00ddd123a52e73aaabf27--
