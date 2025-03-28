@@ -1,101 +1,286 @@
-Received: from mail-yw1-f193.google.com (mail-yw1-f193.google.com [209.85.128.193])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233EC4A05
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 07:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C365211A05
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 07:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743147489; cv=none; b=WaxUDEexbWgNJ42RTQVDnzhTYthg7YK/Tuxjgna5Y6+li4XWjgUKWGxMnHVjb+EVe5GQfq++XLbU6uE0ztTMO4gPwi9eYYFoAr+eY7PqJQOngBvkFLMY4iB525WVHEcsw2WmenRrmKgihjS2KpxInwJ1FR1ATpeV1+TVm0f6mZQ=
+	t=1743147726; cv=none; b=V7/a1WGVcPO1IVtpoyPMHm3x5km6Jv5gxZwMnzu++2tp7KDq7trXmGJQO1aUTO3zlGQyC2VhyqwCytaMY8eEiIjw3Kx/lMGGx8lWPAn7Lbhua7nwSU6tz4UrafXseGw682rGpX7kNdcuyJTeR6+v8cz+34YpDeMaAjtnhNNfD0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743147489; c=relaxed/simple;
-	bh=dXErliaRI+EMWEPfbgtH2HXT42GehobJ4fwY5lT6a7M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pp7rHEVKCOL5RDcmLlZE02tH/jUOWLdNH1y8/5p9YgcZ0krawXnXuconCLb3GejyoalkvpOMlqCDQDWjks+PdqPrPTqgKZdj1QsgCU5IBvCN8CnVQno5U3jV1xB9W/VXMDEg+7gAMwq7dkA7PJ/3I/CUjXGSRUiU2YSZf4I9KqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TXZkTRSi; arc=none smtp.client-ip=209.85.128.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743147726; c=relaxed/simple;
+	bh=1OylK3DGw3fSW1DCNUixEMNZGTPEQ/ir67BOdKYdL8c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uCGaQAYGTUB4Gii5iDvHDjzC/vu9aTOgt7lgjV6/sm8tvxtMOAtGLFzCoTKIzL57OYYt+te2THy9gLnWNAN/1fGrQtC4O1ukMiTgfByy2iPiJ1W4NpdMVrIB6DOlrbqWxx1bO7RVNT3zmfR319X8NWpyODA4FqkTUSnY4e7Ef0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=we3eulPU; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TXZkTRSi"
-Received: by mail-yw1-f193.google.com with SMTP id 00721157ae682-6f7031ea11cso19015167b3.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 00:38:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="we3eulPU"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ff797f8f1bso2872039a91.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 00:42:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743147487; x=1743752287; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gj26yskeh2tjWK5SXJciubeRsbS53+ypDO00BmmM6/o=;
-        b=TXZkTRSi9zH4QK5dCnGAUqlMuzyc8KsXP61khRMso/NGZvfk70gZIhrkIQF+RgIEsB
-         llxblqAe0xgaSZ6fDtw3J0dQGgMyxulJZR+0xgdL2btBZM73JAj96W4seEhoq3x8WDm6
-         dmhUBk32AIkX6fGtINbymBQS+Ev+O3S0PKku4RP9JyYViF6fXHjWplQRqXUmpNehrTYq
-         vqwtBxTxglXq9GkWGISRFeO7alxSetih/GBA9RPJINZPktMOI6i1R5TXbGRwET4qKe3W
-         QU/tAfCyrE/pJ4XGYNl3l6yL1yagiu0Njjx49cyBKjR/7YSWftgr9gGuijaD6Du/yoct
-         P6Jw==
+        d=google.com; s=20230601; t=1743147724; x=1743752524; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tsf7T6GOy/qgiJ4ewThBgUfHabvCY8b0VuUhOLMruus=;
+        b=we3eulPUcSBEaH551cLf2Cy92+aZnYerAycTmUU77Zdh40pNkQXLqpXJ5ZpJ5kLymr
+         ZKOrxgwElbecRcIq2U26MU4MLrcrhZ2lIFT3SpWZsywgCRUtjmTBlzM/zB7Y3mnclpza
+         D1aNyrcgMJjTfh8dQQMSsuZ/ZzTFpUTdYNAX9sUu25Z7tJO4L1K86YAU5NBjpPI/b1yQ
+         7b7/rNW6jpGZXUKTDBpxeuYMQpvHyPy8qvRWccQ8w9M/pfTZUTkm1poCzUNnVvpXPZIN
+         BvHh23gdwjOBhTGvPYMn+81WprLa2fdwqPi8Sjc+NGfd4gEhy8BLJRC9HFc4DhHVLzWl
+         vZXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743147487; x=1743752287;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Gj26yskeh2tjWK5SXJciubeRsbS53+ypDO00BmmM6/o=;
-        b=WVtvqBSU051cWl2ImyfmCdIHCVC6Dnw86/gg2AITdco2n4zN/6wUK3jIR1j380k44m
-         rzR9yr4L4KpiXJlChiK8Z9+nKN7mWfSTc2D2cKFpX9OA8F54R8NVHIbMKIesY9VvLnOh
-         r7bH1vauD5agQbspde5u3ZWw0Al2tPmOZCtyvxSGAXFhxeEcfhUkoYru1wdWqAg0VRXG
-         lIWbn/sTUoVNNqO/Uipxn/xh7SqW04BbzBVs5l+cmIuy+fWH54Wt0e2ggv/IJfK99YCk
-         9fuY19vVBk8T3C6JZDq+2KXb1Le8TFvH4M5BJveYDY285BspRwwthcfn+MTmPK1JDAL9
-         qQAg==
-X-Gm-Message-State: AOJu0YwkJvs12JXSqNYdZrq1dI4RZWmeTjAr78ofgBvjoCTz6DuyyGmi
-	T6r1ppN3vWPYeaCAw40dC/tzL0iXVr8L4cnZuou12Zp++8YvkSIQ
-X-Gm-Gg: ASbGncuqm+IC3ICebg2h2AjS/ovfcj+7el0IIs7jmFyiLmliJYz/XTMAzeJiPCRnDcB
-	ZkrJYUD1FW4kNax73CUocKVCdJWHFZcG5FgxLPDqYmlDQC2Z0dyg7U0QN8KWeDnErTopOzHOihY
-	SETRTQyAddfcss8GGo+Ob+cHfxP1+Ifi/rUJzgAgPxKhlF1FQ/XMQHgX+851xaVEgzuK1TH8AAu
-	2r3SwB6LxGmvLtuXp+fmU32r+b1jD7XlEvNac4rG+mCCB6zIMJIBesbc0SSvjPPIg22Bx00GQ2e
-	cHgua/l8uLCYAn1URXw3IxkOdWvcwCcatBYe8spGMS9JKLlofshdMakXt0qxh7He4r5Xd9qrtVT
-	5
-X-Google-Smtp-Source: AGHT+IF+sLJvXEsN/BMj8PzD7+ryW5HQ6C7Ev1ZbNL2b1gDZdOy97qZSNyrPzq+7J/Tkq+ZXA/H4+A==
-X-Received: by 2002:a05:690c:c14:b0:6fd:44a5:5b68 with SMTP id 00721157ae682-702250e9fdcmr88966257b3.35.1743147486674;
-        Fri, 28 Mar 2025 00:38:06 -0700 (PDT)
-Received: from localhost (66.112.216.249.16clouds.com. [66.112.216.249])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7023a3be5e5sm5152407b3.44.2025.03.28.00.38.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 00:38:05 -0700 (PDT)
-From: John Wang <wangzq.jn@gmail.com>
-To: wangzhiqiang02@ieisystem.com,
-	Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH] scripts/faddr2line: Set LANG=C to enforce ASCII output
-Date: Fri, 28 Mar 2025 15:38:02 +0800
-Message-Id: <20250328073802.3391960-1-wangzq.jn@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1743147724; x=1743752524;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tsf7T6GOy/qgiJ4ewThBgUfHabvCY8b0VuUhOLMruus=;
+        b=iIQ3qM8EVXuFuVD7HfMpSwPMEAEGpLhTeQ474jIJQE7Ty5E+VN/1swvXtz4xT+0l/C
+         5dfBKtiWWwH1UXPk6mzSnqQDv9Oi3D/vEqj5B2u+p1qK4k/BbSieUbH7/R9HH33Q33jH
+         HuayHIQmIzGjKeZWQi5vIZpCZm0pfyEoxFyafxNz0xVI1PGsNP3a9oPjXdxmi5aQIyuy
+         nrsSujhA8FxCTJCQKZZY7GpmaR7czh1h+xqphNocAYdikvLGLyYQ3zgfCXMhDvL9eV43
+         m2omI555RJ5opzzxGwPktle3tn8B2n73IXRv7KVqsgdT4ZI6g/7WtvovaSkG5Y26VS6+
+         MzYA==
+X-Forwarded-Encrypted: i=1; AJvYcCUk2hXOxHye2wJvv1pNCsAMQN0R5F8fSQ1PDCVnhJbeuecNHns3fWPgi8ast7KkLsf/IQDQ9LW5J61ZgwY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5A3tzH+rcjqQoCr2rP8a3eUA4iLhW2AUL3BlZPcKgIKt/HGkE
+	GAX7CS3EzKj5rXrrmp38pI166JYCOffjlQiYQfajFSR60OeVUERy/rbXfD9gGoiizn2HXM1/+gk
+	AJ7gPtQdAY4hFAOs75bAXZaRm7qmbsA5p+F2Y
+X-Gm-Gg: ASbGncueDA4BWv3rhXlN+/ebYmVBuNeYYLLmq2lLnJXPb/IrI9zgiKuFYvwbdknRS7e
+	OVYvdNArtuwh6NSiY++RSDEil+OucsUNMuxFGg4YYuyaBJs2ccPO3M8L6d0OgbD7bCExmiHSkQ2
+	Wv4mliAcH874yY1uwvYamkiFNLnCzmUvUJDCgf88wyvzV2rLjxeMF9X6VQ
+X-Google-Smtp-Source: AGHT+IHUVZSJNZN3D2V31hwTLejPg8P5aNmvTBpjwwEaklGeOM/MnEpcP1E1HOG3Y6WUkKsuM6ojYVsKYT7V/0QolyM=
+X-Received: by 2002:a17:90b:3d47:b0:2f8:34df:5652 with SMTP id
+ 98e67ed59e1d1-303a7f703e7mr8926066a91.21.1743147723354; Fri, 28 Mar 2025
+ 00:42:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250319005141.312805-1-quic_wcheng@quicinc.com> <20250319005141.312805-3-quic_wcheng@quicinc.com>
+In-Reply-To: <20250319005141.312805-3-quic_wcheng@quicinc.com>
+From: Puma Hsu <pumahsu@google.com>
+Date: Fri, 28 Mar 2025 15:42:00 +0800
+X-Gm-Features: AQ5f1Jrg9gTOy803CeskWFeIPBu-5GbtMNtuxub06NGzfZwp0UbNmEoTIVzDoSU
+Message-ID: <CAGCq0LYh13qaPpuM0jPyu2LV+EXqJrfoKvD-TOuhkZYScFnTNg@mail.gmail.com>
+Subject: Re: [PATCH v36 02/31] usb: host: xhci-mem: Cleanup pending secondary
+ event ring events
+To: Wesley Cheng <quic_wcheng@quicinc.com>
+Cc: srinivas.kandagatla@linaro.org, mathias.nyman@intel.com, perex@perex.cz, 
+	conor+dt@kernel.org, dmitry.torokhov@gmail.com, corbet@lwn.net, 
+	broonie@kernel.org, lgirdwood@gmail.com, krzk+dt@kernel.org, 
+	pierre-louis.bossart@linux.intel.com, Thinh.Nguyen@synopsys.com, 
+	tiwai@suse.com, robh@kernel.org, gregkh@linuxfoundation.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-sound@vger.kernel.org, linux-input@vger.kernel.org, 
+	linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Force tools like readelf to use the POSIX/C locale by exporting LANG=C
-This ensures ASCII-only output and avoids locale-specific
-characters(e.g., UTF-8 symbols or translated strings), which could
-break text processing utilities like sed in the script
+On Wed, Mar 19, 2025 at 8:53=E2=80=AFAM Wesley Cheng <quic_wcheng@quicinc.c=
+om> wrote:
+>
+> As part of xHCI bus suspend, the xHCI is halted.  However, if there are
+> pending events in the secondary event ring, it is observed that the xHCI
+> controller stops responding to further commands upon host or device
+> initiated bus resume.  Iterate through all pending events and update the
+> dequeue pointer to the beginning of the event ring.
+>
+> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
 
-Signed-off-by: John Wang <wangzq.jn@gmail.com>
----
- scripts/faddr2line | 4 ++++
- 1 file changed, 4 insertions(+)
+Tested-by: Puma Hsu <pumahsu@google.com>
 
-diff --git a/scripts/faddr2line b/scripts/faddr2line
-index 1fa6beef9f97..1f364fbb0cd8 100755
---- a/scripts/faddr2line
-+++ b/scripts/faddr2line
-@@ -76,6 +76,10 @@ ADDR2LINE="${UTIL_PREFIX}addr2line${UTIL_SUFFIX}"
- AWK="awk"
- GREP="grep"
- 
-+# Enforce ASCII-only output from tools like readelf
-+# ensuring sed processes strings correctly.
-+export LANG=C
-+
- command -v ${AWK} >/dev/null 2>&1 || die "${AWK} isn't installed"
- command -v ${READELF} >/dev/null 2>&1 || die "${READELF} isn't installed"
- command -v ${ADDR2LINE} >/dev/null 2>&1 || die "${ADDR2LINE} isn't installed"
--- 
-2.34.1
-
+> ---
+>  drivers/usb/host/xhci-mem.c  |  7 +++++-
+>  drivers/usb/host/xhci-ring.c | 47 ++++++++++++++++++++++++++++++------
+>  drivers/usb/host/xhci.c      |  2 +-
+>  drivers/usb/host/xhci.h      |  7 ++++++
+>  4 files changed, 54 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+> index d698095fc88d..daea0f76e844 100644
+> --- a/drivers/usb/host/xhci-mem.c
+> +++ b/drivers/usb/host/xhci-mem.c
+> @@ -1805,7 +1805,7 @@ xhci_remove_interrupter(struct xhci_hcd *xhci, stru=
+ct xhci_interrupter *ir)
+>                 tmp &=3D ERST_SIZE_MASK;
+>                 writel(tmp, &ir->ir_set->erst_size);
+>
+> -               xhci_write_64(xhci, ERST_EHB, &ir->ir_set->erst_dequeue);
+> +               xhci_update_erst_dequeue(xhci, ir, true);
+>         }
+>  }
+>
+> @@ -1848,6 +1848,11 @@ void xhci_remove_secondary_interrupter(struct usb_=
+hcd *hcd, struct xhci_interrup
+>                 return;
+>         }
+>
+> +       /*
+> +        * Cleanup secondary interrupter to ensure there are no pending e=
+vents.
+> +        * This also updates event ring dequeue pointer back to the start=
+.
+> +        */
+> +       xhci_skip_sec_intr_events(xhci, ir->event_ring, ir);
+>         intr_num =3D ir->intr_num;
+>
+>         xhci_remove_interrupter(xhci, ir);
+> diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+> index 5d64c297721c..bfef765dd78c 100644
+> --- a/drivers/usb/host/xhci-ring.c
+> +++ b/drivers/usb/host/xhci-ring.c
+> @@ -3054,9 +3054,9 @@ static int xhci_handle_event_trb(struct xhci_hcd *x=
+hci, struct xhci_interrupter
+>   * - When all events have finished
+>   * - To avoid "Event Ring Full Error" condition
+>   */
+> -static void xhci_update_erst_dequeue(struct xhci_hcd *xhci,
+> -                                    struct xhci_interrupter *ir,
+> -                                    bool clear_ehb)
+> +void xhci_update_erst_dequeue(struct xhci_hcd *xhci,
+> +                             struct xhci_interrupter *ir,
+> +                             bool clear_ehb)
+>  {
+>         u64 temp_64;
+>         dma_addr_t deq;
+> @@ -3099,10 +3099,11 @@ static void xhci_clear_interrupt_pending(struct x=
+hci_interrupter *ir)
+>   * Handle all OS-owned events on an interrupter event ring. It may drop
+>   * and reaquire xhci->lock between event processing.
+>   */
+> -static int xhci_handle_events(struct xhci_hcd *xhci, struct xhci_interru=
+pter *ir)
+> +static int xhci_handle_events(struct xhci_hcd *xhci, struct xhci_interru=
+pter *ir,
+> +                             bool skip_events)
+>  {
+>         int event_loop =3D 0;
+> -       int err;
+> +       int err =3D 0;
+>         u64 temp;
+>
+>         xhci_clear_interrupt_pending(ir);
+> @@ -3125,7 +3126,8 @@ static int xhci_handle_events(struct xhci_hcd *xhci=
+, struct xhci_interrupter *ir
+>
+>         /* Process all OS owned event TRBs on this event ring */
+>         while (unhandled_event_trb(ir->event_ring)) {
+> -               err =3D xhci_handle_event_trb(xhci, ir, ir->event_ring->d=
+equeue);
+> +               if (!skip_events)
+> +                       err =3D xhci_handle_event_trb(xhci, ir, ir->event=
+_ring->dequeue);
+>
+>                 /*
+>                  * If half a segment of events have been handled in one g=
+o then
+> @@ -3152,6 +3154,37 @@ static int xhci_handle_events(struct xhci_hcd *xhc=
+i, struct xhci_interrupter *ir
+>         return 0;
+>  }
+>
+> +/*
+> + * Move the event ring dequeue pointer to skip events kept in the second=
+ary
+> + * event ring.  This is used to ensure that pending events in the ring a=
+re
+> + * acknowledged, so the xHCI HCD can properly enter suspend/resume.  The
+> + * secondary ring is typically maintained by an external component.
+> + */
+> +void xhci_skip_sec_intr_events(struct xhci_hcd *xhci,
+> +                              struct xhci_ring *ring,  struct xhci_inter=
+rupter *ir)
+> +{
+> +       union xhci_trb *current_trb;
+> +       u64 erdp_reg;
+> +       dma_addr_t deq;
+> +
+> +       /* disable irq, ack pending interrupt and ack all pending events =
+*/
+> +       xhci_disable_interrupter(ir);
+> +
+> +       /* last acked event trb is in erdp reg  */
+> +       erdp_reg =3D xhci_read_64(xhci, &ir->ir_set->erst_dequeue);
+> +       deq =3D (dma_addr_t)(erdp_reg & ERST_PTR_MASK);
+> +       if (!deq) {
+> +               xhci_err(xhci, "event ring handling not required\n");
+> +               return;
+> +       }
+> +
+> +       current_trb =3D ir->event_ring->dequeue;
+> +       /* read cycle state of the last acked trb to find out CCS */
+> +       ring->cycle_state =3D le32_to_cpu(current_trb->event_cmd.flags) &=
+ TRB_CYCLE;
+> +
+> +       xhci_handle_events(xhci, ir, true);
+> +}
+> +
+>  /*
+>   * xHCI spec says we can get an interrupt, and if the HC has an error co=
+ndition,
+>   * we might get bad data out of the event ring.  Section 4.10.2.7 has a =
+list of
+> @@ -3196,7 +3229,7 @@ irqreturn_t xhci_irq(struct usb_hcd *hcd)
+>         writel(status, &xhci->op_regs->status);
+>
+>         /* This is the handler of the primary interrupter */
+> -       xhci_handle_events(xhci, xhci->interrupters[0]);
+> +       xhci_handle_events(xhci, xhci->interrupters[0], false);
+>  out:
+>         spin_unlock(&xhci->lock);
+>
+> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+> index 83a4adf57bae..61950a350432 100644
+> --- a/drivers/usb/host/xhci.c
+> +++ b/drivers/usb/host/xhci.c
+> @@ -335,7 +335,7 @@ static int xhci_enable_interrupter(struct xhci_interr=
+upter *ir)
+>         return 0;
+>  }
+>
+> -static int xhci_disable_interrupter(struct xhci_interrupter *ir)
+> +int xhci_disable_interrupter(struct xhci_interrupter *ir)
+>  {
+>         u32 iman;
+>
+> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+> index 39db228f0b84..3fa8669e3b2d 100644
+> --- a/drivers/usb/host/xhci.h
+> +++ b/drivers/usb/host/xhci.h
+> @@ -1856,6 +1856,9 @@ xhci_create_secondary_interrupter(struct usb_hcd *h=
+cd, unsigned int segs,
+>                                   u32 imod_interval);
+>  void xhci_remove_secondary_interrupter(struct usb_hcd
+>                                        *hcd, struct xhci_interrupter *ir)=
+;
+> +void xhci_skip_sec_intr_events(struct xhci_hcd *xhci,
+> +                              struct xhci_ring *ring,
+> +                              struct xhci_interrupter *ir);
+>
+>  /* xHCI host controller glue */
+>  typedef void (*xhci_get_quirks_t)(struct device *, struct xhci_hcd *);
+> @@ -1895,6 +1898,7 @@ int xhci_alloc_tt_info(struct xhci_hcd *xhci,
+>                 struct usb_tt *tt, gfp_t mem_flags);
+>  int xhci_set_interrupter_moderation(struct xhci_interrupter *ir,
+>                                     u32 imod_interval);
+> +int xhci_disable_interrupter(struct xhci_interrupter *ir);
+>
+>  /* xHCI ring, segment, TRB, and TD functions */
+>  dma_addr_t xhci_trb_virt_to_dma(struct xhci_segment *seg, union xhci_trb=
+ *trb);
+> @@ -1939,6 +1943,9 @@ unsigned int count_trbs(u64 addr, u64 len);
+>  int xhci_stop_endpoint_sync(struct xhci_hcd *xhci, struct xhci_virt_ep *=
+ep,
+>                             int suspend, gfp_t gfp_flags);
+>  void xhci_process_cancelled_tds(struct xhci_virt_ep *ep);
+> +void xhci_update_erst_dequeue(struct xhci_hcd *xhci,
+> +                             struct xhci_interrupter *ir,
+> +                             bool clear_ehb);
+>
+>  /* xHCI roothub code */
+>  void xhci_set_link_state(struct xhci_hcd *xhci, struct xhci_port *port,
+>
