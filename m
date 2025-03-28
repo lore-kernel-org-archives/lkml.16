@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062E517A2EE
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:09:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1ECA49620
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 14:10:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743170984; cv=none; b=pQx6Jydz2V0JHdzxv8JTBYQkp4FOOxGgayZDpO4IwBOoNthtVmzkXcTz6WF55IF5ghAceiMBEM6zilyEYd7sInYxAKkefCot72je7hxFNaYD88AfpJgTAnPe3sxnQrtPRQOAp6/eTi+gPWNRFaWC+RIRqqH2BkHxHfz9bOya0Tk=
+	t=1743171057; cv=none; b=q2UKSqykoyTWmKUyA4WGrhfmaS5jC2haTrEchn4JHbBhZ47dKF1817QU1uQmmONqMvcw3bll2hhEO3dlqJIgpLHuP7Y3XjUzh+YWD/7H1vHPjgUpB2WMikFOxQSRR2Cz5ZDsyw5cTcrXk3ruiZ4lUVu4RkP7isZBnMoLnTwcHUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743170984; c=relaxed/simple;
-	bh=eiDoFa9jIGXP/ujFM85IxpiZdP0vpmnosAiuEPBIGqI=;
+	s=arc-20240116; t=1743171057; c=relaxed/simple;
+	bh=fWclp7nJB2VTYDvbnpx4IhPZk05Kk8swRynjIbvzJFM=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=R5mDJm4cadB+sC+BUiT8XpPk9o+OzJzFgvYgxYI/+8ZYoyIWOfMrfSfRyQXKhzrua0m+dJPpKMPBZGIf4QzPjVso/jZvIEpmKAccRtqyM0JUCTTNBtDKR2GT58FxOMH5YvgMBjlkWSRbY31rp0PA9cBbVu6OauClkRRDGoAqYQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=avM+QGso; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=pqwfA3QsFZnh9E7H+tedBy7OrXKU8ufRJyGzouF1OP3JentllsGRrs6cLyTVr1vUJG3jWs5Ovty7TLPeUhCZhNtRQlwRe+JuILJojjm0t7Rf6f/9wMQiE75CdwHBVLUyJUGD3ZXWe4OzwNedd+r3z2hZ0JJvGnitOynKXsEFF3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pzpWi9af; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="avM+QGso"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90A0EC4CEE4;
-	Fri, 28 Mar 2025 14:09:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pzpWi9af"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2E99C4CEE5;
+	Fri, 28 Mar 2025 14:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743170983;
-	bh=eiDoFa9jIGXP/ujFM85IxpiZdP0vpmnosAiuEPBIGqI=;
+	s=k20201202; t=1743171057;
+	bh=fWclp7nJB2VTYDvbnpx4IhPZk05Kk8swRynjIbvzJFM=;
 	h=Date:From:To:Cc:Subject:From;
-	b=avM+QGsox9PWYkDQ/HDW51OZuF+9a63re2tZrlP+GFgXYGaGbOnlVgnGUtW46rDJd
-	 f71LHj/mgPLxCx5b7uBHeZ4TEjq5yK96CUYtQDmtAfj9PzROvBtZ8VU0aXv0mf68zW
-	 1Q5U4OWtervfyjmYemYaIz7GWtCFOnxvBlPG+PoxxAN+wmgDdAbqkg7s+NkmqLNCjy
-	 e0zdhK2LkqFECKnqeHhkM0+hHnFAsTuXKAzFF5p6p28QHYmfB6MqdEJa4bgNqRUJbX
-	 ZZcEvt8713hsty78cNGXE2t4ErW1ldDuuwHNuxgfI07Pv4n6NTjjHk/jJXRmWqHqmW
-	 bwulY8ufwlgog==
-Date: Fri, 28 Mar 2025 14:09:37 +0000
+	b=pzpWi9afM4tzbQwGQoFU+Lyizoos/crBtUt0bzNl7pIn91Vl8haYBQDWK4L5q774k
+	 X10hKdFW58ZHRzziUs21z0HMOVGSpC+ZhkO6qEF/I+oeN04WRKHRNKJ8+2vVbhbBf7
+	 tJP2j2S4bNKTMvzVSBZ2QaZMzErvPK3nZAWP37OyOf7f1ihWg984Yqhnm2Zk6dVTS2
+	 Y5vZp5rvGKSmH7U2bgoO0fktIPVhdoiva7QOpItVHDeyKuy/8VKZ9X7S81QPHqK+in
+	 0xlUTgT4yOmgTiQZIpWbLkmFZd+9t0Yz4wCUkOqbB3h0hEG8QjEEUCGsweoYltKSwu
+	 AlvpNpfmWMhlg==
+Date: Fri, 28 Mar 2025 14:10:50 +0000
 From: Lee Jones <lee@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] MFD for v6.15
-Message-ID: <20250328140937.GA7190@google.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Pavel Machek <pavel@ucw.cz>
+Subject: [GIT PULL] LEDs for v6.15
+Message-ID: <20250328141050.GB7190@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,271 +51,144 @@ The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
 
 are available in the Git repository at:
 
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-next-6.15
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/lee/leds.git tags/leds-next-6.15
 
-for you to fetch changes up to a8d1376568619d5b7fb867929b01eeaa59bb9097:
+for you to fetch changes up to 161e3bea8fa5ba34b2291e5cfeb3e533cf991613:
 
-  mfd: cgbc-core: Add support for conga-SA8 (2025-03-21 11:34:08 +0000)
-
-----------------------------------------------------------------
-  * Maxim MAX77705:
-    * Added core MFD driver.
-    * Added charger driver.
-    * Added devicetree bindings for the charger and MFD core.
-    * Added Haptic controller support via the input subsystem.
-    * Added LED support.
-    * Added support to simple-mfd-i2c for fuel gauge and hwmon.
-  * Samsung S2MPU05 (Exynos7870 PMIC):
-    * Added core MFD support.
-    * Added Regulator support for 21 LDOs and 5 BUCKs.
-    * Added devicetree bindings for regulators and the PMIC core.
-  * TI TPS65215 & TPS65214:
-    * Added support to the existing TPS65219 driver.
-    * Added devicetree bindings.
-  * STMicroelectronics STM32MP25:
-    * Added support to the stm32-timers MFD driver.
-    * Added devicetree bindings.
-  * Congatec Board Controller (CGBC):
-    * Added HWMON support for internal sensors.
-    * Added support for the conga-SA8 module.
-  * Microchip LAN969X:
-    * Enabled the at91-usart MFD driver for this architecture.
-  * MediaTek MT6359:
-    * Added mfd_cell for mt6359-accdet to allow its driver to probe.
-
-  * AXP20X (AXP717): Added AXP717_TS_PIN_CFG register to writeable
-    regs for temperature sensor configuration.
-  * SM501: Switched to using BIT() macro to mitigate potential
-    integer overflows in GPIO functions.
-  * ENE KB3930: Added a NULL pointer check for off_gpios during
-    probe to prevent potential dereference.
-  * SYSCON: Added a check for invalid resource size to prevent
-    issues from DT misconfiguration.
-  * CGBC: Corrected signedness issues in cgbc_session_request.
-
-  * intel_soc_pmic_chtdc_ti / intel_soc_pmic_crc: Removed unneeded
-    explicit assignment to REGCACHE_NONE.
-  * ipaq-micro / tps65010: Switched to using str_enable_disable()
-    helpers for clarity and potential size reduction.
-  * upboard-fpga: Removed unnecessary ACPI_PTR() annotation.
-  * max8997: Removed unused max8997_irq_exit() function, using
-    devm_* helpers instead.
-  * lp3943: Dropped unused #include <linux/pwm.h> from the header
-    file.
-  * db8500-prcmu: Removed needless return statements in void APIs.
-  * qnap-mcu: Replaced commas with semicolons between expressions
-    for correctness.
-
-  * STA2X11: Removed the core MFD driver as the underlying
-    platform support was removed.
-  * EZX-PCAP: Removed the unused pcap_adc_sync function.
-  * PCF50633 (OpenMoko PMIC): Removed the entire driver (core, adc,
-    gpio, irq) as the underlying s3c24xx platform support was removed.
-
-  * Converted fsl,mcu-mpc8349emitx binding to YAML.
-  * Added qcom,msm8937-tcsr compatible.
-  * Added microchip,sama7d65-flexcom compatible.
-  * Added rockchip,rk3528-qos syscon compatible.
-  * Added airoha,en7581-pbus-csr syscon compatible.
-  * Added microchip,sama7d65-ddr3phy syscon compatible.
-  * Added microchip,sama7d65-sfrbu syscon compatible.
+  leds: nic78bx: Tidy up ACPI ID table (2025-03-21 09:49:37 +0000)
 
 ----------------------------------------------------------------
-Aaron Kling (1):
-      mfd: max77620: Allow building as a module
+  * pca955x: Add HW blink support, utilizing PWM0. It supports one frequency
+    across all blinking LEDs and falls back to software blink if different
+    frequencies are requested.
 
-Andrew Perepech (1):
-      mfd: mt6397-core: Add mfd_cell for mt6359-accdet
+  * trigger: netdev: Allow configuring LED blink interval via .blink_set
+    even when HW offload (.hw_control) is enabled.
+  * led-core: Fix a race condition where a quick LED_OFF followed by another
+    brightness set could leave the LED off incorrectly, especially
+    noticeable after the introduction of the ordered workqueue.
+  * qcom-lpg: Add support for 6-bit PWM resolution alongside the existing
+    9-bit support.
+  * qcom-lpg: Fix PWM value capping to respect the selected resolution
+    (6-bit or 9-bit) for normal PWMs.
+  * qcom-lpg: Fix PWM value capping to respect the selected resolution for
+    Hi-Res PWMs.
+  * qcom-lpg: Fix calculation of the best period for Hi-Res PWMs to prevent
+    requested duty cycles from exceeding the maximum allowed by the
+    selected resolution.
+  * st1202: Add a check for the error code returned by devm_mutex_init().
+  * pwm-multicolor: Add a check for the return value of
+    fwnode_property_read_u32().
+  * st1202: Ensure hardware initialization (st1202_setup) happens before DT
+    node processing (st1202_dt_init).
+  * Kconfig: leds-st1202: Add select LEDS_TRIGGER_PATTERN as it's required
+    by the driver.
+
+  * lp8860: Drop unneeded explicit assignment to REGCACHE_NONE.
+  * pca955x: Refactor code with helper functions and rename some
+    functions/variables for clarity.
+  * pca955x: Pass driver data pointers instead of the I2C client to helper
+    functions.
+  * pca955x: Optimize probe LED selection logic to reduce I2C operations.
+  * pca955x: Revert the removal of pca95xx_num_led_regs() (renaming it to
+    pca955x_num_led_regs) as it's needed for HW blink support.
+  * st1202: Refactor st1202_led_set() to use the !! operator for boolean
+    conversion.
+  * st1202: Minor spacing and proofreading edits in comments.
+  * Directory Rename: Rename the drivers/leds/simple directory to
+    drivers/leds/simatic as the drivers within are not simple.
+  * mlxcpld: Remove unused include of acpi.h.
+  * nic78bx: Tidy up the ACPI ID table (remove ACPI_PTR, use
+    mod_devicetable.h, remove explicit driver_data initializer).
+
+  * tlc591xx: Convert text binding to YAML format, add child node
+    constraints, and fix typos/formatting in the example.
+  * qcom-lpg: Document the qcom,pm8937-pwm compatible string as a
+    fallback for qcom,pm8916-pwm.
+
+----------------------------------------------------------------
+Abel Vesa (3):
+      leds: rgb: leds-qcom-lpg: Fix pwm resolution max for normal PWMs
+      leds: rgb: leds-qcom-lpg: Fix pwm resolution max for Hi-Res PWMs
+      leds: rgb: leds-qcom-lpg: Fix calculation of best period Hi-Res PWMs
 
 Andy Shevchenko (3):
-      mfd: intel_soc_pmic_chtdc_ti: Drop unneeded assignment for cache_type
-      mfd: intel_soc_pmic_crc: Drop unneeded assignment for cache_type
-      mfd: upboard-fpga: Remove ACPI_PTR() annotation
+      leds: lp8860: Drop unneeded assignment for cache_type
+      leds: mlxcpld: Remove unused ACPI header inclusion
+      leds: nic78bx: Tidy up ACPI ID table
+
+Anjelique Melendez (1):
+      leds: rgb: leds-qcom-lpg: Add support for 6-bit PWM resolution
 
 Barnabás Czémán (1):
-      dt-bindings: mfd: qcom,tcsr: Add compatible for MSM8937
+      dt-bindings: leds: qcom-lpg: Document PM8937 PWM compatible
 
-Chen Ni (1):
-      mfd: qnap-mcu: Convert commas to semicolons in qnap_mcu_exec()
+Eddie James (5):
+      leds: pca955x: Refactor with helper functions and renaming
+      leds: pca955x: Use pointers to driver data rather than I2C client
+      leds: pca955x: Optimize probe LED selection
+      leds: pca955x: Add HW blink support
+      Revert "leds-pca955x: Remove the unused function pca95xx_num_led_regs()"
 
-Chenyuan Yang (1):
-      mfd: ene-kb3930: Fix a potential NULL pointer dereference
+Frank Li (1):
+      dt-bindings: leds: Convert leds-tlc591xx.txt to yaml format
 
-Chris Morgan (1):
-      mfd: axp20x: AXP717: Add AXP717_TS_PIN_CFG to writeable regs
+Lee Jones (1):
+      leds: Rename simple directory to simatic
 
-Chukun Pan (1):
-      dt-bindings: mfd: syscon: Add rk3528 QoS register compatible
+Manuel Fombuena (3):
+      leds: leds-st1202: Initialize hardware before DT node child operations
+      leds: leds-st1202: Spacing and proofreading editing
+      leds: Kconfig: leds-st1202: Add select for required LEDS_TRIGGER_PATTERN
 
-Dan Carpenter (1):
-      mfd: cgbc-core: Cleanup signedness in cgbc_session_request()
+Marek Vasut (1):
+      leds: trigger: netdev: Configure LED blink interval for HW offload
 
-Dharma Balasubiramani (1):
-      dt-bindings: mfd: atmel,sama5d2-flexcom: Add microchip,sama7d65-flexcom
+Pei Xiao (1):
+      leds: st1202: Refactor st1202_led_set() to use !! operator for boolean conversion
 
-Dr. David Alan Gilbert (5):
-      mfd: ezx-pcap: Remove unused pcap_adc_sync
-      mfd: pcf50633-adc: Remove unused driver
-      mfd: pcF50633-gpio: Remove unused driver
-      mfd: pcf50633: Remove unused platform IRQ code
-      mfd: pcf50633: Remove remaining PCF50633 support
+Remi Pommarel (1):
+      leds: Fix LED_OFF brightness race
 
-Dzmitry Sankouski (7):
-      dt-bindings: power: supply: add maxim,max77705 charger
-      dt-bindings: mfd: Add maxim,max77705
-      power: supply: max77705: Add charger driver for Maxim 77705
-      mfd: simple-mfd-i2c: Add MAX77705 support
-      mfd: Add new driver for MAX77705 PMIC
-      Input: max77693 - add max77705 haptic support
-      leds: max77705: Add LEDs support
+Thomas Weißschuh (1):
+      leds: st1202: Check for error code from devm_mutex_init() call
 
-Eder Zulian (1):
-      mfd: syscon: Add check for invalid resource size
+Yuanjun Gong (1):
+      leds: pwm-multicolor: Add check for fwnode_property_read_u32
 
-Fabrice Gasnier (2):
-      dt-bindings: mfd: stm32-timers: Add support for stm32mp25
-      mfd: stm32-timers: Add support for stm32mp25
-
-J. Neuschäfer (1):
-      dt-bindings: mfd: Convert fsl,mcu-mpc8349emitx binding to YAML
-
-Kaustabh Chakraborty (4):
-      regulator: dt-bindings: add documentation for s2mpu05-pmic regulators
-      mfd: sec: Add support for S2MPU05 PMIC
-      regulator: s2mps11: Add support for S2MPU05 regulators
-      dt-bindings: mfd: samsung,s2mps11: Add compatible for s2mpu05-pmic
-
-Krzysztof Kozlowski (1):
-      mfd: ipaq-micro/tps65010: Use str_enable_disable-like helpers
-
-Lee Jones (2):
-      Merge branches 'ib-mfd-input-leds-power-6.15', 'ib-mfd-power-6.15' and 'ib-mfd-regulator-6.15' into ibs-for-mfd-merged
-      mfd: max8997: Remove unused function max8997_irq_exit()
-
-Lorenzo Bianconi (1):
-      dt-bindings: mfd: syscon: Add the pbus-csr node for Airoha EN7581 SoC
-
-Lukas Bulwahn (1):
-      mfd: Remove STA2x11 core driver
-
-Nikita Zhandarovich (1):
-      mfd: sm501: Switch to BIT() to mitigate integer overflows
-
-Robert Marko (1):
-      mfd: at91-usart: Make it selectable for ARCH_LAN969X
-
-Ryan Wanner (2):
-      dt-bindings: mfd: syscon: Add microchip,sama7d65-ddr3phy
-      dt-bindings: mfd: syscon: Add microchip,sama7d65-sfrbu
-
-Shree Ramamoorthy (5):
-      dt-bindings: regulator: Add TI TPS65215 PMIC bindings
-      dt-bindings: regulator: Add TI TPS65214 PMIC bindings
-      mfd: tps65219: Remove TPS65219_REG_TI_DEV_ID check
-      mfd: tps65219: Add support for TI TPS65215 PMIC
-      mfd: tps65219: Add support for TI TPS65214 PMIC
-
-Thomas Richard (2):
-      mfd: cgbc: Add support for HWMON
-      mfd: cgbc-core: Add support for conga-SA8
-
-Uwe Kleine-König (1):
-      mfd: lp3943: Drop #include <linux/pwm.h> from header
-
-Zijun Hu (1):
-      mfd: db8500-prcmu: Remove needless return in three void APIs
-
- .../bindings/mfd/atmel,sama5d2-flexcom.yaml        |   9 +-
- .../bindings/mfd/fsl,mcu-mpc8349emitx.yaml         |  53 ++
- .../devicetree/bindings/mfd/maxim,max77705.yaml    | 158 +++++
- .../devicetree/bindings/mfd/qcom,tcsr.yaml         |   1 +
- .../devicetree/bindings/mfd/samsung,s2mps11.yaml   |  13 +
- .../devicetree/bindings/mfd/st,stm32-timers.yaml   |  18 +-
- Documentation/devicetree/bindings/mfd/syscon.yaml  |   8 +
- .../bindings/power/supply/maxim,max77705.yaml      |  50 ++
- .../bindings/powerpc/fsl/mcu-mpc8349emitx.txt      |  17 -
- .../bindings/regulator/samsung,s2mpu05.yaml        |  47 ++
- .../devicetree/bindings/regulator/ti,tps65219.yaml |  27 +-
- MAINTAINERS                                        |   4 +
- arch/mips/configs/ip27_defconfig                   |   3 -
- drivers/input/misc/Kconfig                         |   6 +-
- drivers/input/misc/max77693-haptic.c               |  13 +-
- drivers/leds/Kconfig                               |   8 +
- drivers/leds/Makefile                              |   1 +
- drivers/leds/leds-max77705.c                       | 275 +++++++++
- drivers/mfd/Kconfig                                |  47 +-
- drivers/mfd/Makefile                               |   6 +-
- drivers/mfd/axp20x.c                               |   1 +
- drivers/mfd/cgbc-core.c                            |  10 +-
- drivers/mfd/ene-kb3930.c                           |   2 +-
- drivers/mfd/ezx-pcap.c                             |  33 --
- drivers/mfd/intel_soc_pmic_chtdc_ti.c              |   1 -
- drivers/mfd/intel_soc_pmic_crc.c                   |   1 -
- drivers/mfd/ipaq-micro.c                           |   3 +-
- drivers/mfd/max77620.c                             |   5 +
- drivers/mfd/max77705.c                             | 182 ++++++
- drivers/mfd/max8997-irq.c                          |  15 +-
- drivers/mfd/mt6397-core.c                          |  12 +
- drivers/mfd/pcf50633-adc.c                         | 255 --------
- drivers/mfd/pcf50633-core.c                        | 304 ----------
- drivers/mfd/pcf50633-gpio.c                        |  92 ---
- drivers/mfd/pcf50633-irq.c                         | 312 ----------
- drivers/mfd/qnap-mcu.c                             |   6 +-
- drivers/mfd/sec-core.c                             |  12 +
- drivers/mfd/sec-irq.c                              |  34 ++
- drivers/mfd/simple-mfd-i2c.c                       |  11 +
- drivers/mfd/sm501.c                                |   6 +-
- drivers/mfd/sta2x11-mfd.c                          | 645 ---------------------
- drivers/mfd/stm32-timers.c                         |  31 +-
- drivers/mfd/syscon.c                               |   9 +-
- drivers/mfd/tps65010.c                             |  13 +-
- drivers/mfd/tps65219.c                             | 279 ++++++++-
- drivers/mfd/upboard-fpga.c                         |   3 +-
- drivers/power/supply/Kconfig                       |   6 +
- drivers/power/supply/Makefile                      |   1 +
- drivers/power/supply/max77705_charger.c            | 581 +++++++++++++++++++
- drivers/regulator/Kconfig                          |   4 +-
- drivers/regulator/s2mps11.c                        |  92 ++-
- include/linux/mfd/axp20x.h                         |   1 +
- include/linux/mfd/dbx500-prcmu.h                   |   6 +-
- include/linux/mfd/ezx-pcap.h                       |   1 -
- include/linux/mfd/lp3943.h                         |   1 -
- include/linux/mfd/max77693-common.h                |   4 +-
- include/linux/mfd/max77705-private.h               | 195 +++++++
- include/linux/mfd/max8997-private.h                |   1 -
- include/linux/mfd/pcf50633/adc.h                   |  69 ---
- include/linux/mfd/pcf50633/gpio.h                  |  48 --
- include/linux/mfd/pcf50633/mbc.h                   | 130 -----
- include/linux/mfd/pcf50633/pmic.h                  |  68 ---
- include/linux/mfd/samsung/core.h                   |   1 +
- include/linux/mfd/samsung/irq.h                    |  44 ++
- include/linux/mfd/samsung/s2mpu05.h                | 183 ++++++
- include/linux/mfd/sta2x11-mfd.h                    | 506 ----------------
- include/linux/mfd/stm32-timers.h                   |   9 +
- include/linux/mfd/tps65219.h                       | 136 ++++-
- include/linux/power/max77705_charger.h             | 195 +++++++
- 69 files changed, 2724 insertions(+), 2599 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/fsl,mcu-mpc8349emitx.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/maxim,max77705.yaml
- create mode 100644 Documentation/devicetree/bindings/power/supply/maxim,max77705.yaml
- delete mode 100644 Documentation/devicetree/bindings/powerpc/fsl/mcu-mpc8349emitx.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/samsung,s2mpu05.yaml
- create mode 100644 drivers/leds/leds-max77705.c
- create mode 100644 drivers/mfd/max77705.c
- delete mode 100644 drivers/mfd/pcf50633-adc.c
- delete mode 100644 drivers/mfd/pcf50633-core.c
- delete mode 100644 drivers/mfd/pcf50633-gpio.c
- delete mode 100644 drivers/mfd/pcf50633-irq.c
- delete mode 100644 drivers/mfd/sta2x11-mfd.c
- create mode 100644 drivers/power/supply/max77705_charger.c
- create mode 100644 include/linux/mfd/max77705-private.h
- delete mode 100644 include/linux/mfd/pcf50633/adc.h
- delete mode 100644 include/linux/mfd/pcf50633/gpio.h
- delete mode 100644 include/linux/mfd/pcf50633/mbc.h
- delete mode 100644 include/linux/mfd/pcf50633/pmic.h
- create mode 100644 include/linux/mfd/samsung/s2mpu05.h
- delete mode 100644 include/linux/mfd/sta2x11-mfd.h
- create mode 100644 include/linux/power/max77705_charger.h
+ .../devicetree/bindings/leds/leds-qcom-lpg.yaml    |   4 +
+ .../devicetree/bindings/leds/leds-tlc591xx.txt     |  40 ---
+ .../devicetree/bindings/leds/ti,tlc59116.yaml      |  90 ++++++
+ drivers/leds/Kconfig                               |   8 +-
+ drivers/leds/Makefile                              |   4 +-
+ drivers/leds/led-core.c                            |  22 +-
+ drivers/leds/leds-lp8860.c                         |   2 -
+ drivers/leds/leds-mlxcpld.c                        |   1 -
+ drivers/leds/leds-nic78bx.c                        |  16 +-
+ drivers/leds/leds-pca955x.c                        | 359 ++++++++++++++-------
+ drivers/leds/leds-st1202.c                         |  21 +-
+ drivers/leds/rgb/leds-pwm-multicolor.c             |   5 +-
+ drivers/leds/rgb/leds-qcom-lpg.c                   |  23 +-
+ drivers/leds/{simple => simatic}/Kconfig           |   0
+ drivers/leds/{simple => simatic}/Makefile          |   0
+ .../simatic-ipc-leds-gpio-apollolake.c             |   0
+ .../simatic-ipc-leds-gpio-core.c                   |   0
+ .../simatic-ipc-leds-gpio-elkhartlake.c            |   0
+ .../simatic-ipc-leds-gpio-f7188x.c                 |   0
+ .../{simple => simatic}/simatic-ipc-leds-gpio.h    |   0
+ .../leds/{simple => simatic}/simatic-ipc-leds.c    |   0
+ drivers/leds/trigger/ledtrig-netdev.c              |  16 +-
+ 22 files changed, 418 insertions(+), 193 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/leds/leds-tlc591xx.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/ti,tlc59116.yaml
+ rename drivers/leds/{simple => simatic}/Kconfig (100%)
+ rename drivers/leds/{simple => simatic}/Makefile (100%)
+ rename drivers/leds/{simple => simatic}/simatic-ipc-leds-gpio-apollolake.c (100%)
+ rename drivers/leds/{simple => simatic}/simatic-ipc-leds-gpio-core.c (100%)
+ rename drivers/leds/{simple => simatic}/simatic-ipc-leds-gpio-elkhartlake.c (100%)
+ rename drivers/leds/{simple => simatic}/simatic-ipc-leds-gpio-f7188x.c (100%)
+ rename drivers/leds/{simple => simatic}/simatic-ipc-leds-gpio.h (100%)
+ rename drivers/leds/{simple => simatic}/simatic-ipc-leds.c (100%)
 
 -- 
 Lee Jones [李琼斯]
