@@ -1,215 +1,230 @@
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2058.outbound.protection.outlook.com [40.107.104.58])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74CCC2C8;
-	Fri, 28 Mar 2025 06:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743144542; cv=fail; b=a7BVybt9JTPvNDaOTesxGmCw6vq3vIsOkI3jvjtw3o8dkK1DdmzFLxNXOlyBfLvVS6uTdHuY5RoV3fBuToRj+xhj+KfFXSJmwxgn6Tc0q48O1daW12QuHOlpT8GcWi2MnlIboA6Hlaaw7KjKLsE1qot8HndYg/4JPO9iK+C9OuI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743144542; c=relaxed/simple;
-	bh=xHZDnYG03wp6BJNxXhjj4caKNy/G6vwR4WxVbbqDVTs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=s1YR0CSKY4DgEHDPXx3AYJ1yliuBMQ8cfQTgZGQtS9/2eINwfYhAM80ttamZjKhJJoz78JOxjBBkGCkOUtqXXgcYR1VlZM3Usntd01AZULz7xRTS7THweXq1ycQwnlukwAY8DJPI0ijJiGkqMAwbMnHuuwqM+s+zSfzrb8o7gL8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=UEgWIsJb; arc=fail smtp.client-ip=40.107.104.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0047D211469
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 06:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743144755; cv=none; b=aaTkSIhDj9KuSnMhXr2OHyBXk4Qe/4ngYCIgBEIl7ajd5/W8anB/YWcWfGF5wvpSo83hZ6Q2mQFVJlvoyeqsBbf5bEJlBCPeb7Zx9kv/nwGm7NCkjrUIeu480ngTOMdo+21kEZCnDdIDdbfHyAZ23253YRIpBuiSbxKCWetGVrA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743144755; c=relaxed/simple;
+	bh=9lHxPXrnLv9eBmUN4XlRv6P9qYNb/DkhwAuIpFAGeHA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Uz/dRCuGlULdeAKBoT8gs0zHWRqd6cCrYbjQ1krWmg65hnti4WOGnXMuGm99zmSsHi2ybU+InVa6e0qvw3Jz9O91nt6rxLUYSn2BmqmppBLcy/yCYT7LJH7LZ51XgESeMW0Qwz7fcby6IMAd3tKfBDvX32QWRKTrCJqo6nX3F28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DtN/PI1z; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="UEgWIsJb"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hdIn/bHZVWLF2fTFTo37SSlvihvU4cqTLFGQB/f03WobGLBwmEwgmN6uwZBD4Jm+3HU+IG3/zoOJ0HMFB9SFRQZQSeypXUovnCOtXT3dboIWkAyONq84Ia0Z0iBBEpC+51l9Bb6zAjuXNfFfgm6VAPr0rSQGtmbE+Z0fJfBLbtoEieTOfYHyyFDsLdaYYS+8VUFIx6KCGFfk+5KtxWqhC6yLfiWysyLep2NbqQTWw7YSsk1x4BTlVT/HO1+WLZ+iHKRbDwsCVOA+BcAge3FP20sZGmNnFbuk9S5t/vehN5cG0k+7/oEVGowxu4eFE4X0+qAr4EXFroHiEgXqb3bAOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7ljEEqKGIjyiNI+y1MvfBRN/8nfmxQruZGYaWFrDjq8=;
- b=JOD7zNSb8z5F3MslqBKIvrVgi8CpuzUVhHE2QdBe8uhjyazlUgljYlPeeZtUi/op1E3rGNHfuBQzGFqYRhuW4ctFEtfXHe6P8l1fH1+Ek/lhZxRJgLQfgctcYGxtL/h2Hv1yGC5kHHOZaTR3BHVKAz43knd8PGzhTGLH2tyzly9mSAOThTirRNkF2CIOHXdJ0kFygI5AkxyF6B7dx5khb8+HACpJyRDaAT+xaXpjo49zVRS+8QYehjK5ZbkrXTeJMec3jR9V94O+8bEHP/2EBtvZinZg1QnKumpOFqj5RJC7ptY4giGAO8pIVdNlzMPfIuRqS9YjPL4vXUYh0cSK8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7ljEEqKGIjyiNI+y1MvfBRN/8nfmxQruZGYaWFrDjq8=;
- b=UEgWIsJbf99OTGUk1KuX8FHblXtk8hsQRzApuyzDIzJK7y7CKz9kS2hzxezulXdz+DJEaXUX7nR6Bgn31h34h+Fq4gShW7HtHUL/Wtg9OmeYeXV6XdxdeYz7r7UgWM/HaUR11WfLqMiIkdmYULhzUIDBog3w4LTbXH2l/EpqlRmiKZztq+kQ90Q3PerLCdpDUdk1DSpp0mOfHFr1RnW2g0QuNcMbsA/CLvgt/Eu0n9bGJrLc47LkZryhwoMdoLwBgwnYaQwwuc4RAOd9b1o6Urgjm6fQ1On5jzpcZmpczlv0yPEhfoxLPYMT41y5U6Gp2qMzkZDiaz0lC5QA1tW0Mw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8254.eurprd04.prod.outlook.com (2603:10a6:102:1cd::24)
- by AS8PR04MB9048.eurprd04.prod.outlook.com (2603:10a6:20b:443::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 28 Mar
- 2025 06:48:58 +0000
-Received: from PAXPR04MB8254.eurprd04.prod.outlook.com
- ([fe80::2755:55ac:5d6f:4f87]) by PAXPR04MB8254.eurprd04.prod.outlook.com
- ([fe80::2755:55ac:5d6f:4f87%4]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
- 06:48:56 +0000
-From: ming.qian@oss.nxp.com
-To: mchehab@kernel.org,
-	hverkuil-cisco@xs4all.nl
-Cc: nicolas@ndufresne.ca,
-	sebastian.fricke@collabora.com,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	linux-imx@nxp.com,
-	xiahong.bao@nxp.com,
-	eagle.zhou@nxp.com,
-	imx@lists.linux.dev,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v4 2/2] media: amphion: Add a frame flush mode for decoder
-Date: Fri, 28 Mar 2025 14:48:17 +0800
-Message-ID: <20250328064819.784-2-ming.qian@oss.nxp.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <20250328064819.784-1-ming.qian@oss.nxp.com>
-References: <20250328064819.784-1-ming.qian@oss.nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0008.apcprd02.prod.outlook.com
- (2603:1096:4:1f7::14) To PAXPR04MB8254.eurprd04.prod.outlook.com
- (2603:10a6:102:1cd::24)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DtN/PI1z"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52S4dWrn002259
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 06:52:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	fL0wsoPCEVHd0F5W/C0Cm1sTkZq1pOZ2ziK/M8hcTqQ=; b=DtN/PI1z21utNG/i
+	EytiAu/kdHNrS9iKShHmnWRbiIyGdCoFK0Z1mDqeoBWI49HMULYgXfbBvWCkrotL
+	QME7WckGb/rAsXrMsUz66cxnQV7r3BYLvCldFret/Gk3BJ3YQbedxqhqTLKYhHC9
+	cLdEHg5ZIlN35HzODx2GkGuTesuL5YeM8QB5HSBOnqBpf1+DyJI0/q0IZxQU756x
+	RTHUniPOCV8rWe5JE7NpgGtEcfnmtaJAnN8EvcMh8LumKvyvE0bfogjIOKf3/dnx
+	B/Sy90i1ww3wEdBfX2IZnT0xpNmvl+rg/0iGi749SyqQWJghtHpmPqS/aklLgtmI
+	rrsFqw==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45m0xe0pc8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 06:52:32 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2241ae15dcbso39717515ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Mar 2025 23:52:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743144751; x=1743749551;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fL0wsoPCEVHd0F5W/C0Cm1sTkZq1pOZ2ziK/M8hcTqQ=;
+        b=lDbttIFfqzXSwuxI12xENsSSl5PWGAU8x9u+H9esXGwTNCAAYnCUWabmPzvUa4BaNZ
+         Lb4JQVkZ1up9jIwqsrjLUSP8BI8XuWCzhlyPTnMJWAhqbQ1SCd+UlTpDZRL2I5vi2G5X
+         zF2rrN/NKslKNFWNUD7XBwyNRqGw5om4ki69AwO4spOsWoyDiLs7oxWPIaznAxEJL0P3
+         N6lQSODNuwu+dgI5ic+il3M2KGCVMMvwwJuydjBhXvnhkepSJ6ZWfNxrPRfTfLRAo907
+         jcVnJ0BN8m4PslS3tzaDqAQ5MepEclwKKzFogKlP55bFqPhu7ne64Yu9aU9QBn8dmbcw
+         aiog==
+X-Forwarded-Encrypted: i=1; AJvYcCXEDZvCDO3z30ePWSkKjBbsw+eBlW6y8PkDyE4VuazK6adb33vMyH8w7c+nGmUTBgeYo+wWo0UaHrUMO7I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtYTGH/Ipn5ViKaWSdZgTBVaExl+bWPu44D19TWzxh6xPE142e
+	miIlOLuZTWCbDtXGnys4MuSoL6ohSIS2KJg1p5ar7dRh1x7EcYcos7URX0TeqYQpw27T5A6zaGl
+	GQtp7oWqA9rptP1Pz45AJRJNrN8dtFHosWih8JjGNfDrmkzmE75SA0Mkdj/TRiLQ=
+X-Gm-Gg: ASbGnctI5qFbGtGaejZqJO7e0LTUQZLCqhzMEn70I86DLjhTkD5pq2PqCpenbbmqA68
+	VndBUoej46jGJkmnycN0BzLF/BQ8Vw9lnbAHgJObZaxLUOwQ/vey6QBQnR60njSNw/YXfbZCRC+
+	9tJA3wFg30kQA6NhGwKmWStwhAutjaxJ+ZdSOviVuaV+OODE+w3ZHSWS7WtPuHWbj1q3LfUoYkK
+	tpEUEJg33EYtsCK5baNWJupBmSjXX+/gsOEpUp7q1LPB+qePGrDLMdW/WejDxBMqh5VG6PnsI6B
+	RWvXfDbwuDkPYmKEwbAJVlwXp4ycFaxPyEuhLnsRIFaLnw==
+X-Received: by 2002:a05:6a00:88e:b0:736:5545:5b84 with SMTP id d2e1a72fcca58-73960e0cdb6mr11297933b3a.3.1743144750871;
+        Thu, 27 Mar 2025 23:52:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEHcHQwhgg0IH/oYdx4ttXb7q2lYkNiP8atH6NOJ54/TnmCTiuOM9YtfoaujKYd6jAJA9jQZA==
+X-Received: by 2002:a05:6a00:88e:b0:736:5545:5b84 with SMTP id d2e1a72fcca58-73960e0cdb6mr11297875b3a.3.1743144750186;
+        Thu, 27 Mar 2025 23:52:30 -0700 (PDT)
+Received: from [10.92.192.202] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739710b493esm1016147b3a.149.2025.03.27.23.52.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Mar 2025 23:52:29 -0700 (PDT)
+Message-ID: <bc8cbbfd-b96f-21b6-6c6d-dd1b97f16035@oss.qualcomm.com>
+Date: Fri, 28 Mar 2025 12:22:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8254:EE_|AS8PR04MB9048:EE_
-X-MS-Office365-Filtering-Correlation-Id: 17427d67-5c9e-4aa2-4b47-08dd6dc49c8e
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|52116014|1800799024|376014|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lgTmzothLyBbNN4/A9coftnwngCVBiIZcLmmNl9qQyiMG2Voy3/TuFCTY0iV?=
- =?us-ascii?Q?+0QJm8e8KnEt9A17HaFQ7BYSpaDZgNtn4LVccbaLeTpc13zP80bB7Q5LgNRa?=
- =?us-ascii?Q?lT3kwi8lM4soy0w8G244Gd+d7SoOTusi80hLbLmwfBqFovRMFaRJ/rcGELth?=
- =?us-ascii?Q?RrFu4TdVQzPPyETjvdpXKfCWDU21bcb+RAS/ecN3j/hvFUSB8RBmXzOM94u3?=
- =?us-ascii?Q?pJisKMXZ8xHmTfPu+SG4+NpKmnMCM8VXWdAZCKDiYs0mgLvHecMEZEe/YWGV?=
- =?us-ascii?Q?LLZEwkjv7mEn3z1lJYTKOwXyvlPGw2sxrkTTpWdzgufCynfmD9+KWscYNDZH?=
- =?us-ascii?Q?RbbOrH/CU/jowzpepvsjmN4wzDpyLGEVXNHuqZJ8w099DMvtiT911uRI2Sbn?=
- =?us-ascii?Q?olyN0jr8C/Q5ndW5tGewvxINAf32QZcj2cITevQciqetjXzKFnM7XjeoZRbu?=
- =?us-ascii?Q?G5rVe9RtPDw9Tw1vCZAFD5Pb1jUhjHMYhEEA+FMOgtIoYVXfS7ErfwI743ux?=
- =?us-ascii?Q?8zHiK+vwKrRDp0MAOKOG28FjNtZ/wrD1gNZgcYhr7Pzc9fEetTLN5liogERe?=
- =?us-ascii?Q?K8dT1seQIaX4HEvNJ44tq73cQT/+87Hup4DBraugHtxUC59jiLJnlKy+UQKo?=
- =?us-ascii?Q?ftltI2H2MQvoyw7xs0mOrZlc/jcVWjzyk00ECgXxbvUY3B+P0CEiFPTTuL2l?=
- =?us-ascii?Q?+sxHZCga5D1VepcohIRQNMl+uszuqk5UvQYR9C7wgQzb/u/DXeXFwg4LoduV?=
- =?us-ascii?Q?iML/Ca6yDOnI1p4zm8xrlS3fvJ2ctDL8VYY3xECdCunLPag1ZyzaBwaro+y6?=
- =?us-ascii?Q?jhNSC+sbvf+izR2vOBHkx3AQsBtImOE/MTaC4I2tTfRnDkkL7/FGKdH65moq?=
- =?us-ascii?Q?IX3Tewcu/L7Z/S/9CUjcQ+Qt7XdywjS0vz1c6u41RrKz7+EeIvjKMqez9sm1?=
- =?us-ascii?Q?Y027b0jK2ZOUUXawKwuBUJtiZNF0h4O4DAr26gk/p+a0IinB0zrN7MCfv9t+?=
- =?us-ascii?Q?JqxBhlSiWIRiQCc1OttcEwbR4ZIgLOHtRUS+pISzxnaFNi7RBtaGYj0u/0Es?=
- =?us-ascii?Q?CMwN9xtIF+q21ydtINmfSPU2LgTGZtW8MmgG1KndhEjt5TlrSMmJAKbBLpBs?=
- =?us-ascii?Q?f5g6GOgMLF0oPcZpvuhVOZ4x/8avqMJsSOZ6D5nURHfuaC00g54smwBLX9GR?=
- =?us-ascii?Q?WYRQ7aWFHt7c2phLzR5iZ9TzrBljKnvOnFbr34jjCuvaS2H/3Wl8n55iYdn0?=
- =?us-ascii?Q?739SBBXXplhY4GN4YswEM2vjBbRwVC5ju7ENVTIq88xc5XdEmJZYyFmlPlzM?=
- =?us-ascii?Q?9G2d5fga63Wqk2gvTiOQPGRQ/2Lj2qJsmxo3MJthwUZ39Lbpk3dk09knRMiW?=
- =?us-ascii?Q?q2ASCS/pWiISWEISEgaklWcJ3oGuHXbt/ynfpdmfHlO4ms3mFwFcLoAg8kjl?=
- =?us-ascii?Q?zzmfRmuA7oWmFOosXiHjAYicOQ0pzVGs?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8254.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(1800799024)(376014)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?zKjr7T9qGBTIIgg+ZsnBprmyp63Goi/f7lx4BRWUfcEDxIwr4qikQuQZ+DBa?=
- =?us-ascii?Q?0DKPM/LztwGlMpCYgi+TKNIsGFWe5hmUUUYi9Ojo1w/IrZ7s7eJuxSlClYsS?=
- =?us-ascii?Q?/uqAGQkPE5DMtarpVzm57TNIfoLRvra0XM7fq+KKxVc1t/HrN9eITEz1KAJA?=
- =?us-ascii?Q?U8+CkhgKehZSZefztspNpnVLPG1K89qg8Rt/WJLooEGzuGz79DSdu/J/SMeP?=
- =?us-ascii?Q?LPBSLEIGXWnIE9wOHSck+2DylCPNUQJDfHEiAPe4vel3ja9U+/uwdSTNvJWj?=
- =?us-ascii?Q?jxwcX88g9Z4qmgCZS4AcHKrCie/malGMe3JRDfwjK0AdYNzbrvCxi9l4YXs7?=
- =?us-ascii?Q?VuGDd9VHYuRnmqWrrHOXE76UUQJJAgWxacmGy8WQ7KnTszdzZvTz2YMkmDk4?=
- =?us-ascii?Q?YT23zISZwmVP5vTaHKqGvUrQgkbjdZHYcdgjiPwmzGuR6kmKlRRkfP3hDrsh?=
- =?us-ascii?Q?PbOmaqKvJjj2kQ0xd61VBAhMrBcpZd5vZNgsnjrden8Gqb0XwoXXs3iEIgd+?=
- =?us-ascii?Q?eF0TJvwqGt9vPwLgXmv2j+La+rhxwrNP7fgYsuwDdUa3sWWsqGI38K3w7rFu?=
- =?us-ascii?Q?YoP/Xm51X5le5TRiC44tq/0PzqCyORSlNEGLPd+9dCBrFL00flb2YcmYzgle?=
- =?us-ascii?Q?/s+qxcBbOG3eAi72JA1bvjbtJGxh9H09mE4Tj3QemL8pR2Lu4L5qUoHn2FjV?=
- =?us-ascii?Q?bbV2B/RlSJyDdml8PM9r68ymzU7sNT/2DqbJXcUIAR9MxgskUr0pNLugIXg1?=
- =?us-ascii?Q?P1sWfVs7tgwlCokxwxx7tUi4nBW+dbMoR7oXR0yIDClpeos0dgZ0keACFVlE?=
- =?us-ascii?Q?QW/4g+8M3t6L3YiZnWTE1mQtCcOHUXqBniNxGEOCW5p8+qeZ0Lx8tQN0rWlr?=
- =?us-ascii?Q?HaGf/za4kLRVGilngNDMOnw9HYBKO8MwCyFOsnkWuhugIRkHYoze1C+T/5He?=
- =?us-ascii?Q?FtbMkKXJq3+kYwLIzLlGRxgw+wM1K+iBscazYOZo6iScHUgPvgA9dXwFWY8B?=
- =?us-ascii?Q?4gy0tuk6SN3b2e0UKXhRBRs2A2I0q5HH9a3w5WmuLu/BKUx1NFYF5Lcs6Em7?=
- =?us-ascii?Q?gPQNAh+fyvF2xd6yxmon30uLJQT/BNM46FRt6f8zWp+tYH98+IdJVE1f+pgz?=
- =?us-ascii?Q?nMKYU5983FWa1U7mHrUKNVx0xXVFOb8gdZrlSngyGHEDGHSM12oWAjeyj8ku?=
- =?us-ascii?Q?AjsINT5vZME4BjLCrkiYqyh3Nk0GE8/fGgSYk7rSwk1natUETprvPqf+oY3O?=
- =?us-ascii?Q?WUMzeEGHYZf4CIqM76w1NZRjDwSTSLWOpCSiWxsIgaG8xKMvXFeRGMJ1Qrs3?=
- =?us-ascii?Q?ZLMDBFVFsKAxP9qjyETAdl+Y7Z5N9nWltC1dqy0wNpAoFB81BwpmqF4UnLsD?=
- =?us-ascii?Q?NJzidJysCzkWqrBO9EEJo5acC9VqQ0Ff4IC4LjfbKVRoxy7S+cvilvot8zwH?=
- =?us-ascii?Q?puGUJ5N56u4ATCX8d5nTuwkrSWTTWD8Vs816aF8ISWCc79os8ypYJKb7cksM?=
- =?us-ascii?Q?80H/QH5PaEz8O1FAToozBvhaOzoYDJNgDFM3/sBPwesBuke1RqT0ssxKGX0i?=
- =?us-ascii?Q?dFrg4jCjiuLd6WabXoaNq7daXeFpgPl9wSOPJrRB?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17427d67-5c9e-4aa2-4b47-08dd6dc49c8e
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8254.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2025 06:48:56.6964
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: s7or76MARvzfGCfLo69MgHxqgxt8f3KrtG9VhE7fwyyvB4q8MkaY9fUxNm+utSmwB57zrXCj8UeZuF8Y0Hn6KQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9048
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v8 2/4] PCI: of: Add of_pci_get_equalization_presets() API
+Content-Language: en-US
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi
+ <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
+ <kw@linux.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
+References: <20250316-preset_v6-v8-0-0703a78cb355@oss.qualcomm.com>
+ <20250316-preset_v6-v8-2-0703a78cb355@oss.qualcomm.com>
+ <gl2klkvpkb2vrxrzdqbqjomfis66tldy6witvbqdd2ig3st3rw@jstguoejcofa>
+ <7a0724ad-89a5-0ccd-eba5-ca4871ce1cdd@oss.qualcomm.com>
+ <epg6mtsnemzwnqvsze7zbkehovxvu6fpmw52kzfrjmjahadg66@k4gprl4zg5b3>
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <epg6mtsnemzwnqvsze7zbkehovxvu6fpmw52kzfrjmjahadg66@k4gprl4zg5b3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: Ha4bSWMifSA8IX8Nb8lTDUNp7LDB5Fx5
+X-Proofpoint-GUID: Ha4bSWMifSA8IX8Nb8lTDUNp7LDB5Fx5
+X-Authority-Analysis: v=2.4 cv=Q43S452a c=1 sm=1 tr=0 ts=67e64730 cx=c_pps a=JL+w9abYAAE89/QcEU+0QA==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=gJnbMjkyvPzYppnzV1QA:9 a=QEXdDO2ut3YA:10
+ a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-28_03,2025-03-27_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 suspectscore=0 adultscore=0
+ mlxlogscore=995 malwarescore=0 mlxscore=0 priorityscore=1501 clxscore=1015
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503280045
 
-From: Ming Qian <ming.qian@oss.nxp.com>
 
-By default the amphion decoder will pre-parse 3 frames before starting
-to decode the first frame. Alternatively, a block of flush padding data
-can be appended to the frame, which will ensure that the decoder can
-start decoding immediately after parsing the flush padding data, thus
-potentially reducing decoding latency.
 
-This mode was previously only enabled, when the display delay was set to
-0. Allow the user to manually toggle the use of that mode via a module
-parameter called low_latency, which enables the mode without
-changing the display order.
+On 3/28/2025 12:13 PM, Manivannan Sadhasivam wrote:
+> On Fri, Mar 28, 2025 at 10:54:25AM +0530, Krishna Chaitanya Chundru wrote:
+>>
+>>
+>> On 3/28/2025 10:09 AM, Manivannan Sadhasivam wrote:
+>>> On Sun, Mar 16, 2025 at 09:39:02AM +0530, Krishna Chaitanya Chundru wrote:
+>>>> PCIe equalization presets are predefined settings used to optimize
+>>>> signal integrity by compensating for signal loss and distortion in
+>>>> high-speed data transmission.
+>>>>
+>>>> As per PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4 for data rates
+>>>> of 8.0 GT/s, 16.0 GT/s, 32.0 GT/s, and 64.0 GT/s, there is a way to
+>>>> configure lane equalization presets for each lane to enhance the PCIe
+>>>> link reliability. Each preset value represents a different combination
+>>>> of pre-shoot and de-emphasis values. For each data rate, different
+>>>> registers are defined: for 8.0 GT/s, registers are defined in section
+>>>> 7.7.3.4; for 16.0 GT/s, in section 7.7.5.9, etc. The 8.0 GT/s rate has
+>>>> an extra receiver preset hint, requiring 16 bits per lane, while the
+>>>> remaining data rates use 8 bits per lane.
+>>>>
+>>>> Based on the number of lanes and the supported data rate,
+>>>> of_pci_get_equalization_presets() reads the device tree property and
+>>>> stores in the presets structure.
+>>>>
+>>>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+>>>> ---
+>>>>    drivers/pci/of.c  | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>>>>    drivers/pci/pci.h | 32 +++++++++++++++++++++++++++++++-
+>>>>    2 files changed, 75 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+>>>> index 7a806f5c0d20..18691483e108 100644
+>>>> --- a/drivers/pci/of.c
+>>>> +++ b/drivers/pci/of.c
+>>>> @@ -851,3 +851,47 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
+>>>>    	return slot_power_limit_mw;
+>>>>    }
+>>>>    EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
+>>>> +
+>>>> +/**
+>>>> + * of_pci_get_equalization_presets - Parses the "eq-presets-Ngts" property.
+>>>> + *
+>>>> + * @dev: Device containing the properties.
+>>>> + * @presets: Pointer to store the parsed data.
+>>>> + * @num_lanes: Maximum number of lanes supported.
+>>>> + *
+>>>> + * If the property is present, read and store the data in the @presets structure.
+>>>> + * Else, assign a default value of PCI_EQ_RESV.
+>>>> + *
+>>>> + * Return: 0 if the property is not available or successfully parsed else
+>>>> + * errno otherwise.
+>>>> + */
+>>>> +int of_pci_get_equalization_presets(struct device *dev,
+>>>> +				    struct pci_eq_presets *presets,
+>>>> +				    int num_lanes)
+>>>> +{
+>>>> +	char name[20];
+>>>> +	int ret;
+>>>> +
+>>>> +	presets->eq_presets_8gts[0] = PCI_EQ_RESV;
+>>>> +	ret = of_property_read_u16_array(dev->of_node, "eq-presets-8gts",
+>>>> +					 presets->eq_presets_8gts, num_lanes);
+>>>> +	if (ret && ret != -EINVAL) {
+>>>> +		dev_err(dev, "Error reading eq-presets-8gts :%d\n", ret);
+>>>
+>>> 'Error reading eq-presets-8gts: %d'
+>>>
+>>>> +		return ret;
+>>>> +	}
+>>>> +
+>>>> +	for (int i = 0; i < EQ_PRESET_TYPE_MAX - 1; i++) {
+>>>> +		presets->eq_presets_Ngts[i][0] = PCI_EQ_RESV;
+>>>> +		snprintf(name, sizeof(name), "eq-presets-%dgts", 8 << (i + 1));
+>>>> +		ret = of_property_read_u8_array(dev->of_node, name,
+>>>> +						presets->eq_presets_Ngts[i],
+>>>> +						num_lanes);
+>>>> +		if (ret && ret != -EINVAL) {
+>>>> +			dev_err(dev, "Error reading %s :%d\n", name, ret);
+>>>
+>>> 'Error reading %s: %d'
+>>>
+>>>> +			return ret;
+>>>> +		}
+>>>> +	}
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(of_pci_get_equalization_presets);
+>>>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>>>> index 01e51db8d285..78c9cc0ad8fa 100644
+>>>> --- a/drivers/pci/pci.h
+>>>> +++ b/drivers/pci/pci.h
+>>>> @@ -9,6 +9,8 @@ struct pcie_tlp_log;
+>>>>    /* Number of possible devfns: 0.0 to 1f.7 inclusive */
+>>>>    #define MAX_NR_DEVFNS 256
+>>>> +#define MAX_NR_LANES 16
+>>>
+>>> Why did you limit to 16?
+>>>
+>> As per PCIe spec we support maximum of 16 lanes only right
+>>
+> 
+> No. PCIe spec defines Max Link Width up to 32 lanes. Though, we have only seen
+> 16 lanes used widely. This field should correspond to 'Maximum Link Width' value
+> in the Link Capabilities Register.
+> 
+As per spec 6.0.1 section 7.5.3.6 Link Capabilities Register max link
+width is x16 only.
 
-Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
----
-v4
-- Improve the comment expressing
-v3
-- Improve commit message as recommended
-- Add some comments to avoid code looks cryptic
-
- drivers/media/platform/amphion/vpu_malone.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/media/platform/amphion/vpu_malone.c b/drivers/media/platform/amphion/vpu_malone.c
-index 88f8c16a451e..7f6251f7becb 100644
---- a/drivers/media/platform/amphion/vpu_malone.c
-+++ b/drivers/media/platform/amphion/vpu_malone.c
-@@ -25,6 +25,10 @@
- #include "vpu_imx8q.h"
- #include "vpu_malone.h"
- 
-+static bool low_latency;
-+module_param(low_latency, bool, 0644);
-+MODULE_PARM_DESC(low_latency, "Set low latency frame flush mode: 0 (disable) or 1 (enable)");
-+
- #define CMD_SIZE			25600
- #define MSG_SIZE			25600
- #define CODEC_SIZE			0x1000
-@@ -1581,7 +1585,15 @@ static int vpu_malone_input_frame_data(struct vpu_malone_str_buffer __iomem *str
- 
- 	vpu_malone_update_wptr(str_buf, wptr);
- 
--	if (disp_imm && !vpu_vb_is_codecconfig(vbuf)) {
-+	/*
-+	 * Enable the low latency flush mode if display delay is set to 0
-+	 * or the low latency frame flush mode if it is set to 1.
-+	 * The low latency flush mode requires some padding data to be appended to each frame,
-+	 * but there must not be any padding data between the sequence header and the frame.
-+	 * This module is currently only supported for the H264 and HEVC formats,
-+	 * for other formats, vpu_malone_add_scode() will return 0.
-+	 */
-+	if ((disp_imm || low_latency) && !vpu_vb_is_codecconfig(vbuf)) {
- 		ret = vpu_malone_add_scode(inst->core->iface,
- 					   inst->id,
- 					   &inst->stream_buffer,
--- 
-2.43.0-rc1
-
+- Krishna Chaitanya.
+> - Mani
+> 
