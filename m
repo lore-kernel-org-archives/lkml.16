@@ -1,141 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C501B1EEA5D;
-	Fri, 28 Mar 2025 22:53:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0A584E1C
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 23:01:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743202411; cv=none; b=PiOQa0I7yT6YKA0YOESOtXpeSgyxUBCRD3cgsM67pg0v2TBz6R8MtMlfzOXRcjKXNU8CIuAiHc7f6tnC/x/IzqIAibxkg8Kl4uPnH4HryE5mzHdOfMsEo3GW51msUMJjCiT2qH3y0HCUz456aWoMu/neyDta15KJgaX9VeCBRvU=
+	t=1743202871; cv=none; b=ZiSU8E1Hyn8io8WHfAkpdDN0EnWuc9ujtjWsAZUKisZcBB4Q5WcTC2l+Z1qnJBQzzpD+43ZbI1Y7PADuXVbZZR6m5iwadRcGnf1u80ASdv0EvZ3nT/EmCrT9w1bR+duNS9HDOjmhT0CgBbR7s2orbqRIuSNuQqf35EQ4Azc7NOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743202411; c=relaxed/simple;
-	bh=X8QzRMcFsniUFRx5vA7MHEqQC/yTTdlJQdKOdbyOdCg=;
+	s=arc-20240116; t=1743202871; c=relaxed/simple;
+	bh=04dgAK0A3bn8jeB685qjEb+d3VvxJzC73Mz7EO4TC/I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a255wv3hLMdp5kAKe701QlWUCuMmN253We5NZ8kjV7ciPv1pLFnu/FpTn8EjGL0p0s3BgtXW0RAqwJv3FUqJTYCMgpssZHVokYNtBNPXKTMax4EbTTnk3arBhRQHoIxS+ueqnx5OJN3Km/vDshTKrZlckbipGdXQ/YOGXWE2NB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGyNjFrs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=P+nDuhE8LQ/WVDr+QVYo+gPSHYxZNGYl5/c2zG8XTbUfNHkyUIX2abtDuGVpVBm4lFfs+b/IHcRjzjDGOClDlW/YeE0FgfJ9nfdsExv/kfcRt4UKozCnEpe0wYzpdZ8B0Lq2GcfVKVKWy+K/lcwhCe9PVloYavqvOnApGTLsvK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e1d7Empg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGyNjFrs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2604C4CEE4;
-	Fri, 28 Mar 2025 22:53:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e1d7Empg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46438C4CEE4;
+	Fri, 28 Mar 2025 23:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743202411;
-	bh=X8QzRMcFsniUFRx5vA7MHEqQC/yTTdlJQdKOdbyOdCg=;
+	s=k20201202; t=1743202871;
+	bh=04dgAK0A3bn8jeB685qjEb+d3VvxJzC73Mz7EO4TC/I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oGyNjFrsB84ZD2gSZSoDKhui0JmIK/RMefONuzx6vRZDoAXKClqQ8TWFqrqfecofS
-	 kL1GFnZk6s0cNy3nP/etxlUOrkZousXfaWLtxsZUd9Ky3zRHfXOkxGHIsGffdsehIV
-	 8HcUnkAhXxaPDlduhMDsLRkh2y8FfUXo2QcxmEB+sw7RzwujnrKxx3itYVyoO80wXu
-	 UZthIA3EpRHjHqn3NdKK5uK4RITBpuDVCDt0oYqOrvFD5qeWLEwkwkwk1lzeCeJL9K
-	 Ob46hbj6s9Wt2FyqUME251vPI20EViHGEXPFwLsfvs3R728YUanJk2B85OcbRW1ihp
-	 AW8/fn5c7x01Q==
-Date: Sat, 29 Mar 2025 01:53:22 +0300
+	b=e1d7EmpgQSHXGQmHmSDrot7Vb/ffiOAIwZMCsqyNcdju7ydyJMuy1Avjp5RFetZLm
+	 fgBpjVgh0P5MOTFPp2txuLP8YVPEdG3oJ+j3zlfxwWkAwTpNatv60jHBrz09RV7/b1
+	 GVhnQ1FkS9qzSkNkP9aDDU1/lpxk0uphCYWny1DQWXNeQRBQP41kNYAdTYoNipi2C4
+	 1A7ZnAdCR0qhtkw7sdzUYbAJUnKR/0UTp+qzqEuZW9Rrfgk/SFFwNdy9Np4D6/qJ0n
+	 9j1R/tKF6BG7HdlNlJoJA5H7ZVAFcrADnfM04S7wfqnDf0Gv66n/7tLMTHCJG+hTQx
+	 1YidgbnHqLs4g==
+Date: Sat, 29 Mar 2025 02:01:05 +0300
 From: Mike Rapoport <rppt@kernel.org>
-To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Cc: Jonathan.Cameron@huawei.com, dan.j.williams@intel.com,
-	rafael@kernel.org, lenb@kernel.org, akpm@linux-foundation.org,
-	alison.schofield@intel.com, rrichter@amd.com, bfaccini@nvidia.com,
-	haibo1.xu@intel.com, david@redhat.com, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	chenbaozi@phytium.com.cn
-Subject: Re: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
-Message-ID: <Z-coYimFFwK0q5dr@kernel.org>
-References: <20250328092132.2695299-1-wangyuquan1236@phytium.com.cn>
+To: Ye Liu <ye.liu@linux.dev>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Ye Liu <liuye@kylinos.cn>
+Subject: Re: [PATCH] mm/show_mem: Optimize si_meminfo_node by reducing
+ redundant code
+Message-ID: <Z-cqMYag8kzS0MEt@kernel.org>
+References: <20250325073803.852594-1-ye.liu@linux.dev>
+ <Z-RVhrZuybsQj7l0@kernel.org>
+ <9d48bfef-11b1-469f-bbf6-7693cb4a2c0a@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250328092132.2695299-1-wangyuquan1236@phytium.com.cn>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9d48bfef-11b1-469f-bbf6-7693cb4a2c0a@linux.dev>
 
-On Fri, Mar 28, 2025 at 05:21:32PM +0800, Yuquan Wang wrote:
-> With numa_add_reserved_memblk(), kernel could add numa_memblk into
-> numa_reserved_meminfo directly.
-> 
-> acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
-> with the expectation that numa_cleanup_meminfo moves them to
-> numa_reserved_meminfo. There is no need for that indirection when it is
-> known in advance that these unpopulated ranges are meant for
-> numa_reserved_meminfo in suppot of future hotplug / CXL provisioning.
-> 
-> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-> ---
-> 
-> Changes in v2 (Thanks to Dan):
-> - Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
-> - Add comments to describe the usage of numa_add_reserved_memblk()
-> - Provide a more explicit commit message
-> 
->  drivers/acpi/numa/srat.c     |  2 +-
->  include/linux/numa_memblks.h |  1 +
->  mm/numa_memblks.c            | 22 ++++++++++++++++++++++
+Please don't send html emails to the Linux kernel mailing lists.
 
-For numa_memblks
+On Thu, Mar 27, 2025 at 05:32:14PM +0800, Ye Liu wrote:
+> 
+> 在 2025/3/27 03:29, Mike Rapoport 写道:
+> 
+>     On Tue, Mar 25, 2025 at 03:38:03PM +0800, Ye Liu wrote:
+> 
+>         From: Ye Liu <liuye@kylinos.cn>
+> 
+>         Refactors the si_meminfo_node() function by reducing redundant code and
+>         improving readability.
+> 
+>         Moved the calculation of managed_pages inside the existing loop that
+>         processes pgdat->node_zones, eliminating the need for a separate loop.
+> 
+>         Simplified the logic by removing unnecessary preprocessor conditionals.
+> 
+>         Ensured that both totalram, totalhigh, and other memory statistics are
+>         consistently set without duplication.
+> 
+>         This change results in cleaner and more efficient code without altering
+>         functionality.
+> 
+>         Signed-off-by: Ye Liu <liuye@kylinos.cn>
+>         ---
+>          mm/show_mem.c | 16 +++++-----------
+>          1 file changed, 5 insertions(+), 11 deletions(-)
+> 
+>         diff --git a/mm/show_mem.c b/mm/show_mem.c
+>         index 6af13bcd2ab3..ad373b4b6e39 100644
+>         --- a/mm/show_mem.c
+>         +++ b/mm/show_mem.c
+>         @@ -94,26 +94,20 @@ void si_meminfo_node(struct sysinfo *val, int nid)
+>                 unsigned long free_highpages = 0;
+>                 pg_data_t *pgdat = NODE_DATA(nid);
+> 
+>         -       for (zone_type = 0; zone_type < MAX_NR_ZONES; zone_type++)
+>         -               managed_pages += zone_managed_pages(&pgdat->node_zones[zone_type]);
+>         -       val->totalram = managed_pages;
+>         -       val->sharedram = node_page_state(pgdat, NR_SHMEM);
+>         -       val->freeram = sum_zone_node_page_state(nid, NR_FREE_PAGES);
+>         -#ifdef CONFIG_HIGHMEM
+>                 for (zone_type = 0; zone_type < MAX_NR_ZONES; zone_type++) {
+>                         struct zone *zone = &pgdat->node_zones[zone_type];
+>         -
+>         +               managed_pages += zone_managed_pages(zone);
+> 
+>     nit: don't remove the empty line after the declaration
+> 
+> Agree.
+> 
+>                         if (is_highmem(zone)) {
+>                                 managed_highpages += zone_managed_pages(zone);
+> 
+>     Looks like highmem pages get counted twice, no?
+> 
+> twice? The original logic has not been changed.
+> 
+> managed_highpages is just high memory, managed_pages is all.
+
+You are right, I misread the patch. 
+
+Feel free to add
 
 Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-
->  3 files changed, 24 insertions(+), 1 deletion(-)
+ 
+> Thanks,
 > 
-> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-> index 00ac0d7bb8c9..70f1a7c6b54a 100644
-> --- a/drivers/acpi/numa/srat.c
-> +++ b/drivers/acpi/numa/srat.c
-> @@ -458,7 +458,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
->  		return -EINVAL;
->  	}
->  
-> -	if (numa_add_memblk(node, start, end) < 0) {
-> +	if (numa_add_reserved_memblk(node, start, end) < 0) {
->  		/* CXL driver must handle the NUMA_NO_NODE case */
->  		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
->  			node, start, end);
-> diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
-> index dd85613cdd86..991076cba7c5 100644
-> --- a/include/linux/numa_memblks.h
-> +++ b/include/linux/numa_memblks.h
-> @@ -22,6 +22,7 @@ struct numa_meminfo {
->  };
->  
->  int __init numa_add_memblk(int nodeid, u64 start, u64 end);
-> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
->  void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi);
->  
->  int __init numa_cleanup_meminfo(struct numa_meminfo *mi);
-> diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
-> index ff4054f4334d..541a99c4071a 100644
-> --- a/mm/numa_memblks.c
-> +++ b/mm/numa_memblks.c
-> @@ -200,6 +200,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
->  	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
->  }
->  
-> +/**
-> + * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
-> + * @nid: NUMA node ID of the new memblk
-> + * @start: Start address of the new memblk
-> + * @end: End address of the new memblk
-> + *
-> + * Add a new memblk to the numa_reserved_meminfo.
-> + *
-> + * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
-> + * against memblock_type information and moves any that intersect reserved
-> + * ranges to numa_reserved_meminfo. However, when that information is known
-> + * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
-> + * to numa_reserved_meminfo directly.
-> + *
-> + * RETURNS:
-> + * 0 on success, -errno on failure.
-> + */
-> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
-> +{
-> +	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
-> +}
-> +
->  /**
->   * numa_cleanup_meminfo - Cleanup a numa_meminfo
->   * @mi: numa_meminfo to clean up
-> -- 
-> 2.34.1
+> Ye Liu
+> 
+> 
+> 
+>                                 free_highpages += zone_page_state(zone, NR_FREE_PAGES);
+>                         }
+>                 }
+>         +
+>         +       val->totalram = managed_pages;
+>         +       val->sharedram = node_page_state(pgdat, NR_SHMEM);
+>         +       val->freeram = sum_zone_node_page_state(nid, NR_FREE_PAGES);
+>                 val->totalhigh = managed_highpages;
+>                 val->freehigh = free_highpages;
+>         -#else
+>         -       val->totalhigh = managed_highpages;
+>         -       val->freehigh = free_highpages;
+>         -#endif
+>                 val->mem_unit = PAGE_SIZE;
+>          }
+>          #endif
+>         --
+>         2.25.1
+> 
 > 
 > 
 
