@@ -1,109 +1,96 @@
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+Received: from out203-205-221-173.mail.qq.com (out203-205-221-173.mail.qq.com [203.205.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F14F1A5BAE;
-	Fri, 28 Mar 2025 10:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 076DC1B4244
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 10:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743157021; cv=none; b=radzzAMJMXyL/dcw+gdBe5VSlYhDH7Sgml77Vag/V5CXS3/IriOOhg4QD1u/gV9o73K/dg+7hOu1sj/PqkSIZoI7wshm7jJgRZHe9Ykxa0Gsj0zahGnlIQtjx5h4dBpmu5YFx0+k6mFFdvhwOB1zcYjo/I/tWBDcN9e/wthXmfI=
+	t=1743157034; cv=none; b=ZN9qn1t7MhyqwOBKjFEn5EfXQXg2RmIv9KxTdRwvRqJVWGnCCYBseS1mCm+vpwAqI9YVF751VMrnOllyks20OEKRiCHjQ496c2qAFEgSzHcZo3arXbYU49plw96rVn898reLFrjw5+hZ5Al3CyUts/qKZRzwykAQteYwf7yJibk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743157021; c=relaxed/simple;
-	bh=/arn/xPbmGg9sUXMiuKadWzed+23kCeYKFOmCYvBUtU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jIvNP4cLE9gVAbu/JvUmZ3wmQ7vsGLPgNrisyVMG69HjtZbPWcWM8aMJVGPbcNAR8DU2p33vKVPbXSb/GUl9rvvpoJkNW6oe6o5TDw4jXRCC6bYqNYUBq9djZOJx2fr25S31aknGYiuchqWsLSfCzDL7dfFssuef7nYX4QDws9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm; spf=pass smtp.mailfrom=fastmail.fm; dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b=JIYO42aa; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=asR2tvTE; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.fm
+	s=arc-20240116; t=1743157034; c=relaxed/simple;
+	bh=/nTyGsw4q573LCJMSMMWDT7IN4jtDKE+TP4OkdCpowY=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=rIRZv2rZs/2pOHVTmwuMnLQjjWgdeYDNAzkh62V0WCulypo4JXjFtAtTeJjX4vM2O5/6MXdgx189+k1WWS4pNXDOYmqARp9B6cS8UU8HQK9dBzkoT4J9slUcZyNA18yi3jd4UNpFe/WOI7uE0wAk12hoimzOM6KXTXXPxzdGjrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com; spf=pass smtp.mailfrom=red54.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=ZTSjQSEF; arc=none smtp.client-ip=203.205.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=red54.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b="JIYO42aa";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="asR2tvTE"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 263B41380B39;
-	Fri, 28 Mar 2025 06:16:58 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Fri, 28 Mar 2025 06:16:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.fm; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1743157018;
-	 x=1743243418; bh=IMBk0uSPcE9659LgXN2g27zCHtqfCxGM1l5u0E4E2hA=; b=
-	JIYO42aaTijYZrCVLAmu7TcR7c47s+0HLa/+VSkxSE/qpp8dwjMd1g9WHBOBSYuk
-	Tjt+ghXqh6GmJg6/8ubLR7hrEpjSDhWZm1sZi5yhPIFY0YWk3SNd2aEotDmbOmvw
-	IwbvFzZv7Gb1Xt2gaJcDRTOBSSzPdl+N40ujzQbxC40O1ObfQyHL14QJhvq0Wp45
-	11nxkHUsqvxOOz+y154NDjifmIANsI57cgXE+T482kwfb5euf0L5xvVeGJSaNI9p
-	ECOyyhcfdtm9iTxJ6IfPqTXvOulQOGCl6+YORq6aWiRJJA/AI4IJYedpvkctJMa8
-	qJm7L06ZANIVd8x5YX82qA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1743157018; x=
-	1743243418; bh=IMBk0uSPcE9659LgXN2g27zCHtqfCxGM1l5u0E4E2hA=; b=a
-	sR2tvTEaugR+Dov5MAHQUSimSAMlu1Z0sc1S5Q/Os6d09f3nDRg7wHRokusneud5
-	4rVsrx6myTJXKT6ZVSFCvoYtUpjLYcWWTPhRNTOSg/Rms9pFvOmBwFC0FR5orMJC
-	NL9FbeISCy4otN6Yx2VADa6KbeillxhDHe+yKEIrjIrtopaGGjTLCAi0i97/p3ah
-	Ls2h5acQfJ/vupUqHdDeu2ylO5WOyA4hTyPbIK2lQ0XIUT3AN4DqoHYBj/sXbBg/
-	TEkKiiiBNbdXtQtzrhil5QqQm0aME8yaw8lsh9TMupXhLv3xatJNg7Dyqb6i/bJj
-	sK1k+W40RyKIqT5d2ebag==
-X-ME-Sender: <xms:GXfmZyz2OWK0eLV7S-9fTcXk5czovMcK7jsBJXk1q277DeechG6qYQ>
-    <xme:GXfmZ-R0X0akjQqYhih8HBXDVXuCsHPnKLVnRcQUBcrWS5I0uWGBJVp9P1kRxVlcf
-    nS2vH0KNLbQHkww>
-X-ME-Received: <xmr:GXfmZ0X1OSvv9ZAc7tYTzwcza9TJj06xexoZ-B08bLJA5CgSIajMMYgwJxdtUhsUVsz5gMPM6TtVddH79Ec66SvOZ8vCfY1gF_gRLoAzDcMV3wNf-EqB>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddujedutddvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddt
-    vdejnecuhfhrohhmpeeuvghrnhguucfutghhuhgsvghrthcuoegsvghrnhgurdhstghhuh
-    gsvghrthesfhgrshhtmhgrihhlrdhfmheqnecuggftrfgrthhtvghrnhepvefhgfdvledt
-    udfgtdfggeelfedvheefieevjeeifeevieetgefggffgueelgfejnecuvehluhhsthgvrh
-    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsggvrhhnugdrshgthhhusggv
-    rhhtsehfrghsthhmrghilhdrfhhmpdhnsggprhgtphhtthhopeeipdhmohguvgepshhmth
-    hpohhuthdprhgtphhtthhopehjrggtohesuhhlshdrtghordiirgdprhgtphhtthhopehl
-    ihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    eplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthht
-    ohepmhhikhhlohhssehsiigvrhgvughirdhhuhdprhgtphhtthhopehrughunhhlrghpse
-    hinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepthhrrghpvgigihhtsehsphgrfihn
-    rdhlihhnkh
-X-ME-Proxy: <xmx:GXfmZ4jYiLAuzU5Y0sQZRuwx0swgtGMzkTYYrqgJoQi2quf-shHbFg>
-    <xmx:GXfmZ0AmcuaJRImY1WiQjhwsaRHJ7sR96kTjYAnwqxySP_tU5__-Mg>
-    <xmx:GXfmZ5Jl3vBKSJagfwFInK5KWhobLPdpjMGR58oBNxMmc_Z4KnIzag>
-    <xmx:GXfmZ7D8Jw_-_iTqbOYT4VzDlz9gVeBmNJzjI450U6OysBObnLO8SQ>
-    <xmx:GnfmZ20-ARwv0lOLjVjSadSL6TAk6dOPLx1hi0HM4z6qI8-Hw4cUBZ18>
-Feedback-ID: id8a24192:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 28 Mar 2025 06:16:56 -0400 (EDT)
-Message-ID: <e89ab398-41f5-48ff-9592-98d21056043f@fastmail.fm>
-Date: Fri, 28 Mar 2025 11:16:55 +0100
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ZTSjQSEF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1743157029; bh=1e85Oa/sKsFTWBH/G9IQp83iHWcRwVIXznp66WaiQHI=;
+	h=From:To:Cc:Subject:Date;
+	b=ZTSjQSEFQI7xgk349EX8qXBOpFewOq20k1kNe6upPdJC6hx/cClmO9In8XQpBtxsY
+	 R0EGxyuIK32MUxPK4oAZsH/z+ck1FZYQiafa1PcPZ2h9gaqRmG5pWMb+Gp3IbbxCmV
+	 zoDAFZWQFuxOH44ut0ZD70FlfhQDlJME3QWwr5fE=
+Received: from mail.red54.com ([139.99.8.57])
+	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
+	id 43905E82; Fri, 28 Mar 2025 18:16:57 +0800
+X-QQ-mid: xmsmtpt1743157017t6i1oblj0
+Message-ID: <tencent_6E57A00F6D56CF8475CF9FD13370FBC1CF06@qq.com>
+X-QQ-XMAILINFO: Mrv6PNPZjcp6a2X0MvRwg1ZdbbuJgf7r968we+8kTrJcUDS3bpUY/6QdTk7OdW
+	 llpTNLlpX4AQQ8NMl4BoXn3FjU5+Gs1puUS/q/bV1hCptUeUyyQjB+nge/IK46uoV5mBmL41fbXc
+	 LeMttqDfgCNGWh/1935cKf36ydkGt478WSHAd0pz2ugg/eg3DDeArgzLy2L4zV3zH2jB9X6dIlMT
+	 TBEyghcpzk3vl79pAyUvrno/9mENwE3i7dooLE8tNJnUvJm+OGPfNLtIxToaBQxtKsTf81bQ673K
+	 zWE9P7snSw9EQK0jHmse+o7ml/sG+1xg5gq7Lt8AlcXBBM9Hy35Uuv1NvbZDBq4iZiKDMOEW6yhl
+	 C7naxRSzu7idxwKuUDN0sZxE+rR/kA6u1ZZswAdnX78gH7GCNB63DgmpLnIcBK3ltB+zv5EYqFSR
+	 FWkfBQlZaAIXLdxOxBgjI9ge/jOfvI27tXUrv1PlZWRfpliOmVZDVkFyno0I2qiemp9jdcL/7L3n
+	 pwulnESigBKDhweSf3/sgwOljFSw9bVz8DJQLKFNNGftxGhGahADS6PLKVp4A8sBBkzxQxQZswgt
+	 6errAhGvZ/0g3UseiVq0LR3uf2XGs5LaW5YS2XR/8hL+6gGqJnaYMUFiK/JHQ587bn4lXb7AWxEh
+	 0auhViMaV+qH50JyBPyK8im6MNNKmCvbR/leGeuvaDvTRpk8OmwUUaRrvVmYHHmDTIjZeBFtqtPA
+	 1hy71RAWFKtwnXYB4rqE4itUxOs8XAu31b6PVw77UctW/Gh8G5KSP1pwJemmlwGCJm1ZWJuWHE85
+	 HZ+ifX3oVxJO+cF/IOnQFjXwznnV/FemlSlWoqw3Yz58hYiedON1i5/tlM7fiWpdAwkxEShm/LrH
+	 qD24Rv4TY5qlDDC6vNLHYe1TwZ/8/QO//gZaVVpKuRn4uxlHD+KEVfBk1kLeD2irKWthDvP9wP7x
+	 4E8YXgYS9G0/TwovYZaLyjbQeyPO8BuEkVb6Bnbty9cX+WMPXtVXPF1HblQoB4
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+Sender: yeking@red54.com
+From: Yeking@Red54.com
+To: linuxppc-dev@lists.ozlabs.org
+Cc: =?UTF-8?q?=E8=B0=A2=E8=87=B4=E9=82=A6=20=28XIE=20Zhibang=29?= <Yeking@Red54.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Chris Packham <chris.packham@alliedtelesis.co.nz>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] PowerPC: Kconfig: Fix help text of CMDLINE_EXTEND
+Date: Fri, 28 Mar 2025 10:16:48 +0000
+X-OQ-MSGID: <20250328101648.52932-1-Yeking@Red54.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: fuse: increase readdir() buffer size
-To: Jaco Kroon <jaco@uls.co.za>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: miklos@szeredi.hu, rdunlap@infradead.org, trapexit@spawn.link
-References: <20230727081237.18217-1-jaco@uls.co.za>
- <20250314221701.12509-1-jaco@uls.co.za>
- <05b36be3-f43f-4a49-9724-1a0d8d3a8ce4@uls.co.za>
-From: Bernd Schubert <bernd.schubert@fastmail.fm>
-Content-Language: en-US, de-DE, fr
-In-Reply-To: <05b36be3-f43f-4a49-9724-1a0d8d3a8ce4@uls.co.za>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
 
+It is the default command line appended to the bootloader command line,
+not the bootloader command line appended to the default command line.
 
-On 3/28/25 11:15, Jaco Kroon wrote:
-> Hi All,
-> 
-> I've not seen feedback on this, please may I get some direction on this?
-> 
-> Kind regards,
-> Jaco
-> 
+Fixes: d79fbb3a32f0 ("powerpc: Support CMDLINE_EXTEND")
+Signed-off-by: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
+---
+ arch/powerpc/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Sorry, will review today.
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 6722625a406a..bc56b9deb4ab 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -1006,8 +1006,8 @@ config CMDLINE_FROM_BOOTLOADER
+ config CMDLINE_EXTEND
+ 	bool "Extend bootloader kernel arguments"
+ 	help
+-	  The command-line arguments provided by the boot loader will be
+-	  appended to the default kernel command string.
++	  The default kernel command string will be appended to the
++	  command-line arguments provided by the boot loader.
+ 
+ config CMDLINE_FORCE
+ 	bool "Always use the default kernel command string"
+-- 
+2.43.0
+
