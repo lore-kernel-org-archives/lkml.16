@@ -1,90 +1,89 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184A621423F;
-	Fri, 28 Mar 2025 12:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000834C6D
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 12:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743164974; cv=none; b=eRhQqMl7gd0PdJ556icDhi78k88EEoGQGx2dI09ihCsaKyvAB0qEGR3e05HZYoY8JJ0HOyQuvn01JUpTSo1N+G3M/cEtCZaWxGn18aA3DUcPw1B0L9J17PwBQKeCi3Mx1AZBq4upawVOZOH0BAyMJa01R+uvgXIPATBa3wxr7JI=
+	t=1743165030; cv=none; b=phqZ3mMg5pdNWIkQ5S/weImJT/P9p2n84YyCrBY4GQM/a/CCAPr5P6wDcmqyVMusvVc8pGwt1jkO9XbyboyQ05oqd6oh2Bz+otWzBsOsLN0KsgA2euZKmaC/JfeAU3J/yr/uV2vBIwpfCTi7DIe8vdrKC+5l/cHYNMblUwhVALo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743164974; c=relaxed/simple;
-	bh=E1w1Pu81bUhOsVxhSt+NbiHujeHIIyEqLBGhz2QxMQw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gW0wpXVOBqY2zNpaZD7sfkjLk4R5nG22Shgg+R2aNipa/Bbnwotu5ZfZBwbqeBYxvAjNMkh08We3mGCb8PF0rfi6stJcxijGJcFH9YW//Hl4KxjVuaYNwAHqtKNwGbep/zDor+JZqwU4nmKxWd3/nh3fYElW2zTjvv9GDHxd3jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=y/sX9qPI; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1743165030; c=relaxed/simple;
+	bh=nw034KAl4K5R0p3fjOL7F1tDs2mvWBYsT2yzg0RvKTQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KlXiy/bByTNc4Npx0ZSykAs3zGnmsroZLbun/kiJDPRZQXGal+bqpbSUoBRPmYb9jNqkHENe3gRGVsVZlpZD8KVS7XcIFf5stTNK6QWHTo0zGOGSBNFh30U0ikDD993ICYsAKyPpZ8oOZzGe3yJWcI6dXR11s8MYzWf9u121+tA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=IKbiqcma; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="y/sX9qPI"
-Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 27B311F93B;
-	Fri, 28 Mar 2025 13:29:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1743164961;
-	bh=CJoUsYQQ2p89R4BMLX7IiEIRyUeB4EqC9KfvN65AKKE=; h=From:To:Subject;
-	b=y/sX9qPII563AOIh4nsmHa209II2+DyvCWXOmT1qGGrksAjVHkPfLJiWufWP2S7Y6
-	 t3k9FmX2NSj0V167AwBYmhKWMGs9N3vNmuoyH2wzHijvUrc31e0aOjY0cNbuoKclAJ
-	 4pNC9G+l8GPqtuMGD7DRGBdP9591W7tTWggmcKQYVDaVCc6dXojYsheLH6qrmY3HIB
-	 LGAdaX8HjIp8uM6M41UIJmgxnxOrgbkomKZKOo0jOHnDPju2Q2VSGXNRYYiF9dS0BF
-	 sieinzZHu0CfwTmH798xTc10GwykiueergQeayuTjAddETu6NSs/1KJTTCKOFvQz8U
-	 1TOBENrK05kOA==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: [PATCH v1] dt-bindings: gpio: pca95xx: add Toradex Embedded Controller
-Date: Fri, 28 Mar 2025 13:29:17 +0100
-Message-Id: <20250328122917.43273-1-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="IKbiqcma"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=8GY9oAspc/UtzxBw+Itn8O6EjWFnF2C8yVESOjSlnrI=; b=IKbiqcmatIo0Xkt4D1J2y/GG+t
+	ZbuNUAw5UdJFOliKlRY/+WuQbfhczTWO4mSRBVwMYz60TS7L2hS+imkBaQ2NDPLyt3Szyt0MnkBzc
+	uW0hOCRc3c0B/DdgEAXxuoiJUbgFeMNtMspS1EYeOY73CiY5ubhx07G/L3DirVQvy70hDUgIZdNfy
+	Ir54uMqedYZwpd1qlYPAZcjcDamI07VZAcc/RfZ4RfEuzGv7/QHsNgVy3KKLINbx6SVxXmWU3+wU9
+	kmalwafojs6If181kkuxPEe8DczboPeh+leY/fepp7AdB62+Yt8BNhMkOWqk/U65yate1OaInct0A
+	5E0yfIEg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:49770)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1ty8qR-0008OX-0q;
+	Fri, 28 Mar 2025 12:29:55 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1ty8qM-0007BV-0X;
+	Fri, 28 Mar 2025 12:29:50 +0000
+Date: Fri, 28 Mar 2025 12:29:50 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Yeking@red54.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Eric Biggers <ebiggers@google.com>,
+	Yuntao Liu <liuyuntao12@huawei.com>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Dave Vasilevsky <dave@vasilevsky.ca>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Victor Boivie <victor.boivie@sonyericsson.com>,
+	Nicolas Pitre <nico@fluxnic.net>,
+	Oskar Andero <oskar.andero@sonyericsson.com>,
+	Bjorn Andersson <bjorn.andersson@sonyericsson.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: Fix support for CMDLINE_EXTEND
+Message-ID: <Z-aWPqAUOIDEzzpZ@shell.armlinux.org.uk>
+References: <tencent_3E8155B4A33D48D6637F16CFE5ED293F0E08@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <tencent_3E8155B4A33D48D6637F16CFE5ED293F0E08@qq.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+On Fri, Mar 28, 2025 at 10:20:17AM +0000, Yeking@Red54.com wrote:
+> From: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
+> 
+> It should be the default command line appended to the bootloader command
+> line, not the bootloader command line appended to the default command
+> line.
 
-The Toradex Embedded Controller IO16 is a 16-bit I2C I/O expander
-implemented using a small MCU.
-Its register interface and behavior are compatible with the PCAL6416.
+Later arguments override earlier arguments. Any compiled-in command line
+needs to be overridable by user supplied input from the boot loader. The
+current behaviour is correct.
 
-Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
- Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+Sorry, but no.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-index 7b1eb08fa055..db1520ff38bd 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-+++ b/Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml
-@@ -16,6 +16,9 @@ description: |+
- properties:
-   compatible:
-     oneOf:
-+      - items:
-+          - const: toradex,embedded-controller-io16
-+          - const: nxp,pcal6416
-       - items:
-           - const: diodes,pi4ioe5v6534q
-           - const: nxp,pcal6534
-@@ -132,6 +135,7 @@ allOf:
-               - maxim,max7325
-               - maxim,max7326
-               - maxim,max7327
-+              - toradex,embedded-controller-io16
-     then:
-       properties:
-         reset-gpios: false
 -- 
-2.39.5
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
