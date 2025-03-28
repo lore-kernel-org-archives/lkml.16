@@ -1,52 +1,65 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC6FE545
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 18:51:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A2E1E0B66;
+	Fri, 28 Mar 2025 18:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743187879; cv=none; b=Lw/x0W9oVb2mTDaeRw88bfD8xUCFzZoZdc0+wLCmjtXc7TmZSWo2VYVVXpCkpAChA4PvTQR56VfuL7WMom+BmeR0/EvR+ORRrQQuQgRJNqlDcy/NH7pYXU7ZbRhyylSdOlMBE9pzbYLDBxxYMH+fC5Gv4kyUpZEQ2Pg9cUO42r8=
+	t=1743188144; cv=none; b=FKQ25XijmDHcC4De2NGL2s8EMEXhXoyjBDqgeBu3rwV4c0cBlwZvbeUglLqIPkSIkFibaXQ72upkBMKjg2DsMmZ8YxWU/SYGaDqAPmraegf4l2mYDoIcG/q38KVUZcbv4VnHpo1WN+A1koNLig6SN1b2TNBwi6HNReP9f1qRISw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743187879; c=relaxed/simple;
-	bh=MuDL9jpbnGRWlbbqtZxhrmChBseaCyNCOaY81ruoHcs=;
+	s=arc-20240116; t=1743188144; c=relaxed/simple;
+	bh=xK40CKXqoutN+Ul2oX1Csofy6qi0LZ+rD5/qYppxCe8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ux/rs8ydm+2ltk+MwqzyARZBL3cJfm1RpvW5uOzkeA721U7pzRqLtkA2NNI/wj3+GeF5ecuXNYy//nNv5j48BwmUe46J9Xq4aGAj++Y4z8YBmI36LUgT/qIiI8akoypE81IRst/By9RH532ToURJG7iyp8ja6HYC+h+QveHrxJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ezYH7Whh; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	 In-Reply-To:Content-Type; b=PPK294kzmMkwOD4/V8f2Atnl7WJ/Rg9pzLE3g94AZ9xB2T/dxEY0m93yfsdrqZ2Upk9qbwlDcprZequ23VhQ4y3gJ5+G4LQKGY1KThvgimeJArTEHO4slTwK7uwEkWqR2s7iTOwWMpFcK/iSngOio2HVJ+igT+Ju6htr7A6wVqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bdo2Kwdx; arc=none smtp.client-ip=209.85.210.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ezYH7Whh"
-Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
-	by cmsmtp with ESMTPS
-	id yAQltPZLnVkcRyEnNtgJAL; Fri, 28 Mar 2025 18:51:09 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id yEnMtMxRKRxIGyEnNtVBag; Fri, 28 Mar 2025 18:51:09 +0000
-X-Authority-Analysis: v=2.4 cv=N/viFH9B c=1 sm=1 tr=0 ts=67e6ef9d
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=B3fuDwYyW55wTQKIj88FGw==:17
- a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=0Sr-awb6awCcF8-qK4kA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=032/a9sJy8Z71nZgfdWNw/Gr3y2QePofuB4HmHZ/uEI=; b=ezYH7WhhR2SUYYRJGnOFtMAN9c
-	mUOy9U/pOh7AoHZUeyrPMs1Bggfwd1bDPUyfWjcdmTJcOPq8p/H2Rj+Bezz+7EHYAqM2z7KyIMezc
-	mQUhJPksrD76brr/vkRFxakbls7CWHN+XNULYruN/4ZTtjYhgkw0yvO/gXKchCF9eA2S9P2cfSbSJ
-	dAEPYjDm3mlxgYT9jk0rqq7HtGnUC4YfQa6NGzjaYLIU69Ok4ke0LV+AYDwGOLfgCflfFaKpK0leY
-	43Mt5g2dCFpJVA6M9GVsZtL+IGlVOyPTlL3Cnj5GmA1ffh9172BLdvw2nb3pVvXtKmpF1nsulQZP7
-	biBbyhBw==;
-Received: from [201.172.174.147] (port=37342 helo=[192.168.15.6])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1tyEnL-00000001zFc-3Su2;
-	Fri, 28 Mar 2025 13:51:07 -0500
-Message-ID: <9a0401f3-fa85-4308-a022-c4205fd7b50f@embeddedor.com>
-Date: Fri, 28 Mar 2025 12:51:02 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bdo2Kwdx"
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-727388e8f6cso1594910a34.0;
+        Fri, 28 Mar 2025 11:55:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743188142; x=1743792942; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=VYN9OZs/WadRSCbRfAworAJi/YfdgYnh3ZtveZTpJi4=;
+        b=bdo2KwdxNkTBYLPnKEZU4uFziU12jRfKN9l44f7+BU+lvRqpzzihJd55Q0R2PjhC+h
+         dxHnTK7SZiws0QTaOgFF6LnXdCY7i24A6/VOexczHAqLF1wEkaIbH/9C+RjobnL6xS7z
+         QJCa414TXM6UbeZ1StPSDNeVGzY7vdKq0Wo6T1E//1NAqjHSYCMdA0S3D1Ji6nEoi0Ql
+         JbUY9PrHO1JyS0GkIPcpBXfZu3euIA/AvUfThC4T6yI0nOnP5zysRsVgf810d5PM4H10
+         4r1sY2jlr5XYEcu7iBxeYcB5swoCfoIWHjCAsRDXh1nIX6i3KU+iE03m9z2DK14CoyYp
+         ONZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743188142; x=1743792942;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VYN9OZs/WadRSCbRfAworAJi/YfdgYnh3ZtveZTpJi4=;
+        b=tJ8HrVjknWsMFfubYAkWXzQx5+ijjQY6OyZjnQxKDz5aD1qB85cPv2oUixfboncGC4
+         oyHtQJU0FG3vpqb1+z5fMkgTtaf6o04ifOqMLDqzqkljRhtnYuNHiTacZwL+kI1r/nQy
+         +8E6Q7vFUtp/xhtUt/v//C006GAVDVlkNoxW9d/WP6hsbb6690bTHjC3T18RgZ+YemHU
+         qcGP4dcec3o0mtfK8bSlfVnvQT1TgFPlRVMgjcr75+IyNg0fRYpzfwHxQoyzDVYVdabv
+         sLRNoEdq3+Tj30MOl/Kv4FKXzVgfy34IeitSagI4IUDEGO1OYDSlNk0VWNDhO61mSrHX
+         vpKg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/SP72MTk+3QgZeMGuowJz2x8cR/3W6ga1vrpAagbxq9Em0mZP4mZobs5f7NUK5eATeEiZUAWkLYPBmLk=@vger.kernel.org, AJvYcCX09OXG4Say0l8v8dFRPWx+8CZMHTO7Mhw7VlV9nJj26iIlAtXrHApiIH5wsy6APHNLtU4Z9krG@vger.kernel.org
+X-Gm-Message-State: AOJu0YwM+8hxpZAPfMwtnjfMgTnIPiqRjcVSYb8rwBBumuIJox9baG7T
+	QacQdUOTw6DpNUastIxVjR1eNN3GF1q0e9QPzVBL/0L4ijVtH4So
+X-Gm-Gg: ASbGncsZh2rKZMOjHjn0YNmLgpwdsvrTW1W4gvWVWSIGkUnQIXpA6zj6gZUNHviONL1
+	6s1RqoqsCSrEAM6XSCYHJTN+qg1IKH/29OBU2eC9hpXnAUQrzpMFYl50hzionm2IAVfUnLWRcSy
+	MdWI70moi9J7FM0pqZ8B62zsabuo8x6+MPdumn0SSWx7RllXXUhN/QIiwQOSYezsfu7dIV/VopL
+	/ehc42r5A/p+IrJhaR/UJ62otuAVzVCuxbNPHRL3FBJozpthbp193/t4noFTSyX+a4fg5d7mg/v
+	eHPy/8yyl9bqXRIwPe8vps4lqDsoo6afrVYNhVFG1A4BGkMzaIKkgq2tP0cpAWcWPLt4h3O5
+X-Google-Smtp-Source: AGHT+IFOwYy+F90YrKnwGg9/FiWrItI1J6HIr59HKtgHNE/idYZiWqYCONNFPbwbxvM1t1mNCuvDuA==
+X-Received: by 2002:a05:6830:4195:b0:72b:7e3c:7284 with SMTP id 46e09a7af769-72c6381740cmr334173a34.18.1743188141825;
+        Fri, 28 Mar 2025 11:55:41 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72c580cc609sm459862a34.29.2025.03.28.11.55.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Mar 2025 11:55:41 -0700 (PDT)
+Message-ID: <6001a417-6439-4e4d-8abb-2c90309f35e0@gmail.com>
+Date: Fri, 28 Mar 2025 11:55:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,168 +67,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] leds: Avoid -Wflex-array-member-not-at-end warning
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@weissschuh.net>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
- linux-leds@vger.kernel.org, chrome-platform@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Z-azMlPnP7nPPJrY@kspp>
- <c051fd45-7eb0-465d-9e97-af294c453755@t-8ch.de>
+Subject: Re: [PATCH 6.6 00/75] 6.6.85-rc3 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250328145011.672606157@linuxfoundation.org>
 Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <c051fd45-7eb0-465d-9e97-af294c453755@t-8ch.de>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250328145011.672606157@linuxfoundation.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.174.147
-X-Source-L: No
-X-Exim-ID: 1tyEnL-00000001zFc-3Su2
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.15.6]) [201.172.174.147]:37342
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfMTtZ5m/LPCb4BvzS9P7DJ5JmUfF+DNoG3IGCexd83zi2y32FHm8Uuvuv0Js87/MPw/tq+Fm4uVBc70cz1U8QZSCf20CrA0TW/uq3pGtQQv4/ZBQ//QB
- oim06U3/rgfSSoT0BnTPKM5QksfOOiYbTXfR/mefhRqOPcoYzE04HBdf82cxdGJV8gy6+I/bIIhgcQN4WkPFiDxmeRQ7inXfS+L9NYKW1tSCKW+fYFd3phhA
+Content-Transfer-Encoding: 7bit
 
-Hi!
-
-On 28/03/25 12:31, Thomas Weißschuh wrote:
-> Hi Gustavo,
+On 3/28/25 07:50, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.85 release.
+> There are 75 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> On 2025-03-28 08:33:22-0600, Gustavo A. R. Silva wrote:
->> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
->> getting ready to enable it, globally.
->>
->> Use the `DEFINE_RAW_FLEX()` helper for an on-stack definition of
->> a flexible structure where the size of the flexible-array member
->> is known at compile-time, and refactor the rest of the code,
->> accordingly.
->>
->> So, with these changes, fix the following warning:
->>
->> drivers/leds/leds-cros_ec.c:70:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>   drivers/leds/leds-cros_ec.c | 26 +++++++++++---------------
->>   1 file changed, 11 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/leds/leds-cros_ec.c b/drivers/leds/leds-cros_ec.c
->> index 275522b81ea5..6eab0474f52d 100644
->> --- a/drivers/leds/leds-cros_ec.c
->> +++ b/drivers/leds/leds-cros_ec.c
->> @@ -66,24 +66,20 @@ static int cros_ec_led_send_cmd(struct cros_ec_device *cros_ec,
->>   				union cros_ec_led_cmd_data *arg)
->>   {
->>   	int ret;
->> -	struct {
->> -		struct cros_ec_command msg;
->> -		union cros_ec_led_cmd_data data;
->> -	} __packed buf = {
->> -		.msg = {
->> -			.version = 1,
->> -			.command = EC_CMD_LED_CONTROL,
->> -			.insize  = sizeof(arg->resp),
->> -			.outsize = sizeof(arg->req),
->> -		},
->> -		.data.req = arg->req
->> -	};
->> -
->> -	ret = cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
->> +	DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
->> +			sizeof(union cros_ec_led_cmd_data));
->> +
->> +	msg->version = 1;
->> +	msg->command = EC_CMD_LED_CONTROL;
->> +	msg->insize  = sizeof(arg->resp);
->> +	msg->outsize = sizeof(arg->req);
->> +	*(struct ec_params_led_control *)msg->data = arg->req;
+> Responses should be made by Sun, 30 Mar 2025 14:49:59 +0000.
+> Anything received after that time might be too late.
 > 
-> To be honest this looks really ugly and it's not at all obvious what is
-
-We can do something like this, instead:
-
-diff --git a/drivers/leds/leds-cros_ec.c b/drivers/leds/leds-cros_ec.c
-index 275522b81ea5..c7235f4e577b 100644
---- a/drivers/leds/leds-cros_ec.c
-+++ b/drivers/leds/leds-cros_ec.c
-@@ -66,24 +66,24 @@ static int cros_ec_led_send_cmd(struct cros_ec_device *cros_ec,
-                                 union cros_ec_led_cmd_data *arg)
-  {
-         int ret;
--       struct {
--               struct cros_ec_command msg;
--               union cros_ec_led_cmd_data data;
--       } __packed buf = {
--               .msg = {
--                       .version = 1,
--                       .command = EC_CMD_LED_CONTROL,
--                       .insize  = sizeof(arg->resp),
--                       .outsize = sizeof(arg->req),
--               },
--               .data.req = arg->req
--       };
--
--       ret = cros_ec_cmd_xfer_status(cros_ec, &buf.msg);
-+       DEFINE_RAW_FLEX(struct cros_ec_command, msg, data,
-+                       sizeof(union cros_ec_led_cmd_data));
-+       struct ec_params_led_control *req =
-+                               (struct ec_params_led_control *)msg->data;
-+       struct ec_response_led_control *resp =
-+                               (struct ec_response_led_control *)msg->data;
-+
-+       msg->version = 1;
-+       msg->command = EC_CMD_LED_CONTROL;
-+       msg->insize  = sizeof(arg->resp);
-+       msg->outsize = sizeof(arg->req);
-+       *req = arg->req;
-+
-+       ret = cros_ec_cmd_xfer_status(cros_ec, msg);
-         if (ret < 0)
-                 return ret;
-
--       arg->resp = buf.data.resp;
-+       arg->resp = *resp;
-
-         return 0;
-  }
-
-as in other cases:
-
-https://lore.kernel.org/linux-hardening/Z-a4meHAy-t58bcE@kspp/
-
--Gustavo
-
-> going on. We have the utility function cros_ec_cmd() which would be the
-> nicer alternative. (Without having verified that it avoids the warning).
-> While it is slightly more expensive, I don't think it matters.
-> And if it does, the helper can be optimized.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.85-rc3.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
 > 
-> (The same goes for my other cros_ec drivers)
+> thanks,
 > 
->> +
->> +	ret = cros_ec_cmd_xfer_status(cros_ec, msg);
->>   	if (ret < 0)
->>   		return ret;
->>   
->> -	arg->resp = buf.data.resp;
->> +	arg->resp = *(struct ec_response_led_control *)msg->data;
->>   
->>   	return 0;
->>   }
-> 
-> 
-> Thomas
+> greg k-h
 
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
+
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
