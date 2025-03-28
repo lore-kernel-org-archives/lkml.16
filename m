@@ -1,218 +1,469 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic315-20.consmr.mail.ne1.yahoo.com (sonic315-20.consmr.mail.ne1.yahoo.com [66.163.190.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E5C1E51E6
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 17:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743184685; cv=fail; b=KCZKJ61IUVR0Bqq7xWLldkA4r3yBabZAHg8Uj08CmF4uHt7cYM7fVpQpOoLHR1diqMeOtD8HWGbYnOK5Njf9S/5sqT37/zeViGSL+a7vTXcLNz+pnMJ7r53XRVTFg3ng8BmPs3LXlcSV1/4EYd6T085NcV31AVY+2fA9TCPgxJo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743184685; c=relaxed/simple;
-	bh=E1DD/3YWFkotErNflbL/O8Gb+aPntcB0uHkETKhDl8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=EKcOjvLSbJTutO44QOlMhlIkhUkjVF2tcHmqnOLzENrtk8kTqx4ksSxt5qBspT9OwMKLWSY9sLhu+5iYuXOyAbkyEjLBi/K/XRnUtTSicnG0FIKLzeXU7DYVJM1BJiILIyG/0ep2nVC5PFYz+hn8xelkk+WZscTPN9gi4C6xFiI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=CfWWgHKo; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=z+VRomCd; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D4961ACEAD
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Mar 2025 18:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.190.146
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743185047; cv=none; b=WD5tSeS27Bn7ydfeeOP+V9+PM5Y9zmyIjaL99FdqfRKOd7kD5DfyLzVRIFSf0Vog/zzkHLvzd3Jmfbx6XBze43I9rLj4em27YnODM5IGAHy7H7aYfy2n9+tsEOopUQHeb9PMd2A1gpH24KlcnAXuMrf0jUAqUd/95G+xWPwJ9uI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743185047; c=relaxed/simple;
+	bh=nlCUIx44KF+GxeZyIe7akNIigE88CAzW6BBWroie/4w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=j0McJbHe372nk3p5WnGVX1UK4/k0m5zTqLq6uUQfTCvAKJDj63w5+MziBURy1ucIyhgHz8A9lXa8XI8DB5NVqQMfp/8OACIPRnaXLI9YCRf0rLt+xZcUlbsom8wTqhO5JSkj0sIzOcqNY78IFTX+Ri+8Jw0ogfE2Q50GZn9KrW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=Zo8fsDjR; arc=none smtp.client-ip=66.163.190.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CfWWgHKo";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="z+VRomCd"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52SGu427004307;
-	Fri, 28 Mar 2025 17:57:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=E1DD/3YWFkotErNflb
-	L/O8Gb+aPntcB0uHkETKhDl8M=; b=CfWWgHKoHAjBZ1D0ynKE4TaWxa8d0nUN9B
-	dBE7U+HlD6KNBbz/7inkZBnKIHLGqscavcZ/OWOkpGpjUUPJrmQ1Dt9xNCS3CyLT
-	rWb2DqwGiboCKp4OzRsgZagQFEUPnxO6aNE1SJGvwj9OHeGVhRZcD4pqtinivEoH
-	7NLMkpP5dG7tiagLEeywoCst+PPNSSYh/beKZ5wz6Rxyk97YVt6xmiqdIr8q33z1
-	UJByf/eh/g8yqMRIGDxCFhK4ndpGS4sAywNdhqDEztDgcPAhgi2tAIRsVLqxFcFg
-	n6+PomXf9db/lgQFT2j4IhTwaw3HfoYJFL0fY4jvoIlXa84uidUw==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45hnd6f399-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 28 Mar 2025 17:57:45 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52SHDiAl029591;
-	Fri, 28 Mar 2025 17:57:44 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2176.outbound.protection.outlook.com [104.47.59.176])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45jjc5gdag-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 28 Mar 2025 17:57:44 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uLeeUyu0flYaAaji7/CfaFWyMctMHXQtEfa5NQ7NtDVC62UkC0bXwIg0xTnaoRZejaFvWapdfmFnJ6IOzpHi0RDe9S/C6sDIHj2LIYE02Y6ULkLKefBxJ4OZ3fe/KBvfN/O+H0juoSAhoR3JtwAAjElfC3OYMPRWYVORx6Ozk3pxkL5EB+sz7ng9YYPNnDGhbO7bjZPRNxU2ID8rPPYR9gIWhXYbSATf1BCE0EAVOhfeVgGszCGA3aKDV1FELEi7nNeIk7YI0crH3JgxDio94JZpf6R/MYALTf92/e+1OqE29eXS04fSeWE3yATVBGcZrJaNKgbyXLWh3NCv1YojKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=E1DD/3YWFkotErNflbL/O8Gb+aPntcB0uHkETKhDl8M=;
- b=MjnfZCiXrscZ1Uz8C+vdtrBgDNUWwCHGCtvUXV0dEIt79cREVM5bfUR5tx6MdKcOPXIvofjk7JhKi/VIlZpvjXpdw48wwjE/3PQadFQmPYAFVMpIoHs82MgyxepFQ3lP8p4m1VoiTXa0Q9l+c5E9Q5oXMgpqVKb0GPDKf2i6Bs/KOg4C5z8hrU8zJULYGpa2GmmRSqntWaQMaNRF6iwJm/9WKWLD2TYnmuGu4yVJvufv7zSIChgKHKfP026zeA3CwgTD39IGnxHmnRC0Fd0opBbn2GsrCYKvznwQE/4KCVLcUhYRDXTheXdSy/aXm5N28PInkys/IC8UWKULsW60Ag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E1DD/3YWFkotErNflbL/O8Gb+aPntcB0uHkETKhDl8M=;
- b=z+VRomCd/R0sf9JlMtMBORaD/lz9jlBwyXpso1FNOvWGuI6cqU8un26U0aXUEBr2mlSEz4B0Ky+BxXW2KAOOERGTrJMCAR9iYrgXAHtcVXWZRJfb9NH8HC0T7BZllJwE8rKWXTqL9WGznlD+vRvKdktOmYWiw0OMyLSmAPPeJEA=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by IA0PR10MB7328.namprd10.prod.outlook.com (2603:10b6:208:3dd::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 28 Mar
- 2025 17:57:42 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%7]) with mapi id 15.20.8583.027; Fri, 28 Mar 2025
- 17:57:42 +0000
-Date: Fri, 28 Mar 2025 17:57:39 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        Li Zhijian <lizhijian@fujitsu.com>, Sumit Garg <sumit.garg@linaro.org>
-Subject: Re: [PATCH v2] intel_th: avoid using deprecated page->mapping, index
- fields
-Message-ID: <1f255d31-4c87-4425-bc61-bbfea76c154f@lucifer.local>
-References: <20241203080001.12341-1-lorenzo.stoakes@oracle.com>
- <0fcfc239-19c7-404f-bbc5-70a29ccf6ec0@lucifer.local>
- <22d79ad1-0064-42d2-9f69-883ec2872c11@lucifer.local>
- <Z5kNgELpK1-zEXm4@smile.fi.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z5kNgELpK1-zEXm4@smile.fi.intel.com>
-X-ClientProxiedBy: LO4P123CA0235.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1a7::6) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="Zo8fsDjR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1743185043; bh=ECtK13jpKQaKG473YT8SJ1hzG929E2lOvC06lN5og2U=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=Zo8fsDjR+kAKqWQN5AGI2C7Eg9Xp+/TCAxZ2Le9pxNI+lJ16C4fAf6nR2evjaW7vq4Hr7oLUjgpeNsNRrtFVT2JZH+mVUr53VICZ0XlRZXrKcJPOv+E/N+Jc9kdq+L3Deoq694vHvEaICGUsY5N0vSVTsbJECE4hea7t+TfGTaKCSC7hP4nzOWKU2HzbMNuCf68iXvJxkamTiDsDQDed6kyF+zN1J/wk6njq9NLNu5378bz7ljZu9G+t7k9VtmoUwPbpPMjHlIZHJCpdsfVFNLOikjiaaOy3R5sWxYFNnkAw/0vCYlVVBwVAQPUMjx2kYtyJ4Q/e3+hDGhETfeAj+w==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1743185043; bh=fMWcWojDG5kXpyVXFtOonF3AJY87xMbVR2Z1PCM9HE4=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=dpTWYNWAvBFkeYx0IMm807OJkXJhk3JQc2qh+9yBjw5rSK3YFtqIBiOpOhlu8eQMT1ZjU8EKSrqJIROF1y3ez93S7poq1C5P4JCZdS9q4sc9qCRA8D5RzEGCvx27RUc2BSa5eM6bc2SOjUuWFKrRKHTieOrn6zT8V8OKaIQK6ajhkAxvOA4BerWj3QgIFch9f5vRWMzrjT3eCAqFgAFfzk8Ct/l+Fna4pUb49E/8+HUMx4gOpvp52gGO36ehmucnxysmDhPXyOmj8fcyAKWnrszN/n0GHv91XfJL0NszSh3IygBbXlcvbL3F3L/3iss5rbQkeoxxRxZOLP3AYleftw==
+X-YMail-OSG: 4bHaV_cVM1lHRlj8PGjrxH.v42qMjx2QQE8Ynbd.7ZsCwl4tl.vy3oredXlx.YN
+ GQKdAzdFglYSpfaiVjDQJCgIpjY1sNqXDrPGJGdaPyJlnIU4RR5J7GpDx6jB0POi54HanWl18ClW
+ A.DmPtI6fwInhRb9zOSVuCwaVryh3psj1YouRr5PCyffkEFOJ.5W56kbqvzCr8P4vv0DwIAjsud1
+ 8Mpf0CKX3uGmHN8RLZwo1EdMUkhZ4mDQMmRIQvbV2wJWEo13aW1SBFmEAu8rch5V0ml5nvaJiczX
+ vtEDGIbTBA7zqqQrHF2Mv5cweuVNJT_wJ282lIyopmVKb5YdXFHFvZWQNWoPpEfdrK3gyL5Rwpa9
+ uy1svi4nSObCXUduxuMDLXt7LRz0wst9V.T6N91FPJAGIsFf7hrn8UFGaXh7OqFNSYR_lITnzdIg
+ 7rNNhaq1kpSUzBHm42.5z5NyuINa8B4mVjobMOTxfdLboBXkk92mn19Zyry2EQJU0XJLNlnYKuSG
+ oKR2H5cEWuWpPNnp8sExkSbz_gIu9gqbNEXvLDj0dT3eBaH5up.kQiyhtebBklMZpRaS0iQskekL
+ c7EPQOQIWXqrEQ_SzKyvyFKZOqbaXe4o.xYKnwsRnt2NQty8yizYMpzKSx8flga0ZPX8rPuuSQAu
+ OZ27hzskAyIKps6Wu4DcNqpEIMwFolEYilqU_i7F6wR14ICYTJFmkgX2BmZaHq0yrZvqE5hp9nxd
+ dOfdlSsWRFRb0hzjz241i2ihpMG3Fkoxcsr9F_HFRsr6FSlSoUEPHBXD.uFZfUpX.u7kxF9wEgTX
+ eAMk0VSoxS640O82ZT6wM1sKd16Uar7VYy7dmVHGsEp3M8bh_grsTRsWBx0TS6Xr4CNcLPClaySB
+ l.YpgQoZ.rvcMXwKIxoLsI72Xc1K7X6rzo2t3ZoPqjI3F4W7jdmejJqsNr9_PsaPlPJ_StUbScQC
+ OOmITu863od7QZZtniXbF8N4vYiSIaS2l8U5y11l3jk.3Ry4VqYEFzvGk_1QscOaNmfAsOL5UUSv
+ oJjh26OZLkHCznBQkXLAggBNNqy2yKjxAMJNio4ApQEjtfUWPvrNZVTRLGfZ.7mo.JFdAdIUW68D
+ lUHy9tFOwGN73VXd0bG33E7Sk1qF87uqEyh8DpBiHHR3JgTv0HwJLWSuMb4uAr3SZMQmaScrtlpK
+ UwD1q8zAr5ZF_l2j21maMtbbJZjmZN6sZAgVZNudpuzJeUemUr3bR17uu5Jr2q5bvjld8AW.2WU5
+ WP7LD_3qKkeZw0MEgTdIFmsp4ntLwynQAvz9j6z2jbIVDoFeeQ5nH8ALdplORzDkslshpFSzwQDx
+ o2ZKsIME1OpEpwkX27sB.nuZOmC.dHjyfThdxFXXwc8F7Q3w5KblNL85W0x0O87hq3TU49EMUjG8
+ J0Zo4LQmx8YU6qBxGMoOp0_rZMNUEqEo_C62JK1StEuTlLyFjqqE4XhW7dKYTOBLmxziS7BO.UKU
+ sfDZIY9iqKNeYyLoBh8WcvT.AFosJPm8R4WbB7M0aTrk6C_izH_S2Ye9ZTkFow7lxFvSkqxDTWrR
+ h5ufz8Xt045ij7SKkht.3g9csdd8HBZ7jwB4Q0KWhRX8MuCqcgYXbOEC0AZYPQnT1DOqS0.pVmK_
+ NGYcVgtST53UeMqzEducvhnGlTaF.eBbc54p.0ymNu_AlWJkzvnp3Lj5.QEFpf2HhfLLr9HI3AGT
+ B4G90jmxlPjG1h.YBeifsxCWGaIbT2S6UTWLM4vO6g9j2KXWegPVwK7Qik6Xqym9aSe1mOi_eZ39
+ PFc.hIWqCnm1BrnCcpPNutKUVQrt7myWcoB_vtQUUdJOUNEhH2Yl1w1xudyvNQCals3ac66SxtAO
+ S4qNUsoa0rcZJtfN2zfI5ackgrkx1QygX2UA36XdLIBrdlTn4Nhjdb_YE72ZYGoV07vR9PvMIvhI
+ 3X6c0gTsy_QzrnCkMqb8j5K6qhYLyYE96gjn7QzO9S__D6Agw3vLGgrrmJ5GKC9j2nf1xcqB70wj
+ Ap9o5i_T3V0_yyaJJxn8pvf6qnJ84YpTCrOcGkFdou3xkc3JMUdnDDe75KZLk7jcThBqCBugrpd5
+ gNKyQOQyL3ujCCFAHof7QmRaAWErk1mzQkpOC_ivPBBV2Gl3A7N4mvfJYO8qg1QkHaai3F7SQvos
+ zer1Otz2Qk4G5WOjKqs_Zhk17TqRhOvao4UPei_g8YsEaEIRwYyj2an0euFEp2O8XLMtYb_dBOCi
+ Yb8gspRDFvpU83AvCmuoV_Rnmho25ZfcZm5i654_nJcdwI8XLphMJ9s_cC5hGDJCAQm0wDH4gQes
+ -
+X-Sonic-MF: <igor.korotin@yahoo.com>
+X-Sonic-ID: b51509a4-2dd0-499c-afa3-861129489411
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.ne1.yahoo.com with HTTP; Fri, 28 Mar 2025 18:04:03 +0000
+Received: by hermes--production-ir2-54ff696c44-sqp8l (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 9492d6006d749a300ac3f1ee8e308470;
+          Fri, 28 Mar 2025 18:03:59 +0000 (UTC)
+From: Igor Korotin <igor.korotin@yahoo.com>
+To: benno.lossin@proton.me
+Cc: linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	Igor Korotin <igor.korotin@yahoo.com>
+Subject: [PATCH v2 1/1] rust: macros: Fix macro referencing core and kernel crates v2
+Date: Fri, 28 Mar 2025 18:03:12 +0000
+Message-ID: <20250328180312.2025317-2-igor.korotin@yahoo.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250328180312.2025317-1-igor.korotin@yahoo.com>
+References: <D8RHIOTYBFI5.3ETKTDNGZW3FH@proton.me>
+ <20250328180312.2025317-1-igor.korotin@yahoo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|IA0PR10MB7328:EE_
-X-MS-Office365-Filtering-Correlation-Id: 73278d1f-e89f-4d2a-2d9c-08dd6e22095d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?6FGDxcrLbgBk8ABBm/3qxVYRMwgb/SyfKZt2h+MMit3EDx34kf6cnGOU4viY?=
- =?us-ascii?Q?UjFcKjUDSSJWJGpXtCnxpLzihBcgGwF+aFbLqk80ztUKcqXm9emMtWOWNq59?=
- =?us-ascii?Q?cpT2h4cscyfgg/bsj2lfT39tu0X1g7qn+ymsIPrFkFVnQMpiFIGwXAJH0MmI?=
- =?us-ascii?Q?/DCdTWohIgdQz6JGn3U7wWvIkWDwdYqHKu2Q+GJVgQhPAmXZAAs9xs7TtB30?=
- =?us-ascii?Q?6mmE6c2lt8L0k6l5VlBMK3U2ZVO8Hvi/+iXqfVuSbSznAk4tYlkO/s2DH4zL?=
- =?us-ascii?Q?q6T2LDBcTXbk3Q3ZIYVcfKxX3D8qY5JDghtCtgUxJPIneXLFX9ZWrUD0tzwI?=
- =?us-ascii?Q?P7oitQMRfStZfwmEBpThk0LoVIWk+zoGtFrjnHYncL9SRzBT6UujFME6iOzY?=
- =?us-ascii?Q?fuxdYeJ2qSHtGxt9030ubYd+vruFk50gr/dvQKCRjQEDBv9BA10H1esOyTri?=
- =?us-ascii?Q?kAGU8N8a4H2z2iBz7UWa4UGMPqZ1CY/Bh3h16UACi9snRWv7yMZ2yHxPgALQ?=
- =?us-ascii?Q?K6d0bDMopTaSri8k87a52KXEeIdd5u/w/rIYXmT7jeytX09SPpbx8iQjQw+f?=
- =?us-ascii?Q?WmzbMXc8jr3W9230YTKNDrv3xk+StaGGpX/49B70W/ucIpPuzroFhXaI4n6G?=
- =?us-ascii?Q?6DEODiNf7fcyCHXEB7zWN5QLtEUrkATLmm1YO0yloWjkPup3KkUDfBaoFbJT?=
- =?us-ascii?Q?yC02QP0n5WhgsufGndBAeLPnDSUzpQOlb8pp2yT2NfBKuAFmMudAVnX2+4WC?=
- =?us-ascii?Q?jxJEzIFfyl9i/3JO+M8szFC7MOfANuLs8DHSANl0p77SMxaDR/lPfzfvszoA?=
- =?us-ascii?Q?mytltKk/acVaETWrd+Nl2BRkTD8wuiDlffMvvN47wb7pANBIPQBdI/+t4CIb?=
- =?us-ascii?Q?jBKZlqCw08dvnsqHlX6PBTZFnL3eeDOvGARg/vi1zYGdep7ry8TzEjP9Vwpo?=
- =?us-ascii?Q?SVjh1d1coXuu2R9z0PNvAIfZRb5EO0OEOSXLedlJ2/+svWwJsgt6NOyJfyqm?=
- =?us-ascii?Q?vC+ZzwlABM77GQ6hwEvLGsvZ/T0ok3LjlhDrUGfGH0ZD3Lg8Wn3B2AScfVZe?=
- =?us-ascii?Q?+Ehh7gcKz9kaMIYMMrbxfq1yuJA8fA+5iNstp2KmImyivl4JBtgLafbl7tzZ?=
- =?us-ascii?Q?36J6c1QLO2hWA42kHoMinDt+ON3IMf8BNe9T+pxjcAz+o0FYdqxkzh63yIVn?=
- =?us-ascii?Q?tQGcy46ydM0i/6RjYG0cVPJ+Pux6mNWrwMLHXxpwylWEja5UhVqDXK24coPc?=
- =?us-ascii?Q?EisLLv2b9Uq7KMWDw5em8GUzbp5zp9sDQ++lAnfMl9154ZeNJmZ29qWDkFk8?=
- =?us-ascii?Q?QQoV8jlI7rPzTFF92G8Da9chkgcsxCrFlJ6ATN+hcylMZvlKxJLIurjIxFpc?=
- =?us-ascii?Q?qptUkEgIxHJSnqiTdS1fvdaGzHNz?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?7AEXsE5xBc3kAxEmztCcVta+5dMqZV4NrtfK4XSgL255RflVpDHGceaOKIfr?=
- =?us-ascii?Q?lg9fRO3oIrmBsI4mnITmNdl+6d1bnwYr04Q7nGLovj+oV+DDUhDbsX5i78GT?=
- =?us-ascii?Q?4qVnMkO73A5xIXZgYZt8cS8hdNYUTagfcAsEuDSc1zCUPteqGdR0moM/xdLP?=
- =?us-ascii?Q?JwwOEJep1JbxwxaUx/KSCyFOMxJIlu5bzTFpW9Go5VF1BgDPD0pPS/SKz90b?=
- =?us-ascii?Q?Xmxo5RSRv80jKIsuCa7m88ryQCDVsGkkbVQxv3K6agKBeU9/N8VzDCJIOIKP?=
- =?us-ascii?Q?J8E6FEjIisdsyXfJEcLeIgJw/aNjTvP/b8ka/iXxc578+aBXLC4DPiY6s1Wx?=
- =?us-ascii?Q?u7PagXTHhqxZI9xr/xJkhlm+Z0jxGRdG0krCDUiQ4qUn+wNn6OlU51lMlTKg?=
- =?us-ascii?Q?ew2t20uMcS8pAmZ+qQ5bCtWFB2sQ2CZcmr7qQK/b9qiOfqU8XAvV3Y0EynRq?=
- =?us-ascii?Q?ni1ZMvylHXSui85Yr/c0OknPoqi1jVszpVYrZ+guxIhkecR4dGULHBhSvCZz?=
- =?us-ascii?Q?st7zRFrJIxMABSNUNrB05ldfi9Q2z9T7QAVc52mSjfRejkWN58e9ITnYhM6H?=
- =?us-ascii?Q?dVngbC/K33QqVeo04AezNPT7KDXFoFrqwYhJH8qNavn6Y4METUvs2uK2xed4?=
- =?us-ascii?Q?b67YXNTIwicu/8MgIg1EI5P9YDEG0STNm7/ltCd5oTsK69ynpbMn3Ke6gwFj?=
- =?us-ascii?Q?alr1OAh4AEvPkMwefNmRQlJtRIHI80FQjeQoeA1KCyFmFuVkA+X6j7wcSxwU?=
- =?us-ascii?Q?CjnGoN6bNjQrLHXq2jq5p3voufRGUF+qqXkbhXXMgTPwEMaXlwbdmWCvv+Pc?=
- =?us-ascii?Q?CDuqMDy+39gCuNezxvvILOsPLU+hCDMFevo6carfUDlDGnJEtPh0KTVnEuXV?=
- =?us-ascii?Q?SJ7ZfL289E328XzX6I4Dt5mdypQdlM+ol/GLZP5C4/HfDfIYua9w3zFkBjbh?=
- =?us-ascii?Q?dcWIHbtaPAJSnAbg5SU1iGNrHABN3A7+E7pVIyz6orhBFLZPRfy0CzJjkMzA?=
- =?us-ascii?Q?lVzeeyINY1t+QKWp8cs4w8G3yhHUXmvzePi+SDiioGJDrJwOEPnsoCUX1k9d?=
- =?us-ascii?Q?qutyLUai/sTktZe9y/I6sahMcjFAviVOE367gGNNUX2AreDfF2+uy8V0xmfD?=
- =?us-ascii?Q?/ju48yBfQFgs8cJL6EmiJo+6s4UiugAFMbSITzRkiLF/IIsm1CH5kT+UQmgt?=
- =?us-ascii?Q?wWhpjfy3FL2Sl7DtbEBUcf2W6C3Gxv20WSGRyB20p81oFX8zT93UJYwBDqab?=
- =?us-ascii?Q?FLb56RebVf0WF3uuHcCAfIrnrMd+InNEttvqF7q+yceG8rHQWcGS0ykn9NeG?=
- =?us-ascii?Q?H2Y4SLVA2GQ6bk+L+Nz9SW68fohXLSb+lh/PzaeRgNoeaYk0FpDdmcQqQeQg?=
- =?us-ascii?Q?Q/blSoww1HEnoNrbkltkLN0bulJtToyxJTHUFp1LAXoT5kWQnrid7xUQofBn?=
- =?us-ascii?Q?9wXV6xVThu6Hr24sgeR7FxSl386rP1BLxgit0DjxxF67HqrO7kRrai/oPpCN?=
- =?us-ascii?Q?KGAun+EZqtPoQv0QsM1FsslFpD3KWdAnmo3SJbxsa8OnJbpC9n8GgKjkAyAa?=
- =?us-ascii?Q?pptHww8u0ZwiCmo9puJ+lPZpSgBIPg3qhVdGuQX603K/stsZjTa+vqqTHzI/?=
- =?us-ascii?Q?9w=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	5J/jR3lTlQqrAsoE64NqPOUGEV9BrtabIR6vRAuwnVJvO93DM3TO7CKBQj8kXrYsZZe05dBTpFBUDpjCnoQdG4YVq1g4dhi64tNvEYHltA+zUyjYiYCJZkA54JEOZRk5hCshlMGLizn+ic+57FPap+LQHC5Mi1eUoiH0Izz1hPkXxWm0StlRpVQOWPXNxsoRPMl5fA2QXRgPZqugeyESLtv2DznDbESyVHWkd8d4V4xIeYnDrQQonEiGoLTwcWBA4SGVhGJvtyNMAyOGoGsfhrxYzxK50Lgolo6PiOWactn1joUjmz5cwd5WwWKOhOoM3kfkaRsRvVXnnYVTW3lrzjoKzvcfxs1oKinari1i2mGOqP+XGs3ouxUSgE7nSLtVToY3uNdK73vWSUtiej3Qf7gobbO1lnTPBQTMbe/oUH14QtyBsT+opg1fsvLqd4id5lr9g97rpcHdLh86d2c8USq7eR52m+gdvyiz0EPK3CKGv3T3GCvj7XnCeSDQnkgBKW6A7m5MT2DU8xb0YQVHb0RxZgF53YcVFT318WegEDucdueMLhlKQo/BYMPyKtweyGBG9iolR+mKfCtHCl9cslcNMbZ2P0zvOD5xOychUmo=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73278d1f-e89f-4d2a-2d9c-08dd6e22095d
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2025 17:57:42.3218
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2Cve0vDChi9avRNpYtHt4Ao5hvrilgeW8j2A5Nln3yfdAeDPK5vvGYBFxOvwxwDV2scEcUsQiSytv5UH0IGEq0PnkLiP3UrNNiTrMmpVf7o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB7328
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-28_09,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 bulkscore=0
- suspectscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2503280123
-X-Proofpoint-ORIG-GUID: 29UQOYgywRFsPPr3ymzEO61YKwcHvNK0
-X-Proofpoint-GUID: 29UQOYgywRFsPPr3ymzEO61YKwcHvNK0
+Content-Transfer-Encoding: 8bit
 
-Hi Alexander,
+Update macros to always use absolute paths for crates `core` and `kernel`.
+This guarantees that macros will not pick up user-defined crates `core`
+or `kernel` by accident.
 
-I pinged earlier as this wasn't in -next, but got no response again, and
-not seeing it in Linus's tree yet, can you please confirm that this change
-is going to land in 6.15 given we have a week of merge window left?
+Changes since v1:
+- Fixed paths in auto-generated code.
 
-We are going to remove these struct page fields so this is an urgent change
-that needs to go in.
+Suggested-by: Benno Lossin <benno.lossin@proton.me>
+Closes: https://github.com/Rust-for-Linux/linux/issues/1150
+Signed-off-by: Igor Korotin <igor.korotin@yahoo.com>
+---
+ rust/ffi.rs                     |  2 +-
+ rust/kernel/device.rs           |  2 +-
+ rust/kernel/device_id.rs        |  4 ++--
+ rust/kernel/kunit.rs            |  8 ++++----
+ rust/kernel/static_assert.rs    |  4 ++--
+ rust/kernel/str.rs              |  4 ++--
+ rust/macros/kunit.rs            | 22 +++++++++++-----------
+ rust/macros/lib.rs              |  6 +++---
+ rust/macros/module.rs           | 31 ++++++++++++++++---------------
+ scripts/rustdoc_test_builder.rs |  6 +++---
+ scripts/rustdoc_test_gen.rs     | 16 ++++++++++------
+ 11 files changed, 55 insertions(+), 50 deletions(-)
 
-Andy - could you ping Alexander internally again, as that seemed to help
-last time?
+diff --git a/rust/ffi.rs b/rust/ffi.rs
+index 584f75b49862..d60aad792af4 100644
+--- a/rust/ffi.rs
++++ b/rust/ffi.rs
+@@ -17,7 +17,7 @@ macro_rules! alias {
+ 
+         // Check size compatibility with `core`.
+         const _: () = assert!(
+-            core::mem::size_of::<$name>() == core::mem::size_of::<core::ffi::$name>()
++            ::core::mem::size_of::<$name>() == ::core::mem::size_of::<::core::ffi::$name>()
+         );
+     )*}
+ }
+diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+index db2d9658ba47..2b19a8597158 100644
+--- a/rust/kernel/device.rs
++++ b/rust/kernel/device.rs
+@@ -214,7 +214,7 @@ unsafe impl Sync for Device {}
+ macro_rules! dev_printk {
+     ($method:ident, $dev:expr, $($f:tt)*) => {
+         {
+-            ($dev).$method(core::format_args!($($f)*));
++            ($dev).$method(::core::format_args!($($f)*));
+         }
+     }
+ }
+diff --git a/rust/kernel/device_id.rs b/rust/kernel/device_id.rs
+index e5859217a579..0a4eb56d98f2 100644
+--- a/rust/kernel/device_id.rs
++++ b/rust/kernel/device_id.rs
+@@ -159,7 +159,7 @@ macro_rules! module_device_table {
+                     "_", line!(),
+                     "_", stringify!($table_name))
+         ]
+-        static $module_table_name: [core::mem::MaybeUninit<u8>; $table_name.raw_ids().size()] =
+-            unsafe { core::mem::transmute_copy($table_name.raw_ids()) };
++        static $module_table_name: [::core::mem::MaybeUninit<u8>; $table_name.raw_ids().size()] =
++            unsafe { ::core::mem::transmute_copy($table_name.raw_ids()) };
+     };
+ }
+diff --git a/rust/kernel/kunit.rs b/rust/kernel/kunit.rs
+index 1604fb6a5b1b..81833a687b75 100644
+--- a/rust/kernel/kunit.rs
++++ b/rust/kernel/kunit.rs
+@@ -59,7 +59,7 @@ macro_rules! kunit_assert {
+             }
+ 
+             static FILE: &'static $crate::str::CStr = $crate::c_str!($file);
+-            static LINE: i32 = core::line!() as i32 - $diff;
++            static LINE: i32 = ::core::line!() as i32 - $diff;
+             static CONDITION: &'static $crate::str::CStr = $crate::c_str!(stringify!($condition));
+ 
+             // SAFETY: FFI call without safety requirements.
+@@ -130,11 +130,11 @@ unsafe impl Sync for UnaryAssert {}
+             unsafe {
+                 $crate::bindings::__kunit_do_failed_assertion(
+                     kunit_test,
+-                    core::ptr::addr_of!(LOCATION.0),
++                    ::core::ptr::addr_of!(LOCATION.0),
+                     $crate::bindings::kunit_assert_type_KUNIT_ASSERTION,
+-                    core::ptr::addr_of!(ASSERTION.0.assert),
++                    ::core::ptr::addr_of!(ASSERTION.0.assert),
+                     Some($crate::bindings::kunit_unary_assert_format),
+-                    core::ptr::null(),
++                    ::core::ptr::null(),
+                 );
+             }
+ 
+diff --git a/rust/kernel/static_assert.rs b/rust/kernel/static_assert.rs
+index 3115ee0ba8e9..f3f8c6eb7360 100644
+--- a/rust/kernel/static_assert.rs
++++ b/rust/kernel/static_assert.rs
+@@ -16,7 +16,7 @@
+ ///
+ /// ```
+ /// static_assert!(42 > 24);
+-/// static_assert!(core::mem::size_of::<u8>() == 1);
++/// static_assert!(::core::mem::size_of::<u8>() == 1);
+ ///
+ /// const X: &[u8] = b"bar";
+ /// static_assert!(X[1] == b'a');
+@@ -29,6 +29,6 @@
+ #[macro_export]
+ macro_rules! static_assert {
+     ($condition:expr) => {
+-        const _: () = core::assert!($condition);
++        const _: () = ::core::assert!($condition);
+     };
+ }
+diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+index 878111cb77bc..aed7b2617c32 100644
+--- a/rust/kernel/str.rs
++++ b/rust/kernel/str.rs
+@@ -595,7 +595,7 @@ fn deref(&self) -> &str {
+ 
+     macro_rules! format {
+         ($($f:tt)*) => ({
+-            &*String::from_fmt(kernel::fmt!($($f)*))
++            &*String::from_fmt(::kernel::fmt!($($f)*))
+         })
+     }
+ 
+@@ -944,5 +944,5 @@ fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+ /// A convenience alias for [`core::format_args`].
+ #[macro_export]
+ macro_rules! fmt {
+-    ($($f:tt)*) => ( core::format_args!($($f)*) )
++    ($($f:tt)*) => ( ::core::format_args!($($f)*) )
+ }
+diff --git a/rust/macros/kunit.rs b/rust/macros/kunit.rs
+index 4f553ecf40c0..61fc25228e72 100644
+--- a/rust/macros/kunit.rs
++++ b/rust/macros/kunit.rs
+@@ -88,29 +88,29 @@ pub(crate) fn kunit_tests(attr: TokenStream, ts: TokenStream) -> TokenStream {
+     // Looks like:
+     //
+     // ```
+-    // unsafe extern "C" fn kunit_rust_wrapper_foo(_test: *mut kernel::bindings::kunit) { foo(); }
+-    // unsafe extern "C" fn kunit_rust_wrapper_bar(_test: *mut kernel::bindings::kunit) { bar(); }
++    // unsafe extern "C" fn kunit_rust_wrapper_foo(_test: *mut ::kernel::bindings::kunit) { foo(); }
++    // unsafe extern "C" fn kunit_rust_wrapper_bar(_test: *mut ::kernel::bindings::kunit) { bar(); }
+     //
+-    // static mut TEST_CASES: [kernel::bindings::kunit_case; 3] = [
+-    //     kernel::kunit::kunit_case(kernel::c_str!("foo"), kunit_rust_wrapper_foo),
+-    //     kernel::kunit::kunit_case(kernel::c_str!("bar"), kunit_rust_wrapper_bar),
+-    //     kernel::kunit::kunit_case_null(),
++    // static mut TEST_CASES: [::kernel::bindings::kunit_case; 3] = [
++    //     ::kernel::kunit::kunit_case(::kernel::c_str!("foo"), kunit_rust_wrapper_foo),
++    //     ::kernel::kunit::kunit_case(::kernel::c_str!("bar"), kunit_rust_wrapper_bar),
++    //     ::kernel::kunit::kunit_case_null(),
+     // ];
+     //
+-    // kernel::kunit_unsafe_test_suite!(kunit_test_suit_name, TEST_CASES);
++    // ::kernel::kunit_unsafe_test_suite!(kunit_test_suit_name, TEST_CASES);
+     // ```
+     let mut kunit_macros = "".to_owned();
+     let mut test_cases = "".to_owned();
+     for test in &tests {
+         let kunit_wrapper_fn_name = format!("kunit_rust_wrapper_{}", test);
+         let kunit_wrapper = format!(
+-            "unsafe extern \"C\" fn {}(_test: *mut kernel::bindings::kunit) {{ {}(); }}",
++            "unsafe extern \"C\" fn {}(_test: *mut ::kernel::bindings::kunit) {{ {}(); }}",
+             kunit_wrapper_fn_name, test
+         );
+         writeln!(kunit_macros, "{kunit_wrapper}").unwrap();
+         writeln!(
+             test_cases,
+-            "    kernel::kunit::kunit_case(kernel::c_str!(\"{}\"), {}),",
++            "    ::kernel::kunit::kunit_case(::kernel::c_str!(\"{}\"), {}),",
+             test, kunit_wrapper_fn_name
+         )
+         .unwrap();
+@@ -119,14 +119,14 @@ pub(crate) fn kunit_tests(attr: TokenStream, ts: TokenStream) -> TokenStream {
+     writeln!(kunit_macros).unwrap();
+     writeln!(
+         kunit_macros,
+-        "static mut TEST_CASES: [kernel::bindings::kunit_case; {}] = [\n{test_cases}    kernel::kunit::kunit_case_null(),\n];",
++        "static mut TEST_CASES: [::kernel::bindings::kunit_case; {}] = [\n{test_cases}    ::kernel::kunit::kunit_case_null(),\n];",
+         tests.len() + 1
+     )
+     .unwrap();
+ 
+     writeln!(
+         kunit_macros,
+-        "kernel::kunit_unsafe_test_suite!({attr}, TEST_CASES);"
++        "::kernel::kunit_unsafe_test_suite!({attr}, TEST_CASES);"
+     )
+     .unwrap();
+ 
+diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
+index 9acaa68c974e..cb429eceff71 100644
+--- a/rust/macros/lib.rs
++++ b/rust/macros/lib.rs
+@@ -283,7 +283,7 @@ pub fn concat_idents(ts: TokenStream) -> TokenStream {
+ /// # const binder_driver_return_protocol_BR_FAILED_REPLY: u32 = 14;
+ /// macro_rules! pub_no_prefix {
+ ///     ($prefix:ident, $($newname:ident),+) => {
+-///         kernel::macros::paste! {
++///         ::kernel::macros::paste! {
+ ///             $(pub(crate) const $newname: u32 = [<$prefix $newname>];)+
+ ///         }
+ ///     };
+@@ -340,7 +340,7 @@ pub fn concat_idents(ts: TokenStream) -> TokenStream {
+ /// # const binder_driver_return_protocol_BR_FAILED_REPLY: u32 = 14;
+ /// macro_rules! pub_no_prefix {
+ ///     ($prefix:ident, $($newname:ident),+) => {
+-///         kernel::macros::paste! {
++///         ::kernel::macros::paste! {
+ ///             $(pub(crate) const fn [<$newname:lower:span>]() -> u32 { [<$prefix $newname:span>] })+
+ ///         }
+ ///     };
+@@ -375,7 +375,7 @@ pub fn concat_idents(ts: TokenStream) -> TokenStream {
+ /// ```
+ /// macro_rules! create_numbered_fn {
+ ///     ($name:literal, $val:literal) => {
+-///         kernel::macros::paste! {
++///         ::kernel::macros::paste! {
+ ///             fn [<some_ $name _fn $val>]() -> u32 { $val }
+ ///         }
+ ///     };
+diff --git a/rust/macros/module.rs b/rust/macros/module.rs
+index 8ab4e1f3eb45..615cefd4160a 100644
+--- a/rust/macros/module.rs
++++ b/rust/macros/module.rs
+@@ -224,20 +224,20 @@ pub(crate) fn module(ts: TokenStream) -> TokenStream {
+             // SAFETY: `__this_module` is constructed by the kernel at load time and will not be
+             // freed until the module is unloaded.
+             #[cfg(MODULE)]
+-            static THIS_MODULE: kernel::ThisModule = unsafe {{
++            static THIS_MODULE: ::kernel::ThisModule = unsafe {{
+                 extern \"C\" {{
+-                    static __this_module: kernel::types::Opaque<kernel::bindings::module>;
++                    static __this_module: ::kernel::types::Opaque<::kernel::bindings::module>;
+                 }}
+ 
+-                kernel::ThisModule::from_ptr(__this_module.get())
++                ::kernel::ThisModule::from_ptr(__this_module.get())
+             }};
+             #[cfg(not(MODULE))]
+-            static THIS_MODULE: kernel::ThisModule = unsafe {{
+-                kernel::ThisModule::from_ptr(core::ptr::null_mut())
++            static THIS_MODULE: ::kernel::ThisModule = unsafe {{
++                ::kernel::ThisModule::from_ptr(::core::ptr::null_mut())
+             }};
+ 
+-            impl kernel::ModuleMetadata for {type_} {{
+-                const NAME: &'static kernel::str::CStr = kernel::c_str!(\"{name}\");
++            impl ::kernel::ModuleMetadata for {type_} {{
++                const NAME: &'static ::kernel::str::CStr = ::kernel::c_str!(\"{name}\");
+             }}
+ 
+             // Double nested modules, since then nobody can access the public items inside.
+@@ -255,8 +255,8 @@ mod __module_init {{
+                     #[used]
+                     static __IS_RUST_MODULE: () = ();
+ 
+-                    static mut __MOD: core::mem::MaybeUninit<{type_}> =
+-                        core::mem::MaybeUninit::uninit();
++                    static mut __MOD: ::core::mem::MaybeUninit<{type_}> =
++                        ::core::mem::MaybeUninit::uninit();
+ 
+                     // Loadable modules need to export the `{{init,cleanup}}_module` identifiers.
+                     /// # Safety
+@@ -267,7 +267,7 @@ mod __module_init {{
+                     #[doc(hidden)]
+                     #[no_mangle]
+                     #[link_section = \".init.text\"]
+-                    pub unsafe extern \"C\" fn init_module() -> kernel::ffi::c_int {{
++                    pub unsafe extern \"C\" fn init_module() -> ::kernel::ffi::c_int {{
+                         // SAFETY: This function is inaccessible to the outside due to the double
+                         // module wrapping it. It is called exactly once by the C side via its
+                         // unique name.
+@@ -306,11 +306,12 @@ mod __module_init {{
+                     #[doc(hidden)]
+                     #[link_section = \"{initcall_section}\"]
+                     #[used]
+-                    pub static __{name}_initcall: extern \"C\" fn() -> kernel::ffi::c_int = __{name}_init;
++                    pub static __{name}_initcall: extern \"C\" fn() -> ::kernel::ffi::c_int =
++                        __{name}_init;
+ 
+                     #[cfg(not(MODULE))]
+                     #[cfg(CONFIG_HAVE_ARCH_PREL32_RELOCATIONS)]
+-                    core::arch::global_asm!(
++                    ::core::arch::global_asm!(
+                         r#\".section \"{initcall_section}\", \"a\"
+                         __{name}_initcall:
+                             .long   __{name}_init - .
+@@ -321,7 +322,7 @@ mod __module_init {{
+                     #[cfg(not(MODULE))]
+                     #[doc(hidden)]
+                     #[no_mangle]
+-                    pub extern \"C\" fn __{name}_init() -> kernel::ffi::c_int {{
++                    pub extern \"C\" fn __{name}_init() -> ::kernel::ffi::c_int {{
+                         // SAFETY: This function is inaccessible to the outside due to the double
+                         // module wrapping it. It is called exactly once by the C side via its
+                         // placement above in the initcall section.
+@@ -344,9 +345,9 @@ mod __module_init {{
+                     /// # Safety
+                     ///
+                     /// This function must only be called once.
+-                    unsafe fn __init() -> kernel::ffi::c_int {{
++                    unsafe fn __init() -> ::kernel::ffi::c_int {{
+                         let initer =
+-                            <{type_} as kernel::InPlaceModule>::init(&super::super::THIS_MODULE);
++                            <{type_} as ::kernel::InPlaceModule>::init(&super::super::THIS_MODULE);
+                         // SAFETY: No data race, since `__MOD` can only be accessed by this module
+                         // and there only `__init` and `__exit` access it. These functions are only
+                         // called once and `__exit` cannot be called before or during `__init`.
+diff --git a/scripts/rustdoc_test_builder.rs b/scripts/rustdoc_test_builder.rs
+index e5894652f12c..81233fb56b66 100644
+--- a/scripts/rustdoc_test_builder.rs
++++ b/scripts/rustdoc_test_builder.rs
+@@ -28,7 +28,7 @@ fn main() {
+     //
+     // ```
+     // fn main() { #[allow(non_snake_case)] fn _doctest_main_rust_kernel_file_rs_28_0() {
+-    // fn main() { #[allow(non_snake_case)] fn _doctest_main_rust_kernel_file_rs_37_0() -> Result<(), impl core::fmt::Debug> {
++    // fn main() { #[allow(non_snake_case)] fn _doctest_main_rust_kernel_file_rs_37_0() -> Result<(), impl ::core::fmt::Debug> {
+     // ```
+     //
+     // It should be unlikely that doctest code matches such lines (when code is formatted properly).
+@@ -49,8 +49,8 @@ fn main() {
+ 
+     // Qualify `Result` to avoid the collision with our own `Result` coming from the prelude.
+     let body = body.replace(
+-        &format!("{rustdoc_function_name}() -> Result<(), impl core::fmt::Debug> {{"),
+-        &format!("{rustdoc_function_name}() -> core::result::Result<(), impl core::fmt::Debug> {{"),
++        &format!("{rustdoc_function_name}() -> Result<(), impl ::core::fmt::Debug> {{"),
++        &format!("{rustdoc_function_name}() -> ::core::result::Result<(), impl ::core::fmt::Debug> {{"),
+     );
+ 
+     // For tests that get generated with `Result`, like above, `rustdoc` generates an `unwrap()` on
+diff --git a/scripts/rustdoc_test_gen.rs b/scripts/rustdoc_test_gen.rs
+index 036635fb1621..f8d053f75270 100644
+--- a/scripts/rustdoc_test_gen.rs
++++ b/scripts/rustdoc_test_gen.rs
+@@ -167,12 +167,14 @@ fn main() {
+             rust_tests,
+             r#"/// Generated `{name}` KUnit test case from a Rust documentation test.
+ #[no_mangle]
+-pub extern "C" fn {kunit_name}(__kunit_test: *mut kernel::bindings::kunit) {{
++pub extern "C" fn {kunit_name}(__kunit_test: *mut ::kernel::bindings::kunit) {{
+     /// Overrides the usual [`assert!`] macro with one that calls KUnit instead.
+     #[allow(unused)]
+     macro_rules! assert {{
+         ($cond:expr $(,)?) => {{{{
+-            kernel::kunit_assert!("{kunit_name}", "{real_path}", __DOCTEST_ANCHOR - {line}, $cond);
++            ::kernel::kunit_assert!(
++                "{kunit_name}", "{real_path}", __DOCTEST_ANCHOR - {line}, $cond
++            );
+         }}}}
+     }}
+ 
+@@ -180,13 +182,15 @@ macro_rules! assert {{
+     #[allow(unused)]
+     macro_rules! assert_eq {{
+         ($left:expr, $right:expr $(,)?) => {{{{
+-            kernel::kunit_assert_eq!("{kunit_name}", "{real_path}", __DOCTEST_ANCHOR - {line}, $left, $right);
++            ::kernel::kunit_assert_eq!(
++                "{kunit_name}", "{real_path}", __DOCTEST_ANCHOR - {line}, $left, $right
++            );
+         }}}}
+     }}
+ 
+     // Many tests need the prelude, so provide it by default.
+     #[allow(unused)]
+-    use kernel::prelude::*;
++    use ::kernel::prelude::*;
+ 
+     // Unconditionally print the location of the original doctest (i.e. rather than the location in
+     // the generated file) so that developers can easily map the test back to the source code.
+@@ -197,11 +201,11 @@ macro_rules! assert_eq {{
+     // This follows the syntax for declaring test metadata in the proposed KTAP v2 spec, which may
+     // be used for the proposed KUnit test attributes API. Thus hopefully this will make migration
+     // easier later on.
+-    kernel::kunit::info(format_args!("    # {kunit_name}.location: {real_path}:{line}\n"));
++    ::kernel::kunit::info(format_args!("    # {kunit_name}.location: {real_path}:{line}\n"));
+ 
+     /// The anchor where the test code body starts.
+     #[allow(unused)]
+-    static __DOCTEST_ANCHOR: i32 = core::line!() as i32 + {body_offset} + 1;
++    static __DOCTEST_ANCHOR: i32 = ::core::line!() as i32 + {body_offset} + 1;
+     {{
+         {body}
+         main();
+-- 
+2.43.0
 
-Thanks, Lorenzo
-
-On Tue, Jan 28, 2025 at 07:01:52PM +0200, Andy Shevchenko wrote:
-> I pinged Alexander, but It will mostly have the same effect as your email.
-> So, no guarantees from me (it is not my area in the kernel, I can't help
-> more).
->
-> On Mon, Jan 27, 2025 at 06:53:23PM +0000, Lorenzo Stoakes wrote:
-> > +cc some commit signers due to total lack of response here.
-> >
-> > Hi Alexander/anybody at intel/elsewhere who can look at this.
-> >
-> > These fields are deprecated and will soon be non-optionally removed, it
-> > would be good to confirm this works on actual hardware before this change
-> > goes in.
-> >
-> > So this patch is probably more urgent than you think.
-> >
-> > If there is a problem with maintainership in this area, MAINTAINERS should
-> > be updated accordingly so I know who to contact.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
